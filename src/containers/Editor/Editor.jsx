@@ -3,7 +3,7 @@ import {connect} from 'react-redux';
 import Radium from 'radium';
 import DocumentMeta from 'react-document-meta';
 import {Nav} from '../../components';
-import {NARROW} from '../../actions/editor';
+import {NARROW, getProjects} from '../../actions/editor';
 
 let styles = {};
 
@@ -11,6 +11,12 @@ const Editor = React.createClass({
 	propTypes: {
 		editorData: PropTypes.object,
 		dispatch: PropTypes.func
+	},
+
+	statics: {
+		fetchData: function(getState, dispatch) {
+			return dispatch(getProjects());
+		}
 	},
 
 	render: function() {
@@ -38,6 +44,10 @@ const Editor = React.createClass({
 				<div style={styles.debug}>
 					<span onClick={()=>toggleNarrow()}>Toggle | </span>
 					<span>{editorData.narrowMode}</span>
+				</div>
+
+				<div>
+					{editorData.sampleOutput[0].displayTitle}
 				</div>
 				
 			</div>

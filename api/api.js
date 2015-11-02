@@ -31,6 +31,17 @@ app.use(bodyParser.json());
 var Pub  = require('./models').Pub;
 var User = require('./models').User;
 
+app.get('/sampleProjects', function(req, res){
+	Pub.find({}, {'displayTitle': 1, 'uniqueTitle': 1})
+	.limit(5)
+	.exec(function(err, pubs){
+		// console.log('yea were here');
+		res.status(201).json(pubs);
+	});
+
+});
+
+
 app.post('/loadProjects', function(req,res){
 	// Want to load each project's title, authors, publishdate, abstract, image
 	console.log(req.body);

@@ -3,11 +3,7 @@ import DocumentMeta from 'react-document-meta';
 
 
 export default React.createClass({
-	statics: {
-		// fetchData: function(getState, dispatch) {
-		// 	console.log('in the static fetchdata');
-		// }
-	},
+
 	componentWillMount: function() {
 		console.log('it will mount...');
 	},
@@ -26,7 +22,7 @@ export default React.createClass({
 				<DocumentMeta {...metaData} />
 
 				<h1>Doh! 404!</h1>
-				<p>These are <em>not</em> the droids you are looking for!</p>
+				<p>That page does not seem to exist!</p>
 			</div>
 			
 		);
