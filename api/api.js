@@ -182,9 +182,9 @@ app.get('/login', function(req,res){
 });
 // User registration and stuff
 app.post('/login', passport.authenticate('local'), function(req, res) {
-  console.log('in login post');
-  console.log(req.body);
-  console.log(req.body.email);
+  console.info('in login post');
+  console.info(req.body);
+  console.info(req.body.email);
    User.findOne({'email':req.body.email}, '-hash -salt')
     .populate("externals highlights relatedpubs discussions")
     .populate({path: "pubs", select:"displayTitle uniqueTitle image"})
