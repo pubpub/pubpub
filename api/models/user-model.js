@@ -2,7 +2,7 @@ var mongoose  = require('mongoose');
 var Schema    =  mongoose.Schema;
 var ObjectId  = Schema.Types.ObjectId;
 
-
+var passportLocalMongoose = require('passport-local-mongoose');
 
 var userSchema = new Schema({
   email: { type: String, required: true, index: { unique: true } },
@@ -28,6 +28,7 @@ var userSchema = new Schema({
   resetHashExpiration: { type: Date },
   registerDate: { type: Date }
 })
+userSchema.plugin(passportLocalMongoose,{'usernameField':'email'});
 
 userSchema.statics.generateUniqueUsername = function (fullname, callback) {
   var self = this;

@@ -19,8 +19,8 @@ const Subdomain = React.createClass({
 		fetchDataDeferred: function(getState, dispatch) {
 			dispatch(testGetEmpty());
 			dispatch(testGetParams());
-			dispatch(testPostEmpty());
-			return dispatch(testPostData());
+			return dispatch(testPostEmpty());
+			// return dispatch(testPostData());
 		}
 	},
 
