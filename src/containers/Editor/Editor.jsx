@@ -71,6 +71,8 @@ styles = {
 	editorContainer: {
 		position: 'relative',
 		height: 'calc(100vh - 30px)',
+		overflow: 'hidden',
+		overflowY: 'scroll',
 	},
 
 	debug: {

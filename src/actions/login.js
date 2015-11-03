@@ -4,7 +4,7 @@
 // All action types are defined as constants. Do not manually pass action 
 // types as strings in action creators
 /*--------*/
-
+export const TOGGLE_VISIBILITY = 'login/TOGGLE_VISIBILITY';
 
 /*--------*/
 // Define Action creators
@@ -14,4 +14,8 @@
 // function calls
 /*--------*/
 
-
+export function toggleVisibility() {
+	return {
+		type: TOGGLE_VISIBILITY
+	};
+}

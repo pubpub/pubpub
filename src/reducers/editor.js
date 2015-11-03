@@ -61,7 +61,6 @@ function loadFail(state, error) {
 export default function editorReducer(state = defaultState, action) {
 	switch (action.type) {
 	case LOAD:
-		console.log('in reducer');
 		return load(state);
 	case LOAD_SUCCESS:
 		return loadSuccess(state, action.result);

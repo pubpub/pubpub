@@ -1,6 +1,6 @@
 import React from 'react';
 import {IndexRoute, Route} from 'react-router';
-import {App, Editor, Explore, Landing, Login, Profile, Reader, NotFound} from 'containers';
+import {App, Editor, Explore, Landing, Profile, Reader, NotFound} from 'containers';
 
 export default () => {
 	return (
@@ -11,7 +11,6 @@ export default () => {
 			{ /* Routes */ }
 			<Route path="/edit" component={Editor}/>
 			<Route path="/explore" component={Explore}/>
-			<Route path="/login" component={Login}/>
 			<Route path="/profile" component={Profile}/>
 			<Route path="/read" component={Reader}/>
 

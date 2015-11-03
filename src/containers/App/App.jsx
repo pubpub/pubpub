@@ -1,13 +1,21 @@
 import React, { PropTypes } from 'react';
 import Radium from 'radium';
 import { Link } from 'react-router';
+import {Login} from '../index';
+import {connect} from 'react-redux';
+import {toggleVisibility} from '../../actions/login';
 
 let styles = {};
 
 const App = React.createClass({
 	propTypes: {
 		children: PropTypes.object.isRequired,
-		pushState: PropTypes.func
+		pushState: PropTypes.func,
+		dispatch: PropTypes.func
+	},
+
+	toggleLogin: function() {
+		this.props.dispatch(toggleVisibility());
 	},
 
 	render: function() {
@@ -19,11 +27,12 @@ const App = React.createClass({
 					<p style={[styles.headerText, styles.headerLogin]}>
 						<Link style={styles.headerText} to={`/edit`}> Edit </Link> | 
 						<Link style={styles.headerText} to={`/explore`}> explore </Link> | 
-						<Link style={styles.headerText} to={`/login`}> login </Link> | 
+						<span onClick={this.toggleLogin}> login </span> | 
 						<Link style={styles.headerText} to={`/profile`}> profile </Link> | 
 						<Link style={styles.headerText} to={`/reader`}> reader </Link> | 
 					</p>
 				</div>
+				<Login />
 				<div className="content" style={styles.content}>
 					{this.props.children}
 				</div>
@@ -35,7 +44,9 @@ const App = React.createClass({
 
 });
 
-export default Radium(App);
+export default connect()( Radium(App) );
+
+// export default Radium(App);
 
 
 styles = {

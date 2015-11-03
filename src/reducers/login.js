@@ -4,12 +4,14 @@ import {ensureImmutable} from './';
 /*--------*/
 // Load Actions
 /*--------*/
-import {} from '../actions/login';
+import {TOGGLE_VISIBILITY} from '../actions/login';
 
 /*--------*/
 // Initialize Default State 
 /*--------*/
-export const defaultState = Immutable.Map({});
+export const defaultState = Immutable.Map({
+	isVisible: true
+});
 
 /*--------*/
 // Define reducing functions 
@@ -17,8 +19,9 @@ export const defaultState = Immutable.Map({});
 // These functions take in an initial state and return a new
 // state. They are pure functions. We use Immutable to enforce this. 
 /*--------*/
-
-// function sample() {}
+function toggle(state) {
+	return state.set('isVisible', !state.get('isVisible'));
+}
 
 /*--------*/
 // Bind actions to specific reducing functions.
@@ -26,6 +29,8 @@ export const defaultState = Immutable.Map({});
 export default function loginReducer(state = defaultState, action) {
 
 	switch (action.type) {
+	case TOGGLE_VISIBILITY:
+		return toggle(state);
 	default:
 		return ensureImmutable(state);
 	}
