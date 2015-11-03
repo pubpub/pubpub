@@ -2,6 +2,7 @@ import React, { PropTypes } from 'react';
 import {connect} from 'react-redux';
 import Radium from 'radium';
 import DocumentMeta from 'react-document-meta';
+import PureRenderMixin from 'react-addons-pure-render-mixin';
 import {Nav} from '../../components';
 import {NARROW, getProjects} from '../../actions/editor';
 
@@ -13,8 +14,10 @@ const Editor = React.createClass({
 		dispatch: PropTypes.func
 	},
 
+	mixins: [PureRenderMixin],
+
 	statics: {
-		fetchData: function(getState, dispatch) {
+		fetchDataDeferred: function(getState, dispatch) {
 			return dispatch(getProjects());
 		}
 	},
@@ -43,11 +46,15 @@ const Editor = React.createClass({
 				
 				<div style={styles.debug}>
 					<span onClick={()=>toggleNarrow()}>Toggle | </span>
-					<span>{editorData.narrowMode}</span>
+					<span>{editorData.get('narrowMode')}</span>
 				</div>
 
 				<div>
-					{editorData.sampleOutput[0].displayTitle}
+					{editorData.get('sampleOutput').toJS().map((pub, index)=>{
+						return (
+							<p key={index}>{pub.displayTitle}</p>
+						);
+					})}
 				</div>
 				
 			</div>

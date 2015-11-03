@@ -15,8 +15,14 @@ const App = React.createClass({
 		return (
 			<div style={styles.body}>
 				<div className="header-bar" style={styles.headerBar}>
-					<Link to={`/edit`}><h1 style={[styles.headerText, styles.headerLogo]}>PubPub</h1></Link>
-					<p style={[styles.headerText, styles.headerLogin]}>Login</p>
+					<Link to={`/landing`}><h1 style={[styles.headerText, styles.headerLogo]}>PubPub</h1></Link>
+					<p style={[styles.headerText, styles.headerLogin]}>
+						<Link style={styles.headerText} to={`/edit`}> Edit </Link> | 
+						<Link style={styles.headerText} to={`/explore`}> explore </Link> | 
+						<Link style={styles.headerText} to={`/login`}> login </Link> | 
+						<Link style={styles.headerText} to={`/profile`}> profile </Link> | 
+						<Link style={styles.headerText} to={`/reader`}> reader </Link> | 
+					</p>
 				</div>
 				<div className="content" style={styles.content}>
 					{this.props.children}

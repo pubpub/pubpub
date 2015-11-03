@@ -1,4 +1,5 @@
 import Immutable from 'immutable';
+import {ensureImmutable} from './';
 
 /*--------*/
 // Load Actions
@@ -26,6 +27,6 @@ export default function profileReducer(state = defaultState, action) {
 
 	switch (action.type) {
 	default:
-		return state;
+		return ensureImmutable(state);
 	}
 }

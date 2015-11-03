@@ -1,4 +1,5 @@
 import Immutable from 'immutable';
+import {ensureImmutable} from './';
 
 /*--------*/
 // Load Actions
@@ -10,6 +11,7 @@ import {NARROW, LOAD, LOAD_SUCCESS, LOAD_FAIL} from '../actions/editor';
 /*--------*/
 const defaultState = Immutable.Map({
 	narrowMode: 'wide',
+	sampleOutput: Immutable.List()
 });
 
 /*--------*/
@@ -20,50 +22,54 @@ const defaultState = Immutable.Map({
 /*--------*/
 function narrow(state) {
 	let newMode = undefined;
-	if (state.narrowMode === 'narrow') {
+	if (state.get('narrowMode') === 'narrow') {
 		newMode = 'wide';
 	} else {
 		newMode = 'narrow';
 	}
-	return newMode;
+	return state.set('narrowMode', newMode);
+}
+
+function load(state) {
+	console.log('in load');
+	return state.set('loading', 50);
+}
+
+function loadSuccess(state, result) {
+	console.log('in loadSuccess');
+	return state.merge({
+		loading: 100,
+		loaded: true,
+		sampleOutput: result,
+		error: null
+	});
+}
+
+function loadFail(state, error) {
+	console.log('in loadFail');
+	return state.merge({
+		loading: false,
+		loaded: false,
+		data: null,
+		error: error
+	});
 }
 
 /*--------*/
 // Bind actions to specific reducing functions.
 /*--------*/
 export default function editorReducer(state = defaultState, action) {
-
 	switch (action.type) {
 	case LOAD:
-		console.log('in Load');
-		return {
-			...state,
-			loading: 50
-		};
+		console.log('in reducer');
+		return load(state);
 	case LOAD_SUCCESS:
-		console.log('in load success');
-		// console.log(action);
-		return {
-			...state,
-			loading: 100,
-			loaded: true,
-			sampleOutput: action.result,
-			error: null
-		};
+		return loadSuccess(state, action.result);
 	case LOAD_FAIL:
-		return {
-			...state,
-			loading: false,
-			loaded: false,
-			data: null,
-			error: action.error
-		};
+		return loadFail(state, action.error);
 	case NARROW:
-		return {
-			...state,
-			narrowMode: narrow(state)
-		};
+		return narrow(state);
 	default:
-		return state;
+		return ensureImmutable(state);
 	}
 }
