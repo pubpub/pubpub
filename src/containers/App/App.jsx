@@ -25,7 +25,8 @@ const App = React.createClass({
 				<div className="header-bar" style={styles.headerBar}>
 					<Link to={`/landing`}><h1 style={[styles.headerText, styles.headerLogo]}>PubPub</h1></Link>
 					<p style={[styles.headerText, styles.headerLogin]}>
-						<Link style={styles.headerText} to={`/edit`}> Edit </Link> | 
+						<Link style={styles.headerText} to={`/subdomain`}> subdomain </Link> | 
+						<Link style={styles.headerText} to={`/edit`}> edit </Link> | 
 						<Link style={styles.headerText} to={`/explore`}> explore </Link> | 
 						<span onClick={this.toggleLogin}> login </span> | 
 						<Link style={styles.headerText} to={`/profile`}> profile </Link> | 
