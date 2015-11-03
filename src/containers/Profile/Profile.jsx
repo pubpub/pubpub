@@ -4,7 +4,7 @@ import Radium from 'radium';
 import DocumentMeta from 'react-document-meta';
 // import {NARROW, getProjects} from '../../actions/editor';
 
-let styles = {};
+// let styles = {};
 
 const Profile = React.createClass({
 	propTypes: {
@@ -39,9 +39,9 @@ const Profile = React.createClass({
 });
 
 export default connect( state => {
-	return {editorData: state.editor};
+	return {profileData: state.profile};
 })( Radium(Profile) );
 
-styles = {
+// styles = {
 	
-};
+// };

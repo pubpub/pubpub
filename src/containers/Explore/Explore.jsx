@@ -4,7 +4,7 @@ import Radium from 'radium';
 import DocumentMeta from 'react-document-meta';
 // import {NARROW, getProjects} from '../../actions/editor';
 
-let styles = {};
+// let styles = {};
 
 const Explore = React.createClass({
 	propTypes: {
@@ -39,9 +39,9 @@ const Explore = React.createClass({
 });
 
 export default connect( state => {
-	return {editorData: state.editor};
+	return {exploreData: state.explore};
 })( Radium(Explore) );
 
-styles = {
+// styles = {
 	
-};
+// };

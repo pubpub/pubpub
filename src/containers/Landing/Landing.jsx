@@ -4,7 +4,7 @@ import Radium from 'radium';
 import DocumentMeta from 'react-document-meta';
 // import {NARROW, getProjects} from '../../actions/editor';
 
-let styles = {};
+// let styles = {};
 
 const Landing = React.createClass({
 	propTypes: {
@@ -39,9 +39,9 @@ const Landing = React.createClass({
 });
 
 export default connect( state => {
-	return {editorData: state.editor};
+	return {landingData: state.landing};
 })( Radium(Landing) );
 
-styles = {
+// styles = {
 	
-};
+// };
