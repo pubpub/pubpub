@@ -36,7 +36,7 @@ const App = React.createClass({
 						<Link style={styles.headerText} to={`/edit`}> edit </Link> | 
 						<Link style={styles.headerText} to={`/explore`}> explore </Link> | 
 						<span onClick={this.toggleLogin}> 
-							{this.props.loginData.isLoggedIn ? 'login' : 'Logged In!'} 
+							{this.props.loginData.get('loggedIn') === false ? 'login' : 'Logged In!'} 
 						</span> | 
 						<Link style={styles.headerText} to={`/profile`}> profile </Link> | 
 						<Link style={styles.headerText} to={`/reader`}> reader </Link> | 
