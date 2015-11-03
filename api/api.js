@@ -182,6 +182,9 @@ app.get('/login', function(req,res){
 });
 // User registration and stuff
 app.post('/login', passport.authenticate('local'), function(req, res) {
+  console.log('in login post');
+  console.log(req.body);
+  console.log(req.body.email);
    User.findOne({'email':req.body.email}, '-hash -salt')
     .populate("externals highlights relatedpubs discussions")
     .populate({path: "pubs", select:"displayTitle uniqueTitle image"})
@@ -194,7 +197,7 @@ app.post('/login', passport.authenticate('local'), function(req, res) {
           model: 'Pub'
         };
         User.populate(user, options, function (err, user) {
-          if (err) return res.json(500);
+          if (err) return res.status(500).json(err);
           return res.status(201).json(user);
         });
       } else {
