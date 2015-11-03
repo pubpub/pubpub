@@ -1,5 +1,36 @@
-import {defaultState, NARROW, narrow, LOAD, LOAD_SUCCESS, LOAD_FAIL} from '../actions/editor';
+import Immutable from 'immutable';
 
+/*--------*/
+// Load Actions
+/*--------*/
+import {NARROW, LOAD, LOAD_SUCCESS, LOAD_FAIL} from '../actions/editor';
+
+/*--------*/
+// Initialize Default State 
+/*--------*/
+const defaultState = Immutable.Map({
+	narrowMode: 'wide',
+});
+
+/*--------*/
+// Define reducing functions 
+//
+// These functions take in an initial state and return a new
+// state. They are pure functions. We use Immutable to enforce this. 
+/*--------*/
+function narrow(state) {
+	let newMode = undefined;
+	if (state.narrowMode === 'narrow') {
+		newMode = 'wide';
+	} else {
+		newMode = 'narrow';
+	}
+	return newMode;
+}
+
+/*--------*/
+// Bind actions to specific reducing functions.
+/*--------*/
 export default function editorReducer(state = defaultState, action) {
 
 	switch (action.type) {

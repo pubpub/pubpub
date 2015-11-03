@@ -1,5 +1,27 @@
-import {defaultState} from '../actions/reader';
+import Immutable from 'immutable';
 
+/*--------*/
+// Load Actions
+/*--------*/
+import {} from '../actions/reader';
+
+/*--------*/
+// Initialize Default State 
+/*--------*/
+export const defaultState = Immutable.Map({});
+
+/*--------*/
+// Define reducing functions 
+//
+// These functions take in an initial state and return a new
+// state. They are pure functions. We use Immutable to enforce this. 
+/*--------*/
+
+// function sample() {}
+
+/*--------*/
+// Bind actions to specific reducing functions.
+/*--------*/
 export default function readerReducer(state = defaultState, action) {
 
 	switch (action.type) {
