@@ -12,6 +12,13 @@ class ApiClient_ {
 		['get', 'post', 'put', 'patch', 'del'].
 			forEach((method) => {
 				this[method] = (path, options) => {
+					
+					options.data = options.data || {}; // Make sure options.data exists first.
+					options.data.host = req.headers.host; // Append options.data to contain host information
+
+					options.params = options.params || {}; // Make sure options.params exists first.
+					options.params.host = req.headers.host; // Append options.params to contain host information
+
 					return new Promise((resolve, reject) => {
 						const request = superagent[method](this.formatUrl(path));
 						if (options && options.params) {

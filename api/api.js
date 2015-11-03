@@ -32,6 +32,7 @@ var Pub  = require('./models').Pub;
 var User = require('./models').User;
 
 app.get('/sampleProjects', function(req, res){
+	console.log(req.query);
 	Pub.find({}, {'displayTitle': 1, 'uniqueTitle': 1})
 	.limit(5)
 	.exec(function(err, pubs){
