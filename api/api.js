@@ -31,6 +31,13 @@ app.use(bodyParser.json());
 var Pub  = require('./models').Pub;
 var User = require('./models').User;
 
+app.get('/getEcho', function(req, res){
+	res.status(201).json(req.query);
+});
+app.post('/postEcho', function(req, res){
+	res.status(201).json(req.body);
+});
+
 app.get('/sampleProjects', function(req, res){
 	console.log(req.query);
 	Pub.find({}, {'displayTitle': 1, 'uniqueTitle': 1})

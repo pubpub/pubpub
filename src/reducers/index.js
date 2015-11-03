@@ -8,6 +8,7 @@ import landing from './landing';
 import login from './login';
 import profile from './profile';
 import reader from './reader';
+import subdomainTest from './subdomainTest';
 
 export default combineReducers({
 	router: routerStateReducer,
@@ -16,7 +17,8 @@ export default combineReducers({
 	landing,
 	login,
 	profile,
-	reader
+	reader,
+	subdomainTest
 });
 
 export function ensureImmutable(state) {

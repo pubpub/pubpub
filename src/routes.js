@@ -1,6 +1,6 @@
 import React from 'react';
 import {IndexRoute, Route} from 'react-router';
-import {App, Editor, Explore, Landing, Profile, Reader, NotFound} from 'containers';
+import {App, Editor, Explore, Landing, Profile, Reader, NotFound, SubdomainTest} from 'containers';
 
 export default () => {
 	return (
@@ -13,6 +13,7 @@ export default () => {
 			<Route path="/explore" component={Explore}/>
 			<Route path="/profile" component={Profile}/>
 			<Route path="/read" component={Reader}/>
+			<Route path="/subdomain" component={SubdomainTest}/>
 
 			{ /* Catch all route */ }
 			<Route path="*" component={NotFound} status={404} />
