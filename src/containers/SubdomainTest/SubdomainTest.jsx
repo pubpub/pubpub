@@ -17,10 +17,13 @@ const Subdomain = React.createClass({
 
 	statics: {
 		fetchDataDeferred: function(getState, dispatch) {
+			// Note, you cannot normally dispatch multiple actions here.
+			// Only the one in the return value will be 'waited for'.
+			// This sorta hack works only because the calls are nearly instant.
 			dispatch(testGetEmpty());
 			dispatch(testGetParams());
-			return dispatch(testPostEmpty());
-			// return dispatch(testPostData());
+			dispatch(testPostEmpty());
+			return dispatch(testPostData());
 		}
 	},
 

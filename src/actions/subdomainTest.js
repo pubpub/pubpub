@@ -18,7 +18,7 @@ export const LOAD_FAIL = 'subdomainTest/LOAD_FAIL';
 export function testGetEmpty() {
 	return {
 		types: [LOAD, LOAD_SUCCESS, LOAD_FAIL],
-		promise: (client) => client.get('/login', {}),
+		promise: (client) => client.get('/getEcho', {}),
 		test: 'testGetEmpty'
 	};
 }
@@ -42,26 +42,14 @@ export function testPostEmpty() {
 	};
 }
 
-import CryptoJS from 'crypto-js';
 export function testPostData() {
 	return {
 		types: [LOAD, LOAD_SUCCESS, LOAD_FAIL],
-		promise: (client) => client.post('/login', {data: {
-			'email': 'trich@media.mit.edu',
-			'password': CryptoJS.SHA3('password').toString(CryptoJS.enc.Hex)
+		promise: (client) => client.post('/postEcho', {data: {
+			'fake3': 345,
+			'fake4': 'salmon'
 		}}),
 		test: 'testPostData'
 	};
 }
-
-// export function testPostData() {
-// 	return {
-// 		types: [LOAD, LOAD_SUCCESS, LOAD_FAIL],
-// 		promise: (client) => client.post('/postEcho', {data: {
-// 			'fake3': 345,
-// 			'fake4': 'salmon'
-// 		}}),
-// 		test: 'testPostData'
-// 	};
-// }
 

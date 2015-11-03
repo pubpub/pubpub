@@ -3,15 +3,22 @@ import Radium from 'radium';
 import { Link } from 'react-router';
 import {Login} from '../index';
 import {connect} from 'react-redux';
-import {toggleVisibility} from '../../actions/login';
+import {toggleVisibility, restoreLogin} from '../../actions/login';
 
 let styles = {};
 
 const App = React.createClass({
 	propTypes: {
+		loginData: PropTypes.object,
 		children: PropTypes.object.isRequired,
 		pushState: PropTypes.func,
 		dispatch: PropTypes.func
+	},
+
+	statics: {
+		fetchDataDeferred: function(getState, dispatch) {
+			return dispatch(restoreLogin());
+		}
 	},
 
 	toggleLogin: function() {
@@ -28,7 +35,9 @@ const App = React.createClass({
 						<Link style={styles.headerText} to={`/subdomain`}> subdomain </Link> | 
 						<Link style={styles.headerText} to={`/edit`}> edit </Link> | 
 						<Link style={styles.headerText} to={`/explore`}> explore </Link> | 
-						<span onClick={this.toggleLogin}> login </span> | 
+						<span onClick={this.toggleLogin}> 
+							{this.props.loginData.isLoggedIn ? 'login' : 'Logged In!'} 
+						</span> | 
 						<Link style={styles.headerText} to={`/profile`}> profile </Link> | 
 						<Link style={styles.headerText} to={`/reader`}> reader </Link> | 
 					</p>
@@ -45,9 +54,9 @@ const App = React.createClass({
 
 });
 
-export default connect()( Radium(App) );
-
-// export default Radium(App);
+export default connect( state => {
+	return {loginData: state.login};
+})( Radium(App) );
 
 
 styles = {

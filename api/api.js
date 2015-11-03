@@ -84,7 +84,7 @@ app.post('/postEcho', function(req, res){
 });
 
 app.get('/sampleProjects', function(req, res){
-	console.log(req.query);
+	// console.log(req.query);
 	Pub.find({}, {'displayTitle': 1, 'uniqueTitle': 1})
 	.limit(5)
 	.exec(function(err, pubs){
@@ -97,7 +97,7 @@ app.get('/sampleProjects', function(req, res){
 
 app.post('/loadProjects', function(req,res){
 	// Want to load each project's title, authors, publishdate, abstract, image
-	console.log(req.body);
+	// console.log(req.body);
 	Pub.find({'uniqueTitle': {$in: req.body}}, { '_id': 0, 'collaboratorsUsers': 1, 'image':1, 'displayTitle':1, 'uniqueTitle':1, 'versions':1})
 		.populate({ path: 'collaboratorsUsers.authors', select: 'username name image'})
 		.populate({ path: "versions", select: 'abstract'})
@@ -168,8 +168,6 @@ app.get('/login', function(req,res){
         };
         User.populate(user, options, function (err, user) {
           if (err) return res.json(500);
-          console.log('about to return user');
-          // return res.status(201).json('cat');
           return res.status(201).json(user);
         });
       } else {

@@ -31,12 +31,10 @@ function narrow(state) {
 }
 
 function load(state) {
-	console.log('in load');
 	return state.set('loading', 50);
 }
 
 function loadSuccess(state, result) {
-	console.log('in loadSuccess');
 	return state.merge({
 		loading: 100,
 		loaded: true,
