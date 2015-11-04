@@ -28,7 +28,7 @@ var userSchema = new Schema({
   resetHashExpiration: { type: Date },
   registerDate: { type: Date }
 })
-userSchema.plugin(passportLocalMongoose,{'usernameField':'email'});
+userSchema.plugin(passportLocalMongoose,{'usernameField':'email', 'digestAlgorithm':'sha1'});
 
 userSchema.statics.generateUniqueUsername = function (fullname, callback) {
   var self = this;

@@ -24,9 +24,11 @@ const server = new http.Server(app);
 
 var User = require('./models').User;
 
-passport.use(new LocalStrategy(
+passport.use(new LocalStrategy({
+    usernameField: 'email'
+  },
   function(username, password, done) {
-    User.findOne({ email: username }, function (err, user) {
+    User.findOne({ username: username }, function (err, user) {
       if (err) { return done(err); }
       if (!user) {
         return done(null, false, { message: 'Incorrect username.' });
