@@ -37,11 +37,21 @@ function toggle(state) {
 }
 
 function loggedIn(state, user) {
-	return state.merge({
-		isVisible: false,
-		loggedIn: true,
-		userData: user
-	});
+	let outputMerge = {};
+	if (user === 'No Session') {
+		outputMerge = {
+			isVisible: false,
+			loggedIn: false,
+			userData: {}
+		};
+	} else {
+		outputMerge = {
+			isVisible: false,
+			loggedIn: true,
+			userData: user
+		};
+	}
+	return state.merge(outputMerge);
 }
 
 function loggedOut(state) {
