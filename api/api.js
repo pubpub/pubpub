@@ -24,11 +24,6 @@ const server = new http.Server(app);
 
 var User = require('./models').User;
 
-app.use( bodyParser.json() );
-app.use(bodyParser.urlencoded({
-  extended: true
-}));
-
 passport.use(new LocalStrategy(
   function(username, password, done) {
     User.findOne({ username: username }, function (err, user) {
@@ -44,18 +39,12 @@ passport.use(new LocalStrategy(
   }
 ));
 
-
+app.use( bodyParser.json() );
+app.use(bodyParser.urlencoded({
+  extended: true
+}));
 // app.use(cookieParser());
 
-app.use(function(req, res, next) {
-  console.log(req.method + ' ' + req.url + ' HTTP/' + req.httpVersion);
-  Object.keys(req.headers).forEach(function(field) {
-    console.log(field + ': ' + req.headers[field])
-  });
-  console.dir(req.body);
-
-  next();
-});
 
 app.use(session({
     secret: 'kevinisacuteboy',
@@ -191,29 +180,43 @@ app.get('/login', function(req,res){
   }
 
 });
-// User registration and stuff
-app.post('/login', passport.authenticate('local'), function(req, res) {
-   User.findOne({'email':req.body.email}, '-hash -salt')
-    .populate("externals highlights relatedpubs discussions")
-    .populate({path: "pubs", select:"displayTitle uniqueTitle image"})
-    .populate({path: "groups", select: "name uniqueName image"})
-    .exec(function (err, user) {
-      if (!err) {
-        var options = {
-          path: 'relatedpubs.pub highlights.pub externals.pub discussions.pub',
-          select: 'displayTitle uniqueTitle image',
-          model: 'Pub'
-        };
-        User.populate(user, options, function (err, user) {
-          if (err) return res.status(500).json(err);
-          return res.status(201).json(user);
-        });
-      } else {
-        console.log(err);
-        return res.json(500);
-      }
-    });
+
+app.post('/login', function(req, res, next) {
+  passport.authenticate('local', function(err, user, info) {
+    if (err) {
+      return next(err); // will generate a 500 error
+    }
+    // Generate a JSON response reflecting authentication status
+    if (! user) {
+      return res.send({ success : false, message : 'authentication failed', body: req.body, info: info });
+    }
+    return res.send({ success : true, message : 'authentication succeeded' });
+  })(req, res, next);
 });
+
+// User registration and stuff
+// app.post('/login', passport.authenticate('local'), function(req, res) {
+//    User.findOne({'email':req.body.email}, '-hash -salt')
+//     .populate("externals highlights relatedpubs discussions")
+//     .populate({path: "pubs", select:"displayTitle uniqueTitle image"})
+//     .populate({path: "groups", select: "name uniqueName image"})
+//     .exec(function (err, user) {
+//       if (!err) {
+//         var options = {
+//           path: 'relatedpubs.pub highlights.pub externals.pub discussions.pub',
+//           select: 'displayTitle uniqueTitle image',
+//           model: 'Pub'
+//         };
+//         User.populate(user, options, function (err, user) {
+//           if (err) return res.status(500).json(err);
+//           return res.status(201).json(user);
+//         });
+//       } else {
+//         console.log(err);
+//         return res.json(500);
+//       }
+//     });
+// });
 
 app.get('/logout', function(req, res) {
   req.logout();
