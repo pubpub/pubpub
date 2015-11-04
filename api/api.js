@@ -24,6 +24,11 @@ const server = new http.Server(app);
 
 var User = require('./models').User;
 
+app.use( bodyParser.json() );
+app.use(bodyParser.urlencoded({
+  extended: true
+}));
+
 passport.use(new LocalStrategy(
   function(username, password, done) {
     User.findOne({ username: username }, function (err, user) {
@@ -39,12 +44,18 @@ passport.use(new LocalStrategy(
   }
 ));
 
-app.use( bodyParser.json() );
-app.use(bodyParser.urlencoded({
-  extended: true
-}));
+
 // app.use(cookieParser());
 
+app.use(function(req, res, next) {
+  console.log(req.method + ' ' + req.url + ' HTTP/' + req.httpVersion);
+  Object.keys(req.headers).forEach(function(field) {
+    console.log(field + ': ' + req.headers[field])
+  });
+  console.dir(req.body);
+
+  next();
+});
 
 app.use(session({
     secret: 'kevinisacuteboy',
@@ -181,9 +192,7 @@ app.get('/login', function(req,res){
 
 });
 // User registration and stuff
-// app.post('/login', passport.authenticate('local'), function(req, res) {
-app.post('/login', function(req, res) {
-  return res.status(201).json(req.body);
+app.post('/login', passport.authenticate('local'), function(req, res) {
    User.findOne({'email':req.body.email}, '-hash -salt')
     .populate("externals highlights relatedpubs discussions")
     .populate({path: "pubs", select:"displayTitle uniqueTitle image"})
