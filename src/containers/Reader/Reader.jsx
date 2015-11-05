@@ -16,7 +16,7 @@ const Reader = React.createClass({
 	},
 
 	statics: {
-		fetchData: function(getState, dispatch, location, routeParams) {
+		fetchDataDeferred: function(getState, dispatch, location, routeParams) {
 			return dispatch(getPub(routeParams.slug));
 		}
 	},
@@ -24,8 +24,12 @@ const Reader = React.createClass({
 	loader: function() {
 		return {
 			transform: 'translateX(' + (-100 + this.props.readerData.get('loading')) + '%)',
-			transition: '.5s linear transform'
+			transition: '.2s linear transform'
 		};
+	},
+
+	pubNavClick: function(optionClicked) {
+		console.log(optionClicked);
 	},
 
 	render: function() {
@@ -41,17 +45,24 @@ const Reader = React.createClass({
 
 				<DocumentMeta {...metaData} />
 
-				<div className="leftBar" style={styles.leftBar}>Left</div>
+				<div className="leftBar" style={[styles.leftBar, styles[this.props.readerData.get('status')]]}>
+					<h2>Left</h2>
+				</div>
+
 				<div className="centerBar" style={styles.centerBar}>
-					<hr style={this.loader()}/>
-					<PubBody 
+					<PubBody
+						status = {this.props.readerData.get('status')}
+						navClickFunction = {this.pubNavClick}
 						title = {pubData.title} 
 						abstract = {pubData.abstract} 
 						markdown = {pubData.markdown}
 						authors = {pubData.authors}/>
 
 				</div>
-				<div className="rightBar" style={styles.rightBar}>right</div>		
+
+				<div className="rightBar" style={[styles.rightBar, styles[this.props.readerData.get('status')]]}>
+					<h2>right</h2>
+				</div>
 				
 			</div>
 		);
@@ -70,11 +81,11 @@ styles = {
 		backgroundColor: 'grey',
 		overflow: 'hidden',
 	},
-
 	leftBar: {
 		width: 150,
 		height: '100%',
 		float: 'left',
+		transition: '.3s linear opacity .2s',
 	},
 
 	centerBar: {
@@ -88,6 +99,13 @@ styles = {
 		width: 'calc(100% - 850px)',
 		height: '100%',
 		float: 'left',
+		transition: '.3s linear opacity .2s',
+	},
+	loading: {
+		opacity: 0,
+	}, 
+	loaded: {
+		opacity: 1
 	},
 };
 

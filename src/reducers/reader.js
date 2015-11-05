@@ -11,7 +11,7 @@ import {LOAD_PUB, LOAD_PUB_SUCCESS, LOAD_PUB_FAIL} from '../actions/reader';
 /*--------*/
 export const defaultState = Immutable.Map({
 	pubData: {},
-	loading: 0,
+	status: 'loading',
 	error: null
 });
 
@@ -23,12 +23,12 @@ export const defaultState = Immutable.Map({
 /*--------*/
 
 function load(state) {
-	return state.set('loading', 25);
+	return state.set('status', 'loading');
 }
 
 function loadSuccess(state, result) {
 	return state.merge({
-		loading: 100,
+		status: 'loaded',
 		pubData: result,
 		error: null
 	});
@@ -37,7 +37,7 @@ function loadSuccess(state, result) {
 function loadFail(state, error) {
 	console.log('in loadFail');
 	return state.merge({
-		loading: false,
+		status: 'failed',
 		pubData: null,
 		error: error
 	});

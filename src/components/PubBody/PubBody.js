@@ -1,11 +1,14 @@
 import React, {PropTypes} from 'react';
 import Radium from 'radium';
 import Markdown from 'react-remarkable';
+import {PubNav, LoaderDeterminate} from '../';
 
 let styles = {};
 
 const PubBody = React.createClass({
 	propTypes: {
+		status: PropTypes.string,
+		navClickFunction: PropTypes.func,
 		title: PropTypes.string,
 		abstract: PropTypes.string,
 		markdown: PropTypes.string,
@@ -16,12 +19,18 @@ const PubBody = React.createClass({
 	render: function() {
 		return (
 			<div style={styles.container}>
-				<h1>{this.props.title}</h1>
-				<p>{this.props.abstract}</p>
+				<PubNav height={this.height} navClickFunction={this.props.navClickFunction} status={this.props.status}/>
+				<LoaderDeterminate value={this.props.status === 'loading' ? 0 : 100}/>
 
-				<hr/>
+				<div style={[styles.contentContainer, styles[this.props.status]]}>
+					<h1>{this.props.title}</h1>
+					<p>{this.props.abstract}</p>
 
-				<Markdown source={this.props.markdown} />
+					<hr/>
+
+					<Markdown source={this.props.markdown} />
+				</div>
+				
 
 			</div>
 		);
@@ -36,7 +45,16 @@ styles = {
 		overflow: 'hidden',
 		overflowY: 'scroll',
 		backgroundColor: 'white',
-	}
+	},
+	contentContainer: {
+		transition: '.3s linear opacity .2s',
+	},
+	loading: {
+		opacity: 0,
+	}, 
+	loaded: {
+		opacity: 1
+	},
 };
 
 export default Radium(PubBody);

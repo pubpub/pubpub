@@ -106,8 +106,6 @@ app.get('/getSamplePub', function(req,res){
 		abstract: 'Here is my abstract'
 	};
 
-
-
 	res.status(201).json(outputPub);
 });
 
