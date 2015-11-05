@@ -1,7 +1,18 @@
 // Connect to Mongo database
-// import {mongoURI} from './authentication/mongoCredentials';
+
 var mongoose = require('mongoose');
-mongoose.connect(process.env.mongoURI);
+if(process.env.NODE_ENV !== 'production'){
+  import {mongoURI} from './authentication/mongoCredentials';
+  mongoose.connect(mongoURI);  
+}else{
+  console.log('in the else of mongoose connect');
+  console.log(process.env)
+  console.log('-----')
+  console.log(process.env.mongoURI)
+  mongoose.connect(process.env.mongoURI);  
+}
+
+
 
 require('../server.babel'); // babel registration (runtime transpilation for node)
 
