@@ -1,4 +1,4 @@
-import {sendgridUsername, sendgridPassword} from '../authentication/sendgridCredentials';
+// import {sendgridUsername, sendgridPassword} from '../authentication/sendgridCredentials';
 
 var app = require('../api');
 var passport = require('passport');
