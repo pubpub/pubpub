@@ -33,7 +33,7 @@ const App = React.createClass({
 					<Link to={`/`}><h1 style={[styles.headerText, styles.headerLogo]}>PubPub</h1></Link>
 					<p style={[styles.headerText, styles.headerLogin]}>
 						<Link style={styles.headerText} to={`/subdomain`}> subdomain </Link> | 
-						<Link style={styles.headerText} to={`/edit/cat`}> edit </Link> | 
+						<Link style={styles.headerText} to={`/pub/cat/edit`}> edit </Link> | 
 						<Link style={styles.headerText} to={`/explore`}> explore </Link> | 
 						<span onClick={this.toggleLogin}> 
 							{this.props.loginData.get('loggedIn') === false ? 'login' : 'Logged In!'} 

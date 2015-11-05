@@ -1,14 +1,11 @@
 // Connect to Mongo database
 
 var mongoose = require('mongoose');
+
 if(process.env.NODE_ENV !== 'production'){
   import {mongoURI} from './authentication/mongoCredentials';
   mongoose.connect(mongoURI);  
 }else{
-  console.log('in the else of mongoose connect');
-  console.log(process.env)
-  console.log('-----')
-  console.log(process.env.mongoURI)
   mongoose.connect(process.env.mongoURI);  
 }
 

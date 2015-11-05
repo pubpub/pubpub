@@ -11,10 +11,10 @@ export default () => {
 			<IndexRoute component={Landing}/>
 
 			{ /* Routes */ }
-			<Route path="/edit/:slug" component={Editor}/>
 			<Route path="/explore" component={Explore}/>
 			<Route path="/profile/:username" component={Profile}/>
 			<Route path="/pub/:slug" component={Reader}/>
+			<Route path="/pub/:slug/edit" component={Editor}/>
 			<Route path="/subdomain" component={SubdomainTest}/>
 
 			{ /* Catch all route */ }

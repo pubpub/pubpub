@@ -1,6 +1,6 @@
 import CryptoJS from 'crypto-js';
 
-/*--------*/
+ /*--------*/
 // Define Action types
 // 
 // All action types are defined as constants. Do not manually pass action 
@@ -27,7 +27,7 @@ export const LOGOUT_LOAD_FAIL = 'login/LOGOUT_LOAD_FAIL';
 export function toggleVisibility() {
 	return {
 		type: TOGGLE_VISIBILITY
-	};
+	};	
 }
 
 export function login(email, password) {
