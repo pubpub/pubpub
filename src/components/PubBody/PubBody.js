@@ -45,9 +45,14 @@ styles = {
 		overflow: 'hidden',
 		overflowY: 'scroll',
 		backgroundColor: 'white',
+		borderRadius: 1
 	},
 	contentContainer: {
-		transition: '.3s linear opacity .2s',
+		transition: '.3s linear opacity .25s',
+		padding: '0px 10px',
+		// overflow: 'hidden',
+		// overflowY: 'scroll',
+		// height: 'calc(100% - 31px)',
 	},
 	loading: {
 		opacity: 0,

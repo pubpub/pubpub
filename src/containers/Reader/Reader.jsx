@@ -78,28 +78,31 @@ styles = {
 	container: {
 		width: '100%',
 		height: '100%',
-		backgroundColor: 'grey',
-		overflow: 'hidden',
+		backgroundColor: '#EAEAEA',
 	},
 	leftBar: {
 		width: 150,
 		height: '100%',
 		float: 'left',
-		transition: '.3s linear opacity .2s',
+		transition: '.3s linear opacity .25s',
 	},
 
 	centerBar: {
 		width: 700,
-		height: '100%',
+		height: 'calc(100% + 5px)',
+		position: 'relative',
+		top: '-5px',
 		float: 'left',
 		overflow: 'hidden',
+		boxShadow: '0px 2px 4px 0px rgba(0,0,0,0.4)',
+		zIndex: 10,
 	},
 
 	rightBar: {
 		width: 'calc(100% - 850px)',
 		height: '100%',
 		float: 'left',
-		transition: '.3s linear opacity .2s',
+		transition: '.3s linear opacity .25s',
 	},
 	loading: {
 		opacity: 0,

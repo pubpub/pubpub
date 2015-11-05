@@ -23,6 +23,7 @@ import {
 export const defaultState = Immutable.Map({
 	isVisible: false,
 	loggedIn: false,
+	// attemptedRestoreState: false,
 	userData: {}
 });
 

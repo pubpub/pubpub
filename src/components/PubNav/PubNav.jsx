@@ -52,7 +52,7 @@ styles = {
 		listStyle: 'none',
 		padding: 0,
 		margin: 0,
-		transition: '.3s linear opacity .2s',
+		transition: '.3s linear opacity .25s',
 	},
 	loading: {
 		opacity: 0,
