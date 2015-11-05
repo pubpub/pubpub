@@ -70,6 +70,7 @@
     "crypto-js": "^3.1.5",
     "express": "4.13.3",
     "express-session": "^1.11.3",
+    "fetch": "^0.3.6",
     "file-loader": "0.8.4",
     "history": "1.12.5",
     "http-proxy": "1.11.3",
