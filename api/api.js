@@ -1,9 +1,10 @@
+// Connect to Mongo database
+import {mongoURI} from './authentication/mongoCredentials';
 var mongoose = require('mongoose');
-mongoose.connect('mongodb://admin:kevinisacuteboy@ds045121-a0.mongolab.com:45121,ds045121-a1.mongolab.com:45121/pubpub');
-
-
+mongoose.connect(mongoURI);
 
 require('../server.babel'); // babel registration (runtime transpilation for node)
+
 
 import express from 'express';
 import session from 'express-session';
@@ -13,15 +14,16 @@ import PrettyError from 'pretty-error';
 import http from 'http';
 import request from 'request';
 
+const pretty = new PrettyError();
+const app = express();
+const server = new http.Server(app);
+
+/*--------*/
+// Configure app login, session, and passport settings
+/*--------*/
 var MongoStore = require('connect-mongo')(session);
 var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
-
-const pretty = new PrettyError();
-const app = express();
-
-const server = new http.Server(app);
-
 var User = require('./models').User;
 
 passport.use(new LocalStrategy(
@@ -39,15 +41,17 @@ passport.use(new LocalStrategy(
   }
 ));
 
+passport.use(User.createStrategy());
+passport.serializeUser(User.serializeUser()); // use static serialize and deserialize of model for passport session support
+passport.deserializeUser(User.deserializeUser()); // use static serialize and deserialize of model for passport session support
+
 app.use( bodyParser.json() );
 app.use(bodyParser.urlencoded({
   extended: true
 }));
-// app.use(cookieParser());
-
 
 app.use(session({
-    secret: 'kevinisacuteboy',
+    secret: 'fuzzyelephantfun',
     resave: true,
     saveUninitialized: true,
     store: new MongoStore({ 
@@ -63,207 +67,16 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 
+module.exports = app;
 
-// use static authenticate method of model in LocalStrategy
-// passport.use(new LocalStrategy(User.authenticate()));
-passport.use(User.createStrategy());
+/*--------*/
+// Connect routes
+/*--------*/
+require('./routes');
 
-// use static serialize and deserialize of model for passport session support
-passport.serializeUser(User.serializeUser());
-passport.deserializeUser(User.deserializeUser());
-
-
-var Pub  = require('./models').Pub;
-
-
-app.get('/getEcho', function(req, res){
-	res.status(201).json(req.query);
-});
-app.post('/postEcho', function(req, res){
-	res.status(201).json(req.body);
-});
-
-app.get('/sampleProjects', function(req, res){
-	// console.log(req.query);
-	Pub.find({}, {'displayTitle': 1, 'uniqueTitle': 1})
-	.limit(5)
-	.exec(function(err, pubs){
-		// console.log('yea were here');
-		res.status(201).json(pubs);
-	});
-
-});
-
-
-app.post('/loadProjects', function(req,res){
-	// Want to load each project's title, authors, publishdate, abstract, image
-	// console.log(req.body);
-	Pub.find({'uniqueTitle': {$in: req.body}}, { '_id': 0, 'collaboratorsUsers': 1, 'image':1, 'displayTitle':1, 'uniqueTitle':1, 'versions':1})
-		.populate({ path: 'collaboratorsUsers.authors', select: 'username name image'})
-		.populate({ path: "versions", select: 'abstract'})
-		.lean()
-		.exec(function (err, pubs) {
-			pubs.forEach(function(pub){
-				pub['abstract'] = pub.versions[pub.versions.length-1].abstract;
-				delete pub.versions;
-			});
-			
-			res.status(201).json(pubs);
-		});
-	
-
-});
-
-app.post('/loadProject', function(req,res){
-	console.log('in Load project backend')
-	Pub.findOne({'uniqueTitle': req.body[0]}, { '_id': 0, 'versions': 1, 'collaboratorsUsers': 1, 'image':1, 'displayTitle':1, 'uniqueTitle':1})
-		.populate({ path: "versions", select: 'abstract content postDate assetTree'})
-		.populate({ path: 'collaboratorsUsers.authors', select: 'username name image'})
-		.lean()
-		.exec(function (err, pub) {
-
-			var output = {
-				displayTitle: pub.displayTitle,
-				uniqueTitle: pub.uniqueTitle,
-				image: pub.image,
-				abstract: pub.versions[pub.versions.length-1].abstract,
-				content: pub.versions[pub.versions.length-1].content,
-				postDate: pub.versions[pub.versions.length-1].postDate,
-				authors: pub.collaboratorsUsers.authors,
-			}
-
-			if(pub.versions[pub.versions.length-1].assetTree != undefined){
-				var assetTree = JSON.parse(pub.versions[pub.versions.length-1].assetTree);
-				output.content = output.content.replace(/\^\^asset{(.*?)}/g, function(match, capture) {
-					return '!['+capture+']('+assetTree[capture]+')';
-				});
-			}
-			output.content = output.content.replace(/\^\^(.*?){(.*?)}/g, '');  
-			output.content = output.content.replace(/\^\^pagebreak/g, '');  
-			output.content = output.content.replace(/(#+)/g, function(match, capture) {
-					return match+' ';
-				});
-			
-			
-			res.status(201).json(output);
-		});
-
-});
-
-
-
-
-app.get('/login', function(req,res){
-  if(req.user){
-    User.findOne({'email':req.user.email}, '-hash -salt')
-    .populate("externals highlights relatedpubs discussions")
-    .populate({path: "pubs", select:"displayTitle uniqueTitle image"})
-    .populate({path: "groups", select: "name uniqueName image"})
-    .exec(function (err, user) {
-      if (!err) {
-        var options = {
-          path: 'relatedpubs.pub highlights.pub externals.pub discussions.pub',
-          select: 'displayTitle uniqueTitle image',
-          model: 'Pub'
-        };
-        User.populate(user, options, function (err, user) {
-          if (err) return res.json(500);
-          return res.status(201).json(user);
-        });
-      } else {
-        console.log(err);
-        return res.json(500);
-      }
-    });
-  }else{
-    return res.status(201).json('No Session');
-  }
-
-});
-// User registration and stuff
-app.post('/login', passport.authenticate('local'), function(req, res) {
-   User.findOne({'email':req.body.email}, '-hash -salt')
-    .populate("externals highlights relatedpubs discussions")
-    .populate({path: "pubs", select:"displayTitle uniqueTitle image"})
-    .populate({path: "groups", select: "name uniqueName image"})
-    .exec(function (err, user) {
-      if (!err) {
-        var options = {
-          path: 'relatedpubs.pub highlights.pub externals.pub discussions.pub',
-          select: 'displayTitle uniqueTitle image',
-          model: 'Pub'
-        };
-        User.populate(user, options, function (err, user) {
-          if (err) return res.status(500).json(err);
-          return res.status(201).json(user);
-        });
-      } else {
-        console.log(err);
-        return res.json(500);
-      }
-    });
-});
-
-app.get('/logout', function(req, res) {
-  req.logout();
-  res.status(201).json(true);
-});
-
-app.post('/register', function(req, res) {
-  User.generateUniqueUsername(req.body.fullname, function(newUsername){
-    User.register(new User({ email : req.body.email, username: newUsername, image: req.body.image, name: req.body.fullname, registerDate: new Date(Date.now())}), req.body.password, function(err, account) {
-        if (err){
-          console.log(err);
-          return res.status(500).json(err);
-        }
-
-        passport.authenticate('local')(req,res,function(){
-          return User.findOne({'username':newUsername}, '-hash -salt')
-            .populate("externals highlights relatedpubs discussions")
-            .populate({path: "pubs", select:"displayTitle uniqueTitle image"})
-            .populate({path: "groups", select: "name uniqueName image"})
-            .exec(function (err, user) {
-              if (!err) {
-                var options = {
-                  path: 'relatedpubs.pub highlights.pub externals.pub discussions.pub',
-                  select: 'displayTitle uniqueTitle image',
-                  model: 'Pub'
-                };
-                User.populate(user, options, function (err, user) {
-                  if (err) return res.json(500);
-
-                  // Send Email Confirmation
-                  var email     = new sendgrid.Email({
-                    to:       user.email,
-                    from:     'pubpub@media.mit.edu',
-                    fromname: 'PubPub Team',
-                    subject:  'Welcome to PubPub!',
-                    text:     'You Successfully Registered!'
-                  });
-                  // sendgrid.send(email, function(err, json) {
-                  //   if (err) { return console.error(err); }
-                  //   console.log(json);
-                  // });
-                
-                  // End Send Email Confirmation
-
-                  res.send(user);
-                });
-              } else {
-                console.log(err);
-                return res.json(500);
-              }
-            });
-        })
-
-    });
-  });
-
-});
-
-
-
-
+/*--------*/
+// Take the setup and start listening!
+/*--------*/
 if (config.apiPort) {
 	const runnable = app.listen(config.apiPort, (err) => {
 		if (err) {

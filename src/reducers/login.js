@@ -64,7 +64,6 @@ function loggedOut(state) {
 
 function failed(state) {
 	return state.merge({
-		isVisible: true,
 		loggedIn: false,
 		userData: {'error': true}
 	});
