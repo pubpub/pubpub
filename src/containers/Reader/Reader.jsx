@@ -2,28 +2,30 @@ import React, { PropTypes } from 'react';
 import {connect} from 'react-redux';
 import Radium from 'radium';
 import DocumentMeta from 'react-document-meta';
-// import {NARROW, getProjects} from '../../actions/editor';
+import {getPub} from '../../actions/reader';
 
 // let styles = {};
 
 const Reader = React.createClass({
 	propTypes: {
 		readerData: PropTypes.object,
+		slug: PropTypes.string,
 		dispatch: PropTypes.func
 	},
 
 	statics: {
-		// fetchData: function(getState, dispatch) {
-		// 	return dispatch(getProjects());
-		// }
+		fetchData: function(getState, dispatch, location, routeParams) {
+			return dispatch(getPub(routeParams.slug));
+		}
 	},
 
 	render: function() {
 
 		const metaData = {
-			title: 'PubPub - Read'
+			title: 'PubPub - ' + this.props.slug
 		};
 
+		const pubData = this.props.readerData.get('pubData');
 
 		return (
 			<div>
@@ -31,7 +33,7 @@ const Reader = React.createClass({
 				<DocumentMeta {...metaData} />
 
 				<h2>Reader</h2>
-
+				{JSON.stringify(pubData)}
 			</div>
 		);
 	}
@@ -39,7 +41,7 @@ const Reader = React.createClass({
 });
 
 export default connect( state => {
-	return {readerData: state.reader};
+	return {readerData: state.reader, slug: state.router.params.slug};
 })( Radium(Reader) );
 
 // styles = {

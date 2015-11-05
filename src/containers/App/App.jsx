@@ -30,16 +30,16 @@ const App = React.createClass({
 		return (
 			<div style={styles.body}>
 				<div className="header-bar" style={styles.headerBar}>
-					<Link to={`/landing`}><h1 style={[styles.headerText, styles.headerLogo]}>PubPub</h1></Link>
+					<Link to={`/`}><h1 style={[styles.headerText, styles.headerLogo]}>PubPub</h1></Link>
 					<p style={[styles.headerText, styles.headerLogin]}>
 						<Link style={styles.headerText} to={`/subdomain`}> subdomain </Link> | 
-						<Link style={styles.headerText} to={`/edit`}> edit </Link> | 
+						<Link style={styles.headerText} to={`/edit/cat`}> edit </Link> | 
 						<Link style={styles.headerText} to={`/explore`}> explore </Link> | 
 						<span onClick={this.toggleLogin}> 
 							{this.props.loginData.get('loggedIn') === false ? 'login' : 'Logged In!'} 
 						</span> | 
-						<Link style={styles.headerText} to={`/profile`}> profile </Link> | 
-						<Link style={styles.headerText} to={`/reader`}> reader </Link> | 
+						<Link style={styles.headerText} to={`/profile/istravis`}> profile </Link> | 
+						<Link style={styles.headerText} to={`/pub/cat`}> reader </Link> | 
 					</p>
 				</div>
 				<Login />
