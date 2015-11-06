@@ -4,6 +4,7 @@ import { Link } from 'react-router';
 import {Login} from '../index';
 import {connect} from 'react-redux';
 import {toggleVisibility, restoreLogin} from '../../actions/login';
+import {LoginHeader} from '../../components';
 
 let styles = {};
 
@@ -35,17 +36,13 @@ const App = React.createClass({
 		return (
 			<div style={styles.body}>
 				<div className="header-bar" style={styles.headerBar}>
+				
 					<Link to={`/`}><h1 style={[styles.headerText, styles.headerLogo]}>PubPub</h1></Link>
-					<p style={[styles.headerText, styles.headerLogin]}>
-						<Link style={styles.headerText} to={`/subdomain`}> subdomain </Link> | 
-						<Link style={styles.headerText} to={`/pub/cat/edit`}> edit </Link> | 
-						<Link style={styles.headerText} to={`/explore`}> explore </Link> | 
-						<span onClick={this.toggleLogin}> 
-							{this.props.loginData.get('loggedIn') === false ? 'login' : 'Logged In!'} 
-						</span> | 
-						<Link style={styles.headerText} to={`/profile/istravis`}> profile </Link> | 
-						<Link style={styles.headerText} to={`/pub/cat`}> reader </Link> | 
-					</p>
+
+					<div style={[styles.headerText, styles.headerLogin]} onClick={this.toggleLogin}>
+						<LoginHeader loginData={this.props.loginData} />
+					</div>
+
 				</div>
 				<Login />
 				<div className="content" style={styles.content}>
@@ -130,3 +127,4 @@ styles = {
 // export default connect( state => {
 //     return {pushState}
 //   })( Radium(Editor) );
+// {this.props.loginData.get('loggedIn') === false ? 'login' : 'Logged In!'} 
