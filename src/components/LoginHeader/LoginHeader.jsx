@@ -18,7 +18,7 @@ const LoginHeader = React.createClass({
 
 				{/* If Logged Out */}
 				{/* ------------- */}
-				<div style={styles.loggedOut[isLoggedIn]}>
+				<div style={[styles.loggedOut[isLoggedIn], styles.userName, styles.headerText]}>
 					Login
 				</div>
 
@@ -65,6 +65,7 @@ styles = {
 	headerText: {
 		lineHeight: globalStyles.headerHeight,
 		color: globalStyles.headerText,
+		padding: '0px 6px 0px 10px',
 		textDecoration: 'none',
 		':hover': {
 			color: globalStyles.headerHover,
