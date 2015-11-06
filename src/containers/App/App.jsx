@@ -37,15 +37,19 @@ const App = React.createClass({
 		return (
 			<div style={styles.body}>
 				<div className="header-bar" style={styles.headerBar}>
-
-					<Link to={`/`}><h1 key="pubpubHeaderLogo" style={[styles.headerText, styles.headerLogo]}>PubPub</h1></Link>
-
-					<div key="loginText" style={[styles.headerText, styles.headerLogin]} onClick={this.toggleLogin}>
-						<LoginHeader loginData={this.props.loginData} />
+					
+					<Link to={`/`}><div key="headerLogo" style={[styles.headerText, styles.headerLogo]}>PubPub</div></Link>
+					
+					<div style={[styles.headerNav]} >
+						<LoginHeader loginData={this.props.loginData} clickFunction={this.toggleLogin} />
+						<div style={styles.separator}></div>
+						<div key="headerNewPub" style={[styles.headerText, styles.rightBorder]}>New Pub</div>
 					</div>
 
 				</div>
+
 				<Login />
+
 				<div className="content" style={styles.content}>
 					{this.props.children}
 				</div>
@@ -63,6 +67,9 @@ export default connect( state => {
 
 
 styles = {
+	logo: {
+		// height: 30,
+	},
 	body: {
 		height: '100vh',
 		width: '100vw',
@@ -83,23 +90,36 @@ styles = {
 		':hover': {
 			color: globalStyles.headerHover
 		},
-		fontFamily: 'Poiret One',
+		fontFamily: globalStyles.headerFont,
 	},
 
 	headerLogo: {
-		margin: 0,
+		margin: '0 calc(50% - 105px) 0 0',
+		padding: '0px 15px',
 		fontSize: '1em',
 		float: 'left',
-		width: '50%',
+		width: '75px',
 	},
 
-	headerLogin: {
+	headerNav: {
 		margin: 0,
 		fontSize: '0.9em',
 		color: '#ddd',
 		float: 'left',
 		width: '50%',
 		textAlign: 'right',
+	},
+	rightBorder: {
+		padding: '0px 10px',
+		float: 'right',
+		cursor: 'pointer',
+	},
+	separator: {
+		width: 1,
+		backgroundColor: '#999',
+		height: 'calc(' + globalStyles.headerHeight + ' - 16px)',
+		margin: '8px 0px',
+		float: 'right',
 	},
 
 	content: {
@@ -110,9 +130,3 @@ styles = {
 	},
 
 };
-
-
-// export default connect( state => {
-//     return {pushState}
-//   })( Radium(Editor) );
-// {this.props.loginData.get('loggedIn') === false ? 'login' : 'Logged In!'} 

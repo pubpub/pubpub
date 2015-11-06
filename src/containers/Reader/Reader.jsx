@@ -89,9 +89,9 @@ styles = {
 
 	centerBar: {
 		width: 700,
-		height: 'calc(100% + 5px)',
+		height: 'calc(100% + 3px)',
 		position: 'relative',
-		top: '-5px',
+		top: '-3px',
 		float: 'left',
 		overflow: 'hidden',
 		boxShadow: '0px 2px 4px 0px rgba(0,0,0,0.4)',

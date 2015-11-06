@@ -1,18 +1,20 @@
 import React, {PropTypes} from 'react';
 import Radium from 'radium';
+import {globalStyles} from '../../utils/styleConstants';
 
 let styles = {};
 
 const LoginHeader = React.createClass({
 	propTypes: {
-		loginData: PropTypes.object
+		loginData: PropTypes.object,
+		clickFunction: PropTypes.func
 	},
 
 	render: function() {
 		const isLoggedIn = this.props.loginData.get('loggedIn');
 
 		return (
-			<div>
+			<div onClick={this.props.clickFunction} styles={styles.right}>
 
 				{/* If Logged Out */}
 				{/* ------------- */}
@@ -22,11 +24,11 @@ const LoginHeader = React.createClass({
 
 				{/* If Logged In */}
 				{/* ------------- */}
-				<div style={styles.loggedIn[isLoggedIn]}>
+				<div key="headerLogin" style={[styles.loggedIn[isLoggedIn], styles.headerText]}>
 					
 					{/* <img style={styles.userImage} src={this.props.loginData.getIn(['userData', 'image'])} /> */}
 					<img style={styles.userImage} src="http://blog.boostability.com/wp-content/uploads/2014/09/Panda-Update.jpg" />
-					<div style={styles.userName}>Search ________ | About | New Pub | {this.props.loginData.getIn(['userData', 'name'])}</div>
+					<div style={styles.userName}>{this.props.loginData.getIn(['userData', 'name'])}</div>
 					
 				</div>
 
@@ -38,6 +40,9 @@ const LoginHeader = React.createClass({
 export default Radium(LoginHeader);
 
 styles = {
+	right: {
+		float: 'right',
+	},
 	loggedOut: {
 		true: {
 			display: 'none',
@@ -49,15 +54,24 @@ styles = {
 		}
 	},
 	userImage: {
-		height: 20,
-		padding: 5,
+		height: 18,
+		padding: 6,
 		float: 'right'
 	},
 	userName: {
 		float: 'right',
-		padding: '0px 10px'
-
-	}
+		padding: '0px 3px 0px 10px'
+	},
+	headerText: {
+		lineHeight: globalStyles.headerHeight,
+		color: globalStyles.headerText,
+		textDecoration: 'none',
+		':hover': {
+			color: globalStyles.headerHover,
+			cursor: 'pointer'
+		},
+		fontFamily: globalStyles.headerFont,
+	},
 
 };
 
