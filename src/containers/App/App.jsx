@@ -5,6 +5,7 @@ import {Login} from '../index';
 import {connect} from 'react-redux';
 import {toggleVisibility, restoreLogin} from '../../actions/login';
 import {LoginHeader} from '../../components';
+import {globalStyles} from '../../utils/styleConstants';
 
 let styles = {};
 
@@ -36,10 +37,10 @@ const App = React.createClass({
 		return (
 			<div style={styles.body}>
 				<div className="header-bar" style={styles.headerBar}>
-				
-					<Link to={`/`}><h1 style={[styles.headerText, styles.headerLogo]}>PubPub</h1></Link>
 
-					<div style={[styles.headerText, styles.headerLogin]} onClick={this.toggleLogin}>
+					<Link to={`/`}><h1 key="pubpubHeaderLogo" style={[styles.headerText, styles.headerLogo]}>PubPub</h1></Link>
+
+					<div key="loginText" style={[styles.headerText, styles.headerLogin]} onClick={this.toggleLogin}>
 						<LoginHeader loginData={this.props.loginData} />
 					</div>
 
@@ -69,22 +70,25 @@ styles = {
 	},
 	headerBar: {
 		width: '100%',
-		height: 30,
-		backgroundColor: '#222',
+		height: globalStyles.headerHeight,
+		backgroundColor: globalStyles.headerBackground,
 		margin: 0,
 		zIndex: 5,
 	},
 
 	headerText: {
-		lineHeight: '30px',
-		color: 'white',
+		lineHeight: globalStyles.headerHeight,
+		color: globalStyles.headerText,
 		textDecoration: 'none',
+		':hover': {
+			color: globalStyles.headerHover
+		},
+		fontFamily: 'Poiret One',
 	},
 
 	headerLogo: {
 		margin: 0,
 		fontSize: '1em',
-		color: '#ddd',
 		float: 'left',
 		width: '50%',
 	},
@@ -100,27 +104,11 @@ styles = {
 
 	content: {
 		width: '100%',
-		height: 'calc(100% - 30px)',
+		height: 'calc(100% - ' + globalStyles.headerHeight + ')',
 		position: 'relative',
 		// backgroundColor: 'red',
 	},
 
-	base: {
-		color: '#f09',
-		// transition: '.2s ease-in-out transform, 1s linear opacity',
-		':hover': {
-			// color: '#0074d9'
-			transform: 'translateX(100px)'
-		}
-	},
-
-	primary: {
-		background: '#0074D9'
-	},
-
-	warning: {
-		background: '#FF4136'
-	}
 };
 
 

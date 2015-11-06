@@ -23,8 +23,10 @@ const LoginHeader = React.createClass({
 				{/* If Logged In */}
 				{/* ------------- */}
 				<div style={styles.loggedIn[isLoggedIn]}>
-					<div style={styles.userName}>{this.props.loginData.getIn(['userData', 'name'])}</div>
-					<img style={styles.userImage} src={this.props.loginData.getIn(['userData', 'image'])} /> 
+					
+					{/* <img style={styles.userImage} src={this.props.loginData.getIn(['userData', 'image'])} /> */}
+					<img style={styles.userImage} src="http://blog.boostability.com/wp-content/uploads/2014/09/Panda-Update.jpg" />
+					<div style={styles.userName}>Search ________ | About | New Pub | {this.props.loginData.getIn(['userData', 'name'])}</div>
 					
 				</div>
 
@@ -47,8 +49,8 @@ styles = {
 		}
 	},
 	userImage: {
-		height: 24,
-		padding: 3,
+		height: 20,
+		padding: 5,
 		float: 'right'
 	},
 	userName: {
