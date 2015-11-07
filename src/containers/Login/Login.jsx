@@ -1,10 +1,10 @@
 import React, { PropTypes } from 'react';
 import {connect} from 'react-redux';
-import {reduxForm} from 'redux-form';
+
 import Radium from 'radium';
 import PureRenderMixin from 'react-addons-pure-render-mixin';
 import {toggleVisibility, login, logout} from '../../actions/login';
-import {LoaderIndeterminate} from '../../components';
+import {LoaderIndeterminate, LoginForm, LoginFormRegister} from '../../components';
 
 let styles = {};
 
@@ -12,9 +12,6 @@ const Login = React.createClass({
 	propTypes: {
 		loginData: PropTypes.object,
 		dispatch: PropTypes.func,
-		fields: PropTypes.object,
-		handleSubmit: PropTypes.func,
-		resetForm: PropTypes.func,
 	},
 
 	mixins: [PureRenderMixin],
@@ -31,12 +28,19 @@ const Login = React.createClass({
 		this.props.dispatch(logout());
 	},
 
+	handleLoginSubmit: function(formValues) {
+		// console.log('inHandleLoginSubmit');
+		this.props.dispatch(login(formValues.email, formValues.password));
+		// console.log(formValues);
+	},
+
+	handleLoginRegisterSubmit: function(formValues) {
+		console.log('inHandleLoginREgisterSubmit');
+		// this.props.dispatch(login(formValues.email, formValues.password));
+		console.log(formValues);
+	},
+
 	render: function() {
-		const {
-			fields: {email, password},
-			handleSubmit,
-			resetForm
-		} = this.props;
 		return (
 			<div style={[
 				styles.container,
@@ -44,22 +48,21 @@ const Login = React.createClass({
 			]}>			
 
 				<h2 style={styles.text}>Login</h2>
-				<p style={styles.text}>Hello Please Login!</p>
+				{(this.props.loginData.get('loggingIn') === true ? <LoaderIndeterminate color="white"/> : null)}
+				
 				<h3 onClick={this.toggleLogin} style={styles.text}>cancel</h3>
 				<h3 onClick={this.submitLogin} style={styles.text}>Submit Login</h3>
 				<h3 onClick={this.submitLogout} style={styles.text}>LogOut</h3>
-				<form>
-					<div>
-						<label>Email</label>
-						<input type="text" placeholder="email" {...email}/>
-					</div>
-					<div>
-						<label>Password</label>
-						<input type="text" placeholder="password" {...password}/>
-					</div>
-
-				</form>
-				{(this.props.loginData.get('loggingIn') === true ? <LoaderIndeterminate /> : null)}
+				
+				{(this.props.loginData.get('isVisible') 
+					? (<div>
+							<LoginForm onSubmit={this.handleLoginSubmit}/>
+							<LoginFormRegister onSubmit={this.handleLoginRegisterSubmit}/>
+						</div>)
+					: null
+				)}
+				
+				
 				<p style={styles.text}>{JSON.stringify(this.props.loginData)}</p>
 
 
@@ -69,14 +72,9 @@ const Login = React.createClass({
 
 });
 
-const LoginForm = reduxForm({
-	form: 'loginForm',
-	fields: ['email', 'password']
-})(Login);
-
 export default connect( state => {
 	return {loginData: state.login};
-})( Radium(LoginForm) );
+})( Radium(Login) );
 
 styles = {
 	visible: {
@@ -87,8 +85,8 @@ styles = {
 		transition: '.2s ease-in opacity',
 		opacity: 0,
 		pointerEvents: 'none',
-		// backgroundColor: '#0E0E0E',
-		backgroundColor: 'white',
+		backgroundColor: '#0E0E0E',
+		// backgroundColor: 'white',
 		position: 'absolute',
 		top: 0,
 		left: 0,
@@ -98,7 +96,7 @@ styles = {
 		overflow: 'hidden',
 	},
 	text: {
-		color: 'black',
+		color: 'white',
 		textAlign: 'center',
 	}
 };

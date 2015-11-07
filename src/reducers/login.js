@@ -24,6 +24,7 @@ export const defaultState = Immutable.Map({
 	isVisible: false,
 	loggedIn: false,
 	loggingIn: false,
+	showMode: 'login',
 	// attemptedRestoreState: false,
 	userData: {}
 });
