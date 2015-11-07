@@ -5,5 +5,5 @@ export const globalStyles = {
 	headerText: '#E0E0E0',
 	headerHover: '#FFFFFF',
 	headerFont: "'Lato', sans-serif",
-	sideBackground: '#EAEAEA',
+	sideBackground: '#E0E0E0',
 };

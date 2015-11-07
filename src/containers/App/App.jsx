@@ -5,6 +5,7 @@ import {reset} from 'redux-form';
 import {Login} from '../index';
 import {connect} from 'react-redux';
 import {toggleVisibility, restoreLogin} from '../../actions/login';
+import {toggleMenu} from '../../actions/nav';
 import {HeaderNav, HeaderMenu} from '../../components';
 import {globalStyles} from '../../utils/styleConstants';
 
@@ -37,6 +38,10 @@ const App = React.createClass({
 		this.props.dispatch(reset('loginFormRegister'));
 	},
 
+	menuToggle: function() {
+		this.props.dispatch(toggleMenu());
+	},
+
 	render: function() {
 		let pathname = 'notlanding';
 		if (this.props.path === '/') {
@@ -52,7 +57,8 @@ const App = React.createClass({
 		return (
 			<div style={[
 				styles.body,
-				this.props.loginData.get('isVisible') && styles.loginVisible
+				this.props.loginData.get('isVisible') && styles.noScroll,
+				this.props.navData.get('menuOpen') && styles.noScroll
 			]}>
 				<div className="header-bar" style={[styles.headerBar, styles[pathname].headerBar]}>
 					
@@ -65,7 +71,8 @@ const App = React.createClass({
 								navData={this.props.navData}
 								color={headerTextColor}
 								hoverColor={headerTextColorHover}
-								loginToggle={this.toggleLogin}/>
+								loginToggle={this.toggleLogin}
+								menuToggle={this.menuToggle}/>
 						</div>
 
 						<div style={styles.headerNav}>
@@ -132,7 +139,7 @@ styles = {
 			// overflow: 'scroll',
 		},
 	},
-	loginVisible: {
+	noScroll: {
 		height: '100vh'
 	},
 	headerBar: {

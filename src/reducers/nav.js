@@ -6,7 +6,7 @@ import {ensureImmutable} from './';
 /*--------*/
 import {
 	TOGGLE_MENU
-} from '../actions/login';
+} from '../actions/nav';
 
 /*--------*/
 // Initialize Default State 
