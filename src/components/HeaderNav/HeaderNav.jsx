@@ -42,7 +42,8 @@ const HeaderNav = React.createClass({
 						
 						{/* <img style={styles.userImage} src={this.props.loginData.getIn(['userData', 'image'])} /> */}
 						<img style={styles.userImage} src="http://blog.boostability.com/wp-content/uploads/2014/09/Panda-Update.jpg" />
-						<div style={styles.userName}>{this.props.loginData.getIn(['userData', 'name'])}</div> 
+						{/* <div style={styles.userName}>{this.props.loginData.getIn(['userData', 'name'])}</div> */}
+						<div style={styles.userName}>Account</div>
 					
 					</span>
 
