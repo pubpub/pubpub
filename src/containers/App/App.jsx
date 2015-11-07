@@ -70,8 +70,7 @@ const App = React.createClass({
 				<div className="content" style={styles.content}>
 					{this.props.children}
 				</div>
-
-				
+	
 			</div>
 		);
 	}
@@ -143,11 +142,12 @@ styles = {
 	},
 
 	headerLogo: {
-		margin: '0 calc(50% - 105px) 0 0',
+		// margin: '0 calc(50% - 105px) 0 0',
 		padding: '0px 15px',
 		fontSize: '1em',
 		float: 'left',
 		width: '75px',
+		backgroundColor: 'red',
 		'@media screen and (min-resolution: 3dppx), (max-width: 767px)': {
 			fontSize: '1.5em',
 			margin: '0',
@@ -160,12 +160,14 @@ styles = {
 		margin: 0,
 		fontSize: '0.9em',
 		color: '#ddd',
+		backgroundColor: 'orange',
 		float: 'left',
-		width: '50%',
+		// width: '50%',
+		width: 'calc(100% - 105px)',
 		textAlign: 'right',
-		'@media screen and (min-resolution: 3dppx), (max-width: 767px)': {
-			width: 'calc(100% - 105px)',
-		},
+		// '@media screen and (min-resolution: 3dppx), (max-width: 767px)': {
+		// 	width: 'calc(100% - 105px)',
+		// },
 	},
 	rightBorder: {
 		padding: '0px 10px',

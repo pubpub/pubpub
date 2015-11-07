@@ -44,7 +44,7 @@ export function login(email, password) {
 	return {
 		types: [LOGIN_LOAD, LOGIN_LOAD_SUCCESS, LOGIN_LOAD_FAIL],
 		promise: (client) => client.post('/login', {data: {
-			'email': email,
+			'email': email.toLowerCase(),
 			'password': CryptoJS.SHA3(password).toString(CryptoJS.enc.Hex)
 		}})
 	};
@@ -68,7 +68,7 @@ export function register(email, password, fullname, image) {
 	return {
 		types: [REGISTER_LOAD, REGISTER_LOAD_SUCCESS, REGISTER_LOAD_FAIL],
 		promise: (client) => client.post('/register', {data: {
-			'email': email,
+			'email': email.toLowerCase(),
 			'password': CryptoJS.SHA3(password).toString(CryptoJS.enc.Hex),
 			'fullname': fullname,
 			'image': image
