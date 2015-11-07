@@ -30,7 +30,8 @@ export const defaultState = Immutable.Map({
 	loggingIn: false,
 	viewMode: 'login',
 	// attemptedRestoreState: false,
-	userData: {}
+	userData: {},
+	error: undefined
 });
 
 /*--------*/
@@ -42,7 +43,8 @@ export const defaultState = Immutable.Map({
 function toggle(state) {
 	return state.merge({
 		isVisible: !state.get('isVisible'),
-		viewMode: 'login'
+		viewMode: 'login',
+		error: undefined
 	});
 }
 
@@ -51,15 +53,16 @@ function toggleViewMode(state) {
 	if (state.get('viewMode') === 'login') {
 		newViewMode = 'register';
 	}
-
 	return state.merge({
-		viewMode: newViewMode
+		viewMode: newViewMode,
+		error: undefined
 	});
 }
 
 function loading(state) {
 	return state.merge({
 		loggingIn: true,
+		error: undefined
 	});
 }
 
@@ -70,6 +73,7 @@ function loggedIn(state, user) {
 			isVisible: false,
 			loggingIn: false,
 			loggedIn: false,
+			error: undefined,
 			userData: {}
 		};
 	} else {
@@ -77,6 +81,7 @@ function loggedIn(state, user) {
 			isVisible: false,
 			loggingIn: false,
 			loggedIn: true,
+			error: undefined,
 			userData: user
 		};
 	}
@@ -92,10 +97,19 @@ function loggedOut(state) {
 	});
 }
 
-function failed(state) {
+function failed(state, error) {
+	console.log('failed error is: ');
+	let errorMessage = '';
+	if (error.toString() === 'Error: Unauthorized') {
+		errorMessage = 'Invalid Username or Password';
+	} else {
+		errorMessage = 'Email already used';
+	}
+	
 	return state.merge({
 		loggedIn: false,
 		loggingIn: false,
+		error: errorMessage,
 		userData: {'error': true}
 	});
 }
@@ -119,7 +133,7 @@ export default function loginReducer(state = defaultState, action) {
 		return loggedIn(state, action.result);
 
 	case LOGIN_LOAD_FAIL:
-		return failed(state);
+		return failed(state, action.error);
 
 	case RESTORE_LOGIN_LOAD:
 		return state;
@@ -128,7 +142,7 @@ export default function loginReducer(state = defaultState, action) {
 		return loggedIn(state, action.result);
 
 	case RESTORE_LOGIN_LOAD_FAIL:
-		return failed(state);
+		return failed(state, action.error);
 
 	case LOGOUT_LOAD:
 		return loading(state);
@@ -137,7 +151,7 @@ export default function loginReducer(state = defaultState, action) {
 		return loggedOut(state);
 
 	case LOGOUT_LOAD_FAIL:
-		return failed(state);
+		return failed(state, action.error);
 
 	case REGISTER_LOAD:
 		return loading(state);
@@ -146,7 +160,7 @@ export default function loginReducer(state = defaultState, action) {
 		return loggedIn(state, action.result);
 
 	case REGISTER_LOAD_FAIL:
-		return failed(state);
+		return failed(state, action.error);
 
 
 	default:

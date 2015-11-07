@@ -56,6 +56,9 @@ const Login = React.createClass({
 					<div key="loginTitle" style={styles.title}>
 						{viewMode}
 					</div>
+					<div style={styles.errorMessage}>
+						{this.props.loginData.get('error')}
+					</div>
 					<div style={styles.viewModeToggle} onClick={this.toggleViewMode}>
 						{(viewMode === 'login'
 							? 'New to PubPub? Click to Register'
@@ -126,11 +129,11 @@ styles = {
 		padding: '0px 20px',
 		lineHeight: '60px',
 		fontSize: '55px',
-		cursor: 'pointer',
 	},
 	viewModeToggle: {
 		height: 20,
-		width: 460,
+		width: 260,
+		marginLeft: 200,
 		float: 'left',
 		// backgroundColor: 'rgba(50,100,0,1)',
 		color: globalStyles.headerText,
@@ -143,6 +146,16 @@ styles = {
 			color: globalStyles.headerHover
 		}
 	},
+	errorMessage: {
+		width: '100%',
+		// backgroundColor: 'rgba(50,100,0,1)',
+		position: 'absolute',
+		padding: 20,
+		fontSize: '18px',
+		color: '#FF6161',
+		top: 60,
+		left: 10
+	},
 	form: {
 		position: 'absolute',
 		// backgroundColor: 'rgba(50,100,150,.5)',
@@ -152,7 +165,7 @@ styles = {
 		height: 300,
 		opacity: 0,
 		pointerEvents: 'none',
-		transition: '.1s linear opacity',
+		// transition: '.1s linear opacity',
 	},
 	login: {
 		login: {
