@@ -86,7 +86,7 @@ styles = {
 	menuDrawer: {
 		width: '100vw',
 		height: '100vh',
-		// backgroundColor: 'rgba(255,0,190,0.2)',
+		backgroundColor: 'rgba(255,0,190,0.2)',
 		position: 'absolute',
 		top: 0,
 		right: 0,
@@ -98,7 +98,7 @@ styles = {
 	},
 	closeBarTop: {
 		width: '100%',
-		height: globalStyles.headerHeightMobile,
+		height: 0,
 		// backgroundColor: 'rgba(255,0,190,0.2)',
 	},
 	closeBarLeft: {

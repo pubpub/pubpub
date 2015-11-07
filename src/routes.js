@@ -2,7 +2,7 @@ import React from 'react';
 import {IndexRoute, Route} from 'react-router';
 import {App, Editor, Explore, Landing, Profile, Reader, NotFound, SubdomainTest} from 'containers';
 
-export default (store, history) => {
+export default () => {
 	
 	return (
 		<Route path="/" component={App}>
