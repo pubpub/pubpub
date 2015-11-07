@@ -159,7 +159,7 @@ styles = {
 	viewModeToggle: {
 		height: 20,
 		width: 260,
-		marginLeft: 200,
+		margin: '0px 0px 0px 200px',
 		float: 'left',
 		// backgroundColor: 'rgba(50,100,0,0.5)',
 		color: globalStyles.headerText,

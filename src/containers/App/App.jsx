@@ -5,7 +5,7 @@ import {reset} from 'redux-form';
 import {Login} from '../index';
 import {connect} from 'react-redux';
 import {toggleVisibility, restoreLogin} from '../../actions/login';
-import {LoginHeader} from '../../components';
+import {HeaderNav, HeaderMenu} from '../../components';
 import {globalStyles} from '../../utils/styleConstants';
 
 let styles = {};
@@ -13,6 +13,7 @@ let styles = {};
 const App = React.createClass({
 	propTypes: {
 		loginData: PropTypes.object,
+		navData: PropTypes.object,
 		path: PropTypes.string,
 		children: PropTypes.object.isRequired,
 		pushState: PropTypes.func,
@@ -57,10 +58,31 @@ const App = React.createClass({
 					
 					<Link to={`/`}><div key="headerLogo" style={[styles.headerText, styles.headerLogo, styles[pathname].headerText]}>PubPub</div></Link>
 					
-					<div style={[styles.headerNav]} >
+					<div style={[styles.headerNavContainer]} >
+						<div style={styles.headerMenu}>
+							<HeaderMenu 
+								loginData={this.props.loginData} 
+								navData={this.props.navData}
+								color={headerTextColor}
+								hoverColor={headerTextColorHover}
+								loginToggle={this.toggleLogin}/>
+						</div>
+
+						<div style={styles.headerNav}>
+							<HeaderNav 
+								loginData={this.props.loginData} 
+								navData={this.props.navData}
+								color={headerTextColor}
+								hoverColor={headerTextColorHover}
+								loginToggle={this.toggleLogin}/>
+						</div>
+
+						{/* 
 						<LoginHeader loginData={this.props.loginData} clickFunction={this.toggleLogin} color={headerTextColor} hoverColor={headerTextColorHover}/>
+
 						<div style={styles.separator}></div>
 						<div key="headerNewPub" style={[styles.headerText, styles.rightBorder, styles[pathname].headerText]}>New Pub</div>
+						*/ }
 					</div>
 
 				</div>
@@ -78,7 +100,11 @@ const App = React.createClass({
 });
 
 export default connect( state => {
-	return {loginData: state.login, path: state.router.location.pathname};
+	return {
+		loginData: state.login, 
+		navData: state.nav,
+		path: state.router.location.pathname
+	};
 })( Radium(App) );
 
 
@@ -147,7 +173,7 @@ styles = {
 		fontSize: '1em',
 		float: 'left',
 		width: '75px',
-		backgroundColor: 'red',
+		// backgroundColor: 'red',
 		'@media screen and (min-resolution: 3dppx), (max-width: 767px)': {
 			fontSize: '1.5em',
 			margin: '0',
@@ -156,11 +182,11 @@ styles = {
 		
 	},
 
-	headerNav: {
+	headerNavContainer: {
 		margin: 0,
 		fontSize: '0.9em',
 		color: '#ddd',
-		backgroundColor: 'orange',
+		// backgroundColor: 'orange',
 		float: 'left',
 		// width: '50%',
 		width: 'calc(100% - 105px)',
@@ -168,6 +194,17 @@ styles = {
 		// '@media screen and (min-resolution: 3dppx), (max-width: 767px)': {
 		// 	width: 'calc(100% - 105px)',
 		// },
+	},
+	headerNav: {
+		'@media screen and (min-resolution: 3dppx), (max-width: 767px)': {
+			display: 'none',
+		},
+	}, 
+	headerMenu: {
+		display: 'none',
+		'@media screen and (min-resolution: 3dppx), (max-width: 767px)': {
+			display: 'block',
+		},
 	},
 	rightBorder: {
 		padding: '0px 10px',
