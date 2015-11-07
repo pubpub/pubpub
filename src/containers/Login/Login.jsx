@@ -152,7 +152,7 @@ styles = {
 		lineHeight: '60px',
 		fontSize: '55px',
 		'@media screen and (min-resolution: 3dppx), (max-width: 767px)': {
-			width: '100%',
+			width: 'calc(100% - 40px)',
 			float: 'none',
 		},
 	},
@@ -172,7 +172,7 @@ styles = {
 			color: globalStyles.headerHover
 		},
 		'@media screen and (min-resolution: 3dppx), (max-width: 767px)': {
-			width: '100%',
+			width: 'calc(100% - 20px)',
 			float: 'none',
 			padding: '0px 20px 0px 0px',
 			height: 40,
@@ -182,17 +182,17 @@ styles = {
 		},
 	},
 	errorMessage: {
-		width: '100%',
+		width: 'calc(100% - 60px)',
 		// backgroundColor: 'rgba(50,100,0,0.2)',
 		position: 'absolute',
-		padding: 20,
+		padding: 30,
 		fontSize: '18px',
 		color: '#FF6161',
 		top: 60,
-		left: 10,
+		left: 0,
 		pointerEvents: 'none',
 		'@media screen and (min-resolution: 3dppx), (max-width: 767px)': {
-			top: 50,
+			top: 250,
 		},
 	},
 	form: {
