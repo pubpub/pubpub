@@ -19,9 +19,8 @@ const client = new ApiClient();
 const dest = document.getElementById('content');
 const store = createStore(reduxReactRouter, makeRouteHooksSafe(getRoutes), createHistory, client, window.__data);
 
-
 const component = (
-	<ReduxRouter routes={getRoutes(store)} />
+	<ReduxRouter routes={getRoutes(store, history)} />
 );
 
 ReactDOM.render(

@@ -39,7 +39,8 @@ const HeaderMenu = React.createClass({
 					styles.menuDrawer,
 					this.props.navData.get('menuOpen') && styles.menuDrawerOpen
 				]}>
-					<div style={styles.closeBar} onClick={this.props.menuToggle}></div>
+					<div style={styles.closeBarTop} onClick={this.props.menuToggle}></div>
+					<div style={styles.closeBarLeft} onClick={this.props.menuToggle}></div>
 					<div style={styles.menuContent}>
 						<ul style={styles.menuList}>
 							<li style={styles.menuItem}>Login</li>
@@ -84,10 +85,10 @@ styles = {
 	},
 	menuDrawer: {
 		width: '100vw',
-		height: 'calc(100vh - ' + globalStyles.headerHeightMobile + ')',
+		height: '100vh',
 		// backgroundColor: 'rgba(255,0,190,0.2)',
 		position: 'absolute',
-		top: 60,
+		top: 0,
 		right: 0,
 		transition: '.2s ease-in-out transform',
 		transform: 'translateX(105%)',
@@ -95,7 +96,12 @@ styles = {
 	menuDrawerOpen: {
 		transform: 'translateX(0%)',
 	},
-	closeBar: {
+	closeBarTop: {
+		width: '100%',
+		height: globalStyles.headerHeightMobile,
+		// backgroundColor: 'rgba(255,0,190,0.2)',
+	},
+	closeBarLeft: {
 		float: 'left',
 		width: '10%',
 		height: '100%',

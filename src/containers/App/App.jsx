@@ -5,7 +5,7 @@ import {reset} from 'redux-form';
 import {Login} from '../index';
 import {connect} from 'react-redux';
 import {toggleVisibility, restoreLogin} from '../../actions/login';
-import {toggleMenu} from '../../actions/nav';
+import {toggleMenu, closeMenu} from '../../actions/nav';
 import {HeaderNav, HeaderMenu} from '../../components';
 import {globalStyles} from '../../utils/styleConstants';
 
@@ -31,7 +31,12 @@ const App = React.createClass({
 			return dispatch(restoreLogin());
 		}
 	},
-
+	componentWillReceiveProps: function(nextProps) {
+		// Close the menu if we're changing routes and it's open
+		if (this.props.path !== nextProps.path && nextProps.navData.get('menuOpen')) {
+			this.props.dispatch(closeMenu());
+		}
+	},
 	toggleLogin: function() {
 		this.props.dispatch(toggleVisibility());
 		this.props.dispatch(reset('loginForm'));
