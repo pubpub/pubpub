@@ -41,10 +41,10 @@ userSchema.statics.generateUniqueUsername = function (fullname, callback) {
 
     self.findOne({'username':tweakedUsername}).exec(function (err, user) {
       if(!user){
-        console.log(tweakedUsername);
+        // console.log(tweakedUsername);
         return callback(tweakedUsername);
       }else{
-        console.log('Next one');
+        // console.log('Next one');
         return findUniqueName(username,count+1);
       }
     });  

@@ -7,7 +7,6 @@ const LoginForm = React.createClass({
 	propTypes: {
 		fields: PropTypes.object.isRequired,
 		handleSubmit: PropTypes.func.isRequired,
-		resetForm: PropTypes.func.isRequired,
 	},
 
 	mixins: [PureRenderMixin],
@@ -15,8 +14,7 @@ const LoginForm = React.createClass({
 	render: function() {
 		const {
 			fields: {email, password},
-			handleSubmit,
-			resetForm
+			handleSubmit
 		} = this.props;
 
 		return (
@@ -29,8 +27,7 @@ const LoginForm = React.createClass({
 					<label>Password</label>
 					<input type="text" placeholder="Password" {...password}/>
 				</div>
-				<button onClick={handleSubmit}>Submit</button>
-				<button onClick={resetForm}>Clear Values</button>
+				<button onClick={handleSubmit}>Login</button>
 			</form>
 		);
 	}

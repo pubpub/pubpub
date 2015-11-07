@@ -1,9 +1,8 @@
 import React, { PropTypes } from 'react';
 import {connect} from 'react-redux';
-
 import Radium from 'radium';
 import PureRenderMixin from 'react-addons-pure-render-mixin';
-import {toggleVisibility, login, logout} from '../../actions/login';
+import {toggleVisibility, toggleViewMode, login, logout, register} from '../../actions/login';
 import {LoaderIndeterminate, LoginForm, LoginFormRegister} from '../../components';
 
 let styles = {};
@@ -20,6 +19,10 @@ const Login = React.createClass({
 		this.props.dispatch(toggleVisibility());
 	},
 
+	toggleViewMode: function() {
+		this.props.dispatch(toggleViewMode());
+	},
+
 	submitLogin: function() {
 		this.props.dispatch(login('trich@media.mit.edu', 'password'));
 	},
@@ -29,18 +32,15 @@ const Login = React.createClass({
 	},
 
 	handleLoginSubmit: function(formValues) {
-		// console.log('inHandleLoginSubmit');
 		this.props.dispatch(login(formValues.email, formValues.password));
-		// console.log(formValues);
 	},
 
 	handleLoginRegisterSubmit: function(formValues) {
-		console.log('inHandleLoginREgisterSubmit');
-		// this.props.dispatch(login(formValues.email, formValues.password));
-		console.log(formValues);
+		this.props.dispatch(register(formValues.email, formValues.password, formValues.fullName, 'https://s3.amazonaws.com/37assets/svn/1065-IMG_2529.jpg'));
 	},
 
 	render: function() {
+		const viewMode = this.props.loginData.get('viewMode');
 		return (
 			<div style={[
 				styles.container,
@@ -53,15 +53,15 @@ const Login = React.createClass({
 				<h3 onClick={this.toggleLogin} style={styles.text}>cancel</h3>
 				<h3 onClick={this.submitLogin} style={styles.text}>Submit Login</h3>
 				<h3 onClick={this.submitLogout} style={styles.text}>LogOut</h3>
+				<h3 onClick={this.toggleViewMode} style={styles.text}>ViewMode</h3>
 				
-				{(this.props.loginData.get('isVisible') 
-					? (<div>
-							<LoginForm onSubmit={this.handleLoginSubmit}/>
-							<LoginFormRegister onSubmit={this.handleLoginRegisterSubmit}/>
-						</div>)
-					: null
-				)}
-				
+				<div style={[styles.form, styles[viewMode].login]}>
+					<LoginForm onSubmit={this.handleLoginSubmit} />
+				</div>
+
+				<div style={[styles.form, styles[viewMode].register]}>
+					<LoginFormRegister onSubmit={this.handleLoginRegisterSubmit} />
+				</div>
 				
 				<p style={styles.text}>{JSON.stringify(this.props.loginData)}</p>
 
@@ -77,6 +77,20 @@ export default connect( state => {
 })( Radium(Login) );
 
 styles = {
+	form: {
+		opacity: 0,
+		transition: '.1s linear opacity',
+	},
+	login: {
+		login: {
+			opacity: 1
+		}
+	},
+	register: {
+		register: {
+			opacity: 1
+		}
+	},
 	visible: {
 		opacity: 0.98,
 		pointerEvents: 'auto',

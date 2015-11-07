@@ -86,13 +86,13 @@ app.post('/register', function(req, res) {
                   if (err) return res.json(500);
 
                   // Send Email Confirmation
-                  var email     = new sendgrid.Email({
-                    to:       user.email,
-                    from:     'pubpub@media.mit.edu',
-                    fromname: 'PubPub Team',
-                    subject:  'Welcome to PubPub!',
-                    text:     'You Successfully Registered!'
-                  });
+                  // var email     = new sendgrid.Email({
+                  //   to:       user.email,
+                  //   from:     'pubpub@media.mit.edu',
+                  //   fromname: 'PubPub Team',
+                  //   subject:  'Welcome to PubPub!',
+                  //   text:     'You Successfully Registered!'
+                  // });
                   // sendgrid.send(email, function(err, json) {
                   //   if (err) { return console.error(err); }
                   //   console.log(json);

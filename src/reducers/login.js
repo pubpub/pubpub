@@ -6,6 +6,7 @@ import {ensureImmutable} from './';
 /*--------*/
 import {
 	TOGGLE_VISIBILITY,
+	TOGGLE_VIEWMODE,
 	LOGIN_LOAD,
 	LOGIN_LOAD_SUCCESS,
 	LOGIN_LOAD_FAIL,
@@ -14,7 +15,10 @@ import {
 	RESTORE_LOGIN_LOAD_FAIL,
 	LOGOUT_LOAD,
 	LOGOUT_LOAD_SUCCESS,
-	LOGOUT_LOAD_FAIL
+	LOGOUT_LOAD_FAIL,
+	REGISTER_LOAD,
+	REGISTER_LOAD_SUCCESS,
+	REGISTER_LOAD_FAIL
 } from '../actions/login';
 
 /*--------*/
@@ -24,7 +28,7 @@ export const defaultState = Immutable.Map({
 	isVisible: false,
 	loggedIn: false,
 	loggingIn: false,
-	showMode: 'login',
+	viewMode: 'login',
 	// attemptedRestoreState: false,
 	userData: {}
 });
@@ -36,7 +40,21 @@ export const defaultState = Immutable.Map({
 // state. They are pure functions. We use Immutable to enforce this. 
 /*--------*/
 function toggle(state) {
-	return state.set('isVisible', !state.get('isVisible'));
+	return state.merge({
+		isVisible: !state.get('isVisible'),
+		viewMode: 'login'
+	});
+}
+
+function toggleViewMode(state) {
+	let newViewMode = 'login';
+	if (state.get('viewMode') === 'login') {
+		newViewMode = 'register';
+	}
+
+	return state.merge({
+		viewMode: newViewMode
+	});
 }
 
 function loading(state) {
@@ -91,6 +109,9 @@ export default function loginReducer(state = defaultState, action) {
 	case TOGGLE_VISIBILITY:
 		return toggle(state);
 
+	case TOGGLE_VIEWMODE:
+		return toggleViewMode(state);
+
 	case LOGIN_LOAD:
 		return loading(state);
 
@@ -116,6 +137,15 @@ export default function loginReducer(state = defaultState, action) {
 		return loggedOut(state);
 
 	case LOGOUT_LOAD_FAIL:
+		return failed(state);
+
+	case REGISTER_LOAD:
+		return loading(state);
+
+	case REGISTER_LOAD_SUCCESS:
+		return loggedIn(state, action.result);
+
+	case REGISTER_LOAD_FAIL:
 		return failed(state);
 
 

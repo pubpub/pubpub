@@ -1,6 +1,7 @@
 import React, { PropTypes } from 'react';
 import Radium from 'radium';
 import { Link } from 'react-router';
+import {reset} from 'redux-form';
 import {Login} from '../index';
 import {connect} from 'react-redux';
 import {toggleVisibility, restoreLogin} from '../../actions/login';
@@ -30,6 +31,8 @@ const App = React.createClass({
 
 	toggleLogin: function() {
 		this.props.dispatch(toggleVisibility());
+		this.props.dispatch(reset('loginForm'));
+		this.props.dispatch(reset('loginFormRegister'));
 	},
 
 	render: function() {
