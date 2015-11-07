@@ -98,7 +98,6 @@ styles = {
 			borderColor: globalStyles.headerHover,
 			outline: 'none',
 		},
-		pointerEvents: 'none',
 		'@media screen and (min-resolution: 3dppx), (max-width: 767px)': {
 			float: 'none',
 			margin: 30,
