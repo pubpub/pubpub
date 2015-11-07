@@ -55,7 +55,7 @@ const HeaderMenu = React.createClass({
 								{/* ------------- */}
 								<span key="headerLogin" style={[styles.loggedIn[isLoggedIn]]}>
 									{/* <img style={styles.userImage} src={this.props.loginData.getIn(['userData', 'image'])} /> */}
-									<img style={styles.userImage} src="http://blog.boostability.com/wp-content/uploads/2014/09/Panda-Update.jpg" />
+									<img style={styles.userImage} src="http://www.minus33.com/wp-content/uploads/2015/07/seasonal-icon-winter-30px.png" />
 									{/* <div style={styles.userName}>{this.props.loginData.getIn(['userData', 'name'])}</div> */}
 									<div style={styles.userName}>Account</div>
 								</span>
@@ -163,6 +163,7 @@ styles = {
 	},
 	userImage: {
 		height: 34,
+		width: 34,
 		float: 'right',
 	},
 	userName: {
