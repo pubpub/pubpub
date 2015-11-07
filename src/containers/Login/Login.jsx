@@ -202,9 +202,7 @@ styles = {
 		left: 0,
 		width: 800,
 		height: 300,
-		opacity: 0,
-		pointerEvents: 'none',
-		// transition: '.1s linear opacity',
+		display: 'none',
 		'@media screen and (min-resolution: 3dppx), (max-width: 767px)': {
 			top: 100,
 			left: 0,
@@ -214,14 +212,12 @@ styles = {
 	},
 	login: {
 		login: {
-			opacity: 1,
-			pointerEvents: 'auto',
+			display: 'block',
 		}
 	},
 	register: {
 		register: {
-			opacity: 1,
-			pointerEvents: 'auto',
+			display: 'block',
 		}
 	},
 	visible: {
