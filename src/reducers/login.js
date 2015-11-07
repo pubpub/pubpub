@@ -23,6 +23,7 @@ import {
 export const defaultState = Immutable.Map({
 	isVisible: false,
 	loggedIn: false,
+	loggingIn: false,
 	// attemptedRestoreState: false,
 	userData: {}
 });
@@ -37,17 +38,25 @@ function toggle(state) {
 	return state.set('isVisible', !state.get('isVisible'));
 }
 
+function loading(state) {
+	return state.merge({
+		loggingIn: true,
+	});
+}
+
 function loggedIn(state, user) {
 	let outputMerge = {};
 	if (user === 'No Session') {
 		outputMerge = {
 			isVisible: false,
+			loggingIn: false,
 			loggedIn: false,
 			userData: {}
 		};
 	} else {
 		outputMerge = {
 			isVisible: false,
+			loggingIn: false,
 			loggedIn: true,
 			userData: user
 		};
@@ -59,6 +68,7 @@ function loggedOut(state) {
 	return state.merge({
 		isVisible: false,
 		loggedIn: false,
+		loggingIn: false,
 		userData: undefined
 	});
 }
@@ -66,6 +76,7 @@ function loggedOut(state) {
 function failed(state) {
 	return state.merge({
 		loggedIn: false,
+		loggingIn: false,
 		userData: {'error': true}
 	});
 }
@@ -80,7 +91,7 @@ export default function loginReducer(state = defaultState, action) {
 		return toggle(state);
 
 	case LOGIN_LOAD:
-		return state;
+		return loading(state);
 
 	case LOGIN_LOAD_SUCCESS:
 		return loggedIn(state, action.result);
@@ -98,7 +109,7 @@ export default function loginReducer(state = defaultState, action) {
 		return failed(state);
 
 	case LOGOUT_LOAD:
-		return state;
+		return loading(state);
 
 	case LOGOUT_LOAD_SUCCESS:
 		return loggedOut(state);

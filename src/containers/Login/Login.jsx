@@ -1,5 +1,6 @@
 import React, { PropTypes } from 'react';
 import {connect} from 'react-redux';
+import {reduxForm} from 'redux-form';
 import Radium from 'radium';
 import PureRenderMixin from 'react-addons-pure-render-mixin';
 import {toggleVisibility, login, logout} from '../../actions/login';
@@ -10,7 +11,10 @@ let styles = {};
 const Login = React.createClass({
 	propTypes: {
 		loginData: PropTypes.object,
-		dispatch: PropTypes.func
+		dispatch: PropTypes.func,
+		fields: PropTypes.object,
+		handleSubmit: PropTypes.func,
+		resetForm: PropTypes.func,
 	},
 
 	mixins: [PureRenderMixin],
@@ -28,6 +32,11 @@ const Login = React.createClass({
 	},
 
 	render: function() {
+		const {
+			fields: {email, password},
+			handleSubmit,
+			resetForm
+		} = this.props;
 		return (
 			<div style={[
 				styles.container,
@@ -39,7 +48,18 @@ const Login = React.createClass({
 				<h3 onClick={this.toggleLogin} style={styles.text}>cancel</h3>
 				<h3 onClick={this.submitLogin} style={styles.text}>Submit Login</h3>
 				<h3 onClick={this.submitLogout} style={styles.text}>LogOut</h3>
-				<LoaderIndeterminate />
+				<form>
+					<div>
+						<label>Email</label>
+						<input type="text" placeholder="email" {...email}/>
+					</div>
+					<div>
+						<label>Password</label>
+						<input type="text" placeholder="password" {...password}/>
+					</div>
+
+				</form>
+				{(this.props.loginData.get('loggingIn') === true ? <LoaderIndeterminate /> : null)}
 				<p style={styles.text}>{JSON.stringify(this.props.loginData)}</p>
 
 
@@ -49,9 +69,14 @@ const Login = React.createClass({
 
 });
 
+const LoginForm = reduxForm({
+	form: 'loginForm',
+	fields: ['email', 'password']
+})(Login);
+
 export default connect( state => {
 	return {loginData: state.login};
-})( Radium(Login) );
+})( Radium(LoginForm) );
 
 styles = {
 	visible: {

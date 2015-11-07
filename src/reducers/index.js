@@ -1,5 +1,6 @@
 import Immutable from 'immutable';
 import { combineReducers } from 'redux';
+import {reducer as formReducer} from 'redux-form';
 import { routerStateReducer } from 'redux-router';
 
 import editor from './editor';
@@ -12,6 +13,7 @@ import subdomainTest from './subdomainTest';
 
 export default combineReducers({
 	router: routerStateReducer,
+	form: formReducer,
 	editor,
 	explore,
 	landing,

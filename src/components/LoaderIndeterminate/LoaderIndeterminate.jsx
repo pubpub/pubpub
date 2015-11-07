@@ -17,8 +17,8 @@ const LoaderIndeterminate = React.createClass({
 const loadingBarFrames = Radium.keyframes({
 	'0%': {transform: 'translateX(-100%)', opacity: 1},
 	'98%': {transform: 'translateX(200%)', opacity: 1},
-	'99%': {transform: 'translateX(200%)', opacity: 1},
-	'100%': {transform: 'translateX(-100%)', opacity: 1},
+	'99%': {transform: 'translateX(200%)', opacity: 0},
+	'100%': {transform: 'translateX(-100%)', opacity: 0},
 }, 'Loading');
 
 styles = {
