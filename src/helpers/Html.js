@@ -14,7 +14,7 @@ import Radium from 'radium';
  * HTML doctype declaration, which is added to the rendered output
  * by the server.js file.
  */
- @Radium
+@Radium
 export default class Html extends Component {
 	static propTypes = {
 		assets: PropTypes.object,

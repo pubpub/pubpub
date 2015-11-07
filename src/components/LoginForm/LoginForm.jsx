@@ -65,6 +65,17 @@ styles = {
 			borderColor: globalStyles.headerHover,
 			outline: 'none',
 		},
+		'@media screen and (min-resolution: 3dppx), (max-width: 767px)': {
+			position: 'relative',
+			top: 0,
+			left: 0,
+			width: '100%',
+			height: '80px',
+			lineHeight: '80px',
+			padding: '0px 20px',
+
+
+		},
 	},
 	label: {
 		opacity: 0,
@@ -82,6 +93,14 @@ styles = {
 			borderWidth: '0px 0px 1px 0px',
 			borderColor: globalStyles.headerHover,
 			outline: 'none',
+		},
+		pointerEvents: 'none',
+		'@media screen and (min-resolution: 3dppx), (max-width: 767px)': {
+			float: 'none',
+			margin: 30,
+			width: 'calc(100% - 60px)',
+
+
 		},
 	}
 

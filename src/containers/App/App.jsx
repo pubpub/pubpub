@@ -49,7 +49,10 @@ const App = React.createClass({
 		}
 
 		return (
-			<div style={styles.body}>
+			<div style={[
+				styles.body,
+				this.props.loginData.get('isVisible') && styles.loginVisible
+			]}>
 				<div className="header-bar" style={[styles.headerBar, styles[pathname].headerBar]}>
 					
 					<Link to={`/`}><div key="headerLogo" style={[styles.headerText, styles.headerLogo, styles[pathname].headerText]}>PubPub</div></Link>
@@ -102,8 +105,10 @@ styles = {
 		height: 'auto',
 		'@media screen and (min-resolution: 3dppx), (max-width: 767px)': {
 			// overflow: 'scroll',
-			
 		},
+	},
+	loginVisible: {
+		height: '100vh'
 	},
 	headerBar: {
 		

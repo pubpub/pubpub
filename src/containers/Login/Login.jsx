@@ -101,7 +101,16 @@ styles = {
 		cursor: 'pointer',
 		':hover': {
 			color: globalStyles.headerHover
-		}
+		},
+		'@media screen and (min-resolution: 3dppx), (max-width: 767px)': {
+			position: 'relative',
+			width: 'calc(100% - 40px)',
+			top: 0,
+			left: 0,
+			right: 'auto',
+			bottom: 'auto',
+			height: 'calc(' + globalStyles.headerHeightMobile + ' - 40px)',
+		},
 
 	},
 	loaderContainer: {
@@ -109,6 +118,10 @@ styles = {
 		width: '100%',
 		height: 1,
 		top: 15,
+		// backgroundColor: 'red',
+		'@media screen and (min-resolution: 3dppx), (max-width: 767px)': {
+			top: globalStyles.headerHeightMobile,
+		},
 	},
 	formWrapper: {
 		// backgroundColor: 'rgba(200,0,0,0.3)',
@@ -118,24 +131,37 @@ styles = {
 		top: '50%',
 		left: '50%',
 		margin: '-200px 0 0 -400px',
+		'@media screen and (min-resolution: 3dppx), (max-width: 767px)': {
+			width: '100%',
+			position: 'relative',
+			margin: 0,
+			padding: 0,
+			top: 0,
+			left: 0,
+
+		},
 	},
 	title: {
 		height: 60,
 		width: 260,
 		float: 'left',
-		// backgroundColor: 'rgba(200,100,0,1)',
+		// backgroundColor: 'rgba(200,100,0,0.5)',
 		textTransform: 'capitalize',
 		color: globalStyles.headerText,
 		padding: '0px 20px',
 		lineHeight: '60px',
 		fontSize: '55px',
+		'@media screen and (min-resolution: 3dppx), (max-width: 767px)': {
+			width: '100%',
+			float: 'none',
+		},
 	},
 	viewModeToggle: {
 		height: 20,
 		width: 260,
 		marginLeft: 200,
 		float: 'left',
-		// backgroundColor: 'rgba(50,100,0,1)',
+		// backgroundColor: 'rgba(50,100,0,0.5)',
 		color: globalStyles.headerText,
 		padding: 20,
 		lineHeight: '50px',
@@ -144,17 +170,30 @@ styles = {
 		cursor: 'pointer',
 		':hover': {
 			color: globalStyles.headerHover
-		}
+		},
+		'@media screen and (min-resolution: 3dppx), (max-width: 767px)': {
+			width: '100%',
+			float: 'none',
+			padding: '0px 20px 0px 0px',
+			height: 40,
+			lineHeight: '40px',
+			margin: 0,
+
+		},
 	},
 	errorMessage: {
 		width: '100%',
-		// backgroundColor: 'rgba(50,100,0,1)',
+		// backgroundColor: 'rgba(50,100,0,0.2)',
 		position: 'absolute',
 		padding: 20,
 		fontSize: '18px',
 		color: '#FF6161',
 		top: 60,
-		left: 10
+		left: 10,
+		pointerEvents: 'none',
+		'@media screen and (min-resolution: 3dppx), (max-width: 767px)': {
+			top: 50,
+		},
 	},
 	form: {
 		position: 'absolute',
@@ -166,6 +205,12 @@ styles = {
 		opacity: 0,
 		pointerEvents: 'none',
 		// transition: '.1s linear opacity',
+		'@media screen and (min-resolution: 3dppx), (max-width: 767px)': {
+			top: 100,
+			left: 0,
+			width: '100%',
+			height: 'auto',
+		},
 	},
 	login: {
 		login: {
@@ -196,7 +241,10 @@ styles = {
 		height: '100%',
 		zIndex: 1000,
 		overflow: 'hidden',
-		fontFamily: globalStyles.headerFont
+		fontFamily: globalStyles.headerFont,
+		'@media screen and (min-resolution: 3dppx), (max-width: 767px)': {
+			overflow: 'scroll',
+		},
 	},
 	text: {
 		color: 'white',
