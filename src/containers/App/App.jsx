@@ -84,6 +84,10 @@ styles = {
 		backgroundColor: globalStyles.headerBackground,
 		margin: 0,
 		zIndex: 5,
+		'@media only screen and (-webkit-device-pixel-ratio:3), (max-width: 767px)': {
+			backgroundColor: 'red',
+			width: '10%',
+		},
 	},
 
 	headerText: {
