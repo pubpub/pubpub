@@ -67,11 +67,11 @@ const Login = React.createClass({
 					</div>
 
 
-					<div style={[styles.form, styles[viewMode].login]}>
+					<div style={[styles.form, this.props.loginData.get('isVisible') && styles[viewMode].login, ]}>
 						<LoginForm onSubmit={this.handleLoginSubmit} />
 					</div>
 
-					<div style={[styles.form, styles[viewMode].register]}>
+					<div style={[styles.form, this.props.loginData.get('isVisible') && styles[viewMode].register]}>
 						<LoginFormRegister onSubmit={this.handleLoginRegisterSubmit} />
 					</div>
 				</div>

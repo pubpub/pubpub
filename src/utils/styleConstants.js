@@ -1,8 +1,8 @@
 export const globalStyles = {
-	headerBackground: '#424242',
+	headerBackground: '#373737',
 	headerHeight: '30px',
-	headerText: '#CECECE',
-	headerHover: '#EEEEEE',
+	headerText: '#EAEAEA',
+	headerHover: '#FFFFFF',
 	headerFont: "'Lato', sans-serif",
 	sideBackground: '#EAEAEA',
 };

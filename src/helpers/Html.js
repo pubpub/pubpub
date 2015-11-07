@@ -34,7 +34,7 @@ export default class Html extends Component {
 					{DocumentMeta.renderAsReact()}
 
 					<link rel="shortcut icon" href="/favicon.ico" />
-					<link href='https://fonts.googleapis.com/css?family=Lato:300' rel='stylesheet' type='text/css' />
+					<link href='https://fonts.googleapis.com/css?family=Lato:300,900italic' rel='stylesheet' type='text/css' />
 					{/* styles (will be present only in production with webpack extract text plugin) */}
 					{Object.keys(assets.styles).map((style, key) =>
 						<link href={assets.styles[style]} key={key} media="screen, projection"

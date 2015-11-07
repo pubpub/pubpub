@@ -13,6 +13,7 @@ let styles = {};
 const App = React.createClass({
 	propTypes: {
 		loginData: PropTypes.object,
+		path: PropTypes.string,
 		children: PropTypes.object.isRequired,
 		pushState: PropTypes.func,
 		dispatch: PropTypes.func
@@ -36,17 +37,27 @@ const App = React.createClass({
 	},
 
 	render: function() {
+		let pathname = 'notlanding';
+		if (this.props.path === '/') {
+			pathname = 'landing';
+		}
+		let headerTextColor = globalStyles.headerText;
+		let headerTextColorHover = globalStyles.headerHover;
+		if (this.props.path === '/') {
+			headerTextColor = globalStyles.headerBackground;
+			headerTextColorHover = 'black';
+		}
 
 		return (
 			<div style={styles.body}>
-				<div className="header-bar" style={styles.headerBar}>
+				<div className="header-bar" style={[styles.headerBar, styles[pathname].headerBar]}>
 					
-					<Link to={`/`}><div key="headerLogo" style={[styles.headerText, styles.headerLogo]}>PubPub</div></Link>
+					<Link to={`/`}><div key="headerLogo" style={[styles.headerText, styles.headerLogo, styles[pathname].headerText]}>PubPub</div></Link>
 					
 					<div style={[styles.headerNav]} >
-						<LoginHeader loginData={this.props.loginData} clickFunction={this.toggleLogin} />
+						<LoginHeader loginData={this.props.loginData} clickFunction={this.toggleLogin} color={headerTextColor} hoverColor={headerTextColorHover}/>
 						<div style={styles.separator}></div>
-						<div key="headerNewPub" style={[styles.headerText, styles.rightBorder]}>New Pub</div>
+						<div key="headerNewPub" style={[styles.headerText, styles.rightBorder, styles[pathname].headerText]}>New Pub</div>
 					</div>
 
 				</div>
@@ -65,11 +76,23 @@ const App = React.createClass({
 });
 
 export default connect( state => {
-	return {loginData: state.login};
+	return {loginData: state.login, path: state.router.location.pathname};
 })( Radium(App) );
 
 
 styles = {
+	notlanding: {},
+	landing: {
+		headerText: {
+			color: globalStyles.headerBackground,
+			':hover': {
+				color: 'black'
+			},
+		},
+		headerBar: {
+			backgroundColor: globalStyles.headerText,
+		},
+	},
 	logo: {
 		// height: 30,
 	},
@@ -77,20 +100,27 @@ styles = {
 		height: '100vh',
 		width: '100vw',
 		overflow: 'hidden',
+		'@media screen and (min-resolution: 3dppx), (max-width: 767px)': {
+			// overflow: 'scroll',
+			height: 'auto',
+		},
 	},
 	headerBar: {
+		
 		width: '100%',
 		height: globalStyles.headerHeight,
 		backgroundColor: globalStyles.headerBackground,
 		margin: 0,
 		zIndex: 5,
-		'@media only screen and (-webkit-device-pixel-ratio:3), (max-width: 767px)': {
+		
+		'@media screen and (min-resolution: 3dppx), (max-width: 767px)': {
 			backgroundColor: 'red',
-			width: '10%',
+			position: 'fixed',
 		},
 	},
 
 	headerText: {
+		
 		lineHeight: globalStyles.headerHeight,
 		color: globalStyles.headerText,
 		textDecoration: 'none',
@@ -98,6 +128,7 @@ styles = {
 			color: globalStyles.headerHover
 		},
 		fontFamily: globalStyles.headerFont,
+		
 	},
 
 	headerLogo: {
@@ -134,6 +165,10 @@ styles = {
 		height: 'calc(100% - ' + globalStyles.headerHeight + ')',
 		position: 'relative',
 		// backgroundColor: 'red',
+		'@media screen and (min-resolution: 3dppx), (max-width: 767px)': {
+			height: 'auto',
+			marginTop: globalStyles.headerHeight,
+		},
 	},
 
 };

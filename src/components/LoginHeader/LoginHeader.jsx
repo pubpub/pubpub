@@ -7,7 +7,18 @@ let styles = {};
 const LoginHeader = React.createClass({
 	propTypes: {
 		loginData: PropTypes.object,
+		color: PropTypes.string,
+		hoverColor: PropTypes.string,
 		clickFunction: PropTypes.func
+	},
+
+	headerTextColorStyle: function() {
+		return {
+			color: this.props.color,
+			':hover': {
+				color: this.props.hoverColor,
+			}
+		};
 	},
 
 	render: function() {
@@ -18,13 +29,13 @@ const LoginHeader = React.createClass({
 
 				{/* If Logged Out */}
 				{/* ------------- */}
-				<div style={[styles.loggedOut[isLoggedIn], styles.userName, styles.headerText]}>
+				<div style={[styles.loggedOut[isLoggedIn], styles.userName, styles.headerText, this.headerTextColorStyle()]}>
 					Login
 				</div>
 
 				{/* If Logged In */}
 				{/* ------------- */}
-				<div key="headerLogin" style={[styles.loggedIn[isLoggedIn], styles.headerText]}>
+				<div key="headerLogin" style={[styles.loggedIn[isLoggedIn], styles.headerText, this.headerTextColorStyle()]}>
 					
 					{/* <img style={styles.userImage} src={this.props.loginData.getIn(['userData', 'image'])} /> */}
 					<img style={styles.userImage} src="http://blog.boostability.com/wp-content/uploads/2014/09/Panda-Update.jpg" />
