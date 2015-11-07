@@ -67,7 +67,11 @@ styles = {
 	userImage: {
 		height: 18,
 		padding: 6,
-		float: 'right'
+		float: 'right',
+		'@media screen and (min-resolution: 3dppx), (max-width: 767px)': {
+			height: 30,
+			padding: 15,
+		},
 	},
 	userName: {
 		float: 'right',
@@ -83,6 +87,11 @@ styles = {
 			cursor: 'pointer'
 		},
 		fontFamily: globalStyles.headerFont,
+
+		'@media screen and (min-resolution: 3dppx), (max-width: 767px)': {
+			lineHeight: globalStyles.headerHeightMobile,
+			fontSize: '1.5em',
+		},
 	},
 
 };

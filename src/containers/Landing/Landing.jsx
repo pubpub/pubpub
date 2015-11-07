@@ -135,7 +135,7 @@ styles = {
 		color: globalStyles.headerText,
 		maxWidth: 800,
 		padding: 20,
-		margin: '80px auto',
+		margin: '60px auto',
 		fontSize: '22px',
 
 	},
