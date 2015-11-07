@@ -4,6 +4,7 @@ import Radium from 'radium';
 import PureRenderMixin from 'react-addons-pure-render-mixin';
 import {toggleVisibility, toggleViewMode, login, logout, register} from '../../actions/login';
 import {LoaderIndeterminate, LoginForm, LoginFormRegister} from '../../components';
+import {globalStyles} from '../../utils/styleConstants';
 
 let styles = {};
 
@@ -47,24 +48,30 @@ const Login = React.createClass({
 				this.props.loginData.get('isVisible') && styles.visible
 			]}>			
 
-				<h2 style={styles.text}>Login</h2>
+				<div key="loginCancel" style={styles.cancel} onClick={this.toggleLogin}>Cancel</div>
+
+				<div style={styles.formWrapper}>
+					<div key="loginTitle" style={styles.title}>
+						{viewMode}
+					</div>
+					<div style={styles.viewModeToggle} onClick={this.toggleViewMode}>
+						{(viewMode === 'login'
+							? 'No Account? Click to Register'
+							: 'Have an account? Click to Login'
+						)}
+					</div>
+
+
+					<div style={[styles.form, styles[viewMode].login]}>
+						<LoginForm onSubmit={this.handleLoginSubmit} />
+					</div>
+
+					<div style={[styles.form, styles[viewMode].register]}>
+						<LoginFormRegister onSubmit={this.handleLoginRegisterSubmit} />
+					</div>
+				</div>
+				
 				{(this.props.loginData.get('loggingIn') === true ? <LoaderIndeterminate color="white"/> : null)}
-				
-				<h3 onClick={this.toggleLogin} style={styles.text}>cancel</h3>
-				<h3 onClick={this.submitLogin} style={styles.text}>Submit Login</h3>
-				<h3 onClick={this.submitLogout} style={styles.text}>LogOut</h3>
-				<h3 onClick={this.toggleViewMode} style={styles.text}>ViewMode</h3>
-				
-				<div style={[styles.form, styles[viewMode].login]}>
-					<LoginForm onSubmit={this.handleLoginSubmit} />
-				</div>
-
-				<div style={[styles.form, styles[viewMode].register]}>
-					<LoginFormRegister onSubmit={this.handleLoginRegisterSubmit} />
-				</div>
-				
-				<p style={styles.text}>{JSON.stringify(this.props.loginData)}</p>
-
 
 			</div>
 		);
@@ -77,18 +84,78 @@ export default connect( state => {
 })( Radium(Login) );
 
 styles = {
+	cancel: {
+		position: 'absolute',
+		top: 0,
+		right: 0,
+		width: 140,
+		height: 40,
+		// backgroundColor: 'rgba(50,100,0,1)',
+		color: globalStyles.headerText,
+		textAlign: 'right',
+		padding: 20,
+		fontSize: '25px',
+		cursor: 'pointer',
+		':hover': {
+			color: globalStyles.headerHover
+		}
+
+	},
+	formWrapper: {
+		// backgroundColor: 'rgba(200,0,0,0.3)',
+		width: 800,
+		height: 400,
+		position: 'absolute',
+		top: '50%',
+		left: '50%',
+		margin: '-200px 0 0 -400px',
+	},
+	title: {
+		height: 36,
+		width: 460,
+		float: 'left',
+		// backgroundColor: 'rgba(200,100,0,1)',
+		textTransform: 'capitalize',
+		color: globalStyles.headerText,
+		padding: '12px 20px',
+		fontSize: '25px',
+		cursor: 'pointer',
+	},
+	viewModeToggle: {
+		height: 20,
+		width: 260,
+		float: 'left',
+		// backgroundColor: 'rgba(50,100,0,1)',
+		color: globalStyles.headerText,
+		textAlign: 'right',
+		padding: 20,
+		fontSize: '15px',
+		cursor: 'pointer',
+		':hover': {
+			color: globalStyles.headerHover
+		}
+	},
 	form: {
+		position: 'absolute',
+		// backgroundColor: 'rgba(50,100,150,.5)',
+		top: 60,
+		left: 0,
+		width: 800,
+		height: 340,
 		opacity: 0,
+		pointerEvents: 'none',
 		transition: '.1s linear opacity',
 	},
 	login: {
 		login: {
-			opacity: 1
+			opacity: 1,
+			pointerEvents: 'auto',
 		}
 	},
 	register: {
 		register: {
-			opacity: 1
+			opacity: 1,
+			pointerEvents: 'auto',
 		}
 	},
 	visible: {
@@ -108,9 +175,11 @@ styles = {
 		height: '100%',
 		zIndex: 1000,
 		overflow: 'hidden',
+		fontFamily: globalStyles.headerFont
 	},
 	text: {
 		color: 'white',
 		textAlign: 'center',
+		fontFamily: globalStyles.headerFont
 	}
 };
