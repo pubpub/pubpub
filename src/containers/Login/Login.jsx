@@ -49,15 +49,17 @@ const Login = React.createClass({
 			]}>			
 
 				<div key="loginCancel" style={styles.cancel} onClick={this.toggleLogin}>Cancel</div>
-
+				<div style={styles.loaderContainer}>
+					{(this.props.loginData.get('loggingIn') === true ? <LoaderIndeterminate color="white"/> : null)}
+				</div>
 				<div style={styles.formWrapper}>
 					<div key="loginTitle" style={styles.title}>
 						{viewMode}
 					</div>
 					<div style={styles.viewModeToggle} onClick={this.toggleViewMode}>
 						{(viewMode === 'login'
-							? 'No Account? Click to Register'
-							: 'Have an account? Click to Login'
+							? 'New to PubPub? Click to Register'
+							: 'Already have an account? Click to Login'
 						)}
 					</div>
 
@@ -71,8 +73,6 @@ const Login = React.createClass({
 					</div>
 				</div>
 				
-				{(this.props.loginData.get('loggingIn') === true ? <LoaderIndeterminate color="white"/> : null)}
-
 			</div>
 		);
 	}
@@ -101,34 +101,42 @@ styles = {
 		}
 
 	},
+	loaderContainer: {
+		position: 'absolute',
+		width: '100%',
+		height: 1,
+		top: 15,
+	},
 	formWrapper: {
 		// backgroundColor: 'rgba(200,0,0,0.3)',
 		width: 800,
-		height: 400,
+		height: 360,
 		position: 'absolute',
 		top: '50%',
 		left: '50%',
 		margin: '-200px 0 0 -400px',
 	},
 	title: {
-		height: 36,
-		width: 460,
+		height: 60,
+		width: 260,
 		float: 'left',
 		// backgroundColor: 'rgba(200,100,0,1)',
 		textTransform: 'capitalize',
 		color: globalStyles.headerText,
-		padding: '12px 20px',
-		fontSize: '25px',
+		padding: '0px 20px',
+		lineHeight: '60px',
+		fontSize: '55px',
 		cursor: 'pointer',
 	},
 	viewModeToggle: {
 		height: 20,
-		width: 260,
+		width: 460,
 		float: 'left',
 		// backgroundColor: 'rgba(50,100,0,1)',
 		color: globalStyles.headerText,
-		textAlign: 'right',
 		padding: 20,
+		lineHeight: '50px',
+		textAlign: 'right',
 		fontSize: '15px',
 		cursor: 'pointer',
 		':hover': {
@@ -141,7 +149,7 @@ styles = {
 		top: 60,
 		left: 0,
 		width: 800,
-		height: 340,
+		height: 300,
 		opacity: 0,
 		pointerEvents: 'none',
 		transition: '.1s linear opacity',

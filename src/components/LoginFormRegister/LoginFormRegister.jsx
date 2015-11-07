@@ -34,7 +34,7 @@ const LoginFormRegister = React.createClass({
 					<label style={styles.label}>Full Name</label>
 					<input style={styles.input} key="registerName" type="text" placeholder="Full Name" {...fullName}/>
 				</div>
-				<div key="registerSubmit" style={styles.submit} onClick={handleSubmit}>Submit</div>
+				<button type="submit" key="registerSubmit" style={styles.submit} onClick={handleSubmit}>Submit</button>
 			</form>
 		);
 	}
@@ -51,16 +51,24 @@ styles = {
 		bottom: 0,
 		right: 0,
 		width: 160,
-		height: 20,
+		height: 52,
 		// backgroundColor: 'rgba(50,100,190,1)',
 		color: globalStyles.headerText,
 		textAlign: 'right',
-		padding: 20,
-		fontSize: '20px',
+		padding: '12px 20px',
+		fontSize: '30px',
 		cursor: 'pointer',
 		':hover': {
 			color: globalStyles.headerHover
-		}
+		},
+		backgroundColor: 'transparent',
+		fontFamily: globalStyles.headerFont,
+		borderWidth: '0px 0px 1px 0px',
+		borderColor: 'transparent',
+		':focus': {
+			borderColor: globalStyles.headerHover,
+			outline: 'none',
+		},
 	},
 	label: {
 		opacity: 0,
@@ -70,9 +78,10 @@ styles = {
 		borderWidth: '0px 0px 1px 0px',
 		borderColor: globalStyles.headerText,
 		backgroundColor: 'transparent',
-		margin: '40px 30px 0px 30px',
-		fontSize: '14px',
+		margin: '90px 30px 0px 30px',
+		fontSize: '25px',
 		color: globalStyles.headerText,
+		float: 'left',
 		':focus': {
 			borderWidth: '0px 0px 1px 0px',
 			borderColor: globalStyles.headerHover,
