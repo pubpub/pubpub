@@ -2,7 +2,7 @@ import React, { PropTypes } from 'react';
 import {connect} from 'react-redux';
 import Radium from 'radium';
 import PureRenderMixin from 'react-addons-pure-render-mixin';
-import {toggleVisibility, toggleViewMode, login, logout, register} from '../../actions/login';
+import {toggleVisibility, toggleViewMode, login, register} from '../../actions/login';
 import {LoaderIndeterminate, LoginForm, LoginFormRegister} from '../../components';
 import {globalStyles} from '../../utils/styleConstants';
 
@@ -28,9 +28,6 @@ const Login = React.createClass({
 		this.props.dispatch(login('trich@media.mit.edu', 'password'));
 	},
 
-	submitLogout: function() {
-		this.props.dispatch(logout());
-	},
 
 	handleLoginSubmit: function(formValues) {
 		this.props.dispatch(login(formValues.email, formValues.password));

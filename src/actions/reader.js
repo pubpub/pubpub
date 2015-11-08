@@ -21,4 +21,3 @@ export function getPub(slug) {
 		promise: (client) => client.get('/getSamplePub', {params: {slug: slug}}) 
 	};
 }
-
