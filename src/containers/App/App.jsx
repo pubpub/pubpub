@@ -8,6 +8,7 @@ import {toggleVisibility, restoreLogin} from '../../actions/login';
 import {toggleMenu, closeMenu} from '../../actions/nav';
 import {HeaderNav, HeaderMenu} from '../../components';
 import {globalStyles} from '../../utils/styleConstants';
+import { pushState } from 'redux-router';
 
 let styles = {};
 
@@ -17,7 +18,6 @@ const App = React.createClass({
 		navData: PropTypes.object,
 		path: PropTypes.string,
 		children: PropTypes.object.isRequired,
-		pushState: PropTypes.func,
 		dispatch: PropTypes.func
 	},
 
@@ -38,9 +38,16 @@ const App = React.createClass({
 		}
 	},
 	toggleLogin: function() {
-		this.props.dispatch(toggleVisibility());
-		this.props.dispatch(reset('loginForm'));
-		this.props.dispatch(reset('loginFormRegister'));
+		if (this.props.loginData.get('loggedIn')) {
+			this.props.dispatch(closeMenu());
+			this.props.dispatch(pushState(null, ('/profile/' + this.props.loginData.getIn(['userData', 'username']))));
+		} else {
+			this.props.dispatch(toggleVisibility());
+			this.props.dispatch(reset('loginForm'));
+			this.props.dispatch(reset('loginFormRegister'));	
+		}
+		
+		
 	},
 
 	menuToggle: function() {

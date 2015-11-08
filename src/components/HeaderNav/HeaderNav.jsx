@@ -37,7 +37,7 @@ const HeaderNav = React.createClass({
 					</span>
 
 					{/* If Logged In */}
-					{/* ------------- */}
+					{/* ------------ */}
 					<span key="headerLogin" style={[styles.loggedIn[isLoggedIn]]}>
 						
 						{/* <img style={styles.userImage} src={this.props.loginData.getIn(['userData', 'image'])} /> */}
@@ -48,6 +48,7 @@ const HeaderNav = React.createClass({
 					</span>
 
 				</div>
+
 				<div style={styles.separator}></div>
 				<div key="headerNavNewPub" style={[styles.navButton, this.headerTextColorStyle()]}>New Pub</div>
 
