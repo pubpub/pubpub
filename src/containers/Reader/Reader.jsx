@@ -33,11 +33,13 @@ const Reader = React.createClass({
 	},
 
 	render: function() {
-
-		const metaData = {
-			title: 'PubPub - ' + this.props.slug
-		};
-
+		const metaData = {};
+		if (this.props.readerData.getIn(['pubData', 'title'])) {
+			metaData.title = 'PubPub - ' + this.props.readerData.getIn(['pubData', 'title']);
+		} else {
+			metaData.title = 'PubPub - ' + this.props.slug;
+		}
+		
 		const pubData = this.props.readerData.get('pubData').toJS();
 
 		return (
