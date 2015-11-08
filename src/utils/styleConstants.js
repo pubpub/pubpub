@@ -6,4 +6,6 @@ export const globalStyles = {
 	headerHover: '#FFFFFF',
 	headerFont: "'Lato', sans-serif",
 	sideBackground: '#E0E0E0',
+	sideText: '#666',
+	sideHover: '#000',
 };
