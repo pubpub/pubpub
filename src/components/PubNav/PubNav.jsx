@@ -47,6 +47,9 @@ const PubNav = React.createClass({
 
 
 styles = {
+	navContainer: {
+
+	},
 	list: {
 		height: 30,
 		listStyle: 'none',
@@ -75,7 +78,8 @@ styles = {
 	},
 	rightOption: {
 		float: 'right'
-	}
+	},
+
 };
 	
 export default Radium(PubNav);
