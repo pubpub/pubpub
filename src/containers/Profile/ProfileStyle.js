@@ -24,9 +24,11 @@ export const styles = {
 		overflow: 'hidden',
 		backgroundColor: 'white',
 		boxShadow: '0px 10px 4px 0px rgba(0,0,0,0.4)',
+		minHeight: 'calc(100vh - ' + globalStyles.headerHeight + ')',
 		'@media screen and (min-resolution: 3dppx), (max-width: 767px)': {
 			width: '100%',
 			maxWidth: '100%',
+			minHeight: 'calc(100vh - ' + globalStyles.headerHeightMobile + ')',
 		},
 	},
 	profileNav: {
