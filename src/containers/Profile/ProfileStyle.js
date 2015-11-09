@@ -113,7 +113,7 @@ export const styles = {
 	statsWrapper: {
 		clear: 'both',
 		height: 100,
-		
+		backgroundColor: globalStyles.sideBackground,
 		'@media screen and (min-resolution: 3dppx), (max-width: 767px)': {
 			height: 300
 		},
@@ -129,7 +129,6 @@ export const styles = {
 		height: '100%',
 		textDecoration: 'none',
 		color: globalStyles.sideText,
-		backgroundColor: globalStyles.sideBackground,
 		':hover': {
 			color: globalStyles.sideHover,
 			cursor: 'pointer',
@@ -147,7 +146,7 @@ export const styles = {
 		borderLeft: '0px solid black',
 		'@media screen and (min-resolution: 3dppx), (max-width: 767px)': {
 			width: '100%',
-			marginBottom: 10,
+			borderBottom: '1px solid rgba(0,0,0,0.1)',
 		},
 	},
 	noRightMobile: {
