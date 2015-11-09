@@ -186,26 +186,31 @@ styles = {
 		'@media screen and (min-width: 768px) and (max-width: 1023px)': {
 			padding: 0,
 			width: 'calc(' + pubSizes.xSmallLeft + 'px - ' + (2 * pubSizes.xSmallPadding) + 'px)',
+			height: 'calc(100vh - ' + globalStyles.headerHeight + ' - ' + (2 * pubSizes.xSmallPadding) + 'px)',
 			marginRight: pubSizes.xSmallPub
 		},
 		'@media screen and (min-width: 1024px) and (max-width: 1300px)': {
 			padding: pubSizes.smallPadding,
 			width: 'calc(' + pubSizes.smallLeft + 'px - ' + (2 * pubSizes.smallPadding) + 'px)',
+			height: 'calc(100vh - ' + globalStyles.headerHeight + ' - ' + (2 * pubSizes.smallPadding) + 'px)',
 			marginRight: pubSizes.smallPub
 		},
 		'@media screen and (min-width: 1301px) and (max-width: 1600px)': {
 			padding: pubSizes.mediumPadding,
 			width: 'calc(' + pubSizes.mediumLeft + 'px - ' + (2 * pubSizes.mediumPadding) + 'px)',
+			height: 'calc(100vh - ' + globalStyles.headerHeight + ' - ' + (2 * pubSizes.mediumPadding) + 'px)',
 			marginRight: pubSizes.mediumPub
 		},
 		'@media screen and (min-width: 1600px) and (max-width: 2000px)': {
 			padding: pubSizes.largePadding,
 			width: 'calc(' + pubSizes.largeLeft + 'px - ' + (2 * pubSizes.largePadding) + 'px)',
+			height: 'calc(100vh - ' + globalStyles.headerHeight + ' - ' + (2 * pubSizes.largePadding) + 'px)',
 			marginRight: pubSizes.largePub
 		},
 		'@media screen and (min-width: 2000px)': {
 			padding: pubSizes.xLargePadding,
 			width: 'calc(' + pubSizes.xLargeLeft + 'px - ' + (2 * pubSizes.xLargePadding) + 'px)',
+			height: 'calc(100vh - ' + globalStyles.headerHeight + ' - ' + (2 * pubSizes.xLargePadding) + 'px)',
 			marginRight: pubSizes.xLargePub
 		},
 		
@@ -274,22 +279,27 @@ styles = {
 		'@media screen and (min-width: 768px) and (max-width: 1023px)': {
 			padding: pubSizes.xSmallPadding,
 			width: 'calc(100% - ' + pubSizes.xSmallLeft + 'px - ' + pubSizes.xSmallPub + 'px - ' + (2 * pubSizes.xSmallPadding) + 'px)',
+			height: 'calc(100vh - ' + globalStyles.headerHeight + ' - ' + (2 * pubSizes.xSmallPadding) + 'px)',
 		},
 		'@media screen and (min-width: 1024px) and (max-width: 1300px)': {
 			padding: pubSizes.smallPadding,
 			width: 'calc(100% - ' + pubSizes.smallLeft + 'px - ' + pubSizes.smallPub + 'px - ' + (2 * pubSizes.smallPadding) + 'px)',
+			height: 'calc(100vh - ' + globalStyles.headerHeight + ' - ' + (2 * pubSizes.smallPadding) + 'px)',
 		},
 		'@media screen and (min-width: 1301px) and (max-width: 1600px)': {
 			padding: pubSizes.mediumPadding,
 			width: 'calc(100% - ' + pubSizes.mediumLeft + 'px - ' + pubSizes.mediumPub + 'px - ' + (2 * pubSizes.mediumPadding) + 'px)',
+			height: 'calc(100vh - ' + globalStyles.headerHeight + ' - ' + (2 * pubSizes.mediumPadding) + 'px)',
 		},
 		'@media screen and (min-width: 1600px) and (max-width: 2000px)': {
 			padding: pubSizes.largePadding,
 			width: 'calc(100% - ' + pubSizes.largeLeft + 'px - ' + pubSizes.largePub + 'px - ' + (2 * pubSizes.largePadding) + 'px)',
+			height: 'calc(100vh - ' + globalStyles.headerHeight + ' - ' + (2 * pubSizes.largePadding) + 'px)',
 		},
 		'@media screen and (min-width: 2000px)': {
 			padding: pubSizes.xLargePadding,
 			width: 'calc(100% - ' + pubSizes.xLargeLeft + 'px - ' + pubSizes.xLargePub + 'px - ' + (2 * pubSizes.xLargePadding) + 'px)',
+			height: 'calc(100vh - ' + globalStyles.headerHeight + ' - ' + (2 * pubSizes.xLargePadding) + 'px)',
 		},
 	},
 	loading: {

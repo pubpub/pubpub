@@ -114,7 +114,7 @@ export const styles = {
 		clear: 'both',
 		height: 100,
 		// backgroundColor: globalStyles.sideBackground,
-		backgroundColor: 'F0F0F0',
+		backgroundColor: '#F0F0F0',
 		'@media screen and (min-resolution: 3dppx), (max-width: 767px)': {
 			height: 300
 		},
