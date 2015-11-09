@@ -115,28 +115,28 @@ const pubSizes = {
 	smallRight: 'calc(100% -  800px)',
 	smallPadding: 10,
 	smallMinContainer: 1024,
-	smallMaxContainer: 1200,
+	smallMaxContainer: 1300,
 
-	mediumLeft: 200,
-	mediumPub: 850,
-	mediumRight: 'calc(100% -  1050px)',
+	mediumLeft: 150,
+	mediumPub: 750,
+	mediumRight: 'calc(100% -  900px)',
 	mediumPadding: 15,
-	mediumMinContainer: 1201,
+	mediumMinContainer: 1301,
 	mediumMaxContainer: 1600,
 
-	largeLeft: 250,
-	largePub: 1050,
-	largeRight: 'calc(100% -  1300px)',
+	largeLeft: 200,
+	largePub: 950,
+	largeRight: 'calc(100% -  1150px)',
 	largePadding: 20,
 	largeMinContainer: 1601,
 	largeMaxContainer: 2000,
 
-	xLargeLeft: 300,
+	xLargeLeft: 200,
 	xLargePub: 1250,
-	xLargeRight: 'calc(100% -  1550px)',
+	xLargeRight: 'calc(100% -  1450px)',
 	xLargePadding: 25,
 	xLargeMinContainer: 2001,
-	xLargeMaxContainer: 2400,
+	xLargeMaxContainer: 2600,
 
 };
 
@@ -155,10 +155,10 @@ styles = {
 		'@media screen and (min-width: 768px) and (max-width: 1023px)': {
 			// backgroundColor: 'red',
 		},
-		'@media screen and (min-width: 1024px) and (max-width: 1200px)': {
+		'@media screen and (min-width: 1024px) and (max-width: 1300px)': {
 			// backgroundColor: 'orange',
 		},
-		'@media screen and (min-width: 1201px) and (max-width: 1600px)': {
+		'@media screen and (min-width: 1301px) and (max-width: 1600px)': {
 			// backgroundColor: 'yellow',
 		},
 		'@media screen and (min-width: 1600px) and (max-width: 2000px)': {
@@ -188,12 +188,12 @@ styles = {
 			width: 'calc(' + pubSizes.xSmallLeft + 'px - ' + (2 * pubSizes.xSmallPadding) + 'px)',
 			marginRight: pubSizes.xSmallPub
 		},
-		'@media screen and (min-width: 1024px) and (max-width: 1200px)': {
+		'@media screen and (min-width: 1024px) and (max-width: 1300px)': {
 			padding: pubSizes.smallPadding,
 			width: 'calc(' + pubSizes.smallLeft + 'px - ' + (2 * pubSizes.smallPadding) + 'px)',
 			marginRight: pubSizes.smallPub
 		},
-		'@media screen and (min-width: 1201px) and (max-width: 1600px)': {
+		'@media screen and (min-width: 1301px) and (max-width: 1600px)': {
 			padding: pubSizes.mediumPadding,
 			width: 'calc(' + pubSizes.mediumLeft + 'px - ' + (2 * pubSizes.mediumPadding) + 'px)',
 			marginRight: pubSizes.mediumPub
@@ -240,11 +240,11 @@ styles = {
 			width: pubSizes.xSmallPub,
 			left: pubSizes.xSmallLeft,
 		},
-		'@media screen and (min-width: 1024px) and (max-width: 1200px)': {
+		'@media screen and (min-width: 1024px) and (max-width: 1300px)': {
 			width: pubSizes.smallPub,
 			left: pubSizes.smallLeft,
 		},
-		'@media screen and (min-width: 1201px) and (max-width: 1600px)': {
+		'@media screen and (min-width: 1301px) and (max-width: 1600px)': {
 			width: pubSizes.mediumPub,
 			left: pubSizes.mediumLeft,
 		},
@@ -275,11 +275,11 @@ styles = {
 			padding: pubSizes.xSmallPadding,
 			width: 'calc(100% - ' + pubSizes.xSmallLeft + 'px - ' + pubSizes.xSmallPub + 'px - ' + (2 * pubSizes.xSmallPadding) + 'px)',
 		},
-		'@media screen and (min-width: 1024px) and (max-width: 1200px)': {
+		'@media screen and (min-width: 1024px) and (max-width: 1300px)': {
 			padding: pubSizes.smallPadding,
 			width: 'calc(100% - ' + pubSizes.smallLeft + 'px - ' + pubSizes.smallPub + 'px - ' + (2 * pubSizes.smallPadding) + 'px)',
 		},
-		'@media screen and (min-width: 1201px) and (max-width: 1600px)': {
+		'@media screen and (min-width: 1301px) and (max-width: 1600px)': {
 			padding: pubSizes.mediumPadding,
 			width: 'calc(100% - ' + pubSizes.mediumLeft + 'px - ' + pubSizes.mediumPub + 'px - ' + (2 * pubSizes.mediumPadding) + 'px)',
 		},
