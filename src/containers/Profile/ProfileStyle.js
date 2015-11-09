@@ -19,11 +19,11 @@ export const styles = {
 		transition: '.3s linear opacity .25s',
 	},
 	profileWrapper: {
-		maxWidth: 900,
+		maxWidth: 1024,
 		margin: '0 auto',
 		overflow: 'hidden',
 		backgroundColor: 'white',
-		boxShadow: '0px 4px 3px 0px rgba(0,0,0,0.2)',
+		boxShadow: '0px 10px 4px 0px rgba(0,0,0,0.4)',
 		'@media screen and (min-resolution: 3dppx), (max-width: 767px)': {
 			width: '100%',
 			maxWidth: '100%',
@@ -113,7 +113,8 @@ export const styles = {
 	statsWrapper: {
 		clear: 'both',
 		height: 100,
-		backgroundColor: globalStyles.sideBackground,
+		// backgroundColor: globalStyles.sideBackground,
+		backgroundColor: 'F0F0F0',
 		'@media screen and (min-resolution: 3dppx), (max-width: 767px)': {
 			height: 300
 		},
