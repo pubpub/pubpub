@@ -2,6 +2,7 @@ import React, { PropTypes } from 'react';
 import {connect} from 'react-redux';
 import Radium from 'radium';
 import DocumentMeta from 'react-document-meta';
+import PureRenderMixin from 'react-addons-pure-render-mixin';
 import {getPub} from '../../actions/reader';
 import {PubBody} from '../../components';
 import {globalStyles} from '../../utils/styleConstants';
@@ -14,6 +15,7 @@ const Reader = React.createClass({
 		slug: PropTypes.string,
 		dispatch: PropTypes.func
 	},
+	mixins: [PureRenderMixin],
 
 	statics: {
 		fetchDataDeferred: function(getState, dispatch, location, routeParams) {

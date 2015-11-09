@@ -4,9 +4,9 @@
 // All action types are defined as constants. Do not manually pass action 
 // types as strings in action creators
 /*--------*/
-export const LOAD_PUB = 'editor/LOAD_PUB';
-export const LOAD_PUB_SUCCESS = 'editor/LOAD_PUB_SUCCESS';
-export const LOAD_PUB_FAIL = 'editor/LOAD_PUB_FAIL';
+export const LOAD_PUB = 'reader/LOAD_PUB';
+export const LOAD_PUB_SUCCESS = 'reader/LOAD_PUB_SUCCESS';
+export const LOAD_PUB_FAIL = 'reader/LOAD_PUB_FAIL';
 
 /*--------*/
 // Define Action creators

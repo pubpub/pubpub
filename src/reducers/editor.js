@@ -4,14 +4,19 @@ import {ensureImmutable} from './';
 /*--------*/
 // Load Actions
 /*--------*/
-import {NARROW, LOAD, LOAD_SUCCESS, LOAD_FAIL} from '../actions/editor';
+import {LOAD_PUB_EDIT, LOAD_PUB_EDIT_SUCCESS, LOAD_PUB_EDIT_FAIL} from '../actions/editor';
 
 /*--------*/
 // Initialize Default State 
 /*--------*/
 const defaultState = Immutable.Map({
-	narrowMode: 'wide',
-	sampleOutput: Immutable.List()
+	pubEditData: {},
+	viewMode: 'edit', // or 'preview'
+	showBottomLeftMenu: false,
+	showBottomRightMenu: false,
+	status: 'loading',
+	error: null
+
 });
 
 /*--------*/
@@ -20,25 +25,24 @@ const defaultState = Immutable.Map({
 // These functions take in an initial state and return a new
 // state. They are pure functions. We use Immutable to enforce this. 
 /*--------*/
-function narrow(state) {
+function toggleViewMode(state) {
 	let newMode = undefined;
-	if (state.get('narrowMode') === 'narrow') {
-		newMode = 'wide';
+	if (state.get('viewMode') === 'edit') {
+		newMode = 'preview';
 	} else {
-		newMode = 'narrow';
+		newMode = 'edit';
 	}
-	return state.set('narrowMode', newMode);
+	return state.set('viewMode', newMode);
 }
 
 function load(state) {
-	return state.set('loading', 50);
+	return state.set('status', 'loading');
 }
 
 function loadSuccess(state, result) {
 	return state.merge({
-		loading: 100,
-		loaded: true,
-		sampleOutput: result,
+		status: 'loaded',
+		pubEditData: result,
 		error: null
 	});
 }
@@ -46,9 +50,8 @@ function loadSuccess(state, result) {
 function loadFail(state, error) {
 	console.log('in loadFail');
 	return state.merge({
-		loading: false,
-		loaded: false,
-		data: null,
+		status: 'failed',
+		pubEditData: null,
 		error: error
 	});
 }
@@ -58,14 +61,12 @@ function loadFail(state, error) {
 /*--------*/
 export default function editorReducer(state = defaultState, action) {
 	switch (action.type) {
-	case LOAD:
+	case LOAD_PUB_EDIT:
 		return load(state);
-	case LOAD_SUCCESS:
+	case LOAD_PUB_EDIT_SUCCESS:
 		return loadSuccess(state, action.result);
-	case LOAD_FAIL:
+	case LOAD_PUB_EDIT_FAIL:
 		return loadFail(state, action.error);
-	case NARROW:
-		return narrow(state);
 	default:
 		return ensureImmutable(state);
 	}

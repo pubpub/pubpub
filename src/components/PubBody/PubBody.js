@@ -2,6 +2,7 @@ import React, {PropTypes} from 'react';
 import Radium from 'radium';
 import Markdown from 'react-remarkable';
 import {PubNav, LoaderDeterminate} from '../';
+import {globalStyles} from '../../utils/styleConstants';
 
 let styles = {};
 
@@ -43,7 +44,8 @@ styles = {
 		width: '100%',
 		overflow: 'hidden',
 		backgroundColor: 'white',
-		borderRadius: 1
+		borderRadius: 1,
+		minHeight: 'calc(100vh - ' + globalStyles.headerHeight + ' + 3px)',
 	},
 	contentContainer: {
 		transition: '.3s linear opacity .25s',
