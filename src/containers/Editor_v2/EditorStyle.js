@@ -93,7 +93,7 @@ export const styles = {
 			zIndex: 10,
 		},
 		editorMarkdown: {
-			marginTop: 30,
+			margin: '30px 0px',
 			width: '50vw',
 			zIndex: 5,
 
@@ -167,7 +167,7 @@ export const styles = {
 			overflowY: 'scroll',
 			maxHeight: 'calc(100vh - 90px)',
 			opacity: 1,
-			transition: '.2s linear opacity',
+			transition: '.352s linear opacity',
 		},
 		bottomNavListItem: {
 			margin: '0px 20px',
@@ -186,21 +186,21 @@ export const styles = {
 
 	edit: {
 		editorMarkdown: {
-			transition: '.2s linear transform, .3s linear opacity .25s, 0s linear padding .2s, 0s linear left .2s',
-			transform: 'translateX(0vw)',
+			transition: '.352s linear transform, .3s linear opacity .25s, 0s linear padding .352s, 0s linear left .352s',
+			transform: 'translateX(0%)',
 			padding: '20px 25vw',
 			left: 0,
 		},
 		editorPreview: {
-			transition: '.2s linear transform',
+			transition: '.352s linear transform',
 			transform: 'translateX(100%)',
 		},
 		bottomNavRight: {
-			transition: '.2s linear transform',
+			transition: '.352s linear transform',
 			transform: 'translateX(0%)',
 		},
 		bottomNavDividerLarge: {
-			transition: '.2s linear opacity',
+			transition: '.352s linear opacity',
 			opacity: 0,
 		},
 	},
@@ -210,20 +210,17 @@ export const styles = {
 			pointerEvents: 'none',
 		},
 		editorMarkdown: {
-			transition: '.2s linear transform, .3s linear opacity .25s, 0s linear padding .2s, 0s linear left .2s',
-			transform: 'translateX(-25vw)',
+			transition: '.352s linear transform, .3s linear opacity .25s',
+			transform: 'translateX(-50%)',
 			padding: '20px 0px',
 			left: '25vw'
-			// height: 300,
-			// overflow: 'hidden',
-			// overflowY: 'scroll',
 		},
 		editorPreview: {
-			transition: '.2s linear transform',
+			transition: '.352s linear transform',
 			transform: 'translateX(0%)',
 		},
 		bottomNavRight: {
-			transition: '.2s linear transform',
+			transition: '.352s linear transform',
 			transform: 'translateX(-250%)',
 		},
 		bottomNavTitle: {
@@ -234,7 +231,7 @@ export const styles = {
 			}
 		},
 		bottomNavDividerLarge: {
-			transition: '.2s linear opacity',
+			transition: '.352s linear opacity',
 			opacity: 1,
 		},
 		bottomNavList: {
