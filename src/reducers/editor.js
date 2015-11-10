@@ -4,7 +4,7 @@ import {ensureImmutable} from './';
 /*--------*/
 // Load Actions
 /*--------*/
-import {TOGGLE_VIEW_MODE, LOAD_PUB_EDIT, LOAD_PUB_EDIT_SUCCESS, LOAD_PUB_EDIT_FAIL} from '../actions/editor';
+import {TOGGLE_VIEW_MODE, TOGGLE_FORMATTING, TOGGLE_TOC, LOAD_PUB_EDIT, LOAD_PUB_EDIT_SUCCESS, LOAD_PUB_EDIT_FAIL} from '../actions/editor';
 
 /*--------*/
 // Initialize Default State 
@@ -26,14 +26,72 @@ const defaultState = Immutable.Map({
 // state. They are pure functions. We use Immutable to enforce this. 
 /*--------*/
 function toggleViewMode(state) {
-	let newMode = undefined;
+	let newModes = {};
 	if (state.get('viewMode') === 'edit') {
-		newMode = 'preview';
+		newModes = {
+			viewMode: 'preview',
+			showBottomRightMenu: false,
+			showBottomLeftMenu: false,
+		};
 	} else {
-		newMode = 'edit';
+		newModes = {
+			viewMode: 'edit',
+			showBottomRightMenu: true,
+			showBottomLeftMenu: true,
+		};
 	}
-	return state.set('viewMode', newMode);
+
+	return state.merge(newModes);
 }
+
+function toggleFormatting(state) {
+	let newModes = {};
+	if (state.get('viewMode') === 'preview') {
+		if (state.get('showBottomRightMenu') === false) {
+			newModes = {
+				showBottomRightMenu: true,
+				showBottomLeftMenu: false,
+			};
+		} else {
+			newModes = {
+				showBottomRightMenu: false,
+				showBottomLeftMenu: false,
+			};
+		}
+	} else { 
+		newModes = {
+			showBottomRightMenu: true,
+			showBottomLeftMenu: true,
+		};
+	}
+	
+	return state.merge(newModes);
+}
+
+function toggleTOC(state) {
+	let newModes = {};
+	if (state.get('viewMode') === 'preview') {
+		if (state.get('showBottomLeftMenu') === false) {
+			newModes = {
+				showBottomLeftMenu: true,
+				showBottomRightMenu: false,
+			};
+		} else {
+			newModes = {
+				showBottomLeftMenu: false,
+				showBottomRightMenu: false,
+			};
+		}
+	} else { 
+		newModes = {
+			showBottomLeftMenu: true,
+			showBottomRightMenu: true,
+		};
+	}
+	
+	return state.merge(newModes);
+}
+
 
 function load(state) {
 	return state.set('status', 'loading');
@@ -63,6 +121,10 @@ export default function editorReducer(state = defaultState, action) {
 	switch (action.type) {
 	case TOGGLE_VIEW_MODE:
 		return toggleViewMode(state);
+	case TOGGLE_FORMATTING:
+		return toggleFormatting(state);
+	case TOGGLE_TOC:
+		return toggleTOC(state);
 	case LOAD_PUB_EDIT:
 		return load(state);
 	case LOAD_PUB_EDIT_SUCCESS:

@@ -8,6 +8,8 @@ export const LOAD_PUB_EDIT = 'editor/LOAD_PUB_EDIT';
 export const LOAD_PUB_EDIT_SUCCESS = 'editor/LOAD_PUB_EDIT_SUCCESS';
 export const LOAD_PUB_EDIT_FAIL = 'editor/LOAD_PUB_EDIT_FAIL';
 export const TOGGLE_VIEW_MODE = 'editor/TOGGLE_VIEW_MODE';
+export const TOGGLE_FORMATTING = 'editor/TOGGLE_FORMATTING';
+export const TOGGLE_TOC = 'editor/TOGGLE_TOC';
 
 /*--------*/
 // Define Action creators
@@ -26,5 +28,17 @@ export function getPubEdit(slug) {
 export function toggleEditorViewMode() {
 	return {
 		type: TOGGLE_VIEW_MODE
+	};
+}
+
+export function toggleFormatting() {
+	return {
+		type: TOGGLE_FORMATTING
+	};
+}
+
+export function toggleTOC() {
+	return {
+		type: TOGGLE_TOC
 	};
 }

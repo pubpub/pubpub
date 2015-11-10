@@ -1,7 +1,6 @@
 import React from 'react';
 import {IndexRoute, Route} from 'react-router';
-import {App, Explore, Landing, Profile, Reader, NotFound, SubdomainTest} from 'containers';
-//	import Editor from 'containers/Editor/Editor'
+import {App, Editor, Explore, Landing, Profile, Reader, NotFound, SubdomainTest} from 'containers';
 import MarkdownEditor from 'containers/Editor/MarkdownEditor';
 
 export default () => {
@@ -16,7 +15,8 @@ export default () => {
 			<Route path="/explore" component={Explore}/>
 			<Route path="/profile/:username" component={Profile}/>
 			<Route path="/pub/:slug" component={Reader}/>
-			<Route path="/pub/:slug/edit" component={MarkdownEditor}/>
+			{ <Route path="/pub/:slug/editMD" component={MarkdownEditor}/> }
+			<Route path="/pub/:slug/edit" component={Editor}/>
 			<Route path="/subdomain" component={SubdomainTest}/>
 
 			{ /* Catch all route */ }
