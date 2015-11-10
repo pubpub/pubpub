@@ -18,8 +18,9 @@
     "jsx-quotes": 2,
     "block-scoped-var": 0,
     "padded-blocks": 0,
-    "comma-dangle": 0, 
+    "comma-dangle": 0,
     "no-console": 0,
+		"no-debugger": 0,
     "no-alert": 1,
     "func-names": 0,
     "no-trailing-spaces": 0,
@@ -30,7 +31,7 @@
   "plugins": [
     "react", "import"
   ],
-  "settings": { 
+  "settings": {
     "import/parser": "babel-eslint",
     "import/resolve": {
       moduleDirectory: ["node_modules", "src", "api"]

@@ -5,21 +5,34 @@ import DocumentMeta from 'react-document-meta';
 import PureRenderMixin from 'react-addons-pure-render-mixin';
 import {Nav} from '../../components';
 import {NARROW, getProjects} from '../../actions/editor';
+import markLib from '../../modules/markdown/markdown';
+
+import {MathPlugin} from '../../components/EditorPlugins';
 
 let styles = {};
 
-const Editor = React.createClass({
+markLib.configure({
+	math: MathPlugin
+});
+
+const MarkdownEditor = React.createClass({
 	propTypes: {
 		editorData: PropTypes.object,
 		dispatch: PropTypes.func
 	},
 
 	mixins: [PureRenderMixin],
-
 	statics: {
 		fetchDataDeferred: function(getState, dispatch) {
 			return dispatch(getProjects());
 		}
+	},
+
+	handleChange: function(event) {
+		console.log('Got change event!');
+		this.setState({
+			tree: markLib(event.target.value).tree
+		});
 	},
 
 	render: function() {
@@ -50,11 +63,12 @@ const Editor = React.createClass({
 				</div>
 
 				<div>
-					{editorData.get('sampleOutput').toJS().map((pub, index)=>{
-						return (
-							<p key={index}>{pub.displayTitle}</p>
-						);
-					})}
+					<textarea
+						onChange={this.handleChange}
+					></textarea>
+					<div>
+						{this.state.tree}
+					</div>
 				</div>
 
 			</div>
@@ -65,7 +79,7 @@ const Editor = React.createClass({
 
 export default connect( state => {
 	return {editorData: state.editor};
-})( Radium(Editor) );
+})( Radium(MarkdownEditor) );
 
 styles = {
 	editorContainer: {
