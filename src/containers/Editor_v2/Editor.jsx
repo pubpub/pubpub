@@ -36,6 +36,8 @@ const Editor = React.createClass({
 	render: function() {
 		const editorData = this.props.editorData;
 		const viewMode = this.props.editorData.get('viewMode');
+		const showBottomLeftMenu = this.props.editorData.get('showBottomLeftMenu');
+		const showBottomRightMenu = this.props.editorData.get('showBottomRightMenu');
 		const metaData = {
 			title: 'PubPub - Editor'
 		};
@@ -86,25 +88,25 @@ const Editor = React.createClass({
 					<div style={[styles.common.editorBottomNav, styles[viewMode].editorBottomNav, styles.hiddenUntilLoad, styles[editorData.get('status')]]}>
 						<div style={[styles.common.bottomNavBackground, styles[viewMode].bottomNavBackground]}></div>
 						<div className="leftBottomNav" style={[styles.common.bottomNavLeft, styles[viewMode].bottomNavLeft]}>
-							<div key="bNav_toc" style={[styles.common.bottomNavTitle, styles[viewMode].bottomNavTitle]} onClick={this.toggleTOC}>Table of Contents</div>
+							<div key="bNav_toc" style={[styles.common.bottomNavTitle, styles[viewMode].bottomNavTitle, showBottomLeftMenu && styles[viewMode].listTitleActive]} onClick={this.toggleTOC}>Table of Contents</div>
 							<div style={[styles.common.bottomNavDivider, styles[viewMode].bottomNavDivider]}>
 								<div style={[styles.common.bottomNavDividerSmall, styles[viewMode].bottomNavDividerSmall]}></div>
 								<div style={[styles.common.bottomNavDividerLarge, styles[viewMode].bottomNavDividerLarge]}></div>
 							</div>
-							<ul style={[styles.common.bottomNavList, styles[viewMode].bottomNavList]}>
-								<li key="blNav0" style={[styles.common.bottomNavListItem, styles[viewMode].bottomNavListItem]}>Introduction</li>
-								<li key="blNav1" style={[styles.common.bottomNavListItem, styles[viewMode].bottomNavListItem]}>Prior Art</li>
-								<li key="blNav2" style={[styles.common.bottomNavListItem, styles[viewMode].bottomNavListItem]}>Resources</li>
-								<li key="blNav3" style={[styles.common.bottomNavListItem, styles[viewMode].bottomNavListItem]}>Methods</li>
-								<li key="blNav4" style={[styles.common.bottomNavListItem, styles[viewMode].bottomNavListItem]}>A New Approach</li>
-								<li key="blNav5" style={[styles.common.bottomNavListItem, styles[viewMode].bottomNavListItem]}>Data Analysis</li>
-								<li key="blNav6" style={[styles.common.bottomNavListItem, styles[viewMode].bottomNavListItem]}>Results</li>
-								<li key="blNav7" style={[styles.common.bottomNavListItem, styles[viewMode].bottomNavListItem]}>Conclusion</li>
+							<ul style={[styles.common.bottomNavList, styles[viewMode].bottomNavList, showBottomLeftMenu && styles[viewMode].listActive]}>
+								<li key="blNav0" style={[styles.common.bottomNavListItem, styles[viewMode].bottomNavListItem, showBottomLeftMenu && styles[viewMode].listItemActive]}>Introduction</li>
+								<li key="blNav1" style={[styles.common.bottomNavListItem, styles[viewMode].bottomNavListItem, showBottomLeftMenu && styles[viewMode].listItemActive]}>Prior Art</li>
+								<li key="blNav2" style={[styles.common.bottomNavListItem, styles[viewMode].bottomNavListItem, showBottomLeftMenu && styles[viewMode].listItemActive]}>Resources</li>
+								<li key="blNav3" style={[styles.common.bottomNavListItem, styles[viewMode].bottomNavListItem, showBottomLeftMenu && styles[viewMode].listItemActive]}>Methods</li>
+								<li key="blNav4" style={[styles.common.bottomNavListItem, styles[viewMode].bottomNavListItem, showBottomLeftMenu && styles[viewMode].listItemActive]}>A New Approach</li>
+								<li key="blNav5" style={[styles.common.bottomNavListItem, styles[viewMode].bottomNavListItem, showBottomLeftMenu && styles[viewMode].listItemActive]}>Data Analysis</li>
+								<li key="blNav6" style={[styles.common.bottomNavListItem, styles[viewMode].bottomNavListItem, showBottomLeftMenu && styles[viewMode].listItemActive]}>Results</li>
+								<li key="blNav7" style={[styles.common.bottomNavListItem, styles[viewMode].bottomNavListItem, showBottomLeftMenu && styles[viewMode].listItemActive]}>Conclusion</li>
 							</ul>
 						</div>
 
 						<div className="rightBottomNav" style={[styles.common.bottomNavRight, styles[viewMode].bottomNavRight]}>
-							<div key="bNav_format" style={[styles.common.bottomNavTitle, styles[viewMode].bottomNavTitle, styles.alignRight]} onClick={this.toggleFormatting}>Formatting</div>
+							<div key="bNav_format" style={[styles.common.bottomNavTitle, styles[viewMode].bottomNavTitle, styles.alignRight, showBottomRightMenu && styles[viewMode].listTitleActive]} onClick={this.toggleFormatting}>Formatting</div>
 
 							<div style={[styles.common.bottomNavDivider, styles[viewMode].bottomNavDivider]}>
 								<div style={[styles.common.bottomNavDividerSmall, styles[viewMode].bottomNavDividerSmall, styles.floatRight, styles.common.bottomNavDividerRight]}></div>
@@ -112,18 +114,18 @@ const Editor = React.createClass({
 							</div>
 
 
-							<ul style={[styles.common.bottomNavList, styles[viewMode].bottomNavList, styles.alignRight]}>
+							<ul style={[styles.common.bottomNavList, styles[viewMode].bottomNavList, styles.alignRight, showBottomRightMenu && styles[viewMode].listActive]}>
 
-								<li key="brNav0" style={[styles.common.bottomNavListItem, styles[viewMode].bottomNavListItem, styles.floatRight]}>H1</li>
-								<li key="brNav1" style={[styles.common.bottomNavListItem, styles[viewMode].bottomNavListItem, styles.floatRight]}>H2</li>
-								<li key="brNav2" style={[styles.common.bottomNavListItem, styles[viewMode].bottomNavListItem, styles.floatRight]}>H3</li>
-								<li key="brNav3" style={[styles.common.bottomNavListItem, styles[viewMode].bottomNavListItem, styles.floatRight]}># List</li>
-								<li key="brNav4" style={[styles.common.bottomNavListItem, styles[viewMode].bottomNavListItem, styles.floatRight]}>- List</li>
-								<li key="brNav5" style={[styles.common.bottomNavListItem, styles[viewMode].bottomNavListItem, styles.floatRight]}>Image</li>
-								<li key="brNav6" style={[styles.common.bottomNavListItem, styles[viewMode].bottomNavListItem, styles.floatRight]}>Video</li>
-								<li key="brNav7" style={[styles.common.bottomNavListItem, styles[viewMode].bottomNavListItem, styles.floatRight]}>Audio</li>
-								<li key="brNav8" style={[styles.common.bottomNavListItem, styles[viewMode].bottomNavListItem, styles.floatRight]}>Gallery</li>
-								<li key="brNav9" style={[styles.common.bottomNavListItem, styles[viewMode].bottomNavListItem, styles.floatRight]}>Hologram</li>
+								<li key="brNav0" style={[styles.common.bottomNavListItem, styles[viewMode].bottomNavListItem, styles.floatRight, showBottomRightMenu && styles[viewMode].listItemActive]}>H1</li>
+								<li key="brNav1" style={[styles.common.bottomNavListItem, styles[viewMode].bottomNavListItem, styles.floatRight, showBottomRightMenu && styles[viewMode].listItemActive]}>H2</li>
+								<li key="brNav2" style={[styles.common.bottomNavListItem, styles[viewMode].bottomNavListItem, styles.floatRight, showBottomRightMenu && styles[viewMode].listItemActive]}>H3</li>
+								<li key="brNav3" style={[styles.common.bottomNavListItem, styles[viewMode].bottomNavListItem, styles.floatRight, showBottomRightMenu && styles[viewMode].listItemActive]}># List</li>
+								<li key="brNav4" style={[styles.common.bottomNavListItem, styles[viewMode].bottomNavListItem, styles.floatRight, showBottomRightMenu && styles[viewMode].listItemActive]}>- List</li>
+								<li key="brNav5" style={[styles.common.bottomNavListItem, styles[viewMode].bottomNavListItem, styles.floatRight, showBottomRightMenu && styles[viewMode].listItemActive]}>Image</li>
+								<li key="brNav6" style={[styles.common.bottomNavListItem, styles[viewMode].bottomNavListItem, styles.floatRight, showBottomRightMenu && styles[viewMode].listItemActive]}>Video</li>
+								<li key="brNav7" style={[styles.common.bottomNavListItem, styles[viewMode].bottomNavListItem, styles.floatRight, showBottomRightMenu && styles[viewMode].listItemActive]}>Audio</li>
+								<li key="brNav8" style={[styles.common.bottomNavListItem, styles[viewMode].bottomNavListItem, styles.floatRight, showBottomRightMenu && styles[viewMode].listItemActive]}>Gallery</li>
+								<li key="brNav9" style={[styles.common.bottomNavListItem, styles[viewMode].bottomNavListItem, styles.floatRight, showBottomRightMenu && styles[viewMode].listItemActive]}>Hologram</li>
 							</ul>
 						</div>
 					</div>

@@ -103,8 +103,9 @@ export const styles = {
 			overflowY: 'scroll',
 		},
 		editorPreview: {
-			width: '50%',
-			backgroundColor: 'rgba(89,89,200,0.4)',
+			width: 'calc(50% - 20px)',
+			// backgroundColor: 'rgba(89,89,200,0.4)',
+			boxShadow: '#909090 4px 9px 5px 6px',
 			position: 'fixed',
 			right: 0,
 			top: 60,
@@ -112,6 +113,7 @@ export const styles = {
 			overflow: 'hidden',
 			overflowY: 'scroll',
 			zIndex: 20,
+			padding: 10
 		},
 		bottomNavBackground: {
 			position: 'absolute',
@@ -204,7 +206,7 @@ export const styles = {
 		},
 		editorPreview: {
 			transition: '.352s linear transform',
-			transform: 'translateX(100%)',
+			transform: 'translateX(110%)',
 		},
 		bottomNavRight: {
 			transition: '.352s linear transform',
@@ -253,10 +255,25 @@ export const styles = {
 		},
 		bottomNavList: {
 			opacity: 0,
+			backgroundColor: 'white',
+			transition: '.1s linear opacity',
+			boxShadow: '0px 4px 4px 0px rgba(0,0,0,0.4)',
+			width: '100%',
 		},
 		bottomNavListItem: {
 			pointerEvents: 'none',
 		},
-	}
+		listActive: {
+			opacity: 1,	
+		},
+		listItemActive: {
+			pointerEvents: 'auto',
+		},
+		listTitleActive: {
+			color: globalStyles.sideText,
+		}
+	},
+
+
 };
 
