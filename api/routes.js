@@ -9,12 +9,7 @@ var app = require('./api');
 //   next();
 // });
 
-
 require('./routes/login-routes');
 require('./routes/pub-routes');
 require('./routes/test-routes');
-
-
-
-
-
+require('./routes/math-routes');
