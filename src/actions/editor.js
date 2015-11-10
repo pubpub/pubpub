@@ -7,6 +7,7 @@
 export const LOAD_PUB_EDIT = 'editor/LOAD_PUB_EDIT';
 export const LOAD_PUB_EDIT_SUCCESS = 'editor/LOAD_PUB_EDIT_SUCCESS';
 export const LOAD_PUB_EDIT_FAIL = 'editor/LOAD_PUB_EDIT_FAIL';
+export const TOGGLE_VIEW_MODE = 'editor/TOGGLE_VIEW_MODE';
 
 /*--------*/
 // Define Action creators
@@ -19,5 +20,11 @@ export function getPubEdit(slug) {
 	return {
 		types: [LOAD_PUB_EDIT, LOAD_PUB_EDIT_SUCCESS, LOAD_PUB_EDIT_FAIL],
 		promise: (client) => client.get('/getSamplePubEdit', {params: {slug: slug}}) 
+	};
+}
+
+export function toggleEditorViewMode() {
+	return {
+		type: TOGGLE_VIEW_MODE
 	};
 }

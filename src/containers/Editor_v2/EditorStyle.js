@@ -88,8 +88,16 @@ export const styles = {
 		padding: '20px 0px',
 		width: '50%',
 		zIndex: 5,
+	},
+	editorMarkdown_edit: {
+		transition: '.2s linear transform',
 		transform: 'translateX(50%)',
 	},
+	editorMarkdown_preview: {
+		transition: '.2s linear transform',
+		transform: 'translateX(0%)',
+	},
+
 	bottomNavLeft: {
 		// backgroundColor: 'rgba(100,200,85, 0.4)',
 		width: '20%',

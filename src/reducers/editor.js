@@ -4,7 +4,7 @@ import {ensureImmutable} from './';
 /*--------*/
 // Load Actions
 /*--------*/
-import {LOAD_PUB_EDIT, LOAD_PUB_EDIT_SUCCESS, LOAD_PUB_EDIT_FAIL} from '../actions/editor';
+import {TOGGLE_VIEW_MODE, LOAD_PUB_EDIT, LOAD_PUB_EDIT_SUCCESS, LOAD_PUB_EDIT_FAIL} from '../actions/editor';
 
 /*--------*/
 // Initialize Default State 
@@ -61,6 +61,8 @@ function loadFail(state, error) {
 /*--------*/
 export default function editorReducer(state = defaultState, action) {
 	switch (action.type) {
+	case TOGGLE_VIEW_MODE:
+		return toggleViewMode(state);
 	case LOAD_PUB_EDIT:
 		return load(state);
 	case LOAD_PUB_EDIT_SUCCESS:
