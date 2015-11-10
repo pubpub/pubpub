@@ -98,7 +98,7 @@ export const styles = {
 			zIndex: 5,
 
 			position: 'fixed',
-			height: 'calc(100vh - 60px - 40px)',
+			height: 'calc(100vh - 60px - 2*' + globalStyles.headerHeight + ')',
 			overflow: 'hidden',
 			overflowY: 'scroll',
 		},
@@ -113,10 +113,20 @@ export const styles = {
 			overflowY: 'scroll',
 			zIndex: 20,
 		},
+		bottomNavBackground: {
+			position: 'absolute',
+			height: globalStyles.headerHeight,
+			backgroundColor: 'white',
+			transition: '.352s linear opacity',
+			opacity: 0,
+			top: 1,
+			width: '50%',
+		},
 		bottomNavLeft: {
 			// backgroundColor: 'rgba(100,200,85, 0.4)',
 			// width: '20%',
 			// height: 'calc(100vh - 60px)',
+			position: 'relative',
 			float: 'left',
 		},
 		bottomNavRight: {
@@ -124,6 +134,7 @@ export const styles = {
 			// width: '20%',
 			// height: 'calc(100vh - 60px)',
 			float: 'right',
+			position: 'relative',
 		},
 		bottomNavTitle: {
 			height: globalStyles.headerHeight,
@@ -188,7 +199,7 @@ export const styles = {
 		editorMarkdown: {
 			transition: '.352s linear transform, .3s linear opacity .25s, 0s linear padding .352s, 0s linear left .352s',
 			transform: 'translateX(0%)',
-			padding: '20px 25vw',
+			padding: globalStyles.headerHeight + ' 25vw',
 			left: 0,
 		},
 		editorPreview: {
@@ -203,6 +214,9 @@ export const styles = {
 			transition: '.352s linear opacity',
 			opacity: 0,
 		},
+		bottomNavBackground: {
+			opacity: 0,
+		},
 	},
 
 	preview: {
@@ -212,7 +226,7 @@ export const styles = {
 		editorMarkdown: {
 			transition: '.352s linear transform, .3s linear opacity .25s',
 			transform: 'translateX(-50%)',
-			padding: '20px 0px',
+			padding: globalStyles.headerHeight + ' 0px',
 			left: '25vw'
 		},
 		editorPreview: {
@@ -232,6 +246,9 @@ export const styles = {
 		},
 		bottomNavDividerLarge: {
 			transition: '.352s linear opacity',
+			opacity: 1,
+		},
+		bottomNavBackground: {
 			opacity: 1,
 		},
 		bottomNavList: {

@@ -24,7 +24,7 @@ styles = function(percentage) {
 			width: '100%',
 			height: '1px',
 			// backgroundColor: 'black',
-			backgroundColor: 'rgba(0,0,0,0.4)',
+			backgroundColor: '#999999',
 			transform: 'translateX(' + (-100 + percentage) + '%)',
 			transition: '.2s linear transform'
 		}

@@ -84,7 +84,7 @@ const Editor = React.createClass({
 					
 
 					<div style={[styles.common.editorBottomNav, styles[viewMode].editorBottomNav, styles.hiddenUntilLoad, styles[editorData.get('status')]]}>
-
+						<div style={[styles.common.bottomNavBackground, styles[viewMode].bottomNavBackground]}></div>
 						<div className="leftBottomNav" style={[styles.common.bottomNavLeft, styles[viewMode].bottomNavLeft]}>
 							<div key="bNav_toc" style={[styles.common.bottomNavTitle, styles[viewMode].bottomNavTitle]} onClick={this.toggleTOC}>Table of Contents</div>
 							<div style={[styles.common.bottomNavDivider, styles[viewMode].bottomNavDivider]}>
