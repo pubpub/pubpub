@@ -12,8 +12,8 @@ import {LOAD_PUB_EDIT, LOAD_PUB_EDIT_SUCCESS, LOAD_PUB_EDIT_FAIL} from '../actio
 const defaultState = Immutable.Map({
 	pubEditData: {},
 	viewMode: 'edit', // or 'preview'
-	showBottomLeftMenu: false,
-	showBottomRightMenu: false,
+	showBottomLeftMenu: true,
+	showBottomRightMenu: true,
 	status: 'loading',
 	error: null
 

@@ -8,4 +8,6 @@ export const globalStyles = {
 	sideBackground: '#E0E0E0',
 	sideText: '#666',
 	sideHover: '#000',
+	veryLight: '#BBB',
+
 };

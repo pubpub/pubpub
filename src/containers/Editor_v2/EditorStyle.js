@@ -36,6 +36,25 @@ export const styles = {
 	hiddenUntilLoad: {
 		transition: '.3s linear opacity .25s',
 	},
+	editorTopNav: {
+		position: 'fixed',
+		top: 30,
+		width: '100%',
+		backgroundColor: 'white',
+		zIndex: 10,
+	},
+	editorLoadBar: {
+		position: 'fixed',
+		top: 60,
+		width: '100%',
+		zIndex: 10,
+	},
+	editorBottomNav: {
+		position: 'fixed',
+		top: 60,
+		width: '100%',
+		zIndex: 10,
+	},
 	editorNav: {
 		listStyle: 'none',
 		height: globalStyles.headerHeight,
@@ -63,5 +82,71 @@ export const styles = {
 	},
 	editorNavRight: {
 		float: 'right',
-	}
+	},
+	editorMarkdown: {
+		marginTop: 60,
+		padding: '20px 0px',
+		width: '50%',
+		zIndex: 5,
+		transform: 'translateX(50%)',
+	},
+	bottomNavLeft: {
+		// backgroundColor: 'rgba(100,200,85, 0.4)',
+		width: '20%',
+		height: 'calc(100vh - 60px)',
+		float: 'left',
+	},
+	bottomNavRight: {
+		// backgroundColor: 'rgba(200,100,85, 0.4)',
+		width: '20%',
+		height: 'calc(100vh - 60px)',
+		float: 'right',
+	},
+	alignRight: {
+		textAlign: 'right',
+	},
+	floatRight: {
+		float: 'right',
+	},
+	bottomNavTitle: {
+		height: 40,
+		lineHeight: '50px',
+		padding: '0px 20px',
+		color: globalStyles.veryLight,
+		fontSize: '.9em',
+	},
+	bottomNavDivider: {
+		width: '100%',
+		height: '1px',
+	},
+	bottomNavDividerSmall: {
+		backgroundColor: globalStyles.veryLight,
+		width: '50%',
+		height: '100%',
+		margin: '0px 20px'
+	},
+	bottomNavList: {
+		listStyle: 'none',
+		margin: 0,
+		padding: 0,
+		overflow: 'hidden',
+		overflowY: 'scroll',
+		height: 'calc(100% - 60px)',
+		
+
+	},
+	bottomNavListItem: {
+		margin: '0px 20px',
+		padding: '3px 0px',
+		float: 'left',
+		clear: 'both',
+		color: globalStyles.veryLight,
+		fontSize: '.8em',
+		':hover': {
+			cursor: 'pointer',
+			color: globalStyles.sideText,
+		}
+	},
+
+
 };
