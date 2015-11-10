@@ -256,9 +256,12 @@ export const styles = {
 		bottomNavList: {
 			opacity: 0,
 			backgroundColor: 'white',
-			transition: '.1s linear opacity',
-			boxShadow: '0px 4px 4px 0px rgba(0,0,0,0.4)',
-			width: '100%',
+			transition: '.1s linear opacity, 0s linear box-shadow 0.352s',
+			boxShadow: '3px 3px 3px 0px rgba(0,0,0,0.3)',
+			
+		},
+		bottomNavListRight: {
+			boxShadow: '-3px 3px 3px 0px rgba(0,0,0,0.3)',
 		},
 		bottomNavListItem: {
 			pointerEvents: 'none',
@@ -268,6 +271,7 @@ export const styles = {
 		},
 		listItemActive: {
 			pointerEvents: 'auto',
+			width: '100%',
 		},
 		listTitleActive: {
 			color: globalStyles.sideText,

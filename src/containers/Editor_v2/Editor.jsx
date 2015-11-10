@@ -114,7 +114,7 @@ const Editor = React.createClass({
 							</div>
 
 
-							<ul style={[styles.common.bottomNavList, styles[viewMode].bottomNavList, styles.alignRight, showBottomRightMenu && styles[viewMode].listActive]}>
+							<ul style={[styles.common.bottomNavList, styles[viewMode].bottomNavList, styles[viewMode].bottomNavListRight, styles.alignRight, showBottomRightMenu && styles[viewMode].listActive]}>
 
 								<li key="brNav0" style={[styles.common.bottomNavListItem, styles[viewMode].bottomNavListItem, styles.floatRight, showBottomRightMenu && styles[viewMode].listItemActive]}>H1</li>
 								<li key="brNav1" style={[styles.common.bottomNavListItem, styles[viewMode].bottomNavListItem, styles.floatRight, showBottomRightMenu && styles[viewMode].listItemActive]}>H2</li>
