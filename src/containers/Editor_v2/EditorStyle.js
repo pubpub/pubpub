@@ -55,6 +55,9 @@ export const styles = {
 		width: '100%',
 		zIndex: 10,
 	},
+	editorBottomNav_preview: {
+		pointerEvents: 'none',
+	},
 	editorNav: {
 		listStyle: 'none',
 		height: globalStyles.headerHeight,
@@ -96,19 +99,52 @@ export const styles = {
 	editorMarkdown_preview: {
 		transition: '.2s linear transform',
 		transform: 'translateX(0%)',
+		height: 300,
+		overflow: 'hidden',
+		overflowY: 'scroll',
+	},
+	editorPreview: {
+		width: '50%',
+		backgroundColor: 'rgba(89,89,200,0.4)',
+		position: 'fixed',
+		right: 0,
+		top: 60,
+		height: 'calc(100vh - 60px)',
+		overflow: 'hidden',
+		overflowY: 'scroll',
+		zIndex: 20,
+	},
+	editorPreview_edit: {
+		transition: '.2s linear transform',
+		transform: 'translateX(100%)',
+	},
+	editorPreview_preview: {
+		transition: '.2s linear transform',
+		transform: 'translateX(0%)',
 	},
 
 	bottomNavLeft: {
 		// backgroundColor: 'rgba(100,200,85, 0.4)',
 		width: '20%',
-		height: 'calc(100vh - 60px)',
+		// height: 'calc(100vh - 60px)',
 		float: 'left',
 	},
+	// bottomNavLeft_preview: {
+		
+	// },
 	bottomNavRight: {
 		// backgroundColor: 'rgba(200,100,85, 0.4)',
 		width: '20%',
-		height: 'calc(100vh - 60px)',
+		// height: 'calc(100vh - 60px)',
 		float: 'right',
+	},
+	bottomNavRight_edit: {
+		transition: '.2s linear transform',
+		transform: 'translateX(0%)',
+	},
+	bottomNavRight_preview: {
+		transition: '.2s linear transform',
+		transform: 'translateX(-250%)',
 	},
 	alignRight: {
 		textAlign: 'right',
@@ -117,21 +153,53 @@ export const styles = {
 		float: 'right',
 	},
 	bottomNavTitle: {
-		height: 40,
-		lineHeight: '50px',
+		height: globalStyles.headerHeight,
+		lineHeight: globalStyles.headerHeight,
 		padding: '0px 20px',
 		color: globalStyles.veryLight,
 		fontSize: '.9em',
 	},
+	bottomNavTitle_preview: {
+		pointerEvents: 'auto',
+		':hover': {
+			color: globalStyles.sideText,
+			cursor: 'pointer',
+		}
+	},
 	bottomNavDivider: {
 		width: '100%',
 		height: '1px',
+		position: 'relative',
 	},
 	bottomNavDividerSmall: {
 		backgroundColor: globalStyles.veryLight,
 		width: '50%',
 		height: '100%',
-		margin: '0px 20px'
+		margin: '0px 20px',
+		position: 'absolute',
+		top: 0,
+	},
+	bottomNavDividerRight: {
+		right: 0,
+	},
+	bottomNavDividerLarge: {
+		backgroundColor: globalStyles.veryLight,
+		width: 'calc(25vw + 1px)',
+		height: '100%',
+		margin: '0px 0px',
+		position: 'absolute',
+		top: 0,
+	},
+	bottomNavDividerLarge_edit: {
+		transition: '.2s linear opacity',
+		opacity: 0,
+	},
+	bottomNavDividerLarge_preview: {
+		transition: '.2s linear opacity',
+		opacity: 1,
+	},
+	bottomNavDividerLargeRight: {
+		right: 0,
 	},
 	bottomNavList: {
 		listStyle: 'none',
@@ -139,9 +207,12 @@ export const styles = {
 		padding: 0,
 		overflow: 'hidden',
 		overflowY: 'scroll',
-		height: 'calc(100% - 60px)',
-		
-
+		height: 'calc(100vh - 90px)',
+		opacity: 1,
+		transition: '.2s linear opacity',
+	},
+	bottomNavList_preview: {
+		opacity: 0,
 	},
 	bottomNavListItem: {
 		margin: '0px 20px',
