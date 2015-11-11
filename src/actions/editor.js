@@ -10,6 +10,7 @@ export const LOAD_PUB_EDIT_FAIL = 'editor/LOAD_PUB_EDIT_FAIL';
 export const TOGGLE_VIEW_MODE = 'editor/TOGGLE_VIEW_MODE';
 export const TOGGLE_FORMATTING = 'editor/TOGGLE_FORMATTING';
 export const TOGGLE_TOC = 'editor/TOGGLE_TOC';
+export const PUB_EDIT_UNMOUNT = 'editor/PUB_EDIT_UNMOUNT';
 
 /*--------*/
 // Define Action creators
@@ -40,5 +41,11 @@ export function toggleFormatting() {
 export function toggleTOC() {
 	return {
 		type: TOGGLE_TOC
+	};
+}
+
+export function unmountEditor() {
+	return {
+		type: PUB_EDIT_UNMOUNT
 	};
 }

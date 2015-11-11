@@ -4,7 +4,7 @@ import {ensureImmutable} from './';
 /*--------*/
 // Load Actions
 /*--------*/
-import {TOGGLE_VIEW_MODE, TOGGLE_FORMATTING, TOGGLE_TOC, LOAD_PUB_EDIT, LOAD_PUB_EDIT_SUCCESS, LOAD_PUB_EDIT_FAIL} from '../actions/editor';
+import {TOGGLE_VIEW_MODE, TOGGLE_FORMATTING, TOGGLE_TOC, LOAD_PUB_EDIT, LOAD_PUB_EDIT_SUCCESS, LOAD_PUB_EDIT_FAIL, PUB_EDIT_UNMOUNT} from '../actions/editor';
 
 /*--------*/
 // Initialize Default State 
@@ -114,6 +114,10 @@ function loadFail(state, error) {
 	});
 }
 
+function unmountEditor() {
+	return defaultState;
+}
+
 /*--------*/
 // Bind actions to specific reducing functions.
 /*--------*/
@@ -131,6 +135,8 @@ export default function editorReducer(state = defaultState, action) {
 		return loadSuccess(state, action.result);
 	case LOAD_PUB_EDIT_FAIL:
 		return loadFail(state, action.error);
+	case PUB_EDIT_UNMOUNT:
+		return unmountEditor();
 	default:
 		return ensureImmutable(state);
 	}

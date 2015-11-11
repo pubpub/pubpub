@@ -4,7 +4,7 @@ import Radium from 'radium';
 import DocumentMeta from 'react-document-meta';
 import PureRenderMixin from 'react-addons-pure-render-mixin';
 import {LoaderDeterminate, CodeMirror} from '../../components';
-import {getPubEdit, toggleEditorViewMode, toggleFormatting, toggleTOC} from '../../actions/editor';
+import {getPubEdit, toggleEditorViewMode, toggleFormatting, toggleTOC, unmountEditor} from '../../actions/editor';
 
 // import Codemirror from 'react-codemirror';
 
@@ -26,23 +26,8 @@ const Editor = React.createClass({
 		}
 	},
 
-	// getInitialState() {
-	// 	let CM = undefined;
-	// 	if (typeof window !== 'undefined') {
-	// 		CM = require('codemirror');
-	// 	}
-
-	// 	return {
-	// 		CM: CM
-	// 	};	
-		
-	// },
-
-	componentDidMount() {
-		// this.setState = ({
-		// 	CM: require('codemirror')
-		// });	
-		// console.log(this.state);
+	componentWillUnmount() {
+		this.props.dispatch(unmountEditor());
 	},
 
 	toggleView: function() {

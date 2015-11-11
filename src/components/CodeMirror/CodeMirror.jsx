@@ -16,33 +16,25 @@ const CodeMirror = React.createClass({
 
 	getInitialState() {
 		return {
-			isFocused: false,
-			propsCount: 0,
+			isFocused: false
 		};
 	},
 
 	componentDidMount() {
-		this.setState({
-			isFocused: this.state.isFocused,
-			propsCount: 0
-		});
+		// Load codemirror here since we can only load it client-side
+		const CM = require('codemirror');
+		const textareaNode = this.refs.textarea;
+		this.codeMirror = CM.fromTextArea(textareaNode, this.props.options);
+		this.codeMirror.on('change', this.codemirrorValueChanged);
+		this.codeMirror.on('focus', this.focusChanged.bind(this, true));
+		this.codeMirror.on('blur', this.focusChanged.bind(this, false));
+		this._currentCodemirrorValue = this.props.value;
+		this.codeMirror.setValue(this.props.value);
+		
+		
 	},
 
 	componentWillReceiveProps(nextProps) {
-		if (this.state.propsCount === 0) {
-			const CM = require('codemirror');
-			const textareaNode = this.refs.textarea;
-			this.codeMirror = CM.fromTextArea(textareaNode, this.props.options);
-			this.codeMirror.on('change', this.codemirrorValueChanged);
-			this.codeMirror.on('focus', this.focusChanged.bind(this, true));
-			this.codeMirror.on('blur', this.focusChanged.bind(this, false));
-			this._currentCodemirrorValue = this.props.value;
-			this.codeMirror.setValue(this.props.value);
-		}
-		this.setState({
-			isFocused: this.state.isFocused,
-			propsCount: 1
-		});
 		if (this.codeMirror && this._currentCodemirrorValue !== nextProps.value) {
 			this.codeMirror.setValue(nextProps.value);
 		}
@@ -81,7 +73,8 @@ const CodeMirror = React.createClass({
 		}
 	},
 
-	codemirrorValueChanged(doc, change) {
+	// codemirrorValueChanged(doc, change) {
+	codemirrorValueChanged(doc) {
 		const newValue = doc.getValue();
 		this._currentCodemirrorValue = newValue;
 		if (this.props.onChange) {
