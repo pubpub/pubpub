@@ -1,3 +1,4 @@
+export CodeMirror from './CodeMirror/CodeMirror';
 export HeaderNav from './HeaderNav/HeaderNav';
 export HeaderMenu from './HeaderMenu/HeaderMenu';
 export LoaderDeterminate from './LoaderDeterminate/LoaderDeterminate';

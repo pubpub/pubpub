@@ -35,6 +35,10 @@ export default class Html extends Component {
 
 					<link rel="shortcut icon" href="/favicon.ico" />
 					<link href='https://fonts.googleapis.com/css?family=Lato:300,900italic' rel='stylesheet' type='text/css' />
+
+					{/* If we have to load more local css - we should bundle it all into one minified file and load it here. */}
+					<link href='/css/codemirror.css' rel='stylesheet' type='text/css' />
+					
 					{/* styles (will be present only in production with webpack extract text plugin) */}
 					{Object.keys(assets.styles).map((style, key) =>
 						<link href={assets.styles[style]} key={key} media="screen, projection"
