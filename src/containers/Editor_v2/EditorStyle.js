@@ -278,6 +278,27 @@ export const styles = {
 		}
 	},
 
+	listItemLeftAnimate: {
+		loading: {
+			transform: 'translateX(-50px)',
+			transition: '.2s linear transform .25s',
+		},
+		loaded: {
+			transform: 'translateX(0px)',
+			transition: '.2s linear transform .25s',
+		}
+	},
+	listItemRightAnimate: {
+		loading: {
+			transform: 'translateX(50px)',
+			transition: '.2s linear transform .25s',
+		},
+		loaded: {
+			transform: 'translateX(0px)',
+			transition: '.2s linear transform .25s',
+		}
+	}
+
 
 };
 
