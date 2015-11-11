@@ -1,5 +1,6 @@
 import {globalStyles} from '../../utils/styleConstants';
 
+
 export const styles = {
 	editorContainer: {
 		position: 'relative',

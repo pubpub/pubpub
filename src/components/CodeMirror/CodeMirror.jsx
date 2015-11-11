@@ -23,6 +23,7 @@ const CodeMirror = React.createClass({
 	componentDidMount() {
 		// Load codemirror here since we can only load it client-side
 		const CM = require('codemirror');
+		require('codemirror/mode/markdown/markdown');
 		const textareaNode = this.refs.textarea;
 		this.codeMirror = CM.fromTextArea(textareaNode, this.props.options);
 		this.codeMirror.on('change', this.codemirrorValueChanged);
@@ -79,7 +80,7 @@ const CodeMirror = React.createClass({
 		this._currentCodemirrorValue = newValue;
 		if (this.props.onChange) {
 			this.props.onChange(newValue);
-		} 
+		}
 	},
 
 	render() {
@@ -90,7 +91,7 @@ const CodeMirror = React.createClass({
 		);
 
 		return (
-			<div className={editorClassName}>
+			<div style={{width: 'calc(100% - 30px)', padding: '0px 15px'}}className={editorClassName}>
 				<textarea ref="textarea" name={this.props.path} defaultValue={''} autoComplete="off" />
 			</div>
 		);
