@@ -22,7 +22,10 @@ const CodeMirror = React.createClass({
 	},
 
 	componentDidMount() {
-
+		this.setState({
+			isFocused: this.state.isFocused,
+			propsCount: 0
+		});
 	},
 
 	componentWillReceiveProps(nextProps) {
