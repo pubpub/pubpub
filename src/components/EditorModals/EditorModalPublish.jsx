@@ -4,9 +4,6 @@ import Radium from 'radium';
 import {baseStyles} from './modalStyle';
 
 const EditorModalPublish = React.createClass({
-	propTypes: {
-	},
-
 	render: function() {
 		
 		return (

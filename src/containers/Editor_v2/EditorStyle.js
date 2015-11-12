@@ -104,7 +104,7 @@ export const styles = {
 	modalContainer: {
 		width: '76vw',
 		minHeight: 200,
-		height: 'calc(100vh - 150px)',
+		maxHeight: 'calc(100vh - 150px)',
 		overflow: 'hidden',
 		overflowY: 'scroll',
 		margin: '0 auto',
