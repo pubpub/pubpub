@@ -22,34 +22,59 @@ const EditorModalAssets = React.createClass({
 
 	getInitialState: function() {
 		return {
-			files: []
+			files: [],
+			uploads: [],
+			uploadRates: []
 		};
 	},
 
 	
 	onDrop: function(files) {
 		console.log('Received files: ', files);
-		this.setState({
-			files: files
-		});
-		const formData = new FormData();
-		const xhr = new XMLHttpRequest();
-		
-		formData.append('kitten', 'dog');
-		formData.append('file', files[0]);
-		xhr.open('POST', '/api/uploadFile', true);
-		xhr.addEventListener('progress', (eee)=>{
-			console.log('in progress');
-			console.log(eee.loaded / eee.total);
-		}, false);
-		xhr.send(formData);
+		// this.setState({
+		// 	files: files
+		// });
+		const offset = this.state.uploadRates.length;
+		for (let iii = offset; iii < (offset + files.length); iii++) {
+			// this.state.files[iii] = files[iii];
+			const formData = new FormData();
+			formData.append('kitten', 'dog');
+			formData.append('file', files[0]);
+			const upload = new XMLHttpRequest();
+			upload.open('POST', '/api/uploadFile', true);
+			upload.addEventListener('progress', (eee)=>{
+				console.log('in progress');
+				this.updateUploadRates(eee, iii);
+			}, false);
+			upload.addEventListener('load', (eee)=>{
+				this.finishUploadRates(iii);
+			}, false);
+			upload.send(formData);
+		}
+
 	},
 
-
+	
 	onOpenClick: function() {
 		this.refs.dropzone.open();
 	},
-
+	finishUploadRates: function(index) {
+		
+		const tmpRates = this.state.uploadRates;
+		tmpRates[index] = 5;
+		this.setState({
+			uploadRates: tmpRates
+		});
+	},
+	updateUploadRates: function(eee, index) {
+		console.log(index);
+		const percent = eee.loaded / eee.total;
+		const tmpRates = this.state.uploadRates;
+		tmpRates[index] = percent;
+		this.setState({
+			uploadRates: tmpRates
+		});
+	},
 	uploadOnProgress: function(eee) {
 		console.log(eee);
 	},
@@ -66,6 +91,7 @@ const EditorModalAssets = React.createClass({
 				<div style={baseStyles.modalContentContainer}>
 					<h2 key="asset-modal-right-action" style={baseStyles.topHeader}>Assets</h2>
 					<div style={baseStyles.rightCornerAction} onClick={this.onOpenClick}>Click to choose or drag files</div>
+					{JSON.stringify(this.state.uploadRates)}
 					{this.props.assetData.map( (asset, index)=> {
 						return (<div key={'asset-modal-item-' + index}>{asset.assetName}</div>);
 					})}

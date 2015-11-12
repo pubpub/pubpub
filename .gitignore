@@ -2,6 +2,7 @@
 node_modules/
 authentication/
 dist/
+tmp/
 misc/
 *.iml
 webpack-stats.json
