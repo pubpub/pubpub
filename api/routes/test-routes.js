@@ -225,11 +225,8 @@ var upload = multer({ dest: 'tmp/' })
 app.post('/uploadFile', upload.any(), function (req, res, next) {
   console.log('done');
   console.log(req.files);
-  setTimeout(function(){
   	console.log('done done');
   	res.status(201).json('done');	
-  }, 2000);
-  
 })
 
 
