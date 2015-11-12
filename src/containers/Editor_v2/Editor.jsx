@@ -41,8 +41,9 @@ const Editor = React.createClass({
 			mode: 'markdown',
 		};
 		const codeMirror = CodeMirror(document.getElementById('firepad'), cmOptions);
+		const username = (this.props.loginData.get('loggedIn') === false) ? 'cat' : this.props.loginData.getIn(['userData', 'username']);
 		Firepad.fromCodeMirror(firepadRef, codeMirror, {
-			userId: this.props.loginData.getIn(['userData', 'username']),
+			userId: username,
 			defaultText: 'Welcome to your new Pub!'
 		});
 	},
