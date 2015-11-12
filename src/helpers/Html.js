@@ -39,6 +39,11 @@ export default class Html extends Component {
 					{/* If we have to load more local css - we should bundle it all into one minified file and load it here. */}
 					<link href='/css/codemirror.css' rel='stylesheet' type='text/css' />
 					
+					// We could dynamically load these in Editor.jsx 
+					// This would prevent us from forcing every user to load the libraries - given that many will not edit
+					<script src="https://cdn.firebase.com/js/client/2.2.4/firebase.js"></script>
+					<script src="https://cdn.firebase.com/libs/firepad/1.2.0/firepad.min.js"></script>
+
 					{/* styles (will be present only in production with webpack extract text plugin) */}
 					{Object.keys(assets.styles).map((style, key) =>
 						<link href={assets.styles[style]} key={key} media="screen, projection"

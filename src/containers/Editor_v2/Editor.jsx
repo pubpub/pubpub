@@ -6,7 +6,9 @@ import PureRenderMixin from 'react-addons-pure-render-mixin';
 import {LoaderDeterminate, CodeMirror} from '../../components';
 import {getPubEdit, toggleEditorViewMode, toggleFormatting, toggleTOC, unmountEditor} from '../../actions/editor';
 
-// import Codemirror from 'react-codemirror';
+// import Firebase from 'firebase';
+// import Firepad from '../../utils/firepad';
+import ReactFire from 'reactfire';
 
 import {styles} from './EditorStyle';
 
@@ -24,6 +26,21 @@ const Editor = React.createClass({
 		fetchDataDeferred: function(getState, dispatch, location, routeParams) {
 			return dispatch(getPubEdit(routeParams.slug));
 		}
+	},
+	componentDidMount() {
+		
+		// Eventually put these in a dispatch. That dispatch will:
+		// Check if we've already loaded the content (maybe keep store variable)
+		// Load the files
+		// Set a variable saying that we're ready to load. 
+		// const jsElm = document.createElement('script');
+		// jsElm.type = 'application/javascript';
+		// jsElm.src = 'https://cdn.firebase.com/js/client/2.2.4/firebase.js';
+		// document.body.appendChild(jsElm);
+		// const jsElm2 = document.createElement('script');
+		// jsElm2.type = 'application/javascript';
+		// jsElm2.src = 'https://cdn.firebase.com/libs/firepad/1.2.0/firepad.min.js';
+		// document.body.appendChild(jsElm2);
 	},
 
 	componentWillUnmount() {
