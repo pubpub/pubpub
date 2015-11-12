@@ -219,3 +219,31 @@ app.get('/user', function(req, res) {
     });
 });
 
+var formidable = require('formidable');
+app.post('/uploadFile', function(req,res){
+	var form = new formidable.IncomingForm();
+	form.uploadDir = __dirname + '/tmp';
+	form.encoding = 'binary';
+	form.on('progress', function(bytesReceived, bytesExpected) {
+		console.log('in server progress');
+		console.log(bytesReceived);
+		console.log(bytesExpected);
+	});
+
+	form.addListener('file', function(name, file) {
+	  // do something with uploaded file
+	  // console.log(file);
+	});
+
+	form.addListener('end', function() {
+	  res.end();
+	});
+
+	form.parse(req, function(err, fields, files) {
+	  if (err) {
+	    console.log(err);
+	  }
+	});
+});
+
+
