@@ -1,6 +1,5 @@
-
 import React from 'react';
-import className from 'classnames';
+import PureRenderMixin from 'react-addons-pure-render-mixin';
 
 const CodeMirror = React.createClass({
 
@@ -13,6 +12,8 @@ const CodeMirror = React.createClass({
 		className: React.PropTypes.any,
 		CM: React.PropTypes.func,
 	},
+
+	mixins: [PureRenderMixin],
 
 	getInitialState() {
 		return {
@@ -81,18 +82,42 @@ const CodeMirror = React.createClass({
 		if (this.props.onChange) {
 			this.props.onChange(newValue);
 		}
+
+		// We'll probably want to keep track of our main doc. That's the one that gets synced with 
+		// firebase. Do we keep it in the store?
+
+		// if (typeof this.oldDoc === 'undefined') {
+		// 	console.log('its undefined!');
+		// 	const subDoc = doc.linkedDoc({
+		// 		sharedHist: true,
+		// 		from: 5,
+		// 		to: 10,	
+		// 	});
+		// 	console.log('New Doc:');
+		// 	console.log(subDoc);
+		// 	this.oldDoc = this.codeMirror.swapDoc(subDoc);
+		// 	console.log('Old Doc:');
+		// 	console.log(this.oldDoc);
+		// 	setTimeout(()=>{
+		// 		console.log('revert!');
+		// 		this.codeMirror.swapDoc(this.oldDoc);
+		// 		doc.iterLinkedDocs(function(docc, hist) {
+		// 			console.log(docc);
+		// 			console.log(hist);
+		// 		});
+		// 	}, 10000);
+		// }
+		
 	},
 
 	render() {
-		const editorClassName = className(
-			'ReactCodeMirror',
-			this.state.isFocused ? 'ReactCodeMirror--focused' : null,
-			this.props.className
-		);
+		
+		const isFocusedClass = (this.state.isFocused) ? 'ReactCodeMirror--focused' : null;
+		const editorClassName = 'ReactCodeMirror ' + this.props.className + ' ' + isFocusedClass;
 
 		return (
-			<div style={{width: 'calc(100% - 30px)', padding: '0px 15px'}}className={editorClassName}>
-				<textarea ref="textarea" name={this.props.path} defaultValue={''} autoComplete="off" />
+			<div style={{width: 'calc(100% - 30px)', padding: '0px 15px'}} className={editorClassName}>
+				<textarea style={{border: 'none', resize: 'none'}} ref="textarea" name={this.props.path} defaultValue={''} autoComplete="off" />
 			</div>
 		);
 	}
