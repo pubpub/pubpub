@@ -49,7 +49,7 @@ const Login = React.createClass({
 				<div style={styles.loaderContainer}>
 					{(this.props.loginData.get('loggingIn') === true ? <LoaderIndeterminate color="white"/> : null)}
 				</div>
-				<div style={styles.formWrapper}>
+				<div style={[styles.formWrapper, this.props.loginData.get('isVisible') && styles.formWrapperVisible]}>
 					<div key="loginTitle" style={styles.title}>
 						{viewMode}
 					</div>
@@ -128,6 +128,8 @@ styles = {
 		top: '50%',
 		left: '50%',
 		margin: '-200px 0 0 -400px',
+		transition: '.2s linear transform',
+		transform: 'scale(0.8)',
 		'@media screen and (min-resolution: 3dppx), (max-width: 767px)': {
 			width: '100%',
 			position: 'relative',
@@ -137,6 +139,9 @@ styles = {
 			left: 0,
 
 		},
+	},
+	formWrapperVisible: {
+		transform: 'scale(1.0)',
 	},
 	title: {
 		height: 60,

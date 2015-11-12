@@ -10,6 +10,8 @@ export const LOAD_PUB_EDIT_FAIL = 'editor/LOAD_PUB_EDIT_FAIL';
 export const TOGGLE_VIEW_MODE = 'editor/TOGGLE_VIEW_MODE';
 export const TOGGLE_FORMATTING = 'editor/TOGGLE_FORMATTING';
 export const TOGGLE_TOC = 'editor/TOGGLE_TOC';
+export const MODAL_CLOSE = 'editor/MODAL_CLOSE';
+export const MODAL_OPEN = 'editor/MODAL_OPEN';
 export const PUB_EDIT_UNMOUNT = 'editor/PUB_EDIT_UNMOUNT';
 
 /*--------*/
@@ -47,5 +49,18 @@ export function toggleTOC() {
 export function unmountEditor() {
 	return {
 		type: PUB_EDIT_UNMOUNT
+	};
+}
+
+export function closeModal() {
+	return {
+		type: MODAL_CLOSE
+	};
+}
+
+export function openModal(activeModal) {
+	return {
+		type: MODAL_OPEN,
+		activeModal: activeModal
 	};
 }

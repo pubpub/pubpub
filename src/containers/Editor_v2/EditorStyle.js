@@ -6,6 +6,8 @@ export const styles = {
 		position: 'relative',
 		color: globalStyles.sideText,
 		fontFamily: globalStyles.headerFont,
+		backgroundColor: globalStyles.sideBackground,
+		height: 'calc(100vh - ' + globalStyles.headerHeight + ')',
 	},
 	isMobile: {
 		display: 'none',
@@ -41,7 +43,7 @@ export const styles = {
 		position: 'fixed',
 		top: 30,
 		width: '100%',
-		backgroundColor: 'white',
+		backgroundColor: globalStyles.sideBackground,
 		zIndex: 10,
 	},
 	editorLoadBar: {
@@ -84,7 +86,51 @@ export const styles = {
 	floatRight: {
 		float: 'right',
 	},
+	modalSplash: {
+		opacity: 0,
+		pointerEvents: 'none',
+		width: '100vw',
+		height: 'calc(100vh - 2 * ' + globalStyles.headerHeight + ')',
+		position: 'fixed',
+		top: 60,
+		backgroundColor: 'rgba(255,255,255,0.7)',
+		transition: '.1s linear opacity',
+		zIndex: 100,
+	},
+	modalSplashActive: {
+		opacity: 1,
+		pointerEvents: 'auto',
+	},
+	modalContainer: {
+		width: '76vw',
+		minHeight: 200,
+		height: 'calc(100vh - 150px)',
+		overflow: 'hidden',
+		overflowY: 'scroll',
+		margin: '0 auto',
+		position: 'absolute',
+		top: 60,
+		left: '12vw',
+		backgroundColor: 'white',
+		boxShadow: '0px 0px 10px 0px rgba(0,0,0,0.25)',
+		zIndex: 150,
 
+		opacity: 0,
+		pointerEvents: 'none',
+		transform: 'scale(0.8)',
+		transition: '.1s linear opacity, .1s linear transform',
+
+		'@media screen and (min-width: 1600px)': {
+			width: 1200,
+			left: 'calc(50vw - 600px)',
+		},
+
+	},
+	modalContainerActive: {
+		opacity: 1,
+		pointerEvents: 'auto',
+		transform: 'scale(1.0)',
+	},
 	common: {
 		editorBottomNav: {
 			position: 'fixed',
@@ -105,12 +151,12 @@ export const styles = {
 		},
 		editorPreview: {
 			width: 'calc(50% - 20px)',
-			// backgroundColor: 'rgba(89,89,200,0.4)',
-			boxShadow: '#909090 4px 9px 5px 6px',
+			backgroundColor: '#fff',
+			boxShadow: 'rgba(0,0,0,0.25) 0px 3px 9px 1px',
 			position: 'fixed',
 			right: 0,
-			top: 60,
-			height: 'calc(100vh - 60px)',
+			top: 61,
+			height: 'calc(100vh - 61px)',
 			overflow: 'hidden',
 			overflowY: 'scroll',
 			zIndex: 20,
@@ -119,7 +165,7 @@ export const styles = {
 		bottomNavBackground: {
 			position: 'absolute',
 			height: globalStyles.headerHeight,
-			backgroundColor: 'white',
+			backgroundColor: globalStyles.sideBackground,
 			transition: '.352s linear opacity',
 			opacity: 0,
 			top: 1,
@@ -256,7 +302,7 @@ export const styles = {
 		},
 		bottomNavList: {
 			opacity: 0,
-			backgroundColor: 'white',
+			backgroundColor: globalStyles.sideBackground,
 			transition: '.1s linear opacity, 0s linear box-shadow 0.352s',
 			boxShadow: '3px 3px 3px 0px rgba(0,0,0,0.3)',
 			

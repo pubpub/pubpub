@@ -4,7 +4,16 @@ import {ensureImmutable} from './';
 /*--------*/
 // Load Actions
 /*--------*/
-import {TOGGLE_VIEW_MODE, TOGGLE_FORMATTING, TOGGLE_TOC, LOAD_PUB_EDIT, LOAD_PUB_EDIT_SUCCESS, LOAD_PUB_EDIT_FAIL, PUB_EDIT_UNMOUNT} from '../actions/editor';
+import {TOGGLE_VIEW_MODE, 
+	TOGGLE_FORMATTING, 
+	TOGGLE_TOC, 
+	LOAD_PUB_EDIT, 
+	LOAD_PUB_EDIT_SUCCESS, 
+	LOAD_PUB_EDIT_FAIL, 
+	PUB_EDIT_UNMOUNT,
+	MODAL_OPEN,
+	MODAL_CLOSE
+} from '../actions/editor';
 
 /*--------*/
 // Initialize Default State 
@@ -14,6 +23,7 @@ const defaultState = Immutable.Map({
 	viewMode: 'edit', // or 'preview'
 	showBottomLeftMenu: true,
 	showBottomRightMenu: true,
+	activeModal: undefined,
 	status: 'loading',
 	error: null
 
@@ -118,6 +128,19 @@ function unmountEditor() {
 	return defaultState;
 }
 
+function openModal(state, activeModal) {
+	const nextModal = (activeModal !== state.get('activeModal')) ? activeModal : undefined;
+	return state.merge({
+		activeModal: nextModal,
+	});
+}
+
+function closeModal(state) {
+	return state.merge({
+		activeModal: undefined,
+	});
+}
+
 /*--------*/
 // Bind actions to specific reducing functions.
 /*--------*/
@@ -137,6 +160,10 @@ export default function editorReducer(state = defaultState, action) {
 		return loadFail(state, action.error);
 	case PUB_EDIT_UNMOUNT:
 		return unmountEditor();
+	case MODAL_OPEN: 
+		return openModal(state, action.activeModal);
+	case MODAL_CLOSE: 
+		return closeModal(state);
 	default:
 		return ensureImmutable(state);
 	}
