@@ -20,6 +20,7 @@
     "padded-blocks": 0,
     "comma-dangle": 0,
     "no-console": 0,
+    "no-undef": 1,
 		"no-debugger": 0,
     "no-alert": 1,
     "func-names": 0,

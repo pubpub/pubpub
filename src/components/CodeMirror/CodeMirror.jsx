@@ -32,8 +32,7 @@ const CodeMirror = React.createClass({
 		this.codeMirror.on('blur', this.focusChanged.bind(this, false));
 		this._currentCodemirrorValue = this.props.value;
 		this.codeMirror.setValue(this.props.value);
-		
-		
+			
 	},
 
 	componentWillReceiveProps(nextProps) {

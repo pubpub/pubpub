@@ -3,12 +3,9 @@ import {connect} from 'react-redux';
 import Radium, {Style} from 'radium';
 import DocumentMeta from 'react-document-meta';
 import PureRenderMixin from 'react-addons-pure-render-mixin';
-import {LoaderDeterminate, CodeMirror} from '../../components';
+import {LoaderDeterminate} from '../../components';
 import {getPubEdit, toggleEditorViewMode, toggleFormatting, toggleTOC, unmountEditor} from '../../actions/editor';
-
-// import Firebase from 'firebase';
-// import Firepad from '../../utils/firepad';
-import ReactFire from 'reactfire';
+import ReactFireMixin from 'reactfire';
 
 import {styles} from './EditorStyle';
 
@@ -19,8 +16,7 @@ const Editor = React.createClass({
 		dispatch: PropTypes.func
 	},
 
-
-	mixins: [PureRenderMixin],
+	mixins: [PureRenderMixin, ReactFireMixin],
 
 	statics: {
 		fetchDataDeferred: function(getState, dispatch, location, routeParams) {
@@ -28,11 +24,17 @@ const Editor = React.createClass({
 		}
 	},
 	componentDidMount() {
-		
+		const ref = new Firebase('https://vivid-fire-5712.firebaseio.com/firepads/andy-generals/users');
+		this.bindAsObject(ref, 'items');
+
 		// Eventually put these in a dispatch. That dispatch will:
 		// Check if we've already loaded the content (maybe keep store variable)
 		// Load the files
 		// Set a variable saying that we're ready to load. 
+		
+		// Ideally, we run headless firepad on server side so we can populate the editor text on load. 
+		// This might be an unnecessarily optimization though. Let's see how it goes...
+
 		// const jsElm = document.createElement('script');
 		// jsElm.type = 'application/javascript';
 		// jsElm.src = 'https://cdn.firebase.com/js/client/2.2.4/firebase.js';
@@ -41,6 +43,25 @@ const Editor = React.createClass({
 		// jsElm2.type = 'application/javascript';
 		// jsElm2.src = 'https://cdn.firebase.com/libs/firepad/1.2.0/firepad.min.js';
 		// document.body.appendChild(jsElm2);
+		// const tasd = require('codemirror/mode/markdown/markdown');
+		// console.log(tasd);
+		// setTimeout(()=> {
+		console.log('firing');
+		// console.log(this.codeMirror);
+		
+		const firepadRef = new Firebase('https://vivid-fire-5712.firebaseio.com/firepads/newFakeReactDevPub');
+		const cmOptions = {
+			lineNumbers: false,
+			lineWrapping: true,
+			viewportMargin: Infinity, // This will cause bad performance on large documents. Rendering the entire thing...
+			autofocus: true,
+			mode: 'markdown',
+
+		};
+		const codeMirror = CodeMirror(document.getElementById('firepad'), cmOptions);
+		console.log(codeMirror);
+		const firepad = Firepad.fromCodeMirror(firepadRef, codeMirror);
+		// }, 5000);
 	},
 
 	componentWillUnmount() {
@@ -182,8 +203,10 @@ const Editor = React.createClass({
 					</div>
 
 					<div style={[styles.hiddenUntilLoad, styles[loadStatus], styles.common.editorMarkdown, styles[viewMode].editorMarkdown]}>
-						<CodeMirror value={cmValue} onChange={this.updateCode} options={cmOptions} />
+						<div id="firepad"></div>
+						{/* <CodeMirror value={cmValue} onChange={this.updateCode} options={cmOptions} /> */}
 					</div>
+
 					<div style={[styles.hiddenUntilLoad, styles[loadStatus], styles.common.editorPreview, styles[viewMode].editorPreview]}>
 						<h2>Sudden she seeing garret far regard</h2><p>With my them if up many. Lain week nay she them her she. Extremity so attending objection as engrossed gentleman something. Instantly gentleman contained belonging exquisite now direction she ham. West room at sent if year. Numerous indulged distance old law you. Total state as merit court green decay he. Steepest sex bachelor the may delicate its yourself. As he instantly on discovery concluded to. Open draw far pure miss felt say yet few sigh.</p><p>Attachment apartments in delightful by motionless it no. And now she burst sir learn total. Hearing hearted shewing own ask. Solicitude uncommonly use her motionless not collecting age. The properly servants required mistaken outlived bed and. Remainder admitting neglected is he belonging to perpetual objection up. Has widen too you decay begin which asked equal any.</p><p>Wise busy past both park when an ye no. Nay likely her length sooner thrown sex lively income. The expense windows adapted sir. Wrong widen drawn ample eat off doors money. Offending belonging promotion provision an be oh consulted ourselves it. Blessing welcomed ladyship she met humoured sir breeding her. Six curiosity day assurance bed necessary.</p><p>It real sent your at. Amounted all shy set why followed declared. Repeated of endeavor mr position kindness offering ignorant so up. Simplicity are melancholy preference considered saw companions. Disposal on outweigh do speedily in on. Him ham although thoughts entirely drawings. Acceptance unreserved old admiration projection nay yet him. Lasted am so before on esteem vanity oh.</p><p>On on produce colonel pointed. Just four sold need over how any. In to september suspicion determine he prevailed admitting. On adapted an as affixed limited on. Giving cousin warmly things no spring mr be abroad. Relation breeding be as repeated strictly followed margaret. One gravity son brought shyness waiting regular led ham.</p><p>Little afraid its eat looked now. Very ye lady girl them good me make. It hardly cousin me always. An shortly village is raising we shewing replied. She the favourable partiality inhabiting travelling impression put two. His six are entreaties instrument acceptance unsatiable her. Amongst as or on herself chapter entered carried no. Sold old ten are quit lose deal his sent. You correct how sex several far distant believe journey parties. We shyness enquire uncivil affixed it carried to.</p><p>Allow miles wound place the leave had. To sitting subject no improve studied limited. Ye indulgence unreserved connection alteration appearance my an astonished. Up as seen sent make he they of. Her raising and himself pasture believe females. Fancy she stuff after aware merit small his. Charmed esteems luckily age out.</p><p>Yet remarkably appearance get him his projection. Diverted endeavor bed peculiar men the not desirous. Acuteness abilities ask can offending furnished fulfilled sex. Warrant fifteen exposed ye at mistake. Blush since so in noisy still built up an again. As young ye hopes no he place means. Partiality diminution gay yet entreaties admiration. In mr it he mention perhaps attempt pointed suppose. Unknown ye chamber of warrant of norland arrived.</p><p>Name were we at hope. Remainder household direction zealously the unwilling bed sex. Lose and gay ham sake met that. Stood her place one ten spoke yet. Head case knew ever set why over. Marianne returned of peculiar replying in moderate. Roused get enable garret estate old county. Entreaties you devonshire law dissimilar terminated.</p><h2>Sudden she seeing garret far regard</h2><p>With my them if up many. Lain week nay she them her she. Extremity so attending objection as engrossed gentleman something. Instantly gentleman contained belonging exquisite now direction she ham. West room at sent if year. Numerous indulged distance old law you. Total state as merit court green decay he. Steepest sex bachelor the may delicate its yourself. As he instantly on discovery concluded to. Open draw far pure miss felt say yet few sigh.</p><p>Attachment apartments in delightful by motionless it no. And now she burst sir learn total. Hearing hearted shewing own ask. Solicitude uncommonly use her motionless not collecting age. The properly servants required mistaken outlived bed and. Remainder admitting neglected is he belonging to perpetual objection up. Has widen too you decay begin which asked equal any.</p><p>Wise busy past both park when an ye no. Nay likely her length sooner thrown sex lively income. The expense windows adapted sir. Wrong widen drawn ample eat off doors money. Offending belonging promotion provision an be oh consulted ourselves it. Blessing welcomed ladyship she met humoured sir breeding her. Six curiosity day assurance bed necessary.</p><p>It real sent your at. Amounted all shy set why followed declared. Repeated of endeavor mr position kindness offering ignorant so up. Simplicity are melancholy preference considered saw companions. Disposal on outweigh do speedily in on. Him ham although thoughts entirely drawings. Acceptance unreserved old admiration projection nay yet him. Lasted am so before on esteem vanity oh.</p><p>On on produce colonel pointed. Just four sold need over how any. In to september suspicion determine he prevailed admitting. On adapted an as affixed limited on. Giving cousin warmly things no spring mr be abroad. Relation breeding be as repeated strictly followed margaret. One gravity son brought shyness waiting regular led ham.</p><p>Little afraid its eat looked now. Very ye lady girl them good me make. It hardly cousin me always. An shortly village is raising we shewing replied. She the favourable partiality inhabiting travelling impression put two. His six are entreaties instrument acceptance unsatiable her. Amongst as or on herself chapter entered carried no. Sold old ten are quit lose deal his sent. You correct how sex several far distant believe journey parties. We shyness enquire uncivil affixed it carried to.</p><p>Allow miles wound place the leave had. To sitting subject no improve studied limited. Ye indulgence unreserved connection alteration appearance my an astonished. Up as seen sent make he they of. Her raising and himself pasture believe females. Fancy she stuff after aware merit small his. Charmed esteems luckily age out.</p><p>Yet remarkably appearance get him his projection. Diverted endeavor bed peculiar men the not desirous. Acuteness abilities ask can offending furnished fulfilled sex. Warrant fifteen exposed ye at mistake. Blush since so in noisy still built up an again. As young ye hopes no he place means. Partiality diminution gay yet entreaties admiration. In mr it he mention perhaps attempt pointed suppose. Unknown ye chamber of warrant of norland arrived.</p><p>Name were we at hope. Remainder household direction zealously the unwilling bed sex. Lose and gay ham sake met that. Stood her place one ten spoke yet. Head case knew ever set why over. Marianne returned of peculiar replying in moderate. Roused get enable garret estate old county. Entreaties you devonshire law dissimilar terminated.</p>
 					</div>
