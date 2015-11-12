@@ -5,6 +5,7 @@ import Radium, {Style} from 'radium';
 import DocumentMeta from 'react-document-meta';
 import PureRenderMixin from 'react-addons-pure-render-mixin';
 import {LoaderDeterminate} from '../../components';
+import {EditorModalAssets, EditorModalCollaborators, EditorModalPublish, EditorModalReferences, EditorModalStyle} from '../../components/EditorModals';
 import {getPubEdit, toggleEditorViewMode, toggleFormatting, toggleTOC, unmountEditor, closeModal, openModal} from '../../actions/editor';
 import ReactFireMixin from 'reactfire';
 
@@ -91,6 +92,7 @@ const Editor = React.createClass({
 		const showBottomLeftMenu = this.props.editorData.get('showBottomLeftMenu');
 		const showBottomRightMenu = this.props.editorData.get('showBottomRightMenu');
 		const loadStatus = this.props.editorData.get('status');
+		const activeModal = this.props.editorData.get('activeModal');
 		const metaData = {
 			title: 'PubPub - Editor'
 		};
@@ -120,8 +122,24 @@ const Editor = React.createClass({
 				<div style={styles.notMobile}>
 					<div className="modals">
 						<div className="modal-splash" onClick={this.closeModalHandler} style={[styles.modalSplash, this.props.editorData.get('activeModal') !== undefined && styles.modalSplashActive]}></div>
-						<div className="modal-container" style={[styles.modalContainer, this.props.editorData.get('activeModal') !== undefined && styles.modalContainerActive]}>
-							<h2>{this.props.editorData.get('activeModal')}</h2><h2>{this.props.editorData.get('activeModal')}</h2><h2>{this.props.editorData.get('activeModal')}</h2><h2>{this.props.editorData.get('activeModal')}</h2><h2>{this.props.editorData.get('activeModal')}</h2><h2>{this.props.editorData.get('activeModal')}</h2><h2>{this.props.editorData.get('activeModal')}</h2><h2>{this.props.editorData.get('activeModal')}</h2><h2>{this.props.editorData.get('activeModal')}</h2><h2>{this.props.editorData.get('activeModal')}</h2><h2>{this.props.editorData.get('activeModal')}</h2><h2>{this.props.editorData.get('activeModal')}</h2><h2>{this.props.editorData.get('activeModal')}</h2><h2>{this.props.editorData.get('activeModal')}</h2><h2>{this.props.editorData.get('activeModal')}</h2><h2>{this.props.editorData.get('activeModal')}</h2><h2>{this.props.editorData.get('activeModal')}</h2><h2>{this.props.editorData.get('activeModal')}</h2><h2>{this.props.editorData.get('activeModal')}</h2><h2>{this.props.editorData.get('activeModal')}</h2><h2>{this.props.editorData.get('activeModal')}</h2><h2>{this.props.editorData.get('activeModal')}</h2><h2>{this.props.editorData.get('activeModal')}</h2><h2>{this.props.editorData.get('activeModal')}</h2>
+						<div className="modal-container" style={[styles.modalContainer, activeModal !== undefined && styles.modalContainerActive]}>
+							
+							{(() => {
+								switch (activeModal) {
+								case 'Assets':   
+									return (<EditorModalAssets assetData={this.state.assetsList} />);
+								case 'Collaborators': 
+									return (<EditorModalCollaborators/>);
+								case 'Publish': 
+									return (<EditorModalPublish/>);
+								case 'References': 
+									return (<EditorModalReferences/>);
+								case 'Style': 
+									return (<EditorModalStyle/>);
+								default: 
+									return null;
+								}
+							})()}
 
 						</div>
 					</div>
