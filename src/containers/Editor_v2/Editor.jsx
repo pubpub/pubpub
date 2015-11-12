@@ -40,7 +40,10 @@ const Editor = React.createClass({
 			mode: 'markdown',
 		};
 		const codeMirror = CodeMirror(document.getElementById('firepad'), cmOptions);
-		Firepad.fromCodeMirror(firepadRef, codeMirror);
+		Firepad.fromCodeMirror(firepadRef, codeMirror, {
+			userId: this.props.loginData.getIn(['userData', 'username']),
+			defaultText: 'Welcome to your new Pub!'
+		});
 	},
 
 	componentWillUnmount() {
