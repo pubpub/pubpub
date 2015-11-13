@@ -1,4 +1,5 @@
 import React, {PropTypes} from 'react';
+import {LoaderDeterminate} from '../';
 import Radium from 'radium';
 
 let styles = {};
@@ -17,17 +18,23 @@ const EditorModalAssetsRow = React.createClass({
 	},
 
 	render: function() {
+		const isHeader = this.props.isHeader;
+		const isLoading = this.props.isLoading || false;
 		return (
-			<div style={styles.assetRowContainer}>
+			<div style={[styles.assetRowContainer, isHeader && styles.headeRowContainer]}>
 				<div style={styles.thumbnail}>
 					<div style={styles.inlineBlockHelper}></div>
 					<img style={styles.thumbnailImg} src={this.props.thumbnail} />
 				</div>
-				<div style={styles.filename}>{this.props.filename}</div>
-				<div style={[styles.type, styles[this.props.assetType]]}>{this.props.assetType}</div>
-				<div style={styles.date}>{this.props.date}</div>
-				<div style={styles.author}>{this.props.author}</div>
-				<div style={styles.delete}>delete</div>
+				<div style={[styles.filename, isHeader && styles.isHeader, isHeader && styles.isHeaderRef]}>{this.props.filename}</div>
+				<div style={[styles.hideOnLoad[isLoading], styles.type, styles.typeColors[this.props.assetType], isHeader && styles.isHeader]}>{this.props.assetType}</div>
+				<div style={[styles.hideOnLoad[isLoading], styles.date, isHeader && styles.isHeader]}>{this.props.date}</div>
+				<div style={[styles.hideOnLoad[isLoading], styles.author, isHeader && styles.isHeader]}>{this.props.author}</div>
+				<div style={[styles.hideOnLoad[isLoading], styles.delete, isHeader && styles.isHeaderDelete]}>delete</div>
+
+				<div style={[styles.showOnLoad[isLoading], styles.loadingBarWrapper]}>
+					<LoaderDeterminate value={this.props.percentLoaded}/> 
+				</div>
 			</div>
 		);
 	}
@@ -35,17 +42,28 @@ const EditorModalAssetsRow = React.createClass({
 
 export default Radium(EditorModalAssetsRow);
 
+// thumbnail: 10%
+// refName: 20%
+// type: 15%
+// date: 20%
+// by 20%
+// delete 15%
+
 const rowHeight = '30px';
 styles = {
 	assetRowContainer: {
 		height: rowHeight,
-		width: '100%',
+		width: 'calc(100% - 20px)',
 		padding: 10,
+		fontFamily: 'Courier',
+		fontSize: '15px',
+
 	},
 	thumbnail: {
-		height: rowHeight,
-		width: rowHeight,
-		padding: 2,
+		height: 'calc(' + rowHeight + ' - 4px)',
+		width: '26px',
+		margin: '0px calc(5% - 15px)',
+		padding: '2px',
 		float: 'left',
 		position: 'relative',
 		textAlign: 'center',
@@ -53,8 +71,8 @@ styles = {
 	thumbnailImg: {
 		display: 'inline-block',
 		verticalAlign: 'middle',
-		maxHeight: rowHeight,
-		maxWidth: rowHeight,
+		maxHeight: 'calc(' + rowHeight + ' - 4px)',
+		maxWidth: 'calc(' + rowHeight + ' - 4px)',
 	},
 	inlineBlockHelper: {
 		display: 'inline-block',
@@ -62,7 +80,8 @@ styles = {
 		height: '100%',
 	},
 	filename: {
-		width: 150,
+		width: 'calc(20% - 8%)',
+		padding: '0px 4%',
 		whiteSpace: 'nowrap',
 		overflow: 'hidden',
 		textOverflow: 'ellipsis',
@@ -71,15 +90,29 @@ styles = {
 		float: 'left',
 	},
 	type: {
-		lineHeight: rowHeight,
-		height: rowHeight,
-		margin: 5,
+		lineHeight: '16px',
+		height: 16,
+		width: 50,
+		padding: '2px 5px',
+		margin: '3px calc(7.5% - 30px)',
 		borderRadius: 2,
-		backgroundColor: 'rgba(200,30,30,0.4)',
 		float: 'left',
+		textAlign: 'center',
+	},
+	typeColors: {
+		data: {
+			backgroundColor: '#F9ACAC',
+		},
+		image: {
+			backgroundColor: '#CAACF9',
+		},
+		video: {
+			backgroundColor: '#ACF9B2',
+		},
 	},
 	date: {
-		width: 150,
+		width: '16%',
+		padding: '0px 2%',
 		whiteSpace: 'nowrap',
 		overflow: 'hidden',
 		textOverflow: 'ellipsis',
@@ -88,7 +121,8 @@ styles = {
 		float: 'left',
 	},
 	author: {
-		width: 150,
+		width: '16%',
+		padding: '0px 2%',
 		whiteSpace: 'nowrap',
 		overflow: 'hidden',
 		textOverflow: 'ellipsis',
@@ -97,7 +131,9 @@ styles = {
 		float: 'left',
 	},
 	delete: {
-		width: 90,
+		width: '11%',
+		padding: '0px 2%',
+		textAlign: 'center',
 		whiteSpace: 'nowrap',
 		overflow: 'hidden',
 		textOverflow: 'ellipsis',
@@ -105,5 +141,39 @@ styles = {
 		height: rowHeight,
 		float: 'left',
 	},
+	headeRowContainer: {
+		padding: '25px 10px',
+	},
+	isHeader: {
+		textAlign: 'center',
+		fontSize: '25px',
+		fontFamily: 'Lato',
+	},
+	isHeaderRef: {
+		width: '20%',
+		padding: 0,
+	},
+	isHeaderDelete: {
+		opacity: 0,
+		pointerEvents: 'none',
+	},
+	hideOnLoad: {
+		true: {
+			display: 'none',
+		}
+	},
+	showOnLoad: {
+		false: {
+			display: 'none'
+		}
+	},
+	loadingBarWrapper: {
+		height: 15,
+		width: '70%',
+		float: 'left',
+		overflow: 'hidden',
+		marginTop: 15, 
+	},
+
 
 };

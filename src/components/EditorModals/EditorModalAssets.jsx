@@ -96,17 +96,18 @@ const EditorModalAssets = React.createClass({
 				<div style={baseStyles.modalContentContainer}>
 					<h2 key="asset-modal-right-action" style={baseStyles.topHeader}>Assets</h2>
 					<div style={baseStyles.rightCornerAction} onClick={this.onOpenClick}>Click to choose or drag files</div>
-					<EditorModalAssetsRow isHeader={true} filename="refName" author="by" type="type" date="date" />
+					<EditorModalAssetsRow isHeader={true} filename="refName" author="by" assetType="type" date="date" />
 
 					{this.state.files.map((uploadAsset, index) => {
-						
+						console.log(this.state.uploadRates[index] * 100);
+						const thumbnailImage = (uploadAsset.type.indexOf('image') > -1) ? uploadAsset.preview : '/thumbnails/file.png';
 						return (uploadAsset.isFinished !== true
 							? <EditorModalAssetsRow 
 								key={'modalAssetUploading-' + index} 
-								filename={uploadAsset.originalFilename} 
-								thumbnail={uploadAsset.preview}
+								filename={uploadAsset.name} 
+								thumbnail={thumbnailImage}
 								isLoading={true}
-								percentLoaded={this.state.uploadRates[index]}/>
+								percentLoaded={this.state.uploadRates[index] * 100}/>
 							: null);
 						
 					})} 
