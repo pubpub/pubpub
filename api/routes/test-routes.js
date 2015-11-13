@@ -329,17 +329,26 @@ app.get('/handleNewFile', function(req,res){
 		// Probably need a cleaner solution, but this'll work for now.
 		setTimeout(function(){		
 			cloudinary.uploader.upload(req.query.url, function(result) { 
-			  // console.log(result) 
+        result.thumbnail = result.url.replace('/upload', '/upload/c_limit,h_50,w_50');
+        result.assetType = 'image';
 			  return res.status(201).json(result);
 			});	
 		}, delay);
+
 	} else if (req.query.contentType.indexOf('video') > -1){
 		cloudinary.uploader.upload(req.query.url, function(result) { 
-		  // console.log(result) 
+		  console.log(result) 
+      
+      result.thumbnail = 'https://res.cloudinary.com/pubpub/video/upload/t_media_lib_thumb/c_limit,h_50,w_50/' + result.public_id + '.jpg';
+      result.assetType = 'video';
 		  return res.status(201).json(result);
 		}, { resource_type: "video" });
 	} else {
-		res.status(201).json({url: req.query.url});
+		res.status(201).json({
+      thumbnail: '/thumbnails/data.png',
+      assetType: 'data',
+      url: req.query.url
+    });
 	}
 
 });

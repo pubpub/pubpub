@@ -3,6 +3,7 @@ import Radium from 'radium';
 import Dropzone from 'react-dropzone';
 import {baseStyles} from './modalStyle';
 import {s3Upload} from '../../utils/uploadFile';
+import {EditorModalAssetsRow} from './';
 
 const styles = {
 	dropzone: {
@@ -54,11 +55,8 @@ const EditorModalAssets = React.createClass({
 	},
 
 	onFileFinish: function(evt, index, type, filename, originalFilename) {
-		const vReq = new XMLHttpRequest();
-		vReq.addEventListener('load', (success)=> {
-			console.log('in postCloud Load');
-			console.log(JSON.parse(success.target.responseText));
-			console.log('----');
+		const createAssetObject = new XMLHttpRequest();
+		createAssetObject.addEventListener('load', (success)=> {
 			// Set File to finished
 			const tmpFiles = this.state.files;
 			tmpFiles[index].isFinished = true;
@@ -69,19 +67,21 @@ const EditorModalAssets = React.createClass({
 			const newAsset = {
 				url_s3: 'https://s3.amazonaws.com/pubpub-upload/' + filename,
 				url: serverResult.url,
+				thumbnail: serverResult.thumbnail,
 				originalFilename: originalFilename,
 				filetype: type,
-				createDate: new Date(),
+				assetType: serverResult.assetType,
+				createDate: new Date().toString(),
 			};
-
+			console.log(newAsset);
 			if ('public_id' in serverResult) {
 				newAsset.cloudinaryID = serverResult.public_id;	
 			}
 
 			this.props.addAsset(newAsset);
 		});
-		vReq.open('GET', '/api/handleNewFile?contentType=' + type + '&url=https://s3.amazonaws.com/pubpub-upload/' + filename );
-		vReq.send();
+		createAssetObject.open('GET', '/api/handleNewFile?contentType=' + type + '&url=https://s3.amazonaws.com/pubpub-upload/' + filename );
+		createAssetObject.send();
 	},
 
 	render: function() {
@@ -96,16 +96,37 @@ const EditorModalAssets = React.createClass({
 				<div style={baseStyles.modalContentContainer}>
 					<h2 key="asset-modal-right-action" style={baseStyles.topHeader}>Assets</h2>
 					<div style={baseStyles.rightCornerAction} onClick={this.onOpenClick}>Click to choose or drag files</div>
-					{JSON.stringify(this.state.uploadRates)}
-					{this.props.assetData.map( (asset, index)=> {
-						return (<div key={'asset-modal-item-' + index}>{asset.assetName}</div>);
-					})}
-					{this.state.files.length > 0 ? <div>
-						<h2>Uploading {this.state.files.length} files...</h2>
-						<div>{this.state.files.map((file, index) => <img key={'asdd' + index}src={file.preview} /> )}</div>
-					</div> : null}
+					<EditorModalAssetsRow isHeader={true} filename="refName" author="by" type="type" date="date" />
 
-					{JSON.stringify(this.props.assetData)}
+					{this.state.files.map((uploadAsset, index) => {
+						
+						return (uploadAsset.isFinished !== true
+							? <EditorModalAssetsRow 
+								key={'modalAssetUploading-' + index} 
+								filename={uploadAsset.originalFilename} 
+								thumbnail={uploadAsset.preview}
+								isLoading={true}
+								percentLoaded={this.state.uploadRates[index]}/>
+							: null);
+						
+					})} 
+
+					{ () => {
+						const assetList = [];
+						for (let index = this.props.assetData.length; index > 0; index--) {
+							const asset = this.props.assetData[index - 1];
+							assetList.push(<EditorModalAssetsRow 
+								key={'modalAsset-' + index} 
+								filename={asset.originalFilename} 
+								author={asset.author} 
+								thumbnail={asset.thumbnail} 
+								assetType={asset.assetType}
+								date={asset.createDate}/>);
+						}
+						return assetList;
+					}()}
+
+					
 				</div>
 			</Dropzone>
 		);
