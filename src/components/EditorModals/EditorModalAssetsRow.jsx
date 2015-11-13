@@ -1,5 +1,5 @@
 import React, {PropTypes} from 'react';
-import {LoaderDeterminate} from '../';
+import {LoaderDeterminate, LoaderIndeterminate} from '../';
 import Radium from 'radium';
 
 let styles = {};
@@ -49,7 +49,14 @@ const EditorModalAssetsRow = React.createClass({
 				{/*	Loading Bar.
 				 	Only shown when file is uploading */}
 				<div style={[styles.showOnLoad[isLoading], styles.loadingBarWrapper]}>
-					<LoaderDeterminate value={this.props.percentLoaded}/> 
+					
+					{/*	If it's fully uploaded, show the indeterminate processing bar, 
+						otherwise, show the determinate loader */}
+					{ this.props.percentLoaded === 100
+						? <LoaderIndeterminate color="#999"/>
+						: <LoaderDeterminate value={this.props.percentLoaded}/>
+					}
+
 				</div>
 
 			</div>
