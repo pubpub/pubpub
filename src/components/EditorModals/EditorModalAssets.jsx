@@ -56,7 +56,9 @@ const EditorModalAssets = React.createClass({
 	onFileFinish: function(evt, index, type, filename, originalFilename) {
 		const vReq = new XMLHttpRequest();
 		vReq.addEventListener('load', (success)=> {
-			
+			console.log('in postCloud Load');
+			console.log(JSON.parse(success.target.responseText));
+			console.log('----');
 			// Set File to finished
 			const tmpFiles = this.state.files;
 			tmpFiles[index].isFinished = true;
@@ -71,7 +73,7 @@ const EditorModalAssets = React.createClass({
 				filetype: type,
 				createDate: new Date(),
 			};
-			
+
 			if ('public_id' in serverResult) {
 				newAsset.cloudinaryID = serverResult.public_id;	
 			}

@@ -82,7 +82,9 @@ const Editor = React.createClass({
 				refName = refName + '_' + Date.now(); 
 			}	
 		});
-
+		console.log('in addasset');
+		console.log(asset);
+		console.log('----');
 		asset.refName = refName;
 		asset.author = this.props.loginData.getIn(['userData', 'username']);
 
