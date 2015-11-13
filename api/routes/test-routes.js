@@ -329,6 +329,7 @@ app.get('/handleNewFile', function(req,res){
 		// Probably need a cleaner solution, but this'll work for now.
 		setTimeout(function(){		
 			cloudinary.uploader.upload(req.query.url, function(result) { 
+        console.log(result);
         result.thumbnail = result.url.replace('/upload', '/upload/c_limit,h_50,w_50');
         result.assetType = 'image';
 			  return res.status(201).json(result);
