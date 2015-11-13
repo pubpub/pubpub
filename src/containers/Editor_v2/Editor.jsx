@@ -74,13 +74,22 @@ const Editor = React.createClass({
 			}			
 		};
 	},
-	addAsset: function() {
-		console.log('in Add Asset');
-		console.log(this.state.assetsList);
-		console.log(this.state.assetsObject);
+
+	addAsset: function(asset) {
+		let refName = asset.originalFilename.replace(/[^0-9a-z]/gi, '');
+		this.state.assetsList.forEach((thisAsset)=>{
+			if (thisAsset.refName === refName) {
+				refName = refName + '_' + Date.now(); 
+			}	
+		});
+
+		asset.refName = refName;
+		asset.author = this.props.loginData.getIn(['userData', 'username']);
+
 		const ref = new Firebase('https://pubpub.firebaseio.com/' + this.props.slug + '/assets' );
-		ref.push({'assetName': Math.floor(Math.random() * 100), 'number': Math.floor(Math.random() * 100)});
+		ref.push(asset);
 	},
+
 	closeModalHandler: function() {
 		this.props.dispatch(closeModal());
 	},
@@ -128,7 +137,7 @@ const Editor = React.createClass({
 							{(() => {
 								switch (activeModal) {
 								case 'Assets':   
-									return (<EditorModalAssets assetData={this.state.assetsList} slug={this.props.slug}/>);
+									return (<EditorModalAssets assetData={this.state.assetsList} slug={this.props.slug} addAsset={this.addAsset}/>);
 								case 'Collaborators': 
 									return (<EditorModalCollaborators/>);
 								case 'Publish': 

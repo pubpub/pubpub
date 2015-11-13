@@ -1,6 +1,6 @@
 export function s3Upload(file, folderName, progressEvent, finishEvent, index) {
 	function beginUpload() {
-		const filename = folderName + '/' + new Date().getTime() + '_' +file.name
+		const filename = folderName + '/' + new Date().getTime() + '_' + file.name;
 		const formData = new FormData();
 
 		formData.append('key', filename);
@@ -14,10 +14,10 @@ export function s3Upload(file, folderName, progressEvent, finishEvent, index) {
 		
 		const sendFile = new XMLHttpRequest();
 		sendFile.upload.addEventListener('progress', (evt)=>{
-			progressEvent(evt, index)
+			progressEvent(evt, index);
 		}, false);
 		sendFile.upload.addEventListener('load', (evt)=>{
-			finishEvent(evt, index, file.type, filename)
+			finishEvent(evt, index, file.type, filename, file.name);
 		}, false);
 		sendFile.open('POST', 'http://pubpub-upload.s3.amazonaws.com/', true);
 		sendFile.send(formData);

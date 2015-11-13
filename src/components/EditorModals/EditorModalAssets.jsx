@@ -7,7 +7,7 @@ import {s3Upload} from '../../utils/uploadFile';
 const styles = {
 	dropzone: {
 		width: '100%',
-		height: '100%',
+		minHeight: '200px',
 	},
 	dropzoneActive: {
 		backgroundColor: '#F5F5F5',
@@ -18,7 +18,8 @@ const styles = {
 const EditorModalAssets = React.createClass({
 	propTypes: {
 		assetData: PropTypes.array,
-		slug: PropTypes.string
+		slug: PropTypes.string,
+		addAsset: PropTypes.func,
 	},
 
 	getInitialState: function() {
@@ -52,12 +53,30 @@ const EditorModalAssets = React.createClass({
 		this.setState({uploadRates: tempUploadRates});
 	},
 
-	onFileFinish: function(evt, index, type, filename) {
+	onFileFinish: function(evt, index, type, filename, originalFilename) {
 		const vReq = new XMLHttpRequest();
-		vReq.addEventListener('load', function() {
-			console.log(JSON.parse(this.responseText));
-			// call push to firebase {url, filetype, date, author, rawURL, refname, cloudinaryID}
-			// set file status to finish this.state.files[index], etc
+		vReq.addEventListener('load', (success)=> {
+			
+			// Set File to finished
+			const tmpFiles = this.state.files;
+			tmpFiles[index].isFinished = true;
+			this.setState({files: tmpFiles});
+			
+			// Create Firebase object and push it
+			const serverResult = JSON.parse(success.target.responseText);
+			const newAsset = {
+				url_s3: 'https://s3.amazonaws.com/pubpub-upload/' + filename,
+				url: serverResult.url,
+				originalFilename: originalFilename,
+				filetype: type,
+				createDate: new Date(),
+			};
+			
+			if ('public_id' in serverResult) {
+				newAsset.cloudinaryID = serverResult.public_id;	
+			}
+
+			this.props.addAsset(newAsset);
 		});
 		vReq.open('GET', '/api/handleNewFile?contentType=' + type + '&url=https://s3.amazonaws.com/pubpub-upload/' + filename );
 		vReq.send();
