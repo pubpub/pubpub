@@ -18,23 +18,40 @@ const EditorModalAssetsRow = React.createClass({
 	},
 
 	render: function() {
+		// Set isHeader and isLoading consts for easier access
 		const isHeader = this.props.isHeader;
 		const isLoading = this.props.isLoading || false;
+		
 		return (
 			<div style={[styles.assetRowContainer, isHeader && styles.headeRowContainer]}>
+				
+				{/* Thumbnail */}
 				<div style={styles.thumbnail}>
 					<div style={styles.inlineBlockHelper}></div>
 					<img style={styles.thumbnailImg} src={this.props.thumbnail} />
 				</div>
+
+				{/* refName */}
 				<div style={[styles.filename, isHeader && styles.isHeader, isHeader && styles.isHeaderRef]}>{this.props.filename}</div>
+				
+				{/* Type */}
 				<div style={[styles.hideOnLoad[isLoading], styles.type, styles.typeColors[this.props.assetType], isHeader && styles.isHeader]}>{this.props.assetType}</div>
+				
+				{/* Create Date */}
 				<div style={[styles.hideOnLoad[isLoading], styles.date, isHeader && styles.isHeader]}>{this.props.date}</div>
+				
+				{/* Author */}
 				<div style={[styles.hideOnLoad[isLoading], styles.author, isHeader && styles.isHeader]}>{this.props.author}</div>
+				
+				{/* Delete Button */}
 				<div style={[styles.hideOnLoad[isLoading], styles.delete, isHeader && styles.isHeaderDelete]}>delete</div>
 
+				{/*	Loading Bar.
+				 	Only shown when file is uploading */}
 				<div style={[styles.showOnLoad[isLoading], styles.loadingBarWrapper]}>
 					<LoaderDeterminate value={this.props.percentLoaded}/> 
 				</div>
+
 			</div>
 		);
 	}
