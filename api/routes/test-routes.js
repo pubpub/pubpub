@@ -219,14 +219,28 @@ app.get('/user', function(req, res) {
     });
 });
 
-var multer  = require('multer')
-var upload = multer({ dest: 'tmp/' })
+// var multer  = require('multer')
+// var upload = multer({ dest: 'tmp/' })
 
-app.post('/uploadFile', upload.any(), function (req, res, next) {
-  console.log('done');
-  console.log(req.files);
-  	console.log('done done');
-  	res.status(201).json('done');	
-})
+// app.post('/uploadFile', upload.any(), function (req, res, next) {
+//   console.log('done');
+//   console.log(req.files);
+//   	console.log('done done');
+//   	res.status(201).json('done');	
+// });
+var formidable = require('formidable'),
+    http = require('http'),
+    util = require('util');
 
+app.post('/uploadFile', function (req, res, next) {
+	var form = new formidable.IncomingForm();
+
+    form.parse(req, function(err, fields, files) {
+      res.writeHead(200, {'content-type': 'text/plain'});
+      res.write('received upload:\n\n');
+      res.end(util.inspect({fields: fields, files: files}));
+    });
+
+    return;
+});
 

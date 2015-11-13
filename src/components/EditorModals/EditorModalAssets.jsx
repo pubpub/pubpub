@@ -41,7 +41,7 @@ const EditorModalAssets = React.createClass({
 			formData.append('kitten', 'dog');
 			formData.append('file', files[0]);
 			const upload = new XMLHttpRequest();
-			upload.open('POST', '/api/uploadFile', true);
+			
 			upload.addEventListener('progress', (eee)=>{
 				console.log('in progress');
 				this.updateUploadRates(eee, iii);
@@ -49,6 +49,7 @@ const EditorModalAssets = React.createClass({
 			upload.addEventListener('load', (eee)=>{
 				this.finishUploadRates(iii);
 			}, false);
+			upload.open('POST', '/api/uploadFile', true);
 			upload.send(formData);
 		}
 
