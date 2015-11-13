@@ -221,24 +221,32 @@ app.get('/user', function(req, res) {
 
 
 var crypto = require('crypto');
+const awsDetails = {};
+if(process.env.NODE_ENV !== 'production'){
+  import {access_key_aws, secret_key_aws} from '../authentication/awsCredentials';
+  awsDetails.access_key_aws = access_key_aws;
+  awsDetails.secret_key_aws = secret_key_aws;
+}else{
+	awsDetails.access_key_aws = process.env.access_key_aws;
+	awsDetails.secret_key_aws = process.env.secret_key_aws;
+}
 
 app.get('/uploadPolicy', function(req,res){
-	console.log('inside!');
-	console.log(req.query.contentType);
   if(req.user){
     var s3 = {
-      access_key: "AKIAJ5ELPUZ6MKEZGCOQ"
-      , secret_key: "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"
-      , bucket: "pubpub-upload"
-      , acl: "public-read"
-      , https: "false"
-      , error_message: ""
-      , pad: function(n) {
+      access_key: awsDetails.access_key_aws,
+      secret_key: awsDetails.secret_key_aws,
+      bucket: "pubpub-upload",
+      acl: "public-read",
+      https: "false",
+      error_message: "",
+      pad: function(n) {
         if ((n+"").length == 1) {
           return "0" + n;
         }
         return ""+n;
-      }, expiration_date: function() {
+      }, 
+      expiration_date: function() {
         var now = new Date();
         var date = new Date( now.getTime() + (3600 * 1000) );
         var ed = date.getFullYear() + "-" + this.pad(date.getMonth()+1) + "-" + this.pad(date.getDate());
@@ -291,3 +299,41 @@ app.get('/uploadPolicy', function(req,res){
     res.status(500).json('Not Logged In');
   }
 });
+
+
+var crypto = require('crypto');
+var cloudinary = require('cloudinary');
+if (process.env.NODE_ENV !== 'production') {
+  import {cloudinary_cloud_name, cloudinary_api_key, cloudinary_api_secret} from '../authentication/cloudinaryCredentials';
+  cloudinary.config({ 
+	  cloud_name: cloudinary_cloud_name, 
+	  api_key: cloudinary_api_key, 
+	  api_secret: cloudinary_api_secret 
+	});
+} else {
+	cloudinary.config({ 
+		cloud_name: process.env.cloudinary_cloud_name,
+		api_key: process.env.cloudinary_api_key,
+		api_secret: process.env.cloudinary_api_secret
+	});
+}
+
+app.get('/handleNewFile', function(req,res){
+	if(req.query.contentType.indexOf('image') > -1){
+		cloudinary.uploader.upload(req.query.url, function(result) { 
+		  // console.log(result) 
+		  return res.status(201).json(result);
+		});	
+	} else if (req.query.contentType.indexOf('video') > -1){
+		cloudinary.uploader.upload(req.query.url, function(result) { 
+		  // console.log(result) 
+		  return res.status(201).json(result);
+		}, { resource_type: "video" });
+	} else {
+		res.status(201).json({url: req.query.url});
+	}
+	
+	
+
+});
+

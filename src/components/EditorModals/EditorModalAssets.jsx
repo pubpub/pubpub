@@ -2,7 +2,8 @@ import React, {PropTypes} from 'react';
 import Radium from 'radium';
 import Dropzone from 'react-dropzone';
 import {baseStyles} from './modalStyle';
-var xhr;
+import {s3Upload} from '../../utils/uploadFile';
+
 const styles = {
 	dropzone: {
 		width: '100%',
@@ -16,121 +17,50 @@ const styles = {
 
 const EditorModalAssets = React.createClass({
 	propTypes: {
-		activeModal: PropTypes.string,
-		assetData: PropTypes.array
+		assetData: PropTypes.array,
+		slug: PropTypes.string
 	},
 
 	getInitialState: function() {
 		return {
 			files: [],
-			uploads: [],
 			uploadRates: []
 		};
 	},
 
-	
 	onDrop: function(files) {
 		
-		console.log('Received files: ', files);
-		function updateProgress (oEvent) {
-		  if (oEvent.lengthComputable) {
-		    var percentComplete = oEvent.loaded / oEvent.total;
-		    // ...
-		  } else {
-		    // Unable to compute progress information since the total size is unknown
-		  }
+		const existingFiles = this.state.files.length;
+		const tmpFiles = this.state.files.concat(files);
+
+		for (let fileCount = existingFiles; fileCount < existingFiles + files.length; fileCount++) {
+			s3Upload(tmpFiles[fileCount], this.props.slug, this.onFileProgress, this.onFileFinish, fileCount);	
 		}
 
-		function transferComplete(evt) {
-		  console.log("The transfer is complete.");
-		}
-
-		function transferFailed(evt) {
-		  console.log("An error occurred while transferring the file.");
-		}
-
-		function transferCanceled(evt) {
-		  console.log("The transfer has been canceled by the user.");
-		}
-		function reqListener() {
-			// console.log(JSON.parse(this.responseText));
-			console.log('in listener');
-			const filename = 'kittenhawk_' + files[0].name;
-			const formData = new FormData();
-			formData.append('key', filename);
-			formData.append('AWSAccessKeyId', 'AKIAJ5ELPUZ6MKEZGCOQ');
-			formData.append('acl', 'public-read');
-			formData.append('policy', JSON.parse(this.responseText).policy);
-			formData.append('signature', JSON.parse(this.responseText).signature);
-			formData.append('Content-Type', files[0].type);
-			formData.append('success_action_status', '200');
-			formData.append('file', files[0]);
-			xhr = new XMLHttpRequest();
-			
-			xhr.upload.addEventListener('progress', (evt)=>{
-				console.log('in progress');
-				console.log(evt.loaded/evt.total);
-			}, false);
-			xhr.upload.addEventListener('load', (evt)=>{
-				console.log('all finished');
-				console.log(evt);
-			}, false);
-			xhr.open('POST', 'http://pubpub-upload.s3.amazonaws.com/', true);
-			xhr.send(formData);
-		}
-		const oReq = new XMLHttpRequest();
-		oReq.addEventListener('load', reqListener);
-		oReq.open('GET', '/api/uploadPolicy?contentType=' + files[0].type);
-		oReq.send();
-		// this.setState({
-		// 	files: files
-		// });
-		// const offset = this.state.uploadRates.length;
-		// for (let iii = offset; iii < (offset + files.length); iii++) {
-		// 	// this.state.files[iii] = files[iii];
-			// const formData = new FormData();
-			// formData.append('kitten', 'dog');
-			// formData.append('file', files[iii]);
-			// const upload = new XMLHttpRequest();
-			
-			// upload.addEventListener('progress', (eee)=>{
-			// 	console.log('in progress');
-			// 	this.updateUploadRates(eee, iii);
-			// }, false);
-			// upload.addEventListener('load', (eee)=>{
-			// 	this.finishUploadRates(iii);
-			// }, false);
-			// upload.open('POST', '/api/uploadFile', true);
-			// upload.send(formData);
-		// }
+		this.setState({files: tmpFiles});
 
 	},
 
-	
 	onOpenClick: function() {
 		this.refs.dropzone.open();
 	},
-	finishUploadRates: function(index) {
-		
-		const tmpRates = this.state.uploadRates;
-		tmpRates[index] = 5;
-		this.setState({
-			uploadRates: tmpRates
+
+	onFileProgress: function(evt, index) {
+		const percentage = evt.loaded / evt.total;
+		const tempUploadRates = this.state.uploadRates;
+		tempUploadRates[index] = percentage;
+		this.setState({uploadRates: tempUploadRates});
+	},
+
+	onFileFinish: function(evt, index, type, filename) {
+		const vReq = new XMLHttpRequest();
+		vReq.addEventListener('load', function() {
+			console.log(JSON.parse(this.responseText));
+			// call push to firebase {url, filetype, date, author, rawURL, refname, cloudinaryID}
+			// set file status to finish this.state.files[index], etc
 		});
-	},
-	updateUploadRates: function(eee) {
-		console.log('in upload');
-		console.log(eee);
-		// console.log(index);
-		// const percent = eee.loaded / eee.total;
-		// const tmpRates = this.state.uploadRates;
-		// tmpRates[index] = percent;
-		// this.setState({
-		// 	uploadRates: tmpRates
-		// });
-	},
-	uploadOnProgress: function(eee) {
-		console.log(eee);
+		vReq.open('GET', '/api/handleNewFile?contentType=' + type + '&url=https://s3.amazonaws.com/pubpub-upload/' + filename );
+		vReq.send();
 	},
 
 	render: function() {

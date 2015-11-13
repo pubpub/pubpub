@@ -128,7 +128,7 @@ const Editor = React.createClass({
 							{(() => {
 								switch (activeModal) {
 								case 'Assets':   
-									return (<EditorModalAssets assetData={this.state.assetsList} />);
+									return (<EditorModalAssets assetData={this.state.assetsList} slug={this.props.slug}/>);
 								case 'Collaborators': 
 									return (<EditorModalCollaborators/>);
 								case 'Publish': 
