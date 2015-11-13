@@ -319,24 +319,28 @@ if (process.env.NODE_ENV !== 'production') {
 }
 
 app.get('/handleNewFile', function(req,res){
-	setTimeout(function(){
-		if(req.query.contentType.indexOf('image') > -1){
+	
+	if(req.query.contentType.indexOf('image') > -1){
+		const delay = (req.query.contentType.indexOf('image/gif') > -1) ? 1500 : 0;
+		// Gifs through a 403 for some reason.
+		// A delay seems to make that 403 go away.
+		// Perhaps S3 is taking time to process? That seems strange, why would it finish to begin with 
+		// if it had more to do?
+		// Probably need a cleaner solution, but this'll work for now.
+		setTimeout(function(){		
 			cloudinary.uploader.upload(req.query.url, function(result) { 
 			  // console.log(result) 
 			  return res.status(201).json(result);
 			});	
-		} else if (req.query.contentType.indexOf('video') > -1){
-			cloudinary.uploader.upload(req.query.url, function(result) { 
-			  // console.log(result) 
-			  return res.status(201).json(result);
-			}, { resource_type: "video" });
-		} else {
-			res.status(201).json({url: req.query.url});
-		}
-	}, 3000);
-	
-	
-	
+		}, delay);
+	} else if (req.query.contentType.indexOf('video') > -1){
+		cloudinary.uploader.upload(req.query.url, function(result) { 
+		  // console.log(result) 
+		  return res.status(201).json(result);
+		}, { resource_type: "video" });
+	} else {
+		res.status(201).json({url: req.query.url});
+	}
 
 });
 
