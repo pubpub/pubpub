@@ -2,7 +2,7 @@ import React, {PropTypes} from 'react';
 import Radium from 'radium';
 import Dropzone from 'react-dropzone';
 import {baseStyles} from './modalStyle';
-
+var xhr;
 const styles = {
 	dropzone: {
 		width: '100%',
@@ -30,28 +30,79 @@ const EditorModalAssets = React.createClass({
 
 	
 	onDrop: function(files) {
+		
 		console.log('Received files: ', files);
+		function updateProgress (oEvent) {
+		  if (oEvent.lengthComputable) {
+		    var percentComplete = oEvent.loaded / oEvent.total;
+		    // ...
+		  } else {
+		    // Unable to compute progress information since the total size is unknown
+		  }
+		}
+
+		function transferComplete(evt) {
+		  console.log("The transfer is complete.");
+		}
+
+		function transferFailed(evt) {
+		  console.log("An error occurred while transferring the file.");
+		}
+
+		function transferCanceled(evt) {
+		  console.log("The transfer has been canceled by the user.");
+		}
+		function reqListener() {
+			// console.log(JSON.parse(this.responseText));
+			console.log('in listener');
+			const filename = 'kittenhawk_' + files[0].name;
+			const formData = new FormData();
+			formData.append('key', filename);
+			formData.append('AWSAccessKeyId', 'AKIAJ5ELPUZ6MKEZGCOQ');
+			formData.append('acl', 'public-read');
+			formData.append('policy', JSON.parse(this.responseText).policy);
+			formData.append('signature', JSON.parse(this.responseText).signature);
+			formData.append('Content-Type', files[0].type);
+			formData.append('success_action_status', '200');
+			formData.append('file', files[0]);
+			xhr = new XMLHttpRequest();
+			
+			xhr.upload.addEventListener('progress', (evt)=>{
+				console.log('in progress');
+				console.log(evt.loaded/evt.total);
+			}, false);
+			xhr.upload.addEventListener('load', (evt)=>{
+				console.log('all finished');
+				console.log(evt);
+			}, false);
+			xhr.open('POST', 'http://pubpub-upload.s3.amazonaws.com/', true);
+			xhr.send(formData);
+		}
+		const oReq = new XMLHttpRequest();
+		oReq.addEventListener('load', reqListener);
+		oReq.open('GET', '/api/uploadPolicy?contentType=' + files[0].type);
+		oReq.send();
 		// this.setState({
 		// 	files: files
 		// });
-		const offset = this.state.uploadRates.length;
-		for (let iii = offset; iii < (offset + files.length); iii++) {
-			// this.state.files[iii] = files[iii];
-			const formData = new FormData();
-			formData.append('kitten', 'dog');
-			formData.append('file', files[0]);
-			const upload = new XMLHttpRequest();
+		// const offset = this.state.uploadRates.length;
+		// for (let iii = offset; iii < (offset + files.length); iii++) {
+		// 	// this.state.files[iii] = files[iii];
+			// const formData = new FormData();
+			// formData.append('kitten', 'dog');
+			// formData.append('file', files[iii]);
+			// const upload = new XMLHttpRequest();
 			
-			upload.addEventListener('progress', (eee)=>{
-				console.log('in progress');
-				this.updateUploadRates(eee, iii);
-			}, false);
-			upload.addEventListener('load', (eee)=>{
-				this.finishUploadRates(iii);
-			}, false);
-			upload.open('POST', '/api/uploadFile', true);
-			upload.send(formData);
-		}
+			// upload.addEventListener('progress', (eee)=>{
+			// 	console.log('in progress');
+			// 	this.updateUploadRates(eee, iii);
+			// }, false);
+			// upload.addEventListener('load', (eee)=>{
+			// 	this.finishUploadRates(iii);
+			// }, false);
+			// upload.open('POST', '/api/uploadFile', true);
+			// upload.send(formData);
+		// }
 
 	},
 
@@ -67,14 +118,16 @@ const EditorModalAssets = React.createClass({
 			uploadRates: tmpRates
 		});
 	},
-	updateUploadRates: function(eee, index) {
-		console.log(index);
-		const percent = eee.loaded / eee.total;
-		const tmpRates = this.state.uploadRates;
-		tmpRates[index] = percent;
-		this.setState({
-			uploadRates: tmpRates
-		});
+	updateUploadRates: function(eee) {
+		console.log('in upload');
+		console.log(eee);
+		// console.log(index);
+		// const percent = eee.loaded / eee.total;
+		// const tmpRates = this.state.uploadRates;
+		// tmpRates[index] = percent;
+		// this.setState({
+		// 	uploadRates: tmpRates
+		// });
 	},
 	uploadOnProgress: function(eee) {
 		console.log(eee);
