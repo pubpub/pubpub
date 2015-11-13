@@ -35,7 +35,7 @@ const EditorModalAssetsRow = React.createClass({
 				<div style={[styles.filename, isHeader && styles.isHeader, isHeader && styles.isHeaderRef]}>{this.props.filename}</div>
 				
 				{/* Type */}
-				<div style={[styles.hideOnLoad[isLoading], styles.type, styles.typeColors[this.props.assetType], isHeader && styles.isHeader]}>{this.props.assetType}</div>
+				<div style={[styles.hideOnLoad[isLoading], styles.type, styles.typeColors[this.props.assetType], isHeader && styles.isHeader, isHeader && styles.isHeaderType]}>{this.props.assetType}</div>
 				
 				{/* Create Date */}
 				<div style={[styles.hideOnLoad[isLoading], styles.date, isHeader && styles.isHeader]}>{this.props.date}</div>
@@ -169,13 +169,18 @@ styles = {
 		padding: '25px 10px',
 	},
 	isHeader: {
-		textAlign: 'center',
 		fontSize: '25px',
 		fontFamily: 'Lato',
 	},
 	isHeaderRef: {
-		width: '20%',
-		padding: 0,
+		width: '16%',
+		padding: '0px 0px 0px 4%',
+	},
+	isHeaderType: {
+		lineHeight: '30px',
+		height: 30,
+		padding: '0px 5px',
+		margin: '0px calc(7.5% - 30px)',
 	},
 	isHeaderDelete: {
 		opacity: 0,
