@@ -319,19 +319,22 @@ if (process.env.NODE_ENV !== 'production') {
 }
 
 app.get('/handleNewFile', function(req,res){
-	if(req.query.contentType.indexOf('image') > -1){
-		cloudinary.uploader.upload(req.query.url, function(result) { 
-		  // console.log(result) 
-		  return res.status(201).json(result);
-		});	
-	} else if (req.query.contentType.indexOf('video') > -1){
-		cloudinary.uploader.upload(req.query.url, function(result) { 
-		  // console.log(result) 
-		  return res.status(201).json(result);
-		}, { resource_type: "video" });
-	} else {
-		res.status(201).json({url: req.query.url});
-	}
+	setTimeout(function(){
+		if(req.query.contentType.indexOf('image') > -1){
+			cloudinary.uploader.upload(req.query.url, function(result) { 
+			  // console.log(result) 
+			  return res.status(201).json(result);
+			});	
+		} else if (req.query.contentType.indexOf('video') > -1){
+			cloudinary.uploader.upload(req.query.url, function(result) { 
+			  // console.log(result) 
+			  return res.status(201).json(result);
+			}, { resource_type: "video" });
+		} else {
+			res.status(201).json({url: req.query.url});
+		}
+	}, 3000);
+	
 	
 	
 
