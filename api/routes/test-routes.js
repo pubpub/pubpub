@@ -319,7 +319,7 @@ if (process.env.NODE_ENV !== 'production') {
 }
 
 app.get('/handleNewFile', function(req,res){
-	
+	// There's a 10mb limit for cloudinary images. Gotta fix that.
 	if(req.query.contentType.indexOf('image') > -1){
 		const delay = (req.query.contentType.indexOf('image/gif') > -1) ? 1500 : 0;
 		// Gifs through a 403 for some reason.
@@ -329,7 +329,6 @@ app.get('/handleNewFile', function(req,res){
 		// Probably need a cleaner solution, but this'll work for now.
 		setTimeout(function(){		
 			cloudinary.uploader.upload(req.query.url, function(result) { 
-        console.log(result);
         result.thumbnail = result.url.replace('/upload', '/upload/c_limit,h_50,w_50');
         result.assetType = 'image';
 			  return res.status(201).json(result);
