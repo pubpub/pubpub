@@ -1,5 +1,5 @@
 import React, {PropTypes} from 'react';
-import {LoaderDeterminate} from '../';
+import {LoaderDeterminate, LoaderIndeterminate} from '../';
 import Radium from 'radium';
 
 let styles = {};
@@ -18,23 +18,47 @@ const EditorModalAssetsRow = React.createClass({
 	},
 
 	render: function() {
+		// Set isHeader and isLoading consts for easier access
 		const isHeader = this.props.isHeader;
 		const isLoading = this.props.isLoading || false;
+		
 		return (
 			<div style={[styles.assetRowContainer, isHeader && styles.headeRowContainer]}>
+				
+				{/* Thumbnail */}
 				<div style={styles.thumbnail}>
 					<div style={styles.inlineBlockHelper}></div>
 					<img style={styles.thumbnailImg} src={this.props.thumbnail} />
 				</div>
+
+				{/* refName */}
 				<div style={[styles.filename, isHeader && styles.isHeader, isHeader && styles.isHeaderRef]}>{this.props.filename}</div>
-				<div style={[styles.hideOnLoad[isLoading], styles.type, styles.typeColors[this.props.assetType], isHeader && styles.isHeader]}>{this.props.assetType}</div>
+				
+				{/* Type */}
+				<div style={[styles.hideOnLoad[isLoading], styles.type, styles.typeColors[this.props.assetType], isHeader && styles.isHeader, isHeader && styles.isHeaderType]}>{this.props.assetType}</div>
+				
+				{/* Create Date */}
 				<div style={[styles.hideOnLoad[isLoading], styles.date, isHeader && styles.isHeader]}>{this.props.date}</div>
+				
+				{/* Author */}
 				<div style={[styles.hideOnLoad[isLoading], styles.author, isHeader && styles.isHeader]}>{this.props.author}</div>
+				
+				{/* Delete Button */}
 				<div style={[styles.hideOnLoad[isLoading], styles.delete, isHeader && styles.isHeaderDelete]}>delete</div>
 
+				{/*	Loading Bar.
+				 	Only shown when file is uploading */}
 				<div style={[styles.showOnLoad[isLoading], styles.loadingBarWrapper]}>
-					<LoaderDeterminate value={this.props.percentLoaded}/> 
+					
+					{/*	If it's fully uploaded, show the indeterminate processing bar, 
+						otherwise, show the determinate loader */}
+					{ this.props.percentLoaded === 100
+						? <LoaderIndeterminate color="#999"/>
+						: <LoaderDeterminate value={this.props.percentLoaded}/>
+					}
+
 				</div>
+
 			</div>
 		);
 	}
@@ -145,13 +169,18 @@ styles = {
 		padding: '25px 10px',
 	},
 	isHeader: {
-		textAlign: 'center',
 		fontSize: '25px',
 		fontFamily: 'Lato',
 	},
 	isHeaderRef: {
-		width: '20%',
-		padding: 0,
+		width: '16%',
+		padding: '0px 0px 0px 4%',
+	},
+	isHeaderType: {
+		lineHeight: '30px',
+		height: 30,
+		padding: '0px 5px',
+		margin: '0px calc(7.5% - 30px)',
 	},
 	isHeaderDelete: {
 		opacity: 0,

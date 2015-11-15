@@ -13,3 +13,4 @@ require('./routes/login-routes');
 require('./routes/pub-routes');
 require('./routes/test-routes');
 require('./routes/math-routes');
+require('./routes/s3-upload-policy');
