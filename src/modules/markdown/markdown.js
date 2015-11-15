@@ -175,33 +175,30 @@ renderer.image = function (href, title, text) {
   return '{{' + id + '}}';
 };
 
-renderer.extensions = {
-  math: {
-    rule: /^ *(:{2})math(:{2})*([^\n]+?) *:* *(?:\n+|$)/,
-    capFunc: function(src,cap) {
-      return { type: 'math',text: cap[3] };
-    },
-    renderer: function(text) {
-      result.push(React.createElement(options.math || 'math', {key: keys++},ent.decode(text)));
-      return;
-    },
-    tokenFunc: function(token,renderer) {
-      return renderer(token.text);
-    }
-  }
-};
-
 var exec = function (content) {
   result = [];
   toc = [];
   inlines = {};
   keys = 0;
   marked(content, {renderer: renderer, smartypants: true});
-  console.log(result);
   return {
     tree: result,
     toc: toc
   };
+};
+
+exec.setExtensions = function (extensions) {
+	var rendererFunc = function(elem,text) {
+		result.push(React.createElement(options[elem] || elem, {key: keys++}, ent.decode(text)));
+		return;
+	};
+
+	for (var ext in extensions){
+		extensions[ext].renderer = rendererFunc.bind(this,ext);
+		renderer[ext] = extensions[ext].renderer;
+		options[ext] = extensions[ext].component;
+	}
+	renderer.extensions = extensions;
 };
 
 exec.configure = function (newOptions) {
