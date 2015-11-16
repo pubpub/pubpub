@@ -70,7 +70,8 @@ const Editor = React.createClass({
 		this.props.dispatch(unmountEditor());
 	},
 
-	onEditorChange: function(cm, change) {
+	// onEditorChange: function(cm, change) {
+	onEditorChange: function(cm) {
 		this.setState({
 			tree: markLib(cm.getValue()).tree
 		});
