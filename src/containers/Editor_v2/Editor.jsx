@@ -11,6 +11,10 @@ import ReactFireMixin from 'reactfire';
 
 import {styles} from './EditorStyle';
 
+import markLib from '../../modules/markdown/markdown';
+import markdownExtensions from '../../components/EditorPlugins';
+markLib.setExtensions(markdownExtensions);
+
 const Editor = React.createClass({
 	propTypes: {
 		editorData: PropTypes.object,
@@ -26,7 +30,9 @@ const Editor = React.createClass({
 			return dispatch(getPubEdit(routeParams.slug));
 		}
 	},
-
+	getInitialState() {
+		return { tree: '' };
+	},
 	// Code for client-side rendering only put in componentDidMount()
 	componentDidMount() {
 		// Load Firebase and bind using ReactFireMixin
@@ -34,10 +40,10 @@ const Editor = React.createClass({
 		const ref = new Firebase('https://pubpub.firebaseio.com/' + this.props.slug + '/assets' );
 		this.bindAsObject(ref, 'assetsObject');
 		this.bindAsArray(ref, 'assetsList');
-		
+
 		// Load Firebase ref that is used for firepad
 		const firepadRef = new Firebase('https://pubpub.firebaseio.com/' + this.props.slug + '/firepad');
-		// codeMirror options. 
+		// codeMirror options.
 		const cmOptions = {
 			lineNumbers: false,
 			lineWrapping: true,
@@ -45,7 +51,7 @@ const Editor = React.createClass({
 			autofocus: true,
 			mode: 'markdown',
 		};
-		// Load codemirror into 
+		// Load codemirror into
 		const codeMirror = CodeMirror(document.getElementById('codemirror-wrapper'), cmOptions);
 		// Get Login username for firepad use. Shouldn't be undefined, but set default in case.
 		const username = (this.props.loginData.get('loggedIn') === false) ? 'cat' : this.props.loginData.getIn(['userData', 'username']);
@@ -54,13 +60,22 @@ const Editor = React.createClass({
 			userId: username,
 			defaultText: 'Welcome to your new Pub!'
 		});
+
+		// need to unmount on change
+		codeMirror.on('change', this.onEditorChange);
+
 	},
 
 	componentWillUnmount() {
 		this.props.dispatch(unmountEditor());
 	},
 
-	
+	onEditorChange: function(cm, change) {
+		this.setState({
+			tree: markLib(cm.getValue()).tree
+		});
+	},
+
 	toggleLivePreview: function() {
 		return this.props.dispatch(toggleEditorViewMode());
 	},
@@ -89,12 +104,12 @@ const Editor = React.createClass({
 				padding: '0px 20px',
 				width: 'calc(100% - 40px)',
 				// fontFamily: 'Alegreya',
-			}			
+			}
 		};
 	},
 
 	// Function to generate side-list fade in animations.
-	// Generates unique style per side and per item-depth 
+	// Generates unique style per side and per item-depth
 	animateListItem: function(side, status, index) {
 		const statusOffset = { loaded: 0, loading: 1};
 		const offset = { left: -100, right: 100};
@@ -105,7 +120,7 @@ const Editor = React.createClass({
 		};
 	},
 
-	// Add asset to firebase. 
+	// Add asset to firebase.
 	// Will trigger other open clients to sync new assets data.
 	addAsset: function(asset) {
 		// Cleanup refname. No special characters, underscores, etc.
@@ -115,8 +130,8 @@ const Editor = React.createClass({
 		// If it's not unique, append a timestamp.
 		this.state.assetsList.forEach((thisAsset)=>{
 			if (thisAsset.refName === refName) {
-				refName = refName + '_' + Date.now(); 
-			}	
+				refName = refName + '_' + Date.now();
+			}
 		});
 		// Add refname and author to passed in asset object.
 		asset.refName = refName;
@@ -142,7 +157,7 @@ const Editor = React.createClass({
 		const loadStatus = this.props.editorData.get('status');
 		const activeModal = this.props.editorData.get('activeModal');
 
-		// Set metadata for the page. 
+		// Set metadata for the page.
 		const metaData = {
 			title: 'PubPub - Editing ' + this.props.slug
 		};
@@ -154,10 +169,10 @@ const Editor = React.createClass({
 
 				<Style rules={this.codeMirrorStyles()} />
 
-				
+
 				{/*	Mobile Editing not currently supported.
 					Display a splash screen if media queries determine mobile mode */}
-				
+
 				<div style={styles.isMobile}>
 					<h1 style={styles.mobileHeader}>Cannot Edit in Mobile :(</h1>
 					<h2 style={styles.mobileText}>Please open this url on a desktop, laptop, or larger screen.</h2>
@@ -168,21 +183,20 @@ const Editor = React.createClass({
 					<div className="modals">
 						<div className="modal-splash" onClick={this.closeModalHandler} style={[styles.modalSplash, this.props.editorData.get('activeModal') !== undefined && styles.modalSplashActive]}></div>
 						<div className="modal-container" style={[styles.modalContainer, activeModal !== undefined && styles.modalContainerActive]}>
-							
 							{/*	Switch which modal is displayed based on the activeModal parameter */}
 							{(() => {
 								switch (activeModal) {
-								case 'Assets':   
+								case 'Assets':
 									return (<EditorModalAssets assetData={this.state.assetsList} slug={this.props.slug} addAsset={this.addAsset}/>);
-								case 'Collaborators': 
+								case 'Collaborators':
 									return (<EditorModalCollaborators/>);
-								case 'Publish': 
+								case 'Publish':
 									return (<EditorModalPublish/>);
-								case 'References': 
+								case 'References':
 									return (<EditorModalReferences/>);
-								case 'Style': 
+								case 'Style':
 									return (<EditorModalStyle/>);
-								default: 
+								default:
 									return null;
 								}
 							})()}
@@ -205,24 +219,23 @@ const Editor = React.createClass({
 							<li key="editorNav4"style={[styles.editorNavItem, styles.editorNavRight]} onClick={this.toggleLivePreview}>Live Preview</li>
 							<li style={[styles.editorNavSeparator, styles.editorNavRight]}></li>
 							<li key="editorNav5"style={[styles.editorNavItem, styles.editorNavRight]} onClick={this.openModalHandler('Style')}>Style</li>
-							
+
 						</ul>
 					</div>
 
-					{/*	Horizontal loader line 
+					{/*	Horizontal loader line
 						Separates top bar from rest of editor page */}
 					<div style={styles.editorLoadBar}>
 						<LoaderDeterminate value={loadStatus === 'loading' ? 0 : 100}/>
 					</div>
-					
 					{/* Bottom Nav */}
 					<div style={[styles.common.editorBottomNav, styles[viewMode].editorBottomNav, styles.hiddenUntilLoad, styles[loadStatus]]}>
-						
+
 						{/* Background header bar that's used in livePreview mode. Provides opaque background. */}
 						<div style={[styles.common.bottomNavBackground, styles[viewMode].bottomNavBackground]}></div>
-						
+
 						<div className="leftBottomNav" style={[styles.common.bottomNavLeft, styles[viewMode].bottomNavLeft]}>
-							
+
 							{/* Table of Contents Title */}
 							<div key="bNav_toc" style={[styles.common.bottomNavTitle, styles[viewMode].bottomNavTitle, showBottomLeftMenu && styles[viewMode].listTitleActive]} onClick={this.toggleTOC}>Table of Contents</div>
 
@@ -244,7 +257,7 @@ const Editor = React.createClass({
 						</div>
 
 						<div className="rightBottomNav" style={[styles.common.bottomNavRight, styles[viewMode].bottomNavRight]}>
-							
+
 							{/* Formatting Title */}
 							<div key="bNav_format" style={[styles.common.bottomNavTitle, styles[viewMode].bottomNavTitle, styles.alignRight, showBottomRightMenu && styles[viewMode].listTitleActive]} onClick={this.toggleFormatting}>Formatting</div>
 
@@ -268,7 +281,7 @@ const Editor = React.createClass({
 
 					{/* Markdown Editing Block */}
 					<div style={[styles.hiddenUntilLoad, styles[loadStatus], styles.common.editorMarkdown, styles[viewMode].editorMarkdown]}>
-						
+
 						{/* Insertion point for codemirror and firepad */}
 						<div id="codemirror-wrapper"></div>
 
@@ -276,11 +289,11 @@ const Editor = React.createClass({
 
 					{/* Live Preview Block */}
 					<div style={[styles.hiddenUntilLoad, styles[loadStatus], styles.common.editorPreview, styles[viewMode].editorPreview]}>
-						<h2>Sudden she seeing garret far regard</h2><p>With my them if up many. Lain week nay she them her she. Extremity so attending objection as engrossed gentleman something. Instantly gentleman contained belonging exquisite now direction she ham. West room at sent if year. Numerous indulged distance old law you. Total state as merit court green decay he. Steepest sex bachelor the may delicate its yourself. As he instantly on discovery concluded to. Open draw far pure miss felt say yet few sigh.</p><p>Attachment apartments in delightful by motionless it no. And now she burst sir learn total. Hearing hearted shewing own ask. Solicitude uncommonly use her motionless not collecting age. The properly servants required mistaken outlived bed and. Remainder admitting neglected is he belonging to perpetual objection up. Has widen too you decay begin which asked equal any.</p><p>Wise busy past both park when an ye no. Nay likely her length sooner thrown sex lively income. The expense windows adapted sir. Wrong widen drawn ample eat off doors money. Offending belonging promotion provision an be oh consulted ourselves it. Blessing welcomed ladyship she met humoured sir breeding her. Six curiosity day assurance bed necessary.</p><p>It real sent your at. Amounted all shy set why followed declared. Repeated of endeavor mr position kindness offering ignorant so up. Simplicity are melancholy preference considered saw companions. Disposal on outweigh do speedily in on. Him ham although thoughts entirely drawings. Acceptance unreserved old admiration projection nay yet him. Lasted am so before on esteem vanity oh.</p><p>On on produce colonel pointed. Just four sold need over how any. In to september suspicion determine he prevailed admitting. On adapted an as affixed limited on. Giving cousin warmly things no spring mr be abroad. Relation breeding be as repeated strictly followed margaret. One gravity son brought shyness waiting regular led ham.</p><p>Little afraid its eat looked now. Very ye lady girl them good me make. It hardly cousin me always. An shortly village is raising we shewing replied. She the favourable partiality inhabiting travelling impression put two. His six are entreaties instrument acceptance unsatiable her. Amongst as or on herself chapter entered carried no. Sold old ten are quit lose deal his sent. You correct how sex several far distant believe journey parties. We shyness enquire uncivil affixed it carried to.</p><p>Allow miles wound place the leave had. To sitting subject no improve studied limited. Ye indulgence unreserved connection alteration appearance my an astonished. Up as seen sent make he they of. Her raising and himself pasture believe females. Fancy she stuff after aware merit small his. Charmed esteems luckily age out.</p><p>Yet remarkably appearance get him his projection. Diverted endeavor bed peculiar men the not desirous. Acuteness abilities ask can offending furnished fulfilled sex. Warrant fifteen exposed ye at mistake. Blush since so in noisy still built up an again. As young ye hopes no he place means. Partiality diminution gay yet entreaties admiration. In mr it he mention perhaps attempt pointed suppose. Unknown ye chamber of warrant of norland arrived.</p><p>Name were we at hope. Remainder household direction zealously the unwilling bed sex. Lose and gay ham sake met that. Stood her place one ten spoke yet. Head case knew ever set why over. Marianne returned of peculiar replying in moderate. Roused get enable garret estate old county. Entreaties you devonshire law dissimilar terminated.</p><h2>Sudden she seeing garret far regard</h2><p>With my them if up many. Lain week nay she them her she. Extremity so attending objection as engrossed gentleman something. Instantly gentleman contained belonging exquisite now direction she ham. West room at sent if year. Numerous indulged distance old law you. Total state as merit court green decay he. Steepest sex bachelor the may delicate its yourself. As he instantly on discovery concluded to. Open draw far pure miss felt say yet few sigh.</p><p>Attachment apartments in delightful by motionless it no. And now she burst sir learn total. Hearing hearted shewing own ask. Solicitude uncommonly use her motionless not collecting age. The properly servants required mistaken outlived bed and. Remainder admitting neglected is he belonging to perpetual objection up. Has widen too you decay begin which asked equal any.</p><p>Wise busy past both park when an ye no. Nay likely her length sooner thrown sex lively income. The expense windows adapted sir. Wrong widen drawn ample eat off doors money. Offending belonging promotion provision an be oh consulted ourselves it. Blessing welcomed ladyship she met humoured sir breeding her. Six curiosity day assurance bed necessary.</p><p>It real sent your at. Amounted all shy set why followed declared. Repeated of endeavor mr position kindness offering ignorant so up. Simplicity are melancholy preference considered saw companions. Disposal on outweigh do speedily in on. Him ham although thoughts entirely drawings. Acceptance unreserved old admiration projection nay yet him. Lasted am so before on esteem vanity oh.</p><p>On on produce colonel pointed. Just four sold need over how any. In to september suspicion determine he prevailed admitting. On adapted an as affixed limited on. Giving cousin warmly things no spring mr be abroad. Relation breeding be as repeated strictly followed margaret. One gravity son brought shyness waiting regular led ham.</p><p>Little afraid its eat looked now. Very ye lady girl them good me make. It hardly cousin me always. An shortly village is raising we shewing replied. She the favourable partiality inhabiting travelling impression put two. His six are entreaties instrument acceptance unsatiable her. Amongst as or on herself chapter entered carried no. Sold old ten are quit lose deal his sent. You correct how sex several far distant believe journey parties. We shyness enquire uncivil affixed it carried to.</p><p>Allow miles wound place the leave had. To sitting subject no improve studied limited. Ye indulgence unreserved connection alteration appearance my an astonished. Up as seen sent make he they of. Her raising and himself pasture believe females. Fancy she stuff after aware merit small his. Charmed esteems luckily age out.</p><p>Yet remarkably appearance get him his projection. Diverted endeavor bed peculiar men the not desirous. Acuteness abilities ask can offending furnished fulfilled sex. Warrant fifteen exposed ye at mistake. Blush since so in noisy still built up an again. As young ye hopes no he place means. Partiality diminution gay yet entreaties admiration. In mr it he mention perhaps attempt pointed suppose. Unknown ye chamber of warrant of norland arrived.</p><p>Name were we at hope. Remainder household direction zealously the unwilling bed sex. Lose and gay ham sake met that. Stood her place one ten spoke yet. Head case knew ever set why over. Marianne returned of peculiar replying in moderate. Roused get enable garret estate old county. Entreaties you devonshire law dissimilar terminated.</p>
+						{this.state.tree}
 					</div>
 				</div>
-				
-	
+
+
 			</div>
 		);
 	}
@@ -289,7 +302,7 @@ const Editor = React.createClass({
 
 export default connect( state => {
 	return {
-		editorData: state.editor, 
+		editorData: state.editor,
 		slug: state.router.params.slug,
 		loginData: state.login
 	};
