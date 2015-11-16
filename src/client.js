@@ -15,20 +15,19 @@ import getRoutes from './routes';
 import makeRouteHooksSafe from './helpers/makeRouteHooksSafe';
 
 const client = new ApiClient();
+import Html from './helpers/Html';
 
 const dest = document.getElementById('content');
-const store = createStore(reduxReactRouter, makeRouteHooksSafe(getRoutes), createHistory, client, window.__data);
+const store = createStore(reduxReactRouter, makeRouteHooksSafe(getRoutes), createHistory, client, window.__INITIAL_STATE__);
 
 const component = (
-	<ReduxRouter routes={getRoutes(store, history)} />
+	<Provider store={store} key="provider">
+		<ReduxRouter routes={getRoutes(store, history)} />
+	</Provider>
 );
 
-ReactDOM.render(
-	<Provider store={store} key="provider">
-		{component}
-	</Provider>,
-	dest
-);
+const mainHTML = <Html component={component} />;
+ReactDOM.render(mainHTML, dest);
 
 if (process.env.NODE_ENV !== 'production') {
 	window.React = React; // enable debugger
@@ -39,5 +38,5 @@ if (process.env.NODE_ENV !== 'production') {
 }
 
 if (__DEVTOOLS__) {
-	require('./containers/DevTools/createDevToolsWindow')(store);
+	// require('./containers/DevTools/createDevToolsWindow')(store);
 }

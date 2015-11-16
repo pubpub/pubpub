@@ -95,13 +95,6 @@ const App = React.createClass({
 								hoverColor={headerTextColorHover}
 								loginToggle={this.toggleLogin}/>
 						</div>
-
-						{/* 
-						<LoginHeader loginData={this.props.loginData} clickFunction={this.toggleLogin} color={headerTextColor} hoverColor={headerTextColorHover}/>
-
-						<div style={styles.separator}></div>
-						<div key="headerNewPub" style={[styles.headerText, styles.rightBorder, styles[pathname].headerText]}>New Pub</div>
-						*/ }
 					</div>
 
 				</div>

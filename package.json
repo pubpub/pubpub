@@ -25,6 +25,7 @@
       "env": {
         "NODE_PATH": "./src",
         "NODE_ENV": "production",
+        "PORT": 8080,
         "APIPORT": 3030
       }
     },
@@ -89,7 +90,7 @@
     "piping": "0.3.0",
     "pretty-error": "1.2.0",
     "query-string": "3.0.0",
-    "radium": "^0.14.3",
+    "radium": "^0.15.1",
     "react": "^0.14.2",
     "react-addons-pure-render-mixin": "^0.14.2",
     "react-document-meta": "2.0.0-rc2",

@@ -12,6 +12,8 @@ import Html from './helpers/Html';
 import PrettyError from 'pretty-error';
 import http from 'http';
 
+import DocumentMeta from 'react-document-meta';
+
 import {ReduxRouter} from 'redux-router';
 import createHistory from 'history/lib/createMemoryHistory';
 import {reduxReactRouter, match} from 'redux-router/server';
@@ -90,6 +92,7 @@ app.use((req, res) => {
 			}
 
 			store.getState().router.then(() => {
+
 				const component = (
 					<Provider store={store} key="provider">
 						<ReduxRouter/>
@@ -100,8 +103,41 @@ app.use((req, res) => {
 				if (status) {
 					res.status(status);
 				}
-				res.send('<!doctype html>\n' +
-					ReactDOM.renderToString(<Html assets={webpackIsomorphicTools.assets()} component={component} store={store}/>));
+
+				const htmltest = ReactDOM.renderToString(
+					<Html radiumConfig={{userAgent: req.headers['user-agent']}} component={component} />
+				)
+				const mainBundle = webpackIsomorphicTools.assets().javascript.main;
+				res.send(`<!doctype html>
+					<html lang="en-us">
+						<head>
+							<meta charSet="utf-8"/>
+							<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+							${DocumentMeta.renderAsHTML()}
+							<link rel="shortcut icon" href="/favicon.ico" />
+							<link href='https://fonts.googleapis.com/css?family=Lato:300,900italic' rel='stylesheet' type='text/css' />
+
+							<!-- If we have to load more local css - we should bundle it all into one minified file and load it here. -->
+							<link href='/css/codemirror.css' rel='stylesheet' type='text/css' />
+							
+							<!-- We could dynamically load these in Editor.jsx 
+							This would prevent us from forcing every user to load the libraries - given that many will not edit -->
+							<script src="https://cdn.firebase.com/js/client/2.2.4/firebase.js"></script>
+							<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.2.0/codemirror.js"></script>
+							<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.2.0/mode/markdown/markdown.min.js"></script>
+							<script src="https://cdn.firebase.com/libs/firepad/1.2.0/firepad.min.js"></script>
+						</head>
+
+						<body style="width: 100%; margin: 0;">
+							<div id="content">${htmltest}</div> 
+							<script>
+					          window.__INITIAL_STATE__ = ${JSON.stringify(store.getState())}
+					        </script>
+							<script src=${mainBundle}></script>
+						</body>
+					</html>
+					`)
+
 			}).catch((err) => {
 				console.error('DATA FETCHING ERROR:', pretty.render(err));
 				res.status(500);
@@ -125,3 +161,5 @@ if (config.port) {
 	
 	console.error('==>     ERROR: No PORT environment variable has been specified');
 }
+
+
