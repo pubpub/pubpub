@@ -5,6 +5,8 @@ import 'babel/polyfill';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import createHistory from 'history/lib/createBrowserHistory';
+import useScroll from 'scroll-behavior/lib/useStandardScroll';
+
 import createStore from './createStore';
 import ApiClient from './helpers/ApiClient';
 // import io from 'socket.io-client';
@@ -17,8 +19,10 @@ import makeRouteHooksSafe from './helpers/makeRouteHooksSafe';
 const client = new ApiClient();
 import Html from './helpers/Html';
 
+const scrollablehistory = useScroll(createHistory);
+
 const dest = document.getElementById('content');
-const store = createStore(reduxReactRouter, makeRouteHooksSafe(getRoutes), createHistory, client, window.__INITIAL_STATE__);
+const store = createStore(reduxReactRouter, makeRouteHooksSafe(getRoutes), scrollablehistory, client, window.__INITIAL_STATE__);
 
 const component = (
 	<Provider store={store} key="provider">
