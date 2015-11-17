@@ -5,7 +5,7 @@ import Radium, {Style} from 'radium';
 import DocumentMeta from 'react-document-meta';
 import PureRenderMixin from 'react-addons-pure-render-mixin';
 import {LoaderDeterminate} from '../../components';
-import {EditorModalAssets, EditorModalCollaborators, EditorModalPublish, EditorModalReferences, EditorModalStyle} from '../../components/EditorModals';
+import {EditorModalAssets, EditorModalCollaborators, EditorModalPublish, EditorModalReferences, EditorModalSettings} from '../../components/EditorModals';
 import {getPubEdit, toggleEditorViewMode, toggleFormatting, toggleTOC, unmountEditor, closeModal, openModal} from '../../actions/editor';
 import ReactFireMixin from 'reactfire';
 
@@ -196,7 +196,7 @@ const Editor = React.createClass({
 								case 'References':
 									return (<EditorModalReferences/>);
 								case 'Style':
-									return (<EditorModalStyle/>);
+									return (<EditorModalSettings/>);
 								default:
 									return null;
 								}
@@ -219,7 +219,7 @@ const Editor = React.createClass({
 							<li style={[styles.editorNavSeparator, styles.editorNavRight]}></li>
 							<li key="editorNav4"style={[styles.editorNavItem, styles.editorNavRight]} onClick={this.toggleLivePreview}>Live Preview</li>
 							<li style={[styles.editorNavSeparator, styles.editorNavRight]}></li>
-							<li key="editorNav5"style={[styles.editorNavItem, styles.editorNavRight]} onClick={this.openModalHandler('Style')}>Style</li>
+							<li key="editorNav5"style={[styles.editorNavItem, styles.editorNavRight]} onClick={this.openModalHandler('Style')}>Settings</li>
 
 						</ul>
 					</div>
