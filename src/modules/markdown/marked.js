@@ -117,7 +117,9 @@ function Lexer(options) {
   this.extensions = this.options.renderer.extensions;
 
   for (var key in this.extensions) {
-    this.rules[key] = this.extensions[key].rule;
+		if (this.extensions.inline == false ){
+			this.rules[key] = this.extensions[key].rule;
+		}
   }
 
   if (this.options.gfm) {
@@ -430,12 +432,14 @@ Lexer.prototype.token = function(src, top, bq) {
     //extensions
     for (var key in this.extensions) {
       var rule = this.extensions[key].rule;
-      if (cap = rule.exec(src)) {
-        var extension = this.extensions[key];
-        src = src.substring(cap[0].length);
-        this.tokens.push(extension.capFunc(src,cap));
-        continue;
-      }
+			if (this.extensions[key].inline == false){
+				if (this.extensions[key].cap = rule.exec(src)) {
+					var extension = this.extensions[key];
+					src = src.substring(cap[0].length);
+					this.tokens.push(extension.capFunc(src,cap));
+					continue;
+				}
+			}
     }
 
     // top-level paragraph
@@ -488,7 +492,7 @@ var inline = {
   code: /^(`+)\s*([\s\S]*?[^`])\s*\1(?!`)/,
   br: /^ {2,}\n(?!\s*$)/,
   del: noop,
-  text: /^[\s\S]+?(?=[\\<!\[_*`]| {2,}\n|$)/
+  text: /^[\s\S]+?(?=[\\<!:\[_*`]| {2,}\n|$)/
 };
 
 inline._inside = /(?:\[[^\]]*\]|[^\[\]]|\](?=[^\[]*\]))*/;
@@ -551,6 +555,14 @@ function InlineLexer(links, options) {
   this.rules = inline.normal;
   this.renderer = this.options.renderer || new Renderer;
   this.renderer.options = this.options;
+	this.extensions = this.options.renderer.extensions;
+
+  for (var key in this.extensions) {
+		if (this.extensions.inline == true ){
+			this.rules[key] = this.extensions[key].rule;
+		}
+  }
+
 
   if (!this.links) {
     throw new
@@ -594,7 +606,32 @@ InlineLexer.prototype.output = function(src) {
     , href
     , cap;
 
+	var EXTENSION_CHAR = ':';
+
+	// debugger;
+
   while (src) {
+		//debugger;
+
+		if (src.charAt(0) == EXTENSION_CHAR){
+
+			for (var key in this.extensions) {
+				var rule = this.extensions[key].rule;
+				if (cap = rule.exec(src)) {
+					// debugger;
+					var extension = this.extensions[key];
+					src = src.substring(cap[0].length);
+					var renderer = this.extensions[key].renderer;
+					var inlineFunc = this.extensions[key].inlineFunc;
+					out += inlineFunc.bind(this)(cap,renderer);
+					continue;
+				}
+			}
+
+		}
+
+
+
     // escape
     if (cap = this.rules.escape.exec(src)) {
       src = src.substring(cap[0].length);
@@ -713,8 +750,8 @@ InlineLexer.prototype.output = function(src) {
       out += this.renderer.text(escape(this.smartypants(cap[0])));
       continue;
     }
-
     if (src) {
+			//debugger;
       throw new
         Error('Infinite loop on byte: ' + src.charCodeAt(0));
     }

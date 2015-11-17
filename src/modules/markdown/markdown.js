@@ -201,16 +201,23 @@ exec.setExtensions = function (extensions) {
 
 	var newOptions = {};
 
-	var rendererFunc = function(elem,text) {
-		//debugger;
-		result.push(React.createElement(options[elem] || elem, {key: keys++}, ent.decode(text)));
-		return;
+	var blockRenderer = function(elem,text) {
+		result.push(React.createElement(options[elem] || elem, {key: keys++},ent.decode(text)));
+	  return;
 	};
 
-	//ebugger;
+	var inlineRenderer = function(elem,text) {
+		var id = inlineIds++;
+		inlines[id] = React.createElement(options[elem] || elem, {key: keys++}, ent.decode(text));
+		return '{{' + id + '}}';
+	};
 
 	for (var ext in extensions){
-		extensions[ext].renderer = rendererFunc.bind(this,ext);
+		if (extensions[ext].inline == true) {
+			extensions[ext].renderer = inlineRenderer.bind(this,ext);
+		} else {
+			extensions[ext].renderer = blockRenderer.bind(this,ext);
+		}
 		renderer[ext] = extensions[ext].renderer;
 		options[ext] = extensions[ext].component;
 	}
