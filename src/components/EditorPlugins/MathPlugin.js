@@ -10,8 +10,7 @@ const MathPlugin = React.createClass({
 	},
 	render: function() {
 		const equation = this.props.children;
-		console.log(equation);
-		const urlRequest = 'http://localhost:3030/mathtest?equation=' + encodeURI(equation);
+		const urlRequest = 'https://dry-retreat-1640.herokuapp.com/mathtest?equation=' + encodeURIComponent(equation) + '&cache=true';
 		return (
       <img src={urlRequest}></img>
 		);
