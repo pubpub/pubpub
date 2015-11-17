@@ -24,12 +24,16 @@ const EditorModalPublish = React.createClass({
 
 				<div style={styles.optionContainer}>
 					<div style={styles.optionHeader}>version description</div>
-					<textarea placeholder="e.g. Initial draft version,or updating dataset caption"></textarea>
+					<textarea style={styles.messageTextarea} placeholder="e.g. Initial draft version,or updating dataset caption"></textarea>
 				</div>
 
-				<p>You can publish versions to your Pub as frequently as you like. We encourage you to publish early and often. The full history will be maintained and accessible.</p>
+				<div style={styles.publishText}>
+					<p style={styles.publishTextP}>You can publish versions to your Pub as frequently as you like.</p> 
+					<p style={styles.publishTextP}>We encourage you to publish early and often.</p> 
+					<p style={styles.publishTextP}>The full history will be maintained and accessible.</p>
+				</div>
 
-				<div style={styles.publishButton}>Publish Version</div>
+				<div key="publish-button" style={styles.publishButton}>Publish version</div>
 			</div>
 		);
 	}
@@ -69,4 +73,34 @@ styles = {
 			color: 'black',
 		},
 	},
+	messageTextarea: {
+		outline: 'none',
+		borderWidth: '0px 0px 1px 0px',
+		borderColor: '#aaa',
+		resize: 'none',
+		margin: '15px 0px',
+		fontSize: '15px',
+		height: 30,
+		width: '100%',
+		maxWidth: 600,
+	},
+	publishText: {
+		padding: '5px 25px',
+		fontSize: '18px',
+	},
+	publishTextP: {
+		margin: 0,
+		padding: 0,
+	},
+	publishButton: {
+		fontSize: '35px',
+		padding: '25px',
+		textAlign: 'right',
+		marginLeft: 'calc(100% - 230px - 50px)',
+		userSelect: 'none',
+		':hover': {
+			cursor: 'pointer',
+			color: 'black',
+		},
+	}
 };
