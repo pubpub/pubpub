@@ -29,7 +29,7 @@ export const baseStyles = {
 		top: 15,
 		right: 0,
 		fontSize: 20,
-		width: '350px',
+		width: '325px',
 	},
 	rightCornerSearchInput: {
 		textAlign: 'right',

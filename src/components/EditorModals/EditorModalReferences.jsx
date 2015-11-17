@@ -90,8 +90,12 @@ const EditorModalReferences = React.createClass({
 					
 				</div>
 
-				<div className="add-options-content" style={[styles.addOptions, styles.addOptions[this.state.showAddOptions]]}>
-				<h2>Doggy!</h2>
+				<div className="add-options-content" style={[styles.addOptions, styles.addOptions[this.state.showAddOptions], styles.addOptionsContent]}>
+					<h2 style={styles.sectionHeader}>Add Bibtex</h2>
+					<textarea></textarea>
+
+					<h2 style={styles.sectionHeader}>Manual Entry</h2>
+					<p>'Fritts, Thomas H., Norman J. Scott Jr, and Julie A. Savidge. "Activity of the arboreal brown tree snake (Boiga irregularis) '</p>
 				</div>
 
 			</div>
@@ -112,6 +116,10 @@ styles = {
 			display: 'block',
 		},
 		display: 'none',
+		
+	},
+	addOptionsContent: {
+		padding: '15px 25px',
 	},
 	rowContainer: {
 		width: 'calc(100% - 30px)',
@@ -143,5 +151,8 @@ styles = {
 		// necessary because we float elements with variable height 
 		display: 'table',
 		clear: 'both',
-	}
+	},
+	sectionHeader: {
+		margin: 0,
+	},
 };
