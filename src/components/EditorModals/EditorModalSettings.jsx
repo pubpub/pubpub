@@ -89,8 +89,8 @@ const EditorModalSettings = React.createClass({
 
 				<div className="add-options-content" style={[styles.addOptions, styles.addOptions[this.state.showInviteOptions], styles.addOptionsContent]}>
 
-					<h2 style={styles.sectionHeader}>Invite By Email</h2>
-					<input type="text" placeholder="email address" />
+					<h2 style={styles.sectionHeader}>Advanced Style Options</h2>
+					
 
 				</div>
 
@@ -119,7 +119,7 @@ styles = {
 	},
 	optionContainer: {
 		width: 'calc(50% - 50px)',
-		padding: '30px 25px',
+		padding: '15px 25px 40px 25px',
 		fontFamily: baseStyles.rowTextFontFamily,
 		fontSize: baseStyles.rowTextFontSize,
 		float: 'left',

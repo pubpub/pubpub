@@ -59,6 +59,7 @@ export function closeModal() {
 }
 
 export function openModal(activeModal) {
+	document.getElementById('modal-container').scrollTop = 0;
 	return {
 		type: MODAL_OPEN,
 		activeModal: activeModal

@@ -79,7 +79,7 @@ styles = {
 	assetRowContainer: {
 		height: rowHeight,
 		width: 'calc(100% - 20px)',
-		padding: 10,
+		padding: 15,
 		fontFamily: baseStyles.rowTextFontFamily,
 		fontSize: baseStyles.rowTextFontSize,
 
@@ -167,7 +167,7 @@ styles = {
 		float: 'left',
 	},
 	headeRowContainer: {
-		padding: '25px 10px',
+		padding: '15px 15px 15px 15px',
 	},
 	isHeader: {
 		fontSize: baseStyles.rowHeaderFontSize,

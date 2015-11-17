@@ -78,6 +78,7 @@ const Editor = React.createClass({
 	},
 
 	toggleLivePreview: function() {
+		this.closeModalHandler();
 		return this.props.dispatch(toggleEditorViewMode());
 	},
 
@@ -183,7 +184,7 @@ const Editor = React.createClass({
 					{/*	Container for all modals and their backdrop. */}
 					<div className="modals">
 						<div className="modal-splash" onClick={this.closeModalHandler} style={[styles.modalSplash, this.props.editorData.get('activeModal') !== undefined && styles.modalSplashActive]}></div>
-						<div className="modal-container" style={[styles.modalContainer, activeModal !== undefined && styles.modalContainerActive]}>
+						<div id="modal-container" className="modal-container" style={[styles.modalContainer, activeModal !== undefined && styles.modalContainerActive]}>
 							{/*	Switch which modal is displayed based on the activeModal parameter */}
 							{(() => {
 								switch (activeModal) {
