@@ -237,6 +237,11 @@ export const styles = {
 			color: globalStyles.veryLight,
 			fontSize: '.8em',
 			pointerEvents: 'auto',
+
+			overflow: 'hidden',
+			textOverflow: 'ellipsis',
+			whiteSpace: 'nowrap',
+			maxWidth: '15vw',
 			':hover': {
 				cursor: 'pointer',
 				color: globalStyles.sideText,

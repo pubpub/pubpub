@@ -31,7 +31,12 @@ const Editor = React.createClass({
 		}
 	},
 	getInitialState() {
-		return { tree: '' };
+		return { 
+			tree: '',
+			travisTOC: ['Section 1', 'Section 2', 'Section 3', 'Section 4'],
+			activeFocus: '',
+			oldDoc: undefined,
+		};
 	},
 	// Code for client-side rendering only put in componentDidMount()
 	componentDidMount() {
@@ -72,8 +77,10 @@ const Editor = React.createClass({
 
 	// onEditorChange: function(cm, change) {
 	onEditorChange: function(cm) {
+		const mdOutput = markLib(cm.getValue());
 		this.setState({
-			tree: markLib(cm.getValue()).tree
+			tree: mdOutput.tree,
+			travisTOC: mdOutput.travisTOC,
 		});
 	},
 
@@ -149,6 +156,58 @@ const Editor = React.createClass({
 	},
 	openModalHandler: function(activeModal) {
 		return ()=> this.props.dispatch(openModal(activeModal));
+	},
+
+	focusEditor: function(title, index) {
+		return ()=>{
+			console.log(title, index);
+			// 	If there is no activeFocus, 
+			// 		find the line numbers in code mirror
+			// 		create new linked doc
+			// 		Switch view to show linked doc
+			// 		Save master view somewhere
+			// 	Else
+			// 		Revert back to master doc
+			const cm = document.getElementsByClassName('CodeMirror')[0].CodeMirror;
+			if (this.state.activeFocus === '') {
+				const xxx = performance.now();
+				let startLine = undefined;
+				let endLine = undefined;
+
+				cm.eachLine(function(line) {
+					if (typeof(endLine) === 'undefined' && typeof(startLine) !== 'undefined' && line.stateAfter.header === 1) {
+						endLine = cm.getLineNumber(line);
+					}
+					if (typeof(startLine) === 'undefined' && line.text.indexOf('# ' + title) > -1) {
+						// console.log(line);
+						// console.log('line #' + cm.getLineNumber(line));
+						startLine = cm.getLineNumber(line);
+					}
+					
+
+				});
+
+				const newFocus = cm.linkedDoc({
+					from: startLine,
+					to: endLine,
+					sharedHist: true,
+				});
+
+				console.log(performance.now() - xxx);
+				this.setState({
+					oldDoc: cm.swapDoc(newFocus),
+					activeFocus: title,
+				});
+				
+			} else {
+				cm.swapDoc(this.state.oldDoc);
+				this.setState({
+					oldDoc: undefined,
+					activeFocus: '',
+				});
+			}
+			
+		};
 	},
 
 	render: function() {
@@ -250,9 +309,10 @@ const Editor = React.createClass({
 							{/* Table of Contents list */}
 							<ul style={[styles.common.bottomNavList, styles[viewMode].bottomNavList, showBottomLeftMenu && styles[viewMode].listActive]}>
 								{()=>{
-									const options = ['Introduction', 'Prior Art', 'Resources', 'Methods', 'A New Approach', 'Data Analysis', 'Results', 'Conclusion'];
+									// const options = ['Introduction', 'Prior Art', 'Resources', 'Methods', 'A New Approach', 'Data Analysis', 'Results', 'Conclusion'];
+									const options = this.state.travisTOC;
 									return options.map((item, index)=>{
-										return <li key={'blNav' + index} style={[styles.common.bottomNavListItem, styles[viewMode].bottomNavListItem, this.animateListItem('left', loadStatus, index), showBottomLeftMenu && styles[viewMode].listItemActive]}>{item}</li>;
+										return <li key={'blNav' + index} onClick={this.focusEditor(item.title, index)} style={[styles.common.bottomNavListItem, styles[viewMode].bottomNavListItem, this.animateListItem('left', loadStatus, index), showBottomLeftMenu && styles[viewMode].listItemActive]}>{item.title}</li>;
 									});
 								}()}
 							</ul>
