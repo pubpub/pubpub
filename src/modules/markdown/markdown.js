@@ -180,6 +180,7 @@ var exec = function (content) {
   toc = [];
   inlines = {};
   keys = 0;
+	//options = {};
   marked(content, {renderer: renderer, smartypants: true});
   return {
     tree: result,
@@ -188,10 +189,16 @@ var exec = function (content) {
 };
 
 exec.setExtensions = function (extensions) {
+
+	var newOptions = {};
+
 	var rendererFunc = function(elem,text) {
+		//debugger;
 		result.push(React.createElement(options[elem] || elem, {key: keys++}, ent.decode(text)));
 		return;
 	};
+
+	//ebugger;
 
 	for (var ext in extensions){
 		extensions[ext].renderer = rendererFunc.bind(this,ext);
@@ -199,10 +206,10 @@ exec.setExtensions = function (extensions) {
 		options[ext] = extensions[ext].component;
 	}
 	renderer.extensions = extensions;
-};
+}.bind(this);
 
 exec.configure = function (newOptions) {
-  options = newOptions;
+  //options = newOptions;
 };
 
 module.exports = exec;
