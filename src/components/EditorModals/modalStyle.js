@@ -17,6 +17,7 @@ export const baseStyles = {
 		top: 15,
 		right: 0,
 		fontSize: 20,
+		userSelect: 'none',
 		':hover': {
 			cursor: 'pointer',
 			color: globalStyles.sideHover,
@@ -28,7 +29,7 @@ export const baseStyles = {
 		top: 15,
 		right: 0,
 		fontSize: 20,
-		width: '275px',
+		width: '350px',
 	},
 	rightCornerSearchInput: {
 		textAlign: 'right',
@@ -42,6 +43,7 @@ export const baseStyles = {
 	rightCornerSearchAdvanced: {
 		textAlign: 'right',
 		fontSize: '13px',
+		userSelect: 'none',
 		':hover': {
 			cursor: 'pointer',
 			color: globalStyles.sideHover,

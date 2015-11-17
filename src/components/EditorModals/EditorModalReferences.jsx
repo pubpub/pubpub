@@ -5,6 +5,16 @@ import {baseStyles} from './modalStyle';
 let styles = {};
 
 const EditorModalReferences = React.createClass({
+	getInitialState: function() {
+		return {
+			showAddOptions: false,
+		};
+	},
+	toggleShowAddOptions: function() {
+		this.setState({
+			showAddOptions: !this.state.showAddOptions,	
+		});
+	},
 	render: function() {
 		const sampleCites = [
 			{
@@ -44,17 +54,23 @@ const EditorModalReferences = React.createClass({
 		return (
 			<div>
 				<h2 style={baseStyles.topHeader}>References</h2>
-				<div style={baseStyles.rightCornerSearch}>
+				<div style={[baseStyles.rightCornerSearch, styles.mainContent[this.state.showAddOptions]]}>
 					<input style={baseStyles.rightCornerSearchInput} type="text" placeholder="Search for new reference"/>
-					<div key="refAdvancedText" style={baseStyles.rightCornerSearchAdvanced}>more add options</div>
+					<div key="refAdvancedText" style={baseStyles.rightCornerSearchAdvanced} onClick={this.toggleShowAddOptions}>more add options</div>
 				</div>
 
-				<div className="main-ref-content">
+				<div style={[baseStyles.rightCornerAction, styles.addOptions, styles.addOptions[this.state.showAddOptions]]} onClick={this.toggleShowAddOptions}>
+					Back
+				</div>
+
+
+				<div className="main-ref-content" style={styles.mainContent[this.state.showAddOptions]}>
 					<div style={styles.rowContainer}>
 						<div style={[styles.refNameColumn, styles.columnHeader]}>refName</div>
 						<div style={[styles.bodyColumn, styles.columnHeader]}>citation</div>
 						<div style={[styles.optionColumn, styles.columnHeader]}></div>
 						<div style={[styles.optionColumn, styles.columnHeader]}></div>
+						<div style={styles.clearfix}></div>
 					</div>
 					
 
@@ -66,11 +82,16 @@ const EditorModalReferences = React.createClass({
 									<div style={[styles.bodyColumn]}>{citation.citation}</div>
 									<div style={[styles.optionColumn]}>edit</div>
 									<div style={[styles.optionColumn]}>delete</div>
+									<div style={styles.clearfix}></div>
 								</div>
 							);
 						})
 					}
 					
+				</div>
+
+				<div className="add-options-content" style={[styles.addOptions, styles.addOptions[this.state.showAddOptions]]}>
+				<h2>Doggy!</h2>
 				</div>
 
 			</div>
@@ -80,4 +101,47 @@ const EditorModalReferences = React.createClass({
 
 export default Radium(EditorModalReferences);
 
-styles = {};
+styles = {
+	mainContent: {
+		true: {
+			display: 'none',
+		},
+	},
+	addOptions: {
+		true: {
+			display: 'block',
+		},
+		display: 'none',
+	},
+	rowContainer: {
+		width: 'calc(100% - 30px)',
+		padding: 15,
+		fontFamily: baseStyles.rowTextFontFamily,
+		fontSize: baseStyles.rowTextFontSize,
+	},
+	refNameColumn: {
+		width: 'calc(25% - 20px)',
+		padding: '0px 10px',
+		float: 'left',
+	},
+	columnHeader: {
+		fontFamily: baseStyles.rowHeaderFontFamily,
+		fontSize: baseStyles.rowHeaderFontSize,
+	},
+	bodyColumn: {
+		width: 'calc(55% - 20px)',
+		padding: '0px 10px',
+		float: 'left',
+	},
+	optionColumn: {
+		width: 'calc(10% - 10px)',
+		padding: '0px 5px',
+		float: 'left',
+		textAlign: 'center',
+	},
+	clearfix: {
+		// necessary because we float elements with variable height 
+		display: 'table',
+		clear: 'both',
+	}
+};
