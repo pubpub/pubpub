@@ -135,17 +135,26 @@ styles = {
 		width: 'calc(30% - 20px)',
 		padding: '0px 10px',
 		float: 'left',
+		height: '30px',
+		lineHeight: '30px',
+		whiteSpace: 'nowrap',
+		overflow: 'hidden',
+		textOverflow: 'ellipsis',
 	},
 	permissionsColumn: {
 		width: 'calc(50% - 20px)',
 		padding: '0px 10px',
 		float: 'left',
+		height: '30px',
+		lineHeight: '30px',
 	},
 	optionColumn: {
 		width: 'calc(10% - 10px)',
 		padding: '0px 5px',
 		float: 'left',
 		textAlign: 'center',
+		height: '30px',
+		lineHeight: '30px',
 	},
 	clearfix: {
 		// necessary because we float elements with variable height 
