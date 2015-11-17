@@ -22,4 +22,35 @@ export const baseStyles = {
 			color: globalStyles.sideHover,
 		}
 	},
+	rightCornerSearch: {
+		position: 'absolute',
+		padding: 15,
+		top: 15,
+		right: 0,
+		fontSize: 20,
+		width: '275px',
+	},
+	rightCornerSearchInput: {
+		textAlign: 'right',
+		fontSize: 20,
+		fontFamily: 'Lato',
+		width: '100%',
+		borderWidth: '0px 0px 1px 0px',
+		borderColor: '#aaa',
+		outline: 'none',
+	},
+	rightCornerSearchAdvanced: {
+		textAlign: 'right',
+		fontSize: '13px',
+		':hover': {
+			cursor: 'pointer',
+			color: globalStyles.sideHover,
+		}
+	},
+
+	rowHeaderFontSize: '25px',
+	rowHeaderFontFamily: 'Lato',
+	rowTextFontSize: '15px',
+	rowTextFontFamily: 'Courier',
 };
+

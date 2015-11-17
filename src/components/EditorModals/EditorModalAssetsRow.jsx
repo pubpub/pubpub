@@ -1,6 +1,7 @@
 import React, {PropTypes} from 'react';
 import {LoaderDeterminate, LoaderIndeterminate} from '../';
 import Radium from 'radium';
+import {baseStyles} from './modalStyle';
 
 let styles = {};
 
@@ -79,8 +80,8 @@ styles = {
 		height: rowHeight,
 		width: 'calc(100% - 20px)',
 		padding: 10,
-		fontFamily: 'Courier',
-		fontSize: '15px',
+		fontFamily: baseStyles.rowTextFontFamily,
+		fontSize: baseStyles.rowTextFontSize,
 
 	},
 	thumbnail: {
@@ -169,8 +170,8 @@ styles = {
 		padding: '25px 10px',
 	},
 	isHeader: {
-		fontSize: '25px',
-		fontFamily: 'Lato',
+		fontSize: baseStyles.rowHeaderFontSize,
+		fontFamily: baseStyles.rowHeaderFontFamily,
 	},
 	isHeaderRef: {
 		width: '16%',
