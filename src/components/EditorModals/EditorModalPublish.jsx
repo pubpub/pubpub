@@ -18,7 +18,7 @@ const EditorModalPublish = React.createClass({
 					<div style={styles.optionChoices}>
 						<span key={'publishModal-draft'} style={[styles.option, styles.optionActive]}>draft</span>
 						<span style={styles.optionSeparator}>|</span> 
-						<span key={'publishModal-journal'} style={[styles.option]}>journal-ready</span>
+						<span key={'publishModal-journal'} style={[styles.option]}>peer-review ready</span>
 					</div>
 				</div>
 
