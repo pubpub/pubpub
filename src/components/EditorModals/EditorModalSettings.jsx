@@ -56,17 +56,20 @@ const EditorModalSettings = React.createClass({
 
 				<div className="main-ref-content" style={styles.mainContent[this.state.showAdvanced]}>
 					
+					{/* Iterate over options types */}
 					{
 						sampleOptions.map((optionObject)=> {
 							return (
 								<div key={'settingsOptions-' + optionObject.title} style={styles.optionContainer}>
 
+									{/* Option title */}
 									<div style={styles.optionHeader}>{optionObject.title}</div>
 
 									<div style={styles.optionChoices}>
+
+										{/* Iterate over specific options */}
 										{
 											optionObject.options.map((option, index)=> {
-												// const separator = index !== optionObject.options.length - 1 ? <span style={styles.optionSeparator}>|</span> : null;
 												return (
 													<span key={optionObject.title + '-' + index}>
 														<span key={optionObject.title + '-' + option} style={[styles.option, optionObject.activeOption === option && styles.optionActive]}>{option}</span>
@@ -87,6 +90,7 @@ const EditorModalSettings = React.createClass({
 					
 				</div>
 
+				{/* Additional options mode */}
 				<div className="add-options-content" style={[styles.addOptions, styles.addOptions[this.state.showInviteOptions], styles.addOptionsContent]}>
 
 					<h2 style={styles.sectionHeader}>Advanced Style Options</h2>

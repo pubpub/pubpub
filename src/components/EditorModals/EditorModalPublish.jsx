@@ -13,6 +13,8 @@ const EditorModalPublish = React.createClass({
 			<div>
 				<h2 style={baseStyles.topHeader}>Publish</h2>
 
+				{/* Draft of Review-ready option 
+					Should default to review-ready if a past version was */}
 				<div style={styles.optionContainer}>
 					<div style={styles.optionHeader}>version state</div>
 					<div style={styles.optionChoices}>
@@ -22,17 +24,20 @@ const EditorModalPublish = React.createClass({
 					</div>
 				</div>
 
+				{/* Version message input */}
 				<div style={styles.optionContainer}>
 					<div style={styles.optionHeader}>version description</div>
 					<textarea style={styles.messageTextarea} placeholder="e.g. Initial draft version,or updating dataset caption"></textarea>
 				</div>
 
+				{/* Publish Message */}
 				<div style={styles.publishText}>
 					<p style={styles.publishTextP}>You can publish versions to your Pub as frequently as you like.</p> 
 					<p style={styles.publishTextP}>We encourage you to publish early and often.</p> 
 					<p style={styles.publishTextP}>The full history will be maintained and accessible.</p>
 				</div>
 
+			{/* Publish button */}
 				<div key="publish-button" style={styles.publishButton}>Publish version</div>
 			</div>
 		);

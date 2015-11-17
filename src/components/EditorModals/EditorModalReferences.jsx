@@ -54,17 +54,21 @@ const EditorModalReferences = React.createClass({
 		return (
 			<div>
 				<h2 style={baseStyles.topHeader}>References</h2>
+
+				{/* Search for new Ref bar and advanced add option */}
 				<div style={[baseStyles.rightCornerSearch, styles.mainContent[this.state.showAddOptions]]}>
 					<input style={baseStyles.rightCornerSearchInput} type="text" placeholder="Search for new reference"/>
 					<div key="refAdvancedText" style={baseStyles.rightCornerSearchAdvanced} onClick={this.toggleShowAddOptions}>more add options</div>
 				</div>
 
+				{/* Back button that displays in advanced mode */}
 				<div style={[baseStyles.rightCornerAction, styles.addOptions, styles.addOptions[this.state.showAddOptions]]} onClick={this.toggleShowAddOptions}>
 					Back
 				</div>
 
-
+				{/* Main References table */}
 				<div className="main-ref-content" style={styles.mainContent[this.state.showAddOptions]}>
+					{/* References table header */}
 					<div style={styles.rowContainer}>
 						<div style={[styles.refNameColumn, styles.columnHeader]}>refName</div>
 						<div style={[styles.bodyColumn, styles.columnHeader]}>citation</div>
@@ -73,7 +77,7 @@ const EditorModalReferences = React.createClass({
 						<div style={styles.clearfix}></div>
 					</div>
 					
-
+					{/* Iterate over citations */}
 					{
 						sampleCites.map((citation, index) => {
 							return (
@@ -90,6 +94,7 @@ const EditorModalReferences = React.createClass({
 					
 				</div>
 
+				{/* Content section displayed when in advanced add mode */}
 				<div className="add-options-content" style={[styles.addOptions, styles.addOptions[this.state.showAddOptions], styles.addOptionsContent]}>
 					<h2 style={styles.sectionHeader}>Add Bibtex</h2>
 					<textarea></textarea>

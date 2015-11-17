@@ -38,16 +38,19 @@ const EditorModalCollaborators = React.createClass({
 		return (
 			<div>
 				<h2 style={baseStyles.topHeader}>Collaborators</h2>
+
+				{/* Add new collaborators search bar */}
 				<div style={[baseStyles.rightCornerSearch, styles.mainContent[this.state.showInviteOptions]]}>
 					<input style={baseStyles.rightCornerSearchInput} type="text" placeholder="Add new collaborator"/>
 					<div key="refAdvancedText" style={baseStyles.rightCornerSearchAdvanced} onClick={this.toggleshowInviteOptions}>invite by email</div>
 				</div>
 
+				{/* Back button when in invite by email mode */}
 				<div style={[baseStyles.rightCornerAction, styles.addOptions, styles.addOptions[this.state.showInviteOptions]]} onClick={this.toggleshowInviteOptions}>
 					Back
 				</div>
 
-
+				{/* Generate collaborators table */}
 				<div className="main-ref-content" style={styles.mainContent[this.state.showInviteOptions]}>
 					<div style={styles.rowContainer}>
 
@@ -82,6 +85,7 @@ const EditorModalCollaborators = React.createClass({
 					
 				</div>
 
+				{/* Invite by email content */}
 				<div className="add-options-content" style={[styles.addOptions, styles.addOptions[this.state.showInviteOptions], styles.addOptionsContent]}>
 
 					<h2 style={styles.sectionHeader}>Invite By Email</h2>
