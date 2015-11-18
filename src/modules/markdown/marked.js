@@ -606,31 +606,25 @@ InlineLexer.prototype.output = function(src) {
     , href
     , cap;
 
-	var EXTENSION_CHAR = ':';
 
 	// debugger;
 
   while (src) {
 		//debugger;
 
-		if (src.charAt(0) == EXTENSION_CHAR){
 
-			for (var key in this.extensions) {
-				var rule = this.extensions[key].rule;
-				if (cap = rule.exec(src)) {
-					// debugger;
-					var extension = this.extensions[key];
-					src = src.substring(cap[0].length);
-					var renderer = this.extensions[key].renderer;
-					var inlineFunc = this.extensions[key].inlineFunc;
-					out += inlineFunc.bind(this)(cap,renderer);
-					continue;
-				}
+		for (var key in this.extensions) {
+			var rule = this.extensions[key].rule;
+			if (cap = rule.exec(src)) {
+				// debugger;
+				var extension = this.extensions[key];
+				src = src.substring(cap[0].length);
+				var renderer = this.extensions[key].renderer;
+				var inlineFunc = this.extensions[key].inlineFunc;
+				out += inlineFunc.bind(this)(cap,renderer);
+				continue;
 			}
-
 		}
-
-
 
     // escape
     if (cap = this.rules.escape.exec(src)) {

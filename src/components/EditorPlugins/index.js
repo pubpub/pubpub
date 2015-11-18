@@ -4,7 +4,7 @@ import MathPlugin from './MathPlugin';
 export default {
 	math: {
 		component: MathPlugin,
-		rule: /(:{2})math(:{2})(.*)(:{2})/,
+		rule: /^(:{2})math(:{2})(.*)(:{2})/,
 		inline: true,
 		inlineFunc: function(cap, renderer) {
 			return renderer(cap[3]);
