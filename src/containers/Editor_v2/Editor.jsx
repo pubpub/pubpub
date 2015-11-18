@@ -31,7 +31,7 @@ const Editor = React.createClass({
 		}
 	},
 	getInitialState() {
-		return { 
+		return {
 			tree: '',
 			travisTOC: ['Section 1', 'Section 2', 'Section 3', 'Section 4'],
 			activeFocus: '',
@@ -77,7 +77,7 @@ const Editor = React.createClass({
 
 	// onEditorChange: function(cm, change) {
 	onEditorChange: function(cm) {
-		const mdOutput = markLib(cm.getValue());
+		const mdOutput = markLib(cm.getValue(), this.state.assetsList);
 		this.setState({
 			tree: mdOutput.tree,
 			travisTOC: mdOutput.travisTOC,
@@ -161,7 +161,7 @@ const Editor = React.createClass({
 	focusEditor: function(title, index) {
 		return ()=>{
 			console.log(title, index);
-			// 	If there is no activeFocus, 
+			// 	If there is no activeFocus,
 			// 		find the line numbers in code mirror
 			// 		create new linked doc
 			// 		Switch view to show linked doc
@@ -183,7 +183,7 @@ const Editor = React.createClass({
 						// console.log('line #' + cm.getLineNumber(line));
 						startLine = cm.getLineNumber(line);
 					}
-					
+
 
 				});
 
@@ -198,7 +198,7 @@ const Editor = React.createClass({
 					oldDoc: cm.swapDoc(newFocus),
 					activeFocus: title,
 				});
-				
+
 			} else {
 				cm.swapDoc(this.state.oldDoc);
 				this.setState({
@@ -206,7 +206,7 @@ const Editor = React.createClass({
 					activeFocus: '',
 				});
 			}
-			
+
 		};
 	},
 

@@ -34,7 +34,7 @@ var block = {
   def: /^ *\[([^\]]+)\]: *<?([^\s>]+)>?(?: +["(]([^\n]+)[")])? *(?:\n+|$)/,
   table: noop,
   paragraph: /^((?:[^\n]+\n?(?!hr|heading|lheading|blockquote|tag|def))+)\n*/,
-  text: /^[^\n]+/
+  text: /^[^\n:]+/
 };
 
 block.bullet = /(?:[*+-]|\d+\.)/;
@@ -177,6 +177,7 @@ Lexer.prototype.token = function(src, top, bq) {
     , l;
 
   while (src) {
+
     // newline
     if (cap = this.rules.newline.exec(src)) {
       src = src.substring(cap[0].length);
@@ -186,6 +187,25 @@ Lexer.prototype.token = function(src, top, bq) {
         });
       }
     }
+
+		//extensions
+		var foundExtension = false;
+		for (var key in this.extensions) {
+			var rule = this.extensions[key].rule;
+			if (this.extensions[key].inline == false){
+				if (cap = rule.exec(src)) {
+					var extension = this.extensions[key];
+					src = src.substring(cap[0].length);
+					this.tokens.push(extension.capFunc(src,cap));
+					foundExtension = true;
+					continue;
+				}
+			}
+		}
+
+		if (foundExtension) {
+			continue;
+		}
 
     // code
     if (cap = this.rules.code.exec(src)) {
@@ -428,20 +448,6 @@ Lexer.prototype.token = function(src, top, bq) {
       continue;
     }
 
-
-    //extensions
-    for (var key in this.extensions) {
-      var rule = this.extensions[key].rule;
-			if (this.extensions[key].inline == false){
-				if (this.extensions[key].cap = rule.exec(src)) {
-					var extension = this.extensions[key];
-					src = src.substring(cap[0].length);
-					this.tokens.push(extension.capFunc(src,cap));
-					continue;
-				}
-			}
-    }
-
     // top-level paragraph
     if (top && (cap = this.rules.paragraph.exec(src))) {
       src = src.substring(cap[0].length);
@@ -557,12 +563,6 @@ function InlineLexer(links, options) {
   this.renderer.options = this.options;
 	this.extensions = this.options.renderer.extensions;
 
-  for (var key in this.extensions) {
-		if (this.extensions.inline == true ){
-			this.rules[key] = this.extensions[key].rule;
-		}
-  }
-
 
   if (!this.links) {
     throw new
@@ -615,14 +615,15 @@ InlineLexer.prototype.output = function(src) {
 
 		for (var key in this.extensions) {
 			var rule = this.extensions[key].rule;
-			if (cap = rule.exec(src)) {
-				// debugger;
-				var extension = this.extensions[key];
-				src = src.substring(cap[0].length);
-				var renderer = this.extensions[key].renderer;
-				var inlineFunc = this.extensions[key].inlineFunc;
-				out += inlineFunc.bind(this)(cap,renderer);
-				continue;
+			var extension = this.extensions[key];
+			if (extension.inline == true){
+				if (cap = rule.exec(src)) {
+					src = src.substring(cap[0].length);
+					var renderFunc = this.extensions[key].renderer;
+					var inlineFunc = this.extensions[key].inlineFunc;
+					out += inlineFunc.bind(this)(cap,renderFunc,this.renderer.assets);
+					continue;
+				}
 			}
 		}
 
@@ -1141,9 +1142,9 @@ Parser.prototype.tok = function() {
       //debugger;
       for (var key in this.extensions) {
         if (key == this.token.type) {
-          var renderer = this.extensions[key].renderer;
+          var renderFunc = this.extensions[key].renderer;
           var tokenFunc = this.extensions[key].tokenFunc;
-          return tokenFunc.bind(this)(this.token,renderer);
+          return tokenFunc.bind(this)(this.token,renderFunc,this.renderer.assets);
         }
       }
   }
