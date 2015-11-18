@@ -43,7 +43,6 @@ const Editor = React.createClass({
 			tree: '',
 			travisTOC: ['Section 1', 'Section 2', 'Section 3', 'Section 4'],
 			activeFocus: '',
-			oldDoc: undefined,
 		};
 	},
 	// Code for client-side rendering only put in componentDidMount()
@@ -160,62 +159,72 @@ const Editor = React.createClass({
 		return ()=> this.props.dispatch(openModal(activeModal));
 	},
 
-	focusEditor: function(title, index) {
+	// focusEditor: function(title, index) {
+	focusEditor: function(title) {
+		// TODO: use the index variable that's passed in to accomodate the case
+		// where a document has more than one identical header title.
+		// Right now, no matter which is clicked, the focus will focus on the first instance of it.
 		return ()=>{
-			console.log(title, index);
-			// 	If there is no activeFocus, 
-			// 		find the line numbers in code mirror
-			// 		create new linked doc
-			// 		Switch view to show linked doc
-			// 		Save master view somewhere
-			// 	Else
-			// 		Revert back to master doc
+			
+			// If the focus button clicked is the same as the activeFocus, 
+			// turn off the focusing
 			if (this.state.activeFocus === title) {
+				this.setState({ activeFocus: ''});
 
-				// cm.swapDoc(this.state.oldDoc);
-				this.setState({
-					// oldDoc: undefined,
-					activeFocus: '',
-				});
-			} else {
-				const cm = document.getElementsByClassName('CodeMirror')[0].CodeMirror;
+				// Erase the existing focus CodeMirror
 				document.getElementById('codemirror-focus-wrapper').innerHTML = '';
 
-				const xxx = performance.now();
+			} else {
+				// Get main codemirror doc
+				const cm = document.getElementsByClassName('CodeMirror')[0].CodeMirror;
+
+				// Erase the existing focus CodeMirror
+				document.getElementById('codemirror-focus-wrapper').innerHTML = '';
+
 				let startLine = undefined;
 				let endLine = undefined;
 
+				// Iterate over all lines in the doc
 				cm.eachLine(function(line) {
-					if (typeof(endLine) === 'undefined' && typeof(startLine) !== 'undefined' && line.stateAfter.header === 1) {
-						endLine = cm.getLineNumber(line);
-					}
-					if (typeof(startLine) === 'undefined' && line.text.indexOf('# ' + title) > -1) {
-						// console.log(line);
-						// console.log('line #' + cm.getLineNumber(line));
-						startLine = cm.getLineNumber(line);
-					}
-					
+					// Proceed if either startLine or endLine is undefined
+					if (typeof(startLine) === 'undefined' || typeof(endLine) === 'undefined') {
 
+						// If we have a startline, but no endline, check to see if the line is a header
+						// We wish to set endline to the first #H1 header after startline
+						if (typeof(endLine) === 'undefined' && typeof(startLine) !== 'undefined' && line.stateAfter.header === 1) {
+							endLine = cm.getLineNumber(line);
+						}
+
+						// If we don't yet have a startline, see if the current line matches the format of the selected title
+						if (typeof(startLine) === 'undefined' && line.text.indexOf('# ' + title) > -1) {
+							startLine = cm.getLineNumber(line);
+						}
+					}
 				});
 
+				// Create new linked doc from startline and endLine
 				const newFocus = cm.linkedDoc({
 					from: startLine,
 					to: endLine,
 					sharedHist: true,
-				});
+				});				
+				
+				// Create new codemirror inside of the focus-wrapper
+				const cmFocus = CodeMirror(document.getElementById('codemirror-focus-wrapper'), cmOptions);
 
-				console.log(performance.now() - xxx);
-				
-				
-				CodeMirror(document.getElementById('codemirror-focus-wrapper'), cmOptions);
-				const cmFocus = document.getElementById('codemirror-focus-wrapper').childNodes[0].CodeMirror;
+				// Insert the new focus doc
 				cmFocus.swapDoc(newFocus);
+
+				// Scroll to top.
+				// We had a weird bug where the focus was defaulting to the bottom of the div
 				document.getElementById('editor-text-wrapper').scrollTop = 0;
 
+				// Update the activeFocus state
 				this.setState({
-					// oldDoc: cm.swapDoc(newFocus),
 					activeFocus: title,
 				});
+
+				// Hide the TOC if we were in live-preview mode and it was expanded
 				this.toggleTOC();
 			}
 			
