@@ -15,11 +15,14 @@ export default {
 		inline: true,
 		rule: /^(?:\s)*(?::{2})asset(?::{2})([^\n:]+)(?::{2})/,
 		inlineFunc: function(cap, renderer, assets) {
+			console.log(assets);
 			const refName = cap[1];
 			const asset = assets.find(asst => (asst.refName === refName));
 			let url = null;
-			if (asset) {
+			if (asset && asset.assetType === 'image') {
 				url = asset.url_s3;
+			} else if (asset) {
+				url = 'error:type';
 			}
 			return renderer(refName, {'url': url});
 		}
