@@ -96,6 +96,7 @@
     "react-dom": "0.14.0",
     "react-dropzone": "^3.0.0",
     "react-image-gallery": "^0.4.6",
+    "react-imageloader": "^2.1.0",
     "react-inline-css": "2.0.0",
     "react-redux": "4.0.0",
     "react-remarkable": "^1.1.1",
