@@ -15,6 +15,14 @@ import markLib from '../../modules/markdown/markdown';
 import markdownExtensions from '../../components/EditorPlugins';
 markLib.setExtensions(markdownExtensions);
 
+const cmOptions = {
+	lineNumbers: false,
+	lineWrapping: true,
+	viewportMargin: Infinity, // This will cause bad performance on large documents. Rendering the entire thing...
+	autofocus: true,
+	mode: 'markdown',
+};
+
 const Editor = React.createClass({
 	propTypes: {
 		editorData: PropTypes.object,
@@ -35,7 +43,6 @@ const Editor = React.createClass({
 			tree: '',
 			travisTOC: ['Section 1', 'Section 2', 'Section 3', 'Section 4'],
 			activeFocus: '',
-			oldDoc: undefined,
 		};
 	},
 	// Code for client-side rendering only put in componentDidMount()
@@ -49,13 +56,7 @@ const Editor = React.createClass({
 		// Load Firebase ref that is used for firepad
 		const firepadRef = new Firebase('https://pubpub.firebaseio.com/' + this.props.slug + '/firepad');
 		// codeMirror options.
-		const cmOptions = {
-			lineNumbers: false,
-			lineWrapping: true,
-			viewportMargin: Infinity, // This will cause bad performance on large documents. Rendering the entire thing...
-			autofocus: true,
-			mode: 'markdown',
-		};
+
 		// Load codemirror into
 		const codeMirror = CodeMirror(document.getElementById('codemirror-wrapper'), cmOptions);
 		// Get Login username for firepad use. Shouldn't be undefined, but set default in case.
@@ -158,53 +159,113 @@ const Editor = React.createClass({
 		return ()=> this.props.dispatch(openModal(activeModal));
 	},
 
-	focusEditor: function(title, index) {
+	insertFormatting: function(formatting) {
 		return ()=>{
-			console.log(title, index);
-			// 	If there is no activeFocus,
-			// 		find the line numbers in code mirror
-			// 		create new linked doc
-			// 		Switch view to show linked doc
-			// 		Save master view somewhere
-			// 	Else
-			// 		Revert back to master doc
-			const cm = document.getElementsByClassName('CodeMirror')[0].CodeMirror;
-			if (this.state.activeFocus === '') {
-				const xxx = performance.now();
+			const cm = this.state.activeFocus === ''
+				? document.getElementsByClassName('CodeMirror')[0].CodeMirror
+				: document.getElementById('codemirror-focus-wrapper').childNodes[0].CodeMirror;
+
+
+			const currentSelection = cm.getSelection();
+			const insertText = currentSelection !== '' ? currentSelection : 'example';
+
+			this.toggleFormatting();
+
+			switch (formatting) {
+			case 'H1':
+				return cm.replaceSelection('# ' + insertText + '\n');
+			case 'H2':
+				return cm.replaceSelection('## ' + insertText + '\n');
+			case 'H3':
+				return cm.replaceSelection('### ' + insertText + '\n');
+			case 'Bold':
+				return cm.replaceSelection('**' + insertText + '**');
+			case 'Italic':
+				return cm.replaceSelection('*' + insertText + '*');
+			case '# List':
+				return cm.replaceSelection('\n 1. ' + insertText + '\n');
+			case '- List':
+				return cm.replaceSelection('\n -  ' + insertText + '\n');
+			case 'Image':
+				return cm.replaceSelection('::image::refName::');
+			case 'Video':
+				return cm.replaceSelection('::video::refName::');
+			default:
+				return null;
+			}
+
+
+		};
+	},
+
+	// focusEditor: function(title, index) {
+	focusEditor: function(title) {
+		// TODO: use the index variable that's passed in to accomodate the case
+		// where a document has more than one identical header title.
+		// Right now, no matter which is clicked, the focus will focus on the first instance of it.
+		return ()=>{
+
+
+			// If the focus button clicked is the same as the activeFocus,
+			// turn off the focusing
+			if (this.state.activeFocus === title) {
+				this.setState({ activeFocus: ''});
+
+				// Erase the existing focus CodeMirror
+				document.getElementById('codemirror-focus-wrapper').innerHTML = '';
+
+			} else {
+				// Get main codemirror doc
+				const cm = document.getElementsByClassName('CodeMirror')[0].CodeMirror;
+
+				// Erase the existing focus CodeMirror
+				document.getElementById('codemirror-focus-wrapper').innerHTML = '';
+
 				let startLine = undefined;
 				let endLine = undefined;
 
+				// Iterate over all lines in the doc
 				cm.eachLine(function(line) {
-					if (typeof(endLine) === 'undefined' && typeof(startLine) !== 'undefined' && line.stateAfter.header === 1) {
-						endLine = cm.getLineNumber(line);
-					}
-					if (typeof(startLine) === 'undefined' && line.text.indexOf('# ' + title) > -1) {
-						// console.log(line);
-						// console.log('line #' + cm.getLineNumber(line));
-						startLine = cm.getLineNumber(line);
-					}
+					// Proceed if either startLine or endLine is undefined
+					if (typeof(startLine) === 'undefined' || typeof(endLine) === 'undefined') {
 
+						// If we have a startline, but no endline, check to see if the line is a header
+						// We wish to set endline to the first #H1 header after startline
+						if (typeof(endLine) === 'undefined' && typeof(startLine) !== 'undefined' && line.stateAfter.header === 1) {
+							endLine = cm.getLineNumber(line);
+						}
 
+						// If we don't yet have a startline, see if the current line matches the format of the selected title
+						if (typeof(startLine) === 'undefined' && line.text.indexOf('# ' + title) > -1) {
+							startLine = cm.getLineNumber(line);
+						}
+					}
 				});
 
+				// Create new linked doc from startline and endLine
 				const newFocus = cm.linkedDoc({
 					from: startLine,
 					to: endLine,
 					sharedHist: true,
 				});
 
-				console.log(performance.now() - xxx);
+				// Create new codemirror inside of the focus-wrapper
+				const cmFocus = CodeMirror(document.getElementById('codemirror-focus-wrapper'), cmOptions);
+
+				// Insert the new focus doc
+				cmFocus.swapDoc(newFocus);
+
+				// Scroll to top.
+				// We had a weird bug where the focus was defaulting to the bottom of the div
+				document.getElementById('editor-text-wrapper').scrollTop = 0;
+
+				// Update the activeFocus state
 				this.setState({
-					oldDoc: cm.swapDoc(newFocus),
 					activeFocus: title,
 				});
 
-			} else {
-				cm.swapDoc(this.state.oldDoc);
-				this.setState({
-					oldDoc: undefined,
-					activeFocus: '',
-				});
+				// Hide the TOC if we were in live-preview mode and it was expanded
+				this.toggleTOC();
 			}
 
 		};
@@ -299,6 +360,7 @@ const Editor = React.createClass({
 
 							{/* Table of Contents Title */}
 							<div key="bNav_toc" style={[styles.common.bottomNavTitle, styles[viewMode].bottomNavTitle, showBottomLeftMenu && styles[viewMode].listTitleActive]} onClick={this.toggleTOC}>Table of Contents</div>
+							<div key="showAllTOCButton" style={[styles.showAll, this.state.activeFocus !== '' && styles.showAllVisible]} onClick={this.focusEditor(this.state.activeFocus, 0)}>- show all -</div>
 
 							{/* Table of Contents line separator */}
 							<div style={[styles.common.bottomNavDivider, styles[viewMode].bottomNavDivider]}>
@@ -312,7 +374,7 @@ const Editor = React.createClass({
 									// const options = ['Introduction', 'Prior Art', 'Resources', 'Methods', 'A New Approach', 'Data Analysis', 'Results', 'Conclusion'];
 									const options = this.state.travisTOC;
 									return options.map((item, index)=>{
-										return <li key={'blNav' + index} onClick={this.focusEditor(item.title, index)} style={[styles.common.bottomNavListItem, styles[viewMode].bottomNavListItem, this.animateListItem('left', loadStatus, index), showBottomLeftMenu && styles[viewMode].listItemActive]}>{item.title}</li>;
+										return <li key={'blNav' + index} onClick={this.focusEditor(item.title, index)} style={[styles.common.bottomNavListItem, styles[viewMode].bottomNavListItem, this.animateListItem('left', loadStatus, index), showBottomLeftMenu && styles[viewMode].listItemActive, this.state.activeFocus === item.title && styles.common.listItemActiveFocus]}>{item.title}</li>;
 									});
 								}()}
 							</ul>
@@ -332,9 +394,9 @@ const Editor = React.createClass({
 							{/* Formatting list */}
 							<ul style={[styles.common.bottomNavList, styles[viewMode].bottomNavList, styles[viewMode].bottomNavListRight, styles.alignRight, showBottomRightMenu && styles[viewMode].listActive]}>
 								{()=>{
-									const options = ['H1', 'H2', 'H3', '# List', '- List', 'Image', 'Video', 'Audio', 'Gallery', 'Hologram'];
+									const options = ['H1', 'H2', 'H3', 'Bold', 'Italic', '# List', '- List', 'Image', 'Video', 'Audio', 'Gallery', 'Hologram'];
 									return options.map((item, index)=>{
-										return <li key={'brNav' + index} style={[styles.common.bottomNavListItem, styles[viewMode].bottomNavListItem, this.animateListItem('right', loadStatus, index), styles.floatRight, showBottomRightMenu && styles[viewMode].listItemActive]}>{item}</li>;
+										return <li key={'brNav' + index} onClick={this.insertFormatting(item)} style={[styles.common.bottomNavListItem, styles[viewMode].bottomNavListItem, this.animateListItem('right', loadStatus, index), styles.floatRight, showBottomRightMenu && styles[viewMode].listItemActive]}>{item}</li>;
 									});
 								}()}
 							</ul>
@@ -342,10 +404,11 @@ const Editor = React.createClass({
 					</div>
 
 					{/* Markdown Editing Block */}
-					<div style={[styles.hiddenUntilLoad, styles[loadStatus], styles.common.editorMarkdown, styles[viewMode].editorMarkdown]}>
+					<div id="editor-text-wrapper" style={[styles.hiddenUntilLoad, styles[loadStatus], styles.common.editorMarkdown, styles[viewMode].editorMarkdown]}>
 
 						{/* Insertion point for codemirror and firepad */}
-						<div id="codemirror-wrapper"></div>
+						<div style={[this.state.activeFocus !== '' && styles.hiddenMainEditor]} id="codemirror-wrapper"></div>
+						<div id="codemirror-focus-wrapper"></div>
 
 					</div>
 
