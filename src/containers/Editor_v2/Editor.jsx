@@ -159,6 +159,45 @@ const Editor = React.createClass({
 		return ()=> this.props.dispatch(openModal(activeModal));
 	},
 
+	insertFormatting: function(formatting) {
+		return ()=>{
+			const cm = this.state.activeFocus === '' 
+				? document.getElementsByClassName('CodeMirror')[0].CodeMirror
+				: document.getElementById('codemirror-focus-wrapper').childNodes[0].CodeMirror;
+
+			
+			const currentSelection = cm.getSelection();
+			const insertText = currentSelection !== '' ? currentSelection : 'example';
+
+			this.toggleFormatting();
+
+			switch (formatting) {
+			case 'H1':
+				return cm.replaceSelection('# ' + insertText + '\n');
+			case 'H2':
+				return cm.replaceSelection('## ' + insertText + '\n');
+			case 'H3':
+				return cm.replaceSelection('### ' + insertText + '\n');
+			case 'Bold':
+				return cm.replaceSelection('**' + insertText + '**');
+			case 'Italic':
+				return cm.replaceSelection('*' + insertText + '*');
+			case '# List':
+				return cm.replaceSelection('\n 1. ' + insertText + '\n');
+			case '- List':
+				return cm.replaceSelection('\n -  ' + insertText + '\n');
+			case 'Image':
+				return cm.replaceSelection('::image::refName::');
+			case 'Video':
+				return cm.replaceSelection('::video::refName::');
+			default:
+				return null;
+			}
+			
+			
+		};
+	},
+
 	// focusEditor: function(title, index) {
 	focusEditor: function(title) {
 		// TODO: use the index variable that's passed in to accomodate the case
@@ -354,9 +393,9 @@ const Editor = React.createClass({
 							{/* Formatting list */}
 							<ul style={[styles.common.bottomNavList, styles[viewMode].bottomNavList, styles[viewMode].bottomNavListRight, styles.alignRight, showBottomRightMenu && styles[viewMode].listActive]}>
 								{()=>{
-									const options = ['H1', 'H2', 'H3', '# List', '- List', 'Image', 'Video', 'Audio', 'Gallery', 'Hologram'];
+									const options = ['H1', 'H2', 'H3', 'Bold', 'Italic', '# List', '- List', 'Image', 'Video', 'Audio', 'Gallery', 'Hologram'];
 									return options.map((item, index)=>{
-										return <li key={'brNav' + index} style={[styles.common.bottomNavListItem, styles[viewMode].bottomNavListItem, this.animateListItem('right', loadStatus, index), styles.floatRight, showBottomRightMenu && styles[viewMode].listItemActive]}>{item}</li>;
+										return <li key={'brNav' + index} onClick={this.insertFormatting(item)} style={[styles.common.bottomNavListItem, styles[viewMode].bottomNavListItem, this.animateListItem('right', loadStatus, index), styles.floatRight, showBottomRightMenu && styles[viewMode].listItemActive]}>{item}</li>;
 									});
 								}()}
 							</ul>
