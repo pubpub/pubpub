@@ -131,6 +131,30 @@ export const styles = {
 		pointerEvents: 'auto',
 		transform: 'scale(1.0)',
 	},
+	hiddenMainEditor: {
+		height: 0,
+		overflow: 'hidden',
+		pointerEvents: 'none',
+	},
+	showAll: {
+		padding: '0px 5px',
+		display: 'none',
+		color: globalStyles.veryLight,
+		position: 'absolute',
+		top: -1,
+		left: 135,
+		height: '30px',
+		lineHeight: '30px',
+		':hover': {
+			cursor: 'pointer',
+			color: 'black',
+		}
+
+	},
+	showAllVisible: {
+		pointerEvents: 'auto',
+		display: 'inline-block',
+	},
 	common: {
 		editorBottomNav: {
 			position: 'fixed',
@@ -247,6 +271,9 @@ export const styles = {
 				color: globalStyles.sideText,
 			}
 		},
+		listItemActiveFocus: {
+			color: 'black',
+		}
 	},
 
 	edit: {
