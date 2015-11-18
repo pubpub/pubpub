@@ -30,7 +30,7 @@ const MathPlugin = React.createClass({
 		const urlRequest = 'https://dry-retreat-1640.herokuapp.com/mathtest?equation=' + encodeURIComponent(equation) + '&cache=true';
 		return (
 			<ImageLoader onLoad={this.loadedImage} src={urlRequest} wrapper={React.DOM.span} preloader={this.preloader}>
-				Image load failed!
+				Syntax Error!
 			</ImageLoader>
 		);
 	}
