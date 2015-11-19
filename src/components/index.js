@@ -5,4 +5,5 @@ export LoaderIndeterminate from './LoaderIndeterminate/LoaderIndeterminate';
 export LoginForm from './LoginForm/LoginForm';
 export LoginFormRegister from './LoginFormRegister/LoginFormRegister';
 export PubBody from './PubBody/PubBody';
+export PubDiscussion from './PubDiscussion/PubDiscussion';
 export PubNav from './PubNav/PubNav';

@@ -4,10 +4,12 @@ import Radium from 'radium';
 import DocumentMeta from 'react-document-meta';
 import PureRenderMixin from 'react-addons-pure-render-mixin';
 import {getPub} from '../../actions/reader';
-import {PubBody} from '../../components';
+import {PubBody, PubDiscussion} from '../../components';
 import {globalStyles} from '../../utils/styleConstants';
 
 let styles = {};
+let leftBarStyles = {};
+let rightBarStyles = {};
 
 const Reader = React.createClass({
 	propTypes: {
@@ -34,6 +36,10 @@ const Reader = React.createClass({
 		console.log(optionClicked);
 	},
 
+	calculateReviewScores: function(reviews) {
+		return (<div>Hi!</div>);
+	},
+
 	render: function() {
 		const metaData = {};
 		if (this.props.readerData.getIn(['pubData', 'title'])) {
@@ -43,24 +49,36 @@ const Reader = React.createClass({
 		}
 		
 		const pubData = this.props.readerData.get('pubData').toJS();
-
+		console.log(pubData);
 		return (
 			<div style={styles.container}>
 
 				<DocumentMeta {...metaData} />
 
 				<div className="leftBar" style={[styles.leftBar, styles[this.props.readerData.get('status')]]}>
-					<h2>Left</h2><ul><li>Content</li><li>Content</li><li>Content</li><li>Content</li><li>Content</li><li>Content</li></ul>
-					<hr/>
-					<h3>Table</h3><ul><li>Content</li><li>Content</li><li>Content</li><li>Content</li><li>Content</li><li>Content</li></ul>
-					<hr/>
-					<h3>Nest</h3><ul><li>Content</li><li>Content</li><li>Content</li><li>Content</li><li>Content</li><li>Content</li></ul>
-					<hr/>
-					<h3>Calc</h3><ul><li>Content</li><li>Content</li><li>Content</li><li>Content</li><li>Content</li><li>Content</li></ul>
-					<hr/>
-					<h3>Nest</h3><ul><li>Content</li><li>Content</li><li>Content</li><li>Content</li><li>Content</li><li>Content</li></ul>
-					<hr/>
-					<h3>Calc</h3><ul><li>Content</li><li>Content</li><li>Content</li><li>Content</li><li>Content</li><li>Content</li></ul>
+					
+					<div style={leftBarStyles.detail}>Home</div>
+					<div style={leftBarStyles.detail}>Explore Pubs (2,342)</div>
+					<div style={leftBarStyles.detail}>Collections (31)</div>
+					<div style={leftBarStyles.detail}>Share</div>
+
+					<div style={leftBarStyles.leftBarDivider}></div>
+
+					<div style={leftBarStyles.detail}>Share</div>
+					<div style={leftBarStyles.detail}>Views: {pubData.views}</div>
+					<div style={leftBarStyles.detail}>Citations: {pubData.citations}</div>
+					<div style={leftBarStyles.detail}>In the News: {pubData.inTheNews}</div>
+					<div style={leftBarStyles.detail}>View All Analytics</div>
+
+					<div style={leftBarStyles.leftBarDivider}></div>
+
+					<div style={leftBarStyles.header}>Read Next</div>
+					{
+						pubData.readNext.map((relatedPub)=>{
+							return <div key={'leftbar_' + relatedPub.title} style={leftBarStyles.pub}>{relatedPub.title}</div>;
+						})
+					}
+
 				</div>
 
 				<div className="centerBar" style={styles.centerBar}>
@@ -75,17 +93,29 @@ const Reader = React.createClass({
 				</div>
 
 				<div className="rightBar" style={[styles.rightBar, styles[this.props.readerData.get('status')]]}>
-					<h2>Right</h2><ul><li>Content</li><li>Content</li><li>Content</li><li>Content</li><li>Content</li><li>Content</li></ul>
-					<hr/>
-					<h3>Table</h3><ul><li>Content</li><li>Content</li><li>Content</li><li>Content</li><li>Content</li><li>Content</li></ul>
-					<hr/>
-					<h3>Nest</h3><ul><li>Content</li><li>Content</li><li>Content</li><li>Content</li><li>Content</li><li>Content</li></ul>
-					<hr/>
-					<h3>Calc</h3><ul><li>Content</li><li>Content</li><li>Content</li><li>Content</li><li>Content</li><li>Content</li></ul>
-					<hr/>
-					<h3>Nest</h3><ul><li>Content</li><li>Content</li><li>Content</li><li>Content</li><li>Content</li><li>Content</li></ul>
-					<hr/>
-					<h3>Calc</h3><ul><li>Content</li><li>Content</li><li>Content</li><li>Content</li><li>Content</li><li>Content</li></ul>
+					<div className="pub-status-wrapper" style={rightBarStyles.sectionWrapper}>
+						<div style={rightBarStyles.sectionHeader}>{pubData.status}</div>
+						<div style={rightBarStyles.sectionSubHeader}>Featured in {pubData.featuredIn.length}  |  Submitted to {pubData.submittedTo.length}</div>
+					</div>
+					<div className="pub-reviews-wrapper" style={rightBarStyles.sectionWrapper}>
+
+						<div style={rightBarStyles.sectionHeader}>Peer Reviews ({pubData.reviews.length})</div>
+						<div style={rightBarStyles.sectionSubHeader}>
+							Full Details | Submit Review | View Experts ({pubData.experts.length}) | Suggest Experts
+						</div>
+						<div style={rightBarStyles.reviewsWrapper}>
+							{this.calculateReviewScores(pubData.reviews)}
+						</div>
+						
+					</div>
+					<div className="pub-discussions-wrapper" style={rightBarStyles.sectionWrapper}>
+						<div style={rightBarStyles.sectionHeader}>Discussion</div>
+						{
+							pubData.discussions.map((discussion)=>{
+								return <PubDiscussion key={discussion._id} discussionItem={discussion}/>;
+							})
+						}
+					</div>
 				</div>
 				
 			</div>
@@ -180,6 +210,8 @@ styles = {
 		transition: '.3s linear opacity .25s',
 		overflow: 'hidden',
 		overflowY: 'scroll',
+		fontFamily: 'Lato',
+		color: globalStyles.sideText,
 		// Mobile
 		'@media screen and (min-resolution: 3dppx), (max-width: 767px)': {
 			display: 'none',
@@ -272,6 +304,7 @@ styles = {
 		float: 'left',
 		overflow: 'hidden',
 		overflowY: 'scroll',
+		fontFamily: 'Lato',
 		transition: '.3s linear opacity .25s',
 		// Mobile
 		'@media screen and (min-resolution: 3dppx), (max-width: 767px)': {
@@ -312,3 +345,55 @@ styles = {
 	},
 };
 
+leftBarStyles = {
+	journalText: {
+		padding: '15px 5px',
+		fontSize: '13px',
+	},
+	detail: {
+		fontSize: '13px',
+		padding: '8px 0px',
+	},
+	leftBarDivider: {
+		backgroundColor: '#DDD',
+		width: '80%',
+		height: 1,
+		margin: '15px auto',
+	},
+	header: {
+		margin: '8px 0px',
+	},
+	pub: {
+		margin: '15px 0px 15px 8px',
+		fontSize: '13px',
+	}
+};
+
+rightBarStyles = {
+	sectionWrapper: {
+		margin: '20px 0px',
+	},
+	sectionHeader: {
+		fontSize: '25px',
+		color: '#666',
+		margin: 0,
+		padding: 0,
+		width: '100%',
+		whiteSpace: 'nowrap',
+		overflow: 'hidden',
+		textOverflow: 'ellipsis',
+
+	},
+	sectionSubHeader: {
+		margin: '3px 0px',
+		fontSize: '14px',
+		color: '#777',
+		width: '100%',
+		whiteSpace: 'nowrap',
+		overflow: 'hidden',
+		textOverflow: 'ellipsis',
+	},
+	reviewsWrapper: {
+
+	}
+};

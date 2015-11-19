@@ -6,7 +6,7 @@ const initStyle = {
 	transform: 'translateX(-100%)',
 	width: '100%',
 	height: '1px',
-	backgroundColor: '#999999',
+	backgroundColor: '#CCC',
 	transition: '.2s linear transform',
 };
 

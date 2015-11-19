@@ -24,10 +24,10 @@ const PubBody = React.createClass({
 				<LoaderDeterminate value={this.props.status === 'loading' ? 0 : 100}/>
 
 				<div style={[styles.contentContainer, styles[this.props.status]]}>
-					<h1>{this.props.title}</h1>
-					<p>{this.props.abstract}</p>
+					<h1 style={styles.pubTitle}>{this.props.title}</h1>
+					<p style={styles.pubAbstract}>{this.props.abstract}</p>
 
-					<hr/>
+					<div style={styles.headerDivider}></div>
 
 					<Markdown source={this.props.markdown} />
 				</div>
@@ -56,6 +56,22 @@ styles = {
 	}, 
 	loaded: {
 		opacity: 1
+	},
+	pubTitle: {
+		textAlign: 'center',
+		fontSize: '40px',
+		margin: '50px 0px',
+	},
+	pubAbstract: {
+		textAlign: 'center',
+		fontSize: '20px',
+		margin: '30px 0px',
+	},
+	headerDivider: {
+		height: 1,
+		width: '80%',
+		margin: '0 auto',
+		backgroundColor: '#DDD',
 	},
 };
 

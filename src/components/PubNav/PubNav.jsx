@@ -53,6 +53,8 @@ styles = {
 		width: '100%',
 		margin: 0,
 		padding: 0,
+		color: '#888',
+		fontFamily: 'Lato',
 		transition: '.3s linear opacity .25s',
 		'@media screen and (min-resolution: 3dppx), (max-width: 767px)': {
 			height: globalStyles.headerHeightMobile,
@@ -68,6 +70,7 @@ styles = {
 		height: '100%',
 		padding: '0px 10px',
 		lineHeight: globalStyles.headerHeight,
+		fontSize: '14px',
 		float: 'left',
 		':hover': {
 			cursor: 'pointer',
