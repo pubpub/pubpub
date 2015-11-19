@@ -39,7 +39,7 @@ const Editor = React.createClass({
 		}
 	},
 	getInitialState() {
-		return { 
+		return {
 			tree: '',
 			travisTOC: ['Section 1', 'Section 2', 'Section 3', 'Section 4'],
 			activeFocus: '',
@@ -56,7 +56,7 @@ const Editor = React.createClass({
 		// Load Firebase ref that is used for firepad
 		const firepadRef = new Firebase('https://pubpub.firebaseio.com/' + this.props.slug + '/firepad');
 		// codeMirror options.
-		
+
 		// Load codemirror into
 		const codeMirror = CodeMirror(document.getElementById('codemirror-wrapper'), cmOptions);
 		// Get Login username for firepad use. Shouldn't be undefined, but set default in case.
@@ -78,7 +78,7 @@ const Editor = React.createClass({
 
 	// onEditorChange: function(cm, change) {
 	onEditorChange: function(cm) {
-		const mdOutput = markLib(cm.getValue());
+		const mdOutput = markLib(cm.getValue(), this.state.assetsList);
 		this.setState({
 			tree: mdOutput.tree,
 			travisTOC: mdOutput.travisTOC,
@@ -161,11 +161,11 @@ const Editor = React.createClass({
 
 	insertFormatting: function(formatting) {
 		return ()=>{
-			const cm = this.state.activeFocus === '' 
+			const cm = this.state.activeFocus === ''
 				? document.getElementsByClassName('CodeMirror')[0].CodeMirror
 				: document.getElementById('codemirror-focus-wrapper').childNodes[0].CodeMirror;
 
-			
+
 			const currentSelection = cm.getSelection();
 			const insertText = currentSelection !== '' ? currentSelection : 'example';
 
@@ -193,8 +193,8 @@ const Editor = React.createClass({
 			default:
 				return null;
 			}
-			
-			
+
+
 		};
 	},
 
@@ -204,8 +204,9 @@ const Editor = React.createClass({
 		// where a document has more than one identical header title.
 		// Right now, no matter which is clicked, the focus will focus on the first instance of it.
 		return ()=>{
-			
-			// If the focus button clicked is the same as the activeFocus, 
+
+
+			// If the focus button clicked is the same as the activeFocus,
 			// turn off the focusing
 			if (this.state.activeFocus === title) {
 				this.setState({ activeFocus: ''});
@@ -246,8 +247,8 @@ const Editor = React.createClass({
 					from: startLine,
 					to: endLine,
 					sharedHist: true,
-				});				
-				
+				});
+
 				// Create new codemirror inside of the focus-wrapper
 				const cmFocus = CodeMirror(document.getElementById('codemirror-focus-wrapper'), cmOptions);
 
@@ -266,7 +267,7 @@ const Editor = React.createClass({
 				// Hide the TOC if we were in live-preview mode and it was expanded
 				this.toggleTOC();
 			}
-			
+
 		};
 	},
 

@@ -182,13 +182,14 @@ renderer.image = function (href, title, text) {
   return '{{' + id + '}}';
 };
 
-var exec = function (content) {
+var exec = function (content,assets) {
   result = [];
   toc = [];
   travisTOC = [];
   inlines = {};
   keys = 0;
 	//options = {};
+	renderer.assets = assets;
   marked(content, {renderer: renderer, smartypants: true});
   return {
     tree: result,
@@ -201,14 +202,22 @@ exec.setExtensions = function (extensions) {
 
 	var newOptions = {};
 
-	var blockRenderer = function(elem,text) {
-		result.push(React.createElement(options[elem] || elem, {key: keys++},ent.decode(text)));
+	var blockRenderer = function(elem,text,props) {
+		if (!props){
+			props = {};
+		}
+		props['key'] = keys++;
+		result.push(React.createElement(options[elem] || elem, props,ent.decode(text)));
 	  return;
 	};
 
-	var inlineRenderer = function(elem,text) {
+	var inlineRenderer = function(elem,text,props) {
 		var id = inlineIds++;
-		inlines[id] = React.createElement(options[elem] || elem, {key: keys++}, ent.decode(text));
+		if (!props){
+			props = {};
+		}
+		props['key'] = keys++;
+		inlines[id] = React.createElement(options[elem] || elem,props, ent.decode(text));
 		return '{{' + id + '}}';
 	};
 
