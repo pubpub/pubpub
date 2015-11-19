@@ -37,7 +37,64 @@ const Reader = React.createClass({
 	},
 
 	calculateReviewScores: function(reviews) {
-		return (<div>Hi!</div>);
+		// TODO: Make this code less miserable and documented (and move it to server)
+
+		// console.log('in reviews ', reviews);
+		const scoreLists = {};
+		for (let reviewIndex = 0; reviewIndex < reviews.length; reviewIndex++) {
+			for (let doneWellIndex = 0; doneWellIndex < reviews[reviewIndex].doneWell.length; doneWellIndex++) {
+				if (reviews[reviewIndex].doneWell[doneWellIndex] in scoreLists) {
+					scoreLists[reviews[reviewIndex].doneWell[doneWellIndex]].push(reviews[reviewIndex].weightLocal + Math.sqrt(reviews[reviewIndex].weightGlobal));
+				} else {
+					scoreLists[reviews[reviewIndex].doneWell[doneWellIndex]] = [(reviews[reviewIndex].weightLocal + Math.sqrt(reviews[reviewIndex].weightGlobal))];
+				}
+			}
+
+			for (let needsWorkIndex = 0; needsWorkIndex < reviews[reviewIndex].needsWork.length; needsWorkIndex++) {
+				if (reviews[reviewIndex].needsWork[needsWorkIndex] in scoreLists) {
+					scoreLists[reviews[reviewIndex].needsWork[needsWorkIndex]].push(-1 * (reviews[reviewIndex].weightLocal + Math.sqrt(reviews[reviewIndex].weightGlobal)));
+				} else {
+					scoreLists[reviews[reviewIndex].needsWork[needsWorkIndex]] = [-1 * (reviews[reviewIndex].weightLocal + Math.sqrt(reviews[reviewIndex].weightGlobal))];
+				}
+			}
+		}
+		// console.log(scoreLists);
+		const scoresObject = [];
+		for (const scoresTag in scoreLists) {
+			if (scoresTag !== undefined) {
+				let total = 0;
+				let absTotal = 0;
+				for (const specificScore in scoreLists[scoresTag]) { 
+					// console.log('---');
+					// console.log(specificScore);
+					// console.log(scoresTag);
+					if (specificScore !== undefined) {
+						total += scoreLists[scoresTag][specificScore]; 
+						absTotal += Math.abs(scoreLists[scoresTag][specificScore]);	
+					}
+					
+				}
+				scoresObject.push({
+					tag: scoresTag,
+					score: Math.floor(100 * total / absTotal) / 100,
+					votes: scoreLists[scoresTag].length,
+				});	
+			}
+			
+		}
+		// console.log(scoresObject);
+		return scoresObject.map((scorething)=>{
+			return (
+				<div key={'review-score-' + scorething.tag} style={rightBarStyles.reviewScore}>
+					<span>{scorething.tag}</span>
+					<span style={rightBarStyles.scorethingDivider}>|</span>
+					<span>{scorething.votes} votes</span>
+					<span style={rightBarStyles.scorethingDivider}>|</span>
+					<span>{scorething.score}</span>
+				</div>
+			);	
+		});
+		
 	},
 
 	render: function() {
@@ -49,7 +106,7 @@ const Reader = React.createClass({
 		}
 		
 		const pubData = this.props.readerData.get('pubData').toJS();
-		console.log(pubData);
+		// console.log(pubData);
 		return (
 			<div style={styles.container}>
 
@@ -105,6 +162,7 @@ const Reader = React.createClass({
 						</div>
 						<div style={rightBarStyles.reviewsWrapper}>
 							{this.calculateReviewScores(pubData.reviews)}
+							<div style={globalStyles.clearFix}></div>
 						</div>
 						
 					</div>
@@ -371,10 +429,11 @@ leftBarStyles = {
 
 rightBarStyles = {
 	sectionWrapper: {
-		margin: '20px 0px',
+		margin: '10px 0px 30px 0px',
 	},
 	sectionHeader: {
-		fontSize: '25px',
+		fontSize: '20px',
+		fontWeight: '400',
 		color: '#666',
 		margin: 0,
 		padding: 0,
@@ -394,6 +453,19 @@ rightBarStyles = {
 		textOverflow: 'ellipsis',
 	},
 	reviewsWrapper: {
-
+		padding: '10px 0px',
+	},
+	reviewScore: {
+		border: '1px solid #ccc',
+		borderRadius: '1px',
+		padding: '1px 8px',
+		margin: '3px 3px',
+		float: 'left',
+		fontSize: '13px',
+		// width: 'calc(33% - 14px)',
+	},
+	scorethingDivider: {
+		padding: '0px 5px',
+		color: '#aaa',
 	}
 };

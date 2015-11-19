@@ -10,7 +10,15 @@ import {LOAD_PUB, LOAD_PUB_SUCCESS, LOAD_PUB_FAIL} from '../actions/reader';
 // Initialize Default State 
 /*--------*/
 export const defaultState = Immutable.Map({
-	pubData: {},
+	pubData: {
+		discussions: [],
+		readNext: [],
+		featuredIn: [],
+		submittedTo: [],
+		reviews: [],
+		experts: [],
+
+	},
 	status: 'loading',
 	error: null
 });

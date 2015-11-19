@@ -1,7 +1,7 @@
 import React, {PropTypes} from 'react';
 import Radium from 'radium';
 import Markdown from 'react-remarkable';
-import {globalStyles} from '../../utils/styleConstants';
+// import {globalStyles} from '../../utils/styleConstants';
 import dateFormat from 'dateformat';
 
 let styles = {};

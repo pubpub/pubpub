@@ -9,5 +9,8 @@ export const globalStyles = {
 	sideText: '#666',
 	sideHover: '#000',
 	veryLight: '#BBB',
-
+	clearFix: {
+		display: 'table',
+		clear: 'both',
+	},
 };

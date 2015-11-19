@@ -22,7 +22,8 @@ const MathPlugin = React.createClass({
 		}
 		return result;
 	},
-	loadedImage: function(evt) {
+	// loadedImage: function(evt) {
+	loadedImage: function() {
 		// this.lastURL = evt.target.src;
 		// debugger;
 		this.lastURL = this.props.children;
