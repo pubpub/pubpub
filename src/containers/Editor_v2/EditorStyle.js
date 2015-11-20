@@ -145,6 +145,7 @@ export const styles = {
 		left: 135,
 		height: '30px',
 		lineHeight: '30px',
+		width: 73,
 		':hover': {
 			cursor: 'pointer',
 			color: 'black',

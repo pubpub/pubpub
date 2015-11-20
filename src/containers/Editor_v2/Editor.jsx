@@ -231,12 +231,14 @@ const Editor = React.createClass({
 
 						// If we have a startline, but no endline, check to see if the line is a header
 						// We wish to set endline to the first #H1 header after startline
-						if (typeof(endLine) === 'undefined' && typeof(startLine) !== 'undefined' && line.stateAfter.header === 1) {
+						if (typeof(endLine) === 'undefined' && typeof(startLine) !== 'undefined' && line.stateAfter.header === 1 && line.text !== '') {
+							console.log(line);
 							endLine = cm.getLineNumber(line);
 						}
 
 						// If we don't yet have a startline, see if the current line matches the format of the selected title
 						if (typeof(startLine) === 'undefined' && line.text.indexOf('# ' + title) > -1) {
+							console.log(line);
 							startLine = cm.getLineNumber(line);
 						}
 					}
