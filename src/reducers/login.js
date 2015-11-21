@@ -29,7 +29,7 @@ export const defaultState = Immutable.Map({
 	loggedIn: false,
 	loggingIn: false,
 	viewMode: 'login',
-	// attemptedRestoreState: false,
+	attemptedRestoreState: false,
 	userData: {},
 	error: undefined
 });
@@ -74,6 +74,7 @@ function loggedIn(state, user) {
 			loggingIn: false,
 			loggedIn: false,
 			error: undefined,
+			attemptedRestoreState: true,
 			userData: {}
 		};
 	} else {
@@ -82,6 +83,7 @@ function loggedIn(state, user) {
 			loggingIn: false,
 			loggedIn: true,
 			error: undefined,
+			attemptedRestoreState: true,
 			userData: user
 		};
 	}

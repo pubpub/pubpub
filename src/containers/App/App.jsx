@@ -23,12 +23,11 @@ const App = React.createClass({
 
 	statics: {
 		fetchDataDeferred: function(getState, dispatch) {
-			// This fires every single time the route changes.
-			// I think this is because App.jsx technically re-renders. 
-			// We should set some variable like 'attemptedRestoreLogin'
-			// it seemed to be working, but because of the css server/client mismatch,
-			// I think we lose the server-side login. Once we fix the css issue, attempt to fix this.
-			return dispatch(restoreLogin());
+			if (!getState().login.get('attemptedRestoreState')) {
+				return dispatch(restoreLogin());		
+			}
+			return ()=>{};	
+	
 		}
 	},
 	componentWillReceiveProps: function(nextProps) {
