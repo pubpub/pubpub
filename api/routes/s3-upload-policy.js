@@ -12,7 +12,7 @@ if(process.env.NODE_ENV !== 'production'){
 }
 
 app.get('/uploadPolicy', function(req,res){
-	if(req.user){
+	// if(req.user){
 		var s3 = {
 			access_key: awsDetails.access_key_aws,
 			secret_key: awsDetails.secret_key_aws,
@@ -75,7 +75,7 @@ app.get('/uploadPolicy', function(req,res){
 			policy: policy,
 			signature: signature
 		});
-	}else{
-		res.status(500).json('Not Logged In');
-	}
+	// }else{
+	// 	res.status(500).json('Not Logged In');
+	// }
 });

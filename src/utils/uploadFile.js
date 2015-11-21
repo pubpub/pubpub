@@ -1,6 +1,7 @@
 export function s3Upload(file, folderName, progressEvent, finishEvent, index) {
 	function beginUpload() {
-		const filename = folderName + '/' + new Date().getTime() + '_' + file.name;
+		const filename = file.name !== undefined ? folderName + '/' + new Date().getTime() + '_' + file.name : folderName + '/' + new Date().getTime() + '.jpg';
+		const fileType = file.type !== undefined ? file.type : 'image/jpeg';
 		const formData = new FormData();
 
 		formData.append('key', filename);
@@ -8,7 +9,7 @@ export function s3Upload(file, folderName, progressEvent, finishEvent, index) {
 		formData.append('acl', 'public-read');
 		formData.append('policy', JSON.parse(this.responseText).policy);
 		formData.append('signature', JSON.parse(this.responseText).signature);
-		formData.append('Content-Type', file.type);
+		formData.append('Content-Type', fileType);
 		formData.append('success_action_status', '200');
 		formData.append('file', file);
 		

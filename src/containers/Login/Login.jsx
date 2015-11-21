@@ -20,6 +20,7 @@ const Login = React.createClass({
 	getInitialState: function() {
 		return {
 			userImageFile: null,
+			userImageURL: 'https://s3.amazonaws.com/pubpub-upload/users/pubHappy.png',
 		};
 	},
 
@@ -41,14 +42,20 @@ const Login = React.createClass({
 	},
 
 	handleLoginRegisterSubmit: function(formValues) {
-		this.props.dispatch(register(formValues.email, formValues.password, formValues.fullName, 'https://s3.amazonaws.com/37assets/svn/1065-IMG_2529.jpg'));
+		this.props.dispatch(register(formValues.email, formValues.password, formValues.fullName, this.state.userImageURL));
 	},
 
 	handleFileSelect: function(evt) {
-		this.setState({userImageFile: evt.target.files[0]});
+		if (evt.target.files.length) {
+			this.setState({userImageFile: evt.target.files[0]});	
+		}
+		
 	},
 	cancelImageUpload: function() {
 		this.setState({userImageFile: null});
+	},
+	userImageUploaded: function(url) {
+		this.setState({userImageFile: null, userImageURL: url});
 	},
 
 	render: function() {
@@ -83,17 +90,15 @@ const Login = React.createClass({
 					</div>
 
 					<div style={[styles.form, this.props.loginData.get('isVisible') && styles[viewMode].register]}>
-						<LoginFormRegister onSubmit={this.handleLoginRegisterSubmit} />
-						<input type="file" accept="image/*" onChange={this.handleFileSelect} />
+						<LoginFormRegister onSubmit={this.handleLoginRegisterSubmit} onFileSelect={this.handleFileSelect} userImage={this.state.userImageURL}/>
 					</div>
-
-					<div style={[styles.imageCropperWrapper, this.state.userImageFile !== null && styles.imageCropperWrapperVisible]} >
-						<ImageCropper height={150} width={150} image={this.state.userImageFile} onCancel={this.cancelImageUpload}/>
-					</div>
-
 
 				</div>
 				
+				<div style={[styles.imageCropperWrapper, this.state.userImageFile !== null && styles.imageCropperWrapperVisible]} >
+					<ImageCropper height={150} width={150} image={this.state.userImageFile} onCancel={this.cancelImageUpload} onUpload={this.userImageUploaded}/>
+				</div>
+
 			</div>
 		);
 	}
@@ -274,18 +279,26 @@ styles = {
 		textAlign: 'center',
 		fontFamily: globalStyles.headerFont
 	},
+	userImageUpload: {
+		margin: '90px 30px 0px 30px',
+		fontSize: '25px',
+		color: globalStyles.headerText,
+		backgroundColor: 'red',
+	},
 	imageCropperWrapper: {
-		height: '100%',
-		width: '100%',
-		zIndex: 5000,
+		height: '270px',
+		width: '450px',
 		backgroundColor: 'rgba(255,255,255,0.97)',
 		position: 'fixed',
 		top: 0,
-		left: 0,
-		display: 'none',
+		left: 'calc(50% - 250px)',
+		opacity: 0,
+		pointerEvents: 'none',
+		transition: '.1s linear opacity',
 	},
 	imageCropperWrapperVisible: {
-		display: 'block',
+		opacity: 1,
+		pointerEvents: 'auto',
 	},
 
 

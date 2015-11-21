@@ -9,7 +9,10 @@ let styles = {};
 const LoginFormRegister = React.createClass({
 	propTypes: {
 		fields: PropTypes.object.isRequired,
+		userImage: PropTypes.string,
 		handleSubmit: PropTypes.func.isRequired,
+		onFileSelect: PropTypes.func.isRequired,
+
 	},
 
 	mixins: [PureRenderMixin],
@@ -34,6 +37,18 @@ const LoginFormRegister = React.createClass({
 					<label style={styles.label}>Full Name</label>
 					<input style={styles.input} key="registerName" type="text" placeholder="Full Name" {...fullName}/>
 				</div>
+
+				<div style={[styles.input, styles.userImageInput]}>
+					<div style={styles.userInputDiv}>User Image</div>
+					<img style={[styles.userInputDiv, styles.userImagePreview]} src={this.props.userImage} />
+					<div style={[styles.userInputDiv, styles.fileInputWrapper]} key="userImageFileInputWrapper">
+						choose new
+						<input style={styles.hiddenFileInput} type="file" accept="image/*" onChange={this.props.onFileSelect} />
+					</div>
+					
+					
+				</div>
+
 				<button type="submit" key="registerSubmit" style={styles.submit} onClick={handleSubmit}>Submit</button>
 			</form>
 		);
@@ -106,6 +121,44 @@ styles = {
 
 
 		},
-	}
+	},
+	userImageInput: {
+		width: 271,
+		height: 32,
+		margin: '90px 30px 0px 30px',
+	},
+	userImagePreview: {
+		width: 35,
+		padding: '0px 20px',
+		position: 'relative',
+		top: -5,
+	},
+	userInputDiv: {
+		float: 'left',
+
+	},
+	fileInputWrapper: {
+		width: 70,
+		height: 30,
+		cursor: 'pointer',
+		position: 'relative',
+		fontSize: '14px',
+		color: globalStyles.headerText,
+		lineHeight: '26px',
+		':hover': {
+			color: globalStyles.headerHover,
+		},
+	},
+	hiddenFileInput: {
+		height: '100%',
+		width: '100%',
+		position: 'absolute',
+		outline: 'none',
+		opacity: 0,
+		left: 0,
+		top: 0,
+
+
+	},
 
 };
