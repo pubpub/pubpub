@@ -54,8 +54,7 @@ const HeaderMenu = React.createClass({
 								{/* If Logged In */}
 								{/* ------------- */}
 								<span key="headerLogin" style={[styles.loggedIn[isLoggedIn]]}>
-									{/* <img style={styles.userImage} src={this.props.loginData.getIn(['userData', 'image'])} /> */}
-									<img style={styles.userImage} src="http://www.minus33.com/wp-content/uploads/2015/07/seasonal-icon-winter-30px.png" />
+									<img style={styles.userImage} src={this.props.loginData.getIn(['userData', 'thumbnail'])} />
 									{/* <div style={styles.userName}>{this.props.loginData.getIn(['userData', 'name'])}</div> */}
 									<div style={styles.userName}>Account</div>
 								</span>

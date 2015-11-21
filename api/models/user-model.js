@@ -19,6 +19,7 @@ var userSchema = new Schema({
   highlights: [ { type: ObjectId, ref: 'Highlight' } ],
   assets: [ { type: ObjectId, ref: 'Asset' } ],
   image: { type: String },
+  thumbnail: { type: String },
   yays: [ { type: ObjectId, ref: 'Discussion' } ],
   nays: [ { type: ObjectId, ref: 'Discussion' } ],
   reviews: [ { type: ObjectId, ref: 'Review' } ],

@@ -387,21 +387,7 @@ app.get('/user', function(req, res) {
 
 
 var crypto = require('crypto');
-var cloudinary = require('cloudinary');
-if (process.env.NODE_ENV !== 'production') {
-  import {cloudinary_cloud_name, cloudinary_api_key, cloudinary_api_secret} from '../authentication/cloudinaryCredentials';
-  cloudinary.config({ 
-	  cloud_name: cloudinary_cloud_name, 
-	  api_key: cloudinary_api_key, 
-	  api_secret: cloudinary_api_secret 
-	});
-} else {
-	cloudinary.config({ 
-		cloud_name: process.env.cloudinary_cloud_name,
-		api_key: process.env.cloudinary_api_key,
-		api_secret: process.env.cloudinary_api_secret
-	});
-}
+import {cloudinary} from '../services/cloudinary';
 
 app.get('/handleNewFile', function(req,res){
 	// There's a 10mb limit for cloudinary images. Gotta fix that.
@@ -415,9 +401,9 @@ app.get('/handleNewFile', function(req,res){
 		// Probably need a cleaner solution, but this'll work for now.
 		setTimeout(function(){		
 			cloudinary.uploader.upload(req.query.url, function(result) { 
-        result.thumbnail = result.url.replace('/upload', '/upload/c_limit,h_50,w_50');
-        result.assetType = 'image';
-			  return res.status(201).json(result);
+		        result.thumbnail = result.url.replace('/upload', '/upload/c_limit,h_50,w_50');
+		        result.assetType = 'image';
+				return res.status(201).json(result);
 			});	
 		}, delay);
 

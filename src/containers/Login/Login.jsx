@@ -20,15 +20,23 @@ const Login = React.createClass({
 	getInitialState: function() {
 		return {
 			userImageFile: null,
-			userImageURL: 'https://s3.amazonaws.com/pubpub-upload/users/pubHappy.png',
+			userImageURL: 'http://res.cloudinary.com/pubpub/image/upload/c_limit,h_50,w_50/v1448145108/yedqa0ks1s6bvgysv6on.png',
 		};
 	},
 
 	toggleLogin: function() {
+		this.setState({
+			userImageFile: null,
+			userImageURL: 'https://s3.amazonaws.com/pubpub-upload/users/pubHappy.png',
+		});
 		this.props.dispatch(toggleVisibility());
 	},
 
 	toggleViewMode: function() {
+		this.setState({
+			userImageFile: null,
+			userImageURL: 'https://s3.amazonaws.com/pubpub-upload/users/pubHappy.png',
+		});
 		this.props.dispatch(toggleViewMode());
 	},
 
