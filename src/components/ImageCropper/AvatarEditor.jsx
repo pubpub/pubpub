@@ -160,7 +160,7 @@ var AvatarEditor = React.createClass({
 		document && document.addEventListener(deviceEvents.native.move, this.handleMouseMove, false);
 		document && document.addEventListener(deviceEvents.native.up, this.handleMouseUp, false);
 
-		if (isTouchDevice) React.initializeTouchEvents(true);
+		// if (isTouchDevice) React.initializeTouchEvents(true);
 	},
 
 	componentWillUnmount() {

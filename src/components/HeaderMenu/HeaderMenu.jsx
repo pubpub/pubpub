@@ -95,6 +95,7 @@ styles = {
 		fontFamily: globalStyles.headerFont,
 		fontSize: '1.5em',
 		padding: '0px 15px 0px 25px',
+		userSelect: 'none',
 		':hover': {
 			cursor: 'pointer',
 		}

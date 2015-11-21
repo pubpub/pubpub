@@ -40,8 +40,9 @@ const HeaderNav = React.createClass({
 		for (let iii = 0; iii < binary.length; iii++) { array.push(binary.charCodeAt(iii));}
 		const file = new Blob([new Uint8Array(array)], {type: mimeString});
 
+		this.setState({isUploading: true});
 		s3Upload(file, 'users', ()=>{}, this.onFileFinish, 0);	
-		this.setState({isUploading: false});
+		
 	},
 	handleScale: function() {
 		const scale = this.refs.scale.value;
@@ -71,13 +72,15 @@ const HeaderNav = React.createClass({
 						scale={parseFloat(this.state.scale)}
 						onImageReady={this.handleUpdate} 
 						onImageChange={this.handleUpdate}/>
+
+						<input style={styles.slider} name="scale" type="range" ref="scale" onChange={this.handleScale} min="1" max="3" step="0.01" defaultValue="1" />
 				</div>
 				<div style={styles.previewAndOptions}>
 					<img style={styles.preview}src={this.state.preview} />
 					<div style={styles.option} key="userUploadCancel" onClick={this.handleCancel}>Cancel</div>
 					<div style={styles.option} key="userUploadSave" onClick={this.handleSaveImage}>Save</div>
 				</div>
-				<input style={styles.slider} name="scale" type="range" ref="scale" onChange={this.handleScale} min="1" max="3" step="0.01" defaultValue="1" />
+				
 
 			</div>
 		);
@@ -102,7 +105,12 @@ styles = {
 		height: 200,
 		width: 200,
 		margin: '25px 25px 10px 25px',
+		position: 'relative',
 		float: 'left',
+		'@media screen and (min-resolution: 3dppx), (max-width: 767px)': {
+			margin: '20px auto 5px auto',
+			float: 'none',
+		},
 		// backgroundColor: 'blue',
 	},
 	previewAndOptions: {
@@ -110,12 +118,22 @@ styles = {
 		height: 200,
 		margin: '25px 25px 10px 0px',
 		float: 'left',
+		'@media screen and (min-resolution: 3dppx), (max-width: 767px)': {
+			width: '100%',
+			height: 'auto',
+			float: 'none',
+		},
 		// backgroundColor: 'red',
 	},
 	preview: {
 		width: 75,
 		float: 'right',
-		marginBottom: 45,
+		margin: '0px 0px 45px 0px',
+		'@media screen and (min-resolution: 3dppx), (max-width: 767px)': {
+			float: 'none',
+			margin: '20px calc(50% - 40px) 10px calc(50% - 40px)',
+			width: 80,
+		},
 	},
 	option: {
 		clear: 'both',
@@ -127,10 +145,20 @@ styles = {
 			cursor: 'pointer',
 			color: '#222',
 		},
+		'@media screen and (min-resolution: 3dppx), (max-width: 767px)': {
+			width: '100%',
+			textAlign: 'center',
+			fontSize: '35px',
+		},
 	},
 	slider: {
-		marginLeft: '25px',
+		// marginLeft: '25px',
 		width: 200,
-		clear: 'both',
-	}
+		position: 'absolute',
+		left: 0,
+		bottom: -35,
+		margin: 0,
+		// clear: 'both',
+	},
+
 };

@@ -295,6 +295,11 @@ styles = {
 		opacity: 0,
 		pointerEvents: 'none',
 		transition: '.1s linear opacity',
+		'@media screen and (min-resolution: 3dppx), (max-width: 767px)': {
+			width: '100%',
+			height: 'auto',
+			left: 0,
+		},
 	},
 	imageCropperWrapperVisible: {
 		opacity: 1,
