@@ -104,7 +104,7 @@ const EditorModalAssets = React.createClass({
 					
 					{/* Show the assets table header if there are any existing assets or uploads */}
 					{this.props.assetData.length || this.state.files.length
-						? <EditorModalAssetsRow isHeader={true} filename="refName" author="by" assetType="type" date="date" />
+						? <EditorModalAssetsRow isHeader={true} filename="filename" author="by" assetType="type" date="date" />
 						: null
 					}
 					

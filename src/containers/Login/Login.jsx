@@ -3,8 +3,9 @@ import {connect} from 'react-redux';
 import Radium from 'radium';
 import PureRenderMixin from 'react-addons-pure-render-mixin';
 import {toggleVisibility, toggleViewMode, login, register} from '../../actions/login';
-import {LoaderIndeterminate, LoginForm, LoginFormRegister} from '../../components';
+import {ImageCropper, LoaderIndeterminate, LoginForm, LoginFormRegister} from '../../components';
 import {globalStyles} from '../../utils/styleConstants';
+
 
 let styles = {};
 
@@ -15,6 +16,12 @@ const Login = React.createClass({
 	},
 
 	mixins: [PureRenderMixin],
+
+	getInitialState: function() {
+		return {
+			userImageFile: null,
+		};
+	},
 
 	toggleLogin: function() {
 		this.props.dispatch(toggleVisibility());
@@ -35,6 +42,13 @@ const Login = React.createClass({
 
 	handleLoginRegisterSubmit: function(formValues) {
 		this.props.dispatch(register(formValues.email, formValues.password, formValues.fullName, 'https://s3.amazonaws.com/37assets/svn/1065-IMG_2529.jpg'));
+	},
+
+	handleFileSelect: function(evt) {
+		this.setState({userImageFile: evt.target.files[0]});
+	},
+	cancelImageUpload: function() {
+		this.setState({userImageFile: null});
 	},
 
 	render: function() {
@@ -70,7 +84,14 @@ const Login = React.createClass({
 
 					<div style={[styles.form, this.props.loginData.get('isVisible') && styles[viewMode].register]}>
 						<LoginFormRegister onSubmit={this.handleLoginRegisterSubmit} />
+						<input type="file" accept="image/*" onChange={this.handleFileSelect} />
 					</div>
+
+					<div style={[styles.imageCropperWrapper, this.state.userImageFile !== null && styles.imageCropperWrapperVisible]} >
+						<ImageCropper height={150} width={150} image={this.state.userImageFile} onCancel={this.cancelImageUpload}/>
+					</div>
+
+
 				</div>
 				
 			</div>
@@ -252,5 +273,20 @@ styles = {
 		color: 'white',
 		textAlign: 'center',
 		fontFamily: globalStyles.headerFont
-	}
+	},
+	imageCropperWrapper: {
+		height: '100%',
+		width: '100%',
+		zIndex: 5000,
+		backgroundColor: 'rgba(255,255,255,0.97)',
+		position: 'fixed',
+		top: 0,
+		left: 0,
+		display: 'none',
+	},
+	imageCropperWrapperVisible: {
+		display: 'block',
+	},
+
+
 };

@@ -55,9 +55,8 @@ const Editor = React.createClass({
 
 		// Load Firebase ref that is used for firepad
 		const firepadRef = new Firebase('https://pubpub.firebaseio.com/' + this.props.slug + '/firepad');
-		// codeMirror options.
 
-		// Load codemirror into
+		// Load codemirror
 		const codeMirror = CodeMirror(document.getElementById('codemirror-wrapper'), cmOptions);
 		// Get Login username for firepad use. Shouldn't be undefined, but set default in case.
 		const username = (this.props.loginData.get('loggedIn') === false) ? 'cat' : this.props.loginData.getIn(['userData', 'username']);

@@ -133,7 +133,8 @@ styles = {
 	},
 	discussionChildrenWrapper: {
 		width: 'calc(100% - 10px)',
-		paddingLeft: 10,
-		borderLeft: '1px solid #ccc',
+		paddingLeft: 20,
+		// borderLeft: '1px solid #ccc',
+		borderTop: '1px solid #ccc',
 	}
 };
