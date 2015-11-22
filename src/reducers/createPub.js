@@ -36,7 +36,6 @@ function loading(state) {
 }
 
 function pubCreated(state, result) {
-	console.log(result);
 	return state.merge({
 		status: 'loaded',
 		error: null,

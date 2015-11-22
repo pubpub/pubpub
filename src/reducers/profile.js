@@ -32,7 +32,7 @@ function loadSuccess(state, result) {
 		profileData: result,
 		error: null
 	};
-
+	
 	if (result === 'User Not Found') {
 		outputState.profileData = { ...defaultState.get('profileData'),
 			name: 'User Not Found',

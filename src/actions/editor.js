@@ -24,7 +24,7 @@ export const PUB_EDIT_UNMOUNT = 'editor/PUB_EDIT_UNMOUNT';
 export function getPubEdit(slug) {
 	return {
 		types: [LOAD_PUB_EDIT, LOAD_PUB_EDIT_SUCCESS, LOAD_PUB_EDIT_FAIL],
-		promise: (client) => client.get('/getSamplePubEdit', {params: {slug: slug}}) 
+		promise: (client) => client.get('/getPubEdit', {params: {slug: slug}}) 
 	};
 }
 

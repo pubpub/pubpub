@@ -108,18 +108,38 @@ function load(state) {
 }
 
 function loadSuccess(state, result) {
-	return state.merge({
+	const outputState = {
 		status: 'loaded',
 		pubEditData: result,
 		error: null
-	});
+	};
+
+	if (result === 'Pub Not Found') {
+		outputState.pubEditData = { ...defaultState.get('pubEditData'),
+			title: 'Pub Not Found',
+		};
+		outputState.error = true;
+		outputState.status = 'loading';
+	}
+
+	if (result === 'Not Authorized') {
+		outputState.pubEditData = { ...defaultState.get('pubEditData'),
+			title: 'Not Authorized',
+		};
+		outputState.error = true;
+		outputState.status = 'loading';
+	}
+
+	return state.merge(outputState);
 }
 
 function loadFail(state, error) {
 	console.log('in loadFail');
 	return state.merge({
-		status: 'failed',
-		pubEditData: null,
+		status: 'loading',
+		pubEditData: { ...defaultState.get('pubEditData'),
+			title: 'Error Loading Pub',
+		},
 		error: error
 	});
 }

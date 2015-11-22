@@ -53,6 +53,12 @@ function loadSuccess(state, result) {
 		};
 	}
 
+	if (result === 'Pub not yet published') {
+		outputState.pubData = { ...defaultState.get('pubData'),
+			title: 'Pub not yet published',
+		};
+	} 
+
 	return state.merge(outputState);
 }
 

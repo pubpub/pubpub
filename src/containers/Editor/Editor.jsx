@@ -47,27 +47,32 @@ const Editor = React.createClass({
 	},
 	// Code for client-side rendering only put in componentDidMount()
 	componentDidMount() {
-		// Load Firebase and bind using ReactFireMixin
-		// For assets, references, etc.
-		const ref = new Firebase('https://pubpub.firebaseio.com/' + this.props.slug + '/assets' );
-		this.bindAsObject(ref, 'assetsObject');
-		this.bindAsArray(ref, 'assetsList');
+		if (! this.props.editorData.get('error')) {
 
-		// Load Firebase ref that is used for firepad
-		const firepadRef = new Firebase('https://pubpub.firebaseio.com/' + this.props.slug + '/firepad');
+			// Load Firebase and bind using ReactFireMixin
+			// For assets, references, etc.
+			const ref = new Firebase('https://pubpub.firebaseio.com/' + this.props.slug + '/assets' );
+			this.bindAsObject(ref, 'assetsObject');
+			this.bindAsArray(ref, 'assetsList');
 
-		// Load codemirror
-		const codeMirror = CodeMirror(document.getElementById('codemirror-wrapper'), cmOptions);
-		// Get Login username for firepad use. Shouldn't be undefined, but set default in case.
-		const username = (this.props.loginData.get('loggedIn') === false) ? 'cat' : this.props.loginData.getIn(['userData', 'username']);
-		// Initialize Firepad using codemirror and the ref defined above.
-		Firepad.fromCodeMirror(firepadRef, codeMirror, {
-			userId: username,
-			defaultText: 'Welcome to your new Pub!'
-		});
+			// Load Firebase ref that is used for firepad
+			const firepadRef = new Firebase('https://pubpub.firebaseio.com/' + this.props.slug + '/firepad');
 
-		// need to unmount on change
-		codeMirror.on('change', this.onEditorChange);
+			// Load codemirror
+			const codeMirror = CodeMirror(document.getElementById('codemirror-wrapper'), cmOptions);
+			// Get Login username for firepad use. Shouldn't be undefined, but set default in case.
+			const username = (this.props.loginData.get('loggedIn') === false) ? 'cat' : this.props.loginData.getIn(['userData', 'username']);
+			// Initialize Firepad using codemirror and the ref defined above.
+			Firepad.fromCodeMirror(firepadRef, codeMirror, {
+				userId: username,
+				defaultText: 'Welcome to your new Pub!'
+			});
+
+			// need to unmount on change
+			codeMirror.on('change', this.onEditorChange);
+
+		}
+		
 
 	},
 
@@ -302,6 +307,13 @@ const Editor = React.createClass({
 				</div>
 
 				<div style={styles.notMobile}>
+					{/*	Not Authorized or Error Note */}					
+					{this.props.editorData.get('error')
+						? <div style={styles.errorTitle}>{this.props.editorData.getIn(['pubEditData', 'title'])}</div>
+						: null
+
+					}
+
 					{/*	Container for all modals and their backdrop. */}
 					<div className="modals">
 						<div className="modal-splash" onClick={this.closeModalHandler} style={[styles.modalSplash, this.props.editorData.get('activeModal') !== undefined && styles.modalSplashActive]}></div>

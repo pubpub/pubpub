@@ -54,12 +54,19 @@ userSchema.statics.generateUniqueUsername = function (fullname, callback) {
 };
 
 userSchema.statics.getUser = function (username, readerID, callback) {
-  this.findOne({username: username}).exec((err, user) =>{
+  this.findOne({username: username})
+  .populate({path: "pubs", select:"title slug"})
+  .lean().exec((err, user) =>{
     if (err) { return callback(err, null); }
 
     if (!user) { return callback(null, 'User Not Found'); }
-
-    return callback(null, user);
+    const outputUser = {
+      username: user.username,
+      image: user.image,
+      name: user.name,
+      pubs: user.pubs,
+    }
+    return callback(null, outputUser);
   })
 };
 

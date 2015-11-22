@@ -23,7 +23,6 @@ app.get('/getPub', function(req, res) {
 app.get('/getPubEdit', function(req, res) {
 	const userID = req.user ? req.user._id : undefined;
 	Pub.getPubEdit(req.query.slug, userID, (err, pubEditData)=>{
-		
 		if (err) {
 			console.log(err);
 			return res.status(500).json(err); 
@@ -49,7 +48,7 @@ app.post('/createPub', function(req, res) {
 				readers:[] 
 			},
 			createDate: new Date().getTime(),
-			status: 'Draft',
+			status: 'Unpublished',
 			assets: [], 
 			history: [],
 			followers: [],

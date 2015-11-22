@@ -121,14 +121,41 @@ pubSchema.statics.getPub = function (slug, readerID, callback) {
 
 		if (!pub) { return callback(null, 'Pub Not Found'); }
 
-		// Check user for access /callback(null, 'Private Pub');
-		// Populate pub here
+		if (pub.status === 'Unpublished') { return callback(null, 'Pub not yet published'); }
+
+		// Check if the pub is private, and if so, check readers/authors list
+		if (pub.settings.isPrivate) { 
+			if (pub.collaborators.authors.indexOf(readerID) === -1 && pub.collaborators.readers.indexOf(readerID) === -1) {
+				return callback(null, 'Private Pub');
+			}
+		}
+		
 		return callback(null, pub);
 	})
 };
 
 pubSchema.statics.getPubEdit = function (slug, readerID, callback) {
-	// Populate documents
+	// Get the pub and check to make sure user is authorized to edit
+	this.findOne({slug: slug}).exec((err, pub) =>{
+		if (err) { return callback(err, null); }
+
+		if (!pub) { return callback(null, 'Pub Not Found'); }
+
+		if (pub.collaborators.authors.indexOf(readerID) === -1) {
+			return callback(null, 'Not Authorized');
+		}
+
+		// const outputPub = {
+			// title: pub.title,
+			// abstract: pub.abstract,
+			// authorsNote: pub.authorsNote,
+			// settings: pub.settings,
+			// collaborators: pub.collaborators,
+		// }
+		return callback(null, {});
+
+	});
+	
 };
 
 module.exports = mongoose.model('Pub', pubSchema);

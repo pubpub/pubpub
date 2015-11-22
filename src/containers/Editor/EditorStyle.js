@@ -9,6 +9,11 @@ export const styles = {
 		backgroundColor: globalStyles.sideBackground,
 		height: 'calc(100vh - ' + globalStyles.headerHeight + ')',
 	},
+	errorTitle: {
+		textAlign: 'center',
+		fontSize: '45px',
+		padding: 40,
+	},
 	isMobile: {
 		display: 'none',
 		'@media screen and (min-resolution: 3dppx), (max-width: 767px)': {
