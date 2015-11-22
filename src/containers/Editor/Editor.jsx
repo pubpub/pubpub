@@ -408,7 +408,13 @@ const Editor = React.createClass({
 					<div id="editor-text-wrapper" style={[styles.hiddenUntilLoad, styles[loadStatus], styles.common.editorMarkdown, styles[viewMode].editorMarkdown]}>
 
 						{/* Insertion point for codemirror and firepad */}
-						<div style={[this.state.activeFocus !== '' && styles.hiddenMainEditor]} id="codemirror-wrapper"></div>
+						<div style={[this.state.activeFocus !== '' && styles.hiddenMainEditor]}>
+							{/* 
+							<input type="text" placeholder="Title Required"/>
+							<p contentEditable="true" onChange={()=>{console.log('change');}}>This is an editable paragraph.</p>
+							*/}
+							<div id="codemirror-wrapper"></div>
+						</div>
 						<div id="codemirror-focus-wrapper"></div>
 
 					</div>

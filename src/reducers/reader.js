@@ -35,20 +35,38 @@ function load(state) {
 }
 
 function loadSuccess(state, result) {
-	return state.merge({
+	const outputState = {
 		status: 'loaded',
 		pubData: result,
 		error: null
-	});
+	};
+
+	if (result === 'Pub Not Found') {
+		outputState.pubData = { ...defaultState.get('pubData'),
+			title: 'Pub Not Found',
+		};
+	}
+
+	if (result === 'Private Pub') {
+		outputState.pubData = { ...defaultState.get('pubData'),
+			title: 'Private Pub',
+		};
+	}
+
+	return state.merge(outputState);
 }
 
 function loadFail(state, error) {
 	console.log('in loadFail');
-	return state.merge({
-		status: 'failed',
-		pubData: null,
-		error: error
-	});
+	const outputState = {
+		status: 'loaded',
+		pubData: { ...defaultState.get('pubData'),
+			title: 'Error Loading Pub',
+		},
+		error: error,
+	};
+
+	return state.merge(outputState);
 }
 
 /*--------*/

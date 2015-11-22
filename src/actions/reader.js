@@ -18,6 +18,6 @@ export const LOAD_PUB_FAIL = 'reader/LOAD_PUB_FAIL';
 export function getPub(slug) {
 	return {
 		types: [LOAD_PUB, LOAD_PUB_SUCCESS, LOAD_PUB_FAIL],
-		promise: (client) => client.get('/getSamplePub', {params: {slug: slug}}) 
+		promise: (client) => client.get('/getPub', {params: {slug: slug}}) 
 	};
 }

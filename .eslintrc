@@ -38,7 +38,7 @@
   "settings": {
     "import/parser": "babel-eslint",
     "import/resolve": {
-      moduleDirectory: ["node_modules", "src", "api"]
+      moduleDirectory: ["api", "node_modules", "src"]
     }
   },
   "globals": {

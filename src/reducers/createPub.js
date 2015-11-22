@@ -41,7 +41,7 @@ function pubCreated(state, result) {
 		status: 'loaded',
 		error: null,
 		pubCreated: true,
-		slug: 'cat'
+		slug: result
 	});
 }
 

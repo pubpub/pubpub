@@ -1,7 +1,5 @@
-// import {sendgridUsername, sendgridPassword} from '../authentication/sendgridCredentials';
 var app = require('../api');
 var passport = require('passport');
-// var sendgrid  = require('sendgrid')(sendgridUsername, sendgridPassword);
 
 var Pub = require('../models').Pub;
 var User = require('../models').User;
@@ -89,6 +87,9 @@ app.post('/register', function(req, res) {
 
 });
 
+
+// import {sendgridUsername, sendgridPassword} from '../authentication/sendgridCredentials';
+// var sendgrid  = require('sendgrid')(sendgridUsername, sendgridPassword);
 
 // Send Email Confirmation
 // var email     = new sendgrid.Email({

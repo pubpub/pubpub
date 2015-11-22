@@ -13,17 +13,15 @@ var userSchema = new Schema({
   title: { type: String },
   bio: { type: String },
   
-  groups: [{ type: ObjectId, ref: 'Group' }],
   pubs: [ { type: ObjectId, ref: 'Pub' } ],
   discussions: [ { type: ObjectId, ref: 'Discussion' } ],
-  references: [ { type: ObjectId, ref: 'Reference' } ],
   highlights: [ { type: ObjectId, ref: 'Highlight' } ],
   assets: [ { type: ObjectId, ref: 'Asset' } ],
   
   yays: [ { type: ObjectId, ref: 'Discussion' } ],
   nays: [ { type: ObjectId, ref: 'Discussion' } ],
   reviews: [ { type: ObjectId, ref: 'Review' } ],
-  // should user have an assets field - that shows all the assets they've ever uploaded?
+  
   emailPublic: { type: Boolean },
   resetHash: { type: String },
   resetHashExpiration: { type: Date },

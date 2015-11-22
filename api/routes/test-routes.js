@@ -21,6 +21,9 @@ app.get('/sampleProjects', function(req, res){
 });
 
 app.post('/createPub', function(req, res){
+	displayTitle
+	slug
+
 	setTimeout(function(){
 		res.status(201).json('Did it!');	
 	}, 2000);
@@ -105,7 +108,7 @@ app.get('/getSamplePub', function(req,res){
 
 		],
 		highlights: [],
-		favorited: 195, // Is stored as array of user IDs, so we know who to update, but we just send down the length of that array
+		followers: 195, // Is stored as array of user IDs, so we know who to update, but we just send down the length of that array
 		assets: [],
 		settings: {
 			isPrivate: false
@@ -168,6 +171,7 @@ app.get('/getSamplePub', function(req,res){
 				yays: 24, //arrays that we send down the length of
 				nays: 13,
 				_id: '0',
+				sourceHost: 'ml',
 				content: 'I don’t know how I feel about mass levels of cyanide gas in my coffee. That seems kinda dangerous, ya know?',
 				children: [
 					{
@@ -179,6 +183,7 @@ app.get('/getSamplePub', function(req,res){
 						isExpert: false,
 						yays: 24, //arrays that we send down the length of
 						nays: 64,
+						sourceHost: 'ml',
 						_id: '1',
 						content: 'Don\'t underestimate how much candy tastes like asphalt.',
 						children: []
@@ -193,6 +198,7 @@ app.get('/getSamplePub', function(req,res){
 						yays: 92, //arrays that we send down the length of
 						nays: 64,
 						_id: '2',
+						sourceHost: 'ml',
 						content: '# Analysis of Coffee Taste \n By measuring the complex refraction of a coffee like substance we can begin to understand how early mesopotamian cultures used such substance sto cure medicinal ailments. We can future begin to explore the vast and utterly perplexing by its very nature though systematically neutral range of colors all the way from red to green emit rare photons that are mesophilically obtruse.',
 						children: [
 							{
@@ -205,6 +211,7 @@ app.get('/getSamplePub', function(req,res){
 								yays: 24, //arrays that we send down the length of
 								nays: 64,
 								_id: '3',
+								sourceHost: 'pandaJournal',
 								content: 'hheheheheheh omg yea!',
 								children: []
 							},
@@ -224,6 +231,7 @@ app.get('/getSamplePub', function(req,res){
 				yays: 15, //arrays that we send down the length of
 				nays: 4,
 				_id: '4',
+				sourceHost: 'ml',
 				content: 'I think pumpkins are cute!',
 				children: []
 			},
