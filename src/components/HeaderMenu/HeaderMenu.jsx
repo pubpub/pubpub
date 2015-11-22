@@ -1,6 +1,7 @@
 import React, {PropTypes} from 'react';
 import Radium from 'radium';
 import {globalStyles} from '../../utils/styleConstants';
+import { Link } from 'react-router';
 
 let styles = {};
 
@@ -60,7 +61,7 @@ const HeaderMenu = React.createClass({
 								</span>
 
 							</li>
-							<li key="menuListItem2" style={[styles.menuItem, styles.menuItemNoBottom]}>New Pub</li>
+							<li key="menuListItem2" style={[styles.menuItem, styles.menuItemNoBottom, styles.menuItemLink]}><Link style={styles.innerLink}to={'/newpub'}>New Pub</Link></li>
 							<li key="menuListItem3" style={styles.menuItemseparator}></li>
 							<li key="menuListItem4" style={styles.menuItem}>Table of Contents</li>
 							<li key="menuListItem5" style={styles.menuItem}>Discussions</li>
@@ -141,9 +142,25 @@ styles = {
 		overflow: 'hidden',
 		textOverflow: 'ellipsis',
 		padding: '20px 20px',
-		margin: '0px 00px 0px 60px',
+		margin: '0px 0px 0px 60px',
 		borderBottom: '1px solid rgba(0,0,0,0.1)',
 		fontFamily: globalStyles.headerFont,
+		':hover': {
+			cursor: 'pointer',
+			color: 'black',
+		},
+	},
+	menuItemLink: {
+		padding: 0,
+		width: 'calc(100% - 60px)',
+	},
+	innerLink: {
+		padding: '20px 20px',
+		width: 'calc(100% - 40px)',
+		height: 'calc(100% - 40px)',
+		display: 'block',
+		textDecoration: 'none',
+		color: globalStyles.headerBackground,
 		':hover': {
 			cursor: 'pointer',
 			color: 'black',

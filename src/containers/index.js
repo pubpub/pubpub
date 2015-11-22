@@ -1,4 +1,5 @@
 export App from './App/App';
+export CreatePub from './CreatePub/CreatePub';
 // export Editor from './Editor/Editor';
 export Editor from './Editor_v2/Editor';
 export Explore from './Explore/Explore';

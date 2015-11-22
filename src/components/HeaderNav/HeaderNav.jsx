@@ -1,5 +1,6 @@
 import React, {PropTypes} from 'react';
 import Radium from 'radium';
+import { Link } from 'react-router';
 import {globalStyles} from '../../utils/styleConstants';
 
 let styles = {};
@@ -48,8 +49,15 @@ const HeaderNav = React.createClass({
 
 				</div>
 
-				<div style={styles.separator}></div>
-				<div key="headerNavNewPub" style={[styles.navButton, this.headerTextColorStyle()]}>New Pub</div>
+				{
+					this.props.loginData.get('loggedIn') === true
+						? 	<div>
+								<div style={styles.separator}></div>
+								<Link to={'/newpub'}><div key="headerNavNewPub" style={[styles.navButton, this.headerTextColorStyle()]}>New Pub</div></Link>
+							</div>
+						: null
+				}
+				
 
 			</div>
 		);

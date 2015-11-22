@@ -1,6 +1,6 @@
 import React from 'react';
 import {IndexRoute, Route} from 'react-router';
-import {App, Editor, Explore, Landing, Profile, Reader, NotFound, SubdomainTest} from 'containers';
+import {App, CreatePub, Editor, Explore, Landing, Profile, Reader, NotFound, SubdomainTest} from 'containers';
 import MarkdownEditor from 'containers/Editor/MarkdownEditor';
 
 export default () => {
@@ -13,6 +13,7 @@ export default () => {
 
 			{ /* Routes */ }
 			<Route path="/explore" component={Explore}/>
+			<Route path="/newpub" component={CreatePub}/>
 			<Route path="/profile/:username" component={Profile}/>
 			<Route path="/pub/:slug" component={Reader}/>
 			{ <Route path="/pub/:slug/editMD" component={MarkdownEditor}/> }
