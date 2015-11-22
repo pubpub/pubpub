@@ -5,6 +5,7 @@ import { pushState } from 'redux-router';
 import PureRenderMixin from 'react-addons-pure-render-mixin';
 import {LoaderIndeterminate, PubCreateForm} from '../../components';
 import {create} from '../../actions/createPub';
+import {toggleVisibility} from '../../actions/login';
 import {globalStyles} from '../../utils/styleConstants';
 
 let styles = {};
@@ -12,6 +13,7 @@ let styles = {};
 const Login = React.createClass({
 	propTypes: {
 		createPubData: PropTypes.object,
+		loginData: PropTypes.object,
 		dispatch: PropTypes.func,
 	},
 
@@ -24,7 +26,12 @@ const Login = React.createClass({
 	},
 
 	handleCreateSubmit: function(formValues) {
-		this.props.dispatch(create(formValues.title, formValues.slug));
+		if (!this.props.loginData.get('loggedIn')) {
+			this.props.dispatch(toggleVisibility());
+		} else {
+			this.props.dispatch(create(formValues.title, formValues.slug));	
+		}
+		
 	},
 
 	render: function() {
@@ -47,7 +54,10 @@ const Login = React.createClass({
 });
 
 export default connect( state => {
-	return {createPubData: state.createPub};
+	return {
+		createPubData: state.createPub,
+		loginData: state.login,
+	};
 })( Radium(Login) );
 
 styles = {
