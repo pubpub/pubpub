@@ -1,12 +1,13 @@
 /* global Firebase Firepad CodeMirror */
 import React, { PropTypes } from 'react';
 import {connect} from 'react-redux';
+import { pushState } from 'redux-router';
 import Radium, {Style} from 'radium';
 import DocumentMeta from 'react-document-meta';
 import PureRenderMixin from 'react-addons-pure-render-mixin';
 import {LoaderDeterminate} from '../../components';
 import {EditorModalAssets, EditorModalCollaborators, EditorModalPublish, EditorModalReferences, EditorModalSettings} from '../../components/EditorModals';
-import {getPubEdit, toggleEditorViewMode, toggleFormatting, toggleTOC, unmountEditor, closeModal, openModal} from '../../actions/editor';
+import {getPubEdit, toggleEditorViewMode, toggleFormatting, toggleTOC, unmountEditor, closeModal, openModal, publishVersion} from '../../actions/editor';
 import ReactFireMixin from 'reactfire';
 
 import {styles} from './EditorStyle';
@@ -45,6 +46,7 @@ const Editor = React.createClass({
 			activeFocus: '',
 		};
 	},
+
 	// Code for client-side rendering only put in componentDidMount()
 	componentDidMount() {
 		if (! this.props.editorData.get('error')) {
@@ -75,6 +77,13 @@ const Editor = React.createClass({
 		
 
 	},
+	
+	componentWillReceiveProps(nextProps) {
+		console.log(nextProps);
+		if (nextProps.editorData.get('publishSuccess')) {
+			this.props.dispatch(pushState(null, ('/pub/' + nextProps.slug)));
+		}
+	},
 
 	componentWillUnmount() {
 		this.props.dispatch(unmountEditor());
@@ -104,6 +113,29 @@ const Editor = React.createClass({
 	// Only has an effect when in livePreview mode
 	toggleTOC: function() {
 		return this.props.dispatch(toggleTOC());
+	},
+	publishVersion: function(versionState, versionDescription) {
+		console.log('gunna publish bro');
+		console.log(versionState);
+		console.log(versionDescription);
+
+		const cm = document.getElementsByClassName('CodeMirror')[0].CodeMirror;
+		const newVersion = {
+			slug: this.props.slug,
+			title: 'Here\'s our new title!',
+			abstract: 'Howdy, this is a brand new abstract!',
+			// authors: [],
+			assets: [],
+			authorsNote: '',
+			style: {},
+			markdown: cm.getValue(),
+			status: versionState,
+			publishNote: versionDescription,
+		};
+		this.props.dispatch(publishVersion(newVersion));
+		// Get Markdown
+		// Pre-process markdown to turn plugins into verboseFormat
+		// Aggregate all the firepad data, push it up through a dispatch, redirect on willreceiveprops
 	},
 
 	// CodeMirror styles function can be
@@ -326,7 +358,7 @@ const Editor = React.createClass({
 								case 'Collaborators':
 									return (<EditorModalCollaborators/>);
 								case 'Publish':
-									return (<EditorModalPublish/>);
+									return (<EditorModalPublish handlePublish={this.publishVersion}/>);
 								case 'References':
 									return (<EditorModalReferences/>);
 								case 'Style':

@@ -12,7 +12,10 @@ import {TOGGLE_VIEW_MODE,
 	LOAD_PUB_EDIT_FAIL, 
 	PUB_EDIT_UNMOUNT,
 	MODAL_OPEN,
-	MODAL_CLOSE
+	MODAL_CLOSE,
+	PUBLISH_LOAD,
+	PUBLISH_SUCCESS,
+	PUBLISH_FAIL,
 } from '../actions/editor';
 
 /*--------*/
@@ -25,7 +28,9 @@ const defaultState = Immutable.Map({
 	showBottomRightMenu: true,
 	activeModal: undefined,
 	status: 'loading',
-	error: null
+	error: null,
+	publishError: null,
+	publishSuccess: null,
 
 });
 
@@ -161,6 +166,24 @@ function closeModal(state) {
 	});
 }
 
+function publishLoad(state) {
+	return state;
+}
+
+// function publishSuccess(state, result) {
+function publishSuccess(state) {
+	return state.merge({
+		publishSuccess: true,
+	});
+}
+
+function publishError(state, error) {
+	return state.merge({
+		publishError: error,
+	});
+}
+
+
 /*--------*/
 // Bind actions to specific reducing functions.
 /*--------*/
@@ -184,6 +207,12 @@ export default function editorReducer(state = defaultState, action) {
 		return openModal(state, action.activeModal);
 	case MODAL_CLOSE: 
 		return closeModal(state);
+	case PUBLISH_LOAD:
+		return publishLoad(state);
+	case PUBLISH_SUCCESS:
+		return publishSuccess(state, action.result);
+	case PUBLISH_FAIL:
+		return publishError(state, action.error);
 	default:
 		return ensureImmutable(state);
 	}

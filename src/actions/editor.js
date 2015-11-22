@@ -14,6 +14,10 @@ export const MODAL_CLOSE = 'editor/MODAL_CLOSE';
 export const MODAL_OPEN = 'editor/MODAL_OPEN';
 export const PUB_EDIT_UNMOUNT = 'editor/PUB_EDIT_UNMOUNT';
 
+export const PUBLISH_LOAD = 'editor/PUBLISH_LOAD';
+export const PUBLISH_SUCCESS = 'editor/PUBLISH_SUCCESS';
+export const PUBLISH_FAIL = 'editor/PUBLISH_FAIL';
+
 /*--------*/
 // Define Action creators
 // 
@@ -25,6 +29,13 @@ export function getPubEdit(slug) {
 	return {
 		types: [LOAD_PUB_EDIT, LOAD_PUB_EDIT_SUCCESS, LOAD_PUB_EDIT_FAIL],
 		promise: (client) => client.get('/getPubEdit', {params: {slug: slug}}) 
+	};
+}
+
+export function publishVersion(newVersion) {
+	return {
+		types: [PUBLISH_LOAD, PUBLISH_SUCCESS, PUBLISH_FAIL],
+		promise: (client) => client.post('/publishPub', {data: {newVersion: newVersion}}) 
 	};
 }
 

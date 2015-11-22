@@ -16,7 +16,7 @@ var pubSchema = new Schema({
 	authorsNote: { type: String },
 	markdown: { type: String },
 	authors: [{ type: ObjectId, ref: 'User'}],
-	assets: [{ type: ObjectId, ref: 'Asset'}], 
+	assets: [{ type: ObjectId, ref: 'Asset'}], // Maybe we won't need assets? If the pre-processor takes the pluginItems and converts them to readable raw source - maybe that's good enough? Maybe the markdown could be completely self contained. This would allow better diffing.
 	style: { type: Schema.Types.Mixed },
 	lastUpdated: { type: Date },
 	status: { type: String },
@@ -35,7 +35,7 @@ var pubSchema = new Schema({
 	htmlCache: { type: String }, // Do we want to cache the html render? It might not be any faster...
 	
 	history: [{ //History is appended to each time a 'publish' is made.
-		note: { type: String },
+		publishNote: { type: String },
 		publishDate: { type: Date },
 		publishAuthor: { type: ObjectId, ref: 'User'},
 		diffToLastPublish: { type: String }, 
@@ -153,13 +153,10 @@ pubSchema.statics.getPubEdit = function (slug, readerID, callback) {
 			return callback(null, 'Not Authorized');
 		}
 
-		// const outputPub = {
-			// title: pub.title,
-			// abstract: pub.abstract,
-			// authorsNote: pub.authorsNote,
-			// settings: pub.settings,
-			// collaborators: pub.collaborators,
-		// }
+		// Once authorized, it doesn't seem like we need to provide any data to the editor
+		// That will likely change when we implement better authentication for the firepad
+		// This will chance when we have to pass down status to the editor. Once you publish peer-review-ready
+		// You can go and publish draft...
 		return callback(null, {});
 
 	});

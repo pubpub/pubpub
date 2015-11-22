@@ -84,5 +84,55 @@ app.post('/updatePub', function(req, res) {
 });
 
 app.post('/publishPub', function(req, res) {
-	
+	console.log(req.body);
+	console.log(req.user._id);
+	// return res.status(201).json('Go!');
+	// Check that the req.user is an editor on the pub. 
+	// Beef out the history object with date, etc
+	// Update the pub object with new dates, titles, etc
+	// Push the new history object
+
+	Pub.findOne({ slug: req.body.newVersion.slug }, function (err, pub){
+		if (err) { return res.status(500).json(err);  }
+
+		console.log(pub);
+		if (pub.collaborators.canEdit.indexOf(req.user._id) === -1) {
+			return res.status(403).json('Not authorized to publish versions to this pub');
+		}
+		// doc.name = 'jason borne';
+		pub.title = req.body.newVersion.title;
+		pub.abstract = req.body.newVersion.abstract;
+		pub.authorsNote = req.body.newVersion.authorsNote;
+		pub.markdown = req.body.newVersion.markdown;
+		pub.assets = req.body.newVersion.assets;
+		pub.style = req.body.newVersion.style;
+		pub.lastUpdated = new Date().getTime(),
+		pub.status = req.body.newVersion.status;
+		pub.history.push({
+			publishNote: req.body.newVersion.publishNote,
+			publishDate: new Date().getTime(),
+			publishAuthor: req.user._id,
+			diffToLastPublish: '',
+			title: req.body.newVersion.title,
+			abstract: req.body.newVersion.abstract,
+			authorsNote: req.body.newVersion.authorsNote,
+			markdown: req.body.newVersion.markdown,
+			authors: req.body.newVersion.authors,
+			assets: req.body.newVersion.assets,
+			style: req.body.newVersion.style,
+			status: req.body.newVersion.status,
+		});
+		pub.save(function(err, result){
+			if (err) { return res.status(500).json(err);  }
+
+			console.log('in save result');
+			console.log(result);
+			return res.status(201).json('Published new version');
+		});
+	});
 });
+
+
+
+
+

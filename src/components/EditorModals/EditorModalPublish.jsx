@@ -1,33 +1,63 @@
-import React from 'react';
+import React, { PropTypes } from 'react';
 import Radium from 'radium';
-
+import {LoaderIndeterminate} from '../';
 import {baseStyles} from './modalStyle';
 import {globalStyles} from '../../utils/styleConstants';
 
 let styles = {};
 
 const EditorModalPublish = React.createClass({
+	propTypes: {
+		handlePublish: PropTypes.func,
+	},
+
+	getInitialState() {
+		return {
+			versionState: 'Draft',
+			versionDescription: '',
+			isPublishing: false,
+		};
+	},
+
+	handleStateClick: function(newState) {
+		return ()=>{
+			this.setState({versionState: newState});	
+		};
+	},
+	handleDescriptionChange: function(event) {
+		this.setState({versionDescription: event.target.value});
+	},
+
+	handlePublish: function() {
+		this.setState({isPublishing: true});
+		this.props.handlePublish(this.state.versionState, this.state.versionDescription);
+	},
+
 	render: function() {
 		
 		return (
 			<div>
+				<div style={styles.loaderWrapper}>
+					{(this.state.isPublishing ? <LoaderIndeterminate color="#555"/> : null)}
+				</div>
+
 				<h2 style={baseStyles.topHeader}>Publish</h2>
 
-				{/* Draft of Review-ready option 
+				{/* Draft or Review-ready option 
 					Should default to review-ready if a past version was */}
 				<div style={styles.optionContainer}>
 					<div style={styles.optionHeader}>version state</div>
 					<div style={styles.optionChoices}>
-						<span key={'publishModal-draft'} style={[styles.option, styles.optionActive]}>draft</span>
+						<span key={'publishModal-draft'} onClick={this.handleStateClick('Draft')} style={[styles.option, this.state.versionState === 'Draft' && styles.optionActive]}>draft</span>
 						<span style={styles.optionSeparator}>|</span> 
-						<span key={'publishModal-journal'} style={[styles.option]}>peer-review ready</span>
+						<span key={'publishModal-journal'} onClick={this.handleStateClick('PeerReviewReady')} style={[styles.option, this.state.versionState === 'PeerReviewReady' && styles.optionActive]}>peer-review ready</span>
 					</div>
 				</div>
 
 				{/* Version message input */}
 				<div style={styles.optionContainer}>
 					<div style={styles.optionHeader}>version description</div>
-					<textarea style={styles.messageTextarea} placeholder="e.g. Initial draft version,or updating dataset caption"></textarea>
+					<textarea onChange={this.handleDescriptionChange} style={styles.messageTextarea} placeholder="e.g. Initial draft version,or updating dataset caption"></textarea>
 				</div>
 
 				{/* Publish Message */}
@@ -38,7 +68,7 @@ const EditorModalPublish = React.createClass({
 				</div>
 
 			{/* Publish button */}
-				<div key="publish-button" style={styles.publishButton}>Publish version</div>
+				<div key="publish-button" style={styles.publishButton} onClick={this.handlePublish}>Publish version</div>
 			</div>
 		);
 	}
@@ -51,6 +81,11 @@ styles = {
 		padding: '15px 25px 40px 25px',
 		fontFamily: baseStyles.rowTextFontFamily,
 		fontSize: baseStyles.rowTextFontSize,
+	},
+	loaderWrapper: {
+		position: 'absolute',
+		width: '100%',
+		top: 10,
 	},
 	optionHeader: {
 		fontFamily: baseStyles.rowHeaderFontFamily,
