@@ -5,29 +5,39 @@ var ObjectId  = Schema.Types.ObjectId;
 var pubSchema = new Schema({
 	slug: { type: String, required: true, index: { unique: true } },
 	
+	// --------------
+	// --------------
+	// The Items in this block are fozen at publish time.
+	// All changes that are made pre-update-publish are stored and synced to firebase.
+	// Their change has no reflection in the variables stored here.
+	// This is to ensure that non-published updates don't leak into the Reader
 	title: { type: String },
 	abstract: { type: String },
 	authorsNote: { type: String },
 	markdown: { type: String },
-	
-	collaborators: {
-		authors:[{ type: ObjectId, ref: 'User'}], 
-		readers:[{ type: ObjectId, ref: 'User'}] 
-	},
+	authors: [{ type: ObjectId, ref: 'User'}],
 	assets: [{ type: ObjectId, ref: 'Asset'}], 
 	style: { type: Schema.Types.Mixed },
-
 	lastUpdated: { type: Date },
-	createDate: { type: Date },
-
 	status: { type: String },
+	// --------------
+	// --------------
+
+	// A duplicate cache of the parameters as defined in the editor. 
+	// Also stored here so that we can privelege access to the editor 
+	// and to private pubs
+	collaborators: {
+		canEdit:[{ type: ObjectId, ref: 'User'}], 
+		canRead:[{ type: ObjectId, ref: 'User'}] 
+	},
+	
+	createDate: { type: Date },
 	htmlCache: { type: String }, // Do we want to cache the html render? It might not be any faster...
 	
 	history: [{ //History is appended to each time a 'publish' is made.
 		note: { type: String },
 		publishDate: { type: Date },
 		publishAuthor: { type: ObjectId, ref: 'User'},
-		publishStatus:  { type: String },
 		diffToLastPublish: { type: String }, 
 		
 		// The following should be enough to entirely reproduce the document
@@ -35,12 +45,10 @@ var pubSchema = new Schema({
 		abstract: { type: String },
 		authorsNote: { type: String },
 		markdown: { type: String }, // We could store just the diff and calculate? Is there any harm in storing the markdown too?
-		collaborators: {
-			authors:[{ type: ObjectId, ref: 'User'}], 
-			readers:[{ type: ObjectId, ref: 'User'}] 
-		},
+		authors: [{ type: ObjectId, ref: 'User'}],
 		assets: [{ type: ObjectId, ref: 'Asset'}],
 		style: { type: Schema.Types.Mixed },
+		status: { type: String },
 	}],
 
 	followers: [{ type: ObjectId, ref: 'User'}],
@@ -125,7 +133,7 @@ pubSchema.statics.getPub = function (slug, readerID, callback) {
 
 		// Check if the pub is private, and if so, check readers/authors list
 		if (pub.settings.isPrivate) { 
-			if (pub.collaborators.authors.indexOf(readerID) === -1 && pub.collaborators.readers.indexOf(readerID) === -1) {
+			if (pub.collaborators.canEdit.indexOf(readerID) === -1 && pub.collaborators.canRead.indexOf(readerID) === -1) {
 				return callback(null, 'Private Pub');
 			}
 		}
@@ -141,7 +149,7 @@ pubSchema.statics.getPubEdit = function (slug, readerID, callback) {
 
 		if (!pub) { return callback(null, 'Pub Not Found'); }
 
-		if (pub.collaborators.authors.indexOf(readerID) === -1) {
+		if (pub.collaborators.canEdit.indexOf(readerID) === -1) {
 			return callback(null, 'Not Authorized');
 		}
 
