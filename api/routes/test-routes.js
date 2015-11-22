@@ -20,6 +20,12 @@ app.get('/sampleProjects', function(req, res){
 
 });
 
+app.post('/createPub', function(req, res){
+	setTimeout(function(){
+		res.status(201).json('Did it!');	
+	}, 2000);
+	
+});
 
 app.post('/loadProjects', function(req,res){
 	// Want to load each project's title, authors, publishdate, abstract, image

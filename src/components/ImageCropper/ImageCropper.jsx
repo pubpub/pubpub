@@ -7,7 +7,7 @@ import {s3Upload} from '../../utils/uploadFile';
 
 let styles = {};
 
-const HeaderNav = React.createClass({
+const ImageCropper = React.createClass({
 	propTypes: {
 		width: PropTypes.number,
 		height: PropTypes.number,
@@ -87,7 +87,7 @@ const HeaderNav = React.createClass({
 	}
 });
 
-export default Radium(HeaderNav);
+export default Radium(ImageCropper);
 
 styles = {
 	container: {

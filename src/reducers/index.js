@@ -3,6 +3,7 @@ import { combineReducers } from 'redux';
 import {reducer as formReducer} from 'redux-form';
 import { routerStateReducer } from 'redux-router';
 
+import createPub from './createPub';
 import editor from './editor';
 import explore from './explore';
 import landing from './landing';
@@ -16,6 +17,7 @@ import subdomainTest from './subdomainTest';
 export default combineReducers({
 	router: routerStateReducer,
 	form: formReducer,
+	createPub,
 	editor,
 	explore,
 	landing,
