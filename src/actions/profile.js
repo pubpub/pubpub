@@ -18,6 +18,6 @@ export const LOAD_PROFILE_FAIL = 'editor/LOAD_PROFILE_FAIL';
 export function getProfile(username) {
 	return {
 		types: [LOAD_PROFILE, LOAD_PROFILE_SUCCESS, LOAD_PROFILE_FAIL],
-		promise: (client) => client.get('/user', {params: {username: username}}) 
+		promise: (client) => client.get('/getUser', {params: {username: username}}) 
 	};
 }

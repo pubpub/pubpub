@@ -2,8 +2,7 @@ import React, { PropTypes } from 'react';
 import {connect} from 'react-redux';
 import Radium from 'radium';
 import DocumentMeta from 'react-document-meta';
-import { pushState } from 'redux-router';
-// import { Link } from 'react-router';
+import { Link, pushState } from 'redux-router';
 import {logout} from '../../actions/login';
 import {getProfile} from '../../actions/profile';
 import {LoaderDeterminate} from '../../components';
@@ -123,21 +122,19 @@ const Profile = React.createClass({
 						</div>
 
 						<div style={styles.profileContent}>
-							<h2>PubPub Points</h2>
-							<h3>Pubs</h3>
-							<h3>Discussions</h3>
-
+							
 							<h2>Pubs</h2>
 							{profileData.pubs
 								? profileData.pubs.map((pub, index)=>{
 									return (
 										<div key={index}>
-											<p>{pub.displayTitle}</p>
-											<img style={styles.image} src={pub.image}/>
+											<Link to={'/pub/' + pub.slug}><p>Read {pub.displayTitle}</p></Link>
+											<Link to={'/pub/' + pub.slug + '/edit'}><p>Edit {pub.displayTitle}</p></Link>
+											{/* <img style={styles.image} src={pub.image}/> */}
 										</div>
 									);
 								})
-								: ''
+								: null
 							}
 
 						</div>

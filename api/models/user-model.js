@@ -53,4 +53,14 @@ userSchema.statics.generateUniqueUsername = function (fullname, callback) {
   findUniqueName(username,0);
 };
 
+userSchema.statics.getUser = function (username, readerID, callback) {
+  this.findOne({username: username}).exec((err, user) =>{
+    if (err) { return callback(err, null); }
+
+    if (!user) { return callback(null, 'User Not Found'); }
+
+    return callback(null, user);
+  })
+};
+
 module.exports = mongoose.model('User', userSchema);

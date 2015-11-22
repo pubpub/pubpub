@@ -27,20 +27,35 @@ function load(state) {
 }
 
 function loadSuccess(state, result) {
-	return state.merge({
+	const outputState = {
 		status: 'loaded',
 		profileData: result,
 		error: null
-	});
+	};
+
+	if (result === 'User Not Found') {
+		outputState.profileData = { ...defaultState.get('profileData'),
+			name: 'User Not Found',
+			image: 'http://res.cloudinary.com/pubpub/image/upload/v1448221655/pubSad_blirpk.png'
+		};
+	}
+
+	return state.merge(outputState);
 }
 
 function loadFail(state, error) {
 	console.log('in loadFail');
-	return state.merge({
-		status: 'failed',
-		profileData: null,
+
+	const outputState = {
+		status: 'loaded',
+		profileData: { ...defaultState.get('profileData'),
+			name: 'Error Loading User',
+			image: 'http://res.cloudinary.com/pubpub/image/upload/v1448221655/pubSad_blirpk.png'
+		},
 		error: error
-	});
+	};
+
+	return state.merge(outputState);
 }
 
 /*--------*/
