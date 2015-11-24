@@ -53,9 +53,8 @@ const Editor = React.createClass({
 
 			// Load Firebase and bind using ReactFireMixin
 			// For assets, references, etc.
-			const ref = new Firebase('https://pubpub.firebaseio.com/' + this.props.slug + '/assets' );
-			this.bindAsObject(ref, 'assetsObject');
-			this.bindAsArray(ref, 'assetsList');
+			const ref = new Firebase('https://pubpub.firebaseio.com/' + this.props.slug + '/editorData' );
+			this.bindAsObject(ref, 'firepadData');
 
 			// Load Firebase ref that is used for firepad
 			const firepadRef = new Firebase('https://pubpub.firebaseio.com/' + this.props.slug + '/firepad');
@@ -91,7 +90,7 @@ const Editor = React.createClass({
 
 	// onEditorChange: function(cm, change) {
 	onEditorChange: function(cm) {
-		const mdOutput = markLib(cm.getValue(), this.state.assetsList);
+		const mdOutput = markLib(cm.getValue(), this.state.firepadData.assets);
 		this.setState({
 			tree: mdOutput.tree,
 			travisTOC: mdOutput.travisTOC,
@@ -174,17 +173,15 @@ const Editor = React.createClass({
 
 		// Make sure refname is unique.
 		// If it's not unique, append a timestamp.
-		this.state.assetsList.forEach((thisAsset)=>{
-			if (thisAsset.refName === refName) {
-				refName = refName + '_' + Date.now();
-			}
-		});
+		if (this.state.firepadData.assets && refName in this.state.firepadData.assets) {
+			refName = refName + '_' + Date.now();
+		}
 		// Add refname and author to passed in asset object.
 		asset.refName = refName;
 		asset.author = this.props.loginData.getIn(['userData', 'username']);
 
 		// Push to firebase ref
-		const ref = new Firebase('https://pubpub.firebaseio.com/' + this.props.slug + '/assets' );
+		const ref = new Firebase('https://pubpub.firebaseio.com/' + this.props.slug + '/editorData/assets' );
 		ref.push(asset);
 	},
 
@@ -354,9 +351,9 @@ const Editor = React.createClass({
 							{(() => {
 								switch (activeModal) {
 								case 'Assets':
-									return (<EditorModalAssets assetData={this.state.assetsList} slug={this.props.slug} addAsset={this.addAsset}/>);
+									return (<EditorModalAssets assetData={this.state.firepadData.assets} slug={this.props.slug} addAsset={this.addAsset}/>);
 								case 'Collaborators':
-									return (<EditorModalCollaborators/>);
+									return (<EditorModalCollaborators collaboratorData={this.state.firepadData.collaborators}/>);
 								case 'Publish':
 									return (<EditorModalPublish handlePublish={this.publishVersion}/>);
 								case 'References':

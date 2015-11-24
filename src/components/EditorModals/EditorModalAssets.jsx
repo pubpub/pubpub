@@ -9,7 +9,7 @@ let styles = {};
 
 const EditorModalAssets = React.createClass({
 	propTypes: {
-		assetData: PropTypes.array,
+		assetData: PropTypes.object,
 		slug: PropTypes.string,
 		addAsset: PropTypes.func,
 	},
@@ -86,6 +86,13 @@ const EditorModalAssets = React.createClass({
 	},
 
 	render: function() {
+		const assetData = [];
+		for ( const key in this.props.assetData ) {
+			if (this.props.assetData.hasOwnProperty(key)) {
+				assetData.push(this.props.assetData[key]);
+			}
+		}
+		
 		return (
 			<Dropzone ref="dropzone" 
 				onDrop={this.onDrop}
@@ -103,7 +110,7 @@ const EditorModalAssets = React.createClass({
 					<div style={baseStyles.rightCornerAction} onClick={this.onOpenClick}>Click to choose or drag files</div>
 					
 					{/* Show the assets table header if there are any existing assets or uploads */}
-					{this.props.assetData.length || this.state.files.length
+					{assetData.length || this.state.files.length
 						? <EditorModalAssetsRow isHeader={true} filename="filename" author="by" assetType="type" date="date" />
 						: null
 					}
@@ -127,8 +134,8 @@ const EditorModalAssets = React.createClass({
 						const assetList = [];
 
 						// Iterate through assetList in reverse order. So newest are at top
-						for (let index = this.props.assetData.length; index > 0; index--) {
-							const asset = this.props.assetData[index - 1];
+						for (let index = assetData.length; index > 0; index--) {
+							const asset = assetData[index - 1];
 							assetList.push(<EditorModalAssetsRow 
 								key={'modalAsset-' + index} 
 								filename={asset.originalFilename} 

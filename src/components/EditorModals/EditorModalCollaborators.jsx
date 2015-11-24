@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {PropTypes} from 'react';
 import Radium from 'radium';
 import {baseStyles} from './modalStyle';
 import {globalStyles} from '../../utils/styleConstants';
@@ -6,6 +6,11 @@ import {globalStyles} from '../../utils/styleConstants';
 let styles = {};
 
 const EditorModalCollaborators = React.createClass({
+	propTypes: {
+		collaboratorData: PropTypes.object,
+		updateCollaborators: PropTypes.func,
+	},
+
 	getInitialState: function() {
 		return {
 			showInviteOptions: false,
@@ -17,23 +22,30 @@ const EditorModalCollaborators = React.createClass({
 		});
 	},
 	render: function() {
-		const sampleCollaborators = [
-			{
-				image: 'https://s3.amazonaws.com/pubpub-upload/lip.png',
-				name: 'Andy Lippman',
-				permissions: 'edit'
-			},
-			{
-				image: 'https://s3.amazonaws.com/pubpub-upload/travis.png',
-				name: 'Cesar Hidalgo',
-				permissions: 'read'
-			},
-			{
-				image: 'https://s3.amazonaws.com/pubpub-upload/kevin.png',
-				name: 'Kevin McManus',
-				permissions: 'edit'
-			},
-		];
+		// const sampleCollaborators = [
+		// 	{
+		// 		image: 'https://s3.amazonaws.com/pubpub-upload/lip.png',
+		// 		name: 'Andy Lippman',
+		// 		permissions: 'edit'
+		// 	},
+		// 	{
+		// 		image: 'https://s3.amazonaws.com/pubpub-upload/travis.png',
+		// 		name: 'Cesar Hidalgo',
+		// 		permissions: 'read'
+		// 	},
+		// 	{
+		// 		image: 'https://s3.amazonaws.com/pubpub-upload/kevin.png',
+		// 		name: 'Kevin McManus',
+		// 		permissions: 'edit'
+		// 	},
+		// ];
+
+		const collaboratorData = [];
+		for ( const key in this.props.collaboratorData ) {
+			if (this.props.collaboratorData.hasOwnProperty(key)) {
+				collaboratorData.push(this.props.collaboratorData[key]);
+			}
+		}
 
 		return (
 			<div>
@@ -64,16 +76,16 @@ const EditorModalCollaborators = React.createClass({
 					
 
 					{
-						sampleCollaborators.map((collaborator, index) => {
+						collaboratorData.map((collaborator, index) => {
 							return (
 								<div key={'collaborator-' + index} style={styles.rowContainer}>
 
-									<div style={[styles.imageColumn, styles.columnHeader]}> <img style={styles.userImage} src={collaborator.image} /> </div>
+									<div style={[styles.imageColumn, styles.columnHeader]}> <img style={styles.userImage} src={collaborator.thumbnail} /> </div>
 									<div style={[styles.nameColumn]}>{collaborator.name}</div>
 									<div style={[styles.permissionsColumn]}>
-										<span key={'collaboratorPermissionsEdit-' + index} style={[styles.permission, collaborator.permissions === 'edit' && styles.permissionActive]}>can edit</span>
+										<span key={'collaboratorPermissionsEdit-' + index} style={[styles.permission, collaborator.permission === 'edit' && styles.permissionActive]}>can edit</span>
 										<span style={styles.permissionSeparator}>|</span>
-										<span key={'collaboratorPermissionsRead-' + index} style={[styles.permission, collaborator.permissions === 'read' && styles.permissionActive]}>can read only</span>
+										<span key={'collaboratorPermissionsRead-' + index} style={[styles.permission, collaborator.permission === 'read' && styles.permissionActive]}>can read only</span>
 									</div>
 									<div style={[styles.optionColumn]}>remove</div>
 

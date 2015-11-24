@@ -4,6 +4,7 @@ var Pub  = require('../models').Pub;
 var User = require('../models').User;
 
 var _         = require('underscore');
+var Firebase  = require('firebase');
 
 app.get('/getPub', function(req, res) {
 	const userID = req.user ? req.user._id : undefined;
@@ -44,8 +45,8 @@ app.post('/createPub', function(req, res) {
 			slug: req.body.slug,
 			abstract: 'Type your abstract here',
 			collaborators: {
-				authors:[userID], 
-				readers:[] 
+				canEdit:[userID], 
+				canRead:[] 
 			},
 			createDate: new Date().getTime(),
 			status: 'Unpublished',
@@ -70,6 +71,15 @@ app.post('/createPub', function(req, res) {
 			const userID = req.user['_id'];
 
 			User.update({ _id: userID }, { $addToSet: { pubs: pubID} }, function(err, result){if(err) return handleError(err)});
+			const ref = new Firebase('https://pubpub.firebaseio.com/' + req.body.slug + '/editorData/collaborators' );
+			ref.push({
+				name: req.user.name,
+				username: req.user.username,
+				email: req.user.email,
+				image: req.user.image,
+				thumbnail: req.user.thumbnail,
+				permission: 'edit',
+			});
 
 			return res.status(201).json(savedPub.slug);
 		});

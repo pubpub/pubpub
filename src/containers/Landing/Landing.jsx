@@ -34,7 +34,7 @@ const Landing = React.createClass({
 				<div style={styles.top}>
 					<h1 style={styles.topPub}>PubPub</h1>
 					<h2 style={styles.subheader}>Open Publishing</h2>
-					<div key="showMeScience" style={styles.showMeScience}><Link style={styles.scienceText} to={`/pub/cat`}>Show Me Science</Link></div>
+					<div key="showMeScience" style={styles.showMeScience}><Link style={styles.scienceText} to={'/pub/fake'}>Show Me Science</Link></div>
 				</div>
 				<div style={styles.search}>
 					Search Pubs and People
@@ -47,6 +47,7 @@ const Landing = React.createClass({
 						<p>As momentary forms become clarified through studious and critical practice, the viewer is left with an epitaph for the possibilities of our existence.</p>
 					</div>
 				</div>
+				{/*
 				<div>
 					<h2 style={styles.text}>Landing</h2>
 					<Link to={`/subdomain`}> subdomain </Link> | 
@@ -55,6 +56,7 @@ const Landing = React.createClass({
 					<Link to={`/profile/istravis`}> profile </Link> | 
 					<Link to={`/pub/cat`}> reader </Link> | 
 				</div>
+				*/}
 				
 
 			</div>
