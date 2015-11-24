@@ -72,6 +72,7 @@ app.post('/createPub', function(req, res) {
 
 			User.update({ _id: userID }, { $addToSet: { pubs: pubID} }, function(err, result){if(err) return handleError(err)});
 			const ref = new Firebase('https://pubpub.firebaseio.com/' + req.body.slug + '/editorData/collaborators' );
+			ref.set({}); // Clear just in case
 			ref.push({
 				name: req.user.name,
 				username: req.user.username,
