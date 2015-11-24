@@ -80,6 +80,7 @@ app.post('/createPub', function(req, res) {
 				image: req.user.image,
 				thumbnail: req.user.thumbnail,
 				permission: 'edit',
+				admin: true,
 			});
 
 			return res.status(201).json(savedPub.slug);
