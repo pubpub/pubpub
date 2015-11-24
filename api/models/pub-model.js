@@ -14,9 +14,10 @@ var pubSchema = new Schema({
 	title: { type: String },
 	abstract: { type: String },
 	authorsNote: { type: String },
-	markdown: { type: String },
+	markdown: { type: String }, //Preprocessed with comments describing all plugin options
 	authors: [{ type: ObjectId, ref: 'User'}],
-	assets: [{ type: ObjectId, ref: 'Asset'}], // Maybe we won't need assets? If the pre-processor takes the pluginItems and converts them to readable raw source - maybe that's good enough? Maybe the markdown could be completely self contained. This would allow better diffing.
+	plugins: [{ type: ObjectId, ref: 'User'}], // Takes raw sources and sets options for rendering them
+	assets: [{ type: ObjectId, ref: 'Asset'}], //Raw sources 
 	style: { type: Schema.Types.Mixed },
 	lastUpdated: { type: Date },
 	status: { type: String },
@@ -39,14 +40,16 @@ var pubSchema = new Schema({
 		publishDate: { type: Date },
 		publishAuthor: { type: ObjectId, ref: 'User'},
 		diffToLastPublish: { type: String }, 
+		firepadVersionNumber: { type: Number }, 
 		
 		// The following should be enough to entirely reproduce the document
 		title: { type: String },
 		abstract: { type: String },
 		authorsNote: { type: String },
-		markdown: { type: String }, // We could store just the diff and calculate? Is there any harm in storing the markdown too?
+		markdown: { type: String }, //Preprocessed with comments describing all plugin options
 		authors: [{ type: ObjectId, ref: 'User'}],
-		assets: [{ type: ObjectId, ref: 'Asset'}],
+		plugins: [{ type: ObjectId, ref: 'User'}], // Takes raw sources and sets options for rendering them
+		assets: [{ type: ObjectId, ref: 'Asset'}], //Raw sources 
 		style: { type: Schema.Types.Mixed },
 		status: { type: String },
 	}],

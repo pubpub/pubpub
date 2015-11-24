@@ -1,5 +1,6 @@
 import React, {PropTypes} from 'react';
 import Radium from 'radium';
+import {Autocomplete} from '../../containers';
 import {baseStyles} from './modalStyle';
 import {globalStyles} from '../../utils/styleConstants';
 
@@ -53,7 +54,8 @@ const EditorModalCollaborators = React.createClass({
 
 				{/* Add new collaborators search bar */}
 				<div style={[baseStyles.rightCornerSearch, styles.mainContent[this.state.showInviteOptions]]}>
-					<input style={baseStyles.rightCornerSearchInput} type="text" placeholder="Add new collaborator"/>
+					<Autocomplete autocompleteKey={'collabAutocomplete'} route={'autocompleteUsers'} placeholder="Add new collaborator" textAlign={'right'} />
+					{/* <input style={baseStyles.rightCornerSearchInput} type="text" placeholder="Add new collaborator"/> */}
 					<div key="refAdvancedText" style={baseStyles.rightCornerSearchAdvanced} onClick={this.toggleshowInviteOptions}>invite by email</div>
 				</div>
 
@@ -84,10 +86,10 @@ const EditorModalCollaborators = React.createClass({
 									<div style={[styles.nameColumn]}>{collaborator.name}</div>
 									<div style={[styles.permissionsColumn]}>
 										<span key={'collaboratorPermissionsEdit-' + index} style={[styles.permission, collaborator.permission === 'edit' && styles.permissionActive]}>can edit</span>
-										<span style={styles.permissionSeparator}>|</span>
-										<span key={'collaboratorPermissionsRead-' + index} style={[styles.permission, collaborator.permission === 'read' && styles.permissionActive]}>can read only</span>
+										<span style={[styles.permissionSeparator, collaborator.admin && styles.isAdminHidden]}>|</span>
+										<span key={'collaboratorPermissionsRead-' + index} style={[styles.permission, collaborator.permission === 'read' && styles.permissionActive, collaborator.admin && styles.isAdminHidden]}>can read only</span>
 									</div>
-									<div style={[styles.optionColumn]}>remove</div>
+									<div style={[styles.optionColumn, collaborator.admin && styles.isAdminHidden]}>remove</div>
 
 									<div style={styles.clearfix}></div>
 								</div>
@@ -176,6 +178,9 @@ styles = {
 		// necessary because we float elements with variable height 
 		display: 'table',
 		clear: 'both',
+	},
+	isAdminHidden: {
+		display: 'none'
 	},
 	sectionHeader: {
 		margin: 0,

@@ -9,6 +9,7 @@ var app = require('./api');
 //   next();
 // });
 
+require('./routes/autocomplete-routes');
 require('./routes/login-routes');
 require('./routes/pub-routes');
 require('./routes/user-routes');
