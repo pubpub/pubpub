@@ -22,6 +22,28 @@ const EditorModalCollaborators = React.createClass({
 			showInviteOptions: !this.state.showInviteOptions,	
 		});
 	},
+
+	renderCollaboratorsSearchResults: function(results) {
+		console.log(results);
+		return (
+			<div style={styles.results}>
+				{
+					results.map((user, index)=>{
+						return (<div key={'collabSearchUser-' + index} style={styles.result}>
+							
+							<div style={styles.imageWrapper}>
+								<img style={styles.image} src={user.thumbnail} />
+							</div>
+							<div style={styles.name}>{user.name}</div>
+							<div style={styles.action}>add</div>
+						</div>);	
+					})
+				}
+			</div>
+		);
+	},
+
+
 	render: function() {
 		// const sampleCollaborators = [
 		// 	{
@@ -54,7 +76,12 @@ const EditorModalCollaborators = React.createClass({
 
 				{/* Add new collaborators search bar */}
 				<div style={[baseStyles.rightCornerSearch, styles.mainContent[this.state.showInviteOptions]]}>
-					<Autocomplete autocompleteKey={'collabAutocomplete'} route={'autocompleteUsers'} placeholder="Add new collaborator" textAlign={'right'} />
+					<Autocomplete 
+						autocompleteKey={'collabAutocomplete'} 
+						route={'autocompleteUsers'} 
+						placeholder="Add new collaborator" 
+						textAlign={'right'} 
+						resultRenderFunction={this.renderCollaboratorsSearchResults}/>
 					{/* <input style={baseStyles.rightCornerSearchInput} type="text" placeholder="Add new collaborator"/> */}
 					<div key="refAdvancedText" style={baseStyles.rightCornerSearchAdvanced} onClick={this.toggleshowInviteOptions}>invite by email</div>
 				</div>
@@ -202,4 +229,27 @@ styles = {
 			color: 'black',
 		},
 	},
+
+	results: {
+		border: '1px solid red',
+
+	},
+	result: {
+		height: 30,
+		width: '100%',
+		margin: '5px 0px',
+	},
+	imageWrapper: {
+		float: 'left',
+		height: '100%',
+	},
+	image: {
+		height: '100%',
+	},
+	name: {
+		float: 'left',
+	},
+	action: {
+		float: 'left',
+	}
 };

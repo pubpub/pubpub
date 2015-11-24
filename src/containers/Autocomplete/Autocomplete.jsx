@@ -15,13 +15,11 @@ const Autocomplete = React.createClass({
 		dispatch: PropTypes.func,
 
 		autocompleteKey: PropTypes.string,
+		resultRenderFunction: PropTypes.func,
 		route: PropTypes.string,
 		height: PropTypes.string,
 		placeholder: PropTypes.string,
 		textAlign: PropTypes.string,
-		resultAction: PropTypes.bool, // Do we display a result action button?
-		resultActionText: PropTypes.string, // What is the text in that button
-		onResultActionClick: PropTypes.func, // What happens when that button is clicked
 	},
 
 	getDefaultProps: function() {
@@ -30,8 +28,6 @@ const Autocomplete = React.createClass({
 			height: '30px',
 			placeholder: 'Placeholder',
 			textAlign: 'left',
-			resultAction: true,
-			resultActionText: 'add',
 		};
 	},
 
@@ -68,21 +64,10 @@ const Autocomplete = React.createClass({
 					}
 				</div>
 
-				<div style={resultData.data && styles.results}>
+				<div className="resultsWrapper">
 					{resultData.data
-						? resultData.data.map((user, index)=>{
-							return (<div key={'collabSearchUser-' + index} style={styles.result}>
-								
-								<div style={styles.imageWrapper}>
-									<img style={styles.image} src={user.thumbnail} />
-								</div>
-								<div style={styles.name}>{user.name}</div>
-								<div style={styles.action}>{this.props.resultActionText}</div>
-							</div>);
-								
-						})
+						? this.props.resultRenderFunction(resultData.data)
 						: null
-						
 					}
 				</div>
 
@@ -123,27 +108,5 @@ styles = {
 		top: 26,
 		width: '100%',
 	},
-	results: {
-		border: '1px solid red',
-
-	},
-	result: {
-		height: 30,
-		width: '100%',
-		margin: '5px 0px',
-	},
-	imageWrapper: {
-		float: 'left',
-		height: '100%',
-	},
-	image: {
-		height: '100%',
-	},
-	name: {
-		float: 'left',
-	},
-	action: {
-		float: 'left',
-	}
 
 };
