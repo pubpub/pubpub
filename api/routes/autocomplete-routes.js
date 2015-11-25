@@ -6,7 +6,7 @@ var Pub = require('../models').Pub;
 var User = require('../models').User;
 
 app.get('/autocompleteUsers', function(req,res){
-	User.find({}, {'_id':0,'username':1, 'thumbnail':1, 'email':1, 'name':1}).exec(function (err, users) {
+	User.find({}, {'_id':1,'username':1, 'thumbnail':1, 'email':1, 'name':1}).exec(function (err, users) {
 		var objects = users;
 		var sifter = new Sifter(objects);
 

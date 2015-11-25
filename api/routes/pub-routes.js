@@ -74,10 +74,10 @@ app.post('/createPub', function(req, res) {
 			const ref = new Firebase('https://pubpub.firebaseio.com/' + req.body.slug + '/editorData/collaborators' );
 			const newCollaborator = {};
 			newCollaborator[req.user.username] = {
+				_id: userID.toString(),
 				name: req.user.name,
 				username: req.user.username,
 				email: req.user.email,
-				image: req.user.image,
 				thumbnail: req.user.thumbnail,
 				permission: 'edit',
 				admin: true,
@@ -145,6 +145,47 @@ app.post('/publishPub', function(req, res) {
 	});
 });
 
+app.post('/updateCollaborators', function(req, res) {
+	Pub.findOne({ slug: req.body.slug }, function (err, pub){
+		if (err) { return res.status(500).json(err);  }
+
+		// Check to make sure the user is authorized to be submitting such changes.
+		if (pub.collaborators.canEdit.indexOf(req.user._id) === -1) {
+			return res.status(403).json('Not authorized to publish versions to this pub');
+		}
+
+		const pubID = pub._id;
+		const canEdit = [];
+		const canRead = [];
+		// Iterate through each user in the collaborators object, add them to appropriate array.
+		_.forEach(req.body.newCollaborators, function(collaborator){
+			if (collaborator.permission === 'edit') {
+				canEdit.push(collaborator._id);
+				// Update the user's pubs collection so it is bound to their profile
+				User.update({ _id: collaborator._id }, { $addToSet: { pubs: pubID} }, function(err, result){if(err) return handleError(err)});
+			} else {
+				canRead.push(collaborator._id);
+				// Update the user's pubs collection so it is removed from their profile
+				User.update({ _id: collaborator._id }, { $pull: { pubs: pubID} }, function(err, result){if(err) return handleError(err)});
+			}
+		});
+		const collaborators = {
+			canEdit: canEdit,
+			canRead: canRead
+		};
+
+		if (req.body.removedUser) {
+			User.update({ _id: req.body.removedUser }, { $pull: { pubs: pubID} }, function(err, result){if(err) return handleError(err)});
+		}
+		// console.log(collaborators);
+		Pub.update({slug: req.body.slug}, { $set: { collaborators: collaborators }}, function(result){
+			// console.log(result);
+			res.status(201).json('Collaborator Data Saved');
+		})
+	});
+	// For each of the canEdits, need to update their Pubs access stuff
+
+});
 
 
 

@@ -14,6 +14,10 @@ export const MODAL_CLOSE = 'editor/MODAL_CLOSE';
 export const MODAL_OPEN = 'editor/MODAL_OPEN';
 export const PUB_EDIT_UNMOUNT = 'editor/PUB_EDIT_UNMOUNT';
 
+export const UPDATE_COLLABORATORS_LOAD = 'editor/UPDATE_COLLABORATORS_LOAD';
+export const UPDATE_COLLABORATORS_SUCCESS = 'editor/UPDATE_COLLABORATORS_SUCCESS';
+export const UPDATE_COLLABORATORS_FAIL = 'editor/UPDATE_COLLABORATORS_FAIL';
+
 export const PUBLISH_LOAD = 'editor/PUBLISH_LOAD';
 export const PUBLISH_SUCCESS = 'editor/PUBLISH_SUCCESS';
 export const PUBLISH_FAIL = 'editor/PUBLISH_FAIL';
@@ -74,5 +78,16 @@ export function openModal(activeModal) {
 	return {
 		type: MODAL_OPEN,
 		activeModal: activeModal
+	};
+}
+
+export function saveCollaboratorsToPub(newCollaborators, removedUser, slug) {
+	return {
+		types: [UPDATE_COLLABORATORS_LOAD, UPDATE_COLLABORATORS_SUCCESS, UPDATE_COLLABORATORS_FAIL],
+		promise: (client) => client.post('/updateCollaborators', {data: {
+			newCollaborators: newCollaborators,
+			removedUser: removedUser,
+			slug: slug
+		}}) 
 	};
 }

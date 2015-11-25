@@ -13,6 +13,9 @@ import {TOGGLE_VIEW_MODE,
 	PUB_EDIT_UNMOUNT,
 	MODAL_OPEN,
 	MODAL_CLOSE,
+	UPDATE_COLLABORATORS_LOAD,
+	UPDATE_COLLABORATORS_SUCCESS,
+	UPDATE_COLLABORATORS_FAIL,
 	PUBLISH_LOAD,
 	PUBLISH_SUCCESS,
 	PUBLISH_FAIL,
@@ -207,6 +210,14 @@ export default function editorReducer(state = defaultState, action) {
 		return openModal(state, action.activeModal);
 	case MODAL_CLOSE: 
 		return closeModal(state);
+
+	case UPDATE_COLLABORATORS_LOAD:
+		return state;
+	case UPDATE_COLLABORATORS_SUCCESS:
+		return state;
+	case UPDATE_COLLABORATORS_FAIL:
+		return state;
+
 	case PUBLISH_LOAD:
 		return publishLoad(state);
 	case PUBLISH_SUCCESS:

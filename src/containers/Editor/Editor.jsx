@@ -7,7 +7,7 @@ import DocumentMeta from 'react-document-meta';
 import PureRenderMixin from 'react-addons-pure-render-mixin';
 import {LoaderDeterminate} from '../../components';
 import {EditorModalAssets, EditorModalCollaborators, EditorModalPublish, EditorModalReferences, EditorModalSettings} from '../../components/EditorModals';
-import {getPubEdit, toggleEditorViewMode, toggleFormatting, toggleTOC, unmountEditor, closeModal, openModal, publishVersion} from '../../actions/editor';
+import {getPubEdit, toggleEditorViewMode, toggleFormatting, toggleTOC, unmountEditor, closeModal, openModal, publishVersion, saveCollaboratorsToPub} from '../../actions/editor';
 import ReactFireMixin from 'reactfire';
 
 import {styles} from './EditorStyle';
@@ -185,6 +185,12 @@ const Editor = React.createClass({
 		ref.push(asset);
 	},
 
+	saveUpdatedCollaborators: function(newCollaborators, removedUser) {
+		const ref = new Firebase('https://pubpub.firebaseio.com/' + this.props.slug + '/editorData/collaborators' );
+		ref.set(newCollaborators);
+		this.props.dispatch(saveCollaboratorsToPub(newCollaborators, removedUser, this.props.slug));
+	},
+
 	closeModalHandler: function() {
 		this.props.dispatch(closeModal());
 	},
@@ -353,7 +359,7 @@ const Editor = React.createClass({
 								case 'Assets':
 									return (<EditorModalAssets assetData={this.state.firepadData.assets} slug={this.props.slug} addAsset={this.addAsset}/>);
 								case 'Collaborators':
-									return (<EditorModalCollaborators collaboratorData={this.state.firepadData.collaborators}/>);
+									return (<EditorModalCollaborators collaboratorData={this.state.firepadData.collaborators} updateCollaborators={this.saveUpdatedCollaborators}/>);
 								case 'Publish':
 									return (<EditorModalPublish handlePublish={this.publishVersion}/>);
 								case 'References':

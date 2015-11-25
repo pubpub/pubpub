@@ -17,6 +17,28 @@ const EditorModalCollaborators = React.createClass({
 			showInviteOptions: false,
 		};
 	},
+
+	setPermission: function(mode, username) {
+		return () => {
+			// if the selected value is different than the set value
+			if (mode !== this.props.collaboratorData[username].permission) {
+				
+				const newCollaboratorsObject = this.props.collaboratorData;
+				newCollaboratorsObject[username].permission = mode;
+				this.props.updateCollaborators(newCollaboratorsObject, null);
+			}
+		};
+	},
+
+	removeUser: function(username) {
+		return () => {
+			const removedUserID = this.props.collaboratorData[username]._id;
+			const newCollaboratorsObject = this.props.collaboratorData;
+			delete newCollaboratorsObject[username];
+			this.props.updateCollaborators(newCollaboratorsObject, removedUserID);
+		};
+	},
+
 	toggleshowInviteOptions: function() {
 		this.setState({
 			showInviteOptions: !this.state.showInviteOptions,	
@@ -25,11 +47,15 @@ const EditorModalCollaborators = React.createClass({
 
 	handleAddNew: function(user) {
 		return () => {
-			console.log(user);
+			const newCollaboratorsObject = this.props.collaboratorData;
+			newCollaboratorsObject[user.username] = user;
+			newCollaboratorsObject[user.username].permission = 'read';
+			this.props.updateCollaborators(newCollaboratorsObject, null);
 		};
 	},
 
 	renderCollaboratorsSearchResults: function(results) {
+		let totalCount = 0; // This is in the case that we have no results because the users in the list are already added
 		return (
 			<div style={styles.results}>
 				{
@@ -38,7 +64,7 @@ const EditorModalCollaborators = React.createClass({
 						if (user.username in this.props.collaboratorData) {
 							return null;
 						}
-
+						totalCount++;
 						return (<div key={'collabSearchUser-' + index} style={styles.result}>
 							
 							<div style={styles.imageWrapper}>
@@ -49,7 +75,7 @@ const EditorModalCollaborators = React.createClass({
 						</div>);	
 					})
 				}
-				{results.length === 0
+				{results.length === 0 || totalCount === 0
 					? <div style={styles.noResults}>No Results</div>
 					: null
 				}
@@ -108,11 +134,11 @@ const EditorModalCollaborators = React.createClass({
 									<div style={[styles.imageColumn, styles.columnHeader]}> <img style={styles.userImage} src={collaborator.thumbnail} /> </div>
 									<div style={[styles.nameColumn]}>{collaborator.name}</div>
 									<div style={[styles.permissionsColumn]}>
-										<span key={'collaboratorPermissionsEdit-' + index} style={[styles.permission, collaborator.permission === 'edit' && styles.permissionActive]}>can edit</span>
+										<span key={'collaboratorPermissionsEdit-' + index} style={[styles.permission, collaborator.permission === 'edit' && styles.permissionActive]} onClick={this.setPermission('edit', collaborator.username)}>can edit</span>
 										<span style={[styles.permissionSeparator, collaborator.admin && styles.isAdminHidden]}>|</span>
-										<span key={'collaboratorPermissionsRead-' + index} style={[styles.permission, collaborator.permission === 'read' && styles.permissionActive, collaborator.admin && styles.isAdminHidden]}>can read only</span>
+										<span key={'collaboratorPermissionsRead-' + index} style={[styles.permission, collaborator.permission === 'read' && styles.permissionActive, collaborator.admin && styles.isAdminHidden]} onClick={this.setPermission('read', collaborator.username)}>can read only</span>
 									</div>
-									<div style={[styles.optionColumn, collaborator.admin && styles.isAdminHidden]}>remove</div>
+									<div key={'collaboratorRemove-' + index} style={[styles.optionColumn, styles.optionColumnClickable, collaborator.admin && styles.isAdminHidden]} onClick={this.removeUser(collaborator.username)}>remove</div>
 
 									<div style={styles.clearfix}></div>
 								</div>
@@ -196,6 +222,15 @@ styles = {
 		textAlign: 'center',
 		height: '30px',
 		lineHeight: '30px',
+		
+	},
+	optionColumnClickable: {
+		userSelect: 'none',
+		color: globalStyles.veryLight,
+		':hover': {
+			cursor: 'pointer',
+			color: globalStyles.sideText,
+		}
 	},
 	clearfix: {
 		// necessary because we float elements with variable height 
@@ -263,9 +298,10 @@ styles = {
 		width: 'calc(100% - 30px - 75%)',
 		textAlign: 'center',
 		userSelect: 'none',
+		color: globalStyles.veryLight,
 		':hover': {
 			cursor: 'pointer',
-			color: 'black',
+			color: globalStyles.sideText,
 		}
 	},
 	noResults: {
