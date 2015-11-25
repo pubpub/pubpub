@@ -1,5 +1,6 @@
 import React, {PropTypes} from 'react';
 import Radium from 'radium';
+import {LoaderIndeterminate} from '../../components';
 import {baseStyles} from './modalStyle';
 import {globalStyles} from '../../utils/styleConstants';
 
@@ -29,8 +30,15 @@ const EditorModalSettings = React.createClass({
 	getInitialState: function() {
 		return {
 			showAdvanced: false,
+			isLoading: false,
 		};
 	},
+
+	componentWillReceiveProps: function(nextProps) {
+		console.log('received new props!');
+		this.setState({isLoading: false});
+	},
+
 	toggleshowAdvanced: function() {
 		this.setState({
 			showAdvanced: !this.state.showAdvanced,	
@@ -43,6 +51,8 @@ const EditorModalSettings = React.createClass({
 
 			const newSetting = {};
 			newSetting[key] = option;
+
+			this.setState({isLoading: true});
 
 			switch (key) {
 			case 'editorFont': 
@@ -97,7 +107,15 @@ const EditorModalSettings = React.createClass({
 		];
 
 		return (
-			<div>
+			<div style={styles.container}>
+
+				<div style={styles.loader}>
+					{this.state.isLoading
+						? <LoaderIndeterminate color={globalStyles.sideText}/>
+						: null
+					}
+				</div>
+
 				<h2 style={baseStyles.topHeader}>Settings</h2>
 
 				<div style={[baseStyles.rightCornerAction, styles.addOptions, styles.addOptions[this.state.showAdvanced]]} onClick={this.toggleshowInviteOptions}>
@@ -156,10 +174,18 @@ const EditorModalSettings = React.createClass({
 export default Radium(EditorModalSettings);
 
 styles = {
+	container: {
+		position: 'relative',
+	},
 	mainContent: {
 		true: {
 			display: 'none',
 		},
+	},
+	loader: {
+		position: 'absolute',
+		top: 10,
+		width: '100%',
 	},
 	addOptions: {
 		true: {
