@@ -17,3 +17,8 @@ app.get('/getUser', function(req, res) {
 	});
   
 });
+
+app.post('/updateUserSettings', function(req, res) {
+	console.log(req.body.newSettings);
+	res.status(201).json('hi');
+});

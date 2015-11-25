@@ -7,7 +7,8 @@ import DocumentMeta from 'react-document-meta';
 import PureRenderMixin from 'react-addons-pure-render-mixin';
 import {LoaderDeterminate} from '../../components';
 import {EditorModalAssets, EditorModalCollaborators, EditorModalPublish, EditorModalReferences, EditorModalSettings} from '../../components/EditorModals';
-import {getPubEdit, toggleEditorViewMode, toggleFormatting, toggleTOC, unmountEditor, closeModal, openModal, publishVersion, saveCollaboratorsToPub} from '../../actions/editor';
+import {getPubEdit, toggleEditorViewMode, toggleFormatting, toggleTOC, unmountEditor, closeModal, openModal, publishVersion, saveCollaboratorsToPub, saveSettingsPubPub} from '../../actions/editor';
+import {saveSettingsUser} from '../../actions/login';
 import ReactFireMixin from 'reactfire';
 
 import {styles} from './EditorStyle';
@@ -192,6 +193,21 @@ const Editor = React.createClass({
 		this.props.dispatch(saveCollaboratorsToPub(newCollaborators, removedUser, this.props.slug));
 	},
 
+	saveUpdatedSettingsUser: function(newSettings) {
+		this.props.dispatch(saveSettingsUser(newSettings));
+	},
+
+	saveUpdatedSettingsFirebase: function(newSettings) {
+		const ref = new Firebase('https://pubpub.firebaseio.com/' + this.props.slug + '/editorData/settings' );
+		ref.update(newSettings);
+	}, 
+
+	saveUpdatedSettingsFirebaseAndPubPub: function(newSettings) {
+		const ref = new Firebase('https://pubpub.firebaseio.com/' + this.props.slug + '/editorData/settings' );
+		ref.update(newSettings);
+		this.props.dispatch(saveSettingsPubPub(this.props.slug, newSettings));
+	}, 
+
 	closeModalHandler: function() {
 		this.props.dispatch(closeModal());
 	},
@@ -366,7 +382,14 @@ const Editor = React.createClass({
 								case 'References':
 									return (<EditorModalReferences/>);
 								case 'Style':
-									return (<EditorModalSettings/>);
+									return (
+										<EditorModalSettings
+											editorFont={'serif'}
+											editorColor={'dark'}
+											saveUpdatedSettingsUser={this.saveUpdatedSettingsUser}
+											saveUpdatedSettingsFirebase={this.saveUpdatedSettingsFirebase}
+											saveUpdatedSettingsFirebaseAndPubPub={this.saveUpdatedSettingsFirebaseAndPubPub}/>
+									);
 								default:
 									return null;
 								}

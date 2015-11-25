@@ -18,7 +18,12 @@ import {
 	LOGOUT_LOAD_FAIL,
 	REGISTER_LOAD,
 	REGISTER_LOAD_SUCCESS,
-	REGISTER_LOAD_FAIL
+	REGISTER_LOAD_FAIL,
+
+	UPDATE_USER_SETTINGS_LOAD,
+	UPDATE_USER_SETTINGS_SUCCESS,
+	UPDATE_USER_SETTINGS_FAIL,
+
 } from '../actions/login';
 
 /*--------*/
@@ -116,6 +121,10 @@ function failed(state, error) {
 	});
 }
 
+function userSettingsUpdate(state, result) {
+	return state.mergeIn(['userData', 'settings'], result);
+}
+
 /*--------*/
 // Bind actions to specific reducing functions.
 /*--------*/
@@ -164,6 +173,12 @@ export default function loginReducer(state = defaultState, action) {
 	case REGISTER_LOAD_FAIL:
 		return failed(state, action.error);
 
+	case UPDATE_USER_SETTINGS_LOAD:
+		return state;
+	case UPDATE_USER_SETTINGS_SUCCESS:
+		return userSettingsUpdate(state, action.result);
+	case UPDATE_USER_SETTINGS_FAIL:
+		return state;
 
 	default:
 		return ensureImmutable(state);

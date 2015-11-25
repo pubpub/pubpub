@@ -188,5 +188,8 @@ app.post('/updateCollaborators', function(req, res) {
 });
 
 
-
-
+app.post('/updatePubSettings', function(req, res) {
+	console.log(req.body.slug);
+	console.log(req.body.newSettings);
+	res.status(201).json('hi2');
+});

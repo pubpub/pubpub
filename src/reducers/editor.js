@@ -16,6 +16,10 @@ import {TOGGLE_VIEW_MODE,
 	UPDATE_COLLABORATORS_LOAD,
 	UPDATE_COLLABORATORS_SUCCESS,
 	UPDATE_COLLABORATORS_FAIL,
+
+	UPDATE_PUB_SETTINGS_LOAD,
+	UPDATE_PUB_SETTINGS_SUCCESS,
+	UPDATE_PUB_SETTINGS_FAIL,
 	PUBLISH_LOAD,
 	PUBLISH_SUCCESS,
 	PUBLISH_FAIL,
@@ -186,7 +190,6 @@ function publishError(state, error) {
 	});
 }
 
-
 /*--------*/
 // Bind actions to specific reducing functions.
 /*--------*/
@@ -216,6 +219,13 @@ export default function editorReducer(state = defaultState, action) {
 	case UPDATE_COLLABORATORS_SUCCESS:
 		return state;
 	case UPDATE_COLLABORATORS_FAIL:
+		return state;
+
+	case UPDATE_PUB_SETTINGS_LOAD:
+		return state;
+	case UPDATE_PUB_SETTINGS_SUCCESS:
+		return state;
+	case UPDATE_PUB_SETTINGS_FAIL:
 		return state;
 
 	case PUBLISH_LOAD:

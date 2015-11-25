@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {PropTypes} from 'react';
 import Radium from 'radium';
 import {baseStyles} from './modalStyle';
 import {globalStyles} from '../../utils/styleConstants';
@@ -6,6 +6,26 @@ import {globalStyles} from '../../utils/styleConstants';
 let styles = {};
 
 const EditorModalSettings = React.createClass({
+	propTypes: {
+		editorFont: PropTypes.string,
+		editorColor: PropTypes.string,
+		editorFontSize: PropTypes.string,
+		pubPrivacy: PropTypes.string,
+		pubStyle: PropTypes.object,
+		saveUpdatedSettingsUser: PropTypes.func,
+		saveUpdatedSettingsFirebase: PropTypes.func,
+		saveUpdatedSettingsFirebaseAndPubPub: PropTypes.func,
+	},
+	getDefaultProps: function() {
+		return {
+			editorFont: 'mono',
+			editorColor: 'light',
+			editorFontSize: 'medium',
+			pubPrivacy: 'public',
+			pubStyle: {type: 'science'},
+		};
+	},
+
 	getInitialState: function() {
 		return {
 			showAdvanced: false,
@@ -16,31 +36,60 @@ const EditorModalSettings = React.createClass({
 			showAdvanced: !this.state.showAdvanced,	
 		});
 	},
+
+	handleOptionClick: function(key, option) {
+
+		return ()=>{
+
+			const newSetting = {};
+			newSetting[key] = option;
+			console.log(key);
+			switch (key) {
+			case 'editorFont': 
+			case 'editorColor':
+			case 'editorFontSize':
+				return this.props.saveUpdatedSettingsUser(newSetting);
+			case 'pubStyle':
+				return this.props.saveUpdatedSettingsFirebase(newSetting);
+			case 'pubPrivacy':
+				return this.props.saveUpdatedSettingsFirebaseAndPubPub(newSetting);
+			default:
+				return console.log('hit default');
+			}
+
+		};
+	},
+
 	render: function() {
-		const sampleOptions = [
+		const options = [
 			{
 				title: 'editor font',
-				activeOption: 'mono',
+				key: 'editorFont',
+				activeOption: this.props.editorFont,
 				options: ['serif', 'sans-serif', 'mono'],
 			},
 			{
 				title: 'editor color',
-				activeOption: 'light',
+				key: 'editorColor',
+				activeOption: this.props.editorColor,
 				options: ['light', 'dark'],
 			},
 			{
 				title: 'editor font size',
-				activeOption: 'medium',
+				key: 'editorFontSize',
+				activeOption: this.props.editorFontSize,
 				options: ['small', 'medium', 'large'],
 			},
 			{
 				title: 'pub privacy',
-				activeOption: 'public',
+				key: 'pubPrivacy',
+				activeOption: this.props.pubPrivacy,
 				options: ['public', 'private'],
 			},
 			{
 				title: 'pub style',
-				activeOption: 'science',
+				key: 'pubStyle',
+				activeOption: this.props.pubStyle.type,
 				options: ['science', 'magazine', 'blog'],
 			}
 
@@ -58,7 +107,7 @@ const EditorModalSettings = React.createClass({
 					
 					{/* Iterate over options types */}
 					{
-						sampleOptions.map((optionObject)=> {
+						options.map((optionObject)=> {
 							return (
 								<div key={'settingsOptions-' + optionObject.title} style={styles.optionContainer}>
 
@@ -72,7 +121,7 @@ const EditorModalSettings = React.createClass({
 											optionObject.options.map((option, index)=> {
 												return (
 													<span key={optionObject.title + '-' + index}>
-														<span key={optionObject.title + '-' + option} style={[styles.option, optionObject.activeOption === option && styles.optionActive]}>{option}</span>
+														<span key={optionObject.title + '-' + option} style={[styles.option, optionObject.activeOption === option && styles.optionActive]} onClick={this.handleOptionClick(optionObject.key, option)}>{option}</span>
 														{(index !== optionObject.options.length - 1 
 															? <span style={styles.optionSeparator}>|</span> 
 															: null

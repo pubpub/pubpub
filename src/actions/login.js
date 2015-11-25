@@ -21,6 +21,10 @@ export const REGISTER_LOAD = 'login/REGISTER_LOAD';
 export const REGISTER_LOAD_SUCCESS = 'login/REGISTER_LOAD_SUCCESS';
 export const REGISTER_LOAD_FAIL = 'login/REGISTER_LOAD_FAIL';
 
+export const UPDATE_USER_SETTINGS_LOAD = 'editor/UPDATE_USER_SETTINGS_LOAD';
+export const UPDATE_USER_SETTINGS_SUCCESS = 'editor/UPDATE_USER_SETTINGS_SUCCESS';
+export const UPDATE_USER_SETTINGS_FAIL = 'editor/UPDATE_USER_SETTINGS_FAIL';
+
 /*--------*/
 // Define Action creators
 // 
@@ -73,5 +77,14 @@ export function register(email, password, fullname, image) {
 			'fullname': fullname,
 			'image': image
 		}})
+	};
+}
+
+export function saveSettingsUser(newSettings) {
+	return {
+		types: [UPDATE_USER_SETTINGS_LOAD, UPDATE_USER_SETTINGS_SUCCESS, UPDATE_USER_SETTINGS_FAIL],
+		promise: (client) => client.post('/updateUserSettings', {data: {
+			newSettings: newSettings,
+		}}) 
 	};
 }

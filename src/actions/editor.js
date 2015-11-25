@@ -18,6 +18,10 @@ export const UPDATE_COLLABORATORS_LOAD = 'editor/UPDATE_COLLABORATORS_LOAD';
 export const UPDATE_COLLABORATORS_SUCCESS = 'editor/UPDATE_COLLABORATORS_SUCCESS';
 export const UPDATE_COLLABORATORS_FAIL = 'editor/UPDATE_COLLABORATORS_FAIL';
 
+export const UPDATE_PUB_SETTINGS_LOAD = 'editor/UPDATE_PUB_SETTINGS_LOAD';
+export const UPDATE_PUB_SETTINGS_SUCCESS = 'editor/UPDATE_PUB_SETTINGS_SUCCESS';
+export const UPDATE_PUB_SETTINGS_FAIL = 'editor/UPDATE_PUB_SETTINGS_FAIL';
+
 export const PUBLISH_LOAD = 'editor/PUBLISH_LOAD';
 export const PUBLISH_SUCCESS = 'editor/PUBLISH_SUCCESS';
 export const PUBLISH_FAIL = 'editor/PUBLISH_FAIL';
@@ -88,6 +92,16 @@ export function saveCollaboratorsToPub(newCollaborators, removedUser, slug) {
 			newCollaborators: newCollaborators,
 			removedUser: removedUser,
 			slug: slug
+		}}) 
+	};
+}
+
+export function saveSettingsPubPub(slug, newSettings) {
+	return {
+		types: [UPDATE_PUB_SETTINGS_LOAD, UPDATE_PUB_SETTINGS_SUCCESS, UPDATE_PUB_SETTINGS_FAIL],
+		promise: (client) => client.post('/updatePubSettings', {data: {
+			slug: slug,
+			newSettings: newSettings
 		}}) 
 	};
 }

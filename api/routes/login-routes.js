@@ -15,6 +15,7 @@ app.get('/login', function(req,res){
 			username: req.user.username,
 			image: req.user.image,
 			thumbnail: req.user.thumbnail,
+			settings: req.user.settings
 		});
 
 	}else{
@@ -36,6 +37,7 @@ app.post('/login', passport.authenticate('local'), function(req, res) {
 			username: user.username,
 			image: user.image,
 			thumbnail: user.thumbnail,
+			settings: user.settings
 		});
 
 	});
@@ -76,6 +78,7 @@ app.post('/register', function(req, res) {
 						username: account.username,
 						image: account.image,
 						thumbnail: account.thumbnail,
+						settings: account.settings
 					});
 
 				});
