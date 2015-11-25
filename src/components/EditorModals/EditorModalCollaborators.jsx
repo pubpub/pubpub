@@ -24,20 +24,28 @@ const EditorModalCollaborators = React.createClass({
 	},
 
 	renderCollaboratorsSearchResults: function(results) {
-		console.log(results);
 		return (
 			<div style={styles.results}>
 				{
+
 					results.map((user, index)=>{
+						if (user.username in this.props.collaboratorData) {
+							return null;
+						}
+
 						return (<div key={'collabSearchUser-' + index} style={styles.result}>
 							
 							<div style={styles.imageWrapper}>
 								<img style={styles.image} src={user.thumbnail} />
 							</div>
 							<div style={styles.name}>{user.name}</div>
-							<div style={styles.action}>add</div>
+							<div style={styles.action} key={'collabSearchAdd-' + index}>add</div>
 						</div>);	
 					})
+				}
+				{results.length === 0
+					? <div style={styles.noResults}>No Results</div>
+					: null
 				}
 			</div>
 		);
@@ -45,24 +53,6 @@ const EditorModalCollaborators = React.createClass({
 
 
 	render: function() {
-		// const sampleCollaborators = [
-		// 	{
-		// 		image: 'https://s3.amazonaws.com/pubpub-upload/lip.png',
-		// 		name: 'Andy Lippman',
-		// 		permissions: 'edit'
-		// 	},
-		// 	{
-		// 		image: 'https://s3.amazonaws.com/pubpub-upload/travis.png',
-		// 		name: 'Cesar Hidalgo',
-		// 		permissions: 'read'
-		// 	},
-		// 	{
-		// 		image: 'https://s3.amazonaws.com/pubpub-upload/kevin.png',
-		// 		name: 'Kevin McManus',
-		// 		permissions: 'edit'
-		// 	},
-		// ];
-
 		const collaboratorData = [];
 		for ( const key in this.props.collaboratorData ) {
 			if (this.props.collaboratorData.hasOwnProperty(key)) {
@@ -80,7 +70,7 @@ const EditorModalCollaborators = React.createClass({
 						autocompleteKey={'collabAutocomplete'} 
 						route={'autocompleteUsers'} 
 						placeholder="Add new collaborator" 
-						textAlign={'right'} 
+						textAlign={'right'}
 						resultRenderFunction={this.renderCollaboratorsSearchResults}/>
 					{/* <input style={baseStyles.rightCornerSearchInput} type="text" placeholder="Add new collaborator"/> */}
 					<div key="refAdvancedText" style={baseStyles.rightCornerSearchAdvanced} onClick={this.toggleshowInviteOptions}>invite by email</div>
@@ -231,14 +221,22 @@ styles = {
 	},
 
 	results: {
-		border: '1px solid red',
+		boxShadow: '0px 0px 2px 2px #D7D7D7',
+		width: 'calc(100% - 6px)',
+		margin: '0 auto 5px auto',
 
 	},
 	result: {
 		height: 30,
-		width: '100%',
-		margin: '5px 0px',
+		width: 'calc(100% - 10px)',
+		padding: '5px 0px',
+		margin: '0px 5px',
+		borderBottom: '1px solid #F0F0F0',
+		fontFamily: 'Courier',
+		fontSize: '15px',
+		lineHeight: '30px',
 	},
+
 	imageWrapper: {
 		float: 'left',
 		height: '100%',
@@ -248,8 +246,27 @@ styles = {
 	},
 	name: {
 		float: 'left',
+		width: '65%',
+		margin: '0px 5%',
+		whiteSpace: 'nowrap',
+		overflow: 'hidden',
+		textOverflow: 'ellipsis',
 	},
 	action: {
 		float: 'left',
+		width: 'calc(100% - 30px - 75%)',
+		textAlign: 'center',
+		userSelect: 'none',
+		':hover': {
+			cursor: 'pointer',
+			color: 'black',
+		}
+	},
+	noResults: {
+		fontFamily: 'Courier',
+		fontSize: '15px',
+		height: 30,
+		lineHeight: '30px',
+		textAlign: 'center',
 	}
 };

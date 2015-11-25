@@ -21,7 +21,7 @@ app.get('/autocompleteUsers', function(req,res){
 			output.push(objects[item.id]);
 		});
 
-		console.log(output);
+		// console.log(output);
 		return res.status(201).json(output.concat(output).concat(output).concat(output).concat(output))
 	});
 });

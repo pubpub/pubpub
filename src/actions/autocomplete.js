@@ -34,3 +34,10 @@ export function complete(autocompleteKey, route, string) {
 		}})
 	};
 }
+
+export function clear(autocompleteKey) {
+	return {
+		type: AUTOCOMPLETE_CLEAR,
+		autocompleteKey: autocompleteKey
+	};
+}

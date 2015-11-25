@@ -72,8 +72,8 @@ app.post('/createPub', function(req, res) {
 
 			User.update({ _id: userID }, { $addToSet: { pubs: pubID} }, function(err, result){if(err) return handleError(err)});
 			const ref = new Firebase('https://pubpub.firebaseio.com/' + req.body.slug + '/editorData/collaborators' );
-			ref.set({}); // Clear just in case
-			ref.push({
+			const newCollaborator = {};
+			newCollaborator[req.user.username] = {
 				name: req.user.name,
 				username: req.user.username,
 				email: req.user.email,
@@ -81,7 +81,8 @@ app.post('/createPub', function(req, res) {
 				thumbnail: req.user.thumbnail,
 				permission: 'edit',
 				admin: true,
-			});
+			};
+			ref.set(newCollaborator);
 
 			return res.status(201).json(savedPub.slug);
 		});

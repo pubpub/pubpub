@@ -2,10 +2,7 @@ import React, { PropTypes } from 'react';
 import {connect} from 'react-redux';
 import Radium from 'radium';
 import {LoaderIndeterminate} from '../../components';
-import {complete} from '../../actions/autocomplete';
-// import { Link } from 'react-router';
-import {globalStyles} from '../../utils/styleConstants';
-
+import {complete, clear} from '../../actions/autocomplete';
 
 let styles = {};
 
@@ -17,29 +14,74 @@ const Autocomplete = React.createClass({
 		autocompleteKey: PropTypes.string,
 		resultRenderFunction: PropTypes.func,
 		route: PropTypes.string,
-		height: PropTypes.string,
+		height: PropTypes.number,
 		placeholder: PropTypes.string,
 		textAlign: PropTypes.string,
+		showBottomLine: PropTypes.bool,
+		hideResultsOnClickOut: PropTypes.bool,
 	},
 
 	getDefaultProps: function() {
 		return {
 			route: '/autocompletePubs',
-			height: '30px',
+			height: 30,
 			placeholder: 'Placeholder',
 			textAlign: 'left',
+			showBottomLine: true,
+			hideResultsOnClickOut: true,
 		};
 	},
 
 	getInitialState: function() {
 		return {
 			inputString: '',
+			showMenu: true,
+
 		};
+	},
+
+	componentDidMount: function() {
+		if (this.props.hideResultsOnClickOut === true) {
+			document.documentElement.addEventListener('click', this.clickOutside);
+			document.getElementById('autocompleteMenu').addEventListener('click', this.clickInside);
+		}
+		
+	},
+
+	componentWillUnmount: function() {
+		this.props.dispatch(clear(this.props.autocompleteKey));
+		document.documentElement.removeEventListener('click', this.clickOutside);
+		document.getElementById('autocompleteMenu').removeEventListener('click', this.clickInside);
+	},
+
+	clickInside: function(clickEvent) {
+		this.setState({showMenu: true});
+		clickEvent.stopPropagation();
+	},
+
+	clickOutside: function() {
+		this.setState({showMenu: false});
 	},
 
 	handleOnChange: function(event) {
 		this.setState({inputString: event.target.value});
 		this.props.dispatch(complete(this.props.autocompleteKey, this.props.route, event.target.value));
+		
+	},
+
+	inputStyle: function() {
+		return {
+			textAlign: this.props.textAlign,
+			height: (this.props.height - 3),
+			fontSize: (this.props.height - 3 - 10),
+			borderColor: this.props.showBottomLine ? '#aaa' : 'transparent',
+		};
+	},
+
+	loaderStyle: function() {
+		return {
+			top: this.props.height - 1
+		};
 	},
 
 	render: function() {
@@ -49,15 +91,14 @@ const Autocomplete = React.createClass({
 		}
 
 		return (
-			<div style={styles.container}>
-
+			<div style={styles.container} id="autocompleteMenu">
 				<input type="text" 
 					placeholder={this.props.placeholder} 
-					style={[styles.input, styles.align[this.props.textAlign]]} 
+					style={[styles.input, this.inputStyle()]} 
 					onChange={this.handleOnChange} 
 					value={this.state.inputString}/>
 
-				<div style={styles.loader}>
+				<div style={[styles.loader, this.loaderStyle()]}>
 					{resultData.loading
 						? <LoaderIndeterminate color={'#000'}/>
 						: null
@@ -65,7 +106,7 @@ const Autocomplete = React.createClass({
 				</div>
 
 				<div className="resultsWrapper">
-					{resultData.data
+					{resultData.data && this.state.showMenu
 						? this.props.resultRenderFunction(resultData.data)
 						: null
 					}
@@ -88,24 +129,13 @@ styles = {
 		position: 'relative',
 	},
 	input: {
-		fontSize: 20,
 		fontFamily: 'Lato',
 		width: 'calc(100% - 2px)',
 		borderWidth: '0px 0px 1px 0px',
-		borderColor: '#aaa',
 		outline: 'none',
-	},
-	align: {
-		left: {
-			textAlign: 'left',
-		},
-		right: {
-			textAlign: 'right',
-		}
 	},
 	loader: {
 		position: 'absolute',
-		top: 26,
 		width: '100%',
 	},
 

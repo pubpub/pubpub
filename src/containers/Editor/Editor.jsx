@@ -78,7 +78,7 @@ const Editor = React.createClass({
 	},
 	
 	componentWillReceiveProps(nextProps) {
-		console.log(nextProps);
+		// console.log(nextProps);
 		if (nextProps.editorData.get('publishSuccess')) {
 			this.props.dispatch(pushState(null, ('/pub/' + nextProps.slug)));
 		}

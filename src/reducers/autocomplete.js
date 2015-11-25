@@ -23,7 +23,7 @@ export const defaultState = Immutable.Map({});
 /*--------*/
 
 function loading(state, autocompleteKey) {
-	const mergeState = {};
+	// const mergeState = {};
 	// console.log(state);
 	// console.log(state.getIn([autocompleteKey, 'data']));
 	// const previousData = state.has(autocompleteKey) ? state.getIn([autocompleteKey, 'data']).toJS() : [];
