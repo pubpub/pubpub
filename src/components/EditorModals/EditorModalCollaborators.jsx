@@ -282,6 +282,7 @@ styles = {
 	imageWrapper: {
 		float: 'left',
 		height: '100%',
+		width: 30,
 	},
 	image: {
 		height: '100%',
