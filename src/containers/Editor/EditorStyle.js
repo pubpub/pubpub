@@ -9,6 +9,10 @@ export const styles = {
 		backgroundColor: globalStyles.sideBackground,
 		height: 'calc(100vh - ' + globalStyles.headerHeight + ')',
 	},
+	editorContainerDark: {
+		backgroundColor: '#272727',
+
+	},
 	errorTitle: {
 		textAlign: 'center',
 		fontSize: '45px',
@@ -50,6 +54,9 @@ export const styles = {
 		width: '100%',
 		backgroundColor: globalStyles.sideBackground,
 		zIndex: 10,
+	},
+	editorTopNavDark: {
+		backgroundColor: '#272727',
 	},
 	editorLoadBar: {
 		position: 'fixed',
@@ -200,6 +207,9 @@ export const styles = {
 			opacity: 0,
 			top: 1,
 			width: '50%',
+		},
+		bottomNavBackgroundDark: {
+			backgroundColor: '#272727',
 		},
 		bottomNavLeft: {
 			// backgroundColor: 'rgba(100,200,85, 0.4)',

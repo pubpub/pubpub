@@ -116,9 +116,6 @@ const Editor = React.createClass({
 		return this.props.dispatch(toggleTOC());
 	},
 	publishVersion: function(versionState, versionDescription) {
-		console.log('gunna publish bro');
-		console.log(versionState);
-		console.log(versionDescription);
 
 		const cm = document.getElementsByClassName('CodeMirror')[0].CodeMirror;
 		const newVersion = {
@@ -180,22 +177,19 @@ const Editor = React.createClass({
 
 		switch (editorColor) {
 		case 'light':
-			editorStyles.backgroundColor = 'transparent';
 			editorStyles.color = '#555';
 			break;
 		case 'dark':
-			editorStyles.backgroundColor = '#555';
 			editorStyles.color = '#ddd';
 			break;
 		default:
-			editorStyles.backgroundColor = 'transparent';
 			editorStyles.color = '#555';
 			break;
 		}
 
 		return {
 			'.CodeMirror': {
-				backgroundColor: editorStyles.backgroundColor,
+				backgroundColor: 'transparent',
 				fontSize: editorStyles.fontSize,
 				color: editorStyles.color,
 				fontFamily: editorStyles.fontFamily,
@@ -385,6 +379,7 @@ const Editor = React.createClass({
 		const showBottomRightMenu = this.props.editorData.get('showBottomRightMenu');
 		const loadStatus = this.props.editorData.get('status');
 		const activeModal = this.props.editorData.get('activeModal');
+		const darkMode = this.props.loginData.getIn(['userData', 'settings', 'editorColor']) === 'dark';
 
 		// Set metadata for the page.
 		const metaData = {
@@ -392,12 +387,11 @@ const Editor = React.createClass({
 		};
 
 		return (
-			<div style={[styles.editorContainer]}>
+			<div style={[styles.editorContainer, darkMode && styles.editorContainerDark]}>
 
 				<DocumentMeta {...metaData} />
 
 				<Style rules={this.codeMirrorStyles()} />
-
 
 				{/*	Mobile Editing not currently supported.
 					Display a splash screen if media queries determine mobile mode */}
@@ -451,7 +445,7 @@ const Editor = React.createClass({
 					</div>
 
 					{/*	Top Nav. Fixed to the top of the editor page, just below the main pubpub bar */}
-					<div style={[styles.editorTopNav, styles.hiddenUntilLoad, styles[editorData.get('status')]]}>
+					<div style={[styles.editorTopNav, styles.hiddenUntilLoad, styles[editorData.get('status')], darkMode && styles.editorTopNavDark]}>
 						<ul style={styles.editorNav}>
 
 							<li key="editorNav0"style={[styles.editorNavItem]} onClick={this.openModalHandler('Assets')}>Assets</li>
@@ -478,7 +472,7 @@ const Editor = React.createClass({
 					<div style={[styles.common.editorBottomNav, styles[viewMode].editorBottomNav, styles.hiddenUntilLoad, styles[loadStatus]]}>
 
 						{/* Background header bar that's used in livePreview mode. Provides opaque background. */}
-						<div style={[styles.common.bottomNavBackground, styles[viewMode].bottomNavBackground]}></div>
+						<div style={[styles.common.bottomNavBackground, styles[viewMode].bottomNavBackground, darkMode && styles.common.bottomNavBackgroundDark]}></div>
 
 						<div className="leftBottomNav" style={[styles.common.bottomNavLeft, styles[viewMode].bottomNavLeft]}>
 

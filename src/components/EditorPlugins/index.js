@@ -1,6 +1,22 @@
 import MathPlugin from './MathPlugin';
 import ImagePlugin from './ImagePlugin';
 
+/* -----------------
+Supported PubPub Syntax
+-----------------
+[title: My Pub Title] *required, only take first one
+[abstract: Here is all of my stuff] *required, only take first one
+[cite: myciteref]
+[ref: my reference to a plugin]
+$math$
+::image:refName::
+::video:refName::
+::audio:refName::
+::table:refName::
+
+
+----------------- */ 
+
 export default {
 	math: {
 		component: MathPlugin,
