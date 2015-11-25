@@ -43,13 +43,14 @@ const EditorModalSettings = React.createClass({
 
 			const newSetting = {};
 			newSetting[key] = option;
-			console.log(key);
+
 			switch (key) {
 			case 'editorFont': 
 			case 'editorColor':
 			case 'editorFontSize':
 				return this.props.saveUpdatedSettingsUser(newSetting);
 			case 'pubStyle':
+				newSetting[key] = {type: option};
 				return this.props.saveUpdatedSettingsFirebase(newSetting);
 			case 'pubPrivacy':
 				return this.props.saveUpdatedSettingsFirebaseAndPubPub(newSetting);
