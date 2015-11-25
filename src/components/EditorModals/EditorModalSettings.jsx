@@ -34,8 +34,7 @@ const EditorModalSettings = React.createClass({
 		};
 	},
 
-	componentWillReceiveProps: function(nextProps) {
-		console.log('received new props!');
+	componentWillReceiveProps: function() {
 		this.setState({isLoading: false});
 	},
 

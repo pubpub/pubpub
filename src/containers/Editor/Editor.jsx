@@ -142,12 +142,63 @@ const Editor = React.createClass({
 	// CodeMirror styles function can be
 	// used to dynamically change font, size, color, etc
 	codeMirrorStyles: function() {
+		const editorFont = this.props.loginData.getIn(['userData', 'settings', 'editorFont']);
+		const editorFontSize = this.props.loginData.getIn(['userData', 'settings', 'editorFontSize']);
+		const editorColor = this.props.loginData.getIn(['userData', 'settings', 'editorColor']);
+		
+		const editorStyles = {};
+
+		switch (editorFont) {
+		case 'serif':
+			editorStyles.fontFamily = 'Arial';
+			break;
+		case 'sans-serif':
+			editorStyles.fontFamily = 'Lato';
+			break;
+		case 'mono':
+			editorStyles.fontFamily = 'Courier';
+			break;
+		default:
+			editorStyles.fontFamily = 'Courier';
+			break;
+		}
+
+		switch (editorFontSize) {
+		case 'small':
+			editorStyles.fontSize = '11px';
+			break;
+		case 'medium':
+			editorStyles.fontSize = '15px';
+			break;
+		case 'large':
+			editorStyles.fontSize = '19px';
+			break;
+		default:
+			editorStyles.fontSize = '15px';
+			break;
+		}
+
+		switch (editorColor) {
+		case 'light':
+			editorStyles.backgroundColor = 'transparent';
+			editorStyles.color = '#555';
+			break;
+		case 'dark':
+			editorStyles.backgroundColor = '#555';
+			editorStyles.color = '#ddd';
+			break;
+		default:
+			editorStyles.backgroundColor = 'transparent';
+			editorStyles.color = '#555';
+			break;
+		}
+
 		return {
 			'.CodeMirror': {
-				backgroundColor: 'transparent',
-				fontSize: '15px',
-				color: '#555',
-				fontFamily: 'Courier',
+				backgroundColor: editorStyles.backgroundColor,
+				fontSize: editorStyles.fontSize,
+				color: editorStyles.color,
+				fontFamily: editorStyles.fontFamily,
 				padding: '0px 20px',
 				width: 'calc(100% - 40px)',
 				// fontFamily: 'Alegreya',
@@ -288,13 +339,11 @@ const Editor = React.createClass({
 						// If we have a startline, but no endline, check to see if the line is a header
 						// We wish to set endline to the first #H1 header after startline
 						if (typeof(endLine) === 'undefined' && typeof(startLine) !== 'undefined' && line.stateAfter.header === 1 && line.text !== '') {
-							console.log(line);
 							endLine = cm.getLineNumber(line);
 						}
 
 						// If we don't yet have a startline, see if the current line matches the format of the selected title
 						if (typeof(startLine) === 'undefined' && line.text.indexOf('# ' + title) > -1) {
-							console.log(line);
 							startLine = cm.getLineNumber(line);
 						}
 					}
