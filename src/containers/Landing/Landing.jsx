@@ -2,6 +2,7 @@ import React, { PropTypes } from 'react';
 import {connect} from 'react-redux';
 import Radium from 'radium';
 import DocumentMeta from 'react-document-meta';
+import {Autocomplete} from '../';
 import { Link } from 'react-router';
 import {globalStyles} from '../../utils/styleConstants';
 
@@ -18,6 +19,32 @@ const Landing = React.createClass({
 		// fetchData: function(getState, dispatch) {
 		// 	return dispatch(getProjects());
 		// }
+	},
+
+	renderLandingSearchResults: function(results) {
+		return (
+			<div style={styles.results}>
+				{
+
+					results.map((item, index)=>{
+						return (<div key={'collabSearchUser-' + index} style={styles.result}>
+							
+							<div style={styles.imageWrapper}>
+								<img style={styles.image} src={item.thumbnail} />
+							</div>
+							<div style={styles.name}>{item.name}</div>
+							<div style={styles.name}>{item.title}</div>
+
+						</div>);	
+					})
+				}
+
+				{results.length === 0
+					? <div style={styles.noResults}>No Results</div>
+					: null
+				}
+			</div>
+		);
 	},
 
 	render: function() {
@@ -37,7 +64,14 @@ const Landing = React.createClass({
 					<div key="showMeScience" style={styles.showMeScience}><Link style={styles.scienceText} to={'/pub/fake'}>Show Me Science</Link></div>
 				</div>
 				<div style={styles.search}>
-					Search Pubs and People
+					<Autocomplete 
+						autocompleteKey={'landingSearch'} 
+						route={'autocompletePubsAndUsers'} 
+						placeholder="Search Pubs and People" 
+						height={40}
+						showBottomLine={false}
+						hideResultsOnClickOut={false}
+						resultRenderFunction={this.renderLandingSearchResults}/>
 				</div>
 				<div style={styles.lower}>
 					<div style={styles.textDark}>

@@ -48,3 +48,36 @@ app.get('/autocompletePubs', function(req,res){
 		return res.status(201).json(output)
 	});
 });
+
+app.get('/autocompletePubsAndUsers', function(req,res){
+	var objects = [];
+
+	User.find({}, {'_id':1,'username':1, 'thumbnail':1, 'name':1}).lean().exec(function (err, users) {
+		if(users){
+			objects = objects.concat(users);	
+		}
+		
+		Pub.find({versions: {$not: {$size: 0}},'settings.isPrivate': {$ne: true}}, {'_id':0,'slug':1, 'title':1}).exec(function (err, pubs) {
+			if(pubs){
+				objects = objects.concat(pubs);			
+			}
+			
+			
+			// console.log(objects)
+			var sifter = new Sifter(objects);
+
+			var result = sifter.search(req.query.string, {
+			    fields: ['username', 'name', 'slug', 'title'],
+			    sort: [{field: 'username', direction: 'asc'}, {field: 'title', direction: 'asc'}],
+			    limit: 10
+			});
+
+			var output = [];
+			_.each(result.items, function(item){
+				output.push(objects[item.id]);
+			});
+			return res.status(201).json(output)
+		});
+
+	});
+});
