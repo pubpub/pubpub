@@ -42,5 +42,5 @@ if (process.env.NODE_ENV !== 'production') {
 }
 
 if (__DEVTOOLS__) {
-	// require('./containers/DevTools/createDevToolsWindow')(store);
+	require('./containers/DevTools/createDevToolsWindow')(store);
 }

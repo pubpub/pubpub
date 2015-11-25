@@ -25,7 +25,12 @@ var userSchema = new Schema({
   emailPublic: { type: Boolean },
   resetHash: { type: String },
   resetHashExpiration: { type: Date },
-  registerDate: { type: Date }
+  registerDate: { type: Date },
+  settings: { 
+    editorFont: { type: String },
+    editorFontSize: { type: String },
+    editorColor: { type: String },
+  },
 })
 userSchema.plugin(passportLocalMongoose,{'usernameField':'email', 'digestAlgorithm':'sha1'});
 

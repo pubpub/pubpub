@@ -384,8 +384,11 @@ const Editor = React.createClass({
 								case 'Style':
 									return (
 										<EditorModalSettings
-											editorFont={'serif'}
-											editorColor={'dark'}
+											editorFont={this.props.loginData.getIn(['userData', 'settings', 'editorFont'])}
+											editorFontSize={this.props.loginData.getIn(['userData', 'settings', 'editorFontSize'])}
+											editorColor={this.props.loginData.getIn(['userData', 'settings', 'editorColor'])}
+											pubPrivacy={this.state.firepadData.settings.pubPrivacy}
+											pubStyle={this.state.firepadData.settings.pubStyle}
 											saveUpdatedSettingsUser={this.saveUpdatedSettingsUser}
 											saveUpdatedSettingsFirebase={this.saveUpdatedSettingsFirebase}
 											saveUpdatedSettingsFirebaseAndPubPub={this.saveUpdatedSettingsFirebaseAndPubPub}/>

@@ -60,6 +60,9 @@ app.post('/createPub', function(req, res) {
 			experts: {
 				approved: [],
 				suggested: []
+			},
+			settings: {
+				pubPrivacy: 'public',
 			}
 		});
 		console.log(pub);
@@ -71,9 +74,12 @@ app.post('/createPub', function(req, res) {
 			const userID = req.user['_id'];
 
 			User.update({ _id: userID }, { $addToSet: { pubs: pubID} }, function(err, result){if(err) return handleError(err)});
-			const ref = new Firebase('https://pubpub.firebaseio.com/' + req.body.slug + '/editorData/collaborators' );
-			const newCollaborator = {};
-			newCollaborator[req.user.username] = {
+			const ref = new Firebase('https://pubpub.firebaseio.com/' + req.body.slug + '/editorData' );
+			const newEditorData = {
+				collaborators: {},
+				settings: {},
+			};
+			newEditorData.collaborators[req.user.username] = {
 				_id: userID.toString(),
 				name: req.user.name,
 				username: req.user.username,
@@ -82,7 +88,8 @@ app.post('/createPub', function(req, res) {
 				permission: 'edit',
 				admin: true,
 			};
-			ref.set(newCollaborator);
+			newEditorData.settings.pubPrivacy = 'public';
+			ref.set(newEditorData);
 
 			return res.status(201).json(savedPub.slug);
 		});
@@ -188,8 +195,56 @@ app.post('/updateCollaborators', function(req, res) {
 });
 
 
+// app.post('/updatePubSettings', function(req, res) {
+// 	console.log(req.body.slug);
+// 	console.log(req.body.newSettings);
+// 	res.status(201).json('hi2');
+// });
+
+// app.post('/updatePubSettings', function(req, res) {
+// 	const settingKey = Object.keys(req.body.newSettings)[0];
+
+// 	Pub.findOne({slug: req.body.slug}, function(err, pub){
+		
+// 		if (err) {
+// 			console.log(err);
+// 			return res.status(500).json(err); 
+// 		}
+
+// 		if (settingKey === 'pubPrivacy') {
+// 			pub.settings.isPrivate = req.body.newSettings[settingKey] === 'private' ? true : false;
+// 		}
+
+// 		pub.save(function(err, result){
+// 			if (err) { return res.status(500).json(err);  }
+
+// 			return res.status(201).json('Pub Setting Saved');
+// 		});
+
+// 	});
+// });
+
 app.post('/updatePubSettings', function(req, res) {
-	console.log(req.body.slug);
-	console.log(req.body.newSettings);
-	res.status(201).json('hi2');
+	const settingKey = Object.keys(req.body.newSettings)[0];
+
+	Pub.findOne({slug: req.body.slug}, function(err, pub){
+		
+		if (err) {
+			console.log(err);
+			return res.status(500).json(err); 
+		}
+
+		if (pub.collaborators.canEdit.indexOf(req.user._id) === -1) {
+			return res.status(403).json('Not authorized to publish versions to this pub');
+		}
+
+		pub.settings[settingKey] = req.body.newSettings[settingKey];
+
+		pub.save(function(err, result){
+			if (err) { return res.status(500).json(err);  }
+
+			return res.status(201).json(pub.settings);
+		});
+
+	});
 });

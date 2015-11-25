@@ -57,7 +57,7 @@ var pubSchema = new Schema({
 	followers: [{ type: ObjectId, ref: 'User'}],
 	
 	settings:{
-		isPrivate: { type: Boolean },
+		pubPrivacy: { type: String },
 	},
 
 	featuredIn: [{
