@@ -65,7 +65,7 @@ app.post('/createPub', function(req, res) {
 				pubPrivacy: 'public',
 			}
 		});
-		console.log(pub);
+		// console.log(pub);
 	  
 		pub.save(function (err, savedPub) {
 			if (err) { return res.status(500).json(err);  }
@@ -104,9 +104,7 @@ app.post('/updatePub', function(req, res) {
 });
 
 app.post('/publishPub', function(req, res) {
-	console.log(req.body);
-	console.log(req.user._id);
-	// return res.status(201).json('Go!');
+
 	// Check that the req.user is an editor on the pub. 
 	// Beef out the history object with date, etc
 	// Update the pub object with new dates, titles, etc
@@ -194,35 +192,6 @@ app.post('/updateCollaborators', function(req, res) {
 
 });
 
-
-// app.post('/updatePubSettings', function(req, res) {
-// 	console.log(req.body.slug);
-// 	console.log(req.body.newSettings);
-// 	res.status(201).json('hi2');
-// });
-
-// app.post('/updatePubSettings', function(req, res) {
-// 	const settingKey = Object.keys(req.body.newSettings)[0];
-
-// 	Pub.findOne({slug: req.body.slug}, function(err, pub){
-		
-// 		if (err) {
-// 			console.log(err);
-// 			return res.status(500).json(err); 
-// 		}
-
-// 		if (settingKey === 'pubPrivacy') {
-// 			pub.settings.isPrivate = req.body.newSettings[settingKey] === 'private' ? true : false;
-// 		}
-
-// 		pub.save(function(err, result){
-// 			if (err) { return res.status(500).json(err);  }
-
-// 			return res.status(201).json('Pub Setting Saved');
-// 		});
-
-// 	});
-// });
 
 app.post('/updatePubSettings', function(req, res) {
 	const settingKey = Object.keys(req.body.newSettings)[0];

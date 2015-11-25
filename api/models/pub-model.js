@@ -135,7 +135,7 @@ pubSchema.statics.getPub = function (slug, readerID, callback) {
 		if (pub.status === 'Unpublished') { return callback(null, 'Pub not yet published'); }
 
 		// Check if the pub is private, and if so, check readers/authors list
-		if (pub.settings.isPrivate) { 
+		if (pub.settings.pubPrivacy === 'private') { 
 			if (pub.collaborators.canEdit.indexOf(readerID) === -1 && pub.collaborators.canRead.indexOf(readerID) === -1) {
 				return callback(null, 'Private Pub');
 			}
