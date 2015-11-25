@@ -29,6 +29,7 @@ export function complete(autocompleteKey, route, string) {
 	return {
 		types: [AUTOCOMPLETE_LOAD, AUTOCOMPLETE_SUCCESS, AUTOCOMPLETE_FAIL],
 		autocompleteKey: autocompleteKey,
+		string: string,
 		promise: (client) => client.get(route, {params: {
 			'string': string
 		}})
@@ -39,5 +40,14 @@ export function clear(autocompleteKey) {
 	return {
 		type: AUTOCOMPLETE_CLEAR,
 		autocompleteKey: autocompleteKey
+	};
+}
+
+export function completeFromCache(autocompleteKey, string, cachedResult) {
+	return {
+		type: AUTOCOMPLETE_SUCCESS,
+		autocompleteKey: autocompleteKey,
+		string: string,
+		result: cachedResult 
 	};
 }

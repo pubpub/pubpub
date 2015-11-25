@@ -265,6 +265,7 @@ styles = {
 		boxShadow: '0px 0px 2px 2px #D7D7D7',
 		width: 'calc(100% - 6px)',
 		margin: '0 auto 5px auto',
+		backgroundColor: 'white',
 
 	},
 	result: {

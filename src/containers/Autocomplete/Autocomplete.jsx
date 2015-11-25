@@ -2,7 +2,7 @@ import React, { PropTypes } from 'react';
 import {connect} from 'react-redux';
 import Radium from 'radium';
 import {LoaderIndeterminate} from '../../components';
-import {complete, clear} from '../../actions/autocomplete';
+import {complete, completeFromCache, clear} from '../../actions/autocomplete';
 
 let styles = {};
 
@@ -65,7 +65,38 @@ const Autocomplete = React.createClass({
 
 	handleOnChange: function(event) {
 		this.setState({inputString: event.target.value});
-		this.props.dispatch(complete(this.props.autocompleteKey, this.props.route, event.target.value));
+		// const currentCompleteData = this.props.autocompleteData.get(this.props.autocompleteKey);
+		// console.log('currentCompleteData', currentCompleteData);
+		// console.log('currentCompleteData.get(cache)', currentCompleteData.get('cache'));
+		// console.log('has', currentCompleteData.get('cache').has(event.target.value));
+		// if (currentCompleteData) {
+		// 	console.log('hascache', currentCompleteData.has('cache'));
+		// 	console.log('getcache', currentCompleteData.get('cache'));	
+		// }
+
+		// if (currentCompleteData && currentCompleteData.get('cache')) {
+		// 	console.log('made it to the hasin test');
+		// 	console.log('hasin', currentCompleteData.hasIn(['cache', event.target.value]));
+		// }
+		
+		// if (currentCompleteData && currentCompleteData.get('cache') && currentCompleteData.hasIn(['cache', event.target.value])) {
+		console.log('about to test');
+		if (this.props.autocompleteData) {
+			console.log(this.props.autocompleteData.toJS());
+			console.log(this.props.autocompleteData.hasIn([this.props.autocompleteKey, 'cache']));
+			console.log( event.target.value);	
+			console.log(this.props.autocompleteData.hasIn([this.props.autocompleteKey, 'cache', event.target.value]));	
+		}
+		
+		if (this.props.autocompleteData.hasIn([this.props.autocompleteKey, 'cache', event.target.value])) {
+			// console.log(currentCompleteData.cache);
+			console.log('calling the cache dispatch');
+			this.props.dispatch(completeFromCache(this.props.autocompleteKey, event.target.value, this.props.autocompleteData.getIn([this.props.autocompleteKey, 'cache', event.target.value])));
+		} else {
+			console.log('calling the server dispatch');
+			this.props.dispatch(complete(this.props.autocompleteKey, this.props.route, event.target.value));	
+		}
+		
 		
 	},
 
