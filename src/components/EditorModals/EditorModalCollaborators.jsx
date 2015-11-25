@@ -23,6 +23,12 @@ const EditorModalCollaborators = React.createClass({
 		});
 	},
 
+	handleAddNew: function(user) {
+		return () => {
+			console.log(user);
+		};
+	},
+
 	renderCollaboratorsSearchResults: function(results) {
 		return (
 			<div style={styles.results}>
@@ -39,7 +45,7 @@ const EditorModalCollaborators = React.createClass({
 								<img style={styles.image} src={user.thumbnail} />
 							</div>
 							<div style={styles.name}>{user.name}</div>
-							<div style={styles.action} key={'collabSearchAdd-' + index}>add</div>
+							<div style={styles.action} key={'collabSearchAdd-' + index} onClick={this.handleAddNew(user)}>add</div>
 						</div>);	
 					})
 				}

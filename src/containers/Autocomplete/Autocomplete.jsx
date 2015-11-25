@@ -41,26 +41,26 @@ const Autocomplete = React.createClass({
 	},
 
 	componentDidMount: function() {
+		// If we want to hideResultsOnClickOut,
+		// Attach a listener so we can tell when we're clicking inside the autocomplete menu and outside
 		if (this.props.hideResultsOnClickOut === true) {
-			document.documentElement.addEventListener('click', this.clickOutside);
-			document.getElementById('autocompleteMenu').addEventListener('click', this.clickInside);
+			document.documentElement.addEventListener('click', this.handleClicks);
 		}
 		
 	},
 
 	componentWillUnmount: function() {
+		// On unmount, clear autocomplete results, remove listener in case we attached one.
 		this.props.dispatch(clear(this.props.autocompleteKey));
-		document.documentElement.removeEventListener('click', this.clickOutside);
-		document.getElementById('autocompleteMenu').removeEventListener('click', this.clickInside);
+		document.documentElement.removeEventListener('click', this.handleClicks);
 	},
 
-	clickInside: function(clickEvent) {
-		this.setState({showMenu: true});
-		clickEvent.stopPropagation();
-	},
-
-	clickOutside: function() {
-		this.setState({showMenu: false});
+	handleClicks: function(event) {
+		if (document.getElementById('autocompleteMenu').contains(event.target)) {
+			this.setState({showMenu: true});
+		} else {
+			this.setState({showMenu: false});
+		}
 	},
 
 	handleOnChange: function(event) {
