@@ -1,7 +1,8 @@
 import React, {PropTypes} from 'react';
 import Radium from 'radium';
 import {Autocomplete} from '../../containers';
-import {Reference} from '../';
+// import {Reference} from '../';
+import {EditorModalReferencesRow} from './';
 import {baseStyles} from './modalStyle';
 import {globalStyles} from '../../utils/styleConstants';
 import bibtexParse from 'bibtex-parse-js';
@@ -55,7 +56,7 @@ const EditorModalReferences = React.createClass({
 	handleManualInputFormChange: function(event) {
 		const newManualFormData = this.state.manualFormData;
 		newManualFormData[event.target.name] = event.target.value;
-		this.setState({newManualFormData});
+		// this.setState({newManualFormData});
 	},
 
 	saveManualForm: function() {
@@ -176,18 +177,17 @@ const EditorModalReferences = React.createClass({
 					{/* Iterate over citations */}
 					{
 						referenceData.map((citation, index) => {
-							return (
-								<div key={'citation-' + index} style={styles.rowContainer}>
-									<div style={[styles.refNameColumn]}>{citation.refName}</div>
-									<div style={[styles.bodyColumn]}> <Reference citationObject={citation} mode={this.props.referenceStyle} /> </div>
-									<div style={[styles.optionColumn, styles.optionColumnClickable]} key={'referenceListOptionColumnEdit-' + index} onClick={this.editReference(citation)}>edit</div>
-									<div style={[styles.optionColumn, styles.optionColumnClickable]} key={'referenceListOptionColumnDelete-' + index} onClick={this.deleteReference(citation.refName)}>delete</div>
-									<div style={styles.clearfix}></div>
-								</div>
+							return ( 
+								<EditorModalReferencesRow 
+									key={'citation-' + index} 
+									citation={citation}
+									index={index}
+									editRefFunction={this.editReference}
+									deleteRefFunction={this.deleteReference}/>
 							);
 						})
-					}
-					
+					}				
+
 				</div>
 
 				{/* Content section displayed when in advanced add mode */}
