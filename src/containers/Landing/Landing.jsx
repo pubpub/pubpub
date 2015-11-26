@@ -3,9 +3,9 @@ import {connect} from 'react-redux';
 import Radium from 'radium';
 import DocumentMeta from 'react-document-meta';
 import {Autocomplete} from '../';
-import { Link } from 'react-router';
 import {globalStyles} from '../../utils/styleConstants';
-
+import { Link } from 'react-router';
+const HoverLink = Radium(Link);
 
 let styles = {};
 
@@ -22,18 +22,23 @@ const Landing = React.createClass({
 	},
 
 	renderLandingSearchResults: function(results) {
+		console.log(results);
 		return (
 			<div style={styles.results}>
 				{
 
 					results.map((item, index)=>{
-						return (<div key={'collabSearchUser-' + index} style={styles.result}>
-							
-							<div style={styles.imageWrapper}>
-								<img style={styles.image} src={item.thumbnail} />
-							</div>
-							<div style={styles.name}>{item.name}</div>
-							<div style={styles.name}>{item.title}</div>
+						const url = item.slug ? '/pub/' + item.slug : '/profile/' + item.username;
+						const type = item.slug ? 'pub' : 'user';
+						return (<div key={'landingSearchResult-' + index} style={styles.result}>
+							<HoverLink key={'landingSearchResultLink-' + index} style={styles.resultLink} to={url}>
+								<div style={styles.type}>{type}</div>
+								<div style={[styles.imageWrapper, styles[type].imageWrapper]}>
+									<img style={styles.image} src={item.thumbnail} />
+								</div>
+								<div style={styles.name}>{item.name}</div>
+								<div style={styles.name}>{item.title}</div>
+							</HoverLink>
 
 						</div>);	
 					})
@@ -53,11 +58,12 @@ const Landing = React.createClass({
 			title: 'PubPub'
 		};
 
-
 		return (
 			<div style={styles.container}>
 
 				<DocumentMeta {...metaData} />
+
+
 				<div style={styles.top}>
 					<h1 style={styles.topPub}>PubPub</h1>
 					<h2 style={styles.subheader}>Open Publishing</h2>
@@ -159,7 +165,8 @@ styles = {
 		},
 	},
 	search: {
-		padding: '20px 0px 20px 30px',
+		width: 'calc(100% - 60px)',
+		padding: '20px 30px',
 		backgroundColor: 'white',
 		color: '#888',
 	},
@@ -179,7 +186,61 @@ styles = {
 		overflow: 'hidden',
 		// height: 900,
 		backgroundColor: globalStyles.headerBackground
-	}
-
+	},
+	results: {
+		// backgroundColor: 'rgba(255,90,80,0.3)',
+		margin: '20px 0px',
+	},
+	result: {
+		padding: '10px 0px',
+		// backgroundColor: 'rgba(100,200,49,0.5)',
+		height: 40,
+		borderTop: '1px solid #DDD',
+	},
+	imageWrapper: {
+		float: 'left',
+		height: 40,
+		margin: '0px 10px 0px 0px',
+	},
+	pub: {
+		imageWrapper: {
+			display: 'none',
+		},
+	},
+	user: {
+	},
+	image: {
+		height: '100%',
+	},
+	
+	type: {
+		width: 40,
+		float: 'left',
+		fontSize: '15px',
+		fontFamily: 'Courier',
+		lineHeight: '40px',
+		padding: '0px 25px 0px 0px',
+		color: globalStyles.veryLight,
+	},
+	name: {
+		float: 'left',
+		fontSize: '20px',
+		lineHeight: '40px',
+		padding: '0px 10px 0px 0px',
+	},
+	noResults: {
+		fontSize: '25px',
+		height: 30,
+		lineHeight: '30px',
+		textAlign: 'center',
+	},
+	resultLink: {
+		display: 'inline-block',
+		height: '100%',
+		color: globalStyles.sideText,
+		':hover': {
+			color: globalStyles.sideHover,
+		},
+	},
 
 };
