@@ -14,7 +14,7 @@ export default function createStore(reduxReactRouter, getRoutes, createHistory, 
 		// const DevTools = require('../containers/DevTools/DevTools');
 		finalCreateStore = compose(
 			applyMiddleware(...middleware),
-			devTools(),
+			window.devToolsExtension ? window.devToolsExtension() : devTools(),
 			persistState(window.location.href.match(/[?&]debug_session=([^&]+)\b/))
 		)(_createStore);
 	} else {
