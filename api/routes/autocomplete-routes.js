@@ -81,3 +81,7 @@ app.get('/autocompletePubsAndUsers', function(req,res){
 
 	});
 });
+
+app.get('/autocompleteReferences', function(req,res){
+	return res.status(201).json(['cat','dog','fish']);
+});

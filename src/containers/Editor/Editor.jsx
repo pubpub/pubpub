@@ -253,6 +253,11 @@ const Editor = React.createClass({
 		this.props.dispatch(saveSettingsPubPub(this.props.slug, newSettings));
 	}, 
 
+	saveReferences: function(newReferences) {
+		const ref = new Firebase('https://pubpub.firebaseio.com/' + this.props.slug + '/editorData/references' );
+		ref.set(newReferences);
+	},
+
 	closeModalHandler: function() {
 		this.props.dispatch(closeModal());
 	},
@@ -423,7 +428,10 @@ const Editor = React.createClass({
 								case 'Publish':
 									return (<EditorModalPublish handlePublish={this.publishVersion}/>);
 								case 'References':
-									return (<EditorModalReferences/>);
+									return (<EditorModalReferences
+										referenceData={this.state.firepadData.references}
+										updateReferences={this.saveReferences}
+										referenceStyle={this.state.firepadData.settings.pubReferenceStyle}/>);
 								case 'Style':
 									return (
 										<EditorModalSettings

@@ -9,4 +9,5 @@ export PubBody from './PubBody/PubBody';
 export PubCreateForm from './PubCreateForm/PubCreateForm';
 export PubDiscussion from './PubDiscussion/PubDiscussion';
 export PubNav from './PubNav/PubNav';
+export Reference from './Reference/Reference';
 

@@ -77,7 +77,7 @@ const Autocomplete = React.createClass({
 		return {
 			textAlign: this.props.textAlign,
 			height: (this.props.height - 3),
-			fontSize: (this.props.height - 3 - 10),
+			fontSize: (this.props.height - 10),
 			borderColor: this.props.showBottomLine ? '#aaa' : 'transparent',
 		};
 	},
