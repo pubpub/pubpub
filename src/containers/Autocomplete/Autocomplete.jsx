@@ -19,12 +19,16 @@ const Autocomplete = React.createClass({
 		textAlign: PropTypes.string,
 		showBottomLine: PropTypes.bool,
 		hideResultsOnClickOut: PropTypes.bool,
+		padding: PropTypes.string,
+		loaderOffset: PropTypes.number
 	},
 
 	getDefaultProps: function() {
 		return {
 			route: '/autocompletePubs',
 			height: 30,
+			loaderOffset: 0,
+			padding: 0,
 			placeholder: 'Placeholder',
 			textAlign: 'left',
 			showBottomLine: true,
@@ -73,6 +77,12 @@ const Autocomplete = React.createClass({
 		
 	},
 
+	containerStyle: function() {
+		return {
+			padding: this.props.padding,
+		};
+	},
+
 	inputStyle: function() {
 		return {
 			textAlign: this.props.textAlign,
@@ -84,7 +94,7 @@ const Autocomplete = React.createClass({
 
 	loaderStyle: function() {
 		return {
-			top: this.props.height - 1
+			top: this.props.height - 1 - this.props.loaderOffset,
 		};
 	},
 
@@ -95,7 +105,7 @@ const Autocomplete = React.createClass({
 		}
 
 		return (
-			<div style={styles.container} id="autocompleteMenu">
+			<div style={[styles.container, this.containerStyle()]} id="autocompleteMenu">
 				<input type="text" 
 					placeholder={this.props.placeholder} 
 					style={[styles.input, this.inputStyle()]} 

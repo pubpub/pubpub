@@ -77,7 +77,9 @@ const Landing = React.createClass({
 						height={40}
 						showBottomLine={false}
 						hideResultsOnClickOut={false}
-						resultRenderFunction={this.renderLandingSearchResults}/>
+						resultRenderFunction={this.renderLandingSearchResults}
+						loaderOffset={-20}
+						padding={'10px 0px'}/>
 				</div>
 				<div style={styles.lower}>
 					<div style={styles.textDark}>
@@ -166,7 +168,7 @@ styles = {
 	},
 	search: {
 		width: 'calc(100% - 60px)',
-		padding: '20px 30px',
+		padding: '10px 30px',
 		backgroundColor: 'white',
 		color: '#888',
 	},
@@ -189,7 +191,7 @@ styles = {
 	},
 	results: {
 		// backgroundColor: 'rgba(255,90,80,0.3)',
-		margin: '20px 0px',
+		margin: '9px 0px',
 	},
 	result: {
 		padding: '10px 0px',
