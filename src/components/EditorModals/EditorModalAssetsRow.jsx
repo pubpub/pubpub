@@ -2,6 +2,7 @@ import React, {PropTypes} from 'react';
 import {LoaderDeterminate, LoaderIndeterminate} from '../';
 import Radium from 'radium';
 import {baseStyles} from './modalStyle';
+import {globalStyles} from '../../utils/styleConstants';
 
 let styles = {};
 
@@ -15,14 +16,22 @@ const EditorModalAssetsRow = React.createClass({
 		url: PropTypes.string,
 		isLoading: PropTypes.bool,
 		percentLoaded: PropTypes.number,
-		isHeader: PropTypes.bool
+		isHeader: PropTypes.bool,
+		keyChild: PropTypes.string,
+		firebaseID: PropTypes.string,
+		handleDelete: PropTypes.func,
+	},
+
+	getDefaultProps: function() {
+		return {
+			handleDelete: ()=>{},
+		};
 	},
 
 	render: function() {
 		// Set isHeader and isLoading consts for easier access
 		const isHeader = this.props.isHeader;
 		const isLoading = this.props.isLoading || false;
-		
 		return (
 			<div style={[styles.assetRowContainer, isHeader && styles.headeRowContainer]}>
 				
@@ -45,7 +54,7 @@ const EditorModalAssetsRow = React.createClass({
 				<div style={[styles.hideOnLoad[isLoading], styles.author, isHeader && styles.isHeader]}>{this.props.author}</div>
 				
 				{/* Delete Button */}
-				<div style={[styles.hideOnLoad[isLoading], styles.delete, isHeader && styles.isHeaderDelete]}>delete</div>
+				<div key={this.props.keyChild} style={[styles.hideOnLoad[isLoading], styles.delete, isHeader && styles.isHeaderDelete]} onClick={this.props.handleDelete(this.props.firebaseID)}>delete</div>
 
 				{/*	Loading Bar.
 				 	Only shown when file is uploading */}
@@ -165,6 +174,11 @@ styles = {
 		lineHeight: rowHeight,
 		height: rowHeight,
 		float: 'left',
+		color: globalStyles.veryLight,
+		':hover': {
+			cursor: 'pointer',
+			color: globalStyles.sideText,
+		}
 	},
 	headeRowContainer: {
 		padding: '15px 15px 15px 15px',

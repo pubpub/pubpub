@@ -232,6 +232,13 @@ const Editor = React.createClass({
 		ref.push(asset);
 	},
 
+	deleteAsset: function(assetID) {
+		return ()=>{
+			const ref = new Firebase('https://pubpub.firebaseio.com/' + this.props.slug + '/editorData/assets/' + assetID );
+			ref.remove();
+		};
+	},
+
 	saveUpdatedCollaborators: function(newCollaborators, removedUser) {
 		const ref = new Firebase('https://pubpub.firebaseio.com/' + this.props.slug + '/editorData/collaborators' );
 		ref.set(newCollaborators);
@@ -422,7 +429,7 @@ const Editor = React.createClass({
 							{(() => {
 								switch (activeModal) {
 								case 'Assets':
-									return (<EditorModalAssets assetData={this.state.firepadData.assets} slug={this.props.slug} addAsset={this.addAsset}/>);
+									return (<EditorModalAssets assetData={this.state.firepadData.assets} slug={this.props.slug} addAsset={this.addAsset} deleteAsset={this.deleteAsset}/>);
 								case 'Collaborators':
 									return (<EditorModalCollaborators collaboratorData={this.state.firepadData.collaborators} updateCollaborators={this.saveUpdatedCollaborators}/>);
 								case 'Publish':

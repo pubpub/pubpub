@@ -12,13 +12,15 @@ const EditorModalAssets = React.createClass({
 		assetData: PropTypes.object,
 		slug: PropTypes.string,
 		addAsset: PropTypes.func,
+		deleteAsset: PropTypes.func,
 	},
 
 	// State is used to keep track of uploading files and their progress
 	getInitialState: function() {
 		return {
 			files: [],
-			uploadRates: []
+			uploadRates: [],
+			finishedUploads: 0,
 		};
 	},
 
@@ -64,7 +66,10 @@ const EditorModalAssets = React.createClass({
 			// Set File to finished in state. This will hide the uploading version
 			const tmpFiles = this.state.files;
 			tmpFiles[index].isFinished = true;
-			this.setState({files: tmpFiles});
+			this.setState({
+				files: tmpFiles,
+				finishedUploads: this.state.finishedUploads + 1
+			});
 			
 			// Create Firebase object and push it
 			const serverResult = JSON.parse(success.target.responseText);
@@ -89,10 +94,11 @@ const EditorModalAssets = React.createClass({
 		const assetData = [];
 		for ( const key in this.props.assetData ) {
 			if (this.props.assetData.hasOwnProperty(key)) {
-				assetData.push(this.props.assetData[key]);
+				const objectWithKey = this.props.assetData[key];
+				objectWithKey.firebaseID = key;
+				assetData.push(objectWithKey);
 			}
 		}
-		
 		return (
 			<Dropzone ref="dropzone" 
 				onDrop={this.onDrop}
@@ -110,13 +116,13 @@ const EditorModalAssets = React.createClass({
 					<div style={baseStyles.rightCornerAction} onClick={this.onOpenClick}>Click to choose or drag files</div>
 					
 					{/* Show a note if no content has been uploaded yet */}
-					{assetData.length === 0 && this.state.files.length === 0
+					{assetData.length === 0 && this.state.files.length === this.state.finishedUploads
 						? <div style={baseStyles.noContentBlock}>No Assets Uploaded</div>
 						: null
 					}
 
 					{/* Show the assets table header if there are any existing assets or uploads */}
-					{assetData.length || this.state.files.length
+					{assetData.length || (this.state.files.length && (this.state.files.length !== this.state.finishedUploads))
 						? <EditorModalAssetsRow isHeader={true} filename="filename" author="by" assetType="type" date="date" />
 						: null
 					}
@@ -127,6 +133,7 @@ const EditorModalAssets = React.createClass({
 						return (uploadAsset.isFinished !== true
 							? <EditorModalAssetsRow 
 								key={'modalAssetUploading-' + index} 
+								keyChild={'modalAssetUploading-' + index} 
 								filename={uploadAsset.name} 
 								thumbnail={thumbnailImage}
 								isLoading={true}
@@ -144,11 +151,14 @@ const EditorModalAssets = React.createClass({
 							const asset = assetData[index - 1];
 							assetList.push(<EditorModalAssetsRow 
 								key={'modalAsset-' + index} 
+								keyChild={'modalAsset-' + index} 
 								filename={asset.originalFilename} 
 								author={asset.author} 
 								thumbnail={asset.thumbnail} 
 								assetType={asset.assetType}
-								date={asset.createDate}/>);
+								firebaseID={asset.firebaseID}
+								date={asset.createDate}
+								handleDelete={this.props.deleteAsset}/>);
 						}
 						return assetList;
 					}()}
@@ -164,7 +174,7 @@ export default Radium(EditorModalAssets);
 styles = {
 	dropzone: {
 		width: '100%',
-		minHeight: '200px',
+		minHeight: '400px',
 	},
 	dropzoneActive: {
 		backgroundColor: '#F5F5F5',
