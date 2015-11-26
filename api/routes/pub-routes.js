@@ -114,7 +114,7 @@ app.post('/publishPub', function(req, res) {
 		if (err) { return res.status(500).json(err);  }
 
 		console.log(pub);
-		if (pub.collaborators.canEdit.indexOf(req.user._id) === -1) {
+		if (!req.user || pub.collaborators.canEdit.indexOf(req.user._id) === -1) {
 			return res.status(403).json('Not authorized to publish versions to this pub');
 		}
 		// doc.name = 'jason borne';
@@ -155,7 +155,7 @@ app.post('/updateCollaborators', function(req, res) {
 		if (err) { return res.status(500).json(err);  }
 
 		// Check to make sure the user is authorized to be submitting such changes.
-		if (pub.collaborators.canEdit.indexOf(req.user._id) === -1) {
+		if (!req.user || pub.collaborators.canEdit.indexOf(req.user._id) === -1) {
 			return res.status(403).json('Not authorized to publish versions to this pub');
 		}
 
@@ -203,7 +203,7 @@ app.post('/updatePubSettings', function(req, res) {
 			return res.status(500).json(err); 
 		}
 
-		if (pub.collaborators.canEdit.indexOf(req.user._id) === -1) {
+		if (!req.user || pub.collaborators.canEdit.indexOf(req.user._id) === -1) {
 			return res.status(403).json('Not authorized to publish versions to this pub');
 		}
 
