@@ -70,7 +70,7 @@ const Reference = React.createClass({
 		switch (this.props.mode) {
 		case 'mla':
 			return (<span>
-				{citationStrings.authors}
+				{citationStrings.author}
 				{citationStrings.title}
 				<span style={styles.italic}>{citationStrings.journal}</span>
 				{citationStrings.volume}
@@ -85,7 +85,7 @@ const Reference = React.createClass({
 
 		case 'chicago':
 			return (<span>
-				{citationStrings.authors}
+				{citationStrings.author}
 				{citationStrings.title}
 				<span style={styles.italic}>{citationStrings.journal}</span>
 				{citationStrings.volume}
@@ -100,7 +100,7 @@ const Reference = React.createClass({
 
 		case 'apa':
 			return (<span>
-				{citationStrings.authors}
+				{citationStrings.author}
 				{citationStrings.year}
 				{citationStrings.title}
 				<span style={styles.italic}>{citationStrings.journal}</span>

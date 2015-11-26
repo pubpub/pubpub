@@ -4,6 +4,7 @@ import {Autocomplete} from '../../containers';
 import {Reference} from '../';
 import {baseStyles} from './modalStyle';
 import {globalStyles} from '../../utils/styleConstants';
+import bibtexParse from 'bibtex-parse-js';
 
 let styles = {};
 
@@ -22,6 +23,7 @@ const EditorModalReferences = React.createClass({
 
 	getInitialState: function() {
 		return {
+			isLoading: false,
 			showAddOptions: false,
 			editingRefName: null,
 			manualFormData: {
@@ -39,13 +41,15 @@ const EditorModalReferences = React.createClass({
 			}
 		};
 	},
+
 	toggleShowAddOptions: function() {
-		console.log(this.getInitialState());
 		this.setState({
+			isLoading: false,
 			showAddOptions: !this.state.showAddOptions,	
 			editingRefName: null,
 			manualFormData: this.getInitialState().manualFormData,
 		});
+		this.refs.bibtexForm.value = '';
 	},
 
 	handleManualInputFormChange: function(event) {
@@ -60,14 +64,53 @@ const EditorModalReferences = React.createClass({
 			delete newReferencesObject[this.state.editingRefName];
 		}
 		// Check for refname or create
-		newReferencesObject[this.state.manualFormData.refName] = this.state.manualFormData;
+		const thisRefName = this.state.manualFormData.refName ? this.state.manualFormData.refName : 'newRef' + Date.now();
+		const newRefData = this.state.manualFormData;
+		newRefData.refName = thisRefName; // This is redundant if it has a refName, but sets one in case it wasn't input
+
+		newReferencesObject[thisRefName] = newRefData;
 		this.props.updateReferences(newReferencesObject);
 		this.toggleShowAddOptions();
+	},
+
+	saveBibtexForm: function() {
+
+		// console.log(this.refs.bibtexForm.value);
+		// Convert all the text into new reference objects
+		const output = bibtexParse.toJSON(this.refs.bibtexForm.value);
+		console.log(output);
+		
+		const newReferencesObject = this.props.referenceData;
+
+		// Add all the new bibtex items to newReferencesObject
+		output.map((newRef)=>{
+			const refName = newRef.citationKey ? newRef.citationKey.replace(/[^a-zA-Z0-9 ]/g, '') : 'newRef' + Date.now();
+			newReferencesObject[refName] = {
+				refName: refName,
+				title: newRef.entryTags.title ? newRef.entryTags.title : null,
+				author: newRef.entryTags.author ? newRef.entryTags.author : null,
+				url: newRef.entryTags.url ? newRef.entryTags.url : null,
+				journal: newRef.entryTags.journal ? newRef.entryTags.journal : null,
+				volume: newRef.entryTags.volume ? newRef.entryTags.volume : null,
+				number: newRef.entryTags.number ? newRef.entryTags.number : null,
+				pages: newRef.entryTags.pages ? newRef.entryTags.pages : null,
+				date: newRef.entryTags.year ? newRef.entryTags.year : null,
+				publisher: newRef.entryTags.publisher ? newRef.entryTags.publisher : null,
+				note: newRef.entryTags.note ? newRef.entryTags.note : null,
+			};
+		});
+
+		// console.log(newReferencesObject);
+		this.props.updateReferences(newReferencesObject);
+		this.toggleShowAddOptions();
+
+
 	},
 
 	editReference: function(referenceObject) {
 		return ()=>{
 			this.setState({
+				isLoading: false,
 				showAddOptions: true,	
 				editingRefName: referenceObject.refName,
 				manualFormData: {...this.getInitialState().manualFormData, ...referenceObject},
@@ -99,7 +142,7 @@ const EditorModalReferences = React.createClass({
 
 		return (
 			<div>
-				<h2 style={baseStyles.topHeader}>References</h2>
+				<h2 style={baseStyles.topHeader}>References <span style={[styles.topHeaderSubtext, this.state.editingRefName && styles.showOnEdit]}>: Edit</span></h2>
 
 				{/* Search for new Ref bar and advanced add option */}
 				<div style={[baseStyles.rightCornerSearch, styles.mainContent[this.state.showAddOptions]]}>
@@ -151,26 +194,32 @@ const EditorModalReferences = React.createClass({
 				<div className="add-options-content" style={[styles.addOptions, styles.addOptions[this.state.showAddOptions], styles.addOptionsContent]}>
 					<div style={this.state.editingRefName && styles.hideOnEdit}>
 						<h2 style={styles.sectionHeader}>Add Bibtex</h2>
-						<textarea></textarea>
+						<div style={styles.inputFormWrapper}>
+							<textarea style={styles.textArea} ref="bibtexForm"></textarea>
+						</div>
+						<div style={styles.saveForm} key={'referencesBibtexFormSaveButton'} onClick={this.saveBibtexForm}>Save</div>
+						<div style={styles.clearfix}></div>
 					</div>
 					
 
 					<h2 style={[styles.sectionHeader, this.state.editingRefName && styles.hideOnEdit]}>Manual Entry</h2>
-					<h2 style={[styles.sectionHeader, styles.sectionHeaderHidden, this.state.editingRefName && styles.showOnEdit]}>Edit Entry</h2>
-					<div style={styles.saveManualForm} onClick={this.saveManualForm}>Save</div>
-					<div style={styles.manualFormWrapper}>
+					<div style={styles.inputFormWrapper}>
 						{
 							Object.keys(this.state.manualFormData).map((inputItem)=>{
 								return (
 									<div key={'manualForm-' + inputItem} style={styles.manualFormInputWrapper}>
-										<input style={styles.manualFormInput} placeholder={inputItem} name={inputItem} type="text" onChange={this.handleManualInputFormChange} value={this.state.manualFormData[inputItem]}/>
+										<label style={styles.manualFormInputTitle} htmlFor={inputItem} >{inputItem}</label>
+										<input style={styles.manualFormInput} name={inputItem} id={inputItem} type="text" onChange={this.handleManualInputFormChange} value={this.state.manualFormData[inputItem]}/>
 									</div>
 									
 								);
 							})
 						}
+						<div style={styles.clearfix}></div>
 					</div>
+					<div style={styles.saveForm} key={'referencesManualFormSaveButton'} onClick={this.saveManualForm}>Save</div>
 
+					<div style={styles.clearfix}></div>
 				</div>
 
 			</div>
@@ -215,6 +264,7 @@ styles = {
 		width: 'calc(55% - 20px)',
 		padding: '0px 10px',
 		float: 'left',
+		overflow: 'hidden',
 	},
 	optionColumn: {
 		width: 'calc(10% - 10px)',
@@ -238,27 +288,60 @@ styles = {
 	sectionHeader: {
 		margin: 0,
 	},
-	sectionHeaderHidden: {
+	topHeaderSubtext: {
 		display: 'none',
+		fontSize: 25,
 	},
-	saveManualForm: {
+	saveForm: {
 		textAlign: 'right',
+		fontSize: 20,
+		position: 'relative',
+		left: '20px',
+		width: '52px',
+		float: 'right',
+		paddingRight: '10px',
+		marginBottom: 10,
+
+		':hover': {
+			cursor: 'pointer',
+			color: globalStyles.sideHover,
+		}
+	},
+	textArea: {
+		margin: '8px 2%',
+		maxWidth: '96%',
+		width: '60%',
+		height: 50,
+		outline: 'none',
+		fontFamily: 'Courier',
+		fontSize: 13,
+		padding: 5,
 	},
 	hideOnEdit: {
 		display: 'none',
 	},
 	showOnEdit: {
-		display: 'block',
+		display: 'inline',
 	},
-	manualFormWrapper: {
-
+	inputFormWrapper: {
+		margin: '10px 0px',
+		fontFamily: 'Courier',
 	},
 	manualFormInputWrapper: {
 		width: '29%',
-		margin: '5px 2%',
+		margin: '8px 2%',
 		float: 'left',
 	},
+	manualFormInputTitle: {
+		fontSize: 13,
+		color: '#BBB',
+	},
 	manualFormInput: {
-
+		width: '100%',
+		fontFamily: 'Courier',
+		borderWidth: '0px 0px 1px 0px',
+		borderColor: '#BBB',
+		outline: 'none',
+		fontSize: 14,
 	}
 };
