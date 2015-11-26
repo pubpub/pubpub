@@ -109,6 +109,12 @@ const EditorModalAssets = React.createClass({
 					{/* Modal option that's placed in the top-right corner */}
 					<div style={baseStyles.rightCornerAction} onClick={this.onOpenClick}>Click to choose or drag files</div>
 					
+					{/* Show a note if no content has been uploaded yet */}
+					{assetData.length === 0 && this.state.files.length === 0
+						? <div style={baseStyles.noContentBlock}>No Assets Uploaded</div>
+						: null
+					}
+
 					{/* Show the assets table header if there are any existing assets or uploads */}
 					{assetData.length || this.state.files.length
 						? <EditorModalAssetsRow isHeader={true} filename="filename" author="by" assetType="type" date="date" />

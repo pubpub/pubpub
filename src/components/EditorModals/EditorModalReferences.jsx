@@ -163,8 +163,14 @@ const EditorModalReferences = React.createClass({
 					Back
 				</div>
 
+				{/* Show a note if no content has been added yet */}
+				{referenceData.length === 0 && this.state.showAddOptions === false
+					? <div style={baseStyles.noContentBlock}>No References Added</div>
+					: null
+				}
+
 				{/* Main References table */}
-				<div className="main-ref-content" style={styles.mainContent[this.state.showAddOptions]}>
+				<div className="main-ref-content" style={[styles.mainContent[this.state.showAddOptions], referenceData.length === 0 && styles.hide]}>
 					{/* References table header */}
 					<div style={styles.rowContainer}>
 						<div style={[styles.refNameColumn, styles.columnHeader]}>refName</div>
@@ -192,7 +198,7 @@ const EditorModalReferences = React.createClass({
 
 				{/* Content section displayed when in advanced add mode */}
 				<div className="add-options-content" style={[styles.addOptions, styles.addOptions[this.state.showAddOptions], styles.addOptionsContent]}>
-					<div style={this.state.editingRefName && styles.hideOnEdit}>
+					<div style={this.state.editingRefName && styles.hide}>
 						<h2 style={styles.sectionHeader}>Add Bibtex</h2>
 						<div style={styles.inputFormWrapper}>
 							<textarea style={styles.textArea} ref="bibtexForm"></textarea>
@@ -202,7 +208,7 @@ const EditorModalReferences = React.createClass({
 					</div>
 					
 
-					<h2 style={[styles.sectionHeader, this.state.editingRefName && styles.hideOnEdit]}>Manual Entry</h2>
+					<h2 style={[styles.sectionHeader, this.state.editingRefName && styles.hide]}>Manual Entry</h2>
 					<div style={styles.inputFormWrapper}>
 						{
 							Object.keys(this.state.manualFormData).map((inputItem)=>{
@@ -272,14 +278,6 @@ styles = {
 		float: 'left',
 		textAlign: 'center',
 	},
-	optionColumnClickable: {
-		userSelect: 'none',
-		color: globalStyles.veryLight,
-		':hover': {
-			cursor: 'pointer',
-			color: globalStyles.sideText,
-		}
-	},
 	clearfix: {
 		// necessary because we float elements with variable height 
 		display: 'table',
@@ -293,14 +291,15 @@ styles = {
 		fontSize: 25,
 	},
 	saveForm: {
-		textAlign: 'right',
+		// textAlign: 'center',
 		fontSize: 20,
-		position: 'relative',
-		left: '20px',
+		// position: 'relative',
+		// left: '20px',
 		width: '52px',
-		float: 'right',
-		paddingRight: '10px',
-		marginBottom: 10,
+		// backgroundColor: 'red',
+		// float: 'right',
+		padding: '0px 20px',
+		marginBottom: 20,
 
 		':hover': {
 			cursor: 'pointer',
@@ -308,7 +307,7 @@ styles = {
 		}
 	},
 	textArea: {
-		margin: '8px 2%',
+		margin: '8px 20px',
 		maxWidth: '96%',
 		width: '60%',
 		height: 50,
@@ -317,7 +316,7 @@ styles = {
 		fontSize: 13,
 		padding: 5,
 	},
-	hideOnEdit: {
+	hide: {
 		display: 'none',
 	},
 	showOnEdit: {
@@ -329,7 +328,7 @@ styles = {
 	},
 	manualFormInputWrapper: {
 		width: '29%',
-		margin: '8px 2%',
+		margin: '8px 20px',
 		float: 'left',
 	},
 	manualFormInputTitle: {

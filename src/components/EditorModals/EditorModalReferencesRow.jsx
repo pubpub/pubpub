@@ -55,6 +55,7 @@ styles = {
 	},
 	bodyColumn: {
 		width: 'calc(55% - 20px)',
+		minHeight: '1px',
 		padding: '0px 10px',
 		float: 'left',
 		overflow: 'hidden',

@@ -49,6 +49,15 @@ export const baseStyles = {
 			color: globalStyles.sideHover,
 		}
 	},
+	noContentBlock: {
+		textAlign: 'center',
+		padding: '40px 0px',
+		fontSize: '20px',
+		fontFamily: 'Courier',
+		backgroundColor: globalStyles.sideBackground,
+		width: '60%',
+		margin: '30px auto',
+	},
 
 	rowHeaderFontSize: '25px',
 	rowHeaderFontFamily: 'Lato',
