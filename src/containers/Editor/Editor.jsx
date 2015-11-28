@@ -86,7 +86,6 @@ const Editor = React.createClass({
 	},
 	
 	componentWillReceiveProps(nextProps) {
-		// console.log(nextProps);
 		if (nextProps.editorData.get('publishSuccess')) {
 			this.props.dispatch(pushState(null, ('/pub/' + nextProps.slug)));
 		}
@@ -108,13 +107,16 @@ const Editor = React.createClass({
 			xLoc = event.clientX + document.body.scrollLeft + document.documentElement.scrollLeft; 
 			yLoc = event.clientY + document.body.scrollTop + document.documentElement.scrollTop; 
 		} 
+		
 		const target = document.elementFromPoint(xLoc, yLoc);
+		const contentBody = document.getElementById('editor-text-wrapper');
 
 		if (target.className.indexOf('cm-header') > -1) {
 			this.setState({
 				pluginPopupVisible: true,
-				pluginPopupX: xLoc,
-				pluginPopupY: yLoc,	
+				pluginPopupContent: target.innerHTML,
+				pluginPopupX: xLoc - 22,
+				pluginPopupY: yLoc + 15 - 60 + contentBody.scrollTop,	
 			});
 		} else if (target.className.indexOf('plugin-popup') > -1) {
 			this.setState({
@@ -467,9 +469,6 @@ const Editor = React.createClass({
 						: null
 					}
 
-					{/*	Plugin Popup Div */}
-					<div className="plugin-popup" style={[styles.pluginPopup, this.getPluginPopupLoc(), this.state.pluginPopupVisible && styles.pluginPopupVisible]}></div>
-
 
 					{/*	Container for all modals and their backdrop. */}
 					<div className="modals">
@@ -588,6 +587,14 @@ const Editor = React.createClass({
 
 					{/* Markdown Editing Block */}
 					<div id="editor-text-wrapper" style={[styles.hiddenUntilLoad, styles[loadStatus], styles.common.editorMarkdown, styles[viewMode].editorMarkdown]}>
+
+						{/*	Plugin Popup Div */}
+						<div className="plugin-popup" style={[styles.pluginPopup, this.getPluginPopupLoc(), this.state.pluginPopupVisible && styles.pluginPopupVisible]}>
+							<div style={styles.pluginPopupArrow}></div>
+							<div style={styles.pluginContent}>
+								{this.state.pluginPopupContent}
+							</div>
+						</div>
 
 						{/* Insertion point for codemirror and firepad */}
 						<div style={[this.state.activeFocus !== '' && styles.hiddenMainEditor]}>
