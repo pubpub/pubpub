@@ -48,6 +48,23 @@ export const styles = {
 	hiddenUntilLoad: {
 		transition: '.3s linear opacity .25s',
 	},
+	pluginPopup: {
+		width: 300,
+		minHeight: 200,
+		backgroundColor: 'white',
+		boxShadow: '0px 0px 4px 0px #ccc',
+		position: 'fixed',
+		opacity: 0,
+		transform: 'scale(0.8)',
+		transition: '.05s linear transform, .05s linear opacity',
+		zIndex: 50,
+		pointerEvents: 'none',
+	},
+	pluginPopupVisible: {
+		opacity: 1,
+		transform: 'scale(1.0)',
+		pointerEvents: 'auto',
+	},
 	editorTopNav: {
 		position: 'fixed',
 		top: 30,

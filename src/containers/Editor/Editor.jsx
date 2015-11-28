@@ -47,6 +47,10 @@ const Editor = React.createClass({
 			travisTOC: ['Section 1', 'Section 2', 'Section 3', 'Section 4'],
 			activeFocus: '',
 			firepadData: {},
+			pluginPopupVisible: false,
+			pluginPopupX: 0,
+			pluginPopupY: 0,
+
 		};
 	},
 
@@ -79,7 +83,6 @@ const Editor = React.createClass({
 
 		}
 		
-
 	},
 	
 	componentWillReceiveProps(nextProps) {
@@ -97,6 +100,7 @@ const Editor = React.createClass({
 	onPluginClick: function(event) {
 		let xLoc;
 		let yLoc;
+
 		if (event.pageX || event.pageY) { 
 			xLoc = event.pageX;
 			yLoc = event.pageY;
@@ -105,14 +109,24 @@ const Editor = React.createClass({
 			yLoc = event.clientY + document.body.scrollTop + document.documentElement.scrollTop; 
 		} 
 		const target = document.elementFromPoint(xLoc, yLoc);
-		console.log(target);
+
 		if (target.className.indexOf('cm-header') > -1) {
-			console.log('header!');   
+			this.setState({
+				pluginPopupVisible: true,
+				pluginPopupX: xLoc,
+				pluginPopupY: yLoc,	
+			});
+		} else if (target.className.indexOf('plugin-popup') > -1) {
+			this.setState({
+				pluginPopupVisible: true,
+			});
 		} else {
-			console.log('nope');
+			this.setState({
+				pluginPopupVisible: false,
+			});
 		}
 	},
-	
+
 	// onEditorChange: function(cm, change) {
 	onEditorChange: function(cm) {
 		const mdOutput = markLib(cm.getValue(), this.state.firepadData.assets);
@@ -120,6 +134,13 @@ const Editor = React.createClass({
 			tree: mdOutput.tree,
 			travisTOC: mdOutput.travisTOC,
 		});
+	},
+
+	getPluginPopupLoc: function() {
+		return {
+			top: this.state.pluginPopupY,
+			left: this.state.pluginPopupX,
+		};
 	},
 
 	toggleLivePreview: function() {
@@ -444,8 +465,11 @@ const Editor = React.createClass({
 					{this.props.editorData.get('error')
 						? <div style={styles.errorTitle}>{this.props.editorData.getIn(['pubEditData', 'title'])}</div>
 						: null
-
 					}
+
+					{/*	Plugin Popup Div */}
+					<div className="plugin-popup" style={[styles.pluginPopup, this.getPluginPopupLoc(), this.state.pluginPopupVisible && styles.pluginPopupVisible]}></div>
+
 
 					{/*	Container for all modals and their backdrop. */}
 					<div className="modals">
