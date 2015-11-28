@@ -26,11 +26,13 @@ const Profile = React.createClass({
 	},
 
 	ownProfile: function() {
-		let output = 'other';
-		if (this.props.loginData.getIn(['userData', 'username']) === this.props.username ) {
-			output = 'self';
-		}
-		return output;
+		// let output = 'other';
+		// if (this.props.loginData.getIn(['userData', 'username']) === this.props.username ) {
+		// 	output = 'self';
+		// }
+		// return output;
+
+		return this.props.loginData.getIn(['userData', 'username']) === this.props.username ? 'self' : 'other';
 	},
 	submitLogout: function() {
 		this.props.dispatch(logout());
@@ -50,6 +52,8 @@ const Profile = React.createClass({
 			profileData = this.props.profileData.get('profileData').toJS();
 		}
 
+		const ownProfile = this.ownProfile();
+
 		return (
 			<div style={styles.profilePage}>
 
@@ -66,11 +70,14 @@ const Profile = React.createClass({
 					<div style={[styles.hiddenUntilLoad, styles[this.props.profileData.get('status')]]}>
 						<ul style={styles.profileNav}>
 
-							<li key="profileNav0"style={[styles.profileNavItem, styles[this.ownProfile()]]} onClick={this.submitLogout}>Logout</li>
-							<li style={styles.profileNavSeparator}></li>
-							<li key="profileNav1"style={[styles.profileNavItem, styles[this.ownProfile()]]}>Settings</li>
-							<li style={styles.profileNavSeparator}></li>
-							<li key="profileNav2"style={[styles.profileNavItem, styles[this.ownProfile()]]}>Create Pub</li>
+							<li key="profileNav0"style={[styles.profileNavItem, ownProfile === 'self' && styles.profileNavShow]} onClick={this.submitLogout}>Logout</li>
+							<li style={[styles.profileNavSeparator, ownProfile === 'self' && styles.profileNavSeparatorShow]}></li>
+
+							<li key="profileNav1"style={[styles.profileNavItem, ownProfile === 'self' && styles.profileNavShow]}>Settings</li>
+							<li style={[styles.profileNavSeparator, ownProfile === 'self' && styles.profileNavSeparatorShow]}></li>
+
+							<li key="profileNav2"style={[styles.profileNavItem, ownProfile === 'other' && styles.profileNavShow]}>Follow</li>
+							<li style={[styles.profileNavSeparator, ownProfile === 'other' && styles.profileNavShow]}></li>
 							
 						</ul>
 						{/* 

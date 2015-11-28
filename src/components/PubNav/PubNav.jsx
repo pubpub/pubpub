@@ -36,6 +36,7 @@ const PubNav = React.createClass({
 					<li key="pubNav5"style={[styles.pubNavItem, styles.pubNavRight, styles.pubNavMobileOnly]} onClick={clickWrapper('pubnav-discussions')}>Discussions</li>
 					<li style={[styles.pubNavSeparator, styles.pubNavMobileOnly, styles.pubNavRight]}></li>
 					<li key="pubNav6"style={[styles.pubNavItem, styles.pubNavRight]} onClick={clickWrapper('pubnav-favorite')}>Favorite</li>
+					<li style={[styles.pubNavSeparator, styles.pubNavMobileOnly, styles.pubNavRight]}></li>
 					
 				</ul>
 			</div>
@@ -77,7 +78,7 @@ styles = {
 			color: globalStyles.sideHover,
 		},
 		'@media screen and (min-resolution: 3dppx), (max-width: 767px)': {
-			width: 'calc(50% - 1px)',
+			width: 'calc(33% - 1px)',
 			lineHeight: globalStyles.headerHeightMobile,
 			padding: 0,
 			textAlign: 'center',

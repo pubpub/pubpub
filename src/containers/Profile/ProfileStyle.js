@@ -6,9 +6,9 @@ export const styles = {
 		color: globalStyles.sideText,
 		fontFamily: globalStyles.headerFont,
 	},
-	other: {
-		display: 'none'
-	},
+	// other: {
+	// 	display: 'none'
+	// },
 	loading: {
 		opacity: 0,
 	}, 
@@ -46,6 +46,7 @@ export const styles = {
 		padding: '0px 20px',
 		lineHeight: globalStyles.headerHeight,
 		float: 'right',
+		display: 'none',
 		':hover': {
 			cursor: 'pointer',
 			color: globalStyles.sideHover,
@@ -58,16 +59,23 @@ export const styles = {
 			fontSize: '20px'
 		},
 	},
+	profileNavShow: {
+		display: 'block',
+	},
 	profileNavSeparator: {
 		width: 1,
 		backgroundColor: '#999',
 		height: 'calc(' + globalStyles.headerHeight + ' - 16px)',
 		margin: '8px 0px',
+		display: 'none',
 		float: 'right',
 		'@media screen and (min-resolution: 3dppx), (max-width: 767px)': {
 			height: 'calc(' + globalStyles.headerHeightMobile + ' - 30px)',
 			margin: '15px 0px',
 		},
+	},
+	profileNavSeparatorShow: {
+		display: 'block',
 	},
 	userImageWrapper: {
 		margin: 30,
