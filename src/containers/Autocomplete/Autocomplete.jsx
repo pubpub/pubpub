@@ -28,7 +28,7 @@ const Autocomplete = React.createClass({
 			route: '/autocompletePubs',
 			height: 30,
 			loaderOffset: 0,
-			padding: 0,
+			padding: '0px',
 			placeholder: 'Placeholder',
 			textAlign: 'left',
 			showBottomLine: true,

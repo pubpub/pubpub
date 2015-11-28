@@ -118,7 +118,7 @@ app.use((req, res) => {
 							<link href='https://fonts.googleapis.com/css?family=Lato:300,900italic' rel='stylesheet' type='text/css' />
 
 							<!-- If we have to load more local css - we should bundle it all into one minified file and load it here. -->
-							<link href='/css/codemirror.css' rel='stylesheet' type='text/css' />
+							<!-- <link href='/css/codemirror.css' rel='stylesheet' type='text/css' /> -->
 							
 							<!-- We could dynamically load these in Editor.jsx 
 							This would prevent us from forcing every user to load the libraries - given that many will not edit -->

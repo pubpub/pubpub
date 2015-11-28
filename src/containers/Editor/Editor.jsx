@@ -11,7 +11,9 @@ import {getPubEdit, toggleEditorViewMode, toggleFormatting, toggleTOC, unmountEd
 import {saveSettingsUser} from '../../actions/login';
 import ReactFireMixin from 'reactfire';
 
+
 import {styles} from './EditorStyle';
+import {CodeMirrorBaseCSS} from './CodeMirrorBaseCSS';
 
 import markLib from '../../modules/markdown/markdown';
 import markdownExtensions from '../../components/EditorPlugins';
@@ -51,6 +53,14 @@ const Editor = React.createClass({
 
 	// Code for client-side rendering only put in componentDidMount()
 	componentDidMount() {
+		const head  = document.getElementsByTagName('head')[0];
+		const link  = document.createElement('link');
+		link.rel  = 'stylesheet';
+		link.type = 'text/css';
+		link.href = '/css/codemirror.css';
+		link.media = 'all';
+		head.appendChild(link);
+
 		if (! this.props.editorData.get('error')) {
 
 			// Load Firebase and bind using ReactFireMixin
@@ -187,8 +197,14 @@ const Editor = React.createClass({
 			break;
 		}
 
-		return {
+		const outputElement = {
+			// ...CodeMirrorBaseCSS, 
 			'.CodeMirror': {
+				height: 'auto',
+				position: 'relative',
+				overflow: 'hidden',
+				background: 'white',
+
 				backgroundColor: 'transparent',
 				fontSize: editorStyles.fontSize,
 				color: editorStyles.color,
@@ -196,8 +212,11 @@ const Editor = React.createClass({
 				padding: '0px 20px',
 				width: 'calc(100% - 40px)',
 				// fontFamily: 'Alegreya',
-			}
+			},
 		};
+		// console.log(CodeMirrorBaseCSS);
+		// console.log(outputElement);
+		return outputElement;
 	},
 
 	// Function to generate side-list fade in animations.
