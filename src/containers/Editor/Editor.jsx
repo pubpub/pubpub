@@ -6,11 +6,12 @@ import Radium, {Style} from 'radium';
 import DocumentMeta from 'react-document-meta';
 import PureRenderMixin from 'react-addons-pure-render-mixin';
 import {LoaderDeterminate} from '../../components';
-import {loadCss} from '../../utils/loadingFunctions';	
+import {loadCss} from '../../utils/loadingFunctions';
 import {EditorModalAssets, EditorModalCollaborators, EditorModalPublish, EditorModalReferences, EditorModalSettings} from '../../components/EditorModals';
 import {getPubEdit, toggleEditorViewMode, toggleFormatting, toggleTOC, unmountEditor, closeModal, openModal, publishVersion, saveCollaboratorsToPub, saveSettingsPubPub} from '../../actions/editor';
 import {saveSettingsUser} from '../../actions/login';
 import ReactFireMixin from 'reactfire';
+import EditorModes from './EditorModes';
 
 import {styles} from './EditorStyle';
 
@@ -23,7 +24,8 @@ const cmOptions = {
 	lineWrapping: true,
 	viewportMargin: Infinity, // This will cause bad performance on large documents. Rendering the entire thing...
 	autofocus: true,
-	mode: 'markdown',
+	mode: 'pubpubmarkdown',
+	extraKeys: {'Ctrl-Space': 'autocomplete'}
 };
 
 const Editor = React.createClass({
@@ -54,12 +56,12 @@ const Editor = React.createClass({
 		};
 	},
 
-	// Code for client-side rendering only put in componentDidMount()
 	componentDidMount() {
 		if (! this.props.editorData.get('error')) {
 			loadCss('/css/codemirror.css');
+			EditorModes();
 			document.documentElement.addEventListener('click', this.onPluginClick);
-			
+
 			// Load Firebase and bind using ReactFireMixin
 			// For assets, references, etc.
 			const ref = new Firebase('https://pubpub.firebaseio.com/' + this.props.slug + '/editorData' );
@@ -82,9 +84,8 @@ const Editor = React.createClass({
 			codeMirror.on('change', this.onEditorChange);
 
 		}
-		
 	},
-	
+
 	componentWillReceiveProps(nextProps) {
 		if (nextProps.editorData.get('publishSuccess')) {
 			this.props.dispatch(pushState(null, ('/pub/' + nextProps.slug)));
@@ -100,14 +101,14 @@ const Editor = React.createClass({
 		let xLoc;
 		let yLoc;
 
-		if (event.pageX || event.pageY) { 
+		if (event.pageX || event.pageY) {
 			xLoc = event.pageX;
 			yLoc = event.pageY;
-		} else { 
-			xLoc = event.clientX + document.body.scrollLeft + document.documentElement.scrollLeft; 
-			yLoc = event.clientY + document.body.scrollTop + document.documentElement.scrollTop; 
-		} 
-		
+		} else {
+			xLoc = event.clientX + document.body.scrollLeft + document.documentElement.scrollLeft;
+			yLoc = event.clientY + document.body.scrollTop + document.documentElement.scrollTop;
+		}
+
 		const target = document.elementFromPoint(xLoc, yLoc);
 		const contentBody = document.getElementById('editor-text-wrapper');
 
@@ -116,7 +117,7 @@ const Editor = React.createClass({
 				pluginPopupVisible: true,
 				pluginPopupContent: target.innerHTML,
 				pluginPopupX: xLoc - 22,
-				pluginPopupY: yLoc + 15 - 60 + contentBody.scrollTop,	
+				pluginPopupY: yLoc + 15 - 60 + contentBody.scrollTop,
 			});
 		} else if (target.className.indexOf('plugin-popup') > -1) {
 			this.setState({
@@ -188,7 +189,7 @@ const Editor = React.createClass({
 		const editorFont = this.props.loginData.getIn(['userData', 'settings', 'editorFont']);
 		const editorFontSize = this.props.loginData.getIn(['userData', 'settings', 'editorFontSize']);
 		const editorColor = this.props.loginData.getIn(['userData', 'settings', 'editorColor']);
-		
+
 		const editorStyles = {};
 
 		switch (editorFont) {
@@ -301,13 +302,13 @@ const Editor = React.createClass({
 	saveUpdatedSettingsFirebase: function(newSettings) {
 		const ref = new Firebase('https://pubpub.firebaseio.com/' + this.props.slug + '/editorData/settings' );
 		ref.update(newSettings);
-	}, 
+	},
 
 	saveUpdatedSettingsFirebaseAndPubPub: function(newSettings) {
 		const ref = new Firebase('https://pubpub.firebaseio.com/' + this.props.slug + '/editorData/settings' );
 		ref.update(newSettings);
 		this.props.dispatch(saveSettingsPubPub(this.props.slug, newSettings));
-	}, 
+	},
 
 	saveReferences: function(newReferences) {
 		const ref = new Firebase('https://pubpub.firebaseio.com/' + this.props.slug + '/editorData/references' );
@@ -463,7 +464,7 @@ const Editor = React.createClass({
 				</div>
 
 				<div style={styles.notMobile}>
-					{/*	Not Authorized or Error Note */}					
+					{/*	Not Authorized or Error Note */}
 					{this.props.editorData.get('error')
 						? <div style={styles.errorTitle}>{this.props.editorData.getIn(['pubEditData', 'title'])}</div>
 						: null
@@ -598,7 +599,7 @@ const Editor = React.createClass({
 
 						{/* Insertion point for codemirror and firepad */}
 						<div style={[this.state.activeFocus !== '' && styles.hiddenMainEditor]}>
-							{/* 
+							{/*
 							<input type="text" placeholder="Title Required"/>
 							<p contentEditable="true" onChange={()=>{console.log('change');}}>This is an editable paragraph.</p>
 							*/}
