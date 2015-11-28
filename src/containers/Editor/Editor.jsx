@@ -6,14 +6,13 @@ import Radium, {Style} from 'radium';
 import DocumentMeta from 'react-document-meta';
 import PureRenderMixin from 'react-addons-pure-render-mixin';
 import {LoaderDeterminate} from '../../components';
+import {loadCss} from '../../utils/loadingFunctions';
 import {EditorModalAssets, EditorModalCollaborators, EditorModalPublish, EditorModalReferences, EditorModalSettings} from '../../components/EditorModals';
 import {getPubEdit, toggleEditorViewMode, toggleFormatting, toggleTOC, unmountEditor, closeModal, openModal, publishVersion, saveCollaboratorsToPub, saveSettingsPubPub} from '../../actions/editor';
 import {saveSettingsUser} from '../../actions/login';
 import ReactFireMixin from 'reactfire';
 
-
 import {styles} from './EditorStyle';
-import {CodeMirrorBaseCSS} from './CodeMirrorBaseCSS';
 
 import markLib from '../../modules/markdown/markdown';
 import markdownExtensions from '../../components/EditorPlugins';
@@ -53,16 +52,8 @@ const Editor = React.createClass({
 
 	// Code for client-side rendering only put in componentDidMount()
 	componentDidMount() {
-		const head  = document.getElementsByTagName('head')[0];
-		const link  = document.createElement('link');
-		link.rel  = 'stylesheet';
-		link.type = 'text/css';
-		link.href = '/css/codemirror.css';
-		link.media = 'all';
-		head.appendChild(link);
-
 		if (! this.props.editorData.get('error')) {
-
+			loadCss('/css/codemirror.css');
 			// Load Firebase and bind using ReactFireMixin
 			// For assets, references, etc.
 			const ref = new Firebase('https://pubpub.firebaseio.com/' + this.props.slug + '/editorData' );
@@ -197,14 +188,8 @@ const Editor = React.createClass({
 			break;
 		}
 
-		const outputElement = {
-			// ...CodeMirrorBaseCSS, 
+		return {
 			'.CodeMirror': {
-				height: 'auto',
-				position: 'relative',
-				overflow: 'hidden',
-				background: 'white',
-
 				backgroundColor: 'transparent',
 				fontSize: editorStyles.fontSize,
 				color: editorStyles.color,
@@ -212,11 +197,8 @@ const Editor = React.createClass({
 				padding: '0px 20px',
 				width: 'calc(100% - 40px)',
 				// fontFamily: 'Alegreya',
-			},
+			}
 		};
-		// console.log(CodeMirrorBaseCSS);
-		// console.log(outputElement);
-		return outputElement;
 	},
 
 	// Function to generate side-list fade in animations.
