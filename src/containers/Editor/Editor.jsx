@@ -23,7 +23,7 @@ const cmOptions = {
 	lineWrapping: true,
 	viewportMargin: Infinity, // This will cause bad performance on large documents. Rendering the entire thing...
 	autofocus: true,
-	mode: 'markdownPubPub',
+	mode: 'markdown',
 };
 
 const Editor = React.createClass({
@@ -60,7 +60,6 @@ const Editor = React.createClass({
 	componentDidMount() {
 
 		if (! this.props.editorData.get('error')) {
-			require('./pubpubMode');
 			loadCss('/css/codemirror.css');
 			document.documentElement.addEventListener('click', this.onPluginClick);
 			
