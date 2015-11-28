@@ -3,3 +3,4 @@ karma.conf.js
 tests.webpack.js
 src/modules/markdown/*
 src/components/ImageCropper/AvatarEditor.jsx
+src/containers/Editor/pubpubMode.js
