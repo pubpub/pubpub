@@ -52,11 +52,14 @@ const Editor = React.createClass({
 			pluginPopupVisible: false,
 			pluginPopupX: 0,
 			pluginPopupY: 0,
+			pluginPopupInitialString: '',
+			pluginPopupActiveLine: undefined,
 
 		};
 	},
 
 	componentDidMount() {
+
 		if (! this.props.editorData.get('error')) {
 			loadCss('/css/codemirror.css');
 			EditorModes();
@@ -97,6 +100,14 @@ const Editor = React.createClass({
 		document.documentElement.removeEventListener('click', this.onPluginClick);
 	},
 
+	getActiveCodemirrorInstance: function() {
+		const cm = this.state.activeFocus === ''
+				? document.getElementsByClassName('CodeMirror')[0].CodeMirror
+				: document.getElementById('codemirror-focus-wrapper').childNodes[0].CodeMirror;
+
+		return cm;
+	},
+
 	onPluginClick: function(event) {
 		let xLoc;
 		let yLoc;
@@ -112,13 +123,42 @@ const Editor = React.createClass({
 		const target = document.elementFromPoint(xLoc, yLoc);
 		const contentBody = document.getElementById('editor-text-wrapper');
 
+
 		if (target.className.indexOf('cm-header') > -1) {
+			const cm = this.getActiveCodemirrorInstance();
+
 			this.setState({
 				pluginPopupVisible: true,
-				pluginPopupContent: target.innerHTML,
 				pluginPopupX: xLoc - 22,
 				pluginPopupY: yLoc + 15 - 60 + contentBody.scrollTop,
+				pluginPopupActiveLine: cm.getCursor().line,
+				pluginPopupInitialString: target.innerHTML,
 			});
+
+			// Get the right codemirror
+			// Get the selected line, and store the content that will be replaced from that line
+			// On save, .replace(pluginPipupInitialString, newString) and put in the entire line
+
+			// What happens if a co-author changes the text as your popup is open?
+			// Looks like, if a collaborator edits the plugin, it will close. This is good.
+			// Will prevent race conditions.
+
+			// Perks to in-line definitions: no ghost objects, no pre-processor,
+			// no firebase syncing needed, duplicate objects don't cause weird edge cases
+
+
+			// const lineNum = cm.getCursor().line;
+			// const newString = '# Brand new title';
+			// const line = cm.getLine(lineNum);
+			// console.log(cm.getLine(lineNum));
+			// console.log('lineNum', lineNum);
+			// const from = {line: lineNum, ch: 0};
+			// const to = {line: lineNum, ch: line.length};
+			// console.log('from', from);
+			// console.log('to', to);
+			// console.log(cm.getRange(from, to));
+			// cm.replaceRange(newString, from, to);
+
 		} else if (target.className.indexOf('plugin-popup') > -1) {
 			this.setState({
 				pluginPopupVisible: true,
@@ -130,8 +170,45 @@ const Editor = React.createClass({
 		}
 	},
 
+	onPluginSave: function() {
+		const cm = this.getActiveCodemirrorInstance();
+		const lineNum = this.state.pluginPopupActiveLine;
+		const lineContent = cm.getLine(lineNum);
+		const from = {line: lineNum, ch: 0};
+		const to = {line: lineNum, ch: lineContent.length};
+		const newContent = '# Howdy!'; // This should eventually be calculated from the pluginPopup options
+		const newString = lineContent.replace(this.state.pluginPopupInitialString, newContent);
+		cm.replaceRange(newString, from, to); // Since the popup closes on change, this will close the pluginPopup
+	},
+
 	// onEditorChange: function(cm, change) {
-	onEditorChange: function(cm) {
+	onEditorChange: function(cm, change) {
+		console.log(change);
+		// If the content changes and the popup is visible, it will be out of date, so hide it.
+		// Well, we don't want it to close if ANY change is made, only a change to the same line
+		// Store in the state of popup, the line, text to replace,
+		// If the from to to line of the change equal the line of the popup, close it.
+
+		// If there is a popupplugin
+		// If the activeLine is not undefined
+		// if the active line is within the range of changes
+		if (this.state.pluginPopupVisible && this.state.pluginPopupActiveLine !== undefined && this.state.pluginPopupActiveLine >= change.from.line && this.state.pluginPopupActiveLine <= change.to.line) {
+
+			this.setState({
+				pluginPopupVisible: false,
+			});
+		}
+
+		// if the change causes the line above to change, change the activeLine
+		if (this.state.pluginPopupVisible && this.state.pluginPopupActiveLine !== undefined && change.from.line < this.state.pluginPopupActiveLine) {
+			// console.log('in the change');
+			// console.log('old line', this.state.pluginPopupActiveLine);
+			// console.log('new line', this.state.pluginPopupActiveLine + change.text.length - 1 - change.removed.length + 1);
+			this.setState({
+				pluginPopupActiveLine: this.state.pluginPopupActiveLine + change.text.length - change.removed.length,
+			});
+		}
+
 		const mdOutput = markLib(cm.getValue(), this.state.firepadData.assets);
 		this.setState({
 			tree: mdOutput.tree,
@@ -324,9 +401,7 @@ const Editor = React.createClass({
 
 	insertFormatting: function(formatting) {
 		return ()=>{
-			const cm = this.state.activeFocus === ''
-				? document.getElementsByClassName('CodeMirror')[0].CodeMirror
-				: document.getElementById('codemirror-focus-wrapper').childNodes[0].CodeMirror;
+			const cm = this.getActiveCodemirrorInstance();
 
 
 			const currentSelection = cm.getSelection();
@@ -593,7 +668,8 @@ const Editor = React.createClass({
 						<div className="plugin-popup" style={[styles.pluginPopup, this.getPluginPopupLoc(), this.state.pluginPopupVisible && styles.pluginPopupVisible]}>
 							<div style={styles.pluginPopupArrow}></div>
 							<div style={styles.pluginContent}>
-								{this.state.pluginPopupContent}
+								{this.state.pluginPopupInitialString}
+								<div onClick={this.onPluginSave}>Save</div>
 							</div>
 						</div>
 
