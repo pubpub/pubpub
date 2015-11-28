@@ -199,11 +199,11 @@ const Editor = React.createClass({
 
 		// if the change causes the line above to change, change the activeLine
 		if (this.state.pluginPopupVisible && this.state.pluginPopupActiveLine !== undefined && change.from.line < this.state.pluginPopupActiveLine) {
-			console.log('in the change');
-			console.log('old line', this.state.pluginPopupActiveLine);
-			console.log('new line', this.state.pluginPopupActiveLine + change.text.length - 1 - change.removed.length + 1);
+			// console.log('in the change');
+			// console.log('old line', this.state.pluginPopupActiveLine);
+			// console.log('new line', this.state.pluginPopupActiveLine + change.text.length - 1 - change.removed.length + 1);
 			this.setState({
-				pluginPopupActiveLine: this.state.pluginPopupActiveLine + change.text.length - 1 - change.removed.length + 1,
+				pluginPopupActiveLine: this.state.pluginPopupActiveLine + change.text.length - change.removed.length,
 			});
 		}
 
