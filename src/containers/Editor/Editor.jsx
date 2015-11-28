@@ -54,6 +54,8 @@ const Editor = React.createClass({
 	componentDidMount() {
 		if (! this.props.editorData.get('error')) {
 			loadCss('/css/codemirror.css');
+			document.documentElement.addEventListener('click', this.onPluginClick);
+			
 			// Load Firebase and bind using ReactFireMixin
 			// For assets, references, etc.
 			const ref = new Firebase('https://pubpub.firebaseio.com/' + this.props.slug + '/editorData' );
@@ -89,8 +91,28 @@ const Editor = React.createClass({
 
 	componentWillUnmount() {
 		this.props.dispatch(unmountEditor());
+		document.documentElement.removeEventListener('click', this.onPluginClick);
 	},
 
+	onPluginClick: function(event) {
+		let xLoc;
+		let yLoc;
+		if (event.pageX || event.pageY) { 
+			xLoc = event.pageX;
+			yLoc = event.pageY;
+		} else { 
+			xLoc = event.clientX + document.body.scrollLeft + document.documentElement.scrollLeft; 
+			yLoc = event.clientY + document.body.scrollTop + document.documentElement.scrollTop; 
+		} 
+		const target = document.elementFromPoint(xLoc, yLoc);
+		console.log(target);
+		if (target.className.indexOf('cm-header') > -1) {
+			console.log('header!');   
+		} else {
+			console.log('nope');
+		}
+	},
+	
 	// onEditorChange: function(cm, change) {
 	onEditorChange: function(cm) {
 		const mdOutput = markLib(cm.getValue(), this.state.firepadData.assets);
@@ -197,6 +219,9 @@ const Editor = React.createClass({
 				padding: '0px 20px',
 				width: 'calc(100% - 40px)',
 				// fontFamily: 'Alegreya',
+			},
+			'.CodeMirror-cursors': {
+				pointerEvents: 'none',
 			}
 		};
 	},
