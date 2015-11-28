@@ -23,7 +23,7 @@ export const styles = {
 		margin: '0 auto',
 		overflow: 'hidden',
 		backgroundColor: 'white',
-		boxShadow: '0px 10px 4px 0px rgba(0,0,0,0.4)',
+		boxShadow: '0px 0px 4px 0px rgba(0,0,0,0.4)',
 		minHeight: 'calc(100vh - ' + globalStyles.headerHeight + ')',
 		'@media screen and (min-resolution: 3dppx), (max-width: 767px)': {
 			width: '100%',
@@ -76,6 +76,7 @@ export const styles = {
 		border: '1px solid rgba(0,0,0,0.1)',
 		borderRadius: '1px',
 		float: 'left',
+		// backgroundColor: 'rgba(190,250,89,0.4)',
 		'@media screen and (min-resolution: 3dppx), (max-width: 767px)': {
 			float: 'none',
 			margin: '30px auto',
@@ -86,17 +87,27 @@ export const styles = {
 		height: '100%',
 		
 	},
-	detailsWrapper: {
-		margin: '30px 0px',
-		width: 'calc(100% - 212px)',
-		height: '152px',
-		overflow: 'hidden',
+	contentWrapper: {
 		float: 'left',
+		width: 'calc(100% - 242px)',
+		// backgroundColor: 'rgba(255,190,89,0.4)',
+		margin: '30px 30px 60px 0px',
 		'@media screen and (min-resolution: 3dppx), (max-width: 767px)': {
 			float: 'none',
-			width: '100%',
+			width: 'calc(100% - 30px)',
+			padding: '0px 15px',
 		},
 	},
+	// detailsWrapper: {
+		
+		// height: '152px',
+		// overflow: 'hidden',
+		// float: 'left',
+		// '@media screen and (min-resolution: 3dppx), (max-width: 767px)': {
+			// float: 'none',
+			// width: '100%',
+		// },
+	// },
 	profileName: {
 		margin: 0,
 		fontSize: '40px',
@@ -113,12 +124,18 @@ export const styles = {
 	},
 
 	statsWrapper: {
-		clear: 'both',
-		height: 100,
+		borderWidth: '1px 0px 1px 0px',
+		borderColor: '#CCC',
+		borderStyle: 'solid',
+		margin: '20px 0px',
+		padding: '10px 0px',
+		// clear: 'both',
+		// height: 100,
 		// backgroundColor: globalStyles.sideBackground,
-		backgroundColor: '#F0F0F0',
+		// backgroundColor: '#F0F0F0',
 		'@media screen and (min-resolution: 3dppx), (max-width: 767px)': {
-			height: 300
+			// height: 300
+			margin: '30px 0px',
 		},
 	},
 	statsList: {
@@ -126,73 +143,107 @@ export const styles = {
 		margin: 0,
 		padding: 0,
 	},
+	statParenthese: {
+		display: 'inline',
+		'@media screen and (min-resolution: 3dppx), (max-width: 767px)': {
+			display: 'none',	
+		}
+	},
 	statsItem: {
-		width: 'calc(20% - 1px)',
-		float: 'left',
-		height: '100%',
+		// backgroundColor: 'rgba(200,200,100,0.3)',
+
+		height: '30px',
+		width: 'calc(100% / 3)',
+		margin: '10px 0px',
+		display: 'inline-block',
+
+		// whiteSpace: 'nowrap',
+		overflow: 'hidden',
+		// textOverflow: 'ellipsis',
+
 		textDecoration: 'none',
 		color: globalStyles.sideText,
+		userSelect: 'none',
+		
 		':hover': {
 			color: globalStyles.sideHover,
 			cursor: 'pointer',
 		},
 		'@media screen and (min-resolution: 3dppx), (max-width: 767px)': {
-			width: 'calc(50% - 1px)',
-			height: 99,
-			borderRight: '1px solid rgba(0,0,0,0.4)',
-			borderBottom: '1px solid rgba(0,0,0,0.4)',
+			width: '50%',
+			height: 70,
+			margin: '20px 0px',
 		},
 		
 	},
-	pointsItem: {
-		width: '20%',
-		borderLeft: '0px solid black',
-		'@media screen and (min-resolution: 3dppx), (max-width: 767px)': {
-			width: '100%',
-			borderBottom: '1px solid rgba(0,0,0,0.1)',
-		},
-	},
-	noRightMobile: {
-		'@media screen and (min-resolution: 3dppx), (max-width: 767px)': {
-			borderRight: '0px solid black',
-			width: '50%',
-		},
-	},
-	noBottomMobile: {
-		'@media screen and (min-resolution: 3dppx), (max-width: 767px)': {
-			borderBottom: '0px solid black',
-			height: 100,
-		},
-	},
-	statsSeparator: {
-		width: 1,
-		height: '60px',
-		margin: '20px 0px',
-		backgroundColor: 'rgba(0,0,0,0.4)',
-		float: 'left',
-		'@media screen and (min-resolution: 3dppx), (max-width: 767px)': {
-			display: 'none',
-		},
-	},
+	// pointsItem: {
+	// 	width: '20%',
+	// 	borderLeft: '0px solid black',
+	// 	'@media screen and (min-resolution: 3dppx), (max-width: 767px)': {
+	// 		width: '100%',
+	// 		borderBottom: '1px solid rgba(0,0,0,0.1)',
+	// 	},
+	// },
+	// noRightMobile: {
+	// 	'@media screen and (min-resolution: 3dppx), (max-width: 767px)': {
+	// 		borderRight: '0px solid black',
+	// 		width: '50%',
+	// 	},
+	// },
+	// noBottomMobile: {
+	// 	'@media screen and (min-resolution: 3dppx), (max-width: 767px)': {
+	// 		borderBottom: '0px solid black',
+	// 		height: 100,
+	// 	},
+	// },
+	// statsSeparator: {
+	// 	width: 1,
+	// 	height: '60px',
+	// 	margin: '20px 0px',
+	// 	backgroundColor: 'rgba(0,0,0,0.4)',
+	// 	display: 'inline-block',
+	// 	'@media screen and (min-resolution: 3dppx), (max-width: 767px)': {
+	// 		display: 'none',
+	// 	},
+	// },
 
 	statsTitle: {
 		// backgroundColor: 'rgba(255,0,0,0.2)',
-		textAlign: 'center',
+		// textAlign: 'center',
 		height: 30,
-		lineHeight: '50px',
-		fontSize: '20px',
+		lineHeight: '30px',
+		fontSize: '18px',
+		display: 'inline-block',
+		// backgroundColor: 'rgba(70,250,89,0.4)',
+		'@media screen and (min-resolution: 3dppx), (max-width: 767px)': {
+			display: 'block',
+			height: 25,
+			lineHeight: '25px',
+			fontSize: '25px',
+			textAlign: 'center',
+		},
 
 	},
 	statsCount: {
 		// backgroundColor: 'rgba(0,92,0,0.2)',
-		height: 70,
-		textAlign: 'center',
-		lineHeight: '70px',
-		fontSize: '35px',
+		height: 30,
+		paddingLeft: 10,
+		// textAlign: 'center',
+		lineHeight: '30px',
+		fontSize: '18px',
+		display: 'inline-block',
+		// backgroundColor: 'rgba(190,70,89,0.4)',
+		'@media screen and (min-resolution: 3dppx), (max-width: 767px)': {
+			display: 'block',
+			height: 45,
+			lineHeight: '40px',
+			textAlign: 'center',
+			fontSize: '35px',
+		},
 	},
 	profileContent: {
-		width: 'calc(100% - 40px)',
-		margin: '0px 20px',
+		// width: 'calc(100% - 40px)',
+		// margin: '0px 20px',
 	}
 
 

@@ -86,66 +86,71 @@ const Profile = React.createClass({
 							<img style={styles.userImage} src={profileData.image} />
 						</div>
 
-						<div style={styles.detailsWrapper}>
+						{/* Content Wrapper is the right-hand side of the profile page.
+							Everything except the image really */}
+						<div style={styles.contentWrapper}>
+
+							{/* User Details */}
 							<h2 style={styles.profileName}>{profileData.name}</h2>
 							<p style={styles.profileDetail}>PhD Researcher at Arlington High School</p>
 							<p style={styles.profileDetail}>Verfied with Twitter</p>
-						</div>
+							<p style={styles.profileDetail}>A biography or simply bio is a detailed description of a person's life. It involves more than just the basic facts like education, work, relationships, and death, but also portrays a subject's experience of these life events. Unlike a profile or curriculum vitae, a biography presents a subject's life story, highlighting various aspects of his or her life, including intimate details of experience, and may include an analysis of the subject's personality.</p>
 
-						<div style={styles.statsWrapper}>
-							<ul style={styles.statsList}>
-								<li key="profileStatsItem0" style={[styles.statsItem, styles.noBottomMobile, styles.noRightMobile, styles.pointsItem]}>
-									<div style={styles.statsTitle}>Points</div>
-									<div style={styles.statsCount}>23,123</div>
-								</li>
-								<li style={styles.statsSeparator}></li>
-								<li key="profileStatsItem1" style={[styles.statsItem]}>
-									<div style={styles.statsTitle}>Pubs</div>
-									<div style={styles.statsCount}>28</div>
-								</li>
-								<li style={styles.statsSeparator}></li>
-								<li key="profileStatsItem2" style={[styles.statsItem, styles.noRightMobile]}>
-									<div style={styles.statsTitle}>Discussions</div>
-									<div style={styles.statsCount}>219</div>
-								</li>
-								<li style={styles.statsSeparator}></li>
-								<li key="profileStatsItem3" style={[styles.statsItem, styles.noBottomMobile]}>
-									<div style={styles.statsTitle}>Expert Papers</div>
-									<div style={styles.statsCount}>14</div>
-								</li>
-								<li style={styles.statsSeparator}></li>
-								<li key="profileStatsItem4" style={[styles.statsItem, styles.noBottomMobile, styles.noRightMobile]}>
-									<div style={styles.statsTitle}>Journals</div>
-									<div style={styles.statsCount}>20</div>
-								</li>
+							{/* Stats and Intra-Profile nav */}
+							<div style={styles.statsWrapper}>
+								<ul style={styles.statsList}>
+									<li key="profileStatsItem1" style={[styles.statsItem]}>
+										<div style={styles.statsTitle}>Points</div>
+										<div style={styles.statsCount}><span style={styles.statParenthese}>(</span>23,123<span style={styles.statParenthese}>)</span></div>
+									</li>
+									
+									<li key="profileStatsItem2" style={[styles.statsItem]}>
+										<div style={styles.statsTitle}>Pubs</div>
+										<div style={styles.statsCount}><span style={styles.statParenthese}>(</span>28<span style={styles.statParenthese}>)</span></div>
+									</li>
+									
+									<li key="profileStatsItem3" style={[styles.statsItem]}>
+										<div style={styles.statsTitle}>Discussions</div>
+										<div style={styles.statsCount}><span style={styles.statParenthese}>(</span>219<span style={styles.statParenthese}>)</span></div>
+									</li>
+									
+									<li key="profileStatsItem4" style={[styles.statsItem]}>
+										<div style={styles.statsTitle}>Expert Papers</div>
+										<div style={styles.statsCount}><span style={styles.statParenthese}>(</span>14<span style={styles.statParenthese}>)</span></div>
+									</li>
+									
+									<li key="profileStatsItem5" style={[styles.statsItem]}>
+										<div style={styles.statsTitle}>Journals</div>
+										<div style={styles.statsCount}><span style={styles.statParenthese}>(</span>20<span style={styles.statParenthese}>)</span></div>
+									</li>
 
-							</ul>
-						</div>
+								</ul>
+							</div>
 
-						<div style={styles.profileContent}>
+							{/* Selected Content based on nav */}
+							<div style={styles.profileContent}>
 							
-							<h2>Pubs</h2>
-							{profileData.pubs
-								? profileData.pubs.map((pub, index)=>{
-									return (
-										<div key={'profilePub-' + index}>
-											<h3>{pub.title}</h3>
-											<div>
-												<Link to={'/pub/' + pub.slug}>Read</Link> | <Link to={'/pub/' + pub.slug + '/edit'}>Edit {pub.title}</Link>
+								<h2>Pubs</h2>
+								{profileData.pubs
+									? profileData.pubs.map((pub, index)=>{
+										return (
+											<div key={'profilePub-' + index}>
+												<h3>{pub.title}</h3>
+												<div>
+													<Link to={'/pub/' + pub.slug}>Read</Link> | <Link to={'/pub/' + pub.slug + '/edit'}>Edit {pub.title}</Link>
+												</div>
+												
 											</div>
-											
-										</div>
-									);
-								})
-								: null
-							}
+										);
+									})
+									: null
+								}
+
+							</div>
+
 
 						</div>
-
-
-						{/* <h3>{profileData.pubs 
-							? profileData.pubs.length
-							: 0} Pubs</h3> */}
+						
 
 					</div>
 				</div>
