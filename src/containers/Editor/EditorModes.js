@@ -3,8 +3,8 @@ export default function() {
 		start: [
 			{regex: /\[abstract.*\]/, token: "meta-abstract number"},
 			{regex: /\[title.*\]/, token: "meta-abstract number"},
-			{regex: /\[asset.*\]/, token: "plugin-asset string"},
-			{regex: /\[image.*\]/, token: "plugin-image string"}
+			{regex: /\[asset.*\]/, token: "plugin plugin-asset"},
+			{regex: /\[image.*\]/, token: "plugin plugin-image"}
 		],
 		asset: [
 			{regex: /.*/, token: "plugin-asset"},

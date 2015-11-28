@@ -124,7 +124,7 @@ const Editor = React.createClass({
 		const contentBody = document.getElementById('editor-text-wrapper');
 
 
-		if (target.className.indexOf('cm-header') > -1) {
+		if (target.className.indexOf('cm-plugin') > -1) {
 			const cm = this.getActiveCodemirrorInstance();
 
 			this.setState({
@@ -323,6 +323,17 @@ const Editor = React.createClass({
 			},
 			'.CodeMirror-cursors': {
 				pointerEvents: 'none',
+			},
+			'.cm-plugin': {
+				cursor: 'pointer',
+				padding: '0px 5px',
+				borderRadius: 2,
+			},
+			'.cm-plugin-image': {
+				backgroundColor: 'rgba(232, 165, 165, 0.45)',
+			},
+			'.cm-plugin-asset': {
+				backgroundColor: 'rgba(132, 265, 165, 0.45)',
 			}
 		};
 	},
