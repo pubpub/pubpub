@@ -98,16 +98,6 @@ export const styles = {
 			padding: '0px 15px',
 		},
 	},
-	// detailsWrapper: {
-		
-		// height: '152px',
-		// overflow: 'hidden',
-		// float: 'left',
-		// '@media screen and (min-resolution: 3dppx), (max-width: 767px)': {
-			// float: 'none',
-			// width: '100%',
-		// },
-	// },
 	profileName: {
 		margin: 0,
 		fontSize: '40px',
@@ -164,7 +154,7 @@ export const styles = {
 		textDecoration: 'none',
 		color: globalStyles.sideText,
 		userSelect: 'none',
-		
+
 		':hover': {
 			color: globalStyles.sideHover,
 			cursor: 'pointer',
@@ -176,36 +166,6 @@ export const styles = {
 		},
 		
 	},
-	// pointsItem: {
-	// 	width: '20%',
-	// 	borderLeft: '0px solid black',
-	// 	'@media screen and (min-resolution: 3dppx), (max-width: 767px)': {
-	// 		width: '100%',
-	// 		borderBottom: '1px solid rgba(0,0,0,0.1)',
-	// 	},
-	// },
-	// noRightMobile: {
-	// 	'@media screen and (min-resolution: 3dppx), (max-width: 767px)': {
-	// 		borderRight: '0px solid black',
-	// 		width: '50%',
-	// 	},
-	// },
-	// noBottomMobile: {
-	// 	'@media screen and (min-resolution: 3dppx), (max-width: 767px)': {
-	// 		borderBottom: '0px solid black',
-	// 		height: 100,
-	// 	},
-	// },
-	// statsSeparator: {
-	// 	width: 1,
-	// 	height: '60px',
-	// 	margin: '20px 0px',
-	// 	backgroundColor: 'rgba(0,0,0,0.4)',
-	// 	display: 'inline-block',
-	// 	'@media screen and (min-resolution: 3dppx), (max-width: 767px)': {
-	// 		display: 'none',
-	// 	},
-	// },
 
 	statsTitle: {
 		// backgroundColor: 'rgba(255,0,0,0.2)',
