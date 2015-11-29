@@ -1,4 +1,5 @@
 /* global CodeMirror */
+
 export default function() {
 	
 	/* CodeMirror.registerHelper('hint', 'plugins', function(editor, options) {

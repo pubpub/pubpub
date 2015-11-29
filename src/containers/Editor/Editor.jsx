@@ -13,9 +13,10 @@ import {EditorModalAssets, EditorModalCollaborators, EditorModalPublish, EditorM
 import {getPubEdit, toggleEditorViewMode, toggleFormatting, toggleTOC, unmountEditor, closeModal, openModal, publishVersion, saveCollaboratorsToPub, saveSettingsPubPub} from '../../actions/editor';
 import {saveSettingsUser} from '../../actions/login';
 import {loadCss} from '../../utils/loadingFunctions';
-import EditorModes from './editorCodeMirrorMode';
+import initCodeMirrorMode from './editorCodeMirrorMode';
 import {styles, codeMirrorStyles, animateListItemStyle} from './editorStyles';
 import {insertText, createFocusDoc} from './editorCodeFunctions';
+import editorDefaultText from './editorDefaultText';
 
 
 import markLib from '../../modules/markdown/markdown';
@@ -61,10 +62,9 @@ const Editor = React.createClass({
 
 		if (! this.props.editorData.get('error')) {
 			loadCss('/css/codemirror.css');
-			EditorModes();
+			initCodeMirrorMode();
 
-			// Load Firebase and bind using ReactFireMixin
-			// For assets, references, etc.
+			// Load Firebase and bind using ReactFireMixin. For assets, references, etc.
 			const ref = new Firebase('https://pubpub.firebaseio.com/' + this.props.slug + '/editorData' );
 			this.bindAsObject(ref, 'firepadData');
 
@@ -73,12 +73,14 @@ const Editor = React.createClass({
 
 			// Load codemirror
 			const codeMirror = CodeMirror(document.getElementById('codemirror-wrapper'), cmOptions);
+			
 			// Get Login username for firepad use. Shouldn't be undefined, but set default in case.
 			const username = (this.props.loginData.get('loggedIn') === false) ? 'cat' : this.props.loginData.getIn(['userData', 'username']);
+
 			// Initialize Firepad using codemirror and the ref defined above.
 			Firepad.fromCodeMirror(firepadRef, codeMirror, {
 				userId: username,
-				defaultText: 'Welcome to your new Pub!'
+				defaultText: editorDefaultText
 			});
 
 			// need to unmount on change
@@ -133,6 +135,7 @@ const Editor = React.createClass({
 	toggleTOC: function() {
 		return this.props.dispatch(toggleTOC());
 	},
+
 	publishVersion: function(versionState, versionDescription) {
 
 		const cm = document.getElementsByClassName('CodeMirror')[0].CodeMirror;
@@ -224,11 +227,11 @@ const Editor = React.createClass({
 			this.toggleFormatting();
 		};
 	},
-
-	// focusEditor: function(title, index) {
+	
 	// TODO: use the index variable that's passed in to accomodate the case
 	// where a document has more than one identical header title.
 	// Right now, no matter which is clicked, the focus will focus on the first instance of it.
+	// focusEditor: function(title, index) {
 	focusEditor: function(title) {
 		return ()=>{
 			// If the focus button clicked is the same as the activeFocus, turn off the focusing
@@ -336,11 +339,11 @@ const Editor = React.createClass({
 						</ul>
 					</div>
 
-					{/*	Horizontal loader line
-						Separates top bar from rest of editor page */}
+					{/*	Horizontal loader line - Separates top bar from rest of editor page */}
 					<div style={styles.editorLoadBar}>
 						<LoaderDeterminate value={loadStatus === 'loading' ? 0 : 100}/>
 					</div>
+
 					{/* Bottom Nav */}
 					<div style={[styles.common.editorBottomNav, styles[viewMode].editorBottomNav, styles.hiddenUntilLoad, styles[loadStatus]]}>
 
@@ -397,13 +400,14 @@ const Editor = React.createClass({
 					{/* Markdown Editing Block */}
 					<div id="editor-text-wrapper" style={[styles.hiddenUntilLoad, styles[loadStatus], styles.common.editorMarkdown, styles[viewMode].editorMarkdown]}>
 
-
 						<EditorPluginPopup activeFocus={this.state.activeFocus} codeMirrorChange={this.state.codeMirrorChange}/>
 						
 						{/* Insertion point for codemirror and firepad */}
 						<div style={[this.state.activeFocus !== '' && styles.hiddenMainEditor]}>
 							<div id="codemirror-wrapper"></div>
 						</div>
+
+						{/* Insertion point for Focused codemirror subset */}
 						<div id="codemirror-focus-wrapper"></div>
 
 					</div>
@@ -412,8 +416,8 @@ const Editor = React.createClass({
 					<div style={[styles.hiddenUntilLoad, styles[loadStatus], styles.common.editorPreview, styles[viewMode].editorPreview]}>
 						{this.state.tree}
 					</div>
-				</div>
 
+				</div>
 
 			</div>
 		);

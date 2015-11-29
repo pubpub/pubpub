@@ -1,4 +1,5 @@
 /* global CodeMirror */
+
 export function insertText(cm, formatting, baseText) {
 
 	switch (formatting) {
