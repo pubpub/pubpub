@@ -26,10 +26,15 @@ export default function() {
 	CodeMirror.defineSimpleMode('plugin', {
 		start: [
 			// {regex: /\[/, token: 'plugin-start',next:'pluginStart'}
-			{regex: /\[abstract.*\]/, token: 'meta-abstract number'},
-			{regex: /\[title.*\]/, token: 'meta-abstract number'},
-			{regex: /\[asset.*\]/, token: 'plugin plugin-asset'},
-			{regex: /\[image.*\]/, token: 'plugin plugin-image'}
+			{regex: /\[title.*\]/, token: 'ppm ppm-title'},
+			{regex: /\[abstract.*\]/, token: 'ppm ppm-abstract'},
+			{regex: /\[authorsNote.*\]/, token: 'ppm ppm-authorsNote'},
+			{regex: /\[cite.*\]/, token: 'ppm ppm-cite'},
+			// {regex: /\[asset.*\]/, token: 'plugin plugin-asset'},
+			{regex: /\[image.*\]/, token: 'plugin plugin-image'},
+			{regex: /\[video.*\]/, token: 'plugin plugin-video'},
+			{regex: /\[audio.*\]/, token: 'plugin plugin-audio'},
+			{regex: /\[table.*\]/, token: 'plugin plugin-table'},
 		],
 		pluginStart: [
 			{regex: /.*/, token: 'plugin-content'},
@@ -42,7 +47,7 @@ export default function() {
 			CodeMirror.getMode(config, 'markdown'),
 			{open: '[', close: ']',
 			 mode: CodeMirror.getMode(config, 'plugin'),
-			 innerStyle: 'test',
+			 innerStyle: 'pubpub-markdown',
 		 	 parseDelimiters: true}
 		);
 	});

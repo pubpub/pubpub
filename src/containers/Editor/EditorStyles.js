@@ -416,9 +416,17 @@ export function codeMirrorStyles(loginData) {
 	switch (editorColor) {
 	case 'light':
 		editorStyles.color = '#555';
+		editorStyles.colorHeader = '#676767';
+		editorStyles.colorTitle = '#575757';
+		editorStyles.colorPPM = '#474747';
+		editorStyles.colorCite = '#171717';
 		break;
 	case 'dark':
 		editorStyles.color = '#ddd';
+		editorStyles.colorHeader = '#bbb';
+		editorStyles.colorTitle = '#ccc';
+		editorStyles.colorPPM = '#eee';
+		editorStyles.colorCite = '#fff';
 		break;
 	default:
 		editorStyles.color = '#555';
@@ -438,16 +446,53 @@ export function codeMirrorStyles(loginData) {
 		'.CodeMirror-cursors': {
 			pointerEvents: 'none',
 		},
+		'.cm-s-default .cm-header': {
+			color: editorStyles.colorHeader,
+		},
+		'.cm-header-1': {
+			fontSize: '20px',
+		},
+		'.cm-header-2': {
+			fontSize: '18px',
+		},
+		'.cm-header-3': {
+			fontSize: '16px',
+		},
+		'.cm-ppm': {
+			color: editorStyles.colorPPM,
+		},
+		'.cm-ppm-title': {
+			fontSize: '23px',
+			color: editorStyles.colorTitle,
+			fontWeight: 'bold',
+		},
+		'.cm-ppm-abstract': {
+			fontSize: '16px',
+		},
+		'.cm-ppm-authorsNote': {
+			fontSize: '14px',
+		},
+		'.cm-ppm-cite': {
+			color: editorStyles.colorCite,
+		},
 		'.cm-plugin': {
 			cursor: 'pointer',
 			borderRadius: '2px',
+			color: '#555',
 		},
 		'.cm-plugin-image': {
-			backgroundColor: 'rgba(232, 165, 165, 0.45)',
+			backgroundColor: '#DAE8F8',
 		},
-		'.cm-plugin-asset': {
-			backgroundColor: 'rgba(132, 265, 165, 0.45)',
-		}
+		'.cm-plugin-video': {
+			backgroundColor: '#DAF8E3',
+		},
+		'.cm-plugin-audio': {
+			backgroundColor: '#F8ECDA',
+		},
+		'.cm-plugin-table': {
+			backgroundColor: '#F1DAF8',
+		},
+		
 	};
 }
 
