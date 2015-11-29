@@ -1,4 +1,5 @@
 /* global Firebase Firepad CodeMirror */
+
 import React, { PropTypes } from 'react';
 import {connect} from 'react-redux';
 import { pushState } from 'redux-router';
@@ -13,11 +14,11 @@ import {EditorModalAssets, EditorModalCollaborators, EditorModalPublish, EditorM
 import {getPubEdit, toggleEditorViewMode, toggleFormatting, toggleTOC, unmountEditor, closeModal, openModal, publishVersion, saveCollaboratorsToPub, saveSettingsPubPub} from '../../actions/editor';
 import {saveSettingsUser} from '../../actions/login';
 import {loadCss} from '../../utils/loadingFunctions';
+
 import initCodeMirrorMode from './editorCodeMirrorMode';
 import {styles, codeMirrorStyles, animateListItemStyle} from './editorStyles';
 import {insertText, createFocusDoc} from './editorCodeFunctions';
 import editorDefaultText from './editorDefaultText';
-
 
 import markLib from '../../modules/markdown/markdown';
 import markdownExtensions from '../../components/EditorPlugins';

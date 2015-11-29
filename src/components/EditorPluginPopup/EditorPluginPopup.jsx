@@ -37,13 +37,17 @@ const Reference = React.createClass({
 	},
 
 	componentWillReceiveProps(nextProps) {
+		if (this.props.codeMirrorChange === nextProps.codeMirrorChange) { 
+			// If a re-render causes this component to receive new props, but the props haven't changed, return.
+			return null;
+		}
+
 		const change = nextProps.codeMirrorChange;
 
 		// If the content changes and the popup is visible, it will be out of date, so hide it.
 		// Well, we don't want it to close if ANY change is made, only a change to the same line
 		// If the from to to line of the change equal the line of the popup, close it.
 		if (this.state.activeLine !== undefined && this.state.activeLine >= change.from.line && this.state.activeLine <= change.to.line) {
-
 			this.setState({
 				popupVisible: false,
 				activeLine: undefined,
@@ -55,7 +59,7 @@ const Reference = React.createClass({
 		if (this.state.activeLine !== undefined && change.from.line < this.state.activeLine) {
 
 			this.setState({
-				pluginPopupActiveLine: this.state.activeLine + change.text.length - change.removed.length,
+				activeLine: this.state.activeLine + change.text.length - change.removed.length,
 			});
 
 		}
