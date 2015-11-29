@@ -12,8 +12,7 @@ import {getPubEdit, toggleEditorViewMode, toggleFormatting, toggleTOC, unmountEd
 import {saveSettingsUser} from '../../actions/login';
 import ReactFireMixin from 'reactfire';
 import EditorModes from './EditorModes';
-
-import {styles} from './EditorStyle';
+import {styles, codeMirrorStyles, animateListItemStyle} from './EditorStyles';
 
 import markLib from '../../modules/markdown/markdown';
 import markdownExtensions, {globalPluginOptions, pluginOptions} from '../../components/EditorPlugins';
@@ -43,6 +42,7 @@ const Editor = React.createClass({
 			return dispatch(getPubEdit(routeParams.slug));
 		}
 	},
+
 	getInitialState() {
 		return {
 			tree: '',
@@ -65,6 +65,7 @@ const Editor = React.createClass({
 		if (! this.props.editorData.get('error')) {
 			loadCss('/css/codemirror.css');
 			EditorModes();
+
 			document.documentElement.addEventListener('click', this.onPluginClick);
 
 			// Load Firebase and bind using ReactFireMixin
@@ -173,34 +174,6 @@ const Editor = React.createClass({
 			});
 
 			
-			// Get the right codemirror
-			// Get the selected line, and store the content that will be replaced from that line
-			// On save, .replace(pluginPipupInitialString, newString) and put in the entire line
-
-			// What happens if a co-author changes the text as your popup is open?
-			// Looks like, if a collaborator edits the plugin, it will close. This is good.
-			// Will prevent race conditions.
-
-			// Perks to in-line definitions: no ghost objects, no pre-processor,
-			// no firebase syncing needed, duplicate objects don't cause weird edge cases
-
-
-			// const lineNum = cm.getCursor().line;
-			// const newString = '# Brand new title';
-			// const line = cm.getLine(lineNum);
-			// console.log(cm.getLine(lineNum));
-			// console.log('lineNum', lineNum);
-			// const from = {line: lineNum, ch: 0};
-			// const to = {line: lineNum, ch: line.length};
-			// console.log('from', from);
-			// console.log('to', to);
-			// console.log(cm.getRange(from, to));
-			// cm.replaceRange(newString, from, to);
-
-		// } else if (target.className.indexOf('plugin-popup') > -1) {
-		// 	this.setState({
-		// 		pluginPopupVisible: true,
-		// 	});
 		} else {
 
 			if (document.getElementById('plugin-popup').contains(event.target)) {
@@ -339,95 +312,6 @@ const Editor = React.createClass({
 		// Aggregate all the firepad data, push it up through a dispatch, redirect on willreceiveprops
 	},
 
-	// CodeMirror styles function can be
-	// used to dynamically change font, size, color, etc
-	codeMirrorStyles: function() {
-		const editorFont = this.props.loginData.getIn(['userData', 'settings', 'editorFont']);
-		const editorFontSize = this.props.loginData.getIn(['userData', 'settings', 'editorFontSize']);
-		const editorColor = this.props.loginData.getIn(['userData', 'settings', 'editorColor']);
-
-		const editorStyles = {};
-
-		switch (editorFont) {
-		case 'serif':
-			editorStyles.fontFamily = 'Arial';
-			break;
-		case 'sans-serif':
-			editorStyles.fontFamily = 'Lato';
-			break;
-		case 'mono':
-			editorStyles.fontFamily = 'Courier';
-			break;
-		default:
-			editorStyles.fontFamily = 'Courier';
-			break;
-		}
-
-		switch (editorFontSize) {
-		case 'small':
-			editorStyles.fontSize = '11px';
-			break;
-		case 'medium':
-			editorStyles.fontSize = '15px';
-			break;
-		case 'large':
-			editorStyles.fontSize = '19px';
-			break;
-		default:
-			editorStyles.fontSize = '15px';
-			break;
-		}
-
-		switch (editorColor) {
-		case 'light':
-			editorStyles.color = '#555';
-			break;
-		case 'dark':
-			editorStyles.color = '#ddd';
-			break;
-		default:
-			editorStyles.color = '#555';
-			break;
-		}
-
-		return {
-			'.CodeMirror': {
-				backgroundColor: 'transparent',
-				fontSize: editorStyles.fontSize,
-				color: editorStyles.color,
-				fontFamily: editorStyles.fontFamily,
-				padding: '0px 20px',
-				width: 'calc(100% - 40px)',
-				// fontFamily: 'Alegreya',
-			},
-			'.CodeMirror-cursors': {
-				pointerEvents: 'none',
-			},
-			'.cm-plugin': {
-				cursor: 'pointer',
-				borderRadius: '2px',
-			},
-			'.cm-plugin-image': {
-				backgroundColor: 'rgba(232, 165, 165, 0.45)',
-			},
-			'.cm-plugin-asset': {
-				backgroundColor: 'rgba(132, 265, 165, 0.45)',
-			}
-		};
-	},
-
-	// Function to generate side-list fade in animations.
-	// Generates unique style per side and per item-depth
-	animateListItem: function(side, status, index) {
-		const statusOffset = { loaded: 0, loading: 1};
-		const offset = { left: -100, right: 100};
-		const delay = 0.25 + (index * 0.02);
-		return {
-			transform: 'translateX(' + statusOffset[status] * offset[side] + 'px)',
-			transition: '.3s ease-out transform ' + delay + 's',
-		};
-	},
-
 	// Add asset to firebase.
 	// Will trigger other open clients to sync new assets data.
 	addAsset: function(asset) {
@@ -484,6 +368,7 @@ const Editor = React.createClass({
 	closeModalHandler: function() {
 		this.props.dispatch(closeModal());
 	},
+
 	openModalHandler: function(activeModal) {
 		return ()=> this.props.dispatch(openModal(activeModal));
 	},
@@ -624,11 +509,10 @@ const Editor = React.createClass({
 
 				<DocumentMeta {...metaData} />
 
-				<Style rules={this.codeMirrorStyles()} />
+				<Style rules={codeMirrorStyles(this.props.loginData)} />
 
 				{/*	Mobile Editing not currently supported.
 					Display a splash screen if media queries determine mobile mode */}
-
 				<div style={styles.isMobile}>
 					<h1 style={styles.mobileHeader}>Cannot Edit in Mobile :(</h1>
 					<h2 style={styles.mobileText}>Please open this url on a desktop, laptop, or larger screen.</h2>
@@ -728,7 +612,7 @@ const Editor = React.createClass({
 									// const options = ['Introduction', 'Prior Art', 'Resources', 'Methods', 'A New Approach', 'Data Analysis', 'Results', 'Conclusion'];
 									const options = this.state.travisTOC;
 									return options.map((item, index)=>{
-										return <li key={'blNav' + index} onClick={this.focusEditor(item.title, index)} style={[styles.common.bottomNavListItem, styles[viewMode].bottomNavListItem, this.animateListItem('left', loadStatus, index), showBottomLeftMenu && styles[viewMode].listItemActive, this.state.activeFocus === item.title && styles.common.listItemActiveFocus]}>{item.title}</li>;
+										return <li key={'blNav' + index} onClick={this.focusEditor(item.title, index)} style={[styles.common.bottomNavListItem, styles[viewMode].bottomNavListItem, animateListItemStyle('left', loadStatus, index), showBottomLeftMenu && styles[viewMode].listItemActive, this.state.activeFocus === item.title && styles.common.listItemActiveFocus]}>{item.title}</li>;
 									});
 								}()}
 							</ul>
@@ -750,7 +634,7 @@ const Editor = React.createClass({
 								{()=>{
 									const options = ['H1', 'H2', 'H3', 'Bold', 'Italic', '# List', '- List', 'Image', 'Video', 'Audio', 'Gallery', 'Hologram'];
 									return options.map((item, index)=>{
-										return <li key={'brNav' + index} onClick={this.insertFormatting(item)} style={[styles.common.bottomNavListItem, styles[viewMode].bottomNavListItem, this.animateListItem('right', loadStatus, index), styles.floatRight, showBottomRightMenu && styles[viewMode].listItemActive]}>{item}</li>;
+										return <li key={'brNav' + index} onClick={this.insertFormatting(item)} style={[styles.common.bottomNavListItem, styles[viewMode].bottomNavListItem, animateListItemStyle('right', loadStatus, index), styles.floatRight, showBottomRightMenu && styles[viewMode].listItemActive]}>{item}</li>;
 									});
 								}()}
 							</ul>

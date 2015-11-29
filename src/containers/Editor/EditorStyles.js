@@ -407,5 +407,93 @@ export const styles = {
 			color: globalStyles.sideText,
 		}
 	},
-
 };
+
+// CodeMirror styles function can be
+// used to dynamically change font, size, color, etc
+export function codeMirrorStyles(loginData) {
+	const editorFont = loginData.getIn(['userData', 'settings', 'editorFont']);
+	const editorFontSize = loginData.getIn(['userData', 'settings', 'editorFontSize']);
+	const editorColor = loginData.getIn(['userData', 'settings', 'editorColor']);
+
+	const editorStyles = {};
+
+	switch (editorFont) {
+	case 'serif':
+		editorStyles.fontFamily = 'Arial';
+		break;
+	case 'sans-serif':
+		editorStyles.fontFamily = 'Lato';
+		break;
+	case 'mono':
+		editorStyles.fontFamily = 'Courier';
+		break;
+	default:
+		editorStyles.fontFamily = 'Courier';
+		break;
+	}
+
+	switch (editorFontSize) {
+	case 'small':
+		editorStyles.fontSize = '11px';
+		break;
+	case 'medium':
+		editorStyles.fontSize = '15px';
+		break;
+	case 'large':
+		editorStyles.fontSize = '19px';
+		break;
+	default:
+		editorStyles.fontSize = '15px';
+		break;
+	}
+
+	switch (editorColor) {
+	case 'light':
+		editorStyles.color = '#555';
+		break;
+	case 'dark':
+		editorStyles.color = '#ddd';
+		break;
+	default:
+		editorStyles.color = '#555';
+		break;
+	}
+
+	return {
+		'.CodeMirror': {
+			backgroundColor: 'transparent',
+			fontSize: editorStyles.fontSize,
+			color: editorStyles.color,
+			fontFamily: editorStyles.fontFamily,
+			padding: '0px 20px',
+			width: 'calc(100% - 40px)',
+			// fontFamily: 'Alegreya',
+		},
+		'.CodeMirror-cursors': {
+			pointerEvents: 'none',
+		},
+		'.cm-plugin': {
+			cursor: 'pointer',
+			borderRadius: '2px',
+		},
+		'.cm-plugin-image': {
+			backgroundColor: 'rgba(232, 165, 165, 0.45)',
+		},
+		'.cm-plugin-asset': {
+			backgroundColor: 'rgba(132, 265, 165, 0.45)',
+		}
+	};
+}
+
+// Function to generate side-list fade in animations.
+// Generates unique style per side and per item-depth
+export function animateListItemStyle(side, status, index) {
+	const statusOffset = { loaded: 0, loading: 1};
+	const offset = { left: -100, right: 100};
+	const delay = 0.25 + (index * 0.02);
+	return {
+		transform: 'translateX(' + statusOffset[status] * offset[side] + 'px)',
+		transition: '.3s ease-out transform ' + delay + 's',
+	};
+}
