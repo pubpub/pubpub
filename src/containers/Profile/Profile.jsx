@@ -7,7 +7,7 @@ import { pushState } from 'redux-router';
 import {logout} from '../../actions/login';
 import {getProfile} from '../../actions/profile';
 import {LoaderDeterminate} from '../../components';
-import {styles} from './ProfileStyle';
+import {styles} from './profileStyles';
 
 const Profile = React.createClass({
 	propTypes: {

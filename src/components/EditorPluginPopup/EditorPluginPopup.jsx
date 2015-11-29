@@ -55,7 +55,7 @@ const Reference = React.createClass({
 			});
 		}
 
-		// Ff the change causes the line above to change, change the activeLine
+		// If the change causes the line above to change, change the activeLine
 		if (this.state.activeLine !== undefined && change.from.line < this.state.activeLine) {
 
 			this.setState({

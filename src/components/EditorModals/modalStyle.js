@@ -1,6 +1,5 @@
 import {globalStyles} from '../../utils/styleConstants';
 
-
 export const baseStyles = {
 	modalContentContainer: {
 		position: 'relative',
@@ -64,4 +63,3 @@ export const baseStyles = {
 	rowTextFontSize: '15px',
 	rowTextFontFamily: 'Courier',
 };
-
