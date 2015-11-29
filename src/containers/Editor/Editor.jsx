@@ -144,6 +144,13 @@ const Editor = React.createClass({
 				});
 			}
 			console.log(pluginObject);
+			// pass pluginObject to a function that 
+			// 1) gets the global object parameters
+			// 2) gets the local object paramaters (e.g. parameters for image or video or whatever)
+			// 3) merges these with the pluginObject derived above
+			// Save that object to pluginPopupContentObject
+			// How do we handle defaults, comments, etc. Perhaps a separate comments object. Same keys, but with an explainer string
+
 			this.setState({
 				pluginPopupVisible: true,
 				pluginPopupX: xLoc - 22,
@@ -207,6 +214,12 @@ const Editor = React.createClass({
 		const to = {line: lineNum, ch: lineContent.length};
 		const newContent = '# Howdy!'; // This should eventually be calculated from the pluginPopup options
 		const newString = lineContent.replace(this.state.pluginPopupInitialString, newContent);
+		
+		// iterate through all keys in pluginPopupContentObject (make a new object and iterate through that so we can mutate)
+		// get the value as defined at the React.refs(key) input
+		// save value to new object
+		// Generate a string based on that object
+		// Format string for output and replace with line below
 		// cm.replaceRange(newString, from, to); // Since the popup closes on change, this will close the pluginPopup
 	},
 
@@ -355,8 +368,8 @@ const Editor = React.createClass({
 			},
 			'.cm-plugin': {
 				cursor: 'pointer',
-				padding: '0px 5px',
-				borderRadius: 2,
+				padding: '2px 0px',
+				borderRadius: '2px',
 			},
 			'.cm-plugin-image': {
 				backgroundColor: 'rgba(232, 165, 165, 0.45)',
