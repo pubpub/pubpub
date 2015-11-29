@@ -209,6 +209,7 @@ export default function editorReducer(state = defaultState, action) {
 		return loadFail(state, action.error);
 	case PUB_EDIT_UNMOUNT:
 		return unmountEditor();
+		
 	case MODAL_OPEN: 
 		return openModal(state, action.activeModal);
 	case MODAL_CLOSE: 

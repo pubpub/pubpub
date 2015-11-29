@@ -8,6 +8,9 @@ export const LOAD_PUB = 'reader/LOAD_PUB';
 export const LOAD_PUB_SUCCESS = 'reader/LOAD_PUB_SUCCESS';
 export const LOAD_PUB_FAIL = 'reader/LOAD_PUB_FAIL';
 
+export const MODAL_CLOSE = 'editor/MODAL_CLOSE';
+export const MODAL_OPEN = 'editor/MODAL_OPEN';
+
 /*--------*/
 // Define Action creators
 // 
@@ -19,5 +22,19 @@ export function getPub(slug) {
 	return {
 		types: [LOAD_PUB, LOAD_PUB_SUCCESS, LOAD_PUB_FAIL],
 		promise: (client) => client.get('/getPub', {params: {slug: slug}}) 
+	};
+}
+
+export function closeModal() {
+	return {
+		type: MODAL_CLOSE
+	};
+}
+
+export function openModal(activeModal) {
+	document.getElementById('modal-container').scrollTop = 0;
+	return {
+		type: MODAL_OPEN,
+		activeModal: activeModal
 	};
 }
