@@ -1,5 +1,6 @@
 import React, {PropTypes} from 'react';
 import Radium from 'radium';
+import { Link } from 'react-router';
 import {globalStyles} from '../../utils/styleConstants';
 
 let styles = {};
@@ -8,7 +9,8 @@ const PubNav = React.createClass({
 	propTypes: {
 		height: PropTypes.number,
 		navClickFunction: PropTypes.func,
-		status: PropTypes.string
+		status: PropTypes.string,
+		slug: PropTypes.string
 	},
 
 	render: function() {
@@ -31,7 +33,7 @@ const PubNav = React.createClass({
 					<li style={[styles.pubNavSeparator, styles.pubNavDesktopOnly]}></li>
 					<li key="pubNav4"style={[styles.pubNavItem, styles.pubNavDesktopOnly]} onClick={clickWrapper('pubnav-cite')}>Cite</li>
 
-					<li key="pubNav7"style={[styles.pubNavItem, styles.pubNavRight, styles.pubNavAuthorOnly, styles.pubNavDesktopOnly]} onClick={clickWrapper('pubnav-edit')}>Edit Pub</li>
+					<Link to={'/pub/' + this.props.slug + '/edit'}><li key="pubNav7"style={[styles.pubNavItem, styles.pubNavRight, styles.pubNavAuthorOnly, styles.pubNavDesktopOnly]} onClick={clickWrapper('pubnav-edit')}>Edit Pub</li></Link>
 					<li style={[styles.pubNavSeparator, styles.pubNavAuthorOnly, styles.pubNavRight, styles.pubNavDesktopOnly]}></li>
 					<li key="pubNav5"style={[styles.pubNavItem, styles.pubNavRight, styles.pubNavMobileOnly]} onClick={clickWrapper('pubnav-discussions')}>Discussions</li>
 					<li style={[styles.pubNavSeparator, styles.pubNavMobileOnly, styles.pubNavRight]}></li>

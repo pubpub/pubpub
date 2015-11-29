@@ -145,7 +145,8 @@ const Reader = React.createClass({
 						title = {pubData.title} 
 						abstract = {pubData.abstract} 
 						markdown = {pubData.markdown}
-						authors = {pubData.authors}/>
+						authors = {pubData.authors}
+						slug= {this.props.slug}/>
 
 				</div>
 

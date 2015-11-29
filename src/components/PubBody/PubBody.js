@@ -14,13 +14,14 @@ const PubBody = React.createClass({
 		abstract: PropTypes.string,
 		markdown: PropTypes.string,
 		html: PropTypes.string,
-		authors: PropTypes.array
+		authors: PropTypes.array,
+		slug: PropTypes.string
 	},
 
 	render: function() {
 		return (
 			<div style={styles.container}>
-				<PubNav height={this.height} navClickFunction={this.props.navClickFunction} status={this.props.status}/>
+				<PubNav height={this.height} navClickFunction={this.props.navClickFunction} status={this.props.status} slug={this.props.slug}/>
 				<LoaderDeterminate value={this.props.status === 'loading' ? 0 : 100}/>
 
 				<div style={[styles.contentContainer, styles[this.props.status]]}>
