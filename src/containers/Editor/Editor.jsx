@@ -260,11 +260,12 @@ const Editor = React.createClass({
 
 	// onEditorChange: function(cm, change) {
 	onEditorChange: function(cm, change) {
-		console.log(change);
+		// console.log(change);
 		// If the content changes and the popup is visible, it will be out of date, so hide it.
 		// Well, we don't want it to close if ANY change is made, only a change to the same line
 		// Store in the state of popup, the line, text to replace,
 		// If the from to to line of the change equal the line of the popup, close it.
+		CodeMirror.commands.autocomplete(cm, CodeMirror.hint.plugins, {completeSingle: false});
 
 		// If there is a popupplugin
 		// If the activeLine is not undefined
