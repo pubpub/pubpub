@@ -1,3 +1,4 @@
+export EditorPluginPopup from './EditorPluginPopup/EditorPluginPopup';
 export HeaderNav from './HeaderNav/HeaderNav';
 export HeaderMenu from './HeaderMenu/HeaderMenu';
 export ImageCropper from './ImageCropper/ImageCropper';

@@ -5,7 +5,7 @@ import { pushState } from 'redux-router';
 import Radium, {Style} from 'radium';
 import DocumentMeta from 'react-document-meta';
 import PureRenderMixin from 'react-addons-pure-render-mixin';
-import {LoaderDeterminate} from '../../components';
+import {LoaderDeterminate, EditorPluginPopup} from '../../components';
 import {loadCss} from '../../utils/loadingFunctions';
 import {EditorModalAssets, EditorModalCollaborators, EditorModalPublish, EditorModalReferences, EditorModalSettings} from '../../components/EditorModals';
 import {getPubEdit, toggleEditorViewMode, toggleFormatting, toggleTOC, unmountEditor, closeModal, openModal, publishVersion, saveCollaboratorsToPub, saveSettingsPubPub} from '../../actions/editor';
@@ -15,7 +15,8 @@ import EditorModes from './EditorModes';
 import {styles, codeMirrorStyles, animateListItemStyle} from './EditorStyles';
 
 import markLib from '../../modules/markdown/markdown';
-import markdownExtensions, {globalPluginOptions, pluginOptions} from '../../components/EditorPlugins';
+// import markdownExtensions, {globalPluginOptions, pluginOptions} from '../../components/EditorPlugins';
+import markdownExtensions from '../../components/EditorPlugins';
 markLib.setExtensions(markdownExtensions);
 
 const cmOptions = {
@@ -49,13 +50,14 @@ const Editor = React.createClass({
 			travisTOC: ['Section 1', 'Section 2', 'Section 3', 'Section 4'],
 			activeFocus: '',
 			firepadData: {},
-			pluginPopupVisible: false,
-			pluginPopupX: 0,
-			pluginPopupY: 0,
-			pluginPopupInitialString: '',
-			pluginPopupActiveLine: undefined,
-			pluginPopupType: '',
-			pluginPopupContentObject: {},
+			codeMirrorChange: {},
+			// pluginPopupVisible: false,
+			// pluginPopupX: 0,
+			// pluginPopupY: 0,
+			// pluginPopupInitialString: '',
+			// pluginPopupActiveLine: undefined,
+			// pluginPopupType: '',
+			// pluginPopupContentObject: {},
 
 		};
 	},
@@ -65,8 +67,6 @@ const Editor = React.createClass({
 		if (! this.props.editorData.get('error')) {
 			loadCss('/css/codemirror.css');
 			EditorModes();
-
-			document.documentElement.addEventListener('click', this.onPluginClick);
 
 			// Load Firebase and bind using ReactFireMixin
 			// For assets, references, etc.
@@ -100,7 +100,6 @@ const Editor = React.createClass({
 
 	componentWillUnmount() {
 		this.props.dispatch(unmountEditor());
-		document.documentElement.removeEventListener('click', this.onPluginClick);
 	},
 
 	getActiveCodemirrorInstance: function() {
@@ -109,126 +108,6 @@ const Editor = React.createClass({
 				: document.getElementById('codemirror-focus-wrapper').childNodes[0].CodeMirror;
 
 		return cm;
-	},
-
-	onPluginClick: function(event) {
-		let xLoc;
-		let yLoc;
-
-		if (event.pageX || event.pageY) {
-			xLoc = event.pageX;
-			yLoc = event.pageY;
-		} else {
-			xLoc = event.clientX + document.body.scrollLeft + document.documentElement.scrollLeft;
-			yLoc = event.clientY + document.body.scrollTop + document.documentElement.scrollTop;
-		}
-
-		const target = document.elementFromPoint(xLoc, yLoc);
-		const contentBody = document.getElementById('editor-text-wrapper');
-
-
-		if (target.className.indexOf('cm-plugin') > -1) {
-			const cm = this.getActiveCodemirrorInstance();
-			const pluginString = target.innerHTML.slice(1, -1);
-			console.log(pluginString);
-			const pluginSplit = pluginString.split(':');
-			const pluginType = pluginSplit[0];
-
-			const values = pluginSplit.length > 1 ? pluginSplit[1] : undefined;
-			const pluginObject = {};
-			if (values !== undefined) {
-				const splitValues = values.split(',');
-				splitValues.map((valueString)=>{
-					const key = valueString.split('=')[0].replace(/ /g, '');
-					const value = valueString.split('=')[1];
-					pluginObject[key] = value;
-				});
-			}
-			console.log(pluginObject);
-			// pass pluginObject to a function that 
-			const defaultObject = {...globalPluginOptions.values, ...pluginOptions[pluginType].values};
-			console.log('plugin values', pluginOptions[pluginType].values);
-			console.log('defaultObject', defaultObject);
-			const outputObject = {...defaultObject};
-			for (const key in defaultObject) {
-				if (key in pluginObject) {
-					outputObject[key] = pluginObject[key];
-				}
-			}
-			console.log('outputObject', outputObject);
-			// 1) gets the global object parameters
-			// 2) gets the local object paramaters (e.g. parameters for image or video or whatever)
-			// 3) merges these with the pluginObject derived above
-			// Save that object to pluginPopupContentObject
-			// How do we handle defaults, comments, etc. Perhaps a separate comments object. Same keys, but with an explainer string
-
-			this.setState({
-				pluginPopupVisible: true,
-				pluginPopupX: xLoc - 22,
-				pluginPopupY: yLoc + 15 - 60 + contentBody.scrollTop,
-				pluginPopupActiveLine: cm.getCursor().line,
-				pluginPopupType: pluginType,
-				pluginPopupContentObject: outputObject,
-				pluginPopupInitialString: pluginString,
-
-			});
-
-			
-		} else {
-
-			if (document.getElementById('plugin-popup').contains(event.target)) {
-				this.setState({
-					pluginPopupVisible: true,
-				});
-			} else {
-				this.setState({
-					pluginPopupVisible: false,
-					pluginPopupContentObject: {}
-				});
-			}
-			
-		}
-	},
-
-	onPluginSave: function() {
-		const cm = this.getActiveCodemirrorInstance();
-		const lineNum = this.state.pluginPopupActiveLine;
-		const lineContent = cm.getLine(lineNum);
-		const from = {line: lineNum, ch: 0};
-		const to = {line: lineNum, ch: lineContent.length};
-		// const newContent = '# Howdy!'; // This should eventually be calculated from the pluginPopup options
-		
-		
-		// const newOutputValues = {};
-		let outputVariables = '';
-		for (const key in this.state.pluginPopupContentObject) {
-			if (Object.prototype.hasOwnProperty.call(this.state.pluginPopupContentObject, key)) {
-				// console.log('key', key);
-				// console.log(this.refs['pluginInput-' + key].value);
-				const val = this.refs['pluginInput-' + key].value;
-				// newOutputValues[key] = val && val.length ? val : undefined;
-				if (val && val.length) {
-					outputVariables += key + '=' + val + ', ';
-				}
-
-			}
-			
-		}
-		outputVariables = outputVariables.slice(0, -2);
-		console.log(outputVariables);
-
-		// console.log('newOutputValues', newOutputValues);
-
-		const outputString = outputVariables.length ? this.state.pluginPopupType + ': ' + outputVariables : this.state.pluginPopupType;
-		console.log('outputString', outputString);
-		// iterate through all keys in pluginPopupContentObject (make a new object and iterate through that so we can mutate)
-		// get the value as defined at the React.refs(key) input
-		// save value to new object
-		// Generate a string based on that object
-		// Format string for output and replace with line below
-		const newString = lineContent.replace(this.state.pluginPopupInitialString, outputString);
-		
-		cm.replaceRange(newString, from, to); // Since the popup closes on change, this will close the pluginPopup
 	},
 
 	// onEditorChange: function(cm, change) {
@@ -240,40 +119,41 @@ const Editor = React.createClass({
 		// If the from to to line of the change equal the line of the popup, close it.
 		CodeMirror.commands.autocomplete(cm, CodeMirror.hint.plugins, {completeSingle: false});
 
-		// If there is a popupplugin
-		// If the activeLine is not undefined
-		// if the active line is within the range of changes
-		if (this.state.pluginPopupVisible && this.state.pluginPopupActiveLine !== undefined && this.state.pluginPopupActiveLine >= change.from.line && this.state.pluginPopupActiveLine <= change.to.line) {
+		// // If there is a popupplugin
+		// // If the activeLine is not undefined
+		// // if the active line is within the range of changes
+		// if (this.state.pluginPopupVisible && this.state.pluginPopupActiveLine !== undefined && this.state.pluginPopupActiveLine >= change.from.line && this.state.pluginPopupActiveLine <= change.to.line) {
 
-			this.setState({
-				pluginPopupVisible: false,
-				pluginPopupContentObject: {}
-			});
-		}
+		// 	this.setState({
+		// 		pluginPopupVisible: false,
+		// 		pluginPopupContentObject: {}
+		// 	});
+		// }
 
-		// if the change causes the line above to change, change the activeLine
-		if (this.state.pluginPopupVisible && this.state.pluginPopupActiveLine !== undefined && change.from.line < this.state.pluginPopupActiveLine) {
-			// console.log('in the change');
-			// console.log('old line', this.state.pluginPopupActiveLine);
-			// console.log('new line', this.state.pluginPopupActiveLine + change.text.length - 1 - change.removed.length + 1);
-			this.setState({
-				pluginPopupActiveLine: this.state.pluginPopupActiveLine + change.text.length - change.removed.length,
-			});
-		}
+		// // if the change causes the line above to change, change the activeLine
+		// if (this.state.pluginPopupVisible && this.state.pluginPopupActiveLine !== undefined && change.from.line < this.state.pluginPopupActiveLine) {
+		// 	// console.log('in the change');
+		// 	// console.log('old line', this.state.pluginPopupActiveLine);
+		// 	// console.log('new line', this.state.pluginPopupActiveLine + change.text.length - 1 - change.removed.length + 1);
+		// 	this.setState({
+		// 		pluginPopupActiveLine: this.state.pluginPopupActiveLine + change.text.length - change.removed.length,
+		// 	});
+		// }
 
 		const mdOutput = markLib(cm.getValue(), this.state.firepadData.assets);
 		this.setState({
 			tree: mdOutput.tree,
 			travisTOC: mdOutput.travisTOC,
+			codeMirrorChange: change
 		});
 	},
 
-	getPluginPopupLoc: function() {
-		return {
-			top: this.state.pluginPopupY,
-			left: this.state.pluginPopupX,
-		};
-	},
+	// getPluginPopupLoc: function() {
+	// 	return {
+	// 		top: this.state.pluginPopupY,
+	// 		left: this.state.pluginPopupX,
+	// 	};
+	// },
 
 	toggleLivePreview: function() {
 		this.closeModalHandler();
@@ -492,12 +372,12 @@ const Editor = React.createClass({
 		const activeModal = this.props.editorData.get('activeModal');
 		const darkMode = this.props.loginData.getIn(['userData', 'settings', 'editorColor']) === 'dark';
 
-		const defaultObjectTitles = this.state.pluginPopupType
-			? {...globalPluginOptions.titles, ...pluginOptions[this.state.pluginPopupType].titles}
-			: {};
-		const defaultObjectDefaults = this.state.pluginPopupType
-			? {...globalPluginOptions.defaults, ...pluginOptions[this.state.pluginPopupType].defaults}
-			: {};
+		// const defaultObjectTitles = this.state.pluginPopupType
+		// 	? {...globalPluginOptions.titles, ...pluginOptions[this.state.pluginPopupType].titles}
+		// 	: {};
+		// const defaultObjectDefaults = this.state.pluginPopupType
+		// 	? {...globalPluginOptions.defaults, ...pluginOptions[this.state.pluginPopupType].defaults}
+		// 	: {};
 
 		// Set metadata for the page.
 		const metaData = {
@@ -644,35 +524,11 @@ const Editor = React.createClass({
 					{/* Markdown Editing Block */}
 					<div id="editor-text-wrapper" style={[styles.hiddenUntilLoad, styles[loadStatus], styles.common.editorMarkdown, styles[viewMode].editorMarkdown]}>
 
-						{/*	Plugin Popup Div */}
-						<div id="plugin-popup" className="plugin-popup" style={[styles.pluginPopup, this.getPluginPopupLoc(), this.state.pluginPopupVisible && styles.pluginPopupVisible]}>
-							<div style={styles.pluginPopupArrow}></div>
-							<div style={styles.pluginContent}>
-								<div style={styles.pluginPopupTitle}>{this.state.pluginPopupType} plugin</div>
-									{
 
-										Object.keys(this.state.pluginPopupContentObject).map((pluginValue)=>{
-											return (
-												<div key={'pluginVal-' + pluginValue}>
-													<label htmlFor={pluginValue} >{defaultObjectTitles[pluginValue]}</label>
-													<input ref={'pluginInput-' + pluginValue} name={pluginValue} id={pluginValue} type="text" defaultValue={this.state.pluginPopupContentObject[pluginValue]}/>
-													<div>default: {defaultObjectDefaults[pluginValue]}</div>
-												</div>
-												
-											);
-										})
-									}
-									
-								<div onClick={this.onPluginSave}>Save</div>
-							</div>
-						</div>
-
+						<EditorPluginPopup activeFocus={this.state.activeFocus} codeMirrorChange={this.state.codeMirrorChange}/>
+						
 						{/* Insertion point for codemirror and firepad */}
 						<div style={[this.state.activeFocus !== '' && styles.hiddenMainEditor]}>
-							{/*
-							<input type="text" placeholder="Title Required"/>
-							<p contentEditable="true" onChange={()=>{console.log('change');}}>This is an editable paragraph.</p>
-							*/}
 							<div id="codemirror-wrapper"></div>
 						</div>
 						<div id="codemirror-focus-wrapper"></div>
