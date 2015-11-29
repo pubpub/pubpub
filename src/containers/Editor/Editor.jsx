@@ -140,21 +140,31 @@ const Editor = React.createClass({
 	publishVersion: function(versionState, versionDescription) {
 
 		const cm = document.getElementsByClassName('CodeMirror')[0].CodeMirror;
+		const fullMD = cm.getValue();
+
+		const titleRE = /\[title:(.*?)\]/i;
+		const title = fullMD.match(titleRE)[1].trim();
+
+		const abstractRE = /\[abstract:(.*?)\]/i;
+		const abstract = fullMD.match(abstractRE)[1].trim();
+
+		const authorsNoteRE = /\[authorsNote:(.*?)\]/i;
+		const authorsNote = fullMD.match(authorsNoteRE)[1].trim();
+
 		const newVersion = {
 			slug: this.props.slug,
-			title: 'Here\'s our new title!',
-			abstract: 'Howdy, this is a brand new abstract!',
+			title: title,
+			abstract: abstract,
 			// authors: [],
 			assets: [],
-			authorsNote: '',
+			authorsNote: authorsNote,
 			style: {},
-			markdown: cm.getValue(),
+			markdown: fullMD.replace(/\[title:.*?\]/g, '').replace(/\[abstract:.*?\]/g, '').replace(/\[authorsNote:.*?\]/g, '').trim(),
 			status: versionState,
 			publishNote: versionDescription,
 		};
+		// console.log(newVersion);
 		this.props.dispatch(publishVersion(newVersion));
-		// Get Markdown
-		// Pre-process markdown to turn plugins into verboseFormat
 		// Aggregate all the firepad data, push it up through a dispatch, redirect on willreceiveprops
 	},
 
