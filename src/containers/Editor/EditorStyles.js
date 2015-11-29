@@ -415,6 +415,7 @@ export function codeMirrorStyles(loginData) {
 
 	switch (editorColor) {
 	case 'light':
+		editorStyles.cursorColor = '#000';
 		editorStyles.color = '#555';
 		editorStyles.colorHeader = '#676767';
 		editorStyles.colorTitle = '#575757';
@@ -422,6 +423,7 @@ export function codeMirrorStyles(loginData) {
 		editorStyles.colorCite = '#171717';
 		break;
 	case 'dark':
+		editorStyles.cursorColor = '#fff';
 		editorStyles.color = '#ddd';
 		editorStyles.colorHeader = '#bbb';
 		editorStyles.colorTitle = '#ccc';
@@ -445,6 +447,9 @@ export function codeMirrorStyles(loginData) {
 		},
 		'.CodeMirror-cursors': {
 			pointerEvents: 'none',
+		},
+		'.CodeMirror-cursor': {
+			borderLeft: '1px solid ' + editorStyles.cursorColor,
 		},
 		'.cm-s-default .cm-header': {
 			color: editorStyles.colorHeader,
