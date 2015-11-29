@@ -8,6 +8,9 @@ export const styles = {
 		fontFamily: globalStyles.headerFont,
 		backgroundColor: globalStyles.sideBackground,
 		height: 'calc(100vh - ' + globalStyles.headerHeight + ')',
+		'@media screen and (min-resolution: 3dppx), (max-width: 767px)': {
+			height: 'calc(100vh - ' + globalStyles.headerHeightMobile + ')',
+		},
 	},
 	editorContainerDark: {
 		backgroundColor: '#272727',
@@ -29,10 +32,18 @@ export const styles = {
 		fontSize: '3em',
 		paddingTop: 50,
 	},
+	mobileImageWrapper: {
+		width: 100,
+		margin: '0 auto',
+	},
+	mobileImage: {
+		width: '100%',
+	},
 	mobileText: {
 		textAlign: 'center',
 		fontSize: '1.5em',
 		padding: 20,
+		margin: 0,
 	},
 	notMobile: {
 		'@media screen and (min-resolution: 3dppx), (max-width: 767px)': {
