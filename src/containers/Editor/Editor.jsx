@@ -54,6 +54,8 @@ const Editor = React.createClass({
 			pluginPopupY: 0,
 			pluginPopupInitialString: '',
 			pluginPopupActiveLine: undefined,
+			pluginPopupType: '',
+			pluginPopupContentObject: {},
 
 		};
 	},
@@ -126,15 +128,34 @@ const Editor = React.createClass({
 
 		if (target.className.indexOf('cm-plugin') > -1) {
 			const cm = this.getActiveCodemirrorInstance();
+			const pluginString = target.innerHTML.slice(1, -1);
+			console.log(pluginString);
+			const pluginSplit = pluginString.split(':');
+			const pluginType = pluginSplit[0];
 
+			const values = pluginSplit.length > 1 ? pluginSplit[1] : undefined;
+			const pluginObject = {};
+			if (values !== undefined) {
+				const splitValues = values.split(',');
+				splitValues.map((valueString)=>{
+					const key = valueString.split('=')[0];
+					const value = valueString.split('=')[1];
+					pluginObject[key] = value;
+				});
+			}
+			console.log(pluginObject);
 			this.setState({
 				pluginPopupVisible: true,
 				pluginPopupX: xLoc - 22,
 				pluginPopupY: yLoc + 15 - 60 + contentBody.scrollTop,
 				pluginPopupActiveLine: cm.getCursor().line,
-				pluginPopupInitialString: target.innerHTML,
+				pluginPopupType: pluginType,
+				pluginPopupContentObject: pluginObject,
+				pluginPopupInitialString: pluginString,
+
 			});
 
+			
 			// Get the right codemirror
 			// Get the selected line, and store the content that will be replaced from that line
 			// On save, .replace(pluginPipupInitialString, newString) and put in the entire line
@@ -159,14 +180,22 @@ const Editor = React.createClass({
 			// console.log(cm.getRange(from, to));
 			// cm.replaceRange(newString, from, to);
 
-		} else if (target.className.indexOf('plugin-popup') > -1) {
-			this.setState({
-				pluginPopupVisible: true,
-			});
+		// } else if (target.className.indexOf('plugin-popup') > -1) {
+		// 	this.setState({
+		// 		pluginPopupVisible: true,
+		// 	});
 		} else {
-			this.setState({
-				pluginPopupVisible: false,
-			});
+
+			if (document.getElementById('plugin-popup').contains(event.target)) {
+				this.setState({
+					pluginPopupVisible: true,
+				});
+			} else {
+				this.setState({
+					pluginPopupVisible: false,
+				});
+			}
+			
 		}
 	},
 
@@ -178,7 +207,7 @@ const Editor = React.createClass({
 		const to = {line: lineNum, ch: lineContent.length};
 		const newContent = '# Howdy!'; // This should eventually be calculated from the pluginPopup options
 		const newString = lineContent.replace(this.state.pluginPopupInitialString, newContent);
-		cm.replaceRange(newString, from, to); // Since the popup closes on change, this will close the pluginPopup
+		// cm.replaceRange(newString, from, to); // Since the popup closes on change, this will close the pluginPopup
 	},
 
 	// onEditorChange: function(cm, change) {
@@ -676,10 +705,22 @@ const Editor = React.createClass({
 					<div id="editor-text-wrapper" style={[styles.hiddenUntilLoad, styles[loadStatus], styles.common.editorMarkdown, styles[viewMode].editorMarkdown]}>
 
 						{/*	Plugin Popup Div */}
-						<div className="plugin-popup" style={[styles.pluginPopup, this.getPluginPopupLoc(), this.state.pluginPopupVisible && styles.pluginPopupVisible]}>
+						<div id="plugin-popup" className="plugin-popup" style={[styles.pluginPopup, this.getPluginPopupLoc(), this.state.pluginPopupVisible && styles.pluginPopupVisible]}>
 							<div style={styles.pluginPopupArrow}></div>
 							<div style={styles.pluginContent}>
-								{this.state.pluginPopupInitialString}
+								<div style={styles.pluginPopupTitle}>{this.state.pluginPopupType} plugin</div>
+									{
+										Object.keys(this.state.pluginPopupContentObject).map((pluginValue)=>{
+											return (
+												<div key={'pluginVal-' + pluginValue}>
+													<label htmlFor={pluginValue} >{pluginValue}</label>
+													<input name={pluginValue} id={pluginValue} type="text" value={this.state.pluginPopupContentObject[pluginValue]}/>
+												</div>
+												
+											);
+										})
+									}
+									
 								<div onClick={this.onPluginSave}>Save</div>
 							</div>
 						</div>
