@@ -12,20 +12,22 @@ const Reference = React.createClass({
 
 	getDefaultProps: function() {
 		return {
-			citationObject: {},
-			mode: 'mla'
+			activeFocus: '',
+			codeMirrorChange: {}
 		};
 	},
 
 	getInitialState() {
 		return {
-			pluginPopupVisible: false,
-			pluginPopupX: 0,
-			pluginPopupY: 0,
-			pluginPopupInitialString: '',
-			pluginPopupActiveLine: undefined,
-			pluginPopupType: '',
-			pluginPopupContentObject: {},
+			popupVisible: false,
+			xLoc: 0,
+			yLoc: 0,
+			initialString: '',
+			activeLine: undefined,
+			pluginType: '',
+			contentObject: {},
+			defaultObjectTitles: {},
+			defaultObjectDefaults: {},
 
 		};
 	},
@@ -35,27 +37,27 @@ const Reference = React.createClass({
 	},
 
 	componentWillReceiveProps(nextProps) {
-		// If there is a popupplugin
-		// If the activeLine is not undefined
-		// if the active line is within the range of changes
 		const change = nextProps.codeMirrorChange;
 
-		if (this.state.pluginPopupVisible && this.state.pluginPopupActiveLine !== undefined && this.state.pluginPopupActiveLine >= change.from.line && this.state.pluginPopupActiveLine <= change.to.line) {
+		// If the content changes and the popup is visible, it will be out of date, so hide it.
+		// Well, we don't want it to close if ANY change is made, only a change to the same line
+		// If the from to to line of the change equal the line of the popup, close it.
+		if (this.state.activeLine !== undefined && this.state.activeLine >= change.from.line && this.state.activeLine <= change.to.line) {
 
 			this.setState({
-				pluginPopupVisible: false,
-				pluginPopupContentObject: {}
+				popupVisible: false,
+				activeLine: undefined,
+				contentObject: {},
 			});
 		}
 
-		// if the change causes the line above to change, change the activeLine
-		if (this.state.pluginPopupVisible && this.state.pluginPopupActiveLine !== undefined && change.from.line < this.state.pluginPopupActiveLine) {
-			// console.log('in the change');
-			// console.log('old line', this.state.pluginPopupActiveLine);
-			// console.log('new line', this.state.pluginPopupActiveLine + change.text.length - 1 - change.removed.length + 1);
+		// Ff the change causes the line above to change, change the activeLine
+		if (this.state.activeLine !== undefined && change.from.line < this.state.activeLine) {
+
 			this.setState({
-				pluginPopupActiveLine: this.state.pluginPopupActiveLine + change.text.length - change.removed.length,
+				pluginPopupActiveLine: this.state.activeLine + change.text.length - change.removed.length,
 			});
+
 		}
 	},
 
@@ -73,84 +75,84 @@ const Reference = React.createClass({
 
 	getPluginPopupLoc: function() {
 		return {
-			top: this.state.pluginPopupY,
-			left: this.state.pluginPopupX,
+			top: this.state.yLoc,
+			left: this.state.xLoc,
 		};
 	},
 
 	onPluginClick: function(event) {
-		let xLoc;
-		let yLoc;
+		let clickX;
+		let clickY;
 
 		if (event.pageX || event.pageY) {
-			xLoc = event.pageX;
-			yLoc = event.pageY;
+			clickX = event.pageX;
+			clickY = event.pageY;
 		} else {
-			xLoc = event.clientX + document.body.scrollLeft + document.documentElement.scrollLeft;
-			yLoc = event.clientY + document.body.scrollTop + document.documentElement.scrollTop;
+			clickX = event.clientX + document.body.scrollLeft + document.documentElement.scrollLeft;
+			clickY = event.clientY + document.body.scrollTop + document.documentElement.scrollTop;
 		}
 
-		const target = document.elementFromPoint(xLoc, yLoc);
+		const target = document.elementFromPoint(clickX, clickY);
 		const contentBody = document.getElementById('editor-text-wrapper');
-
 
 		if (target.className.indexOf('cm-plugin') > -1) {
 			const cm = this.getActiveCodemirrorInstance();
-			const pluginString = target.innerHTML.slice(1, -1);
-			console.log(pluginString);
+			const pluginString = target.innerHTML.slice(1, -1); // Original string minus the brackets
 			const pluginSplit = pluginString.split(':');
 			const pluginType = pluginSplit[0];
+			const values = pluginSplit.length > 1 ? pluginSplit[1].split(',') : undefined; // Values split into an array
 
-			const values = pluginSplit.length > 1 ? pluginSplit[1] : undefined;
 			const pluginObject = {};
 			if (values !== undefined) {
-				const splitValues = values.split(',');
-				splitValues.map((valueString)=>{
+				// Map the array values into an object
+				values.map((valueString)=>{
 					const key = valueString.split('=')[0].replace(/ /g, '');
 					const value = valueString.split('=')[1];
 					pluginObject[key] = value;
 				});
 			}
-			console.log(pluginObject);
-			// pass pluginObject to a function that 
-			const defaultObject = {...globalPluginOptions.values, ...pluginOptions[pluginType].values};
-			console.log('plugin values', pluginOptions[pluginType].values);
-			console.log('defaultObject', defaultObject);
-			const outputObject = {...defaultObject};
-			for (const key in defaultObject) {
+
+			const defaultValues = {...globalPluginOptions.values, ...pluginOptions[pluginType].values};
+			// console.log('plugin values', pluginOptions[pluginType].values);
+			// console.log('defaultObject', defaultValues);
+			const outputObject = {...defaultValues};
+			for (const key in defaultValues) {
+				// Take all of the the value specified in the text, and overwrite default values.
 				if (key in pluginObject) {
 					outputObject[key] = pluginObject[key];
 				}
 			}
-			console.log('outputObject', outputObject);
-			// 1) gets the global object parameters
-			// 2) gets the local object paramaters (e.g. parameters for image or video or whatever)
-			// 3) merges these with the pluginObject derived above
-			// Save that object to pluginPopupContentObject
-			// How do we handle defaults, comments, etc. Perhaps a separate comments object. Same keys, but with an explainer string
+
+			const defaultObjectTitles = pluginType
+				? {...globalPluginOptions.titles, ...pluginOptions[pluginType].titles}
+				: {};
+			const defaultObjectDefaults = pluginType
+				? {...globalPluginOptions.defaults, ...pluginOptions[pluginType].defaults}
+				: {};
 
 			this.setState({
-				pluginPopupVisible: true,
-				pluginPopupX: xLoc - 22,
-				pluginPopupY: yLoc + 15 - 60 + contentBody.scrollTop,
-				pluginPopupActiveLine: cm.getCursor().line,
-				pluginPopupType: pluginType,
-				pluginPopupContentObject: outputObject,
-				pluginPopupInitialString: pluginString,
-
+				popupVisible: true,
+				xLoc: clickX - 22,
+				yLoc: clickY + 15 - 60 + contentBody.scrollTop,
+				activeLine: cm.getCursor().line,
+				pluginType: pluginType,
+				contentObject: outputObject,
+				initialString: pluginString,
+				defaultObjectTitles: defaultObjectTitles,
+				defaultObjectDefaults: defaultObjectDefaults
 			});
 
-			
 		} else {
 
 			if (document.getElementById('plugin-popup').contains(event.target)) {
 				this.setState({
-					pluginPopupVisible: true,
+					popupVisible: true,
 				});
 			} else {
 				this.setState({
-					pluginPopupVisible: false,
-					pluginPopupContentObject: {}
+					popupVisible: false,
+					activeLine: undefined,
+					contentObject: {}
 				});
 			}
 			
@@ -159,67 +161,46 @@ const Reference = React.createClass({
 
 	onPluginSave: function() {
 		const cm = this.getActiveCodemirrorInstance();
-		const lineNum = this.state.pluginPopupActiveLine;
+		const lineNum = this.state.activeLine;
 		const lineContent = cm.getLine(lineNum);
 		const from = {line: lineNum, ch: 0};
 		const to = {line: lineNum, ch: lineContent.length};
-		// const newContent = '# Howdy!'; // This should eventually be calculated from the pluginPopup options
-		
-		
-		// const newOutputValues = {};
+
 		let outputVariables = '';
-		for (const key in this.state.pluginPopupContentObject) {
-			if (Object.prototype.hasOwnProperty.call(this.state.pluginPopupContentObject, key)) {
-				// console.log('key', key);
-				// console.log(this.refs['pluginInput-' + key].value);
+		for (const key in this.state.contentObject) {
+			// Generate an output string based on the key, values in the object
+			if (Object.prototype.hasOwnProperty.call(this.state.contentObject, key)) {
 				const val = this.refs['pluginInput-' + key].value;
-				// newOutputValues[key] = val && val.length ? val : undefined;
+
 				if (val && val.length) {
 					outputVariables += key + '=' + val + ', ';
 				}
-
 			}
-			
 		}
-		outputVariables = outputVariables.slice(0, -2);
-		console.log(outputVariables);
+		outputVariables = outputVariables.slice(0, -2); // Remove the last comma and space
 
-		// console.log('newOutputValues', newOutputValues);
-
-		const outputString = outputVariables.length ? this.state.pluginPopupType + ': ' + outputVariables : this.state.pluginPopupType;
-		console.log('outputString', outputString);
-		// iterate through all keys in pluginPopupContentObject (make a new object and iterate through that so we can mutate)
-		// get the value as defined at the React.refs(key) input
-		// save value to new object
-		// Generate a string based on that object
-		// Format string for output and replace with line below
-		const newString = lineContent.replace(this.state.pluginPopupInitialString, outputString);
+		const mergedString = outputVariables.length ? this.state.pluginType + ': ' + outputVariables : this.state.pluginType;
+		const outputString = lineContent.replace(this.state.initialString, mergedString);
 		
-		cm.replaceRange(newString, from, to); // Since the popup closes on change, this will close the pluginPopup
+		cm.replaceRange(outputString, from, to); // Since the popup closes on change, this will close the pluginPopup
 	},
 
 	
 	render: function() {
-		const defaultObjectTitles = this.state.pluginPopupType
-			? {...globalPluginOptions.titles, ...pluginOptions[this.state.pluginPopupType].titles}
-			: {};
-		const defaultObjectDefaults = this.state.pluginPopupType
-			? {...globalPluginOptions.defaults, ...pluginOptions[this.state.pluginPopupType].defaults}
-			: {};
 
 		return (
-			<div id="plugin-popup" className="plugin-popup" style={[styles.pluginPopup, this.getPluginPopupLoc(), this.state.pluginPopupVisible && styles.pluginPopupVisible]}>
+			<div id="plugin-popup" className="plugin-popup" style={[styles.pluginPopup, this.getPluginPopupLoc(), this.state.popupVisible && styles.pluginPopupVisible]}>
 				<div style={styles.pluginPopupArrow}></div>
 				<div style={styles.pluginContent}>
-					<div style={styles.pluginPopupTitle}>{this.state.pluginPopupType} plugin</div>
+					<div style={styles.pluginPopupTitle}>{this.state.pluginType} plugin</div>
 						{
 
-							Object.keys(this.state.pluginPopupContentObject).map((pluginValue)=>{
+							Object.keys(this.state.contentObject).map((pluginValue)=>{
 								return (
 									<div key={'pluginVal-' + pluginValue}>
-										<label htmlFor={pluginValue} >{defaultObjectTitles[pluginValue]}</label>
-										<input ref={'pluginInput-' + pluginValue} name={pluginValue} id={pluginValue} type="text" defaultValue={this.state.pluginPopupContentObject[pluginValue]}/>
-										<div>default: {defaultObjectDefaults[pluginValue]}</div>
+										<label htmlFor={pluginValue} >{this.state.defaultObjectTitles[pluginValue]}</label>
+										<input ref={'pluginInput-' + pluginValue} name={pluginValue} id={pluginValue} type="text" defaultValue={this.state.contentObject[pluginValue]}/>
+										<div>default: {this.state.defaultObjectDefaults[pluginValue]}</div>
 									</div>
 									
 								);

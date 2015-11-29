@@ -15,7 +15,6 @@ import EditorModes from './EditorModes';
 import {styles, codeMirrorStyles, animateListItemStyle} from './EditorStyles';
 
 import markLib from '../../modules/markdown/markdown';
-// import markdownExtensions, {globalPluginOptions, pluginOptions} from '../../components/EditorPlugins';
 import markdownExtensions from '../../components/EditorPlugins';
 markLib.setExtensions(markdownExtensions);
 
@@ -51,14 +50,6 @@ const Editor = React.createClass({
 			activeFocus: '',
 			firepadData: {},
 			codeMirrorChange: {},
-			// pluginPopupVisible: false,
-			// pluginPopupX: 0,
-			// pluginPopupY: 0,
-			// pluginPopupInitialString: '',
-			// pluginPopupActiveLine: undefined,
-			// pluginPopupType: '',
-			// pluginPopupContentObject: {},
-
 		};
 	},
 
@@ -110,35 +101,9 @@ const Editor = React.createClass({
 		return cm;
 	},
 
-	// onEditorChange: function(cm, change) {
 	onEditorChange: function(cm, change) {
-		// console.log(change);
-		// If the content changes and the popup is visible, it will be out of date, so hide it.
-		// Well, we don't want it to close if ANY change is made, only a change to the same line
-		// Store in the state of popup, the line, text to replace,
-		// If the from to to line of the change equal the line of the popup, close it.
+		
 		CodeMirror.commands.autocomplete(cm, CodeMirror.hint.plugins, {completeSingle: false});
-
-		// // If there is a popupplugin
-		// // If the activeLine is not undefined
-		// // if the active line is within the range of changes
-		// if (this.state.pluginPopupVisible && this.state.pluginPopupActiveLine !== undefined && this.state.pluginPopupActiveLine >= change.from.line && this.state.pluginPopupActiveLine <= change.to.line) {
-
-		// 	this.setState({
-		// 		pluginPopupVisible: false,
-		// 		pluginPopupContentObject: {}
-		// 	});
-		// }
-
-		// // if the change causes the line above to change, change the activeLine
-		// if (this.state.pluginPopupVisible && this.state.pluginPopupActiveLine !== undefined && change.from.line < this.state.pluginPopupActiveLine) {
-		// 	// console.log('in the change');
-		// 	// console.log('old line', this.state.pluginPopupActiveLine);
-		// 	// console.log('new line', this.state.pluginPopupActiveLine + change.text.length - 1 - change.removed.length + 1);
-		// 	this.setState({
-		// 		pluginPopupActiveLine: this.state.pluginPopupActiveLine + change.text.length - change.removed.length,
-		// 	});
-		// }
 
 		const mdOutput = markLib(cm.getValue(), this.state.firepadData.assets);
 		this.setState({
@@ -147,13 +112,6 @@ const Editor = React.createClass({
 			codeMirrorChange: change
 		});
 	},
-
-	// getPluginPopupLoc: function() {
-	// 	return {
-	// 		top: this.state.pluginPopupY,
-	// 		left: this.state.pluginPopupX,
-	// 	};
-	// },
 
 	toggleLivePreview: function() {
 		this.closeModalHandler();
@@ -371,13 +329,6 @@ const Editor = React.createClass({
 		const loadStatus = this.props.editorData.get('status');
 		const activeModal = this.props.editorData.get('activeModal');
 		const darkMode = this.props.loginData.getIn(['userData', 'settings', 'editorColor']) === 'dark';
-
-		// const defaultObjectTitles = this.state.pluginPopupType
-		// 	? {...globalPluginOptions.titles, ...pluginOptions[this.state.pluginPopupType].titles}
-		// 	: {};
-		// const defaultObjectDefaults = this.state.pluginPopupType
-		// 	? {...globalPluginOptions.defaults, ...pluginOptions[this.state.pluginPopupType].defaults}
-		// 	: {};
 
 		// Set metadata for the page.
 		const metaData = {
