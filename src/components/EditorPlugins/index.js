@@ -13,8 +13,6 @@ $math$
 ::video:refName::
 ::audio:refName::
 ::table:refName::
-
-
 ----------------- */ 
 
 export default {
@@ -61,4 +59,24 @@ export default {
 		}
 	}
 	*/
+};
+
+import {imageOptions} from './ImagePlugin';
+export const pluginOptions = {
+	image: imageOptions,
+};
+
+export const globalPluginOptions = {
+	titles: {
+		caption: 'caption',
+		printFallbackImage: 'print fallback image',
+	},
+	defaults: {
+		caption: '',
+		printFallbackImage: '',
+	},
+	values: {
+		caption: '',
+		printFallbackImage: '',
+	},
 };

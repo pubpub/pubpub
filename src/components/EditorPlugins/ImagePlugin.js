@@ -2,8 +2,28 @@ import React, {PropTypes} from 'react';
 import Radium from 'radium';
 import ImageLoader from 'react-imageloader';
 
-// let styles = {};
+export const imageOptions = {
+	titles: {
+		width: 'width',
+		height: 'height',
+		align: 'align',
+		inline: 'inline'
+	},
+	defaults: {
+		width: '100%',
+		height: 'auto',
+		align: 'center',
+		inline: 'false'
+	},
+	values: {
+		width: '',
+		height: '',
+		align: '',
+		inline: '',
+	},
+};
 
+// let styles = {};
 const ImagePlugin = React.createClass({
 	propTypes: {
 		url: PropTypes.string,

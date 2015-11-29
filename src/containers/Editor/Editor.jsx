@@ -16,7 +16,7 @@ import EditorModes from './EditorModes';
 import {styles} from './EditorStyle';
 
 import markLib from '../../modules/markdown/markdown';
-import markdownExtensions from '../../components/EditorPlugins';
+import markdownExtensions, {globalPluginOptions, pluginOptions} from '../../components/EditorPlugins';
 markLib.setExtensions(markdownExtensions);
 
 const cmOptions = {
@@ -138,13 +138,23 @@ const Editor = React.createClass({
 			if (values !== undefined) {
 				const splitValues = values.split(',');
 				splitValues.map((valueString)=>{
-					const key = valueString.split('=')[0];
+					const key = valueString.split('=')[0].replace(/ /g, '');
 					const value = valueString.split('=')[1];
 					pluginObject[key] = value;
 				});
 			}
 			console.log(pluginObject);
 			// pass pluginObject to a function that 
+			const defaultObject = {...globalPluginOptions.values, ...pluginOptions[pluginType].values};
+			console.log('plugin values', pluginOptions[pluginType].values);
+			console.log('defaultObject', defaultObject);
+			const outputObject = {...defaultObject};
+			for (const key in defaultObject) {
+				if (key in pluginObject) {
+					outputObject[key] = pluginObject[key];
+				}
+			}
+			console.log('outputObject', outputObject);
 			// 1) gets the global object parameters
 			// 2) gets the local object paramaters (e.g. parameters for image or video or whatever)
 			// 3) merges these with the pluginObject derived above
@@ -157,7 +167,7 @@ const Editor = React.createClass({
 				pluginPopupY: yLoc + 15 - 60 + contentBody.scrollTop,
 				pluginPopupActiveLine: cm.getCursor().line,
 				pluginPopupType: pluginType,
-				pluginPopupContentObject: pluginObject,
+				pluginPopupContentObject: outputObject,
 				pluginPopupInitialString: pluginString,
 
 			});
@@ -200,6 +210,7 @@ const Editor = React.createClass({
 			} else {
 				this.setState({
 					pluginPopupVisible: false,
+					pluginPopupContentObject: {}
 				});
 			}
 			
@@ -212,15 +223,39 @@ const Editor = React.createClass({
 		const lineContent = cm.getLine(lineNum);
 		const from = {line: lineNum, ch: 0};
 		const to = {line: lineNum, ch: lineContent.length};
-		const newContent = '# Howdy!'; // This should eventually be calculated from the pluginPopup options
-		const newString = lineContent.replace(this.state.pluginPopupInitialString, newContent);
+		// const newContent = '# Howdy!'; // This should eventually be calculated from the pluginPopup options
 		
+		
+		// const newOutputValues = {};
+		let outputVariables = '';
+		for (const key in this.state.pluginPopupContentObject) {
+			if (Object.prototype.hasOwnProperty.call(this.state.pluginPopupContentObject, key)) {
+				// console.log('key', key);
+				// console.log(this.refs['pluginInput-' + key].value);
+				const val = this.refs['pluginInput-' + key].value;
+				// newOutputValues[key] = val && val.length ? val : undefined;
+				if (val && val.length) {
+					outputVariables += key + '=' + val + ', ';
+				}
+
+			}
+			
+		}
+		outputVariables = outputVariables.slice(0, -2);
+		console.log(outputVariables);
+
+		// console.log('newOutputValues', newOutputValues);
+
+		const outputString = outputVariables.length ? this.state.pluginPopupType + ': ' + outputVariables : this.state.pluginPopupType;
+		console.log('outputString', outputString);
 		// iterate through all keys in pluginPopupContentObject (make a new object and iterate through that so we can mutate)
 		// get the value as defined at the React.refs(key) input
 		// save value to new object
 		// Generate a string based on that object
 		// Format string for output and replace with line below
-		// cm.replaceRange(newString, from, to); // Since the popup closes on change, this will close the pluginPopup
+		const newString = lineContent.replace(this.state.pluginPopupInitialString, outputString);
+		
+		cm.replaceRange(newString, from, to); // Since the popup closes on change, this will close the pluginPopup
 	},
 
 	// onEditorChange: function(cm, change) {
@@ -238,6 +273,7 @@ const Editor = React.createClass({
 
 			this.setState({
 				pluginPopupVisible: false,
+				pluginPopupContentObject: {}
 			});
 		}
 
@@ -368,7 +404,6 @@ const Editor = React.createClass({
 			},
 			'.cm-plugin': {
 				cursor: 'pointer',
-				padding: '2px 0px',
 				borderRadius: '2px',
 			},
 			'.cm-plugin-image': {
@@ -571,6 +606,13 @@ const Editor = React.createClass({
 		const activeModal = this.props.editorData.get('activeModal');
 		const darkMode = this.props.loginData.getIn(['userData', 'settings', 'editorColor']) === 'dark';
 
+		const defaultObjectTitles = this.state.pluginPopupType
+			? {...globalPluginOptions.titles, ...pluginOptions[this.state.pluginPopupType].titles}
+			: {};
+		const defaultObjectDefaults = this.state.pluginPopupType
+			? {...globalPluginOptions.defaults, ...pluginOptions[this.state.pluginPopupType].defaults}
+			: {};
+
 		// Set metadata for the page.
 		const metaData = {
 			title: 'PubPub - Editing ' + this.props.slug
@@ -723,11 +765,13 @@ const Editor = React.createClass({
 							<div style={styles.pluginContent}>
 								<div style={styles.pluginPopupTitle}>{this.state.pluginPopupType} plugin</div>
 									{
+
 										Object.keys(this.state.pluginPopupContentObject).map((pluginValue)=>{
 											return (
 												<div key={'pluginVal-' + pluginValue}>
-													<label htmlFor={pluginValue} >{pluginValue}</label>
-													<input name={pluginValue} id={pluginValue} type="text" value={this.state.pluginPopupContentObject[pluginValue]}/>
+													<label htmlFor={pluginValue} >{defaultObjectTitles[pluginValue]}</label>
+													<input ref={'pluginInput-' + pluginValue} name={pluginValue} id={pluginValue} type="text" defaultValue={this.state.pluginPopupContentObject[pluginValue]}/>
+													<div>default: {defaultObjectDefaults[pluginValue]}</div>
 												</div>
 												
 											);
