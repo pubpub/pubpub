@@ -152,7 +152,7 @@ styles = {
 		display: 'none',
 		'@media screen and (min-resolution: 3dppx), (max-width: 767px)': {
 			display: 'block',
-			margin: '0px 0px 40px 60px',
+			margin: '0px 0px 0px 60px',
 			textAlign: 'right',
 			fontSize: '2em',
 			width: 'calc(100% - 100px)',
