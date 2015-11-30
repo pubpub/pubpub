@@ -287,12 +287,13 @@ const Editor = React.createClass({
 				</div>
 
 				<div style={styles.notMobile}>
-					{/*	Not Authorized or Error Note */}
+					{/*	'Not Authorized' or 'Error' Note */}
 					{this.props.editorData.get('error')
 						? <div style={styles.errorTitle}>{this.props.editorData.getIn(['pubEditData', 'title'])}</div>
 						: null
 					}
 
+					{/*	Component for all modals and their backdrop. */}
 					<EditorModals 
 						closeModalHandler={this.closeModalHandler}
 						activeModal={this.props.editorData.get('activeModal')}
@@ -319,44 +320,6 @@ const Editor = React.createClass({
 						saveUpdatedSettingsUser={this.saveUpdatedSettingsUser}
 						saveUpdatedSettingsFirebase={this.saveUpdatedSettingsFirebase}
 						saveUpdatedSettingsFirebaseAndPubPub={this.saveUpdatedSettingsFirebaseAndPubPub} />
-
-					{/*	Container for all modals and their backdrop. 
-					<div className="modals">
-						<div className="modal-splash" onClick={this.closeModalHandler} style={[styles.modalSplash, this.props.editorData.get('activeModal') !== undefined && styles.modalSplashActive]}></div>
-						<div id="modal-container" className="modal-container" style={[styles.modalContainer, activeModal !== undefined && styles.modalContainerActive]}>
-							{(() => {
-								switch (activeModal) {
-								case 'Assets':
-									return (<EditorModalAssets assetData={this.state.firepadData.assets} slug={this.props.slug} addAsset={this.addAsset} deleteAsset={this.deleteAsset}/>);
-								case 'Collaborators':
-									return (<EditorModalCollaborators collaboratorData={this.state.firepadData.collaborators} updateCollaborators={this.saveUpdatedCollaborators}/>);
-								case 'Publish':
-									return (<EditorModalPublish handlePublish={this.publishVersion}/>);
-								case 'References':
-									return (<EditorModalReferences
-										referenceData={this.state.firepadData.references}
-										updateReferences={this.saveReferences}
-										referenceStyle={this.state.firepadData.settings.pubReferenceStyle}/>);
-								case 'Style':
-									return (
-										<EditorModalSettings
-											editorFont={this.props.loginData.getIn(['userData', 'settings', 'editorFont'])}
-											editorFontSize={this.props.loginData.getIn(['userData', 'settings', 'editorFontSize'])}
-											editorColor={this.props.loginData.getIn(['userData', 'settings', 'editorColor'])}
-											pubPrivacy={this.state.firepadData.settings.pubPrivacy}
-											pubStyle={this.state.firepadData.settings.pubStyle}
-											saveUpdatedSettingsUser={this.saveUpdatedSettingsUser}
-											saveUpdatedSettingsFirebase={this.saveUpdatedSettingsFirebase}
-											saveUpdatedSettingsFirebaseAndPubPub={this.saveUpdatedSettingsFirebaseAndPubPub}/>
-									);
-								default:
-									return null;
-								}
-							})()}
-
-						</div>
-					</div>
-					*/}
 
 					{/*	Top Nav. Fixed to the top of the editor page, just below the main pubpub bar */}
 					<div style={[styles.editorTopNav, styles.hiddenUntilLoad, styles[editorData.get('status')], darkMode && styles.editorTopNavDark]}>

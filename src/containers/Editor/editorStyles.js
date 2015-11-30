@@ -109,51 +109,6 @@ export const styles = {
 	floatRight: {
 		float: 'right',
 	},
-	// modalSplash: {
-	// 	opacity: 0,
-	// 	pointerEvents: 'none',
-	// 	width: '100vw',
-	// 	height: 'calc(100vh - 2 * ' + globalStyles.headerHeight + ')',
-	// 	position: 'fixed',
-	// 	top: 60,
-	// 	backgroundColor: 'rgba(255,255,255,0.7)',
-	// 	transition: '.1s linear opacity',
-	// 	zIndex: 100,
-	// },
-	// modalSplashActive: {
-	// 	opacity: 1,
-	// 	pointerEvents: 'auto',
-	// },
-	// modalContainer: {
-	// 	width: '76vw',
-	// 	minHeight: 400,
-	// 	maxHeight: 'calc(100vh - 150px)',
-	// 	overflow: 'hidden',
-	// 	overflowY: 'scroll',
-	// 	margin: '0 auto',
-	// 	position: 'absolute',
-	// 	top: 60,
-	// 	left: '12vw',
-	// 	backgroundColor: 'white',
-	// 	boxShadow: '0px 0px 10px 0px rgba(0,0,0,0.25)',
-	// 	zIndex: 150,
-
-	// 	opacity: 0,
-	// 	pointerEvents: 'none',
-	// 	transform: 'scale(0.8)',
-	// 	transition: '.1s linear opacity, .1s linear transform',
-
-	// 	'@media screen and (min-width: 1600px)': {
-	// 		width: 1200,
-	// 		left: 'calc(50vw - 600px)',
-	// 	},
-
-	// },
-	// modalContainerActive: {
-	// 	opacity: 1,
-	// 	pointerEvents: 'auto',
-	// 	transform: 'scale(1.0)',
-	// },
 	hiddenMainEditor: {
 		height: 0,
 		overflow: 'hidden',
