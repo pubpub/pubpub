@@ -82,9 +82,8 @@ function loadFail(state, error) {
 }
 
 function openModal(state, activeModal) {
-	const nextModal = (activeModal !== state.get('activeModal')) ? activeModal : undefined;
 	return state.merge({
-		activeModal: nextModal,
+		activeModal: activeModal,
 	});
 }
 

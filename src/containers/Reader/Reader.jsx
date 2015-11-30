@@ -48,6 +48,13 @@ const Reader = React.createClass({
 	},
 
 	openModalHandler: function(activeModal) {
+		if (this.props.readerData.get('activeModal') === activeModal) {
+			return ()=> {
+				this.props.dispatch(closeModal());
+				this.props.dispatch(closeMenu());
+			};	
+		}
+
 		return ()=> {
 			this.props.dispatch(openMenu());
 			this.props.dispatch(openModal(activeModal));

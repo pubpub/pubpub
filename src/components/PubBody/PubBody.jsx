@@ -114,6 +114,7 @@ styles = {
 		top: 0,
 		left: 0,
 		pointerEvents: 'none',
+
 		'@media screen and (min-resolution: 3dppx), (max-width: 767px)': {
 			position: 'fixed',
 			top: 0,
@@ -145,6 +146,7 @@ styles = {
 			position: 'fixed',
 			width: '10vw',
 			height: '100%',
+			transition: '0s linear opacity',
 			backgroundColor: 'transparent',
 			left: 0,
 			top: 0,
@@ -181,8 +183,9 @@ styles = {
 			// backgroundColor: 'blue',
 			left: '10vw',
 			top: 0,
-			opacity: 1,
+			// opacity: 1,
 			backgroundColor: globalStyles.sideBackground,
+			transition: '0s linear opacity 0.3s, 0s linear transform',
 			transform: 'scale(1.0)',
 		},
 
@@ -191,6 +194,10 @@ styles = {
 		opacity: 1,
 		pointerEvents: 'auto',
 		transform: 'scale(1.0)',
+		'@media screen and (min-resolution: 3dppx), (max-width: 767px)': {
+			transition: '0s linear opacity 0s, 0s linear transform',	
+		},
+		
 	},
 	// End Modal Styling
 };
