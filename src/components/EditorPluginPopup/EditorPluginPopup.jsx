@@ -7,7 +7,7 @@ let styles = {};
 const Reference = React.createClass({
 	propTypes: {
 		activeFocus: PropTypes.string,
-		codeMirrorChange: PropTypes.object
+		codeMirrorChange: PropTypes.object,
 	},
 
 	getDefaultProps: function() {
@@ -185,22 +185,23 @@ const Reference = React.createClass({
 			<div id="plugin-popup" className="plugin-popup" style={[styles.pluginPopup, this.getPluginPopupLoc(), this.state.popupVisible && styles.pluginPopupVisible]}>
 				<div style={styles.pluginPopupArrow}></div>
 				<div style={styles.pluginContent}>
-					<div style={styles.pluginPopupTitle}>{this.state.pluginType} plugin</div>
+					<div style={styles.pluginPopupTitle}>Plugin: {this.state.pluginType}</div>
 						{
 
 							Object.keys(this.state.contentObject).map((pluginValue)=>{
 								return (
-									<div key={'pluginVal-' + pluginValue}>
-										<label htmlFor={pluginValue} >{this.state.defaultObject[pluginValue].title}</label>
-										<input ref={'pluginInput-' + pluginValue} name={pluginValue} id={pluginValue} type="text" defaultValue={this.state.contentObject[pluginValue]}/>
-										<div>default: {this.state.defaultObject[pluginValue].default}</div>
+									<div key={'pluginVal-' + pluginValue} style={styles.pluginOptionWrapper}>
+										<label htmlFor={pluginValue} style={styles.pluginOptionLabel}>{this.state.defaultObject[pluginValue].title}</label>
+										<input ref={'pluginInput-' + pluginValue} style={styles.pluginOptionInput} name={pluginValue} id={pluginValue} type="text" defaultValue={this.state.contentObject[pluginValue]}/>
+										<div style={[styles.pluginOptionDefault, this.state.defaultObject[pluginValue].default && styles.pluginOptionDefaultVisible]}>default: {this.state.defaultObject[pluginValue].default}</div>
+										<div style={styles.clearfix}></div>
 									</div>
 									
 								);
 							})
 						}
 						
-					<div onClick={this.onPluginSave}>Save</div>
+					<div style={styles.pluginSave} key={'pluginPopupSave'} onClick={this.onPluginSave}>Save</div>
 				</div>
 			</div>
 		);
@@ -212,8 +213,8 @@ export default Radium(Reference);
 
 styles = {
 	pluginPopup: {
-		width: 300,
-		minHeight: 200,
+		width: 350,
+		// minHeight: 200,
 		backgroundColor: 'white',
 		boxShadow: '0px 0px 2px 0px #333',
 		position: 'absolute',
@@ -246,4 +247,45 @@ styles = {
 		backgroundColor: 'white',
 		zIndex: 10,
 	},
+	pluginPopupTitle: {
+		padding: '6px 0px',
+		fontSize: '18px',
+	},
+	pluginSave: {
+		padding: '6px 20px 6px 0px',
+		fontSize: '18px',
+		display: 'inline-block',
+		':hover': {
+			cursor: 'pointer',
+			color: 'black',
+		},
+	},
+	pluginOptionWrapper: {
+		margin: '0px 10px 10px 10px',
+		fontFamily: 'Courier',
+	},
+	pluginOptionLabel: {
+		width: '100%',
+		display: 'block',
+	},
+	pluginOptionInput: {
+		width: 'calc(50% - 4px)',
+		padding: 0,
+		float: 'left',
+	},
+	pluginOptionDefault: {
+		width: 'calc(50% - 10px)',
+		padding: '0px 5px',
+		float: 'left',
+		fontSize: '14px',
+		color: '#bbb',
+		display: 'none'
+	},
+	pluginOptionDefaultVisible: {
+		display: 'block'
+	},
+	clearfix: {
+		display: 'table',
+		clear: 'both',
+	}
 };
