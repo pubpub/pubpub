@@ -10,12 +10,16 @@ const PubNav = React.createClass({
 		height: PropTypes.number,
 		navClickFunction: PropTypes.func,
 		status: PropTypes.string,
-		slug: PropTypes.string
+		slug: PropTypes.string,
+		isAuthor: PropTypes.string,
+	},
+
+	handlePrint: function() {
+		window.print();
 	},
 
 	render: function() {
 		const navClickFunction = this.props.navClickFunction;
-
 		return (
 			<div>
 				<ul style={[styles.pubNav, styles[this.props.status]]}>
@@ -26,16 +30,21 @@ const PubNav = React.createClass({
 					<li style={[styles.pubNavSeparator, styles.pubNavDesktopOnly]}></li>
 					<li key="pubNav2"style={[styles.pubNavItem, styles.pubNavDesktopOnly]} onClick={navClickFunction('source')}>Source</li>
 					<li style={[styles.pubNavSeparator, styles.pubNavDesktopOnly]}></li>
-					<li key="pubNav3"style={[styles.pubNavItem, styles.pubNavDesktopOnly]}>Print</li>
+					<li key="pubNav3"style={[styles.pubNavItem, styles.pubNavDesktopOnly]} onClick={this.handlePrint}>Print</li>
 					<li style={[styles.pubNavSeparator, styles.pubNavDesktopOnly]}></li>
 					<li key="pubNav4"style={[styles.pubNavItem, styles.pubNavDesktopOnly]} onClick={navClickFunction('cite')}>Cite</li>
 
-					<Link to={'/pub/' + this.props.slug + '/edit'}><li key="pubNav7"style={[styles.pubNavItem, styles.pubNavRight, styles.pubNavAuthorOnly, styles.pubNavDesktopOnly]}>Edit Pub</li></Link>
-					<li style={[styles.pubNavSeparator, styles.pubNavAuthorOnly, styles.pubNavRight, styles.pubNavDesktopOnly]}></li>
+
+					<Link to={'/pub/' + this.props.slug + '/edit'}><li key="pubNav7"style={[styles.pubNavItem, styles.pubNavRight, styles.pubNavDesktopOnly, styles.pubNavAuthorOnly, styles.pubAuthor[this.props.isAuthor]]}>Edit Pub</li></Link>
+					<li style={[styles.pubNavSeparator, styles.pubNavRight, styles.pubNavDesktopOnly, styles.pubNavAuthorOnly, styles.pubAuthor[this.props.isAuthor]]}></li>
+
 					<li key="pubNav5"style={[styles.pubNavItem, styles.pubNavRight, styles.pubNavMobileOnly]} onClick={navClickFunction('discussions')}>Discussions</li>
 					<li style={[styles.pubNavSeparator, styles.pubNavMobileOnly, styles.pubNavRight]}></li>
-					<li key="pubNav6"style={[styles.pubNavItem, styles.pubNavRight]}>Favorite</li>
+					
+					<li key="pubNav6"style={[styles.pubNavItem, styles.pubNavRight, styles.pubNavMobileOnly]} onClick={navClickFunction('status')}>Draft</li>
 					<li style={[styles.pubNavSeparator, styles.pubNavMobileOnly, styles.pubNavRight]}></li>
+
+					<li key="pubNav8"style={[styles.pubNavItem, styles.pubNavRight]}>Favorite</li>
 					
 				</ul>
 			</div>
@@ -75,6 +84,7 @@ styles = {
 		lineHeight: globalStyles.headerHeight,
 		fontSize: '14px',
 		float: 'left',
+		color: '#888',
 		':hover': {
 			cursor: 'pointer',
 			color: globalStyles.sideHover,
@@ -112,6 +122,14 @@ styles = {
 			height: 'calc(' + globalStyles.headerHeightMobile + ' - 30px)',
 			margin: '15px 0px',
 		},
-	}
+	},
+	pubNavAuthorOnly: {
+		display: 'none',
+	},
+	pubAuthor: {
+		true: {
+			display: 'block',
+		},
+	},
 
 };

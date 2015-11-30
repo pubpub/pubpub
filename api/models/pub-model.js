@@ -140,8 +140,14 @@ pubSchema.statics.getPub = function (slug, readerID, callback) {
 				return callback(null, 'Private Pub');
 			}
 		}
+
+		const outputPub = pub.toObject();
+		if (pub.collaborators.canEdit.indexOf(readerID) > -1) {
+			outputPub.isAuthor = true;
+		}
+		console.log(outputPub.isAuthor);
 		
-		return callback(null, pub);
+		return callback(null, outputPub);
 	})
 };
 

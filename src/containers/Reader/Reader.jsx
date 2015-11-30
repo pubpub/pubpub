@@ -26,6 +26,10 @@ const Reader = React.createClass({
 		}
 	},
 
+	componentWillUnmount() {
+		this.closeModalAndMenuHandler();
+	},
+
 	loader: function() {
 		return {
 			transform: 'translateX(' + (-100 + this.props.readerData.get('loading')) + '%)',
@@ -174,6 +178,7 @@ const Reader = React.createClass({
 						abstract = {pubData.abstract} 
 						markdown = {pubData.markdown}
 						authors = {pubData.authors}
+						isAuthor = {pubData.isAuthor}
 						slug= {this.props.slug}/>
 
 				</div>

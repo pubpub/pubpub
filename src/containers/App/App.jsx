@@ -10,6 +10,8 @@ import {HeaderNav, HeaderMenu} from '../../components';
 import {globalStyles} from '../../utils/styleConstants';
 import { pushState } from 'redux-router';
 
+import {openModal} from '../../actions/reader';
+
 let styles = {};
 
 const App = React.createClass({
@@ -53,6 +55,12 @@ const App = React.createClass({
 		this.props.dispatch(toggleMenu());
 	},
 
+	openPubModalHandler: function(activeModal) {
+		return ()=> {
+			this.props.dispatch(openModal(activeModal));
+		};
+	},
+
 	render: function() {
 		let pathname = 'notlanding';
 		if (this.props.path === '/') {
@@ -83,7 +91,9 @@ const App = React.createClass({
 								color={headerTextColor}
 								hoverColor={headerTextColorHover}
 								loginToggle={this.toggleLogin}
-								menuToggle={this.menuToggle}/>
+								menuToggle={this.menuToggle}
+								openPubModal={this.openPubModalHandler}
+								urlPath={this.props.path}/>
 						</div>
 
 						<div style={styles.headerNav}>

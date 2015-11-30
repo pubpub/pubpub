@@ -18,13 +18,14 @@ const PubBody = React.createClass({
 		markdown: PropTypes.string,
 		html: PropTypes.string,
 		authors: PropTypes.array,
-		slug: PropTypes.string
+		slug: PropTypes.string,
+		isAuthor: PropTypes.string
 	},
 
 	render: function() {
 		return (
 			<div style={styles.container}>
-				<PubNav height={this.height} navClickFunction={this.props.openModalHandler} status={this.props.status} slug={this.props.slug}/>
+				<PubNav height={this.height} navClickFunction={this.props.openModalHandler} status={this.props.status} slug={this.props.slug} isAuthor={this.props.isAuthor}/>
 				<LoaderDeterminate value={this.props.status === 'loading' ? 0 : 100}/>
 
 				<div style={[styles.contentContainer, styles[this.props.status]]}>
@@ -42,18 +43,28 @@ const PubBody = React.createClass({
 					<div className="modal-splash" onClick={this.props.closeModalAndMenuHandler} style={[styles.modalSplash, this.props.activeModal !== undefined && styles.modalSplashActive]}></div>
 					<div id="modal-container" className="modal-container" style={[styles.modalContainer, this.props.activeModal !== undefined && styles.modalContainerActive]}>
 						{/*	Switch which modal is displayed based on the activeModal parameter */}
+						<div style={styles.modalBackButton} onClick={this.props.closeModalHandler}>Back</div>
 						{(() => {
 							switch (this.props.activeModal) {
 							case 'tableOfContents':
 								return (
 									<div>
-										<div onClick={this.props.closeModalHandler}>Back</div>
+										
 										'tableOfContents'
 									</div>
 									
 									);
 							case 'history':
 								return ('history');
+							case 'source':
+								return ('source');
+							case 'cite':
+								return ('cite');
+							case 'status':
+								return ('status');
+							case 'discussions':
+								return ('discussions');
+							
 							default:
 								return null;
 							}
@@ -198,6 +209,27 @@ styles = {
 			transition: '0s linear opacity 0s, 0s linear transform',	
 		},
 		
+	},
+
+	modalBackButton: {
+		display: 'none',
+		'@media screen and (min-resolution: 3dppx), (max-width: 767px)': {
+			display: 'block',
+			margin: '0px 0px 40px 60px',
+			textAlign: 'right',
+			fontSize: '2em',
+			width: 'calc(100% - 100px)',
+			whiteSpace: 'nowrap',
+			overflow: 'hidden',
+			textOverflow: 'ellipsis',
+			padding: '20px 20px',
+			fontFamily: globalStyles.headerFont,
+			':hover': {
+				cursor: 'pointer',
+				color: 'black',
+			},
+
+		},
 	},
 	// End Modal Styling
 };

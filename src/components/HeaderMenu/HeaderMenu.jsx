@@ -1,7 +1,7 @@
 import React, {PropTypes} from 'react';
 import Radium from 'radium';
 import {globalStyles} from '../../utils/styleConstants';
-import { Link } from 'react-router';
+// import { Link } from 'react-router';
 
 let styles = {};
 
@@ -13,6 +13,8 @@ const HeaderMenu = React.createClass({
 		hoverColor: PropTypes.string,
 		loginToggle: PropTypes.func,
 		menuToggle: PropTypes.func,
+		openPubModal: PropTypes.func,
+		urlPath: PropTypes.string,
 	},
 
 	headerTextColorStyle: function() {
@@ -26,6 +28,7 @@ const HeaderMenu = React.createClass({
 
 	render: function() {
 		const isLoggedIn = this.props.loginData.get('loggedIn');
+		const isPub = this.props.urlPath.substring(0, 4) === '/pub';
 
 		return (
 			<div styles={styles.right}>
@@ -44,7 +47,7 @@ const HeaderMenu = React.createClass({
 					<div style={styles.menuContent}>
 						<ul style={styles.menuList}>
 							<li key="menuListItem0" style={[styles.menuItem, styles.menuItemClose]} onClick={this.props.menuToggle}>Close</li>
-							<li key="menuListItem1" style={styles.menuItem} onClick={this.props.loginToggle}>
+							<li key="menuListItem1" style={[styles.menuItem, styles.menuItemNoBottom]} onClick={this.props.loginToggle}>
 
 								{/* If Logged Out */}
 								{/* ------------- */}
@@ -61,17 +64,26 @@ const HeaderMenu = React.createClass({
 								</span>
 
 							</li>
-							<li key="menuListItem2" style={[styles.menuItem, styles.menuItemNoBottom, styles.menuItemLink]}><Link style={styles.innerLink}to={'/newpub'}>New Pub</Link></li>
-							<li key="menuListItem3" style={styles.menuItemseparator}></li>
-							<li key="menuListItem4" style={styles.menuItem}>Table of Contents</li>
-							<li key="menuListItem5" style={styles.menuItem}>Discussions</li>
-							<li key="menuListItem6" style={styles.menuItem}>History</li>
-							<li key="menuListItem7" style={styles.menuItem}>Cite</li>
-							<li key="menuListItem8" style={[styles.menuItem, styles.menuItemNoBottom]}>Source</li>
-							<li key="menuListItem9" style={styles.menuItemseparator}></li>
-							<li key="menuListItem10" style={styles.menuItem}>About PubPub</li>
-							<li key="menuListItem11" style={styles.menuItem}>FAQs</li>
-							<li key="menuListItem12" style={styles.menuItem}>Report a Bug</li>
+							{/* <li key="menuListItem2" style={[styles.menuItem, styles.menuItemNoBottom, styles.menuItemLink]}><Link style={styles.innerLink}to={'/newpub'}>New Pub</Link></li> */}
+							
+							{(isPub === true
+								? <div>
+									<li key="menuListItem3" style={styles.menuItemseparator}></li>
+									<li key="menuListItem4" style={styles.menuItem} >Favorite Pub</li>
+									<li key="menuListItem5" style={styles.menuItem} onClick={this.props.openPubModal('tableOfContents')}>Table of Contents</li>
+									<li key="menuListItem6" style={styles.menuItem} onClick={this.props.openPubModal('status')}>Status</li>
+									<li key="menuListItem7" style={styles.menuItem} onClick={this.props.openPubModal('discussions')}>Discussions</li>
+									<li key="menuListItem8" style={styles.menuItem} onClick={this.props.openPubModal('history')}>History</li>
+									<li key="menuListItem9" style={styles.menuItem} onClick={this.props.openPubModal('source')}>Source</li>
+									<li key="menuListItem10" style={[styles.menuItem, styles.menuItemNoBottom]} onClick={this.props.openPubModal('cite')}>Cite</li>
+									</div>
+								: null
+							)}
+							
+							<li key="menuListItem11" style={styles.menuItemseparator}></li>
+							<li key="menuListItem12" style={styles.menuItem}>About PubPub</li>
+							<li key="menuListItem13" style={styles.menuItem}>FAQs</li>
+							<li key="menuListItem14" style={styles.menuItem}>Report a Bug</li>
 							
 						</ul>
 					</div>
