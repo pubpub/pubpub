@@ -15,29 +15,26 @@ const PubNav = React.createClass({
 
 	render: function() {
 		const navClickFunction = this.props.navClickFunction;
-		function clickWrapper(clickOption) {
-			return ()=>navClickFunction(clickOption);
-		}
 
 		return (
 			<div>
 				<ul style={[styles.pubNav, styles[this.props.status]]}>
 
-					<li key="pubNav0"style={[styles.pubNavItem, styles.pubNavDesktopOnly]} onClick={clickWrapper('pubnav-tableOfContents')}>Table of Contents</li>
+					<li key="pubNav0"style={[styles.pubNavItem, styles.pubNavDesktopOnly]} onClick={navClickFunction('tableOfContents')}>Table of Contents</li>
 					<li style={[styles.pubNavSeparator, styles.pubNavDesktopOnly]}></li>
-					<li key="pubNav1"style={[styles.pubNavItem, styles.pubNavDesktopOnly]} onClick={clickWrapper('pubnav-history')}>History</li>
+					<li key="pubNav1"style={[styles.pubNavItem, styles.pubNavDesktopOnly]} onClick={navClickFunction('history')}>History</li>
 					<li style={[styles.pubNavSeparator, styles.pubNavDesktopOnly]}></li>
-					<li key="pubNav2"style={[styles.pubNavItem, styles.pubNavDesktopOnly]} onClick={clickWrapper('pubnav-source')}>Source</li>
+					<li key="pubNav2"style={[styles.pubNavItem, styles.pubNavDesktopOnly]} onClick={navClickFunction('source')}>Source</li>
 					<li style={[styles.pubNavSeparator, styles.pubNavDesktopOnly]}></li>
-					<li key="pubNav3"style={[styles.pubNavItem, styles.pubNavDesktopOnly]} onClick={clickWrapper('pubnav-print')}>Print</li>
+					<li key="pubNav3"style={[styles.pubNavItem, styles.pubNavDesktopOnly]}>Print</li>
 					<li style={[styles.pubNavSeparator, styles.pubNavDesktopOnly]}></li>
-					<li key="pubNav4"style={[styles.pubNavItem, styles.pubNavDesktopOnly]} onClick={clickWrapper('pubnav-cite')}>Cite</li>
+					<li key="pubNav4"style={[styles.pubNavItem, styles.pubNavDesktopOnly]} onClick={navClickFunction('cite')}>Cite</li>
 
-					<Link to={'/pub/' + this.props.slug + '/edit'}><li key="pubNav7"style={[styles.pubNavItem, styles.pubNavRight, styles.pubNavAuthorOnly, styles.pubNavDesktopOnly]} onClick={clickWrapper('pubnav-edit')}>Edit Pub</li></Link>
+					<Link to={'/pub/' + this.props.slug + '/edit'}><li key="pubNav7"style={[styles.pubNavItem, styles.pubNavRight, styles.pubNavAuthorOnly, styles.pubNavDesktopOnly]}>Edit Pub</li></Link>
 					<li style={[styles.pubNavSeparator, styles.pubNavAuthorOnly, styles.pubNavRight, styles.pubNavDesktopOnly]}></li>
-					<li key="pubNav5"style={[styles.pubNavItem, styles.pubNavRight, styles.pubNavMobileOnly]} onClick={clickWrapper('pubnav-discussions')}>Discussions</li>
+					<li key="pubNav5"style={[styles.pubNavItem, styles.pubNavRight, styles.pubNavMobileOnly]} onClick={navClickFunction('discussions')}>Discussions</li>
 					<li style={[styles.pubNavSeparator, styles.pubNavMobileOnly, styles.pubNavRight]}></li>
-					<li key="pubNav6"style={[styles.pubNavItem, styles.pubNavRight]} onClick={clickWrapper('pubnav-favorite')}>Favorite</li>
+					<li key="pubNav6"style={[styles.pubNavItem, styles.pubNavRight]}>Favorite</li>
 					<li style={[styles.pubNavSeparator, styles.pubNavMobileOnly, styles.pubNavRight]}></li>
 					
 				</ul>
@@ -46,12 +43,15 @@ const PubNav = React.createClass({
 	}
 });
 
+export default Radium(PubNav);
+
 styles = {
 	navContainer: {
 
 	},
 	pubNav: {
 		listStyle: 'none',
+		pointerEvents: 'auto',
 		height: globalStyles.headerHeight,
 		width: '100%',
 		margin: 0,
@@ -115,5 +115,3 @@ styles = {
 	}
 
 };
-	
-export default Radium(PubNav);

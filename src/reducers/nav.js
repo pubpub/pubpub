@@ -6,6 +6,7 @@ import {ensureImmutable} from './';
 /*--------*/
 import {
 	TOGGLE_MENU,
+	OPEN_MENU,
 	CLOSE_MENU
 } from '../actions/nav';
 
@@ -29,6 +30,12 @@ function toggleMenu(state) {
 	});
 }
 
+function openMenu(state) {
+	return state.merge({
+		menuOpen: true
+	});
+}
+
 function closeMenu(state) {
 	return state.merge({
 		menuOpen: false
@@ -44,6 +51,8 @@ export default function loginReducer(state = defaultState, action) {
 	switch (action.type) {
 	case TOGGLE_MENU:
 		return toggleMenu(state);
+	case OPEN_MENU:
+		return openMenu(state);
 	case CLOSE_MENU:
 		return closeMenu(state);
 	default:

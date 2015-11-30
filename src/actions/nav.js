@@ -5,6 +5,7 @@
 // types as strings in action creators
 /*--------*/
 export const TOGGLE_MENU = 'nav/TOGGLE_MENU';
+export const OPEN_MENU = 'nav/OPEN_MENU';
 export const CLOSE_MENU = 'nav/CLOSE_MENU';
 
 /*--------*/
@@ -17,6 +18,12 @@ export const CLOSE_MENU = 'nav/CLOSE_MENU';
 export function toggleMenu() {
 	return {
 		type: TOGGLE_MENU
+	};	
+}
+
+export function openMenu() {
+	return {
+		type: OPEN_MENU
 	};	
 }
 

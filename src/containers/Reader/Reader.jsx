@@ -3,7 +3,8 @@ import {connect} from 'react-redux';
 import Radium from 'radium';
 import DocumentMeta from 'react-document-meta';
 import PureRenderMixin from 'react-addons-pure-render-mixin';
-import {getPub} from '../../actions/reader';
+import {getPub, closeModal, openModal} from '../../actions/reader';
+import {openMenu, closeMenu} from '../../actions/nav';
 import {PubBody, PubDiscussion} from '../../components';
 import {globalStyles} from '../../utils/styleConstants';
 
@@ -32,8 +33,25 @@ const Reader = React.createClass({
 		};
 	},
 
-	pubNavClick: function(optionClicked) {
-		console.log(optionClicked);
+	// pubNavClick: function(optionClicked) {
+	// 	console.log(optionClicked);
+	// 	// this dispatches to reader to set the modal to 'discussion' or 'toc', 
+	// },
+
+	closeModalHandler: function() {
+		this.props.dispatch(closeModal());
+	},
+
+	closeModalAndMenuHandler: function() {
+		this.props.dispatch(closeModal());
+		this.props.dispatch(closeMenu());
+	},
+
+	openModalHandler: function(activeModal) {
+		return ()=> {
+			this.props.dispatch(openMenu());
+			this.props.dispatch(openModal(activeModal));
+		};
 	},
 
 	calculateReviewScores: function(reviews) {
@@ -138,10 +156,13 @@ const Reader = React.createClass({
 
 				</div>
 
-				<div className="centerBar" style={styles.centerBar}>
+				<div className="centerBar" style={[styles.centerBar, this.props.readerData.get('activeModal') !== undefined && styles.centerBarModalActive]}>
 					<PubBody
 						status = {this.props.readerData.get('status')}
-						navClickFunction = {this.pubNavClick}
+						openModalHandler = {this.openModalHandler}
+						closeModalHandler = {this.closeModalHandler}
+						closeModalAndMenuHandler = {this.closeModalAndMenuHandler}
+						activeModal = {this.props.readerData.get('activeModal')}
 						title = {pubData.title} 
 						abstract = {pubData.abstract} 
 						markdown = {pubData.markdown}
@@ -151,6 +172,18 @@ const Reader = React.createClass({
 				</div>
 
 				<div className="rightBar" style={[styles.rightBar, styles[this.props.readerData.get('status')]]}>
+					{/* 
+							Needs to be isMobile and isShow for the mobile styles to be applied, otherwise, keep the styles we got now, which show on desktop and hide otherwise.
+							This will need to be done for the rightBar wrapper, and for the pub body modal wrapper
+						    position: fixed;
+						    top: 0;
+						    width: 90vw;
+						    height: 100vh;
+						    background-color: red;
+						    z-index: 9;
+						    left: 10vw;
+						    capture the invisible left section to close both the menu and the activesetting of the current component
+					*/}
 					<div className="pub-status-wrapper" style={rightBarStyles.sectionWrapper}>
 						<div style={rightBarStyles.sectionHeader}>{pubData.status}</div>
 						<div style={rightBarStyles.sectionSubHeader}>Featured in {pubData.featuredIn.length}  |  Submitted to {pubData.submittedTo.length}</div>
@@ -329,7 +362,7 @@ styles = {
 			position: 'relative',
 			overflow: 'hidden',
 			float: 'none',
-			zIndex: 0,
+			zIndex: 'auto',
 			top: 0,
 			left: 0,
 		},
@@ -354,6 +387,9 @@ styles = {
 			width: pubSizes.xLargePub,
 			left: pubSizes.xLargeLeft,
 		},
+	},
+	centerBarModalActive: {
+		pointerEvents: 'none',
 	},
 
 	rightBar: {
