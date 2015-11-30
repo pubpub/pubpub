@@ -26,8 +26,7 @@ const Reference = React.createClass({
 			activeLine: undefined,
 			pluginType: '',
 			contentObject: {},
-			defaultObjectTitles: {},
-			defaultObjectDefaults: {},
+			defaultObject: {},
 
 		};
 	},
@@ -116,23 +115,14 @@ const Reference = React.createClass({
 				});
 			}
 
-			const defaultValues = {...globalPluginOptions.values, ...pluginOptions[pluginType].values};
-			// console.log('plugin values', pluginOptions[pluginType].values);
-			// console.log('defaultObject', defaultValues);
-			const outputObject = {...defaultValues};
-			for (const key in defaultValues) {
-				// Take all of the the value specified in the text, and overwrite default values.
-				if (key in pluginObject) {
-					outputObject[key] = pluginObject[key];
+			const defaultObject = {...globalPluginOptions, ...pluginOptions[pluginType]};
+			const outputObject = {};
+			for (const key in defaultObject) {
+				if (defaultObject.hasOwnProperty(key)) {
+					// Take all of the the value specified in the text, and overwrite default values.
+					outputObject[key] = key in pluginObject ? pluginObject[key] : defaultObject[key].value;	
 				}
 			}
-
-			const defaultObjectTitles = pluginType
-				? {...globalPluginOptions.titles, ...pluginOptions[pluginType].titles}
-				: {};
-			const defaultObjectDefaults = pluginType
-				? {...globalPluginOptions.defaults, ...pluginOptions[pluginType].defaults}
-				: {};
 
 			this.setState({
 				popupVisible: true,
@@ -141,9 +131,8 @@ const Reference = React.createClass({
 				activeLine: cm.getCursor().line,
 				pluginType: pluginType,
 				contentObject: outputObject,
+				defaultObject: defaultObject,
 				initialString: pluginString,
-				defaultObjectTitles: defaultObjectTitles,
-				defaultObjectDefaults: defaultObjectDefaults
 			});
 
 		} else {
@@ -202,9 +191,9 @@ const Reference = React.createClass({
 							Object.keys(this.state.contentObject).map((pluginValue)=>{
 								return (
 									<div key={'pluginVal-' + pluginValue}>
-										<label htmlFor={pluginValue} >{this.state.defaultObjectTitles[pluginValue]}</label>
+										<label htmlFor={pluginValue} >{this.state.defaultObject[pluginValue].title}</label>
 										<input ref={'pluginInput-' + pluginValue} name={pluginValue} id={pluginValue} type="text" defaultValue={this.state.contentObject[pluginValue]}/>
-										<div>default: {this.state.defaultObjectDefaults[pluginValue]}</div>
+										<div>default: {this.state.defaultObject[pluginValue].default}</div>
 									</div>
 									
 								);

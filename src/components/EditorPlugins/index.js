@@ -67,16 +67,14 @@ export const pluginOptions = {
 };
 
 export const globalPluginOptions = {
-	titles: {
-		caption: 'caption',
-		printFallbackImage: 'print fallback image',
+	caption: {
+		title: 'caption',
+		default: '',
+		value: '',
 	},
-	defaults: {
-		caption: '',
-		printFallbackImage: '',
-	},
-	values: {
-		caption: '',
-		printFallbackImage: '',
-	},
+	printFallbackImage: {
+		title: 'print fallback image',
+		default: '',
+		value: '',
+	}
 };

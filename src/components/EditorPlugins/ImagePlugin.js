@@ -3,23 +3,25 @@ import Radium from 'radium';
 import ImageLoader from 'react-imageloader';
 
 export const imageOptions = {
-	titles: {
-		width: 'width',
-		height: 'height',
-		align: 'align',
-		inline: 'inline'
+	width: {
+		title: 'width',
+		default: '100%',
+		value: '',
 	},
-	defaults: {
-		width: '100%',
-		height: 'auto',
-		align: 'center',
-		inline: 'false'
+	height: {
+		title: 'height',
+		default: 'auto',
+		value: '',
 	},
-	values: {
-		width: '',
-		height: '',
-		align: '',
-		inline: '',
+	align: {
+		title: 'align',
+		default: 'center',
+		value: '',
+	},
+	inline: {
+		title: 'inline',
+		default: 'false',
+		value: '',
 	},
 };
 
