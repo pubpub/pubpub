@@ -3,7 +3,7 @@ import Radium from 'radium';
 import {Autocomplete} from '../../containers';
 // import {Reference} from '../';
 import {EditorModalReferencesRow} from './';
-import {baseStyles} from './modalStyle';
+import {baseStyles} from './editorModalStyle';
 import {globalStyles} from '../../utils/styleConstants';
 import bibtexParse from 'bibtex-parse-js';
 

@@ -1,6 +1,7 @@
 import React, {PropTypes} from 'react';
 import Radium from 'radium';
 import {globalStyles} from '../../utils/styleConstants';
+import {PubModalTOC} from './';
 
 let styles = {};
 
@@ -24,13 +25,7 @@ const PubModals = React.createClass({
 						{(() => {
 							switch (this.props.activeModal) {
 							case 'tableOfContents':
-								return (
-									<div>
-										
-										'tableOfContents'
-									</div>
-									
-									);
+								return (<PubModalTOC />);
 							case 'history':
 								return ('history');
 							case 'source':

@@ -1,7 +1,7 @@
 import React, {PropTypes} from 'react';
 import Radium from 'radium';
 import Dropzone from 'react-dropzone';
-import {baseStyles} from './modalStyle';
+import {baseStyles} from './editorModalStyle';
 import {s3Upload} from '../../utils/uploadFile';
 import {EditorModalAssetsRow} from './';
 

@@ -1,7 +1,7 @@
 import React, {PropTypes} from 'react';
 import Radium from 'radium';
 import {Reference} from '../';
-import {baseStyles} from './modalStyle';
+import {baseStyles} from './editorModalStyle';
 import {globalStyles} from '../../utils/styleConstants';
 
 let styles = {};

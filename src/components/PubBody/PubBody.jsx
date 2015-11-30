@@ -40,7 +40,7 @@ styles = {
 		width: '100%',
 		overflow: 'hidden',
 		borderRadius: 1,
-		minHeight: 'calc(100vh - ' + globalStyles.headerHeight + ' + 3px)',
+		minHeight: 'calc(100vh - 2 * ' + globalStyles.headerHeight + ' + 3px)',
 	},
 	contentContainer: {
 		transition: '.3s linear opacity .25s',
