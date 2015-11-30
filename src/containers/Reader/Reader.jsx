@@ -5,7 +5,7 @@ import DocumentMeta from 'react-document-meta';
 import PureRenderMixin from 'react-addons-pure-render-mixin';
 import {getPub, closeModal, openModal} from '../../actions/reader';
 import {openMenu, closeMenu} from '../../actions/nav';
-import {PubBody, PubDiscussion} from '../../components';
+import {PubBody, PubDiscussion, PubModals, PubNav, LoaderDeterminate} from '../../components';
 import {globalStyles} from '../../utils/styleConstants';
 
 let styles = {};
@@ -168,18 +168,29 @@ const Reader = React.createClass({
 				</div>
 
 				<div className="centerBar" style={[styles.centerBar, this.props.readerData.get('activeModal') !== undefined && styles.centerBarModalActive]}>
+
+					<PubNav 
+						height={this.height} 
+						navClickFunction={this.openModalHandler} 
+						status={this.props.readerData.get('status')} 
+						slug={this.props.slug} 
+						isAuthor={pubData.isAuthor}/>
+
+					<LoaderDeterminate 
+						value={this.props.readerData.get('status') === 'loading' ? 0 : 100}/>
+
 					<PubBody
 						status = {this.props.readerData.get('status')}
 						openModalHandler = {this.openModalHandler}
-						closeModalHandler = {this.closeModalHandler}
-						closeModalAndMenuHandler = {this.closeModalAndMenuHandler}
-						activeModal = {this.props.readerData.get('activeModal')}
 						title = {pubData.title} 
 						abstract = {pubData.abstract} 
 						markdown = {pubData.markdown}
-						authors = {pubData.authors}
-						isAuthor = {pubData.isAuthor}
-						slug= {this.props.slug}/>
+						authors = {pubData.authors}/>
+
+					<PubModals 
+						closeModalHandler = {this.closeModalHandler}
+						closeModalAndMenuHandler = {this.closeModalAndMenuHandler}
+						activeModal = {this.props.readerData.get('activeModal')}/>
 
 				</div>
 
@@ -356,6 +367,7 @@ styles = {
 	},
 
 	centerBar: {
+		backgroundColor: 'white',
 		width: 650,
 		height: 'calc(100vh - ' + globalStyles.headerHeight + ' + 3px)',
 		position: 'absolute',

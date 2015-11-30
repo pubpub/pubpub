@@ -9,6 +9,7 @@ export LoginFormRegister from './LoginFormRegister/LoginFormRegister';
 export PubBody from './PubBody/PubBody';
 export PubCreateForm from './PubCreateForm/PubCreateForm';
 export PubDiscussion from './PubDiscussion/PubDiscussion';
+export PubModals from './PubModals/PubModals';
 export PubNav from './PubNav/PubNav';
 export Reference from './Reference/Reference';
 

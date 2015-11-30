@@ -145,7 +145,7 @@ pubSchema.statics.getPub = function (slug, readerID, callback) {
 		if (pub.collaborators.canEdit.indexOf(readerID) > -1) {
 			outputPub.isAuthor = true;
 		}
-		console.log(outputPub.isAuthor);
+		// console.log(outputPub.isAuthor);
 		
 		return callback(null, outputPub);
 	})

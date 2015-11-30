@@ -11,7 +11,7 @@ const PubNav = React.createClass({
 		navClickFunction: PropTypes.func,
 		status: PropTypes.string,
 		slug: PropTypes.string,
-		isAuthor: PropTypes.string,
+		isAuthor: PropTypes.boolean,
 	},
 
 	handlePrint: function() {
