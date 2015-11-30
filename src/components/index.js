@@ -1,3 +1,4 @@
+export EditorModals from './EditorModals/EditorModals';
 export EditorPluginPopup from './EditorPluginPopup/EditorPluginPopup';
 export HeaderNav from './HeaderNav/HeaderNav';
 export HeaderMenu from './HeaderMenu/HeaderMenu';

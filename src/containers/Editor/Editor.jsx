@@ -9,8 +9,7 @@ import DocumentMeta from 'react-document-meta';
 import PureRenderMixin from 'react-addons-pure-render-mixin';
 import ReactFireMixin from 'reactfire';
 
-import {LoaderDeterminate, EditorPluginPopup} from '../../components';
-import {EditorModalAssets, EditorModalCollaborators, EditorModalPublish, EditorModalReferences, EditorModalSettings} from '../../components/EditorModals';
+import {LoaderDeterminate, EditorPluginPopup, EditorModals} from '../../components';
 import {getPubEdit, toggleEditorViewMode, toggleFormatting, toggleTOC, unmountEditor, closeModal, openModal, publishVersion, saveCollaboratorsToPub, saveSettingsPubPub} from '../../actions/editor';
 import {saveSettingsUser} from '../../actions/login';
 import {loadCss} from '../../utils/loadingFunctions';
@@ -263,7 +262,6 @@ const Editor = React.createClass({
 		const showBottomLeftMenu = this.props.editorData.get('showBottomLeftMenu');
 		const showBottomRightMenu = this.props.editorData.get('showBottomRightMenu');
 		const loadStatus = this.props.editorData.get('status');
-		const activeModal = this.props.editorData.get('activeModal');
 		const darkMode = this.props.loginData.getIn(['userData', 'settings', 'editorColor']) === 'dark';
 
 		// Set metadata for the page.
@@ -295,12 +293,37 @@ const Editor = React.createClass({
 						: null
 					}
 
+					<EditorModals 
+						closeModalHandler={this.closeModalHandler}
+						activeModal={this.props.editorData.get('activeModal')}
+						slug={this.props.slug}
+						// Asset Props
+						assetData={this.state.firepadData.assets}
+						addAsset={this.addAsset}
+						deleteAsset={this.deleteAsset}
+						// Collaborator Props
+						collaboratorData={this.state.firepadData.collaborators}
+						updateCollaborators={this.saveUpdatedCollaborators}
+						// Publish Props
+						handlePublish={this.publishVersion}
+						// References Props
+						referenceData={this.state.firepadData.references}
+						referenceStyle={this.state.firepadData && this.state.firepadData.settings ? this.state.firepadData.settings.pubReferenceStyle : undefined}
+						updateReferences={this.saveReferences}
+						// Style Props
+						editorFont={this.props.loginData.getIn(['userData', 'settings', 'editorFont'])}
+						editorFontSize={this.props.loginData.getIn(['userData', 'settings', 'editorFontSize'])}
+						editorColor={this.props.loginData.getIn(['userData', 'settings', 'editorColor'])}
+						pubPrivacy={this.state.firepadData && this.state.firepadData.settings ? this.state.firepadData.settings.pubPrivacy : undefined}
+						pubStyle={this.state.firepadData && this.state.firepadData.settings ? this.state.firepadData.settings.pubStyle : undefined}
+						saveUpdatedSettingsUser={this.saveUpdatedSettingsUser}
+						saveUpdatedSettingsFirebase={this.saveUpdatedSettingsFirebase}
+						saveUpdatedSettingsFirebaseAndPubPub={this.saveUpdatedSettingsFirebaseAndPubPub} />
 
-					{/*	Container for all modals and their backdrop. */}
+					{/*	Container for all modals and their backdrop. 
 					<div className="modals">
 						<div className="modal-splash" onClick={this.closeModalHandler} style={[styles.modalSplash, this.props.editorData.get('activeModal') !== undefined && styles.modalSplashActive]}></div>
 						<div id="modal-container" className="modal-container" style={[styles.modalContainer, activeModal !== undefined && styles.modalContainerActive]}>
-							{/*	Switch which modal is displayed based on the activeModal parameter */}
 							{(() => {
 								switch (activeModal) {
 								case 'Assets':
@@ -333,6 +356,7 @@ const Editor = React.createClass({
 
 						</div>
 					</div>
+					*/}
 
 					{/*	Top Nav. Fixed to the top of the editor page, just below the main pubpub bar */}
 					<div style={[styles.editorTopNav, styles.hiddenUntilLoad, styles[editorData.get('status')], darkMode && styles.editorTopNavDark]}>

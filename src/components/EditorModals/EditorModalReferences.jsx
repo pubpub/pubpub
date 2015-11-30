@@ -54,9 +54,9 @@ const EditorModalReferences = React.createClass({
 	},
 
 	handleManualInputFormChange: function(event) {
-		const newManualFormData = this.state.manualFormData;
+		const newManualFormData = {...this.state.manualFormData};
 		newManualFormData[event.target.name] = event.target.value;
-		// this.setState({newManualFormData});
+		this.setState({manualFormData: newManualFormData});
 	},
 
 	saveManualForm: function() {
