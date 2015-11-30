@@ -73,7 +73,7 @@ const Editor = React.createClass({
 
 			// Load codemirror
 			const codeMirror = CodeMirror(document.getElementById('codemirror-wrapper'), cmOptions);
-			
+
 			// Get Login username for firepad use. Shouldn't be undefined, but set default in case.
 			const username = (this.props.loginData.get('loggedIn') === false) ? 'cat' : this.props.loginData.getIn(['userData', 'username']);
 
@@ -108,10 +108,10 @@ const Editor = React.createClass({
 	},
 
 	onEditorChange: function(cm, change) {
-		
+
 		CodeMirror.commands.autocomplete(cm, CodeMirror.hint.plugins, {completeSingle: false});
 
-		const mdOutput = markLib(cm.getValue(), this.state.firepadData.assets);
+		const mdOutput = markLib(cm.getValue(), Object.values(this.state.firepadData.assets || {}));
 		this.setState({
 			tree: mdOutput.tree,
 			travisTOC: mdOutput.travisTOC,
@@ -237,7 +237,7 @@ const Editor = React.createClass({
 			this.toggleFormatting();
 		};
 	},
-	
+
 	// TODO: use the index variable that's passed in to accomodate the case
 	// where a document has more than one identical header title.
 	// Right now, no matter which is clicked, the focus will focus on the first instance of it.
@@ -402,7 +402,7 @@ const Editor = React.createClass({
 					<div id="editor-text-wrapper" style={[styles.hiddenUntilLoad, styles[loadStatus], styles.common.editorMarkdown, styles[viewMode].editorMarkdown]}>
 
 						<EditorPluginPopup activeFocus={this.state.activeFocus} codeMirrorChange={this.state.codeMirrorChange}/>
-						
+
 						{/* Insertion point for codemirror and firepad */}
 						<div style={[this.state.activeFocus !== '' && styles.hiddenMainEditor]}>
 							<div id="codemirror-wrapper"></div>

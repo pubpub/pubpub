@@ -1,6 +1,6 @@
 import MathPlugin from './MathPlugin';
 import ImagePlugin from './ImagePlugin';
-
+import {parsePluginString} from '../../utils/parsePlugins';
 /* -----------------
 Supported PubPub Syntax
 -----------------
@@ -13,24 +13,25 @@ $math$
 ::video:refName::
 ::audio:refName::
 ::table:refName::
------------------ */ 
+----------------- */
 
 export default {
 	math: {
 		component: MathPlugin,
-		rule: /^(?:\s)*(:{2})math(:{2})([^\n:]+?)(:{2})/,
+		rule: /^\$([^\$]+)\$/,
 		inline: true,
 		inlineFunc: function(cap, renderer) {
-			return renderer(cap[3]);
+			return renderer(cap[1]);
 		}
 	},
-	asset: {
+	image: {
 		component: ImagePlugin,
 		inline: true,
-		rule: /^(?:\s)*(?::{2})asset(?::{2})([^\n:]+)(?::{2})/,
+		// rule: /^(?:\s)*(?::{2})asset(?::{2})([^\n:]+)(?::{2})/,
+		rule: /^(?:\s)*(?:\[)image:([^\n\]]*)(?:\])/,
 		inlineFunc: function(cap, renderer, assets) {
-			console.log(assets);
-			const refName = cap[1];
+			const propDict = parsePluginString(cap[1]);
+			const refName = propDict.src || 'none';
 			const asset = assets.find(asst => (asst.refName === refName));
 			let url = null;
 			if (asset && asset.assetType === 'image') {
@@ -38,27 +39,10 @@ export default {
 			} else if (asset) {
 				url = 'error:type';
 			}
-			return renderer(refName, {'url': url});
+			propDict.url = url;
+			return renderer(refName, propDict);
 		}
 	}
-	/*
-	asset: {
-		component: ImagePlugin,
-		inline: false,
-		rule: /^(?:\s)*(?::{2})asset(?::{2})([^\n:]+)(?::{2})/,
-		capFunc: function(src, cap) {
-			return { type: 'asset', text: cap[1] };
-		},
-		tokenFunc: function(token, renderer, assets) {
-			const asset = assets.find(asst => (asst.refName === token.text));
-			let url = null;
-			if (asset) {
-				url = asset.url_s3;
-			}
-			return renderer(token.text, {'url': url});
-		}
-	}
-	*/
 };
 
 import {imageOptions} from './ImagePlugin';

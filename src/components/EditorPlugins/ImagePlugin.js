@@ -3,6 +3,11 @@ import Radium from 'radium';
 import ImageLoader from 'react-imageloader';
 
 export const imageOptions = {
+	src: {
+		title: 'src',
+		default: '',
+		value: '',
+	},
 	width: {
 		title: 'width',
 		default: '100%',
