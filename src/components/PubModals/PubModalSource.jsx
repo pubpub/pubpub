@@ -5,7 +5,7 @@ import {baseStyles} from './pubModalStyle';
 
 let styles = {};
 
-const PubModalTOC = React.createClass({
+const PubModalSource = React.createClass({
 	propTypes: {
 		markdown: PropTypes.string,
 	},
@@ -31,7 +31,7 @@ const PubModalTOC = React.createClass({
 	}
 });
 
-export default Radium(PubModalTOC);
+export default Radium(PubModalSource);
 
 styles = {
 	sourceText: {

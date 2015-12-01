@@ -1,7 +1,7 @@
 import React, {PropTypes} from 'react';
 import Radium from 'radium';
 import {globalStyles} from '../../utils/styleConstants';
-import {PubModalTOC, PubModalSource} from './';
+import {PubModalCite, PubModalHistory, PubModalTOC, PubModalSource} from './';
 
 let styles = {};
 
@@ -33,13 +33,15 @@ const PubModals = React.createClass({
 										tocData={this.props.tocData}/>
 									);
 							case 'history':
-								return ('history');
+								return (<PubModalHistory/>
+									);
 							case 'source':
 								return (<PubModalSource 
 										markdown={this.props.markdown}/>
 									);
 							case 'cite':
-								return ('cite');
+								return (<PubModalCite/>
+									);
 							case 'status':
 								return ('status');
 							case 'discussions':
