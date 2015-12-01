@@ -1,7 +1,7 @@
 import React, {PropTypes} from 'react';
 import Radium from 'radium';
 import {globalStyles} from '../../utils/styleConstants';
-import {PubModalTOC} from './';
+import {PubModalTOC, PubModalSource} from './';
 
 let styles = {};
 
@@ -10,7 +10,10 @@ const PubModals = React.createClass({
 		closeModalHandler: PropTypes.func,
 		closeModalAndMenuHandler: PropTypes.func,
 		activeModal: PropTypes.string,
+		// TOC Props
 		tocData: PropTypes.array,
+		// Source Props
+		markdown: PropTypes.string,
 	},
 
 	render: function() {
@@ -32,7 +35,9 @@ const PubModals = React.createClass({
 							case 'history':
 								return ('history');
 							case 'source':
-								return ('source');
+								return (<PubModalSource 
+										markdown={this.props.markdown}/>
+									);
 							case 'cite':
 								return ('cite');
 							case 'status':
@@ -111,8 +116,8 @@ styles = {
 	},
 	modalContainer: {
 		width: '90%',
-		minHeight: 400,
-		maxHeight: 'calc(100% - 150px)',
+		// minHeight: 400,
+		maxHeight: 'calc(100% - 90px)',
 		overflow: 'hidden',
 		overflowY: 'scroll',
 		margin: '0 auto',

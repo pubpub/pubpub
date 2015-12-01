@@ -219,7 +219,9 @@ const Reader = React.createClass({
 						closeModalAndMenuHandler = {this.closeModalAndMenuHandler}
 						activeModal = {this.props.readerData.get('activeModal')}
 						// TOC Props
-						tocData = {this.state.TOC}/>
+						tocData = {this.state.TOC}
+						// Source Props
+						markdown = {activePubData.markdown}/>
 
 				</div>
 
@@ -443,6 +445,7 @@ styles = {
 	},
 	centerBarModalActive: {
 		pointerEvents: 'none',
+		overflowY: 'hidden',
 	},
 
 	rightBar: {
