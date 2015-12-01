@@ -17,6 +17,18 @@ import {LOAD_PUB,
 /*--------*/
 export const defaultState = Immutable.Map({
 	pubData: {
+		assets: {},
+		references: {},
+		discussions: [],
+		readNext: [],
+		featuredIn: [],
+		submittedTo: [],
+		reviews: [],
+		experts: [],
+	},
+	activePubData: {
+		assets: {},
+		references: {},
 		discussions: [],
 		readNext: [],
 		featuredIn: [],
@@ -44,6 +56,19 @@ function loadSuccess(state, result) {
 	const outputState = {
 		status: 'loaded',
 		pubData: result,
+		activePubData: {
+			title: result.title,
+			abstract: result.abstract,
+			authorsNote: result.authorsNote,
+			markdown: result.markdown,
+			authors: result.authors,
+			assets: result.assets,
+			references: result.references,
+			style: result.style,
+			lastUpdated: result.lastUpdated,
+			status: result.status,
+			mostRecentVersion: true,
+		},
 		error: null
 	};
 

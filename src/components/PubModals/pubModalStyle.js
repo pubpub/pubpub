@@ -11,5 +11,8 @@ export const baseStyles = {
 	},
 	pubModalContentWrapper: {
 		margin: '0px 20px',
+		'@media screen and (min-resolution: 3dppx), (max-width: 767px)': {
+			margin: '0px 10px',
+		},
 	},
 };

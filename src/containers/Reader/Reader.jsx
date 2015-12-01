@@ -8,6 +8,10 @@ import {openMenu, closeMenu} from '../../actions/nav';
 import {PubBody, PubDiscussion, PubModals, PubNav, LoaderDeterminate} from '../../components';
 import {globalStyles} from '../../utils/styleConstants';
 
+import markLib from '../../modules/markdown/markdown';
+import markdownExtensions from '../../components/EditorPlugins';
+markLib.setExtensions(markdownExtensions);
+
 let styles = {};
 let leftBarStyles = {};
 let rightBarStyles = {};
@@ -26,6 +30,32 @@ const Reader = React.createClass({
 		}
 	},
 
+	getInitialState() {
+		return {
+			htmlTree: [],
+			TOC: [],
+		};
+	},
+
+	componentWillMount() {
+		const mdOutput = markLib(this.props.readerData.getIn(['activePubData', 'markdown']), Object.values({} || {}));
+		this.setState({
+			htmlTree: mdOutput.tree,
+			TOC: mdOutput.travisTOCFull,
+		});
+	},
+
+	componentWillReceiveProps(nextProps) {
+		if (this.props.readerData.getIn(['activePubData', 'markdown']) !== nextProps.readerData.getIn(['activePubData', 'markdown'])) {
+			const mdOutput = markLib(nextProps.readerData.getIn(['activePubData', 'markdown']), Object.values({} || {}));
+			this.setState({
+				htmlTree: mdOutput.tree,
+				TOC: mdOutput.travisTOCFull,
+			});	
+		}
+		
+	},
+
 	componentWillUnmount() {
 		this.closeModalAndMenuHandler();
 	},
@@ -36,11 +66,6 @@ const Reader = React.createClass({
 			transition: '.2s linear transform'
 		};
 	},
-
-	// pubNavClick: function(optionClicked) {
-	// 	console.log(optionClicked);
-	// 	// this dispatches to reader to set the modal to 'discussion' or 'toc', 
-	// },
 
 	closeModalHandler: function() {
 		this.props.dispatch(closeModal());
@@ -135,50 +160,8 @@ const Reader = React.createClass({
 		}
 		
 		const pubData = this.props.readerData.get('pubData').toJS();
-		// console.log(pubData);
-		const tocFull = [
-			{
-				id: 'okay-nosdw-woohooo-so-thats',
-				level: 1,
-				title: 'Okay nosdw Woohooo so thats',
-			},
-			{
-				id: 'abstract-intro',
-				level: 1,
-				title: 'Abstract Intro',
-			},
-			{
-				id: 'dog',
-				level: 2,
-				title: 'dog',
-			},
-			{
-				id: 'cat',
-				level: 2,
-				title: 'cat',
-			},
-			{
-				id: 'fish',
-				level: 3,
-				title: 'fish',
-			},
-			{
-				id: 'scheduling',
-				level: 1,
-				title: 'Scheduling',
-			},
-			{
-				id: 'donkey',
-				level: 3,
-				title: 'donkey',
-			},
-			{
-				id: 'Conclusion',
-				level: 2,
-				title: 'Conclusion',
-			},
-		];
-
+		const activePubData = this.props.readerData.get('activePubData').toJS();
+	
 		return (
 			<div style={styles.container}>
 
@@ -225,17 +208,17 @@ const Reader = React.createClass({
 					<PubBody
 						status = {this.props.readerData.get('status')}
 						openModalHandler = {this.openModalHandler}
-						title = {pubData.title} 
-						abstract = {pubData.abstract} 
-						markdown = {pubData.markdown} // This will probably be the tree, not the markdown. Calculate markdown here in reader, so we can have TOC, etc
-						authors = {pubData.authors}/>
+						title = {activePubData.title} 
+						abstract = {activePubData.abstract} 
+						htmlTree = {this.state.htmlTree} // This will probably be the tree, not the markdown. Calculate markdown here in reader, so we can have TOC, etc
+						authors = {activePubData.authors}/>
 
 					<PubModals 
 						closeModalHandler = {this.closeModalHandler}
 						closeModalAndMenuHandler = {this.closeModalAndMenuHandler}
 						activeModal = {this.props.readerData.get('activeModal')}
 						// TOC Props
-						tocData = {tocFull}/>
+						tocData = {this.state.TOC}/>
 
 				</div>
 

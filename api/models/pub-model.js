@@ -18,6 +18,7 @@ var pubSchema = new Schema({
 	authors: [{ type: ObjectId, ref: 'User'}],
 	plugins: [{ type: ObjectId, ref: 'User'}], // Takes raw sources and sets options for rendering them
 	assets: [{ type: ObjectId, ref: 'Asset'}], //Raw sources 
+	references: [{ type: ObjectId, ref: 'Reference'}], //Raw References
 	style: { type: Schema.Types.Mixed },
 	lastUpdated: { type: Date },
 	status: { type: String },
@@ -50,6 +51,7 @@ var pubSchema = new Schema({
 		authors: [{ type: ObjectId, ref: 'User'}],
 		plugins: [{ type: ObjectId, ref: 'User'}], // Takes raw sources and sets options for rendering them
 		assets: [{ type: ObjectId, ref: 'Asset'}], //Raw sources 
+		references: [{ type: ObjectId, ref: 'Reference'}], //Raw References
 		style: { type: Schema.Types.Mixed },
 		status: { type: String },
 	}],

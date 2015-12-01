@@ -4,7 +4,7 @@ import {baseStyles} from './pubModalStyle';
 import PubModalTOCRow from './PubModalTOCRow';
 // import {globalStyles} from '../../utils/styleConstants';
 
-let styles = {};
+// let styles = {};
 
 const PubModalTOC = React.createClass({
 	propTypes: {
@@ -18,7 +18,6 @@ const PubModalTOC = React.createClass({
 	},
 
 	render: function() {
-		console.log(PubModalTOCRow);
 		return (
 			<div style={baseStyles.pubModalContainer}>
 
@@ -47,6 +46,6 @@ const PubModalTOC = React.createClass({
 
 export default Radium(PubModalTOC);
 
-styles = {
+// styles = {
 	
-};
+// };

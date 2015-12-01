@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react';
 import Radium from 'radium';
-import {baseStyles} from './pubModalStyle';
+// import {baseStyles} from './pubModalStyle';
 // import {globalStyles} from '../../utils/styleConstants';
 
 let styles = {};
@@ -12,8 +12,6 @@ const PubModalTOCRow = React.createClass({
 	},
 
 	render: function() {
-		console.log(this.props.content);
-		console.log(this.props.tocIndex);
 		return (
 			<div style={styles.container}>
 
@@ -34,6 +32,9 @@ export default Radium(PubModalTOCRow);
 styles = {
 	container: {
 		margin: '10px 0px',
+		'@media screen and (min-resolution: 3dppx), (max-width: 767px)': {
+			margin: '20px 0px',
+		},
 	},
 	row: {
 		color: '#888',
@@ -44,14 +45,14 @@ styles = {
 	},
 	rowNumber: {
 		// float: 'left',
-		fontWeight: 'bold',
-		fontFamily: 'Arial',
+		// fontWeight: 'bold',
+		fontFamily: 'Courier',
 		color: '#BBB',
 		// width: 50,
 		height: 25,
 		lineHeight: '25px',
 		// backgroundColor: 'red',
-		fontSize: '18px',
+		fontSize: '15px',
 		paddingRight: 20,
 	},
 	rowTitle: {
