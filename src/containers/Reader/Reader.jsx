@@ -136,6 +136,49 @@ const Reader = React.createClass({
 		
 		const pubData = this.props.readerData.get('pubData').toJS();
 		// console.log(pubData);
+		const tocFull = [
+			{
+				id: 'okay-nosdw-woohooo-so-thats',
+				level: 1,
+				title: 'Okay nosdw Woohooo so thats',
+			},
+			{
+				id: 'abstract-intro',
+				level: 1,
+				title: 'Abstract Intro',
+			},
+			{
+				id: 'dog',
+				level: 2,
+				title: 'dog',
+			},
+			{
+				id: 'cat',
+				level: 2,
+				title: 'cat',
+			},
+			{
+				id: 'fish',
+				level: 3,
+				title: 'fish',
+			},
+			{
+				id: 'scheduling',
+				level: 1,
+				title: 'Scheduling',
+			},
+			{
+				id: 'donkey',
+				level: 3,
+				title: 'donkey',
+			},
+			{
+				id: 'Conclusion',
+				level: 2,
+				title: 'Conclusion',
+			},
+		];
+
 		return (
 			<div style={styles.container}>
 
@@ -184,13 +227,15 @@ const Reader = React.createClass({
 						openModalHandler = {this.openModalHandler}
 						title = {pubData.title} 
 						abstract = {pubData.abstract} 
-						markdown = {pubData.markdown}
+						markdown = {pubData.markdown} // This will probably be the tree, not the markdown. Calculate markdown here in reader, so we can have TOC, etc
 						authors = {pubData.authors}/>
 
 					<PubModals 
 						closeModalHandler = {this.closeModalHandler}
 						closeModalAndMenuHandler = {this.closeModalAndMenuHandler}
-						activeModal = {this.props.readerData.get('activeModal')}/>
+						activeModal = {this.props.readerData.get('activeModal')}
+						// TOC Props
+						tocData = {tocFull}/>
 
 				</div>
 

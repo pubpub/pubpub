@@ -10,6 +10,7 @@ const PubModals = React.createClass({
 		closeModalHandler: PropTypes.func,
 		closeModalAndMenuHandler: PropTypes.func,
 		activeModal: PropTypes.string,
+		tocData: PropTypes.array,
 	},
 
 	render: function() {
@@ -25,7 +26,9 @@ const PubModals = React.createClass({
 						{(() => {
 							switch (this.props.activeModal) {
 							case 'tableOfContents':
-								return (<PubModalTOC />);
+								return (<PubModalTOC 
+										tocData={this.props.tocData}/>
+									);
 							case 'history':
 								return ('history');
 							case 'source':
@@ -53,7 +56,9 @@ const PubModals = React.createClass({
 export default Radium(PubModals);
 
 styles = {	
-
+	container: {
+		fontFamily: globalStyles.headerFont,
+	},
 	// Modal Styling
 	modalWrapper: {
 		width: '100%',
@@ -105,7 +110,7 @@ styles = {
 		pointerEvents: 'auto',
 	},
 	modalContainer: {
-		width: '76%',
+		width: '90%',
 		minHeight: 400,
 		maxHeight: 'calc(100% - 150px)',
 		overflow: 'hidden',
@@ -113,7 +118,7 @@ styles = {
 		margin: '0 auto',
 		position: 'absolute',
 		top: 60,
-		left: '12%',
+		left: '5%',
 		backgroundColor: 'white',
 		boxShadow: '0px 0px 10px 0px rgba(0,0,0,0.25)',
 		zIndex: 150,

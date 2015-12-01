@@ -9,6 +9,7 @@ var inlines = {};
 var result = [];
 var toc = [];
 var travisTOC = [];
+var travisTOCFull = [];
 
 // Converts inline IDs to actual elements
 var createBlockContent = function (content) {
@@ -57,6 +58,15 @@ renderer.heading = function (text, level) {
   type = options[type] || type;
   var id = text.replace(/\s/g, '-').toLowerCase();
   var lastToc = toc[toc.length -1];
+
+  if (level) {
+    travisTOCFull.push({
+        id: id,
+        title: text,
+        level: level,
+      });
+  }
+
   if (level === 1) {
     travisTOC.push({
       id: id,
@@ -64,6 +74,7 @@ renderer.heading = function (text, level) {
       level: level,
     });
   }
+
   if (!lastToc || lastToc.level > level) {
     toc.push({
       id: id,
@@ -186,6 +197,7 @@ var exec = function (content,assets) {
   result = [];
   toc = [];
   travisTOC = [];
+  travisTOCFull = [];
   inlines = {};
   keys = 0;
 	//options = {};
@@ -195,6 +207,7 @@ var exec = function (content,assets) {
     tree: result,
     toc: toc,
     travisTOC: travisTOC,
+    travisTOCFull: travisTOCFull,
   };
 };
 
