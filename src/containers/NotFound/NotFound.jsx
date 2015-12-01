@@ -5,10 +5,10 @@ import DocumentMeta from 'react-document-meta';
 export default React.createClass({
 
 	componentWillMount: function() {
-		console.log('it will mount...');
+		// console.log('it will mount...');
 	},
 	componentDidMount: function() {
-		console.log('it mounted!');
+		// console.log('it mounted!');
 	},
 
 	render: function() {
