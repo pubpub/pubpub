@@ -1,6 +1,6 @@
 import React, {PropTypes} from 'react';
 import Radium from 'radium';
-import Markdown from 'react-remarkable';
+// import Markdown from 'react-remarkable';
 import {globalStyles} from '../../utils/styleConstants';
 
 let styles = {};
@@ -10,9 +10,13 @@ const PubBody = React.createClass({
 		status: PropTypes.string,
 		title: PropTypes.string,
 		abstract: PropTypes.string,
-		markdown: PropTypes.string,
-		html: PropTypes.string,
+		htmlTree: PropTypes.array,
 		authors: PropTypes.array,
+	},
+	getDefaultProps: function() {
+		return {
+			htmlTree: [],
+		};
 	},
 
 	render: function() {
@@ -25,7 +29,7 @@ const PubBody = React.createClass({
 					<p style={styles.pubAbstract}>{this.props.abstract}</p>
 					<div style={styles.headerDivider}></div>
 
-					<Markdown source={this.props.markdown} />
+					{this.props.htmlTree}
 
 				</div>
 				

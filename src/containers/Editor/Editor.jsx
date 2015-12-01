@@ -51,7 +51,8 @@ const Editor = React.createClass({
 	getInitialState() {
 		return {
 			tree: '',
-			travisTOC: ['Section 1', 'Section 2', 'Section 3', 'Section 4'],
+			travisTOC: [],
+			travisTOCFull: [],
 			activeFocus: '',
 			firepadData: {},
 			codeMirrorChange: {},
@@ -109,7 +110,7 @@ const Editor = React.createClass({
 		return cm;
 	},
 
-	showPopupFromAutocomplete: function(completion, element) {
+	showPopupFromAutocomplete: function(completion) { // completion, element
 		const cords = this.cm.cursorCoords();
 		this.refs.pluginPopup.showAtPos(cords.left - 10, cords.top);
 		CodeMirror.off(completion, 'pick', this.showPopupFromAutocomplete);
@@ -126,9 +127,12 @@ const Editor = React.createClass({
 		}
 
 		const mdOutput = markLib(cm.getValue(), Object.values(this.state.firepadData.assets || {}));
+		// console.log(mdOutput.travisTOCFull);
+		// console.log(mdOutput.tree);
 		this.setState({
 			tree: mdOutput.tree,
 			travisTOC: mdOutput.travisTOC,
+			travisTOCFull: mdOutput.travisTOCFull,
 			codeMirrorChange: change
 		});
 	},
@@ -284,6 +288,7 @@ const Editor = React.createClass({
 		};
 
 		return (
+
 			<div style={[styles.editorContainer, darkMode && styles.editorContainerDark]}>
 
 				<DocumentMeta {...metaData} />
@@ -415,7 +420,7 @@ const Editor = React.createClass({
 					{/* Markdown Editing Block */}
 					<div id="editor-text-wrapper" style={[styles.hiddenUntilLoad, styles[loadStatus], styles.common.editorMarkdown, styles[viewMode].editorMarkdown]}>
 
-						<EditorPluginPopup ref="pluginPopup" activeFocus={this.state.activeFocus} codeMirrorChange={this.state.codeMirrorChange}/>
+						<EditorPluginPopup ref="pluginPopup" assets={this.state.firepadData.assets} activeFocus={this.state.activeFocus} codeMirrorChange={this.state.codeMirrorChange}/>
 
 						{/* Insertion point for codemirror and firepad */}
 						<div style={[this.state.activeFocus !== '' && styles.hiddenMainEditor]}>

@@ -4,7 +4,7 @@ import plugins from '../../components/EditorPlugins/index.js';
 
 export default function() {
 
-	CodeMirror.registerHelper('hint', 'plugins', function(editor, options) {
+	CodeMirror.registerHelper('hint', 'plugins', function(editor) { // (editor,options)
 
 		let result;
 		try {
@@ -35,6 +35,9 @@ export default function() {
 			} else {
 				result = null;
 			}
+			// } else {
+			// 	return null;
+			// }
 		} catch (err) {
 			console.warn(err);
 		}

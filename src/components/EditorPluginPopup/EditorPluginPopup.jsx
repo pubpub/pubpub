@@ -9,6 +9,7 @@ const Reference = React.createClass({
 	propTypes: {
 		activeFocus: PropTypes.string,
 		codeMirrorChange: PropTypes.object,
+		assets: PropTypes.object
 	},
 
 	getDefaultProps: function() {
@@ -164,6 +165,8 @@ const Reference = React.createClass({
 
 	render: function() {
 
+		const assets = (this.props.assets) ? Object.values(this.props.assets).map( asset => asset.refName) : [];
+		console.log(assets);
 		return (
 			<div id="plugin-popup" className="plugin-popup" style={[styles.pluginPopup, this.getPluginPopupLoc(), this.state.popupVisible && styles.pluginPopupVisible]}>
 				<div style={styles.pluginPopupArrow}></div>
@@ -172,15 +175,23 @@ const Reference = React.createClass({
 						{
 
 							Object.keys(this.state.contentObject).map((pluginValue)=>{
-								return (
-									<div key={'pluginVal-' + pluginValue} style={styles.pluginOptionWrapper}>
-										<label htmlFor={pluginValue} style={styles.pluginOptionLabel}>{this.state.defaultObject[pluginValue].title}</label>
-										<input ref={'pluginInput-' + pluginValue} style={styles.pluginOptionInput} name={pluginValue} id={pluginValue} type="text" defaultValue={this.state.contentObject[pluginValue]}/>
-										<div style={[styles.pluginOptionDefault, this.state.defaultObject[pluginValue].default && styles.pluginOptionDefaultVisible]}>default: {this.state.defaultObject[pluginValue].default}</div>
-										<div style={styles.clearfix}></div>
-									</div>
-
-								);
+								let html;
+								if (pluginValue === 'src') {
+									html = 	(<div key={'pluginVal-' + pluginValue} style={styles.pluginOptionWrapper}>
+														<label htmlFor={pluginValue} style={styles.pluginOptionLabel}>{this.state.defaultObject[pluginValue].title}</label>
+														<select ref={'pluginInput-' + pluginValue} style={styles.pluginOptionInput} name={pluginValue} id={pluginValue} multiple={true} value={['B', 'C']} />
+														<div style={[styles.pluginOptionDefault, this.state.defaultObject[pluginValue].default && styles.pluginOptionDefaultVisible]}>default: {this.state.defaultObject[pluginValue].default}</div>
+														<div style={styles.clearfix}></div>
+														</div>);
+								} else {
+									html = 	( <div key={'pluginVal-' + pluginValue} style={styles.pluginOptionWrapper}>
+														<label htmlFor={pluginValue} style={styles.pluginOptionLabel}>{this.state.defaultObject[pluginValue].title}</label>
+														<input ref={'pluginInput-' + pluginValue} style={styles.pluginOptionInput} name={pluginValue} id={pluginValue} type="text" defaultValue={this.state.contentObject[pluginValue]}/>
+														<div style={[styles.pluginOptionDefault, this.state.defaultObject[pluginValue].default && styles.pluginOptionDefaultVisible]}>default: {this.state.defaultObject[pluginValue].default}</div>
+														<div style={styles.clearfix}></div>
+													</div>);
+								}
+								return html;
 							})
 						}
 
