@@ -69,7 +69,7 @@ const HeaderMenu = React.createClass({
 							{(isPub === true
 								? <div>
 									<li key="menuListItem3" style={styles.menuItemseparator}></li>
-									<li key="menuListItem4" style={styles.menuItem} >Favorite Pub</li>
+									<li key="menuListItem4" style={styles.menuItem} >Favorite</li>
 									<li key="menuListItem5" style={styles.menuItem} onClick={this.props.openPubModal('tableOfContents')}>Table of Contents</li>
 									<li key="menuListItem6" style={styles.menuItem} onClick={this.props.openPubModal('status')}>Status</li>
 									<li key="menuListItem7" style={styles.menuItem} onClick={this.props.openPubModal('discussions')}>Discussions</li>

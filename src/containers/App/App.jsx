@@ -1,5 +1,5 @@
 import React, { PropTypes } from 'react';
-import Radium from 'radium';
+import Radium, {Style} from 'radium';
 import { Link } from 'react-router';
 import {reset} from 'redux-form';
 import {Login} from '../index';
@@ -74,11 +74,16 @@ const App = React.createClass({
 		}
 
 		return (
-			<div style={[
-				styles.body,
-				this.props.loginData.get('isVisible') && styles.noScroll,
-				this.props.navData.get('menuOpen') && styles.noScroll
-			]}>
+			<div style={styles.body}>
+
+				{
+					// Set the body to not scroll if you have the login window or the mobile menu open
+					this.props.loginData.get('isVisible') || this.props.navData.get('menuOpen')
+						? <Style rules={{'body': {overflow: 'hidden'}}} />
+						: null
+				}
+				
+
 				<div className="header-bar" style={[styles.headerBar, styles[pathname].headerBar]}>
 					
 					<Link to={`/`}><div key="headerLogo" style={[styles.headerText, styles.headerLogo, styles[pathname].headerText]}>PubPub</div></Link>
@@ -152,9 +157,6 @@ styles = {
 		'@media screen and (min-resolution: 3dppx), (max-width: 767px)': {
 			// overflow: 'scroll',
 		},
-	},
-	noScroll: {
-		height: '100vh'
 	},
 	headerBar: {
 		
