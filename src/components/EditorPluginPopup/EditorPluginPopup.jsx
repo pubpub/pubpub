@@ -2,6 +2,8 @@ import React, {PropTypes} from 'react';
 import Radium from 'radium';
 import {globalPluginOptions, pluginOptions} from '../../components/EditorPlugins';
 import {parsePluginString, createPluginString} from '../../utils/parsePlugins';
+import SmartSelect from 'react-select';
+
 
 let styles = {};
 
@@ -165,8 +167,7 @@ const Reference = React.createClass({
 
 	render: function() {
 
-		const assets = (this.props.assets) ? Object.values(this.props.assets).map( asset => asset.refName) : [];
-		console.log(assets);
+		const assets = (this.props.assets) ? Object.values(this.props.assets).map( function(asset) { return {'value': asset.refName, 'label': asset.refName};}) : [];
 		return (
 			<div id="plugin-popup" className="plugin-popup" style={[styles.pluginPopup, this.getPluginPopupLoc(), this.state.popupVisible && styles.pluginPopupVisible]}>
 				<div style={styles.pluginPopupArrow}></div>
@@ -179,7 +180,7 @@ const Reference = React.createClass({
 								if (pluginValue === 'src') {
 									html = 	(<div key={'pluginVal-' + pluginValue} style={styles.pluginOptionWrapper}>
 														<label htmlFor={pluginValue} style={styles.pluginOptionLabel}>{this.state.defaultObject[pluginValue].title}</label>
-														<select ref={'pluginInput-' + pluginValue} style={styles.pluginOptionInput} name={pluginValue} id={pluginValue} multiple={true} value={['B', 'C']} />
+														<SmartSelect ref={'pluginInput-' + pluginValue} name={pluginValue} id={pluginValue} options={assets} />
 														<div style={[styles.pluginOptionDefault, this.state.defaultObject[pluginValue].default && styles.pluginOptionDefaultVisible]}>default: {this.state.defaultObject[pluginValue].default}</div>
 														<div style={styles.clearfix}></div>
 														</div>);
