@@ -38,7 +38,8 @@ const Reader = React.createClass({
 	},
 
 	componentWillMount() {
-		const mdOutput = markLib(this.props.readerData.getIn(['activePubData', 'markdown']), Object.values({} || {}));
+		const inputMD = this.props.readerData.getIn(['activePubData', 'markdown']) || '';
+		const mdOutput = markLib(inputMD, Object.values({} || {}));
 		this.setState({
 			htmlTree: mdOutput.tree,
 			TOC: mdOutput.travisTOCFull,

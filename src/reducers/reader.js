@@ -76,18 +76,21 @@ function loadSuccess(state, result) {
 		outputState.pubData = { ...defaultState.get('pubData'),
 			title: 'Pub Not Found',
 		};
+		outputState.activePubData = { ...outputState.pubData};
 	}
 
 	if (result === 'Private Pub') {
 		outputState.pubData = { ...defaultState.get('pubData'),
 			title: 'Private Pub',
 		};
+		outputState.activePubData = { ...outputState.pubData};
 	}
 
 	if (result === 'Pub not yet published') {
 		outputState.pubData = { ...defaultState.get('pubData'),
 			title: 'Pub not yet published',
 		};
+		outputState.activePubData = { ...outputState.pubData};
 	} 
 
 	return state.merge(outputState);
