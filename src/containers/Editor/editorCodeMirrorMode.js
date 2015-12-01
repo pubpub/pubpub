@@ -10,7 +10,7 @@ export default function() {
 			// console.log(token);
 
 			if (token.type === 'pubpub-markdown') {
-				//const list = ['asset', 'image', 'title', 'audio', 'video', 'table'];
+				// const list = ['asset', 'image', 'title', 'audio', 'video', 'table'];
 				const list = [
 					{text: 'video: ]', displayText: 'video'},
 					{text: 'image: ]', displayText: 'image'}];
@@ -24,9 +24,10 @@ export default function() {
 				}
 
 				return {list: list, from: CodeMirror.Pos(cur.line, startPos + 1), to: CodeMirror.Pos(cur.line, token.end)};
-			} else {
-				return null;
 			}
+			// } else {
+			// 	return null;
+			// }
 		} catch (err) {
 			console.warn(err);
 		}
