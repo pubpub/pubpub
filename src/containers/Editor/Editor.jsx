@@ -73,6 +73,7 @@ const Editor = React.createClass({
 
 			// Load codemirror
 			const codeMirror = CodeMirror(document.getElementById('codemirror-wrapper'), cmOptions);
+			this.cm = codeMirror;
 
 			// Get Login username for firepad use. Shouldn't be undefined, but set default in case.
 			const username = (this.props.loginData.get('loggedIn') === false) ? 'cat' : this.props.loginData.getIn(['userData', 'username']);
@@ -108,9 +109,21 @@ const Editor = React.createClass({
 		return cm;
 	},
 
+	showPopupFromAutocomplete: function(completion, element) {
+		const cords = this.cm.cursorCoords();
+		this.refs.pluginPopup.showAtPos(cords.left - 10, cords.top);
+		CodeMirror.off(completion, 'pick', this.showPopupFromAutocomplete);
+		return;
+	},
+
 	onEditorChange: function(cm, change) {
 
 		CodeMirror.commands.autocomplete(cm, CodeMirror.hint.plugins, {completeSingle: false});
+
+		if (cm.state.completionActive && cm.state.completionActive.data) {
+			const completion = cm.state.completionActive.data;
+			CodeMirror.on(completion, 'pick', this.showPopupFromAutocomplete);
+		}
 
 		const mdOutput = markLib(cm.getValue(), Object.values(this.state.firepadData.assets || {}));
 		this.setState({
@@ -295,7 +308,7 @@ const Editor = React.createClass({
 					}
 
 					{/*	Component for all modals and their backdrop. */}
-					<EditorModals 
+					<EditorModals
 						closeModalHandler={this.closeModalHandler}
 						activeModal={this.props.editorData.get('activeModal')}
 						slug={this.props.slug}
@@ -402,7 +415,7 @@ const Editor = React.createClass({
 					{/* Markdown Editing Block */}
 					<div id="editor-text-wrapper" style={[styles.hiddenUntilLoad, styles[loadStatus], styles.common.editorMarkdown, styles[viewMode].editorMarkdown]}>
 
-						<EditorPluginPopup activeFocus={this.state.activeFocus} codeMirrorChange={this.state.codeMirrorChange}/>
+						<EditorPluginPopup ref="pluginPopup" activeFocus={this.state.activeFocus} codeMirrorChange={this.state.codeMirrorChange}/>
 
 						{/* Insertion point for codemirror and firepad */}
 						<div style={[this.state.activeFocus !== '' && styles.hiddenMainEditor]}>

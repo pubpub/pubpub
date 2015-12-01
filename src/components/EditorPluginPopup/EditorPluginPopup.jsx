@@ -47,7 +47,7 @@ const Reference = React.createClass({
 		// If the content changes and the popup is visible, it will be out of date, so hide it.
 		// Well, we don't want it to close if ANY change is made, only a change to the same line
 		// If the from to to line of the change equal the line of the popup, close it.
-		if (this.state.activeLine !== undefined && this.state.activeLine >= change.from.line && this.state.activeLine <= change.to.line) {
+		if (this.state.activeLine !== undefined && this.state.activeLine >= change.from.line && this.state.activeLine <= change.to.line && change.origin !== 'complete') {
 			this.setState({
 				popupVisible: false,
 				activeLine: undefined,
@@ -95,6 +95,10 @@ const Reference = React.createClass({
 			clickX = event.clientX + document.body.scrollLeft + document.documentElement.scrollLeft;
 			clickY = event.clientY + document.body.scrollTop + document.documentElement.scrollTop;
 		}
+		this.showAtPos(clickX, clickY);
+	},
+
+	showAtPos: function(clickX, clickY) {
 
 		const target = document.elementFromPoint(clickX, clickY);
 		const contentBody = document.getElementById('editor-text-wrapper');

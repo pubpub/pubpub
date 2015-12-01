@@ -151,13 +151,6 @@ renderer.em = function (text) {
   return '{{' + id + '}}';
 };
 
-/*
-renderer.math = function (text) {
-  result.push(React.createElement(options.math || 'math', {key: keys++},ent.decode(text)));
-  return;
-};
-*/
-
 renderer.codespan = function (text) {
   var id = inlineIds++;
   inlines[id] = React.createElement('code', {key: keys++}, ent.decode(text));

@@ -20,6 +20,7 @@ export default {
 		component: MathPlugin,
 		rule: /^\$([^\$]+)\$/,
 		inline: true,
+		autocomplete: false,
 		inlineFunc: function(cap, renderer) {
 			return renderer(cap[1]);
 		}
@@ -27,6 +28,7 @@ export default {
 	image: {
 		component: ImagePlugin,
 		inline: true,
+		autocomplete: true,
 		// rule: /^(?:\s)*(?::{2})asset(?::{2})([^\n:]+)(?::{2})/,
 		rule: /^(?:\s)*(?:\[)image:([^\n\]]*)(?:\])/,
 		inlineFunc: function(cap, renderer, assets) {
