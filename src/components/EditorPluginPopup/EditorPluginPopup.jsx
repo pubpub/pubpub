@@ -1,6 +1,7 @@
 import React, {PropTypes} from 'react';
 import Radium from 'radium';
 import {globalPluginOptions, pluginOptions} from '../../components/EditorPlugins';
+import {parsePluginString, createPluginString} from '../../utils/parsePlugins';
 
 let styles = {};
 
@@ -36,7 +37,7 @@ const Reference = React.createClass({
 	},
 
 	componentWillReceiveProps(nextProps) {
-		if (this.props.codeMirrorChange === nextProps.codeMirrorChange) { 
+		if (this.props.codeMirrorChange === nextProps.codeMirrorChange) {
 			// If a re-render causes this component to receive new props, but the props haven't changed, return.
 			return null;
 		}
@@ -103,24 +104,16 @@ const Reference = React.createClass({
 			const pluginString = target.innerHTML.slice(1, -1); // Original string minus the brackets
 			const pluginSplit = pluginString.split(':');
 			const pluginType = pluginSplit[0];
-			const values = pluginSplit.length > 1 ? pluginSplit[1].split(',') : undefined; // Values split into an array
 
-			const pluginObject = {};
-			if (values !== undefined) {
-				// Map the array values into an object
-				values.map((valueString)=>{
-					const key = valueString.split('=')[0].replace(/ /g, '');
-					const value = valueString.split('=')[1];
-					pluginObject[key] = value;
-				});
-			}
+			const valueString = pluginSplit.length > 1 ? pluginSplit[1] : ''; // Values split into an array
+			const pluginObject = parsePluginString(valueString);
 
 			const defaultObject = {...globalPluginOptions, ...pluginOptions[pluginType]};
 			const outputObject = {};
 			for (const key in defaultObject) {
 				if (defaultObject.hasOwnProperty(key)) {
 					// Take all of the the value specified in the text, and overwrite default values.
-					outputObject[key] = key in pluginObject ? pluginObject[key] : defaultObject[key].value;	
+					outputObject[key] = key in pluginObject ? pluginObject[key] : defaultObject[key].value;
 				}
 			}
 
@@ -148,7 +141,7 @@ const Reference = React.createClass({
 					contentObject: {}
 				});
 			}
-			
+
 		}
 	},
 
@@ -159,26 +152,12 @@ const Reference = React.createClass({
 		const from = {line: lineNum, ch: 0};
 		const to = {line: lineNum, ch: lineContent.length};
 
-		let outputVariables = '';
-		for (const key in this.state.contentObject) {
-			// Generate an output string based on the key, values in the object
-			if (Object.prototype.hasOwnProperty.call(this.state.contentObject, key)) {
-				const val = this.refs['pluginInput-' + key].value;
-
-				if (val && val.length) {
-					outputVariables += key + '=' + val + ', ';
-				}
-			}
-		}
-		outputVariables = outputVariables.slice(0, -2); // Remove the last comma and space
-
-		const mergedString = outputVariables.length ? this.state.pluginType + ': ' + outputVariables : this.state.pluginType;
+		const mergedString = createPluginString(this.state.pluginType, this.state.contentObject, this.refs);
 		const outputString = lineContent.replace(this.state.initialString, mergedString);
-		
 		cm.replaceRange(outputString, from, to); // Since the popup closes on change, this will close the pluginPopup
 	},
 
-	
+
 	render: function() {
 
 		return (
@@ -196,16 +175,16 @@ const Reference = React.createClass({
 										<div style={[styles.pluginOptionDefault, this.state.defaultObject[pluginValue].default && styles.pluginOptionDefaultVisible]}>default: {this.state.defaultObject[pluginValue].default}</div>
 										<div style={styles.clearfix}></div>
 									</div>
-									
+
 								);
 							})
 						}
-						
+
 					<div style={styles.pluginSave} key={'pluginPopupSave'} onClick={this.onPluginSave}>Save</div>
 				</div>
 			</div>
 		);
-		
+
 	}
 });
 
