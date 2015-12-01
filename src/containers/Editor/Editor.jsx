@@ -96,6 +96,7 @@ const Editor = React.createClass({
 	},
 
 	componentWillUnmount() {
+		this.props.dispatch(closeModal());
 		this.props.dispatch(unmountEditor());
 	},
 
