@@ -221,7 +221,9 @@ const Reader = React.createClass({
 						// TOC Props
 						tocData = {this.state.TOC}
 						// Source Props
-						markdown = {activePubData.markdown}/>
+						markdown = {activePubData.markdown}
+						// History Props
+						historyData = {pubData.history} />
 
 				</div>
 

@@ -14,6 +14,8 @@ const PubModals = React.createClass({
 		tocData: PropTypes.array,
 		// Source Props
 		markdown: PropTypes.string,
+		// History Props
+		historyData: PropTypes.array,
 	},
 
 	render: function() {
@@ -33,7 +35,8 @@ const PubModals = React.createClass({
 										tocData={this.props.tocData}/>
 									);
 							case 'history':
-								return (<PubModalHistory/>
+								return (<PubModalHistory 
+										historyData={this.props.historyData} />
 									);
 							case 'source':
 								return (<PubModalSource 
