@@ -2,6 +2,8 @@ var app = require('../api');
 
 var Pub  = require('../models').Pub;
 var User = require('../models').User;
+var Asset = require('../models').Asset;
+var Reference = require('../models').Reference;
 
 var _         = require('underscore');
 var Firebase  = require('firebase');
@@ -113,40 +115,80 @@ app.post('/publishPub', function(req, res) {
 	Pub.findOne({ slug: req.body.newVersion.slug }, function (err, pub){
 		if (err) { return res.status(500).json(err);  }
 
-		console.log(pub);
+		// console.log(pub);
 		if (!req.user || pub.collaborators.canEdit.indexOf(req.user._id) === -1) {
 			return res.status(403).json('Not authorized to publish versions to this pub');
 		}
-		// doc.name = 'jason borne';
-		pub.title = req.body.newVersion.title;
-		pub.abstract = req.body.newVersion.abstract;
-		pub.authorsNote = req.body.newVersion.authorsNote;
-		pub.markdown = req.body.newVersion.markdown;
-		pub.assets = req.body.newVersion.assets;
-		pub.style = req.body.newVersion.style;
-		pub.lastUpdated = new Date().getTime(),
-		pub.status = req.body.newVersion.status;
-		pub.history.push({
-			publishNote: req.body.newVersion.publishNote,
-			publishDate: new Date().getTime(),
-			publishAuthor: req.user._id,
-			diffToLastPublish: '',
-			title: req.body.newVersion.title,
-			abstract: req.body.newVersion.abstract,
-			authorsNote: req.body.newVersion.authorsNote,
-			markdown: req.body.newVersion.markdown,
-			authors: req.body.newVersion.authors,
-			assets: req.body.newVersion.assets,
-			style: req.body.newVersion.style,
-			status: req.body.newVersion.status,
-		});
-		pub.save(function(err, result){
-			if (err) { return res.status(500).json(err);  }
+		const publishDate = new Date().getTime();
+	
+		// Append details to assets
+		const assets = [];
+		for (const key in req.body.newVersion.assets) { 
+			const assetObject = req.body.newVersion.assets[key];
+			assetObject.usedInDiscussion = null;
+			assetObject.usedInPub = pub._id;
+			assetObject.owner = req.user._id;
+			assetObject.createDate = publishDate;
+			assets.push(assetObject);
+		}
 
-			console.log('in save result');
-			console.log(result);
-			return res.status(201).json('Published new version');
+		// Append details to references
+		const references = [];
+		for (const key in req.body.newVersion.references) { 
+			const referenceObject = req.body.newVersion.references[key];
+			referenceObject.usedInDiscussion = null;
+			referenceObject.usedInPub = pub._id;
+			referenceObject.owner = req.user._id;
+			referenceObject.createDate = publishDate;
+			references.push(referenceObject);
+		}
+
+		Asset.insertBulkAndReturnIDs(assets, function(err, dbAssetsIds){
+			if (err) { return res.status(500).json(err);  }
+			Reference.insertBulkAndReturnIDs(references, function(err, dbReferencesIds){
+				if (err) { return res.status(500).json(err);  }
+			
+				pub.title = req.body.newVersion.title;
+				pub.abstract = req.body.newVersion.abstract;
+				pub.authorsNote = req.body.newVersion.authorsNote;
+				pub.markdown = req.body.newVersion.markdown;
+				pub.authors = req.body.newVersion.authors;
+				pub.assets = dbAssetsIds;
+				pub.references = dbReferencesIds;
+				pub.style = req.body.newVersion.style;
+				pub.lastUpdated = publishDate,
+				pub.status = req.body.newVersion.status;
+				pub.history.push({
+					publishNote: req.body.newVersion.publishNote,
+					publishDate: publishDate,
+					publishAuthor: req.user._id,
+					title: req.body.newVersion.title,
+					abstract: req.body.newVersion.abstract,
+					authorsNote: req.body.newVersion.authorsNote,
+					markdown: req.body.newVersion.markdown,
+					authors: req.body.newVersion.authors,
+					assets: dbAssetsIds,
+					references: dbReferencesIds,
+					style: req.body.newVersion.style,
+					status: req.body.newVersion.status,
+				});
+
+				// console.log(pub);
+
+				pub.save(function(err, result){
+					if (err) { return res.status(500).json(err);  }
+					// console.log('in save result');
+					// console.log(result);
+					return res.status(201).json('Published new version');
+
+				});
+
+
+
+			});
+
 		});
+		
 	});
 });
 

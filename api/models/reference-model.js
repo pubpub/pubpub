@@ -2,23 +2,27 @@ var mongoose  = require('mongoose');
 var Schema    =  mongoose.Schema;
 var ObjectId  = Schema.Types.ObjectId;
 
-var assetSchema = new Schema({
+var referenceSchema = new Schema({
   refName: { type: String, required:true },
-
-  assetType: { type: String},
-  filetype: { type: String},
-  originalFilename: { type: String},
-  thumbnail: { type: String},
-  url: { type: String},
-  url_s3: { type: String},
   
+  title: { type: String },
+  url: { type: String },
+  author: { type: String },
+  journal: { type: String },
+  volume: { type: String },
+  number: { type: String },
+  pages: { type: String },
+  year: { type: String },
+  publisher: { type: String },
+  note: { type: String },
+
   usedInDiscussion: { type: ObjectId, ref: 'Pub' },
   usedInPub: { type: ObjectId, ref: 'Pub' },
   owner: { type: ObjectId, ref: 'User' },
   createDate: { type: Date },
-})
+});
 
-assetSchema.statics.insertBulkAndReturnIDs = function (array, callback) {
+referenceSchema.statics.insertBulkAndReturnIDs = function (array, callback) {
 
 	this.create(array, function(err, dbArray){
 		
@@ -35,4 +39,4 @@ assetSchema.statics.insertBulkAndReturnIDs = function (array, callback) {
 	});
 };
 
-module.exports = mongoose.model('Asset', assetSchema);
+module.exports = mongoose.model('Reference', referenceSchema);

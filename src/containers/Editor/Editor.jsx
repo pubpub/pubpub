@@ -161,29 +161,40 @@ const Editor = React.createClass({
 		const fullMD = cm.getValue();
 
 		const titleRE = /\[title:(.*?)\]/i;
-		const title = fullMD.match(titleRE)[1].trim();
+		const titleMatch = fullMD.match(titleRE);
+		const title = titleMatch && titleMatch.length ? titleMatch[1].trim() : '';
 
 		const abstractRE = /\[abstract:(.*?)\]/i;
-		const abstract = fullMD.match(abstractRE)[1].trim();
+		const abstractMatch = fullMD.match(abstractRE);
+		const abstract = abstractMatch && abstractMatch.length ? abstractMatch[1].trim() : '';
 
 		const authorsNoteRE = /\[authorsNote:(.*?)\]/i;
-		const authorsNote = fullMD.match(authorsNoteRE)[1].trim();
+		const authorsNoteMatch = fullMD.match(authorsNoteRE);
+		const authorsNote = authorsNoteMatch && authorsNoteMatch.length ? authorsNoteMatch[1].trim() : '';
 
+		const authors = [];
+		for (const collaborator in this.state.firepadData.collaborators) {
+			if (this.state.firepadData.collaborators[collaborator].permission === 'edit') {
+				authors.push(this.state.firepadData.collaborators[collaborator]._id);
+			}
+		}
+		
 		const newVersion = {
 			slug: this.props.slug,
 			title: title,
 			abstract: abstract,
-			// authors: [],
-			assets: [],
 			authorsNote: authorsNote,
-			style: {},
 			markdown: fullMD.replace(/\[title:.*?\]/g, '').replace(/\[abstract:.*?\]/g, '').replace(/\[authorsNote:.*?\]/g, '').trim(),
+			authors: authors,
+			assets: this.state.firepadData.assets,
+			references: this.state.firepadData.references,
+			style: this.state.firepadData.settings.pubStyle,
+
 			status: versionState,
 			publishNote: versionDescription,
 		};
-		// console.log(newVersion);
+		
 		this.props.dispatch(publishVersion(newVersion));
-		// Aggregate all the firepad data, push it up through a dispatch, redirect on willreceiveprops
 	},
 
 	// Add asset to firebase.
