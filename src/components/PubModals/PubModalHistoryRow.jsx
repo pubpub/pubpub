@@ -89,6 +89,9 @@ styles = {
 	versionTitleLine: {
 		fontFamily: 'Courier',
 		color: '#555',
+		'@media screen and (min-resolution: 3dppx), (max-width: 767px)': {
+			fontSize: '20px',
+		}
 
 		// backgroundColor: 'rgba(255,0,20,0.1)',
 	},
@@ -102,6 +105,7 @@ styles = {
 		// backgroundColor: 'rgba(255,255,20,0.1)',
 		'@media screen and (min-resolution: 3dppx), (max-width: 767px)': {
 			padding: '15px 15px 30px 30px',
+			fontSize: '20px',
 		}
 	},
 	// versionButtons: {
@@ -111,17 +115,24 @@ styles = {
 		width: 30,
 		display: 'inline-block',
 		fontSize: '16px',
+		'@media screen and (min-resolution: 3dppx), (max-width: 767px)': {
+			fontSize: '20px',
+		}
 	},
 	versionStatus: {
 		paddingRight: 10,
 		fontSize: '16px',
+		'@media screen and (min-resolution: 3dppx), (max-width: 767px)': {
+			fontSize: '20px',
+		}
 	},
 	versionDate: {
 		fontSize: '14px',
 		color: '#666',
 		'@media screen and (min-resolution: 3dppx), (max-width: 767px)': {
 			display: 'block',
-			paddingLeft: 30
+			paddingLeft: 30,
+			fontSize: '18px',
 		}
 	},
 	additions: {
@@ -130,6 +141,7 @@ styles = {
 		fontFamily: 'Courier',
 		'@media screen and (min-resolution: 3dppx), (max-width: 767px)': {
 			display: 'block',
+			fontSize: '18px',
 			// paddingLeft: 30
 		}
 	},
@@ -139,6 +151,7 @@ styles = {
 		fontFamily: 'Courier',
 		'@media screen and (min-resolution: 3dppx), (max-width: 767px)': {
 			display: 'block',
+			fontSize: '18px',
 			// paddingLeft: 30
 		}
 	},
@@ -163,6 +176,12 @@ styles = {
 		':hover': {
 			cursor: 'pointer',
 			color: 'black',
+		},
+		'@media screen and (min-resolution: 3dppx), (max-width: 767px)': {
+			display: 'block',
+			paddingTop: 15,
+			fontSize: '18px',
+			// paddingLeft: 30
 		}
 	}
 
