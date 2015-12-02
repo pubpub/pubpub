@@ -72,15 +72,24 @@ styles = {
 	versionDetails: {
 		width: 'calc(100% - 175px)',
 		float: 'left',
+		'@media screen and (min-resolution: 3dppx), (max-width: 767px)': {
+			float: 'none',
+			width: '100%',
+		}
 	},
 	versionButtons: {
 		width: 175,
-		float: 'left'
+		float: 'left',
+		'@media screen and (min-resolution: 3dppx), (max-width: 767px)': {
+			float: 'none',
+			width: '100%',
+		}
 	},
 
 	versionTitleLine: {
 		fontFamily: 'Courier',
 		color: '#555',
+
 		// backgroundColor: 'rgba(255,0,20,0.1)',
 	},
 	versionChangesLine: {
@@ -91,6 +100,9 @@ styles = {
 	
 		padding: '15px 15px 0px 30px',
 		// backgroundColor: 'rgba(255,255,20,0.1)',
+		'@media screen and (min-resolution: 3dppx), (max-width: 767px)': {
+			padding: '15px 15px 30px 30px',
+		}
 	},
 	// versionButtons: {
 	// 	paddingLeft: 30
@@ -105,24 +117,40 @@ styles = {
 		fontSize: '16px',
 	},
 	versionDate: {
-		fontSize: '12px',
+		fontSize: '14px',
 		color: '#666',
+		'@media screen and (min-resolution: 3dppx), (max-width: 767px)': {
+			display: 'block',
+			paddingLeft: 30
+		}
 	},
 	additions: {
 		fontSize: '14px',
 		color: 'green',
-		fontFamily: 'Courier'
+		fontFamily: 'Courier',
+		'@media screen and (min-resolution: 3dppx), (max-width: 767px)': {
+			display: 'block',
+			// paddingLeft: 30
+		}
 	},
 	deletions: {
 		fontSize: '14px',
 		color: 'red',
-		fontFamily: 'Courier'
+		fontFamily: 'Courier',
+		'@media screen and (min-resolution: 3dppx), (max-width: 767px)': {
+			display: 'block',
+			// paddingLeft: 30
+		}
 	},
 	changeCountSeparator: {
 		display: 'inline-block',
 		width: 20,
 		textAlign: 'center',
 		color: '#ccc',
+		'@media screen and (min-resolution: 3dppx), (max-width: 767px)': {
+			display: 'none',
+			// paddingLeft: 30
+		}
 	},
 	historyButton: {
 		// float: 'left',
