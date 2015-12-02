@@ -92,25 +92,18 @@ styles = {
 		'@media screen and (min-resolution: 3dppx), (max-width: 767px)': {
 			fontSize: '20px',
 		}
-
-		// backgroundColor: 'rgba(255,0,20,0.1)',
 	},
 	versionChangesLine: {
 		paddingLeft: 30
-		// backgroundColor: 'rgba(100,100,20,0.1)',
 	},
 	versionMessage: {
 	
 		padding: '15px 15px 0px 30px',
-		// backgroundColor: 'rgba(255,255,20,0.1)',
 		'@media screen and (min-resolution: 3dppx), (max-width: 767px)': {
 			padding: '15px 15px 30px 30px',
 			fontSize: '20px',
 		}
 	},
-	// versionButtons: {
-	// 	paddingLeft: 30
-	// },
 	versionNumber: {
 		width: 30,
 		display: 'inline-block',
@@ -142,7 +135,6 @@ styles = {
 		'@media screen and (min-resolution: 3dppx), (max-width: 767px)': {
 			display: 'block',
 			fontSize: '18px',
-			// paddingLeft: 30
 		}
 	},
 	deletions: {
@@ -152,7 +144,6 @@ styles = {
 		'@media screen and (min-resolution: 3dppx), (max-width: 767px)': {
 			display: 'block',
 			fontSize: '18px',
-			// paddingLeft: 30
 		}
 	},
 	changeCountSeparator: {
@@ -162,13 +153,9 @@ styles = {
 		color: '#ccc',
 		'@media screen and (min-resolution: 3dppx), (max-width: 767px)': {
 			display: 'none',
-			// paddingLeft: 30
 		}
 	},
 	historyButton: {
-		// float: 'left',
-		// width: '50%',
-		// textAlign: 'center',
 		textAlign: 'right',
 		fontSize: '14px',
 		color: '#888',
@@ -181,7 +168,6 @@ styles = {
 			display: 'block',
 			paddingTop: 15,
 			fontSize: '18px',
-			// paddingLeft: 30
 		}
 	}
 

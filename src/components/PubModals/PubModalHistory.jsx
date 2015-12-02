@@ -2,6 +2,7 @@ import React, { PropTypes } from 'react';
 import Radium from 'radium';
 import {baseStyles} from './pubModalStyle';
 import PubModalHistoryRow from './PubModalHistoryRow';
+import * as jsdiff from 'diff';
 // import {globalStyles} from '../../utils/styleConstants';
 
 let styles = {};
@@ -19,6 +20,12 @@ const PubModalHistory = React.createClass({
 
 	render: function() {
 		console.log(this.props.historyData);
+		const one = 'beep boop';
+		const other = 'beep boob blah';
+
+		const output = jsdiff.diffChars(one, other);
+
+		console.log(output);
 		return (
 			<div style={baseStyles.pubModalContainer}>
 
