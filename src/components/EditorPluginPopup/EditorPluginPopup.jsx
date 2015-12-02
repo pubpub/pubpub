@@ -40,8 +40,9 @@ const Reference = React.createClass({
 	},
 
 	componentWillReceiveProps(nextProps) {
+		
+		// If a re-render causes this component to receive new props, but the props haven't changed, return.
 		if (this.props.codeMirrorChange === nextProps.codeMirrorChange) {
-			// If a re-render causes this component to receive new props, but the props haven't changed, return.
 			return null;
 		}
 

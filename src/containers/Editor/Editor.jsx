@@ -63,6 +63,7 @@ const Editor = React.createClass({
 
 		if (! this.props.editorData.get('error')) {
 			loadCss('/css/codemirror.css');
+			loadCss('/css/react-select.min.css');
 			initCodeMirrorMode();
 
 			// Load Firebase and bind using ReactFireMixin. For assets, references, etc.
