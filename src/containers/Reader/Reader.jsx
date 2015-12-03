@@ -3,10 +3,12 @@ import {connect} from 'react-redux';
 import Radium from 'radium';
 import DocumentMeta from 'react-document-meta';
 import PureRenderMixin from 'react-addons-pure-render-mixin';
-import {getPub, closeModal, openModal} from '../../actions/reader';
-import {openMenu, closeMenu} from '../../actions/nav';
+// import {getPub, closeModal, openModal} from '../../actions/reader';
+import {getPub} from '../../actions/reader';
+// import {openMenu, closeMenu} from '../../actions/nav';
 import {PubBody, PubDiscussion, PubModals, PubNav, LoaderDeterminate} from '../../components';
 import {globalStyles} from '../../utils/styleConstants';
+import { pushState, replaceState, goBack } from 'redux-router';
 
 import markLib from '../../modules/markdown/markdown';
 import markdownExtensions from '../../components/EditorPlugins';
@@ -20,13 +22,34 @@ const Reader = React.createClass({
 	propTypes: {
 		readerData: PropTypes.object,
 		slug: PropTypes.string,
+		query: PropTypes.object,
+		// query options: {
+			// modal: tableOfContents | history | source | cite | status | discussions 
+			// historyDiff: integer
+			// version: integer
+		// }
 		dispatch: PropTypes.func
 	},
+
+	getDefaultProps: function() {
+		return {
+			query: {},
+		};
+	},
+
 	mixins: [PureRenderMixin],
 
 	statics: {
 		fetchDataDeferred: function(getState, dispatch, location, routeParams) {
-			return dispatch(getPub(routeParams.slug));
+			
+			// return dispatch(getPub(routeParams.slug));
+			// console.log(getState().reader.getIn(['pubData', 'slug']));
+			// console.log(routeParams.slug);
+			// console.log('---');
+			if (getState().reader.getIn(['pubData', 'slug']) !== routeParams.slug) {
+				// console.log('in fetch data deferred');
+				return dispatch(getPub(routeParams.slug));
+			}
 		}
 	},
 
@@ -38,7 +61,11 @@ const Reader = React.createClass({
 	},
 
 	componentWillMount() {
-		const inputMD = this.props.readerData.getIn(['activePubData', 'markdown']) || '';
+		// console.log('component will mount fired ');
+		const version = this.props.query.version !== undefined ? this.props.query.version - 1 : this.props.readerData.getIn(['pubData', 'history']).size - 1;
+		// console.log('version is ' + version);
+
+		const inputMD = this.props.readerData.getIn(['pubData', 'history', version, 'markdown']) || '';
 		const mdOutput = markLib(inputMD, Object.values({} || {}));
 		this.setState({
 			htmlTree: mdOutput.tree,
@@ -47,8 +74,12 @@ const Reader = React.createClass({
 	},
 
 	componentWillReceiveProps(nextProps) {
-		if (this.props.readerData.getIn(['activePubData', 'markdown']) !== nextProps.readerData.getIn(['activePubData', 'markdown'])) {
-			const mdOutput = markLib(nextProps.readerData.getIn(['activePubData', 'markdown']), Object.values({} || {}));
+		const oldVersion = this.props.query.version !== undefined ? this.props.query.version - 1 : this.props.readerData.getIn(['pubData', 'history']).size - 1;
+		const version = nextProps.query.version !== undefined ? nextProps.query.version - 1 : nextProps.readerData.getIn(['pubData', 'history']).size - 1;
+
+		if (this.props.readerData.getIn(['pubData', 'history', oldVersion, 'markdown']) !== nextProps.readerData.getIn(['pubData', 'history', version, 'markdown'])) {
+			// console.log('compiling markdown for version ' + version);
+			const mdOutput = markLib(nextProps.readerData.getIn(['pubData', 'history', version, 'markdown']), Object.values({} || {}));
 			this.setState({
 				htmlTree: mdOutput.tree,
 				TOC: mdOutput.travisTOCFull,
@@ -58,7 +89,8 @@ const Reader = React.createClass({
 	},
 
 	componentWillUnmount() {
-		this.closeModalAndMenuHandler();
+		// console.log('component is unmounting');
+		// this.closeModalAndMenuHandler();
 	},
 
 	loader: function() {
@@ -69,31 +101,43 @@ const Reader = React.createClass({
 	},
 
 	closeModalHandler: function() {
-		this.props.dispatch(closeModal());
+		// this.props.dispatch(closeModal());
+		this.props.dispatch(goBack());
 	},
 
-	closeModalAndMenuHandler: function() {
-		this.props.dispatch(closeModal());
-		this.props.dispatch(closeMenu());
-	},
+	// closeModalAndMenuHandler: function() {
+		// this.props.dispatch(closeModal());
+		// this.props.dispatch(closeMenu());
+		// this.props.dispatch(goBack());
+	// },
 
 	openModalHandler: function(activeModal) {
-		if (this.props.readerData.get('activeModal') === activeModal) {
+		if (this.props.query.modal === activeModal) {
 			return ()=> {
-				this.props.dispatch(closeModal());
-				this.props.dispatch(closeMenu());
+				// this.props.dispatch(closeModal());
+				// this.props.dispatch(closeMenu());
+				this.props.dispatch(goBack());
 			};	
 		}
 
 		return ()=> {
-			this.props.dispatch(openMenu());
-			this.props.dispatch(openModal(activeModal));
+			// this.props.dispatch(openMenu());
+			// this.props.dispatch(openModal(activeModal));
+
+			// if there is no query, push state, else, replace state, 
+			// on close, go back.
+			if (this.props.query.modal !== undefined) {
+				this.props.dispatch(replaceState(null, '/pub/' + this.props.slug, {modal: activeModal}));
+			} else {
+				this.props.dispatch(pushState(null, '/pub/' + this.props.slug, {modal: activeModal}));
+			}
+			
 		};
 	},
 
 	calculateReviewScores: function(reviews) {
 		// TODO: Make this code less miserable and documented (and move it to server)
-
+		// console.log('calculating review scores');
 		// console.log('in reviews ', reviews);
 		const scoreLists = {};
 		for (let reviewIndex = 0; reviewIndex < reviews.length; reviewIndex++) {
@@ -161,7 +205,10 @@ const Reader = React.createClass({
 		}
 		
 		const pubData = this.props.readerData.get('pubData').toJS();
-		const activePubData = this.props.readerData.get('activePubData').toJS();
+		const version = this.props.query.version !== undefined ? this.props.query.version - 1 : this.props.readerData.getIn(['pubData', 'history']).size - 1;
+		// console.log('versi`ta.history[version].title', pubData.history[version].title);
+		
+		// const activePubData = this.props.readerData.get('activePubData').toJS();
 	
 		return (
 			<div style={styles.container}>
@@ -208,20 +255,20 @@ const Reader = React.createClass({
 
 					<PubBody
 						status = {this.props.readerData.get('status')}
-						openModalHandler = {this.openModalHandler}
-						title = {activePubData.title} 
-						abstract = {activePubData.abstract} 
+						title = {pubData.history[version].title} 
+						abstract = {pubData.history[version].abstract} 
 						htmlTree = {this.state.htmlTree} // This will probably be the tree, not the markdown. Calculate markdown here in reader, so we can have TOC, etc
-						authors = {activePubData.authors}/>
+						authors = {pubData.history[version].authors}/>
 
 					<PubModals 
 						closeModalHandler = {this.closeModalHandler}
-						closeModalAndMenuHandler = {this.closeModalAndMenuHandler}
-						activeModal = {this.props.readerData.get('activeModal')}
+						// closeModalAndMenuHandler = {this.closeModalAndMenuHandler}
+						activeModal = {this.props.query.modal}
 						// TOC Props
 						tocData = {this.state.TOC}
 						// Source Props
-						markdown = {activePubData.markdown}
+						markdown = {pubData.history[version].markdown}
+						historyObject = {pubData.history[version]}
 						// History Props
 						historyData = {pubData.history} />
 
@@ -273,7 +320,11 @@ const Reader = React.createClass({
 });
 
 export default connect( state => {
-	return {readerData: state.reader, slug: state.router.params.slug};
+	return {
+		readerData: state.reader, 
+		slug: state.router.params.slug,
+		query: state.router.location.query
+	};
 })( Radium(Reader) );
 
 const pubSizes = {
