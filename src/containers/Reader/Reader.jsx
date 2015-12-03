@@ -147,7 +147,7 @@ const Reader = React.createClass({
 
 				
 				this.props.dispatch(replaceState(null, '/pub/' + this.props.slug, {mode: activeModal}));
-				this.props.dispatch(go(-1));	
+				// this.props.dispatch(go(-1));	
 
 			} else {
 
