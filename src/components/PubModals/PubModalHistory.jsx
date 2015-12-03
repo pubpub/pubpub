@@ -39,7 +39,7 @@ const PubModalHistory = React.createClass({
 	},
 
 	render: function() {
-		console.log(this.props.historyData);
+		// console.log(this.props.historyData);
 		// const diffObject =  || {diffMarkdown: []};
 		return (
 			<div style={[baseStyles.pubModalContainer, styles.container]}>

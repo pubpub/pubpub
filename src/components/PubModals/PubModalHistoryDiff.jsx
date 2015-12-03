@@ -36,15 +36,16 @@ const PubModalHistoryDiff = React.createClass({
 				<div style={styles.backButton} onClick={this.props.closeHandler}>Back</div>
 
 				{
-					renderOrder.map((key)=>{
-						if (this.props.diffObject[key].length > 1 || (this.props.diffObject[key][0].added || this.props.diffObject[key][0].removed)) {
+					renderOrder.map((key, itemIndex)=>{
+						const diffItem = this.props.diffObject[key];
+						if (diffItem.length > 1 || ((diffItem[0] && diffItem[0].added) || (diffItem[0] && diffItem[0].removed))) {
 							return (
-								<div>
+								<div key={'diffObject-' + itemIndex}>
 									<div style={styles.diffTitle}>{key.replace('diff', '')}</div>
 									<div style={styles.diffContent}>
 										{
-											this.props.diffObject[key].map((part)=>{
-												return <span style={[part.added && styles.additionsText, part.removed && styles.deletionsText]}>{part.value}</span>;
+											diffItem.map((part, partIndex)=>{
+												return <span key={'diffObjectPart-' + partIndex} style={[part.added && styles.additionsText, part.removed && styles.deletionsText]}>{part.value}</span>;
 											})
 										}
 									</div>
