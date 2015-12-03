@@ -1,7 +1,7 @@
 import React, {PropTypes} from 'react';
 import Radium from 'radium';
 import {globalStyles} from '../../utils/styleConstants';
-// import { Link } from 'react-router';
+import { Link } from 'react-router';
 
 let styles = {};
 
@@ -57,11 +57,13 @@ const HeaderMenu = React.createClass({
 
 								{/* If Logged In */}
 								{/* ------------- */}
-								<span key="headerLogin" style={[styles.loggedIn[isLoggedIn]]}>
-									<img style={styles.userImage} src={this.props.loginData.getIn(['userData', 'thumbnail'])} />
-									{/* <div style={styles.userName}>{this.props.loginData.getIn(['userData', 'name'])}</div> */}
-									<div style={styles.userName}>Account</div>
-								</span>
+								<Link to={'/profile/' + this.props.loginData.getIn(['userData', 'username'])}>
+									<span key="headerLogin" style={[styles.loggedIn[isLoggedIn]]}>
+										<img style={styles.userImage} src={this.props.loginData.getIn(['userData', 'thumbnail'])} />
+										{/* <div style={styles.userName}>{this.props.loginData.getIn(['userData', 'name'])}</div> */}
+										<div style={styles.userName}>Account</div>
+									</span>
+								</Link>
 
 							</li>
 							{/* <li key="menuListItem2" style={[styles.menuItem, styles.menuItemNoBottom, styles.menuItemLink]}><Link style={styles.innerLink}to={'/newpub'}>New Pub</Link></li> */}
@@ -197,7 +199,12 @@ styles = {
 	},
 	userName: {
 		float: 'right',
-		padding: '0px 10px 0px 0px'
+		padding: '0px 10px 0px 0px',
+		color: globalStyles.headerBackground,
+		':hover': {
+			cursor: 'pointer',
+			color: 'black',
+		},
 	},
 	loggedOut: {
 		true: {
