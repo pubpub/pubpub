@@ -7,15 +7,18 @@ let styles = {};
 
 const PubModals = React.createClass({
 	propTypes: {
-		closeModalHandler: PropTypes.func,
+		setQueryHandler: PropTypes.func,
+		goBackHandler: PropTypes.func,
 		closeModalAndMenuHandler: PropTypes.func,
 		activeModal: PropTypes.string,
+
 		// TOC Props
 		tocData: PropTypes.array,
 		// Source Props
 		markdown: PropTypes.string,
 		// History Props
 		historyData: PropTypes.array,
+		activeDiff: PropTypes.number,
 	},
 
 	render: function() {
@@ -27,7 +30,7 @@ const PubModals = React.createClass({
 					<div className="modal-splash" onClick={this.props.closeModalAndMenuHandler} style={[styles.modalSplash, this.props.activeModal !== undefined && styles.modalSplashActive]}></div>
 					<div id="modal-container" className="modal-container" style={[styles.modalContainer, this.props.activeModal !== undefined && styles.modalContainerActive]}>
 						{/*	Switch which modal is displayed based on the activeModal parameter */}
-						<div style={styles.modalBackButton} onClick={this.props.closeModalHandler}>Back</div>
+						<div style={styles.modalBackButton} onClick={this.props.goBackHandler}>Back</div>
 						{(() => {
 							switch (this.props.activeModal) {
 							case 'tableOfContents':
@@ -36,7 +39,10 @@ const PubModals = React.createClass({
 									);
 							case 'history':
 								return (<PubModalHistory 
-										historyData={this.props.historyData} />
+										historyData={this.props.historyData} 
+										activeDiff={this.props.activeDiff}
+										setQueryHandler={this.props.setQueryHandler}
+										goBackHandler={this.props.goBackHandler} />
 									);
 							case 'source':
 								return (<PubModalSource 

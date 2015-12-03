@@ -9,7 +9,7 @@ import {getPub} from '../../actions/reader';
 import {closeMenu} from '../../actions/nav';
 import {PubBody, PubDiscussion, PubModals, PubNav, LoaderDeterminate} from '../../components';
 import {globalStyles} from '../../utils/styleConstants';
-import { pushState, replaceState, goBack } from 'redux-router';
+import { pushState, replaceState, go } from 'redux-router';
 
 import markLib from '../../modules/markdown/markdown';
 import markdownExtensions from '../../components/EditorPlugins';
@@ -95,15 +95,35 @@ const Reader = React.createClass({
 		};
 	},
 
-	closeModalHandler: function() {
+	goBackHandler: function(index) {
 		// this.props.dispatch(closeModal());
-		this.props.dispatch(goBack());
+		// this.props.dispatch(goBack());
+		let backCount = index;
+
+		if (index === undefined) {
+			const queryKeys = Object.keys(this.props.query);
+			if (queryKeys.indexOf('diff') > -1) { // Check for all second-level queries
+				backCount = -2;
+			} else {
+				backCount = -1;
+			}	
+		}
+		
+		this.props.dispatch(go(backCount));
 	},
 
 	closeModalAndMenuHandler: function() {
 		// this.props.dispatch(closeModal());
 		this.props.dispatch(closeMenu());
-		this.props.dispatch(goBack());
+		this.goBackHandler();
+	},
+
+	setQuery: function(queryObject) {
+		// console.log(queryObject);
+		// return ()=> {
+		// console.log('queryObject', queryObject);
+		this.props.dispatch(pushState(null, '/pub/' + this.props.slug, queryObject));
+		// };
 	},
 
 	openModalHandler: function(activeModal) {
@@ -116,10 +136,10 @@ const Reader = React.createClass({
 		// }
 
 		return ()=> {
-
-			if (this.props.query.mode === activeModal) {
-
-				this.props.dispatch(goBack());
+			const queryKeys = Object.keys(this.props.query);
+			if ( this.props.query.mode === activeModal ) {
+				
+				this.props.dispatch(go(-1));	
 
 			} else {
 
@@ -262,16 +282,19 @@ const Reader = React.createClass({
 						authors = {pubData.history[version].authors}/>
 
 					<PubModals 
-						closeModalHandler = {this.closeModalHandler}
+						setQueryHandler = {this.setQuery}
+						goBackHandler = {this.goBackHandler}
 						closeModalAndMenuHandler = {this.closeModalAndMenuHandler}
 						activeModal = {this.props.query.mode}
+
 						// TOC Props
 						tocData = {this.state.TOC}
 						// Source Props
 						markdown = {pubData.history[version].markdown}
 						historyObject = {pubData.history[version]}
 						// History Props
-						historyData = {pubData.history} />
+						historyData = {pubData.history}
+						activeDiff={this.props.query.diff} />
 
 				</div>
 

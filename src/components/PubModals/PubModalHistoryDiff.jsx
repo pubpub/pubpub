@@ -7,7 +7,7 @@ let styles = {};
 const PubModalHistoryDiff = React.createClass({
 	propTypes: {
 		diffObject: PropTypes.object,
-		closeHandler: PropTypes.func,
+		goBackHandler: PropTypes.func,
 
 	},
 
@@ -22,6 +22,10 @@ const PubModalHistoryDiff = React.createClass({
 		};
 	},
 
+	closeHandler: function() {
+		this.props.goBackHandler(-1);			
+	},
+
 	render: function() {
 		const renderOrder = [
 			'diffTitle',
@@ -33,10 +37,12 @@ const PubModalHistoryDiff = React.createClass({
 		return (
 			<div style={styles.container}>
 
-				<div style={styles.backButton} onClick={this.props.closeHandler}>Back</div>
+				<div style={styles.backButton} onClick={this.closeHandler}>Back</div>
 
 				{
 					renderOrder.map((key, itemIndex)=>{
+						// console.log(key);
+						// console.log(this.props.diffObject);
 						const diffItem = this.props.diffObject[key];
 						if (diffItem.length > 1 || ((diffItem[0] && diffItem[0].added) || (diffItem[0] && diffItem[0].removed))) {
 							return (

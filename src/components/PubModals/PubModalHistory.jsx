@@ -10,41 +10,57 @@ let styles = {};
 const PubModalHistory = React.createClass({
 	propTypes: {
 		historyData: PropTypes.array,
+		activeDiff: PropTypes.number,
+
+		setQueryHandler: PropTypes.func,
+		goBackHandler: PropTypes.func,
 	},
 
 	getDefaultProps: function() {
 		return {
 			historyData: [],
+			activeDiff: undefined,
 		};
 	},
 
-	getInitialState() {
-		return {
-			activeChangesViewer: undefined,
-		};
-	},
+	// getInitialState() {
+	// 	return {
+	// 		activeChangesViewer: undefined,
+	// 	};
+	// },
 
 	showChangesViewer: function(index) {
+		
 		return ()=>{
-			this.setState({
-				activeChangesViewer: this.props.historyData[index].diffObject
+			this.props.setQueryHandler({
+				mode: 'history',
+				diff: index,
 			});	
-			document.getElementById('modal-container').scrollTop = 0;
 		};
+		
+		// return ()=>{
+		// 	// this.setState({
+		// 	// 	activeChangesViewer: this.props.historyData[index].diffObject
+		// 	// });	
+		// 	// document.getElementById('modal-container').scrollTop = 0;
+		// 	this.props.dispatch(pushState(null, '/pub/' + this.props.slug, {mode: 'history', diff: index}));
+		// };
 	},
 
-	hideChangesViewer: function() {
-		this.setState({activeChangesViewer: undefined});
-		document.getElementById('modal-container').scrollTop = 0;
-	},
+	// hideChangesViewer: function() {
+		// this.setState({activeChangesViewer: undefined});
+		// document.getElementById('modal-container').scrollTop = 0;
+		// this.props.dispatch(pushState(null, '/pub/' + this.props.slug, {mode: activeModal}));
+		// goBackHandler()
+	// },
 
 	render: function() {
-		// console.log(this.props.historyData);
-		// const diffObject =  || {diffMarkdown: []};
+		const activeDiffObject = this.props.historyData[this.props.activeDiff] ? this.props.historyData[this.props.activeDiff].diffObject : undefined;
+		
 		return (
 			<div style={[baseStyles.pubModalContainer, styles.container]}>
 
-				<div style={[styles.shown, this.state.activeChangesViewer !== undefined && styles.hidden]}>
+				<div style={[styles.shown, activeDiffObject !== undefined && styles.hidden]}>
 					<div style={baseStyles.pubModalTitle}>History</div>
 
 					{()=>{
@@ -60,8 +76,8 @@ const PubModalHistory = React.createClass({
 					}()}
 				</div>
 
-				<div style={[styles.hidden, this.state.activeChangesViewer !== undefined && styles.shown]}>
-					<PubModalHistoryDiff diffObject={this.state.activeChangesViewer} closeHandler={this.hideChangesViewer}/>
+				<div style={[styles.hidden, activeDiffObject !== undefined && styles.shown]}>
+					<PubModalHistoryDiff diffObject={activeDiffObject} goBackHandler={this.props.goBackHandler}/>
 				</div>
 
 			</div>
