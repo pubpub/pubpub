@@ -15,13 +15,16 @@ const PubModalHistoryRow = React.createClass({
 
 	getDefaultProps: function() {
 		return {
-			historyItem: {},
+			historyItem: {
+				diffObject: {},
+			},
 		};
 	},
 
 	render: function() {
 		// const diffObject = this.props.historyItem.diffObject || {diffMarkdown: []};
 		// console.log('diffObject.diffMarkdown', diffObject.diffMarkdown);
+		const diffObject = this.props.historyItem.diffObject || {};
 		return (
 			<div style={[styles.container, this.props.index === 0 && styles.noBottomBorder]}>
 
@@ -33,9 +36,9 @@ const PubModalHistoryRow = React.createClass({
 					</div>
 
 					<div style={styles.versionChangesLine}>
-						<span style={styles.additions}>{this.props.historyItem.diffObject.additions} additions</span> 
+						<span style={styles.additions}>{diffObject.additions} additions</span> 
 						<span style={styles.changeCountSeparator}>|</span> 
-						<span style={styles.deletions}>{this.props.historyItem.diffObject.deletions} deletions</span>
+						<span style={styles.deletions}>{diffObject.deletions} deletions</span>
 					</div>
 
 					<div style={styles.versionMessage}>

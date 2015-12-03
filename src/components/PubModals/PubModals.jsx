@@ -7,6 +7,7 @@ let styles = {};
 
 const PubModals = React.createClass({
 	propTypes: {
+		status: PropTypes.string,
 		setQueryHandler: PropTypes.func,
 		goBackHandler: PropTypes.func,
 		closeModalAndMenuHandler: PropTypes.func,
@@ -18,12 +19,12 @@ const PubModals = React.createClass({
 		markdown: PropTypes.string,
 		// History Props
 		historyData: PropTypes.array,
-		activeDiff: PropTypes.number,
+		activeDiff: PropTypes.string,
 	},
 
 	render: function() {
 		return (
-			<div style={styles.container}>
+			<div style={[styles.container, styles[this.props.status]]}>
 
 				{/*	Container for all modals and their backdrop. */}
 				<div className="modals" style={[styles.modalWrapper, this.props.activeModal !== undefined && styles.modalWrapperActive]}>
@@ -74,6 +75,13 @@ export default Radium(PubModals);
 styles = {	
 	container: {
 		fontFamily: globalStyles.headerFont,
+		transition: '.3s linear opacity .25s',
+	},
+	loading: {
+		opacity: 0,
+	}, 
+	loaded: {
+		opacity: 1
 	},
 	// Modal Styling
 	modalWrapper: {

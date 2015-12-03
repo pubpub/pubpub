@@ -137,9 +137,16 @@ const Reader = React.createClass({
 
 		return ()=> {
 			const queryKeys = Object.keys(this.props.query);
+
 			if ( this.props.query.mode === activeModal ) {
 				
 				this.props.dispatch(go(-1));	
+
+
+			} else if ( queryKeys.indexOf('diff') > -1) {
+
+				this.props.dispatch(go(-1));	
+				this.props.dispatch(replaceState(null, '/pub/' + this.props.slug, {mode: activeModal}));
 
 			} else {
 
@@ -148,6 +155,7 @@ const Reader = React.createClass({
 				} else {
 					this.props.dispatch(pushState(null, '/pub/' + this.props.slug, {mode: activeModal}));
 				}
+
 			}
 			// this.props.dispatch(openMenu());
 			// this.props.dispatch(openModal(activeModal));
@@ -282,6 +290,7 @@ const Reader = React.createClass({
 						authors = {pubData.history[version].authors}/>
 
 					<PubModals 
+						status={this.props.readerData.get('status')} 
 						setQueryHandler = {this.setQuery}
 						goBackHandler = {this.goBackHandler}
 						closeModalAndMenuHandler = {this.closeModalAndMenuHandler}

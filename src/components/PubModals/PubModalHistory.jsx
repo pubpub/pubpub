@@ -10,7 +10,7 @@ let styles = {};
 const PubModalHistory = React.createClass({
 	propTypes: {
 		historyData: PropTypes.array,
-		activeDiff: PropTypes.number,
+		activeDiff: PropTypes.string,
 
 		setQueryHandler: PropTypes.func,
 		goBackHandler: PropTypes.func,
@@ -56,7 +56,7 @@ const PubModalHistory = React.createClass({
 
 	render: function() {
 		const activeDiffObject = this.props.historyData[this.props.activeDiff] ? this.props.historyData[this.props.activeDiff].diffObject : undefined;
-		
+
 		return (
 			<div style={[baseStyles.pubModalContainer, styles.container]}>
 
