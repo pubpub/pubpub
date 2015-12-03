@@ -121,6 +121,26 @@ app.post('/publishPub', function(req, res) {
 		}
 		const publishDate = new Date().getTime();
 	
+		// Calculate diff
+		// Take last history object, 
+		// take new object, 
+		// diff them and return object
+			// diff each item in object and store output
+			// iterate over to calculate total additions, deletions
+		const previousHistoryItem = pub.history.length 
+			? pub.history[pub.history.length-1]
+			: {
+				title: '',
+				abstract: '',
+				authorsNote: '',
+				markdown: '',
+				// authors: {}, // We need to save an author's string and then diff that...
+				// assets: [],
+				// references: [],
+				// style: {},
+			}
+		const diffObject = Pub.generateDiffObject(previousHistoryItem, req.body.newVersion);
+
 		// Append details to assets
 		const assets = [];
 		for (const key in req.body.newVersion.assets) { 
@@ -171,9 +191,21 @@ app.post('/publishPub', function(req, res) {
 					references: dbReferencesIds,
 					style: req.body.newVersion.style,
 					status: req.body.newVersion.status,
+					diffObject: {
+						additions:  diffObject.additions,
+						deletions:  diffObject.deletions,
+						diffTitle:  diffObject.diffTitle,
+						diffAbstract:  diffObject.diffAbstract,
+						diffAuthorsNote: diffObject.diffAuthorsNote,
+						diffMarkdown: diffObject.diffMarkdown,
+						// diffAuthors:  diffObject.diffAuthors,
+						// diffAssets:  diffObject.diffAssets,
+						// diffReferences: diffObject.diffReferences,
+						// diffStyle:  diffObject.diffStyle,
+					}
 				});
 
-				// console.log(pub);
+				// console.log('pub', pub);
 
 				pub.save(function(err, result){
 					if (err) { return res.status(500).json(err);  }

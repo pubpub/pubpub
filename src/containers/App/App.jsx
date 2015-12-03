@@ -8,7 +8,7 @@ import {toggleVisibility, restoreLogin} from '../../actions/login';
 import {toggleMenu, closeMenu} from '../../actions/nav';
 import {HeaderNav, HeaderMenu} from '../../components';
 import {globalStyles} from '../../utils/styleConstants';
-import { pushState } from 'redux-router';
+// import { pushState } from 'redux-router';
 
 import {openModal} from '../../actions/reader';
 
@@ -41,7 +41,7 @@ const App = React.createClass({
 	toggleLogin: function() {
 		if (this.props.loginData.get('loggedIn')) {
 			this.props.dispatch(closeMenu());
-			this.props.dispatch(pushState(null, ('/profile/' + this.props.loginData.getIn(['userData', 'username']))));
+			// this.props.dispatch(pushState(null, ('/profile/' + this.props.loginData.getIn(['userData', 'username']))));
 		} else {
 			this.props.dispatch(toggleVisibility());
 			this.props.dispatch(reset('loginForm'));

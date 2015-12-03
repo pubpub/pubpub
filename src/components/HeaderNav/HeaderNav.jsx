@@ -39,13 +39,15 @@ const HeaderNav = React.createClass({
 
 					{/* If Logged In */}
 					{/* ------------ */}
-					<span key="headerLogin" style={[styles.loggedIn[isLoggedIn]]}>
+					<Link to={'/profile/' + this.props.loginData.getIn(['userData', 'username'])}>
+						<span key="headerLogin" style={[styles.loggedIn[isLoggedIn]]}>
+							
+							<img style={styles.userImage} src={this.props.loginData.getIn(['userData', 'thumbnail'])} />
+							{/* <div style={styles.userName}>{this.props.loginData.getIn(['userData', 'name'])}</div> */}
+							<div style={[styles.userName, this.headerTextColorStyle()]}>Account</div>
 						
-						<img style={styles.userImage} src={this.props.loginData.getIn(['userData', 'thumbnail'])} />
-						{/* <div style={styles.userName}>{this.props.loginData.getIn(['userData', 'name'])}</div> */}
-						<div style={styles.userName}>Account</div>
-					
-					</span>
+						</span>
+					</Link>
 
 				</div>
 
@@ -106,7 +108,7 @@ styles = {
 	},
 	userName: {
 		float: 'right',
-		padding: '0px 3px 0px 0px'
+		padding: '0px 3px 0px 0px',
 	},
 };
 

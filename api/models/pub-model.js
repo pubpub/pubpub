@@ -1,6 +1,7 @@
 var mongoose  = require('mongoose');
 var Schema    =  mongoose.Schema;
 var ObjectId  = Schema.Types.ObjectId;
+import * as jsdiff from 'diff';
 
 var pubSchema = new Schema({
 	slug: { type: String, required: true, index: { unique: true } },
@@ -39,7 +40,18 @@ var pubSchema = new Schema({
 		publishNote: { type: String },
 		publishDate: { type: Date },
 		publishAuthor: { type: ObjectId, ref: 'User'},
-		diffToLastPublish: { type: String }, 
+		diffObject: {
+			additions:  { type: Number },
+			deletions: { type: Number },
+			diffTitle: [],
+			diffAbstract: [],
+			diffAuthorsNote: [],
+			diffMarkdown: [],
+			// diffAuthors: { type: String },
+			// diffAssets: { type: String },
+			// diffReferences: { type: String },
+			// diffStyle: { type: String },
+		},
 		
 		// The following should be enough to entirely reproduce the document
 		title: { type: String },
@@ -169,6 +181,40 @@ pubSchema.statics.getPubEdit = function (slug, readerID, callback) {
 
 	});
 	
+};
+
+pubSchema.statics.generateDiffObject = function(oldPubObject, newPubObject) {
+		
+	const t0 = new Date();
+	const outputObject = {};
+	outputObject.diffTitle = jsdiff.diffWords(oldPubObject.title, newPubObject.title, {newlineIsToken: true});
+	outputObject.diffAbstract = jsdiff.diffWords(oldPubObject.abstract, newPubObject.abstract, {newlineIsToken: true});
+	outputObject.diffAuthorsNote = jsdiff.diffWords(oldPubObject.authorsNote, newPubObject.authorsNote, {newlineIsToken: true});
+	outputObject.diffMarkdown = jsdiff.diffWords(oldPubObject.markdown, newPubObject.markdown, {newlineIsToken: true});
+	
+	let additions = 0;
+	let deletions = 0;
+	for (const key in outputObject) {
+		outputObject[key].map((diffArrayItem)=>{
+			if (diffArrayItem.added) {
+				additions += 1;
+			}
+			if (diffArrayItem.removed) {
+				deletions += 1;
+			}
+		});
+	}
+
+
+	outputObject.additions = additions;
+	outputObject.deletions = deletions;
+	const t1 =  new Date() - t0;
+	console.info("Execution time: %dms", t1);
+
+	// console.log('outputObject', outputObject);
+
+	return outputObject;
+
 };
 
 module.exports = mongoose.model('Pub', pubSchema);
