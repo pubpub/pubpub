@@ -37,7 +37,7 @@ const PubModalHistoryDiff = React.createClass({
 
 				{
 					renderOrder.map((key)=>{
-						if (this.props.diffObject[key].length && (this.props.diffObject[key][0].added || this.props.diffObject[key][0].removed)) {
+						if (this.props.diffObject[key].length > 1 || (this.props.diffObject[key][0].added || this.props.diffObject[key][0].removed)) {
 							return (
 								<div>
 									<div style={styles.diffTitle}>{key.replace('diff', '')}</div>

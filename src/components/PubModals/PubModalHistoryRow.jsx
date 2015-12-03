@@ -23,7 +23,7 @@ const PubModalHistoryRow = React.createClass({
 		// const diffObject = this.props.historyItem.diffObject || {diffMarkdown: []};
 		// console.log('diffObject.diffMarkdown', diffObject.diffMarkdown);
 		return (
-			<div style={styles.container}>
+			<div style={[styles.container, this.props.index === 0 && styles.noBottomBorder]}>
 
 				<div style={styles.versionDetails}>
 					<div style={styles.versionTitleLine}>
@@ -62,9 +62,13 @@ export default Radium(PubModalHistoryRow);
 
 styles = {
 	container: {
-		paddingTop: 30,
+		paddingBottom: 30,
 		marginBottom: 30,
-		borderTop: '1px solid #ccc',
+		borderBottom: '1px solid #ccc',
+	},
+	noBottomBorder: {
+		borderBottom: '0px solid #ccc',
+		marginBottom: 0,
 	},
 	clearFix: {
 		display: 'table',
