@@ -37,7 +37,7 @@ const PubModalHistoryDiff = React.createClass({
 		return (
 			<div style={styles.container}>
 
-				<div style={styles.backButton} onClick={this.closeHandler}>Back</div>
+				{/* <div style={styles.backButton} onClick={this.closeHandler}>Back</div> */}
 
 				{
 					renderOrder.map((key, itemIndex)=>{
@@ -71,9 +71,10 @@ export default Radium(PubModalHistoryDiff);
 
 styles = {
 	container: {
+		// backgroundColor: 'red',
 		'@media screen and (min-resolution: 3dppx), (max-width: 767px)': {
-			position: 'absolute',
-			top: 0,
+			// position: 'absolute',
+			// top: 0,
 		}
 	},
 	backButton: {

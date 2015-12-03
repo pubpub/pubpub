@@ -96,11 +96,9 @@ const Reader = React.createClass({
 	},
 
 	goBackHandler: function(index) {
-		// this.props.dispatch(closeModal());
-		// this.props.dispatch(goBack());
 		let backCount = index;
 
-		if (index === undefined) {
+		if (typeof(index) !== 'number') { // index will be an event object if undefined in call
 			const queryKeys = Object.keys(this.props.query);
 			if (queryKeys.indexOf('diff') > -1) { // Check for all second-level queries
 				backCount = -2;
@@ -108,8 +106,7 @@ const Reader = React.createClass({
 				backCount = -1;
 			}	
 		}
-		
-		this.props.dispatch(go(backCount));
+		this.props.dispatch(go(-1));
 	},
 
 	closeModalAndMenuHandler: function() {
@@ -134,7 +131,10 @@ const Reader = React.createClass({
 				// this.props.dispatch(goBack());
 			// };	
 		// }
-
+		// console.log('----');
+		// console.log(replaceState);
+		// console.log(go);
+		// console.log('----');
 		return ()=> {
 			const queryKeys = Object.keys(this.props.query);
 
@@ -145,8 +145,9 @@ const Reader = React.createClass({
 
 			} else if ( queryKeys.indexOf('diff') > -1) {
 
-				this.props.dispatch(go(-1));	
+				
 				this.props.dispatch(replaceState(null, '/pub/' + this.props.slug, {mode: activeModal}));
+				this.props.dispatch(go(-1));	
 
 			} else {
 

@@ -8,9 +8,9 @@ import {toggleVisibility, restoreLogin} from '../../actions/login';
 import {toggleMenu, closeMenu} from '../../actions/nav';
 import {HeaderNav, HeaderMenu} from '../../components';
 import {globalStyles} from '../../utils/styleConstants';
-// import { pushState } from 'redux-router';
+import { pushState } from 'redux-router';
 
-import {openModal} from '../../actions/reader';
+// import {openModal} from '../../actions/reader';
 
 let styles = {};
 
@@ -19,6 +19,7 @@ const App = React.createClass({
 		loginData: PropTypes.object,
 		navData: PropTypes.object,
 		path: PropTypes.string,
+		slug: PropTypes.string,
 		children: PropTypes.object.isRequired,
 		dispatch: PropTypes.func
 	},
@@ -57,7 +58,8 @@ const App = React.createClass({
 
 	openPubModalHandler: function(activeModal) {
 		return ()=> {
-			this.props.dispatch(openModal(activeModal));
+			// this.props.dispatch(openModal(activeModal));
+			this.props.dispatch(pushState(null, '/pub/' + this.props.slug, {mode: activeModal}));
 		};
 	},
 
@@ -129,7 +131,8 @@ export default connect( state => {
 	return {
 		loginData: state.login, 
 		navData: state.nav,
-		path: state.router.location.pathname
+		path: state.router.location.pathname,
+		slug: state.router.params.slug,
 	};
 })( Radium(App) );
 
