@@ -6,6 +6,7 @@ import PureRenderMixin from 'react-addons-pure-render-mixin';
 // import {getPub, closeModal, openModal} from '../../actions/reader';
 import {getPub} from '../../actions/reader';
 // import {openMenu, closeMenu} from '../../actions/nav';
+import {closeMenu} from '../../actions/nav';
 import {PubBody, PubDiscussion, PubModals, PubNav, LoaderDeterminate} from '../../components';
 import {globalStyles} from '../../utils/styleConstants';
 import { pushState, replaceState, goBack } from 'redux-router';
@@ -23,7 +24,7 @@ const Reader = React.createClass({
 		readerData: PropTypes.object,
 		slug: PropTypes.string,
 		query: PropTypes.object,
-		// query options: {
+		// query : {
 			// modal: tableOfContents | history | source | cite | status | discussions 
 			// historyDiff: integer
 			// version: integer
@@ -41,13 +42,7 @@ const Reader = React.createClass({
 
 	statics: {
 		fetchDataDeferred: function(getState, dispatch, location, routeParams) {
-			
-			// return dispatch(getPub(routeParams.slug));
-			// console.log(getState().reader.getIn(['pubData', 'slug']));
-			// console.log(routeParams.slug);
-			// console.log('---');
 			if (getState().reader.getIn(['pubData', 'slug']) !== routeParams.slug) {
-				// console.log('in fetch data deferred');
 				return dispatch(getPub(routeParams.slug));
 			}
 		}
@@ -105,32 +100,41 @@ const Reader = React.createClass({
 		this.props.dispatch(goBack());
 	},
 
-	// closeModalAndMenuHandler: function() {
+	closeModalAndMenuHandler: function() {
 		// this.props.dispatch(closeModal());
-		// this.props.dispatch(closeMenu());
-		// this.props.dispatch(goBack());
-	// },
+		this.props.dispatch(closeMenu());
+		this.props.dispatch(goBack());
+	},
 
 	openModalHandler: function(activeModal) {
-		if (this.props.query.modal === activeModal) {
-			return ()=> {
+		
+			// return ()=> {
 				// this.props.dispatch(closeModal());
 				// this.props.dispatch(closeMenu());
-				this.props.dispatch(goBack());
-			};	
-		}
+				// this.props.dispatch(goBack());
+			// };	
+		// }
 
 		return ()=> {
+
+			if (this.props.query.mode === activeModal) {
+
+				this.props.dispatch(goBack());
+
+			} else {
+
+				if (this.props.query.mode !== undefined) {
+					this.props.dispatch(replaceState(null, '/pub/' + this.props.slug, {mode: activeModal}));
+				} else {
+					this.props.dispatch(pushState(null, '/pub/' + this.props.slug, {mode: activeModal}));
+				}
+			}
 			// this.props.dispatch(openMenu());
 			// this.props.dispatch(openModal(activeModal));
 
 			// if there is no query, push state, else, replace state, 
 			// on close, go back.
-			if (this.props.query.modal !== undefined) {
-				this.props.dispatch(replaceState(null, '/pub/' + this.props.slug, {modal: activeModal}));
-			} else {
-				this.props.dispatch(pushState(null, '/pub/' + this.props.slug, {modal: activeModal}));
-			}
+			
 			
 		};
 	},
@@ -206,10 +210,7 @@ const Reader = React.createClass({
 		
 		const pubData = this.props.readerData.get('pubData').toJS();
 		const version = this.props.query.version !== undefined ? this.props.query.version - 1 : this.props.readerData.getIn(['pubData', 'history']).size - 1;
-		// console.log('versi`ta.history[version].title', pubData.history[version].title);
-		
-		// const activePubData = this.props.readerData.get('activePubData').toJS();
-	
+
 		return (
 			<div style={styles.container}>
 
@@ -262,8 +263,8 @@ const Reader = React.createClass({
 
 					<PubModals 
 						closeModalHandler = {this.closeModalHandler}
-						// closeModalAndMenuHandler = {this.closeModalAndMenuHandler}
-						activeModal = {this.props.query.modal}
+						closeModalAndMenuHandler = {this.closeModalAndMenuHandler}
+						activeModal = {this.props.query.mode}
 						// TOC Props
 						tocData = {this.state.TOC}
 						// Source Props
