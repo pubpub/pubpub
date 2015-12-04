@@ -109,7 +109,8 @@ const PubModals = React.createClass({
 						onClick={this.closeModalandMenu(2)} 
 						style={[
 							styles.modalSplash, 
-							modalWrapper2Active && styles.modalSplash2Active]}>
+							styles.modalSplash2,
+							modalWrapper2Active && styles.modalSplashActive]}>
 					</div>
 
 					<div className="modalContainer2" 
@@ -197,15 +198,13 @@ styles = {
 			top: 0,
 		},
 	},
+	modalSplash2: {
+		backgroundColor: 'transparent',
+		transition: '0s linear opacity',
+	},
 	modalSplashActive: {
 		opacity: 1,
 		pointerEvents: 'auto',
-	},
-	modalSplash2Active: {
-		opacity: 1,
-		pointerEvents: 'auto',
-		backgroundColor: 'transparent',
-		transition: '0s linear opacity',
 	},
 	modalContainer: {
 		width: '90%',

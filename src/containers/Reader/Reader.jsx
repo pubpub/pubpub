@@ -295,7 +295,6 @@ const Reader = React.createClass({
 						historyObject={pubData.history[version]}
 						// History Props
 						historyData={pubData.history} />
-						// activeDiff={this.props.query.diff} />
 
 				</div>
 
