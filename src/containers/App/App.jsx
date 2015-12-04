@@ -83,7 +83,7 @@ const App = React.createClass({
 	},
 
 	setQuery: function(queryObject) {
-		this.props.dispatch(pushState(null, '/pub/' + this.props.slug, {...this.props.query, ...queryObject}));
+		this.props.dispatch(pushState(null, this.props.path, {...this.props.query, ...queryObject}));
 	},
 
 	render: function() {
