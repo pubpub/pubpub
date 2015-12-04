@@ -8,7 +8,7 @@ import {toggleVisibility, restoreLogin} from '../../actions/login';
 // import {toggleMenu, closeMenu} from '../../actions/nav';
 import {HeaderNav, HeaderMenu} from '../../components';
 import {globalStyles} from '../../utils/styleConstants';
-import { pushState } from 'redux-router';
+import { pushState, go } from 'redux-router';
 
 // import {openModal} from '../../actions/reader';
 
@@ -60,22 +60,30 @@ const App = React.createClass({
 		
 	},
 
-	menuToggle: function() {
-		// this.props.dispatch(toggleMenu());
-		const newMenuState = this.props.query.menu ? undefined : true;
-		this.props.dispatch(pushState(null, this.props.path, {...this.props.query, menu: newMenuState}));
-		// if (this.props.query.menu) {
+	// menuToggle: function() {
+	// 	// this.props.dispatch(toggleMenu());
+	// 	const newMenuState = this.props.query.menu ? undefined : true;
+	// 	this.props.dispatch(pushState(null, this.props.path, {...this.props.query, menu: newMenuState}));
+	// 	// if (this.props.query.menu) {
 			
-		// } else {
-		// 	this.props.dispatch(pushState(null, this.props.path, {...this.props.query, menu: true}));
-		// }
+	// 	// } else {
+	// 	// 	this.props.dispatch(pushState(null, this.props.path, {...this.props.query, menu: true}));
+	// 	// }
+	// },
+
+	// openPubModal: function(activeModal) {
+	// 	return ()=> {
+	// 		// this.props.dispatch(openModal(activeModal));
+	// 		this.props.dispatch(pushState(null, '/pub/' + this.props.slug, {...this.props.query, mode: activeModal}));
+	// 	};
+	// },
+
+	goBack: function(backCount) {
+		this.props.dispatch(go(backCount));
 	},
 
-	openPubModalHandler: function(activeModal) {
-		return ()=> {
-			// this.props.dispatch(openModal(activeModal));
-			this.props.dispatch(pushState(null, '/pub/' + this.props.slug, {...this.props.query, mode: activeModal}));
-		};
+	setQuery: function(queryObject) {
+		this.props.dispatch(pushState(null, '/pub/' + this.props.slug, {...this.props.query, ...queryObject}));
 	},
 
 	render: function() {
@@ -110,12 +118,14 @@ const App = React.createClass({
 							<HeaderMenu 
 								loginData={this.props.loginData} 
 								// navData={this.props.navData}
-								menuOpen={this.props.query.menu ? true : false}
 								color={headerTextColor}
 								hoverColor={headerTextColorHover}
 								loginToggle={this.toggleLogin}
-								menuToggle={this.menuToggle}
-								openPubModal={this.openPubModalHandler}
+
+								menuOpen={this.props.query.menu ? true : false}
+								goBackHandler={this.goBack}
+								setQueryHandler={this.setQuery}
+								
 								urlPath={this.props.path}/>
 						</div>
 
