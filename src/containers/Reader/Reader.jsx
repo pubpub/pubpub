@@ -240,6 +240,7 @@ const Reader = React.createClass({
 		const pubData = this.props.readerData.get('pubData').toJS();
 		const version = this.props.query.version !== undefined ? this.props.query.version - 1 : this.props.readerData.getIn(['pubData', 'history']).size - 1;
 
+		console.log('rerender reader');
 		return (
 			<div style={styles.container}>
 

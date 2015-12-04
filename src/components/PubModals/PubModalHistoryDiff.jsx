@@ -71,7 +71,7 @@ export default Radium(PubModalHistoryDiff);
 
 styles = {
 	container: {
-
+		padding: 15,
 	},
 	backButton: {
 		// display: 'none',

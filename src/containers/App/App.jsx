@@ -49,7 +49,7 @@ const App = React.createClass({
 	},
 	toggleLogin: function() {
 		if (this.props.loginData.get('loggedIn')) {
-			this.props.dispatch(closeMenu());
+			// this.props.dispatch(closeMenu());
 			// this.props.dispatch(pushState(null, ('/profile/' + this.props.loginData.getIn(['userData', 'username']))));
 		} else {
 			this.props.dispatch(toggleVisibility());
