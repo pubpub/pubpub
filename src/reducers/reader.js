@@ -8,9 +8,6 @@ import {
 	LOAD_PUB, 
 	LOAD_PUB_SUCCESS, 
 	LOAD_PUB_FAIL,
-
-	// MODAL_OPEN,
-	// MODAL_CLOSE,
 } from '../actions/reader';
 
 /*--------*/
@@ -28,7 +25,6 @@ export const defaultState = Immutable.Map({
 		experts: [],
 		history: [{}],
 	},
-	// activeModal: undefined,
 	status: 'loading',
 	error: null
 });
@@ -48,19 +44,6 @@ function loadSuccess(state, result) {
 	const outputState = {
 		status: 'loaded',
 		pubData: result,
-		// activePubData: {
-		// 	title: result.title,
-		// 	abstract: result.abstract,
-		// 	authorsNote: result.authorsNote,
-		// 	markdown: result.markdown,
-		// 	authors: result.authors,
-		// 	assets: result.assets,
-		// 	references: result.references,
-		// 	style: result.style,
-		// 	lastUpdated: result.lastUpdated,
-		// 	status: result.status,
-		// 	mostRecentVersion: true,
-		// },
 		error: null
 	};
 
@@ -68,21 +51,18 @@ function loadSuccess(state, result) {
 		outputState.pubData = { ...defaultState.get('pubData'),
 			title: 'Pub Not Found',
 		};
-		// outputState.activePubData = { ...outputState.pubData};
 	}
 
 	if (result === 'Private Pub') {
 		outputState.pubData = { ...defaultState.get('pubData'),
 			title: 'Private Pub',
 		};
-		// outputState.activePubData = { ...outputState.pubData};
 	}
 
 	if (result === 'Pub not yet published') {
 		outputState.pubData = { ...defaultState.get('pubData'),
 			title: 'Pub not yet published',
 		};
-		// outputState.activePubData = { ...outputState.pubData};
 	} 
 
 	return state.merge(outputState);
@@ -101,18 +81,6 @@ function loadFail(state, error) {
 	return state.merge(outputState);
 }
 
-// function openModal(state, activeModal) {
-// 	return state.merge({
-// 		activeModal: activeModal,
-// 	});
-// }
-
-// function closeModal(state) {
-// 	return state.merge({
-// 		activeModal: undefined,
-// 	});
-// }
-
 /*--------*/
 // Bind actions to specific reducing functions.
 /*--------*/
@@ -125,12 +93,6 @@ export default function readerReducer(state = defaultState, action) {
 		return loadSuccess(state, action.result);
 	case LOAD_PUB_FAIL:
 		return loadFail(state, action.error);
-
-	// case MODAL_OPEN: 
-	// 	return openModal(state, action.activeModal);
-	// case MODAL_CLOSE: 
-	// 	return closeModal(state);
-		
 	default:
 		return ensureImmutable(state);
 	}
