@@ -5,7 +5,7 @@ import {reset} from 'redux-form';
 import {Login} from '../index';
 import {connect} from 'react-redux';
 import {toggleVisibility, restoreLogin} from '../../actions/login';
-import {toggleMenu, closeMenu} from '../../actions/nav';
+// import {toggleMenu, closeMenu} from '../../actions/nav';
 import {HeaderNav, HeaderMenu} from '../../components';
 import {globalStyles} from '../../utils/styleConstants';
 import { pushState } from 'redux-router';
@@ -41,17 +41,17 @@ const App = React.createClass({
 	
 		}
 	},
-	componentWillReceiveProps: function(nextProps) {
+	// componentWillReceiveProps: function(nextProps) {
 		// Close the menu if we're changing routes and it's open
-		if (this.props.path !== nextProps.path && nextProps.navData.get('menuOpen')) {
-			this.props.dispatch(closeMenu());
-		}
-	},
+		// if (this.props.path !== nextProps.path && nextProps.navData.get('menuOpen')) {
+		// 	this.props.dispatch(closeMenu());
+		// }
+	// },
 	toggleLogin: function() {
-		if (this.props.loginData.get('loggedIn')) {
+		if (!this.props.loginData.get('loggedIn')) {
 			// this.props.dispatch(closeMenu());
 			// this.props.dispatch(pushState(null, ('/profile/' + this.props.loginData.getIn(['userData', 'username']))));
-		} else {
+		// } else {
 			this.props.dispatch(toggleVisibility());
 			this.props.dispatch(reset('loginForm'));
 			this.props.dispatch(reset('loginFormRegister'));	
@@ -61,13 +61,20 @@ const App = React.createClass({
 	},
 
 	menuToggle: function() {
-		this.props.dispatch(toggleMenu());
+		// this.props.dispatch(toggleMenu());
+		const newMenuState = this.props.query.menu ? undefined : true;
+		this.props.dispatch(pushState(null, this.props.path, {...this.props.query, menu: newMenuState}));
+		// if (this.props.query.menu) {
+			
+		// } else {
+		// 	this.props.dispatch(pushState(null, this.props.path, {...this.props.query, menu: true}));
+		// }
 	},
 
 	openPubModalHandler: function(activeModal) {
 		return ()=> {
 			// this.props.dispatch(openModal(activeModal));
-			this.props.dispatch(pushState(null, '/pub/' + this.props.slug, {mode: activeModal}));
+			this.props.dispatch(pushState(null, '/pub/' + this.props.slug, {...this.props.query, mode: activeModal}));
 		};
 	},
 
@@ -102,7 +109,8 @@ const App = React.createClass({
 						<div style={styles.headerMenu}>
 							<HeaderMenu 
 								loginData={this.props.loginData} 
-								navData={this.props.navData}
+								// navData={this.props.navData}
+								menuOpen={this.props.query.menu ? true : false}
 								color={headerTextColor}
 								hoverColor={headerTextColorHover}
 								loginToggle={this.toggleLogin}

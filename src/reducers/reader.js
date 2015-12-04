@@ -4,7 +4,8 @@ import {ensureImmutable} from './';
 /*--------*/
 // Load Actions
 /*--------*/
-import {LOAD_PUB, 
+import {
+	LOAD_PUB, 
 	LOAD_PUB_SUCCESS, 
 	LOAD_PUB_FAIL,
 

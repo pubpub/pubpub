@@ -5,16 +5,16 @@ import {ensureImmutable} from './';
 // Load Actions
 /*--------*/
 import {
-	TOGGLE_MENU,
-	OPEN_MENU,
-	CLOSE_MENU
+	// TOGGLE_MENU,
+	// OPEN_MENU,
+	// CLOSE_MENU
 } from '../actions/nav';
 
 /*--------*/
 // Initialize Default State 
 /*--------*/
 export const defaultState = Immutable.Map({
-	menuOpen: false,
+	// menuOpen: false,
 	searchString: '',
 });
 
@@ -24,23 +24,23 @@ export const defaultState = Immutable.Map({
 // These functions take in an initial state and return a new
 // state. They are pure functions. We use Immutable to enforce this. 
 /*--------*/
-function toggleMenu(state) {
-	return state.merge({
-		menuOpen: !state.get('menuOpen')
-	});
-}
+// function toggleMenu(state) {
+// 	return state.merge({
+// 		menuOpen: !state.get('menuOpen')
+// 	});
+// }
 
-function openMenu(state) {
-	return state.merge({
-		menuOpen: true
-	});
-}
+// function openMenu(state) {
+// 	return state.merge({
+// 		menuOpen: true
+// 	});
+// }
 
-function closeMenu(state) {
-	return state.merge({
-		menuOpen: false
-	});
-}
+// function closeMenu(state) {
+// 	return state.merge({
+// 		menuOpen: false
+// 	});
+// }
 
 
 /*--------*/
@@ -49,12 +49,12 @@ function closeMenu(state) {
 export default function loginReducer(state = defaultState, action) {
 
 	switch (action.type) {
-	case TOGGLE_MENU:
-		return toggleMenu(state);
-	case OPEN_MENU:
-		return openMenu(state);
-	case CLOSE_MENU:
-		return closeMenu(state);
+	// case TOGGLE_MENU:
+	// 	return toggleMenu(state);
+	// case OPEN_MENU:
+	// 	return openMenu(state);
+	// case CLOSE_MENU:
+	// 	return closeMenu(state);
 	default:
 		return ensureImmutable(state);
 	}

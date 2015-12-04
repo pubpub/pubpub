@@ -8,7 +8,7 @@ let styles = {};
 const HeaderMenu = React.createClass({
 	propTypes: {
 		loginData: PropTypes.object,
-		navData: PropTypes.object,
+		menuOpen: PropTypes.bool,
 		color: PropTypes.string,
 		hoverColor: PropTypes.string,
 		loginToggle: PropTypes.func,
@@ -41,8 +41,9 @@ const HeaderMenu = React.createClass({
 
 				<div className="menuDrawer" style={[
 					styles.menuDrawer,
-					this.props.navData.get('menuOpen') && styles.menuDrawerOpen
+					this.props.menuOpen && styles.menuDrawerOpen
 				]}>
+				{/* this.props.navData.get('menuOpen') && styles.menuDrawerOpen */}
 					<div style={styles.closeBar} onClick={this.props.menuToggle}></div>
 					<div style={styles.menuContent}>
 						<ul style={styles.menuList}>
