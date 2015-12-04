@@ -2,7 +2,6 @@ import React, { PropTypes } from 'react';
 import Radium from 'radium';
 import {baseStyles} from './pubModalStyle';
 import PubModalHistoryRow from './PubModalHistoryRow';
-// import PubModalHistoryDiff from './PubModalHistoryDiff';
 // import {globalStyles} from '../../utils/styleConstants';
 
 let styles = {};
@@ -10,23 +9,14 @@ let styles = {};
 const PubModalHistory = React.createClass({
 	propTypes: {
 		historyData: PropTypes.array,
-		activeDiff: PropTypes.string,
-
 		setQueryHandler: PropTypes.func,
 	},
 
 	getDefaultProps: function() {
 		return {
 			historyData: [],
-			activeDiff: undefined,
 		};
 	},
-
-	// getInitialState() {
-	// 	return {
-	// 		activeChangesViewer: undefined,
-	// 	};
-	// },
 
 	showChangesViewer: function(index) {
 		
@@ -36,30 +26,13 @@ const PubModalHistory = React.createClass({
 				diff: index,
 			});	
 		};
-		
-		// return ()=>{
-		// 	// this.setState({
-		// 	// 	activeChangesViewer: this.props.historyData[index].diffObject
-		// 	// });	
-		// 	// document.getElementById('modal-container').scrollTop = 0;
-		// 	this.props.dispatch(pushState(null, '/pub/' + this.props.slug, {mode: 'history', diff: index}));
-		// };
+
 	},
 
-	// hideChangesViewer: function() {
-		// this.setState({activeChangesViewer: undefined});
-		// document.getElementById('modal-container').scrollTop = 0;
-		// this.props.dispatch(pushState(null, '/pub/' + this.props.slug, {mode: activeModal}));
-		// goBackHandler()
-	// },
-
 	render: function() {
-		// const activeDiffObject = this.props.historyData[this.props.activeDiff] ? this.props.historyData[this.props.activeDiff].diffObject : undefined;
-
 		return (
 			<div style={[baseStyles.pubModalContainer, styles.container]}>
 
-				{/* <div style={[styles.shown, activeDiffObject !== undefined && styles.hidden]}> */}
 				<div>
 					<div style={baseStyles.pubModalTitle}>History</div>
 
@@ -75,14 +48,7 @@ const PubModalHistory = React.createClass({
 						return historyDivs;
 					}()}
 				</div>
-
-				{/* 
-					<div style={[styles.hidden, activeDiffObject !== undefined && styles.shown]}>
-						<PubModalHistoryDiff diffObject={activeDiffObject} goBackHandler={this.props.goBackHandler}/>
-					</div>
-				*/}
 				
-
 			</div>
 		);
 	}

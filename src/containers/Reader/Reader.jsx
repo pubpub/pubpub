@@ -3,16 +3,11 @@ import {connect} from 'react-redux';
 import Radium from 'radium';
 import DocumentMeta from 'react-document-meta';
 import PureRenderMixin from 'react-addons-pure-render-mixin';
-// import {getPub, closeModal, openModal} from '../../actions/reader';
 import {getPub} from '../../actions/reader';
-// import {openMenu, closeMenu} from '../../actions/nav';
 import {updateDelta} from '../../actions/nav';
-// import {closeMenu} from '../../actions/nav';
 import {PubBody, PubDiscussion, PubModals, PubNav, LoaderDeterminate} from '../../components';
 import {globalStyles} from '../../utils/styleConstants';
 import { pushState, go } from 'redux-router';
-// import * as funky from 'redux-router';
-// import * as monkey from 'react-router';
 
 import markLib from '../../modules/markdown/markdown';
 import markdownExtensions from '../../components/EditorPlugins';
@@ -21,7 +16,6 @@ markLib.setExtensions(markdownExtensions);
 let styles = {};
 let leftBarStyles = {};
 let rightBarStyles = {};
-// const routeKeys = {};
 
 const Reader = React.createClass({
 	propTypes: {
@@ -75,9 +69,6 @@ const Reader = React.createClass({
 	},
 
 	componentWillReceiveProps(nextProps) {
-		// console.log(this.props.routeKey);
-		// routeKeys[this.props.routeKey] = true;
-
 		const oldVersion = this.props.query.version !== undefined ? this.props.query.version - 1 : this.props.readerData.getIn(['pubData', 'history']).size - 1;
 		const version = nextProps.query.version !== undefined ? nextProps.query.version - 1 : nextProps.readerData.getIn(['pubData', 'history']).size - 1;
 
@@ -93,11 +84,6 @@ const Reader = React.createClass({
 		
 	},
 
-	// componentWillUnmount() {
-		// console.log('component is unmounting');
-		// this.closeModalAndMenuHandler();
-	// },
-
 	loader: function() {
 		return {
 			transform: 'translateX(' + (-100 + this.props.readerData.get('loading')) + '%)',
@@ -106,81 +92,20 @@ const Reader = React.createClass({
 	},
 
 	goBack: function(backCount) {
-		// let backCount = index;
-
-		// if (typeof(index) !== 'number') { // index will be an event object if undefined in call
-		// 	const queryKeys = Object.keys(this.props.query);
-		// 	if (queryKeys.indexOf('diff') > -1) { // Check for all second-level queries
-		// 		backCount = -2;
-		// 	} else {
-		// 		backCount = -1;
-		// 	}	
-		// }
-
-		// If this is the case, we likely have no history and direct-loaded into this mode. We can't go back, so push an empty state.
-		// This also behooves us to not use 'replaceState' anywhere in our manual nav functioning
-		// console.log(routeKeys);
-		// if (this.props.routeAction === 'REPLACE') { 
 		if (this.props.delta + backCount < 0) {
+			// If there is no history with which to go back, clear the query params
 			this.props.dispatch(pushState(null, '/pub/' + this.props.slug, {}));
 		} else {
-		// console.log(go(backCount));
-			// delta += backCount;
-			this.props.dispatch(updateDelta(backCount + 1));
-			this.props.dispatch(go(backCount));
+			this.props.dispatch(updateDelta(backCount + 1)); // Keep track of nav.delta so we can handle cases where the page was directly navigated to.
+			this.props.dispatch(go(backCount)); 
 		}
 			
 			
 	},
 
-	// closeModalAndMenuHandler: function() {
-	// 	// this.props.dispatch(closeModal());
-	// 	this.props.dispatch(closeMenu());
-	// 	this.goBackHandler();
-	// },
-
 	setQuery: function(queryObject) {
-		// console.log(queryObject);
-		// return ()=> {
-		// console.log('queryObject', queryObject);
-		// delta += 1;
-		// this.props.dispatch(updateDelta(1));
 		this.props.dispatch(pushState(null, '/pub/' + this.props.slug, {...this.props.query, ...queryObject}));
-		// };
 	},
-
-	// openModalHandler: function(activeModal) {
-		
-	
-	// 	return ()=> {
-	// 		// const queryKeys = Object.keys(this.props.query);
-
-	// 		// if ( this.props.query.mode === activeModal ) {
-				
-	// 		// 	this.props.dispatch(go(-1));	
-
-
-	// 		// } else if ( queryKeys.indexOf('diff') > -1) {
-
-				
-	// 		// 	this.props.dispatch(replaceState(null, '/pub/' + this.props.slug, {mode: activeModal}));
-	// 		// 	// this.props.dispatch(go(-1));	
-
-	// 		// } else {
-
-	// 		// 	if (this.props.query.mode !== undefined) {
-	// 		// 		this.props.dispatch(replaceState(null, '/pub/' + this.props.slug, {mode: activeModal}));
-	// 		// 	} else {
-	// 		// 		this.props.dispatch(pushState(null, '/pub/' + this.props.slug, {mode: activeModal}));
-	// 		// 	}
-
-	// 		// }
-
-	// 		this.props.dispatch(pushState(null, '/pub/' + this.props.slug, {...this.props.query, mode: activeModal}));
-			
-			
-	// 	};
-	// },
 
 	calculateReviewScores: function(reviews) {
 		// TODO: Make this code less miserable and documented (and move it to server)
@@ -254,13 +179,6 @@ const Reader = React.createClass({
 		const pubData = this.props.readerData.get('pubData').toJS();
 		const version = this.props.query.version !== undefined ? this.props.query.version - 1 : this.props.readerData.getIn(['pubData', 'history']).size - 1;
 
-		// console.log(this.props.delta);
-		// console.log('funky', funky);
-		// // console.log('funkyapi', funky.historyAPI);
-		// // console.log('funkyapi()', funky.historyAPI());
-		// console.log('monkey', monkey);
-		// console.log('monkeyhistorylength', monkey.History.length);
-
 		return (
 			<div style={styles.container}>
 
@@ -313,17 +231,13 @@ const Reader = React.createClass({
 
 					<PubModals 
 						status={this.props.readerData.get('status')} 
-						
 						setQueryHandler={this.setQuery}
 						goBackHandler={this.goBack}
 						query={this.props.query}
-						// closeModalAndMenuHandler={this.closeModalAndMenuHandler}
-						// activeModal={this.props.query.mode}
 
 						// TOC Props
 						tocData={this.state.TOC}
 						// Source Props
-						// markdown={pubData.history[version].markdown}
 						historyObject={pubData.history[version]}
 						// History Props
 						historyData={pubData.history} />

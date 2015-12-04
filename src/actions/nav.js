@@ -5,8 +5,6 @@
 // types as strings in action creators
 /*--------*/
 export const UPDATE_DELTA = 'nav/UPDATE_DELTA';
-// export const OPEN_MENU = 'nav/OPEN_MENU';
-// export const CLOSE_MENU = 'nav/CLOSE_MENU';
 
 /*--------*/
 // Define Action creators
@@ -21,16 +19,3 @@ export function updateDelta(delta) {
 		delta: delta,
 	};	
 }
-
-// export function openMenu() {
-// 	return {
-// 		type: OPEN_MENU
-// 	};	
-// }
-
-// export function closeMenu() {
-// 	return {
-// 		type: CLOSE_MENU
-// 	};	
-// }
-

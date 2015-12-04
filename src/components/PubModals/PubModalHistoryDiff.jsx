@@ -33,10 +33,9 @@ const PubModalHistoryDiff = React.createClass({
 
 				{
 					renderOrder.map((key, itemIndex)=>{
-						// console.log(key);
-						// console.log(this.props.diffObject);
 						const diffItem = this.props.diffObject[key];
 						if (diffItem.length > 1 || ((diffItem[0] && diffItem[0].added) || (diffItem[0] && diffItem[0].removed))) {
+							
 							return (
 								<div key={'diffObject-' + itemIndex} style={styles.diffContentWrapper}>
 									<div style={styles.diffTitle}>{key.replace('diff', '')}</div>
@@ -66,11 +65,6 @@ styles = {
 		padding: 15,
 	},
 	
-	// diffContentWrapper: {
-	// 	'@media screen and (min-resolution: 3dppx), (max-width: 767px)': {
-	// 		paddingLeft: 15,
-	// 	},
-	// },
 	diffTitle: {
 		margin: '15px 0px',
 		fontFamily: 'Courier',

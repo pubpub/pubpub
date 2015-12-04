@@ -5,13 +5,10 @@ import {reset} from 'redux-form';
 import {Login} from '../index';
 import {connect} from 'react-redux';
 import {toggleVisibility, restoreLogin} from '../../actions/login';
-// import {toggleMenu, closeMenu} from '../../actions/nav';
 import {updateDelta} from '../../actions/nav';
 import {HeaderNav, HeaderMenu} from '../../components';
 import {globalStyles} from '../../utils/styleConstants';
 import { pushState, go } from 'redux-router';
-
-// import {openModal} from '../../actions/reader';
 
 let styles = {};
 const App = React.createClass({
@@ -42,17 +39,9 @@ const App = React.createClass({
 	
 		}
 	},
-	// componentWillReceiveProps: function(nextProps) {
-		// Close the menu if we're changing routes and it's open
-		// if (this.props.path !== nextProps.path && nextProps.navData.get('menuOpen')) {
-		// 	this.props.dispatch(closeMenu());
-		// }
-	// },
+
 	toggleLogin: function() {
 		if (!this.props.loginData.get('loggedIn')) {
-			// this.props.dispatch(closeMenu());
-			// this.props.dispatch(pushState(null, ('/profile/' + this.props.loginData.getIn(['userData', 'username']))));
-		// } else {
 			this.props.dispatch(toggleVisibility());
 			this.props.dispatch(reset('loginForm'));
 			this.props.dispatch(reset('loginFormRegister'));	
@@ -61,41 +50,19 @@ const App = React.createClass({
 		
 	},
 
-	// menuToggle: function() {
-	// 	// this.props.dispatch(toggleMenu());
-	// 	const newMenuState = this.props.query.menu ? undefined : true;
-	// 	this.props.dispatch(pushState(null, this.props.path, {...this.props.query, menu: newMenuState}));
-	// 	// if (this.props.query.menu) {
-			
-	// 	// } else {
-	// 	// 	this.props.dispatch(pushState(null, this.props.path, {...this.props.query, menu: true}));
-	// 	// }
-	// },
-
-	// openPubModal: function(activeModal) {
-	// 	return ()=> {
-	// 		// this.props.dispatch(openModal(activeModal));
-	// 		this.props.dispatch(pushState(null, '/pub/' + this.props.slug, {...this.props.query, mode: activeModal}));
-	// 	};
-	// },
-
 	goBack: function(backCount) {
-		// If this is the case, we likely have no history and direct-loaded into this mode. We can't go back, so push an empty state.
-		// This also behooves us to not use 'replaceState' anywhere in our manual nav functioning
-		// if (this.props.routeAction === 'REPLACE') { 
 		if (this.props.delta + backCount < 0) {
+			// If there is no history with which to go back, clear the query params
 			this.props.dispatch(pushState(null, this.props.path, {}));
 		} else {
+			this.props.dispatch(updateDelta(backCount + 1)); // Keep track of nav.delta so we can handle cases where the page was directly navigated to.
 			this.props.dispatch(go(backCount));
-			this.props.dispatch(updateDelta(backCount + 1));
+			
 		}
-
-		// this.props.dispatch(go(backCount));
 	},
 
 	setQuery: function(queryObject) {
 		this.props.dispatch(pushState(null, this.props.path, {...this.props.query, ...queryObject}));
-		// this.props.dispatch(updateDelta(1));
 	},
 
 	render: function() {
@@ -109,8 +76,6 @@ const App = React.createClass({
 			headerTextColor = globalStyles.headerBackground;
 			headerTextColorHover = 'black';
 		}
-
-		console.log('appDelta', this.props.delta);
 
 		return (
 			<div style={styles.body}>

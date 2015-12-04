@@ -11,13 +11,11 @@ const PubModals = React.createClass({
 		status: PropTypes.string,
 		setQueryHandler: PropTypes.func,
 		goBackHandler: PropTypes.func,
-		// closeModalAndMenuHandler: PropTypes.func,
 		query: PropTypes.object,
 
 		// TOC Props
 		tocData: PropTypes.array,
 		// Source Props
-		// markdown: PropTypes.string,
 		historyObject: PropTypes.object,
 		// History Props
 		historyData: PropTypes.array,
@@ -43,28 +41,15 @@ const PubModals = React.createClass({
 		return (
 			<div className={'pubModals'} style={[styles.container, styles[this.props.status]]}>
 
-
 				// Each level has to have it's own animation-in/out style, (pop for level1 on desktop, slide for all on mobile)
 				// Each level has to have it's own splash, that goes back the correct amount
-				// Each level has it's own switch statement
 
-				<div className="modalsLevel1" 
-					style={[
-						styles.modalWrapper, 
-						modalWrapper1Active && styles.modalWrapperActive]}>
+				<div className="modalsLevel1" style={[styles.modalWrapper, modalWrapper1Active && styles.modalWrapperActive]}>
 
-					<div className="modalSplash1" 
-						onClick={this.closeModalandMenu(1)} 
-						style={[
-							styles.modalSplash, 
-							modalWrapper1Active && styles.modalSplashActive]}>
+					<div className="modalSplash1" onClick={this.closeModalandMenu(1)} style={[styles.modalSplash, modalWrapper1Active && styles.modalSplashActive]}>
 					</div>
 
-					<div className="modalContainer1" 
-						style={[
-							styles.modalContainer, 
-							modalWrapper1Active && styles.modalContainerActive, 
-							modalWrapper2Active && styles.modalContainerInactive]} >
+					<div className="modalContainer1" style={[styles.modalContainer, modalWrapper1Active && styles.modalContainerActive, modalWrapper2Active && styles.modalContainerInactive]} >
 
 						<div key={'level1Back'} style={styles.modalBackButton} onClick={this.closeModal}>Back</div>
 
@@ -77,7 +62,6 @@ const PubModals = React.createClass({
 							case 'history':
 								return (<PubModalHistory 
 										historyData={this.props.historyData} 
-										activeDiff={this.props.query.diff}
 										setQueryHandler={this.props.setQueryHandler} />
 									);
 							case 'source':
@@ -100,24 +84,12 @@ const PubModals = React.createClass({
 				</div>
 
 
-				<div className="modalsLevel2" 
-					style={[
-						styles.modalWrapper, 
-						modalWrapper2Active && styles.modalWrapperActive]}>
+				<div className="modalsLevel2" style={[styles.modalWrapper, modalWrapper2Active && styles.modalWrapperActive]}>
 
-					<div className="modalSplash2" 
-						onClick={this.closeModalandMenu(2)} 
-						style={[
-							styles.modalSplash, 
-							styles.modalSplash2,
-							modalWrapper2Active && styles.modalSplashActive]}>
+					<div className="modalSplash2" onClick={this.closeModalandMenu(2)} style={[styles.modalSplash, styles.modalSplash2, modalWrapper2Active && styles.modalSplashActive]}>
 					</div>
 
-					<div className="modalContainer2" 
-						style={[
-							styles.modalContainer, 
-							styles.modalContainer2,
-							modalWrapper2Active && styles.modalContainerActive]} >
+					<div className="modalContainer2" style={[styles.modalContainer, styles.modalContainer2, modalWrapper2Active && styles.modalContainerActive]} >
 
 						<div key={'level2Back'} style={[styles.modalBackButton, styles.modalBackButtonAlwaysShow]} onClick={this.closeModal}>Back</div>
 
