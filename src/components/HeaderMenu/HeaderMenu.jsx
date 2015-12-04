@@ -135,11 +135,13 @@ styles = {
 		position: 'absolute',
 		top: 0,
 		right: 0,
-		transition: '.2s ease-in-out transform',
-		transform: 'translateX(105%)',
+		transition: '.2s linear transform',
+		// transform: 'translateX(105%)',
+		transform: 'translate3d(105%,0,0)',
 	},
 	menuDrawerOpen: {
-		transform: 'translateX(0%)',
+		// transform: 'translateX(0%)',
+		transform: 'translate3d(0%,0,0)',
 	},
 	closeBar: {
 		float: 'left',

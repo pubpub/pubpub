@@ -84,9 +84,9 @@ const Reader = React.createClass({
 		
 	},
 
-	componentWillUnmount() {
-		window.scrollTo(0, 0);
-	},
+	// componentWillUnmount() {
+	// 	window.scrollTo(0, 0);
+	// },
 
 	loader: function() {
 		return {

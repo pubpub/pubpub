@@ -20,10 +20,6 @@ const Landing = React.createClass({
 		// 	return dispatch(getProjects());
 		// }
 	},
-	
-	componentWillUnmount() {
-		window.scrollTo(0, 0);
-	},
 
 	renderLandingSearchResults: function(results) {
 		console.log(results);
