@@ -13,7 +13,6 @@ const PubModalHistory = React.createClass({
 		activeDiff: PropTypes.string,
 
 		setQueryHandler: PropTypes.func,
-		goBackHandler: PropTypes.func,
 	},
 
 	getDefaultProps: function() {

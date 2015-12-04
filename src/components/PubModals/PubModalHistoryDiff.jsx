@@ -1,14 +1,12 @@
 import React, { PropTypes } from 'react';
 import Radium from 'radium';
-import {globalStyles} from '../../utils/styleConstants';
+// import {globalStyles} from '../../utils/styleConstants';
 
 let styles = {};
 
 const PubModalHistoryDiff = React.createClass({
 	propTypes: {
 		diffObject: PropTypes.object,
-		goBackHandler: PropTypes.func,
-
 	},
 
 	getDefaultProps: function() {
@@ -22,10 +20,6 @@ const PubModalHistoryDiff = React.createClass({
 		};
 	},
 
-	closeHandler: function() {
-		this.props.goBackHandler(-1);			
-	},
-
 	render: function() {
 		const renderOrder = [
 			'diffTitle',
@@ -36,8 +30,6 @@ const PubModalHistoryDiff = React.createClass({
 
 		return (
 			<div style={styles.container}>
-
-				<div style={styles.backButton} onClick={this.closeHandler}>Back</div>
 
 				{
 					renderOrder.map((key, itemIndex)=>{
@@ -73,33 +65,12 @@ styles = {
 	container: {
 		padding: 15,
 	},
-	backButton: {
-		// display: 'none',
-		textAlign: 'right',
-		fontSize: '1.5em',
-		whiteSpace: 'nowrap',
-		overflow: 'hidden',
-		textOverflow: 'ellipsis',
-		padding: '0px',
-		fontFamily: globalStyles.headerFont,
-		margin: '0px 0px 30px 0px',
-		':hover': {
-			cursor: 'pointer',
-			color: 'black',
-		},
-		'@media screen and (min-resolution: 3dppx), (max-width: 767px)': {
-			margin: '0px 0px 0px 60px',
-			fontSize: '2em',
-			padding: '20px 20px',
-			width: 'calc(100% - 100px)',
-			// display: 'none',
-		},
-	},
-	diffContentWrapper: {
-		'@media screen and (min-resolution: 3dppx), (max-width: 767px)': {
-			paddingLeft: 15,
-		},
-	},
+	
+	// diffContentWrapper: {
+	// 	'@media screen and (min-resolution: 3dppx), (max-width: 767px)': {
+	// 		paddingLeft: 15,
+	// 	},
+	// },
 	diffTitle: {
 		margin: '15px 0px',
 		fontFamily: 'Courier',

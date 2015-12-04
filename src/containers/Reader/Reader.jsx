@@ -273,27 +273,29 @@ const Reader = React.createClass({
 						value={this.props.readerData.get('status') === 'loading' ? 0 : 100}/>
 
 					<PubBody
-						status = {this.props.readerData.get('status')}
-						title = {pubData.history[version].title} 
-						abstract = {pubData.history[version].abstract} 
-						htmlTree = {this.state.htmlTree} // This will probably be the tree, not the markdown. Calculate markdown here in reader, so we can have TOC, etc
-						authors = {pubData.history[version].authors}/>
+						status={this.props.readerData.get('status')}
+						title={pubData.history[version].title} 
+						abstract={pubData.history[version].abstract} 
+						htmlTree={this.state.htmlTree}
+						authors={pubData.history[version].authors}/>
 
 					<PubModals 
 						status={this.props.readerData.get('status')} 
-						setQueryHandler = {this.setQuery}
-						goBackHandler = {this.goBack}
-						closeModalAndMenuHandler = {this.closeModalAndMenuHandler}
-						activeModal = {this.props.query.mode}
+						
+						setQueryHandler={this.setQuery}
+						goBackHandler={this.goBack}
+						query={this.props.query}
+						// closeModalAndMenuHandler={this.closeModalAndMenuHandler}
+						// activeModal={this.props.query.mode}
 
 						// TOC Props
-						tocData = {this.state.TOC}
+						tocData={this.state.TOC}
 						// Source Props
-						markdown = {pubData.history[version].markdown}
-						historyObject = {pubData.history[version]}
+						// markdown={pubData.history[version].markdown}
+						historyObject={pubData.history[version]}
 						// History Props
-						historyData = {pubData.history}
-						activeDiff={this.props.query.diff} />
+						historyData={pubData.history} />
+						// activeDiff={this.props.query.diff} />
 
 				</div>
 

@@ -11,31 +11,65 @@ const PubModals = React.createClass({
 		status: PropTypes.string,
 		setQueryHandler: PropTypes.func,
 		goBackHandler: PropTypes.func,
-		closeModalAndMenuHandler: PropTypes.func,
-		activeModal: PropTypes.string,
+		// closeModalAndMenuHandler: PropTypes.func,
+		query: PropTypes.object,
 
 		// TOC Props
 		tocData: PropTypes.array,
 		// Source Props
-		markdown: PropTypes.string,
+		// markdown: PropTypes.string,
+		historyObject: PropTypes.object,
 		// History Props
 		historyData: PropTypes.array,
-		activeDiff: PropTypes.string,
+		// activeDiff: PropTypes.string,
+	},
+
+	closeModalandMenu: function(level) {
+		return ()=> {
+			// check if menu is open, if so, add one to level, return negative level
+			const backCount = this.props.query.menu ? level + 1 : level;
+			this.props.goBackHandler(-1 * backCount);
+		};
+	},
+	closeModal: function() {
+		this.props.goBackHandler(-1);
 	},
 
 	render: function() {
-		const activeDiffObject = this.props.historyData[this.props.activeDiff] ? this.props.historyData[this.props.activeDiff].diffObject : undefined;
-		return (
-			<div style={[styles.container, styles[this.props.status]]}>
+		const activeDiffObject = this.props.historyData[this.props.query.diff] ? this.props.historyData[this.props.query.diff].diffObject : undefined;
+		const modalWrapper1Active = this.props.query.mode !== undefined;
+		const modalWrapper2Active = this.props.query.diff !== undefined;
 
-				{/*	Container for all modals and their backdrop. */}
-				<div className="modals" style={[styles.modalWrapper, this.props.activeModal !== undefined && styles.modalWrapperActive]}>
-					<div className="modal-splash" onClick={this.props.closeModalAndMenuHandler} style={[styles.modalSplash, this.props.activeModal !== undefined && styles.modalSplashActive]}></div>
-					<div id="modal-container" key={'1'} className="modal-container" style={[styles.modalContainer, this.props.activeModal !== undefined && styles.modalContainerActive, this.props.activeDiff && styles.modalContainerNoScroll]}>
-						{/*	Switch which modal is displayed based on the activeModal parameter */}
-						<div key={'3'} style={styles.modalBackButton} onClick={this.props.goBackHandler}>Back</div>
-						{(() => {
-							switch (this.props.activeModal) {
+		return (
+			<div className={'pubModals'} style={[styles.container, styles[this.props.status]]}>
+
+
+				// Each level has to have it's own animation-in/out style, (pop for level1 on desktop, slide for all on mobile)
+				// Each level has to have it's own splash, that goes back the correct amount
+				// Each level has it's own switch statement
+
+				<div className="modalsLevel1" 
+					style={[
+						styles.modalWrapper, 
+						modalWrapper1Active && styles.modalWrapperActive]}>
+
+					<div className="modalSplash1" 
+						onClick={this.closeModalandMenu(1)} 
+						style={[
+							styles.modalSplash, 
+							modalWrapper1Active && styles.modalSplashActive]}>
+					</div>
+
+					<div className="modalContainer1" 
+						style={[
+							styles.modalContainer, 
+							modalWrapper1Active && styles.modalContainerActive, 
+							modalWrapper2Active && styles.modalContainerInactive]} >
+
+						<div key={'level1Back'} style={styles.modalBackButton} onClick={this.closeModal}>Back</div>
+
+						{() => {
+							switch (this.props.query.mode) {
 							case 'tableOfContents':
 								return (<PubModalTOC 
 										tocData={this.props.tocData}/>
@@ -43,13 +77,12 @@ const PubModals = React.createClass({
 							case 'history':
 								return (<PubModalHistory 
 										historyData={this.props.historyData} 
-										activeDiff={this.props.activeDiff}
-										setQueryHandler={this.props.setQueryHandler}
-										goBackHandler={this.props.goBackHandler} />
+										activeDiff={this.props.query.diff}
+										setQueryHandler={this.props.setQueryHandler} />
 									);
 							case 'source':
 								return (<PubModalSource 
-										markdown={this.props.markdown}/>
+										markdown={this.props.historyObject.markdown}/>
 									);
 							case 'cite':
 								return (<PubModalCite/>
@@ -62,17 +95,40 @@ const PubModals = React.createClass({
 							default:
 								return null;
 							}
-						})()}
-
+						}()}
 					</div>
 				</div>
 
-				<div id="modal-container" key={'2'} className="modal-container" style={[styles.modalContainer, styles.modalContainer2, this.props.activeDiff !== undefined && styles.modalContainerActive]}>
-						{/*	Switch which modal is displayed based on the activeModal parameter */}
-						{/* <div key={'4'} style={styles.modalBackButton} onClick={this.props.goBackHandler}>Back</div> */}
 
-						<PubModalHistoryDiff diffObject={activeDiffObject} goBackHandler={this.props.goBackHandler}/>
+				<div className="modalsLevel2" 
+					style={[
+						styles.modalWrapper, 
+						modalWrapper2Active && styles.modalWrapperActive]}>
+
+					<div className="modalSplash2" 
+						onClick={this.closeModalandMenu(2)} 
+						style={[
+							styles.modalSplash, 
+							modalWrapper2Active && styles.modalSplash2Active]}>
+					</div>
+
+					<div className="modalContainer2" 
+						style={[
+							styles.modalContainer, 
+							styles.modalContainer2,
+							modalWrapper2Active && styles.modalContainerActive]} >
+
+						<div key={'level2Back'} style={[styles.modalBackButton, styles.modalBackButtonAlwaysShow]} onClick={this.closeModal}>Back</div>
+
+						{() => {
+							if (this.props.query.diff) {
+								return <PubModalHistoryDiff diffObject={activeDiffObject}/>;
+							}
+							return null;
+						}()}
+					</div>
 				</div>
+
 
 			</div>
 		);
@@ -84,7 +140,7 @@ export default Radium(PubModals);
 styles = {	
 	container: {
 		fontFamily: globalStyles.headerFont,
-		transition: '.3s linear opacity .25s',
+		transition: '.3s linear opacity .25s', // This is the transition for pub load, not for modalOpen
 	},
 	loading: {
 		opacity: 0,
@@ -92,6 +148,7 @@ styles = {
 	loaded: {
 		opacity: 1
 	},
+
 	// Modal Styling
 	modalWrapper: {
 		width: '100%',
@@ -118,6 +175,7 @@ styles = {
 			transform: 'translateX(0%)',
 		}
 	},
+
 	modalSplash: {
 		opacity: 0,
 		pointerEvents: 'none',
@@ -143,11 +201,17 @@ styles = {
 		opacity: 1,
 		pointerEvents: 'auto',
 	},
+	modalSplash2Active: {
+		opacity: 1,
+		pointerEvents: 'auto',
+		backgroundColor: 'transparent',
+		transition: '0s linear opacity',
+	},
 	modalContainer: {
 		width: '90%',
 		// minHeight: 400,
-		// maxHeight: 'calc(100% - 90px)',
-		height: 'calc(100% - 90px)',
+		maxHeight: 'calc(100% - 90px)',
+		// height: 'calc(100% - 90px)',
 		overflow: 'hidden',
 		overflowY: 'scroll',
 		margin: '0 auto',
@@ -179,16 +243,16 @@ styles = {
 
 	},
 	modalContainer2: {
-		transition: 'none',
-		height: 'calc(100% - 90px)',
+		transform: 'scale(1.0)',
+		transition: '.02s linear opacity',
 	},
-	modalContainerNoScroll: {
-		// '@media screen and (min-resolution: 3dppx), (max-width: 767px)': {
+	// modalContainerNoScroll: {
+	// 	// '@media screen and (min-resolution: 3dppx), (max-width: 767px)': {
 
-		overflow: 'hidden',
-		overflowY: 'hidden',
-		// },
-	},
+	// 	overflow: 'hidden',
+	// 	overflowY: 'hidden',
+	// 	// },
+	// },
 	modalContainerActive: {
 		opacity: 1,
 		pointerEvents: 'auto',
@@ -198,25 +262,37 @@ styles = {
 		},
 		
 	},
+	modalContainerInactive: {
+		pointerEvents: 'none',
+		opacity: 0,
+		'@media screen and (min-resolution: 3dppx), (max-width: 767px)': {
+			opacity: 1,
+		},
+	},
 
 	modalBackButton: {
 		display: 'none',
+		margin: '15px',
+		fontFamily: globalStyles.headerFont,
+		padding: '0px',
+		fontSize: '1.5em',
+		whiteSpace: 'nowrap',
+		overflow: 'hidden',
+		textOverflow: 'ellipsis',
+		textAlign: 'right',
+		':hover': {
+			cursor: 'pointer',
+			color: 'black',
+		},
 		'@media screen and (min-resolution: 3dppx), (max-width: 767px)': {
 			display: 'block',
 			margin: '0px 0px 0px 60px',
-			textAlign: 'right',
 			fontSize: '2em',
 			width: 'calc(100% - 100px)',
-			whiteSpace: 'nowrap',
-			overflow: 'hidden',
-			textOverflow: 'ellipsis',
 			padding: '20px 20px',
-			fontFamily: globalStyles.headerFont,
-			':hover': {
-				cursor: 'pointer',
-				color: 'black',
-			},
-
 		},
 	},
+	modalBackButtonAlwaysShow: {
+		display: 'block',		
+	}
 };
