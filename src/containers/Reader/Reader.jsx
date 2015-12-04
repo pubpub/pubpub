@@ -126,7 +126,7 @@ const Reader = React.createClass({
 		} else {
 		// console.log(go(backCount));
 			// delta += backCount;
-			this.props.dispatch(updateDelta(backCount));
+			this.props.dispatch(updateDelta(backCount + 1));
 			this.props.dispatch(go(backCount));
 		}
 			
@@ -144,7 +144,7 @@ const Reader = React.createClass({
 		// return ()=> {
 		// console.log('queryObject', queryObject);
 		// delta += 1;
-		this.props.dispatch(updateDelta(1));
+		// this.props.dispatch(updateDelta(1));
 		this.props.dispatch(pushState(null, '/pub/' + this.props.slug, {...this.props.query, ...queryObject}));
 		// };
 	},
@@ -254,7 +254,7 @@ const Reader = React.createClass({
 		const pubData = this.props.readerData.get('pubData').toJS();
 		const version = this.props.query.version !== undefined ? this.props.query.version - 1 : this.props.readerData.getIn(['pubData', 'history']).size - 1;
 
-		console.log(this.props.delta);
+		// console.log(this.props.delta);
 		// console.log('funky', funky);
 		// // console.log('funkyapi', funky.historyAPI);
 		// // console.log('funkyapi()', funky.historyAPI());

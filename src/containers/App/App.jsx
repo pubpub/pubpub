@@ -87,7 +87,7 @@ const App = React.createClass({
 			this.props.dispatch(pushState(null, this.props.path, {}));
 		} else {
 			this.props.dispatch(go(backCount));
-			this.props.dispatch(updateDelta(backCount));
+			this.props.dispatch(updateDelta(backCount + 1));
 		}
 
 		// this.props.dispatch(go(backCount));
@@ -95,7 +95,7 @@ const App = React.createClass({
 
 	setQuery: function(queryObject) {
 		this.props.dispatch(pushState(null, this.props.path, {...this.props.query, ...queryObject}));
-		this.props.dispatch(updateDelta(1));
+		// this.props.dispatch(updateDelta(1));
 	},
 
 	render: function() {
