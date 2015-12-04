@@ -224,8 +224,8 @@ styles = {
 
 		opacity: 0,
 		pointerEvents: 'none',
-		transform: 'scale(0.8)',
-		transition: '.1s linear opacity, .1s linear transform',
+		transform: 'scale(0.9)',
+		transition: '.0s linear opacity, .1s linear transform',
 
 		'@media screen and (min-resolution: 3dppx), (max-width: 767px)': {
 			position: 'fixed',
@@ -244,7 +244,7 @@ styles = {
 	},
 	modalContainer2: {
 		transform: 'scale(1.0)',
-		transition: '.02s linear opacity',
+		transition: '.0s linear opacity',
 	},
 	// modalContainerNoScroll: {
 	// 	// '@media screen and (min-resolution: 3dppx), (max-width: 767px)': {
