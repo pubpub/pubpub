@@ -6,6 +6,7 @@ import {Login} from '../index';
 import {connect} from 'react-redux';
 import {toggleVisibility, restoreLogin} from '../../actions/login';
 // import {toggleMenu, closeMenu} from '../../actions/nav';
+import {updateDelta} from '../../actions/nav';
 import {HeaderNav, HeaderMenu} from '../../components';
 import {globalStyles} from '../../utils/styleConstants';
 import { pushState, go } from 'redux-router';
@@ -13,7 +14,6 @@ import { pushState, go } from 'redux-router';
 // import {openModal} from '../../actions/reader';
 
 let styles = {};
-
 const App = React.createClass({
 	propTypes: {
 		loginData: PropTypes.object,
@@ -22,6 +22,7 @@ const App = React.createClass({
 		path: PropTypes.string,
 		query: PropTypes.object,
 		slug: PropTypes.string,
+		delta: PropTypes.number,
 		children: PropTypes.object.isRequired,
 		dispatch: PropTypes.func
 	},
@@ -79,11 +80,22 @@ const App = React.createClass({
 	// },
 
 	goBack: function(backCount) {
-		this.props.dispatch(go(backCount));
+		// If this is the case, we likely have no history and direct-loaded into this mode. We can't go back, so push an empty state.
+		// This also behooves us to not use 'replaceState' anywhere in our manual nav functioning
+		// if (this.props.routeAction === 'REPLACE') { 
+		if (this.props.delta + backCount < 0) {
+			this.props.dispatch(pushState(null, this.props.path, {}));
+		} else {
+			this.props.dispatch(go(backCount));
+			this.props.dispatch(updateDelta(backCount));
+		}
+
+		// this.props.dispatch(go(backCount));
 	},
 
 	setQuery: function(queryObject) {
 		this.props.dispatch(pushState(null, this.props.path, {...this.props.query, ...queryObject}));
+		this.props.dispatch(updateDelta(1));
 	},
 
 	render: function() {
@@ -98,12 +110,14 @@ const App = React.createClass({
 			headerTextColorHover = 'black';
 		}
 
+		console.log('appDelta', this.props.delta);
+
 		return (
 			<div style={styles.body}>
 
 				{
 					// Set the body to not scroll if you have the login window or the mobile menu open
-					this.props.loginData.get('isVisible') || this.props.navData.get('menuOpen') || (this.props.query.mode !== undefined && this.props.path.indexOf('/pub/') > -1)
+					this.props.loginData.get('isVisible') || this.props.query.menu !== undefined || (this.props.query.mode !== undefined && this.props.path.indexOf('/pub/') > -1)
 						? <Style rules={{'body': {overflow: 'hidden'}}} />
 						: null
 				}
@@ -161,6 +175,7 @@ export default connect( state => {
 		path: state.router.location.pathname,
 		query: state.router.location.query,
 		slug: state.router.params.slug,
+		delta: state.nav.get('delta'),
 	};
 })( Radium(App) );
 

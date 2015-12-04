@@ -6,10 +6,13 @@ import PureRenderMixin from 'react-addons-pure-render-mixin';
 // import {getPub, closeModal, openModal} from '../../actions/reader';
 import {getPub} from '../../actions/reader';
 // import {openMenu, closeMenu} from '../../actions/nav';
+import {updateDelta} from '../../actions/nav';
 // import {closeMenu} from '../../actions/nav';
 import {PubBody, PubDiscussion, PubModals, PubNav, LoaderDeterminate} from '../../components';
 import {globalStyles} from '../../utils/styleConstants';
 import { pushState, go } from 'redux-router';
+// import * as funky from 'redux-router';
+// import * as monkey from 'react-router';
 
 import markLib from '../../modules/markdown/markdown';
 import markdownExtensions from '../../components/EditorPlugins';
@@ -18,12 +21,15 @@ markLib.setExtensions(markdownExtensions);
 let styles = {};
 let leftBarStyles = {};
 let rightBarStyles = {};
+// const routeKeys = {};
 
 const Reader = React.createClass({
 	propTypes: {
 		readerData: PropTypes.object,
 		slug: PropTypes.string,
 		query: PropTypes.object,
+		delta: PropTypes.number,
+		routeKey: PropTypes.string,
 		// query : {
 			// modal: tableOfContents | history | source | cite | status | discussions 
 			// historyDiff: integer
@@ -69,6 +75,9 @@ const Reader = React.createClass({
 	},
 
 	componentWillReceiveProps(nextProps) {
+		// console.log(this.props.routeKey);
+		// routeKeys[this.props.routeKey] = true;
+
 		const oldVersion = this.props.query.version !== undefined ? this.props.query.version - 1 : this.props.readerData.getIn(['pubData', 'history']).size - 1;
 		const version = nextProps.query.version !== undefined ? nextProps.query.version - 1 : nextProps.readerData.getIn(['pubData', 'history']).size - 1;
 
@@ -107,7 +116,21 @@ const Reader = React.createClass({
 		// 		backCount = -1;
 		// 	}	
 		// }
-		this.props.dispatch(go(backCount));
+
+		// If this is the case, we likely have no history and direct-loaded into this mode. We can't go back, so push an empty state.
+		// This also behooves us to not use 'replaceState' anywhere in our manual nav functioning
+		// console.log(routeKeys);
+		// if (this.props.routeAction === 'REPLACE') { 
+		if (this.props.delta + backCount < 0) {
+			this.props.dispatch(pushState(null, '/pub/' + this.props.slug, {}));
+		} else {
+		// console.log(go(backCount));
+			// delta += backCount;
+			this.props.dispatch(updateDelta(backCount));
+			this.props.dispatch(go(backCount));
+		}
+			
+			
 	},
 
 	// closeModalAndMenuHandler: function() {
@@ -120,6 +143,8 @@ const Reader = React.createClass({
 		// console.log(queryObject);
 		// return ()=> {
 		// console.log('queryObject', queryObject);
+		// delta += 1;
+		this.props.dispatch(updateDelta(1));
 		this.props.dispatch(pushState(null, '/pub/' + this.props.slug, {...this.props.query, ...queryObject}));
 		// };
 	},
@@ -228,6 +253,13 @@ const Reader = React.createClass({
 		
 		const pubData = this.props.readerData.get('pubData').toJS();
 		const version = this.props.query.version !== undefined ? this.props.query.version - 1 : this.props.readerData.getIn(['pubData', 'history']).size - 1;
+
+		console.log(this.props.delta);
+		// console.log('funky', funky);
+		// // console.log('funkyapi', funky.historyAPI);
+		// // console.log('funkyapi()', funky.historyAPI());
+		// console.log('monkey', monkey);
+		// console.log('monkeyhistorylength', monkey.History.length);
 
 		return (
 			<div style={styles.container}>
@@ -347,7 +379,10 @@ export default connect( state => {
 	return {
 		readerData: state.reader, 
 		slug: state.router.params.slug,
-		query: state.router.location.query
+		query: state.router.location.query,
+		delta: state.nav.get('delta'),
+		routeKey: state.router.location.key,
+
 	};
 })( Radium(Reader) );
 

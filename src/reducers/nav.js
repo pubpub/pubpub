@@ -5,7 +5,7 @@ import {ensureImmutable} from './';
 // Load Actions
 /*--------*/
 import {
-	// TOGGLE_MENU,
+	UPDATE_DELTA,
 	// OPEN_MENU,
 	// CLOSE_MENU
 } from '../actions/nav';
@@ -15,6 +15,7 @@ import {
 /*--------*/
 export const defaultState = Immutable.Map({
 	// menuOpen: false,
+	delta: 0,
 	searchString: '',
 });
 
@@ -24,11 +25,11 @@ export const defaultState = Immutable.Map({
 // These functions take in an initial state and return a new
 // state. They are pure functions. We use Immutable to enforce this. 
 /*--------*/
-// function toggleMenu(state) {
-// 	return state.merge({
-// 		menuOpen: !state.get('menuOpen')
-// 	});
-// }
+function updateDelta(state, delta) {
+	return state.merge({
+		delta: state.get('delta') + delta
+	});
+}
 
 // function openMenu(state) {
 // 	return state.merge({
@@ -49,8 +50,8 @@ export const defaultState = Immutable.Map({
 export default function loginReducer(state = defaultState, action) {
 
 	switch (action.type) {
-	// case TOGGLE_MENU:
-	// 	return toggleMenu(state);
+	case UPDATE_DELTA:
+		return updateDelta(state, action.delta);
 	// case OPEN_MENU:
 	// 	return openMenu(state);
 	// case CLOSE_MENU:

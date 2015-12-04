@@ -167,7 +167,7 @@ styles = {
 			height: '100vh',
 			// backgroundColor: 'red',
 			zIndex: 9,
-			transition: '.2s ease-in-out transform',
+			transition: '.4s ease-in-out transform',
 			transform: 'translateX(105%)',
 		},
 	},
