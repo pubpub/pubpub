@@ -26,6 +26,12 @@ const App = React.createClass({
 		dispatch: PropTypes.func
 	},
 
+	getDefaultProps: function() {
+		return {
+			query: {},
+		};
+	},
+
 	statics: {
 		fetchDataDeferred: function(getState, dispatch) {
 			if (!getState().login.get('attemptedRestoreState')) {
