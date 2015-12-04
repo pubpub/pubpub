@@ -5,7 +5,7 @@ import 'babel/polyfill';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import createHistory from 'history/lib/createBrowserHistory';
-import useScroll from 'scroll-behavior/lib/useStandardScroll';
+// import useScroll from 'scroll-behavior/lib/useStandardScroll';
 
 import createStore from './createStore';
 import ApiClient from './helpers/ApiClient';
@@ -19,7 +19,8 @@ import makeRouteHooksSafe from './helpers/makeRouteHooksSafe';
 const client = new ApiClient();
 import Html from './helpers/Html';
 
-const scrollablehistory = useScroll(createHistory);
+// const scrollablehistory = useScroll(createHistory);
+const scrollablehistory = createHistory; // Had to turn off scrollable because of how it messes when we use queries
 
 const dest = document.getElementById('content');
 const store = createStore(reduxReactRouter, makeRouteHooksSafe(getRoutes), scrollablehistory, client, window.__INITIAL_STATE__);

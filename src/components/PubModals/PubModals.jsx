@@ -40,9 +40,11 @@ const PubModals = React.createClass({
 
 		return (
 			<div className={'pubModals'} style={[styles.container, styles[this.props.status]]}>
-
-				// Each level has to have it's own animation-in/out style, (pop for level1 on desktop, slide for all on mobile)
-				// Each level has to have it's own splash, that goes back the correct amount
+				{/*
+					Each level has to have it's own animation-in/out style, (pop for level1 on desktop, slide for all on mobile)
+					Each level has to have it's own splash, that goes back the correct amount
+				*/}
+				
 
 				<div className="modalsLevel1" style={[styles.modalWrapper, modalWrapper1Active && styles.modalWrapperActive]}>
 
