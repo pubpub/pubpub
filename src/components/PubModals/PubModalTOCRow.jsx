@@ -9,13 +9,15 @@ const PubModalTOCRow = React.createClass({
 	propTypes: {
 		content: PropTypes.object,
 		tocIndex: PropTypes.string,
+		dataIndex: PropTypes.number,
+		onRowClickHandler: PropTypes.func,
 	},
 
 	render: function() {
 		return (
 			<div style={styles.container}>
 
-				<div style={[styles.rowIndent[this.props.content.level], styles.row]} key={'TOC-' + this.props.tocIndex}>
+				<div style={[styles.rowIndent[this.props.content.level], styles.row]} onClick={this.props.onRowClickHandler(this.props.dataIndex)} key={'TOC-' + this.props.tocIndex}>
 					<span style={styles.rowNumber}>{this.props.tocIndex}</span>
 					<span style={styles.rowTitle}>{this.props.content.title}</span>
 					

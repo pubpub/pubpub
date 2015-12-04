@@ -9,12 +9,25 @@ import PubModalTOCRow from './PubModalTOCRow';
 const PubModalTOC = React.createClass({
 	propTypes: {
 		tocData: PropTypes.array,
+		closeModalAndMenuHandler: PropTypes.func,
 	},
 
 	getDefaultProps: function() {
 		return {
 			tocData: [],
 		};
+	},
+
+	onRowClick: function(index) {
+		return ()=>{
+			this.props.closeModalAndMenuHandler(1)();
+			
+			setTimeout(()=>{ // Route changes seem to jank up the scroll on mobile.
+				document.getElementById(this.props.tocData[index].id).scrollIntoView();
+			}, 200);
+			
+		};
+		
 	},
 
 	render: function() {
@@ -32,7 +45,7 @@ const PubModalTOC = React.createClass({
 							headerValues[contentItem.level - 1] += 1; // Increment the counter for the currentLevel
 							headerValues = headerValues.slice(0, contentItem.level).concat(defaultValues.slice(contentItem.level, 6)); // Clear all values after the currentLevel
 							const tocIndex = headerValues.slice(0, contentItem.level).join('.'); // Slice an array that is only as long as currentLevel and join them into a string with separating periods
-							return <PubModalTOCRow key={'pubModalRow-' + index} content={contentItem} tocIndex={tocIndex} />;
+							return <PubModalTOCRow key={'pubModalRow-' + index} content={contentItem} dataIndex={index} tocIndex={tocIndex} onRowClickHandler={this.onRowClick}/>;
 						});
 
 					}()}

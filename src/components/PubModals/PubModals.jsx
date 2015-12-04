@@ -37,7 +37,6 @@ const PubModals = React.createClass({
 		const activeDiffObject = this.props.historyData[this.props.query.diff] ? this.props.historyData[this.props.query.diff].diffObject : undefined;
 		const modalWrapper1Active = this.props.query.mode !== undefined;
 		const modalWrapper2Active = this.props.query.diff !== undefined;
-
 		return (
 			<div className={'pubModals'} style={[styles.container, styles[this.props.status]]}>
 				{/*
@@ -59,7 +58,8 @@ const PubModals = React.createClass({
 							switch (this.props.query.mode) {
 							case 'tableOfContents':
 								return (<PubModalTOC 
-										tocData={this.props.tocData}/>
+										tocData={this.props.tocData}
+										closeModalAndMenuHandler={this.closeModalandMenu}/>
 									);
 							case 'history':
 								return (<PubModalHistory 
