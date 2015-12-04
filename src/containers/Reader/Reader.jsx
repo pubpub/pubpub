@@ -84,6 +84,10 @@ const Reader = React.createClass({
 		
 	},
 
+	componentWillUnmount() {
+		window.scrollTo(0, 0);
+	},
+
 	loader: function() {
 		return {
 			transform: 'translateX(' + (-100 + this.props.readerData.get('loading')) + '%)',

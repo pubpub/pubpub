@@ -25,6 +25,10 @@ const Login = React.createClass({
 		}
 	},
 
+	componentWillUnmount: function() {
+		window.scrollTo(0, 0);
+	},
+
 	handleCreateSubmit: function(formValues) {
 		if (!this.props.loginData.get('loggedIn')) {
 			this.props.dispatch(toggleVisibility());

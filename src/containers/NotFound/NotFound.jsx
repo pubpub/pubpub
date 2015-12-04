@@ -11,6 +11,10 @@ export default React.createClass({
 		// console.log('it mounted!');
 	},
 
+	componentWillUnmount() {
+		window.scrollTo(0, 0);
+	},
+	
 	render: function() {
 		const metaData = {
 			title: 'PubPub - Not Found'

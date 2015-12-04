@@ -29,6 +29,7 @@ function updateDelta(state, delta) {
 }
 
 function updateDeltaOnRoute(state, action) {
+
 	let deltaDiff = 0;
 	if (action.payload.location.action === 'PUSH') {
 		deltaDiff = 1;

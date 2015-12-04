@@ -18,6 +18,10 @@ const Explore = React.createClass({
 		// }
 	},
 
+	componentWillUnmount() {
+		window.scrollTo(0, 0);
+	},
+	
 	render: function() {
 
 		const metaData = {

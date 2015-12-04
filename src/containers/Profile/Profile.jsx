@@ -25,6 +25,10 @@ const Profile = React.createClass({
 		}
 	},
 
+	componentWillUnmount() {
+		window.scrollTo(0, 0);
+	},
+
 	ownProfile: function() {
 		// let output = 'other';
 		// if (this.props.loginData.getIn(['userData', 'username']) === this.props.username ) {

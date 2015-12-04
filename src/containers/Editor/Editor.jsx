@@ -101,6 +101,7 @@ const Editor = React.createClass({
 	componentWillUnmount() {
 		this.props.dispatch(closeModal());
 		this.props.dispatch(unmountEditor());
+		window.scrollTo(0, 0);
 	},
 
 	getActiveCodemirrorInstance: function() {
