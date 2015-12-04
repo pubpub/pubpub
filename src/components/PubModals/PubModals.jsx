@@ -2,6 +2,7 @@ import React, {PropTypes} from 'react';
 import Radium from 'radium';
 import {globalStyles} from '../../utils/styleConstants';
 import {PubModalCite, PubModalHistory, PubModalTOC, PubModalSource} from './';
+import PubModalHistoryDiff from './PubModalHistoryDiff';
 
 let styles = {};
 
@@ -23,15 +24,16 @@ const PubModals = React.createClass({
 	},
 
 	render: function() {
+		const activeDiffObject = this.props.historyData[this.props.activeDiff] ? this.props.historyData[this.props.activeDiff].diffObject : undefined;
 		return (
 			<div style={[styles.container, styles[this.props.status]]}>
 
 				{/*	Container for all modals and their backdrop. */}
 				<div className="modals" style={[styles.modalWrapper, this.props.activeModal !== undefined && styles.modalWrapperActive]}>
 					<div className="modal-splash" onClick={this.props.closeModalAndMenuHandler} style={[styles.modalSplash, this.props.activeModal !== undefined && styles.modalSplashActive]}></div>
-					<div id="modal-container" className="modal-container" style={[styles.modalContainer, this.props.activeModal !== undefined && styles.modalContainerActive]}>
+					<div id="modal-container" key={'1'} className="modal-container" style={[styles.modalContainer, this.props.activeModal !== undefined && styles.modalContainerActive, this.props.activeDiff && styles.modalContainerNoScroll]}>
 						{/*	Switch which modal is displayed based on the activeModal parameter */}
-						<div style={styles.modalBackButton} onClick={this.props.goBackHandler}>Back</div>
+						<div key={'3'} style={styles.modalBackButton} onClick={this.props.goBackHandler}>Back</div>
 						{(() => {
 							switch (this.props.activeModal) {
 							case 'tableOfContents':
@@ -63,6 +65,13 @@ const PubModals = React.createClass({
 						})()}
 
 					</div>
+				</div>
+
+				<div id="modal-container" key={'2'} className="modal-container" style={[styles.modalContainer, styles.modalContainer2, this.props.activeDiff !== undefined && styles.modalContainerActive]}>
+						{/*	Switch which modal is displayed based on the activeModal parameter */}
+						{/* <div key={'4'} style={styles.modalBackButton} onClick={this.props.goBackHandler}>Back</div> */}
+
+						<PubModalHistoryDiff diffObject={activeDiffObject} goBackHandler={this.props.goBackHandler}/>
 				</div>
 
 			</div>
@@ -137,7 +146,8 @@ styles = {
 	modalContainer: {
 		width: '90%',
 		// minHeight: 400,
-		maxHeight: 'calc(100% - 90px)',
+		// maxHeight: 'calc(100% - 90px)',
+		height: 'calc(100% - 90px)',
 		overflow: 'hidden',
 		overflowY: 'scroll',
 		margin: '0 auto',
@@ -167,6 +177,17 @@ styles = {
 			transform: 'scale(1.0)',
 		},
 
+	},
+	modalContainer2: {
+		transition: 'none',
+		height: 'calc(100% - 90px)',
+	},
+	modalContainerNoScroll: {
+		// '@media screen and (min-resolution: 3dppx), (max-width: 767px)': {
+
+		overflow: 'hidden',
+		overflowY: 'hidden',
+		// },
 	},
 	modalContainerActive: {
 		opacity: 1,

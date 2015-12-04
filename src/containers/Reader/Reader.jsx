@@ -106,7 +106,7 @@ const Reader = React.createClass({
 				backCount = -1;
 			}	
 		}
-		this.props.dispatch(go(-1));
+		this.props.dispatch(go(backCount));
 	},
 
 	closeModalAndMenuHandler: function() {
@@ -271,7 +271,7 @@ const Reader = React.createClass({
 
 				</div>
 
-				<div className="centerBar" style={[styles.centerBar, this.props.readerData.get('activeModal') !== undefined && styles.centerBarModalActive]}>
+				<div className="centerBar" style={[styles.centerBar, this.props.query.mode !== undefined && styles.centerBarModalActive]}>
 
 					<PubNav 
 						height={this.height} 

@@ -18,7 +18,9 @@ const App = React.createClass({
 	propTypes: {
 		loginData: PropTypes.object,
 		navData: PropTypes.object,
+		pubData: PropTypes.object,
 		path: PropTypes.string,
+		query: PropTypes.object,
 		slug: PropTypes.string,
 		children: PropTypes.object.isRequired,
 		dispatch: PropTypes.func
@@ -80,7 +82,7 @@ const App = React.createClass({
 
 				{
 					// Set the body to not scroll if you have the login window or the mobile menu open
-					this.props.loginData.get('isVisible') || this.props.navData.get('menuOpen')
+					this.props.loginData.get('isVisible') || this.props.navData.get('menuOpen') || (this.props.query.mode !== undefined && this.props.path.indexOf('/pub/') > -1)
 						? <Style rules={{'body': {overflow: 'hidden'}}} />
 						: null
 				}
@@ -131,7 +133,9 @@ export default connect( state => {
 	return {
 		loginData: state.login, 
 		navData: state.nav,
+		readerData: state.reader,
 		path: state.router.location.pathname,
+		query: state.router.location.query,
 		slug: state.router.params.slug,
 	};
 })( Radium(App) );

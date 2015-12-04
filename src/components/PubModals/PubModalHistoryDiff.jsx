@@ -37,7 +37,7 @@ const PubModalHistoryDiff = React.createClass({
 		return (
 			<div style={styles.container}>
 
-				{/* <div style={styles.backButton} onClick={this.closeHandler}>Back</div> */}
+				<div style={styles.backButton} onClick={this.closeHandler}>Back</div>
 
 				{
 					renderOrder.map((key, itemIndex)=>{
@@ -46,7 +46,7 @@ const PubModalHistoryDiff = React.createClass({
 						const diffItem = this.props.diffObject[key];
 						if (diffItem.length > 1 || ((diffItem[0] && diffItem[0].added) || (diffItem[0] && diffItem[0].removed))) {
 							return (
-								<div key={'diffObject-' + itemIndex}>
+								<div key={'diffObject-' + itemIndex} style={styles.diffContentWrapper}>
 									<div style={styles.diffTitle}>{key.replace('diff', '')}</div>
 									<div style={styles.diffContent}>
 										{
@@ -71,11 +71,7 @@ export default Radium(PubModalHistoryDiff);
 
 styles = {
 	container: {
-		// backgroundColor: 'red',
-		'@media screen and (min-resolution: 3dppx), (max-width: 767px)': {
-			// position: 'absolute',
-			// top: 0,
-		}
+
 	},
 	backButton: {
 		// display: 'none',
@@ -96,6 +92,12 @@ styles = {
 			fontSize: '2em',
 			padding: '20px 20px',
 			width: 'calc(100% - 100px)',
+			// display: 'none',
+		},
+	},
+	diffContentWrapper: {
+		'@media screen and (min-resolution: 3dppx), (max-width: 767px)': {
+			paddingLeft: 15,
 		},
 	},
 	diffTitle: {
