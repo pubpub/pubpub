@@ -10,23 +10,6 @@ export function parsePluginString(str) {
 	return propDict;
 }
 
-export function createPluginString(pluginType, content, refs) {
-	let outputVariables = '';
-	for (const key in content) {
-		// Generate an output string based on the key, values in the object
-		if (Object.prototype.hasOwnProperty.call(content, key)) {
-			const val = refs['pluginInput-' + key].value;
-
-			if (val && val.length) {
-				outputVariables += key + '=' + val + ', ';
-			}
-		}
-	}
-	outputVariables = outputVariables.slice(0, -2); // Remove the last comma and space
-	const mergedString = outputVariables.length ? pluginType + ': ' + outputVariables : pluginType;
-	return mergedString;
-}
-
 /*
 export function getAssetInformation(propDict, assets, assetType) {
 	const refName = propDict.src || 'none';
