@@ -11,7 +11,7 @@ import landing from './landing';
 import login from './login';
 import nav from './nav';
 import profile from './profile';
-import reader from './reader';
+import pub from './pub';
 import subdomainTest from './subdomainTest';
 
 
@@ -26,7 +26,7 @@ export default combineReducers({
 	login,
 	nav,
 	profile,
-	reader,
+	pub,
 	subdomainTest
 });
 

@@ -4,7 +4,8 @@
 // All action types are defined as constants. Do not manually pass action 
 // types as strings in action creators
 /*--------*/
-export const UPDATE_DELTA = 'nav/UPDATE_DELTA';
+export const OPEN_MENU = 'nav/OPEN_MENU';
+export const CLOSE_MENU = 'nav/CLOSE_MENU';
 
 /*--------*/
 // Define Action creators
@@ -13,9 +14,14 @@ export const UPDATE_DELTA = 'nav/UPDATE_DELTA';
 // action objects (e.g. {type:example, payload:data} ) within dispatch()
 // function calls
 /*--------*/
-export function updateDelta(delta) {
+export function openMenu() {
 	return {
-		type: UPDATE_DELTA,
-		delta: delta,
+		type: OPEN_MENU,
+	};	
+}
+
+export function closeMenu() {
+	return {
+		type: CLOSE_MENU,
 	};	
 }

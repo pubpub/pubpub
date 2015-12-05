@@ -57,7 +57,7 @@ const PubNav = React.createClass({
 							<li key="pubNav6"style={[styles.pubNavItem, styles.pubNavRight, styles.pubNavMobileOnly]} onClick={this.navClickFunction('status')}>Draft</li>
 							<li style={[styles.pubNavSeparator, styles.pubNavMobileOnly, styles.pubNavRight]}></li>
 
-							<li key="pubNav8"style={[styles.pubNavItem, styles.pubNavRight]}>Favorite</li>
+							<li key="pubNav8"style={[styles.pubNavItem, styles.pubNavRight]}>Follow</li>
 							
 						</ul>
 				}

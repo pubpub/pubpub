@@ -3,7 +3,7 @@ import {connect} from 'react-redux';
 import Radium from 'radium';
 import DocumentMeta from 'react-document-meta';
 import PureRenderMixin from 'react-addons-pure-render-mixin';
-import {getPub} from '../../actions/reader';
+import {getPub} from '../../actions/pub';
 // import {updateDelta} from '../../actions/nav';
 import {PubLeftBar, PubNav, LoaderDeterminate} from '../../components';
 import {globalStyles} from '../../utils/styleConstants';
@@ -162,7 +162,7 @@ const PubMeta = React.createClass({
 
 export default connect( state => {
 	return {
-		readerData: state.reader, 
+		readerData: state.pub, 
 		slug: state.router.params.slug,
 		meta: state.router.params.meta,
 	};
