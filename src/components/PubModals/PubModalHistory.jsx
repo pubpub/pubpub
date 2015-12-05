@@ -18,7 +18,7 @@ const PubModalHistory = React.createClass({
 		};
 	},
 
-	showChangesViewer: function(index) {
+	showChangesViewer: function() {
 		// return ()=>{
 		// 	this.props.setQueryHandler({
 		// 		mode: 'history',
@@ -27,7 +27,7 @@ const PubModalHistory = React.createClass({
 		// };
 	},
 
-	setVersion: function(index) {
+	setVersion: function() {
 		// return ()=>{
 		// 	this.props.setQueryHandler({
 		// 		mode: undefined,
