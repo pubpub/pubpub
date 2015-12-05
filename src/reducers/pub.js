@@ -109,10 +109,12 @@ export default function readerReducer(state = defaultState, action) {
 		return loadSuccess(state, action.result);
 	case LOAD_PUB_FAIL:
 		return loadFail(state, action.error);
+
 	case OPEN_PUB_MODAL:
 		return openPubModal(state, action.modal);
 	case CLOSE_PUB_MODAL:
 		return closePubModal(state);
+		
 	default:
 		return ensureImmutable(state);
 	}

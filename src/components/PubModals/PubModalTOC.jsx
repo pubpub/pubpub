@@ -20,13 +20,10 @@ const PubModalTOC = React.createClass({
 
 	onRowClick: function(index) {
 		return ()=>{
-			this.props.closeModalAndMenuHandler(1)();
+			this.props.closeModalAndMenuHandler();
 			
 			// TODO: Scrolls too far on mobile
-			setTimeout(()=>{ // Route changes seem to jank up the scroll on mobile.
-				document.getElementById(this.props.tocData[index].id).scrollIntoView();
-			}, 200);
-			
+			document.getElementById(this.props.tocData[index].id).scrollIntoView();
 		};
 		
 	},

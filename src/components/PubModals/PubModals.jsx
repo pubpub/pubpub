@@ -1,41 +1,47 @@
 import React, {PropTypes} from 'react';
 import Radium from 'radium';
 import {globalStyles} from '../../utils/styleConstants';
-import {PubModalCite, PubModalHistory, PubModalHistoryDiff, PubModalTOC, PubModalSource, } from './';
+import {PubModalCite, PubModalTOC, } from './';
 
 let styles = {};
 
 const PubModals = React.createClass({
 	propTypes: {
 		status: PropTypes.string,
-		setQueryHandler: PropTypes.func,
-		goBackHandler: PropTypes.func,
-		query: PropTypes.object,
-
+		// setQueryHandler: PropTypes.func,
+		// goBackHandler: PropTypes.func,
+		// query: PropTypes.object,
+		openPubModalHandler: PropTypes.func,
+		closePubModalHandler: PropTypes.func,
+		closeMenuHandler: PropTypes.func,
+		activeModal: PropTypes.string,
 		// TOC Props
 		tocData: PropTypes.array,
+
 		// Source Props
-		historyObject: PropTypes.object,
+		// historyObject: PropTypes.object,
 		// History Props
-		historyData: PropTypes.array,
+		// historyData: PropTypes.array,
 		// activeDiff: PropTypes.string,
 	},
 
-	closeModalandMenu: function(level) {
-		return ()=> {
-			// check if menu is open, if so, add one to level, return negative level
-			const backCount = this.props.query.menu ? level + 1 : level;
-			this.props.goBackHandler(-1 * backCount);
-		};
+	closeModalandMenu: function() {
+		this.props.closePubModalHandler();
+		this.props.closeMenuHandler();
+		// return ()=> {
+		// 	// check if menu is open, if so, add one to level, return negative level
+		// 	const backCount = this.props.query.menu ? level + 1 : level;
+		// 	this.props.goBackHandler(-1 * backCount);
+		// };
 	},
-	closeModal: function() {
-		this.props.goBackHandler(-1);
-	},
+	// closeModal: function() {
+		// this.props.goBackHandler(-1);
+	// },
 
 	render: function() {
-		const activeDiffObject = this.props.historyData[this.props.query.diff] ? this.props.historyData[this.props.query.diff].diffObject : undefined;
-		const modalWrapper1Active = this.props.query.mode !== undefined;
-		const modalWrapper2Active = this.props.query.diff !== undefined;
+		// const activeDiffObject = this.props.historyData[this.props.query.diff] ? this.props.historyData[this.props.query.diff].diffObject : undefined;
+		// const modalWrapper1Active = this.props.query.mode !== undefined;
+		// const modalWrapper2Active = this.props.query.diff !== undefined;
 		return (
 			<div className={'pubModals'} style={[styles.container, styles[this.props.status]]}>
 				{/*
@@ -44,31 +50,31 @@ const PubModals = React.createClass({
 				*/}
 				
 
-				<div className="modalsLevel1" style={[styles.modalWrapper, modalWrapper1Active && styles.modalWrapperActive]}>
+				<div className="modalsLevel1" style={[styles.modalWrapper, this.props.activeModal && styles.modalWrapperActive]}>
 
-					<div className="modalSplash1" onClick={this.closeModalandMenu(1)} style={[styles.modalSplash, modalWrapper1Active && styles.modalSplashActive]}>
+					<div className="modalSplash1" onClick={this.closeModalandMenu} style={[styles.modalSplash, this.props.activeModal && styles.modalSplashActive]}>
 					</div>
 
-					<div className="modalContainer1" style={[styles.modalContainer, modalWrapper1Active && styles.modalContainerActive, modalWrapper2Active && styles.modalContainerInactive]} >
+					<div className="modalContainer1" style={[styles.modalContainer, this.props.activeModal && styles.modalContainerActive]} >
 
-						<div key={'level1Back'} style={styles.modalBackButton} onClick={this.closeModal}>Back</div>
+						<div key={'level1Back'} style={styles.modalBackButton} onClick={this.props.closePubModalHandler}>Back</div>
 
 						{() => {
-							switch (this.props.query.mode) {
+							switch (this.props.activeModal) {
 							case 'tableOfContents':
 								return (<PubModalTOC 
 										tocData={this.props.tocData}
 										closeModalAndMenuHandler={this.closeModalandMenu}/>
 									);
-							case 'history':
-								return (<PubModalHistory 
-										historyData={this.props.historyData} 
-										setQueryHandler={this.props.setQueryHandler} />
-									);
-							case 'source':
-								return (<PubModalSource 
-										historyObject={this.props.historyObject}/>
-									);
+							// case 'history':
+							// 	return (<PubModalHistory 
+							// 			historyData={this.props.historyData} 
+							// 			setQueryHandler={this.props.setQueryHandler} />
+							// 		);
+							// case 'source':
+							// 	return (<PubModalSource 
+							// 			historyObject={this.props.historyObject}/>
+							// 		);
 							case 'cite':
 								return (<PubModalCite/>
 									);
@@ -84,7 +90,7 @@ const PubModals = React.createClass({
 					</div>
 				</div>
 
-
+				{/*
 				<div className="modalsLevel2" style={[styles.modalWrapper, modalWrapper2Active && styles.modalWrapperActive]}>
 
 					<div className="modalSplash2" onClick={this.closeModalandMenu(2)} style={[styles.modalSplash, styles.modalSplash2, modalWrapper2Active && styles.modalSplashActive]}>
@@ -102,6 +108,7 @@ const PubModals = React.createClass({
 						}()}
 					</div>
 				</div>
+				*/}
 
 
 			</div>

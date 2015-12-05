@@ -3,11 +3,13 @@ import {connect} from 'react-redux';
 import Radium from 'radium';
 import DocumentMeta from 'react-document-meta';
 import PureRenderMixin from 'react-addons-pure-render-mixin';
-import {getPub} from '../../actions/pub';
-import {updateDelta} from '../../actions/nav';
+
+import {getPub, openPubModal, closePubModal} from '../../actions/pub';
+import {closeMenu} from '../../actions/nav';
+
 import {PubBody, PubModals, PubNav, LoaderDeterminate, PubDiscussions, PubStatus, PubReviews, PubLeftBar} from '../../components';
 import {globalStyles} from '../../utils/styleConstants';
-import { pushState, go } from 'redux-router';
+// import { pushState, go } from 'redux-router';
 
 
 import markLib from '../../modules/markdown/markdown';
@@ -20,14 +22,8 @@ const PubReader = React.createClass({
 	propTypes: {
 		readerData: PropTypes.object,
 		slug: PropTypes.string,
-		query: PropTypes.object,
-		delta: PropTypes.number,
-		routeKey: PropTypes.string,
-		// query : {
-			// modal: tableOfContents | history | source | cite | status | discussions 
-			// historyDiff: integer
-			// version: integer
-		// }
+		query: PropTypes.object, // version: integer
+
 		dispatch: PropTypes.func
 	},
 
@@ -41,7 +37,7 @@ const PubReader = React.createClass({
 
 	statics: {
 		fetchDataDeferred: function(getState, dispatch, location, routeParams) {
-			if (getState().reader.getIn(['pubData', 'slug']) !== routeParams.slug) {
+			if (getState().pub.getIn(['pubData', 'slug']) !== routeParams.slug) {
 				return dispatch(getPub(routeParams.slug));
 			}
 			return ()=>{};
@@ -94,25 +90,38 @@ const PubReader = React.createClass({
 		};
 	},
 
-	goBack: function(backCount) {
-		if (this.props.delta + backCount < 0) {
-			// If there is no history with which to go back, clear the query params
-			this.props.dispatch(pushState(null, '/pub/' + this.props.slug, {}));
-		} else {
-			this.props.dispatch(updateDelta(backCount + 1)); // Keep track of nav.delta so we can handle cases where the page was directly navigated to.
-			this.props.dispatch(go(backCount)); 
-		}
+	// goBack: function(backCount) {
+	// 	if (this.props.delta + backCount < 0) {
+	// 		// If there is no history with which to go back, clear the query params
+	// 		this.props.dispatch(pushState(null, '/pub/' + this.props.slug, {}));
+	// 	} else {
+	// 		this.props.dispatch(updateDelta(backCount + 1)); // Keep track of nav.delta so we can handle cases where the page was directly navigated to.
+	// 		this.props.dispatch(go(backCount)); 
+	// 	}
 			
 			
+	// },
+
+	// setQuery: function(queryObject) {
+	// 	this.props.dispatch(pushState(null, '/pub/' + this.props.slug, {...this.props.query, ...queryObject}));
+	// },
+
+	openPubModal: function(modal) {
+		return ()=> {
+			this.props.dispatch(openPubModal(modal));
+		};
 	},
 
-	setQuery: function(queryObject) {
-		this.props.dispatch(pushState(null, '/pub/' + this.props.slug, {...this.props.query, ...queryObject}));
+	closePubModal: function() {
+		this.props.dispatch(closePubModal());
 	},
 
-	clearVersion: function() {
-		this.props.dispatch(pushState(null, '/pub/' + this.props.slug, {}));
+	closeMenu: function() {
+		this.props.dispatch(closeMenu());
 	},
+	// clearVersion: function() {
+		// this.props.dispatch(pushState(null, '/pub/' + this.props.slug, {}));
+	// },
 
 	render: function() {
 		const metaData = {};
@@ -140,7 +149,7 @@ const PubReader = React.createClass({
 
 					<PubNav 
 						height={this.height} 
-						setQueryHandler={this.setQuery} 
+						openPubModalHandler={this.openPubModal} 
 						status={this.props.readerData.get('status')} 
 						slug={this.props.slug} 
 						isAuthor={pubData.isAuthor}/>
@@ -163,16 +172,21 @@ const PubReader = React.createClass({
 
 					<PubModals 
 						status={this.props.readerData.get('status')} 
-						setQueryHandler={this.setQuery}
-						goBackHandler={this.goBack}
-						query={this.props.query}
+						openPubModalHandler={this.openPubModal}
+						closePubModalHandler={this.closePubModal}
+						closeMenuHandler={this.closeMenu}
+						activeModal={this.props.readerData.get('activeModal')}
+						// setQueryHandler={this.setQuery}
+						// goBackHandler={this.goBack}
+						// query={this.props.query}
 
-						// TOC Props
-						tocData={this.state.TOC}
+						
 						// Source Props
-						historyObject={pubData.history[version]}
+						// historyObject={pubData.history[version]}
 						// History Props
-						historyData={pubData.history} />
+						// historyData={pubData.history}
+						// TOC Props
+						tocData={this.state.TOC}/>
 
 				</div>
 
@@ -206,8 +220,8 @@ export default connect( state => {
 		readerData: state.pub, 
 		slug: state.router.params.slug,
 		query: state.router.location.query,
-		delta: state.nav.get('delta'),
-		routeKey: state.router.location.key,
+		// delta: state.nav.get('delta'),
+		// routeKey: state.router.location.key,
 
 	};
 })( Radium(PubReader) );
