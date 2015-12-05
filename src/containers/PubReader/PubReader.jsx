@@ -300,10 +300,10 @@ styles = {
 
 	},
 	leftBar: {
-		padding: 5,
-		width: 'calc(150px - 10px)',
-		height: 'calc(100vh - ' + globalStyles.headerHeight + ' - 10px)',
-		marginRight: 650,
+		padding: '10px 15px',
+		width: 'calc(150px - 30px)',
+		height: 'calc(100vh - ' + globalStyles.headerHeight + ' - 20px)',
+		marginRight: '55%', // Width of pub
 		float: 'left',
 		transition: '.3s linear opacity .25s',
 		overflow: 'hidden',
@@ -315,43 +315,44 @@ styles = {
 			display: 'none',
 		},
 		// Desktop Sizes
-		'@media screen and (min-width: 768px) and (max-width: 1023px)': {
-			padding: 0,
-			width: 'calc(' + pubSizes.xSmallLeft + 'px - ' + (2 * pubSizes.xSmallPadding) + 'px)',
-			height: 'calc(100vh - ' + globalStyles.headerHeight + ' - ' + (2 * pubSizes.xSmallPadding) + 'px)',
-			marginRight: pubSizes.xSmallPub
-		},
-		'@media screen and (min-width: 1024px) and (max-width: 1300px)': {
-			padding: pubSizes.smallPadding,
-			width: 'calc(' + pubSizes.smallLeft + 'px - ' + (2 * pubSizes.smallPadding) + 'px)',
-			height: 'calc(100vh - ' + globalStyles.headerHeight + ' - ' + (2 * pubSizes.smallPadding) + 'px)',
-			marginRight: pubSizes.smallPub
-		},
-		'@media screen and (min-width: 1301px) and (max-width: 1600px)': {
-			padding: pubSizes.mediumPadding,
-			width: 'calc(' + pubSizes.mediumLeft + 'px - ' + (2 * pubSizes.mediumPadding) + 'px)',
-			height: 'calc(100vh - ' + globalStyles.headerHeight + ' - ' + (2 * pubSizes.mediumPadding) + 'px)',
-			marginRight: pubSizes.mediumPub
-		},
-		'@media screen and (min-width: 1600px) and (max-width: 2000px)': {
-			padding: pubSizes.largePadding,
-			width: 'calc(' + pubSizes.largeLeft + 'px - ' + (2 * pubSizes.largePadding) + 'px)',
-			height: 'calc(100vh - ' + globalStyles.headerHeight + ' - ' + (2 * pubSizes.largePadding) + 'px)',
-			marginRight: pubSizes.largePub
-		},
-		'@media screen and (min-width: 2000px)': {
-			padding: pubSizes.xLargePadding,
-			width: 'calc(' + pubSizes.xLargeLeft + 'px - ' + (2 * pubSizes.xLargePadding) + 'px)',
-			height: 'calc(100vh - ' + globalStyles.headerHeight + ' - ' + (2 * pubSizes.xLargePadding) + 'px)',
-			marginRight: pubSizes.xLargePub
-		},
+		// '@media screen and (min-width: 768px) and (max-width: 1023px)': {
+		// 	padding: 0,
+		// 	width: 'calc(' + pubSizes.xSmallLeft + 'px - ' + (2 * pubSizes.xSmallPadding) + 'px)',
+		// 	height: 'calc(100vh - ' + globalStyles.headerHeight + ' - ' + (2 * pubSizes.xSmallPadding) + 'px)',
+		// 	marginRight: pubSizes.xSmallPub
+		// },
+		// '@media screen and (min-width: 1024px) and (max-width: 1300px)': {
+		// 	padding: pubSizes.smallPadding,
+		// 	width: 'calc(' + pubSizes.smallLeft + 'px - ' + (2 * pubSizes.smallPadding) + 'px)',
+		// 	height: 'calc(100vh - ' + globalStyles.headerHeight + ' - ' + (2 * pubSizes.smallPadding) + 'px)',
+		// 	marginRight: pubSizes.smallPub
+		// },
+		// '@media screen and (min-width: 1301px) and (max-width: 1600px)': {
+		// 	padding: pubSizes.mediumPadding,
+		// 	width: 'calc(' + pubSizes.mediumLeft + 'px - ' + (2 * pubSizes.mediumPadding) + 'px)',
+		// 	height: 'calc(100vh - ' + globalStyles.headerHeight + ' - ' + (2 * pubSizes.mediumPadding) + 'px)',
+		// 	marginRight: pubSizes.mediumPub
+		// },
+		// '@media screen and (min-width: 1600px) and (max-width: 2000px)': {
+		// 	padding: pubSizes.largePadding,
+		// 	width: 'calc(' + pubSizes.largeLeft + 'px - ' + (2 * pubSizes.largePadding) + 'px)',
+		// 	height: 'calc(100vh - ' + globalStyles.headerHeight + ' - ' + (2 * pubSizes.largePadding) + 'px)',
+		// 	marginRight: pubSizes.largePub
+		// },
+		// '@media screen and (min-width: 2000px)': {
+		// 	padding: pubSizes.xLargePadding,
+		// 	width: 'calc(' + pubSizes.xLargeLeft + 'px - ' + (2 * pubSizes.xLargePadding) + 'px)',
+		// 	height: 'calc(100vh - ' + globalStyles.headerHeight + ' - ' + (2 * pubSizes.xLargePadding) + 'px)',
+		// 	marginRight: pubSizes.xLargePub
+		// },
 		
 		
 	},
 
 	centerBar: {
 		backgroundColor: 'white',
-		width: 650,
+		// width: 650,
+		width: '55%',
 		height: 'calc(100vh - ' + globalStyles.headerHeight + ' + 3px)',
 		position: 'absolute',
 		top: '-3px',
@@ -374,26 +375,26 @@ styles = {
 			left: 0,
 		},
 		// Desktop Sizes
-		'@media screen and (min-width: 768px) and (max-width: 1023px)': {
-			width: pubSizes.xSmallPub,
-			left: pubSizes.xSmallLeft,
-		},
-		'@media screen and (min-width: 1024px) and (max-width: 1300px)': {
-			width: pubSizes.smallPub,
-			left: pubSizes.smallLeft,
-		},
-		'@media screen and (min-width: 1301px) and (max-width: 1600px)': {
-			width: pubSizes.mediumPub,
-			left: pubSizes.mediumLeft,
-		},
-		'@media screen and (min-width: 1600px) and (max-width: 2000px)': {
-			width: pubSizes.largePub,
-			left: pubSizes.largeLeft,
-		},
-		'@media screen and (min-width: 2000px)': {
-			width: pubSizes.xLargePub,
-			left: pubSizes.xLargeLeft,
-		},
+		// '@media screen and (min-width: 768px) and (max-width: 1023px)': {
+		// 	width: pubSizes.xSmallPub,
+		// 	left: pubSizes.xSmallLeft,
+		// },
+		// '@media screen and (min-width: 1024px) and (max-width: 1300px)': {
+		// 	width: pubSizes.smallPub,
+		// 	left: pubSizes.smallLeft,
+		// },
+		// '@media screen and (min-width: 1301px) and (max-width: 1600px)': {
+		// 	width: pubSizes.mediumPub,
+		// 	left: pubSizes.mediumLeft,
+		// },
+		// '@media screen and (min-width: 1600px) and (max-width: 2000px)': {
+		// 	width: pubSizes.largePub,
+		// 	left: pubSizes.largeLeft,
+		// },
+		// '@media screen and (min-width: 2000px)': {
+		// 	width: pubSizes.xLargePub,
+		// 	left: pubSizes.xLargeLeft,
+		// },
 	},
 	centerBarModalActive: {
 		pointerEvents: 'none',
@@ -402,8 +403,8 @@ styles = {
 
 	rightBar: {
 		padding: 5,
-		width: 'calc(100% - 800px - 10px)',
-		height: 'calc(100vh - ' + globalStyles.headerHeight + ' - 10px)',
+		// width: 'calc(100% - 800px - 10px)',
+		// height: 'calc(100vh - ' + globalStyles.headerHeight + ' - 10px)',
 		float: 'left',
 		overflow: 'hidden',
 		overflowY: 'scroll',
@@ -413,32 +414,34 @@ styles = {
 		'@media screen and (min-resolution: 3dppx), (max-width: 767px)': {
 			display: 'none',
 		},
+		width: 'calc(100% - 55% - 150px - 10px)',
+		height: 'calc(100vh - ' + globalStyles.headerHeight + ' - 10px)',
 		// Desktop Sizes
-		'@media screen and (min-width: 768px) and (max-width: 1023px)': {
-			padding: pubSizes.xSmallPadding,
-			width: 'calc(100% - ' + pubSizes.xSmallLeft + 'px - ' + pubSizes.xSmallPub + 'px - ' + (2 * pubSizes.xSmallPadding) + 'px)',
-			height: 'calc(100vh - ' + globalStyles.headerHeight + ' - ' + (2 * pubSizes.xSmallPadding) + 'px)',
-		},
-		'@media screen and (min-width: 1024px) and (max-width: 1300px)': {
-			padding: pubSizes.smallPadding,
-			width: 'calc(100% - ' + pubSizes.smallLeft + 'px - ' + pubSizes.smallPub + 'px - ' + (2 * pubSizes.smallPadding) + 'px)',
-			height: 'calc(100vh - ' + globalStyles.headerHeight + ' - ' + (2 * pubSizes.smallPadding) + 'px)',
-		},
-		'@media screen and (min-width: 1301px) and (max-width: 1600px)': {
-			padding: pubSizes.mediumPadding,
-			width: 'calc(100% - ' + pubSizes.mediumLeft + 'px - ' + pubSizes.mediumPub + 'px - ' + (2 * pubSizes.mediumPadding) + 'px)',
-			height: 'calc(100vh - ' + globalStyles.headerHeight + ' - ' + (2 * pubSizes.mediumPadding) + 'px)',
-		},
-		'@media screen and (min-width: 1600px) and (max-width: 2000px)': {
-			padding: pubSizes.largePadding,
-			width: 'calc(100% - ' + pubSizes.largeLeft + 'px - ' + pubSizes.largePub + 'px - ' + (2 * pubSizes.largePadding) + 'px)',
-			height: 'calc(100vh - ' + globalStyles.headerHeight + ' - ' + (2 * pubSizes.largePadding) + 'px)',
-		},
-		'@media screen and (min-width: 2000px)': {
-			padding: pubSizes.xLargePadding,
-			width: 'calc(100% - ' + pubSizes.xLargeLeft + 'px - ' + pubSizes.xLargePub + 'px - ' + (2 * pubSizes.xLargePadding) + 'px)',
-			height: 'calc(100vh - ' + globalStyles.headerHeight + ' - ' + (2 * pubSizes.xLargePadding) + 'px)',
-		},
+		// '@media screen and (min-width: 768px) and (max-width: 1023px)': {
+		// 	padding: pubSizes.xSmallPadding,
+		// 	width: 'calc(100% - ' + pubSizes.xSmallLeft + 'px - ' + pubSizes.xSmallPub + 'px - ' + (2 * pubSizes.xSmallPadding) + 'px)',
+		// 	height: 'calc(100vh - ' + globalStyles.headerHeight + ' - ' + (2 * pubSizes.xSmallPadding) + 'px)',
+		// },
+		// '@media screen and (min-width: 1024px) and (max-width: 1300px)': {
+		// 	padding: pubSizes.smallPadding,
+		// 	width: 'calc(100% - ' + pubSizes.smallLeft + 'px - ' + pubSizes.smallPub + 'px - ' + (2 * pubSizes.smallPadding) + 'px)',
+		// 	height: 'calc(100vh - ' + globalStyles.headerHeight + ' - ' + (2 * pubSizes.smallPadding) + 'px)',
+		// },
+		// '@media screen and (min-width: 1301px) and (max-width: 1600px)': {
+		// 	padding: pubSizes.mediumPadding,
+		// 	width: 'calc(100% - ' + pubSizes.mediumLeft + 'px - ' + pubSizes.mediumPub + 'px - ' + (2 * pubSizes.mediumPadding) + 'px)',
+		// 	height: 'calc(100vh - ' + globalStyles.headerHeight + ' - ' + (2 * pubSizes.mediumPadding) + 'px)',
+		// },
+		// '@media screen and (min-width: 1600px) and (max-width: 2000px)': {
+		// 	padding: pubSizes.largePadding,
+		// 	width: 'calc(100% - ' + pubSizes.largeLeft + 'px - ' + pubSizes.largePub + 'px - ' + (2 * pubSizes.largePadding) + 'px)',
+		// 	height: 'calc(100vh - ' + globalStyles.headerHeight + ' - ' + (2 * pubSizes.largePadding) + 'px)',
+		// },
+		// '@media screen and (min-width: 2000px)': {
+		// 	padding: pubSizes.xLargePadding,
+		// 	width: 'calc(100% - ' + pubSizes.xLargeLeft + 'px - ' + pubSizes.xLargePub + 'px - ' + (2 * pubSizes.xLargePadding) + 'px)',
+		// 	height: 'calc(100vh - ' + globalStyles.headerHeight + ' - ' + (2 * pubSizes.xLargePadding) + 'px)',
+		// },
 	},
 	loading: {
 		opacity: 0,

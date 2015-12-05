@@ -33,10 +33,12 @@ const PubNav = React.createClass({
 
 							<li key="pubNav0"style={[styles.pubNavItem, styles.pubNavDesktopOnly]} onClick={this.props.openPubModalHandler('tableOfContents')}>Table of Contents</li>
 							<li style={[styles.pubNavSeparator, styles.pubNavDesktopOnly]}></li>
+							{/*
 							<li key="pubNav1"style={[styles.pubNavItem, styles.pubNavDesktopOnly]} onClick={this.props.openPubModalHandler('history')}>History</li>
 							<li style={[styles.pubNavSeparator, styles.pubNavDesktopOnly]}></li>
 							<li key="pubNav2"style={[styles.pubNavItem, styles.pubNavDesktopOnly]} onClick={this.props.openPubModalHandler('source')}>Source</li>
 							<li style={[styles.pubNavSeparator, styles.pubNavDesktopOnly]}></li>
+							*/}
 							<li key="pubNav3"style={[styles.pubNavItem, styles.pubNavDesktopOnly]} onClick={this.handlePrint}>Print</li>
 							<li style={[styles.pubNavSeparator, styles.pubNavDesktopOnly]}></li>
 							<li key="pubNav4"style={[styles.pubNavItem, styles.pubNavDesktopOnly]} onClick={this.props.openPubModalHandler('cite')}>Cite</li>
