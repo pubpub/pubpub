@@ -11,6 +11,7 @@ const PubModalHistoryRow = React.createClass({
 		diffItem: PropTypes.object,
 		index: PropTypes.number,
 		setDiffViewer: PropTypes.func,
+		setVersionHandler: PropTypes.func,
 	},
 
 	getDefaultProps: function() {
@@ -49,7 +50,7 @@ const PubModalHistoryRow = React.createClass({
 				<div style={styles.versionButtons}>
 					<div style={styles.versionButtons}>
 						<div key={'historyRowViewButton-' + this.props.index} style={styles.historyButton} onClick={this.props.setDiffViewer(this.props.index)}>View Changes</div>
-						<div key={'historyRowReadButton-' + this.props.index} style={styles.historyButton}>Read pub at this point</div>
+						<div key={'historyRowReadButton-' + this.props.index} style={styles.historyButton} onClick={this.props.setVersionHandler(this.props.index)}>Read pub at this point</div>
 					</div>
 				</div>
 					

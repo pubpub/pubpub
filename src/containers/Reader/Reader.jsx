@@ -111,6 +111,10 @@ const Reader = React.createClass({
 		this.props.dispatch(pushState(null, '/pub/' + this.props.slug, {...this.props.query, ...queryObject}));
 	},
 
+	clearVersion: function() {
+		this.props.dispatch(pushState(null, '/pub/' + this.props.slug, {}));
+	},
+
 	calculateReviewScores: function(reviews) {
 		// TODO: Make this code less miserable and documented (and move it to server)
 		// console.log('calculating review scores');
@@ -225,6 +229,12 @@ const Reader = React.createClass({
 
 					<LoaderDeterminate 
 						value={this.props.readerData.get('status') === 'loading' ? 0 : 100}/>
+
+					{
+						this.props.query.version 
+							? <div key={'versionNotification'} style={styles.versionNotification} onClick={this.clearVersion}>Reading Version {this.props.query.version}. Click to read the most recent (Version {pubData.history.length}).</div>
+							: null
+					}
 
 					<PubBody
 						status={this.props.readerData.get('status')}
@@ -523,6 +533,20 @@ styles = {
 	}, 
 	loaded: {
 		opacity: 1
+	},
+
+	versionNotification: {
+		textAlign: 'center',
+		backgroundColor: globalStyles.sideBackground,
+		padding: 20,
+		margin: 5,
+		fontFamily: globalStyles.headerFont,
+		color: globalStyles.sideText,
+		userSelect: 'none',
+		':hover': {
+			color: globalStyles.sideHover,
+			cursor: 'pointer',
+		}
 	},
 };
 

@@ -19,14 +19,21 @@ const PubModalHistory = React.createClass({
 	},
 
 	showChangesViewer: function(index) {
-		
 		return ()=>{
 			this.props.setQueryHandler({
 				mode: 'history',
 				diff: index,
 			});	
 		};
+	},
 
+	setVersion: function(index) {
+		return ()=>{
+			this.props.setQueryHandler({
+				mode: undefined,
+				version: index,
+			});	
+		};
 	},
 
 	render: function() {
@@ -41,7 +48,12 @@ const PubModalHistory = React.createClass({
 
 						for (let index = this.props.historyData.length; index-- > 0; ) {
 							historyDivs.push( 
-								<PubModalHistoryRow key={'historyRow-' + index} historyItem={this.props.historyData[index]} index={index} setDiffViewer={this.showChangesViewer}/>
+								<PubModalHistoryRow 
+									key={'historyRow-' + index} 
+									historyItem={this.props.historyData[index]} 
+									index={index} 
+									setDiffViewer={this.showChangesViewer}
+									setVersionHandler={this.setVersion}/>
 							);
 						}
 
