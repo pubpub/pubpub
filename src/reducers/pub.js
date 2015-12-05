@@ -8,7 +8,10 @@ import {
 	LOAD_PUB, 
 	LOAD_PUB_SUCCESS, 
 	LOAD_PUB_FAIL,
-} from '../actions/reader';
+	
+	OPEN_PUB_MODAL,
+	CLOSE_PUB_MODAL
+} from '../actions/pub';
 
 /*--------*/
 // Initialize Default State 
@@ -25,6 +28,7 @@ export const defaultState = Immutable.Map({
 		experts: [],
 		history: [{}],
 	},
+	activeModal: undefined,
 	status: 'loading',
 	error: null
 });
@@ -81,6 +85,18 @@ function loadFail(state, error) {
 	return state.merge(outputState);
 }
 
+function openPubModal(state, modal) {
+	return state.merge({
+		activeModal: modal,
+	});
+}
+
+function closePubModal(state) {
+	return state.merge({
+		activeModal: undefined,
+	});
+}
+
 /*--------*/
 // Bind actions to specific reducing functions.
 /*--------*/
@@ -93,6 +109,10 @@ export default function readerReducer(state = defaultState, action) {
 		return loadSuccess(state, action.result);
 	case LOAD_PUB_FAIL:
 		return loadFail(state, action.error);
+	case OPEN_PUB_MODAL:
+		return openPubModal(state, action.modal);
+	case CLOSE_PUB_MODAL:
+		return closePubModal(state);
 	default:
 		return ensureImmutable(state);
 	}

@@ -3,21 +3,20 @@ import {connect} from 'react-redux';
 import Radium from 'radium';
 import DocumentMeta from 'react-document-meta';
 import PureRenderMixin from 'react-addons-pure-render-mixin';
-import {getPub} from '../../actions/reader';
+import {getPub} from '../../actions/pub';
 import {updateDelta} from '../../actions/nav';
-import {PubBody, PubDiscussion, PubModals, PubNav, LoaderDeterminate} from '../../components';
+import {PubBody, PubModals, PubNav, LoaderDeterminate, PubDiscussions, PubStatus, PubReviews, PubLeftBar} from '../../components';
 import {globalStyles} from '../../utils/styleConstants';
 import { pushState, go } from 'redux-router';
+
 
 import markLib from '../../modules/markdown/markdown';
 import markdownExtensions from '../../components/EditorPlugins';
 markLib.setExtensions(markdownExtensions);
 
 let styles = {};
-let leftBarStyles = {};
-let rightBarStyles = {};
 
-const Reader = React.createClass({
+const PubReader = React.createClass({
 	propTypes: {
 		readerData: PropTypes.object,
 		slug: PropTypes.string,
@@ -115,67 +114,6 @@ const Reader = React.createClass({
 		this.props.dispatch(pushState(null, '/pub/' + this.props.slug, {}));
 	},
 
-	calculateReviewScores: function(reviews) {
-		// TODO: Make this code less miserable and documented (and move it to server)
-		// console.log('calculating review scores');
-		// console.log('in reviews ', reviews);
-		const scoreLists = {};
-		for (let reviewIndex = 0; reviewIndex < reviews.length; reviewIndex++) {
-			for (let doneWellIndex = 0; doneWellIndex < reviews[reviewIndex].doneWell.length; doneWellIndex++) {
-				if (reviews[reviewIndex].doneWell[doneWellIndex] in scoreLists) {
-					scoreLists[reviews[reviewIndex].doneWell[doneWellIndex]].push(reviews[reviewIndex].weightLocal + Math.sqrt(reviews[reviewIndex].weightGlobal));
-				} else {
-					scoreLists[reviews[reviewIndex].doneWell[doneWellIndex]] = [(reviews[reviewIndex].weightLocal + Math.sqrt(reviews[reviewIndex].weightGlobal))];
-				}
-			}
-
-			for (let needsWorkIndex = 0; needsWorkIndex < reviews[reviewIndex].needsWork.length; needsWorkIndex++) {
-				if (reviews[reviewIndex].needsWork[needsWorkIndex] in scoreLists) {
-					scoreLists[reviews[reviewIndex].needsWork[needsWorkIndex]].push(-1 * (reviews[reviewIndex].weightLocal + Math.sqrt(reviews[reviewIndex].weightGlobal)));
-				} else {
-					scoreLists[reviews[reviewIndex].needsWork[needsWorkIndex]] = [-1 * (reviews[reviewIndex].weightLocal + Math.sqrt(reviews[reviewIndex].weightGlobal))];
-				}
-			}
-		}
-		// console.log(scoreLists);
-		const scoresObject = [];
-		for (const scoresTag in scoreLists) {
-			if (scoresTag !== undefined) {
-				let total = 0;
-				let absTotal = 0;
-				for (const specificScore in scoreLists[scoresTag]) { 
-					// console.log('---');
-					// console.log(specificScore);
-					// console.log(scoresTag);
-					if (specificScore !== undefined) {
-						total += scoreLists[scoresTag][specificScore]; 
-						absTotal += Math.abs(scoreLists[scoresTag][specificScore]);	
-					}
-					
-				}
-				scoresObject.push({
-					tag: scoresTag,
-					score: Math.floor(100 * total / absTotal) / 100,
-					votes: scoreLists[scoresTag].length,
-				});	
-			}
-			
-		}
-		// console.log(scoresObject);
-		return scoresObject.map((scorething)=>{
-			return (
-				<div key={'review-score-' + scorething.tag} style={rightBarStyles.reviewScore}>
-					<span>{scorething.tag}</span>
-					<span style={rightBarStyles.scorethingDivider}>|</span>
-					<span>{scorething.votes} votes</span>
-					<span style={rightBarStyles.scorethingDivider}>|</span>
-					<span>{scorething.score}</span>
-				</div>
-			);	
-		});
-		
-	},
-
 	render: function() {
 		const metaData = {};
 		if (this.props.readerData.getIn(['pubData', 'title'])) {
@@ -194,27 +132,7 @@ const Reader = React.createClass({
 
 				<div className="leftBar" style={[styles.leftBar, styles[this.props.readerData.get('status')]]}>
 					
-					<div style={leftBarStyles.detail}>Home</div>
-					<div style={leftBarStyles.detail}>Explore Pubs (2,342)</div>
-					<div style={leftBarStyles.detail}>Collections (31)</div>
-					<div style={leftBarStyles.detail}>Share</div>
-
-					<div style={leftBarStyles.leftBarDivider}></div>
-
-					<div style={leftBarStyles.detail}>Share</div>
-					<div style={leftBarStyles.detail}>Views: {pubData.views}</div>
-					<div style={leftBarStyles.detail}>Citations: {pubData.citations}</div>
-					<div style={leftBarStyles.detail}>In the News: {pubData.inTheNews}</div>
-					<div style={leftBarStyles.detail}>View All Analytics</div>
-
-					<div style={leftBarStyles.leftBarDivider}></div>
-
-					<div style={leftBarStyles.header}>Read Next</div>
-					{
-						pubData.readNext.map((relatedPub)=>{
-							return <div key={'leftbar_' + relatedPub.title} style={leftBarStyles.pub}>{relatedPub.title}</div>;
-						})
-					}
+					<PubLeftBar slug={this.props.slug}/>
 
 				</div>
 
@@ -271,30 +189,10 @@ const Reader = React.createClass({
 						    left: 10vw;
 						    capture the invisible left section to close both the menu and the activesetting of the current component
 					*/}
-					<div className="pub-status-wrapper" style={rightBarStyles.sectionWrapper}>
-						<div style={rightBarStyles.sectionHeader}>{pubData.status}</div>
-						<div style={rightBarStyles.sectionSubHeader}>Featured in {pubData.featuredIn.length}  |  Submitted to {pubData.submittedTo.length}</div>
-					</div>
-					<div className="pub-reviews-wrapper" style={rightBarStyles.sectionWrapper}>
 
-						<div style={rightBarStyles.sectionHeader}>Peer Reviews ({pubData.reviews.length})</div>
-						<div style={rightBarStyles.sectionSubHeader}>
-							Full Details | Submit Review | View Experts ({pubData.experts.length}) | Suggest Experts
-						</div>
-						<div style={rightBarStyles.reviewsWrapper}>
-							{this.calculateReviewScores(pubData.reviews)}
-							<div style={globalStyles.clearFix}></div>
-						</div>
-						
-					</div>
-					<div className="pub-discussions-wrapper" style={rightBarStyles.sectionWrapper}>
-						<div style={rightBarStyles.sectionHeader}>Discussion</div>
-						{
-							pubData.discussions.map((discussion)=>{
-								return <PubDiscussion key={discussion._id} discussionItem={discussion}/>;
-							})
-						}
-					</div>
+					<PubStatus />
+					<PubReviews />
+					<PubDiscussions />
 				</div>
 				
 			</div>
@@ -305,14 +203,14 @@ const Reader = React.createClass({
 
 export default connect( state => {
 	return {
-		readerData: state.reader, 
+		readerData: state.pub, 
 		slug: state.router.params.slug,
 		query: state.router.location.query,
 		delta: state.nav.get('delta'),
 		routeKey: state.router.location.key,
 
 	};
-})( Radium(Reader) );
+})( Radium(PubReader) );
 
 const pubSizes = {
 	mobileLeft: null,
@@ -552,71 +450,4 @@ styles = {
 		},
 
 	},
-};
-
-leftBarStyles = {
-	journalText: {
-		padding: '15px 5px',
-		fontSize: '13px',
-	},
-	detail: {
-		fontSize: '13px',
-		padding: '8px 0px',
-	},
-	leftBarDivider: {
-		backgroundColor: '#DDD',
-		width: '80%',
-		height: 1,
-		margin: '15px auto',
-	},
-	header: {
-		margin: '8px 0px',
-	},
-	pub: {
-		margin: '15px 0px 15px 8px',
-		fontSize: '13px',
-	}
-};
-
-rightBarStyles = {
-	sectionWrapper: {
-		margin: '10px 0px 30px 0px',
-	},
-	sectionHeader: {
-		fontSize: '20px',
-		fontWeight: '400',
-		color: '#666',
-		margin: 0,
-		padding: 0,
-		width: '100%',
-		whiteSpace: 'nowrap',
-		overflow: 'hidden',
-		textOverflow: 'ellipsis',
-
-	},
-	sectionSubHeader: {
-		margin: '3px 0px',
-		fontSize: '14px',
-		color: '#777',
-		width: '100%',
-		whiteSpace: 'nowrap',
-		overflow: 'hidden',
-		textOverflow: 'ellipsis',
-	},
-	reviewsWrapper: {
-		padding: '10px 0px',
-	},
-	reviewScore: {
-		border: '1px solid #ccc',
-		borderRadius: '1px',
-		padding: '1px 8px',
-		margin: '3px 3px',
-		float: 'left',
-		fontSize: '13px',
-		// width: 'calc(33% - 14px)',
-	},
-	scorethingDivider: {
-		padding: '0px 5px',
-		color: '#aaa',
-	}
 };

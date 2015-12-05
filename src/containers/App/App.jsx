@@ -5,10 +5,13 @@ import {reset} from 'redux-form';
 import {Login} from '../index';
 import {connect} from 'react-redux';
 import {toggleVisibility, restoreLogin} from '../../actions/login';
-import {updateDelta} from '../../actions/nav';
+// import {updateDelta} from '../../actions/nav';
+import {openMenu, closeMenu} from '../../actions/nav';
+import {openPubModal} from '../../actions/pub';
+
 import {HeaderNav, HeaderMenu} from '../../components';
 import {globalStyles} from '../../utils/styleConstants';
-import { pushState, go } from 'redux-router';
+// import { pushState, go } from 'redux-router';
 
 let styles = {};
 const App = React.createClass({
@@ -17,18 +20,18 @@ const App = React.createClass({
 		navData: PropTypes.object,
 		pubData: PropTypes.object,
 		path: PropTypes.string,
-		query: PropTypes.object,
+		// query: PropTypes.object,
 		slug: PropTypes.string,
-		delta: PropTypes.number,
+		// delta: PropTypes.number,
 		children: PropTypes.object.isRequired,
 		dispatch: PropTypes.func
 	},
 
-	getDefaultProps: function() {
-		return {
-			query: {},
-		};
-	},
+	// getDefaultProps: function() {
+	// 	return {
+	// 		query: {},
+	// 	};
+	// },
 
 	statics: {
 		fetchDataDeferred: function(getState, dispatch) {
@@ -50,19 +53,32 @@ const App = React.createClass({
 		
 	},
 
-	goBack: function(backCount) {
-		if (this.props.delta + backCount < 0) {
-			// If there is no history with which to go back, clear the query params
-			this.props.dispatch(pushState(null, this.props.path, {}));
-		} else {
-			this.props.dispatch(updateDelta(backCount + 1)); // Keep track of nav.delta so we can handle cases where the page was directly navigated to.
-			this.props.dispatch(go(backCount));
+	// goBack: function(backCount) {
+	// 	if (this.props.delta + backCount < 0) {
+	// 		// If there is no history with which to go back, clear the query params
+	// 		this.props.dispatch(pushState(null, this.props.path, {}));
+	// 	} else {
+	// 		this.props.dispatch(updateDelta(backCount + 1)); // Keep track of nav.delta so we can handle cases where the page was directly navigated to.
+	// 		this.props.dispatch(go(backCount));
 			
-		}
+	// 	}
+	// },
+
+	// setQuery: function(queryObject) {
+	// 	this.props.dispatch(pushState(null, this.props.path, {...this.props.query, ...queryObject}));
+	// },
+
+	closeMenu: function() {
+		this.props.dispatch(closeMenu());
 	},
 
-	setQuery: function(queryObject) {
-		this.props.dispatch(pushState(null, this.props.path, {...this.props.query, ...queryObject}));
+	openMenu: function() {
+		this.props.dispatch(openMenu());
+	},
+	openPubModal: function(modal) {
+		return ()=> {
+			this.props.dispatch(openPubModal(modal));
+		};
 	},
 
 	render: function() {
@@ -77,12 +93,20 @@ const App = React.createClass({
 			headerTextColorHover = 'black';
 		}
 
+		// const mquery = {mediaQueries: {
+		// 	'(min-width: 1050px)': {
+		// 		body: {
+		// 			fontSize: '320%'
+		// 		}
+		// 	},
+		// }};
+		// : <Style rules={mquery} />
 		return (
 			<div style={styles.body}>
 
 				{
 					// Set the body to not scroll if you have the login window or the mobile menu open
-					this.props.loginData.get('isVisible') || this.props.query.menu !== undefined || (this.props.query.mode !== undefined && this.props.path.indexOf('/pub/') > -1)
+					this.props.loginData.get('isVisible') || this.props.navData.get('menuOpen') || (this.props.pubData.activeModal !== undefined && this.props.path.indexOf('/pub/') > -1)
 						? <Style rules={{'body': {overflow: 'hidden'}}} />
 						: null
 				}
@@ -101,11 +125,14 @@ const App = React.createClass({
 								hoverColor={headerTextColorHover}
 								loginToggle={this.toggleLogin}
 
-								menuOpen={this.props.query.menu ? true : false}
-								goBackHandler={this.goBack}
-								setQueryHandler={this.setQuery}
+								menuOpen={this.props.navData.get('menuOpen') ? true : false}
+								openMenuHandler={this.openMenu}
+								closeMenuHandler={this.closeMenu}
+								openPubModalHandler={this.openPubModal}
+								// goBackHandler={this.goBack}
+								// setQueryHandler={this.setQuery}
 								
-								urlPath={this.props.path}/>
+								slug={this.props.slug}/>
 						</div>
 
 						<div style={styles.headerNav}>
@@ -136,11 +163,11 @@ export default connect( state => {
 	return {
 		loginData: state.login, 
 		navData: state.nav,
-		readerData: state.reader,
+		pubData: state.pub,
 		path: state.router.location.pathname,
-		query: state.router.location.query,
+		// query: state.router.location.query,
 		slug: state.router.params.slug,
-		delta: state.nav.get('delta'),
+		// delta: state.nav.get('delta'),
 	};
 })( Radium(App) );
 

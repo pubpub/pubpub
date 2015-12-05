@@ -5,14 +5,15 @@ import {ensureImmutable} from './';
 // Load Actions
 /*--------*/
 import {
-	UPDATE_DELTA,
+	OPEN_MENU,
+	CLOSE_MENU,
 } from '../actions/nav';
 
 /*--------*/
 // Initialize Default State 
 /*--------*/
 export const defaultState = Immutable.Map({
-	delta: 1, // Delta is used to track internal app routing. Hopefully so we can dismiss queries and modals properly even if directly navigated to.
+	menuOpen: false, 
 	searchString: '',
 });
 
@@ -22,25 +23,16 @@ export const defaultState = Immutable.Map({
 // These functions take in an initial state and return a new
 // state. They are pure functions. We use Immutable to enforce this. 
 /*--------*/
-function updateDelta(state, delta) {
+function openMenu(state) {
 	return state.merge({
-		delta: state.get('delta') + delta
+		menuOpen: true,
 	});
 }
 
-function updateDeltaOnRoute(state, action) {
-
-	let deltaDiff = 0;
-	if (action.payload.location.action === 'PUSH') {
-		deltaDiff = 1;
-	} else if (action.payload.location.action === 'POP') { // This break sometimes because forward navigation from the browser is also registered as a POP
-		deltaDiff = -1;
-	}
-
+function closeMenu(state) {
 	return state.merge({
-		delta: state.get('delta') + deltaDiff
+		menuOpen: false,
 	});
-
 }
 
 /*--------*/
@@ -49,10 +41,10 @@ function updateDeltaOnRoute(state, action) {
 export default function loginReducer(state = defaultState, action) {
 
 	switch (action.type) {
-	case UPDATE_DELTA:
-		return updateDelta(state, action.delta);
-	case '@@reduxReactRouter/routerDidChange': 
-		return updateDeltaOnRoute(state, action);
+	case OPEN_MENU:
+		return openMenu(state);
+	case CLOSE_MENU:
+		return closeMenu(state);
 	default:
 		return ensureImmutable(state);
 	}

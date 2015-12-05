@@ -1,8 +1,7 @@
 import React, {PropTypes} from 'react';
 import Radium from 'radium';
 import {globalStyles} from '../../utils/styleConstants';
-import {PubModalCite, PubModalHistory, PubModalTOC, PubModalSource} from './';
-import PubModalHistoryDiff from './PubModalHistoryDiff';
+import {PubModalCite, PubModalHistory, PubModalHistoryDiff, PubModalTOC, PubModalSource, } from './';
 
 let styles = {};
 
@@ -68,7 +67,7 @@ const PubModals = React.createClass({
 									);
 							case 'source':
 								return (<PubModalSource 
-										markdown={this.props.historyObject.markdown}/>
+										historyObject={this.props.historyObject}/>
 									);
 							case 'cite':
 								return (<PubModalCite/>

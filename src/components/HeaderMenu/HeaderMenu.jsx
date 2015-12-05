@@ -12,9 +12,11 @@ const HeaderMenu = React.createClass({
 		hoverColor: PropTypes.string,
 		loginToggle: PropTypes.func,
 		menuOpen: PropTypes.bool,
-		goBackHandler: PropTypes.func,
-		setQueryHandler: PropTypes.func,
-		urlPath: PropTypes.string,
+
+		openMenuHandler: PropTypes.func,
+		closeMenuHandler: PropTypes.func,
+		openPubModalHandler: PropTypes.func,
+		slug: PropTypes.string,
 	},
 
 	headerTextColorStyle: function() {
@@ -26,28 +28,29 @@ const HeaderMenu = React.createClass({
 		};
 	},
 
-	openMenu: function() {
-		this.props.setQueryHandler({menu: true});
-	},
+	// openMenu: function() {
+	// 	this.props.setQueryHandler({menu: true});
+	// },
 
-	closeMenu: function() {
-		this.props.goBackHandler(-1);
-	},
+	// closeMenu: function() {
+	// 	this.props.goBackHandler(-1);
+	// },
 
-	openPubModal: function(mode) {
-		return ()=> {
-			this.props.setQueryHandler({mode: mode});
-		};
-	},
+	// openPubModal: function(mode) {
+		
+	// 		// this.props.setQueryHandler({mode: mode});
+	// 		this.props.openPubModalHandler
+	// 	};
+	// },
 
 	render: function() {
 		const isLoggedIn = this.props.loginData.get('loggedIn');
-		const isPub = this.props.urlPath.substring(0, 4) === '/pub';
+		const isPub = this.props.slug !== undefined;
 
 		return (
 			<div styles={styles.right}>
 
-				<div key="headerMenuLogin" onClick={this.openMenu} style={[styles.navButton, this.headerTextColorStyle()]}>
+				<div key="headerMenuLogin" onClick={this.props.openMenuHandler} style={[styles.navButton, this.headerTextColorStyle()]}>
 					<span>
 						Menu
 					</span>
@@ -57,10 +60,10 @@ const HeaderMenu = React.createClass({
 					styles.menuDrawer,
 					this.props.menuOpen && styles.menuDrawerOpen
 				]}>
-					<div style={styles.closeBar} onClick={this.closeMenu}></div>
+					<div style={styles.closeBar} onClick={this.props.closeMenuHandler}></div>
 					<div style={styles.menuContent}>
 						<ul style={styles.menuList}>
-							<li key="menuListItem0" style={[styles.menuItem, styles.menuItemClose]} onClick={this.closeMenu}>Close</li>
+							<li key="menuListItem0" style={[styles.menuItem, styles.menuItemClose]} onClick={this.props.closeMenuHandler}>Close</li>
 							<li key="menuListItem1" style={[styles.menuItem, styles.menuItemNoBottom]} onClick={this.props.loginToggle}>
 
 								{/* If Logged Out */}
@@ -86,12 +89,12 @@ const HeaderMenu = React.createClass({
 								? <div>
 									<li key="menuListItem3" style={styles.menuItemseparator}></li>
 									<li key="menuListItem4" style={styles.menuItem} >Favorite</li>
-									<li key="menuListItem5" style={styles.menuItem} onClick={this.openPubModal('tableOfContents')}>Table of Contents</li>
-									<li key="menuListItem6" style={styles.menuItem} onClick={this.openPubModal('status')}>Status</li>
-									<li key="menuListItem7" style={styles.menuItem} onClick={this.openPubModal('discussions')}>Discussions</li>
-									<li key="menuListItem8" style={styles.menuItem} onClick={this.openPubModal('history')}>History</li>
-									<li key="menuListItem9" style={styles.menuItem} onClick={this.openPubModal('source')}>Source</li>
-									<li key="menuListItem10" style={[styles.menuItem, styles.menuItemNoBottom]} onClick={this.openPubModal('cite')}>Cite</li>
+									<li key="menuListItem5" style={styles.menuItem} onClick={this.props.openPubModalHandler('tableOfContents')}>Table of Contents</li>
+									<li key="menuListItem6" style={styles.menuItem} onClick={this.props.openPubModalHandler('status')}>Status</li>
+									<li key="menuListItem7" style={styles.menuItem} onClick={this.props.openPubModalHandler('discussions')}>Discussions</li>
+									<Link to={'/pub/' + this.props.slug + '/history'}><li key="menuListItem8" style={styles.menuItem}>History</li></Link>
+									<Link to={'/pub/' + this.props.slug + '/source'}><li key="menuListItem9" style={styles.menuItem}>Source</li></Link>
+									<li key="menuListItem10" style={[styles.menuItem, styles.menuItemNoBottom]} onClick={this.props.openPubModalHandler('cite')}>Cite</li>
 									</div>
 								: null
 							)}
