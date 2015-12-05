@@ -43,6 +43,13 @@ const App = React.createClass({
 		}
 	},
 
+	componentWillReceiveProps: function(nextProps) {
+		// Close the menu if we're changing routes and it's open
+		if (this.props.path !== nextProps.path && nextProps.navData.get('menuOpen')) {
+			this.props.dispatch(closeMenu());
+		}
+	},
+
 	toggleLogin: function() {
 		if (!this.props.loginData.get('loggedIn')) {
 			this.props.dispatch(toggleVisibility());
