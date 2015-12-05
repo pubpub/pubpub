@@ -68,7 +68,7 @@ const PubModals = React.createClass({
 									);
 							case 'source':
 								return (<PubModalSource 
-										markdown={this.props.historyObject.markdown}/>
+										historyObject={this.props.historyObject}/>
 									);
 							case 'cite':
 								return (<PubModalCite/>

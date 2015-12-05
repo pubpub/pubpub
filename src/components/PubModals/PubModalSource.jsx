@@ -7,25 +7,43 @@ let styles = {};
 
 const PubModalSource = React.createClass({
 	propTypes: {
-		markdown: PropTypes.string,
+		historyObject: PropTypes.object,
 	},
 
 	getDefaultProps: function() {
 		return {
-			markdown: '',
+			historyObject: {},
 		};
 	},
 
 	render: function() {
+
+		const renderOrder = [
+			'title',
+			'abstract',
+			'authorsNote',
+			'markdown',
+		];
+
 		return (
 			<div style={baseStyles.pubModalContainer}>
-
 				<div style={baseStyles.pubModalTitle}>Source</div>
 				<div style={baseStyles.pubModalContentWrapper}>
-					<div style={styles.sourceText} spellCheck="false">{this.props.markdown}</div>
-				</div>
-				
 
+					{
+						renderOrder.map((key, itemIndex)=>{
+							if (this.props.historyObject[key].length) {
+								return (
+									<div key={'historyObject-' + itemIndex} style={styles.historyContentWrapper}>
+										<div style={styles.historyTitle}>{key}</div>
+										<div style={styles.historyContent} spellCheck="false">{this.props.historyObject[key]}</div>
+									</div>
+								);	
+							}	
+						})
+					}
+
+				</div>					
 			</div>
 		);
 	}
@@ -42,5 +60,17 @@ styles = {
 		borderWidth: 0,
 		whiteSpace: 'pre-wrap',
 		outline: 'none',
-	}
+	},
+	historyTitle: {
+		margin: '15px 0px',
+		fontFamily: 'Courier',
+		color: '#999',
+	},
+	historyContent: {
+		whiteSpace: 'pre-wrap',
+		fontFamily: 'Courier',
+		fontSize: '14px',
+		padding: '0px 5px 0px 30px',
+		color: '#555',
+	},
 };
