@@ -226,49 +226,6 @@ export default connect( state => {
 	};
 })( Radium(PubReader) );
 
-const pubSizes = {
-	mobileLeft: null,
-	mobilePub: '100%',
-	mobileRight: null,
-	mobileMinContainer: null,
-	mobileMaxContainer: '767px',
-
-	xSmallLeft: 0,
-	xSmallPub: 600,
-	xSmallRight: 'calc(100% -  600px)',
-	xSmallPadding: 5,
-	xSmallMinContainer: 768,
-	xSmallMaxContainer: 1023,
-
-	smallLeft: 150,
-	smallPub: 650,
-	smallRight: 'calc(100% -  800px)',
-	smallPadding: 10,
-	smallMinContainer: 1024,
-	smallMaxContainer: 1300,
-
-	mediumLeft: 150,
-	mediumPub: 750,
-	mediumRight: 'calc(100% -  900px)',
-	mediumPadding: 15,
-	mediumMinContainer: 1301,
-	mediumMaxContainer: 1600,
-
-	largeLeft: 200,
-	largePub: 950,
-	largeRight: 'calc(100% -  1150px)',
-	largePadding: 20,
-	largeMinContainer: 1601,
-	largeMaxContainer: 2000,
-
-	xLargeLeft: 200,
-	xLargePub: 1250,
-	xLargeRight: 'calc(100% -  1450px)',
-	xLargePadding: 25,
-	xLargeMinContainer: 2001,
-	xLargeMaxContainer: 2600,
-
-};
 
 styles = {
 	container: {
@@ -280,22 +237,6 @@ styles = {
 			width: '100%',
 			maxWidth: '100%',
 			height: 'auto'
-		},
-		// Desktop Sizes
-		'@media screen and (min-width: 768px) and (max-width: 1023px)': {
-			// backgroundColor: 'red',
-		},
-		'@media screen and (min-width: 1024px) and (max-width: 1300px)': {
-			// backgroundColor: 'orange',
-		},
-		'@media screen and (min-width: 1301px) and (max-width: 1600px)': {
-			// backgroundColor: 'yellow',
-		},
-		'@media screen and (min-width: 1600px) and (max-width: 2000px)': {
-			// backgroundColor: 'green',
-		},
-		'@media screen and (min-width: 2000px)': {
-			// backgroundColor: 'blue',
 		},
 
 	},
@@ -315,36 +256,9 @@ styles = {
 			display: 'none',
 		},
 		// Desktop Sizes
-		// '@media screen and (min-width: 768px) and (max-width: 1023px)': {
-		// 	padding: 0,
-		// 	width: 'calc(' + pubSizes.xSmallLeft + 'px - ' + (2 * pubSizes.xSmallPadding) + 'px)',
-		// 	height: 'calc(100vh - ' + globalStyles.headerHeight + ' - ' + (2 * pubSizes.xSmallPadding) + 'px)',
-		// 	marginRight: pubSizes.xSmallPub
-		// },
-		// '@media screen and (min-width: 1024px) and (max-width: 1300px)': {
-		// 	padding: pubSizes.smallPadding,
-		// 	width: 'calc(' + pubSizes.smallLeft + 'px - ' + (2 * pubSizes.smallPadding) + 'px)',
-		// 	height: 'calc(100vh - ' + globalStyles.headerHeight + ' - ' + (2 * pubSizes.smallPadding) + 'px)',
-		// 	marginRight: pubSizes.smallPub
-		// },
-		// '@media screen and (min-width: 1301px) and (max-width: 1600px)': {
-		// 	padding: pubSizes.mediumPadding,
-		// 	width: 'calc(' + pubSizes.mediumLeft + 'px - ' + (2 * pubSizes.mediumPadding) + 'px)',
-		// 	height: 'calc(100vh - ' + globalStyles.headerHeight + ' - ' + (2 * pubSizes.mediumPadding) + 'px)',
-		// 	marginRight: pubSizes.mediumPub
-		// },
-		// '@media screen and (min-width: 1600px) and (max-width: 2000px)': {
-		// 	padding: pubSizes.largePadding,
-		// 	width: 'calc(' + pubSizes.largeLeft + 'px - ' + (2 * pubSizes.largePadding) + 'px)',
-		// 	height: 'calc(100vh - ' + globalStyles.headerHeight + ' - ' + (2 * pubSizes.largePadding) + 'px)',
-		// 	marginRight: pubSizes.largePub
-		// },
-		// '@media screen and (min-width: 2000px)': {
-		// 	padding: pubSizes.xLargePadding,
-		// 	width: 'calc(' + pubSizes.xLargeLeft + 'px - ' + (2 * pubSizes.xLargePadding) + 'px)',
-		// 	height: 'calc(100vh - ' + globalStyles.headerHeight + ' - ' + (2 * pubSizes.xLargePadding) + 'px)',
-		// 	marginRight: pubSizes.xLargePub
-		// },
+		'@media screen and (min-width: 1600px)': {
+			marginRight: '880px',
+		},
 		
 		
 	},
@@ -373,6 +287,9 @@ styles = {
 			zIndex: 'auto',
 			top: 0,
 			left: 0,
+		},
+		'@media screen and (min-width: 1600px)': {
+			width: '880px',
 		},
 		// Desktop Sizes
 		// '@media screen and (min-width: 768px) and (max-width: 1023px)': {
@@ -405,6 +322,8 @@ styles = {
 		padding: 5,
 		// width: 'calc(100% - 800px - 10px)',
 		// height: 'calc(100vh - ' + globalStyles.headerHeight + ' - 10px)',
+		width: 'calc(100% - 55% - 150px - 10px)',
+		height: 'calc(100vh - ' + globalStyles.headerHeight + ' - 10px)',
 		float: 'left',
 		overflow: 'hidden',
 		overflowY: 'scroll',
@@ -414,8 +333,9 @@ styles = {
 		'@media screen and (min-resolution: 3dppx), (max-width: 767px)': {
 			display: 'none',
 		},
-		width: 'calc(100% - 55% - 150px - 10px)',
-		height: 'calc(100vh - ' + globalStyles.headerHeight + ' - 10px)',
+		'@media screen and (min-width: 1600px)': {
+			width: 'calc(100% - 880px - 150px - 10px)',
+		},
 		// Desktop Sizes
 		// '@media screen and (min-width: 768px) and (max-width: 1023px)': {
 		// 	padding: pubSizes.xSmallPadding,
