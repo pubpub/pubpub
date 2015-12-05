@@ -1,9 +1,8 @@
 import React, {PropTypes} from 'react';
 import Radium from 'radium';
 import {globalPluginOptions, pluginOptions} from '../../components/EditorPlugins';
-import {parsePluginString, createPluginString} from '../../utils/parsePlugins';
-import SmartSelect from 'react-select';
-
+import {parsePluginString} from '../../utils/parsePlugins';
+import {SimpleSelect} from 'react-selectize';
 
 let styles = {};
 
@@ -38,13 +37,15 @@ const Reference = React.createClass({
 	componentDidMount() {
 		document.documentElement.addEventListener('click', this.onPluginClick);
 	},
-
 	componentWillReceiveProps(nextProps) {
-		
+
 		// If a re-render causes this component to receive new props, but the props haven't changed, return.
 		if (this.props.codeMirrorChange === nextProps.codeMirrorChange) {
 			return null;
 		}
+
+		this.assets = (this.props.assets) ? Object.values(this.props.assets).map( function(asset) { return {'value': asset.refName, 'label': asset.refName};}) : [];
+
 
 		const change = nextProps.codeMirrorChange;
 
@@ -137,7 +138,6 @@ const Reference = React.createClass({
 			});
 
 		} else {
-
 			if (document.getElementById('plugin-popup').contains(event.target)) {
 				this.setState({
 					popupVisible: true,
@@ -149,7 +149,6 @@ const Reference = React.createClass({
 					contentObject: {}
 				});
 			}
-
 		}
 	},
 
@@ -160,28 +159,49 @@ const Reference = React.createClass({
 		const from = {line: lineNum, ch: 0};
 		const to = {line: lineNum, ch: lineContent.length};
 
-		const mergedString = createPluginString(this.state.pluginType, this.state.contentObject, this.refs);
+		const mergedString = this.createPluginString(this.state.pluginType, this.state.contentObject);
 		const outputString = lineContent.replace(this.state.initialString, mergedString);
 		cm.replaceRange(outputString, from, to); // Since the popup closes on change, this will close the pluginPopup
 	},
 
+	createPluginString: function(pluginType, content) {
+		const refs = this.refs;
+		let outputVariables = '';
+		for (const key in content) {
+			// Generate an output string based on the key, values in the object
+			if (Object.prototype.hasOwnProperty.call(content, key)) {
+				let val = refs['pluginInput-' + key].value;
+
+				if (typeof val === 'function') {
+					val = val().value;
+				}
+
+				if (val && val.length) {
+					outputVariables += key + '=' + val + ', ';
+				}
+			}
+		}
+		outputVariables = outputVariables.slice(0, -2); // Remove the last comma and space
+		const mergedString = outputVariables.length ? pluginType + ': ' + outputVariables : pluginType;
+		return mergedString;
+	},
 
 	render: function() {
 
-		const assets = (this.props.assets) ? Object.values(this.props.assets).map( function(asset) { return {'value': asset.refName, 'label': asset.refName};}) : [];
+		console.log('rendering!');
+
 		return (
 			<div id="plugin-popup" className="plugin-popup" style={[styles.pluginPopup, this.getPluginPopupLoc(), this.state.popupVisible && styles.pluginPopupVisible]}>
 				<div style={styles.pluginPopupArrow}></div>
 				<div style={styles.pluginContent}>
 					<div style={styles.pluginPopupTitle}>Plugin: {this.state.pluginType}</div>
 						{
-
 							Object.keys(this.state.contentObject).map((pluginValue)=>{
 								let html;
 								if (pluginValue === 'src') {
 									html = 	(<div key={'pluginVal-' + pluginValue} style={styles.pluginOptionWrapper}>
 														<label htmlFor={pluginValue} style={styles.pluginOptionLabel}>{this.state.defaultObject[pluginValue].title}</label>
-														<SmartSelect ref={'pluginInput-' + pluginValue} name={pluginValue} id={pluginValue} options={assets} />
+														<SimpleSelect ref={'pluginInput-' + pluginValue} name={pluginValue} id={pluginValue} options={this.assets}/>
 														<div style={[styles.pluginOptionDefault, this.state.defaultObject[pluginValue].default && styles.pluginOptionDefaultVisible]}>default: {this.state.defaultObject[pluginValue].default}</div>
 														<div style={styles.clearfix}></div>
 														</div>);
@@ -196,7 +216,6 @@ const Reference = React.createClass({
 								return html;
 							})
 						}
-
 					<div style={styles.pluginSave} key={'pluginPopupSave'} onClick={this.onPluginSave}>Save</div>
 				</div>
 			</div>
