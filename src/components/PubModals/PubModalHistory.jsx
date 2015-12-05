@@ -31,7 +31,8 @@ const PubModalHistory = React.createClass({
 		return ()=>{
 			this.props.setQueryHandler({
 				mode: undefined,
-				version: index,
+				menu: undefined,
+				version: index + 1,
 			});	
 		};
 	},

@@ -232,7 +232,7 @@ const Reader = React.createClass({
 
 					{
 						this.props.query.version 
-							? <div key={'versionNotification'} style={styles.versionNotification} onClick={this.clearVersion}>Reading Version {this.props.query.version}. Click to read the most recent (Version {pubData.history.length}).</div>
+							? <div key={'versionNotification'} style={styles.versionNotification} onClick={this.clearVersion}>Reading Version {this.props.query.version}. Click to read the most recent version ({pubData.history.length}).</div>
 							: null
 					}
 
@@ -546,7 +546,11 @@ styles = {
 		':hover': {
 			color: globalStyles.sideHover,
 			cursor: 'pointer',
-		}
+		},
+		'@media screen and (min-resolution: 3dppx), (max-width: 767px)': {
+			fontSize: '20px',
+		},
+
 	},
 };
 
