@@ -226,6 +226,54 @@ export default connect( state => {
 	};
 })( Radium(PubReader) );
 
+const pubSizes = {
+	mobileLeft: null,
+	mobilePub: '100%',
+	mobileRight: null,
+	mobileMinContainer: null,
+	mobileMaxContainer: '767px',
+
+	xSmallLeft: 150,
+	xSmallPub: 450,
+	xSmallRight: 'calc(100% -  600px)',
+	xSmallPadding: 5,
+	xSmallLeftBarPadding: 10,
+	xSmallMinContainer: 768,
+	xSmallMaxContainer: 1023,
+
+	smallLeft: 150,
+	smallPub: 650,
+	smallRight: 'calc(100% -  800px)',
+	smallPadding: 10,
+	smallLeftBarPadding: 10,
+	smallMinContainer: 1024,
+	smallMaxContainer: 1300,
+
+	mediumLeft: 150,
+	mediumPub: 750,
+	mediumRight: 'calc(100% -  900px)',
+	mediumPadding: 15,
+	mediumLeftBarPadding: 10,
+	mediumMinContainer: 1301,
+	mediumMaxContainer: 1600,
+
+	largeLeft: 200,
+	largePub: 950,
+	largeRight: 'calc(100% -  1150px)',
+	largePadding: 20,
+	largeLeftBarPadding: 15,
+	largeMinContainer: 1601,
+	largeMaxContainer: 2000,
+
+	xLargeLeft: 200,
+	xLargePub: 1250,
+	xLargeRight: 'calc(100% -  1450px)',
+	xLargePadding: 25,
+	xLargeLeftBarPadding: 15,
+	xLargeMinContainer: 2001,
+	xLargeMaxContainer: 2600,
+
+};
 
 styles = {
 	container: {
@@ -238,13 +286,29 @@ styles = {
 			maxWidth: '100%',
 			height: 'auto'
 		},
+		// Desktop Sizes
+		'@media screen and (min-width: 768px) and (max-width: 1023px)': {
+			// backgroundColor: 'red',
+		},
+		'@media screen and (min-width: 1024px) and (max-width: 1300px)': {
+			// backgroundColor: 'orange',
+		},
+		'@media screen and (min-width: 1301px) and (max-width: 1600px)': {
+			// backgroundColor: 'yellow',
+		},
+		'@media screen and (min-width: 1600px) and (max-width: 2000px)': {
+			// backgroundColor: 'green',
+		},
+		'@media screen and (min-width: 2000px)': {
+			// backgroundColor: 'blue',
+		},
 
 	},
 	leftBar: {
-		padding: '10px 15px',
-		width: 'calc(150px - 30px)',
-		height: 'calc(100vh - ' + globalStyles.headerHeight + ' - 20px)',
-		marginRight: '55%', // Width of pub
+		padding: 5,
+		width: 'calc(150px - 10px)',
+		height: 'calc(100vh - ' + globalStyles.headerHeight + ' - 10px)',
+		marginRight: 650,
 		float: 'left',
 		transition: '.3s linear opacity .25s',
 		overflow: 'hidden',
@@ -256,8 +320,35 @@ styles = {
 			display: 'none',
 		},
 		// Desktop Sizes
-		'@media screen and (min-width: 1600px)': {
-			marginRight: '880px',
+		'@media screen and (min-width: 768px) and (max-width: 1023px)': {
+			padding: pubSizes.xSmallLeftBarPadding,
+			width: 'calc(' + pubSizes.xSmallLeft + 'px - ' + (2 * pubSizes.xSmallLeftBarPadding) + 'px)',
+			height: 'calc(100vh - ' + globalStyles.headerHeight + ' - ' + (2 * pubSizes.xSmallLeftBarPadding) + 'px)',
+			marginRight: pubSizes.xSmallPub
+		},
+		'@media screen and (min-width: 1024px) and (max-width: 1300px)': {
+			padding: pubSizes.smallLeftBarPadding,
+			width: 'calc(' + pubSizes.smallLeft + 'px - ' + (2 * pubSizes.smallLeftBarPadding) + 'px)',
+			height: 'calc(100vh - ' + globalStyles.headerHeight + ' - ' + (2 * pubSizes.smallLeftBarPadding) + 'px)',
+			marginRight: pubSizes.smallPub
+		},
+		'@media screen and (min-width: 1301px) and (max-width: 1600px)': {
+			padding: pubSizes.mediumLeftBarPadding,
+			width: 'calc(' + pubSizes.mediumLeft + 'px - ' + (2 * pubSizes.mediumLeftBarPadding) + 'px)',
+			height: 'calc(100vh - ' + globalStyles.headerHeight + ' - ' + (2 * pubSizes.mediumLeftBarPadding) + 'px)',
+			marginRight: pubSizes.mediumPub
+		},
+		'@media screen and (min-width: 1600px) and (max-width: 2000px)': {
+			padding: pubSizes.largeLeftBarPadding,
+			width: 'calc(' + pubSizes.largeLeft + 'px - ' + (2 * pubSizes.largeLeftBarPadding) + 'px)',
+			height: 'calc(100vh - ' + globalStyles.headerHeight + ' - ' + (2 * pubSizes.largeLeftBarPadding) + 'px)',
+			marginRight: pubSizes.largePub
+		},
+		'@media screen and (min-width: 2000px)': {
+			padding: pubSizes.xLargeLeftBarPadding,
+			width: 'calc(' + pubSizes.xLargeLeft + 'px - ' + (2 * pubSizes.xLargeLeftBarPadding) + 'px)',
+			height: 'calc(100vh - ' + globalStyles.headerHeight + ' - ' + (2 * pubSizes.xLargeLeftBarPadding) + 'px)',
+			marginRight: pubSizes.xLargePub
 		},
 		
 		
@@ -265,8 +356,7 @@ styles = {
 
 	centerBar: {
 		backgroundColor: 'white',
-		// width: 650,
-		width: '55%',
+		width: 650,
 		height: 'calc(100vh - ' + globalStyles.headerHeight + ' + 3px)',
 		position: 'absolute',
 		top: '-3px',
@@ -288,30 +378,27 @@ styles = {
 			top: 0,
 			left: 0,
 		},
-		'@media screen and (min-width: 1600px)': {
-			width: '880px',
-		},
 		// Desktop Sizes
-		// '@media screen and (min-width: 768px) and (max-width: 1023px)': {
-		// 	width: pubSizes.xSmallPub,
-		// 	left: pubSizes.xSmallLeft,
-		// },
-		// '@media screen and (min-width: 1024px) and (max-width: 1300px)': {
-		// 	width: pubSizes.smallPub,
-		// 	left: pubSizes.smallLeft,
-		// },
-		// '@media screen and (min-width: 1301px) and (max-width: 1600px)': {
-		// 	width: pubSizes.mediumPub,
-		// 	left: pubSizes.mediumLeft,
-		// },
-		// '@media screen and (min-width: 1600px) and (max-width: 2000px)': {
-		// 	width: pubSizes.largePub,
-		// 	left: pubSizes.largeLeft,
-		// },
-		// '@media screen and (min-width: 2000px)': {
-		// 	width: pubSizes.xLargePub,
-		// 	left: pubSizes.xLargeLeft,
-		// },
+		'@media screen and (min-width: 768px) and (max-width: 1023px)': {
+			width: pubSizes.xSmallPub,
+			left: pubSizes.xSmallLeft,
+		},
+		'@media screen and (min-width: 1024px) and (max-width: 1300px)': {
+			width: pubSizes.smallPub,
+			left: pubSizes.smallLeft,
+		},
+		'@media screen and (min-width: 1301px) and (max-width: 1600px)': {
+			width: pubSizes.mediumPub,
+			left: pubSizes.mediumLeft,
+		},
+		'@media screen and (min-width: 1600px) and (max-width: 2000px)': {
+			width: pubSizes.largePub,
+			left: pubSizes.largeLeft,
+		},
+		'@media screen and (min-width: 2000px)': {
+			width: pubSizes.xLargePub,
+			left: pubSizes.xLargeLeft,
+		},
 	},
 	centerBarModalActive: {
 		pointerEvents: 'none',
@@ -320,9 +407,7 @@ styles = {
 
 	rightBar: {
 		padding: 5,
-		// width: 'calc(100% - 800px - 10px)',
-		// height: 'calc(100vh - ' + globalStyles.headerHeight + ' - 10px)',
-		width: 'calc(100% - 55% - 150px - 10px)',
+		width: 'calc(100% - 800px - 10px)',
 		height: 'calc(100vh - ' + globalStyles.headerHeight + ' - 10px)',
 		float: 'left',
 		overflow: 'hidden',
@@ -333,35 +418,32 @@ styles = {
 		'@media screen and (min-resolution: 3dppx), (max-width: 767px)': {
 			display: 'none',
 		},
-		'@media screen and (min-width: 1600px)': {
-			width: 'calc(100% - 880px - 150px - 10px)',
-		},
 		// Desktop Sizes
-		// '@media screen and (min-width: 768px) and (max-width: 1023px)': {
-		// 	padding: pubSizes.xSmallPadding,
-		// 	width: 'calc(100% - ' + pubSizes.xSmallLeft + 'px - ' + pubSizes.xSmallPub + 'px - ' + (2 * pubSizes.xSmallPadding) + 'px)',
-		// 	height: 'calc(100vh - ' + globalStyles.headerHeight + ' - ' + (2 * pubSizes.xSmallPadding) + 'px)',
-		// },
-		// '@media screen and (min-width: 1024px) and (max-width: 1300px)': {
-		// 	padding: pubSizes.smallPadding,
-		// 	width: 'calc(100% - ' + pubSizes.smallLeft + 'px - ' + pubSizes.smallPub + 'px - ' + (2 * pubSizes.smallPadding) + 'px)',
-		// 	height: 'calc(100vh - ' + globalStyles.headerHeight + ' - ' + (2 * pubSizes.smallPadding) + 'px)',
-		// },
-		// '@media screen and (min-width: 1301px) and (max-width: 1600px)': {
-		// 	padding: pubSizes.mediumPadding,
-		// 	width: 'calc(100% - ' + pubSizes.mediumLeft + 'px - ' + pubSizes.mediumPub + 'px - ' + (2 * pubSizes.mediumPadding) + 'px)',
-		// 	height: 'calc(100vh - ' + globalStyles.headerHeight + ' - ' + (2 * pubSizes.mediumPadding) + 'px)',
-		// },
-		// '@media screen and (min-width: 1600px) and (max-width: 2000px)': {
-		// 	padding: pubSizes.largePadding,
-		// 	width: 'calc(100% - ' + pubSizes.largeLeft + 'px - ' + pubSizes.largePub + 'px - ' + (2 * pubSizes.largePadding) + 'px)',
-		// 	height: 'calc(100vh - ' + globalStyles.headerHeight + ' - ' + (2 * pubSizes.largePadding) + 'px)',
-		// },
-		// '@media screen and (min-width: 2000px)': {
-		// 	padding: pubSizes.xLargePadding,
-		// 	width: 'calc(100% - ' + pubSizes.xLargeLeft + 'px - ' + pubSizes.xLargePub + 'px - ' + (2 * pubSizes.xLargePadding) + 'px)',
-		// 	height: 'calc(100vh - ' + globalStyles.headerHeight + ' - ' + (2 * pubSizes.xLargePadding) + 'px)',
-		// },
+		'@media screen and (min-width: 768px) and (max-width: 1023px)': {
+			padding: pubSizes.xSmallPadding,
+			width: 'calc(100% - ' + pubSizes.xSmallLeft + 'px - ' + pubSizes.xSmallPub + 'px - ' + (2 * pubSizes.xSmallPadding) + 'px)',
+			height: 'calc(100vh - ' + globalStyles.headerHeight + ' - ' + (2 * pubSizes.xSmallPadding) + 'px)',
+		},
+		'@media screen and (min-width: 1024px) and (max-width: 1300px)': {
+			padding: pubSizes.smallPadding,
+			width: 'calc(100% - ' + pubSizes.smallLeft + 'px - ' + pubSizes.smallPub + 'px - ' + (2 * pubSizes.smallPadding) + 'px)',
+			height: 'calc(100vh - ' + globalStyles.headerHeight + ' - ' + (2 * pubSizes.smallPadding) + 'px)',
+		},
+		'@media screen and (min-width: 1301px) and (max-width: 1600px)': {
+			padding: pubSizes.mediumPadding,
+			width: 'calc(100% - ' + pubSizes.mediumLeft + 'px - ' + pubSizes.mediumPub + 'px - ' + (2 * pubSizes.mediumPadding) + 'px)',
+			height: 'calc(100vh - ' + globalStyles.headerHeight + ' - ' + (2 * pubSizes.mediumPadding) + 'px)',
+		},
+		'@media screen and (min-width: 1600px) and (max-width: 2000px)': {
+			padding: pubSizes.largePadding,
+			width: 'calc(100% - ' + pubSizes.largeLeft + 'px - ' + pubSizes.largePub + 'px - ' + (2 * pubSizes.largePadding) + 'px)',
+			height: 'calc(100vh - ' + globalStyles.headerHeight + ' - ' + (2 * pubSizes.largePadding) + 'px)',
+		},
+		'@media screen and (min-width: 2000px)': {
+			padding: pubSizes.xLargePadding,
+			width: 'calc(100% - ' + pubSizes.xLargeLeft + 'px - ' + pubSizes.xLargePub + 'px - ' + (2 * pubSizes.xLargePadding) + 'px)',
+			height: 'calc(100vh - ' + globalStyles.headerHeight + ' - ' + (2 * pubSizes.xLargePadding) + 'px)',
+		},
 	},
 	loading: {
 		opacity: 0,

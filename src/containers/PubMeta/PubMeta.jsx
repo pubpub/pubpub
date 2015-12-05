@@ -175,38 +175,43 @@ const pubSizes = {
 	mobileMinContainer: null,
 	mobileMaxContainer: '767px',
 
-	xSmallLeft: 0,
-	xSmallPub: '100%',
-	xSmallRight: '0px',
+	xSmallLeft: 150,
+	xSmallPub: 'calc(100% -  150px)',
+	xSmallRight: 0,
 	xSmallPadding: 5,
+	xSmallLeftBarPadding: 10,
 	xSmallMinContainer: 768,
 	xSmallMaxContainer: 1023,
 
 	smallLeft: 150,
-	smallPub: 'calc(100% - 150px)',
-	smallRight: '0px',
+	smallPub: 'calc(100% -  150px)',
+	smallRight: 0,
 	smallPadding: 10,
+	smallLeftBarPadding: 10,
 	smallMinContainer: 1024,
 	smallMaxContainer: 1300,
 
 	mediumLeft: 150,
-	mediumPub: 'calc(100% - 150px)',
-	mediumRight: '0px',
+	mediumPub: 'calc(100% -  150px)',
+	mediumRight: 0,
 	mediumPadding: 15,
+	mediumLeftBarPadding: 10,
 	mediumMinContainer: 1301,
 	mediumMaxContainer: 1600,
 
 	largeLeft: 200,
-	largePub: 'calc(100% - 200px)',
-	largeRight: '0px',
+	largePub: 'calc(100% -  200px)',
+	largeRight: 0,
 	largePadding: 20,
+	largeLeftBarPadding: 15,
 	largeMinContainer: 1601,
 	largeMaxContainer: 2000,
 
 	xLargeLeft: 200,
-	xLargePub: 'calc(100% - 200px)',
-	xLargeRight: '0px',
+	xLargePub: 'calc(100% -  200px)',
+	xLargeRight: 0,
 	xLargePadding: 25,
+	xLargeLeftBarPadding: 15,
 	xLargeMinContainer: 2001,
 	xLargeMaxContainer: 2600,
 
@@ -258,33 +263,33 @@ styles = {
 		},
 		// Desktop Sizes
 		'@media screen and (min-width: 768px) and (max-width: 1023px)': {
-			padding: 0,
-			width: 'calc(' + pubSizes.xSmallLeft + 'px - ' + (2 * pubSizes.xSmallPadding) + 'px)',
-			height: 'calc(100vh - ' + globalStyles.headerHeight + ' - ' + (2 * pubSizes.xSmallPadding) + 'px)',
+			padding: pubSizes.xSmallLeftBarPadding,
+			width: 'calc(' + pubSizes.xSmallLeft + 'px - ' + (2 * pubSizes.xSmallLeftBarPadding) + 'px)',
+			height: 'calc(100vh - ' + globalStyles.headerHeight + ' - ' + (2 * pubSizes.xSmallLeftBarPadding) + 'px)',
 			marginRight: pubSizes.xSmallPub
 		},
 		'@media screen and (min-width: 1024px) and (max-width: 1300px)': {
-			padding: pubSizes.smallPadding,
-			width: 'calc(' + pubSizes.smallLeft + 'px - ' + (2 * pubSizes.smallPadding) + 'px)',
-			height: 'calc(100vh - ' + globalStyles.headerHeight + ' - ' + (2 * pubSizes.smallPadding) + 'px)',
+			padding: pubSizes.smallLeftBarPadding,
+			width: 'calc(' + pubSizes.smallLeft + 'px - ' + (2 * pubSizes.smallLeftBarPadding) + 'px)',
+			height: 'calc(100vh - ' + globalStyles.headerHeight + ' - ' + (2 * pubSizes.smallLeftBarPadding) + 'px)',
 			marginRight: pubSizes.smallPub
 		},
 		'@media screen and (min-width: 1301px) and (max-width: 1600px)': {
-			padding: pubSizes.mediumPadding,
-			width: 'calc(' + pubSizes.mediumLeft + 'px - ' + (2 * pubSizes.mediumPadding) + 'px)',
-			height: 'calc(100vh - ' + globalStyles.headerHeight + ' - ' + (2 * pubSizes.mediumPadding) + 'px)',
+			padding: pubSizes.mediumLeftBarPadding,
+			width: 'calc(' + pubSizes.mediumLeft + 'px - ' + (2 * pubSizes.mediumLeftBarPadding) + 'px)',
+			height: 'calc(100vh - ' + globalStyles.headerHeight + ' - ' + (2 * pubSizes.mediumLeftBarPadding) + 'px)',
 			marginRight: pubSizes.mediumPub
 		},
 		'@media screen and (min-width: 1600px) and (max-width: 2000px)': {
-			padding: pubSizes.largePadding,
-			width: 'calc(' + pubSizes.largeLeft + 'px - ' + (2 * pubSizes.largePadding) + 'px)',
-			height: 'calc(100vh - ' + globalStyles.headerHeight + ' - ' + (2 * pubSizes.largePadding) + 'px)',
+			padding: pubSizes.largeLeftBarPadding,
+			width: 'calc(' + pubSizes.largeLeft + 'px - ' + (2 * pubSizes.largeLeftBarPadding) + 'px)',
+			height: 'calc(100vh - ' + globalStyles.headerHeight + ' - ' + (2 * pubSizes.largeLeftBarPadding) + 'px)',
 			marginRight: pubSizes.largePub
 		},
 		'@media screen and (min-width: 2000px)': {
-			padding: pubSizes.xLargePadding,
-			width: 'calc(' + pubSizes.xLargeLeft + 'px - ' + (2 * pubSizes.xLargePadding) + 'px)',
-			height: 'calc(100vh - ' + globalStyles.headerHeight + ' - ' + (2 * pubSizes.xLargePadding) + 'px)',
+			padding: pubSizes.xLargeLeftBarPadding,
+			width: 'calc(' + pubSizes.xLargeLeft + 'px - ' + (2 * pubSizes.xLargeLeftBarPadding) + 'px)',
+			height: 'calc(100vh - ' + globalStyles.headerHeight + ' - ' + (2 * pubSizes.xLargeLeftBarPadding) + 'px)',
 			marginRight: pubSizes.xLargePub
 		},
 		
