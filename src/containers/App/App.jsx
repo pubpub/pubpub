@@ -77,6 +77,14 @@ const App = React.createClass({
 			headerTextColorHover = 'black';
 		}
 
+		// const mquery = {mediaQueries: {
+		// 	'(min-width: 1050px)': {
+		// 		body: {
+		// 			fontSize: '320%'
+		// 		}
+		// 	},
+		// }};
+		// : <Style rules={mquery} />
 		return (
 			<div style={styles.body}>
 

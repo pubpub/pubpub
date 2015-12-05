@@ -1,6 +1,6 @@
 import React from 'react';
 import {IndexRoute, Route} from 'react-router';
-import {App, CreatePub, Editor, Explore, Landing, Profile, Reader, NotFound, SubdomainTest} from 'containers';
+import {App, CreatePub, Editor, Explore, Landing, Profile, PubMeta, PubReader, NotFound, SubdomainTest} from 'containers';
 
 export default () => {
 
@@ -14,8 +14,9 @@ export default () => {
 			<Route path="/explore" component={Explore}/>
 			<Route path="/newpub" component={CreatePub}/>
 			<Route path="/profile/:username" component={Profile}/>
-			<Route path="/pub/:slug" component={Reader}/>
+			<Route path="/pub/:slug" component={PubReader}/>
 			<Route path="/pub/:slug/edit" component={Editor}/>
+			<Route path="/pub/:slug/:meta" component={PubMeta}/>
 			<Route path="/subdomain" component={SubdomainTest}/>
 
 			{ /* Catch all route */ }

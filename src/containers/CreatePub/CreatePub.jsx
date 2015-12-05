@@ -3,7 +3,7 @@ import {connect} from 'react-redux';
 import Radium from 'radium';
 import { pushState } from 'redux-router';
 import PureRenderMixin from 'react-addons-pure-render-mixin';
-import {LoaderIndeterminate, PubCreateForm} from '../../components';
+import {LoaderIndeterminate, CreatePubForm} from '../../components';
 import {create} from '../../actions/createPub';
 import {toggleVisibility} from '../../actions/login';
 import {globalStyles} from '../../utils/styleConstants';
@@ -45,7 +45,7 @@ const Login = React.createClass({
 				</div>	
 				
 				<h1 style={styles.header}>Create Pub</h1>
-				<PubCreateForm onSubmit={this.handleCreateSubmit} /> 
+				<CreatePubForm onSubmit={this.handleCreateSubmit} /> 
 
 			</div>
 		);

@@ -30,20 +30,30 @@ const PubModalCite = React.createClass({
 		return (
 			<div style={baseStyles.pubModalContainer}>
 
+				{/* TODO: use the <Reference/> component for the styling. Just gotta make the citation object first. */}
+
 				<div style={baseStyles.pubModalTitle}>Cite</div>
 				<div style={baseStyles.pubModalContentWrapper}>
 
 					<div style={styles.typeTitle}>Bibtex</div>
-					<div style={styles.typeContent} contentEditable readOnly>{bibtex}</div>
+					<div style={styles.typeContent}>
+						{bibtex}
+					</div>
 
 					<div style={styles.typeTitle}>APA</div>
-					<div style={styles.typeContent} contentEditable readOnly>{apa}</div>
+					<div style={styles.typeContent}>
+						{apa}
+					</div>
 
 					<div style={styles.typeTitle}>MLA</div>
-					<div style={styles.typeContent} contentEditable readOnly>{mla}</div>
+					<div style={styles.typeContent}>
+						{mla}
+					</div>
 
 					<div style={styles.typeTitle}>Chicago</div>
-					<div style={styles.typeContent} contentEditable readOnly>{chicago}</div>
+					<div style={styles.typeContent}>
+						{chicago}
+					</div>
 				</div>
 
 
