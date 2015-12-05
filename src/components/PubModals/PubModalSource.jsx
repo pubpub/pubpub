@@ -27,8 +27,6 @@ const PubModalSource = React.createClass({
 
 		return (
 			<div style={baseStyles.pubModalContainer}>
-				<div style={baseStyles.pubModalTitle}>Source</div>
-				<div style={baseStyles.pubModalContentWrapper}>
 
 					{
 						renderOrder.map((key, itemIndex)=>{
@@ -42,8 +40,7 @@ const PubModalSource = React.createClass({
 							}	
 						})
 					}
-
-				</div>					
+					
 			</div>
 		);
 	}

@@ -9,7 +9,7 @@ let styles = {};
 const PubModalHistory = React.createClass({
 	propTypes: {
 		historyData: PropTypes.array,
-		setQueryHandler: PropTypes.func,
+		// setQueryHandler: PropTypes.func,
 	},
 
 	getDefaultProps: function() {
@@ -19,30 +19,27 @@ const PubModalHistory = React.createClass({
 	},
 
 	showChangesViewer: function(index) {
-		return ()=>{
-			this.props.setQueryHandler({
-				mode: 'history',
-				diff: index,
-			});	
-		};
+		// return ()=>{
+		// 	this.props.setQueryHandler({
+		// 		mode: 'history',
+		// 		diff: index,
+		// 	});	
+		// };
 	},
 
 	setVersion: function(index) {
-		return ()=>{
-			this.props.setQueryHandler({
-				mode: undefined,
-				menu: undefined,
-				version: index + 1,
-			});	
-		};
+		// return ()=>{
+		// 	this.props.setQueryHandler({
+		// 		mode: undefined,
+		// 		menu: undefined,
+		// 		version: index + 1,
+		// 	});	
+		// };
 	},
 
 	render: function() {
 		return (
 			<div style={[baseStyles.pubModalContainer, styles.container]}>
-
-				<div>
-					<div style={baseStyles.pubModalTitle}>History</div>
 
 					{()=>{
 						const historyDivs = [];
@@ -60,7 +57,6 @@ const PubModalHistory = React.createClass({
 
 						return historyDivs;
 					}()}
-				</div>
 				
 			</div>
 		);

@@ -6,6 +6,7 @@ import PureRenderMixin from 'react-addons-pure-render-mixin';
 import {getPub} from '../../actions/pub';
 // import {updateDelta} from '../../actions/nav';
 import {PubLeftBar, PubNav, LoaderDeterminate} from '../../components';
+import {PubModalSource, PubModalHistory} from '../../components/PubModals';
 import {globalStyles} from '../../utils/styleConstants';
 // import { pushState, go } from 'redux-router';
 
@@ -21,7 +22,7 @@ const PubMeta = React.createClass({
 		readerData: PropTypes.object,
 		slug: PropTypes.string,
 		meta: PropTypes.string,
-		// query: PropTypes.object,
+		query: PropTypes.object,
 		// delta: PropTypes.number,
 		// routeKey: PropTypes.string,
 		// query : {
@@ -34,7 +35,7 @@ const PubMeta = React.createClass({
 
 	getDefaultProps: function() {
 		return {
-			// query: {},
+			query: {},
 		};
 	},
 
@@ -42,7 +43,7 @@ const PubMeta = React.createClass({
 
 	statics: {
 		fetchDataDeferred: function(getState, dispatch, location, routeParams) {
-			if (getState().reader.getIn(['pubData', 'slug']) !== routeParams.slug) {
+			if (getState().pub.getIn(['pubData', 'slug']) !== routeParams.slug) {
 				return dispatch(getPub(routeParams.slug));
 			}
 			return ()=>{};
@@ -124,7 +125,7 @@ const PubMeta = React.createClass({
 		}
 		
 		// const pubData = this.props.readerData.get('pubData').toJS();
-		// const version = this.props.query.version !== undefined ? this.props.query.version - 1 : this.props.readerData.getIn(['pubData', 'history']).size - 1;
+		const version = this.props.query.version !== undefined ? this.props.query.version - 1 : this.props.readerData.getIn(['pubData', 'history']).size - 1;
 
 		return (
 			<div style={styles.container}>
@@ -148,7 +149,24 @@ const PubMeta = React.createClass({
 						value={this.props.readerData.get('status') === 'loading' ? 0 : 100}/>
 
 					<div style={[styles.centerContent, styles[this.props.readerData.get('status')]]}>
-						<h1>{this.props.meta}</h1>
+						<h1>{this.props.meta}: {this.props.readerData.getIn(['pubData', 'title'])}</h1>
+
+						{() => {
+							switch (this.props.meta) {
+							case 'history':
+								return (<PubModalHistory 
+										historyData={this.props.readerData.getIn(['pubData', 'history']).toJS()}/>
+									);
+							case 'source':
+								return (<PubModalSource 
+										historyObject={this.props.readerData.getIn(['pubData', 'history', version]).toJS()}/>
+									);
+							
+							default:
+								return null;
+							}
+						}()}
+
 					</div>
 					
 
@@ -165,6 +183,7 @@ export default connect( state => {
 		readerData: state.pub, 
 		slug: state.router.params.slug,
 		meta: state.router.params.meta,
+		query: state.router.location.query,
 	};
 })( Radium(PubMeta) );
 
