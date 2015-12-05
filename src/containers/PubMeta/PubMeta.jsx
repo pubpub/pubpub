@@ -5,7 +5,7 @@ import DocumentMeta from 'react-document-meta';
 import PureRenderMixin from 'react-addons-pure-render-mixin';
 import {getPub} from '../../actions/reader';
 // import {updateDelta} from '../../actions/nav';
-import {PubLeftBar} from '../../components';
+import {PubLeftBar, PubNav, LoaderDeterminate} from '../../components';
 import {globalStyles} from '../../utils/styleConstants';
 // import { pushState, go } from 'redux-router';
 
@@ -133,13 +133,24 @@ const PubMeta = React.createClass({
 
 				<div className="leftBar" style={[styles.leftBar, styles[this.props.readerData.get('status')]]}>
 					
-					<PubLeftBar />
+					<PubLeftBar slug={this.props.slug}/>
 
 				</div>
 
 				<div className="centerBar" style={[styles.centerBar]}>
+					<PubNav 
+						height={this.height} 
+						status={this.props.readerData.get('status')} 
+						slug={this.props.slug} 
+						meta={this.props.meta}/>
 
-					<h1>Center!</h1>
+					<LoaderDeterminate 
+						value={this.props.readerData.get('status') === 'loading' ? 0 : 100}/>
+
+					<div style={[styles.centerContent, styles[this.props.readerData.get('status')]]}>
+						<h1>{this.props.meta}</h1>
+					</div>
+					
 
 				</div>
 
@@ -279,13 +290,15 @@ styles = {
 		
 		
 	},
-
+	centerContent: {
+		transition: '.3s linear opacity .25s',
+	},
 	centerBar: {
 		backgroundColor: 'white',
 		width: 'calc(100% - 150px)',
-		height: 'calc(100vh - ' + globalStyles.headerHeight + ' + 3px)',
+		height: 'calc(100vh - ' + globalStyles.headerHeight + ')',
 		position: 'absolute',
-		top: '-3px',
+		top: '0px',
 		left: 150,
 		float: 'left',
 		overflow: 'hidden',

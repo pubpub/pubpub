@@ -11,6 +11,7 @@ const PubNav = React.createClass({
 		setQueryHandler: PropTypes.func,
 		status: PropTypes.string,
 		slug: PropTypes.string,
+		meta: PropTypes.string, 
 		isAuthor: PropTypes.bool,
 	},
 
@@ -27,31 +28,40 @@ const PubNav = React.createClass({
 	render: function() {
 		return (
 			<div>
-				<ul style={[styles.pubNav, styles[this.props.status]]}>
+				{
+					this.props.meta 
+						? <ul style={[styles.pubNav, styles[this.props.status]]}>
+							<Link to={'/pub/' + this.props.slug}><li key="pubNav8"style={[styles.pubNavItem, styles.pubNavRight]}>Read Pub</li></Link>
+							<li style={[styles.pubNavSeparator, styles.pubNavMobileOnly, styles.pubNavRight]}></li>
+						</ul>
 
-					<li key="pubNav0"style={[styles.pubNavItem, styles.pubNavDesktopOnly]} onClick={this.navClickFunction('tableOfContents')}>Table of Contents</li>
-					<li style={[styles.pubNavSeparator, styles.pubNavDesktopOnly]}></li>
-					<li key="pubNav1"style={[styles.pubNavItem, styles.pubNavDesktopOnly]} onClick={this.navClickFunction('history')}>History</li>
-					<li style={[styles.pubNavSeparator, styles.pubNavDesktopOnly]}></li>
-					<li key="pubNav2"style={[styles.pubNavItem, styles.pubNavDesktopOnly]} onClick={this.navClickFunction('source')}>Source</li>
-					<li style={[styles.pubNavSeparator, styles.pubNavDesktopOnly]}></li>
-					<li key="pubNav3"style={[styles.pubNavItem, styles.pubNavDesktopOnly]} onClick={this.handlePrint}>Print</li>
-					<li style={[styles.pubNavSeparator, styles.pubNavDesktopOnly]}></li>
-					<li key="pubNav4"style={[styles.pubNavItem, styles.pubNavDesktopOnly]} onClick={this.navClickFunction('cite')}>Cite</li>
+						: <ul style={[styles.pubNav, styles[this.props.status]]}>
+
+							<li key="pubNav0"style={[styles.pubNavItem, styles.pubNavDesktopOnly]} onClick={this.navClickFunction('tableOfContents')}>Table of Contents</li>
+							<li style={[styles.pubNavSeparator, styles.pubNavDesktopOnly]}></li>
+							<li key="pubNav1"style={[styles.pubNavItem, styles.pubNavDesktopOnly]} onClick={this.navClickFunction('history')}>History</li>
+							<li style={[styles.pubNavSeparator, styles.pubNavDesktopOnly]}></li>
+							<li key="pubNav2"style={[styles.pubNavItem, styles.pubNavDesktopOnly]} onClick={this.navClickFunction('source')}>Source</li>
+							<li style={[styles.pubNavSeparator, styles.pubNavDesktopOnly]}></li>
+							<li key="pubNav3"style={[styles.pubNavItem, styles.pubNavDesktopOnly]} onClick={this.handlePrint}>Print</li>
+							<li style={[styles.pubNavSeparator, styles.pubNavDesktopOnly]}></li>
+							<li key="pubNav4"style={[styles.pubNavItem, styles.pubNavDesktopOnly]} onClick={this.navClickFunction('cite')}>Cite</li>
 
 
-					<Link to={'/pub/' + this.props.slug + '/edit'}><li key="pubNav7"style={[styles.pubNavItem, styles.pubNavRight, styles.pubNavDesktopOnly, styles.pubNavAuthorOnly, styles.pubAuthor[this.props.isAuthor]]}>Edit Pub</li></Link>
-					<li style={[styles.pubNavSeparator, styles.pubNavRight, styles.pubNavDesktopOnly, styles.pubNavAuthorOnly, styles.pubAuthor[this.props.isAuthor]]}></li>
+							<Link to={'/pub/' + this.props.slug + '/edit'}><li key="pubNav7"style={[styles.pubNavItem, styles.pubNavRight, styles.pubNavDesktopOnly, styles.pubNavAuthorOnly, styles.pubAuthor[this.props.isAuthor]]}>Edit Pub</li></Link>
+							<li style={[styles.pubNavSeparator, styles.pubNavRight, styles.pubNavDesktopOnly, styles.pubNavAuthorOnly, styles.pubAuthor[this.props.isAuthor]]}></li>
 
-					<li key="pubNav5"style={[styles.pubNavItem, styles.pubNavRight, styles.pubNavMobileOnly]} onClick={this.navClickFunction('discussions')}>Discussions</li>
-					<li style={[styles.pubNavSeparator, styles.pubNavMobileOnly, styles.pubNavRight]}></li>
-					
-					<li key="pubNav6"style={[styles.pubNavItem, styles.pubNavRight, styles.pubNavMobileOnly]} onClick={this.navClickFunction('status')}>Draft</li>
-					<li style={[styles.pubNavSeparator, styles.pubNavMobileOnly, styles.pubNavRight]}></li>
+							<li key="pubNav5"style={[styles.pubNavItem, styles.pubNavRight, styles.pubNavMobileOnly]} onClick={this.navClickFunction('discussions')}>Discussions</li>
+							<li style={[styles.pubNavSeparator, styles.pubNavMobileOnly, styles.pubNavRight]}></li>
+							
+							<li key="pubNav6"style={[styles.pubNavItem, styles.pubNavRight, styles.pubNavMobileOnly]} onClick={this.navClickFunction('status')}>Draft</li>
+							<li style={[styles.pubNavSeparator, styles.pubNavMobileOnly, styles.pubNavRight]}></li>
 
-					<li key="pubNav8"style={[styles.pubNavItem, styles.pubNavRight]}>Favorite</li>
-					
-				</ul>
+							<li key="pubNav8"style={[styles.pubNavItem, styles.pubNavRight]}>Favorite</li>
+							
+						</ul>
+				}
+				
 			</div>
 		);
 	}
