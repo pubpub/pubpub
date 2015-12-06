@@ -92,7 +92,7 @@ const HeaderMenu = React.createClass({
 									
 									<li key="menuListItem5" style={styles.menuItem} onClick={this.props.openPubModalHandler('tableOfContents')}>Table of Contents</li>
 									<li key="menuListItem7" style={styles.menuItem} onClick={this.props.openPubModalHandler('discussions')}>Discussions</li>
-									<Link to={'/pub/' + this.props.slug + '/reviews'} style={globalStyles.link}><li key="menuListItem6" style={[styles.menuItem, this.props.pubStatus === 'Draft' && styles.hidden]}>Reviews</li></Link>
+									<li key="menuListItem6" style={[styles.menuItem, this.props.pubStatus === 'Draft' && styles.hidden]} onClick={this.props.openPubModalHandler('reviews')}>Reviews</li>
 									<Link to={'/pub/' + this.props.slug + '/experts'} style={globalStyles.link}><li key="menuListItem16" style={[styles.menuItem]}>Experts</li></Link>
 									<Link to={'/pub/' + this.props.slug + '/history'} style={globalStyles.link}><li key="menuListItem8" style={styles.menuItem}>History</li></Link>
 									<Link to={'/pub/' + this.props.slug + '/analytics'} style={globalStyles.link}><li key="menuListItem18" style={styles.menuItem}>Analytics</li></Link>

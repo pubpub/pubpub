@@ -132,7 +132,8 @@ const PubReader = React.createClass({
 						openPubModalHandler={this.openPubModal} 
 						status={this.props.readerData.get('status')} 
 						slug={this.props.slug} 
-						isAuthor={pubData.isAuthor}/>
+						isAuthor={pubData.isAuthor}
+						pubStatus={pubData.status}/>
 
 					<LoaderDeterminate 
 						value={this.props.readerData.get('status') === 'loading' ? 0 : 100}/>
@@ -156,14 +157,23 @@ const PubReader = React.createClass({
 						authors={pubData.history[version].authors}/>
 
 					<PubModals 
+						slug={this.props.slug}
 						status={this.props.readerData.get('status')} 
+						pubStatus={pubData.status}
 						openPubModalHandler={this.openPubModal}
 						closePubModalHandler={this.closePubModal}
 						closeMenuHandler={this.closeMenu}
 						activeModal={this.props.readerData.get('activeModal')}
 
 						// TOC Props
-						tocData={this.state.TOC}/>
+						tocData={this.state.TOC}
+						// Status Data
+						featuredIn={pubData.featuredIn}
+						submittedTo={pubData.submittedTo}
+						// Reviews Data
+						reviewsData={pubData.reviews}
+						// Discussions Data
+						discussionsData={pubData.discussions} />
 
 				</div>
 
@@ -173,8 +183,12 @@ const PubReader = React.createClass({
 						pubStatus={pubData.status}
 						featuredIn={pubData.featuredIn}
 						submittedTo={pubData.submittedTo}/>
-					<PubReviews />
-					<PubDiscussions />
+					<PubReviews 
+						slug={this.props.slug}
+						reviewsData={pubData.reviews} />
+					<PubDiscussions 
+						slug={this.props.slug}
+						discussionsData={pubData.discussions}/>
 				</div>
 				
 			</div>

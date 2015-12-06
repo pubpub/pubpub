@@ -2,12 +2,15 @@ import React, {PropTypes} from 'react';
 import Radium from 'radium';
 import {globalStyles} from '../../utils/styleConstants';
 import {PubModalCite, PubModalTOC, } from './';
+import {PubStatus, PubReviews, PubDiscussions} from '../';
 
 let styles = {};
 
 const PubModals = React.createClass({
 	propTypes: {
+		slug: PropTypes.string,
 		status: PropTypes.string,
+		pubStatus: PropTypes.string,
 		// setQueryHandler: PropTypes.func,
 		// goBackHandler: PropTypes.func,
 		// query: PropTypes.object,
@@ -17,12 +20,13 @@ const PubModals = React.createClass({
 		activeModal: PropTypes.string,
 		// TOC Props
 		tocData: PropTypes.array,
-
-		// Source Props
-		// historyObject: PropTypes.object,
-		// History Props
-		// historyData: PropTypes.array,
-		// activeDiff: PropTypes.string,
+		// Status Data
+		featuredIn: PropTypes.array,
+		submittedTo: PropTypes.array,
+		// Reviews Data
+		reviewsData: PropTypes.array,
+		// Discussions Data
+		discussionsData: PropTypes.array,
 	},
 
 	closeModalandMenu: function() {
@@ -66,22 +70,28 @@ const PubModals = React.createClass({
 										tocData={this.props.tocData}
 										closeModalAndMenuHandler={this.closeModalandMenu}/>
 									);
-							// case 'history':
-							// 	return (<PubModalHistory 
-							// 			historyData={this.props.historyData} 
-							// 			setQueryHandler={this.props.setQueryHandler} />
-							// 		);
-							// case 'source':
-							// 	return (<PubModalSource 
-							// 			historyObject={this.props.historyObject}/>
-							// 		);
 							case 'cite':
 								return (<PubModalCite/>
 									);
-							case 'status':
-								return ('status');
+							case 'reviews':
+								return (<div>
+										<PubStatus 
+											slug={this.props.slug}
+											pubStatus={this.props.pubStatus}
+											featuredIn={this.props.featuredIn}
+											submittedTo={this.props.submittedTo}/>
+										<PubReviews 
+											slug={this.props.slug}
+											reviewsData={this.props.reviewsData} />
+									</div>);
+										
+
 							case 'discussions':
-								return ('discussions');
+								return (<PubDiscussions 
+									slug={this.props.slug}
+									discussionsData={this.props.discussionsData}/>
+								);
+							
 							
 							default:
 								return null;

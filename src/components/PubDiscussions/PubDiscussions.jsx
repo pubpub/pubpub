@@ -10,7 +10,8 @@ let styles = {};
 
 const PubDiscussions = React.createClass({
 	propTypes: {
-		discussionData: PropTypes.object,
+		slug: PropTypes.string,
+		discussionsData: PropTypes.object,
 	},
 
 	render: function() {

@@ -14,6 +14,7 @@ const PubNav = React.createClass({
 		query: PropTypes.object,
 		meta: PropTypes.string, 
 		isAuthor: PropTypes.bool,
+		pubStatus: PropTypes.string,
 	},
 
 	getDefaultProps: function() {
@@ -52,7 +53,7 @@ const PubNav = React.createClass({
 							<li key="pubNav5"style={[styles.pubNavItem, styles.pubNavRight, styles.pubNavMobileOnly]} onClick={this.props.openPubModalHandler('discussions')}>Discussions</li>
 							<li style={[styles.pubNavSeparator, styles.pubNavMobileOnly, styles.pubNavRight]}></li>
 							
-							<li key="pubNav6"style={[styles.pubNavItem, styles.pubNavRight, styles.pubNavMobileOnly]} onClick={this.props.openPubModalHandler('status')}>Draft</li>
+							<li key="pubNav6"style={[styles.pubNavItem, styles.pubNavRight, styles.pubNavMobileOnly, this.props.pubStatus === 'Draft' && styles.draftNav]} onClick={this.props.pubStatus !== 'Draft' ? this.props.openPubModalHandler('reviews') : null}>{this.props.pubStatus === 'Draft' ? 'Draft' : 'Reviews'}</li>
 							<li style={[styles.pubNavSeparator, styles.pubNavMobileOnly, styles.pubNavRight]}></li>
 
 							<li key="pubNav8"style={[styles.pubNavItem, styles.pubNavRight]}>Follow</li>
@@ -143,6 +144,12 @@ styles = {
 	pubAuthor: {
 		true: {
 			display: 'block',
+		},
+	},
+	draftNav: {
+		color: '#ccc',
+		':hover': {
+			color: '#ccc',
 		},
 	},
 
