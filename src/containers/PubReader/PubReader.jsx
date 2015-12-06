@@ -110,7 +110,6 @@ const PubReader = React.createClass({
 			? this.props.query.version - 1 
 			: this.props.readerData.getIn(['pubData', 'history']).size - 1;
 
-		// console.log(pubData);
 		return (
 			<div style={styles.container}>
 

@@ -13,6 +13,12 @@ const PubReviews = React.createClass({
 		reviewsData: PropTypes.array,
 	},
 
+	getDefaultProps: function() {
+		return {
+			reviewsData: [],
+		};
+	},
+
 	calculateReviewScores: function(reviews) {
 		// TODO: Make this code less miserable and documented (and move it to server)
 		// console.log('calculating review scores');
