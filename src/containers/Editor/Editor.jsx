@@ -10,6 +10,7 @@ import PureRenderMixin from 'react-addons-pure-render-mixin';
 import ReactFireMixin from 'reactfire';
 
 import {LoaderDeterminate, EditorPluginPopup, EditorModals} from '../../components';
+import {clearPub} from '../../actions/pub';
 import {getPubEdit, toggleEditorViewMode, toggleFormatting, toggleTOC, unmountEditor, closeModal, openModal, publishVersion, saveCollaboratorsToPub, saveSettingsPubPub} from '../../actions/editor';
 import {saveSettingsUser} from '../../actions/login';
 import {loadCss} from '../../utils/loadingFunctions';
@@ -193,7 +194,7 @@ const Editor = React.createClass({
 			status: versionState,
 			publishNote: versionDescription,
 		};
-		
+		this.props.dispatch(clearPub());
 		this.props.dispatch(publishVersion(newVersion));
 	},
 

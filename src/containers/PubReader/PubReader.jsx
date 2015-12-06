@@ -110,6 +110,7 @@ const PubReader = React.createClass({
 			? this.props.query.version - 1 
 			: this.props.readerData.getIn(['pubData', 'history']).size - 1;
 
+		console.log(pubData);
 		return (
 			<div style={styles.container}>
 
@@ -135,7 +136,12 @@ const PubReader = React.createClass({
 
 					{
 						this.props.query.version && this.props.query.version !== pubData.history.length.toString()
-							? <Link to={'/pub/' + this.props.slug} style={styles.versionNotificationLink}><div key={'versionNotification'} style={styles.versionNotification}>Reading Version {this.props.query.version}. Click to read the most recent version ({pubData.history.length}).</div></Link>
+							? <Link to={'/pub/' + this.props.slug} style={styles.versionNotificationLink}>
+								<div key={'versionNotification'} style={styles.versionNotification}>
+									<p>Reading Version {this.props.query.version}. Click to read the most recent version ({pubData.history.length}).</p>
+									<p>This was a {pubData.history[version].status === 'draft' ? 'Draft' : 'Peer-Review Ready'} version.</p>
+								</div>
+							</Link>
 							: null
 					}
 
@@ -159,7 +165,11 @@ const PubReader = React.createClass({
 				</div>
 
 				<div className="rightBar" style={[styles.rightBar, styles[this.props.readerData.get('status')]]}>
-					<PubStatus />
+					<PubStatus 
+						slug={this.props.slug}
+						pubStatus={pubData.status}
+						featuredIn={pubData.featuredIn}
+						submittedTo={pubData.submittedTo}/>
 					<PubReviews />
 					<PubDiscussions />
 				</div>
@@ -358,7 +368,7 @@ styles = {
 	versionNotification: {
 		textAlign: 'center',
 		backgroundColor: globalStyles.sideBackground,
-		padding: 20,
+		padding: '5px 20px',
 		margin: 5,
 		fontFamily: globalStyles.headerFont,
 		color: globalStyles.sideText,

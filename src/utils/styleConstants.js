@@ -13,6 +13,9 @@ export const globalStyles = {
 		display: 'table',
 		clear: 'both',
 	},
+	link: {
+		textDecoration: 'none',
+	},
 };
 
 export const pubSizes = {

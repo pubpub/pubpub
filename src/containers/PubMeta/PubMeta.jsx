@@ -213,9 +213,9 @@ styles = {
 	centerContent: {
 		transition: '.3s linear opacity .25s',
 		padding: 15,
+		fontFamily: globalStyles.headerFont,
 	},
 	metaTitle: {
-		fontFamily: globalStyles.headerFont,
 		fontSize: '35px',
 	},
 	metaTitleLink: {

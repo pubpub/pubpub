@@ -28,11 +28,15 @@ const PubLeftBar = React.createClass({
 
 				<div style={styles.leftBarDivider}></div>
 
-				<Link style={styles.link} to={'/pub/' + this.props.slug + '/source' + versionURL}><div key={'leftBar4'} style={styles.detail}>Source</div></Link>
+				
 				<Link style={styles.link} to={'/pub/' + this.props.slug + '/history'}><div key={'leftBar3'} style={styles.detail}>History</div></Link>
+				<Link style={styles.link} to={'/pub/' + this.props.slug + '/reviews'}><div key={'leftBar8'} style={styles.detail}>Reviews</div></Link>
+				<Link style={styles.link} to={'/pub/' + this.props.slug + '/experts'}><div key={'leftBar9'} style={styles.detail}>Experts</div></Link>
 				<Link style={styles.link} to={'/pub/' + this.props.slug + '/analytics'}><div key={'leftBar5'} style={styles.detail}>Analytics</div></Link>
 				<Link style={styles.link} to={'/pub/' + this.props.slug + '/citations'}><div key={'leftBar6'} style={styles.detail}>Citations</div></Link>
+				<Link style={styles.link} to={'/pub/' + this.props.slug + '/source' + versionURL}><div key={'leftBar4'} style={styles.detail}>Source</div></Link>
 				<Link style={styles.link} to={'/pub/' + this.props.slug + '/news'}><div key={'leftBar7'} style={styles.detail}>In the News</div></Link>
+				
 				{/* <div style={styles.detail}>Related Pub</div> */}
 				{/* <div style={styles.detail}>Share</div> */}
 				

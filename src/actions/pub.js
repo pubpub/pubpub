@@ -4,6 +4,8 @@
 // All action types are defined as constants. Do not manually pass action 
 // types as strings in action creators
 /*--------*/
+export const CLEAR_PUB = 'pub/CLEAR_PUB';
+
 export const LOAD_PUB = 'pub/LOAD_PUB';
 export const LOAD_PUB_SUCCESS = 'pub/LOAD_PUB_SUCCESS';
 export const LOAD_PUB_FAIL = 'pub/LOAD_PUB_FAIL';
@@ -18,6 +20,12 @@ export const CLOSE_PUB_MODAL = 'pub/CLOSE_PUB_MODAL';
 // action objects (e.g. {type:example, payload:data} ) within dispatch()
 // function calls
 /*--------*/
+export function clearPub() {
+	return {
+		type: CLEAR_PUB,
+	};
+}
+
 export function getPub(slug) {
 	return {
 		types: [LOAD_PUB, LOAD_PUB_SUCCESS, LOAD_PUB_FAIL],

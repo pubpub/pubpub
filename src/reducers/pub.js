@@ -5,6 +5,7 @@ import {ensureImmutable} from './';
 // Load Actions
 /*--------*/
 import {
+	CLEAR_PUB, 
 	LOAD_PUB, 
 	LOAD_PUB_SUCCESS, 
 	LOAD_PUB_FAIL,
@@ -39,6 +40,10 @@ export const defaultState = Immutable.Map({
 // These functions take in an initial state and return a new
 // state. They are pure functions. We use Immutable to enforce this. 
 /*--------*/
+function clearPub(state) {
+	console.log('in clearPub');
+	return state.merge(defaultState.toJS());
+}
 
 function load(state) {
 	return state.set('status', 'loading');
@@ -103,6 +108,8 @@ function closePubModal(state) {
 export default function readerReducer(state = defaultState, action) {
 
 	switch (action.type) {
+	case CLEAR_PUB:
+		return clearPub(state);
 	case LOAD_PUB:
 		return load(state);
 	case LOAD_PUB_SUCCESS:
