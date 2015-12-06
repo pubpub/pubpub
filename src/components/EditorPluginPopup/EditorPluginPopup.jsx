@@ -127,7 +127,7 @@ const Reference = React.createClass({
 				values: values
 			});
 
-			if (contentObject.src) {
+			if (contentObject.src && !values.src) {
 				this.refs['pluginInput-src'].showOptions();
 			}
 
