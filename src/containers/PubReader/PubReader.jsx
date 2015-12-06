@@ -76,6 +76,10 @@ const PubReader = React.createClass({
 		
 	},
 
+	componentWillUnmount() {
+		this.closePubModal();
+	},
+
 	loader: function() {
 		return {
 			transform: 'translateX(' + (-100 + this.props.readerData.get('loading')) + '%)',
