@@ -26,7 +26,7 @@ export const defaultState = Immutable.Map({
 		featuredIn: [],
 		submittedTo: [],
 		reviews: [],
-		experts: [],
+		experts: {},
 		history: [{}],
 	},
 	activeModal: undefined,

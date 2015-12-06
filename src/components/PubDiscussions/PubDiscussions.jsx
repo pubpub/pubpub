@@ -11,7 +11,15 @@ let styles = {};
 const PubDiscussions = React.createClass({
 	propTypes: {
 		slug: PropTypes.string,
-		discussionsData: PropTypes.object,
+		discussionsData: PropTypes.array,
+		expertsData: PropTypes.object,
+	},
+
+	getDefaultProps: function() {
+		return {
+			discussionsData: [],
+			expertsData: {approved: []},
+		};
 	},
 
 	render: function() {
@@ -21,6 +29,9 @@ const PubDiscussions = React.createClass({
 				
 				<div className="pub-discussions-wrapper" style={rightBarStyles.sectionWrapper}>
 					<div style={rightBarStyles.sectionHeader}>Discussions</div>
+					<div style={rightBarStyles.sectionSubHeader}>
+						View Experts ({this.props.expertsData.approved.length}) | Suggest Expert
+					</div>
 					{
 						pubData.discussions.map((discussion)=>{
 							return <PubDiscussion key={discussion._id} discussionItem={discussion}/>;

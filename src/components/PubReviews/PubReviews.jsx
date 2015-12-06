@@ -75,19 +75,18 @@ const PubReviews = React.createClass({
 	},
 
 	render: function() {
-		const pubData = {experts: [], reviews: []};
 
 		return (
 			<div style={styles.container}>
 				
 				<div className="pub-reviews-wrapper" style={rightBarStyles.sectionWrapper}>
 
-					<div style={rightBarStyles.sectionHeader}>Peer Reviews ({pubData.reviews.length})</div>
+					<div style={rightBarStyles.sectionHeader}>Peer Reviews ({this.props.reviewsData.length})</div>
 					<div style={rightBarStyles.sectionSubHeader}>
-						Full Details | Submit Review | View Experts ({pubData.experts.length}) | Suggest Experts
+						Full Details | Submit Review
 					</div>
 					<div style={rightBarStyles.reviewsWrapper}>
-						{this.calculateReviewScores(pubData.reviews)}
+						{this.calculateReviewScores(this.props.reviewsData)}
 						<div style={globalStyles.clearFix}></div>
 					</div>
 					

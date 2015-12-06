@@ -27,6 +27,7 @@ const PubModals = React.createClass({
 		reviewsData: PropTypes.array,
 		// Discussions Data
 		discussionsData: PropTypes.array,
+		expertsData: PropTypes.object,
 	},
 
 	closeModalandMenu: function() {
@@ -89,7 +90,8 @@ const PubModals = React.createClass({
 							case 'discussions':
 								return (<PubDiscussions 
 									slug={this.props.slug}
-									discussionsData={this.props.discussionsData}/>
+									discussionsData={this.props.discussionsData}
+									expertsData={this.props.expertsData}/>
 								);
 							
 							

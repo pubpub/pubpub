@@ -110,7 +110,7 @@ const PubReader = React.createClass({
 			? this.props.query.version - 1 
 			: this.props.readerData.getIn(['pubData', 'history']).size - 1;
 
-		console.log(pubData);
+		// console.log(pubData);
 		return (
 			<div style={styles.container}>
 
@@ -173,7 +173,8 @@ const PubReader = React.createClass({
 						// Reviews Data
 						reviewsData={pubData.reviews}
 						// Discussions Data
-						discussionsData={pubData.discussions} />
+						discussionsData={pubData.discussions}
+						expertsData={pubData.experts} />
 
 				</div>
 
@@ -188,7 +189,8 @@ const PubReader = React.createClass({
 						reviewsData={pubData.reviews} />
 					<PubDiscussions 
 						slug={this.props.slug}
-						discussionsData={pubData.discussions}/>
+						discussionsData={pubData.discussions}
+						expertsData={pubData.experts}/>
 				</div>
 				
 			</div>
