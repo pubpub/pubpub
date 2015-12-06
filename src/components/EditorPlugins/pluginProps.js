@@ -1,5 +1,7 @@
 import React from 'react';
 import {SimpleSelect} from 'react-selectize';
+// import {openModal} from '../../actions/editor';
+
 
 export const src = {
 	title: 'src',
@@ -12,24 +14,26 @@ export const src = {
 	},
 	component: function(pluginProp, value, props, styles) {
 		const title = pluginProp.title;
-		const defaultString = pluginProp.defaultString;
 
 		const assets = (props.assets) ? Object.values(props.assets).map( function(asset) { return {'value': asset.refName, 'label': asset.refName};}) : [];
+		assets.push({'value': 'upload', 'label': 'Upload New'});
+
 		const val = (value) ? {'value': value, 'label': value } : undefined;
+
+		const onValueChange = function(changedValue, callback) {
+			if (changedValue.value === 'upload') {
+				console.log('Trying to upload!!!');
+			}
+			callback();
+		};
 
 		let elem;
 		if (val) {
-			elem = <SimpleSelect ref={'pluginInput-' + title} name={title} id={title} options={assets} value={val}/>;
+			elem = <SimpleSelect onValueChange={onValueChange} ref={'pluginInput-' + title} name={title} id={title} options={assets} value={val}/>;
 		} else {
-			elem = <SimpleSelect ref={'pluginInput-' + title} name={title} id={title} options={assets}/>;
+			elem = <SimpleSelect onValueChange={onValueChange} ref={'pluginInput-' + title} name={title} id={title} options={assets}/>;
 		}
-
-		return (<div key={'pluginVal-' + title} style={styles.pluginOptionWrapper}>
-			<label htmlFor={title} style={styles.pluginOptionLabel}>{title}</label>
-			{elem}
-			<div style={[styles.pluginOptionDefault, defaultString && styles.pluginOptionDefaultVisible]}>default: {defaultString}</div>
-			<div style={styles.clearfix}></div>
-		</div>);
+		return elem;
 	}
 };
 

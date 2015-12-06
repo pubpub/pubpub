@@ -197,18 +197,20 @@ const Reference = React.createClass({
 							Object.keys(this.state.contentObject).map((valKey)=>{
 								const pluginProp = this.state.contentObject[valKey];
 								let html;
+								let elem;
 								const pluginPropTitle = pluginProp.title;
 								const value = this.state.values[pluginPropTitle] || pluginProp.defaultValue;
 								if (pluginProp.component) {
-									html = pluginProp.component(pluginProp, value, this.props, styles);
+									elem = pluginProp.component(pluginProp, value, this.props, styles);
 								} else {
-									html = 	( <div key={'pluginVal-' + pluginPropTitle} style={styles.pluginOptionWrapper}>
-														<label htmlFor={pluginPropTitle} style={styles.pluginOptionLabel}>{pluginPropTitle}</label>
-														<input ref={'pluginInput-' + pluginPropTitle} style={styles.pluginOptionInput} name={pluginPropTitle} id={pluginPropTitle} type="text" defaultValue={value}/>
-														<div style={[styles.pluginOptionDefault, pluginProp.default && styles.pluginOptionDefaultVisible]}>default: {pluginProp.defaultString}</div>
-														<div style={styles.clearfix}></div>
-													</div>);
+									elem = <input ref={'pluginInput-' + pluginPropTitle} style={styles.pluginOptionInput} name={pluginPropTitle} id={pluginPropTitle} type="text" defaultValue={value}/>;
 								}
+								html = 	(<div key={'pluginVal-' + pluginPropTitle} style={styles.pluginOptionWrapper}>
+													<label htmlFor={pluginPropTitle} style={styles.pluginOptionLabel}>{pluginPropTitle}</label>
+													{elem}
+													<div style={[styles.pluginOptionDefault, pluginProp.default && styles.pluginOptionDefaultVisible]}>default: {pluginProp.defaultString}</div>
+													<div style={styles.clearfix}></div>
+													</div>);
 								return html;
 							})
 						}
