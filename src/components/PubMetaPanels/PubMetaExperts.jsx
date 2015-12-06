@@ -11,7 +11,7 @@ const PubMetaExperts = React.createClass({
 
 	getDefaultProps: function() {
 		return {
-			expertObject: [],
+			expertObject: {},
 		};
 	},
 

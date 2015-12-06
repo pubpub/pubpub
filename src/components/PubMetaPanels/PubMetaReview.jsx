@@ -11,7 +11,7 @@ const PubMetaReview = React.createClass({
 
 	getDefaultProps: function() {
 		return {
-			reviewObject: [],
+			reviewObject: {},
 		};
 	},
 
