@@ -1,8 +1,7 @@
 import React, {PropTypes} from 'react';
 import Radium from 'radium';
-import {globalPluginOptions, pluginOptions} from '../../components/EditorPlugins';
+import {pluginOptions} from '../../components/EditorPlugins';
 import {parsePluginString} from '../../utils/parsePlugins';
-import {SimpleSelect} from 'react-selectize';
 
 let styles = {};
 
@@ -28,9 +27,7 @@ const Reference = React.createClass({
 			initialString: '',
 			activeLine: undefined,
 			pluginType: '',
-			contentObject: {},
-			defaultObject: {},
-
+			contentObject: {}
 		};
 	},
 
@@ -115,16 +112,9 @@ const Reference = React.createClass({
 			const pluginType = pluginSplit[0];
 
 			const valueString = pluginSplit.length > 1 ? pluginSplit[1] : ''; // Values split into an array
-			const pluginObject = parsePluginString(valueString);
+			const values = parsePluginString(valueString);
 
-			const defaultObject = {...globalPluginOptions, ...pluginOptions[pluginType]};
-			const outputObject = {};
-			for (const key in defaultObject) {
-				if (defaultObject.hasOwnProperty(key)) {
-					// Take all of the the value specified in the text, and overwrite default values.
-					outputObject[key] = key in pluginObject ? pluginObject[key] : defaultObject[key].value;
-				}
-			}
+			const contentObject = pluginOptions[pluginType];
 
 			this.setState({
 				popupVisible: true,
@@ -132,17 +122,23 @@ const Reference = React.createClass({
 				yLoc: clickY + 15 - 60 + contentBody.scrollTop,
 				activeLine: cm.getCursor().line,
 				pluginType: pluginType,
-				contentObject: outputObject,
-				defaultObject: defaultObject,
+				contentObject: contentObject,
 				initialString: pluginString,
+				values: values
 			});
+
+			if (contentObject.src) {
+				this.refs['pluginInput-src'].showOptions();
+			}
 
 		} else {
 			if (document.getElementById('plugin-popup').contains(event.target)) {
-				this.setState({
-					popupVisible: true,
-				});
-			} else {
+				if (!this.state.popupVisible) {
+					this.setState({
+						popupVisible: true,
+					});
+				}
+			} else if (this.state.popupVisible === true) {
 				this.setState({
 					popupVisible: false,
 					activeLine: undefined,
@@ -170,10 +166,14 @@ const Reference = React.createClass({
 		for (const key in content) {
 			// Generate an output string based on the key, values in the object
 			if (Object.prototype.hasOwnProperty.call(content, key)) {
-				let val = refs['pluginInput-' + key].value;
 
-				if (typeof val === 'function') {
-					val = val().value;
+				const pluginProp = this.state.contentObject[key];
+				const ref = refs['pluginInput-' + key];
+				let val;
+				if (pluginProp.valueFunction) {
+					val = pluginProp.valueFunction(ref);
+				} else {
+					val = ref.value;
 				}
 
 				if (val && val.length) {
@@ -188,28 +188,24 @@ const Reference = React.createClass({
 
 	render: function() {
 
-		console.log('rendering!');
-
 		return (
 			<div id="plugin-popup" className="plugin-popup" style={[styles.pluginPopup, this.getPluginPopupLoc(), this.state.popupVisible && styles.pluginPopupVisible]}>
 				<div style={styles.pluginPopupArrow}></div>
 				<div style={styles.pluginContent}>
 					<div style={styles.pluginPopupTitle}>Plugin: {this.state.pluginType}</div>
 						{
-							Object.keys(this.state.contentObject).map((pluginValue)=>{
+							Object.keys(this.state.contentObject).map((valKey)=>{
+								const pluginProp = this.state.contentObject[valKey];
 								let html;
-								if (pluginValue === 'src') {
-									html = 	(<div key={'pluginVal-' + pluginValue} style={styles.pluginOptionWrapper}>
-														<label htmlFor={pluginValue} style={styles.pluginOptionLabel}>{this.state.defaultObject[pluginValue].title}</label>
-														<SimpleSelect ref={'pluginInput-' + pluginValue} name={pluginValue} id={pluginValue} options={this.assets}/>
-														<div style={[styles.pluginOptionDefault, this.state.defaultObject[pluginValue].default && styles.pluginOptionDefaultVisible]}>default: {this.state.defaultObject[pluginValue].default}</div>
-														<div style={styles.clearfix}></div>
-														</div>);
+								const pluginPropTitle = pluginProp.title;
+								const value = this.state.values[pluginPropTitle] || pluginProp.defaultValue;
+								if (pluginProp.component) {
+									html = pluginProp.component(pluginProp, value, this.props, styles);
 								} else {
-									html = 	( <div key={'pluginVal-' + pluginValue} style={styles.pluginOptionWrapper}>
-														<label htmlFor={pluginValue} style={styles.pluginOptionLabel}>{this.state.defaultObject[pluginValue].title}</label>
-														<input ref={'pluginInput-' + pluginValue} style={styles.pluginOptionInput} name={pluginValue} id={pluginValue} type="text" defaultValue={this.state.contentObject[pluginValue]}/>
-														<div style={[styles.pluginOptionDefault, this.state.defaultObject[pluginValue].default && styles.pluginOptionDefaultVisible]}>default: {this.state.defaultObject[pluginValue].default}</div>
+									html = 	( <div key={'pluginVal-' + pluginPropTitle} style={styles.pluginOptionWrapper}>
+														<label htmlFor={pluginPropTitle} style={styles.pluginOptionLabel}>{pluginPropTitle}</label>
+														<input ref={'pluginInput-' + pluginPropTitle} style={styles.pluginOptionInput} name={pluginPropTitle} id={pluginPropTitle} type="text" defaultValue={value}/>
+														<div style={[styles.pluginOptionDefault, pluginProp.default && styles.pluginOptionDefaultVisible]}>default: {pluginProp.defaultString}</div>
 														<div style={styles.clearfix}></div>
 													</div>);
 								}

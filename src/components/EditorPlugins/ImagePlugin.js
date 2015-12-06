@@ -1,34 +1,10 @@
 import React, {PropTypes} from 'react';
 import Radium from 'radium';
 import ImageLoader from 'react-imageloader';
+import {src, width, height, align} from './pluginProps';
 
-export const imageOptions = {
-	src: {
-		title: 'src',
-		default: '',
-		value: '',
-	},
-	width: {
-		title: 'width',
-		default: '100%',
-		value: '',
-	},
-	height: {
-		title: 'height',
-		default: 'auto',
-		value: '',
-	},
-	align: {
-		title: 'align',
-		default: 'center',
-		value: '',
-	},
-	inline: {
-		title: 'inline',
-		default: 'false',
-		value: '',
-	},
-};
+
+export const imageOptions = {src, width, height, align};
 
 // let styles = {};
 const ImagePlugin = React.createClass({
