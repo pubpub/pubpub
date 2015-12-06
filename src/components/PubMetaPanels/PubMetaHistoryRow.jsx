@@ -178,7 +178,8 @@ styles = {
 		'@media screen and (min-resolution: 3dppx), (max-width: 767px)': {
 			display: 'block',
 			paddingTop: 15,
-			fontSize: '18px',
+			fontSize: '22px',
+			textAlign: 'center'
 		}
 	}
 

@@ -16,6 +16,7 @@ const HeaderMenu = React.createClass({
 		openMenuHandler: PropTypes.func,
 		closeMenuHandler: PropTypes.func,
 		openPubModalHandler: PropTypes.func,
+		pubStatus: PropTypes.string,
 		slug: PropTypes.string,
 	},
 
@@ -46,7 +47,6 @@ const HeaderMenu = React.createClass({
 	render: function() {
 		const isLoggedIn = this.props.loginData.get('loggedIn');
 		const isPub = this.props.slug !== undefined;
-
 		return (
 			<div styles={styles.right}>
 
@@ -89,11 +89,16 @@ const HeaderMenu = React.createClass({
 								? <div>
 									<li key="menuListItem3" style={styles.menuItemseparator}></li>
 									<li key="menuListItem4" style={styles.menuItem} >Favorite</li>
+									
 									<li key="menuListItem5" style={styles.menuItem} onClick={this.props.openPubModalHandler('tableOfContents')}>Table of Contents</li>
-									<li key="menuListItem6" style={styles.menuItem} onClick={this.props.openPubModalHandler('status')}>Status</li>
 									<li key="menuListItem7" style={styles.menuItem} onClick={this.props.openPubModalHandler('discussions')}>Discussions</li>
-									<Link to={'/pub/' + this.props.slug + '/history'}><li key="menuListItem8" style={styles.menuItem}>History</li></Link>
-									<Link to={'/pub/' + this.props.slug + '/source'}><li key="menuListItem9" style={styles.menuItem}>Source</li></Link>
+									<Link to={'/pub/' + this.props.slug + '/reviews'} style={globalStyles.link}><li key="menuListItem6" style={[styles.menuItem, this.props.pubStatus === 'Draft' && styles.hidden]}>Reviews</li></Link>
+									<Link to={'/pub/' + this.props.slug + '/experts'} style={globalStyles.link}><li key="menuListItem16" style={[styles.menuItem]}>Experts</li></Link>
+									<Link to={'/pub/' + this.props.slug + '/history'} style={globalStyles.link}><li key="menuListItem8" style={styles.menuItem}>History</li></Link>
+									<Link to={'/pub/' + this.props.slug + '/analytics'} style={globalStyles.link}><li key="menuListItem18" style={styles.menuItem}>Analytics</li></Link>
+									<Link to={'/pub/' + this.props.slug + '/citations'} style={globalStyles.link}><li key="menuListItem19" style={styles.menuItem}>Citations</li></Link>
+									<Link to={'/pub/' + this.props.slug + '/news'} style={globalStyles.link}><li key="menuListItem20" style={styles.menuItem}>In the News</li></Link>
+									<Link to={'/pub/' + this.props.slug + '/source'} style={globalStyles.link}><li key="menuListItem9" style={styles.menuItem}>Source</li></Link>
 									<li key="menuListItem10" style={[styles.menuItem, styles.menuItemNoBottom]} onClick={this.props.openPubModalHandler('cite')}>Cite</li>
 									</div>
 								: null
@@ -130,6 +135,9 @@ styles = {
 		':hover': {
 			cursor: 'pointer',
 		}
+	},
+	hidden: {
+		display: 'none',
 	},
 	menuDrawer: {
 		width: '100vw',
@@ -178,6 +186,7 @@ styles = {
 		margin: '0px 0px 0px 60px',
 		borderBottom: '1px solid rgba(0,0,0,0.1)',
 		fontFamily: globalStyles.headerFont,
+		color: globalStyles.headerBackground,
 		':hover': {
 			cursor: 'pointer',
 			color: 'black',

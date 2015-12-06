@@ -70,7 +70,10 @@ const PubMeta = React.createClass({
 
 				<div className="leftBar" style={[styles.leftBar, styles[this.props.readerData.get('status')]]}>
 					
-					<PubLeftBar slug={this.props.slug} query={this.props.query}/>
+					<PubLeftBar 
+						slug={this.props.slug} 
+						query={this.props.query}
+						pubStatus={this.props.readerData.getIn(['pubData', 'status'])}/>
 
 				</div>
 

@@ -136,6 +136,7 @@ const App = React.createClass({
 								openMenuHandler={this.openMenu}
 								closeMenuHandler={this.closeMenu}
 								openPubModalHandler={this.openPubModal}
+								pubStatus={this.props.pubData.getIn(['pubData', 'status'])}
 								// goBackHandler={this.goBack}
 								// setQueryHandler={this.setQuery}
 								

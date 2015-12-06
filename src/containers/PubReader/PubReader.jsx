@@ -118,7 +118,10 @@ const PubReader = React.createClass({
 
 				<div className="leftBar" style={[styles.leftBar, styles[this.props.readerData.get('status')]]}>
 					
-					<PubLeftBar slug={this.props.slug} query={this.props.query}/>
+					<PubLeftBar 
+						slug={this.props.slug} 
+						query={this.props.query}
+						pubStatus={pubData.status}/>
 
 				</div>
 
@@ -139,7 +142,7 @@ const PubReader = React.createClass({
 							? <Link to={'/pub/' + this.props.slug} style={styles.versionNotificationLink}>
 								<div key={'versionNotification'} style={styles.versionNotification}>
 									<p>Reading Version {this.props.query.version}. Click to read the most recent version ({pubData.history.length}).</p>
-									<p>This was a {pubData.history[version].status === 'draft' ? 'Draft' : 'Peer-Review Ready'} version.</p>
+									<p>This was a {pubData.history[version].status === 'Draft' ? 'Draft' : 'Peer-Review Ready'} version.</p>
 								</div>
 							</Link>
 							: null
