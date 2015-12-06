@@ -10,7 +10,7 @@ let styles = {};
 const PubReviews = React.createClass({
 	propTypes: {
 		slug: PropTypes.string,
-		reviewsData: PropTypes.object,
+		reviewsData: PropTypes.array,
 	},
 
 	calculateReviewScores: function(reviews) {
