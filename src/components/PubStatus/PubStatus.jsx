@@ -28,7 +28,11 @@ const PubStatus = React.createClass({
 				
 				<div className="pub-status-wrapper" style={rightBarStyles.sectionWrapper}>
 					<div style={rightBarStyles.sectionHeader}><span style={styles.headerPrefix}>Status:</span> {this.props.pubStatus === 'Draft' ? 'Draft' : 'Peer-Review Ready'}</div>
-					<Link to={'/pub/' + this.props.slug + '/reviews'} style={globalStyles.link}><div style={rightBarStyles.sectionSubHeader}>Featured in {this.props.featuredIn.length} Journals |  Submitted to {this.props.submittedTo.length} Journals</div></Link>
+					<div style={rightBarStyles.sectionSubHeader}>
+						<Link to={'/pub/' + this.props.slug + '/reviews'} style={globalStyles.link}><span key={'statusButton1'} style={rightBarStyles.sectionSubHeaderSpan}>Featured in {this.props.featuredIn.length} Journals </span></Link>
+						|  
+						<Link to={'/pub/' + this.props.slug + '/reviews'} style={globalStyles.link}><span key={'statusButton2'} style={rightBarStyles.sectionSubHeaderSpan}>Submitted to {this.props.submittedTo.length} Journals</span></Link>
+					</div>
 				</div>
 				
 			</div>

@@ -1,10 +1,9 @@
 import React, {PropTypes} from 'react';
 import Radium from 'radium';
-// import Markdown from 'react-remarkable';
-// import {globalStyles} from '../../utils/styleConstants';
+import { Link } from 'react-router';
+import {globalStyles} from '../../utils/styleConstants';
 import {rightBarStyles} from '../../containers/PubReader/rightBarStyles';
 import {PubDiscussion} from '../../components';
-// import dateFormat from 'dateformat';
 
 let styles = {};
 
@@ -30,7 +29,9 @@ const PubDiscussions = React.createClass({
 				<div className="pub-discussions-wrapper" style={rightBarStyles.sectionWrapper}>
 					<div style={rightBarStyles.sectionHeader}>Discussions</div>
 					<div style={rightBarStyles.sectionSubHeader}>
-						View Experts ({this.props.expertsData.approved.length}) | Suggest Expert
+						<Link to={'/pub/' + this.props.slug + '/experts'} style={globalStyles.link}><span key={'discussionButton1'} style={rightBarStyles.sectionSubHeaderSpan}>View Experts ({this.props.expertsData.approved.length}) </span></Link>
+						| 
+						<Link to={'/pub/' + this.props.slug + '/experts'} style={globalStyles.link}><span key={'discussionButton2'} style={rightBarStyles.sectionSubHeaderSpan}>Suggest Expert</span></Link>
 					</div>
 					{
 						pubData.discussions.map((discussion)=>{

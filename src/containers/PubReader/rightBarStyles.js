@@ -23,6 +23,14 @@ export const rightBarStyles = {
 		overflow: 'hidden',
 		textOverflow: 'ellipsis',
 	},
+	sectionSubHeaderSpan: {
+		fontSize: '14px',
+		color: '#777',
+		':hover': {
+			cursor: 'pointer',
+			color: '#222',
+		},
+	},
 	reviewsWrapper: {
 		padding: '10px 0px',
 	},

@@ -1,9 +1,8 @@
 import React, {PropTypes} from 'react';
 import Radium from 'radium';
-// import Markdown from 'react-remarkable';
+import { Link } from 'react-router';
 import {globalStyles} from '../../utils/styleConstants';
 import {rightBarStyles} from '../../containers/PubReader/rightBarStyles';
-// import dateFormat from 'dateformat';
 
 let styles = {};
 
@@ -89,7 +88,9 @@ const PubReviews = React.createClass({
 
 					<div style={rightBarStyles.sectionHeader}>Peer Reviews ({this.props.reviewsData.length})</div>
 					<div style={rightBarStyles.sectionSubHeader}>
-						Full Details | Submit Review
+						<Link to={'/pub/' + this.props.slug + '/reviews'} style={globalStyles.link}><span key={'reviewsButton1'}style={rightBarStyles.sectionSubHeaderSpan}>Full Details</span> </Link>
+						| 
+						<Link to={'/pub/' + this.props.slug + '/review'} style={globalStyles.link}><span key={'reviewsButton2'}style={rightBarStyles.sectionSubHeaderSpan}>Submit Review</span></Link>
 					</div>
 					<div style={rightBarStyles.reviewsWrapper}>
 						{this.calculateReviewScores(this.props.reviewsData)}

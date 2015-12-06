@@ -6,7 +6,7 @@ import PureRenderMixin from 'react-addons-pure-render-mixin';
 import {getPub} from '../../actions/pub';
 import { Link } from 'react-router';
 import {PubLeftBar, PubNav, LoaderDeterminate} from '../../components';
-import {PubMetaSource, PubMetaHistory, PubMetaHistoryDiff} from '../../components/PubMetaPanels';
+import {PubMetaExperts, PubMetaHistory, PubMetaHistoryDiff, PubMetaReview, PubMetaReviews, PubMetaSource} from '../../components/PubMetaPanels';
 import {globalStyles, pubSizes} from '../../utils/styleConstants';
 
 
@@ -108,6 +108,15 @@ const PubMeta = React.createClass({
 							case 'historydiff':
 								return (<PubMetaHistoryDiff 
 										diffObject={this.props.readerData.getIn(['pubData', 'history', (version - 1), 'diffObject']).toJS()}/>
+									);
+							case 'experts':
+								return (<PubMetaExperts />
+									);
+							case 'reviews':
+								return (<PubMetaReviews />
+									);
+							case 'review':
+								return (<PubMetaReview />
 									);
 							
 							default:
