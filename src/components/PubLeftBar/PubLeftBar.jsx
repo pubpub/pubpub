@@ -1,11 +1,7 @@
 import React, {PropTypes} from 'react';
 import Radium from 'radium';
 import { Link } from 'react-router';
-// import Markdown from 'react-remarkable';
 import {globalStyles} from '../../utils/styleConstants';
-// import {rightBarStyles} from '../../containers/Reader/rightBarStyles';
-// import {PubDiscussion} from '../../components';
-// import dateFormat from 'dateformat';
 
 let styles = {};
 
@@ -20,7 +16,7 @@ const PubLeftBar = React.createClass({
 			query: {},
 		};
 	},
-	
+
 	render: function() {
 		const versionURL = this.props.query.version !== undefined ? '?version=' + this.props.query.version : '';
 		return (
@@ -37,8 +33,8 @@ const PubLeftBar = React.createClass({
 				<Link style={styles.link} to={'/pub/' + this.props.slug + '/analytics'}><div key={'leftBar5'} style={styles.detail}>Analytics</div></Link>
 				<Link style={styles.link} to={'/pub/' + this.props.slug + '/citations'}><div key={'leftBar6'} style={styles.detail}>Citations</div></Link>
 				<Link style={styles.link} to={'/pub/' + this.props.slug + '/news'}><div key={'leftBar7'} style={styles.detail}>In the News</div></Link>
+				{/* <div style={styles.detail}>Related Pub</div> */}
 				{/* <div style={styles.detail}>Share</div> */}
-
 				
 			</div>
 		);

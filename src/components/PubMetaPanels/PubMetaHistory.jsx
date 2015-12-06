@@ -1,6 +1,5 @@
 import React, { PropTypes } from 'react';
 import Radium from 'radium';
-// import {baseStyles} from './pubModalStyle';
 import PubMetaHistoryRow from './PubMetaHistoryRow';
 // import {globalStyles} from '../../utils/styleConstants';
 
@@ -10,7 +9,6 @@ const PubMetaHistory = React.createClass({
 	propTypes: {
 		historyData: PropTypes.array,
 		slug: PropTypes.string
-		// setQueryHandler: PropTypes.func,
 	},
 
 	getDefaultProps: function() {

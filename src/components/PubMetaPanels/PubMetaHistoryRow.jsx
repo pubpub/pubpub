@@ -23,8 +23,6 @@ const PubMetaHistoryRow = React.createClass({
 	},
 
 	render: function() {
-		// const diffObject = this.props.historyItem.diffObject || {diffMarkdown: []};
-		// console.log('diffObject.diffMarkdown', diffObject.diffMarkdown);
 		const diffObject = this.props.historyItem.diffObject || {};
 		return (
 			<div style={[styles.container, this.props.index === 0 && styles.noBottomBorder]}>
@@ -49,8 +47,8 @@ const PubMetaHistoryRow = React.createClass({
 
 				<div style={styles.versionButtons}>
 					<div style={styles.versionButtons}>
-						<Link to={'/pub/' + this.props.slug + '/historydiff?version=' + (this.props.index + 1)}><div key={'historyRowViewButton-' + this.props.index} style={styles.historyButton} >View Changes</div></Link>
-						<Link to={'/pub/' + this.props.slug + '?version=' + (this.props.index + 1)}><div key={'historyRowReadButton-' + this.props.index} style={styles.historyButton} >Read pub at this point</div></Link>
+						<Link style={styles.link} to={'/pub/' + this.props.slug + '/historydiff?version=' + (this.props.index + 1)}><div key={'historyRowViewButton-' + this.props.index} style={styles.historyButton} >View Changes</div></Link>
+						<Link style={styles.link} to={'/pub/' + this.props.slug + '?version=' + (this.props.index + 1)}><div key={'historyRowReadButton-' + this.props.index} style={styles.historyButton} >Read pub at this point</div></Link>
 					</div>
 				</div>
 					
@@ -69,6 +67,9 @@ styles = {
 		paddingBottom: 30,
 		marginBottom: 30,
 		borderBottom: '1px solid #ccc',
+	},
+	link: {
+		textDecoration: 'none',
 	},
 	noBottomBorder: {
 		borderBottom: '0px solid #ccc',
@@ -140,7 +141,7 @@ styles = {
 	},
 	additions: {
 		fontSize: '14px',
-		color: 'green',
+		color: 'rgba(79, 192, 79, 1.0)',
 		fontFamily: 'Courier',
 		'@media screen and (min-resolution: 3dppx), (max-width: 767px)': {
 			display: 'block',
@@ -149,18 +150,12 @@ styles = {
 	},
 	deletions: {
 		fontSize: '14px',
-		color: 'red',
+		color: 'rgba(245,105,105,1.0)',
 		fontFamily: 'Courier',
 		'@media screen and (min-resolution: 3dppx), (max-width: 767px)': {
 			display: 'block',
 			fontSize: '18px',
 		}
-	},
-	additionsText: {
-		backgroundColor: 'green',
-	},
-	deletionsText: {
-		backgroundColor: 'red',
 	},
 	changeCountSeparator: {
 		display: 'inline-block',

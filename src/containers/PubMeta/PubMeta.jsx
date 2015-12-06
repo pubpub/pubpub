@@ -5,16 +5,10 @@ import DocumentMeta from 'react-document-meta';
 import PureRenderMixin from 'react-addons-pure-render-mixin';
 import {getPub} from '../../actions/pub';
 import { Link } from 'react-router';
-// import {updateDelta} from '../../actions/nav';
 import {PubLeftBar, PubNav, LoaderDeterminate} from '../../components';
 import {PubMetaSource, PubMetaHistory, PubMetaHistoryDiff} from '../../components/PubMetaPanels';
 import {globalStyles, pubSizes} from '../../utils/styleConstants';
-// import { pushState, go } from 'redux-router';
 
-
-// import markLib from '../../modules/markdown/markdown';
-// import markdownExtensions from '../../components/EditorPlugins';
-// markLib.setExtensions(markdownExtensions);
 
 let styles = {};
 
@@ -24,13 +18,6 @@ const PubMeta = React.createClass({
 		slug: PropTypes.string,
 		meta: PropTypes.string,
 		query: PropTypes.object,
-		// delta: PropTypes.number,
-		// routeKey: PropTypes.string,
-		// query : {
-			// modal: tableOfContents | history | source | cite | status | discussions 
-			// historyDiff: integer
-			// version: integer
-		// }
 		dispatch: PropTypes.func
 	},
 
@@ -51,48 +38,11 @@ const PubMeta = React.createClass({
 		}
 	},
 
-	// getInitialState() {
-	// 	return {
-	// 		htmlTree: [],
-	// 		TOC: [],
-	// 	};
-	// },
-
-	// componentWillMount() {
-	// 	const version = this.props.query.version !== undefined ? this.props.query.version - 1 : this.props.readerData.getIn(['pubData', 'history']).size - 1;
-	// 	// console.log('version is ' + version);
-
-	// 	const inputMD = this.props.readerData.getIn(['pubData', 'history', version, 'markdown']) || '';
-	// 	const mdOutput = markLib(inputMD, Object.values({} || {}));
-	// 	this.setState({
-	// 		htmlTree: mdOutput.tree,
-	// 		TOC: mdOutput.travisTOCFull,
-	// 	});
-	// 	console.log('mounting meta');
-	// },
-
 	componentWillReceiveProps(nextProps) {
 		if (this.props.meta !== nextProps.meta) {
 			document.getElementsByClassName('centerBar')[0].scrollTop = 0;
 		}
-	// 	const oldVersion = this.props.query.version !== undefined ? this.props.query.version - 1 : this.props.readerData.getIn(['pubData', 'history']).size - 1;
-	// 	const version = nextProps.query.version !== undefined ? nextProps.query.version - 1 : nextProps.readerData.getIn(['pubData', 'history']).size - 1;
-
-	// 	// if (this.props.readerData.getIn(['pubData', 'history', oldVersion, 'markdown']) !== nextProps.readerData.getIn(['pubData', 'history', version, 'markdown'])) {
-	// 	if (oldVersion !== version) {
-	// 		// console.log('compiling markdown for version ' + version);
-	// 		const mdOutput = markLib(nextProps.readerData.getIn(['pubData', 'history', version, 'markdown']), Object.values({} || {}));
-	// 		this.setState({
-	// 			htmlTree: mdOutput.tree,
-	// 			TOC: mdOutput.travisTOCFull,
-	// 		});	
-	// 	}
-		
 	},
-
-	// componentWillUnmount() {
-	// 	window.scrollTo(0, 0);
-	// },
 
 	loader: function() {
 		return {
@@ -100,26 +50,6 @@ const PubMeta = React.createClass({
 			transition: '.2s linear transform'
 		};
 	},
-
-	// goBack: function(backCount) {
-	// 	if (this.props.delta + backCount < 0) {
-	// 		// If there is no history with which to go back, clear the query params
-	// 		this.props.dispatch(pushState(null, '/pub/' + this.props.slug, {}));
-	// 	} else {
-	// 		this.props.dispatch(updateDelta(backCount + 1)); // Keep track of nav.delta so we can handle cases where the page was directly navigated to.
-	// 		this.props.dispatch(go(backCount)); 
-	// 	}
-			
-			
-	// },
-
-	// setQuery: function(queryObject) {
-	// 	this.props.dispatch(pushState(null, '/pub/' + this.props.slug, {...this.props.query, ...queryObject}));
-	// },
-
-	// clearVersion: function() {
-	// 	this.props.dispatch(pushState(null, '/pub/' + this.props.slug, {}));
-	// },
 
 	render: function() {
 		const metaData = {};

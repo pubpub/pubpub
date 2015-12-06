@@ -3,14 +3,12 @@ import {connect} from 'react-redux';
 import Radium from 'radium';
 import DocumentMeta from 'react-document-meta';
 import PureRenderMixin from 'react-addons-pure-render-mixin';
-
+import { Link } from 'react-router';
 import {getPub, openPubModal, closePubModal} from '../../actions/pub';
 import {closeMenu} from '../../actions/nav';
 
 import {PubBody, PubModals, PubNav, LoaderDeterminate, PubDiscussions, PubStatus, PubReviews, PubLeftBar} from '../../components';
 import {globalStyles, pubSizes} from '../../utils/styleConstants';
-// import { pushState, go } from 'redux-router';
-
 
 import markLib from '../../modules/markdown/markdown';
 import markdownExtensions from '../../components/EditorPlugins';
@@ -53,7 +51,6 @@ const PubReader = React.createClass({
 
 	componentWillMount() {
 		const version = this.props.query.version !== undefined ? this.props.query.version - 1 : this.props.readerData.getIn(['pubData', 'history']).size - 1;
-		// console.log('version is ' + version);
 
 		const inputMD = this.props.readerData.getIn(['pubData', 'history', version, 'markdown']) || '';
 		const mdOutput = markLib(inputMD, Object.values({} || {}));
@@ -79,32 +76,12 @@ const PubReader = React.createClass({
 		
 	},
 
-	// componentWillUnmount() {
-	// 	window.scrollTo(0, 0);
-	// },
-
 	loader: function() {
 		return {
 			transform: 'translateX(' + (-100 + this.props.readerData.get('loading')) + '%)',
 			transition: '.2s linear transform'
 		};
 	},
-
-	// goBack: function(backCount) {
-	// 	if (this.props.delta + backCount < 0) {
-	// 		// If there is no history with which to go back, clear the query params
-	// 		this.props.dispatch(pushState(null, '/pub/' + this.props.slug, {}));
-	// 	} else {
-	// 		this.props.dispatch(updateDelta(backCount + 1)); // Keep track of nav.delta so we can handle cases where the page was directly navigated to.
-	// 		this.props.dispatch(go(backCount)); 
-	// 	}
-			
-			
-	// },
-
-	// setQuery: function(queryObject) {
-	// 	this.props.dispatch(pushState(null, '/pub/' + this.props.slug, {...this.props.query, ...queryObject}));
-	// },
 
 	openPubModal: function(modal) {
 		return ()=> {
@@ -119,9 +96,6 @@ const PubReader = React.createClass({
 	closeMenu: function() {
 		this.props.dispatch(closeMenu());
 	},
-	// clearVersion: function() {
-		// this.props.dispatch(pushState(null, '/pub/' + this.props.slug, {}));
-	// },
 
 	render: function() {
 		const metaData = {};
@@ -132,7 +106,9 @@ const PubReader = React.createClass({
 		}
 		
 		const pubData = this.props.readerData.get('pubData').toJS();
-		const version = this.props.query.version !== undefined ? this.props.query.version - 1 : this.props.readerData.getIn(['pubData', 'history']).size - 1;
+		const version = this.props.query.version !== undefined && this.props.query.version > 0 && this.props.query.version < (this.props.readerData.getIn(['pubData', 'history']).size - 1)
+			? this.props.query.version - 1 
+			: this.props.readerData.getIn(['pubData', 'history']).size - 1;
 
 		return (
 			<div style={styles.container}>
@@ -158,8 +134,8 @@ const PubReader = React.createClass({
 						value={this.props.readerData.get('status') === 'loading' ? 0 : 100}/>
 
 					{
-						this.props.query.version 
-							? <div key={'versionNotification'} style={styles.versionNotification} onClick={this.clearVersion}>Reading Version {this.props.query.version}. Click to read the most recent version ({pubData.history.length}).</div>
+						this.props.query.version && this.props.query.version !== pubData.history.length.toString()
+							? <Link to={'/pub/' + this.props.slug} style={styles.versionNotificationLink}><div key={'versionNotification'} style={styles.versionNotification}>Reading Version {this.props.query.version}. Click to read the most recent version ({pubData.history.length}).</div></Link>
 							: null
 					}
 
@@ -176,34 +152,13 @@ const PubReader = React.createClass({
 						closePubModalHandler={this.closePubModal}
 						closeMenuHandler={this.closeMenu}
 						activeModal={this.props.readerData.get('activeModal')}
-						// setQueryHandler={this.setQuery}
-						// goBackHandler={this.goBack}
-						// query={this.props.query}
 
-						
-						// Source Props
-						// historyObject={pubData.history[version]}
-						// History Props
-						// historyData={pubData.history}
 						// TOC Props
 						tocData={this.state.TOC}/>
 
 				</div>
 
 				<div className="rightBar" style={[styles.rightBar, styles[this.props.readerData.get('status')]]}>
-					{/* 
-							Needs to be isMobile and isShow for the mobile styles to be applied, otherwise, keep the styles we got now, which show on desktop and hide otherwise.
-							This will need to be done for the rightBar wrapper, and for the pub body modal wrapper
-						    position: fixed;
-						    top: 0;
-						    width: 90vw;
-						    height: 100vh;
-						    background-color: red;
-						    z-index: 9;
-						    left: 10vw;
-						    capture the invisible left section to close both the menu and the activesetting of the current component
-					*/}
-
 					<PubStatus />
 					<PubReviews />
 					<PubDiscussions />
@@ -220,9 +175,6 @@ export default connect( state => {
 		readerData: state.pub, 
 		slug: state.router.params.slug,
 		query: state.router.location.query,
-		// delta: state.nav.get('delta'),
-		// routeKey: state.router.location.key,
-
 	};
 })( Radium(PubReader) );
 
@@ -420,4 +372,7 @@ styles = {
 		},
 
 	},
+	versionNotificationLink: {
+		textDecoration: 'none',
+	}
 };
