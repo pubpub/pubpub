@@ -4,7 +4,7 @@ import Radium from 'radium';
 
 let styles = {};
 
-const PubModalHistoryDiff = React.createClass({
+const PubMetaHistoryDiff = React.createClass({
 	propTypes: {
 		diffObject: PropTypes.object,
 	},
@@ -58,7 +58,7 @@ const PubModalHistoryDiff = React.createClass({
 	}
 });
 
-export default Radium(PubModalHistoryDiff);
+export default Radium(PubMetaHistoryDiff);
 
 styles = {
 	container: {

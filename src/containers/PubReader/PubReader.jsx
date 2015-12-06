@@ -141,7 +141,7 @@ const PubReader = React.createClass({
 
 				<div className="leftBar" style={[styles.leftBar, styles[this.props.readerData.get('status')]]}>
 					
-					<PubLeftBar slug={this.props.slug}/>
+					<PubLeftBar slug={this.props.slug} query={this.props.query}/>
 
 				</div>
 

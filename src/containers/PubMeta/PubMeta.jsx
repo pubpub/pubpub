@@ -4,9 +4,10 @@ import Radium from 'radium';
 import DocumentMeta from 'react-document-meta';
 import PureRenderMixin from 'react-addons-pure-render-mixin';
 import {getPub} from '../../actions/pub';
+import { Link } from 'react-router';
 // import {updateDelta} from '../../actions/nav';
 import {PubLeftBar, PubNav, LoaderDeterminate} from '../../components';
-import {PubModalSource, PubModalHistory} from '../../components/PubModals';
+import {PubMetaSource, PubMetaHistory, PubMetaHistoryDiff} from '../../components/PubMetaPanels';
 import {globalStyles} from '../../utils/styleConstants';
 // import { pushState, go } from 'redux-router';
 
@@ -67,9 +68,13 @@ const PubMeta = React.createClass({
 	// 		htmlTree: mdOutput.tree,
 	// 		TOC: mdOutput.travisTOCFull,
 	// 	});
+	// 	console.log('mounting meta');
 	// },
 
-	// componentWillReceiveProps(nextProps) {
+	componentWillReceiveProps(nextProps) {
+		if (this.props.meta !== nextProps.meta) {
+			document.getElementsByClassName('centerBar')[0].scrollTop = 0;
+		}
 	// 	const oldVersion = this.props.query.version !== undefined ? this.props.query.version - 1 : this.props.readerData.getIn(['pubData', 'history']).size - 1;
 	// 	const version = nextProps.query.version !== undefined ? nextProps.query.version - 1 : nextProps.readerData.getIn(['pubData', 'history']).size - 1;
 
@@ -83,7 +88,7 @@ const PubMeta = React.createClass({
 	// 		});	
 	// 	}
 		
-	// },
+	},
 
 	// componentWillUnmount() {
 	// 	window.scrollTo(0, 0);
@@ -126,6 +131,7 @@ const PubMeta = React.createClass({
 		
 		// const pubData = this.props.readerData.get('pubData').toJS();
 		const version = this.props.query.version !== undefined ? this.props.query.version - 1 : this.props.readerData.getIn(['pubData', 'history']).size - 1;
+		const versionURL = this.props.query.version !== undefined ? '?version=' + this.props.query.version : '';
 
 		return (
 			<div style={styles.container}>
@@ -134,7 +140,7 @@ const PubMeta = React.createClass({
 
 				<div className="leftBar" style={[styles.leftBar, styles[this.props.readerData.get('status')]]}>
 					
-					<PubLeftBar slug={this.props.slug}/>
+					<PubLeftBar slug={this.props.slug} query={this.props.query}/>
 
 				</div>
 
@@ -143,23 +149,32 @@ const PubMeta = React.createClass({
 						height={this.height} 
 						status={this.props.readerData.get('status')} 
 						slug={this.props.slug} 
-						meta={this.props.meta}/>
+						meta={this.props.meta}
+						query={this.props.query}/>
 
 					<LoaderDeterminate 
 						value={this.props.readerData.get('status') === 'loading' ? 0 : 100}/>
 
 					<div style={[styles.centerContent, styles[this.props.readerData.get('status')]]}>
-						<h1>{this.props.meta}: {this.props.readerData.getIn(['pubData', 'title'])}</h1>
+						<div style={styles.metaTitle}>
+							<span style={styles.metaTitleType}>{this.props.meta}:</span> 
+							<Link to={'/pub/' + this.props.slug + versionURL} key={'metaTitleLink'} style={styles.metaTitleLink}><span style={styles.metaTitlePub}>{this.props.readerData.getIn(['pubData', 'title'])}</span></Link>
+						</div>
 
 						{() => {
 							switch (this.props.meta) {
 							case 'history':
-								return (<PubModalHistory 
-										historyData={this.props.readerData.getIn(['pubData', 'history']).toJS()}/>
+								return (<PubMetaHistory 
+										historyData={this.props.readerData.getIn(['pubData', 'history']).toJS()}
+										slug={this.props.slug}/>
 									);
 							case 'source':
-								return (<PubModalSource 
-										historyObject={this.props.readerData.getIn(['pubData', 'history', version]).toJS()}/>
+								return (<PubMetaSource 
+										historyObject={this.props.readerData.getIn(['pubData', 'history', (version - 1)]).toJS()}/>
+									);
+							case 'historydiff':
+								return (<PubMetaHistoryDiff 
+										diffObject={this.props.readerData.getIn(['pubData', 'history', (version - 1), 'diffObject']).toJS()}/>
 									);
 							
 							default:
@@ -316,6 +331,25 @@ styles = {
 	},
 	centerContent: {
 		transition: '.3s linear opacity .25s',
+		padding: 15,
+	},
+	metaTitle: {
+		fontFamily: globalStyles.headerFont,
+		fontSize: '35px',
+	},
+	metaTitleLink: {
+		textDecoration: 'none',
+		
+	},
+	metaTitleType: {
+		color: '#777',
+		paddingRight: 10,
+	},
+	metaTitlePub: {
+		color: '#444',
+		':hover': {
+			color: '#000',
+		}
 	},
 	centerBar: {
 		backgroundColor: 'white',

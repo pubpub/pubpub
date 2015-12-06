@@ -11,21 +11,29 @@ const PubNav = React.createClass({
 		openPubModalHandler: PropTypes.func,
 		status: PropTypes.string,
 		slug: PropTypes.string,
+		query: PropTypes.object,
 		meta: PropTypes.string, 
 		isAuthor: PropTypes.bool,
 	},
 
+	getDefaultProps: function() {
+		return {
+			query: {},
+		};
+	},
+	
 	handlePrint: function() {
 		window.print();
 	},
 
 	render: function() {
+		const versionURL = this.props.query.version !== undefined ? '?version=' + this.props.query.version : '';
 		return (
 			<div>
 				{
 					this.props.meta 
 						? <ul style={[styles.pubNav, styles[this.props.status]]}>
-							<Link to={'/pub/' + this.props.slug}><li key="pubNav8"style={[styles.pubNavItem, styles.pubNavRight]}>Read Pub</li></Link>
+							<Link to={'/pub/' + this.props.slug + versionURL}><li key="pubNav8"style={[styles.pubNavItem, styles.pubNavRight]}>Read Pub</li></Link>
 							<li style={[styles.pubNavSeparator, styles.pubNavMobileOnly, styles.pubNavRight]}></li>
 						</ul>
 

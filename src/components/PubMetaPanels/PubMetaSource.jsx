@@ -1,11 +1,11 @@
 import React, { PropTypes } from 'react';
 import Radium from 'radium';
-import {baseStyles} from './pubModalStyle';
+// import {baseStyles} from './pubModalStyle';
 // import {globalStyles} from '../../utils/styleConstants';
 
 let styles = {};
 
-const PubModalSource = React.createClass({
+const PubMetaSource = React.createClass({
 	propTypes: {
 		historyObject: PropTypes.object,
 	},
@@ -26,7 +26,7 @@ const PubModalSource = React.createClass({
 		];
 
 		return (
-			<div style={baseStyles.pubModalContainer}>
+			<div style={styles.container}>
 
 					{
 						renderOrder.map((key, itemIndex)=>{
@@ -46,9 +46,12 @@ const PubModalSource = React.createClass({
 	}
 });
 
-export default Radium(PubModalSource);
+export default Radium(PubMetaSource);
 
 styles = {
+	container: {
+		padding: 15,
+	},
 	sourceText: {
 		fontFamily: 'Courier',
 		fontSize: '15px',

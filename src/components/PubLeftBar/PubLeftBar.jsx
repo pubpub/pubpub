@@ -12,9 +12,17 @@ let styles = {};
 const PubLeftBar = React.createClass({
 	propTypes: {
 		slug: PropTypes.string,
+		query: PropTypes.object,
 	},
 
+	getDefaultProps: function() {
+		return {
+			query: {},
+		};
+	},
+	
 	render: function() {
+		const versionURL = this.props.query.version !== undefined ? '?version=' + this.props.query.version : '';
 		return (
 			<div style={styles.container}>
 				
@@ -24,7 +32,7 @@ const PubLeftBar = React.createClass({
 
 				<div style={styles.leftBarDivider}></div>
 
-				<Link style={styles.link} to={'/pub/' + this.props.slug + '/source'}><div key={'leftBar4'} style={styles.detail}>Source</div></Link>
+				<Link style={styles.link} to={'/pub/' + this.props.slug + '/source' + versionURL}><div key={'leftBar4'} style={styles.detail}>Source</div></Link>
 				<Link style={styles.link} to={'/pub/' + this.props.slug + '/history'}><div key={'leftBar3'} style={styles.detail}>History</div></Link>
 				<Link style={styles.link} to={'/pub/' + this.props.slug + '/analytics'}><div key={'leftBar5'} style={styles.detail}>Analytics</div></Link>
 				<Link style={styles.link} to={'/pub/' + this.props.slug + '/citations'}><div key={'leftBar6'} style={styles.detail}>Citations</div></Link>

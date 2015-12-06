@@ -1,17 +1,17 @@
 import React, { PropTypes } from 'react';
 import Radium from 'radium';
 import dateFormat from 'dateformat';
+import { Link } from 'react-router';
 // import {globalStyles} from '../../utils/styleConstants';
 
 let styles = {};
 
-const PubModalHistoryRow = React.createClass({
+const PubMetaHistoryRow = React.createClass({
 	propTypes: {
 		historyItem: PropTypes.object,
 		diffItem: PropTypes.object,
 		index: PropTypes.number,
-		setDiffViewer: PropTypes.func,
-		setVersionHandler: PropTypes.func,
+		slug: PropTypes.string
 	},
 
 	getDefaultProps: function() {
@@ -49,8 +49,8 @@ const PubModalHistoryRow = React.createClass({
 
 				<div style={styles.versionButtons}>
 					<div style={styles.versionButtons}>
-						<div key={'historyRowViewButton-' + this.props.index} style={styles.historyButton} onClick={this.props.setDiffViewer(this.props.index)}>View Changes</div>
-						<div key={'historyRowReadButton-' + this.props.index} style={styles.historyButton} onClick={this.props.setVersionHandler(this.props.index)}>Read pub at this point</div>
+						<Link to={'/pub/' + this.props.slug + '/historydiff?version=' + (this.props.index + 1)}><div key={'historyRowViewButton-' + this.props.index} style={styles.historyButton} >View Changes</div></Link>
+						<Link to={'/pub/' + this.props.slug + '?version=' + (this.props.index + 1)}><div key={'historyRowReadButton-' + this.props.index} style={styles.historyButton} >Read pub at this point</div></Link>
 					</div>
 				</div>
 					
@@ -62,7 +62,7 @@ const PubModalHistoryRow = React.createClass({
 	}
 });
 
-export default Radium(PubModalHistoryRow);
+export default Radium(PubMetaHistoryRow);
 
 styles = {
 	container: {

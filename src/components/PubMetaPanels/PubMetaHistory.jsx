@@ -1,14 +1,15 @@
 import React, { PropTypes } from 'react';
 import Radium from 'radium';
-import {baseStyles} from './pubModalStyle';
-import PubModalHistoryRow from './PubModalHistoryRow';
+// import {baseStyles} from './pubModalStyle';
+import PubMetaHistoryRow from './PubMetaHistoryRow';
 // import {globalStyles} from '../../utils/styleConstants';
 
 let styles = {};
 
-const PubModalHistory = React.createClass({
+const PubMetaHistory = React.createClass({
 	propTypes: {
 		historyData: PropTypes.array,
+		slug: PropTypes.string
 		// setQueryHandler: PropTypes.func,
 	},
 
@@ -18,40 +19,20 @@ const PubModalHistory = React.createClass({
 		};
 	},
 
-	showChangesViewer: function() {
-		// return ()=>{
-		// 	this.props.setQueryHandler({
-		// 		mode: 'history',
-		// 		diff: index,
-		// 	});	
-		// };
-	},
-
-	setVersion: function() {
-		// return ()=>{
-		// 	this.props.setQueryHandler({
-		// 		mode: undefined,
-		// 		menu: undefined,
-		// 		version: index + 1,
-		// 	});	
-		// };
-	},
-
 	render: function() {
 		return (
-			<div style={[baseStyles.pubModalContainer, styles.container]}>
+			<div style={[styles.container]}>
 
 					{()=>{
 						const historyDivs = [];
 
 						for (let index = this.props.historyData.length; index-- > 0; ) {
 							historyDivs.push( 
-								<PubModalHistoryRow 
+								<PubMetaHistoryRow 
 									key={'historyRow-' + index} 
 									historyItem={this.props.historyData[index]} 
 									index={index} 
-									setDiffViewer={this.showChangesViewer}
-									setVersionHandler={this.setVersion}/>
+									slug={this.props.slug}/>
 							);
 						}
 
@@ -63,11 +44,12 @@ const PubModalHistory = React.createClass({
 	}
 });
 
-export default Radium(PubModalHistory);
+export default Radium(PubMetaHistory);
 
 styles = {
 	container: {
 		overflow: 'hidden',
+		padding: 15,
 	},
 
 	hidden: {
