@@ -17,7 +17,6 @@ const PubDiscussionsItem = React.createClass({
 	render: function() {
 		const discussionItem = this.props.discussionItem;
 		const md = marked(discussionItem.markdown, Object.values({} || {}));
-		
 		return (
 			<div style={styles.container}>
 				
@@ -27,7 +26,7 @@ const PubDiscussionsItem = React.createClass({
 						<img style={styles.discussionAuthorImage} src={discussionItem.author.thumbnail} />
 					</div>
 					<div style={styles.discussionDetailsLine}>
-						{discussionItem.author.name} on {dateFormat(discussionItem.date, 'mm/dd/yy, h:MMTT')}
+						{discussionItem.author.name} on {dateFormat(discussionItem.postDate, 'mm/dd/yy, h:MMTT')}
 					</div>
 
 					<div style={styles.discussionDetailsLineBottom}>

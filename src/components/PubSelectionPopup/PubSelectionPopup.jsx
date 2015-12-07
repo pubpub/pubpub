@@ -149,6 +149,10 @@ styles = {
 		'@media screen and (min-resolution: 3dppx), (max-width: 767px)': {
 			display: 'none',
 		},
+		'@media screen and (min-width: 1600px)': {
+			marginLeft: -223,
+		},
+		
 	},
 	pluginPopupVisible: {
 		opacity: 1,
