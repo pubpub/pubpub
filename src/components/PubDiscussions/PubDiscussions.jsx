@@ -3,7 +3,7 @@ import Radium from 'radium';
 import { Link } from 'react-router';
 import {globalStyles} from '../../utils/styleConstants';
 import {rightBarStyles} from '../../containers/PubReader/rightBarStyles';
-import {PubDiscussion} from '../../components';
+import {PubDiscussion} from './PubDiscussion';
 
 let styles = {};
 

@@ -1,4 +1,5 @@
-import CryptoJS from 'crypto-js';
+import SHA3 from 'crypto-js/sha3';
+import encHex from 'crypto-js/enc-hex';
 
  /*--------*/
 // Define Action types
@@ -49,7 +50,7 @@ export function login(email, password) {
 		types: [LOGIN_LOAD, LOGIN_LOAD_SUCCESS, LOGIN_LOAD_FAIL],
 		promise: (client) => client.post('/login', {data: {
 			'email': email.toLowerCase(),
-			'password': CryptoJS.SHA3(password).toString(CryptoJS.enc.Hex)
+			'password': SHA3(password).toString(encHex)
 		}})
 	};
 }
@@ -73,7 +74,7 @@ export function register(email, password, fullname, image) {
 		types: [REGISTER_LOAD, REGISTER_LOAD_SUCCESS, REGISTER_LOAD_FAIL],
 		promise: (client) => client.post('/register', {data: {
 			'email': email.toLowerCase(),
-			'password': CryptoJS.SHA3(password).toString(CryptoJS.enc.Hex),
+			'password': SHA3(password).toString(encHex),
 			'fullname': fullname,
 			'image': image
 		}})

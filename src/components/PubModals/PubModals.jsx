@@ -11,9 +11,7 @@ const PubModals = React.createClass({
 		slug: PropTypes.string,
 		status: PropTypes.string,
 		pubStatus: PropTypes.string,
-		// setQueryHandler: PropTypes.func,
-		// goBackHandler: PropTypes.func,
-		// query: PropTypes.object,
+
 		openPubModalHandler: PropTypes.func,
 		closePubModalHandler: PropTypes.func,
 		closeMenuHandler: PropTypes.func,
@@ -33,36 +31,20 @@ const PubModals = React.createClass({
 	closeModalandMenu: function() {
 		this.props.closePubModalHandler();
 		this.props.closeMenuHandler();
-		// return ()=> {
-		// 	// check if menu is open, if so, add one to level, return negative level
-		// 	const backCount = this.props.query.menu ? level + 1 : level;
-		// 	this.props.goBackHandler(-1 * backCount);
-		// };
 	},
-	// closeModal: function() {
-		// this.props.goBackHandler(-1);
-	// },
 
 	render: function() {
-		// const activeDiffObject = this.props.historyData[this.props.query.diff] ? this.props.historyData[this.props.query.diff].diffObject : undefined;
-		// const modalWrapper1Active = this.props.query.mode !== undefined;
-		// const modalWrapper2Active = this.props.query.diff !== undefined;
 		return (
 			<div className={'pubModals'} style={[styles.container, styles[this.props.status]]}>
-				{/*
-					Each level has to have it's own animation-in/out style, (pop for level1 on desktop, slide for all on mobile)
-					Each level has to have it's own splash, that goes back the correct amount
-				*/}
-				
 
-				<div className="modalsLevel1" style={[styles.modalWrapper, this.props.activeModal && styles.modalWrapperActive]}>
+				<div className="modals" style={[styles.modalWrapper, this.props.activeModal && styles.modalWrapperActive]}>
 
-					<div className="modalSplash1" onClick={this.closeModalandMenu} style={[styles.modalSplash, this.props.activeModal && styles.modalSplashActive]}>
+					<div className="modalSplash" onClick={this.closeModalandMenu} style={[styles.modalSplash, this.props.activeModal && styles.modalSplashActive]}>
 					</div>
 
-					<div className="modalContainer1" style={[styles.modalContainer, this.props.activeModal && styles.modalContainerActive]} >
+					<div className="modalContainer" style={[styles.modalContainer, this.props.activeModal && styles.modalContainerActive]} >
 
-						<div key={'level1Back'} style={styles.modalBackButton} onClick={this.props.closePubModalHandler}>Back</div>
+						<div key={'modalBack'} style={styles.modalBackButton} onClick={this.props.closePubModalHandler}>Back</div>
 
 						{() => {
 							switch (this.props.activeModal) {
@@ -101,27 +83,6 @@ const PubModals = React.createClass({
 						}()}
 					</div>
 				</div>
-
-				{/*
-				<div className="modalsLevel2" style={[styles.modalWrapper, modalWrapper2Active && styles.modalWrapperActive]}>
-
-					<div className="modalSplash2" onClick={this.closeModalandMenu(2)} style={[styles.modalSplash, styles.modalSplash2, modalWrapper2Active && styles.modalSplashActive]}>
-					</div>
-
-					<div className="modalContainer2" style={[styles.modalContainer, styles.modalContainer2, modalWrapper2Active && styles.modalContainerActive]} >
-
-						<div key={'level2Back'} style={[styles.modalBackButton, styles.modalBackButtonAlwaysShow]} onClick={this.closeModal}>Back</div>
-
-						{() => {
-							if (this.props.query.diff) {
-								return <PubModalHistoryDiff diffObject={activeDiffObject}/>;
-							}
-							return null;
-						}()}
-					</div>
-				</div>
-				*/}
-
 
 			</div>
 		);
@@ -190,10 +151,6 @@ styles = {
 			top: 0,
 		},
 	},
-	modalSplash2: {
-		backgroundColor: 'transparent',
-		transition: '0s linear opacity',
-	},
 	modalSplashActive: {
 		opacity: 1,
 		pointerEvents: 'auto',
@@ -233,17 +190,6 @@ styles = {
 		},
 
 	},
-	modalContainer2: {
-		transform: 'scale(1.0)',
-		transition: '.0s linear opacity',
-	},
-	// modalContainerNoScroll: {
-	// 	// '@media screen and (min-resolution: 3dppx), (max-width: 767px)': {
-
-	// 	overflow: 'hidden',
-	// 	overflowY: 'hidden',
-	// 	// },
-	// },
 	modalContainerActive: {
 		opacity: 1,
 		pointerEvents: 'auto',
