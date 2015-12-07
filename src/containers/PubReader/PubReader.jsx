@@ -254,9 +254,9 @@ styles = {
 
 	},
 	leftBar: {
-		padding: 5,
-		width: 'calc(150px - 10px)',
-		height: 'calc(100vh - ' + globalStyles.headerHeight + ' - 10px)',
+		padding: 10,
+		width: 'calc(150px - 20px)',
+		height: 'calc(100vh - ' + globalStyles.headerHeight + ' - 20px)',
 		marginRight: 650,
 		float: 'left',
 		transition: '.3s linear opacity .25s',
@@ -355,9 +355,9 @@ styles = {
 	},
 
 	rightBar: {
-		padding: 5,
-		width: 'calc(100% - 800px - 10px)',
-		height: 'calc(100vh - ' + globalStyles.headerHeight + ' - 10px)',
+		padding: 10,
+		width: 'calc(100% - 800px - 20px)',
+		height: 'calc(100vh - ' + globalStyles.headerHeight + ' - 20px)',
 		float: 'left',
 		overflow: 'hidden',
 		overflowY: 'scroll',

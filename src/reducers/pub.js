@@ -51,7 +51,10 @@ function clearPub(state) {
 }
 
 function load(state) {
-	return state.set('status', 'loading');
+	return state.merge({
+		status: 'loading',
+		pubdata: defaultState.toJS(),
+	});
 }
 
 function loadSuccess(state, result) {

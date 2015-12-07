@@ -90,8 +90,9 @@ const PubMeta = React.createClass({
 
 					<div style={[styles.centerContent, styles[this.props.readerData.get('status')]]}>
 						<div style={styles.metaTitle}>
-							<span style={styles.metaTitleType}>{this.props.meta}:</span> 
-							<Link to={'/pub/' + this.props.slug + versionURL} key={'metaTitleLink'} style={styles.metaTitleLink}><span style={styles.metaTitlePub}>{this.props.readerData.getIn(['pubData', 'title'])}</span></Link>
+							<span style={styles.metaTitleType}>{this.props.meta}</span> 
+							<Link to={'/pub/' + this.props.slug + versionURL} key={'metaTitleLink'} style={globalStyles.link}><span style={styles.metaTitlePub}>{this.props.readerData.getIn(['pubData', 'title'])}</span></Link>
+							
 						</div>
 
 						{() => {
@@ -228,18 +229,16 @@ styles = {
 		fontFamily: globalStyles.headerFont,
 	},
 	metaTitle: {
-		fontSize: '35px',
-	},
-	metaTitleLink: {
-		textDecoration: 'none',
-		
+		marginBottom: '15px',
 	},
 	metaTitleType: {
-		color: '#777',
+		color: '#555',
 		paddingRight: 10,
+		fontSize: '30px',
 	},
 	metaTitlePub: {
-		color: '#444',
+		color: '#777',
+		fontSize: '20px',
 		':hover': {
 			color: '#000',
 		}
