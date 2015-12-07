@@ -10,7 +10,6 @@ var Firebase  = require('firebase');
 
 app.get('/getPub', function(req, res) {
 	const userID = req.user ? req.user._id : undefined;
-	
 	Pub.getPub(req.query.slug, userID, (err, pubData)=>{
 		
 		if (err) {

@@ -138,27 +138,36 @@ pubSchema.statics.isUnique = function (slug,callback) {
 };
 
 pubSchema.statics.getPub = function (slug, readerID, callback) {
-	this.findOne({slug: slug}).exec((err, pub) =>{
-		if (err) { return callback(err, null); }
+	this.findOne({slug: slug})
+	.populate({ path: 'discussions', model: 'Discussion' })
+	.exec((err, pub)=> {
+		const options = [
+			{ path: 'discussions.author', select: '_id username name thumbnail', model: 'User'}
+		];
 
-		if (!pub) { return callback(null, 'Pub Not Found'); }
+		this.populate(pub, options, (err, populatedPub)=> {
+			if (err) { return callback(err, null); }
 
-		if (pub.status === 'Unpublished') { return callback(null, 'Pub not yet published'); }
+			if (!populatedPub) { return callback(null, 'Pub Not Found'); }
 
-		// Check if the pub is private, and if so, check readers/authors list
-		if (pub.settings.pubPrivacy === 'private') { 
-			if (pub.collaborators.canEdit.indexOf(readerID) === -1 && pub.collaborators.canRead.indexOf(readerID) === -1) {
-				return callback(null, 'Private Pub');
+			if (populatedPub.status === 'Unpublished') { return callback(null, 'Pub not yet published'); }
+
+			// Check if the pub is private, and if so, check readers/authors list
+			if (populatedPub.settings.pubPrivacy === 'private') { 
+				if (populatedPub.collaborators.canEdit.indexOf(readerID) === -1 && populatedPub.collaborators.canRead.indexOf(readerID) === -1) {
+					return callback(null, 'Private Pub');
+				}
 			}
-		}
 
-		const outputPub = pub.toObject();
-		if (pub.collaborators.canEdit.indexOf(readerID) > -1) {
-			outputPub.isAuthor = true;
-		}
-		// console.log(outputPub.isAuthor);
-		
-		return callback(null, outputPub);
+			const outputPub = populatedPub.toObject();
+			if (populatedPub.collaborators.canEdit.indexOf(readerID) > -1) {
+				outputPub.isAuthor = true;
+			}
+			// console.log(outputPub.isAuthor);
+			
+			return callback(null, outputPub);
+		});
+
 	})
 };
 

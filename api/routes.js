@@ -10,6 +10,7 @@ var app = require('./api');
 // });
 
 require('./routes/autocomplete-routes');
+require('./routes/discussion-routes');
 require('./routes/login-routes');
 require('./routes/pub-routes');
 require('./routes/user-routes');

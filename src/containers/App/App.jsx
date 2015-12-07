@@ -113,7 +113,7 @@ const App = React.createClass({
 
 				{
 					// Set the body to not scroll if you have the login window or the mobile menu open
-					this.props.loginData.get('isVisible') || this.props.navData.get('menuOpen') || (this.props.pubData.activeModal !== undefined && this.props.path.indexOf('/pub/') > -1)
+					this.props.loginData.get('isVisible') || this.props.navData.get('menuOpen') || (this.props.pubData.get('activeModal') !== undefined && this.props.path.indexOf('/pub/') > -1)
 						? <Style rules={{'body': {overflow: 'hidden'}}} />
 						: null
 				}

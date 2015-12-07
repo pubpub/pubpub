@@ -4,7 +4,8 @@ import Radium from 'radium';
 import DocumentMeta from 'react-document-meta';
 import PureRenderMixin from 'react-addons-pure-render-mixin';
 import { Link } from 'react-router';
-import {getPub, openPubModal, closePubModal} from '../../actions/pub';
+import {getPub, openPubModal, closePubModal, addDiscussion} from '../../actions/pub';
+import {toggleVisibility} from '../../actions/login';
 import {closeMenu} from '../../actions/nav';
 
 import {PubBody, PubModals, PubNav, LoaderDeterminate, PubDiscussions, PubStatus, PubReviews, PubLeftBar} from '../../components';
@@ -19,6 +20,7 @@ let styles = {};
 const PubReader = React.createClass({
 	propTypes: {
 		readerData: PropTypes.object,
+		loginData: PropTypes.object,
 		slug: PropTypes.string,
 		query: PropTypes.object, // version: integer
 
@@ -50,9 +52,9 @@ const PubReader = React.createClass({
 	},
 
 	componentWillMount() {
-		const version = this.props.query.version !== undefined ? this.props.query.version - 1 : this.props.readerData.getIn(['pubData', 'history']).size - 1;
+		const versionIndex = this.props.query.version !== undefined ? this.props.query.version - 1 : this.props.readerData.getIn(['pubData', 'history']).size - 1;
 
-		const inputMD = this.props.readerData.getIn(['pubData', 'history', version, 'markdown']) || '';
+		const inputMD = this.props.readerData.getIn(['pubData', 'history', versionIndex, 'markdown']) || '';
 		const mdOutput = marked(inputMD, Object.values({} || {}));
 		this.setState({
 			htmlTree: mdOutput.tree,
@@ -61,13 +63,13 @@ const PubReader = React.createClass({
 	},
 
 	componentWillReceiveProps(nextProps) {
-		const oldVersion = this.props.query.version !== undefined ? this.props.query.version - 1 : this.props.readerData.getIn(['pubData', 'history']).size - 1;
-		const version = nextProps.query.version !== undefined ? nextProps.query.version - 1 : nextProps.readerData.getIn(['pubData', 'history']).size - 1;
+		const oldVersionIndex = this.props.query.version !== undefined ? this.props.query.version - 1 : this.props.readerData.getIn(['pubData', 'history']).size - 1;
+		const versionIndex = nextProps.query.version !== undefined ? nextProps.query.version - 1 : nextProps.readerData.getIn(['pubData', 'history']).size - 1;
 
-		// if (this.props.readerData.getIn(['pubData', 'history', oldVersion, 'markdown']) !== nextProps.readerData.getIn(['pubData', 'history', version, 'markdown'])) {
-		if (oldVersion !== version) {
+		// if (this.props.readerData.getIn(['pubData', 'history', oldVersionIndex, 'markdown']) !== nextProps.readerData.getIn(['pubData', 'history', version, 'markdown'])) {
+		if (oldVersionIndex !== versionIndex) {
 			// console.log('compiling markdown for version ' + version);
-			const mdOutput = marked(nextProps.readerData.getIn(['pubData', 'history', version, 'markdown']), Object.values({} || {}));
+			const mdOutput = marked(nextProps.readerData.getIn(['pubData', 'history', versionIndex, 'markdown']), Object.values({} || {}));
 			this.setState({
 				htmlTree: mdOutput.tree,
 				TOC: mdOutput.travisTOCFull,
@@ -100,6 +102,15 @@ const PubReader = React.createClass({
 	closeMenu: function() {
 		this.props.dispatch(closeMenu());
 	},
+	addDiscussion: function(discussionObject) {
+		if (!this.props.loginData.get('loggedIn')) {
+			this.props.dispatch(toggleVisibility());
+		} else {
+			discussionObject.pub = this.props.readerData.getIn(['pubData', '_id']);
+			discussionObject.version = this.props.query.version !== undefined && this.props.query.version > 0 && this.props.query.version < (this.props.readerData.getIn(['pubData', 'history']).size - 1) ? this.props.query.version : this.props.readerData.getIn(['pubData', 'history']).size;
+			this.props.dispatch(addDiscussion(discussionObject));
+		}
+	},
 
 	render: function() {
 		const metaData = {};
@@ -110,7 +121,7 @@ const PubReader = React.createClass({
 		}
 		
 		const pubData = this.props.readerData.get('pubData').toJS();
-		const version = this.props.query.version !== undefined && this.props.query.version > 0 && this.props.query.version < (this.props.readerData.getIn(['pubData', 'history']).size - 1)
+		const versionIndex = this.props.query.version !== undefined && this.props.query.version > 0 && this.props.query.version < (this.props.readerData.getIn(['pubData', 'history']).size - 1)
 			? this.props.query.version - 1 
 			: this.props.readerData.getIn(['pubData', 'history']).size - 1;
 
@@ -146,7 +157,7 @@ const PubReader = React.createClass({
 							? <Link to={'/pub/' + this.props.slug} style={styles.versionNotificationLink}>
 								<div key={'versionNotification'} style={styles.versionNotification}>
 									<p>Reading Version {this.props.query.version}. Click to read the most recent version ({pubData.history.length}).</p>
-									<p>This was a {pubData.history[version].status === 'Draft' ? 'Draft' : 'Peer-Review Ready'} version.</p>
+									<p>This was a {pubData.history[versionIndex].status === 'Draft' ? 'Draft' : 'Peer-Review Ready'} version.</p>
 								</div>
 							</Link>
 							: null
@@ -154,10 +165,10 @@ const PubReader = React.createClass({
 
 					<PubBody
 						status={this.props.readerData.get('status')}
-						title={pubData.history[version].title} 
-						abstract={pubData.history[version].abstract} 
+						title={pubData.history[versionIndex].title} 
+						abstract={pubData.history[versionIndex].abstract} 
 						htmlTree={this.state.htmlTree}
-						authors={pubData.history[version].authors}/>
+						authors={pubData.history[versionIndex].authors}/>
 
 					<PubModals 
 						slug={this.props.slug}
@@ -193,7 +204,9 @@ const PubReader = React.createClass({
 					<PubDiscussions 
 						slug={this.props.slug}
 						discussionsData={pubData.discussions}
-						expertsData={pubData.experts}/>
+						expertsData={pubData.experts}
+						addDiscussionHandler={this.addDiscussion} 
+						addDiscussionStatus={this.props.readerData.get('addDiscussionStatus')}/>
 				</div>
 				
 			</div>
@@ -205,6 +218,7 @@ const PubReader = React.createClass({
 export default connect( state => {
 	return {
 		readerData: state.pub, 
+		loginData: state.login,
 		slug: state.router.params.slug,
 		query: state.router.location.query,
 	};

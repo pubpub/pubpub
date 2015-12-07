@@ -13,6 +13,10 @@ export const LOAD_PUB_FAIL = 'pub/LOAD_PUB_FAIL';
 export const OPEN_PUB_MODAL = 'pub/OPEN_PUB_MODAL';
 export const CLOSE_PUB_MODAL = 'pub/CLOSE_PUB_MODAL';
 
+export const ADD_DISCUSSION = 'pub/ADD_DISCUSSION';
+export const ADD_DISCUSSION_SUCCESS = 'pub/ADD_DISCUSSION_SUCCESS';
+export const ADD_DISCUSSION_FAIL = 'pub/ADD_DISCUSSION_FAIL';
+
 /*--------*/
 // Define Action creators
 // 
@@ -44,4 +48,11 @@ export function closePubModal() {
 	return {
 		type: CLOSE_PUB_MODAL,
 	};	
+}
+
+export function addDiscussion(discussionObject) {
+	return {
+		types: [ADD_DISCUSSION, ADD_DISCUSSION_SUCCESS, ADD_DISCUSSION_FAIL],
+		promise: (client) => client.post('/addDiscussion', {data: {discussionObject: discussionObject}}) 
+	};
 }

@@ -1,25 +1,30 @@
 import React, {PropTypes} from 'react';
 import Radium from 'radium';
-import Markdown from 'react-remarkable';
 // import {globalStyles} from '../../utils/styleConstants';
 import dateFormat from 'dateformat';
 
+import marked from '../../modules/markdown/markdown';
+import markdownExtensions from '../../components/EditorPlugins';
+marked.setExtensions(markdownExtensions);
+
 let styles = {};
 
-const PubDiscussion = React.createClass({
+const PubDiscussionsItem = React.createClass({
 	propTypes: {
 		discussionItem: PropTypes.object,
 	},
 
 	render: function() {
 		const discussionItem = this.props.discussionItem;
+		const md = marked(discussionItem.markdown, Object.values({} || {}));
+		
 		return (
 			<div style={styles.container}>
 				
 				<div style={styles.discussionHeader}>
 
 					<div style={styles.discussionAuthorImageWrapper}>
-						<img style={styles.discussionAuthorImage} src={discussionItem.author.image} />
+						<img style={styles.discussionAuthorImage} src={discussionItem.author.thumbnail} />
 					</div>
 					<div style={styles.discussionDetailsLine}>
 						{discussionItem.author.name} on {dateFormat(discussionItem.date, 'mm/dd/yy, h:MMTT')}
@@ -39,7 +44,7 @@ const PubDiscussion = React.createClass({
 					</div>
 
 					<div style={styles.discussionContent}>
-						<Markdown source={discussionItem.content} />
+						{md.tree}
 					</div>
 				</div>
 				
@@ -48,7 +53,7 @@ const PubDiscussion = React.createClass({
 				<div style={styles.discussionChildrenWrapper}>
 					{
 						discussionItem.children.map((child)=>{
-							return <PubDiscussion key={child._id} discussionItem={child}/>;
+							return <PubDiscussionsItem key={child._id} discussionItem={child}/>;
 						})
 					}
 				</div>
@@ -59,7 +64,7 @@ const PubDiscussion = React.createClass({
 	}
 });
 
-export default Radium(PubDiscussion);
+export default Radium(PubDiscussionsItem);
 
 styles = {
 	container: {

@@ -4,18 +4,23 @@ var Schema    =  mongoose.Schema;
 var ObjectId  = Schema.Types.ObjectId;
 
 var discussionSchema = new Schema({
-  content: { type: String },
-  selection: {text:{ type: String }, serializedSelection:{ type: String }},
-  type: { type: String },
-  children: [ { type: ObjectId, ref: 'Discussion' } ],
   author: { type: ObjectId, ref: 'User' },
-  pub: { type: ObjectId, ref: 'Pub' },
-  version: { type: ObjectId, ref: 'Version' },
-  postDate: { type: Date },
+  markdown: { type: String },
+  assets: [{ type: ObjectId, ref: 'Asset'}], //Raw sources 
+  selections: [{ type: ObjectId, ref: 'Highlight'}], //Raw References
+  references: [{ type: ObjectId, ref: 'Reference'}], //Raw References
+  
   parent: { type: ObjectId, ref: 'Discussion' },
+  children: [ { type: ObjectId, ref: 'Discussion' } ],
+  
+  pub: { type: ObjectId, ref: 'Pub' },
+  version: { type: Number },
+  sourceJournal: { type: ObjectId, ref: 'Journal' },
+  postDate: { type: Date },
+
   yays: [ { type: ObjectId, ref: 'User' } ],
   nays: [ { type: ObjectId, ref: 'User' } ],
-  approvedAsPeer: { type: Boolean },
+  
 });
 
 

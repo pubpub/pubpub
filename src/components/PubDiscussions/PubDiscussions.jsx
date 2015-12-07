@@ -3,7 +3,8 @@ import Radium from 'radium';
 import { Link } from 'react-router';
 import {globalStyles} from '../../utils/styleConstants';
 import {rightBarStyles} from '../../containers/PubReader/rightBarStyles';
-import {PubDiscussion} from './PubDiscussion';
+import PubDiscussionsItem from './PubDiscussionsItem';
+import PubDiscussionsInput from './PubDiscussionsInput';
 
 let styles = {};
 
@@ -12,6 +13,8 @@ const PubDiscussions = React.createClass({
 		slug: PropTypes.string,
 		discussionsData: PropTypes.array,
 		expertsData: PropTypes.object,
+		addDiscussionHandler: PropTypes.func,
+		addDiscussionStatus: PropTypes.string,
 	},
 
 	getDefaultProps: function() {
@@ -22,7 +25,7 @@ const PubDiscussions = React.createClass({
 	},
 
 	render: function() {
-		const pubData = {discussions: []};
+		// const pubData = {discussions: []};
 		return (
 			<div style={styles.container}>
 				
@@ -33,9 +36,12 @@ const PubDiscussions = React.createClass({
 						| 
 						<Link to={'/pub/' + this.props.slug + '/experts'} style={globalStyles.link}><span key={'discussionButton2'} style={rightBarStyles.sectionSubHeaderSpan}>Suggest Expert</span></Link>
 					</div>
+					<PubDiscussionsInput 
+						addDiscussionHandler={this.props.addDiscussionHandler}
+						addDiscussionStatus={this.props.addDiscussionStatus} />
 					{
-						pubData.discussions.map((discussion)=>{
-							return <PubDiscussion key={discussion._id} discussionItem={discussion}/>;
+						this.props.discussionsData.map((discussion)=>{
+							return <PubDiscussionsItem key={discussion._id} discussionItem={discussion}/>;
 						})
 					}
 				</div>

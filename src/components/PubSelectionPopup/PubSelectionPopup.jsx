@@ -64,8 +64,8 @@ const PubSelectionPopup = React.createClass({
 
 		const selection = Rangy.getSelection();
 		const range = selection.getRangeAt(0);
-		console.log(range);
-		console.log(range.commonAncestorContainer);
+		// console.log(range);
+		// console.log(range.commonAncestorContainer);
 		if (!selection.isCollapsed && isDescendantOfP(range.commonAncestorContainer)) {
 			
 			Rangy.getSelection().expand('word');
@@ -103,7 +103,7 @@ const PubSelectionPopup = React.createClass({
 			endOffset: result.endOffset
 		};
 		// console.log(result);
-		// console.log(highlightObject);
+		console.log(highlightObject);
 	},
 
 	getPluginPopupLoc: function() {
@@ -146,6 +146,9 @@ styles = {
 		borderRadius: '1px',
 		marginLeft: -173,
 		marginTop: -5,
+		'@media screen and (min-resolution: 3dppx), (max-width: 767px)': {
+			display: 'none',
+		},
 	},
 	pluginPopupVisible: {
 		opacity: 1,

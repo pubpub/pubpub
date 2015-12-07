@@ -343,9 +343,9 @@ export const styles = {
 // CodeMirror styles function can be
 // used to dynamically change font, size, color, etc
 export function codeMirrorStyles(loginData) {
-	const editorFont = loginData.getIn(['userData', 'settings', 'editorFont']);
-	const editorFontSize = loginData.getIn(['userData', 'settings', 'editorFontSize']);
-	const editorColor = loginData.getIn(['userData', 'settings', 'editorColor']);
+	const editorFont = loginData ? loginData.getIn(['userData', 'settings', 'editorFont']) : undefined;
+	const editorFontSize = loginData ? loginData.getIn(['userData', 'settings', 'editorFontSize']) : undefined;
+	const editorColor = loginData ? loginData.getIn(['userData', 'settings', 'editorColor']) : undefined;
 
 	const editorStyles = {};
 
