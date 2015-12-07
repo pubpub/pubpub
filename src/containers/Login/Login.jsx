@@ -270,7 +270,7 @@ styles = {
 		pointerEvents: 'none',
 		backgroundColor: '#0E0E0E',
 		// backgroundColor: 'white',
-		position: 'absolute',
+		position: 'fixed',
 		top: 0,
 		left: 0,
 		width: '100%',
