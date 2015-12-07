@@ -14,5 +14,6 @@ export PubLeftBar from './PubLeftBar/PubLeftBar';
 export PubModals from './PubModals/PubModals';
 export PubNav from './PubNav/PubNav';
 export PubReviews from './PubReviews/PubReviews';
+export PubSelectionPopup from './PubSelectionPopup/PubSelectionPopup';
 export PubStatus from './PubStatus/PubStatus';
 export Reference from './Reference/Reference';

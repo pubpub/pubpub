@@ -1,6 +1,6 @@
 import React, {PropTypes} from 'react';
-import Radium from 'radium';
-// import Markdown from 'react-remarkable';
+import Radium, {Style} from 'radium';
+import {PubSelectionPopup} from '../';
 // import {globalStyles} from '../../utils/styleConstants';
 
 let styles = {};
@@ -19,9 +19,30 @@ const PubBody = React.createClass({
 		};
 	},
 
+	getInitialState() {
+		return {
+			htmlTree: [],
+			TOC: [],
+		};
+	},
+	
+	// componentDidMount() {
+	// 	// Go through all the discussions and add them to the body
+	// },
+
 	render: function() {
+		// console.log(this.props.htmlTree);
 		return (
 			<div style={styles.container}>
+				
+				<Style rules={{
+					'.marking': {
+						backgroundColor: 'rgba(124, 235, 124, 0.7)'
+					},
+					'.temp': {
+						backgroundColor: 'rgba(200,200,200, 0.7)'
+					},
+				}}/>
 
 				<div style={[styles.contentContainer, styles[this.props.status]]}>
 					
@@ -29,7 +50,10 @@ const PubBody = React.createClass({
 					<p style={styles.pubAbstract}>{this.props.abstract}</p>
 					<div style={styles.headerDivider}></div>
 
-					{this.props.htmlTree}
+					<div id="pubBodyContent">
+						<PubSelectionPopup />
+						{this.props.htmlTree}
+					</div>
 
 				</div>
 				

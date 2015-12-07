@@ -20,9 +20,9 @@ import {styles, codeMirrorStyles, animateListItemStyle} from './editorStyles';
 import {insertText, createFocusDoc} from './editorCodeFunctions';
 import editorDefaultText from './editorDefaultText';
 
-import markLib from '../../modules/markdown/markdown';
+import marked from '../../modules/markdown/markdown';
 import markdownExtensions from '../../components/EditorPlugins';
-markLib.setExtensions(markdownExtensions);
+marked.setExtensions(markdownExtensions);
 
 const cmOptions = {
 	lineNumbers: false,
@@ -128,7 +128,7 @@ const Editor = React.createClass({
 			CodeMirror.on(completion, 'pick', this.showPopupFromAutocomplete);
 		}
 
-		const mdOutput = markLib(cm.getValue(), Object.values(this.state.firepadData.assets || {}));
+		const mdOutput = marked(cm.getValue(), Object.values(this.state.firepadData.assets || {}));
 		// console.log(mdOutput.travisTOCFull);
 		// console.log(mdOutput.tree);
 		this.setState({

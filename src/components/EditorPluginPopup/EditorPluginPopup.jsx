@@ -5,7 +5,7 @@ import {parsePluginString} from '../../utils/parsePlugins';
 
 let styles = {};
 
-const Reference = React.createClass({
+const EditorPluginPopup = React.createClass({
 	propTypes: {
 		activeFocus: PropTypes.string,
 		codeMirrorChange: PropTypes.object,
@@ -222,7 +222,7 @@ const Reference = React.createClass({
 	}
 });
 
-export default Radium(Reference);
+export default Radium(EditorPluginPopup);
 
 styles = {
 	pluginPopup: {

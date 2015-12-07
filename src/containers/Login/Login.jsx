@@ -6,7 +6,6 @@ import {toggleVisibility, toggleViewMode, login, register} from '../../actions/l
 import {ImageCropper, LoaderIndeterminate, LoginForm, LoginFormRegister} from '../../components';
 import {globalStyles} from '../../utils/styleConstants';
 
-
 let styles = {};
 
 const Login = React.createClass({

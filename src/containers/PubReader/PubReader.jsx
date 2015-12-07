@@ -10,9 +10,9 @@ import {closeMenu} from '../../actions/nav';
 import {PubBody, PubModals, PubNav, LoaderDeterminate, PubDiscussions, PubStatus, PubReviews, PubLeftBar} from '../../components';
 import {globalStyles, pubSizes} from '../../utils/styleConstants';
 
-import markLib from '../../modules/markdown/markdown';
+import marked from '../../modules/markdown/markdown';
 import markdownExtensions from '../../components/EditorPlugins';
-markLib.setExtensions(markdownExtensions);
+marked.setExtensions(markdownExtensions);
 
 let styles = {};
 
@@ -53,7 +53,7 @@ const PubReader = React.createClass({
 		const version = this.props.query.version !== undefined ? this.props.query.version - 1 : this.props.readerData.getIn(['pubData', 'history']).size - 1;
 
 		const inputMD = this.props.readerData.getIn(['pubData', 'history', version, 'markdown']) || '';
-		const mdOutput = markLib(inputMD, Object.values({} || {}));
+		const mdOutput = marked(inputMD, Object.values({} || {}));
 		this.setState({
 			htmlTree: mdOutput.tree,
 			TOC: mdOutput.travisTOCFull,
@@ -67,7 +67,7 @@ const PubReader = React.createClass({
 		// if (this.props.readerData.getIn(['pubData', 'history', oldVersion, 'markdown']) !== nextProps.readerData.getIn(['pubData', 'history', version, 'markdown'])) {
 		if (oldVersion !== version) {
 			// console.log('compiling markdown for version ' + version);
-			const mdOutput = markLib(nextProps.readerData.getIn(['pubData', 'history', version, 'markdown']), Object.values({} || {}));
+			const mdOutput = marked(nextProps.readerData.getIn(['pubData', 'history', version, 'markdown']), Object.values({} || {}));
 			this.setState({
 				htmlTree: mdOutput.tree,
 				TOC: mdOutput.travisTOCFull,
