@@ -60,7 +60,7 @@ const PubMeta = React.createClass({
 		}
 		
 		// const pubData = this.props.readerData.get('pubData').toJS();
-		const version = this.props.query.version !== undefined ? this.props.query.version - 1 : this.props.readerData.getIn(['pubData', 'history']).size - 1;
+		const versionIndex = this.props.query.version !== undefined ? this.props.query.version - 1 : this.props.readerData.getIn(['pubData', 'history']).size - 1;
 		const versionURL = this.props.query.version !== undefined ? '?version=' + this.props.query.version : '';
 
 		return (
@@ -104,11 +104,11 @@ const PubMeta = React.createClass({
 									);
 							case 'source':
 								return (<PubMetaSource 
-										historyObject={this.props.readerData.getIn(['pubData', 'history', (version - 1)]).toJS()}/>
+										historyObject={this.props.readerData.getIn(['pubData', 'history', versionIndex]).toJS()}/>
 									);
 							case 'historydiff':
 								return (<PubMetaHistoryDiff 
-										diffObject={this.props.readerData.getIn(['pubData', 'history', (version - 1), 'diffObject']).toJS()}/>
+										diffObject={this.props.readerData.getIn(['pubData', 'history', versionIndex, 'diffObject']).toJS()}/>
 									);
 							case 'experts':
 								return (<PubMetaExperts />
