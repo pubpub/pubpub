@@ -3,6 +3,15 @@ var Schema    =  mongoose.Schema;
 var ObjectId  = Schema.Types.ObjectId;
 import * as jsdiff from 'diff';
 
+import React from 'react';
+import ReactDOMServer from 'react-dom/server';
+import SHA1 from 'crypto-js/sha1';
+import encHex from 'crypto-js/enc-hex';
+import marked from '../../src/modules/markdown/markdown';
+import markdownExtensions from '../../src/components/EditorPlugins';
+marked.setExtensions(markdownExtensions);
+
+
 var pubSchema = new Schema({
 	slug: { type: String, required: true, index: { unique: true } },
 	
@@ -22,6 +31,7 @@ var pubSchema = new Schema({
 	style: { type: Schema.Types.Mixed },
 	lastUpdated: { type: Date },
 	status: { type: String },
+	pHashes: { type: Schema.Types.Mixed }, // Used to track location of comments
 	// --------------
 	// --------------
 
@@ -63,6 +73,7 @@ var pubSchema = new Schema({
 		references: [{ type: ObjectId, ref: 'Reference'}], //Raw References
 		style: { type: Schema.Types.Mixed },
 		status: { type: String },
+		pHashes: [{ type: String }], // Used to track location of comments
 	}],
 
 	followers: [{ type: ObjectId, ref: 'User'}],
@@ -225,6 +236,22 @@ pubSchema.statics.generateDiffObject = function(oldPubObject, newPubObject) {
 
 	return outputObject;
 
+};
+
+pubSchema.statics.generatePHashes = function(markdown, assets, references, selections) {
+	// const mdOutput = marked(markdown, assets, references, selections);
+	console.log(markdown)
+	const htmlTree = marked(markdown, []).tree;
+	const pHashes = {};
+	let counter = 1;
+	htmlTree.map((treeItem)=>{
+		if (treeItem.type === "p") {
+			// pHashes[counter] = SHA1(treeItem).toString(encHex);
+			// counter += 1;
+		}
+	});
+	// console.log(htmlTree);
+	console.log(ReactDOMServer.renderToStaticMarkup(<div>{htmlTree}</div>));
 };
 
 module.exports = mongoose.model('Pub', pubSchema);

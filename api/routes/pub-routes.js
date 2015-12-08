@@ -110,6 +110,8 @@ app.post('/publishPub', function(req, res) {
 	// Beef out the history object with date, etc
 	// Update the pub object with new dates, titles, etc
 	// Push the new history object
+	const pHashes = Pub.generatePHashes(req.body.newVersion.markdown);			
+	return res.status(500).json(pHashes);
 
 	Pub.findOne({ slug: req.body.newVersion.slug }, function (err, pub){
 		if (err) { return res.status(500).json(err);  }
@@ -166,7 +168,8 @@ app.post('/publishPub', function(req, res) {
 			if (err) { return res.status(500).json(err);  }
 			Reference.insertBulkAndReturnIDs(references, function(err, dbReferencesIds){
 				if (err) { return res.status(500).json(err);  }
-			
+				
+				const pHashes = Pub.generatePHashes(req.body.newVersion.markdown);			
 				pub.title = req.body.newVersion.title;
 				pub.abstract = req.body.newVersion.abstract;
 				pub.authorsNote = req.body.newVersion.authorsNote;
@@ -177,6 +180,7 @@ app.post('/publishPub', function(req, res) {
 				pub.style = req.body.newVersion.style;
 				pub.lastUpdated = publishDate,
 				pub.status = req.body.newVersion.status;
+				pub.pHashes = pHashes;
 				pub.history.push({
 					publishNote: req.body.newVersion.publishNote,
 					publishDate: publishDate,
@@ -190,6 +194,7 @@ app.post('/publishPub', function(req, res) {
 					references: dbReferencesIds,
 					style: req.body.newVersion.style,
 					status: req.body.newVersion.status,
+					pHashes: pHashes,
 					diffObject: {
 						additions:  diffObject.additions,
 						deletions:  diffObject.deletions,

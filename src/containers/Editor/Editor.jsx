@@ -20,6 +20,9 @@ import {styles, codeMirrorStyles, animateListItemStyle} from './editorStyles';
 import {insertText, createFocusDoc} from './editorCodeFunctions';
 import editorDefaultText from './editorDefaultText';
 
+import SHA1 from 'crypto-js/sha1';
+import encHex from 'crypto-js/enc-hex';
+
 import marked from '../../modules/markdown/markdown';
 import markdownExtensions from '../../components/EditorPlugins';
 marked.setExtensions(markdownExtensions);
@@ -179,6 +182,15 @@ const Editor = React.createClass({
 				authors.push(this.state.firepadData.collaborators[collaborator]._id);
 			}
 		}
+
+		// pHashes are generated and collected to perform discussion highlight synchronization
+		const pTags = document.querySelectorAll('div#live-preview>p');
+		const pHashes = {};
+		for ( const key in pTags ) {
+			if (pTags.hasOwnProperty(key)) {
+				pHashes[parseInt(key, 10) + 1] = SHA1(pTags[key].innerText).toString(encHex);
+			}
+		}
 		
 		const newVersion = {
 			slug: this.props.slug,
@@ -190,8 +202,8 @@ const Editor = React.createClass({
 			assets: this.state.firepadData.assets,
 			references: this.state.firepadData.references,
 			style: this.state.firepadData.settings.pubStyle,
-
 			status: versionState,
+			pHashes: pHashes,
 			publishNote: versionDescription,
 		};
 		this.props.dispatch(clearPub());
@@ -446,7 +458,7 @@ const Editor = React.createClass({
 					</div>
 
 					{/* Live Preview Block */}
-					<div style={[styles.hiddenUntilLoad, styles[loadStatus], styles.common.editorPreview, styles[viewMode].editorPreview]}>
+					<div id="live-preview" style={[styles.hiddenUntilLoad, styles[loadStatus], styles.common.editorPreview, styles[viewMode].editorPreview]}>
 						{this.state.tree}
 					</div>
 
