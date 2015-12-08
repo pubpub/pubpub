@@ -63,5 +63,9 @@ const PubDiscussions = React.createClass({
 export default Radium(PubDiscussions);
 
 styles = {
-	
+	container: {
+		'@media screen and (min-resolution: 3dppx), (max-width: 767px)': {
+			padding: '0px 10px',
+		},
+	},
 };

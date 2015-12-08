@@ -1,6 +1,7 @@
 import React, {PropTypes} from 'react';
 import Radium from 'radium';
-// import {globalStyles} from '../../utils/styleConstants';
+import {globalStyles} from '../../utils/styleConstants';
+import { Link } from 'react-router';
 import dateFormat from 'dateformat';
 
 import marked from '../../modules/markdown/markdown';
@@ -54,10 +55,12 @@ const PubDiscussionsItem = React.createClass({
 				<div style={styles.discussionHeader}>
 
 					<div style={styles.discussionAuthorImageWrapper}>
-						<img style={styles.discussionAuthorImage} src={discussionItem.author.thumbnail} />
+						<Link to={'/profile/' + discussionItem.author.username} style={globalStyles.link}>
+							<img style={styles.discussionAuthorImage} src={discussionItem.author.thumbnail} />
+						</Link>
 					</div>
 					<div style={styles.discussionDetailsLine}>
-						{discussionItem.author.name} on {dateFormat(discussionItem.postDate, 'mm/dd/yy, h:MMTT')}
+						<Link to={'/profile/' + discussionItem.author.username} style={globalStyles.link}><span key={'discussionItemAuthorLink' + discussionItem._id} style={styles.headerText}>{discussionItem.author.name}</span></Link> on {dateFormat(discussionItem.postDate, 'mm/dd/yy, h:MMTT')}
 					</div>
 
 					<div style={styles.discussionDetailsLineBottom}>
@@ -129,6 +132,13 @@ styles = {
 		overflow: 'hidden',
 		textOverflow: 'ellipsis',
 	},
+	headerText: {
+		color: '#777',
+		':hover': {
+			color: '#333',
+			cursor: 'pointer',
+		}
+	},
 	discussionDetailsLineBottom: { 
 		// We are explicitly repeating ourselves here because Radium seems to have an issue with
 		// handling arrays of styles in nested components.
@@ -188,7 +198,7 @@ styles = {
 		transform: 'rotate(180deg)',
 	},
 	discussionContent: {
-		width: 'calc(100% - 36px)',
+		width: 'calc(100% - 36px - 30px)',
 		marginLeft: 36,
 		overflow: 'hidden',
 		fontFamily: 'Arial',
