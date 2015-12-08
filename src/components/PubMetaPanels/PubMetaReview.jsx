@@ -41,7 +41,7 @@ const PubMetaReview = React.createClass({
 	},
 
 	createFromSearch: function(options, values, search) {
-		if ( search.length === 0 || this.tagUsed(search) ) {
+		if ( search.length === 0 || this.tagUsed(search.toLowerCase()) ) {
 			return null;
 		}
 		return {label: search.toLowerCase(), value: search.toLowerCase()};
@@ -57,7 +57,7 @@ const PubMetaReview = React.createClass({
 			{(()=> {
 				if (search.length === 0) {
 					return 'Type a few characters to create a tag';
-				} else if (this.tagUsed(search)) {
+				} else if (this.tagUsed(search.toLowerCase())) {
 					return 'Tag already used';
 				}
 			})()}
