@@ -4,7 +4,7 @@ import Radium from 'radium';
 import DocumentMeta from 'react-document-meta';
 import PureRenderMixin from 'react-addons-pure-render-mixin';
 import { Link } from 'react-router';
-import {getPub, openPubModal, closePubModal, addDiscussion} from '../../actions/pub';
+import {getPub, openPubModal, closePubModal, addDiscussion, addSelection} from '../../actions/pub';
 import {toggleVisibility} from '../../actions/login';
 import {closeMenu} from '../../actions/nav';
 
@@ -108,8 +108,15 @@ const PubReader = React.createClass({
 		} else {
 			discussionObject.pub = this.props.readerData.getIn(['pubData', '_id']);
 			discussionObject.version = this.props.query.version !== undefined && this.props.query.version > 0 && this.props.query.version < (this.props.readerData.getIn(['pubData', 'history']).size - 1) ? this.props.query.version : this.props.readerData.getIn(['pubData', 'history']).size;
+			discussionObject.selections = this.props.readerData.getIn(['newDiscussionData', 'selections']);
 			this.props.dispatch(addDiscussion(discussionObject));
 		}
+	},
+	addSelection: function(newSelection) {
+		console.log('newSelection', newSelection);
+		newSelection.pub = this.props.readerData.getIn(['pubData', '_id']);
+		newSelection.version = this.props.query.version !== undefined && this.props.query.version > 0 && this.props.query.version < (this.props.readerData.getIn(['pubData', 'history']).size - 1) ? this.props.query.version : this.props.readerData.getIn(['pubData', 'history']).size;
+		this.props.dispatch(addSelection(newSelection));
 	},
 
 	render: function() {
@@ -168,7 +175,8 @@ const PubReader = React.createClass({
 						title={pubData.history[versionIndex].title} 
 						abstract={pubData.history[versionIndex].abstract} 
 						htmlTree={this.state.htmlTree}
-						authors={pubData.history[versionIndex].authors}/>
+						authors={pubData.history[versionIndex].authors}
+						addSelectionHandler={this.addSelection} />
 
 					<PubModals 
 						slug={this.props.slug}
@@ -206,7 +214,8 @@ const PubReader = React.createClass({
 						discussionsData={pubData.discussions}
 						expertsData={pubData.experts}
 						addDiscussionHandler={this.addDiscussion} 
-						addDiscussionStatus={this.props.readerData.get('addDiscussionStatus')}/>
+						addDiscussionStatus={this.props.readerData.get('addDiscussionStatus')}
+						newDiscussionData={this.props.readerData.get('newDiscussionData')}/>
 				</div>
 				
 			</div>

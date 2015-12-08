@@ -12,6 +12,7 @@ const PubBody = React.createClass({
 		abstract: PropTypes.string,
 		htmlTree: PropTypes.array,
 		authors: PropTypes.array,
+		addSelectionHandler: PropTypes.func,
 	},
 	getDefaultProps: function() {
 		return {
@@ -42,6 +43,9 @@ const PubBody = React.createClass({
 					'.temp': {
 						backgroundColor: 'rgba(200,200,200, 0.7)'
 					},
+					'.selection': {
+						backgroundColor: 'rgba(100,200,80, 0.7)'	
+					}
 				}}/>
 
 				<div style={[styles.contentContainer, styles[this.props.status]]}>
@@ -51,7 +55,7 @@ const PubBody = React.createClass({
 					<div style={styles.headerDivider}></div>
 
 					<div id="pubBodyContent">
-						<PubSelectionPopup />
+						<PubSelectionPopup addSelectionHandler={this.props.addSelectionHandler}/>
 						{this.props.htmlTree}
 					</div>
 

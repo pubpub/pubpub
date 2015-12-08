@@ -12,7 +12,7 @@ let styles = {};
 
 const PubSelectionPopup = React.createClass({
 	propTypes: {
-		fake: PropTypes.string,
+		addSelectionHandler: PropTypes.func,
 	},
 
 	getDefaultProps: function() {
@@ -104,6 +104,8 @@ const PubSelectionPopup = React.createClass({
 		};
 		// console.log(result);
 		console.log(highlightObject);
+		this.props.addSelectionHandler(highlightObject);
+
 	},
 
 	getPluginPopupLoc: function() {

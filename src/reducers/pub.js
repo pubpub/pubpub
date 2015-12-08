@@ -16,6 +16,8 @@ import {
 	ADD_DISCUSSION, 
 	ADD_DISCUSSION_SUCCESS, 
 	ADD_DISCUSSION_FAIL,
+
+	ADD_SELECTION
 } from '../actions/pub';
 
 /*--------*/
@@ -34,6 +36,11 @@ export const defaultState = Immutable.Map({
 		history: [{}],
 	},
 	activeModal: undefined,
+	newDiscussionData: {
+		selections: {},
+		assets: {},
+		references: {},
+	},
 	addDiscussionStatus: 'loaded',
 	status: 'loading',
 	error: null
@@ -127,14 +134,27 @@ function addDiscussionSuccess(state, result) {
 	const newState = state.mergeIn(['pubData', 'discussions'], discussionsObject);
 	return newState.merge({
 		addDiscussionStatus: 'loaded',
+		newDiscussionData: {
+			selections: {},
+			assets: {},
+			references: {},
+		},
 	});
 }
 
 function addDiscussionFail(state, error) {
 	console.log(error);
 	return state.merge({
-		addDiscussionStatus: 'loaded',
+		addDiscussionStatus: 'error',
 	});
+}
+
+function addSelection(state, selection) {
+	const selectionData = state.getIn(['newDiscussionData', 'selections']);
+	return state.mergeIn(
+		['newDiscussionData', 'selections'], 
+		selectionData.set(selectionData.size + 1, selection)
+	);
 }
 
 /*--------*/
@@ -163,7 +183,10 @@ export default function readerReducer(state = defaultState, action) {
 		return addDiscussionSuccess(state, action.result);
 	case ADD_DISCUSSION_FAIL:
 		return addDiscussionFail(state, action.error);
-		
+
+	case ADD_SELECTION:
+		return addSelection(state, action.selection);
+
 	default:
 		return ensureImmutable(state);
 	}

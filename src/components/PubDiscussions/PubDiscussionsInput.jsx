@@ -28,6 +28,7 @@ const PubDiscussionsInput = React.createClass({
 	propTypes: {
 		addDiscussionHandler: PropTypes.func,
 		addDiscussionStatus: PropTypes.string,
+		newDiscussionData: PropTypes.object,
 	},
 
 	componentDidMount() {
@@ -50,8 +51,12 @@ const PubDiscussionsInput = React.createClass({
 			const cm = document.getElementsByClassName('CodeMirror')[0].CodeMirror;
 			// Reset any form options here.
 			cm.setValue('');
-
+		} else if (this.props.newDiscussionData.get('selections').size !== nextProps.newDiscussionData.get('selections').size) {
+			const cm = document.getElementsByClassName('CodeMirror')[0].CodeMirror;
+			const spacing = cm.getValue().length ? '\n' : '';
+			cm.setValue(cm.getValue() + spacing + '[selection: ' + nextProps.newDiscussionData.get('selections').size + '] ' );	
 		}
+		
 	},
 
 	onEditorChange: function(cm, change) {

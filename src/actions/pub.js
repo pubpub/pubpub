@@ -17,6 +17,8 @@ export const ADD_DISCUSSION = 'pub/ADD_DISCUSSION';
 export const ADD_DISCUSSION_SUCCESS = 'pub/ADD_DISCUSSION_SUCCESS';
 export const ADD_DISCUSSION_FAIL = 'pub/ADD_DISCUSSION_FAIL';
 
+export const ADD_SELECTION = 'pub/ADD_SELECTION';
+
 /*--------*/
 // Define Action creators
 // 
@@ -55,4 +57,11 @@ export function addDiscussion(discussionObject) {
 		types: [ADD_DISCUSSION, ADD_DISCUSSION_SUCCESS, ADD_DISCUSSION_FAIL],
 		promise: (client) => client.post('/addDiscussion', {data: {discussionObject: discussionObject}}) 
 	};
+}
+
+export function addSelection(selection) {
+	return {
+		type: ADD_SELECTION,
+		selection: selection,
+	};	
 }

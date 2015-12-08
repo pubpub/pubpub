@@ -142,7 +142,8 @@ pubSchema.statics.getPub = function (slug, readerID, callback) {
 	.populate({ path: 'discussions', model: 'Discussion' })
 	.exec((err, pub)=> {
 		const options = [
-			{ path: 'discussions.author', select: '_id username name thumbnail', model: 'User'}
+			{ path: 'discussions.author', select: '_id username name thumbnail', model: 'User'},
+			{ path: 'discussions.selections', model: 'Highlight'}
 		];
 
 		this.populate(pub, options, (err, populatedPub)=> {

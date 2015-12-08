@@ -16,6 +16,7 @@ const PubDiscussionsItem = React.createClass({
 
 	render: function() {
 		const discussionItem = this.props.discussionItem;
+		// console.log(discussionItem);
 		const md = marked(discussionItem.markdown, Object.values({} || {}));
 		return (
 			<div style={styles.container}>
