@@ -18,6 +18,7 @@ const PubBody = React.createClass({
 	getDefaultProps: function() {
 		return {
 			htmlTree: [],
+			authors: [],
 		};
 	},
 
@@ -51,7 +52,7 @@ const PubBody = React.createClass({
 					<div style={styles.authors}>
 						{
 							this.props.authors.map((author, index)=>{
-								return (<Link to={'/profile/' + author.username} style={globalStyles.link}>
+								return (<Link to={'/profile/' + author.username} key={'pubAuthorLink-' + index} style={globalStyles.link}>
 									<span key={'pubAuthor-' + index} style={styles.author}>{author.name} </span>
 								</Link>);
 							})

@@ -13,7 +13,7 @@ import {LoaderDeterminate, EditorPluginPopup, EditorModals, PubBody} from '../..
 import {clearPub} from '../../actions/pub';
 import {getPubEdit, toggleEditorViewMode, toggleFormatting, toggleTOC, unmountEditor, closeModal, openModal, publishVersion, saveCollaboratorsToPub, saveSettingsPubPub} from '../../actions/editor';
 import {saveSettingsUser} from '../../actions/login';
-import {loadCss} from '../../utils/loadingFunctions';
+// import {loadCss} from '../../utils/loadingFunctions';
 
 import initCodeMirrorMode from './editorCodeMirrorMode';
 import {styles, codeMirrorStyles, animateListItemStyle} from './editorStyles';
@@ -67,7 +67,7 @@ const Editor = React.createClass({
 
 		if (! this.props.editorData.get('error')) {
 			// loadCss('/css/codemirror.css');
-			loadCss('/css/react-select.min.css');
+			// loadCss('/css/react-select.min.css');
 			initCodeMirrorMode();
 
 			// Load Firebase and bind using ReactFireMixin. For assets, references, etc.
