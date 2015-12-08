@@ -101,6 +101,7 @@ styles = {
 		width: '100%',
 		overflow: 'hidden',
 		margin: '10px 0px',
+		backgroundColor: 'rgba(255,255,255,0.2)',
 	},
 	discussionHeader: {
 		height: 36,
@@ -159,11 +160,41 @@ styles = {
 		fontSize: '20px',
 		textAlign: 'center',
 		padding: '5px 0px',
+		fontFamily: 'Courier',
+		// backgroundColor: 'rgba(255,0,100,0.2)',
+	},
+	voteUp: {
+		// backgroundColor: 'rgba(0,0,100,0.2)',
+		// fontFamily: 'Courier',
+		height: 20,
+		lineHeight: '38px',
+		fontSize: '28px',
+		color: '#aaa',
+	},
+	voteScore: {
+		// backgroundColor: 'rgba(255,100,100,0.2)',
+		color: '#888',
+		fontFamily: 'Lato',
+		// fontWeight: 'bold',
+
+	},
+	voteDown: {
+		// backgroundColor: 'rgba(0,0,100,0.2)',
+		// fontFamily: 'Courier',
+		height: 20,
+		lineHeight: '38px',
+		fontSize: '28px',
+		color: '#aaa',
+		transform: 'rotate(180deg)',
 	},
 	discussionContent: {
 		width: 'calc(100% - 36px)',
 		marginLeft: 36,
 		overflow: 'hidden',
+		fontFamily: 'Arial',
+		color: '#555',
+		fontSize: '15px',
+		padding: '0px 15px',
 
 	},
 	discussionChildrenWrapper: {

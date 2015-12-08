@@ -3,7 +3,7 @@
 import React, {PropTypes} from 'react';
 import Radium, {Style} from 'radium';
 import {LoaderIndeterminate} from '../';
-// import {globalStyles} from '../../utils/styleConstants';
+import {globalStyles} from '../../utils/styleConstants';
 
 let styles = {};
 
@@ -31,6 +31,7 @@ const PubDiscussionsInput = React.createClass({
 		addDiscussionHandler: PropTypes.func,
 		addDiscussionStatus: PropTypes.string,
 		newDiscussionData: PropTypes.object,
+		userThumbnail: PropTypes.string,
 	},
 
 	componentDidMount() {
@@ -77,14 +78,32 @@ const PubDiscussionsInput = React.createClass({
 			<div style={styles.container}>
 				<Style rules={codeMirrorStyles} />
 
+				<div style={styles.inputTopLine}>
+					<div style={styles.thumbnail}>
+						{this.props.userThumbnail 
+							? <img style={styles.thumbnailImage}src={this.props.userThumbnail} />
+							: null
+						}
+					</div>
+					<div style={styles.topCheckbox} key={'newDiscussionAnonymous'} >
+						<label style={styles.checkboxLabel} htmlFor={'anonymousDiscussion'}>Anonymous</label>
+						<input style={styles.checkboxInput} name={'anonymousDiscussion'} id={'anonymousDiscussion'} type="checkbox" value={'anonymous'} ref={'anonymousDiscussion'}/>
+					</div>
+					<div style={styles.topCheckbox} key={'newDiscussionPrivate'} >
+						<label style={styles.checkboxLabel} htmlFor={'privateDiscussion'}>Private</label>
+						<input style={styles.checkboxInput} name={'privateDiscussion'} id={'privateDiscussion'} type="checkbox" value={'private'} ref={'privateDiscussion'}/>
+					</div>
+				</div>
 				<div id="codemirror-wrapper" style={styles.inputBox}></div>
 
 				<div style={styles.loaderContainer}>
 					{(this.props.addDiscussionStatus === 'loading' ? <LoaderIndeterminate color="#444"/> : null)}
 				</div>
 
-				<div onClick={this.submitDiscussion}>Submit</div>
-				
+				<div style={styles.inputBottomLine}>
+					<div style={styles.submitButton} key={'newDiscussionSubmit'} onClick={this.submitDiscussion}>Submit</div>
+				</div>
+
 			</div>
 		);
 	}
@@ -96,9 +115,18 @@ styles = {
 	container: {
 		width: '100%',
 		overflow: 'hidden',
-		margin: '10px 0px',
+		margin: '20px 0px',
 		position: 'relative',
 	},
+	inputTopLine: {
+		// backgroundColor: 'rgba(255,0,0,0.1)',
+		height: 20,
+	},
+	inputBottomLine: {
+		// backgroundColor: 'rgba(255,0,100,0.1)',
+		height: 20,
+	},
+
 	inputBox: {
 		border: '1px solid #ddd',
 		backgroundColor: '#fff',
@@ -107,7 +135,46 @@ styles = {
 	},
 	loaderContainer: {
 		position: 'absolute',
-		bottom: '19px',
+		bottom: '20px',
 		width: '100%',
 	},
+	thumbnail: {
+		width: '18px',
+		height: '18px',
+		padding: '1px',
+		float: 'left',
+	},
+	thumbnailImage: {
+		width: '100%',
+	},
+	topCheckbox: {
+		float: 'right',
+		height: 20,
+		
+		userSelect: 'none',
+		color: globalStyles.sideText,
+		':hover': {
+			cursor: 'pointer',
+			color: globalStyles.sideHover,
+		}
+	},
+	checkboxLabel: {
+		fontSize: '14px',
+		margin: '0px 3px 0px 15px',
+		cursor: 'pointer',
+	},
+	checkboxInput: {
+		cursor: 'pointer',
+	},
+	submitButton: {
+		float: 'right',
+		color: globalStyles.sideText,
+		padding: '0px 5px',
+		':hover': {
+			cursor: 'pointer',
+			color: globalStyles.sideHover,
+		}
+
+	},
+
 };

@@ -26,6 +26,10 @@ const PubModals = React.createClass({
 		// Discussions Data
 		discussionsData: PropTypes.array,
 		expertsData: PropTypes.object,
+		addDiscussionHandler: PropTypes.func,
+		addDiscussionStatus: PropTypes.string,
+		newDiscussionData: PropTypes.object,
+		userThumbnail: PropTypes.string,
 	},
 
 	closeModalandMenu: function() {
@@ -70,10 +74,16 @@ const PubModals = React.createClass({
 										
 
 							case 'discussions':
+							// Don't 
 								return (<PubDiscussions 
 									slug={this.props.slug}
 									discussionsData={this.props.discussionsData}
-									expertsData={this.props.expertsData}/>
+									expertsData={this.props.expertsData}
+									addDiscussionHandler={this.props.addDiscussionHandler} 
+									pHashes={{}} // Send a blank object in because we don't want to repopulate the highlights. We'll probably have to do something different so selections are clickable/scrollable...
+									addDiscussionStatus={this.props.addDiscussionStatus}
+									newDiscussionData={this.props.newDiscussionData}
+									userThumbnail={this.props.userThumbnail}/>
 								);
 							
 							

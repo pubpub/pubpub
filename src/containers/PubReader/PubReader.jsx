@@ -196,7 +196,12 @@ const PubReader = React.createClass({
 						reviewsData={pubData.reviews}
 						// Discussions Data
 						discussionsData={pubData.discussions}
-						expertsData={pubData.experts} />
+						expertsData={pubData.experts}
+						addDiscussionHandler={this.addDiscussion} 
+						pHashes={pubData.pHashes}
+						addDiscussionStatus={this.props.readerData.get('addDiscussionStatus')}
+						newDiscussionData={this.props.readerData.get('newDiscussionData')}
+						userThumbnail={this.props.loginData.getIn(['userData', 'thumbnail'])}/>
 
 				</div>
 
@@ -216,7 +221,8 @@ const PubReader = React.createClass({
 						addDiscussionHandler={this.addDiscussion} 
 						pHashes={pubData.pHashes}
 						addDiscussionStatus={this.props.readerData.get('addDiscussionStatus')}
-						newDiscussionData={this.props.readerData.get('newDiscussionData')}/>
+						newDiscussionData={this.props.readerData.get('newDiscussionData')}
+						userThumbnail={this.props.loginData.getIn(['userData', 'thumbnail'])}/>
 				</div>
 				
 			</div>

@@ -16,7 +16,8 @@ const PubDiscussions = React.createClass({
 		expertsData: PropTypes.object,
 		addDiscussionHandler: PropTypes.func,
 		addDiscussionStatus: PropTypes.string,
-		newDiscussionData: PropTypes.object
+		newDiscussionData: PropTypes.object,
+		userThumbnail: PropTypes.string,
 	},
 
 	getDefaultProps: function() {
@@ -41,7 +42,8 @@ const PubDiscussions = React.createClass({
 					<PubDiscussionsInput 
 						addDiscussionHandler={this.props.addDiscussionHandler}
 						addDiscussionStatus={this.props.addDiscussionStatus} 
-						newDiscussionData={this.props.newDiscussionData} />
+						newDiscussionData={this.props.newDiscussionData} 
+						userThumbnail={this.props.userThumbnail} />
 					{
 						this.props.discussionsData.map((discussion)=>{
 							return (<PubDiscussionsItem 
