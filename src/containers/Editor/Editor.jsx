@@ -9,7 +9,7 @@ import DocumentMeta from 'react-document-meta';
 import PureRenderMixin from 'react-addons-pure-render-mixin';
 import ReactFireMixin from 'reactfire';
 
-import {LoaderDeterminate, EditorPluginPopup, EditorModals} from '../../components';
+import {LoaderDeterminate, EditorPluginPopup, EditorModals, PubBody} from '../../components';
 import {clearPub} from '../../actions/pub';
 import {getPubEdit, toggleEditorViewMode, toggleFormatting, toggleTOC, unmountEditor, closeModal, openModal, publishVersion, saveCollaboratorsToPub, saveSettingsPubPub} from '../../actions/editor';
 import {saveSettingsUser} from '../../actions/login';
@@ -54,7 +54,7 @@ const Editor = React.createClass({
 
 	getInitialState() {
 		return {
-			tree: '',
+			tree: [],
 			travisTOC: [],
 			travisTOCFull: [],
 			activeFocus: '',
@@ -130,15 +130,39 @@ const Editor = React.createClass({
 			const completion = cm.state.completionActive.data;
 			CodeMirror.on(completion, 'pick', this.showPopupFromAutocomplete);
 		}
+		// const start = performance.now();
 
-		const mdOutput = marked(cm.getValue(), Object.values(this.state.firepadData.assets || {}));
+		// This feels inefficient. 
+		// An alternative is that we don't pass a trimmed version of the text to the markdown processor.
+		// Instead we define header plugins and pass the entire thing to both here and body.
+		const fullMD = cm.getValue();
+		const titleRE = /\[title:(.*?)\]/i;
+		const titleMatch = fullMD.match(titleRE);
+		const title = titleMatch && titleMatch.length ? titleMatch[1].trim() : '';
+
+		const abstractRE = /\[abstract:(.*?)\]/i;
+		const abstractMatch = fullMD.match(abstractRE);
+		const abstract = abstractMatch && abstractMatch.length ? abstractMatch[1].trim() : '';
+
+		const authorsNoteRE = /\[authorsNote:(.*?)\]/i;
+		const authorsNoteMatch = fullMD.match(authorsNoteRE);
+		const authorsNote = authorsNoteMatch && authorsNoteMatch.length ? authorsNoteMatch[1].trim() : '';
+		const markdown = fullMD.replace(/\[title:.*?\]/g, '').replace(/\[abstract:.*?\]/g, '').replace(/\[authorsNote:.*?\]/g, '').trim();
+		
+		const mdOutput = marked(markdown, Object.values(this.state.firepadData.assets || {}));
+		// const mdOutput = marked(cm.getValue(), Object.values(this.state.firepadData.assets || {}));
 		// console.log(mdOutput.travisTOCFull);
 		// console.log(mdOutput.tree);
+		// const end = performance.now();
+		// console.log('timing = ', end - start);
 		this.setState({
 			tree: mdOutput.tree,
 			travisTOC: mdOutput.travisTOC,
 			travisTOCFull: mdOutput.travisTOCFull,
-			codeMirrorChange: change
+			codeMirrorChange: change,
+			title: title,
+			abstract: abstract,
+			authorsNote: authorsNote,
 		});
 	},
 
@@ -184,7 +208,7 @@ const Editor = React.createClass({
 		}
 
 		// pHashes are generated and collected to perform discussion highlight synchronization
-		const pTags = document.querySelectorAll('div#live-preview>p');
+		const pTags = document.querySelectorAll('div#pubBodyContent>p');
 		const pHashes = {};
 		for ( const key in pTags ) {
 			if (pTags.hasOwnProperty(key)) {
@@ -458,8 +482,15 @@ const Editor = React.createClass({
 					</div>
 
 					{/* Live Preview Block */}
-					<div id="live-preview" style={[styles.hiddenUntilLoad, styles[loadStatus], styles.common.editorPreview, styles[viewMode].editorPreview]}>
-						{this.state.tree}
+					<div style={[styles.hiddenUntilLoad, styles[loadStatus], styles.common.editorPreview, styles[viewMode].editorPreview]}>
+						{/* {this.state.tree} */}
+						<PubBody
+							status={'loaded'}
+							title={this.state.title} 
+							abstract={this.state.abstract} 
+							// authors={this.state.authors}
+							// addSelectionHandler={this.addSelection}
+							htmlTree={this.state.tree} />
 					</div>
 
 				</div>
