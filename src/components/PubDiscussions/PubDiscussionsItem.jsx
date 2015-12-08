@@ -27,14 +27,19 @@ const PubDiscussionsItem = React.createClass({
 		// Go through all the selections and add them to the body
 		const Marklib = require('marklib');
 		this.props.discussionItem.selections.map((selection)=>{
-			const result = {
-				startContainerPath: selection.startContainerPath.replace(/p:nth-of-type\((.*)\)/, 'p:nth-of-type(' + this.props.pHashes[selection.ancestorHash] + ')'),
-				endContainerPath: selection.endContainerPath.replace(/p:nth-of-type\((.*)\)/, 'p:nth-of-type(' + this.props.pHashes[selection.ancestorHash] + ')'),
-				startOffset: selection.startOffset,
-				endOffset: selection.endOffset,
-			};	
-			const renderer = new Marklib.Rendering(document, {className: 'selection'}, document.getElementById('pubBodyContent'));
-			renderer.renderWithResult(result);
+			const pIndex = this.props.pHashes[selection.ancestorHash];
+			if (pIndex) {
+				const result = {
+					startContainerPath: selection.startContainerPath.replace(/p:nth-of-type\((.*)\)/, 'p:nth-of-type(' + pIndex + ')'),
+					endContainerPath: selection.endContainerPath.replace(/p:nth-of-type\((.*)\)/, 'p:nth-of-type(' + pIndex + ')'),
+					startOffset: selection.startOffset,
+					endOffset: selection.endOffset,
+				};	
+				const renderer = new Marklib.Rendering(document, {className: 'selection'}, document.getElementById('pubBodyContent'));
+				renderer.renderWithResult(result);	
+			}
+
+			
 		});
 		
 	},
