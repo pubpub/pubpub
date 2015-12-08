@@ -21,7 +21,7 @@ const PubMetaReview = React.createClass({
 		return {
 			goodTags: [],
 			badTags: [],
-			baseTags: ['introduction', 'analysis', 'discussion', 'conclusion', 'clarity'].map(function(tag) {
+			baseTags: [ 'analysis', 'clarity', 'conclusion', 'discussion', 'introduction'].map((tag)=> {
 				return {label: tag, value: tag};
 			}),
 		};
@@ -187,7 +187,6 @@ styles = {
 	saveButton: {
 		width: '150px',
 		marginLeft: 385,
-		backgroundColor: 'red',
 		fontSize: '20px',
 		textAlign: 'center',
 		color: '#666',

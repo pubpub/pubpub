@@ -49,12 +49,12 @@ const PubBody = React.createClass({
 				<div style={[styles.contentContainer, styles[this.props.status]]}>
 					
 					<h1 style={styles.pubTitle}>{this.props.title}</h1>
-					<div style={styles.authors}>
+					<div style={styles.authors}> <span>by </span>
 						{
 							this.props.authors.map((author, index)=>{
-								return (<Link to={'/profile/' + author.username} key={'pubAuthorLink-' + index} style={globalStyles.link}>
-									<span key={'pubAuthor-' + index} style={styles.author}>{author.name} </span>
-								</Link>);
+								return (index === this.props.authors.length - 1 
+									? <Link to={'/profile/' + author.username} key={'pubAuthorLink-' + index} style={globalStyles.link}><span key={'pubAuthor-' + index} style={styles.author}>{author.name}</span></Link>
+									: <Link to={'/profile/' + author.username} key={'pubAuthorLink-' + index} style={globalStyles.link}><span key={'pubAuthor-' + index} style={styles.author}>{author.name}, </span></Link>);
 							})
 						}
 					</div>
@@ -106,6 +106,19 @@ styles = {
 		width: '80%',
 		margin: '0 auto',
 		backgroundColor: '#DDD',
+	},
+	authors: {
+		textAlign: 'center',
+		color: '#555',
+		fontSize: '17px',
+		padding: '0px 50px',
+	},
+	author: {
+		color: '#555',
+		':hover': {
+			color: '#111',
+		},
+
 	},
 
 };
