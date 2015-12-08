@@ -222,6 +222,9 @@ export const styles = {
 		height: 175,
 		overflow: 'hidden',
 		position: 'relative',
+		':hover': {
+			backgroundColor: '#E5E5E5',
+		},
 		'@media screen and (min-resolution: 3dppx), (max-width: 767px)': {
 			width: 'calc(100% - 30px)'
 		},
@@ -253,6 +256,7 @@ export const styles = {
 		':hover': {
 			cusror: 'pointer',
 			color: '#111',
+
 		},
 	},
 

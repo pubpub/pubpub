@@ -142,6 +142,7 @@ pubSchema.statics.isUnique = function (slug,callback) {
 pubSchema.statics.getPub = function (slug, readerID, callback) {
 	this.findOne({slug: slug})
 	.populate({ path: 'discussions', model: 'Discussion' })
+	.populate({ path: 'authors history.authors', select: 'username name thumbnail', model: 'User' })
 	.exec((err, pub)=> {
 		const options = [
 			{ path: 'discussions.author', select: '_id username name thumbnail', model: 'User'},

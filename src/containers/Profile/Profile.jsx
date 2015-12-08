@@ -145,7 +145,7 @@ const Profile = React.createClass({
 											
 											<div key={'profilePub-' + index} style={styles.pubBlock}>
 												<Link to={'/pub/' + pub.slug} style={globalStyles.link}>
-													<div style={styles.pubTextWrapper}>
+													<div key={'profilePubWrapper-' + index} style={styles.pubTextWrapper}>
 														<div style={styles.pubTitle}>{pub.title}</div>
 														<div style={styles.pubAbstract}>{pub.abstract}</div>
 													</div>

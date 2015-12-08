@@ -1,7 +1,8 @@
 import React, {PropTypes} from 'react';
 import Radium, {Style} from 'radium';
 import {PubSelectionPopup} from '../';
-// import {globalStyles} from '../../utils/styleConstants';
+import {globalStyles} from '../../utils/styleConstants';
+import { Link } from 'react-router';
 
 let styles = {};
 
@@ -47,7 +48,16 @@ const PubBody = React.createClass({
 				<div style={[styles.contentContainer, styles[this.props.status]]}>
 					
 					<h1 style={styles.pubTitle}>{this.props.title}</h1>
-					<p style={styles.pubAbstract}>{this.props.abstract}</p>
+					<div style={styles.authors}>
+						{
+							this.props.authors.map((author, index)=>{
+								return (<Link to={'/profile/' + author.username} style={globalStyles.link}>
+									<span key={'pubAuthor-' + index} style={styles.author}>{author.name} </span>
+								</Link>);
+							})
+						}
+					</div>
+					<div style={styles.pubAbstract}>{this.props.abstract}</div>
 					<div style={styles.headerDivider}></div>
 
 					<div id="pubBodyContent">
