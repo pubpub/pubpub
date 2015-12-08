@@ -10,6 +10,7 @@ let styles = {};
 import {loadCss} from '../../utils/loadingFunctions';
 import initCodeMirrorMode from '../../containers/Editor/editorCodeMirrorMode';
 import {codeMirrorStyles} from './discussionInputStyles';
+import {clearTempHighlights} from '../PubSelectionPopup/selectionFunctions';
 
 import marked from '../../modules/markdown/markdown';
 import markdownExtensions from '../../components/EditorPlugins';
@@ -41,26 +42,28 @@ const PubDiscussionsInput = React.createClass({
 		const codeMirror = CodeMirror(document.getElementById('codemirror-wrapper'), cmOptions);
 		this.cm = codeMirror;
 
-		// need to unmount on change
 		codeMirror.on('change', this.onEditorChange);
 
 	},
 
 	componentWillReceiveProps(nextProps) {
 		if (this.props.addDiscussionStatus === 'loading' && nextProps.addDiscussionStatus === 'loaded') {
-			const cm = document.getElementsByClassName('CodeMirror')[0].CodeMirror;
+			// This means the discussion was succesfully submitted
 			// Reset any form options here.
+			const cm = document.getElementsByClassName('CodeMirror')[0].CodeMirror;
 			cm.setValue('');
+			clearTempHighlights();
+
 		} else if (this.props.newDiscussionData.get('selections').size !== nextProps.newDiscussionData.get('selections').size) {
 			const cm = document.getElementsByClassName('CodeMirror')[0].CodeMirror;
-			const spacing = cm.getValue().length ? '\n' : '';
+			const spacing = cm.getValue().length ? ' ' : '';
 			cm.setValue(cm.getValue() + spacing + '[selection: ' + nextProps.newDiscussionData.get('selections').size + '] ' );	
 		}
 		
 	},
 
 	onEditorChange: function(cm, change) {
-		console.log('change!');
+		// console.log('change!');
 	},
 
 	submitDiscussion: function() {

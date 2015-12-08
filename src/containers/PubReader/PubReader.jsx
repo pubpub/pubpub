@@ -113,7 +113,6 @@ const PubReader = React.createClass({
 		}
 	},
 	addSelection: function(newSelection) {
-		console.log('newSelection', newSelection);
 		newSelection.pub = this.props.readerData.getIn(['pubData', '_id']);
 		newSelection.version = this.props.query.version !== undefined && this.props.query.version > 0 && this.props.query.version < (this.props.readerData.getIn(['pubData', 'history']).size - 1) ? this.props.query.version : this.props.readerData.getIn(['pubData', 'history']).size;
 		this.props.dispatch(addSelection(newSelection));
@@ -132,7 +131,7 @@ const PubReader = React.createClass({
 			? this.props.query.version - 1 
 			: this.props.readerData.getIn(['pubData', 'history']).size - 1;
 		// console.log(this.state.htmlTree);
-		console.log(pubData);
+		// console.log(pubData);
 		return (
 			<div style={styles.container}>
 

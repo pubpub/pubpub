@@ -91,7 +91,7 @@ const PubSelectionPopup = React.createClass({
 	},
 
 	onHighlightSave: function() {
-		const renderer = new Marklib.Rendering(document, {className: 'temp'}, document.getElementById('pubBodyContent'));
+		const renderer = new Marklib.Rendering(document, {className: 'tempHighlight'}, document.getElementById('pubBodyContent'));
 		const result = renderer.renderWithRange(this.state.range);
 		const highlightObject = {
 			text: this.state.selectionText,

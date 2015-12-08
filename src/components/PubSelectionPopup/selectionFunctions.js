@@ -19,3 +19,12 @@ export function getAncestorText(child) {
 	}
 	return null;
 }
+
+export function clearTempHighlights() {
+	const temps = document.getElementsByClassName('tempHighlight');
+	while (temps.length) {
+		for (let index = 0; index < temps.length; index += 1) {
+			temps[index].classList.remove('tempHighlight');
+		}	
+	}
+}

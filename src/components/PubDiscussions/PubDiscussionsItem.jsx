@@ -25,8 +25,6 @@ const PubDiscussionsItem = React.createClass({
 
 	componentDidMount() {
 		// Go through all the selections and add them to the body
-		console.log(this.props.discussionItem.selections);
-		console.log('this.props.pHashes', this.props.pHashes);
 		const Marklib = require('marklib');
 		this.props.discussionItem.selections.map((selection)=>{
 			const result = {

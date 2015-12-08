@@ -34,13 +34,13 @@ const PubBody = React.createClass({
 				
 				<Style rules={{
 					'.marking': {
-						backgroundColor: 'rgba(124, 235, 124, 0.7)'
+						backgroundColor: 'rgba(124, 235, 124, 0.7)',
 					},
-					'.temp': {
-						backgroundColor: 'rgba(200,200,200, 0.7)'
+					'.tempHighlight': {
+						backgroundColor: 'rgba(200,200,200, 0.7)',
 					},
 					'.selection': {
-						backgroundColor: 'rgba(100,200,80, 0.7)'	
+						backgroundColor: 'rgba(195, 245, 185, 0.7)',
 					}
 				}}/>
 
