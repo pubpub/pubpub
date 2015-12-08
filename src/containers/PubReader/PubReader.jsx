@@ -215,6 +215,7 @@ const PubReader = React.createClass({
 						discussionsData={pubData.discussions}
 						expertsData={pubData.experts}
 						addDiscussionHandler={this.addDiscussion} 
+						pHashes={pubData.pHashes}
 						addDiscussionStatus={this.props.readerData.get('addDiscussionStatus')}
 						newDiscussionData={this.props.readerData.get('newDiscussionData')}/>
 				</div>

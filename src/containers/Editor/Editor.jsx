@@ -212,7 +212,8 @@ const Editor = React.createClass({
 		const pHashes = {};
 		for ( const key in pTags ) {
 			if (pTags.hasOwnProperty(key)) {
-				pHashes[parseInt(key, 10) + 1] = SHA1(pTags[key].innerText).toString(encHex);
+				// pHashes[parseInt(key, 10) + 1] = SHA1(pTags[key].innerText).toString(encHex);
+				pHashes[SHA1(pTags[key].innerText).toString(encHex)] = parseInt(key, 10) + 1;
 			}
 		}
 		

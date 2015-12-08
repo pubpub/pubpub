@@ -27,10 +27,6 @@ const PubBody = React.createClass({
 		};
 	},
 	
-	// componentDidMount() {
-	// 	// Go through all the discussions and add them to the body
-	// },
-
 	render: function() {
 		// console.log(this.props.htmlTree);
 		return (

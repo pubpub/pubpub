@@ -12,6 +12,7 @@ const PubDiscussions = React.createClass({
 	propTypes: {
 		slug: PropTypes.string,
 		discussionsData: PropTypes.array,
+		pHashes: PropTypes.object,
 		expertsData: PropTypes.object,
 		addDiscussionHandler: PropTypes.func,
 		addDiscussionStatus: PropTypes.string,
@@ -43,7 +44,11 @@ const PubDiscussions = React.createClass({
 						newDiscussionData={this.props.newDiscussionData} />
 					{
 						this.props.discussionsData.map((discussion)=>{
-							return <PubDiscussionsItem key={discussion._id} discussionItem={discussion}/>;
+							return (<PubDiscussionsItem 
+								key={discussion._id} 
+								pHashes={this.props.pHashes}
+								discussionItem={discussion}/>
+							);
 						})
 					}
 				</div>

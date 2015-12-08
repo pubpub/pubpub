@@ -56,10 +56,10 @@ const PubSelectionPopup = React.createClass({
 
 		if (event.pageX || event.pageY) {
 			clickX = event.pageX;
-			clickY = event.pageY;
+			clickY = event.pageY + document.getElementsByClassName('centerBar')[0].scrollTop;
 		} else {
 			clickX = event.clientX + document.body.scrollLeft + document.documentElement.scrollLeft;
-			clickY = event.clientY + document.body.scrollTop + document.documentElement.scrollTop;
+			clickY = event.clientY + document.body.scrollTop + document.documentElement.scrollTop + document.getElementsByClassName('centerBar')[0].scrollTop;
 		}
 
 		const selection = Rangy.getSelection();
