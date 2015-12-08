@@ -212,7 +212,49 @@ export const styles = {
 	profileContent: {
 		// width: 'calc(100% - 40px)',
 		// margin: '0px 20px',
-	}
+	},
+	pubBlock: {
+		margin: 15,
+		float: 'left',
+		backgroundColor: '#EAEAEA',
+		fontFamily: 'Lora',
+		width: 'calc(100% / 3 - 30px)',
+		height: 175,
+		overflow: 'hidden',
+		position: 'relative',
+		'@media screen and (min-resolution: 3dppx), (max-width: 767px)': {
+			width: 'calc(100% - 30px)'
+		},
+
+	},
+	pubTextWrapper: {
+		width: '100%',
+		height: '100%',
+	},
+	pubTitle: {
+		color: '#333',
+		padding: '10px 10px 20px 10px',
+		fontSize: '20px',
+	},
+	pubAbstract: {
+		color: '#888',
+		padding: '5px 15px 0px 15px',
+	},
+	pubEdit: {
+		backgroundColor: '#FCFCFC',
+		textAlign: 'center',
+		position: 'absolute',
+		bottom: 2,
+		left: 2,
+		height: '30px',
+		lineHeight: '30px',
+		color: '#555',
+		width: 'calc(100% - 4px)',
+		':hover': {
+			cusror: 'pointer',
+			color: '#111',
+		},
+	},
 
 
 };

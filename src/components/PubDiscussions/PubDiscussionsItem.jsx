@@ -21,6 +21,7 @@ const PubDiscussionsItem = React.createClass({
 			discussionItem: {
 				selections: [],
 			},
+			pHashes: {},
 		};
 	},
 

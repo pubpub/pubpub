@@ -397,7 +397,12 @@ export function codeMirrorStyles(loginData) {
 		editorStyles.colorCite = '#fff';
 		break;
 	default:
+		editorStyles.cursorColor = '#000';
 		editorStyles.color = '#555';
+		editorStyles.colorHeader = '#676767';
+		editorStyles.colorTitle = '#575757';
+		editorStyles.colorPPM = '#474747';
+		editorStyles.colorCite = '#171717';
 		break;
 	}
 

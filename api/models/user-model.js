@@ -60,7 +60,7 @@ userSchema.statics.generateUniqueUsername = function (fullname, callback) {
 
 userSchema.statics.getUser = function (username, readerID, callback) {
   this.findOne({username: username})
-  .populate({path: "pubs", select:"title slug"})
+  .populate({path: "pubs", select:"title abstract slug"})
   .lean().exec((err, user) =>{
     if (err) { return callback(err, null); }
 

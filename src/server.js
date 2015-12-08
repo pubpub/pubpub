@@ -115,7 +115,7 @@ app.use((req, res) => {
 							<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 							${DocumentMeta.renderAsHTML()}
 							<link rel="shortcut icon" href="/favicon.ico" />
-							<link href='https://fonts.googleapis.com/css?family=Lato:300,900italic' rel='stylesheet' type='text/css' />
+							<link href='https://fonts.googleapis.com/css?family=Lato:300,900italic|Lora' rel='stylesheet' type='text/css' />
 
 							<!-- We could dynamically load these in Editor.jsx
 							<!-- If we have to load more local css - we should bundle it all into one minified file and load it here. -->

@@ -8,6 +8,7 @@ import {logout} from '../../actions/login';
 import {getProfile} from '../../actions/profile';
 import {LoaderDeterminate} from '../../components';
 import {styles} from './profileStyles';
+import {globalStyles} from '../../utils/styleConstants';
 
 const Profile = React.createClass({
 	propTypes: {
@@ -141,13 +142,26 @@ const Profile = React.createClass({
 								{profileData.pubs
 									? profileData.pubs.map((pub, index)=>{
 										return (
-											<div key={'profilePub-' + index}>
-												<h3>{pub.title}</h3>
-												<div>
-													<Link to={'/pub/' + pub.slug}>Read</Link> | <Link to={'/pub/' + pub.slug + '/edit'}>Edit {pub.title}</Link>
-												</div>
+											
+											<div key={'profilePub-' + index} style={styles.pubBlock}>
+												<Link to={'/pub/' + pub.slug} style={globalStyles.link}>
+													<div style={styles.pubTextWrapper}>
+														<div style={styles.pubTitle}>{pub.title}</div>
+														<div style={styles.pubAbstract}>{pub.abstract}</div>
+													</div>
+													
+												</Link>
+
+												{
+													ownProfile === 'self'
+														? <Link to={'/pub/' + pub.slug + '/edit'} style={globalStyles.link}>
+															<div key={'profilePubEdit-' + index} style={styles.pubEdit}>Edit</div>
+														</Link>
+														: null
+												}
 												
 											</div>
+											
 										);
 									})
 									: null
