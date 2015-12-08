@@ -119,7 +119,7 @@ app.use((req, res) => {
 
 							<!-- We could dynamically load these in Editor.jsx
 							<!-- If we have to load more local css - we should bundle it all into one minified file and load it here. -->
-							<!-- <link href='/css/codemirror.css' rel='stylesheet' type='text/css' /> -->
+							<link href='/css/codemirror.css' rel='stylesheet' type='text/css' /> <!-- I went back to loaded this one because the async css load was causing flicker on Discussion Codemirror -->
 							<!-- <link href='/css/react-select.min.css' rel='stylesheet' type='text/css' /> -->
 							<link href='https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.9.0/addon/hint/show-hint.css' rel='stylesheet' type='text/css' />
 							<!-- We could dynamically load these in Editor.jsx

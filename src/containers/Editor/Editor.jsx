@@ -66,7 +66,7 @@ const Editor = React.createClass({
 	componentDidMount() {
 
 		if (! this.props.editorData.get('error')) {
-			loadCss('/css/codemirror.css');
+			// loadCss('/css/codemirror.css');
 			loadCss('/css/react-select.min.css');
 			initCodeMirrorMode();
 

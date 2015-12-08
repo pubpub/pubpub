@@ -7,7 +7,7 @@ import {LoaderIndeterminate} from '../';
 
 let styles = {};
 
-import {loadCss} from '../../utils/loadingFunctions';
+// import {loadCss} from '../../utils/loadingFunctions';
 import initCodeMirrorMode from '../../containers/Editor/editorCodeMirrorMode';
 import {codeMirrorStyles} from './discussionInputStyles';
 import {clearTempHighlights} from '../PubSelectionPopup/selectionFunctions';
@@ -18,6 +18,7 @@ marked.setExtensions(markdownExtensions);
 
 const cmOptions = {
 	lineNumbers: false,
+	value: '',
 	lineWrapping: true,
 	viewportMargin: Infinity, // This will cause bad performance on large documents. Rendering the entire thing...
 	autofocus: false,
@@ -34,14 +35,8 @@ const PubDiscussionsInput = React.createClass({
 
 	componentDidMount() {
 
-		loadCss('/css/codemirror.css');
-		loadCss('/css/react-select.min.css');
 		initCodeMirrorMode();
-
-		// Load codemirror
 		const codeMirror = CodeMirror(document.getElementById('codemirror-wrapper'), cmOptions);
-		this.cm = codeMirror;
-
 		codeMirror.on('change', this.onEditorChange);
 
 	},
@@ -64,6 +59,7 @@ const PubDiscussionsInput = React.createClass({
 
 	onEditorChange: function(cm, change) {
 		// console.log('change!');
+		// console.log(cm);
 	},
 
 	submitDiscussion: function() {

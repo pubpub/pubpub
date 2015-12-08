@@ -19,6 +19,13 @@ export const codeMirrorStyles = {
 		width: 'calc(100% - 40px)',
 		// fontFamily: 'Alegreya',
 	},
+	'.CodeMirror-measure': {
+		position: 'absolute',
+		width: '100%',
+		height: '0',
+		overflow: 'hidden',
+		visibility: 'hidden',
+	},
 	'.CodeMirror-cursors': {
 		pointerEvents: 'none',
 	},
