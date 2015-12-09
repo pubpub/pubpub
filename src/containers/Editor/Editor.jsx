@@ -58,7 +58,12 @@ const Editor = React.createClass({
 			travisTOC: [],
 			travisTOCFull: [],
 			activeFocus: '',
-			firepadData: {},
+			firepadData: {
+				collaborators: {},
+				assets: {},
+				references: {},
+				settings: {},
+			},
 			codeMirrorChange: {},
 		};
 	},
@@ -324,6 +329,16 @@ const Editor = React.createClass({
 		};
 	},
 
+	getAuthorsArray: function() {
+		const outputAuthors = [];
+		Object.keys(this.state.firepadData.collaborators).map((author)=>{
+			if (this.state.firepadData.collaborators[author].permission === 'edit') {
+				outputAuthors.push(this.state.firepadData.collaborators[author]);
+			}
+		});
+		return outputAuthors;
+	},
+
 	render: function() {
 		const editorData = this.props.editorData;
 		const viewMode = this.props.editorData.get('viewMode');
@@ -336,7 +351,7 @@ const Editor = React.createClass({
 		const metaData = {
 			title: 'PubPub - Editing ' + this.props.slug
 		};
-
+		console.log(this.state.firepadData.collaborators);
 		return (
 
 			<div style={[styles.editorContainer, darkMode && styles.editorContainerDark]}>
@@ -489,7 +504,7 @@ const Editor = React.createClass({
 							status={'loaded'}
 							title={this.state.title} 
 							abstract={this.state.abstract} 
-							// authors={this.state.authors}
+							authors={this.getAuthorsArray()}
 							// addSelectionHandler={this.addSelection}
 							htmlTree={this.state.tree} />
 					</div>
