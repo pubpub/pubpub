@@ -43,6 +43,15 @@ const PubBody = React.createClass({
 					},
 					'.selection': {
 						backgroundColor: 'rgba(195, 245, 185, 0.7)',
+					},
+					'h1, h2, h3, h4, h5, h6': {
+						padding: '0px 20px',
+						color: '#4C4C4C',
+					},
+					'p, ul, ol': {
+						fontFamily: 'Lora',
+						padding: '0px 40px',
+						color: '#565656',
 					}
 				}}/>
 
@@ -58,7 +67,7 @@ const PubBody = React.createClass({
 							})
 						}
 					</div>
-					<div style={styles.pubAbstract}>{this.props.abstract}</div>
+					<p style={styles.pubAbstract}>{this.props.abstract}</p>
 					<div style={styles.headerDivider}></div>
 
 					<div id="pubBodyContent">
@@ -98,7 +107,7 @@ styles = {
 	},
 	pubAbstract: {
 		textAlign: 'center',
-		fontSize: '20px',
+		color: '#777',
 		margin: '30px 0px',
 	},
 	headerDivider: {
