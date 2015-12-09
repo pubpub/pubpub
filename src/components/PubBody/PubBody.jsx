@@ -44,11 +44,11 @@ const PubBody = React.createClass({
 					'.selection': {
 						backgroundColor: 'rgba(195, 245, 185, 0.7)',
 					},
-					'h1, h2, h3, h4, h5, h6': {
+					'#pubBodyContent h1, pubBodyContent h2, pubBodyContent h3, pubBodyContent h4, pubBodyContent h5, pubBodyContent h6': {
 						padding: '0px 20px',
 						color: '#4C4C4C',
 					},
-					'p, ul, ol': {
+					'#pubBodyContent p, pubBodyContent ul, pubBodyContent ol': {
 						fontFamily: 'Lora',
 						padding: '0px 40px',
 						color: '#565656',

@@ -16,14 +16,14 @@ export const src = {
 		const title = pluginProp.title;
 
 		const assets = (props.assets) ? Object.values(props.assets).map( function(asset) { return {'value': asset.refName, 'label': asset.refName};}) : [];
-		assets.push({'value': 'upload', 'label': 'Upload New'});
+		// assets.push({'value': 'upload', 'label': 'Upload New'});
 
 		const val = (value) ? {'value': value, 'label': value } : undefined;
 
 		const onValueChange = function(changedValue, callback) {
-			if (changedValue.value === 'upload') {
-				console.log('Trying to upload!!!');
-			}
+			// if (changedValue.value === 'upload') {
+			// 	console.log('Trying to upload!!!');
+			// }
 			callback();
 		};
 
