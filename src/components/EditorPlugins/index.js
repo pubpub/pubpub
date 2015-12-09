@@ -1,5 +1,8 @@
-import MathPlugin from './MathPlugin';
-import ImagePlugin from './ImagePlugin';
+import MathPlugin 	from './MathPlugin';
+import ImagePlugin 	from './ImagePlugin';
+import CitePlugin 	from './CitePlugin';
+import VideoPlugin 	from './VideoPlugin';
+
 import {parsePluginString} from '../../utils/parsePlugins';
 /* -----------------
 Supported PubPub Syntax
@@ -44,23 +47,52 @@ export default {
 			propDict.url = url;
 			return renderer(refName, propDict);
 		}
+	},
+	video: {
+		component: VideoPlugin,
+		inline: true,
+		autocomplete: true,
+		// rule: /^(?:\s)*(?::{2})asset(?::{2})([^\n:]+)(?::{2})/,
+		rule: /^(?:\s)*(?:\[)video:([^\n\]]*)(?:\])/,
+		inlineFunc: function(cap, renderer, assets) {
+			const propDict = parsePluginString(cap[1]);
+			const refName = propDict.src || 'none';
+			const asset = assets.find(asst => (asst.refName === refName));
+			let url = null;
+			if (asset && asset.assetType === 'video') {
+				url = asset.url_s3;
+			} else if (asset) {
+				url = 'error:type';
+			}
+			propDict.url = url;
+			return renderer(refName, propDict);
+		}
+	},
+	cite: {
+		component: CitePlugin,
+		inline: true,
+		autocomplete: true,
+		rule: /^(?:\s)*(?:\[)cite:([^\n\]]*)(?:\])/,
+		inlineFunc: function(cap, renderer, assets) {
+			const propDict = parsePluginString(cap[1]);
+			const refName = propDict.src || 'none';
+			const asset = assets.find(asst => (asst.refName === refName));
+			let url = null;
+			if (asset && asset.assetType === 'reference') {
+				url = asset.url_s3;
+			} else if (asset) {
+				url = 'error:type';
+			}
+			propDict.url = url;
+			return renderer(refName, propDict);
+		}
 	}
 };
 
 import {imageOptions} from './ImagePlugin';
+import {videoOptions} from './VideoPlugin';
+
 export const pluginOptions = {
 	image: imageOptions,
-};
-
-export const globalPluginOptions = {
-	caption: {
-		title: 'caption',
-		default: '',
-		value: '',
-	},
-	printFallbackImage: {
-		title: 'print fallback image',
-		default: '',
-		value: '',
-	}
+	video: videoOptions
 };
