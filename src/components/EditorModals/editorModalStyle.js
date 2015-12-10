@@ -55,7 +55,9 @@ export const baseStyles = {
 		fontFamily: 'Courier',
 		backgroundColor: globalStyles.sideBackground,
 		width: '60%',
-		margin: '30px auto',
+		margin: '0px auto',
+		position: 'relative',
+		top: 50,
 	},
 
 	rowHeaderFontSize: '25px',

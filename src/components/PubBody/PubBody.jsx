@@ -50,7 +50,7 @@ const PubBody = React.createClass({
 					},
 					'#pubBodyContent p, #pubBodyContent ul, #pubBodyContent ol': {
 						fontFamily: 'Lora',
-						padding: '0px 40px',
+						padding: '0px 20px',
 						color: '#565656',
 					}
 				}}/>

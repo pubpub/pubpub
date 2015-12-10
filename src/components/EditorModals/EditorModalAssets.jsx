@@ -174,7 +174,7 @@ export default Radium(EditorModalAssets);
 styles = {
 	dropzone: {
 		width: '100%',
-		minHeight: '400px',
+		minHeight: '430px',
 	},
 	dropzoneActive: {
 		backgroundColor: '#F5F5F5',
