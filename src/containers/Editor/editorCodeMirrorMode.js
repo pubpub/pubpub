@@ -46,7 +46,6 @@ export default function() {
 
 	CodeMirror.defineSimpleMode('plugin', {
 		start: [
-			{regex: /\\$[^\$]+\$/, token: 'plugin-math string'},
 			{regex: /\[title:.*\]/, token: 'ppm ppm-title'},
 			{regex: /\[abstract:.*\]/, token: 'ppm ppm-abstract'},
 			{regex: /\[authorsNote:.*\]/, token: 'ppm ppm-authorsNote'},
@@ -56,11 +55,16 @@ export default function() {
 			{regex: /\[audio:.*\]/, token: 'ppm plugin plugin-audio'},
 			{regex: /\[table:.*\]/, token: 'ppm plugin plugin-table'},
 			{regex: /\[cite:/, token: 'ppm ppm-cite', next: 'citationStart'},
-
 		],
 		citationStart: [
 			// {regex: /.*/, token: 'plugin-content'},
 			{regex: /.*\]/, token: 'ppm ppm-cite', next: 'start'}
+		]
+	});
+
+	CodeMirror.defineSimpleMode('math', {
+		start: [
+			{regex: /.*/, token: 'ppm ppm-math string'}
 		]
 	});
 
@@ -70,7 +74,13 @@ export default function() {
 			{open: '[', close: ']',
 			 mode: CodeMirror.getMode(config, 'plugin'),
 			 innerStyle: 'pubpub-markdown',
-		 	 parseDelimiters: true}
+		 	 parseDelimiters: true},
+			 {open: '$', close: '$',
+ 			 mode: CodeMirror.getMode(config, 'math'),
+ 			 innerStyle: 'pubpub-math',
+ 		 	 parseDelimiters: false}
+
+
 		);
 	});
 }
