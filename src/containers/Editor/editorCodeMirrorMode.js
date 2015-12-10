@@ -33,7 +33,7 @@ export default function() {
 				}
 				if (token.end - startPos <= 8) {
 					result = {list: list, from: CodeMirror.Pos(cur.line, startPos + 1), to: CodeMirror.Pos(cur.line, token.end)};
-				} 
+				}
 			}
 			// } else {
 			// 	return null;
@@ -46,7 +46,7 @@ export default function() {
 
 	CodeMirror.defineSimpleMode('plugin', {
 		start: [
-			// {regex: /\[/, token: 'plugin-start',next:'pluginStart'}
+			{regex: /\\$[^\$]+\$/, token: 'plugin-math string'},
 			{regex: /\[title:.*\]/, token: 'ppm ppm-title'},
 			{regex: /\[abstract:.*\]/, token: 'ppm ppm-abstract'},
 			{regex: /\[authorsNote:.*\]/, token: 'ppm ppm-authorsNote'},

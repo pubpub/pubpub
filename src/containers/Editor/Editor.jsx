@@ -137,7 +137,7 @@ const Editor = React.createClass({
 		}
 		// const start = performance.now();
 
-		// This feels inefficient. 
+		// This feels inefficient.
 		// An alternative is that we don't pass a trimmed version of the text to the markdown processor.
 		// Instead we define header plugins and pass the entire thing to both here and body.
 		const fullMD = cm.getValue();
@@ -153,11 +153,10 @@ const Editor = React.createClass({
 		const authorsNoteMatch = fullMD.match(authorsNoteRE);
 		const authorsNote = authorsNoteMatch && authorsNoteMatch.length ? authorsNoteMatch[1].trim() : '';
 		const markdown = fullMD.replace(/\[title:.*?\]/g, '').replace(/\[abstract:.*?\]/g, '').replace(/\[authorsNote:.*?\]/g, '').trim();
-		
-		const mdOutput = marked(markdown, Object.values(this.state.firepadData.assets || {}));
-		// const mdOutput = marked(cm.getValue(), Object.values(this.state.firepadData.assets || {}));
-		// console.log(mdOutput.travisTOCFull);
-		// console.log(mdOutput.tree);
+
+		const mdOutput = marked(markdown, this.state.firepadData.assets || {});
+		// const mdOutput = marked(markdown, Object.values(this.state.firepadData.assets || {}));
+
 		// const end = performance.now();
 		// console.log('timing = ', end - start);
 		this.setState({
@@ -221,7 +220,7 @@ const Editor = React.createClass({
 				pHashes[SHA1(pTags[key].innerText).toString(encHex)] = parseInt(key, 10) + 1;
 			}
 		}
-		
+
 		const newVersion = {
 			slug: this.props.slug,
 			title: title,
@@ -351,7 +350,7 @@ const Editor = React.createClass({
 		const metaData = {
 			title: 'PubPub - Editing ' + this.props.slug
 		};
-		
+
 		return (
 
 			<div style={[styles.editorContainer, darkMode && styles.editorContainerDark]}>
@@ -502,8 +501,8 @@ const Editor = React.createClass({
 						{/* {this.state.tree} */}
 						<PubBody
 							status={'loaded'}
-							title={this.state.title} 
-							abstract={this.state.abstract} 
+							title={this.state.title}
+							abstract={this.state.abstract}
 							authors={this.getAuthorsArray()}
 							// addSelectionHandler={this.addSelection}
 							htmlTree={this.state.tree} />

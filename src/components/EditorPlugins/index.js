@@ -37,7 +37,8 @@ export default {
 		inlineFunc: function(cap, renderer, assets) {
 			const propDict = parsePluginString(cap[1]);
 			const refName = propDict.src || 'none';
-			const asset = assets.find(asst => (asst.refName === refName));
+			// const asset = assets.find(asst => (asst.refName === refName));
+			const asset = assets[refName];
 			let url = null;
 			if (asset && asset.assetType === 'image') {
 				url = asset.url_s3;
@@ -57,7 +58,8 @@ export default {
 		inlineFunc: function(cap, renderer, assets) {
 			const propDict = parsePluginString(cap[1]);
 			const refName = propDict.src || 'none';
-			const asset = assets.find(asst => (asst.refName === refName));
+			// const asset = assets.find(asst => (asst.refName === refName));
+			const asset = assets[refName];
 			let url = null;
 			if (asset && asset.assetType === 'video') {
 				url = asset.url_s3;
@@ -76,7 +78,7 @@ export default {
 		inlineFunc: function(cap, renderer, assets) {
 			const propDict = parsePluginString(cap[1]);
 			const refName = propDict.src || 'none';
-			const asset = assets.find(asst => (asst.refName === refName));
+			const asset = assets[refName];
 			let url = null;
 			if (asset && asset.assetType === 'reference') {
 				url = asset.url_s3;
