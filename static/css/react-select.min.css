@@ -237,11 +237,13 @@
 }
 .react-selectize.simple-select:not(.open) {
   background-color: #f9f9f9;
+	/*
   background-image: -webkit-linear-gradient(top, #fefefe, #f2f2f2);
   background-image: -moz-linear-gradient(top, #fefefe, #f2f2f2);
   background-image: -o-linear-gradient(top, #fefefe, #f2f2f2);
   background-image: -ms-linear-gradient(top, #fefefe, #f2f2f2);
   background-image: linear-gradient(to bottom, #fefefe, #f2f2f2);
+	*/
 }
 .react-selectize.simple-select .control {
   padding: 2px 52px 2px 8px;

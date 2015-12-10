@@ -5,7 +5,10 @@ import {SimpleSelect} from 'react-selectize';
 
 export function src(assetType) {
 
+	console.log('CREATING SRC WITH' + assetType);
+
 	const filterAssets = function(asset) {
+		console.log('Filtering by asset type!' + assetType);
 		return (asset.assetType === assetType);
 	};
 
@@ -21,6 +24,8 @@ export function src(assetType) {
 		component: function(pluginProp, value, props, styles) {
 			const title = pluginProp.title;
 
+			console.log(assetType);
+
 			const assets = (props.assets) ? Object.values(props.assets).filter(filterAssets).map( function(asset) { return {'value': asset.refName, 'label': asset.refName};}) : [];
 			// assets.push({'value': 'upload', 'label': 'Upload New'});
 
@@ -32,7 +37,7 @@ export function src(assetType) {
 
 			let elem;
 			if (val) {
-				elem = <SimpleSelect onValueChange={onValueChange} ref={'pluginInput-' + title} name={title} id={title} options={assets} defaultValue={val}/>;
+				elem = <SimpleSelect style={styles.pluginPropSrc} onValueChange={onValueChange} ref={'pluginInput-' + title} name={title} id={title} options={assets} defaultValue={val}/>;
 			} else {
 				elem = <SimpleSelect onValueChange={onValueChange} ref={'pluginInput-' + title} name={title} id={title} options={assets}/>;
 			}

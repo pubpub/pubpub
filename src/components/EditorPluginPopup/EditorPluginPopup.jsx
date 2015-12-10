@@ -295,6 +295,9 @@ styles = {
 	pluginOptionDefaultVisible: {
 		display: 'block'
 	},
+	pluginPropSrc: {
+		width: '75%'
+	},
 	clearfix: {
 		display: 'table',
 		clear: 'both',
