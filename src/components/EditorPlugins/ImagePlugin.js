@@ -4,7 +4,7 @@ import ImageLoader from 'react-imageloader';
 import {src, width, height, align} from './pluginProps';
 
 
-export const imageOptions = {src, width, height, align};
+export const imageOptions = {src: src('video'), width, height, align};
 
 // let styles = {};
 const ImagePlugin = React.createClass({

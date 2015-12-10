@@ -2,7 +2,7 @@ import React, {PropTypes} from 'react';
 import Radium from 'radium';
 import {src, width, height, align} from './pluginProps';
 
-export const videoOptions = {src, width, height, align};
+export const videoOptions = {src: src('video'), width, height, align};
 
 // let styles = {};
 const VideoPlugin = React.createClass({

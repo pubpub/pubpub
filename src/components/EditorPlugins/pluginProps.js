@@ -3,36 +3,43 @@ import {SimpleSelect} from 'react-selectize';
 // import {openModal} from '../../actions/editor';
 
 
-export const src = {
-	title: 'src',
-	default: '',
-	defaultValue: '',
-	defaultString: '',
-	valueFunction: function(ref) {
-		const val = ref.value();
-		return (val) ? val.value : null;
-	},
-	component: function(pluginProp, value, props, styles) {
-		const title = pluginProp.title;
+export function src(assetType) {
 
-		const assets = (props.assets) ? Object.values(props.assets).map( function(asset) { return {'value': asset.refName, 'label': asset.refName};}) : [];
-		// assets.push({'value': 'upload', 'label': 'Upload New'});
+	const filterAssets = function(asset) {
+		return (asset.assetType === assetType);
+	};
 
-		const val = (value) ? {'value': value, 'label': value } : undefined;
+	return {
+		title: 'src',
+		default: '',
+		defaultValue: '',
+		defaultString: '',
+		valueFunction: function(ref) {
+			const val = ref.value();
+			return (val) ? val.value : null;
+		},
+		component: function(pluginProp, value, props, styles) {
+			const title = pluginProp.title;
 
-		const onValueChange = function(changedValue, callback) {
-			callback();
-		};
+			const assets = (props.assets) ? Object.values(props.assets).filter(filterAssets).map( function(asset) { return {'value': asset.refName, 'label': asset.refName};}) : [];
+			// assets.push({'value': 'upload', 'label': 'Upload New'});
 
-		let elem;
-		if (val) {
-			elem = <SimpleSelect onValueChange={onValueChange} ref={'pluginInput-' + title} name={title} id={title} options={assets} defaultValue={val}/>;
-		} else {
-			elem = <SimpleSelect onValueChange={onValueChange} ref={'pluginInput-' + title} name={title} id={title} options={assets}/>;
+			const val = (value) ? {'value': value, 'label': value } : undefined;
+
+			const onValueChange = function(changedValue, callback) {
+				callback();
+			};
+
+			let elem;
+			if (val) {
+				elem = <SimpleSelect onValueChange={onValueChange} ref={'pluginInput-' + title} name={title} id={title} options={assets} defaultValue={val}/>;
+			} else {
+				elem = <SimpleSelect onValueChange={onValueChange} ref={'pluginInput-' + title} name={title} id={title} options={assets}/>;
+			}
+			return elem;
 		}
-		return elem;
-	}
-};
+	};
+}
 
 export const width = {
 	title: 'width',
