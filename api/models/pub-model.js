@@ -5,7 +5,7 @@ import * as jsdiff from 'diff';
 
 var pubSchema = new Schema({
 	slug: { type: String, required: true, index: { unique: true } },
-	
+
 	// --------------
 	// --------------
 	// The Items in this block are fozen at publish time.
@@ -17,7 +17,7 @@ var pubSchema = new Schema({
 	authorsNote: { type: String },
 	markdown: { type: String }, //Preprocessed with comments describing all plugin options
 	authors: [{ type: ObjectId, ref: 'User'}],
-	assets: [{ type: ObjectId, ref: 'Asset'}], //Raw sources 
+	assets: [{ type: ObjectId, ref: 'Asset'}], //Raw sources
 	references: [{ type: ObjectId, ref: 'Reference'}], //Raw References
 	style: { type: Schema.Types.Mixed },
 	lastUpdated: { type: Date },
@@ -26,17 +26,17 @@ var pubSchema = new Schema({
 	// --------------
 	// --------------
 
-	// A duplicate cache of the parameters as defined in the editor. 
-	// Also stored here so that we can privelege access to the editor 
+	// A duplicate cache of the parameters as defined in the editor.
+	// Also stored here so that we can privelege access to the editor
 	// and to private pubs
 	collaborators: {
-		canEdit:[{ type: ObjectId, ref: 'User'}], 
-		canRead:[{ type: ObjectId, ref: 'User'}] 
+		canEdit:[{ type: ObjectId, ref: 'User'}],
+		canRead:[{ type: ObjectId, ref: 'User'}]
 	},
-	
+
 	createDate: { type: Date },
 	htmlCache: { type: String }, // Do we want to cache the html render? It might not be any faster...
-	
+
 	history: [{ //History is appended to each time a 'publish' is made.
 		publishNote: { type: String },
 		publishDate: { type: Date },
@@ -53,14 +53,14 @@ var pubSchema = new Schema({
 			// diffReferences: { type: String },
 			// diffStyle: { type: String },
 		},
-		
+
 		// The following should be enough to entirely reproduce the document
 		title: { type: String },
 		abstract: { type: String },
 		authorsNote: { type: String },
 		markdown: { type: String }, //Preprocessed with comments describing all plugin options
 		authors: [{ type: ObjectId, ref: 'User'}],
-		assets: [{ type: ObjectId, ref: 'Asset'}], //Raw sources 
+		assets: [{ type: ObjectId, ref: 'Asset'}], //Raw sources
 		references: [{ type: ObjectId, ref: 'Reference'}], //Raw References
 		style: { type: Schema.Types.Mixed },
 		status: { type: String },
@@ -68,7 +68,7 @@ var pubSchema = new Schema({
 	}],
 
 	followers: [{ type: ObjectId, ref: 'User'}],
-	
+
 	settings:{
 		pubPrivacy: { type: String },
 	},
@@ -142,6 +142,7 @@ pubSchema.statics.isUnique = function (slug,callback) {
 pubSchema.statics.getPub = function (slug, readerID, callback) {
 	this.findOne({slug: slug})
 	.populate({ path: 'discussions', model: 'Discussion' })
+	.populate({ path: 'assets history.assets', model: 'Asset' })
 	.populate({ path: 'authors history.authors', select: 'username name thumbnail', model: 'User' })
 	.exec((err, pub)=> {
 		const options = [
@@ -157,7 +158,7 @@ pubSchema.statics.getPub = function (slug, readerID, callback) {
 			if (populatedPub.status === 'Unpublished') { return callback(null, 'Pub not yet published'); }
 
 			// Check if the pub is private, and if so, check readers/authors list
-			if (populatedPub.settings.pubPrivacy === 'private') { 
+			if (populatedPub.settings.pubPrivacy === 'private') {
 				if (populatedPub.collaborators.canEdit.indexOf(readerID) === -1 && populatedPub.collaborators.canRead.indexOf(readerID) === -1) {
 					return callback(null, 'Private Pub');
 				}
@@ -168,7 +169,7 @@ pubSchema.statics.getPub = function (slug, readerID, callback) {
 				outputPub.isAuthor = true;
 			}
 			// console.log(outputPub.isAuthor);
-			
+
 			return callback(null, outputPub);
 		});
 
@@ -193,18 +194,18 @@ pubSchema.statics.getPubEdit = function (slug, readerID, callback) {
 		return callback(null, {});
 
 	});
-	
+
 };
 
 pubSchema.statics.generateDiffObject = function(oldPubObject, newPubObject) {
-		
+
 	const t0 = new Date();
 	const outputObject = {};
 	outputObject.diffTitle = jsdiff.diffWords(oldPubObject.title, newPubObject.title, {newlineIsToken: true});
 	outputObject.diffAbstract = jsdiff.diffWords(oldPubObject.abstract, newPubObject.abstract, {newlineIsToken: true});
 	outputObject.diffAuthorsNote = jsdiff.diffWords(oldPubObject.authorsNote, newPubObject.authorsNote, {newlineIsToken: true});
 	outputObject.diffMarkdown = jsdiff.diffWords(oldPubObject.markdown, newPubObject.markdown, {newlineIsToken: true});
-	
+
 	let additions = 0;
 	let deletions = 0;
 	for (const key in outputObject) {

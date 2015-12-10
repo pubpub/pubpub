@@ -73,9 +73,9 @@ const PubReader = React.createClass({
 			this.setState({
 				htmlTree: mdOutput.tree,
 				TOC: mdOutput.travisTOCFull,
-			});	
+			});
 		}
-		
+
 	},
 
 	componentWillUnmount() {
@@ -125,10 +125,10 @@ const PubReader = React.createClass({
 		} else {
 			metaData.title = 'PubPub - ' + this.props.slug;
 		}
-		
+
 		const pubData = this.props.readerData.get('pubData').toJS();
 		const versionIndex = this.props.query.version !== undefined && this.props.query.version > 0 && this.props.query.version < (this.props.readerData.getIn(['pubData', 'history']).size - 1)
-			? this.props.query.version - 1 
+			? this.props.query.version - 1
 			: this.props.readerData.getIn(['pubData', 'history']).size - 1;
 		// console.log(this.state.htmlTree);
 		// console.log(pubData);
@@ -138,9 +138,9 @@ const PubReader = React.createClass({
 				<DocumentMeta {...metaData} />
 
 				<div className="leftBar" style={[styles.leftBar, styles[this.props.readerData.get('status')]]}>
-					
-					<PubLeftBar 
-						slug={this.props.slug} 
+
+					<PubLeftBar
+						slug={this.props.slug}
 						query={this.props.query}
 						pubStatus={pubData.status}/>
 
@@ -148,15 +148,15 @@ const PubReader = React.createClass({
 
 				<div className="centerBar" style={[styles.centerBar, this.props.query.mode !== undefined && styles.centerBarModalActive]}>
 
-					<PubNav 
-						height={this.height} 
-						openPubModalHandler={this.openPubModal} 
-						status={this.props.readerData.get('status')} 
-						slug={this.props.slug} 
+					<PubNav
+						height={this.height}
+						openPubModalHandler={this.openPubModal}
+						status={this.props.readerData.get('status')}
+						slug={this.props.slug}
 						isAuthor={pubData.isAuthor}
 						pubStatus={pubData.status}/>
 
-					<LoaderDeterminate 
+					<LoaderDeterminate
 						value={this.props.readerData.get('status') === 'loading' ? 0 : 100}/>
 
 					{
@@ -172,15 +172,16 @@ const PubReader = React.createClass({
 
 					<PubBody
 						status={this.props.readerData.get('status')}
-						title={pubData.history[versionIndex].title} 
-						abstract={pubData.history[versionIndex].abstract} 
+						title={pubData.history[versionIndex].title}
+						abstract={pubData.history[versionIndex].abstract}
 						htmlTree={this.state.htmlTree}
 						authors={pubData.history[versionIndex].authors}
+						assets={pubData.history[versionIndex].assets}
 						addSelectionHandler={this.addSelection} />
 
-					<PubModals 
+					<PubModals
 						slug={this.props.slug}
-						status={this.props.readerData.get('status')} 
+						status={this.props.readerData.get('status')}
 						pubStatus={pubData.status}
 						openPubModalHandler={this.openPubModal}
 						closePubModalHandler={this.closePubModal}
@@ -197,7 +198,7 @@ const PubReader = React.createClass({
 						// Discussions Data
 						discussionsData={pubData.discussions}
 						expertsData={pubData.experts}
-						addDiscussionHandler={this.addDiscussion} 
+						addDiscussionHandler={this.addDiscussion}
 						pHashes={pubData.pHashes}
 						addDiscussionStatus={this.props.readerData.get('addDiscussionStatus')}
 						newDiscussionData={this.props.readerData.get('newDiscussionData')}
@@ -206,25 +207,25 @@ const PubReader = React.createClass({
 				</div>
 
 				<div className="rightBar" style={[styles.rightBar, styles[this.props.readerData.get('status')]]}>
-					<PubStatus 
+					<PubStatus
 						slug={this.props.slug}
 						pubStatus={pubData.status}
 						featuredIn={pubData.featuredIn}
 						submittedTo={pubData.submittedTo}/>
-					<PubReviews 
+					<PubReviews
 						slug={this.props.slug}
 						reviewsData={pubData.reviews} />
-					<PubDiscussions 
+					<PubDiscussions
 						slug={this.props.slug}
 						discussionsData={pubData.discussions}
 						expertsData={pubData.experts}
-						addDiscussionHandler={this.addDiscussion} 
+						addDiscussionHandler={this.addDiscussion}
 						pHashes={pubData.pHashes}
 						addDiscussionStatus={this.props.readerData.get('addDiscussionStatus')}
 						newDiscussionData={this.props.readerData.get('newDiscussionData')}
 						userThumbnail={this.props.loginData.getIn(['userData', 'thumbnail'])}/>
 				</div>
-				
+
 			</div>
 		);
 	}
@@ -233,7 +234,7 @@ const PubReader = React.createClass({
 
 export default connect( state => {
 	return {
-		readerData: state.pub, 
+		readerData: state.pub,
 		loginData: state.login,
 		slug: state.router.params.slug,
 		query: state.router.location.query,
@@ -315,8 +316,8 @@ styles = {
 			height: 'calc(100vh - ' + globalStyles.headerHeight + ' - ' + (2 * pubSizes.xLargeLeftBarPadding) + 'px)',
 			marginRight: pubSizes.xLargePub
 		},
-		
-		
+
+
 	},
 
 	centerBar: {
@@ -412,7 +413,7 @@ styles = {
 	},
 	loading: {
 		opacity: 0,
-	}, 
+	},
 	loaded: {
 		opacity: 1
 	},

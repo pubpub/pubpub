@@ -13,6 +13,7 @@ const PubBody = React.createClass({
 		abstract: PropTypes.string,
 		htmlTree: PropTypes.array,
 		authors: PropTypes.array,
+		assets: PropTypes.array,
 		addSelectionHandler: PropTypes.func,
 	},
 	getDefaultProps: function() {
@@ -28,12 +29,12 @@ const PubBody = React.createClass({
 			TOC: [],
 		};
 	},
-	
+
 	render: function() {
 		// console.log(this.props.htmlTree);
 		return (
 			<div style={styles.container}>
-				
+
 				<Style rules={{
 					'.marking': {
 						backgroundColor: 'rgba(124, 235, 124, 0.7)',
@@ -56,12 +57,12 @@ const PubBody = React.createClass({
 				}}/>
 
 				<div style={[styles.contentContainer, styles[this.props.status]]}>
-					
+
 					<h1 style={styles.pubTitle}>{this.props.title}</h1>
 					<div style={styles.authors}> <span>by </span>
 						{
 							this.props.authors.map((author, index)=>{
-								return (index === this.props.authors.length - 1 
+								return (index === this.props.authors.length - 1
 									? <Link to={'/profile/' + author.username} key={'pubAuthorLink-' + index} style={globalStyles.link}><span key={'pubAuthor-' + index} style={styles.author}>{author.name}</span></Link>
 									: <Link to={'/profile/' + author.username} key={'pubAuthorLink-' + index} style={globalStyles.link}><span key={'pubAuthor-' + index} style={styles.author}>{author.name}, </span></Link>);
 							})
@@ -76,7 +77,7 @@ const PubBody = React.createClass({
 					</div>
 
 				</div>
-				
+
 			</div>
 		);
 	}
@@ -96,7 +97,7 @@ styles = {
 	},
 	loading: {
 		opacity: 0,
-	}, 
+	},
 	loaded: {
 		opacity: 1
 	},
