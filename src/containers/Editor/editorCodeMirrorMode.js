@@ -6,11 +6,11 @@ export default function() {
 
 	CodeMirror.registerHelper('hint', 'plugins', function(editor) { // (editor,options)
 
-		let result;
+		let result = null;
 		try {
 			const cur = editor.getCursor();
 			const token = editor.getTokenAt(cur);
-			// console.log(token);
+			console.log(token);
 
 			if (token.type === 'pubpub-markdown') {
 				// const list = ['asset', 'image', 'title', 'audio', 'video', 'table'];
@@ -31,9 +31,9 @@ export default function() {
 					startPos--;
 					char = line.charAt(startPos);
 				}
-				result = {list: list, from: CodeMirror.Pos(cur.line, startPos + 1), to: CodeMirror.Pos(cur.line, token.end)};
-			} else {
-				result = null;
+				if (token.end - startPos <= 8) {
+					result = {list: list, from: CodeMirror.Pos(cur.line, startPos + 1), to: CodeMirror.Pos(cur.line, token.end)};
+				} 
 			}
 			// } else {
 			// 	return null;
