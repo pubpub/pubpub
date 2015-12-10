@@ -196,7 +196,6 @@ const EditorPluginPopup = React.createClass({
 						{
 							Object.keys(this.state.contentObject).map((valKey)=>{
 								const pluginProp = this.state.contentObject[valKey];
-								let html;
 								let elem;
 								const pluginPropTitle = pluginProp.title;
 								const value = this.state.values[pluginPropTitle] || pluginProp.defaultValue;
@@ -205,13 +204,12 @@ const EditorPluginPopup = React.createClass({
 								} else {
 									elem = <input ref={'pluginInput-' + pluginPropTitle} style={styles.pluginOptionInput} name={pluginPropTitle} id={pluginPropTitle} type="text" defaultValue={value}/>;
 								}
-								html = 	(<div key={'pluginVal-' + pluginPropTitle} style={styles.pluginOptionWrapper}>
+								return (<div key={'pluginVal-' + pluginPropTitle} style={styles.pluginOptionWrapper}>
 													<label htmlFor={pluginPropTitle} style={styles.pluginOptionLabel}>{pluginPropTitle}</label>
 													{elem}
-													<div style={[styles.pluginOptionDefault, pluginProp.default && styles.pluginOptionDefaultVisible]}>default: {pluginProp.defaultString}</div>
+													<div style={[styles.pluginOptionDefault, pluginProp.defaultString && styles.pluginOptionDefaultVisible]}>default: {pluginProp.defaultString}</div>
 													<div style={styles.clearfix}></div>
 													</div>);
-								return html;
 							})
 						}
 					<div style={styles.pluginSave} key={'pluginPopupSave'} onClick={this.onPluginSave}>Save</div>

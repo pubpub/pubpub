@@ -21,15 +21,12 @@ export const src = {
 		const val = (value) ? {'value': value, 'label': value } : undefined;
 
 		const onValueChange = function(changedValue, callback) {
-			// if (changedValue.value === 'upload') {
-			// 	console.log('Trying to upload!!!');
-			// }
 			callback();
 		};
 
 		let elem;
 		if (val) {
-			elem = <SimpleSelect onValueChange={onValueChange} ref={'pluginInput-' + title} name={title} id={title} options={assets} value={val}/>;
+			elem = <SimpleSelect onValueChange={onValueChange} ref={'pluginInput-' + title} name={title} id={title} options={assets} defaultValue={val}/>;
 		} else {
 			elem = <SimpleSelect onValueChange={onValueChange} ref={'pluginInput-' + title} name={title} id={title} options={assets}/>;
 		}
@@ -39,22 +36,19 @@ export const src = {
 
 export const width = {
 	title: 'width',
-	defaultValue: '100%',
+	defaultValue: '',
 	defaultString: '100%',
-	value: '',
 };
 
 
 export const height = {
 	title: 'height',
-	defaultValue: 'auto',
+	defaultValue: '',
 	defaultString: 'auto',
-	value: '',
 };
 
 export const align = {
 	title: 'align',
-	defaultValue: 'center',
+	defaultValue: '',
 	defaultString: 'center',
-	value: '',
 };
