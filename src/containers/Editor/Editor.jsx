@@ -152,9 +152,17 @@ const Editor = React.createClass({
 		const authorsNoteRE = /\[authorsNote:(.*?)\]/i;
 		const authorsNoteMatch = fullMD.match(authorsNoteRE);
 		const authorsNote = authorsNoteMatch && authorsNoteMatch.length ? authorsNoteMatch[1].trim() : '';
+
+		const assets = this.state.firepadData.assets;
+		const assetsObj = Object.keys(assets || {}).reduce(function(obj, key) {
+			const asset = assets[key];
+			obj[asset.refName] = asset;
+			return obj;
+		}, {});
+
 		const markdown = fullMD.replace(/\[title:.*?\]/g, '').replace(/\[abstract:.*?\]/g, '').replace(/\[authorsNote:.*?\]/g, '').trim();
 
-		const mdOutput = marked(markdown, this.state.firepadData.assets || {});
+		const mdOutput = marked(markdown, assetsObj);
 		// const mdOutput = marked(markdown, Object.values(this.state.firepadData.assets || {}));
 
 		// const end = performance.now();

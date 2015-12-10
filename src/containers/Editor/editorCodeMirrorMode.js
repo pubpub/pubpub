@@ -10,7 +10,6 @@ export default function() {
 		try {
 			const cur = editor.getCursor();
 			const token = editor.getTokenAt(cur);
-			console.log(token);
 
 			if (token.type === 'pubpub-markdown') {
 				// const list = ['asset', 'image', 'title', 'audio', 'video', 'table'];
