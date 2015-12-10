@@ -351,7 +351,7 @@ const Editor = React.createClass({
 		const metaData = {
 			title: 'PubPub - Editing ' + this.props.slug
 		};
-		console.log(this.state.firepadData.collaborators);
+		
 		return (
 
 			<div style={[styles.editorContainer, darkMode && styles.editorContainerDark]}>
