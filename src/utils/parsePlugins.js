@@ -10,10 +10,15 @@ export function parsePluginString(str) {
 	return propDict;
 }
 
-export function convertFirebaseToObject(firebaseObj) {
+export function convertFirebaseToObject(firebaseObj, shouldCount = false) {
+	let count = 0;
 	return Object.keys(firebaseObj || {}).reduce(function(obj, key) {
 		const asset = firebaseObj[key];
 		obj[asset.refName] = asset;
+		if (shouldCount) {
+			count++;
+			obj[asset.refName].count = count;
+		}
 		return obj;
 	}, {});
 }

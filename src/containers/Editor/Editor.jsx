@@ -159,7 +159,7 @@ const Editor = React.createClass({
 		const authorsNote = authorsNoteMatch && authorsNoteMatch.length ? authorsNoteMatch[1].trim() : '';
 
 		const assets = convertFirebaseToObject(this.state.firepadData.assets);
-		const references = convertFirebaseToObject(this.state.firepadData.references);
+		const references = convertFirebaseToObject(this.state.firepadData.references, true);
 
 		const markdown = fullMD.replace(/\[title:.*?\]/g, '').replace(/\[abstract:.*?\]/g, '').replace(/\[authorsNote:.*?\]/g, '').trim();
 

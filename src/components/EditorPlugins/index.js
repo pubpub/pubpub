@@ -69,6 +69,7 @@ export default {
 				url = 'error:type';
 			}
 			propDict.url = url;
+
 			return renderer(refName, propDict);
 		}
 	},
@@ -80,15 +81,14 @@ export default {
 		inlineFunc: function(cap, renderer, data) {
 			const references = data.references;
 			const propDict = parsePluginString(cap[1]);
-			const refName = propDict.src || 'none';
+			const refName = propDict.srcRef || 'none';
 			const ref = references[refName];
-			let title = null;
 			if (ref) {
-				title = ref.title;
+				propDict.title = ref.title;
+				propDict.count = ref.count;
 			} else if (ref) {
-				title = 'error:type';
+				propDict.title = 'error:type';
 			}
-			propDict.title = title;
 			return renderer(refName, propDict);
 		}
 	}

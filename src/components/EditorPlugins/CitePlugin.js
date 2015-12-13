@@ -1,6 +1,5 @@
 import React, {PropTypes} from 'react';
 import Radium from 'radium';
-import ImageLoader from 'react-imageloader';
 import {srcRef} from './pluginProps';
 
 export const citeOptions = {srcRef};
@@ -8,26 +7,31 @@ export const citeOptions = {srcRef};
 // let styles = {};
 const CitePlugin = React.createClass({
 	propTypes: {
-		url: PropTypes.string,
+		title: PropTypes.string,
 		ref: PropTypes.string,
-		children: PropTypes.string
+		children: PropTypes.string,
+		count: PropTypes.number
 	},
 	getInitialState: function() {
-		return {};
+		return {hover: false};
+	},
+	mouseOver: function() {
+		console.log('set the state yoo');
+		this.setState({hover: true});
+	},
+	mouseOut: function() {
+		console.log('set the state yoo');
+		this.setState({hover: false});
 	},
 	render: function() {
-		const refName = this.props.children;
-		const img = !(this.props.url === 'error:type');
-		const url = this.props.url;
+		const ref = !(this.props.title === 'error:type');
+		// const title = this.props.title;
 		let html;
-		if (!img) {
-			html = <span>Not an image asset.</span>;
-		}	else if (url) {
-			html = (<ImageLoader onLoad={this.loadedImage} src={url} wrapper={React.DOM.span} preloader={this.preloader}>
-				{refName}
-			</ImageLoader>);
-		} else {
-			html = <span>Could not find reference</span>;
+		if (!ref) {
+			html = <span>[COULD NOT FIND REFERENCE]</span>;
+		}	else {
+			html = (<span onMouseOver={this.mouseOver} onMouseOut={this.mouseOut}>[{this.props.count}: {this.state.hover}]</span>
+				);
 		}
 		return html;
 	}
