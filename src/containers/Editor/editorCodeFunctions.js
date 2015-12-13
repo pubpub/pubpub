@@ -18,9 +18,9 @@ export function insertText(cm, formatting, baseText) {
 	case '- List':
 		return cm.replaceSelection('\n -  ' + baseText + '\n');
 	case 'Image':
-		return cm.replaceSelection('[image]');
+		return cm.replaceSelection('[image: ]');
 	case 'Video':
-		return cm.replaceSelection('[video]');
+		return cm.replaceSelection('[video: ]');
 	default:
 		return null;
 	}
