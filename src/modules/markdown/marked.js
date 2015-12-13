@@ -621,7 +621,7 @@ InlineLexer.prototype.output = function(src) {
 					src = src.substring(cap[0].length);
 					var renderFunc = this.extensions[key].renderer;
 					var inlineFunc = this.extensions[key].inlineFunc;
-					out += inlineFunc.bind(this)(cap,renderFunc,this.renderer.assets);
+					out += inlineFunc.bind(this)(cap,renderFunc,{assets: this.renderer.assets, references:this.renderer.references});
 					continue;
 				}
 			}

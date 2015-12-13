@@ -34,7 +34,8 @@ export default {
 		autocomplete: true,
 		// rule: /^(?:\s)*(?::{2})asset(?::{2})([^\n:]+)(?::{2})/,
 		rule: /^(?:\s)*(?:\[)image:([^\n\]]*)(?:\])/,
-		inlineFunc: function(cap, renderer, assets) {
+		inlineFunc: function(cap, renderer, data) {
+			const assets = data.assets;
 			const propDict = parsePluginString(cap[1]);
 			const refName = propDict.src || 'none';
 			// const asset = assets.find(asst => (asst.refName === refName));
@@ -55,7 +56,8 @@ export default {
 		autocomplete: true,
 		// rule: /^(?:\s)*(?::{2})asset(?::{2})([^\n:]+)(?::{2})/,
 		rule: /^(?:\s)*(?:\[)video:([^\n\]]*)(?:\])/,
-		inlineFunc: function(cap, renderer, assets) {
+		inlineFunc: function(cap, renderer, data) {
+			const assets = data.assets;
 			const propDict = parsePluginString(cap[1]);
 			const refName = propDict.src || 'none';
 			// const asset = assets.find(asst => (asst.refName === refName));
@@ -75,17 +77,18 @@ export default {
 		inline: true,
 		autocomplete: true,
 		rule: /^(?:\s)*(?:\[)cite:([^\n\]]*)(?:\])/,
-		inlineFunc: function(cap, renderer, assets) {
+		inlineFunc: function(cap, renderer, data) {
+			const references = data.references;
 			const propDict = parsePluginString(cap[1]);
 			const refName = propDict.src || 'none';
-			const asset = assets[refName];
-			let url = null;
-			if (asset && asset.assetType === 'reference') {
-				url = asset.url_s3;
-			} else if (asset) {
-				url = 'error:type';
+			const ref = references[refName];
+			let title = null;
+			if (ref) {
+				title = ref.title;
+			} else if (ref) {
+				title = 'error:type';
 			}
-			propDict.url = url;
+			propDict.title = title;
 			return renderer(refName, propDict);
 		}
 	}
@@ -93,8 +96,10 @@ export default {
 
 import {imageOptions} from './ImagePlugin';
 import {videoOptions} from './VideoPlugin';
+import {citeOptions} from './CitePlugin';
 
 export const pluginOptions = {
 	image: imageOptions,
-	video: videoOptions
+	cite: citeOptions,
+	video: videoOptions,
 };

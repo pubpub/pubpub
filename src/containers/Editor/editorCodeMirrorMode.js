@@ -21,8 +21,6 @@ export default function() {
 					}
 				}
 
-				list.push({text: 'cite: ', displayText: 'cite'});
-
 				const line = editor.getLine(cur.line);
 				let startPos = token.start;
 				let char = line.charAt(startPos);
@@ -53,7 +51,7 @@ export default function() {
 			{regex: /\[video:.*\]/, token: 'ppm plugin plugin-video'},
 			{regex: /\[audio:.*\]/, token: 'ppm plugin plugin-audio'},
 			{regex: /\[table:.*\]/, token: 'ppm plugin plugin-table'},
-			{regex: /\[cite:/, token: 'ppm ppm-cite', next: 'citationStart'},
+			{regex: /\[cite:.*\]/, token: 'ppm plugin plugin-cite'},
 		],
 		citationStart: [
 			// {regex: /.*/, token: 'plugin-content'},

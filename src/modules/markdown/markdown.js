@@ -186,7 +186,9 @@ renderer.image = function (href, title, text) {
   return '{{' + id + '}}';
 };
 
-var exec = function (content,assets) {
+var exec = function (content,options) {
+	var assets = options.assets;
+	var references = options.references;
   result = [];
   toc = [];
   travisTOC = [];
@@ -195,6 +197,8 @@ var exec = function (content,assets) {
   keys = 0;
 	//options = {};
 	renderer.assets = assets;
+	renderer.references = references;
+
   marked(content, {renderer: renderer, smartypants: true});
   return {
     tree: result,

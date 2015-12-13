@@ -10,6 +10,15 @@ export function parsePluginString(str) {
 	return propDict;
 }
 
+export function convertFirebaseToObject(firebaseObj) {
+	return Object.keys(firebaseObj || {}).reduce(function(obj, key) {
+		const asset = firebaseObj[key];
+		obj[asset.refName] = asset;
+		return obj;
+	}, {});
+}
+
+
 /*
 export function getAssetInformation(propDict, assets, assetType) {
 	const refName = propDict.src || 'none';

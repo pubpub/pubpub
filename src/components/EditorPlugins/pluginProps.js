@@ -22,17 +22,37 @@ export function src(assetType) {
 			const title = pluginProp.title;
 			const assets = (props.assets) ? Object.values(props.assets).filter(filterAssets).map( function(asset) { return {'value': asset.refName, 'label': asset.refName};}) : [];
 			// assets.push({'value': 'upload', 'label': 'Upload New'});
-
 			const val = (value) ? {'value': value, 'label': value } : undefined;
 
 			const onValueChange = function(changedValue, callback) {
 				callback();
 			};
-
 			return <SimpleSelect style={styles.pluginPropSrc} onValueChange={onValueChange} ref={'pluginInput-' + title} name={title} id={title} options={assets} defaultValue={val}/>;
 		}
 	};
 }
+
+export const srcRef = {
+	title: 'srcRef',
+	default: '',
+	defaultValue: '',
+	defaultString: '',
+	valueFunction: function(thisRef) {
+		const val = thisRef.value();
+		return (val) ? val.value : null;
+	},
+	component: function(pluginProp, value, props, styles) {
+		const title = pluginProp.title;
+		const refs = (props.references) ? Object.values(props.references).map( function(ref) { return {'value': ref.refName, 'label': ref.refName + ' ' + ref.title};}) : [];
+		// assets.push({'value': 'upload', 'label': 'Upload New'});
+		const val = (value) ? {'value': value, 'label': value } : undefined;
+
+		const onValueChange = function(changedValue, callback) {
+			callback();
+		};
+		return <SimpleSelect style={styles.pluginPropSrc} onValueChange={onValueChange} ref={'pluginInput-' + title} name={title} id={title} options={refs} defaultValue={val}/>;
+	}
+};
 
 export const width = {
 	title: 'width',

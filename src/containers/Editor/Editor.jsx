@@ -25,6 +25,9 @@ import encHex from 'crypto-js/enc-hex';
 
 import marked from '../../modules/markdown/markdown';
 import markdownExtensions from '../../components/EditorPlugins';
+
+import {convertFirebaseToObject} from '../../utils/parsePlugins';
+
 marked.setExtensions(markdownExtensions);
 
 const cmOptions = {
@@ -153,16 +156,12 @@ const Editor = React.createClass({
 		const authorsNoteMatch = fullMD.match(authorsNoteRE);
 		const authorsNote = authorsNoteMatch && authorsNoteMatch.length ? authorsNoteMatch[1].trim() : '';
 
-		const assets = this.state.firepadData.assets;
-		const assetsObj = Object.keys(assets || {}).reduce(function(obj, key) {
-			const asset = assets[key];
-			obj[asset.refName] = asset;
-			return obj;
-		}, {});
+		const assets = convertFirebaseToObject(this.state.firepadData.assets);
+		const references = convertFirebaseToObject(this.state.firepadData.references);
 
 		const markdown = fullMD.replace(/\[title:.*?\]/g, '').replace(/\[abstract:.*?\]/g, '').replace(/\[authorsNote:.*?\]/g, '').trim();
 
-		const mdOutput = marked(markdown, assetsObj);
+		const mdOutput = marked(markdown, {assets, references});
 		// const mdOutput = marked(markdown, Object.values(this.state.firepadData.assets || {}));
 
 		// const end = performance.now();
@@ -492,7 +491,7 @@ const Editor = React.createClass({
 					{/* Markdown Editing Block */}
 					<div id="editor-text-wrapper" style={[styles.hiddenUntilLoad, styles[loadStatus], styles.common.editorMarkdown, styles[viewMode].editorMarkdown]}>
 
-						<EditorPluginPopup ref="pluginPopup" assets={this.state.firepadData.assets} activeFocus={this.state.activeFocus} codeMirrorChange={this.state.codeMirrorChange}/>
+						<EditorPluginPopup ref="pluginPopup" references={this.state.firepadData.references} assets={this.state.firepadData.assets} activeFocus={this.state.activeFocus} codeMirrorChange={this.state.codeMirrorChange}/>
 
 						{/* Insertion point for codemirror and firepad */}
 						<div style={[this.state.activeFocus !== '' && styles.hiddenMainEditor]}>

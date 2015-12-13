@@ -1,10 +1,9 @@
 import React, {PropTypes} from 'react';
 import Radium from 'radium';
 import ImageLoader from 'react-imageloader';
-import {src} from './pluginProps';
+import {srcRef} from './pluginProps';
 
-
-export const citeOptions = {src};
+export const citeOptions = {srcRef};
 
 // let styles = {};
 const CitePlugin = React.createClass({
