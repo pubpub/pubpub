@@ -126,7 +126,9 @@ const Editor = React.createClass({
 	showPopupFromAutocomplete: function(completion) { // completion, element
 		const cords = this.cm.cursorCoords();
 		this.refs.pluginPopup.showAtPos(cords.left - 10, cords.top);
-		CodeMirror.off(completion, 'pick', this.showPopupFromAutocomplete);
+		if (completion) {
+			CodeMirror.off(completion, 'pick', this.showPopupFromAutocomplete);
+		}
 		return;
 	},
 
@@ -162,7 +164,6 @@ const Editor = React.createClass({
 		const markdown = fullMD.replace(/\[title:.*?\]/g, '').replace(/\[abstract:.*?\]/g, '').replace(/\[authorsNote:.*?\]/g, '').trim();
 
 		const mdOutput = marked(markdown, {assets, references});
-		// const mdOutput = marked(markdown, Object.values(this.state.firepadData.assets || {}));
 
 		// const end = performance.now();
 		// console.log('timing = ', end - start);
@@ -312,7 +313,7 @@ const Editor = React.createClass({
 			const cm = this.getActiveCodemirrorInstance();
 			const currentSelection = cm.getSelection();
 			const baseText = currentSelection !== '' ? currentSelection : 'example';
-			insertText(cm, formatting, baseText);
+			insertText(cm, formatting, baseText, this.showPopupFromAutocomplete);
 			this.toggleFormatting();
 		};
 	},

@@ -1,29 +1,42 @@
 /* global CodeMirror */
 
-export function insertText(cm, formatting, baseText) {
+export function insertText(cm, formatting, baseText, showPopup) {
 
 	switch (formatting) {
 	case 'H1':
-		return cm.replaceSelection('# ' + baseText + '\n');
+		cm.replaceSelection('# ' + baseText + '\n');
+		break;
 	case 'H2':
-		return cm.replaceSelection('## ' + baseText + '\n');
+		cm.replaceSelection('## ' + baseText + '\n');
+		break;
 	case 'H3':
-		return cm.replaceSelection('### ' + baseText + '\n');
+		cm.replaceSelection('### ' + baseText + '\n');
+		break;
 	case 'Bold':
-		return cm.replaceSelection('**' + baseText + '**');
+		cm.replaceSelection('**' + baseText + '**');
+		break;
 	case 'Italic':
-		return cm.replaceSelection('*' + baseText + '*');
+		cm.replaceSelection('*' + baseText + '*');
+		break;
 	case '# List':
-		return cm.replaceSelection('\n 1. ' + baseText + '\n');
+		cm.replaceSelection('\n 1. ' + baseText + '\n');
+		break;
 	case '- List':
-		return cm.replaceSelection('\n -  ' + baseText + '\n');
+		cm.replaceSelection('\n -  ' + baseText + '\n');
+		break;
 	case 'Image':
-		return cm.replaceSelection('[image: ]');
+		cm.replaceSelection('[image: ]');
+		showPopup();
+		break;
 	case 'Video':
-		return cm.replaceSelection('[video: ]');
+		cm.replaceSelection('[video: ]');
+		showPopup();
+		break;
 	default:
-		return null;
+		throw new Error('Insert command not found');
 	}
+
+	return;
 
 }
 
