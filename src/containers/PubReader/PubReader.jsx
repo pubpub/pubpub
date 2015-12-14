@@ -183,7 +183,8 @@ const PubReader = React.createClass({
 						abstract={pubData.history[versionIndex].abstract}
 						htmlTree={this.state.htmlTree}
 						authors={pubData.history[versionIndex].authors}
-						addSelectionHandler={this.addSelection} />
+						addSelectionHandler={this.addSelection} 
+						style={pubData.history[versionIndex].style}/>
 
 					<PubModals
 						slug={this.props.slug}

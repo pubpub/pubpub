@@ -106,7 +106,9 @@ const EditorModalSettings = React.createClass({
 		// this.setState({showAdvancedError: false});
 		const cm = document.getElementById('codeMirrorJSX').childNodes[0].CodeMirror;
 		// console.log(cm.getValue());
-		console.log(cssConvert(cm.getValue()));
+		
+		// We should test before save
+		cssConvert(cm.getValue());
 	
 
 		const newSetting = {};
