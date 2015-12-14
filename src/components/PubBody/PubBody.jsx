@@ -4,6 +4,7 @@ import {PubSelectionPopup} from '../';
 import {globalStyles} from '../../utils/styleConstants';
 import { Link } from 'react-router';
 import {loadCss} from '../../utils/loadingFunctions';
+import {scienceStyle, magazineStyle} from './pubStyles';
 
 let styles = {};
 
@@ -22,8 +23,21 @@ const PubBody = React.createClass({
 			htmlTree: [],
 			authors: [],
 			style: {
+				type: 'science',
 				googleFontURL: 'https://fonts.googleapis.com/css?family=Open+Sans|Indie+Flower',
-				cssObject: {},
+				cssObject: {
+					'#pub-title': {
+						color: 'red',
+					},
+					'h1': {
+						fontFamily: 'Indie Flower',
+						color: 'blue',
+					},
+					'p': {
+						fontFamily: 'Indie Flower',
+						color: 'green',
+					}
+				},
 			},
 		};
 	},
@@ -32,39 +46,59 @@ const PubBody = React.createClass({
 		return {
 			htmlTree: [],
 			TOC: [],
-			styleRules: {}
 		};
-	},
-
-	componentWillMount() {
-		this.compileRules();
 	},
 
 	componentDidMount() {
 		loadCss(this.props.style.googleFontURL);
 	},
 
-	compileRules: function() {
-		const userRules = {
-			'#pubContent': {
-				fontFamily: 'Indie Flower',
-				color: 'blue',
-			},
-		};
+	componentWillReceiveProps(nextProps) {
+		if (this.props.style.googleFontURL !== nextProps.style.googleFontURL) {
+			console.log('load new fonts!');
+			loadCss(nextProps.style.googleFontURL);
+		}
+	},
 
-		this.setState({
-			styleRules: {
-				...userRules, 
-				'.marking': {
-					backgroundColor: 'rgba(124, 235, 124, 0.7)',
-				},
-				'.tempHighlight': {
-					backgroundColor: 'rgba(200,200,200, 0.7)',
-				},
-				'.selection': {
-					backgroundColor: 'rgba(195, 245, 185, 0.7)',
-				},
-			}
+	compileStyleRules: function() {
+		// console.log('compiling rules');
+		
+		let cssObject = {};
+		switch (this.props.style.type) {
+		case 'science':
+			cssObject = scienceStyle;
+			break;
+		case 'magazine': 
+			cssObject = magazineStyle;
+			break;
+		case 'custom': 
+			cssObject = this.props.style.cssObject;
+			break;
+		default: 
+			cssObject = scienceStyle;
+			break;
+		}
+		// console.log(cssObject);
+		const pubContentRules = {};
+		Object.keys(cssObject).map((cssRule)=> {
+			cssRule.split(',').map((splitRule)=> {
+				pubContentRules['#pubContent ' + splitRule] = cssObject[cssRule];
+			});
+			
+			// console.log(pubContentRules);
+		});
+
+		return ({
+			...pubContentRules, 
+			'.marking': {
+				backgroundColor: 'rgba(124, 235, 124, 0.7)',
+			},
+			'.tempHighlight': {
+				backgroundColor: 'rgba(200,200,200, 0.7)',
+			},
+			'.selection': {
+				backgroundColor: 'rgba(195, 245, 185, 0.7)',
+			},
 		});
 	},
 
@@ -73,7 +107,7 @@ const PubBody = React.createClass({
 		return (
 			<div style={styles.container}>
 
-				<Style rules={this.state.styleRules}/>
+				<Style rules={this.compileStyleRules()}/>
 
 				<div id="pubContent" style={[styles.contentContainer, styles[this.props.status]]}>
 
@@ -82,13 +116,13 @@ const PubBody = React.createClass({
 						{
 							this.props.authors.map((author, index)=>{
 								return (index === this.props.authors.length - 1
-									? <Link to={'/profile/' + author.username} key={'pubAuthorLink-' + index} style={globalStyles.link}><span key={'pubAuthor-' + index} style={styles.author}>{author.name}</span></Link>
-									: <Link to={'/profile/' + author.username} key={'pubAuthorLink-' + index} style={globalStyles.link}><span key={'pubAuthor-' + index} style={styles.author}>{author.name}, </span></Link>);
+									? <Link to={'/profile/' + author.username} key={'pubAuthorLink-' + index} style={globalStyles.link}><span key={'pubAuthor-' + index} className={'pub-author'} style={styles.author}>{author.name}</span></Link>
+									: <Link to={'/profile/' + author.username} key={'pubAuthorLink-' + index} style={globalStyles.link}><span key={'pubAuthor-' + index} className={'pub-author'} style={styles.author}>{author.name}, </span></Link>);
 							})
 						}
 					</div>
 					<div id={'pub-abstract'} style={styles.pubAbstract}>{this.props.abstract}</div>
-					<div style={styles.headerDivider}></div>
+					<div id={'pub-header-divider'} style={styles.headerDivider}></div>
 
 					<div id="pubBodyContent">
 						{this.props.addSelectionHandler
@@ -124,35 +158,35 @@ styles = {
 	loaded: {
 		opacity: 1
 	},
-	pubTitle: {
-		textAlign: 'center',
-		fontSize: '40px',
-		margin: '50px 0px',
-	},
-	pubAbstract: {
-		textAlign: 'center',
-		color: '#777',
-		margin: '30px 0px',
-	},
-	headerDivider: {
-		height: 1,
-		width: '80%',
-		margin: '0 auto',
-		backgroundColor: '#DDD',
-	},
-	authors: {
-		textAlign: 'center',
-		color: '#555',
-		fontSize: '17px',
-		padding: '0px 50px',
-	},
-	author: {
-		color: '#555',
-		':hover': {
-			color: '#111',
-		},
+	// pubTitle: {
+	// 	textAlign: 'center',
+	// 	fontSize: '40px',
+	// 	margin: '50px 0px',
+	// },
+	// pubAbstract: {
+	// 	textAlign: 'center',
+	// 	color: '#777',
+	// 	margin: '30px 0px',
+	// },
+	// headerDivider: {
+	// 	height: 1,
+	// 	width: '80%',
+	// 	margin: '0 auto',
+	// 	backgroundColor: '#DDD',
+	// },
+	// authors: {
+	// 	textAlign: 'center',
+	// 	color: '#555',
+	// 	fontSize: '17px',
+	// 	padding: '0px 50px',
+	// },
+	// author: {
+	// 	color: '#555',
+	// 	':hover': {
+	// 		color: '#111',
+	// 	},
 
-	},
+	// },
 
 };
 
