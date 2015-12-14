@@ -46,7 +46,7 @@ const EditorModalReferences = React.createClass({
 	toggleShowAddOptions: function() {
 		this.setState({
 			isLoading: false,
-			showAddOptions: !this.state.showAddOptions,	
+			showAddOptions: !this.state.showAddOptions,
 			editingRefName: null,
 			manualFormData: this.getInitialState().manualFormData,
 		});
@@ -80,7 +80,7 @@ const EditorModalReferences = React.createClass({
 		// Convert all the text into new reference objects
 		const output = bibtexParse.toJSON(this.refs.bibtexForm.value);
 		console.log(output);
-		
+
 		const newReferencesObject = this.props.referenceData;
 
 		// Add all the new bibtex items to newReferencesObject
@@ -95,7 +95,7 @@ const EditorModalReferences = React.createClass({
 				volume: newRef.entryTags.volume ? newRef.entryTags.volume : null,
 				number: newRef.entryTags.number ? newRef.entryTags.number : null,
 				pages: newRef.entryTags.pages ? newRef.entryTags.pages : null,
-				date: newRef.entryTags.year ? newRef.entryTags.year : null,
+				year: newRef.entryTags.year ? newRef.entryTags.year : null,
 				publisher: newRef.entryTags.publisher ? newRef.entryTags.publisher : null,
 				note: newRef.entryTags.note ? newRef.entryTags.note : null,
 			};
@@ -112,7 +112,7 @@ const EditorModalReferences = React.createClass({
 		return ()=>{
 			this.setState({
 				isLoading: false,
-				showAddOptions: true,	
+				showAddOptions: true,
 				editingRefName: referenceObject.refName,
 				manualFormData: {...this.getInitialState().manualFormData, ...referenceObject},
 			});
@@ -125,7 +125,7 @@ const EditorModalReferences = React.createClass({
 			delete newReferencesObject[refName];
 			this.props.updateReferences(newReferencesObject);
 		};
-		
+
 	},
 
 	renderReferencesSearchResults: function(results) {
@@ -147,10 +147,10 @@ const EditorModalReferences = React.createClass({
 
 				{/* Search for new Ref bar and advanced add option */}
 				<div style={[baseStyles.rightCornerSearch, styles.mainContent[this.state.showAddOptions]]}>
-					<Autocomplete 
-						autocompleteKey={'referencesAutocomplete'} 
-						route={'autocompleteReferences'} 
-						placeholder="Search for reference" 
+					<Autocomplete
+						autocompleteKey={'referencesAutocomplete'}
+						route={'autocompleteReferences'}
+						placeholder="Search for reference"
 						textAlign={'right'}
 						resultRenderFunction={this.renderReferencesSearchResults}/>
 
@@ -179,20 +179,20 @@ const EditorModalReferences = React.createClass({
 						<div style={[styles.optionColumn, styles.columnHeader]}></div>
 						<div style={styles.clearfix}></div>
 					</div>
-					
+
 					{/* Iterate over citations */}
 					{
 						referenceData.map((citation, index) => {
-							return ( 
-								<EditorModalReferencesRow 
-									key={'citation-' + index} 
+							return (
+								<EditorModalReferencesRow
+									key={'citation-' + index}
 									citation={citation}
 									index={index}
 									editRefFunction={this.editReference}
 									deleteRefFunction={this.deleteReference}/>
 							);
 						})
-					}				
+					}
 
 				</div>
 
@@ -206,7 +206,7 @@ const EditorModalReferences = React.createClass({
 						<div style={styles.saveForm} key={'referencesBibtexFormSaveButton'} onClick={this.saveBibtexForm}>Save</div>
 						<div style={styles.clearfix}></div>
 					</div>
-					
+
 
 					<h2 style={[styles.sectionHeader, this.state.editingRefName && styles.hide]}>Manual Entry</h2>
 					<div style={styles.inputFormWrapper}>
@@ -217,7 +217,7 @@ const EditorModalReferences = React.createClass({
 										<label style={styles.manualFormInputTitle} htmlFor={inputItem} >{inputItem}</label>
 										<input style={styles.manualFormInput} name={inputItem} id={inputItem} type="text" onChange={this.handleManualInputFormChange} value={this.state.manualFormData[inputItem]}/>
 									</div>
-									
+
 								);
 							})
 						}
@@ -246,7 +246,7 @@ styles = {
 			display: 'block',
 		},
 		display: 'none',
-		
+
 	},
 	addOptionsContent: {
 		padding: '15px 25px',
@@ -279,7 +279,7 @@ styles = {
 		textAlign: 'center',
 	},
 	clearfix: {
-		// necessary because we float elements with variable height 
+		// necessary because we float elements with variable height
 		display: 'table',
 		clear: 'both',
 	},
