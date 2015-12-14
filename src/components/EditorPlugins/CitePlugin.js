@@ -35,21 +35,27 @@ const CitePlugin = React.createClass({
 		}	else {
 			const title = this.props.reference.title;
 			const author = this.props.reference.author;
-			const date = this.props.reference.date;
+			const year = this.props.reference.year;
 
 			const show = this.state.expanded || this.state.hover;
 			const titleStyle = show && ((this.state.expanded && styles.expanded) || (this.state.hover && styles.hover));
 
-			console.log(this.props.reference);
-			console.log(titleStyle);
+			let expandedElem = null;
+			if (show) {
+				expandedElem = (<span style={[styles.show, titleStyle]} onClick={this.onClick} onMouseOut={this.mouseOut} >
+					<span style={[styles.author]}>({author} , {year})</span> <br/>
+					<span style={[styles.title]}>{title}</span>
+					<img style={[styles.img]} src="https://pbs.twimg.com/media/CWLFL0UUsAEtuij.png"></img>
+					<a target="_blank" href="http://physics.gu.se/~frtbm/joomla/media/mydocs/Kramers.pdf">Source</a>
+				  &nbsp;&nbsp;<a target="_blank" href="http://physics.gu.se/~frtbm/joomla/media/mydocs/Kramers.pdf" >Copy Citation</a>
+
+				</span>);
+			}
 
 			html = (
-				<span style={[styles.ref]} onClick={this.onClick} onMouseOver={this.mouseOver} onMouseOut={this.mouseOut}>
+				<span style={[styles.ref]} onClick={this.onClick} onMouseOver={this.mouseOver}>
 					[{this.props.count}]
-					<span style={[show && styles.show, !show && styles.hidden, titleStyle]}>
-						<span style={[styles.author]}>({author} , {date})</span> -
-						<span style={[styles.title]}>{title}</span>
-					</span>
+					{expandedElem}
 				</span>
 			);
 		}
@@ -57,12 +63,32 @@ const CitePlugin = React.createClass({
 	}
 });
 
+const expandedHeight = '150px';
+const expandedWidth = '350px';
+const hoverWidth = '150px';
+const hoverHeight = '50px';
+
+
+const pulseKeyframes = Radium.keyframes({
+	'0%': {width: '10px', height: '17px', color: 'rgba(0,0,0,0)'},
+	'90%': {width: hoverWidth, height: hoverHeight, color: 'rgba(0,0,0,0)'},
+	'100%': {width: hoverWidth, height: hoverHeight, color: 'black'},
+}, 'Spinner');
+
+const expandFrames = Radium.keyframes({
+	'0%': {width: hoverWidth, height: hoverHeight},
+	'100%': {width: expandedWidth, height: expandedHeight}
+}, 'Spinner');
 
 styles = {
 	ref: {
 		'cursor': 'pointer',
 		'position': 'relative',
-		'overflow': 'visible'
+		'overflow': 'visible',
+		'display': 'inline-block'
+	},
+	img: {
+		'width': expandedWidth
 	},
 	hidden: {
 		display: 'none',
@@ -80,28 +106,29 @@ styles = {
 	show: {
 		// opacity: '1',
 		// color: 'rgba(0,0,0,1.0)',
+		animation: `${pulseKeyframes} 0.5s ease 0s 1`,
 		display: 'block',
 		position: 'absolute',
 		zIndex: 100000,
 		backgroundColor: 'white',
-		borderColor: '#666',
+		borderColor: '#ddd',
 		borderStyle: 'solid',
-		borderWidth: '1px',
+		borderWidth: '1.5px',
 		padding: '5px',
 		textOverflow: 'ellipsis',
 		fontSize: '0.75em',
 		overflow: 'hidden',
-		marginLeft: '61px',
 		marginTop: '-17px',
 		// transition: 'width 0.5s ease 0.1s, color 0.5s ease 0.5s'
 	},
 	expanded: {
-		height: '150px',
-		width: '150px'
+		height: expandedHeight,
+		width: expandedWidth,
+		animation: `${expandFrames} 0.5s ease 0s 1`,
 	},
 	hover: {
-		height: '50px',
-		width: '150px'
+		height: hoverHeight,
+		width: hoverWidth
 	}
 };
 
