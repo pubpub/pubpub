@@ -25,7 +25,7 @@ const PubBody = React.createClass({
 			style: {
 				type: 'science',
 				googleFontURL: undefined,
-				cssObject: {},
+				cssObjectString: {},
 			},
 		};
 	},
@@ -60,7 +60,10 @@ const PubBody = React.createClass({
 			cssObject = magazineStyle;
 			break;
 		case 'custom': 
-			cssObject = this.props.style.cssObject;
+			const objectString = this.props.style.cssObjectString || '';
+			// const testJSON = objectString.replace(/(['"])?([a-zA-Z0-9_]+)(['"])?:/g, '"$2": ');
+			// cssObject = JSON.parse('{' + testJSON + '}');
+			cssObject = JSON.parse('{' + objectString.replace(/(['"])?([a-zA-Z0-9_#, -]+)(['"])?:/g, '"$2": ') + '}');
 			break;
 		default: 
 			cssObject = scienceStyle;

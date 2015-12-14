@@ -1,5 +1,6 @@
+/* global CodeMirror */
 import React, {PropTypes} from 'react';
-import Radium from 'radium';
+import Radium, {Style} from 'radium';
 import {LoaderIndeterminate} from '../../components';
 import {baseStyles} from './editorModalStyle';
 import {globalStyles} from '../../utils/styleConstants';
@@ -23,22 +24,45 @@ const EditorModalSettings = React.createClass({
 			editorColor: 'light',
 			editorFontSize: 'medium',
 			pubPrivacy: 'public',
-			pubStyle: {type: 'science'},
+			pubStyle: {
+				type: 'science',
+				googleFontURL: '',
+				cssObjectString: '',
+			},
 		};
 	},
 
 	getInitialState: function() {
 		return {
 			showAdvanced: false,
+			showAdvancedError: false,
 			isLoading: false,
 		};
 	},
 
+	componentDidMount() {
+		CodeMirror(document.getElementById('codeMirrorJSX'), {
+			lineNumbers: false,
+			lineWrapping: true,
+			viewportMargin: Infinity, // This will cause bad performance on large documents. Rendering the entire thing...
+			autofocus: true,
+			mode: {name: 'javascript', json: true},
+			extraKeys: {'Ctrl-Space': 'autocomplete'}
+		});
+		// codeMirror.setValue(JSON.stringify(this.props.pubStyle.cssObjectString));
+	},
 	componentWillReceiveProps: function() {
 		this.setState({isLoading: false});
 	},
 
-	toggleshowAdvanced: function() {
+	toggleShowAdvanced: function() {
+		if (!this.state.showAdvanced) {
+			const cm = document.getElementById('codeMirrorJSX').childNodes[0].CodeMirror;
+			console.log(this.props.pubStyle.cssObjectString);
+			cm.setValue(this.props.pubStyle.cssObjectString || '');
+			
+		}
+
 		this.setState({
 			showAdvanced: !this.state.showAdvanced,	
 		});
@@ -47,6 +71,10 @@ const EditorModalSettings = React.createClass({
 	handleOptionClick: function(key, option) {
 
 		return ()=>{
+
+			if (key === 'pubStyle' && option === 'custom') {
+				return this.toggleShowAdvanced();
+			}
 
 			const newSetting = {};
 			newSetting[key] = option;
@@ -59,8 +87,9 @@ const EditorModalSettings = React.createClass({
 			case 'editorFontSize':
 				return this.props.saveUpdatedSettingsUser(newSetting);
 			case 'pubStyle':
-				newSetting[key] = {type: option};
+				newSetting[key] = {...this.props.pubStyle, type: option};
 				return this.props.saveUpdatedSettingsFirebase(newSetting);
+
 			case 'pubPrivacy':
 				return this.props.saveUpdatedSettingsFirebaseAndPubPub(newSetting);
 			default:
@@ -70,7 +99,35 @@ const EditorModalSettings = React.createClass({
 		};
 	},
 
+	saveCustomSettings: function() {
+		this.setState({showAdvancedError: false});
+		const cm = document.getElementById('codeMirrorJSX').childNodes[0].CodeMirror;
+		console.log(cm.getValue());
+		try {
+			// JSON.parse('{' + cm.getValue().replace(/'/g, '\"') + '}');
+			// const testJSON = cm.getValue().replace(/(['"])?([a-zA-Z0-9_]+)(['"])?:/g, '"$2": ');
+			// console.log('testJSON', testJSON);
+			JSON.parse('{' + cm.getValue().replace(/(['"])?([a-zA-Z0-9_#, -]+)(['"])?:/g, '"$2": ') + '}');
+
+			const newSetting = {};
+			newSetting.pubStyle = {
+				type: 'custom',
+				googleFontURL: this.refs.googleFontURL.value,
+				cssObjectString: cm.getValue(),
+			};
+			this.setState({
+				showAdvanced: false,
+				showAdvancedError: false,
+			});
+			return this.props.saveUpdatedSettingsFirebase(newSetting);
+		} catch (error) {
+			console.log(error);
+			return this.setState({showAdvancedError: true});
+		}
+	},
+
 	render: function() {
+		// console.log('this.props.pubStyle', this.props.pubStyle);
 		const options = [
 			{
 				title: 'editor font',
@@ -100,13 +157,25 @@ const EditorModalSettings = React.createClass({
 				title: 'pub style',
 				key: 'pubStyle',
 				activeOption: this.props.pubStyle.type,
-				options: ['science', 'magazine', 'blog'],
+				options: ['science', 'magazine', 'custom'],
 			}
 
 		];
 
 		return (
 			<div style={styles.container}>
+				<Style rules={{
+					'#codeMirrorJSX .CodeMirror': {
+						// backgroundColor: '#efefef',
+						border: '1px solid #ccc',
+						fontSize: '14px',
+						// color: 'red',
+						fontFamily: 'Courier',
+						padding: '0px 10px',
+						width: 'calc(100% - 20px)',
+						minHeight: '24px',
+					},
+				}} />
 
 				<div style={styles.loader}>
 					{this.state.isLoading
@@ -115,9 +184,9 @@ const EditorModalSettings = React.createClass({
 					}
 				</div>
 
-				<h2 style={baseStyles.topHeader}>Settings</h2>
+				<h2 style={baseStyles.topHeader}>Settings<span style={[styles.advancedTitle, styles.advancedTitle[this.state.showAdvanced]]}>: custom style</span></h2>
 
-				<div style={[baseStyles.rightCornerAction, styles.addOptions, styles.addOptions[this.state.showAdvanced]]} onClick={this.toggleshowInviteOptions}>
+				<div style={[baseStyles.rightCornerAction, styles.advanced, styles.advanced[this.state.showAdvanced]]} onClick={this.toggleShowAdvanced}>
 					Back
 				</div>
 
@@ -158,9 +227,20 @@ const EditorModalSettings = React.createClass({
 				</div>
 
 				{/* Additional options mode */}
-				<div className="add-options-content" style={[styles.addOptions, styles.addOptions[this.state.showInviteOptions], styles.addOptionsContent]}>
+				<div className="add-options-content" style={[styles.advanced, styles.advanced[this.state.showAdvanced], styles.advancedContent]}>
 
-					<h2 style={styles.sectionHeader}>Advanced Style Options</h2>
+					<div>PubPub supports using custom Google Fonts. Paste font css url below.</div>
+					<input type="text" ref={'googleFontURL'} style={styles.googleFontInput} defaultValue={this.props.pubStyle.googleFontURL}/>
+
+					<div>Custom style. Javascript CSS (radium, etc).</div>
+					<div id={'codeMirrorJSX'} style={styles.codeMirrorWrapper}></div>
+
+					<div onClick={this.saveCustomSettings}>Save</div>
+					{
+						this.state.showAdvancedError
+							? <div>ERROR</div>
+							: null
+					}
 					
 
 				</div>
@@ -186,14 +266,26 @@ styles = {
 		top: 10,
 		width: '100%',
 	},
-	addOptions: {
+	advanced: {
 		true: {
-			display: 'block',
+			// display: 'block',
+			opacity: 1,
+			pointerEvents: 'auto',
 		},
-		display: 'none',
+		// display: 'none',
+		opacity: 0,
+		pointerEvents: 'none',
 		
 	},
-	addOptionsContent: {
+	advancedTitle: {
+		true: {
+			display: 'inline-block',
+		},
+		display: 'none',
+		fontSize: '25px',
+		
+	},
+	advancedContent: {
 		padding: '15px 25px',
 	},
 	optionContainer: {
@@ -231,8 +323,18 @@ styles = {
 	optionActive: {
 		color: 'black',
 		':hover': {
-			cursor: 'default',
+			// cursor: 'default',
 			color: 'black',
 		},
 	},
+	codeMirrorWrapper: {
+		width: 600,
+	},
+	googleFontInput: {
+		width: 580,
+		padding: '10px 10px',
+		fontSize: '16px',
+		color: '#555',
+		outline: 'none',
+	}
 };

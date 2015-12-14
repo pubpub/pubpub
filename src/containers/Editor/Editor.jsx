@@ -511,9 +511,10 @@ const Editor = React.createClass({
 							status={'loaded'}
 							title={this.state.title}
 							abstract={this.state.abstract}
+							htmlTree={this.state.tree} 
 							authors={this.getAuthorsArray()}
 							// addSelectionHandler={this.addSelection}
-							htmlTree={this.state.tree} />
+							style={this.state.firepadData.settings.pubStyle}/>
 					</div>
 
 				</div>

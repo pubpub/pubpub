@@ -130,6 +130,7 @@ app.use((req, res) => {
 							<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.9.0/addon/mode/simple.js"></script>
 							<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.9.0/addon/mode/multiplex.js"></script>
 							<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.2.0/mode/markdown/markdown.min.js"></script>
+							<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.2.0/mode/javascript/javascript.min.js"></script>
 							<script src="https://cdn.firebase.com/libs/firepad/1.2.0/firepad.min.js"></script>
 						</head>
 
