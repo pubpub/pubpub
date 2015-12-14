@@ -1,8 +1,10 @@
 import React, {PropTypes} from 'react';
 import Radium from 'radium';
 import ImageLoader from 'react-imageloader';
-import {src, width, height, align} from './pluginProps';
+import ErrorMsg from './ErrorPlugin';
 
+
+import {src, width, height, align} from './pluginProps';
 export const imageOptions = {src: src('image'), width, height, align};
 
 // let styles = {};
@@ -32,13 +34,13 @@ const ImagePlugin = React.createClass({
 		const url = this.props.url;
 		let html;
 		if (!img) {
-			html = <span>Not an image asset.</span>;
+			html = <ErrorMsg>Not an Image-type asset.</ErrorMsg>;
 		}	else if (url) {
 			html = (<ImageLoader onLoad={this.loadedImage} src={url} wrapper={React.DOM.span} preloader={this.preloader}>
 				{refName}
 			</ImageLoader>);
 		} else {
-			html = <span>Could not find asset</span>;
+			html = <ErrorMsg>Could not find Image asset.</ErrorMsg>;
 		}
 		return html;
 	}

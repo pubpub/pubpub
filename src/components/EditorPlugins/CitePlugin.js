@@ -1,12 +1,12 @@
 import React, {PropTypes} from 'react';
 import Radium from 'radium';
 import {srcRef} from './pluginProps';
+import ErrorMsg from './ErrorPlugin';
 
 export const citeOptions = {srcRef};
 
 let styles = {};
 
-// let styles = {};
 const CitePlugin = React.createClass({
 	propTypes: {
 		reference: PropTypes.object,
@@ -31,7 +31,7 @@ const CitePlugin = React.createClass({
 		let html;
 
 		if (!ref) {
-			html = <span>[COULD NOT FIND REFERENCE]</span>;
+			html = <ErrorMsg>Could not find reference.</ErrorMsg>;
 		}	else {
 			const title = this.props.reference.title;
 			const author = this.props.reference.author;
