@@ -126,6 +126,7 @@ app.use((req, res) => {
 							This would prevent us from forcing every user to load the libraries - given that many will not edit -->
 							<script src="https://cdn.firebase.com/js/client/2.2.4/firebase.js"></script>
 							<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.2.0/codemirror.min.js"></script>
+							<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.9.0/addon/display/placeholder.js"></script>
 							<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.9.0/addon/hint/show-hint.js"></script>
 							<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.9.0/addon/mode/simple.js"></script>
 							<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.9.0/addon/mode/multiplex.js"></script>

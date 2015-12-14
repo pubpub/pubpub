@@ -5,7 +5,7 @@ import {globalStyles} from '../../utils/styleConstants';
 import { Link } from 'react-router';
 import {loadCss} from '../../utils/loadingFunctions';
 import {scienceStyle, magazineStyle} from './pubStyles';
-import cssConvert from 'css-to-radium';
+import cssConvert from '../../utils/cssToRadium';
 
 let styles = {};
 
@@ -44,7 +44,7 @@ const PubBody = React.createClass({
 
 	componentWillReceiveProps(nextProps) {
 		if (this.props.style.googleFontURL !== nextProps.style.googleFontURL) {
-			console.log('load new fonts!');
+			// console.log('load new fonts!');
 			loadCss(nextProps.style.googleFontURL);
 		}
 	},
@@ -65,7 +65,9 @@ const PubBody = React.createClass({
 			// const testJSON = objectString.replace(/(['"])?([a-zA-Z0-9_]+)(['"])?:/g, '"$2": ');
 			// cssObject = JSON.parse('{' + testJSON + '}');
 			// cssObject = JSON.parse('{' + objectString.replace(/(['"])?([a-zA-Z0-9_#, -]+)(['"])?:/g, '"$2": ') + '}');
+			// console.log('objectString', objectString);
 			cssObject = cssConvert(objectString);
+			// console.log('cssObject', cssObject);
 			break;
 		default: 
 			cssObject = scienceStyle;
