@@ -1,5 +1,7 @@
 import React, {PropTypes} from 'react';
 import Radium from 'radium';
+import ErrorMsg from './ErrorPlugin';
+
 import {src, width, height, align} from './pluginProps';
 
 export const videoOptions = {src: src('video'), width, height, align};
@@ -22,7 +24,7 @@ const VideoPlugin = React.createClass({
 								<source src={this.props.url} type="video/mp4"/>
 							</video>);
 		} else {
-			html = (<span>Not rendered!</span>);
+			html = (<ErrorMsg>Could not find video!</ErrorMsg>);
 		}
 		return html;
 	}

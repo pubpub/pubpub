@@ -86,7 +86,7 @@ export default {
 			if (ref) {
 				propDict.count = ref.count;
 				propDict.reference = ref;
-			} else if (ref) {
+			} else {
 				propDict.reference = 'error:type';
 			}
 			return renderer(refName, propDict);
