@@ -84,10 +84,10 @@ export default {
 			const refName = propDict.srcRef || 'none';
 			const ref = references[refName];
 			if (ref) {
-				propDict.title = ref.title;
 				propDict.count = ref.count;
+				propDict.reference = ref;
 			} else if (ref) {
-				propDict.title = 'error:type';
+				propDict.reference = 'error:type';
 			}
 			return renderer(refName, propDict);
 		}
