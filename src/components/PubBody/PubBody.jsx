@@ -24,20 +24,8 @@ const PubBody = React.createClass({
 			authors: [],
 			style: {
 				type: 'science',
-				googleFontURL: 'https://fonts.googleapis.com/css?family=Open+Sans|Indie+Flower',
-				cssObject: {
-					'#pub-title': {
-						color: 'red',
-					},
-					'h1': {
-						fontFamily: 'Indie Flower',
-						color: 'blue',
-					},
-					'p': {
-						fontFamily: 'Indie Flower',
-						color: 'green',
-					}
-				},
+				googleFontURL: undefined,
+				cssObject: {},
 			},
 		};
 	},
@@ -78,17 +66,23 @@ const PubBody = React.createClass({
 			cssObject = scienceStyle;
 			break;
 		}
-		// console.log(cssObject);
+
+		const defaultContentRules = {};
+		Object.keys(scienceStyle).map((cssRule)=> {
+			cssRule.split(',').map((splitRule)=> {
+				defaultContentRules['#pubContent ' + splitRule] = scienceStyle[cssRule];
+			});
+		});
+
 		const pubContentRules = {};
 		Object.keys(cssObject).map((cssRule)=> {
 			cssRule.split(',').map((splitRule)=> {
 				pubContentRules['#pubContent ' + splitRule] = cssObject[cssRule];
 			});
-			
-			// console.log(pubContentRules);
 		});
 
 		return ({
+			...defaultContentRules, 
 			...pubContentRules, 
 			'.marking': {
 				backgroundColor: 'rgba(124, 235, 124, 0.7)',
@@ -111,18 +105,18 @@ const PubBody = React.createClass({
 
 				<div id="pubContent" style={[styles.contentContainer, styles[this.props.status]]}>
 
-					<div id={'pub-title'} style={styles.pubTitle}>{this.props.title}</div>
-					<div id={'pub-authors'} style={styles.authors}> <span>by </span>
+					<div id={'pub-title'}>{this.props.title}</div>
+					<div id={'pub-authors'}> <span>by </span>
 						{
 							this.props.authors.map((author, index)=>{
 								return (index === this.props.authors.length - 1
-									? <Link to={'/profile/' + author.username} key={'pubAuthorLink-' + index} style={globalStyles.link}><span key={'pubAuthor-' + index} className={'pub-author'} style={styles.author}>{author.name}</span></Link>
-									: <Link to={'/profile/' + author.username} key={'pubAuthorLink-' + index} style={globalStyles.link}><span key={'pubAuthor-' + index} className={'pub-author'} style={styles.author}>{author.name}, </span></Link>);
+									? <Link to={'/profile/' + author.username} key={'pubAuthorLink-' + index} style={globalStyles.link}><span key={'pubAuthor-' + index} className={'pub-author'}>{author.name}</span></Link>
+									: <Link to={'/profile/' + author.username} key={'pubAuthorLink-' + index} style={globalStyles.link}><span key={'pubAuthor-' + index} className={'pub-author'}>{author.name}, </span></Link>);
 							})
 						}
 					</div>
-					<div id={'pub-abstract'} style={styles.pubAbstract}>{this.props.abstract}</div>
-					<div id={'pub-header-divider'} style={styles.headerDivider}></div>
+					<div id={'pub-abstract'}>{this.props.abstract}</div>
+					<div id={'pub-header-divider'}></div>
 
 					<div id="pubBodyContent">
 						{this.props.addSelectionHandler
@@ -158,35 +152,6 @@ styles = {
 	loaded: {
 		opacity: 1
 	},
-	// pubTitle: {
-	// 	textAlign: 'center',
-	// 	fontSize: '40px',
-	// 	margin: '50px 0px',
-	// },
-	// pubAbstract: {
-	// 	textAlign: 'center',
-	// 	color: '#777',
-	// 	margin: '30px 0px',
-	// },
-	// headerDivider: {
-	// 	height: 1,
-	// 	width: '80%',
-	// 	margin: '0 auto',
-	// 	backgroundColor: '#DDD',
-	// },
-	// authors: {
-	// 	textAlign: 'center',
-	// 	color: '#555',
-	// 	fontSize: '17px',
-	// 	padding: '0px 50px',
-	// },
-	// author: {
-	// 	color: '#555',
-	// 	':hover': {
-	// 		color: '#111',
-	// 	},
-
-	// },
 
 };
 
