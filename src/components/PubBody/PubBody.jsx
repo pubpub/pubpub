@@ -5,6 +5,7 @@ import {globalStyles} from '../../utils/styleConstants';
 import { Link } from 'react-router';
 import {loadCss} from '../../utils/loadingFunctions';
 import {scienceStyle, magazineStyle} from './pubStyles';
+import cssConvert from 'css-to-radium';
 
 let styles = {};
 
@@ -63,7 +64,8 @@ const PubBody = React.createClass({
 			const objectString = this.props.style.cssObjectString || '';
 			// const testJSON = objectString.replace(/(['"])?([a-zA-Z0-9_]+)(['"])?:/g, '"$2": ');
 			// cssObject = JSON.parse('{' + testJSON + '}');
-			cssObject = JSON.parse('{' + objectString.replace(/(['"])?([a-zA-Z0-9_#, -]+)(['"])?:/g, '"$2": ') + '}');
+			// cssObject = JSON.parse('{' + objectString.replace(/(['"])?([a-zA-Z0-9_#, -]+)(['"])?:/g, '"$2": ') + '}');
+			cssObject = cssConvert(objectString);
 			break;
 		default: 
 			cssObject = scienceStyle;
@@ -73,14 +75,14 @@ const PubBody = React.createClass({
 		const defaultContentRules = {};
 		Object.keys(scienceStyle).map((cssRule)=> {
 			cssRule.split(',').map((splitRule)=> {
-				defaultContentRules['#pubContent ' + splitRule] = scienceStyle[cssRule];
+				defaultContentRules['#pubContent ' + splitRule.replace(/ /g, '')] = scienceStyle[cssRule];
 			});
 		});
 
 		const pubContentRules = {};
 		Object.keys(cssObject).map((cssRule)=> {
 			cssRule.split(',').map((splitRule)=> {
-				pubContentRules['#pubContent ' + splitRule] = cssObject[cssRule];
+				pubContentRules['#pubContent ' + splitRule.replace(/ /g, '')] = cssObject[cssRule];
 			});
 		});
 

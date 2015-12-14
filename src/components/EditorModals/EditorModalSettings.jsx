@@ -4,6 +4,7 @@ import Radium, {Style} from 'radium';
 import {LoaderIndeterminate} from '../../components';
 import {baseStyles} from './editorModalStyle';
 import {globalStyles} from '../../utils/styleConstants';
+import cssConvert from 'css-to-radium';
 
 let styles = {};
 
@@ -46,7 +47,7 @@ const EditorModalSettings = React.createClass({
 			lineWrapping: true,
 			viewportMargin: Infinity, // This will cause bad performance on large documents. Rendering the entire thing...
 			autofocus: true,
-			mode: {name: 'javascript', json: true},
+			mode: 'css',
 			extraKeys: {'Ctrl-Space': 'autocomplete'}
 		});
 		// codeMirror.setValue(JSON.stringify(this.props.pubStyle.cssObjectString));
@@ -100,30 +101,26 @@ const EditorModalSettings = React.createClass({
 	},
 
 	saveCustomSettings: function() {
-		this.setState({showAdvancedError: false});
-		const cm = document.getElementById('codeMirrorJSX').childNodes[0].CodeMirror;
-		console.log(cm.getValue());
-		try {
-			// JSON.parse('{' + cm.getValue().replace(/'/g, '\"') + '}');
-			// const testJSON = cm.getValue().replace(/(['"])?([a-zA-Z0-9_]+)(['"])?:/g, '"$2": ');
-			// console.log('testJSON', testJSON);
-			JSON.parse('{' + cm.getValue().replace(/(['"])?([a-zA-Z0-9_#, -]+)(['"])?:/g, '"$2": ') + '}');
 
-			const newSetting = {};
-			newSetting.pubStyle = {
-				type: 'custom',
-				googleFontURL: this.refs.googleFontURL.value,
-				cssObjectString: cm.getValue(),
-			};
-			this.setState({
-				showAdvanced: false,
-				showAdvancedError: false,
-			});
-			return this.props.saveUpdatedSettingsFirebase(newSetting);
-		} catch (error) {
-			console.log(error);
-			return this.setState({showAdvancedError: true});
-		}
+		// this.setState({showAdvancedError: false});
+		const cm = document.getElementById('codeMirrorJSX').childNodes[0].CodeMirror;
+		// console.log(cm.getValue());
+		console.log(cssConvert(cm.getValue()));
+	
+
+		const newSetting = {};
+
+		newSetting.pubStyle = {
+			type: 'custom',
+			googleFontURL: this.refs.googleFontURL.value,
+			cssObjectString: cm.getValue(),
+		};
+		this.setState({
+			showAdvanced: false,
+			showAdvancedError: false,
+		});
+
+		return this.props.saveUpdatedSettingsFirebase(newSetting);
 	},
 
 	render: function() {
@@ -171,7 +168,7 @@ const EditorModalSettings = React.createClass({
 						fontSize: '14px',
 						// color: 'red',
 						fontFamily: 'Courier',
-						padding: '0px 10px',
+						padding: '10px 10px',
 						width: 'calc(100% - 20px)',
 						minHeight: '24px',
 					},
@@ -271,9 +268,11 @@ styles = {
 			// display: 'block',
 			opacity: 1,
 			pointerEvents: 'auto',
+			height: 'auto',
 		},
 		// display: 'none',
 		opacity: 0,
+		height: 0,
 		pointerEvents: 'none',
 		
 	},
