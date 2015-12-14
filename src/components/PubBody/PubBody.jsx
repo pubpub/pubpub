@@ -13,7 +13,6 @@ const PubBody = React.createClass({
 		abstract: PropTypes.string,
 		htmlTree: PropTypes.array,
 		authors: PropTypes.array,
-		assets: PropTypes.array,
 		addSelectionHandler: PropTypes.func,
 	},
 	getDefaultProps: function() {

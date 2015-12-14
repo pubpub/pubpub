@@ -143,6 +143,7 @@ pubSchema.statics.getPub = function (slug, readerID, callback) {
 	this.findOne({slug: slug})
 	.populate({ path: 'discussions', model: 'Discussion' })
 	.populate({ path: 'assets history.assets', model: 'Asset' })
+	.populate({ path: 'references history.references', model: 'Reference' })
 	.populate({ path: 'authors history.authors', select: 'username name thumbnail', model: 'User' })
 	.exec((err, pub)=> {
 		const options = [
@@ -169,7 +170,6 @@ pubSchema.statics.getPub = function (slug, readerID, callback) {
 				outputPub.isAuthor = true;
 			}
 			// console.log(outputPub.isAuthor);
-
 			return callback(null, outputPub);
 		});
 

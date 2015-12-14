@@ -11,6 +11,8 @@ export function parsePluginString(str) {
 }
 
 export function convertFirebaseToObject(firebaseObj, shouldCount = false) {
+	// It seems this could be removed if we did a better job of creating the firebase
+	// data to use the refNames as key to that object.
 	let count = 0;
 	return Object.keys(firebaseObj || {}).reduce(function(obj, key) {
 		const asset = firebaseObj[key];
@@ -21,6 +23,19 @@ export function convertFirebaseToObject(firebaseObj, shouldCount = false) {
 		}
 		return obj;
 	}, {});
+}
+
+export function convertArrayToObject(array, shouldCount = false) {
+	const newObject = {};
+	if (!array) { return newObject; }
+
+	array.map((item, index)=> {
+		newObject[item.refName] = item;
+		if (shouldCount) {
+			newObject[item.refName].count = index;
+		}
+	});
+	return newObject;
 }
 
 
