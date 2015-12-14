@@ -12,6 +12,7 @@ const CitePlugin = React.createClass({
 		reference: PropTypes.object,
 		ref: PropTypes.string,
 		children: PropTypes.string,
+		error: PropTypes.string,
 		count: PropTypes.number
 	},
 	getInitialState: function() {
@@ -27,10 +28,11 @@ const CitePlugin = React.createClass({
 		this.setState({expanded: !this.state.expanded, hover: !this.state.expanded});
 	},
 	render: function() {
-		const ref = !(this.props.reference === 'error:type');
 		let html;
 
-		if (!ref) {
+		if (this.props.error === 'empty') {
+			html = <span></span>;
+		} else if (this.props.error === 'type') {
 			html = <ErrorMsg>Could not find reference.</ErrorMsg>;
 		}	else {
 			const title = this.props.reference.title;

@@ -11,6 +11,7 @@ export const imageOptions = {src: src('image'), width, height, align};
 const ImagePlugin = React.createClass({
 	propTypes: {
 		url: PropTypes.string,
+		error: PropTypes.string,
 		children: PropTypes.string
 	},
 	getInitialState: function() {
@@ -30,10 +31,12 @@ const ImagePlugin = React.createClass({
 	},
 	render: function() {
 		const refName = this.props.children;
-		const img = !(this.props.url === 'error:type');
 		const url = this.props.url;
 		let html;
-		if (!img) {
+
+		if (this.props.error === 'empty') {
+			html = <span></span>;
+		} else if (this.props.error === 'type') {
 			html = <ErrorMsg>Not an Image-type asset.</ErrorMsg>;
 		}	else if (url) {
 			html = (<ImageLoader onLoad={this.loadedImage} src={url} wrapper={React.DOM.span} preloader={this.preloader}>
