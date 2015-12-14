@@ -43,13 +43,18 @@ const CitePlugin = React.createClass({
 			console.log(this.props.reference);
 			console.log(titleStyle);
 
+			let expandedElem = null;
+			if (show) {
+				expandedElem = (<span style={[styles.show, titleStyle]} onClick={this.onClick} onMouseOut={this.mouseOut} >
+					<span style={[styles.author]}>({author} , {date})</span> -
+					<span style={[styles.title]}>{title}</span>
+				</span>);
+			}
+
 			html = (
-				<span style={[styles.ref]} onClick={this.onClick} onMouseOver={this.mouseOver} onMouseOut={this.mouseOut}>
+				<span style={[styles.ref]} onClick={this.onClick} onMouseOver={this.mouseOver}>
 					[{this.props.count}]
-					<span style={[show && styles.show, !show && styles.hidden, titleStyle]}>
-						<span style={[styles.author]}>({author} , {date})</span> -
-						<span style={[styles.title]}>{title}</span>
-					</span>
+					{expandedElem}
 				</span>
 			);
 		}
@@ -58,11 +63,26 @@ const CitePlugin = React.createClass({
 });
 
 
+const pulseKeyframes = Radium.keyframes({
+	'0%': {width: '10px', height: '17px', color: 'rgba(0,0,0,0)'},
+	'90%': {width: '150px', height: '50px', color: 'rgba(0,0,0,0)'},
+	'100%': {width: '150px', height: '50px', color: 'black'},
+}, 'Spinner');
+
+const expandFrames = Radium.keyframes({
+	'0%': {width: '150px', height: '50px'},
+	'100%': {width: '250px', height: '150px'}
+}, 'Spinner');
+
 styles = {
 	ref: {
 		'cursor': 'pointer',
 		'position': 'relative',
-		'overflow': 'visible'
+		'overflow': 'visible',
+		'display': 'inline-block'
+	},
+	img: {
+		'width': '250px'
 	},
 	hidden: {
 		display: 'none',
@@ -80,6 +100,7 @@ styles = {
 	show: {
 		// opacity: '1',
 		// color: 'rgba(0,0,0,1.0)',
+		animation: `${pulseKeyframes} 0.5s ease 0s 1`,
 		display: 'block',
 		position: 'absolute',
 		zIndex: 100000,
@@ -91,13 +112,13 @@ styles = {
 		textOverflow: 'ellipsis',
 		fontSize: '0.75em',
 		overflow: 'hidden',
-		marginLeft: '61px',
 		marginTop: '-17px',
 		// transition: 'width 0.5s ease 0.1s, color 0.5s ease 0.5s'
 	},
 	expanded: {
 		height: '150px',
-		width: '150px'
+		width: '250px',
+		animation: `${expandFrames} 0.5s ease 0s 1`,
 	},
 	hover: {
 		height: '50px',
