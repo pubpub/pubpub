@@ -8,7 +8,7 @@ import {getPub, openPubModal, closePubModal, addDiscussion, addSelection} from '
 import {toggleVisibility} from '../../actions/login';
 import {closeMenu} from '../../actions/nav';
 
-import {convertArrayToObject} from '../../utils/parsePlugins';
+import {convertImmutableListToObject} from '../../utils/parsePlugins';
 
 import {PubBody, PubModals, PubNav, LoaderDeterminate, PubDiscussions, PubStatus, PubReviews, PubLeftBar} from '../../components';
 import {globalStyles, pubSizes} from '../../utils/styleConstants';
@@ -57,8 +57,8 @@ const PubReader = React.createClass({
 		const versionIndex = this.props.query.version !== undefined ? this.props.query.version - 1 : this.props.readerData.getIn(['pubData', 'history']).size - 1;
 
 		const inputMD = this.props.readerData.getIn(['pubData', 'history', versionIndex, 'markdown']) || '';
-		const assets = convertArrayToObject( this.props.readerData.getIn(['pubData', 'history', versionIndex, 'assets']).toJS() );
-		const references = convertArrayToObject(this.props.readerData.getIn(['pubData', 'history', versionIndex, 'references']).toJS(), true);
+		const assets = convertImmutableListToObject( this.props.readerData.getIn(['pubData', 'history', versionIndex, 'assets']) );
+		const references = convertImmutableListToObject(this.props.readerData.getIn(['pubData', 'history', versionIndex, 'references']), true);
 		const mdOutput = marked(inputMD, {assets, references});
 
 		this.setState({
@@ -71,13 +71,11 @@ const PubReader = React.createClass({
 		const oldVersionIndex = this.props.query.version !== undefined ? this.props.query.version - 1 : this.props.readerData.getIn(['pubData', 'history']).size - 1;
 		const versionIndex = nextProps.query.version !== undefined ? nextProps.query.version - 1 : nextProps.readerData.getIn(['pubData', 'history']).size - 1;
 
-		// if (this.props.readerData.getIn(['pubData', 'history', oldVersionIndex, 'markdown']) !== nextProps.readerData.getIn(['pubData', 'history', version, 'markdown'])) {
 		if (oldVersionIndex !== versionIndex) {
 			// console.log('compiling markdown for version ' + version);
 			const inputMD = nextProps.readerData.getIn(['pubData', 'history', versionIndex, 'markdown']) || '';
-			const assets = convertArrayToObject( nextProps.readerData.getIn(['pubData', 'history', versionIndex, 'assets']) );
-			const references = convertArrayToObject(nextProps.readerData.getIn(['pubData', 'history', versionIndex, 'references']), true);
-			console.log('assets', assets);
+			const assets = convertImmutableListToObject( nextProps.readerData.getIn(['pubData', 'history', versionIndex, 'assets']) );
+			const references = convertImmutableListToObject(nextProps.readerData.getIn(['pubData', 'history', versionIndex, 'references']), true);
 			const mdOutput = marked(inputMD, {assets, references});
 			this.setState({
 				htmlTree: mdOutput.tree,

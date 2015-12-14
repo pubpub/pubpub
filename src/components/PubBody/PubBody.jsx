@@ -3,6 +3,7 @@ import Radium, {Style} from 'radium';
 import {PubSelectionPopup} from '../';
 import {globalStyles} from '../../utils/styleConstants';
 import { Link } from 'react-router';
+import {loadCss} from '../../utils/loadingFunctions';
 
 let styles = {};
 
@@ -14,11 +15,16 @@ const PubBody = React.createClass({
 		htmlTree: PropTypes.array,
 		authors: PropTypes.array,
 		addSelectionHandler: PropTypes.func,
+		style: PropTypes.object,
 	},
 	getDefaultProps: function() {
 		return {
 			htmlTree: [],
 			authors: [],
+			style: {
+				googleFontURL: 'https://fonts.googleapis.com/css?family=Open+Sans|Indie+Flower',
+				cssObject: {},
+			},
 		};
 	},
 
@@ -26,7 +32,40 @@ const PubBody = React.createClass({
 		return {
 			htmlTree: [],
 			TOC: [],
+			styleRules: {}
 		};
+	},
+
+	componentWillMount() {
+		this.compileRules();
+	},
+
+	componentDidMount() {
+		loadCss(this.props.style.googleFontURL);
+	},
+
+	compileRules: function() {
+		const userRules = {
+			'#pubContent': {
+				fontFamily: 'Indie Flower',
+				color: 'blue',
+			},
+		};
+
+		this.setState({
+			styleRules: {
+				...userRules, 
+				'.marking': {
+					backgroundColor: 'rgba(124, 235, 124, 0.7)',
+				},
+				'.tempHighlight': {
+					backgroundColor: 'rgba(200,200,200, 0.7)',
+				},
+				'.selection': {
+					backgroundColor: 'rgba(195, 245, 185, 0.7)',
+				},
+			}
+		});
 	},
 
 	render: function() {
@@ -34,31 +73,12 @@ const PubBody = React.createClass({
 		return (
 			<div style={styles.container}>
 
-				<Style rules={{
-					'.marking': {
-						backgroundColor: 'rgba(124, 235, 124, 0.7)',
-					},
-					'.tempHighlight': {
-						backgroundColor: 'rgba(200,200,200, 0.7)',
-					},
-					'.selection': {
-						backgroundColor: 'rgba(195, 245, 185, 0.7)',
-					},
-					'#pubBodyContent h1, #pubBodyContent h2, #pubBodyContent h3, #pubBodyContent h4, #pubBodyContent h5, #pubBodyContent h6': {
-						padding: '0px 20px',
-						color: '#4C4C4C',
-					},
-					'#pubBodyContent p, #pubBodyContent ul, #pubBodyContent ol': {
-						fontFamily: 'Lora',
-						padding: '0px 20px',
-						color: '#565656',
-					}
-				}}/>
+				<Style rules={this.state.styleRules}/>
 
-				<div style={[styles.contentContainer, styles[this.props.status]]}>
+				<div id="pubContent" style={[styles.contentContainer, styles[this.props.status]]}>
 
-					<h1 style={styles.pubTitle}>{this.props.title}</h1>
-					<div style={styles.authors}> <span>by </span>
+					<div id={'pub-title'} style={styles.pubTitle}>{this.props.title}</div>
+					<div id={'pub-authors'} style={styles.authors}> <span>by </span>
 						{
 							this.props.authors.map((author, index)=>{
 								return (index === this.props.authors.length - 1
@@ -67,11 +87,15 @@ const PubBody = React.createClass({
 							})
 						}
 					</div>
-					<p style={styles.pubAbstract}>{this.props.abstract}</p>
+					<div id={'pub-abstract'} style={styles.pubAbstract}>{this.props.abstract}</div>
 					<div style={styles.headerDivider}></div>
 
 					<div id="pubBodyContent">
-						<PubSelectionPopup addSelectionHandler={this.props.addSelectionHandler}/>
+						{this.props.addSelectionHandler
+							? <PubSelectionPopup addSelectionHandler={this.props.addSelectionHandler}/>
+							: null
+						}
+						
 						{this.props.htmlTree}
 					</div>
 

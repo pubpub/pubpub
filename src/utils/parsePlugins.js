@@ -25,11 +25,11 @@ export function convertFirebaseToObject(firebaseObj, shouldCount = false) {
 	}, {});
 }
 
-export function convertArrayToObject(array, shouldCount = false) {
+export function convertImmutableListToObject(array, shouldCount = false) {
 	const newObject = {};
 	if (!array) { return newObject; }
 
-	array.map((item, index)=> {
+	array.toJS().map((item, index)=> {
 		newObject[item.refName] = item;
 		if (shouldCount) {
 			newObject[item.refName].count = index;
