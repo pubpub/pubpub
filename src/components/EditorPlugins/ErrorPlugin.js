@@ -9,13 +9,13 @@ const ErrorPlugin = React.createClass({
 		children: PropTypes.string
 	},
 	render: function() {
-		return (<span style={[styles.ref]}>[ERROR: {this.props.children}]</span>);
+		return (<span style={[styles.ref]}>[Error: {this.props.children}]</span>);
 	}
 });
 
 styles = {
 	ref: {
-		'background-color': 'rgba(255,0,0,0.4)'
+		'background-color': 'rgba(255,0,0,0.25)'
 	}
 };
 

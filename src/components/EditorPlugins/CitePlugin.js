@@ -16,16 +16,29 @@ const CitePlugin = React.createClass({
 		count: PropTypes.number
 	},
 	getInitialState: function() {
+		this.hoverTimeout = null;
 		return {hover: false, expanded: false};
 	},
 	mouseOver: function() {
-		this.setState({hover: true});
+		this.hoverTimeout = setTimeout(this.startHover.bind(this), 100);
 	},
 	mouseOut: function() {
 		this.setState({hover: false});
 	},
 	onClick: function() {
 		this.setState({expanded: !this.state.expanded, hover: !this.state.expanded});
+	},
+	cancelHover: function() {
+		if (this.hoverTimeout) {
+			clearTimeout(this.hoverTimeout);
+			this.hoverTimeout = null;
+		}
+	},
+	startHover: function() {
+		this.setState({hover: true});
+	},
+	close: function() {
+		this.setState({expanded: false, hover: false});
 	},
 	render: function() {
 		let html;
@@ -43,19 +56,30 @@ const CitePlugin = React.createClass({
 			const titleStyle = show && ((this.state.expanded && styles.expanded) || (this.state.hover && styles.hover));
 
 			let expandedElem = null;
+			const fakeElem = null;
+
+			/*
+			const fakeElem = (<span><img style={[styles.img]} src="https://pbs.twimg.com/media/CWLFL0UUsAEtuij.png"></img>
+								<a target="_blank" href="http://physics.gu.se/~frtbm/joomla/media/mydocs/Kramers.pdf">Source</a>
+							  &nbsp;&nbsp;
+								<a target="_blank" href="http://physics.gu.se/~frtbm/joomla/media/mydocs/Kramers.pdf" >Copy Citation</a></span>);
+			*/
+
 			if (show) {
-				expandedElem = (<span style={[styles.show, titleStyle]} onClick={this.onClick} onMouseOut={this.mouseOut} >
+				expandedElem = (
+				<span>
+				<span style={[styles.show, titleStyle]} onClick={this.onClick} onMouseOut={this.mouseOut} >
 					<span style={[styles.author]}>({author} , {year})</span> <br/>
 					<span style={[styles.title]}>{title}</span>
-					<img style={[styles.img]} src="https://pbs.twimg.com/media/CWLFL0UUsAEtuij.png"></img>
-					<a target="_blank" href="http://physics.gu.se/~frtbm/joomla/media/mydocs/Kramers.pdf">Source</a>
-				  &nbsp;&nbsp;<a target="_blank" href="http://physics.gu.se/~frtbm/joomla/media/mydocs/Kramers.pdf" >Copy Citation</a>
-
-				</span>);
+					{fakeElem}
+				</span>
+				<span style={[styles.cover]} onClick={this.close}></span>
+				</span>
+				);
 			}
 
 			html = (
-				<span style={[styles.ref]} onClick={this.onClick} onMouseOver={this.mouseOver}>
+				<span style={[styles.ref]} onClick={this.onClick} onMouseOver={this.mouseOver} onMouseOut={this.cancelHover}>
 					[{this.props.count}]
 					{expandedElem}
 				</span>
@@ -87,7 +111,8 @@ styles = {
 		'cursor': 'pointer',
 		'position': 'relative',
 		'overflow': 'visible',
-		'display': 'inline-block'
+		'display': 'inline-block',
+		'backgroundColor': 'white'
 	},
 	img: {
 		'width': expandedWidth
@@ -104,6 +129,15 @@ styles = {
 	title: {
 		WebkitLineClamp: 2,
 		overflow: 'hidden'
+	},
+	cover: {
+		position: 'fixed',
+		zIndex: 99999,
+		left: 0,
+		top: 0,
+		width: '100vw',
+		height: '100vh',
+		opacity: 0
 	},
 	show: {
 		// opacity: '1',
