@@ -8,7 +8,7 @@ export const styles = {
 		fontFamily: globalStyles.headerFont,
 		backgroundColor: globalStyles.sideBackground,
 		height: 'calc(100vh - ' + globalStyles.headerHeight + ')',
-		'@media screen and (min-resolution: 3dppx), (max-width: 767px)': {
+		'@media screen and (min-resolution: 3dppx), @media screen and(max-width: 767px)': {
 			height: 'calc(100vh - ' + globalStyles.headerHeightMobile + ')',
 		},
 	},
@@ -23,7 +23,7 @@ export const styles = {
 	},
 	isMobile: {
 		display: 'none',
-		'@media screen and (min-resolution: 3dppx), (max-width: 767px)': {
+		'@media screen and (min-resolution: 3dppx), @media screen and(max-width: 767px)': {
 			display: 'block',
 		},
 	},
@@ -46,7 +46,7 @@ export const styles = {
 		margin: 0,
 	},
 	notMobile: {
-		'@media screen and (min-resolution: 3dppx), (max-width: 767px)': {
+		'@media screen and (min-resolution: 3dppx), @media screen and(max-width: 767px)': {
 			display: 'none',
 		},
 	},
@@ -387,6 +387,7 @@ export function codeMirrorStyles(loginData) {
 		editorStyles.colorTitle = '#575757';
 		editorStyles.colorPPM = '#474747';
 		editorStyles.colorCite = '#171717';
+		editorStyles.colorPagebreak = '#aaa';
 		break;
 	case 'dark':
 		editorStyles.cursorColor = '#fff';
@@ -395,6 +396,7 @@ export function codeMirrorStyles(loginData) {
 		editorStyles.colorTitle = '#ccc';
 		editorStyles.colorPPM = '#eee';
 		editorStyles.colorCite = '#fff';
+		editorStyles.colorPagebreak = '#555';
 		break;
 	default:
 		editorStyles.cursorColor = '#000';
@@ -403,6 +405,7 @@ export function codeMirrorStyles(loginData) {
 		editorStyles.colorTitle = '#575757';
 		editorStyles.colorPPM = '#474747';
 		editorStyles.colorCite = '#171717';
+		editorStyles.colorPagebreak = '#aaa';
 		break;
 	}
 
@@ -455,6 +458,10 @@ export function codeMirrorStyles(loginData) {
 			cursor: 'pointer',
 			borderRadius: '2px',
 			color: '#555',
+		},
+		'.cm-ppm-pagebreak': {
+			color: editorStyles.colorPagebreak,
+			fontSize: '16px',
 		},
 		'.cm-plugin-image': {
 			backgroundColor: 'rgba(185, 215, 249, 0.5)',

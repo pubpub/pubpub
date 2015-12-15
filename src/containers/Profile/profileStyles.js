@@ -25,7 +25,7 @@ export const styles = {
 		backgroundColor: 'white',
 		boxShadow: '0px 0px 4px 0px rgba(0,0,0,0.4)',
 		minHeight: 'calc(100vh - ' + globalStyles.headerHeight + ')',
-		'@media screen and (min-resolution: 3dppx), (max-width: 767px)': {
+		'@media screen and (min-resolution: 3dppx), @media screen and(max-width: 767px)': {
 			width: '100%',
 			maxWidth: '100%',
 			minHeight: 'calc(100vh - ' + globalStyles.headerHeightMobile + ')',
@@ -37,7 +37,7 @@ export const styles = {
 		width: '100%',
 		margin: 0,
 		padding: 0,
-		'@media screen and (min-resolution: 3dppx), (max-width: 767px)': {
+		'@media screen and (min-resolution: 3dppx), @media screen and(max-width: 767px)': {
 			height: globalStyles.headerHeightMobile,
 		},
 	},
@@ -51,7 +51,7 @@ export const styles = {
 			cursor: 'pointer',
 			color: globalStyles.sideHover,
 		},
-		'@media screen and (min-resolution: 3dppx), (max-width: 767px)': {
+		'@media screen and (min-resolution: 3dppx), @media screen and(max-width: 767px)': {
 			width: 'calc(33% - 1px)',
 			lineHeight: globalStyles.headerHeightMobile,
 			padding: 0,
@@ -69,7 +69,7 @@ export const styles = {
 		margin: '8px 0px',
 		display: 'none',
 		float: 'right',
-		'@media screen and (min-resolution: 3dppx), (max-width: 767px)': {
+		'@media screen and (min-resolution: 3dppx), @media screen and(max-width: 767px)': {
 			height: 'calc(' + globalStyles.headerHeightMobile + ' - 30px)',
 			margin: '15px 0px',
 		},
@@ -85,7 +85,7 @@ export const styles = {
 		borderRadius: '1px',
 		float: 'left',
 		// backgroundColor: 'rgba(190,250,89,0.4)',
-		'@media screen and (min-resolution: 3dppx), (max-width: 767px)': {
+		'@media screen and (min-resolution: 3dppx), @media screen and(max-width: 767px)': {
 			float: 'none',
 			margin: '30px auto',
 		},
@@ -100,7 +100,7 @@ export const styles = {
 		width: 'calc(100% - 242px)',
 		// backgroundColor: 'rgba(255,190,89,0.4)',
 		margin: '30px 30px 60px 0px',
-		'@media screen and (min-resolution: 3dppx), (max-width: 767px)': {
+		'@media screen and (min-resolution: 3dppx), @media screen and(max-width: 767px)': {
 			float: 'none',
 			width: 'calc(100% - 30px)',
 			padding: '0px 15px',
@@ -109,13 +109,13 @@ export const styles = {
 	profileName: {
 		margin: 0,
 		fontSize: '40px',
-		'@media screen and (min-resolution: 3dppx), (max-width: 767px)': {
+		'@media screen and (min-resolution: 3dppx), @media screen and(max-width: 767px)': {
 			fontSize: '50px',
 			textAlign: 'center',
 		},
 	},
 	profileDetail: {
-		'@media screen and (min-resolution: 3dppx), (max-width: 767px)': {
+		'@media screen and (min-resolution: 3dppx), @media screen and(max-width: 767px)': {
 			textAlign: 'center',
 			fontSize: '20px',
 		},
@@ -131,7 +131,7 @@ export const styles = {
 		// height: 100,
 		// backgroundColor: globalStyles.sideBackground,
 		// backgroundColor: '#F0F0F0',
-		'@media screen and (min-resolution: 3dppx), (max-width: 767px)': {
+		'@media screen and (min-resolution: 3dppx), @media screen and(max-width: 767px)': {
 			// height: 300
 			margin: '30px 0px',
 		},
@@ -143,7 +143,7 @@ export const styles = {
 	},
 	statParenthese: {
 		display: 'inline',
-		'@media screen and (min-resolution: 3dppx), (max-width: 767px)': {
+		'@media screen and (min-resolution: 3dppx), @media screen and(max-width: 767px)': {
 			display: 'none',	
 		}
 	},
@@ -167,7 +167,7 @@ export const styles = {
 			color: globalStyles.sideHover,
 			cursor: 'pointer',
 		},
-		'@media screen and (min-resolution: 3dppx), (max-width: 767px)': {
+		'@media screen and (min-resolution: 3dppx), @media screen and(max-width: 767px)': {
 			width: '50%',
 			height: 70,
 			margin: '20px 0px',
@@ -183,7 +183,7 @@ export const styles = {
 		fontSize: '18px',
 		display: 'inline-block',
 		// backgroundColor: 'rgba(70,250,89,0.4)',
-		'@media screen and (min-resolution: 3dppx), (max-width: 767px)': {
+		'@media screen and (min-resolution: 3dppx), @media screen and(max-width: 767px)': {
 			display: 'block',
 			height: 25,
 			lineHeight: '25px',
@@ -201,7 +201,7 @@ export const styles = {
 		fontSize: '18px',
 		display: 'inline-block',
 		// backgroundColor: 'rgba(190,70,89,0.4)',
-		'@media screen and (min-resolution: 3dppx), (max-width: 767px)': {
+		'@media screen and (min-resolution: 3dppx), @media screen and(max-width: 767px)': {
 			display: 'block',
 			height: 45,
 			lineHeight: '40px',
@@ -225,7 +225,7 @@ export const styles = {
 		':hover': {
 			backgroundColor: '#E5E5E5',
 		},
-		'@media screen and (min-resolution: 3dppx), (max-width: 767px)': {
+		'@media screen and (min-resolution: 3dppx), @media screen and(max-width: 767px)': {
 			width: 'calc(100% - 30px)'
 		},
 

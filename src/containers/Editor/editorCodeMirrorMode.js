@@ -46,6 +46,7 @@ export default function() {
 			{regex: /\[title:.*\]/, token: 'ppm ppm-title'},
 			{regex: /\[abstract:.*\]/, token: 'ppm ppm-abstract'},
 			{regex: /\[authorsNote:.*\]/, token: 'ppm ppm-authorsNote'},
+			{regex: /\[pagebreak\]/, token: 'ppm ppm-pagebreak'},
 			// {regex: /\[asset.*\]/, token: 'plugin plugin-asset'},
 			{regex: /\[image:.*\]/, token: 'ppm plugin plugin-image'},
 			{regex: /\[video:.*\]/, token: 'ppm plugin plugin-video'},

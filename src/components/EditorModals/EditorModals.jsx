@@ -43,7 +43,7 @@ const EditorModals = React.createClass({
 
 	render: function() {
 		return (
-			<div style={styles.container}>
+			<div style={styles.container} className={'editorModals'}>
 
 				{/*	Container for all modals and their backdrop. */}
 				<div className="modals">

@@ -52,7 +52,7 @@ const Editor = React.createClass({
 	statics: {
 		fetchDataDeferred: function(getState, dispatch, location, routeParams) {
 			return dispatch(getPubEdit(routeParams.slug));
-		}
+		},
 	},
 
 	getInitialState() {
@@ -361,7 +361,7 @@ const Editor = React.createClass({
 
 		return (
 
-			<div style={[styles.editorContainer, darkMode && styles.editorContainerDark]}>
+			<div style={[styles.editorContainer, darkMode && styles.editorContainerDark]} className={'editor-container'}>
 
 				<DocumentMeta {...metaData} />
 
@@ -480,7 +480,7 @@ const Editor = React.createClass({
 							{/* Formatting list */}
 							<ul style={[styles.common.bottomNavList, styles[viewMode].bottomNavList, styles[viewMode].bottomNavListRight, styles.alignRight, showBottomRightMenu && styles[viewMode].listActive]}>
 								{()=>{
-									const options = ['H1', 'H2', 'H3', 'Bold', 'Italic', '# List', '- List', 'Line', 'Image', 'Video', 'Cite'];
+									const options = ['H1', 'H2', 'H3', 'Bold', 'Italic', '# List', '- List', 'Line', 'Image', 'Video', 'Cite', 'Pagebreak'];
 									return options.map((item, index)=>{
 										return <li key={'brNav' + index} onClick={this.insertFormatting(item)} style={[styles.common.bottomNavListItem, styles[viewMode].bottomNavListItem, animateListItemStyle('right', loadStatus, index), styles.floatRight, showBottomRightMenu && styles[viewMode].listItemActive]}>{item}</li>;
 									});
@@ -505,7 +505,7 @@ const Editor = React.createClass({
 					</div>
 
 					{/* Live Preview Block */}
-					<div style={[styles.hiddenUntilLoad, styles[loadStatus], styles.common.editorPreview, styles[viewMode].editorPreview]}>
+					<div style={[styles.hiddenUntilLoad, styles[loadStatus], styles.common.editorPreview, styles[viewMode].editorPreview]} className={'editorPreview'}>
 						{/* {this.state.tree} */}
 						<PubBody
 							status={'loaded'}

@@ -39,6 +39,9 @@ export function insertText(cm, formatting, baseText, showPopup) {
 		cm.replaceSelection('[cite: ]');
 		showPopup();
 		break;
+	case 'Pagebreak':
+		cm.replaceSelection('[pagebreak]');
+		break;
 	default:
 		throw new Error('Insert command not found');
 	}

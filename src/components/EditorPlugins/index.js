@@ -1,4 +1,5 @@
 import MathPlugin 	from './MathPlugin';
+import PagebreakPlugin 	from './PagebreakPlugin';
 import ImagePlugin 	from './ImagePlugin';
 import CitePlugin 	from './CitePlugin';
 import VideoPlugin 	from './VideoPlugin';
@@ -22,6 +23,15 @@ export default {
 	math: {
 		component: MathPlugin,
 		rule: /^\$([^\$]+)\$/,
+		inline: true,
+		autocomplete: false,
+		inlineFunc: function(cap, renderer) {
+			return renderer(cap[1]);
+		}
+	},
+	pagebreak: {
+		component: PagebreakPlugin,
+		rule: /^(?:\s)*(?:\[)pagebreak([^\n\]]*)(?:\])/,
 		inline: true,
 		autocomplete: false,
 		inlineFunc: function(cap, renderer) {

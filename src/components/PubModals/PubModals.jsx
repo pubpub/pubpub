@@ -122,7 +122,7 @@ styles = {
 		left: 0,
 		pointerEvents: 'none',
 
-		'@media screen and (min-resolution: 3dppx), (max-width: 767px)': {
+		'@media screen and (min-resolution: 3dppx), @media screen and(max-width: 767px)': {
 			position: 'fixed',
 			top: 0,
 			left: 0,
@@ -135,7 +135,7 @@ styles = {
 		},
 	},
 	modalWrapperActive: {
-		'@media screen and (min-resolution: 3dppx), (max-width: 767px)': {
+		'@media screen and (min-resolution: 3dppx), @media screen and(max-width: 767px)': {
 			transform: 'translateX(0%)',
 		}
 	},
@@ -151,7 +151,7 @@ styles = {
 		backgroundColor: 'rgba(255,255,255,0.7)',
 		transition: '.1s linear opacity',
 		zIndex: 10,
-		'@media screen and (min-resolution: 3dppx), (max-width: 767px)': {
+		'@media screen and (min-resolution: 3dppx), @media screen and(max-width: 767px)': {
 			position: 'fixed',
 			width: '10vw',
 			height: '100%',
@@ -185,7 +185,7 @@ styles = {
 		transform: 'scale(0.9)',
 		transition: '.0s linear opacity, .1s linear transform',
 
-		'@media screen and (min-resolution: 3dppx), (max-width: 767px)': {
+		'@media screen and (min-resolution: 3dppx), @media screen and(max-width: 767px)': {
 			position: 'fixed',
 			width: '90vw',
 			height: '100%',
@@ -204,7 +204,7 @@ styles = {
 		opacity: 1,
 		pointerEvents: 'auto',
 		transform: 'scale(1.0)',
-		'@media screen and (min-resolution: 3dppx), (max-width: 767px)': {
+		'@media screen and (min-resolution: 3dppx), @media screen and(max-width: 767px)': {
 			transition: '0s linear opacity 0s, 0s linear transform',	
 		},
 		
@@ -212,7 +212,7 @@ styles = {
 	modalContainerInactive: {
 		pointerEvents: 'none',
 		opacity: 0,
-		'@media screen and (min-resolution: 3dppx), (max-width: 767px)': {
+		'@media screen and (min-resolution: 3dppx), @media screen and(max-width: 767px)': {
 			opacity: 1,
 		},
 	},
@@ -231,7 +231,7 @@ styles = {
 			cursor: 'pointer',
 			color: 'black',
 		},
-		'@media screen and (min-resolution: 3dppx), (max-width: 767px)': {
+		'@media screen and (min-resolution: 3dppx), @media screen and(max-width: 767px)': {
 			display: 'block',
 			margin: '0px 0px 0px 60px',
 			fontSize: '2em',

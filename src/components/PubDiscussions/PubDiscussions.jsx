@@ -64,7 +64,7 @@ export default Radium(PubDiscussions);
 
 styles = {
 	container: {
-		'@media screen and (min-resolution: 3dppx), (max-width: 767px)': {
+		'@media screen and (min-resolution: 3dppx), @media screen and(max-width: 767px)': {
 			padding: '0px 10px',
 		},
 	},
