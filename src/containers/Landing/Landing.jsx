@@ -89,17 +89,6 @@ const Landing = React.createClass({
 						<p>As momentary forms become clarified through studious and critical practice, the viewer is left with an epitaph for the possibilities of our existence.</p>
 					</div>
 				</div>
-				{/*
-				<div>
-					<h2 style={styles.text}>Landing</h2>
-					<Link to={`/subdomain`}> subdomain </Link> | 
-					<Link to={`/pub/cat/edit`}> edit </Link> | 
-					<Link to={`/explore`}> explore </Link> | 
-					<Link to={`/profile/istravis`}> profile </Link> | 
-					<Link to={`/pub/cat`}> reader </Link> | 
-				</div>
-				*/}
-				
 
 			</div>
 		);

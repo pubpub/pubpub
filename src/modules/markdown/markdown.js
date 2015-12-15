@@ -114,7 +114,8 @@ renderer.listitem = function (text) {
 
 renderer.paragraph = function (text) {
   var id = inlineIds++;
-  inlines[id] = React.createElement(options.p || 'p', {key: keys++}, createBlockContent(text));
+  // inlines[id] = React.createElement(options.p || 'p', {key: keys++}, createBlockContent(text));
+  inlines[id] = React.createElement('div', {key: keys++, className: 'p-block'}, createBlockContent(text));
   result.push(inlines[id]);
   return '{{' + id + '}}';
 };

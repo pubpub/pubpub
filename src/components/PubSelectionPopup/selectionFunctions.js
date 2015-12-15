@@ -1,7 +1,7 @@
 export function isDescendantOfP(child) {
 	let node = child.parentNode;
 	while (node !== null) {
-		if (node.nodeName === 'P') {
+		if (node.className === 'p-block') {
 			return true;
 		}
 		node = node.parentNode;
@@ -12,7 +12,7 @@ export function isDescendantOfP(child) {
 export function getAncestorText(child) {
 	let node = child.parentNode;
 	while (node !== null) {
-		if (node.nodeName === 'P') {
+		if (node.className === 'p-block') {
 			return node.innerText;
 		}
 		node = node.parentNode;

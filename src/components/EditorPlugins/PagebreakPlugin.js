@@ -3,7 +3,7 @@ import React from 'react';
 const PagebreakPlugin = React.createClass({
 	render: function() {
 		return (
-			<span className={'pagebreak'} style={{display: 'block', borderTop: '1px dashed #ddd'}}></span>
+			<div className={'pagebreak'} style={{display: 'block', borderTop: '1px dashed #ddd'}}></div>
 		);
 	}
 });

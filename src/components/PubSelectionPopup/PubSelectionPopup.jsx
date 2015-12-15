@@ -103,7 +103,7 @@ const PubSelectionPopup = React.createClass({
 			endOffset: result.endOffset
 		};
 		// console.log(result);
-		console.log(highlightObject);
+		// console.log(highlightObject);
 		this.props.addSelectionHandler(highlightObject);
 
 	},
