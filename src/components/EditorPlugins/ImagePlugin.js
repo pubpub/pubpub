@@ -13,6 +13,7 @@ const ImagePlugin = React.createClass({
 		url: PropTypes.string,
 		error: PropTypes.string,
 		children: PropTypes.string,
+		
 		width: PropTypes.string,
 		height: PropTypes.string,
 		inline: PropTypes.string,
