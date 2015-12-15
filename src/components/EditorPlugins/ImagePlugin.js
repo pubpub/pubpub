@@ -13,7 +13,7 @@ const ImagePlugin = React.createClass({
 		url: PropTypes.string,
 		error: PropTypes.string,
 		children: PropTypes.string,
-		
+
 		width: PropTypes.string,
 		height: PropTypes.string,
 		inline: PropTypes.string,
@@ -47,12 +47,14 @@ const ImagePlugin = React.createClass({
 
 		let html;
 
+		const imgProps = {style: styleObject};
+
 		if (this.props.error === 'empty') {
 			html = <span></span>;
 		} else if (this.props.error === 'type') {
 			html = <ErrorMsg>Not an Image-type asset.</ErrorMsg>;
 		}	else if (url) {
-			html = (<ImageLoader onLoad={this.loadedImage} style={styleObject} src={url} wrapper={React.DOM.span} preloader={this.preloader}>
+			html = (<ImageLoader onLoad={this.loadedImage} imgProps={imgProps} src={url} wrapper={React.DOM.span} preloader={this.preloader}>
 				{refName}
 			</ImageLoader>);
 		} else {

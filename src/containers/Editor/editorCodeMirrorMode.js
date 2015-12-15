@@ -12,29 +12,34 @@ export default function() {
 			const token = editor.getTokenAt(cur);
 
 			if (token.type === 'pubpub-markdown') {
-				// const list = ['asset', 'image', 'title', 'audio', 'video', 'table'];
-				const list = [];
-
-				for (const plugin in plugins) {
-					if (plugins.hasOwnProperty(plugin) && plugins[plugin].autocomplete === true) {
-						list.push({text: plugin + ': ]', displayText: plugin});
-					}
-				}
 
 				const line = editor.getLine(cur.line);
 				let startPos = token.start;
 				let char = line.charAt(startPos);
+				let completionString = '' + char;
 				while (char !== '[' && startPos > 0) {
 					startPos--;
 					char = line.charAt(startPos);
+					completionString = char + completionString;
 				}
-				if (token.end - startPos <= 8) {
+
+				const list = [];
+
+				for (const plugin in plugins) {
+					if (plugins.hasOwnProperty(plugin) && plugins[plugin].autocomplete === true) {
+						if (completionString.length >= 2 && plugin.charAt(0) === completionString.charAt(1)) {
+							list.unshift({text: plugin + ': ]', displayText: plugin});
+						} else {
+							list.push({text: plugin + ': ]', displayText: plugin});
+						}
+					}
+				}
+
+				if (token.end - startPos <= 8 && completionString.indexOf(':') === -1) {
 					result = {list: list, from: CodeMirror.Pos(cur.line, startPos + 1), to: CodeMirror.Pos(cur.line, token.end)};
 				}
 			}
-			// } else {
-			// 	return null;
-			// }
+
 		} catch (err) {
 			console.warn(err);
 		}
@@ -62,7 +67,7 @@ export default function() {
 
 	CodeMirror.defineSimpleMode('math', {
 		start: [
-			{regex: /.*/, token: 'ppm ppm-math string'}
+			{regex: /.*/, token: 'ppm ppm-math'}
 		]
 	});
 
@@ -75,7 +80,7 @@ export default function() {
 		 	 parseDelimiters: true},
 			 {open: '$', close: '$',
  			 mode: CodeMirror.getMode(config, 'math'),
- 			 innerStyle: 'pubpub-math',
+ 			 innerStyle: 'ppm-math',
  		 	 parseDelimiters: false}
 
 
