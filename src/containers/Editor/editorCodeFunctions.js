@@ -62,10 +62,9 @@ export function createFocusDoc(title, cmOptions) {
 	cm.eachLine(function(line) {
 		// Proceed if either startLine or endLine is undefined
 		if (typeof(startLine) === 'undefined' || typeof(endLine) === 'undefined') {
-
 			// If we have a startline, but no endline, check to see if the line is a header
 			// We wish to set endline to the first #H1 header after startline
-			if (typeof(endLine) === 'undefined' && typeof(startLine) !== 'undefined' && line.stateAfter.header === 1 && line.text !== '') {
+			if (typeof(endLine) === 'undefined' && typeof(startLine) !== 'undefined' && line.stateAfter.outer.header === 1 && line.text !== '') {
 				endLine = cm.getLineNumber(line);
 			}
 
