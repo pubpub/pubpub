@@ -38,15 +38,15 @@ export default {
 			const assets = data.assets;
 			const propDict = parsePluginString(cap[1]);
 			const refName = propDict.src || 'none';
-			// const asset = assets.find(asst => (asst.refName === refName));
 			const asset = assets[refName];
-			let url = null;
-			if (asset && asset.assetType === 'image') {
-				url = asset.url_s3;
+
+			if (Object.keys(propDict).length === 0) {
+				propDict.error = 'empty';
+			} else if (asset && asset.assetType === 'image') {
+				propDict.url = asset.url_s3;
 			} else if (asset) {
-				url = 'error:type';
+				propDict.error = 'type';
 			}
-			propDict.url = url;
 			return renderer(refName, propDict);
 		}
 	},
@@ -62,13 +62,13 @@ export default {
 			const refName = propDict.src || 'none';
 			// const asset = assets.find(asst => (asst.refName === refName));
 			const asset = assets[refName];
-			let url = null;
-			if (asset && asset.assetType === 'video') {
-				url = asset.url_s3;
-			} else if (asset) {
-				url = 'error:type';
+			if (Object.keys(propDict).length === 0) {
+				propDict.error = 'empty';
+			} else if (asset && asset.assetType === 'video') {
+				propDict.url = asset.url_s3;
+			} else {
+				propDict.error = 'type';
 			}
-			propDict.url = url;
 
 			return renderer(refName, propDict);
 		}
@@ -83,11 +83,13 @@ export default {
 			const propDict = parsePluginString(cap[1]);
 			const refName = propDict.srcRef || 'none';
 			const ref = references[refName];
-			if (ref) {
+			if (Object.keys(propDict).length === 0) {
+				propDict.error = 'empty';
+			} else if (ref) {
 				propDict.count = ref.count;
 				propDict.reference = ref;
 			} else {
-				propDict.reference = 'error:type';
+				propDict.error = 'type';
 			}
 			return renderer(refName, propDict);
 		}
