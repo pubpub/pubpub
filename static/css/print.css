@@ -1,0 +1,39 @@
+@media print{
+	* {
+		transition: none !important;
+	}
+	body {
+		overflow: visible !important;
+		height: auto !important;
+	}
+	.header-bar,.login-container, .leftBar, .rightBar, .pubModals, .editorModals {
+		display: none !important;
+	}
+	.content {
+		margin-top: 0px !important;
+	}
+	.editor-container {
+		height: auto !important;
+	}
+	.editorPreview {
+		width: 100% !important;
+		height: auto !important;
+		padding: 0px !important;
+		transform: translateX(0%) !important;
+		top: 0px !important;
+		left: 0px !important;
+		position: relative !important;
+	}	
+	.centerBar {
+		width: 100% !important;
+		height: auto !important;
+		position: relative !important;
+		left: 0 !important;
+		top: -30px !important;
+		box-shadow: none !important
+	}
+	.pagebreak {
+		opacity: 0;
+		page-break-after: always;
+	}
+}

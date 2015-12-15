@@ -1,5 +1,5 @@
 import React, { PropTypes } from 'react';
-import Radium, {Style} from 'radium';
+import Radium, {Style, PrintStyleSheet} from 'radium';
 import { Link } from 'react-router';
 import {reset} from 'redux-form';
 import {Login} from '../index';
@@ -117,7 +117,7 @@ const App = React.createClass({
 						? <Style rules={{'body': {overflow: 'hidden'}}} />
 						: null
 				}
-				
+				<PrintStyleSheet />
 
 				<div className="header-bar" style={[styles.headerBar, styles[pathname].headerBar]}>
 					
@@ -195,10 +195,10 @@ styles = {
 		// height: 30,
 	},
 	body: {
-		width: '100vw',
+		// width: '100vw',
 		overflow: 'hidden',
 		height: 'auto',
-		'@media screen and (min-resolution: 3dppx), (max-width: 767px)': {
+		'@media screen and (min-resolution: 3dppx), @media screen and(max-width: 767px)': {
 			// overflow: 'scroll',
 		},
 	},
@@ -211,7 +211,7 @@ styles = {
 		zIndex: 5,
 		position: 'fixed',
 
-		'@media screen and (min-resolution: 3dppx), (max-width: 767px)': {
+		'@media screen and (min-resolution: 3dppx), @media screen and(max-width: 767px)': {
 			// backgroundColor: 'red',
 			height: globalStyles.headerHeightMobile,
 		},
@@ -227,7 +227,7 @@ styles = {
 		},
 		fontFamily: globalStyles.headerFont,
 
-		'@media screen and (min-resolution: 3dppx), (max-width: 767px)': {
+		'@media screen and (min-resolution: 3dppx), @media screen and(max-width: 767px)': {
 			lineHeight: globalStyles.headerHeightMobile,
 			fontSize: '1.5em',
 		},
@@ -241,7 +241,7 @@ styles = {
 		float: 'left',
 		width: '75px',
 		// backgroundColor: 'red',
-		'@media screen and (min-resolution: 3dppx), (max-width: 767px)': {
+		'@media screen and (min-resolution: 3dppx), @media screen and(max-width: 767px)': {
 			fontSize: '1.5em',
 			margin: '0',
 			padding: '0px 20px 0px 10px',
@@ -258,18 +258,18 @@ styles = {
 		// width: '50%',
 		width: 'calc(100% - 105px)',
 		textAlign: 'right',
-		// '@media screen and (min-resolution: 3dppx), (max-width: 767px)': {
+		// '@media screen and (min-resolution: 3dppx), @media screen and(max-width: 767px)': {
 		// 	width: 'calc(100% - 105px)',
 		// },
 	},
 	headerNav: {
-		'@media screen and (min-resolution: 3dppx), (max-width: 767px)': {
+		'@media screen and (min-resolution: 3dppx), @media screen and(max-width: 767px)': {
 			display: 'none',
 		},
 	}, 
 	headerMenu: {
 		display: 'none',
-		'@media screen and (min-resolution: 3dppx), (max-width: 767px)': {
+		'@media screen and (min-resolution: 3dppx), @media screen and(max-width: 767px)': {
 			display: 'block',
 		},
 	},
@@ -284,7 +284,7 @@ styles = {
 		height: 'calc(' + globalStyles.headerHeight + ' - 16px)',
 		margin: '8px 0px',
 		float: 'right',
-		'@media screen and (min-resolution: 3dppx), (max-width: 767px)': {
+		'@media screen and (min-resolution: 3dppx), @media screen and(max-width: 767px)': {
 			height: 'calc(' + globalStyles.headerHeightMobile + ' - 36px)',
 			margin: '18px 0px',
 		},
@@ -296,7 +296,7 @@ styles = {
 		marginTop: globalStyles.headerHeight,
 		height: 'auto',
 		// backgroundColor: 'red',
-		'@media screen and (min-resolution: 3dppx), (max-width: 767px)': {
+		'@media screen and (min-resolution: 3dppx), @media screen and(max-width: 767px)': {
 			marginTop: globalStyles.headerHeightMobile,
 			
 		},

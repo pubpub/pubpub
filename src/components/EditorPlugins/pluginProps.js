@@ -72,3 +72,9 @@ export const align = {
 	defaultValue: '',
 	defaultString: 'center',
 };
+
+export const inline = {
+	title: 'inline',
+	defaultValue: '',
+	defaultString: 'false',
+};

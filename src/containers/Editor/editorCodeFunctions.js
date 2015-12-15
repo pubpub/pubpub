@@ -24,6 +24,9 @@ export function insertText(cm, formatting, baseText, showPopup) {
 	case '- List':
 		cm.replaceSelection('\n -  ' + baseText + '\n');
 		break;
+	case 'Line':
+		cm.replaceSelection('\n***\n');
+		break;
 	case 'Image':
 		cm.replaceSelection('[image: ]');
 		showPopup();
@@ -31,6 +34,13 @@ export function insertText(cm, formatting, baseText, showPopup) {
 	case 'Video':
 		cm.replaceSelection('[video: ]');
 		showPopup();
+		break;
+	case 'Cite':
+		cm.replaceSelection('[cite: ]');
+		showPopup();
+		break;
+	case 'Pagebreak':
+		cm.replaceSelection('[pagebreak]');
 		break;
 	default:
 		throw new Error('Insert command not found');
@@ -55,10 +65,9 @@ export function createFocusDoc(title, cmOptions) {
 	cm.eachLine(function(line) {
 		// Proceed if either startLine or endLine is undefined
 		if (typeof(startLine) === 'undefined' || typeof(endLine) === 'undefined') {
-
 			// If we have a startline, but no endline, check to see if the line is a header
 			// We wish to set endline to the first #H1 header after startline
-			if (typeof(endLine) === 'undefined' && typeof(startLine) !== 'undefined' && line.stateAfter.header === 1 && line.text !== '') {
+			if (typeof(endLine) === 'undefined' && typeof(startLine) !== 'undefined' && line.stateAfter.outer.header === 1 && line.text !== '') {
 				endLine = cm.getLineNumber(line);
 			}
 

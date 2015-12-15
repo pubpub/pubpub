@@ -35,6 +35,20 @@ export const scienceStyle = {
 		fontFamily: 'Lora',
 		padding: '0px 20px',
 		color: '#565656',
+	},
+	'table': {
+		borderSpacing: '0px',
+		borderCollapse: 'collapse',
+	},
+	'td': {
+		border: '1px solid #ccc',
+		padding: '3px',
+	},
+	'th': {
+		border: '1px solid #ccc',
+		padding: '3px',
+		backgroundColor: '#eee',
+		color: '#111',
 	}
 };
 

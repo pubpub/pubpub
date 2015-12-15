@@ -84,7 +84,7 @@ styles = {
 			borderColor: globalStyles.headerHover,
 			outline: 'none',
 		},
-		'@media screen and (min-resolution: 3dppx), (max-width: 767px)': {
+		'@media screen and (min-resolution: 3dppx), @media screen and(max-width: 767px)': {
 			position: 'relative',
 			top: 0,
 			left: 0,
@@ -114,7 +114,7 @@ styles = {
 			borderColor: globalStyles.headerHover,
 			outline: 'none',
 		},
-		'@media screen and (min-resolution: 3dppx), (max-width: 767px)': {
+		'@media screen and (min-resolution: 3dppx), @media screen and(max-width: 767px)': {
 			float: 'none',
 			margin: 30,
 			width: 'calc(100% - 60px)',

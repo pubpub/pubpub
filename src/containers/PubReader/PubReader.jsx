@@ -254,7 +254,7 @@ styles = {
 		height: 'calc(100vh - ' + globalStyles.headerHeight + ')',
 		backgroundColor: globalStyles.sideBackground,
 		// Mobile
-		'@media screen and (min-resolution: 3dppx), (max-width: 767px)': {
+		'@media screen and (min-resolution: 3dppx), @media screen and(max-width: 767px)': {
 			width: '100%',
 			maxWidth: '100%',
 			height: 'auto'
@@ -289,7 +289,7 @@ styles = {
 		fontFamily: 'Lato',
 		color: globalStyles.sideText,
 		// Mobile
-		'@media screen and (min-resolution: 3dppx), (max-width: 767px)': {
+		'@media screen and (min-resolution: 3dppx), @media screen and(max-width: 767px)': {
 			display: 'none',
 		},
 		// Desktop Sizes
@@ -340,7 +340,7 @@ styles = {
 		boxShadow: '0px 2px 4px 0px rgba(0,0,0,0.4)',
 		zIndex: 10,
 		// Mobile
-		'@media screen and (min-resolution: 3dppx), (max-width: 767px)': {
+		'@media screen and (min-resolution: 3dppx), @media screen and(max-width: 767px)': {
 			width: '100%',
 			// height: 'calc(100vh - ' + globalStyles.headerHeight + ')',
 			height: 'auto',
@@ -388,7 +388,7 @@ styles = {
 		fontFamily: 'Lato',
 		transition: '.3s linear opacity .25s',
 		// Mobile
-		'@media screen and (min-resolution: 3dppx), (max-width: 767px)': {
+		'@media screen and (min-resolution: 3dppx), @media screen and(max-width: 767px)': {
 			display: 'none',
 		},
 		// Desktop Sizes
@@ -437,7 +437,7 @@ styles = {
 			color: globalStyles.sideHover,
 			cursor: 'pointer',
 		},
-		'@media screen and (min-resolution: 3dppx), (max-width: 767px)': {
+		'@media screen and (min-resolution: 3dppx), @media screen and(max-width: 767px)': {
 			fontSize: '20px',
 		},
 

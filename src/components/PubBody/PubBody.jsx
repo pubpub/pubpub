@@ -31,6 +31,17 @@ const PubBody = React.createClass({
 		};
 	},
 
+	statics: {
+		printStyles: {
+			title: { 
+				color: 'orange',
+			},
+			text: { 
+				color: 'red',
+			}
+		}
+	},
+
 	getInitialState() {
 		return {
 			htmlTree: [],
@@ -110,10 +121,10 @@ const PubBody = React.createClass({
 
 				<Style rules={this.compileStyleRules()}/>
 
-				<div id="pubContent" style={[styles.contentContainer, styles[this.props.status]]}>
+				<div id="pubContent" style={[styles.contentContainer, styles[this.props.status]]} className={this.printStyleClass.pubContent}>
 
-					<div id={'pub-title'}>{this.props.title}</div>
-					<div id={'pub-authors'}> <span>by </span>
+					<div id={'pub-title'} className={this.printStyleClass.title}>{this.props.title}</div>
+					<div id={'pub-authors'} className={this.printStyleClass.authors}> <span>by </span>
 						{
 							this.props.authors.map((author, index)=>{
 								return (index === this.props.authors.length - 1
@@ -145,7 +156,7 @@ const PubBody = React.createClass({
 styles = {
 	container: {
 		width: '100%',
-		overflow: 'hidden',
+		// overflow: 'hidden',
 		borderRadius: 1,
 		// minHeight: 'calc(100vh - 2 * ' + globalStyles.headerHeight + ' + 2px)',
 	},

@@ -34,7 +34,7 @@ export default Radium(PubModalTOCRow);
 styles = {
 	container: {
 		margin: '10px 0px',
-		'@media screen and (min-resolution: 3dppx), (max-width: 767px)': {
+		'@media screen and (min-resolution: 3dppx), @media screen and(max-width: 767px)': {
 			margin: '20px 0px',
 		},
 	},
