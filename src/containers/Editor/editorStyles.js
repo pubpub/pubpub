@@ -52,7 +52,7 @@ export const styles = {
 	},
 	loading: {
 		opacity: 0,
-	}, 
+	},
 	loaded: {
 		opacity: 1
 	},
@@ -81,7 +81,7 @@ export const styles = {
 		width: '100%',
 		margin: 0,
 		padding: 0,
-		
+
 	},
 	editorNavItem: {
 		height: '100%',
@@ -319,7 +319,7 @@ export const styles = {
 			backgroundColor: globalStyles.sideBackground,
 			transition: '.1s linear opacity, 0s linear box-shadow 0.352s',
 			boxShadow: '3px 3px 3px 0px rgba(0,0,0,0.3)',
-			
+
 		},
 		bottomNavListRight: {
 			boxShadow: '-3px 3px 3px 0px rgba(0,0,0,0.3)',
@@ -328,7 +328,7 @@ export const styles = {
 			pointerEvents: 'none',
 		},
 		listActive: {
-			opacity: 1,	
+			opacity: 1,
 		},
 		listItemActive: {
 			pointerEvents: 'auto',
@@ -448,8 +448,8 @@ export function codeMirrorStyles(loginData) {
 		'.cm-ppm-authorsNote': {
 			fontSize: '14px',
 		},
-		'.cm-ppm-cite': {
-			color: editorStyles.colorCite,
+		'.cm-ppm-math': {
+			fontStyle: 'italic',
 		},
 		'.cm-plugin': {
 			cursor: 'pointer',
@@ -457,10 +457,13 @@ export function codeMirrorStyles(loginData) {
 			color: '#555',
 		},
 		'.cm-plugin-image': {
-			backgroundColor: '#DAE8F8',
+			backgroundColor: 'rgba(169, 213, 245, 0.5)',
 		},
 		'.cm-plugin-video': {
-			backgroundColor: '#DAF8E3',
+			backgroundColor: 'rgba(169, 245, 192, 0.50)',
+		},
+		'.cm-plugin-cite': {
+			backgroundColor: 'rgba(244, 245, 169, 0.50)',
 		},
 		'.cm-plugin-audio': {
 			backgroundColor: '#F8ECDA',
@@ -468,7 +471,7 @@ export function codeMirrorStyles(loginData) {
 		'.cm-plugin-table': {
 			backgroundColor: '#F1DAF8',
 		},
-		
+
 	};
 }
 
