@@ -24,12 +24,19 @@ export function insertText(cm, formatting, baseText, showPopup) {
 	case '- List':
 		cm.replaceSelection('\n -  ' + baseText + '\n');
 		break;
+	case 'Line':
+		cm.replaceSelection('\n***\n');
+		break;
 	case 'Image':
 		cm.replaceSelection('[image: ]');
 		showPopup();
 		break;
 	case 'Video':
 		cm.replaceSelection('[video: ]');
+		showPopup();
+		break;
+	case 'Cite':
+		cm.replaceSelection('[cite: ]');
 		showPopup();
 		break;
 	default:
