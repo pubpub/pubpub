@@ -457,16 +457,16 @@ export function codeMirrorStyles(loginData) {
 			color: '#555',
 		},
 		'.cm-plugin-image': {
-			backgroundColor: '#DAE8F8',
+			backgroundColor: 'rgba(185, 215, 249, 0.5)',
 		},
 		'.cm-plugin-video': {
-			backgroundColor: '#DAF8E3',
+			backgroundColor: 'rgba(158, 219, 176, 0.5)',
 		},
 		'.cm-plugin-audio': {
-			backgroundColor: '#F8ECDA',
+			backgroundColor: 'rgba(233, 201, 153, 0.5)',
 		},
 		'.cm-plugin-table': {
-			backgroundColor: '#F1DAF8',
+			backgroundColor: 'rgba(211, 172, 223, 0.5)',
 		},
 		
 	};
