@@ -70,9 +70,8 @@ export function createFocusDoc(title, cmOptions) {
 			if (typeof(endLine) === 'undefined' && typeof(startLine) !== 'undefined' && line.stateAfter.outer.header === 1 && line.text !== '') {
 				endLine = cm.getLineNumber(line);
 			}
-
 			// If we don't yet have a startline, see if the current line matches the format of the selected title
-			if (typeof(startLine) === 'undefined' && line.text.indexOf('# ' + title) > -1) {
+			if (typeof(startLine) === 'undefined' && line.text.replace(/[^A-Za-z0-9 #]/g, '').indexOf('# ' + title.replace(/[^A-Za-z0-9 #]/g, '')) > -1) {
 				startLine = cm.getLineNumber(line);
 			}
 		}
