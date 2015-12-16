@@ -31,9 +31,14 @@ export const scienceStyle = {
 		padding: '0px 20px',
 		color: '#4C4C4C',
 	},
-	'p, ul, ol': {
+	'.p-block': {
 		fontFamily: 'Lora',
 		padding: '0px 20px',
+		color: '#565656',
+	},
+	'ul, ol': {
+		fontFamily: 'Lora',
+		padding: '0px 20px 0px 60px',
 		color: '#565656',
 	},
 	'table': {
@@ -86,9 +91,4 @@ export const magazineStyle = {
 		padding: '0px 20px',
 		color: '#4C4C4C',
 	},
-	'p, ul, ol': {
-		fontFamily: 'Lato',
-		padding: '0px 20px',
-		color: '#565656',
-	}
 };
