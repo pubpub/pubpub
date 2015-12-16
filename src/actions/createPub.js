@@ -24,6 +24,7 @@ export function create(title, slug) {
 		promise: (client) => client.post('/createPub', {data: {
 			'title': title,
 			'slug': slug
-		}})
+		}}),
+		title: title,
 	};
 }

@@ -33,12 +33,7 @@ const PubBody = React.createClass({
 
 	statics: {
 		printStyles: {
-			title: { 
-				color: 'orange',
-			},
-			text: { 
-				color: 'red',
-			}
+			
 		}
 	},
 

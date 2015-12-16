@@ -18,7 +18,7 @@ import {saveSettingsUser} from '../../actions/login';
 import initCodeMirrorMode from './editorCodeMirrorMode';
 import {styles, codeMirrorStyles, animateListItemStyle} from './editorStyles';
 import {insertText, createFocusDoc} from './editorCodeFunctions';
-import editorDefaultText from './editorDefaultText';
+import {editorDefaultText} from './editorDefaultText';
 
 import SHA1 from 'crypto-js/sha1';
 import encHex from 'crypto-js/enc-hex';
@@ -34,13 +34,14 @@ const cmOptions = {
 	lineNumbers: false,
 	lineWrapping: true,
 	viewportMargin: Infinity, // This will cause bad performance on large documents. Rendering the entire thing...
-	autofocus: true,
+	autofocus: false,
 	mode: 'pubpubmarkdown',
 	extraKeys: {'Ctrl-Space': 'autocomplete'}
 };
 
 const Editor = React.createClass({
 	propTypes: {
+		createPubData: PropTypes.object, // Used to get new pub titles
 		editorData: PropTypes.object,
 		loginData: PropTypes.object, // User login data
 		slug: PropTypes.string, // equal to project uniqueTitle
@@ -72,8 +73,8 @@ const Editor = React.createClass({
 	},
 
 	componentDidMount() {
-
 		if (! this.props.editorData.get('error')) {
+
 			// loadCss('/css/codemirror.css');
 			// loadCss('/css/react-select.min.css');
 			initCodeMirrorMode();
@@ -95,7 +96,7 @@ const Editor = React.createClass({
 			// Initialize Firepad using codemirror and the ref defined above.
 			Firepad.fromCodeMirror(firepadRef, codeMirror, {
 				userId: username,
-				defaultText: editorDefaultText
+				defaultText: editorDefaultText(this.props.createPubData.get('title'))
 			});
 
 			// need to unmount on change
@@ -527,6 +528,7 @@ const Editor = React.createClass({
 
 export default connect( state => {
 	return {
+		createPubData: state.createPub,
 		editorData: state.editor,
 		slug: state.router.params.slug,
 		loginData: state.login

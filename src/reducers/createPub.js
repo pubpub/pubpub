@@ -18,6 +18,7 @@ export const defaultState = Immutable.Map({
 	status: 'loaded',
 	error: null,
 	slug: null,
+	title: undefined,
 });
 
 /*--------*/
@@ -35,12 +36,13 @@ function loading(state) {
 	});
 }
 
-function pubCreated(state, result) {
+function pubCreated(state, result, title) {
 	return state.merge({
 		status: 'loaded',
 		error: null,
 		pubCreated: true,
-		slug: result
+		slug: result,
+		title: title,
 	});
 }
 
@@ -61,7 +63,7 @@ export default function loginReducer(state = defaultState, action) {
 		return loading(state);
 
 	case CREATE_PUB_SUCCESS:
-		return pubCreated(state, action.result);
+		return pubCreated(state, action.result, action.title);
 
 	case CREATE_PUB_FAIL:
 		return failed(state, action.error);
