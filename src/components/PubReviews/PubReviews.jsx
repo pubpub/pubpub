@@ -86,11 +86,11 @@ const PubReviews = React.createClass({
 				
 				<div className="pub-reviews-wrapper" style={rightBarStyles.sectionWrapper}>
 
-					<div style={rightBarStyles.sectionHeader}>Peer Reviews ({this.props.reviewsData.length})</div>
+					<div style={rightBarStyles.sectionHeader}>Review Scores ({this.props.reviewsData.length})</div>
 					<div style={rightBarStyles.sectionSubHeader}>
 						<Link to={'/pub/' + this.props.slug + '/reviews'} style={globalStyles.link}><span key={'reviewsButton1'}style={rightBarStyles.sectionSubHeaderSpan}>Full Details</span> </Link>
 						| 
-						<Link to={'/pub/' + this.props.slug + '/review'} style={globalStyles.link}><span key={'reviewsButton2'}style={rightBarStyles.sectionSubHeaderSpan}>Submit Review</span></Link>
+						<Link to={'/pub/' + this.props.slug + '/review'} style={globalStyles.link}><span key={'reviewsButton2'}style={rightBarStyles.sectionSubHeaderSpan}>Submit Score</span></Link>
 					</div>
 					<div style={rightBarStyles.reviewsWrapper}>
 						{this.calculateReviewScores(this.props.reviewsData)}
