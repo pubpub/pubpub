@@ -2,13 +2,13 @@ import React, { PropTypes } from 'react';
 import {connect} from 'react-redux';
 import Radium from 'radium';
 import DocumentMeta from 'react-document-meta';
-import { Link } from 'react-router';
-import { pushState } from 'redux-router';
-import {logout} from '../../actions/login';
-import {getProfile} from '../../actions/profile';
+// import { Link } from 'react-router';
+// import { pushState } from 'redux-router';
+// import {logout} from '../../actions/login';
+// import {getProfile} from '../../actions/profile';
 import {LoaderDeterminate} from '../../components';
 import {styles} from './journalAdminStyles';
-import {globalStyles} from '../../utils/styleConstants';
+// import {globalStyles} from '../../utils/styleConstants';
 
 const JournalAdmin = React.createClass({
 	propTypes: {
@@ -45,7 +45,8 @@ const JournalAdmin = React.createClass({
 						</ul>
 					</div>
 					
-					<LoaderDeterminate value={'loaded' === 'loading' ? 0 : 100}/>
+					{/* <LoaderDeterminate value={'loaded' === 'loading' ? 0 : 100}/> */}
+					 <LoaderDeterminate value={100}/> 
 
 					<div style={[styles.hiddenUntilLoad, styles.loaded]}>
 						

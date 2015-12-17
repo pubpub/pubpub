@@ -10,9 +10,9 @@ import {
 	LOGIN_LOAD,
 	LOGIN_LOAD_SUCCESS,
 	LOGIN_LOAD_FAIL,
-	RESTORE_LOGIN_LOAD,
-	RESTORE_LOGIN_LOAD_SUCCESS,
-	RESTORE_LOGIN_LOAD_FAIL,
+	// RESTORE_LOGIN_LOAD,
+	// RESTORE_LOGIN_LOAD_SUCCESS,
+	// RESTORE_LOGIN_LOAD_FAIL,
 	LOGOUT_LOAD,
 	LOGOUT_LOAD_SUCCESS,
 	LOGOUT_LOAD_FAIL,
@@ -26,6 +26,13 @@ import {
 
 } from '../actions/login';
 
+import {
+
+	LOAD_JOURNAL_AND_LOGIN,
+	LOAD_JOURNAL_AND_LOGIN_SUCCESS,
+	LOAD_JOURNAL_AND_LOGIN_FAIL,
+
+} from '../actions/journal';
 /*--------*/
 // Initialize Default State 
 /*--------*/
@@ -133,52 +140,39 @@ export default function loginReducer(state = defaultState, action) {
 	switch (action.type) {
 	case TOGGLE_VISIBILITY:
 		return toggle(state);
-
 	case TOGGLE_VIEWMODE:
 		return toggleViewMode(state);
-
 	case LOGIN_LOAD:
 		return loading(state);
-
 	case LOGIN_LOAD_SUCCESS:
 		return loggedIn(state, action.result);
-
 	case LOGIN_LOAD_FAIL:
 		return failed(state, action.error);
-
-	case RESTORE_LOGIN_LOAD:
-		return state;
-
-	case RESTORE_LOGIN_LOAD_SUCCESS:
-		return loggedIn(state, action.result);
-
-	case RESTORE_LOGIN_LOAD_FAIL:
-		return failed(state, action.error);
-
 	case LOGOUT_LOAD:
 		return loading(state);
-
 	case LOGOUT_LOAD_SUCCESS:
 		return loggedOut(state);
-
 	case LOGOUT_LOAD_FAIL:
 		return failed(state, action.error);
-
 	case REGISTER_LOAD:
 		return loading(state);
-
 	case REGISTER_LOAD_SUCCESS:
 		return loggedIn(state, action.result);
-
 	case REGISTER_LOAD_FAIL:
 		return failed(state, action.error);
-
 	case UPDATE_USER_SETTINGS_LOAD:
 		return state;
 	case UPDATE_USER_SETTINGS_SUCCESS:
 		return userSettingsUpdate(state, action.result);
 	case UPDATE_USER_SETTINGS_FAIL:
 		return state;
+
+	case LOAD_JOURNAL_AND_LOGIN:
+		return state;
+	case LOAD_JOURNAL_AND_LOGIN_SUCCESS:
+		return loggedIn(state, action.result.loginData);
+	case LOAD_JOURNAL_AND_LOGIN_FAIL:
+		return failed(state, action.error);
 
 	default:
 		return ensureImmutable(state);

@@ -8,6 +8,7 @@ import createPub from './createPub';
 import createJournal from './createJournal';
 import editor from './editor';
 import explore from './explore';
+import journal from './journal';
 import landing from './landing';
 import login from './login';
 import nav from './nav';
@@ -24,6 +25,7 @@ export default combineReducers({
 	createJournal,
 	editor,
 	explore,
+	journal,
 	landing,
 	login,
 	nav,

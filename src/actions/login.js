@@ -12,9 +12,9 @@ export const TOGGLE_VIEWMODE = 'login/TOGGLE_VIEWMODE';
 export const LOGIN_LOAD = 'login/LOGIN_LOAD';
 export const LOGIN_LOAD_SUCCESS = 'login/LOGIN_LOAD_SUCCESS';
 export const LOGIN_LOAD_FAIL = 'login/LOGIN_LOAD_FAIL';
-export const RESTORE_LOGIN_LOAD = 'login/RESTORE_LOGIN_LOAD';
-export const RESTORE_LOGIN_LOAD_SUCCESS = 'login/RESTORE_LOGIN_LOAD_SUCCESS';
-export const RESTORE_LOGIN_LOAD_FAIL = 'login/RESTORE_LOGIN_LOAD_FAIL';
+// export const RESTORE_LOGIN_LOAD = 'login/RESTORE_LOGIN_LOAD';
+// export const RESTORE_LOGIN_LOAD_SUCCESS = 'login/RESTORE_LOGIN_LOAD_SUCCESS';
+// export const RESTORE_LOGIN_LOAD_FAIL = 'login/RESTORE_LOGIN_LOAD_FAIL';
 export const LOGOUT_LOAD = 'login/LOGOUT_LOAD';
 export const LOGOUT_LOAD_SUCCESS = 'login/LOGOUT_LOAD_SUCCESS';
 export const LOGOUT_LOAD_FAIL = 'login/LOGOUT_LOAD_FAIL';
@@ -55,12 +55,12 @@ export function login(email, password) {
 	};
 }
 
-export function restoreLogin() {
-	return {
-		types: [RESTORE_LOGIN_LOAD, RESTORE_LOGIN_LOAD_SUCCESS, RESTORE_LOGIN_LOAD_FAIL],
-		promise: (client) => client.get('/login', {})
-	};
-}
+// export function restoreLogin() {
+// 	return {
+// 		types: [RESTORE_LOGIN_LOAD, RESTORE_LOGIN_LOAD_SUCCESS, RESTORE_LOGIN_LOAD_FAIL],
+// 		promise: (client) => client.get('/login', {})
+// 	};
+// }
 
 export function logout() {
 	return {

@@ -4,7 +4,8 @@ import { Link } from 'react-router';
 import {reset} from 'redux-form';
 import {Login} from '../index';
 import {connect} from 'react-redux';
-import {toggleVisibility, restoreLogin} from '../../actions/login';
+import {toggleVisibility} from '../../actions/login';
+import {loadJournalAndLogin} from '../../actions/journal';
 // import {updateDelta} from '../../actions/nav';
 import {openMenu, closeMenu} from '../../actions/nav';
 import {openPubModal} from '../../actions/pub';
@@ -36,10 +37,14 @@ const App = React.createClass({
 	statics: {
 		fetchDataDeferred: function(getState, dispatch) {
 			// If the subdomain is different
-			if (!getState().login.get('attemptedRestoreState')) {
-				return dispatch(restoreLogin());		
-			}
-			return ()=>{};	
+			console.log('about to dispatch in app');
+			return dispatch(loadJournalAndLogin());		
+			
+
+			// if (!getState().login.get('attemptedRestoreState')) {
+			// 	return dispatch(restoreLogin());		
+			// }
+			// return ()=>{};	
 	
 		}
 	},

@@ -44,26 +44,33 @@ app.post('/createJournal', function(req,res){
 	});
 });
 
-app.get('/journalLoad', function(req,res){
+app.get('/loadJournalAndLogin', function(req,res){
 	// Load journal Data
 	// When an implicit login request is made using the cookie
-	// Journal.findOne({ $or:[ {'subdomain':req.query.host.split('.')[0]}, {'customDomain':req.query.host}]}).lean().exec(function(err, result){
-	Journal.find(req.body.host)
+	Journal.findOne({ $or:[ {'subdomain':req.query.host.split('.')[0]}, {'customDomain':req.query.host}]}).lean().exec(function(err, result){
+	// Journal.find(req.body.host)
+		console.log('journalResult', result);
 
 		if(req.user){
 
 			return res.status(201).json({
-				name: req.user.name,
-				username: req.user.username,
-				image: req.user.image,
-				thumbnail: req.user.thumbnail,
-				settings: req.user.settings
+				journalData: result,
+				loginData: {
+					name: req.user.name,
+					username: req.user.username,
+					image: req.user.image,
+					thumbnail: req.user.thumbnail,
+					settings: req.user.settings
+				},
 			});
 
 		}else{
-			return res.status(201).json('No Session');
+			return res.status(201).json({
+				journalData: result,
+				loginData: 'No Session',
+			});
 		}
+	});
 
-	return res.status(201).json(thing)
 
 });
