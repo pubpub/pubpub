@@ -5,7 +5,6 @@ var Journal = require('../models').Journal;
 var Heroku = require('heroku-client');
 var heroku = undefined;
 
-
 if(process.env.NODE_ENV !== 'production'){
 	import {herokuApiKey} from '../authentication/herokuCredentials';	
 	console.log('herokuApiKey', herokuApiKey);
@@ -28,6 +27,22 @@ app.get('/testheroku', function(req,res){
 	// 	});
 	// });
 
+});
+
+app.post('/createJournal', function(req,res){
+	const journal = new Journal({
+		journalName: req.body.journalName,
+		subdomain: req.body.subdomain,
+		createDate: new Date().getTime(),
+		admins: [req.user._id],
+	});
+
+	journal.save(function (err, savedJournal) {
+		if (err) { return res.status(500).json(err);  }
+
+		return res.status(201).json(savedJournal.subdomain);	
+		
+	});
 });
 
 app.get('/journalLoad', function(req,res){

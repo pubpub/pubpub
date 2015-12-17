@@ -35,6 +35,7 @@ const App = React.createClass({
 
 	statics: {
 		fetchDataDeferred: function(getState, dispatch) {
+			// If the subdomain is different
 			if (!getState().login.get('attemptedRestoreState')) {
 				return dispatch(restoreLogin());		
 			}

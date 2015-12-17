@@ -1,3 +1,4 @@
+export CreateJournalForm from './CreateJournalForm/CreateJournalForm';
 export CreatePubForm from './CreatePubForm/CreatePubForm';
 export EditorModals from './EditorModals/EditorModals';
 export EditorPluginPopup from './EditorPluginPopup/EditorPluginPopup';
