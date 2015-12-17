@@ -7,7 +7,7 @@ import DocumentMeta from 'react-document-meta';
 // import {logout} from '../../actions/login';
 // import {getProfile} from '../../actions/profile';
 import {LoaderDeterminate} from '../../components';
-import {styles} from './journalAdminStyles';
+import {styles} from './journalProfileStyles';
 // import {globalStyles} from '../../utils/styleConstants';
 
 const JournalAdmin = React.createClass({
