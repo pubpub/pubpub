@@ -11,14 +11,18 @@ export default () => {
 			<IndexRoute component={Landing}/>
 
 			{ /* Routes */ }
-			<Route path="/admin" component={JournalAdmin}/>
-			<Route path="/createjournal" component={CreateJournal}/>
+			
 			<Route path="/explore" component={Explore}/>
-			<Route path="/newpub" component={CreatePub}/>
+
+			<Route path="/journal" component={JournalAdmin}/>
+			<Route path="/journals/create" component={CreateJournal}/>
+			
 			<Route path="/profile/:username" component={Profile}/>
+
 			<Route path="/pub/:slug" component={PubReader}/>
 			<Route path="/pub/:slug/edit" component={Editor}/>
 			<Route path="/pub/:slug/:meta" component={PubMeta}/>
+			<Route path="/pubs/create" component={CreatePub}/>
 			<Route path="/subdomain" component={SubdomainTest}/>
 
 			{ /* Catch all route */ }

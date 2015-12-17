@@ -55,7 +55,7 @@ const HeaderNav = React.createClass({
 					this.props.loginData.get('loggedIn') === true
 						? 	<div>
 								<div style={styles.separator}></div>
-								<Link to={'/newpub'}><div key="headerNavNewPub" style={[styles.navButton, this.headerTextColorStyle()]}>New Pub</div></Link>
+								<Link to={'/pubs/create'}><div key="headerNavNewPub" style={[styles.navButton, this.headerTextColorStyle()]}>New Pub</div></Link>
 							</div>
 						: null
 				}

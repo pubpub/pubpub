@@ -5,7 +5,6 @@ import { routerStateReducer } from 'redux-router';
 
 import autocomplete from './autocomplete';
 import createPub from './createPub';
-import createJournal from './createJournal';
 import editor from './editor';
 import explore from './explore';
 import journal from './journal';
@@ -22,7 +21,6 @@ export default combineReducers({
 	form: formReducer,
 	autocomplete,
 	createPub,
-	createJournal,
 	editor,
 	explore,
 	journal,

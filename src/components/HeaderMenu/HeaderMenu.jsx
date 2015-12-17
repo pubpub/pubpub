@@ -83,7 +83,7 @@ const HeaderMenu = React.createClass({
 								</Link>
 
 							</li>
-							{/* <li key="menuListItem2" style={[styles.menuItem, styles.menuItemNoBottom, styles.menuItemLink]}><Link style={styles.innerLink}to={'/newpub'}>New Pub</Link></li> */}
+							{/* <li key="menuListItem2" style={[styles.menuItem, styles.menuItemNoBottom, styles.menuItemLink]}><Link style={styles.innerLink}to={'/pubs/create'}>New Pub</Link></li> */}
 							
 							{(isPub === true
 								? <div>

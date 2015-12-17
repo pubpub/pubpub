@@ -4,9 +4,14 @@
 // All action types are defined as constants. Do not manually pass action 
 // types as strings in action creators
 /*--------*/
-export const LOAD_JOURNAL_AND_LOGIN = 'login/LOAD_JOURNAL_AND_LOGIN';
-export const LOAD_JOURNAL_AND_LOGIN_SUCCESS = 'login/LOAD_JOURNAL_AND_LOGIN_SUCCESS';
-export const LOAD_JOURNAL_AND_LOGIN_FAIL = 'login/LOAD_JOURNAL_AND_LOGIN_FAIL';
+export const CREATE_JOURNAL_LOAD = 'journal/CREATE_JOURNAL_LOAD';
+export const CREATE_JOURNAL_SUCCESS = 'journal/CREATE_JOURNAL_LOAD_SUCCESS';
+export const CREATE_JOURNAL_FAIL = 'journal/CREATE_JOURNAL_LOAD_FAIL';
+
+export const LOAD_JOURNAL_AND_LOGIN = 'journal/LOAD_JOURNAL_AND_LOGIN';
+export const LOAD_JOURNAL_AND_LOGIN_SUCCESS = 'journal/LOAD_JOURNAL_AND_LOGIN_SUCCESS';
+export const LOAD_JOURNAL_AND_LOGIN_FAIL = 'journal/LOAD_JOURNAL_AND_LOGIN_FAIL';
+
 
 /*--------*/
 // Define Action creators
@@ -16,9 +21,20 @@ export const LOAD_JOURNAL_AND_LOGIN_FAIL = 'login/LOAD_JOURNAL_AND_LOGIN_FAIL';
 // function calls
 /*--------*/
 
+export function create(journalName, subdomain) {
+	return {
+		types: [CREATE_JOURNAL_LOAD, CREATE_JOURNAL_SUCCESS, CREATE_JOURNAL_FAIL],
+		promise: (client) => client.post('/createJournal', {data: {
+			'journalName': journalName,
+			'subdomain': subdomain
+		}})
+	};
+}
+
 export function loadJournalAndLogin() {
 	return {
 		types: [LOAD_JOURNAL_AND_LOGIN, LOAD_JOURNAL_AND_LOGIN_SUCCESS, LOAD_JOURNAL_AND_LOGIN_FAIL],
 		promise: (client) => client.get('/loadJournalAndLogin', {})
 	};
 }
+

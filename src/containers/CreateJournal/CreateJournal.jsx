@@ -1,10 +1,9 @@
 import React, { PropTypes } from 'react';
 import {connect} from 'react-redux';
 import Radium from 'radium';
-// import { pushState } from 'redux-router';
 import PureRenderMixin from 'react-addons-pure-render-mixin';
 import {LoaderIndeterminate, CreateJournalForm} from '../../components';
-import {create} from '../../actions/createJournal';
+import {create} from '../../actions/journal';
 import {toggleVisibility} from '../../actions/login';
 import {globalStyles} from '../../utils/styleConstants';
 
@@ -12,7 +11,7 @@ let styles = {};
 
 const Login = React.createClass({
 	propTypes: {
-		createJournalData: PropTypes.object,
+		journalData: PropTypes.object,
 		loginData: PropTypes.object,
 		dispatch: PropTypes.func,
 	},
@@ -20,9 +19,8 @@ const Login = React.createClass({
 	mixins: [PureRenderMixin],
 
 	componentWillReceiveProps: function(nextProps) {
-		if (nextProps.createJournalData.get('subdomain')) {
-			// this.props.dispatch(pushState(null, (nextProps.createJournalData.get('subdomain') + '.' + window.location.host)));
-			window.location = 'http://' + nextProps.createJournalData.get('subdomain') + '.' + window.location.host + '/admin';
+		if (nextProps.journalData.getIn(['createJournalData', 'subdomain'])) {
+			window.location = 'http://' + nextProps.journalData.getIn(['createJournalData', 'subdomain']) + '.' + window.location.host + '/journal';
 		}
 	},
 
@@ -39,7 +37,7 @@ const Login = React.createClass({
 		return (
 			<div style={styles.container}>		
 				<div style={styles.loader}>
-					{this.props.createJournalData.get('status') === 'loading'
+					{this.props.journalData.getIn(['createJournalData', 'status']) === 'loading'
 						? <LoaderIndeterminate color={globalStyles.sideText}/>
 						: null
 					}
@@ -56,7 +54,7 @@ const Login = React.createClass({
 
 export default connect( state => {
 	return {
-		createJournalData: state.createJournal,
+		journalData: state.journal,
 		loginData: state.login,
 	};
 })( Radium(Login) );

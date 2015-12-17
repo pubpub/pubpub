@@ -17,6 +17,7 @@ var userSchema = new Schema({
   discussions: [ { type: ObjectId, ref: 'Discussion' } ],
   highlights: [ { type: ObjectId, ref: 'Highlight' } ],
   assets: [ { type: ObjectId, ref: 'Asset' } ],
+  adminJournals: [ { type: ObjectId, ref: 'Journal' } ],
   
   yays: [ { type: ObjectId, ref: 'Discussion' } ],
   nays: [ { type: ObjectId, ref: 'Discussion' } ],

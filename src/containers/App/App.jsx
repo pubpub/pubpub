@@ -36,8 +36,7 @@ const App = React.createClass({
 
 	statics: {
 		fetchDataDeferred: function(getState, dispatch) {
-			// If the subdomain is different
-			console.log('about to dispatch in app');
+			// If journaldata loaded ==== true
 			return dispatch(loadJournalAndLogin());		
 			
 

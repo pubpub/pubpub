@@ -5,6 +5,9 @@ import {ensureImmutable} from './';
 // Load Actions
 /*--------*/
 import {
+	CREATE_JOURNAL_LOAD,
+	CREATE_JOURNAL_SUCCESS,
+	CREATE_JOURNAL_FAIL,
 
 	LOAD_JOURNAL_AND_LOGIN,
 	LOAD_JOURNAL_AND_LOGIN_SUCCESS,
@@ -15,7 +18,15 @@ import {
 /*--------*/
 // Initialize Default State 
 /*--------*/
-export const defaultState = Immutable.Map({});
+export const defaultState = Immutable.Map({
+	createJournalData: {
+		journalCreated: false,
+		status: 'loaded',
+		error: null,
+		subdomain: null,	
+	},
+
+});
 
 /*--------*/
 // Define reducing functions 
@@ -24,12 +35,36 @@ export const defaultState = Immutable.Map({});
 // state. They are pure functions. We use Immutable to enforce this. 
 /*--------*/
 
-function journalLoaded(state, journalData) {
-	console.log('in journal loaded');
+function createJournalLoad(state) {
+	return state.mergeIn(['createJournalData'], {
+		status: 'loading',
+		error: null,
+		subdomain: null,
+	});
+}
+
+function createJournalSuccess(state, result) {
+
+	return state.mergeIn(['createJournalData'], {
+		status: 'loaded',
+		error: null,
+		journalCreated: true,
+		subdomain: result,
+	});
+}
+
+function createJournalFail(state, error) {
+	return state.mergeIn(['createJournalData'], {
+		status: 'loaded',
+		error: error,
+	});
+}
+
+function loadJournalSuccess(state, journalData) {
 	return state.merge(journalData);
 }
 
-function failed(state, error) {	
+function loadJournalFail(state, error) {	
 	return state.merge({
 		error: error,
 	});
@@ -39,15 +74,21 @@ function failed(state, error) {
 // Bind actions to specific reducing functions.
 /*--------*/
 export default function loginReducer(state = defaultState, action) {
-
 	switch (action.type) {
+
+	case CREATE_JOURNAL_LOAD:
+		return createJournalLoad(state);
+	case CREATE_JOURNAL_SUCCESS:
+		return createJournalSuccess(state, action.result);
+	case CREATE_JOURNAL_FAIL:
+		return createJournalFail(state, action.error);
 
 	case LOAD_JOURNAL_AND_LOGIN:
 		return state;
 	case LOAD_JOURNAL_AND_LOGIN_SUCCESS:
-		return journalLoaded(state, action.result.journalData);
+		return loadJournalSuccess(state, action.result.journalData);
 	case LOAD_JOURNAL_AND_LOGIN_FAIL:
-		return failed(state, action.error);
+		return loadJournalFail(state, action.error);
 
 	default:
 		return ensureImmutable(state);

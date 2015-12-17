@@ -2,6 +2,7 @@ var app = require('../api');
 var passport = require('passport');
 
 var Journal = require('../models').Journal;
+var User = require('../models').User;
 var Heroku = require('heroku-client');
 var heroku = undefined;
 
@@ -38,6 +39,7 @@ app.post('/createJournal', function(req,res){
 
 	journal.save(function (err, savedJournal) {
 		if (err) { return res.status(500).json(err);  }
+		User.update({ _id: req.user._id }, { $addToSet: { adminJournals: savedJournal._id} }, function(err, result){if(err) return handleError(err)});
 
 		return res.status(201).json(savedJournal.subdomain);	
 
