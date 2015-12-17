@@ -123,8 +123,8 @@ const PubBody = React.createClass({
 						{
 							this.props.authors.map((author, index)=>{
 								return (index === this.props.authors.length - 1
-									? <Link to={'/profile/' + author.username} key={'pubAuthorLink-' + index} style={globalStyles.link}><span key={'pubAuthor-' + index} className={'pub-author'}>{author.name}</span></Link>
-									: <Link to={'/profile/' + author.username} key={'pubAuthorLink-' + index} style={globalStyles.link}><span key={'pubAuthor-' + index} className={'pub-author'}>{author.name}, </span></Link>);
+									? <Link to={'/user/' + author.username} key={'pubAuthorLink-' + index} style={globalStyles.link}><span key={'pubAuthor-' + index} className={'pub-author'}>{author.name}</span></Link>
+									: <Link to={'/user/' + author.username} key={'pubAuthorLink-' + index} style={globalStyles.link}><span key={'pubAuthor-' + index} className={'pub-author'}>{author.name}, </span></Link>);
 							})
 						}
 					</div>

@@ -17,7 +17,7 @@ export default () => {
 			<Route path="/journal" component={JournalAdmin}/>
 			<Route path="/journals/create" component={CreateJournal}/>
 			
-			<Route path="/profile/:username" component={Profile}/>
+			<Route path="/user/:username" component={Profile}/>
 
 			<Route path="/pub/:slug" component={PubReader}/>
 			<Route path="/pub/:slug/edit" component={Editor}/>

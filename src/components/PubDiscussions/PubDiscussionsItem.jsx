@@ -60,12 +60,12 @@ const PubDiscussionsItem = React.createClass({
 				<div style={styles.discussionHeader}>
 
 					<div style={styles.discussionAuthorImageWrapper}>
-						<Link to={'/profile/' + discussionItem.author.username} style={globalStyles.link}>
+						<Link to={'/user/' + discussionItem.author.username} style={globalStyles.link}>
 							<img style={styles.discussionAuthorImage} src={discussionItem.author.thumbnail} />
 						</Link>
 					</div>
 					<div style={styles.discussionDetailsLine}>
-						<Link to={'/profile/' + discussionItem.author.username} style={globalStyles.link}><span key={'discussionItemAuthorLink' + discussionItem._id} style={styles.headerText}>{discussionItem.author.name}</span></Link> on {dateFormat(discussionItem.postDate, 'mm/dd/yy, h:MMTT')}
+						<Link to={'/user/' + discussionItem.author.username} style={globalStyles.link}><span key={'discussionItemAuthorLink' + discussionItem._id} style={styles.headerText}>{discussionItem.author.name}</span></Link> on {dateFormat(discussionItem.postDate, 'mm/dd/yy, h:MMTT')}
 					</div>
 
 					<div style={styles.discussionDetailsLineBottom}>

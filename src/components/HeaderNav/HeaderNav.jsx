@@ -39,7 +39,7 @@ const HeaderNav = React.createClass({
 
 					{/* If Logged In */}
 					{/* ------------ */}
-					<Link to={'/profile/' + this.props.loginData.getIn(['userData', 'username'])}>
+					<Link to={'/user/' + this.props.loginData.getIn(['userData', 'username'])}>
 						<span key="headerLogin" style={[styles.loggedIn[isLoggedIn]]}>
 							
 							<img style={styles.userImage} src={this.props.loginData.getIn(['userData', 'thumbnail'])} />

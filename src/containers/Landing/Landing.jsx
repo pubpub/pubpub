@@ -28,7 +28,7 @@ const Landing = React.createClass({
 				{
 
 					results.map((item, index)=>{
-						const url = item.slug ? '/pub/' + item.slug : '/profile/' + item.username;
+						const url = item.slug ? '/pub/' + item.slug : '/user/' + item.username;
 						const type = item.slug ? 'pub' : 'user';
 						return (<div key={'landingSearchResult-' + index} style={styles.result}>
 							<HoverLink key={'landingSearchResultLink-' + index} style={styles.resultLink} to={url}>

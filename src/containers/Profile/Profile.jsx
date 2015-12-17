@@ -81,10 +81,6 @@ const Profile = React.createClass({
 							<li style={[styles.profileNavSeparator, ownProfile === 'other' && styles.profileNavShow]}></li>
 							
 						</ul>
-						{/* 
-						<Link to={`/profile/` + this.props.username + `?filter=funk`}><p>funk</p></Link>
-						<Link to={`/profile/` + this.props.username + `?filter=dog`}><p>dog</p></Link>
-						*/}
 					</div>
 					
 					<LoaderDeterminate value={this.props.profileData.get('status') === 'loading' ? 0 : 100}/>
