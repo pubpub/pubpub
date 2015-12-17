@@ -4,6 +4,7 @@ export CreateJournal from './CreateJournal/CreateJournal';
 export CreatePub from './CreatePub/CreatePub';
 export Editor from './Editor/Editor';
 export Explore from './Explore/Explore';
+export JournalAdmin from './JournalAdmin/JournalAdmin';
 export Landing from './Landing/Landing';
 export Login from './Login/Login';
 export Profile from './Profile/Profile';

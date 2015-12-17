@@ -1,6 +1,6 @@
 import React from 'react';
 import {IndexRoute, Route} from 'react-router';
-import {App, CreateJournal, CreatePub, Editor, Explore, Landing, Profile, PubMeta, PubReader, NotFound, SubdomainTest} from 'containers';
+import {App, CreateJournal, CreatePub, Editor, Explore, JournalAdmin, Landing, Profile, PubMeta, PubReader, NotFound, SubdomainTest} from 'containers';
 
 export default () => {
 
@@ -11,6 +11,7 @@ export default () => {
 			<IndexRoute component={Landing}/>
 
 			{ /* Routes */ }
+			<Route path="/admin" component={JournalAdmin}/>
 			<Route path="/createjournal" component={CreateJournal}/>
 			<Route path="/explore" component={Explore}/>
 			<Route path="/newpub" component={CreatePub}/>
