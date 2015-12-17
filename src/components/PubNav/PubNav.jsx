@@ -82,7 +82,7 @@ styles = {
 		color: '#888',
 		fontFamily: 'Lato',
 		transition: '.3s linear opacity .25s',
-		'@media screen and (min-resolution: 3dppx), @media screen and(max-width: 767px)': {
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
 			height: globalStyles.headerHeightMobile,
 		},
 	},
@@ -104,7 +104,7 @@ styles = {
 			cursor: 'pointer',
 			color: globalStyles.sideHover,
 		},
-		'@media screen and (min-resolution: 3dppx), @media screen and(max-width: 767px)': {
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
 			width: 'calc(33% - 1px)',
 			lineHeight: globalStyles.headerHeightMobile,
 			padding: 0,
@@ -117,13 +117,13 @@ styles = {
 	},
 	pubNavMobileOnly: {
 		display: 'none',
-		'@media screen and (min-resolution: 3dppx), @media screen and(max-width: 767px)': {
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
 			display: 'block',
 		},
 	},
 	pubNavDesktopOnly: {
 		display: 'block',
-		'@media screen and (min-resolution: 3dppx), @media screen and(max-width: 767px)': {
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
 			display: 'none',
 		},
 	},
@@ -133,7 +133,7 @@ styles = {
 		height: 'calc(' + globalStyles.headerHeight + ' - 16px)',
 		margin: '8px 0px',
 		float: 'left',
-		'@media screen and (min-resolution: 3dppx), @media screen and(max-width: 767px)': {
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
 			height: 'calc(' + globalStyles.headerHeightMobile + ' - 30px)',
 			margin: '15px 0px',
 		},

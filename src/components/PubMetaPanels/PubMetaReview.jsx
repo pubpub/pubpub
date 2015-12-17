@@ -164,7 +164,7 @@ styles = {
 	tagFormWrapper: {
 		maxWidth: 500,
 		margin: '0px 0px 25px 20px',
-		'@media screen and (min-resolution: 3dppx), @media screen and(max-width: 767px)': {
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
 			margin: '0px 5px 25px 5px',
 			maxWidth: '100%',
 			width: '100%',
@@ -194,7 +194,7 @@ styles = {
 			color: '#000',
 			cursor: 'pointer',
 		},
-		'@media screen and (min-resolution: 3dppx), @media screen and(max-width: 767px)': {
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
 			marginLeft: 0,
 			textAlign: 'right',
 			width: '100%',

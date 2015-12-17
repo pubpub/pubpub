@@ -132,12 +132,14 @@ const PubBody = React.createClass({
 					<div id={'pub-header-divider'}></div>
 
 					<div id="pubBodyContent">
+						{/* For Highlights to work, no divs can be placed before htmlTree */}
+						{this.props.htmlTree}
+						
 						{this.props.addSelectionHandler
 							? <PubSelectionPopup addSelectionHandler={this.props.addSelectionHandler}/>
 							: null
 						}
-						
-						{this.props.htmlTree}
+
 					</div>
 
 				</div>

@@ -69,7 +69,7 @@ styles = {
 		transition: '.1s linear transform',
 
 		backgroundColor: 'rgba(200,0,0,0.8)',
-		'@media screen and (min-resolution: 3dppx), @media screen and(max-width: 767px)': {
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
 			width: '100%',
 			position: 'fixed',
 			top: '0px',

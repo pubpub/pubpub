@@ -148,7 +148,7 @@ styles = {
 		borderRadius: '1px',
 		marginLeft: -173,
 		marginTop: -5,
-		'@media screen and (min-resolution: 3dppx), @media screen and(max-width: 767px)': {
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
 			display: 'none',
 		},
 		'@media screen and (min-width: 1600px)': {

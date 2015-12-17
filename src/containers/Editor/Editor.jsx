@@ -221,7 +221,7 @@ const Editor = React.createClass({
 		}
 
 		// pHashes are generated and collected to perform discussion highlight synchronization
-		const pTags = document.querySelectorAll('div#pubBodyContent>p');
+		const pTags = document.querySelectorAll('div#pubBodyContent>div');
 		const pHashes = {};
 		for ( const key in pTags ) {
 			if (pTags.hasOwnProperty(key)) {
@@ -229,6 +229,7 @@ const Editor = React.createClass({
 				pHashes[SHA1(pTags[key].innerText).toString(encHex)] = parseInt(key, 10) + 1;
 			}
 		}
+		console.log(pHashes);
 
 		const newVersion = {
 			slug: this.props.slug,

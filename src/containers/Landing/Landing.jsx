@@ -107,7 +107,7 @@ styles = {
 		overflow: 'hidden',
 		overflowY: 'scroll',
 		fontFamily: globalStyles.headerFont,
-		'@media screen and (min-resolution: 3dppx), @media screen and(max-width: 767px)': {
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
 			height: 'auto',
 			overflow: 'hidden',
 		},

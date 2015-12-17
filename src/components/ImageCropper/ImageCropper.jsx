@@ -107,7 +107,7 @@ styles = {
 		margin: '25px 25px 10px 25px',
 		position: 'relative',
 		float: 'left',
-		'@media screen and (min-resolution: 3dppx), @media screen and(max-width: 767px)': {
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
 			margin: '20px auto 5px auto',
 			float: 'none',
 		},
@@ -118,7 +118,7 @@ styles = {
 		height: 200,
 		margin: '25px 25px 10px 0px',
 		float: 'left',
-		'@media screen and (min-resolution: 3dppx), @media screen and(max-width: 767px)': {
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
 			width: '100%',
 			height: 'auto',
 			float: 'none',
@@ -129,7 +129,7 @@ styles = {
 		width: 75,
 		float: 'right',
 		margin: '0px 0px 45px 0px',
-		'@media screen and (min-resolution: 3dppx), @media screen and(max-width: 767px)': {
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
 			float: 'none',
 			margin: '20px calc(50% - 40px) 10px calc(50% - 40px)',
 			width: 80,
@@ -145,7 +145,7 @@ styles = {
 			cursor: 'pointer',
 			color: '#222',
 		},
-		'@media screen and (min-resolution: 3dppx), @media screen and(max-width: 767px)': {
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
 			width: '100%',
 			textAlign: 'center',
 			fontSize: '35px',

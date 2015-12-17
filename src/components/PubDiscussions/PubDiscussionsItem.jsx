@@ -30,15 +30,23 @@ const PubDiscussionsItem = React.createClass({
 		const Marklib = require('marklib');
 		this.props.discussionItem.selections.map((selection)=>{
 			const pIndex = this.props.pHashes[selection.ancestorHash];
+			console.log('pHashes', this.props.pHashes);
+			console.log('ancestor', selection.ancestorHash);
 			if (pIndex) {
-				const result = {
-					startContainerPath: selection.startContainerPath.replace(/p:nth-of-type\((.*)\)/, 'p:nth-of-type(' + pIndex + ')'),
-					endContainerPath: selection.endContainerPath.replace(/p:nth-of-type\((.*)\)/, 'p:nth-of-type(' + pIndex + ')'),
-					startOffset: selection.startOffset,
-					endOffset: selection.endOffset,
-				};	
-				const renderer = new Marklib.Rendering(document, {className: 'selection'}, document.getElementById('pubBodyContent'));
-				renderer.renderWithResult(result);	
+				try {
+					console.log('selection', selection);
+					const result = {
+						startContainerPath: selection.startContainerPath.replace(/div:nth-of-type\((.*)\)/, 'div:nth-of-type(' + pIndex + ')'),
+						endContainerPath: selection.endContainerPath.replace(/div:nth-of-type\((.*)\)/, 'div:nth-of-type(' + pIndex + ')'),
+						startOffset: selection.startOffset,
+						endOffset: selection.endOffset,
+					};	
+					console.log('result', result);
+					const renderer = new Marklib.Rendering(document, {className: 'selection'}, document.getElementById('pubBodyContent'));
+					renderer.renderWithResult(result);	
+				} catch (err) {
+					console.log('selection', err);
+				}
 			}
 
 			

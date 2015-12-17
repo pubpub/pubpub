@@ -8,7 +8,7 @@ export const styles = {
 		fontFamily: globalStyles.headerFont,
 		backgroundColor: globalStyles.sideBackground,
 		height: 'calc(100vh - ' + globalStyles.headerHeight + ')',
-		'@media screen and (min-resolution: 3dppx), @media screen and(max-width: 767px)': {
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
 			height: 'calc(100vh - ' + globalStyles.headerHeightMobile + ')',
 		},
 	},
@@ -23,7 +23,7 @@ export const styles = {
 	},
 	isMobile: {
 		display: 'none',
-		'@media screen and (min-resolution: 3dppx), @media screen and(max-width: 767px)': {
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
 			display: 'block',
 		},
 	},
@@ -46,7 +46,7 @@ export const styles = {
 		margin: 0,
 	},
 	notMobile: {
-		'@media screen and (min-resolution: 3dppx), @media screen and(max-width: 767px)': {
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
 			display: 'none',
 		},
 	},

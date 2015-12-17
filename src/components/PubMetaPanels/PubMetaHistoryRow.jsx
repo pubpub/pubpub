@@ -83,7 +83,7 @@ styles = {
 	versionDetails: {
 		width: 'calc(100% - 175px)',
 		float: 'left',
-		'@media screen and (min-resolution: 3dppx), @media screen and(max-width: 767px)': {
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
 			float: 'none',
 			width: '100%',
 		}
@@ -91,7 +91,7 @@ styles = {
 	versionButtons: {
 		width: 175,
 		float: 'left',
-		'@media screen and (min-resolution: 3dppx), @media screen and(max-width: 767px)': {
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
 			float: 'none',
 			width: '100%',
 		}
@@ -100,7 +100,7 @@ styles = {
 	versionTitleLine: {
 		fontFamily: 'Courier',
 		color: '#555',
-		'@media screen and (min-resolution: 3dppx), @media screen and(max-width: 767px)': {
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
 			fontSize: '20px',
 		}
 	},
@@ -110,7 +110,7 @@ styles = {
 	versionMessage: {
 	
 		padding: '15px 15px 0px 40px',
-		'@media screen and (min-resolution: 3dppx), @media screen and(max-width: 767px)': {
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
 			padding: '15px 15px 30px 40px',
 			fontSize: '20px',
 		}
@@ -119,21 +119,21 @@ styles = {
 		width: 40,
 		display: 'inline-block',
 		fontSize: '16px',
-		'@media screen and (min-resolution: 3dppx), @media screen and(max-width: 767px)': {
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
 			fontSize: '20px',
 		}
 	},
 	versionStatus: {
 		paddingRight: 10,
 		fontSize: '16px',
-		'@media screen and (min-resolution: 3dppx), @media screen and(max-width: 767px)': {
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
 			fontSize: '20px',
 		}
 	},
 	versionDate: {
 		fontSize: '14px',
 		color: '#666',
-		'@media screen and (min-resolution: 3dppx), @media screen and(max-width: 767px)': {
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
 			display: 'block',
 			paddingLeft: 40,
 			fontSize: '18px',
@@ -143,7 +143,7 @@ styles = {
 		fontSize: '14px',
 		color: 'rgba(79, 192, 79, 1.0)',
 		fontFamily: 'Courier',
-		'@media screen and (min-resolution: 3dppx), @media screen and(max-width: 767px)': {
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
 			display: 'block',
 			fontSize: '18px',
 		}
@@ -152,7 +152,7 @@ styles = {
 		fontSize: '14px',
 		color: 'rgba(245,105,105,1.0)',
 		fontFamily: 'Courier',
-		'@media screen and (min-resolution: 3dppx), @media screen and(max-width: 767px)': {
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
 			display: 'block',
 			fontSize: '18px',
 		}
@@ -162,7 +162,7 @@ styles = {
 		width: 20,
 		textAlign: 'center',
 		color: '#ccc',
-		'@media screen and (min-resolution: 3dppx), @media screen and(max-width: 767px)': {
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
 			display: 'none',
 		}
 	},
@@ -175,7 +175,7 @@ styles = {
 			cursor: 'pointer',
 			color: 'black',
 		},
-		'@media screen and (min-resolution: 3dppx), @media screen and(max-width: 767px)': {
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
 			display: 'block',
 			paddingTop: 15,
 			fontSize: '22px',

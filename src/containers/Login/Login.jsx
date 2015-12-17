@@ -132,7 +132,7 @@ styles = {
 		':hover': {
 			color: globalStyles.headerHover
 		},
-		'@media screen and (min-resolution: 3dppx), @media screen and(max-width: 767px)': {
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
 			position: 'relative',
 			width: 'calc(100% - 40px)',
 			top: 0,
@@ -149,7 +149,7 @@ styles = {
 		height: 1,
 		top: 15,
 		// backgroundColor: 'red',
-		'@media screen and (min-resolution: 3dppx), @media screen and(max-width: 767px)': {
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
 			top: globalStyles.headerHeightMobile,
 		},
 	},
@@ -163,7 +163,7 @@ styles = {
 		margin: '-200px 0 0 -400px',
 		transition: '.2s linear transform',
 		transform: 'scale(0.8)',
-		'@media screen and (min-resolution: 3dppx), @media screen and(max-width: 767px)': {
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
 			width: '100%',
 			position: 'relative',
 			margin: 0,
@@ -186,7 +186,7 @@ styles = {
 		padding: '0px 20px',
 		lineHeight: '60px',
 		fontSize: '55px',
-		'@media screen and (min-resolution: 3dppx), @media screen and(max-width: 767px)': {
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
 			width: 'calc(100% - 40px)',
 			float: 'none',
 		},
@@ -206,7 +206,7 @@ styles = {
 		':hover': {
 			color: globalStyles.headerHover
 		},
-		'@media screen and (min-resolution: 3dppx), @media screen and(max-width: 767px)': {
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
 			width: 'calc(100% - 20px)',
 			float: 'none',
 			padding: '0px 20px 0px 0px',
@@ -226,7 +226,7 @@ styles = {
 		top: 60,
 		left: 0,
 		pointerEvents: 'none',
-		'@media screen and (min-resolution: 3dppx), @media screen and(max-width: 767px)': {
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
 			top: 250,
 		},
 	},
@@ -240,7 +240,7 @@ styles = {
 		opacity: 0,
 		pointerEvents: 'none',
 		// transition: '.1s linear opacity',
-		'@media screen and (min-resolution: 3dppx), @media screen and(max-width: 767px)': {
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
 			top: 100,
 			left: 0,
 			width: '100%',
@@ -277,7 +277,7 @@ styles = {
 		zIndex: 1000,
 		overflow: 'hidden',
 		fontFamily: globalStyles.headerFont,
-		'@media screen and (min-resolution: 3dppx), @media screen and(max-width: 767px)': {
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
 			overflow: 'scroll',
 		},
 	},
@@ -302,7 +302,7 @@ styles = {
 		opacity: 0,
 		pointerEvents: 'none',
 		transition: '.1s linear opacity',
-		'@media screen and (min-resolution: 3dppx), @media screen and(max-width: 767px)': {
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
 			width: '100%',
 			height: 'auto',
 			left: 0,
