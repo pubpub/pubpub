@@ -25,6 +25,8 @@ export const defaultState = Immutable.Map({
 		error: null,
 		subdomain: null,	
 	},
+	journalDataLoaded: false,
+	journalDataError: null,
 
 });
 
@@ -61,12 +63,16 @@ function createJournalFail(state, error) {
 }
 
 function loadJournalSuccess(state, journalData) {
-	return state.merge(journalData);
+	return state.merge({
+		journalDataLoaded: true,
+		journalData
+	});
 }
 
 function loadJournalFail(state, error) {	
 	return state.merge({
-		error: error,
+		journalDataLoaded: false,
+		journalDataError: error,
 	});
 }
 

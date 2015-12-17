@@ -5,6 +5,10 @@ import {ensureImmutable} from './';
 // Load Actions
 /*--------*/
 import {
+	CREATE_PUB_LOAD,
+	CREATE_PUB_SUCCESS,
+	CREATE_PUB_FAIL,
+
 	CLEAR_PUB, 
 	LOAD_PUB, 
 	LOAD_PUB_SUCCESS, 
@@ -24,6 +28,13 @@ import {
 // Initialize Default State 
 /*--------*/
 export const defaultState = Immutable.Map({
+	createPubData: {
+		pubCreated: false,
+		status: 'loaded',
+		error: null,
+		slug: null,
+		title: undefined,
+	},
 	pubData: {
 		assets: {},
 		references: {},
@@ -52,6 +63,31 @@ export const defaultState = Immutable.Map({
 // These functions take in an initial state and return a new
 // state. They are pure functions. We use Immutable to enforce this. 
 /*--------*/
+function createPubLoad(state) {
+	return state.mergeIn(['createPubData'], {
+		status: 'loading',
+		error: null,
+		slug: null,
+	});
+}
+
+function createPubLoadSuccess(state, result, title) {
+	return state.mergeIn(['createPubData'], {
+		status: 'loaded',
+		error: null,
+		pubCreated: true,
+		slug: result,
+		title: title,
+	});
+}
+
+function createPubLoadFail(state, error) {
+	return state.mergeIn(['createPubData'], {
+		status: 'loaded',
+		error: error,
+	});
+}
+
 function clearPub(state) {
 	console.log('in clearPub');
 	return state.merge(defaultState.toJS());
@@ -163,6 +199,14 @@ function addSelection(state, selection) {
 export default function readerReducer(state = defaultState, action) {
 
 	switch (action.type) {
+	case CREATE_PUB_LOAD:
+		console.log('in create reducer load');
+		return createPubLoad(state);
+	case CREATE_PUB_SUCCESS:
+		return createPubLoadSuccess(state, action.result, action.title);
+	case CREATE_PUB_FAIL:
+		return createPubLoadFail(state, action.error);
+
 	case CLEAR_PUB:
 		return clearPub(state);
 	case LOAD_PUB:

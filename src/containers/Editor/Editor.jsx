@@ -41,7 +41,7 @@ const cmOptions = {
 
 const Editor = React.createClass({
 	propTypes: {
-		createPubData: PropTypes.object, // Used to get new pub titles
+		pubData: PropTypes.object, // Used to get new pub titles
 		editorData: PropTypes.object,
 		loginData: PropTypes.object, // User login data
 		slug: PropTypes.string, // equal to project uniqueTitle
@@ -96,7 +96,7 @@ const Editor = React.createClass({
 			// Initialize Firepad using codemirror and the ref defined above.
 			Firepad.fromCodeMirror(firepadRef, codeMirror, {
 				userId: username,
-				defaultText: editorDefaultText(this.props.createPubData.get('title'))
+				defaultText: editorDefaultText(this.props.pubData.getIn(['createPubData', 'title']))
 			});
 
 			// need to unmount on change
@@ -529,7 +529,7 @@ const Editor = React.createClass({
 
 export default connect( state => {
 	return {
-		createPubData: state.createPub,
+		pubData: state.pub,
 		editorData: state.editor,
 		slug: state.router.params.slug,
 		loginData: state.login

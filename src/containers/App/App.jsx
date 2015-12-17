@@ -17,6 +17,7 @@ import {globalStyles} from '../../utils/styleConstants';
 let styles = {};
 const App = React.createClass({
 	propTypes: {
+		journalData: PropTypes.object,
 		loginData: PropTypes.object,
 		navData: PropTypes.object,
 		pubData: PropTypes.object,
@@ -36,9 +37,10 @@ const App = React.createClass({
 
 	statics: {
 		fetchDataDeferred: function(getState, dispatch) {
-			// If journaldata loaded ==== true
-			return dispatch(loadJournalAndLogin());		
-			
+			if (!getState().journal.get('journalDataLoaded')) {
+				return dispatch(loadJournalAndLogin());				
+			}
+			return ()=>{};	
 
 			// if (!getState().login.get('attemptedRestoreState')) {
 			// 	return dispatch(restoreLogin());		
@@ -172,6 +174,7 @@ const App = React.createClass({
 
 export default connect( state => {
 	return {
+		journalData: state.journal,
 		loginData: state.login, 
 		navData: state.nav,
 		pubData: state.pub,

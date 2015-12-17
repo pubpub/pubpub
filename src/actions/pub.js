@@ -4,6 +4,10 @@
 // All action types are defined as constants. Do not manually pass action 
 // types as strings in action creators
 /*--------*/
+export const CREATE_PUB_LOAD = 'pub/CREATE_PUB_LOAD';
+export const CREATE_PUB_SUCCESS = 'pub/CREATE_PUB_SUCCESS';
+export const CREATE_PUB_FAIL = 'pub/CREATE_PUB_FAIL';
+
 export const CLEAR_PUB = 'pub/CLEAR_PUB';
 
 export const LOAD_PUB = 'pub/LOAD_PUB';
@@ -26,6 +30,18 @@ export const ADD_SELECTION = 'pub/ADD_SELECTION';
 // action objects (e.g. {type:example, payload:data} ) within dispatch()
 // function calls
 /*--------*/
+export function create(title, slug) {
+	console.log('in create action');
+	return {
+		types: [CREATE_PUB_LOAD, CREATE_PUB_SUCCESS, CREATE_PUB_FAIL],
+		promise: (client) => client.post('/createPub', {data: {
+			'title': title,
+			'slug': slug
+		}}),
+		title: title,
+	};
+}
+
 export function clearPub() {
 	return {
 		type: CLEAR_PUB,
