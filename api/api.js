@@ -68,7 +68,7 @@ app.use(session({
     }),
     cookie: {
       path: '/',
-      domain: 'pbpb.co',
+      domain: '.pbpb.co',
       secure: false,
       maxAge: 30 * 24 * 60 * 60 * 1000// = 30 days.
     },
