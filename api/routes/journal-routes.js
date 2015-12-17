@@ -7,7 +7,6 @@ var heroku = undefined;
 
 if(process.env.NODE_ENV !== 'production'){
 	import {herokuApiKey} from '../authentication/herokuCredentials';	
-	console.log('herokuApiKey', herokuApiKey);
 	heroku = new Heroku({ token: herokuApiKey });
 }else{
 	heroku = new Heroku({ token: process.env.HEROKU_API_KEY });
@@ -41,7 +40,7 @@ app.post('/createJournal', function(req,res){
 		if (err) { return res.status(500).json(err);  }
 
 		return res.status(201).json(savedJournal.subdomain);	
-		
+
 	});
 });
 

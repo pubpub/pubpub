@@ -67,6 +67,8 @@ app.use(session({
       ttl: 30 * 24 * 60 * 60 // = 30 days.
     }),
     cookie: {
+      path: '/',
+      domain: 'pbpb.co',
       secure: false,
       maxAge: 30 * 24 * 60 * 60 * 1000// = 30 days.
     },
