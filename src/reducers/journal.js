@@ -25,6 +25,7 @@ export const defaultState = Immutable.Map({
 		error: null,
 		subdomain: null,	
 	},
+	journalData: null,
 	journalDataLoaded: false,
 	journalDataError: null,
 

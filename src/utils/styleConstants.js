@@ -16,6 +16,87 @@ export const globalStyles = {
 	link: {
 		textDecoration: 'none',
 	},
+	loading: {
+		opacity: 0,
+	}, 
+	loaded: {
+		opacity: 1
+	},
+	hiddenUntilLoad: {
+		transition: '.3s linear opacity .25s',
+	},
+};
+
+export const profileStyles = {
+	profilePage: {
+		backgroundColor: globalStyles.sideBackground,
+		color: globalStyles.sideText,
+		fontFamily: globalStyles.headerFont,
+	},
+	profileWrapper: {
+		maxWidth: 1024,
+		margin: '0 auto',
+		overflow: 'hidden',
+		backgroundColor: 'white',
+		boxShadow: '0px 0px 4px 0px rgba(0,0,0,0.4)',
+		minHeight: 'calc(100vh - ' + globalStyles.headerHeight + ')',
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+			width: '100%',
+			maxWidth: '100%',
+			minHeight: 'calc(100vh - ' + globalStyles.headerHeightMobile + ')',
+		},
+	},
+};
+
+export const navStyles = {
+	navList: {
+		listStyle: 'none',
+		height: globalStyles.headerHeight,
+		width: '100%',
+		margin: 0,
+		padding: 0,
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+			height: globalStyles.headerHeightMobile,
+		},
+	},
+	navItem: {
+		height: '100%',
+		padding: '0px 20px',
+		lineHeight: globalStyles.headerHeight,
+		float: 'right',
+		display: 'none',
+		':hover': {
+			cursor: 'pointer',
+			color: globalStyles.sideHover,
+		},
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+			width: 'calc(33% - 1px)',
+			lineHeight: globalStyles.headerHeightMobile,
+			padding: 0,
+			textAlign: 'center',
+			fontSize: '20px'
+		},
+	},
+	navSeparator: {
+		width: 1,
+		backgroundColor: '#999',
+		height: 'calc(' + globalStyles.headerHeight + ' - 16px)',
+		margin: '8px 0px',
+		display: 'none',
+		float: 'right',
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+			height: 'calc(' + globalStyles.headerHeightMobile + ' - 30px)',
+			margin: '15px 0px',
+		},
+	},
+	navItemShow: {
+		display: 'block',
+	},
+	navSeparatorNoMobile: {
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+			display: 'none',
+		},
+	},
 };
 
 export const pubSizes = {

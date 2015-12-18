@@ -10,7 +10,7 @@ import journal from './journal';
 import landing from './landing';
 import login from './login';
 import nav from './nav';
-import profile from './profile';
+import user from './user';
 import pub from './pub';
 import subdomainTest from './subdomainTest';
 
@@ -25,7 +25,7 @@ export default combineReducers({
 	landing,
 	login,
 	nav,
-	profile,
+	user,
 	pub,
 	subdomainTest
 });

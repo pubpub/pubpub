@@ -4,7 +4,7 @@ import {ensureImmutable} from './';
 /*--------*/
 // Load Actions
 /*--------*/
-import {LOAD_PROFILE, LOAD_PROFILE_SUCCESS, LOAD_PROFILE_FAIL} from '../actions/profile';
+import {LOAD_PROFILE, LOAD_PROFILE_SUCCESS, LOAD_PROFILE_FAIL} from '../actions/user';
 
 /*--------*/
 // Initialize Default State 

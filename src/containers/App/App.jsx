@@ -6,13 +6,10 @@ import {Login} from '../index';
 import {connect} from 'react-redux';
 import {toggleVisibility} from '../../actions/login';
 import {loadJournalAndLogin} from '../../actions/journal';
-// import {updateDelta} from '../../actions/nav';
 import {openMenu, closeMenu} from '../../actions/nav';
 import {openPubModal} from '../../actions/pub';
-
 import {HeaderNav, HeaderMenu} from '../../components';
 import {globalStyles} from '../../utils/styleConstants';
-// import { pushState, go } from 'redux-router';
 
 let styles = {};
 const App = React.createClass({
@@ -22,31 +19,17 @@ const App = React.createClass({
 		navData: PropTypes.object,
 		pubData: PropTypes.object,
 		path: PropTypes.string,
-		// query: PropTypes.object,
 		slug: PropTypes.string,
-		// delta: PropTypes.number,
 		children: PropTypes.object.isRequired,
 		dispatch: PropTypes.func
 	},
-
-	// getDefaultProps: function() {
-	// 	return {
-	// 		query: {},
-	// 	};
-	// },
 
 	statics: {
 		fetchDataDeferred: function(getState, dispatch) {
 			if (!getState().journal.get('journalDataLoaded')) {
 				return dispatch(loadJournalAndLogin());				
 			}
-			return ()=>{};	
-
-			// if (!getState().login.get('attemptedRestoreState')) {
-			// 	return dispatch(restoreLogin());		
-			// }
-			// return ()=>{};	
-	
+			return ()=>{};		
 		}
 	},
 
@@ -66,21 +49,6 @@ const App = React.createClass({
 		
 		
 	},
-
-	// goBack: function(backCount) {
-	// 	if (this.props.delta + backCount < 0) {
-	// 		// If there is no history with which to go back, clear the query params
-	// 		this.props.dispatch(pushState(null, this.props.path, {}));
-	// 	} else {
-	// 		this.props.dispatch(updateDelta(backCount + 1)); // Keep track of nav.delta so we can handle cases where the page was directly navigated to.
-	// 		this.props.dispatch(go(backCount));
-			
-	// 	}
-	// },
-
-	// setQuery: function(queryObject) {
-	// 	this.props.dispatch(pushState(null, this.props.path, {...this.props.query, ...queryObject}));
-	// },
 
 	closeMenu: function() {
 		this.props.dispatch(closeMenu());
@@ -107,14 +75,6 @@ const App = React.createClass({
 			headerTextColorHover = 'black';
 		}
 
-		// const mquery = {mediaQueries: {
-		// 	'(min-width: 1050px)': {
-		// 		body: {
-		// 			fontSize: '320%'
-		// 		}
-		// 	},
-		// }};
-		// : <Style rules={mquery} />
 		return (
 			<div style={styles.body}>
 

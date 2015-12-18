@@ -50,8 +50,7 @@ app.get('/loadJournalAndLogin', function(req,res){
 	// Load journal Data
 	// When an implicit login request is made using the cookie
 	Journal.findOne({ $or:[ {'subdomain':req.query.host.split('.')[0]}, {'customDomain':req.query.host}]}).lean().exec(function(err, result){
-	// Journal.find(req.body.host)
-		console.log('journalResult', result);
+		// console.log('journalResult', result);
 
 		if(req.user){
 

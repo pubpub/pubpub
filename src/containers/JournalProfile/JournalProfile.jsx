@@ -2,17 +2,14 @@ import React, { PropTypes } from 'react';
 import {connect} from 'react-redux';
 import Radium from 'radium';
 import DocumentMeta from 'react-document-meta';
-// import { Link } from 'react-router';
-// import { pushState } from 'redux-router';
-// import {logout} from '../../actions/login';
-// import {getProfile} from '../../actions/profile';
 import {LoaderDeterminate} from '../../components';
-import {styles} from './journalProfileStyles';
-// import {globalStyles} from '../../utils/styleConstants';
+import {globalStyles, profileStyles, navStyles} from '../../utils/styleConstants';
+
+let styles = {};
 
 const JournalAdmin = React.createClass({
 	propTypes: {
-		profileData: PropTypes.object,
+		journalData: PropTypes.object,
 		loginData: PropTypes.object,
 		username: PropTypes.string,
 		dispatch: PropTypes.func
@@ -24,35 +21,34 @@ const JournalAdmin = React.createClass({
 
 
 		return (
-			<div style={styles.profilePage}>
+			<div style={profileStyles.profilePage}>
 
 				<DocumentMeta {...metaData} />
 
 				
-				<div style={styles.profileWrapper}>
-					<div style={[styles.hiddenUntilLoad, styles.loaded]}>
-						<ul style={styles.profileNav}>
+				<div style={profileStyles.profileWrapper}>
+					
+					<div style={[globalStyles.hiddenUntilLoad, globalStyles.loaded]}>
+						<ul style={navStyles.navList}>
+							<li key="journalNav0" style={[navStyles.navItem, true && navStyles.navItemShow]}>Settings</li>
+							<li style={[navStyles.navSeparator, true && navStyles.navItemShow]}></li>
 
-							<li key="profileNav0"style={[styles.profileNavItem]} onClick={this.submitLogout}>Settings</li>
-							<li style={[styles.profileNavSeparator]}></li>
+							<li key="journalNav1" style={[navStyles.navItem, true && navStyles.navItemShow]}>Design</li>
+							<li style={[navStyles.navSeparator, true && navStyles.navItemShow]}></li>
 
-							<li key="profileNav1"style={[styles.profileNavItem]}>Design</li>
-							<li style={[styles.profileNavSeparator]}></li>
-
-							<li key="profileNav2"style={[styles.profileNavItem]}>Pubs</li>
-							<li style={[styles.profileNavSeparator]}></li>
-							
+							<li key="journalNav2" style={[navStyles.navItem, true && navStyles.navItemShow]}>Pubs</li>
+							<li style={[navStyles.navSeparator, true && navStyles.navItemShow, navStyles.navSeparatorNoMobile]}></li>
 						</ul>
 					</div>
 					
 					{/* <LoaderDeterminate value={'loaded' === 'loading' ? 0 : 100}/> */}
-					 <LoaderDeterminate value={100}/> 
+					<LoaderDeterminate value={100}/> 
 
-					<div style={[styles.hiddenUntilLoad, styles.loaded]}>
-						
+					<div style={[globalStyles.hiddenUntilLoad, globalStyles.loaded, styles.contentWrapper]}>
 						<h1>Journal Admin</h1>
-						
+						{JSON.stringify(this.props.journalData.get('journalData').toJS())}
 					</div>
+
 				</div>
 
 			</div>
@@ -67,3 +63,9 @@ export default connect( state => {
 		journalData: state.journal, 
 	};
 })( Radium(JournalAdmin) );
+
+styles = {
+	contentWrapper: {
+		margin: globalStyles.headerHeight,
+	}
+};
