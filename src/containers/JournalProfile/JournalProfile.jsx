@@ -120,7 +120,7 @@ styles = {
 	},
 	headerJournalName: {
 		color: globalStyles.sideText,
-		fontSize: 30,
+		fontSize: 35,
 		':hover': {
 			color: 'black',
 		},
