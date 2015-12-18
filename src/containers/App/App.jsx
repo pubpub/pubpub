@@ -25,8 +25,8 @@ const App = React.createClass({
 	},
 
 	statics: {
-		fetchDataDeferred: function(getState, dispatch) {
-			if (getState().journal.get('status') === 'loaded') {
+		fetchData: function(getState, dispatch) {
+			if (getState().journal.get('status') === 'loading') {
 				return dispatch(loadJournalAndLogin());				
 			}
 			return ()=>{};		

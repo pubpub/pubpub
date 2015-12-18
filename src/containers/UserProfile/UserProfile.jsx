@@ -24,6 +24,7 @@ const Profile = React.createClass({
 			if (getState().user.getIn(['profileData', 'username']) !== routerParams.username) {
 				return dispatch(getProfile(routerParams.username));
 			}
+			return ()=>{};	
 		}
 	},
 

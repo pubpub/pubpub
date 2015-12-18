@@ -29,9 +29,10 @@ export const defaultState = Immutable.Map({
 		error: null,
 		subdomain: null,	
 	},
-	journalData: null,
+	journalData: {},
 	status: 'loading',
 	error: null,
+	baseSubdomain: undefined, // Will be null if on pubpub and defined if on a journal
 
 });
 
@@ -72,16 +73,18 @@ function loadJournal(state) {
 }
 
 function loadJournalSuccess(state, journalData) {
+	const newBaseSubdomain = journalData ? journalData.subdomain : null;
 	return state.merge({
 		status: 'loaded',
 		error: null,
+		baseSubdomain: state.get('baseSubdomain') === undefined ? newBaseSubdomain : state.get('baseSubdomain'),
 		journalData
 	});
 }
 
 function loadJournalFail(state, error) {	
 	return state.merge({
-		status: 'loading',
+		status: 'loaded',
 		error: error,
 	});
 }

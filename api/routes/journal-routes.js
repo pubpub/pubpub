@@ -48,7 +48,9 @@ app.post('/createJournal', function(req,res){
 
 app.get('/getJournal', function(req,res){
 	Journal.findOne({subdomain: req.query.subdomain}).exec(function(err, result) {
-		return res.status(201).json({result});
+		if (err) { return res.status(500).json(err);  }
+		console.log('in the get journal route');
+		return res.status(201).json(result);
 	});
 });
 
