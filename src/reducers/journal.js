@@ -73,7 +73,7 @@ function loadJournal(state) {
 }
 
 function loadJournalSuccess(state, journalData) {
-	const newBaseSubdomain = journalData ? journalData.subdomain : null;
+	const newBaseSubdomain = journalData.subdomain ? journalData.subdomain : null;
 	return state.merge({
 		status: 'loaded',
 		error: null,

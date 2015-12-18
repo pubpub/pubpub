@@ -12,13 +12,16 @@ export default () => {
 
 			{ /* Routes */ }
 			<Route path="/explore" component={Explore}/>
-			<Route path="/journal" component={JournalProfile}/>
+
 			<Route path="/journal/:subdomain" component={JournalProfile}/>
+			<Route path="/journal/:subdomain/:mode" component={JournalProfile}/>
 			<Route path="/journals/create" component={JournalCreate}/>
+
 			<Route path="/pub/:slug" component={PubReader}/>
 			<Route path="/pub/:slug/edit" component={Editor}/>
 			<Route path="/pub/:slug/:meta" component={PubMeta}/>
 			<Route path="/pubs/create" component={PubCreate}/>
+			
 			<Route path="/subdomain" component={SubdomainTest}/>
 			<Route path="/user/:username" component={UserProfile}/>
 

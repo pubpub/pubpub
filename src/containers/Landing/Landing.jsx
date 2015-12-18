@@ -11,6 +11,7 @@ let styles = {};
 
 const Landing = React.createClass({
 	propTypes: {
+		journalData: PropTypes.object,
 		landingData: PropTypes.object,
 		dispatch: PropTypes.func
 	},
@@ -63,6 +64,11 @@ const Landing = React.createClass({
 
 				<DocumentMeta {...metaData} />
 
+				{
+					this.props.journalData.get('baseSubdomain') === null
+						? null
+						: <div>WE ARE IN A JOURNAL AHHHHH!</div>
+				}
 
 				<div style={styles.top}>
 					<h1 style={styles.topPub}>PubPub</h1>
@@ -97,7 +103,10 @@ const Landing = React.createClass({
 });
 
 export default connect( state => {
-	return {landingData: state.landing};
+	return {
+		journalData: state.journal,
+		landingData: state.landing
+	};
 })( Radium(Landing) );
 
 styles = {

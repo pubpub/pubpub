@@ -65,6 +65,7 @@ export const navStyles = {
 		lineHeight: globalStyles.headerHeight,
 		float: 'right',
 		display: 'none',
+		color: globalStyles.sideText,
 		':hover': {
 			cursor: 'pointer',
 			color: globalStyles.sideHover,

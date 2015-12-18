@@ -47,10 +47,19 @@ app.post('/createJournal', function(req,res){
 });
 
 app.get('/getJournal', function(req,res){
-	Journal.findOne({subdomain: req.query.subdomain}).exec(function(err, result) {
+	Journal.findOne({subdomain: req.query.subdomain}).lean().exec(function(err, result) {
 		if (err) { return res.status(500).json(err);  }
-		console.log('in the get journal route');
-		return res.status(201).json(result);
+
+		let isAdmin = false;
+		const userID = req.user ? req.user._id : undefined;
+		if (result && String(result.admins).indexOf(userID) !== -1) {
+			isAdmin =  true;
+		}
+
+		return res.status(201).json({
+			...result,
+			isAdmin: isAdmin,
+		});
 	});
 });
 
@@ -59,11 +68,17 @@ app.get('/loadJournalAndLogin', function(req,res){
 	// When an implicit login request is made using the cookie
 	Journal.findOne({ $or:[ {'subdomain':req.query.host.split('.')[0]}, {'customDomain':req.query.host}]}).lean().exec(function(err, result){
 		// console.log('journalResult', result);
-
+		let isAdmin = false;
+		const userID = req.user ? req.user._id : undefined;
+		if (result && String(result.admins).indexOf(userID) !== -1) {
+			isAdmin =  true;
+		}
 		if(req.user){
-
 			return res.status(201).json({
-				journalData: result,
+				journalData: {
+					...result,
+					isAdmin: isAdmin,
+				},
 				loginData: {
 					name: req.user.name,
 					username: req.user.username,
@@ -75,7 +90,10 @@ app.get('/loadJournalAndLogin', function(req,res){
 
 		}else{
 			return res.status(201).json({
-				journalData: result,
+				journalData: {
+					...result,
+					isAdmin: false,
+				},
 				loginData: 'No Session',
 			});
 		}
