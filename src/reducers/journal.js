@@ -13,6 +13,10 @@ import {
 	LOAD_JOURNAL_AND_LOGIN_SUCCESS,
 	LOAD_JOURNAL_AND_LOGIN_FAIL,
 
+	LOAD_JOURNAL,
+	LOAD_JOURNAL_SUCCESS,
+	LOAD_JOURNAL_FAIL,
+
 } from '../actions/journal';
 
 /*--------*/
@@ -26,8 +30,8 @@ export const defaultState = Immutable.Map({
 		subdomain: null,	
 	},
 	journalData: null,
-	journalDataLoaded: false,
-	journalDataError: null,
+	status: 'loading',
+	error: null,
 
 });
 
@@ -63,17 +67,22 @@ function createJournalFail(state, error) {
 	});
 }
 
+function loadJournal(state) {
+	return state.set('status', 'loading');
+}
+
 function loadJournalSuccess(state, journalData) {
 	return state.merge({
-		journalDataLoaded: true,
+		status: 'loaded',
+		error: null,
 		journalData
 	});
 }
 
 function loadJournalFail(state, error) {	
 	return state.merge({
-		journalDataLoaded: false,
-		journalDataError: error,
+		status: 'loading',
+		error: error,
 	});
 }
 
@@ -91,10 +100,17 @@ export default function loginReducer(state = defaultState, action) {
 		return createJournalFail(state, action.error);
 
 	case LOAD_JOURNAL_AND_LOGIN:
-		return state;
+		return loadJournal(state);
 	case LOAD_JOURNAL_AND_LOGIN_SUCCESS:
 		return loadJournalSuccess(state, action.result.journalData);
 	case LOAD_JOURNAL_AND_LOGIN_FAIL:
+		return loadJournalFail(state, action.error);
+
+	case LOAD_JOURNAL:
+		return loadJournal(state);
+	case LOAD_JOURNAL_SUCCESS:
+		return loadJournalSuccess(state, action.result);
+	case LOAD_JOURNAL_FAIL:
 		return loadJournalFail(state, action.error);
 
 	default:
