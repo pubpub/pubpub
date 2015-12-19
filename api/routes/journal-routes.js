@@ -79,12 +79,11 @@ app.post('/saveJournal', function(req,res){
 
 		journal.save(function(err, result){
 			if (err) { return res.status(500).json(err);  }
-			setTimeout(function(){
-				return res.status(201).json({
-					...journal.toObject(),
-					isAdmin: true,
-				});	
-			}, 5000);
+			
+			return res.status(201).json({
+				...journal.toObject(),
+				isAdmin: true,
+			});	
 			
 		});
 	});
