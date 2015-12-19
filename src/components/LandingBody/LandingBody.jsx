@@ -46,7 +46,7 @@ styles = {
 		// height: 'calc(100vh - 30px)',
 		position: 'relative',
 		overflow: 'hidden',
-		marginTop: 30,
+		// marginTop: 30,
 		// transform: typeof(window) !== 'undefined' ? 'scale(' + document.getElementById('landingPreviewContainer').clientWidth / window.innerWidth + ')' : '',
 		// transformOrigin: '0% 0%',
 	},

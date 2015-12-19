@@ -50,6 +50,7 @@ const JournalDesign = React.createClass({
 				},
 			},
 			activeKey: undefined,
+			jsonError: undefined,
 			landingPreviewHeight: 50, 
 			landingPreviewScale: 1.0,
 		};
@@ -112,14 +113,16 @@ const JournalDesign = React.createClass({
 			const array = JSON.parse(cm.getValue().replace(/(['"])?([a-zA-Z0-9_]+)(['"])?: /g, '"$2": ').replace(/'/g, '"'));
 			this.setState({
 				componentsArray: array,
+				jsonError: undefined,
 				landingPreviewScale: this.calcLandingPreviewScale(),
 			});
 			setTimeout(()=>{
 				this.setLandingPreviewHeight();
 			}, 50);
 		} catch (err) {
-			console.log(err);
-			console.log('No good');
+			this.setState({
+				jsonError: err.toString(),
+			});
 		}
 		
 	},
@@ -205,13 +208,14 @@ const JournalDesign = React.createClass({
 
 	render: function() {
 		// console.log(this.props.designObject);
+		const color = this.state.jsonError ? '#c22' : '#ccc';
 		return (
 			<div style={styles.container}>
 
 				<Style rules={{
 					'#codeMirrorJSON .CodeMirror': {
 						// backgroundColor: '#efefef',
-						border: '1px solid #ccc',
+						border: '1px solid ' + color,
 						fontSize: '14px',
 						// color: 'red',
 						fontFamily: 'Courier',
@@ -271,6 +275,7 @@ const JournalDesign = React.createClass({
 
 						<div style={[styles.sectionHeader, styles.sectionHeaderInternal]}>Landing Page Components</div> 
 						<div id={'codeMirrorJSON'} style={styles.codeMirrorWrapper}></div>
+						<div style={styles.jsonError}>{this.state.jsonError}</div>
 					</div>
 
 					<div id="landingPreviewContainer" style={[styles.sectionContentRight, styles.sectionContentRightLanding, {height: this.state.landingPreviewHeight}]}>
@@ -402,7 +407,7 @@ styles = {
 	mockHeaderBarLanding: {
 		width: '100vw',
 		height: globalStyles.headerHeight,
-		position: 'fixed',
+		// position: 'fixed',
 	},
 	mockBody: {
 		width: '100%',
@@ -423,4 +428,11 @@ styles = {
 		bottom: 10,
 		width: '100%',
 	},
+	jsonError: {
+		width: '100%',
+		textAlign: 'center',
+		color: 'red',
+		fontFamily: 'Courier',
+		fontSize: '15px',
+	}
 };
