@@ -4,6 +4,7 @@ import Radium from 'radium';
 import DocumentMeta from 'react-document-meta';
 import {Autocomplete} from '../';
 import {globalStyles} from '../../utils/styleConstants';
+import {LandingBody} from '../../components';
 import { Link } from 'react-router';
 const HoverLink = Radium(Link);
 
@@ -58,7 +59,7 @@ const Landing = React.createClass({
 		const metaData = {
 			title: 'PubPub'
 		};
-
+		const componentsArray = JSON.parse(this.props.journalData.getIn(['journalData', 'design', 'layoutString']).replace(/(['"])?([a-zA-Z0-9_]+)(['"])?: /g, '"$2": ').replace(/'/g, '"'));
 		return (
 			<div style={styles.container}>
 
@@ -67,7 +68,7 @@ const Landing = React.createClass({
 				{
 					this.props.journalData.get('baseSubdomain') === null
 						? null
-						: <div>WE ARE IN A JOURNAL AHHHHH!</div>
+						: <LandingBody componentsArray={componentsArray}/>
 				}
 
 				<div style={styles.top}>

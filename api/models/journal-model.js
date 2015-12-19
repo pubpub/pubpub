@@ -18,7 +18,10 @@ var journalSchema = new Schema({
 
 	pubsFeatured: [{ type: ObjectId, ref: 'Pub' }],
 	pubsSubmitted: [{ type: ObjectId, ref: 'Pub' }],
-	// We should eventually probably store 'owned' journals in the User model
+	
+	design: { type: Schema.Types.Mixed },
+	settings: { type: Schema.Types.Mixed },
+
 });
 
 

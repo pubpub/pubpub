@@ -16,6 +16,10 @@ export const LOAD_JOURNAL = 'journal/LOAD_JOURNAL';
 export const LOAD_JOURNAL_SUCCESS = 'journal/LOAD_JOURNAL_SUCCESS';
 export const LOAD_JOURNAL_FAIL = 'journal/LOAD_JOURNAL_FAIL';
 
+export const SAVE_JOURNAL = 'journal/SAVE_JOURNAL';
+export const SAVE_JOURNAL_SUCCESS = 'journal/SAVE_JOURNAL_SUCCESS';
+export const SAVE_JOURNAL_FAIL = 'journal/SAVE_JOURNAL_FAIL';
+
 
 /*--------*/
 // Define Action creators
@@ -46,6 +50,13 @@ export function getJournal(subdomain) {
 	return {
 		types: [LOAD_JOURNAL, LOAD_JOURNAL_SUCCESS, LOAD_JOURNAL_FAIL],
 		promise: (client) => client.get('/getJournal', {params: {subdomain: subdomain}})
+	};
+}
+
+export function saveJournal(subdomain, key, newObject) {
+	return {
+		types: [SAVE_JOURNAL, SAVE_JOURNAL_SUCCESS, SAVE_JOURNAL_FAIL],
+		promise: (client) => client.post('/saveJournal', {data: {subdomain: subdomain, key: key, newObject: newObject}})
 	};
 }
 

@@ -3,7 +3,7 @@ import {connect} from 'react-redux';
 import { Link } from 'react-router';
 import Radium from 'radium';
 import DocumentMeta from 'react-document-meta';
-import {getJournal} from '../../actions/journal';
+import {getJournal, saveJournal} from '../../actions/journal';
 import {LoaderDeterminate, JournalCurate, JournalDesign, JournalSettings} from '../../components';
 import {NotFound} from '../../containers';
 import {globalStyles, profileStyles, navStyles} from '../../utils/styleConstants';
@@ -29,6 +29,10 @@ const JournalAdmin = React.createClass({
 			}
 			return ()=>{};	
 		}
+	},
+
+	journalSave: function(key, newObject) {
+		this.props.dispatch(saveJournal(this.props.subdomain, key, newObject));
 	},
 
 	render: function() {
@@ -80,7 +84,10 @@ const JournalAdmin = React.createClass({
 											);
 										case 'design':
 											return (
-												<JournalDesign />
+												<JournalDesign 
+													designObject={this.props.journalData.getIn(['journalData', 'design']) ? this.props.journalData.getIn(['journalData', 'design']).toJS() : {}}
+													journalSaving={this.props.journalData.get( 'journalSaving')}
+													journalSaveHandler={this.journalSave}/>
 											);
 										case 'settings':
 											return (

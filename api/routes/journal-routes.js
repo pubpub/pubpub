@@ -63,6 +63,33 @@ app.get('/getJournal', function(req,res){
 	});
 });
 
+app.post('/saveJournal', function(req,res){
+	Journal.findOne({subdomain: req.body.subdomain}).exec(function(err, journal) {
+		// console.log('in server save journal');
+		// console.log('req.body', req.body);
+		// console.log('journal', journal);
+
+		if (err) { return res.status(500).json(err);  }
+
+		if (!req.user || String(journal.admins).indexOf(req.user._id) === -1) {
+			return res.status(403).json('Not authorized to administrate this Journal.');
+		}
+
+		journal[req.body.key] = req.body.newObject;
+
+		journal.save(function(err, result){
+			if (err) { return res.status(500).json(err);  }
+			setTimeout(function(){
+				return res.status(201).json({
+					...journal.toObject(),
+					isAdmin: true,
+				});	
+			}, 5000);
+			
+		});
+	});
+});
+
 app.get('/loadJournalAndLogin', function(req,res){
 	// Load journal Data
 	// When an implicit login request is made using the cookie

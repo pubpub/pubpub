@@ -1,7 +1,7 @@
 /* global CodeMirror */
 import React, {PropTypes} from 'react';
 import Radium, {Style} from 'radium';
-import {LandingBody} from '../../components';
+import {LandingBody, LoaderIndeterminate} from '../../components';
 import ColorPicker from 'react-color';
 import {globalStyles} from '../../utils/styleConstants';
 
@@ -9,11 +9,16 @@ let styles = {};
 
 const JournalDesign = React.createClass({
 	propTypes: {
-		input: PropTypes.string,
+		journalSaveHandler: PropTypes.func,
+		designObject: PropTypes.object,
+		journalSaving: PropTypes.bool,
 	},
 
 	getDefaultProps: function() {
-		
+		return {
+			designObject: {},
+			journalSaving: false,
+		};
 	},
 
 	getInitialState() {
@@ -50,6 +55,10 @@ const JournalDesign = React.createClass({
 		};
 	},
 
+	componentWillMount() {
+		this.loadSavedColors();
+	},
+
 	componentDidMount() {
 		const codeMirror = CodeMirror(document.getElementById('codeMirrorJSON'), {
 			lineNumbers: false,
@@ -62,12 +71,29 @@ const JournalDesign = React.createClass({
 			placeholder: 'Add Components...',
 		});
 		codeMirror.on('change', this.onCodeChange);
+		codeMirror.setValue(this.props.designObject.layoutString);
 		window.addEventListener('resize', this.updatePreviewSize);
+		setTimeout(()=>{
+			this.setLandingPreviewHeight();
+		}, 1000);
 		// codeMirror.setValue(JSON.stringify(this.props.pubStyle.cssObjectString));
 	},
 
 	componentWillUnmount() {
 		window.removeEventListener('resize', this.updatePreviewSize);
+	},
+
+	loadSavedColors: function() {
+		this.setState({
+			colorSelections: {
+				headerBackground: {color: this.props.designObject.headerBackground, display: false} || this.state.headerBackground,
+				headerText: {color: this.props.designObject.headerText, display: false} || this.state.headerText,
+				headerHover: {color: this.props.designObject.headerHover, display: false} || this.state.headerHover,
+				landingHeaderBackground: {color: this.props.designObject.landingHeaderBackground, display: false} || this.state.landingHeaderBackground,
+				landingHeaderText: {color: this.props.designObject.landingHeaderText, display: false} || this.state.landingHeaderText,
+				landingHeaderHover: {color: this.props.designObject.landingHeaderHover, display: false} || this.state.landingHeaderHover,
+			}
+		});
 	},
 
 	updatePreviewSize: function() {
@@ -76,21 +102,21 @@ const JournalDesign = React.createClass({
 		});
 		setTimeout(()=>{
 			this.setLandingPreviewHeight();
-		}, 10);
+		}, 50);
 	},
 
 	onCodeChange: function(cm, change) {
 		// console.log(cm.getValue());
 		try {
 			// console.log(cm.getValue().replace(/'/g, '"'));
-			const array = JSON.parse(cm.getValue().replace(/'/g, '"'));
+			const array = JSON.parse(cm.getValue().replace(/(['"])?([a-zA-Z0-9_]+)(['"])?: /g, '"$2": ').replace(/'/g, '"'));
 			this.setState({
 				componentsArray: array,
 				landingPreviewScale: this.calcLandingPreviewScale(),
 			});
 			setTimeout(()=>{
 				this.setLandingPreviewHeight();
-			}, 10);
+			}, 50);
 		} catch (err) {
 			console.log(err);
 			console.log('No good');
@@ -153,7 +179,6 @@ const JournalDesign = React.createClass({
 	},
 
 	setLandingPreviewHeight: function() {
-		console.log('about to calc height', document.getElementById('landingMockContainer').clientHeight * (document.getElementById('landingPreviewContainer').clientWidth / window.innerWidth));
 		this.setState({
 			landingPreviewHeight: typeof(window) !== 'undefined' ? document.getElementById('landingMockContainer').clientHeight * (document.getElementById('landingPreviewContainer').clientWidth / window.innerWidth) : 50,
 		});
@@ -163,7 +188,23 @@ const JournalDesign = React.createClass({
 		return typeof(window) !== 'undefined' ? document.getElementById('landingPreviewContainer').clientWidth / window.innerWidth : 1.0;
 	},
 
+	saveDesign: function() {
+		const cm = document.getElementById('codeMirrorJSON').childNodes[0].CodeMirror;
+
+		const object = {
+			headerBackground: this.state.colorSelections.headerBackground.color,
+			headerText: this.state.colorSelections.headerText.color,
+			headerHover: this.state.colorSelections.headerHover.color,
+			landingHeaderBackground: this.state.colorSelections.landingHeaderBackground.color,
+			landingHeaderText: this.state.colorSelections.landingHeaderText.color,
+			landingHeaderHover: this.state.colorSelections.landingHeaderHover.color,
+			layoutString: cm.getValue(),
+		};
+		this.props.journalSaveHandler('design', object);
+	},
+
 	render: function() {
+		// console.log(this.props.designObject);
 		return (
 			<div style={styles.container}>
 
@@ -244,7 +285,16 @@ const JournalDesign = React.createClass({
 
 				</div>
 
-				<div style={styles.saveButton} key={'journalDesignSaveButton'} onClick={this.saveCustomSettings}>Save</div>
+				<div style={styles.saveButton} key={'journalDesignSaveButton'} onClick={this.saveDesign}>Save</div>
+
+				<div style={styles.loader}>
+					{this.props.journalSaving
+						? <LoaderIndeterminate color={globalStyles.sideText}/>
+						: null
+					}
+				</div>
+
+				<div style={globalStyles.clearFix}></div>
 
 			</div>
 		);
@@ -254,6 +304,9 @@ const JournalDesign = React.createClass({
 export default Radium(JournalDesign);
 
 styles = {
+	container: {
+		position: 'relative',
+	},
 	sectionHeader: {
 		fontSize: 20,
 		marginTop: 25,
@@ -286,6 +339,7 @@ styles = {
 	},
 	landingMockContainer: {
 		width: '100vw',
+		overflow: 'hidden',
 		// height: '100vh',
 		// transform: typeof(window) !== 'undefined' ? 'scale(' + document.getElementById('landingPreviewContainer').clientWidth / window.innerWidth + ')' : '',
 		// transformOrigin: '0% 0%',
@@ -348,6 +402,7 @@ styles = {
 	mockHeaderBarLanding: {
 		width: '100vw',
 		height: globalStyles.headerHeight,
+		position: 'fixed',
 	},
 	mockBody: {
 		width: '100%',
@@ -362,5 +417,10 @@ styles = {
 		top: '18px',
 		backgroundColor: '#FFF',
 		boxShadow: '0px 2px 2px #999',
+	},
+	loader: {
+		position: 'absolute',
+		bottom: 10,
+		width: '100%',
 	},
 };
