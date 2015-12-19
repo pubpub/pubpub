@@ -110,7 +110,6 @@ const PubBody = React.createClass({
 	},
 
 	render: function() {
-		// console.log(this.props.htmlTree);
 		return (
 			<div style={styles.container}>
 

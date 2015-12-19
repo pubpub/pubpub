@@ -31,7 +31,6 @@ export const ADD_SELECTION = 'pub/ADD_SELECTION';
 // function calls
 /*--------*/
 export function create(title, slug) {
-	console.log('in create action');
 	return {
 		types: [CREATE_PUB_LOAD, CREATE_PUB_SUCCESS, CREATE_PUB_FAIL],
 		promise: (client) => client.post('/createPub', {data: {

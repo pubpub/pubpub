@@ -38,23 +38,28 @@ const ImagePlugin = React.createClass({
 		const refName = this.props.children;
 		const url = this.props.url;
 
+		const alignConstants = {
+			left: 'auto auto auto 0px',
+			center: '0px auto',
+			right: 'auto 0px auto auto',
+		};
 		const styleObject = {
 			width: this.props.width || imageOptions.width.defaultString,
 			height: this.props.height || imageOptions.height.defaultString,
 			display: this.props.inline === 'true' ? 'inline-block' : 'block',
-			textAlign: this.props.align || imageOptions.align.defaultString,
+			margin: alignConstants[this.props.align] || alignConstants[imageOptions.align.defaultString],
 		};
 
 		let html;
 
-		const imgProps = {style: styleObject};
+		const imgProps = {style: {width: '100%', height: '100%'}};
 
 		if (this.props.error === 'empty') {
 			html = <span></span>;
 		} else if (this.props.error === 'type') {
 			html = <ErrorMsg>Not an Image-type asset.</ErrorMsg>;
 		}	else if (url) {
-			html = (<ImageLoader onLoad={this.loadedImage} imgProps={imgProps} src={url} wrapper={React.DOM.span} preloader={this.preloader}>
+			html = (<ImageLoader onLoad={this.loadedImage} style={styleObject} imgProps={imgProps} src={url} wrapper={React.DOM.span} preloader={this.preloader}>
 				{refName}
 			</ImageLoader>);
 		} else {

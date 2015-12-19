@@ -54,8 +54,9 @@ const PubReader = React.createClass({
 	},
 
 	componentWillMount() {
+		
 		const versionIndex = this.props.query.version !== undefined ? this.props.query.version - 1 : this.props.readerData.getIn(['pubData', 'history']).size - 1;
-
+		
 		const inputMD = this.props.readerData.getIn(['pubData', 'history', versionIndex, 'markdown']) || '';
 		const assets = convertImmutableListToObject( this.props.readerData.getIn(['pubData', 'history', versionIndex, 'assets']) );
 		const references = convertImmutableListToObject(this.props.readerData.getIn(['pubData', 'history', versionIndex, 'references']), true);
@@ -70,9 +71,8 @@ const PubReader = React.createClass({
 	componentWillReceiveProps(nextProps) {
 		const oldVersionIndex = this.props.query.version !== undefined ? this.props.query.version - 1 : this.props.readerData.getIn(['pubData', 'history']).size - 1;
 		const versionIndex = nextProps.query.version !== undefined ? nextProps.query.version - 1 : nextProps.readerData.getIn(['pubData', 'history']).size - 1;
-
-		if (oldVersionIndex !== versionIndex) {
-			// console.log('compiling markdown for version ' + version);
+		if (oldVersionIndex !== versionIndex || this.state.htmlTree.length === 0) {
+			// console.log('compiling markdown for version ' + versionIndex);
 			const inputMD = nextProps.readerData.getIn(['pubData', 'history', versionIndex, 'markdown']) || '';
 			const assets = convertImmutableListToObject( nextProps.readerData.getIn(['pubData', 'history', versionIndex, 'assets']) );
 			const references = convertImmutableListToObject(nextProps.readerData.getIn(['pubData', 'history', versionIndex, 'references']), true);

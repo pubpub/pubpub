@@ -89,7 +89,6 @@ function createPubLoadFail(state, error) {
 }
 
 function clearPub(state) {
-	console.log('in clearPub');
 	return state.merge(defaultState.toJS());
 }
 
@@ -200,7 +199,6 @@ export default function readerReducer(state = defaultState, action) {
 
 	switch (action.type) {
 	case CREATE_PUB_LOAD:
-		console.log('in create reducer load');
 		return createPubLoad(state);
 	case CREATE_PUB_SUCCESS:
 		return createPubLoadSuccess(state, action.result, action.title);

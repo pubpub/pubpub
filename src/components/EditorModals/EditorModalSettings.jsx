@@ -242,7 +242,7 @@ const EditorModalSettings = React.createClass({
 
 					<h2 style={styles.subHeader}>Custom CSS</h2>
 					<div style={styles.customDetail}>Custom styles can be designed for your pub by overwriting the default CSS. Custom fonts specified above can be used in this custom CSS.</div>
-					<div style={styles.customDetail}>Available selectors: <span style={styles.url}>#pub-title, #pub-authors, .pub-author, #pub-abstract, #pub-header-divider, h1, h2, h3, h4, h5, h6, p, ul, ol</span></div>
+					<div style={styles.customDetail}>Available selectors: <span style={styles.url}>#pub-title, #pub-authors, .pub-author, #pub-abstract, #pub-header-divider, .p-block, h1, h2, h3, h4, h5, h6, ul, ol</span></div>
 					<div id={'codeMirrorJSX'} style={styles.codeMirrorWrapper}></div>
 
 					<div style={styles.saveButton} key={'customStyleSaveButton'} onClick={this.saveCustomSettings}>Save</div>

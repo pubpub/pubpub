@@ -164,19 +164,30 @@ const Editor = React.createClass({
 
 		const markdown = fullMD.replace(/\[title:.*?\]/g, '').replace(/\[abstract:.*?\]/g, '').replace(/\[authorsNote:.*?\]/g, '').trim();
 
-		const mdOutput = marked(markdown, {assets, references});
+		try {
+			const mdOutput = marked(markdown, {assets, references});	
+			this.setState({
+				tree: mdOutput.tree,
+				travisTOC: mdOutput.travisTOC,
+				travisTOCFull: mdOutput.travisTOCFull,
+				codeMirrorChange: change,
+				title: title,
+				abstract: abstract,
+				authorsNote: authorsNote,
+			});
+		} catch (err) {
+			console.log('Compiling error: ', err);
+			this.setState({
+				tree: [],
+				title: 'Error Compiling',
+				abstract: err.toString().replace('Please report this to https://github.com/chjj/marked.', ''),
+			});
+		}
+		
 
 		// const end = performance.now();
 		// console.log('timing = ', end - start);
-		this.setState({
-			tree: mdOutput.tree,
-			travisTOC: mdOutput.travisTOC,
-			travisTOCFull: mdOutput.travisTOCFull,
-			codeMirrorChange: change,
-			title: title,
-			abstract: abstract,
-			authorsNote: authorsNote,
-		});
+		
 	},
 
 	toggleLivePreview: function() {
@@ -229,7 +240,7 @@ const Editor = React.createClass({
 				pHashes[SHA1(pTags[key].innerText).toString(encHex)] = parseInt(key, 10) + 1;
 			}
 		}
-		console.log(pHashes);
+		// console.log(pHashes);
 
 		const newVersion = {
 			slug: this.props.slug,
@@ -339,6 +350,8 @@ const Editor = React.createClass({
 	},
 
 	getAuthorsArray: function() {
+		
+		if (!this.state.firepadData.collaborators) { return []; }
 		const outputAuthors = [];
 		Object.keys(this.state.firepadData.collaborators).map((author)=>{
 			if (this.state.firepadData.collaborators[author].permission === 'edit') {
@@ -367,7 +380,13 @@ const Editor = React.createClass({
 
 				<DocumentMeta {...metaData} />
 
-				<Style rules={codeMirrorStyles(this.props.loginData)} />
+				<Style rules={{
+					...codeMirrorStyles(this.props.loginData),
+					'.pagebreak': {
+						opacity: '1 !important', // Alternatively, instead of using !important, we could pass a variable to PubBody that differentiates whether we're in the Reader or Editor and toggle the pagebreak opacity accordingly.
+					}
+
+				}} />
 
 				{/*	Mobile Editing not currently supported.
 					Display a splash screen if media queries determine mobile mode */}

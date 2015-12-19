@@ -115,7 +115,7 @@ app.use((req, res) => {
 							<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 							${DocumentMeta.renderAsHTML()}
 							<link rel="shortcut icon" href="/favicon.ico" />
-							<link href='https://fonts.googleapis.com/css?family=Lato:300,900italic|Lora' rel='stylesheet' type='text/css' />
+							<link href='https://fonts.googleapis.com/css?family=Lato:300,900italic|Lora:400,700' rel='stylesheet' type='text/css' />
 
 							<!-- We could dynamically load these in Editor.jsx
 							<!-- If we have to load more local css - we should bundle it all into one minified file and load it here. -->
@@ -133,6 +133,7 @@ app.use((req, res) => {
 							<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.9.0/addon/mode/multiplex.js"></script>
 							<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.2.0/mode/markdown/markdown.min.js"></script>
 							<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.2.0/mode/css/css.min.js"></script>
+							<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.2.0/mode/javascript/javascript.min.js"></script>
 							<script src="https://cdn.firebase.com/libs/firepad/1.2.0/firepad.min.js"></script>
 						</head>
 
