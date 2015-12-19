@@ -71,28 +71,30 @@ const JournalAdmin = React.createClass({
 									</Link>
 									<span style={[styles.headerMode, this.props.mode && styles.headerModeShow]}>: {this.props.mode}</span>
 								</div>
-
-								{() => {
-									switch (this.props.mode) {
-									case 'curate':
-										return (
-											<JournalCurate />
-										);
-									case 'design':
-										return (
-											<JournalDesign />
-										);
-									case 'settings':
-										return (
-											<JournalSettings />
-										);
-									
-									default:
-										return (
-											<div>Default</div>
-										);
-									}
-								}()}
+								<div style={styles.journalProfileContent}>
+									{() => {
+										switch (this.props.mode) {
+										case 'curate':
+											return (
+												<JournalCurate />
+											);
+										case 'design':
+											return (
+												<JournalDesign />
+											);
+										case 'settings':
+											return (
+												<JournalSettings />
+											);
+										
+										default:
+											return (
+												<div>Default</div>
+											);
+										}
+									}()}
+								</div>
+								
 
 							</div>
 
@@ -132,6 +134,9 @@ styles = {
 	},
 	headerModeShow: {
 		display: 'inline',
+	},
+	journalProfileContent: {
+		marginLeft: 10,
 	},
 
 };

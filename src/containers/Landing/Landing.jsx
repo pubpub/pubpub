@@ -23,7 +23,7 @@ const Landing = React.createClass({
 	},
 
 	renderLandingSearchResults: function(results) {
-		console.log(results);
+		// console.log(results);
 		return (
 			<div style={styles.results}>
 				{

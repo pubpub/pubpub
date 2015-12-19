@@ -1,7 +1,7 @@
 /* global CodeMirror */
 import React, {PropTypes} from 'react';
 import Radium, {Style} from 'radium';
-// import {LoaderIndeterminate} from '../../components';
+import {LandingBody} from '../../components';
 import ColorPicker from 'react-color';
 import {globalStyles} from '../../utils/styleConstants';
 
@@ -27,6 +27,10 @@ const JournalDesign = React.createClass({
 					display: false,
 					color: '#E0E0E0',
 				},
+				headerHover: {
+					display: false,
+					color: '#FFF',
+				},
 				landingHeaderBackground: {
 					display: false,
 					color: '#E0E0E0',
@@ -34,24 +38,41 @@ const JournalDesign = React.createClass({
 				landingHeaderText: {
 					display: false,
 					color: '#373737',
-				}
+				},
+				landingHeaderHover: {
+					display: false,
+					color: '#000',
+				},
 			},
 			activeKey: undefined,
 		};
 	},
 
 	componentDidMount() {
-		CodeMirror(document.getElementById('codeMirrorJSON'), {
+		const codeMirror = CodeMirror(document.getElementById('codeMirrorJSON'), {
 			lineNumbers: false,
 			lineWrapping: true,
 			viewportMargin: Infinity, // This will cause bad performance on large documents. Rendering the entire thing...
-			autofocus: true,
+			autofocus: false,
 			mode: {name: 'javascript', json: true},
 			tabSize: 2,
 			extraKeys: {'Ctrl-Space': 'autocomplete'},
 			placeholder: 'Add Components...',
 		});
+		codeMirror.on('change', this.onCodeChange);
 		// codeMirror.setValue(JSON.stringify(this.props.pubStyle.cssObjectString));
+	},
+
+	onCodeChange: function(cm, change) {
+		// console.log(cm.getValue());
+		try {
+			// console.log(cm.getValue().replace(/'/g, '"'));
+			const array = JSON.parse(cm.getValue().replace(/'/g, '"'));
+			this.setState({componentsArray: array});
+		} catch (err) {
+			console.log('No good');
+		}
+		
 	},
 
 	handleClick: function(key) {
@@ -97,6 +118,15 @@ const JournalDesign = React.createClass({
 			</div>
 		);
 	},
+	colorStyles: function(background, text, hover) {
+		return {
+			backgroundColor: background,
+			color: text,
+			':hover': {
+				color: hover
+			}
+		};
+	},
 
 	render: function() {
 		return (
@@ -119,32 +149,65 @@ const JournalDesign = React.createClass({
 				}} />
 
 				<div style={styles.sectionHeader}>Global</div> 
-				<div style={styles.colorRow}>
-					<div style={styles.colorRowHeader}>Header Background</div>
-					{this.renderColorPicker('headerBackground')}
-				</div>
+				<div style={styles.sectionContent}>
+					<div style={styles.sectionContentLeft}>
+						<div style={styles.colorRow}>
+							<div style={styles.colorRowHeader}>Header Background</div>
+							{this.renderColorPicker('headerBackground')}
+						</div>
 
-				<div style={styles.colorRow}>
-					<div style={styles.colorRowHeader}>Header Text</div>
-					{this.renderColorPicker('headerText')}
+						<div style={styles.colorRow}>
+							<div style={styles.colorRowHeader}>Header Text</div>
+							{this.renderColorPicker('headerText')}
+						</div>
+						<div style={styles.colorRow}>
+							<div style={styles.colorRowHeader}>Header Text Hover</div>
+							{this.renderColorPicker('headerHover')}
+						</div>
+					</div>
+
+					<div style={styles.sectionContentRight}>
+						<div style={[styles.mockHeaderBar, this.colorStyles(this.state.colorSelections.headerBackground.color, this.state.colorSelections.headerText.color, this.state.colorSelections.headerHover.color)]} key={'globalJournalMockHeader'}>Journal Name</div>
+						<div style={styles.mockBody}></div>
+						<div style={styles.mockPub}></div>
+					</div>
+
+					<div style={globalStyles.clearFix}></div>
+					
 				</div>
 
 				<div style={styles.sectionHeader}>Landing Page</div> 
-				<div style={styles.colorRow}>
-					<div style={styles.colorRowHeader}>Landing Header Background</div>
-					{this.renderColorPicker('landingHeaderBackground')}
-				</div>
 
-				<div style={styles.colorRow}>
-					<div style={styles.colorRowHeader}>Landing Header Text</div>
-					{this.renderColorPicker('landingHeaderText')}
-				</div>
+				<div style={styles.sectionContent}>
+					<div style={styles.sectionContentLeft}>
+						<div style={styles.colorRow}>
+							<div style={styles.colorRowHeader}>Landing Header Background</div>
+							{this.renderColorPicker('landingHeaderBackground')}
+						</div>
+						<div style={styles.colorRow}>
+							<div style={styles.colorRowHeader}>Landing Header Text</div>
+							{this.renderColorPicker('landingHeaderText')}
+						</div>
+						<div style={styles.colorRow}>
+							<div style={styles.colorRowHeader}>Landing Header Text Hover</div>
+							{this.renderColorPicker('landingHeaderHover')}
+						</div>
+					
 
-				<div style={styles.sectionHeader}>Landing Page Components</div> 
-				<div id={'codeMirrorJSON'} style={styles.codeMirrorWrapper}></div>
+						<div style={[styles.sectionHeader, styles.sectionHeaderInternal]}>Landing Page Components</div> 
+						<div id={'codeMirrorJSON'} style={styles.codeMirrorWrapper}></div>
+					</div>
+
+					<div style={styles.sectionContentRight}>
+						<div style={[styles.mockHeaderBar, this.colorStyles(this.state.colorSelections.landingHeaderBackground.color, this.state.colorSelections.landingHeaderText.color, this.state.colorSelections.landingHeaderHover.color)]} key={'landingJournalMockHeader'}>Journal Name</div>
+						<LandingBody componentsArray={this.state.componentsArray}/>
+					</div>
+
+					<div style={globalStyles.clearFix}></div>
+
+				</div>
 
 				<div style={styles.saveButton} key={'journalDesignSaveButton'} onClick={this.saveCustomSettings}>Save</div>
-
 
 			</div>
 		);
@@ -157,6 +220,26 @@ styles = {
 	sectionHeader: {
 		fontSize: 20,
 		marginTop: 25,
+	},
+	sectionHeaderInternal: {
+		marginLeft: -10,
+	},
+	sectionContent: {
+		marginLeft: 10,
+	},
+	sectionContentLeft: {
+		float: 'left',
+		width: 'calc(50% - 10px)',
+		marginRight: 10,
+	},
+	sectionContentRight: {
+		float: 'left',
+		width: 'calc(50% - 12px)',
+		marginLeft: 10,
+		position: 'relative',
+		border: '1px solid #bbb',
+		overflow: 'hidden',
+		minHeight: '30px',
 	},
 	swatch: {
 		padding: '5px',
@@ -173,7 +256,7 @@ styles = {
 	},
 	colorRow: {
 		height: 24,
-		margin: '10px 10px',
+		margin: '10px 0px',
 		
 	},
 	colorRowHeader: {
@@ -193,8 +276,8 @@ styles = {
 		top: 0,
 	},
 	codeMirrorWrapper: {
-		width: '50%',
-		margin: 10,
+		width: 'calc(100% - 2px)',
+		margin: '10px 0px',
 	},
 	saveButton: {
 		fontSize: 20,
@@ -206,5 +289,23 @@ styles = {
 			cursor: 'pointer',
 			color: globalStyles.sideHover,
 		}
+	},
+	mockHeaderBar: {
+		width: '100%',
+		height: '20px',
+	},
+	mockBody: {
+		width: '100%',
+		height: '150px',
+		backgroundColor: globalStyles.sideBackground,
+	},
+	mockPub: {
+		width: '50%',
+		height: '152',
+		position: 'absolute',
+		left: '20%',
+		top: '18px',
+		backgroundColor: '#FFF',
+		boxShadow: '0px 2px 2px #999',
 	},
 };

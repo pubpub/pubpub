@@ -110,7 +110,6 @@ const EditorModalSettings = React.createClass({
 		// We should test before save
 		cssConvert(cm.getValue());
 	
-
 		const newSetting = {};
 
 		newSetting.pubStyle = {

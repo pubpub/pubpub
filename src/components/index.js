@@ -8,6 +8,7 @@ export ImageCropper from './ImageCropper/ImageCropper';
 export JournalCurate from './JournalCurate/JournalCurate';
 export JournalDesign from './JournalDesign/JournalDesign';
 export JournalSettings from './JournalSettings/JournalSettings';
+export LandingBody from './LandingBody/LandingBody';
 export LoaderDeterminate from './LoaderDeterminate/LoaderDeterminate';
 export LoaderIndeterminate from './LoaderIndeterminate/LoaderIndeterminate';
 export LoginForm from './LoginForm/LoginForm';
