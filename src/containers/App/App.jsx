@@ -64,16 +64,30 @@ const App = React.createClass({
 	},
 
 	render: function() {
-		let pathname = 'notlanding';
+		// let pathname = 'notlanding';
+		// if (this.props.path === '/') {
+		// 	pathname = 'landing';
+		// }
+		let headerBackground = this.props.journalData.getIn(['journalData', 'design', 'headerBackground']) || globalStyles.headerBackground;
+		let headerTextColor = this.props.journalData.getIn(['journalData', 'design', 'headerText']) || globalStyles.headerText;
+		let headerTextColorHover = this.props.journalData.getIn(['journalData', 'design', 'headerHover']) || globalStyles.headerHover;
 		if (this.props.path === '/') {
-			pathname = 'landing';
+			headerBackground = this.props.journalData.getIn(['journalData', 'design', 'landingHeaderBackground']) || globalStyles.headerText;
+			headerTextColor = this.props.journalData.getIn(['journalData', 'design', 'landingHeaderText']) || globalStyles.headerBackground;
+			headerTextColorHover = this.props.journalData.getIn(['journalData', 'design', 'landingHeaderHover']) || 'black';
 		}
-		let headerTextColor = globalStyles.headerText;
-		let headerTextColorHover = globalStyles.headerHover;
-		if (this.props.path === '/') {
-			headerTextColor = globalStyles.headerBackground;
-			headerTextColorHover = 'black';
-		}
+
+		const headerStyle = {
+			headerText: {
+				color: headerTextColor,
+				':hover': {
+					color: headerTextColorHover
+				},
+			},
+			headerBar: {
+				backgroundColor: headerBackground,
+			},
+		};
 
 		return (
 			<div style={styles.body}>
@@ -86,9 +100,9 @@ const App = React.createClass({
 				}
 				<PrintStyleSheet />
 
-				<div className="header-bar" style={[styles.headerBar, styles[pathname].headerBar]}>
+				<div className="header-bar" style={[styles.headerBar, headerStyle.headerBar]}>
 					
-					<Link to={`/`}><div key="headerLogo" style={[styles.headerText, styles.headerLogo, styles[pathname].headerText]}>PubPub</div></Link>
+					<Link to={`/`}><div key="headerLogo" style={[styles.headerText, styles.headerLogo, headerStyle.headerText]}>PubPub</div></Link>
 					
 					<div style={[styles.headerNavContainer]} >
 						<div style={styles.headerMenu}>
@@ -147,18 +161,18 @@ export default connect( state => {
 
 
 styles = {
-	notlanding: {},
-	landing: {
-		headerText: {
-			color: globalStyles.headerBackground,
-			':hover': {
-				color: 'black'
-			},
-		},
-		headerBar: {
-			backgroundColor: globalStyles.headerText,
-		},
-	},
+	// notlanding: {},
+	// landing: {
+	// 	headerText: {
+	// 		color: globalStyles.headerBackground,
+	// 		':hover': {
+	// 			color: 'black'
+	// 		},
+	// 	},
+	// 	headerBar: {
+	// 		backgroundColor: globalStyles.headerText,
+	// 	},
+	// },
 	logo: {
 		// height: 30,
 	},

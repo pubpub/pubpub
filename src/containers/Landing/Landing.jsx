@@ -67,35 +67,36 @@ const Landing = React.createClass({
 
 				{
 					this.props.journalData.get('baseSubdomain') === null
-						? null
+						? <div>
+							<div style={styles.top}>
+								<h1 style={styles.topPub}>PubPub</h1>
+								<h2 style={styles.subheader}>Open Publishing</h2>
+								<div key="showMeScience" style={styles.showMeScience}><Link style={styles.scienceText} to={'/pub/sample'}>Show Me Science</Link></div>
+							</div>
+							<div style={styles.search}>
+								<Autocomplete 
+									autocompleteKey={'landingSearch'} 
+									route={'autocompletePubsAndUsers'} 
+									placeholder="Search Pubs and People" 
+									height={40}
+									showBottomLine={false}
+									hideResultsOnClickOut={false}
+									resultRenderFunction={this.renderLandingSearchResults}
+									loaderOffset={-20}
+									padding={'10px 0px'}/>
+							</div>
+							<div style={styles.lower}>
+								<div style={styles.textDark}>
+									<p>PubPub explores the relationship between multiculturalism and romance tourism.</p>
+									<p>With influences as diverse as Munch and Miles Davis, new tensions are distilled from both opaque and transparent discourse.</p>
+									<p>Ever since I was a teenager I have been fascinated by the ephemeral nature of meaning. What starts out as contemplation soon becomes finessed into a cacophony of lust, leaving only a sense of failing and the dawn of a new understanding.</p>
+									<p>As momentary forms become clarified through studious and critical practice, the viewer is left with an epitaph for the possibilities of our existence.</p>
+								</div>
+							</div>
+						</div>
+							
 						: <LandingBody componentsArray={componentsArray}/>
 				}
-
-				<div style={styles.top}>
-					<h1 style={styles.topPub}>PubPub</h1>
-					<h2 style={styles.subheader}>Open Publishing</h2>
-					<div key="showMeScience" style={styles.showMeScience}><Link style={styles.scienceText} to={'/pub/sample'}>Show Me Science</Link></div>
-				</div>
-				<div style={styles.search}>
-					<Autocomplete 
-						autocompleteKey={'landingSearch'} 
-						route={'autocompletePubsAndUsers'} 
-						placeholder="Search Pubs and People" 
-						height={40}
-						showBottomLine={false}
-						hideResultsOnClickOut={false}
-						resultRenderFunction={this.renderLandingSearchResults}
-						loaderOffset={-20}
-						padding={'10px 0px'}/>
-				</div>
-				<div style={styles.lower}>
-					<div style={styles.textDark}>
-						<p>PubPub explores the relationship between multiculturalism and romance tourism.</p>
-						<p>With influences as diverse as Munch and Miles Davis, new tensions are distilled from both opaque and transparent discourse.</p>
-						<p>Ever since I was a teenager I have been fascinated by the ephemeral nature of meaning. What starts out as contemplation soon becomes finessed into a cacophony of lust, leaving only a sense of failing and the dawn of a new understanding.</p>
-						<p>As momentary forms become clarified through studious and critical practice, the viewer is left with an epitaph for the possibilities of our existence.</p>
-					</div>
-				</div>
 
 			</div>
 		);
