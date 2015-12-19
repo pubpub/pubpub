@@ -1,5 +1,6 @@
 import React, {PropTypes} from 'react';
 import Radium from 'radium';
+import {LandingComponentBlock, LandingComponentSearch} from '../LandingComponents';
 // import {globalStyles} from '../../utils/styleConstants';
 
 let styles = {};
@@ -16,12 +17,20 @@ const LandingBody = React.createClass({
 	},
 
 	render: function() {
-		// console.log(this.props);
+		// console.log(typeof(window) !== 'undefined');
 		return (
 			<div style={styles.container}>
 				{
 					this.props.componentsArray.map((component, index)=>{
-						return <div key={'landingBodyComponent-' + index}>{JSON.stringify(component)}</div>;
+						// console.log(component);
+						switch (component.type) {
+						case 'block': 
+							return <LandingComponentBlock key={'LandingComponent-' + index} text={component.text} link={component.link} image={component.image} style={component.style}/>;
+						case 'search': 
+							return <LandingComponentSearch key={'LandingComponent-' + index} />;
+						default:
+							return null;
+						}
 					})
 				}
 			</div>
@@ -33,6 +42,17 @@ export default Radium(LandingBody);
 
 styles = {
 	container: {
-		width: '100%',
+		width: '100vw',
+		// height: 'calc(100vh - 30px)',
+		position: 'relative',
+		overflow: 'hidden',
+		// transform: typeof(window) !== 'undefined' ? 'scale(' + document.getElementById('landingPreviewContainer').clientWidth / window.innerWidth + ')' : '',
+		// transformOrigin: '0% 0%',
 	},
 };
+
+// type
+// text
+// link
+// image
+// style

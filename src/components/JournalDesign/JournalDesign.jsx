@@ -45,6 +45,8 @@ const JournalDesign = React.createClass({
 				},
 			},
 			activeKey: undefined,
+			landingPreviewHeight: 50, 
+			landingPreviewScale: 1.0,
 		};
 	},
 
@@ -60,7 +62,21 @@ const JournalDesign = React.createClass({
 			placeholder: 'Add Components...',
 		});
 		codeMirror.on('change', this.onCodeChange);
+		window.addEventListener('resize', this.updatePreviewSize);
 		// codeMirror.setValue(JSON.stringify(this.props.pubStyle.cssObjectString));
+	},
+
+	componentWillUnmount() {
+		window.removeEventListener('resize', this.updatePreviewSize);
+	},
+
+	updatePreviewSize: function() {
+		this.setState({
+			landingPreviewScale: this.calcLandingPreviewScale(),
+		});
+		setTimeout(()=>{
+			this.setLandingPreviewHeight();
+		}, 10);
 	},
 
 	onCodeChange: function(cm, change) {
@@ -68,8 +84,15 @@ const JournalDesign = React.createClass({
 		try {
 			// console.log(cm.getValue().replace(/'/g, '"'));
 			const array = JSON.parse(cm.getValue().replace(/'/g, '"'));
-			this.setState({componentsArray: array});
+			this.setState({
+				componentsArray: array,
+				landingPreviewScale: this.calcLandingPreviewScale(),
+			});
+			setTimeout(()=>{
+				this.setLandingPreviewHeight();
+			}, 10);
 		} catch (err) {
+			console.log(err);
 			console.log('No good');
 		}
 		
@@ -123,9 +146,21 @@ const JournalDesign = React.createClass({
 			backgroundColor: background,
 			color: text,
 			':hover': {
-				color: hover
+				color: hover,
+				cursor: 'pointer',
 			}
 		};
+	},
+
+	setLandingPreviewHeight: function() {
+		console.log('about to calc height', document.getElementById('landingMockContainer').clientHeight * (document.getElementById('landingPreviewContainer').clientWidth / window.innerWidth));
+		this.setState({
+			landingPreviewHeight: typeof(window) !== 'undefined' ? document.getElementById('landingMockContainer').clientHeight * (document.getElementById('landingPreviewContainer').clientWidth / window.innerWidth) : 50,
+		});
+		// return 
+	},
+	calcLandingPreviewScale: function() {
+		return typeof(window) !== 'undefined' ? document.getElementById('landingPreviewContainer').clientWidth / window.innerWidth : 1.0;
 	},
 
 	render: function() {
@@ -147,7 +182,6 @@ const JournalDesign = React.createClass({
 						color: '#999',
 					},
 				}} />
-
 				<div style={styles.sectionHeader}>Global</div> 
 				<div style={styles.sectionContent}>
 					<div style={styles.sectionContentLeft}>
@@ -198,9 +232,12 @@ const JournalDesign = React.createClass({
 						<div id={'codeMirrorJSON'} style={styles.codeMirrorWrapper}></div>
 					</div>
 
-					<div style={styles.sectionContentRight}>
-						<div style={[styles.mockHeaderBar, this.colorStyles(this.state.colorSelections.landingHeaderBackground.color, this.state.colorSelections.landingHeaderText.color, this.state.colorSelections.landingHeaderHover.color)]} key={'landingJournalMockHeader'}>Journal Name</div>
-						<LandingBody componentsArray={this.state.componentsArray}/>
+					<div id="landingPreviewContainer" style={[styles.sectionContentRight, styles.sectionContentRightLanding, {height: this.state.landingPreviewHeight}]}>
+						<div id="landingMockContainer" style={[styles.landingMockContainer, {transform: 'scale(' + this.state.landingPreviewScale + ')'}]}>
+							<div style={[styles.mockHeaderBarLanding, this.colorStyles(this.state.colorSelections.landingHeaderBackground.color, this.state.colorSelections.landingHeaderText.color, this.state.colorSelections.landingHeaderHover.color)]} key={'landingJournalMockHeader'}>Journal Name</div>
+							<LandingBody componentsArray={this.state.componentsArray}/>
+						</div>
+						
 					</div>
 
 					<div style={globalStyles.clearFix}></div>
@@ -241,6 +278,20 @@ styles = {
 		overflow: 'hidden',
 		minHeight: '30px',
 	},
+	sectionContentRightLanding: {
+		// height: typeof(window) !== 'undefined' ? document.getElementById('landingPreviewContainer').clientHeight * (document.getElementById('landingPreviewContainer').clientWidth / window.innerWidth) : 30,
+		// height: typeof(window) !== 'undefined' ? document.getElementById('landingMockContainer').clientHeight : 30,
+		// height: typeof(window) !== 'undefined' ? document.getElementById('landingMockContainer').clientHeight * (document.getElementById('landingPreviewContainer').clientWidth / window.innerWidth) : 30,
+
+	},
+	landingMockContainer: {
+		width: '100vw',
+		// height: '100vh',
+		// transform: typeof(window) !== 'undefined' ? 'scale(' + document.getElementById('landingPreviewContainer').clientWidth / window.innerWidth + ')' : '',
+		// transformOrigin: '0% 0%',
+		transformOrigin: '0% 0%',
+	},
+	
 	swatch: {
 		padding: '5px',
 		background: '#fff',
@@ -293,6 +344,10 @@ styles = {
 	mockHeaderBar: {
 		width: '100%',
 		height: '20px',
+	},
+	mockHeaderBarLanding: {
+		width: '100vw',
+		height: globalStyles.headerHeight,
 	},
 	mockBody: {
 		width: '100%',
