@@ -17,7 +17,7 @@ const LandingBody = React.createClass({
 	},
 
 	render: function() {
-		// console.log(typeof(window) !== 'undefined');
+		console.log('components Array in lBody', this.props.componentsArray);
 		return (
 			<div style={styles.container}>
 				{
@@ -25,9 +25,20 @@ const LandingBody = React.createClass({
 						// console.log(component);
 						switch (component.type) {
 						case 'block': 
-							return <LandingComponentBlock key={'LandingComponent-' + index} text={component.text} link={component.link} image={component.image} style={component.style}/>;
+							return ( 
+								<LandingComponentBlock 
+									key={'LandingComponent-' + index} 
+									text={component.text} 
+									link={component.link} 
+									image={component.image} 
+									style={component.style}
+									childArray={component.children}/>
+							);
 						case 'search': 
-							return <LandingComponentSearch key={'LandingComponent-' + index} />;
+							return (
+								<LandingComponentSearch 
+									key={'LandingComponent-' + index} />
+							);
 						default:
 							return null;
 						}
@@ -42,13 +53,7 @@ export default Radium(LandingBody);
 
 styles = {
 	container: {
-		width: '100vw',
-		// height: 'calc(100vh - 30px)',
-		position: 'relative',
-		overflow: 'hidden',
-		// marginTop: 30,
-		// transform: typeof(window) !== 'undefined' ? 'scale(' + document.getElementById('landingPreviewContainer').clientWidth / window.innerWidth + ')' : '',
-		// transformOrigin: '0% 0%',
+
 	},
 };
 

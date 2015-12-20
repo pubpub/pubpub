@@ -2,6 +2,7 @@ import React, { PropTypes } from 'react';
 import Radium from 'radium';
 import {globalStyles} from '../../utils/styleConstants';
 import { Link } from 'react-router';
+import {LandingBody} from '../../components';
 // const HoverLink = Radium(Link);
 
 let styles = {};
@@ -12,9 +13,11 @@ const LandingComponentBlock = React.createClass({
 		link: PropTypes.string,
 		image: PropTypes.string,
 		style: PropTypes.object,
+		childArray: PropTypes.array,
 	},
 
 	blockContent: function() {
+		console.log('children in block', this.props.childArray);
 		return (
 				<div>
 					{ this.props.text
@@ -25,6 +28,7 @@ const LandingComponentBlock = React.createClass({
 						? <img src={this.props.image} style={styles.image}/>
 						: null
 					}
+					<LandingBody componentsArray={this.props.childArray} />
 				</div>
 				
 		);
