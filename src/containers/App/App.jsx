@@ -68,13 +68,13 @@ const App = React.createClass({
 		// if (this.props.path === '/') {
 		// 	pathname = 'landing';
 		// }
-		let headerBackground = this.props.journalData.getIn(['journalData', 'design', 'headerBackground']) || globalStyles.headerBackground;
-		let headerTextColor = this.props.journalData.getIn(['journalData', 'design', 'headerText']) || globalStyles.headerText;
-		let headerTextColorHover = this.props.journalData.getIn(['journalData', 'design', 'headerHover']) || globalStyles.headerHover;
+		let headerBackground = (this.props.journalData.get('baseSubdomain') && this.props.journalData.getIn(['journalData', 'design', 'headerBackground'])) || globalStyles.headerBackground;
+		let headerTextColor = (this.props.journalData.get('baseSubdomain') && this.props.journalData.getIn(['journalData', 'design', 'headerText'])) || globalStyles.headerText;
+		let headerTextColorHover = (this.props.journalData.get('baseSubdomain') && this.props.journalData.getIn(['journalData', 'design', 'headerHover'])) || globalStyles.headerHover;
 		if (this.props.path === '/') {
-			headerBackground = this.props.journalData.getIn(['journalData', 'design', 'landingHeaderBackground']) || globalStyles.headerText;
-			headerTextColor = this.props.journalData.getIn(['journalData', 'design', 'landingHeaderText']) || globalStyles.headerBackground;
-			headerTextColorHover = this.props.journalData.getIn(['journalData', 'design', 'landingHeaderHover']) || 'black';
+			headerBackground = (this.props.journalData.get('baseSubdomain') && this.props.journalData.getIn(['journalData', 'design', 'landingHeaderBackground'])) || globalStyles.headerText;
+			headerTextColor = (this.props.journalData.get('baseSubdomain') && this.props.journalData.getIn(['journalData', 'design', 'landingHeaderText'])) || globalStyles.headerBackground;
+			headerTextColorHover = (this.props.journalData.get('baseSubdomain') && this.props.journalData.getIn(['journalData', 'design', 'landingHeaderHover'])) || 'black';
 		}
 
 		const headerStyle = {

@@ -17,7 +17,7 @@ const LandingComponentBlock = React.createClass({
 	},
 
 	blockContent: function() {
-		console.log('children in block', this.props.childArray);
+		// console.log('children in block', this.props.childArray);
 		return (
 				<div>
 					{ this.props.text

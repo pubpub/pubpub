@@ -17,7 +17,7 @@ const LandingBody = React.createClass({
 	},
 
 	render: function() {
-		console.log('components Array in lBody', this.props.componentsArray);
+		// console.log('components Array in lBody', this.props.componentsArray);
 		return (
 			<div style={styles.container}>
 				{

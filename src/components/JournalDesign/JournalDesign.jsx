@@ -112,7 +112,7 @@ const JournalDesign = React.createClass({
 			// console.log(cm.getValue().replace(/'/g, '"'));
 			const array = JSON.parse(cm.getValue().replace(/(['"])?([a-zA-Z0-9_]+)(['"])?: /g, '"$2": ').replace(/'/g, '"'));
 			// const array = JSON.parse(cm.getValue());
-			console.log('array', array);
+			// console.log('array', array);
 			this.setState({
 				componentsArray: array,
 				jsonError: undefined,
