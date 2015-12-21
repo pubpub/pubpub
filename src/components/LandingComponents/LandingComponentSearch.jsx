@@ -10,7 +10,7 @@ let styles = {};
 const LandingComponentBlock = React.createClass({
 	propTypes: {
 		style: PropTypes.object,
-		showBottomLine: PropTypes.string,
+		showBottomLine: PropTypes.bool,
 	},
 
 	renderLandingSearchResults: function(results) {
