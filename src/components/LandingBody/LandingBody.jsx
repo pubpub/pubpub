@@ -1,6 +1,6 @@
 import React, {PropTypes} from 'react';
 import Radium from 'radium';
-import {LandingComponentBlock, LandingComponentSearch} from '../LandingComponents';
+import {LandingComponentBlock, LandingComponentCollectionList, LandingComponentSearch} from '../LandingComponents';
 // import {globalStyles} from '../../utils/styleConstants';
 
 let styles = {};
@@ -39,6 +39,14 @@ const LandingBody = React.createClass({
 								<LandingComponentSearch 
 									key={'LandingComponent-' + index}
 									showBottomLine={component.showBottomLine}
+									placeholder={component.placeholder}
+									resultBackgroundColor={component.resultBackgroundColor}
+									style={component.style} />
+							);
+						case 'collectionList': 
+							return (
+								<LandingComponentCollectionList 
+									key={'LandingComponent-' + index}
 									style={component.style} />
 							);
 						default:

@@ -17,7 +17,7 @@ export const scienceStyle = {
 		},
 	},
 	'#pub-abstract': {
-		textAlign: 'center',
+		textAlign: 'left',
 		color: '#777',
 		margin: '30px 0px',
 	},
@@ -77,7 +77,7 @@ export const magazineStyle = {
 		},
 	},
 	'#pub-abstract': {
-		textAlign: 'center',
+		textAlign: 'left',
 		color: '#777',
 		margin: '30px 0px',
 	},

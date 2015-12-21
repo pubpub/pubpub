@@ -57,10 +57,10 @@ const Landing = React.createClass({
 	render: function() {
 
 		const metaData = {
-			title: 'PubPub'
+			title: this.props.journalData.getIn(['journalData', 'journalName']) || 'PubPub'
 		};
 		const componentsArray = this.props.journalData.getIn(['journalData', 'design', 'layoutString'])
-			? JSON.parse(this.props.journalData.getIn(['journalData', 'design', 'layoutString']).replace(/(['"])?([a-zA-Z0-9_]+)(['"])?: /g, '"$2": ').replace(/'/g, '"'))
+			? JSON.parse(this.props.journalData.getIn(['journalData', 'design', 'layoutString']).replace(/(['"])?([:]?[a-zA-Z0-9_]+)(['"])?: /g, '"$2": ').replace(/'/g, '"'))
 			: [];
 		return (
 			<div style={styles.container}>

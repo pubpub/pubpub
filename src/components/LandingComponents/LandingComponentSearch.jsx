@@ -7,16 +7,18 @@ const HoverLink = Radium(Link);
 
 let styles = {};
 
-const LandingComponentBlock = React.createClass({
+const LandingComponentSearch = React.createClass({
 	propTypes: {
 		style: PropTypes.object,
 		showBottomLine: PropTypes.bool,
+		placeholder: PropTypes.string,
+		resultBackgroundColor: PropTypes.string
 	},
 
 	renderLandingSearchResults: function(results) {
 		// console.log(results);
 		return (
-			<div style={styles.results}>
+			<div style={[styles.results, {backgroundColor: this.props.resultBackgroundColor}]}>
 				{
 
 					results.map((item, index)=>{
@@ -50,7 +52,7 @@ const LandingComponentBlock = React.createClass({
 				<Autocomplete 
 					autocompleteKey={'landingSearch'} 
 					route={'autocompletePubsAndUsers'} 
-					placeholder="Search Pubs and People" 
+					placeholder={this.props.placeholder || 'Search Pubs and People'}
 					height={40}
 					showBottomLine={this.props.showBottomLine !== undefined ? this.props.showBottomLine : true}
 					hideResultsOnClickOut={false}
@@ -62,7 +64,7 @@ const LandingComponentBlock = React.createClass({
 	}
 });
 
-export default Radium(LandingComponentBlock);
+export default Radium(LandingComponentSearch);
 
 styles = {
 	container: {
