@@ -43,12 +43,18 @@ const LandingComponentBlock = React.createClass({
 	},
 
 	render: function() {
-		return (this.props.link
-			? <Link style={styles.hoverLink} to={this.props.link}>
-					{this.blockContent()}
-				</Link>
-			: this.blockContent()
-		);
+		let output = undefined;
+		if (this.props.link) {
+			if (this.props.link.indexOf('http://') > -1 || this.props.link.indexOf('https://') > -1) {
+				output = <a style={styles.hoverLink} href={this.props.link} target="_blank"> {this.blockContent()} </a>;
+			} else {
+				output = <Link style={styles.hoverLink} to={this.props.link}> {this.blockContent()} </Link>;
+			}
+		} else {
+			output = this.blockContent();
+		}
+
+		return output;
 	}
 });
 
