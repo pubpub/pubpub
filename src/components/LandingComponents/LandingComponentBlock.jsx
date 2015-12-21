@@ -16,16 +16,24 @@ const LandingComponentBlock = React.createClass({
 		childArray: PropTypes.array,
 	},
 
+	imageStyle: function() {
+		const output = {};
+		output.height = this.props.style.height ? '100%' : 'auto'; // If they declare a height, make the image fit that.
+		output.width = this.props.style.height ? 'auto' : '100%'; // If they declare a height, make the width auto, otherwise 100%.
+		output.width = this.props.style.width ? '100%' : output.width; // If they decalre a width, force width to 100%, otherwise do whatever was resolved in the line above.
+		return output;
+	},
+
 	blockContent: function() {
 		// console.log('children in block', this.props.childArray);
 		return (
-				<div>
+				<div style={[styles.container, this.props.style]}>
 					{ this.props.text
 						? <div>{this.props.text}</div>
 						: null
 					}
 					{ this.props.image
-						? <img src={this.props.image} style={styles.image}/>
+						? <img src={this.props.image} style={this.imageStyle()}/>
 						: null
 					}
 					<LandingBody componentsArray={this.props.childArray} />
@@ -35,16 +43,11 @@ const LandingComponentBlock = React.createClass({
 	},
 
 	render: function() {
-		return (
-			<div style={[styles.container, this.props.style]}>
-				{
-					this.props.link
-						? <Link style={styles.hoverLink} to={this.props.link}>
-								{this.blockContent()}
-							</Link>
-						: this.blockContent()
-				}
-			</div>
+		return (this.props.link
+			? <Link style={styles.hoverLink} to={this.props.link}>
+					{this.blockContent()}
+				</Link>
+			: this.blockContent()
 		);
 	}
 });

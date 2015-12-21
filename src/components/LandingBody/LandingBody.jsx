@@ -37,7 +37,9 @@ const LandingBody = React.createClass({
 						case 'search': 
 							return (
 								<LandingComponentSearch 
-									key={'LandingComponent-' + index} />
+									key={'LandingComponent-' + index}
+									showBottomLine={component.showBottomLine}
+									style={component.style} />
 							);
 						default:
 							return null;

@@ -109,7 +109,7 @@ const JournalDesign = React.createClass({
 	onCodeChange: function(cm, change) {
 		// console.log(cm.getValue());
 		try {
-			// console.log(cm.getValue().replace(/'/g, '"'));
+			// console.log('string', cm.getValue().replace(/(['"])?([a-zA-Z0-9_]+)(['"])?: /g, '"$2": ').replace(/'/g, '"'));
 			const array = JSON.parse(cm.getValue().replace(/(['"])?([a-zA-Z0-9_]+)(['"])?: /g, '"$2": ').replace(/'/g, '"'));
 			// const array = JSON.parse(cm.getValue());
 			// console.log('array', array);

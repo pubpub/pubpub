@@ -147,6 +147,7 @@ styles = {
 		width: 'calc(100% - 2px)',
 		borderWidth: '0px 0px 1px 0px',
 		outline: 'none',
+		backgroundColor: 'transparent',
 	},
 	loader: {
 		position: 'absolute',
