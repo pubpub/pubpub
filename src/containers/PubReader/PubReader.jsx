@@ -219,9 +219,9 @@ const PubReader = React.createClass({
 						pubStatus={pubData.status}
 						featuredIn={pubData.featuredIn}
 						submittedTo={pubData.submittedTo}/>
-					<PubReviews
+					{/* <PubReviews
 						slug={this.props.slug}
-						reviewsData={pubData.reviews} />
+						reviewsData={pubData.reviews} /> */}
 					<PubDiscussions
 						slug={this.props.slug}
 						discussionsData={pubData.discussions}
