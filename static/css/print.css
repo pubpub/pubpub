@@ -15,10 +15,10 @@
 	.editor-container {
 		height: auto !important;
 	}
-	.editorPreview {
+	#editor-live-preview-wrapper {
 		width: 100% !important;
 		height: auto !important;
-		overflow: 'hidden' !important;
+		overflow: hidden !important;
 		padding: 0px !important;
 		transform: translateX(0%) !important;
 		top: 0px !important;
@@ -38,7 +38,7 @@
 		overflow: hidden !important;
 	}
 	.pagebreak {
-		opacity: 0;
-		page-break-after: always;
+		opacity: 0 !important;
+		page-break-after: always !important;
 	}
 }

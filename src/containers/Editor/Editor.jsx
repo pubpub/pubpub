@@ -383,7 +383,7 @@ const Editor = React.createClass({
 				<Style rules={{
 					...codeMirrorStyles(this.props.loginData),
 					'.pagebreak': {
-						opacity: '1 !important', // Alternatively, instead of using !important, we could pass a variable to PubBody that differentiates whether we're in the Reader or Editor and toggle the pagebreak opacity accordingly.
+						opacity: '1', // Alternatively, instead of using !important, we could pass a variable to PubBody that differentiates whether we're in the Reader or Editor and toggle the pagebreak opacity accordingly.
 					}
 
 				}} />
@@ -526,7 +526,7 @@ const Editor = React.createClass({
 					</div>
 
 					{/* Live Preview Block */}
-					<div style={[styles.hiddenUntilLoad, styles[loadStatus], styles.common.editorPreview, styles[viewMode].editorPreview]} className={'editorPreview'}>
+					<div id="editor-live-preview-wrapper" style={[styles.hiddenUntilLoad, styles[loadStatus], styles.common.editorPreview, styles[viewMode].editorPreview]} className={'editorPreview'}>
 						{/* {this.state.tree} */}
 						<PubBody
 							status={'loaded'}

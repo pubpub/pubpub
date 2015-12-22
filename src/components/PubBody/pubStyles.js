@@ -20,6 +20,7 @@ export const scienceStyle = {
 		textAlign: 'left',
 		color: '#777',
 		margin: '30px 0px',
+		fontFamily: 'Lora',
 	},
 	'#pub-header-divider': {
 		height: '1px',

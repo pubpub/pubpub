@@ -159,7 +159,7 @@ export const styles = {
 			position: 'fixed',
 			right: 0,
 			top: 61,
-			height: 'calc(100vh - 61px)',
+			height: 'calc(100vh - 81px)',
 			overflow: 'hidden',
 			overflowY: 'scroll',
 			zIndex: 20,

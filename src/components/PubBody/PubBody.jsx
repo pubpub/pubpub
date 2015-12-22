@@ -93,7 +93,8 @@ const PubBody = React.createClass({
 				pubContentRules['#pubContent ' + splitRule.replace(/ /g, '')] = cssObject[cssRule];
 			});
 		});
-
+		console.log(this.props.style);
+		console.log(pubContentRules);
 		return ({
 			...defaultContentRules, 
 			...pubContentRules, 
@@ -158,7 +159,8 @@ styles = {
 	},
 	contentContainer: {
 		transition: '.3s linear opacity .25s',
-		padding: '0px 10px',
+		padding: '0px 10px 50px 10px',
+		fontFamily: globalStyles.headerFont,
 	},
 	loading: {
 		opacity: 0,

@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react';
 import {connect} from 'react-redux';
-import Radium from 'radium';
+import Radium, {Style} from 'radium';
 import DocumentMeta from 'react-document-meta';
 import PureRenderMixin from 'react-addons-pure-render-mixin';
 import { Link } from 'react-router';
@@ -144,6 +144,12 @@ const PubReader = React.createClass({
 			<div style={styles.container}>
 
 				<DocumentMeta {...metaData} />
+
+				<Style rules={{
+					'.pagebreak': {
+						opacity: '0',
+					}
+				}} />
 
 				<div className="leftBar" style={[styles.leftBar, styles[this.props.readerData.get('status')]]}>
 
