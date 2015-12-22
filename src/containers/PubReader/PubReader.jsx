@@ -10,7 +10,8 @@ import {closeMenu} from '../../actions/nav';
 
 import {convertImmutableListToObject} from '../../utils/parsePlugins';
 
-import {PubBody, PubModals, PubNav, LoaderDeterminate, PubDiscussions, PubStatus, PubReviews, PubLeftBar} from '../../components';
+// import {PubBody, PubModals, PubNav, LoaderDeterminate, PubDiscussions, PubStatus, PubReviews, PubLeftBar} from '../../components';
+import {PubBody, PubModals, PubNav, LoaderDeterminate, PubDiscussions, PubStatus, PubLeftBar} from '../../components';
 import {globalStyles, pubSizes} from '../../utils/styleConstants';
 
 import marked from '../../modules/markdown/markdown';
