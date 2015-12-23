@@ -137,6 +137,7 @@ const PubDiscussionsItem = React.createClass({
 								pHashes={this.props.pHashes}
 								discussionItem={child}
 
+								activeSaveID={this.props.activeSaveID}
 								addDiscussionHandler={this.props.addDiscussionHandler}
 								addDiscussionStatus={this.props.addDiscussionStatus} 
 								newDiscussionData={this.props.newDiscussionData} 

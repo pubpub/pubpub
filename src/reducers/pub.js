@@ -53,7 +53,7 @@ export const defaultState = Immutable.Map({
 		references: {},
 	},
 	addDiscussionStatus: 'loaded',
-	activeSaveID: undefined,
+	activeSaveID: null,
 	status: 'loading',
 	error: null
 });
@@ -186,7 +186,7 @@ function addDiscussionSuccess(state, result, activeSaveID) {
 	const newState = state.mergeIn(['pubData', 'discussions'], discussionsObject);
 	return newState.merge({
 		addDiscussionStatus: 'loaded',
-		activeSaveID: undefined,
+		activeSaveID: null,
 		newDiscussionData: {
 			selections: {},
 			assets: {},

@@ -56,9 +56,7 @@ app.post('/addDiscussion', function(req, res) {
 
 			Discussion.populate(result, populateQuery, function(err,populatedResult){
 				if (err) { return res.status(500).json(err);  }
-				setTimeout(function(){
-					res.status(201).json(populatedResult);
-				},2000);
+				res.status(201).json(populatedResult);
 				
 			});
 
