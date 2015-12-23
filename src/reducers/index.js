@@ -17,7 +17,14 @@ import subdomainTest from './subdomainTest';
 
 export default combineReducers({
 	router: routerStateReducer,
-	form: formReducer,
+	form: formReducer.normalize({
+		pubCreateForm: {
+			slug: value => value && value.replace(/[^\w\s]/gi, '').replace(/ /g, '_').toLowerCase(),
+		},
+		journalCreateForm: {
+			subdomain: value => value && value.replace(/[^\w\s]/gi, '').replace(/ /g, '_').toLowerCase(),
+		},
+	}),
 	autocomplete,
 	editor,
 	explore,
