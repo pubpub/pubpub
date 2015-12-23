@@ -19,19 +19,6 @@ const PubDiscussionsScore = React.createClass({
 		};
 	},
 
-	
-	// addYay: function(discussionID) {
-	// 	return ()=> {
-	// 		console.log('yay', discussionID);
-	// 	};
-	// },
-
-	// addNay: function(discussionID) {
-	// 	return ()=> {
-	// 		console.log('nay', discussionID);
-	// 	};
-	// },
-
 	handleVoteClick: function(type, discussionID) {
 		return ()=> {
 			this.props.handleVoteSubmit(type, discussionID, this.props.userYay, this.props.userNay);	

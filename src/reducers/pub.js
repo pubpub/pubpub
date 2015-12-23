@@ -217,7 +217,6 @@ function addSelection(state, selection) {
 }
 
 function discussionVote(state, voteType, discussionID, userYay, userNay) {
-	console.log(state, voteType, discussionID, userYay, userNay);
 	let scoreChange = 0;
 	let newUserYay = undefined;
 	let newUserNay = undefined;
@@ -235,11 +234,9 @@ function discussionVote(state, voteType, discussionID, userYay, userNay) {
 		scoreChange = -1;
 		newUserNay = false;
 	}
-	console.log('reducer score change', scoreChange);
 	// Find the discussion with result._id
 	// update the yays
 	// update the nays
-	// update the score
 	// update useryay
 	// update usernay
 
@@ -256,43 +253,12 @@ function discussionVote(state, voteType, discussionID, userYay, userNay) {
 		});
 	}
 
-	let discussionsObject = state.getIn(['pubData', 'discussions']);
-	const discussionsArray = discussionsObject.toJS();
+	const discussionsArray = state.getIn(['pubData', 'discussions']).toJS();
 	findDiscussionAndChange(discussionsArray);
-	discussionsObject = discussionsArray;
 
-	return state.mergeIn(['pubData', 'discussions'], discussionsObject);
+	return state.mergeIn(['pubData', 'discussions'], discussionsArray);
 
 }
-
-// function discussionVoteSuccess(state, result) {
-// 	// Find the discussion with result._id
-// 	// update the yays
-// 	// update the nays
-// 	// update the score
-// 	// update useryay
-// 	// update usernay
-
-// 	function findDiscussionAndChange(discussions, discussionID, changes) {
-// 		discussions.map((discussion)=>{
-// 			if (discussion._id === discussionID) {
-// 				discussion[changes.type === 'yay' ? 'yays' : 'nays'] += changes.scoreChange;
-// 				discussion.userYay = changes.newUserYay;
-// 				discussion.userNay = changes.newUserNay;
-// 			}
-// 			if (discussion.children.length) {
-// 				findDiscussionAndChange(discussion.children, discussionID, changes);
-// 			}
-// 		});
-// 	}
-
-// 	let discussionsObject = state.getIn(['pubData', 'discussions']);
-// 	const discussionsArray = discussionsObject.toJS();
-// 	findDiscussionAndChange(discussionsArray, result.discussionID, result.changes);
-// 	discussionsObject = discussionsArray;
-
-// 	return state.mergeIn(['pubData', 'discussions'], discussionsObject);
-// }
 
 /*--------*/
 // Bind actions to specific reducing functions.
