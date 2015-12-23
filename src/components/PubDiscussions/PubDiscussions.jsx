@@ -31,7 +31,6 @@ const PubDiscussions = React.createClass({
 
 	render: function() {
 		// const pubData = {discussions: []};
-		console.log('trying to render discussions');
 		return (
 			<div style={styles.container}>
 				

@@ -95,15 +95,13 @@ function createPubLoadFail(state, error) {
 }
 
 function clearPub(state) {
-	console.log('in clear pub');
 	return state.merge(defaultState.toJS());
 }
 
 function load(state) {
-	console.log('in load pub');
 	return state.merge({
 		status: 'loading',
-		pubData: defaultState.toJS(),
+		pubData: defaultState.toJS().pubData,
 	});
 }
 
@@ -113,7 +111,6 @@ function loadSuccess(state, result) {
 		pubData: result,
 		error: null
 	};
-	console.log('in load success pub');
 
 	if (result === 'Pub Not Found') {
 		outputState.pubData = { ...defaultState.get('pubData'),
