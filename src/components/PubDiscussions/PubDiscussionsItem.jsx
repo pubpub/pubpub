@@ -14,6 +14,7 @@ let styles = {};
 
 const PubDiscussionsItem = React.createClass({
 	propTypes: {
+		slug: PropTypes.string,
 		discussionItem: PropTypes.object,
 		pHashes: PropTypes.object,
 
@@ -30,6 +31,7 @@ const PubDiscussionsItem = React.createClass({
 		return {
 			discussionItem: {
 				selections: [],
+				children: [],
 			},
 			pHashes: {},
 		};
@@ -98,8 +100,10 @@ const PubDiscussionsItem = React.createClass({
 						<Link to={'/user/' + discussionItem.author.username} style={globalStyles.link}><span key={'discussionItemAuthorLink' + discussionItem._id} style={styles.headerText}>{discussionItem.author.name}</span></Link> on {dateFormat(discussionItem.postDate, 'mm/dd/yy, h:MMTT')}
 					</div>
 
-					<div style={styles.discussionDetailsLineBottom}>
-						Mark Expert | Flag | <span onClick={this.toggleReplyActive}>Reply</span>
+					<div style={[styles.discussionDetailsLine, styles.discussionDetailsLineBottom]}>
+						<Link style={globalStyles.link} to={'/pub/' + this.props.slug + '/discussions/' + discussionItem._id}><span style={styles.detailLineItem}>Permalink</span></Link>
+						<span style={styles.detailLineItemSeparator}>|</span>
+						<span style={styles.detailLineItem} key={'replyButton-' + discussionItem._id} onClick={this.toggleReplyActive}>Reply</span>
 					</div>
 
 				</div>
@@ -139,6 +143,7 @@ const PubDiscussionsItem = React.createClass({
 						discussionItem.children.map((child)=>{
 							return (<ChildPubDiscussionItem 
 								key={child._id}
+								slug={this.props.slug}
 								pHashes={this.props.pHashes}
 								discussionItem={child}
 
@@ -195,6 +200,16 @@ styles = {
 		overflow: 'hidden',
 		textOverflow: 'ellipsis',
 	},
+	detailLineItem: {
+		userSelect: 'none',
+		':hover': {
+			cursor: 'pointer',
+			color: '#000',
+		}
+	},
+	detailLineItemSeparator: {
+		padding: '0px 10px',
+	},
 	headerText: {
 		color: '#777',
 		':hover': {
@@ -203,21 +218,7 @@ styles = {
 		}
 	},
 	discussionDetailsLineBottom: { 
-		// We are explicitly repeating ourselves here because Radium seems to have an issue with
-		// handling arrays of styles in nested components.
-		// Didn't spend too much time on it, just figured I'd dupe the style.
-		// Before, it was [styles.discusionDetailsLine, styles. discussionDetailsLineBottom]
-		// with discussionDetailsLineBottom only containing 'lineHeight: 18px'
-		height: 18,
 		lineHeight: '18px',
-		width: 'calc(100% - 36px - 5px)',
-		paddingLeft: 5,
-		color: '#777',
-		fontSize: '13px',
-		float: 'left',
-		whiteSpace: 'nowrap',
-		overflow: 'hidden',
-		textOverflow: 'ellipsis'
 	},
 	discussionBody: {
 		width: '100%',

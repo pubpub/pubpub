@@ -15,6 +15,7 @@ export const globalStyles = {
 	},
 	link: {
 		textDecoration: 'none',
+		color: 'inherit',
 	},
 	loading: {
 		opacity: 0,

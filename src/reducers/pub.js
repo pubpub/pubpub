@@ -95,10 +95,12 @@ function createPubLoadFail(state, error) {
 }
 
 function clearPub(state) {
+	console.log('in clear pub');
 	return state.merge(defaultState.toJS());
 }
 
 function load(state) {
+	console.log('in load pub');
 	return state.merge({
 		status: 'loading',
 		pubData: defaultState.toJS(),
@@ -111,6 +113,7 @@ function loadSuccess(state, result) {
 		pubData: result,
 		error: null
 	};
+	console.log('in load success pub');
 
 	if (result === 'Pub Not Found') {
 		outputState.pubData = { ...defaultState.get('pubData'),
@@ -171,7 +174,7 @@ function addDiscussionSuccess(state, result, activeSaveID) {
 			if (discussion._id === parentID) {
 				discussion.children.unshift(result);
 			}
-			if (discussion.children.length) {
+			if (discussion.children && discussion.children.length) {
 				findParentAndAdd(discussion.children, parentID, newChild);
 			}
 		});
@@ -247,7 +250,7 @@ function discussionVote(state, voteType, discussionID, userYay, userNay) {
 				discussion.userYay = newUserYay;
 				discussion.userNay = newUserNay;
 			}
-			if (discussion.children.length) {
+			if (discussion.children && discussion.children.length) {
 				findDiscussionAndChange(discussion.children);
 			}
 		});

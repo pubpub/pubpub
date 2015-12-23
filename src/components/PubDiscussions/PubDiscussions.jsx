@@ -31,15 +31,16 @@ const PubDiscussions = React.createClass({
 
 	render: function() {
 		// const pubData = {discussions: []};
+		console.log('trying to render discussions');
 		return (
 			<div style={styles.container}>
 				
 				<div className="pub-discussions-wrapper" style={rightBarStyles.sectionWrapper}>
 					<div style={rightBarStyles.sectionHeader}>Discussions</div>
 					<div style={rightBarStyles.sectionSubHeader}>
-						<Link to={'/pub/' + this.props.slug + '/experts'} style={globalStyles.link}><span key={'discussionButton1'} style={rightBarStyles.sectionSubHeaderSpan}>View Experts ({this.props.expertsData.approved.length}) </span></Link>
-						| 
-						<Link to={'/pub/' + this.props.slug + '/experts'} style={globalStyles.link}><span key={'discussionButton2'} style={rightBarStyles.sectionSubHeaderSpan}>Suggest Expert</span></Link>
+						{/* <Link to={'/pub/' + this.props.slug + '/experts'} style={globalStyles.link}><span key={'discussionButton1'} style={rightBarStyles.sectionSubHeaderSpan}>View Experts ({this.props.expertsData.approved.length}) </span></Link>
+						| */}
+						<Link to={'/pub/' + this.props.slug + '/invite'} style={globalStyles.link}><span key={'discussionButton2'} style={rightBarStyles.sectionSubHeaderSpan}>Invite Reviewers</span></Link>
 					</div>
 					<PubDiscussionsInput 
 						addDiscussionHandler={this.props.addDiscussionHandler}
@@ -53,7 +54,8 @@ const PubDiscussions = React.createClass({
 					{
 						this.props.discussionsData.map((discussion)=>{
 							return (<PubDiscussionsItem 
-								key={discussion._id} 
+								key={discussion._id}
+								slug={this.props.slug}
 								pHashes={this.props.pHashes}
 								discussionItem={discussion}
 
