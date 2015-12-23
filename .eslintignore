@@ -4,3 +4,4 @@ tests.webpack.js
 src/modules/markdown/*
 src/utils/cssToRadium.js
 src/components/ImageCropper/AvatarEditor.jsx
+src/containers/Editor/editorFirepadUserlist.js

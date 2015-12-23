@@ -100,6 +100,12 @@ export const styles = {
 		margin: '8px 0px',
 		float: 'left',
 	},
+	editorNavItemUsers: {
+		height: '100%',
+		padding: '0px 0px',
+		lineHeight: globalStyles.headerHeight,
+		float: 'left',
+	},
 	editorNavRight: {
 		float: 'right',
 	},

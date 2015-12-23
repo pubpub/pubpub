@@ -93,8 +93,7 @@ const PubBody = React.createClass({
 				pubContentRules['#pubContent ' + splitRule.replace(/ /g, '')] = cssObject[cssRule];
 			});
 		});
-		console.log(this.props.style);
-		console.log(pubContentRules);
+
 		return ({
 			...defaultContentRules, 
 			...pubContentRules, 

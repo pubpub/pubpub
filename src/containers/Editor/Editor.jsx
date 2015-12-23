@@ -25,6 +25,7 @@ import encHex from 'crypto-js/enc-hex';
 
 import marked from '../../modules/markdown/markdown';
 import markdownExtensions from '../../components/EditorPlugins';
+import FirepadUserList from './editorFirepadUserlist';
 
 import {convertFirebaseToObject} from '../../utils/parsePlugins';
 
@@ -98,6 +99,8 @@ const Editor = React.createClass({
 				userId: username,
 				defaultText: editorDefaultText(this.props.pubData.getIn(['createPubData', 'title']))
 			});
+			FirepadUserList.fromDiv(firepadRef.child('users'),
+				document.getElementById('userlist'), username, this.props.loginData.getIn(['userData', 'name']), this.props.loginData.getIn(['userData', 'thumbnail']));
 
 			// need to unmount on change
 			codeMirror.on('change', this.onEditorChange);
@@ -384,7 +387,32 @@ const Editor = React.createClass({
 					...codeMirrorStyles(this.props.loginData),
 					'.pagebreak': {
 						opacity: '1', // Alternatively, instead of using !important, we could pass a variable to PubBody that differentiates whether we're in the Reader or Editor and toggle the pagebreak opacity accordingly.
-					}
+					},
+					'.firepad-userlist-user': {
+						height: '30px',
+						overflow: 'hidden',
+						display: 'inline-block',
+						position: 'relative',
+						':hover': {
+							backgroundColor: 'red',
+							overflow: 'visible',
+						}
+					},
+					'.firepad-userlist-image': {
+						height: '20px',
+						padding: '5px',
+					},
+					'.firepad-userlist-color-indicator': {
+						position: 'absolute',
+						height: '3px',
+						bottom: '2px',
+						left: '5px',
+						width: '20px',
+					},
+					'.firepad-userlist-name': {
+						position: 'absolute',
+						opacity: 0,
+					},
 
 				}} />
 
@@ -441,7 +469,12 @@ const Editor = React.createClass({
 							<li style={styles.editorNavSeparator}></li>
 							<li key="editorNav1"style={[styles.editorNavItem]} onClick={this.openModalHandler('References')}>References</li>
 							<li style={styles.editorNavSeparator}></li>
-							<li key="editorNav2"style={[styles.editorNavItem]} onClick={this.openModalHandler('Collaborators')}>Collaborators</li>
+							<li key="editorNav2"style={[styles.editorNavItem]} onClick={this.openModalHandler('Collaborators')}>
+								Collaborators
+							</li>
+							<li key="editorNavUsers" style={[styles.editorNavItemUsers]}>
+								<div id={'userlist'}></div>
+							</li>
 
 							<li key="editorNav3"style={[styles.editorNavItem, styles.editorNavRight]} onClick={this.openModalHandler('Publish')}>Publish</li>
 							<li style={[styles.editorNavSeparator, styles.editorNavRight]}></li>
