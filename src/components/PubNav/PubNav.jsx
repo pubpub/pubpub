@@ -20,6 +20,7 @@ const PubNav = React.createClass({
 	getDefaultProps: function() {
 		return {
 			query: {},
+			openPubModalHandler: ()=>{},
 		};
 	},
 

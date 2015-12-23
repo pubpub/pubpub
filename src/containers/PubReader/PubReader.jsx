@@ -246,7 +246,7 @@ const PubReader = React.createClass({
 						newDiscussionData={this.props.readerData.get('newDiscussionData')}
 						activeSaveID={this.props.readerData.get('activeSaveID')}
 						userThumbnail={this.props.loginData.getIn(['userData', 'thumbnail'])}
-						handleVoteSubmit={this.discussionVoteSubmit} />/>
+						handleVoteSubmit={this.discussionVoteSubmit} />
 				</div>
 
 			</div>
