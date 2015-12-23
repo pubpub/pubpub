@@ -124,7 +124,7 @@ FirepadUserList.prototype.makeUserEntriesForOthers_ = function() {
     var imageDiv = elt('img', null,  {'src': image, 'class': 'firepad-userlist-image' });
 
     var userDiv = elt('div', [ imageDiv, colorDiv, nameDiv ], {
-      'class': 'firepad-userlist-user ' + 'firepad-user-' + userId,
+      class: 'firepad-userlist-user ' + 'firepad-user-' + userId
     });
     userId2Element[userId] = userDiv;
 

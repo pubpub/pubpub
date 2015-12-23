@@ -393,10 +393,9 @@ const Editor = React.createClass({
 						overflow: 'hidden',
 						display: 'inline-block',
 						position: 'relative',
-						':hover': {
-							backgroundColor: 'red',
-							overflow: 'visible',
-						}
+					},
+					'.firepad-userlist-user:hover': {
+						overflow: 'visible',
 					},
 					'.firepad-userlist-image': {
 						height: '20px',
@@ -411,7 +410,14 @@ const Editor = React.createClass({
 					},
 					'.firepad-userlist-name': {
 						position: 'absolute',
-						opacity: 0,
+						width: '250px',
+						left: '-110px',
+						textAlign: 'center',
+						bottom: '-20px',
+						height: '20px',
+						lineHeight: '20px',
+						backgroundColor: '#F5F5F5',
+
 					},
 
 				}} />
