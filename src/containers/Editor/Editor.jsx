@@ -14,6 +14,7 @@ import {clearPub} from '../../actions/pub';
 import {getPubEdit, toggleEditorViewMode, toggleFormatting, toggleTOC, unmountEditor, closeModal, openModal, publishVersion, saveCollaboratorsToPub, saveSettingsPubPub} from '../../actions/editor';
 import {saveSettingsUser} from '../../actions/login';
 // import {loadCss} from '../../utils/loadingFunctions';
+import {debounce} from '../../utils/loadingFunctions';
 
 import initCodeMirrorMode from './editorCodeMirrorMode';
 import {styles, codeMirrorStyles, animateListItemStyle} from './editorStyles';
@@ -70,6 +71,7 @@ const Editor = React.createClass({
 				settings: {},
 			},
 			codeMirrorChange: {},
+			editorSaveStatus: 'saved',
 		};
 	},
 
@@ -95,12 +97,30 @@ const Editor = React.createClass({
 			const username = (this.props.loginData.get('loggedIn') === false) ? 'cat' : this.props.loginData.getIn(['userData', 'username']);
 
 			// Initialize Firepad using codemirror and the ref defined above.
-			Firepad.fromCodeMirror(firepadRef, codeMirror, {
+			const firepad = Firepad.fromCodeMirror(firepadRef, codeMirror, {
 				userId: username,
 				defaultText: editorDefaultText(this.props.pubData.getIn(['createPubData', 'title']))
 			});
+			
+			new Firebase('https://pubpub.firebaseio.com/.info/connected').on('value', (connectedSnap)=> {
+				if (connectedSnap.val() === true) {
+					/* we're connected! */
+					this.setState({editorSaveStatus: 'saved'});
+				} else {
+					/* we're disconnected! */
+					this.setState({editorSaveStatus: 'disconnected'});
+				}
+			});
+
 			FirepadUserList.fromDiv(firepadRef.child('users'),
 				document.getElementById('userlist'), username, this.props.loginData.getIn(['userData', 'name']), this.props.loginData.getIn(['userData', 'thumbnail']));
+			
+			firepad.on('synced', (synced)=>{
+				console.log('before debounce', synced);
+				debounce(()=> {
+					this.updateSaveStatus(synced);
+				}, 250)();
+			});
 
 			// need to unmount on change
 			codeMirror.on('change', this.onEditorChange);
@@ -136,7 +156,18 @@ const Editor = React.createClass({
 		return;
 	},
 
+	updateSaveStatus: function(isSynced) {
+		if (!isSynced) {
+			if (this.state.editorSaveStatus !== 'disconnected') {
+				this.setState({editorSaveStatus: 'saving'});	
+			}
+		} else {
+			this.setState({editorSaveStatus: 'saved'});
+		}
+	},
+
 	onEditorChange: function(cm, change) {
+		
 
 		CodeMirror.commands.autocomplete(cm, CodeMirror.hint.plugins, {completeSingle: false});
 
@@ -487,7 +518,21 @@ const Editor = React.createClass({
 							<li key="editorNav4"style={[styles.editorNavItem, styles.editorNavRight]} onClick={this.toggleLivePreview}>Live Preview</li>
 							<li style={[styles.editorNavSeparator, styles.editorNavRight]}></li>
 							<li key="editorNav5"style={[styles.editorNavItem, styles.editorNavRight]} onClick={this.openModalHandler('Style')}>Settings</li>
+							<li key="editorNav7"style={[styles.editorNavItemSaveStatus, styles.editorNavRight]}>
+								{()=>{
+									switch (this.state.editorSaveStatus) {
+									case 'saved': 
+										return 'Pub Saved';
+									case 'saving': 
+										return 'Pub Saving...';
+									default:
+										return 'Disconnected';
+									}
+									// this.state.editorSaveStatus === 'saved' ? 'Pub Saved' : 'Pub Saving...'}
+								}()}
 
+							</li>
+							
 						</ul>
 					</div>
 

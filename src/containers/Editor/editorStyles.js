@@ -106,6 +106,17 @@ export const styles = {
 		lineHeight: globalStyles.headerHeight,
 		float: 'left',
 	},
+	editorNavItemSaveStatus: {
+		height: '100%',
+		padding: '0px 0px',
+		lineHeight: 'calc(' + globalStyles.headerHeight + ' + 2px)',
+		float: 'right',
+		fontFamily: 'Courier',
+		color: '#AAA',
+		fontSize: '14px',
+		paddingRight: 10,
+
+	},
 	editorNavRight: {
 		float: 'right',
 	},
