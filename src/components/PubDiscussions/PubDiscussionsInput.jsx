@@ -32,12 +32,15 @@ const PubDiscussionsInput = React.createClass({
 		addDiscussionStatus: PropTypes.string,
 		newDiscussionData: PropTypes.object,
 		userThumbnail: PropTypes.string,
+		codeMirrorID: PropTypes.string,
+		parentID: PropTypes.string,
+		isReply: PropTypes.bool,
 	},
 
 	componentDidMount() {
 
 		initCodeMirrorMode();
-		const codeMirror = CodeMirror(document.getElementById('codemirror-wrapper'), cmOptions);
+		const codeMirror = CodeMirror(document.getElementById(this.props.codeMirrorID), cmOptions);
 		codeMirror.on('change', this.onEditorChange);
 
 	},
@@ -46,12 +49,14 @@ const PubDiscussionsInput = React.createClass({
 		if (this.props.addDiscussionStatus === 'loading' && nextProps.addDiscussionStatus === 'loaded') {
 			// This means the discussion was succesfully submitted
 			// Reset any form options here.
-			const cm = document.getElementsByClassName('CodeMirror')[0].CodeMirror;
+			// const cm = document.getElementsByClassName('CodeMirror')[0].CodeMirror;
+			const cm = document.getElementById(this.props.codeMirrorID).childNodes[0].CodeMirror;
 			cm.setValue('');
 			clearTempHighlights();
 
 		} else if (this.props.newDiscussionData.get('selections').size !== nextProps.newDiscussionData.get('selections').size) {
-			const cm = document.getElementsByClassName('CodeMirror')[0].CodeMirror;
+			// const cm = document.getElementsByClassName('CodeMirror')[0].CodeMirror;
+			const cm = document.getElementById(this.props.codeMirrorID).childNodes[0].CodeMirror;
 			const spacing = cm.getValue().length ? ' ' : '';
 			cm.setValue(cm.getValue() + spacing + '[selection: ' + nextProps.newDiscussionData.get('selections').size + '] ' );	
 		}
@@ -65,17 +70,19 @@ const PubDiscussionsInput = React.createClass({
 
 	submitDiscussion: function() {
 		const newDiscussion = {};
-		const cm = document.getElementsByClassName('CodeMirror')[0].CodeMirror;
+		// const cm = document.getElementsByClassName('CodeMirror')[0].CodeMirror;
+		const cm = document.getElementById(this.props.codeMirrorID).childNodes[0].CodeMirror;
 		newDiscussion.markdown = cm.getValue();
 		newDiscussion.assets = {};
 		newDiscussion.selections = {};
 		newDiscussion.references = {};
+		newDiscussion.parent = this.props.parentID;
 		this.props.addDiscussionHandler(newDiscussion);
 	},
 
 	render: function() {
 		return (
-			<div style={styles.container}>
+			<div style={[styles.container, this.props.isReply && styles.replyContainer]}>
 				<Style rules={codeMirrorStyles} />
 
 				<div style={styles.inputTopLine}>
@@ -94,7 +101,7 @@ const PubDiscussionsInput = React.createClass({
 						<input style={styles.checkboxInput} name={'privateDiscussion'} id={'privateDiscussion'} type="checkbox" value={'private'} ref={'privateDiscussion'}/>
 					</div>
 				</div>
-				<div id="codemirror-wrapper" style={styles.inputBox}></div>
+				<div id={this.props.codeMirrorID} style={styles.inputBox}></div>
 
 				<div style={styles.loaderContainer}>
 					{(this.props.addDiscussionStatus === 'loading' ? <LoaderIndeterminate color="#444"/> : null)}
@@ -117,6 +124,9 @@ styles = {
 		overflow: 'hidden',
 		margin: '20px 0px',
 		position: 'relative',
+	},
+	replyContainer: {
+		margin: '0px 0px 10px 0px',
 	},
 	inputTopLine: {
 		// backgroundColor: 'rgba(255,0,0,0.1)',

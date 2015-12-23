@@ -21,6 +21,7 @@ export const scienceStyle = {
 		color: '#777',
 		margin: '30px 0px',
 		fontFamily: 'Lora',
+		padding: '0px 20px',
 	},
 	'#pub-header-divider': {
 		height: '1px',
@@ -81,6 +82,7 @@ export const magazineStyle = {
 		textAlign: 'left',
 		color: '#777',
 		margin: '30px 0px',
+		padding: '0px 20px',
 	},
 	'#pub-header-divider': {
 		height: '1px',

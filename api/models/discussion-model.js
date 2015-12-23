@@ -38,7 +38,7 @@ discussionSchema.statics.nestChildren = function (input) {
     return d;
   });
 
-  top_children = _.filter(input,function(d) {return !(d.parent)});
+  const top_children = _.filter(input,function(d) {return !(d.parent)});
   return top_children;
 
 };

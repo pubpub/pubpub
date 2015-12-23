@@ -43,13 +43,20 @@ const PubDiscussions = React.createClass({
 						addDiscussionHandler={this.props.addDiscussionHandler}
 						addDiscussionStatus={this.props.addDiscussionStatus} 
 						newDiscussionData={this.props.newDiscussionData} 
-						userThumbnail={this.props.userThumbnail} />
+						userThumbnail={this.props.userThumbnail} 
+						isReply={false}
+						codeMirrorID={'rootCommentInput'}/>
 					{
 						this.props.discussionsData.map((discussion)=>{
 							return (<PubDiscussionsItem 
 								key={discussion._id} 
 								pHashes={this.props.pHashes}
-								discussionItem={discussion}/>
+								discussionItem={discussion}
+
+								addDiscussionHandler={this.props.addDiscussionHandler}
+								addDiscussionStatus={this.props.addDiscussionStatus} 
+								newDiscussionData={this.props.newDiscussionData} 
+								userThumbnail={this.props.userThumbnail} />
 							);
 						})
 					}

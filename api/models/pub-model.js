@@ -1,6 +1,7 @@
 var mongoose  = require('mongoose');
 var Schema    =  mongoose.Schema;
 var ObjectId  = Schema.Types.ObjectId;
+var Discussion = require('../models').Discussion;
 import * as jsdiff from 'diff';
 
 var pubSchema = new Schema({
@@ -169,6 +170,8 @@ pubSchema.statics.getPub = function (slug, readerID, callback) {
 			if (populatedPub.collaborators.canEdit.indexOf(readerID) > -1) {
 				outputPub.isAuthor = true;
 			}
+
+			outputPub.discussions = Discussion.nestChildren(outputPub.discussions);
 			// console.log(outputPub.isAuthor);
 			return callback(null, outputPub);
 		});

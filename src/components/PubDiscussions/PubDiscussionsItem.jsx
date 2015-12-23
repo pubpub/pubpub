@@ -3,6 +3,7 @@ import Radium from 'radium';
 import {globalStyles} from '../../utils/styleConstants';
 import { Link } from 'react-router';
 import dateFormat from 'dateformat';
+import PubDiscussionsInput from './PubDiscussionsInput';
 
 import marked from '../../modules/markdown/markdown';
 import markdownExtensions from '../../components/EditorPlugins';
@@ -14,6 +15,11 @@ const PubDiscussionsItem = React.createClass({
 	propTypes: {
 		discussionItem: PropTypes.object,
 		pHashes: PropTypes.object,
+
+		addDiscussionHandler: PropTypes.func,
+		addDiscussionStatus: PropTypes.string,
+		newDiscussionData: PropTypes.object,
+		userThumbnail: PropTypes.string,
 	},
 
 	getDefaultProps: function() {
@@ -22,6 +28,12 @@ const PubDiscussionsItem = React.createClass({
 				selections: [],
 			},
 			pHashes: {},
+		};
+	},
+
+	getInitialState() {
+		return {
+			replyActive: false,
 		};
 	},
 
@@ -50,10 +62,16 @@ const PubDiscussionsItem = React.createClass({
 		
 	},
 
+	toggleReplyActive: function() {
+		this.setState({
+			replyActive: !this.state.replyActive,
+		});
+	},
+
 	render: function() {
 		const discussionItem = this.props.discussionItem;
 		// console.log(discussionItem);
-		const md = marked(discussionItem.markdown, Object.values({} || {}));
+		const md = marked(discussionItem.markdown || '', Object.values({} || {}));
 		return (
 			<div style={styles.container}>
 				
@@ -69,7 +87,7 @@ const PubDiscussionsItem = React.createClass({
 					</div>
 
 					<div style={styles.discussionDetailsLineBottom}>
-						Mark Expert | Flag | Reply
+						Mark Expert | Flag | <span onClick={this.toggleReplyActive}>Reply</span>
 					</div>
 
 				</div>
@@ -86,12 +104,32 @@ const PubDiscussionsItem = React.createClass({
 					</div>
 				</div>
 				
+				<div style={[styles.replyWrapper, this.state.replyActive && styles.replyWrapperActive]}>
+					<PubDiscussionsInput 
+						addDiscussionHandler={this.props.addDiscussionHandler}
+						addDiscussionStatus={this.props.addDiscussionStatus} 
+						newDiscussionData={this.props.newDiscussionData} 
+						userThumbnail={this.props.userThumbnail}
+						codeMirrorID={'replyInput-' + discussionItem._id} 
+						parentID={discussionItem._id}
+						isReply={true}/>
+				</div>
+				
 
 				{/* Children */}
 				<div style={styles.discussionChildrenWrapper}>
 					{
 						discussionItem.children.map((child)=>{
-							return <PubDiscussionsItem key={child._id} discussionItem={child}/>;
+							return (<ChildPubDiscussionItem 
+								key={child._id}
+								pHashes={this.props.pHashes}
+								discussionItem={child}
+
+								addDiscussionHandler={this.props.addDiscussionHandler}
+								addDiscussionStatus={this.props.addDiscussionStatus} 
+								newDiscussionData={this.props.newDiscussionData} 
+								userThumbnail={this.props.userThumbnail} />
+							);
 						})
 					}
 				</div>
@@ -102,6 +140,7 @@ const PubDiscussionsItem = React.createClass({
 	}
 });
 
+const ChildPubDiscussionItem = Radium(PubDiscussionsItem);
 export default Radium(PubDiscussionsItem);
 
 styles = {
@@ -217,5 +256,16 @@ styles = {
 		paddingLeft: 20,
 		// borderLeft: '1px solid #ccc',
 		borderTop: '1px solid #ccc',
+	},
+	replyWrapper: {
+		paddingLeft: '15%',
+		position: 'absolute',
+		pointerEvents: 'none',
+		opacity: 0,
+	},
+	replyWrapperActive: {
+		position: 'relative',
+		pointerEvents: 'auto',
+		opacity: 1,
 	}
 };
