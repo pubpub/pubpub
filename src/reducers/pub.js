@@ -216,7 +216,26 @@ function addSelection(state, selection) {
 	);
 }
 
-function discussionVoteSuccess(state, result) {
+function discussionVote(state, voteType, discussionID, userYay, userNay) {
+	console.log(state, voteType, discussionID, userYay, userNay);
+	let scoreChange = 0;
+	let newUserYay = undefined;
+	let newUserNay = undefined;
+
+	if (voteType === 'yay' && !userYay) {
+		scoreChange = userNay ? 2 : 1;
+		newUserYay = true;
+	} else if (voteType === 'yay' && userYay) {
+		scoreChange = -1;
+		newUserYay = false;
+	} else if (voteType === 'nay' && !userNay) {
+		scoreChange = userYay ? 2 : 1;
+		newUserNay = true;
+	} else if (voteType === 'nay' && userNay) {
+		scoreChange = -1;
+		newUserNay = false;
+	}
+	console.log('reducer score change', scoreChange);
 	// Find the discussion with result._id
 	// update the yays
 	// update the nays
@@ -224,26 +243,56 @@ function discussionVoteSuccess(state, result) {
 	// update useryay
 	// update usernay
 
-	function findDiscussionAndChange(discussions, discussionID, changes) {
+	function findDiscussionAndChange(discussions) {
 		discussions.map((discussion)=>{
 			if (discussion._id === discussionID) {
-				discussion[changes.type === 'yay' ? 'yays' : 'nays'] += changes.scoreChange;
-				discussion.userYay = changes.newUserYay;
-				discussion.userNay = changes.newUserNay;
+				discussion[voteType === 'yay' ? 'yays' : 'nays'] += scoreChange;
+				discussion.userYay = newUserYay;
+				discussion.userNay = newUserNay;
 			}
 			if (discussion.children.length) {
-				findDiscussionAndChange(discussion.children, discussionID, changes);
+				findDiscussionAndChange(discussion.children);
 			}
 		});
 	}
 
 	let discussionsObject = state.getIn(['pubData', 'discussions']);
 	const discussionsArray = discussionsObject.toJS();
-	findDiscussionAndChange(discussionsArray, result.discussionID, result.changes);
+	findDiscussionAndChange(discussionsArray);
 	discussionsObject = discussionsArray;
 
 	return state.mergeIn(['pubData', 'discussions'], discussionsObject);
+
 }
+
+// function discussionVoteSuccess(state, result) {
+// 	// Find the discussion with result._id
+// 	// update the yays
+// 	// update the nays
+// 	// update the score
+// 	// update useryay
+// 	// update usernay
+
+// 	function findDiscussionAndChange(discussions, discussionID, changes) {
+// 		discussions.map((discussion)=>{
+// 			if (discussion._id === discussionID) {
+// 				discussion[changes.type === 'yay' ? 'yays' : 'nays'] += changes.scoreChange;
+// 				discussion.userYay = changes.newUserYay;
+// 				discussion.userNay = changes.newUserNay;
+// 			}
+// 			if (discussion.children.length) {
+// 				findDiscussionAndChange(discussion.children, discussionID, changes);
+// 			}
+// 		});
+// 	}
+
+// 	let discussionsObject = state.getIn(['pubData', 'discussions']);
+// 	const discussionsArray = discussionsObject.toJS();
+// 	findDiscussionAndChange(discussionsArray, result.discussionID, result.changes);
+// 	discussionsObject = discussionsArray;
+
+// 	return state.mergeIn(['pubData', 'discussions'], discussionsObject);
+// }
 
 /*--------*/
 // Bind actions to specific reducing functions.
@@ -283,9 +332,10 @@ export default function readerReducer(state = defaultState, action) {
 		return addSelection(state, action.selection);
 
 	case DISCUSSION_VOTE:
-		return state;
+		return discussionVote(state, action.voteType, action.discussionID, action.userYay, action.userNay);
 	case DISCUSSION_VOTE_SUCCESS:
-		return discussionVoteSuccess(state, action.result);
+		// return discussionVoteSuccess(state, action.result);
+		return state;
 	case DISCUSSION_VOTE_FAIL:
 		return state;
 

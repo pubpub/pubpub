@@ -75,46 +75,47 @@ app.post('/discussionVote', function(req,res){
 	const userNay = req.body.userNay;
 	const type = req.body.type;
 
-	let scoreChange = 0;
-	let newUserYay = undefined;
-	let newUserNay = undefined;
+	// let scoreChange = 0;
+	// let newUserYay = undefined;
+	// let newUserNay = undefined;
 
 	if (type === 'yay' && !userYay) {
 		Discussion.update({_id: discussionID}, { $addToSet: { yays: userID} }, function(err, result){if(err) return handleError(err)});
 		Discussion.update({_id: discussionID}, { $pull: { nays: userID} }, function(err, result){if(err) return handleError(err)});
 		User.update({ _id: userID}, { $addToSet: { yays: discussionID} }, function(err, result){if(err) return handleError(err)});
 		User.update({ _id: userID}, { $pull: { nays: discussionID} }, function(err, result){if(err) return handleError(err)});
-		scoreChange = userNay ? 2 : 1;
-		newUserYay = true;
+		// scoreChange = userNay ? 2 : 1;
+		// newUserYay = true;
 	} else if (type === 'yay' && userYay) {
 		Discussion.update({_id: discussionID}, { $pull: { yays: userID} }, function(err, result){if(err) return handleError(err)});
 		User.update({ _id: userID}, { $pull: { yays: discussionID} }, function(err, result){if(err) return handleError(err)});
-		scoreChange = -1;
-		newUserYay = false;
+		// scoreChange = -1;
+		// newUserYay = false;
 	} else if (type === 'nay' && !userNay) {
 		Discussion.update({_id: discussionID}, { $addToSet: { nays: userID} }, function(err, result){if(err) return handleError(err)});
 		Discussion.update({_id: discussionID}, { $pull: { yays: userID} }, function(err, result){if(err) return handleError(err)});
 		User.update({ _id: userID}, { $addToSet: { nays: discussionID} }, function(err, result){if(err) return handleError(err)});
 		User.update({ _id: userID}, { $pull: { yays: discussionID} }, function(err, result){if(err) return handleError(err)});
-		scoreChange = userYay ? 2 : 1;
-		newUserNay = true;
+		// scoreChange = userYay ? 2 : 1;
+		// newUserNay = true;
 	} else if (type === 'nay' && userNay) {
 		Discussion.update({_id: discussionID}, { $pull: { nays: userID} }, function(err, result){if(err) return handleError(err)});
 		User.update({ _id: userID}, { $pull: { nays: discussionID} }, function(err, result){if(err) return handleError(err)});
-		scoreChange = -1;
-		newUserNay = false;
+		// scoreChange = -1;
+		// newUserNay = false;
 	}
 
-	return res.status(201).json({
-		discussionID: req.body.discussionID,
-		changes: {
-			type: type,
-			scoreChange: scoreChange,
-			newUserYay: newUserYay,
-			newUserNay: newUserNay,	
-		}
+	return res.status(201).json(true);
+	// return res.status(201).json({
+	// 	discussionID: req.body.discussionID,
+	// 	changes: {
+	// 		type: type,
+	// 		scoreChange: scoreChange,
+	// 		newUserYay: newUserYay,
+	// 		newUserNay: newUserNay,	
+	// 	}
 		
-	});
+	// });
 
 });
 

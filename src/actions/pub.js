@@ -90,5 +90,9 @@ export function discussionVoteSubmit(type, discussionID, userYay, userNay) {
 	return {
 		types: [DISCUSSION_VOTE, DISCUSSION_VOTE_SUCCESS, DISCUSSION_VOTE_FAIL],
 		promise: (client) => client.post('/discussionVote', {data: {type, discussionID, userYay, userNay}}),
+		voteType: type,
+		discussionID: discussionID,
+		userYay: userYay,
+		userNay: userNay,
 	};
 }
