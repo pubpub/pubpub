@@ -4,6 +4,7 @@ import {globalStyles} from '../../utils/styleConstants';
 import { Link } from 'react-router';
 import dateFormat from 'dateformat';
 import PubDiscussionsInput from './PubDiscussionsInput';
+import PubDiscussionsScore from './PubDiscussionsScore';
 
 import marked from '../../modules/markdown/markdown';
 import markdownExtensions from '../../components/EditorPlugins';
@@ -104,9 +105,9 @@ const PubDiscussionsItem = React.createClass({
 
 				<div style={styles.discussionBody}>
 					<div style={styles.discussionVoting}>
-						<div style={styles.voteUp}>^</div>
-						<div style={styles.voteScore}>{discussionItem.yays - discussionItem.nays}</div>
-						<div style={styles.voteDown}>^</div>
+						<PubDiscussionsScore 
+							discussionID={discussionItem._id}
+							score={discussionItem.yays - discussionItem.nays} />
 					</div>
 
 					<div style={styles.discussionContent}>
@@ -230,6 +231,12 @@ styles = {
 		padding: '5px 0px',
 		fontFamily: 'Courier',
 		// backgroundColor: 'rgba(255,0,100,0.2)',
+	},
+	voteButton: {
+		':hover': {
+			color: '#444',
+			cursor: 'pointer',
+		}
 	},
 	voteUp: {
 		// backgroundColor: 'rgba(0,0,100,0.2)',
