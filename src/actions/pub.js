@@ -67,10 +67,13 @@ export function closePubModal() {
 	};	
 }
 
-export function addDiscussion(discussionObject) {
+export function addDiscussion(discussionObject, activeSaveID) {
 	return {
 		types: [ADD_DISCUSSION, ADD_DISCUSSION_SUCCESS, ADD_DISCUSSION_FAIL],
-		promise: (client) => client.post('/addDiscussion', {data: {discussionObject: discussionObject}}) 
+		promise: (client) => client.post('/addDiscussion', {data: {
+			discussionObject: discussionObject,
+			activeSaveID: activeSaveID
+		}}) 
 	};
 }
 

@@ -53,6 +53,7 @@ export const defaultState = Immutable.Map({
 		references: {},
 	},
 	addDiscussionStatus: 'loaded',
+	activeSaveID: undefined,
 	status: 'loading',
 	error: null
 });
@@ -152,23 +153,40 @@ function closePubModal(state) {
 	});
 }
 
-function addDiscussionLoad(state) {
+function addDiscussionLoad(state, activeSaveID) {
 	return state.merge({
 		addDiscussionStatus: 'loading',
+		activeSaveID: activeSaveID,
 	});
 }
 
-function addDiscussionSuccess(state, result) {
+function addDiscussionSuccess(state, result, activeSaveID) {
+	function findParentAndAdd(discussions, parentID, newChild) {
+		discussions.map((discussion)=>{
+			if (discussion._id === parentID) {
+				discussion.children.unshift(result);
+			}
+			if (discussion.children.length) {
+				findParentAndAdd(discussion.children, parentID, newChild);
+			}
+		});
+	}
+
 	let discussionsObject = state.getIn(['pubData', 'discussions']);
+	
 	if (!result.parent) {
 		discussionsObject = discussionsObject.unshift(result);
 	} else {
 		// We have a parent, we gotta go find it and then merge inside of it
+		const discussionsArray = discussionsObject.toJS();
+		findParentAndAdd(discussionsArray, result.parent, result);
+		discussionsObject = discussionsArray;
 	}
 
 	const newState = state.mergeIn(['pubData', 'discussions'], discussionsObject);
 	return newState.merge({
 		addDiscussionStatus: 'loaded',
+		activeSaveID: undefined,
 		newDiscussionData: {
 			selections: {},
 			assets: {},
@@ -177,10 +195,11 @@ function addDiscussionSuccess(state, result) {
 	});
 }
 
-function addDiscussionFail(state, error) {
+function addDiscussionFail(state, error, activeSaveID) {
 	console.log(error);
 	return state.merge({
 		addDiscussionStatus: 'error',
+		activeSaveID: activeSaveID,
 	});
 }
 
@@ -220,11 +239,11 @@ export default function readerReducer(state = defaultState, action) {
 		return closePubModal(state);
 
 	case ADD_DISCUSSION:
-		return addDiscussionLoad(state);
+		return addDiscussionLoad(state, action.activeSaveID);
 	case ADD_DISCUSSION_SUCCESS:
-		return addDiscussionSuccess(state, action.result);
+		return addDiscussionSuccess(state, action.result, action.activeSaveID);
 	case ADD_DISCUSSION_FAIL:
-		return addDiscussionFail(state, action.error);
+		return addDiscussionFail(state, action.error, action.activeSaveID);
 
 	case ADD_SELECTION:
 		return addSelection(state, action.selection);

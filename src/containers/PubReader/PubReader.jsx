@@ -110,14 +110,14 @@ const PubReader = React.createClass({
 	closeMenu: function() {
 		this.props.dispatch(closeMenu());
 	},
-	addDiscussion: function(discussionObject) {
+	addDiscussion: function(discussionObject, activeSaveID) {
 		if (!this.props.loginData.get('loggedIn')) {
 			this.props.dispatch(toggleVisibility());
 		} else {
 			discussionObject.pub = this.props.readerData.getIn(['pubData', '_id']);
 			discussionObject.version = this.props.query.version !== undefined && this.props.query.version > 0 && this.props.query.version < (this.props.readerData.getIn(['pubData', 'history']).size - 1) ? this.props.query.version : this.props.readerData.getIn(['pubData', 'history']).size;
 			discussionObject.selections = this.props.readerData.getIn(['newDiscussionData', 'selections']);
-			this.props.dispatch(addDiscussion(discussionObject));
+			this.props.dispatch(addDiscussion(discussionObject, activeSaveID));
 		}
 	},
 	addSelection: function(newSelection) {
@@ -237,6 +237,7 @@ const PubReader = React.createClass({
 						pHashes={pubData.pHashes}
 						addDiscussionStatus={this.props.readerData.get('addDiscussionStatus')}
 						newDiscussionData={this.props.readerData.get('newDiscussionData')}
+						activeSaveID={this.props.readerData.get('activeSaveID')}
 						userThumbnail={this.props.loginData.getIn(['userData', 'thumbnail'])}/>
 				</div>
 

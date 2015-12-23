@@ -20,6 +20,8 @@ const PubDiscussionsItem = React.createClass({
 		addDiscussionStatus: PropTypes.string,
 		newDiscussionData: PropTypes.object,
 		userThumbnail: PropTypes.string,
+
+		activeSaveID: PropTypes.string,
 	},
 
 	getDefaultProps: function() {
@@ -59,6 +61,14 @@ const PubDiscussionsItem = React.createClass({
 
 			
 		});
+		
+	},
+
+	componentWillReceiveProps(nextProps) {
+		if (this.props.addDiscussionStatus === 'loading' && this.props.activeSaveID === this.props.discussionItem._id && nextProps.addDiscussionStatus === 'loaded') {
+			this.setState({replyActive: false});
+
+		}
 		
 	},
 
@@ -112,6 +122,8 @@ const PubDiscussionsItem = React.createClass({
 						userThumbnail={this.props.userThumbnail}
 						codeMirrorID={'replyInput-' + discussionItem._id} 
 						parentID={discussionItem._id}
+						saveID={discussionItem._id}
+						activeSaveID={this.props.activeSaveID}
 						isReply={true}/>
 				</div>
 				
@@ -204,6 +216,7 @@ styles = {
 		width: '100%',
 		position: 'relative',
 		minHeight: 82,
+		borderBottom: '1px solid #ccc',
 	},
 	discussionVoting: {
 		width: '36',
@@ -252,13 +265,14 @@ styles = {
 
 	},
 	discussionChildrenWrapper: {
-		width: 'calc(100% - 10px)',
-		paddingLeft: 20,
+		width: 'calc(100% - 20px)',
+		marginLeft: 20,
 		// borderLeft: '1px solid #ccc',
-		borderTop: '1px solid #ccc',
+		// borderTop: '1px solid #ccc',
 	},
 	replyWrapper: {
-		paddingLeft: '15%',
+		width: 'calc(100% - 20px)',
+		marginLeft: 20,
 		position: 'absolute',
 		pointerEvents: 'none',
 		opacity: 0,

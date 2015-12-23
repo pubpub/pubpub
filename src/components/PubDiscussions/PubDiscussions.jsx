@@ -16,6 +16,7 @@ const PubDiscussions = React.createClass({
 		expertsData: PropTypes.object,
 		addDiscussionHandler: PropTypes.func,
 		addDiscussionStatus: PropTypes.string,
+		activeSaveID: PropTypes.string,
 		newDiscussionData: PropTypes.object,
 		userThumbnail: PropTypes.string,
 	},
@@ -44,6 +45,8 @@ const PubDiscussions = React.createClass({
 						addDiscussionStatus={this.props.addDiscussionStatus} 
 						newDiscussionData={this.props.newDiscussionData} 
 						userThumbnail={this.props.userThumbnail} 
+						activeSaveID={this.props.activeSaveID}
+						saveID={'root'}
 						isReply={false}
 						codeMirrorID={'rootCommentInput'}/>
 					{
@@ -53,6 +56,7 @@ const PubDiscussions = React.createClass({
 								pHashes={this.props.pHashes}
 								discussionItem={discussion}
 
+								activeSaveID={this.props.activeSaveID}
 								addDiscussionHandler={this.props.addDiscussionHandler}
 								addDiscussionStatus={this.props.addDiscussionStatus} 
 								newDiscussionData={this.props.newDiscussionData} 

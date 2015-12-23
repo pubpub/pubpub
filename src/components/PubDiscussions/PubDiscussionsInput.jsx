@@ -35,6 +35,9 @@ const PubDiscussionsInput = React.createClass({
 		codeMirrorID: PropTypes.string,
 		parentID: PropTypes.string,
 		isReply: PropTypes.bool,
+		activeSaveID: PropTypes.string,
+		saveID: PropTypes.string,
+
 	},
 
 	componentDidMount() {
@@ -46,7 +49,7 @@ const PubDiscussionsInput = React.createClass({
 	},
 
 	componentWillReceiveProps(nextProps) {
-		if (this.props.addDiscussionStatus === 'loading' && nextProps.addDiscussionStatus === 'loaded') {
+		if (this.props.addDiscussionStatus === 'loading' && this.props.activeSaveID === this.props.saveID && nextProps.addDiscussionStatus === 'loaded') {
 			// This means the discussion was succesfully submitted
 			// Reset any form options here.
 			// const cm = document.getElementsByClassName('CodeMirror')[0].CodeMirror;
@@ -77,7 +80,7 @@ const PubDiscussionsInput = React.createClass({
 		newDiscussion.selections = {};
 		newDiscussion.references = {};
 		newDiscussion.parent = this.props.parentID;
-		this.props.addDiscussionHandler(newDiscussion);
+		this.props.addDiscussionHandler(newDiscussion, this.props.saveID);
 	},
 
 	render: function() {
@@ -104,7 +107,7 @@ const PubDiscussionsInput = React.createClass({
 				<div id={this.props.codeMirrorID} style={styles.inputBox}></div>
 
 				<div style={styles.loaderContainer}>
-					{(this.props.addDiscussionStatus === 'loading' ? <LoaderIndeterminate color="#444"/> : null)}
+					{(this.props.addDiscussionStatus === 'loading' && this.props.activeSaveID === this.props.saveID ? <LoaderIndeterminate color="#444"/> : null)}
 				</div>
 
 				<div style={styles.inputBottomLine}>
@@ -126,7 +129,7 @@ styles = {
 		position: 'relative',
 	},
 	replyContainer: {
-		margin: '0px 0px 10px 0px',
+		// margin: '0px 10px 10px 0px',
 	},
 	inputTopLine: {
 		// backgroundColor: 'rgba(255,0,0,0.1)',
