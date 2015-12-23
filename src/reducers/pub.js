@@ -21,7 +21,12 @@ import {
 	ADD_DISCUSSION_SUCCESS, 
 	ADD_DISCUSSION_FAIL,
 
-	ADD_SELECTION
+	ADD_SELECTION,
+
+	DISCUSSION_VOTE,
+	DISCUSSION_VOTE_SUCCESS,
+	DISCUSSION_VOTE_FAIL,
+
 } from '../actions/pub';
 
 /*--------*/
@@ -96,7 +101,7 @@ function clearPub(state) {
 function load(state) {
 	return state.merge({
 		status: 'loading',
-		pubdata: defaultState.toJS(),
+		pubData: defaultState.toJS(),
 	});
 }
 
@@ -211,6 +216,35 @@ function addSelection(state, selection) {
 	);
 }
 
+function discussionVoteSuccess(state, result) {
+	// Find the discussion with result._id
+	// update the yays
+	// update the nays
+	// update the score
+	// update useryay
+	// update usernay
+
+	function findDiscussionAndChange(discussions, discussionID, changes) {
+		discussions.map((discussion)=>{
+			if (discussion._id === discussionID) {
+				discussion[changes.type === 'yay' ? 'yays' : 'nays'] += changes.scoreChange;
+				discussion.userYay = changes.newUserYay;
+				discussion.userNay = changes.newUserNay;
+			}
+			if (discussion.children.length) {
+				findDiscussionAndChange(discussion.children, discussionID, changes);
+			}
+		});
+	}
+
+	let discussionsObject = state.getIn(['pubData', 'discussions']);
+	const discussionsArray = discussionsObject.toJS();
+	findDiscussionAndChange(discussionsArray, result.discussionID, result.changes);
+	discussionsObject = discussionsArray;
+
+	return state.mergeIn(['pubData', 'discussions'], discussionsObject);
+}
+
 /*--------*/
 // Bind actions to specific reducing functions.
 /*--------*/
@@ -247,6 +281,13 @@ export default function readerReducer(state = defaultState, action) {
 
 	case ADD_SELECTION:
 		return addSelection(state, action.selection);
+
+	case DISCUSSION_VOTE:
+		return state;
+	case DISCUSSION_VOTE_SUCCESS:
+		return discussionVoteSuccess(state, action.result);
+	case DISCUSSION_VOTE_FAIL:
+		return state;
 
 	default:
 		return ensureImmutable(state);

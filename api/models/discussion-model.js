@@ -49,8 +49,8 @@ discussionSchema.statics.nestChildren = function (input) {
 discussionSchema.statics.appendUserYayNayFlag = function (input, userID) {
   // for each item, check if userID is in yays, add userYay = true, userNay = true
   // return discussions with items augmented with userYays and userNays
-  // console.log(input, userID)
   input.forEach(function(item){
+
     if(item.yays.toString().indexOf(userID) > -1){
       item.userYay = true;
     }

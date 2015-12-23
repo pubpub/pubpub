@@ -4,7 +4,7 @@ import Radium, {Style} from 'radium';
 import DocumentMeta from 'react-document-meta';
 import PureRenderMixin from 'react-addons-pure-render-mixin';
 import { Link } from 'react-router';
-import {getPub, openPubModal, closePubModal, addDiscussion, addSelection} from '../../actions/pub';
+import {getPub, openPubModal, closePubModal, addDiscussion, addSelection, discussionVoteSubmit} from '../../actions/pub';
 import {toggleVisibility} from '../../actions/login';
 import {closeMenu} from '../../actions/nav';
 
@@ -112,18 +112,25 @@ const PubReader = React.createClass({
 	},
 	addDiscussion: function(discussionObject, activeSaveID) {
 		if (!this.props.loginData.get('loggedIn')) {
-			this.props.dispatch(toggleVisibility());
-		} else {
-			discussionObject.pub = this.props.readerData.getIn(['pubData', '_id']);
-			discussionObject.version = this.props.query.version !== undefined && this.props.query.version > 0 && this.props.query.version < (this.props.readerData.getIn(['pubData', 'history']).size - 1) ? this.props.query.version : this.props.readerData.getIn(['pubData', 'history']).size;
-			discussionObject.selections = this.props.readerData.getIn(['newDiscussionData', 'selections']);
-			this.props.dispatch(addDiscussion(discussionObject, activeSaveID));
+			return this.props.dispatch(toggleVisibility());
 		}
+		discussionObject.pub = this.props.readerData.getIn(['pubData', '_id']);
+		discussionObject.version = this.props.query.version !== undefined && this.props.query.version > 0 && this.props.query.version < (this.props.readerData.getIn(['pubData', 'history']).size - 1) ? this.props.query.version : this.props.readerData.getIn(['pubData', 'history']).size;
+		discussionObject.selections = this.props.readerData.getIn(['newDiscussionData', 'selections']);
+		this.props.dispatch(addDiscussion(discussionObject, activeSaveID));	
 	},
 	addSelection: function(newSelection) {
 		newSelection.pub = this.props.readerData.getIn(['pubData', '_id']);
 		newSelection.version = this.props.query.version !== undefined && this.props.query.version > 0 && this.props.query.version < (this.props.readerData.getIn(['pubData', 'history']).size - 1) ? this.props.query.version : this.props.readerData.getIn(['pubData', 'history']).size;
 		this.props.dispatch(addSelection(newSelection));
+	},
+
+	discussionVoteSubmit: function(type, discussionID, userYay, userNay) {
+		if (!this.props.loginData.get('loggedIn')) {
+			return this.props.dispatch(toggleVisibility());
+		}
+		this.props.dispatch(discussionVoteSubmit(type, discussionID, userYay, userNay));
+		// console.log(type, discussionID, userYay, userNay);
 	},
 
 	render: function() {
@@ -238,7 +245,8 @@ const PubReader = React.createClass({
 						addDiscussionStatus={this.props.readerData.get('addDiscussionStatus')}
 						newDiscussionData={this.props.readerData.get('newDiscussionData')}
 						activeSaveID={this.props.readerData.get('activeSaveID')}
-						userThumbnail={this.props.loginData.getIn(['userData', 'thumbnail'])}/>
+						userThumbnail={this.props.loginData.getIn(['userData', 'thumbnail'])}
+						handleVoteSubmit={this.discussionVoteSubmit} />/>
 				</div>
 
 			</div>

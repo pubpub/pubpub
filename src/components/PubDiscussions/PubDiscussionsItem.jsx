@@ -23,6 +23,7 @@ const PubDiscussionsItem = React.createClass({
 		userThumbnail: PropTypes.string,
 
 		activeSaveID: PropTypes.string,
+		handleVoteSubmit: PropTypes.func,
 	},
 
 	getDefaultProps: function() {
@@ -107,7 +108,10 @@ const PubDiscussionsItem = React.createClass({
 					<div style={styles.discussionVoting}>
 						<PubDiscussionsScore 
 							discussionID={discussionItem._id}
-							score={discussionItem.yays - discussionItem.nays} />
+							score={discussionItem.yays - discussionItem.nays}
+							userYay={discussionItem.userYay}
+							userNay={discussionItem.userNay} 
+							handleVoteSubmit={this.props.handleVoteSubmit} />
 					</div>
 
 					<div style={styles.discussionContent}>
@@ -142,7 +146,8 @@ const PubDiscussionsItem = React.createClass({
 								addDiscussionHandler={this.props.addDiscussionHandler}
 								addDiscussionStatus={this.props.addDiscussionStatus} 
 								newDiscussionData={this.props.newDiscussionData} 
-								userThumbnail={this.props.userThumbnail} />
+								userThumbnail={this.props.userThumbnail} 
+								handleVoteSubmit={this.props.handleVoteSubmit} />
 							);
 						})
 					}
@@ -160,7 +165,7 @@ export default Radium(PubDiscussionsItem);
 styles = {
 	container: {
 		width: '100%',
-		overflow: 'hidden',
+		// overflow: 'hidden',
 		margin: '10px 0px',
 		backgroundColor: 'rgba(255,255,255,0.2)',
 	},
@@ -231,36 +236,6 @@ styles = {
 		padding: '5px 0px',
 		fontFamily: 'Courier',
 		// backgroundColor: 'rgba(255,0,100,0.2)',
-	},
-	voteButton: {
-		':hover': {
-			color: '#444',
-			cursor: 'pointer',
-		}
-	},
-	voteUp: {
-		// backgroundColor: 'rgba(0,0,100,0.2)',
-		// fontFamily: 'Courier',
-		height: 20,
-		lineHeight: '38px',
-		fontSize: '28px',
-		color: '#aaa',
-	},
-	voteScore: {
-		// backgroundColor: 'rgba(255,100,100,0.2)',
-		color: '#888',
-		fontFamily: 'Lato',
-		// fontWeight: 'bold',
-
-	},
-	voteDown: {
-		// backgroundColor: 'rgba(0,0,100,0.2)',
-		// fontFamily: 'Courier',
-		height: 20,
-		lineHeight: '38px',
-		fontSize: '28px',
-		color: '#aaa',
-		transform: 'rotate(180deg)',
 	},
 	discussionContent: {
 		width: 'calc(100% - 36px - 30px)',

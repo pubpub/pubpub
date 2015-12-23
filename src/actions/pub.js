@@ -23,6 +23,10 @@ export const ADD_DISCUSSION_FAIL = 'pub/ADD_DISCUSSION_FAIL';
 
 export const ADD_SELECTION = 'pub/ADD_SELECTION';
 
+export const DISCUSSION_VOTE = 'pub/DISCUSSION_VOTE';
+export const DISCUSSION_VOTE_SUCCESS = 'pub/DISCUSSION_VOTE_SUCCESS';
+export const DISCUSSION_VOTE_FAIL = 'pub/DISCUSSION_VOTE_FAIL';
+
 /*--------*/
 // Define Action creators
 // 
@@ -80,4 +84,11 @@ export function addSelection(selection) {
 		type: ADD_SELECTION,
 		selection: selection,
 	};	
+}
+
+export function discussionVoteSubmit(type, discussionID, userYay, userNay) {
+	return {
+		types: [DISCUSSION_VOTE, DISCUSSION_VOTE_SUCCESS, DISCUSSION_VOTE_FAIL],
+		promise: (client) => client.post('/discussionVote', {data: {type, discussionID, userYay, userNay}}),
+	};
 }

@@ -171,6 +171,8 @@ pubSchema.statics.getPub = function (slug, readerID, callback) {
 				outputPub.isAuthor = true;
 			}
 
+			outputPub.discussions = Discussion.appendUserYayNayFlag(outputPub.discussions, readerID);
+			outputPub.discussions = Discussion.calculateYayNayScore(outputPub.discussions);
 			outputPub.discussions = Discussion.nestChildren(outputPub.discussions);
 			// console.log(outputPub.isAuthor);
 			return callback(null, outputPub);

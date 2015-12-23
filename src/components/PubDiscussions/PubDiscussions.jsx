@@ -19,6 +19,7 @@ const PubDiscussions = React.createClass({
 		activeSaveID: PropTypes.string,
 		newDiscussionData: PropTypes.object,
 		userThumbnail: PropTypes.string,
+		handleVoteSubmit: PropTypes.func
 	},
 
 	getDefaultProps: function() {
@@ -60,7 +61,8 @@ const PubDiscussions = React.createClass({
 								addDiscussionHandler={this.props.addDiscussionHandler}
 								addDiscussionStatus={this.props.addDiscussionStatus} 
 								newDiscussionData={this.props.newDiscussionData} 
-								userThumbnail={this.props.userThumbnail} />
+								userThumbnail={this.props.userThumbnail} 
+								handleVoteSubmit={this.props.handleVoteSubmit} />
 							);
 						})
 					}
