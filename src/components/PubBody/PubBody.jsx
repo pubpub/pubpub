@@ -106,8 +106,7 @@ const PubBody = React.createClass({
 			},
 			'.selection': {
 				backgroundColor: this.props.showPubHighlights ? 'rgba(195, 245, 185, 0.6)' : 'rgba(195, 245, 185, 0.0)',
-				cursor: 'pointer',
-				pointerEvents: this.props.showPubHighlights ? 'auto' : 'none',
+				cursor: this.props.showPubHighlights ? 'pointer' : 'text',
 			},
 			'.selection-active': {
 				backgroundColor: 'rgba(78, 164, 61, 0.6)',
