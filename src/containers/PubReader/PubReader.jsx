@@ -4,7 +4,7 @@ import Radium, {Style} from 'radium';
 import DocumentMeta from 'react-document-meta';
 import PureRenderMixin from 'react-addons-pure-render-mixin';
 import { Link } from 'react-router';
-import {getPub, openPubModal, closePubModal, addDiscussion, addSelection, discussionVoteSubmit} from '../../actions/pub';
+import {getPub, openPubModal, closePubModal, addDiscussion, addSelection, discussionVoteSubmit, togglePubHighlights} from '../../actions/pub';
 import {toggleVisibility} from '../../actions/login';
 import {closeMenu} from '../../actions/nav';
 
@@ -132,6 +132,10 @@ const PubReader = React.createClass({
 		this.props.dispatch(discussionVoteSubmit(type, discussionID, userYay, userNay));
 	},
 
+	toggleHighlights: function() {
+		this.props.dispatch(togglePubHighlights());
+	},
+
 	render: function() {
 		const metaData = {};
 		if (this.props.readerData.getIn(['pubData', 'title'])) {
@@ -197,7 +201,8 @@ const PubReader = React.createClass({
 						htmlTree={this.state.htmlTree}
 						authors={pubData.history[versionIndex].authors}
 						addSelectionHandler={this.addSelection} 
-						style={pubData.history[versionIndex].style}/>
+						style={pubData.history[versionIndex].style}
+						showPubHighlights={this.props.readerData.get('showPubHighlights')}/>
 
 					<PubModals
 						slug={this.props.slug}
@@ -245,7 +250,9 @@ const PubReader = React.createClass({
 						newDiscussionData={this.props.readerData.get('newDiscussionData')}
 						activeSaveID={this.props.readerData.get('activeSaveID')}
 						userThumbnail={this.props.loginData.getIn(['userData', 'thumbnail'])}
-						handleVoteSubmit={this.discussionVoteSubmit} />
+						handleVoteSubmit={this.discussionVoteSubmit} 
+						toggleHighlightsHandler={this.toggleHighlights}
+						showPubHighlights={this.props.readerData.get('showPubHighlights')}/>
 				</div>
 
 			</div>

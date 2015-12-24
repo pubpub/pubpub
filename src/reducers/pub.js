@@ -23,6 +23,8 @@ import {
 
 	ADD_SELECTION,
 
+	TOGGLE_PUB_HIGHLIGHTS,
+
 	DISCUSSION_VOTE,
 	DISCUSSION_VOTE_SUCCESS,
 	DISCUSSION_VOTE_FAIL,
@@ -60,7 +62,8 @@ export const defaultState = Immutable.Map({
 	addDiscussionStatus: 'loaded',
 	activeSaveID: null,
 	status: 'loading',
-	error: null
+	error: null,
+	showPubHighlights: true,
 });
 
 /*--------*/
@@ -216,6 +219,10 @@ function addSelection(state, selection) {
 	);
 }
 
+function togglePubHighlights(state) {
+	return state.set('showPubHighlights', !state.get('showPubHighlights'));
+}
+
 function discussionVote(state, voteType, discussionID, userYay, userNay) {
 	let scoreChange = 0;
 	let newUserYay = undefined;
@@ -296,6 +303,9 @@ export default function readerReducer(state = defaultState, action) {
 
 	case ADD_SELECTION:
 		return addSelection(state, action.selection);
+
+	case TOGGLE_PUB_HIGHLIGHTS:
+		return togglePubHighlights(state);
 
 	case DISCUSSION_VOTE:
 		return discussionVote(state, action.voteType, action.discussionID, action.userYay, action.userNay);

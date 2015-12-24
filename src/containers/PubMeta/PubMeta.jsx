@@ -7,7 +7,8 @@ import {getPub, addDiscussion, discussionVoteSubmit} from '../../actions/pub';
 import {toggleVisibility} from '../../actions/login';
 import { Link } from 'react-router';
 import {PubLeftBar, PubNav, LoaderDeterminate} from '../../components';
-import {PubMetaDiscussions, PubMetaExperts, PubMetaHistory, PubMetaHistoryDiff, PubMetaReview, PubMetaReviews, PubMetaSource} from '../../components/PubMetaPanels';
+// import {PubMetaDiscussions, PubMetaExperts, PubMetaHistory, PubMetaHistoryDiff, PubMetaReview, PubMetaReviews, PubMetaSource} from '../../components/PubMetaPanels';
+import {PubMetaDiscussions, PubMetaHistory, PubMetaHistoryDiff, PubMetaSource} from '../../components/PubMetaPanels';
 import {globalStyles, pubSizes} from '../../utils/styleConstants';
 
 
@@ -143,15 +144,15 @@ const PubMeta = React.createClass({
 									userThumbnail={this.props.loginData.getIn(['userData', 'thumbnail'])}
 									handleVoteSubmit={this.discussionVoteSubmit} />
 									);
-							case 'experts':
-								return (<PubMetaExperts />
-									);
-							case 'reviews':
-								return (<PubMetaReviews />
-									);
-							case 'review':
-								return (<PubMetaReview />
-									);
+							// case 'experts':
+							// 	return (<PubMetaExperts />
+							// 		);
+							// case 'reviews':
+							// 	return (<PubMetaReviews />
+							// 		);
+							// case 'review':
+							// 	return (<PubMetaReview />
+							// 		);
 							
 							default:
 								return null;

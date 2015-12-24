@@ -18,6 +18,7 @@ const PubBody = React.createClass({
 		authors: PropTypes.array,
 		addSelectionHandler: PropTypes.func,
 		style: PropTypes.object,
+		showPubHighlights: PropTypes.bool,
 	},
 	getDefaultProps: function() {
 		return {
@@ -40,7 +41,7 @@ const PubBody = React.createClass({
 	getInitialState() {
 		return {
 			htmlTree: [],
-			TOC: [],
+			TOC: []
 		};
 	},
 
@@ -104,7 +105,7 @@ const PubBody = React.createClass({
 				backgroundColor: 'rgba(200,200,200, 0.7)',
 			},
 			'.selection': {
-				backgroundColor: 'rgba(195, 245, 185, 0.7)',
+				backgroundColor: this.props.showPubHighlights ? 'rgba(195, 245, 185, 0.6)' : 'rgba(195, 245, 185, 0.0)',
 			},
 		});
 	},
