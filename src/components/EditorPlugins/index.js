@@ -3,6 +3,7 @@ import PagebreakPlugin 	from './PagebreakPlugin';
 import ImagePlugin 	from './ImagePlugin';
 import CitePlugin 	from './CitePlugin';
 import VideoPlugin 	from './VideoPlugin';
+import SelectionPlugin 	from './SelectionPlugin';
 
 import {parsePluginString} from '../../utils/parsePlugins';
 /* -----------------
@@ -32,6 +33,15 @@ export default {
 	pagebreak: {
 		component: PagebreakPlugin,
 		rule: /^(?:\s)*(?:\[)pagebreak([^\n\]]*)(?:\])/,
+		inline: true,
+		autocomplete: false,
+		inlineFunc: function(cap, renderer) {
+			return renderer(cap[1]);
+		}
+	},
+	selection: {
+		component: SelectionPlugin,
+		rule: /^(?:\s)*(?:\[)selection([^\n\]]*)(?:\])/,
 		inline: true,
 		autocomplete: false,
 		inlineFunc: function(cap, renderer) {

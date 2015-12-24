@@ -9,7 +9,7 @@ let styles = {};
 
 // import {loadCss} from '../../utils/loadingFunctions';
 import initCodeMirrorMode from '../../containers/Editor/editorCodeMirrorMode';
-import {codeMirrorStyles} from './discussionInputStyles';
+import {codeMirrorStyles} from '../../containers/Editor/editorStyles';
 import {clearTempHighlights} from '../PubSelectionPopup/selectionFunctions';
 
 import marked from '../../modules/markdown/markdown';
@@ -86,7 +86,17 @@ const PubDiscussionsInput = React.createClass({
 	render: function() {
 		return (
 			<div style={[styles.container, this.props.isReply && styles.replyContainer]}>
-				<Style rules={codeMirrorStyles} />
+				<Style rules={{
+					...codeMirrorStyles(),
+					'.CodeMirror': {
+						backgroundColor: 'transparent',
+						fontSize: '15px',
+						color: '#555',
+						fontFamily: 'Arial',
+						padding: '0px 20px',
+						width: 'calc(100% - 40px)',
+					}
+				}} />
 
 				<div style={styles.inputTopLine}>
 					<div style={styles.thumbnail}>

@@ -39,8 +39,6 @@ const PubDiscussions = React.createClass({
 				<div className="pub-discussions-wrapper" style={rightBarStyles.sectionWrapper}>
 					<div style={rightBarStyles.sectionHeader}>Discussions</div>
 					<div style={rightBarStyles.sectionSubHeader}>
-						{/* <Link to={'/pub/' + this.props.slug + '/experts'} style={globalStyles.link}><span key={'discussionButton1'} style={rightBarStyles.sectionSubHeaderSpan}>View Experts ({this.props.expertsData.approved.length}) </span></Link>
-						| */}
 						<PubDiscussionsOptions
 							slug={this.props.slug}
 							toggleHighlightsHandler={this.props.toggleHighlightsHandler}
