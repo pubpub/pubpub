@@ -5,6 +5,7 @@ import { Link } from 'react-router';
 import dateFormat from 'dateformat';
 import PubDiscussionsInput from './PubDiscussionsInput';
 import PubDiscussionsScore from './PubDiscussionsScore';
+import smoothScroll from '../../utils/smoothscroll';
 
 import marked from '../../modules/markdown/markdown';
 import markdownExtensions from '../../components/EditorPlugins';
@@ -58,6 +59,19 @@ const PubDiscussionsItem = React.createClass({
 					};	
 					const renderer = new Marklib.Rendering(document, {className: 'selection selection-' + selection._id}, document.getElementById('pubBodyContent'));
 					renderer.renderWithResult(result);	
+					renderer.on('click', function(item) {
+						const destination = document.getElementById('selection-block-' + selection._id);
+						const context = document.getElementsByClassName('rightBar')[0];
+						smoothScroll(destination, 500, ()=>{}, context);
+					});
+					renderer.on('hover-enter', function(item) {
+						const destination = document.getElementById('selection-block-' + selection._id);
+						destination.className = destination.className.replace('selection-block', 'selection-block-active');
+					});
+					renderer.on('hover-leave', function(item) {
+						const destination = document.getElementById('selection-block-' + selection._id);
+						destination.className = destination.className.replace('selection-block-active', 'selection-block');
+					});
 				} catch (err) {
 					console.log('selection', err);
 				}
