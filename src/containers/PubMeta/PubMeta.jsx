@@ -3,10 +3,11 @@ import {connect} from 'react-redux';
 import Radium from 'radium';
 import DocumentMeta from 'react-document-meta';
 import PureRenderMixin from 'react-addons-pure-render-mixin';
-import {getPub} from '../../actions/pub';
+import {getPub, addDiscussion, discussionVoteSubmit} from '../../actions/pub';
+import {toggleVisibility} from '../../actions/login';
 import { Link } from 'react-router';
 import {PubLeftBar, PubNav, LoaderDeterminate} from '../../components';
-import {PubMetaExperts, PubMetaHistory, PubMetaHistoryDiff, PubMetaReview, PubMetaReviews, PubMetaSource} from '../../components/PubMetaPanels';
+import {PubMetaDiscussions, PubMetaExperts, PubMetaHistory, PubMetaHistoryDiff, PubMetaReview, PubMetaReviews, PubMetaSource} from '../../components/PubMetaPanels';
 import {globalStyles, pubSizes} from '../../utils/styleConstants';
 
 
@@ -15,8 +16,10 @@ let styles = {};
 const PubMeta = React.createClass({
 	propTypes: {
 		readerData: PropTypes.object,
+		loginData: PropTypes.object,
 		slug: PropTypes.string,
 		meta: PropTypes.string,
+		metaID: PropTypes.string,
 		query: PropTypes.object,
 		dispatch: PropTypes.func
 	},
@@ -49,6 +52,23 @@ const PubMeta = React.createClass({
 			transform: 'translateX(' + (-100 + this.props.readerData.get('loading')) + '%)',
 			transition: '.2s linear transform'
 		};
+	},
+
+	addDiscussion: function(discussionObject, activeSaveID) {
+		if (!this.props.loginData.get('loggedIn')) {
+			return this.props.dispatch(toggleVisibility());
+		}
+		discussionObject.pub = this.props.readerData.getIn(['pubData', '_id']);
+		discussionObject.version = this.props.query.version !== undefined && this.props.query.version > 0 && this.props.query.version < (this.props.readerData.getIn(['pubData', 'history']).size - 1) ? this.props.query.version : this.props.readerData.getIn(['pubData', 'history']).size;
+		discussionObject.selections = this.props.readerData.getIn(['newDiscussionData', 'selections']);
+		this.props.dispatch(addDiscussion(discussionObject, activeSaveID));	
+	},
+
+	discussionVoteSubmit: function(type, discussionID, userYay, userNay) {
+		if (!this.props.loginData.get('loggedIn')) {
+			return this.props.dispatch(toggleVisibility());
+		}
+		this.props.dispatch(discussionVoteSubmit(type, discussionID, userYay, userNay));
 	},
 
 	render: function() {
@@ -110,6 +130,19 @@ const PubMeta = React.createClass({
 								return (<PubMetaHistoryDiff 
 										diffObject={this.props.readerData.getIn(['pubData', 'history', versionIndex, 'diffObject']).toJS()}/>
 									);
+							case 'discussions':
+								return (<PubMetaDiscussions 
+									metaID={this.props.metaID}
+									slug={this.props.slug}
+									discussionsData={this.props.readerData.getIn(['pubData', 'discussions']).toJS()}
+									
+									addDiscussionHandler={this.addDiscussion}
+									addDiscussionStatus={this.props.readerData.get('addDiscussionStatus')}
+									newDiscussionData={this.props.readerData.get('newDiscussionData')}
+									activeSaveID={this.props.readerData.get('activeSaveID')}
+									userThumbnail={this.props.loginData.getIn(['userData', 'thumbnail'])}
+									handleVoteSubmit={this.discussionVoteSubmit} />
+									);
 							case 'experts':
 								return (<PubMetaExperts />
 									);
@@ -139,8 +172,10 @@ const PubMeta = React.createClass({
 export default connect( state => {
 	return {
 		readerData: state.pub, 
+		loginData: state.login,
 		slug: state.router.params.slug,
 		meta: state.router.params.meta,
+		metaID: state.router.params.metaID,
 		query: state.router.location.query,
 	};
 })( Radium(PubMeta) );

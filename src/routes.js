@@ -20,6 +20,7 @@ export default () => {
 			<Route path="/pub/:slug" component={PubReader}/>
 			<Route path="/pub/:slug/edit" component={Editor}/>
 			<Route path="/pub/:slug/:meta" component={PubMeta}/>
+			<Route path="/pub/:slug/:meta/:metaID" component={PubMeta}/> // Used for discussions
 			<Route path="/pubs/create" component={PubCreate}/>
 			
 			<Route path="/subdomain" component={SubdomainTest}/>

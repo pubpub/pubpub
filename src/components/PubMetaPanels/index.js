@@ -1,3 +1,4 @@
+export PubMetaDiscussions from './PubMetaDiscussions';
 export PubMetaExperts from './PubMetaExperts';
 export PubMetaHistory from './PubMetaHistory';
 export PubMetaHistoryDiff from './PubMetaHistoryDiff';

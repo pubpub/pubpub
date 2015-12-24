@@ -130,7 +130,6 @@ const PubReader = React.createClass({
 			return this.props.dispatch(toggleVisibility());
 		}
 		this.props.dispatch(discussionVoteSubmit(type, discussionID, userYay, userNay));
-		// console.log(type, discussionID, userYay, userNay);
 	},
 
 	render: function() {
