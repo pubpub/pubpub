@@ -56,7 +56,7 @@ const PubDiscussionsItem = React.createClass({
 						startOffset: selection.startOffset,
 						endOffset: selection.endOffset,
 					};	
-					const renderer = new Marklib.Rendering(document, {className: 'selection'}, document.getElementById('pubBodyContent'));
+					const renderer = new Marklib.Rendering(document, {className: 'selection selection-' + selection._id}, document.getElementById('pubBodyContent'));
 					renderer.renderWithResult(result);	
 				} catch (err) {
 					console.log('selection', err);
@@ -84,8 +84,10 @@ const PubDiscussionsItem = React.createClass({
 
 	render: function() {
 		const discussionItem = this.props.discussionItem;
-		// console.log(discussionItem);
-		const md = marked(discussionItem.markdown || '', Object.values({} || {}));
+		const assets = discussionItem.assets || [];
+		const references = discussionItem.references || [];
+		const selections = discussionItem.selections || [];
+		const md = marked(discussionItem.markdown || '', {assets, references, selections});
 		return (
 			<div style={styles.container}>
 				

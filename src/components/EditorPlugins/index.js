@@ -44,8 +44,10 @@ export default {
 		rule: /^(?:\s)*(?:\[)selection([^\n\]]*)(?:\])/,
 		inline: true,
 		autocomplete: false,
-		inlineFunc: function(cap, renderer) {
-			return renderer(cap[1]);
+		inlineFunc: function(cap, renderer, data) {
+			const selectionIndex = parseInt(cap[1].replace(':', ''), 10) - 1;
+			const selectionItem = data.selections[selectionIndex];
+			return renderer(selectionItem._id, {selectionItem});
 		}
 	},
 	image: {

@@ -195,11 +195,11 @@ const Editor = React.createClass({
 
 		const assets = convertFirebaseToObject(this.state.firepadData.assets);
 		const references = convertFirebaseToObject(this.state.firepadData.references, true);
-
+		const selections = [];
 		const markdown = fullMD.replace(/\[title:.*?\]/g, '').replace(/\[abstract:.*?\]/g, '').replace(/\[authorsNote:.*?\]/g, '').trim();
 
 		try {
-			const mdOutput = marked(markdown, {assets, references});	
+			const mdOutput = marked(markdown, {assets, references, selections});	
 			this.setState({
 				tree: mdOutput.tree,
 				travisTOC: mdOutput.travisTOC,

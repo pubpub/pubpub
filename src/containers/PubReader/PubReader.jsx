@@ -61,7 +61,8 @@ const PubReader = React.createClass({
 		const inputMD = this.props.readerData.getIn(['pubData', 'history', versionIndex, 'markdown']) || '';
 		const assets = convertImmutableListToObject( this.props.readerData.getIn(['pubData', 'history', versionIndex, 'assets']) );
 		const references = convertImmutableListToObject(this.props.readerData.getIn(['pubData', 'history', versionIndex, 'references']), true);
-		const mdOutput = marked(inputMD, {assets, references});
+		const selections = [];
+		const mdOutput = marked(inputMD, {assets, references, selections});
 
 		this.setState({
 			htmlTree: mdOutput.tree,
@@ -77,7 +78,8 @@ const PubReader = React.createClass({
 			const inputMD = nextProps.readerData.getIn(['pubData', 'history', versionIndex, 'markdown']) || '';
 			const assets = convertImmutableListToObject( nextProps.readerData.getIn(['pubData', 'history', versionIndex, 'assets']) );
 			const references = convertImmutableListToObject(nextProps.readerData.getIn(['pubData', 'history', versionIndex, 'references']), true);
-			const mdOutput = marked(inputMD, {assets, references});
+			const selections = [];
+			const mdOutput = marked(inputMD, {assets, references, selections});
 			this.setState({
 				htmlTree: mdOutput.tree,
 				TOC: mdOutput.travisTOCFull,

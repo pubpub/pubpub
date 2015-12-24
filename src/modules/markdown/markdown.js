@@ -190,6 +190,7 @@ renderer.image = function (href, title, text) {
 var exec = function (content,options) {
 	var assets = options.assets;
 	var references = options.references;
+  var selections = options.selections;
   result = [];
   toc = [];
   travisTOC = [];
@@ -199,6 +200,7 @@ var exec = function (content,options) {
 	//options = {};
 	renderer.assets = assets;
 	renderer.references = references;
+  renderer.selections = selections;
 
   marked(content, {renderer: renderer, smartypants: true});
   return {

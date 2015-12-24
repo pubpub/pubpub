@@ -12,9 +12,9 @@ import initCodeMirrorMode from '../../containers/Editor/editorCodeMirrorMode';
 import {codeMirrorStyles} from '../../containers/Editor/editorStyles';
 import {clearTempHighlights} from '../PubSelectionPopup/selectionFunctions';
 
-import marked from '../../modules/markdown/markdown';
-import markdownExtensions from '../../components/EditorPlugins';
-marked.setExtensions(markdownExtensions);
+// import marked from '../../modules/markdown/markdown';
+// import markdownExtensions from '../../components/EditorPlugins';
+// marked.setExtensions(markdownExtensions);
 
 const cmOptions = {
 	lineNumbers: false,

@@ -107,6 +107,9 @@ const PubBody = React.createClass({
 			'.selection': {
 				backgroundColor: this.props.showPubHighlights ? 'rgba(195, 245, 185, 0.6)' : 'rgba(195, 245, 185, 0.0)',
 			},
+			'.selection-active': {
+				backgroundColor: this.props.showPubHighlights ? 'rgba(78, 164, 61, 0.6)' : 'rgba(78, 164, 61, 0.0)',
+			},
 		});
 	},
 
