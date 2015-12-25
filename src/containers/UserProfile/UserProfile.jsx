@@ -87,7 +87,7 @@ const Profile = React.createClass({
 
 
 							{/* User Details */}
-							<div>
+							<div style={styles.profileNameWrapper}>
 								<Link to={'/user/' + this.props.username} style={globalStyles.link}>
 									<span style={styles.profileName} key={'userProfileName'}>{profileData.name}</span>
 								</Link>
@@ -160,6 +160,11 @@ styles = {
 			padding: '0px 15px',
 		},
 	},
+	profileNameWrapper: {
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+			textAlign: 'center',
+		},
+	},
 	profileName: {
 		margin: 0,
 		fontSize: '40px',
@@ -168,7 +173,6 @@ styles = {
 		},
 		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
 			fontSize: '50px',
-			textAlign: 'center',
 		},
 
 	},
