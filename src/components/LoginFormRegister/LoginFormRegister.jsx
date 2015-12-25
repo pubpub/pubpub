@@ -157,8 +157,6 @@ styles = {
 		opacity: 0,
 		left: 0,
 		top: 0,
-
-
 	},
 
 };

@@ -56,7 +56,6 @@ const Login = React.createClass({
 		if (evt.target.files.length) {
 			this.setState({userImageFile: evt.target.files[0]});	
 		}
-		
 	},
 	cancelImageUpload: function() {
 		this.setState({userImageFile: null});

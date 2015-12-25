@@ -6,7 +6,7 @@ import { Link } from 'react-router';
 import { pushState } from 'redux-router';
 import {logout} from '../../actions/login';
 import {getProfile} from '../../actions/user';
-import {LoaderDeterminate, UserMain, UserSettings} from '../../components';
+import {ImageCropper, LoaderDeterminate, UserMain, UserSettings} from '../../components';
 import {globalStyles, profileStyles, navStyles} from '../../utils/styleConstants';
 
 let styles = {};
@@ -18,6 +18,12 @@ const Profile = React.createClass({
 		username: PropTypes.string,
 		mode: PropTypes.string,
 		dispatch: PropTypes.func
+	},
+
+	getInitialState: function() {
+		return {
+			userImageFile: null,
+		};
 	},
 
 	statics: {
@@ -37,6 +43,25 @@ const Profile = React.createClass({
 		this.props.dispatch(logout());
 		this.props.dispatch(pushState(null, ('/')));
 	},
+
+	settingsSave: function(settingsObject) {
+		// Send it off and save
+		// If user image is in the settingsobject, on the server, save to cloudinary, etc.
+	},
+	onFileSelect: function(evt) {
+		if (evt.target.files.length) {
+			this.setState({userImageFile: evt.target.files[0]});	
+		}
+	},
+	cancelImageUpload: function() {
+		this.setState({userImageFile: null});
+	},
+	userImageUploaded: function(url) {
+		this.setState({userImageFile: null});
+		// AND THEN SEND URL OFF TO SERVER
+
+	},
+
 
 	render: function() {
 		const metaData = {};
@@ -79,6 +104,11 @@ const Profile = React.createClass({
 					<div style={[globalStyles.hiddenUntilLoad, globalStyles[this.props.profileData.get('status')]]}>
 						<div style={styles.userImageWrapper}>
 							<img style={styles.userImage} src={profileData.image} />
+							{/* <div key={'changeUserImageButton'} style={[styles.editImageButton, this.props.mode === 'settings' && styles.editImageButtonShow]} onClick={this.editImageClicked}>Change Image</div> */}
+							<div style={[styles.fileInputWrapper, this.props.mode === 'settings' && styles.fileInputWrapperShow]} key={'changeUserImageButton'}>
+								Change Image
+								<input style={styles.hiddenFileInput} type="file" accept="image/*" onChange={this.onFileSelect} />
+							</div>
 						</div>
 
 						{/* Content Wrapper is the right-hand side of the profile page.
@@ -110,8 +140,14 @@ const Profile = React.createClass({
 							}()}
 							
 						</div>
-						
+					</div>
 
+
+					<div style={[styles.imageCropperWrapper, this.state.userImageFile !== null && styles.imageCropperWrapperVisible]} >
+						<div style={styles.imageCropperContainer}>
+							<ImageCropper height={150} width={150} image={this.state.userImageFile} onCancel={this.cancelImageUpload} onUpload={this.userImageUploaded}/>
+						</div>
+						
 					</div>
 				</div>
 
@@ -149,6 +185,19 @@ styles = {
 		height: '100%',
 		
 	},
+	editImageButton: {
+		width: '100%',
+		textAlign: 'center',
+		display: 'none',
+		userSelect: 'none',
+		cursor: 'pointer',
+		':hover': {
+			color: 'black',
+		}
+	},
+	editImageButtonShow: {
+		display: 'block',
+	},
 	contentWrapper: {
 		float: 'left',
 		width: 'calc(100% - 242px)',
@@ -183,5 +232,65 @@ styles = {
 	},
 	headerModeShow: {
 		display: 'inline',
+	},
+	fileInputWrapper: {
+		width: '100%',
+		textAlign: 'center',
+		display: 'none',
+		userSelect: 'none',
+		position: 'relative',
+		':hover': {
+			color: 'black',
+		}
+	},
+	fileInputWrapperShow: {
+		display: 'block'
+	},
+	hiddenFileInput: {
+		height: '100%',
+		width: '100%',
+		position: 'absolute',
+		outline: 'none',
+		opacity: 0,
+		left: 0,
+		top: 0,
+		cursor: 'pointer',
+	},
+	imageCropperWrapper: {
+		height: 'calc(100vh - ' + globalStyles.headerHeight + ')',
+		width: '100vw',
+		backgroundColor: 'rgba(255,255,255,0.8)',
+		position: 'fixed',
+		top: globalStyles.headerHeight,
+		left: 0,
+		opacity: 0,
+		pointerEvents: 'none',
+		transition: '.1s linear opacity',
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+			width: '100%',
+			height: 'auto',
+			minHeight: 'calc(100vh - ' + globalStyles.headerHeightMobile + ')',
+			top: globalStyles.headerHeightMobile,
+			left: 0,
+		},
+	},
+	imageCropperContainer: {
+		width: 400,
+		height: 300,
+		backgroundColor: 'white',
+		margin: '0 auto',
+		position: 'relative',
+		top: '50%',
+		transform: 'translateY(-50%)',
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+			height: 'auto',
+			width: '100%',
+			top: 0,
+			transform: 'translateY(0%)',
+		}
+	},
+	imageCropperWrapperVisible: {
+		opacity: 1,
+		pointerEvents: 'auto',
 	},
 };
