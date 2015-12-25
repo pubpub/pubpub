@@ -27,13 +27,12 @@ app.post('/updateUser', function(req, res) {
 		if (err) { console.log(err); return res.status(500).json(err); }
 
 		const outputObject = req.body.newDetails;
-		user = {...user, ...req.body.newDetails};
-		// for (const key in req.body.newDetails) {
-		// 	if (req.body.newDetails.hasOwnProperty(key)) {
-		// 		user[key] = req.body.newDetails[key];
-		// 		outputObject[key] = req.body.newDetails[key];
-		// 	}
-		// }
+		// user = {...user, ...req.body.newDetails};
+		for (const key in req.body.newDetails) {
+			if (req.body.newDetails.hasOwnProperty(key)) {
+				user[key] = req.body.newDetails[key];
+			}
+		}
 
 		if (req.body.newDetails.image) {
 			cloudinary.uploader.upload(req.body.newDetails.image, function(cloudinaryResponse) { 
@@ -41,7 +40,6 @@ app.post('/updateUser', function(req, res) {
 				
 				user.thumbnail = thumbnail;
 				outputObject.thumbnail = thumbnail;
-
 				user.save(function(err, result){
 					if (err) { return res.status(500).json(err);  }
 					return res.status(201).json(outputObject);
@@ -50,6 +48,7 @@ app.post('/updateUser', function(req, res) {
 		} else {
 			user.save(function(err, result){
 				if (err) { return res.status(500).json(err);  }
+				console.log('outputObject', outputObject);
 				return res.status(201).json(outputObject);
 			});
 			

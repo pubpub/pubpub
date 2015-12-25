@@ -76,7 +76,7 @@ function updateUserSuccess(state, result) {
 
 	return state.merge({
 		settingsStatus: 'saved',
-		profileData: { ...state.get('profileData'), ...result},
+		profileData: { ...state.get('profileData').toJS(), ...result},
 	});
 }
 

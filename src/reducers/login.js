@@ -27,6 +27,10 @@ import {
 } from '../actions/login';
 
 import {
+	UPDATE_USER_SUCCESS,
+} from '../actions/user';
+
+import {
 
 	LOAD_JOURNAL_AND_LOGIN,
 	LOAD_JOURNAL_AND_LOGIN_SUCCESS,
@@ -132,6 +136,12 @@ function userSettingsUpdate(state, result) {
 	return state.mergeIn(['userData', 'settings'], result);
 }
 
+function updateUserSuccess(state, result) {
+	return state.merge({
+		userData: { ...state.get('userData').toJS(), ...result},
+	});
+}
+
 /*--------*/
 // Bind actions to specific reducing functions.
 /*--------*/
@@ -173,6 +183,9 @@ export default function loginReducer(state = defaultState, action) {
 		return loggedIn(state, action.result.loginData);
 	case LOAD_JOURNAL_AND_LOGIN_FAIL:
 		return failed(state, action.error);
+
+	case UPDATE_USER_SUCCESS:
+		return updateUserSuccess(state, action.result);
 
 	default:
 		return ensureImmutable(state);
