@@ -5,7 +5,7 @@ import DocumentMeta from 'react-document-meta';
 import { Link } from 'react-router';
 import { pushState } from 'redux-router';
 import {logout} from '../../actions/login';
-import {getProfile} from '../../actions/user';
+import {getProfile, updateUser} from '../../actions/user';
 import {ImageCropper, LoaderDeterminate, UserMain, UserSettings} from '../../components';
 import {globalStyles, profileStyles, navStyles} from '../../utils/styleConstants';
 
@@ -46,7 +46,9 @@ const Profile = React.createClass({
 
 	settingsSave: function(settingsObject) {
 		// Send it off and save
-		// If user image is in the settingsobject, on the server, save to cloudinary, etc.
+		// If user image is in the settingsObject, on the server, save to cloudinary, etc.
+		// console.log('settingsObject', settingsObject);
+		this.props.dispatch(updateUser(settingsObject));
 	},
 	onFileSelect: function(evt) {
 		if (evt.target.files.length) {
@@ -58,8 +60,7 @@ const Profile = React.createClass({
 	},
 	userImageUploaded: function(url) {
 		this.setState({userImageFile: null});
-		// AND THEN SEND URL OFF TO SERVER
-
+		this.settingsSave({image: url});
 	},
 
 
@@ -128,7 +129,8 @@ const Profile = React.createClass({
 								switch (this.props.mode) {
 								case 'settings':
 									return (
-										<UserSettings />
+										<UserSettings 
+											handleSettingsSave={this.settingsSave}/>
 									);
 								default:
 									return (

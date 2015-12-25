@@ -8,6 +8,10 @@ export const LOAD_PROFILE = 'user/LOAD_PROFILE';
 export const LOAD_PROFILE_SUCCESS = 'user/LOAD_PROFILE_SUCCESS';
 export const LOAD_PROFILE_FAIL = 'user/LOAD_PROFILE_FAIL';
 
+export const UPDATE_USER = 'user/UPDATE_USER';
+export const UPDATE_USER_SUCCESS = 'user/UPDATE_USER_SUCCESS';
+export const UPDATE_USER_FAIL = 'user/UPDATE_USER_FAIL';
+
 /*--------*/
 // Define Action creators
 // 
@@ -19,5 +23,12 @@ export function getProfile(username) {
 	return {
 		types: [LOAD_PROFILE, LOAD_PROFILE_SUCCESS, LOAD_PROFILE_FAIL],
 		promise: (client) => client.get('/getUser', {params: {username: username}}) 
+	};
+}
+
+export function updateUser(newDetails) {
+	return {
+		types: [UPDATE_USER, UPDATE_USER_SUCCESS, UPDATE_USER_FAIL],
+		promise: (client) => client.post('/updateUser', {data: {newDetails: newDetails}}) 
 	};
 }

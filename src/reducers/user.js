@@ -4,7 +4,16 @@ import {ensureImmutable} from './';
 /*--------*/
 // Load Actions
 /*--------*/
-import {LOAD_PROFILE, LOAD_PROFILE_SUCCESS, LOAD_PROFILE_FAIL} from '../actions/user';
+import {
+	LOAD_PROFILE, 
+	LOAD_PROFILE_SUCCESS, 
+	LOAD_PROFILE_FAIL,
+
+	UPDATE_USER, 
+	UPDATE_USER_SUCCESS, 
+	UPDATE_USER_FAIL,
+
+} from '../actions/user';
 
 /*--------*/
 // Initialize Default State 
@@ -12,6 +21,7 @@ import {LOAD_PROFILE, LOAD_PROFILE_SUCCESS, LOAD_PROFILE_FAIL} from '../actions/
 export const defaultState = Immutable.Map({
 	profileData: {},
 	status: 'loading',
+	settingsStatus: 'saved',
 	error: null
 });
 
@@ -58,6 +68,23 @@ function loadFail(state, error) {
 	return state.merge(outputState);
 }
 
+function updateUser(state) {
+	return state.set('settingsStatus', 'saving');
+}
+
+function updateUserSuccess(state, result) {
+
+	return state.merge({
+		settingsStatus: 'saved',
+		profileData: { ...state.get('profileData'), ...result},
+	});
+}
+
+function updateUserFail(state, error) {
+
+	return state.set('settingsStatus', 'error');
+}
+
 /*--------*/
 // Bind actions to specific reducing functions.
 /*--------*/
@@ -70,6 +97,14 @@ export default function profileReducer(state = defaultState, action) {
 		return loadSuccess(state, action.result);
 	case LOAD_PROFILE_FAIL:
 		return loadFail(state, action.error);
+
+	case UPDATE_USER:
+		return updateUser(state);
+	case UPDATE_USER_SUCCESS:
+		return updateUserSuccess(state, action.result);
+	case UPDATE_USER_FAIL:
+		return updateUserFail(state, action.error);
+
 	default:
 		return ensureImmutable(state);
 	}

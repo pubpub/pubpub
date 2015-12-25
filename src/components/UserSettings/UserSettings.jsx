@@ -6,7 +6,7 @@ let styles = {};
 
 const UserSettings = React.createClass({
 	propTypes: {
-		input: PropTypes.string,
+		handleSettingsSave: PropTypes.func,
 	},
 
 	getDefaultProps: function() {
@@ -14,6 +14,13 @@ const UserSettings = React.createClass({
 	},
 
 	saveSettings: function() {
+		const newDetails = {
+			name: this.refs.name.value,
+			title: this.refs.title.value,
+			bio: this.refs.bio.value,
+		};
+		// console.log(saveSettings);
+		this.props.handleSettingsSave(newDetails);
 		// Grab all the form content by their refs
 		// Stick it in an object, call the this.props.handleSettingsSave
 	},
@@ -24,17 +31,17 @@ const UserSettings = React.createClass({
 
 				<div key={'settingsForm-name'} style={styles.inputWrapper}>
 					<label style={styles.manualFormInputTitle} htmlFor={'name'}>Name</label>
-					<input style={styles.manualFormInput} name={'name'} id={'settingsForm-name'} ref={'settingsForm-name'} type="text" defaultValue={'Jingle'}/>
+					<input style={styles.manualFormInput} name={'name'} id={'settingsForm-name'} ref={'name'} type="text" defaultValue={'Jingle'}/>
 				</div>
 
 				<div key={'settingsForm-title'} style={styles.inputWrapper}>
 					<label style={styles.manualFormInputTitle} htmlFor={'title'}>Title</label>
-					<input style={styles.manualFormInput} name={'title'} id={'settingsForm-title'} ref={'settingsForm-title'} type="text" defaultValue={'Doctor of things'}/>
+					<input style={styles.manualFormInput} name={'title'} id={'settingsForm-title'} ref={'title'} type="text" defaultValue={'Doctor of things'}/>
 				</div>
 
 				<div key={'settingsForm-bio'} style={styles.inputWrapper}>
 					<label style={styles.manualFormInputTitle} htmlFor={'bio'}>Bio</label>
-					<textarea style={[styles.manualFormInput, styles.manualFormTextArea]} name={'bio'} id={'settingsForm-bio'} ref={'settingsForm-bio'} defaultValue={'Jingle'}></textarea>
+					<textarea style={[styles.manualFormInput, styles.manualFormTextArea]} name={'bio'} id={'settingsForm-bio'} ref={'bio'} defaultValue={'Jingle'}></textarea>
 				</div>
 
 				<div style={styles.saveSettings} key={'userSettingsSaveButton'} onClick={this.saveSettings}>Save</div>
