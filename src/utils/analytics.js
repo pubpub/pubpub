@@ -1,12 +1,14 @@
 // Mixpanel can't load on server, so we need to do a check to make sure we're on the browser
 // Google analytics could load server side, but let's stay consistent
-
 let ga = undefined;
 let mixpanel = undefined;
 if (typeof window !== 'undefined') {
 	ga = require('react-ga');
 	mixpanel = require('mixpanel-browser');
 }
+
+// Don't register events if we're in DEV
+const analyticsEnabled = __DEVELOPMENT__ ? false : true; 
 
 function pageView(path, loggedIn) {
 	ga.pageview(path);
@@ -16,11 +18,15 @@ function pageView(path, loggedIn) {
 	});
 }
 
-function sendEvent(eventData) {
-	// Do things
+function sendEvent(eventTitle, eventData, category) {
+	ga.event({
+		category: category || 'User',
+		action: eventTitle,
+	});
+	mixpanel.track(eventTitle, eventData || {});
 }
 
 export default {
-	pageView,
-	sendEvent,
+	pageView: analyticsEnabled ? pageView : ()=>{},
+	sendEvent: analyticsEnabled ? sendEvent : ()=>{},
 };
