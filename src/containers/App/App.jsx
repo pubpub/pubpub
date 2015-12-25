@@ -10,6 +10,7 @@ import {openMenu, closeMenu} from '../../actions/nav';
 import {openPubModal} from '../../actions/pub';
 import {HeaderNav, HeaderMenu} from '../../components';
 import {globalStyles} from '../../utils/styleConstants';
+import ga from 'react-ga';
 
 let styles = {};
 const App = React.createClass({
@@ -37,6 +38,9 @@ const App = React.createClass({
 		// Close the menu if we're changing routes and it's open
 		if (this.props.path !== nextProps.path && nextProps.navData.get('menuOpen')) {
 			this.props.dispatch(closeMenu());
+		}
+		if (this.props.path !== nextProps.path) {
+			ga.pageview(nextProps.path);
 		}
 	},
 
