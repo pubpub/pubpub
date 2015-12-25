@@ -4,7 +4,7 @@ import { Link } from 'react-router';
 import Radium from 'radium';
 import DocumentMeta from 'react-document-meta';
 import {getJournal, saveJournal} from '../../actions/journal';
-import {LoaderDeterminate, JournalCurate, JournalDesign, JournalSettings} from '../../components';
+import {LoaderDeterminate, JournalCurate, JournalDesign, JournalMain, JournalSettings} from '../../components';
 import {NotFound} from '../../containers';
 import {globalStyles, profileStyles, navStyles} from '../../utils/styleConstants';
 
@@ -45,7 +45,7 @@ const JournalAdmin = React.createClass({
 				<DocumentMeta {...metaData} />
 
 				{
-					this.props.subdomain !== this.props.journalData.get('baseSubdomain') && this.props.journalData.get('baseSubdomain') !== null
+					(this.props.subdomain !== this.props.journalData.get('baseSubdomain') && this.props.journalData.get('baseSubdomain') !== null) || (this.props.mode && !this.props.journalData.getIn(['journalData', 'isAdmin']))
 						? <NotFound />
 						: <div style={profileStyles.profileWrapper}>
 					
@@ -96,7 +96,7 @@ const JournalAdmin = React.createClass({
 										
 										default:
 											return (
-												<div>Default</div>
+												<JournalMain />
 											);
 										}
 									}()}

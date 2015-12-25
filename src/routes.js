@@ -25,6 +25,7 @@ export default () => {
 			
 			<Route path="/subdomain" component={SubdomainTest}/>
 			<Route path="/user/:username" component={UserProfile}/>
+			<Route path="/user/:username/:mode" component={UserProfile}/>
 
 			{ /* Catch all route */ }
 			<Route path="*" component={NotFound} status={404} />

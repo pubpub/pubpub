@@ -108,14 +108,12 @@ export const styles = {
 	},
 	editorNavItemSaveStatus: {
 		height: '100%',
-		padding: '0px 0px',
+		padding: '0px 10px 0px 0px',
 		lineHeight: 'calc(' + globalStyles.headerHeight + ' + 2px)',
 		float: 'right',
 		fontFamily: 'Courier',
 		color: '#AAA',
 		fontSize: '14px',
-		paddingRight: 10,
-
 	},
 	editorNavRight: {
 		float: 'right',
