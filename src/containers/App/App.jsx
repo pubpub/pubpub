@@ -10,7 +10,7 @@ import {openMenu, closeMenu} from '../../actions/nav';
 import {openPubModal} from '../../actions/pub';
 import {HeaderNav, HeaderMenu} from '../../components';
 import {globalStyles} from '../../utils/styleConstants';
-import ga from 'react-ga';
+import analytics from '../../utils/analytics';
 
 let styles = {};
 const App = React.createClass({
@@ -40,8 +40,12 @@ const App = React.createClass({
 			this.props.dispatch(closeMenu());
 		}
 		if (this.props.path !== nextProps.path) {
-			ga.pageview(nextProps.path);
+			analytics.pageView(nextProps.path, nextProps.loginData.get('loggedIn'));
 		}
+	},
+
+	componentDidMount() {
+		analytics.pageView(this.props.path, this.props.loginData.get('loggedIn'));
 	},
 
 	toggleLogin: function() {
@@ -50,8 +54,6 @@ const App = React.createClass({
 			this.props.dispatch(reset('loginForm'));
 			this.props.dispatch(reset('loginFormRegister'));	
 		}
-		
-		
 	},
 
 	closeMenu: function() {

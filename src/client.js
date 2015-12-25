@@ -17,8 +17,9 @@ import getRoutes from './routes';
 import makeRouteHooksSafe from './helpers/makeRouteHooksSafe';
 
 import ga from 'react-ga';
-ga.initialize('UA-61723493-3', {debug: true});
-
+import mixpanel from 'mixpanel-browser';
+ga.initialize('UA-61723493-3');
+mixpanel.init('f85adcbd0f97f6101ebd440e931197b2');
 
 const client = new ApiClient();
 import Html from './helpers/Html';
