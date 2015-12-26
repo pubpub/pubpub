@@ -52,8 +52,11 @@ app.get('/getJournal', function(req,res){
 
 		let isAdmin = false;
 		const userID = req.user ? req.user._id : undefined;
-		if (result && String(result.admins).indexOf(userID) !== -1) {
-			isAdmin =  true;
+		const adminsLength = result ? result.admins.length : 0;
+		for(let index = adminsLength; index--; ) {
+			if (String(result.admins[index]._id) === String(userID)) {
+				isAdmin =  true;	
+			}
 		}
 
 		return res.status(201).json({
@@ -75,28 +78,29 @@ app.post('/saveJournal', function(req,res){
 			return res.status(403).json('Not authorized to administrate this Journal.');
 		}
 
-		// if (req.body.key) {
-		// 	journal[req.body.key] = req.body.newObject;	
-		// } else {
-		// for (const key in req.body.key) { 
-
-		// }
-
+		// if () check for customDomain change
 		for (const key in req.body.newObject) {
 			if (req.body.newObject.hasOwnProperty(key)) {
 				journal[key] = req.body.newObject[key];
 			}
 		}
-		// }
 		
 
 		journal.save(function(err, result){
 			if (err) { return res.status(500).json(err);  }
 			
-			return res.status(201).json({
-				...journal.toObject(),
-				isAdmin: true,
-			});	
+			const options = [
+				{path: "pubs", select:"title abstract slug settings", model: 'Pub'},
+				{path: "admins", select:"name username thumbnail", model: 'User'},
+			];
+
+			Journal.populate(result, options, (err, populatedJournal)=> {
+				return res.status(201).json({
+					...populatedJournal.toObject(),
+					isAdmin: true,
+				});		
+			});
+			
 			
 		});
 	});
@@ -105,13 +109,21 @@ app.post('/saveJournal', function(req,res){
 app.get('/loadJournalAndLogin', function(req,res){
 	// Load journal Data
 	// When an implicit login request is made using the cookie
-	Journal.findOne({ $or:[ {'subdomain':req.query.host.split('.')[0]}, {'customDomain':req.query.host}]}).lean().exec(function(err, result){
+	Journal.findOne({ $or:[ {'subdomain':req.query.host.split('.')[0]}, {'customDomain':req.query.host}]})
+	.populate({path: "pubs", select:"title abstract slug settings"})
+	.populate({path: "admins", select:"name username thumbnail"})
+	.lean().exec(function(err, result){
 		// console.log('journalResult', result);
+		
 		let isAdmin = false;
 		const userID = req.user ? req.user._id : undefined;
-		if (result && String(result.admins).indexOf(userID) !== -1) {
-			isAdmin =  true;
+		const adminsLength = result ? result.admins.length : 0;
+		for(let index = adminsLength; index--; ) {
+			if (String(result.admins[index]._id) === String(userID)) {
+				isAdmin =  true;	
+			}
 		}
+
 		if(req.user){
 			return res.status(201).json({
 				journalData: {
