@@ -3,6 +3,7 @@ var passport = require('passport');
 
 var Journal = require('../models').Journal;
 var User = require('../models').User;
+var Pub = require('../models').Pub;
 var Heroku = require('heroku-client');
 var heroku = undefined;
 
@@ -83,14 +84,22 @@ app.post('/saveJournal', function(req,res){
 			return res.status(403).json('Not authorized to administrate this Journal.');
 		}
 
-		// if () check for customDomain change
+		if ('customDomain' in req.body.newObject && req.body.newObject.customDomain !== journal.customDomain){
+			console.log('we got a new custom domain!');
+			Journal.updateHerokuDomains(journal.customDomain, req.body.newObject.customDomain);
+
+		}
+
+		if ('pubsFeatured' in req.body.newObject) {
+			Pub.updateJournalObjects(journal.pubsFeatured, journal.pubsSubmitted, req.body.newObject.pubsFeatured, req.body.newObject.pubsSubmitted, journal._id, req.user._id);
+		}
+
 		for (const key in req.body.newObject) {
 			if (req.body.newObject.hasOwnProperty(key)) {
 				journal[key] = req.body.newObject[key];
 			}
 		}
 		
-
 		journal.save(function(err, result){
 			if (err) { return res.status(500).json(err);  }
 			
