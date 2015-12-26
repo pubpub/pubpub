@@ -129,7 +129,7 @@ const JournalSettings = React.createClass({
 
 								<div style={[styles.imageColumn, styles.columnHeader]}> <img style={styles.userImage} src={admin.thumbnail} /> </div>
 								<div style={[styles.nameColumn]}>{admin.name}</div>
-								<div key={'adminRemove-' + index} style={[styles.optionColumn, styles.optionColumnClickable]} onClick={this.removeUser(admin._id)}>remove</div>
+								<div key={'adminRemove-' + index} style={[styles.optionColumn, styles.optionColumnClickable, this.props.journalData.admins.length === 1 && styles.hideRemove]} onClick={this.removeUser(admin._id)}>remove</div>
 								<div style={globalStyles.clearFix}></div>
 
 							</div>
@@ -197,7 +197,7 @@ styles = {
 	},
 	adminAddWrapper: {
 		width: '60%',
-		margin: '20px 5%',
+		margin: '20px 20px',
 	},
 
 	results: {
@@ -255,14 +255,14 @@ styles = {
 
 	rowContainer: {
 		width: 'calc(100% - 30px)',
-		padding: '5px 15px',
+		padding: '5px 20px',
 		fontFamily: 'Courier',
 		fontSize: 15,
 	},
 
 	imageColumn: {
 		width: '30px',
-		padding: '0px calc(5% - 15px)',
+		padding: '0px calc(10% - 30px) 0px 0px',
 		float: 'left',
 	},
 	userImage: {
@@ -295,5 +295,8 @@ styles = {
 			color: globalStyles.sideText,
 		}
 	},
+	hideRemove: {
+		display: 'none',
+	}
 
 };
