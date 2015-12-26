@@ -70,6 +70,8 @@ userSchema.statics.getUser = function (username, readerID, callback) {
       username: user.username,
       image: user.image,
       name: user.name,
+      title: user.title,
+      bio: user.bio,
       pubs: user.pubs,
     }
     return callback(null, outputUser);

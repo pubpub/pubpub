@@ -130,6 +130,8 @@ const Profile = React.createClass({
 								case 'settings':
 									return (
 										<UserSettings 
+											profileData={profileData}
+											saveStatus={this.props.profileData.get('settingsStatus')}
 											handleSettingsSave={this.settingsSave}/>
 									);
 								default:

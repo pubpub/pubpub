@@ -1,11 +1,14 @@
 import React, {PropTypes} from 'react';
 import Radium from 'radium';
+import {LoaderIndeterminate} from '../../components';
 import {globalStyles} from '../../utils/styleConstants';
 
 let styles = {};
 
 const UserSettings = React.createClass({
 	propTypes: {
+		profileData: PropTypes.object,
+		saveStatus: PropTypes.string,
 		handleSettingsSave: PropTypes.func,
 	},
 
@@ -19,10 +22,7 @@ const UserSettings = React.createClass({
 			title: this.refs.title.value,
 			bio: this.refs.bio.value,
 		};
-		// console.log(saveSettings);
 		this.props.handleSettingsSave(newDetails);
-		// Grab all the form content by their refs
-		// Stick it in an object, call the this.props.handleSettingsSave
 	},
 
 	render: function() {
@@ -31,20 +31,27 @@ const UserSettings = React.createClass({
 
 				<div key={'settingsForm-name'} style={styles.inputWrapper}>
 					<label style={styles.manualFormInputTitle} htmlFor={'name'}>Name</label>
-					<input style={styles.manualFormInput} name={'name'} id={'settingsForm-name'} ref={'name'} type="text" defaultValue={'Jingle'}/>
+					<input style={styles.manualFormInput} name={'name'} id={'settingsForm-name'} ref={'name'} type="text" defaultValue={this.props.profileData.name}/>
 				</div>
 
 				<div key={'settingsForm-title'} style={styles.inputWrapper}>
 					<label style={styles.manualFormInputTitle} htmlFor={'title'}>Title</label>
-					<input style={styles.manualFormInput} name={'title'} id={'settingsForm-title'} ref={'title'} type="text" defaultValue={'Doctor of things'}/>
+					<input style={styles.manualFormInput} name={'title'} id={'settingsForm-title'} ref={'title'} type="text" defaultValue={this.props.profileData.title}/>
 				</div>
 
 				<div key={'settingsForm-bio'} style={styles.inputWrapper}>
 					<label style={styles.manualFormInputTitle} htmlFor={'bio'}>Bio</label>
-					<textarea style={[styles.manualFormInput, styles.manualFormTextArea]} name={'bio'} id={'settingsForm-bio'} ref={'bio'} defaultValue={'Jingle'}></textarea>
+					<textarea style={[styles.manualFormInput, styles.manualFormTextArea]} name={'bio'} id={'settingsForm-bio'} ref={'bio'} defaultValue={this.props.profileData.bio}></textarea>
 				</div>
 
 				<div style={styles.saveSettings} key={'userSettingsSaveButton'} onClick={this.saveSettings}>Save</div>
+
+				<div style={styles.loader}>
+					{this.props.saveStatus === 'saving'
+						? <LoaderIndeterminate color={globalStyles.sideText}/>
+						: null
+					}
+				</div>
 
 			</div>
 		);
@@ -57,10 +64,14 @@ styles = {
 	container: {
 		margin: '10px 0px',
 		fontFamily: 'Courier',
+		position: 'relative',
 	},
 	inputWrapper: {
 		width: '400px',
 		margin: '30px 20px',
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+			width: 'calc(100% - 40px)',
+		},
 	},
 	manualFormInputTitle: {
 		fontSize: 20,
@@ -89,5 +100,10 @@ styles = {
 		':hover': {
 			color: 'black',
 		}
+	},
+	loader: {
+		position: 'absolute',
+		bottom: 35,
+		width: '100%',
 	},
 };

@@ -48,7 +48,7 @@ app.post('/updateUser', function(req, res) {
 		} else {
 			user.save(function(err, result){
 				if (err) { return res.status(500).json(err);  }
-				console.log('outputObject', outputObject);
+				// console.log('outputObject', outputObject);
 				return res.status(201).json(outputObject);
 			});
 			
