@@ -30,8 +30,11 @@ const JournalSettings = React.createClass({
 
 	removeUser: function(userID) {
 		return () => {
-			const outputAdmins = this.props.journalData.admins.filter((admin)=>{
+			let outputAdmins = this.props.journalData.admins.filter((admin)=>{
 				return admin._id !== userID;
+			});
+			outputAdmins = outputAdmins.map((admin)=>{
+				return admin._id;
 			});
 			
 			this.props.journalSaveHandler({admins: outputAdmins});

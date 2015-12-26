@@ -80,7 +80,10 @@ const JournalAdmin = React.createClass({
 										switch (this.props.mode) {
 										case 'curate':
 											return (
-												<JournalCurate />
+												<JournalCurate 
+													journalData={this.props.journalData.get('journalData').toJS()}
+													journalSaving={this.props.journalData.get( 'journalSaving')}
+													journalSaveHandler={this.journalSave}/>
 											);
 										case 'design':
 											return (
