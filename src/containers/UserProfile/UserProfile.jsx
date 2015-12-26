@@ -78,7 +78,6 @@ const Profile = React.createClass({
 		}
 
 		const ownProfile = this.ownProfile();
-
 		return (
 			<div style={profileStyles.profilePage}>
 

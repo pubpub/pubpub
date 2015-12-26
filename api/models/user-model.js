@@ -4,6 +4,8 @@ var ObjectId  = Schema.Types.ObjectId;
 
 var passportLocalMongoose = require('passport-local-mongoose');
 
+var Discussion = require('../models').Discussion;
+
 var userSchema = new Schema({
   email: { type: String, required: true, index: { unique: true } },
   username: { type: String, required: true, index: { unique: true } },
@@ -61,20 +63,31 @@ userSchema.statics.generateUniqueUsername = function (fullname, callback) {
 
 userSchema.statics.getUser = function (username, readerID, callback) {
   this.findOne({username: username})
-  .populate({path: "pubs", select:"title abstract slug"})
+  .populate({path: "pubs", select:"title abstract slug collaborators settings"})
+  .populate({path: "discussions", select:"markdown postDate yays nays pub"})
   .lean().exec((err, user) =>{
     if (err) { return callback(err, null); }
-
     if (!user) { return callback(null, 'User Not Found'); }
-    const outputUser = {
-      username: user.username,
-      image: user.image,
-      name: user.name,
-      title: user.title,
-      bio: user.bio,
-      pubs: user.pubs,
-    }
-    return callback(null, outputUser);
+
+    const options = [
+      { path: 'discussions.pub', select: 'title slug', model: 'Pub'},
+    ];
+
+    this.populate(user, options, (err, populatedUser)=> {
+      if (err) { return callback(err, null); }
+
+      const outputUser = {
+        username: populatedUser.username,
+        image: populatedUser.image,
+        name: populatedUser.name,
+        title: populatedUser.title,
+        bio: populatedUser.bio,
+        pubs: populatedUser.pubs,
+        discussions: Discussion.calculateYayNayScore(populatedUser.discussions),
+      }
+      return callback(null, outputUser);
+
+    });
   })
 };
 

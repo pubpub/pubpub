@@ -71,9 +71,9 @@ var smoothScroll = function(el, duration, callback, context){
       var end = getTop(el, context);
     }
 
-    var endContext = context === window ? document.body : context;
-    end = Math.min(end, endContext.scrollHeight - endContext.offsetHeight);
-
+    // var endContext = context === window ? document.body : context;
+    // end = Math.min(end, endContext.scrollHeight - endContext.offsetHeight);
+    
     var clock = Date.now();
     var requestAnimationFrame = window.requestAnimationFrame ||
         window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame ||

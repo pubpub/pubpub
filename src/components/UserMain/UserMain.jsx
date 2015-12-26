@@ -1,7 +1,9 @@
 import React, {PropTypes} from 'react';
 import Radium from 'radium';
 import {globalStyles} from '../../utils/styleConstants';
-import { Link } from 'react-router';
+// import { Link } from 'react-router';
+import smoothScroll from '../../utils/smoothscroll';
+import {DiscussionPreview, PubPreview} from '../ItemPreviews';
 
 let styles = {};
 
@@ -15,32 +17,54 @@ const UserMain = React.createClass({
 		
 	},
 
+	statClick: function(id) {
+		return ()=> {
+			const destination = document.getElementById(id);
+			smoothScroll(destination);
+		};
+	},
+
+	calculateReputation: function() {
+		let rep = 0;
+		for (let index = this.props.profileData.discussions.length; index--;) {
+			rep += this.props.profileData.discussions[index].points;
+		}
+		console.log(this.props.profileData.pubs);
+		for (let index = this.props.profileData.pubs.length; index--;) {
+			if (!this.props.profileData.pubs[index].settings || this.props.profileData.pubs[index].settings.pubPrivacy === 'public') {
+				rep += 10;	
+			}
+		}
+		return rep;
+	},
+
 	render: function() {
+		// console.log(this.props.profileData);
 		return (
 			<div style={styles.container}>
-				<p style={styles.profileDetail}>PhD Researcher at Arlington High School</p>
-				<p style={styles.profileDetail}>Verfied with Twitter</p>
-				<p style={styles.profileDetail}>A biography or simply bio is a detailed description of a person's life. It involves more than just the basic facts like education, work, relationships, and death, but also portrays a subject's experience of these life events. Unlike a profile or curriculum vitae, a biography presents a subject's life story, highlighting various aspects of his or her life, including intimate details of experience, and may include an analysis of the subject's personality.</p>
+				<p style={styles.profileDetail}>{this.props.profileData.title}</p>
+				{/* <p style={styles.profileDetail}>Verfied with Twitter</p> */}
+				<p style={styles.profileDetail}>{this.props.profileData.bio}</p>
 
 				{/* Stats and Intra-Profile nav */}
 				<div style={styles.statsWrapper}>
 					<ul style={styles.statsList}>
 						<li key="profileStatsItem1" style={[styles.statsItem]}>
-							<div style={styles.statsTitle}>Points</div>
-							<div style={styles.statsCount}><span style={styles.statParenthese}>(</span>23,123<span style={styles.statParenthese}>)</span></div>
+							<div style={styles.statsTitle}>Reputation</div>
+							<div style={styles.statsCount}><span style={styles.statParenthese}>(</span>{this.calculateReputation()}<span style={styles.statParenthese}>)</span></div>
 						</li>
 						
-						<li key="profileStatsItem2" style={[styles.statsItem]}>
+						<li key="profileStatsItem2" style={[styles.statsItem]} onClick={this.statClick('pubs-section')}>
 							<div style={styles.statsTitle}>Pubs</div>
-							<div style={styles.statsCount}><span style={styles.statParenthese}>(</span>28<span style={styles.statParenthese}>)</span></div>
+							<div style={styles.statsCount}><span style={styles.statParenthese}>(</span>{this.props.profileData.pubs.length}<span style={styles.statParenthese}>)</span></div>
 						</li>
 						
-						<li key="profileStatsItem3" style={[styles.statsItem]}>
+						<li key="profileStatsItem3" style={[styles.statsItem]} onClick={this.statClick('discussions-section')}>
 							<div style={styles.statsTitle}>Discussions</div>
-							<div style={styles.statsCount}><span style={styles.statParenthese}>(</span>219<span style={styles.statParenthese}>)</span></div>
+							<div style={styles.statsCount}><span style={styles.statParenthese}>(</span>{this.props.profileData.discussions.length}<span style={styles.statParenthese}>)</span></div>
 						</li>
 						
-						<li key="profileStatsItem4" style={[styles.statsItem]}>
+						{/* <li key="profileStatsItem4" style={[styles.statsItem]}>
 							<div style={styles.statsTitle}>Expert Papers</div>
 							<div style={styles.statsCount}><span style={styles.statParenthese}>(</span>14<span style={styles.statParenthese}>)</span></div>
 						</li>
@@ -48,7 +72,7 @@ const UserMain = React.createClass({
 						<li key="profileStatsItem5" style={[styles.statsItem]}>
 							<div style={styles.statsTitle}>Journals</div>
 							<div style={styles.statsCount}><span style={styles.statParenthese}>(</span>20<span style={styles.statParenthese}>)</span></div>
-						</li>
+						</li> */}
 
 					</ul>
 				</div>
@@ -56,34 +80,29 @@ const UserMain = React.createClass({
 				{/* Selected Content based on nav */}
 				<div style={styles.profileContent}>
 				
-					<h2>Pubs</h2>
-					{this.props.profileData.pubs
-						? this.props.profileData.pubs.map((pub, index)=>{
-							return (
-								
-								<div key={'profilePub-' + index} style={styles.pubBlock}>
-									<Link to={'/pub/' + pub.slug} style={globalStyles.link}>
-										<div key={'profilePubWrapper-' + index} style={styles.pubTextWrapper}>
-											<div style={styles.pubTitle}>{pub.title}</div>
-											<div style={styles.pubAbstract}>{pub.abstract}</div>
-										</div>
-										
-									</Link>
+					<h2 id={'pubs-section'}>Pubs</h2>
+					{()=>{
+						const outputPubs = [];
+						for (let index = this.props.profileData.pubs.length; index--;) {
+							outputPubs.push(<PubPreview 
+								key={'pubItem-' + index}
+								pubData={this.props.profileData.pubs[index]}
+								canEdit={this.props.ownProfile === 'self' ? true : false} />);
+						}
+						return outputPubs;
+					}()}
 
-									{
-										this.props.ownProfile === 'self'
-											? <Link to={'/pub/' + pub.slug + '/edit'} style={globalStyles.link}>
-												<div key={'profilePubEdit-' + index} style={styles.pubEdit}>Edit</div>
-											</Link>
-											: null
-									}
-									
-								</div>
-								
-							);
-						})
-						: null
-					}
+					<h2 id={'discussions-section'}>Discussions</h2>
+					{()=>{
+						const outputDiscussions = [];
+						for (let index = this.props.profileData.discussions.length; index--;) {
+							outputDiscussions.push(<DiscussionPreview 
+								key={'discussionItem-' + index}
+								discussionData={this.props.profileData.discussions[index]}
+								canEdit={this.props.ownProfile === 'self' ? true : false} />);
+						}
+						return outputDiscussions;
+					}()}
 
 				</div>
 			</div>
@@ -194,20 +213,21 @@ styles = {
 		// margin: '0px 20px',
 	},
 	pubBlock: {
-		margin: 15,
-		float: 'left',
-		backgroundColor: '#EAEAEA',
-		fontFamily: 'Lora',
-		width: 'calc(100% / 3 - 30px)',
-		height: 175,
-		overflow: 'hidden',
-		position: 'relative',
-		':hover': {
-			backgroundColor: '#E5E5E5',
-		},
-		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
-			width: 'calc(100% - 30px)'
-		},
+		// margin: 15,
+		// float: 'left',
+		// backgroundColor: '#EAEAEA',
+		// fontFamily: 'Lora',
+		// width: 'calc(100% - 30px)',
+		// width: 'calc(100% / 3 - 30px)',
+		// height: 175,
+		// overflow: 'hidden',
+		// position: 'relative',
+		// ':hover': {
+			// backgroundColor: '#E5E5E5',
+		// },
+		// '@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+			// width: 'calc(100% - 30px)'
+		// },
 
 	},
 	pubTextWrapper: {
