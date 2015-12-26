@@ -47,7 +47,12 @@ app.post('/createJournal', function(req,res){
 });
 
 app.get('/getJournal', function(req,res){
-	Journal.findOne({subdomain: req.query.subdomain}).lean().exec(function(err, result) {
+	Journal.findOne({subdomain: req.query.subdomain})
+	.populate({path: "pubs", select:"title abstract slug settings"})
+	.populate({path: "pubsFeatured", select:"title abstract slug settings"})
+	.populate({path: "pubsSubmitted", select:"title abstract slug settings"})
+	.populate({path: "admins", select:"name username thumbnail"})
+	.lean().exec(function(err, result) {
 		if (err) { return res.status(500).json(err);  }
 
 		let isAdmin = false;
@@ -91,6 +96,8 @@ app.post('/saveJournal', function(req,res){
 			
 			const options = [
 				{path: "pubs", select:"title abstract slug settings", model: 'Pub'},
+				{path: "pubsFeatured", select:"title abstract slug settings", model: 'Pub'},
+				{path: "pubsSubmitted", select:"title abstract slug settings", model: 'Pub'},
 				{path: "admins", select:"name username thumbnail", model: 'User'},
 			];
 
@@ -111,6 +118,8 @@ app.get('/loadJournalAndLogin', function(req,res){
 	// When an implicit login request is made using the cookie
 	Journal.findOne({ $or:[ {'subdomain':req.query.host.split('.')[0]}, {'customDomain':req.query.host}]})
 	.populate({path: "pubs", select:"title abstract slug settings"})
+	.populate({path: "pubsFeatured", select:"title abstract slug settings"})
+	.populate({path: "pubsSubmitted", select:"title abstract slug settings"})
 	.populate({path: "admins", select:"name username thumbnail"})
 	.lean().exec(function(err, result){
 		// console.log('journalResult', result);

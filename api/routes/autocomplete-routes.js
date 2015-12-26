@@ -25,6 +25,29 @@ app.get('/autocompleteUsers', function(req,res){
 	});
 });
 
+app.get('/autocompletePubsAll', function(req,res){
+	var objects = [];
+	var query = {history: {$not: {$size: 0}},'settings.isPrivate': {$ne: true}};
+
+	Pub.find(query, {'slug':1, 'title':1, 'abstract': 1}).exec(function (err, pubs) {
+		objects = pubs;
+		// console.log(objects);
+		var sifter = new Sifter(objects);
+
+		var result = sifter.search(req.query.string, {
+		    fields: ['slug', 'title'],
+		    sort: [{field: 'title', direction: 'asc'}],
+		    limit: 10
+		});
+
+		var output = [];
+		_.each(result.items, function(item){
+			output.push(objects[item.id]);
+		});
+		return res.status(201).json(output)
+	});
+});
+
 app.get('/autocompletePubs', function(req,res){
 	var query = {versions: {$not: {$size: 0}},'settings.isPrivate': {$ne: true}};
 	if(req.query.journalID){
@@ -32,7 +55,7 @@ app.get('/autocompletePubs', function(req,res){
 	}
 	Pub.find(query, {'displayTitle':1, 'uniqueTitle':1, 'image':1, 'featuredInJournalsList':1}).exec(function (err, pubs) {
 	objects = pubs;
-	console.log(objects);
+	// console.log(objects);
 		var sifter = new Sifter(objects);
 
 		var result = sifter.search(req.query.string, {
@@ -57,7 +80,7 @@ app.get('/autocompletePubsAndUsers', function(req,res){
 			objects = objects.concat(users);	
 		}
 		
-		Pub.find({versions: {$not: {$size: 0}},'settings.isPrivate': {$ne: true}}, {'_id':0,'slug':1, 'title':1}).exec(function (err, pubs) {
+		Pub.find({history: {$not: {$size: 0}},'settings.isPrivate': {$ne: true}}, {'_id':0,'slug':1, 'title':1}).exec(function (err, pubs) {
 			if(pubs){
 				objects = objects.concat(pubs);			
 			}

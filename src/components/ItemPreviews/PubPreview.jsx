@@ -11,6 +11,9 @@ const PubPreview = React.createClass({
 		pubData: PropTypes.object,
 		displayType: PropTypes.string, // 'line' or 'block'
 		canEdit: PropTypes.bool,
+		headerFontSize: PropTypes.string,
+		textFontSize: PropTypes.string,
+		hideBottomLine: PropTypes.bool,
 	},
 
 	getDefaultProps: function() {
@@ -22,12 +25,12 @@ const PubPreview = React.createClass({
 	render: function() {
 		const pub = this.props.pubData;
 		return (
-			<div style={styles.container} >
+			<div style={[styles.container, this.props.hideBottomLine && styles.containerNoLine]} >
 
 				<div style={[styles.detailsWrapper, !this.props.canEdit && styles.detailsWrapperNoEdit]} key={'detailsWrapper-' + pub._id}>
 					<Link to={'/pub/' + pub.slug} style={globalStyles.link}>
-							<div style={styles.pubTitle}>{pub.title}</div>
-							<div style={styles.pubAbstract}>{pub.abstract}</div>
+							<div style={[styles.pubTitle, this.props.headerFontSize && {fontSize: this.props.headerFontSize}]}>{pub.title}</div>
+							<div style={[styles.pubAbstract, this.props.textFontSize && {fontSize: this.props.textFontSize}]}>{pub.abstract}</div>
 					</Link>
 				</div>
 
@@ -51,14 +54,17 @@ export default Radium(PubPreview);
 
 styles = {
 	container: {
-		padding: '10px 5px',
+		padding: '10px 0px',
 		// margin: '10px',
 		// height: '50px',
 		borderBottom: '1px solid #F0F0F0',
 		// backgroundColor: 'rgba(0,200,0,0.1)',
 		display: 'table',
-		width: '100%',
+		width: 'calc(100% - 0px)',
 		
+	},
+	containerNoLine: {
+		borderBottom: '0px solid black',
 	},
 	detailsWrapper: {
 		// backgroundColor: 'rgba(200,0,0,0.1)',
