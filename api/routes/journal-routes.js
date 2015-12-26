@@ -75,7 +75,20 @@ app.post('/saveJournal', function(req,res){
 			return res.status(403).json('Not authorized to administrate this Journal.');
 		}
 
-		journal[req.body.key] = req.body.newObject;
+		// if (req.body.key) {
+		// 	journal[req.body.key] = req.body.newObject;	
+		// } else {
+		// for (const key in req.body.key) { 
+
+		// }
+
+		for (const key in req.body.newObject) {
+			if (req.body.newObject.hasOwnProperty(key)) {
+				journal[key] = req.body.newObject[key];
+			}
+		}
+		// }
+		
 
 		journal.save(function(err, result){
 			if (err) { return res.status(500).json(err);  }

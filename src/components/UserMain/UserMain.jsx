@@ -29,7 +29,6 @@ const UserMain = React.createClass({
 		for (let index = this.props.profileData.discussions.length; index--;) {
 			rep += this.props.profileData.discussions[index].points;
 		}
-		console.log(this.props.profileData.pubs);
 		for (let index = this.props.profileData.pubs.length; index--;) {
 			if (!this.props.profileData.pubs[index].settings || this.props.profileData.pubs[index].settings.pubPrivacy === 'public') {
 				rep += 10;	

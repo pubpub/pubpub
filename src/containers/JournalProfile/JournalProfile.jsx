@@ -31,8 +31,8 @@ const JournalAdmin = React.createClass({
 		}
 	},
 
-	journalSave: function(key, newObject) {
-		this.props.dispatch(saveJournal(this.props.subdomain, key, newObject));
+	journalSave: function(newObject) {
+		this.props.dispatch(saveJournal(this.props.subdomain, newObject));
 	},
 
 	render: function() {
@@ -91,7 +91,10 @@ const JournalAdmin = React.createClass({
 											);
 										case 'settings':
 											return (
-												<JournalSettings />
+												<JournalSettings 
+													journalData={this.props.journalData.get('journalData').toJS()}
+													journalSaving={this.props.journalData.get( 'journalSaving')}
+													journalSaveHandler={this.journalSave}/>
 											);
 										
 										default:

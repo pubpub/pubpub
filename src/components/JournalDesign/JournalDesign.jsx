@@ -205,7 +205,7 @@ const JournalDesign = React.createClass({
 			landingHeaderHover: this.state.colorSelections.landingHeaderHover.color,
 			layoutString: cm.getValue(),
 		};
-		this.props.journalSaveHandler('design', object);
+		this.props.journalSaveHandler({design: object});
 	},
 
 	render: function() {

@@ -53,10 +53,10 @@ export function getJournal(subdomain) {
 	};
 }
 
-export function saveJournal(subdomain, key, newObject) {
+export function saveJournal(subdomain, newObject) {
 	return {
 		types: [SAVE_JOURNAL, SAVE_JOURNAL_SUCCESS, SAVE_JOURNAL_FAIL],
-		promise: (client) => client.post('/saveJournal', {data: {subdomain: subdomain, key: key, newObject: newObject}})
+		promise: (client) => client.post('/saveJournal', {data: {subdomain: subdomain, newObject: newObject}})
 	};
 }
 
