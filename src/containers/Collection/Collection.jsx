@@ -148,6 +148,7 @@ styles = {
 	title: {
 		maxWidth: 1024,
 		margin: '0 auto',
+		padding: '20px 0px 0px 20px',
 		textShadow: '0px 0px 1px black',
 	},
 	headerTitle: {
