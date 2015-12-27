@@ -161,12 +161,21 @@ app.get('/loadJournalAndLogin', function(req,res){
 app.post('/createCollection', function(req,res){
 	// return res.status(201).json(['cat','dog']);
 	Journal.findOne({subdomain: req.body.subdomain}).exec(function(err, journal) {
+		const defaultHeaderImages = [
+			'http://res.cloudinary.com/pubpub/image/upload/v1451254753/bg4_xboped.jpg',
+			'http://res.cloudinary.com/pubpub/image/upload/v1451254753/bg3_jhaf23.jpg',
+			'http://res.cloudinary.com/pubpub/image/upload/v1451254753/bg2_nwyraz.jpg',
+			'http://res.cloudinary.com/pubpub/image/upload/v1451254753/bg1_h1blyq.jpg',
+			'http://res.cloudinary.com/pubpub/image/upload/v1451254753/bg6_difbzv.jpg',
+			'http://res.cloudinary.com/pubpub/image/upload/v1451254753/bg5_x9jodx.jpg'
+		];
+
 		const newCollection = {
 			title: req.body.newCollectionObject.title,
 			slug: req.body.newCollectionObject.slug,
 			description: '',
 			pubs: [],
-			headerImage: 'http://res.cloudinary.com/pubpub/image/upload/c_scale,w_2000/v1451248425/ps7hqaxx2h7fjz7vuekz.jpg',
+			headerImage: defaultHeaderImages[Math.floor(Math.random() * defaultHeaderImages.length)],
 		};
 		journal.collections.push(newCollection);
 		
