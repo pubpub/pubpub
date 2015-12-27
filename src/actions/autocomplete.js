@@ -4,10 +4,10 @@
 // All action types are defined as constants. Do not manually pass action 
 // types as strings in action creators
 /*--------*/
-export const AUTOCOMPLETE_LOAD = 'login/AUTOCOMPLETE_LOAD';
-export const AUTOCOMPLETE_SUCCESS = 'login/AUTOCOMPLETE_LOAD_SUCCESS';
-export const AUTOCOMPLETE_FAIL = 'login/AUTOCOMPLETE_LOAD_FAIL';
-export const AUTOCOMPLETE_CLEAR = 'login/AUTOCOMPLETE_LOAD_CLEAR';
+export const AUTOCOMPLETE_LOAD = 'autocomplete/AUTOCOMPLETE_LOAD';
+export const AUTOCOMPLETE_SUCCESS = 'autocomplete/AUTOCOMPLETE_LOAD_SUCCESS';
+export const AUTOCOMPLETE_FAIL = 'autocomplete/AUTOCOMPLETE_LOAD_FAIL';
+export const AUTOCOMPLETE_CLEAR = 'autocomplete/AUTOCOMPLETE_LOAD_CLEAR';
 
 
 /*--------*/

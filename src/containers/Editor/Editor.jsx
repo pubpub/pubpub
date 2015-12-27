@@ -118,7 +118,7 @@ const Editor = React.createClass({
 				document.getElementById('userlist'), username, this.props.loginData.getIn(['userData', 'name']), this.props.loginData.getIn(['userData', 'thumbnail']));
 			
 			firepad.on('synced', (synced)=>{
-				console.log('before debounce', synced);
+				// console.log('before debounce', synced);
 				debounce(()=> {
 					this.updateSaveStatus(synced);
 				}, 250)();
@@ -621,7 +621,7 @@ const Editor = React.createClass({
 							htmlTree={this.state.tree} 
 							authors={this.getAuthorsArray()}
 							// addSelectionHandler={this.addSelection}
-							style={this.state.firepadData.settings.pubStyle}/>
+							style={this.state.firepadData && this.state.firepadData.settings ? this.state.firepadData.settings.pubStyle : undefined}/>
 					</div>
 
 				</div>

@@ -32,10 +32,11 @@ var journalSchema = new Schema({
 	settings: { type: Schema.Types.Mixed },
 
 	collections: [{
-		description: { type: String}, 
+		description: { type: String},
+		slug: {type: String},
 		title: { type: String}, 
 		pubs: [{ type: ObjectId, ref: 'Pub' }],
-	}]
+	}],
 
 });
 

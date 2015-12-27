@@ -1,9 +1,10 @@
 import React, { PropTypes } from 'react';
 import {connect} from 'react-redux';
 import { Link } from 'react-router';
+import { pushState } from 'redux-router';
 import Radium from 'radium';
 import DocumentMeta from 'react-document-meta';
-import {getJournal, saveJournal} from '../../actions/journal';
+import {getJournal, saveJournal, createCollection} from '../../actions/journal';
 import {LoaderDeterminate, JournalCurate, JournalDesign, JournalMain, JournalSettings} from '../../components';
 import {NotFound} from '../../containers';
 import {globalStyles, profileStyles, navStyles} from '../../utils/styleConstants';
@@ -31,8 +32,18 @@ const JournalAdmin = React.createClass({
 		}
 	},
 
+	componentWillReceiveProps(nextProps) {
+		if (nextProps.journalData.get('createCollectionStatus') === 'created') {
+			this.props.dispatch(pushState(null, ('/collection/' + nextProps.journalData.get('createCollectionSlug') + '/edit')));
+		}
+	},
+
 	journalSave: function(newObject) {
 		this.props.dispatch(saveJournal(this.props.subdomain, newObject));
+	},
+
+	createCollection: function(newCollectionObject) {
+		this.props.dispatch(createCollection(this.props.subdomain, newCollectionObject));
 	},
 
 	render: function() {
@@ -82,8 +93,10 @@ const JournalAdmin = React.createClass({
 											return (
 												<JournalCurate 
 													journalData={this.props.journalData.get('journalData').toJS()}
-													journalSaving={this.props.journalData.get( 'journalSaving')}
-													journalSaveHandler={this.journalSave}/>
+													journalSaving={this.props.journalData.get('journalSaving')}
+													journalSaveHandler={this.journalSave}
+													createCollectionHandler={this.createCollection}
+													createCollectionStatus={this.props.journalData.get('createCollectionStatus')}/>
 											);
 										case 'design':
 											return (

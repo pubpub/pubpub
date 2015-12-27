@@ -153,3 +153,33 @@ app.get('/loadJournalAndLogin', function(req,res){
 
 
 });
+
+app.post('/createCollection', function(req,res){
+	// return res.status(201).json(['cat','dog']);
+	Journal.findOne({subdomain: req.body.subdomain}).exec(function(err, journal) {
+		const newCollection = {
+			title: req.body.newCollectionObject.title,
+			slug: req.body.newCollectionObject.slug,
+			description: '',
+			pubs: [],
+		};
+		journal.collections.push(newCollection);
+		
+		journal.save(function (err, savedJournal) {
+			if (err) { return res.status(500).json(err);  }
+			const options = [
+				{path: "pubs", select:"title abstract slug authors lastUpdated createDate", model: 'Pub'},
+			];
+
+			Journal.populate(savedJournal, options, (err, populatedJournal)=> {
+				if (err) { return res.status(500).json(err);  }
+
+				return res.status(201).json(populatedJournal.collections);		
+			});
+
+		});
+	});
+});
+
+
+

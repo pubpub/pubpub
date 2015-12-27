@@ -2,7 +2,7 @@ import React, {PropTypes} from 'react';
 import Radium from 'radium';
 import {Autocomplete} from '../../containers';
 import {PubPreview} from '../../components/ItemPreviews';
-// import {LoaderIndeterminate} from '../../components';
+import {LoaderIndeterminate} from '../../components';
 import {globalStyles} from '../../utils/styleConstants';
 // import { Link } from 'react-router';
 
@@ -13,6 +13,8 @@ const JournalCurate = React.createClass({
 		journalData: PropTypes.object,
 		journalSaving: PropTypes.bool,
 		journalSaveHandler: PropTypes.func,
+		createCollectionHandler: PropTypes.func,
+		createCollectionStatus: PropTypes.string,
 	},
 
 	getDefaultProps: function() {
@@ -20,6 +22,13 @@ const JournalCurate = React.createClass({
 			journalData: {},
 		};
 	},
+
+	getInitialState() {
+		return {
+			newCollectionSlug: '',
+		};
+	},
+
 
 	featurePub: function(pubID) {
 		return () => {
@@ -76,6 +85,20 @@ const JournalCurate = React.createClass({
 				
 			</div>
 		);
+	},
+
+	updateNewCollectionSlug: function(evt) {
+		this.setState({newCollectionSlug: this.refs.slug.value.replace(/[^\w\s]/gi, '').replace(/ /g, '_').toLowerCase()});
+	},
+
+	createNewCollection: function() {
+		const newObject = {
+			title: this.refs.title.value,
+			slug: this.refs.slug.value.replace(/[^\w\s]/gi, '').replace(/ /g, '_').toLowerCase(),
+		};
+		// console.log(newObject);
+		this.props.createCollectionHandler(newObject);
+		// grab values, dispatch, listen on nextprops for a complete, on which we redirect to the edit page of that thing
 	},
 
 	render: function() {
@@ -154,8 +177,33 @@ const JournalCurate = React.createClass({
 
 				<div>
 					<h2>Collections</h2>
-					<div>Your list of Collections</div>
+					<div style={styles.emptyBlock}>No Collections</div>
+
 					<div>Create new collection: Title : slug 'CREATE' (takes you to collection page, where you can edit)</div>
+					<h2>Create New Collection</h2>
+					
+					<div key={'createCollection-title'} style={styles.inputWrapper}>
+						<label style={styles.manualFormInputTitle} htmlFor={'title'}>Collection Title</label>
+						<input style={styles.manualFormInput} name={'title'} id={'createCollection-title'} ref={'title'} type="text" defaultValue={''}/>
+					</div>
+
+					<div key={'createCollection-slug'} style={styles.inputWrapper}>
+						<label style={styles.manualFormInputTitle} htmlFor={'slug'}>URL</label>
+						<input style={styles.manualFormInput} name={'slug'} id={'createCollection-slug'} ref={'slug'} type="text" onChange={this.updateNewCollectionSlug} value={this.state.newCollectionSlug}/>
+						<div style={styles.infoText}>Collection will live at <span style={styles.url}>{typeof(window) !== 'undefined' ? window.location.hostname : ''}/collection/<span style={styles.dark}>{(this.state.newCollectionSlug === '' || this.state.newCollectionSlug === undefined) ? '[URL]' : this.state.newCollectionSlug}</span></span></div>
+						
+					</div>
+
+					<div style={styles.saveSettings} key={'userSettingsSaveButton'} onClick={this.createNewCollection}>Create</div>
+
+					<div style={styles.loader}>
+						<h1>{this.props.journalData.createCollectionStatus}</h1>
+						{this.props.createCollectionStatus === 'creating'
+							? <LoaderIndeterminate color={globalStyles.sideText}/>
+							: null
+						}
+					</div>
+
 				</div>
 				
 			</div>
@@ -269,4 +317,62 @@ styles = {
 		paddingLeft: '10px',
 	},
 
+	inputWrapper: {
+		width: '500px',
+		margin: '30px 20px',
+		position: 'relative',
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+			width: 'calc(100% - 40px)',
+		},
+	},
+	manualFormInputTitle: {
+		fontSize: 20,
+		color: '#BBB',
+		fontFamily: 'Courier',
+	},
+	manualFormInput: {
+		width: '100%',
+		fontFamily: 'Courier',
+		borderWidth: '0px 0px 1px 0px',
+		borderColor: '#BBB',
+		outline: 'none',
+		fontSize: 18,
+		color: '#555',
+	},
+	manualFormTextArea: {
+		borderWidth: '1px 1px 1px 1px',
+		resize: 'vertical',
+	},
+	saveSettings: {
+		fontSize: 20,
+		width: '52px',
+		padding: '0px 20px',
+		marginBottom: 20,
+		fontFamily: globalStyles.headerFont,
+		cursor: 'pointer',
+		':hover': {
+			color: 'black',
+		}
+	},
+	loader: {
+		position: 'relative',
+		top: -50,
+		width: '100%',
+		height: 1
+	},
+	infoText: {
+		// position: 'absolute',
+		// bottom: 0,
+		// left: 30,
+		color: globalStyles.sideText,
+		whiteSpace: 'nowrap',
+	},
+	dark: {
+		color: 'black',
+	},
+	url: {
+		fontFamily: 'Courier',
+		fontSize: '15px',
+		padding: '0px 5px',
+	}
 };
