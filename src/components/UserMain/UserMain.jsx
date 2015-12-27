@@ -14,7 +14,12 @@ const UserMain = React.createClass({
 	},
 
 	getDefaultProps: function() {
-		
+		return {
+			profileData: {
+				discussions: [],
+				pubs: [],
+			},
+		};
 	},
 
 	statClick: function(id) {
@@ -25,6 +30,7 @@ const UserMain = React.createClass({
 	},
 
 	calculateReputation: function() {
+
 		let rep = 0;
 		for (let index = this.props.profileData.discussions.length; index--;) {
 			rep += this.props.profileData.discussions[index].points;

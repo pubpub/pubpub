@@ -19,7 +19,10 @@ import {
 // Initialize Default State 
 /*--------*/
 export const defaultState = Immutable.Map({
-	profileData: {},
+	profileData: {
+		pubs: [],
+		discussions: [],
+	},
 	status: 'loading',
 	settingsStatus: 'saved',
 	error: null

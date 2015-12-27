@@ -1,5 +1,4 @@
 #!/usr/bin/env node
-require('newrelic');
 require('../server.babel'); // babel registration (runtime transpilation for node)
 var path = require('path');
 var rootDir = path.resolve(__dirname, '..');
@@ -18,6 +17,8 @@ if (__DEVELOPMENT__) {
 		})) {
 		return;
 	}
+} else {
+	require('newrelic');
 }
 
 // https://github.com/halt-hammerzeit/webpack-isomorphic-tools
