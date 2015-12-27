@@ -1,6 +1,6 @@
 import React from 'react';
 import {IndexRoute, Route} from 'react-router';
-import {App, Editor, Explore, JournalCreate, JournalProfile, Landing, NotFound, PubCreate, PubMeta, PubReader, SubdomainTest, UserProfile} from 'containers';
+import {App, Collection, Editor, Explore, JournalCreate, JournalProfile, Landing, NotFound, PubCreate, PubMeta, PubReader, SubdomainTest, UserProfile} from 'containers';
 
 export default () => {
 
@@ -11,6 +11,10 @@ export default () => {
 			<IndexRoute component={Landing}/>
 
 			{ /* Routes */ }
+			<Route path="/collection/:slug" component={Collection}/>
+			<Route path="/collection/:slug/:mode" component={Collection}/>
+			// <Route path="/collections" component={JournalProfile}/>
+
 			<Route path="/explore" component={Explore}/>
 
 			<Route path="/journal/:subdomain" component={JournalProfile}/>

@@ -3,7 +3,7 @@ import {connect} from 'react-redux';
 import Radium from 'radium';
 import DocumentMeta from 'react-document-meta';
 import PureRenderMixin from 'react-addons-pure-render-mixin';
-import {getPub, addDiscussion, discussionVoteSubmit, pubNavOut, pubNavIn} from '../../actions/pub';
+import {getPub, addDiscussion, discussionVoteSubmit, pubNavIn} from '../../actions/pub';
 import {toggleVisibility} from '../../actions/login';
 import { Link } from 'react-router';
 import {PubLeftBar, PubNav, LoaderDeterminate} from '../../components';

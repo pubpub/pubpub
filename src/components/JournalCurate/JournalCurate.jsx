@@ -154,6 +154,8 @@ const JournalCurate = React.createClass({
 
 				<div>
 					<h2>Collections</h2>
+					<div>Your list of Collections</div>
+					<div>Create new collection: Title : slug 'CREATE' (takes you to collection page, where you can edit)</div>
 				</div>
 				
 			</div>
