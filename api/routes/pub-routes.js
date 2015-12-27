@@ -55,7 +55,9 @@ app.post('/createPub', function(req, res) {
 			history: [],
 			followers: [],
 			featuredIn: [],
+			featuredInList: [],
 			submittedTo: [],
+			submittedToList: [],
 			reviews: [],
 			discussions: [],
 			experts: {

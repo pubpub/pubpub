@@ -1,5 +1,6 @@
 var app = require('../api');
 var passport = require('passport');
+var _         = require('underscore');
 
 var Journal = require('../models').Journal;
 var User = require('../models').User;
@@ -91,7 +92,12 @@ app.post('/saveJournal', function(req,res){
 		}
 
 		if ('pubsFeatured' in req.body.newObject) {
-			Pub.updateJournalObjects(journal.pubsFeatured, journal.pubsSubmitted, req.body.newObject.pubsFeatured, req.body.newObject.pubsSubmitted, journal._id, req.user._id);
+			const newFeatured = req.body.newObject.pubsFeatured;
+			const oldFeatured = journal.pubsFeatured.map((pubID)=>{return String(pubID)});
+			const pubsToUpdateFeature = _.difference(newFeatured, oldFeatured);
+			for (let index = pubsToUpdateFeature.length; index--;) {
+				Pub.addJournalFeatured(pubsToUpdateFeature[index], journal._id, req.user._id);
+			}
 		}
 
 		for (const key in req.body.newObject) {

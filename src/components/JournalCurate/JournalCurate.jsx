@@ -236,6 +236,13 @@ styles = {
 			color: 'black',
 		}
 	},
+	noResults: {
+		fontFamily: 'Courier',
+		fontSize: '15px',
+		height: 30,
+		lineHeight: '30px',
+		textAlign: 'center',
+	},
 	searchTitle: {
 		fontFamily: globalStyles.headerFont,
 		fontSize: 16,
