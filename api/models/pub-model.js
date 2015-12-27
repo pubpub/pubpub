@@ -239,7 +239,6 @@ pubSchema.statics.generateDiffObject = function(oldPubObject, newPubObject) {
 };
 
 pubSchema.statics.addJournalFeatured = function(pubID, journalID, adminID){
-	// console.log('statics input', pubID, journalID, adminID);
 	const featureObject = {
 		journal: journalID,
 		date: new Date().getTime(),
@@ -248,50 +247,13 @@ pubSchema.statics.addJournalFeatured = function(pubID, journalID, adminID){
 	this.update({ _id: pubID }, { $addToSet: { 'featuredInList': journalID, 'featuredIn': featureObject} }, function(err, result){if(err) console.log('Error in addJournalFeatured ', err);});
 };
 
-// pubSchema.statics.updateJournalObjects = function (oldFeatured, oldSubmitted, newFeatured, newSubmitted, journalID, adminID) {
-// 	// TODO - this function is kinda trash. It feels heavy and inefficient. The whole feature/submit add could be cleaner
-	
-// 	// make objects of all the existing featured and submitted
-// 	// iterate over all submitted and featured
-// 	// If they're not in the existing lists, create a new object for them and append it the pub object
-
-// 	// console.log(oldFeatured, oldSubmitted, newFeatured, newSubmitted, journalID, adminID);
-// 	const existingFeatured = {};
-// 	for(let index = oldFeatured.length; index--;) {
-// 		existingFeatured[oldFeatured[index]] = true;
-// 	}
-// 	const existingSubmitted = {};
-// 	for(let index = oldSubmitted.length; index--;) {
-// 		existingSubmitted[oldSubmitted[index]] = true;
-// 	}
-
-// 	for (let index = newFeatured.length; index--;) {
-// 		if (newFeatured[index] in existingFeatured === false) {
-// 			// We need to update the pub
-// 			const featureObject = {
-// 				journal: journalID,
-// 				date: new Date().getTime(),
-// 				by: adminID,
-// 			};
-// 			this.update({ _id: newFeatured[index] }, { $addToSet: { 'featuredInList': journalID, 'featuredIn': featureObject} }, function(err, result){if(err) console.log('Error in updatePubDocs ', err);});
-// 			// this.update({ _id:  }, { $addToSet: {'featuredIn': featureObject} }, function(err, result){if(err) console.log('Error in updatePubDocs ', err);});
-// 			// this.update({ _id: newFeatured[index] }, { $addToSet: {'featuredIn': featureObject} }, function(err, result){if(err) console.log('Error in updatePubDocs ', err);});
-// 		}
-// 	}
-
-// 	for (let index = newSubmitted.length; index--;) {
-// 		if (newSubmitted[index] in existingFeatured === false) {
-// 			// We need to update the pub
-// 			const submitObject = {
-// 				journal: journalID,
-// 				date: new Date().getTime(),
-// 				by: adminID,
-// 			};
-
-// 			this.update({ _id: newSubmitted[index] }, { $addToSet: { 'submittedToList': journalID, 'submittedTo': featureObject} }, function(err, result){if(err) console.log('Error in updatePubDocs ', err);});
-// 			// this.update({ _id: newSubmitted[index] }, { $addToSet: {'submittedTo': submitObject} }, function(err, result){if(err) console.log('Error in updatePubDocs ', err)});
-// 		}
-// 	}
-// };
+pubSchema.statics.addJournalSubmitted = function(pubID, journalID, userID){
+	const submittedObject = {
+		journal: journalID,
+		date: new Date().getTime(),
+		by: userID,
+	};
+	this.update({ _id: pubID }, { $addToSet: { 'submittedToList': journalID, 'submittedTo': submittedObject} }, function(err, result){if(err) console.log('Error in addJournalSubmitted ', err);});
+};
 
 module.exports = mongoose.model('Pub', pubSchema);

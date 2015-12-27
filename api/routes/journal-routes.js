@@ -92,6 +92,8 @@ app.post('/saveJournal', function(req,res){
 		}
 
 		if ('pubsFeatured' in req.body.newObject) {
+			// If there are new pubs to be featured, we have to update the pub with a new feature entry
+			// We don't have to update any submit entries, as you can't do that from the journal curate page
 			const newFeatured = req.body.newObject.pubsFeatured;
 			const oldFeatured = journal.pubsFeatured.map((pubID)=>{return String(pubID)});
 			const pubsToUpdateFeature = _.difference(newFeatured, oldFeatured);
