@@ -56,19 +56,28 @@ const Collection = React.createClass({
 						? <NotFound />
 						: <div>
 							
-							<div style={[styles.headerImage, {backgroundImage: 'url(' + collectionData.headerImage + ')'}]}></div>
+							<div style={[styles.headerImage, {backgroundImage: 'url(' + collectionData.headerImage + ')'}]}>
 
-							<div style={[globalStyles.hiddenUntilLoad, globalStyles[this.props.journalData.get('status')], this.props.mode && {display: 'none'} ]}>
+								<div style={styles.title}>
+									<Link style={globalStyles.link} to={'/collection/' + this.props.slug}><span style={styles.headerTitle}>{collectionData.title}</span></Link> 
+									{this.props.mode ? <span style={styles.headerModeText}> : {this.props.mode}</span> : null}
+								</div>
+								
+								<div style={styles.descriptionWrapper}>
+									<div style={styles.description}>{collectionData.description}</div>
+								</div>
+								
+
+							</div>
+
+							<div style={ this.props.mode && {display: 'none'} }>
 								<ul style={[navStyles.navList, styles.navList]}>
 									<Link to={'/collection/' + this.props.slug + '/edit'} style={globalStyles.link}><li key="collectionNav0" style={[navStyles.navItem, this.props.journalData.getIn(['journalData', 'isAdmin']) && navStyles.navItemShow, styles.navItemBackground]}>Edit</li></Link>
 								</ul>
 							</div>
 							
-							<div style={[globalStyles.hiddenUntilLoad, globalStyles[this.props.journalData.get('status')], styles.contentWrapper]}>
-								<div style={styles.headerContent}>
-									<Link style={globalStyles.link} to={'/collection/' + this.props.slug}>{collectionData.title}</Link> 
-									{this.props.mode ? <span style={styles.headerModeText}> : {this.props.mode}</span> : null}
-								</div>
+							<div style={styles.contentWrapper}>
+								
 								
 								<div style={styles.CollectionContent}>
 									{() => {
@@ -84,7 +93,8 @@ const Collection = React.createClass({
 										
 										default:
 											return (
-												<CollectionMain />
+												<CollectionMain 
+													collectionData={collectionData} />
 											);
 										}
 									}()}
@@ -117,26 +127,46 @@ styles = {
 		color: globalStyles.sideText,
 		fontFamily: globalStyles.headerFont,
 		width: '100%',
+		position: 'relative',
 	},
 	headerImage: {
 		backgroundRepeat: 'no-repeat',
 		backgroundPosition: 'center center',
 		backgroundAttachment: 'fixed',
 		backgroundSize: 'cover',
-		position: 'absolute',
-		height: 250,
+		// position: 'absolute',
+		minHeight: 250,
 		width: '100%',
+		color: 'white',	
 	},
-	headerContent: {
-		height: 250,
-		width: '100%',
-		color: 'white',
-		fontSize: 35,
+	// headerContent: {
+	// 	minHeight: 250,
+	// 	width: '100%',
+	// 	color: 'white',
+	// 	fontSize: 50,
+	// },
+	title: {
+		maxWidth: 1024,
+		margin: '0 auto',
+		textShadow: '0px 0px 1px black',
+	},
+	headerTitle: {
+		fontSize: 50,
 	},
 	headerModeText: {
-		fontSize: 25,
-
+		fontSize: 35,
 	},
+	descriptionWrapper: {
+		maxWidth: 1024,
+		margin: '0px auto',
+		padding: '30px 0px 50px 50px',
+	},
+	description: {
+		fontSize: 25,
+		textShadow: '0px 0px 1px black',
+		width: 500,
+	},
+	
 	contentWrapper: {
 		margin: globalStyles.headerHeight + ' auto',
 		width: 'calc(100% - 40px)',
@@ -148,6 +178,7 @@ styles = {
 	},
 	navList: {
 		position: 'absolute',
+		top: 0,
 		zIndex: 2,
 	},
 	navItemBackground: {
