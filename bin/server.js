@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+require('newrelic');
 require('../server.babel'); // babel registration (runtime transpilation for node)
 var path = require('path');
 var rootDir = path.resolve(__dirname, '..');
