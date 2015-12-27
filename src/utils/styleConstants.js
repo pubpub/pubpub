@@ -19,12 +19,14 @@ export const globalStyles = {
 	},
 	loading: {
 		opacity: 0,
+		transition: '0s linear opacity .25s',
 	}, 
 	loaded: {
-		opacity: 1
+		opacity: 1,
+		transition: '.3s linear opacity .25s',
 	},
 	hiddenUntilLoad: {
-		transition: '.3s linear opacity .25s',
+		// transition: '.3s linear opacity .25s',
 	},
 };
 

@@ -4,7 +4,7 @@ import Radium, {Style} from 'radium';
 import DocumentMeta from 'react-document-meta';
 import PureRenderMixin from 'react-addons-pure-render-mixin';
 import { Link } from 'react-router';
-import {getPub, openPubModal, closePubModal, addDiscussion, addSelection, discussionVoteSubmit, togglePubHighlights} from '../../actions/pub';
+import {getPub, openPubModal, closePubModal, addDiscussion, addSelection, discussionVoteSubmit, togglePubHighlights, pubNavOut, pubNavIn} from '../../actions/pub';
 import {toggleVisibility} from '../../actions/login';
 import {closeMenu} from '../../actions/nav';
 
@@ -43,7 +43,7 @@ const PubReader = React.createClass({
 			if (getState().pub.getIn(['pubData', 'slug']) !== routeParams.slug) {
 				return dispatch(getPub(routeParams.slug));
 			}
-			return ()=>{};
+			return dispatch(pubNavIn());
 		}
 	},
 
@@ -63,7 +63,7 @@ const PubReader = React.createClass({
 		const references = convertImmutableListToObject(this.props.readerData.getIn(['pubData', 'history', versionIndex, 'references']), true);
 		const selections = [];
 		const mdOutput = marked(inputMD, {assets, references, selections});
-
+		// console.log(inputMD);
 		this.setState({
 			htmlTree: mdOutput.tree,
 			TOC: mdOutput.travisTOCFull,
@@ -73,7 +73,13 @@ const PubReader = React.createClass({
 	componentWillReceiveProps(nextProps) {
 		const oldVersionIndex = this.props.query.version !== undefined ? this.props.query.version - 1 : this.props.readerData.getIn(['pubData', 'history']).size - 1;
 		const versionIndex = nextProps.query.version !== undefined ? nextProps.query.version - 1 : nextProps.readerData.getIn(['pubData', 'history']).size - 1;
-		if (oldVersionIndex !== versionIndex || this.state.htmlTree.length === 0) {
+
+		// When a pub is loaded, and we navigate away, then navigate to a new pub - the old pub data is still there during component will mount
+		// Thus, we need to also check and render when the markdown has changed.
+		const oldMarkdown = this.props.readerData.getIn(['pubData', 'history', oldVersionIndex, 'markdown']);
+		const newMarkdown = nextProps.readerData.getIn(['pubData', 'history', versionIndex, 'markdown']); 
+
+		if (oldVersionIndex !== versionIndex || this.state.htmlTree.length === 0 || oldMarkdown !== newMarkdown) {
 			// console.log('compiling markdown for version ' + versionIndex);
 			const inputMD = nextProps.readerData.getIn(['pubData', 'history', versionIndex, 'markdown']) || '';
 			const assets = convertImmutableListToObject( nextProps.readerData.getIn(['pubData', 'history', versionIndex, 'assets']) );
@@ -90,14 +96,15 @@ const PubReader = React.createClass({
 
 	componentWillUnmount() {
 		this.closePubModal();
+		this.props.dispatch(pubNavOut());
 	},
 
-	loader: function() {
-		return {
-			transform: 'translateX(' + (-100 + this.props.readerData.get('loading')) + '%)',
-			transition: '.2s linear transform'
-		};
-	},
+	// loader: function() {
+	// 	return {
+	// 		transform: 'translateX(' + (-100 + this.props.readerData.get('loading')) + '%)',
+	// 		transition: '.2s linear transform'
+	// 	};
+	// },
 
 	openPubModal: function(modal) {
 		return ()=> {
@@ -163,7 +170,7 @@ const PubReader = React.createClass({
 					}
 				}} />
 
-				<div className="leftBar" style={[styles.leftBar, styles[this.props.readerData.get('status')]]}>
+				<div className="leftBar" style={[styles.leftBar, globalStyles[this.props.readerData.get('status')]]}>
 
 					<PubLeftBar
 						slug={this.props.slug}
@@ -187,8 +194,8 @@ const PubReader = React.createClass({
 
 					{
 						this.props.query.version && this.props.query.version !== pubData.history.length.toString()
-							? <Link to={'/pub/' + this.props.slug} style={styles.versionNotificationLink}>
-								<div key={'versionNotification'} style={styles.versionNotification}>
+							? <Link to={'/pub/' + this.props.slug} style={globalStyles.link}>
+								<div key={'versionNotification'} style={[styles.versionNotification, globalStyles[this.props.readerData.get('status')]]}>
 									<p>Reading Version {this.props.query.version}. Click to read the most recent version ({pubData.history.length}).</p>
 									<p>This was a {pubData.history[versionIndex].status === 'Draft' ? 'Draft' : 'Peer-Review Ready'} version.</p>
 								</div>
@@ -233,7 +240,7 @@ const PubReader = React.createClass({
 
 				</div>
 
-				<div className="rightBar" style={[styles.rightBar, styles[this.props.readerData.get('status')]]}>
+				<div className="rightBar" style={[styles.rightBar, globalStyles[this.props.readerData.get('status')]]}>
 					<PubStatus
 						slug={this.props.slug}
 						pubStatus={pubData.status}

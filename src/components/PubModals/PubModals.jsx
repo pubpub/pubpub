@@ -39,7 +39,7 @@ const PubModals = React.createClass({
 
 	render: function() {
 		return (
-			<div className={'pubModals'} style={[styles.container, styles[this.props.status]]}>
+			<div className={'pubModals'} style={[styles.container, globalStyles[this.props.status]]}>
 
 				<div className="modals" style={[styles.modalWrapper, this.props.activeModal && styles.modalWrapperActive]}>
 

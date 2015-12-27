@@ -34,12 +34,12 @@ const PubNav = React.createClass({
 			<div>
 				{
 					this.props.meta 
-						? <ul style={[styles.pubNav, styles[this.props.status]]}>
+						? <ul style={[styles.pubNav, globalStyles[this.props.status]]}>
 							<Link to={'/pub/' + this.props.slug + versionURL}><li key="pubNav8"style={[styles.pubNavItem, styles.pubNavRight]}>Read Pub</li></Link>
 							<li style={[styles.pubNavSeparator, styles.pubNavMobileOnly, styles.pubNavRight]}></li>
 						</ul>
 
-						: <ul style={[styles.pubNav, styles[this.props.status]]}>
+						: <ul style={[styles.pubNav, globalStyles[this.props.status]]}>
 
 							<li key="pubNav0"style={[styles.pubNavItem, styles.pubNavDesktopOnly]} onClick={this.props.openPubModalHandler('tableOfContents')}>Table of Contents</li>
 							<li style={[styles.pubNavSeparator, styles.pubNavDesktopOnly]}></li>

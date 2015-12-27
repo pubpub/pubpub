@@ -120,7 +120,7 @@ const PubBody = React.createClass({
 
 				<Style rules={this.compileStyleRules()}/>
 
-				<div id="pubContent" style={[styles.contentContainer, styles[this.props.status]]} className={this.printStyleClass.pubContent}>
+				<div id="pubContent" style={[styles.contentContainer, globalStyles[this.props.status]]} className={this.printStyleClass.pubContent}>
 
 					<div id={'pub-title'} className={this.printStyleClass.title}>{this.props.title}</div>
 					<div id={'pub-authors'} className={this.printStyleClass.authors}> <span>by </span>

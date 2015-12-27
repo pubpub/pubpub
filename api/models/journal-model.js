@@ -31,6 +31,12 @@ var journalSchema = new Schema({
 	design: { type: Schema.Types.Mixed },
 	settings: { type: Schema.Types.Mixed },
 
+	collections: [{
+		description: { type: String}, 
+		title: { type: String}, 
+		pubs: [{ type: ObjectId, ref: 'Pub' }],
+	}]
+
 });
 
 journalSchema.statics.updateHerokuDomains = function (oldDomain, newDomain) {

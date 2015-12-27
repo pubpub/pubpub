@@ -18,6 +18,8 @@ import {debounce} from '../../utils/loadingFunctions';
 
 import initCodeMirrorMode from './editorCodeMirrorMode';
 import {styles, codeMirrorStyles, animateListItemStyle} from './editorStyles';
+import {globalStyles} from '../../utils/styleConstants';
+
 import {insertText, createFocusDoc} from './editorCodeFunctions';
 import {editorDefaultText} from './editorDefaultText';
 
@@ -499,7 +501,7 @@ const Editor = React.createClass({
 						saveUpdatedSettingsFirebaseAndPubPub={this.saveUpdatedSettingsFirebaseAndPubPub} />
 
 					{/*	Top Nav. Fixed to the top of the editor page, just below the main pubpub bar */}
-					<div style={[styles.editorTopNav, styles.hiddenUntilLoad, styles[editorData.get('status')], darkMode && styles.editorTopNavDark]}>
+					<div style={[styles.editorTopNav, globalStyles.hiddenUntilLoad, globalStyles[editorData.get('status')], darkMode && styles.editorTopNavDark]}>
 						<ul style={styles.editorNav}>
 
 							<li key="editorNav0"style={[styles.editorNavItem]} onClick={this.openModalHandler('Assets')}>Assets</li>
@@ -542,7 +544,7 @@ const Editor = React.createClass({
 					</div>
 
 					{/* Bottom Nav */}
-					<div style={[styles.common.editorBottomNav, styles[viewMode].editorBottomNav, styles.hiddenUntilLoad, styles[loadStatus]]}>
+					<div style={[styles.common.editorBottomNav, styles[viewMode].editorBottomNav, globalStyles.hiddenUntilLoad, globalStyles[loadStatus]]}>
 
 						{/* Background header bar that's used in livePreview mode. Provides opaque background. */}
 						<div style={[styles.common.bottomNavBackground, styles[viewMode].bottomNavBackground, darkMode && styles.common.bottomNavBackgroundDark]}></div>
@@ -595,7 +597,7 @@ const Editor = React.createClass({
 					</div>
 
 					{/* Markdown Editing Block */}
-					<div id="editor-text-wrapper" style={[styles.hiddenUntilLoad, styles[loadStatus], styles.common.editorMarkdown, styles[viewMode].editorMarkdown]}>
+					<div id="editor-text-wrapper" style={[globalStyles.hiddenUntilLoad, globalStyles[loadStatus], styles.common.editorMarkdown, styles[viewMode].editorMarkdown]}>
 
 						<EditorPluginPopup ref="pluginPopup" references={this.state.firepadData.references} assets={this.state.firepadData.assets} activeFocus={this.state.activeFocus} codeMirrorChange={this.state.codeMirrorChange}/>
 
@@ -610,7 +612,7 @@ const Editor = React.createClass({
 					</div>
 
 					{/* Live Preview Block */}
-					<div id="editor-live-preview-wrapper" style={[styles.hiddenUntilLoad, styles[loadStatus], styles.common.editorPreview, styles[viewMode].editorPreview]} className={'editorPreview'}>
+					<div id="editor-live-preview-wrapper" style={[globalStyles.hiddenUntilLoad, globalStyles[loadStatus], styles.common.editorPreview, styles[viewMode].editorPreview]} className={'editorPreview'}>
 						{/* {this.state.tree} */}
 						<PubBody
 							status={'loaded'}

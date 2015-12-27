@@ -23,6 +23,9 @@ export const ADD_DISCUSSION_FAIL = 'pub/ADD_DISCUSSION_FAIL';
 
 export const ADD_SELECTION = 'pub/ADD_SELECTION';
 
+export const PUB_NAV_OUT = 'pub/PUB_NAV_OUT';
+export const PUB_NAV_IN = 'pub/PUB_NAV_IN';
+
 export const TOGGLE_PUB_HIGHLIGHTS = 'pub/TOGGLE_PUB_HIGHLIGHTS';
 
 export const DISCUSSION_VOTE = 'pub/DISCUSSION_VOTE';
@@ -70,6 +73,18 @@ export function openPubModal(modal) {
 export function closePubModal() {
 	return {
 		type: CLOSE_PUB_MODAL,
+	};	
+}
+
+export function pubNavOut() {
+	return {
+		type: PUB_NAV_OUT,
+	};	
+}
+
+export function pubNavIn() {
+	return {
+		type: PUB_NAV_IN,
 	};	
 }
 

@@ -50,15 +50,15 @@ export const styles = {
 			display: 'none',
 		},
 	},
-	loading: {
-		opacity: 0,
-	},
-	loaded: {
-		opacity: 1
-	},
-	hiddenUntilLoad: {
-		transition: '.3s linear opacity .25s',
-	},
+	// loading: {
+	// 	opacity: 0,
+	// },
+	// loaded: {
+	// 	opacity: 1
+	// },
+	// hiddenUntilLoad: {
+	// 	transition: '.3s linear opacity .25s',
+	// },
 	editorTopNav: {
 		position: 'fixed',
 		top: 30,

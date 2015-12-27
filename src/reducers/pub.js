@@ -29,6 +29,9 @@ import {
 	DISCUSSION_VOTE_SUCCESS,
 	DISCUSSION_VOTE_FAIL,
 
+	PUB_NAV_OUT,
+	PUB_NAV_IN,
+
 } from '../actions/pub';
 
 /*--------*/
@@ -223,6 +226,18 @@ function togglePubHighlights(state) {
 	return state.set('showPubHighlights', !state.get('showPubHighlights'));
 }
 
+function pubNavOut(state) {
+	return state.merge({
+		status: 'loading',
+	});
+}
+
+function pubNavIn(state) {
+	return state.merge({
+		status: 'loaded',
+	});
+}
+
 function discussionVote(state, voteType, discussionID, userYay, userNay) {
 	let scoreChange = 0;
 	let newUserYay = undefined;
@@ -303,6 +318,11 @@ export default function readerReducer(state = defaultState, action) {
 
 	case ADD_SELECTION:
 		return addSelection(state, action.selection);
+
+	case PUB_NAV_OUT:
+		return pubNavOut(state);
+	case PUB_NAV_IN:
+		return pubNavIn(state);
 
 	case TOGGLE_PUB_HIGHLIGHTS:
 		return togglePubHighlights(state);
