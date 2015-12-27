@@ -30,6 +30,8 @@ import marked from '../../modules/markdown/markdown';
 import markdownExtensions from '../../components/EditorPlugins';
 import FirepadUserList from './editorFirepadUserlist';
 
+import PubDiscussionsItem from '../../components/PubDiscussions/PubDiscussionsItem';
+
 import {convertFirebaseToObject} from '../../utils/parsePlugins';
 
 marked.setExtensions(markdownExtensions);
@@ -614,6 +616,18 @@ const Editor = React.createClass({
 					{/* Live Preview Block */}
 					<div id="editor-live-preview-wrapper" style={[globalStyles.hiddenUntilLoad, globalStyles[loadStatus], styles.common.editorPreview, styles[viewMode].editorPreview]} className={'editorPreview'}>
 						{/* {this.state.tree} */}
+
+						{
+							this.props.editorData.getIn(['pubEditData', 'discussions']).toJS().map((discussion)=>{
+								return (<PubDiscussionsItem 
+									key={'editorDiscussionItem-' + discussion._id}
+									slug={this.props.slug}
+									discussionItem={discussion}
+									noReply={true}/>
+								);
+							})
+						}
+
 						<PubBody
 							status={'loaded'}
 							title={this.state.title}

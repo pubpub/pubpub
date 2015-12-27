@@ -26,6 +26,8 @@ const PubDiscussionsItem = React.createClass({
 
 		activeSaveID: PropTypes.string,
 		handleVoteSubmit: PropTypes.func,
+
+		noReply: PropTypes.bool,
 	},
 
 	getDefaultProps: function() {
@@ -118,8 +120,8 @@ const PubDiscussionsItem = React.createClass({
 
 					<div style={[styles.discussionDetailsLine, styles.discussionDetailsLineBottom]}>
 						<Link style={globalStyles.link} to={'/pub/' + this.props.slug + '/discussions/' + discussionItem._id}><span style={styles.detailLineItem}>Permalink</span></Link>
-						<span style={styles.detailLineItemSeparator}>|</span>
-						<span style={styles.detailLineItem} key={'replyButton-' + discussionItem._id} onClick={this.toggleReplyActive}>Reply</span>
+						<span style={[styles.detailLineItemSeparator, this.props.noReply && {display: 'none'}]}>|</span>
+						<span style={[styles.detailLineItem, this.props.noReply && {display: 'none'}]} key={'replyButton-' + discussionItem._id} onClick={this.toggleReplyActive}>Reply</span>
 					</div>
 
 				</div>
@@ -131,7 +133,8 @@ const PubDiscussionsItem = React.createClass({
 							score={discussionItem.yays - discussionItem.nays}
 							userYay={discussionItem.userYay}
 							userNay={discussionItem.userNay} 
-							handleVoteSubmit={this.props.handleVoteSubmit} />
+							handleVoteSubmit={this.props.handleVoteSubmit} 
+							readOnly={this.props.noReply}/>
 					</div>
 
 					<div style={styles.discussionContent}>
@@ -139,19 +142,22 @@ const PubDiscussionsItem = React.createClass({
 					</div>
 				</div>
 				
-				<div style={[styles.replyWrapper, this.state.replyActive && styles.replyWrapperActive]}>
-					<PubDiscussionsInput 
-						addDiscussionHandler={this.props.addDiscussionHandler}
-						addDiscussionStatus={this.props.addDiscussionStatus} 
-						newDiscussionData={this.props.newDiscussionData} 
-						userThumbnail={this.props.userThumbnail}
-						codeMirrorID={'replyInput-' + discussionItem._id} 
-						parentID={discussionItem._id}
-						saveID={discussionItem._id}
-						activeSaveID={this.props.activeSaveID}
-						isReply={true}/>
-				</div>
-				
+				{this.props.noReply
+					? null
+					: <div style={[styles.replyWrapper, this.state.replyActive && styles.replyWrapperActive]}>
+						<PubDiscussionsInput 
+							addDiscussionHandler={this.props.addDiscussionHandler}
+							addDiscussionStatus={this.props.addDiscussionStatus} 
+							newDiscussionData={this.props.newDiscussionData} 
+							userThumbnail={this.props.userThumbnail}
+							codeMirrorID={'replyInput-' + discussionItem._id} 
+							parentID={discussionItem._id}
+							saveID={discussionItem._id}
+							activeSaveID={this.props.activeSaveID}
+							isReply={true}/>
+					</div>
+
+				}
 
 				{/* Children */}
 				<div style={styles.discussionChildrenWrapper}>

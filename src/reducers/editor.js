@@ -29,7 +29,9 @@ import {TOGGLE_VIEW_MODE,
 // Initialize Default State 
 /*--------*/
 const defaultState = Immutable.Map({
-	pubEditData: {},
+	pubEditData: {
+		discussions: [],
+	},
 	viewMode: 'edit', // or 'preview'
 	showBottomLeftMenu: true,
 	showBottomRightMenu: true,

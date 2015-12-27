@@ -186,7 +186,9 @@ pubSchema.statics.getPub = function (slug, readerID, callback) {
 
 pubSchema.statics.getPubEdit = function (slug, readerID, callback) {
 	// Get the pub and check to make sure user is authorized to edit
-	this.findOne({slug: slug}).exec((err, pub) =>{
+	this.findOne({slug: slug})
+	.populate({ path: 'discussions', model: 'Discussion' })
+	.exec((err, pub) =>{
 		if (err) { return callback(err, null); }
 
 		if (!pub) { return callback(null, 'Pub Not Found'); }
@@ -197,9 +199,25 @@ pubSchema.statics.getPubEdit = function (slug, readerID, callback) {
 
 		// Once authorized, it doesn't seem like we need to provide any data to the editor
 		// That will likely change when we implement better authentication for the firepad
-		// This will chance when we have to pass down status to the editor. Once you publish peer-review-ready
+		// This will change when we have to pass down status to the editor. Once you publish peer-review-ready
 		// You can go and publish draft...
-		return callback(null, {});
+
+		// We gotta pass down discussions if we want to show in editor
+		const options = [
+			{ path: 'discussions.author', select: '_id username name thumbnail', model: 'User'},
+			{ path: 'discussions.selections', model: 'Highlight'}
+		];
+
+		this.populate(pub, options, (err, populatedPub)=> {
+			if (err) { return callback(err, null); }
+			const outputPub = populatedPub.toObject();
+			outputPub.discussions = Discussion.appendUserYayNayFlag(outputPub.discussions, readerID);
+			outputPub.discussions = Discussion.calculateYayNayScore(outputPub.discussions);
+			outputPub.discussions = Discussion.nestChildren(outputPub.discussions);
+			return callback(null, outputPub);
+		});
+
+		// return callback(null, {});
 
 	});
 
