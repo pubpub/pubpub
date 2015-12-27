@@ -26,18 +26,28 @@ const Collection = React.createClass({
 	// journalSave: function(newObject) {
 	// 	this.props.dispatch(saveJournal(this.props.subdomain, newObject));
 	// },
+	getCollectionData: function(slug) {
+		if ( !this.props.journalData.getIn(['journalData', 'collections']) ) { return {}; }
+
+		const data = this.props.journalData.getIn(['journalData', 'collections']).find((obj)=>{
+			return obj.get('slug') === slug;
+		});
+		return data ? data.toJS() : {};
+	},
 
 	render: function() {
 		const metaData = {};
-		metaData.title = 'Collection';
-		console.log(this.props.slug);
+		
+		const collectionData = this.getCollectionData(this.props.slug);
+		metaData.title = collectionData.title + ' - ' + this.props.journalData.getIn(['journalData', 'journalName']);
+
 		return (
 			<div style={styles.container}>
 
 				<DocumentMeta {...metaData} />
 
 				{
-					(this.props.slug === 'cat') || (this.props.mode && !this.props.journalData.getIn(['journalData', 'isAdmin']))
+					(!collectionData.slug) || (this.props.journalData.get('baseSubdomain') !== this.props.journalData.getIn(['journalData', 'subdomain'])) || (this.props.mode && !this.props.journalData.getIn(['journalData', 'isAdmin']))
 						? <NotFound />
 						: <div>
 							
@@ -54,7 +64,7 @@ const Collection = React.createClass({
 							
 							<div style={[globalStyles.hiddenUntilLoad, globalStyles[this.props.journalData.get('status')], styles.contentWrapper]}>
 								<div style={styles.headerContent}>
-									Wowy Zowwy!
+									{collectionData.title}
 								</div>
 								<p>TITLE</p>
 								<p>TITLE</p>

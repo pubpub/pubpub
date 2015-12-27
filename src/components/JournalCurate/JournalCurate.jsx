@@ -179,7 +179,6 @@ const JournalCurate = React.createClass({
 					<h2>Collections</h2>
 					<div style={styles.emptyBlock}>No Collections</div>
 
-					<div>Create new collection: Title : slug 'CREATE' (takes you to collection page, where you can edit)</div>
 					<h2>Create New Collection</h2>
 					
 					<div key={'createCollection-title'} style={styles.inputWrapper}>
