@@ -24,6 +24,10 @@ export const CREATE_COLLECTION = 'journal/CREATE_COLLECTION';
 export const CREATE_COLLECTION_SUCCESS = 'journal/CREATE_COLLECTION_SUCCESS';
 export const CREATE_COLLECTION_FAIL = 'journal/CREATE_COLLECTION_FAIL';
 
+export const SAVE_COLLECTION = 'journal/SAVE_COLLECTION';
+export const SAVE_COLLECTION_SUCCESS = 'journal/SAVE_COLLECTION_SUCCESS';
+export const SAVE_COLLECTION_FAIL = 'journal/SAVE_COLLECTION_FAIL';
+
 
 /*--------*/
 // Define Action creators
@@ -69,5 +73,12 @@ export function createCollection(subdomain, newCollectionObject) {
 		types: [CREATE_COLLECTION, CREATE_COLLECTION_SUCCESS, CREATE_COLLECTION_FAIL],
 		promise: (client) => client.post('/createCollection', {data: {subdomain: subdomain, newCollectionObject: newCollectionObject}}),
 		newCollectionSlug: newCollectionObject.slug,
+	};
+}
+
+export function saveCollection(subdomain, slug, newCollectionObject) {
+	return {
+		types: [CREATE_COLLECTION, CREATE_COLLECTION_SUCCESS, CREATE_COLLECTION_FAIL],
+		promise: (client) => client.post('/saveCollection', {data: {subdomain: subdomain, slug: slug, newCollectionObject: newCollectionObject}}),
 	};
 }

@@ -49,18 +49,20 @@ app.get('/autocompletePubsAll', function(req,res){
 });
 
 app.get('/autocompletePubs', function(req,res){
-	var query = {versions: {$not: {$size: 0}},'settings.isPrivate': {$ne: true}};
+	var objects = [];
+	var query = {history: {$not: {$size: 0}},'settings.isPrivate': {$ne: true}};
 	if(req.query.journalID){
-		query['featuredInJournalsList'] = req.query.journalID;
+		query['featuredInList'] = req.query.journalID;
 	}
-	Pub.find(query, {'displayTitle':1, 'uniqueTitle':1, 'image':1, 'featuredInJournalsList':1}).exec(function (err, pubs) {
-	objects = pubs;
-	// console.log(objects);
+
+	Pub.find(query, {'slug':1, 'title':1, 'abstract': 1}).exec(function (err, pubs) {
+		objects = pubs;
+		// console.log(objects);
 		var sifter = new Sifter(objects);
 
 		var result = sifter.search(req.query.string, {
-		    fields: ['uniqueTitle', 'displayTitle'],
-		    sort: [{field: 'uniqueTitle', direction: 'asc'}],
+		    fields: ['slug', 'title'],
+		    sort: [{field: 'title', direction: 'asc'}],
 		    limit: 10
 		});
 

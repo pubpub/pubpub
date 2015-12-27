@@ -3,8 +3,8 @@ import {connect} from 'react-redux';
 import { Link } from 'react-router';
 import Radium from 'radium';
 import DocumentMeta from 'react-document-meta';
-// import {getJournal, saveJournal} from '../../actions/journal';
-// import {LoaderDeterminate} from '../../components';
+import {saveCollection} from '../../actions/journal';
+import {CollectionEdit, CollectionMain} from '../../components';
 import {NotFound} from '../../containers';
 import {globalStyles, navStyles} from '../../utils/styleConstants';
 
@@ -35,6 +35,11 @@ const Collection = React.createClass({
 		return data ? data.toJS() : {};
 	},
 
+	collectionSave: function(newCollectionData) {
+		console.log('saving', this.props.journalData.get('baseSubdomain'), this.props.slug, newCollectionData);
+		this.props.dispatch(saveCollection(this.props.journalData.get('baseSubdomain'), this.props.slug, newCollectionData));
+	},
+
 	render: function() {
 		const metaData = {};
 		
@@ -51,27 +56,39 @@ const Collection = React.createClass({
 						? <NotFound />
 						: <div>
 							
-							<div style={styles.headerImage}></div>
+							<div style={[styles.headerImage, {backgroundImage: 'url(' + collectionData.headerImage + ')'}]}></div>
 
-							<div style={[globalStyles.hiddenUntilLoad, globalStyles[this.props.journalData.get('status')]]}>
+							<div style={[globalStyles.hiddenUntilLoad, globalStyles[this.props.journalData.get('status')], this.props.mode && {display: 'none'} ]}>
 								<ul style={[navStyles.navList, styles.navList]}>
 									<Link to={'/collection/' + this.props.slug + '/edit'} style={globalStyles.link}><li key="collectionNav0" style={[navStyles.navItem, this.props.journalData.getIn(['journalData', 'isAdmin']) && navStyles.navItemShow, styles.navItemBackground]}>Edit</li></Link>
-
-									{/* <li key="journalNav3" style={[navStyles.navItem, !this.props.journalData.getIn(['journalData', 'isAdmin']) && navStyles.navItemShow]}>Follow</li>
-										<li style={[navStyles.navSeparator, !this.props.journalData.getIn(['journalData', 'isAdmin']) && navStyles.navItemShow]}></li> */}
 								</ul>
 							</div>
 							
 							<div style={[globalStyles.hiddenUntilLoad, globalStyles[this.props.journalData.get('status')], styles.contentWrapper]}>
 								<div style={styles.headerContent}>
-									{collectionData.title}
+									<Link style={globalStyles.link} to={'/collection/' + this.props.slug}>{collectionData.title}</Link> 
+									{this.props.mode ? <span style={styles.headerModeText}> : {this.props.mode}</span> : null}
 								</div>
-								<p>TITLE</p>
-								<p>TITLE</p>
-								<p>TITLE</p>
-								<p>TITLE</p>
-								<p>TITLE</p>
-								<p>TITLE</p>
+								
+								<div style={styles.CollectionContent}>
+									{() => {
+										switch (this.props.mode) {
+										case 'edit':
+											return (
+												<CollectionEdit 
+													collectionData={collectionData}
+													handleCollectionSave={this.collectionSave}
+													saveStatus={this.props.journalData.get('saveCollectionStatus')}
+													journalID={this.props.journalData.getIn(['journalData', '_id'])}/>
+											);
+										
+										default:
+											return (
+												<CollectionMain />
+											);
+										}
+									}()}
+								</div>
 								
 
 							</div>
@@ -102,7 +119,6 @@ styles = {
 		width: '100%',
 	},
 	headerImage: {
-		backgroundImage: 'url(http://7-themes.com/data_images/out/24/6851008-landscape-photos.jpg)',
 		backgroundRepeat: 'no-repeat',
 		backgroundPosition: 'center center',
 		backgroundAttachment: 'fixed',
@@ -116,6 +132,10 @@ styles = {
 		width: '100%',
 		color: 'white',
 		fontSize: 35,
+	},
+	headerModeText: {
+		fontSize: 25,
+
 	},
 	contentWrapper: {
 		margin: globalStyles.headerHeight + ' auto',

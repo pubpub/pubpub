@@ -36,6 +36,7 @@ var journalSchema = new Schema({
 		slug: {type: String},
 		title: { type: String}, 
 		pubs: [{ type: ObjectId, ref: 'Pub' }],
+		headerImage: { type: String}, 
 	}],
 
 });

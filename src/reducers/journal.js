@@ -25,6 +25,10 @@ import {
 	CREATE_COLLECTION_SUCCESS,
 	CREATE_COLLECTION_FAIL,
 
+	SAVE_COLLECTION,
+	SAVE_COLLECTION_SUCCESS,
+	SAVE_COLLECTION_FAIL,
+
 } from '../actions/journal';
 
 /*--------*/
@@ -45,6 +49,7 @@ export const defaultState = Immutable.Map({
 	journalSavingError: null,
 	createCollectionStatus: null,
 	createCollectionSlug: null,
+	saveCollectionStatus: null,
 
 });
 
@@ -140,6 +145,25 @@ function createCollectionFail(state, error) {
 	return state.set('createCollectionStatus', 'failed');
 }
 
+function saveCollection(state) {
+	return state.set('saveCollectionStatus', 'saving');
+}
+
+function saveCollectionSuccess(state, result) {
+	return state.merge({
+		saveCollectionStatus: 'saved',
+		journalData: {
+			...state.get('journalData').toJS(),
+			collections: result,
+		},
+	});
+}
+
+function saveCollectionFail(state, error) {	
+	console.log('createCollection Failed: ', error);
+	return state.set('saveCollectionStatus', 'saved');
+}
+
 /*--------*/
 // Bind actions to specific reducing functions.
 /*--------*/
@@ -180,6 +204,13 @@ export default function loginReducer(state = defaultState, action) {
 		return createCollectionSuccess(state, action.result, action.newCollectionSlug);
 	case CREATE_COLLECTION_FAIL:
 		return createCollectionFail(state, action.error);
+
+	case SAVE_COLLECTION:
+		return saveCollection(state);
+	case SAVE_COLLECTION_SUCCESS:
+		return saveCollectionSuccess(state, action.result);
+	case SAVE_COLLECTION_FAIL:
+		return saveCollectionFail(state, action.error);
 
 	default:
 		return ensureImmutable(state);

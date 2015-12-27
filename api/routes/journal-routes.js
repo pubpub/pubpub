@@ -5,6 +5,7 @@ var _         = require('underscore');
 var Journal = require('../models').Journal;
 var User = require('../models').User;
 var Pub = require('../models').Pub;
+import {cloudinary} from '../services/cloudinary';
 
 app.post('/createJournal', function(req,res){
 	const journal = new Journal({
@@ -29,6 +30,7 @@ app.get('/getJournal', function(req,res){
 	.populate({path: "pubsFeatured", select:"title abstract slug settings"})
 	.populate({path: "pubsSubmitted", select:"title abstract slug settings"})
 	.populate({path: "admins", select:"name username thumbnail"})
+	.populate({path: "collections.pubs", select:"title abstract slug authors lastUpdated createDate"})
 	.lean().exec(function(err, result) {
 		if (err) { return res.status(500).json(err);  }
 
@@ -61,7 +63,7 @@ app.post('/saveJournal', function(req,res){
 		}
 
 		if ('customDomain' in req.body.newObject && req.body.newObject.customDomain !== journal.customDomain){
-			console.log('we got a new custom domain!');
+			// console.log('we got a new custom domain!');
 			Journal.updateHerokuDomains(journal.customDomain, req.body.newObject.customDomain);
 
 		}
@@ -91,6 +93,7 @@ app.post('/saveJournal', function(req,res){
 				{path: "pubsFeatured", select:"title abstract slug settings", model: 'Pub'},
 				{path: "pubsSubmitted", select:"title abstract slug settings", model: 'Pub'},
 				{path: "admins", select:"name username thumbnail", model: 'User'},
+				{path: "collections.pubs", select:"title abstract slug authors lastUpdated createDate", model: 'Pub'},
 			];
 
 			Journal.populate(result, options, (err, populatedJournal)=> {
@@ -113,6 +116,7 @@ app.get('/loadJournalAndLogin', function(req,res){
 	.populate({path: "pubsFeatured", select:"title abstract slug settings"})
 	.populate({path: "pubsSubmitted", select:"title abstract slug settings"})
 	.populate({path: "admins", select:"name username thumbnail"})
+	.populate({path: "collections.pubs", select:"title abstract slug authors lastUpdated createDate"})
 	.lean().exec(function(err, result){
 		// console.log('journalResult', result);
 		
@@ -181,5 +185,49 @@ app.post('/createCollection', function(req,res){
 	});
 });
 
+app.post('/saveCollection', function(req,res){
+	Journal.findOne({subdomain: req.body.subdomain}).exec(function(err, journal) {
+		const collections = journal ? journal.collections : [];
 
+		function updateAndSave(cloudinaryURL) {
+			for (let index = collections.length; index--;) {
+				if (collections[index].slug === req.body.slug) {
+					if (cloudinaryURL) {
+						journal.collections[index].headerImage = cloudinaryURL;
+					}
+					for (const key in req.body.newCollectionObject) {
+						if (req.body.newCollectionObject.hasOwnProperty(key)) {
+							journal.collections[index][key] = req.body.newCollectionObject[key];
+						}
+					}
+					break;
+				}
+			}
+			journal.save(function (err, savedJournal) {
+				if (err) { return res.status(500).json(err);  }
+				const options = [
+					{path: "collections.pubs", select:"title abstract slug authors lastUpdated createDate", model: 'Pub'},
+				];
+
+				Journal.populate(savedJournal, options, (err, populatedJournal)=> {
+					if (err) { return res.status(500).json(err);  }
+
+					return res.status(201).json(populatedJournal.collections);		
+				});
+
+			});
+		}
+
+		if (req.body.newCollectionObject.headerImageURL) {
+			cloudinary.uploader.upload(req.body.newCollectionObject.headerImageURL, function(cloudinaryResponse) { 
+				const cloudinaryURL = cloudinaryResponse.url; 
+				updateAndSave(cloudinaryURL);
+				
+			});
+		} else {
+			updateAndSave();
+		}
+
+	});
+});
 
