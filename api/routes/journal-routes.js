@@ -166,6 +166,7 @@ app.post('/createCollection', function(req,res){
 			slug: req.body.newCollectionObject.slug,
 			description: '',
 			pubs: [],
+			headerImage: 'http://res.cloudinary.com/pubpub/image/upload/c_scale,w_2000/v1451248425/ps7hqaxx2h7fjz7vuekz.jpg',
 		};
 		journal.collections.push(newCollection);
 		
