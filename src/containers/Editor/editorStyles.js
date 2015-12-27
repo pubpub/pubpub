@@ -149,6 +149,21 @@ export const styles = {
 		pointerEvents: 'auto',
 		display: 'inline-block',
 	},
+
+	showCommentsToggle: {
+		backgroundColor: '#EAEAEA',
+		cursor: 'pointer',
+		width: '300px',
+		height: '30px',
+		lineHeight: '30px',
+		margin: '0 auto',
+		borderRadius: '1px',
+		userSelect: 'none',
+		textAlign: 'center',
+		':hover': {
+			color: 'black'
+		}
+	},
 	common: {
 		editorBottomNav: {
 			position: 'fixed',

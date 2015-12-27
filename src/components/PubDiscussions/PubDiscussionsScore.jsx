@@ -100,7 +100,7 @@ styles = {
 		transform: 'rotate(180deg)',
 	},
 	readOnly: {
-		opacity: 0.3,
+		opacity: 0.15,
 		pointerEvents: 'none',
 	},
 	

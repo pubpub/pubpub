@@ -76,6 +76,7 @@ const Editor = React.createClass({
 			},
 			codeMirrorChange: {},
 			editorSaveStatus: 'saved',
+			showComments: false,
 		};
 	},
 
@@ -168,6 +169,10 @@ const Editor = React.createClass({
 		} else {
 			this.setState({editorSaveStatus: 'saved'});
 		}
+	},
+
+	toggleShowComments: function() {
+		this.setState({showComments: !this.state.showComments});
 	},
 
 	onEditorChange: function(cm, change) {
@@ -615,10 +620,18 @@ const Editor = React.createClass({
 
 					{/* Live Preview Block */}
 					<div id="editor-live-preview-wrapper" style={[globalStyles.hiddenUntilLoad, globalStyles[loadStatus], styles.common.editorPreview, styles[viewMode].editorPreview]} className={'editorPreview'}>
-						{/* {this.state.tree} */}
+						{this.props.editorData.getIn(['pubEditData', 'discussions']) && this.props.editorData.getIn(['pubEditData', 'discussions']).size
+							? <div onClick={this.toggleShowComments} style={styles.showCommentsToggle} key={'editorCommentsToggleButton'}>
+								{this.state.showComments
+									? 'Click to View Preview'
+									: 'Click to View Comments'
+								}
+							</div>
+							: null
+						}
 
-						{
-							this.props.editorData.getIn(['pubEditData', 'discussions']).toJS().map((discussion)=>{
+						{this.state.showComments
+							? this.props.editorData.getIn(['pubEditData', 'discussions']).toJS().map((discussion)=>{
 								return (<PubDiscussionsItem 
 									key={'editorDiscussionItem-' + discussion._id}
 									slug={this.props.slug}
@@ -626,16 +639,17 @@ const Editor = React.createClass({
 									noReply={true}/>
 								);
 							})
+							: <PubBody
+								status={'loaded'}
+								title={this.state.title}
+								abstract={this.state.abstract}
+								htmlTree={this.state.tree} 
+								authors={this.getAuthorsArray()}
+								// addSelectionHandler={this.addSelection}
+								style={this.state.firepadData && this.state.firepadData.settings ? this.state.firepadData.settings.pubStyle : undefined}/>
 						}
 
-						<PubBody
-							status={'loaded'}
-							title={this.state.title}
-							abstract={this.state.abstract}
-							htmlTree={this.state.tree} 
-							authors={this.getAuthorsArray()}
-							// addSelectionHandler={this.addSelection}
-							style={this.state.firepadData && this.state.firepadData.settings ? this.state.firepadData.settings.pubStyle : undefined}/>
+						
 					</div>
 
 				</div>
