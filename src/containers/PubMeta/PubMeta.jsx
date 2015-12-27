@@ -3,7 +3,7 @@ import {connect} from 'react-redux';
 import Radium from 'radium';
 import DocumentMeta from 'react-document-meta';
 import PureRenderMixin from 'react-addons-pure-render-mixin';
-import {getPub, addDiscussion, discussionVoteSubmit} from '../../actions/pub';
+import {getPub, addDiscussion, discussionVoteSubmit, pubNavOut, pubNavIn} from '../../actions/pub';
 import {toggleVisibility} from '../../actions/login';
 import { Link } from 'react-router';
 import {PubLeftBar, PubNav, LoaderDeterminate} from '../../components';
@@ -38,7 +38,7 @@ const PubMeta = React.createClass({
 			if (getState().pub.getIn(['pubData', 'slug']) !== routeParams.slug) {
 				return dispatch(getPub(routeParams.slug));
 			}
-			return ()=>{};
+			return dispatch(pubNavIn());
 		}
 	},
 
@@ -47,6 +47,10 @@ const PubMeta = React.createClass({
 			document.getElementsByClassName('centerBar')[0].scrollTop = 0;
 		}
 	},
+
+	// componentWillUnmount() {
+	// 	this.props.dispatch(pubNavOut());
+	// },
 
 	loader: function() {
 		return {

@@ -118,21 +118,24 @@ function loadSuccess(state, result) {
 		error: null
 	};
 
-	if (result === 'Pub Not Found') {
+	if (result.message === 'Pub Not Found') {
 		outputState.pubData = { ...defaultState.get('pubData'),
 			history: [{title: 'Pub Not Found'}],
+			slug: result.slug,
 		};
 	}
 
-	if (result === 'Private Pub') {
+	if (result.message === 'Private Pub') {
 		outputState.pubData = { ...defaultState.get('pubData'),
 			history: [{title: 'Private Pub'}],
+			slug: result.slug,
 		};
 	}
 
-	if (result === 'Pub not yet published') {
+	if (result.message === 'Pub not yet published') {
 		outputState.pubData = { ...defaultState.get('pubData'),
 			history: [{title: 'Pub not yet published'}],
+			slug: result.slug,
 		};
 	} 
 

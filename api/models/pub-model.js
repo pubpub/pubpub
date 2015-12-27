@@ -158,14 +158,14 @@ pubSchema.statics.getPub = function (slug, readerID, callback) {
 		this.populate(pub, options, (err, populatedPub)=> {
 			if (err) { return callback(err, null); }
 
-			if (!populatedPub) { return callback(null, 'Pub Not Found'); }
+			if (!populatedPub) { return callback(null, {message: 'Pub Not Found', slug: slug}); }
 
-			if (populatedPub.status === 'Unpublished') { return callback(null, 'Pub not yet published'); }
+			if (populatedPub.status === 'Unpublished') { return callback(null, {message: 'Pub not yet published', slug: slug}); }
 
 			// Check if the pub is private, and if so, check readers/authors list
 			if (populatedPub.settings.pubPrivacy === 'private') {
 				if (populatedPub.collaborators.canEdit.indexOf(readerID) === -1 && populatedPub.collaborators.canRead.indexOf(readerID) === -1) {
-					return callback(null, 'Private Pub');
+					return callback(null, {message: 'Private Pub', slug: slug});
 				}
 			}
 
