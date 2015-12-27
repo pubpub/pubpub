@@ -151,6 +151,10 @@ const JournalCurate = React.createClass({
 					</div>
 
 				</div>
+
+				<div>
+					<h2>Collections</h2>
+				</div>
 				
 			</div>
 		);
