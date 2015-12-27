@@ -5,31 +5,6 @@ var _         = require('underscore');
 var Journal = require('../models').Journal;
 var User = require('../models').User;
 var Pub = require('../models').Pub;
-var Heroku = require('heroku-client');
-var heroku = undefined;
-
-if(process.env.NODE_ENV !== 'production'){
-	import {herokuApiKey} from '../authentication/herokuCredentials';	
-	heroku = new Heroku({ token: herokuApiKey });
-}else{
-	heroku = new Heroku({ token: process.env.HEROKU_API_KEY });
-}
-
-app.get('/testheroku', function(req,res){
-
-	heroku.post('/apps/immense-escarpment-3653/domains', { hostname: 'funky.pbpb.co' }, function (err, app) {
-		if (err) {console.log(err);}
-		heroku.apps('immense-escarpment-3653').domains().list(function (err, apps) {
-		  return res.status(201).json(apps);
-		});
-	});
-	// heroku.delete('/apps/immense-escarpment-3653/domains/funky.pbpb.co', function (err, app) {
-	// 	heroku.apps('immense-escarpment-3653').domains().list(function (err, apps) {
-	// 	  return res.status(201).json(apps);
-	// 	});
-	// });
-
-});
 
 app.post('/createJournal', function(req,res){
 	const journal = new Journal({

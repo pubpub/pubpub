@@ -5,7 +5,6 @@ module.exports = {};
 // just shouldn't be relying on cross dependencies in model static functions.. duh
 module.exports.Discussion = require('./models/discussion-model');
 
-
 module.exports.Asset = require('./models/asset-model');
 module.exports.Highlight = require('./models/highlight-model');
 module.exports.Journal = require('./models/journal-model');

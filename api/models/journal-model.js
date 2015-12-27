@@ -1,7 +1,16 @@
 var mongoose  = require('mongoose');
 var Schema    =  mongoose.Schema;
 var ObjectId  = Schema.Types.ObjectId;
-var Pub = require('../models').Pub;
+
+var Heroku = require('heroku-client');
+var heroku = undefined;
+
+if(process.env.NODE_ENV !== 'production'){
+	import {herokuApiKey} from '../authentication/herokuCredentials';	
+	heroku = new Heroku({ token: herokuApiKey });
+}else{
+	heroku = new Heroku({ token: process.env.HEROKU_API_KEY });
+}
 
 var journalSchema = new Schema({
 
@@ -25,7 +34,13 @@ var journalSchema = new Schema({
 });
 
 journalSchema.statics.updateHerokuDomains = function (oldDomain, newDomain) {
-	console.log('in here', oldDomain, newDomain);
+	heroku.delete('/apps/immense-escarpment-3653/domains/' + oldDomain, function (err, app) {
+		if (err) {console.log(err);}
+		heroku.post('/apps/immense-escarpment-3653/domains', { hostname: newDomain }, function (err, app) {
+			if (err) {console.log(err);}
+			console.log('New domain succesfully added');
+		});
+	});
 };
 
 module.exports = mongoose.model('Journal', journalSchema);

@@ -28,9 +28,6 @@ const JournalCurate = React.createClass({
 
 			let outputSubmittedPubs = this.props.journalData.pubsSubmitted.filter((pub)=>{ return pub._id !== pubID; });
 			outputSubmittedPubs = outputSubmittedPubs.map((pub)=>{ return pub._id; });
-			
-			console.log('outputFeaturedPubs', outputFeaturedPubs);
-			console.log('outputSubmittedPubs', outputSubmittedPubs);
 
 			this.props.journalSaveHandler({
 				pubsFeatured: outputFeaturedPubs,
@@ -100,18 +97,22 @@ const JournalCurate = React.createClass({
 						</div>
 						
 
-						{
-							this.props.journalData.pubsFeatured && this.props.journalData.pubsFeatured.length
-								? this.props.journalData.pubsFeatured.map((pub, index)=>{
-									return (<div key={'featuredPubItem-' + index} style={styles.featuredPubsSection}>
-											<PubPreview 
-											pubData={pub} 
-											headerFontSize={'16px'}
-											textFontSize={'13px'} />
-										</div>);
-								})
-								: <div style={styles.emptyBlock}>No Featured Pubs</div>
-						}
+						{()=>{
+							const length = this.props.journalData.pubsFeatured ? this.props.journalData.pubsFeatured.length : 0;
+							if (!length) {
+								return <div style={styles.emptyBlock}>No Featured Pubs</div>;
+							} 
+							const output = [];
+							for (let index = length; index--;) {
+								output.push(<div key={'featuredPubItem-' + index} style={styles.featuredPubsSection}>
+									<PubPreview 
+										pubData={this.props.journalData.pubsFeatured[index]} 
+										headerFontSize={'16px'}
+										textFontSize={'13px'} />
+								</div>);
+							}
+							return output;
+						}()}
 
 
 					</div>
@@ -120,29 +121,33 @@ const JournalCurate = React.createClass({
 					<div style={[styles.pubSectionWrapper]}>
 						<div style={styles.sectionTitle}>Submitted Pubs</div>
 						<div style={styles.sectionText}>Pubs submitted to your journal for consideration</div>
-						{
-							this.props.journalData.pubsSubmitted && this.props.journalData.pubsSubmitted.length
-								? <div style={styles.submittedPubsSection}>
-									{
-										this.props.journalData.pubsSubmitted.map((pub, index)=>{
-											return (<div key={'submittedPubItem-' + index} style={styles.result}>
+						<div style={styles.submittedPubsSection}>
+							{()=>{
+								const length = this.props.journalData.pubsSubmitted ? this.props.journalData.pubsSubmitted.length : 0;
+								if (!length) {
+									return <div style={styles.emptyBlock}>No Pending Submitted Pubs</div>;
+								} 
+								const output = [];
+								for (let index = length; index--;) {
+									output.push(<div key={'submittedPubItem-' + index} style={styles.result}>
 
 												<div style={styles.resultDetails}>
 													<PubPreview 
-														pubData={pub} 
+														pubData={this.props.journalData.pubsSubmitted[index]} 
 														headerFontSize={'16px'}
 														textFontSize={'13px'} 
 														hideBottomLine={true}/>
 
 												</div>
 												
-												<div style={styles.action} key={'submittedPubItemAdd-' + index} onClick={this.featurePub(pub._id)}>feature</div>
-											</div>);	
-										})
-									}
-								</div>
-								: <div style={styles.emptyBlock}>No Pending Submitted Pubs</div>
-						}
+												<div style={styles.action} key={'submittedPubItemAdd-' + index} onClick={this.featurePub(this.props.journalData.pubsSubmitted[index]._id)}>feature</div>
+											</div>);
+								}
+								return output;
+							}()}
+
+						</div>
+					
 					</div>
 
 				</div>
@@ -167,11 +172,16 @@ styles = {
 		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
 			width: '100%',
 			display: 'block',
+			marginTop: '80px',
 		}
 	},
 	featuredPubWrapper: {
 		// Because we're using table-cell, the border doesn't mess with the 1px width difference
 		borderRight: '1px solid #EAEAEA',
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+			marginTop: '20px',
+			borderRight: '0px solid #EAEAEA',
+		}
 	},
 	featuredPubsSection: {
 		margin: '0px 10px',
