@@ -13,6 +13,9 @@ import {
 	UPDATE_USER_SUCCESS, 
 	UPDATE_USER_FAIL,
 
+	USER_NAV_OUT,
+	USER_NAV_IN
+
 } from '../actions/user';
 
 /*--------*/
@@ -94,6 +97,18 @@ function updateUserFail(state, error) {
 	return state.set('settingsStatus', 'error');
 }
 
+function userNavOut(state) {
+	return state.merge({
+		status: 'loading',
+	});
+}
+
+function userNavIn(state) {
+	return state.merge({
+		status: 'loaded',
+	});
+}
+
 /*--------*/
 // Bind actions to specific reducing functions.
 /*--------*/
@@ -113,6 +128,11 @@ export default function profileReducer(state = defaultState, action) {
 		return updateUserSuccess(state, action.result);
 	case UPDATE_USER_FAIL:
 		return updateUserFail(state, action.error);
+
+	case USER_NAV_OUT:
+		return userNavOut(state);
+	case USER_NAV_IN:
+		return userNavIn(state);
 
 	default:
 		return ensureImmutable(state);

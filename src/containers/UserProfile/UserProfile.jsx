@@ -5,7 +5,7 @@ import DocumentMeta from 'react-document-meta';
 import { Link } from 'react-router';
 import { pushState } from 'redux-router';
 import {logout} from '../../actions/login';
-import {getProfile, updateUser} from '../../actions/user';
+import {getProfile, updateUser, userNavOut, userNavIn} from '../../actions/user';
 import {ImageCropper, LoaderDeterminate, UserMain, UserSettings} from '../../components';
 import {globalStyles, profileStyles, navStyles} from '../../utils/styleConstants';
 
@@ -31,8 +31,12 @@ const Profile = React.createClass({
 			if (getState().user.getIn(['profileData', 'username']) !== routerParams.username) {
 				return dispatch(getProfile(routerParams.username));
 			}
-			return ()=>{};	
+			return dispatch(userNavIn());
 		}
+	},
+
+	componentWillUnmount() {
+		this.props.dispatch(userNavOut());
 	},
 
 	ownProfile: function() {

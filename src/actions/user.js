@@ -12,6 +12,9 @@ export const UPDATE_USER = 'user/UPDATE_USER';
 export const UPDATE_USER_SUCCESS = 'user/UPDATE_USER_SUCCESS';
 export const UPDATE_USER_FAIL = 'user/UPDATE_USER_FAIL';
 
+export const USER_NAV_OUT = 'user/USER_NAV_OUT';
+export const USER_NAV_IN = 'user/USER_NAV_IN';
+
 /*--------*/
 // Define Action creators
 // 
@@ -31,4 +34,16 @@ export function updateUser(newDetails) {
 		types: [UPDATE_USER, UPDATE_USER_SUCCESS, UPDATE_USER_FAIL],
 		promise: (client) => client.post('/updateUser', {data: {newDetails: newDetails}}) 
 	};
+}
+
+export function userNavOut() {
+	return {
+		type: USER_NAV_OUT,
+	};	
+}
+
+export function userNavIn() {
+	return {
+		type: USER_NAV_IN,
+	};	
 }
