@@ -41,6 +41,21 @@ var journalSchema = new Schema({
 
 });
 
+journalSchema.statics.isUnique = function (subdomain,callback) {
+
+	this.findOne({'subdomain':subdomain})
+	.exec(function (err, subdomain) {
+			if (err) return callback(err);
+			// if (err) return res.json(500);
+
+			if(subdomain!=null){ //We found a pub
+				return callback(null,false);  //False - is not unique
+			}else{ //We did not find a pub
+				return callback(null,true) //True -  is unique.
+			}
+		});
+};
+
 journalSchema.statics.updateHerokuDomains = function (oldDomain, newDomain) {
 	heroku.delete('/apps/immense-escarpment-3653/domains/' + oldDomain, function (err, app) {
 		if (err) {console.log(err);}

@@ -18,17 +18,31 @@ const Login = React.createClass({
 
 	mixins: [PureRenderMixin],
 
+	getInitialState() {
+		return {
+			errorMessage: null,
+		};
+	},
+
 	componentWillReceiveProps: function(nextProps) {
 		if (nextProps.journalData.getIn(['createJournalData', 'subdomain'])) {
 			window.location = 'http://' + nextProps.journalData.getIn(['createJournalData', 'subdomain']) + '.' + window.location.host + '/journal/' + nextProps.journalData.getIn(['createJournalData', 'subdomain']);
 		}
+		this.setState({ errorMessage: nextProps.journalData.getIn(['createJournalData', 'error']) });
 	},
 
 	handleCreateSubmit: function(formValues) {
 		if (!this.props.loginData.get('loggedIn')) {
 			this.props.dispatch(toggleVisibility());
 		} else {
-			this.props.dispatch(create(formValues.journalName, formValues.subdomain));	
+			if (!formValues.journalName) {
+				this.setState({errorMessage: 'noName'});
+			} else if (!formValues.subdomain) {
+				this.setState({errorMessage: 'noSubdomain'});
+			} else {
+				this.props.dispatch(create(formValues.journalName, formValues.subdomain));	
+			}
+			
 		}
 		
 	},
@@ -45,6 +59,20 @@ const Login = React.createClass({
 				
 				<h1 style={styles.header}>Create Journal</h1>
 				<CreateJournalForm onSubmit={this.handleCreateSubmit} /> 
+				<div style={[styles.error, !this.state.errorMessage && styles.hidden]}>
+					{()=>{
+						switch (this.state.errorMessage) {
+						case 'Subdomain is not Unique!':
+							return 'Subdomain is already used';
+						case 'noName':
+							return 'A journal name is required';
+						case 'noSubdomain':
+							return 'A subdomain is required';
+						default:
+							return this.state.errorMessage;
+						}
+					}()}
+				</div>
 
 			</div>
 		);
@@ -74,5 +102,16 @@ styles = {
 		position: 'absolute',
 		top: 10,
 		width: '100%',
-	}
+	},
+	error: {
+		color: 'red',
+		padding: '0px 30px',
+		position: 'relative',
+		top: '-50px',
+		fontSize: '20px',
+		marginRight: 200,
+	},
+	hidden: {
+		display: 'none',
+	},
 };

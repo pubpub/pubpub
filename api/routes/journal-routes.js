@@ -8,23 +8,29 @@ var Pub = require('../models').Pub;
 import {cloudinary} from '../services/cloudinary';
 
 app.post('/createJournal', function(req,res){
-	const journal = new Journal({
-		journalName: req.body.journalName,
-		subdomain: req.body.subdomain,
-		createDate: new Date().getTime(),
-		admins: [req.user._id],
-		collections: [],
-		pubsFeatured: [],
-		pubsSubmitted: [],
+	Journal.isUnique(req.body.subdomain, (err, result)=>{
+		if(!result){ return res.status(500).json('Subdomain is not Unique!'); }
+
+		const journal = new Journal({
+			journalName: req.body.journalName,
+			subdomain: req.body.subdomain,
+			createDate: new Date().getTime(),
+			admins: [req.user._id],
+			collections: [],
+			pubsFeatured: [],
+			pubsSubmitted: [],
+		});
+
+		journal.save(function (err, savedJournal) {
+			if (err) { return res.status(500).json(err);  }
+			User.update({ _id: req.user._id }, { $addToSet: { adminJournals: savedJournal._id} }, function(err, result){if(err) return handleError(err)});
+
+			return res.status(201).json(savedJournal.subdomain);	
+
+		});
 	});
 
-	journal.save(function (err, savedJournal) {
-		if (err) { return res.status(500).json(err);  }
-		User.update({ _id: req.user._id }, { $addToSet: { adminJournals: savedJournal._id} }, function(err, result){if(err) return handleError(err)});
-
-		return res.status(201).json(savedJournal.subdomain);	
-
-	});
+	
 });
 
 app.get('/getJournal', function(req,res){
