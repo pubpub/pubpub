@@ -1,18 +1,18 @@
 import React, {PropTypes} from 'react';
 import Radium from 'radium';
 import {globalStyles} from '../../utils/styleConstants';
-import {CollectionPreview} from '../../components/ItemPreviews';
+import {PubPreview} from '../../components/ItemPreviews';
 
 let styles = {};
 
-const CollectionGallery = React.createClass({
+const PubGallery = React.createClass({
 	propTypes: {
-		collections: PropTypes.array,
+		pubs: PropTypes.array,
 	},
 
 	getDefaultProps: function() {
 		return {
-			collections: [],
+			pubs: [],
 		};
 	},
 
@@ -20,10 +20,10 @@ const CollectionGallery = React.createClass({
 		return (
 			<div style={styles.container}>
 				{
-					this.props.collections.map((collection, index)=>{
+					this.props.pubs.map((pub, index)=>{
 						return (
-							<div style={styles.previewWrapper} key={'CollectionPreview-' + index}>
-								<CollectionPreview collectionData={collection} />
+							<div style={styles.previewWrapper} key={'PubPreview-' + index}>
+								<PubPreview pubData={pub} />
 							</div>
 						);
 					})
@@ -34,7 +34,7 @@ const CollectionGallery = React.createClass({
 	}
 });
 
-export default Radium(CollectionGallery);
+export default Radium(PubGallery);
 
 styles = {
 	previewWrapper: {

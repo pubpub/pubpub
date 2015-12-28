@@ -115,7 +115,8 @@ const JournalAdmin = React.createClass({
 										
 										default:
 											return (
-												<JournalMain />
+												<JournalMain 
+													journalData={this.props.journalData.get('journalData').toJS()}/>
 											);
 										}
 									}()}

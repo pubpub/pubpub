@@ -55,7 +55,7 @@ const Explore = React.createClass({
 								<CollectionGallery collections={this.props.journalData.getIn(['journalData', 'collections']).toJS()} />
 							</div>
 						);
-						
+
 					case 'pubs':
 						return (
 							<div style={styles.header}>Pubs</div>
@@ -99,7 +99,7 @@ styles = {
 	header: {
 		color: globalStyles.sideText,
 		padding: '20px 0px',
-		fontSize: '32px',
+		fontSize: '50px',
 		fontWeight: 'bold',
 	},
 };
