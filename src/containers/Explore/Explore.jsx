@@ -41,6 +41,8 @@ const Explore = React.createClass({
 
 		} 
 
+		// TODO: We may want to have some fetchData functions in the statics section. We would fetch collections and pubs when on pubpub.org to display in their respective galleries.
+		// Pubs and collections are already populated in journalData when we're in a journal - so this is the only place that it's an issue.
 		return (
 
 			<div style={styles.container}>
@@ -50,33 +52,33 @@ const Explore = React.createClass({
 				{() => {
 					switch (mode) {
 					case 'collections':
-						return (
-							<div>
+						/* This should only be available on journals */
+						return (!this.props.journalData.get('baseSubdomain')
+							? <NotFound />
+							: <div>
 								<div style={styles.header}>Collections</div>
 								<CollectionGallery collections={this.props.journalData.getIn(['journalData', 'collections']).toJS()} />
 							</div>
 						);
 
 					case 'pubs':
-						/* Handle the situation at pubpub.org for this */
+						const pubData = this.props.journalData.get('baseSubdomain') ? this.props.journalData.getIn(['journalData', 'pubsFeatured']).toJS() : this.props.journalData.getIn(['journalData', 'allPubs']).toJS()
 						return (
 							<div>
 								<div style={styles.header}>Pubs</div>
-								
-								<PubGallery pubs={this.props.journalData.getIn(['journalData', 'pubsFeatured']).toJS()} />
+								<PubGallery pubs={pubData} />
 							</div>
 							
 						);
 
 					case 'journals':
 						/* This should only be available on pubpub */
-						return (
-							<div>
-								
+						return (this.props.journalData.get('baseSubdomain')
+							? <NotFound />
+							: <div>
 								<div style={styles.header}>Journals</div>
 								<JournalGallery journals={this.props.journalData.getIn(['journalData', 'allJournals']).toJS()} />
-							</div>
-							
+							</div>	
 						);
 
 					default:

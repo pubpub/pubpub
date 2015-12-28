@@ -121,11 +121,20 @@ app.get('/loadJournalAndLogin', function(req,res){
 	.populate({path: "admins", select:"name username thumbnail"})
 	.populate({path: "collections.pubs", select:"title abstract slug authors lastUpdated createDate"})
 	.lean().exec(function(err, result){
-		// console.log('journalResult', result);
-		
-		let isAdmin = false;
+
+		const loginData = req.user 
+			? {
+				name: req.user.name,
+				username: req.user.username,
+				image: req.user.image,
+				thumbnail: req.user.thumbnail,
+				settings: req.user.settings
+			}
+			: 'No Session';
 
 		if (result) {
+			// If it is a journal, check if the user is an admin.
+			let isAdmin = false;
 			const userID = req.user ? req.user._id : undefined;
 			const adminsLength = result ? result.admins.length : 0;
 			for(let index = adminsLength; index--; ) {
@@ -134,68 +143,34 @@ app.get('/loadJournalAndLogin', function(req,res){
 				}
 			}
 
-			if(req.user){
-				return res.status(201).json({
-					journalData: {
-						...result,
-						isAdmin: isAdmin,
-					},
-					loginData: {
-						name: req.user.name,
-						username: req.user.username,
-						image: req.user.image,
-						thumbnail: req.user.thumbnail,
-						settings: req.user.settings
-					},
-				});
+			return res.status(201).json({
+				journalData: {
+					...result,
+					isAdmin: isAdmin,
+				},
+				loginData: loginData,
+			});
 
-			}else{
-				return res.status(201).json({
-					journalData: {
-						...result,
-						isAdmin: false,
-					},
-					loginData: 'No Session',
-				});
-			}
-
-		} else {
+		} else { 
+			// If there was no result, that means we're on pubpub.org, and we need to populate journals and pubs.
 			Journal.find({}, {'_id':1,'journalName':1, 'subdomain':1, 'customDomain':1, 'pubsFeatured':1, 'collections':1}).lean().exec(function (err, journals) {
-				if(req.user){
+				Pub.find({history: {$not: {$size: 0}},'settings.isPrivate': {$ne: true}}, {'_id':1,'title':1, 'slug':1, 'abstract':1}).lean().exec(function (err, pubs) {
+					
 					return res.status(201).json({
 						journalData: {
 							...result,
 							allJournals: journals,
-							isAdmin: isAdmin,
-						},
-						loginData: {
-							name: req.user.name,
-							username: req.user.username,
-							image: req.user.image,
-							thumbnail: req.user.thumbnail,
-							settings: req.user.settings
-						},
-					});
-
-				}else{
-					return res.status(201).json({
-						journalData: {
-							...result,
+							allPubs: pubs,
 							isAdmin: false,
 						},
-						loginData: 'No Session',
+						loginData: loginData,
 					});
-				}
+
+				});
 			});
 		}
 		
-		
-
-
-
-		
 	});
-
 
 });
 
