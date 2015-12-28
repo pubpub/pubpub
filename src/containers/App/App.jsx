@@ -125,6 +125,8 @@ const App = React.createClass({
 								openPubModalHandler={this.openPubModal}
 								pubStatus={this.props.pubData.getIn(['pubData', 'status'])}
 								
+								isJournalAdmin={this.props.journalData.getIn(['journalData', 'isAdmin'])}
+								journalSubdomain={this.props.journalData.get('baseSubdomain')}
 								slug={this.props.slug}/>
 						</div>
 
@@ -134,7 +136,9 @@ const App = React.createClass({
 								navData={this.props.navData}
 								color={headerTextColor}
 								hoverColor={headerTextColorHover}
-								loginToggle={this.toggleLogin}/>
+								loginToggle={this.toggleLogin}
+								isJournalAdmin={this.props.journalData.getIn(['journalData', 'isAdmin'])}
+								journalSubdomain={this.props.journalData.get('baseSubdomain')} />
 						</div>
 					</div>
 

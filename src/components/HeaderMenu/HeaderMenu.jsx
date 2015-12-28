@@ -17,6 +17,10 @@ const HeaderMenu = React.createClass({
 		closeMenuHandler: PropTypes.func,
 		openPubModalHandler: PropTypes.func,
 		pubStatus: PropTypes.string,
+
+		isJournalAdmin: PropTypes.bool,
+		journalSubdomain: PropTypes.string,
+
 		slug: PropTypes.string,
 	},
 
@@ -64,25 +68,32 @@ const HeaderMenu = React.createClass({
 					<div style={styles.menuContent}>
 						<ul style={styles.menuList}>
 							<li key="menuListItem0" style={[styles.menuItem, styles.menuItemClose]} onClick={this.props.closeMenuHandler}>Close</li>
-							<li key="menuListItem1" style={[styles.menuItem, styles.menuItemNoBottom]} onClick={this.props.loginToggle}>
+							{
+								isLoggedIn
+									? <Link to={'/user/' + this.props.loginData.getIn(['userData', 'username'])}>
+										<li key="menuListItem1" style={[styles.menuItem, !this.props.isJournalAdmin && styles.menuItemNoBottom]}>
+											<span key="headerLogin" style={[styles.loggedIn[isLoggedIn]]}>
+												<img style={styles.userImage} src={this.props.loginData.getIn(['userData', 'thumbnail'])} />
+												{/* <div style={styles.userName}>{this.props.loginData.getIn(['userData', 'name'])}</div> */}
+												<div style={styles.userName}>Account</div>
+												<div style={globalStyles.clearFix}></div>
+											</span>
+										</li>
+									</Link>
+									: <li key="menuListItem1" style={[styles.menuItem, !this.props.isJournalAdmin && styles.menuItemNoBottom]} onClick={this.props.loginToggle}>
+										<span style={styles.loggedOut[isLoggedIn]}>
+											Login or Register
+										</span>
+									</li>
 
-								{/* If Logged Out */}
-								{/* ------------- */}
-								<span style={styles.loggedOut[isLoggedIn]}>
-									Login or Register
-								</span>
+							}
+							
+							{
+								this.props.isJournalAdmin 
+									? <Link to={'/journal/' + this.props.journalSubdomain} style={globalStyles.link}><li key="menuListItem22" style={[styles.menuItem, styles.menuItemNoBottom]}>Journal Admin</li></Link> 
+									: null
+							}
 
-								{/* If Logged In */}
-								{/* ------------- */}
-								<Link to={'/user/' + this.props.loginData.getIn(['userData', 'username'])}>
-									<span key="headerLogin" style={[styles.loggedIn[isLoggedIn]]}>
-										<img style={styles.userImage} src={this.props.loginData.getIn(['userData', 'thumbnail'])} />
-										{/* <div style={styles.userName}>{this.props.loginData.getIn(['userData', 'name'])}</div> */}
-										<div style={styles.userName}>Account</div>
-									</span>
-								</Link>
-
-							</li>
 							{/* <li key="menuListItem2" style={[styles.menuItem, styles.menuItemNoBottom, styles.menuItemLink]}><Link style={styles.innerLink}to={'/pubs/create'}>New Pub</Link></li> */}
 							
 							{(isPub === true

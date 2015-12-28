@@ -62,7 +62,7 @@ const Explore = React.createClass({
 						);
 
 					case 'pubs':
-						const pubData = this.props.journalData.get('baseSubdomain') ? this.props.journalData.getIn(['journalData', 'pubsFeatured']).toJS() : this.props.journalData.getIn(['journalData', 'allPubs']).toJS()
+						const pubData = this.props.journalData.get('baseSubdomain') ? this.props.journalData.getIn(['journalData', 'pubsFeatured']).toJS() : this.props.journalData.getIn(['journalData', 'allPubs']).toJS();
 						return (
 							<div>
 								<div style={styles.header}>Pubs</div>

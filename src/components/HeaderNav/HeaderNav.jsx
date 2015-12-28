@@ -11,7 +11,9 @@ const HeaderNav = React.createClass({
 		navData: PropTypes.object,
 		color: PropTypes.string,
 		hoverColor: PropTypes.string,
-		loginToggle: PropTypes.func
+		loginToggle: PropTypes.func,
+		isJournalAdmin: PropTypes.bool,
+		journalSubdomain: PropTypes.string,
 	},
 
 	headerTextColorStyle: function() {
@@ -56,6 +58,14 @@ const HeaderNav = React.createClass({
 						? 	<div>
 								<div style={styles.separator}></div>
 								<Link to={'/pubs/create'}><div key="headerNavNewPub" style={[styles.navButton, this.headerTextColorStyle()]}>New Pub</div></Link>
+								{
+									this.props.isJournalAdmin 
+										? <div>
+											<div style={styles.separator}></div>
+											<Link to={'/journal/' + this.props.journalSubdomain}><div key="headerNavAdmin" style={[styles.navButton, this.headerTextColorStyle()]}>Journal Admin</div></Link>
+										</div>
+										: null
+								}
 							</div>
 						: null
 				}
