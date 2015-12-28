@@ -19,20 +19,20 @@ const UserPreview = React.createClass({
 	},
 
 	render: function() {
-		return 'UserPreview';
-		// const collection = this.props.userData;
-		// return (
-		// 	<div style={[styles.container]} >
+		const user = this.props.userData;
+		return (
+			<div style={[styles.container]} >
 
-		// 		<Link style={globalStyles.link} to={'/collection/' + collection.slug}>
-		// 			<div key={'headerblock-' + collection._id} style={[styles.headerBlock, {backgroundImage: 'url(' + collection.headerImage + ')'}]}>
-		// 				<div style={styles.title}>{collection.title}</div>
-		// 				<div style={styles.pubCount}>{collection.pubs.length} Pubs</div>
-		// 			</div>
-		// 		</Link>
+				<Link style={globalStyles.link} to={'/user/' + user.username}>
 
-		// 	</div>
-		// );
+					<div key={'userBlock-' + user._id} style={[styles.userBlock]}>
+						<img style={styles.image} src={user.thumbnail.replace(',h_50,w_50', ',h_100,w_100')} />
+						<div style={styles.name}>{user.name}</div>
+					</div>
+				</Link>
+
+			</div>
+		);
 	}
 });
 
@@ -42,26 +42,23 @@ styles = {
 	container: {
 		width: '100%',
 	},
-	headerBlock: {
-		backgroundRepeat: 'no-repeat',
-		backgroundPosition: 'center center',
-		backgroundSize: 'cover',
-
-		padding: '15px',
-		width: 'calc(100% - 30px)',
-		color: 'white',	
-		
+	userBlock: {
+		padding: '5px',
+		width: '100px',
+		color: globalStyles.sideText,
 		':hover': {
-			// color: 'black',
-			boxShadow: '0px 0px 0px 2px rgba(0, 0, 0, 0.85)',
+			color: 'black',
 		},
 	},
-	title: {
-		fontSize: '25px',
-		textShadow: '0px 0px 1px black',
+	image: {
+		width: '100%',
 	},
-	pubCount: {
-		fontSize: '18px',
-		textShadow: '0px 0px 1px black',
+	name: {
+		fontSize: '16px',
+		width: '100%',
+		textAlign: 'center',
+		whiteSpace: 'nowrap',
+		overflow: 'hidden',
+		textOverflow: 'ellipsis',
 	},
 };

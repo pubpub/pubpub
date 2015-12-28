@@ -38,11 +38,11 @@ export default Radium(UserGallery);
 
 styles = {
 	previewWrapper: {
-		margin: 20,
-		width: 'calc(50% - 40px)',
+		margin: 10,
+		// width: 'calc(105px)',
 		float: 'left',
 		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
-			width: 'calc(100% - 40px)',
+			// width: 'calc(170px - 20px)',
 		}
 	},
 };
