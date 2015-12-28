@@ -21,7 +21,7 @@ const JournalMain = React.createClass({
 			<div style={styles.container}>
 
 				<div style={styles.sectionHeader}>Pubs</div>
-				<PubGallery pubs={this.props.journalData.pubs} />
+				<PubGallery pubs={this.props.journalData.pubsFeatured} />
 
 				<div style={styles.sectionHeader}>Collections</div>
 				<CollectionGallery collections={this.props.journalData.collections} />

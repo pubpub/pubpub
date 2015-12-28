@@ -2,7 +2,7 @@ import React, { PropTypes } from 'react';
 import {connect} from 'react-redux';
 import Radium from 'radium';
 import DocumentMeta from 'react-document-meta';
-import {CollectionGallery} from '../../components';
+import {CollectionGallery, PubGallery, JournalGallery} from '../../components';
 import {NotFound} from '../../containers';
 import {globalStyles} from '../../utils/styleConstants';
 
@@ -42,6 +42,7 @@ const Explore = React.createClass({
 		} 
 
 		return (
+
 			<div style={styles.container}>
 
 				<DocumentMeta {...metaData} />
@@ -57,13 +58,25 @@ const Explore = React.createClass({
 						);
 
 					case 'pubs':
+						/* Handle the situation at pubpub.org for this */
 						return (
-							<div style={styles.header}>Pubs</div>
+							<div>
+								<div style={styles.header}>Pubs</div>
+								
+								<PubGallery pubs={this.props.journalData.getIn(['journalData', 'pubsFeatured']).toJS()} />
+							</div>
+							
 						);
 
 					case 'journals':
+						/* This should only be available on pubpub */
 						return (
-							<div style={styles.header}>Journals</div>
+							<div>
+								
+								<div style={styles.header}>Journals</div>
+								<JournalGallery journals={this.props.journalData.getIn(['journalData', 'allJournals']).toJS()} />
+							</div>
+							
 						);
 
 					default:

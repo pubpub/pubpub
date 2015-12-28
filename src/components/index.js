@@ -10,6 +10,7 @@ export HeaderMenu from './HeaderMenu/HeaderMenu';
 export ImageCropper from './ImageCropper/ImageCropper';
 export JournalCurate from './JournalCurate/JournalCurate';
 export JournalDesign from './JournalDesign/JournalDesign';
+export JournalGallery from './JournalGallery/JournalGallery';
 export JournalMain from './JournalMain/JournalMain';
 export JournalSettings from './JournalSettings/JournalSettings';
 export LandingBody from './LandingBody/LandingBody';

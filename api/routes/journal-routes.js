@@ -124,38 +124,76 @@ app.get('/loadJournalAndLogin', function(req,res){
 		// console.log('journalResult', result);
 		
 		let isAdmin = false;
-		const userID = req.user ? req.user._id : undefined;
-		const adminsLength = result ? result.admins.length : 0;
-		for(let index = adminsLength; index--; ) {
-			if (String(result.admins[index]._id) === String(userID)) {
-				isAdmin =  true;	
+
+		if (result) {
+			const userID = req.user ? req.user._id : undefined;
+			const adminsLength = result ? result.admins.length : 0;
+			for(let index = adminsLength; index--; ) {
+				if (String(result.admins[index]._id) === String(userID)) {
+					isAdmin =  true;	
+				}
 			}
-		}
 
-		if(req.user){
-			return res.status(201).json({
-				journalData: {
-					...result,
-					isAdmin: isAdmin,
-				},
-				loginData: {
-					name: req.user.name,
-					username: req.user.username,
-					image: req.user.image,
-					thumbnail: req.user.thumbnail,
-					settings: req.user.settings
-				},
-			});
+			if(req.user){
+				return res.status(201).json({
+					journalData: {
+						...result,
+						isAdmin: isAdmin,
+					},
+					loginData: {
+						name: req.user.name,
+						username: req.user.username,
+						image: req.user.image,
+						thumbnail: req.user.thumbnail,
+						settings: req.user.settings
+					},
+				});
 
-		}else{
-			return res.status(201).json({
-				journalData: {
-					...result,
-					isAdmin: false,
-				},
-				loginData: 'No Session',
+			}else{
+				return res.status(201).json({
+					journalData: {
+						...result,
+						isAdmin: false,
+					},
+					loginData: 'No Session',
+				});
+			}
+
+		} else {
+			Journal.find({}, {'_id':1,'journalName':1, 'subdomain':1, 'customDomain':1, 'pubsFeatured':1, 'collections':1}).lean().exec(function (err, journals) {
+				if(req.user){
+					return res.status(201).json({
+						journalData: {
+							...result,
+							allJournals: journals,
+							isAdmin: isAdmin,
+						},
+						loginData: {
+							name: req.user.name,
+							username: req.user.username,
+							image: req.user.image,
+							thumbnail: req.user.thumbnail,
+							settings: req.user.settings
+						},
+					});
+
+				}else{
+					return res.status(201).json({
+						journalData: {
+							...result,
+							isAdmin: false,
+						},
+						loginData: 'No Session',
+					});
+				}
 			});
 		}
+		
+		
+
+
+
+		
 	});
 
 

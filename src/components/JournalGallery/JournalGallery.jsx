@@ -1,18 +1,18 @@
 import React, {PropTypes} from 'react';
 import Radium from 'radium';
 import {globalStyles} from '../../utils/styleConstants';
-import {PubPreview} from '../../components/ItemPreviews';
+import {JournalPreview} from '../../components/ItemPreviews';
 
 let styles = {};
 
-const PubGallery = React.createClass({
+const JournalGallery = React.createClass({
 	propTypes: {
-		pubs: PropTypes.array,
+		journals: PropTypes.array,
 	},
 
 	getDefaultProps: function() {
 		return {
-			pubs: [],
+			journals: [],
 		};
 	},
 
@@ -20,10 +20,10 @@ const PubGallery = React.createClass({
 		return (
 			<div style={styles.container}>
 				{
-					this.props.pubs.map((pub, index)=>{
+					this.props.journals.map((journal, index)=>{
 						return (
-							<div style={styles.previewWrapper} key={'PubPreview-' + index}>
-								<PubPreview pubData={pub} />
+							<div style={styles.previewWrapper} key={'journalPreview-' + index}>
+								<JournalPreview journalData={journal} />
 							</div>
 						);
 					})
@@ -34,15 +34,15 @@ const PubGallery = React.createClass({
 	}
 });
 
-export default Radium(PubGallery);
+export default Radium(JournalGallery);
 
 styles = {
 	previewWrapper: {
-		margin: 20,
-		width: 'calc(100% - 40px)',
+		margin: 10,
+		width: 'calc(50% - 20px)',
 		float: 'left',
 		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
-			width: 'calc(100% - 40px)',
+			width: 'calc(100% - 20px)',
 		}
 	},
 };
