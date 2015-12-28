@@ -13,6 +13,9 @@ app.post('/createJournal', function(req,res){
 		subdomain: req.body.subdomain,
 		createDate: new Date().getTime(),
 		admins: [req.user._id],
+		collections: [],
+		pubsFeatured: [],
+		pubsSubmitted: [],
 	});
 
 	journal.save(function (err, savedJournal) {
@@ -162,12 +165,13 @@ app.post('/createCollection', function(req,res){
 	// return res.status(201).json(['cat','dog']);
 	Journal.findOne({subdomain: req.body.subdomain}).exec(function(err, journal) {
 		const defaultHeaderImages = [
-			'http://res.cloudinary.com/pubpub/image/upload/v1451254753/bg4_xboped.jpg',
-			'http://res.cloudinary.com/pubpub/image/upload/v1451254753/bg3_jhaf23.jpg',
-			'http://res.cloudinary.com/pubpub/image/upload/v1451254753/bg2_nwyraz.jpg',
-			'http://res.cloudinary.com/pubpub/image/upload/v1451254753/bg1_h1blyq.jpg',
-			'http://res.cloudinary.com/pubpub/image/upload/v1451254753/bg6_difbzv.jpg',
-			'http://res.cloudinary.com/pubpub/image/upload/v1451254753/bg5_x9jodx.jpg'
+			'http://res.cloudinary.com/pubpub/image/upload/v1451320792/coll4_ivgyzj.jpg',
+			'http://res.cloudinary.com/pubpub/image/upload/v1451320792/coll5_nwapxj.jpg',
+			'http://res.cloudinary.com/pubpub/image/upload/v1451320792/coll6_kqgzbq.jpg',
+			// 'http://res.cloudinary.com/pubpub/image/upload/v1451320792/coll1_bfmnax.jpg',
+			// 'http://res.cloudinary.com/pubpub/image/upload/v1451320792/coll2_udefua.jpg',
+			// 'http://res.cloudinary.com/pubpub/image/upload/v1451320792/coll3_xtimc2.jpg',
+			'http://res.cloudinary.com/pubpub/image/upload/v1451320792/coll7_mrq4q9.jpg',
 		];
 
 		const newCollection = {

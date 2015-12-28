@@ -1,5 +1,6 @@
-export CollectionMain from './CollectionMain/CollectionMain';
 export CollectionEdit from './CollectionEdit/CollectionEdit';
+export CollectionMain from './CollectionMain/CollectionMain';
+export CollectionGallery from './CollectionGallery/CollectionGallery';
 export CreateJournalForm from './CreateJournalForm/CreateJournalForm';
 export CreatePubForm from './CreatePubForm/CreatePubForm';
 export EditorModals from './EditorModals/EditorModals';

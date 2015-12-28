@@ -132,7 +132,7 @@ styles = {
 	headerImage: {
 		backgroundRepeat: 'no-repeat',
 		backgroundPosition: 'center center',
-		backgroundAttachment: 'fixed',
+		// backgroundAttachment: 'fixed',
 		backgroundSize: 'cover',
 		// position: 'absolute',
 		minHeight: 250,

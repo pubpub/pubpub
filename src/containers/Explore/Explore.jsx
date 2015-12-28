@@ -2,13 +2,17 @@ import React, { PropTypes } from 'react';
 import {connect} from 'react-redux';
 import Radium from 'radium';
 import DocumentMeta from 'react-document-meta';
-// import {NARROW, getProjects} from '../../actions/editor';
+import {CollectionGallery} from '../../components';
+import {NotFound} from '../../containers';
+import {globalStyles} from '../../utils/styleConstants';
 
-// let styles = {};
+let styles = {};
 
 const Explore = React.createClass({
 	propTypes: {
 		exploreData: PropTypes.object,
+		journalData: PropTypes.object,
+		path: PropTypes.string,
 		dispatch: PropTypes.func
 	},
 
@@ -20,17 +24,52 @@ const Explore = React.createClass({
 
 	render: function() {
 
-		const metaData = {
-			title: 'PubPub - Explore'
-		};
+		const metaData = {};
 
+		let mode = '';
+		if (this.props.path.indexOf('collections') > -1) {
+			mode = 'collections';
+			metaData.title = 'Collections';
+
+		} else if (this.props.path.indexOf('pubs') > -1) {
+			mode = 'pubs';
+			metaData.title = 'Pubs';
+
+		} else if (this.props.path.indexOf('journals') > -1) {
+			mode = 'journals';
+			metaData.title = 'Journals';
+
+		} 
 
 		return (
-			<div>
+			<div style={styles.container}>
 
 				<DocumentMeta {...metaData} />
 
-				<h2>Explore</h2>
+				{() => {
+					switch (mode) {
+					case 'collections':
+						return (
+							<div>
+								<div style={styles.header}>Collections</div>
+								<CollectionGallery collections={this.props.journalData.getIn(['journalData', 'collections']).toJS()} />
+							</div>
+						);
+						
+					case 'pubs':
+						return (
+							<div style={styles.header}>Pubs</div>
+						);
+
+					case 'journals':
+						return (
+							<div style={styles.header}>Journals</div>
+						);
+
+					default:
+						return <NotFound />;
+					}
+				}()}
 
 			</div>
 		);
@@ -39,9 +78,28 @@ const Explore = React.createClass({
 });
 
 export default connect( state => {
-	return {exploreData: state.explore};
+	return {
+		exploreData: state.explore,
+		journalData: state.journal,
+		path: state.router.location.pathname
+	};
 })( Radium(Explore) );
 
-// styles = {
-	
-// };
+styles = {
+	container: {
+		fontFamily: globalStyles.headerFont,
+		position: 'relative',
+		maxWidth: 1024,
+		margin: '0 auto',
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+			width: '100%',
+			maxWidth: '100%',
+		},
+	},	
+	header: {
+		color: globalStyles.sideText,
+		padding: '20px 0px',
+		fontSize: '32px',
+		fontWeight: 'bold',
+	},
+};
