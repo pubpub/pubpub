@@ -45,7 +45,7 @@ styles = {
 	userBlock: {
 		padding: '5px',
 		width: '100px',
-		color: globalStyles.sideText,
+		color: '#999',
 		':hover': {
 			color: 'black',
 		},
