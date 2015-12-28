@@ -2,7 +2,7 @@ import React, {PropTypes} from 'react';
 import Radium from 'radium';
 import {Autocomplete} from '../../containers';
 import {PubPreview} from '../../components/ItemPreviews';
-import {LoaderIndeterminate} from '../../components';
+import {CollectionGallery, LoaderIndeterminate} from '../';
 import {globalStyles} from '../../utils/styleConstants';
 // import { Link } from 'react-router';
 
@@ -19,7 +19,9 @@ const JournalCurate = React.createClass({
 
 	getDefaultProps: function() {
 		return {
-			journalData: {},
+			journalData: {
+				collections: [],
+			},
 		};
 	},
 
@@ -177,7 +179,11 @@ const JournalCurate = React.createClass({
 
 				<div>
 					<h2>Collections</h2>
-					<div style={styles.emptyBlock}>No Collections</div>
+						{
+							this.props.journalData.collections && this.props.journalData.collections.length
+								? <CollectionGallery collections={this.props.journalData.collections} />
+								: <div style={styles.emptyBlock}>No Collections</div>
+						}
 
 					<h2>Create New Collection</h2>
 					
