@@ -333,7 +333,7 @@ app.get('/handleNewFile', function(req,res){
 	try {
 		// There's a 10mb limit for cloudinary images. Gotta fix that.
 		// This shoudl eventually be written to handle discovery and processing of all file types.
-		if(req.query.contentType.indexOf('image') > -1){
+		if(req.query.contentType.indexOf('image') > -1) {
 			const delay = (req.query.contentType.indexOf('image/gif') > -1) ? 1500 : 1000;
 			// Gifs throw a 403 for some reason.
 			// A delay seems to make that 403 go away.
@@ -361,7 +361,7 @@ app.get('/handleNewFile', function(req,res){
 				
 			}, delay);
 
-		} else if (req.query.contentType.indexOf('video') > -1){
+		} else if (req.query.contentType.indexOf('video') > -1) {
 			try {
 				cloudinary.uploader.upload(req.query.url, function(result) { 
 					// console.log(result) 
@@ -370,13 +370,15 @@ app.get('/handleNewFile', function(req,res){
 					return res.status(201).json(result);
 				}, { resource_type: "video" });	
 			} catch (err) {
-					console.log('In catch on cloudinary video upload.'); console.log('req.body', req.body); console.log('err', err);
-					result = {
-						url: req.query.url,
-						thumbnail: '/thumbnails/file.png',
-						assetType: 'video',
-					};
-					return res.status(201).json(result);
+				console.log('In catch on cloudinary video upload.'); console.log('req.body', req.body); console.log('err', err);
+				result = {
+					url: req.query.url,
+					thumbnail: '/thumbnails/file.png',
+					assetType: 'video',
+				};
+				return res.status(201).json(result);
+
+			}
 			
 		} else {
 			return res.status(201).json({
