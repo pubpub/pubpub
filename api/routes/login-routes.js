@@ -3,6 +3,7 @@ var passport = require('passport');
 
 var Pub = require('../models').Pub;
 var User = require('../models').User;
+var Journal = require('../models').Journal;
 import {cloudinary} from '../services/cloudinary';
 
 
@@ -32,14 +33,22 @@ app.post('/login', passport.authenticate('local'), function(req, res) {
 			return res.status(500).json(err);
 		}
 		
-		return res.status(201).json({
-			name: user.name,
-			username: user.username,
-			image: user.image,
-			thumbnail: user.thumbnail,
-			settings: user.settings
-		});
+		Journal.findOne({ $or:[ {'subdomain':req.query.host.split('.')[0]}, {'customDomain':req.query.host}]}).lean().exec(function(err, journal){
 
+			const userID = user._id;
+			const isAdmin = journal && String(journal.admins).indexOf(String(userID)) > -1 ? true : false;
+
+			return res.status(201).json({
+				name: user.name,
+				username: user.username,
+				image: user.image,
+				thumbnail: user.thumbnail,
+				settings: user.settings,
+				isAdminToJournal: isAdmin,
+			});
+
+		});
+		
 	});
 });
 

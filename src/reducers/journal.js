@@ -31,6 +31,13 @@ import {
 
 } from '../actions/journal';
 
+import {
+
+	LOGIN_LOAD_SUCCESS,
+	LOGOUT_LOAD_SUCCESS,
+
+} from '../actions/login';
+
 /*--------*/
 // Initialize Default State 
 /*--------*/
@@ -164,6 +171,24 @@ function saveCollectionFail(state, error) {
 	return state.set('saveCollectionStatus', 'saved');
 }
 
+function loginLoad(state, result) {
+	return state.merge({
+		journalData: {
+			...state.get('journalData').toJS(),
+			isAdmin: result.isAdminToJournal,
+		},
+	});
+}
+
+function logoutLoad(state) {
+	return state.merge({
+		journalData: {
+			...state.get('journalData').toJS(),
+			isAdmin: false,
+		},
+	});
+}
+
 /*--------*/
 // Bind actions to specific reducing functions.
 /*--------*/
@@ -211,6 +236,11 @@ export default function loginReducer(state = defaultState, action) {
 		return saveCollectionSuccess(state, action.result);
 	case SAVE_COLLECTION_FAIL:
 		return saveCollectionFail(state, action.error);
+
+	case LOGIN_LOAD_SUCCESS:
+		return loginLoad(state, action.result);
+	case LOGOUT_LOAD_SUCCESS:
+		return logoutLoad(state);
 
 	default:
 		return ensureImmutable(state);
