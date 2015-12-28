@@ -36,7 +36,7 @@ const Collection = React.createClass({
 	},
 
 	collectionSave: function(newCollectionData) {
-		console.log('saving', this.props.journalData.get('baseSubdomain'), this.props.slug, newCollectionData);
+		// console.log('saving', this.props.journalData.get('baseSubdomain'), this.props.slug, newCollectionData);
 		this.props.dispatch(saveCollection(this.props.journalData.get('baseSubdomain'), this.props.slug, newCollectionData));
 	},
 

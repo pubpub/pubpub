@@ -22,7 +22,7 @@ const CollectionMain = React.createClass({
 				{()=>{
 					const length = this.props.collectionData.pubs ? this.props.collectionData.pubs.length : 0;
 					if (!length) {
-						return null;
+						return <div style={styles.emptyBlock}>No Pubs Added</div>;
 					} 
 					const output = [];
 					for (let index = length; index--;) {
@@ -36,6 +36,7 @@ const CollectionMain = React.createClass({
 					}
 					return output;
 				}()}
+
 			</div>
 		);
 	}
@@ -46,5 +47,15 @@ export default Radium(CollectionMain);
 styles = {
 	pubWrapper: {
 		margin: '30px 50px',
+	},
+	emptyBlock: {
+		backgroundColor: '#f6f6f6',
+		width: '75%',
+		margin: '0px auto',
+		height: '85px',
+		lineHeight: '85px',
+		textAlign: 'center',
+		border: '1px solid rgba(0,0,0,0.05)',
+		borderRadius: '2px',
 	},
 };
