@@ -26,9 +26,9 @@ const PubMetaExperts = React.createClass({
 		};
 	},
 
-	submitToJournal: function(journalID) {
+	submitToJournal: function(journalData) {
 		return () => {
-			this.props.handleSubmitToJournal(journalID);
+			this.props.handleSubmitToJournal(journalData);
 		};
 	},
 
@@ -59,7 +59,7 @@ const PubMetaExperts = React.createClass({
 									<JournalPreview journalData={journal}/>
 								</div>
 								
-								<div style={styles.action} key={'featuredPubSearchAdd-' + index} onClick={this.submitToJournal(journal._id)}>submit</div>
+								<div style={styles.action} key={'featuredPubSearchAdd-' + index} onClick={this.submitToJournal(journal)}>submit</div>
 							</div>
 						);	
 					})
@@ -89,16 +89,23 @@ const PubMetaExperts = React.createClass({
 					: null
 				}
 
-				{this.props.submittedTo.map((journalItem, index)=>{
-					return (
-						<div key={'submittedTo-' + index}>
-							<JournalPreview 
-								journalData={journalItem.journal} 
-								hideDetails={true} 
-								customDetails={['Submitted On ' + dateFormat(journalItem.date, 'mm/dd/yy, h:MMTT')]} />
-						</div>
-					);
-				})}
+				<div style={styles.journalListWrapper}>
+					{this.props.submittedTo.map((journalItem, index)=>{
+						return (
+							<div key={'submittedTo-' + index}>
+								{String(this.props.featuredInList).indexOf(journalItem.journal._id) > -1
+									? null
+									: <JournalPreview 
+										journalData={journalItem.journal} 
+										hideDetails={true} 
+										customDetails={['Submitted On ' + dateFormat(journalItem.date, 'mm/dd/yy, h:MMTT')]} />
+								}
+								
+							</div>
+						);
+					})}
+				</div>
+				
 
 				{this.props.submittedTo.length
 					? null
@@ -106,16 +113,19 @@ const PubMetaExperts = React.createClass({
 				}
 
 				<div style={styles.sectionHeader}>Journals Featured In</div>
-				{this.props.featuredIn.map((journalItem, index)=>{
-					return (
-						<div key={'featuredIn-' + index}>
-							<JournalPreview 
-								journalData={journalItem.journal} 
-								hideDetails={true} 
-								customDetails={['Featured On ' + dateFormat(journalItem.date, 'mm/dd/yy, h:MMTT')]} />
-						</div>
-					);
-				})}
+				<div style={styles.journalListWrapper}>
+					{this.props.featuredIn.map((journalItem, index)=>{
+						return (
+							<div key={'featuredIn-' + index}>
+								<JournalPreview 
+									journalData={journalItem.journal} 
+									hideDetails={true} 
+									customDetails={['Featured On ' + dateFormat(journalItem.date, 'mm/dd/yy, h:MMTT')]} />
+							</div>
+						);
+					})}
+				</div>
+				
 				{this.props.featuredIn.length
 					? null
 					: <div style={styles.emptyBlock}>Not featured in any Journals</div>
@@ -136,6 +146,13 @@ styles = {
 	sectionHeader: {
 		fontSize: '25px',
 		margin: '20px 0px',
+	},
+	journalListWrapper: {
+		marginLeft: '30px',
+	},
+	searchWrapper: {
+		margin: '0px 0px 25px 30px',
+		width: '80%',
 	},
 	results: {
 		boxShadow: '0px 0px 2px 2px #D7D7D7',

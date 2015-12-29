@@ -5,6 +5,7 @@ import DocumentMeta from 'react-document-meta';
 import PureRenderMixin from 'react-addons-pure-render-mixin';
 import {getPub, addDiscussion, discussionVoteSubmit, pubNavIn} from '../../actions/pub';
 import {toggleVisibility} from '../../actions/login';
+import {submitPubToJournal} from '../../actions/journal';
 import { Link } from 'react-router';
 import {PubLeftBar, PubNav, LoaderDeterminate} from '../../components';
 // import {PubMetaDiscussions, PubMetaExperts, PubMetaHistory, PubMetaHistoryDiff, PubMetaReview, PubMetaReviews, PubMetaSource} from '../../components/PubMetaPanels';
@@ -76,8 +77,8 @@ const PubMeta = React.createClass({
 		this.props.dispatch(discussionVoteSubmit(type, discussionID, userYay, userNay));
 	},
 
-	submitToJournal: function(journalID) {
-		console.log('Gunna submit it to', journalID);
+	submitToJournal: function(journalData) {
+		this.props.dispatch(submitPubToJournal(this.props.readerData.getIn(['pubData', '_id']), journalData));
 	},
 
 	render: function() {

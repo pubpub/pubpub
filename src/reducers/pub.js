@@ -34,6 +34,12 @@ import {
 
 } from '../actions/pub';
 
+import {
+	SUBMIT_PUB_TO_JOURNAL,
+	SUBMIT_PUB_TO_JOURNAL_SUCCESS,
+	SUBMIT_PUB_TO_JOURNAL_FAIL,
+} from '../actions/journal';
+
 /*--------*/
 // Initialize Default State 
 /*--------*/
@@ -282,7 +288,19 @@ function discussionVote(state, voteType, discussionID, userYay, userNay) {
 	findDiscussionAndChange(discussionsArray);
 
 	return state.mergeIn(['pubData', 'discussions'], discussionsArray);
+}
 
+function submitPubToJournalSuccess(state, journalData) {
+	const outputObject = state.get('pubData').toJS();
+	outputObject.submittedTo.push({
+		journal: journalData,
+		date: new Date().getTime(),
+	});
+	outputObject.submittedToList.push(journalData._id);
+
+	return state.merge({
+		pubData: outputObject
+	});
 }
 
 /*--------*/
@@ -336,6 +354,13 @@ export default function readerReducer(state = defaultState, action) {
 		// return discussionVoteSuccess(state, action.result);
 		return state;
 	case DISCUSSION_VOTE_FAIL:
+		return state;
+
+	case SUBMIT_PUB_TO_JOURNAL:
+		return state;
+	case SUBMIT_PUB_TO_JOURNAL_SUCCESS:
+		return submitPubToJournalSuccess(state, action.journalData);
+	case SUBMIT_PUB_TO_JOURNAL_FAIL:
 		return state;
 
 	default:

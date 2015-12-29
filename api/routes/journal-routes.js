@@ -127,6 +127,40 @@ app.post('/saveJournal', function(req,res){
 	});
 });
 
+app.post('/submitPubToJournal', function(req,res){
+	Journal.findOne({_id: req.body.journalID}).exec(function(err, journal) {
+		if (err) { return res.status(500).json(err);  }
+
+		if (!req.user || String(journal.admins).indexOf(req.user._id) === -1) {
+			return res.status(403).json('Not authorized to administrate this Journal.');
+		}
+
+		journal.pubsSubmitted.push(req.body.pubID);
+		Pub.addJournalSubmitted(req.body.pubID, req.body.journalID, req.user._id);
+
+		journal.save(function(err, result){
+			if (err) { return res.status(500).json(err);  }
+			
+			const options = [
+				{path: "pubs", select:"title abstract slug settings", model: 'Pub'},
+				{path: "pubsFeatured", select:"title abstract slug settings", model: 'Pub'},
+				{path: "pubsSubmitted", select:"title abstract slug settings", model: 'Pub'},
+				{path: "admins", select:"name username thumbnail", model: 'User'},
+				{path: "collections.pubs", select:"title abstract slug authors lastUpdated createDate", model: 'Pub'},
+			];
+
+			Journal.populate(result, options, (err, populatedJournal)=> {
+				return res.status(201).json({
+					...populatedJournal.toObject(),
+					isAdmin: true,
+				});		
+			});
+			
+			
+		});
+	});
+});
+
 app.get('/loadJournalAndLogin', function(req,res){
 	// Load journal Data
 	// When an implicit login request is made using the cookie

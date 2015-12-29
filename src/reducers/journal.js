@@ -29,6 +29,10 @@ import {
 	SAVE_COLLECTION_SUCCESS,
 	SAVE_COLLECTION_FAIL,
 
+	SUBMIT_PUB_TO_JOURNAL,
+	SUBMIT_PUB_TO_JOURNAL_SUCCESS,
+	SUBMIT_PUB_TO_JOURNAL_FAIL,
+
 } from '../actions/journal';
 
 import {
@@ -171,6 +175,25 @@ function saveCollectionFail(state, error) {
 	return state.set('saveCollectionStatus', 'saved');
 }
 
+function submitPubToJournal(state) {
+	return state;
+}
+
+function submitPubToJournalSuccess(state, result) {
+	if (result._id !== state.getIn(['journalData', '_id'])) {
+		return state;
+	}
+	
+	return state.merge({
+		journalData: result
+	});
+}
+
+function submitPubToJournalFail(state, error) {	
+	console.log('submitPubToJournalFail Failed: ', error);
+	return state;
+}
+
 function loginLoad(state, result) {
 	return state.merge({
 		journalData: {
@@ -236,6 +259,13 @@ export default function loginReducer(state = defaultState, action) {
 		return saveCollectionSuccess(state, action.result);
 	case SAVE_COLLECTION_FAIL:
 		return saveCollectionFail(state, action.error);
+
+	case SUBMIT_PUB_TO_JOURNAL:
+		return submitPubToJournal(state);
+	case SUBMIT_PUB_TO_JOURNAL_SUCCESS:
+		return submitPubToJournalSuccess(state, action.result);
+	case SUBMIT_PUB_TO_JOURNAL_FAIL:
+		return submitPubToJournalFail(state, action.error);
 
 	case LOGIN_LOAD_SUCCESS:
 		return loginLoad(state, action.result);

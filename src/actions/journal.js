@@ -28,6 +28,10 @@ export const SAVE_COLLECTION = 'journal/SAVE_COLLECTION';
 export const SAVE_COLLECTION_SUCCESS = 'journal/SAVE_COLLECTION_SUCCESS';
 export const SAVE_COLLECTION_FAIL = 'journal/SAVE_COLLECTION_FAIL';
 
+export const SUBMIT_PUB_TO_JOURNAL = 'journal/SUBMIT_PUB_TO_JOURNAL';
+export const SUBMIT_PUB_TO_JOURNAL_SUCCESS = 'journal/SUBMIT_PUB_TO_JOURNAL_SUCCESS';
+export const SUBMIT_PUB_TO_JOURNAL_FAIL = 'journal/SUBMIT_PUB_TO_JOURNAL_FAIL';
+
 
 /*--------*/
 // Define Action creators
@@ -80,5 +84,13 @@ export function saveCollection(subdomain, slug, newCollectionObject) {
 	return {
 		types: [CREATE_COLLECTION, CREATE_COLLECTION_SUCCESS, CREATE_COLLECTION_FAIL],
 		promise: (client) => client.post('/saveCollection', {data: {subdomain: subdomain, slug: slug, newCollectionObject: newCollectionObject}}),
+	};
+}
+
+export function submitPubToJournal(pubID, journalData) {
+	return {
+		types: [SUBMIT_PUB_TO_JOURNAL, SUBMIT_PUB_TO_JOURNAL_SUCCESS, SUBMIT_PUB_TO_JOURNAL_FAIL],
+		promise: (client) => client.post('/submitPubToJournal', {data: {pubID: pubID, journalID: journalData._id}}),
+		journalData: journalData,
 	};
 }
