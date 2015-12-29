@@ -34,12 +34,17 @@ const PubDiscussionsScore = React.createClass({
 				
 				<div key={'yay-' + discussionID} style={[styles.voteButton, styles.voteUp, this.props.userYay && styles.activeVote, this.props.readOnly && styles.readOnly]} onClick={this.handleVoteClick('yay', discussionID)}>
 					^
-					<div style={[styles.voteMessage, styles.yayMessage]}>For constructive, insightful, or productive discussion</div>
+					{/* We're not quite ready for this. Don't have the right design
+						<div style={[styles.voteMessage, styles.yayMessage]}>For constructive, insightful, or productive discussion</div> 
+					*/}
 				</div>
 				<div style={styles.voteScore}>{this.props.score}</div>
 				<div key={'nay-' + discussionID} style={[styles.voteButton, styles.voteDown, this.props.userNay && styles.activeVote, this.props.readOnly && styles.readOnly]} onClick={this.handleVoteClick('nay', discussionID)}>
 					^
-					<div style={[styles.voteMessage, styles.nayMessage]}>For unproductive or trolling discussion. <br/>NOT for thoughtful discussion you happen to disagree with.</div>
+					{/* We're not quite ready for this. Don't have the right design
+						<div style={[styles.voteMessage, styles.nayMessage]}>For unproductive or trolling discussion. <br/>NOT for thoughtful discussion you happen to disagree with.</div>
+					*/}
+					
 				</div>
 				
 			</div>

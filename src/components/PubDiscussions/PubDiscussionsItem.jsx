@@ -267,7 +267,8 @@ styles = {
 		fontFamily: 'Arial',
 		color: '#555',
 		fontSize: '15px',
-		padding: '0px 15px',
+		// padding: '0px 15px',
+		padding: '10px 6px',
 
 	},
 	discussionChildrenWrapper: {
