@@ -8,7 +8,7 @@ import {toggleVisibility} from '../../actions/login';
 import { Link } from 'react-router';
 import {PubLeftBar, PubNav, LoaderDeterminate} from '../../components';
 // import {PubMetaDiscussions, PubMetaExperts, PubMetaHistory, PubMetaHistoryDiff, PubMetaReview, PubMetaReviews, PubMetaSource} from '../../components/PubMetaPanels';
-import {PubMetaDiscussions, PubMetaHistory, PubMetaHistoryDiff, PubMetaSource} from '../../components/PubMetaPanels';
+import {PubMetaDiscussions, PubMetaHistory, PubMetaJournals, PubMetaHistoryDiff, PubMetaSource} from '../../components/PubMetaPanels';
 import {globalStyles, pubSizes} from '../../utils/styleConstants';
 
 
@@ -76,6 +76,10 @@ const PubMeta = React.createClass({
 		this.props.dispatch(discussionVoteSubmit(type, discussionID, userYay, userNay));
 	},
 
+	submitToJournal: function(journalID) {
+		console.log('Gunna submit it to', journalID);
+	},
+
 	render: function() {
 		const metaData = {};
 		if (this.props.readerData.getIn(['pubData', 'title'])) {
@@ -126,6 +130,14 @@ const PubMeta = React.createClass({
 								return (<PubMetaHistory 
 										historyData={this.props.readerData.getIn(['pubData', 'history']).toJS()}
 										slug={this.props.slug}/>
+									);
+							case 'journals':
+								return (<PubMetaJournals 
+										featuredIn={this.props.readerData.getIn(['pubData', 'featuredIn']).toJS()}
+										featuredInList={this.props.readerData.getIn(['pubData', 'featuredInList']).toJS()}
+										submittedTo={this.props.readerData.getIn(['pubData', 'submittedTo']).toJS()}
+										submittedToList={this.props.readerData.getIn(['pubData', 'submittedToList']).toJS()}
+										handleSubmitToJournal={this.submitToJournal}/>
 									);
 							case 'source':
 								return (<PubMetaSource 
