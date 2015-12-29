@@ -308,3 +308,14 @@ app.post('/saveCollection', function(req,res){
 	});
 });
 
+app.get('/testLogin', function(req,res){
+	Journal.findOne({ $or:[ {'subdomain':req.get('host').split('.')[0]}, {'customDomain':req.get('host')}]}, {'_id':1}).lean().exec(function(err, journal){
+		console.log(journal);
+		if (!journal) {
+			return res.status(201).send('');
+		} else {
+			return res.status(201).type('.html').send('<div style="opacity:0;position:absolute;border:0;height:0;width:0;"><h1>iFrame Window</h1><script type="text/javascript">function readCookie() {return document.cookie;}console.log("in the iframe, about to send", readCookie());console.log("parent is", parent);parent.postMessage(readCookie(), "' + req.get('host') + '");</script></div>')		
+		}
+ 	});
+	
+});
