@@ -189,7 +189,7 @@ const EditorModalSettings = React.createClass({
 					}
 				</div>
 
-				<h2 style={baseStyles.topHeader}>Settings<span style={[styles.advancedTitle, styles.advancedTitle[this.state.showAdvanced]]}>: custom style</span></h2>
+				<div style={baseStyles.topHeader}>Settings<span style={[styles.advancedTitle, styles.advancedTitle[this.state.showAdvanced]]}>: custom style</span></div>
 
 				<div style={[baseStyles.rightCornerAction, styles.advanced, styles.advanced[this.state.showAdvanced]]} onClick={this.toggleShowAdvanced}>
 					Back
@@ -234,12 +234,12 @@ const EditorModalSettings = React.createClass({
 				{/* Additional options mode */}
 				<div className="add-options-content" style={[styles.advanced, styles.advanced[this.state.showAdvanced], styles.advancedContent]}>
 
-					<h2 style={styles.subHeader}>Custom Fonts</h2>
+					<div style={styles.subHeader}>Custom Fonts</div>
 					<div style={styles.customDetail}>PubPub supports using custom Google Fonts. To add new fonts, paste the Google fonts url.</div>
 					<div style={styles.customDetail}>e.g. <span style={styles.url}>https://fonts.googleapis.com/css?family=Raleway:400,100|Merriweather:400,300</span> </div>
 					<input type="text" ref={'googleFontURL'} style={styles.googleFontInput} defaultValue={this.props.pubStyle.googleFontURL}/>
 
-					<h2 style={styles.subHeader}>Custom CSS</h2>
+					<div style={styles.subHeader}>Custom CSS</div>
 					<div style={styles.customDetail}>Custom styles can be designed for your pub by overwriting the default CSS. Custom fonts specified above can be used in this custom CSS.</div>
 					<div style={styles.customDetail}>Available selectors: <span style={styles.url}>#pub-title, #pub-authors, .pub-author, #pub-abstract, #pub-header-divider, .p-block, h1, h2, h3, h4, h5, h6, ul, ol</span></div>
 					<div id={'codeMirrorJSX'} style={styles.codeMirrorWrapper}></div>
@@ -343,6 +343,7 @@ styles = {
 	subHeader: {
 		margin: 0,
 		paddingBottom: 5,
+		fontSize: '1.5em',
 	},
 	url: {
 		fontFamily: 'Courier',

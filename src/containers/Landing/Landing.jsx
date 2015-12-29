@@ -88,7 +88,7 @@ const Landing = React.createClass({
 						? <div>
 							<div style={styles.top}>
 								<h1 style={styles.topPub}>PubPub</h1>
-								<h2 style={styles.subheader}>Open Publishing</h2>
+								<div style={styles.subheader}>Open Publishing</div>
 								<div key="showMeScience" style={styles.showMeScience} onClick={this.registerShowMeScienceEvent}><Link style={styles.scienceText} to={'/pub/sample'}>Show Me Science</Link></div>
 							</div>
 							<div style={styles.search}>

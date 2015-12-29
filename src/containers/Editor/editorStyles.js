@@ -31,6 +31,7 @@ export const styles = {
 		textAlign: 'center',
 		fontSize: '3em',
 		paddingTop: 50,
+		margin: '.66em 0em',
 	},
 	mobileImageWrapper: {
 		width: 100,

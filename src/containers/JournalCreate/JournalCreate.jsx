@@ -57,7 +57,7 @@ const Login = React.createClass({
 					}
 				</div>	
 				
-				<h1 style={styles.header}>Create Journal</h1>
+				<div style={styles.header}>Create Journal</div>
 				<CreateJournalForm onSubmit={this.handleCreateSubmit} /> 
 				<div style={[styles.error, !this.state.errorMessage && styles.hidden]}>
 					{()=>{
@@ -97,6 +97,8 @@ styles = {
 	header: {
 		color: globalStyles.sideText,
 		padding: 20,
+		fontSize: '2em',
+		margin: '.66em 0'
 	},
 	loader: {
 		position: 'absolute',

@@ -465,11 +465,11 @@ const Editor = React.createClass({
 				{/*	Mobile Editing not currently supported.
 					Display a splash screen if media queries determine mobile mode */}
 				<div style={styles.isMobile}>
-					<h1 style={styles.mobileHeader}>Cannot Edit in Mobile</h1>
+					<div style={styles.mobileHeader}>Cannot Edit in Mobile</div>
 					<div style={styles.mobileImageWrapper}>
 						<img style={styles.mobileImage} src={'http://res.cloudinary.com/pubpub/image/upload/v1448221655/pubSad_blirpk.png'} />
 					</div>
-					<h2 style={styles.mobileText}>Please open this url on a desktop, laptop, or larger screen.</h2>
+					<div style={styles.mobileText}>Please open this url on a desktop, laptop, or larger screen.</div>
 				</div>
 
 				<div style={styles.notMobile}>

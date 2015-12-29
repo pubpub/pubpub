@@ -41,7 +41,7 @@ const EditorModalPublish = React.createClass({
 					{(this.state.isPublishing ? <LoaderIndeterminate color="#555"/> : null)}
 				</div>
 
-				<h2 style={baseStyles.topHeader}>Publish</h2>
+				<div style={baseStyles.topHeader}>Publish</div>
 
 				{/* Draft or Review-ready option 
 					Should default to review-ready if a past version was */}

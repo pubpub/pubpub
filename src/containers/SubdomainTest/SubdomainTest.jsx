@@ -38,7 +38,7 @@ const Subdomain = React.createClass({
 
 				<DocumentMeta {...metaData} />
 
-				<h1>Welcome to Subdomain Tests!</h1>
+				<div>Welcome to Subdomain Tests!</div>
 				<div>
 					<h3>testGetEmpty</h3>
 					{JSON.stringify(this.props.subdomainData.get('testGetEmpty'))}

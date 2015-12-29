@@ -178,14 +178,14 @@ const JournalCurate = React.createClass({
 				</div>
 
 				<div>
-					<h2>Collections</h2>
+					<div style={styles.sectionHeader}>Collections</div>
 						{
 							this.props.journalData.collections && this.props.journalData.collections.length
 								? <CollectionGallery collections={this.props.journalData.collections} />
 								: <div style={styles.emptyBlock}>No Collections</div>
 						}
 
-					<h2>Create New Collection</h2>
+					<div style={styles.sectionHeader}>Create New Collection</div>
 					
 					<div key={'createCollection-title'} style={styles.inputWrapper}>
 						<label style={styles.manualFormInputTitle} htmlFor={'title'}>Collection Title</label>
@@ -224,6 +224,10 @@ styles = {
 		display: 'table',
 		tableLayout: 'fixed',
 		width: '100%',
+	},
+	sectionHeader: {
+		fontSize: '1.5em',
+		margin: '.8em 0px',
 	},
 	pubSectionWrapper: {
 		width: '50%',

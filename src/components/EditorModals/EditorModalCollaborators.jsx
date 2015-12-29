@@ -94,7 +94,7 @@ const EditorModalCollaborators = React.createClass({
 
 		return (
 			<div>
-				<h2 style={baseStyles.topHeader}>Collaborators</h2>
+				<div style={baseStyles.topHeader}>Collaborators</div>
 
 				{/* Add new collaborators search bar */}
 				<div style={[baseStyles.rightCornerSearch, styles.mainContent[this.state.showInviteOptions]]}>
@@ -151,7 +151,7 @@ const EditorModalCollaborators = React.createClass({
 				{/* Invite by email content */}
 				<div className="add-options-content" style={[styles.addOptions, styles.addOptions[this.state.showInviteOptions], styles.addOptionsContent]}>
 
-					<h2 style={styles.sectionHeader}>Invite By Email</h2>
+					<div style={styles.sectionHeader}>Invite By Email</div>
 					<input type="text" placeholder="email address" />
 
 				</div>
@@ -242,6 +242,7 @@ styles = {
 	},
 	sectionHeader: {
 		margin: 0,
+		fontSize: '1.5em',
 	},
 	permission: {
 		color: globalStyles.veryLight,

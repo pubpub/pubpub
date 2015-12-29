@@ -110,7 +110,7 @@ const EditorModalAssets = React.createClass({
 
 				<div style={baseStyles.modalContentContainer}>
 					{/* Modal Title */}
-					<h2 key="asset-modal-right-action" style={baseStyles.topHeader}>Assets</h2>
+					<div key="asset-modal-right-action" style={baseStyles.topHeader}>Assets</div>
 
 					{/* Modal option that's placed in the top-right corner */}
 					<div style={baseStyles.rightCornerAction} onClick={this.onOpenClick}>Click to choose or drag files</div>

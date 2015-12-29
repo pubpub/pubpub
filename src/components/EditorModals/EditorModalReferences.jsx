@@ -143,7 +143,7 @@ const EditorModalReferences = React.createClass({
 
 		return (
 			<div>
-				<h2 style={baseStyles.topHeader}>References <span style={[styles.topHeaderSubtext, this.state.editingRefName && styles.showOnEdit]}>: Edit</span></h2>
+				<div style={baseStyles.topHeader}>References <span style={[styles.topHeaderSubtext, this.state.editingRefName && styles.showOnEdit]}>: Edit</span></div>
 
 				{/* Search for new Ref bar and advanced add option */}
 				<div style={[baseStyles.rightCornerSearch, styles.mainContent[this.state.showAddOptions]]}>
@@ -199,7 +199,7 @@ const EditorModalReferences = React.createClass({
 				{/* Content section displayed when in advanced add mode */}
 				<div className="add-options-content" style={[styles.addOptions, styles.addOptions[this.state.showAddOptions], styles.addOptionsContent]}>
 					<div style={this.state.editingRefName && styles.hide}>
-						<h2 style={styles.sectionHeader}>Add Bibtex</h2>
+						<div style={styles.sectionHeader}>Add Bibtex</div>
 						<div style={styles.inputFormWrapper}>
 							<textarea style={styles.textArea} ref="bibtexForm"></textarea>
 						</div>
@@ -208,7 +208,7 @@ const EditorModalReferences = React.createClass({
 					</div>
 
 
-					<h2 style={[styles.sectionHeader, this.state.editingRefName && styles.hide]}>Manual Entry</h2>
+					<div style={[styles.sectionHeader, this.state.editingRefName && styles.hide]}>Manual Entry</div>
 					<div style={styles.inputFormWrapper}>
 						{
 							Object.keys(this.state.manualFormData).map((inputItem)=>{
@@ -285,10 +285,12 @@ styles = {
 	},
 	sectionHeader: {
 		margin: 0,
+		fontSize: '1.5em',
 	},
 	topHeaderSubtext: {
 		display: 'none',
 		fontSize: 25,
+		margin: '.83em 0px',
 	},
 	saveForm: {
 		// textAlign: 'center',
