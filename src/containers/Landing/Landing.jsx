@@ -156,7 +156,15 @@ const Landing = React.createClass({
 								<div style={globalStyles.clearFix}></div>
 							</div>
 
-							<div style={styles.footer}>Stay up to date | About PubPub | Contact</div>
+							<div style={styles.footer}>
+								<span style={styles.footerItem} key={'footerItem' + 0}><Link to={'/about'} style={globalStyles.link}>About PubPub</Link></span>
+								<span style={styles.footerSeparator}>|</span>
+								<span style={styles.footerItem} key={'footerItem' + 1}><a target="_blank" style={globalStyles.link} href="http://www.twitter.com/_pubpub">@_pubpub</a></span>
+								<span style={styles.footerSeparator}>|</span>
+								<span style={styles.footerItem} key={'footerItem' + 2}><a target="_blank" style={globalStyles.link} href="http://eepurl.com/bLkuVn">Stay up to date</a></span>
+								<span style={styles.footerSeparator}>|</span>
+								<span style={styles.footerItem} key={'footerItem' + 3}><a target="_blank" style={globalStyles.link} href="mailto:pubpub@media.mit.edu">Contact</a></span>
+							 </div>
 						</div>
 							
 						: <LandingBody componentsArray={componentsArray}/>
@@ -367,7 +375,7 @@ styles = {
 		padding: '15px 0px',
 		fontSize: '18px',
 		cursor: 'pointer',
-		color: '#999',
+		color: '#aaa',
 		':hover': {
 			color: 'black',
 		},
@@ -398,14 +406,28 @@ styles = {
 		boxShadow: '0px 3px 4px rgba(0,0,0,0.4)',
 	},
 	footer: {
-		height: '80px',
-		lineHeight: '80px',
+		padding: '50px 0px',
 		backgroundColor: globalStyles.headerBackground,
 		color: globalStyles.headerText,
 		fontSize: '18px',
 		textAlign: 'center',
-
-	}
+	},
+	footerItem: {
+		color: '#aaa',
+		':hover': {
+			color: '#fff',
+		},
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+			display: 'block',
+			padding: '15px 0px',
+		},
+	},
+	footerSeparator: {
+		padding: '0px 30px',
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+			display: 'none',
+		}
+	},
 
 
 };
