@@ -24,6 +24,12 @@ const Landing = React.createClass({
 		// }
 	},
 
+	getInitialState() {
+		return {
+			activeFeature: 'editing',
+		};
+	},
+
 	renderLandingSearchResults: function(results) {
 		// console.log(results);
 		return (
@@ -59,8 +65,14 @@ const Landing = React.createClass({
 		analytics.sendEvent('Show Me Science Clicked');
 	},
 
-	render: function() {
+	setFeature: function(newFeature) {
+		return ()=> {
+			this.setState({activeFeature: newFeature});
+		};
+	},
 
+	render: function() {
+		console.log(this.state.activeFeature);
 		const metaData = {
 			title: this.props.journalData.getIn(['journalData', 'journalName']) || 'PubPub'
 		};
@@ -112,9 +124,36 @@ const Landing = React.createClass({
 										<div style={styles.experimentText}>Journals serve as curators rather than gatekeepers. Pubs can be submitted to and featured in as many journals as is relevant. No more silos. Journals can be run for large or small audiences, by institutions or individuals. Everyone can be a journal.</div>
 									</div>
 									<div style={globalStyles.clearFix}></div>
-									
 								</div>
 							</div>
+
+							<div style={styles.featureDemos}>
+								<div style={styles.features}>
+									<div key={'feature0'} style={[styles.feature, this.state.activeFeature === 'editing' && styles.featureActive]} onClick={this.setFeature('editing')}>Rich, Collaborative Editing</div>
+									<div key={'feature1'} style={[styles.feature, this.state.activeFeature === 'discussions' && styles.featureActive]} onClick={this.setFeature('discussions')}>In-line rich discussion</div>
+									<div key={'feature2'} style={[styles.feature, this.state.activeFeature === 'history' && styles.featureActive]} onClick={this.setFeature('history')}>Versioned Publication History</div>
+									<div key={'feature3'} style={[styles.feature, this.state.activeFeature === 'journals' && styles.featureActive]} onClick={this.setFeature('journals')}>Custom grassroots journals</div>
+								</div>
+								<div style={styles.featurePreview}>
+
+									<div style={styles.featurePreviewImageWrapper}>
+										{()=>{
+											switch (this.state.activeFeature) {
+											case 'editing':
+												return <img style={styles.featurePreviewImage} src={'http://i.imgur.com/X5ZSCJT.jpg'}/>;
+											case 'discussions':
+												return <img style={styles.featurePreviewImage} src={'http://i.imgur.com/JFhw6qz.jpg'}/>;
+											default:
+												return <img style={styles.featurePreviewImage} src={'http://i.imgur.com/X5ZSCJT.jpg'}/>;
+											}
+										}()}
+									</div>
+
+								</div>
+								<div style={globalStyles.clearFix}></div>
+							</div>
+
+							<div style={styles.footer}>Stay up to date | About PubPub | Contact</div>
 						</div>
 							
 						: <LandingBody componentsArray={componentsArray}/>
@@ -285,7 +324,7 @@ styles = {
 		padding: '0px 10px',
 		float: 'left',
 		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
-			width: '100%',
+			width: 'calc(100% - 20px)',
 		},
 	},
 	experimentTitle: {
@@ -302,5 +341,68 @@ styles = {
 			marginBottom: '30px',
 		},
 	},
+	featureDemos: {
+		maxWidth: 1024,
+		// backgroundColor: 'red',
+		margin: '50px auto',
+		padding: 10,
+		display: 'table',
+		tableLayout: 'fixed',
+
+	},
+	features: {
+		// backgroundColor: 'orange',
+		display: 'table-cell',
+		width: '40%',
+		verticalAlign: 'middle',
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+			display: 'block',
+			width: '100%',
+		},
+	},
+	feature: {
+		padding: '15px 0px',
+		fontSize: '18px',
+		cursor: 'pointer',
+		color: '#999',
+		':hover': {
+			color: 'black',
+		},
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+			textAlign: 'center',
+			padding: '5px 10px'
+		},
+	},
+	featureActive: {
+		color: 'black',
+	},
+	featurePreview: {
+		// backgroundColor: 'green',
+		display: 'table-cell',
+		width: '60%',
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+			marginTop: '20px',
+			display: 'block',
+			width: '100%',
+		},
+	},
+	featurePreviewImageWrapper: {
+		width: '100%',
+		// float: 'right',
+	},
+	featurePreviewImage: {
+		width: '100%',
+		boxShadow: '0px 3px 4px rgba(0,0,0,0.4)',
+	},
+	footer: {
+		height: '80px',
+		lineHeight: '80px',
+		backgroundColor: globalStyles.headerBackground,
+		color: globalStyles.headerText,
+		fontSize: '18px',
+		textAlign: 'center',
+
+	}
+
 
 };

@@ -85,7 +85,7 @@ const UserMain = React.createClass({
 				{/* Selected Content based on nav */}
 				<div style={styles.profileContent}>
 				
-					<h2 id={'pubs-section'}>Pubs</h2>
+					<div id={'pubs-section'} style={styles.sectionHeader}>Pubs</div>
 					{()=>{
 						const outputPubs = [];
 						for (let index = this.props.profileData.pubs.length; index--;) {
@@ -97,7 +97,7 @@ const UserMain = React.createClass({
 						return outputPubs;
 					}()}
 
-					<h2 id={'discussions-section'}>Discussions</h2>
+					<div id={'discussions-section'} style={styles.sectionHeader}>Discussions</div>
 					{()=>{
 						const outputDiscussions = [];
 						for (let index = this.props.profileData.discussions.length; index--;) {
@@ -216,6 +216,10 @@ styles = {
 	profileContent: {
 		// width: 'calc(100% - 40px)',
 		// margin: '0px 20px',
+	},
+	sectionHeader: {
+		fontSize: '30px',
+		margin: '15px 0px',
 	},
 	pubBlock: {
 		// margin: 15,
