@@ -94,10 +94,25 @@ const Landing = React.createClass({
 							</div>
 							<div style={styles.lower}>
 								<div style={styles.textDark}>
-									<p>PubPub explores the relationship between multiculturalism and romance tourism.</p>
-									<p>With influences as diverse as Munch and Miles Davis, new tensions are distilled from both opaque and transparent discourse.</p>
-									<p>Ever since I was a teenager I have been fascinated by the ephemeral nature of meaning. What starts out as contemplation soon becomes finessed into a cacophony of lust, leaving only a sense of failing and the dawn of a new understanding.</p>
-									<p>As momentary forms become clarified through studious and critical practice, the viewer is left with an epitaph for the possibilities of our existence.</p>
+									<div style={styles.centerMedium}>Read, Write, Publish, Review.</div>
+									<div style={styles.centerMedium}>PubPub is a platform for totally transparent publishing.</div>
+									<div style={styles.centerTitle}>Three Core Experiments</div>
+									<div style={styles.experimentBlock}>
+										<div style={styles.experimentTitle}>Modern Publishing</div>
+										<div style={styles.experimentText}>A rich and collaborative open-source editor allows for evolving content and formats. Publishing is by the author and immediate. Publishing is versioned and we encourage publishing early and often to capture the full history of your work.</div>
+									</div>
+
+									<div style={styles.experimentBlock}>
+										<div style={styles.experimentTitle}>Distributed Review</div>
+										<div style={styles.experimentText}>Review is distributed across many communities and done in the open. Rewarding constructive reviews and incentivizing progress rather than elitism opens the process to all that are capable.</div>
+									</div>
+
+									<div style={styles.experimentBlock}>
+										<div style={styles.experimentTitle}>Grassroots Journals</div>
+										<div style={styles.experimentText}>Journals serve as curators rather than gatekeepers. Pubs can be submitted to and featured in as many journals as is relevant. No more silos. Journals can be run for large or small audiences, by institutions or individuals. Everyone can be a journal.</div>
+									</div>
+									<div style={globalStyles.clearFix}></div>
+									
 								</div>
 							</div>
 						</div>
@@ -185,9 +200,9 @@ styles = {
 	},
 	textDark: {
 		color: globalStyles.headerText,
-		maxWidth: 800,
+		maxWidth: 1024,
 		padding: 20,
-		margin: '60px auto',
+		margin: '40px auto 60px auto',
 		fontSize: '22px',
 
 	},
@@ -249,6 +264,42 @@ styles = {
 		color: globalStyles.sideText,
 		':hover': {
 			color: globalStyles.sideHover,
+		},
+	},
+	centerMedium: {
+		fontSize: '20px',
+		textAlign: 'center',
+		fontFamily: globalStyles.headerFont,
+		color: '#A8A8A8',
+	},
+	centerTitle: {
+		fontSize: '40px',
+		textAlign: 'center',
+		fontFamily: globalStyles.headerFont,
+		fontWeight: 900,
+		color: '#D1D1D1',
+		margin: '40px 0px 70px 0px',
+	},
+	experimentBlock: {
+		width: 'calc((100% / 3) - 20px)',
+		padding: '0px 10px',
+		float: 'left',
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+			width: '100%',
+		},
+	},
+	experimentTitle: {
+		fontWeight: 900,
+		fontSize: '22px',
+		textAlign: 'center',
+		color: '#D1D1D1',
+	},
+	experimentText: {
+		fontSize: '17px',
+		textAlign: 'justify',
+		padding: '15px',
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+			marginBottom: '30px',
 		},
 	},
 
