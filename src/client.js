@@ -50,7 +50,7 @@ if (__DEVTOOLS__ && !window.devToolsExtension) {
 	require('./containers/DevTools/createDevToolsWindow')(store);
 }
 
-window.addEventListener( 'clientId', function(evt) {
+window.addEventListener( 'message', function(evt) {
 	console.log('evt', evt);
 	if (evt.origin !== 'https://www.pubpub.org') { return; } 
 	console.log(evt.data);

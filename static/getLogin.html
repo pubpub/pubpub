@@ -4,6 +4,7 @@
 		function readCookie() {
 			return document.cookie;
 		}
-		parent.postMessage(readCookie(), "http://www.pubpub.org");
+		console.log('in the iframe, about to send' readCookie());
+		parent.postMessage(readCookie(), "http://localhost:3000");
 	</script>
 </div>
