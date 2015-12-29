@@ -205,7 +205,7 @@ app.get('/loadJournalAndLogin', function(req,res){
 			// If there was no result, that means we're on pubpub.org, and we need to populate journals and pubs.
 			Journal.find({}, {'_id':1,'journalName':1, 'subdomain':1, 'customDomain':1, 'pubsFeatured':1, 'collections':1, 'design': 1}).lean().exec(function (err, journals) {
 				Pub.find({history: {$not: {$size: 0}},'settings.isPrivate': {$ne: true}}, {'_id':1,'title':1, 'slug':1, 'abstract':1}).lean().exec(function (err, pubs) {
-					
+					// console.log(res);
 					return res.status(201).json({
 						journalData: {
 							...result,

@@ -1,0 +1,9 @@
+<div>
+	<h1>iFrame Window</h1>
+	<script type="text/javascript">
+		function readCookie() {
+			return document.cookie;
+		}
+		parent.postMessage(readCookie(), "http://www.pubpub.org");
+	</script>
+</div>
