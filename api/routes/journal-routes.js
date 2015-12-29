@@ -19,6 +19,16 @@ app.post('/createJournal', function(req,res){
 			collections: [],
 			pubsFeatured: [],
 			pubsSubmitted: [],
+			design: {
+				headerBackground: '#373737',
+				headerText: '#E0E0E0',
+				headerHover: '#FFF',
+				landingHeaderBackground: '#E0E0E0',
+				landingHeaderText: '#373737',
+				landingHeaderHover: '#000',
+			},
+
+				
 		});
 
 		journal.save(function (err, savedJournal) {
@@ -159,7 +169,7 @@ app.get('/loadJournalAndLogin', function(req,res){
 
 		} else { 
 			// If there was no result, that means we're on pubpub.org, and we need to populate journals and pubs.
-			Journal.find({}, {'_id':1,'journalName':1, 'subdomain':1, 'customDomain':1, 'pubsFeatured':1, 'collections':1}).lean().exec(function (err, journals) {
+			Journal.find({}, {'_id':1,'journalName':1, 'subdomain':1, 'customDomain':1, 'pubsFeatured':1, 'collections':1, 'design': 1}).lean().exec(function (err, journals) {
 				Pub.find({history: {$not: {$size: 0}},'settings.isPrivate': {$ne: true}}, {'_id':1,'title':1, 'slug':1, 'abstract':1}).lean().exec(function (err, pubs) {
 					
 					return res.status(201).json({

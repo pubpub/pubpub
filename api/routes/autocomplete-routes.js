@@ -7,8 +7,8 @@ var User = require('../models').User;
 var Journal = require('../models').Journal;
 
 app.get('/autocompleteJournals', function(req,res){
-	Journal.find({}, {'_id':1,'journalName':1, 'subdomain':1, 'customDomain':1}).exec(function (err, journals) {
-		var objects = users;
+	Journal.find({}, {'_id':1,'journalName':1, 'subdomain':1, 'customDomain':1, 'design': 1}).exec(function (err, journals) {
+		var objects = journals;
 		var sifter = new Sifter(objects);
 
 		var result = sifter.search(req.query.string, {

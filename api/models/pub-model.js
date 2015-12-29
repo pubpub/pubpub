@@ -148,7 +148,7 @@ pubSchema.statics.getPub = function (slug, readerID, callback) {
 	.populate({ path: 'discussions', model: 'Discussion' })
 	.populate({ path: 'assets history.assets', model: 'Asset' })
 	.populate({ path: 'references history.references', model: 'Reference' })
-	.populate({ path: 'featuredIn.journal submittedTo.journal', model: 'Journal' })
+	.populate({ path: 'featuredIn.journal submittedTo.journal', select: 'journalName subdomain customDomain design', model: 'Journal' })
 	.populate({ path: 'authors history.authors', select: 'username name thumbnail', model: 'User' })
 	.exec((err, pub)=> {
 		const options = [

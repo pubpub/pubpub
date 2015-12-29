@@ -10,29 +10,47 @@ const JournalPreview = React.createClass({
 		journalData: PropTypes.object,
 		displayType: PropTypes.string, // 'line' or 'block'
 		headerFontSize: PropTypes.string,
+		hideDetails: PropTypes.bool,
+		customDetails: PropTypes.array,
 	},
 
 	getDefaultProps: function() {
 		return {
-			displayType: 'line' 
+			displayType: 'line',
+			customDetails: [],
 		};
 	},
 
 	render: function() {
 		const journal = this.props.journalData;
 		const journalURL = journal.customDomain ? 'http://' + journal.customDomain : 'http://' + journal.subdomain + '.pbpb.co';
+		const journalStyle = {
+			backgroundColor: journal.design && journal.design.landingHeaderBackground, 
+			color: journal.design && journal.design.landingHeaderText,
+			':hover': {
+				color: journal.design && journal.design.landingHeaderHover,
+			},
+		};
 		return (
 			<div style={[styles.container]} >
 
 				<a style={globalStyles.link} href={journalURL}>
 
-					<div key={'userBlock-' + journal._id} style={[styles.journalBlock]}>
+					<div key={'userBlock-' + journal._id} style={[styles.journalBlock, journalStyle]}>
 						<div style={styles.journalName}>{journal.journalName}</div>
-						<div style={styles.details}>
+						<div style={[styles.details, this.props.hideDetails && {display: 'none'} ]}>
 							<span>{(journal.pubsFeatured && journal.pubsFeatured.length) || 0} Pubs</span>
 							<span style={styles.separator}> | </span>
-							<span>{(journal.collections && journal.collections.length) || 0} Collections</span>
+							<span>{(journal.colletctions && journal.collections.length) || 0} Collections</span>
 						</div>
+
+						{this.props.customDetails.map((detail, index)=>{
+							return (
+								<div style={[styles.details]} key={'customDetail-' + index}>
+									{detail}
+								</div>
+							);
+						})}
 						
 					</div>
 				</a>
@@ -51,9 +69,10 @@ styles = {
 	journalBlock: {
 		padding: '5px',
 		color: '#999',
-		':hover': {
-			color: 'black',
-		},
+		// ':hover': {
+		// 	// color: 'black',
+		// 	boxShadow: '0px 0px 0px 2px rgba(0, 0, 0, 0.85)',
+		// },
 	},
 	journalName: {
 		fontSize: '25px',

@@ -137,7 +137,8 @@ const PubMeta = React.createClass({
 										featuredInList={this.props.readerData.getIn(['pubData', 'featuredInList']).toJS()}
 										submittedTo={this.props.readerData.getIn(['pubData', 'submittedTo']).toJS()}
 										submittedToList={this.props.readerData.getIn(['pubData', 'submittedToList']).toJS()}
-										handleSubmitToJournal={this.submitToJournal}/>
+										handleSubmitToJournal={this.submitToJournal}
+										isAuthor={this.props.readerData.getIn(['pubData', 'isAuthor'])}/>
 									);
 							case 'source':
 								return (<PubMetaSource 
