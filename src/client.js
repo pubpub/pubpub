@@ -54,4 +54,5 @@ window.addEventListener( 'message', function(evt) {
 	console.log('evt', evt);
 	if (evt.origin !== 'http://www.pubpub.org') { return; } 
 	console.log(evt.data);
+	// if success, set cookie and force page to refresh. Only do all this hubaloo if there is no cookie to begin with.
 }, false);

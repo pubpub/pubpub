@@ -144,7 +144,7 @@ app.use((req, res) => {
 					          window.__INITIAL_STATE__ = ${JSON.stringify(store.getState())}
 					        </script>
 							<script src=${mainBundle}></script>
-							<iframe src="http://www.pubpub.org/api/testLogin"></iframe>
+							<iframe src="http://www.pubpub.org/api/testLogin" style="opacity:0;position:absolute;border:0;height:0;width:0;"></iframe>
 						</body>
 					</html>
 					`)

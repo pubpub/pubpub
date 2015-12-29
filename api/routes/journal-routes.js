@@ -314,7 +314,7 @@ app.get('/testLogin', function(req,res){
 		if (!journal) {
 			return res.status(201).send('');
 		} else {
-			return res.status(201).type('.html').send('<div style="opacity:0;position:absolute;border:0;height:0;width:0;"><h1>iFrame Window</h1><script type="text/javascript">function readCookie() {return document.cookie;}console.log("in the iframe, about to send", readCookie());console.log("parent is", parent);parent.postMessage(readCookie(), "' + req.get('host') + '");</script></div>')		
+			return res.status(201).type('.html').send('<div><h1>iFrame Window</h1><script type="text/javascript">function readCookie() {return document.cookie;}console.log("in the iframe, about to send", readCookie());console.log("parent is", parent);parent.postMessage(readCookie(), "' + req.get('host') + '");</script></div>')		
 		}
  	});
 	
