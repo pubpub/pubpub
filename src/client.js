@@ -52,6 +52,6 @@ if (__DEVTOOLS__ && !window.devToolsExtension) {
 
 window.addEventListener( 'message', function(evt) {
 	console.log('evt', evt);
-	if (evt.origin !== 'https://www.pubpub.org') { return; } 
+	if (evt.origin !== 'http://www.pubpub.org') { return; } 
 	console.log(evt.data);
 }, false);
