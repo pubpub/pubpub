@@ -72,7 +72,6 @@ const Landing = React.createClass({
 	},
 
 	render: function() {
-		console.log(this.state.activeFeature);
 		const metaData = {
 			title: this.props.journalData.getIn(['journalData', 'journalName']) || 'PubPub'
 		};
@@ -140,9 +139,13 @@ const Landing = React.createClass({
 										{()=>{
 											switch (this.state.activeFeature) {
 											case 'editing':
-												return <img style={styles.featurePreviewImage} src={'http://i.imgur.com/X5ZSCJT.jpg'}/>;
+												return <img style={styles.featurePreviewImage} src={'http://res.cloudinary.com/pubpub/image/upload/c_scale,w_600/v1451416401/editing_hires_svywu2.gif'}/>;
 											case 'discussions':
-												return <img style={styles.featurePreviewImage} src={'http://i.imgur.com/JFhw6qz.jpg'}/>;
+												return <img style={styles.featurePreviewImage} src={'http://res.cloudinary.com/pubpub/image/upload/c_scale,w_600/v1451416396/discussion_hires_jhdoga.gif'}/>;
+											case 'history':
+												return <img style={styles.featurePreviewImage} src={'http://res.cloudinary.com/pubpub/image/upload/c_scale,w_600/v1451416390/history_hires_ou47rn.gif'}/>;
+											case 'journals':
+												return <img style={styles.featurePreviewImage} src={'http://res.cloudinary.com/pubpub/image/upload/c_scale,w_600/v1451417712/outputjournal_qcdqyh.gif'}/>;
 											default:
 												return <img style={styles.featurePreviewImage} src={'http://i.imgur.com/X5ZSCJT.jpg'}/>;
 											}
