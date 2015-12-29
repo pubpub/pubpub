@@ -4,6 +4,27 @@ var _      = require('underscore');
 
 var Pub = require('../models').Pub;
 var User = require('../models').User;
+var Journal = require('../models').Journal;
+
+app.get('/autocompleteJournals', function(req,res){
+	Journal.find({}, {'_id':1,'journalName':1, 'subdomain':1, 'customDomain':1}).exec(function (err, journals) {
+		var objects = users;
+		var sifter = new Sifter(objects);
+
+		var result = sifter.search(req.query.string, {
+		    fields: ['journalName', 'customDomain', 'subdomain'],
+		    sort: [{field: 'journalName', direction: 'asc'}],
+		    limit: 10
+		});
+
+		var output = [];
+		_.each(result.items, function(item){
+			output.push(objects[item.id]);
+		});
+
+		return res.status(201).json(output);
+	});
+});
 
 app.get('/autocompleteUsers', function(req,res){
 	User.find({}, {'_id':1,'username':1, 'thumbnail':1, 'email':1, 'name':1}).exec(function (err, users) {

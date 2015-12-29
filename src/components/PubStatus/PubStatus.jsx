@@ -10,28 +10,43 @@ const PubStatus = React.createClass({
 	propTypes: {
 		slug: PropTypes.string,
 		pubStatus: PropTypes.string,
-		featuredIn: PropTypes.array,
-		submittedTo: PropTypes.array,
+		featuredInList: PropTypes.array,
+		submittedToList: PropTypes.array,
+		isAuthor: PropTypes.bool,
 	},
 
 	getDefaultProps: function() {
 		return {
-			featuredIn: [],
-			submittedTo: [],
+			featuredInList: [],
+			submittedToList: [],
 		};
 	},
 
 	render: function() {
-		// const pubData = {featuredIn: [], submittedTo: []};
+		// const pubData = {featuredInList: [], submittedToList: []};
 		return (
 			<div style={styles.container}>
 				
 				<div className="pub-status-wrapper" style={rightBarStyles.sectionWrapper}>
 					<div style={rightBarStyles.sectionHeader}><span style={styles.headerPrefix}>Status:</span> {this.props.pubStatus === 'Draft' ? 'Draft' : 'Peer-Review Ready'}</div>
 					<div style={rightBarStyles.sectionSubHeader}>
-						<Link to={'/pub/' + this.props.slug + '/reviews'} style={globalStyles.link}><span key={'statusButton1'} style={rightBarStyles.sectionSubHeaderSpan}>Featured in {this.props.featuredIn.length} Journals </span></Link>
-						|  
-						<Link to={'/pub/' + this.props.slug + '/reviews'} style={globalStyles.link}><span key={'statusButton2'} style={rightBarStyles.sectionSubHeaderSpan}>Submitted to {this.props.submittedTo.length} Journals</span></Link>
+						<Link to={'/pub/' + this.props.slug + '/journals'} style={globalStyles.link}>
+							<div key={'statusButton1'} style={rightBarStyles.sectionSubHeaderSpan}>
+								Featured in {this.props.featuredInList.length} Journals 
+								|
+								Submitted to {this.props.submittedToList.length} Journals
+							</div>
+						</Link>
+						{
+							this.props.isAuthor 
+								? <Link to={'/pub/' + this.props.slug + '/journals'} style={globalStyles.link}>
+									<div key={'statusButton2'} style={rightBarStyles.sectionSubHeaderSpan}>
+										Submit to New Journal
+									</div>
+								</Link>
+								: null
+						}
+
 					</div>
 				</div>
 				

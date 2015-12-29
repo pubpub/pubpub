@@ -244,8 +244,9 @@ const PubReader = React.createClass({
 					<PubStatus
 						slug={this.props.slug}
 						pubStatus={pubData.status}
-						featuredIn={pubData.featuredIn}
-						submittedTo={pubData.submittedTo}/>
+						featuredInList={pubData.featuredInList}
+						submittedToList={pubData.submittedToList}
+						isAuthor={pubData.isAuthor}/>
 					{/* <PubReviews
 						slug={this.props.slug}
 						reviewsData={pubData.reviews} /> */}
