@@ -23,7 +23,7 @@ const JournalPreview = React.createClass({
 
 	render: function() {
 		const journal = this.props.journalData;
-		const journalURL = journal.customDomain ? 'http://' + journal.customDomain : 'http://' + journal.subdomain + '.pbpb.co';
+		const journalURL = journal.customDomain ? 'http://' + journal.customDomain : 'http://' + journal.subdomain + '.pubpub.org';
 		const journalStyle = {
 			backgroundColor: journal.design && journal.design.landingHeaderBackground, 
 			color: journal.design && journal.design.landingHeaderText,
