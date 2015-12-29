@@ -41,7 +41,6 @@ const PubMetaExperts = React.createClass({
 		for (let index = this.props.submittedToList.length; index--; ) {
 			usedJournalsObject[this.props.submittedToList[index]] = true;
 		}
-		console.log(usedJournalsObject);
 
 		return (
 			<div style={styles.results}>
@@ -101,6 +100,11 @@ const PubMetaExperts = React.createClass({
 					);
 				})}
 
+				{this.props.submittedTo.length
+					? null
+					: <div style={styles.emptyBlock}>Not submitted to any Journals</div>
+				}
+
 				<div style={styles.sectionHeader}>Journals Featured In</div>
 				{this.props.featuredIn.map((journalItem, index)=>{
 					return (
@@ -112,6 +116,10 @@ const PubMetaExperts = React.createClass({
 						</div>
 					);
 				})}
+				{this.props.featuredIn.length
+					? null
+					: <div style={styles.emptyBlock}>Not featured in any Journals</div>
+				}
 
 					
 			</div>
@@ -124,6 +132,10 @@ export default Radium(PubMetaExperts);
 styles = {
 	container: {
 		padding: 15,
+	},
+	sectionHeader: {
+		fontSize: '25px',
+		margin: '20px 0px',
 	},
 	results: {
 		boxShadow: '0px 0px 2px 2px #D7D7D7',
@@ -164,5 +176,15 @@ styles = {
 		height: 30,
 		lineHeight: '30px',
 		textAlign: 'center',
+	},
+	emptyBlock: {
+		backgroundColor: '#f6f6f6',
+		width: '75%',
+		margin: '15px auto',
+		height: '85px',
+		lineHeight: '85px',
+		textAlign: 'center',
+		border: '1px solid rgba(0,0,0,0.05)',
+		borderRadius: '2px',
 	},
 };
