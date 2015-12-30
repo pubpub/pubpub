@@ -54,7 +54,9 @@ const App = React.createClass({
 			// 2) Create an iframe to pubpub.org to check for a login cookie
 			// 3) On the backend, check to verify that the given domain requesting the login cookie is within our system of journalSubdomain
 			// 4) On verification of referring domain, send down iframe content that will read the cookies and post a message with the login cookie (if available)
-
+			// A larger scale implementation of a similar approach described by Stack Overflow here: http://meta.stackexchange.com/questions/64260/how-does-sos-new-auto-login-feature-work
+			// About window.postMessage: https://developer.mozilla.org/en-US/docs/Web/API/Window/postMessage
+			
 			// Create the Listener
 			window.addEventListener( 'message', (evt)=> {
 				if (evt.origin !== 'http://www.pubpub.org') { return; } // Only listen to iFrame messages from pubpub.org
