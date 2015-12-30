@@ -23,7 +23,9 @@ if (__DEVELOPMENT__) {
 	require('newrelic');
 }
 
-console.log('asdasd');
+var translate = require('./translate');
+translate();
+
 // https://github.com/halt-hammerzeit/webpack-isomorphic-tools
 var WebpackIsomorphicTools = require('webpack-isomorphic-tools');
 global.webpackIsomorphicTools = new WebpackIsomorphicTools(require('../webpack/webpack-isomorphic-tools'))

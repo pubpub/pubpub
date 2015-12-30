@@ -161,6 +161,9 @@ app.post('/submitPubToJournal', function(req,res){
 	});
 });
 
+
+var fs = require('fs');
+
 app.get('/loadJournalAndLogin', function(req,res){
 	// Load journal Data
 	// When an implicit login request is made using the cookie
@@ -172,53 +175,65 @@ app.get('/loadJournalAndLogin', function(req,res){
 	.populate({path: "collections.pubs", select:"title abstract slug authors lastUpdated createDate"})
 	.lean().exec(function(err, result){
 
-		const loginData = req.user 
-			? {
-				name: req.user.name,
-				username: req.user.username,
-				image: req.user.image,
-				thumbnail: req.user.thumbnail,
-				settings: req.user.settings
-			}
-			: 'No Session';
+		const locale = result && result.locale ? result.locale : 'en';
+		let languageObject = {};
+		fs.readFile(__dirname + '/../../translations/languages/' + locale + '.json', 'utf8', function (err, data) {
+			if (err) { console.log(err); }
+			languageObject = JSON.parse(data);
 
-		if (result) {
-			// If it is a journal, check if the user is an admin.
-			let isAdmin = false;
-			const userID = req.user ? req.user._id : undefined;
-			const adminsLength = result ? result.admins.length : 0;
-			for(let index = adminsLength; index--; ) {
-				if (String(result.admins[index]._id) === String(userID)) {
-					isAdmin =  true;	
+			const loginData = req.user 
+				? {
+					name: req.user.name,
+					username: req.user.username,
+					image: req.user.image,
+					thumbnail: req.user.thumbnail,
+					settings: req.user.settings
 				}
+				: 'No Session';
+
+			if (result) {
+				// If it is a journal, check if the user is an admin.
+				let isAdmin = false;
+				const userID = req.user ? req.user._id : undefined;
+				const adminsLength = result ? result.admins.length : 0;
+				for(let index = adminsLength; index--; ) {
+					if (String(result.admins[index]._id) === String(userID)) {
+						isAdmin =  true;	
+					}
+				}
+
+				return res.status(201).json({
+					journalData: {
+						...result,
+						isAdmin: isAdmin,
+						locale: locale,
+						languageObject: languageObject,
+					},
+					loginData: loginData,
+				});
+
+			} else { 
+				// If there was no result, that means we're on pubpub.org, and we need to populate journals and pubs.
+				Journal.find({}, {'_id':1,'journalName':1, 'subdomain':1, 'customDomain':1, 'pubsFeatured':1, 'collections':1, 'design': 1}).lean().exec(function (err, journals) {
+					Pub.find({history: {$not: {$size: 0}},'settings.isPrivate': {$ne: true}}, {'_id':1,'title':1, 'slug':1, 'abstract':1}).lean().exec(function (err, pubs) {
+						// console.log(res);
+						return res.status(201).json({
+							journalData: {
+								...result,
+								allJournals: journals,
+								allPubs: pubs,
+								isAdmin: false,
+								locale: locale,
+								languageObject: languageObject,
+							},
+							loginData: loginData,
+						});
+
+					});
+				});
 			}
 
-			return res.status(201).json({
-				journalData: {
-					...result,
-					isAdmin: isAdmin,
-				},
-				loginData: loginData,
-			});
-
-		} else { 
-			// If there was no result, that means we're on pubpub.org, and we need to populate journals and pubs.
-			Journal.find({}, {'_id':1,'journalName':1, 'subdomain':1, 'customDomain':1, 'pubsFeatured':1, 'collections':1, 'design': 1}).lean().exec(function (err, journals) {
-				Pub.find({history: {$not: {$size: 0}},'settings.isPrivate': {$ne: true}}, {'_id':1,'title':1, 'slug':1, 'abstract':1}).lean().exec(function (err, pubs) {
-					// console.log(res);
-					return res.status(201).json({
-						journalData: {
-							...result,
-							allJournals: journals,
-							allPubs: pubs,
-							isAdmin: false,
-						},
-						loginData: loginData,
-					});
-
-				});
-			});
-		}
+		});
 		
 	});
 

@@ -14,9 +14,9 @@ import analytics from '../../utils/analytics';
 
 import {IntlProvider} from 'react-intl';
 
-const messages = {
-	testing: '¿Que?'
-};
+// const messages = {
+// 	testing: '¿Que?'
+// };
 
 let styles = {};
 const App = React.createClass({
@@ -130,9 +130,8 @@ const App = React.createClass({
 				backgroundColor: headerBackground,
 			},
 		};
-
 		return (
-			<IntlProvider locale={'en'} defaultLocale={'en'}>
+			<IntlProvider locale={this.props.journalData.getIn(['journalData', 'locale'])} messages={this.props.journalData.getIn(['journalData', 'languageObject']).toJS()}>
 			<div style={styles.body}>
 				
 				{

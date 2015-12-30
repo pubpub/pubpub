@@ -143,7 +143,6 @@ app.use((req, res) => {
 							<div id="content">${htmltest}</div>
 							<script>
 					          window.__INITIAL_STATE__ = ${JSON.stringify(store.getState())};
-					          window.App = ${JSON.stringify({dog: 5})};
 					        </script>
 							<script src=${mainBundle}></script>
 						</body>
