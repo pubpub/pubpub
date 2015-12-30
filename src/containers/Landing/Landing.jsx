@@ -8,7 +8,6 @@ import {LandingBody} from '../../components';
 import { Link } from 'react-router';
 const HoverLink = Radium(Link);
 import analytics from '../../utils/analytics';
-// import {FormattedNumber, FormattedPlural} from 'react-intl';
 
 let styles = {};
 
@@ -76,12 +75,10 @@ const Landing = React.createClass({
 		const metaData = {
 			title: this.props.journalData.getIn(['journalData', 'journalName']) || 'PubPub'
 		};
+		// console.log(this.props);
 		const componentsArray = this.props.journalData.getIn(['journalData', 'design', 'layoutString'])
 			? JSON.parse(this.props.journalData.getIn(['journalData', 'design', 'layoutString']).replace(/(['"])?([:]?[a-zA-Z0-9_]+)(['"])?: /g, '"$2": ').replace(/'/g, '"'))
 			: [];
-
-		// const name = 'Eric';
-		// const unreadCount = 1000;
 
 		return (
 			<div style={styles.container}>
@@ -92,14 +89,6 @@ const Landing = React.createClass({
 					this.props.journalData.get('baseSubdomain') === null
 						? <div>
 							<div style={styles.top}>
-								{/* <p>
-									Hello <b>{name}</b>, you have {' '}
-									<FormattedNumber value={unreadCount} /> {' '}
-									<FormattedPlural value={unreadCount}
-										one="message"
-										other="messages"/>.
-								</p> */}
-
 								<h1 style={styles.topPub}>PubPub</h1>
 								<div style={styles.subheader}>Open Publishing</div>
 								<div key="showMeScience" style={styles.showMeScience} onClick={this.registerShowMeScienceEvent}><Link style={styles.scienceText} to={'/pub/sample'}>Show Me Science</Link></div>

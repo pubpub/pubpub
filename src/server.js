@@ -142,7 +142,8 @@ app.use((req, res) => {
 						<body style="width: 100%; margin: 0;">
 							<div id="content">${htmltest}</div>
 							<script>
-					          window.__INITIAL_STATE__ = ${JSON.stringify(store.getState())}
+					          window.__INITIAL_STATE__ = ${JSON.stringify(store.getState())};
+					          window.App = ${JSON.stringify({dog: 5})};
 					        </script>
 							<script src=${mainBundle}></script>
 						</body>

@@ -8,3 +8,4 @@ misc/
 webpack-stats.json
 npm-debug.log
 .DS_Store
+translations/

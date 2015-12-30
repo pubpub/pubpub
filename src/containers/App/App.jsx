@@ -12,7 +12,11 @@ import {HeaderNav, HeaderMenu} from '../../components';
 import {globalStyles} from '../../utils/styleConstants';
 import analytics from '../../utils/analytics';
 
-// import {IntlProvider} from 'react-intl';
+import {IntlProvider} from 'react-intl';
+
+const messages = {
+	testing: '¿Que?'
+};
 
 let styles = {};
 const App = React.createClass({
@@ -52,8 +56,7 @@ const App = React.createClass({
 		if (!this.props.loginData.get('loggedIn') && this.props.journalData.get('baseSubdomain') !== null) {
 			// If we're not logged in, and on a journal domain (i.e. not www.pubpub.org)...
 			this.testAndRestoreLogin();
-		}
-				
+		}	
 	},
 
 	testAndRestoreLogin: function() {
@@ -129,6 +132,7 @@ const App = React.createClass({
 		};
 
 		return (
+			<IntlProvider locale={'en'} defaultLocale={'en'}>
 			<div style={styles.body}>
 				
 				{
@@ -184,6 +188,7 @@ const App = React.createClass({
 				</div>
 	
 			</div>
+			</IntlProvider>
 		);
 	}
 

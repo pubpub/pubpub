@@ -3,6 +3,7 @@ import Radium from 'radium';
 import {LoaderIndeterminate} from '../';
 import {baseStyles} from './editorModalStyle';
 import {globalStyles} from '../../utils/styleConstants';
+import {FormattedMessage} from 'react-intl';
 
 let styles = {};
 
@@ -62,13 +63,33 @@ const EditorModalPublish = React.createClass({
 
 				{/* Publish Message */}
 				<div style={styles.publishText}>
-					<p style={styles.publishTextP}>You can publish versions to your Pub as frequently as you like.</p> 
-					<p style={styles.publishTextP}>We encourage you to publish early and often.</p> 
-					<p style={styles.publishTextP}>The full history will be maintained and accessible.</p>
+					<p style={styles.publishTextP}>
+						<FormattedMessage 
+							id="editor.publishMessage1"
+							description="Message seen before publishing a pub version"
+							defaultMessage="You can publish versions to your Pub as frequently as you like."/>
+					</p> 
+					<p style={styles.publishTextP}>
+						<FormattedMessage 
+							id="editor.publishMessage2"
+							description="Message seen before publishing a pub version"
+							defaultMessage="We encourage you to publish early and often."/>
+					</p> 
+					<p style={styles.publishTextP}>
+						<FormattedMessage 
+							id="editor.publishMessage3"
+							description="Message seen before publishing a pub version"
+							defaultMessage="The full history will be maintained and accessible."/>
+					</p>
 				</div>
 
-			{/* Publish button */}
-				<div key="publish-button" style={styles.publishButton} onClick={this.handlePublish}>Publish version</div>
+				{/* Publish button */}
+				<div key="publish-button" style={styles.publishButton} onClick={this.handlePublish}>
+					<FormattedMessage 
+						id="editor.publishButton"
+						description="Button to publish a version"
+						defaultMessage="Publish version"/>
+				</div>
 			</div>
 		);
 	}
