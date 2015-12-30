@@ -145,8 +145,6 @@ app.use((req, res) => {
 					        </script>
 							<script src=${mainBundle}></script>
 
-							<!--Only add this iframe if we arent logged in. If we are logged in, but not on the domain, itll log in. Otherwise, itll not send a cookie - and no worries -->
-							<iframe src="http://www.pubpub.org/api/testLogin" style="opacity:0;position:absolute;border:0;height:0;width:0;"></iframe>
 						</body>
 					</html>
 					`)

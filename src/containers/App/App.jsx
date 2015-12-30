@@ -46,6 +46,24 @@ const App = React.createClass({
 
 	componentDidMount() {
 		analytics.pageView(this.props.path, this.props.loginData.get('loggedIn'));
+
+		// Only add this iframe if we arent logged in. If we are logged in, but not on the domain, itll log in. Otherwise, itll not send a cookie - and no worries
+		if (!this.props.loginData.get('loggedIn')) {
+			window.addEventListener( 'message', function(evt) {
+				console.log('evt', evt);
+				if (evt.origin !== 'http://www.pubpub.org') { return; } 
+				console.log(evt.data);
+				document.cookie = evt.data;
+				this.props.dispatch(loadJournalAndLogin());
+				// if success, set cookie and force page to refresh. Only do all this hubaloo if there is no cookie to begin with.
+			}, false);
+
+			const iframe = document.createElement('iframe');
+			iframe.src = 'http://www.pubpub.org/api/testLogin';
+			iframe.style = 'opacity:0;position:absolute;border:0;height:0;width:0;';
+			document.body.appendChild(iframe);
+		}
+		
 	},
 
 	toggleLogin: function() {
@@ -97,7 +115,7 @@ const App = React.createClass({
 
 		return (
 			<div style={styles.body}>
-
+				
 				{
 					// Set the body to not scroll if you have the login window or the mobile menu open
 					this.props.loginData.get('isVisible') || this.props.navData.get('menuOpen') || (this.props.pubData.get('activeModal') !== undefined && this.props.path.indexOf('/pub/') > -1)
