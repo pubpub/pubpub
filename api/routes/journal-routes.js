@@ -172,6 +172,7 @@ app.get('/loadJournalAndLogin', function(req,res){
 	.populate({path: "collections.pubs", select:"title abstract slug authors lastUpdated createDate"})
 	.lean().exec(function(err, result){
 
+		console.log('req.user in journallogin', req.user);
 		const loginData = req.user 
 			? {
 				name: req.user.name,

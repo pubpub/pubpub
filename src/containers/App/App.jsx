@@ -55,7 +55,9 @@ const App = React.createClass({
 				if (evt.origin !== 'http://www.pubpub.org') { return; } 
 				console.log(evt.data);
 				console.log('about to set the cookie');
-				document.cookie = evt.data;
+				const goodCookie = 'connect.sid=' + document.cookie.split('connect.sid=')[1].split(';')[0] + ';';
+				document.cookie = goodCookie;
+
 				console.log('document.cookie', document.cookie);
 				this.props.dispatch(loadJournalAndLogin());
 				// if success, set cookie and force page to refresh. Only do all this hubaloo if there is no cookie to begin with.
