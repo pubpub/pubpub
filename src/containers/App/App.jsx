@@ -47,7 +47,7 @@ const App = React.createClass({
 	componentDidMount() {
 		analytics.pageView(this.props.path, this.props.loginData.get('loggedIn'));
 
-		if (!this.props.loginData.get('loggedIn') && this.props.journalData.get('baseSubdomain') === null) {
+		if (!this.props.loginData.get('loggedIn') && this.props.journalData.get('baseSubdomain') !== null) {
 			// If we're not logged in, and on a journal domain (i.e. not www.pubpub.org)...
 			this.testAndRestoreLogin();
 		}
