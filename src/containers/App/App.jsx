@@ -50,7 +50,7 @@ const App = React.createClass({
 		// Only add this iframe if we arent logged in. If we are logged in, but not on the domain, itll log in. Otherwise, itll not send a cookie - and no worries
 		if (!this.props.loginData.get('loggedIn')) {
 			console.log('gunna try to set the iframe and get the cookie');
-			window.addEventListener( 'message', function(evt) {
+			window.addEventListener( 'message', (evt)=> {
 				console.log('evt', evt);
 				if (evt.origin !== 'http://www.pubpub.org') { return; } 
 				console.log(evt.data);
