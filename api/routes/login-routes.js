@@ -102,14 +102,20 @@ app.post('/register', function(req, res) {
 app.get('/testLogin', function(req,res){
 	// This is used to test if we provide an iFrame with the code to access the login cookie.
 	// We check to make sure the referring domain is within our set of journals. If it is, we share the login cookie, otherwise we send back an empty page
-	// Malicious users embedding the same iFrame in evil.com will get
-	const referDomain = req.get('referrer').split('://')[1].replace('/','');
-	Journal.findOne({ $or:[ {'subdomain':referDomain.split('.')[0]}, {'customDomain':referDomain}]}, {'_id':1}).lean().exec(function(err, journal){
-		if (journal) {
-			return res.status(201).type('.html').send('<div><script type="text/javascript">var loginCookie = null; try {loginCookie = "connect.sid="+document.cookie.split("connect.sid=")[1].split(";")[0]+";";}catch(err){} parent.postMessage(loginCookie, "' + req.get('referrer') + '");</script></div>');		
-		}
-		return res.status(201).send('');
- 	});
+	// Malicious users embedding the same iFrame in evil.com will get an empty response - and no login cookie.
+
+	if (req.get('referrer')) {
+		const referDomain = req.get('referrer').split('://')[1].replace('/','');
+		Journal.findOne({ $or:[ {'subdomain':referDomain.split('.')[0]}, {'customDomain':referDomain}]}, {'_id':1}).lean().exec(function(err, journal){
+			if (journal) {
+				return res.status(201).type('.html').send('<div><script type="text/javascript">var loginCookie = null; try {loginCookie = "connect.sid="+document.cookie.split("connect.sid=")[1].split(";")[0]+";";}catch(err){} parent.postMessage(loginCookie, "' + req.get('referrer') + '");</script></div>');		
+			}
+			return res.status(201).type('.html').send('');
+	 	});
+	} else {
+		return res.status(201).type('.html').send('');
+	}
+	
 });
 
 // import {sendgridUsername, sendgridPassword} from '../authentication/sendgridCredentials';

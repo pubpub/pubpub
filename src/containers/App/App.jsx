@@ -47,34 +47,36 @@ const App = React.createClass({
 	componentDidMount() {
 		analytics.pageView(this.props.path, this.props.loginData.get('loggedIn'));
 
-		// Only add this iframe if we arent logged in. If we are logged in, but not on the domain, itll log in. Otherwise, itll not send a cookie - and no worries
 		if (!this.props.loginData.get('loggedIn')) {
-			// If the user is not logged in. We
-			// 1) Create a listener that will listen to postMessage calls
-			// 2) Create an iframe to pubpub.org to check for a login cookie
-			// 3) On the backend, check to verify that the given domain requesting the login cookie is within our system of journalSubdomain
-			// 4) On verification of referring domain, send down iframe content that will read the cookies and post a message with the login cookie (if available)
-			// A larger scale implementation of a similar approach described by Stack Overflow here: http://meta.stackexchange.com/questions/64260/how-does-sos-new-auto-login-feature-work
-			// About window.postMessage: https://developer.mozilla.org/en-US/docs/Web/API/Window/postMessage
-			
-			// Create the Listener
-			window.addEventListener( 'message', (evt)=> {
-				if (evt.origin !== 'http://www.pubpub.org') { return; } // Only listen to iFrame messages from pubpub.org
-				console.log(evt.data);
-				if (evt.data) {
-					document.cookie = evt.data;
-					this.props.dispatch(loadJournalAndLogin());
-				}
-			}, false);
-
-			// Create the iFrame
-			const iframe = document.createElement('iframe');
-			iframe.src = 'http://www.pubpub.org/api/testLogin';
-			iframe.style.cssText = 'opacity:0;position:absolute;border:0;height:0;width:0;';
-			document.body.appendChild(iframe);
-			
+			this.testAndRestoreLogin();
 		}
 				
+	},
+
+	testAndRestoreLogin: function() {
+		// If the user is not logged in. We
+		// 1) Create a listener that will listen to postMessage calls
+		// 2) Create an iframe to pubpub.org to check for a login cookie
+		// 3) On the backend, check to verify that the given domain requesting the login cookie is within our system of journalSubdomain
+		// 4) On verification of referring domain, send down iframe content that will read the cookies and post a message with the login cookie (if available)
+		// A larger scale implementation of a similar approach described by Stack Overflow here: http://meta.stackexchange.com/questions/64260/how-does-sos-new-auto-login-feature-work
+		// About window.postMessage: https://developer.mozilla.org/en-US/docs/Web/API/Window/postMessage
+
+		// Create the Listener
+		window.addEventListener( 'message', (evt)=> {
+			if (evt.origin !== 'http://www.pubpub.org') { return; } // Only listen to iFrame messages from pubpub.org
+			console.log(evt.data);
+			if (evt.data) {
+				document.cookie = evt.data;
+				this.props.dispatch(loadJournalAndLogin());
+			}
+		}, false);
+
+		// Create the iFrame
+		const iframe = document.createElement('iframe');
+		iframe.src = 'http://www.pubpub.org/api/testLogin';
+		iframe.style.cssText = 'opacity:0;position:absolute;border:0;height:0;width:0;';
+		document.body.appendChild(iframe);
 	},
 
 	toggleLogin: function() {
