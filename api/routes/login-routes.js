@@ -103,7 +103,7 @@ app.get('/testLogin', function(req,res){
 	// This is used to test if we provide an iFrame with the code to access the login cookie.
 	// We check to make sure the referring domain is within our set of journals. If it is, we share the login cookie, otherwise we send back an empty page
 	// Malicious users embedding the same iFrame in evil.com will get an empty response - and no login cookie.
-
+	console.log(req);
 	if (req.get('referrer')) {
 		const referDomain = req.get('referrer').split('://')[1].replace('/','');
 		Journal.findOne({ $or:[ {'subdomain':referDomain.split('.')[0]}, {'customDomain':referDomain}]}, {'_id':1}).lean().exec(function(err, journal){
