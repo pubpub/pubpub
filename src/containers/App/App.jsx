@@ -55,7 +55,7 @@ const App = React.createClass({
 				if (evt.origin !== 'http://www.pubpub.org') { return; } 
 				console.log(evt.data);
 				console.log('about to set the cookie');
-				const goodCookie = 'connect.sid=' + document.cookie.split('connect.sid=')[1].split(';')[0] + ';';
+				const goodCookie = 'connect.sid=' + evt.data.split('connect.sid=')[1].split(';')[0] + ';';
 				document.cookie = goodCookie;
 
 				console.log('document.cookie', document.cookie);
