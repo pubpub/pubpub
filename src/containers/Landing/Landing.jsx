@@ -159,7 +159,7 @@ const Landing = React.createClass({
 							<div style={styles.footer}>
 								<span style={styles.footerItem} key={'footerItem' + 0}><Link to={'/about'} style={globalStyles.link}>About PubPub</Link></span>
 								<span style={styles.footerSeparator}>|</span>
-								<span style={styles.footerItem} key={'footerItem' + 1}><a target="_blank" style={globalStyles.link} href="http://www.twitter.com/_pubpub">@_pubpub</a></span>
+								<span style={styles.footerItem} key={'footerItem' + 1}><a target="_blank" style={globalStyles.link} href="http://www.twitter.com/isPubPub">@isPubPub</a></span>
 								<span style={styles.footerSeparator}>|</span>
 								<span style={styles.footerItem} key={'footerItem' + 2}><a target="_blank" style={globalStyles.link} href="http://eepurl.com/bLkuVn">Stay up to date</a></span>
 								<span style={styles.footerSeparator}>|</span>

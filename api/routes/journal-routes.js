@@ -309,12 +309,16 @@ app.post('/saveCollection', function(req,res){
 });
 
 app.get('/testLogin', function(req,res){
-	Journal.findOne({ $or:[ {'subdomain':req.get('host').split('.')[0]}, {'customDomain':req.get('host')}]}, {'_id':1}).lean().exec(function(err, journal){
+	console.log('req', req);
+	console.log('got host', req.get('host'));
+	console.log('got referrer', req.get('referrer'));
+	Journal.findOne({ $or:[ {'subdomain':req.get('referrer').split('.')[0]}, {'customDomain':req.get('referrer')}]}, {'_id':1}).lean().exec(function(err, journal){
 		console.log(journal);
 		if (!journal) {
 			return res.status(201).send('');
 		} else {
-			return res.status(201).type('.html').send('<div><h1>iFrame Window</h1><script type="text/javascript">function readCookie() {return document.cookie;}console.log("in the iframe, about to send", readCookie());console.log("parent is", parent);parent.postMessage(readCookie(), "' + req.get('host') + '");</script></div>')		
+
+			return res.status(201).type('.html').send('<div><h1>iFrame Window</h1><script type="text/javascript">function readCookie() {return document.cookie;}console.log("in the iframe, about to send", readCookie());console.log("parent is", parent);parent.postMessage(readCookie(), "' + req.get('referrer') + '");</script></div>')		
 		}
  	});
 	
