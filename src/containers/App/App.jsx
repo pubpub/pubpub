@@ -12,6 +12,8 @@ import {HeaderNav, HeaderMenu} from '../../components';
 import {globalStyles} from '../../utils/styleConstants';
 import analytics from '../../utils/analytics';
 
+// import {IntlProvider} from 'react-intl';
+
 let styles = {};
 const App = React.createClass({
 	propTypes: {
