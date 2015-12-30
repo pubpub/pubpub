@@ -114,6 +114,7 @@ app.use((req, res) => {
 							<meta charSet="utf-8"/>
 							<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 							<meta name="google-site-verification" content="jmmJFnkSOeIEuS54adOzGMwc0kwpsa8wQ-L4GyPpPDg" />
+							<meta name="referrer" content="always">
 							${DocumentMeta.renderAsHTML()}
 							<link rel="shortcut icon" href="/favicon.ico" />
 							<link href='https://fonts.googleapis.com/css?family=Lato:300,900,900italic|Lora:400,700' rel='stylesheet' type='text/css' />
