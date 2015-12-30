@@ -49,19 +49,24 @@ const App = React.createClass({
 
 		// Only add this iframe if we arent logged in. If we are logged in, but not on the domain, itll log in. Otherwise, itll not send a cookie - and no worries
 		if (!this.props.loginData.get('loggedIn')) {
+			console.log('gunna try to set the iframe and get the cookie')
 			window.addEventListener( 'message', function(evt) {
 				console.log('evt', evt);
 				if (evt.origin !== 'http://www.pubpub.org') { return; } 
 				console.log(evt.data);
+				console.log('about to set the cookie');
 				document.cookie = evt.data;
+				console.log('document.cookie', document.cookie);
 				this.props.dispatch(loadJournalAndLogin());
 				// if success, set cookie and force page to refresh. Only do all this hubaloo if there is no cookie to begin with.
 			}, false);
 
+			console.log('about to create the iframe');
 			const iframe = document.createElement('iframe');
 			iframe.src = 'http://www.pubpub.org/api/testLogin';
 			iframe.style = 'opacity:0;position:absolute;border:0;height:0;width:0;';
 			document.body.appendChild(iframe);
+			console.log('created the iframe');
 		}
 		
 	},
