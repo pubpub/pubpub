@@ -66,7 +66,6 @@ const App = React.createClass({
 		// Create the Listener
 		window.addEventListener( 'message', (evt)=> {
 			if (evt.origin !== 'http://www.pubpub.org') { return; } // Only listen to iFrame messages from pubpub.org
-			console.log(evt.data);
 			if (evt.data) {
 				document.cookie = evt.data;
 				this.props.dispatch(loadJournalAndLogin());
