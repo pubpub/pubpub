@@ -49,7 +49,7 @@ const App = React.createClass({
 
 		// Only add this iframe if we arent logged in. If we are logged in, but not on the domain, itll log in. Otherwise, itll not send a cookie - and no worries
 		if (!this.props.loginData.get('loggedIn')) {
-			console.log('gunna try to set the iframe and get the cookie')
+			console.log('gunna try to set the iframe and get the cookie');
 			window.addEventListener( 'message', function(evt) {
 				console.log('evt', evt);
 				if (evt.origin !== 'http://www.pubpub.org') { return; } 
@@ -64,11 +64,12 @@ const App = React.createClass({
 			console.log('about to create the iframe');
 			const iframe = document.createElement('iframe');
 			iframe.src = 'http://www.pubpub.org/api/testLogin';
-			iframe.style = 'opacity:0;position:absolute;border:0;height:0;width:0;';
+			iframe.style.cssText = 'opacity:0;position:absolute;border:0;height:0;width:0;';
 			document.body.appendChild(iframe);
 			console.log('created the iframe');
+			
 		}
-		
+				
 	},
 
 	toggleLogin: function() {
