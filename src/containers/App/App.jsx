@@ -49,26 +49,27 @@ const App = React.createClass({
 
 		// Only add this iframe if we arent logged in. If we are logged in, but not on the domain, itll log in. Otherwise, itll not send a cookie - and no worries
 		if (!this.props.loginData.get('loggedIn')) {
-			console.log('gunna try to set the iframe and get the cookie');
-			window.addEventListener( 'message', (evt)=> {
-				console.log('evt', evt);
-				if (evt.origin !== 'http://www.pubpub.org') { return; } 
-				console.log(evt.data);
-				console.log('about to set the cookie');
-				const goodCookie = 'connect.sid=' + evt.data.split('connect.sid=')[1].split(';')[0] + ';';
-				document.cookie = goodCookie;
+			// If the user is not logged in. We
+			// 1) Create a listener that will listen to postMessage calls
+			// 2) Create an iframe to pubpub.org to check for a login cookie
+			// 3) On the backend, check to verify that the given domain requesting the login cookie is within our system of journalSubdomain
+			// 4) On verification of referring domain, send down iframe content that will read the cookies and post a message with the login cookie (if available)
 
-				console.log('document.cookie', document.cookie);
-				this.props.dispatch(loadJournalAndLogin());
-				// if success, set cookie and force page to refresh. Only do all this hubaloo if there is no cookie to begin with.
+			// Create the Listener
+			window.addEventListener( 'message', (evt)=> {
+				if (evt.origin !== 'http://www.pubpub.org') { return; } // Only listen to iFrame messages from pubpub.org
+				console.log(evt.data);
+				if (evt.data) {
+					document.cookie = evt.data;
+					this.props.dispatch(loadJournalAndLogin());
+				}
 			}, false);
 
-			console.log('about to create the iframe');
+			// Create the iFrame
 			const iframe = document.createElement('iframe');
 			iframe.src = 'http://www.pubpub.org/api/testLogin';
 			iframe.style.cssText = 'opacity:0;position:absolute;border:0;height:0;width:0;';
 			document.body.appendChild(iframe);
-			console.log('created the iframe');
 			
 		}
 				

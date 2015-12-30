@@ -144,7 +144,6 @@ app.use((req, res) => {
 					          window.__INITIAL_STATE__ = ${JSON.stringify(store.getState())}
 					        </script>
 							<script src=${mainBundle}></script>
-
 						</body>
 					</html>
 					`)

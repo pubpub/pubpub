@@ -172,7 +172,6 @@ app.get('/loadJournalAndLogin', function(req,res){
 	.populate({path: "collections.pubs", select:"title abstract slug authors lastUpdated createDate"})
 	.lean().exec(function(err, result){
 
-		console.log('req.user in journallogin', req.user);
 		const loginData = req.user 
 			? {
 				name: req.user.name,
@@ -307,22 +306,4 @@ app.post('/saveCollection', function(req,res){
 		}
 
 	});
-});
-
-app.get('/testLogin', function(req,res){
-	console.log('req', req);
-	console.log('got host', req.get('host'));
-	console.log('got referrer', req.get('referrer'));
-	const referDomain = req.get('referrer').split('://')[1].replace('/','');
-	console.log('referDomain', referDomain);
-	Journal.findOne({ $or:[ {'subdomain':referDomain.split('.')[0]}, {'customDomain':referDomain}]}, {'_id':1}).lean().exec(function(err, journal){
-		console.log(journal);
-		if (!journal) {
-			return res.status(201).send('');
-		} else {
-
-			return res.status(201).type('.html').send('<div><h1>iFrame Window</h1><script type="text/javascript">function readCookie() {return document.cookie;}console.log("in the iframe, about to send", readCookie());console.log("parent is", parent);parent.postMessage(readCookie(), "' + req.get('referrer') + '");</script></div>')		
-		}
- 	});
-	
 });
