@@ -312,7 +312,9 @@ app.get('/testLogin', function(req,res){
 	console.log('req', req);
 	console.log('got host', req.get('host'));
 	console.log('got referrer', req.get('referrer'));
-	Journal.findOne({ $or:[ {'subdomain':req.get('referrer').split('.')[0]}, {'customDomain':req.get('referrer')}]}, {'_id':1}).lean().exec(function(err, journal){
+	const referDomain = req.get('referrer').split('://')[1].replace('/','');
+	console.log('referDomain', referDomain);
+	Journal.findOne({ $or:[ {'subdomain':referDomain.split('.')[0]}, {'customDomain':referDomain}]}, {'_id':1}).lean().exec(function(err, journal){
 		console.log(journal);
 		if (!journal) {
 			return res.status(201).send('');
