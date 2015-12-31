@@ -4,6 +4,9 @@ import { Link } from 'react-router';
 import {globalStyles} from '../../utils/styleConstants';
 import {rightBarStyles} from '../../containers/PubReader/rightBarStyles';
 
+import {globalMessages} from '../../utils/globalMessages';
+import {FormattedMessage} from 'react-intl';
+
 let styles = {};
 
 const PubStatus = React.createClass({
@@ -28,20 +31,33 @@ const PubStatus = React.createClass({
 			<div style={styles.container}>
 				
 				<div className="pub-status-wrapper" style={rightBarStyles.sectionWrapper}>
-					<div style={rightBarStyles.sectionHeader}><span style={styles.headerPrefix}>Status:</span> {this.props.pubStatus === 'Draft' ? 'Draft' : 'Peer-Review Ready'}</div>
+					<div style={rightBarStyles.sectionHeader}><span style={styles.headerPrefix}>
+							<FormattedMessage id="pub.Status" defaultMessage="Status"/>:{' '}
+						</span> 
+						{this.props.pubStatus === 'Draft' 
+							? <FormattedMessage {...globalMessages.Draft} />
+							: <FormattedMessage {...globalMessages.ReadyForPeerReview} />
+						}
+					</div>
 					<div style={rightBarStyles.sectionSubHeader}>
 						<Link to={'/pub/' + this.props.slug + '/journals'} style={globalStyles.link}>
 							<div key={'statusButton1'} style={rightBarStyles.sectionSubHeaderSpan}>
-								Featured in {this.props.featuredInList.length} Journals 
+								<FormattedMessage
+									id="pub.featuredInX"
+									defaultMessage="Featured in {number} Journals "
+									values={{number: this.props.featuredInList.length}}/>
 								|
-								Submitted to {this.props.submittedToList.length} Journals
+								<FormattedMessage
+									id="pub.submittedToX"
+									defaultMessage="Submitted to {number} Journals "
+									values={{number: this.props.submittedToList.length}}/>
 							</div>
 						</Link>
 						{
 							this.props.isAuthor 
 								? <Link to={'/pub/' + this.props.slug + '/journals'} style={globalStyles.link}>
 									<div key={'statusButton2'} style={rightBarStyles.sectionSubHeaderSpan}>
-										Submit to New Journal
+									<FormattedMessage id="pub.submitToNew" defaultMessage="Submit to New Journal"/>
 									</div>
 								</Link>
 								: null

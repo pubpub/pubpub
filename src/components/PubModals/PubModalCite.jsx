@@ -3,6 +3,9 @@ import Radium from 'radium';
 import {baseStyles} from './pubModalStyle';
 // import {globalStyles} from '../../utils/styleConstants';
 
+import {globalMessages} from '../../utils/globalMessages';
+import {FormattedMessage} from 'react-intl';
+
 let styles = {};
 
 const PubModalCite = React.createClass({
@@ -32,7 +35,9 @@ const PubModalCite = React.createClass({
 
 				{/* TODO: use the <Reference/> component for the styling. Just gotta make the citation object first. */}
 
-				<div style={baseStyles.pubModalTitle}>Cite</div>
+				<div style={baseStyles.pubModalTitle}>
+					<FormattedMessage {...globalMessages.cite} />
+				</div>
 				<div style={baseStyles.pubModalContentWrapper}>
 
 					<div style={styles.typeTitle}>Bibtex</div>

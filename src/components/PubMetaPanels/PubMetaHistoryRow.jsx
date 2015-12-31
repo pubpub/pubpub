@@ -4,6 +4,7 @@ import dateFormat from 'dateformat';
 import { Link } from 'react-router';
 // import {globalStyles} from '../../utils/styleConstants';
 
+import {globalMessages} from '../../utils/globalMessages';
 import {FormattedMessage} from 'react-intl';
 
 let styles = {};
@@ -34,7 +35,7 @@ const PubMetaHistoryRow = React.createClass({
 						<span style={styles.versionNumber}>{this.props.index + 1}.</span>
 						<span style={styles.versionStatus}>{this.props.historyItem.status === 'Draft' 
 							? <FormattedMessage id="pub.draftVersion" defaultMessage="Draft Version"/>
-							: <FormattedMessage id="pub.readyForReview" defaultMessage="Ready for Peer Review"/>
+							: <FormattedMessage {...globalMessages.ReadyForPeerReview} />
 						}</span>
 						<span style={styles.versionDate}>{dateFormat(this.props.historyItem.publishDate, 'mm/dd/yy, h:MMTT')}</span>
 					</div>

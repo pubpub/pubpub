@@ -2,6 +2,9 @@ import React, { PropTypes } from 'react';
 import Radium from 'radium';
 // import {globalStyles} from '../../utils/styleConstants';
 
+import {globalMessages} from '../../utils/globalMessages';
+import {FormattedMessage} from 'react-intl';
+
 let styles = {};
 
 const PubMetaSource = React.createClass({
@@ -32,7 +35,9 @@ const PubMetaSource = React.createClass({
 							if (this.props.historyObject[key].length) {
 								return (
 									<div key={'historyObject-' + itemIndex} style={styles.historyContentWrapper}>
-										<div style={styles.historyTitle}>{key}</div>
+										<div style={styles.historyTitle}>
+											<FormattedMessage {...globalMessages[key]} />
+										</div>
 										<div style={styles.historyContent} spellCheck="false">{this.props.historyObject[key]}</div>
 									</div>
 								);	

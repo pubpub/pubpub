@@ -4,6 +4,9 @@ import {baseStyles} from './pubModalStyle';
 import PubModalTOCRow from './PubModalTOCRow';
 // import {globalStyles} from '../../utils/styleConstants';
 
+import {globalMessages} from '../../utils/globalMessages';
+import {FormattedMessage} from 'react-intl';
+
 // let styles = {};
 
 const PubModalTOC = React.createClass({
@@ -32,7 +35,9 @@ const PubModalTOC = React.createClass({
 		return (
 			<div style={baseStyles.pubModalContainer}>
 
-				<div style={baseStyles.pubModalTitle}>Table of Contents</div>
+				<div style={baseStyles.pubModalTitle}>
+					<FormattedMessage {...globalMessages.tableOfContents} />
+				</div>
 				<div style={baseStyles.pubModalContentWrapper}>
 					{()=>{
 

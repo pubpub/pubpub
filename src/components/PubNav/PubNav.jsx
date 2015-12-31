@@ -3,6 +3,9 @@ import Radium from 'radium';
 import { Link } from 'react-router';
 import {globalStyles} from '../../utils/styleConstants';
 
+import {globalMessages} from '../../utils/globalMessages';
+import {FormattedMessage} from 'react-intl';
+
 let styles = {};
 
 const PubNav = React.createClass({
@@ -35,29 +38,45 @@ const PubNav = React.createClass({
 				{
 					this.props.meta 
 						? <ul style={[styles.pubNav, globalStyles[this.props.status]]}>
-							<Link to={'/pub/' + this.props.slug + versionURL}><li key="pubNav8"style={[styles.pubNavItem, styles.pubNavRight]}>Read Pub</li></Link>
+							<Link to={'/pub/' + this.props.slug + versionURL}><li key="pubNav8"style={[styles.pubNavItem, styles.pubNavRight]}>
+								<FormattedMessage id="pub.readPub" defaultMessage="Read Pub"/>
+							</li></Link>
 							<li style={[styles.pubNavSeparator, styles.pubNavMobileOnly, styles.pubNavRight]}></li>
 						</ul>
 
 						: <ul style={[styles.pubNav, globalStyles[this.props.status]]}>
 
-							<li key="pubNav0"style={[styles.pubNavItem, styles.pubNavDesktopOnly]} onClick={this.props.openPubModalHandler('tableOfContents')}>Table of Contents</li>
+							<li key="pubNav0"style={[styles.pubNavItem, styles.pubNavDesktopOnly]} onClick={this.props.openPubModalHandler('tableOfContents')}>
+								<FormattedMessage {...globalMessages.tableOfContents} />
+							</li>
 							<li style={[styles.pubNavSeparator, styles.pubNavDesktopOnly]}></li>
-							<li key="pubNav3"style={[styles.pubNavItem, styles.pubNavDesktopOnly]} onClick={this.handlePrint}>Print</li>
+							<li key="pubNav3"style={[styles.pubNavItem, styles.pubNavDesktopOnly]} onClick={this.handlePrint}>
+								<FormattedMessage {...globalMessages.print} />
+							</li>
 							<li style={[styles.pubNavSeparator, styles.pubNavDesktopOnly]}></li>
-							<li key="pubNav4"style={[styles.pubNavItem, styles.pubNavDesktopOnly]} onClick={this.props.openPubModalHandler('cite')}>Cite</li>
+							<li key="pubNav4"style={[styles.pubNavItem, styles.pubNavDesktopOnly]} onClick={this.props.openPubModalHandler('cite')}>
+								<FormattedMessage {...globalMessages.cite} />
+							</li>
 
 
-							<Link to={'/pub/' + this.props.slug + '/edit'}><li key="pubNav7"style={[styles.pubNavItem, styles.pubNavRight, styles.pubNavDesktopOnly, styles.pubNavAuthorOnly, styles.pubAuthor[this.props.isAuthor]]}>Edit Pub</li></Link>
+							<Link to={'/pub/' + this.props.slug + '/edit'}><li key="pubNav7"style={[styles.pubNavItem, styles.pubNavRight, styles.pubNavDesktopOnly, styles.pubNavAuthorOnly, styles.pubAuthor[this.props.isAuthor]]}>
+								<FormattedMessage id="pub.editPub" defaultMessage="Edit Pub"/>
+							</li></Link>
 							<li style={[styles.pubNavSeparator, styles.pubNavRight, styles.pubNavDesktopOnly, styles.pubNavAuthorOnly, styles.pubAuthor[this.props.isAuthor]]}></li>
 
-							<li key="pubNav5"style={[styles.pubNavItem, styles.pubNavRight, styles.pubNavMobileOnly]} onClick={this.props.openPubModalHandler('discussions')}>Discussions</li>
+							<li key="pubNav5"style={[styles.pubNavItem, styles.pubNavRight, styles.pubNavMobileOnly]} onClick={this.props.openPubModalHandler('discussions')}>
+								<FormattedMessage {...globalMessages.discussions} />
+							</li>
 							<li style={[styles.pubNavSeparator, styles.pubNavMobileOnly, styles.pubNavRight]}></li>
 							
-							<li key="pubNav6"style={[styles.pubNavItem, styles.pubNavRight, styles.pubNavMobileOnly, this.props.pubStatus === 'Draft' && styles.draftNav]} onClick={this.props.pubStatus !== 'Draft' ? this.props.openPubModalHandler('reviews') : null}>{this.props.pubStatus === 'Draft' ? 'Draft' : 'Reviews'}</li>
+							<li key="pubNav6"style={[styles.pubNavItem, styles.pubNavRight, styles.pubNavMobileOnly, this.props.pubStatus === 'Draft' && styles.draftNav]} onClick={this.props.pubStatus !== 'Draft' ? this.props.openPubModalHandler('reviews') : null}>
+								{this.props.pubStatus === 'Draft' ? <FormattedMessage {...globalMessages.Draft} /> : ''}
+							</li>
 							<li style={[styles.pubNavSeparator, styles.pubNavMobileOnly, styles.pubNavRight]}></li>
 
-							<li key="pubNav8"style={[styles.pubNavItem, styles.pubNavRight]}>Follow</li>
+							<li key="pubNav8"style={[styles.pubNavItem, styles.pubNavRight]}>
+								<FormattedMessage {...globalMessages.follow} />
+							</li>
 							
 						</ul>
 				}

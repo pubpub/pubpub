@@ -67,13 +67,11 @@ const EditorModalPublish = React.createClass({
 					</div>
 					<div style={styles.optionChoices}>
 						<span key={'publishModal-draft'} onClick={this.handleStateClick('Draft')} style={[styles.option, this.state.versionState === 'Draft' && styles.optionActive]}>
-							<FormattedMessage {...globalMessages.draft} />
+							<FormattedMessage {...globalMessages.Draft} />
 						</span>
 						<span style={styles.optionSeparator}>|</span> 
 						<span key={'publishModal-journal'} onClick={this.handleStateClick('PeerReviewReady')} style={[styles.option, this.state.versionState === 'PeerReviewReady' && styles.optionActive]}>
-							<FormattedMessage 
-								id="editor.readyForReview"
-								defaultMessage="ready for peer-review"/>
+							<FormattedMessage {...globalMessages.ReadyForPeerReview} />
 						</span>
 					</div>
 				</div>

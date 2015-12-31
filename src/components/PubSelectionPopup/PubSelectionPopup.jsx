@@ -2,6 +2,8 @@ import React, {PropTypes} from 'react';
 import Radium from 'radium';
 import {globalStyles} from '../../utils/styleConstants';
 
+import {FormattedMessage} from 'react-intl';
+
 import {isDescendantOfP, getAncestorText} from './selectionFunctions';
 import SHA1 from 'crypto-js/sha1';
 import encHex from 'crypto-js/enc-hex';
@@ -121,7 +123,9 @@ const PubSelectionPopup = React.createClass({
 			<div id="plugin-popup" className="plugin-popup" style={[styles.pluginPopup, this.getPluginPopupLoc(), this.state.popupVisible && styles.pluginPopupVisible]}>
 				<div style={styles.pluginPopupArrow}></div>
 				<div style={styles.pluginContent}>
-					<div key={'addToComment Button'} style={styles.button} onClick={this.onHighlightSave}>Add to Comment</div>
+					<div key={'addToComment Button'} style={styles.button} onClick={this.onHighlightSave}>
+						<FormattedMessage id="pub.addToComment" defaultMessage="Add to Comment"/>
+					</div>
 				</div>
 			</div>
 		);
