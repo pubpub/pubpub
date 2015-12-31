@@ -16,7 +16,8 @@ const compileTranslations = function() {
     .reduce((collection, descriptors) => {
         descriptors.forEach(({id, defaultMessage}) => {
             if (collection.hasOwnProperty(id)) {
-                throw new Error(`Duplicate message id: ${id}`);
+                // throw new Error(`Duplicate message id: ${id}`);
+                console.log('Warning: Duplicate message id:', id);
             }
 
             collection[id] = defaultMessage;

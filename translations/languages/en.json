@@ -2,5 +2,6 @@
   "editor.publishMessage1": "You can publish versions to your Pub as frequently as you like.",
   "editor.publishMessage2": "We encourage you to publish early and often.",
   "editor.publishMessage3": "The full history will be maintained and accessible.",
-  "editor.publishButton": "Publish version"
+  "editor.publishButton": "Publish version",
+  "global.login": "Login2"
 }
