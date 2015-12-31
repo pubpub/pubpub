@@ -20,7 +20,13 @@ if (__DEVELOPMENT__) {
 		return;
 	}
 } else {
-	require('newrelic');
+	try{
+		require('newrelic');	
+	} catch (err) {
+		console.log('New Relic failed to initialize.');
+		console.log('err', err);
+	}
+	
 }
 
 var translate = require('./translate');
