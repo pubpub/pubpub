@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react';
 import {connect} from 'react-redux';
-import Radium from 'radium';
+import Radium, {Style} from 'radium';
 import {LoaderIndeterminate} from '../../components';
 import {complete, completeFromCache, clear} from '../../actions/autocomplete';
 
@@ -18,9 +18,12 @@ const Autocomplete = React.createClass({
 		placeholder: PropTypes.string,
 		textAlign: PropTypes.string,
 		showBottomLine: PropTypes.bool,
+		bottomLineColor: PropTypes.string,
 		hideResultsOnClickOut: PropTypes.bool,
 		padding: PropTypes.string,
-		loaderOffset: PropTypes.number
+		loaderOffset: PropTypes.number,
+		fontColor: PropTypes.string,
+		searchPlaceholderColor: PropTypes.string,
 	},
 
 	getDefaultProps: function() {
@@ -84,11 +87,13 @@ const Autocomplete = React.createClass({
 	},
 
 	inputStyle: function() {
+		const borderColor = this.props.bottomLineColor ? this.props.bottomLineColor : '#aaa';
 		return {
 			textAlign: this.props.textAlign,
 			height: (this.props.height - 3),
 			fontSize: (this.props.height - 10),
-			borderColor: this.props.showBottomLine ? '#aaa' : 'transparent',
+			borderColor: this.props.showBottomLine ? borderColor : 'transparent',
+			color: this.props.fontColor,
 		};
 	},
 
@@ -103,10 +108,25 @@ const Autocomplete = React.createClass({
 		if (this.props.autocompleteData.get(this.props.autocompleteKey) !== undefined) {
 			resultData = this.props.autocompleteData.get(this.props.autocompleteKey).toJS();
 		}
-
 		return (
 			<div style={[styles.container, this.containerStyle()]} id="autocompleteMenu">
-				<input type="text" 
+
+				<Style rules={{
+					'#autocomplete-input::-webkit-input-placeholder': {
+						color: this.props.searchPlaceholderColor
+					},
+					'#autocomplete-input:-moz-placeholder': {
+						color: this.props.searchPlaceholderColor
+					},
+					'#autocomplete-input::-moz-placeholder': {
+						color: this.props.searchPlaceholderColor
+					},
+					'#autocomplete-input:-ms-input-placeholder': {
+						color: this.props.searchPlaceholderColor
+					},
+				}} />
+
+				<input id={'autocomplete-input'} type="text" 
 					placeholder={this.props.placeholder} 
 					style={[styles.input, this.inputStyle()]} 
 					onChange={this.handleOnChange} 

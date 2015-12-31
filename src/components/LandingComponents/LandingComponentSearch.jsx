@@ -14,8 +14,11 @@ const LandingComponentSearch = React.createClass({
 	propTypes: {
 		style: PropTypes.object,
 		showBottomLine: PropTypes.bool,
+		bottomLineColor: PropTypes.string,
 		placeholder: PropTypes.string,
-		resultBackgroundColor: PropTypes.string
+		resultBackgroundColor: PropTypes.string,
+		searchFontColor: PropTypes.string,
+		searchPlaceholderColor: PropTypes.string,
 	},
 
 	renderLandingSearchResults: function(results) {
@@ -34,7 +37,7 @@ const LandingComponentSearch = React.createClass({
 									<img style={styles.image} src={item.thumbnail} />
 								</div>
 								<div style={styles.name}>{item.name}</div>
-								<div style={styles.name}>{item.title}</div>
+								<div style={styles.title}>{item.title}</div>
 							</HoverLink>
 
 						</div>);	
@@ -63,7 +66,10 @@ const LandingComponentSearch = React.createClass({
 					hideResultsOnClickOut={false}
 					resultRenderFunction={this.renderLandingSearchResults}
 					loaderOffset={-20}
-					padding={'10px 0px'}/>
+					padding={'10px 0px'}
+					fontColor={this.props.searchFontColor}
+					bottomLineColor={this.props.bottomLineColor}
+					searchPlaceholderColor={this.props.searchPlaceholderColor}/>
 			</div>
 		);
 	}
@@ -110,7 +116,7 @@ styles = {
 		fontSize: '15px',
 		fontFamily: 'Courier',
 		lineHeight: '40px',
-		padding: '0px 25px 0px 0px',
+		padding: '0px 10px',
 		color: globalStyles.veryLight,
 	},
 	name: {
@@ -118,6 +124,20 @@ styles = {
 		fontSize: '20px',
 		lineHeight: '40px',
 		padding: '0px 10px 0px 0px',
+		width: 'calc(100% - 60px - 40px - 10px - 10px)',
+		whiteSpace: 'nowrap',
+		overflow: 'hidden',
+		textOverflow: 'ellipsis',
+	},
+	title: {
+		float: 'left',
+		fontSize: '20px',
+		lineHeight: '40px',
+		padding: '0px 10px 0px 0px',
+		width: 'calc(100% - 60px - 10px)',
+		whiteSpace: 'nowrap',
+		overflow: 'hidden',
+		textOverflow: 'ellipsis',
 	},
 	noResults: {
 		fontSize: '25px',
@@ -129,6 +149,7 @@ styles = {
 		display: 'inline-block',
 		height: '100%',
 		color: globalStyles.sideText,
+		width: '100%',
 		':hover': {
 			color: globalStyles.sideHover,
 		},

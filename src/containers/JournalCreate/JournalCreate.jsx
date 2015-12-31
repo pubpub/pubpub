@@ -28,7 +28,7 @@ const Login = React.createClass({
 
 	componentWillReceiveProps: function(nextProps) {
 		if (nextProps.journalData.getIn(['createJournalData', 'subdomain'])) {
-			window.location = 'http://' + nextProps.journalData.getIn(['createJournalData', 'subdomain']) + '.' + window.location.host + '/journal/' + nextProps.journalData.getIn(['createJournalData', 'subdomain']);
+			window.location = 'http://' + nextProps.journalData.getIn(['createJournalData', 'subdomain']) + '.' + window.location.host.replace('www.', '') + '/journal/' + nextProps.journalData.getIn(['createJournalData', 'subdomain']);
 		}
 		this.setState({ errorMessage: nextProps.journalData.getIn(['createJournalData', 'error']) });
 	},

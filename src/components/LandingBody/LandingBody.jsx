@@ -41,7 +41,10 @@ const LandingBody = React.createClass({
 									showBottomLine={component.showBottomLine}
 									placeholder={component.placeholder}
 									resultBackgroundColor={component.resultBackgroundColor}
-									style={component.style} />
+									style={component.style} 
+									searchFontColor={component.searchFontColor}
+									searchPlaceholderColor={component.searchPlaceholderColor}
+									bottomLineColor={component.bottomLineColor}/>
 							);
 						case 'collectionList': 
 							return (
