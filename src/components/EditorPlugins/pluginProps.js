@@ -43,9 +43,10 @@ export const srcRef = {
 	},
 	component: function(pluginProp, value, props, styles) {
 		const title = pluginProp.title;
-		const refs = (props.references) ? Object.values(props.references).map( function(ref) { return {'value': ref.refName, 'label': ref.refName + ' ' + ref.title};}) : [];
+		// const refs = (props.references) ? Object.values(props.references).map( function(ref) { return {'value': ref.refName, 'label': ref.refName + ' ' + ref.title};}) : [];
+		const refs = (props.references) ? Object.values(props.references).map( function(ref) { return {'value': ref.refName, 'label': ref.refName};}) : [];
 		// assets.push({'value': 'upload', 'label': 'Upload New'});
-		const val = (value) ? {'value': value, 'label': value } : undefined;
+		const val = (value) ? {'value': value, 'label': value } : {};
 
 		const onValueChange = function(changedValue, callback) {
 			callback();
