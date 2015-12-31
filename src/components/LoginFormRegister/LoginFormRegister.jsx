@@ -39,13 +39,13 @@ const LoginFormRegister = React.createClass({
 					<label style={styles.label}>
 						<FormattedMessage {...globalMessages.Email} />
 					</label>
-					<input style={styles.input} key="registerEmail" type="text" placeholder={this.props.intl.formatMessage(global.Email)} {...email}/>
+					<input style={styles.input} key="registerEmail" type="text" placeholder={this.props.intl.formatMessage(globalMessages.Email)} {...email}/>
 				</div>
 				<div>
 					<label style={styles.label}>
 						<FormattedMessage {...globalMessages.Password} />
 					</label>
-					<input style={styles.input} key="registerpassword" type="password" placeholder={this.props.intl.formatMessage(global.Password)} {...password}/>
+					<input style={styles.input} key="registerpassword" type="password" placeholder={this.props.intl.formatMessage(globalMessages.Password)} {...password}/>
 				</div>
 				<div>
 					<label style={styles.label}>

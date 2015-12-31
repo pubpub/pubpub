@@ -6,6 +6,9 @@ import {toggleVisibility, toggleViewMode, login, register} from '../../actions/l
 import {ImageCropper, LoaderIndeterminate, LoginForm, LoginFormRegister} from '../../components';
 import {globalStyles} from '../../utils/styleConstants';
 
+import {globalMessages} from '../../utils/globalMessages';
+import {FormattedMessage} from 'react-intl';
+
 let styles = {};
 
 const Login = React.createClass({
@@ -72,21 +75,23 @@ const Login = React.createClass({
 				this.props.loginData.get('isVisible') && styles.visible
 			]}>			
 
-				<div key="loginCancel" style={styles.cancel} onClick={this.toggleLogin}>Cancel</div>
+				<div key="loginCancel" style={styles.cancel} onClick={this.toggleLogin}>
+					<FormattedMessage {...globalMessages.cancel} />
+				</div>
 				<div style={styles.loaderContainer}>
 					{(this.props.loginData.get('loggingIn') === true ? <LoaderIndeterminate color="white"/> : null)}
 				</div>
 				<div style={[styles.formWrapper, this.props.loginData.get('isVisible') && styles.formWrapperVisible]}>
 					<div key="loginTitle" style={styles.title}>
-						{viewMode}
+						<FormattedMessage {...globalMessages[viewMode]} />
 					</div>
 					<div style={styles.errorMessage}>
 						{this.props.loginData.get('error')}
 					</div>
 					<div style={styles.viewModeToggle} onClick={this.toggleViewMode}>
 						{(viewMode === 'login'
-							? 'New to PubPub? Click to Register'
-							: 'Already have an account? Click to Login'
+							? <FormattedMessage id="collections.newToPubPub" defaultMessage="New to PubPub? Click to Register"/>
+							: <FormattedMessage id="collections.alreadyHaveAccount" defaultMessage="Already have an account? Click to Login"/>
 						)}
 					</div>
 

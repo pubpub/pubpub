@@ -30,13 +30,13 @@ const LoginForm = React.createClass({
 					<label style={styles.label}>
 						<FormattedMessage {...globalMessages.Email} />
 					</label>
-					<input key="loginEmail" style={styles.input} type="text" placeholder={this.props.intl.formatMessage(global.Email)} {...email}/>
+					<input key="loginEmail" style={styles.input} type="text" placeholder={this.props.intl.formatMessage(globalMessages.Email)} {...email}/>
 				</div>
 				<div>
 					<label style={styles.label}>
 						<FormattedMessage {...globalMessages.Password} />
 					</label>
-					<input key="loginPassword" style={styles.input} type="password" placeholder={this.props.intl.formatMessage(global.Password)} {...password}/>
+					<input key="loginPassword" style={styles.input} type="password" placeholder={this.props.intl.formatMessage(globalMessages.Password)} {...password}/>
 				</div>
 				<button type="submit" key="loginSubmit" style={styles.submit} onClick={handleSubmit}>
 					<FormattedMessage {...globalMessages.Submit} />

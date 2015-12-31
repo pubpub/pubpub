@@ -9,6 +9,9 @@ import {LoaderDeterminate, JournalCurate, JournalDesign, JournalMain, JournalSet
 import {NotFound} from '../../containers';
 import {globalStyles, profileStyles, navStyles} from '../../utils/styleConstants';
 
+import {globalMessages} from '../../utils/globalMessages';
+import {FormattedMessage} from 'react-intl';
+
 let styles = {};
 
 const JournalAdmin = React.createClass({
@@ -62,16 +65,24 @@ const JournalAdmin = React.createClass({
 					
 							<div style={[globalStyles.hiddenUntilLoad, globalStyles[this.props.journalData.get('status')]]}>
 								<ul style={navStyles.navList}>
-									<Link to={'/journal/' + this.props.subdomain + '/settings'} style={globalStyles.link}><li key="journalNav0" style={[navStyles.navItem, this.props.journalData.getIn(['journalData', 'isAdmin']) && navStyles.navItemShow]}>Settings</li></Link>
+									<Link to={'/journal/' + this.props.subdomain + '/settings'} style={globalStyles.link}><li key="journalNav0" style={[navStyles.navItem, this.props.journalData.getIn(['journalData', 'isAdmin']) && navStyles.navItemShow]}>
+										<FormattedMessage {...globalMessages.settings} />
+									</li></Link>
 									<li style={[navStyles.navSeparator, this.props.journalData.getIn(['journalData', 'isAdmin']) && navStyles.navItemShow]}></li>
 
-									<Link to={'/journal/' + this.props.subdomain + '/design'} style={globalStyles.link}><li key="journalNav1" style={[navStyles.navItem, this.props.journalData.getIn(['journalData', 'isAdmin']) && navStyles.navItemShow]}>Design</li></Link>
+									<Link to={'/journal/' + this.props.subdomain + '/design'} style={globalStyles.link}><li key="journalNav1" style={[navStyles.navItem, this.props.journalData.getIn(['journalData', 'isAdmin']) && navStyles.navItemShow]}>
+										<FormattedMessage {...globalMessages.Design} />
+									</li></Link>
 									<li style={[navStyles.navSeparator, this.props.journalData.getIn(['journalData', 'isAdmin']) && navStyles.navItemShow]}></li>
 
-									<Link to={'/journal/' + this.props.subdomain + '/curate'} style={globalStyles.link}><li key="journalNav2" style={[navStyles.navItem, this.props.journalData.getIn(['journalData', 'isAdmin']) && navStyles.navItemShow]}>Curate</li></Link>
+									<Link to={'/journal/' + this.props.subdomain + '/curate'} style={globalStyles.link}><li key="journalNav2" style={[navStyles.navItem, this.props.journalData.getIn(['journalData', 'isAdmin']) && navStyles.navItemShow]}>
+										<FormattedMessage {...globalMessages.Curate} />
+									</li></Link>
 									<li style={[navStyles.navSeparator, this.props.journalData.getIn(['journalData', 'isAdmin']) && navStyles.navItemShow, navStyles.navSeparatorNoMobile]}></li>
 
-									<li key="journalNav3" style={[navStyles.navItem, !this.props.journalData.getIn(['journalData', 'isAdmin']) && navStyles.navItemShow]}>Follow</li>
+									<li key="journalNav3" style={[navStyles.navItem, !this.props.journalData.getIn(['journalData', 'isAdmin']) && navStyles.navItemShow]}>
+										<FormattedMessage {...globalMessages.follow} />
+									</li>
 									<li style={[navStyles.navSeparator, !this.props.journalData.getIn(['journalData', 'isAdmin']) && navStyles.navItemShow]}></li>
 								</ul>
 							</div>
@@ -84,7 +95,7 @@ const JournalAdmin = React.createClass({
 									<Link to={'/journal/' + this.props.subdomain} style={globalStyles.link}>
 										<span style={styles.headerJournalName} key={'headerJournalName'}>{this.props.journalData.getIn(['journalData', 'journalName'])}</span>
 									</Link>
-									<span style={[styles.headerMode, this.props.mode && styles.headerModeShow]}>: {this.props.mode}</span>
+									<span style={[styles.headerMode, this.props.mode && styles.headerModeShow]}>: <FormattedMessage {...globalMessages[this.props.mode]} /></span>
 								</div>
 								<div style={styles.journalProfileContent}>
 									{() => {
