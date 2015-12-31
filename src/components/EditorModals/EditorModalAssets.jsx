@@ -5,6 +5,9 @@ import {baseStyles} from './editorModalStyle';
 import {s3Upload} from '../../utils/uploadFile';
 import {EditorModalAssetsRow} from './';
 
+import {globalMessages} from '../../utils/globalMessages';
+import {injectIntl, FormattedMessage} from 'react-intl';
+
 let styles = {};
 
 const EditorModalAssets = React.createClass({
@@ -13,6 +16,7 @@ const EditorModalAssets = React.createClass({
 		slug: PropTypes.string,
 		addAsset: PropTypes.func,
 		deleteAsset: PropTypes.func,
+		intl: PropTypes.object,
 	},
 
 	// State is used to keep track of uploading files and their progress
@@ -110,20 +114,33 @@ const EditorModalAssets = React.createClass({
 
 				<div style={baseStyles.modalContentContainer}>
 					{/* Modal Title */}
-					<div key="asset-modal-right-action" style={baseStyles.topHeader}>Assets</div>
+					<div key="asset-modal-right-action" style={baseStyles.topHeader}>
+						<FormattedMessage {...globalMessages.assets} />
+					</div>
 
 					{/* Modal option that's placed in the top-right corner */}
-					<div style={baseStyles.rightCornerAction} onClick={this.onOpenClick}>Click to choose or drag files</div>
+					<div style={baseStyles.rightCornerAction} onClick={this.onOpenClick}>
+						<FormattedMessage {...globalMessages.clickOrDrag} />
+					</div>
 					
 					{/* Show a note if no content has been uploaded yet */}
 					{assetData.length === 0 && this.state.files.length === this.state.finishedUploads
-						? <div style={baseStyles.noContentBlock}>No Assets Uploaded</div>
+						? <div style={baseStyles.noContentBlock}>
+							<FormattedMessage
+								id="editor.noAssets"
+								defaultMessage="No Assets Uploaded"/>
+						</div>
 						: null
 					}
 
 					{/* Show the assets table header if there are any existing assets or uploads */}
 					{assetData.length || (this.state.files.length && (this.state.files.length !== this.state.finishedUploads))
-						? <EditorModalAssetsRow isHeader={true} filename="filename" author="by" assetType="type" date="date" />
+						? <EditorModalAssetsRow 
+							isHeader={true} 
+							filename={this.props.intl.formatMessage(globalMessages.filename)}
+							author={this.props.intl.formatMessage(globalMessages.by)} 
+							assetType={this.props.intl.formatMessage(globalMessages.type)} 
+							date={this.props.intl.formatMessage(globalMessages.date)} />
 						: null
 					}
 					
@@ -169,7 +186,7 @@ const EditorModalAssets = React.createClass({
 	}
 });
 
-export default Radium(EditorModalAssets);
+export default injectIntl(Radium(EditorModalAssets));
 
 styles = {
 	dropzone: {

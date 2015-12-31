@@ -4,6 +4,9 @@ import Radium from 'radium';
 import {baseStyles} from './editorModalStyle';
 import {globalStyles} from '../../utils/styleConstants';
 
+import {globalMessages} from '../../utils/globalMessages';
+import {FormattedMessage} from 'react-intl';
+
 let styles = {};
 
 const EditorModalAssetsRow = React.createClass({
@@ -54,7 +57,9 @@ const EditorModalAssetsRow = React.createClass({
 				<div style={[styles.hideOnLoad[isLoading], styles.author, isHeader && styles.isHeader]}>{this.props.author}</div>
 				
 				{/* Delete Button */}
-				<div key={this.props.keyChild} style={[styles.hideOnLoad[isLoading], styles.delete, isHeader && styles.isHeaderDelete]} onClick={this.props.handleDelete(this.props.firebaseID)}>delete</div>
+				<div key={this.props.keyChild} style={[styles.hideOnLoad[isLoading], styles.delete, isHeader && styles.isHeaderDelete]} onClick={this.props.handleDelete(this.props.firebaseID)}>
+					<FormattedMessage {...globalMessages.delete} />
+				</div>
 
 				{/*	Loading Bar.
 				 	Only shown when file is uploading */}

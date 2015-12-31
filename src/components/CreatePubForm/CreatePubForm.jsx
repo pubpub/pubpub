@@ -4,12 +4,16 @@ import Radium from 'radium';
 import PureRenderMixin from 'react-addons-pure-render-mixin';
 import {globalStyles} from '../../utils/styleConstants';
 
+import {globalMessages} from '../../utils/globalMessages';
+import {injectIntl, FormattedMessage} from 'react-intl';
+
 let styles = {};
 
 const PubCreateForm = React.createClass({
 	propTypes: {
 		fields: PropTypes.object.isRequired,
 		handleSubmit: PropTypes.func.isRequired,
+		intl: PropTypes.object,
 	},
 
 	mixins: [PureRenderMixin],
@@ -22,15 +26,26 @@ const PubCreateForm = React.createClass({
 		return (
 			<form onSubmit={handleSubmit}>
 				<div style={styles.inputWrapper}>
-					<label style={styles.label}>Title</label>
-					<input key="pubCreateTitle" style={styles.input} type="text" placeholder="Title" {...title}/>
+					<label style={styles.label}>
+						<FormattedMessage {...globalMessages.title} />
+					</label>
+					<input key="pubCreateTitle" style={styles.input} type="text" placeholder={this.props.intl.formatMessage(globalMessages.title)} {...title}/>
 				</div>
 				<div style={styles.inputWrapper}>
-					<label style={styles.label}>URL</label>
-					<div style={styles.infoText}>Pub will live at <span style={styles.url}>pubpub.org/pub/<span style={styles.dark}>{(slug.value === '' || slug.value === undefined) ? '[URL]' : slug.value}</span></span></div>
-					<input key="pubCreateSlug" style={styles.input} type="text" placeholder="URL" {...slug}/>
+					<label style={styles.label}>
+						<FormattedMessage {...globalMessages.url} />
+					</label>
+					<div style={styles.infoText}>
+						<FormattedMessage
+							id="pub.pubWillLiveAt"
+							defaultMessage="Pub will live at"/>
+						<span style={styles.url}>pubpub.org/pub/<span style={styles.dark}>{(slug.value === '' || slug.value === undefined) ? '[URL]' : slug.value}</span></span>
+					</div>
+					<input key="pubCreateSlug" style={styles.input} type="text" placeholder={this.props.intl.formatMessage(globalMessages.url)} {...slug}/>
 				</div>
-				<button type="submit" key="pubCreateSubmit" style={styles.submit} onClick={handleSubmit}>Create</button>
+				<button type="submit" key="pubCreateSubmit" style={styles.submit} onClick={handleSubmit}>
+					<FormattedMessage {...globalMessages.create} />
+				</button>
 			</form>
 		);
 	}
@@ -39,7 +54,7 @@ const PubCreateForm = React.createClass({
 export default reduxForm({
 	form: 'pubCreateForm',
 	fields: ['title', 'slug']
-})(Radium(PubCreateForm));
+})( injectIntl(Radium(PubCreateForm)));
 
 styles = {
 	submit: {

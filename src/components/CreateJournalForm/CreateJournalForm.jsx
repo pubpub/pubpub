@@ -47,7 +47,8 @@ const JournalCreateForm = React.createClass({
 						<FormattedMessage
 							id="journal.journalWillLiveAt"
 							defaultMessage="Journal will live at"/>
-						<span style={styles.url}><span style={styles.dark}>{(subdomain.value === '' || subdomain.value === undefined) ? '[subdomain]' : subdomain.value}</span>.pubpub.org</span></div>
+						<span style={styles.url}><span style={styles.dark}>{(subdomain.value === '' || subdomain.value === undefined) ? '[subdomain]' : subdomain.value}</span>.pubpub.org</span>
+					</div>
 					<input key="journalCreateSubdomain" style={styles.input} type="text" placeholder={this.props.intl.formatMessage(messages.subdomainPlaceholder)} {...subdomain}/>
 				</div>
 				<button type="submit" key="journalCreateSubmit" style={styles.submit} onClick={handleSubmit}>

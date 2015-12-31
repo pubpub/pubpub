@@ -4,12 +4,16 @@ import {Autocomplete} from '../../containers';
 import {baseStyles} from './editorModalStyle';
 import {globalStyles} from '../../utils/styleConstants';
 
+import {globalMessages} from '../../utils/globalMessages';
+import {injectIntl, defineMessages, FormattedMessage} from 'react-intl';
+
 let styles = {};
 
 const EditorModalCollaborators = React.createClass({
 	propTypes: {
 		collaboratorData: PropTypes.object,
 		updateCollaborators: PropTypes.func,
+		intl: PropTypes.object,
 	},
 
 	getInitialState: function() {
@@ -71,12 +75,16 @@ const EditorModalCollaborators = React.createClass({
 								<img style={styles.image} src={user.thumbnail} />
 							</div>
 							<div style={styles.name}>{user.name}</div>
-							<div style={styles.action} key={'collabSearchAdd-' + index} onClick={this.handleAddNew(user)}>add</div>
+							<div style={styles.action} key={'collabSearchAdd-' + index} onClick={this.handleAddNew(user)}>
+								<FormattedMessage {...globalMessages.add} />
+							</div>
 						</div>);	
 					})
 				}
 				{results.length === 0 || totalCount === 0
-					? <div style={styles.noResults}>No Results</div>
+					? <div style={styles.noResults}>
+						<FormattedMessage {...globalMessages.noresults} />
+					</div>
 					: null
 				}
 			</div>
@@ -92,25 +100,38 @@ const EditorModalCollaborators = React.createClass({
 			}
 		}
 
+		const messages = defineMessages({
+			addNewCollaborator: {
+				id: 'editor.addNewCollaborator',
+				defaultMessage: 'Add new collaborator',
+			},
+		});
+
 		return (
 			<div>
-				<div style={baseStyles.topHeader}>Collaborators</div>
+				<div style={baseStyles.topHeader}>
+					<FormattedMessage {...globalMessages.collaborators} />
+				</div>
 
 				{/* Add new collaborators search bar */}
 				<div style={[baseStyles.rightCornerSearch, styles.mainContent[this.state.showInviteOptions]]}>
 					<Autocomplete 
 						autocompleteKey={'collabAutocomplete'} 
 						route={'autocompleteUsers'} 
-						placeholder="Add new collaborator" 
+						placeholder={this.props.intl.formatMessage(messages.addNewCollaborator)}
 						textAlign={'right'}
 						resultRenderFunction={this.renderCollaboratorsSearchResults}/>
 					{/* <input style={baseStyles.rightCornerSearchInput} type="text" placeholder="Add new collaborator"/> */}
-					<div key="refAdvancedText" style={baseStyles.rightCornerSearchAdvanced} onClick={this.toggleshowInviteOptions}>invite by email</div>
+					<div key="refAdvancedText" style={baseStyles.rightCornerSearchAdvanced} onClick={this.toggleshowInviteOptions}>
+						<FormattedMessage
+							id="editor.inviteByEmail"
+							defaultMessage="invite by email"/>
+					</div>
 				</div>
 
 				{/* Back button when in invite by email mode */}
 				<div style={[baseStyles.rightCornerAction, styles.addOptions, styles.addOptions[this.state.showInviteOptions]]} onClick={this.toggleshowInviteOptions}>
-					Back
+					<FormattedMessage {...globalMessages.back} />
 				</div>
 
 				{/* Generate collaborators table */}
@@ -118,8 +139,16 @@ const EditorModalCollaborators = React.createClass({
 					<div style={styles.rowContainer}>
 
 						<div style={[styles.imageColumn, styles.columnHeader]}></div>
-						<div style={[styles.nameColumn, styles.columnHeader]}>name</div>
-						<div style={[styles.permissionsColumn, styles.columnHeader]}>permissions</div>
+						<div style={[styles.nameColumn, styles.columnHeader]}>
+							<FormattedMessage
+								id="editor.name"
+								defaultMessage="name"/>
+						</div>
+						<div style={[styles.permissionsColumn, styles.columnHeader]}>
+							<FormattedMessage
+								id="editor.permissions"
+								defaultMessage="permissions"/>
+						</div>
 						<div style={[styles.optionColumn, styles.columnHeader]}></div>
 
 						<div style={styles.clearfix}></div>
@@ -134,11 +163,21 @@ const EditorModalCollaborators = React.createClass({
 									<div style={[styles.imageColumn, styles.columnHeader]}> <img style={styles.userImage} src={collaborator.thumbnail} /> </div>
 									<div style={[styles.nameColumn]}>{collaborator.name}</div>
 									<div style={[styles.permissionsColumn]}>
-										<span key={'collaboratorPermissionsEdit-' + index} style={[styles.permission, collaborator.permission === 'edit' && styles.permissionActive]} onClick={this.setPermission('edit', collaborator.username)}>can edit</span>
+										<span key={'collaboratorPermissionsEdit-' + index} style={[styles.permission, collaborator.permission === 'edit' && styles.permissionActive]} onClick={this.setPermission('edit', collaborator.username)}>
+											<FormattedMessage
+												id="editor.canEdit"
+												defaultMessage="can edit"/>
+										</span>
 										<span style={[styles.permissionSeparator, collaborator.admin && styles.isAdminHidden]}>|</span>
-										<span key={'collaboratorPermissionsRead-' + index} style={[styles.permission, collaborator.permission === 'read' && styles.permissionActive, collaborator.admin && styles.isAdminHidden]} onClick={this.setPermission('read', collaborator.username)}>can read only</span>
+										<span key={'collaboratorPermissionsRead-' + index} style={[styles.permission, collaborator.permission === 'read' && styles.permissionActive, collaborator.admin && styles.isAdminHidden]} onClick={this.setPermission('read', collaborator.username)}>
+											<FormattedMessage
+												id="editor.canRead"
+												defaultMessage="can only read"/>
+										</span>
 									</div>
-									<div key={'collaboratorRemove-' + index} style={[styles.optionColumn, styles.optionColumnClickable, collaborator.admin && styles.isAdminHidden]} onClick={this.removeUser(collaborator.username)}>remove</div>
+									<div key={'collaboratorRemove-' + index} style={[styles.optionColumn, styles.optionColumnClickable, collaborator.admin && styles.isAdminHidden]} onClick={this.removeUser(collaborator.username)}>
+										<FormattedMessage {...globalMessages.remove} />
+									</div>
 
 									<div style={styles.clearfix}></div>
 								</div>
@@ -151,8 +190,12 @@ const EditorModalCollaborators = React.createClass({
 				{/* Invite by email content */}
 				<div className="add-options-content" style={[styles.addOptions, styles.addOptions[this.state.showInviteOptions], styles.addOptionsContent]}>
 
-					<div style={styles.sectionHeader}>Invite By Email</div>
-					<input type="text" placeholder="email address" />
+					<div style={styles.sectionHeader}>
+						<FormattedMessage
+							id="editor.InviteByEmailHeader"
+							defaultMessage="Invite By Email"/>
+					</div>
+					<input type="text" placeholder={this.props.intl.formatMessage(globalMessages.emailAddress)} />
 
 				</div>
 
@@ -161,7 +204,7 @@ const EditorModalCollaborators = React.createClass({
 	}
 });
 
-export default Radium(EditorModalCollaborators);
+export default injectIntl(Radium(EditorModalCollaborators));
 
 styles = {
 	mainContent: {

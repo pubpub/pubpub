@@ -3,13 +3,16 @@ import Radium from 'radium';
 import {LoaderIndeterminate} from '../';
 import {baseStyles} from './editorModalStyle';
 import {globalStyles} from '../../utils/styleConstants';
-import {FormattedMessage} from 'react-intl';
+
+import {globalMessages} from '../../utils/globalMessages';
+import {injectIntl, defineMessages, FormattedMessage} from 'react-intl';
 
 let styles = {};
 
 const EditorModalPublish = React.createClass({
 	propTypes: {
 		handlePublish: PropTypes.func,
+		intl: PropTypes.object,
 	},
 
 	getInitialState() {
@@ -35,30 +38,54 @@ const EditorModalPublish = React.createClass({
 	},
 
 	render: function() {
-		
+		const messages = defineMessages({
+			descriptionPlaceholder: {
+				id: 'collections.descriptionPlaceholder',
+				defaultMessage: 'e.g. Initial draft version,or updating dataset caption',
+			},
+		});
+
 		return (
 			<div>
 				<div style={styles.loaderWrapper}>
 					{(this.state.isPublishing ? <LoaderIndeterminate color="#555"/> : null)}
 				</div>
 
-				<div style={baseStyles.topHeader}>Publish</div>
+				<div style={baseStyles.topHeader}>
+					<FormattedMessage 
+						id="editor.publish"
+						defaultMessage="Publish"/>
+				</div>
 
 				{/* Draft or Review-ready option 
 					Should default to review-ready if a past version was */}
 				<div style={styles.optionContainer}>
-					<div style={styles.optionHeader}>version state</div>
+					<div style={styles.optionHeader}>
+						<FormattedMessage 
+							id="editor.versionState"
+							defaultMessage="version state"/>
+					</div>
 					<div style={styles.optionChoices}>
-						<span key={'publishModal-draft'} onClick={this.handleStateClick('Draft')} style={[styles.option, this.state.versionState === 'Draft' && styles.optionActive]}>draft</span>
+						<span key={'publishModal-draft'} onClick={this.handleStateClick('Draft')} style={[styles.option, this.state.versionState === 'Draft' && styles.optionActive]}>
+							<FormattedMessage {...globalMessages.draft} />
+						</span>
 						<span style={styles.optionSeparator}>|</span> 
-						<span key={'publishModal-journal'} onClick={this.handleStateClick('PeerReviewReady')} style={[styles.option, this.state.versionState === 'PeerReviewReady' && styles.optionActive]}>peer-review ready</span>
+						<span key={'publishModal-journal'} onClick={this.handleStateClick('PeerReviewReady')} style={[styles.option, this.state.versionState === 'PeerReviewReady' && styles.optionActive]}>
+							<FormattedMessage 
+								id="editor.readyForReview"
+								defaultMessage="ready for peer-review"/>
+						</span>
 					</div>
 				</div>
 
 				{/* Version message input */}
 				<div style={styles.optionContainer}>
-					<div style={styles.optionHeader}>version description</div>
-					<textarea onChange={this.handleDescriptionChange} style={styles.messageTextarea} placeholder="e.g. Initial draft version,or updating dataset caption"></textarea>
+					<div style={styles.optionHeader}>
+						<FormattedMessage 
+							id="editor.versionDescription"
+							defaultMessage="version description"/>
+					</div>
+					<textarea onChange={this.handleDescriptionChange} style={styles.messageTextarea} placeholder={this.props.intl.formatMessage(messages.descriptionPlaceholder)}></textarea>
 				</div>
 
 				{/* Publish Message */}
@@ -91,7 +118,7 @@ const EditorModalPublish = React.createClass({
 	}
 });
 
-export default Radium(EditorModalPublish);
+export default injectIntl(Radium(EditorModalPublish));
 
 styles = {
 	optionContainer: {

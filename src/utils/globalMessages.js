@@ -113,6 +113,59 @@ export const globalMessages = defineMessages({
 		id: 'global.create',
 		defaultMessage: 'Create',
 	},
+	title: {
+		id: 'global.title',
+		defaultMessage: 'Title',
+	},
+	url: {
+		id: 'global.url',
+		defaultMessage: 'URL',
+	},
+	clickOrDrag: {
+		id: 'global.clickOrDrag',
+		defaultMessage: 'Click to choose or drag files',
+	},
+	assets: {
+		id: 'global.assets',
+		defaultMessage: 'Assets',
+	},
+	filename: {
+		id: 'global.filename',
+		defaultMessage: 'filename',
+	},
+	by: {
+		id: 'global.by',
+		defaultMessage: 'by',
+	},
+	type: {
+		id: 'global.type',
+		defaultMessage: 'type',
+	},
+	date: {
+		id: 'global.date',
+		defaultMessage: 'date',
+	},
+	delete: {
+		id: 'global.delete',
+		defaultMessage: 'delete',
+	},
+	collaborators: {
+		id: 'global.collaborators',
+		defaultMessage: 'Collaborators',
+	},
+	back: {
+		id: 'global.back',
+		defaultMessage: 'Back',
+	},
+	emailAddress: {
+		id: 'global.emailAddress',
+		defaultMessage: 'email address',
+	},
+	draft: {
+		id: 'global.draft',
+		defaultMessage: 'draft',
+	},
+	
 });
 
 // <FormattedMessage
