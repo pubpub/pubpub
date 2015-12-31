@@ -3,6 +3,8 @@ import Radium from 'radium';
 // import {globalStyles} from '../../utils/styleConstants';
 import {PubPreview} from '../../components/ItemPreviews';
 
+import {FormattedMessage} from 'react-intl';
+
 let styles = {};
 
 const CollectionMain = React.createClass({
@@ -22,7 +24,11 @@ const CollectionMain = React.createClass({
 				{()=>{
 					const length = this.props.collectionData.pubs ? this.props.collectionData.pubs.length : 0;
 					if (!length) {
-						return <div style={styles.emptyBlock}>No Pubs Added</div>;
+						return (<div style={styles.emptyBlock}>
+							<FormattedMessage
+								id="collections.noPubsAdded"
+								defaultMessage="No Pubs Added"/>
+						</div>);
 					} 
 					const output = [];
 					for (let index = length; index--;) {

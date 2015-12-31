@@ -217,11 +217,11 @@ const CollectionEdit = React.createClass({
 				{()=>{
 					const length = this.props.collectionData.pubs ? this.props.collectionData.pubs.length : 0;
 					if (!length) {
-						return <div style={styles.emptyBlock}>
+						return (<div style={styles.emptyBlock}>
 							<FormattedMessage
 								id="collections.noPubsAddedToCollection"
 								defaultMessage="No Pubs Added to Collection"/>
-						</div>;
+						</div>);
 					} 
 					const output = [];
 					for (let index = length; index--;) {

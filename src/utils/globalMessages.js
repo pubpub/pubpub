@@ -101,8 +101,18 @@ export const globalMessages = defineMessages({
 		id: 'global.pubs',
 		defaultMessage: 'Pubs',
 	},
-
-
+	journalName: {
+		id: 'global.journalName',
+		defaultMessage: 'Journal Name',
+	},
+	subdomain: {
+		id: 'global.subdomain',
+		defaultMessage: 'Subdomain',
+	},
+	create: {
+		id: 'global.create',
+		defaultMessage: 'Create',
+	},
 });
 
 // <FormattedMessage

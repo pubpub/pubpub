@@ -4,6 +4,9 @@
   "collections.description": "Description",
   "collections.headerImage": "Header Image",
   "collections.noPubsAddedToCollection": "No Pubs Added to Collection",
+  "collections.noPubsAdded": "No Pubs Added",
+  "journals.subdomainPlaceholder": "Subdomain (Custom domains can be set later)",
+  "journal.journalWillLiveAt": "Journal will live at",
   "editor.publishMessage1": "You can publish versions to your Pub as frequently as you like.",
   "editor.publishMessage2": "We encourage you to publish early and often.",
   "editor.publishMessage3": "The full history will be maintained and accessible.",
@@ -31,5 +34,9 @@
   "global.add": "add",
   "global.noResults": "No Results",
   "global.save": "Save",
-  "global.pubs": "Pubs"
+  "global.remove": "remove",
+  "global.pubs": "Pubs",
+  "global.journalName": "Journal Name",
+  "global.subdomain": "Subdomain",
+  "global.create": "Create"
 }

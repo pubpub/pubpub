@@ -4,12 +4,16 @@ import Radium from 'radium';
 import PureRenderMixin from 'react-addons-pure-render-mixin';
 import {globalStyles} from '../../utils/styleConstants';
 
+import {globalMessages} from '../../utils/globalMessages';
+import {injectIntl, defineMessages, FormattedMessage} from 'react-intl';
+
 let styles = {};
 
 const JournalCreateForm = React.createClass({
 	propTypes: {
 		fields: PropTypes.object.isRequired,
 		handleSubmit: PropTypes.func.isRequired,
+		intl: PropTypes.object,
 	},
 
 	mixins: [PureRenderMixin],
@@ -20,18 +24,35 @@ const JournalCreateForm = React.createClass({
 			handleSubmit
 		} = this.props;
 
+		const messages = defineMessages({
+			subdomainPlaceholder: {
+				id: 'journals.subdomainPlaceholder',
+				defaultMessage: 'Subdomain (Custom domains can be set later)',
+			},
+		});
+
 		return (
 			<form onSubmit={handleSubmit}>
 				<div style={styles.inputWrapper}>
-					<label style={styles.label}>Journal Name</label>
-					<input key="journalCreateJournalName" style={styles.input} type="text" placeholder="Journal Name" {...journalName}/>
+					<label style={styles.label}>
+						<FormattedMessage {...globalMessages.journalName} />
+					</label>
+					<input key="journalCreateJournalName" style={styles.input} type="text" placeholder={this.props.intl.formatMessage(globalMessages.journalName)} {...journalName}/>
 				</div>
 				<div style={styles.inputWrapper}>
-					<label style={styles.label}>Subdomain name</label>
-					<div style={styles.infoText}>Journal will live at <span style={styles.url}><span style={styles.dark}>{(subdomain.value === '' || subdomain.value === undefined) ? '[subdomain]' : subdomain.value}</span>.pubpub.org</span></div>
-					<input key="journalCreateSubdomain" style={styles.input} type="text" placeholder="Subdomain (Custom domains can be set later)" {...subdomain}/>
+					<label style={styles.label}>
+						<FormattedMessage {...globalMessages.subdomain} />
+					</label>
+					<div style={styles.infoText}>
+						<FormattedMessage
+							id="journal.journalWillLiveAt"
+							defaultMessage="Journal will live at"/>
+						<span style={styles.url}><span style={styles.dark}>{(subdomain.value === '' || subdomain.value === undefined) ? '[subdomain]' : subdomain.value}</span>.pubpub.org</span></div>
+					<input key="journalCreateSubdomain" style={styles.input} type="text" placeholder={this.props.intl.formatMessage(messages.subdomainPlaceholder)} {...subdomain}/>
 				</div>
-				<button type="submit" key="journalCreateSubmit" style={styles.submit} onClick={handleSubmit}>Create</button>
+				<button type="submit" key="journalCreateSubmit" style={styles.submit} onClick={handleSubmit}>
+					<FormattedMessage {...globalMessages.create} />
+				</button>
 			</form>
 		);
 	}
@@ -40,7 +61,7 @@ const JournalCreateForm = React.createClass({
 export default reduxForm({
 	form: 'journalCreateForm',
 	fields: ['journalName', 'subdomain']
-})(Radium(JournalCreateForm));
+})( injectIntl(Radium(JournalCreateForm)));
 
 styles = {
 	submit: {
