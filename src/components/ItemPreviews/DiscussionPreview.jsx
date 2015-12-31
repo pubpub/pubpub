@@ -3,6 +3,9 @@ import Radium from 'radium';
 import {globalStyles} from '../../utils/styleConstants';
 import { Link } from 'react-router';
 
+import {globalMessages} from '../../utils/globalMessages';
+import {FormattedMessage} from 'react-intl';
+
 let styles = {};
 
 const DiscussionPreview = React.createClass({
@@ -22,8 +25,12 @@ const DiscussionPreview = React.createClass({
 		return (
 			<div style={styles.container} key={'discussionContainer-' + discussion._id}>
 				<Link style={globalStyles.link} to={'/pub/' + discussion.pub.slug + '/discussions/' + discussion._id}>
-					<div style={styles.pubLine}>Discussion on {discussion.pub.title}</div>
-					<div style={styles.scoreLine}>Score: {discussion.points}</div>
+					<div style={styles.pubLine}>
+					<FormattedMessage
+						id="preview.discussionOn"
+						defaultMessage="Discussion on"/>
+					{' '}{discussion.pub.title}</div>
+					<div style={styles.scoreLine}><FormattedMessage {...globalMessages.score}/>: {discussion.points}</div>
 					<div style={styles.markdown}>{discussion.markdown}</div>
 				</Link>
 			</div>

@@ -3,6 +3,9 @@ import Radium from 'radium';
 import {globalStyles} from '../../utils/styleConstants';
 import { Link } from 'react-router';
 
+import {globalMessages} from '../../utils/globalMessages';
+import {FormattedMessage} from 'react-intl';
+
 let styles = {};
 
 const CollectionPreview = React.createClass({
@@ -26,7 +29,7 @@ const CollectionPreview = React.createClass({
 				<Link style={globalStyles.link} to={'/collection/' + collection.slug}>
 					<div key={'headerblock-' + collection._id} style={[styles.headerBlock, {backgroundImage: 'url(' + collection.headerImage + ')'}]}>
 						<div style={styles.title}>{collection.title}</div>
-						<div style={styles.pubCount}>{collection.pubs.length} Pubs</div>
+						<div style={styles.pubCount}>{collection.pubs.length} <FormattedMessage {...globalMessages.pubs}/></div>
 					</div>
 				</Link>
 

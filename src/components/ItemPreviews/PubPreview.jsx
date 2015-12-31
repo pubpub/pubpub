@@ -4,6 +4,9 @@ import {globalStyles} from '../../utils/styleConstants';
 import { Link } from 'react-router';
 const HoverLink = Radium(Link);
 
+import {globalMessages} from '../../utils/globalMessages';
+import {FormattedMessage} from 'react-intl';
+
 let styles = {};
 
 const PubPreview = React.createClass({
@@ -38,7 +41,7 @@ const PubPreview = React.createClass({
 				{
 					this.props.canEdit
 						? <HoverLink to={'/pub/' + pub.slug + '/edit'} key={'profilePubEdit-' + pub._id} style={[globalStyles.link, styles.editWrapper]}>
-							Edit
+							<FormattedMessage {...globalMessages.edit}/>
 						</HoverLink>
 						: null
 				}

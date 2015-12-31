@@ -6,6 +6,9 @@ import {CollectionGallery, LoaderIndeterminate} from '../';
 import {globalStyles} from '../../utils/styleConstants';
 // import { Link } from 'react-router';
 
+import {globalMessages} from '../../utils/globalMessages';
+import {injectIntl, defineMessages, FormattedMessage} from 'react-intl';
+
 let styles = {};
 
 const JournalCurate = React.createClass({
@@ -15,6 +18,7 @@ const JournalCurate = React.createClass({
 		journalSaveHandler: PropTypes.func,
 		createCollectionHandler: PropTypes.func,
 		createCollectionStatus: PropTypes.string,
+		intl: PropTypes.object,
 	},
 
 	getDefaultProps: function() {
@@ -76,12 +80,16 @@ const JournalCurate = React.createClass({
 
 							</div>
 							
-							<div style={styles.action} key={'featuredPubSearchAdd-' + index} onClick={this.featurePub(pub._id)}>feature</div>
+							<div style={styles.action} key={'featuredPubSearchAdd-' + index} onClick={this.featurePub(pub._id)}>
+								<FormattedMessage {...globalMessages.feature}/>
+							</div>
 						</div>);	
 					})
 				}
 				{results.length === 0 || totalCount === 0
-					? <div style={styles.noResults}>No Results</div>
+					? <div style={styles.noResults}>
+						<FormattedMessage {...globalMessages.noResults}/>
+					</div>
 					: null
 				}
 				
@@ -104,20 +112,35 @@ const JournalCurate = React.createClass({
 	},
 
 	render: function() {
+		const messages = defineMessages({
+			searchPubsToFeature: {
+				id: 'journal.searchPubsToFeature',
+				defaultMessage: 'Search Pubs to Feature',
+			},
+		});
+
 		return (
 			<div style={styles.container}>
 				<div style={styles.pubSectionsWrapper}>
 					
 					{/* Featured Pubs Section */}
 					<div style={[styles.pubSectionWrapper, styles.featuredPubWrapper]}>
-						<div style={styles.sectionTitle}>Featured Pubs</div>
-						<div style={styles.sectionText}>Pubs curated by your journal</div>
+						<div style={styles.sectionTitle}>
+							<FormattedMessage
+								id="journal.featuredPubs"
+								defaultMessage="Featured Pubs"/>
+						</div>
+						<div style={styles.sectionText}>
+							<FormattedMessage
+								id="journal.curatedBy"
+								defaultMessage="Pubs curated by your journal"/>
+						</div>
 
 						<div style={styles.searchWrapper}>
 							<Autocomplete 
 								autocompleteKey={'journalPubFeatureAutocomplete'} 
 								route={'autocompletePubsAll'} 
-								placeholder="Search Pubs to Feature" 
+								placeholder={this.props.intl.formatMessage(messages.searchPubsToFeature)}
 								resultRenderFunction={this.renderPubSearchResults}/>
 						</div>
 						
@@ -125,7 +148,11 @@ const JournalCurate = React.createClass({
 						{()=>{
 							const length = this.props.journalData.pubsFeatured ? this.props.journalData.pubsFeatured.length : 0;
 							if (!length) {
-								return <div style={styles.emptyBlock}>No Featured Pubs</div>;
+								return (<div style={styles.emptyBlock}>
+									<FormattedMessage
+										id="journal.noFeaturedPubs"
+										defaultMessage="No Featured Pubs"/>
+								</div>);
 							} 
 							const output = [];
 							for (let index = length; index--;) {
@@ -144,13 +171,25 @@ const JournalCurate = React.createClass({
 
 					{/* Submitted Pubs Section */}
 					<div style={[styles.pubSectionWrapper]}>
-						<div style={styles.sectionTitle}>Submitted Pubs</div>
-						<div style={styles.sectionText}>Pubs submitted to your journal for consideration</div>
+						<div style={styles.sectionTitle}>
+							<FormattedMessage
+								id="journal.submittedPubs"
+								defaultMessage="Submitted Pubs"/>
+							</div>
+						<div style={styles.sectionText}>
+							<FormattedMessage
+								id="journal.submittedPubsForConsideration"
+								defaultMessage="Pubs submitted to your journal for consideration"/>
+							</div>
 						<div style={styles.submittedPubsSection}>
 							{()=>{
 								const length = this.props.journalData.pubsSubmitted ? this.props.journalData.pubsSubmitted.length : 0;
 								if (!length) {
-									return <div style={styles.emptyBlock}>No Pending Submitted Pubs</div>;
+									return (<div style={styles.emptyBlock}>
+										<FormattedMessage
+											id="journal.noPendingPubs"
+											defaultMessage="No Pending Submitted Pubs"/>
+										</div>);
 								} 
 								const output = [];
 								for (let index = length; index--;) {
@@ -165,7 +204,9 @@ const JournalCurate = React.createClass({
 
 												</div>
 												
-												<div style={styles.action} key={'submittedPubItemAdd-' + index} onClick={this.featurePub(this.props.journalData.pubsSubmitted[index]._id)}>feature</div>
+												<div style={styles.action} key={'submittedPubItemAdd-' + index} onClick={this.featurePub(this.props.journalData.pubsSubmitted[index]._id)}>
+													<FormattedMessage {...globalMessages.feature}/>
+												</div>
 											</div>);
 								}
 								return output;
@@ -178,28 +219,53 @@ const JournalCurate = React.createClass({
 				</div>
 
 				<div>
-					<div style={styles.sectionHeader}>Collections</div>
+					<div style={styles.sectionHeader}>
+						<FormattedMessage
+							id="journal.collections"
+							defaultMessage="Collections"/>
+					</div>
 						{
 							this.props.journalData.collections && this.props.journalData.collections.length
 								? <CollectionGallery collections={this.props.journalData.collections} />
-								: <div style={styles.emptyBlock}>No Collections</div>
+								: <div style={styles.emptyBlock}>
+									<FormattedMessage
+										id="journal.noCollections"
+										defaultMessage="No Collections"/>
+								</div>
 						}
 
-					<div style={styles.sectionHeader}>Create New Collection</div>
+					<div style={styles.sectionHeader}>
+						<FormattedMessage
+							id="journal.createNew"
+							defaultMessage="Create New Collection"/>
+					</div>
 					
 					<div key={'createCollection-title'} style={styles.inputWrapper}>
-						<label style={styles.manualFormInputTitle} htmlFor={'title'}>Collection Title</label>
+						<label style={styles.manualFormInputTitle} htmlFor={'createCollection-title'}>
+							<FormattedMessage
+								id="journal.collectionTitle"
+								defaultMessage="Collection Title"/>
+						</label>
 						<input style={styles.manualFormInput} name={'title'} id={'createCollection-title'} ref={'title'} type="text" defaultValue={''}/>
 					</div>
 
 					<div key={'createCollection-slug'} style={styles.inputWrapper}>
-						<label style={styles.manualFormInputTitle} htmlFor={'slug'}>URL</label>
+						<label style={styles.manualFormInputTitle} htmlFor={'createCollection-slug'}>
+							<FormattedMessage {...globalMessages.url}/>
+						</label>
 						<input style={styles.manualFormInput} name={'slug'} id={'createCollection-slug'} ref={'slug'} type="text" onChange={this.updateNewCollectionSlug} value={this.state.newCollectionSlug}/>
-						<div style={styles.infoText}>Collection will live at <span style={styles.url}>{typeof(window) !== 'undefined' ? window.location.hostname : ''}/collection/<span style={styles.dark}>{(this.state.newCollectionSlug === '' || this.state.newCollectionSlug === undefined) ? '[URL]' : this.state.newCollectionSlug}</span></span></div>
+						<div style={styles.infoText}>
+							<FormattedMessage
+								id="journal.collectionWillLive"
+								defaultMessage="Collection will live at"/>
+							 <span style={styles.url}>{typeof(window) !== 'undefined' ? window.location.hostname : ''}/collection/<span style={styles.dark}>{(this.state.newCollectionSlug === '' || this.state.newCollectionSlug === undefined) ? '[URL]' : this.state.newCollectionSlug}</span></span>
+							</div>
 						
 					</div>
 
-					<div style={styles.saveSettings} key={'userSettingsSaveButton'} onClick={this.createNewCollection}>Create</div>
+					<div style={styles.saveSettings} key={'userSettingsSaveButton'} onClick={this.createNewCollection}>
+						<FormattedMessage {...globalMessages.create}/>
+					</div>
 
 					<div style={styles.loader}>
 						<h1>{this.props.journalData.createCollectionStatus}</h1>
@@ -216,7 +282,7 @@ const JournalCurate = React.createClass({
 	}
 });
 
-export default Radium(JournalCurate);
+export default injectIntl(Radium(JournalCurate));
 
 styles = {
 	pubSectionsWrapper: {

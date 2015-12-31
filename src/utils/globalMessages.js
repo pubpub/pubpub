@@ -93,6 +93,10 @@ export const globalMessages = defineMessages({
 		id: 'global.save',
 		defaultMessage: 'Save',
 	},
+	cancel: {
+		id: 'global.cancel',
+		defaultMessage: 'Cancel',
+	},
 	remove: {
 		id: 'global.remove',
 		defaultMessage: 'remove',
@@ -100,6 +104,10 @@ export const globalMessages = defineMessages({
 	pubs: {
 		id: 'global.pubs',
 		defaultMessage: 'Pubs',
+	},
+	score: {
+		id: 'global.score',
+		defaultMessage: 'Score',
 	},
 	journalName: {
 		id: 'global.journalName',
@@ -217,6 +225,10 @@ export const globalMessages = defineMessages({
 	note: {
 		id: 'global.note',
 		defaultMessage: 'note',
+	},
+	feature: {
+		id: 'global.feature',
+		defaultMessage: 'feature',
 	},
 	
 });

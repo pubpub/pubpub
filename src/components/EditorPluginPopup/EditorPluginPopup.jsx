@@ -3,6 +3,9 @@ import Radium from 'radium';
 import {pluginOptions} from '../../components/EditorPlugins';
 import {parsePluginString} from '../../utils/parsePlugins';
 
+import {globalMessages} from '../../utils/globalMessages';
+import {FormattedMessage} from 'react-intl';
+
 let styles = {};
 
 const EditorPluginPopup = React.createClass({
@@ -192,7 +195,11 @@ const EditorPluginPopup = React.createClass({
 			<div id="plugin-popup" className="plugin-popup" style={[styles.pluginPopup, this.getPluginPopupLoc(), this.state.popupVisible && styles.pluginPopupVisible]}>
 				<div style={styles.pluginPopupArrow}></div>
 				<div style={styles.pluginContent}>
-					<div style={styles.pluginPopupTitle}>Plugin: {this.state.pluginType}</div>
+					<div style={styles.pluginPopupTitle}>
+						<FormattedMessage
+								id="editor.plugin"
+								defaultMessage="Plugin"/>
+						: {this.state.pluginType}</div>
 						{
 							Object.keys(this.state.contentObject).map((valKey)=>{
 								const pluginProp = this.state.contentObject[valKey];
@@ -207,12 +214,18 @@ const EditorPluginPopup = React.createClass({
 								return (<div key={'pluginVal-' + pluginPropTitle} style={styles.pluginOptionWrapper}>
 													<label htmlFor={pluginPropTitle} style={styles.pluginOptionLabel}>{pluginPropTitle}</label>
 													{elem}
-													<div style={[styles.pluginOptionDefault, pluginProp.defaultString && styles.pluginOptionDefaultVisible]}>default: {pluginProp.defaultString}</div>
+													<div style={[styles.pluginOptionDefault, pluginProp.defaultString && styles.pluginOptionDefaultVisible]}>
+													<FormattedMessage
+														id="editor.default"
+														defaultMessage="default"/>
+													: {pluginProp.defaultString}</div>
 													<div style={styles.clearfix}></div>
 													</div>);
 							})
 						}
-					<div style={styles.pluginSave} key={'pluginPopupSave'} onClick={this.onPluginSave}>Save</div>
+					<div style={styles.pluginSave} key={'pluginPopupSave'} onClick={this.onPluginSave}>
+						<FormattedMessage {...globalMessages.save} />
+					</div>
 				</div>
 			</div>
 		);

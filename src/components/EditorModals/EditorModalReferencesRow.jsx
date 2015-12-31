@@ -4,6 +4,9 @@ import {Reference} from '../';
 import {baseStyles} from './editorModalStyle';
 import {globalStyles} from '../../utils/styleConstants';
 
+import {globalMessages} from '../../utils/globalMessages';
+import {FormattedMessage} from 'react-intl';
+
 let styles = {};
 
 // This file exists because of performance issues.
@@ -30,8 +33,12 @@ const EditorModalReferences = React.createClass({
 			<div style={styles.rowContainer}>
 				<div style={[styles.refNameColumn]}>{citation.refName}</div>
 				<div style={[styles.bodyColumn]}> <Reference citationObject={citation} mode={this.props.referenceStyle} /> </div>
-				<div style={[styles.optionColumn, styles.optionColumnClickable]} key={'referenceListOptionColumnEdit-' + index} onClick={this.props.editRefFunction(citation)}>edit</div>
-				<div style={[styles.optionColumn, styles.optionColumnClickable]} key={'referenceListOptionColumnDelete-' + index} onClick={this.props.deleteRefFunction(citation.refName)}>delete</div>
+				<div style={[styles.optionColumn, styles.optionColumnClickable]} key={'referenceListOptionColumnEdit-' + index} onClick={this.props.editRefFunction(citation)}>
+					<FormattedMessage {...globalMessages.edit} />
+				</div>
+				<div style={[styles.optionColumn, styles.optionColumnClickable]} key={'referenceListOptionColumnDelete-' + index} onClick={this.props.deleteRefFunction(citation.refName)}>
+					<FormattedMessage {...globalMessages.delete} />
+				</div>
 				<div style={styles.clearfix}></div>
 			</div>
 							

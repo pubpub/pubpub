@@ -247,7 +247,7 @@ const EditorModalSettings = React.createClass({
 					<div style={styles.saveButton} key={'customStyleSaveButton'} onClick={this.saveCustomSettings}>Save</div>
 					{
 						this.state.showAdvancedError
-							? <div>ERROR</div>
+							? <div>Error</div>
 							: null
 					}
 					

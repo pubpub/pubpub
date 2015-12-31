@@ -5,6 +5,9 @@ import {LoaderIndeterminate} from '../';
 import AvatarEditor from './AvatarEditor';
 import {s3Upload} from '../../utils/uploadFile';
 
+import {globalMessages} from '../../utils/globalMessages';
+import {FormattedMessage} from 'react-intl';
+
 let styles = {};
 
 const ImageCropper = React.createClass({
@@ -77,8 +80,12 @@ const ImageCropper = React.createClass({
 				</div>
 				<div style={styles.previewAndOptions}>
 					<img style={styles.preview}src={this.state.preview} />
-					<div style={styles.option} key="userUploadCancel" onClick={this.handleCancel}>Cancel</div>
-					<div style={styles.option} key="userUploadSave" onClick={this.handleSaveImage}>Save</div>
+					<div style={styles.option} key="userUploadCancel" onClick={this.handleCancel}>
+						<FormattedMessage {...globalMessages.cancel} />
+					</div>
+					<div style={styles.option} key="userUploadSave" onClick={this.handleSaveImage}>
+						<FormattedMessage {...globalMessages.save} />
+					</div>
 				</div>
 				
 
