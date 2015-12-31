@@ -22,6 +22,7 @@ let styles = {};
 const App = React.createClass({
 	propTypes: {
 		journalData: PropTypes.object,
+		languageData: PropTypes.object,
 		loginData: PropTypes.object,
 		navData: PropTypes.object,
 		pubData: PropTypes.object,
@@ -131,7 +132,7 @@ const App = React.createClass({
 			},
 		};
 		return (
-			<IntlProvider locale={this.props.journalData.getIn(['journalData', 'locale'])} messages={this.props.journalData.getIn(['journalData', 'languageObject']) ? this.props.journalData.getIn(['journalData', 'languageObject']).toJS() : {}}>
+			<IntlProvider locale={this.props.languageData.get('locale')} messages={this.props.languageData.get('languageObject').toJS()}>
 			<div style={styles.body}>
 				
 				{
@@ -144,7 +145,7 @@ const App = React.createClass({
 
 				<div className="header-bar" style={[styles.headerBar, headerStyle.headerBar]}>
 					
-					<Link to={`/`}><div key="headerLogo" style={[styles.headerText, styles.headerLogo, headerStyle.headerText]}>{this.props.journalData.getIn(['journalData', 'journalName']) || 'PubPub'}</div></Link>
+					<Link to={`/`}><div key="headerLogo" style={[styles.headerText, styles.headerLogo, headerStyle.headerText]}>{this.props.journalData.get('baseSubdomain') !== null ? this.props.journalData.getIn(['journalData', 'journalName']) : 'PubPub'}</div></Link>
 					
 					<div style={[styles.headerNavContainer]} >
 						<div style={styles.headerMenu}>
@@ -196,6 +197,7 @@ const App = React.createClass({
 export default connect( state => {
 	return {
 		journalData: state.journal,
+		languageData: state.language,
 		loginData: state.login, 
 		navData: state.nav,
 		pubData: state.pub,

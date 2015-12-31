@@ -206,6 +206,8 @@ app.get('/loadJournalAndLogin', function(req,res){
 					journalData: {
 						...result,
 						isAdmin: isAdmin,
+					},
+					languageData: {
 						locale: locale,
 						languageObject: languageObject,
 					},
@@ -223,6 +225,10 @@ app.get('/loadJournalAndLogin', function(req,res){
 								allJournals: journals,
 								allPubs: pubs,
 								isAdmin: false,
+								locale: locale,
+								languageObject: languageObject,
+							},
+							languageData: {
 								locale: locale,
 								languageObject: languageObject,
 							},

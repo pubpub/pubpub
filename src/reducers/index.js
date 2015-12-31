@@ -8,6 +8,7 @@ import editor from './editor';
 import explore from './explore';
 import journal from './journal';
 import landing from './landing';
+import language from './language';
 import login from './login';
 import nav from './nav';
 import user from './user';
@@ -30,6 +31,7 @@ export default combineReducers({
 	explore,
 	journal,
 	landing,
+	language,
 	login,
 	nav,
 	user,
