@@ -230,6 +230,10 @@ export const globalMessages = defineMessages({
 		id: 'global.feature',
 		defaultMessage: 'feature',
 	},
+	submit: {
+		id: 'global.submit',
+		defaultMessage: 'Submit',
+	},
 	
 });
 

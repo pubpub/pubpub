@@ -7,6 +7,9 @@ import {loadCss} from '../../utils/loadingFunctions';
 import {scienceStyle, magazineStyle} from './pubStyles';
 import cssConvert from '../../utils/cssToRadium';
 
+import {globalMessages} from '../../utils/globalMessages';
+import {FormattedMessage} from 'react-intl';
+
 let styles = {};
 
 const PubBody = React.createClass({
@@ -123,7 +126,7 @@ const PubBody = React.createClass({
 				<div id="pubContent" style={[styles.contentContainer, globalStyles[this.props.status]]} className={this.printStyleClass.pubContent}>
 
 					<div id={'pub-title'} className={this.printStyleClass.title}>{this.props.title}</div>
-					<div id={'pub-authors'} className={this.printStyleClass.authors}> <span>by </span>
+					<div id={'pub-authors'} className={this.printStyleClass.authors}> <span><FormattedMessage {...globalMessages.by}/> </span>
 						{
 							this.props.authors.map((author, index)=>{
 								return (index === this.props.authors.length - 1

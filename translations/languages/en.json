@@ -45,6 +45,12 @@
   "journal.createNew": "Create New Collection",
   "journal.collectionTitle": "Collection Title",
   "journal.collectionWillLive": "Collection will live at",
+  "discussion.permalink": "Permalink",
+  "discussion.reply": "Reply",
+  "discussion.inviteReviewers": "Invite Reviewers",
+  "discussion.turnHighlights": "Turn Highlights",
+  "discussion.off": "Off",
+  "discussion.on": "On",
   "global.login": "Login",
   "global.loginOrRegister": "Login or Register",
   "global.account": "Account",
@@ -101,5 +107,6 @@
   "global.year": "year",
   "global.publisher": "publisher",
   "global.note": "note",
-  "global.feature": "feature"
+  "global.feature": "feature",
+  "global.submit": "Submit"
 }

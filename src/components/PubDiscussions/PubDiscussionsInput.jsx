@@ -5,6 +5,9 @@ import Radium, {Style} from 'radium';
 import {LoaderIndeterminate} from '../';
 import {globalStyles} from '../../utils/styleConstants';
 
+import {globalMessages} from '../../utils/globalMessages';
+import {FormattedMessage} from 'react-intl';
+
 let styles = {};
 
 // import {loadCss} from '../../utils/loadingFunctions';
@@ -105,14 +108,14 @@ const PubDiscussionsInput = React.createClass({
 							: null
 						}
 					</div>
-					<div style={styles.topCheckbox} key={'newDiscussionAnonymous'} >
+					{/* <div style={styles.topCheckbox} key={'newDiscussionAnonymous'} >
 						<label style={styles.checkboxLabel} htmlFor={'anonymousDiscussion'}>Anonymous</label>
 						<input style={styles.checkboxInput} name={'anonymousDiscussion'} id={'anonymousDiscussion'} type="checkbox" value={'anonymous'} ref={'anonymousDiscussion'}/>
 					</div>
 					<div style={styles.topCheckbox} key={'newDiscussionPrivate'} >
 						<label style={styles.checkboxLabel} htmlFor={'privateDiscussion'}>Private</label>
 						<input style={styles.checkboxInput} name={'privateDiscussion'} id={'privateDiscussion'} type="checkbox" value={'private'} ref={'privateDiscussion'}/>
-					</div>
+					</div> */}
 				</div>
 				<div id={this.props.codeMirrorID} style={styles.inputBox}></div>
 
@@ -121,7 +124,9 @@ const PubDiscussionsInput = React.createClass({
 				</div>
 
 				<div style={styles.inputBottomLine}>
-					<div style={styles.submitButton} key={'newDiscussionSubmit'} onClick={this.submitDiscussion}>Submit</div>
+					<div style={styles.submitButton} key={'newDiscussionSubmit'} onClick={this.submitDiscussion}>
+						<FormattedMessage {...globalMessages.submit}/>
+					</div>
 				</div>
 
 			</div>

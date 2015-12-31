@@ -6,6 +6,9 @@ import PubDiscussionsItem from './PubDiscussionsItem';
 import PubDiscussionsInput from './PubDiscussionsInput';
 import PubDiscussionsOptions from './PubDiscussionsOptions';
 
+import {globalMessages} from '../../utils/globalMessages';
+import {FormattedMessage} from 'react-intl';
+
 let styles = {};
 
 const PubDiscussions = React.createClass({
@@ -37,7 +40,7 @@ const PubDiscussions = React.createClass({
 			<div style={styles.container}>
 				
 				<div className="pub-discussions-wrapper" style={rightBarStyles.sectionWrapper}>
-					<div style={rightBarStyles.sectionHeader}>Discussions</div>
+					<div style={rightBarStyles.sectionHeader}><FormattedMessage {...globalMessages.discussions}/></div>
 					<div style={rightBarStyles.sectionSubHeader}>
 						<PubDiscussionsOptions
 							slug={this.props.slug}

@@ -11,6 +11,9 @@ import marked from '../../modules/markdown/markdown';
 import markdownExtensions from '../../components/EditorPlugins';
 marked.setExtensions(markdownExtensions);
 
+// import {globalMessages} from '../../utils/globalMessages';
+import {FormattedMessage} from 'react-intl';
+
 let styles = {};
 
 const PubDiscussionsItem = React.createClass({
@@ -119,9 +122,17 @@ const PubDiscussionsItem = React.createClass({
 					</div>
 
 					<div style={[styles.discussionDetailsLine, styles.discussionDetailsLineBottom]}>
-						<Link style={globalStyles.link} to={'/pub/' + this.props.slug + '/discussions/' + discussionItem._id}><span style={styles.detailLineItem}>Permalink</span></Link>
+						<Link style={globalStyles.link} to={'/pub/' + this.props.slug + '/discussions/' + discussionItem._id}><span style={styles.detailLineItem}>
+							<FormattedMessage
+								id="discussion.permalink"
+								defaultMessage="Permalink"/>
+						</span></Link>
 						<span style={[styles.detailLineItemSeparator, this.props.noReply && {display: 'none'}]}>|</span>
-						<span style={[styles.detailLineItem, this.props.noReply && {display: 'none'}]} key={'replyButton-' + discussionItem._id} onClick={this.toggleReplyActive}>Reply</span>
+						<span style={[styles.detailLineItem, this.props.noReply && {display: 'none'}]} key={'replyButton-' + discussionItem._id} onClick={this.toggleReplyActive}>
+							<FormattedMessage
+								id="discussion.reply"
+								defaultMessage="Reply"/>
+						</span>
 					</div>
 
 				</div>
