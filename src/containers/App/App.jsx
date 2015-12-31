@@ -14,10 +14,6 @@ import analytics from '../../utils/analytics';
 
 import {IntlProvider} from 'react-intl';
 
-// const messages = {
-// 	testing: '¿Que?'
-// };
-
 let styles = {};
 const App = React.createClass({
 	propTypes: {
@@ -131,6 +127,7 @@ const App = React.createClass({
 				backgroundColor: headerBackground,
 			},
 		};
+		console.log(this.props.languageData.toJS());
 		return (
 			<IntlProvider locale={this.props.languageData.get('locale')} messages={this.props.languageData.get('languageObject').toJS()}>
 			<div style={styles.body}>

@@ -3,13 +3,18 @@
   "optional": "runtime",
   "loose": "all",
   "plugins": [
-    "typecheck"
+    "typecheck",
+    "react-intl"
   ],
+  "extra": {
+    "react-intl": {
+      "messagesDir": "./translations/messages"
+    }
+  },
   "env": {
     "development": {
       "plugins": [
-        "react-transform",
-        "react-intl"
+        "react-transform"
       ],      
       "extra": {
         "react-transform": {
@@ -20,9 +25,6 @@
               "redbox-react"
             ]
           }]
-        },
-        "react-intl": {
-          "messagesDir": "./translations/messages"
         }
       }
     }
