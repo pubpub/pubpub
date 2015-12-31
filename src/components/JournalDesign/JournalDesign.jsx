@@ -233,7 +233,9 @@ const JournalDesign = React.createClass({
 						color: '#999',
 					},
 				}} />
-				<div style={styles.sectionHeader}>Global</div> 
+				<div style={styles.sectionHeader}>
+					<FormattedMessage id="journal.global" defaultMessage="Global"/>
+				</div> 
 				<div style={styles.sectionContent}>
 					<div style={styles.sectionContentLeft}>
 						<div style={styles.colorRow}>

@@ -5,6 +5,14 @@ export const globalMessages = defineMessages({
 		id: 'global.login',
 		defaultMessage: 'Login',
 	},
+	register: {
+		id: 'global.register',
+		defaultMessage: 'Register',
+	},
+	Logout: {
+		id: 'global.Logout',
+		defaultMessage: 'Logout',
+	},
 	loginOrRegister: {
 		id: 'global.loginOrRegister',
 		defaultMessage: 'Login or Register',
@@ -33,6 +41,14 @@ export const globalMessages = defineMessages({
 		id: 'global.follow',
 		defaultMessage: 'Follow',
 	},
+	design: {
+		id: 'global.Design',
+		defaultMessage: 'Design',
+	},
+	curate: {
+		id: 'global.Curate',
+		defaultMessage: 'Curate',
+	},
 	tableOfContents: {
 		id: 'global.tableOfContents',
 		defaultMessage: 'Table of Contents',
@@ -57,12 +73,16 @@ export const globalMessages = defineMessages({
 		id: 'global.analytics',
 		defaultMessage: 'Analytics',
 	},
+	news: {
+		id: 'global.news',
+		defaultMessage: 'News',
+	},
 	citations: {
 		id: 'global.citations',
 		defaultMessage: 'Citations',
 	},
-	inTheNews: {
-		id: 'global.inTheNews',
+	inthenews: {
+		id: 'global.inthenews',
 		defaultMessage: 'In The News',
 	},
 	source: {
@@ -141,6 +161,7 @@ export const globalMessages = defineMessages({
 		id: 'global.settings',
 		defaultMessage: 'Settings',
 	},
+
 	by: {
 		id: 'global.by',
 		defaultMessage: 'by',

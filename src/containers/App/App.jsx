@@ -128,7 +128,7 @@ const App = React.createClass({
 			},
 		};
 		return (
-			<IntlProvider locale={this.props.languageData.get('locale')} messages={this.props.languageData.get('languageObject').toJS()}>
+			<IntlProvider locale={'en'} messages={this.props.languageData.get('languageObject').toJS()}>
 			<div style={styles.body}>
 				
 				{

@@ -3,6 +3,8 @@ import Radium from 'radium';
 import DocumentMeta from 'react-document-meta';
 import {globalStyles} from '../../utils/styleConstants';
 
+import {FormattedMessage} from 'react-intl';
+
 let styles = {};
 
 const NotFound = React.createClass({
@@ -17,7 +19,9 @@ const NotFound = React.createClass({
 
 				<DocumentMeta {...metaData} />
 
-				<div style={styles.header}>Doh - That page does not seem to exist!</div>
+				<div style={styles.header}>
+					<FormattedMessage id="notFound.pageDoesntExist" defaultMessage="Doh - That page does not seem to exist!"/>
+				</div>
 				<img src={'http://res.cloudinary.com/pubpub/image/upload/v1448221655/pubSad_blirpk.png'} />
 			</div>
 			

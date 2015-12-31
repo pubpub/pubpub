@@ -83,7 +83,7 @@ const EditorModalCollaborators = React.createClass({
 				}
 				{results.length === 0 || totalCount === 0
 					? <div style={styles.noResults}>
-						<FormattedMessage {...globalMessages.noresults} />
+						<FormattedMessage {...globalMessages.noResults} />
 					</div>
 					: null
 				}

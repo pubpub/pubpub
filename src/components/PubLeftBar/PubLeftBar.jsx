@@ -34,7 +34,7 @@ const PubLeftBar = React.createClass({
 				</div>
 				<Link style={globalStyles.link} to={'/explore'}><div key={'leftBar2'} style={styles.detail}>
 					<FormattedMessage {...globalMessages.Explore} />
-				Explore PubPub</div></Link>
+				</div></Link>
 
 				<div style={styles.leftBarDivider}></div>
 
@@ -52,7 +52,7 @@ const PubLeftBar = React.createClass({
 					<FormattedMessage {...globalMessages.citations} />
 				</div></Link>				
 				<Link style={globalStyles.link} to={'/pub/' + this.props.slug + '/news'}><div key={'leftBar7'} style={styles.detail}>
-					<FormattedMessage {...globalMessages.inTheNews} />
+					<FormattedMessage {...globalMessages.inthenews} />
 				</div></Link>
 				<Link style={globalStyles.link} to={'/pub/' + this.props.slug + '/source' + versionURL}><div key={'leftBar4'} style={styles.detail}>
 					<FormattedMessage {...globalMessages.source} />

@@ -63,7 +63,7 @@ const HeaderNav = React.createClass({
 						? 	<div>
 								<div style={styles.separator}></div>
 								<Link to={'/pubs/create'}><div key="headerNavNewPub" style={[styles.navButton, this.headerTextColorStyle()]}>
-									<FormattedMessage {...globalMessages.account} />
+									<FormattedMessage {...globalMessages.newPub} />
 								</div></Link>
 								{
 									this.props.isJournalAdmin 

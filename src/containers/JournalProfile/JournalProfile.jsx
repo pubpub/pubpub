@@ -71,12 +71,12 @@ const JournalAdmin = React.createClass({
 									<li style={[navStyles.navSeparator, this.props.journalData.getIn(['journalData', 'isAdmin']) && navStyles.navItemShow]}></li>
 
 									<Link to={'/journal/' + this.props.subdomain + '/design'} style={globalStyles.link}><li key="journalNav1" style={[navStyles.navItem, this.props.journalData.getIn(['journalData', 'isAdmin']) && navStyles.navItemShow]}>
-										<FormattedMessage {...globalMessages.Design} />
+										<FormattedMessage {...globalMessages.design} />
 									</li></Link>
 									<li style={[navStyles.navSeparator, this.props.journalData.getIn(['journalData', 'isAdmin']) && navStyles.navItemShow]}></li>
 
 									<Link to={'/journal/' + this.props.subdomain + '/curate'} style={globalStyles.link}><li key="journalNav2" style={[navStyles.navItem, this.props.journalData.getIn(['journalData', 'isAdmin']) && navStyles.navItemShow]}>
-										<FormattedMessage {...globalMessages.Curate} />
+										<FormattedMessage {...globalMessages.curate} />
 									</li></Link>
 									<li style={[navStyles.navSeparator, this.props.journalData.getIn(['journalData', 'isAdmin']) && navStyles.navItemShow, navStyles.navSeparatorNoMobile]}></li>
 
@@ -95,7 +95,11 @@ const JournalAdmin = React.createClass({
 									<Link to={'/journal/' + this.props.subdomain} style={globalStyles.link}>
 										<span style={styles.headerJournalName} key={'headerJournalName'}>{this.props.journalData.getIn(['journalData', 'journalName'])}</span>
 									</Link>
-									<span style={[styles.headerMode, this.props.mode && styles.headerModeShow]}>: <FormattedMessage {...globalMessages[this.props.mode]} /></span>
+									{this.props.mode
+										? <span style={styles.headerMode}>: <FormattedMessage {...globalMessages[this.props.mode]} /></span>
+										: null
+
+									}
 								</div>
 								<div style={styles.journalProfileContent}>
 									{() => {
@@ -168,10 +172,6 @@ styles = {
 	headerMode: {
 		color: '#888',
 		fontSize: 25,
-		display: 'none',
-	},
-	headerModeShow: {
-		display: 'inline',
 	},
 	journalProfileContent: {
 		marginLeft: 10,

@@ -141,7 +141,7 @@ const HeaderMenu = React.createClass({
 									</li></Link>
 
 									<Link to={'/pub/' + this.props.slug + '/news'} style={globalStyles.link}><li key="menuListItem20" style={styles.menuItem}>
-										<FormattedMessage {...globalMessages.inTheNews} />
+										<FormattedMessage {...globalMessages.inthenews} />
 									</li></Link>
 
 									<Link to={'/pub/' + this.props.slug + '/source'} style={globalStyles.link}><li key="menuListItem9" style={styles.menuItem}>

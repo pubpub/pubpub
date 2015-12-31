@@ -12,6 +12,8 @@ import {PubLeftBar, PubNav, LoaderDeterminate} from '../../components';
 import {PubMetaDiscussions, PubMetaHistory, PubMetaJournals, PubMetaHistoryDiff, PubMetaSource} from '../../components/PubMetaPanels';
 import {globalStyles, pubSizes} from '../../utils/styleConstants';
 
+import {globalMessages} from '../../utils/globalMessages';
+import {FormattedMessage} from 'react-intl';
 
 let styles = {};
 
@@ -120,7 +122,7 @@ const PubMeta = React.createClass({
 
 					<div style={[styles.centerContent, styles[this.props.readerData.get('status')]]}>
 						<div style={styles.metaTitle}>
-							<span style={styles.metaTitleType}>{this.props.meta}:</span> 
+							<span style={styles.metaTitleType}><FormattedMessage {...globalMessages[this.props.meta]} />:</span> 
 							<Link to={'/pub/' + this.props.slug + versionURL} key={'metaTitleLink'} style={globalStyles.link}><span style={styles.metaTitlePub}>{this.props.readerData.getIn(['pubData', 'title'])}</span></Link>
 							
 						</div>
@@ -289,6 +291,7 @@ styles = {
 		color: '#444',
 		paddingRight: 10,
 		fontSize: '35px',
+		textTransform: 'lowercase',
 	},
 	metaTitlePub: {
 		color: '#888',

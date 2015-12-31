@@ -9,6 +9,9 @@ import {getProfile, updateUser, userNavOut, userNavIn} from '../../actions/user'
 import {ImageCropper, LoaderDeterminate, UserMain, UserSettings} from '../../components';
 import {globalStyles, profileStyles, navStyles} from '../../utils/styleConstants';
 
+import {globalMessages} from '../../utils/globalMessages';
+import {FormattedMessage} from 'react-intl';
+
 let styles = {};
 
 const Profile = React.createClass({
@@ -91,13 +94,19 @@ const Profile = React.createClass({
 					<div style={[globalStyles.hiddenUntilLoad, globalStyles[this.props.profileData.get('status')]]}>
 						<ul style={navStyles.navList}>
 
-							<li key="profileNav0"style={[navStyles.navItem, ownProfile === 'self' && navStyles.navItemShow]} onClick={this.submitLogout}>Logout</li>
+							<li key="profileNav0"style={[navStyles.navItem, ownProfile === 'self' && navStyles.navItemShow]} onClick={this.submitLogout}>
+								<FormattedMessage {...globalMessages.Logout} />
+							</li>
 							<li style={[navStyles.navSeparator, ownProfile === 'self' && navStyles.navItemShow]}></li>
 
-							<Link to={'/user/' + this.props.username + '/settings'} style={globalStyles.link}><li key="profileNav1"style={[navStyles.navItem, ownProfile === 'self' && navStyles.navItemShow]}>Settings</li></Link>
+							<Link to={'/user/' + this.props.username + '/settings'} style={globalStyles.link}><li key="profileNav1"style={[navStyles.navItem, ownProfile === 'self' && navStyles.navItemShow]}>
+								<FormattedMessage {...globalMessages.settings} />
+							</li></Link>
 							<li style={[navStyles.navSeparator, ownProfile === 'self' && navStyles.navItemShow]}></li>
 
-							<li key="profileNav2"style={[navStyles.navItem, ownProfile === 'other' && navStyles.navItemShow]}>Follow</li>
+							<li key="profileNav2"style={[navStyles.navItem, ownProfile === 'other' && navStyles.navItemShow]}>
+								<FormattedMessage {...globalMessages.follow} />
+							</li>
 							<li style={[navStyles.navSeparator, ownProfile === 'other' && styles.navItemShow]}></li>
 							
 						</ul>
@@ -110,7 +119,7 @@ const Profile = React.createClass({
 							<img style={styles.userImage} src={profileData.image} />
 							{/* <div key={'changeUserImageButton'} style={[styles.editImageButton, this.props.mode === 'settings' && styles.editImageButtonShow]} onClick={this.editImageClicked}>Change Image</div> */}
 							<div style={[styles.fileInputWrapper, this.props.mode === 'settings' && styles.fileInputWrapperShow]} key={'changeUserImageButton'}>
-								Change Image
+								<FormattedMessage id="user.changeImage" defaultMessage="Change Image"/>
 								<input style={styles.hiddenFileInput} type="file" accept="image/*" onChange={this.onFileSelect} />
 							</div>
 						</div>
@@ -125,7 +134,10 @@ const Profile = React.createClass({
 								<Link to={'/user/' + this.props.username} style={globalStyles.link}>
 									<span style={styles.profileName} key={'userProfileName'}>{profileData.name}</span>
 								</Link>
-								<span style={[styles.headerMode, this.props.mode && styles.headerModeShow]}>: {this.props.mode}</span>
+								{this.props.mode
+									? <span style={styles.headerMode}>{': '}<FormattedMessage {...globalMessages[this.props.mode]} /></span>
+									: null
+								}
 							</div>
 
 							{() => {
@@ -235,10 +247,6 @@ styles = {
 	headerMode: {
 		color: '#888',
 		fontSize: 30,
-		display: 'none',
-	},
-	headerModeShow: {
-		display: 'inline',
 	},
 	fileInputWrapper: {
 		width: '100%',

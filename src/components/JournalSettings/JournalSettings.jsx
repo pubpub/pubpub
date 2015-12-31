@@ -91,7 +91,9 @@ const JournalSettings = React.createClass({
 					})
 				}
 				{results.length === 0 || totalCount === 0
-					? <div style={styles.noResults}>No Results</div>
+					? <div style={styles.noResults}>
+						<FormattedMessage {...globalMessages.noResults} />
+					</div>
 					: null
 				}
 			</div>
