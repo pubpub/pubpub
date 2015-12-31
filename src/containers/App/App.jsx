@@ -131,7 +131,7 @@ const App = React.createClass({
 			},
 		};
 		return (
-			<IntlProvider locale={this.props.journalData.getIn(['journalData', 'locale'])} messages={this.props.journalData.getIn(['journalData', 'languageObject']).toJS()}>
+			<IntlProvider locale={this.props.journalData.getIn(['journalData', 'locale'])} messages={this.props.journalData.getIn(['journalData', 'languageObject']) ? this.props.journalData.getIn(['journalData', 'languageObject']).toJS() : {}}>
 			<div style={styles.body}>
 				
 				{
