@@ -3,6 +3,9 @@ import Radium from 'radium';
 import {LoaderIndeterminate} from '../../components';
 import {globalStyles} from '../../utils/styleConstants';
 
+import {globalMessages} from '../../utils/globalMessages';
+import {FormattedMessage} from 'react-intl';
+
 let styles = {};
 
 const UserSettings = React.createClass({
@@ -30,21 +33,29 @@ const UserSettings = React.createClass({
 			<div style={styles.container}>
 
 				<div key={'settingsForm-name'} style={styles.inputWrapper}>
-					<label style={styles.manualFormInputTitle} htmlFor={'name'}>Name</label>
+					<label style={styles.manualFormInputTitle} htmlFor={'settingsForm-name'}>
+						<FormattedMessage id="user.name" defaultMessage="Name"/>
+					</label>
 					<input style={styles.manualFormInput} name={'name'} id={'settingsForm-name'} ref={'name'} type="text" defaultValue={this.props.profileData.name}/>
 				</div>
 
 				<div key={'settingsForm-title'} style={styles.inputWrapper}>
-					<label style={styles.manualFormInputTitle} htmlFor={'title'}>Title</label>
+					<label style={styles.manualFormInputTitle} htmlFor={'settingsForm-title'}>
+						<FormattedMessage id="user.titleForPerson" defaultMessage="Title"/>
+					</label>
 					<input style={styles.manualFormInput} name={'title'} id={'settingsForm-title'} ref={'title'} type="text" defaultValue={this.props.profileData.title}/>
 				</div>
 
 				<div key={'settingsForm-bio'} style={styles.inputWrapper}>
-					<label style={styles.manualFormInputTitle} htmlFor={'bio'}>Bio</label>
+					<label style={styles.manualFormInputTitle} htmlFor={'settingsForm-bio'}>
+						<FormattedMessage id="user.userBio" defaultMessage="Bio"/>
+					</label>
 					<textarea style={[styles.manualFormInput, styles.manualFormTextArea]} name={'bio'} id={'settingsForm-bio'} ref={'bio'} defaultValue={this.props.profileData.bio}></textarea>
 				</div>
 
-				<div style={styles.saveSettings} key={'userSettingsSaveButton'} onClick={this.saveSettings}>Save</div>
+				<div style={styles.saveSettings} key={'userSettingsSaveButton'} onClick={this.saveSettings}>
+					<FormattedMessage {...globalMessages.save} />
+				</div>
 
 				<div style={styles.loader}>
 					{this.props.saveStatus === 'saving'

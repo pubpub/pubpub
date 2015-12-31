@@ -169,6 +169,14 @@ export const globalMessages = defineMessages({
 		id: 'global.draft',
 		defaultMessage: 'draft',
 	},
+	Draft: {
+		id: 'global.Draft',
+		defaultMessage: 'Draft',
+	},
+	ReadyForPeerReview: {
+		id: 'global.ReadyForPeerReview',
+		defaultMessage: 'Ready For Peer Review',
+	},
 	references: {
 		id: 'global.references',
 		defaultMessage: 'References',
@@ -232,6 +240,10 @@ export const globalMessages = defineMessages({
 	},
 	submit: {
 		id: 'global.submit',
+		defaultMessage: 'submit',
+	},
+	Submit: {
+		id: 'global.Submit',
 		defaultMessage: 'Submit',
 	},
 	collections: {
@@ -257,6 +269,22 @@ export const globalMessages = defineMessages({
 	draftVersion: {
 		id: 'global.draftVersion',
 		defaultMessage: 'Draft Version',
+	},
+	abstract: {
+		id: 'global.abstract',
+		defaultMessage: 'abstract',
+	},
+	authorsNote: {
+		id: 'global.authorsNote',
+		defaultMessage: 'authors note',
+	},
+	markdown: {
+		id: 'global.markdown',
+		defaultMessage: 'markdown',
+	},
+	print: {
+		id: 'global.print',
+		defaultMessage: 'Print',
 	},
 	
 });

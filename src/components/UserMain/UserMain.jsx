@@ -5,6 +5,9 @@ import {globalStyles} from '../../utils/styleConstants';
 import smoothScroll from '../../utils/smoothscroll';
 import {DiscussionPreview, PubPreview} from '../ItemPreviews';
 
+import {globalMessages} from '../../utils/globalMessages';
+import {FormattedMessage} from 'react-intl';
+
 let styles = {};
 
 const UserMain = React.createClass({
@@ -55,17 +58,23 @@ const UserMain = React.createClass({
 				<div style={styles.statsWrapper}>
 					<ul style={styles.statsList}>
 						<li key="profileStatsItem1" style={[styles.statsItem]}>
-							<div style={styles.statsTitle}>Reputation</div>
+							<div style={styles.statsTitle}>
+								<FormattedMessage id="user.reputation" defaultMessage="Reputation"/>
+							</div>
 							<div style={styles.statsCount}><span style={styles.statParenthese}>(</span>{this.calculateReputation()}<span style={styles.statParenthese}>)</span></div>
 						</li>
 						
 						<li key="profileStatsItem2" style={[styles.statsItem]} onClick={this.statClick('pubs-section')}>
-							<div style={styles.statsTitle}>Pubs</div>
+							<div style={styles.statsTitle}>
+								<FormattedMessage {...globalMessages.pubs} />
+							</div>
 							<div style={styles.statsCount}><span style={styles.statParenthese}>(</span>{this.props.profileData.pubs.length}<span style={styles.statParenthese}>)</span></div>
 						</li>
 						
 						<li key="profileStatsItem3" style={[styles.statsItem]} onClick={this.statClick('discussions-section')}>
-							<div style={styles.statsTitle}>Discussions</div>
+							<div style={styles.statsTitle}>
+								<FormattedMessage {...globalMessages.discussions} />
+							</div>
 							<div style={styles.statsCount}><span style={styles.statParenthese}>(</span>{this.props.profileData.discussions.length}<span style={styles.statParenthese}>)</span></div>
 						</li>
 						
@@ -85,7 +94,9 @@ const UserMain = React.createClass({
 				{/* Selected Content based on nav */}
 				<div style={styles.profileContent}>
 				
-					<div id={'pubs-section'} style={styles.sectionHeader}>Pubs</div>
+					<div id={'pubs-section'} style={styles.sectionHeader}>
+						<FormattedMessage {...globalMessages.pubs} />
+					</div>
 					{()=>{
 						const outputPubs = [];
 						for (let index = this.props.profileData.pubs.length; index--;) {
@@ -97,7 +108,9 @@ const UserMain = React.createClass({
 						return outputPubs;
 					}()}
 
-					<div id={'discussions-section'} style={styles.sectionHeader}>Discussions</div>
+					<div id={'discussions-section'} style={styles.sectionHeader}>
+						<FormattedMessage {...globalMessages.discussions} />
+					</div>
 					{()=>{
 						const outputDiscussions = [];
 						for (let index = this.props.profileData.discussions.length; index--;) {

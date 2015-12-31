@@ -8,6 +8,9 @@ import {CollectionEdit, CollectionMain} from '../../components';
 import {NotFound} from '../../containers';
 import {globalStyles, navStyles} from '../../utils/styleConstants';
 
+import {globalMessages} from '../../utils/globalMessages';
+import {FormattedMessage} from 'react-intl';
+
 let styles = {};
 
 const Collection = React.createClass({
@@ -60,7 +63,10 @@ const Collection = React.createClass({
 
 								<div style={styles.title}>
 									<Link style={globalStyles.link} to={'/collection/' + this.props.slug}><span style={styles.headerTitle}>{collectionData.title}</span></Link> 
-									{this.props.mode ? <span style={styles.headerModeText}> : {this.props.mode}</span> : null}
+									{this.props.mode 
+										? <span style={styles.headerModeText}>{' : '}<FormattedMessage {...globalMessages[this.props.mode]} /></span> 
+										: null
+									}
 								</div>
 								
 								<div style={styles.descriptionWrapper}>
@@ -72,7 +78,9 @@ const Collection = React.createClass({
 
 							<div style={ this.props.mode && {display: 'none'} }>
 								<ul style={[navStyles.navList, styles.navList]}>
-									<Link to={'/collection/' + this.props.slug + '/edit'} style={globalStyles.link}><li key="collectionNav0" style={[navStyles.navItem, this.props.journalData.getIn(['journalData', 'isAdmin']) && navStyles.navItemShow, styles.navItemBackground]}>Edit</li></Link>
+									<Link to={'/collection/' + this.props.slug + '/edit'} style={globalStyles.link}><li key="collectionNav0" style={[navStyles.navItem, this.props.journalData.getIn(['journalData', 'isAdmin']) && navStyles.navItemShow, styles.navItemBackground]}>
+										<FormattedMessage {...globalMessages.edit} />
+									</li></Link>
 								</ul>
 							</div>
 							
