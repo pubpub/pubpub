@@ -143,7 +143,7 @@ styles = {
 		width: 'calc(80% - 20px)',
 		left: '10%',
 		wordWrap: 'break-word',
-		transform: 'translateY(10px)',
+		transform: 'translateY(20px)',
 		fontSize: '11px',
 		boxShadow: '0px 0px 5px rgba(0,0,0,0.7)',
 		padding: '10px',
@@ -151,7 +151,7 @@ styles = {
 
 	},
 	hoverRefVisible: {
-		display: 'block',
+		display: 'inline-block',
 	},
 
 	// img: {

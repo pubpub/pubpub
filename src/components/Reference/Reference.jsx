@@ -79,7 +79,7 @@ const Reference = React.createClass({
 				{citationStrings.journal}
 				{citationStrings.number}
 				{citationStrings.pages}
-				{citationStrings.url}
+				<a href={citation.url} style={{textDecoration: 'none', color: 'inherit'}}>{citationStrings.url}</a>
 				{citationStrings.note}
 			</span>);
 
@@ -94,7 +94,7 @@ const Reference = React.createClass({
 				{citationStrings.journal}
 				{citationStrings.number}
 				{citationStrings.pages}
-				{citationStrings.url}
+				<a href={citation.url} style={{textDecoration: 'none', color: 'inherit'}}>{citationStrings.url}</a>
 				{citationStrings.note}
 			</span>);
 
@@ -110,7 +110,7 @@ const Reference = React.createClass({
 				{citationStrings.journal}
 				{citationStrings.number}
 				{citationStrings.pages}
-				{citationStrings.url}
+				<a href={citation.url} style={{textDecoration: 'none', color: 'inherit'}}>{citationStrings.url}</a>
 				{citationStrings.note}
 			</span>);
 
