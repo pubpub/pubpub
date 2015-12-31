@@ -220,9 +220,7 @@ const JournalCurate = React.createClass({
 
 				<div>
 					<div style={styles.sectionHeader}>
-						<FormattedMessage
-							id="journal.collections"
-							defaultMessage="Collections"/>
+						<FormattedMessage {...globalMessages.collections} />
 					</div>
 						{
 							this.props.journalData.collections && this.props.journalData.collections.length

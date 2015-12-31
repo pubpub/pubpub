@@ -125,7 +125,7 @@ const PubDiscussionsInput = React.createClass({
 
 				<div style={styles.inputBottomLine}>
 					<div style={styles.submitButton} key={'newDiscussionSubmit'} onClick={this.submitDiscussion}>
-						<FormattedMessage {...globalMessages.submit}/>
+						<FormattedMessage {...globalMessages.Submit}/>
 					</div>
 				</div>
 

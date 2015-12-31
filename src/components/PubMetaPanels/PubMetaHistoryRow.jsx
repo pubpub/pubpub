@@ -4,6 +4,8 @@ import dateFormat from 'dateformat';
 import { Link } from 'react-router';
 // import {globalStyles} from '../../utils/styleConstants';
 
+import {FormattedMessage} from 'react-intl';
+
 let styles = {};
 
 const PubMetaHistoryRow = React.createClass({
@@ -30,14 +32,17 @@ const PubMetaHistoryRow = React.createClass({
 				<div style={styles.versionDetails}>
 					<div style={styles.versionTitleLine}>
 						<span style={styles.versionNumber}>{this.props.index + 1}.</span>
-						<span style={styles.versionStatus}>{this.props.historyItem.status === 'Draft' ? 'Draft Version' : 'Peer-Review Ready'}</span>
+						<span style={styles.versionStatus}>{this.props.historyItem.status === 'Draft' 
+							? <FormattedMessage id="pub.draftVersion" defaultMessage="Draft Version"/>
+							: <FormattedMessage id="pub.readyForReview" defaultMessage="Ready for Peer Review"/>
+						}</span>
 						<span style={styles.versionDate}>{dateFormat(this.props.historyItem.publishDate, 'mm/dd/yy, h:MMTT')}</span>
 					</div>
 
 					<div style={styles.versionChangesLine}>
-						<span style={styles.additions}>{diffObject.additions} additions</span> 
+						<span style={styles.additions}>{diffObject.additions} <FormattedMessage id="pub.additions" defaultMessage="additions"/></span> 
 						<span style={styles.changeCountSeparator}>|</span> 
-						<span style={styles.deletions}>{diffObject.deletions} deletions</span>
+						<span style={styles.deletions}>{diffObject.deletions} <FormattedMessage id="pub.deletions" defaultMessage="deletions"/></span>
 					</div>
 
 					<div style={styles.versionMessage}>
@@ -47,8 +52,12 @@ const PubMetaHistoryRow = React.createClass({
 
 				<div style={styles.versionButtons}>
 					<div style={styles.versionButtons}>
-						<Link style={styles.link} to={'/pub/' + this.props.slug + '/historydiff?version=' + (this.props.index + 1)}><div key={'historyRowViewButton-' + this.props.index} style={styles.historyButton} >View Changes</div></Link>
-						<Link style={styles.link} to={'/pub/' + this.props.slug + '?version=' + (this.props.index + 1)}><div key={'historyRowReadButton-' + this.props.index} style={styles.historyButton} >Read pub at this point</div></Link>
+						<Link style={styles.link} to={'/pub/' + this.props.slug + '/historydiff?version=' + (this.props.index + 1)}><div key={'historyRowViewButton-' + this.props.index} style={styles.historyButton}>
+							<FormattedMessage id="pub.viewChanges" defaultMessage="View Changes"/>
+						</div></Link>
+						<Link style={styles.link} to={'/pub/' + this.props.slug + '?version=' + (this.props.index + 1)}><div key={'historyRowReadButton-' + this.props.index} style={styles.historyButton}>
+							<FormattedMessage id="pub.readAtThisPoint" defaultMessage="Read pub at this point"/>
+						</div></Link>
 					</div>
 				</div>
 					

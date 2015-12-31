@@ -4,12 +4,16 @@ import Radium from 'radium';
 import PureRenderMixin from 'react-addons-pure-render-mixin';
 import {globalStyles} from '../../utils/styleConstants';
 
+import {globalMessages} from '../../utils/globalMessages';
+import {injectIntl, FormattedMessage} from 'react-intl';
+
 let styles = {};
 
 const LoginForm = React.createClass({
 	propTypes: {
 		fields: PropTypes.object.isRequired,
 		handleSubmit: PropTypes.func.isRequired,
+		intl: PropTypes.object,
 	},
 
 	mixins: [PureRenderMixin],
@@ -23,14 +27,20 @@ const LoginForm = React.createClass({
 		return (
 			<form onSubmit={handleSubmit}>
 				<div>
-					<label style={styles.label}>Email</label>
-					<input key="loginEmail" style={styles.input} type="text" placeholder="Email" {...email}/>
+					<label style={styles.label}>
+						<FormattedMessage {...globalMessages.Email} />
+					</label>
+					<input key="loginEmail" style={styles.input} type="text" placeholder={this.props.intl.formatMessage(global.Email)} {...email}/>
 				</div>
 				<div>
-					<label style={styles.label}>Password</label>
-					<input key="loginPassword" style={styles.input} type="password" placeholder="Password" {...password}/>
+					<label style={styles.label}>
+						<FormattedMessage {...globalMessages.Password} />
+					</label>
+					<input key="loginPassword" style={styles.input} type="password" placeholder={this.props.intl.formatMessage(global.Password)} {...password}/>
 				</div>
-				<button type="submit" key="loginSubmit" style={styles.submit} onClick={handleSubmit}>Submit</button>
+				<button type="submit" key="loginSubmit" style={styles.submit} onClick={handleSubmit}>
+					<FormattedMessage {...globalMessages.Submit} />
+				</button>
 			</form>
 		);
 	}
@@ -39,7 +49,7 @@ const LoginForm = React.createClass({
 export default reduxForm({
 	form: 'loginForm',
 	fields: ['email', 'password']
-})(Radium(LoginForm));
+})(injectIntl(Radium(LoginForm)));
 
 styles = {
 	submit: {

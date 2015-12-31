@@ -234,9 +234,29 @@ export const globalMessages = defineMessages({
 		id: 'global.submit',
 		defaultMessage: 'Submit',
 	},
+	collections: {
+		id: 'global.collections',
+		defaultMessage: 'Collections',
+	},
+	admins: {
+		id: 'global.admins',
+		defaultMessage: 'Admins',
+	},
+	Email: {
+		id: 'global.Email',
+		defaultMessage: 'Email',
+	},
+	Password: {
+		id: 'global.Password',
+		defaultMessage: 'Password',
+	},
+	Explore: {
+		id: 'global.Explore',
+		defaultMessage: 'Explore',
+	},
+	draftVersion: {
+		id: 'global.draftVersion',
+		defaultMessage: 'Draft Version',
+	},
 	
 });
-
-// <FormattedMessage
-// 	id="collections.collectionTitle"
-// 	defaultMessage="Collection Title"/>

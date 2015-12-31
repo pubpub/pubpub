@@ -5,6 +5,9 @@ import {Autocomplete} from '../../containers';
 import { Link } from 'react-router';
 const HoverLink = Radium(Link);
 
+import {globalMessages} from '../../utils/globalMessages';
+import {FormattedMessage} from 'react-intl';
+
 let styles = {};
 
 const LandingComponentSearch = React.createClass({
@@ -39,7 +42,9 @@ const LandingComponentSearch = React.createClass({
 				}
 
 				{results.length === 0
-					? <div style={styles.noResults}>No Results</div>
+					? <div style={styles.noResults}>
+						<FormattedMessage {...globalMessages.noResults} />
+					</div>
 					: null
 				}
 			</div>

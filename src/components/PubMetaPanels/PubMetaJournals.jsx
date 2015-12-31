@@ -5,6 +5,9 @@ import dateFormat from 'dateformat';
 import {Autocomplete} from '../../containers';
 // import {globalStyles} from '../../utils/styleConstants';
 
+import {globalMessages} from '../../utils/globalMessages';
+import {injectIntl, defineMessages, FormattedMessage} from 'react-intl';
+
 let styles = {};
 
 const PubMetaExperts = React.createClass({
@@ -15,6 +18,7 @@ const PubMetaExperts = React.createClass({
 		submittedToList: PropTypes.array,
 		handleSubmitToJournal: PropTypes.func,
 		isAuthor: PropTypes.bool,
+		intl: PropTypes.object,
 	},
 
 	getDefaultProps: function() {
@@ -59,13 +63,17 @@ const PubMetaExperts = React.createClass({
 									<JournalPreview journalData={journal}/>
 								</div>
 								
-								<div style={styles.action} key={'featuredPubSearchAdd-' + index} onClick={this.submitToJournal(journal)}>submit</div>
+								<div style={styles.action} key={'featuredPubSearchAdd-' + index} onClick={this.submitToJournal(journal)}>
+									<FormattedMessage {...globalMessages.submit} />
+								</div>
 							</div>
 						);	
 					})
 				}
 				{results.length === 0 || totalCount === 0
-					? <div style={styles.noResults}>No Results</div>
+					? <div style={styles.noResults}>
+						<FormattedMessage {...globalMessages.noResults} />
+					</div>
 					: null
 				}
 				
@@ -74,16 +82,25 @@ const PubMetaExperts = React.createClass({
 	},
 
 	render: function() {
+		const messages = defineMessages({
+			searchJournals: {
+				id: 'pub.searchJournals',
+				defaultMessage: 'Search Journals to Submit to',
+			},
+		});
+
 		return (
 			<div style={styles.container}>
 
-				<div style={styles.sectionHeader}>Journal Submissions</div>
+				<div style={styles.sectionHeader}>
+					<FormattedMessage id="pub.journalSubmissions" defaultMessage="Journal Submissions"/>
+				</div>
 				{this.props.isAuthor
 					? <div style={styles.searchWrapper}>
 						<Autocomplete 
 							autocompleteKey={'pubSubmitToJournalAutocomplete'} 
 							route={'autocompleteJournals'} 
-							placeholder="Search Journals to Submit to" 
+							placeholder={this.props.intl.formatMessage(messages.searchJournals)} 
 							resultRenderFunction={this.renderJournalSearchResults}/>
 					</div>
 					: null
@@ -109,10 +126,14 @@ const PubMetaExperts = React.createClass({
 
 				{this.props.submittedTo.length
 					? null
-					: <div style={styles.emptyBlock}>Not submitted to any Journals</div>
+					: <div style={styles.emptyBlock}>
+						<FormattedMessage id="pub.noSubmissions" defaultMessage="Not submitted to any Journals"/>
+					</div>
 				}
 
-				<div style={styles.sectionHeader}>Journals Featured In</div>
+				<div style={styles.sectionHeader}>
+					<FormattedMessage id="pub.journalsFeaturedIn" defaultMessage="Journals Featured In"/>
+				</div>
 				<div style={styles.journalListWrapper}>
 					{this.props.featuredIn.map((journalItem, index)=>{
 						return (
@@ -128,7 +149,9 @@ const PubMetaExperts = React.createClass({
 				
 				{this.props.featuredIn.length
 					? null
-					: <div style={styles.emptyBlock}>Not featured in any Journals</div>
+					: <div style={styles.emptyBlock}>
+						<FormattedMessage id="pub.notFeatured" defaultMessage="Not featured in any Journals"/>
+					</div>
 				}
 
 					
@@ -137,7 +160,7 @@ const PubMetaExperts = React.createClass({
 	}
 });
 
-export default Radium(PubMetaExperts);
+export default injectIntl(Radium(PubMetaExperts));
 
 styles = {
 	container: {

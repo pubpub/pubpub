@@ -4,6 +4,9 @@ import {Autocomplete} from '../../containers';
 import {LoaderIndeterminate} from '../../components';
 import {globalStyles} from '../../utils/styleConstants';
 
+import {globalMessages} from '../../utils/globalMessages';
+import {injectIntl, defineMessages, FormattedMessage} from 'react-intl';
+
 let styles = {};
 
 const JournalSettings = React.createClass({
@@ -11,6 +14,7 @@ const JournalSettings = React.createClass({
 		journalData: PropTypes.object,
 		journalSaving: PropTypes.bool,
 		journalSaveHandler: PropTypes.func,
+		intl: PropTypes.object,
 	},
 
 	getDefaultProps: function() {
@@ -80,7 +84,9 @@ const JournalSettings = React.createClass({
 								<img style={styles.image} src={user.thumbnail} />
 							</div>
 							<div style={styles.name}>{user.name}</div>
-							<div style={styles.action} key={'collabSearchAdd-' + index} onClick={this.handleAddNew(user._id)}>add</div>
+							<div style={styles.action} key={'collabSearchAdd-' + index} onClick={this.handleAddNew(user._id)}>
+								<FormattedMessage {...globalMessages.add} />
+							</div>
 						</div>);	
 					})
 				}
@@ -94,20 +100,33 @@ const JournalSettings = React.createClass({
 
 	render: function() {
 		// console.log(this.props.journalData);
+		const messages = defineMessages({
+			addNewAdmin: {
+				id: 'journal.addNewAdmin',
+				defaultMessage: 'Add new admin',
+			},
+		});
+
 		return (
 			<div style={styles.container}>
 
 				<div key={'settingsForm-name'} style={styles.inputWrapper}>
-					<label style={styles.manualFormInputTitle} htmlFor={'name'}>Journal Name</label>
+					<label style={styles.manualFormInputTitle} htmlFor={'name'}>
+						<FormattedMessage {...globalMessages.journalName} />
+					</label>
 					<input style={styles.manualFormInput} name={'name'} id={'settingsForm-name'} ref={'name'} type="text" defaultValue={this.props.journalData.journalName}/>
 				</div>
 
 				<div key={'settingsForm-customDomain'} style={styles.inputWrapper}>
-					<label style={styles.manualFormInputTitle} htmlFor={'customDomain'}>Custom Domain</label>
+					<label style={styles.manualFormInputTitle} htmlFor={'customDomain'}>
+						<FormattedMessage id="journal.customDomain" defaultMessage="Custom Domain"/>
+					</label>
 					<input style={styles.manualFormInput} name={'customDomain'} id={'settingsForm-customDomain'} ref={'customDomain'} type="text" defaultValue={this.props.journalData.customDomain}/>
 				</div>
 
-				<div style={styles.saveSettings} key={'userSettingsSaveButton'} onClick={this.saveSettings}>Save</div>
+				<div style={styles.saveSettings} key={'userSettingsSaveButton'} onClick={this.saveSettings}>
+					<FormattedMessage {...globalMessages.save} />
+				</div>
 
 				<div style={styles.loader}>
 					{this.props.journalSaving
@@ -116,12 +135,14 @@ const JournalSettings = React.createClass({
 					}
 				</div>
 
-				<div style={styles.settingsHeader}>Journal Admins</div>
+				<div style={styles.settingsHeader}>
+					<FormattedMessage {...globalMessages.admins} />
+				</div>
 				<div style={styles.adminAddWrapper}>
 					<Autocomplete 
 						autocompleteKey={'journalAdminAutocomplete'} 
 						route={'autocompleteUsers'} 
-						placeholder="Add new admin" 
+						placeholder={this.props.intl.formatMessage(messages.addNewAdmin)}
 						resultRenderFunction={this.renderAdminSearchResults}/>
 				</div>
 
@@ -132,7 +153,9 @@ const JournalSettings = React.createClass({
 
 								<div style={[styles.imageColumn, styles.columnHeader]}> <img style={styles.userImage} src={admin.thumbnail} /> </div>
 								<div style={[styles.nameColumn]}>{admin.name}</div>
-								<div key={'adminRemove-' + index} style={[styles.optionColumn, styles.optionColumnClickable, this.props.journalData.admins.length === 1 && styles.hideRemove]} onClick={this.removeUser(admin._id)}>remove</div>
+								<div key={'adminRemove-' + index} style={[styles.optionColumn, styles.optionColumnClickable, this.props.journalData.admins.length === 1 && styles.hideRemove]} onClick={this.removeUser(admin._id)}>
+									<FormattedMessage {...globalMessages.remove} />
+								</div>
 								<div style={globalStyles.clearFix}></div>
 
 							</div>
@@ -145,7 +168,7 @@ const JournalSettings = React.createClass({
 	}
 });
 
-export default Radium(JournalSettings);
+export default injectIntl(Radium(JournalSettings));
 
 styles = {
 	container: {

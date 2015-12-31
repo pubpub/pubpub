@@ -4,6 +4,9 @@ import Radium from 'radium';
 import PureRenderMixin from 'react-addons-pure-render-mixin';
 import {globalStyles} from '../../utils/styleConstants';
 
+import {globalMessages} from '../../utils/globalMessages';
+import {injectIntl, defineMessages, FormattedMessage} from 'react-intl';
+
 let styles = {};
 
 const LoginFormRegister = React.createClass({
@@ -12,7 +15,7 @@ const LoginFormRegister = React.createClass({
 		userImage: PropTypes.string,
 		handleSubmit: PropTypes.func.isRequired,
 		onFileSelect: PropTypes.func.isRequired,
-
+		intl: PropTypes.object,
 	},
 
 	mixins: [PureRenderMixin],
@@ -23,33 +26,50 @@ const LoginFormRegister = React.createClass({
 			handleSubmit
 		} = this.props;
 
+		const messages = defineMessages({
+			fullName: {
+				id: 'collections.fullName',
+				defaultMessage: 'Full Name',
+			},
+		});
+
 		return (
 			<form onSubmit={handleSubmit}>
 				<div>
-					<label style={styles.label}>Email</label>
-					<input style={styles.input} key="registerEmail" type="text" placeholder="Email" {...email}/>
+					<label style={styles.label}>
+						<FormattedMessage {...globalMessages.Email} />
+					</label>
+					<input style={styles.input} key="registerEmail" type="text" placeholder={this.props.intl.formatMessage(global.Email)} {...email}/>
 				</div>
 				<div>
-					<label style={styles.label}>Password</label>
-					<input style={styles.input} key="registerpassword" type="password" placeholder="Password" {...password}/>
+					<label style={styles.label}>
+						<FormattedMessage {...globalMessages.Password} />
+					</label>
+					<input style={styles.input} key="registerpassword" type="password" placeholder={this.props.intl.formatMessage(global.Password)} {...password}/>
 				</div>
 				<div>
-					<label style={styles.label}>Full Name</label>
-					<input style={styles.input} key="registerName" type="text" placeholder="Full Name" {...fullName}/>
+					<label style={styles.label}>
+						{this.props.intl.formatMessage(messages.fullName)}
+					</label>
+					<input style={styles.input} key="registerName" type="text" placeholder={this.props.intl.formatMessage(messages.fullName)} {...fullName}/>
 				</div>
 
 				<div style={[styles.input, styles.userImageInput]}>
-					<div style={styles.userInputDiv}>User Image</div>
+					<div style={styles.userInputDiv}>
+						<FormattedMessage id="login.userImage" defaultMessage="User Image"/>
+					</div>
 					<img style={[styles.userInputDiv, styles.userImagePreview]} src={this.props.userImage} />
 					<div style={[styles.userInputDiv, styles.fileInputWrapper]} key="userImageFileInputWrapper">
-						choose new
+						<FormattedMessage id="login.chooseNew" defaultMessage="choose new"/>
 						<input style={styles.hiddenFileInput} type="file" accept="image/*" onChange={this.props.onFileSelect} />
 					</div>
 					
 					
 				</div>
 
-				<button type="submit" key="registerSubmit" style={styles.submit} onClick={handleSubmit}>Submit</button>
+				<button type="submit" key="registerSubmit" style={styles.submit} onClick={handleSubmit}>
+					<FormattedMessage {...globalMessages.Submit} />
+				</button>
 			</form>
 		);
 	}
@@ -58,7 +78,7 @@ const LoginFormRegister = React.createClass({
 export default reduxForm({
 	form: 'loginFormRegister',
 	fields: ['fullName', 'email', 'password', 'image']
-})(Radium(LoginFormRegister));
+})(injectIntl(Radium(LoginFormRegister)));
 
 styles = {
 	submit: {

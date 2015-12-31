@@ -1,9 +1,13 @@
 /* global CodeMirror */
+
 import React, {PropTypes} from 'react';
 import Radium, {Style} from 'radium';
 import {LandingBody, LoaderIndeterminate} from '../../components';
 import ColorPicker from 'react-color';
 import {globalStyles} from '../../utils/styleConstants';
+
+import {globalMessages} from '../../utils/globalMessages';
+import {FormattedMessage} from 'react-intl';
 
 let styles = {};
 
@@ -233,22 +237,30 @@ const JournalDesign = React.createClass({
 				<div style={styles.sectionContent}>
 					<div style={styles.sectionContentLeft}>
 						<div style={styles.colorRow}>
-							<div style={styles.colorRowHeader}>Header Background</div>
+							<div style={styles.colorRowHeader}>
+								<FormattedMessage id="journal.headerBackground" defaultMessage="Header Background"/>
+							</div>
 							{this.renderColorPicker('headerBackground')}
 						</div>
 
 						<div style={styles.colorRow}>
-							<div style={styles.colorRowHeader}>Header Text</div>
+							<div style={styles.colorRowHeader}>
+								<FormattedMessage id="journal.headerText" defaultMessage="Header Text"/>
+							</div>
 							{this.renderColorPicker('headerText')}
 						</div>
 						<div style={styles.colorRow}>
-							<div style={styles.colorRowHeader}>Header Text Hover</div>
+							<div style={styles.colorRowHeader}>
+								<FormattedMessage id="journal.headerTextHover" defaultMessage="Header Text Hover"/>
+							</div>
 							{this.renderColorPicker('headerHover')}
 						</div>
 					</div>
 
 					<div style={styles.sectionContentRight}>
-						<div style={[styles.mockHeaderBar, this.colorStyles(this.state.colorSelections.headerBackground.color, this.state.colorSelections.headerText.color, this.state.colorSelections.headerHover.color)]} key={'globalJournalMockHeader'}>Journal Name</div>
+						<div style={[styles.mockHeaderBar, this.colorStyles(this.state.colorSelections.headerBackground.color, this.state.colorSelections.headerText.color, this.state.colorSelections.headerHover.color)]} key={'globalJournalMockHeader'}>
+							<FormattedMessage {...globalMessages.journalName} />
+						</div>
 						<div style={styles.mockBody}></div>
 						<div style={styles.mockPub}></div>
 					</div>
@@ -257,32 +269,44 @@ const JournalDesign = React.createClass({
 					
 				</div>
 
-				<div style={styles.sectionHeader}>Landing Page</div> 
+				<div style={styles.sectionHeader}>
+					<FormattedMessage id="journal.landingPage" defaultMessage="Landing Page"/>
+				</div> 
 
 				<div style={styles.sectionContent}>
 					<div style={styles.sectionContentLeft}>
 						<div style={styles.colorRow}>
-							<div style={styles.colorRowHeader}>Landing Header Background</div>
+							<div style={styles.colorRowHeader}>
+								<FormattedMessage id="journal.landingHeaderBackground" defaultMessage="Landing Header Background"/>
+							</div>
 							{this.renderColorPicker('landingHeaderBackground')}
 						</div>
 						<div style={styles.colorRow}>
-							<div style={styles.colorRowHeader}>Landing Header Text</div>
+							<div style={styles.colorRowHeader}>
+								<FormattedMessage id="journal.landingHeaderText" defaultMessage="Landing Header Text"/>
+							</div>
 							{this.renderColorPicker('landingHeaderText')}
 						</div>
 						<div style={styles.colorRow}>
-							<div style={styles.colorRowHeader}>Landing Header Text Hover</div>
+							<div style={styles.colorRowHeader}>
+								<FormattedMessage id="journal.landingHeaderTextHover" defaultMessage="Landing Header Text Hover"/>
+							</div>
 							{this.renderColorPicker('landingHeaderHover')}
 						</div>
 					
 
-						<div style={[styles.sectionHeader, styles.sectionHeaderInternal]}>Landing Page Components</div> 
+						<div style={[styles.sectionHeader, styles.sectionHeaderInternal]}>
+							<FormattedMessage id="journal.landingPageComponents" defaultMessage="Landing Page Components"/>
+						</div> 
 						<div id={'codeMirrorJSON'} style={styles.codeMirrorWrapper}></div>
 						<div style={styles.jsonError}>{this.state.jsonError}</div>
 					</div>
 
 					<div id="landingPreviewContainer" style={[styles.sectionContentRight, styles.sectionContentRightLanding, {height: this.state.landingPreviewHeight}]}>
 						<div id="landingMockContainer" style={[styles.landingMockContainer, {transform: 'scale(' + this.state.landingPreviewScale + ')'}]}>
-							<div style={[styles.mockHeaderBarLanding, this.colorStyles(this.state.colorSelections.landingHeaderBackground.color, this.state.colorSelections.landingHeaderText.color, this.state.colorSelections.landingHeaderHover.color)]} key={'landingJournalMockHeader'}>Journal Name</div>
+							<div style={[styles.mockHeaderBarLanding, this.colorStyles(this.state.colorSelections.landingHeaderBackground.color, this.state.colorSelections.landingHeaderText.color, this.state.colorSelections.landingHeaderHover.color)]} key={'landingJournalMockHeader'}>
+								<FormattedMessage {...globalMessages.journalName} />
+							</div>
 							<LandingBody componentsArray={this.state.componentsArray}/>
 						</div>
 						
@@ -292,7 +316,9 @@ const JournalDesign = React.createClass({
 
 				</div>
 
-				<div style={styles.saveButton} key={'journalDesignSaveButton'} onClick={this.saveDesign}>Save</div>
+				<div style={styles.saveButton} key={'journalDesignSaveButton'} onClick={this.saveDesign}>
+					<FormattedMessage {...globalMessages.save} />
+				</div>
 
 				<div style={styles.loader}>
 					{this.props.journalSaving
