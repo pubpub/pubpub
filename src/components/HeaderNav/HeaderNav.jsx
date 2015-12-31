@@ -49,7 +49,9 @@ const HeaderNav = React.createClass({
 							
 							<img style={styles.userImage} src={this.props.loginData.getIn(['userData', 'thumbnail'])} />
 							{/* <div style={styles.userName}>{this.props.loginData.getIn(['userData', 'name'])}</div> */}
-							<div style={[styles.userName, this.headerTextColorStyle()]}>Account</div>
+							<div style={[styles.userName, this.headerTextColorStyle()]}>
+								<FormattedMessage {...globalMessages.account} />
+							</div>
 						
 						</span>
 					</Link>
@@ -60,12 +62,16 @@ const HeaderNav = React.createClass({
 					this.props.loginData.get('loggedIn') === true
 						? 	<div>
 								<div style={styles.separator}></div>
-								<Link to={'/pubs/create'}><div key="headerNavNewPub" style={[styles.navButton, this.headerTextColorStyle()]}>New Pub</div></Link>
+								<Link to={'/pubs/create'}><div key="headerNavNewPub" style={[styles.navButton, this.headerTextColorStyle()]}>
+									<FormattedMessage {...globalMessages.account} />
+								</div></Link>
 								{
 									this.props.isJournalAdmin 
 										? <div>
 											<div style={styles.separator}></div>
-											<Link to={'/journal/' + this.props.journalSubdomain}><div key="headerNavAdmin" style={[styles.navButton, this.headerTextColorStyle()]}>Journal Admin</div></Link>
+											<Link to={'/journal/' + this.props.journalSubdomain}><div key="headerNavAdmin" style={[styles.navButton, this.headerTextColorStyle()]}>
+												<FormattedMessage {...globalMessages.journalAdmin} />
+											</div></Link>
 										</div>
 										: null
 								}

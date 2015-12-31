@@ -6,6 +6,9 @@ import {PubPreview} from '../../components/ItemPreviews';
 import {s3Upload} from '../../utils/uploadFile';
 import {Autocomplete} from '../../containers';
 
+import {globalMessages} from '../../utils/globalMessages';
+import {injectIntl, defineMessages, FormattedMessage} from 'react-intl';
+
 let styles = {};
 
 const CollectionEdit = React.createClass({
@@ -14,6 +17,7 @@ const CollectionEdit = React.createClass({
 		handleCollectionSave: PropTypes.func,
 		saveStatus: PropTypes.string,
 		journalID: PropTypes.string,
+		intl: PropTypes.object,
 	},
 
 	getDefaultProps: function() {
@@ -126,12 +130,16 @@ const CollectionEdit = React.createClass({
 
 							</div>
 							
-							<div style={styles.action} key={'featuredPubSearchAdd-' + index} onClick={this.featurePub(pub._id)}>add</div>
+							<div style={styles.action} key={'featuredPubSearchAdd-' + index} onClick={this.featurePub(pub._id)}>
+								<FormattedMessage {...globalMessages.add} />
+							</div>
 						</div>);	
 					})
 				}
 				{results.length === 0 || totalCount === 0
-					? <div style={styles.noResults}>No Results</div>
+					? <div style={styles.noResults}>
+						<FormattedMessage {...globalMessages.noResults} />
+					</div>
 					: null
 				}
 				
@@ -140,11 +148,22 @@ const CollectionEdit = React.createClass({
 	},
 
 	render: function() {
+		const messages = defineMessages({
+			addPubsToCollection: {
+				id: 'collections.addPubsToCollection',
+				defaultMessage: 'Add Pubs to Collection',
+			},
+		});
+
 		return (
 			<div style={styles.container}>
 
 				<div key={'collectionForm-title'} style={styles.inputWrapper}>
-					<label style={styles.manualFormInputTitle} htmlFor={'title'}>Collection Title</label>
+					<label style={styles.manualFormInputTitle} htmlFor={'title'}>
+						<FormattedMessage
+							id="collections.collectionTitle"
+							defaultMessage="Collection Title"/>
+					</label>
 					<input style={styles.manualFormInput} name={'title'} id={'collectionForm-title'} ref={'title'} type="text" defaultValue={this.props.collectionData.title}/>
 				</div>
 
@@ -155,17 +174,27 @@ const CollectionEdit = React.createClass({
 				</div> */}
 
 				<div key={'collectionForm-description'} style={styles.inputWrapper}>
-					<label style={styles.manualFormInputTitle} htmlFor={'description'}>Description</label>
+					<label style={styles.manualFormInputTitle} htmlFor={'description'}>
+						<FormattedMessage
+							id="collections.description"
+							defaultMessage="Description"/>
+					</label>
 					<textarea style={[styles.manualFormInput, styles.manualFormTextArea]} name={'description'} id={'collectionForm-description'} ref={'description'} defaultValue={this.props.collectionData.description}></textarea>
 				</div>
 
 				<div key={'collectionForm-headerImage'} style={styles.inputWrapper}>
-					<label style={styles.manualFormInputTitle} htmlFor={'headerImage'}>Header Image</label>
+					<label style={styles.manualFormInputTitle} htmlFor={'headerImage'}>
+						<FormattedMessage
+							id="collections.headerImage"
+							defaultMessage="Header Image"/>
+					</label>
 					<input style={[styles.manualFormInput, styles.manualFormFile]} type="file" name={'headerImage'} ref={'headerImage'} accept="image/*" onChange={this.handleNewImage} />
 					{this.state.headerImageURL ? <img src={this.state.headerImageURL} style={styles.previewImage}/> : null}
 				</div>
 
-				<div style={styles.saveSettings} key={'userSettingsSaveButton'} onClick={this.saveCollection}>Save</div>
+				<div style={styles.saveSettings} key={'userSettingsSaveButton'} onClick={this.saveCollection}>
+					<FormattedMessage {...globalMessages.save} />
+				</div>
 
 				<div style={styles.loader}>
 					{this.props.saveStatus === 'saving'
@@ -174,19 +203,25 @@ const CollectionEdit = React.createClass({
 					}
 				</div>
 
-				<div style={styles.editHeader}>Pubs</div>
+				<div style={styles.editHeader}>
+					<FormattedMessage {...globalMessages.pubs} />
+				</div>
 				<div style={styles.autocompleteWrapper}>
 					<Autocomplete 
 						autocompleteKey={'collectionFeatureAutocomplete'} 
 						route={'autocompletePubs?journalID=' + this.props.journalID} 
-						placeholder="Add Pubs to Collection" 
+						placeholder={this.props.intl.formatMessage(messages.addPubsToCollection)}
 						resultRenderFunction={this.renderPubSearchResults}/>
 				</div>
 				
 				{()=>{
 					const length = this.props.collectionData.pubs ? this.props.collectionData.pubs.length : 0;
 					if (!length) {
-						return <div style={styles.emptyBlock}>No Pubs Added to Collection</div>;
+						return <div style={styles.emptyBlock}>
+							<FormattedMessage
+								id="collections.noPubsAddedToCollection"
+								defaultMessage="No Pubs Added to Collection"/>
+						</div>;
 					} 
 					const output = [];
 					for (let index = length; index--;) {
@@ -201,7 +236,9 @@ const CollectionEdit = React.createClass({
 
 									</div>
 									
-									<div style={styles.action} key={'submittedPubItemAdd-' + index} onClick={this.removePub(this.props.collectionData.pubs[index]._id)}>remove</div>
+									<div style={styles.action} key={'submittedPubItemAdd-' + index} onClick={this.removePub(this.props.collectionData.pubs[index]._id)}>
+										<FormattedMessage {...globalMessages.remove} />
+									</div>
 								</div>);
 					}
 					return output;
@@ -212,7 +249,7 @@ const CollectionEdit = React.createClass({
 	}
 });
 
-export default Radium(CollectionEdit);
+export default injectIntl(Radium(CollectionEdit));
 
 styles = {
 	container: {

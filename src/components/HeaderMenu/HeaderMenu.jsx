@@ -3,6 +3,9 @@ import Radium from 'radium';
 import {globalStyles} from '../../utils/styleConstants';
 import { Link } from 'react-router';
 
+import {globalMessages} from '../../utils/globalMessages';
+import {FormattedMessage} from 'react-intl';
+
 let styles = {};
 
 const HeaderMenu = React.createClass({
@@ -56,7 +59,7 @@ const HeaderMenu = React.createClass({
 
 				<div key="headerMenuLogin" onClick={this.props.openMenuHandler} style={[styles.navButton, this.headerTextColorStyle()]}>
 					<span>
-						Menu
+						<FormattedMessage {...globalMessages.menu} />
 					</span>
 				</div>
 
@@ -67,7 +70,9 @@ const HeaderMenu = React.createClass({
 					<div style={styles.closeBar} onClick={this.props.closeMenuHandler}></div>
 					<div style={styles.menuContent}>
 						<ul style={styles.menuList}>
-							<li key="menuListItem0" style={[styles.menuItem, styles.menuItemClose]} onClick={this.props.closeMenuHandler}>Close</li>
+							<li key="menuListItem0" style={[styles.menuItem, styles.menuItemClose]} onClick={this.props.closeMenuHandler}>
+								<FormattedMessage {...globalMessages.close} />
+							</li>
 							{
 								isLoggedIn
 									? <Link to={'/user/' + this.props.loginData.getIn(['userData', 'username'])}>
@@ -75,14 +80,16 @@ const HeaderMenu = React.createClass({
 											<span key="headerLogin" style={[styles.loggedIn[isLoggedIn]]}>
 												<img style={styles.userImage} src={this.props.loginData.getIn(['userData', 'thumbnail'])} />
 												{/* <div style={styles.userName}>{this.props.loginData.getIn(['userData', 'name'])}</div> */}
-												<div style={styles.userName}>Account</div>
+												<div style={styles.userName}>
+													<FormattedMessage {...globalMessages.account} />
+												</div>
 												<div style={globalStyles.clearFix}></div>
 											</span>
 										</li>
 									</Link>
 									: <li key="menuListItem1" style={[styles.menuItem, !this.props.isJournalAdmin && styles.menuItemNoBottom]} onClick={this.props.loginToggle}>
 										<span style={styles.loggedOut[isLoggedIn]}>
-											Login or Register
+											<FormattedMessage {...globalMessages.loginOrRegister} />
 										</span>
 									</li>
 
@@ -90,7 +97,9 @@ const HeaderMenu = React.createClass({
 							
 							{
 								this.props.isJournalAdmin 
-									? <Link to={'/journal/' + this.props.journalSubdomain} style={globalStyles.link}><li key="menuListItem22" style={[styles.menuItem, styles.menuItemNoBottom]}>Journal Admin</li></Link> 
+									? <Link to={'/journal/' + this.props.journalSubdomain} style={globalStyles.link}><li key="menuListItem22" style={[styles.menuItem, styles.menuItemNoBottom]}>
+										<FormattedMessage {...globalMessages.journalAdmin} />
+									</li></Link> 
 									: null
 							}
 
@@ -99,26 +108,61 @@ const HeaderMenu = React.createClass({
 							{(isPub === true
 								? <div>
 									<li key="menuListItem3" style={styles.menuItemseparator}></li>
-									<li key="menuListItem4" style={styles.menuItem} >Favorite</li>
+									<li key="menuListItem4" style={styles.menuItem}>
+										<FormattedMessage {...globalMessages.follow} />
+									</li>
 									
-									<li key="menuListItem5" style={styles.menuItem} onClick={this.props.openPubModalHandler('tableOfContents')}>Table of Contents</li>
-									<li key="menuListItem7" style={styles.menuItem} onClick={this.props.openPubModalHandler('discussions')}>Discussions</li>
-									<li key="menuListItem6" style={[styles.menuItem, this.props.pubStatus === 'Draft' && styles.hidden]} onClick={this.props.openPubModalHandler('reviews')}>Reviews</li>
-									<Link to={'/pub/' + this.props.slug + '/experts'} style={globalStyles.link}><li key="menuListItem16" style={[styles.menuItem]}>Experts</li></Link>
-									<Link to={'/pub/' + this.props.slug + '/history'} style={globalStyles.link}><li key="menuListItem8" style={styles.menuItem}>History</li></Link>
-									<Link to={'/pub/' + this.props.slug + '/analytics'} style={globalStyles.link}><li key="menuListItem18" style={styles.menuItem}>Analytics</li></Link>
-									<Link to={'/pub/' + this.props.slug + '/citations'} style={globalStyles.link}><li key="menuListItem19" style={styles.menuItem}>Citations</li></Link>
-									<Link to={'/pub/' + this.props.slug + '/news'} style={globalStyles.link}><li key="menuListItem20" style={styles.menuItem}>In the News</li></Link>
-									<Link to={'/pub/' + this.props.slug + '/source'} style={globalStyles.link}><li key="menuListItem9" style={styles.menuItem}>Source</li></Link>
-									<li key="menuListItem10" style={[styles.menuItem, styles.menuItemNoBottom]} onClick={this.props.openPubModalHandler('cite')}>Cite</li>
+									<li key="menuListItem5" style={styles.menuItem} onClick={this.props.openPubModalHandler('tableOfContents')}>
+										<FormattedMessage {...globalMessages.tableOfContents} />
+									</li>
+
+									<li key="menuListItem7" style={styles.menuItem} onClick={this.props.openPubModalHandler('discussions')}>
+										<FormattedMessage {...globalMessages.discussions} />
+									</li>
+
+									<li key="menuListItem6" style={[styles.menuItem, this.props.pubStatus === 'Draft' && styles.hidden]} onClick={this.props.openPubModalHandler('reviews')}>
+										<FormattedMessage {...globalMessages.reviews} />
+									</li>
+
+									<Link to={'/pub/' + this.props.slug + '/experts'} style={globalStyles.link}><li key="menuListItem16" style={[styles.menuItem]}>
+										<FormattedMessage {...globalMessages.experts} />
+									</li></Link>
+
+									<Link to={'/pub/' + this.props.slug + '/history'} style={globalStyles.link}><li key="menuListItem8" style={styles.menuItem}>
+										<FormattedMessage {...globalMessages.history} />
+									</li></Link>
+
+									<Link to={'/pub/' + this.props.slug + '/analytics'} style={globalStyles.link}><li key="menuListItem18" style={styles.menuItem}>
+										<FormattedMessage {...globalMessages.analytics} />
+									</li></Link>
+
+									<Link to={'/pub/' + this.props.slug + '/citations'} style={globalStyles.link}><li key="menuListItem19" style={styles.menuItem}>
+										<FormattedMessage {...globalMessages.citations} />
+									</li></Link>
+
+									<Link to={'/pub/' + this.props.slug + '/news'} style={globalStyles.link}><li key="menuListItem20" style={styles.menuItem}>
+										<FormattedMessage {...globalMessages.inTheNews} />
+									</li></Link>
+
+									<Link to={'/pub/' + this.props.slug + '/source'} style={globalStyles.link}><li key="menuListItem9" style={styles.menuItem}>
+										<FormattedMessage {...globalMessages.source} />
+									</li></Link>
+
+									<li key="menuListItem10" style={[styles.menuItem, styles.menuItemNoBottom]} onClick={this.props.openPubModalHandler('cite')}>
+										<FormattedMessage {...globalMessages.cite} />
+									</li>
+
 									</div>
 								: null
 							)}
 							
 							<li key="menuListItem11" style={styles.menuItemseparator}></li>
-							<li key="menuListItem12" style={styles.menuItem}>About PubPub</li>
-							<li key="menuListItem13" style={styles.menuItem}>FAQs</li>
-							<li key="menuListItem14" style={styles.menuItem}>Report a Bug</li>
+							<li key="menuListItem12" style={styles.menuItem}>
+								<FormattedMessage {...globalMessages.aboutPubPub} />
+							</li>
+							<li key="menuListItem14" style={styles.menuItem}>
+								<FormattedMessage {...globalMessages.contact} />
+							</li>
 							
 						</ul>
 					</div>
