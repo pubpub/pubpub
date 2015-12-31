@@ -27,7 +27,7 @@ const PubCreateForm = React.createClass({
 			<form onSubmit={handleSubmit}>
 				<div style={styles.inputWrapper}>
 					<label style={styles.label}>
-						<FormattedMessage {...globalMessages.title} />
+						<FormattedMessage {...globalMessages.Title} />
 					</label>
 					<input key="pubCreateTitle" style={styles.input} type="text" placeholder={this.props.intl.formatMessage(globalMessages.title)} {...title}/>
 				</div>

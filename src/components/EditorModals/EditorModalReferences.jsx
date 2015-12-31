@@ -7,6 +7,9 @@ import {baseStyles} from './editorModalStyle';
 import {globalStyles} from '../../utils/styleConstants';
 import bibtexParse from 'bibtex-parse-js';
 
+import {globalMessages} from '../../utils/globalMessages';
+import {injectIntl, defineMessages, FormattedMessage} from 'react-intl';
+
 let styles = {};
 
 const EditorModalReferences = React.createClass({
@@ -14,6 +17,7 @@ const EditorModalReferences = React.createClass({
 		referenceData: PropTypes.object,
 		updateReferences: PropTypes.func,
 		referenceStyle: PropTypes.string,
+		intl: PropTypes.object,
 	},
 
 	getDefaultProps: function() {
@@ -140,32 +144,48 @@ const EditorModalReferences = React.createClass({
 				referenceData.push(this.props.referenceData[key]);
 			}
 		}
+		const messages = defineMessages({
+			searchForRef: {
+				id: 'editor.searchForRef',
+				defaultMessage: 'Search for a reference',
+			},
+		});
 
 		return (
 			<div>
-				<div style={baseStyles.topHeader}>References <span style={[styles.topHeaderSubtext, this.state.editingRefName && styles.showOnEdit]}>: Edit</span></div>
+				<div style={baseStyles.topHeader}>
+					<FormattedMessage {...globalMessages.references} /> 
+					<span style={[styles.topHeaderSubtext, this.state.editingRefName && styles.showOnEdit]}> : <FormattedMessage {...globalMessages.edit} /></span></div>
 
 				{/* Search for new Ref bar and advanced add option */}
 				<div style={[baseStyles.rightCornerSearch, styles.mainContent[this.state.showAddOptions]]}>
 					<Autocomplete
 						autocompleteKey={'referencesAutocomplete'}
 						route={'autocompleteReferences'}
-						placeholder="Search for reference"
+						placeholder={this.props.intl.formatMessage(messages.searchForRef)}
 						textAlign={'right'}
 						resultRenderFunction={this.renderReferencesSearchResults}/>
 
-					<div key="refAdvancedText" style={baseStyles.rightCornerSearchAdvanced} onClick={this.toggleShowAddOptions}>more add options</div>
+					<div key="refAdvancedText" style={baseStyles.rightCornerSearchAdvanced} onClick={this.toggleShowAddOptions}>
+						<FormattedMessage
+							id="editor.modeAddOptions"
+							defaultMessage="more add options"/>
+					</div>
 				</div>
 
 
 				{/* Back button that displays in advanced mode */}
 				<div style={[baseStyles.rightCornerAction, styles.addOptions, styles.addOptions[this.state.showAddOptions]]} onClick={this.toggleShowAddOptions}>
-					Back
+					<FormattedMessage {...globalMessages.back} /> 
 				</div>
 
 				{/* Show a note if no content has been added yet */}
 				{referenceData.length === 0 && this.state.showAddOptions === false
-					? <div style={baseStyles.noContentBlock}>No References Added</div>
+					? <div style={baseStyles.noContentBlock}>
+						<FormattedMessage
+							id="editor.noRefsAdded"
+							defaultMessage="No References Added"/>
+					</div>
 					: null
 				}
 
@@ -173,8 +193,12 @@ const EditorModalReferences = React.createClass({
 				<div className="main-ref-content" style={[styles.mainContent[this.state.showAddOptions], referenceData.length === 0 && styles.hide]}>
 					{/* References table header */}
 					<div style={styles.rowContainer}>
-						<div style={[styles.refNameColumn, styles.columnHeader]}>refName</div>
-						<div style={[styles.bodyColumn, styles.columnHeader]}>citation</div>
+						<div style={[styles.refNameColumn, styles.columnHeader]}>
+							<FormattedMessage {...globalMessages.refName} /> 
+						</div>
+						<div style={[styles.bodyColumn, styles.columnHeader]}>
+							<FormattedMessage {...globalMessages.citation} />
+						</div>
 						<div style={[styles.optionColumn, styles.columnHeader]}></div>
 						<div style={[styles.optionColumn, styles.columnHeader]}></div>
 						<div style={styles.clearfix}></div>
@@ -199,22 +223,34 @@ const EditorModalReferences = React.createClass({
 				{/* Content section displayed when in advanced add mode */}
 				<div className="add-options-content" style={[styles.addOptions, styles.addOptions[this.state.showAddOptions], styles.addOptionsContent]}>
 					<div style={this.state.editingRefName && styles.hide}>
-						<div style={styles.sectionHeader}>Add Bibtex</div>
+						<div style={styles.sectionHeader}>
+							<FormattedMessage
+								id="editor.addBibtex"
+								defaultMessage="Add Bibtex"/>
+						</div>
 						<div style={styles.inputFormWrapper}>
 							<textarea style={styles.textArea} ref="bibtexForm"></textarea>
 						</div>
-						<div style={styles.saveForm} key={'referencesBibtexFormSaveButton'} onClick={this.saveBibtexForm}>Save</div>
+						<div style={styles.saveForm} key={'referencesBibtexFormSaveButton'} onClick={this.saveBibtexForm}>
+							<FormattedMessage {...globalMessages.save} /> 
+						</div>
 						<div style={styles.clearfix}></div>
 					</div>
 
 
-					<div style={[styles.sectionHeader, this.state.editingRefName && styles.hide]}>Manual Entry</div>
+					<div style={[styles.sectionHeader, this.state.editingRefName && styles.hide]}>
+						<FormattedMessage
+								id="editor.manualEntry"
+								defaultMessage="Manual Entry"/>
+					</div>
 					<div style={styles.inputFormWrapper}>
 						{
 							Object.keys(this.state.manualFormData).map((inputItem)=>{
 								return (
 									<div key={'manualForm-' + inputItem} style={styles.manualFormInputWrapper}>
-										<label style={styles.manualFormInputTitle} htmlFor={inputItem} >{inputItem}</label>
+										<label style={styles.manualFormInputTitle} htmlFor={inputItem}>
+											<FormattedMessage {...globalMessages[inputItem]} /> 
+										</label>
 										<input style={styles.manualFormInput} name={inputItem} id={inputItem} type="text" onChange={this.handleManualInputFormChange} value={this.state.manualFormData[inputItem]}/>
 									</div>
 
@@ -223,7 +259,9 @@ const EditorModalReferences = React.createClass({
 						}
 						<div style={styles.clearfix}></div>
 					</div>
-					<div style={styles.saveForm} key={'referencesManualFormSaveButton'} onClick={this.saveManualForm}>Save</div>
+					<div style={styles.saveForm} key={'referencesManualFormSaveButton'} onClick={this.saveManualForm}>
+						<FormattedMessage {...globalMessages.save} />
+					</div>
 
 					<div style={styles.clearfix}></div>
 				</div>
@@ -233,7 +271,7 @@ const EditorModalReferences = React.createClass({
 	}
 });
 
-export default Radium(EditorModalReferences);
+export default injectIntl(Radium(EditorModalReferences));
 
 styles = {
 	mainContent: {

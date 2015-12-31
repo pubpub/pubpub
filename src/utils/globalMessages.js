@@ -113,13 +113,9 @@ export const globalMessages = defineMessages({
 		id: 'global.create',
 		defaultMessage: 'Create',
 	},
-	title: {
-		id: 'global.title',
+	Title: {
+		id: 'global.Title',
 		defaultMessage: 'Title',
-	},
-	url: {
-		id: 'global.url',
-		defaultMessage: 'URL',
 	},
 	clickOrDrag: {
 		id: 'global.clickOrDrag',
@@ -164,6 +160,63 @@ export const globalMessages = defineMessages({
 	draft: {
 		id: 'global.draft',
 		defaultMessage: 'draft',
+	},
+	references: {
+		id: 'global.references',
+		defaultMessage: 'References',
+	},
+	edit: {
+		id: 'global.edit',
+		defaultMessage: 'Edit',
+	},
+	refName: {
+		id: 'global.refName',
+		defaultMessage: 'refName',
+	},
+	citation: {
+		id: 'global.citation',
+		defaultMessage: 'citation',
+	},
+
+	title: {
+		id: 'global.title',
+		defaultMessage: 'title',
+	},
+	url: {
+		id: 'global.url',
+		defaultMessage: 'url',
+	},
+	author: {
+		id: 'global.author',
+		defaultMessage: 'author',
+	},
+	journal: {
+		id: 'global.journal',
+		defaultMessage: 'journal',
+	},
+	volume: {
+		id: 'global.volume',
+		defaultMessage: 'volume',
+	},
+	number: {
+		id: 'global.number',
+		defaultMessage: 'number',
+	},
+	pages: {
+		id: 'global.pages',
+		defaultMessage: 'pages',
+	},
+	year: {
+		id: 'global.year',
+		defaultMessage: 'year',
+	},
+	publisher: {
+		id: 'global.publisher',
+		defaultMessage: 'publisher',
+	},
+	note: {
+		id: 'global.note',
+		defaultMessage: 'note',
 	},
 	
 });
