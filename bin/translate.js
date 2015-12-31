@@ -2,7 +2,9 @@ import * as fs from 'fs';
 import {sync as globSync} from 'glob';
 import {sync as mkdirpSync} from 'mkdirp';
 
-const MESSAGES_PATTERN = './translations/messages/**/*.json';
+// I'm not sure why babel-plugin-react-intl is putting everything into a nested 
+// tree under messages/node_modules. I can't seem to fix it. maybe in babel6 it'll be better?
+const MESSAGES_PATTERN = './translations/messages/node_modules/**/*.json';
 const LANG_DIR         = './translations/languages/';
 
 // Aggregates the default messages that were extracted from the example app's
