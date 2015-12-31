@@ -127,7 +127,6 @@ const App = React.createClass({
 				backgroundColor: headerBackground,
 			},
 		};
-		console.log(this.props.languageData.toJS());
 		return (
 			<IntlProvider locale={this.props.languageData.get('locale')} messages={this.props.languageData.get('languageObject').toJS()}>
 			<div style={styles.body}>

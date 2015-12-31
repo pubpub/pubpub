@@ -27,8 +27,6 @@ export const defaultState = Immutable.Map({
 // state. They are pure functions. We use Immutable to enforce this. 
 /*--------*/
 function setLanguage(state, result) {
-	console.log('in set language');
-	console.log(result);
 	return state.merge({
 		locale: result.locale,
 		languageObject: result.languageObject,
