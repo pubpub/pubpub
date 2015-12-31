@@ -137,6 +137,10 @@ export const globalMessages = defineMessages({
 		id: 'global.filename',
 		defaultMessage: 'filename',
 	},
+	settings: {
+		id: 'global.settings',
+		defaultMessage: 'Settings',
+	},
 	by: {
 		id: 'global.by',
 		defaultMessage: 'by',
@@ -181,6 +185,10 @@ export const globalMessages = defineMessages({
 		id: 'global.references',
 		defaultMessage: 'References',
 	},
+	publish: {
+		id: 'global.publish',
+		defaultMessage: 'Publish',
+	},
 	edit: {
 		id: 'global.edit',
 		defaultMessage: 'Edit',
@@ -209,6 +217,10 @@ export const globalMessages = defineMessages({
 	journal: {
 		id: 'global.journal',
 		defaultMessage: 'journal',
+	},
+	Journals: {
+		id: 'global.Journals',
+		defaultMessage: 'Journals',
 	},
 	volume: {
 		id: 'global.volume',

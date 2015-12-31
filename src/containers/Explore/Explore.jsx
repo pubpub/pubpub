@@ -6,6 +6,9 @@ import {CollectionGallery, PubGallery, JournalGallery} from '../../components';
 import {NotFound} from '../../containers';
 import {globalStyles} from '../../utils/styleConstants';
 
+import {globalMessages} from '../../utils/globalMessages';
+import {FormattedMessage} from 'react-intl';
+
 let styles = {};
 
 const Explore = React.createClass({
@@ -56,7 +59,9 @@ const Explore = React.createClass({
 						return (!this.props.journalData.get('baseSubdomain')
 							? <NotFound />
 							: <div>
-								<div style={styles.header}>Collections</div>
+								<div style={styles.header}>
+									<FormattedMessage {...globalMessages.collections} />
+								</div>
 								<CollectionGallery collections={this.props.journalData.getIn(['journalData', 'collections']).toJS()} />
 							</div>
 						);
@@ -65,7 +70,9 @@ const Explore = React.createClass({
 						const pubData = this.props.journalData.get('baseSubdomain') ? this.props.journalData.getIn(['journalData', 'pubsFeatured']).toJS() : this.props.journalData.getIn(['journalData', 'allPubs']).toJS();
 						return (
 							<div>
-								<div style={styles.header}>Pubs</div>
+								<div style={styles.header}>
+									<FormattedMessage {...globalMessages.pubs} />
+								</div>
 								<PubGallery pubs={pubData} />
 							</div>
 							
@@ -76,7 +83,9 @@ const Explore = React.createClass({
 						return (this.props.journalData.get('baseSubdomain')
 							? <NotFound />
 							: <div>
-								<div style={styles.header}>Journals</div>
+								<div style={styles.header}>
+									<FormattedMessage {...globalMessages.Journals} />
+								</div>
 								<JournalGallery journals={this.props.journalData.getIn(['journalData', 'allJournals']).toJS()} />
 							</div>	
 						);

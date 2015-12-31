@@ -7,6 +7,8 @@ import {create} from '../../actions/journal';
 import {toggleVisibility} from '../../actions/login';
 import {globalStyles} from '../../utils/styleConstants';
 
+import {FormattedMessage} from 'react-intl';
+
 let styles = {};
 
 const Login = React.createClass({
@@ -57,17 +59,19 @@ const Login = React.createClass({
 					}
 				</div>	
 				
-				<div style={styles.header}>Create Journal</div>
+				<div style={styles.header}>
+					<FormattedMessage id="journal.createJournal" defaultMessage="Create Journal"/>
+				</div>
 				<CreateJournalForm onSubmit={this.handleCreateSubmit} /> 
 				<div style={[styles.error, !this.state.errorMessage && styles.hidden]}>
 					{()=>{
 						switch (this.state.errorMessage) {
 						case 'Subdomain is not Unique!':
-							return 'Subdomain is already used';
+							return <FormattedMessage id="journal.subdomainUsed" defaultMessage="Subdomain is already used"/>;
 						case 'noName':
-							return 'A journal name is required';
+							return <FormattedMessage id="journal.journalNameRequired" defaultMessage="A journal name is required"/>;
 						case 'noSubdomain':
-							return 'A subdomain is required';
+							return <FormattedMessage id="journal.subdomainRequired" defaultMessage="A subdomain is required"/>;
 						default:
 							return this.state.errorMessage;
 						}

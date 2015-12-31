@@ -34,6 +34,9 @@ import PubDiscussionsItem from '../../components/PubDiscussions/PubDiscussionsIt
 
 import {convertFirebaseToObject} from '../../utils/parsePlugins';
 
+import {globalMessages} from '../../utils/globalMessages';
+import {FormattedMessage} from 'react-intl';
+
 marked.setExtensions(markdownExtensions);
 
 const cmOptions = {
@@ -465,11 +468,15 @@ const Editor = React.createClass({
 				{/*	Mobile Editing not currently supported.
 					Display a splash screen if media queries determine mobile mode */}
 				<div style={styles.isMobile}>
-					<div style={styles.mobileHeader}>Cannot Edit in Mobile</div>
+					<div style={styles.mobileHeader}>
+						<FormattedMessage id="editor.cannotEdit" defaultMessage="Cannot Edit in Mobile"/>
+					</div>
 					<div style={styles.mobileImageWrapper}>
 						<img style={styles.mobileImage} src={'http://res.cloudinary.com/pubpub/image/upload/v1448221655/pubSad_blirpk.png'} />
 					</div>
-					<div style={styles.mobileText}>Please open this url on a desktop, laptop, or larger screen.</div>
+					<div style={styles.mobileText}>
+						<FormattedMessage id="editor.cannotEditLargerScreen" defaultMessage="Please open this url on a desktop, laptop, or larger screen."/>
+					</div>
 				</div>
 
 				<div style={styles.notMobile}>
@@ -511,31 +518,41 @@ const Editor = React.createClass({
 					<div style={[styles.editorTopNav, globalStyles.hiddenUntilLoad, globalStyles[editorData.get('status')], darkMode && styles.editorTopNavDark]}>
 						<ul style={styles.editorNav}>
 
-							<li key="editorNav0"style={[styles.editorNavItem]} onClick={this.openModalHandler('Assets')}>Assets</li>
+							<li key="editorNav0"style={[styles.editorNavItem]} onClick={this.openModalHandler('Assets')}>
+								<FormattedMessage {...globalMessages.assets} />
+							</li>
 							<li style={styles.editorNavSeparator}></li>
-							<li key="editorNav1"style={[styles.editorNavItem]} onClick={this.openModalHandler('References')}>References</li>
+							<li key="editorNav1"style={[styles.editorNavItem]} onClick={this.openModalHandler('References')}>
+								<FormattedMessage {...globalMessages.references} />
+							</li>
 							<li style={styles.editorNavSeparator}></li>
 							<li key="editorNav2"style={[styles.editorNavItem]} onClick={this.openModalHandler('Collaborators')}>
-								Collaborators
+								<FormattedMessage {...globalMessages.collaborators} />
 							</li>
 							<li key="editorNavUsers" style={[styles.editorNavItemUsers]}>
 								<div id={'userlist'}></div>
 							</li>
 
-							<li key="editorNav3"style={[styles.editorNavItem, styles.editorNavRight]} onClick={this.openModalHandler('Publish')}>Publish</li>
+							<li key="editorNav3"style={[styles.editorNavItem, styles.editorNavRight]} onClick={this.openModalHandler('Publish')}>
+								<FormattedMessage {...globalMessages.publish} />
+							</li>
 							<li style={[styles.editorNavSeparator, styles.editorNavRight]}></li>
-							<li key="editorNav4"style={[styles.editorNavItem, styles.editorNavRight]} onClick={this.toggleLivePreview}>Live Preview</li>
+							<li key="editorNav4"style={[styles.editorNavItem, styles.editorNavRight]} onClick={this.toggleLivePreview}>
+								<FormattedMessage id="editor.livePreview" defaultMessage="Live Preview"/>
+							</li>
 							<li style={[styles.editorNavSeparator, styles.editorNavRight]}></li>
-							<li key="editorNav5"style={[styles.editorNavItem, styles.editorNavRight]} onClick={this.openModalHandler('Style')}>Settings</li>
+							<li key="editorNav5"style={[styles.editorNavItem, styles.editorNavRight]} onClick={this.openModalHandler('Style')}>
+								<FormattedMessage {...globalMessages.settings} />
+							</li>
 							<li key="editorNav7"style={[styles.editorNavItemSaveStatus, styles.editorNavRight]}>
 								{()=>{
 									switch (this.state.editorSaveStatus) {
 									case 'saved': 
-										return 'Pub Saved';
+										return <FormattedMessage id="editor.pubSaved" defaultMessage="Pub Saved"/>;
 									case 'saving': 
-										return 'Pub Saving...';
+										return <FormattedMessage id="editor.pubSaving" defaultMessage="Pub Saving..."/>;
 									default:
-										return 'Disconnected';
+										return <FormattedMessage id="editor.disconnected" defaultMessage="Disconnected"/>;
 									}
 									// this.state.editorSaveStatus === 'saved' ? 'Pub Saved' : 'Pub Saving...'}
 								}()}
@@ -559,8 +576,12 @@ const Editor = React.createClass({
 						<div className="leftBottomNav" style={[styles.common.bottomNavLeft, styles[viewMode].bottomNavLeft]}>
 
 							{/* Table of Contents Title */}
-							<div key="bNav_toc" style={[styles.common.bottomNavTitle, styles[viewMode].bottomNavTitle, showBottomLeftMenu && styles[viewMode].listTitleActive]} onClick={this.toggleTOC}>Table of Contents</div>
-							<div key="showAllTOCButton" style={[styles.showAll, this.state.activeFocus !== '' && styles.showAllVisible]} onClick={this.focusEditor(this.state.activeFocus, 0)}>- show all -</div>
+							<div key="bNav_toc" style={[styles.common.bottomNavTitle, styles[viewMode].bottomNavTitle, showBottomLeftMenu && styles[viewMode].listTitleActive]} onClick={this.toggleTOC}>
+								<FormattedMessage {...globalMessages.tableOfContents} />
+							</div>
+							<div key="showAllTOCButton" style={[styles.showAll, this.state.activeFocus !== '' && styles.showAllVisible]} onClick={this.focusEditor(this.state.activeFocus, 0)}>
+								{'- '}<FormattedMessage id="editor.showAll" defaultMessage="show all"/>{' -'}
+							</div>
 
 							{/* Table of Contents line separator */}
 							<div style={[styles.common.bottomNavDivider, styles[viewMode].bottomNavDivider]}>
@@ -583,7 +604,9 @@ const Editor = React.createClass({
 						<div className="rightBottomNav" style={[styles.common.bottomNavRight, styles[viewMode].bottomNavRight]}>
 
 							{/* Formatting Title */}
-							<div key="bNav_format" style={[styles.common.bottomNavTitle, styles[viewMode].bottomNavTitle, styles.alignRight, showBottomRightMenu && styles[viewMode].listTitleActive]} onClick={this.toggleFormatting}>Formatting</div>
+							<div key="bNav_format" style={[styles.common.bottomNavTitle, styles[viewMode].bottomNavTitle, styles.alignRight, showBottomRightMenu && styles[viewMode].listTitleActive]} onClick={this.toggleFormatting}>
+								<FormattedMessage id="editor.formatting" defaultMessage="Formatting"/>
+							</div>
 
 							{/* Formatting line separator */}
 							<div style={[styles.common.bottomNavDivider, styles[viewMode].bottomNavDivider]}>
@@ -623,8 +646,8 @@ const Editor = React.createClass({
 						{this.props.editorData.getIn(['pubEditData', 'discussions']) && this.props.editorData.getIn(['pubEditData', 'discussions']).size
 							? <div onClick={this.toggleShowComments} style={styles.showCommentsToggle} key={'editorCommentsToggleButton'}>
 								{this.state.showComments
-									? 'Click to View Preview'
-									: 'Click to View Comments'
+									? <FormattedMessage id="editor.clickForPreview" defaultMessage="Click to View Preview"/>
+									: <FormattedMessage id="editor.clickForComments" defaultMessage="Click to View Comments"/>
 								}
 							</div>
 							: null
