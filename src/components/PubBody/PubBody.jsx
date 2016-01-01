@@ -150,19 +150,24 @@ const PubBody = React.createClass({
 						}
 
 					</div>
-					<div id={'pub-references'}>
-						<h1><FormattedMessage {...globalMessages.references}/></h1>
-						{this.props.references && this.props.references.length
-							? this.props.references.map((reference, index)=>{
-								return (<div key={'pubReference-' + index} className={'pub-reference'}>
-										<span style={styles.referenceNumber}>[{index + 1}]</span>
-										<Reference citationObject={reference} mode={'mla'} />
-									
-								</div>);
-							})
-							: null
-						}
-					</div>
+					{this.props.references && this.props.references.length
+						? <div id={'pub-references'}>
+							<h1><FormattedMessage {...globalMessages.references}/></h1>
+
+							{
+								this.props.references.map((reference, index)=>{
+									return (
+										<div key={'pubReference-' + index} className={'pub-reference'}>
+											<span style={styles.referenceNumber}>[{index + 1}]</span>
+											<Reference citationObject={reference} mode={'mla'} />
+										</div>
+									);
+								})
+							}
+
+						</div>
+						: null
+					}
 
 				</div>
 
