@@ -54,8 +54,7 @@ const CitePlugin = React.createClass({
 				{this.props.error === 'type'
 					? <ErrorMsg>Could not find reference.</ErrorMsg>
 					: <span style={[styles.ref]} onMouseOver={this.mouseOver} onMouseOut={this.mouseOut}>
-
-						[{this.props.count}]
+						{' '}[{this.props.count}]
 						<span style={[styles.hoverRef, this.state.hover && styles.hoverRefVisible]}>
 							<Reference citationObject={this.props.reference} mode={'mla'} />
 						</span>

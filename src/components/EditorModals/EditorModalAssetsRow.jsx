@@ -140,13 +140,13 @@ styles = {
 	},
 	typeColors: {
 		data: {
-			backgroundColor: '#F9ACAC',
+			backgroundColor: 'rgba(249, 172, 172, 0.5)',
 		},
 		image: {
-			backgroundColor: '#CAACF9',
+			backgroundColor: 'rgba(185, 215, 249, 0.5)',
 		},
 		video: {
-			backgroundColor: '#ACF9B2',
+			backgroundColor: 'rgba(158, 219, 176, 0.5)',
 		},
 	},
 	date: {
