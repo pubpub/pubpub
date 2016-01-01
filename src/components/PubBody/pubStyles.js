@@ -51,6 +51,10 @@ export const scienceStyle = {
 		margin: '0px 20px',
 		padding: '10px',
 		backgroundColor: '#f0f0f0',
+		display: 'block',
+		borderRadius: '1px',
+		width: '88%',
+
 	},
 	'.codeBlockPre': {
 		margin: '10px 0px',
