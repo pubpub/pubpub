@@ -70,6 +70,11 @@ app.get('/autocompletePubsAll', function(req,res){
 });
 
 app.get('/autocompletePubs', function(req,res){
+	// If we don't want to have to pass up journalID from the call,
+	// We could just take the host appended to the query by the middleware,
+	// look up the journal based on that, and then grab the ID.
+	// Requires an extra db call - but may be client side
+
 	var objects = [];
 	var query = {history: {$not: {$size: 0}},'settings.isPrivate': {$ne: true}};
 	if(req.query.journalID){

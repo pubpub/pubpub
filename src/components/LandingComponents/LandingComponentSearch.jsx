@@ -19,6 +19,7 @@ const LandingComponentSearch = React.createClass({
 		resultBackgroundColor: PropTypes.string,
 		searchFontColor: PropTypes.string,
 		searchPlaceholderColor: PropTypes.string,
+		journalID: PropTypes.string,
 	},
 
 	renderLandingSearchResults: function(results) {
@@ -59,8 +60,8 @@ const LandingComponentSearch = React.createClass({
 			<div style={[styles.container, this.props.style]}>
 				<Autocomplete 
 					autocompleteKey={'landingSearch'} 
-					route={'autocompletePubsAndUsers'} 
-					placeholder={this.props.placeholder || 'Search Pubs and People'}
+					route={'autocompletePubs?journalID=' + this.props.journalID} 
+					placeholder={this.props.placeholder || 'Search Pubs'}
 					height={40}
 					showBottomLine={this.props.showBottomLine !== undefined ? this.props.showBottomLine : true}
 					hideResultsOnClickOut={false}

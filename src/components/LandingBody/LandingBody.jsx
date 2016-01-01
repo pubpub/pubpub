@@ -8,6 +8,7 @@ let styles = {};
 const LandingBody = React.createClass({
 	propTypes: {
 		componentsArray: PropTypes.array,
+		journalID: PropTypes.string,
 	},
 
 	getDefaultProps: function() {
@@ -32,7 +33,8 @@ const LandingBody = React.createClass({
 									link={component.link} 
 									image={component.image} 
 									style={component.style}
-									childArray={component.children}/>
+									childArray={component.children}
+									journalID={this.props.journalID}/>
 							);
 						case 'search': 
 							return (
@@ -44,7 +46,8 @@ const LandingBody = React.createClass({
 									style={component.style} 
 									searchFontColor={component.searchFontColor}
 									searchPlaceholderColor={component.searchPlaceholderColor}
-									bottomLineColor={component.bottomLineColor}/>
+									bottomLineColor={component.bottomLineColor}
+									journalID={this.props.journalID}/>
 							);
 						case 'collectionList': 
 							return (

@@ -80,6 +80,8 @@ const Landing = React.createClass({
 			? JSON.parse(this.props.journalData.getIn(['journalData', 'design', 'layoutString']).replace(/(['"])?([:]?[a-zA-Z0-9_]+)(['"])?: /g, '"$2": ').replace(/'/g, '"'))
 			: [];
 
+		
+		const journalID = this.props.journalData.getIn(['journalData', '_id']);
 		return (
 			<div style={styles.container}>
 
@@ -169,7 +171,7 @@ const Landing = React.createClass({
 							 </div>
 						</div>
 							
-						: <LandingBody componentsArray={componentsArray}/>
+						: <LandingBody componentsArray={componentsArray} journalID={journalID}/>
 				}
 
 			</div>
