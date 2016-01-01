@@ -211,7 +211,8 @@ const PubReader = React.createClass({
 						authors={pubData.history[versionIndex].authors}
 						addSelectionHandler={this.addSelection} 
 						style={pubData.history[versionIndex].style}
-						showPubHighlights={this.props.readerData.get('showPubHighlights')}/>
+						showPubHighlights={this.props.readerData.get('showPubHighlights')}
+						references={this.props.readerData.getIn(['pubData', 'history', versionIndex, 'references'])}/>
 
 					<PubModals
 						slug={this.props.slug}

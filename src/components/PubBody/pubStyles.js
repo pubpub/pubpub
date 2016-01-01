@@ -29,6 +29,15 @@ export const scienceStyle = {
 		margin: '0 auto',
 		backgroundColor: '#DDD',
 	},
+	'#pub-references': {
+		marginTop: '20px',
+		paddingTop: '20px',
+		borderTop: '1px solid #eee',
+	},
+	'.pub-reference': {
+		padding: '5px 20px',
+		fontSize: '13px',
+	},
 	'h1, h2, h3, h4, h5, h6': {
 		padding: '0px 20px',
 		color: '#4C4C4C',

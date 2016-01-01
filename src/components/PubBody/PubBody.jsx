@@ -2,6 +2,7 @@ import React, {PropTypes} from 'react';
 import Radium, {Style} from 'radium';
 import {PubSelectionPopup} from '../';
 import {globalStyles} from '../../utils/styleConstants';
+import {Reference} from '../';
 import { Link } from 'react-router';
 import {loadCss} from '../../utils/loadingFunctions';
 import {scienceStyle, magazineStyle} from './pubStyles';
@@ -22,6 +23,7 @@ const PubBody = React.createClass({
 		addSelectionHandler: PropTypes.func,
 		style: PropTypes.object,
 		showPubHighlights: PropTypes.bool,
+		references: PropTypes.array,
 	},
 	getDefaultProps: function() {
 		return {
@@ -148,6 +150,19 @@ const PubBody = React.createClass({
 						}
 
 					</div>
+					<div id={'pub-references'}>
+						<h1><FormattedMessage {...globalMessages.references}/></h1>
+						{this.props.references && this.props.references.length
+							? this.props.references.map((reference, index)=>{
+								return (<div key={'pubReference-' + index} className={'pub-reference'}>
+										<span style={styles.referenceNumber}>[{index + 1}]</span>
+										<Reference citationObject={reference} mode={'mla'} />
+									
+								</div>);
+							})
+							: null
+						}
+					</div>
 
 				</div>
 
@@ -174,6 +189,11 @@ styles = {
 	},
 	loaded: {
 		opacity: 1
+	},
+	referenceNumber: {
+		color: '#222',
+		paddingRight: '10px',
+		fontSize: '14px',
 	},
 
 };

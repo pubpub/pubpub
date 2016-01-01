@@ -420,6 +420,13 @@ const Editor = React.createClass({
 			title: 'PubPub - Editing ' + this.props.slug
 		};
 
+		const referencesList = [];
+		for ( const key in this.state.firepadData.references ) {
+			if (this.state.firepadData.references.hasOwnProperty(key)) {
+				referencesList.push(this.state.firepadData.references[key]);
+			}
+		}
+
 		return (
 
 			<div style={[styles.editorContainer, darkMode && styles.editorContainerDark]} className={'editor-container'}>
@@ -669,7 +676,9 @@ const Editor = React.createClass({
 								htmlTree={this.state.tree} 
 								authors={this.getAuthorsArray()}
 								// addSelectionHandler={this.addSelection}
-								style={this.state.firepadData && this.state.firepadData.settings ? this.state.firepadData.settings.pubStyle : undefined}/>
+								style={this.state.firepadData && this.state.firepadData.settings ? this.state.firepadData.settings.pubStyle : undefined}
+								references={referencesList}/>
+
 						}
 
 						
