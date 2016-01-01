@@ -81,6 +81,7 @@
     "file-loader": "0.8.4",
     "firebase": "^2.3.2",
     "heroku-client": "^2.4.0",
+    "highlight.js": "^9.0.0",
     "history": "^1.12.5",
     "http-proxy": "1.11.3",
     "immutable": "^3.7.5",

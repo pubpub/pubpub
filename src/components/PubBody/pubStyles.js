@@ -38,6 +38,14 @@ export const scienceStyle = {
 		padding: '10px 20px',
 		color: '#565656',
 	},
+	'.codeBlock': {
+		margin: '0px 20px',
+		padding: '10px',
+		backgroundColor: '#f0f0f0',
+	},
+	'.codeBlockPre': {
+		margin: '10px 0px',
+	},
 	'ul, ol': {
 		fontFamily: 'Lora',
 		padding: '0px 20px 0px 60px',
@@ -56,7 +64,8 @@ export const scienceStyle = {
 		padding: '3px',
 		backgroundColor: '#eee',
 		color: '#111',
-	}
+	},
+	
 };
 
 

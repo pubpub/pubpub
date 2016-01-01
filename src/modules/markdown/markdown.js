@@ -1,6 +1,7 @@
 var React = require('react');
 var marked = require('./marked');
 var ent = require('ent');
+var CodeComponent = React.createFactory(require('./CodeComponent.js'));
 var renderer = new marked.Renderer();
 var options = {};
 var inlineIds = 0;
@@ -38,7 +39,7 @@ var getTocPosition = function (toc, level) {
 };
 
 renderer.code = function (code, language) {
-  result.push(CodeComponent({key: keys++, language: language, code: code}));
+  result.push(CodeComponent({key: keys++, language: language || 'javascript', code: code}));
 };
 
 renderer.blockquote = function (text) {
