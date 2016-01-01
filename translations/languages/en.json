@@ -83,6 +83,8 @@
   "pub.submittedToX": "Submitted to {number} Journals",
   "pub.submitToNew": "Submit to New Journal",
   "user.reputation": "Reputation",
+  "user.noPubs": "No Pubs Yet",
+  "user.noDiscussions": "No Discussions Yet",
   "user.name": "Name",
   "user.titleForPerson": "Title",
   "user.userBio": "Bio",

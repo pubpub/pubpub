@@ -107,6 +107,12 @@ const UserMain = React.createClass({
 						}
 						return outputPubs;
 					}()}
+					{this.props.profileData.discussions.length === 0
+						? <div style={globalStyles.emptyBlock}>
+							<FormattedMessage id="user.noPubs" defaultMessage="No Pubs Yet"/>
+						</div>
+						: null
+					}
 
 					<div id={'discussions-section'} style={styles.sectionHeader}>
 						<FormattedMessage {...globalMessages.discussions} />
@@ -121,6 +127,12 @@ const UserMain = React.createClass({
 						}
 						return outputDiscussions;
 					}()}
+					{this.props.profileData.discussions.length === 0
+						? <div style={globalStyles.emptyBlock}>
+							<FormattedMessage id="user.noDiscussions" defaultMessage="No Discussions Yet"/>
+						</div>
+						: null
+					}
 
 				</div>
 			</div>
@@ -232,7 +244,7 @@ styles = {
 	},
 	sectionHeader: {
 		fontSize: '30px',
-		margin: '15px 0px',
+		margin: '25px 0px 20px 0px',
 	},
 	pubBlock: {
 		// margin: 15,

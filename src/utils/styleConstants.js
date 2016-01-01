@@ -28,6 +28,16 @@ export const globalStyles = {
 	hiddenUntilLoad: {
 		// transition: '.3s linear opacity .25s',
 	},
+	emptyBlock: {
+		backgroundColor: '#f6f6f6',
+		width: '75%',
+		margin: '0px auto',
+		height: '85px',
+		lineHeight: '85px',
+		textAlign: 'center',
+		border: '1px solid rgba(0,0,0,0.05)',
+		borderRadius: '2px',
+	},
 };
 
 export const profileStyles = {

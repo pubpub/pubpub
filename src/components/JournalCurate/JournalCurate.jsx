@@ -148,10 +148,8 @@ const JournalCurate = React.createClass({
 						{()=>{
 							const length = this.props.journalData.pubsFeatured ? this.props.journalData.pubsFeatured.length : 0;
 							if (!length) {
-								return (<div style={styles.emptyBlock}>
-									<FormattedMessage
-										id="journal.noFeaturedPubs"
-										defaultMessage="No Featured Pubs"/>
+								return (<div style={globalStyles.emptyBlock}>
+									<FormattedMessage id="journal.noFeaturedPubs" defaultMessage="No Featured Pubs"/>
 								</div>);
 							} 
 							const output = [];
@@ -185,7 +183,7 @@ const JournalCurate = React.createClass({
 							{()=>{
 								const length = this.props.journalData.pubsSubmitted ? this.props.journalData.pubsSubmitted.length : 0;
 								if (!length) {
-									return (<div style={styles.emptyBlock}>
+									return (<div style={globalStyles.emptyBlock}>
 										<FormattedMessage
 											id="journal.noPendingPubs"
 											defaultMessage="No Pending Submitted Pubs"/>
@@ -225,7 +223,7 @@ const JournalCurate = React.createClass({
 						{
 							this.props.journalData.collections && this.props.journalData.collections.length
 								? <CollectionGallery collections={this.props.journalData.collections} />
-								: <div style={styles.emptyBlock}>
+								: <div style={globalStyles.emptyBlock}>
 									<FormattedMessage
 										id="journal.noCollections"
 										defaultMessage="No Collections"/>
@@ -326,16 +324,16 @@ styles = {
 		fontSize: 16,
 		marginBottom: '15px'
 	},
-	emptyBlock: {
-		backgroundColor: '#f6f6f6',
-		width: '75%',
-		margin: '0px auto',
-		height: '85px',
-		lineHeight: '85px',
-		textAlign: 'center',
-		border: '1px solid rgba(0,0,0,0.05)',
-		borderRadius: '2px',
-	},
+	// emptyBlock: {
+	// 	backgroundColor: '#f6f6f6',
+	// 	width: '75%',
+	// 	margin: '0px auto',
+	// 	height: '85px',
+	// 	lineHeight: '85px',
+	// 	textAlign: 'center',
+	// 	border: '1px solid rgba(0,0,0,0.05)',
+	// 	borderRadius: '2px',
+	// },
 	searchWrapper: {
 		width: '90%',
 		margin: '10px auto',
