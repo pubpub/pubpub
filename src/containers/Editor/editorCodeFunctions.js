@@ -28,19 +28,19 @@ export function insertText(cm, formatting, baseText, showPopup) {
 		cm.replaceSelection('\n***\n');
 		break;
 	case 'Image':
-		cm.replaceSelection('[image: ]');
+		cm.replaceSelection('{{image: }}');
 		showPopup();
 		break;
 	case 'Video':
-		cm.replaceSelection('[video: ]');
+		cm.replaceSelection('{{video: }}');
 		showPopup();
 		break;
 	case 'Cite':
-		cm.replaceSelection('[cite: ]');
+		cm.replaceSelection('{{cite: }}');
 		showPopup();
 		break;
 	case 'Pagebreak':
-		cm.replaceSelection('[pagebreak]');
+		cm.replaceSelection('{{pagebreak}}');
 		break;
 	default:
 		throw new Error('Insert command not found');

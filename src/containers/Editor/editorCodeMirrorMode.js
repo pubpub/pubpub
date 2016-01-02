@@ -17,7 +17,7 @@ export default function() {
 				let startPos = token.start;
 				let char = line.charAt(startPos);
 				let completionString = '' + char;
-				while (char !== '[' && startPos > 0) {
+				while (char !== '{' && startPos > 0) {
 					startPos--;
 					char = line.charAt(startPos);
 					completionString = char + completionString;
@@ -28,9 +28,9 @@ export default function() {
 				for (const plugin in plugins) {
 					if (plugins.hasOwnProperty(plugin) && plugins[plugin].autocomplete === true) {
 						if (completionString.length >= 2 && plugin.charAt(0) === completionString.charAt(1)) {
-							list.unshift({text: plugin + ': ]', displayText: plugin});
+							list.unshift({text: plugin + ': }}', displayText: plugin});
 						} else {
-							list.push({text: plugin + ': ]', displayText: plugin});
+							list.push({text: plugin + ': }}', displayText: plugin});
 						}
 					}
 				}
@@ -48,21 +48,21 @@ export default function() {
 
 	CodeMirror.defineSimpleMode('plugin', {
 		start: [
-			{regex: /\[title:.*\]/, token: 'ppm ppm-title'},
-			{regex: /\[abstract:.*\]/, token: 'ppm ppm-abstract'},
-			{regex: /\[authorsNote:.*\]/, token: 'ppm ppm-authorsNote'},
-			{regex: /\[pagebreak\]/, token: 'ppm ppm-pagebreak'},
-			{regex: /\[selection:.*\]/, token: 'ppm ppm-pagebreak'},
-			// {regex: /\[asset.*\]/, token: 'plugin plugin-asset'},
-			{regex: /\[image:.*\]/, token: 'ppm plugin plugin-image'},
-			{regex: /\[video:.*\]/, token: 'ppm plugin plugin-video'},
-			{regex: /\[audio:.*\]/, token: 'ppm plugin plugin-audio'},
-			{regex: /\[table:.*\]/, token: 'ppm plugin plugin-table'},
-			{regex: /\[cite:.*\]/, token: 'ppm plugin plugin-cite'},
+			{regex: /\{\{title:.*\}\}/, token: 'ppm ppm-title'},
+			{regex: /\{\{abstract:.*\}\}/, token: 'ppm ppm-abstract'},
+			{regex: /\{\{authorsNote:.*\}\}/, token: 'ppm ppm-authorsNote'},
+			{regex: /\{\{pagebreak\}\}/, token: 'ppm ppm-pagebreak'},
+			{regex: /\{\{selection:.*\}\}/, token: 'ppm ppm-pagebreak'},
+			// {regex: /\{\{asset.*\}\}/, token: 'plugin plugin-asset'},
+			{regex: /\{\{image:.*\}\}/, token: 'ppm plugin plugin-image'},
+			{regex: /\{\{video:.*\}\}/, token: 'ppm plugin plugin-video'},
+			{regex: /\{\{audio:.*\}\}/, token: 'ppm plugin plugin-audio'},
+			// {regex: /\{\{table:.*\}\}/, token: 'ppm plugin plugin-table'},
+			{regex: /\{\{cite:.*\}\}/, token: 'ppm plugin plugin-cite'},
 		],
 		citationStart: [
 			// {regex: /.*/, token: 'plugin-content'},
-			{regex: /.*\]/, token: 'ppm ppm-cite', next: 'start'}
+			{regex: /.*\}\}/, token: 'ppm ppm-cite', next: 'start'}
 		]
 	});
 
@@ -75,7 +75,7 @@ export default function() {
 	CodeMirror.defineMode('pubpubmarkdown', function(config) {
 		return CodeMirror.multiplexingMode(
 			CodeMirror.getMode(config, 'markdown'),
-			{open: '[', close: ']',
+			{open: '{{', close: '}}',
 			 mode: CodeMirror.getMode(config, 'plugin'),
 			 innerStyle: 'pubpub-markdown',
 		 	 parseDelimiters: true},

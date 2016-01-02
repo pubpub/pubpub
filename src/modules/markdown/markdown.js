@@ -14,10 +14,9 @@ var travisTOCFull = [];
 
 // Converts inline IDs to actual elements
 var createBlockContent = function (content) {
-
-  var textWithInlines = content.split(/(\{\{.*?\}\})/);
+  var textWithInlines = content.split(/(\{\$.*?\$\})/);
   content = textWithInlines.map(function (text) {
-    var inline = text.match(/\{\{(.*)\}\}/);
+    var inline = text.match(/\{\$(.*)\$\}/);
     if (inline) {
       return inlines[inline[1]];
     } else {
@@ -110,7 +109,7 @@ renderer.list = function (body, ordered) {
 renderer.listitem = function (text) {
   var id = inlineIds++;
   inlines[id] = React.createElement(options.li || 'li', {key: keys++}, createBlockContent(text));
-  return '{{' + id + '}}';
+  return '{$' + id + '$}';
 };
 
 renderer.paragraph = function (text) {
@@ -118,7 +117,7 @@ renderer.paragraph = function (text) {
   // inlines[id] = React.createElement(options.p || 'p', {key: keys++}, createBlockContent(text));
   inlines[id] = React.createElement('div', {key: keys++, className: 'p-block'}, createBlockContent(text));
   result.push(inlines[id]);
-  return '{{' + id + '}}';
+  return '{$' + id + '$}';
 };
 
 renderer.table = function (header, body) {
@@ -131,14 +130,14 @@ renderer.table = function (header, body) {
 renderer.tablerow = function (content) {
   var id = inlineIds++;
   inlines[id] = React.createElement(options.tr || 'tr', {key: keys++}, createBlockContent(content));
-  return '{{' + id + '}}';
+  return '{$' + id + '$}';
 };
 
 renderer.tablecell = function (content, flags) {
   var id = inlineIds++;
   var props =  flags.align ? {className: 'text-' + flags.align} : {key: keys++};
   inlines[id] = React.createElement(flags.header ? options.th || 'th' : options.td || 'td', props, createBlockContent(content));
-  return '{{' + id + '}}';
+  return '{$' + id + '$}';
 };
 
 renderer.link = function (href, title, text) {
@@ -149,43 +148,43 @@ renderer.link = function (href, title, text) {
     key: keys++,
     target: 'new'
   }, ent.decode(text));
-  return '{{' + id + '}}';
+  return '{$' + id + '$}';
 };
 
 renderer.strong = function (text) {
   var id = inlineIds++;
   inlines[id] = React.createElement(options.strong || 'strong', {key: keys++}, ent.decode(text));
-  return '{{' + id + '}}';
+  return '{$' + id + '$}';
 };
 
 renderer.em = function (text) {
   var id = inlineIds++;
   inlines[id] = React.createElement(options.em || 'em', {key: keys++}, ent.decode(text));
-  return '{{' + id + '}}';
+  return '{$' + id + '$}';
 };
 
 renderer.codespan = function (text) {
   var id = inlineIds++;
   inlines[id] = React.createElement('code', {key: keys++}, ent.decode(text));
-  return '{{' + id + '}}';
+  return '{$' + id + '$}';
 };
 
 renderer.br = function (text) {
   var id = inlineIds++;
   inlines[id] = React.createElement(options.br || 'br', {key: keys++}, ent.decode(text));
-  return '{{' + id + '}}';
+  return '{$' + id + '$}';
 };
 
 renderer.del = function (text) {
   var id = inlineIds++;
   inlines[id] = React.createElement(options.del || 'del', {key: keys++}, ent.decode(text));
-  return '{{' + id + '}}';
+  return '{$' + id + '$}';
 };
 
 renderer.image = function (href, title, text) {
   var id = inlineIds++;
   inlines[id] = React.createElement(options.img || 'img', {src: href, alt: title, key: keys++});
-  return '{{' + id + '}}';
+  return '{$' + id + '$}';
 };
 
 var exec = function (content,options) {
@@ -232,7 +231,7 @@ exec.setExtensions = function (extensions) {
 		}
 		props['key'] = keys++;
 		inlines[id] = React.createElement(options[elem] || elem,props, ent.decode(text));
-		return '{{' + id + '}}';
+		return '{$' + id + '$}';
 	};
 
 	for (var ext in extensions){

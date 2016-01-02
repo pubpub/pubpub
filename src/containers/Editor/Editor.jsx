@@ -193,22 +193,22 @@ const Editor = React.createClass({
 		// An alternative is that we don't pass a trimmed version of the text to the markdown processor.
 		// Instead we define header plugins and pass the entire thing to both here and body.
 		const fullMD = cm.getValue();
-		const titleRE = /\[title:(.*?)\]/i;
+		const titleRE = /\{\{title:(.*?)\}\}/i;
 		const titleMatch = fullMD.match(titleRE);
 		const title = titleMatch && titleMatch.length ? titleMatch[1].trim() : '';
 
-		const abstractRE = /\[abstract:(.*?)\]/i;
+		const abstractRE = /\{\{abstract:(.*?)\}\}/i;
 		const abstractMatch = fullMD.match(abstractRE);
 		const abstract = abstractMatch && abstractMatch.length ? abstractMatch[1].trim() : '';
 
-		const authorsNoteRE = /\[authorsNote:(.*?)\]/i;
+		const authorsNoteRE = /\{\{authorsNote:(.*?)\}\}/i;
 		const authorsNoteMatch = fullMD.match(authorsNoteRE);
 		const authorsNote = authorsNoteMatch && authorsNoteMatch.length ? authorsNoteMatch[1].trim() : '';
 
 		const assets = convertFirebaseToObject(this.state.firepadData.assets);
 		const references = convertFirebaseToObject(this.state.firepadData.references, true);
 		const selections = [];
-		const markdown = fullMD.replace(/\[title:.*?\]/g, '').replace(/\[abstract:.*?\]/g, '').replace(/\[authorsNote:.*?\]/g, '').trim();
+		const markdown = fullMD.replace(/\{\{title:.*?\}\}/g, '').replace(/\{\{abstract:.*?\}\}/g, '').replace(/\{\{authorsNote:.*?\}\}/g, '').trim();
 
 		try {
 			const mdOutput = marked(markdown, {assets, references, selections});	
@@ -257,16 +257,16 @@ const Editor = React.createClass({
 
 		const cm = document.getElementsByClassName('CodeMirror')[0].CodeMirror;
 		const fullMD = cm.getValue();
-
-		const titleRE = /\[title:(.*?)\]/i;
+		
+		const titleRE = /\{\{title:(.*?)\}\}/i;
 		const titleMatch = fullMD.match(titleRE);
 		const title = titleMatch && titleMatch.length ? titleMatch[1].trim() : '';
 
-		const abstractRE = /\[abstract:(.*?)\]/i;
+		const abstractRE = /\{\{abstract:(.*?)\}\}/i;
 		const abstractMatch = fullMD.match(abstractRE);
 		const abstract = abstractMatch && abstractMatch.length ? abstractMatch[1].trim() : '';
 
-		const authorsNoteRE = /\[authorsNote:(.*?)\]/i;
+		const authorsNoteRE = /\{\{authorsNote:(.*?)\}\}/i;
 		const authorsNoteMatch = fullMD.match(authorsNoteRE);
 		const authorsNote = authorsNoteMatch && authorsNoteMatch.length ? authorsNoteMatch[1].trim() : '';
 
@@ -293,7 +293,7 @@ const Editor = React.createClass({
 			title: title,
 			abstract: abstract,
 			authorsNote: authorsNote,
-			markdown: fullMD.replace(/\[title:.*?\]/g, '').replace(/\[abstract:.*?\]/g, '').replace(/\[authorsNote:.*?\]/g, '').trim(),
+			markdown: fullMD.replace(/\{\{title:.*?\}\}/g, '').replace(/\{\{abstract:.*?\}\}/g, '').replace(/\{\{authorsNote:.*?\}\}/g, '').trim(),
 			authors: authors,
 			assets: this.state.firepadData.assets,
 			references: this.state.firepadData.references,

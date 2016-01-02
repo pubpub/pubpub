@@ -32,16 +32,17 @@ export default {
 	},
 	pagebreak: {
 		component: PagebreakPlugin,
-		rule: /^(?:\s)*(?:\[)pagebreak([^\n\]]*)(?:\])/,
+		rule: /^(?:\s)*(?:\{\{)pagebreak([^\n\}]*)(?:\}\})/,
 		inline: true,
 		autocomplete: false,
 		inlineFunc: function(cap, renderer) {
+			console.log('in pagebreak thing');
 			return renderer(cap[1]);
 		}
 	},
 	selection: {
 		component: SelectionPlugin,
-		rule: /^(?:\s)*(?:\[)selection([^\n\]]*)(?:\])/,
+		rule: /^(?:\s)*(?:\{\{)selection([^\n\}]*)(?:\}\})/,
 		inline: true,
 		autocomplete: false,
 		inlineFunc: function(cap, renderer, data) {
@@ -55,8 +56,9 @@ export default {
 		inline: true,
 		autocomplete: true,
 		// rule: /^(?:\s)*(?::{2})asset(?::{2})([^\n:]+)(?::{2})/,
-		rule: /^(?:\s)*(?:\[)image:([^\n\]]*)(?:\])/,
+		rule: /^(?:\s)*(?:\{\{)image:([^\n\}]*)(?:\}\})/,
 		inlineFunc: function(cap, renderer, data) {
+			console.log('in image thing');
 			const assets = data.assets;
 			const propDict = parsePluginString(cap[1]);
 			const refName = propDict.src || 'none';
@@ -77,7 +79,7 @@ export default {
 		inline: true,
 		autocomplete: true,
 		// rule: /^(?:\s)*(?::{2})asset(?::{2})([^\n:]+)(?::{2})/,
-		rule: /^(?:\s)*(?:\[)video:([^\n\]]*)(?:\])/,
+		rule: /^(?:\s)*(?:\{\{)video:([^\n\}]*)(?:\}\})/,
 		inlineFunc: function(cap, renderer, data) {
 			const assets = data.assets;
 			const propDict = parsePluginString(cap[1]);
@@ -99,7 +101,7 @@ export default {
 		component: CitePlugin,
 		inline: true,
 		autocomplete: true,
-		rule: /^(?:\s)*(?:\[)cite:([^\n\]]*)(?:\])/,
+		rule: /^(?:\s)*(?:\{\{)cite:([^\n\}]*)(?:\}\})/,
 		inlineFunc: function(cap, renderer, data) {
 			const references = data.references;
 			const propDict = parsePluginString(cap[1]);
