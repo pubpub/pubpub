@@ -30,7 +30,7 @@ const PubLeftBar = React.createClass({
 					<FormattedMessage id="pub.home" defaultMessage="Home"/>
 				</div></Link>
 				<div key={'leftBar1'} style={styles.detail}>
-					<FormattedMessage id="pub.randomPub" defaultMessage="randomPub"/>
+					<FormattedMessage id="pub.randomPub" defaultMessage="Random Pub"/>
 				</div>
 				<Link style={globalStyles.link} to={'/explore'}><div key={'leftBar2'} style={styles.detail}>
 					<FormattedMessage {...globalMessages.Explore} />

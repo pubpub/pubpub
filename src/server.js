@@ -138,7 +138,7 @@ app.use((req, res) => {
 							<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.2.0/mode/css/css.min.js"></script>
 							<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.2.0/mode/javascript/javascript.min.js"></script>
 							<script src="https://cdn.firebase.com/libs/firepad/1.2.0/firepad.min.js"></script>
-
+							<script src="https://cdn.polyfill.io/v2/polyfill.min.js?features=Intl.~locale.en"></script>
 							<script src="//cdnjs.cloudflare.com/ajax/libs/codemirror/5.4.0/addon/mode/overlay.min.js"></script>
 							<script src="//cdn.jsdelivr.net/codemirror.spell-checker/latest/spell-checker.min.js"></script>
 						</head>
