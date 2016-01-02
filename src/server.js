@@ -140,7 +140,6 @@ app.use((req, res) => {
 							<script src="https://cdn.firebase.com/libs/firepad/1.2.0/firepad.min.js"></script>
 
 							<script src="//cdnjs.cloudflare.com/ajax/libs/codemirror/5.4.0/addon/mode/overlay.min.js"></script>
-							<link rel="stylesheet" href="//cdn.jsdelivr.net/codemirror.spell-checker/latest/spell-checker.min.css">
 							<script src="//cdn.jsdelivr.net/codemirror.spell-checker/latest/spell-checker.min.js"></script>
 						</head>
 
