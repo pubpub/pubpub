@@ -7,6 +7,7 @@ import { Link } from 'react-router';
 import {getPub, openPubModal, closePubModal, addDiscussion, addSelection, discussionVoteSubmit, togglePubHighlights, pubNavOut, pubNavIn} from '../../actions/pub';
 import {toggleVisibility} from '../../actions/login';
 import {closeMenu} from '../../actions/nav';
+import ResizingText from './ResizingText';
 
 import {convertImmutableListToObject} from '../../utils/parsePlugins';
 
@@ -55,9 +56,9 @@ const PubReader = React.createClass({
 	},
 
 	componentWillMount() {
-		
+
 		const versionIndex = this.props.query.version !== undefined ? this.props.query.version - 1 : this.props.readerData.getIn(['pubData', 'history']).size - 1;
-		
+
 		const inputMD = this.props.readerData.getIn(['pubData', 'history', versionIndex, 'markdown']) || '';
 		const assets = convertImmutableListToObject( this.props.readerData.getIn(['pubData', 'history', versionIndex, 'assets']) );
 		const references = convertImmutableListToObject(this.props.readerData.getIn(['pubData', 'history', versionIndex, 'references']), true);
@@ -77,7 +78,7 @@ const PubReader = React.createClass({
 		// When a pub is loaded, and we navigate away, then navigate to a new pub - the old pub data is still there during component will mount
 		// Thus, we need to also check and render when the markdown has changed.
 		const oldMarkdown = this.props.readerData.getIn(['pubData', 'history', oldVersionIndex, 'markdown']);
-		const newMarkdown = nextProps.readerData.getIn(['pubData', 'history', versionIndex, 'markdown']); 
+		const newMarkdown = nextProps.readerData.getIn(['pubData', 'history', versionIndex, 'markdown']);
 
 		if (oldVersionIndex !== versionIndex || this.state.htmlTree.length === 0 || oldMarkdown !== newMarkdown) {
 			// console.log('compiling markdown for version ' + versionIndex);
@@ -126,7 +127,7 @@ const PubReader = React.createClass({
 		discussionObject.pub = this.props.readerData.getIn(['pubData', '_id']);
 		discussionObject.version = this.props.query.version !== undefined && this.props.query.version > 0 && this.props.query.version < (this.props.readerData.getIn(['pubData', 'history']).size - 1) ? this.props.query.version : this.props.readerData.getIn(['pubData', 'history']).size;
 		discussionObject.selections = this.props.readerData.getIn(['newDiscussionData', 'selections']);
-		this.props.dispatch(addDiscussion(discussionObject, activeSaveID));	
+		this.props.dispatch(addDiscussion(discussionObject, activeSaveID));
 	},
 	addSelection: function(newSelection) {
 		newSelection.pub = this.props.readerData.getIn(['pubData', '_id']);
@@ -203,16 +204,18 @@ const PubReader = React.createClass({
 							: null
 					}
 
+					<ResizingText fontRatio={60}>
 					<PubBody
 						status={this.props.readerData.get('status')}
 						title={pubData.history[versionIndex].title}
 						abstract={pubData.history[versionIndex].abstract}
 						htmlTree={this.state.htmlTree}
 						authors={pubData.history[versionIndex].authors}
-						addSelectionHandler={this.addSelection} 
+						addSelectionHandler={this.addSelection}
 						style={pubData.history[versionIndex].style}
 						showPubHighlights={this.props.readerData.get('showPubHighlights')}
 						references={this.props.readerData.getIn(['pubData', 'history', versionIndex, 'references']) !== undefined ? this.props.readerData.getIn(['pubData', 'history', versionIndex, 'references']).toJS() : []} />
+					</ResizingText>
 
 					<PubModals
 						slug={this.props.slug}
@@ -261,7 +264,7 @@ const PubReader = React.createClass({
 						newDiscussionData={this.props.readerData.get('newDiscussionData')}
 						activeSaveID={this.props.readerData.get('activeSaveID')}
 						userThumbnail={this.props.loginData.getIn(['userData', 'thumbnail'])}
-						handleVoteSubmit={this.discussionVoteSubmit} 
+						handleVoteSubmit={this.discussionVoteSubmit}
 						toggleHighlightsHandler={this.toggleHighlights}
 						showPubHighlights={this.props.readerData.get('showPubHighlights')}/>
 				</div>
