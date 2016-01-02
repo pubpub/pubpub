@@ -153,13 +153,13 @@ renderer.link = function (href, title, text) {
 
 renderer.strong = function (text) {
   var id = inlineIds++;
-  inlines[id] = React.createElement(options.strong || 'strong', {key: keys++}, ent.decode(text));
+  inlines[id] = React.createElement(options.strong || 'strong', {key: keys++}, createBlockContent(text));
   return '{$' + id + '$}';
 };
 
 renderer.em = function (text) {
   var id = inlineIds++;
-  inlines[id] = React.createElement(options.em || 'em', {key: keys++}, ent.decode(text));
+  inlines[id] = React.createElement(options.em || 'em', {key: keys++}, createBlockContent(text));
   return '{$' + id + '$}';
 };
 
