@@ -75,14 +75,18 @@ export default function() {
 	CodeMirror.defineMode('pubpubmarkdown', function(config) {
 		return CodeMirror.multiplexingMode(
 			CodeMirror.getMode(config, 'markdown'),
-			{open: '{{', close: '}}',
-			 mode: CodeMirror.getMode(config, 'plugin'),
-			 innerStyle: 'pubpub-markdown',
-		 	 parseDelimiters: true},
-			 {open: '$', close: '$',
- 			 mode: CodeMirror.getMode(config, 'math'),
- 			 innerStyle: 'ppm-math',
- 		 	 parseDelimiters: false}
+			{
+				open: '{{', close: '}}',
+				mode: CodeMirror.getMode(config, 'plugin'),
+				innerStyle: 'pubpub-markdown',
+				parseDelimiters: true
+			},
+			// {
+			// 	open: '$', close: '$',
+			// 	mode: CodeMirror.getMode(config, 'math'),
+			// 	innerStyle: 'ppm-math',
+			// 	parseDelimiters: false
+			// }
 
 
 		);
