@@ -38,12 +38,9 @@ class ResizingText extends React.Component {
 	updateFontSize() {
 		const settings = this.settings;
 		const elw = this.elemWidth;
-		// const width = elw > settings.maximum ? settings.maximum : elw < settings.minimum ? settings.minimum : elw;
 		const width = this.calcWithBounds(settings.maximum, settings.minimum, elw);
 		const fontBase = width / settings.fontRatio;
 		const fontSize = Math.round(this.calcWithBounds(settings.maxFont, settings.minFont, fontBase));
-		// let fontSize = fontBase > settings.maxFont ? settings.maxFont : fontBase < settings.minFont ? settings.minFont : fontBase;
-		// fontSize = Math.round(fontSize);
 		this.setState({fontSize: fontSize});
 	}
 	render() {

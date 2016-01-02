@@ -69,6 +69,10 @@ export const globalMessages = defineMessages({
 		id: 'global.history',
 		defaultMessage: 'History',
 	},
+	historydiff: {
+		id: 'global.historydiff',
+		defaultMessage: 'history diff',
+	},
 	analytics: {
 		id: 'global.analytics',
 		defaultMessage: 'Analytics',
@@ -161,7 +165,6 @@ export const globalMessages = defineMessages({
 		id: 'global.settings',
 		defaultMessage: 'Settings',
 	},
-
 	by: {
 		id: 'global.by',
 		defaultMessage: 'by',
@@ -238,6 +241,14 @@ export const globalMessages = defineMessages({
 	journal: {
 		id: 'global.journal',
 		defaultMessage: 'journal',
+	},
+	invite: {
+		id: 'global.invite',
+		defaultMessage: 'invite',
+	},
+	journals: {
+		id: 'global.journals',
+		defaultMessage: 'journals',
 	},
 	Journals: {
 		id: 'global.Journals',
@@ -318,6 +329,18 @@ export const globalMessages = defineMessages({
 	print: {
 		id: 'global.print',
 		defaultMessage: 'Print',
+	},
+	published: {
+		id: 'global.published',
+		defaultMessage: 'Published on',
+	},
+	firstPublished: {
+		id: 'global.firstPublished',
+		defaultMessage: 'First published on',
+	},
+	lastPublished: {
+		id: 'global.lastPublished',
+		defaultMessage: 'Last Published on',
 	},
 	
 });

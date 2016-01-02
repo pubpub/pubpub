@@ -8,6 +8,7 @@ import {loadCss} from '../../utils/loadingFunctions';
 import {scienceStyle, magazineStyle} from './pubStyles';
 import cssConvert from '../../utils/cssToRadium';
 import ResizingText from './ResizingText';
+import dateFormat from 'dateformat';
 
 import {globalMessages} from '../../utils/globalMessages';
 import {FormattedMessage} from 'react-intl';
@@ -25,7 +26,9 @@ const PubBody = React.createClass({
 		style: PropTypes.object,
 		showPubHighlights: PropTypes.bool,
 		references: PropTypes.array,
-		minFont: PropTypes.number
+		minFont: PropTypes.number,
+		firstPublishedDate: PropTypes.string,
+		lastPublishedDate: PropTypes.string
 	},
 	getDefaultProps: function() {
 		return {
@@ -141,6 +144,21 @@ const PubBody = React.createClass({
 							})
 						}
 					</div>
+
+					{this.props.firstPublishedDate !== this.props.lastPublishedDate
+						? <div id={'pub-dates'} className={this.printStyleClass.dates}>
+							<span><FormattedMessage {...globalMessages.firstPublished}/> </span>
+							{dateFormat(this.props.firstPublishedDate, 'mm/dd/yy')}
+							<span style={styles.dateSeparator}>|</span>
+							<span><FormattedMessage {...globalMessages.lastPublished}/> </span>
+							{dateFormat(this.props.lastPublishedDate, 'mm/dd/yy')}
+						</div>
+						: <div id={'pub-dates'} className={this.printStyleClass.dates}>
+							<span><FormattedMessage {...globalMessages.published}/> </span>
+							{dateFormat(this.props.firstPublishedDate, 'mm/dd/yy')}
+						</div>
+					}
+
 					<div id={'pub-abstract'}>{this.props.abstract}</div>
 					<div id={'pub-header-divider'}></div>
 
@@ -199,6 +217,9 @@ styles = {
 	},
 	loaded: {
 		opacity: 1
+	},
+	dateSeparator: {
+		padding: '0px 10px',
 	},
 	referenceNumber: {
 		color: '#222',

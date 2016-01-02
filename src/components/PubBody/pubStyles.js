@@ -16,6 +16,11 @@ export const scienceStyle = {
 			color: '#111',
 		},
 	},
+	'#pub-dates': {
+		textAlign: 'center',
+		padding: '0px 50px',
+		color: '#555',
+	},
 	'#pub-abstract': {
 		textAlign: 'left',
 		color: '#777',
@@ -54,6 +59,7 @@ export const scienceStyle = {
 		display: 'block',
 		borderRadius: '1px',
 		width: '88%',
+		overflowX: 'scroll',
 
 	},
 	'.codeBlockPre': {

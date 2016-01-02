@@ -107,7 +107,7 @@ const UserMain = React.createClass({
 						}
 						return outputPubs;
 					}()}
-					{this.props.profileData.discussions.length === 0
+					{this.props.profileData.pubs.length === 0
 						? <div style={globalStyles.emptyBlock}>
 							<FormattedMessage id="user.noPubs" defaultMessage="No Pubs Yet"/>
 						</div>

@@ -117,7 +117,7 @@ app.use((req, res) => {
 							<meta name="referrer" content="always">
 							${DocumentMeta.renderAsHTML()}
 							<link rel="shortcut icon" href="/favicon.ico" />
-							<link href='https://fonts.googleapis.com/css?family=Lato:300,900,900italic|Lora:400,700' rel='stylesheet' type='text/css' />
+							<link href='https://fonts.googleapis.com/css?family=Lato:300,300italic,900,900italic|Lora:400,400italic,700' rel='stylesheet' type='text/css' />
 
 							<!-- We could dynamically load these in Editor.jsx
 							<!-- If we have to load more local css - we should bundle it all into one minified file and load it here. -->
