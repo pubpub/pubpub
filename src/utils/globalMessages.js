@@ -165,7 +165,6 @@ export const globalMessages = defineMessages({
 		id: 'global.settings',
 		defaultMessage: 'Settings',
 	},
-
 	by: {
 		id: 'global.by',
 		defaultMessage: 'by',
@@ -242,6 +241,10 @@ export const globalMessages = defineMessages({
 	journal: {
 		id: 'global.journal',
 		defaultMessage: 'journal',
+	},
+	journals: {
+		id: 'global.journals',
+		defaultMessage: 'journals',
 	},
 	Journals: {
 		id: 'global.Journals',
