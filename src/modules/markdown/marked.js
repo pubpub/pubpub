@@ -498,7 +498,7 @@ var inline = {
   code: /^(`+)\s*([\s\S]*?[^`])\s*\1(?!`)/,
   br: /^ {2,}\n(?!\s*$)/,
   del: noop,
-  text: /^[\s\S]+?(?=[\\<!:\[_*`]| {2,}\n|$)/
+  text: /^[\s\S]+?(?=[\\<!:\{_*`]| {2,}\n|$)/
 };
 
 inline._inside = /(?:\[[^\]]*\]|[^\[\]]|\](?=[^\[]*\]))*/;
@@ -611,7 +611,6 @@ InlineLexer.prototype.output = function(src) {
 
   while (src) {
 		//debugger;
-
 
 		for (var key in this.extensions) {
 			var rule = this.extensions[key].rule;

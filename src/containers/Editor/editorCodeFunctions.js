@@ -27,6 +27,9 @@ export function insertText(cm, formatting, baseText, showPopup) {
 	case 'Line':
 		cm.replaceSelection('\n***\n');
 		break;
+	case 'Link':
+		cm.replaceSelection('[Link Title](http:// Link URL)');
+		break;
 	case 'Image':
 		cm.replaceSelection('{{image: }}');
 		showPopup();
