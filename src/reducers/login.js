@@ -116,7 +116,7 @@ function loggedOut(state) {
 }
 
 function failed(state, error) {
-	console.log('failed error is: ');
+	console.log('failed error is: ', error);
 	let errorMessage = '';
 	if (error.toString() === 'Error: Unauthorized') {
 		errorMessage = 'Invalid Username or Password';

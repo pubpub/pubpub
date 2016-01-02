@@ -456,6 +456,13 @@ export function codeMirrorStyles(loginData) {
 		'.CodeMirror-cursor': {
 			borderLeft: '1px solid ' + editorStyles.cursorColor,
 		},
+		'.CodeMirror .cm-spell-error:not(.cm-url):not(.cm-comment):not(.cm-tag):not(.cm-word)': {
+			':after': {
+				width: '5px',
+				height: '5px',
+				backgroundColor: 'red',
+			}
+		},
 		'.cm-s-default .cm-header': {
 			color: editorStyles.colorHeader,
 		},

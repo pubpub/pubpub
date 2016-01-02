@@ -44,7 +44,8 @@ const cmOptions = {
 	lineWrapping: true,
 	viewportMargin: Infinity, // This will cause bad performance on large documents. Rendering the entire thing...
 	autofocus: false,
-	mode: 'pubpubmarkdown',
+	mode: 'spell-checker',
+	backdrop: 'pubpubmarkdown',
 	extraKeys: {'Ctrl-Space': 'autocomplete'}
 };
 
