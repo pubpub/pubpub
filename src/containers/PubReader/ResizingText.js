@@ -16,12 +16,12 @@ class ResizingText extends React.Component {
 			maximum: this.props.maximum || 9999,
 			minimum: this.props.minimum || 1,
 			maxFont: this.props.maxFont || 9999,
-			minFont: this.props.minFont || 20,
+			minFont: this.props.minFont || 15,
 			fontRatio: this.props.fontRatio
 		};
 	}
 	updateWidthFont() {
-		this.elemWidth = this.refs.textBody.getDOMNode().offsetWidth;
+		this.elemWidth = React.findDOMNode(this.refs.textBody).offsetWidth;
 		this.updateFontSize();
 	}
 	updateFontSize() {
