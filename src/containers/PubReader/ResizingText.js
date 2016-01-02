@@ -27,13 +27,15 @@ class ResizingText extends React.Component {
 	updateFontSize() {
 		const settings = this.settings;
 		const elw = this.elemWidth;
-		const width = elw > settings.maximum ? settings.maximum : elw < settings.minimum ? settings.minimum : elw;
+		const widthElse = elw < settings.minimum ? settings.minimum : elw;
+		const width = elw > settings.maximum ? settings.maximum : widthElse;
 		const fontBase = width / settings.fontRatio;
-		let fontSize = fontBase > settings.maxFont ? settings.maxFont : fontBase < settings.minFont ? settings.minFont : fontBase;
+		const fontSizeElse = fontBase < settings.minFont ? settings.minFont : fontBase;
+		let fontSize = fontBase > settings.maxFont ? settings.maxFont : fontSizeElse;
 		fontSize = Math.round(fontSize);
 		this.setState({fontSize: fontSize});
 	}
-  render() {
+	render() {
 		let fontSize = this.state && this.state.fontSize;
 		if (isNaN(fontSize)) {
 			fontSize = this.props.default || null;
@@ -45,8 +47,8 @@ class ResizingText extends React.Component {
 			<div style={divStyle} ref="textBody">
 				{this.props.children}
 			</div>
-    );
-  }
+		);
+	}
 }
 
 ResizingText.propTypes = {
