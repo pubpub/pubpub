@@ -34,7 +34,7 @@ var block = {
   def: /^ *\[([^\]]+)\]: *<?([^\s>]+)>?(?: +["(]([^\n]+)[")])? *(?:\n+|$)/,
   table: noop,
   paragraph: /^((?:[^\n]+\n?(?!hr|heading|lheading|blockquote|tag|def))+)\n*/,
-  text: /^[^\n:]+/
+  text: /^[^\n]+/
 };
 
 block.bullet = /(?:[*+-]|\d+\.)/;
