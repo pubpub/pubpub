@@ -204,20 +204,20 @@ const PubReader = React.createClass({
 							: null
 					}
 
-					<ResizingText fontRatio={60}>
-						<PubBody
-							status={this.props.readerData.get('status')}
-							title={pubData.history[versionIndex].title}
-							abstract={pubData.history[versionIndex].abstract}
-							htmlTree={this.state.htmlTree}
-							authors={pubData.history[versionIndex].authors}
-							addSelectionHandler={this.addSelection}
-							style={pubData.history[versionIndex].style}
-							showPubHighlights={this.props.readerData.get('showPubHighlights')}
-							references={this.props.readerData.getIn(['pubData', 'history', versionIndex, 'references']) !== undefined ? this.props.readerData.getIn(['pubData', 'history', versionIndex, 'references']).toJS() : []} 
-							firstPublishedDate={this.props.readerData.getIn(['pubData', 'history', 0, 'publishDate'])}
-							lastPublishedDate={this.props.readerData.getIn(['pubData', 'history', this.props.readerData.getIn(['pubData', 'history']).size - 1, 'publishDate'])} />
-					</ResizingText>
+					{/* <ResizingText fontRatio={60}> */}
+					<PubBody
+						status={this.props.readerData.get('status')}
+						title={pubData.history[versionIndex].title}
+						abstract={pubData.history[versionIndex].abstract}
+						htmlTree={this.state.htmlTree}
+						authors={pubData.history[versionIndex].authors}
+						addSelectionHandler={this.addSelection}
+						style={pubData.history[versionIndex].style}
+						showPubHighlights={this.props.readerData.get('showPubHighlights')}
+						references={this.props.readerData.getIn(['pubData', 'history', versionIndex, 'references']) !== undefined ? this.props.readerData.getIn(['pubData', 'history', versionIndex, 'references']).toJS() : []} 
+						firstPublishedDate={this.props.readerData.getIn(['pubData', 'history', 0, 'publishDate'])}
+						lastPublishedDate={this.props.readerData.getIn(['pubData', 'history', this.props.readerData.getIn(['pubData', 'history']).size - 1, 'publishDate'])} />
+					{/* </ResizingText> */}
 
 					<PubModals
 						slug={this.props.slug}
