@@ -7,7 +7,7 @@ import { Link } from 'react-router';
 import {getPub, openPubModal, closePubModal, addDiscussion, addSelection, discussionVoteSubmit, togglePubHighlights, pubNavOut, pubNavIn} from '../../actions/pub';
 import {toggleVisibility} from '../../actions/login';
 import {closeMenu} from '../../actions/nav';
-import ResizingText from './ResizingText';
+// import ResizingText from './ResizingText';
 
 import {convertImmutableListToObject} from '../../utils/parsePlugins';
 
