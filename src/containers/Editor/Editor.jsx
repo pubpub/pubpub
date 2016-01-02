@@ -110,7 +110,7 @@ const Editor = React.createClass({
 				userId: username,
 				defaultText: editorDefaultText(this.props.pubData.getIn(['createPubData', 'title']))
 			});
-			
+
 			new Firebase('https://pubpub.firebaseio.com/.info/connected').on('value', (connectedSnap)=> {
 				if (connectedSnap.val() === true) {
 					/* we're connected! */
@@ -123,7 +123,7 @@ const Editor = React.createClass({
 
 			FirepadUserList.fromDiv(firepadRef.child('users'),
 				document.getElementById('userlist'), username, this.props.loginData.getIn(['userData', 'name']), this.props.loginData.getIn(['userData', 'thumbnail']));
-			
+
 			firepad.on('synced', (synced)=>{
 				// console.log('before debounce', synced);
 				debounce(()=> {
@@ -168,7 +168,7 @@ const Editor = React.createClass({
 	updateSaveStatus: function(isSynced) {
 		if (!isSynced) {
 			if (this.state.editorSaveStatus !== 'disconnected') {
-				this.setState({editorSaveStatus: 'saving'});	
+				this.setState({editorSaveStatus: 'saving'});
 			}
 		} else {
 			this.setState({editorSaveStatus: 'saved'});
@@ -180,7 +180,7 @@ const Editor = React.createClass({
 	},
 
 	onEditorChange: function(cm, change) {
-		
+
 
 		CodeMirror.commands.autocomplete(cm, CodeMirror.hint.plugins, {completeSingle: false});
 
@@ -212,7 +212,7 @@ const Editor = React.createClass({
 		const markdown = fullMD.replace(/\{\{title:.*?\}\}/g, '').replace(/\{\{abstract:.*?\}\}/g, '').replace(/\{\{authorsNote:.*?\}\}/g, '').trim();
 
 		try {
-			const mdOutput = marked(markdown, {assets, references, selections});	
+			const mdOutput = marked(markdown, {assets, references, selections});
 			this.setState({
 				tree: mdOutput.tree,
 				travisTOC: mdOutput.travisTOC,
@@ -230,11 +230,11 @@ const Editor = React.createClass({
 				abstract: err.toString().replace('Please report this to https://github.com/chjj/marked.', ''),
 			});
 		}
-		
+
 
 		// const end = performance.now();
 		// console.log('timing = ', end - start);
-		
+
 	},
 
 	toggleLivePreview: function() {
@@ -258,7 +258,7 @@ const Editor = React.createClass({
 
 		const cm = document.getElementsByClassName('CodeMirror')[0].CodeMirror;
 		const fullMD = cm.getValue();
-		
+
 		const titleRE = /\{\{title:(.*?)\}\}/i;
 		const titleMatch = fullMD.match(titleRE);
 		const title = titleMatch && titleMatch.length ? titleMatch[1].trim() : '';
@@ -397,7 +397,7 @@ const Editor = React.createClass({
 	},
 
 	getAuthorsArray: function() {
-		
+
 		if (!this.state.firepadData.collaborators) { return []; }
 		const outputAuthors = [];
 		Object.keys(this.state.firepadData.collaborators).map((author)=>{
@@ -555,9 +555,9 @@ const Editor = React.createClass({
 							<li key="editorNav7"style={[styles.editorNavItemSaveStatus, styles.editorNavRight]}>
 								{()=>{
 									switch (this.state.editorSaveStatus) {
-									case 'saved': 
+									case 'saved':
 										return <FormattedMessage id="editor.pubSaved" defaultMessage="Pub Saved"/>;
-									case 'saving': 
+									case 'saving':
 										return <FormattedMessage id="editor.pubSaving" defaultMessage="Pub Saving..."/>;
 									default:
 										return <FormattedMessage id="editor.disconnected" defaultMessage="Disconnected"/>;
@@ -566,7 +566,7 @@ const Editor = React.createClass({
 								}()}
 
 							</li>
-							
+
 						</ul>
 					</div>
 
@@ -663,7 +663,7 @@ const Editor = React.createClass({
 
 						{this.state.showComments
 							? this.props.editorData.getIn(['pubEditData', 'discussions']).toJS().map((discussion)=>{
-								return (<PubDiscussionsItem 
+								return (<PubDiscussionsItem
 									key={'editorDiscussionItem-' + discussion._id}
 									slug={this.props.slug}
 									discussionItem={discussion}
@@ -674,7 +674,8 @@ const Editor = React.createClass({
 								status={'loaded'}
 								title={this.state.title}
 								abstract={this.state.abstract}
-								htmlTree={this.state.tree} 
+								minFont={5}
+								htmlTree={this.state.tree}
 								authors={this.getAuthorsArray()}
 								// addSelectionHandler={this.addSelection}
 								style={this.state.firepadData && this.state.firepadData.settings ? this.state.firepadData.settings.pubStyle : undefined}
@@ -682,7 +683,7 @@ const Editor = React.createClass({
 
 						}
 
-						
+
 					</div>
 
 				</div>

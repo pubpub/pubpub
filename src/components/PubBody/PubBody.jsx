@@ -7,6 +7,7 @@ import { Link } from 'react-router';
 import {loadCss} from '../../utils/loadingFunctions';
 import {scienceStyle, magazineStyle} from './pubStyles';
 import cssConvert from '../../utils/cssToRadium';
+import ResizingText from './ResizingText';
 
 import {globalMessages} from '../../utils/globalMessages';
 import {FormattedMessage} from 'react-intl';
@@ -24,6 +25,7 @@ const PubBody = React.createClass({
 		style: PropTypes.object,
 		showPubHighlights: PropTypes.bool,
 		references: PropTypes.array,
+		minFont: PropTypes.number
 	},
 	getDefaultProps: function() {
 		return {
@@ -39,7 +41,7 @@ const PubBody = React.createClass({
 
 	statics: {
 		printStyles: {
-			
+
 		}
 	},
 
@@ -63,16 +65,16 @@ const PubBody = React.createClass({
 
 	compileStyleRules: function() {
 		// console.log('compiling rules');
-		
+
 		let cssObject = {};
 		switch (this.props.style.type) {
 		case 'science':
 			cssObject = scienceStyle;
 			break;
-		case 'magazine': 
+		case 'magazine':
 			cssObject = magazineStyle;
 			break;
-		case 'custom': 
+		case 'custom':
 			const objectString = this.props.style.cssObjectString || '';
 			// const testJSON = objectString.replace(/(['"])?([a-zA-Z0-9_]+)(['"])?:/g, '"$2": ');
 			// cssObject = JSON.parse('{' + testJSON + '}');
@@ -81,7 +83,7 @@ const PubBody = React.createClass({
 			cssObject = cssConvert(objectString);
 			// console.log('cssObject', cssObject);
 			break;
-		default: 
+		default:
 			cssObject = scienceStyle;
 			break;
 		}
@@ -101,8 +103,8 @@ const PubBody = React.createClass({
 		});
 
 		return ({
-			...defaultContentRules, 
-			...pubContentRules, 
+			...defaultContentRules,
+			...pubContentRules,
 			'.marking': {
 				backgroundColor: 'rgba(124, 235, 124, 0.7)',
 			},
@@ -121,6 +123,8 @@ const PubBody = React.createClass({
 
 	render: function() {
 		return (
+			<ResizingText fontRatio={60} minFont={this.props.minFont}>
+
 			<div style={styles.container}>
 
 				<Style rules={this.compileStyleRules()}/>
@@ -143,7 +147,7 @@ const PubBody = React.createClass({
 					<div id="pubBodyContent">
 						{/* For Highlights to work, no divs can be placed before htmlTree */}
 						{this.props.htmlTree}
-						
+
 						{this.props.addSelectionHandler
 							? <PubSelectionPopup addSelectionHandler={this.props.addSelectionHandler}/>
 							: null
@@ -172,6 +176,7 @@ const PubBody = React.createClass({
 				</div>
 
 			</div>
+		</ResizingText>
 		);
 	}
 });

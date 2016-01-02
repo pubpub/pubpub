@@ -7,7 +7,6 @@ import { Link } from 'react-router';
 import {getPub, openPubModal, closePubModal, addDiscussion, addSelection, discussionVoteSubmit, togglePubHighlights, pubNavOut, pubNavIn} from '../../actions/pub';
 import {toggleVisibility} from '../../actions/login';
 import {closeMenu} from '../../actions/nav';
-import ResizingText from './ResizingText';
 
 import {convertImmutableListToObject} from '../../utils/parsePlugins';
 
@@ -204,18 +203,17 @@ const PubReader = React.createClass({
 							: null
 					}
 
-					<ResizingText fontRatio={60}>
 					<PubBody
 						status={this.props.readerData.get('status')}
 						title={pubData.history[versionIndex].title}
 						abstract={pubData.history[versionIndex].abstract}
+						minFont={15}
 						htmlTree={this.state.htmlTree}
 						authors={pubData.history[versionIndex].authors}
 						addSelectionHandler={this.addSelection}
 						style={pubData.history[versionIndex].style}
 						showPubHighlights={this.props.readerData.get('showPubHighlights')}
 						references={this.props.readerData.getIn(['pubData', 'history', versionIndex, 'references']) !== undefined ? this.props.readerData.getIn(['pubData', 'history', versionIndex, 'references']).toJS() : []} />
-					</ResizingText>
 
 					<PubModals
 						slug={this.props.slug}

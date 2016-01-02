@@ -24,29 +24,40 @@ class ResizingText extends React.Component {
 		this.elemWidth = React.findDOMNode(this.refs.textBody).offsetWidth;
 		this.updateFontSize();
 	}
+	calcWithBounds(max, min, elw) {
+		let width;
+		if (elw > max) {
+			width = max;
+		} else if (elw < min) {
+			width = min;
+		} else {
+			width = elw;
+		}
+		return width;
+	}
 	updateFontSize() {
 		const settings = this.settings;
 		const elw = this.elemWidth;
-		const width = elw > settings.maximum ? settings.maximum : elw < settings.minimum ? settings.minimum : elw;
+		// const width = elw > settings.maximum ? settings.maximum : elw < settings.minimum ? settings.minimum : elw;
+		const width = this.calcWithBounds(settings.maximum, settings.minimum, elw);
 		const fontBase = width / settings.fontRatio;
-		let fontSize = fontBase > settings.maxFont ? settings.maxFont : fontBase < settings.minFont ? settings.minFont : fontBase;
-		fontSize = Math.round(fontSize);
+		const fontSize = Math.round(this.calcWithBounds(settings.maxFont, settings.minFont, fontBase));
+		// let fontSize = fontBase > settings.maxFont ? settings.maxFont : fontBase < settings.minFont ? settings.minFont : fontBase;
+		// fontSize = Math.round(fontSize);
 		this.setState({fontSize: fontSize});
 	}
-  render() {
+	render() {
 		let fontSize = this.state && this.state.fontSize;
 		if (isNaN(fontSize)) {
 			fontSize = this.props.default || null;
 		}
-
 		const divStyle = (fontSize) ? {'fontSize': fontSize + 'px' } : {};
-
 		return (
 			<div style={divStyle} ref="textBody">
 				{this.props.children}
 			</div>
-    );
-  }
+  	);
+	}
 }
 
 ResizingText.propTypes = {
