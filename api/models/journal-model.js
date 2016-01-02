@@ -57,9 +57,9 @@ journalSchema.statics.isUnique = function (subdomain,callback) {
 };
 
 journalSchema.statics.updateHerokuDomains = function (oldDomain, newDomain) {
-	heroku.delete('/apps/immense-escarpment-3653/domains/' + oldDomain, function (err, app) {
+	heroku.delete('/apps/pubpub/domains/' + oldDomain, function (err, app) {
 		if (err) {console.log(err);}
-		heroku.post('/apps/immense-escarpment-3653/domains', { hostname: newDomain }, function (err, app) {
+		heroku.post('/apps/pubpub/domains', { hostname: newDomain }, function (err, app) {
 			if (err) {console.log(err);}
 			console.log('New domain succesfully added');
 		});
