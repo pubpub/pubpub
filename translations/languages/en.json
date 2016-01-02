@@ -170,6 +170,7 @@
   "global.url": "url",
   "global.author": "author",
   "global.journal": "journal",
+  "global.invite": "invite",
   "global.journals": "journals",
   "global.Journals": "Journals",
   "global.volume": "volume",

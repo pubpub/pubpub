@@ -242,6 +242,10 @@ export const globalMessages = defineMessages({
 		id: 'global.journal',
 		defaultMessage: 'journal',
 	},
+	invite: {
+		id: 'global.invite',
+		defaultMessage: 'invite',
+	},
 	journals: {
 		id: 'global.journals',
 		defaultMessage: 'journals',
