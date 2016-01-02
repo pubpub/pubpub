@@ -319,5 +319,17 @@ export const globalMessages = defineMessages({
 		id: 'global.print',
 		defaultMessage: 'Print',
 	},
+	published: {
+		id: 'global.published',
+		defaultMessage: 'Published on',
+	},
+	firstPublished: {
+		id: 'global.firstPublished',
+		defaultMessage: 'First published on',
+	},
+	lastPublished: {
+		id: 'global.lastPublished',
+		defaultMessage: 'Last Published on',
+	},
 	
 });

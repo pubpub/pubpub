@@ -188,5 +188,8 @@
   "global.abstract": "abstract",
   "global.authorsNote": "authors note",
   "global.markdown": "markdown",
-  "global.print": "Print"
+  "global.print": "Print",
+  "global.published": "Published on",
+  "global.firstPublished": "First published on",
+  "global.lastPublished": "Last Published on"
 }
