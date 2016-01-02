@@ -69,6 +69,10 @@ export const globalMessages = defineMessages({
 		id: 'global.history',
 		defaultMessage: 'History',
 	},
+	historydiff: {
+		id: 'global.historydiff',
+		defaultMessage: 'history diff',
+	},
 	analytics: {
 		id: 'global.analytics',
 		defaultMessage: 'Analytics',
