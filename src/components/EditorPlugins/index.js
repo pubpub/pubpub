@@ -56,7 +56,7 @@ export default {
 		inline: true,
 		autocomplete: true,
 		// rule: /^(?:\s)*(?::{2})asset(?::{2})([^\n:]+)(?::{2})/,
-		rule: /^(?:\s)*(?:\{\{)image:([^\n\}]*)(?:\}\})/,
+		rule: /^(?:\s)*(?:\<\<)image:([^\n\}]*)(?:\>\>)/,
 		inlineFunc: function(cap, renderer, data) {
 			console.log('in image thing');
 			const assets = data.assets;
