@@ -24,9 +24,9 @@ const PubReader = React.createClass({
 	propTypes: {
 		readerData: PropTypes.object,
 		loginData: PropTypes.object,
+		journalData: PropTypes.object,
 		slug: PropTypes.string,
 		query: PropTypes.object, // version: integer
-
 		dispatch: PropTypes.func
 	},
 
@@ -253,6 +253,9 @@ const PubReader = React.createClass({
 
 						// TOC Props
 						tocData={this.state.TOC}
+						// Cite Props
+						pubData={pubData.history[versionIndex]}
+						journalName={this.props.journalData.get('baseSubdomain') ? this.props.journalData.getIn(['journalData', 'journalName']) : ''}
 						// Status Data
 						featuredIn={pubData.featuredIn}
 						submittedTo={pubData.submittedTo}
@@ -304,6 +307,7 @@ export default connect( state => {
 	return {
 		readerData: state.pub,
 		loginData: state.login,
+		journalData: state.journal,
 		slug: state.router.params.slug,
 		query: state.router.location.query,
 	};

@@ -18,6 +18,9 @@ const PubModals = React.createClass({
 		activeModal: PropTypes.string,
 		// TOC Props
 		tocData: PropTypes.array,
+		// Cite Data
+		pubData: PropTypes.object,
+		journalName: PropTypes.string,
 		// Status Data
 		featuredIn: PropTypes.array,
 		submittedTo: PropTypes.array,
@@ -30,6 +33,8 @@ const PubModals = React.createClass({
 		addDiscussionStatus: PropTypes.string,
 		newDiscussionData: PropTypes.object,
 		userThumbnail: PropTypes.string,
+
+
 	},
 
 	closeModalandMenu: function() {
@@ -53,12 +58,16 @@ const PubModals = React.createClass({
 						{() => {
 							switch (this.props.activeModal) {
 							case 'tableOfContents':
-								return (<PubModalTOC 
-										tocData={this.props.tocData}
-										closeModalAndMenuHandler={this.closeModalandMenu}/>
+								return (
+										<PubModalTOC 
+											tocData={this.props.tocData}
+											closeModalAndMenuHandler={this.closeModalandMenu}/>
 									);
 							case 'cite':
-								return (<PubModalCite/>
+								return (
+										<PubModalCite
+											pubData={this.props.pubData} 
+											journalName={this.props.journalName} />
 									);
 							case 'reviews':
 								return (<div>

@@ -20,7 +20,8 @@ const Reference = React.createClass({
 	render: function() {
 		const citation = this.props.citationObject;
 		const citationStrings = {};
-
+		let bibtexString = null;
+		// console.log(citation);
 		// Switch over string construction statements, based on mode.
 		switch (this.props.mode) {
 		case 'mla':
@@ -60,6 +61,17 @@ const Reference = React.createClass({
 			citationStrings.pages = citation.pages ? citation.pages + '. ' : '';
 			citationStrings.url = citation.url ? '[' + citation.url + '] ' : '';
 			citationStrings.note = citation.note ? citation.note : '';
+			break;
+		case 'bibtex':
+			const journalString = citation.journal ? `
+  journal={` + citation.journal + `},` : '';
+
+			bibtexString = `@article{` + citation.title.replace(/[^A-Za-z0-9]/g, '').substring(0, 12) + citation.year + `,
+  title={` + citation.title + `},
+  author={` + citation.author + `},
+  year={` + citation.year + `},
+  publisher={PubPub},` + journalString + `
+}`;
 			break;
 
 		default:
@@ -112,6 +124,10 @@ const Reference = React.createClass({
 				{citationStrings.pages}
 				<a href={citation.url} style={{textDecoration: 'none', color: 'inherit'}}>{citationStrings.url}</a>
 				{citationStrings.note}
+			</span>);
+		case 'bibtex':
+			return (<span>
+				{bibtexString}
 			</span>);
 
 		default:

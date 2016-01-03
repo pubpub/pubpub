@@ -2,6 +2,7 @@ import React, { PropTypes } from 'react';
 import Radium from 'radium';
 import {baseStyles} from './pubModalStyle';
 // import {globalStyles} from '../../utils/styleConstants';
+import {Reference} from '../';
 
 import {globalMessages} from '../../utils/globalMessages';
 import {FormattedMessage} from 'react-intl';
@@ -10,25 +11,34 @@ let styles = {};
 
 const PubModalCite = React.createClass({
 	propTypes: {
-		string: PropTypes.string,
+		pubData: PropTypes.object,
+		journalName: PropTypes.string
 	},
 
 	getDefaultProps: function() {
 		return {
-			// markdown: '',
+			pubData: {},
 		};
 	},
 
 	render: function() {
-		const bibtex = `@book{radomski2008occupational,
-	title={Occupational therapy for physical dysfunction},
-	author={Radomski, Mary Vining and Latham, Catherine A Trombly},
-	year={2008},
-	publisher={Lippincott Williams \& Wilkins}
-}`;
-		const apa = 'Radomski, M. V., & Latham, C. A. T. (Eds.). (2008). Occupational therapy for physical dysfunction. Lippincott Williams & Wilkins.';
-		const mla = 'Radomski, Mary Vining, and Catherine A. Trombly Latham, eds. Occupational therapy for physical dysfunction. Lippincott Williams & Wilkins, 2008.';
-		const chicago = 'Radomski, Mary Vining, and Catherine A. Trombly Latham, eds. Occupational therapy for physical dysfunction. Lippincott Williams & Wilkins, 2008.';
+		const referenceObject = {
+			title: this.props.pubData.title,
+			journal: this.props.journalName,
+			publisher: 'PubPub',
+			year: new Date(this.props.pubData.publishDate).getFullYear(),
+			url: typeof(window) !== 'undefined' ? window.location.protocol + '//' + window.location.host + window.location.pathname : '',
+		};
+
+		const author = this.props.pubData.authors.reduce((previousValue, currentValue, currentIndex, array)=>{
+			const lastName = array[currentIndex].lastName || 'Lastname';
+			const firstName = array[currentIndex].firstName ? array[currentIndex].firstName.charAt(0) + '.' : 'F.';
+			const authorString = array.length === currentIndex + 1 ? lastName + ', ' + firstName : lastName + ', ' + firstName + ', ';
+			return previousValue + authorString;
+		}, '');
+		
+
+		referenceObject.author = author;
 
 		return (
 			<div style={baseStyles.pubModalContainer}>
@@ -41,26 +51,26 @@ const PubModalCite = React.createClass({
 				<div style={baseStyles.pubModalContentWrapper}>
 
 					<div style={styles.typeTitle}>Bibtex</div>
-					<div style={styles.typeContent}>
-						{bibtex}
+					<div style={[styles.typeContent, styles.bibtexContent]}>
+						<Reference citationObject={referenceObject} mode={'bibtex'} />
 					</div>
 
 					<div style={styles.typeTitle}>APA</div>
 					<div style={styles.typeContent}>
-						{apa}
+						<Reference citationObject={referenceObject} mode={'apa'} />
 					</div>
 
 					<div style={styles.typeTitle}>MLA</div>
 					<div style={styles.typeContent}>
-						{mla}
+						<Reference citationObject={referenceObject} mode={'mla'} />
 					</div>
 
 					<div style={styles.typeTitle}>Chicago</div>
 					<div style={styles.typeContent}>
-						{chicago}
+						<Reference citationObject={referenceObject} mode={'chicago'} />
 					</div>
-				</div>
 
+				</div>
 
 			</div>
 		);
@@ -75,9 +85,17 @@ styles = {
 		color: '#777',
 	},
 	typeContent: {
-		padding: '5px 20px 25px 20px',
-		whiteSpace: 'pre-wrap',
-		color: '#222',
+		margin: '15px 5px',
+		padding: '5px',
+		color: '#555',
 		outline: 'none',
+		overflowY: 'scroll',
+		fontFamily: 'Courier',
+		fontSize: '14px',
+		boxShadow: '0px 0px 0px 1px #ddd',
+		borderRadius: '1px',
+	},
+	bibtexContent: {
+		whiteSpace: 'pre',
 	},
 };
