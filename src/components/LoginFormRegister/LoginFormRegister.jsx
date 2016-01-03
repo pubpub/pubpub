@@ -43,19 +43,19 @@ const LoginFormRegister = React.createClass({
 					<label style={styles.label}>
 						<FormattedMessage {...globalMessages.Email} />
 					</label>
-					<input style={styles.input} key="registerEmail" type="text" placeholder={this.props.intl.formatMessage(globalMessages.Email)} {...email}/>
+					<input style={[styles.input, styles.shortInput]} key="registerEmail" type="text" placeholder={this.props.intl.formatMessage(globalMessages.Email)} {...email}/>
 				</div>
 				<div>
 					<label style={styles.label}>
 						<FormattedMessage {...globalMessages.Password} />
 					</label>
-					<input style={styles.input} key="registerpassword" type="password" placeholder={this.props.intl.formatMessage(globalMessages.Password)} {...password}/>
+					<input style={[styles.input, styles.shortInput]} key="registerpassword" type="password" placeholder={this.props.intl.formatMessage(globalMessages.Password)} {...password}/>
 				</div>
 				<div>
 					<label style={styles.label}>
 						{this.props.intl.formatMessage(messages.firstName)}
 					</label>
-					<input style={[styles.input, styles.shortInput]} key="registerFirstName" type="text" placeholder={this.props.intl.formatMessage(messages.firstName)} {...firstName}/>
+					<input style={[styles.input, styles.shortInput, {clear: 'left'}]} key="registerFirstName" type="text" placeholder={this.props.intl.formatMessage(messages.firstName)} {...firstName}/>
 				</div>
 				<div>
 					<label style={styles.label}>
@@ -153,7 +153,7 @@ styles = {
 		},
 	},
 	shortInput: {
-		width: 'calc( ((100% - 175px - 10px - 10px) / 2) - 60px)',
+		width: 'calc( ((100% - 155px - 10px - 10px - 100px) / 2) - 60px)',
 	},
 	userImageInput: {
 		// width: 270,
@@ -163,7 +163,7 @@ styles = {
 	},
 	userImagePreview: {
 		width: 35,
-		padding: '0px 20px 0px 0px',
+		// padding: '0px 20px 0px 0px',
 		position: 'relative',
 		top: -5,
 	},

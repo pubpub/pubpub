@@ -64,7 +64,7 @@ app.get('/logout', function(req, res) {
 
 // When a user registers
 app.post('/register', function(req, res) {
-	// console.log(req.body.host);
+	// console.log(req.body);
 	User.generateUniqueUsername(req.body.fullname, function(newUsername){
 		
 		// Upload to cloudinary so we can have a thumbnail and CDN action.
@@ -89,8 +89,8 @@ app.post('/register', function(req, res) {
 				passport.authenticate('local')(req,res,function(){
 					
 					return res.status(201).json({
-						firstName: user.firstName,
-						lastName: user.lastName,
+						firstName: account.firstName,
+						lastName: account.lastName,
 						name: account.name,
 						username: account.username,
 						image: account.image,

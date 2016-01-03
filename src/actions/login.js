@@ -77,7 +77,7 @@ export function register(email, password, firstName, lastName, image) {
 			'password': SHA3(password).toString(encHex),
 			'firstName': firstName,
 			'lastName': lastName,
-			'fullName': firstName + ' ' + lastName,
+			'fullname': firstName + ' ' + lastName,
 			'image': image
 		}})
 	};
