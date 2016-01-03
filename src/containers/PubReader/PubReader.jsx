@@ -156,8 +156,8 @@ const PubReader = React.createClass({
 			metaData.meta = [
 				{property: 'og:title', content: pubData.title},
 				{property: 'og:type', content: 'article'},
-				{property: 'og:article:published_time', content: new Date(pubData.history[versionIndex].publishDate)/1000},
-				{property: 'og:article:modified_time', content: new Date(pubData.history[pubData.history.length - 1].publishDate)},
+				{property: 'og:article:published_time', content: new Date(pubData.history[versionIndex].publishDate) / 1000},
+				{property: 'og:article:modified_time', content: new Date(pubData.history[pubData.history.length - 1].publishDate) / 1000},
 			];
 
 			const srcRegex = /{{image:.*(src=([^\s,]*)).*}}/;
