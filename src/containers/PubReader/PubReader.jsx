@@ -194,7 +194,7 @@ const PubReader = React.createClass({
 					}
 				}} />
 
-				<div className="leftBar" style={[styles.leftBar, globalStyles[this.props.readerData.get('status')]]}>
+				<div className="leftBar" style={[styles.leftBar, globalStyles[this.props.readerData.get('status')], pubData.markdown === undefined && {display: 'none'}]}>
 
 					<PubLeftBar
 						slug={this.props.slug}
@@ -269,7 +269,7 @@ const PubReader = React.createClass({
 
 				</div>
 
-				<div className="rightBar" style={[styles.rightBar, globalStyles[this.props.readerData.get('status')]]}>
+				<div className="rightBar" style={[styles.rightBar, globalStyles[this.props.readerData.get('status')], pubData.markdown === undefined && {display: 'none'}]}>
 					<PubStatus
 						slug={this.props.slug}
 						pubStatus={pubData.status}

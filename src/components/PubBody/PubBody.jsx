@@ -135,7 +135,8 @@ const PubBody = React.createClass({
 				<div id="pubContent" style={[styles.contentContainer, globalStyles[this.props.status]]} className={this.printStyleClass.pubContent}>
 
 					<div id={'pub-title'} className={this.printStyleClass.title}>{this.props.title}</div>
-					<div id={'pub-authors'} className={this.printStyleClass.authors}> <span><FormattedMessage {...globalMessages.by}/> </span>
+					<div id={'pub-authors'} className={this.printStyleClass.authors} style={this.props.authors.length === 0 && {display: 'none'}}> 
+						<span><FormattedMessage {...globalMessages.by}/> </span>
 						{
 							this.props.authors.map((author, index)=>{
 								return (index === this.props.authors.length - 1
@@ -153,7 +154,7 @@ const PubBody = React.createClass({
 							<span><FormattedMessage {...globalMessages.lastPublished}/> </span>
 							{dateFormat(this.props.lastPublishedDate, 'mm/dd/yy')}
 						</div>
-						: <div id={'pub-dates'} className={this.printStyleClass.dates}>
+						: <div id={'pub-dates'} className={this.printStyleClass.dates} style={this.props.firstPublishedDate === undefined && {display: 'none'}}>
 							<span><FormattedMessage {...globalMessages.published}/> </span>
 							{dateFormat(this.props.firstPublishedDate, 'mm/dd/yy')}
 						</div>
