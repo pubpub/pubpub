@@ -145,6 +145,13 @@ function loadSuccess(state, result) {
 		};
 	} 
 
+	if (result.message === 'Pub not in this journal') {
+		outputState.pubData = { ...defaultState.get('pubData'),
+			history: [{title: 'Pub not in this journal', markdown: '[Available on PubPub](http://www.pubpub.org/pub/' + result.slug + ')', style: {type: 'custom', cssObjectString: 'a {text-align: center; color: #555; padding: 15px 0px; display: block; font-size: 1.2em; margin: 10px auto; background-color: #F6F6F6; width: 75%; border-radius: 2px; text-decoration: none;}'}}],
+			slug: result.slug,
+		};
+	} 
+    
 	return state.merge(outputState);
 }
 

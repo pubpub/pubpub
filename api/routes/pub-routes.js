@@ -3,6 +3,7 @@ var app = require('../api');
 var Pub  = require('../models').Pub;
 var User = require('../models').User;
 var Asset = require('../models').Asset;
+var Journal = require('../models').Journal;
 var Reference = require('../models').Reference;
 
 var _         = require('underscore');
@@ -10,15 +11,10 @@ var Firebase  = require('firebase');
 
 app.get('/getPub', function(req, res) {
 	const userID = req.user ? req.user._id : undefined;
-	Pub.getPub(req.query.slug, userID, (err, pubData)=>{
-		
-		if (err) {
-			console.log(err);
-			return res.status(500).json(err); 
-		}
-
+	const journalID = req.query.journalID;
+	Pub.getPub(req.query.slug, userID, journalID, (err, pubData)=>{
+		if (err) { console.log(err); return res.status(500).json(err); }
 		return res.status(201).json(pubData);
-
 	});
 });
 

@@ -79,10 +79,6 @@ const PubBody = React.createClass({
 			break;
 		case 'custom':
 			const objectString = this.props.style.cssObjectString || '';
-			// const testJSON = objectString.replace(/(['"])?([a-zA-Z0-9_]+)(['"])?:/g, '"$2": ');
-			// cssObject = JSON.parse('{' + testJSON + '}');
-			// cssObject = JSON.parse('{' + objectString.replace(/(['"])?([a-zA-Z0-9_#, -]+)(['"])?:/g, '"$2": ') + '}');
-			// console.log('objectString', objectString);
 			cssObject = cssConvert(objectString);
 			// console.log('cssObject', cssObject);
 			break;
@@ -135,7 +131,7 @@ const PubBody = React.createClass({
 				<div id="pubContent" style={[styles.contentContainer, globalStyles[this.props.status]]} className={this.printStyleClass.pubContent}>
 
 					<div id={'pub-title'} className={this.printStyleClass.title}>{this.props.title}</div>
-					<div id={'pub-authors'} className={this.printStyleClass.authors} style={this.props.authors.length === 0 && {display: 'none'}}> 
+					<div id={'pub-authors'} className={this.printStyleClass.authors} style={[this.props.authors.length === 0 && {display: 'none'}]}> 
 						<span><FormattedMessage {...globalMessages.by}/> </span>
 						{
 							this.props.authors.map((author, index)=>{
@@ -154,7 +150,7 @@ const PubBody = React.createClass({
 							<span><FormattedMessage {...globalMessages.lastPublished}/> </span>
 							{dateFormat(this.props.lastPublishedDate, 'mm/dd/yy')}
 						</div>
-						: <div id={'pub-dates'} className={this.printStyleClass.dates} style={this.props.firstPublishedDate === undefined && {display: 'none'}}>
+						: <div id={'pub-dates'} className={this.printStyleClass.dates} style={[this.props.firstPublishedDate === undefined && {display: 'none'}]}>
 							<span><FormattedMessage {...globalMessages.published}/> </span>
 							{dateFormat(this.props.firstPublishedDate, 'mm/dd/yy')}
 						</div>

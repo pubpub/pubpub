@@ -143,7 +143,7 @@ pubSchema.statics.isUnique = function (slug,callback) {
 		});
 };
 
-pubSchema.statics.getPub = function (slug, readerID, callback) {
+pubSchema.statics.getPub = function (slug, readerID, journalID, callback) {
 	this.findOne({slug: slug})
 	.populate({ path: 'discussions', model: 'Discussion' })
 	.populate({ path: 'assets history.assets', model: 'Asset' })
@@ -161,6 +161,11 @@ pubSchema.statics.getPub = function (slug, readerID, callback) {
 
 			if (!populatedPub) { return callback(null, {message: 'Pub Not Found', slug: slug}); }
 
+			// Check if the pub is not allowed in the journal
+			if (journalID && String(populatedPub.featuredInList).indexOf(journalID) === -1) {
+				return callback(null, {message: 'Pub not in this journal', slug: slug});
+			}
+
 			if (populatedPub.status === 'Unpublished') { return callback(null, {message: 'Pub not yet published', slug: slug}); }
 
 			// Check if the pub is private, and if so, check readers/authors list
@@ -169,7 +174,7 @@ pubSchema.statics.getPub = function (slug, readerID, callback) {
 					return callback(null, {message: 'Private Pub', slug: slug});
 				}
 			}
-
+			
 			const outputPub = populatedPub.toObject();
 			if (populatedPub.collaborators.canEdit.indexOf(readerID) > -1) {
 				outputPub.isAuthor = true;
