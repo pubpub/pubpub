@@ -160,7 +160,7 @@ const PubReader = React.createClass({
 				{property: 'article:published_time', content: pubData.history[versionIndex].publishDate},
 				{property: 'article:modified_time', content: pubData.history[pubData.history.length - 1].publishDate},
 				{name: 'twitter:card', content: 'summary_large_image'},
-				{name: 'twitter:site', content: '@pubpub'},
+				{name: 'twitter:site', content: '@isPubPub'},
 				{name: 'twitter:title', content: pubData.history[versionIndex].title},
 				{name: 'twitter:description', content: pubData.history[versionIndex].abstract},
 			];
