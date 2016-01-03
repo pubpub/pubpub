@@ -135,7 +135,8 @@ const App = React.createClass({
 				{property: 'og:title', content: 'PubPub'},
 				{property: 'og:url', content: 'http://www.pubpub.org' + this.props.path}, // Need to override for journals
 				{property: 'og:type', content: 'website'},
-				{property: 'og:image', content: 'http://res.cloudinary.com/pubpub/image/upload/v1451828189/pubpubDefaultImage_pvagkc.png'},
+				{property: 'og:image', content: 'https://s3.amazonaws.com/pubpub-upload/pubpubDefaultImage.png'},
+				{property: 'fb:app_id', content: '924988584221879'},
 			]
 		};
 

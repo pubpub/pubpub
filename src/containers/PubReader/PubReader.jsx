@@ -168,7 +168,7 @@ const PubReader = React.createClass({
 			let leadImage = undefined;
 			for (let index = pubData.history[versionIndex].assets.length; index--;) {
 				if (pubData.history[versionIndex].assets[index].refName === refName) {
-					leadImage = pubData.history[versionIndex].assets[index].url;
+					leadImage = pubData.history[versionIndex].assets[index].url_s3;
 					break;
 				}
 			}
