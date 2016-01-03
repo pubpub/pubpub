@@ -1,4 +1,5 @@
 import React, {PropTypes} from 'react';
+import {findDOMNode} from 'react-dom';
 
 class ResizingText extends React.Component {
 
@@ -21,7 +22,7 @@ class ResizingText extends React.Component {
 		};
 	}
 	updateWidthFont() {
-		this.elemWidth = React.findDOMNode(this.refs.textBody).offsetWidth;
+		this.elemWidth = findDOMNode(this.refs.textBody).offsetWidth;
 		this.updateFontSize();
 	}
 	calcWithBounds(max, min, elw) {

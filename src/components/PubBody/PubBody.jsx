@@ -128,73 +128,73 @@ const PubBody = React.createClass({
 		return (
 			<ResizingText fontRatio={60} minFont={this.props.minFont}>
 
-			<div style={styles.container}>
+				<div style={styles.container}>
 
-				<Style rules={this.compileStyleRules()}/>
+					<Style rules={this.compileStyleRules()}/>
 
-				<div id="pubContent" style={[styles.contentContainer, globalStyles[this.props.status]]} className={this.printStyleClass.pubContent}>
+					<div id="pubContent" style={[styles.contentContainer, globalStyles[this.props.status]]} className={this.printStyleClass.pubContent}>
 
-					<div id={'pub-title'} className={this.printStyleClass.title}>{this.props.title}</div>
-					<div id={'pub-authors'} className={this.printStyleClass.authors}> <span><FormattedMessage {...globalMessages.by}/> </span>
-						{
-							this.props.authors.map((author, index)=>{
-								return (index === this.props.authors.length - 1
-									? <Link to={'/user/' + author.username} key={'pubAuthorLink-' + index} style={globalStyles.link}><span key={'pubAuthor-' + index} className={'pub-author'}>{author.name}</span></Link>
-									: <Link to={'/user/' + author.username} key={'pubAuthorLink-' + index} style={globalStyles.link}><span key={'pubAuthor-' + index} className={'pub-author'}>{author.name}, </span></Link>);
-							})
+						<div id={'pub-title'} className={this.printStyleClass.title}>{this.props.title}</div>
+						<div id={'pub-authors'} className={this.printStyleClass.authors}> <span><FormattedMessage {...globalMessages.by}/> </span>
+							{
+								this.props.authors.map((author, index)=>{
+									return (index === this.props.authors.length - 1
+										? <Link to={'/user/' + author.username} key={'pubAuthorLink-' + index} style={globalStyles.link}><span key={'pubAuthor-' + index} className={'pub-author'}>{author.name}</span></Link>
+										: <Link to={'/user/' + author.username} key={'pubAuthorLink-' + index} style={globalStyles.link}><span key={'pubAuthor-' + index} className={'pub-author'}>{author.name}, </span></Link>);
+								})
+							}
+						</div>
+
+						{this.props.firstPublishedDate !== this.props.lastPublishedDate
+							? <div id={'pub-dates'} className={this.printStyleClass.dates}>
+								<span><FormattedMessage {...globalMessages.firstPublished}/> </span>
+								{dateFormat(this.props.firstPublishedDate, 'mm/dd/yy')}
+								<span style={styles.dateSeparator}>|</span>
+								<span><FormattedMessage {...globalMessages.lastPublished}/> </span>
+								{dateFormat(this.props.lastPublishedDate, 'mm/dd/yy')}
+							</div>
+							: <div id={'pub-dates'} className={this.printStyleClass.dates}>
+								<span><FormattedMessage {...globalMessages.published}/> </span>
+								{dateFormat(this.props.firstPublishedDate, 'mm/dd/yy')}
+							</div>
 						}
-					</div>
 
-					{this.props.firstPublishedDate !== this.props.lastPublishedDate
-						? <div id={'pub-dates'} className={this.printStyleClass.dates}>
-							<span><FormattedMessage {...globalMessages.firstPublished}/> </span>
-							{dateFormat(this.props.firstPublishedDate, 'mm/dd/yy')}
-							<span style={styles.dateSeparator}>|</span>
-							<span><FormattedMessage {...globalMessages.lastPublished}/> </span>
-							{dateFormat(this.props.lastPublishedDate, 'mm/dd/yy')}
+						<div id={'pub-abstract'}>{this.props.abstract}</div>
+						<div id={'pub-header-divider'}></div>
+
+						<div id="pubBodyContent">
+							{/* For Highlights to work, no divs can be placed before htmlTree */}
+							{this.props.htmlTree}
+
+							{this.props.addSelectionHandler
+								? <PubSelectionPopup addSelectionHandler={this.props.addSelectionHandler}/>
+								: null
+							}
+
 						</div>
-						: <div id={'pub-dates'} className={this.printStyleClass.dates}>
-							<span><FormattedMessage {...globalMessages.published}/> </span>
-							{dateFormat(this.props.firstPublishedDate, 'mm/dd/yy')}
-						</div>
-					}
+						{this.props.references && this.props.references.length
+							? <div id={'pub-references'}>
+								<h1><FormattedMessage {...globalMessages.references}/></h1>
 
-					<div id={'pub-abstract'}>{this.props.abstract}</div>
-					<div id={'pub-header-divider'}></div>
+								{
+									this.props.references.map((reference, index)=>{
+										return (
+											<div key={'pubReference-' + index} className={'pub-reference'}>
+												<span style={styles.referenceNumber}>[{index + 1}]</span>
+												<Reference citationObject={reference} mode={'mla'} />
+											</div>
+										);
+									})
+								}
 
-					<div id="pubBodyContent">
-						{/* For Highlights to work, no divs can be placed before htmlTree */}
-						{this.props.htmlTree}
-
-						{this.props.addSelectionHandler
-							? <PubSelectionPopup addSelectionHandler={this.props.addSelectionHandler}/>
+							</div>
 							: null
 						}
 
 					</div>
-					{this.props.references && this.props.references.length
-						? <div id={'pub-references'}>
-							<h1><FormattedMessage {...globalMessages.references}/></h1>
-
-							{
-								this.props.references.map((reference, index)=>{
-									return (
-										<div key={'pubReference-' + index} className={'pub-reference'}>
-											<span style={styles.referenceNumber}>[{index + 1}]</span>
-											<Reference citationObject={reference} mode={'mla'} />
-										</div>
-									);
-								})
-							}
-
-						</div>
-						: null
-					}
 
 				</div>
-
-			</div>
-		</ResizingText>
+			</ResizingText>
 		);
 	}
 });
