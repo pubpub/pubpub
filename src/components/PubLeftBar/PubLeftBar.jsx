@@ -37,10 +37,12 @@ const PubLeftBar = React.createClass({
 				</div></Link>
 
 				<div style={styles.leftBarDivider}></div>
-
-				<Link style={globalStyles.link} to={'/pub/' + this.props.slug + '/reviews'}><div key={'leftBar8'} style={[styles.detail, this.props.pubStatus === 'Draft' && styles.hidden]}>
-					<FormattedMessage {...globalMessages.reviews} />
-				</div></Link>
+				{/* 
+					<Link style={globalStyles.link} to={'/pub/' + this.props.slug + '/reviews'}><div key={'leftBar8'} style={[styles.detail, this.props.pubStatus === 'Draft' && styles.hidden]}>
+						<FormattedMessage {...globalMessages.reviews} />
+					</div></Link>
+				*/}
+				
 				{/* <Link style={globalStyles.link} to={'/pub/' + this.props.slug + '/experts'}><div key={'leftBar9'} style={styles.detail}>Experts</div></Link> */}
 				<Link style={globalStyles.link} to={'/pub/' + this.props.slug + '/history'}><div key={'leftBar3'} style={styles.detail}>
 					<FormattedMessage {...globalMessages.history} />
