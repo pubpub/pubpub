@@ -9,7 +9,7 @@ import {submitPubToJournal} from '../../actions/journal';
 import { Link } from 'react-router';
 import {PubLeftBar, PubNav, LoaderDeterminate} from '../../components';
 // import {PubMetaDiscussions, PubMetaExperts, PubMetaHistory, PubMetaHistoryDiff, PubMetaReview, PubMetaReviews, PubMetaSource} from '../../components/PubMetaPanels';
-import {PubMetaDiscussions, PubMetaHistory, PubMetaJournals, PubMetaHistoryDiff, PubMetaSource} from '../../components/PubMetaPanels';
+import {PubMetaAnalytics, PubMetaCitations, PubMetaDiscussions, PubMetaHistory, PubMetaHistoryDiff, PubMetaInTheNews, PubMetaInvite, PubMetaJournals, PubMetaSource} from '../../components/PubMetaPanels';
 import {globalStyles, pubSizes} from '../../utils/styleConstants';
 
 import {globalMessages} from '../../utils/globalMessages';
@@ -164,9 +164,22 @@ const PubMeta = React.createClass({
 									userThumbnail={this.props.loginData.getIn(['userData', 'thumbnail'])}
 									handleVoteSubmit={this.discussionVoteSubmit} />
 									);
-							// case 'experts':
-							// 	return (<PubMetaExperts />
-							// 		);
+							case 'invite':
+								return (
+									<PubMetaInvite />
+								);
+							case 'citations':
+								return (
+									<PubMetaCitations />
+								);
+							case 'analytics':
+								return (
+									<PubMetaAnalytics />
+								);
+							case 'news':
+								return (
+									<PubMetaInTheNews />
+								);
 							// case 'reviews':
 							// 	return (<PubMetaReviews />
 							// 		);
