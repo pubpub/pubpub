@@ -12,7 +12,7 @@ import Html from './helpers/Html';
 import PrettyError from 'pretty-error';
 import http from 'http';
 
-import DocumentMeta from 'react-document-meta';
+import Helmet from 'react-helmet';
 
 import {ReduxRouter} from 'redux-router';
 import createHistory from 'history/lib/createMemoryHistory';
@@ -108,6 +108,7 @@ app.use((req, res) => {
 					<Html radiumConfig={{userAgent: req.headers['user-agent']}} component={component} />
 				)
 				const mainBundle = webpackIsomorphicTools.assets().javascript.main;
+				const head = Helmet.rewind();
 				res.send(`<!doctype html>
 					<html lang="en-us">
 						<head>
@@ -115,7 +116,10 @@ app.use((req, res) => {
 							<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 							<meta name="google-site-verification" content="jmmJFnkSOeIEuS54adOzGMwc0kwpsa8wQ-L4GyPpPDg" />
 							<meta name="referrer" content="always">
-							${DocumentMeta.renderAsHTML()}
+							
+							${head.title.toString()}
+							${head.meta.toString()}
+							
 							<link rel="shortcut icon" href="/favicon.ico" />
 							<link href='https://fonts.googleapis.com/css?family=Lato:300,300italic,900,900italic|Lora:400,400italic,700' rel='stylesheet' type='text/css' />
 

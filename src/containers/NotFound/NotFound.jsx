@@ -1,6 +1,6 @@
 import React from 'react';
 import Radium from 'radium';
-import DocumentMeta from 'react-document-meta';
+import Helmet from 'react-helmet';
 import {globalStyles} from '../../utils/styleConstants';
 
 import {FormattedMessage} from 'react-intl';
@@ -17,7 +17,7 @@ const NotFound = React.createClass({
 		return (
 			<div style={styles.container}>
 
-				<DocumentMeta {...metaData} />
+				<Helmet {...metaData} />
 
 				<div style={styles.header}>
 					<FormattedMessage id="notFound.pageDoesntExist" defaultMessage="Doh - That page does not seem to exist!"/>

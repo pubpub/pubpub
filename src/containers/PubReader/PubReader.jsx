@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react';
 import {connect} from 'react-redux';
 import Radium, {Style} from 'radium';
-import DocumentMeta from 'react-document-meta';
+import Helmet from 'react-helmet';
 import PureRenderMixin from 'react-addons-pure-render-mixin';
 import { Link } from 'react-router';
 import {getPub, openPubModal, closePubModal, addDiscussion, addSelection, discussionVoteSubmit, togglePubHighlights, pubNavOut, pubNavIn} from '../../actions/pub';
@@ -162,7 +162,7 @@ const PubReader = React.createClass({
 		return (
 			<div style={styles.container}>
 
-				<DocumentMeta {...metaData} />
+				<Helmet {...metaData} />
 
 				<Style rules={{
 					'.pagebreak': {

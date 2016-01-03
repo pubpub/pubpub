@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react';
 import {connect} from 'react-redux';
 import Radium from 'radium';
-import DocumentMeta from 'react-document-meta';
+import Helmet from 'react-helmet';
 import {CollectionGallery, PubGallery, JournalGallery} from '../../components';
 import {NotFound} from '../../containers';
 import {globalStyles} from '../../utils/styleConstants';
@@ -50,7 +50,7 @@ const Explore = React.createClass({
 
 			<div style={styles.container}>
 
-				<DocumentMeta {...metaData} />
+				<Helmet {...metaData} />
 
 				{() => {
 					switch (mode) {

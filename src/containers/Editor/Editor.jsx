@@ -4,7 +4,7 @@ import React, { PropTypes } from 'react';
 import {connect} from 'react-redux';
 import { pushState } from 'redux-router';
 import Radium, {Style} from 'radium';
-import DocumentMeta from 'react-document-meta';
+import Helmet from 'react-helmet';
 
 import PureRenderMixin from 'react-addons-pure-render-mixin';
 import ReactFireMixin from 'reactfire';
@@ -432,7 +432,7 @@ const Editor = React.createClass({
 
 			<div style={[styles.editorContainer, darkMode && styles.editorContainerDark]} className={'editor-container'}>
 
-				<DocumentMeta {...metaData} />
+				<Helmet {...metaData} />
 
 				<Style rules={{
 					...codeMirrorStyles(this.props.loginData),

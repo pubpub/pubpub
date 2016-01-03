@@ -3,7 +3,7 @@ import {connect} from 'react-redux';
 import { Link } from 'react-router';
 import { pushState } from 'redux-router';
 import Radium from 'radium';
-import DocumentMeta from 'react-document-meta';
+import Helmet from 'react-helmet';
 import {getJournal, saveJournal, createCollection} from '../../actions/journal';
 import {LoaderDeterminate, JournalCurate, JournalDesign, JournalMain, JournalSettings} from '../../components';
 import {NotFound} from '../../containers';
@@ -56,7 +56,7 @@ const JournalAdmin = React.createClass({
 		return (
 			<div style={profileStyles.profilePage}>
 
-				<DocumentMeta {...metaData} />
+				<Helmet {...metaData} />
 
 				{
 					(this.props.subdomain !== this.props.journalData.get('baseSubdomain') && this.props.journalData.get('baseSubdomain') !== null) || (this.props.mode && !this.props.journalData.getIn(['journalData', 'isAdmin']))

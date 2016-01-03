@@ -2,7 +2,7 @@ import React, { PropTypes } from 'react';
 import {connect} from 'react-redux';
 import { Link } from 'react-router';
 import Radium from 'radium';
-import DocumentMeta from 'react-document-meta';
+import Helmet from 'react-helmet';
 import {saveCollection} from '../../actions/journal';
 import {CollectionEdit, CollectionMain} from '../../components';
 import {NotFound} from '../../containers';
@@ -52,7 +52,7 @@ const Collection = React.createClass({
 		return (
 			<div style={styles.container}>
 
-				<DocumentMeta {...metaData} />
+				<Helmet {...metaData} />
 
 				{
 					(!collectionData.slug) || (this.props.journalData.get('baseSubdomain') !== this.props.journalData.getIn(['journalData', 'subdomain'])) || (this.props.mode && !this.props.journalData.getIn(['journalData', 'isAdmin']))

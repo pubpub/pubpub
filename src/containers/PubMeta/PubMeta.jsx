@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react';
 import {connect} from 'react-redux';
 import Radium from 'radium';
-import DocumentMeta from 'react-document-meta';
+import Helmet from 'react-helmet';
 import PureRenderMixin from 'react-addons-pure-render-mixin';
 import {getPub, addDiscussion, discussionVoteSubmit, pubNavIn} from '../../actions/pub';
 import {toggleVisibility} from '../../actions/login';
@@ -98,7 +98,7 @@ const PubMeta = React.createClass({
 		return (
 			<div style={styles.container}>
 
-				<DocumentMeta {...metaData} />
+				<Helmet {...metaData} />
 
 				<div className="leftBar" style={[styles.leftBar, styles[this.props.readerData.get('status')]]}>
 					

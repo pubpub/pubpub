@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react';
 import {connect} from 'react-redux';
 import Radium from 'radium';
-import DocumentMeta from 'react-document-meta';
+import Helmet from 'react-helmet';
 import PureRenderMixin from 'react-addons-pure-render-mixin';
 import {testGetEmpty, testGetParams, testPostEmpty, testPostData} from '../../actions/subdomainTest';
 
@@ -36,7 +36,7 @@ const Subdomain = React.createClass({
 		return (
 			<div style={[styles.editorContainer]}>
 
-				<DocumentMeta {...metaData} />
+				<Helmet {...metaData} />
 
 				<div>Welcome to Subdomain Tests!</div>
 				<div>

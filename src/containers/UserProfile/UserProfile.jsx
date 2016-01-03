@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react';
 import {connect} from 'react-redux';
 import Radium from 'radium';
-import DocumentMeta from 'react-document-meta';
+import Helmet from 'react-helmet';
 import { Link } from 'react-router';
 import { pushState } from 'redux-router';
 import {logout} from '../../actions/login';
@@ -88,7 +88,7 @@ const Profile = React.createClass({
 		return (
 			<div style={profileStyles.profilePage}>
 
-				<DocumentMeta {...metaData} />
+				<Helmet {...metaData} />
 
 				<div style={profileStyles.profileWrapper}>
 					<div style={[globalStyles.hiddenUntilLoad, globalStyles[this.props.profileData.get('status')]]}>

@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react';
 import {connect} from 'react-redux';
 import Radium from 'radium';
-import DocumentMeta from 'react-document-meta';
+import Helmet from 'react-helmet';
 import {Autocomplete} from '../';
 import {globalStyles} from '../../utils/styleConstants';
 import {LandingBody} from '../../components';
@@ -73,7 +73,10 @@ const Landing = React.createClass({
 
 	render: function() {
 		const metaData = {
-			title: this.props.journalData.getIn(['journalData', 'journalName']) || 'PubPub'
+			title: this.props.journalData.getIn(['journalData', 'journalName']) || 'PubPub',
+			// meta: [
+			// 	{property: 'og:type', content: 'Wubadub'},
+			// ]
 		};
 		// console.log(this.props);
 		const componentsArray = this.props.journalData.getIn(['journalData', 'design', 'layoutString'])
@@ -85,7 +88,7 @@ const Landing = React.createClass({
 		return (
 			<div style={styles.container}>
 
-				<DocumentMeta {...metaData} />
+				<Helmet {...metaData} />
 
 				{
 					this.props.journalData.get('baseSubdomain') === null
