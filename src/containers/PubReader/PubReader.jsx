@@ -150,7 +150,6 @@ const PubReader = React.createClass({
 		const versionIndex = this.props.query.version !== undefined && this.props.query.version > 0 && this.props.query.version < (this.props.readerData.getIn(['pubData', 'history']).size - 1)
 			? this.props.query.version - 1
 			: this.props.readerData.getIn(['pubData', 'history']).size - 1;
-		debugger;
 		const metaData = {};
 		if (pubData.title) {
 			metaData.title = pubData.title;
