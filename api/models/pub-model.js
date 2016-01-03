@@ -162,7 +162,7 @@ pubSchema.statics.getPub = function (slug, readerID, journalID, callback) {
 			if (!populatedPub) { return callback(null, {message: 'Pub Not Found', slug: slug}); }
 
 			// Check if the pub is not allowed in the journal
-			if (journalID && String(populatedPub.featuredInList).indexOf(journalID) === -1) {
+			if (journalID && String(populatedPub.featuredInList).indexOf(journalID) === -1 && String(populatedPub.submittedToList).indexOf(journalID) === -1) {
 				return callback(null, {message: 'Pub not in this journal', slug: slug});
 			}
 
