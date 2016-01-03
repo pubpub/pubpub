@@ -159,6 +159,10 @@ const PubReader = React.createClass({
 				{property: 'og:description', content: pubData.history[versionIndex].abstract},
 				{property: 'article:published_time', content: pubData.history[versionIndex].publishDate},
 				{property: 'article:modified_time', content: pubData.history[pubData.history.length - 1].publishDate},
+				{name: 'twitter:card', content: 'summary_large_image'},
+				{name: 'twitter:site', content: '@pubpub'},
+				{name: 'twitter:title', content: pubData.history[versionIndex].title},
+				{name: 'twitter:description', content: pubData.history[versionIndex].abstract},
 			];
 
 			const srcRegex = /{{image:.*(src=([^\s,]*)).*}}/;
@@ -175,6 +179,7 @@ const PubReader = React.createClass({
 
 			if (leadImage) {
 				metaData.meta.push({property: 'og:image', content: leadImage});
+				metaData.meta.push({name: 'twitter:image', content: leadImage});
 			}
 		} else {
 			metaData.title = 'PubPub - ' + this.props.slug;

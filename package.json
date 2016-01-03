@@ -125,6 +125,7 @@
     "redux-form": "^3.0.5",
     "request": "^2.65.0",
     "scroll-behavior": "^0.3.0",
+    "sendgrid": "^2.0.0",
     "serialize-javascript": "1.1.2",
     "serve-favicon": "2.3.0",
     "serve-static": "1.10.0",

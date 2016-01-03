@@ -124,21 +124,3 @@ app.get('/testLogin', function(req,res){
 	}
 	
 });
-
-// import {sendgridUsername, sendgridPassword} from '../authentication/sendgridCredentials';
-// var sendgrid  = require('sendgrid')(sendgridUsername, sendgridPassword);
-
-// Send Email Confirmation
-// var email     = new sendgrid.Email({
-//   to:       user.email,
-//   from:     'pubpub@media.mit.edu',
-//   fromname: 'PubPub Team',
-//   subject:  'Welcome to PubPub!',
-//   text:     'You Successfully Registered!'
-// });
-// sendgrid.send(email, function(err, json) {
-//   if (err) { return console.error(err); }
-//   console.log(json);
-// });
-
-// End Send Email Confirmation
