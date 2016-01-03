@@ -74,9 +74,6 @@ const Landing = React.createClass({
 	render: function() {
 		const metaData = {
 			title: this.props.journalData.getIn(['journalData', 'journalName']) || 'PubPub',
-			// meta: [
-			// 	{property: 'og:type', content: 'Wubadub'},
-			// ]
 		};
 		// console.log(this.props);
 		const componentsArray = this.props.journalData.getIn(['journalData', 'design', 'layoutString'])

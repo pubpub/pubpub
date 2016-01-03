@@ -132,9 +132,12 @@ const App = React.createClass({
 		const metaData = {
 			meta: [
 				{property: 'og:site_name', content: 'PubPub'},
+				{property: 'og:title', content: 'PubPub'},
+				{property: 'og:url', content: 'http://www.pubpub.org' + this.props.path}, // Need to override for journals
+				{property: 'og:type', content: 'website'},
+				{property: 'og:image', content: 'http://res.cloudinary.com/pubpub/image/upload/v1451828189/pubpubDefaultImage_pvagkc.png'},
 			]
 		};
-
 
 		return (
 			<IntlProvider locale={'en'} messages={this.props.languageData.get('languageObject').toJS()}>

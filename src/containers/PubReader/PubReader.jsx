@@ -146,17 +146,43 @@ const PubReader = React.createClass({
 	},
 
 	render: function() {
-		const metaData = {};
-		if (this.props.readerData.getIn(['pubData', 'title'])) {
-			metaData.title = 'PubPub - ' + this.props.readerData.getIn(['pubData', 'title']);
-		} else {
-			metaData.title = 'PubPub - ' + this.props.slug;
-		}
-
 		const pubData = this.props.readerData.get('pubData').toJS();
 		const versionIndex = this.props.query.version !== undefined && this.props.query.version > 0 && this.props.query.version < (this.props.readerData.getIn(['pubData', 'history']).size - 1)
 			? this.props.query.version - 1
 			: this.props.readerData.getIn(['pubData', 'history']).size - 1;
+
+		const metaData = {};
+		if (pubData.title) {
+			metaData.title = pubData.title;
+			metaData.meta = [
+				{property: 'og:title', content: pubData.title},
+				{property: 'og:url', content: 'article'},
+				{property: 'og:type', content: 'article'},
+				{property: 'og:article:published_time', content: pubData.history[versionIndex].publishDate},
+				{property: 'og:article:modified_time', content: pubData.history[pubData.history.length - 1].publishDate},
+			];
+
+			const srcRegex = /{{image:.*(src=([^\s,]*)).*}}/;
+			const match = srcRegex.exec(pubData.history[versionIndex].markdown);
+			const refName = match ? match[2] : undefined;
+			console.log('match', match);
+			
+			let leadImage = undefined;
+			for (let index = pubData.history[versionIndex].assets.length; index--;) {
+				if (pubData.history[versionIndex].assets[index].refName === refName) {
+					leadImage = pubData.history[versionIndex].assets[index].url;
+					break;
+				}
+			}
+
+			if (leadImage) {
+				metaData.meta.push({property: 'og:image', content: leadImage});
+			}
+		} else {
+			metaData.title = 'PubPub - ' + this.props.slug;
+		}
+
+		
 		// console.log(this.state.htmlTree);
 		// console.log(pubData);
 		return (
