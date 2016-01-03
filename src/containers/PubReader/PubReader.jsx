@@ -156,7 +156,6 @@ const PubReader = React.createClass({
 			metaData.title = pubData.title;
 			metaData.meta = [
 				{property: 'og:title', content: pubData.title},
-				{property: 'og:url', content: 'article'},
 				{property: 'og:type', content: 'article'},
 				{property: 'og:article:published_time', content: pubData.history[versionIndex].publishDate},
 				{property: 'og:article:modified_time', content: pubData.history[pubData.history.length - 1].publishDate},
@@ -165,7 +164,6 @@ const PubReader = React.createClass({
 			const srcRegex = /{{image:.*(src=([^\s,]*)).*}}/;
 			const match = srcRegex.exec(pubData.history[versionIndex].markdown);
 			const refName = match ? match[2] : undefined;
-			console.log('match', match);
 			
 			let leadImage = undefined;
 			for (let index = pubData.history[versionIndex].assets.length; index--;) {
