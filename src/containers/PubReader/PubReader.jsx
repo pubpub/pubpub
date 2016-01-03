@@ -152,10 +152,11 @@ const PubReader = React.createClass({
 			: this.props.readerData.getIn(['pubData', 'history']).size - 1;
 		const metaData = {};
 		if (pubData.title) {
-			metaData.title = pubData.title;
+			metaData.title = pubData.history[versionIndex].title;
 			metaData.meta = [
-				{property: 'og:title', content: pubData.title},
+				{property: 'og:title', content: pubData.history[versionIndex].title},
 				{property: 'og:type', content: 'article'},
+				{property: 'og:description', content: pubData.history[versionIndex].abstract},
 				{property: 'article:published_time', content: pubData.history[versionIndex].publishDate},
 				{property: 'article:modified_time', content: pubData.history[pubData.history.length - 1].publishDate},
 			];

@@ -131,8 +131,10 @@ const App = React.createClass({
 
 		const metaData = {
 			meta: [
+				{name: 'description', content: 'PubPub is a platform for totally transparent publishing. Read, Write, Publish, Review.'},
 				{property: 'og:site_name', content: 'PubPub'},
 				{property: 'og:title', content: 'PubPub'},
+				{property: 'og:description', content: 'PubPub is a platform for totally transparent publishing. Read, Write, Publish, Review.'},
 				{property: 'og:url', content: 'http://www.pubpub.org' + this.props.path}, // Need to override for journals
 				{property: 'og:type', content: 'website'},
 				{property: 'og:image', content: 'https://s3.amazonaws.com/pubpub-upload/pubpubDefaultImage.png'},
