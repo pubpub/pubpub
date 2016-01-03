@@ -129,19 +129,21 @@ const App = React.createClass({
 			},
 		};
 
+		const journalURL = this.props.journalData.getIn(['journalData', 'customDomain']) ? 'http://' + this.props.journalData.getIn(['journalData', 'customDomain']) : 'http://' + this.props.journalData.getIn(['journalData', 'subdomain']) + '.pubpub.org';
+		const currentBaseURL = this.props.journalData.get('baseSubdomain') ? journalURL : 'http://www.pubpub.org';
 		const metaData = {
 			meta: [
 				{name: 'description', content: 'PubPub is a platform for totally transparent publishing. Read, Write, Publish, Review.'},
 				{property: 'og:site_name', content: 'PubPub'},
-				{property: 'og:title', content: 'PubPub'},
+				{property: 'og:title', content: this.props.journalData.get('baseSubdomain') ? this.props.journalData.getIn(['journalData', 'journalName']) : 'PubPub'},
 				{property: 'og:description', content: 'PubPub is a platform for totally transparent publishing. Read, Write, Publish, Review.'},
-				{property: 'og:url', content: 'http://www.pubpub.org' + this.props.path}, // Need to override for journals
+				{property: 'og:url', content: currentBaseURL + this.props.path},
 				{property: 'og:type', content: 'website'},
-				{property: 'og:image', content: 'https://s3.amazonaws.com/pubpub-upload/pubpubDefaultImage.png'},
+				{property: 'og:image', content: 'https://s3.amazonaws.com/pubpub-upload/pubpubDefaultTitle.png'},
 				{property: 'fb:app_id', content: '924988584221879'},
 			]
 		};
-
+		console.log(metaData);
 		return (
 			<IntlProvider locale={'en'} messages={this.props.languageData.get('languageObject').toJS()}>
 			<div style={styles.body}>
