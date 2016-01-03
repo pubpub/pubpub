@@ -1,14 +1,14 @@
 export const scienceStyle = {
 	'#pub-title': {
 		textAlign: 'center',
-		fontSize: '40px',
-		margin: '50px 0px',
+		fontSize: '3em',
+		margin: '0.7em 0px',
 	},
 	'#pub-authors': {
 		textAlign: 'center',
 		color: '#555',
-		fontSize: '17px',
-		padding: '0px 50px',
+		fontSize: '1.3em',
+		padding: '0px 4em',
 	},
 	'.pub-author': {
 		color: '#555',
@@ -18,13 +18,13 @@ export const scienceStyle = {
 	},
 	'#pub-dates': {
 		textAlign: 'center',
-		padding: '0px 50px',
+		padding: '0px 3em',
 		color: '#555',
 	},
 	'#pub-abstract': {
 		textAlign: 'left',
 		color: '#777',
-		margin: '30px 0px',
+		margin: '2em 0px',
 		fontFamily: 'Lora',
 		padding: '0px 20px',
 	},
@@ -35,21 +35,21 @@ export const scienceStyle = {
 		backgroundColor: '#DDD',
 	},
 	'#pub-references': {
-		marginTop: '20px',
-		paddingTop: '20px',
+		marginTop: '1.5em',
+		paddingTop: '1.5em',
 		borderTop: '1px solid #eee',
 	},
 	'.pub-reference': {
-		padding: '5px 20px',
-		fontSize: '13px',
+		padding: '0.5em 1.5em',
+		fontSize: '1.3em',
 	},
 	'h1, h2, h3, h4, h5, h6': {
-		padding: '0px 20px',
+		padding: '0px 0.2em',
 		color: '#4C4C4C',
 	},
 	'.p-block': {
 		fontFamily: 'Lora',
-		padding: '10px 20px',
+		padding: '0.5em 1em',
 		color: '#565656',
 	},
 	'.codeBlock': {
@@ -67,7 +67,7 @@ export const scienceStyle = {
 	},
 	'ul, ol': {
 		fontFamily: 'Lora',
-		padding: '0px 20px 0px 60px',
+		padding: '0px 1.5em 0px 4em',
 		color: '#565656',
 	},
 	'table': {
@@ -76,29 +76,29 @@ export const scienceStyle = {
 	},
 	'td': {
 		border: '1px solid #ccc',
-		padding: '3px',
+		padding: '0.3em',
 	},
 	'th': {
 		border: '1px solid #ccc',
-		padding: '3px',
+		padding: '0.3em',
 		backgroundColor: '#eee',
 		color: '#111',
 	},
-	
+
 };
 
 
 export const magazineStyle = {
 	'#pub-title': {
 		textAlign: 'left',
-		fontSize: '60px',
-		margin: '50px 0px',
+		fontSize: '5em',
+		margin: '0.7em 0px',
 	},
 	'#pub-authors': {
 		textAlign: 'center',
 		color: '#555',
-		fontSize: '17px',
-		padding: '0px 50px',
+		fontSize: '1.3em',
+		padding: '0px 4em',
 	},
 	'.pub-author': {
 		color: '#555',
@@ -109,8 +109,8 @@ export const magazineStyle = {
 	'#pub-abstract': {
 		textAlign: 'left',
 		color: '#777',
-		margin: '30px 0px',
-		padding: '0px 20px',
+		margin: '2.5em 0px',
+		padding: '0px 1.5em',
 	},
 	'#pub-header-divider': {
 		height: '1px',
@@ -119,7 +119,7 @@ export const magazineStyle = {
 		backgroundColor: '#DDD',
 	},
 	'h1, h2, h3, h4, h5, h6': {
-		padding: '0px 20px',
+		padding: '0em 0.2em',
 		color: '#4C4C4C',
 	},
 };

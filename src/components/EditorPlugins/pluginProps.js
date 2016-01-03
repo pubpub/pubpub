@@ -18,9 +18,9 @@ export function src(assetType) {
 			const val = ref.value();
 			return (val) ? val.value : null;
 		},
-		component: function(pluginProp, value, props, styles) {
+		component: function(pluginProp, value, componentProps, styles) {
 			const title = pluginProp.title;
-			const assets = (props.assets) ? Object.values(props.assets).filter(filterAssets).map( function(asset) { return {'value': asset.refName, 'label': asset.refName};}) : [];
+			const assets = (componentProps.assets) ? Object.values(componentProps.assets).filter(filterAssets).map( function(asset) { return {'value': asset.refName, 'label': asset.refName};}) : [];
 			// assets.push({'value': 'upload', 'label': 'Upload New'});
 			const val = (value) ? {'value': value, 'label': value } : undefined;
 
@@ -41,10 +41,9 @@ export const srcRef = {
 		const val = thisRef.value();
 		return (val) ? val.value : null;
 	},
-	component: function(pluginProp, value, props, styles) {
+	component: function(pluginProp, value, componentProps, styles) {
 		const title = pluginProp.title;
-		// const refs = (props.references) ? Object.values(props.references).map( function(ref) { return {'value': ref.refName, 'label': ref.refName + ' ' + ref.title};}) : [];
-		const refs = (props.references) ? Object.values(props.references).map( function(ref) { return {'value': ref.refName, 'label': ref.refName};}) : [];
+		const refs = (componentProps.references) ? Object.values(componentProps.references).map( function(ref) { return {'value': ref.refName, 'label': ref.refName};}) : [];
 		// assets.push({'value': 'upload', 'label': 'Upload New'});
 		const val = (value) ? {'value': value, 'label': value } : {};
 
