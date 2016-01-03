@@ -52,7 +52,7 @@ const Login = React.createClass({
 	},
 
 	handleLoginRegisterSubmit: function(formValues) {
-		this.props.dispatch(register(formValues.email, formValues.password, formValues.fullName, this.state.userImageURL));
+		this.props.dispatch(register(formValues.email, formValues.password, formValues.firstName, formValues.lastName, this.state.userImageURL));
 	},
 
 	handleFileSelect: function(evt) {

@@ -9,6 +9,8 @@ var Discussion = require('../models').Discussion;
 var userSchema = new Schema({
   email: { type: String, required: true, index: { unique: true } },
   username: { type: String, required: true, index: { unique: true } },
+  firstName: { type: String },
+  lastName: { type: String },
   name: { type: String },
   image: { type: String },
   thumbnail: { type: String },
@@ -80,6 +82,8 @@ userSchema.statics.getUser = function (username, readerID, callback) {
         username: populatedUser.username,
         image: populatedUser.image,
         name: populatedUser.name,
+        firstName: populatedUser.firstName,
+        lastName: populatedUser.lastName,
         title: populatedUser.title,
         bio: populatedUser.bio,
         pubs: populatedUser.pubs,

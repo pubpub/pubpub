@@ -69,13 +69,15 @@ export function logout() {
 	};
 }
 
-export function register(email, password, fullname, image) {
+export function register(email, password, firstName, lastName, image) {
 	return {
 		types: [REGISTER_LOAD, REGISTER_LOAD_SUCCESS, REGISTER_LOAD_FAIL],
 		promise: (client) => client.post('/register', {data: {
 			'email': email.toLowerCase(),
 			'password': SHA3(password).toString(encHex),
-			'fullname': fullname,
+			'firstName': firstName,
+			'lastName': lastName,
+			'fullName': firstName + ' ' + lastName,
 			'image': image
 		}})
 	};

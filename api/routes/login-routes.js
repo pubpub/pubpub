@@ -13,6 +13,8 @@ app.get('/login', function(req,res){
 
 		return res.status(201).json({
 			name: req.user.name,
+			firstName: req.user.firstName,
+			lastName: req.user.lastName,
 			username: req.user.username,
 			image: req.user.image,
 			thumbnail: req.user.thumbnail,
@@ -40,6 +42,8 @@ app.post('/login', passport.authenticate('local'), function(req, res) {
 
 			return res.status(201).json({
 				name: user.name,
+				firstName: user.firstName,
+				lastName: user.lastName,
 				username: user.username,
 				image: user.image,
 				thumbnail: user.thumbnail,
@@ -70,6 +74,8 @@ app.post('/register', function(req, res) {
 				username: newUsername, 
 				image: req.body.image, 
 				thumbnail: cloudinaryResponse.url.replace('/upload', '/upload/c_limit,h_50,w_50'),
+				firstName: req.body.firstName,
+				lastName: req.body.lastName,
 				name: req.body.fullname, 
 				registerDate: new Date(Date.now()),
 			});
@@ -83,6 +89,8 @@ app.post('/register', function(req, res) {
 				passport.authenticate('local')(req,res,function(){
 					
 					return res.status(201).json({
+						firstName: user.firstName,
+						lastName: user.lastName,
 						name: account.name,
 						username: account.username,
 						image: account.image,

@@ -85,6 +85,8 @@ app.post('/createPub', function(req, res) {
 			newEditorData.collaborators[req.user.username] = {
 				_id: userID.toString(),
 				name: req.user.name,
+				firstName: req.user.firstName,
+				lastName: req.user.lastName,
 				username: req.user.username,
 				email: req.user.email,
 				thumbnail: req.user.thumbnail,

@@ -149,10 +149,10 @@ pubSchema.statics.getPub = function (slug, readerID, callback) {
 	.populate({ path: 'assets history.assets', model: 'Asset' })
 	.populate({ path: 'references history.references', model: 'Reference' })
 	.populate({ path: 'featuredIn.journal submittedTo.journal', select: 'journalName subdomain customDomain design', model: 'Journal' })
-	.populate({ path: 'authors history.authors', select: 'username name thumbnail', model: 'User' })
+	.populate({ path: 'authors history.authors', select: 'username name thumbnail firstName lastName', model: 'User' })
 	.exec((err, pub)=> {
 		const options = [
-			{ path: 'discussions.author', select: '_id username name thumbnail', model: 'User'},
+			{ path: 'discussions.author', select: '_id username name firstName lastName thumbnail', model: 'User'},
 			{ path: 'discussions.selections', model: 'Highlight'}
 		];
 
@@ -205,7 +205,7 @@ pubSchema.statics.getPubEdit = function (slug, readerID, callback) {
 
 		// We gotta pass down discussions if we want to show in editor
 		const options = [
-			{ path: 'discussions.author', select: '_id username name thumbnail', model: 'User'},
+			{ path: 'discussions.author', select: '_id username name firstName lastName thumbnail', model: 'User'},
 			{ path: 'discussions.selections', model: 'Highlight'}
 		];
 

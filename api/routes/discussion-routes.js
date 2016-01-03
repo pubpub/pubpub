@@ -50,7 +50,7 @@ app.post('/addDiscussion', function(req, res) {
 			Discussion.update({_id: result.parent}, { $addToSet: { children: discussionID} }, function(err, result){if(err) return handleError(err)});
 
 			var populateQuery = [
-				{path:'author', select:'_id name thumbnail'},
+				{path:'author', select:'_id name firstName lastName thumbnail'},
 				{path:'selections'},
 			];
 

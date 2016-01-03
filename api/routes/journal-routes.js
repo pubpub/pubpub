@@ -48,7 +48,7 @@ app.get('/getJournal', function(req,res){
 	.populate({path: "pubs", select:"title abstract slug settings"})
 	.populate({path: "pubsFeatured", select:"title abstract slug settings"})
 	.populate({path: "pubsSubmitted", select:"title abstract slug settings"})
-	.populate({path: "admins", select:"name username thumbnail"})
+	.populate({path: "admins", select:"name username thumbnail firstName lastName"})
 	.populate({path: "collections.pubs", select:"title abstract slug authors lastUpdated createDate"})
 	.lean().exec(function(err, result) {
 		if (err) { return res.status(500).json(err);  }
@@ -111,7 +111,7 @@ app.post('/saveJournal', function(req,res){
 				{path: "pubs", select:"title abstract slug settings", model: 'Pub'},
 				{path: "pubsFeatured", select:"title abstract slug settings", model: 'Pub'},
 				{path: "pubsSubmitted", select:"title abstract slug settings", model: 'Pub'},
-				{path: "admins", select:"name username thumbnail", model: 'User'},
+				{path: "admins", select:"name firstName lastName username thumbnail", model: 'User'},
 				{path: "collections.pubs", select:"title abstract slug authors lastUpdated createDate", model: 'Pub'},
 			];
 
@@ -145,7 +145,7 @@ app.post('/submitPubToJournal', function(req,res){
 				{path: "pubs", select:"title abstract slug settings", model: 'Pub'},
 				{path: "pubsFeatured", select:"title abstract slug settings", model: 'Pub'},
 				{path: "pubsSubmitted", select:"title abstract slug settings", model: 'Pub'},
-				{path: "admins", select:"name username thumbnail", model: 'User'},
+				{path: "admins", select:"name firstName lastName username thumbnail", model: 'User'},
 				{path: "collections.pubs", select:"title abstract slug authors lastUpdated createDate", model: 'Pub'},
 			];
 
@@ -171,7 +171,7 @@ app.get('/loadJournalAndLogin', function(req,res){
 	.populate({path: "pubs", select:"title abstract slug settings"})
 	.populate({path: "pubsFeatured", select:"title abstract slug settings"})
 	.populate({path: "pubsSubmitted", select:"title abstract slug settings"})
-	.populate({path: "admins", select:"name username thumbnail"})
+	.populate({path: "admins", select:"name firstName lastName username thumbnail"})
 	.populate({path: "collections.pubs", select:"title abstract slug authors lastUpdated createDate"})
 	.lean().exec(function(err, result){
 
@@ -184,6 +184,8 @@ app.get('/loadJournalAndLogin', function(req,res){
 			const loginData = req.user 
 				? {
 					name: req.user.name,
+					firstName: req.user.firstName,
+					lastName: req.user.lastName,
 					username: req.user.username,
 					image: req.user.image,
 					thumbnail: req.user.thumbnail,

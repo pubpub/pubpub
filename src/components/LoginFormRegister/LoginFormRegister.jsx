@@ -22,14 +22,18 @@ const LoginFormRegister = React.createClass({
 
 	render: function() {
 		const {
-			fields: {email, password, fullName},
+			fields: {email, password, firstName, lastName},
 			handleSubmit
 		} = this.props;
 
 		const messages = defineMessages({
-			fullName: {
-				id: 'collections.fullName',
-				defaultMessage: 'Full Name',
+			firstName: {
+				id: 'login.firstName',
+				defaultMessage: 'First Name',
+			},
+			lastName: {
+				id: 'login.lastName',
+				defaultMessage: 'Last Name',
 			},
 		});
 
@@ -49,18 +53,24 @@ const LoginFormRegister = React.createClass({
 				</div>
 				<div>
 					<label style={styles.label}>
-						{this.props.intl.formatMessage(messages.fullName)}
+						{this.props.intl.formatMessage(messages.firstName)}
 					</label>
-					<input style={styles.input} key="registerName" type="text" placeholder={this.props.intl.formatMessage(messages.fullName)} {...fullName}/>
+					<input style={[styles.input, styles.shortInput]} key="registerFirstName" type="text" placeholder={this.props.intl.formatMessage(messages.firstName)} {...firstName}/>
+				</div>
+				<div>
+					<label style={styles.label}>
+						{this.props.intl.formatMessage(messages.lastName)}
+					</label>
+					<input style={[styles.input, styles.shortInput]} key="registerLastName" type="text" placeholder={this.props.intl.formatMessage(messages.lastName)} {...lastName}/>
 				</div>
 
 				<div style={[styles.input, styles.userImageInput]}>
-					<div style={styles.userInputDiv}>
-						<FormattedMessage id="login.userImage" defaultMessage="User Image"/>
-					</div>
+					{/* <div style={styles.userInputDiv}>
+							<FormattedMessage id="login.userImage" defaultMessage="User Image"/>
+						</div> */}
 					<img style={[styles.userInputDiv, styles.userImagePreview]} src={this.props.userImage} />
 					<div style={[styles.userInputDiv, styles.fileInputWrapper]} key="userImageFileInputWrapper">
-						<FormattedMessage id="login.chooseNew" defaultMessage="choose new"/>
+						<FormattedMessage id="login.chooseNew" defaultMessage="choose new image"/>
 						<input style={styles.hiddenFileInput} type="file" accept="image/*" onChange={this.props.onFileSelect} />
 					</div>
 					
@@ -77,7 +87,7 @@ const LoginFormRegister = React.createClass({
 
 export default reduxForm({
 	form: 'loginFormRegister',
-	fields: ['fullName', 'email', 'password', 'image']
+	fields: ['firstName', 'lastName', 'email', 'password', 'image']
 })(injectIntl(Radium(LoginFormRegister)));
 
 styles = {
@@ -142,14 +152,18 @@ styles = {
 
 		},
 	},
+	shortInput: {
+		width: 'calc( ((100% - 175px - 10px - 10px) / 2) - 60px)',
+	},
 	userImageInput: {
-		width: 271,
+		// width: 270,
+		width: 175,
 		height: 32,
-		margin: '90px 30px 0px 30px',
+		margin: '90px 10px 0px 0px',
 	},
 	userImagePreview: {
 		width: 35,
-		padding: '0px 20px',
+		padding: '0px 20px 0px 0px',
 		position: 'relative',
 		top: -5,
 	},
@@ -158,7 +172,9 @@ styles = {
 
 	},
 	fileInputWrapper: {
-		width: 70,
+		// width: 70,
+		width: 120,
+		textAlign: 'center',
 		height: 30,
 		cursor: 'pointer',
 		position: 'relative',
