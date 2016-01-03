@@ -143,7 +143,6 @@ const App = React.createClass({
 				{property: 'fb:app_id', content: '924988584221879'},
 			]
 		};
-		console.log(metaData);
 		return (
 			<IntlProvider locale={'en'} messages={this.props.languageData.get('languageObject').toJS()}>
 			<div style={styles.body}>

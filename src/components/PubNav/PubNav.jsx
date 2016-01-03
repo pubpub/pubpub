@@ -54,9 +54,9 @@ const PubNav = React.createClass({
 								<FormattedMessage {...globalMessages.print} />
 							</li>
 							<li style={[styles.pubNavSeparator, styles.pubNavDesktopOnly]}></li>
-							<li key="pubNav4"style={[styles.pubNavItem, styles.pubNavDesktopOnly]} onClick={this.props.openPubModalHandler('cite')}>
+							{/* <li key="pubNav4"style={[styles.pubNavItem, styles.pubNavDesktopOnly]} onClick={this.props.openPubModalHandler('cite')}>
 								<FormattedMessage {...globalMessages.cite} />
-							</li>
+							</li> */}
 
 
 							<Link to={'/pub/' + this.props.slug + '/edit'}><li key="pubNav7"style={[styles.pubNavItem, styles.pubNavRight, styles.pubNavDesktopOnly, styles.pubNavAuthorOnly, styles.pubAuthor[this.props.isAuthor]]}>
