@@ -33,6 +33,9 @@ const PubModals = React.createClass({
 		addDiscussionStatus: PropTypes.string,
 		newDiscussionData: PropTypes.object,
 		userThumbnail: PropTypes.string,
+		handleVoteSubmit: PropTypes.func,
+		toggleHighlightsHandler: PropTypes.func,
+		showPubHighlights: PropTypes.bool,
 
 
 	},
@@ -92,7 +95,10 @@ const PubModals = React.createClass({
 									pHashes={{}} // Send a blank object in because we don't want to repopulate the highlights. We'll probably have to do something different so selections are clickable/scrollable...
 									addDiscussionStatus={this.props.addDiscussionStatus}
 									newDiscussionData={this.props.newDiscussionData}
-									userThumbnail={this.props.userThumbnail}/>
+									userThumbnail={this.props.userThumbnail}
+									handleVoteSubmit={this.props.handleVoteSubmit}
+									toggleHighlightsHandler={this.props.toggleHighlightsHandler}
+									showPubHighlights={this.props.showPubHighlights}/>
 								);
 							
 							

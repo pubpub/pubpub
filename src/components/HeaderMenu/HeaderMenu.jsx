@@ -162,12 +162,14 @@ const HeaderMenu = React.createClass({
 							)}
 							
 							<li key="menuListItem11" style={styles.menuItemseparator}></li>
-							<li key="menuListItem12" style={styles.menuItem}>
-								<FormattedMessage {...globalMessages.aboutPubPub} />
-							</li>
-							<li key="menuListItem14" style={styles.menuItem}>
+
+							<Link style={globalStyles.link} to={'/pub/about'}><li key="menuListItem12" style={styles.menuItem}>
+								<FormattedMessage {...globalMessages.FAQ} />
+							</li></Link>
+
+							<a style={globalStyles.link} target="_blank" href={'mailto:pubpub@media.mit.edu'}><li key="menuListItem14" style={styles.menuItem}>
 								<FormattedMessage {...globalMessages.contact} />
-							</li>
+							</li></a>
 							
 						</ul>
 					</div>

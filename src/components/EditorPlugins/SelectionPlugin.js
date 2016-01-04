@@ -12,6 +12,7 @@ const PagebreakPlugin = React.createClass({
 		const destination = document.getElementsByClassName('selection-' + this.props.selectionItem._id)[0];
 		const context = document.getElementsByClassName('centerBar')[0];
 		smoothScroll(destination, 500, ()=>{}, context);
+		smoothScroll(destination, 500, ()=>{}, null, -60);
 	},
 
 	hoverOn: function() {

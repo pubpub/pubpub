@@ -61,6 +61,16 @@ const PubLeftBar = React.createClass({
 				<Link style={globalStyles.link} to={'/pub/' + this.props.slug + '/source' + versionURL}><div key={'leftBar4'} style={styles.detail}>
 					<FormattedMessage {...globalMessages.source} />
 				</div></Link>
+
+				<div style={styles.leftBarDivider}></div>
+
+				<Link style={globalStyles.link} to={'/pub/about'}><div key={'leftBar9'} style={styles.detail}>
+					<FormattedMessage {...globalMessages.FAQ} />
+				</div></Link>
+
+				<a style={globalStyles.link} target="_blank" href={'mailto:pubpub@media.mit.edu'}><div key={'leftBar10'} style={styles.detail}>
+					<FormattedMessage {...globalMessages.Feedback} />
+				</div></a>
 				
 				{/* <div style={styles.detail}>Related Pub</div> */}
 				{/* <div style={styles.detail}>Share</div> */}

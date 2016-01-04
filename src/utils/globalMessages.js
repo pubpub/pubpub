@@ -29,6 +29,14 @@ export const globalMessages = defineMessages({
 		id: 'global.journalAdmin',
 		defaultMessage: 'Journal Admin',
 	},
+	Feedback: {
+		id: 'global.Feedback',
+		defaultMessage: 'Feedback',
+	},
+	FAQ: {
+		id: 'global.FAQ',
+		defaultMessage: 'FAQ',
+	},
 	menu: {
 		id: 'global.menu',
 		defaultMessage: 'Menu',

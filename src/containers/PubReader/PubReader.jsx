@@ -307,7 +307,10 @@ const PubReader = React.createClass({
 						pHashes={pubData.pHashes}
 						addDiscussionStatus={this.props.readerData.get('addDiscussionStatus')}
 						newDiscussionData={this.props.readerData.get('newDiscussionData')}
-						userThumbnail={this.props.loginData.getIn(['userData', 'thumbnail'])}/>
+						userThumbnail={this.props.loginData.getIn(['userData', 'thumbnail'])}
+						handleVoteSubmit={this.discussionVoteSubmit}
+						toggleHighlightsHandler={this.toggleHighlights}
+						showPubHighlights={this.props.readerData.get('showPubHighlights')}/>
 
 				</div>
 
