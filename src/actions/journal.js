@@ -1,3 +1,5 @@
+import analytics from '../utils/analytics';
+
 /*--------*/
 // Define Action types
 // 
@@ -98,7 +100,8 @@ export function submitPubToJournal(pubID, journalData) {
 	};
 }
 
-export function getRandomSlug(journalID) {
+export function getRandomSlug(journalID, analyticsData) {
+	analytics.sendEvent('Random Pub', analyticsData);
 	return {
 		types: [GET_RANDOM_SLUG_LOAD, GET_RANDOM_SLUG_SUCCESS, GET_RANDOM_SLUG_FAIL],
 		promise: (client) => client.get('/getRandomSlug', {params: {journalID: journalID}})

@@ -147,7 +147,12 @@ const PubReader = React.createClass({
 	},
 
 	readRandomPub: function() {
-		this.props.dispatch(getRandomSlug(this.props.journalData.getIn(['journalData', '_id'])));
+		const analyticsData = {
+			location: 'pub/' + this.props.slug,
+			journalID: this.props.journalData.getIn(['journalData', '_id']),
+			journalName: this.props.journalData.getIn(['journalData', 'journalName']),
+		};
+		this.props.dispatch(getRandomSlug(this.props.journalData.getIn(['journalData', '_id']), analyticsData));
 	},
 
 	followPubToggle: function() {

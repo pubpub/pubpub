@@ -8,7 +8,6 @@ import {LandingBody} from '../../components';
 import {getRandomSlug} from '../../actions/journal';
 import { Link } from 'react-router';
 const HoverLink = Radium(Link);
-import analytics from '../../utils/analytics';
 
 let styles = {};
 
@@ -63,8 +62,12 @@ const Landing = React.createClass({
 	},
 
 	showMeScienceClick: function() {
-		analytics.sendEvent('Show Me Science Clicked');
-		this.props.dispatch(getRandomSlug(this.props.journalData.getIn(['journalData', '_id'])));
+		const analyticsData = {
+			location: '/',
+			journalID: this.props.journalData.getIn(['journalData', '_id']),
+			journalName: this.props.journalData.getIn(['journalData', 'journalName']),
+		};
+		this.props.dispatch(getRandomSlug(this.props.journalData.getIn(['journalData', '_id']), analyticsData));
 	},
 
 	setFeature: function(newFeature) {

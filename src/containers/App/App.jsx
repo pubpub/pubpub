@@ -48,15 +48,6 @@ const App = React.createClass({
 			analytics.pageView(nextProps.path, nextProps.loginData.get('loggedIn'));
 		}
 
-		// if (this.props.pubData.get('randomSlug') !== nextProps.pubData.get('randomSlug')) {
-		// 	analytics.sendEvent('Random Pub', {
-		// 		newRandomSlug: nextProps.pubData.get('randomSlug'),
-		// 		journalID: nextProps.journalData.getIn(['journalData', '_id']),
-		// 		journalName: nextProps.journalData.getIn(['journalData', 'journalName']),
-		// 		currentPath: nextProps.path,
-		// 	});
-		// 	this.props.dispatch(pushState(null, '/pub/' + nextProps.pubData.get('randomSlug') ));
-		// }
 	},
 
 	componentDidMount() {
