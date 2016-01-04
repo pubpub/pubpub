@@ -12,6 +12,9 @@ export const rightBarStyles = {
 		whiteSpace: 'nowrap',
 		overflow: 'hidden',
 		textOverflow: 'ellipsis',
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+			fontSize: '30px',
+		},
 
 	},
 	sectionSubHeader: {
