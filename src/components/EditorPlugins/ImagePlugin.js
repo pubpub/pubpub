@@ -4,8 +4,9 @@ import ImageLoader from 'react-imageloader';
 import ErrorMsg from './ErrorPlugin';
 
 
-import {src, width, height, inline, align} from './pluginProps';
-export const imageOptions = {src: src('image'), width, height, inline, align};
+import {propSrc, propSize, propAlign} from './pluginProps';
+export const imageOptions = {src: propSrc('image'), size: propSize, align: propAlign};
+
 
 // let styles = {};
 const ImagePlugin = React.createClass({
@@ -13,11 +14,8 @@ const ImagePlugin = React.createClass({
 		url: PropTypes.string,
 		error: PropTypes.string,
 		children: PropTypes.string,
-
-		width: PropTypes.string,
-		height: PropTypes.string,
-		inline: PropTypes.string,
-		align: PropTypes.string,
+		size: React.PropTypes.oneOf(['small', 'medium', 'large']),
+		align: React.PropTypes.oneOf(['left', 'right', 'full']),
 	},
 	getInitialState: function() {
 		return {};
@@ -27,28 +25,35 @@ const ImagePlugin = React.createClass({
 		result = <span>loading</span>;
 		return result;
 	},
-	// loadedImage: function(evt) {
 	loadedImage: function() {
-		// this.lastURL = evt.target.src;
-		// debugger;
-		// this.lastURL = this.props.children;
 		return;
 	},
 	render: function() {
 		const refName = this.props.children;
 		const url = this.props.url;
+		const size = this.props.size || 'large';
+		const align = this.props.align || 'full';
 
-		const alignConstants = {
-			left: 'auto auto auto 0px',
-			center: '0px auto',
-			right: 'auto 0px auto auto',
+		// whether floating flows all of the text or just some is dependent on how much space is left
+		// a 'large' image is smaller when floating because it needs to leave space for the text
+		const sizeOptions = {
+			'small': (this.props.align === 'full') ? '30%' : '25%',
+			'medium': (this.props.align === 'full') ? '50%' : '40%',
+			'large': (this.props.align === 'full') ? '80%' : '60%'
 		};
+
 		const styleObject = {
-			width: this.props.width || imageOptions.width.defaultString,
-			height: this.props.height || imageOptions.height.defaultString,
-			display: this.props.inline === 'true' ? 'inline-block' : 'block',
-			margin: alignConstants[this.props.align] || alignConstants[imageOptions.align.defaultString],
+			width: sizeOptions[size],
+			height: sizeOptions[size],
+			display: 'block'
 		};
+
+		if (align === 'left' || align === 'right' ) {
+			styleObject.float = align;
+			styleObject.padding = '1em';
+		} else if (this.props.align === 'full') {
+			styleObject.margin = '0px auto';
+		}
 
 		let html;
 
@@ -68,12 +73,5 @@ const ImagePlugin = React.createClass({
 		return html;
 	}
 });
-
-/*
-styles = function() {
-	return {
-	};
-};
-*/
 
 export default Radium(ImagePlugin);

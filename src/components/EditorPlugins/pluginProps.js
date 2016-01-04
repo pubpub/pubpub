@@ -1,9 +1,10 @@
 import React from 'react';
 import {SimpleSelect} from 'react-selectize';
+import Radios from './radioButton';
 // import {openModal} from '../../actions/editor';
 
 
-export function src(assetType) {
+export function propSrc(assetType) {
 
 	const filterAssets = function(asset) {
 		return (asset.assetType === assetType);
@@ -32,7 +33,37 @@ export function src(assetType) {
 	};
 }
 
-export const srcRef = {
+export const propAlign = {
+	title: 'align',
+	default: '',
+	defaultValue: '',
+	defaultString: '',
+	valueFunction: function(thisRef) {
+		return thisRef.value();
+	},
+	component: function(pluginProp, value, componentProps, styles) {
+		const title = pluginProp.title;
+		const choices = ['left', 'full', 'right'];
+		return (<Radios ref={'pluginInput-' + title} selectedVal={value}  choices={choices}/>);
+	}
+};
+
+export const propSize = {
+	title: 'size',
+	default: '',
+	defaultValue: '',
+	defaultString: '',
+	valueFunction: function(thisRef) {
+		return thisRef.value();
+	},
+	component: function(pluginProp, value, componentProps, styles) {
+		const title = pluginProp.title;
+		const choices = ['small', 'medium', 'large'];
+		return (<Radios ref={'pluginInput-' + title} selectedVal={value} choices={choices}/>);
+	}
+};
+
+export const propSrcRef = {
 	title: 'srcRef',
 	default: '',
 	defaultValue: '',
@@ -52,29 +83,4 @@ export const srcRef = {
 		};
 		return <SimpleSelect style={styles.pluginPropSrc} onValueChange={onValueChange} ref={'pluginInput-' + title} name={title} id={title} options={refs} defaultValue={val}/>;
 	}
-};
-
-export const width = {
-	title: 'width',
-	defaultValue: '',
-	defaultString: '100%',
-};
-
-
-export const height = {
-	title: 'height',
-	defaultValue: '',
-	defaultString: 'auto',
-};
-
-export const align = {
-	title: 'align',
-	defaultValue: '',
-	defaultString: 'center',
-};
-
-export const inline = {
-	title: 'inline',
-	defaultValue: '',
-	defaultString: 'false',
 };

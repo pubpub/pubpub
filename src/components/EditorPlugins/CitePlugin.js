@@ -1,10 +1,10 @@
 import React, {PropTypes} from 'react';
 import Radium from 'radium';
-import {srcRef} from './pluginProps';
+import {propSrcRef} from './pluginProps';
 import ErrorMsg from './ErrorPlugin';
 import {Reference} from '../';
 
-export const citeOptions = {srcRef};
+export const citeOptions = {propSrcRef};
 
 let styles = {};
 
@@ -18,7 +18,7 @@ const CitePlugin = React.createClass({
 	},
 	getInitialState: function() {
 		return {
-			hover: false, 
+			hover: false,
 			// expanded: false
 		};
 	},
@@ -58,8 +58,8 @@ const CitePlugin = React.createClass({
 						<span style={[styles.hoverRef, this.state.hover && styles.hoverRefVisible]}>
 							<Reference citationObject={this.props.reference} mode={'mla'} />
 						</span>
-						
-					</span> 
+
+					</span>
 				}
 			</span>
 		);
@@ -67,7 +67,7 @@ const CitePlugin = React.createClass({
 		// if (this.props.error === 'empty') {
 		// 	html = <span></span>;
 		// } else if (this.props.error === 'type') {
-		// 	html = 
+		// 	html =
 		// }	else {
 		// 	const title = this.props.reference.title;
 		// 	const author = this.props.reference.author;

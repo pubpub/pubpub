@@ -2,8 +2,9 @@ import React, {PropTypes} from 'react';
 import Radium from 'radium';
 import ErrorMsg from './ErrorPlugin';
 
-import {src, width, height, inline, align} from './pluginProps';
-export const videoOptions = {src: src('video'), width, height, inline, align};
+import {propSrc, propSize, propAlign} from './pluginProps';
+export const videoOptions = {src: propSrc('image'), size: propSize, align: propAlign};
+
 
 // let styles = {};
 const VideoPlugin = React.createClass({
@@ -11,11 +12,8 @@ const VideoPlugin = React.createClass({
 		url: PropTypes.string,
 		error: PropTypes.string,
 		children: PropTypes.string,
-
-		width: PropTypes.string,
-		height: PropTypes.string,
-		inline: PropTypes.string,
-		align: PropTypes.string,
+		size: React.PropTypes.oneOf(['small', 'medium', 'large']),
+		align: React.PropTypes.oneOf(['left', 'right', 'full']),
 	},
 	getInitialState: function() {
 		return {};
@@ -23,12 +21,28 @@ const VideoPlugin = React.createClass({
 	render: function() {
 		let html;
 
-		const styleObject = {
-			width: this.props.width || videoOptions.width.defaultString,
-			height: this.props.height || videoOptions.height.defaultString,
-			display: this.props.inline === 'true' ? 'inline-block' : 'block',
-			textAlign: this.props.align || videoOptions.align.defaultString,
+		const size = this.props.size || 'large';
+		const align = this.props.align || 'full';
+
+		const sizeOptions = {
+			'small': '30%',
+			'medium': '50%',
+			'large': '80%'
 		};
+
+		const styleObject = {
+			width: sizeOptions[size],
+			height: sizeOptions[size],
+			display: 'block'
+		};
+
+		if (align === 'left' || align === 'righr' ) {
+			styleObject.float = align;
+			styleObject.padding = '1em';
+		} else if (this.props.align === 'full') {
+			styleObject.margin = '0px auto';
+		}
+
 
 		if (this.props.error === 'empty') {
 			html = <span></span>;
