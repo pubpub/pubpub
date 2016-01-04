@@ -4,7 +4,7 @@ import dateFormat from 'dateformat';
 import { Link } from 'react-router';
 // import {globalStyles} from '../../utils/styleConstants';
 
-import {globalMessages} from '../../utils/globalMessages';
+// import {globalMessages} from '../../utils/globalMessages';
 import {FormattedMessage} from 'react-intl';
 
 let styles = {};

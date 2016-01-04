@@ -20,6 +20,7 @@ let styles = {};
 const PubMeta = React.createClass({
 	propTypes: {
 		readerData: PropTypes.object,
+		journalData: PropTypes.object,
 		loginData: PropTypes.object,
 		slug: PropTypes.string,
 		meta: PropTypes.string,
@@ -84,6 +85,8 @@ const PubMeta = React.createClass({
 	},
 
 	render: function() {
+		const pubData = this.props.readerData.get('pubData').toJS();
+
 		const metaData = {};
 		if (this.props.readerData.getIn(['pubData', 'title'])) {
 			metaData.title = 'PubPub - ' + this.props.readerData.getIn(['pubData', 'title']);
@@ -105,7 +108,14 @@ const PubMeta = React.createClass({
 					<PubLeftBar 
 						slug={this.props.slug} 
 						query={this.props.query}
-						pubStatus={this.props.readerData.getIn(['pubData', 'status'])}/>
+						pubStatus={pubData.status}
+						readRandomPubHandler={this.readRandomPub}
+						randomSlug={this.props.journalData.getIn(['journalData', 'randomSlug'])}
+						journalCount={pubData.featuredInList ? pubData.featuredInList.length : 0}
+						historyCount={pubData.history ? pubData.history.length : 0}
+						analyticsCount={pubData.views ? pubData.views : 0}
+						citationsCount={pubData.citations ? pubData.citations.length : 0}
+						newsCount={pubData.news ? pubData.news.length : 0} />
 
 				</div>
 
@@ -207,6 +217,7 @@ export default connect( state => {
 	return {
 		readerData: state.pub, 
 		loginData: state.login,
+		journalData: state.journal,
 		slug: state.router.params.slug,
 		meta: state.router.params.meta,
 		metaID: state.router.params.metaID,

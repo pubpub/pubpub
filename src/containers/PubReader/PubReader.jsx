@@ -265,7 +265,7 @@ const PubReader = React.createClass({
 							? <Link to={'/pub/' + this.props.slug} style={globalStyles.link}>
 								<div key={'versionNotification'} style={[styles.versionNotification, globalStyles[this.props.readerData.get('status')]]}>
 									<p>Reading Version {this.props.query.version}. Click to read the most recent version ({pubData.history.length}).</p>
-									<p>This was a {pubData.history[versionIndex].status === 'Draft' ? 'Draft' : 'Peer-Review Ready'} version.</p>
+									{/* <p>This was a {pubData.history[versionIndex].status === 'Draft' ? 'Draft' : 'Peer-Review Ready'} version.</p> */}
 								</div>
 							</Link>
 							: null
