@@ -5,7 +5,7 @@ import ErrorMsg from './ErrorPlugin';
 
 
 import {src, width, height, inline, align} from './pluginProps';
-export const imageOptions = {src: src('image'), width, height, inline, align};
+export const imageOptions = {src: src('image'), width, height, align};
 
 // let styles = {};
 const ImagePlugin = React.createClass({
@@ -13,7 +13,6 @@ const ImagePlugin = React.createClass({
 		url: PropTypes.string,
 		error: PropTypes.string,
 		children: PropTypes.string,
-
 		width: PropTypes.string,
 		height: PropTypes.string,
 		inline: PropTypes.string,

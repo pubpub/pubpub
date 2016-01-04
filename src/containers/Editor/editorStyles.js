@@ -513,7 +513,7 @@ export function codeMirrorStyles(loginData) {
 			backgroundColor: 'rgba(245, 245, 169, 0.5)',
 		},
 		'.cm-ppm.cm-spell-error': {
-    	borderBottom: 'none'
+			borderBottom: 'none'
 		}
 	};
 }

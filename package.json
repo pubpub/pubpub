@@ -116,6 +116,7 @@
     "react-imageloader": "^2.1.0",
     "react-inline-css": "2.0.0",
     "react-intl": "^2.0.0-beta-2",
+    "react-radio-group": "^2.2.0",
     "react-redux": "4.0.0",
     "react-router": "1.0.0",
     "react-select": "^0.9.1",

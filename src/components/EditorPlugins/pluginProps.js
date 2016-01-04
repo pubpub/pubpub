@@ -1,5 +1,6 @@
 import React from 'react';
 import {SimpleSelect} from 'react-selectize';
+import Radios from './radioButton';
 // import {openModal} from '../../actions/editor';
 
 
@@ -31,6 +32,23 @@ export function src(assetType) {
 		}
 	};
 }
+
+export const align = {
+	title: 'align',
+	default: '',
+	defaultValue: '',
+	defaultString: '',
+	valueFunction: function(thisRef) {
+		debugger;
+		return thisRef.value();
+	},
+	component: function(pluginProp, value, componentProps, styles) {
+		const title = pluginProp.title;
+		const choices = ['left','full','right'];
+		return (<Radios ref={'pluginInput-' + title} choices={choices}/>);
+	}
+};
+
 
 export const srcRef = {
 	title: 'srcRef',
@@ -67,11 +85,6 @@ export const height = {
 	defaultString: 'auto',
 };
 
-export const align = {
-	title: 'align',
-	defaultValue: '',
-	defaultString: 'center',
-};
 
 export const inline = {
 	title: 'inline',
