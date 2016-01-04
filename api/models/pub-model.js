@@ -288,12 +288,12 @@ pubSchema.statics.getRandomSlug = function(journalID, callback) {
 		query['featuredInList'] = journalID;
 	}
 
-	this.count(query, {'slug':1}).exec(function (err, count) {
+	this.count(query, {'slug':1}).exec((err, count)=> {
 		if (err){ return callback(err, null); }
 
 		const skip = Math.floor(Math.random()*count);
 
-		this.find(query, {'slug':1}).skip(skip).limit(1).exec(function (err, pub) {
+		this.find(query, {'slug':1}).skip(skip).limit(1).exec((err, pub)=> {
 				if (err){ return callback(err, null); }
 
 				if(!pub[0]){ return callback(err, null); }

@@ -181,7 +181,8 @@ app.get('/loadJournalAndLogin', function(req,res){
 	.populate({path: "admins", select:"name firstName lastName username thumbnail"})
 	.populate({path: "collections.pubs", select:"title abstract slug authors lastUpdated createDate"})
 	.lean().exec(function(err, result){
-		Pub.getRandomSlug(result._id, function(err, randomSlug) {
+		const journalID = result ? result._id : null;
+		Pub.getRandomSlug(journalID, function(err, randomSlug) {
 			const locale = result && result.locale ? result.locale : 'en';
 			let languageObject = {};
 			fs.readFile(__dirname + '/../../translations/languages/' + locale + '.json', 'utf8', function (err, data) {
