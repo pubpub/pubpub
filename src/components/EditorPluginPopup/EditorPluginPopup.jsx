@@ -110,12 +110,9 @@ const EditorPluginPopup = React.createClass({
 
 		if (target.className.indexOf('cm-plugin') > -1) {
 			const cm = this.getActiveCodemirrorInstance();
-			// debugger;
 			const pluginString = target.parentElement.textContent.slice(2, -2); // Original string minus the brackets
 			const pluginSplit = pluginString.split(':');
 			const pluginType = pluginSplit[0];
-
-			console.log(pluginString);
 
 			const valueString = pluginSplit.length > 1 ? pluginSplit[1] : ''; // Values split into an array
 			const values = parsePluginString(valueString);
@@ -175,6 +172,7 @@ const EditorPluginPopup = React.createClass({
 
 				const pluginProp = this.state.contentObject[key];
 				const ref = refs['pluginInput-' + key];
+
 				let val;
 				if (pluginProp.valueFunction) {
 					val = pluginProp.valueFunction(ref);
