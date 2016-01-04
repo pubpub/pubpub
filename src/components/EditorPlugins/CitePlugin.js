@@ -4,7 +4,7 @@ import {propSrcRef} from './pluginProps';
 import ErrorMsg from './ErrorPlugin';
 import {Reference} from '../';
 
-export const citeOptions = {propSrcRef};
+export const citeOptions = {srcRef: propSrcRef};
 
 let styles = {};
 
