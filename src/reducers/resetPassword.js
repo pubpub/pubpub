@@ -38,10 +38,10 @@ function loading(state) {
 	});
 }
 
-function resetResetSuccess(state, result) {
+function requestResetSuccess(state, result) {
 	return state.merge({
 		loading: false,
-		requestSuccess: 'success',
+		requestSuccess: result === 'User Not Found' ? 'error' : 'success',
 	});
 }
 
@@ -49,6 +49,34 @@ function requestResetFail(state, error) {
 	return state.merge({
 		loading: false,
 		requestSuccess: 'error',
+	});
+}
+
+function hashSuccess(state, result) {
+	return state.merge({
+		loading: false,
+		resetSuccess: result === 'valid' ? 'valid' : 'invalid',
+	});
+}
+
+function hashFailed(state, error) {
+	return state.merge({
+		loading: false,
+		resetSuccess: 'invalid',
+	});
+}
+
+function resetPasswordSuccess(state, result) {
+	return state.merge({
+		loading: false,
+		resetSuccess: result === 'success' ? 'success' : 'invalid',
+	});
+}
+
+function resetPasswordFailed(state, error) {
+	return state.merge({
+		loading: false,
+		resetSuccess: 'invalid',
 	});
 }
 
@@ -71,6 +99,13 @@ export default function autocompleteReducer(state = defaultState, action) {
 		return hashSuccess(state, action.result);
 	case HASH_FAIL:
 		return hashFailed(state, action.error);
+
+	case RESET_LOAD:
+		return loading(state);
+	case RESET_SUCCESS:
+		return resetPasswordSuccess(state, action.result);
+	case RESET_FAIL:
+		return resetPasswordFailed(state, action.error);
 
 	default:
 		return ensureImmutable(state);

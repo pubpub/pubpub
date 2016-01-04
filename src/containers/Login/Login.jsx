@@ -97,7 +97,7 @@ const Login = React.createClass({
 
 
 					<div style={[styles.form, this.props.loginData.get('isVisible') && styles[viewMode].login, ]}>
-						<LoginForm onSubmit={this.handleLoginSubmit} />
+						<LoginForm onSubmit={this.handleLoginSubmit} toggleVisibility={this.toggleLogin}/>
 					</div>
 
 					<div style={[styles.form, this.props.loginData.get('isVisible') && styles[viewMode].register]}>

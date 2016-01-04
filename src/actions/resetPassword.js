@@ -1,3 +1,6 @@
+import SHA3 from 'crypto-js/sha3';
+import encHex from 'crypto-js/enc-hex';
+
 /*--------*/
 // Define Action types
 // 
@@ -27,17 +30,18 @@ export const RESET_FAIL = 'resetPassword/RESET_LOAD_FAIL';
 export function submitResetRequest(email) {
 	return {
 		types: [REQUEST_LOAD, REQUEST_SUCCESS, REQUEST_FAIL],
-		promise: (client) => client.get('/requestReset', {params: {
+		promise: (client) => client.post('/requestReset', {data: {
 			'email': email
 		}})
 	};
 }
 
-export function checkHash(hash) {
+export function checkHash(hash, username) {
 	return {
 		types: [HASH_LOAD, HASH_SUCCESS, HASH_FAIL],
-		promise: (client) => client.get('/checkResetHash', {params: {
-			'hash': hash
+		promise: (client) => client.post('/checkResetHash', {data: {
+			'resetHash': hash,
+			'username': username,
 		}})
 	};
 }
@@ -45,10 +49,10 @@ export function checkHash(hash) {
 export function resetPassword(hash, username, password) {
 	return {
 		types: [RESET_LOAD, RESET_SUCCESS, RESET_FAIL],
-		promise: (client) => client.get('/passwordReset', {params: {
-			'hash': hash,
+		promise: (client) => client.post('/passwordReset', {data: {
+			'resetHash': hash,
 			'username': username,
-			'password': password,
+			'password': SHA3(password).toString(encHex),
 		}})
 	};
 }

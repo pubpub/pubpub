@@ -3,6 +3,7 @@ import {reduxForm} from 'redux-form';
 import Radium from 'radium';
 import PureRenderMixin from 'react-addons-pure-render-mixin';
 import {globalStyles} from '../../utils/styleConstants';
+import { Link } from 'react-router';
 
 import {globalMessages} from '../../utils/globalMessages';
 import {injectIntl, FormattedMessage} from 'react-intl';
@@ -14,6 +15,7 @@ const LoginForm = React.createClass({
 		fields: PropTypes.object.isRequired,
 		handleSubmit: PropTypes.func.isRequired,
 		intl: PropTypes.object,
+		toggleVisibility: PropTypes.func,
 	},
 
 	mixins: [PureRenderMixin],
@@ -37,6 +39,10 @@ const LoginForm = React.createClass({
 						<FormattedMessage {...globalMessages.Password} />
 					</label>
 					<input key="loginPassword" style={styles.input} type="password" placeholder={this.props.intl.formatMessage(globalMessages.Password)} {...password}/>
+					<div style={globalStyles.clearFix}></div>
+					<Link to={'/resetpassword'}>
+						<div style={styles.forgot} key={'forgotPasswordButton'} onClick={this.props.toggleVisibility}>Forgot Password</div>
+					</Link>
 				</div>
 				<button type="submit" key="loginSubmit" style={styles.submit} onClick={handleSubmit}>
 					<FormattedMessage {...globalMessages.Submit} />
@@ -112,6 +118,15 @@ styles = {
 
 
 		},
-	}
+	},
+	forgot: {
+		color: '#999',
+		display: 'inline-block',
+		padding: '10px 0px',
+		margin: '5px 30px',
+		':hover': {
+			color: 'white',
+		}
+	},
 
 };

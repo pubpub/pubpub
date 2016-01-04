@@ -125,12 +125,12 @@ app.get('/testLogin', function(req,res){
 	
 });
 
-app.get('/requestReset', function(req, res) {
-	console.log(req.body.email);
+app.post('/requestReset', function(req, res) {
+	
 	User.findOne({'email':req.body.email}).exec(function (err, user) {
 		
 		if(!user){
-		  return res.status(500).json('User Not found');
+		  return res.status(201).json('User Not Found');
 		}
 
 		var resetHash = "";
@@ -147,9 +147,44 @@ app.get('/requestReset', function(req, res) {
 		// Send reset email
 		sendResetEmail(user.email, resetHash, user.username, function(err, success){
 			if (err){ console.log(err); return res.status(500).json(err); }
-			return res.status(201).success(success);
+			return res.status(201).json(success);
 		});
 		
 	});
 
 });
+
+app.post('/checkResetHash', function(req, res) {
+	
+	User.findOne({'resetHash':req.body.resetHash, 'username':req.body.username}).exec(function (err, user) {
+		const currentTime = Date.now();
+		if (!user || user.resetHashExpiration < currentTime) {
+			return res.status(201).json('invalid');
+		}
+
+		return res.status(201).json('valid');
+	});
+});	
+
+app.post('/passwordReset', function(req, res) {
+	
+	User.findOne({'resetHash':req.body.resetHash, 'username':req.body.username}).exec(function (err, user) {
+		const currentTime = Date.now();
+		if (!user || user.resetHashExpiration < currentTime) {
+			return res.status(201).json('invalid');
+		}
+
+		// Update user
+		user.setPassword(req.body.password, function(){
+			user.resetHash = '';
+			user.resetHashExpiration = currentTime;
+			user.save();
+			return res.status(201).json('success');      
+		});			
+	});
+
+});	
+
+
+
+
