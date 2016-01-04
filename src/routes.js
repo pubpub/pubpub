@@ -1,6 +1,6 @@
 import React from 'react';
 import {IndexRoute, Route} from 'react-router';
-import {App, Collection, Editor, Explore, JournalCreate, JournalProfile, Landing, NotFound, PubCreate, PubMeta, PubReader, SubdomainTest, UserProfile} from 'containers';
+import {App, Collection, Editor, Explore, JournalCreate, JournalProfile, Landing, NotFound, PubCreate, PubMeta, PubReader, ResetPassword, SubdomainTest, UserProfile} from 'containers';
 
 export default () => {
 
@@ -31,6 +31,9 @@ export default () => {
 
 			<Route path="/pubs" component={Explore}/>
 			<Route path="/pubs/create" component={PubCreate}/>
+
+			<Route path="/resetpassword" component={ResetPassword}/>
+			<Route path="/resetpassword/:hash/:username" component={ResetPassword}/>
 
 			<Route path="/subdomain" component={SubdomainTest}/>
 			

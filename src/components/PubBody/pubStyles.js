@@ -41,7 +41,7 @@ export const scienceStyle = {
 	},
 	'.pub-reference': {
 		padding: '0.5em 1.5em',
-		fontSize: '1.3em',
+		fontSize: '0.8em',
 	},
 	'h1, h2, h3, h4, h5, h6': {
 		padding: '0px 0.2em',

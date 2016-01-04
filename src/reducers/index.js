@@ -13,6 +13,7 @@ import login from './login';
 import nav from './nav';
 import user from './user';
 import pub from './pub';
+import resetPassword from './resetPassword';
 import subdomainTest from './subdomainTest';
 
 
@@ -36,6 +37,7 @@ export default combineReducers({
 	nav,
 	user,
 	pub,
+	resetPassword,
 	subdomainTest
 });
 

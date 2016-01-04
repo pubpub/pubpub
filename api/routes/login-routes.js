@@ -5,7 +5,7 @@ var Pub = require('../models').Pub;
 var User = require('../models').User;
 var Journal = require('../models').Journal;
 import {cloudinary} from '../services/cloudinary';
-
+import {sendResetEmail} from '../services/emails';
 
 // When an implicit login request is made using the cookie
 app.get('/login', function(req,res){
@@ -123,4 +123,33 @@ app.get('/testLogin', function(req,res){
 		return res.status(201).type('.html').send('');
 	}
 	
+});
+
+app.get('/requestReset', function(req, res) {
+	console.log(req.body.email);
+	User.findOne({'email':req.body.email}).exec(function (err, user) {
+		
+		if(!user){
+		  return res.status(500).json('User Not found');
+		}
+
+		var resetHash = "";
+		var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+		for( var i=0; i < 12; i++ ) {
+			resetHash += possible.charAt(Math.floor(Math.random() * possible.length));
+		}
+
+		var expiration = Date.now() + 1000*60*60*24; //Expires in 24 hours.
+
+		User.update({ email: req.body.email }, { 'resetHash':resetHash, 'resetHashExpiration': expiration }, function(err, result){if(err) return handleError(err)});
+
+		// Send reset email
+		sendResetEmail(user.email, resetHash, user.username, function(err, success){
+			if (err){ console.log(err); return res.status(500).json(err); }
+			return res.status(201).success(success);
+		});
+		
+	});
+
 });

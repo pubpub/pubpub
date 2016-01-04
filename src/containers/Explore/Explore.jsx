@@ -116,7 +116,8 @@ styles = {
 		maxWidth: 1024,
 		margin: '0 auto',
 		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
-			width: '100%',
+			width: 'calc(100% - 40px)',
+			padding: '0px 20px',
 			maxWidth: '100%',
 		},
 	},	
@@ -124,6 +125,5 @@ styles = {
 		color: globalStyles.sideText,
 		padding: '20px 0px',
 		fontSize: '50px',
-		fontWeight: 'bold',
 	},
 };
