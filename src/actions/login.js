@@ -1,5 +1,6 @@
 import SHA3 from 'crypto-js/sha3';
 import encHex from 'crypto-js/enc-hex';
+import analytics from '../utils/analytics';
 
  /*--------*/
 // Define Action types
@@ -25,6 +26,14 @@ export const REGISTER_LOAD_FAIL = 'login/REGISTER_LOAD_FAIL';
 export const UPDATE_USER_SETTINGS_LOAD = 'editor/UPDATE_USER_SETTINGS_LOAD';
 export const UPDATE_USER_SETTINGS_SUCCESS = 'editor/UPDATE_USER_SETTINGS_SUCCESS';
 export const UPDATE_USER_SETTINGS_FAIL = 'editor/UPDATE_USER_SETTINGS_FAIL';
+
+export const FOLLOW_LOAD = 'user/FOLLOW_LOAD';
+export const FOLLOW_SUCCESS = 'user/FOLLOW_SUCCESS';
+export const FOLLOW_FAIL = 'user/FOLLOW_FAIL';
+
+export const UNFOLLOW_LOAD = 'user/UNFOLLOW_LOAD';
+export const UNFOLLOW_SUCCESS = 'user/UNFOLLOW_SUCCESS';
+export const UNFOLLOW_FAIL = 'user/UNFOLLOW_FAIL';
 
 /*--------*/
 // Define Action creators
@@ -88,6 +97,30 @@ export function saveSettingsUser(newSettings) {
 		types: [UPDATE_USER_SETTINGS_LOAD, UPDATE_USER_SETTINGS_SUCCESS, UPDATE_USER_SETTINGS_FAIL],
 		promise: (client) => client.post('/updateUserSettings', {data: {
 			newSettings: newSettings,
+		}}) 
+	};
+}
+
+export function follow(type, followedID, analyticsData) {
+	analytics.sendEvent('Follow: ' + type, analyticsData);
+
+	return {
+		types: [FOLLOW_LOAD, FOLLOW_SUCCESS, FOLLOW_FAIL],
+		promise: (client) => client.post('/follow', {data: {
+			type: type,
+			followedID: followedID,
+		}}) 
+	};
+}
+
+export function unfollow(type, followedID, analyticsData) {
+	analytics.sendEvent('Unfollow: ' + type, analyticsData);
+	
+	return {
+		types: [UNFOLLOW_LOAD, UNFOLLOW_SUCCESS, UNFOLLOW_FAIL],
+		promise: (client) => client.post('/unfollow', {data: {
+			type: type,
+			followedID: followedID,
 		}}) 
 	};
 }

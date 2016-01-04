@@ -1,6 +1,9 @@
 var app = require('../api');
 
 var User = require('../models').User;
+var Pub = require('../models').Pub;
+var Journal = require('../models').Journal;
+
 import {cloudinary} from '../services/cloudinary';
 
 app.get('/getUser', function(req, res) {
@@ -78,3 +81,59 @@ app.post('/updateUserSettings', function(req, res) {
 
 	});
 });
+
+app.post('/follow', function(req, res) {
+	if (!req.user) { return res.status(403).json('Not authorized for this action'); }
+
+	const userID = req.user._id;
+
+	switch (req.body.type){
+	case 'pubs':
+		User.update({ _id: userID }, { $addToSet: { 'following.pubs': req.body.followedID} }, function(err, result){if(err) return handleError(err)});
+		Pub.update({ _id: req.body.followedID }, { $addToSet: { followers: userID} }, function(err, result){if(err) return handleError(err)});
+		return res.status(201).json(req.body);
+
+	case 'users':
+		User.update({ _id: userID }, { $addToSet: { 'following.users': req.body.followedID} }, function(err, result){if(err) return handleError(err)});
+		User.update({ _id: req.body.followedID }, { $addToSet: { followers: userID} }, function(err, result){if(err) return handleError(err)});
+		return res.status(201).json(req.body);
+
+	case 'journals':
+		User.update({ _id: userID }, { $addToSet: { 'following.journals': req.body.followedID} }, function(err, result){if(err) return handleError(err)});
+		Journal.update({ _id: req.body.followedID }, { $addToSet: { followers: userID} }, function(err, result){if(err) return handleError(err)});
+		return res.status(201).json(req.body);
+
+	default: 
+		return res.status(500).json('Invalid type');	
+	}
+	
+});
+
+app.post('/unfollow', function(req, res) {
+	if (!req.user) { return res.status(403).json('Not authorized for this action'); }
+
+	const userID = req.user._id;
+
+	switch (req.body.type){
+	case 'pubs':
+		User.update({ _id: userID }, { $pull: { 'following.pubs': req.body.followedID} }, function(err, result){if(err) return handleError(err)});
+		Pub.update({ _id: req.body.followedID }, { $pull: { followers: userID} }, function(err, result){if(err) return handleError(err)});
+		return res.status(201).json(req.body);
+
+	case 'users':
+		User.update({ _id: userID }, { $pull: { 'following.users': req.body.followedID} }, function(err, result){if(err) return handleError(err)});
+		User.update({ _id: req.body.followedID }, { $pull: { followers: userID} }, function(err, result){if(err) return handleError(err)});
+		return res.status(201).json(req.body);
+
+	case 'journals':
+		User.update({ _id: userID }, { $pull: { 'following.journals': req.body.followedID} }, function(err, result){if(err) return handleError(err)});
+		Journal.update({ _id: req.body.followedID }, { $pull: { followers: userID} }, function(err, result){if(err) return handleError(err)});
+		return res.status(201).json(req.body);
+
+	default: 
+		return res.status(500).json('Invalid type');	
+	}
+		
+	
+});
+

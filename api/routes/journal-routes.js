@@ -189,7 +189,8 @@ app.get('/loadJournalAndLogin', function(req,res){
 					username: req.user.username,
 					image: req.user.image,
 					thumbnail: req.user.thumbnail,
-					settings: req.user.settings
+					settings: req.user.settings,
+					following: req.user.following,
 				}
 				: 'No Session';
 

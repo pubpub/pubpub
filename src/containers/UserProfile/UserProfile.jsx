@@ -4,7 +4,7 @@ import Radium from 'radium';
 import Helmet from 'react-helmet';
 import { Link } from 'react-router';
 import { pushState } from 'redux-router';
-import {logout} from '../../actions/login';
+import {logout, follow, unfollow, toggleVisibility} from '../../actions/login';
 import {getProfile, updateUser, userNavOut, userNavIn} from '../../actions/user';
 import {ImageCropper, LoaderDeterminate, UserMain, UserSettings} from '../../components';
 import {globalStyles, profileStyles, navStyles} from '../../utils/styleConstants';
@@ -69,6 +69,28 @@ const Profile = React.createClass({
 		this.setState({userImageFile: null});
 		this.settingsSave({image: url});
 	},
+	followUserToggle: function() {
+		if (!this.props.loginData.get('loggedIn')) {
+			return this.props.dispatch(toggleVisibility());
+		}
+
+		const analyticsData = {
+			type: 'pubs',
+			followedID: this.props.profileData.getIn(['profileData', '_id']),
+			username: this.props.profileData.getIn(['profileData', 'username']),
+			fullname: this.props.profileData.getIn(['profileData', 'fullname']),
+			image: this.props.profileData.getIn(['profileData', 'image']),
+			numFollowers: this.props.profileData.getIn(['profileData', 'followers']) ? this.props.profileData.getIn(['profileData', 'followers']).size : 0,
+		};
+
+		const isFollowing = this.props.loginData.getIn(['userData', 'following', 'users']) ? this.props.loginData.getIn(['userData', 'following', 'users']).indexOf(this.props.profileData.getIn(['profileData', '_id'])) > -1 : false;
+
+		if (isFollowing) {
+			this.props.dispatch( unfollow('users', this.props.profileData.getIn(['profileData', '_id']), analyticsData) );
+		} else {
+			this.props.dispatch( follow('users', this.props.profileData.getIn(['profileData', '_id']), analyticsData) );
+		}
+	},
 
 
 	render: function() {
@@ -104,8 +126,11 @@ const Profile = React.createClass({
 							</li></Link>
 							<li style={[navStyles.navSeparator, ownProfile === 'self' && navStyles.navItemShow]}></li>
 
-							<li key="profileNav2"style={[navStyles.navItem, ownProfile === 'other' && navStyles.navItemShow]}>
-								<FormattedMessage {...globalMessages.follow} />
+							<li key="profileNav2"style={[navStyles.navItem, ownProfile === 'other' && navStyles.navItemShow]} onClick={this.followUserToggle}>
+								{this.props.loginData.getIn(['userData', 'following', 'users']) && this.props.loginData.getIn(['userData', 'following', 'users']).indexOf(this.props.profileData.getIn(['profileData', '_id'])) > -1 
+									? <FormattedMessage {...globalMessages.following} />
+									: <FormattedMessage {...globalMessages.follow} />
+								}
 							</li>
 							<li style={[navStyles.navSeparator, ownProfile === 'other' && styles.navItemShow]}></li>
 							

@@ -39,6 +39,8 @@ var journalSchema = new Schema({
 		headerImage: { type: String}, 
 	}],
 
+	followers: [{ type: ObjectId, ref: 'User' }],
+
 });
 
 journalSchema.statics.isUnique = function (subdomain,callback) {

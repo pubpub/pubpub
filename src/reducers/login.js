@@ -24,6 +24,14 @@ import {
 	UPDATE_USER_SETTINGS_SUCCESS,
 	UPDATE_USER_SETTINGS_FAIL,
 
+	// FOLLOW_LOAD,
+	FOLLOW_SUCCESS,
+	// FOLLOW_FAIL,
+
+	// UNFOLLOW_LOAD,
+	UNFOLLOW_SUCCESS,
+	// UNFOLLOW_FAIL,
+
 } from '../actions/login';
 
 import {
@@ -142,6 +150,20 @@ function updateUserSuccess(state, result) {
 	});
 }
 
+function followSuccess(state, result) {
+	const following = state.getIn(['userData', 'following'])
+		? state.getIn(['userData', 'following']).toJS()
+		: {pubs: [], users: [], journals: []};
+
+	following[result.type].push(result.followedID);
+	return state.mergeIn(['userData', 'following'], following);
+}
+
+function unfollowSuccess(state, result) {
+	const index = state.getIn(['userData', 'following', result.type]).indexOf(result.followedID);
+	return state.deleteIn(['userData', 'following', result.type, index]);
+}
+
 /*--------*/
 // Bind actions to specific reducing functions.
 /*--------*/
@@ -186,6 +208,12 @@ export default function loginReducer(state = defaultState, action) {
 
 	case UPDATE_USER_SUCCESS:
 		return updateUserSuccess(state, action.result);
+
+	case FOLLOW_SUCCESS:
+		return followSuccess(state, action.result);
+
+	case UNFOLLOW_SUCCESS:
+		return unfollowSuccess(state, action.result);
 
 	default:
 		return ensureImmutable(state);

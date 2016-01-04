@@ -41,6 +41,10 @@ export const globalMessages = defineMessages({
 		id: 'global.follow',
 		defaultMessage: 'Follow',
 	},
+	following: {
+		id: 'global.following',
+		defaultMessage: 'Following',
+	},
 	design: {
 		id: 'global.Design',
 		defaultMessage: 'Design',

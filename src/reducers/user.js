@@ -14,7 +14,7 @@ import {
 	UPDATE_USER_FAIL,
 
 	USER_NAV_OUT,
-	USER_NAV_IN
+	USER_NAV_IN,
 
 } from '../actions/user';
 

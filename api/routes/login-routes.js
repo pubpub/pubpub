@@ -18,7 +18,8 @@ app.get('/login', function(req,res){
 			username: req.user.username,
 			image: req.user.image,
 			thumbnail: req.user.thumbnail,
-			settings: req.user.settings
+			settings: req.user.settings,
+			following: req.user.following,
 		});
 
 	}else{
@@ -48,7 +49,9 @@ app.post('/login', passport.authenticate('local'), function(req, res) {
 				image: user.image,
 				thumbnail: user.thumbnail,
 				settings: user.settings,
+				following: req.user.following,
 				isAdminToJournal: isAdmin,
+
 			});
 
 		});

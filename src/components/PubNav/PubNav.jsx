@@ -18,6 +18,8 @@ const PubNav = React.createClass({
 		meta: PropTypes.string, 
 		isAuthor: PropTypes.bool,
 		pubStatus: PropTypes.string,
+		isFollowing: PropTypes.bool,
+		handleFollow: PropTypes.func,
 	},
 
 	getDefaultProps: function() {
@@ -74,8 +76,11 @@ const PubNav = React.createClass({
 							</li>
 							<li style={[styles.pubNavSeparator, styles.pubNavMobileOnly, styles.pubNavRight]}></li>
 
-							<li key="pubNav8"style={[styles.pubNavItem, styles.pubNavRight]}>
-								<FormattedMessage {...globalMessages.follow} />
+							<li key="pubNav8"style={[styles.pubNavItem, styles.pubNavRight]} onClick={this.props.handleFollow}>
+								{this.props.isFollowing 
+									? <FormattedMessage {...globalMessages.following} />
+									: <FormattedMessage {...globalMessages.follow} />
+								}
 							</li>
 							
 						</ul>

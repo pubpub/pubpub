@@ -5,7 +5,7 @@ import Helmet from 'react-helmet';
 import PureRenderMixin from 'react-addons-pure-render-mixin';
 import { Link } from 'react-router';
 import {getPub, openPubModal, closePubModal, addDiscussion, addSelection, discussionVoteSubmit, togglePubHighlights, pubNavOut, pubNavIn} from '../../actions/pub';
-import {toggleVisibility} from '../../actions/login';
+import {toggleVisibility, follow, unfollow} from '../../actions/login';
 import {closeMenu} from '../../actions/nav';
 
 import {convertImmutableListToObject} from '../../utils/parsePlugins';
@@ -145,6 +145,26 @@ const PubReader = React.createClass({
 		this.props.dispatch(togglePubHighlights());
 	},
 
+	followPubToggle: function() {
+		if (!this.props.loginData.get('loggedIn')) {
+			return this.props.dispatch(toggleVisibility());
+		}
+
+		const analyticsData = {
+			type: 'pubs',
+			followedID: this.props.readerData.getIn(['pubData', '_id']),
+			pubtitle: this.props.readerData.getIn(['pubData', 'title']),
+			numFollowers: this.props.readerData.getIn(['pubData', 'followers']) ? this.props.readerData.getIn(['pubData', 'followers']).size : 0,
+		};
+
+		const isFollowing = this.props.loginData.getIn(['userData', 'following', 'pubs']) ? this.props.loginData.getIn(['userData', 'following', 'pubs']).indexOf(this.props.readerData.getIn(['pubData', '_id'])) > -1 : false;
+		if (isFollowing) {
+			this.props.dispatch( unfollow('pubs', this.props.readerData.getIn(['pubData', '_id']), analyticsData ));
+		} else {
+			this.props.dispatch( follow('pubs', this.props.readerData.getIn(['pubData', '_id']), analyticsData ));
+		}
+	},
+
 	render: function() {
 		const pubData = this.props.readerData.get('pubData').toJS();
 		const versionIndex = this.props.query.version !== undefined && this.props.query.version > 0 && this.props.query.version < (this.props.readerData.getIn(['pubData', 'history']).size - 1)
@@ -216,7 +236,9 @@ const PubReader = React.createClass({
 						status={this.props.readerData.get('status')}
 						slug={this.props.slug}
 						isAuthor={pubData.isAuthor}
-						pubStatus={pubData.status}/>
+						pubStatus={pubData.status}
+						isFollowing={this.props.loginData.getIn(['userData', 'following', 'pubs']) ? this.props.loginData.getIn(['userData', 'following', 'pubs']).indexOf(this.props.readerData.getIn(['pubData', '_id'])) > -1 : false}
+						handleFollow={this.followPubToggle}/>
 
 					<LoaderDeterminate
 						value={this.props.readerData.get('status') === 'loading' ? 0 : 100}/>

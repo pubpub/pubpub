@@ -36,7 +36,16 @@ var userSchema = new Schema({
     editorFontSize: { type: String },
     editorColor: { type: String },
   },
-})
+
+  following: {
+    pubs: [ { type: ObjectId, ref: 'Pub' } ],
+    users: [ { type: ObjectId, ref: 'User' } ],
+    journals: [ { type: ObjectId, ref: 'Journal' } ],
+  },
+
+  followers: [{ type: ObjectId, ref: 'User' }],
+});
+
 userSchema.plugin(passportLocalMongoose,{'usernameField':'email', 'digestAlgorithm':'sha1'});
 
 userSchema.statics.generateUniqueUsername = function (fullname, callback) {
@@ -79,6 +88,7 @@ userSchema.statics.getUser = function (username, readerID, callback) {
       if (err) { return callback(err, null); }
 
       const outputUser = {
+        _id: populatedUser._id,
         username: populatedUser.username,
         image: populatedUser.image,
         name: populatedUser.name,
@@ -88,6 +98,7 @@ userSchema.statics.getUser = function (username, readerID, callback) {
         bio: populatedUser.bio,
         pubs: populatedUser.pubs,
         discussions: Discussion.calculateYayNayScore(populatedUser.discussions),
+        followers: populatedUser.followers,
       }
       return callback(null, outputUser);
 

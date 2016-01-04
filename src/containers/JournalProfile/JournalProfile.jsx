@@ -5,6 +5,7 @@ import { pushState } from 'redux-router';
 import Radium from 'radium';
 import Helmet from 'react-helmet';
 import {getJournal, saveJournal, createCollection} from '../../actions/journal';
+import {follow, unfollow, toggleVisibility} from '../../actions/login';
 import {LoaderDeterminate, JournalCurate, JournalDesign, JournalMain, JournalSettings} from '../../components';
 import {NotFound} from '../../containers';
 import {globalStyles, profileStyles, navStyles} from '../../utils/styleConstants';
@@ -49,6 +50,32 @@ const JournalAdmin = React.createClass({
 		this.props.dispatch(createCollection(this.props.subdomain, newCollectionObject));
 	},
 
+	followJournalToggle: function() {
+		if (!this.props.loginData.get('loggedIn')) {
+			return this.props.dispatch(toggleVisibility());
+		}
+
+		const analyticsData = {
+			type: 'pubs',
+			followedID: this.props.journalData.getIn(['journalData', '_id']),
+			journalName: this.props.journalData.getIn(['journalData', 'journalName']),
+			subdomain: this.props.journalData.getIn(['journalData', 'subdomain']),
+			customDomain: this.props.journalData.getIn(['journalData', 'customDomain']),
+			numPubsFeatured: this.props.journalData.getIn(['journalData', 'pubsFeatured']) ? this.props.journalData.getIn(['journalData', 'pubsFeatured']).size : 0,
+			numPubsSubmitted: this.props.journalData.getIn(['journalData', 'pubsSubmitted']) ? this.props.journalData.getIn(['journalData', 'pubsSubmitted']).size : 0,
+			numFollowers: this.props.journalData.getIn(['journalData', 'followers']) ? this.props.journalData.getIn(['journalData', 'followers']).size : 0,
+			numAdmins: this.props.journalData.getIn(['journalData', 'admins']) ? this.props.journalData.getIn(['journalData', 'admins']).size : 0,
+		};
+
+		const isFollowing = this.props.loginData.getIn(['userData', 'following', 'journals']) ? this.props.loginData.getIn(['userData', 'following', 'journals']).indexOf(this.props.journalData.getIn(['journalData', '_id'])) > -1 : false;
+		
+		if (isFollowing) {
+			this.props.dispatch( unfollow('journals', this.props.journalData.getIn(['journalData', '_id']), analyticsData) );
+		} else {
+			this.props.dispatch( follow('journals', this.props.journalData.getIn(['journalData', '_id']), analyticsData) );
+		}
+	},
+
 	render: function() {
 		const metaData = {};
 		metaData.title = 'Journal';
@@ -80,8 +107,11 @@ const JournalAdmin = React.createClass({
 									</li></Link>
 									<li style={[navStyles.navSeparator, this.props.journalData.getIn(['journalData', 'isAdmin']) && navStyles.navItemShow, navStyles.navSeparatorNoMobile]}></li>
 
-									<li key="journalNav3" style={[navStyles.navItem, !this.props.journalData.getIn(['journalData', 'isAdmin']) && navStyles.navItemShow]}>
-										<FormattedMessage {...globalMessages.follow} />
+									<li key="journalNav3" style={[navStyles.navItem, !this.props.journalData.getIn(['journalData', 'isAdmin']) && navStyles.navItemShow]} onClick={this.followJournalToggle}>
+										{this.props.loginData.getIn(['userData', 'following', 'journals']) && this.props.loginData.getIn(['userData', 'following', 'journals']).indexOf(this.props.journalData.getIn(['journalData', '_id'])) > -1 
+											? <FormattedMessage {...globalMessages.following} />
+											: <FormattedMessage {...globalMessages.follow} />
+										}
 									</li>
 									<li style={[navStyles.navSeparator, !this.props.journalData.getIn(['journalData', 'isAdmin']) && navStyles.navItemShow]}></li>
 								</ul>
