@@ -45,12 +45,12 @@ const PubStatus = React.createClass({
 								<FormattedMessage
 									id="pub.featuredInX"
 									defaultMessage="Featured in {number} Journals "
-									values={{number: this.props.featuredInList.length}}/>
-								|
+									values={{number: this.props.featuredInList.length || '0'}}/>
+								<span style={styles.separator}>|</span>
 								<FormattedMessage
 									id="pub.submittedToX"
 									defaultMessage="Submitted to {number} Journals "
-									values={{number: this.props.submittedToList.length}}/>
+									values={{number: this.props.submittedToList.length || '0'}}/>
 							</div>
 						</Link>
 						{
@@ -76,5 +76,8 @@ export default Radium(PubStatus);
 styles = {
 	headerPrefix: {
 		paddingRight: 10,
+	},
+	separator: {
+		padding: '0px 10px',
 	},
 };
