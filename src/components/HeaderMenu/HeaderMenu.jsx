@@ -20,6 +20,8 @@ const HeaderMenu = React.createClass({
 		closeMenuHandler: PropTypes.func,
 		openPubModalHandler: PropTypes.func,
 		pubStatus: PropTypes.string,
+		followPubToggleHandler: PropTypes.func,
+		isFollowing: PropTypes.bool,
 
 		isJournalAdmin: PropTypes.bool,
 		journalSubdomain: PropTypes.string,
@@ -108,8 +110,11 @@ const HeaderMenu = React.createClass({
 							{(isPub === true
 								? <div>
 									<li key="menuListItem3" style={styles.menuItemseparator}></li>
-									<li key="menuListItem4" style={styles.menuItem}>
-										<FormattedMessage {...globalMessages.follow} />
+									<li key="menuListItem4" style={styles.menuItem} onClick={this.props.followPubToggleHandler}>
+										{this.props.isFollowing 
+											? <FormattedMessage {...globalMessages.following} />
+											: <FormattedMessage {...globalMessages.follow} />
+										}
 									</li>
 									
 									<li key="menuListItem5" style={styles.menuItem} onClick={this.props.openPubModalHandler('tableOfContents')}>

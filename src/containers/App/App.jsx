@@ -5,7 +5,7 @@ import {reset} from 'redux-form';
 import {Login} from '../index';
 import Helmet from 'react-helmet';
 import {connect} from 'react-redux';
-import {toggleVisibility} from '../../actions/login';
+import {toggleVisibility, follow, unfollow} from '../../actions/login';
 import {loadJournalAndLogin} from '../../actions/journal';
 import {openMenu, closeMenu} from '../../actions/nav';
 import {openPubModal} from '../../actions/pub';
@@ -103,6 +103,26 @@ const App = React.createClass({
 		};
 	},
 
+	followPubToggle: function() {
+		if (!this.props.loginData.get('loggedIn')) {
+			return this.props.dispatch(toggleVisibility());
+		}
+
+		const analyticsData = {
+			type: 'pubs',
+			followedID: this.props.pubData.getIn(['pubData', '_id']),
+			pubtitle: this.props.pubData.getIn(['pubData', 'title']),
+			numFollowers: this.props.pubData.getIn(['pubData', 'followers']) ? this.props.pubData.getIn(['pubData', 'followers']).size : 0,
+		};
+
+		const isFollowing = this.props.loginData.getIn(['userData', 'following', 'pubs']) ? this.props.loginData.getIn(['userData', 'following', 'pubs']).indexOf(this.props.pubData.getIn(['pubData', '_id'])) > -1 : false;
+		if (isFollowing) {
+			this.props.dispatch( unfollow('pubs', this.props.pubData.getIn(['pubData', '_id']), analyticsData ));
+		} else {
+			this.props.dispatch( follow('pubs', this.props.pubData.getIn(['pubData', '_id']), analyticsData ));
+		}
+	},
+
 	render: function() {
 		// let pathname = 'notlanding';
 		// if (this.props.path === '/') {
@@ -175,6 +195,8 @@ const App = React.createClass({
 								closeMenuHandler={this.closeMenu}
 								openPubModalHandler={this.openPubModal}
 								pubStatus={this.props.pubData.getIn(['pubData', 'status'])}
+								followPubToggleHandler={this.followPubToggle}
+								isFollowing={this.props.loginData.getIn(['userData', 'following', 'pubs']) ? this.props.loginData.getIn(['userData', 'following', 'pubs']).indexOf(this.props.pubData.getIn(['pubData', '_id'])) > -1 : false}
 								
 								isJournalAdmin={this.props.journalData.getIn(['journalData', 'isAdmin'])}
 								journalSubdomain={this.props.journalData.get('baseSubdomain')}
