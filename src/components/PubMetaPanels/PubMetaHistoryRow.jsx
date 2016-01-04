@@ -33,10 +33,10 @@ const PubMetaHistoryRow = React.createClass({
 				<div style={styles.versionDetails}>
 					<div style={styles.versionTitleLine}>
 						<span style={styles.versionNumber}>{this.props.index + 1}.</span>
-						<span style={styles.versionStatus}>{this.props.historyItem.status === 'Draft' 
+						{/* <span style={styles.versionStatus}>{this.props.historyItem.status === 'Draft' 
 							? <FormattedMessage id="pub.draftVersion" defaultMessage="Draft Version"/>
 							: <FormattedMessage {...globalMessages.ReadyForPeerReview} />
-						}</span>
+						}</span> */}
 						<span style={styles.versionDate}>{dateFormat(this.props.historyItem.publishDate, 'mm/dd/yy, h:MMTT')}</span>
 					</div>
 
@@ -141,12 +141,12 @@ styles = {
 		}
 	},
 	versionDate: {
-		fontSize: '14px',
-		color: '#666',
+		fontSize: '16px',
+		// color: '#666',
 		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
 			display: 'block',
 			paddingLeft: 40,
-			fontSize: '18px',
+			fontSize: '20px',
 		}
 	},
 	additions: {
