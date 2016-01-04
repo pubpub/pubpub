@@ -4,7 +4,7 @@ import Radium, {Style} from 'radium';
 import Helmet from 'react-helmet';
 import PureRenderMixin from 'react-addons-pure-render-mixin';
 import { Link } from 'react-router';
-import {getPub, openPubModal, closePubModal, addDiscussion, addSelection, discussionVoteSubmit, togglePubHighlights, pubNavOut, pubNavIn} from '../../actions/pub';
+import {getPub, getRandomSlug, openPubModal, closePubModal, addDiscussion, addSelection, discussionVoteSubmit, togglePubHighlights, pubNavOut, pubNavIn} from '../../actions/pub';
 import {toggleVisibility, follow, unfollow} from '../../actions/login';
 import {closeMenu} from '../../actions/nav';
 
@@ -145,6 +145,10 @@ const PubReader = React.createClass({
 		this.props.dispatch(togglePubHighlights());
 	},
 
+	readRandomPub: function() {
+		this.props.dispatch(getRandomSlug(this.props.journalData.getIn(['journalData', '_id'])));
+	},
+
 	followPubToggle: function() {
 		if (!this.props.loginData.get('loggedIn')) {
 			return this.props.dispatch(toggleVisibility());
@@ -224,7 +228,8 @@ const PubReader = React.createClass({
 					<PubLeftBar
 						slug={this.props.slug}
 						query={this.props.query}
-						pubStatus={pubData.status}/>
+						pubStatus={pubData.status}
+						readRandomPubHandler={this.readRandomPub}/>
 
 				</div>
 

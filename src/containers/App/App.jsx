@@ -12,6 +12,7 @@ import {openPubModal} from '../../actions/pub';
 import {HeaderNav, HeaderMenu} from '../../components';
 import {globalStyles} from '../../utils/styleConstants';
 import analytics from '../../utils/analytics';
+import { pushState } from 'redux-router';
 
 import {IntlProvider} from 'react-intl';
 
@@ -45,6 +46,16 @@ const App = React.createClass({
 		}
 		if (this.props.path !== nextProps.path) {
 			analytics.pageView(nextProps.path, nextProps.loginData.get('loggedIn'));
+		}
+
+		if (this.props.pubData.get('randomSlug') !== nextProps.pubData.get('randomSlug')) {
+			analytics.sendEvent('Random Pub', {
+				newRandomSlug: nextProps.pubData.get('randomSlug'),
+				journalID: nextProps.journalData.getIn(['journalData', '_id']),
+				journalName: nextProps.journalData.getIn(['journalData', 'journalName']),
+				currentPath: nextProps.path,
+			});
+			this.props.dispatch(pushState(null, '/pub/' + nextProps.pubData.get('randomSlug') ));
 		}
 	},
 
