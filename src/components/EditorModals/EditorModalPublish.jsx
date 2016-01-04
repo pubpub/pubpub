@@ -4,7 +4,7 @@ import {LoaderIndeterminate} from '../';
 import {baseStyles} from './editorModalStyle';
 import {globalStyles} from '../../utils/styleConstants';
 
-import {globalMessages} from '../../utils/globalMessages';
+// import {globalMessages} from '../../utils/globalMessages';
 import {injectIntl, defineMessages, FormattedMessage} from 'react-intl';
 
 let styles = {};
@@ -20,6 +20,7 @@ const EditorModalPublish = React.createClass({
 			versionState: 'Draft',
 			versionDescription: '',
 			isPublishing: false,
+			descriptionError: false,
 		};
 	},
 
@@ -33,8 +34,13 @@ const EditorModalPublish = React.createClass({
 	},
 
 	handlePublish: function() {
-		this.setState({isPublishing: true});
-		this.props.handlePublish(this.state.versionState, this.state.versionDescription);
+		if (this.state.description) {
+			this.setState({isPublishing: true, descriptionError: false});
+			this.props.handlePublish(this.state.versionState, this.state.versionDescription);	
+		} else {
+			this.setState({descriptionError: true});
+		}
+		
 	},
 
 	render: function() {
@@ -59,7 +65,7 @@ const EditorModalPublish = React.createClass({
 
 				{/* Draft or Review-ready option 
 					Should default to review-ready if a past version was */}
-				<div style={styles.optionContainer}>
+				{/* <div style={styles.optionContainer}>
 					<div style={styles.optionHeader}>
 						<FormattedMessage 
 							id="editor.versionState"
@@ -74,7 +80,7 @@ const EditorModalPublish = React.createClass({
 							<FormattedMessage {...globalMessages.ReadyForPeerReview} />
 						</span>
 					</div>
-				</div>
+				</div> */}
 
 				{/* Version message input */}
 				<div style={styles.optionContainer}>
@@ -103,6 +109,11 @@ const EditorModalPublish = React.createClass({
 							id="editor.publishMessage3"
 							defaultMessage="The full history will be maintained and accessible."/>
 					</p>
+					<p style={[styles.publishTextP, styles.publishTextPError, this.state.descriptionError && {display: 'block'}]}>
+						<FormattedMessage 
+							id="editor.publishMessage4"
+							defaultMessage="A description is required."/>
+					</p>
 				</div>
 
 				{/* Publish button */}
@@ -120,7 +131,7 @@ export default injectIntl(Radium(EditorModalPublish));
 
 styles = {
 	optionContainer: {
-		padding: '15px 25px 40px 25px',
+		padding: '15px 25px 15px 25px',
 		fontFamily: baseStyles.rowTextFontFamily,
 		fontSize: baseStyles.rowTextFontSize,
 	},
@@ -173,6 +184,11 @@ styles = {
 	publishTextP: {
 		margin: 0,
 		padding: 0,
+	},
+	publishTextPError: {
+		color: 'red',
+		display: 'none',
+		position: 'absolute',
 	},
 	publishButton: {
 		fontSize: '35px',
