@@ -12,7 +12,7 @@ import {closeMenu} from '../../actions/nav';
 import {convertImmutableListToObject} from '../../utils/parsePlugins';
 
 // import {PubBody, PubModals, PubNav, LoaderDeterminate, PubDiscussions, PubStatus, PubReviews, PubLeftBar} from '../../components';
-import {PubBody, PubModals, PubNav, LoaderDeterminate, PubDiscussions, PubStatus, PubLeftBar} from '../../components';
+import {PubBody, PubModals, PubNav, LoaderDeterminate, PubDiscussions, PubLeftBar} from '../../components';
 import {globalStyles, pubSizes} from '../../utils/styleConstants';
 
 import marked from '../../modules/markdown/markdown';
@@ -236,7 +236,12 @@ const PubReader = React.createClass({
 						query={this.props.query}
 						pubStatus={pubData.status}
 						readRandomPubHandler={this.readRandomPub}
-						randomSlug={this.props.journalData.getIn(['journalData', 'randomSlug'])}/>
+						randomSlug={this.props.journalData.getIn(['journalData', 'randomSlug'])}
+						journalCount={pubData.featuredInList ? pubData.featuredInList.length : 0}
+						historyCount={pubData.history ? pubData.history.length : 0}
+						analyticsCount={pubData.views ? pubData.views : 0}
+						citationsCount={pubData.citations ? pubData.citations.length : 0}
+						newsCount={pubData.news ? pubData.news.length : 0} />
 
 				</div>
 
@@ -315,12 +320,12 @@ const PubReader = React.createClass({
 				</div>
 
 				<div className="rightBar" style={[styles.rightBar, globalStyles[this.props.readerData.get('status')], pubData.markdown === undefined && {display: 'none'}]}>
-					<PubStatus
+					{/* <PubStatus
 						slug={this.props.slug}
 						pubStatus={pubData.status}
 						featuredInList={pubData.featuredInList}
 						submittedToList={pubData.submittedToList}
-						isAuthor={pubData.isAuthor}/>
+						isAuthor={pubData.isAuthor}/> */}
 					{/* <PubReviews
 						slug={this.props.slug}
 						reviewsData={pubData.reviews} /> */}

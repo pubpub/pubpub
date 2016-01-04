@@ -22,6 +22,11 @@ const HeaderMenu = React.createClass({
 		pubStatus: PropTypes.string,
 		followPubToggleHandler: PropTypes.func,
 		isFollowing: PropTypes.bool,
+		journalCount: PropTypes.number, 
+		historyCount: PropTypes.number,
+		analyticsCount: PropTypes.number,
+		citationsCount: PropTypes.number,
+		newsCount: PropTypes.number,
 
 		isJournalAdmin: PropTypes.bool,
 		journalSubdomain: PropTypes.string,
@@ -133,20 +138,29 @@ const HeaderMenu = React.createClass({
 										<FormattedMessage {...globalMessages.experts} />
 									</li></Link> */}
 
+									<Link to={'/pub/' + this.props.slug + '/journals'} style={globalStyles.link}><li key="menuListItem28" style={styles.menuItem}>
+										<FormattedMessage {...globalMessages.Journals} />
+										{/* <span style={styles.count}> ({this.props.journalCount})</span> */}
+									</li></Link>
+
 									<Link to={'/pub/' + this.props.slug + '/history'} style={globalStyles.link}><li key="menuListItem8" style={styles.menuItem}>
 										<FormattedMessage {...globalMessages.history} />
+										{/* <span style={styles.count}> ({this.props.historyCount})</span> */}
 									</li></Link>
 
 									<Link to={'/pub/' + this.props.slug + '/analytics'} style={globalStyles.link}><li key="menuListItem18" style={styles.menuItem}>
 										<FormattedMessage {...globalMessages.analytics} />
+										{/* <span style={styles.count}> ({this.props.analyticsCount})</span> */}
 									</li></Link>
 
 									<Link to={'/pub/' + this.props.slug + '/citations'} style={globalStyles.link}><li key="menuListItem19" style={styles.menuItem}>
 										<FormattedMessage {...globalMessages.citations} />
+										{/* <span style={styles.count}> ({this.props.citationsCount})</span> */}
 									</li></Link>
 
 									<Link to={'/pub/' + this.props.slug + '/news'} style={globalStyles.link}><li key="menuListItem20" style={styles.menuItem}>
 										<FormattedMessage {...globalMessages.inthenews} />
+										{/* <span style={styles.count}> ({this.props.newsCount})</span> */}
 									</li></Link>
 
 									<Link to={'/pub/' + this.props.slug + '/source'} style={globalStyles.link}><li key="menuListItem9" style={styles.menuItem}>
@@ -305,5 +319,8 @@ styles = {
 		false: {
 			display: 'none',
 		}
+	},
+	count: {
+
 	},
 };

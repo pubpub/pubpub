@@ -15,6 +15,12 @@ const PubLeftBar = React.createClass({
 		pubStatus: PropTypes.string,
 		readRandomPubHandler: PropTypes.func,
 		randomSlug: PropTypes.string,
+		journalCount: PropTypes.number, 
+		historyCount: PropTypes.number,
+		analyticsCount: PropTypes.number,
+		citationsCount: PropTypes.number,
+		newsCount: PropTypes.number,
+
 	},
 
 	getDefaultProps: function() {
@@ -34,9 +40,17 @@ const PubLeftBar = React.createClass({
 				<Link style={globalStyles.link} to={'/pub/' + this.props.randomSlug}><div key={'leftBar1'} style={styles.detail} onClick={this.props.readRandomPubHandler}>
 					<FormattedMessage id="pub.randomPub" defaultMessage="Random Pub"/>
 				</div></Link>
-				<Link style={globalStyles.link} to={'/explore'}><div key={'leftBar2'} style={styles.detail}>
+				<Link style={globalStyles.link} to={'/pubs'}><div key={'leftBar2'} style={styles.detail}>
 					<FormattedMessage {...globalMessages.Explore} />
 				</div></Link>
+
+				<Link style={globalStyles.link} to={'/pub/about'}><div key={'leftBar9'} style={styles.detail}>
+					<FormattedMessage {...globalMessages.FAQ} />
+				</div></Link>
+
+				<a style={globalStyles.link} target="_blank" href={'mailto:pubpub@media.mit.edu'}><div key={'leftBar10'} style={styles.detail}>
+					<FormattedMessage {...globalMessages.Feedback} />
+				</div></a>
 
 				<div style={styles.leftBarDivider}></div>
 				{/* 
@@ -46,31 +60,26 @@ const PubLeftBar = React.createClass({
 				*/}
 				
 				{/* <Link style={globalStyles.link} to={'/pub/' + this.props.slug + '/experts'}><div key={'leftBar9'} style={styles.detail}>Experts</div></Link> */}
+				<Link style={globalStyles.link} to={'/pub/' + this.props.slug + '/journals'}><div key={'leftBar13'} style={styles.detail}>
+					<FormattedMessage {...globalMessages.Journals} /> <span style={styles.count}>({this.props.journalCount || 0})</span>
+				</div></Link>
 				<Link style={globalStyles.link} to={'/pub/' + this.props.slug + '/history'}><div key={'leftBar3'} style={styles.detail}>
-					<FormattedMessage {...globalMessages.history} />
+					<FormattedMessage {...globalMessages.history} /> <span style={styles.count}>({this.props.historyCount || 0})</span>
 				</div></Link>
 				<Link style={globalStyles.link} to={'/pub/' + this.props.slug + '/analytics'}><div key={'leftBar5'} style={styles.detail}>
-					<FormattedMessage {...globalMessages.analytics} />
+					<FormattedMessage {...globalMessages.analytics} /> <span style={styles.count}>({this.props.analyticsCount || 0})</span>
 				</div></Link>
 				<Link style={globalStyles.link} to={'/pub/' + this.props.slug + '/citations'}><div key={'leftBar6'} style={styles.detail}>
-					<FormattedMessage {...globalMessages.citations} />
+					<FormattedMessage {...globalMessages.citations} /> <span style={styles.count}>({this.props.citationsCount || 0})</span>
 				</div></Link>				
 				<Link style={globalStyles.link} to={'/pub/' + this.props.slug + '/news'}><div key={'leftBar7'} style={styles.detail}>
-					<FormattedMessage {...globalMessages.inthenews} />
+					<FormattedMessage {...globalMessages.inthenews} /> <span style={styles.count}>({this.props.newsCount || 0})</span>
 				</div></Link>
 				<Link style={globalStyles.link} to={'/pub/' + this.props.slug + '/source' + versionURL}><div key={'leftBar4'} style={styles.detail}>
 					<FormattedMessage {...globalMessages.source} />
 				</div></Link>
 
-				<div style={styles.leftBarDivider}></div>
-
-				<Link style={globalStyles.link} to={'/pub/about'}><div key={'leftBar9'} style={styles.detail}>
-					<FormattedMessage {...globalMessages.FAQ} />
-				</div></Link>
-
-				<a style={globalStyles.link} target="_blank" href={'mailto:pubpub@media.mit.edu'}><div key={'leftBar10'} style={styles.detail}>
-					<FormattedMessage {...globalMessages.Feedback} />
-				</div></a>
+				{/* <div style={styles.leftBarDivider}></div> */}
 				
 				{/* <div style={styles.detail}>Related Pub</div> */}
 				{/* <div style={styles.detail}>Share</div> */}
@@ -88,6 +97,7 @@ styles = {
 	},
 	detail: {
 		fontSize: '13px',
+		width: '85%',
 		padding: '8px 0px',
 		userSelect: 'none',
 		color: globalStyles.sideText,
@@ -104,5 +114,10 @@ styles = {
 		width: '100%',
 		height: 1,
 		margin: '15px auto',
+	},
+	count: {
+		// paddingLeft: '10px',
+		float: 'right',
+		paddingRight: '15px',
 	},
 };

@@ -165,7 +165,10 @@ const App = React.createClass({
 				{property: 'fb:app_id', content: '924988584221879'},
 			]
 		};
+		const pubData = this.props.pubData.get('pubData').toJS();
+
 		return (
+			
 			<IntlProvider locale={'en'} messages={this.props.languageData.get('languageObject').toJS()}>
 			<div style={styles.body}>
 
@@ -199,6 +202,11 @@ const App = React.createClass({
 								pubStatus={this.props.pubData.getIn(['pubData', 'status'])}
 								followPubToggleHandler={this.followPubToggle}
 								isFollowing={this.props.loginData.getIn(['userData', 'following', 'pubs']) ? this.props.loginData.getIn(['userData', 'following', 'pubs']).indexOf(this.props.pubData.getIn(['pubData', '_id'])) > -1 : false}
+								journalCount={pubData.featuredInList ? pubData.featuredInList.length : 0}
+								historyCount={pubData.history ? pubData.history.length : 0}
+								analyticsCount={pubData.views ? pubData.views : 0}
+								citationsCount={pubData.citations ? pubData.citations.length : 0}
+								newsCount={pubData.news ? pubData.news.length : 0}
 								
 								isJournalAdmin={this.props.journalData.getIn(['journalData', 'isAdmin'])}
 								journalSubdomain={this.props.journalData.get('baseSubdomain')}

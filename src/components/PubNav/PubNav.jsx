@@ -71,9 +71,13 @@ const PubNav = React.createClass({
 							</li>
 							<li style={[styles.pubNavSeparator, styles.pubNavMobileOnly, styles.pubNavRight]}></li>
 							
-							<li key="pubNav6"style={[styles.pubNavItem, styles.pubNavRight, styles.pubNavMobileOnly, this.props.pubStatus === 'Draft' && styles.draftNav]} onClick={this.props.pubStatus !== 'Draft' ? this.props.openPubModalHandler('reviews') : null}>
+							{/* <li key="pubNav6"style={[styles.pubNavItem, styles.pubNavRight, styles.pubNavMobileOnly, this.props.pubStatus === 'Draft' && styles.draftNav]} onClick={this.props.pubStatus !== 'Draft' ? this.props.openPubModalHandler('reviews') : null}>
 								{this.props.pubStatus === 'Draft' ? <FormattedMessage {...globalMessages.Draft} /> : ''}
+							</li> */}
+							<li key="pubNav6"style={[styles.pubNavItem, styles.pubNavRight, styles.pubNavMobileOnly]} >
+								
 							</li>
+
 							<li style={[styles.pubNavSeparator, styles.pubNavMobileOnly, styles.pubNavRight]}></li>
 
 							<li key="pubNav8"style={[styles.pubNavItem, styles.pubNavRight]} onClick={this.props.handleFollow}>

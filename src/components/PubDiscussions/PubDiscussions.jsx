@@ -40,7 +40,7 @@ const PubDiscussions = React.createClass({
 			<div style={styles.container}>
 				
 				<div className="pub-discussions-wrapper" style={rightBarStyles.sectionWrapper}>
-					<div style={rightBarStyles.sectionHeader}><FormattedMessage {...globalMessages.discussions}/></div>
+					<div style={rightBarStyles.sectionHeader}><FormattedMessage {...globalMessages.discussion}/></div>
 					<div style={rightBarStyles.sectionSubHeader}>
 						<PubDiscussionsOptions
 							slug={this.props.slug}
