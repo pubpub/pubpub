@@ -5,6 +5,7 @@ import Helmet from 'react-helmet';
 import {Autocomplete} from '../';
 import {globalStyles} from '../../utils/styleConstants';
 import {LandingBody} from '../../components';
+import {getRandomSlug} from '../../actions/journal';
 import { Link } from 'react-router';
 const HoverLink = Radium(Link);
 import analytics from '../../utils/analytics';
@@ -61,8 +62,9 @@ const Landing = React.createClass({
 		);
 	},
 
-	registerShowMeScienceEvent: function() {
+	showMeScienceClick: function() {
 		analytics.sendEvent('Show Me Science Clicked');
+		this.props.dispatch(getRandomSlug(this.props.journalData.getIn(['journalData', '_id'])));
 	},
 
 	setFeature: function(newFeature) {
@@ -93,7 +95,7 @@ const Landing = React.createClass({
 							<div style={styles.top}>
 								<h1 style={styles.topPub}>PubPub</h1>
 								<div style={styles.subheader}>Open Publishing</div>
-								<div key="showMeScience" style={styles.showMeScience} onClick={this.registerShowMeScienceEvent}><Link style={styles.scienceText} to={'/pub/sample'}>Show Me Science</Link></div>
+								<div key="showMeScience" style={styles.showMeScience} onClick={this.showMeScienceClick}><Link to={'/pub/' + this.props.journalData.get('randomSlug')}style={styles.scienceText}>Show Me Science</Link></div>
 							</div>
 							<div style={styles.search}>
 								<Autocomplete 

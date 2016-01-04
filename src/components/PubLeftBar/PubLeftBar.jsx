@@ -14,6 +14,7 @@ const PubLeftBar = React.createClass({
 		query: PropTypes.object,
 		pubStatus: PropTypes.string,
 		readRandomPubHandler: PropTypes.func,
+		randomSlug: PropTypes.string,
 	},
 
 	getDefaultProps: function() {
@@ -30,9 +31,9 @@ const PubLeftBar = React.createClass({
 				<Link style={globalStyles.link} to={'/'}><div key={'leftBar0'} style={styles.detail}>
 					<FormattedMessage id="pub.home" defaultMessage="Home"/>
 				</div></Link>
-				<div key={'leftBar1'} style={styles.detail} onClick={this.props.readRandomPubHandler}>
+				<Link style={globalStyles.link} to={'/pub/' + this.props.randomSlug}><div key={'leftBar1'} style={styles.detail} onClick={this.props.readRandomPubHandler}>
 					<FormattedMessage id="pub.randomPub" defaultMessage="Random Pub"/>
-				</div>
+				</div></Link>
 				<Link style={globalStyles.link} to={'/explore'}><div key={'leftBar2'} style={styles.detail}>
 					<FormattedMessage {...globalMessages.Explore} />
 				</div></Link>

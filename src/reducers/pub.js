@@ -32,9 +32,6 @@ import {
 	PUB_NAV_OUT,
 	PUB_NAV_IN,
 
-	// GET_RANDOM_SLUG_LOAD,
-	GET_RANDOM_SLUG_SUCCESS,
-	// GET_RANDOM_SLUG_FAIL,
 
 } from '../actions/pub';
 
@@ -77,7 +74,7 @@ export const defaultState = Immutable.Map({
 	status: 'loading',
 	error: null,
 	showPubHighlights: true,
-	randomSlug: null,
+	
 });
 
 /*--------*/
@@ -315,15 +312,6 @@ function submitPubToJournalSuccess(state, journalData) {
 	});
 }
 
-function newRandomSlug(state, result) {
-	if (!result) { return state; }
-
-	return state.merge({
-		randomSlug: result,
-	});
-	
-}
-
 /*--------*/
 // Bind actions to specific reducing functions.
 /*--------*/
@@ -383,9 +371,6 @@ export default function readerReducer(state = defaultState, action) {
 		return submitPubToJournalSuccess(state, action.journalData);
 	case SUBMIT_PUB_TO_JOURNAL_FAIL:
 		return state;
-
-	case GET_RANDOM_SLUG_SUCCESS:
-		return newRandomSlug(state, action.result);
 
 	default:
 		return ensureImmutable(state);

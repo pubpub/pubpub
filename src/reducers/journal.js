@@ -33,6 +33,10 @@ import {
 	SUBMIT_PUB_TO_JOURNAL_SUCCESS,
 	SUBMIT_PUB_TO_JOURNAL_FAIL,
 
+	// GET_RANDOM_SLUG_LOAD,
+	GET_RANDOM_SLUG_SUCCESS,
+	// GET_RANDOM_SLUG_FAIL,
+
 } from '../actions/journal';
 
 import {
@@ -61,6 +65,7 @@ export const defaultState = Immutable.Map({
 	createCollectionStatus: null,
 	createCollectionSlug: null,
 	saveCollectionStatus: null,
+	randomSlug: null,
 
 });
 
@@ -212,6 +217,14 @@ function logoutLoad(state) {
 	});
 }
 
+function newRandomSlug(state, result) {
+	if (!result) { return state; }
+
+	return state.merge({
+		randomSlug: result,
+	});	
+}
+
 /*--------*/
 // Bind actions to specific reducing functions.
 /*--------*/
@@ -271,6 +284,9 @@ export default function loginReducer(state = defaultState, action) {
 		return loginLoad(state, action.result);
 	case LOGOUT_LOAD_SUCCESS:
 		return logoutLoad(state);
+
+	case GET_RANDOM_SLUG_SUCCESS:
+		return newRandomSlug(state, action.result);
 
 	default:
 		return ensureImmutable(state);

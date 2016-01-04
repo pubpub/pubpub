@@ -32,6 +32,9 @@ export const SUBMIT_PUB_TO_JOURNAL = 'journal/SUBMIT_PUB_TO_JOURNAL';
 export const SUBMIT_PUB_TO_JOURNAL_SUCCESS = 'journal/SUBMIT_PUB_TO_JOURNAL_SUCCESS';
 export const SUBMIT_PUB_TO_JOURNAL_FAIL = 'journal/SUBMIT_PUB_TO_JOURNAL_FAIL';
 
+export const GET_RANDOM_SLUG_LOAD = 'pub/GET_RANDOM_SLUG_LOAD';
+export const GET_RANDOM_SLUG_SUCCESS = 'pub/GET_RANDOM_SLUG_SUCCESS';
+export const GET_RANDOM_SLUG_FAIL = 'pub/GET_RANDOM_SLUG_FAIL';
 
 /*--------*/
 // Define Action creators
@@ -92,5 +95,12 @@ export function submitPubToJournal(pubID, journalData) {
 		types: [SUBMIT_PUB_TO_JOURNAL, SUBMIT_PUB_TO_JOURNAL_SUCCESS, SUBMIT_PUB_TO_JOURNAL_FAIL],
 		promise: (client) => client.post('/submitPubToJournal', {data: {pubID: pubID, journalID: journalData._id}}),
 		journalData: journalData,
+	};
+}
+
+export function getRandomSlug(journalID) {
+	return {
+		types: [GET_RANDOM_SLUG_LOAD, GET_RANDOM_SLUG_SUCCESS, GET_RANDOM_SLUG_FAIL],
+		promise: (client) => client.get('/getRandomSlug', {query: {journalID: journalID}})
 	};
 }

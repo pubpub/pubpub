@@ -262,7 +262,7 @@ pubSchema.statics.generateDiffObject = function(oldPubObject, newPubObject) {
 
 };
 
-pubSchema.statics.addJournalFeatured = function(pubID, journalID, adminID){
+pubSchema.statics.addJournalFeatured = function(pubID, journalID, adminID) {
 	const featureObject = {
 		journal: journalID,
 		date: new Date().getTime(),
@@ -271,13 +271,37 @@ pubSchema.statics.addJournalFeatured = function(pubID, journalID, adminID){
 	this.update({ _id: pubID }, { $addToSet: { 'featuredInList': journalID, 'featuredIn': featureObject} }, function(err, result){if(err) console.log('Error in addJournalFeatured ', err);});
 };
 
-pubSchema.statics.addJournalSubmitted = function(pubID, journalID, userID){
+pubSchema.statics.addJournalSubmitted = function(pubID, journalID, userID) {
 	const submittedObject = {
 		journal: journalID,
 		date: new Date().getTime(),
 		by: userID,
 	};
 	this.update({ _id: pubID }, { $addToSet: { 'submittedToList': journalID, 'submittedTo': submittedObject} }, function(err, result){if(err) console.log('Error in addJournalSubmitted ', err);});
+};
+
+pubSchema.statics.getRandomSlug = function(journalID, callback) {
+	console.log('randomSlug journalID', journalID);
+	var objects = [];
+	var query = {history: {$not: {$size: 0}},'settings.isPrivate': {$ne: true}};
+	if(journalID){
+		query['featuredInList'] = journalID;
+	}
+
+	this.count(query, {'slug':1}).exec(function (err, count) {
+		if (err){ return callback(err, null); }
+
+		const skip = Math.floor(Math.random()*count);
+
+		this.find(query, {'slug':1}).skip(skip).limit(1).exec(function (err, pub) {
+				if (err){ return callback(err, null); }
+
+				if(!pub[0]){ return callback(err, null); }
+
+				return callback(null, pub[0].slug);
+		});
+
+	});
 };
 
 module.exports = mongoose.model('Pub', pubSchema);

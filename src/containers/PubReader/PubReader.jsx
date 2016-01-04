@@ -4,7 +4,8 @@ import Radium, {Style} from 'radium';
 import Helmet from 'react-helmet';
 import PureRenderMixin from 'react-addons-pure-render-mixin';
 import { Link } from 'react-router';
-import {getPub, getRandomSlug, openPubModal, closePubModal, addDiscussion, addSelection, discussionVoteSubmit, togglePubHighlights, pubNavOut, pubNavIn} from '../../actions/pub';
+import {getPub, openPubModal, closePubModal, addDiscussion, addSelection, discussionVoteSubmit, togglePubHighlights, pubNavOut, pubNavIn} from '../../actions/pub';
+import {getRandomSlug} from '../../actions/journal';
 import {toggleVisibility, follow, unfollow} from '../../actions/login';
 import {closeMenu} from '../../actions/nav';
 
@@ -229,7 +230,8 @@ const PubReader = React.createClass({
 						slug={this.props.slug}
 						query={this.props.query}
 						pubStatus={pubData.status}
-						readRandomPubHandler={this.readRandomPub}/>
+						readRandomPubHandler={this.readRandomPub}
+						randomSlug={this.props.journalData.get('randomSlug')}/>
 
 				</div>
 

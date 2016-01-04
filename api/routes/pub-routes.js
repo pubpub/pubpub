@@ -31,29 +31,6 @@ app.get('/getPubEdit', function(req, res) {
 	});
 });
 
-app.get('/getRandomSlug', function(req, res) {
-	console.log(req.query);
-	var objects = [];
-	var query = {history: {$not: {$size: 0}},'settings.isPrivate': {$ne: true}};
-	if(req.query.journalID){
-		query['featuredInList'] = req.query.journalID;
-	}
-
-	Pub.count(query, {'slug':1}).exec(function (err, count) {
-		if (err){console.log(err); return res.json(500);} 
-		const skip = Math.floor(Math.random()*count);
-
-		Pub.find(query, {'slug':1}).skip(skip).limit(1).exec(function (err, pub) {
-				if (err){console.log(err); return res.json(500);} 
-
-				if(!pub[0]){ return res.status(500).json(null); }
-
-				return res.status(201).json(pub[0].slug);
-		});
-
-	});
-
-});
 
 app.post('/createPub', function(req, res) {
 	const userID = req.user ? req.user._id : undefined;

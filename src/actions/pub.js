@@ -32,10 +32,6 @@ export const DISCUSSION_VOTE = 'pub/DISCUSSION_VOTE';
 export const DISCUSSION_VOTE_SUCCESS = 'pub/DISCUSSION_VOTE_SUCCESS';
 export const DISCUSSION_VOTE_FAIL = 'pub/DISCUSSION_VOTE_FAIL';
 
-export const GET_RANDOM_SLUG_LOAD = 'pub/GET_RANDOM_SLUG_LOAD';
-export const GET_RANDOM_SLUG_SUCCESS = 'pub/GET_RANDOM_SLUG_SUCCESS';
-export const GET_RANDOM_SLUG_FAIL = 'pub/GET_RANDOM_SLUG_FAIL';
-
 /*--------*/
 // Define Action creators
 // 
@@ -122,12 +118,5 @@ export function discussionVoteSubmit(type, discussionID, userYay, userNay) {
 		discussionID: discussionID,
 		userYay: userYay,
 		userNay: userNay,
-	};
-}
-
-export function getRandomSlug(journalID) {
-	return {
-		types: [GET_RANDOM_SLUG_LOAD, GET_RANDOM_SLUG_SUCCESS, GET_RANDOM_SLUG_FAIL],
-		promise: (client) => client.get('/getRandomSlug', {query: {journalID: journalID}})
 	};
 }
