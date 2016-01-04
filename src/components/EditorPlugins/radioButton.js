@@ -30,7 +30,7 @@ const RadioButtonProp = React.createClass({
 					{Radio => (
 						<div>
 							{choices.map(function(choice) {
-								return (<label>
+								return (<label style={{paddingRight: '10px'}}>
 									<Radio value={choice} />{choice}
 									</label>);
 							})}
