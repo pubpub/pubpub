@@ -20,6 +20,7 @@ const PubBody = React.createClass({
 		status: PropTypes.string,
 		title: PropTypes.string,
 		abstract: PropTypes.string,
+		authorsNote: PropTypes.string,
 		htmlTree: PropTypes.array,
 		authors: PropTypes.array,
 		addSelectionHandler: PropTypes.func,
@@ -129,7 +130,8 @@ const PubBody = React.createClass({
 				<Style rules={this.compileStyleRules()}/>
 
 				<div id="pubContent" style={[styles.contentContainer, globalStyles[this.props.status]]} className={this.printStyleClass.pubContent}>
-
+					<div id={'pub-authorsNote'} className={this.printStyleClass.authorsNote}>{this.props.authorsNote}</div>
+					
 					<div id={'pub-title'} className={this.printStyleClass.title}>{this.props.title}</div>
 					<div id={'pub-authors'} className={this.printStyleClass.authors} style={[this.props.authors.length === 0 && {display: 'none'}]}> 
 						<span><FormattedMessage {...globalMessages.by}/> </span>

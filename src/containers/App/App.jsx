@@ -165,7 +165,7 @@ const App = React.createClass({
 				{property: 'fb:app_id', content: '924988584221879'},
 			]
 		};
-		const pubData = this.props.pubData.get('pubData').toJS();
+		const pubData = this.props.pubData.get('pubData').toJS ? this.props.pubData.get('pubData').toJS() : {};
 
 		return (
 			

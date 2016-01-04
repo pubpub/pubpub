@@ -28,6 +28,15 @@ export const scienceStyle = {
 		fontFamily: 'Lora',
 		padding: '0px 20px',
 	},
+	'#pub-authorsNote': {
+		textAlign: 'center',
+		margin: '30px auto 0px auto',
+		backgroundColor: '#EAEAEA',
+		color: '#666',
+		fontFamily: 'Lora',
+		padding: '10px 20px',
+		width: '80%',
+	},
 	'#pub-header-divider': {
 		height: '1px',
 		width: '80%',

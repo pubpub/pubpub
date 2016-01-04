@@ -674,6 +674,7 @@ const Editor = React.createClass({
 								status={'loaded'}
 								title={this.state.title}
 								abstract={this.state.abstract}
+								authorsNote={this.state.authorsNote}
 								minFont={5}
 								htmlTree={this.state.tree}
 								authors={this.getAuthorsArray()}

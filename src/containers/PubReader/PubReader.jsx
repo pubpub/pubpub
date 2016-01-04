@@ -275,6 +275,7 @@ const PubReader = React.createClass({
 						status={this.props.readerData.get('status')}
 						title={pubData.history[versionIndex].title}
 						abstract={pubData.history[versionIndex].abstract}
+						authorsNote={pubData.history[versionIndex].authorsNote}
 						minFont={15}
 						htmlTree={this.state.htmlTree}
 						authors={pubData.history[versionIndex].authors}

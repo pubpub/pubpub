@@ -152,7 +152,7 @@ export const styles = {
 	},
 
 	showCommentsToggle: {
-		backgroundColor: '#EAEAEA',
+		backgroundColor: '#F5F5F5',
 		cursor: 'pointer',
 		width: '300px',
 		height: '30px',
@@ -483,7 +483,7 @@ export function codeMirrorStyles(loginData) {
 			fontSize: '16px',
 		},
 		'.cm-ppm-authorsNote': {
-			fontSize: '14px',
+			fontSize: '16px',
 		},
 		'.cm-ppm-math': {
 			fontStyle: 'italic',
