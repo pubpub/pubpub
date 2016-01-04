@@ -39,7 +39,7 @@ const ImagePlugin = React.createClass({
 		const sizeOptions = {
 			'small': (this.props.align === 'full') ? '30%' : '25%',
 			'medium': (this.props.align === 'full') ? '50%' : '40%',
-			'large': (this.props.align === 'full') ? '80%' : '60%'
+			'large': (this.props.align === 'full') ? '100%' : '60%'
 		};
 
 		const styleObject = {
