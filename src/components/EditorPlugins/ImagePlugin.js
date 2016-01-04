@@ -3,12 +3,11 @@ import Radium from 'radium';
 import ImageLoader from 'react-imageloader';
 import ErrorMsg from './ErrorPlugin';
 
+import {propSrc, propSize, propAlign, propCaption} from './pluginProps';
+export const imageOptions = {src: propSrc('image'), size: propSize, align: propAlign, caption: propCaption};
 
-import {propSrc, propSize, propAlign} from './pluginProps';
-export const imageOptions = {src: propSrc('image'), size: propSize, align: propAlign};
+let styles = {};
 
-
-// let styles = {};
 const ImagePlugin = React.createClass({
 	propTypes: {
 		url: PropTypes.string,
@@ -16,6 +15,7 @@ const ImagePlugin = React.createClass({
 		children: PropTypes.string,
 		size: React.PropTypes.oneOf(['small', 'medium', 'large']),
 		align: React.PropTypes.oneOf(['left', 'right', 'full']),
+		caption: PropTypes.string,
 	},
 	getInitialState: function() {
 		return {};
@@ -33,6 +33,8 @@ const ImagePlugin = React.createClass({
 		const url = this.props.url;
 		const size = this.props.size || 'large';
 		const align = this.props.align || 'full';
+		const caption = this.props.caption || '';
+
 
 		// whether floating flows all of the text or just some is dependent on how much space is left
 		// a 'large' image is smaller when floating because it needs to leave space for the text
@@ -50,7 +52,7 @@ const ImagePlugin = React.createClass({
 
 		if (align === 'left' || align === 'right' ) {
 			styleObject.float = align;
-			styleObject.padding = '1em';
+			styleObject.margin = '2em';
 		} else if (this.props.align === 'full') {
 			styleObject.margin = '0px auto';
 		}
@@ -64,14 +66,26 @@ const ImagePlugin = React.createClass({
 		} else if (this.props.error === 'type') {
 			html = <ErrorMsg>Not an Image-type asset.</ErrorMsg>;
 		}	else if (url) {
-			html = (<ImageLoader onLoad={this.loadedImage} style={styleObject} imgProps={imgProps} src={url} wrapper={React.DOM.span} preloader={this.preloader}>
-				{refName}
-			</ImageLoader>);
+			html = (<div style={styleObject}>
+				<ImageLoader onLoad={this.loadedImage} imgProps={imgProps} src={url} wrapper={React.DOM.span} preloader={this.preloader}>
+					{refName}
+				</ImageLoader>
+				{ (caption) ? <span style={styles.caption}>{caption}</span> : null }
+			</div>
+		);
 		} else {
 			html = <ErrorMsg>Could not find Image asset.</ErrorMsg>;
 		}
 		return html;
 	}
 });
+
+styles = {
+	caption: {
+		fontSize: '0.8em',
+		color: '#757575'
+	},
+};
+
 
 export default Radium(ImagePlugin);
