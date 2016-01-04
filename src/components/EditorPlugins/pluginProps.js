@@ -1,8 +1,9 @@
 import React from 'react';
 import {SimpleSelect} from 'react-selectize';
 import Radios from './radioButton';
-// import {openModal} from '../../actions/editor';
+import DropdownProp from './dropdownProp';
 
+// import {openModal} from '../../actions/editor';
 
 export function propSrc(assetType) {
 
@@ -15,20 +16,15 @@ export function propSrc(assetType) {
 		default: '',
 		defaultValue: '',
 		defaultString: '',
-		valueFunction: function(ref) {
-			const val = ref.value();
-			return (val) ? val.value : null;
+		valueFunction: function(thisRef) {
+			return thisRef.value();
 		},
 		component: function(pluginProp, value, componentProps, styles) {
 			const title = pluginProp.title;
 			const assets = (componentProps.assets) ? Object.values(componentProps.assets).filter(filterAssets).map( function(asset) { return {'value': asset.refName, 'label': asset.refName};}) : [];
 			// assets.push({'value': 'upload', 'label': 'Upload New'});
 			const val = (value) ? {'value': value, 'label': value } : undefined;
-
-			const onValueChange = function(changedValue, callback) {
-				callback();
-			};
-			return <SimpleSelect style={styles.pluginPropSrc} onValueChange={onValueChange} ref={'pluginInput-' + title} name={title} id={title} options={assets} defaultValue={val}/>;
+			return <DropdownProp ref={'pluginInput-' + title} choices={assets} selectedValue={val}/>;
 		}
 	};
 }
@@ -44,7 +40,7 @@ export const propAlign = {
 	component: function(pluginProp, value, componentProps, styles) {
 		const title = pluginProp.title;
 		const choices = ['left', 'full', 'right'];
-		return (<Radios ref={'pluginInput-' + title} selectedVal={value}  choices={choices}/>);
+		return (<Radios ref={'pluginInput-' + title} selectedValue={value}  choices={choices}/>);
 	}
 };
 
@@ -59,7 +55,7 @@ export const propSize = {
 	component: function(pluginProp, value, componentProps, styles) {
 		const title = pluginProp.title;
 		const choices = ['small', 'medium', 'large'];
-		return (<Radios ref={'pluginInput-' + title} selectedVal={value} choices={choices}/>);
+		return (<Radios ref={'pluginInput-' + title} selectedValue={value} choices={choices}/>);
 	}
 };
 
@@ -69,8 +65,7 @@ export const propSrcRef = {
 	defaultValue: '',
 	defaultString: '',
 	valueFunction: function(thisRef) {
-		const val = thisRef.value();
-		return (val) ? val.value : null;
+		return thisRef.value();
 	},
 	component: function(pluginProp, value, componentProps, styles) {
 		const title = pluginProp.title;
@@ -78,9 +73,6 @@ export const propSrcRef = {
 		// assets.push({'value': 'upload', 'label': 'Upload New'});
 		const val = (value) ? {'value': value, 'label': value } : {};
 
-		const onValueChange = function(changedValue, callback) {
-			callback();
-		};
-		return <SimpleSelect style={styles.pluginPropSrc} onValueChange={onValueChange} ref={'pluginInput-' + title} name={title} id={title} options={refs} defaultValue={val}/>;
+		return <DropdownProp ref={'pluginInput-' + title} choices={refs} selectedValue={val}/>;
 	}
 };

@@ -1,0 +1,34 @@
+import React, {PropTypes} from 'react';
+import {SimpleSelect} from 'react-selectize';
+import Radium from 'radium';
+
+let styles = {};
+
+
+const DropdownProp = React.createClass({
+	propTypes: {
+		choices: PropTypes.array,
+		selectedValue: PropTypes.string,
+	},
+	onValueChange: function(changedValue, callback) {
+		callback();
+	},
+	value: function() {
+		const val = this.refs.test.value();
+		return (val) ? val.value : null;
+	},
+	render: function() {
+		const choices = this.props.choices || [];
+		return (
+			<SimpleSelect style={styles.select} onValueChange={this.onValueChange} ref="test" options={choices} defaultValue={this.props.selectedValue}/>
+		);
+	}
+});
+
+styles = {
+	select: {
+		width: '75%',
+	},
+};
+
+export default Radium(DropdownProp);

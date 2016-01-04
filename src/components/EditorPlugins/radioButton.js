@@ -4,11 +4,11 @@ import RadioGroup from 'react-radio-group';
 const RadioButtonProp = React.createClass({
 	propTypes: {
 		choices: PropTypes.array,
-		selectedVal: PropTypes.string,
+		selectedValue: PropTypes.string,
 	},
 	getInitialState: function() {
 		return {
-			selectedValue: this.props.selectedVal || null,
+			selectedValue: this.props.selectedValue || null,
 		};
 	},
 
