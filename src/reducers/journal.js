@@ -220,7 +220,7 @@ function logoutLoad(state) {
 function newRandomSlug(state, result) {
 	if (!result) { return state; }
 
-	return state.merge({
+	return state.mergeIn(['journalData'], {
 		randomSlug: result,
 	});	
 }

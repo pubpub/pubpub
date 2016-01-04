@@ -95,7 +95,7 @@ const Landing = React.createClass({
 							<div style={styles.top}>
 								<h1 style={styles.topPub}>PubPub</h1>
 								<div style={styles.subheader}>Open Publishing</div>
-								<div key="showMeScience" style={styles.showMeScience} onClick={this.showMeScienceClick}><Link to={'/pub/' + this.props.journalData.get('randomSlug')}style={styles.scienceText}>Show Me Science</Link></div>
+								<div key="showMeScience" style={styles.showMeScience} onClick={this.showMeScienceClick}><Link to={'/pub/' + this.props.journalData.getIn(['journalData', 'randomSlug'])}style={styles.scienceText}>Show Me Science</Link></div>
 							</div>
 							<div style={styles.search}>
 								<Autocomplete 

@@ -101,6 +101,6 @@ export function submitPubToJournal(pubID, journalData) {
 export function getRandomSlug(journalID) {
 	return {
 		types: [GET_RANDOM_SLUG_LOAD, GET_RANDOM_SLUG_SUCCESS, GET_RANDOM_SLUG_FAIL],
-		promise: (client) => client.get('/getRandomSlug', {query: {journalID: journalID}})
+		promise: (client) => client.get('/getRandomSlug', {params: {journalID: journalID}})
 	};
 }

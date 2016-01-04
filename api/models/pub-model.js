@@ -281,7 +281,6 @@ pubSchema.statics.addJournalSubmitted = function(pubID, journalID, userID) {
 };
 
 pubSchema.statics.getRandomSlug = function(journalID, callback) {
-	console.log('randomSlug journalID', journalID);
 	var objects = [];
 	var query = {history: {$not: {$size: 0}},'settings.isPrivate': {$ne: true}};
 	if(journalID){

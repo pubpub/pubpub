@@ -231,7 +231,7 @@ const PubReader = React.createClass({
 						query={this.props.query}
 						pubStatus={pubData.status}
 						readRandomPubHandler={this.readRandomPub}
-						randomSlug={this.props.journalData.get('randomSlug')}/>
+						randomSlug={this.props.journalData.getIn(['journalData', 'randomSlug'])}/>
 
 				</div>
 
