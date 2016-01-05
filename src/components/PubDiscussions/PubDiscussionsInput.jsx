@@ -170,7 +170,8 @@ styles = {
 		width: '18px',
 		height: '18px',
 		padding: '1px',
-		float: 'left',
+		marginRight: '5px',
+		float: 'right',
 	},
 	thumbnailImage: {
 		width: '100%',
