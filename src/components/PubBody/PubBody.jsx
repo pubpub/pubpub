@@ -134,7 +134,7 @@ const PubBody = React.createClass({
 						? <div id={'pub-authorsNote'} className={this.printStyleClass.authorsNote}>{this.props.authorsNote}</div>
 						: null
 					}
-					
+
 					<div id={'pub-title'} className={this.printStyleClass.title}>{this.props.title}</div>
 					<div id={'pub-authors'} className={this.printStyleClass.authors} style={[this.props.authors.length === 0 && {display: 'none'}]}>
 						<span><FormattedMessage {...globalMessages.by}/> </span>
@@ -212,11 +212,10 @@ styles = {
 	},
 	contentContainer: {
 		transition: '.3s linear opacity .25s',
-		padding: '0px 2.5em 50px 2.5em',
+		padding: '0px 4em 50px',
 		fontFamily: globalStyles.headerFont,
 		lineHeight: '1.58',
 		textRendering: 'optimizeLegibility',
-		fontSmoothing: 'antialiased',
 		'-webkit-font-smoothing': 'antialiased',
 	},
 	loading: {
