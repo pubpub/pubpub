@@ -223,7 +223,7 @@ styles = {
 		fontFamily: globalStyles.headerFont,
 		lineHeight: '1.58',
 		textRendering: 'optimizeLegibility',
-		'-webkit-font-smoothing': 'antialiased',
+		WebkitFontSmoothing: 'antialiased',
 	},
 	loading: {
 		opacity: 0,
