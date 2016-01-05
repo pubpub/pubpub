@@ -161,24 +161,23 @@ const EditorModalReferences = React.createClass({
 					<span style={[styles.topHeaderSubtext, this.state.editingRefName && styles.showOnEdit]}> : <FormattedMessage {...globalMessages.edit} /></span></div>
 
 				{/* Search for new Ref bar and advanced add option */}
+
+				{
+				// Disabled: Searching for References
+				/*
 				<div style={[baseStyles.rightCornerSearch, styles.mainContent[this.state.showAddOptions]]}>
 
-					{
-					// Disabled: Searching for References
-					/*
 					<Autocomplete
-											autocompleteKey={'referencesAutocomplete'}
-											route={'autocompleteReferences'}
-											placeholder={this.props.intl.formatMessage(messages.searchForRef)}
-											textAlign={'right'}
-											resultRenderFunction={this.renderReferencesSearchResults}/>
-					*/}
+						autocompleteKey={'referencesAutocomplete'}
+						route={'autocompleteReferences'}
+						placeholder={this.props.intl.formatMessage(messages.searchForRef)}
+						textAlign={'right'}
+						resultRenderFunction={this.renderReferencesSearchResults}/>
+					
+				</div> */}
 
-					<div key="refAdvancedText" style={baseStyles.rightCornerAction} onClick={this.toggleShowAddOptions}>
-						<FormattedMessage
-							id="editor.addReference"
-							defaultMessage="Add Reference"/>
-					</div>
+				<div key="refAdvancedText" style={baseStyles.rightCornerAction} onClick={this.toggleShowAddOptions}>
+					<FormattedMessage id="editor.addReference" defaultMessage="Add Reference"/>
 				</div>
 
 
