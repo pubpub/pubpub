@@ -103,7 +103,7 @@ export default {
 		inlineFunc: function(cap, renderer, data) {
 			const references = data.references;
 			const propDict = parsePluginString(cap[1]);
-			const refName = propDict.srcRef || 'none';
+			const refName = propDict.srcRef || propDict.reference || 'none';
 			const ref = references[refName];
 			if (Object.keys(propDict).length === 0) {
 				propDict.error = 'empty';
