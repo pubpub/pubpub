@@ -26,9 +26,9 @@ const MathPlugin = React.createClass({
 	render: function() {
 		const equation = this.props.children;
 		const urlRequest = 'https://dry-retreat-1640.herokuapp.com/mathtest?equation=' + encodeURIComponent(equation);
-		const imgProps = {style: {height: '1em'}};
+		// const imgProps = {style: {height: '1.5em'}};
 		return (
-			<ImageLoader onLoad={this.loadedImage} imgProps={imgProps} src={urlRequest} wrapper={React.DOM.span} preloader={this.preloader}>
+			<ImageLoader onLoad={this.loadedImage} src={urlRequest} wrapper={React.DOM.span} preloader={this.preloader}>
 				{equation}
 			</ImageLoader>
 		);
