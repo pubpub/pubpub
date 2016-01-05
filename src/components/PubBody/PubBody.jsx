@@ -135,7 +135,7 @@ const PubBody = React.createClass({
 				<div id="pubContent" style={[styles.contentContainer, globalStyles[this.props.status]]} className={this.printStyleClass.pubContent}>
 					
 					{!this.props.isFeatured && !this.props.errorView
-						? <div style={styles.submittedNotification}>This Pub has been submitted to - but is not yet featured - in this journal.</div>
+						? <div style={styles.submittedNotification}>This Pub has been submitted to - but is not yet featured in - this journal.</div>
 						: null
 					}
 
