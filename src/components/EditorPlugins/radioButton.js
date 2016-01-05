@@ -1,5 +1,8 @@
 import React, {PropTypes} from 'react';
 import RadioGroup from 'react-radio-group';
+import Radium from 'radium';
+
+let styles = {};
 
 const RadioButtonProp = React.createClass({
 	propTypes: {
@@ -23,14 +26,14 @@ const RadioButtonProp = React.createClass({
 	render: function() {
 		const choices = this.props.choices || [];
 		return (
-			<div>
+			<div style={styles.group}>
 				<RadioGroup
 					selectedValue={this.state.selectedValue}
 					onChange={this.handleChange}>
 					{Radio => (
 						<div>
 							{choices.map(function(choice) {
-								return (<label style={{paddingRight: '10px'}}>
+								return (<label style={{width: '86px', display: 'inline-block'}}>
 									<Radio value={choice} />{choice}
 									</label>);
 							})}
@@ -42,4 +45,9 @@ const RadioButtonProp = React.createClass({
 	}
 });
 
-export default RadioButtonProp;
+styles = {
+	group: {
+	}
+};
+
+export default Radium(RadioButtonProp);

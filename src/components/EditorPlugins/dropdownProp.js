@@ -27,7 +27,7 @@ const DropdownProp = React.createClass({
 
 styles = {
 	select: {
-		width: '75%',
+		minWidth: '75%'
 	},
 };
 

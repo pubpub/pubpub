@@ -212,7 +212,9 @@ const EditorPluginPopup = React.createClass({
 								}
 								return (<div key={'pluginVal-' + pluginPropTitle} style={styles.pluginOptionWrapper}>
 													<label htmlFor={pluginPropTitle} style={styles.pluginOptionLabel}>{pluginPropTitle}</label>
-													{elem}
+													<div style={styles.pluginPropWrapper}>
+														{elem}
+													</div>
 													<div style={[styles.pluginOptionDefault, pluginProp.defaultString && styles.pluginOptionDefaultVisible]}>
 													<FormattedMessage
 														id="editor.default"
@@ -236,7 +238,7 @@ export default Radium(EditorPluginPopup);
 
 styles = {
 	pluginPopup: {
-		width: 350,
+		width: 425,
 		// minHeight: 200,
 		backgroundColor: 'white',
 		boxShadow: '0px 0px 2px 0px #333',
@@ -278,6 +280,8 @@ styles = {
 		padding: '6px 20px 6px 0px',
 		fontSize: '18px',
 		display: 'inline-block',
+		float: 'right',
+		marginBottom: '15px',
 		':hover': {
 			cursor: 'pointer',
 			color: 'black',
@@ -288,8 +292,10 @@ styles = {
 		fontFamily: 'Courier',
 	},
 	pluginOptionLabel: {
-		width: '100%',
-		display: 'block',
+		// width: '100%',
+		display: 'inline-block',
+		marginRight: '20px',
+		width: '20%'
 	},
 	pluginOptionInput: {
 		width: 'calc(50% - 4px)',
@@ -308,6 +314,10 @@ styles = {
 		display: 'block'
 	},
 	pluginPropSrc: {
+		width: '75%'
+	},
+	pluginPropWrapper: {
+		display: 'inline-block',
 		width: '75%'
 	},
 	clearfix: {

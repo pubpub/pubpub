@@ -64,7 +64,7 @@ export const propCaption = {
 };
 
 export const propSrcRef = {
-	title: 'srcRef',
+	title: 'reference',
 	default: '',
 	defaultValue: '',
 	defaultString: '',

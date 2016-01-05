@@ -20,13 +20,21 @@ const TextProp = React.createClass({
 	},
 	render: function() {
 		const value = this.state.value || '';
-		return <input style={styles.select} type="text" value={value} onChange={this.handleChange} />;
+		return <input placeholder="Enter Caption" style={styles.select} type="text" value={value} onChange={this.handleChange} />;
 	}
 });
 
 styles = {
 	select: {
-		width: '75%',
+		width: '100%',
+		fontFamily: 'courier',
+		borderTop: 'none',
+		borderLeft: 'none',
+		borderRight: 'none',
+		borderBottom: 'gainsboro solid 1px',
+		fontSize: '13px',
+		height: '2.5em',
+		paddingLeft: '5px',
 	},
 };
 
