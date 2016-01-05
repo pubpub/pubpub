@@ -132,7 +132,10 @@ const PubMeta = React.createClass({
 
 					<div style={[styles.centerContent, styles[this.props.readerData.get('status')]]}>
 						<div style={styles.metaTitle}>
-							<span style={styles.metaTitleType}><FormattedMessage {...globalMessages[this.props.meta]} />:</span> 
+							{this.props.meta
+								? <span style={styles.metaTitleType}><FormattedMessage {...globalMessages[this.props.meta]} />:</span> 
+								: null
+							}
 							<Link to={'/pub/' + this.props.slug + versionURL} key={'metaTitleLink'} style={globalStyles.link}><span style={styles.metaTitlePub}>{this.props.readerData.getIn(['pubData', 'title'])}</span></Link>
 							
 						</div>

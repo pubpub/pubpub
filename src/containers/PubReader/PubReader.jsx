@@ -282,6 +282,7 @@ const PubReader = React.createClass({
 						addSelectionHandler={this.addSelection}
 						style={pubData.history[versionIndex].style}
 						showPubHighlights={this.props.readerData.get('showPubHighlights')}
+						isFeatured={pubData.featuredInList && pubData.featuredInList.indexOf(pubData._id) > -1}
 
 						references={this.props.readerData.getIn(['pubData', 'history', versionIndex, 'references']) !== undefined ? this.props.readerData.getIn(['pubData', 'history', versionIndex, 'references']).toJS() : []}
 						firstPublishedDate={this.props.readerData.getIn(['pubData', 'history', 0, 'publishDate'])}

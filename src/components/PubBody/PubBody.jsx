@@ -26,6 +26,8 @@ const PubBody = React.createClass({
 		addSelectionHandler: PropTypes.func,
 		style: PropTypes.object,
 		showPubHighlights: PropTypes.bool,
+		isFeatured: PropTypes.bool,
+
 		references: PropTypes.array,
 		minFont: PropTypes.number,
 		firstPublishedDate: PropTypes.string,
@@ -122,6 +124,7 @@ const PubBody = React.createClass({
 	},
 
 	render: function() {
+		console.log('isFeatured', this.props.isFeatured);
 		return (
 			// <ResizingText fontRatio={60} minFont={this.props.minFont}>
 
