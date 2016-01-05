@@ -22,6 +22,7 @@ const EditorModals = React.createClass({
 
 		// Publish Props
 		handlePublish: PropTypes.func,
+		currentJournal: PropTypes.string,
 
 		// References Props
 		referenceData: PropTypes.object,
@@ -68,7 +69,9 @@ const EditorModals = React.createClass({
 
 							case 'Publish':
 								return (<EditorModalPublish 
-										handlePublish={this.props.handlePublish}/>
+										slug={this.props.slug} 
+										handlePublish={this.props.handlePublish}
+										currentJournal={this.props.currentJournal}/>
 									);
 
 							case 'References':

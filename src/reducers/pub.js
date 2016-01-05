@@ -62,6 +62,7 @@ export const defaultState = Immutable.Map({
 		reviews: [],
 		experts: {approved: []},
 		history: [{}],
+		pubErrorView: false,
 	},
 	activeModal: undefined,
 	newDiscussionData: {
@@ -130,6 +131,7 @@ function loadSuccess(state, result) {
 		outputState.pubData = { ...defaultState.get('pubData'),
 			history: [{title: 'Pub Not Found'}],
 			slug: result.slug,
+			pubErrorView: true,
 		};
 	}
 
@@ -137,6 +139,7 @@ function loadSuccess(state, result) {
 		outputState.pubData = { ...defaultState.get('pubData'),
 			history: [{title: 'Private Pub'}],
 			slug: result.slug,
+			pubErrorView: true,
 		};
 	}
 
@@ -144,6 +147,7 @@ function loadSuccess(state, result) {
 		outputState.pubData = { ...defaultState.get('pubData'),
 			history: [{title: 'Pub not yet published'}],
 			slug: result.slug,
+			pubErrorView: true,
 		};
 	} 
 
@@ -151,6 +155,7 @@ function loadSuccess(state, result) {
 		outputState.pubData = { ...defaultState.get('pubData'),
 			history: [{title: 'Pub not in this journal', markdown: '[Available on PubPub](http://www.pubpub.org/pub/' + result.slug + ')', style: {type: 'custom', cssObjectString: 'a {text-align: center; color: #555; padding: 15px 0px; display: block; font-size: 1.2em; margin: 10px auto; background-color: #F6F6F6; width: 75%; border-radius: 2px; text-decoration: none;}'}}],
 			slug: result.slug,
+			pubErrorView: true,
 		};
 	} 
     
@@ -163,6 +168,7 @@ function loadFail(state, error) {
 		status: 'loaded',
 		pubData: { ...defaultState.get('pubData'),
 			history: [{title: 'Error Loading Pub'}],
+			pubErrorView: true,
 		},
 		error: error,
 	};
@@ -301,6 +307,10 @@ function discussionVote(state, voteType, discussionID, userYay, userNay) {
 
 function submitPubToJournalSuccess(state, journalData) {
 	const outputObject = state.get('pubData').toJS();
+	if (!outputObject.submittedTo || !outputObject.submittedToList) {
+		return state;
+	}
+
 	outputObject.submittedTo.push({
 		journal: journalData,
 		date: new Date().getTime(),

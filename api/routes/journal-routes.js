@@ -142,8 +142,10 @@ app.post('/submitPubToJournal', function(req,res){
 			return res.status(403).json('Not authorized to administrate this Journal.');
 		}
 
-		journal.pubsSubmitted.push(req.body.pubID);
-		Pub.addJournalSubmitted(req.body.pubID, req.body.journalID, req.user._id);
+		if (String(journal.pubsSubmitted).indexOf(req.body.pubID) === -1) {
+			journal.pubsSubmitted.push(req.body.pubID);
+			Pub.addJournalSubmitted(req.body.pubID, req.body.journalID, req.user._id);
+		}
 
 		journal.save(function(err, result){
 			if (err) { return res.status(500).json(err);  }

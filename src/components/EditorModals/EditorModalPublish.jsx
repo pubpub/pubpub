@@ -11,7 +11,9 @@ let styles = {};
 
 const EditorModalPublish = React.createClass({
 	propTypes: {
+		slug: PropTypes.string,
 		handlePublish: PropTypes.func,
+		currentJournal: PropTypes.string,
 		intl: PropTypes.object,
 	},
 
@@ -34,7 +36,7 @@ const EditorModalPublish = React.createClass({
 	},
 
 	handlePublish: function() {
-		if (this.state.description) {
+		if (this.state.versionDescription) {
 			this.setState({isPublishing: true, descriptionError: false});
 			this.props.handlePublish(this.state.versionState, this.state.versionDescription);	
 		} else {
@@ -109,6 +111,25 @@ const EditorModalPublish = React.createClass({
 							id="editor.publishMessage3"
 							defaultMessage="The full history will be maintained and accessible."/>
 					</p>
+
+					{this.props.currentJournal
+						? <div style={styles.autoSubmitWrapper}>
+							<p style={[styles.publishTextP, styles.autoSubmitText]}>
+								<FormattedMessage 
+									id="editor.publishMessageJournal1"
+									defaultMessage="Publishing will automatically submit this pub to: {currentJournal}."
+									values={{currentJournal: this.props.currentJournal}} />
+							</p>
+							<p style={[styles.publishTextP, styles.autoSubmitText]}>
+								<FormattedMessage 
+									id="editor.publishMessageJournal2"
+									defaultMessage="If you would like to publish without submitting, please publish from"/>
+								<a style={styles.detailLink} href={'http://www.pubpub.org/pub/' + this.props.slug + '/edit'}> pubpub.org</a>
+							</p>
+						</div>
+						: null
+					}
+
 					<p style={[styles.publishTextP, styles.publishTextPError, this.state.descriptionError && {display: 'block'}]}>
 						<FormattedMessage 
 							id="editor.publishMessage4"
@@ -184,6 +205,16 @@ styles = {
 	publishTextP: {
 		margin: 0,
 		padding: 0,
+	},
+	detailLink: {
+		color: 'inherit',
+	},
+	autoSubmitText: {
+		textAlign: 'center',
+		fontWeight: 'bold',
+	},
+	autoSubmitWrapper: {
+		margin: '15px 0px',
 	},
 	publishTextPError: {
 		color: 'red',

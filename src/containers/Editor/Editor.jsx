@@ -15,6 +15,7 @@ import {getPubEdit, toggleEditorViewMode, toggleFormatting, toggleTOC, unmountEd
 import {saveSettingsUser} from '../../actions/login';
 // import {loadCss} from '../../utils/loadingFunctions';
 import {debounce} from '../../utils/loadingFunctions';
+import {submitPubToJournal} from '../../actions/journal';
 
 import initCodeMirrorMode from './editorCodeMirrorMode';
 import {styles, codeMirrorStyles, animateListItemStyle} from './editorStyles';
@@ -52,6 +53,7 @@ const cmOptions = {
 const Editor = React.createClass({
 	propTypes: {
 		pubData: PropTypes.object, // Used to get new pub titles
+		journalData: PropTypes.object,
 		editorData: PropTypes.object,
 		loginData: PropTypes.object, // User login data
 		slug: PropTypes.string, // equal to project uniqueTitle
@@ -303,8 +305,15 @@ const Editor = React.createClass({
 			pHashes: pHashes,
 			publishNote: versionDescription,
 		};
-		this.props.dispatch(clearPub());
+		this.props.dispatch(clearPub());	
+
+		// This should perhaps be done on the backend in one fell swoop - rather than having two client side calls.
+		if (this.props.journalData.get('baseSubdomain')) {
+			this.props.dispatch(submitPubToJournal(this.props.editorData.getIn(['pubEditData', '_id']), this.props.journalData.getIn(['journalData']).toJS()));	
+		}
+
 		this.props.dispatch(publishVersion(newVersion));
+		
 	},
 
 	// Add asset to firebase.
@@ -508,6 +517,8 @@ const Editor = React.createClass({
 						updateCollaborators={this.saveUpdatedCollaborators}
 						// Publish Props
 						handlePublish={this.publishVersion}
+						currentJournal={this.props.journalData.getIn(['journalData', 'journalName'])}
+
 						// References Props
 						referenceData={this.state.firepadData.references}
 						referenceStyle={this.state.firepadData && this.state.firepadData.settings ? this.state.firepadData.settings.pubReferenceStyle : undefined}
@@ -699,6 +710,7 @@ const Editor = React.createClass({
 export default connect( state => {
 	return {
 		pubData: state.pub,
+		journalData: state.journal,
 		editorData: state.editor,
 		slug: state.router.params.slug,
 		loginData: state.login

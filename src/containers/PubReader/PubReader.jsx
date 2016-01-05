@@ -283,6 +283,7 @@ const PubReader = React.createClass({
 						style={pubData.history[versionIndex].style}
 						showPubHighlights={this.props.readerData.get('showPubHighlights')}
 						isFeatured={(pubData.featuredInList && pubData.featuredInList.indexOf(this.props.journalData.getIn(['journalData', '_id'])) > -1) || this.props.journalData.get('baseSubdomain') === null}
+						errorView={pubData.pubErrorView}
 
 						references={this.props.readerData.getIn(['pubData', 'history', versionIndex, 'references']) !== undefined ? this.props.readerData.getIn(['pubData', 'history', versionIndex, 'references']).toJS() : []}
 						firstPublishedDate={this.props.readerData.getIn(['pubData', 'history', 0, 'publishDate'])}

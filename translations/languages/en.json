@@ -22,6 +22,8 @@
   "editor.publishMessage1": "You can publish versions to your Pub as frequently as you like.",
   "editor.publishMessage2": "We encourage you to publish early and often.",
   "editor.publishMessage3": "The full history will be maintained and accessible.",
+  "editor.publishMessageJournal1": "Publishing will automatically submit this pub to: {currentJournal}.",
+  "editor.publishMessageJournal2": "If you would like to publish without submitting, please publish from",
   "editor.publishMessage4": "A description is required.",
   "editor.publishButton": "Publish version",
   "editor.searchForRef": "Search for a reference",

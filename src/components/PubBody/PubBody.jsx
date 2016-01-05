@@ -27,6 +27,7 @@ const PubBody = React.createClass({
 		style: PropTypes.object,
 		showPubHighlights: PropTypes.bool,
 		isFeatured: PropTypes.bool,
+		errorView: PropTypes.bool,
 
 		references: PropTypes.array,
 		minFont: PropTypes.number,
@@ -124,7 +125,6 @@ const PubBody = React.createClass({
 	},
 
 	render: function() {
-
 		return (
 			<ResizingText fontRatio={60} minFont={this.props.minFont}>
 
@@ -133,10 +133,12 @@ const PubBody = React.createClass({
 				<Style rules={this.compileStyleRules()}/>
 
 				<div id="pubContent" style={[styles.contentContainer, globalStyles[this.props.status]]} className={this.printStyleClass.pubContent}>
-					{this.props.isFeatured
-						? null
-						: <div style={styles.submittedNotification}>This Pub has been submitted to - but is not yet featured - in this journal.</div>
+					
+					{!this.props.isFeatured && !this.props.errorView
+						? <div style={styles.submittedNotification}>This Pub has been submitted to - but is not yet featured - in this journal.</div>
+						: null
 					}
+
 					{this.props.authorsNote
 						? <div id={'pub-authorsNote'} className={this.printStyleClass.authorsNote}>{this.props.authorsNote}</div>
 						: null
