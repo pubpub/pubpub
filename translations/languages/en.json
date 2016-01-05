@@ -30,6 +30,7 @@
   "editor.modeAddOptions": "more add options",
   "editor.noRefsAdded": "No References Added",
   "editor.addBibtex": "Add Bibtex",
+  "editor.addReference": "Add Reference",
   "editor.manualEntry": "Manual Entry",
   "editor.plugin": "Plugin",
   "editor.default": "default",
