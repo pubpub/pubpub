@@ -146,12 +146,12 @@ const EditorModalSettings = React.createClass({
 				activeOption: this.props.editorFontSize,
 				options: ['small', 'medium', 'large'],
 			},
-			{
-				title: 'pub privacy',
-				key: 'pubPrivacy',
-				activeOption: this.props.pubPrivacy,
-				options: ['public', 'private'],
-			},
+			// {
+			// 	title: 'pub privacy',
+			// 	key: 'pubPrivacy',
+			// 	activeOption: this.props.pubPrivacy,
+			// 	options: ['public', 'private'],
+			// },
 			{
 				title: 'pub style',
 				key: 'pubStyle',

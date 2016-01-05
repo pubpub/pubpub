@@ -124,7 +124,7 @@ const PubBody = React.createClass({
 	},
 
 	render: function() {
-		console.log('isFeatured', this.props.isFeatured);
+
 		return (
 			// <ResizingText fontRatio={60} minFont={this.props.minFont}>
 
@@ -133,6 +133,10 @@ const PubBody = React.createClass({
 				<Style rules={this.compileStyleRules()}/>
 
 				<div id="pubContent" style={[styles.contentContainer, globalStyles[this.props.status]]} className={this.printStyleClass.pubContent}>
+					{this.props.isFeatured
+						? null
+						: <div style={styles.submittedNotification}>This Pub has been submitted to - but is not yet featured - in this journal.</div>
+					}
 					{this.props.authorsNote
 						? <div id={'pub-authorsNote'} className={this.printStyleClass.authorsNote}>{this.props.authorsNote}</div>
 						: null
@@ -230,6 +234,14 @@ styles = {
 		color: '#222',
 		paddingRight: '10px',
 		fontSize: '14px',
+	},
+	submittedNotification: {
+		backgroundColor: '#373737',
+		textAlign: 'center',
+		fontSize: '18px',
+		padding: '15px',
+		margin: '5px',
+		color: 'white',
 	},
 
 };
