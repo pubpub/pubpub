@@ -50,7 +50,7 @@ export const scienceStyle = {
 	},
 	'.pub-reference': {
 		padding: '0.5em 1.5em',
-		fontSize: '0.8em',
+		fontSize: '0.85em',
 	},
 	'h1, h2, h3, h4, h5, h6': {
 		margin: '0px',
