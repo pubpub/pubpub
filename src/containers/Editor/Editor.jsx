@@ -680,7 +680,8 @@ const Editor = React.createClass({
 								authors={this.getAuthorsArray()}
 								// addSelectionHandler={this.addSelection}
 								style={this.state.firepadData && this.state.firepadData.settings ? this.state.firepadData.settings.pubStyle : undefined}
-								references={referencesList}/>
+								references={referencesList}
+								isFeatured={true}/>
 
 						}
 
