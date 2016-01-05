@@ -7,7 +7,7 @@ import { Link } from 'react-router';
 import {loadCss} from '../../utils/loadingFunctions';
 import {scienceStyle, magazineStyle} from './pubStyles';
 import cssConvert from '../../utils/cssToRadium';
-// import ResizingText from './ResizingText';
+import ResizingText from './ResizingText';
 import dateFormat from 'dateformat';
 
 import {globalMessages} from '../../utils/globalMessages';
@@ -126,7 +126,7 @@ const PubBody = React.createClass({
 	render: function() {
 
 		return (
-			// <ResizingText fontRatio={60} minFont={this.props.minFont}>
+			<ResizingText fontRatio={60} minFont={this.props.minFont}>
 
 			<div style={styles.container}>
 
@@ -141,9 +141,9 @@ const PubBody = React.createClass({
 						? <div id={'pub-authorsNote'} className={this.printStyleClass.authorsNote}>{this.props.authorsNote}</div>
 						: null
 					}
-					
+
 					<div id={'pub-title'} className={this.printStyleClass.title}>{this.props.title}</div>
-					<div id={'pub-authors'} className={this.printStyleClass.authors} style={[this.props.authors.length === 0 && {display: 'none'}]}> 
+					<div id={'pub-authors'} className={this.printStyleClass.authors} style={[this.props.authors.length === 0 && {display: 'none'}]}>
 						<span><FormattedMessage {...globalMessages.by}/> </span>
 						{
 							this.props.authors.map((author, index)=>{
@@ -181,6 +181,7 @@ const PubBody = React.createClass({
 						}
 
 					</div>
+
 					{this.props.references && this.props.references.length
 						? <div id={'pub-references'}>
 							<h1><FormattedMessage {...globalMessages.references}/></h1>
@@ -203,7 +204,7 @@ const PubBody = React.createClass({
 				</div>
 
 			</div>
-			// </ResizingText>
+			</ResizingText>
 		);
 	}
 });
@@ -218,8 +219,11 @@ styles = {
 	},
 	contentContainer: {
 		transition: '.3s linear opacity .25s',
-		padding: '0px 10px 50px 10px',
+		padding: '0px 4em 50px',
 		fontFamily: globalStyles.headerFont,
+		lineHeight: '1.58',
+		textRendering: 'optimizeLegibility',
+		'-webkit-font-smoothing': 'antialiased',
 	},
 	loading: {
 		opacity: 0,
@@ -233,7 +237,7 @@ styles = {
 	referenceNumber: {
 		color: '#222',
 		paddingRight: '10px',
-		fontSize: '14px',
+		fontSize: '1em',
 	},
 	submittedNotification: {
 		backgroundColor: '#373737',

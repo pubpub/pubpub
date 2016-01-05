@@ -2,6 +2,7 @@ import React from 'react';
 import {SimpleSelect} from 'react-selectize';
 import Radios from './radioButton';
 import DropdownProp from './dropdownProp';
+import TextInput from './textProp';
 
 // import {openModal} from '../../actions/editor';
 
@@ -16,10 +17,7 @@ export function propSrc(assetType) {
 		default: '',
 		defaultValue: '',
 		defaultString: '',
-		valueFunction: function(thisRef) {
-			return thisRef.value();
-		},
-		component: function(pluginProp, value, componentProps, styles) {
+		component: function(pluginProp, value, componentProps) {
 			const title = pluginProp.title;
 			const assets = (componentProps.assets) ? Object.values(componentProps.assets).filter(filterAssets).map( function(asset) { return {'value': asset.refName, 'label': asset.refName};}) : [];
 			// assets.push({'value': 'upload', 'label': 'Upload New'});
@@ -34,10 +32,7 @@ export const propAlign = {
 	default: '',
 	defaultValue: '',
 	defaultString: '',
-	valueFunction: function(thisRef) {
-		return thisRef.value();
-	},
-	component: function(pluginProp, value, componentProps, styles) {
+	component: function(pluginProp, value, componentProps) {
 		const title = pluginProp.title;
 		const choices = ['left', 'full', 'right'];
 		return (<Radios ref={'pluginInput-' + title} selectedValue={value}  choices={choices}/>);
@@ -49,13 +44,22 @@ export const propSize = {
 	default: '',
 	defaultValue: '',
 	defaultString: '',
-	valueFunction: function(thisRef) {
-		return thisRef.value();
-	},
-	component: function(pluginProp, value, componentProps, styles) {
+	component: function(pluginProp, value, componentProps) {
 		const title = pluginProp.title;
 		const choices = ['small', 'medium', 'large'];
 		return (<Radios ref={'pluginInput-' + title} selectedValue={value} choices={choices}/>);
+	}
+};
+
+
+export const propCaption = {
+	title: 'caption',
+	default: '',
+	defaultValue: '',
+	defaultString: '',
+	component: function(pluginProp, value, componentProps) {
+		const title = pluginProp.title;
+		return (<TextInput ref={'pluginInput-' + title} selectedValue={value}/>);
 	}
 };
 
@@ -64,10 +68,7 @@ export const propSrcRef = {
 	default: '',
 	defaultValue: '',
 	defaultString: '',
-	valueFunction: function(thisRef) {
-		return thisRef.value();
-	},
-	component: function(pluginProp, value, componentProps, styles) {
+	component: function(pluginProp, value, componentProps) {
 		const title = pluginProp.title;
 		const refs = (componentProps.references) ? Object.values(componentProps.references).map( function(ref) { return {'value': ref.refName, 'label': ref.refName};}) : [];
 		// assets.push({'value': 'upload', 'label': 'Upload New'});

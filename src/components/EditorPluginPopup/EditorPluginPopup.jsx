@@ -169,13 +169,11 @@ const EditorPluginPopup = React.createClass({
 		for (const key in content) {
 			// Generate an output string based on the key, values in the object
 			if (Object.prototype.hasOwnProperty.call(content, key)) {
-
-				const pluginProp = this.state.contentObject[key];
 				const ref = refs['pluginInput-' + key];
 
 				let val;
-				if (pluginProp.valueFunction) {
-					val = pluginProp.valueFunction(ref);
+				if (typeof ref.value === 'function') {
+					val = ref.value();
 				} else {
 					val = ref.value;
 				}

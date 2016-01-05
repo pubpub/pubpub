@@ -1,17 +1,19 @@
 import React, {PropTypes} from 'react';
 import Radium from 'radium';
 import ErrorMsg from './ErrorPlugin';
+import Media from './baseMediaPlugin';
 
-import {propSrc, propSize, propAlign} from './pluginProps';
-export const videoOptions = {src: propSrc('image'), size: propSize, align: propAlign};
+import {propSrc, propSize, propAlign, propCaption} from './pluginProps';
+export const videoOptions = {src: propSrc('video'), size: propSize, align: propAlign, caption: propCaption};
 
+let styles = {};
 
-// let styles = {};
 const VideoPlugin = React.createClass({
 	propTypes: {
 		url: PropTypes.string,
 		error: PropTypes.string,
 		children: PropTypes.string,
+		caption: PropTypes.string,
 		size: React.PropTypes.oneOf(['small', 'medium', 'large']),
 		align: React.PropTypes.oneOf(['left', 'right', 'full']),
 	},
@@ -21,27 +23,9 @@ const VideoPlugin = React.createClass({
 	render: function() {
 		let html;
 
-		const size = this.props.size || 'large';
-		const align = this.props.align || 'full';
-
-		const sizeOptions = {
-			'small': '30%',
-			'medium': '50%',
-			'large': '80%'
-		};
-
-		const styleObject = {
-			width: sizeOptions[size],
-			height: sizeOptions[size],
-			display: 'block'
-		};
-
-		if (align === 'left' || align === 'righr' ) {
-			styleObject.float = align;
-			styleObject.padding = '1em';
-		} else if (this.props.align === 'full') {
-			styleObject.margin = '0px auto';
-		}
+		const size = this.props.size;
+		const align = this.props.align;
+		const caption = this.props.caption;
 
 
 		if (this.props.error === 'empty') {
@@ -49,19 +33,24 @@ const VideoPlugin = React.createClass({
 		} else if (this.props.error === 'type') {
 			html = <ErrorMsg>Could not find video asset.</ErrorMsg>;
 		} else {
-			html = (<video style={styleObject} controls>
+			html = (
+				<Media caption={caption} size={size} align={align}>
+					<video controls style={styles.video}>
 						<source src={this.props.url} type="video/mp4"/>
-					</video>);
+					</video>
+				</Media>);
 		}
 		return html;
 	}
 });
 
-/*
-styles = function() {
-	return {
-	};
+
+styles = {
+	video: {
+		width: '100%',
+		height: '100%'
+	}
 };
-*/
+
 
 export default Radium(VideoPlugin);
