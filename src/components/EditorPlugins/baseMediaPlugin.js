@@ -1,6 +1,5 @@
 import React, {PropTypes} from 'react';
 import Radium from 'radium';
-import ImageLoader from 'react-imageloader';
 
 let styles = {};
 

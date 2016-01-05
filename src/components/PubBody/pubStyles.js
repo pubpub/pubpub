@@ -26,7 +26,7 @@ export const scienceStyle = {
 		color: '#777',
 		margin: '2em 0px',
 		fontFamily: 'Lora',
-		padding: '0px 20px',
+		padding: '0px 0px',
 	},
 	'#pub-authorsNote': {
 		textAlign: 'center',
@@ -53,12 +53,14 @@ export const scienceStyle = {
 		fontSize: '0.8em',
 	},
 	'h1, h2, h3, h4, h5, h6': {
-		padding: '0px 0.2em',
+		margin: '0px',
+		marginBottom: '1.58333em',
+		padding: '0px',
 		color: '#4C4C4C',
 	},
 	'.p-block': {
 		fontFamily: 'Lora',
-		padding: '0.5em 1em',
+		padding: '0.5em 0em',
 		color: '#565656',
 	},
 	'.codeBlock': {
@@ -79,6 +81,9 @@ export const scienceStyle = {
 		padding: '0px 1.5em 0px 4em',
 		color: '#565656',
 	},
+	'span + li + span + li': {
+		paddingTop: '0.7em'
+	},
 	'table': {
 		borderSpacing: '0px',
 		borderCollapse: 'collapse',
@@ -93,7 +98,24 @@ export const scienceStyle = {
 		backgroundColor: '#eee',
 		color: '#111',
 	},
-
+	/* Modular Fourth sizing -- from React Typography */
+	/*
+	'h1': {
+		fontSize: '2.3em',
+	},
+	*/
+	'h1': {
+		fontSize: '2em',
+	},
+	'h2': {
+		fontSize: '1.41421em',
+	},
+	'h3': {
+		fontSize: '1.25992em',
+	},
+	'h4': {
+		fontSize: '1.12246em',
+	}
 };
 
 
@@ -119,7 +141,7 @@ export const magazineStyle = {
 		textAlign: 'left',
 		color: '#777',
 		margin: '2.5em 0px',
-		padding: '0px 1.5em',
+		padding: '0px 0px',
 	},
 	'#pub-header-divider': {
 		height: '1px',
