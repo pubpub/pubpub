@@ -60,6 +60,7 @@ export default function() {
 			{regex: /\{\{audio:.*\}\}/, token: 'ppm plugin plugin-audio'},
 			// {regex: /\{\{table:.*\}\}/, token: 'ppm plugin plugin-table'},
 			{regex: /\{\{cite:.*\}\}/, token: 'ppm plugin plugin-cite'},
+			{regex: /\{\{quote:.*\}\}/, token: 'ppm plugin plugin-quote'},
 		],
 		citationStart: [
 			// {regex: /.*/, token: 'plugin-content'},
