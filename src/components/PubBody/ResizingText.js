@@ -22,7 +22,8 @@ class ResizingText extends React.Component {
 		};
 	}
 	updateWidthFont() {
-		this.elemWidth = findDOMNode(this.refs.textBody).offsetWidth;
+		const node = findDOMNode(this.refs.textBody);
+		this.elemWidth = node ? node.offsetWidth : 800;
 		this.updateFontSize();
 	}
 	calcWithBounds(max, min, elw) {
