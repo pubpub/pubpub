@@ -6,7 +6,7 @@ let styles = {};
 const baseMediaPlugin = React.createClass({
 	propTypes: {
 		children: PropTypes.any,
-		size: React.PropTypes.oneOf(['small', 'medium', 'large']),
+		size: React.PropTypes.oneOfType([React.PropTypes.oneOf(['small', 'medium', 'large']), React.PropTypes.number]),
 		align: React.PropTypes.oneOf(['left', 'right', 'full']),
 		caption: PropTypes.string,
 	},
@@ -20,17 +20,23 @@ const baseMediaPlugin = React.createClass({
 
 		// whether floating flows all of the text or just some is dependent on how much space is left
 		// a 'large' image is smaller when floating because it needs to leave space for the text
-		const sizeOptions = {
-			'small': (this.props.align === 'full') ? '30%' : '25%',
-			'medium': (this.props.align === 'full') ? '50%' : '40%',
-			'large': (this.props.align === 'full') ? '100%' : '60%'
-		};
 
 		const styleObject = {
-			width: sizeOptions[size],
-			height: sizeOptions[size],
 			display: 'block'
 		};
+
+		if (!isNaN(size)) {
+			styleObject.width = size;
+			styleObject.height = size;
+		} else {
+			const sizeOptions = {
+				'small': (this.props.align === 'full') ? '30%' : '25%',
+				'medium': (this.props.align === 'full') ? '50%' : '40%',
+				'large': (this.props.align === 'full') ? '100%' : '60%'
+			};
+			styleObject.width = sizeOptions[size];
+			styleObject.height = sizeOptions[size];
+		}
 
 		if (align === 'left' || align === 'right' ) {
 			styleObject.float = align;

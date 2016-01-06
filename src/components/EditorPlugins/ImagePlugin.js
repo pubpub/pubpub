@@ -14,7 +14,7 @@ const ImagePlugin = React.createClass({
 		url: PropTypes.string,
 		error: PropTypes.string,
 		children: PropTypes.string,
-		size: React.PropTypes.oneOf(['small', 'medium', 'large']),
+		size: React.PropTypes.oneOfType([React.PropTypes.oneOf(['small', 'medium', 'large']), React.PropTypes.number]),
 		align: React.PropTypes.oneOf(['left', 'right', 'full']),
 		caption: PropTypes.string,
 	},

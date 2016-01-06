@@ -15,27 +15,45 @@ const RadioButtonProp = React.createClass({
 		};
 	},
 
-	handleChange: function(value) {
+	handleChange: function(prop) {
+		const selectedVal = prop;
+		let val = prop;
+
+		if (prop === 'number') {
+			val = this.refs.radio.refs.number.value;
+		}
+		console.log(val);
 		this.setState({
-			selectedValue: value,
+			selectedValue: selectedVal,
+			value: val
 		});
 	},
 	value: function() {
-		return this.state.selectedValue;
+		return this.state.value;
 	},
 	render: function() {
 		const choices = this.props.choices || [];
 		return (
 			<div style={styles.group}>
 				<RadioGroup
+					ref="radio"
 					selectedValue={this.state.selectedValue}
 					onChange={this.handleChange}>
 					{Radio => (
 						<div>
 							{choices.map(function(choice) {
-								return (<label style={{width: '86px', display: 'inline-block'}}>
-									<Radio value={choice} />{choice}
-									</label>);
+								let elem;
+								if (choice !== 'number') {
+									elem = (<label style={{width: '75px', display: 'inline-block', fontSize: '0.9em' }}>
+										<Radio ref={choice} value={choice} />{choice}
+										</label>);
+								} else {
+									elem = (<label style={{width: '60px', display: 'inline-block'}}>
+										<Radio value={choice} />
+										<input ref={choice} style={{width: '26px', fontSize: '0.7em'}} min="1" max="100" maxLength="3" type="number"/>%
+										</label>);
+								}
+								return elem;
 							})}
 						</div>
 					)}
