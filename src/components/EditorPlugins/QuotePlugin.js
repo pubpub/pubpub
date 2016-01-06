@@ -32,13 +32,11 @@ const QuotePlugin = React.createClass({
 
 		if (this.props.error === 'empty') {
 			html = <span></span>;
-		} else if (url) {
+		} else {
 			html = (<Media size={size} align={align}>
 				{caption}
 			</Media>
 		);
-		} else {
-			html = <ErrorMsg>Could not find the reference.</ErrorMsg>;
 		}
 		return html;
 	}
