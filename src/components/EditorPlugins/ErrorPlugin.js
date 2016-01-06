@@ -15,7 +15,7 @@ const ErrorPlugin = React.createClass({
 
 styles = {
 	ref: {
-		'background-color': 'rgba(255,0,0,0.25)'
+		backgroundColor: 'rgba(255,0,0,0.25)'
 	}
 };
 

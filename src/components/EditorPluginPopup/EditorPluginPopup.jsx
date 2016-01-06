@@ -92,7 +92,6 @@ const EditorPluginPopup = React.createClass({
 	onPluginClick: function(event) {
 		let clickX;
 		let clickY;
-
 		if (event.pageX || event.pageY) {
 			clickX = event.pageX;
 			clickY = event.pageY;
@@ -110,10 +109,10 @@ const EditorPluginPopup = React.createClass({
 
 		if (target.className.indexOf('cm-plugin') > -1) {
 			const cm = this.getActiveCodemirrorInstance();
-			const pluginString = target.parentElement.textContent.slice(2, -2); // Original string minus the brackets
+			// const pluginString = target.parentElement.textContent.slice(2, -2); // Original string minus the brackets
+			const pluginString = target.innerHTML.slice(2, -2); // Original string minus the brackets
 			const pluginSplit = pluginString.split(':');
 			const pluginType = pluginSplit[0];
-
 			const valueString = pluginSplit.length > 1 ? pluginSplit[1] : ''; // Values split into an array
 			const values = parsePluginString(valueString);
 
@@ -134,7 +133,7 @@ const EditorPluginPopup = React.createClass({
 
 			if (firstRef && typeof firstRef.focus === 'function') {
 				firstRef.focus();
-			} 
+			}
 
 		} else {
 			if (document.getElementById('plugin-popup').contains(event.target)) {
