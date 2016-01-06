@@ -2,8 +2,8 @@ import React, {PropTypes} from 'react';
 import Radium from 'radium';
 import Media from './baseMediaPlugin';
 
-import {propSize, propAlign, propCaption, propSrcRef} from './pluginProps';
-export const quoteOptions = {caption: propCaption, size: propSize, align: propAlign, reference: propSrcRef};
+import {propQuote, propAttribution, propSize, propAlign, propSrcRef} from './pluginProps';
+export const quoteOptions = {quote: propQuote, attribution: propAttribution, size: propSize, align: propAlign, reference: propSrcRef};
 
 // let styles = {};
 
@@ -13,7 +13,7 @@ const QuotePlugin = React.createClass({
 		children: PropTypes.string,
 		size: React.PropTypes.oneOfType([React.PropTypes.oneOf(['small', 'medium', 'large']), React.PropTypes.number]),
 		align: React.PropTypes.oneOf(['left', 'right', 'full']),
-		caption: PropTypes.string,
+		quote: PropTypes.string,
 		attribution: PropTypes.string,
 		reference: PropTypes.object
 	},
@@ -23,7 +23,8 @@ const QuotePlugin = React.createClass({
 	render: function() {
 		const size = this.props.size;
 		const align = this.props.align;
-		const caption = this.props.caption;
+		const quote = this.props.quote;
+		const attribution = this.props.attribution;
 
 		let html;
 
@@ -31,7 +32,10 @@ const QuotePlugin = React.createClass({
 			html = <span></span>;
 		} else {
 			html = (<Media size={size} align={align}>
-				{caption}
+				{quote}
+				<div>
+				{attribution}
+				</div>
 			</Media>
 		);
 		}

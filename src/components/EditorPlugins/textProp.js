@@ -6,6 +6,7 @@ let styles = {};
 const TextProp = React.createClass({
 	propTypes: {
 		selectedValue: PropTypes.string,
+		placeholder: PropTypes.string
 	},
 	getInitialState: function() {
 		return {
@@ -15,12 +16,15 @@ const TextProp = React.createClass({
 	handleChange: function(event) {
 		this.setState({value: event.target.value});
 	},
+	focus: function() {
+		this.textInput.focus();
+	},
 	value: function() {
 		return this.state.value;
 	},
 	render: function() {
 		const value = this.state.value || '';
-		return <input placeholder="Enter Caption" style={styles.select} type="text" value={value} onChange={this.handleChange} />;
+		return <input ref={(ref) => this.textInput = ref} placeholder={this.props.placeholder} style={styles.select} type="text" value={value} onChange={this.handleChange} />;
 	}
 });
 
