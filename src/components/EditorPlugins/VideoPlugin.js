@@ -4,7 +4,7 @@ import ErrorMsg from './ErrorPlugin';
 import Media from './baseMediaPlugin';
 
 import {propSrc, propSize, propAlign, propCaption} from './pluginProps';
-export const videoOptions = {src: propSrc('video'), size: propSize, align: propAlign, caption: propCaption};
+export const videoOptions = {source: propSrc('video'), size: propSize, align: propAlign, caption: propCaption};
 
 let styles = {};
 

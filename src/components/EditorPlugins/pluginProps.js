@@ -13,7 +13,7 @@ export function propSrc(assetType) {
 	};
 
 	return {
-		title: 'src',
+		title: 'source',
 		default: '',
 		defaultValue: '',
 		defaultString: '',
