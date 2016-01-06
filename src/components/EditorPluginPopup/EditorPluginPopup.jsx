@@ -130,9 +130,11 @@ const EditorPluginPopup = React.createClass({
 				values: values
 			});
 
-			if (contentObject.src && !values.src) {
-				this.refs['pluginInput-src'].showOptions();
-			}
+			const firstRef = Object.keys(contentObject)[0];
+
+			if (firstRef && typeof firstRef.focus === 'function') {
+				firstRef.focus();
+			} 
 
 		} else {
 			if (document.getElementById('plugin-popup').contains(event.target)) {
@@ -172,15 +174,20 @@ const EditorPluginPopup = React.createClass({
 				const ref = refs['pluginInput-' + key];
 
 				let val;
-				if (typeof ref.value === 'function') {
-					val = ref.value();
+
+				if (ref) {
+					if (typeof ref.value === 'function') {
+						val = ref.value();
+					} else {
+						val = ref.value;
+					}
+					if (val && val.length) {
+						outputVariables += key + '=' + val + ', ';
+					}
 				} else {
-					val = ref.value;
+					console.log('Could not find ' + key + ' in dict.');
 				}
 
-				if (val && val.length) {
-					outputVariables += key + '=' + val + ', ';
-				}
 			}
 		}
 		outputVariables = outputVariables.slice(0, -2); // Remove the last comma and space
@@ -195,10 +202,7 @@ const EditorPluginPopup = React.createClass({
 				<div style={styles.pluginPopupArrow}></div>
 				<div style={styles.pluginContent}>
 					<div style={styles.pluginPopupTitle}>
-						<FormattedMessage
-								id="editor.plugin"
-								defaultMessage="Plugin"/>
-						: {this.state.pluginType}</div>
+						{this.state.pluginType}</div>
 						{
 							Object.keys(this.state.contentObject).map((valKey)=>{
 								const pluginProp = this.state.contentObject[valKey];
@@ -274,7 +278,10 @@ styles = {
 	},
 	pluginPopupTitle: {
 		padding: '6px 0px',
-		fontSize: '18px',
+		fontSize: '25px',
+		textTransform: 'capitalize',
+		fontFamily: 'Courier',
+		marginBottom: '10px',
 	},
 	pluginSave: {
 		padding: '6px 20px 6px 0px',
@@ -288,14 +295,15 @@ styles = {
 		},
 	},
 	pluginOptionWrapper: {
-		margin: '0px 10px 10px 10px',
+		margin: '0px 10px 15px 10px',
 		fontFamily: 'Courier',
 	},
 	pluginOptionLabel: {
 		// width: '100%',
 		display: 'inline-block',
 		marginRight: '20px',
-		width: '20%'
+		width: '20%',
+		textTransform: 'capitalize'
 	},
 	pluginOptionInput: {
 		width: 'calc(50% - 4px)',

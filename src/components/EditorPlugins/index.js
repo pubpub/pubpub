@@ -59,7 +59,7 @@ export default {
 		inlineFunc: function(cap, renderer, data) {
 			const assets = data.assets;
 			const propDict = parsePluginString(cap[1]);
-			const refName = propDict.src || 'none';
+			const refName = propDict.src || propDict.source || 'none';
 			const asset = assets[refName];
 
 			if (Object.keys(propDict).length === 0) {
@@ -81,8 +81,9 @@ export default {
 		inlineFunc: function(cap, renderer, data) {
 			const assets = data.assets;
 			const propDict = parsePluginString(cap[1]);
-			const refName = propDict.src || 'none';
-			// const asset = assets.find(asst => (asst.refName === refName));
+
+			// historical naming variations on the source property
+			const refName = propDict.src || propDict.source || 'none';
 			const asset = assets[refName];
 			if (Object.keys(propDict).length === 0) {
 				propDict.error = 'empty';
@@ -103,6 +104,8 @@ export default {
 		inlineFunc: function(cap, renderer, data) {
 			const references = data.references;
 			const propDict = parsePluginString(cap[1]);
+
+			// historical naming variations on the source property
 			const refName = propDict.srcRef || propDict.reference || 'none';
 			const ref = references[refName];
 			if (Object.keys(propDict).length === 0) {

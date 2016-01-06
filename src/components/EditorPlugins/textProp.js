@@ -32,8 +32,8 @@ styles = {
 		borderLeft: 'none',
 		borderRight: 'none',
 		borderBottom: 'gainsboro solid 1px',
-		fontSize: '13px',
-		height: '2.5em',
+		fontSize: '15px',
+		height: '2em',
 		paddingLeft: '5px',
 	},
 };

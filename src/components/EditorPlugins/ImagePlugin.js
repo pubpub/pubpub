@@ -5,7 +5,7 @@ import ErrorMsg from './ErrorPlugin';
 import Media from './baseMediaPlugin';
 
 import {propSrc, propSize, propAlign, propCaption, propSrcRef} from './pluginProps';
-export const imageOptions = {src: propSrc('image'), size: propSize, align: propAlign, caption: propCaption, reference: propSrcRef};
+export const imageOptions = {source: propSrc('image'), size: propSize, align: propAlign, caption: propCaption, reference: propSrcRef};
 
 // let styles = {};
 
