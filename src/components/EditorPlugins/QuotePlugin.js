@@ -1,6 +1,5 @@
 import React, {PropTypes} from 'react';
 import Radium from 'radium';
-import ErrorMsg from './ErrorPlugin';
 import Media from './baseMediaPlugin';
 
 import {propSize, propAlign, propCaption, propSrcRef} from './pluginProps';
@@ -10,7 +9,6 @@ export const quoteOptions = {caption: propCaption, size: propSize, align: propAl
 
 const QuotePlugin = React.createClass({
 	propTypes: {
-		url: PropTypes.string,
 		error: PropTypes.string,
 		children: PropTypes.string,
 		size: React.PropTypes.oneOfType([React.PropTypes.oneOf(['small', 'medium', 'large']), React.PropTypes.number]),
@@ -23,7 +21,6 @@ const QuotePlugin = React.createClass({
 		return {};
 	},
 	render: function() {
-		const url = this.props.url;
 		const size = this.props.size;
 		const align = this.props.align;
 		const caption = this.props.caption;

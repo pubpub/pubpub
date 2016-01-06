@@ -12,6 +12,7 @@ const RadioButtonProp = React.createClass({
 	getInitialState: function() {
 		return {
 			selectedValue: this.props.selectedValue || null,
+			value: this.props.selectedValue || null,
 		};
 	},
 
@@ -22,7 +23,6 @@ const RadioButtonProp = React.createClass({
 		if (prop === 'number') {
 			val = this.refs.radio.refs.number.value;
 		}
-		console.log(val);
 		this.setState({
 			selectedValue: selectedVal,
 			value: val
