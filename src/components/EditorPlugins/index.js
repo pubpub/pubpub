@@ -1,5 +1,6 @@
 import MathPlugin 	from './MathPlugin';
 import PagebreakPlugin 	from './PagebreakPlugin';
+import LinebreakPlugin 	from './LinebreakPlugin';
 import ImagePlugin 	from './ImagePlugin';
 import CitePlugin 	from './CitePlugin';
 import VideoPlugin 	from './VideoPlugin';
@@ -33,6 +34,15 @@ export default {
 	pagebreak: {
 		component: PagebreakPlugin,
 		rule: /^(?:\s)*(?:\{\{)pagebreak([^\n\}]*)(?:\}\})/,
+		inline: true,
+		autocomplete: false,
+		inlineFunc: function(cap, renderer) {
+			return renderer(cap[1]);
+		}
+	},
+	linebreak: {
+		component: LinebreakPlugin,
+		rule: /^(?:\s)*(?:\{\{)linebreak([^\n\}]*)(?:\}\})/,
 		inline: true,
 		autocomplete: false,
 		inlineFunc: function(cap, renderer) {

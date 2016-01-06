@@ -45,6 +45,9 @@ export function insertText(cm, formatting, baseText, showPopup) {
 	case 'Pagebreak':
 		cm.replaceSelection('{{pagebreak}}');
 		break;
+	case 'Linebreak':
+		cm.replaceSelection('{{linebreak}}');
+		break;
 	default:
 		throw new Error('Insert command not found');
 	}
