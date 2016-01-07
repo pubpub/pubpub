@@ -14,9 +14,14 @@ const DropdownProp = React.createClass({
 		callback();
 	},
 	focus: function() {
+		let focused;
 		if (Object.keys(this.props.selectedValue || {}).length === 0) {
 			this.refs.select.showOptions();
+			focused = true;
+		} else {
+			focused = false;
 		}
+		return focused;
 	},
 	value: function() {
 		const val = this.refs.select.value();

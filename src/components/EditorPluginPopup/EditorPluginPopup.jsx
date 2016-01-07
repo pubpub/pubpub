@@ -36,6 +36,15 @@ const EditorPluginPopup = React.createClass({
 
 	componentDidMount() {
 		document.documentElement.addEventListener('click', this.onPluginClick);
+		document.documentElement.addEventListener('keydown', this.onpluginKeyPress);
+
+	},
+	onpluginKeyPress(evt) {
+		if (evt.keyCode === 13) {
+			if (document.activeElement === document.body) {
+				this.onPluginSave();
+			}
+		}
 	},
 	componentWillReceiveProps(nextProps) {
 
@@ -72,6 +81,7 @@ const EditorPluginPopup = React.createClass({
 
 	componentWillUnmount() {
 		document.documentElement.removeEventListener('click', this.onPluginClick);
+		document.documentElement.removeEventListener('keydown', this.onpluginKeyPress);
 	},
 
 	getActiveCodemirrorInstance: function() {
@@ -89,6 +99,9 @@ const EditorPluginPopup = React.createClass({
 		};
 	},
 
+	focus: function() {
+		this.popupBox.focus();
+	},
 	onPluginClick: function(event) {
 		let clickX;
 		let clickY;
@@ -131,8 +144,14 @@ const EditorPluginPopup = React.createClass({
 
 			const firstRefName = Object.keys(contentObject)[0];
 			const firstRef = (firstRefName) ? this.refs['pluginInput-' + firstRefName] : null;
+			cm.setCursor(null);
 			if (firstRef && typeof firstRef.focus === 'function') {
-				firstRef.focus();
+				const focused = firstRef.focus();
+				if (!focused) {
+					document.body.focus();
+				}
+			} else {
+				document.body.focus();
 			}
 
 		} else {
@@ -195,9 +214,8 @@ const EditorPluginPopup = React.createClass({
 	},
 
 	render: function() {
-
 		return (
-			<div id="plugin-popup" className="plugin-popup" style={[styles.pluginPopup, this.getPluginPopupLoc(), this.state.popupVisible && styles.pluginPopupVisible]}>
+			<div id="plugin-popup" ref={(ref) => this.popupBox = ref} className="plugin-popup" style={[styles.pluginPopup, this.getPluginPopupLoc(), this.state.popupVisible && styles.pluginPopupVisible]}>
 				<div style={styles.pluginPopupArrow}></div>
 				<div style={styles.pluginContent}>
 					<div style={styles.pluginPopupTitle}>
