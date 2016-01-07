@@ -185,7 +185,8 @@ const DiscussionsItem = React.createClass({
 								addDiscussionStatus={this.props.addDiscussionStatus} 
 								newDiscussionData={this.props.newDiscussionData} 
 								userThumbnail={this.props.userThumbnail} 
-								handleVoteSubmit={this.props.handleVoteSubmit} />
+								handleVoteSubmit={this.props.handleVoteSubmit} 
+								noReply={this.props.noReply}/>
 							);
 						})
 					}

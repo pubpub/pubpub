@@ -31,7 +31,7 @@ import marked from '../../modules/markdown/markdown';
 import markdownExtensions from '../../components/EditorPlugins';
 import FirepadUserList from './editorFirepadUserlist';
 
-import Discussions from '../';
+import {Discussions} from '../';
 
 import {convertFirebaseToObject} from '../../utils/parsePlugins';
 
@@ -673,7 +673,7 @@ const Editor = React.createClass({
 						}
 
 						{this.state.showComments
-							? <Discussions editorCommentMode={false} />
+							? <Discussions editorCommentMode={false} inEditor={true}/>
 							: <PubBody
 								status={'loaded'}
 								title={this.state.title}

@@ -122,11 +122,11 @@ const EditorModalCollaborators = React.createClass({
 						textAlign={'right'}
 						resultRenderFunction={this.renderCollaboratorsSearchResults}/>
 					{/* <input style={baseStyles.rightCornerSearchInput} type="text" placeholder="Add new collaborator"/> */}
-					<div key="refAdvancedText" style={baseStyles.rightCornerSearchAdvanced} onClick={this.toggleshowInviteOptions}>
+					{/* <div key="refAdvancedText" style={baseStyles.rightCornerSearchAdvanced} onClick={this.toggleshowInviteOptions}>
 						<FormattedMessage
 							id="editor.inviteByEmail"
 							defaultMessage="invite by email"/>
-					</div>
+					</div> */}
 				</div>
 
 				{/* Back button when in invite by email mode */}

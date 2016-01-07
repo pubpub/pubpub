@@ -18,6 +18,7 @@ const Discussions = React.createClass({
 	propTypes: {
 		metaID: PropTypes.string,
 		editorCommentMode: PropTypes.bool, 
+		inEditor: PropTypes.bool, 
 
 		pubData: PropTypes.object,
 		editorData: PropTypes.object,
@@ -46,6 +47,7 @@ const Discussions = React.createClass({
 	getDefaultProps: function() {
 		return {
 			editorCommentMode: false,
+			inEditor: false,
 		};
 	},
 
@@ -71,6 +73,15 @@ const Discussions = React.createClass({
 		this.props.dispatch(togglePubHighlights());
 	},
 
+	getPubData: function() {
+		if (this.props.inEditor) {
+			return this.props.editorData.get('pubEditData') ? this.props.editorData.get('pubEditData').toJS() : {};
+		}
+
+		return this.props.pubData.get('pubData') ? this.props.pubData.get('pubData').toJS() : {};
+	
+	},
+
 	filterDiscussions: function() {
 		function findDiscussionRoot(discussions, searchID) {
 			for (let index = 0; index < discussions.length; index++) {
@@ -82,13 +93,14 @@ const Discussions = React.createClass({
 			}
 		}
 
-		const pubData = this.props.pubData.get('pubData') ? this.props.pubData.get('pubData').toJS() : {};
+		const pubData = this.getPubData();
 		return [findDiscussionRoot(pubData.discussions, this.props.metaID)];
 	},
 
 	render: function() {
 		// const pubData = {discussions: []};
-		const pubData = this.props.pubData.get('pubData') ? this.props.pubData.get('pubData').toJS() : {};
+		
+		const pubData = this.getPubData();
 		const discussionsData = this.props.metaID ? this.filterDiscussions() : pubData.discussions;
 
 		return (
@@ -96,8 +108,9 @@ const Discussions = React.createClass({
 				
 				<div className="pub-discussions-wrapper" style={rightBarStyles.sectionWrapper}>
 					
-					{!this.props.metaID
-						? <DiscussionsInput 
+					{this.props.metaID || (!this.props.editorCommentMode && this.props.inEditor)
+						? null
+						: <DiscussionsInput 
 								addDiscussionHandler={this.addDiscussion}
 								addDiscussionStatus={this.props.pubData.get('addDiscussionStatus')} 
 								newDiscussionData={this.props.pubData.get('newDiscussionData')} 
@@ -106,8 +119,6 @@ const Discussions = React.createClass({
 								saveID={'root'}
 								isReply={false}
 								codeMirrorID={'rootCommentInput'}/>
-						: null
-
 					}
 					
 					{
@@ -123,7 +134,8 @@ const Discussions = React.createClass({
 								addDiscussionStatus={this.props.pubData.get('addDiscussionStatus')} 
 								newDiscussionData={this.props.pubData.get('newDiscussionData')} 
 								userThumbnail={this.props.loginData.getIn(['userData', 'thumbnail'])} 
-								handleVoteSubmit={this.discussionVoteSubmit} />
+								handleVoteSubmit={this.discussionVoteSubmit} 
+								noReply={!this.props.editorCommentMode && this.props.inEditor}/>
 							);
 						})
 					}
