@@ -2,7 +2,8 @@ import React, {PropTypes} from 'react';
 import Radium from 'radium';
 import {globalStyles} from '../../utils/styleConstants';
 import {PubModalCite, PubModalTOC, } from './';
-import {PubStatus, PubReviews, PubDiscussions} from '../';
+import {PubStatus, PubReviews} from '../';
+import {Discussions} from '../../containers';
 
 let styles = {};
 
@@ -27,15 +28,15 @@ const PubModals = React.createClass({
 		// Reviews Data
 		reviewsData: PropTypes.array,
 		// Discussions Data
-		discussionsData: PropTypes.array,
-		expertsData: PropTypes.object,
-		addDiscussionHandler: PropTypes.func,
-		addDiscussionStatus: PropTypes.string,
-		newDiscussionData: PropTypes.object,
-		userThumbnail: PropTypes.string,
-		handleVoteSubmit: PropTypes.func,
-		toggleHighlightsHandler: PropTypes.func,
-		showPubHighlights: PropTypes.bool,
+		// discussionsData: PropTypes.array,
+		// expertsData: PropTypes.object,
+		// addDiscussionHandler: PropTypes.func,
+		// addDiscussionStatus: PropTypes.string,
+		// newDiscussionData: PropTypes.object,
+		// userThumbnail: PropTypes.string,
+		// handleVoteSubmit: PropTypes.func,
+		// toggleHighlightsHandler: PropTypes.func,
+		// showPubHighlights: PropTypes.bool,
 
 
 	},
@@ -86,20 +87,22 @@ const PubModals = React.createClass({
 										
 
 							case 'discussions':
-							// Don't 
-								return (<PubDiscussions 
-									slug={this.props.slug}
-									discussionsData={this.props.discussionsData}
-									expertsData={this.props.expertsData}
-									addDiscussionHandler={this.props.addDiscussionHandler} 
-									pHashes={{}} // Send a blank object in because we don't want to repopulate the highlights. We'll probably have to do something different so selections are clickable/scrollable...
-									addDiscussionStatus={this.props.addDiscussionStatus}
-									newDiscussionData={this.props.newDiscussionData}
-									userThumbnail={this.props.userThumbnail}
-									handleVoteSubmit={this.props.handleVoteSubmit}
-									toggleHighlightsHandler={this.props.toggleHighlightsHandler}
-									showPubHighlights={this.props.showPubHighlights}/>
-								);
+							
+								// return (<PubDiscussions 
+								// 	slug={this.props.slug}
+								// 	discussionsData={this.props.discussionsData}
+								// 	expertsData={this.props.expertsData}
+								// 	addDiscussionHandler={this.props.addDiscussionHandler} 
+								// 	pHashes={{}} // Send a blank object in because we don't want to repopulate the highlights. We'll probably have to do something different so selections are clickable/scrollable...
+								// 	addDiscussionStatus={this.props.addDiscussionStatus}
+								// 	newDiscussionData={this.props.newDiscussionData}
+								// 	userThumbnail={this.props.userThumbnail}
+								// 	handleVoteSubmit={this.props.handleVoteSubmit}
+								// 	toggleHighlightsHandler={this.props.toggleHighlightsHandler}
+								// 	showPubHighlights={this.props.showPubHighlights}/>
+								// );
+
+								return <Discussions editorCommentMode={false} />;
 							
 							
 							default:

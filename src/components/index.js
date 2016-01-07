@@ -19,7 +19,7 @@ export LoaderIndeterminate from './LoaderIndeterminate/LoaderIndeterminate';
 export LoginForm from './LoginForm/LoginForm';
 export LoginFormRegister from './LoginFormRegister/LoginFormRegister';
 export PubBody from './PubBody/PubBody';
-export PubDiscussions from './PubDiscussions/PubDiscussions';
+// export PubDiscussions from './PubDiscussions/PubDiscussions';
 export PubGallery from './PubGallery/PubGallery';
 export PubLeftBar from './PubLeftBar/PubLeftBar';
 export PubModals from './PubModals/PubModals';

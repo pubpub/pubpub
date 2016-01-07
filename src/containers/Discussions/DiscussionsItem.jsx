@@ -3,8 +3,8 @@ import Radium from 'radium';
 import {globalStyles} from '../../utils/styleConstants';
 import { Link } from 'react-router';
 import dateFormat from 'dateformat';
-import PubDiscussionsInput from './PubDiscussionsInput';
-import PubDiscussionsScore from './PubDiscussionsScore';
+import DiscussionsInput from './DiscussionsInput';
+import DiscussionsScore from './DiscussionsScore';
 import smoothScroll from '../../utils/smoothscroll';
 
 import marked from '../../modules/markdown/markdown';
@@ -16,7 +16,7 @@ import {FormattedMessage} from 'react-intl';
 
 let styles = {};
 
-const PubDiscussionsItem = React.createClass({
+const DiscussionsItem = React.createClass({
 	propTypes: {
 		slug: PropTypes.string,
 		discussionItem: PropTypes.object,
@@ -139,7 +139,7 @@ const PubDiscussionsItem = React.createClass({
 
 				<div style={styles.discussionBody}>
 					<div style={styles.discussionVoting}>
-						<PubDiscussionsScore 
+						<DiscussionsScore 
 							discussionID={discussionItem._id}
 							score={discussionItem.yays - discussionItem.nays}
 							userYay={discussionItem.userYay}
@@ -156,7 +156,7 @@ const PubDiscussionsItem = React.createClass({
 				{this.props.noReply
 					? null
 					: <div style={[styles.replyWrapper, this.state.replyActive && styles.replyWrapperActive]}>
-						<PubDiscussionsInput 
+						<DiscussionsInput 
 							addDiscussionHandler={this.props.addDiscussionHandler}
 							addDiscussionStatus={this.props.addDiscussionStatus} 
 							newDiscussionData={this.props.newDiscussionData} 
@@ -197,8 +197,8 @@ const PubDiscussionsItem = React.createClass({
 	}
 });
 
-const ChildPubDiscussionItem = Radium(PubDiscussionsItem);
-export default Radium(PubDiscussionsItem);
+const ChildPubDiscussionItem = Radium(DiscussionsItem);
+export default Radium(DiscussionsItem);
 
 styles = {
 	container: {

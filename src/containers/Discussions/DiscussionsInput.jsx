@@ -2,7 +2,7 @@
 
 import React, {PropTypes} from 'react';
 import Radium, {Style} from 'radium';
-import {LoaderIndeterminate} from '../';
+import {LoaderIndeterminate} from '../../components';
 import {globalStyles} from '../../utils/styleConstants';
 
 import {globalMessages} from '../../utils/globalMessages';
@@ -13,7 +13,7 @@ let styles = {};
 // import {loadCss} from '../../utils/loadingFunctions';
 import initCodeMirrorMode from '../../containers/Editor/editorCodeMirrorMode';
 import {codeMirrorStyles} from '../../containers/Editor/editorStyles';
-import {clearTempHighlights} from '../PubSelectionPopup/selectionFunctions';
+import {clearTempHighlights} from '../../components/PubSelectionPopup/selectionFunctions';
 
 // import marked from '../../modules/markdown/markdown';
 // import markdownExtensions from '../../components/EditorPlugins';
@@ -87,6 +87,7 @@ const PubDiscussionsInput = React.createClass({
 	},
 
 	render: function() {
+
 		return (
 			<div style={[styles.container, this.props.isReply && styles.replyContainer]}>
 				<Style rules={{

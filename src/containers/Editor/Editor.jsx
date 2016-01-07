@@ -31,7 +31,7 @@ import marked from '../../modules/markdown/markdown';
 import markdownExtensions from '../../components/EditorPlugins';
 import FirepadUserList from './editorFirepadUserlist';
 
-import PubDiscussionsItem from '../../components/PubDiscussions/PubDiscussionsItem';
+import Discussions from '../';
 
 import {convertFirebaseToObject} from '../../utils/parsePlugins';
 
@@ -673,14 +673,7 @@ const Editor = React.createClass({
 						}
 
 						{this.state.showComments
-							? this.props.editorData.getIn(['pubEditData', 'discussions']).toJS().map((discussion)=>{
-								return (<PubDiscussionsItem
-									key={'editorDiscussionItem-' + discussion._id}
-									slug={this.props.slug}
-									discussionItem={discussion}
-									noReply={true}/>
-								);
-							})
+							? <Discussions editorCommentMode={false} />
 							: <PubBody
 								status={'loaded'}
 								title={this.state.title}

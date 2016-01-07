@@ -3,13 +3,14 @@ import {connect} from 'react-redux';
 import Radium from 'radium';
 import Helmet from 'react-helmet';
 import PureRenderMixin from 'react-addons-pure-render-mixin';
-import {getPub, addDiscussion, discussionVoteSubmit, pubNavIn} from '../../actions/pub';
-import {toggleVisibility} from '../../actions/login';
+import {getPub, pubNavIn} from '../../actions/pub';
+// import {toggleVisibility} from '../../actions/login';
 import {submitPubToJournal} from '../../actions/journal';
 import { Link } from 'react-router';
 import {PubLeftBar, PubNav, LoaderDeterminate} from '../../components';
+import {Discussions} from '../../containers';
 // import {PubMetaDiscussions, PubMetaExperts, PubMetaHistory, PubMetaHistoryDiff, PubMetaReview, PubMetaReviews, PubMetaSource} from '../../components/PubMetaPanels';
-import {PubMetaAnalytics, PubMetaCitations, PubMetaDiscussions, PubMetaHistory, PubMetaHistoryDiff, PubMetaInTheNews, PubMetaInvite, PubMetaJournals, PubMetaSource} from '../../components/PubMetaPanels';
+import {PubMetaAnalytics, PubMetaCitations, PubMetaHistory, PubMetaHistoryDiff, PubMetaInTheNews, PubMetaInvite, PubMetaJournals, PubMetaSource} from '../../components/PubMetaPanels';
 import {globalStyles, pubSizes} from '../../utils/styleConstants';
 
 import {globalMessages} from '../../utils/globalMessages';
@@ -63,22 +64,22 @@ const PubMeta = React.createClass({
 		};
 	},
 
-	addDiscussion: function(discussionObject, activeSaveID) {
-		if (!this.props.loginData.get('loggedIn')) {
-			return this.props.dispatch(toggleVisibility());
-		}
-		discussionObject.pub = this.props.readerData.getIn(['pubData', '_id']);
-		discussionObject.version = this.props.query.version !== undefined && this.props.query.version > 0 && this.props.query.version < (this.props.readerData.getIn(['pubData', 'history']).size - 1) ? this.props.query.version : this.props.readerData.getIn(['pubData', 'history']).size;
-		discussionObject.selections = this.props.readerData.getIn(['newDiscussionData', 'selections']);
-		this.props.dispatch(addDiscussion(discussionObject, activeSaveID));	
-	},
+	// addDiscussion: function(discussionObject, activeSaveID) {
+	// 	if (!this.props.loginData.get('loggedIn')) {
+	// 		return this.props.dispatch(toggleVisibility());
+	// 	}
+	// 	discussionObject.pub = this.props.readerData.getIn(['pubData', '_id']);
+	// 	discussionObject.version = this.props.query.version !== undefined && this.props.query.version > 0 && this.props.query.version < (this.props.readerData.getIn(['pubData', 'history']).size - 1) ? this.props.query.version : this.props.readerData.getIn(['pubData', 'history']).size;
+	// 	discussionObject.selections = this.props.readerData.getIn(['newDiscussionData', 'selections']);
+	// 	this.props.dispatch(addDiscussion(discussionObject, activeSaveID));	
+	// },
 
-	discussionVoteSubmit: function(type, discussionID, userYay, userNay) {
-		if (!this.props.loginData.get('loggedIn')) {
-			return this.props.dispatch(toggleVisibility());
-		}
-		this.props.dispatch(discussionVoteSubmit(type, discussionID, userYay, userNay));
-	},
+	// discussionVoteSubmit: function(type, discussionID, userYay, userNay) {
+	// 	if (!this.props.loginData.get('loggedIn')) {
+	// 		return this.props.dispatch(toggleVisibility());
+	// 	}
+	// 	this.props.dispatch(discussionVoteSubmit(type, discussionID, userYay, userNay));
+	// },
 
 	submitToJournal: function(journalData) {
 		this.props.dispatch(submitPubToJournal(this.props.readerData.getIn(['pubData', '_id']), journalData));
@@ -165,18 +166,19 @@ const PubMeta = React.createClass({
 										diffObject={this.props.readerData.getIn(['pubData', 'history', versionIndex, 'diffObject']).toJS()}/>
 									);
 							case 'discussions':
-								return (<PubMetaDiscussions 
-									metaID={this.props.metaID}
-									slug={this.props.slug}
-									discussionsData={this.props.readerData.getIn(['pubData', 'discussions']).toJS()}
+								return <Discussions editorCommentMode={false} metaID={this.props.metaID} />;
+								// return (<PubMetaDiscussions 
+								// 	metaID={this.props.metaID}
+								// 	slug={this.props.slug}
+								// 	discussionsData={this.props.readerData.getIn(['pubData', 'discussions']).toJS()}
 									
-									addDiscussionHandler={this.addDiscussion}
-									addDiscussionStatus={this.props.readerData.get('addDiscussionStatus')}
-									newDiscussionData={this.props.readerData.get('newDiscussionData')}
-									activeSaveID={this.props.readerData.get('activeSaveID')}
-									userThumbnail={this.props.loginData.getIn(['userData', 'thumbnail'])}
-									handleVoteSubmit={this.discussionVoteSubmit} />
-									);
+								// 	addDiscussionHandler={this.addDiscussion}
+								// 	addDiscussionStatus={this.props.readerData.get('addDiscussionStatus')}
+								// 	newDiscussionData={this.props.readerData.get('newDiscussionData')}
+								// 	activeSaveID={this.props.readerData.get('activeSaveID')}
+								// 	userThumbnail={this.props.loginData.getIn(['userData', 'thumbnail'])}
+								// 	handleVoteSubmit={this.discussionVoteSubmit} />
+								// 	);
 							case 'invite':
 								return (
 									<PubMetaInvite />

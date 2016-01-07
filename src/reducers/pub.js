@@ -197,6 +197,7 @@ function addDiscussionLoad(state, activeSaveID) {
 
 function addDiscussionSuccess(state, result, activeSaveID) {
 	function findParentAndAdd(discussions, parentID, newChild) {
+		console.log('in here');
 		discussions.map((discussion)=>{
 			if (discussion._id === parentID) {
 				discussion.children.unshift(result);
@@ -208,7 +209,7 @@ function addDiscussionSuccess(state, result, activeSaveID) {
 	}
 
 	let discussionsObject = state.getIn(['pubData', 'discussions']);
-	
+	console.log('in here 2');
 	if (!result.parent) {
 		discussionsObject = discussionsObject.unshift(result);
 	} else {
@@ -217,7 +218,7 @@ function addDiscussionSuccess(state, result, activeSaveID) {
 		findParentAndAdd(discussionsArray, result.parent, result);
 		discussionsObject = discussionsArray;
 	}
-
+	console.log('in here3');
 	const newState = state.mergeIn(['pubData', 'discussions'], discussionsObject);
 	return newState.merge({
 		addDiscussionStatus: 'loaded',

@@ -1,6 +1,7 @@
 export App from './App/App';
 export Autocomplete from './Autocomplete/Autocomplete';
 export Collection from './Collection/Collection';
+export Discussions from './Discussions/Discussions';
 export Editor from './Editor/Editor';
 export Explore from './Explore/Explore';
 export JournalCreate from './JournalCreate/JournalCreate';

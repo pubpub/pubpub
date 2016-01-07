@@ -4,15 +4,17 @@ import Radium, {Style} from 'radium';
 import Helmet from 'react-helmet';
 import PureRenderMixin from 'react-addons-pure-render-mixin';
 import { Link } from 'react-router';
-import {getPub, openPubModal, closePubModal, addDiscussion, addSelection, discussionVoteSubmit, togglePubHighlights, pubNavOut, pubNavIn} from '../../actions/pub';
+import {getPub, openPubModal, closePubModal, addSelection, pubNavOut, pubNavIn} from '../../actions/pub';
 import {getRandomSlug} from '../../actions/journal';
 import {toggleVisibility, follow, unfollow} from '../../actions/login';
 import {closeMenu} from '../../actions/nav';
 
 import {convertImmutableListToObject} from '../../utils/parsePlugins';
 
-// import {PubBody, PubModals, PubNav, LoaderDeterminate, PubDiscussions, PubStatus, PubReviews, PubLeftBar} from '../../components';
-import {PubBody, PubModals, PubNav, LoaderDeterminate, PubDiscussions, PubLeftBar} from '../../components';
+// import {PubBody, PubModals, PubNav, LoaderDeterminate, Discussions, PubStatus, PubReviews, PubLeftBar} from '../../components';
+import {PubBody, PubModals, PubNav, LoaderDeterminate, PubLeftBar} from '../../components';
+import {Discussions} from '../';
+
 import {globalStyles, pubSizes} from '../../utils/styleConstants';
 
 import marked from '../../modules/markdown/markdown';
@@ -120,31 +122,31 @@ const PubReader = React.createClass({
 	closeMenu: function() {
 		this.props.dispatch(closeMenu());
 	},
-	addDiscussion: function(discussionObject, activeSaveID) {
-		if (!this.props.loginData.get('loggedIn')) {
-			return this.props.dispatch(toggleVisibility());
-		}
-		discussionObject.pub = this.props.readerData.getIn(['pubData', '_id']);
-		discussionObject.version = this.props.query.version !== undefined && this.props.query.version > 0 && this.props.query.version < (this.props.readerData.getIn(['pubData', 'history']).size - 1) ? this.props.query.version : this.props.readerData.getIn(['pubData', 'history']).size;
-		discussionObject.selections = this.props.readerData.getIn(['newDiscussionData', 'selections']);
-		this.props.dispatch(addDiscussion(discussionObject, activeSaveID));
-	},
+	// addDiscussion: function(discussionObject, activeSaveID) {
+	// 	if (!this.props.loginData.get('loggedIn')) {
+	// 		return this.props.dispatch(toggleVisibility());
+	// 	}
+	// 	discussionObject.pub = this.props.readerData.getIn(['pubData', '_id']);
+	// 	discussionObject.version = this.props.query.version !== undefined && this.props.query.version > 0 && this.props.query.version < (this.props.readerData.getIn(['pubData', 'history']).size - 1) ? this.props.query.version : this.props.readerData.getIn(['pubData', 'history']).size;
+	// 	discussionObject.selections = this.props.readerData.getIn(['newDiscussionData', 'selections']);
+	// 	this.props.dispatch(addDiscussion(discussionObject, activeSaveID));
+	// },
 	addSelection: function(newSelection) {
 		newSelection.pub = this.props.readerData.getIn(['pubData', '_id']);
 		newSelection.version = this.props.query.version !== undefined && this.props.query.version > 0 && this.props.query.version < (this.props.readerData.getIn(['pubData', 'history']).size - 1) ? this.props.query.version : this.props.readerData.getIn(['pubData', 'history']).size;
 		this.props.dispatch(addSelection(newSelection));
 	},
 
-	discussionVoteSubmit: function(type, discussionID, userYay, userNay) {
-		if (!this.props.loginData.get('loggedIn')) {
-			return this.props.dispatch(toggleVisibility());
-		}
-		this.props.dispatch(discussionVoteSubmit(type, discussionID, userYay, userNay));
-	},
+	// discussionVoteSubmit: function(type, discussionID, userYay, userNay) {
+	// 	if (!this.props.loginData.get('loggedIn')) {
+	// 		return this.props.dispatch(toggleVisibility());
+	// 	}
+	// 	this.props.dispatch(discussionVoteSubmit(type, discussionID, userYay, userNay));
+	// },
 
-	toggleHighlights: function() {
-		this.props.dispatch(togglePubHighlights());
-	},
+	// toggleHighlights: function() {
+	// 	this.props.dispatch(togglePubHighlights());
+	// },
 
 	readRandomPub: function() {
 		const analyticsData = {
@@ -307,7 +309,8 @@ const PubReader = React.createClass({
 						featuredIn={pubData.featuredIn}
 						submittedTo={pubData.submittedTo}
 						// Reviews Data
-						reviewsData={pubData.reviews}
+						reviewsData={pubData.reviews} />
+						{/*
 						// Discussions Data
 						discussionsData={pubData.discussions}
 						expertsData={pubData.experts}
@@ -319,6 +322,7 @@ const PubReader = React.createClass({
 						handleVoteSubmit={this.discussionVoteSubmit}
 						toggleHighlightsHandler={this.toggleHighlights}
 						showPubHighlights={this.props.readerData.get('showPubHighlights')}/>
+						*/}
 
 				</div>
 
@@ -332,19 +336,21 @@ const PubReader = React.createClass({
 					{/* <PubReviews
 						slug={this.props.slug}
 						reviewsData={pubData.reviews} /> */}
-					<PubDiscussions
-						slug={this.props.slug}
-						discussionsData={pubData.discussions}
-						expertsData={pubData.experts}
-						addDiscussionHandler={this.addDiscussion}
-						pHashes={pubData.pHashes}
-						addDiscussionStatus={this.props.readerData.get('addDiscussionStatus')}
-						newDiscussionData={this.props.readerData.get('newDiscussionData')}
-						activeSaveID={this.props.readerData.get('activeSaveID')}
-						userThumbnail={this.props.loginData.getIn(['userData', 'thumbnail'])}
-						handleVoteSubmit={this.discussionVoteSubmit}
-						toggleHighlightsHandler={this.toggleHighlights}
-						showPubHighlights={this.props.readerData.get('showPubHighlights')}/>
+					<Discussions editorCommentMode={false} />
+					{/* // <Discussions
+						// slug={this.props.slug}
+						// discussionsData={pubData.discussions}
+						// expertsData={pubData.experts}
+						// addDiscussionHandler={this.addDiscussion}
+						// pHashes={pubData.pHashes}
+						// addDiscussionStatus={this.props.readerData.get('addDiscussionStatus')}
+						// newDiscussionData={this.props.readerData.get('newDiscussionData')}
+						// activeSaveID={this.props.readerData.get('activeSaveID')}
+						// userThumbnail={this.props.loginData.getIn(['userData', 'thumbnail'])}
+						// handleVoteSubmit={this.discussionVoteSubmit}
+						// toggleHighlightsHandler={this.toggleHighlights}
+						// showPubHighlights={this.props.readerData.get('showPubHighlights')}/>
+					*/}
 				</div>
 
 			</div>
