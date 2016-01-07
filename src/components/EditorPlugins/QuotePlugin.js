@@ -69,7 +69,8 @@ styles = {
 		fontStyle: 'italic'
 	},
 	reference: {
-		fontSize: '0.7em'
+		fontSize: '0.65em',
+		paddingTop: '0.5em'
 	}
 };
 
