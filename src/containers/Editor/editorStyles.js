@@ -121,6 +121,13 @@ export const styles = {
 			color: 'black'
 		}
 	},
+	bodyNavBar: {
+		width: '100%',
+		height: '30px',
+		color: 'white',
+		borderBottom: '1px solid black',
+
+	},
 	common: {
 		editorMarkdown: {
 			margin: '30px 0px',

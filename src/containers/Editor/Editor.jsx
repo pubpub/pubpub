@@ -420,6 +420,7 @@ const Editor = React.createClass({
 	renderNav: function(mobileView, discussionsExist) {
 		// if isEditor, add 'Public Discussions' | 'Collaborator Comments'  | 'Live Preview'
 		// remove whichever one is active in state at the moment
+		return <div style={styles.bodyNavBar}></div>;
 	},
 
 	render: function() {
@@ -442,7 +443,7 @@ const Editor = React.createClass({
 			}
 		}
 
-		const isReader = true;
+		const isReader = false;
 		return (
 
 			<div style={[styles.editorContainer, darkMode && styles.editorContainerDark]} className={'editor-container'}>
@@ -508,127 +509,129 @@ const Editor = React.createClass({
 									renderNav
 									renderBody (switches out in place with comments/discussions)
 
-
 						*/}
-
+						{/* Mobile */}
 						<div style={styles.isMobile}>
+							{/* In mobile - readers and editors have the same view. Editors have a note about screen size. */}
+							{this.renderNav()}
 							<h1>Here is where we should reader stuff! Youll have a nav and can toggle. Mostly body though</h1>
 						</div>
 
+						{/* Not Mobile */}
 						<div style={styles.notMobile}>
 							{isReader
 								? <div>
+									{/* Reader's View */}
 									Reader Stuff
 								</div>
 
 								: <div>
+									{/* Editor's View */}
 
+									{/*	Component for all modals and their backdrop. */}
+									<EditorModals
+										closeModalHandler={this.closeModalHandler}
+										activeModal={this.props.editorData.get('activeModal')}
+										slug={this.props.slug}
+										// Asset Props
+										assetData={this.state.firepadData.assets}
+										addAsset={this.addAsset}
+										deleteAsset={this.deleteAsset}
+										// Collaborator Props
+										collaboratorData={this.state.firepadData.collaborators}
+										updateCollaborators={this.saveUpdatedCollaborators}
+										// Publish Props
+										handlePublish={this.publishVersion}
+										currentJournal={this.props.journalData.getIn(['journalData', 'journalName'])}
+
+										// References Props
+										referenceData={this.state.firepadData.references}
+										referenceStyle={this.state.firepadData && this.state.firepadData.settings ? this.state.firepadData.settings.pubReferenceStyle : undefined}
+										updateReferences={this.saveReferences}
+										// Style Props
+										editorFont={this.props.loginData.getIn(['userData', 'settings', 'editorFont'])}
+										editorFontSize={this.props.loginData.getIn(['userData', 'settings', 'editorFontSize'])}
+										editorColor={this.props.loginData.getIn(['userData', 'settings', 'editorColor'])}
+										pubPrivacy={this.state.firepadData && this.state.firepadData.settings ? this.state.firepadData.settings.pubPrivacy : undefined}
+										pubStyle={this.state.firepadData && this.state.firepadData.settings ? this.state.firepadData.settings.pubStyle : undefined}
+										saveUpdatedSettingsUser={this.saveUpdatedSettingsUser}
+										saveUpdatedSettingsFirebase={this.saveUpdatedSettingsFirebase}
+										saveUpdatedSettingsFirebaseAndPubPub={this.saveUpdatedSettingsFirebaseAndPubPub} />
+
+									{/* Top Nav. Fixed to the top of the editor page, just below the main pubpub bar */}
+									<EditorTopNav 
+										status={editorData.get('status')}
+										darkMode={darkMode}
+										openModalHandler={this.openModalHandler}
+										editorSaveStatus={this.state.editorSaveStatus}
+										toggleLivePreviewHandler={this.toggleLivePreview}/>
+
+									{/*	Horizontal loader line - Separates top bar from rest of editor page */}
+									<div style={styles.editorLoadBar}>
+										<LoaderDeterminate value={loadStatus === 'loading' ? 0 : 100}/>
+									</div>
+
+									{/* Bottom Nav */}
+									<EditorBottomNav 
+										viewMode={viewMode}
+										loadStatus={loadStatus}
+										darkMode={darkMode}
+										showBottomLeftMenu={showBottomLeftMenu}
+										showBottomRightMenu={showBottomRightMenu}
+										toggleTOCHandler={this.toggleTOC}
+										toggleFormattingHandler={this.toggleFormatting}
+										activeFocus={this.state.activeFocus}
+										focusEditorHandler={this.focusEditor}
+										travisTOC={this.state.travisTOC}
+										insertFormattingHandler={this.insertFormatting}/>
+
+									{/* Markdown Editing Block */}
+									<div id="editor-text-wrapper" style={[globalStyles.hiddenUntilLoad, globalStyles[loadStatus], styles.common.editorMarkdown, styles[viewMode].editorMarkdown]}>
+
+										<EditorPluginPopup ref="pluginPopup" references={this.state.firepadData.references} assets={this.state.firepadData.assets} activeFocus={this.state.activeFocus} codeMirrorChange={this.state.codeMirrorChange}/>
+
+										{/* Insertion point for codemirror and firepad */}
+										<div style={[this.state.activeFocus !== '' && styles.hiddenMainEditor]}>
+											<div id="codemirror-wrapper"></div>
+										</div>
+
+										{/* Insertion point for Focused codemirror subset */}
+										<div id="codemirror-focus-wrapper"></div>
+
+									</div>
+
+									{/* Live Preview Block */}
+									<div id="editor-live-preview-wrapper" style={[globalStyles.hiddenUntilLoad, globalStyles[loadStatus], styles.common.editorPreview, styles[viewMode].editorPreview]} className={'editorPreview'}>
+										{this.renderNav()}
+										{this.props.editorData.getIn(['pubEditData', 'discussions']) && this.props.editorData.getIn(['pubEditData', 'discussions']).size
+											? <div onClick={this.toggleShowComments} style={styles.showCommentsToggle} key={'editorCommentsToggleButton'}>
+												{this.state.showComments
+													? <FormattedMessage id="editor.clickForPreview" defaultMessage="Click to View Preview"/>
+													: <FormattedMessage id="editor.clickForComments" defaultMessage="Click to View Discussion"/>
+												}
+											</div>
+											: null
+										}
+
+										{this.state.showComments
+											? <Discussions editorCommentMode={false} inEditor={true}/>
+											: <PubBody
+												status={'loaded'}
+												title={this.state.title}
+												abstract={this.state.abstract}
+												authorsNote={this.state.authorsNote}
+												minFont={15}
+												htmlTree={this.state.tree}
+												authors={this.getAuthorsArray()}
+												// addSelectionHandler={this.addSelection}
+												style={this.state.firepadData && this.state.firepadData.settings ? this.state.firepadData.settings.pubStyle : undefined}
+												references={referencesList}
+												isFeatured={true}/>
+										}
+
+									</div>
 								</div>
 							}
-						
-
-							{/*	Component for all modals and their backdrop. */}
-							<EditorModals
-								closeModalHandler={this.closeModalHandler}
-								activeModal={this.props.editorData.get('activeModal')}
-								slug={this.props.slug}
-								// Asset Props
-								assetData={this.state.firepadData.assets}
-								addAsset={this.addAsset}
-								deleteAsset={this.deleteAsset}
-								// Collaborator Props
-								collaboratorData={this.state.firepadData.collaborators}
-								updateCollaborators={this.saveUpdatedCollaborators}
-								// Publish Props
-								handlePublish={this.publishVersion}
-								currentJournal={this.props.journalData.getIn(['journalData', 'journalName'])}
-
-								// References Props
-								referenceData={this.state.firepadData.references}
-								referenceStyle={this.state.firepadData && this.state.firepadData.settings ? this.state.firepadData.settings.pubReferenceStyle : undefined}
-								updateReferences={this.saveReferences}
-								// Style Props
-								editorFont={this.props.loginData.getIn(['userData', 'settings', 'editorFont'])}
-								editorFontSize={this.props.loginData.getIn(['userData', 'settings', 'editorFontSize'])}
-								editorColor={this.props.loginData.getIn(['userData', 'settings', 'editorColor'])}
-								pubPrivacy={this.state.firepadData && this.state.firepadData.settings ? this.state.firepadData.settings.pubPrivacy : undefined}
-								pubStyle={this.state.firepadData && this.state.firepadData.settings ? this.state.firepadData.settings.pubStyle : undefined}
-								saveUpdatedSettingsUser={this.saveUpdatedSettingsUser}
-								saveUpdatedSettingsFirebase={this.saveUpdatedSettingsFirebase}
-								saveUpdatedSettingsFirebaseAndPubPub={this.saveUpdatedSettingsFirebaseAndPubPub} />
-
-							{/* Top Nav. Fixed to the top of the editor page, just below the main pubpub bar */}
-							<EditorTopNav 
-								status={editorData.get('status')}
-								darkMode={darkMode}
-								openModalHandler={this.openModalHandler}
-								editorSaveStatus={this.state.editorSaveStatus}
-								toggleLivePreviewHandler={this.toggleLivePreview}/>
-
-							{/*	Horizontal loader line - Separates top bar from rest of editor page */}
-							<div style={styles.editorLoadBar}>
-								<LoaderDeterminate value={loadStatus === 'loading' ? 0 : 100}/>
-							</div>
-
-							{/* Bottom Nav */}
-							<EditorBottomNav 
-								viewMode={viewMode}
-								loadStatus={loadStatus}
-								darkMode={darkMode}
-								showBottomLeftMenu={showBottomLeftMenu}
-								showBottomRightMenu={showBottomRightMenu}
-								toggleTOCHandler={this.toggleTOC}
-								toggleFormattingHandler={this.toggleFormatting}
-								activeFocus={this.state.activeFocus}
-								focusEditorHandler={this.focusEditor}
-								travisTOC={this.state.travisTOC}
-								insertFormattingHandler={this.insertFormatting}/>
-
-							{/* Markdown Editing Block */}
-							<div id="editor-text-wrapper" style={[globalStyles.hiddenUntilLoad, globalStyles[loadStatus], styles.common.editorMarkdown, styles[viewMode].editorMarkdown]}>
-
-								<EditorPluginPopup ref="pluginPopup" references={this.state.firepadData.references} assets={this.state.firepadData.assets} activeFocus={this.state.activeFocus} codeMirrorChange={this.state.codeMirrorChange}/>
-
-								{/* Insertion point for codemirror and firepad */}
-								<div style={[this.state.activeFocus !== '' && styles.hiddenMainEditor]}>
-									<div id="codemirror-wrapper"></div>
-								</div>
-
-								{/* Insertion point for Focused codemirror subset */}
-								<div id="codemirror-focus-wrapper"></div>
-
-							</div>
-
-							{/* Live Preview Block */}
-							<div id="editor-live-preview-wrapper" style={[globalStyles.hiddenUntilLoad, globalStyles[loadStatus], styles.common.editorPreview, styles[viewMode].editorPreview]} className={'editorPreview'}>
-
-								{this.props.editorData.getIn(['pubEditData', 'discussions']) && this.props.editorData.getIn(['pubEditData', 'discussions']).size
-									? <div onClick={this.toggleShowComments} style={styles.showCommentsToggle} key={'editorCommentsToggleButton'}>
-										{this.state.showComments
-											? <FormattedMessage id="editor.clickForPreview" defaultMessage="Click to View Preview"/>
-											: <FormattedMessage id="editor.clickForComments" defaultMessage="Click to View Discussion"/>
-										}
-									</div>
-									: null
-								}
-
-								{this.state.showComments
-									? <Discussions editorCommentMode={false} inEditor={true}/>
-									: <PubBody
-										status={'loaded'}
-										title={this.state.title}
-										abstract={this.state.abstract}
-										authorsNote={this.state.authorsNote}
-										minFont={15}
-										htmlTree={this.state.tree}
-										authors={this.getAuthorsArray()}
-										// addSelectionHandler={this.addSelection}
-										style={this.state.firepadData && this.state.firepadData.settings ? this.state.firepadData.settings.pubStyle : undefined}
-										references={referencesList}
-										isFeatured={true}/>
-								}
-
-							</div>
 
 						</div>
 
