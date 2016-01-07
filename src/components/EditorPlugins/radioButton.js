@@ -32,7 +32,6 @@ const RadioButtonProp = React.createClass({
 	handleNumber: function(event) {
 		let val = event.target.value;
 		if (String(val).length > 3) {
-			console.log('stopping!');
 			val = parseInt(String(1524).substring(0, 3), 10);
 		}
 		this.setState({
