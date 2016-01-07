@@ -63,11 +63,9 @@ const Discussions = React.createClass({
 
 	getPubData: function() {
 		if (this.props.inEditor) {
-			return this.props.editorData.get('pubEditData') ? this.props.editorData.get('pubEditData').toJS() : {};
+			return this.props.editorData.get('pubEditData').toJS ? this.props.editorData.get('pubEditData').toJS() : {};
 		}
-
-		return this.props.pubData.get('pubData') ? this.props.pubData.get('pubData').toJS() : {};
-	
+		return this.props.pubData.get('pubData').toJS ? this.props.pubData.get('pubData').toJS() : {};
 	},
 
 	filterDiscussions: function() {
@@ -89,8 +87,8 @@ const Discussions = React.createClass({
 		// const pubData = {discussions: []};
 		
 		const pubData = this.getPubData();
-		const discussionsData = this.props.metaID ? this.filterDiscussions() : pubData.discussions;
-
+		let discussionsData = this.props.metaID ? this.filterDiscussions() : pubData.discussions;
+		discussionsData = discussionsData ? discussionsData : [];
 		return (
 			<div style={styles.container}>
 				

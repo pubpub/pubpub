@@ -444,8 +444,9 @@ const Editor = React.createClass({
 					return (
 						<div>
 							{editorCommentsTab}
+							<div style={[styles.bodyNavSeparator, styles.mobileOnlySeparator]}>|</div>
 							{discussionsExist
-								? <div>
+								? <div style={styles.bodyNavDiscussionBlock}>
 									<div style={styles.bodyNavSeparator}>|</div>
 									{publicDiscussionsTab}
 								</div>
@@ -458,8 +459,9 @@ const Editor = React.createClass({
 					return (
 						<div>
 							{livePreviewTab}
+							<div style={[styles.bodyNavSeparator, styles.mobileOnlySeparator]}>|</div>
 							{discussionsExist
-								? <div>
+								? <div style={styles.bodyNavDiscussionBlock}>
 									<div style={styles.bodyNavSeparator}>|</div>
 									{publicDiscussionsTab}
 								</div>
@@ -526,7 +528,7 @@ const Editor = React.createClass({
 			title: 'PubPub - Editing ' + this.props.slug
 		};
 
-		const isReader = false;
+		const isReader = true;
 		return (
 
 			<div style={[styles.editorContainer, darkMode && styles.editorContainerDark]} className={'editor-container'}>
@@ -597,15 +599,50 @@ const Editor = React.createClass({
 						<div style={styles.isMobile}>
 							{/* In mobile - readers and editors have the same view. Editors have a note about screen size. */}
 							{this.renderNav(true)}
-							<h1>Here is where we should reader stuff! Youll have a nav and can toggle. Mostly body though</h1>
+							
+							<div style={[styles.previewBlockWrapper, this.state.previewPaneMode === 'preview' && styles.previewBlockWrapperShow]}>
+								{isReader
+									? null
+									: 'Editing disabled on mobile view - but you can still read and comment. Open in a laptop or desktop to edit'
+								}
+
+								{this.renderBody()}
+							</div>
+
+							<div style={[styles.previewBlockWrapper, this.state.previewPaneMode === 'comments' && styles.previewBlockWrapperShow]}>
+								<div style={styles.previewBlockHeader}>Editor Comments</div>
+								<div style={styles.previewBlockText}>This section can only be used by collaborators and is private. It is never published or made public.</div>
+								<Discussions editorCommentMode={true}/>
+							</div>
+
 						</div>
 
 						{/* Not Mobile */}
 						<div style={styles.notMobile}>
 							{isReader
 								? <div>
-									{/* Reader's View */}
-									Reader Stuff
+
+									<div style={styles.hiddenCodeMirror}>
+										{/*  Necessary for body rednering to work */}
+										<EditorTopNav 
+											status={editorData.get('status')}
+											darkMode={darkMode}
+											openModalHandler={this.openModalHandler}
+											editorSaveStatus={this.state.editorSaveStatus}
+											toggleLivePreviewHandler={this.toggleLivePreview}/>
+										<div id="codemirror-wrapper"></div>
+									</div>
+
+									<div style={[styles.readerViewBlock, styles.readerViewBlockBody]}>
+										{this.renderBody()}
+									</div>
+
+									<div style={[styles.readerViewBlock]}>
+										<div style={styles.previewBlockHeader}>Editor Comments</div>
+										<div style={styles.previewBlockText}>This section can only be used by collaborators and is private. It is never published or made public.</div>
+										<Discussions editorCommentMode={true}/>
+									</div>
+
 								</div>
 
 								: <div>
@@ -693,11 +730,14 @@ const Editor = React.createClass({
 										</div>
 
 										<div style={[styles.previewBlockWrapper, this.state.previewPaneMode === 'comments' && styles.previewBlockWrapperShow]}>
-											<h1>Comments comments comments</h1>
+											<div style={styles.previewBlockHeader}>Editor Comments</div>
+											<div style={styles.previewBlockText}>This section can only be used by collaborators and is private. It is never published or made public.</div>
+											<Discussions editorCommentMode={true}/>
 										</div>
 
 										<div style={[styles.previewBlockWrapper, this.state.previewPaneMode === 'discussions' && styles.previewBlockWrapperShow]}>
-											<h1>Discussion Discussion Discussion</h1>
+											<div style={styles.previewBlockHeader}>Discussion</div>
+											<div style={styles.previewBlockText}>This section shows the discussion from the public, published version of your pub.</div>
 											<Discussions editorCommentMode={false} inEditor={true}/>
 										</div>
 

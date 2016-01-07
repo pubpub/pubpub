@@ -127,6 +127,9 @@ export const styles = {
 		color: 'white',
 		borderBottom: '1px solid #CCC',
 		marginBottom: 0,
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+			height: 'calc(' + globalStyles.headerHeightMobile + ' - 1px)',
+		},
 	},
 	bodyNavItem: {
 		
@@ -143,6 +146,7 @@ export const styles = {
 		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
 			height: globalStyles.headerHeightMobile,
 			lineHeight: globalStyles.headerHeightMobile,
+			fontSize: '20px',
 		},
 	},
 	bodyNavSeparator: {
@@ -152,6 +156,22 @@ export const styles = {
 		userSelect: 'none',
 		padding: '0px 2px',
 		color: '#888',
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+			height: globalStyles.headerHeightMobile,
+			lineHeight: globalStyles.headerHeightMobile,
+			fontSize: '20px',
+		},
+	},
+	mobileOnlySeparator: {
+		display: 'none',
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+			display: 'block',
+		},
+	},
+	bodyNavDiscussionBlock: {
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+			display: 'none',
+		},
 	},
 	previewBlockWrapper: {
 		width: 'calc(100% - 20px)',
@@ -166,6 +186,31 @@ export const styles = {
 	previewBlockWrapperShow: {
 		opacity: '1',
 		pointerEvents: 'auto',
+	},
+	previewBlockHeader: {
+		fontSize: '30px',
+		margin: '10px 0px',
+	},
+	previewBlockText: {
+		fontSize: '15px',
+		margin: '5px 0px 35px 0px',
+	},
+	readerViewBlock: {
+		width: 'calc(50% - 20px)',
+		height: 'calc(100vh - 31px - 20px)',
+		padding: '10px',
+		overflow: 'hidden',
+		overflowY: 'scroll',
+		float: 'left',
+	},
+	readerViewBlockBody: {
+		backgroundColor: 'white',
+		boxShadow: 'rgba(0,0,0,0.25) 0px 3px 9px 1px',
+	},
+	hiddenCodeMirror: {
+		opacity: 0,
+		pointerEvents: 'none',
+		position: 'absolute',
 	},
 	common: {
 		editorMarkdown: {
