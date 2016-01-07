@@ -129,8 +129,8 @@ const EditorPluginPopup = React.createClass({
 				values: values
 			});
 
-			const firstRef = Object.keys(contentObject)[0];
-
+			const firstRefName = Object.keys(contentObject)[0];
+			const firstRef = (firstRefName) ? this.refs['pluginInput-' + firstRefName] : null;
 			if (firstRef && typeof firstRef.focus === 'function') {
 				firstRef.focus();
 			}

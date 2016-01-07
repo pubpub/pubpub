@@ -59,9 +59,32 @@ export const propCaption = {
 	defaultString: '',
 	component: function(pluginProp, value, componentProps) {
 		const title = pluginProp.title;
-		return (<TextInput ref={'pluginInput-' + title} selectedValue={value}/>);
+		return (<TextInput placeholder="Enter Caption" ref={'pluginInput-' + title} selectedValue={value}/>);
 	}
 };
+
+export const propQuote = {
+	title: 'quote',
+	default: '',
+	defaultValue: '',
+	defaultString: '',
+	component: function(pluginProp, value, componentProps) {
+		const title = pluginProp.title;
+		return (<TextInput placeholder="Enter Quote" ref={'pluginInput-' + title} selectedValue={value}/>);
+	}
+};
+
+export const propAttribution = {
+	title: 'attribution',
+	default: '',
+	defaultValue: '',
+	defaultString: '',
+	component: function(pluginProp, value, componentProps) {
+		const title = pluginProp.title;
+		return (<TextInput placeholder="Who said it?" ref={'pluginInput-' + title} selectedValue={value}/>);
+	}
+};
+
 
 export const propSrcRef = {
 	title: 'reference',

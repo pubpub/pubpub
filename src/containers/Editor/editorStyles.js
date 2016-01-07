@@ -512,9 +512,9 @@ export function codeMirrorStyles(loginData) {
 		'.cm-plugin-cite': {
 			backgroundColor: 'rgba(245, 245, 169, 0.5)',
 		},
-		// '.cm-ppm.cm-spell-error': {
-		// 	borderBottom: 'none'
-		// }
+		'.cm-plugin-quote': {
+			backgroundColor: 'rgba(245, 245, 169, 0.5)',
+		},
 	};
 }
 
