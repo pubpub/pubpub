@@ -24,7 +24,7 @@
 		top: 0px !important;
 		left: 0px !important;
 		position: relative !important;
-	}	
+	}
 	.centerBar {
 		width: 100% !important;
 		height: auto !important;
@@ -41,4 +41,13 @@
 		opacity: 0 !important;
 		page-break-after: always !important;
 	}
+	
+	.p-block, table, figure, image {
+		page-break-inside: avoid !important;
+	}
+
+	.codeBlockPre{
+		page-break-inside: avoid !important;
+	}
+
 }
