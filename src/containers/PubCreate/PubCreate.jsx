@@ -65,7 +65,7 @@ const Login = React.createClass({
 				</div>
 				<CreatePubForm onSubmit={this.handleCreateSubmit} /> 
 				<div style={[styles.error, !this.state.errorMessage && styles.hidden]}>
-					{()=>{
+					{(()=>{
 						switch (this.state.errorMessage) {
 						case 'URL Title is not Unique!':
 							return <FormattedMessage id="pub.urlAlreadyUsed" defaultMessage="URL is already used"/>;
@@ -76,7 +76,7 @@ const Login = React.createClass({
 						default:
 							return this.state.errorMessage;
 						}
-					}()}
+					})()}
 				</div>
 
 			</div>

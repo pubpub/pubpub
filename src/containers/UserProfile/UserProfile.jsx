@@ -165,7 +165,7 @@ const Profile = React.createClass({
 								}
 							</div>
 
-							{() => {
+							{(() => {
 								switch (this.props.mode) {
 								case 'settings':
 									return (
@@ -181,7 +181,7 @@ const Profile = React.createClass({
 											ownProfile={ownProfile}/>
 									);
 								}
-							}()}
+							})()}
 							
 						</div>
 					</div>

@@ -21,7 +21,7 @@ const CollectionMain = React.createClass({
 			<div style={styles.container}>
 				
 
-				{()=>{
+				{(()=>{
 					const length = this.props.collectionData.pubs ? this.props.collectionData.pubs.length : 0;
 					if (!length) {
 						return (<div style={styles.emptyBlock}>
@@ -41,7 +41,7 @@ const CollectionMain = React.createClass({
 							
 					}
 					return output;
-				}()}
+				})()}
 
 			</div>
 		);

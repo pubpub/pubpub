@@ -97,7 +97,7 @@ const UserMain = React.createClass({
 					<div id={'pubs-section'} style={styles.sectionHeader}>
 						<FormattedMessage {...globalMessages.pubs} />
 					</div>
-					{()=>{
+					{(()=>{
 						const outputPubs = [];
 						for (let index = this.props.profileData.pubs.length; index--;) {
 							outputPubs.push(<PubPreview 
@@ -106,7 +106,7 @@ const UserMain = React.createClass({
 								canEdit={this.props.ownProfile === 'self' ? true : false} />);
 						}
 						return outputPubs;
-					}()}
+					})()}
 					{this.props.profileData.pubs.length === 0
 						? <div style={globalStyles.emptyBlock}>
 							<FormattedMessage id="user.noPubs" defaultMessage="No Pubs Yet"/>
@@ -117,7 +117,7 @@ const UserMain = React.createClass({
 					<div id={'discussions-section'} style={styles.sectionHeader}>
 						<FormattedMessage {...globalMessages.discussions} />
 					</div>
-					{()=>{
+					{(()=>{
 						const outputDiscussions = [];
 						for (let index = this.props.profileData.discussions.length; index--;) {
 							outputDiscussions.push(<DiscussionPreview 
@@ -126,7 +126,7 @@ const UserMain = React.createClass({
 								canEdit={this.props.ownProfile === 'self' ? true : false} />);
 						}
 						return outputDiscussions;
-					}()}
+					})()}
 					{this.props.profileData.discussions.length === 0
 						? <div style={globalStyles.emptyBlock}>
 							<FormattedMessage id="user.noDiscussions" defaultMessage="No Discussions Yet"/>

@@ -52,7 +52,7 @@ const Explore = React.createClass({
 
 				<Helmet {...metaData} />
 
-				{() => {
+				{(() => {
 					switch (mode) {
 					case 'collections':
 						/* This should only be available on journals */
@@ -93,7 +93,7 @@ const Explore = React.createClass({
 					default:
 						return <NotFound />;
 					}
-				}()}
+				})()}
 
 			</div>
 		);

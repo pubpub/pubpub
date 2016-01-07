@@ -5,7 +5,7 @@ import Radium from 'radium';
 export default class Html extends Component {
 	static propTypes = {
 		component: PropTypes.node,
-	}
+	};
 
 	render() {
 		return this.props.component;

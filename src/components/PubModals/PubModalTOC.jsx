@@ -50,7 +50,7 @@ const PubModalTOC = React.createClass({
 					<FormattedMessage {...globalMessages.tableOfContents} />
 				</div>
 				<div style={baseStyles.pubModalContentWrapper}>
-					{()=>{
+					{(()=>{
 
 						const defaultValues = [0, 0, 0, 0, 0, 0];
 						let headerValues = [0, 0, 0, 0, 0, 0]; // Support six-depths of header
@@ -62,7 +62,7 @@ const PubModalTOC = React.createClass({
 							return <PubModalTOCRow key={'pubModalRow-' + index} content={contentItem} dataIndex={index} tocIndex={tocIndex} onRowClickHandler={this.onRowClick}/>;
 						});
 
-					}()}
+					})()}
 				</div>
 				
 

@@ -145,7 +145,7 @@ const Landing = React.createClass({
 								<div style={styles.featurePreview}>
 
 									<div style={styles.featurePreviewImageWrapper}>
-										{()=>{
+										{(()=>{
 											switch (this.state.activeFeature) {
 											case 'editing':
 												return <img style={styles.featurePreviewImage} src={'http://res.cloudinary.com/pubpub/image/upload/c_scale,w_600/v1451416401/editing_hires_svywu2.gif'}/>;
@@ -158,7 +158,7 @@ const Landing = React.createClass({
 											default:
 												return <img style={styles.featurePreviewImage} src={'http://i.imgur.com/X5ZSCJT.jpg'}/>;
 											}
-										}()}
+										})()}
 									</div>
 
 								</div>

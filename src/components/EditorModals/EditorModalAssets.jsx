@@ -160,7 +160,7 @@ const EditorModalAssets = React.createClass({
 					})} 
 
 					{/* Display all existing assets using EditorModalAssetsRow */}
-					{ () => {
+					{(() => {
 						const assetList = [];
 
 						// Iterate through assetList in reverse order. So newest are at top
@@ -178,7 +178,7 @@ const EditorModalAssets = React.createClass({
 								handleDelete={this.props.deleteAsset}/>);
 						}
 						return assetList;
-					}()}
+					})()}
 
 				</div>
 			</Dropzone>

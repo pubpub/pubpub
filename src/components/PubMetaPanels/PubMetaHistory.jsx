@@ -21,7 +21,7 @@ const PubMetaHistory = React.createClass({
 		return (
 			<div style={[styles.container]}>
 
-					{()=>{
+					{(()=>{
 						const historyDivs = [];
 
 						for (let index = this.props.historyData.length; index-- > 0; ) {
@@ -35,7 +35,7 @@ const PubMetaHistory = React.createClass({
 						}
 
 						return historyDivs;
-					}()}
+					})()}
 				
 			</div>
 		);

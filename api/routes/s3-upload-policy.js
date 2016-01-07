@@ -3,9 +3,9 @@ var crypto = require('crypto');
 
 const awsDetails = {};
 if(process.env.NODE_ENV !== 'production'){
-	import {access_key_aws, secret_key_aws} from '../authentication/awsCredentials';
-	awsDetails.access_key_aws = access_key_aws;
-	awsDetails.secret_key_aws = secret_key_aws;
+	// import {access_key_aws, secret_key_aws} from '../authentication/awsCredentials';
+	awsDetails.access_key_aws = require('../authentication/awsCredentials').access_key_aws;
+	awsDetails.secret_key_aws = require('../authentication/awsCredentials').secret_key_aws;
 }else{
 	awsDetails.access_key_aws = process.env.access_key_aws;
 	awsDetails.secret_key_aws = process.env.secret_key_aws;

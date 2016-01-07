@@ -141,7 +141,7 @@ const PubMeta = React.createClass({
 							
 						</div>
 
-						{() => {
+						{(() => {
 							switch (this.props.meta) {
 							case 'history':
 								return (<PubMetaHistory 
@@ -205,7 +205,7 @@ const PubMeta = React.createClass({
 							default:
 								return null;
 							}
-						}()}
+						})()}
 
 					</div>
 					

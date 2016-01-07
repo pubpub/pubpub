@@ -23,8 +23,8 @@ export function convertFirebaseToObject(firebaseObj, shouldCount = false) {
 		const asset = firebaseObj[key];
 		obj[asset.refName] = asset;
 		if (shouldCount) {
-			count++;
 			obj[asset.refName].count = count;
+			count++;
 		}
 		return obj;
 	}, {});

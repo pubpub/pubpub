@@ -65,13 +65,13 @@ const EditorBottomNav = React.createClass({
 
 					{/* Table of Contents list */}
 					<ul style={[styles.common.bottomNavList, styles[this.props.viewMode].bottomNavList, this.props.showBottomLeftMenu && styles[this.props.viewMode].listActive]}>
-						{()=>{
+						{(()=>{
 							// const options = ['Introduction', 'Prior Art', 'Resources', 'Methods', 'A New Approach', 'Data Analysis', 'Results', 'Conclusion'];
 							const options = this.props.travisTOC;
 							return options.map((item, index)=>{
 								return <li key={'blNav' + index} onClick={this.props.focusEditorHandler(item.title, index)} style={[styles.common.bottomNavListItem, styles[this.props.viewMode].bottomNavListItem, this.animateListItemStyle('left', this.props.loadStatus, index), this.props.showBottomLeftMenu && styles[this.props.viewMode].listItemActive, this.props.activeFocus === item.title && styles.common.listItemActiveFocus]}>{item.title}</li>;
 							});
-						}()}
+						})()}
 					</ul>
 				</div>
 
@@ -90,12 +90,12 @@ const EditorBottomNav = React.createClass({
 
 					{/* Formatting list */}
 					<ul style={[styles.common.bottomNavList, styles[this.props.viewMode].bottomNavList, styles[this.props.viewMode].bottomNavListRight, styles.alignRight, this.props.showBottomRightMenu && styles[this.props.viewMode].listActive]}>
-						{()=>{
+						{(()=>{
 							const options = ['H1', 'H2', 'H3', 'Bold', 'Italic', '# List', '- List', 'Line', 'Link', 'Image', 'Video', 'Cite', 'Pagebreak', 'Linebreak', 'Quote'];
 							return options.map((item, index)=>{
 								return <li key={'brNav' + index} onClick={this.props.insertFormattingHandler(item)} style={[styles.common.bottomNavListItem, styles[this.props.viewMode].bottomNavListItem, this.animateListItemStyle('right', this.props.loadStatus, index), styles.floatRight, this.props.showBottomRightMenu && styles[this.props.viewMode].listItemActive]}>{item}</li>;
 							});
-						}()}
+						})()}
 					</ul>
 				</div>
 			</div>

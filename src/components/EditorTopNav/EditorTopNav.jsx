@@ -50,7 +50,7 @@ const EditorTopNac = React.createClass({
 						<FormattedMessage {...globalMessages.settings} />
 					</li>
 					<li key="editorNav7"style={[styles.editorNavItemSaveStatus, styles.editorNavRight]}>
-						{()=>{
+						{(()=>{
 							switch (this.props.editorSaveStatus) {
 							case 'saved':
 								return <FormattedMessage id="editor.pubSaved" defaultMessage="Pub Saved"/>;
@@ -60,7 +60,7 @@ const EditorTopNac = React.createClass({
 								return <FormattedMessage id="editor.disconnected" defaultMessage="Disconnected"/>;
 							}
 							// this.state.editorSaveStatus === 'saved' ? 'Pub Saved' : 'Pub Saving...'}
-						}()}
+						})()}
 
 					</li>
 

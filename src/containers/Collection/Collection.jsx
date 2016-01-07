@@ -88,7 +88,7 @@ const Collection = React.createClass({
 								
 								
 								<div style={styles.CollectionContent}>
-									{() => {
+									{(() => {
 										switch (this.props.mode) {
 										case 'edit':
 											return (
@@ -105,7 +105,7 @@ const Collection = React.createClass({
 													collectionData={collectionData} />
 											);
 										}
-									}()}
+									})()}
 								</div>
 								
 
