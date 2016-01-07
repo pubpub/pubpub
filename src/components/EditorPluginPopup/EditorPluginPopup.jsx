@@ -153,7 +153,6 @@ const EditorPluginPopup = React.createClass({
 	},
 
 	onPluginSave: function() {
-		console.log('wt?');
 		const cm = this.getActiveCodemirrorInstance();
 		const lineNum = this.state.activeLine;
 		const lineContent = cm.getLine(lineNum);

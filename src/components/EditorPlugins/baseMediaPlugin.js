@@ -28,8 +28,8 @@ const baseMediaPlugin = React.createClass({
 		};
 
 		if (!isNaN(size)) {
-			styleObject.width = size;
-			styleObject.height = size;
+			styleObject.width = size + '%';
+			styleObject.height = size + '%';
 		} else {
 			const sizeOptions = {
 				'small': (this.props.align === 'full') ? '30%' : '25%',

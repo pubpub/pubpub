@@ -7,32 +7,50 @@ let styles = {};
 const RadioButtonProp = React.createClass({
 	propTypes: {
 		choices: PropTypes.array,
-		selectedValue: PropTypes.string,
+		selectedValue: React.PropTypes.oneOfType(React.PropTypes.string, React.PropTypes.number),
 	},
 	getInitialState: function() {
-		return {
-			selectedValue: this.props.selectedValue || null,
-			value: this.props.selectedValue || null,
-		};
+
+		const state = {};
+
+		if (!isNaN(this.props.selectedValue)) {
+			state.selectedValue = 'number';
+			state.number = parseInt(this.props.selectedValue, 10);
+		} else {
+			state.selectedValue = this.props.selectedValue || null;
+			state.number = null;
+		}
+
+		return state;
 	},
 
-	handleChange: function(prop) {
-		const selectedVal = prop;
-		let val = prop;
-
-		if (prop === 'number') {
-			val = this.refs.radio.refs.number.value;
+	focusNumber: function() {
+		this.setState({
+			selectedValue: 'number'
+		});
+	},
+	handleNumber: function(event) {
+		let val = event.target.value;
+		if (String(val).length > 3) {
+			console.log('stopping!');
+			val = parseInt(String(1524).substring(0, 3), 10);
 		}
 		this.setState({
-			selectedValue: selectedVal,
-			value: val
+			selectedValue: 'number',
+			number: val
+		});
+	},
+	handleChange: function(prop) {
+		this.setState({
+			selectedValue: prop
 		});
 	},
 	value: function() {
-		return this.state.value;
+		return (this.state.selectedValue === 'number') ? this.state.number : this.state.selectedValue;
 	},
 	render: function() {
 		const choices = this.props.choices || [];
+		const self = this;
 		return (
 			<div style={styles.group}>
 				<RadioGroup
@@ -50,7 +68,7 @@ const RadioButtonProp = React.createClass({
 								} else {
 									elem = (<label style={{width: '60px', display: 'inline-block'}}>
 										<Radio value={choice} />
-										<input ref={choice} style={{width: '26px', fontSize: '0.7em'}} min="1" max="100" maxLength="3" type="number"/>%
+										<input ref={choice} value={self.state.number} onClick={self.focusNumber} onChange={self.handleNumber} style={{width: '26px', fontSize: '0.7em'}} min="1" max="100" maxLength="2" type="number"/>%
 										</label>);
 								}
 								return elem;
