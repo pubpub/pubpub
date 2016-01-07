@@ -9,6 +9,7 @@ const baseMediaPlugin = React.createClass({
 		size: React.PropTypes.oneOfType([React.PropTypes.oneOf(['small', 'medium', 'large']), React.PropTypes.number]),
 		align: React.PropTypes.oneOf(['left', 'right', 'full']),
 		caption: PropTypes.string,
+		style: PropTypes.object
 	},
 	getInitialState: function() {
 		return {};
@@ -17,6 +18,7 @@ const baseMediaPlugin = React.createClass({
 		const size = this.props.size || 'large';
 		const align = this.props.align || 'full';
 		const caption = this.props.caption || '';
+		const baseStyle = this.props.style || {};
 
 		// whether floating flows all of the text or just some is dependent on how much space is left
 		// a 'large' image is smaller when floating because it needs to leave space for the text
@@ -40,12 +42,18 @@ const baseMediaPlugin = React.createClass({
 
 		if (align === 'left' || align === 'right' ) {
 			styleObject.float = align;
-			styleObject.margin = '2em';
+			if (align === 'left') {
+				styleObject.margin = '1.5em 1.5em 1.5em 0px';
+			} else {
+				styleObject.margin = '0px 1.5em 1.5em 1.5em';
+			}
 		} else if (this.props.align === 'full') {
 			styleObject.margin = '0px auto';
 		}
 
-		return (<div style={styleObject}>
+		const wrapperStyle = Object.assign(styleObject, baseStyle);
+
+		return (<div style={wrapperStyle}>
 			{this.props.children}
 			{ (caption) ? <span style={styles.caption}>{caption}</span> : null }
 		</div>
