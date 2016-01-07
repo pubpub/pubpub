@@ -76,7 +76,7 @@ const EditorPluginPopup = React.createClass({
 
 	getActiveCodemirrorInstance: function() {
 		const cm = this.props.activeFocus === ''
-				? document.getElementsByClassName('CodeMirror')[0].CodeMirror
+				? document.getElementById('codemirror-wrapper').childNodes[0].childNodes[0].CodeMirror
 				: document.getElementById('codemirror-focus-wrapper').childNodes[0].CodeMirror;
 
 		return cm;
@@ -153,6 +153,7 @@ const EditorPluginPopup = React.createClass({
 	},
 
 	onPluginSave: function() {
+		console.log('wt?');
 		const cm = this.getActiveCodemirrorInstance();
 		const lineNum = this.state.activeLine;
 		const lineContent = cm.getLine(lineNum);

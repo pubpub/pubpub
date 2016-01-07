@@ -90,7 +90,7 @@ const PubDiscussionsInput = React.createClass({
 			<div style={[styles.container, this.props.isReply && styles.replyContainer]}>
 				<Style rules={{
 					...codeMirrorStyles(),
-					'.CodeMirror': {
+					'.inputCodeMirror .CodeMirror': {
 						backgroundColor: 'transparent',
 						fontSize: '15px',
 						color: '#555',
@@ -116,7 +116,7 @@ const PubDiscussionsInput = React.createClass({
 						<input style={styles.checkboxInput} name={'privateDiscussion'} id={'privateDiscussion'} type="checkbox" value={'private'} ref={'privateDiscussion'}/>
 					</div> */}
 				</div>
-				<div id={this.props.codeMirrorID} style={styles.inputBox}></div>
+				<div id={this.props.codeMirrorID} className={'inputCodeMirror'} style={styles.inputBox}></div>
 
 				<div style={styles.loaderContainer}>
 					{(this.props.addDiscussionStatus === 'loading' && this.props.activeSaveID === this.props.saveID ? <LoaderIndeterminate color="#444"/> : null)}

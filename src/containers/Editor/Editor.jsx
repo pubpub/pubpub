@@ -152,7 +152,7 @@ const Editor = React.createClass({
 
 	getActiveCodemirrorInstance: function() {
 		const cm = this.state.activeFocus === ''
-				? document.getElementsByClassName('CodeMirror')[0].CodeMirror
+				? document.getElementById('codemirror-wrapper').childNodes[0].childNodes[0].CodeMirror
 				: document.getElementById('codemirror-focus-wrapper').childNodes[0].CodeMirror;
 
 		return cm;
@@ -254,7 +254,8 @@ const Editor = React.createClass({
 
 	publishVersion: function(versionState, versionDescription) {
 
-		const cm = document.getElementsByClassName('CodeMirror')[0].CodeMirror;
+		// const cm = document.getElementsByClassName('CodeMirror')[0].CodeMirror;
+		const cm = document.getElementById('codemirror-wrapper').childNodes[0].childNodes[0].CodeMirror;
 		const fullMD = cm.getValue();
 
 		const titleRE = /\{\{title:(.*?)\}\}/i;

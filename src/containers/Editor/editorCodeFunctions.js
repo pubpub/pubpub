@@ -62,7 +62,7 @@ export function insertText(cm, formatting, baseText, showPopup) {
 // focusEditor: function(title, index) {
 export function createFocusDoc(title, cmOptions) {
 	// Get main codemirror doc
-	const cm = document.getElementsByClassName('CodeMirror')[0].CodeMirror;
+	const cm = document.getElementById('codemirror-wrapper').childNodes[0].childNodes[0].CodeMirror;
 
 	// Erase the existing focus CodeMirror
 	document.getElementById('codemirror-focus-wrapper').innerHTML = '';
