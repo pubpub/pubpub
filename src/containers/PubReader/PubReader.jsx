@@ -4,7 +4,7 @@ import Radium, {Style} from 'radium';
 import Helmet from 'react-helmet';
 import PureRenderMixin from 'react-addons-pure-render-mixin';
 import { Link } from 'react-router';
-import {getPub, openPubModal, closePubModal, addSelection, pubNavOut, pubNavIn} from '../../actions/pub';
+import {getPub, openPubModal, closePubModal, addSelection, pubNavOut, pubNavIn, togglePubHighlights} from '../../actions/pub';
 import {getRandomSlug} from '../../actions/journal';
 import {toggleVisibility, follow, unfollow} from '../../actions/login';
 import {closeMenu} from '../../actions/nav';
@@ -16,6 +16,10 @@ import {PubBody, PubModals, PubNav, LoaderDeterminate, PubLeftBar} from '../../c
 import {Discussions} from '../';
 
 import {globalStyles, pubSizes} from '../../utils/styleConstants';
+import {rightBarStyles} from './rightBarStyles';
+
+import {globalMessages} from '../../utils/globalMessages';
+import {FormattedMessage} from 'react-intl';
 
 import marked from '../../modules/markdown/markdown';
 import markdownExtensions from '../../components/EditorPlugins';
@@ -144,9 +148,9 @@ const PubReader = React.createClass({
 	// 	this.props.dispatch(discussionVoteSubmit(type, discussionID, userYay, userNay));
 	// },
 
-	// toggleHighlights: function() {
-	// 	this.props.dispatch(togglePubHighlights());
-	// },
+	toggleHighlights: function() {
+		this.props.dispatch(togglePubHighlights());
+	},
 
 	readRandomPub: function() {
 		const analyticsData = {
@@ -309,20 +313,21 @@ const PubReader = React.createClass({
 						featuredIn={pubData.featuredIn}
 						submittedTo={pubData.submittedTo}
 						// Reviews Data
-						reviewsData={pubData.reviews} />
-						{/*
+						reviewsData={pubData.reviews} 
+						
 						// Discussions Data
-						discussionsData={pubData.discussions}
-						expertsData={pubData.experts}
-						addDiscussionHandler={this.addDiscussion}
-						pHashes={pubData.pHashes}
-						addDiscussionStatus={this.props.readerData.get('addDiscussionStatus')}
-						newDiscussionData={this.props.readerData.get('newDiscussionData')}
-						userThumbnail={this.props.loginData.getIn(['userData', 'thumbnail'])}
-						handleVoteSubmit={this.discussionVoteSubmit}
+						// discussionsData={pubData.discussions}
+						// expertsData={pubData.experts}
+						// addDiscussionHandler={this.addDiscussion}
+						// pHashes={pubData.pHashes}
+						// addDiscussionStatus={this.props.readerData.get('addDiscussionStatus')}
+						// newDiscussionData={this.props.readerData.get('newDiscussionData')}
+						// userThumbnail={this.props.loginData.getIn(['userData', 'thumbnail'])}
+						// handleVoteSubmit={this.discussionVoteSubmit}
+						
 						toggleHighlightsHandler={this.toggleHighlights}
-						showPubHighlights={this.props.readerData.get('showPubHighlights')}/>
-						*/}
+						showPubHighlights={this.props.readerData.get('showPubHighlights')}/> 
+						
 
 				</div>
 
@@ -336,6 +341,23 @@ const PubReader = React.createClass({
 					{/* <PubReviews
 						slug={this.props.slug}
 						reviewsData={pubData.reviews} /> */}
+
+					<div style={rightBarStyles.sectionHeader}><FormattedMessage {...globalMessages.discussion}/></div>
+					<div style={rightBarStyles.sectionSubHeader}>
+						<div>
+							<Link to={'/pub/' + this.props.slug + '/invite'} style={globalStyles.link}><span key={'discussionButton2'} style={rightBarStyles.sectionSubHeaderSpan}>
+								<FormattedMessage id="discussion.inviteReviewers" defaultMessage="Invite Reviewers"/>
+							</span></Link>
+							<span style={styles.optionSeparator}>|</span>
+							<span style={styles.option} key={'discussions-highlight-toggle'} onClick={this.toggleHighlights}>
+								<FormattedMessage id="discussion.turnHighlights" defaultMessage="Turn Highlights"/>
+								{' '}
+								{this.props.readerData.get('showPubHighlights')
+									? <FormattedMessage id="discussion.off" defaultMessage="Off"/> 
+									: <FormattedMessage id="discussion.on" defaultMessage="On"/> }
+								</span>
+						</div>
+					</div>
 					<Discussions editorCommentMode={false} />
 					{/* // <Discussions
 						// slug={this.props.slug}
@@ -565,5 +587,15 @@ styles = {
 	},
 	versionNotificationLink: {
 		textDecoration: 'none',
-	}
+	},
+	option: {
+		userSelect: 'none',
+		':hover': {
+			cursor: 'pointer',
+			color: '#000',
+		}
+	},
+	optionSeparator: {
+		padding: '0px 6px',
+	},
 };

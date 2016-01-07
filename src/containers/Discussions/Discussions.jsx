@@ -5,13 +5,12 @@ import Radium from 'radium';
 import {rightBarStyles} from '../../containers/PubReader/rightBarStyles';
 import DiscussionsItem from './DiscussionsItem';
 import DiscussionsInput from './DiscussionsInput';
-import DiscussionsOptions from './DiscussionsOptions';
 
 import {toggleVisibility} from '../../actions/login';
 import {addDiscussion, discussionVoteSubmit, togglePubHighlights} from '../../actions/pub';
 
-import {globalMessages} from '../../utils/globalMessages';
-import {FormattedMessage} from 'react-intl';
+// import {globalMessages} from '../../utils/globalMessages';
+// import {FormattedMessage} from 'react-intl';
 
 let styles = {};
 
@@ -98,15 +97,7 @@ const Discussions = React.createClass({
 				<div className="pub-discussions-wrapper" style={rightBarStyles.sectionWrapper}>
 					
 					{!this.props.metaID
-						? <div>
-							<div style={rightBarStyles.sectionHeader}><FormattedMessage {...globalMessages.discussion}/></div>
-							<div style={rightBarStyles.sectionSubHeader}>
-								<DiscussionsOptions
-									slug={this.props.slug}
-									toggleHighlightsHandler={this.toggleHighlightsHandler}
-									showPubHighlights={this.props.pubData.get('showPubHighlights')} />
-							</div>
-							<DiscussionsInput 
+						? <DiscussionsInput 
 								addDiscussionHandler={this.addDiscussion}
 								addDiscussionStatus={this.props.pubData.get('addDiscussionStatus')} 
 								newDiscussionData={this.props.pubData.get('newDiscussionData')} 
@@ -115,7 +106,6 @@ const Discussions = React.createClass({
 								saveID={'root'}
 								isReply={false}
 								codeMirrorID={'rootCommentInput'}/>
-						</div>
 						: null
 
 					}

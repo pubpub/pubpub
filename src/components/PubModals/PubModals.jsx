@@ -5,6 +5,11 @@ import {PubModalCite, PubModalTOC, } from './';
 import {PubStatus, PubReviews} from '../';
 import {Discussions} from '../../containers';
 
+import {rightBarStyles} from '../../containers/PubReader/rightBarStyles';
+import { Link } from 'react-router';
+import {globalMessages} from '../../utils/globalMessages';
+import {FormattedMessage} from 'react-intl';
+
 let styles = {};
 
 const PubModals = React.createClass({
@@ -35,9 +40,8 @@ const PubModals = React.createClass({
 		// newDiscussionData: PropTypes.object,
 		// userThumbnail: PropTypes.string,
 		// handleVoteSubmit: PropTypes.func,
-		// toggleHighlightsHandler: PropTypes.func,
-		// showPubHighlights: PropTypes.bool,
-
+		toggleHighlightsHandler: PropTypes.func,
+		showPubHighlights: PropTypes.bool,
 
 	},
 
@@ -101,10 +105,28 @@ const PubModals = React.createClass({
 								// 	toggleHighlightsHandler={this.props.toggleHighlightsHandler}
 								// 	showPubHighlights={this.props.showPubHighlights}/>
 								// );
-
-								return <Discussions editorCommentMode={false} />;
-							
-							
+								return (
+									<div>
+										<div style={rightBarStyles.sectionHeader}><FormattedMessage {...globalMessages.discussion}/></div>
+										<div style={rightBarStyles.sectionSubHeader}>
+											<div>
+												<Link to={'/pub/' + this.props.slug + '/invite'} style={globalStyles.link}><span key={'discussionButton2'} style={rightBarStyles.sectionSubHeaderSpan}>
+													<FormattedMessage id="discussion.inviteReviewers" defaultMessage="Invite Reviewers"/>
+												</span></Link>
+												<span style={styles.optionSeparator}>|</span>
+												<span style={styles.option} key={'discussions-highlight-toggle'} onClick={this.props.toggleHighlightsHandler}>
+													<FormattedMessage id="discussion.turnHighlights" defaultMessage="Turn Highlights"/>
+													{' '}
+													{this.props.showPubHighlights
+														? <FormattedMessage id="discussion.off" defaultMessage="Off"/> 
+														: <FormattedMessage id="discussion.on" defaultMessage="On"/> }
+													</span>
+											</div>
+										</div>
+										<Discussions editorCommentMode={false} />;
+									</div>
+								);
+				
 							default:
 								return null;
 							}
