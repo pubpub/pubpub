@@ -1,7 +1,7 @@
 import React, {PropTypes} from 'react';
 import Radium from 'radium';
 import Media from './baseMediaPlugin';
-
+import {Reference} from '../';
 import {propQuote, propAttribution, propSize, propAlign, propSrcRef} from './pluginProps';
 export const quoteOptions = {quote: propQuote, attribution: propAttribution, size: propSize, align: propAlign, reference: propSrcRef};
 
@@ -25,6 +25,7 @@ const QuotePlugin = React.createClass({
 		const align = this.props.align;
 		const quote = this.props.quote;
 		const attribution = this.props.attribution;
+		const reference = this.props.reference || null;
 
 		let html;
 
@@ -36,14 +37,6 @@ const QuotePlugin = React.createClass({
 			style = styles.inline;
 		}
 
-		/*
-		margin: 1.5em;
-		border-top: #A7A7A7 solid 1px;
-		border-bottom: #A7A7A7 solid 1px;
-		padding: 0.5em;
-		margin-left: 0em;
-		*/
-
 		if (this.props.error === 'empty') {
 			html = <span></span>;
 		} else {
@@ -52,6 +45,7 @@ const QuotePlugin = React.createClass({
 				<div style={styles.attribute}>
 				- {attribution}
 				</div>
+				{ (reference) ? <div style={styles.reference}> <Reference citationObject={reference} mode={'mla'} /> </div> : null }
 			</Media>
 		);
 		}
@@ -73,6 +67,9 @@ styles = {
 	},
 	attribute: {
 		fontStyle: 'italic'
+	},
+	reference: {
+		fontSize: '0.7em'
 	}
 };
 
