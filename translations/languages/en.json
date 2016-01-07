@@ -95,7 +95,7 @@
   "editor.showAll": "show all",
   "editor.formatting": "Formatting",
   "editor.clickForPreview": "Click to View Preview",
-  "editor.clickForComments": "Click to View Comments",
+  "editor.clickForComments": "Click to View Discussion",
   "journal.createJournal": "Create Journal",
   "journal.subdomainUsed": "Subdomain is already used",
   "journal.journalNameRequired": "A journal name is required",

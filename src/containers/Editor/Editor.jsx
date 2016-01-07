@@ -666,7 +666,7 @@ const Editor = React.createClass({
 							? <div onClick={this.toggleShowComments} style={styles.showCommentsToggle} key={'editorCommentsToggleButton'}>
 								{this.state.showComments
 									? <FormattedMessage id="editor.clickForPreview" defaultMessage="Click to View Preview"/>
-									: <FormattedMessage id="editor.clickForComments" defaultMessage="Click to View Comments"/>
+									: <FormattedMessage id="editor.clickForComments" defaultMessage="Click to View Discussion"/>
 								}
 							</div>
 							: null
