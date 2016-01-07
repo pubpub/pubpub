@@ -1,6 +1,5 @@
 export PubMetaAnalytics from './PubMetaAnalytics';
 export PubMetaCitations from './PubMetaCitations';
-export PubMetaDiscussions from './PubMetaDiscussions';
 export PubMetaExperts from './PubMetaExperts';
 export PubMetaHistory from './PubMetaHistory';
 export PubMetaHistoryDiff from './PubMetaHistoryDiff';

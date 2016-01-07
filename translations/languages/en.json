@@ -56,12 +56,6 @@
   "login.firstName": "First Name",
   "login.lastName": "Last Name",
   "login.chooseNew": "choose new image",
-  "discussion.permalink": "Permalink",
-  "discussion.reply": "Reply",
-  "discussion.inviteReviewers": "Invite Reviewers",
-  "discussion.turnHighlights": "Turn Highlights",
-  "discussion.off": "Off",
-  "discussion.on": "On",
   "pub.home": "Home",
   "pub.randomPub": "Random Pub",
   "pub.additions": "additions",
@@ -86,6 +80,8 @@
   "user.name": "Name",
   "user.titleForPerson": "Title",
   "user.userBio": "Bio",
+  "discussion.permalink": "Permalink",
+  "discussion.reply": "Reply",
   "editor.cannotEdit": "Cannot Edit in Mobile",
   "editor.cannotEditLargerScreen": "Please open this url on a desktop, laptop, or larger screen.",
   "editor.livePreview": "Live Preview",
@@ -196,5 +192,9 @@
   "global.print": "Print",
   "global.published": "Published on",
   "global.firstPublished": "First published on",
-  "global.lastPublished": "Last Published on"
+  "global.lastPublished": "Last Published on",
+  "global.inviteReviewers": "Invite Reviewers",
+  "global.turnHighlights": "Turn Highlights",
+  "global.on": "On",
+  "global.off": "Off"
 }

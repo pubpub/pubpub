@@ -11,7 +11,6 @@ import {closeMenu} from '../../actions/nav';
 
 import {convertImmutableListToObject} from '../../utils/parsePlugins';
 
-// import {PubBody, PubModals, PubNav, LoaderDeterminate, Discussions, PubStatus, PubReviews, PubLeftBar} from '../../components';
 import {PubBody, PubModals, PubNav, LoaderDeterminate, PubLeftBar} from '../../components';
 import {Discussions} from '../';
 
@@ -106,13 +105,6 @@ const PubReader = React.createClass({
 		this.props.dispatch(pubNavOut());
 	},
 
-	// loader: function() {
-	// 	return {
-	// 		transform: 'translateX(' + (-100 + this.props.readerData.get('loading')) + '%)',
-	// 		transition: '.2s linear transform'
-	// 	};
-	// },
-
 	openPubModal: function(modal) {
 		return ()=> {
 			this.props.dispatch(openPubModal(modal));
@@ -126,27 +118,12 @@ const PubReader = React.createClass({
 	closeMenu: function() {
 		this.props.dispatch(closeMenu());
 	},
-	// addDiscussion: function(discussionObject, activeSaveID) {
-	// 	if (!this.props.loginData.get('loggedIn')) {
-	// 		return this.props.dispatch(toggleVisibility());
-	// 	}
-	// 	discussionObject.pub = this.props.readerData.getIn(['pubData', '_id']);
-	// 	discussionObject.version = this.props.query.version !== undefined && this.props.query.version > 0 && this.props.query.version < (this.props.readerData.getIn(['pubData', 'history']).size - 1) ? this.props.query.version : this.props.readerData.getIn(['pubData', 'history']).size;
-	// 	discussionObject.selections = this.props.readerData.getIn(['newDiscussionData', 'selections']);
-	// 	this.props.dispatch(addDiscussion(discussionObject, activeSaveID));
-	// },
+
 	addSelection: function(newSelection) {
 		newSelection.pub = this.props.readerData.getIn(['pubData', '_id']);
 		newSelection.version = this.props.query.version !== undefined && this.props.query.version > 0 && this.props.query.version < (this.props.readerData.getIn(['pubData', 'history']).size - 1) ? this.props.query.version : this.props.readerData.getIn(['pubData', 'history']).size;
 		this.props.dispatch(addSelection(newSelection));
 	},
-
-	// discussionVoteSubmit: function(type, discussionID, userYay, userNay) {
-	// 	if (!this.props.loginData.get('loggedIn')) {
-	// 		return this.props.dispatch(toggleVisibility());
-	// 	}
-	// 	this.props.dispatch(discussionVoteSubmit(type, discussionID, userYay, userNay));
-	// },
 
 	toggleHighlights: function() {
 		this.props.dispatch(togglePubHighlights());
@@ -315,16 +292,7 @@ const PubReader = React.createClass({
 						// Reviews Data
 						reviewsData={pubData.reviews} 
 						
-						// Discussions Data
-						// discussionsData={pubData.discussions}
-						// expertsData={pubData.experts}
-						// addDiscussionHandler={this.addDiscussion}
-						// pHashes={pubData.pHashes}
-						// addDiscussionStatus={this.props.readerData.get('addDiscussionStatus')}
-						// newDiscussionData={this.props.readerData.get('newDiscussionData')}
-						// userThumbnail={this.props.loginData.getIn(['userData', 'thumbnail'])}
-						// handleVoteSubmit={this.discussionVoteSubmit}
-						
+						// Discussions Data						
 						toggleHighlightsHandler={this.toggleHighlights}
 						showPubHighlights={this.props.readerData.get('showPubHighlights')}/> 
 						
@@ -332,47 +300,25 @@ const PubReader = React.createClass({
 				</div>
 
 				<div className="rightBar" style={[styles.rightBar, globalStyles[this.props.readerData.get('status')], pubData.markdown === undefined && {display: 'none'}]}>
-					{/* <PubStatus
-						slug={this.props.slug}
-						pubStatus={pubData.status}
-						featuredInList={pubData.featuredInList}
-						submittedToList={pubData.submittedToList}
-						isAuthor={pubData.isAuthor}/> */}
-					{/* <PubReviews
-						slug={this.props.slug}
-						reviewsData={pubData.reviews} /> */}
 
 					<div style={rightBarStyles.sectionHeader}><FormattedMessage {...globalMessages.discussion}/></div>
 					<div style={rightBarStyles.sectionSubHeader}>
 						<div>
 							<Link to={'/pub/' + this.props.slug + '/invite'} style={globalStyles.link}><span key={'discussionButton2'} style={rightBarStyles.sectionSubHeaderSpan}>
-								<FormattedMessage id="discussion.inviteReviewers" defaultMessage="Invite Reviewers"/>
+								<FormattedMessage {...globalMessages.inviteReviewers}/>
 							</span></Link>
 							<span style={styles.optionSeparator}>|</span>
 							<span style={styles.option} key={'discussions-highlight-toggle'} onClick={this.toggleHighlights}>
-								<FormattedMessage id="discussion.turnHighlights" defaultMessage="Turn Highlights"/>
+								<FormattedMessage {...globalMessages.turnHighlights}/>
 								{' '}
 								{this.props.readerData.get('showPubHighlights')
-									? <FormattedMessage id="discussion.off" defaultMessage="Off"/> 
-									: <FormattedMessage id="discussion.on" defaultMessage="On"/> }
+									? <FormattedMessage {...globalMessages.off}/> 
+									: <FormattedMessage {...globalMessages.on}/> }
 								</span>
 						</div>
 					</div>
+
 					<Discussions editorCommentMode={false} />
-					{/* // <Discussions
-						// slug={this.props.slug}
-						// discussionsData={pubData.discussions}
-						// expertsData={pubData.experts}
-						// addDiscussionHandler={this.addDiscussion}
-						// pHashes={pubData.pHashes}
-						// addDiscussionStatus={this.props.readerData.get('addDiscussionStatus')}
-						// newDiscussionData={this.props.readerData.get('newDiscussionData')}
-						// activeSaveID={this.props.readerData.get('activeSaveID')}
-						// userThumbnail={this.props.loginData.getIn(['userData', 'thumbnail'])}
-						// handleVoteSubmit={this.discussionVoteSubmit}
-						// toggleHighlightsHandler={this.toggleHighlights}
-						// showPubHighlights={this.props.readerData.get('showPubHighlights')}/>
-					*/}
 				</div>
 
 			</div>

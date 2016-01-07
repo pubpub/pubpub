@@ -358,5 +358,21 @@ export const globalMessages = defineMessages({
 		id: 'global.lastPublished',
 		defaultMessage: 'Last Published on',
 	},
+	inviteReviewers: {
+		id: 'global.inviteReviewers',
+		defaultMessage: 'Invite Reviewers',
+	},
+	turnHighlights: {
+		id: 'global.turnHighlights',
+		defaultMessage: 'Turn Highlights',
+	},
+	on: {
+		id: 'global.on',
+		defaultMessage: 'On',
+	},
+	off: {
+		id: 'global.off',
+		defaultMessage: 'Off',
+	},
 	
 });

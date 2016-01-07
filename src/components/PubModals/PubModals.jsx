@@ -33,13 +33,6 @@ const PubModals = React.createClass({
 		// Reviews Data
 		reviewsData: PropTypes.array,
 		// Discussions Data
-		// discussionsData: PropTypes.array,
-		// expertsData: PropTypes.object,
-		// addDiscussionHandler: PropTypes.func,
-		// addDiscussionStatus: PropTypes.string,
-		// newDiscussionData: PropTypes.object,
-		// userThumbnail: PropTypes.string,
-		// handleVoteSubmit: PropTypes.func,
 		toggleHighlightsHandler: PropTypes.func,
 		showPubHighlights: PropTypes.bool,
 
@@ -91,35 +84,21 @@ const PubModals = React.createClass({
 										
 
 							case 'discussions':
-							
-								// return (<PubDiscussions 
-								// 	slug={this.props.slug}
-								// 	discussionsData={this.props.discussionsData}
-								// 	expertsData={this.props.expertsData}
-								// 	addDiscussionHandler={this.props.addDiscussionHandler} 
-								// 	pHashes={{}} // Send a blank object in because we don't want to repopulate the highlights. We'll probably have to do something different so selections are clickable/scrollable...
-								// 	addDiscussionStatus={this.props.addDiscussionStatus}
-								// 	newDiscussionData={this.props.newDiscussionData}
-								// 	userThumbnail={this.props.userThumbnail}
-								// 	handleVoteSubmit={this.props.handleVoteSubmit}
-								// 	toggleHighlightsHandler={this.props.toggleHighlightsHandler}
-								// 	showPubHighlights={this.props.showPubHighlights}/>
-								// );
 								return (
 									<div>
 										<div style={rightBarStyles.sectionHeader}><FormattedMessage {...globalMessages.discussion}/></div>
 										<div style={rightBarStyles.sectionSubHeader}>
 											<div>
 												<Link to={'/pub/' + this.props.slug + '/invite'} style={globalStyles.link}><span key={'discussionButton2'} style={rightBarStyles.sectionSubHeaderSpan}>
-													<FormattedMessage id="discussion.inviteReviewers" defaultMessage="Invite Reviewers"/>
+													<FormattedMessage {...globalMessages.inviteReviewers}/>
 												</span></Link>
 												<span style={styles.optionSeparator}>|</span>
 												<span style={styles.option} key={'discussions-highlight-toggle'} onClick={this.props.toggleHighlightsHandler}>
-													<FormattedMessage id="discussion.turnHighlights" defaultMessage="Turn Highlights"/>
+													<FormattedMessage {...globalMessages.turnHighlights}/>
 													{' '}
 													{this.props.showPubHighlights
-														? <FormattedMessage id="discussion.off" defaultMessage="Off"/> 
-														: <FormattedMessage id="discussion.on" defaultMessage="On"/> }
+														? <FormattedMessage {...globalMessages.off}/> 
+														: <FormattedMessage {...globalMessages.on}/> }
 													</span>
 											</div>
 										</div>

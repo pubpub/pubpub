@@ -26,9 +26,6 @@
     "journal.landingPageComponents": "Same as English: Landing Page Components",
     "login.firstName": "Missing. English is: First Name",
     "login.lastName": "Missing. English is: Last Name",
-    "discussion.permalink": "Same as English: Permalink",
-    "discussion.inviteReviewers": "Same as English: Invite Reviewers",
-    "discussion.turnHighlights": "Same as English: Turn Highlights",
     "pub.home": "Same as English: Home",
     "pub.additions": "Same as English: additions",
     "pub.deletions": "Same as English: deletions",
@@ -45,6 +42,7 @@
     "user.noPubs": "Missing. English is: No Pubs Yet",
     "user.noDiscussions": "Missing. English is: No Discussions Yet",
     "user.titleForPerson": "Same as English: Title",
+    "discussion.permalink": "Same as English: Permalink",
     "editor.livePreview": "Same as English: Live Preview",
     "editor.formatting": "Same as English: Formatting",
     "editor.clickForPreview": "Same as English: Click to View Preview",
@@ -80,7 +78,11 @@
     "global.markdown": "Same as English: markdown",
     "global.published": "Missing. English is: Published on",
     "global.firstPublished": "Missing. English is: First published on",
-    "global.lastPublished": "Missing. English is: Last Published on"
+    "global.lastPublished": "Missing. English is: Last Published on",
+    "global.inviteReviewers": "Missing. English is: Invite Reviewers",
+    "global.turnHighlights": "Missing. English is: Turn Highlights",
+    "global.on": "Missing. English is: On",
+    "global.off": "Missing. English is: Off"
   },
   "ee": {
     "editor.publishMessageJournal1": "Missing. English is: Publishing will automatically submit this pub to: {currentJournal}.",
@@ -100,6 +102,10 @@
     "global.journals": "Missing. English is: journals",
     "global.published": "Missing. English is: Published on",
     "global.firstPublished": "Missing. English is: First published on",
-    "global.lastPublished": "Missing. English is: Last Published on"
+    "global.lastPublished": "Missing. English is: Last Published on",
+    "global.inviteReviewers": "Missing. English is: Invite Reviewers",
+    "global.turnHighlights": "Missing. English is: Turn Highlights",
+    "global.on": "Missing. English is: On",
+    "global.off": "Missing. English is: Off"
   }
 }

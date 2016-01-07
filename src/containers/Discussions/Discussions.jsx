@@ -30,18 +30,6 @@ const Discussions = React.createClass({
 		query: PropTypes.object,
 
 		dispatch: PropTypes.func
-		// slug: PropTypes.string,
-		// discussionsData: PropTypes.array,
-		// pHashes: PropTypes.object,
-		// expertsData: PropTypes.object,
-		// addDiscussionHandler: PropTypes.func,
-		// addDiscussionStatus: PropTypes.string,
-		// activeSaveID: PropTypes.string,
-		// newDiscussionData: PropTypes.object,
-		// userThumbnail: PropTypes.string,
-		// handleVoteSubmit: PropTypes.func,
-		// toggleHighlightsHandler: PropTypes.func,
-		// showPubHighlights: PropTypes.bool,
 	},
 
 	getDefaultProps: function() {
