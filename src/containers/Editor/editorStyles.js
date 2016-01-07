@@ -60,65 +60,65 @@ export const styles = {
 	// hiddenUntilLoad: {
 	// 	transition: '.3s linear opacity .25s',
 	// },
-	editorTopNav: {
-		position: 'fixed',
-		top: 30,
-		width: '100%',
-		backgroundColor: globalStyles.sideBackground,
-		zIndex: 10,
-	},
-	editorTopNavDark: {
-		backgroundColor: '#272727',
-	},
+	// editorTopNav: {
+	// 	position: 'fixed',
+	// 	top: 30,
+	// 	width: '100%',
+	// 	backgroundColor: globalStyles.sideBackground,
+	// 	zIndex: 10,
+	// },
+	// editorTopNavDark: {
+	// 	backgroundColor: '#272727',
+	// },
 	editorLoadBar: {
 		position: 'fixed',
 		top: 60,
 		width: '100%',
 		zIndex: 10,
 	},
-	editorNav: {
-		listStyle: 'none',
-		height: globalStyles.headerHeight,
-		width: '100%',
-		margin: 0,
-		padding: 0,
+	// editorNav: {
+	// 	listStyle: 'none',
+	// 	height: globalStyles.headerHeight,
+	// 	width: '100%',
+	// 	margin: 0,
+	// 	padding: 0,
 
-	},
-	editorNavItem: {
-		height: '100%',
-		padding: '0px 20px',
-		lineHeight: globalStyles.headerHeight,
-		float: 'left',
-		':hover': {
-			cursor: 'pointer',
-			color: globalStyles.sideHover,
-		},
-	},
-	editorNavSeparator: {
-		width: 1,
-		backgroundColor: '#999',
-		height: 'calc(' + globalStyles.headerHeight + ' - 16px)',
-		margin: '8px 0px',
-		float: 'left',
-	},
-	editorNavItemUsers: {
-		height: '100%',
-		padding: '0px 0px',
-		lineHeight: globalStyles.headerHeight,
-		float: 'left',
-	},
-	editorNavItemSaveStatus: {
-		height: '100%',
-		padding: '0px 10px 0px 0px',
-		lineHeight: 'calc(' + globalStyles.headerHeight + ' + 2px)',
-		float: 'right',
-		fontFamily: 'Courier',
-		color: '#AAA',
-		fontSize: '14px',
-	},
-	editorNavRight: {
-		float: 'right',
-	},
+	// },
+	// editorNavItem: {
+	// 	height: '100%',
+	// 	padding: '0px 20px',
+	// 	lineHeight: globalStyles.headerHeight,
+	// 	float: 'left',
+	// 	':hover': {
+	// 		cursor: 'pointer',
+	// 		color: globalStyles.sideHover,
+	// 	},
+	// },
+	// editorNavSeparator: {
+	// 	width: 1,
+	// 	backgroundColor: '#999',
+	// 	height: 'calc(' + globalStyles.headerHeight + ' - 16px)',
+	// 	margin: '8px 0px',
+	// 	float: 'left',
+	// },
+	// editorNavItemUsers: {
+	// 	height: '100%',
+	// 	padding: '0px 0px',
+	// 	lineHeight: globalStyles.headerHeight,
+	// 	float: 'left',
+	// },
+	// editorNavItemSaveStatus: {
+	// 	height: '100%',
+	// 	padding: '0px 10px 0px 0px',
+	// 	lineHeight: 'calc(' + globalStyles.headerHeight + ' + 2px)',
+	// 	float: 'right',
+	// 	fontFamily: 'Courier',
+	// 	color: '#AAA',
+	// 	fontSize: '14px',
+	// },
+	// editorNavRight: {
+	// 	float: 'right',
+	// },
 	alignRight: {
 		textAlign: 'right',
 	},
@@ -369,6 +369,7 @@ export const styles = {
 			color: globalStyles.sideText,
 		}
 	},
+
 };
 
 // CodeMirror styles function can be
@@ -518,14 +519,14 @@ export function codeMirrorStyles(loginData) {
 	};
 }
 
-// Function to generate side-list fade in animations.
-// Generates unique style per side and per item-depth
-export function animateListItemStyle(side, status, index) {
-	const statusOffset = { loaded: 0, loading: 1};
-	const offset = { left: -100, right: 100};
-	const delay = 0.25 + (index * 0.02);
-	return {
-		transform: 'translateX(' + statusOffset[status] * offset[side] + 'px)',
-		transition: '.3s ease-out transform ' + delay + 's',
-	};
-}
+// // Function to generate side-list fade in animations.
+// // Generates unique style per side and per item-depth
+// export function animateListItemStyle(side, status, index) {
+// 	const statusOffset = { loaded: 0, loading: 1};
+// 	const offset = { left: -100, right: 100};
+// 	const delay = 0.25 + (index * 0.02);
+// 	return {
+// 		transform: 'translateX(' + statusOffset[status] * offset[side] + 'px)',
+// 		transition: '.3s ease-out transform ' + delay + 's',
+// 	};
+// }

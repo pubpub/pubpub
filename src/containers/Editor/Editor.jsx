@@ -9,7 +9,7 @@ import Helmet from 'react-helmet';
 import PureRenderMixin from 'react-addons-pure-render-mixin';
 import ReactFireMixin from 'reactfire';
 
-import {LoaderDeterminate, EditorPluginPopup, EditorModals, PubBody} from '../../components';
+import {LoaderDeterminate, EditorPluginPopup, EditorModals, EditorTopNav, EditorBottomNav, PubBody} from '../../components';
 import {clearPub} from '../../actions/pub';
 import {getPubEdit, toggleEditorViewMode, toggleFormatting, toggleTOC, unmountEditor, closeModal, openModal, publishVersion, saveCollaboratorsToPub, saveSettingsPubPub} from '../../actions/editor';
 import {saveSettingsUser} from '../../actions/login';
@@ -18,7 +18,7 @@ import {debounce} from '../../utils/loadingFunctions';
 import {submitPubToJournal} from '../../actions/journal';
 
 import initCodeMirrorMode from './editorCodeMirrorMode';
-import {styles, codeMirrorStyles, animateListItemStyle} from './editorStyles';
+import {styles, codeMirrorStyles} from './editorStyles';
 import {globalStyles} from '../../utils/styleConstants';
 
 import {insertText, createFocusDoc} from './editorCodeFunctions';
@@ -35,7 +35,7 @@ import {Discussions} from '../';
 
 import {convertFirebaseToObject} from '../../utils/parsePlugins';
 
-import {globalMessages} from '../../utils/globalMessages';
+// import {globalMessages} from '../../utils/globalMessages';
 import {FormattedMessage} from 'react-intl';
 
 marked.setExtensions(markdownExtensions);
@@ -417,6 +417,11 @@ const Editor = React.createClass({
 		return outputAuthors;
 	},
 
+	renderNav: function(mobileView, discussionsExist) {
+		// if isEditor, add 'Public Discussions' | 'Collaborator Comments'  | 'Live Preview'
+		// remove whichever one is active in state at the moment
+	},
+
 	render: function() {
 		const editorData = this.props.editorData;
 		const viewMode = this.props.editorData.get('viewMode');
@@ -437,6 +442,7 @@ const Editor = React.createClass({
 			}
 		}
 
+		const isReader = true;
 		return (
 
 			<div style={[styles.editorContainer, darkMode && styles.editorContainerDark]} className={'editor-container'}>
@@ -482,217 +488,153 @@ const Editor = React.createClass({
 
 				}} />
 
-				{/*	Mobile Editing not currently supported.
-					Display a splash screen if media queries determine mobile mode */}
-				<div style={styles.isMobile}>
-					<div style={styles.mobileHeader}>
-						<FormattedMessage id="editor.cannotEdit" defaultMessage="Cannot Edit in Mobile"/>
-					</div>
-					<div style={styles.mobileImageWrapper}>
-						<img style={styles.mobileImage} src={'http://res.cloudinary.com/pubpub/image/upload/v1448221655/pubSad_blirpk.png'} />
-					</div>
-					<div style={styles.mobileText}>
-						<FormattedMessage id="editor.cannotEditLargerScreen" defaultMessage="Please open this url on a desktop, laptop, or larger screen."/>
-					</div>
-				</div>
+				{/*	'Not Authorized' or 'Error' Note */}
+				{this.props.editorData.get('error')
+					? <div style={styles.errorTitle}>{this.props.editorData.getIn(['pubEditData', 'title'])}</div>
+					: <div>
+						{/*
+							Mobile
+								renderNav
+								renderBody (switches out in place with comments/discussions)
 
-				<div style={styles.notMobile}>
-					{/*	'Not Authorized' or 'Error' Note */}
-					{this.props.editorData.get('error')
-						? <div style={styles.errorTitle}>{this.props.editorData.getIn(['pubEditData', 'title'])}</div>
-						: null
-					}
 
-					{/*	Component for all modals and their backdrop. */}
-					<EditorModals
-						closeModalHandler={this.closeModalHandler}
-						activeModal={this.props.editorData.get('activeModal')}
-						slug={this.props.slug}
-						// Asset Props
-						assetData={this.state.firepadData.assets}
-						addAsset={this.addAsset}
-						deleteAsset={this.deleteAsset}
-						// Collaborator Props
-						collaboratorData={this.state.firepadData.collaborators}
-						updateCollaborators={this.saveUpdatedCollaborators}
-						// Publish Props
-						handlePublish={this.publishVersion}
-						currentJournal={this.props.journalData.getIn(['journalData', 'journalName'])}
+							Not Mobile
+								isReader
+									renderBody
+									renderComments
 
-						// References Props
-						referenceData={this.state.firepadData.references}
-						referenceStyle={this.state.firepadData && this.state.firepadData.settings ? this.state.firepadData.settings.pubReferenceStyle : undefined}
-						updateReferences={this.saveReferences}
-						// Style Props
-						editorFont={this.props.loginData.getIn(['userData', 'settings', 'editorFont'])}
-						editorFontSize={this.props.loginData.getIn(['userData', 'settings', 'editorFontSize'])}
-						editorColor={this.props.loginData.getIn(['userData', 'settings', 'editorColor'])}
-						pubPrivacy={this.state.firepadData && this.state.firepadData.settings ? this.state.firepadData.settings.pubPrivacy : undefined}
-						pubStyle={this.state.firepadData && this.state.firepadData.settings ? this.state.firepadData.settings.pubStyle : undefined}
-						saveUpdatedSettingsUser={this.saveUpdatedSettingsUser}
-						saveUpdatedSettingsFirebase={this.saveUpdatedSettingsFirebase}
-						saveUpdatedSettingsFirebaseAndPubPub={this.saveUpdatedSettingsFirebaseAndPubPub} />
+								isEditor
+									renderEditor
+									renderNav
+									renderBody (switches out in place with comments/discussions)
 
-					{/*	Top Nav. Fixed to the top of the editor page, just below the main pubpub bar */}
-					<div style={[styles.editorTopNav, globalStyles.hiddenUntilLoad, globalStyles[editorData.get('status')], darkMode && styles.editorTopNavDark]}>
-						<ul style={styles.editorNav}>
 
-							<li key="editorNav0"style={[styles.editorNavItem]} onClick={this.openModalHandler('Assets')}>
-								<FormattedMessage {...globalMessages.assets} />
-							</li>
-							<li style={styles.editorNavSeparator}></li>
-							<li key="editorNav1"style={[styles.editorNavItem]} onClick={this.openModalHandler('References')}>
-								<FormattedMessage {...globalMessages.references} />
-							</li>
-							<li style={styles.editorNavSeparator}></li>
-							<li key="editorNav2"style={[styles.editorNavItem]} onClick={this.openModalHandler('Collaborators')}>
-								<FormattedMessage {...globalMessages.collaborators} />
-							</li>
-							<li key="editorNavUsers" style={[styles.editorNavItemUsers]}>
-								<div id={'userlist'}></div>
-							</li>
+						*/}
 
-							<li key="editorNav3"style={[styles.editorNavItem, styles.editorNavRight]} onClick={this.openModalHandler('Publish')}>
-								<FormattedMessage {...globalMessages.publish} />
-							</li>
-							<li style={[styles.editorNavSeparator, styles.editorNavRight]}></li>
-							<li key="editorNav4"style={[styles.editorNavItem, styles.editorNavRight]} onClick={this.toggleLivePreview}>
-								<FormattedMessage id="editor.livePreview" defaultMessage="Live Preview"/>
-							</li>
-							<li style={[styles.editorNavSeparator, styles.editorNavRight]}></li>
-							<li key="editorNav5"style={[styles.editorNavItem, styles.editorNavRight]} onClick={this.openModalHandler('Style')}>
-								<FormattedMessage {...globalMessages.settings} />
-							</li>
-							<li key="editorNav7"style={[styles.editorNavItemSaveStatus, styles.editorNavRight]}>
-								{()=>{
-									switch (this.state.editorSaveStatus) {
-									case 'saved':
-										return <FormattedMessage id="editor.pubSaved" defaultMessage="Pub Saved"/>;
-									case 'saving':
-										return <FormattedMessage id="editor.pubSaving" defaultMessage="Pub Saving..."/>;
-									default:
-										return <FormattedMessage id="editor.disconnected" defaultMessage="Disconnected"/>;
-									}
-									// this.state.editorSaveStatus === 'saved' ? 'Pub Saved' : 'Pub Saving...'}
-								}()}
-
-							</li>
-
-						</ul>
-					</div>
-
-					{/*	Horizontal loader line - Separates top bar from rest of editor page */}
-					<div style={styles.editorLoadBar}>
-						<LoaderDeterminate value={loadStatus === 'loading' ? 0 : 100}/>
-					</div>
-
-					{/* Bottom Nav */}
-					<div style={[styles.common.editorBottomNav, styles[viewMode].editorBottomNav, globalStyles.hiddenUntilLoad, globalStyles[loadStatus]]}>
-
-						{/* Background header bar that's used in livePreview mode. Provides opaque background. */}
-						<div style={[styles.common.bottomNavBackground, styles[viewMode].bottomNavBackground, darkMode && styles.common.bottomNavBackgroundDark]}></div>
-
-						<div className="leftBottomNav" style={[styles.common.bottomNavLeft, styles[viewMode].bottomNavLeft]}>
-
-							{/* Table of Contents Title */}
-							<div key="bNav_toc" style={[styles.common.bottomNavTitle, styles[viewMode].bottomNavTitle, showBottomLeftMenu && styles[viewMode].listTitleActive]} onClick={this.toggleTOC}>
-								<FormattedMessage {...globalMessages.tableOfContents} />
-							</div>
-							<div key="showAllTOCButton" style={[styles.showAll, this.state.activeFocus !== '' && styles.showAllVisible]} onClick={this.focusEditor(this.state.activeFocus, 0)}>
-								{'- '}<FormattedMessage id="editor.showAll" defaultMessage="show all"/>{' -'}
-							</div>
-
-							{/* Table of Contents line separator */}
-							<div style={[styles.common.bottomNavDivider, styles[viewMode].bottomNavDivider]}>
-								<div style={[styles.common.bottomNavDividerSmall, styles[viewMode].bottomNavDividerSmall]}></div>
-								<div style={[styles.common.bottomNavDividerLarge, styles[viewMode].bottomNavDividerLarge]}></div>
-							</div>
-
-							{/* Table of Contents list */}
-							<ul style={[styles.common.bottomNavList, styles[viewMode].bottomNavList, showBottomLeftMenu && styles[viewMode].listActive]}>
-								{()=>{
-									// const options = ['Introduction', 'Prior Art', 'Resources', 'Methods', 'A New Approach', 'Data Analysis', 'Results', 'Conclusion'];
-									const options = this.state.travisTOC;
-									return options.map((item, index)=>{
-										return <li key={'blNav' + index} onClick={this.focusEditor(item.title, index)} style={[styles.common.bottomNavListItem, styles[viewMode].bottomNavListItem, animateListItemStyle('left', loadStatus, index), showBottomLeftMenu && styles[viewMode].listItemActive, this.state.activeFocus === item.title && styles.common.listItemActiveFocus]}>{item.title}</li>;
-									});
-								}()}
-							</ul>
+						<div style={styles.isMobile}>
+							<h1>Here is where we should reader stuff! Youll have a nav and can toggle. Mostly body though</h1>
 						</div>
 
-						<div className="rightBottomNav" style={[styles.common.bottomNavRight, styles[viewMode].bottomNavRight]}>
+						<div style={styles.notMobile}>
+							{isReader
+								? <div>
+									Reader Stuff
+								</div>
 
-							{/* Formatting Title */}
-							<div key="bNav_format" style={[styles.common.bottomNavTitle, styles[viewMode].bottomNavTitle, styles.alignRight, showBottomRightMenu && styles[viewMode].listTitleActive]} onClick={this.toggleFormatting}>
-								<FormattedMessage id="editor.formatting" defaultMessage="Formatting"/>
+								: <div>
+
+								</div>
+							}
+						
+
+							{/*	Component for all modals and their backdrop. */}
+							<EditorModals
+								closeModalHandler={this.closeModalHandler}
+								activeModal={this.props.editorData.get('activeModal')}
+								slug={this.props.slug}
+								// Asset Props
+								assetData={this.state.firepadData.assets}
+								addAsset={this.addAsset}
+								deleteAsset={this.deleteAsset}
+								// Collaborator Props
+								collaboratorData={this.state.firepadData.collaborators}
+								updateCollaborators={this.saveUpdatedCollaborators}
+								// Publish Props
+								handlePublish={this.publishVersion}
+								currentJournal={this.props.journalData.getIn(['journalData', 'journalName'])}
+
+								// References Props
+								referenceData={this.state.firepadData.references}
+								referenceStyle={this.state.firepadData && this.state.firepadData.settings ? this.state.firepadData.settings.pubReferenceStyle : undefined}
+								updateReferences={this.saveReferences}
+								// Style Props
+								editorFont={this.props.loginData.getIn(['userData', 'settings', 'editorFont'])}
+								editorFontSize={this.props.loginData.getIn(['userData', 'settings', 'editorFontSize'])}
+								editorColor={this.props.loginData.getIn(['userData', 'settings', 'editorColor'])}
+								pubPrivacy={this.state.firepadData && this.state.firepadData.settings ? this.state.firepadData.settings.pubPrivacy : undefined}
+								pubStyle={this.state.firepadData && this.state.firepadData.settings ? this.state.firepadData.settings.pubStyle : undefined}
+								saveUpdatedSettingsUser={this.saveUpdatedSettingsUser}
+								saveUpdatedSettingsFirebase={this.saveUpdatedSettingsFirebase}
+								saveUpdatedSettingsFirebaseAndPubPub={this.saveUpdatedSettingsFirebaseAndPubPub} />
+
+							{/* Top Nav. Fixed to the top of the editor page, just below the main pubpub bar */}
+							<EditorTopNav 
+								status={editorData.get('status')}
+								darkMode={darkMode}
+								openModalHandler={this.openModalHandler}
+								editorSaveStatus={this.state.editorSaveStatus}
+								toggleLivePreviewHandler={this.toggleLivePreview}/>
+
+							{/*	Horizontal loader line - Separates top bar from rest of editor page */}
+							<div style={styles.editorLoadBar}>
+								<LoaderDeterminate value={loadStatus === 'loading' ? 0 : 100}/>
 							</div>
 
-							{/* Formatting line separator */}
-							<div style={[styles.common.bottomNavDivider, styles[viewMode].bottomNavDivider]}>
-								<div style={[styles.common.bottomNavDividerSmall, styles[viewMode].bottomNavDividerSmall, styles.floatRight, styles.common.bottomNavDividerRight]}></div>
-								<div style={[styles.common.bottomNavDividerLarge, styles[viewMode].bottomNavDividerLarge, styles.floatRight, styles.common.bottomNavDividerLargeRight]}></div>
+							{/* Bottom Nav */}
+							<EditorBottomNav 
+								viewMode={viewMode}
+								loadStatus={loadStatus}
+								darkMode={darkMode}
+								showBottomLeftMenu={showBottomLeftMenu}
+								showBottomRightMenu={showBottomRightMenu}
+								toggleTOCHandler={this.toggleTOC}
+								toggleFormattingHandler={this.toggleFormatting}
+								activeFocus={this.state.activeFocus}
+								focusEditorHandler={this.focusEditor}
+								travisTOC={this.state.travisTOC}
+								insertFormattingHandler={this.insertFormatting}/>
+
+							{/* Markdown Editing Block */}
+							<div id="editor-text-wrapper" style={[globalStyles.hiddenUntilLoad, globalStyles[loadStatus], styles.common.editorMarkdown, styles[viewMode].editorMarkdown]}>
+
+								<EditorPluginPopup ref="pluginPopup" references={this.state.firepadData.references} assets={this.state.firepadData.assets} activeFocus={this.state.activeFocus} codeMirrorChange={this.state.codeMirrorChange}/>
+
+								{/* Insertion point for codemirror and firepad */}
+								<div style={[this.state.activeFocus !== '' && styles.hiddenMainEditor]}>
+									<div id="codemirror-wrapper"></div>
+								</div>
+
+								{/* Insertion point for Focused codemirror subset */}
+								<div id="codemirror-focus-wrapper"></div>
+
 							</div>
 
-							{/* Formatting list */}
-							<ul style={[styles.common.bottomNavList, styles[viewMode].bottomNavList, styles[viewMode].bottomNavListRight, styles.alignRight, showBottomRightMenu && styles[viewMode].listActive]}>
-								{()=>{
-									const options = ['H1', 'H2', 'H3', 'Bold', 'Italic', '# List', '- List', 'Line', 'Link', 'Image', 'Video', 'Cite', 'Pagebreak', 'Linebreak'];
-									return options.map((item, index)=>{
-										return <li key={'brNav' + index} onClick={this.insertFormatting(item)} style={[styles.common.bottomNavListItem, styles[viewMode].bottomNavListItem, animateListItemStyle('right', loadStatus, index), styles.floatRight, showBottomRightMenu && styles[viewMode].listItemActive]}>{item}</li>;
-									});
-								}()}
-							</ul>
-						</div>
-					</div>
+							{/* Live Preview Block */}
+							<div id="editor-live-preview-wrapper" style={[globalStyles.hiddenUntilLoad, globalStyles[loadStatus], styles.common.editorPreview, styles[viewMode].editorPreview]} className={'editorPreview'}>
 
-					{/* Markdown Editing Block */}
-					<div id="editor-text-wrapper" style={[globalStyles.hiddenUntilLoad, globalStyles[loadStatus], styles.common.editorMarkdown, styles[viewMode].editorMarkdown]}>
-
-						<EditorPluginPopup ref="pluginPopup" references={this.state.firepadData.references} assets={this.state.firepadData.assets} activeFocus={this.state.activeFocus} codeMirrorChange={this.state.codeMirrorChange}/>
-
-						{/* Insertion point for codemirror and firepad */}
-						<div style={[this.state.activeFocus !== '' && styles.hiddenMainEditor]}>
-							<div id="codemirror-wrapper"></div>
-						</div>
-
-						{/* Insertion point for Focused codemirror subset */}
-						<div id="codemirror-focus-wrapper"></div>
-
-					</div>
-
-					{/* Live Preview Block */}
-					<div id="editor-live-preview-wrapper" style={[globalStyles.hiddenUntilLoad, globalStyles[loadStatus], styles.common.editorPreview, styles[viewMode].editorPreview]} className={'editorPreview'}>
-						{this.props.editorData.getIn(['pubEditData', 'discussions']) && this.props.editorData.getIn(['pubEditData', 'discussions']).size
-							? <div onClick={this.toggleShowComments} style={styles.showCommentsToggle} key={'editorCommentsToggleButton'}>
-								{this.state.showComments
-									? <FormattedMessage id="editor.clickForPreview" defaultMessage="Click to View Preview"/>
-									: <FormattedMessage id="editor.clickForComments" defaultMessage="Click to View Discussion"/>
+								{this.props.editorData.getIn(['pubEditData', 'discussions']) && this.props.editorData.getIn(['pubEditData', 'discussions']).size
+									? <div onClick={this.toggleShowComments} style={styles.showCommentsToggle} key={'editorCommentsToggleButton'}>
+										{this.state.showComments
+											? <FormattedMessage id="editor.clickForPreview" defaultMessage="Click to View Preview"/>
+											: <FormattedMessage id="editor.clickForComments" defaultMessage="Click to View Discussion"/>
+										}
+									</div>
+									: null
 								}
+
+								{this.state.showComments
+									? <Discussions editorCommentMode={false} inEditor={true}/>
+									: <PubBody
+										status={'loaded'}
+										title={this.state.title}
+										abstract={this.state.abstract}
+										authorsNote={this.state.authorsNote}
+										minFont={15}
+										htmlTree={this.state.tree}
+										authors={this.getAuthorsArray()}
+										// addSelectionHandler={this.addSelection}
+										style={this.state.firepadData && this.state.firepadData.settings ? this.state.firepadData.settings.pubStyle : undefined}
+										references={referencesList}
+										isFeatured={true}/>
+								}
+
 							</div>
-							: null
-						}
 
-						{this.state.showComments
-							? <Discussions editorCommentMode={false} inEditor={true}/>
-							: <PubBody
-								status={'loaded'}
-								title={this.state.title}
-								abstract={this.state.abstract}
-								authorsNote={this.state.authorsNote}
-								minFont={15}
-								htmlTree={this.state.tree}
-								authors={this.getAuthorsArray()}
-								// addSelectionHandler={this.addSelection}
-								style={this.state.firepadData && this.state.firepadData.settings ? this.state.firepadData.settings.pubStyle : undefined}
-								references={referencesList}
-								isFeatured={true}/>
-
-						}
+						</div>
 
 
 					</div>
-
-				</div>
+				}
 
 			</div>
 		);

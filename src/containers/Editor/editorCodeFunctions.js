@@ -48,6 +48,9 @@ export function insertText(cm, formatting, baseText, showPopup) {
 	case 'Linebreak':
 		cm.replaceSelection('{{linebreak}}');
 		break;
+	case 'Quote':
+		cm.replaceSelection('{{quote: }}');
+		break;
 	default:
 		throw new Error('Insert command not found');
 	}

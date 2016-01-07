@@ -1,6 +1,7 @@
 {
   "es": {
     "journal.journalWillLiveAt": "Same as English: Journal will live at",
+    "editor.formatting": "Same as English: Formatting",
     "editor.noAssets": "Same as English: No Assets Uploaded",
     "editor.publishMessageJournal1": "Missing. English is: Publishing will automatically submit this pub to: {currentJournal}.",
     "editor.publishMessageJournal2": "Missing. English is: If you would like to publish without submitting, please publish from",
@@ -8,6 +9,7 @@
     "editor.addReference": "Missing. English is: Add Reference",
     "editor.manualEntry": "Same as English: Manual Entry",
     "editor.default": "Same as English: default",
+    "editor.livePreview": "Same as English: Live Preview",
     "preview.discussionOn": "Same as English: Discussion on",
     "journal.searchPubsToFeature": "Same as English: Search Pubs to Feature",
     "journal.curatedBy": "Same as English: Pubs curated by your journal",
@@ -43,8 +45,6 @@
     "user.noDiscussions": "Missing. English is: No Discussions Yet",
     "user.titleForPerson": "Same as English: Title",
     "discussion.permalink": "Same as English: Permalink",
-    "editor.livePreview": "Same as English: Live Preview",
-    "editor.formatting": "Same as English: Formatting",
     "editor.clickForPreview": "Same as English: Click to View Preview",
     "journal.createJournal": "Same as English: Create Journal",
     "journal.journalNameRequired": "Same as English: A journal name is required",

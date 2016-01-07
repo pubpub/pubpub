@@ -5,6 +5,8 @@ export CreateJournalForm from './CreateJournalForm/CreateJournalForm';
 export CreatePubForm from './CreatePubForm/CreatePubForm';
 export EditorModals from './EditorModals/EditorModals';
 export EditorPluginPopup from './EditorPluginPopup/EditorPluginPopup';
+export EditorTopNav from './EditorTopNav/EditorTopNav';
+export EditorBottomNav from './EditorBottomNav/EditorBottomNav';
 export HeaderNav from './HeaderNav/HeaderNav';
 export HeaderMenu from './HeaderMenu/HeaderMenu';
 export ImageCropper from './ImageCropper/ImageCropper';
