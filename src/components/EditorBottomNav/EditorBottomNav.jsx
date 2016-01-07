@@ -112,11 +112,7 @@ styles = {
 	floatRight: {
 		float: 'right',
 	},
-	hiddenMainEditor: {
-		height: 0,
-		overflow: 'hidden',
-		pointerEvents: 'none',
-	},
+
 	showAll: {
 		padding: '0px 5px',
 		display: 'none',
@@ -138,20 +134,6 @@ styles = {
 		display: 'inline-block',
 	},
 
-	showCommentsToggle: {
-		backgroundColor: '#F5F5F5',
-		cursor: 'pointer',
-		width: '300px',
-		height: '30px',
-		lineHeight: '30px',
-		margin: '0 auto',
-		borderRadius: '1px',
-		userSelect: 'none',
-		textAlign: 'center',
-		':hover': {
-			color: 'black'
-		}
-	},
 	common: {
 		editorBottomNav: {
 			position: 'fixed',
@@ -160,29 +142,7 @@ styles = {
 			pointerEvents: 'none',
 			zIndex: 10,
 		},
-		editorMarkdown: {
-			margin: '30px 0px',
-			width: '50vw',
-			zIndex: 5,
 
-			position: 'fixed',
-			height: 'calc(100vh - 60px - 2*' + globalStyles.headerHeight + ')',
-			overflow: 'hidden',
-			overflowY: 'scroll',
-		},
-		editorPreview: {
-			width: 'calc(50% - 20px)',
-			backgroundColor: '#fff',
-			boxShadow: 'rgba(0,0,0,0.25) 0px 3px 9px 1px',
-			position: 'fixed',
-			right: 0,
-			top: 61,
-			height: 'calc(100vh - 81px)',
-			overflow: 'hidden',
-			overflowY: 'scroll',
-			zIndex: 20,
-			padding: 10
-		},
 		bottomNavBackground: {
 			position: 'absolute',
 			height: globalStyles.headerHeight,
@@ -277,16 +237,6 @@ styles = {
 	},
 
 	edit: {
-		editorMarkdown: {
-			transition: '.352s linear transform, .3s linear opacity .25s, 0s linear padding .352s, 0s linear left .352s',
-			transform: 'translateX(0%)',
-			padding: globalStyles.headerHeight + ' 25vw',
-			left: 0,
-		},
-		editorPreview: {
-			transition: '.352s linear transform',
-			transform: 'translateX(110%)',
-		},
 		bottomNavRight: {
 			transition: '.352s linear transform',
 			transform: 'translateX(0%)',
@@ -304,16 +254,7 @@ styles = {
 		editorBottomNav: {
 			pointerEvents: 'none',
 		},
-		editorMarkdown: {
-			transition: '.352s linear transform, .3s linear opacity .25s',
-			transform: 'translateX(-50%)',
-			padding: globalStyles.headerHeight + ' 0px',
-			left: '25vw'
-		},
-		editorPreview: {
-			transition: '.352s linear transform',
-			transform: 'translateX(0%)',
-		},
+
 		bottomNavRight: {
 			transition: '.352s linear transform',
 			transform: 'translateX(-250%)',
