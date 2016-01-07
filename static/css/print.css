@@ -6,7 +6,7 @@
 		overflow: visible !important;
 		height: auto !important;
 	}
-	.header-bar,.login-container, .leftBar, .rightBar, .pubModals, .editorModals {
+	.header-bar,.login-container, .leftBar, .rightBar, .pubModals, .editorModals, .editorBodyNav {
 		display: none !important;
 	}
 	.content {
@@ -15,7 +15,7 @@
 	.editor-container {
 		height: auto !important;
 	}
-	#editor-live-preview-wrapper {
+	#editor-live-preview-wrapper, .editorBodyView {
 		width: 100% !important;
 		height: auto !important;
 		overflow: hidden !important;

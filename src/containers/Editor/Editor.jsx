@@ -437,7 +437,7 @@ const Editor = React.createClass({
 			</div>
 		);
 
-		return (<div style={styles.bodyNavBar}>
+		return (<div className={'editorBodyNav'} style={styles.bodyNavBar}>
 
 			{()=>{
 				switch (this.state.previewPaneMode) {
@@ -634,7 +634,7 @@ const Editor = React.createClass({
 										<div id="codemirror-wrapper"></div>
 									</div>
 
-									<div style={[styles.readerViewBlock, styles.readerViewBlockBody]}>
+									<div className={'editorBodyView'} style={[styles.readerViewBlock, styles.readerViewBlockBody]}>
 										{this.renderBody()}
 									</div>
 
@@ -648,7 +648,6 @@ const Editor = React.createClass({
 
 								: <div>
 									{/* Editor's View */}
-
 									{/*	Component for all modals and their backdrop. */}
 									<EditorModals
 										closeModalHandler={this.closeModalHandler}
@@ -723,10 +722,10 @@ const Editor = React.createClass({
 
 									{/* Live Preview Block */}
 									<div id="editor-live-preview-wrapper" style={[globalStyles.hiddenUntilLoad, globalStyles[loadStatus], styles.common.editorPreview, styles[viewMode].editorPreview]} className={'editorPreview'}>
-										
+
 										{this.renderNav(false)}
 										
-										<div style={[styles.previewBlockWrapper, this.state.previewPaneMode === 'preview' && styles.previewBlockWrapperShow]}>
+										<div className="editorBodyView" style={[styles.previewBlockWrapper, this.state.previewPaneMode === 'preview' && styles.previewBlockWrapperShow]}>
 											{this.renderBody()}
 										</div>
 
@@ -752,7 +751,6 @@ const Editor = React.createClass({
 
 					</div>
 				}
-
 			</div>
 		);
 	}
