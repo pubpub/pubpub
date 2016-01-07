@@ -13,7 +13,7 @@ const RadioButtonProp = React.createClass({
 
 		const state = {};
 
-		if (!isNaN(this.props.selectedValue)) {
+		if (this.props.selectedValue && !isNaN(this.props.selectedValue)) {
 			state.selectedValue = 'number';
 			state.number = parseInt(this.props.selectedValue, 10);
 		} else {
