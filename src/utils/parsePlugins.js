@@ -1,7 +1,11 @@
 export function parsePluginString(str) {
 	const propDict = {};
-	const regex = /([^=\s]*)\s*=\s*(.*)/;
-	for (const prop of str.split(',')) {
+	const regex = /([^=\s]*)\s*=\s*\"?([^"]*)\"?/;
+
+	const matches = str.match(/([^=\s,]*=(?:(?:(?=".*?")".*?")|(?:(?!".+?")[^,]+)))/g);
+
+	for (const prop of matches) {
+		console.log(prop);
 		const match = regex.exec(prop);
 		if (match && match[1] && match[2]) {
 			propDict[match[1]] = match[2];

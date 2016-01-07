@@ -42,9 +42,7 @@ const QuotePlugin = React.createClass({
 		} else {
 			html = (<Media style={style} size={size} align={align}>
 				{quote}
-				<div style={styles.attribute}>
-				- {attribution}
-				</div>
+				{ (attribution) ? <div style={styles.attribute}> - {attribution}</div> : null}
 				{ (reference) ? <div style={styles.reference}> <Reference citationObject={reference} mode={'mla'} /> </div> : null }
 			</Media>
 		);
