@@ -123,13 +123,17 @@ const DiscussionsItem = React.createClass({
 						<Link to={'/user/' + discussionItem.author.username} style={globalStyles.link}><span key={'discussionItemAuthorLink' + discussionItem._id} style={styles.headerText}>{discussionItem.author.name}</span></Link> on {dateFormat(discussionItem.postDate, 'mm/dd/yy, h:MMTT')}
 					</div>
 
-					<div style={[styles.discussionDetailsLine, styles.discussionDetailsLineBottom, this.props.noPermalink && {display: 'none'}]}>
-						<Link style={globalStyles.link} to={'/pub/' + this.props.slug + '/discussions/' + discussionItem._id}><span style={styles.detailLineItem}>
+					<div style={[styles.discussionDetailsLine, styles.discussionDetailsLineBottom]}>
+						<Link style={globalStyles.link} to={'/pub/' + this.props.slug + '/discussions/' + discussionItem._id}>
+						<span style={[styles.detailLineItem, this.props.noPermalink && {display: 'none'}]}>
 							<FormattedMessage
 								id="discussion.permalink"
 								defaultMessage="Permalink"/>
-						</span></Link>
+						</span>
+						</Link>
+
 						<span style={[styles.detailLineItemSeparator, (this.props.noReply || this.props.noPermalink) && {display: 'none'}]}>|</span>
+						
 						<span style={[styles.detailLineItem, this.props.noReply && {display: 'none'}]} key={'replyButton-' + discussionItem._id} onClick={this.toggleReplyActive}>
 							<FormattedMessage
 								id="discussion.reply"

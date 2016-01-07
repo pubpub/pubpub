@@ -205,9 +205,9 @@ pubSchema.statics.getPubEdit = function (slug, readerID, callback) {
 			return callback(null, 'Not Authorized');
 		}
 
-		let isReader = false;
-		if (pub.collaborators.canRead.indexOf(readerID) > -1) {
-			isReader = true;
+		let isReader = true;
+		if (pub.collaborators.canEdit.indexOf(readerID) > -1) {
+			isReader = false;
 		}
 
 		// Once authorized, it doesn't seem like we need to provide any data to the editor

@@ -528,7 +528,7 @@ const Editor = React.createClass({
 			title: 'PubPub - Editing ' + this.props.slug
 		};
 
-		const isReader = false;
+		const isReader = this.props.editorData.getIn(['pubEditData', 'isReader']);
 		return (
 
 			<div style={[styles.editorContainer, darkMode && styles.editorContainerDark]} className={'editor-container'}>
