@@ -56,7 +56,7 @@ styles = {
 		borderTop: '#A7A7A7 solid 1px',
 		borderBottom: '#A7A7A7 solid 1px',
 		padding: '1em',
-		textAlign: 'center'
+		textAlign: 'left'
 	},
 	inline: {
 		borderLeft: '#A7A7A7 solid 1px',
@@ -64,7 +64,8 @@ styles = {
 		textAlign: 'left'
 	},
 	attribute: {
-		fontStyle: 'italic'
+		fontStyle: 'italic',
+		textAlign: 'right',
 	},
 	reference: {
 		fontSize: '0.65em',
