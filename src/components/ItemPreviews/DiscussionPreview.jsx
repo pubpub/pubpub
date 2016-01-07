@@ -22,6 +22,7 @@ const DiscussionPreview = React.createClass({
 
 	render: function() {
 		const discussion = this.props.discussionData;
+		if (!discussion || !discussion.pub) {return null;}
 		return (
 			<div style={styles.container} key={'discussionContainer-' + discussion._id}>
 				<Link style={globalStyles.link} to={'/pub/' + discussion.pub.slug + '/discussions/' + discussion._id}>
