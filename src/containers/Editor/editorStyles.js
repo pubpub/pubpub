@@ -123,10 +123,49 @@ export const styles = {
 	},
 	bodyNavBar: {
 		width: '100%',
-		height: '30px',
+		height: '29px',
 		color: 'white',
-		borderBottom: '1px solid black',
-
+		borderBottom: '1px solid #CCC',
+		marginBottom: 0,
+	},
+	bodyNavItem: {
+		
+		float: 'right',
+		padding: '0px 10px',
+		height: globalStyles.headerHeight,
+		lineHeight: globalStyles.headerHeight,
+		cursor: 'pointer',
+		color: '#888',
+		userSelect: 'none',
+		':hover': {
+			color: 'black',
+		},
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+			height: globalStyles.headerHeightMobile,
+			lineHeight: globalStyles.headerHeightMobile,
+		},
+	},
+	bodyNavSeparator: {
+		float: 'right',
+		height: globalStyles.headerHeight,
+		lineHeight: globalStyles.headerHeight,
+		userSelect: 'none',
+		padding: '0px 2px',
+		color: '#888',
+	},
+	previewBlockWrapper: {
+		width: 'calc(100% - 20px)',
+		height: 'calc(100vh - 91px - 20px)',
+		padding: '10px',
+		overflow: 'hidden',
+		overflowY: 'scroll',
+		position: 'absolute',
+		opacity: '0',
+		pointerEvents: 'none',
+	},
+	previewBlockWrapperShow: {
+		opacity: '1',
+		pointerEvents: 'auto',
 	},
 	common: {
 		editorMarkdown: {
@@ -140,17 +179,16 @@ export const styles = {
 			overflowY: 'scroll',
 		},
 		editorPreview: {
-			width: 'calc(50% - 20px)',
+			width: 'calc(50% - 0px)',
 			backgroundColor: '#fff',
 			boxShadow: 'rgba(0,0,0,0.25) 0px 3px 9px 1px',
 			position: 'fixed',
 			right: 0,
 			top: 61,
-			height: 'calc(100vh - 81px)',
+			height: 'calc(100vh - 61px)',
 			overflow: 'hidden',
-			overflowY: 'scroll',
 			zIndex: 20,
-			padding: 10
+			padding: 0
 		},
 
 	},

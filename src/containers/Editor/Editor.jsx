@@ -36,7 +36,7 @@ import {Discussions} from '../';
 import {convertFirebaseToObject} from '../../utils/parsePlugins';
 
 // import {globalMessages} from '../../utils/globalMessages';
-import {FormattedMessage} from 'react-intl';
+// import {FormattedMessage} from 'react-intl';
 
 marked.setExtensions(markdownExtensions);
 
@@ -82,7 +82,7 @@ const Editor = React.createClass({
 			},
 			codeMirrorChange: {},
 			editorSaveStatus: 'saved',
-			showComments: false,
+			previewPaneMode: 'preview',
 		};
 	},
 
@@ -175,10 +175,6 @@ const Editor = React.createClass({
 		} else {
 			this.setState({editorSaveStatus: 'saved'});
 		}
-	},
-
-	toggleShowComments: function() {
-		this.setState({showComments: !this.state.showComments});
 	},
 
 	onEditorChange: function(cm, change) {
@@ -417,10 +413,104 @@ const Editor = React.createClass({
 		return outputAuthors;
 	},
 
-	renderNav: function(mobileView, discussionsExist) {
+	renderNav: function(mobileView) {
 		// if isEditor, add 'Public Discussions' | 'Collaborator Comments'  | 'Live Preview'
 		// remove whichever one is active in state at the moment
-		return <div style={styles.bodyNavBar}></div>;
+		const discussionsExist = this.props.editorData.getIn(['pubEditData', 'discussions']) && this.props.editorData.getIn(['pubEditData', 'discussions']).size;
+
+		const editorCommentsTab = (
+			<div key={mobileView ? 'mobileBodyNav2' : 'previewBodyNav2'} style={styles.bodyNavItem} onClick={this.switchPreviewPaneMode('comments')}>
+				Editor Comments
+			</div>
+		);
+
+		const publicDiscussionsTab = (
+			<div key={mobileView ? 'mobileBodyNav1' : 'previewBodyNav1'} style={styles.bodyNavItem} onClick={this.switchPreviewPaneMode('discussions')}>
+				Public Discussions
+			</div>
+		);
+
+		const livePreviewTab = (
+			<div key={mobileView ? 'mobileBodyNav3' : 'previewBodyNav3'} style={styles.bodyNavItem} onClick={this.switchPreviewPaneMode('preview')}>
+				Live Preview
+			</div>
+		);
+
+		return (<div style={styles.bodyNavBar}>
+
+			{()=>{
+				switch (this.state.previewPaneMode) {
+				case 'preview':
+					return (
+						<div>
+							{editorCommentsTab}
+							{discussionsExist
+								? <div>
+									<div style={styles.bodyNavSeparator}>|</div>
+									{publicDiscussionsTab}
+								</div>
+								: null
+							}
+							
+						</div>
+					);
+				case 'comments':
+					return (
+						<div>
+							{livePreviewTab}
+							{discussionsExist
+								? <div>
+									<div style={styles.bodyNavSeparator}>|</div>
+									{publicDiscussionsTab}
+								</div>
+								: null
+							}
+						</div>
+					);
+				case 'discussions':
+					return (
+						<div>
+							{editorCommentsTab}
+							<div style={styles.bodyNavSeparator}>|</div>
+							{livePreviewTab}
+						</div>
+					);
+				default:
+					return null;
+				}
+			}()}
+
+		</div>);
+	},
+
+	switchPreviewPaneMode: function(mode) {
+		return ()=>{
+			this.setState({previewPaneMode: mode});
+		};
+	},
+
+	renderBody: function() {
+		const referencesList = [];
+		for ( const key in this.state.firepadData.references ) {
+			if (this.state.firepadData.references.hasOwnProperty(key)) {
+				referencesList.push(this.state.firepadData.references[key]);
+			}
+		}
+
+		return (
+			<PubBody
+				status={'loaded'}
+				title={this.state.title}
+				abstract={this.state.abstract}
+				authorsNote={this.state.authorsNote}
+				minFont={15}
+				htmlTree={this.state.tree}
+				authors={this.getAuthorsArray()}
+				// addSelectionHandler={this.addSelection}
+				style={this.state.firepadData && this.state.firepadData.settings ? this.state.firepadData.settings.pubStyle : undefined}
+				references={referencesList}
+				isFeatured={true}/>
+		);
 	},
 
 	render: function() {
@@ -435,13 +525,6 @@ const Editor = React.createClass({
 		const metaData = {
 			title: 'PubPub - Editing ' + this.props.slug
 		};
-
-		const referencesList = [];
-		for ( const key in this.state.firepadData.references ) {
-			if (this.state.firepadData.references.hasOwnProperty(key)) {
-				referencesList.push(this.state.firepadData.references[key]);
-			}
-		}
 
 		const isReader = false;
 		return (
@@ -513,7 +596,7 @@ const Editor = React.createClass({
 						{/* Mobile */}
 						<div style={styles.isMobile}>
 							{/* In mobile - readers and editors have the same view. Editors have a note about screen size. */}
-							{this.renderNav()}
+							{this.renderNav(true)}
 							<h1>Here is where we should reader stuff! Youll have a nav and can toggle. Mostly body though</h1>
 						</div>
 
@@ -602,33 +685,23 @@ const Editor = React.createClass({
 
 									{/* Live Preview Block */}
 									<div id="editor-live-preview-wrapper" style={[globalStyles.hiddenUntilLoad, globalStyles[loadStatus], styles.common.editorPreview, styles[viewMode].editorPreview]} className={'editorPreview'}>
-										{this.renderNav()}
-										{this.props.editorData.getIn(['pubEditData', 'discussions']) && this.props.editorData.getIn(['pubEditData', 'discussions']).size
-											? <div onClick={this.toggleShowComments} style={styles.showCommentsToggle} key={'editorCommentsToggleButton'}>
-												{this.state.showComments
-													? <FormattedMessage id="editor.clickForPreview" defaultMessage="Click to View Preview"/>
-													: <FormattedMessage id="editor.clickForComments" defaultMessage="Click to View Discussion"/>
-												}
-											</div>
-											: null
-										}
+										
+										{this.renderNav(false)}
+										
+										<div style={[styles.previewBlockWrapper, this.state.previewPaneMode === 'preview' && styles.previewBlockWrapperShow]}>
+											{this.renderBody()}
+										</div>
 
-										{this.state.showComments
-											? <Discussions editorCommentMode={false} inEditor={true}/>
-											: <PubBody
-												status={'loaded'}
-												title={this.state.title}
-												abstract={this.state.abstract}
-												authorsNote={this.state.authorsNote}
-												minFont={15}
-												htmlTree={this.state.tree}
-												authors={this.getAuthorsArray()}
-												// addSelectionHandler={this.addSelection}
-												style={this.state.firepadData && this.state.firepadData.settings ? this.state.firepadData.settings.pubStyle : undefined}
-												references={referencesList}
-												isFeatured={true}/>
-										}
+										<div style={[styles.previewBlockWrapper, this.state.previewPaneMode === 'comments' && styles.previewBlockWrapperShow]}>
+											<h1>Comments comments comments</h1>
+										</div>
 
+										<div style={[styles.previewBlockWrapper, this.state.previewPaneMode === 'discussions' && styles.previewBlockWrapperShow]}>
+											<h1>Discussion Discussion Discussion</h1>
+											<Discussions editorCommentMode={false} inEditor={true}/>
+										</div>
+
+	
 									</div>
 								</div>
 							}
