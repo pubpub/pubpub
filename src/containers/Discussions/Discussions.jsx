@@ -8,6 +8,7 @@ import DiscussionsInput from './DiscussionsInput';
 
 import {toggleVisibility} from '../../actions/login';
 import {addDiscussion, discussionVoteSubmit, togglePubHighlights} from '../../actions/pub';
+import {addComment} from '../../actions/editor';
 
 // import {globalMessages} from '../../utils/globalMessages';
 // import {FormattedMessage} from 'react-intl';
@@ -19,6 +20,7 @@ const Discussions = React.createClass({
 		metaID: PropTypes.string,
 		editorCommentMode: PropTypes.bool, 
 		inEditor: PropTypes.bool, 
+		instanceName: PropTypes.string,
 
 		pubData: PropTypes.object,
 		editorData: PropTypes.object,
@@ -43,11 +45,22 @@ const Discussions = React.createClass({
 		if (!this.props.loginData.get('loggedIn')) {
 			return this.props.dispatch(toggleVisibility());
 		}
-		discussionObject.pub = this.props.pubData.getIn(['pubData', '_id']);
-		discussionObject.version = this.props.query.version !== undefined && this.props.query.version > 0 && this.props.query.version < (this.props.pubData.getIn(['pubData', 'history']).size - 1) ? this.props.query.version : this.props.pubData.getIn(['pubData', 'history']).size;
-		discussionObject.selections = this.props.pubData.getIn(['newDiscussionData', 'selections']);
-		console.log('about to dispatch addDiscussion ', discussionObject, activeSaveID);
-		this.props.dispatch(addDiscussion(discussionObject, activeSaveID));
+
+		// Check if it's a comment or discussion we're adding.
+		if (this.props.editorCommentMode) {
+			discussionObject.pub = this.props.editorData.getIn(['pubEditData', '_id']);
+			discussionObject.version = this.props.query.version !== undefined && this.props.query.version > 0 && this.props.query.version < (this.props.editorData.getIn(['pubEditData', 'history']).size - 1) ? this.props.query.version : this.props.editorData.getIn(['pubEditData', 'history']).size;
+			discussionObject.selections = this.props.editorData.getIn(['newDiscussionData', 'selections']);
+			console.log('about to dispatch addComment ', discussionObject, activeSaveID);
+			this.props.dispatch(addComment(discussionObject, activeSaveID));
+		} else {
+			discussionObject.pub = this.props.pubData.getIn(['pubData', '_id']);
+			discussionObject.version = this.props.query.version !== undefined && this.props.query.version > 0 && this.props.query.version < (this.props.pubData.getIn(['pubData', 'history']).size - 1) ? this.props.query.version : this.props.pubData.getIn(['pubData', 'history']).size;
+			discussionObject.selections = this.props.pubData.getIn(['newDiscussionData', 'selections']);
+			console.log('about to dispatch addDiscussion ', discussionObject, activeSaveID);
+			this.props.dispatch(addDiscussion(discussionObject, activeSaveID));	
+		}
+		
 	},
 
 	discussionVoteSubmit: function(type, discussionID, userYay, userNay) {
@@ -61,14 +74,8 @@ const Discussions = React.createClass({
 		this.props.dispatch(togglePubHighlights());
 	},
 
-	getPubData: function() {
-		if (this.props.inEditor) {
-			return this.props.editorData.get('pubEditData').toJS ? this.props.editorData.get('pubEditData').toJS() : {};
-		}
-		return this.props.pubData.get('pubData').toJS ? this.props.pubData.get('pubData').toJS() : {};
-	},
 
-	filterDiscussions: function() {
+	filterDiscussions: function(discussionsData) {
 		function findDiscussionRoot(discussions, searchID) {
 			for (let index = 0; index < discussions.length; index++) {
 				if (discussions[index]._id === searchID) {
@@ -79,16 +86,41 @@ const Discussions = React.createClass({
 			}
 		}
 
-		const pubData = this.getPubData();
-		return [findDiscussionRoot(pubData.discussions, this.props.metaID)];
+		// const pubData = this.getDiscussionData();
+		return [findDiscussionRoot(discussionsData, this.props.metaID)];
+	},
+
+	getDiscussionData: function() {
+		// Point to the right state source
+		let pubData = {};
+		if (this.props.inEditor) {
+			pubData = this.props.editorData.get('pubEditData') && this.props.editorData.get('pubEditData').toJS ? this.props.editorData.get('pubEditData').toJS() : {};
+		} else {
+			pubData = this.props.pubData.get('pubData') && this.props.pubData.get('pubData').toJS ? this.props.pubData.get('pubData').toJS() : {};
+		}
+		// Point to the right list of discssion items
+		let discussionsData = [];
+		if (this.props.editorCommentMode) {
+			discussionsData = pubData.editorComments;
+		} else {
+			discussionsData = pubData.discussions;
+		}
+		// Filter the items if we have a metaID
+		discussionsData = this.props.metaID ? this.filterDiscussions(discussionsData) : discussionsData;
+		// Check to make sure it's not undefined
+		discussionsData = discussionsData ? discussionsData : [];
+		return discussionsData;
 	},
 
 	render: function() {
 		// const pubData = {discussions: []};
 		
-		const pubData = this.getPubData();
-		let discussionsData = this.props.metaID ? this.filterDiscussions() : pubData.discussions;
-		discussionsData = discussionsData ? discussionsData : [];
+		const discussionsData = this.getDiscussionData();
+		
+		const addDiscussionStatus = this.props.editorCommentMode ? this.props.editorData.get('addDiscussionStatus') : this.props.pubData.get('addDiscussionStatus');
+		const newDiscussionData = this.props.editorCommentMode ? this.props.editorData.get('newDiscussionData') : this.props.pubData.get('newDiscussionData');
+		const activeSaveID = this.props.editorCommentMode ? this.props.editorData.get('activeSaveID') : this.props.pubData.get('activeSaveID');
+
 		return (
 			<div style={styles.container}>
 				
@@ -98,13 +130,13 @@ const Discussions = React.createClass({
 						? null
 						: <DiscussionsInput 
 								addDiscussionHandler={this.addDiscussion}
-								addDiscussionStatus={this.props.pubData.get('addDiscussionStatus')} 
-								newDiscussionData={this.props.pubData.get('newDiscussionData')} 
+								addDiscussionStatus={addDiscussionStatus} 
+								newDiscussionData={newDiscussionData} 
 								userThumbnail={this.props.loginData.getIn(['userData', 'thumbnail'])} 
-								activeSaveID={this.props.pubData.get('activeSaveID')}
+								activeSaveID={activeSaveID}
 								saveID={'root'}
 								isReply={false}
-								codeMirrorID={'rootCommentInput'}/>
+								codeMirrorID={this.props.instanceName + 'rootCommentInput'}/>
 					}
 					
 					{
@@ -112,16 +144,18 @@ const Discussions = React.createClass({
 							return (<DiscussionsItem 
 								key={discussion._id}
 								slug={this.props.slug}
-								pHashes={pubData.pHashes}
+								pHashes={this.props.pubData.getIn(['pubData', 'pHashes']) ? this.props.pubData.getIn(['pubData', 'pHashes']).toJS() : {} }
 								discussionItem={discussion}
+								instanceName={this.props.instanceName}
 
-								activeSaveID={this.props.pubData.get('activeSaveID')}
+								activeSaveID={activeSaveID}
 								addDiscussionHandler={this.addDiscussion}
-								addDiscussionStatus={this.props.pubData.get('addDiscussionStatus')} 
-								newDiscussionData={this.props.pubData.get('newDiscussionData')} 
+								addDiscussionStatus={addDiscussionStatus} 
+								newDiscussionData={newDiscussionData} 
 								userThumbnail={this.props.loginData.getIn(['userData', 'thumbnail'])} 
 								handleVoteSubmit={this.discussionVoteSubmit} 
-								noReply={!this.props.editorCommentMode && this.props.inEditor}/>
+								noReply={!this.props.editorCommentMode && this.props.inEditor}
+								noPermalink={this.props.editorCommentMode}/>
 							);
 						})
 					}

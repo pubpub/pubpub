@@ -21,6 +21,7 @@ const DiscussionsItem = React.createClass({
 		slug: PropTypes.string,
 		discussionItem: PropTypes.object,
 		pHashes: PropTypes.object,
+		instanceName: PropTypes.string,
 
 		addDiscussionHandler: PropTypes.func,
 		addDiscussionStatus: PropTypes.string,
@@ -30,6 +31,7 @@ const DiscussionsItem = React.createClass({
 		activeSaveID: PropTypes.string,
 		handleVoteSubmit: PropTypes.func,
 
+		noPermalink: PropTypes.bool,
 		noReply: PropTypes.bool,
 	},
 
@@ -121,13 +123,13 @@ const DiscussionsItem = React.createClass({
 						<Link to={'/user/' + discussionItem.author.username} style={globalStyles.link}><span key={'discussionItemAuthorLink' + discussionItem._id} style={styles.headerText}>{discussionItem.author.name}</span></Link> on {dateFormat(discussionItem.postDate, 'mm/dd/yy, h:MMTT')}
 					</div>
 
-					<div style={[styles.discussionDetailsLine, styles.discussionDetailsLineBottom]}>
+					<div style={[styles.discussionDetailsLine, styles.discussionDetailsLineBottom, this.props.noPermalink && {display: 'none'}]}>
 						<Link style={globalStyles.link} to={'/pub/' + this.props.slug + '/discussions/' + discussionItem._id}><span style={styles.detailLineItem}>
 							<FormattedMessage
 								id="discussion.permalink"
 								defaultMessage="Permalink"/>
 						</span></Link>
-						<span style={[styles.detailLineItemSeparator, this.props.noReply && {display: 'none'}]}>|</span>
+						<span style={[styles.detailLineItemSeparator, (this.props.noReply || this.props.noPermalink) && {display: 'none'}]}>|</span>
 						<span style={[styles.detailLineItem, this.props.noReply && {display: 'none'}]} key={'replyButton-' + discussionItem._id} onClick={this.toggleReplyActive}>
 							<FormattedMessage
 								id="discussion.reply"
@@ -161,7 +163,7 @@ const DiscussionsItem = React.createClass({
 							addDiscussionStatus={this.props.addDiscussionStatus} 
 							newDiscussionData={this.props.newDiscussionData} 
 							userThumbnail={this.props.userThumbnail}
-							codeMirrorID={'replyInput-' + discussionItem._id} 
+							codeMirrorID={this.props.instanceName + 'replyInput-' + discussionItem._id} 
 							parentID={discussionItem._id}
 							saveID={discussionItem._id}
 							activeSaveID={this.props.activeSaveID}
@@ -186,7 +188,8 @@ const DiscussionsItem = React.createClass({
 								newDiscussionData={this.props.newDiscussionData} 
 								userThumbnail={this.props.userThumbnail} 
 								handleVoteSubmit={this.props.handleVoteSubmit} 
-								noReply={this.props.noReply}/>
+								noReply={this.props.noReply}
+								noPermalink={this.props.noPermalink}/>
 							);
 						})
 					}

@@ -99,6 +99,7 @@ var pubSchema = new Schema({
 	}],
 
 	discussions: [ { type: ObjectId, ref: 'Discussion' } ],
+	editorComments: [ { type: ObjectId, ref: 'Discussion' } ],
 	experts: {
 		approved: [{
 			// When approved, experts are notified
@@ -194,13 +195,19 @@ pubSchema.statics.getPubEdit = function (slug, readerID, callback) {
 	// Get the pub and check to make sure user is authorized to edit
 	this.findOne({slug: slug})
 	.populate({ path: 'discussions', model: 'Discussion' })
+	.populate({ path: 'editorComments', model: 'Discussion' })
 	.exec((err, pub) =>{
 		if (err) { return callback(err, null); }
 
 		if (!pub) { return callback(null, 'Pub Not Found'); }
 
-		if (pub.collaborators.canEdit.indexOf(readerID) === -1) {
+		if (pub.collaborators.canEdit.indexOf(readerID) === -1 && pub.collaborators.canRead.indexOf(readerID) === -1) {
 			return callback(null, 'Not Authorized');
+		}
+
+		let isReader = false;
+		if (pub.collaborators.canRead.indexOf(readerID) > -1) {
+			isReader = true;
 		}
 
 		// Once authorized, it doesn't seem like we need to provide any data to the editor
@@ -211,15 +218,23 @@ pubSchema.statics.getPubEdit = function (slug, readerID, callback) {
 		// We gotta pass down discussions if we want to show in editor
 		const options = [
 			{ path: 'discussions.author', select: '_id username name firstName lastName thumbnail', model: 'User'},
-			{ path: 'discussions.selections', model: 'Highlight'}
+			{ path: 'discussions.selections', model: 'Highlight'},
+			{ path: 'editorComments.author', select: '_id username name firstName lastName thumbnail', model: 'User'},
 		];
 
 		this.populate(pub, options, (err, populatedPub)=> {
 			if (err) { return callback(err, null); }
 			const outputPub = populatedPub.toObject();
+			outputPub.isReader = isReader;
+
 			outputPub.discussions = Discussion.appendUserYayNayFlag(outputPub.discussions, readerID);
 			outputPub.discussions = Discussion.calculateYayNayScore(outputPub.discussions);
 			outputPub.discussions = Discussion.nestChildren(outputPub.discussions);
+
+			outputPub.editorComments = Discussion.appendUserYayNayFlag(outputPub.editorComments, readerID);
+			outputPub.editorComments = Discussion.calculateYayNayScore(outputPub.editorComments);
+			outputPub.editorComments = Discussion.nestChildren(outputPub.editorComments);
+
 			return callback(null, outputPub);
 		});
 

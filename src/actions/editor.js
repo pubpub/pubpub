@@ -16,6 +16,10 @@ export const MODAL_OPEN = 'editor/MODAL_OPEN';
 
 export const PUB_EDIT_UNMOUNT = 'editor/PUB_EDIT_UNMOUNT';
 
+export const ADD_COMMENT = 'pub/ADD_COMMENT';
+export const ADD_COMMENT_SUCCESS = 'pub/ADD_COMMENT_SUCCESS';
+export const ADD_COMMENT_FAIL = 'pub/ADD_COMMENT_FAIL';
+
 export const UPDATE_COLLABORATORS_LOAD = 'editor/UPDATE_COLLABORATORS_LOAD';
 export const UPDATE_COLLABORATORS_SUCCESS = 'editor/UPDATE_COLLABORATORS_SUCCESS';
 export const UPDATE_COLLABORATORS_FAIL = 'editor/UPDATE_COLLABORATORS_FAIL';
@@ -105,5 +109,13 @@ export function saveSettingsPubPub(slug, newSettings) {
 			slug: slug,
 			newSettings: newSettings
 		}}) 
+	};
+}
+
+export function addComment(discussionObject, activeSaveID) {
+	return {
+		types: [ADD_COMMENT, ADD_COMMENT_SUCCESS, ADD_COMMENT_FAIL],
+		promise: (client) => client.post('/addDiscussion', {data: {discussionObject: discussionObject, isEditorComment: true}}),
+		activeSaveID: activeSaveID 
 	};
 }

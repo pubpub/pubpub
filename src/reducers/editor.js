@@ -23,6 +23,11 @@ import {TOGGLE_VIEW_MODE,
 	PUBLISH_LOAD,
 	PUBLISH_SUCCESS,
 	PUBLISH_FAIL,
+
+	ADD_COMMENT, 
+	ADD_COMMENT_SUCCESS, 
+	ADD_COMMENT_FAIL,
+
 } from '../actions/editor';
 
 /*--------*/
@@ -40,6 +45,13 @@ const defaultState = Immutable.Map({
 	error: null,
 	publishError: null,
 	publishSuccess: null,
+	newDiscussionData: {
+		selections: {},
+		assets: {},
+		references: {},
+	},
+	addDiscussionStatus: 'loaded',
+	activeSaveID: null,
 
 });
 
@@ -192,6 +204,57 @@ function publishError(state, error) {
 	});
 }
 
+function addCommentLoad(state, activeSaveID) {
+	return state.merge({
+		addDiscussionStatus: 'loading',
+		activeSaveID: activeSaveID,
+	});
+}
+
+function addCommentSuccess(state, result, activeSaveID) {
+	function findParentAndAdd(discussions, parentID, newChild) {
+		console.log('in here');
+		discussions.map((discussion)=>{
+			if (discussion._id === parentID) {
+				discussion.children.unshift(result);
+			}
+			if (discussion.children && discussion.children.length) {
+				findParentAndAdd(discussion.children, parentID, newChild);
+			}
+		});
+	}
+
+	let discussionsObject = state.getIn(['pubEditData', 'editorComments']);
+	console.log('in here 2');
+	if (!result.parent) {
+		discussionsObject = discussionsObject.unshift(result);
+	} else {
+		// We have a parent, we gotta go find it and then merge inside of it
+		const discussionsArray = discussionsObject.toJS();
+		findParentAndAdd(discussionsArray, result.parent, result);
+		discussionsObject = discussionsArray;
+	}
+	console.log('in here3');
+	const newState = state.mergeIn(['pubEditData', 'editorComments'], discussionsObject);
+	return newState.merge({
+		addDiscussionStatus: 'loaded',
+		activeSaveID: null,
+		newDiscussionData: {
+			selections: {},
+			assets: {},
+			references: {},
+		},
+	});
+}
+
+function addCommentFail(state, error, activeSaveID) {
+	console.log(error);
+	return state.merge({
+		addDiscussionStatus: 'error',
+		activeSaveID: activeSaveID,
+	});
+}
+
 /*--------*/
 // Bind actions to specific reducing functions.
 /*--------*/
@@ -237,6 +300,13 @@ export default function editorReducer(state = defaultState, action) {
 		return publishSuccess(state, action.result);
 	case PUBLISH_FAIL:
 		return publishError(state, action.error);
+		
+	case ADD_COMMENT:
+		return addCommentLoad(state, action.activeSaveID);
+	case ADD_COMMENT_SUCCESS:
+		return addCommentSuccess(state, action.result, action.activeSaveID);
+	case ADD_COMMENT_FAIL:
+		return addCommentFail(state, action.error, action.activeSaveID);
 	default:
 		return ensureImmutable(state);
 	}

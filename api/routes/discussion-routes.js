@@ -45,8 +45,15 @@ app.post('/addDiscussion', function(req, res) {
 			var userID = result.author;
 			var pubID = result.pub;
 
-			Pub.update({ _id: pubID }, { $addToSet: { discussions: discussionID} }, function(err, result){if(err) return handleError(err)});
-			User.update({ _id: userID }, { $addToSet: { discussions: discussionID} }, function(err, result){if(err) return handleError(err)});
+			if (req.body.isEditorComment) {
+				console.log('got an editor comment!');
+				Pub.update({ _id: pubID }, { $addToSet: { editorComments: discussionID} }, function(err, result){if(err) return handleError(err)});
+			} else {
+				console.log('got a discussion!');
+				Pub.update({ _id: pubID }, { $addToSet: { discussions: discussionID} }, function(err, result){if(err) return handleError(err)});
+				User.update({ _id: userID }, { $addToSet: { discussions: discussionID} }, function(err, result){if(err) return handleError(err)});
+			}
+			
 			Discussion.update({_id: result.parent}, { $addToSet: { children: discussionID} }, function(err, result){if(err) return handleError(err)});
 
 			var populateQuery = [

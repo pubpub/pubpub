@@ -528,7 +528,7 @@ const Editor = React.createClass({
 			title: 'PubPub - Editing ' + this.props.slug
 		};
 
-		const isReader = true;
+		const isReader = false;
 		return (
 
 			<div style={[styles.editorContainer, darkMode && styles.editorContainerDark]} className={'editor-container'}>
@@ -612,7 +612,7 @@ const Editor = React.createClass({
 							<div style={[styles.previewBlockWrapper, this.state.previewPaneMode === 'comments' && styles.previewBlockWrapperShow]}>
 								<div style={styles.previewBlockHeader}>Editor Comments</div>
 								<div style={styles.previewBlockText}>This section can only be used by collaborators and is private. It is never published or made public.</div>
-								<Discussions editorCommentMode={true}/>
+								<Discussions inEditor={true} editorCommentMode={true} instanceName={'mobileEditorComments'}/>
 							</div>
 
 						</div>
@@ -640,7 +640,7 @@ const Editor = React.createClass({
 									<div style={[styles.readerViewBlock]}>
 										<div style={styles.previewBlockHeader}>Editor Comments</div>
 										<div style={styles.previewBlockText}>This section can only be used by collaborators and is private. It is never published or made public.</div>
-										<Discussions editorCommentMode={true}/>
+										<Discussions inEditor={true} editorCommentMode={true} instanceName={'desktopEditorComments'}/>
 									</div>
 
 								</div>
@@ -732,7 +732,7 @@ const Editor = React.createClass({
 										<div style={[styles.previewBlockWrapper, this.state.previewPaneMode === 'comments' && styles.previewBlockWrapperShow]}>
 											<div style={styles.previewBlockHeader}>Editor Comments</div>
 											<div style={styles.previewBlockText}>This section can only be used by collaborators and is private. It is never published or made public.</div>
-											<Discussions editorCommentMode={true}/>
+											<Discussions editorCommentMode={true} inEditor={true}/>
 										</div>
 
 										<div style={[styles.previewBlockWrapper, this.state.previewPaneMode === 'discussions' && styles.previewBlockWrapperShow]}>

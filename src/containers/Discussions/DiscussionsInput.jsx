@@ -44,11 +44,9 @@ const PubDiscussionsInput = React.createClass({
 	},
 
 	componentDidMount() {
-
 		initCodeMirrorMode();
 		const codeMirror = CodeMirror(document.getElementById(this.props.codeMirrorID), cmOptions);
-		codeMirror.on('change', this.onEditorChange);
-
+		codeMirror.on('change', this.onEditorChange);	
 	},
 
 	componentWillReceiveProps(nextProps) {
