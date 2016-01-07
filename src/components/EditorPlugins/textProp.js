@@ -20,7 +20,8 @@ const TextProp = React.createClass({
 		this.textInput.focus();
 	},
 	value: function() {
-		return this.state.value;
+		const value = this.state.value;
+		return (value) ? '"' + value + '"' : null;
 	},
 	render: function() {
 		const value = this.state.value || '';
