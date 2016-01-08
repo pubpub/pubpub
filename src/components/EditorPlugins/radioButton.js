@@ -10,7 +10,6 @@ const RadioButtonProp = React.createClass({
 		selectedValue: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.number]),
 	},
 	getInitialState: function() {
-
 		const state = {};
 
 		if (this.props.selectedValue && !isNaN(this.props.selectedValue)) {

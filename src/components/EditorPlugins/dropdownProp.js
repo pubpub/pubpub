@@ -8,7 +8,7 @@ let styles = {};
 const DropdownProp = React.createClass({
 	propTypes: {
 		choices: PropTypes.array,
-		selectedValue: PropTypes.string,
+		selectedValue: PropTypes.object,
 	},
 	onValueChange: function(changedValue, callback) {
 		callback();
