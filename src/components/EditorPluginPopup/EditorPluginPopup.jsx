@@ -7,6 +7,8 @@ import {globalMessages} from '../../utils/globalMessages';
 import {FormattedMessage} from 'react-intl';
 
 let styles = {};
+const POPUP_WIDTH = 425;
+const POPUP_HEIGHT_ESTIMATE = 350;
 
 const EditorPluginPopup = React.createClass({
 	propTypes: {
@@ -91,14 +93,6 @@ const EditorPluginPopup = React.createClass({
 
 		return cm;
 	},
-
-	getPluginPopupLoc: function() {
-		return {
-			top: this.state.yLoc,
-			left: this.state.xLoc,
-		};
-	},
-
 	focus: function() {
 		this.popupBox.focus();
 	},
@@ -131,20 +125,31 @@ const EditorPluginPopup = React.createClass({
 
 			const contentObject = pluginOptions[pluginType];
 
+			const edgeX = document.elementFromPoint(clickX + POPUP_WIDTH, clickY);
+			const edgeY = document.elementFromPoint(clickX, clickY + POPUP_HEIGHT_ESTIMATE);
+
+			const flippedX = !contentBody.contains(edgeX);
+			const flippedY = !(edgeY !== null);
+
+			const xLoc = (flippedX) ? clickX - POPUP_WIDTH + 22 : clickX - 22;
+			const yLoc = (flippedY) ? (window.innerHeight - clickY) - contentBody.scrollTop + 15 : clickY + 15 - 60 + contentBody.scrollTop;
+
 			this.setState({
 				popupVisible: true,
-				xLoc: clickX - 22,
-				yLoc: clickY + 15 - 60 + contentBody.scrollTop,
+				xLoc: xLoc,
+				yLoc: yLoc,
 				activeLine: cm.getCursor().line,
 				pluginType: pluginType,
 				contentObject: contentObject,
 				initialString: pluginString,
-				values: values
+				values: values,
+				flippedX: flippedX,
+				flippedY: flippedY
 			});
+
 
 			const firstRefName = Object.keys(contentObject)[0];
 			const firstRef = (firstRefName) ? this.refs['pluginInput-' + firstRefName] : null;
-			cm.setCursor(null);
 			if (firstRef && typeof firstRef.focus === 'function') {
 				const focused = firstRef.focus();
 				if (!focused) {
@@ -215,8 +220,12 @@ const EditorPluginPopup = React.createClass({
 
 	render: function() {
 		return (
-			<div id="plugin-popup" ref={(ref) => this.popupBox = ref} className="plugin-popup" style={[styles.pluginPopup, this.getPluginPopupLoc(), this.state.popupVisible && styles.pluginPopupVisible]}>
-				<div style={styles.pluginPopupArrow}></div>
+			<div id="plugin-popup"
+					ref={(ref) => this.popupBox = ref}
+					className="plugin-popup"
+					style={[styles.pluginPopup, styles.pluginPopupPos(this.state.xLoc, this.state.yLoc, this.state.flippedY), this.state.popupVisible && styles.pluginPopupVisible]}
+				>
+				<div style={styles.pluginPopupArrow(this.state.flippedX, this.state.flippedY)}></div>
 				<div style={styles.pluginContent}>
 					<div style={styles.pluginPopupTitle}>
 						{this.state.pluginType}</div>
@@ -257,9 +266,10 @@ const EditorPluginPopup = React.createClass({
 
 export default Radium(EditorPluginPopup);
 
+
 styles = {
 	pluginPopup: {
-		width: 425,
+		width: POPUP_WIDTH,
 		// minHeight: 200,
 		backgroundColor: 'white',
 		boxShadow: '0px 0px 2px 0px #333',
@@ -277,16 +287,34 @@ styles = {
 		transform: 'scale(1.0)',
 		pointerEvents: 'auto',
 	},
-	pluginPopupArrow: {
-		position: 'absolute',
-		top: -8,
-		left: 15,
-		width: 16,
-		height: 16,
-		backgroundColor: 'white',
-		transform: 'rotate(45deg)',
-		boxShadow: '-1px -1px 1px 0px #9A9A9A',
-		zIndex: 5,
+	pluginPopupPos: function(xLoc, yLoc, flipY) {
+		const pos = {left: xLoc};
+		if (flipY) {
+			pos.bottom = yLoc;
+		} else {
+			pos.top = yLoc;
+		}
+		return pos;
+	},
+	pluginPopupArrow: function(flipX, flipY) {
+		const xWidth = (flipX) ? POPUP_WIDTH - 25 : 15;
+		const arrowStyle = {
+			position: 'absolute',
+			left: xWidth,
+			width: 16,
+			height: 16,
+			backgroundColor: 'white',
+			boxShadow: '-1px -1px 1px 0px #9A9A9A',
+			zIndex: 5,
+		};
+		if (flipY) {
+			arrowStyle.bottom = -8;
+			arrowStyle.transform = 'rotate(225deg)';
+		} else {
+			arrowStyle.top = -8;
+			arrowStyle.transform = 'rotate(45deg)';
+		}
+		return arrowStyle;
 	},
 	pluginContent: {
 		position: 'relative',
