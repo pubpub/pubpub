@@ -7,7 +7,7 @@ let styles = {};
 const RadioButtonProp = React.createClass({
 	propTypes: {
 		choices: PropTypes.array,
-		selectedValue: React.PropTypes.oneOfType(React.PropTypes.string, React.PropTypes.number),
+		selectedValue: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.number]),
 	},
 	getInitialState: function() {
 
@@ -61,13 +61,13 @@ const RadioButtonProp = React.createClass({
 							{choices.map(function(choice) {
 								let elem;
 								if (choice !== 'number') {
-									elem = (<label style={{width: '75px', display: 'inline-block', fontSize: '0.9em' }}>
-										<Radio ref={choice} value={choice} />{choice}
+									elem = (<label key={choice} style={{width: '75px', display: 'inline-block', fontSize: '0.9em' }}>
+										<Radio value={choice} />{choice}
 										</label>);
 								} else {
-									elem = (<label style={{width: '60px', display: 'inline-block'}}>
+									elem = (<label key={choice} style={{width: '60px', display: 'inline-block'}}>
 										<Radio value={choice} />
-										<input ref={choice} value={self.state.number} onClick={self.focusNumber} onChange={self.handleNumber} style={{width: '26px', fontSize: '0.7em'}} min="1" max="100" maxLength="2" type="number"/>%
+										<input value={self.state.number} onClick={self.focusNumber} onChange={self.handleNumber} style={{width: '26px', fontSize: '0.7em'}} min="1" max="100" maxLength="2" type="number"/>%
 										</label>);
 								}
 								return elem;
