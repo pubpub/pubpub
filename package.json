@@ -59,12 +59,12 @@
         "UV_THREADPOOL_SIZE": 100,
         "NODE_PATH": "./src"
       }
-    }
-  },
-  "build": {
-    "command": "webpack --verbose --colors --display-error-details --config webpack/prod.config.js",
-    "env": {
-      "NODE_ENV": "production"
+    },
+    "build": {
+      "command": "webpack --verbose --colors --display-error-details --config webpack/prod.config.js",
+      "env": {
+        "NODE_ENV": "production"
+      }
     }
   },
   "dependencies": {
