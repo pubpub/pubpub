@@ -66,7 +66,7 @@ const RadioButtonProp = React.createClass({
 								} else {
 									elem = (<label key={choice} style={{width: '60px', display: 'inline-block'}}>
 										<Radio value={choice} />
-										<input value={self.state.number} onClick={self.focusNumber} onChange={self.handleNumber} style={{width: '26px', fontSize: '0.7em'}} min="1" max="100" maxLength="2" type="number"/>%
+										<input value={self.state.number} onClick={self.focusNumber} onChange={self.handleNumber} style={styles.input} min="1" max="100" maxLength="2" type="number"/>%
 										</label>);
 								}
 								return elem;
@@ -80,7 +80,13 @@ const RadioButtonProp = React.createClass({
 });
 
 styles = {
-	group: {
+	input: {
+		width: '30px',
+		fontSize: '0.7em',
+		borderTop: 'none',
+		borderLeft: 'none',
+		borderRight: 'none',
+		borderBottom: 'gainsboro solid 1px',
 	}
 };
 

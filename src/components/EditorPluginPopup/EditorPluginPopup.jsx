@@ -322,7 +322,7 @@ styles = {
 		zIndex: 10,
 	},
 	pluginPopupTitle: {
-		padding: '6px 0px',
+		padding: '6px 6px',
 		fontSize: '25px',
 		textTransform: 'capitalize',
 		fontFamily: 'Courier',
@@ -348,7 +348,8 @@ styles = {
 		display: 'inline-block',
 		marginRight: '20px',
 		width: '20%',
-		textTransform: 'capitalize'
+		textTransform: 'capitalize',
+		fontSize: '0.95em'
 	},
 	pluginOptionInput: {
 		width: 'calc(50% - 4px)',
