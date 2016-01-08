@@ -22,6 +22,8 @@ import qs from 'query-string';
 import getRoutes from './routes';
 import getStatusFromRoutes from './helpers/getStatusFromRoutes';
 
+import {StyleRoot} from 'radium';
+
 const pretty = new PrettyError();
 const app = new Express();
 const server = new http.Server(app);
@@ -95,7 +97,10 @@ app.use((req, res) => {
 
 				const component = (
 					<Provider store={store} key="provider">
-						<ReduxRouter/>
+						<StyleRoot>
+							<ReduxRouter/>
+						</StyleRoot>
+						
 					</Provider>
 				);
 

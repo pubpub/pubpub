@@ -23,6 +23,7 @@ mixpanel.init('f85adcbd0f97f6101ebd440e931197b2');
 
 const client = new ApiClient();
 import Html from './helpers/Html';
+import {StyleRoot} from 'radium';
 
 const scrollablehistory = useScroll(createHistory);
 
@@ -31,7 +32,9 @@ const store = createStore(reduxReactRouter, makeRouteHooksSafe(getRoutes), scrol
 
 const component = (
 	<Provider store={store} key="provider">
-		<ReduxRouter routes={getRoutes(store, history)} />
+		<StyleRoot>
+			<ReduxRouter routes={getRoutes(store, history)} />
+		</StyleRoot>
 	</Provider>
 );
 
