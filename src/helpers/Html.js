@@ -1,5 +1,5 @@
-import {Component, PropTypes} from 'react';
-import Radium from 'radium';
+import React, {Component, PropTypes} from 'react';
+import Radium, {StyleRoot} from 'radium';
 
 @Radium
 export default class Html extends Component {
@@ -8,6 +8,10 @@ export default class Html extends Component {
 	};
 
 	render() {
-		return this.props.component;
+		return (
+			<StyleRoot>
+				{this.props.component}
+			</StyleRoot>
+		);
 	}
 }

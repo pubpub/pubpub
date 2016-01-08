@@ -22,8 +22,6 @@ import qs from 'query-string';
 import getRoutes from './routes';
 import getStatusFromRoutes from './helpers/getStatusFromRoutes';
 
-import {StyleRoot} from 'radium';
-
 const pretty = new PrettyError();
 const app = new Express();
 const server = new http.Server(app);
@@ -97,10 +95,7 @@ app.use((req, res) => {
 
 				const component = (
 					<Provider store={store} key="provider">
-						<StyleRoot>
-							<ReduxRouter/>
-						</StyleRoot>
-						
+						<ReduxRouter/>
 					</Provider>
 				);
 
@@ -152,7 +147,6 @@ app.use((req, res) => {
 							<script src="/js/typo.js"></script>
 							<script src="/js/spellcheck.js"></script>
 
-							<!-- <script src="//cdn.jsdelivr.net/codemirror.spell-checker/latest/spell-checker.min.js"></script> -->
 						</head>
 
 						<body style="width: 100%; margin: 0;">
