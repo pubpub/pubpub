@@ -2,6 +2,10 @@
   "name": "pubpub",
   "description": "PubPub Open Publishing",
   "author": "PubPub",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/isTravis/pubpub.git"
+  },
   "license": "MIT",
   "version": "0.1.0",
   "keywords": [],
@@ -10,8 +14,8 @@
     "start": "concurrent --kill-others \"npm run start-prod\" \"npm run start-prod-api\"",
     "start-prod": "node ./node_modules/better-npm-run start-prod",
     "start-prod-api": "node ./node_modules/better-npm-run start-prod-api",
-    "build": "better-npm-run build",
-    "postinstall": "npm run build",
+    "build": "node ./node_modules/better-npm-run build",
+    "postinstall": "node ./node_modules/better-npm-run build",
     "lint": "eslint -c .eslintrc src api",
     "start-dev": "node ./node_modules/better-npm-run start-dev",
     "start-dev-api": "node ./node_modules/better-npm-run start-dev-api",
