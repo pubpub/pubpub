@@ -73,7 +73,7 @@ const ResetPassword = React.createClass({
 					
 					{this.props.hash
 						? <div>
-							{()=>{
+							{(()=>{
 								switch (this.props.resetData.get('resetSuccess')) {
 								case 'success': 
 									return (
@@ -94,10 +94,10 @@ const ResetPassword = React.createClass({
 								default:
 									return <NotFound />;
 								}
-							}()}
+							})()}
 						</div>
 						: <div>
-							{()=>{
+							{(()=>{
 								switch (this.props.resetData.get('requestSuccess')) {
 								case 'success': 
 									return (
@@ -120,7 +120,7 @@ const ResetPassword = React.createClass({
 										}
 									</div>);
 								}
-							}()}
+							})()}
 						</div>
 					}
 				</div>

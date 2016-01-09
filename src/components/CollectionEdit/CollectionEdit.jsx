@@ -214,7 +214,7 @@ const CollectionEdit = React.createClass({
 						resultRenderFunction={this.renderPubSearchResults}/>
 				</div>
 				
-				{()=>{
+				{(()=>{
 					const length = this.props.collectionData.pubs ? this.props.collectionData.pubs.length : 0;
 					if (!length) {
 						return (<div style={styles.emptyBlock}>
@@ -242,7 +242,7 @@ const CollectionEdit = React.createClass({
 								</div>);
 					}
 					return output;
-				}()}
+				})()}
 
 			</div>
 		);

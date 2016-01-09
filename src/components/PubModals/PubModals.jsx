@@ -56,7 +56,7 @@ const PubModals = React.createClass({
 
 						<div key={'modalBack'} style={styles.modalBackButton} onClick={this.props.closePubModalHandler}>Back</div>
 
-						{() => {
+						{(() => {
 							switch (this.props.activeModal) {
 							case 'tableOfContents':
 								return (
@@ -109,7 +109,7 @@ const PubModals = React.createClass({
 							default:
 								return null;
 							}
-						}()}
+						})()}
 					</div>
 				</div>
 

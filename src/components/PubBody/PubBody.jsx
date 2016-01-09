@@ -46,12 +46,6 @@ const PubBody = React.createClass({
 		};
 	},
 
-	statics: {
-		printStyles: {
-
-		}
-	},
-
 	getInitialState() {
 		return {
 			htmlTree: [],
@@ -132,7 +126,7 @@ const PubBody = React.createClass({
 
 				<Style rules={this.compileStyleRules()}/>
 
-				<div id="pubContent" style={[styles.contentContainer, globalStyles[this.props.status]]} className={this.printStyleClass.pubContent}>
+				<div id="pubContent" style={[styles.contentContainer, globalStyles[this.props.status]]} >
 					
 					{!this.props.isFeatured && !this.props.errorView
 						? <div style={styles.submittedNotification}>This Pub has been submitted to - but is not yet featured in - this journal.</div>
@@ -140,31 +134,31 @@ const PubBody = React.createClass({
 					}
 
 					{this.props.authorsNote
-						? <div id={'pub-authorsNote'} className={this.printStyleClass.authorsNote}>{this.props.authorsNote}</div>
+						? <div id={'pub-authorsNote'} >{this.props.authorsNote}</div>
 						: null
 					}
 
-					<div id={'pub-title'} className={this.printStyleClass.title}>{this.props.title}</div>
-					<div id={'pub-authors'} className={this.printStyleClass.authors} style={[this.props.authors.length === 0 && {display: 'none'}]}>
+					<div id={'pub-title'} >{this.props.title}</div>
+					<div id={'pub-authors'} style={[this.props.authors.length === 0 && {display: 'none'}]}>
 						<span><FormattedMessage {...globalMessages.by}/> </span>
 						{
 							this.props.authors.map((author, index)=>{
 								return (index === this.props.authors.length - 1
-									? <Link to={'/user/' + author.username} key={'pubAuthorLink-' + index} style={globalStyles.link}><span key={'pubAuthor-' + index} className={'pub-author'}>{author.name}</span></Link>
-									: <Link to={'/user/' + author.username} key={'pubAuthorLink-' + index} style={globalStyles.link}><span key={'pubAuthor-' + index} className={'pub-author'}>{author.name}, </span></Link>);
+									? <Link to={'/user/' + author.username} key={'pubAuthorLink-' + index} style={globalStyles.link}><span key={'pubAuthor-' + index}>{author.name}</span></Link>
+									: <Link to={'/user/' + author.username} key={'pubAuthorLink-' + index} style={globalStyles.link}><span key={'pubAuthor-' + index}>{author.name}, </span></Link>);
 							})
 						}
 					</div>
 
 					{this.props.firstPublishedDate !== this.props.lastPublishedDate
-						? <div id={'pub-dates'} className={this.printStyleClass.dates}>
+						? <div id={'pub-dates'}>
 							<span><FormattedMessage {...globalMessages.firstPublished}/> </span>
 							{dateFormat(this.props.firstPublishedDate, 'mm/dd/yy')}
 							<span style={styles.dateSeparator}>|</span>
 							<span><FormattedMessage {...globalMessages.lastPublished}/> </span>
 							{dateFormat(this.props.lastPublishedDate, 'mm/dd/yy')}
 						</div>
-						: <div id={'pub-dates'} className={this.printStyleClass.dates} style={[this.props.firstPublishedDate === undefined && {display: 'none'}]}>
+						: <div id={'pub-dates'} style={[this.props.firstPublishedDate === undefined && {display: 'none'}]}>
 							<span><FormattedMessage {...globalMessages.published}/> </span>
 							{dateFormat(this.props.firstPublishedDate, 'mm/dd/yy')}
 						</div>
@@ -191,7 +185,7 @@ const PubBody = React.createClass({
 							{
 								this.props.references.map((reference, index)=>{
 									return (
-										<div key={'pubReference-' + index} className={'pub-reference'}>
+										<div key={'pubReference-' + index} >
 											<span style={styles.referenceNumber}>[{index + 1}]</span>
 											<Reference citationObject={reference} mode={'mla'} />
 										</div>

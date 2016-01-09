@@ -1,5 +1,5 @@
 import React, { PropTypes } from 'react';
-import Radium, {Style, PrintStyleSheet} from 'radium';
+import Radium, {Style} from 'radium';
 import { Link } from 'react-router';
 import {reset} from 'redux-form';
 import {Login} from '../index';
@@ -166,7 +166,6 @@ const App = React.createClass({
 			]
 		};
 		const pubData = this.props.pubData.get('pubData').toJS ? this.props.pubData.get('pubData').toJS() : {};
-
 		return (
 			
 			<IntlProvider locale={'en'} messages={this.props.languageData.get('languageObject').toJS()}>
@@ -180,7 +179,6 @@ const App = React.createClass({
 						? <Style rules={{'body': {overflow: 'hidden'}}} />
 						: null
 				}
-				<PrintStyleSheet />
 
 				<div className="header-bar" style={[styles.headerBar, headerStyle.headerBar]}>
 					

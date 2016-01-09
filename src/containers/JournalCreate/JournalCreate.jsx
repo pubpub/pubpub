@@ -64,7 +64,7 @@ const Login = React.createClass({
 				</div>
 				<CreateJournalForm onSubmit={this.handleCreateSubmit} /> 
 				<div style={[styles.error, !this.state.errorMessage && styles.hidden]}>
-					{()=>{
+					{(()=>{
 						switch (this.state.errorMessage) {
 						case 'Subdomain is not Unique!':
 							return <FormattedMessage id="journal.subdomainUsed" defaultMessage="Subdomain is already used"/>;
@@ -75,7 +75,7 @@ const Login = React.createClass({
 						default:
 							return this.state.errorMessage;
 						}
-					}()}
+					})()}
 				</div>
 
 			</div>

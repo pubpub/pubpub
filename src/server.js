@@ -147,7 +147,6 @@ app.use((req, res) => {
 							<script src="/js/typo.js"></script>
 							<script src="/js/spellcheck.js"></script>
 
-							<!-- <script src="//cdn.jsdelivr.net/codemirror.spell-checker/latest/spell-checker.min.js"></script> -->
 						</head>
 
 						<body style="width: 100%; margin: 0;">

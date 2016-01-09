@@ -439,7 +439,7 @@ const Editor = React.createClass({
 
 		return (<div className={'editorBodyNav'} style={styles.bodyNavBar}>
 
-			{()=>{
+			{(()=>{
 				switch (this.state.previewPaneMode) {
 				case 'preview':
 					return (
@@ -481,7 +481,7 @@ const Editor = React.createClass({
 				default:
 					return null;
 				}
-			}()}
+			})()}
 
 		</div>);
 	},

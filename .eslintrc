@@ -40,7 +40,7 @@
   "settings": {
     "import/parser": "babel-eslint",
     "import/resolve": {
-      moduleDirectory: ["api", "src"]
+      moduleDirectory: [src"]
     }
   },
   "globals": {

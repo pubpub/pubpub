@@ -3,7 +3,7 @@
 var mongoose = require('mongoose');
 
 if(process.env.NODE_ENV !== 'production'){
-  import {mongoURI} from './authentication/mongoCredentials';
+  var mongoURI = require('./authentication/mongoCredentials').mongoURI;
   mongoose.connect(mongoURI);  
 }else{
   mongoose.connect(process.env.mongoURI);  

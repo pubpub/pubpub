@@ -132,7 +132,7 @@ const JournalAdmin = React.createClass({
 									}
 								</div>
 								<div style={styles.journalProfileContent}>
-									{() => {
+									{(() => {
 										switch (this.props.mode) {
 										case 'curate':
 											return (
@@ -164,7 +164,7 @@ const JournalAdmin = React.createClass({
 													journalData={this.props.journalData.get('journalData').toJS()}/>
 											);
 										}
-									}()}
+									})()}
 								</div>
 								
 

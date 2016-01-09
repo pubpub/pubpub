@@ -145,7 +145,7 @@ const JournalCurate = React.createClass({
 						</div>
 						
 
-						{()=>{
+						{(()=>{
 							const length = this.props.journalData.pubsFeatured ? this.props.journalData.pubsFeatured.length : 0;
 							if (!length) {
 								return (<div style={globalStyles.emptyBlock}>
@@ -162,7 +162,7 @@ const JournalCurate = React.createClass({
 								</div>);
 							}
 							return output;
-						}()}
+						})()}
 
 
 					</div>
@@ -180,7 +180,7 @@ const JournalCurate = React.createClass({
 								defaultMessage="Pubs submitted to your journal for consideration"/>
 							</div>
 						<div style={styles.submittedPubsSection}>
-							{()=>{
+							{(()=>{
 								const length = this.props.journalData.pubsSubmitted ? this.props.journalData.pubsSubmitted.length : 0;
 								if (!length) {
 									return (<div style={globalStyles.emptyBlock}>
@@ -208,7 +208,7 @@ const JournalCurate = React.createClass({
 											</div>);
 								}
 								return output;
-							}()}
+							})()}
 
 						</div>
 					
