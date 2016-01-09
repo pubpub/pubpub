@@ -248,7 +248,6 @@ const Editor = React.createClass({
 		console.log('compiledMarkdown', compiledMarkdown - start, compiledMarkdown - removeTitleEtc);
 		console.log('saveState', saveState - start, saveState - compiledMarkdown);
 		console.log('~~~~~~~~~~~~~~~~~~');
-		
 		// const end = performance.now();
 		// console.log('timing = ', end - start);
 
