@@ -216,6 +216,7 @@ const Editor = React.createClass({
 		const removeTitleEtc = performance.now();
 		let compiledMarkdown = 0;
 		let saveState = 0;
+
 		try {
 
 			const mdOutput = marked(markdown, {assets, references, selections});
@@ -238,16 +239,16 @@ const Editor = React.createClass({
 				abstract: err.toString().replace('Please report this to https://github.com/chjj/marked.', ''),
 			});
 		}
-		console.log('total', saveState - start);
-		console.log('preMD', markdownStart - start);
-		console.log('markdownGrab', markdownGrab - start, markdownGrab - markdownStart);
-		console.log('titleGrab', titleGrabAndSet - start, titleGrabAndSet - markdownGrab);
-		console.log('abstractGrab', abstractGrabAndSet - start, abstractGrabAndSet - titleGrabAndSet);
-		console.log('anGrab', aNGrabAndSet - start, aNGrabAndSet - abstractGrabAndSet);
-		console.log('removeTitleEtc', removeTitleEtc - start, removeTitleEtc - aNGrabAndSet);
-		console.log('compiledMarkdown', compiledMarkdown - start, compiledMarkdown - removeTitleEtc);
+		// console.log('total', saveState - start);
+		// console.log('preMD', markdownStart - start);
+		// console.log('markdownGrab', markdownGrab - start, markdownGrab - markdownStart);
+		// console.log('titleGrab', titleGrabAndSet - start, titleGrabAndSet - markdownGrab);
+		// console.log('abstractGrab', abstractGrabAndSet - start, abstractGrabAndSet - titleGrabAndSet);
+		// console.log('anGrab', aNGrabAndSet - start, aNGrabAndSet - abstractGrabAndSet);
+		// console.log('removeTitleEtc', removeTitleEtc - start, removeTitleEtc - aNGrabAndSet);
+		// console.log('compiledMarkdown', compiledMarkdown - start, compiledMarkdown - removeTitleEtc);
 		console.log('saveState', saveState - start, saveState - compiledMarkdown);
-		console.log('~~~~~~~~~~~~~~~~~~');
+		// console.log('~~~~~~~~~~~~~~~~~~');
 		// const end = performance.now();
 		// console.log('timing = ', end - start);
 

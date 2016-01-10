@@ -28,6 +28,20 @@ const EditorBottomNav = React.createClass({
 		};
 	},
 
+	shouldComponentUpdate(nextProps, nextState) {
+		if (this.props.viewMode !== nextProps.viewMode || this.props.loadStatus !== nextProps.loadStatus || this.props.darkMode !== nextProps.darkMode || this.props.activeFocus !== nextProps.activeFocus || this.props.showBottomLeftMenu !== nextProps.showBottomLeftMenu || this.props.showBottomRightMenu !== nextProps.showBottomRightMenu ) {
+			return true;
+		}
+		if (this.props.travisTOC.length !== nextProps.travisTOC.length) {
+			return true;
+		}
+		for (let index = nextProps.travisTOC.length; index--;) {
+			if (this.props.travisTOC[index].title !== nextProps.travisTOC[index].title) {
+				return true;
+			}
+		}
+		return false;
+	},
 	// Function to generate side-list fade in animations.
 	// Generates unique style per side and per item-depth
 	animateListItemStyle: function(side, status, index) {

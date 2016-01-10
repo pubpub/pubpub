@@ -80,7 +80,9 @@ const DiscussionsItem = React.createClass({
 						destination.className = destination.className.replace('selection-block-active', 'selection-block');
 					});
 				} catch (err) {
-					console.log('selection', err);
+					if (__DEVELOPMENT__) {
+						console.log('selection', err);	
+					}
 				}
 			}
 
