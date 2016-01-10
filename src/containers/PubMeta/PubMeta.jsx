@@ -133,7 +133,7 @@ const PubMeta = React.createClass({
 
 					<div style={[styles.centerContent, styles[this.props.readerData.get('status')]]}>
 						<div style={styles.metaTitle}>
-							{this.props.meta
+							{this.props.meta && globalMessages[this.props.meta]
 								? <span style={styles.metaTitleType}><FormattedMessage {...globalMessages[this.props.meta]} />:</span> 
 								: null
 							}

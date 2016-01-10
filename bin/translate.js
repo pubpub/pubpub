@@ -4,8 +4,8 @@ import {sync as mkdirpSync} from 'mkdirp';
 
 // I'm not sure why babel-plugin-react-intl is putting everything into a nested 
 // tree under messages/node_modules. I can't seem to fix it. maybe in babel6 it'll be better?
-const MESSAGES_PATTERN = './translations/messages/node_modules/**/*.json';
-const TRANSLATIONS_DIR         = './translations/';
+const MESSAGES_PATTERN = './translations/messages/src/**/*.json';
+const TRANSLATIONS_DIR = './translations/';
 const LANG_DIR         = './translations/languages/';
 const LANG_PATTERN     = './translations/languages/*.json';
 

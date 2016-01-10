@@ -88,6 +88,8 @@
   "user.userBio": "Bio",
   "discussion.permalink": "Permalink",
   "discussion.reply": "Reply",
+  "editingDisableMobile": "Editing disabled on mobile view - but you can still read and comment. Open on a laptop or desktop to edit.",
+  "editorDiscussionMessage": "This section shows the discussion from the public, published version of your pub.",
   "journal.createJournal": "Create Journal",
   "journal.subdomainUsed": "Subdomain is already used",
   "journal.journalNameRequired": "A journal name is required",
@@ -192,5 +194,8 @@
   "global.inviteReviewers": "Invite Reviewers",
   "global.turnHighlights": "Turn Highlights",
   "global.on": "On",
-  "global.off": "Off"
+  "global.off": "Off",
+  "editorCommentsText0": "You are commenting on a draft version of this Pub.",
+  "editorCommentsText1": "This section can only be used by collaborators and is private. It is never published or made public.",
+  "EditorComments": "Editor Comments"
 }

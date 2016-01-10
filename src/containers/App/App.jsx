@@ -1,18 +1,9 @@
 import React, { PropTypes } from 'react';
 import {StyleRoot} from 'radium';
-// import { Link } from 'react-router';
-// import {reset} from 'redux-form';
-// import {Login} from '../index';
 import Helmet from 'react-helmet';
 import {connect} from 'react-redux';
-// import {toggleVisibility, follow, unfollow} from '../../actions/login';
 import {loadJournalAndLogin} from '../../actions/journal';
-// import {openMenu, closeMenu} from '../../actions/nav';
-// import {openPubModal} from '../../actions/pub';
-// import {HeaderNav, HeaderMenu} from '../../components';
 import {AppBody} from '../';
-// import {globalStyles} from '../../utils/styleConstants';
-// import analytics from '../../utils/analytics';
 
 
 import {IntlProvider} from 'react-intl';

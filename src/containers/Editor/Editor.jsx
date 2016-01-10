@@ -35,8 +35,8 @@ import {Discussions} from '../';
 
 import {convertFirebaseToObject} from '../../utils/parsePlugins';
 
-// import {globalMessages} from '../../utils/globalMessages';
-// import {FormattedMessage} from 'react-intl';
+import {globalMessages} from '../../utils/globalMessages';
+import {FormattedMessage} from 'react-intl';
 
 marked.setExtensions(markdownExtensions);
 
@@ -622,7 +622,10 @@ const Editor = React.createClass({
 							<div style={[styles.previewBlockWrapper, this.state.previewPaneMode === 'preview' && styles.previewBlockWrapperShow]}>
 								{isReader
 									? null
-									: 'Editing disabled on mobile view - but you can still read and comment. Open in a laptop or desktop to edit'
+									: <span style={styles.editorDisabledMessage}>
+										<FormattedMessage id="editingDisableMobile" defaultMessage="Editing disabled on mobile view - but you can still read and comment. Open on a laptop or desktop to edit." />
+									</span>
+									
 								}
 
 								{this.renderBody()}
@@ -630,7 +633,11 @@ const Editor = React.createClass({
 
 							<div style={[styles.previewBlockWrapper, this.state.previewPaneMode === 'comments' && styles.previewBlockWrapperShow]}>
 								<div style={styles.previewBlockHeader}>Editor Comments</div>
-								<div style={styles.previewBlockText}>This section can only be used by collaborators and is private. It is never published or made public.</div>
+								<div style={styles.previewBlockText}>
+									<div><FormattedMessage {...globalMessages.editorCommentsText0} /></div>
+									<div><FormattedMessage {...globalMessages.editorCommentsText1} /></div>
+								</div>
+
 								<Discussions inEditor={true} editorCommentMode={true} instanceName={'mobileEditorComments'}/>
 							</div>
 
@@ -658,7 +665,10 @@ const Editor = React.createClass({
 
 									<div style={[styles.readerViewBlock]}>
 										<div style={styles.previewBlockHeader}>Editor Comments</div>
-										<div style={styles.previewBlockText}>This section can only be used by collaborators and is private. It is never published or made public.</div>
+										<div style={styles.previewBlockText}>
+											<div><FormattedMessage {...globalMessages.editorCommentsText0} /></div>
+											<div><FormattedMessage {...globalMessages.editorCommentsText1} /></div>
+										</div>
 										<Discussions inEditor={true} editorCommentMode={true} instanceName={'desktopEditorComments'}/>
 									</div>
 
@@ -748,14 +758,23 @@ const Editor = React.createClass({
 										</div>
 
 										<div style={[styles.previewBlockWrapper, this.state.previewPaneMode === 'comments' && styles.previewBlockWrapperShow]}>
-											<div style={styles.previewBlockHeader}>Editor Comments</div>
-											<div style={styles.previewBlockText}>This section can only be used by collaborators and is private. It is never published or made public.</div>
+											<div style={styles.previewBlockHeader}>
+												<FormattedMessage {...globalMessages.EditorComments} />
+											</div>
+											<div style={styles.previewBlockText}>
+												<div><FormattedMessage {...globalMessages.editorCommentsText0} /></div>
+												<div><FormattedMessage {...globalMessages.editorCommentsText1} /></div>
+											</div>
 											<Discussions editorCommentMode={true} inEditor={true}/>
 										</div>
 
 										<div style={[styles.previewBlockWrapper, this.state.previewPaneMode === 'discussions' && styles.previewBlockWrapperShow]}>
-											<div style={styles.previewBlockHeader}>Discussion</div>
-											<div style={styles.previewBlockText}>This section shows the discussion from the public, published version of your pub.</div>
+											<div style={styles.previewBlockHeader}>
+												<FormattedMessage {...globalMessages.discussion} />
+											</div>
+											<div style={styles.previewBlockText}>
+												<FormattedMessage id="editorDiscussionMessage" defaultMessage="This section shows the discussion from the public, published version of your pub."/>
+											</div>
 											<Discussions editorCommentMode={false} inEditor={true}/>
 										</div>
 

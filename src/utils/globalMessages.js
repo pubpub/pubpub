@@ -374,5 +374,18 @@ export const globalMessages = defineMessages({
 		id: 'global.off',
 		defaultMessage: 'Off',
 	},
+	editorCommentsText0: {
+		id: 'editorCommentsText0',
+		defaultMessage: 'You are commenting on a draft version of this Pub.'
+	},
+	editorCommentsText1: {
+		id: 'editorCommentsText1',
+		defaultMessage: 'This section can only be used by collaborators and is private. It is never published or made public.'
+	},
+	EditorComments: {
+		id: 'EditorComments',
+		defaultMessage: 'Editor Comments'
+	},
+	
 	
 });

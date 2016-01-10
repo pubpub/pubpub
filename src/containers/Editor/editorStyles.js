@@ -212,6 +212,16 @@ export const styles = {
 		pointerEvents: 'none',
 		position: 'absolute',
 	},
+	editorDisabledMessage: {
+		width: '90%',
+		backgroundColor: '#373737',
+		display: 'block',
+		margin: '0 auto',
+		color: 'white',
+		textAlign: 'center',
+		padding: '5px',
+
+	},
 	common: {
 		editorMarkdown: {
 			margin: '30px 0px',
