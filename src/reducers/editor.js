@@ -213,7 +213,6 @@ function addCommentLoad(state, activeSaveID) {
 
 function addCommentSuccess(state, result, activeSaveID) {
 	function findParentAndAdd(discussions, parentID, newChild) {
-		console.log('in here');
 		discussions.map((discussion)=>{
 			if (discussion._id === parentID) {
 				discussion.children.unshift(result);
@@ -225,7 +224,6 @@ function addCommentSuccess(state, result, activeSaveID) {
 	}
 
 	let discussionsObject = state.getIn(['pubEditData', 'editorComments']);
-	console.log('in here 2');
 	if (!result.parent) {
 		discussionsObject = discussionsObject.unshift(result);
 	} else {
@@ -234,7 +232,6 @@ function addCommentSuccess(state, result, activeSaveID) {
 		findParentAndAdd(discussionsArray, result.parent, result);
 		discussionsObject = discussionsArray;
 	}
-	console.log('in here3');
 	const newState = state.mergeIn(['pubEditData', 'editorComments'], discussionsObject);
 	return newState.merge({
 		addDiscussionStatus: 'loaded',
