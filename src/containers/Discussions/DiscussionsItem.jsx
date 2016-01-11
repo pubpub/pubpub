@@ -59,11 +59,12 @@ const DiscussionsItem = React.createClass({
 			if (pIndex) {
 				try {
 					const result = {
-						startContainerPath: selection.startContainerPath.replace(/div:nth-of-type\((.*)\)/, 'div:nth-of-type(' + pIndex + ')'),
-						endContainerPath: selection.endContainerPath.replace(/div:nth-of-type\((.*)\)/, 'div:nth-of-type(' + pIndex + ')'),
+						startContainerPath: selection.startContainerPath.replace(/div:nth-of-type\([^\)]+\)/, 'div:nth-of-type(' + pIndex + ')'),
+						endContainerPath: selection.endContainerPath.replace(/div:nth-of-type\([^\)]+\)/, 'div:nth-of-type(' + pIndex + ')'),
 						startOffset: selection.startOffset,
 						endOffset: selection.endOffset,
 					};	
+					// console.log('reproduced result', result);
 					const renderer = new Marklib.Rendering(document, {className: 'selection selection-' + selection._id}, document.getElementById('pubBodyContent'));
 					renderer.renderWithResult(result);	
 					renderer.on('click', function(item) {

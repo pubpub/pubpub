@@ -297,7 +297,8 @@ const Editor = React.createClass({
 		}
 
 		// pHashes are generated and collected to perform discussion highlight synchronization
-		const pTags = document.querySelectorAll('div#pubBodyContent>div');
+		const pTags = document.getElementById('pubBodyContent').querySelectorAll('div');
+		// console.log(pTags);
 		const pHashes = {};
 		for ( const key in pTags ) {
 			if (pTags.hasOwnProperty(key)) {
