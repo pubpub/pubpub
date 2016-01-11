@@ -1,14 +1,18 @@
 export const scienceStyle = {
 	'#pub-title': {
-		textAlign: 'center',
-		fontSize: '3em',
+		textAlign: 'left',
+		fontSize: '2.4em',
 		margin: '0.7em 0px',
+		fontWeight: '700',
+		lineHeight: '1.3em',
+		color: '#4C4C4C',
+		fontFamily: 'Lora',
 	},
 	'#pub-authors': {
-		textAlign: 'center',
+		textAlign: 'left',
 		color: '#555',
-		fontSize: '1.3em',
-		padding: '0px 4em',
+		fontSize: '1.0em',
+		padding: '0px',
 	},
 	'.pub-author': {
 		color: '#555',
@@ -17,8 +21,8 @@ export const scienceStyle = {
 		},
 	},
 	'#pub-dates': {
-		textAlign: 'center',
-		padding: '0px 3em',
+		textAlign: 'left',
+		padding: '0px',
 		color: '#555',
 	},
 	'#pub-abstract': {
@@ -39,7 +43,7 @@ export const scienceStyle = {
 	},
 	'#pub-header-divider': {
 		height: '1px',
-		width: '80%',
+		width: '100%',
 		margin: '0 auto',
 		backgroundColor: '#DDD',
 	},
