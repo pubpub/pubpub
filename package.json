@@ -92,7 +92,6 @@
     "babel-runtime": "^6.3.19",
     "bibtex-parse-js": "0.0.22",
     "body-parser": "1.14.1",
-    "buildify": "^0.4.0",
     "camelcase": "^2.0.1",
     "cloudinary": "^1.2.5",
     "codemirror": "^5.8.0",
