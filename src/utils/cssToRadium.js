@@ -1,8 +1,8 @@
 // Taken from https://github.com/FormidableLabs/css-to-radium
 // Edited to work for Radium Style elements.
 // Specifically, we don't remove 'px' from item values.
+// Edited to not use lodash.
 
-// var _ = require('lodash');
 var postcss = require('postcss');
 var camelCase = require('camelcase');
 

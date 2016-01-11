@@ -1,5 +1,5 @@
 var React = require('react');
-var hljs = require('highlight.js');
+// var hljs = require('highlight.js');
 
 var CodeComponent = React.createClass({
   componentDidMount: function () {

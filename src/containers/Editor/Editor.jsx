@@ -179,7 +179,7 @@ const Editor = React.createClass({
 
 	onEditorChange: function(cm, change) {
 
-		const start = performance.now();
+		// const start = performance.now();
 		CodeMirror.commands.autocomplete(cm, CodeMirror.hint.plugins, {completeSingle: false});
 
 		if (cm.state.completionActive && cm.state.completionActive.data) {
@@ -191,36 +191,36 @@ const Editor = React.createClass({
 		// This feels inefficient.
 		// An alternative is that we don't pass a trimmed version of the text to the markdown processor.
 		// Instead we define header plugins and pass the entire thing to both here and body.
-		const markdownStart = performance.now();
+		// const markdownStart = performance.now();
 		const fullMD = cm.getValue();
-		const markdownGrab = performance.now();
+		// const markdownGrab = performance.now();
 		const titleRE = /\{\{title:(.*?)\}\}/i;
 		const titleMatch = fullMD.match(titleRE);
 		const title = titleMatch && titleMatch.length ? titleMatch[1].trim() : '';
-		const titleGrabAndSet = performance.now();
+		// const titleGrabAndSet = performance.now();
 
 		const abstractRE = /\{\{abstract:(.*?)\}\}/i;
 		const abstractMatch = fullMD.match(abstractRE);
 		const abstract = abstractMatch && abstractMatch.length ? abstractMatch[1].trim() : '';
-		const abstractGrabAndSet = performance.now();
+		// const abstractGrabAndSet = performance.now();
 
 		const authorsNoteRE = /\{\{authorsNote:(.*?)\}\}/i;
 		const authorsNoteMatch = fullMD.match(authorsNoteRE);
 		const authorsNote = authorsNoteMatch && authorsNoteMatch.length ? authorsNoteMatch[1].trim() : '';
-		const aNGrabAndSet = performance.now();
+		// const aNGrabAndSet = performance.now();
 
 		const assets = convertFirebaseToObject(this.state.firepadData.assets);
 		const references = convertFirebaseToObject(this.state.firepadData.references, true);
 		const selections = [];
 		const markdown = fullMD.replace(/\{\{title:.*?\}\}/g, '').replace(/\{\{abstract:.*?\}\}/g, '').replace(/\{\{authorsNote:.*?\}\}/g, '').trim();
-		const removeTitleEtc = performance.now();
-		let compiledMarkdown = 0;
-		let saveState = 0;
+		// const removeTitleEtc = performance.now();
+		// let compiledMarkdown = 0;
+		// let saveState = 0;
 
 		try {
 
 			const mdOutput = marked(markdown, {assets, references, selections});
-			compiledMarkdown = performance.now();
+			// compiledMarkdown = performance.now();
 			this.setState({
 				tree: mdOutput.tree,
 				travisTOC: mdOutput.travisTOC,
@@ -230,7 +230,7 @@ const Editor = React.createClass({
 				abstract: abstract,
 				authorsNote: authorsNote,
 			});
-			saveState = performance.now();
+			// saveState = performance.now();
 		} catch (err) {
 			console.log('Compiling error: ', err);
 			this.setState({
@@ -247,7 +247,7 @@ const Editor = React.createClass({
 		// console.log('anGrab', aNGrabAndSet - start, aNGrabAndSet - abstractGrabAndSet);
 		// console.log('removeTitleEtc', removeTitleEtc - start, removeTitleEtc - aNGrabAndSet);
 		// console.log('compiledMarkdown', compiledMarkdown - start, compiledMarkdown - removeTitleEtc);
-		console.log('saveState', saveState - start, saveState - compiledMarkdown);
+		// console.log('saveState', saveState - start, saveState - compiledMarkdown);
 		// console.log('~~~~~~~~~~~~~~~~~~');
 		// const end = performance.now();
 		// console.log('timing = ', end - start);
