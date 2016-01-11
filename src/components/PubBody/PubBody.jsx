@@ -220,6 +220,9 @@ styles = {
 		lineHeight: '1.58',
 		textRendering: 'optimizeLegibility',
 		WebkitFontSmoothing: 'antialiased',
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+			padding: '0px 1em 50px',
+		},
 	},
 	loading: {
 		opacity: 0,
