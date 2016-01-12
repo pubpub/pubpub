@@ -55,6 +55,11 @@ export function toggleViewMode() {
 }
 
 export function login(email, password) {
+	const analyticsData = {
+		email: email,
+	};
+	analytics.sendEvent('Login', analyticsData);
+
 	return {
 		types: [LOGIN_LOAD, LOGIN_LOAD_SUCCESS, LOGIN_LOAD_FAIL],
 		promise: (client) => client.post('/login', {data: {
@@ -72,6 +77,8 @@ export function login(email, password) {
 // }
 
 export function logout() {
+	analytics.sendEvent('Logout');
+
 	return {
 		types: [LOGOUT_LOAD, LOGOUT_LOAD_SUCCESS, LOGOUT_LOAD_FAIL],
 		promise: (client) => client.get('/logout', {})
@@ -79,6 +86,14 @@ export function logout() {
 }
 
 export function register(email, password, firstName, lastName, image) {
+	const analyticsData = {
+		email: email,
+		image: image,
+		firstName: firstName,
+		lastName: lastName,
+	};
+	analytics.sendEvent('Register', analyticsData);
+	
 	return {
 		types: [REGISTER_LOAD, REGISTER_LOAD_SUCCESS, REGISTER_LOAD_FAIL],
 		promise: (client) => client.post('/register', {data: {
