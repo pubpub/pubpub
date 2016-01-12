@@ -179,7 +179,7 @@ const PubReader = React.createClass({
 				{name: 'twitter:description', content: pubData.history[versionIndex].abstract},
 			];
 
-			const srcRegex = /{{image:.*(src=([^\s,]*)).*}}/;
+			const srcRegex = /{{image:.*(source=([^\s,]*)).*}}/;
 			const match = srcRegex.exec(pubData.history[versionIndex].markdown);
 			const refName = match ? match[2] : undefined;
 			
