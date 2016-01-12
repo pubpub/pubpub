@@ -6,6 +6,7 @@ import {globalMessages} from '../../utils/globalMessages';
 import {FormattedMessage} from 'react-intl';
 
 let styles = {};
+const formattingOptions = ['H1', 'H2', 'H3', 'Bold', 'Italic', '# List', '- List', 'Line', 'Link', 'Image', 'Video', 'Cite', 'Pagebreak', 'Linebreak', 'Quote'];
 
 const EditorBottomNav = React.createClass({
 	propTypes: {
@@ -40,6 +41,23 @@ const EditorBottomNav = React.createClass({
 				return true;
 			}
 		}
+		const keys = ['bNav_toc', 'showAllTOCButton', 'bNav_format'];
+		for (let index = keys.length; index--;) {
+			if (Radium.getState(this.state, keys[index], ':hover') !== Radium.getState(nextState, keys[index], ':hover')) {
+				return true;
+			}
+		}
+		for (let index = formattingOptions.length; index--;) {
+			if (Radium.getState(this.state, 'brNav' + index, ':hover') !== Radium.getState(nextState, 'brNav' + index, ':hover')) {
+				return true;
+			}
+		}
+		for (let index = nextProps.travisTOC.length; index--;) {
+			if (Radium.getState(this.state, 'blNav' + index, ':hover') !== Radium.getState(nextState, 'blNav' + index, ':hover')) {
+				return true;
+			}
+		}
+		
 		return false;
 	},
 	// Function to generate side-list fade in animations.
@@ -105,8 +123,7 @@ const EditorBottomNav = React.createClass({
 					{/* Formatting list */}
 					<ul style={[styles.common.bottomNavList, styles[this.props.viewMode].bottomNavList, styles[this.props.viewMode].bottomNavListRight, styles.alignRight, this.props.showBottomRightMenu && styles[this.props.viewMode].listActive]}>
 						{(()=>{
-							const options = ['H1', 'H2', 'H3', 'Bold', 'Italic', '# List', '- List', 'Line', 'Link', 'Image', 'Video', 'Cite', 'Pagebreak', 'Linebreak', 'Quote'];
-							return options.map((item, index)=>{
+							return formattingOptions.map((item, index)=>{
 								return <li key={'brNav' + index} onClick={this.props.insertFormattingHandler(item)} style={[styles.common.bottomNavListItem, styles[this.props.viewMode].bottomNavListItem, this.animateListItemStyle('right', this.props.loadStatus, index), styles.floatRight, this.props.showBottomRightMenu && styles[this.props.viewMode].listItemActive]}>{item}</li>;
 							});
 						})()}
