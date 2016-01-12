@@ -114,12 +114,10 @@ app.post('/publishPub', function(req, res) {
 	Pub.findOne({ slug: req.body.newVersion.slug }, function (err, pub){
 		if (err) { return res.status(500).json(err);  }
 
-		// console.log(pub);
 		if (!req.user || pub.collaborators.canEdit.indexOf(req.user._id) === -1) {
 			return res.status(403).json('Not authorized to publish versions to this pub');
 		}
 		const publishDate = new Date().getTime();
-	
 		// Calculate diff
 		// Take last history object, 
 		// take new object, 
@@ -139,7 +137,6 @@ app.post('/publishPub', function(req, res) {
 				// style: {},
 			}
 		const diffObject = Pub.generateDiffObject(previousHistoryItem, req.body.newVersion);
-
 		// Append details to assets
 		const assets = [];
 		for (const key in req.body.newVersion.assets) { 
@@ -166,7 +163,6 @@ app.post('/publishPub', function(req, res) {
 			if (err) { return res.status(500).json(err);  }
 			Reference.insertBulkAndReturnIDs(references, function(err, dbReferencesIds){
 				if (err) { return res.status(500).json(err);  }
-				
 				pub.title = req.body.newVersion.title;
 				pub.abstract = req.body.newVersion.abstract;
 				pub.authorsNote = req.body.newVersion.authorsNote;
@@ -205,8 +201,6 @@ app.post('/publishPub', function(req, res) {
 						// diffStyle:  diffObject.diffStyle,
 					}
 				});
-
-				// console.log('pub', pub);
 
 				pub.save(function(err, result){
 					if (err) { return res.status(500).json(err);  }

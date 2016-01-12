@@ -251,8 +251,8 @@ pubSchema.statics.generateDiffObject = function(oldPubObject, newPubObject) {
 	outputObject.diffTitle = jsdiff.diffWords(oldPubObject.title, newPubObject.title, {newlineIsToken: true});
 	outputObject.diffAbstract = jsdiff.diffWords(oldPubObject.abstract, newPubObject.abstract, {newlineIsToken: true});
 	outputObject.diffAuthorsNote = jsdiff.diffWords(oldPubObject.authorsNote, newPubObject.authorsNote, {newlineIsToken: true});
-	outputObject.diffMarkdown = jsdiff.diffWords(oldPubObject.markdown, newPubObject.markdown, {newlineIsToken: true});
-
+	outputObject.diffMarkdown = jsdiff.diffSentences(oldPubObject.markdown, newPubObject.markdown, {newlineIsToken: true});
+	
 	let additions = 0;
 	let deletions = 0;
 	for (const key in outputObject) {
@@ -265,7 +265,6 @@ pubSchema.statics.generateDiffObject = function(oldPubObject, newPubObject) {
 			}
 		});
 	}
-
 
 	outputObject.additions = additions;
 	outputObject.deletions = deletions;
