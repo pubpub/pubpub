@@ -21,7 +21,7 @@ export default combineReducers({
 	router: routerStateReducer,
 	form: formReducer.normalize({
 		pubCreateForm: {
-			slug: value => value && value.replace(/[^\w\s-]/gi, '').replace(/ /g, '_').toLowerCase(),
+			slug: value => value && value.replace(/[^\w\s-]/gi, '').replace(/ /g, '_'),
 		},
 		journalCreateForm: {
 			subdomain: value => value && value.replace(/[^\w\s-]/gi, '').replace(/ /g, '_').toLowerCase(),
