@@ -71,11 +71,11 @@ styles = {
 		display: 'none',
 		position: 'absolute',
 		border: '1px solid black',
-		width: '250px',
+		width: '350px',
 		right: 0,
 		backgroundColor: 'white',
 		padding: '5px',
-		top: '18px',
+		top: '20px',
 		zIndex: 3,
 	},
 	hoverOn: {

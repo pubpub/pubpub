@@ -150,7 +150,7 @@ styles = {
 	},
 	inputTopLine: {
 		// backgroundColor: 'rgba(255,0,0,0.1)',
-		height: 20,
+		height: 22,
 	},
 	inputBottomLine: {
 		// backgroundColor: 'rgba(255,0,100,0.1)',
@@ -169,8 +169,8 @@ styles = {
 		width: '100%',
 	},
 	thumbnail: {
-		width: '18px',
-		height: '18px',
+		width: '20px',
+		height: '20px',
 		padding: '1px',
 		marginRight: '1px',
 		float: 'right',
@@ -180,9 +180,9 @@ styles = {
 	},
 	license: {
 		float: 'right',
-		lineHeight: '24px',
+		lineHeight: '26px',
 		opacity: '0.4',
-		paddingRight: '10px',
+		paddingRight: '4px',
 		':hover': {
 			opacity: '1.0',
 		},
