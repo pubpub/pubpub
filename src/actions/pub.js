@@ -56,10 +56,14 @@ export function clearPub() {
 	};
 }
 
-export function getPub(slug, journalID) {
+export function getPub(slug, journalID, referrer) {
 	return {
 		types: [LOAD_PUB, LOAD_PUB_SUCCESS, LOAD_PUB_FAIL],
-		promise: (client) => client.get('/getPub', {params: {slug: slug, journalID: journalID}}) 
+		promise: (client) => client.get('/getPub', {params: {
+			slug: slug, 
+			journalID: journalID,
+			referrer: referrer,
+		}}) 
 	};
 }
 

@@ -14,7 +14,17 @@ app.get('/getPub', function(req, res) {
 	const journalID = req.query.journalID;
 	Pub.getPub(req.query.slug, userID, journalID, (err, pubData)=>{
 		if (err) { console.log(err); return res.status(500).json(err); }
-		return res.status(201).json(pubData);
+
+		if (req.query.referrer) {
+			User.findOne({'_id':req.query.referrer}, {'_id':1,'image':1, 'thumbnail':1, 'name':1, 'username':1}).exec(function (err, referrer) {
+				pubData.referrer = referrer;
+				return res.status(201).json(pubData);
+			});
+		} else {
+			return res.status(201).json(pubData);	
+		}
+
+		
 	});
 });
 

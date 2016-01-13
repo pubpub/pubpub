@@ -125,6 +125,10 @@ const Discussions = React.createClass({
 			<div style={styles.container}>
 				
 				<div className="pub-discussions-wrapper" style={rightBarStyles.sectionWrapper}>
+					{this.props.pubData.getIn(['pubData', 'referrer', 'name'])
+						? <div>{this.props.pubData.getIn(['pubData', 'referrer', 'name'])} invites you to comment!</div>
+						: null
+					}
 					
 					{this.props.metaID || (!this.props.editorCommentMode && this.props.inEditor)
 						? null
