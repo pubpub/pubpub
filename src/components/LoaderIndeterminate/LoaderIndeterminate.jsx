@@ -21,7 +21,8 @@ const LoaderIndeterminate = React.createClass({
 				width: '100%',
 				height: '1px',
 				backgroundColor: this.props.color,
-				animation: `${loadingBarFrames} 1.5s linear infinite`,
+				animation: 'x 1.5s linear infinite',
+				animationName: loadingBarFrames,
 			}
 		};
 
