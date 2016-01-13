@@ -1,5 +1,6 @@
 {
   "es": {
+    "editor.publishMessage5": "Missing. English is: By publishing, you agree to a Creative Commons By license for your work.",
     "journal.global": "Same as English: Global",
     "global.analytics": "Same as English: Analytics",
     "global.pubs": "Same as English: Pubs",
@@ -7,6 +8,7 @@
     "global.markdown": "Same as English: markdown"
   },
   "ee": {
+    "editor.publishMessage5": "Missing. English is: By publishing, you agree to a Creative Commons By license for your work.",
     "editor.publishMessageJournal1": "Missing. English is: Publishing will automatically submit this pub to: {currentJournal}.",
     "editor.publishMessageJournal2": "Missing. English is: If you would like to publish without submitting, please publish from",
     "editor.publishMessage4": "Missing. English is: A description is required.",

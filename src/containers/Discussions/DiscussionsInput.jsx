@@ -2,7 +2,7 @@
 
 import React, {PropTypes} from 'react';
 import Radium, {Style} from 'radium';
-import {LoaderIndeterminate} from '../../components';
+import {LoaderIndeterminate, License} from '../../components';
 import {globalStyles} from '../../utils/styleConstants';
 
 import {globalMessages} from '../../utils/globalMessages';
@@ -107,6 +107,9 @@ const PubDiscussionsInput = React.createClass({
 							: null
 						}
 					</div>
+					<div style={styles.license} key={'discussionLicense'}>
+						<License text={'All discussions are licensed under a'} hover={true} />
+					</div>
 					{/* <div style={styles.topCheckbox} key={'newDiscussionAnonymous'} >
 						<label style={styles.checkboxLabel} htmlFor={'anonymousDiscussion'}>Anonymous</label>
 						<input style={styles.checkboxInput} name={'anonymousDiscussion'} id={'anonymousDiscussion'} type="checkbox" value={'anonymous'} ref={'anonymousDiscussion'}/>
@@ -138,7 +141,7 @@ export default Radium(PubDiscussionsInput);
 styles = {
 	container: {
 		width: '100%',
-		overflow: 'hidden',
+		// overflow: 'hidden',
 		margin: '20px 0px',
 		position: 'relative',
 	},
@@ -174,6 +177,15 @@ styles = {
 	},
 	thumbnailImage: {
 		width: '100%',
+	},
+	license: {
+		float: 'right',
+		lineHeight: '24px',
+		opacity: '0.4',
+		paddingRight: '10px',
+		':hover': {
+			opacity: '1.0',
+		},
 	},
 	topCheckbox: {
 		float: 'right',

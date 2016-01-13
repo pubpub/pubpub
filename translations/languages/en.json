@@ -23,6 +23,7 @@
   "editor.publishMessage1": "You can publish versions to your Pub as frequently as you like.",
   "editor.publishMessage2": "We encourage you to publish early and often.",
   "editor.publishMessage3": "The full history will be maintained and accessible.",
+  "editor.publishMessage5": "By publishing, you agree to a Creative Commons By license for your work.",
   "editor.publishMessageJournal1": "Publishing will automatically submit this pub to: {currentJournal}.",
   "editor.publishMessageJournal2": "If you would like to publish without submitting, please publish from",
   "editor.publishMessage4": "A description is required.",

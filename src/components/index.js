@@ -16,6 +16,7 @@ export JournalGallery from './JournalGallery/JournalGallery';
 export JournalMain from './JournalMain/JournalMain';
 export JournalSettings from './JournalSettings/JournalSettings';
 export LandingBody from './LandingBody/LandingBody';
+export License from './License/License';
 export LoaderDeterminate from './LoaderDeterminate/LoaderDeterminate';
 export LoaderIndeterminate from './LoaderIndeterminate/LoaderIndeterminate';
 export LoginForm from './LoginForm/LoginForm';

@@ -9,6 +9,7 @@ import {scienceStyle, magazineStyle} from './pubStyles';
 import cssConvert from '../../utils/cssToRadium';
 import ResizingText from './ResizingText';
 import dateFormat from 'dateformat';
+import {License} from '../';
 
 import {globalMessages} from '../../utils/globalMessages';
 import {FormattedMessage} from 'react-intl';
@@ -197,6 +198,8 @@ const PubBody = React.createClass({
 						: null
 					}
 
+					<License />
+					
 				</div>
 
 			</div>

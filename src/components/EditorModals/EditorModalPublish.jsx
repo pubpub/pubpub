@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react';
 import Radium from 'radium';
-import {LoaderIndeterminate} from '../';
+import {LoaderIndeterminate, License} from '../';
 import {baseStyles} from './editorModalStyle';
 import {globalStyles} from '../../utils/styleConstants';
 
@@ -96,45 +96,55 @@ const EditorModalPublish = React.createClass({
 
 				{/* Publish Message */}
 				<div style={styles.publishText}>
-					<p style={styles.publishTextP}>
+					<div style={styles.publishTextP}>
 						<FormattedMessage 
 							id="editor.publishMessage1"
 							defaultMessage="You can publish versions to your Pub as frequently as you like."/>
-					</p> 
-					<p style={styles.publishTextP}>
+					</div> 
+
+					<div style={styles.publishTextP}>
 						<FormattedMessage 
 							id="editor.publishMessage2"
 							defaultMessage="We encourage you to publish early and often."/>
-					</p> 
-					<p style={styles.publishTextP}>
+					</div> 
+					<div style={styles.publishTextP}>
 						<FormattedMessage 
 							id="editor.publishMessage3"
 							defaultMessage="The full history will be maintained and accessible."/>
-					</p>
+					</div>
+					<div style={styles.publishTextP}>
+
+						<FormattedMessage id="editor.publishMessage5" defaultMessage="By publishing, you agree to a Creative Commons By license for your work."/>
+
+						<div style={styles.license}>
+							<License text={'Your pub will be licensed under a'} hover={true} />
+						</div>
+					
+					</div>
 
 					{this.props.currentJournal
 						? <div style={styles.autoSubmitWrapper}>
-							<p style={[styles.publishTextP, styles.autoSubmitText]}>
+							<div style={[styles.publishTextP, styles.autoSubmitText]}>
 								<FormattedMessage 
 									id="editor.publishMessageJournal1"
 									defaultMessage="Publishing will automatically submit this pub to: {currentJournal}."
 									values={{currentJournal: this.props.currentJournal}} />
-							</p>
-							<p style={[styles.publishTextP, styles.autoSubmitText]}>
+							</div>
+							<div style={[styles.publishTextP, styles.autoSubmitText]}>
 								<FormattedMessage 
 									id="editor.publishMessageJournal2"
 									defaultMessage="If you would like to publish without submitting, please publish from"/>
 								<a style={styles.detailLink} href={'http://www.pubpub.org/pub/' + this.props.slug + '/edit'}> pubpub.org</a>
-							</p>
+							</div>
 						</div>
 						: null
 					}
 
-					<p style={[styles.publishTextP, styles.publishTextPError, this.state.descriptionError && {display: 'block'}]}>
+					<div style={[styles.publishTextP, styles.publishTextPError, this.state.descriptionError && {display: 'block'}]}>
 						<FormattedMessage 
 							id="editor.publishMessage4"
 							defaultMessage="A description is required."/>
-					</p>
+					</div>
 				</div>
 
 				{/* Publish button */}
@@ -205,6 +215,10 @@ styles = {
 	publishTextP: {
 		margin: 0,
 		padding: 0,
+	},
+	license: {
+		display: 'inline-block',
+		padding: '0px 10px',
 	},
 	detailLink: {
 		color: 'inherit',
