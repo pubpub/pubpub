@@ -1,6 +1,6 @@
 export function s3Upload(file, folderName, progressEvent, finishEvent, index) {
 	function beginUpload() {
-		const filename = file.name !== undefined ? folderName + '/' + new Date().getTime() + '_' + file.name : folderName + '/' + new Date().getTime() + '.jpg';
+		const filename = file.name !== undefined ? folderName + '/' + new Date().getTime() + '_' + file.name.replace(/ /g, '') : folderName + '/' + new Date().getTime() + '.jpg';
 		const fileType = file.type !== undefined ? file.type : 'image/jpeg';
 		const formData = new FormData();
 
