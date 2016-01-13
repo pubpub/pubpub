@@ -42,7 +42,7 @@
 		page-break-after: always !important;
 	}
 	
-	.p-block, table, figure, image {
+	table, figure, image {
 		page-break-inside: avoid !important;
 	}
 
