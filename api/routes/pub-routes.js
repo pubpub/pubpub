@@ -32,13 +32,16 @@ app.get('/getPub', function(req, res) {
 
 app.get('/getPubEdit', function(req, res) {
 	const userID = req.user ? req.user._id : undefined;
-	Pub.getPubEdit(req.query.slug, userID, (err, pubEditData)=>{
+	Pub.getPubEdit(req.query.slug, userID, (err, pubEditData, authError)=>{
 		if (err) {
 			console.log(err);
 			return res.status(500).json(err); 
 		}
 
-		pubEditData.token = firebaseTokenGen(req.user.username, req.query.slug);
+		if (!authError) {
+			pubEditData.token = firebaseTokenGen(req.user.username, req.query.slug);	
+		}
+		
 
 		return res.status(201).json(pubEditData);
 

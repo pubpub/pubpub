@@ -199,10 +199,10 @@ pubSchema.statics.getPubEdit = function (slug, readerID, callback) {
 	.exec((err, pub) =>{
 		if (err) { return callback(err, null); }
 
-		if (!pub) { return callback(null, 'Pub Not Found'); }
+		if (!pub) { return callback(null, 'Pub Not Found', true); }
 
 		if (pub.collaborators.canEdit.indexOf(readerID) === -1 && pub.collaborators.canRead.indexOf(readerID) === -1) {
-			return callback(null, 'Not Authorized');
+			return callback(null, 'Not Authorized', true);
 		}
 
 		let isReader = true;
