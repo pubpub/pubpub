@@ -105,6 +105,7 @@
     "express-session": "^1.11.3",
     "file-loader": "0.8.4",
     "firebase": "^2.3.2",
+    "firebase-token-generator": "^2.0.0",
     "heroku-client": "^2.4.0",
     "highlight.js": "^9.0.0",
     "history": "1.17.0",

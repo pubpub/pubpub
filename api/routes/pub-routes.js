@@ -9,6 +9,8 @@ var Reference = require('../models').Reference;
 var _         = require('underscore');
 var Firebase  = require('firebase');
 
+import {firebaseTokenGen} from '../services/firebase';
+
 app.get('/getPub', function(req, res) {
 	const userID = req.user ? req.user._id : undefined;
 	const journalID = req.query.journalID;
@@ -35,6 +37,8 @@ app.get('/getPubEdit', function(req, res) {
 			console.log(err);
 			return res.status(500).json(err); 
 		}
+
+		pubEditData.token = firebaseTokenGen(req.user.username, req.query.slug);
 
 		return res.status(201).json(pubEditData);
 
