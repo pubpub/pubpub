@@ -70,6 +70,7 @@ const Editor = React.createClass({
 
 	getInitialState() {
 		return {
+			initialized: false,
 			tree: [],
 			travisTOC: [],
 			travisTOCFull: [],
@@ -93,56 +94,10 @@ const Editor = React.createClass({
 			// loadCss('/css/react-select.min.css');
 			initCodeMirrorMode();
 
-			// Load Firebase and bind using ReactFireMixin. For assets, references, etc.
-			const ref = new Firebase('https://pubpub.firebaseio.com/' + this.props.slug + '/editorData' );
-			ref.authWithCustomToken(this.props.editorData.getIn(['pubEditData', 'token']), (error, authData)=> {
-				if (error) {
-					console.log('Authentication Failed!', error);
-				} else {
-					this.bindAsObject(ref, 'firepadData');
-
-					// Load Firebase ref that is used for firepad
-					const firepadRef = new Firebase('https://pubpub.firebaseio.com/' + this.props.slug + '/firepad');
-
-					// Load codemirror
-					const codeMirror = CodeMirror(document.getElementById('codemirror-wrapper'), cmOptions);
-					this.cm = codeMirror;
-
-					// Get Login username for firepad use. Shouldn't be undefined, but set default in case.
-					const username = (this.props.loginData.get('loggedIn') === false) ? 'cat' : this.props.loginData.getIn(['userData', 'username']);
-
-					// Initialize Firepad using codemirror and the ref defined above.
-					const firepad = Firepad.fromCodeMirror(firepadRef, codeMirror, {
-						userId: username,
-						defaultText: editorDefaultText(this.props.pubData.getIn(['createPubData', 'title']))
-					});
-
-					new Firebase('https://pubpub.firebaseio.com/.info/connected').on('value', (connectedSnap)=> {
-						if (connectedSnap.val() === true) {
-							/* we're connected! */
-							this.setState({editorSaveStatus: 'saved'});
-						} else {
-							/* we're disconnected! */
-							this.setState({editorSaveStatus: 'disconnected'});
-						}
-					});
-
-					FirepadUserList.fromDiv(firepadRef.child('users'),
-						document.getElementById('userlist'), username, this.props.loginData.getIn(['userData', 'name']), this.props.loginData.getIn(['userData', 'thumbnail']));
-
-					firepad.on('synced', (synced)=>{
-						// console.log('before debounce', synced);
-						debounce(()=> {
-							this.updateSaveStatus(synced);
-						}, 250)();
-					});
-
-					// need to unmount on change
-					codeMirror.on('change', this.onEditorChange);
-				}
-			});
+			if (this.props.editorData.getIn(['pubEditData', 'token'])) {
+				this.initializeEditorData(this.props.editorData.getIn(['pubEditData', 'token']));
+			}
 			
-
 		}
 	},
 
@@ -150,11 +105,69 @@ const Editor = React.createClass({
 		if (nextProps.editorData.get('publishSuccess')) {
 			this.props.dispatch(pushState(null, ('/pub/' + nextProps.slug)));
 		}
+		if (!this.state.initialized && nextProps.editorData.getIn(['pubEditData', 'token'])) {
+			console.log('calling willreceive initialize');
+			this.initializeEditorData(nextProps.editorData.getIn(['pubEditData', 'token']));
+		}
+
 	},
 
 	componentWillUnmount() {
 		this.props.dispatch(closeModal());
 		this.props.dispatch(unmountEditor());
+	},
+
+	initializeEditorData: function(token) {
+		// Load Firebase and bind using ReactFireMixin. For assets, references, etc.
+		const ref = new Firebase('https://pubpub.firebaseio.com/' + this.props.slug + '/editorData' );
+		ref.authWithCustomToken(token, (error, authData)=> {
+			if (error) {
+				console.log('Authentication Failed!', error);
+			} else {
+				this.bindAsObject(ref, 'firepadData');
+
+				// Load Firebase ref that is used for firepad
+				const firepadRef = new Firebase('https://pubpub.firebaseio.com/' + this.props.slug + '/firepad');
+
+				// Load codemirror
+				const codeMirror = CodeMirror(document.getElementById('codemirror-wrapper'), cmOptions);
+				this.cm = codeMirror;
+
+				// Get Login username for firepad use. Shouldn't be undefined, but set default in case.
+				const username = (this.props.loginData.get('loggedIn') === false) ? 'cat' : this.props.loginData.getIn(['userData', 'username']);
+
+				// Initialize Firepad using codemirror and the ref defined above.
+				const firepad = Firepad.fromCodeMirror(firepadRef, codeMirror, {
+					userId: username,
+					defaultText: editorDefaultText(this.props.pubData.getIn(['createPubData', 'title']))
+				});
+
+				new Firebase('https://pubpub.firebaseio.com/.info/connected').on('value', (connectedSnap)=> {
+					if (connectedSnap.val() === true) {
+						/* we're connected! */
+						this.setState({editorSaveStatus: 'saved'});
+					} else {
+						/* we're disconnected! */
+						this.setState({editorSaveStatus: 'disconnected'});
+					}
+				});
+
+				FirepadUserList.fromDiv(firepadRef.child('users'),
+					document.getElementById('userlist'), username, this.props.loginData.getIn(['userData', 'name']), this.props.loginData.getIn(['userData', 'thumbnail']));
+
+				firepad.on('synced', (synced)=>{
+					// console.log('before debounce', synced);
+					debounce(()=> {
+						this.updateSaveStatus(synced);
+					}, 250)();
+				});
+
+				// need to unmount on change
+				codeMirror.on('change', this.onEditorChange);
+				this.setState({initialized: true});
+			}
+		});
+
 	},
 
 	getActiveCodemirrorInstance: function() {
