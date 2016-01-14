@@ -106,7 +106,6 @@ const Editor = React.createClass({
 			this.props.dispatch(pushState(null, ('/pub/' + nextProps.slug)));
 		}
 		if (!this.state.initialized && nextProps.editorData.getIn(['pubEditData', 'token'])) {
-			console.log('calling willreceive initialize');
 			this.initializeEditorData(nextProps.editorData.getIn(['pubEditData', 'token']));
 		}
 
