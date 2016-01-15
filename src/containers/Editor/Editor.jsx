@@ -21,7 +21,7 @@ import initCodeMirrorMode from './editorCodeMirrorMode';
 import {styles, codeMirrorStyles} from './editorStyles';
 import {globalStyles} from '../../utils/styleConstants';
 
-import {insertText, createFocusDoc} from './editorCodeFunctions';
+import {insertText, createFocusDoc, addCodeMirrorKeys} from './editorCodeFunctions';
 import {editorDefaultText} from './editorDefaultText';
 
 import SHA1 from 'crypto-js/sha1';
@@ -163,6 +163,8 @@ const Editor = React.createClass({
 
 				// need to unmount on change
 				codeMirror.on('change', this.onEditorChange);
+				addCodeMirrorKeys(codeMirror);
+
 				this.setState({initialized: true});
 			}
 		});
@@ -176,6 +178,7 @@ const Editor = React.createClass({
 
 		return cm;
 	},
+
 
 	showPopupFromAutocomplete: function(completion) { // completion, element
 		const cords = this.cm.cursorCoords();
@@ -416,9 +419,7 @@ const Editor = React.createClass({
 	insertFormatting: function(formatting) {
 		return ()=>{
 			const cm = this.getActiveCodemirrorInstance();
-			const currentSelection = cm.getSelection();
-			const baseText = currentSelection !== '' ? currentSelection : 'example';
-			insertText(cm, formatting, baseText, this.showPopupFromAutocomplete);
+			insertText(cm, formatting, this.showPopupFromAutocomplete);
 			this.toggleFormatting();
 		};
 	},

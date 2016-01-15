@@ -1,6 +1,9 @@
 /* global CodeMirror */
 
-export function insertText(cm, formatting, baseText, showPopup) {
+export function insertText(cm, formatting, showPopup) {
+
+	const currentSelection = cm.getSelection();
+	const baseText = currentSelection !== '' ? currentSelection : 'example';
 
 	switch (formatting) {
 	case 'H1':
@@ -57,6 +60,16 @@ export function insertText(cm, formatting, baseText, showPopup) {
 
 	return;
 
+}
+
+export function addCodeMirrorKeys(cm) {
+	const map = {
+		'Cmd-S': ()=>{},
+		'Cmd-B': ()=>{insertText(cm, 'Bold');},
+		'Cmd-I': ()=>{insertText(cm, 'Italic');},
+	};
+	cm.addKeyMap(map);
+	return;
 }
 
 // focusEditor: function(title, index) {
