@@ -5,3 +5,7 @@ export function firebaseTokenGen(username, pubSlug) {
 	const tokenGenerator = new FirebaseTokenGenerator(firebaseSecret);
 	return tokenGenerator.createToken({ uid: username, pubSlug: pubSlug });
 };
+
+export function generateAuthToken() {
+	return firebaseSecret;
+};

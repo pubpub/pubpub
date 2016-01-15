@@ -9,7 +9,7 @@ var Reference = require('../models').Reference;
 var _         = require('underscore');
 var Firebase  = require('firebase');
 
-import {firebaseTokenGen} from '../services/firebase';
+import {firebaseTokenGen, generateAuthToken} from '../services/firebase';
 
 app.get('/getPub', function(req, res) {
 	const userID = req.user ? req.user._id : undefined;
@@ -92,25 +92,28 @@ app.post('/createPub', function(req, res) {
 
 			User.update({ _id: userID }, { $addToSet: { pubs: pubID} }, function(err, result){if(err) return handleError(err)});
 			const ref = new Firebase('https://pubpub.firebaseio.com/' + req.body.slug + '/editorData' );
-			const newEditorData = {
-				collaborators: {},
-				settings: {},
-			};
-			newEditorData.collaborators[req.user.username] = {
-				_id: userID.toString(),
-				name: req.user.name,
-				firstName: req.user.firstName || '',
-				lastName: req.user.lastName || '',
-				username: req.user.username,
-				email: req.user.email,
-				thumbnail: req.user.thumbnail,
-				permission: 'edit',
-				admin: true,
-			};
-			newEditorData.settings.pubPrivacy = 'public';
-			ref.set(newEditorData);
+			ref.authWithCustomToken(generateAuthToken(), ()=>{
+				const newEditorData = {
+					collaborators: {},
+					settings: {},
+				};
+				newEditorData.collaborators[req.user.username] = {
+					_id: userID.toString(),
+					name: req.user.name,
+					firstName: req.user.firstName || '',
+					lastName: req.user.lastName || '',
+					username: req.user.username,
+					email: req.user.email,
+					thumbnail: req.user.thumbnail,
+					permission: 'edit',
+					admin: true,
+				};
+				newEditorData.settings.pubPrivacy = 'public';
+				ref.set(newEditorData);
 
-			return res.status(201).json(savedPub.slug);
+				return res.status(201).json(savedPub.slug);
+			});
+			
 		});
 
 	});
