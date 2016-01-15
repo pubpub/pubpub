@@ -198,5 +198,6 @@
   "global.off": "Off",
   "editorCommentsText0": "You are commenting on a draft version of this Pub.",
   "editorCommentsText1": "This section can only be used by collaborators and is private. It is never published or made public.",
-  "EditorComments": "Editor Comments"
+  "EditorComments": "Editor Comments",
+  "discussionPlaceholder": "Add discussion..."
 }

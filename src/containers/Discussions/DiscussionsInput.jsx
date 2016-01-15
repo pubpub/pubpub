@@ -6,7 +6,7 @@ import {LoaderIndeterminate, License} from '../../components';
 import {globalStyles} from '../../utils/styleConstants';
 
 import {globalMessages} from '../../utils/globalMessages';
-import {FormattedMessage} from 'react-intl';
+import {injectIntl, FormattedMessage} from 'react-intl';
 
 let styles = {};
 
@@ -19,16 +19,6 @@ import {clearTempHighlights} from '../../components/PubSelectionPopup/selectionF
 // import markdownExtensions from '../../components/EditorPlugins';
 // marked.setExtensions(markdownExtensions);
 
-const cmOptions = {
-	lineNumbers: false,
-	value: '',
-	lineWrapping: true,
-	viewportMargin: Infinity, // This will cause bad performance on large documents. Rendering the entire thing...
-	autofocus: false,
-	mode: 'pubpubmarkdown',
-	extraKeys: {'Ctrl-Space': 'autocomplete'}
-};
-
 const PubDiscussionsInput = React.createClass({
 	propTypes: {
 		addDiscussionHandler: PropTypes.func,
@@ -40,11 +30,24 @@ const PubDiscussionsInput = React.createClass({
 		isReply: PropTypes.bool,
 		activeSaveID: PropTypes.string,
 		saveID: PropTypes.string,
+		intl: PropTypes.object,
 
 	},
 
 	componentDidMount() {
 		initCodeMirrorMode();
+		
+		const cmOptions = {
+			lineNumbers: false,
+			value: '',
+			lineWrapping: true,
+			viewportMargin: Infinity, // This will cause bad performance on large documents. Rendering the entire thing...
+			autofocus: false,
+			mode: 'pubpubmarkdown',
+			extraKeys: {'Ctrl-Space': 'autocomplete'},
+			placeholder: this.props.intl.formatMessage(globalMessages.discussionPlaceholder),
+		};
+
 		const codeMirror = CodeMirror(document.getElementById(this.props.codeMirrorID), cmOptions);
 		codeMirror.on('change', this.onEditorChange);	
 	},
@@ -136,7 +139,7 @@ const PubDiscussionsInput = React.createClass({
 	}
 });
 
-export default Radium(PubDiscussionsInput);
+export default injectIntl(Radium(PubDiscussionsInput));
 
 styles = {
 	container: {

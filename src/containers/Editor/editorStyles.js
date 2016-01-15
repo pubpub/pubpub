@@ -369,6 +369,9 @@ export function codeMirrorStyles(loginData) {
 		'.CodeMirror .cm-spell-error': {
 			borderBottom: '1px dotted red',
 		},
+		'.CodeMirror pre.CodeMirror-placeholder': { 
+			color: '#999',
+		},
 		'.cm-s-default .cm-header': {
 			color: editorStyles.colorHeader,
 		},

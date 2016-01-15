@@ -386,6 +386,10 @@ export const globalMessages = defineMessages({
 		id: 'EditorComments',
 		defaultMessage: 'Editor Comments'
 	},
+	discussionPlaceholder: {
+		id: 'discussionPlaceholder',
+		defaultMessage: 'Add discussion and feedback'
+	},
 	
 	
 });
