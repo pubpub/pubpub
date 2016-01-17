@@ -37,11 +37,9 @@ const IframePlugin = React.createClass({
 		if (align === 'full') {
 			style = styles.full;
 			style.width = width;
-			style.height = height;
 		} else {
 			style = styles.inline;
 			style.width = width;
-			style.height = height;
 		}
 
 
@@ -49,7 +47,7 @@ const IframePlugin = React.createClass({
 			html = <span></span>;
 		} else {
 			html = (<Media caption={caption} style={style} align={align}>
-				<iframe src={url} style={{width: '100%', height: '100%'}} frameBorder="0"></iframe>
+				<iframe src={url} style={{width: '100%', height: height, margin: '0 auto', display: 'block'}} frameBorder="0"></iframe>
 				
 				{ (reference) ? <div style={styles.reference}> <Reference citationObject={reference} mode={'mla'} /> </div> : null }
 			</Media>
@@ -61,10 +59,11 @@ const IframePlugin = React.createClass({
 
 styles = {
 	full: {
-		padding: '1em',
+		margin: '1em auto',
 		textAlign: 'left'
 	},
 	inline: {
+		margin: '1em 1em',
 		textAlign: 'left'
 	},
 	reference: {
