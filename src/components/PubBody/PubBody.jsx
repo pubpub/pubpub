@@ -198,7 +198,11 @@ const PubBody = React.createClass({
 						: null
 					}
 
-					<License />
+					{this.props.isFeatured && !this.props.errorView
+						? <License />
+						: null
+					}
+					
 					
 				</div>
 
