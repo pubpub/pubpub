@@ -74,6 +74,39 @@ export const propQuote = {
 	}
 };
 
+export const propUrl = {
+	title: 'url',
+	default: '',
+	defaultValue: '',
+	defaultString: '',
+	component: function(pluginProp, value, componentProps) {
+		const title = pluginProp.title;
+		return (<TextInput placeholder="Enter Url" ref={'pluginInput-' + title} selectedValue={value}/>);
+	}
+};
+
+export const propWidth = {
+	title: 'width',
+	default: '',
+	defaultValue: '',
+	defaultString: '',
+	component: function(pluginProp, value, componentProps) {
+		const title = pluginProp.title;
+		return (<TextInput placeholder="Enter width" ref={'pluginInput-' + title} selectedValue={value}/>);
+	}
+};
+
+export const propHeight = {
+	title: 'height',
+	default: '',
+	defaultValue: '',
+	defaultString: '',
+	component: function(pluginProp, value, componentProps) {
+		const title = pluginProp.title;
+		return (<TextInput placeholder="Enter height" ref={'pluginInput-' + title} selectedValue={value}/>);
+	}
+};
+
 export const propAttribution = {
 	title: 'attribution',
 	default: '',

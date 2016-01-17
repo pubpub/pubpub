@@ -5,6 +5,7 @@ import ImagePlugin 	from './ImagePlugin';
 import CitePlugin 	from './CitePlugin';
 import VideoPlugin 	from './VideoPlugin';
 import QuotePlugin 	from './QuotePlugin';
+import IframePlugin 	from './IframePlugin';
 import SelectionPlugin 	from './SelectionPlugin';
 
 import {parsePluginString} from '../../utils/parsePlugins';
@@ -128,6 +129,27 @@ export default {
 			return renderer(refName, propDict);
 		}
 	},
+	iframe: {
+		component: IframePlugin,
+		inline: true,
+		autocomplete: true,
+		rule: /^(?:\s)*(?:\{\{)iframe:([^\n\}]*)(?:\}\})/,
+		inlineFunc: function(cap, renderer, data) {
+			const references = data.references;
+			const propDict = parsePluginString(cap[1]);
+			const refName = propDict.srcRef || propDict.reference || 'none';
+			const ref = references[refName];
+
+			if (Object.keys(propDict).length === 0) {
+				propDict.error = 'empty';
+			} else if (ref) {
+				propDict.reference = ref;
+			} else {
+				propDict.error = 'type';
+			}
+			return renderer(refName, propDict);
+		}
+	},
 	cite: {
 		component: CitePlugin,
 		inline: true,
@@ -157,10 +179,12 @@ import {imageOptions} from './ImagePlugin';
 import {videoOptions} from './VideoPlugin';
 import {citeOptions} from './CitePlugin';
 import {quoteOptions} from './QuotePlugin';
+import {iframeOptions} from './IframePlugin';
 
 export const pluginOptions = {
 	image: imageOptions,
 	cite: citeOptions,
 	video: videoOptions,
 	quote: quoteOptions,
+	iframe: iframeOptions
 };
