@@ -121,6 +121,9 @@ export const scienceStyle = {
 	'h5, h6': {
 		color: '#666',
 	},
+	'a': {
+		color: 'inherit',
+	},
 };
 
 
