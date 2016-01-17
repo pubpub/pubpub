@@ -82,7 +82,7 @@ const Reference = React.createClass({
 		switch (this.props.mode) {
 		case 'mla':
 			return (<span>
-				{citationStrings.author.replace(/../g, '.')}
+				{citationStrings.author.replace(/\.\./g, '.')}
 				{citationStrings.title}
 				<span style={styles.italic}>{citationStrings.journal}</span>
 				{citationStrings.volume}
@@ -97,7 +97,7 @@ const Reference = React.createClass({
 
 		case 'chicago':
 			return (<span>
-				{citationStrings.author.replace(/../g, '.')}
+				{citationStrings.author.replace(/\.\./g, '.')}
 				{citationStrings.title}
 				<span style={styles.italic}>{citationStrings.journal}</span>
 				{citationStrings.volume}
@@ -112,7 +112,7 @@ const Reference = React.createClass({
 
 		case 'apa':
 			return (<span>
-				{citationStrings.author.replace(/../g, '.')}
+				{citationStrings.author.replace(/\.\./g, '.')}
 				{citationStrings.year}
 				{citationStrings.title}
 				<span style={styles.italic}>{citationStrings.journal}</span>
