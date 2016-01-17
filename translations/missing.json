@@ -6,7 +6,7 @@
     "global.pubs": "Same as English: Pubs",
     "global.url": "Same as English: url",
     "global.markdown": "Same as English: markdown",
-    "discussionPlaceholder": "Missing. English is: Add discussion..."
+    "discussionPlaceholder": "Missing. English is: Add discussion or feedback"
   },
   "ee": {
     "editor.publishMessage5": "Missing. English is: By publishing, you agree to a Creative Commons By license for your work.",
@@ -37,6 +37,6 @@
     "editorCommentsText0": "Missing. English is: You are commenting on a draft version of this Pub.",
     "editorCommentsText1": "Missing. English is: This section can only be used by collaborators and is private. It is never published or made public.",
     "EditorComments": "Missing. English is: Editor Comments",
-    "discussionPlaceholder": "Missing. English is: Add discussion..."
+    "discussionPlaceholder": "Missing. English is: Add discussion or feedback"
   }
 }

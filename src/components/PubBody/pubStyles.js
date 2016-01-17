@@ -76,7 +76,7 @@ export const scienceStyle = {
 	},
 	'ul, ol': {
 		fontFamily: 'Lora',
-		padding: '0px 1.5em 0px 4em',
+		padding: '0px 3em 0px 3em',
 		color: '#565656',
 	},
 	'span + li + span + li': {

@@ -388,7 +388,7 @@ export const globalMessages = defineMessages({
 	},
 	discussionPlaceholder: {
 		id: 'discussionPlaceholder',
-		defaultMessage: 'Add discussion and feedback'
+		defaultMessage: 'Add discussion or feedback'
 	},
 	
 	
