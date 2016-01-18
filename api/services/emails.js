@@ -4,6 +4,7 @@ const sendgrid  = require('sendgrid')(sendgridKey);
 const fromname = 'PubPub';
 const from = 'pubpub@media.mit.edu';
 
+
 export function registrationEmail(email, callback) {
 	var emailObject = new sendgrid.Email();
 	emailObject.addTo(email);
@@ -35,6 +36,26 @@ export function sendResetEmail(email, hash, username, callback) {
 
 	sendgrid.send(emailObject, callback);
 };
+
+
+export function sendInviteEmail({journalName, pubName, senderName, recieverEmail, recieverName, callback}) {
+	var emailObject = new sendgrid.Email();
+	emailObject.addTo(recieverEmail);
+	emailObject.subject = "Invitation to Review at " + journalName;
+	emailObject.from = from;
+	emailObject.fromname = fromname;
+	emailObject.addSubstitution('%recipient%', [recieverName]);
+	emailObject.addSubstitution('%sender%', [senderName]);
+	emailObject.addSubstitution('%journal%', [journalName]);
+	emailObject.addSubstitution('%pub%', [pubName]);
+
+	emailObject.addFilter('templates', 'enable', 1);
+	emailObject.addFilter('templates', 'template_id', 'f3fb33cb-a630-4be0-9abd-5496ee05903d');
+
+	sendgrid.send(emailObject, callback);
+};
+
+
 
 // var email     = new sendgrid.Email({
 // 	to:       req.body.email,

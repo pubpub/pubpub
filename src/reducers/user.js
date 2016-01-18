@@ -5,21 +5,25 @@ import {ensureImmutable} from './';
 // Load Actions
 /*--------*/
 import {
-	LOAD_PROFILE, 
-	LOAD_PROFILE_SUCCESS, 
+	LOAD_PROFILE,
+	LOAD_PROFILE_SUCCESS,
 	LOAD_PROFILE_FAIL,
 
-	UPDATE_USER, 
-	UPDATE_USER_SUCCESS, 
+	UPDATE_USER,
+	UPDATE_USER_SUCCESS,
 	UPDATE_USER_FAIL,
 
 	USER_NAV_OUT,
 	USER_NAV_IN,
 
+	INVITE_USER,
+	INVITE_USER_SUCCESS,
+	INVITE_USER_FAIL,
+
 } from '../actions/user';
 
 /*--------*/
-// Initialize Default State 
+// Initialize Default State
 /*--------*/
 export const defaultState = Immutable.Map({
 	profileData: {
@@ -32,10 +36,10 @@ export const defaultState = Immutable.Map({
 });
 
 /*--------*/
-// Define reducing functions 
+// Define reducing functions
 //
 // These functions take in an initial state and return a new
-// state. They are pure functions. We use Immutable to enforce this. 
+// state. They are pure functions. We use Immutable to enforce this.
 /*--------*/
 
 function load(state) {
@@ -54,7 +58,7 @@ function loadSuccess(state, result) {
 		profileData: result,
 		error: null
 	};
-	
+
 	if (result === 'User Not Found') {
 		outputState.profileData = { ...defaultState.get('profileData'),
 			name: 'User Not Found',
@@ -109,6 +113,19 @@ function userNavIn(state) {
 	});
 }
 
+
+function inviteUser(state, type, err) {
+	let result;
+	switch (type) {
+	case INVITE_USER: result = 'loading'; break;
+	case INVITE_USER_SUCCESS: result = 'success'; break;
+	case INVITE_USER_FAIL: result = 'error'; break;
+	default: result = 'init';
+	}
+	return state.set('inviteStatus', result);
+}
+
+
 /*--------*/
 // Bind actions to specific reducing functions.
 /*--------*/
@@ -133,6 +150,11 @@ export default function profileReducer(state = defaultState, action) {
 		return userNavOut(state);
 	case USER_NAV_IN:
 		return userNavIn(state);
+
+	case INVITE_USER:
+	case INVITE_USER_SUCCESS:
+	case INVITE_USER_FAIL:
+		return inviteUser(state, action.type, action.error);
 
 	default:
 		return ensureImmutable(state);
