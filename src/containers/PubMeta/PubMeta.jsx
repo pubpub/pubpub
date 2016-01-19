@@ -228,7 +228,6 @@ const PubMeta = React.createClass({
 });
 
 export default connect( state => {
-	debugger;
 	return {
 		readerData: state.pub,
 		loginData: state.login,

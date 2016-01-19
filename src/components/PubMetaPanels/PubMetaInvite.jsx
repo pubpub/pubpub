@@ -10,7 +10,7 @@ let styles = {};
 const PubMetaInvite = React.createClass({
 	propTypes: {
 		handleSubmitInvites: PropTypes.func,
-		inviteStatus: PropTypes.obj
+		inviteStatus: PropTypes.string
 	},
 
 	getInitialState: function() {

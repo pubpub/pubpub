@@ -138,20 +138,35 @@ app.post('/unfollow', function(req, res) {
 
 app.post('/inviteReviewers', function(req, res) {
 	const inviteData = req.body.inviteData;
+	const pubId = req.body.pubID;
+	Pub.getSimplePub(pubId, function(err, pub) {
 
-	Journal.findByHost(req.query.host, function(err, journ) {
+		if (err) {res.status(500); }
+		const pubName = pub.title;
 
-		const senderName = req.user.firstName;
-		const journalName = (journ) ? journ.journalName : 'PubPub';
+		Journal.findByHost(req.query.host, function(err, journ) {
 
-		for (let recipient of inviteData) {
-			if (!recipient.twitter) {
-				sendInviteEmail({journalName, senderName, recipientEmail: recipient.email, recipientName: recipient.name});
-			} else {
-				/*tweet at pmarca!*/
+			console.log(req.user);
+			const senderName = req.user.name;
+			const journalName = (journ) ? journ.journalName : 'PubPub';
+
+
+			for (let recipient of inviteData) {
+				if (!recipient.twitter) {
+					const emailCallback = function(error, email) {
+						console.log(error);
+						console.log(email);
+					};
+					sendInviteEmail({journalName, pubName, senderName, recipientEmail: recipient.email, recipientName: recipient.name, callback: emailCallback});
+				} else {
+					/*Send Tweets*/
+				}
 			}
-		}
 
-		res.status(201).json({});
+			res.status(201).json({});
+		});
+
 	});
+
+
 });

@@ -64,7 +64,6 @@ journalSchema.statics.findByHost = function(host,callback) {
 		{ $or:[ {'subdomain':host.split('.')[0]},
 		{'customDomain':host}]})
 	.exec(function(err, journal) {
-		console.log(journal);
 		return callback(err,journal);
 	});
 }
