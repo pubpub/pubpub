@@ -15,29 +15,29 @@ if(process.env.NODE_ENV !== 'production'){
 
 var journalSchema = new Schema({
 
-	journalName: { type: String}, 
+	journalName: { type: String},
 	subdomain: { type: String, required: true, index: true,  unique: true  },
 	customDomain: { type: String, index: true,  unique: true, sparse: true  },
-	journalLogoURL: { type: String}, 
-	journalLogoThumbnailURL: { type: String}, 
+	journalLogoURL: { type: String},
+	journalLogoThumbnailURL: { type: String},
 
-	defaultLanguage: { type: String}, 
+	defaultLanguage: { type: String},
 	createDate: {type: Date},
-	
+
 	admins: [{ type: ObjectId, ref: 'User' }],
 
 	pubsFeatured: [{ type: ObjectId, ref: 'Pub' }],
 	pubsSubmitted: [{ type: ObjectId, ref: 'Pub' }],
-	
+
 	design: { type: Schema.Types.Mixed },
 	settings: { type: Schema.Types.Mixed },
 
 	collections: [{
 		description: { type: String},
 		slug: {type: String},
-		title: { type: String}, 
+		title: { type: String},
 		pubs: [{ type: ObjectId, ref: 'Pub' }],
-		headerImage: { type: String}, 
+		headerImage: { type: String},
 	}],
 
 	followers: [{ type: ObjectId, ref: 'User' }],
@@ -58,6 +58,15 @@ journalSchema.statics.isUnique = function (subdomain,callback) {
 			}
 		});
 };
+
+journalSchema.statics.findByHost = function(host,callback) {
+	this.findOne(
+		{ $or:[ {'subdomain':host.split('.')[0]},
+		{'customDomain':host}]})
+	.exec(function(err, journal) {
+		return callback(err,journal);
+	});
+}
 
 journalSchema.statics.updateHerokuDomains = function (oldDomain, newDomain) {
 	heroku.delete('/apps/pubpub/domains/' + oldDomain, function (err, app) {
