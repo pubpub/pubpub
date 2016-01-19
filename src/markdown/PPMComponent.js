@@ -37,7 +37,7 @@ const PPMComponent = React.createClass({
 
 	render: function() {
 		return (
-			<MDReactComponent text={text}
+			<MDReactComponent text={this.props.markdown}
 				onIterate={handleIterate}
 				markdownOptions={{ 
 					typographer: true,
