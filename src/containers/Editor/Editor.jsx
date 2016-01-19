@@ -201,7 +201,7 @@ const Editor = React.createClass({
 	},
 
 	onEditorChange: function(cm, change) {
-		console.log(change);
+		// console.log(change);
 		// const start = performance.now();
 		CodeMirror.commands.autocomplete(cm, CodeMirror.hint.plugins, {completeSingle: false});
 
@@ -245,7 +245,7 @@ const Editor = React.createClass({
 			const mdOutput = marked(markdown, {assets, references, selections});
 			// compiledMarkdown = performance.now();
 			this.setState({
-				text: markdown,
+				markdown: markdown,
 				tree: mdOutput.tree,
 				travisTOC: mdOutput.travisTOC,
 				travisTOCFull: mdOutput.travisTOCFull,

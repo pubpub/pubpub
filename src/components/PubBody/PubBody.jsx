@@ -25,7 +25,7 @@ const PubBody = React.createClass({
 		abstract: PropTypes.string,
 		authorsNote: PropTypes.string,
 		htmlTree: PropTypes.array,
-		text: PropTypes.string,
+		markdown: PropTypes.string,
 		authors: PropTypes.array,
 		addSelectionHandler: PropTypes.func,
 		style: PropTypes.object,
