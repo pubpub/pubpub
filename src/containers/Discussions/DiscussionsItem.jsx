@@ -7,7 +7,7 @@ import DiscussionsInput from './DiscussionsInput';
 import DiscussionsScore from './DiscussionsScore';
 import smoothScroll from '../../utils/smoothscroll';
 
-import marked from '../../modules/markdown/markdown';
+import marked from '../../markdown/markdown';
 import markdownExtensions from '../../components/EditorPlugins';
 marked.setExtensions(markdownExtensions);
 

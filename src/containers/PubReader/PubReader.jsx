@@ -20,7 +20,7 @@ import {rightBarStyles} from './rightBarStyles';
 import {globalMessages} from '../../utils/globalMessages';
 import {FormattedMessage} from 'react-intl';
 
-import marked from '../../modules/markdown/markdown';
+import marked from '../../markdown/markdown';
 import markdownExtensions from '../../components/EditorPlugins';
 marked.setExtensions(markdownExtensions);
 

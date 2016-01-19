@@ -14,6 +14,8 @@ import {License} from '../';
 import {globalMessages} from '../../utils/globalMessages';
 import {FormattedMessage} from 'react-intl';
 
+import PPMComponent from '../../markdown/PPMComponent';
+
 let styles = {};
 
 const PubBody = React.createClass({
@@ -23,6 +25,7 @@ const PubBody = React.createClass({
 		abstract: PropTypes.string,
 		authorsNote: PropTypes.string,
 		htmlTree: PropTypes.array,
+		text: PropTypes.string,
 		authors: PropTypes.array,
 		addSelectionHandler: PropTypes.func,
 		style: PropTypes.object,
@@ -39,6 +42,7 @@ const PubBody = React.createClass({
 		return {
 			htmlTree: [],
 			authors: [],
+			text: '',
 			style: {
 				type: 'science',
 				googleFontURL: undefined,
@@ -170,7 +174,8 @@ const PubBody = React.createClass({
 
 					<div id="pubBodyContent">
 						{/* For Highlights to work, no divs can be placed before htmlTree */}
-						{this.props.htmlTree}
+						{/* this.props.htmlTree */}
+						<PPMComponent markdown={this.props.markdown} />
 
 						{this.props.addSelectionHandler
 							? <PubSelectionPopup addSelectionHandler={this.props.addSelectionHandler}/>
