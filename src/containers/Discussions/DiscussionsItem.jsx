@@ -112,6 +112,7 @@ const DiscussionsItem = React.createClass({
 		const references = discussionItem.references || [];
 		const selections = discussionItem.selections || [];
 		const md = marked(discussionItem.markdown || '', {assets, references, selections});
+
 		return (
 			<div style={styles.container}>
 				
@@ -162,7 +163,8 @@ const DiscussionsItem = React.createClass({
 					</div>
 
 					<div style={styles.discussionContent}>
-						{md.tree}
+						{/* {md.tree} */}
+						{discussionItem.markdown}
 					</div>
 				</div>
 				
