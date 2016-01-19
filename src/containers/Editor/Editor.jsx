@@ -27,7 +27,7 @@ import {editorDefaultText} from './editorDefaultText';
 import SHA1 from 'crypto-js/sha1';
 import encHex from 'crypto-js/enc-hex';
 
-import marked from '../../modules/markdown/markdown';
+import marked from '../../markdown/markdown';
 import markdownExtensions from '../../components/EditorPlugins';
 import FirepadUserList from './editorFirepadUserlist';
 
@@ -72,6 +72,7 @@ const Editor = React.createClass({
 		return {
 			initialized: false,
 			tree: [],
+			markdown: '',
 			travisTOC: [],
 			travisTOCFull: [],
 			activeFocus: '',
@@ -200,7 +201,7 @@ const Editor = React.createClass({
 	},
 
 	onEditorChange: function(cm, change) {
-
+		console.log(change);
 		// const start = performance.now();
 		CodeMirror.commands.autocomplete(cm, CodeMirror.hint.plugins, {completeSingle: false});
 
@@ -244,6 +245,7 @@ const Editor = React.createClass({
 			const mdOutput = marked(markdown, {assets, references, selections});
 			// compiledMarkdown = performance.now();
 			this.setState({
+				text: markdown,
 				tree: mdOutput.tree,
 				travisTOC: mdOutput.travisTOC,
 				travisTOCFull: mdOutput.travisTOCFull,
@@ -548,6 +550,7 @@ const Editor = React.createClass({
 				authorsNote={this.state.authorsNote}
 				minFont={15}
 				htmlTree={this.state.tree}
+				markdown={this.state.markdown}
 				authors={this.getAuthorsArray()}
 				// addSelectionHandler={this.addSelection}
 				style={this.state.firepadData && this.state.firepadData.settings ? this.state.firepadData.settings.pubStyle : undefined}
