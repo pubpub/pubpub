@@ -38,7 +38,7 @@ export function sendResetEmail(email, hash, username, callback) {
 };
 
 
-export function sendInviteEmail({journalName, pubName, senderName, recipientEmail, recipientName, callback}) {
+export function sendInviteEmail({journalName, pubName, journalURL, senderName, recipientEmail, recipientName, callback}) {
 	var emailObject = new sendgrid.Email();
 	emailObject.addTo(recipientEmail);
 	emailObject.subject = "Invitation to Review at " + journalName;
