@@ -145,11 +145,8 @@ app.post('/inviteReviewers', function(req, res) {
 		const pubName = pub.title;
 
 		Journal.findByHost(req.query.host, function(err, journ) {
-
-			console.log(req.user);
 			const senderName = req.user.name;
 			const journalName = (journ) ? journ.journalName : 'PubPub';
-
 
 			for (let recipient of inviteData) {
 				if (!recipient.twitter) {
