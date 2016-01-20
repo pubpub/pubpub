@@ -57,9 +57,17 @@ export default {
 		inline: true,
 		autocomplete: false,
 		inlineFunc: function(cap, renderer, data) {
-			const selectionIndex = parseInt(cap[1].replace(':', ''), 10) - 1;
-			const selectionItem = data.selections[selectionIndex];
-			return renderer(selectionItem._id, {selectionItem});
+			try {
+				const selectionIndex = parseInt(cap[1].replace(':', ''), 10) - 1;
+				const selectionItem = data.selections[selectionIndex];
+				if (!selectionItem) {
+					return renderer(cap[1], {selectionItem: 'empty'});
+				}
+				return renderer(selectionItem._id, {selectionItem});
+			} catch (err) {
+				console.log('Error parsing selection: ' + err);
+			}
+			return renderer(cap[1], {selectionItem: 'empty'});
 		}
 	},
 	image: {

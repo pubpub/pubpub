@@ -18,19 +18,24 @@ const PagebreakPlugin = React.createClass({
 	hoverOn: function() {
 		const items = document.getElementsByClassName('selection-' + this.props.selectionItem._id);
 		for (let index = 0; index < items.length; index++) {
-			items[index].className = items[index].className.replace('selection ', 'selection selection-active ');	
+			items[index].className = items[index].className.replace('selection ', 'selection selection-active ');
 		}
-		
+
 	},
 	hoverOff: function() {
 		const items = document.getElementsByClassName('selection-' + this.props.selectionItem._id);
 		for (let index = 0; index < items.length; index++) {
-			items[index].className = items[index].className.replace('selection selection-active ', 'selection ');	
+			items[index].className = items[index].className.replace('selection selection-active ', 'selection ');
 		}
 	},
 
 	render: function() {
 		// console.log('this.props', this.props);
+
+		if (this.props.selectionItem === 'empty') {
+			return <span></span>;
+		}
+
 		const styleObject = {
 			borderRadius: '3px',
 			padding: '0px 8px',
@@ -40,10 +45,10 @@ const PagebreakPlugin = React.createClass({
 
 		};
 		return (
-			<span 
+			<span
 				id={'selection-block-' + this.props.selectionItem._id}
-				className={'selection-block'} 
-				style={styleObject} 
+				className={'selection-block'}
+				style={styleObject}
 				onClick={this.scrollToHighlight}
 				onMouseEnter={this.hoverOn}
 				onMouseLeave={this.hoverOff}>
