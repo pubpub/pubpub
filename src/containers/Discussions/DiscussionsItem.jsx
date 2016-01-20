@@ -55,9 +55,9 @@ const DiscussionsItem = React.createClass({
 		// Go through all the selections and add them to the body
 		const Marklib = require('marklib');
 		this.props.discussionItem.selections.map((selection)=>{
-			console.log('selection', selection);
+			// console.log('selection', selection);
 			const pIndex = this.props.pHashes[selection.ancestorHash];
-			console.log('pIndex', pIndex);
+			// console.log('pIndex', pIndex);
 			if (pIndex) {
 				try {
 					const result = {

@@ -37,8 +37,6 @@ const PubSelectionPopup = React.createClass({
 		Rangy = require('rangy');
 		require('rangy/lib/rangy-textrange.js');
 		document.getElementById('pubBodyContent').addEventListener('mouseup', this.onMouseUp);
-		window.SHA1 = SHA1;
-		window.encHex = encHex;
 	},
 	
 	componentWillUnmount() {
