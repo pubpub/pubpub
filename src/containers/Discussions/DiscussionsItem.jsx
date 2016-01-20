@@ -55,7 +55,9 @@ const DiscussionsItem = React.createClass({
 		// Go through all the selections and add them to the body
 		const Marklib = require('marklib');
 		this.props.discussionItem.selections.map((selection)=>{
+			console.log('selection', selection);
 			const pIndex = this.props.pHashes[selection.ancestorHash];
+			console.log('pIndex', pIndex);
 			if (pIndex) {
 				try {
 					const result = {
@@ -163,8 +165,8 @@ const DiscussionsItem = React.createClass({
 					</div>
 
 					<div style={styles.discussionContent}>
-						{/* {md.tree} */}
-						{discussionItem.markdown}
+						{md.tree}
+						{/* discussionItem.markdown */}
 					</div>
 				</div>
 				

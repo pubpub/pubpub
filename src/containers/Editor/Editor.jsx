@@ -319,16 +319,18 @@ const Editor = React.createClass({
 		}
 
 		// pHashes are generated and collected to perform discussion highlight synchronization
-		const pTags = document.getElementById('pubBodyContent').querySelectorAll('.p-block');
-		// console.log(pTags);
+		const pTags = document.querySelectorAll('.mainRenderBody .p-block');
+		console.log(pTags);
 		const pHashes = {};
 		for ( const key in pTags ) {
 			if (pTags.hasOwnProperty(key)) {
 				// pHashes[parseInt(key, 10) + 1] = SHA1(pTags[key].innerText).toString(encHex);
 				pHashes[SHA1(pTags[key].innerText).toString(encHex)] = parseInt(key, 10) + 1;
+				console.log(pTags[key].innerText);
 			}
 		}
-		// console.log(pHashes);
+
+		console.log(pHashes);
 
 		const newVersion = {
 			slug: this.props.slug,
@@ -776,7 +778,9 @@ const Editor = React.createClass({
 										{this.renderNav(false)}
 										
 										<div className="editorBodyView" style={[styles.previewBlockWrapper, this.state.previewPaneMode === 'preview' && styles.previewBlockWrapperShow]}>
-											{this.renderBody()}
+											<div className={'mainRenderBody'}>
+												{this.renderBody()}
+											</div>
 										</div>
 
 										<div style={[styles.previewBlockWrapper, this.state.previewPaneMode === 'comments' && styles.previewBlockWrapperShow]}>

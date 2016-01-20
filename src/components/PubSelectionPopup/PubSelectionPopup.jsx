@@ -10,6 +10,9 @@ import encHex from 'crypto-js/enc-hex';
 let Marklib = undefined;
 let Rangy = undefined;
 
+
+
+
 let styles = {};
 
 const PubSelectionPopup = React.createClass({
@@ -34,6 +37,8 @@ const PubSelectionPopup = React.createClass({
 		Rangy = require('rangy');
 		require('rangy/lib/rangy-textrange.js');
 		document.getElementById('pubBodyContent').addEventListener('mouseup', this.onMouseUp);
+		window.SHA1 = SHA1;
+		window.encHex = encHex;
 	},
 	
 	componentWillUnmount() {
@@ -97,6 +102,7 @@ const PubSelectionPopup = React.createClass({
 	onHighlightSave: function() {
 		const renderer = new Marklib.Rendering(document, {className: 'tempHighlight'}, document.getElementById('pubBodyContent'));
 		const result = renderer.renderWithRange(this.state.range);
+
 		const highlightObject = {
 			text: this.state.selectionText,
 			context: this.state.ancestorText,
