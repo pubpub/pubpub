@@ -144,6 +144,16 @@ pubSchema.statics.isUnique = function (slug,callback) {
 		});
 };
 
+pubSchema.statics.getSimplePub = function (id,callback) {
+	this.findById(id)
+	.exec((err, pub)=> {
+		callback(err,pub);
+	});
+
+
+};
+
+
 pubSchema.statics.getPub = function (slug, readerID, journalID, callback) {
 	this.findOne({slug: slug})
 	.populate({ path: 'discussions', model: 'Discussion' })
@@ -175,7 +185,7 @@ pubSchema.statics.getPub = function (slug, readerID, journalID, callback) {
 					return callback(null, {message: 'Private Pub', slug: slug});
 				}
 			}
-			
+
 			const outputPub = populatedPub.toObject();
 			if (populatedPub.collaborators.canEdit.indexOf(readerID) > -1) {
 				outputPub.isAuthor = true;
@@ -252,13 +262,13 @@ pubSchema.statics.generateDiffObject = function(oldPubObject, newPubObject) {
 	outputObject.diffAbstract = jsdiff.diffWords(oldPubObject.abstract, newPubObject.abstract, {newlineIsToken: true});
 	outputObject.diffAuthorsNote = jsdiff.diffWords(oldPubObject.authorsNote, newPubObject.authorsNote, {newlineIsToken: true});
 	if (newPubObject.slug === 'cdmxglobal') {
-		outputObject.diffMarkdown = jsdiff.diffSentences(oldPubObject.markdown, newPubObject.markdown, {newlineIsToken: true});	
+		outputObject.diffMarkdown = jsdiff.diffSentences(oldPubObject.markdown, newPubObject.markdown, {newlineIsToken: true});
 	} else {
-		outputObject.diffMarkdown = jsdiff.diffWords(oldPubObject.markdown, newPubObject.markdown, {newlineIsToken: true});	
+		outputObject.diffMarkdown = jsdiff.diffWords(oldPubObject.markdown, newPubObject.markdown, {newlineIsToken: true});
 	}
-	
-	
-	
+
+
+
 	let additions = 0;
 	let deletions = 0;
 	for (const key in outputObject) {

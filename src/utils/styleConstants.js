@@ -20,10 +20,23 @@ export const globalStyles = {
 	loading: {
 		opacity: 0,
 		transition: '0s linear opacity .25s',
-	}, 
+	},
 	loaded: {
 		opacity: 1,
 		transition: '.3s linear opacity .25s',
+	},
+	button: {
+		color: '#666',
+		fontSize: '20px',
+		padding: '15px',
+		cursor: 'pointer',
+		':hover': {
+			color: '#000'
+		}
+	},
+	paragraph: {
+		lineHeight: '1.58',
+		padding: '20px 0px'
 	},
 	hiddenUntilLoad: {
 		// transition: '.3s linear opacity .25s',
