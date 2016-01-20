@@ -56,38 +56,41 @@ const DiscussionsItem = React.createClass({
 		const Marklib = require('marklib');
 		this.props.discussionItem.selections.map((selection)=>{
 			// console.log('selection', selection);
-			const pIndex = this.props.pHashes[selection.ancestorHash];
-			// console.log('pIndex', pIndex);
-			if (pIndex) {
-				try {
-					const result = {
-						startContainerPath: selection.startContainerPath.replace(/div:nth-of-type\([^\)]+\)/, 'div:nth-of-type(' + pIndex + ')'),
-						endContainerPath: selection.endContainerPath.replace(/div:nth-of-type\([^\)]+\)/, 'div:nth-of-type(' + pIndex + ')'),
-						startOffset: selection.startOffset,
-						endOffset: selection.endOffset,
-					};	
-					// console.log('reproduced result', result);
-					const renderer = new Marklib.Rendering(document, {className: 'selection selection-' + selection._id}, document.getElementById('pubBodyContent'));
-					renderer.renderWithResult(result);	
-					renderer.on('click', function(item) {
-						const destination = document.getElementById('selection-block-' + selection._id);
-						const context = document.getElementsByClassName('rightBar')[0];
-						smoothScroll(destination, 500, ()=>{}, context);
-					});
-					renderer.on('hover-enter', function(item) {
-						const destination = document.getElementById('selection-block-' + selection._id);
-						destination.className = destination.className.replace('selection-block', 'selection-block-active');
-					});
-					renderer.on('hover-leave', function(item) {
-						const destination = document.getElementById('selection-block-' + selection._id);
-						destination.className = destination.className.replace('selection-block-active', 'selection-block');
-					});
-				} catch (err) {
-					if (__DEVELOPMENT__) {
-						console.log('selection', err);	
+			setTimeout(()=>{
+				const pIndex = this.props.pHashes[selection.ancestorHash];
+				// console.log('pIndex', pIndex);
+				if (pIndex) {
+					try {
+						const result = {
+							startContainerPath: selection.startContainerPath.replace(/div:nth-of-type\([^\)]+\)/, 'div:nth-of-type(' + pIndex + ')'),
+							endContainerPath: selection.endContainerPath.replace(/div:nth-of-type\([^\)]+\)/, 'div:nth-of-type(' + pIndex + ')'),
+							startOffset: selection.startOffset,
+							endOffset: selection.endOffset,
+						};	
+						// console.log('reproduced result', result);
+						const renderer = new Marklib.Rendering(document, {className: 'selection selection-' + selection._id}, document.getElementById('pubBodyContent'));
+						renderer.renderWithResult(result);	
+						renderer.on('click', function(item) {
+							const destination = document.getElementById('selection-block-' + selection._id);
+							const context = document.getElementsByClassName('rightBar')[0];
+							smoothScroll(destination, 500, ()=>{}, context);
+						});
+						renderer.on('hover-enter', function(item) {
+							const destination = document.getElementById('selection-block-' + selection._id);
+							destination.className = destination.className.replace('selection-block', 'selection-block-active');
+						});
+						renderer.on('hover-leave', function(item) {
+							const destination = document.getElementById('selection-block-' + selection._id);
+							destination.className = destination.className.replace('selection-block-active', 'selection-block');
+						});
+					} catch (err) {
+						if (__DEVELOPMENT__) {
+							console.log('selection', err);	
+						}
 					}
 				}
-			}
+			}, 100);
+			
 
 			
 		});
