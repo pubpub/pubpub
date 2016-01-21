@@ -17,10 +17,6 @@ function attachPopup(Component, options, props) {
 
 }
 
-export getProp(propName, propOption) {
-  return {name: propName, option: propOption};
-}
-
 export default function(reactComponent, options, props) {
 	return {
 		options: options,

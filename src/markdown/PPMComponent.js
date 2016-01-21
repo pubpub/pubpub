@@ -10,6 +10,7 @@ import ppm from './markdown-it-ppm';
 
 import {parsePluginString} from '../utils/ParsePlugins';
 import {Image} from '../components/EditorPluginsNew/index';
+import {PluginProps} from '../components/EditorPluginPopup/pluginProps';
 
 
 const handleIterate = function(Tag, props, children) {
@@ -34,6 +35,20 @@ const handleIterate = function(Tag, props, children) {
     const Component = Image.Component;
     const ImageProps = parsePluginString(children[0]);
     console.log(ImageProps);
+
+    /*
+    Prop transform happens here:
+    for (const propName in props) {
+      if (Image.props[propName]) {
+        let propVal = props[propName];
+        if (PluginProps[propName].transform) {
+          props[propName] = PluginProps[propName].transform(propVal, Image.props[propName].option, this.assets, this.references);
+        }
+        propVal = props[propName];
+      }
+    }
+    */
+
     return <Component props={ImageProps}/>;
     break;
   case 'code':
