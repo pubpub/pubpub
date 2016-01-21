@@ -46,7 +46,7 @@ export const propSize = {
 	defaultString: '',
 	component: function(pluginProp, value, componentProps) {
 		const title = pluginProp.title;
-		const choices = ['small', 'medium', 'large','number'];
+		const choices = ['small', 'medium', 'large', 'number'];
 		return (<Radios ref={'pluginInput-' + title} selectedValue={value} choices={choices}/>);
 	}
 };
