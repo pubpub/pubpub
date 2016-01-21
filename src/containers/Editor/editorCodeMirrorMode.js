@@ -73,8 +73,6 @@ export default function() {
 		}
 	}
 
-	console.log(start);
-
 	CodeMirror.defineSimpleMode('plugin', {
 		start: start
 	});

@@ -7,11 +7,7 @@ import {propSrc, propSize, propAlign, propCaption, propSrcRef} from './pluginPro
 import createPubPubPlugin from './PubPub';
 
 const ImageProps = {
-	source: propSrc('image'),
-	size: propSize,
-	align: propAlign,
-	caption: propCaption,
-	reference: propSrcRef
+	source: {name: 'source', params: 'image'}
 };
 
 const ImageOptions = {
