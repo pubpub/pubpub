@@ -5,15 +5,23 @@ import abbr from 'markdown-it-abbr';
 import emoji from 'markdown-it-emoji';
 import sub from 'markdown-it-sub';
 import sup from 'markdown-it-sup';
+import container from 'markdown-it-container';
 import ppm from './markdown-it-ppm';
+
 
 import parsePluginString from '../utils/ParsePlugins';
 
 
 const handleIterate = function(Tag, props, children) {
+
   switch(Tag) {
   case 'table':
     props.className = 'table table-striped';
+    break;
+  case 'div':
+  	if (props['data-info']) {
+  		props.className = props.className ? props.className + props['data-info'] : props['data-info'];	
+  	}
     break;
   case 'ppm':
     props.className = 'ppm';
@@ -59,7 +67,8 @@ const PPMComponent = React.createClass({
 					emoji,
 					sub,
 					sup,
-          ppm
+					{plugin: container, args: ['blank', {validate: ()=>{return true;}}]},
+          			ppm
 				]} />
 		);
 	}
