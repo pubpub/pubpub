@@ -14,9 +14,14 @@ export function propSrc(assetType) {
 
 	return {
 		title: 'source',
-		default: '',
-		defaultValue: '',
-		defaultString: '',
+		transform: function(prop, assets, references) {
+			const asset = assets[prop];
+			if (asset && asset.assetType === assetType) {
+				return asset;
+			} else {
+				return 'error';
+			}
+		},
 		component: function(pluginProp, value, componentProps) {
 			const title = pluginProp.title;
 			const assets = (componentProps.assets) ? Object.values(componentProps.assets).filter(filterAssets).map( function(asset) { return {'value': asset.refName, 'label': asset.refName};}) : [];
@@ -29,9 +34,6 @@ export function propSrc(assetType) {
 
 export const propAlign = {
 	title: 'align',
-	default: '',
-	defaultValue: '',
-	defaultString: '',
 	component: function(pluginProp, value, componentProps) {
 		const title = pluginProp.title;
 		const choices = ['left', 'full', 'right'];
@@ -41,9 +43,6 @@ export const propAlign = {
 
 export const propSize = {
 	title: 'size',
-	default: '',
-	defaultValue: '',
-	defaultString: '',
 	component: function(pluginProp, value, componentProps) {
 		const title = pluginProp.title;
 		const choices = ['small', 'medium', 'large', 'number'];
@@ -54,9 +53,6 @@ export const propSize = {
 
 export const propCaption = {
 	title: 'caption',
-	default: '',
-	defaultValue: '',
-	defaultString: '',
 	component: function(pluginProp, value, componentProps) {
 		const title = pluginProp.title;
 		return (<TextInput placeholder="Enter Caption" ref={'pluginInput-' + title} selectedValue={value}/>);
@@ -65,9 +61,6 @@ export const propCaption = {
 
 export const propQuote = {
 	title: 'quote',
-	default: '',
-	defaultValue: '',
-	defaultString: '',
 	component: function(pluginProp, value, componentProps) {
 		const title = pluginProp.title;
 		return (<TextInput placeholder="Enter Quote" ref={'pluginInput-' + title} selectedValue={value}/>);
@@ -76,9 +69,6 @@ export const propQuote = {
 
 export const propUrl = {
 	title: 'url',
-	default: '',
-	defaultValue: '',
-	defaultString: '',
 	component: function(pluginProp, value, componentProps) {
 		const title = pluginProp.title;
 		return (<TextInput placeholder="Enter Url" ref={'pluginInput-' + title} selectedValue={value}/>);
@@ -87,9 +77,6 @@ export const propUrl = {
 
 export const propWidth = {
 	title: 'width',
-	default: '',
-	defaultValue: '',
-	defaultString: '',
 	component: function(pluginProp, value, componentProps) {
 		const title = pluginProp.title;
 		return (<TextInput placeholder="Enter width" ref={'pluginInput-' + title} selectedValue={value}/>);
@@ -98,9 +85,6 @@ export const propWidth = {
 
 export const propHeight = {
 	title: 'height',
-	default: '',
-	defaultValue: '',
-	defaultString: '',
 	component: function(pluginProp, value, componentProps) {
 		const title = pluginProp.title;
 		return (<TextInput placeholder="Enter height" ref={'pluginInput-' + title} selectedValue={value}/>);
@@ -109,9 +93,6 @@ export const propHeight = {
 
 export const propAttribution = {
 	title: 'attribution',
-	default: '',
-	defaultValue: '',
-	defaultString: '',
 	component: function(pluginProp, value, componentProps) {
 		const title = pluginProp.title;
 		return (<TextInput placeholder="Who said it?" ref={'pluginInput-' + title} selectedValue={value}/>);
@@ -121,9 +102,6 @@ export const propAttribution = {
 
 export const propSrcRef = {
 	title: 'reference',
-	default: '',
-	defaultValue: '',
-	defaultString: '',
 	component: function(pluginProp, value, componentProps) {
 		const title = pluginProp.title;
 		const refs = (componentProps.references) ? Object.values(componentProps.references).map( function(ref) { return {'value': ref.refName, 'label': ref.refName};}) : [];
