@@ -1,9 +1,6 @@
 import React, {PropTypes} from 'react';
 import ImageLoader from 'react-imageloader';
 import Media from './baseMediaPlugin';
-import {propSrc, propSize, propAlign, propCaption, propSrcRef} from './pluginProps';
-
-
 import createPubPubPlugin from './PubPub';
 
 const ImageProps = {
@@ -41,7 +38,7 @@ const ImagePlugin = React.createClass({
 	},
 	render: function() {
 
-		return (<span>THIS IS AN IAMGE {this.props.source}</span>);
+		return (<span>THIS IS AN IMAGE {this.props.source}</span>);
 
 		const refName = this.props.children;
 		const url = this.props.url;
