@@ -8,8 +8,8 @@ import sup from 'markdown-it-sup';
 import container from 'markdown-it-container';
 import ppm from './markdown-it-ppm';
 
-
-import parsePluginString from '../utils/ParsePlugins';
+import {parsePluginString} from '../utils/ParsePlugins';
+import {Image} from '../components/EditorPluginsNew/index';
 
 
 const handleIterate = function(Tag, props, children) {
@@ -20,7 +20,7 @@ const handleIterate = function(Tag, props, children) {
     break;
   case 'div':
   	if (props['data-info']) {
-  		props.className = props.className ? props.className + props['data-info'] : props['data-info'];	
+  		props.className = props.className ? props.className + props['data-info'] : props['data-info'];
   	}
     break;
   case 'ppm':
@@ -28,7 +28,13 @@ const handleIterate = function(Tag, props, children) {
     console.log('Got a ppm!!!');
     console.log(children);
     console.log(props);
-
+    if (children.length > 1) {
+      console.log('Wierd!!');
+    }
+    const Component = Image.Component;
+    const ImageProps = parsePluginString(children[0]);
+    console.log(ImageProps);
+    return <Component props={ImageProps}/>;
     break;
   case 'code':
     if (props['data-language']) {
