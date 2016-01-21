@@ -69,6 +69,7 @@
   "pub.deletions": "deletions",
   "pub.viewChanges": "View Changes",
   "pub.readAtThisPoint": "Read pub at this point",
+  "pubMeta.inviteMessage": "Do you know someone who might have a have an interesting opinion on this paper? Invite them to join the discussion! We will send them a message and help them create accounts.",
   "pub.searchJournals": "Search Journals to Submit to",
   "pub.journalSubmissions": "Journal Submissions",
   "pub.noSubmissions": "Not submitted to any Journals",
