@@ -5,11 +5,22 @@ import abbr from 'markdown-it-abbr';
 import emoji from 'markdown-it-emoji';
 import sub from 'markdown-it-sub';
 import sup from 'markdown-it-sup';
+import ppm from './markdown-it-ppm';
+
+import parsePluginString from '../utils/ParsePlugins';
+
 
 const handleIterate = function(Tag, props, children) {
   switch(Tag) {
   case 'table':
     props.className = 'table table-striped';
+    break;
+  case 'ppm':
+    props.className = 'ppm';
+    console.log('Got a ppm!!!');
+    console.log(children);
+    console.log(props);
+
     break;
   case 'code':
     if (props['data-language']) {
@@ -39,7 +50,7 @@ const PPMComponent = React.createClass({
 		return (
 			<MDReactComponent text={this.props.markdown}
 				onIterate={handleIterate}
-				markdownOptions={{ 
+				markdownOptions={{
 					typographer: true,
 					linkify: true,
 				}}
@@ -48,6 +59,7 @@ const PPMComponent = React.createClass({
 					emoji,
 					sub,
 					sup,
+          ppm
 				]} />
 		);
 	}
