@@ -8,36 +8,11 @@ import sup from 'markdown-it-sup';
 import container from 'markdown-it-container';
 import ppm from './markdown-it-ppm';
 
+import {parsePluginString} from '../utils/ParsePlugins';
+import {Image} from '../components/EditorPluginsNew/index';
+import {PluginProps} from '../components/EditorPluginPopup/pluginProps';
 
-import parsePluginString from '../utils/ParsePlugins';
 
-
-const handleIterate = function(Tag, props, children) {
-
-  switch(Tag) {
-  case 'table':
-    props.className = 'table table-striped';
-    break;
-  case 'div':
-  	if (props['data-info']) {
-  		props.className = props.className ? props.className + props['data-info'] : props['data-info'];	
-  	}
-    break;
-  case 'ppm':
-    props.className = 'ppm';
-    console.log('Got a ppm!!!');
-    console.log(children);
-    console.log(props);
-
-    break;
-  case 'code':
-    if (props['data-language']) {
-      return <Tag {...props} dangerouslySetInnerHTML={{__html: window.hljs.highlight(props['data-language'], children[0]).value}} />
-    };
-    break;
-  }
-  return <Tag {...props}>{children}</Tag>;
-}
 
 const PPMComponent = React.createClass({
 	propTypes: {
@@ -53,6 +28,52 @@ const PPMComponent = React.createClass({
 			references: [],
 		};
 	},
+
+  handleIterate: function(Tag, props, children) {
+
+    switch(Tag) {
+    case 'table':
+      props.className = 'table table-striped';
+      break;
+    case 'div':
+    	if (props['data-info']) {
+    		props.className = props.className ? props.className + props['data-info'] : props['data-info'];
+    	}
+      break;
+    case 'ppm':
+      props.className = 'ppm';
+      console.log('Got a ppm!!!');
+      console.log(children);
+      console.log(props);
+      if (children.length > 1) {
+        console.log('Wierd!!');
+      }
+      const Component = Image.Component;
+      const ImageProps = parsePluginString(children[0]);
+      console.log(ImageProps);
+
+      /*Prop transform happens here:*/
+
+      for (const propName in props) {
+        if (Image.props[propName]) {
+          let propVal = props[propName];
+          if (PluginProps[propName].transform) {
+            props[propName] = PluginProps[propName].transform(propVal, Image.props[propName].option, this.assets, this.references);
+          }
+          propVal = props[propName];
+        }
+      }
+
+      return <Component props={ImageProps}/>;
+      break;
+    case 'code':
+      if (props['data-language']) {
+        return <Tag {...props} dangerouslySetInnerHTML={{__html: window.hljs.highlight(props['data-language'], children[0]).value}} />
+      };
+      break;
+    }
+    return <Tag {...props}>{children}</Tag>;
+  },
 
 	render: function() {
 		return (
