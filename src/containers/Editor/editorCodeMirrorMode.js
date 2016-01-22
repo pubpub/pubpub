@@ -1,6 +1,6 @@
 /* global CodeMirror */
 
-import plugins from '../../components/EditorPlugins/index.js';
+import Plugins from '../../components/EditorPluginsNew/index.js';
 
 export default function() {
 
@@ -46,27 +46,38 @@ export default function() {
 		return result;
 	});
 
+	/*
+	for (const plugin in plugins) {
+		if (plugins.hasOwnProperty(plugin)) {
+			start.push({
+				regex: new RegExp('\\{\\{' + plugin + ':.*\\}\\}'),
+				token: 'ppm plugin plugin-' + plugin
+			});
+		}
+	}
+	*/
+
+	const start = [
+		{regex: /\[\[title:.*\]\]/, token: 'ppm ppm-title'},
+		{regex: /\[\[abstract:.*\]\]/, token: 'ppm ppm-abstract'},
+		{regex: /\[\[authorsNote:.*\]\]/, token: 'ppm ppm-authorsNote'}
+	];
+
+	for (const pluginKey in Plugins) {
+		if (Plugins.hasOwnProperty(pluginKey)) {
+			const plugin = Plugins[pluginKey];
+			console.log(plugin);
+			start.push({
+				regex: new RegExp('\\[\\[' + plugin.Config.title + ':.*\\]\\]'),
+				token: 'ppm plugin plugin-' + plugin.Config.title
+			});
+		}
+	}
+
+
+
 	CodeMirror.defineSimpleMode('plugin', {
-		start: [
-			{regex: /\{\{title:.*\}\}/, token: 'ppm ppm-title'},
-			{regex: /\{\{abstract:.*\}\}/, token: 'ppm ppm-abstract'},
-			{regex: /\{\{authorsNote:.*\}\}/, token: 'ppm ppm-authorsNote'},
-			{regex: /\{\{pagebreak\}\}/, token: 'ppm ppm-pagebreak'},
-			{regex: /\{\{linebreak\}\}/, token: 'ppm ppm-pagebreak'},
-			{regex: /\{\{selection:.*\}\}/, token: 'ppm ppm-pagebreak'},
-			// {regex: /\{\{asset.*\}\}/, token: 'plugin plugin-asset'},
-			{regex: /\{\{image:.*\}\}/, token: 'ppm plugin plugin-image'},
-			{regex: /\{\{video:.*\}\}/, token: 'ppm plugin plugin-video'},
-			{regex: /\{\{audio:.*\}\}/, token: 'ppm plugin plugin-audio'},
-			// {regex: /\{\{table:.*\}\}/, token: 'ppm plugin plugin-table'},
-			{regex: /\{\{cite:.*\}\}/, token: 'ppm plugin plugin-cite'},
-			{regex: /\{\{quote:.*\}\}/, token: 'ppm plugin plugin-quote'},
-			{regex: /\{\{iframe:.*\}\}/, token: 'ppm plugin plugin-audio'},
-		],
-		citationStart: [
-			// {regex: /.*/, token: 'plugin-content'},
-			{regex: /.*\}\}/, token: 'ppm ppm-cite', next: 'start'}
-		]
+		start: start
 	});
 
 	CodeMirror.defineSimpleMode('math', {
@@ -79,7 +90,7 @@ export default function() {
 		return CodeMirror.multiplexingMode(
 			CodeMirror.getMode(config, 'markdown'),
 			{
-				open: '{{', close: '}}',
+				open: '[[', close: ']]',
 				mode: CodeMirror.getMode(config, 'plugin'),
 				innerStyle: 'pubpub-markdown',
 				parseDelimiters: true

@@ -1,27 +1,26 @@
 import Radium from 'radium';
 import ErrorMsg from './ErrorPlugin';
+import React, {PropTypes} from 'react';
 
-function attachPopup(Component,options,props) {
+function attachWrapper(Component, options, props) {
+	const PluginWrapper = React.createClass({
+		render() {
+			try {
+				return (<Component {...this.props} {...this.state} />);
+			} catch (err) {
+				console.log(err);
+				return (<ErrorMsg>Error rendering {options.name} plugin</ErrorMsg>);
+			}
+		}
+	});
+	return PluginWrapper;
 
-  const PluginWrapper = React.createClass({
-    render() {
-      try {
-        return (<Component {...this.props} {...this.state} />);        
-      } catch (err) {
-        console.log(err);
-        return (<ErrorMsg>Error rendering {options.name} plugin</ErrorMsg>);
-      }
-    }
-  });
-  return PluginWrapper;
+}
 
-};
-
-export default createPubPubPlugin function(reactComponent,options,props) {
-
-  return {
-    options: options,
-    props: props,
-    component: attachPopup(Radium(reactComponent))
-  };
-};
+export default function(reactComponent, config, inputFields) {
+	return {
+		Config: config,
+		InputFields: inputFields,
+		Component: attachWrapper(Radium(reactComponent))
+	};
+}
