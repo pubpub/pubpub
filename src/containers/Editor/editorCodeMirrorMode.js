@@ -1,6 +1,6 @@
 /* global CodeMirror */
 
-import plugins from '../../components/EditorPluginsNew/index.js';
+import Plugins from '../../components/EditorPluginsNew/index.js';
 
 export default function() {
 
@@ -63,15 +63,18 @@ export default function() {
 		{regex: /\[\[authorsNote:.*\]\]/, token: 'ppm ppm-authorsNote'}
 	];
 
-	for (const pluginKey in plugins) {
-		if (plugins.hasOwnProperty(pluginKey)) {
-			const plugin = plugins[pluginKey];
+	for (const pluginKey in Plugins) {
+		if (Plugins.hasOwnProperty(pluginKey)) {
+			const plugin = Plugins[pluginKey];
+			console.log(plugin);
 			start.push({
-				regex: new RegExp('\\[\\[' + plugin.options.title + ':.*\\]\\]'),
-				token: 'ppm plugin plugin-' + plugin.options.title
+				regex: new RegExp('\\[\\[' + plugin.Config.title + ':.*\\]\\]'),
+				token: 'ppm plugin plugin-' + plugin.Config.title
 			});
 		}
 	}
+
+
 
 	CodeMirror.defineSimpleMode('plugin', {
 		start: start

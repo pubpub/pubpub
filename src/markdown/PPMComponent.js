@@ -9,8 +9,8 @@ import container from 'markdown-it-container';
 import ppm from './markdown-it-ppm';
 
 import {parsePluginString} from '../utils/ParsePlugins';
-import {Image} from '../components/EditorPluginsNew/index';
-import {PluginProps} from '../components/EditorPluginPopup/pluginProps';
+import {image} from '../components/EditorPluginsNew/index';
+import InputFields from '../components/EditorPluginPopup/pluginInputFields';
 
 
 
@@ -43,28 +43,32 @@ const PPMComponent = React.createClass({
     case 'ppm':
       props.className = 'ppm';
       console.log('Got a ppm!!!');
-      console.log(children);
-      console.log(props);
       if (children.length > 1) {
         console.log('Wierd!!');
       }
-      const Component = Image.Component;
+      const Component = image.Component;
+			const PluginInputFields = image.InputFields;
       const ImageProps = parsePluginString(children[0]);
-      console.log(ImageProps);
 
-      /*Prop transform happens here:*/
+      for (const propName in ImageProps) {
+				const propVal = ImageProps[propName];
+				const pluginInputField = PluginInputFields.find( field => field.title === propName)
+        if (pluginInputField) {
+					console.log('Transforming!!');
+          let inputVal = ImageProps[propName];
+					const InputFieldType = pluginInputField.type;
+					const Field = InputFields[InputFieldType];
+					// debugger;
 
-      for (const propName in props) {
-        if (Image.props[propName]) {
-          let propVal = props[propName];
-          if (PluginProps[propName].transform) {
-            props[propName] = PluginProps[propName].transform(propVal, Image.props[propName].option, this.assets, this.references);
-          }
-          propVal = props[propName];
+          if (InputFields[InputFieldType].transform) {
+						console.log(ImageProps[propName]);
+            ImageProps[propName] = InputFields[InputFieldType].transform(propVal, pluginInputField.params, this.props.assets, this.props.references);
+						console.log(ImageProps[propName]);
+					}
         }
       }
 
-      return <Component props={ImageProps}/>;
+      return <Component {...ImageProps}/>;
       break;
     case 'code':
       if (props['data-language']) {
@@ -78,7 +82,7 @@ const PPMComponent = React.createClass({
 	render: function() {
 		return (
 			<MDReactComponent text={this.props.markdown}
-				onIterate={handleIterate}
+				onIterate={this.handleIterate}
 				markdownOptions={{
 					typographer: true,
 					linkify: true,
