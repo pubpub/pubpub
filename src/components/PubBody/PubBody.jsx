@@ -132,7 +132,7 @@ const PubBody = React.createClass({
 				<Style rules={this.compileStyleRules()}/>
 
 				<div id="pubContent" style={[styles.contentContainer, globalStyles[this.props.status]]} >
-					
+
 					{!this.props.isFeatured && !this.props.errorView
 						? <div style={styles.submittedNotification}>This Pub has been submitted to - but is not yet featured in - this journal.</div>
 						: null
@@ -175,7 +175,7 @@ const PubBody = React.createClass({
 					<div id="pubBodyContent">
 						{/* For Highlights to work, no divs can be placed before htmlTree */}
 						{/* this.props.htmlTree */}
-						<PPMComponent markdown={this.props.markdown} />
+						<PPMComponent assets={this.props.assets} references={this.props.references} markdown={this.props.markdown} />
 
 						{this.props.addSelectionHandler
 							? <PubSelectionPopup addSelectionHandler={this.props.addSelectionHandler}/>
@@ -207,8 +207,8 @@ const PubBody = React.createClass({
 						? <License />
 						: null
 					}
-					
-					
+
+
 				</div>
 
 			</div>

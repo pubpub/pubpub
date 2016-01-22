@@ -3,11 +3,11 @@ import ImageLoader from 'react-imageloader';
 import Media from './baseMediaPlugin';
 import createPubPubPlugin from './PubPub';
 
-const ImageProps = {
-	source: {name: 'source', params: 'image'}
-};
+const ImageInputFields = [
+	{title: 'source', type: 'asset', params: {assetType: 'image'}},
+];
 
-const ImageOptions = {
+const ImageConfig = {
 	title: 'image',
 	color: 'red',
 	inline: true,
@@ -24,6 +24,7 @@ const ImagePlugin = React.createClass({
 		size: React.PropTypes.oneOfType([React.PropTypes.oneOf(['small', 'medium', 'large']), React.PropTypes.number]),
 		align: React.PropTypes.oneOf(['left', 'right', 'full']),
 		caption: PropTypes.string,
+		source: PropTypes.string
 	},
 	getInitialState: function() {
 		return {};
@@ -62,4 +63,4 @@ const ImagePlugin = React.createClass({
 });
 
 
-export default createPubPubPlugin(ImagePlugin, ImageOptions, ImageProps);
+export default createPubPubPlugin(ImagePlugin, ImageConfig, ImageInputFields);
