@@ -15,7 +15,6 @@ const PropAsset = React.createClass({
 	statics: {
 		transform: function(prop, params, assets, references) {
 			const asset = assets[prop];
-			debugger;
 			if (asset && asset.assetType === params.assetType) {
 				return asset;
 			}
@@ -26,8 +25,6 @@ const PropAsset = React.createClass({
 		return this.refs.val.value();
 	},
 	render: function() {
-		console.log(this.props.assetType);
-		console.log(this.props.assets);
 		const assets = this.props.assets.filter((asset) => (asset.assetType === this.props.assetType))
 		.map( function(asset) { return {'value': asset.refName, 'label': asset.refName};});
 		// assets.push({'value': 'upload', 'label': 'Upload New'});
