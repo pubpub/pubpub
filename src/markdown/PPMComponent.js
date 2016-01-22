@@ -44,7 +44,6 @@ const PPMComponent = React.createClass({
       break;
     case 'ppm':
       props.className = 'ppm';
-      console.log('Got a ppm!!!');
       if (children.length > 1) {
         console.log('Wierd!!');
       }

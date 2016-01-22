@@ -44,8 +44,6 @@ const ImagePlugin = React.createClass({
 		const caption = this.props.caption;
 
 		let html;
-		console.log(url);
-
 		const imgProps = {style: {width: '100%', height: '100%'}};
 
 		return (<Media caption={caption} size={size} align={align}>
