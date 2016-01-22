@@ -6,6 +6,9 @@ import {parsePluginString} from '../../utils/parsePlugins';
 import {globalMessages} from '../../utils/globalMessages';
 import {FormattedMessage} from 'react-intl';
 
+import Plugins from '../../components/EditorPluginsNew/index.js';
+import InputFields from './pluginInputFields.js';
+
 let styles = {};
 const POPUP_WIDTH = 425;
 const POPUP_HEIGHT_ESTIMATE = 350;
@@ -25,6 +28,7 @@ const EditorPluginPopup = React.createClass({
 	},
 
 	getInitialState() {
+		this.inputFields = {};
 		return {
 			popupVisible: false,
 			xLoc: 0,
@@ -32,7 +36,7 @@ const EditorPluginPopup = React.createClass({
 			initialString: '',
 			activeLine: undefined,
 			pluginType: '',
-			contentObject: {}
+			contentObject: []
 		};
 	},
 
@@ -55,7 +59,7 @@ const EditorPluginPopup = React.createClass({
 			return null;
 		}
 
-		this.assets = (this.props.assets) ? Object.values(this.props.assets).map( function(asset) { return {'value': asset.refName, 'label': asset.refName};}) : [];
+		this.assets = (this.props.assets) ? Object.values(this.props.assets) : [];
 
 
 		const change = nextProps.codeMirrorChange;
@@ -67,7 +71,7 @@ const EditorPluginPopup = React.createClass({
 			this.setState({
 				popupVisible: false,
 				activeLine: undefined,
-				contentObject: {},
+				contentObject: [],
 			});
 		}
 
@@ -123,7 +127,9 @@ const EditorPluginPopup = React.createClass({
 			const valueString = pluginSplit.length > 1 ? pluginSplit[1] : ''; // Values split into an array
 			const values = parsePluginString(valueString);
 
-			const contentObject = pluginOptions[pluginType];
+			console.log('Plugin type is!!' + pluginType);
+
+			const contentObject = Plugins[pluginType].InputFields;
 
 			const edgeX = document.elementFromPoint(clickX + POPUP_WIDTH, clickY);
 			const edgeY = document.elementFromPoint(clickX, clickY + POPUP_HEIGHT_ESTIMATE);
@@ -148,6 +154,7 @@ const EditorPluginPopup = React.createClass({
 			});
 
 
+			/*
 			const firstRefName = Object.keys(contentObject)[0];
 			const firstRef = (firstRefName) ? this.refs['pluginInput-' + firstRefName] : null;
 			if (firstRef && typeof firstRef.focus === 'function') {
@@ -158,6 +165,7 @@ const EditorPluginPopup = React.createClass({
 			} else {
 				document.body.focus();
 			}
+			*/
 
 		} else {
 			if (document.getElementById('plugin-popup').contains(event.target)) {
@@ -170,7 +178,7 @@ const EditorPluginPopup = React.createClass({
 				this.setState({
 					popupVisible: false,
 					activeLine: undefined,
-					contentObject: {}
+					contentObject: []
 				});
 			}
 		}
@@ -188,30 +196,21 @@ const EditorPluginPopup = React.createClass({
 		cm.replaceRange(outputString, from, to); // Since the popup closes on change, this will close the pluginPopup
 	},
 
-	createPluginString: function(pluginType, content) {
+	createPluginString: function(pluginType, PluginInputFields) {
 		const refs = this.refs;
 		let outputVariables = '';
-		for (const key in content) {
+		for (const pluginInputField of PluginInputFields) {
 			// Generate an output string based on the key, values in the object
-			if (Object.prototype.hasOwnProperty.call(content, key)) {
-				const ref = refs['pluginInput-' + key];
+			const inputFieldType = pluginInputField.type;
+			const inputFieldTitle = pluginInputField.title;
 
-				let val;
+			const ref = this.inputFields[inputFieldType];
+			const val = ref.value();
 
-				if (ref) {
-					if (typeof ref.value === 'function') {
-						val = ref.value();
-					} else {
-						val = ref.value;
-					}
-					if (val && val.length) {
-						outputVariables += key + '=' + val + ', ';
-					}
-				} else {
-					console.log('Could not find ' + key + ' in dict.');
-				}
-
+			if (val && val.length) {
+				outputVariables += inputFieldTitle + '=' + val + ', ';
 			}
+
 		}
 		outputVariables = outputVariables.slice(0, -2); // Remove the last comma and space
 		const mergedString = outputVariables.length ? pluginType + ': ' + outputVariables : pluginType;
@@ -230,26 +229,20 @@ const EditorPluginPopup = React.createClass({
 					<div style={styles.pluginPopupTitle}>
 						{this.state.pluginType}</div>
 						{
-							Object.keys(this.state.contentObject).map((valKey)=>{
-								const pluginProp = this.state.contentObject[valKey];
+							  this.state.contentObject.map((inputField)=>{
+
+								const fieldType = inputField.type;
+								const Field = InputFields[fieldType];
+								const PluginInputFieldParams = inputField.params;
+
 								let elem;
-								const pluginPropTitle = pluginProp.title;
-								const value = this.state.values[pluginPropTitle] || pluginProp.defaultValue;
-								if (pluginProp.component) {
-									elem = pluginProp.component(pluginProp, value, this.props, styles);
-								} else {
-									elem = <input ref={'pluginInput-' + pluginPropTitle} style={styles.pluginOptionInput} name={pluginPropTitle} id={pluginPropTitle} type="text" defaultValue={value}/>;
-								}
-								return (<div key={'pluginVal-' + pluginPropTitle} style={styles.pluginOptionWrapper}>
-													<label htmlFor={pluginPropTitle} style={styles.pluginOptionLabel}>{pluginPropTitle}</label>
+								const value = this.state.values[fieldType];
+								// (pluginProp, value, this.props, styles)
+								return (<div key={'pluginVal-' + fieldType} style={styles.pluginOptionWrapper}>
+													<label htmlFor={fieldType} style={styles.pluginOptionLabel}>{inputField.name}</label>
 													<div style={styles.pluginPropWrapper}>
-														{elem}
+														<Field selectedValue={value} assets={this.assets} {...PluginInputFieldParams} ref={(ref) => this.inputFields[fieldType] = ref}/>
 													</div>
-													<div style={[styles.pluginOptionDefault, pluginProp.defaultString && styles.pluginOptionDefaultVisible]}>
-													<FormattedMessage
-														id="editor.default"
-														defaultMessage="default"/>
-													: {pluginProp.defaultString}</div>
 													<div style={styles.clearfix}></div>
 													</div>);
 							})

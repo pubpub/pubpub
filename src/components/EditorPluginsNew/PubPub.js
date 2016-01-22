@@ -2,7 +2,7 @@ import Radium from 'radium';
 import ErrorMsg from './ErrorPlugin';
 import React, {PropTypes} from 'react';
 
-function attachPopup(Component, options, props) {
+function attachWrapper(Component, options, props) {
 	const PluginWrapper = React.createClass({
 		render() {
 			try {
@@ -17,10 +17,10 @@ function attachPopup(Component, options, props) {
 
 }
 
-export default function(reactComponent, options, props) {
+export default function(reactComponent, config, inputFields) {
 	return {
-		options: options,
-		props: props,
-		Component: attachPopup(Radium(reactComponent))
+		Config: config,
+		InputFields: inputFields,
+		Component: attachWrapper(Radium(reactComponent))
 	};
 }
