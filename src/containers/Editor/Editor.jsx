@@ -98,7 +98,7 @@ const Editor = React.createClass({
 			if (this.props.editorData.getIn(['pubEditData', 'token'])) {
 				this.initializeEditorData(this.props.editorData.getIn(['pubEditData', 'token']));
 			}
-			
+
 		}
 	},
 
@@ -242,17 +242,19 @@ const Editor = React.createClass({
 
 		try {
 
-			const mdOutput = marked(markdown, {assets, references, selections});
 			// compiledMarkdown = performance.now();
 			this.setState({
 				markdown: markdown,
-				tree: mdOutput.tree,
-				travisTOC: mdOutput.travisTOC,
-				travisTOCFull: mdOutput.travisTOCFull,
+				travisTOC: [],
+				travisTOCFull: [],
+				// travisTOC: mdOutput.travisTOC,
+				// travisTOCFull: mdOutput.travisTOCFull,
 				codeMirrorChange: change,
 				title: title,
 				abstract: abstract,
 				authorsNote: authorsNote,
+				assets: assets,
+				references: references
 			});
 			// saveState = performance.now();
 		} catch (err) {
@@ -346,15 +348,15 @@ const Editor = React.createClass({
 			pHashes: pHashes,
 			publishNote: versionDescription,
 		};
-		this.props.dispatch(clearPub());	
+		this.props.dispatch(clearPub());
 
 		// This should perhaps be done on the backend in one fell swoop - rather than having two client side calls.
 		if (this.props.journalData.get('baseSubdomain')) {
-			this.props.dispatch(submitPubToJournal(this.props.editorData.getIn(['pubEditData', '_id']), this.props.journalData.getIn(['journalData']).toJS()));	
+			this.props.dispatch(submitPubToJournal(this.props.editorData.getIn(['pubEditData', '_id']), this.props.journalData.getIn(['journalData']).toJS()));
 		}
 
 		this.props.dispatch(publishVersion(newVersion));
-		
+
 	},
 
 	// Add asset to firebase.
@@ -495,7 +497,7 @@ const Editor = React.createClass({
 								</div>
 								: null
 							}
-							
+
 						</div>
 					);
 				case 'comments':
@@ -554,6 +556,7 @@ const Editor = React.createClass({
 				authors={this.getAuthorsArray()}
 				// addSelectionHandler={this.addSelection}
 				style={this.state.firepadData && this.state.firepadData.settings ? this.state.firepadData.settings.pubStyle : undefined}
+				assets={this.state.assets}
 				references={referencesList}
 				isFeatured={true}/>
 		);
@@ -643,14 +646,14 @@ const Editor = React.createClass({
 						<div style={styles.isMobile}>
 							{/* In mobile - readers and editors have the same view. Editors have a note about screen size. */}
 							{this.renderNav(true)}
-							
+
 							<div style={[styles.previewBlockWrapper, this.state.previewPaneMode === 'preview' && styles.previewBlockWrapperShow]}>
 								{isReader
 									? null
 									: <span style={styles.editorDisabledMessage}>
 										<FormattedMessage id="editingDisableMobile" defaultMessage="Editing disabled on mobile view - but you can still read and comment. Open on a laptop or desktop to edit." />
 									</span>
-									
+
 								}
 
 								{this.renderBody()}
@@ -675,7 +678,7 @@ const Editor = React.createClass({
 
 									<div style={styles.hiddenCodeMirror}>
 										{/*  Necessary for body rednering to work */}
-										<EditorTopNav 
+										<EditorTopNav
 											status={editorData.get('status')}
 											darkMode={darkMode}
 											openModalHandler={this.openModalHandler}
@@ -732,7 +735,7 @@ const Editor = React.createClass({
 										saveUpdatedSettingsFirebaseAndPubPub={this.saveUpdatedSettingsFirebaseAndPubPub} />
 
 									{/* Top Nav. Fixed to the top of the editor page, just below the main pubpub bar */}
-									<EditorTopNav 
+									<EditorTopNav
 										status={editorData.get('status')}
 										darkMode={darkMode}
 										openModalHandler={this.openModalHandler}
@@ -745,7 +748,7 @@ const Editor = React.createClass({
 									</div>
 
 									{/* Bottom Nav */}
-									<EditorBottomNav 
+									<EditorBottomNav
 										viewMode={viewMode}
 										loadStatus={loadStatus}
 										darkMode={darkMode}
@@ -777,7 +780,7 @@ const Editor = React.createClass({
 									<div id="editor-live-preview-wrapper" style={[globalStyles.hiddenUntilLoad, globalStyles[loadStatus], styles.common.editorPreview, styles[viewMode].editorPreview]} className={'editorPreview'}>
 
 										{this.renderNav(false)}
-										
+
 										<div className="editorBodyView" style={[styles.previewBlockWrapper, this.state.previewPaneMode === 'preview' && styles.previewBlockWrapperShow]}>
 											{this.renderBody()}
 										</div>

@@ -31,6 +31,8 @@ const PPMComponent = React.createClass({
 
   handleIterate: function(Tag, props, children) {
 
+		let Component = Tag;
+
     switch(Tag) {
     case 'table':
       props.className = 'table table-striped';
@@ -46,7 +48,7 @@ const PPMComponent = React.createClass({
       if (children.length > 1) {
         console.log('Wierd!!');
       }
-      const Component = image.Component;
+      Component = image.Component;
 			const PluginInputFields = image.InputFields;
       const ImageProps = parsePluginString(children[0]);
 
@@ -54,16 +56,11 @@ const PPMComponent = React.createClass({
 				const propVal = ImageProps[propName];
 				const pluginInputField = PluginInputFields.find( field => field.title === propName)
         if (pluginInputField) {
-					console.log('Transforming!!');
           let inputVal = ImageProps[propName];
 					const InputFieldType = pluginInputField.type;
 					const Field = InputFields[InputFieldType];
-					// debugger;
-
           if (InputFields[InputFieldType].transform) {
-						console.log(ImageProps[propName]);
             ImageProps[propName] = InputFields[InputFieldType].transform(propVal, pluginInputField.params, this.props.assets, this.props.references);
-						console.log(ImageProps[propName]);
 					}
         }
       }
@@ -75,8 +72,12 @@ const PPMComponent = React.createClass({
         return <Tag {...props} dangerouslySetInnerHTML={{__html: window.hljs.highlight(props['data-language'], children[0]).value}} />
       };
       break;
+		case 'p':
+			props.className = 'p-block';
+			Component = 'div';
+			break;
     }
-    return <Tag {...props}>{children}</Tag>;
+    return <Component {...props}>{children}</Component>;
   },
 
 	render: function() {

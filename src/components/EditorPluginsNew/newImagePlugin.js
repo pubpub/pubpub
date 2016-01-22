@@ -18,13 +18,12 @@ const ImageConfig = {
 
 const ImagePlugin = React.createClass({
 	propTypes: {
-		url: PropTypes.string,
 		error: PropTypes.string,
 		children: PropTypes.string,
 		size: React.PropTypes.oneOfType([React.PropTypes.oneOf(['small', 'medium', 'large']), React.PropTypes.number]),
 		align: React.PropTypes.oneOf(['left', 'right', 'full']),
 		caption: PropTypes.string,
-		source: PropTypes.string
+		source: PropTypes.object
 	},
 	getInitialState: function() {
 		return {};
@@ -38,27 +37,21 @@ const ImagePlugin = React.createClass({
 		return;
 	},
 	render: function() {
-
-		return (<span>THIS IS AN IMAGE {this.props.source}</span>);
-
-		const refName = this.props.children;
-		const url = this.props.url;
+		// const refName = this.props.children;
+		const url = this.props.source.url_s3;
 		const size = this.props.size;
 		const align = this.props.align;
 		const caption = this.props.caption;
 
 		let html;
+		console.log(url);
 
 		const imgProps = {style: {width: '100%', height: '100%'}};
 
-		html = (<Media caption={caption} size={size} align={align}>
-				<ImageLoader onLoad={this.loadedImage} imgProps={imgProps} src={url} wrapper={React.DOM.span} preloader={this.preloader}>
-					{refName}
-				</ImageLoader>
+		return (<Media caption={caption} size={size} align={align}>
+				<ImageLoader onLoad={this.loadedImage} imgProps={imgProps} src={url} wrapper={React.DOM.span} preloader={this.preloader}/>
 			</Media>
 		);
-
-		return html;
 	}
 });
 
