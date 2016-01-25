@@ -38,6 +38,9 @@ const ImagePlugin = React.createClass({
 	},
 	render: function() {
 		// const refName = this.props.children;
+		if (!this.props.source || !this.props.source.url_s3) {
+			return (<span></span>);
+		}
 		const url = this.props.source.url_s3;
 		const size = this.props.size;
 		const align = this.props.align;

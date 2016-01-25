@@ -15,7 +15,7 @@ const AssetField = React.createClass({
 			if (asset && asset.assetType === params.assetType) {
 				return asset;
 			}
-			return 'error';
+			return new Error('Could not find asset');
 		}
 	},
 	value: function() {
@@ -24,7 +24,7 @@ const AssetField = React.createClass({
 	render: function() {
 		const assets = this.props.assets.filter((asset) => (asset.assetType === this.props.assetType))
 		.map( function(asset) { return {'value': asset.refName, 'label': asset.refName};});
-		const val = (this.props.selectedValue) ? {'value': this.props.selectedValue, 'label': this.props.selectedValue } : undefined;
+		const val = (this.props.selectedValue) ? {'label': this.props.selectedValue, 'value': this.props.selectedValue} : undefined;
 		return <DropdownField ref="val" choices={assets} selectedValue={val}/>;
 	}
 });

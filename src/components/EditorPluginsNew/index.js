@@ -1,4 +1,4 @@
-import ImagePlugin 	from './newImagePlugin';
+import ImagePlugin 	from './imagePlugin';
 
 export default {
 	image: ImagePlugin
