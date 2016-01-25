@@ -32,7 +32,7 @@ const PubBody = React.createClass({
 		showPubHighlights: PropTypes.bool,
 		isFeatured: PropTypes.bool,
 		errorView: PropTypes.bool,
-
+		assets: PropTypes.array,
 		references: PropTypes.array,
 		minFont: PropTypes.number,
 		firstPublishedDate: PropTypes.string,
