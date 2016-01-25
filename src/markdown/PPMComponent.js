@@ -8,7 +8,7 @@ import sup from 'markdown-it-sup';
 import container from 'markdown-it-container';
 import ppm from './markdown-it-ppm';
 
-import {parsePluginString} from '../utils/ParsePlugins';
+import {parsePluginString} from '../utils/parsePlugins';
 import {image} from '../components/EditorPluginsNew/index';
 import InputFields from '../components/EditorPluginFields/index';
 
