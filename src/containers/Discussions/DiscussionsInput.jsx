@@ -100,6 +100,7 @@ const PubDiscussionsInput = React.createClass({
 						fontFamily: 'Arial',
 						padding: '0px 20px',
 						width: 'calc(100% - 40px)',
+						minHeight: '25px',
 					}
 				}} />
 
@@ -163,7 +164,7 @@ styles = {
 	inputBox: {
 		border: '1px solid #ddd',
 		backgroundColor: '#fff',
-		minHeight: 25,
+		// minHeight: 25,
 		padding: '10px 0px',
 	},
 	loaderContainer: {
