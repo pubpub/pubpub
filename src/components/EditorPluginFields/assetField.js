@@ -1,18 +1,15 @@
 import React, {PropTypes} from 'react';
-import {SimpleSelect} from 'react-selectize';
-import Radios from './radioField';
-import DropdownField from './dropdownField';
-import TextField from './textField';
+import DropdownField from './baseDropdownField';
 
-// import {openModal} from '../../actions/editor';
-
-const PropAsset = React.createClass({
+const AssetField = React.createClass({
 	propTypes: {
 		assetType: PropTypes.string,
 		assets: PropTypes.array,
 		selectedValue: PropTypes.string
 	},
 	statics: {
+		// Transform is called by PPMComponent.js to transform
+		// 'prop' -- the text value of the asset into the asset object
 		transform: function(prop, params, assets, references) {
 			const asset = assets[prop];
 			if (asset && asset.assetType === params.assetType) {
@@ -27,12 +24,9 @@ const PropAsset = React.createClass({
 	render: function() {
 		const assets = this.props.assets.filter((asset) => (asset.assetType === this.props.assetType))
 		.map( function(asset) { return {'value': asset.refName, 'label': asset.refName};});
-		// assets.push({'value': 'upload', 'label': 'Upload New'});
-		const val = (this.props.selectedValue) ? {'value': this.props.selectedValue, 'label': value } : undefined;
+		const val = (this.props.selectedValue) ? {'value': this.props.selectedValue, 'label': this.props.selectedValue } : undefined;
 		return <DropdownField ref="val" choices={assets} selectedValue={val}/>;
 	}
 });
 
-export default {
-	'asset': PropAsset
-};
+export default AssetField;

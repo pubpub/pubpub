@@ -10,9 +10,7 @@ import ppm from './markdown-it-ppm';
 
 import {parsePluginString} from '../utils/ParsePlugins';
 import {image} from '../components/EditorPluginsNew/index';
-import InputFields from '../components/EditorPluginPopup/pluginInputFields';
-
-
+import InputFields from '../components/EditorPluginFields/index';
 
 const PPMComponent = React.createClass({
 	propTypes: {
@@ -45,7 +43,7 @@ const PPMComponent = React.createClass({
     case 'ppm':
       props.className = 'ppm';
       if (children.length > 1) {
-        console.log('Wierd!!');
+        console.log('This shouldnt happen!!');
       }
       Component = image.Component;
 			const PluginInputFields = image.InputFields;

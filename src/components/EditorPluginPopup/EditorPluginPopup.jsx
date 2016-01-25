@@ -7,7 +7,7 @@ import {globalMessages} from '../../utils/globalMessages';
 import {FormattedMessage} from 'react-intl';
 
 import Plugins from '../../components/EditorPluginsNew/index.js';
-import InputFields from './pluginInputFields.js';
+import InputFields from '../EditorPluginFields/index.js';
 
 let styles = {};
 const POPUP_WIDTH = 425;
@@ -35,8 +35,7 @@ const EditorPluginPopup = React.createClass({
 			yLoc: 0,
 			initialString: '',
 			activeLine: undefined,
-			pluginType: '',
-			contentObject: []
+			pluginType: ''
 		};
 	},
 
@@ -71,7 +70,6 @@ const EditorPluginPopup = React.createClass({
 			this.setState({
 				popupVisible: false,
 				activeLine: undefined,
-				contentObject: [],
 			});
 		}
 
@@ -129,8 +127,6 @@ const EditorPluginPopup = React.createClass({
 
 			console.log('Plugin type is!!' + pluginType);
 
-			const contentObject = Plugins[pluginType].InputFields;
-
 			const edgeX = document.elementFromPoint(clickX + POPUP_WIDTH, clickY);
 			const edgeY = document.elementFromPoint(clickX, clickY + POPUP_HEIGHT_ESTIMATE);
 
@@ -146,7 +142,6 @@ const EditorPluginPopup = React.createClass({
 				yLoc: yLoc,
 				activeLine: cm.getCursor().line,
 				pluginType: pluginType,
-				contentObject: contentObject,
 				initialString: pluginString,
 				values: values,
 				flippedX: flippedX,
@@ -178,7 +173,6 @@ const EditorPluginPopup = React.createClass({
 				this.setState({
 					popupVisible: false,
 					activeLine: undefined,
-					contentObject: []
 				});
 			}
 		}
@@ -191,14 +185,17 @@ const EditorPluginPopup = React.createClass({
 		const from = {line: lineNum, ch: 0};
 		const to = {line: lineNum, ch: lineContent.length};
 
-		const mergedString = this.createPluginString(this.state.pluginType, this.state.contentObject);
+		const mergedString = this.createPluginString(this.state.pluginType);
 		const outputString = lineContent.replace(this.state.initialString, mergedString);
 		cm.replaceRange(outputString, from, to); // Since the popup closes on change, this will close the pluginPopup
 	},
 
-	createPluginString: function(pluginType, PluginInputFields) {
+	createPluginString: function(pluginType) {
 		const refs = this.refs;
 		let outputVariables = '';
+
+		const PluginInputFields = Plugins[pluginType].InputFields;
+
 		for (const pluginInputField of PluginInputFields) {
 			// Generate an output string based on the key, values in the object
 			const inputFieldType = pluginInputField.type;
@@ -218,6 +215,9 @@ const EditorPluginPopup = React.createClass({
 	},
 
 	render: function() {
+
+		const PluginInputFields = (this.state.pluginType) ? Plugins[this.state.pluginType].InputFields : [];
+
 		return (
 			<div id="plugin-popup"
 					ref={(ref) => this.popupBox = ref}
@@ -229,14 +229,14 @@ const EditorPluginPopup = React.createClass({
 					<div style={styles.pluginPopupTitle}>
 						{this.state.pluginType}</div>
 						{
-							  this.state.contentObject.map((inputField)=>{
+							  PluginInputFields.map((inputField)=>{
 
 								const fieldType = inputField.type;
 								const Field = InputFields[fieldType];
+								const FieldTitle = inputField.title;
 								const PluginInputFieldParams = inputField.params;
-
 								let elem;
-								const value = this.state.values[fieldType];
+								const value = (this.state) ? this.state.values[FieldTitle] || null : null;
 								// (pluginProp, value, this.props, styles)
 								return (<div key={'pluginVal-' + fieldType} style={styles.pluginOptionWrapper}>
 													<label htmlFor={fieldType} style={styles.pluginOptionLabel}>{inputField.name}</label>
@@ -244,7 +244,7 @@ const EditorPluginPopup = React.createClass({
 														<Field selectedValue={value} assets={this.assets} {...PluginInputFieldParams} ref={(ref) => this.inputFields[fieldType] = ref}/>
 													</div>
 													<div style={styles.clearfix}></div>
-													</div>);
+												</div>);
 							})
 						}
 					<div style={styles.pluginSave} key={'pluginPopupSave'} onClick={this.onPluginSave}>
