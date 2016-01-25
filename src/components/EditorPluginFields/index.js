@@ -1,7 +1,9 @@
 import assetField from './assetField';
+import baseTextField from './baseTextField';
 
 export default {
 	'asset': assetField,
+	'text': baseTextField
 	// 'size' : (radio with small, medium, large and %),
 	// 'align' : (radio with left, right and full)
 	// 'caption' : (text field)

@@ -4,7 +4,7 @@ import Media from './baseMediaPlugin';
 import createPubPubPlugin from './PubPub';
 
 const ImageInputFields = [
-	{title: 'source', type: 'asset', params: {assetType: 'image'}},
+	{title: 'source', type: 'asset', params: {assetType: 'image'}}
 ];
 
 const ImageConfig = {
