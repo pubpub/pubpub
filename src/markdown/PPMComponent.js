@@ -9,7 +9,7 @@ import container from 'markdown-it-container';
 import ppm from './markdown-it-ppm';
 
 import {parsePluginString} from '../utils/parsePlugins';
-import {image} from '../components/EditorPluginsNew/index';
+import Plugins from '../components/EditorPluginsNew/index';
 import InputFields from '../components/EditorPluginFields/index';
 
 const PPMComponent = React.createClass({
@@ -45,24 +45,32 @@ const PPMComponent = React.createClass({
       if (children.length > 1) {
         console.log('This shouldnt happen!!');
       }
-      Component = image.Component;
-			const PluginInputFields = image.InputFields;
-      const ImageProps = parsePluginString(children[0]);
+			const pluginName = children[0].split(':')[0];
+			const plugin = Plugins[pluginName];
+			if (!plugin) {
+				console.warn('Could not find a plugin');
+				return <span {...props}>{children}</span>;
+			}
 
-      for (const propName in ImageProps) {
-				const propVal = ImageProps[propName];
-				const pluginInputField = PluginInputFields.find( field => field.title === propName)
+      Component = plugin.Component;
+			const PluginInputFields = plugin.InputFields;
+			const pluginString = children[0];
+      const pluginProps = parsePluginString(pluginString);
+
+      for (const propName in pluginProps) {
+				const propVal = pluginProps[propName];
+				const pluginInputField = PluginInputFields.find( field => field.title === propName);
         if (pluginInputField) {
-          let inputVal = ImageProps[propName];
+          let inputVal = pluginProps[propName];
 					const InputFieldType = pluginInputField.type;
 					const Field = InputFields[InputFieldType];
           if (InputFields[InputFieldType].transform) {
-            ImageProps[propName] = InputFields[InputFieldType].transform(propVal, pluginInputField.params, this.props.assets, this.props.references);
+            pluginProps[propName] = InputFields[InputFieldType].transform(propVal, pluginInputField.params, this.props.assets, this.props.references);
 					}
         }
       }
 
-      return <Component {...ImageProps}/>;
+      return <Component {...pluginProps}/>;
       break;
     case 'code':
       if (props['data-language']) {
