@@ -56,6 +56,7 @@ const PPMComponent = React.createClass({
 			const PluginInputFields = plugin.InputFields;
 			const pluginString = children[0];
       const pluginProps = parsePluginString(pluginString);
+			console.log(pluginProps);
 
       for (const propName in pluginProps) {
 				const propVal = pluginProps[propName];

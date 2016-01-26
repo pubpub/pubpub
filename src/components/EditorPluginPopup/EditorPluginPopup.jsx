@@ -233,7 +233,7 @@ const EditorPluginPopup = React.createClass({
 									const FieldComponent = InputFields[fieldType];
 									const value = (this.state) ? this.state.values[fieldTitle] || null : null;
 
-									return (<div key={'pluginVal-' + fieldType + this.state.pluginType} style={styles.pluginOptionWrapper}>
+									return (<div key={'pluginVal-' + fieldTitle + this.state.pluginType} style={styles.pluginOptionWrapper}>
 														<label htmlFor={fieldType} style={styles.pluginOptionLabel}>{fieldTitle}</label>
 														<div style={styles.pluginPropWrapper}>
 															<FieldComponent selectedValue={value} references={this.references} assets={this.assets} {...PluginInputFieldParams} ref={(ref) => this.popupInputFields[fieldTitle] = ref}/>
