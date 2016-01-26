@@ -8,6 +8,8 @@ const ImageInputFields = [
 	{title: 'align', type: 'align'},
 	{title: 'size', type: 'size'},
 	{title: 'caption', type: 'text', params: {placeholder: 'Caption describing the image'}},
+	{title: 'reference', type: 'reference'},
+
 ];
 
 const ImageConfig = {
