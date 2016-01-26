@@ -123,6 +123,7 @@
     "markdown-it-abbr": "^1.0.3",
     "markdown-it-container": "^2.0.0",
     "markdown-it-emoji": "^1.1.0",
+    "markdown-it-math": "^3.0.2",
     "markdown-it-sub": "^1.0.0",
     "markdown-it-sup": "^1.0.0",
     "marklib": "^0.6.1",
