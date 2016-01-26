@@ -557,7 +557,7 @@ const Editor = React.createClass({
 				// addSelectionHandler={this.addSelection}
 				style={this.state.firepadData && this.state.firepadData.settings ? this.state.firepadData.settings.pubStyle : undefined}
 				assets={this.state.assets}
-				references={referencesList}
+				references={this.state.references}
 				isFeatured={true}/>
 		);
 	},
