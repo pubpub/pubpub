@@ -194,10 +194,9 @@ const EditorPluginPopup = React.createClass({
 
 		for (const pluginInputField of PluginInputFields) {
 			// Generate an output string based on the key, values in the object
-			const inputFieldType = pluginInputField.type;
 			const inputFieldTitle = pluginInputField.title;
 
-			const ref = this.popupInputFields[inputFieldType];
+			const ref = this.popupInputFields[inputFieldTitle];
 			const val = ref.value();
 
 			if (val && val.length) {
