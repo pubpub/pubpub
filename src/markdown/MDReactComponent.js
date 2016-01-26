@@ -183,10 +183,18 @@ class MDReactComponent extends Component {
     plugins: PropTypes.array,
     className: PropTypes.string
   };
-
+  constructor(props) {
+    super(props);
+    const { text, ...props } = this.props;
+    this.mdfactory = mdReactFactory(props);
+  }
   render() {
     const { text, ...props } = this.props;
-    return mdReactFactory(props)(text);
+    if (this.mdfactory) {
+      return this.mdfactory(text);
+    } else {
+      return <span></span>;
+    }
   }
 }
 
