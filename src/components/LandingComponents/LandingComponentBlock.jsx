@@ -15,6 +15,7 @@ const LandingComponentBlock = React.createClass({
 		style: PropTypes.object,
 		childArray: PropTypes.array,
 		journalID: PropTypes.string,
+		journalData: PropTypes.object,
 	},
 
 	imageStyle: function() {
@@ -37,7 +38,7 @@ const LandingComponentBlock = React.createClass({
 						? <img src={this.props.image} style={this.imageStyle()}/>
 						: null
 					}
-					<LandingBody componentsArray={this.props.childArray} journalID={this.props.journalID}/>
+					<LandingBody componentsArray={this.props.childArray} journalID={this.props.journalID} journalData={this.props.journalData}/>
 				</div>
 				
 		);

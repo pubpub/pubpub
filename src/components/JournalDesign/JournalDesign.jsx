@@ -16,6 +16,7 @@ const JournalDesign = React.createClass({
 		journalSaveHandler: PropTypes.func,
 		designObject: PropTypes.object,
 		journalSaving: PropTypes.bool,
+		journalData: PropTypes.object,
 	},
 
 	getDefaultProps: function() {
@@ -311,7 +312,7 @@ const JournalDesign = React.createClass({
 							<div style={[styles.mockHeaderBarLanding, this.colorStyles(this.state.colorSelections.landingHeaderBackground.color, this.state.colorSelections.landingHeaderText.color, this.state.colorSelections.landingHeaderHover.color)]} key={'landingJournalMockHeader'}>
 								<FormattedMessage {...globalMessages.journalName} />
 							</div>
-							<LandingBody componentsArray={this.state.componentsArray}/>
+							<LandingBody componentsArray={this.state.componentsArray} journalID={this.props.journalData.getIn(['journalData', '_id'])} journalData={this.props.journalData.get('journalData')}/>
 						</div>
 						
 					</div>

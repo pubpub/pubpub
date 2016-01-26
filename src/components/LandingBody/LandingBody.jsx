@@ -1,6 +1,6 @@
 import React, {PropTypes} from 'react';
 import Radium from 'radium';
-import {LandingComponentBlock, LandingComponentCollectionList, LandingComponentSearch} from '../LandingComponents';
+import {LandingComponentBlock, LandingComponentCollectionList, LandingComponentSearch, LandingComponentRecentList} from '../LandingComponents';
 // import {globalStyles} from '../../utils/styleConstants';
 
 let styles = {};
@@ -9,6 +9,7 @@ const LandingBody = React.createClass({
 	propTypes: {
 		componentsArray: PropTypes.array,
 		journalID: PropTypes.string,
+		journalData: PropTypes.object,
 	},
 
 	getDefaultProps: function() {
@@ -34,7 +35,8 @@ const LandingBody = React.createClass({
 									image={component.image} 
 									style={component.style}
 									childArray={component.children}
-									journalID={this.props.journalID}/>
+									journalID={this.props.journalID}
+									journalData={this.props.journalData}/>
 							);
 						case 'search': 
 							return (
@@ -54,6 +56,13 @@ const LandingBody = React.createClass({
 								<LandingComponentCollectionList 
 									key={'LandingComponent-' + index}
 									style={component.style} />
+							);
+						case 'recentList': 
+							return (
+								<LandingComponentRecentList 
+									key={'LandingComponent-' + index}
+									style={component.style} 
+									recentPubs={this.props.journalData && this.props.journalData.get('pubsFeatured') ? this.props.journalData.get('pubsFeatured').toJS() : []}/>
 							);
 						default:
 							return null;

@@ -46,7 +46,7 @@ app.post('/createJournal', function(req,res){
 app.get('/getJournal', function(req,res){
 	Journal.findOne({subdomain: req.query.subdomain})
 	.populate({path: "pubs", select:"title abstract slug settings"})
-	.populate({path: "pubsFeatured", select:"title abstract slug settings"})
+	.populate({path: "pubsFeatured", select:"title abstract slug settings createDate lastUpdated discussions"})
 	.populate({path: "pubsSubmitted", select:"title abstract slug settings"})
 	.populate({path: "admins", select:"name username thumbnail firstName lastName"})
 	.populate({path: "collections.pubs", select:"title abstract slug authors lastUpdated createDate"})
@@ -178,7 +178,7 @@ app.get('/loadJournalAndLogin', function(req,res){
 	// When an implicit login request is made using the cookie
 	Journal.findOne({ $or:[ {'subdomain':req.query.host.split('.')[0]}, {'customDomain':req.query.host}]})
 	.populate({path: "pubs", select:"title abstract slug settings"})
-	.populate({path: "pubsFeatured", select:"title abstract slug settings"})
+	.populate({path: "pubsFeatured", select:"title abstract slug settings createDate lastUpdated discussions"})
 	.populate({path: "pubsSubmitted", select:"title abstract slug settings"})
 	.populate({path: "admins", select:"name firstName lastName username thumbnail"})
 	.populate({path: "collections.pubs", select:"title abstract slug authors lastUpdated createDate"})

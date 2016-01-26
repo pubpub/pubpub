@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react';
 import Radium from 'radium';
 import {MultiSelect} from 'react-selectize';
-import {injectIntl, defineMessages, FormattedMessage} from 'react-intl';
+import {FormattedMessage} from 'react-intl';
 import isValidEmail from 'valid-email';
 import {globalStyles} from '../../utils/styleConstants';
 

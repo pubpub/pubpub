@@ -3,6 +3,7 @@ import Radium from 'radium';
 import {globalStyles} from '../../utils/styleConstants';
 import { Link } from 'react-router';
 const HoverLink = Radium(Link);
+import dateFormat from 'dateformat';
 
 import {globalMessages} from '../../utils/globalMessages';
 import {FormattedMessage} from 'react-intl';
@@ -33,6 +34,25 @@ const PubPreview = React.createClass({
 				<div style={[styles.detailsWrapper, !this.props.canEdit && styles.detailsWrapperNoEdit]} key={'detailsWrapper-' + pub._id}>
 					<Link to={'/pub/' + pub.slug} style={globalStyles.link}>
 							<div style={[styles.pubTitle, this.props.headerFontSize && {fontSize: this.props.headerFontSize}]}>{pub.title}</div>
+							
+							<div style={[styles.pubDate, this.props.textFontSize && {fontSize: this.props.textFontSize}]}>
+								{pub.createDate
+									? <span>Created: {dateFormat(pub.createDate, 'mm/dd/yy')}</span>
+									: null
+								}
+
+								{pub.lastUpdated
+									? <span> | Last Updated: {dateFormat(pub.lastUpdated, 'mm/dd/yy')}</span>
+									: null
+								}
+								<div>
+									{pub.discussions && pub.discussions.length
+										? <span>{pub.discussions.length} Discussions</span>
+										: null
+									}
+								</div>
+							</div>
+
 							<div style={[styles.pubAbstract, this.props.textFontSize && {fontSize: this.props.textFontSize}]}>{pub.abstract}</div>
 					</Link>
 				</div>
@@ -60,7 +80,7 @@ styles = {
 		padding: '10px 0px',
 		// margin: '10px',
 		// height: '50px',
-		borderBottom: '1px solid #F0F0F0',
+		// borderBottom: '1px solid #F0F0F0',
 		// backgroundColor: 'rgba(0,200,0,0.1)',
 		display: 'table',
 		width: 'calc(100% - 0px)',
@@ -110,11 +130,17 @@ styles = {
 		fontSize: '16px',
 		// color: '#999',
 		fontFamily: 'Lora',
-		paddingLeft: '10px',
-		width: 'calc(100% - 10px)',
+		// paddingLeft: '10px',
+		width: 'calc(100% - 0px)',
 		// whiteSpace: 'nowrap',
 		// overflow: 'hidden',
 		// textOverflow: 'ellipsis',
+	},
+	pubDate: {
+		fontSize: '13px',
+		padding: '5px 0px 5px 0px',
+		color: '#888'
+
 	},
 };
 

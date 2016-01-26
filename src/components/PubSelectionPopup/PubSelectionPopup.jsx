@@ -10,9 +10,6 @@ import encHex from 'crypto-js/enc-hex';
 let Marklib = undefined;
 let Rangy = undefined;
 
-
-
-
 let styles = {};
 
 const PubSelectionPopup = React.createClass({

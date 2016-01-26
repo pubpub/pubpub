@@ -87,6 +87,7 @@ const Landing = React.createClass({
 
 		
 		const journalID = this.props.journalData.getIn(['journalData', '_id']);
+		
 		return (
 			<div style={styles.container}>
 
@@ -176,7 +177,7 @@ const Landing = React.createClass({
 							 </div>
 						</div>
 							
-						: <LandingBody componentsArray={componentsArray} journalID={journalID}/>
+						: <LandingBody componentsArray={componentsArray} journalID={journalID} journalData={this.props.journalData.get('journalData')}/>
 				}
 
 			</div>

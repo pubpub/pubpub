@@ -38,8 +38,9 @@ export default Radium(PubGallery);
 
 styles = {
 	previewWrapper: {
-		margin: 20,
+		padding: 20,
 		width: 'calc(100% - 40px)',
+		borderBottom: '1px solid #F0F0F0',
 		float: 'left',
 		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
 			width: 'calc(100% - 40px)',

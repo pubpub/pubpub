@@ -148,7 +148,8 @@ const JournalAdmin = React.createClass({
 												<JournalDesign 
 													designObject={this.props.journalData.getIn(['journalData', 'design']) ? this.props.journalData.getIn(['journalData', 'design']).toJS() : {}}
 													journalSaving={this.props.journalData.get( 'journalSaving')}
-													journalSaveHandler={this.journalSave}/>
+													journalSaveHandler={this.journalSave}
+													journalData={this.props.journalData}/>
 											);
 										case 'settings':
 											return (

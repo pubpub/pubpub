@@ -90,9 +90,7 @@ const DiscussionsItem = React.createClass({
 					}
 				}
 			}, 100);
-			
-
-			
+				
 		});
 		
 	},
