@@ -64,7 +64,12 @@ const DEFAULT_RULES = {
   inline(token, attrs, children) {
     return children;
   },
-
+  mathBlock(token, attrs, children) {
+    return [['math', compact([token.tag, attrs, token.content])]];
+  },
+  mathInline(token, attrs, children) {
+    return [['math', compact([token.tag, attrs, token.content])]];
+  },
   default(token, attrs, children, options, getNext) {
     if (token.nesting === 1 && token.hidden) {
       return getNext();
