@@ -80,6 +80,7 @@ const Editor = React.createClass({
 				collaborators: {},
 				assets: {},
 				references: {},
+				selections: {},
 				settings: {},
 			},
 			codeMirrorChange: {},
@@ -234,7 +235,7 @@ const Editor = React.createClass({
 
 		const assets = convertFirebaseToObject(this.state.firepadData.assets);
 		const references = convertFirebaseToObject(this.state.firepadData.references, true);
-		const selections = [];
+		const selections = {};
 		const markdown = fullMD.replace(/\[\[title:.*?\]\]/g, '').replace(/\[\[abstract:.*?\]\]/g, '').replace(/\[\[authorsNote:.*?\]\]/g, '').trim();
 		// const removeTitleEtc = performance.now();
 		// let compiledMarkdown = 0;
