@@ -72,9 +72,9 @@ function ppm(state, silent) {
   token         = state.push('ppm_open', 'ppm', 1);
   token.markup  = '[[';
 
-  token         = state.push('text', '', 0);
+  token         = state.push('ppm_content', '', 0);
   token.content = content.replace(UNESCAPE_RE, '$1');
-
+  // debugger;
   token         = state.push('ppm_close', 'ppm', -1);
   token.markup  = ']]';
 
@@ -85,6 +85,6 @@ function ppm(state, silent) {
 
 
 module.exports = function ppm_plugin(md) {
-  // md.inline.ruler.after('emphasis', 'ppm', ppm);
-  md.inline.ruler.push('ppm', ppm);
+  md.inline.ruler.before('math_inline', 'ppm', ppm);
+  // md.inline.ruler.push('ppm', ppm);
 };
