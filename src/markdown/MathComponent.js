@@ -6,8 +6,7 @@ let styles = {};
 
 const MathPlugin = React.createClass({
 	propTypes: {
-		svg: PropTypes.string,
-		children: PropTypes.string
+		children: PropTypes.any
 	},
 	getInitialState: function() {
 		this.lastURL = undefined;
