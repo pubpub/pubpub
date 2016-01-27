@@ -301,7 +301,7 @@ styles = {
 	discussionContent: {
 		width: 'calc(100% - 36px - 30px)',
 		marginLeft: 36,
-		overflow: 'hidden',
+		// overflow: 'hidden',
 		fontFamily: 'Arial',
 		color: '#555',
 		fontSize: '15px',
