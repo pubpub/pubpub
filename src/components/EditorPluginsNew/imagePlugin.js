@@ -14,7 +14,6 @@ const ImageInputFields = [
 
 const ImageConfig = {
 	title: 'image',
-	color: 'red',
 	inline: true,
 	autocomplete: true
 };
@@ -28,7 +27,8 @@ const ImagePlugin = React.createClass({
 		size: React.PropTypes.oneOfType([React.PropTypes.oneOf(['small', 'medium', 'large']), React.PropTypes.number]),
 		align: React.PropTypes.oneOf(['left', 'right', 'full']),
 		caption: PropTypes.string,
-		source: PropTypes.object
+		source: PropTypes.object,
+		reference: PropTypes.object
 	},
 	getInitialState: function() {
 		return {};
@@ -50,11 +50,12 @@ const ImagePlugin = React.createClass({
 		const size = this.props.size;
 		const align = this.props.align;
 		const caption = this.props.caption;
+		const reference = this.props.reference;
 
 		let html;
 		const imgProps = {style: {width: '100%', height: '100%'}};
 
-		return (<Media caption={caption} size={size} align={align}>
+		return (<Media caption={caption} size={size} align={align} reference={reference}>
 				<ImageLoader onLoad={this.loadedImage} imgProps={imgProps} src={url} wrapper={React.DOM.span} preloader={this.preloader}/>
 			</Media>
 		);
