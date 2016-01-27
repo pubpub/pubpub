@@ -78,16 +78,21 @@ const Discussions = React.createClass({
 	filterDiscussions: function(discussionsData) {
 		function findDiscussionRoot(discussions, searchID) {
 			for (let index = 0; index < discussions.length; index++) {
+				console.log(discussions[index]._id, searchID);
 				if (discussions[index]._id === searchID) {
 					return discussions[index];
 				} else if (discussions[index].children && discussions[index].children.length) {
-					return findDiscussionRoot(discussions[index].children, searchID);
+					const foundChild = findDiscussionRoot(discussions[index].children, searchID);
+					if (foundChild) {
+						return foundChild;
+					}
 				}
 			}
 		}
 
 		// const pubData = this.getDiscussionData();
-		return [findDiscussionRoot(discussionsData, this.props.metaID)];
+		const output = [findDiscussionRoot(discussionsData, this.props.metaID)];
+		return output;
 	},
 
 	getDiscussionData: function() {
@@ -145,6 +150,7 @@ const Discussions = React.createClass({
 					
 					{
 						discussionsData.map((discussion)=>{
+							// console.log(discussion);
 							return (<DiscussionsItem 
 								key={discussion._id}
 								slug={this.props.slug}
