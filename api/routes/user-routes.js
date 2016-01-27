@@ -37,8 +37,12 @@ app.post('/updateUser', function(req, res) {
 
 		if (req.body.newDetails.image) {
 			cloudinary.uploader.upload(req.body.newDetails.image, function(cloudinaryResponse) {
-				const thumbnail = cloudinaryResponse.url.replace('/upload', '/upload/c_limit,h_50,w_50');
 
+				const thumbnail = cloudinaryResponse.url ? cloudinaryResponse.url.replace('/upload', '/upload/c_limit,h_50,w_50') : req.body.newDetails.image;
+				if (!cloudinaryResponse.url) {
+					console.log('cloudinaryResponse did not have url. Here is the response:');
+					console.log(cloudinaryResponse);
+				}
 				user.thumbnail = thumbnail;
 				outputObject.thumbnail = thumbnail;
 				user.save(function(err, result){
