@@ -142,7 +142,7 @@ app.post('/inviteReviewers', function(req, res) {
 	Pub.getSimplePub(pubId, function(err, pub) {
 
 		if (err) {res.status(500); }
-		const senderName = req.user.name;
+		const senderName = req.user ? req.user.name : 'An anonymous user';
 		const pubName = pub.title;
 		
 
