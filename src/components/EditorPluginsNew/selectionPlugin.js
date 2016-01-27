@@ -5,7 +5,7 @@ import Radium, {Style} from 'radium';
 import smoothScroll from '../../utils/smoothscroll';
 
 const SelectionInputFields = [
-	{title: 'selectionNum', type: 'selection', params: {}},
+	{title: 'index', type: 'selection', params: {}},
 ];
 
 const SelectionConfig = {
