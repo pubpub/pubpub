@@ -34,13 +34,13 @@ const PubMetaInvite = React.createClass({
 		const result = {};
 		const searchWords = search.split(' ');
 
-		if (search.charAt(0) === '@') {
-			result.twitter = search;
-		} else if (isValidEmail(searchWords[searchWords.length - 1])) {
-			result.email = searchWords[searchWords.length - 1];
-			searchWords.splice(searchWords.length - 1, searchWords.length - 1);
-			result.name = searchWords.join(' ');
-		}
+		// if (search.charAt(0) === '@') {
+		// 	result.twitter = search;
+		// } else if (isValidEmail(searchWords[searchWords.length - 1])) {
+		result.email = searchWords[searchWords.length - 1];
+			// searchWords.splice(searchWords.length - 1, searchWords.length - 1);
+			// result.name = searchWords.join(' ');
+		// }
 
 		return result;
 	},
@@ -48,7 +48,7 @@ const PubMetaInvite = React.createClass({
 	checkEmailResult: function(search, returnReason) {
 
 		if (search.length === 0) {
-			return (returnReason) ? 'Enter an email address and name, e.g. Joe Smith joe@example.com OR twitter handle e.g. @pmarca' : null;
+			return (returnReason) ? 'Enter an email address, e.g. betty@example.com' : null;
 		}
 
 		let result;
@@ -56,10 +56,11 @@ const PubMetaInvite = React.createClass({
 
 		if (search.charAt(0) === '@') {
 			result = (returnReason) ? null : true;
-		} else if (isValidEmail(searchWords[searchWords.length - 1]) && searchWords.length > 1) {
+		// } else if (isValidEmail(searchWords[searchWords.length - 1]) && searchWords.length > 1) {
+		} else if ( isValidEmail(searchWords[searchWords.length - 1]) ) {
 			result = (returnReason) ? null : true;
 		} else {
-			result = (returnReason) ? 'Enter an email address and name, e.g. Joe Smith joe@example.com OR twitter handle e.g. @pmarca' : false;
+			result = (returnReason) ? 'Enter an email address, e.g. betty@example.com' : false;
 		}
 		return result;
 	},
@@ -109,13 +110,12 @@ const PubMetaInvite = React.createClass({
 				<MultiSelect
 					style={styles.complete}
 					values = {this.state.tags}
-					placeholder="examples: Joe Smith joe@example.com OR @joe"
+					placeholder="example: betty@example.com"
 					onValuesChange = {(tags, callback) => {
 						self.setState({tags: tags}, callback);
 					}}
 					createFromSearch = {this.createFromSearch}
-					renderNoResultsFound = {this.noResults}
-					/>
+					renderNoResultsFound = {this.noResults} />
 				<div style={[globalStyles.button, styles.submit]} onClick={this.sendInvites}>Invite</div>
 			</span>);
 		}

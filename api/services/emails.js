@@ -38,16 +38,21 @@ export function sendResetEmail(email, hash, username, callback) {
 };
 
 
-export function sendInviteEmail({journalName, pubName, journalURL, senderName, recipientEmail, recipientName, callback}) {
+export function sendInviteEmail(senderName, pubName, pubURL, journalName, journalURL, journalIntroduction, recipientEmail, callback) {
+
 	var emailObject = new sendgrid.Email();
 	emailObject.addTo(recipientEmail);
-	emailObject.subject = "Invitation to Review at " + journalName;
+	emailObject.subject = "Invitation to Review " + pubName;
 	emailObject.from = from;
-	emailObject.fromname = fromname;
-	emailObject.addSubstitution('%recipient%', [recipientName]);
+	// emailObject.fromname = fromname;
+	emailObject.fromname = senderName + ' (PubPub)';
+	// emailObject.addSubstitution('%recipient%', [recipientName]);
 	emailObject.addSubstitution('%sender%', [senderName]);
 	emailObject.addSubstitution('%journal%', [journalName]);
+	emailObject.addSubstitution('%journalURL%', [journalURL]);
 	emailObject.addSubstitution('%pub%', [pubName]);
+	emailObject.addSubstitution('%pubURL%', [pubURL]);
+	emailObject.addSubstitution('%journalIntroduction%', [journalIntroduction]);
 
 	emailObject.text = ' ';
 	emailObject.html = ' ';

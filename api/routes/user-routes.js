@@ -142,22 +142,34 @@ app.post('/inviteReviewers', function(req, res) {
 	Pub.getSimplePub(pubId, function(err, pub) {
 
 		if (err) {res.status(500); }
+		const senderName = req.user.name;
 		const pubName = pub.title;
+		
 
 		Journal.findByHost(req.query.host, function(err, journ) {
-			const senderName = req.user.name;
-			const journalName = (journ) ? journ.journalName : 'PubPub';
+			
+			const journalName = journ ? journ.journalName : 'PubPub';
+			let journalURL = '';
+			if (journ) {
+				journalURL = journ.customDomain ? 'http://' + journ.customDomain : 'http://' + journ.subdomain + '.pubpub.org';
+			} else {
+				journalURL = 'http://www.pubpub.org'
+			}
+
+			const journalIntroduction = journ ? journalName + ' is a journal built on PubPub:' : 'PubPub is';
+
+			const pubURL = journalURL + '/pub/' + pub.slug;
 
 			for (let recipient of inviteData) {
-				if (!recipient.twitter) {
-					const emailCallback = function(error, email) {
-						console.log(error);
-						console.log(email);
-					};
-					sendInviteEmail({journalName, pubName, senderName, recipientEmail: recipient.email, recipientName: recipient.name, callback: emailCallback});
-				} else {
-					/*Send Tweets*/
-				}
+				const recipientEmail = recipient.email;
+				const emailCallback = function(error, email) {
+					if (err) {
+						console.log(error);	
+					}
+					// console.log(email);
+				};
+				sendInviteEmail(senderName, pubName, pubURL, journalName, journalURL, journalIntroduction, recipientEmail, emailCallback);
+
 			}
 
 			res.status(201).json({});
