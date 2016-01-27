@@ -27,6 +27,7 @@ const JournalSettings = React.createClass({
 		const newObject = {
 			journalName: this.refs.name.value,
 			customDomain: this.refs.customDomain.value,
+			autoFeature: this.refs.autoFeature.checked,
 		};
 
 		this.props.journalSaveHandler(newObject);
@@ -126,6 +127,17 @@ const JournalSettings = React.createClass({
 					<input style={styles.manualFormInput} name={'customDomain'} id={'settingsForm-customDomain'} ref={'customDomain'} type="text" defaultValue={this.props.journalData.customDomain}/>
 				</div>
 
+				<div key={'settingsForm-autoFeature'} style={[styles.inputWrapper, styles.checkboxWrapper]}>
+					<label style={[styles.manualFormInputTitle, styles.checkboxLabel]} htmlFor={'autoFeature'}>
+						<FormattedMessage id="journal.autoFeature" defaultMessage="Automatically Feature Pubs on Submission"/>
+					</label>
+					<input style={[styles.manualFormInput, styles.checkboxInput]} name={'autoFeature'} id={'settingsForm-autoFeature'} ref={'autoFeature'} type="checkbox" onChange={()=>{return this.setState({});}} defaultChecked={this.props.journalData.autoFeature}/>
+					{(this.refs.autoFeature && this.refs.autoFeature.checked) || (!this.refs.autoFeature && this.props.journalData.autoFeature)
+						? <label htmlFor={'settingsForm-autoFeature'}> enabled</label>
+						: <label htmlFor={'settingsForm-autoFeature'}> disabled</label>
+					}
+				</div>
+
 				<div style={styles.saveSettings} key={'userSettingsSaveButton'} onClick={this.saveSettings}>
 					<FormattedMessage {...globalMessages.save} />
 				</div>
@@ -188,6 +200,15 @@ styles = {
 		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
 			width: 'calc(100% - 40px)',
 		},
+	},
+	checkboxWrapper: {
+		width: '600px',
+	},
+	checkboxLabel: {
+		display: 'block',
+	},
+	checkboxInput: {
+		width: 'auto',
 	},
 	manualFormInputTitle: {
 		fontSize: 20,

@@ -21,13 +21,15 @@ var journalSchema = new Schema({
 	journalLogoURL: { type: String},
 	journalLogoThumbnailURL: { type: String},
 
-	defaultLanguage: { type: String},
+	defaultLanguage: {type: String},
 	createDate: {type: Date},
 
 	admins: [{ type: ObjectId, ref: 'User' }],
 
 	pubsFeatured: [{ type: ObjectId, ref: 'Pub' }],
 	pubsSubmitted: [{ type: ObjectId, ref: 'Pub' }],
+
+	autoFeature: { type: Boolean },
 
 	design: { type: Schema.Types.Mixed },
 	settings: { type: Schema.Types.Mixed },

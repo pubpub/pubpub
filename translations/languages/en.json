@@ -60,6 +60,7 @@
   "journal.landingPageComponents": "Landing Page Components",
   "journal.addNewAdmin": "Add new admin",
   "journal.customDomain": "Custom Domain",
+  "journal.autoFeature": "Automatically Feature Pubs on Submission",
   "login.firstName": "First Name",
   "login.lastName": "Last Name",
   "login.chooseNew": "choose new image",

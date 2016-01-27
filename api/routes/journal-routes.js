@@ -143,8 +143,17 @@ app.post('/submitPubToJournal', function(req,res){
 		}
 
 		if (String(journal.pubsSubmitted).indexOf(req.body.pubID) === -1) {
-			journal.pubsSubmitted.push(req.body.pubID);
+			
 			Pub.addJournalSubmitted(req.body.pubID, req.body.journalID, req.user._id);
+
+			if (journal.autoFeature) {
+				journal.pubsFeatured.push(req.body.pubID);
+				Pub.addJournalFeatured(req.body.pubID, req.body.journalID, null);
+			} else {
+				journal.pubsSubmitted.push(req.body.pubID);
+			}
+
+
 		}
 
 		journal.save(function(err, result){
