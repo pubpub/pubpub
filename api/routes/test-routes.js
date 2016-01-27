@@ -343,7 +343,11 @@ app.get('/handleNewFile', function(req,res){
 			setTimeout(function(){		
 					cloudinary.uploader.upload(req.query.url, function(result) { 
 						try{
-							result.thumbnail = result.url.replace('/upload', '/upload/c_limit,h_50,w_50');
+							result.thumbnail = result.url ? result.url.replace('/upload', '/upload/c_limit,h_50,w_50') : req.query.url;
+							if (!result.url) {
+								console.log('cloudinaryResponse in test-routes did not have url. Here is the response:');
+								console.log(cloudinaryResponse);
+							}
 					        result.assetType = 'image';
 							return res.status(201).json(result);	
 						} catch (err){
