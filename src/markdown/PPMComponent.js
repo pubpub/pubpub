@@ -35,7 +35,10 @@ const PPMComponent = React.createClass({
 		assets: PropTypes.array,
 		references: PropTypes.array,
 	},
-
+	getInitialState() {
+		this.globals = {};
+		return {};
+	},
 	getDefaultProps: function() {
 		return {
 			markdown: '',
@@ -43,8 +46,7 @@ const PPMComponent = React.createClass({
 			references: [],
 		};
 	},
-
-	handleIterate: function(Tag, props, children) {
+	handleIterate: function(globals, Tag, props, children) {
 
 		let Component = Tag;
 
@@ -72,7 +74,7 @@ const PPMComponent = React.createClass({
 				Component = plugin.Component;
 				const PluginInputFields = plugin.InputFields;
 				const pluginString = children[0];
-				const pluginProps = parsePluginString(pluginString);
+				let pluginProps = parsePluginString(pluginString);
 
 				for (const propName in pluginProps) {
 					const propVal = pluginProps[propName];
@@ -87,6 +89,10 @@ const PPMComponent = React.createClass({
 					}
 				}
 
+				if (plugin.Config.prerender) {
+					({globals, pluginProps} = plugin.Config.prerender(globals, pluginProps));
+				}
+
 				return <Component {...pluginProps}/>;
 				break;
 				case 'code':
@@ -96,34 +102,37 @@ const PPMComponent = React.createClass({
 				break;
 				case 'math':
 				return <MathComponent>{children[0]}</MathComponent>;
-				break;
-				case 'p':
-				props.className = 'p-block';
-				Component = 'div';
-				break;
-			}
-			return <Component {...props}>{children}</Component>;
-			},
-
-			render: function() {
-				return (
-					<MDReactComponent text={this.props.markdown}
-						onIterate={this.handleIterate}
-						markdownOptions={{
-							typographer: true,
-							linkify: true,
-						}}
-						plugins={[
-							abbr,
-							emoji,
-							sub,
-							sup,
-							{plugin: mathIt, args: [MathOptions]},
-							{plugin: container, args: ['blank', {validate: ()=>{return true;}}]},
-							ppm
-						]} />
-					);
+					break;
+					case 'p':
+					props.className = 'p-block';
+					Component = 'div';
+					break;
 				}
-			});
+				return <Component {...props}>{children}</Component>;
+				},
 
-			export default PPMComponent;
+				render: function() {
+					for (const member in this.globals) delete this.globals[member];
+
+					return (
+						<MDReactComponent
+							text={this.props.markdown}
+							onIterate={this.handleIterate.bind(this, this.globals)}
+							markdownOptions={{
+								typographer: true,
+								linkify: true,
+							}}
+							plugins={[
+								abbr,
+								emoji,
+								sub,
+								sup,
+								{plugin: mathIt, args: [MathOptions]},
+								{plugin: container, args: ['blank', {validate: ()=>{return true;}}]},
+								ppm
+							]} />
+						);
+					}
+				});
+
+				export default PPMComponent;
