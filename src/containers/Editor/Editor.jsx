@@ -217,17 +217,17 @@ const Editor = React.createClass({
 		// const markdownStart = performance.now();
 		const fullMD = cm.getValue();
 		// const markdownGrab = performance.now();
-		const titleRE = /\{\{title:(.*?)\}\}/i;
+		const titleRE = /\[\[title:(.*?)\]\]/i;
 		const titleMatch = fullMD.match(titleRE);
 		const title = titleMatch && titleMatch.length ? titleMatch[1].trim() : '';
 		// const titleGrabAndSet = performance.now();
 
-		const abstractRE = /\{\{abstract:(.*?)\}\}/i;
+		const abstractRE = /\[\[abstract:(.*?)\]\]/i;
 		const abstractMatch = fullMD.match(abstractRE);
 		const abstract = abstractMatch && abstractMatch.length ? abstractMatch[1].trim() : '';
 		// const abstractGrabAndSet = performance.now();
 
-		const authorsNoteRE = /\{\{authorsNote:(.*?)\}\}/i;
+		const authorsNoteRE = /\[\[authorsNote:(.*?)\]\]/i;
 		const authorsNoteMatch = fullMD.match(authorsNoteRE);
 		const authorsNote = authorsNoteMatch && authorsNoteMatch.length ? authorsNoteMatch[1].trim() : '';
 		// const aNGrabAndSet = performance.now();
@@ -235,7 +235,7 @@ const Editor = React.createClass({
 		const assets = convertFirebaseToObject(this.state.firepadData.assets);
 		const references = convertFirebaseToObject(this.state.firepadData.references, true);
 		const selections = [];
-		const markdown = fullMD.replace(/\{\{title:.*?\}\}/g, '').replace(/\{\{abstract:.*?\}\}/g, '').replace(/\{\{authorsNote:.*?\}\}/g, '').trim();
+		const markdown = fullMD.replace(/\[\[title:.*?\]\]/g, '').replace(/\[\[abstract:.*?\]\]/g, '').replace(/\[\[authorsNote:.*?\]\]/g, '').trim();
 		// const removeTitleEtc = performance.now();
 		// let compiledMarkdown = 0;
 		// let saveState = 0;
@@ -303,15 +303,15 @@ const Editor = React.createClass({
 		const cm = document.getElementById('codemirror-wrapper').childNodes[0].childNodes[0].CodeMirror;
 		const fullMD = cm.getValue();
 
-		const titleRE = /\{\{title:(.*?)\}\}/i;
+		const titleRE = /\[\[title:(.*?)\]\]/i;
 		const titleMatch = fullMD.match(titleRE);
 		const title = titleMatch && titleMatch.length ? titleMatch[1].trim() : '';
 
-		const abstractRE = /\{\{abstract:(.*?)\}\}/i;
+		const abstractRE = /\[\[abstract:(.*?)\]\]/i;
 		const abstractMatch = fullMD.match(abstractRE);
 		const abstract = abstractMatch && abstractMatch.length ? abstractMatch[1].trim() : '';
 
-		const authorsNoteRE = /\{\{authorsNote:(.*?)\}\}/i;
+		const authorsNoteRE = /\[\[authorsNote:(.*?)\]\]/i;
 		const authorsNoteMatch = fullMD.match(authorsNoteRE);
 		const authorsNote = authorsNoteMatch && authorsNoteMatch.length ? authorsNoteMatch[1].trim() : '';
 
@@ -339,7 +339,7 @@ const Editor = React.createClass({
 			title: title,
 			abstract: abstract,
 			authorsNote: authorsNote,
-			markdown: fullMD.replace(/\{\{title:.*?\}\}/g, '').replace(/\{\{abstract:.*?\}\}/g, '').replace(/\{\{authorsNote:.*?\}\}/g, '').trim(),
+			markdown: fullMD.replace(/\[\[title:.*?\]\]/g, '').replace(/\[\[abstract:.*?\]\]/g, '').replace(/\[\[authorsNote:.*?\]\]/g, '').trim(),
 			authors: authors,
 			assets: this.state.firepadData.assets,
 			references: this.state.firepadData.references,
