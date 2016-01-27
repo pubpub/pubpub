@@ -341,44 +341,48 @@ app.get('/handleNewFile', function(req,res){
 			// if it had more to do?
 			// Probably need a cleaner solution, but this'll work for now.
 			setTimeout(function(){		
-				try {
 					cloudinary.uploader.upload(req.query.url, function(result) { 
-				        result.thumbnail = result.url.replace('/upload', '/upload/c_limit,h_50,w_50');
-				        result.assetType = 'image';
-						return res.status(201).json(result);
+						try{
+							result.thumbnail = result.url.replace('/upload', '/upload/c_limit,h_50,w_50');
+					        result.assetType = 'image';
+							return res.status(201).json(result);	
+						} catch (err){
+							console.log('In catch on cloudinary image upload. '); console.log('req.body', req.body); console.log('err', err);
+							// If cloudinary fails - just set the thumbnail url to the full sized amazon version url. We can go through and check all the
+							// items that have .amazon urls in their thumbnail fields.
+							result = {
+								url: req.query.url,
+								thumbnail: req.query.url,
+								assetType: 'image',
+							};
+							return res.status(201).json(result);
+						}
+				        
 					});		
-				} catch (err) {
-					console.log('In catch on cloudinary image upload. '); console.log('req.body', req.body); console.log('err', err);
-					// If cloudinary fails - just set the thumbnail url to the full sized amazon version url. We can go through and check all the
-					// items that have .amazon urls in their thumbnail fields.
-					result = {
-						url: req.query.url,
-						thumbnail: req.query.url,
-						assetType: 'image',
-					};
-					return res.status(201).json(result);
-				}
+
 				
 			}, delay);
 
 		} else if (req.query.contentType.indexOf('video') > -1) {
-			try {
-				cloudinary.uploader.upload(req.query.url, function(result) { 
+			cloudinary.uploader.upload(req.query.url, function(result) { 
+				try{
 					// console.log(result) 
 					result.thumbnail = 'https://res.cloudinary.com/pubpub/video/upload/t_media_lib_thumb/c_limit,h_50,w_50/' + result.public_id + '.jpg';
 					result.assetType = 'video';
+					return res.status(201).json(result);	
+				} catch (err) {
+					console.log('In catch on cloudinary video upload.'); console.log('req.body', req.body); console.log('err', err);
+					result = {
+						url: req.query.url,
+						thumbnail: '/thumbnails/file.png',
+						assetType: 'video',
+					};
 					return res.status(201).json(result);
-				}, { resource_type: "video" });	
-			} catch (err) {
-				console.log('In catch on cloudinary video upload.'); console.log('req.body', req.body); console.log('err', err);
-				result = {
-					url: req.query.url,
-					thumbnail: '/thumbnails/file.png',
-					assetType: 'video',
-				};
-				return res.status(201).json(result);
 
-			}
+				}
+				
+			}, { resource_type: "video" });	
+			
 			
 		} else {
 			return res.status(201).json({
