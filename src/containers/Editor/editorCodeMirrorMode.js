@@ -17,7 +17,7 @@ export default function() {
 				let startPos = token.start;
 				let char = line.charAt(startPos);
 				let completionString = '' + char;
-				while (char !== '{' && startPos > 0) {
+				while (char !== '[' && startPos > 0) {
 					startPos--;
 					char = line.charAt(startPos);
 					completionString = char + completionString;
@@ -26,11 +26,11 @@ export default function() {
 				const list = [];
 
 				for (const plugin in plugins) {
-					if (plugins.hasOwnProperty(plugin) && plugins[plugin].autocomplete === true) {
+					if (plugins.hasOwnProperty(plugin) && plugins[plugin].Config.autocomplete === true) {
 						if (completionString.length >= 2 && plugin.charAt(0) === completionString.charAt(1)) {
-							list.unshift({text: plugin + ': }}', displayText: plugin});
+							list.unshift({text: plugin + ': ]]', displayText: plugin});
 						} else {
-							list.push({text: plugin + ': }}', displayText: plugin});
+							list.push({text: plugin + ': ]]', displayText: plugin});
 						}
 					}
 				}
@@ -45,6 +45,7 @@ export default function() {
 		}
 		return result;
 	});
+
 
 	/*
 	for (const plugin in plugins) {
@@ -73,8 +74,6 @@ export default function() {
 			});
 		}
 	}
-
-
 
 	CodeMirror.defineSimpleMode('plugin', {
 		start: start

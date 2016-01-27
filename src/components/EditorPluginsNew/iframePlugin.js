@@ -5,7 +5,7 @@ import {Reference} from '../';
 
 
 const IframeInputFields = [
-	{title: 'url', type: 'text', params: {placeholder: 'iFrame URL'}},
+	{title: 'url', type: 'url', params: {}},
 	{title: 'height', type: 'text', params: {placeholder: 'iFrame height'}},
 	{title: 'width', type: 'text', params: {placeholder: 'iFrame width'}},
 	{title: 'align', type: 'align'},
@@ -63,7 +63,7 @@ const IframePlugin = React.createClass({
 		} else {
 			html = (<Media caption={caption} style={style} align={align}>
 				<iframe src={url} style={{width: '100%', height: height, margin: '0 auto', display: 'block'}} frameBorder="0"></iframe>
-				
+
 				{ (reference) ? <div style={styles.reference}> <Reference citationObject={reference} mode={'mla'} /> </div> : null }
 			</Media>
 		);

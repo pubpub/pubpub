@@ -31,9 +31,10 @@ const MathOptions = {
 const PPMComponent = React.createClass({
 	propTypes: {
 		markdown: PropTypes.string,
-		assets: PropTypes.array,
-		references: PropTypes.array,
-		selections: PropTypes.array,
+		
+		assets: PropTypes.object,
+		references: PropTypes.object,
+		selections: PropTypes.object,
 	},
 
 	getInitialState() {
