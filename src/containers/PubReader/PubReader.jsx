@@ -234,7 +234,7 @@ const PubReader = React.createClass({
 					<PubNav
 						height={this.height}
 						openPubModalHandler={this.openPubModal}
-						status={this.props.readerData.get('status')}
+						status={pubData.history[0].markdown ? this.props.readerData.get('status') : 'loading'}
 						slug={this.props.slug}
 						isAuthor={pubData.isAuthor}
 						pubStatus={pubData.status}

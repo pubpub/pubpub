@@ -19,6 +19,7 @@ export const globalStyles = {
 	},
 	loading: {
 		opacity: 0,
+		pointerEvents: 'none',
 		transition: '0s linear opacity .25s',
 	},
 	loaded: {
