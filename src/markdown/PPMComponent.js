@@ -33,6 +33,7 @@ const PPMComponent = React.createClass({
 		markdown: PropTypes.string,
 		assets: PropTypes.array,
 		references: PropTypes.array,
+		selections: PropTypes.array,
 	},
 
 	getInitialState() {
@@ -45,6 +46,7 @@ const PPMComponent = React.createClass({
 			markdown: '',
 			assets: [],
 			references: [],
+			selections: [],
 		};
 	},
 
@@ -95,7 +97,7 @@ const PPMComponent = React.createClass({
 					const InputFieldType = pluginInputField.type;
 					const Field = InputFields[InputFieldType];
 					if (InputFields[InputFieldType].transform) {
-						pluginProps[propName] = InputFields[InputFieldType].transform(propVal, pluginInputField.params, this.props.assets, this.props.references);
+						pluginProps[propName] = InputFields[InputFieldType].transform(propVal, pluginInputField.params, this.props.assets, this.props.references, this.props.selections);
 					}
 				}
 			}

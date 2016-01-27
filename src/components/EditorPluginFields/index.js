@@ -1,5 +1,6 @@
 import assetField from './assetField';
 import alignField from './alignField';
+import selectionField from './selectionField';
 import sizeField from './sizeField';
 import referenceField from './referenceField';
 
@@ -8,6 +9,7 @@ import baseRadioField from './baseRadioField';
 
 export default {
 	'asset': assetField,
+	'selection': selectionField,
 	'text': baseTextField,
 	'align': alignField,
 	'size': sizeField,
