@@ -1,11 +1,11 @@
 import React, {PropTypes} from 'react';
 import createPubPubPlugin from './PubPub';
 
-import Radium, {Style} from 'radium';
+import {Style} from 'radium';
 import smoothScroll from '../../utils/smoothscroll';
 
 const SelectionInputFields = [
-	{title: 'selectionNum', type: 'selection', params: {}},
+	{title: 'index', type: 'selection', params: {}},
 ];
 
 const SelectionConfig = {
@@ -13,8 +13,6 @@ const SelectionConfig = {
 	inline: true,
 	autocomplete: false
 };
-
-let styles = {};
 
 const SelectionPlugin = React.createClass({
 	propTypes: {
@@ -60,25 +58,7 @@ const SelectionPlugin = React.createClass({
 
 		};
 		if (!this.props.selectionItem) {
-			return (<span 
-				id={'selection-block-'}
-				className={'selection-block'} 
-				style={styleObject} 
-				onClick={this.scrollToHighlight}
-				onMouseEnter={this.hoverOn}
-				onMouseLeave={this.hoverOff}>
-
-					<Style rules={{
-						'.selection-block': {
-							backgroundColor: 'rgba(0,0,0,0.15)',
-						},
-						'.selection-block-active': {
-							backgroundColor: 'rgba(0,0,0,0.5)',
-						},
-					}} />
-
-					selection
-			</span>);
+			return null;
 		}
 		return (
 			<span 
@@ -103,10 +83,5 @@ const SelectionPlugin = React.createClass({
 		);
 	}
 });
-
-styles = {
-	
-};
-
 
 export default createPubPubPlugin(SelectionPlugin, SelectionConfig, SelectionInputFields);

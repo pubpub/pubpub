@@ -3,7 +3,6 @@ import Media from './baseMediaPlugin';
 import createPubPubPlugin from './PubPub';
 import {Reference} from '../';
 
-
 const QuoteInputFields = [
 	{title: 'quote', type: 'text', params: {placeholder: 'Caption describing the image'}},
 	{title: 'attribution', type: 'text', params: {placeholder: 'Who said it'}},
@@ -17,8 +16,6 @@ const QuoteConfig = {
 	inline: true,
 	autocomplete: true
 };
-
-
 
 let styles = {};
 
@@ -87,6 +84,5 @@ styles = {
 		paddingTop: '0.5em'
 	}
 };
-
 
 export default createPubPubPlugin(QuotePlugin, QuoteConfig, QuoteInputFields);

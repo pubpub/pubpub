@@ -52,7 +52,6 @@ const ImagePlugin = React.createClass({
 		const caption = this.props.caption;
 		const reference = this.props.reference;
 
-		let html;
 		const imgProps = {style: {width: '100%', height: '100%'}};
 
 		return (<Media caption={caption} size={size} align={align} reference={reference}>
@@ -61,6 +60,5 @@ const ImagePlugin = React.createClass({
 		);
 	}
 });
-
 
 export default createPubPubPlugin(ImagePlugin, ImageConfig, ImageInputFields);

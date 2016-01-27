@@ -19,8 +19,6 @@ const IframeConfig = {
 	autocomplete: true
 };
 
-
-
 let styles = {};
 
 const IframePlugin = React.createClass({
@@ -86,6 +84,5 @@ styles = {
 		paddingTop: '0.5em'
 	}
 };
-
 
 export default createPubPubPlugin(IframePlugin, IframeConfig, IframeInputFields);

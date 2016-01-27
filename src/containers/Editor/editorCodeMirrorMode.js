@@ -25,8 +25,8 @@ export default function() {
 
 				const list = [];
 
-				for (const plugin in plugins) {
-					if (plugins.hasOwnProperty(plugin) && plugins[plugin].Config.autocomplete === true) {
+				for (const plugin in Plugins) {
+					if (Plugins.hasOwnProperty(plugin) && Plugins[plugin].Config.autocomplete === true) {
 						if (completionString.length >= 2 && plugin.charAt(0) === completionString.charAt(1)) {
 							list.unshift({text: plugin + ': ]]', displayText: plugin});
 						} else {
