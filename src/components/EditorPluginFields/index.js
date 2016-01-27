@@ -6,7 +6,7 @@ import referenceField from './referenceField';
 import urlField from './urlField';
 
 import baseTextField from './baseTextField';
-import baseRadioField from './baseRadioField';
+// import baseRadioField from './baseRadioField';
 
 export default {
 	'asset': assetField,
