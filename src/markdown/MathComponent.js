@@ -2,6 +2,8 @@ import React, {PropTypes} from 'react';
 import Radium from 'radium';
 import ImageLoader from 'react-imageloader';
 
+let styles = {};
+
 const MathPlugin = React.createClass({
 	propTypes: {
 		svg: PropTypes.string,
@@ -35,12 +37,19 @@ const MathPlugin = React.createClass({
 	   // const urlRequest = 'https://dry-retreat-1640.herokuapp.com/mathtest?equation=' + encodeURIComponent(equation);
 		// const imgProps = {style: {height: '1.5em'}};
 		return (
-			<ImageLoader onLoad={this.loadedImage} src={urlRequest} wrapper={React.DOM.span} preloader={this.preloader}>
+			<ImageLoader onLoad={this.loadedImage} src={urlRequest} imageProps={styles.math} wrapper={React.DOM.span} preloader={this.preloader}>
 				{equation}
 			</ImageLoader>
 		);
 	}
 });
+
+
+styles = {
+  math: {
+    verticalAlign: 'middle'
+  }
+}
 
 
 export default MathPlugin;
