@@ -1,4 +1,4 @@
-var UNESCAPE_RE = /\\([ \\!"#$%&'()*+,.\/:;<=>?@[\]^_`{|}~-])/g;
+var UNESCAPE_RE = /\\([ \\!#$%&'()*+,.\/:;<=>?@[\]^_`{|}~-])/g;
 
 var OPENING_CHAR = 0x5B; /* [ */
 var CLOSING_CHAR = 0x5D; /* ] */
@@ -25,7 +25,7 @@ function ppm(state, silent) {
       break;
     }
 
-    state.md.inline.skipToken(state);
+    // state.md.inline.skipToken(state);
   }
 
 
