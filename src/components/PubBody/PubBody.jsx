@@ -32,9 +32,14 @@ const PubBody = React.createClass({
 		showPubHighlights: PropTypes.bool,
 		isFeatured: PropTypes.bool,
 		errorView: PropTypes.bool,
+<<<<<<< HEAD
 		assets: PropTypes.array,
 		references: PropTypes.array,
 		selections: PropTypes.array,
+=======
+		assets: PropTypes.object,
+		references: PropTypes.object,
+>>>>>>> 22e02e5... fixing warning errors
 		minFont: PropTypes.number,
 		firstPublishedDate: PropTypes.string,
 		lastPublishedDate: PropTypes.string
