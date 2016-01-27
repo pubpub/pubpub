@@ -4,25 +4,6 @@ import Plugins from '../../components/EditorPluginsNew/index.js';
 
 export default function() {
 
-	const plugins = {};
-
-	const start = [
-		{regex: /\[\[title:.*\]\]/, token: 'ppm ppm-title'},
-		{regex: /\[\[abstract:.*\]\]/, token: 'ppm ppm-abstract'},
-		{regex: /\[\[authorsNote:.*\]\]/, token: 'ppm ppm-authorsNote'}
-	];
-	for (const pluginName in Plugins) {
-		if (Plugins.hasOwnProperty(pluginName)) {
-			Plugins[pluginName].then(function(plugin) {
-				plugins[pluginName] = plugin;
-				start.push({
-					regex: new RegExp('\\[\\[' + plugin.Config.title + ':.*\\]\\]'),
-					token: 'ppm plugin plugin-' + plugin.Config.title
-				});
-			});
-		}
-	}
-
 	CodeMirror.registerHelper('hint', 'plugins', function(editor) { // (editor,options)
 
 		let result = null;
@@ -65,6 +46,7 @@ export default function() {
 		return result;
 	});
 
+
 	/*
 	for (const plugin in plugins) {
 		if (plugins.hasOwnProperty(plugin)) {
@@ -76,9 +58,22 @@ export default function() {
 	}
 	*/
 
+	const start = [
+		{regex: /\[\[title:.*\]\]/, token: 'ppm ppm-title'},
+		{regex: /\[\[abstract:.*\]\]/, token: 'ppm ppm-abstract'},
+		{regex: /\[\[authorsNote:.*\]\]/, token: 'ppm ppm-authorsNote'}
+	];
 
-
-
+	for (const pluginKey in Plugins) {
+		if (Plugins.hasOwnProperty(pluginKey)) {
+			const plugin = Plugins[pluginKey];
+			console.log(plugin);
+			start.push({
+				regex: new RegExp('\\[\\[' + plugin.Config.title + ':.*\\]\\]'),
+				token: 'ppm plugin plugin-' + plugin.Config.title
+			});
+		}
+	}
 
 	CodeMirror.defineSimpleMode('plugin', {
 		start: start
