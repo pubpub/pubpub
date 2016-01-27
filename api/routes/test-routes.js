@@ -346,7 +346,7 @@ app.get('/handleNewFile', function(req,res){
 							result.thumbnail = result.url ? result.url.replace('/upload', '/upload/c_limit,h_50,w_50') : req.query.url;
 							if (!result.url) {
 								console.log('cloudinaryResponse in test-routes did not have url. Here is the response:');
-								console.log(cloudinaryResponse);
+								console.log(result);
 							}
 					        result.assetType = 'image';
 							return res.status(201).json(result);	
@@ -375,7 +375,7 @@ app.get('/handleNewFile', function(req,res){
 					result.assetType = 'video';
 					return res.status(201).json(result);	
 				} catch (err) {
-					console.log('In catch on cloudinary video upload.'); console.log('req.body', req.body); console.log('err', err);
+					console.log('In catch on cloudinary video upload.'); console.log('req.body', req.body); console.log('err', err); console.log('result', result);
 					result = {
 						url: req.query.url,
 						thumbnail: '/thumbnails/file.png',

@@ -72,11 +72,15 @@ app.post('/register', function(req, res) {
 		
 		// Upload to cloudinary so we can have a thumbnail and CDN action.
 		cloudinary.uploader.upload(req.body.image, function(cloudinaryResponse) { 
+			if (!cloudinaryResponse.url) {
+				console.log('cloudinaryResponse in login-routes did not have url. Here is the response:');
+				console.log(cloudinaryResponse);
+			}
 			const newUser = new User({ 
 				email : req.body.email, 
 				username: newUsername, 
 				image: req.body.image, 
-				thumbnail: cloudinaryResponse.url.replace('/upload', '/upload/c_limit,h_50,w_50'),
+				thumbnail: cloudinaryResponse.url ? cloudinaryResponse.url.replace('/upload', '/upload/c_limit,h_50,w_50') : req.body.image,
 				firstName: req.body.firstName,
 				lastName: req.body.lastName,
 				name: req.body.fullname, 
