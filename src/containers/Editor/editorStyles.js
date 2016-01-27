@@ -428,6 +428,9 @@ export function codeMirrorStyles(loginData) {
 		'.cm-plugin-quote': {
 			backgroundColor: 'rgba(245, 245, 169, 0.5)',
 		},
+		'.cm-plugin-iframe': {
+			backgroundColor: 'rgba(233, 201, 153, 0.5);',
+		},
 	};
 }
 

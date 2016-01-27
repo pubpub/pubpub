@@ -18,6 +18,7 @@ const EditorPluginPopup = React.createClass({
 		codeMirrorChange: PropTypes.object,
 		assets: PropTypes.object,
 		references: PropTypes.object,
+		selections: PropTypes.object,
 	},
 
 	getDefaultProps: function() {
@@ -60,6 +61,7 @@ const EditorPluginPopup = React.createClass({
 
 		this.assets = (this.props.assets) ? Object.values(this.props.assets) : [];
 		this.references = (this.props.references) ? Object.values(this.props.references) : [];
+		this.selections = (this.props.selections) ? Object.values(this.props.selections) : [];
 
 
 		const change = nextProps.codeMirrorChange;
@@ -236,7 +238,7 @@ const EditorPluginPopup = React.createClass({
 									return (<div key={'pluginVal-' + fieldTitle + this.state.pluginType} style={styles.pluginOptionWrapper}>
 														<label htmlFor={fieldType} style={styles.pluginOptionLabel}>{fieldTitle}</label>
 														<div style={styles.pluginPropWrapper}>
-															<FieldComponent selectedValue={value} references={this.references} assets={this.assets} {...PluginInputFieldParams} ref={(ref) => this.popupInputFields[fieldTitle] = ref}/>
+															<FieldComponent selectedValue={value} references={this.references} assets={this.assets} selections={this.selections} {...PluginInputFieldParams} ref={(ref) => this.popupInputFields[fieldTitle] = ref}/>
 														</div>
 														<div style={styles.clearfix}></div>
 													</div>);
