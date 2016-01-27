@@ -78,7 +78,6 @@ const Discussions = React.createClass({
 	filterDiscussions: function(discussionsData) {
 		function findDiscussionRoot(discussions, searchID) {
 			for (let index = 0; index < discussions.length; index++) {
-				console.log(discussions[index]._id, searchID);
 				if (discussions[index]._id === searchID) {
 					return discussions[index];
 				} else if (discussions[index].children && discussions[index].children.length) {
