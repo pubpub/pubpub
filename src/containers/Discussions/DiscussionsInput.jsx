@@ -65,7 +65,7 @@ const PubDiscussionsInput = React.createClass({
 			// const cm = document.getElementsByClassName('CodeMirror')[0].CodeMirror;
 			const cm = document.getElementById(this.props.codeMirrorID).childNodes[0].CodeMirror;
 			const spacing = cm.getValue().length ? ' ' : '';
-			cm.setValue(cm.getValue() + spacing + '{{selection: ' + nextProps.newDiscussionData.get('selections').size + '}} ' );	
+			cm.setValue(cm.getValue() + spacing + '[[selection: index=' + nextProps.newDiscussionData.get('selections').size + ']] ' );	
 		}
 		
 	},

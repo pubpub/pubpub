@@ -7,9 +7,10 @@ import DiscussionsInput from './DiscussionsInput';
 import DiscussionsScore from './DiscussionsScore';
 import smoothScroll from '../../utils/smoothscroll';
 
-import marked from '../../markdown/markdown';
-import markdownExtensions from '../../components/EditorPlugins';
-marked.setExtensions(markdownExtensions);
+import PPMComponent from '../../markdown/PPMComponent';
+// import marked from '../../markdown/markdown';
+// import markdownExtensions from '../../components/EditorPlugins';
+// marked.setExtensions(markdownExtensions);
 
 // import {globalMessages} from '../../utils/globalMessages';
 import {FormattedMessage} from 'react-intl';
@@ -114,7 +115,8 @@ const DiscussionsItem = React.createClass({
 		const assets = discussionItem.assets || [];
 		const references = discussionItem.references || [];
 		const selections = discussionItem.selections || [];
-		const md = marked(discussionItem.markdown || '', {assets, references, selections});
+
+		// const md = marked(discussionItem.markdown || '', {assets, references, selections});
 
 		return (
 			<div style={styles.container}>
@@ -166,8 +168,13 @@ const DiscussionsItem = React.createClass({
 					</div>
 
 					<div style={styles.discussionContent}>
+<<<<<<< HEAD
 						{md.tree}
 						{/* discussionItem.markdown */}
+=======
+						{/* md.tree */}
+						<PPMComponent assets={assets} references={references} selections={selections} markdown={discussionItem.markdown} />
+>>>>>>> db727e2... Making selections work in discussions. Making pubReader use new markdown renderer
 					</div>
 				</div>
 				

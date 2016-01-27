@@ -20,9 +20,9 @@ import {rightBarStyles} from './rightBarStyles';
 import {globalMessages} from '../../utils/globalMessages';
 import {FormattedMessage} from 'react-intl';
 
-import marked from '../../markdown/markdown';
-import markdownExtensions from '../../components/EditorPlugins';
-marked.setExtensions(markdownExtensions);
+// import marked from '../../markdown/markdown';
+// import markdownExtensions from '../../components/EditorPlugins';
+// marked.setExtensions(markdownExtensions);
 
 let styles = {};
 
@@ -68,11 +68,16 @@ const PubReader = React.createClass({
 		const assets = convertImmutableListToObject( this.props.readerData.getIn(['pubData', 'history', versionIndex, 'assets']) );
 		const references = convertImmutableListToObject(this.props.readerData.getIn(['pubData', 'history', versionIndex, 'references']), true);
 		const selections = [];
-		const mdOutput = marked(inputMD, {assets, references, selections});
+		// const mdOutput = marked(inputMD, {assets, references, selections});
 		// console.log(inputMD);
 		this.setState({
-			htmlTree: mdOutput.tree,
-			TOC: mdOutput.travisTOCFull,
+			// htmlTree: mdOutput.tree,
+			// TOC: mdOutput.travisTOCFull,
+			inputMD: inputMD,
+			assets: assets, 
+			references: references,
+			selections: selections,
+			TOC: [],
 		});
 	},
 
@@ -91,10 +96,15 @@ const PubReader = React.createClass({
 			const assets = convertImmutableListToObject( nextProps.readerData.getIn(['pubData', 'history', versionIndex, 'assets']) );
 			const references = convertImmutableListToObject(nextProps.readerData.getIn(['pubData', 'history', versionIndex, 'references']), true);
 			const selections = [];
-			const mdOutput = marked(inputMD, {assets, references, selections});
+			// const mdOutput = marked(inputMD, {assets, references, selections});
 			this.setState({
-				htmlTree: mdOutput.tree,
-				TOC: mdOutput.travisTOCFull,
+				// htmlTree: mdOutput.tree,
+				// TOC: mdOutput.travisTOCFull,
+				inputMD: inputMD,
+				assets: assets, 
+				references: references,
+				selections: selections,
+				TOC: [],
 			});
 		}
 
@@ -261,7 +271,12 @@ const PubReader = React.createClass({
 						abstract={pubData.history[versionIndex].abstract}
 						authorsNote={pubData.history[versionIndex].authorsNote}
 						minFont={15}
-						htmlTree={this.state.htmlTree}
+						// htmlTree={this.state.htmlTree}
+						markdown={this.state.inputMD}
+						assets={this.state.assets}
+						references={this.state.references}
+						selections={this.state.selections}
+
 						authors={pubData.history[versionIndex].authors}
 						addSelectionHandler={this.addSelection}
 						style={pubData.history[versionIndex].style}
