@@ -31,7 +31,7 @@ const MathOptions = {
 const PPMComponent = React.createClass({
 	propTypes: {
 		markdown: PropTypes.string,
-		
+
 		assets: PropTypes.object,
 		references: PropTypes.object,
 		selections: PropTypes.object,
@@ -67,9 +67,9 @@ const PPMComponent = React.createClass({
 		case 'ppm':
 			props.className = 'ppm';
 			if (children.length > 1) {
-				console.log('This shouldnt happen!!');
+				console.warn('A component should not have multiple children', children);
 			}
-			
+
 			if (children[0] === 'pagebreak') {
 				return <div className={'pagebreak'} style={{display: 'block', borderTop: '1px dashed #ddd'}}></div>
 			}
