@@ -18,37 +18,43 @@ const SelectionPlugin = React.createClass({
 	propTypes: {
 		error: PropTypes.string,
 		children: PropTypes.string,
-		selectionItem: PropTypes.object,
+		index: PropTypes.object,
 	},
 	getInitialState: function() {
 		return {};
 	},
 
 	scrollToHighlight: function() {
-		const destination = document.getElementsByClassName('selection-' + this.props.selectionItem._id)[0];
+		const destination = document.getElementsByClassName('selection-' + this.props.index._id)[0];
 		const context = document.getElementsByClassName('centerBar')[0];
 		smoothScroll(destination, 500, ()=>{}, context);
 		smoothScroll(destination, 500, ()=>{}, null, -60);
 	},
 
 	hoverOn: function() {
-		const items = document.getElementsByClassName('selection-' + this.props.selectionItem._id);
+		const items = document.getElementsByClassName('selection-' + this.props.index._id);
 		// If list is empty - show hover box
+		if (!items.length) {
+			console.log(this.props.index);
+		}
 		for (let index = 0; index < items.length; index++) {
 			items[index].className = items[index].className.replace('selection ', 'selection selection-active ');	
 		}
 		
 	},
 	hoverOff: function() {
-		const items = document.getElementsByClassName('selection-' + this.props.selectionItem._id);
+		const items = document.getElementsByClassName('selection-' + this.props.index._id);
 		// If list is empty - remove hover box
+		if (!items.length) {
+			console.log(this.props.index);
+		}
 		for (let index = 0; index < items.length; index++) {
 			items[index].className = items[index].className.replace('selection selection-active ', 'selection ');	
 		}
 	},
 
 	render: function() {
-		// console.log('this.props', this.props);
+		console.log('this.props', this.props);
 		const styleObject = {
 			borderRadius: '3px',
 			padding: '0px 8px',
@@ -57,12 +63,13 @@ const SelectionPlugin = React.createClass({
 			userSelect: 'none',
 
 		};
-		if (!this.props.selectionItem) {
+		if (!this.props.index) {
+			console.log(this.props.index);
 			return null;
 		}
 		return (
 			<span 
-				id={'selection-block-' + this.props.selectionItem._id}
+				id={'selection-block-' + this.props.index._id}
 				className={'selection-block'} 
 				style={styleObject} 
 				onClick={this.scrollToHighlight}

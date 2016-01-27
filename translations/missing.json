@@ -2,6 +2,7 @@
   "es": {
     "editor.publishMessage5": "Missing. English is: By publishing, you agree to a Creative Commons By license for your work.",
     "journal.global": "Same as English: Global",
+    "pubMeta.inviteMessage": "Missing. English is: Do you know someone who might have a have an interesting opinion on this paper? Invite them to join the discussion! We will send them a message and help them create accounts.",
     "global.analytics": "Same as English: Analytics",
     "global.pubs": "Same as English: Pubs",
     "global.url": "Same as English: url",
@@ -16,6 +17,7 @@
     "editor.addReference": "Missing. English is: Add Reference",
     "login.firstName": "Missing. English is: First Name",
     "login.lastName": "Missing. English is: Last Name",
+    "pubMeta.inviteMessage": "Missing. English is: Do you know someone who might have a have an interesting opinion on this paper? Invite them to join the discussion! We will send them a message and help them create accounts.",
     "user.noPubs": "Missing. English is: No Pubs Yet",
     "user.noDiscussions": "Missing. English is: No Discussions Yet",
     "editingDisableMobile": "Missing. English is: Editing disabled on mobile view - but you can still read and comment. Open on a laptop or desktop to edit.",

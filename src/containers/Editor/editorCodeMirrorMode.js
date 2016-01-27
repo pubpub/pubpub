@@ -67,7 +67,7 @@ export default function() {
 	for (const pluginKey in Plugins) {
 		if (Plugins.hasOwnProperty(pluginKey)) {
 			const plugin = Plugins[pluginKey];
-			console.log(plugin);
+			// console.log(plugin);
 			start.push({
 				regex: new RegExp('\\[\\[' + plugin.Config.title + ':.*\\]\\]'),
 				token: 'ppm plugin plugin-' + plugin.Config.title
