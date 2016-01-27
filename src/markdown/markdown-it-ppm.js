@@ -25,7 +25,7 @@ function ppm(state, silent) {
       break;
     }
 
-    // state.md.inline.skipToken(state);
+    state.md.inline.skipToken(state);
   }
 
 
