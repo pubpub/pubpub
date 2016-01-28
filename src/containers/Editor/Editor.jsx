@@ -38,7 +38,7 @@ import {convertFirebaseToObject} from '../../utils/parsePlugins';
 import {globalMessages} from '../../utils/globalMessages';
 import {FormattedMessage} from 'react-intl';
 
-const FireBaseURL = (process.env.NODE_ENV === 'production' && location.hostname !== 'pubpub-dev.herokuapp.com') ? 'https://pubpub.firebaseio.com/' : 'https://pubpub-dev.firebaseio.com/';
+let FireBaseURL;
 
 const cmOptions = {
 	lineNumbers: false,
@@ -90,6 +90,8 @@ const Editor = React.createClass({
 	},
 
 	componentDidMount() {
+		FireBaseURL = (process.env.NODE_ENV === 'production' && location.hostname !== 'pubpub-dev.herokuapp.com') ? 'https://pubpub.firebaseio.com/' : 'https://pubpub-dev.firebaseio.com/';
+
 		if (! this.props.editorData.get('error')) {
 
 			// loadCss('/css/codemirror.css');
@@ -99,7 +101,6 @@ const Editor = React.createClass({
 			if (this.props.editorData.getIn(['pubEditData', 'token'])) {
 				this.initializeEditorData(this.props.editorData.getIn(['pubEditData', 'token']));
 			}
-
 		}
 	},
 

@@ -71,6 +71,12 @@ export const scienceStyle = {
 		overflowX: 'scroll',
 
 	},
+	'blockquote': {
+		padding: '10px 20px',
+		margin: '0 0 20px',
+		fontSize: '17.5px',
+		borderLeft: '5px solid #eee',
+	},
 	'ul, ol': {
 		fontFamily: 'Lora',
 		padding: '0px 3em 0px 3em',
