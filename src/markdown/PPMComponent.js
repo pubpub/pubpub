@@ -132,7 +132,7 @@ const PPMComponent = React.createClass({
 				({globals, pluginProps} = plugin.Config.prerender(globals, pluginProps));
 			}
 
-			return <Component {...pluginProps}/>;
+			return <Component {...props} {...pluginProps} />;
 			break;
 
 		case 'code':
