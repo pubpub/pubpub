@@ -92,8 +92,8 @@ const PubDiscussionsInput = React.createClass({
 		return (
 			<div style={[styles.container, this.props.isReply && styles.replyContainer]}>
 				<Style rules={{
-					...codeMirrorStyles(),
 					'.inputCodeMirror .CodeMirror': {
+						...codeMirrorStyles(),
 						backgroundColor: 'transparent',
 						fontSize: '15px',
 						color: '#555',
