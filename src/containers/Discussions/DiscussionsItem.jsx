@@ -7,6 +7,7 @@ import DiscussionsInput from './DiscussionsInput';
 import DiscussionsScore from './DiscussionsScore';
 import smoothScroll from '../../utils/smoothscroll';
 
+import {convertListToObject} from '../../utils/parsePlugins';
 import PPMComponent from '../../markdown/PPMComponent';
 // import marked from '../../markdown/markdown';
 // import markdownExtensions from '../../components/EditorPlugins';
@@ -111,9 +112,14 @@ const DiscussionsItem = React.createClass({
 	},
 
 	render: function() {
+
 		const discussionItem = this.props.discussionItem;
-		const assets = discussionItem.assets || [];
-		const references = discussionItem.references || [];
+		// console.log('discussionItem', discussionItem);
+		// const assets = discussionItem.assets || {};
+		// const references = discussionItem.references || {};
+
+		const assets = convertListToObject( discussionItem.assets );
+		const references = convertListToObject(discussionItem.references, true);
 		const selections = discussionItem.selections || [];
 
 		// const md = marked(discussionItem.markdown || '', {assets, references, selections});
