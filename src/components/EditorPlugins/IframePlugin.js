@@ -1,9 +1,23 @@
 import React, {PropTypes} from 'react';
-import Radium from 'radium';
 import Media from './baseMediaPlugin';
+import createPubPubPlugin from './PubPub';
 import {Reference} from '../';
-import {propUrl, propWidth, propHeight, propAlign, propCaption, propSrcRef} from './pluginProps';
-export const iframeOptions = {url: propUrl, width: propWidth, height: propHeight, align: propAlign, caption: propCaption, reference: propSrcRef};
+
+
+const IframeInputFields = [
+	{title: 'url', type: 'url', params: {}},
+	{title: 'height', type: 'text', params: {placeholder: 'iFrame height'}},
+	{title: 'width', type: 'text', params: {placeholder: 'iFrame width'}},
+	{title: 'align', type: 'align'},
+	{title: 'caption', type: 'text', params: {placeholder: 'iFrame caption'}},
+	{title: 'reference', type: 'reference'},
+];
+
+const IframeConfig = {
+	title: 'iframe',
+	inline: true,
+	autocomplete: true
+};
 
 let styles = {};
 
@@ -11,13 +25,12 @@ const IframePlugin = React.createClass({
 	propTypes: {
 		error: PropTypes.string,
 		children: PropTypes.string,
-		align: React.PropTypes.oneOf(['left', 'right', 'full']),
 		url: PropTypes.string,
-		width: PropTypes.string,
 		height: PropTypes.string,
+		width: PropTypes.string,
 		caption: PropTypes.string,
-		reference: PropTypes.object,
-		
+		align: React.PropTypes.oneOf(['left', 'right', 'full']),
+		reference: PropTypes.object
 	},
 	getInitialState: function() {
 		return {};
@@ -48,7 +61,7 @@ const IframePlugin = React.createClass({
 		} else {
 			html = (<Media caption={caption} style={style} align={align}>
 				<iframe src={url} style={{width: '100%', height: height, margin: '0 auto', display: 'block'}} frameBorder="0"></iframe>
-				
+
 				{ (reference) ? <div style={styles.reference}> <Reference citationObject={reference} mode={'mla'} /> </div> : null }
 			</Media>
 		);
@@ -72,5 +85,4 @@ styles = {
 	}
 };
 
-
-export default Radium(IframePlugin);
+export default createPubPubPlugin(IframePlugin, IframeConfig, IframeInputFields);

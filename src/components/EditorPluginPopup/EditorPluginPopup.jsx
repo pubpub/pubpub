@@ -5,7 +5,7 @@ import {parsePluginString} from '../../utils/parsePlugins';
 import {globalMessages} from '../../utils/globalMessages';
 import {FormattedMessage} from 'react-intl';
 
-import Plugins from '../../components/EditorPluginsNew/index.js';
+import Plugins from '../../components/EditorPlugins/index.js';
 import InputFields from '../EditorPluginFields/index.js';
 
 let styles = {};

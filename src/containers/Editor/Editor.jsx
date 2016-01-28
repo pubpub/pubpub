@@ -27,8 +27,8 @@ import {editorDefaultText} from './editorDefaultText';
 import SHA1 from 'crypto-js/sha1';
 import encHex from 'crypto-js/enc-hex';
 
-import marked from '../../markdown/markdown';
-import markdownExtensions from '../../components/EditorPlugins';
+// import marked from '../../markdown/markdown';
+// import markdownExtensions from '../../components/EditorPlugins';
 import FirepadUserList from './editorFirepadUserlist';
 
 import {Discussions} from '../';
@@ -39,8 +39,6 @@ import {globalMessages} from '../../utils/globalMessages';
 import {FormattedMessage} from 'react-intl';
 
 const FireBaseURL = (process.env.NODE_ENV === 'production') ? 'https://pubpub.firebaseio.com/' : 'https://pubpub-dev.firebaseio.com/';
-
-marked.setExtensions(markdownExtensions);
 
 const cmOptions = {
 	lineNumbers: false,

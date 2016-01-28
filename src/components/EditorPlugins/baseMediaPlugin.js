@@ -1,5 +1,7 @@
 import React, {PropTypes} from 'react';
 import Radium from 'radium';
+import {Reference} from '../';
+
 
 let styles = {};
 
@@ -9,7 +11,8 @@ const baseMediaPlugin = React.createClass({
 		size: React.PropTypes.oneOfType([React.PropTypes.oneOf(['small', 'medium', 'large']), React.PropTypes.number]),
 		align: React.PropTypes.oneOf(['left', 'right', 'full']),
 		caption: PropTypes.string,
-		style: PropTypes.object
+		style: PropTypes.object,
+		reference: PropTypes.object,
 	},
 	getInitialState: function() {
 		return {};
@@ -19,6 +22,7 @@ const baseMediaPlugin = React.createClass({
 		const align = this.props.align || 'full';
 		const caption = this.props.caption || '';
 		const baseStyle = this.props.style || {};
+		const reference = this.props.reference || null;
 
 		// whether floating flows all of the text or just some is dependent on how much space is left
 		// a 'large' image is smaller when floating because it needs to leave space for the text
@@ -56,6 +60,7 @@ const baseMediaPlugin = React.createClass({
 		return (<div style={wrapperStyle}>
 			{this.props.children}
 			{ (caption) ? <span style={styles.caption}>{caption}</span> : null }
+			{ (reference) ? <div style={styles.caption}> <Reference citationObject={reference} mode={'mla'} /> </div> : null }
 		</div>
 		);
 	}

@@ -71,9 +71,6 @@ export const scienceStyle = {
 		overflowX: 'scroll',
 
 	},
-	'.codeBlockPre': {
-		margin: '10px 0px',
-	},
 	'ul, ol': {
 		fontFamily: 'Lora',
 		padding: '0px 3em 0px 3em',
