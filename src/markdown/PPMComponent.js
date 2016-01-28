@@ -51,7 +51,6 @@ const PPMComponent = React.createClass({
 	},
 
 	handleIterate: function(globals, Tag, props, children) {
-
 		let Component = Tag;
 		const id = children[0] && children[0].replace ? children[0].replace(/\s/g, '-').toLowerCase() : undefined;
 
