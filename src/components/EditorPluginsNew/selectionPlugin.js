@@ -88,6 +88,7 @@ const SelectionPlugin = React.createClass({
 			<div 
 				id={'selection-block-' + this.props.index._id}
 				className={'selection-block'} 
+				key={'selection-block-' + this.props.index._id}
 				style={styles.selectionBlock} 
 				onClick={this.scrollToHighlight}
 				onMouseEnter={this.hoverOn}
