@@ -122,7 +122,6 @@ const DiscussionsItem = React.createClass({
 		const assets = convertListToObject( discussionItem.assets );
 		const references = convertListToObject(discussionItem.references, true);
 		const selections = discussionItem.selections || [];
-
 		// const md = marked(discussionItem.markdown || '', {assets, references, selections});
 
 		return (
@@ -175,13 +174,10 @@ const DiscussionsItem = React.createClass({
 					</div>
 
 					<div style={styles.discussionContent}>
-<<<<<<< HEAD
-						{md.tree}
-						{/* discussionItem.markdown */}
-=======
+
 						{/* md.tree */}
 						<PPMComponent assets={assets} references={references} selections={selections} markdown={discussionItem.markdown} />
->>>>>>> db727e2... Making selections work in discussions. Making pubReader use new markdown renderer
+
 					</div>
 				</div>
 				
