@@ -1,6 +1,6 @@
 /* global CodeMirror */
 
-import Plugins from '../../components/EditorPluginsNew/index.js';
+import Plugins from '../../components/EditorPlugins/index.js';
 
 export default function() {
 

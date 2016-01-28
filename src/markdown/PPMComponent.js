@@ -10,7 +10,7 @@ import ppm from './markdown-it-ppm';
 import mathIt from 'markdown-it-math';
 
 import {parsePluginString} from '../utils/parsePlugins';
-import Plugins from '../components/EditorPluginsNew/index';
+import Plugins from '../components/EditorPlugins/index';
 import InputFields from '../components/EditorPluginFields/index';
 
 import MathComponent from './MathComponent';
@@ -139,7 +139,7 @@ const PPMComponent = React.createClass({
 
 		case 'code':
 			if (props['data-language']) {
-				return <Tag {...props} dangerouslySetInnerHTML={{__html: window.hljs.highlight(props['data-language'], children[0]).value}} />
+				return <Tag {...props} className={'codeBlock'} dangerouslySetInnerHTML={{__html: window.hljs.highlight(props['data-language'], children[0]).value}} />
 			};
 			break;
 		case 'math':

@@ -1,9 +1,21 @@
 import React, {PropTypes} from 'react';
-import Radium from 'radium';
 import Media from './baseMediaPlugin';
+import createPubPubPlugin from './PubPub';
 import {Reference} from '../';
-import {propQuote, propAttribution, propSize, propAlign, propSrcRef} from './pluginProps';
-export const quoteOptions = {quote: propQuote, attribution: propAttribution, size: propSize, align: propAlign, reference: propSrcRef};
+
+const QuoteInputFields = [
+	{title: 'quote', type: 'text', params: {placeholder: 'Caption describing the image'}},
+	{title: 'attribution', type: 'text', params: {placeholder: 'Who said it'}},
+	{title: 'align', type: 'align'},
+	{title: 'size', type: 'size'},
+	{title: 'reference', type: 'reference'},
+];
+
+const QuoteConfig = {
+	title: 'quote',
+	inline: true,
+	autocomplete: true
+};
 
 let styles = {};
 
@@ -73,5 +85,4 @@ styles = {
 	}
 };
 
-
-export default Radium(QuotePlugin);
+export default createPubPubPlugin(QuotePlugin, QuoteConfig, QuoteInputFields);

@@ -27,8 +27,8 @@ import {editorDefaultText} from './editorDefaultText';
 import SHA1 from 'crypto-js/sha1';
 import encHex from 'crypto-js/enc-hex';
 
-import marked from '../../markdown/markdown';
-import markdownExtensions from '../../components/EditorPlugins';
+// import marked from '../../markdown/markdown';
+// import markdownExtensions from '../../components/EditorPlugins';
 import FirepadUserList from './editorFirepadUserlist';
 
 import {Discussions} from '../';
@@ -38,7 +38,7 @@ import {convertFirebaseToObject} from '../../utils/parsePlugins';
 import {globalMessages} from '../../utils/globalMessages';
 import {FormattedMessage} from 'react-intl';
 
-marked.setExtensions(markdownExtensions);
+// marked.setExtensions(markdownExtensions);
 
 const cmOptions = {
 	lineNumbers: false,
