@@ -37,9 +37,8 @@ import {convertFirebaseToObject} from '../../utils/parsePlugins';
 
 import {globalMessages} from '../../utils/globalMessages';
 import {FormattedMessage} from 'react-intl';
-console.log(process.env);
-console.log(process.env.FIREBASE_URL);
-const FireBaseURL = (process.env.NODE_ENV === 'production') ? process.env.FIREBASE_URL : 'https://pubpub-dev.firebaseio.com/';
+
+const FireBaseURL = (process.env.NODE_ENV === 'production' && location.hostname !== 'pubpub-dev.herokuapp.com') ? 'https://pubpub.firebaseio.com/' : 'https://pubpub-dev.firebaseio.com/';
 
 const cmOptions = {
 	lineNumbers: false,
