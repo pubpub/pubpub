@@ -54,13 +54,14 @@ const DiscussionsItem = React.createClass({
 	},
 
 	componentDidMount() {
-		// Go through all the selections and add them to the body
-		const Marklib = require('marklib');
-		this.props.discussionItem.selections.map((selection)=>{
-			// console.log('selection', selection);
-			setTimeout(()=>{
+
+		// Timeout is to let DOM elements draw first, so they exist since everything will initially 'mount' at the same time
+		setTimeout(()=>{
+			// Go through all the selections and add them to the body
+			const Marklib = require('marklib');
+			this.props.discussionItem.selections.map((selection)=>{
 				const pIndex = this.props.pHashes[selection.ancestorHash];
-				// console.log('pIndex', pIndex);
+
 				if (pIndex) {
 					try {
 						const result = {
@@ -91,9 +92,9 @@ const DiscussionsItem = React.createClass({
 						}
 					}
 				}
-			}, 100);
 				
-		});
+			});
+		}, 10);
 		
 	},
 
