@@ -80,10 +80,9 @@ const SelectionPlugin = React.createClass({
 
 	render: function() {
 		if (!this.props.index) {
-			console.log(this.props.index);
 			return null;
 		}
-
+		
 		const offsets = this.calculateOffsets();
 		return (
 			<div 
@@ -106,9 +105,10 @@ const SelectionPlugin = React.createClass({
 						},
 					}} />
 
+					{/* <span style={styles.quotationMark}>“</span> */}
 					{this.state.showContext
 						? <div>
-							
+							<div style={styles.versionHeader}>Selection made on Version {this.props.index.version}</div>
 							{offsets[0] === null
 								? this.props.index.context
 								: <span>
@@ -129,7 +129,7 @@ const SelectionPlugin = React.createClass({
 
 styles = {
 	selectionBlock: {
-		backgroundColor: 'white',
+		backgroundColor: 'rgba(255,255,255,0.65)',
 		borderRadius: '1px',
 		padding: '10px 8px',
 		color: '#5B5B5B',
@@ -141,6 +141,19 @@ styles = {
 	highlight: {
 		backgroundColor: 'rgba(195, 245, 185, 0.6)',
 	},
+	versionHeader: {
+		textAlign: 'center',
+		borderBottom: '1px dashed #ddd',
+		paddingBottom: '8px',
+		marginBottom: '8px',
+		fontStyle: 'initial',
+		color: '#777',
+		fontSize: '0.85em',
+	}
+	// quotationMark: {
+	// 	fontSize: '2em',
+	// 	fontFamily: 'serif',
+	// },
 };
 
 export default createPubPubPlugin(Radium(SelectionPlugin), SelectionConfig, SelectionInputFields);

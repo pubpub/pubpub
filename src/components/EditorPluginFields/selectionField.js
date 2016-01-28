@@ -10,7 +10,6 @@ const AssetField = React.createClass({
 		// Transform is called by PPMComponent.js to transform
 		// 'prop' -- the text value of the asset into the asset object
 		transform: function(prop, params, assets, references, selections) {
-			console.log(selections);
 			if (selections.length >= prop) {
 				return selections[prop - 1];
 			}
