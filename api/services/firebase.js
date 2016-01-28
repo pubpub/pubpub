@@ -9,3 +9,5 @@ export function firebaseTokenGen(username, pubSlug) {
 export function generateAuthToken() {
 	return firebaseSecret;
 };
+
+export const FireBaseURL = (process.env.NODE_ENV === 'production') ? 'https://pubpub.firebaseio.com/' : 'https://pubpub-dev.firebaseio.com/' ;

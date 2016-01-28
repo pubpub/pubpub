@@ -38,6 +38,8 @@ import {convertFirebaseToObject} from '../../utils/parsePlugins';
 import {globalMessages} from '../../utils/globalMessages';
 import {FormattedMessage} from 'react-intl';
 
+const FireBaseURL = (process.env.NODE_ENV === 'production') ? 'https://pubpub.firebaseio.com/' : 'https://pubpub-dev.firebaseio.com/';
+
 marked.setExtensions(markdownExtensions);
 
 const cmOptions = {
@@ -120,7 +122,7 @@ const Editor = React.createClass({
 
 	initializeEditorData: function(token) {
 		// Load Firebase and bind using ReactFireMixin. For assets, references, etc.
-		const ref = new Firebase('https://pubpub.firebaseio.com/' + this.props.slug + '/editorData' );
+		const ref = new Firebase(FireBaseURL + this.props.slug + '/editorData' );
 		ref.authWithCustomToken(token, (error, authData)=> {
 			if (error) {
 				console.log('Authentication Failed!', error);
@@ -128,7 +130,7 @@ const Editor = React.createClass({
 				this.bindAsObject(ref, 'firepadData');
 
 				// Load Firebase ref that is used for firepad
-				const firepadRef = new Firebase('https://pubpub.firebaseio.com/' + this.props.slug + '/firepad');
+				const firepadRef = new Firebase(FireBaseURL + this.props.slug + '/firepad');
 
 				// Load codemirror
 				const codeMirror = CodeMirror(document.getElementById('codemirror-wrapper'), cmOptions);
@@ -143,7 +145,7 @@ const Editor = React.createClass({
 					defaultText: editorDefaultText(this.props.pubData.getIn(['createPubData', 'title']))
 				});
 
-				new Firebase('https://pubpub.firebaseio.com/.info/connected').on('value', (connectedSnap)=> {
+				new Firebase(FireBaseURL + '.info/connected').on('value', (connectedSnap)=> {
 					if (connectedSnap.val() === true) {
 						/* we're connected! */
 						this.setState({editorSaveStatus: 'saved'});
@@ -378,19 +380,19 @@ const Editor = React.createClass({
 		asset.author = this.props.loginData.getIn(['userData', 'username']);
 
 		// Push to firebase ref
-		const ref = new Firebase('https://pubpub.firebaseio.com/' + this.props.slug + '/editorData/assets' );
+		const ref = new Firebase(FireBaseURL + this.props.slug + '/editorData/assets' );
 		ref.push(asset);
 	},
 
 	deleteAsset: function(assetID) {
 		return ()=>{
-			const ref = new Firebase('https://pubpub.firebaseio.com/' + this.props.slug + '/editorData/assets/' + assetID );
+			const ref = new Firebase(FireBaseURL + this.props.slug + '/editorData/assets/' + assetID );
 			ref.remove();
 		};
 	},
 
 	saveUpdatedCollaborators: function(newCollaborators, removedUser) {
-		const ref = new Firebase('https://pubpub.firebaseio.com/' + this.props.slug + '/editorData/collaborators' );
+		const ref = new Firebase(FireBaseURL + this.props.slug + '/editorData/collaborators' );
 		ref.set(newCollaborators);
 		this.props.dispatch(saveCollaboratorsToPub(newCollaborators, removedUser, this.props.slug));
 	},
@@ -400,18 +402,18 @@ const Editor = React.createClass({
 	},
 
 	saveUpdatedSettingsFirebase: function(newSettings) {
-		const ref = new Firebase('https://pubpub.firebaseio.com/' + this.props.slug + '/editorData/settings' );
+		const ref = new Firebase(FireBaseURL + this.props.slug + '/editorData/settings' );
 		ref.update(newSettings);
 	},
 
 	saveUpdatedSettingsFirebaseAndPubPub: function(newSettings) {
-		const ref = new Firebase('https://pubpub.firebaseio.com/' + this.props.slug + '/editorData/settings' );
+		const ref = new Firebase(FireBaseURL + this.props.slug + '/editorData/settings' );
 		ref.update(newSettings);
 		this.props.dispatch(saveSettingsPubPub(this.props.slug, newSettings));
 	},
 
 	saveReferences: function(newReferences) {
-		const ref = new Firebase('https://pubpub.firebaseio.com/' + this.props.slug + '/editorData/references' );
+		const ref = new Firebase(FireBaseURL + this.props.slug + '/editorData/references' );
 		ref.set(newReferences);
 	},
 

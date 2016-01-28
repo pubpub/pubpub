@@ -9,7 +9,7 @@ var Reference = require('../models').Reference;
 var _         = require('underscore');
 var Firebase  = require('firebase');
 
-import {firebaseTokenGen, generateAuthToken} from '../services/firebase';
+import {fireBaseURL, firebaseTokenGen, generateAuthToken} from '../services/firebase';
 
 app.get('/getPub', function(req, res) {
 	const userID = req.user ? req.user._id : undefined;
@@ -23,10 +23,10 @@ app.get('/getPub', function(req, res) {
 				return res.status(201).json(pubData);
 			});
 		} else {
-			return res.status(201).json(pubData);	
+			return res.status(201).json(pubData);
 		}
 
-		
+
 	});
 });
 
@@ -35,13 +35,13 @@ app.get('/getPubEdit', function(req, res) {
 	Pub.getPubEdit(req.query.slug, userID, (err, pubEditData, authError)=>{
 		if (err) {
 			console.log(err);
-			return res.status(500).json(err); 
+			return res.status(500).json(err);
 		}
 
 		if (!authError) {
-			pubEditData.token = firebaseTokenGen(req.user.username, req.query.slug);	
+			pubEditData.token = firebaseTokenGen(req.user.username, req.query.slug);
 		}
-		
+
 
 		return res.status(201).json(pubEditData);
 
@@ -60,12 +60,12 @@ app.post('/createPub', function(req, res) {
 			slug: req.body.slug,
 			abstract: 'Type your abstract here',
 			collaborators: {
-				canEdit:[userID], 
-				canRead:[] 
+				canEdit:[userID],
+				canRead:[]
 			},
 			createDate: new Date().getTime(),
 			status: 'Unpublished',
-			assets: [], 
+			assets: [],
 			history: [],
 			followers: [],
 			featuredIn: [],
@@ -83,7 +83,7 @@ app.post('/createPub', function(req, res) {
 			}
 		});
 		// console.log(pub);
-	  
+
 		pub.save(function (err, savedPub) {
 			if (err) { return res.status(500).json(err);  }
 
@@ -91,7 +91,7 @@ app.post('/createPub', function(req, res) {
 			const userID = req.user['_id'];
 
 			User.update({ _id: userID }, { $addToSet: { pubs: pubID} }, function(err, result){if(err) return handleError(err)});
-			const ref = new Firebase('https://pubpub.firebaseio.com/' + req.body.slug + '/editorData' );
+			const ref = new Firebase(fireBaseURL + req.body.slug + '/editorData' );
 			ref.authWithCustomToken(generateAuthToken(), ()=>{
 				const newEditorData = {
 					collaborators: {},
@@ -113,7 +113,7 @@ app.post('/createPub', function(req, res) {
 
 				return res.status(201).json(savedPub.slug);
 			});
-			
+
 		});
 
 	});
@@ -121,13 +121,13 @@ app.post('/createPub', function(req, res) {
 });
 
 app.post('/updatePub', function(req, res) {
-	// push updates to pub doc, 
+	// push updates to pub doc,
 	// handle updates to other docs
 });
 
 app.post('/publishPub', function(req, res) {
 
-	// Check that the req.user is an editor on the pub. 
+	// Check that the req.user is an editor on the pub.
 	// Beef out the history object with date, etc
 	// Update the pub object with new dates, titles, etc
 	// Push the new history object
@@ -139,12 +139,12 @@ app.post('/publishPub', function(req, res) {
 		}
 		const publishDate = new Date().getTime();
 		// Calculate diff
-		// Take last history object, 
-		// take new object, 
+		// Take last history object,
+		// take new object,
 		// diff them and return object
 			// diff each item in object and store output
 			// iterate over to calculate total additions, deletions
-		const previousHistoryItem = pub.history.length 
+		const previousHistoryItem = pub.history.length
 			? pub.history[pub.history.length-1]
 			: {
 				title: '',
@@ -159,7 +159,7 @@ app.post('/publishPub', function(req, res) {
 		const diffObject = Pub.generateDiffObject(previousHistoryItem, req.body.newVersion);
 		// Append details to assets
 		const assets = [];
-		for (const key in req.body.newVersion.assets) { 
+		for (const key in req.body.newVersion.assets) {
 			const assetObject = req.body.newVersion.assets[key];
 			assetObject.usedInDiscussion = null;
 			assetObject.usedInPub = pub._id;
@@ -170,7 +170,7 @@ app.post('/publishPub', function(req, res) {
 
 		// Append details to references
 		const references = [];
-		for (const key in req.body.newVersion.references) { 
+		for (const key in req.body.newVersion.references) {
 			const referenceObject = req.body.newVersion.references[key];
 			referenceObject.usedInDiscussion = null;
 			referenceObject.usedInPub = pub._id;
@@ -235,7 +235,7 @@ app.post('/publishPub', function(req, res) {
 			});
 
 		});
-		
+
 	});
 });
 
@@ -286,10 +286,10 @@ app.post('/updatePubSettings', function(req, res) {
 	const settingKey = Object.keys(req.body.newSettings)[0];
 
 	Pub.findOne({slug: req.body.slug}, function(err, pub){
-		
+
 		if (err) {
 			console.log(err);
-			return res.status(500).json(err); 
+			return res.status(500).json(err);
 		}
 
 		if (!req.user || pub.collaborators.canEdit.indexOf(req.user._id) === -1) {
