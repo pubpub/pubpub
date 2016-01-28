@@ -31,17 +31,11 @@ const MathOptions = {
 const PPMComponent = React.createClass({
 	propTypes: {
 		markdown: PropTypes.string,
-<<<<<<< HEAD
 
 		assets: PropTypes.object,
 		references: PropTypes.object,
 		selections: PropTypes.array,
 
-=======
-		assets: PropTypes.object,
-		references: PropTypes.object,
-		selections: PropTypes.array,
->>>>>>> 61683f37b4f2859fd92354e8ecbbd7a9d08f21da
 	},
 
 	getInitialState() {
@@ -186,4 +180,4 @@ const PPMComponent = React.createClass({
 	}
 });
 
-		export default PPMComponent;
+export default PPMComponent;
