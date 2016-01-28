@@ -37,8 +37,9 @@ import {convertFirebaseToObject} from '../../utils/parsePlugins';
 
 import {globalMessages} from '../../utils/globalMessages';
 import {FormattedMessage} from 'react-intl';
-
-const FireBaseURL = (process.env.NODE_ENV === 'production') ? process.env.FIREBASE_URL : 'https://pubpub-dev.firebaseio.com/' ;
+console.log(process.env);
+console.log(process.env.FIREBASE_URL);
+const FireBaseURL = (process.env.NODE_ENV === 'production') ? process.env.FIREBASE_URL : 'https://pubpub-dev.firebaseio.com/';
 
 const cmOptions = {
 	lineNumbers: false,
