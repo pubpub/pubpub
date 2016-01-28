@@ -55,6 +55,10 @@ const SelectionPlugin = React.createClass({
 	},
 
 	calculateOffsets: function() {
+		if (!this.props.index.context || !this.props.index.text) {
+			return [null, null];
+		}
+		
 		const contextString = this.props.index.context.substring(this.props.index.startOffset, this.props.index.endOffset);
 		
 		// If the substring based on our offsets does not match the selection text...
