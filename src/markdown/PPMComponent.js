@@ -33,7 +33,7 @@ const PPMComponent = React.createClass({
 		markdown: PropTypes.string,
 		assets: PropTypes.object,
 		references: PropTypes.object,
-		selections: PropTypes.object,
+		selections: PropTypes.array,
 	},
 
 	getInitialState() {
@@ -46,7 +46,7 @@ const PPMComponent = React.createClass({
 			markdown: '',
 			assets: {},
 			references: {},
-			selections: {},
+			selections: [],
 		};
 	},
 

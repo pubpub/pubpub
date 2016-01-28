@@ -74,9 +74,9 @@ const PubReader = React.createClass({
 			// htmlTree: mdOutput.tree,
 			// TOC: mdOutput.travisTOCFull,
 			inputMD: inputMD,
-			assets: assets, 
-			references: references,
-			selections: selections,
+			assetsObject: assets, 
+			referencesObject: references,
+			selectionsArray: selections,
 			TOC: [],
 		});
 	},
@@ -101,9 +101,9 @@ const PubReader = React.createClass({
 				// htmlTree: mdOutput.tree,
 				// TOC: mdOutput.travisTOCFull,
 				inputMD: inputMD,
-				assets: assets, 
-				references: references,
-				selections: selections,
+				assetsObject: assets, 
+				referencesObject: references,
+				selectionsArray: selections,
 				TOC: [],
 			});
 		}
@@ -273,9 +273,9 @@ const PubReader = React.createClass({
 						minFont={15}
 						// htmlTree={this.state.htmlTree}
 						markdown={this.state.inputMD}
-						assets={this.state.assets}
-						references={this.state.references}
-						selections={this.state.selections}
+						assetsObject={this.state.assetsObject}
+						referencesObject={this.state.referencesObject}
+						selectionsArray={this.state.selectionsArray}
 
 						authors={pubData.history[versionIndex].authors}
 						addSelectionHandler={this.addSelection}

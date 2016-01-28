@@ -33,10 +33,11 @@ const PubBody = React.createClass({
 		isFeatured: PropTypes.bool,
 		errorView: PropTypes.bool,
 
-		assets: PropTypes.object,
-		references: PropTypes.object,
-		selections: PropTypes.object,
+		assetsObject: PropTypes.object,
+		referencesObject: PropTypes.object,
+		selectionsArray: PropTypes.array,
 
+		references: PropTypes.array,
 		minFont: PropTypes.number,
 		firstPublishedDate: PropTypes.string,
 		lastPublishedDate: PropTypes.string
@@ -178,7 +179,7 @@ const PubBody = React.createClass({
 					<div id="pubBodyContent">
 						{/* For Highlights to work, no divs can be placed before htmlTree */}
 						{/* this.props.htmlTree */}
-						<PPMComponent assets={this.props.assets} references={this.props.references} selections={this.props.selections} markdown={this.props.markdown} />
+						<PPMComponent assets={this.props.assetsObject} references={this.props.referencesObject} selections={this.props.selectionsArray} markdown={this.props.markdown} />
 
 						{this.props.addSelectionHandler
 							? <PubSelectionPopup addSelectionHandler={this.props.addSelectionHandler}/>

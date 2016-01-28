@@ -80,7 +80,7 @@ const Editor = React.createClass({
 				collaborators: {},
 				assets: {},
 				references: {},
-				selections: {},
+				selections: [],
 				settings: {},
 			},
 			codeMirrorChange: {},
@@ -235,7 +235,7 @@ const Editor = React.createClass({
 
 		const assets = convertFirebaseToObject(this.state.firepadData.assets);
 		const references = convertFirebaseToObject(this.state.firepadData.references, true);
-		const selections = {};
+		const selections = [];
 		const markdown = fullMD.replace(/\[\[title:.*?\]\]/g, '').replace(/\[\[abstract:.*?\]\]/g, '').replace(/\[\[authorsNote:.*?\]\]/g, '').trim();
 		// const removeTitleEtc = performance.now();
 		// let compiledMarkdown = 0;
@@ -254,9 +254,9 @@ const Editor = React.createClass({
 				title: title,
 				abstract: abstract,
 				authorsNote: authorsNote,
-				assets: assets,
-				references: references,
-				selections: selections,
+				assetsObject: assets,
+				referencesObject: references,
+				selectionsArray: selections,
 			});
 			// saveState = performance.now();
 		} catch (err) {
@@ -345,7 +345,7 @@ const Editor = React.createClass({
 			authors: authors,
 			assets: this.state.firepadData.assets,
 			references: this.state.firepadData.references,
-			selections: this.state.firepadData.selections,
+			// selections: this.state.firepadData.selections,
 			style: this.state.firepadData.settings.pubStyle,
 			status: versionState,
 			pHashes: pHashes,
@@ -559,10 +559,11 @@ const Editor = React.createClass({
 				authors={this.getAuthorsArray()}
 				// addSelectionHandler={this.addSelection}
 				style={this.state.firepadData && this.state.firepadData.settings ? this.state.firepadData.settings.pubStyle : undefined}
-				assets={this.state.assets}
-				references={this.state.references}
-				selections={this.state.selections}
+				assetsObject={this.state.assetsObject}
+				referencesObject={this.state.referencesObject}
+				selectionsArray={this.state.selectionsArray}
 
+				references={referencesList}
 				isFeatured={true}/>
 		);
 	},
@@ -769,7 +770,7 @@ const Editor = React.createClass({
 									{/* Markdown Editing Block */}
 									<div id="editor-text-wrapper" style={[globalStyles.hiddenUntilLoad, globalStyles[loadStatus], styles.common.editorMarkdown, styles[viewMode].editorMarkdown]}>
 
-										<EditorPluginPopup ref="pluginPopup" references={this.state.firepadData.references} assets={this.state.firepadData.assets} selections={this.state.firepadData.selections} activeFocus={this.state.activeFocus} codeMirrorChange={this.state.codeMirrorChange}/>
+										<EditorPluginPopup ref="pluginPopup" references={this.state.firepadData.references} assets={this.state.firepadData.assets} /* selections={this.state.firepadData.selections} */ activeFocus={this.state.activeFocus} codeMirrorChange={this.state.codeMirrorChange}/>
 
 										{/* Insertion point for codemirror and firepad */}
 										<div style={[this.state.activeFocus !== '' && styles.hiddenMainEditor]}>
