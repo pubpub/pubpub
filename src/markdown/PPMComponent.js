@@ -53,8 +53,35 @@ const PPMComponent = React.createClass({
 	handleIterate: function(globals, Tag, props, children) {
 
 		let Component = Tag;
+		const id = children[0] && children[0].replace ? children[0].replace(/\s/g, '-').toLowerCase() : undefined;
 
 		switch(Tag) {
+		case 'h1': 
+			globals.toc.push({id: id, title: children[0], level: 1,});
+			globals.tocH1.push({id: id, title: children[0], level: 1,});
+			props.id = id;
+			break;
+		case 'h2': 
+			globals.toc.push({ id: id, title: children[0], level: 2,});
+			props.id = id;
+			break;
+		case 'h3': 
+			globals.toc.push({ id: id, title: children[0], level: 3,});
+			props.id = id;
+			break;
+		case 'h4': 
+			globals.toc.push({ id: id, title: children[0], level: 4,});
+			props.id = id;
+			break;
+		case 'h5': 
+			globals.toc.push({ id: id, title: children[0], level: 5,});
+			props.id = id;
+			break;
+		case 'h6': 
+			globals.toc.push({ id: id, title: children[0], level: 6,});
+			props.id = id;
+			break;
+
 		case 'table':
 			props.className = 'table table-striped';
 			break;
@@ -128,6 +155,8 @@ const PPMComponent = React.createClass({
 
 	render: function() {
 		for (const member in this.globals) delete this.globals[member];
+		this.globals.tocH1 = [];
+		this.globals.toc = [];
 
 		return (
 			<MDReactComponent
