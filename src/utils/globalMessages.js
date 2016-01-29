@@ -73,6 +73,10 @@ export const globalMessages = defineMessages({
 		id: 'global.discussion',
 		defaultMessage: 'Discussion',
 	},
+	PublicDiscussion: {
+		id: 'global.PublicDiscussion',
+		defaultMessage: 'Public Discussion',
+	},
 	reviews: {
 		id: 'global.reviews',
 		defaultMessage: 'Reviews',

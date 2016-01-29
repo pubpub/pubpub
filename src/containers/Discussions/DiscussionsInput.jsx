@@ -145,7 +145,7 @@ export default injectIntl(Radium(PubDiscussionsInput));
 styles = {
 	container: {
 		width: '100%',
-		// overflow: 'hidden',
+		overflow: 'hidden',
 		margin: '20px 0px',
 		position: 'relative',
 	},

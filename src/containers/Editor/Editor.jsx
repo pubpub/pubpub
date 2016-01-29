@@ -443,12 +443,12 @@ const Editor = React.createClass({
 						<div id="editor-live-preview-wrapper" style={[globalStyles.hiddenUntilLoad, globalStyles[loadStatus], styles.editorPreview, styles[viewMode].editorPreview]} className={'editorPreview'}>
 
 							<div className={'editorPreviewNav'} style={styles.bodyNavBar}>
-								<div key={'previewBodyNav0'} style={styles.bodyNavItem} onClick={this.switchPreviewPaneMode('comments')}>
+								<div key={'previewBodyNav0'} style={[styles.bodyNavItem, viewMode === 'read' && globalStyles.invisible]} onClick={this.switchPreviewPaneMode('comments')}>
 									Editor Comments
 								</div>
-								<div style={styles.bodyNavSeparator}>|</div>
-								<div key={'previewBodyNav1'} style={[styles.bodyNavItem, styles.bodyNavItemHiddenMobile]} onClick={this.switchPreviewPaneMode('discussions')}>
-									Public Discussions
+								<div style={[styles.bodyNavSeparator, viewMode === 'read' && globalStyles.invisible]}>|</div>
+								<div key={'previewBodyNav1'} style={[styles.bodyNavItem, styles.bodyNavItemHiddenMobile, viewMode === 'read' && globalStyles.invisible]} onClick={this.switchPreviewPaneMode('discussions')}>
+									<FormattedMessage {...globalMessages.PublicDiscussion} />
 								</div>
 							</div>
 
@@ -498,7 +498,7 @@ const Editor = React.createClass({
 
 							<div style={[styles.previewBlockWrapper, this.state.previewPaneMode === 'discussions' && styles.previewBlockWrapperShow]}>
 								<div style={styles.previewBlockHeader}>
-									<FormattedMessage {...globalMessages.discussion} />
+									<FormattedMessage {...globalMessages.PublicDiscussion} />
 								</div>
 								<div style={styles.previewBlockText}>
 									<FormattedMessage id="editorDiscussionMessage" defaultMessage="This section shows the discussion from the public, published version of your pub."/>
@@ -683,7 +683,7 @@ styles = {
 		},
 	},
 	editorDiscussions: {
-		width: 'calc(30% - 0px)',
+		width: 'calc(35% - 0px)',
 		position: 'fixed',
 		right: 0,
 		transition: '.252s ease-in-out transform',
@@ -693,7 +693,7 @@ styles = {
 		overflow: 'hidden',
 		zIndex: 40,
 		padding: 0,
-		backgroundColor: 'rgba(245,245,245,0.95)',
+		backgroundColor: 'rgba(245,245,245,0.97)',
 		boxShadow: '-2px -1px 3px -2px rgba(0,0,0,0.7)',
 		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
 			width: '90%',

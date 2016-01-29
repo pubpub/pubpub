@@ -71,7 +71,7 @@ styles = {
 		display: 'none',
 		position: 'absolute',
 		border: '1px solid black',
-		width: '350px',
+		width: '300px',
 		right: 0,
 		backgroundColor: 'white',
 		padding: '5px',

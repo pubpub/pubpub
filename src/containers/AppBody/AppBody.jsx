@@ -220,7 +220,7 @@ styles = {
 		height: globalStyles.headerHeight,
 		backgroundColor: globalStyles.headerBackground,
 		margin: 0,
-		zIndex: 5,
+		zIndex: 55,
 		position: 'fixed',
 
 		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
