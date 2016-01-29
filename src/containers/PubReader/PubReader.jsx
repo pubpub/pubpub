@@ -68,16 +68,23 @@ const PubReader = React.createClass({
 		const assets = convertImmutableListToObject( this.props.readerData.getIn(['pubData', 'history', versionIndex, 'assets']) );
 		const references = convertImmutableListToObject(this.props.readerData.getIn(['pubData', 'history', versionIndex, 'references']), true);
 		const selections = [];
-		// const mdOutput = marked(inputMD, {assets, references, selections});
-		// console.log(inputMD);
+
+		const toc = [];	
+		const myRegEx = /(^|\n)( {0,3})(#+ )(.*)/g;
+		let match;
+		while (match = myRegEx.exec(inputMD)) {
+			const level = match[3].trim().length;
+			const output = { id: match[4].replace(/\s/g, '-').toLowerCase(), title: match[4], level: level };
+			toc.push(output);
+		}
+
+
 		this.setState({
-			// htmlTree: mdOutput.tree,
-			// TOC: mdOutput.travisTOCFull,
 			inputMD: inputMD,
 			assetsObject: assets, 
 			referencesObject: references,
 			selectionsArray: selections,
-			TOC: [],
+			TOC: toc,
 		});
 	},
 
@@ -96,15 +103,22 @@ const PubReader = React.createClass({
 			const assets = convertImmutableListToObject( nextProps.readerData.getIn(['pubData', 'history', versionIndex, 'assets']) );
 			const references = convertImmutableListToObject(nextProps.readerData.getIn(['pubData', 'history', versionIndex, 'references']), true);
 			const selections = [];
+
+			const toc = [];	
+			const myRegEx = /(^|\n)( {0,3})(#+ )(.*)/g;
+			let match;
+			while (match = myRegEx.exec(inputMD)) {
+				const level = match[3].trim().length;
+				const output = { id: match[4].replace(/\s/g, '-').toLowerCase(), title: match[4], level: level };
+				toc.push(output);
+			}
 			// const mdOutput = marked(inputMD, {assets, references, selections});
 			this.setState({
-				// htmlTree: mdOutput.tree,
-				// TOC: mdOutput.travisTOCFull,
 				inputMD: inputMD,
 				assetsObject: assets, 
 				referencesObject: references,
 				selectionsArray: selections,
-				TOC: [],
+				TOC: toc,
 			});
 		}
 

@@ -208,33 +208,25 @@ const Editor = React.createClass({
 
 		const fullMD = cm.getValue();
 
+		// Grab title, abstract, and authorsNote
 		const titleMatch = fullMD.match(/\[\[title:(.*?)\]\]/i);
 		const title = titleMatch && titleMatch.length ? titleMatch[1].trim() : '';
-		
 		const abstractMatch = fullMD.match(/\[\[abstract:(.*?)\]\]/i);
 		const abstract = abstractMatch && abstractMatch.length ? abstractMatch[1].trim() : '';
-		
 		const authorsNoteMatch = fullMD.match(/\[\[authorsNote:(.*?)\]\]/i);
 		const authorsNote = authorsNoteMatch && authorsNoteMatch.length ? authorsNoteMatch[1].trim() : '';
 
-		// const tocMatch = fullMD.match(/\n( {0,3})(#+ )(.*)/g);
-		// console.log(tocMatch);
-		// for
-
+		// Generate TOC
 		const startTOC = performance.now();
 		const toc = [];
-		const tocH1 = [];
-
-		
+		const tocH1 = [];		
+		const myRegEx = /(^|\n)( {0,3})(#+ )(.*)/g;
 		let match;
-		const myRegEx = /\n( {0,3})(#+ )(.*)/g;
 		while (match = myRegEx.exec(fullMD)) {
-			// const id = children[0] && children[0].replace ? children[0].replace(/\s/g, '-').toLowerCase() : undefined;
-			console.log('second match: ', match[2].trim());
-			const level = match[2].trim().length;
+			const level = match[3].trim().length;
 			const output = {
-				id: match[3].replace(/\s/g, '-').toLowerCase(),
-				title: match[3],
+				id: match[4].replace(/\s/g, '-').toLowerCase(),
+				title: match[4],
 				level: level
 			};
 
@@ -244,20 +236,16 @@ const Editor = React.createClass({
 		const endTOC = performance.now();
 		console.log('tocGen: ', endTOC - startTOC);
 
-
-		console.log('toc', toc);
-		console.log('tocH1', tocH1);
-
+		// Format assets and references
 		const assets = convertFirebaseToObject(this.state.firepadData.assets);
 		const references = convertFirebaseToObject(this.state.firepadData.references, true);
 		const selections = [];
 
+		// Strip markdown of title, abstract, authorsNote
 		const markdown = fullMD.replace(/\[\[title:.*?\]\]/g, '').replace(/\[\[abstract:.*?\]\]/g, '').replace(/\[\[authorsNote:.*?\]\]/g, '').trim();
-		
-
-		// try {
-
 		const compiledMarkdown = performance.now();
+
+		// Set State to trigger re-render
 		this.setState({
 			markdown: markdown,
 			tocH1: tocH1,
@@ -272,26 +260,9 @@ const Editor = React.createClass({
 		});
 
 		const saveState = performance.now();
-		// } catch (err) {
-		// 	console.log('Compiling error: ', err);
-		// 	this.setState({
-		// 		tree: [],
-		// 		title: 'Error Compiling',
-		// 		abstract: err.toString().replace('Please report this to https://github.com/chjj/marked.', ''),
-		// 	});
-		// }
-		console.log('total', saveState - start);
-		// console.log('preMD', markdownStart - start);
-		// console.log('markdownGrab', markdownGrab - start, markdownGrab - markdownStart);
-		// console.log('titleGrab', titleGrabAndSet - start, titleGrabAndSet - markdownGrab);
-		// console.log('abstractGrab', abstractGrabAndSet - start, abstractGrabAndSet - titleGrabAndSet);
-		// console.log('anGrab', aNGrabAndSet - start, aNGrabAndSet - abstractGrabAndSet);
-		// console.log('removeTitleEtc', removeTitleEtc - start, removeTitleEtc - aNGrabAndSet);
-		// console.log('compiledMarkdown', compiledMarkdown - start, compiledMarkdown - removeTitleEtc);
+		
 		console.log('saveState', saveState - start, saveState - compiledMarkdown);
-		console.log('~~~~~~~~~~~~~~~~~~');
-		const end = performance.now();
-		console.log('timing = ', end - start);
+		console.log('total', saveState - start);
 
 	},
 
@@ -314,22 +285,6 @@ const Editor = React.createClass({
 
 	publishVersion: function(versionDescription) {
 
-		// const cm = document.getElementsByClassName('CodeMirror')[0].CodeMirror;
-		const cm = document.getElementById('codemirror-wrapper').childNodes[0].childNodes[0].CodeMirror;
-		const fullMD = cm.getValue().trim();
-
-		// const titleRE = /\[\[title:(.*?)\]\]/i;
-		// const titleMatch = fullMD.match(titleRE);
-		// const title = titleMatch && titleMatch.length ? titleMatch[1].trim() : '';
-
-		// const abstractRE = /\[\[abstract:(.*?)\]\]/i;
-		// const abstractMatch = fullMD.match(abstractRE);
-		// const abstract = abstractMatch && abstractMatch.length ? abstractMatch[1].trim() : '';
-
-		// const authorsNoteRE = /\[\[authorsNote:(.*?)\]\]/i;
-		// const authorsNoteMatch = fullMD.match(authorsNoteRE);
-		// const authorsNote = authorsNoteMatch && authorsNoteMatch.length ? authorsNoteMatch[1].trim() : '';
-
 		const authors = [];
 		for (const collaborator in this.state.firepadData.collaborators) {
 			if (this.state.firepadData.collaborators[collaborator].permission === 'edit') {
@@ -337,24 +292,12 @@ const Editor = React.createClass({
 			}
 		}
 
-		// // pHashes are generated and collected to perform discussion highlight synchronization
-		// const pTags = document.querySelectorAll('.mainRenderBody .p-block');
-		// // console.log(pTags);
-		// const pHashes = {};
-		// for ( const key in pTags ) {
-		// 	if (pTags.hasOwnProperty(key)) {
-		// 		pHashes[SHA1(pTags[key].innerText).toString(encHex)] = parseInt(key, 10) + 1;
-		// 	}
-		// }
-
-		// console.log(pHashes);
-
 		const newVersion = {
 			slug: this.props.slug,
 			title: this.state.title,
 			abstract: this.state.abstract,
 			authorsNote: this.state.authorsNote,
-			markdown: fullMD,
+			markdown: this.state.markdown,
 			authors: authors,
 			assets: this.state.firepadData.assets,
 			references: this.state.firepadData.references,
@@ -363,6 +306,7 @@ const Editor = React.createClass({
 			// pHashes: pHashes,
 			publishNote: versionDescription,
 		};
+
 		this.props.dispatch(clearPub());
 
 		// This should perhaps be done on the backend in one fell swoop - rather than having two client side calls.
@@ -444,27 +388,6 @@ const Editor = React.createClass({
 			this.setState({previewPaneMode: mode});
 		};
 	},
-
-	// collectMarkdownOutput: function(output) {
-		// console.log('in editor', output);
-		// const start = performance.now();
-		// const oldOutput = {
-		// 	abstract: this.state.abstract,
-		// 	authorsNote: this.state.authorsNote,
-		// 	title: this.state.title,
-		// 	toc: this.state.toc,
-		// 	tocH1: this.state.tocH1,
-		// };
-
-		// if (JSON.stringify(oldOutput) !== JSON.stringify(output) ) {
-		// 	console.log('gunna set');
-		// this.setStte(output);
-		// }
-
-		// const end = performance.now();
-
-		// console.log('JSON timing', end - start);
-	// },
 
 	renderBody: function() {
 		const referencesList = [];
@@ -585,7 +508,7 @@ const Editor = React.createClass({
 								toggleFormattingHandler={this.toggleFormatting}
 								activeFocus={this.state.activeFocus}
 								focusEditorHandler={this.focusEditor}
-								travisTOC={this.state.tocH1}
+								tocH1={this.state.tocH1}
 								insertFormattingHandler={this.insertFormatting}/>
 
 							{/* Markdown Editing Block */}
