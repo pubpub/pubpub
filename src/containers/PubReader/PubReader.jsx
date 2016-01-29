@@ -65,7 +65,7 @@ const PubReader = React.createClass({
 		const assets = convertImmutableListToObject( this.props.readerData.getIn(['pubData', 'history', versionIndex, 'assets']) );
 		const references = convertImmutableListToObject(this.props.readerData.getIn(['pubData', 'history', versionIndex, 'references']), true);
 		const selections = [];
-		const toc = generateTOC().full;
+		const toc = generateTOC(inputMD).full;
 
 		this.setState({
 			inputMD: inputMD,
@@ -91,8 +91,8 @@ const PubReader = React.createClass({
 			const assets = convertImmutableListToObject( nextProps.readerData.getIn(['pubData', 'history', versionIndex, 'assets']) );
 			const references = convertImmutableListToObject(nextProps.readerData.getIn(['pubData', 'history', versionIndex, 'references']), true);
 			const selections = [];
-			const toc = generateTOC().full;
-			
+			const toc = generateTOC(inputMD).full;
+
 			this.setState({
 				inputMD: inputMD,
 				assetsObject: assets, 

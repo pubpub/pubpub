@@ -17,10 +17,6 @@ import MathComponent from './MathComponent';
 
 import murmur from 'murmurhash';
 
-
-
-
-
 const MathOptions = {
 	inlineOpen: '$$',
 	inlineClose: '$$',
@@ -61,8 +57,6 @@ const PPMComponent = React.createClass({
 	handleIterate: function(globals, Tag, props, children) {
 		let Component = Tag;
 
-		const id = children[0] && children[0].replace ? children[0].replace(/\s/g, '-').toLowerCase() : undefined;
-
 		switch(Tag) {
 		case 'h1': 
 		case 'h2': 
@@ -70,17 +64,19 @@ const PPMComponent = React.createClass({
 		case 'h4': 
 		case 'h5': 
 		case 'h6': 
-			props.id = id;
+			props.id = children[0] && children[0].replace ? children[0].replace(/\s/g, '-').toLowerCase() : undefined;
 			break;
 
 		case 'table':
 			props.className = 'table table-striped';
 			break;
+
 		case 'div':
 			if (props['data-info']) {
 				props.className = props.className ? props.className + props['data-info'] : props['data-info'];
 			}
 			break;
+
 		case 'ppm':
 			props.className = 'ppm';
 			if (children.length > 1) {
@@ -93,19 +89,6 @@ const PPMComponent = React.createClass({
 			if (children[0] === 'linebreak') {
 				return <div className={'linebreak p-block'} style={{display: 'block', height: '1.5em'}}></div>
 			}
-
-			// if (children[0].substring(0,6) === 'title:') {
-			// 	globals.title = children[0].split('title:')[1].trim();
-			// 	return null;
-			// }
-			// if (children[0].substring(0,9) === 'abstract:') {
-			// 	globals.abstract = children[0].split('abstract:')[1].trim();
-			// 	return null;
-			// }
-			// if (children[0].substring(0,12) === 'authorsNote:') {
-			// 	globals.authorsNote = children[0].split('authorsNote:')[1].trim();
-			// 	return null;
-			// }
 
 			const pluginName = children[0].split(':')[0];
 			const plugin = Plugins[pluginName];
@@ -144,23 +127,25 @@ const PPMComponent = React.createClass({
 				return <Tag {...props} className={'codeBlock'} dangerouslySetInnerHTML={{__html: window.hljs.highlight(props['data-language'], children[0]).value}} />
 			};
 			break;
+
 		case 'math':
 			return <MathComponent>{children[0]}</MathComponent>;
 			break;
+
 		case 'p':
 			// if (children[0] === null){ return null; }
 			props.className = 'p-block';
 			props['data-hash'] = murmur.v2(children[0]);
 			Component = 'div';
 			break;
+
 		}
+
 		return <Component {...props}>{children}</Component>;
 	},
 
 	render: function() {
 		for (const member in this.globals) delete this.globals[member];
-		// this.globals.tocH1 = [];
-		// this.globals.toc = [];
 
 		return (
 			<div>

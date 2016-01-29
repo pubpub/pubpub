@@ -219,9 +219,7 @@ const Editor = React.createClass({
 
 		// Generate TOC
 		const startTOC = performance.now();
-		const TOCs = generateTOC();
-		// const toc = generateTOC().full;		
-		
+		const TOCs = generateTOC(fullMD);		
 		const endTOC = performance.now();
 		console.log('tocGen: ', endTOC - startTOC);
 
