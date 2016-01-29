@@ -15,6 +15,12 @@ import InputFields from '../components/EditorPluginFields/index';
 
 import MathComponent from './MathComponent';
 
+import murmur from 'murmurhash';
+
+
+
+
+
 const MathOptions = {
 	inlineOpen: '$$',
 	inlineClose: '$$',
@@ -144,11 +150,12 @@ const PPMComponent = React.createClass({
 			break;
 		case 'math':
 			return <MathComponent>{children[0]}</MathComponent>;
-				break;
-				case 'p':
-				props.className = 'p-block';
-				Component = 'div';
-				break;
+			break;
+		case 'p':
+			props.className = 'p-block';
+			props['data-hash'] = murmur.v2(children[0]);
+			Component = 'div';
+			break;
 		}
 
 		return <Component {...props}>{children}</Component>;

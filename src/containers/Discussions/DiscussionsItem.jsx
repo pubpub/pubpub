@@ -70,9 +70,19 @@ const DiscussionsItem = React.createClass({
 							startOffset: selection.startOffset,
 							endOffset: selection.endOffset,
 						};	
-						// console.log('reproduced result', result);
+						// console.log(result);
+
+						// result = {
+						// 	startContainerPath: '[data-hash="2358576322"]>span:nth-of-type(1);0',
+						// 	endContainerPath: '[data-hash="2358576322"]>span:nth-of-type(3);0',
+						// 	startOffset: selection.startOffset,
+						// 	endOffset: selection.endOffset,
+						// };	
+						
 						const renderer = new Marklib.Rendering(document, {className: 'selection selection-' + selection._id}, document.getElementById('pubBodyContent'));
 						renderer.renderWithResult(result);	
+
+
 						renderer.on('click', function(item) {
 							const destination = document.getElementById('selection-block-' + selection._id);
 							const context = document.getElementsByClassName('rightBar')[0];
