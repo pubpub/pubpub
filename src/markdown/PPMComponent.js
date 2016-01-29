@@ -42,8 +42,6 @@ const PPMComponent = React.createClass({
 		references: PropTypes.object,
 		selections: PropTypes.array,
 
-		collectMarkdownOutputHandler: PropTypes.func,
-
 	},
 
 	getInitialState() {
@@ -57,13 +55,7 @@ const PPMComponent = React.createClass({
 			assets: {},
 			references: {},
 			selections: [],
-			collectMarkdownOutputHandler: ()=>{},
 		};
-	},
-
-	passUpOutput: function() {
-		console.log(this.globals);
-		this.props.collectMarkdownOutputHandler(this.globals);
 	},
 
 	handleIterate: function(globals, Tag, props, children) {
@@ -72,31 +64,31 @@ const PPMComponent = React.createClass({
 		const id = children[0] && children[0].replace ? children[0].replace(/\s/g, '-').toLowerCase() : undefined;
 
 		switch(Tag) {
-		case 'h1': 
-			globals.toc.push({id: id, title: children[0], level: 1,});
-			globals.tocH1.push({id: id, title: children[0], level: 1,});
-			props.id = id;
-			break;
-		case 'h2': 
-			globals.toc.push({ id: id, title: children[0], level: 2,});
-			props.id = id;
-			break;
-		case 'h3': 
-			globals.toc.push({ id: id, title: children[0], level: 3,});
-			props.id = id;
-			break;
-		case 'h4': 
-			globals.toc.push({ id: id, title: children[0], level: 4,});
-			props.id = id;
-			break;
-		case 'h5': 
-			globals.toc.push({ id: id, title: children[0], level: 5,});
-			props.id = id;
-			break;
-		case 'h6': 
-			globals.toc.push({ id: id, title: children[0], level: 6,});
-			props.id = id;
-			break;
+		// case 'h1': 
+		// 	globals.toc.push({id: id, title: children[0], level: 1,});
+		// 	globals.tocH1.push({id: id, title: children[0], level: 1,});
+		// 	props.id = id;
+		// 	break;
+		// case 'h2': 
+		// 	globals.toc.push({ id: id, title: children[0], level: 2,});
+		// 	props.id = id;
+		// 	break;
+		// case 'h3': 
+		// 	globals.toc.push({ id: id, title: children[0], level: 3,});
+		// 	props.id = id;
+		// 	break;
+		// case 'h4': 
+		// 	globals.toc.push({ id: id, title: children[0], level: 4,});
+		// 	props.id = id;
+		// 	break;
+		// case 'h5': 
+		// 	globals.toc.push({ id: id, title: children[0], level: 5,});
+		// 	props.id = id;
+		// 	break;
+		// case 'h6': 
+		// 	globals.toc.push({ id: id, title: children[0], level: 6,});
+		// 	props.id = id;
+		// 	break;
 
 		case 'table':
 			props.className = 'table table-striped';
@@ -119,19 +111,18 @@ const PPMComponent = React.createClass({
 				return <div className={'linebreak p-block'} style={{display: 'block', height: '1.5em'}}></div>
 			}
 
-			if (children[0].substring(0,6) === 'title:') {
-				globals.title = children[0].split('title:')[1].trim();
-				return null;
-			}
-			if (children[0].substring(0,9) === 'abstract:') {
-				globals.abstract = children[0].split('abstract:')[1].trim();
-				return null;
-			}
-			if (children[0].substring(0,12) === 'authorsNote:') {
-				globals.authorsNote = children[0].split('authorsNote:')[1].trim();
-				return null;
-			}
-
+			// if (children[0].substring(0,6) === 'title:') {
+			// 	globals.title = children[0].split('title:')[1].trim();
+			// 	return null;
+			// }
+			// if (children[0].substring(0,9) === 'abstract:') {
+			// 	globals.abstract = children[0].split('abstract:')[1].trim();
+			// 	return null;
+			// }
+			// if (children[0].substring(0,12) === 'authorsNote:') {
+			// 	globals.authorsNote = children[0].split('authorsNote:')[1].trim();
+			// 	return null;
+			// }
 
 			const pluginName = children[0].split(':')[0];
 			const plugin = Plugins[pluginName];
@@ -174,9 +165,7 @@ const PPMComponent = React.createClass({
 			return <MathComponent>{children[0]}</MathComponent>;
 			break;
 		case 'p':
-			
-			if (children[0] === null){ return null; }
-
+			// if (children[0] === null){ return null; }
 			props.className = 'p-block';
 			props['data-hash'] = murmur.v2(children[0]);
 			Component = 'div';
@@ -187,8 +176,8 @@ const PPMComponent = React.createClass({
 
 	render: function() {
 		for (const member in this.globals) delete this.globals[member];
-		this.globals.tocH1 = [];
-		this.globals.toc = [];
+		// this.globals.tocH1 = [];
+		// this.globals.toc = [];
 
 		return (
 			<div>
@@ -208,9 +197,6 @@ const PPMComponent = React.createClass({
 						{plugin: container, args: ['blank', {validate: ()=>{return true;}}]},
 						ppm
 					]} />
-				{(() => {
-					this.passUpOutput();
-				})()}
 			</div>
 			
 		);

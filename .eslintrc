@@ -31,6 +31,7 @@
     "no-alert": 1,
     "func-names": 0,
     "no-multi-spaces": 1,
+    "no-cond-assign": 0,
     "no-trailing-spaces": 0,
     "indent": [2, "tab"],
     "new-cap": 0,

@@ -12,9 +12,8 @@ import ReactFireMixin from 'reactfire';
 import {EditorModals} from '../';
 import {LoaderDeterminate, EditorPluginPopup, EditorTopNav, EditorBottomNav, PubBody} from '../../components';
 import {clearPub} from '../../actions/pub';
-import {getPubEdit, toggleEditorViewMode, toggleFormatting, toggleTOC, unmountEditor, closeModal, openModal, publishVersion, saveCollaboratorsToPub, saveSettingsPubPub} from '../../actions/editor';
-import {saveSettingsUser} from '../../actions/login';
-// import {loadCss} from '../../utils/loadingFunctions';
+import {getPubEdit, toggleEditorViewMode, toggleFormatting, toggleTOC, unmountEditor, closeModal, openModal, publishVersion} from '../../actions/editor';
+
 import {debounce} from '../../utils/loadingFunctions';
 import {submitPubToJournal} from '../../actions/journal';
 
@@ -25,11 +24,9 @@ import {globalStyles} from '../../utils/styleConstants';
 import {insertText, createFocusDoc, addCodeMirrorKeys} from './editorCodeFunctions';
 import {editorDefaultText} from './editorDefaultText';
 
-import SHA1 from 'crypto-js/sha1';
-import encHex from 'crypto-js/enc-hex';
+// import SHA1 from 'crypto-js/sha1';
+// import encHex from 'crypto-js/enc-hex';
 
-// import marked from '../../markdown/markdown';
-// import markdownExtensions from '../../components/EditorPlugins';
 import FirepadUserList from './editorFirepadUserlist';
 
 import {Discussions} from '../';
@@ -72,10 +69,8 @@ const Editor = React.createClass({
 	getInitialState() {
 		return {
 			initialized: false,
-			tree: [],
 			markdown: '',
-			travisTOC: [],
-			travisTOCFull: [],
+			tocH1: [],
 			activeFocus: '',
 			firepadData: {
 				collaborators: {},
@@ -114,7 +109,6 @@ const Editor = React.createClass({
 	},
 
 	componentWillUnmount() {
-		this.props.dispatch(closeModal());
 		this.props.dispatch(unmountEditor());
 	},
 
@@ -202,80 +196,98 @@ const Editor = React.createClass({
 	},
 
 	onEditorChange: function(cm, change) {
-		// console.log(change);
-		// const start = performance.now();
+
 		CodeMirror.commands.autocomplete(cm, CodeMirror.hint.plugins, {completeSingle: false});
 
 		if (cm.state.completionActive && cm.state.completionActive.data) {
 			const completion = cm.state.completionActive.data;
 			CodeMirror.on(completion, 'pick', this.showPopupFromAutocomplete);
 		}
+
 		const start = performance.now();
 
-		// This feels inefficient.
-		// An alternative is that we don't pass a trimmed version of the text to the markdown processor.
-		// Instead we define header plugins and pass the entire thing to both here and body.
-		const markdownStart = performance.now();
 		const fullMD = cm.getValue();
-		const markdownGrab = performance.now();
-		const titleRE = /\[\[title:(.*?)\]\]/i;
-		const titleMatch = fullMD.match(titleRE);
+
+		const titleMatch = fullMD.match(/\[\[title:(.*?)\]\]/i);
 		const title = titleMatch && titleMatch.length ? titleMatch[1].trim() : '';
-		const titleGrabAndSet = performance.now();
-
-		const abstractRE = /\[\[abstract:(.*?)\]\]/i;
-		const abstractMatch = fullMD.match(abstractRE);
+		
+		const abstractMatch = fullMD.match(/\[\[abstract:(.*?)\]\]/i);
 		const abstract = abstractMatch && abstractMatch.length ? abstractMatch[1].trim() : '';
-		const abstractGrabAndSet = performance.now();
-
-		const authorsNoteRE = /\[\[authorsNote:(.*?)\]\]/i;
-		const authorsNoteMatch = fullMD.match(authorsNoteRE);
+		
+		const authorsNoteMatch = fullMD.match(/\[\[authorsNote:(.*?)\]\]/i);
 		const authorsNote = authorsNoteMatch && authorsNoteMatch.length ? authorsNoteMatch[1].trim() : '';
-		const aNGrabAndSet = performance.now();
+
+		// const tocMatch = fullMD.match(/\n( {0,3})(#+ )(.*)/g);
+		// console.log(tocMatch);
+		// for
+
+		const startTOC = performance.now();
+		const toc = [];
+		const tocH1 = [];
+
+		
+		let match;
+		const myRegEx = /\n( {0,3})(#+ )(.*)/g;
+		while (match = myRegEx.exec(fullMD)) {
+			// const id = children[0] && children[0].replace ? children[0].replace(/\s/g, '-').toLowerCase() : undefined;
+			console.log('second match: ', match[2].trim());
+			const level = match[2].trim().length;
+			const output = {
+				id: match[3].replace(/\s/g, '-').toLowerCase(),
+				title: match[3],
+				level: level
+			};
+
+			if (level === 1) { tocH1.push(output); }
+			toc.push(output);
+		}
+		const endTOC = performance.now();
+		console.log('tocGen: ', endTOC - startTOC);
+
+
+		console.log('toc', toc);
+		console.log('tocH1', tocH1);
 
 		const assets = convertFirebaseToObject(this.state.firepadData.assets);
 		const references = convertFirebaseToObject(this.state.firepadData.references, true);
 		const selections = [];
-		// const markdown = fullMD.replace(/\[\[title:.*?\]\]/g, '').replace(/\[\[abstract:.*?\]\]/g, '').replace(/\[\[authorsNote:.*?\]\]/g, '').trim();
-		const markdown = fullMD;
-		const removeTitleEtc = performance.now();
-		let compiledMarkdown = 0;
-		let saveState = 0;
 
-		try {
+		const markdown = fullMD.replace(/\[\[title:.*?\]\]/g, '').replace(/\[\[abstract:.*?\]\]/g, '').replace(/\[\[authorsNote:.*?\]\]/g, '').trim();
+		
 
-			compiledMarkdown = performance.now();
-			this.setState({
-				markdown: markdown,
-				travisTOC: [],
-				travisTOCFull: [],
-				// travisTOC: mdOutput.travisTOC,
-				// travisTOCFull: mdOutput.travisTOCFull,
-				codeMirrorChange: change,
-				title: title,
-				abstract: abstract,
-				authorsNote: authorsNote,
-				assetsObject: assets,
-				referencesObject: references,
-				selectionsArray: selections,
-			});
-			saveState = performance.now();
-		} catch (err) {
-			console.log('Compiling error: ', err);
-			this.setState({
-				tree: [],
-				title: 'Error Compiling',
-				abstract: err.toString().replace('Please report this to https://github.com/chjj/marked.', ''),
-			});
-		}
+		// try {
+
+		const compiledMarkdown = performance.now();
+		this.setState({
+			markdown: markdown,
+			tocH1: tocH1,
+			toc: toc,
+			codeMirrorChange: change,
+			title: title,
+			abstract: abstract,
+			authorsNote: authorsNote,
+			assetsObject: assets,
+			referencesObject: references,
+			selectionsArray: selections,
+		});
+
+		const saveState = performance.now();
+		// } catch (err) {
+		// 	console.log('Compiling error: ', err);
+		// 	this.setState({
+		// 		tree: [],
+		// 		title: 'Error Compiling',
+		// 		abstract: err.toString().replace('Please report this to https://github.com/chjj/marked.', ''),
+		// 	});
+		// }
 		console.log('total', saveState - start);
-		console.log('preMD', markdownStart - start);
-		console.log('markdownGrab', markdownGrab - start, markdownGrab - markdownStart);
-		console.log('titleGrab', titleGrabAndSet - start, titleGrabAndSet - markdownGrab);
-		console.log('abstractGrab', abstractGrabAndSet - start, abstractGrabAndSet - titleGrabAndSet);
-		console.log('anGrab', aNGrabAndSet - start, aNGrabAndSet - abstractGrabAndSet);
-		console.log('removeTitleEtc', removeTitleEtc - start, removeTitleEtc - aNGrabAndSet);
-		console.log('compiledMarkdown', compiledMarkdown - start, compiledMarkdown - removeTitleEtc);
+		// console.log('preMD', markdownStart - start);
+		// console.log('markdownGrab', markdownGrab - start, markdownGrab - markdownStart);
+		// console.log('titleGrab', titleGrabAndSet - start, titleGrabAndSet - markdownGrab);
+		// console.log('abstractGrab', abstractGrabAndSet - start, abstractGrabAndSet - titleGrabAndSet);
+		// console.log('anGrab', aNGrabAndSet - start, aNGrabAndSet - abstractGrabAndSet);
+		// console.log('removeTitleEtc', removeTitleEtc - start, removeTitleEtc - aNGrabAndSet);
+		// console.log('compiledMarkdown', compiledMarkdown - start, compiledMarkdown - removeTitleEtc);
 		console.log('saveState', saveState - start, saveState - compiledMarkdown);
 		console.log('~~~~~~~~~~~~~~~~~~');
 		const end = performance.now();
@@ -300,23 +312,23 @@ const Editor = React.createClass({
 		return this.props.dispatch(toggleTOC());
 	},
 
-	publishVersion: function(versionState, versionDescription) {
+	publishVersion: function(versionDescription) {
 
 		// const cm = document.getElementsByClassName('CodeMirror')[0].CodeMirror;
 		const cm = document.getElementById('codemirror-wrapper').childNodes[0].childNodes[0].CodeMirror;
-		const fullMD = cm.getValue();
+		const fullMD = cm.getValue().trim();
 
-		const titleRE = /\[\[title:(.*?)\]\]/i;
-		const titleMatch = fullMD.match(titleRE);
-		const title = titleMatch && titleMatch.length ? titleMatch[1].trim() : '';
+		// const titleRE = /\[\[title:(.*?)\]\]/i;
+		// const titleMatch = fullMD.match(titleRE);
+		// const title = titleMatch && titleMatch.length ? titleMatch[1].trim() : '';
 
-		const abstractRE = /\[\[abstract:(.*?)\]\]/i;
-		const abstractMatch = fullMD.match(abstractRE);
-		const abstract = abstractMatch && abstractMatch.length ? abstractMatch[1].trim() : '';
+		// const abstractRE = /\[\[abstract:(.*?)\]\]/i;
+		// const abstractMatch = fullMD.match(abstractRE);
+		// const abstract = abstractMatch && abstractMatch.length ? abstractMatch[1].trim() : '';
 
-		const authorsNoteRE = /\[\[authorsNote:(.*?)\]\]/i;
-		const authorsNoteMatch = fullMD.match(authorsNoteRE);
-		const authorsNote = authorsNoteMatch && authorsNoteMatch.length ? authorsNoteMatch[1].trim() : '';
+		// const authorsNoteRE = /\[\[authorsNote:(.*?)\]\]/i;
+		// const authorsNoteMatch = fullMD.match(authorsNoteRE);
+		// const authorsNote = authorsNoteMatch && authorsNoteMatch.length ? authorsNoteMatch[1].trim() : '';
 
 		const authors = [];
 		for (const collaborator in this.state.firepadData.collaborators) {
@@ -325,31 +337,30 @@ const Editor = React.createClass({
 			}
 		}
 
-		// pHashes are generated and collected to perform discussion highlight synchronization
-		const pTags = document.querySelectorAll('.mainRenderBody .p-block');
-		// console.log(pTags);
-		const pHashes = {};
-		for ( const key in pTags ) {
-			if (pTags.hasOwnProperty(key)) {
-				pHashes[SHA1(pTags[key].innerText).toString(encHex)] = parseInt(key, 10) + 1;
-			}
-		}
+		// // pHashes are generated and collected to perform discussion highlight synchronization
+		// const pTags = document.querySelectorAll('.mainRenderBody .p-block');
+		// // console.log(pTags);
+		// const pHashes = {};
+		// for ( const key in pTags ) {
+		// 	if (pTags.hasOwnProperty(key)) {
+		// 		pHashes[SHA1(pTags[key].innerText).toString(encHex)] = parseInt(key, 10) + 1;
+		// 	}
+		// }
 
 		// console.log(pHashes);
 
 		const newVersion = {
 			slug: this.props.slug,
-			title: title,
-			abstract: abstract,
-			authorsNote: authorsNote,
-			markdown: fullMD.replace(/\[\[title:.*?\]\]/g, '').replace(/\[\[abstract:.*?\]\]/g, '').replace(/\[\[authorsNote:.*?\]\]/g, '').trim(),
+			title: this.state.title,
+			abstract: this.state.abstract,
+			authorsNote: this.state.authorsNote,
+			markdown: fullMD,
 			authors: authors,
 			assets: this.state.firepadData.assets,
 			references: this.state.firepadData.references,
 			// selections: this.state.firepadData.selections,
 			style: this.state.firepadData.settings.pubStyle,
-			status: versionState,
-			pHashes: pHashes,
+			// pHashes: pHashes,
 			publishNote: versionDescription,
 		};
 		this.props.dispatch(clearPub());
@@ -412,7 +423,8 @@ const Editor = React.createClass({
 	renderNav: function(mobileView) {
 		// if isEditor, add 'Public Discussions' | 'Collaborator Comments'  | 'Live Preview'
 		// remove whichever one is active in state at the moment
-		const discussionsExist = this.props.editorData.getIn(['pubEditData', 'discussions']) && this.props.editorData.getIn(['pubEditData', 'discussions']).size;
+
+		// const discussionsExist = this.props.editorData.getIn(['pubEditData', 'discussions']) && this.props.editorData.getIn(['pubEditData', 'discussions']).size;
 
 		return (
 			<div className={'editorBodyNav'} style={styles.bodyNavBar}>
@@ -432,6 +444,27 @@ const Editor = React.createClass({
 			this.setState({previewPaneMode: mode});
 		};
 	},
+
+	// collectMarkdownOutput: function(output) {
+		// console.log('in editor', output);
+		// const start = performance.now();
+		// const oldOutput = {
+		// 	abstract: this.state.abstract,
+		// 	authorsNote: this.state.authorsNote,
+		// 	title: this.state.title,
+		// 	toc: this.state.toc,
+		// 	tocH1: this.state.tocH1,
+		// };
+
+		// if (JSON.stringify(oldOutput) !== JSON.stringify(output) ) {
+		// 	console.log('gunna set');
+		// this.setStte(output);
+		// }
+
+		// const end = performance.now();
+
+		// console.log('JSON timing', end - start);
+	// },
 
 	renderBody: function() {
 		const referencesList = [];
@@ -458,7 +491,7 @@ const Editor = React.createClass({
 				selectionsArray={this.state.selectionsArray}
 
 				references={referencesList}
-				isFeatured={true}/>
+				isFeatured={true} />
 		);
 	},
 
@@ -552,7 +585,7 @@ const Editor = React.createClass({
 								toggleFormattingHandler={this.toggleFormatting}
 								activeFocus={this.state.activeFocus}
 								focusEditorHandler={this.focusEditor}
-								travisTOC={this.state.travisTOC}
+								travisTOC={this.state.tocH1}
 								insertFormattingHandler={this.insertFormatting}/>
 
 							{/* Markdown Editing Block */}
