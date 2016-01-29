@@ -34,6 +34,7 @@ import {Discussions} from '../';
 import {convertFirebaseToObject} from '../../utils/parsePlugins';
 
 import {globalMessages} from '../../utils/globalMessages';
+import {generateTOC} from '../../markdown/generateTOC';
 import {FormattedMessage} from 'react-intl';
 
 let FireBaseURL;
@@ -218,21 +219,9 @@ const Editor = React.createClass({
 
 		// Generate TOC
 		const startTOC = performance.now();
-		const toc = [];
-		const tocH1 = [];		
-		const myRegEx = /(^|\n)( {0,3})(#+ )(.*)/g;
-		let match;
-		while (match = myRegEx.exec(fullMD)) {
-			const level = match[3].trim().length;
-			const output = {
-				id: match[4].replace(/\s/g, '-').toLowerCase(),
-				title: match[4],
-				level: level
-			};
-
-			if (level === 1) { tocH1.push(output); }
-			toc.push(output);
-		}
+		const TOCs = generateTOC();
+		// const toc = generateTOC().full;		
+		
 		const endTOC = performance.now();
 		console.log('tocGen: ', endTOC - startTOC);
 
@@ -248,8 +237,8 @@ const Editor = React.createClass({
 		// Set State to trigger re-render
 		this.setState({
 			markdown: markdown,
-			tocH1: tocH1,
-			toc: toc,
+			tocH1: TOCs.h1,
+			toc: TOCs.full,
 			codeMirrorChange: change,
 			title: title,
 			abstract: abstract,

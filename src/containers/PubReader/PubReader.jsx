@@ -18,11 +18,8 @@ import {globalStyles, pubSizes} from '../../utils/styleConstants';
 import {rightBarStyles} from './rightBarStyles';
 
 import {globalMessages} from '../../utils/globalMessages';
+import {generateTOC} from '../../markdown/generateTOC';
 import {FormattedMessage} from 'react-intl';
-
-// import marked from '../../markdown/markdown';
-// import markdownExtensions from '../../components/EditorPlugins';
-// marked.setExtensions(markdownExtensions);
 
 let styles = {};
 
@@ -68,16 +65,7 @@ const PubReader = React.createClass({
 		const assets = convertImmutableListToObject( this.props.readerData.getIn(['pubData', 'history', versionIndex, 'assets']) );
 		const references = convertImmutableListToObject(this.props.readerData.getIn(['pubData', 'history', versionIndex, 'references']), true);
 		const selections = [];
-
-		const toc = [];	
-		const myRegEx = /(^|\n)( {0,3})(#+ )(.*)/g;
-		let match;
-		while (match = myRegEx.exec(inputMD)) {
-			const level = match[3].trim().length;
-			const output = { id: match[4].replace(/\s/g, '-').toLowerCase(), title: match[4], level: level };
-			toc.push(output);
-		}
-
+		const toc = generateTOC().full;
 
 		this.setState({
 			inputMD: inputMD,
@@ -103,16 +91,8 @@ const PubReader = React.createClass({
 			const assets = convertImmutableListToObject( nextProps.readerData.getIn(['pubData', 'history', versionIndex, 'assets']) );
 			const references = convertImmutableListToObject(nextProps.readerData.getIn(['pubData', 'history', versionIndex, 'references']), true);
 			const selections = [];
-
-			const toc = [];	
-			const myRegEx = /(^|\n)( {0,3})(#+ )(.*)/g;
-			let match;
-			while (match = myRegEx.exec(inputMD)) {
-				const level = match[3].trim().length;
-				const output = { id: match[4].replace(/\s/g, '-').toLowerCase(), title: match[4], level: level };
-				toc.push(output);
-			}
-			// const mdOutput = marked(inputMD, {assets, references, selections});
+			const toc = generateTOC().full;
+			
 			this.setState({
 				inputMD: inputMD,
 				assetsObject: assets, 
