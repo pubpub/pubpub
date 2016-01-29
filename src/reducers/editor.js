@@ -4,7 +4,9 @@ import {ensureImmutable} from './';
 /*--------*/
 // Load Actions
 /*--------*/
-import {TOGGLE_VIEW_MODE, 
+import {
+	TOGGLE_VIEW_MODE, 
+	SET_VIEW_MODE, 
 	TOGGLE_FORMATTING, 
 	TOGGLE_TOC, 
 	LOAD_PUB_EDIT, 
@@ -74,6 +76,31 @@ function toggleViewMode(state) {
 			viewMode: 'edit',
 			showBottomRightMenu: true,
 			showBottomLeftMenu: true,
+		};
+	}
+
+	return state.merge(newModes);
+}
+
+function setViewMode(state, viewMode) {
+	let newModes = {};
+	if (viewMode === 'preview') {
+		newModes = {
+			viewMode: 'preview',
+			showBottomRightMenu: false,
+			showBottomLeftMenu: false,
+		};
+	} else if (viewMode === 'edit') {
+		newModes = {
+			viewMode: 'edit',
+			showBottomRightMenu: true,
+			showBottomLeftMenu: true,
+		};
+	} else if (viewMode === 'read') {
+		newModes = {
+			viewMode: 'read',
+			showBottomRightMenu: false,
+			showBottomLeftMenu: false,
 		};
 	}
 
@@ -154,6 +181,10 @@ function loadSuccess(state, result) {
 		};
 		outputState.error = true;
 		outputState.status = 'loading';
+	}
+
+	if (result.isReader) {
+		outputState.viewMode = 'read';
 	}
 
 	return state.merge(outputState);
@@ -259,6 +290,8 @@ export default function editorReducer(state = defaultState, action) {
 	switch (action.type) {
 	case TOGGLE_VIEW_MODE:
 		return toggleViewMode(state);
+	case SET_VIEW_MODE:
+		return setViewMode(state, action.viewMode);
 	case TOGGLE_FORMATTING:
 		return toggleFormatting(state);
 	case TOGGLE_TOC:

@@ -403,106 +403,109 @@ const Editor = React.createClass({
 					? <div style={styles.errorTitle}>{this.props.editorData.getIn(['pubEditData', 'title'])}</div>
 					: <div>
 						
-						<div>
-							{/*	Component for all modals and their backdrop. */}
-							<EditorModals publishVersionHandler={this.publishVersion} />
+						{/*	Component for all modals and their backdrop. */}
+						<EditorModals publishVersionHandler={this.publishVersion} />
 
-							{/* Top Nav. Fixed to the top of the editor page, just below the main pubpub bar */}
-							<EditorTopNav
-								status={editorData.get('status')}
-								darkMode={darkMode}
-								openModalHandler={this.openModalHandler}
-								editorSaveStatus={this.state.editorSaveStatus}
-								toggleLivePreviewHandler={this.toggleLivePreview}/>
+						{/* Top Nav. Fixed to the top of the editor page, just below the main pubpub bar */}
+						<EditorTopNav
+							status={editorData.get('status')}
+							darkMode={darkMode}
+							openModalHandler={this.openModalHandler}
+							editorSaveStatus={this.state.editorSaveStatus}
+							toggleLivePreviewHandler={this.toggleLivePreview}/>
 
-							{/*	Horizontal loader line - Separates top bar from rest of editor page */}
-							<div style={styles.editorLoadBar}>
-								<LoaderDeterminate value={loadStatus === 'loading' ? 0 : 100}/>
+						{/*	Horizontal loader line - Separates top bar from rest of editor page */}
+						<div style={styles.editorLoadBar}>
+							<LoaderDeterminate value={loadStatus === 'loading' ? 0 : 100}/>
+						</div>
+
+						{/* Bottom Nav */}
+						<EditorBottomNav
+							viewMode={viewMode}
+							loadStatus={loadStatus}
+							darkMode={darkMode}
+							showBottomLeftMenu={showBottomLeftMenu}
+							showBottomRightMenu={showBottomRightMenu}
+							toggleTOCHandler={this.toggleTOC}
+							toggleFormattingHandler={this.toggleFormatting}
+							activeFocus={this.state.activeFocus}
+							focusEditorHandler={this.focusEditor}
+							tocH1={this.state.tocH1}
+							insertFormattingHandler={this.insertFormatting}/>
+
+						{/* ---------------------- */}
+						{/* Markdown Editing Block */}
+						{/* ---------------------- */}
+						<div id="editor-text-wrapper" style={[globalStyles.hiddenUntilLoad, globalStyles[loadStatus], styles.editorMarkdown, styles[viewMode].editorMarkdown]}>
+
+							<EditorPluginPopup ref="pluginPopup" references={this.state.firepadData.references} assets={this.state.firepadData.assets} /* selections={this.state.firepadData.selections} */ activeFocus={this.state.activeFocus} codeMirrorChange={this.state.codeMirrorChange}/>
+
+							{/* Insertion point for codemirror and firepad */}
+							<div style={[this.state.activeFocus !== '' && styles.hiddenMainEditor]}>
+								<div id="codemirror-wrapper"></div>
 							</div>
 
-							{/* Bottom Nav */}
-							<EditorBottomNav
-								viewMode={viewMode}
-								loadStatus={loadStatus}
-								darkMode={darkMode}
-								showBottomLeftMenu={showBottomLeftMenu}
-								showBottomRightMenu={showBottomRightMenu}
-								toggleTOCHandler={this.toggleTOC}
-								toggleFormattingHandler={this.toggleFormatting}
-								activeFocus={this.state.activeFocus}
-								focusEditorHandler={this.focusEditor}
-								tocH1={this.state.tocH1}
-								insertFormattingHandler={this.insertFormatting}/>
+							{/* Insertion point for Focused codemirror subset */}
+							<div id="codemirror-focus-wrapper"></div>
 
-							{/* Markdown Editing Block */}
-							<div id="editor-text-wrapper" style={[globalStyles.hiddenUntilLoad, globalStyles[loadStatus], styles.editorMarkdown, styles[viewMode].editorMarkdown]}>
+						</div>
 
-								<EditorPluginPopup ref="pluginPopup" references={this.state.firepadData.references} assets={this.state.firepadData.assets} /* selections={this.state.firepadData.selections} */ activeFocus={this.state.activeFocus} codeMirrorChange={this.state.codeMirrorChange}/>
+						{/* ------------------ */}
+						{/* Live Preview Block */}
+						{/* ------------------ */}
+						<div id="editor-live-preview-wrapper" style={[globalStyles.hiddenUntilLoad, globalStyles[loadStatus], styles.editorPreview, styles[viewMode].editorPreview]} className={'editorPreview'}>
 
-								{/* Insertion point for codemirror and firepad */}
-								<div style={[this.state.activeFocus !== '' && styles.hiddenMainEditor]}>
-									<div id="codemirror-wrapper"></div>
+							{this.renderNav(false)}
+
+							<div className="editorBodyView" style={[styles.previewBlockWrapper, styles.previewBlockWrapperShow]}>
+								<PubBody
+									status={'loaded'}
+									title={this.state.title}
+									abstract={this.state.abstract}
+									authorsNote={this.state.authorsNote}
+									minFont={15}
+									htmlTree={this.state.tree}
+									markdown={this.state.markdown}
+									authors={this.getAuthorsArray()}
+									// addSelectionHandler={this.addSelection}
+									style={this.state.firepadData && this.state.firepadData.settings ? this.state.firepadData.settings.pubStyle : undefined}
+									assetsObject={this.state.assetsObject}
+									referencesObject={this.state.referencesObject}
+									selectionsArray={this.state.selectionsArray}
+
+									references={referencesList}
+									isFeatured={true} />
+							</div>
+						</div>
+
+						{/* ----------------- */}
+						{/* Discussions Block */}
+						{/* ----------------- */}
+						<div id="editor-discussions-wrapper" style={[globalStyles.hiddenUntilLoad, globalStyles[loadStatus], styles.editorDiscussions, styles[viewMode].editorDiscussions]}>
+
+							<div style={[styles.previewBlockWrapper, styles.previewBlockWrapperShow]}>
+								<div style={styles.previewBlockHeader}>
+									<FormattedMessage {...globalMessages.EditorComments} />
 								</div>
 
-								{/* Insertion point for Focused codemirror subset */}
-								<div id="codemirror-focus-wrapper"></div>
+								<div style={styles.previewBlockText}>
+									<div><FormattedMessage {...globalMessages.editorCommentsText0} /></div>
+									<div><FormattedMessage {...globalMessages.editorCommentsText1} /></div>
+								</div>
 
+								<Discussions editorCommentMode={true} inEditor={true}/>
 							</div>
 
-							{/* Live Preview Block */}
-							<div id="editor-live-preview-wrapper" style={[globalStyles.hiddenUntilLoad, globalStyles[loadStatus], styles.editorPreview, styles[viewMode].editorPreview]} className={'editorPreview'}>
-
-								{this.renderNav(false)}
-
-								<div className="editorBodyView" style={[styles.previewBlockWrapper, this.state.previewPaneMode === 'preview' && styles.previewBlockWrapperShow]}>
-									<PubBody
-										status={'loaded'}
-										title={this.state.title}
-										abstract={this.state.abstract}
-										authorsNote={this.state.authorsNote}
-										minFont={15}
-										htmlTree={this.state.tree}
-										markdown={this.state.markdown}
-										authors={this.getAuthorsArray()}
-										// addSelectionHandler={this.addSelection}
-										style={this.state.firepadData && this.state.firepadData.settings ? this.state.firepadData.settings.pubStyle : undefined}
-										assetsObject={this.state.assetsObject}
-										referencesObject={this.state.referencesObject}
-										selectionsArray={this.state.selectionsArray}
-
-										references={referencesList}
-										isFeatured={true} />
+							<div style={[styles.previewBlockWrapper, this.state.previewPaneMode === 'discussions' && styles.previewBlockWrapperShow]}>
+								<div style={styles.previewBlockHeader}>
+									<FormattedMessage {...globalMessages.discussion} />
 								</div>
+								<div style={styles.previewBlockText}>
+									<FormattedMessage id="editorDiscussionMessage" defaultMessage="This section shows the discussion from the public, published version of your pub."/>
+								</div>
+								<Discussions editorCommentMode={false} inEditor={true}/>
 							</div>
 
-							{/* Discussions Block */}
-							<div id="editor-discussions-wrapper" >
-
-							
-
-								<div style={[styles.previewBlockWrapper, this.state.previewPaneMode === 'comments' && styles.previewBlockWrapperShow]}>
-									<div style={styles.previewBlockHeader}>
-										<FormattedMessage {...globalMessages.EditorComments} />
-									</div>
-
-									<div style={styles.previewBlockText}>
-										<div><FormattedMessage {...globalMessages.editorCommentsText0} /></div>
-										<div><FormattedMessage {...globalMessages.editorCommentsText1} /></div>
-									</div>
-									<Discussions editorCommentMode={true} inEditor={true}/>
-								</div>
-
-								<div style={[styles.previewBlockWrapper, this.state.previewPaneMode === 'discussions' && styles.previewBlockWrapperShow]}>
-									<div style={styles.previewBlockHeader}>
-										<FormattedMessage {...globalMessages.discussion} />
-									</div>
-									<div style={styles.previewBlockText}>
-										<FormattedMessage id="editorDiscussionMessage" defaultMessage="This section shows the discussion from the public, published version of your pub."/>
-									</div>
-									<Discussions editorCommentMode={false} inEditor={true}/>
-								</div>
-
-							</div>
 						</div>
 
 					</div>

@@ -8,6 +8,7 @@ export const LOAD_PUB_EDIT = 'editor/LOAD_PUB_EDIT';
 export const LOAD_PUB_EDIT_SUCCESS = 'editor/LOAD_PUB_EDIT_SUCCESS';
 export const LOAD_PUB_EDIT_FAIL = 'editor/LOAD_PUB_EDIT_FAIL';
 export const TOGGLE_VIEW_MODE = 'editor/TOGGLE_VIEW_MODE';
+export const SET_VIEW_MODE = 'editor/SET_VIEW_MODE';
 export const TOGGLE_FORMATTING = 'editor/TOGGLE_FORMATTING';
 export const TOGGLE_TOC = 'editor/TOGGLE_TOC';
 
@@ -56,6 +57,13 @@ export function publishVersion(newVersion) {
 export function toggleEditorViewMode() {
 	return {
 		type: TOGGLE_VIEW_MODE
+	};
+}
+
+export function setEditorViewMode(viewMode) {
+	return {
+		type: SET_VIEW_MODE,
+		viewMode: viewMode
 	};
 }
 

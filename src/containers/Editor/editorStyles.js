@@ -1,6 +1,5 @@
 import {globalStyles} from '../../utils/styleConstants';
 
-
 export const styles = {
 	editorContainer: {
 		position: 'relative',
@@ -21,36 +20,6 @@ export const styles = {
 		fontSize: '45px',
 		padding: 40,
 	},
-	// isMobile: {
-	// 	display: 'none',
-	// 	'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
-	// 		display: 'block',
-	// 	},
-	// },
-	// mobileHeader: {
-	// 	textAlign: 'center',
-	// 	fontSize: '3em',
-	// 	paddingTop: 50,
-	// 	margin: '.66em 0em',
-	// },
-	// mobileImageWrapper: {
-	// 	width: 100,
-	// 	margin: '0 auto',
-	// },
-	// mobileImage: {
-	// 	width: '100%',
-	// },
-	// mobileText: {
-	// 	textAlign: 'center',
-	// 	fontSize: '1.5em',
-	// 	padding: 20,
-	// 	margin: 0,
-	// },
-	// notMobile: {
-	// 	'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
-	// 		display: 'none',
-	// 	},
-	// },
 
 	editorLoadBar: {
 		position: 'fixed',
@@ -58,51 +27,12 @@ export const styles = {
 		width: '100%',
 		zIndex: 10,
 	},
-	// alignRight: {
-	// 	textAlign: 'right',
-	// },
-	// floatRight: {
-	// 	float: 'right',
-	// },
 	hiddenMainEditor: {
 		height: 0,
 		overflow: 'hidden',
 		pointerEvents: 'none',
 	},
-	// showAll: {
-	// 	padding: '0px 5px',
-	// 	display: 'none',
-	// 	color: globalStyles.veryLight,
-	// 	position: 'absolute',
-	// 	top: -1,
-	// 	left: 135,
-	// 	height: '30px',
-	// 	lineHeight: '30px',
-	// 	width: 73,
-	// 	':hover': {
-	// 		cursor: 'pointer',
-	// 		color: 'black',
-	// 	}
-	// },
-	// showAllVisible: {
-	// 	pointerEvents: 'auto',
-	// 	display: 'inline-block',
-	// },
 
-	// showCommentsToggle: {
-	// 	backgroundColor: '#F5F5F5',
-	// 	cursor: 'pointer',
-	// 	width: '300px',
-	// 	height: '30px',
-	// 	lineHeight: '30px',
-	// 	margin: '0 auto',
-	// 	borderRadius: '1px',
-	// 	userSelect: 'none',
-	// 	textAlign: 'center',
-	// 	':hover': {
-	// 		color: 'black'
-	// 	}
-	// },
 	bodyNavBar: {
 		width: '100%',
 		height: '29px',
@@ -157,7 +87,7 @@ export const styles = {
 	},
 	previewBlockWrapper: {
 		width: 'calc(100% - 20px)',
-		height: 'calc(100vh - 91px - 20px)',
+		height: 'calc(100% - 50px)',
 		padding: '10px',
 		overflow: 'hidden',
 		overflowY: 'scroll',
@@ -177,33 +107,7 @@ export const styles = {
 		fontSize: '15px',
 		margin: '5px 0px 35px 0px',
 	},
-	// readerViewBlock: {
-	// 	width: 'calc(50% - 20px)',
-	// 	height: 'calc(100vh - 31px - 20px)',
-	// 	padding: '10px',
-	// 	overflow: 'hidden',
-	// 	overflowY: 'scroll',
-	// 	float: 'left',
-	// },
-	// readerViewBlockBody: {
-	// 	backgroundColor: 'white',
-	// 	boxShadow: 'rgba(0,0,0,0.25) 0px 3px 9px 1px',
-	// },
-	// hiddenCodeMirror: {
-	// 	opacity: 0,
-	// 	pointerEvents: 'none',
-	// 	position: 'absolute',
-	// },
-	// editorDisabledMessage: {
-	// 	width: '90%',
-	// 	backgroundColor: '#373737',
-	// 	display: 'block',
-	// 	margin: '0 auto',
-	// 	color: 'white',
-	// 	textAlign: 'center',
-	// 	padding: '5px',
 
-	// },
 	editorMarkdown: {
 		margin: '30px 0px',
 		width: '50vw',
@@ -225,6 +129,17 @@ export const styles = {
 		overflow: 'hidden',
 		zIndex: 20,
 		padding: 0
+	},
+	editorDiscussions: {
+		width: 'calc(30% - 0px)',
+		position: 'fixed',
+		right: 0,
+		top: 61,
+		height: 'calc(100vh - 61px)',
+		overflow: 'hidden',
+		zIndex: 40,
+		padding: 0,
+		backgroundColor: 'rgba(245,245,245,0.9)',
 	},
 
 	edit: {
@@ -257,6 +172,32 @@ export const styles = {
 		},
 		
 	},
+	read: {
+		editorMarkdown: {
+			opacity: 0,
+			pointerEvents: 0,
+			transition: '.352s linear transform, .3s linear opacity .25s, 0s linear padding .352s, 0s linear left .352s',
+			transform: 'translateX(0%)',
+			padding: globalStyles.headerHeight + ' 25vw',
+			left: 0,
+		},
+		editorPreview: {
+			// backgroundColor: 'orange',
+			transition: '.352s linear transform',
+			transform: 'translateX(calc(-100% - 1px))',
+			top: '30px',
+			height: 'calc(100vh - 30px)',
+		},
+		editorDiscussions: {
+			width: 'calc(50%)',
+			backgroundColor: globalStyles.sideBackground,
+			top: '30px',
+			height: 'calc(100vh - 30px + 30px)',
+			transition: '.352s linear transform',
+			transform: 'translateX(0px)',
+
+		},
+
+	},
 
 };
-

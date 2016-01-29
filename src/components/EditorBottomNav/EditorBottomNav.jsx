@@ -280,6 +280,20 @@ styles = {
 			opacity: 0,
 		},
 	},
+	read: {
+		bottomNavRight: {
+			opacity: 0,
+			pointerEvents: 'none',
+		},
+		bottomNavDividerLarge: {
+			opacity: 0,
+			pointerEvents: 'none',
+		},
+		bottomNavBackground: {
+			opacity: 0,
+			pointerEvents: 'none',
+		},
+	},
 
 	preview: {
 		editorBottomNav: {
