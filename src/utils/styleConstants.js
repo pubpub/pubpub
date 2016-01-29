@@ -26,6 +26,10 @@ export const globalStyles = {
 		opacity: 1,
 		transition: '.3s linear opacity .25s',
 	},
+	invisible: {
+		opacity: 0,
+		pointerEvents: 'none',
+	},
 	button: {
 		color: '#666',
 		fontSize: '20px',

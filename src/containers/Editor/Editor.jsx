@@ -398,7 +398,8 @@ const Editor = React.createClass({
 							darkMode={darkMode}
 							openModalHandler={this.openModalHandler}
 							editorSaveStatus={this.state.editorSaveStatus}
-							toggleLivePreviewHandler={this.toggleLivePreview}/>
+							toggleLivePreviewHandler={this.toggleLivePreview}
+							viewMode={viewMode} />
 
 						{/*	Horizontal loader line - Separates top bar from rest of editor page */}
 						<div style={styles.editorLoadBar}>

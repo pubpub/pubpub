@@ -39,7 +39,7 @@ app.get('/getPubEdit', function(req, res) {
 		}
 
 		if (!authError) {
-			pubEditData.token = firebaseTokenGen(req.user.username, req.query.slug);
+			pubEditData.token = firebaseTokenGen(req.user.username, req.query.slug, pubEditData.isReader);
 		}
 
 
