@@ -79,6 +79,9 @@ styles = {
 		width: '100%',
 		backgroundColor: globalStyles.sideBackground,
 		zIndex: 10,
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+			display: 'none',
+		},
 	},
 	editorTopNavDark: {
 		backgroundColor: '#272727',

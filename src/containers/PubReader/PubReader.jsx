@@ -187,7 +187,7 @@ const PubReader = React.createClass({
 			const match = srcRegex.exec(pubData.history[versionIndex].markdown);
 			const refName = match ? match[2] : undefined;
 			
-			let leadImage = undefined;
+			let leadImage = '';
 			for (let index = pubData.history[versionIndex].assets.length; index--;) {
 				if (pubData.history[versionIndex].assets[index].refName === refName) {
 					leadImage = pubData.history[versionIndex].assets[index].url_s3;
@@ -195,10 +195,9 @@ const PubReader = React.createClass({
 				}
 			}
 
-			if (leadImage) {
-				metaData.meta.push({property: 'og:image', content: leadImage});
-				metaData.meta.push({name: 'twitter:image', content: leadImage});
-			}
+			metaData.meta.push({property: 'og:image', content: leadImage});
+			metaData.meta.push({name: 'twitter:image', content: leadImage});
+			
 		} else {
 			metaData.title = 'PubPub - ' + this.props.slug;
 		}

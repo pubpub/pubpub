@@ -128,18 +128,25 @@ export const styles = {
 		height: 'calc(100vh - 61px)',
 		overflow: 'hidden',
 		zIndex: 20,
-		padding: 0
+		padding: 0,
 	},
 	editorDiscussions: {
 		width: 'calc(30% - 0px)',
 		position: 'fixed',
 		right: 0,
-		top: 61,
+		transition: '.252s ease-in-out transform',
+		transform: 'translateX(110%)',
+		top: 91,
 		height: 'calc(100vh - 61px)',
 		overflow: 'hidden',
 		zIndex: 40,
 		padding: 0,
-		backgroundColor: 'rgba(245,245,245,0.9)',
+		backgroundColor: 'rgba(245,245,245,0.95)',
+		boxShadow: '-2px -1px 3px -2px rgba(0,0,0,0.7)',
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+			boxShadow: '-2px -1px 4px -2px rgba(0,0,0,0.0)',
+			width: '80%',
+		},
 	},
 
 	edit: {
@@ -152,6 +159,13 @@ export const styles = {
 		editorPreview: {
 			transition: '.352s linear transform',
 			transform: 'translateX(110%)',
+			'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+				backgroundColor: 'red',
+				width: '100%',
+				transform: 'translateX(0%)',
+				top: '60px',
+				height: 'calc(100vh - 60px)',
+			},
 		},
 
 	},
@@ -170,6 +184,9 @@ export const styles = {
 			transition: '.352s linear transform',
 			transform: 'translateX(0%)',
 		},
+		editorDiscussions: {
+			transform: 'translateX(0px)',
+		},
 		
 	},
 	read: {
@@ -185,16 +202,24 @@ export const styles = {
 			// backgroundColor: 'orange',
 			transition: '.352s linear transform',
 			transform: 'translateX(calc(-100% - 1px))',
-			top: '30px',
-			height: 'calc(100vh - 30px)',
+			top: '31px',
+			height: 'calc(100vh - 31px)',
+			'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+				transform: 'translateX(0%)',
+			},
 		},
 		editorDiscussions: {
 			width: 'calc(50%)',
 			backgroundColor: globalStyles.sideBackground,
 			top: '30px',
 			height: 'calc(100vh - 30px + 30px)',
-			transition: '.352s linear transform',
 			transform: 'translateX(0px)',
+			boxShadow: '-2px -1px 4px -2px rgba(0,0,0,0.0)',
+			'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+				width: '80%',
+				top: '0px',
+				height: 'calc(100vh + 30px)',
+			},
 
 		},
 

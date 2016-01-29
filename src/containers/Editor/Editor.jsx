@@ -18,7 +18,7 @@ import {debounce} from '../../utils/loadingFunctions';
 import {submitPubToJournal} from '../../actions/journal';
 
 import initCodeMirrorMode from './editorCodeMirrorMode';
-import {styles} from './editorStyles';
+// import {styles} from './editorStyles';
 import {codeMirrorStyles, codeMirrorStyleClasses} from './codeMirrorStyles';
 import {globalStyles} from '../../utils/styleConstants';
 
@@ -34,6 +34,7 @@ import {globalMessages} from '../../utils/globalMessages';
 import {FormattedMessage} from 'react-intl';
 
 let FireBaseURL;
+let styles;
 
 const cmOptions = {
 	lineNumbers: false,
@@ -78,7 +79,7 @@ const Editor = React.createClass({
 			},
 			codeMirrorChange: {},
 			editorSaveStatus: 'saved',
-			previewPaneMode: 'preview',
+			previewPaneMode: undefined,
 		};
 	},
 
@@ -342,28 +343,13 @@ const Editor = React.createClass({
 		return outputAuthors;
 	},
 
-	renderNav: function(mobileView) {
-		// if isEditor, add 'Public Discussions' | 'Collaborator Comments'  | 'Live Preview'
-		// remove whichever one is active in state at the moment
-
-		// const discussionsExist = this.props.editorData.getIn(['pubEditData', 'discussions']) && this.props.editorData.getIn(['pubEditData', 'discussions']).size;
-
-		return (
-			<div className={'editorBodyNav'} style={styles.bodyNavBar}>
-				<div key={mobileView ? 'mobileBodyNav2' : 'previewBodyNav2'} style={styles.bodyNavItem} onClick={this.switchPreviewPaneMode('comments')}>
-					Editor Comments
-				</div>
-				<div style={styles.bodyNavSeparator}>|</div>
-				<div key={mobileView ? 'mobileBodyNav1' : 'previewBodyNav1'} style={styles.bodyNavItem} onClick={this.switchPreviewPaneMode('discussions')}>
-					Public Discussions
-				</div>
-			</div>
-		);
-	},
-
 	switchPreviewPaneMode: function(mode) {
 		return ()=>{
-			this.setState({previewPaneMode: mode});
+			if (mode === this.state.previewPaneMode) {
+				this.setState({previewPaneMode: undefined});
+			} else {
+				this.setState({previewPaneMode: mode});	
+			}
 		};
 	},
 
@@ -455,9 +441,22 @@ const Editor = React.createClass({
 						{/* ------------------ */}
 						<div id="editor-live-preview-wrapper" style={[globalStyles.hiddenUntilLoad, globalStyles[loadStatus], styles.editorPreview, styles[viewMode].editorPreview]} className={'editorPreview'}>
 
-							{this.renderNav(false)}
+							<div className={'editorPreviewNav'} style={styles.bodyNavBar}>
+								<div key={'previewBodyNav0'} style={styles.bodyNavItem} onClick={this.switchPreviewPaneMode('comments')}>
+									Editor Comments
+								</div>
+								<div style={styles.bodyNavSeparator}>|</div>
+								<div key={'previewBodyNav1'} style={[styles.bodyNavItem, styles.bodyNavItemHiddenMobile]} onClick={this.switchPreviewPaneMode('discussions')}>
+									Public Discussions
+								</div>
+							</div>
 
 							<div className="editorBodyView" style={[styles.previewBlockWrapper, styles.previewBlockWrapperShow]}>
+
+								<span style={[styles.editorDisabledMessage, viewMode !== 'read' && styles.editorDisabledMessageVisible]}>
+									<FormattedMessage id="editingDisableMobile" defaultMessage="Editing disabled on mobile view. You can still read and comment. Open on a laptop or desktop to edit." />
+								</span>
+
 								<PubBody
 									status={'loaded'}
 									title={this.state.title}
@@ -481,9 +480,9 @@ const Editor = React.createClass({
 						{/* ----------------- */}
 						{/* Discussions Block */}
 						{/* ----------------- */}
-						<div id="editor-discussions-wrapper" style={[globalStyles.hiddenUntilLoad, globalStyles[loadStatus], styles.editorDiscussions, styles[viewMode].editorDiscussions]}>
+						<div id="editor-discussions-wrapper" style={[globalStyles.hiddenUntilLoad, globalStyles[loadStatus], styles.editorDiscussions, viewMode === 'read' && styles[viewMode].editorDiscussionsMobile, this.state.previewPaneMode && styles[viewMode].editorDiscussions]}>
 
-							<div style={[styles.previewBlockWrapper, styles.previewBlockWrapperShow]}>
+							<div style={[styles.previewBlockWrapper, (this.state.previewPaneMode === 'comments' || viewMode === 'read') && styles.previewBlockWrapperShow]}>
 								<div style={styles.previewBlockHeader}>
 									<FormattedMessage {...globalMessages.EditorComments} />
 								</div>
@@ -508,6 +507,8 @@ const Editor = React.createClass({
 
 						</div>
 
+						<div id="editor-mobile-close-bar" style={[this.state.previewPaneMode && styles.editorMobileCloseBar]} onClick={this.switchPreviewPaneMode(undefined)}></div>
+
 					</div>
 				}
 			</div>
@@ -525,3 +526,288 @@ export default connect( state => {
 		loginData: state.login
 	};
 })( Radium(Editor) );
+
+styles = {
+	editorContainer: {
+		position: 'relative',
+		color: globalStyles.sideText,
+		fontFamily: globalStyles.headerFont,
+		backgroundColor: globalStyles.sideBackground,
+		height: 'calc(100vh - ' + globalStyles.headerHeight + ')',
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+			height: 'calc(100vh - ' + globalStyles.headerHeightMobile + ')',
+		},
+	},
+	editorContainerDark: {
+		backgroundColor: '#272727',
+
+	},
+	errorTitle: {
+		textAlign: 'center',
+		fontSize: '45px',
+		padding: 40,
+	},
+
+	editorLoadBar: {
+		position: 'fixed',
+		top: 60,
+		width: '100%',
+		zIndex: 10,
+	},
+	hiddenMainEditor: {
+		height: 0,
+		overflow: 'hidden',
+		pointerEvents: 'none',
+	},
+
+	bodyNavBar: {
+		width: '100%',
+		height: '29px',
+		color: 'white',
+		borderBottom: '1px solid #CCC',
+		marginBottom: 0,
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+			height: 'calc(' + globalStyles.headerHeightMobile + ' - 1px)',
+		},
+	},
+	bodyNavItem: {
+		
+		float: 'right',
+		padding: '0px 10px',
+		height: globalStyles.headerHeight,
+		lineHeight: globalStyles.headerHeight,
+		cursor: 'pointer',
+		color: '#888',
+		userSelect: 'none',
+		':hover': {
+			color: 'black',
+		},
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+			height: globalStyles.headerHeightMobile,
+			lineHeight: globalStyles.headerHeightMobile,
+			fontSize: '20px',
+		},
+	},
+	bodyNavItemHiddenMobile: {
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+			display: 'none',
+		},
+	},
+	bodyNavSeparator: {
+		float: 'right',
+		height: globalStyles.headerHeight,
+		lineHeight: globalStyles.headerHeight,
+		userSelect: 'none',
+		padding: '0px 2px',
+		color: '#888',
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+			height: globalStyles.headerHeightMobile,
+			lineHeight: globalStyles.headerHeightMobile,
+			fontSize: '20px',
+		},
+	},
+	mobileOnlySeparator: {
+		display: 'none',
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+			display: 'block',
+		},
+	},
+	bodyNavDiscussionBlock: {
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+			display: 'none',
+		},
+	},
+	previewBlockWrapper: {
+		width: 'calc(100% - 20px)',
+		height: 'calc(100% - 50px)',
+		padding: '10px',
+		overflow: 'hidden',
+		overflowY: 'scroll',
+		position: 'absolute',
+		opacity: '0',
+		pointerEvents: 'none',
+	},
+	previewBlockWrapperShow: {
+		opacity: '1',
+		pointerEvents: 'auto',
+	},
+	previewBlockHeader: {
+		fontSize: '30px',
+		margin: '10px 0px',
+	},
+	previewBlockText: {
+		fontSize: '15px',
+		margin: '5px 0px 35px 0px',
+	},
+	editorDisabledMessage: {
+		width: '90%',
+		backgroundColor: '#373737',
+		display: 'none',
+		margin: '0 auto',
+		color: 'white',
+		textAlign: 'center',
+		padding: '5px',
+	},
+
+	editorDisabledMessageVisible: {
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+			display: 'block',
+		},
+	},
+
+	editorMarkdown: {
+		margin: '30px 0px',
+		width: '50vw',
+		zIndex: 5,
+
+		position: 'fixed',
+		height: 'calc(100vh - 60px - 2*' + globalStyles.headerHeight + ')',
+		overflow: 'hidden',
+		overflowY: 'scroll',
+	},
+	editorPreview: {
+		width: 'calc(50% - 0px)',
+		backgroundColor: '#fff',
+		boxShadow: 'rgba(0,0,0,0.25) 0px 3px 9px 1px',
+		position: 'fixed',
+		right: 0,
+		top: 61,
+		height: 'calc(100vh - 61px)',
+		overflow: 'hidden',
+		zIndex: 20,
+		padding: 0,
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+			width: '100%',
+			transform: 'translateX(0%)',
+		},
+	},
+	editorDiscussions: {
+		width: 'calc(30% - 0px)',
+		position: 'fixed',
+		right: 0,
+		transition: '.252s ease-in-out transform',
+		transform: 'translateX(110%)',
+		top: 91,
+		height: 'calc(100vh - 61px)',
+		overflow: 'hidden',
+		zIndex: 40,
+		padding: 0,
+		backgroundColor: 'rgba(245,245,245,0.95)',
+		boxShadow: '-2px -1px 3px -2px rgba(0,0,0,0.7)',
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+			width: '90%',
+			top: '61px',
+		},
+	},
+
+	editorMobileCloseBar: {
+		display: 'none',
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+			display: 'block',
+			left: 0,
+			width: '10%',
+			height: 'calc(100vh - 61px)',
+			top: '61px',
+			zIndex: 50,
+			position: 'fixed',
+		},
+	},
+
+	edit: {
+		editorMarkdown: {
+			transition: '.352s linear transform, .3s linear opacity .25s, 0s linear padding .352s, 0s linear left .352s',
+			transform: 'translateX(0%)',
+			padding: globalStyles.headerHeight + ' 25vw',
+			left: 0,
+		},
+		editorPreview: {
+			transition: '.352s linear transform',
+			transform: 'translateX(110%)',
+			'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+				transform: 'translateX(0%)',
+			},
+		},
+		editorDiscussions: {
+			'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+				transform: 'translateX(0%)',
+			},
+		},
+
+	},
+
+	preview: {
+		editorBottomNav: {
+			pointerEvents: 'none',
+		},
+		editorMarkdown: {
+			transition: '.352s linear transform, .3s linear opacity .25s',
+			transform: 'translateX(-50%)',
+			padding: globalStyles.headerHeight + ' 0px',
+			left: '25vw'
+		},
+		editorPreview: {
+			transition: '.352s linear transform',
+			transform: 'translateX(0%)',
+		},
+		editorDiscussions: {
+			transform: 'translateX(0px)',
+		},
+		
+	},
+	read: {
+		editorMarkdown: {
+			opacity: 0,
+			pointerEvents: 0,
+			transition: '.352s linear transform, .3s linear opacity .25s, 0s linear padding .352s, 0s linear left .352s',
+			transform: 'translateX(0%)',
+			padding: globalStyles.headerHeight + ' 25vw',
+			left: 0,
+		},
+		editorPreview: {
+			// backgroundColor: 'orange',
+			transition: '.352s linear transform',
+			transform: 'translateX(calc(-100% - 1px))',
+			top: '31px',
+			height: 'calc(100vh - 31px)',
+			'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+				transform: 'translateX(0%)',
+				top: '61px',
+				height: 'calc(100vh - 61px)',
+			},
+		},
+		editorDiscussionsMobile: {
+			width: 'calc(50%)',
+			backgroundColor: globalStyles.sideBackground,
+			top: '30px',
+			height: 'calc(100vh - 30px + 30px)',
+			transform: 'translateX(0px)',
+			boxShadow: '-2px -1px 4px -2px rgba(0,0,0,0.0)',
+			'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+				transform: 'translateX(110%)',
+				width: '90%',
+				boxShadow: '-2px -1px 3px -2px rgba(0,0,0,0.7)',
+				top: '61px',
+				height: 'calc(100vh - 61px)',
+			},
+
+		},
+		editorDiscussions: {
+			width: 'calc(50%)',
+			backgroundColor: globalStyles.sideBackground,
+			top: '30px',
+			height: 'calc(100vh - 30px + 30px)',
+			transform: 'translateX(0px)',
+			boxShadow: '-2px -1px 4px -2px rgba(0,0,0,0.0)',
+			'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+				transform: 'translateX(0%)',
+				width: '90%',
+				boxShadow: '-2px -1px 3px -2px rgba(0,0,0,0.7)',
+				top: '61px',
+				height: 'calc(100vh - 61px)',
+			},
+
+		},
+
+	},
+
+};
