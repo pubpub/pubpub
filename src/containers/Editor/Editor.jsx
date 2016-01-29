@@ -9,7 +9,7 @@ import Helmet from 'react-helmet';
 import PureRenderMixin from 'react-addons-pure-render-mixin';
 import ReactFireMixin from 'reactfire';
 
-import {EditorModals} from '../';
+import {Discussions, EditorModals} from '../';
 import {LoaderDeterminate, EditorPluginPopup, EditorTopNav, EditorBottomNav, PubBody} from '../../components';
 import {clearPub} from '../../actions/pub';
 import {getPubEdit, toggleEditorViewMode, toggleFormatting, toggleTOC, unmountEditor, closeModal, openModal, publishVersion} from '../../actions/editor';
@@ -18,23 +18,19 @@ import {debounce} from '../../utils/loadingFunctions';
 import {submitPubToJournal} from '../../actions/journal';
 
 import initCodeMirrorMode from './editorCodeMirrorMode';
-import {styles, codeMirrorStyles} from './editorStyles';
+import {styles} from './editorStyles';
+import {codeMirrorStyles, codeMirrorStyleClasses} from './codeMirrorStyles';
 import {globalStyles} from '../../utils/styleConstants';
 
 import {insertText, createFocusDoc, addCodeMirrorKeys} from './editorCodeFunctions';
 import {editorDefaultText} from './editorDefaultText';
 
-// import SHA1 from 'crypto-js/sha1';
-// import encHex from 'crypto-js/enc-hex';
-
 import FirepadUserList from './editorFirepadUserlist';
 
-import {Discussions} from '../';
-
 import {convertFirebaseToObject} from '../../utils/parsePlugins';
+import {generateTOC} from '../../markdown/generateTOC';
 
 import {globalMessages} from '../../utils/globalMessages';
-import {generateTOC} from '../../markdown/generateTOC';
 import {FormattedMessage} from 'react-intl';
 
 let FireBaseURL;
@@ -169,13 +165,10 @@ const Editor = React.createClass({
 	},
 
 	getActiveCodemirrorInstance: function() {
-		const cm = this.state.activeFocus === ''
-				? document.getElementById('codemirror-wrapper').childNodes[0].childNodes[0].CodeMirror
-				: document.getElementById('codemirror-focus-wrapper').childNodes[0].CodeMirror;
-
-		return cm;
+		return this.state.activeFocus === ''
+			? document.getElementById('codemirror-wrapper').childNodes[0].childNodes[0].CodeMirror
+			: document.getElementById('codemirror-focus-wrapper').childNodes[0].CodeMirror;
 	},
-
 
 	showPopupFromAutocomplete: function(completion) { // completion, element
 		const cords = this.cm.cursorCoords();
@@ -288,9 +281,7 @@ const Editor = React.createClass({
 			authors: authors,
 			assets: this.state.firepadData.assets,
 			references: this.state.firepadData.references,
-			// selections: this.state.firepadData.selections,
 			style: this.state.firepadData.settings.pubStyle,
-			// pHashes: pHashes,
 			publishNote: versionDescription,
 		};
 
@@ -376,35 +367,6 @@ const Editor = React.createClass({
 		};
 	},
 
-	renderBody: function() {
-		const referencesList = [];
-		for ( const key in this.state.firepadData.references ) {
-			if (this.state.firepadData.references.hasOwnProperty(key)) {
-				referencesList.push(this.state.firepadData.references[key]);
-			}
-		}
-
-		return (
-			<PubBody
-				status={'loaded'}
-				title={this.state.title}
-				abstract={this.state.abstract}
-				authorsNote={this.state.authorsNote}
-				minFont={15}
-				htmlTree={this.state.tree}
-				markdown={this.state.markdown}
-				authors={this.getAuthorsArray()}
-				// addSelectionHandler={this.addSelection}
-				style={this.state.firepadData && this.state.firepadData.settings ? this.state.firepadData.settings.pubStyle : undefined}
-				assetsObject={this.state.assetsObject}
-				referencesObject={this.state.referencesObject}
-				selectionsArray={this.state.selectionsArray}
-
-				references={referencesList}
-				isFeatured={true} />
-		);
-	},
-
 	render: function() {
 		const editorData = this.props.editorData;
 		const viewMode = this.props.editorData.get('viewMode');
@@ -412,6 +374,13 @@ const Editor = React.createClass({
 		const showBottomRightMenu = this.props.editorData.get('showBottomRightMenu');
 		const loadStatus = this.props.editorData.get('status');
 		const darkMode = this.props.loginData.getIn(['userData', 'settings', 'editorColor']) === 'dark';
+
+		const referencesList = [];
+		for ( const key in this.state.firepadData.references ) {
+			if (this.state.firepadData.references.hasOwnProperty(key)) {
+				referencesList.push(this.state.firepadData.references[key]);
+			}
+		}
 
 		// Set metadata for the page.
 		const metaData = {
@@ -426,40 +395,7 @@ const Editor = React.createClass({
 
 				<Style rules={{
 					...codeMirrorStyles(this.props.loginData),
-					'.pagebreak': {
-						opacity: '1', // Alternatively, instead of using !important, we could pass a variable to PubBody that differentiates whether we're in the Reader or Editor and toggle the pagebreak opacity accordingly.
-					},
-					'.firepad-userlist-user': {
-						height: '30px',
-						overflow: 'hidden',
-						display: 'inline-block',
-						position: 'relative',
-					},
-					'.firepad-userlist-user:hover': {
-						overflow: 'visible',
-					},
-					'.firepad-userlist-image': {
-						height: '20px',
-						padding: '5px',
-					},
-					'.firepad-userlist-color-indicator': {
-						position: 'absolute',
-						height: '3px',
-						bottom: '2px',
-						left: '5px',
-						width: '20px',
-					},
-					'.firepad-userlist-name': {
-						position: 'absolute',
-						width: '250px',
-						left: '-110px',
-						textAlign: 'center',
-						bottom: '-20px',
-						height: '20px',
-						lineHeight: '20px',
-						backgroundColor: '#F5F5F5',
-					},
-
+					...codeMirrorStyleClasses
 				}} />
 
 				{/*	'Not Authorized' or 'Error' Note */}
@@ -499,7 +435,7 @@ const Editor = React.createClass({
 								insertFormattingHandler={this.insertFormatting}/>
 
 							{/* Markdown Editing Block */}
-							<div id="editor-text-wrapper" style={[globalStyles.hiddenUntilLoad, globalStyles[loadStatus], styles.common.editorMarkdown, styles[viewMode].editorMarkdown]}>
+							<div id="editor-text-wrapper" style={[globalStyles.hiddenUntilLoad, globalStyles[loadStatus], styles.editorMarkdown, styles[viewMode].editorMarkdown]}>
 
 								<EditorPluginPopup ref="pluginPopup" references={this.state.firepadData.references} assets={this.state.firepadData.assets} /* selections={this.state.firepadData.selections} */ activeFocus={this.state.activeFocus} codeMirrorChange={this.state.codeMirrorChange}/>
 
@@ -514,20 +450,41 @@ const Editor = React.createClass({
 							</div>
 
 							{/* Live Preview Block */}
-							<div id="editor-live-preview-wrapper" style={[globalStyles.hiddenUntilLoad, globalStyles[loadStatus], styles.common.editorPreview, styles[viewMode].editorPreview]} className={'editorPreview'}>
+							<div id="editor-live-preview-wrapper" style={[globalStyles.hiddenUntilLoad, globalStyles[loadStatus], styles.editorPreview, styles[viewMode].editorPreview]} className={'editorPreview'}>
 
 								{this.renderNav(false)}
 
 								<div className="editorBodyView" style={[styles.previewBlockWrapper, this.state.previewPaneMode === 'preview' && styles.previewBlockWrapperShow]}>
-									<div className={'mainRenderBody'}>
-										{this.renderBody()}
-									</div>
+									<PubBody
+										status={'loaded'}
+										title={this.state.title}
+										abstract={this.state.abstract}
+										authorsNote={this.state.authorsNote}
+										minFont={15}
+										htmlTree={this.state.tree}
+										markdown={this.state.markdown}
+										authors={this.getAuthorsArray()}
+										// addSelectionHandler={this.addSelection}
+										style={this.state.firepadData && this.state.firepadData.settings ? this.state.firepadData.settings.pubStyle : undefined}
+										assetsObject={this.state.assetsObject}
+										referencesObject={this.state.referencesObject}
+										selectionsArray={this.state.selectionsArray}
+
+										references={referencesList}
+										isFeatured={true} />
 								</div>
+							</div>
+
+							{/* Discussions Block */}
+							<div id="editor-discussions-wrapper" >
+
+							
 
 								<div style={[styles.previewBlockWrapper, this.state.previewPaneMode === 'comments' && styles.previewBlockWrapperShow]}>
 									<div style={styles.previewBlockHeader}>
 										<FormattedMessage {...globalMessages.EditorComments} />
 									</div>
+
 									<div style={styles.previewBlockText}>
 										<div><FormattedMessage {...globalMessages.editorCommentsText0} /></div>
 										<div><FormattedMessage {...globalMessages.editorCommentsText1} /></div>

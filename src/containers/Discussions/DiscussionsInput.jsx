@@ -12,7 +12,7 @@ let styles = {};
 
 // import {loadCss} from '../../utils/loadingFunctions';
 import initCodeMirrorMode from '../../containers/Editor/editorCodeMirrorMode';
-import {codeMirrorStyles} from '../../containers/Editor/editorStyles';
+import {codeMirrorStyles} from '../../containers/Editor/codeMirrorStyles';
 import {clearTempHighlights} from '../../components/PubSelectionPopup/selectionFunctions';
 
 // import marked from '../../modules/markdown/markdown';
