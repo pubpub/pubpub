@@ -9,7 +9,8 @@ import Helmet from 'react-helmet';
 import PureRenderMixin from 'react-addons-pure-render-mixin';
 import ReactFireMixin from 'reactfire';
 
-import {LoaderDeterminate, EditorPluginPopup, EditorModals, EditorTopNav, EditorBottomNav, PubBody} from '../../components';
+import {EditorModals} from '../';
+import {LoaderDeterminate, EditorPluginPopup, EditorTopNav, EditorBottomNav, PubBody} from '../../components';
 import {clearPub} from '../../actions/pub';
 import {getPubEdit, toggleEditorViewMode, toggleFormatting, toggleTOC, unmountEditor, closeModal, openModal, publishVersion, saveCollaboratorsToPub, saveSettingsPubPub} from '../../actions/editor';
 import {saveSettingsUser} from '../../actions/login';
