@@ -3,7 +3,6 @@ export CollectionMain from './CollectionMain/CollectionMain';
 export CollectionGallery from './CollectionGallery/CollectionGallery';
 export CreateJournalForm from './CreateJournalForm/CreateJournalForm';
 export CreatePubForm from './CreatePubForm/CreatePubForm';
-export EditorModals from './EditorModals/EditorModals';
 export EditorPluginPopup from './EditorPluginPopup/EditorPluginPopup';
 export EditorTopNav from './EditorTopNav/EditorTopNav';
 export EditorBottomNav from './EditorBottomNav/EditorBottomNav';

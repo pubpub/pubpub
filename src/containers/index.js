@@ -4,6 +4,7 @@ export Autocomplete from './Autocomplete/Autocomplete';
 export Collection from './Collection/Collection';
 export Discussions from './Discussions/Discussions';
 export Editor from './Editor/Editor';
+export EditorModals from './EditorModals/EditorModals';
 export Explore from './Explore/Explore';
 export JournalCreate from './JournalCreate/JournalCreate';
 export JournalProfile from './JournalProfile/JournalProfile';

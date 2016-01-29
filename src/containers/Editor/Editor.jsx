@@ -94,8 +94,6 @@ const Editor = React.createClass({
 
 		if (! this.props.editorData.get('error')) {
 
-			// loadCss('/css/codemirror.css');
-			// loadCss('/css/react-select.min.css');
 			initCodeMirrorMode();
 
 			if (this.props.editorData.getIn(['pubEditData', 'token'])) {
@@ -211,40 +209,41 @@ const Editor = React.createClass({
 			const completion = cm.state.completionActive.data;
 			CodeMirror.on(completion, 'pick', this.showPopupFromAutocomplete);
 		}
-		// const start = performance.now();
+		const start = performance.now();
 
 		// This feels inefficient.
 		// An alternative is that we don't pass a trimmed version of the text to the markdown processor.
 		// Instead we define header plugins and pass the entire thing to both here and body.
-		// const markdownStart = performance.now();
+		const markdownStart = performance.now();
 		const fullMD = cm.getValue();
-		// const markdownGrab = performance.now();
+		const markdownGrab = performance.now();
 		const titleRE = /\[\[title:(.*?)\]\]/i;
 		const titleMatch = fullMD.match(titleRE);
 		const title = titleMatch && titleMatch.length ? titleMatch[1].trim() : '';
-		// const titleGrabAndSet = performance.now();
+		const titleGrabAndSet = performance.now();
 
 		const abstractRE = /\[\[abstract:(.*?)\]\]/i;
 		const abstractMatch = fullMD.match(abstractRE);
 		const abstract = abstractMatch && abstractMatch.length ? abstractMatch[1].trim() : '';
-		// const abstractGrabAndSet = performance.now();
+		const abstractGrabAndSet = performance.now();
 
 		const authorsNoteRE = /\[\[authorsNote:(.*?)\]\]/i;
 		const authorsNoteMatch = fullMD.match(authorsNoteRE);
 		const authorsNote = authorsNoteMatch && authorsNoteMatch.length ? authorsNoteMatch[1].trim() : '';
-		// const aNGrabAndSet = performance.now();
+		const aNGrabAndSet = performance.now();
 
 		const assets = convertFirebaseToObject(this.state.firepadData.assets);
 		const references = convertFirebaseToObject(this.state.firepadData.references, true);
 		const selections = [];
-		const markdown = fullMD.replace(/\[\[title:.*?\]\]/g, '').replace(/\[\[abstract:.*?\]\]/g, '').replace(/\[\[authorsNote:.*?\]\]/g, '').trim();
-		// const removeTitleEtc = performance.now();
-		// let compiledMarkdown = 0;
-		// let saveState = 0;
+		// const markdown = fullMD.replace(/\[\[title:.*?\]\]/g, '').replace(/\[\[abstract:.*?\]\]/g, '').replace(/\[\[authorsNote:.*?\]\]/g, '').trim();
+		const markdown = fullMD;
+		const removeTitleEtc = performance.now();
+		let compiledMarkdown = 0;
+		let saveState = 0;
 
 		try {
 
-			// compiledMarkdown = performance.now();
+			compiledMarkdown = performance.now();
 			this.setState({
 				markdown: markdown,
 				travisTOC: [],
@@ -259,7 +258,7 @@ const Editor = React.createClass({
 				referencesObject: references,
 				selectionsArray: selections,
 			});
-			// saveState = performance.now();
+			saveState = performance.now();
 		} catch (err) {
 			console.log('Compiling error: ', err);
 			this.setState({
@@ -268,18 +267,18 @@ const Editor = React.createClass({
 				abstract: err.toString().replace('Please report this to https://github.com/chjj/marked.', ''),
 			});
 		}
-		// console.log('total', saveState - start);
-		// console.log('preMD', markdownStart - start);
-		// console.log('markdownGrab', markdownGrab - start, markdownGrab - markdownStart);
-		// console.log('titleGrab', titleGrabAndSet - start, titleGrabAndSet - markdownGrab);
-		// console.log('abstractGrab', abstractGrabAndSet - start, abstractGrabAndSet - titleGrabAndSet);
-		// console.log('anGrab', aNGrabAndSet - start, aNGrabAndSet - abstractGrabAndSet);
-		// console.log('removeTitleEtc', removeTitleEtc - start, removeTitleEtc - aNGrabAndSet);
-		// console.log('compiledMarkdown', compiledMarkdown - start, compiledMarkdown - removeTitleEtc);
-		// console.log('saveState', saveState - start, saveState - compiledMarkdown);
-		// console.log('~~~~~~~~~~~~~~~~~~');
-		// const end = performance.now();
-		// console.log('timing = ', end - start);
+		console.log('total', saveState - start);
+		console.log('preMD', markdownStart - start);
+		console.log('markdownGrab', markdownGrab - start, markdownGrab - markdownStart);
+		console.log('titleGrab', titleGrabAndSet - start, titleGrabAndSet - markdownGrab);
+		console.log('abstractGrab', abstractGrabAndSet - start, abstractGrabAndSet - titleGrabAndSet);
+		console.log('anGrab', aNGrabAndSet - start, aNGrabAndSet - abstractGrabAndSet);
+		console.log('removeTitleEtc', removeTitleEtc - start, removeTitleEtc - aNGrabAndSet);
+		console.log('compiledMarkdown', compiledMarkdown - start, compiledMarkdown - removeTitleEtc);
+		console.log('saveState', saveState - start, saveState - compiledMarkdown);
+		console.log('~~~~~~~~~~~~~~~~~~');
+		const end = performance.now();
+		console.log('timing = ', end - start);
 
 	},
 
@@ -363,59 +362,6 @@ const Editor = React.createClass({
 
 	},
 
-	// Add asset to firebase.
-	// Will trigger other open clients to sync new assets data.
-	addAsset: function(asset) {
-		// Cleanup refname. No special characters, underscores, etc.
-		let refName = asset.originalFilename.replace(/[^0-9a-z]/gi, '');
-
-		// Make sure refname is unique.
-		// If it's not unique, append a timestamp.
-		if (this.state.firepadData.assets && refName in this.state.firepadData.assets) {
-			refName = refName + '_' + Date.now();
-		}
-		// Add refname and author to passed in asset object.
-		asset.refName = refName;
-		asset.author = this.props.loginData.getIn(['userData', 'username']);
-
-		// Push to firebase ref
-		const ref = new Firebase(FireBaseURL + this.props.slug + '/editorData/assets' );
-		ref.push(asset);
-	},
-
-	deleteAsset: function(assetID) {
-		return ()=>{
-			const ref = new Firebase(FireBaseURL + this.props.slug + '/editorData/assets/' + assetID );
-			ref.remove();
-		};
-	},
-
-	saveUpdatedCollaborators: function(newCollaborators, removedUser) {
-		const ref = new Firebase(FireBaseURL + this.props.slug + '/editorData/collaborators' );
-		ref.set(newCollaborators);
-		this.props.dispatch(saveCollaboratorsToPub(newCollaborators, removedUser, this.props.slug));
-	},
-
-	saveUpdatedSettingsUser: function(newSettings) {
-		this.props.dispatch(saveSettingsUser(newSettings));
-	},
-
-	saveUpdatedSettingsFirebase: function(newSettings) {
-		const ref = new Firebase(FireBaseURL + this.props.slug + '/editorData/settings' );
-		ref.update(newSettings);
-	},
-
-	saveUpdatedSettingsFirebaseAndPubPub: function(newSettings) {
-		const ref = new Firebase(FireBaseURL + this.props.slug + '/editorData/settings' );
-		ref.update(newSettings);
-		this.props.dispatch(saveSettingsPubPub(this.props.slug, newSettings));
-	},
-
-	saveReferences: function(newReferences) {
-		const ref = new Firebase(FireBaseURL + this.props.slug + '/editorData/references' );
-		ref.set(newReferences);
-	},
-
 	closeModalHandler: function() {
 		this.props.dispatch(closeModal());
 	},
@@ -467,71 +413,17 @@ const Editor = React.createClass({
 		// remove whichever one is active in state at the moment
 		const discussionsExist = this.props.editorData.getIn(['pubEditData', 'discussions']) && this.props.editorData.getIn(['pubEditData', 'discussions']).size;
 
-		const editorCommentsTab = (
-			<div key={mobileView ? 'mobileBodyNav2' : 'previewBodyNav2'} style={styles.bodyNavItem} onClick={this.switchPreviewPaneMode('comments')}>
-				Editor Comments
+		return (
+			<div className={'editorBodyNav'} style={styles.bodyNavBar}>
+				<div key={mobileView ? 'mobileBodyNav2' : 'previewBodyNav2'} style={styles.bodyNavItem} onClick={this.switchPreviewPaneMode('comments')}>
+					Editor Comments
+				</div>
+				<div style={styles.bodyNavSeparator}>|</div>
+				<div key={mobileView ? 'mobileBodyNav1' : 'previewBodyNav1'} style={styles.bodyNavItem} onClick={this.switchPreviewPaneMode('discussions')}>
+					Public Discussions
+				</div>
 			</div>
 		);
-
-		const publicDiscussionsTab = (
-			<div key={mobileView ? 'mobileBodyNav1' : 'previewBodyNav1'} style={styles.bodyNavItem} onClick={this.switchPreviewPaneMode('discussions')}>
-				Public Discussions
-			</div>
-		);
-
-		const livePreviewTab = (
-			<div key={mobileView ? 'mobileBodyNav3' : 'previewBodyNav3'} style={styles.bodyNavItem} onClick={this.switchPreviewPaneMode('preview')}>
-				Live Preview
-			</div>
-		);
-
-		return (<div className={'editorBodyNav'} style={styles.bodyNavBar}>
-
-			{(()=>{
-				switch (this.state.previewPaneMode) {
-				case 'preview':
-					return (
-						<div>
-							{editorCommentsTab}
-							<div style={[styles.bodyNavSeparator, styles.mobileOnlySeparator]}>|</div>
-							{discussionsExist
-								? <div style={styles.bodyNavDiscussionBlock}>
-									<div style={styles.bodyNavSeparator}>|</div>
-									{publicDiscussionsTab}
-								</div>
-								: null
-							}
-
-						</div>
-					);
-				case 'comments':
-					return (
-						<div>
-							{livePreviewTab}
-							<div style={[styles.bodyNavSeparator, styles.mobileOnlySeparator]}>|</div>
-							{discussionsExist
-								? <div style={styles.bodyNavDiscussionBlock}>
-									<div style={styles.bodyNavSeparator}>|</div>
-									{publicDiscussionsTab}
-								</div>
-								: null
-							}
-						</div>
-					);
-				case 'discussions':
-					return (
-						<div>
-							{editorCommentsTab}
-							<div style={styles.bodyNavSeparator}>|</div>
-							{livePreviewTab}
-						</div>
-					);
-				default:
-					return null;
-				}
-			})()}
-
-		</div>);
 	},
 
 	switchPreviewPaneMode: function(mode) {
@@ -582,7 +474,6 @@ const Editor = React.createClass({
 			title: 'PubPub - Editing ' + this.props.slug
 		};
 
-		const isReader = this.props.editorData.getIn(['pubEditData', 'isReader']);
 		return (
 
 			<div style={[styles.editorContainer, darkMode && styles.editorContainerDark]} className={'editor-container'}>
@@ -623,7 +514,6 @@ const Editor = React.createClass({
 						height: '20px',
 						lineHeight: '20px',
 						backgroundColor: '#F5F5F5',
-
 					},
 
 				}} />
@@ -632,195 +522,87 @@ const Editor = React.createClass({
 				{this.props.editorData.get('error')
 					? <div style={styles.errorTitle}>{this.props.editorData.getIn(['pubEditData', 'title'])}</div>
 					: <div>
-						{/*
-							Mobile
-								renderNav
-								renderBody (switches out in place with comments/discussions)
+						
+						<div>
+							{/*	Component for all modals and their backdrop. */}
+							<EditorModals publishVersionHandler={this.publishVersion} />
 
+							{/* Top Nav. Fixed to the top of the editor page, just below the main pubpub bar */}
+							<EditorTopNav
+								status={editorData.get('status')}
+								darkMode={darkMode}
+								openModalHandler={this.openModalHandler}
+								editorSaveStatus={this.state.editorSaveStatus}
+								toggleLivePreviewHandler={this.toggleLivePreview}/>
 
-							Not Mobile
-								isReader
-									renderBody
-									renderComments
-
-								isEditor
-									renderEditor
-									renderNav
-									renderBody (switches out in place with comments/discussions)
-
-						*/}
-						{/* Mobile */}
-						<div style={styles.isMobile}>
-							{/* In mobile - readers and editors have the same view. Editors have a note about screen size. */}
-							{this.renderNav(true)}
-
-							<div style={[styles.previewBlockWrapper, this.state.previewPaneMode === 'preview' && styles.previewBlockWrapperShow]}>
-								{isReader
-									? null
-									: <span style={styles.editorDisabledMessage}>
-										<FormattedMessage id="editingDisableMobile" defaultMessage="Editing disabled on mobile view - but you can still read and comment. Open on a laptop or desktop to edit." />
-									</span>
-
-								}
-
-								{this.renderBody()}
+							{/*	Horizontal loader line - Separates top bar from rest of editor page */}
+							<div style={styles.editorLoadBar}>
+								<LoaderDeterminate value={loadStatus === 'loading' ? 0 : 100}/>
 							</div>
 
-							<div style={[styles.previewBlockWrapper, this.state.previewPaneMode === 'comments' && styles.previewBlockWrapperShow]}>
-								<div style={styles.previewBlockHeader}>Editor Comments</div>
-								<div style={styles.previewBlockText}>
-									<div><FormattedMessage {...globalMessages.editorCommentsText0} /></div>
-									<div><FormattedMessage {...globalMessages.editorCommentsText1} /></div>
+							{/* Bottom Nav */}
+							<EditorBottomNav
+								viewMode={viewMode}
+								loadStatus={loadStatus}
+								darkMode={darkMode}
+								showBottomLeftMenu={showBottomLeftMenu}
+								showBottomRightMenu={showBottomRightMenu}
+								toggleTOCHandler={this.toggleTOC}
+								toggleFormattingHandler={this.toggleFormatting}
+								activeFocus={this.state.activeFocus}
+								focusEditorHandler={this.focusEditor}
+								travisTOC={this.state.travisTOC}
+								insertFormattingHandler={this.insertFormatting}/>
+
+							{/* Markdown Editing Block */}
+							<div id="editor-text-wrapper" style={[globalStyles.hiddenUntilLoad, globalStyles[loadStatus], styles.common.editorMarkdown, styles[viewMode].editorMarkdown]}>
+
+								<EditorPluginPopup ref="pluginPopup" references={this.state.firepadData.references} assets={this.state.firepadData.assets} /* selections={this.state.firepadData.selections} */ activeFocus={this.state.activeFocus} codeMirrorChange={this.state.codeMirrorChange}/>
+
+								{/* Insertion point for codemirror and firepad */}
+								<div style={[this.state.activeFocus !== '' && styles.hiddenMainEditor]}>
+									<div id="codemirror-wrapper"></div>
 								</div>
 
-								<Discussions inEditor={true} editorCommentMode={true} instanceName={'mobileEditorComments'}/>
+								{/* Insertion point for Focused codemirror subset */}
+								<div id="codemirror-focus-wrapper"></div>
+
 							</div>
 
-						</div>
+							{/* Live Preview Block */}
+							<div id="editor-live-preview-wrapper" style={[globalStyles.hiddenUntilLoad, globalStyles[loadStatus], styles.common.editorPreview, styles[viewMode].editorPreview]} className={'editorPreview'}>
 
-						{/* Not Mobile */}
-						<div style={styles.notMobile}>
-							{isReader
-								? <div>
+								{this.renderNav(false)}
 
-									<div style={styles.hiddenCodeMirror}>
-										{/*  Necessary for body rednering to work */}
-										<EditorTopNav
-											status={editorData.get('status')}
-											darkMode={darkMode}
-											openModalHandler={this.openModalHandler}
-											editorSaveStatus={this.state.editorSaveStatus}
-											toggleLivePreviewHandler={this.toggleLivePreview}/>
-										<div id="codemirror-wrapper"></div>
-									</div>
-
-									<div className={'editorBodyView'} style={[styles.readerViewBlock, styles.readerViewBlockBody]}>
+								<div className="editorBodyView" style={[styles.previewBlockWrapper, this.state.previewPaneMode === 'preview' && styles.previewBlockWrapperShow]}>
+									<div className={'mainRenderBody'}>
 										{this.renderBody()}
 									</div>
-
-									<div style={[styles.readerViewBlock]}>
-										<div style={styles.previewBlockHeader}>Editor Comments</div>
-										<div style={styles.previewBlockText}>
-											<div><FormattedMessage {...globalMessages.editorCommentsText0} /></div>
-											<div><FormattedMessage {...globalMessages.editorCommentsText1} /></div>
-										</div>
-										<Discussions inEditor={true} editorCommentMode={true} instanceName={'desktopEditorComments'}/>
-									</div>
-
 								</div>
 
-								: <div>
-									{/* Editor's View */}
-									{/*	Component for all modals and their backdrop. */}
-									<EditorModals
-										closeModalHandler={this.closeModalHandler}
-										activeModal={this.props.editorData.get('activeModal')}
-										slug={this.props.slug}
-										// Asset Props
-										assetData={this.state.firepadData.assets}
-										addAsset={this.addAsset}
-										deleteAsset={this.deleteAsset}
-										// Collaborator Props
-										collaboratorData={this.state.firepadData.collaborators}
-										updateCollaborators={this.saveUpdatedCollaborators}
-										// Publish Props
-										handlePublish={this.publishVersion}
-										currentJournal={this.props.journalData.getIn(['journalData', 'journalName'])}
-
-										// References Props
-										referenceData={this.state.firepadData.references}
-										referenceStyle={this.state.firepadData && this.state.firepadData.settings ? this.state.firepadData.settings.pubReferenceStyle : undefined}
-										updateReferences={this.saveReferences}
-										// Style Props
-										editorFont={this.props.loginData.getIn(['userData', 'settings', 'editorFont'])}
-										editorFontSize={this.props.loginData.getIn(['userData', 'settings', 'editorFontSize'])}
-										editorColor={this.props.loginData.getIn(['userData', 'settings', 'editorColor'])}
-										pubPrivacy={this.state.firepadData && this.state.firepadData.settings ? this.state.firepadData.settings.pubPrivacy : undefined}
-										pubStyle={this.state.firepadData && this.state.firepadData.settings ? this.state.firepadData.settings.pubStyle : undefined}
-										saveUpdatedSettingsUser={this.saveUpdatedSettingsUser}
-										saveUpdatedSettingsFirebase={this.saveUpdatedSettingsFirebase}
-										saveUpdatedSettingsFirebaseAndPubPub={this.saveUpdatedSettingsFirebaseAndPubPub} />
-
-									{/* Top Nav. Fixed to the top of the editor page, just below the main pubpub bar */}
-									<EditorTopNav
-										status={editorData.get('status')}
-										darkMode={darkMode}
-										openModalHandler={this.openModalHandler}
-										editorSaveStatus={this.state.editorSaveStatus}
-										toggleLivePreviewHandler={this.toggleLivePreview}/>
-
-									{/*	Horizontal loader line - Separates top bar from rest of editor page */}
-									<div style={styles.editorLoadBar}>
-										<LoaderDeterminate value={loadStatus === 'loading' ? 0 : 100}/>
+								<div style={[styles.previewBlockWrapper, this.state.previewPaneMode === 'comments' && styles.previewBlockWrapperShow]}>
+									<div style={styles.previewBlockHeader}>
+										<FormattedMessage {...globalMessages.EditorComments} />
 									</div>
-
-									{/* Bottom Nav */}
-									<EditorBottomNav
-										viewMode={viewMode}
-										loadStatus={loadStatus}
-										darkMode={darkMode}
-										showBottomLeftMenu={showBottomLeftMenu}
-										showBottomRightMenu={showBottomRightMenu}
-										toggleTOCHandler={this.toggleTOC}
-										toggleFormattingHandler={this.toggleFormatting}
-										activeFocus={this.state.activeFocus}
-										focusEditorHandler={this.focusEditor}
-										travisTOC={this.state.travisTOC}
-										insertFormattingHandler={this.insertFormatting}/>
-
-									{/* Markdown Editing Block */}
-									<div id="editor-text-wrapper" style={[globalStyles.hiddenUntilLoad, globalStyles[loadStatus], styles.common.editorMarkdown, styles[viewMode].editorMarkdown]}>
-
-										<EditorPluginPopup ref="pluginPopup" references={this.state.firepadData.references} assets={this.state.firepadData.assets} /* selections={this.state.firepadData.selections} */ activeFocus={this.state.activeFocus} codeMirrorChange={this.state.codeMirrorChange}/>
-
-										{/* Insertion point for codemirror and firepad */}
-										<div style={[this.state.activeFocus !== '' && styles.hiddenMainEditor]}>
-											<div id="codemirror-wrapper"></div>
-										</div>
-
-										{/* Insertion point for Focused codemirror subset */}
-										<div id="codemirror-focus-wrapper"></div>
-
+									<div style={styles.previewBlockText}>
+										<div><FormattedMessage {...globalMessages.editorCommentsText0} /></div>
+										<div><FormattedMessage {...globalMessages.editorCommentsText1} /></div>
 									</div>
-
-									{/* Live Preview Block */}
-									<div id="editor-live-preview-wrapper" style={[globalStyles.hiddenUntilLoad, globalStyles[loadStatus], styles.common.editorPreview, styles[viewMode].editorPreview]} className={'editorPreview'}>
-
-										{this.renderNav(false)}
-
-										<div className="editorBodyView" style={[styles.previewBlockWrapper, this.state.previewPaneMode === 'preview' && styles.previewBlockWrapperShow]}>
-											<div className={'mainRenderBody'}>
-												{this.renderBody()}
-											</div>
-										</div>
-
-										<div style={[styles.previewBlockWrapper, this.state.previewPaneMode === 'comments' && styles.previewBlockWrapperShow]}>
-											<div style={styles.previewBlockHeader}>
-												<FormattedMessage {...globalMessages.EditorComments} />
-											</div>
-											<div style={styles.previewBlockText}>
-												<div><FormattedMessage {...globalMessages.editorCommentsText0} /></div>
-												<div><FormattedMessage {...globalMessages.editorCommentsText1} /></div>
-											</div>
-											<Discussions editorCommentMode={true} inEditor={true}/>
-										</div>
-
-										<div style={[styles.previewBlockWrapper, this.state.previewPaneMode === 'discussions' && styles.previewBlockWrapperShow]}>
-											<div style={styles.previewBlockHeader}>
-												<FormattedMessage {...globalMessages.discussion} />
-											</div>
-											<div style={styles.previewBlockText}>
-												<FormattedMessage id="editorDiscussionMessage" defaultMessage="This section shows the discussion from the public, published version of your pub."/>
-											</div>
-											<Discussions editorCommentMode={false} inEditor={true}/>
-										</div>
-
-									</div>
+									<Discussions editorCommentMode={true} inEditor={true}/>
 								</div>
-							}
 
+								<div style={[styles.previewBlockWrapper, this.state.previewPaneMode === 'discussions' && styles.previewBlockWrapperShow]}>
+									<div style={styles.previewBlockHeader}>
+										<FormattedMessage {...globalMessages.discussion} />
+									</div>
+									<div style={styles.previewBlockText}>
+										<FormattedMessage id="editorDiscussionMessage" defaultMessage="This section shows the discussion from the public, published version of your pub."/>
+									</div>
+									<Discussions editorCommentMode={false} inEditor={true}/>
+								</div>
+
+							</div>
 						</div>
-
 
 					</div>
 				}

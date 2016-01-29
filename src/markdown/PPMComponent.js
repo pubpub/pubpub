@@ -42,6 +42,8 @@ const PPMComponent = React.createClass({
 		references: PropTypes.object,
 		selections: PropTypes.array,
 
+		collectMarkdownOutputHandler: PropTypes.func,
+
 	},
 
 	getInitialState() {
@@ -55,11 +57,18 @@ const PPMComponent = React.createClass({
 			assets: {},
 			references: {},
 			selections: [],
+			collectMarkdownOutputHandler: ()=>{},
 		};
+	},
+
+	passUpOutput: function() {
+		console.log(this.globals);
+		this.props.collectMarkdownOutputHandler(this.globals);
 	},
 
 	handleIterate: function(globals, Tag, props, children) {
 		let Component = Tag;
+
 		const id = children[0] && children[0].replace ? children[0].replace(/\s/g, '-').toLowerCase() : undefined;
 
 		switch(Tag) {
@@ -110,6 +119,19 @@ const PPMComponent = React.createClass({
 				return <div className={'linebreak p-block'} style={{display: 'block', height: '1.5em'}}></div>
 			}
 
+			if (children[0].substring(0,6) === 'title:') {
+				globals.title = children[0].split('title:')[1].trim();
+				return null;
+			}
+			if (children[0].substring(0,9) === 'abstract:') {
+				globals.abstract = children[0].split('abstract:')[1].trim();
+				return null;
+			}
+			if (children[0].substring(0,12) === 'authorsNote:') {
+				globals.authorsNote = children[0].split('authorsNote:')[1].trim();
+				return null;
+			}
+
 
 			const pluginName = children[0].split(':')[0];
 			const plugin = Plugins[pluginName];
@@ -152,12 +174,14 @@ const PPMComponent = React.createClass({
 			return <MathComponent>{children[0]}</MathComponent>;
 			break;
 		case 'p':
+			
+			if (children[0] === null){ return null; }
+
 			props.className = 'p-block';
 			props['data-hash'] = murmur.v2(children[0]);
 			Component = 'div';
 			break;
 		}
-
 		return <Component {...props}>{children}</Component>;
 	},
 
@@ -167,22 +191,28 @@ const PPMComponent = React.createClass({
 		this.globals.toc = [];
 
 		return (
-			<MDReactComponent
-				text={this.props.markdown}
-				onIterate={this.handleIterate.bind(this, this.globals)}
-				markdownOptions={{
-					typographer: true,
-					linkify: true,
-				}}
-				plugins={[
-					abbr,
-					emoji,
-					sub,
-					sup,
-					{plugin: mathIt, args: [MathOptions]},
-					{plugin: container, args: ['blank', {validate: ()=>{return true;}}]},
-					ppm
-				]} />
+			<div>
+				<MDReactComponent
+					text={this.props.markdown}
+					onIterate={this.handleIterate.bind(this, this.globals)}
+					markdownOptions={{
+						typographer: true,
+						linkify: true,
+					}}
+					plugins={[
+						abbr,
+						emoji,
+						sub,
+						sup,
+						{plugin: mathIt, args: [MathOptions]},
+						{plugin: container, args: ['blank', {validate: ()=>{return true;}}]},
+						ppm
+					]} />
+				{(() => {
+					this.passUpOutput();
+				})()}
+			</div>
+			
 		);
 	}
 });
