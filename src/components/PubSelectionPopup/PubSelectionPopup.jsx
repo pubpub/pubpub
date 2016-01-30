@@ -4,9 +4,8 @@ import {globalStyles} from '../../utils/styleConstants';
 
 import {FormattedMessage} from 'react-intl';
 
-import {isDescendantOfP, getAncestorText} from './selectionFunctions';
-import SHA1 from 'crypto-js/sha1';
-import encHex from 'crypto-js/enc-hex';
+import {isDescendantOfHash, getAncestorText} from './selectionFunctions';
+
 let Marklib = undefined;
 let Rangy = undefined;
 
@@ -56,13 +55,12 @@ const PubSelectionPopup = React.createClass({
 		let clickX;
 		let clickY;
 
-		const element = document.getElementsByClassName('centerBar')[0] ? document.getElementsByClassName('centerBar')[0] : document.getElementsByClassName('editorBodyView')[0];
 		if (event.pageX || event.pageY) {
 			clickX = event.pageX;
-			clickY = event.pageY + element.scrollTop;
+			clickY = event.pageY + document.getElementsByClassName('centerBar')[0].scrollTop;
 		} else {
 			clickX = event.clientX + document.body.scrollLeft + document.documentElement.scrollLeft;
-			clickY = event.clientY + document.body.scrollTop + document.documentElement.scrollTop + element.scrollTop;
+			clickY = event.clientY + document.body.scrollTop + document.documentElement.scrollTop + document.getElementsByClassName('centerBar')[0].scrollTop;
 		}
 
 		const selection = Rangy.getSelection();
@@ -70,7 +68,7 @@ const PubSelectionPopup = React.createClass({
 		// console.log(range);
 		// console.log(range.commonAncestorContainer);
 
-		if (!selection.isCollapsed && isDescendantOfP(range.commonAncestorContainer)) {
+		if (!selection.isCollapsed && isDescendantOfHash(range.commonAncestorContainer)) {
 			
 			Rangy.getSelection().expand('word');
 			const ancestorText = getAncestorText(range.commonAncestorContainer);
@@ -83,7 +81,6 @@ const PubSelectionPopup = React.createClass({
 				range: Rangy.getSelection().getRangeAt(0),
 				selectionText: Rangy.getSelection().toString(),
 				ancestorText: ancestorText,
-				ancestorHash: SHA1(ancestorText).toString(encHex),
 
 			});
 
@@ -95,21 +92,49 @@ const PubSelectionPopup = React.createClass({
 				
 	},
 
+	replacePathWithHash: function(path) {
+		let newPath = '';
+
+		const splitOnSemicolonArray = path.split(';');
+		
+		if (splitOnSemicolonArray.length === 2) {
+			newPath = ';' + splitOnSemicolonArray[1];
+		}
+
+		const chunkedPath = splitOnSemicolonArray[0].split('>');
+
+		for (let index = chunkedPath.length; index--;) {
+			const tempPath = chunkedPath.slice(0, index + 1).join('>');
+			const tempElement = document.querySelector(tempPath);
+			if (tempElement.dataset && tempElement.dataset.hash) {
+				newPath = '[data-hash="' + tempElement.dataset.hash + '"]' + newPath;
+				break;
+			} else {
+				newPath = '>' + chunkedPath[index] + newPath;
+			}
+		}
+
+		return newPath;
+	},
+
 	onHighlightSave: function() {
 		const renderer = new Marklib.Rendering(document, {className: 'tempHighlight'}, document.getElementById('pubBodyContent'));
 		const result = renderer.renderWithRange(this.state.range);
 
+		// Note - these containers will fail if identical paragraphs or list-items exist (they'll have an identical hash).
+		const newStartContainer = this.replacePathWithHash(result.startContainerPath);
+		const newEndContainer = this.replacePathWithHash(result.endContainerPath);
+
 		const highlightObject = {
 			text: this.state.selectionText,
 			context: this.state.ancestorText,
-			ancestorHash: this.state.ancestorHash,
-			startContainerPath: result.startContainerPath,
-			endContainerPath: result.endContainerPath,
+
+			startContainerPath: newStartContainer,
+			endContainerPath: newEndContainer,
 			startOffset: result.startOffset,
 			endOffset: result.endOffset
 		};
-		// console.log(result);
-		// console.log(highlightObject);
+		
 		this.props.addSelectionHandler(highlightObject);
 
 	},

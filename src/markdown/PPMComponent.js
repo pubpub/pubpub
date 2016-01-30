@@ -138,6 +138,9 @@ const PPMComponent = React.createClass({
 			props['data-hash'] = murmur.v2(children[0]);
 			Component = 'div';
 			break;
+		case 'li':
+			props['data-hash'] = murmur.v2(children[0]);
+			break;
 
 		}
 

@@ -63,44 +63,44 @@ const DiscussionsItem = React.createClass({
 				const pIndex = this.props.pHashes[selection.ancestorHash];
 
 				if (pIndex) {
-					try {
-						const result = {
-							startContainerPath: selection.startContainerPath.replace(/div:nth-of-type\([^\)]+\)/, 'div:nth-of-type(' + pIndex + ')'),
-							endContainerPath: selection.endContainerPath.replace(/div:nth-of-type\([^\)]+\)/, 'div:nth-of-type(' + pIndex + ')'),
-							startOffset: selection.startOffset,
-							endOffset: selection.endOffset,
-						};	
-						// console.log(result);
+					// try {
+					// 	const result = {
+					// 		startContainerPath: selection.startContainerPath.replace(/div:nth-of-type\([^\)]+\)/, 'div:nth-of-type(' + pIndex + ')'),
+					// 		endContainerPath: selection.endContainerPath.replace(/div:nth-of-type\([^\)]+\)/, 'div:nth-of-type(' + pIndex + ')'),
+					// 		startOffset: selection.startOffset,
+					// 		endOffset: selection.endOffset,
+					// 	};	
+					// 	// console.log(result);
 
-						// result = {
-						// 	startContainerPath: '[data-hash="2358576322"]>span:nth-of-type(1);0',
-						// 	endContainerPath: '[data-hash="2358576322"]>span:nth-of-type(3);0',
-						// 	startOffset: selection.startOffset,
-						// 	endOffset: selection.endOffset,
-						// };	
+					// 	// result = {
+					// 	// 	startContainerPath: '[data-hash="2358576322"]>span:nth-of-type(1);0',
+					// 	// 	endContainerPath: '[data-hash="2358576322"]>span:nth-of-type(3);0',
+					// 	// 	startOffset: selection.startOffset,
+					// 	// 	endOffset: selection.endOffset,
+					// 	// };	
 						
-						const renderer = new Marklib.Rendering(document, {className: 'selection selection-' + selection._id}, document.getElementById('pubBodyContent'));
-						renderer.renderWithResult(result);	
+					// 	const renderer = new Marklib.Rendering(document, {className: 'selection selection-' + selection._id}, document.getElementById('pubBodyContent'));
+					// 	renderer.renderWithResult(result);	
 
 
-						renderer.on('click', function(item) {
-							const destination = document.getElementById('selection-block-' + selection._id);
-							const context = document.getElementsByClassName('rightBar')[0];
-							smoothScroll(destination, 500, ()=>{}, context);
-						});
-						renderer.on('hover-enter', function(item) {
-							const destination = document.getElementById('selection-block-' + selection._id);
-							destination.className = destination.className.replace('selection-block', 'selection-block-active');
-						});
-						renderer.on('hover-leave', function(item) {
-							const destination = document.getElementById('selection-block-' + selection._id);
-							destination.className = destination.className.replace('selection-block-active', 'selection-block');
-						});
-					} catch (err) {
-						if (__DEVELOPMENT__) {
-							console.log('selection', err);	
-						}
-					}
+					// 	renderer.on('click', function(item) {
+					// 		const destination = document.getElementById('selection-block-' + selection._id);
+					// 		const context = document.getElementsByClassName('rightBar')[0];
+					// 		smoothScroll(destination, 500, ()=>{}, context);
+					// 	});
+					// 	renderer.on('hover-enter', function(item) {
+					// 		const destination = document.getElementById('selection-block-' + selection._id);
+					// 		destination.className = destination.className.replace('selection-block', 'selection-block-active');
+					// 	});
+					// 	renderer.on('hover-leave', function(item) {
+					// 		const destination = document.getElementById('selection-block-' + selection._id);
+					// 		destination.className = destination.className.replace('selection-block-active', 'selection-block');
+					// 	});
+					// } catch (err) {
+					// 	if (__DEVELOPMENT__) {
+					// 		console.log('selection', err);	
+					// 	}
+					// }
 				}
 				
 			});

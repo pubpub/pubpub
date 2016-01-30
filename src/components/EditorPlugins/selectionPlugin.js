@@ -1,6 +1,6 @@
 import React, {PropTypes} from 'react';
 import createPubPubPlugin from './PubPub';
-
+// import murmur from 'murmurhash';
 import Radium, {Style} from 'radium';
 import smoothScroll from '../../utils/smoothscroll';
 
@@ -15,6 +15,8 @@ const SelectionConfig = {
 };
 
 let styles;
+let Marklib;
+// let Rangy;
 
 const SelectionPlugin = React.createClass({
 	propTypes: {
@@ -22,6 +24,53 @@ const SelectionPlugin = React.createClass({
 		children: PropTypes.string,
 		index: PropTypes.object,
 	},
+
+	componentDidMount() {
+		Marklib = require('marklib');
+		// Rangy = require('rangy');
+		// require('rangy/lib/rangy-textrange.js');
+
+		// Timeout is to let DOM elements draw first, so they exist since everything will initially 'mount' at the same time
+		setTimeout(()=>{
+
+			const selection = this.props.index;
+
+			try {
+				const result = {
+					startContainerPath: selection.startContainerPath,
+					endContainerPath: selection.endContainerPath,
+					startOffset: selection.startOffset,
+					endOffset: selection.endOffset,
+				};	
+
+				const renderer = new Marklib.Rendering(document, {className: 'selection selection-' + selection._id}, document.getElementById('pubBodyContent'));
+				renderer.renderWithResult(result);	
+
+
+				renderer.on('click', function(item) {
+					const destination = document.getElementById('selection-block-' + selection._id);
+					const context = document.getElementsByClassName('rightBar')[0];
+					smoothScroll(destination, 500, ()=>{}, context);
+				});
+				renderer.on('hover-enter', function(item) {
+					const destination = document.getElementById('selection-block-' + selection._id);
+					destination.className = destination.className.replace('selection-block', 'selection-block-active');
+				});
+				renderer.on('hover-leave', function(item) {
+					const destination = document.getElementById('selection-block-' + selection._id);
+					destination.className = destination.className.replace('selection-block-active', 'selection-block');
+				});
+				
+			} catch (err) {
+				if (__DEVELOPMENT__) {
+					console.log('selection', err);	
+				}
+			}
+
+		}, 10);
+		
+	},
+
 	getInitialState: function() {
 		return {
 			showContext: false,
