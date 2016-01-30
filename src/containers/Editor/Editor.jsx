@@ -353,6 +353,12 @@ const Editor = React.createClass({
 		};
 	},
 
+	addSelection: function(newSelection) {
+		newSelection.pub = this.props.editorData.getIn(['pubEditData', '_id']);
+		newSelection.version = 'draft';
+		// this.props.dispatch(addSelection(newSelection));
+	},
+
 	render: function() {
 		const editorData = this.props.editorData;
 		const viewMode = this.props.editorData.get('viewMode');
@@ -467,7 +473,7 @@ const Editor = React.createClass({
 									htmlTree={this.state.tree}
 									markdown={this.state.markdown}
 									authors={this.getAuthorsArray()}
-									// addSelectionHandler={this.addSelection}
+									addSelectionHandler={this.addSelection}
 									style={this.state.firepadData && this.state.firepadData.settings ? this.state.firepadData.settings.pubStyle : undefined}
 									assetsObject={this.state.assetsObject}
 									referencesObject={this.state.referencesObject}
