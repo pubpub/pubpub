@@ -40,27 +40,17 @@ const PubSelectionPopup = React.createClass({
 	},
 
 	onMouseUp: function(event) {
-		// Right now, we only trigger the selectionPopup when the selection is
-		// contained to a single P element. Support for headers, multiple paragraphs, and UL/OL
-		// creates many many edge cases for storing and re-highlighting (especially as new 
-		// versions are published). Support for lists could work by wrapping them in a P tag. 
-		// Or, perhaps are more broad solution can be eventually built. For now, I think the bulk of
-		// functionality is met by only supporting P-tag highlights. 
-		// If we aren't supporting the current selection, we make no changes to the range. We could 
-		// automatically snap to a supported section within the current range if we wanted to specifically 
-		// push behavior, but maybe that's overkill. 
-		// We could also start storing the type of element with the selection range. This would allow us to populate across
-		// element types and across versions using the same technique as we do for P tags (replacing the nth-child index number
-		// based on some hash)
+		// We only trigger the selectionPopup for elements that have a data-hash'd ancestor.
 		let clickX;
 		let clickY;
-
+		console.log('got an event');
+		const element = document.getElementById('pubBodyContent').parentNode.parentNode.parentNode.parentNode;
 		if (event.pageX || event.pageY) {
-			clickX = event.pageX;
-			clickY = event.pageY + document.getElementsByClassName('centerBar')[0].scrollTop;
+			clickX = event.pageX - element.offsetLeft;
+			clickY = event.pageY + element.scrollTop - element.offsetTop;
 		} else {
-			clickX = event.clientX + document.body.scrollLeft + document.documentElement.scrollLeft;
-			clickY = event.clientY + document.body.scrollTop + document.documentElement.scrollTop + document.getElementsByClassName('centerBar')[0].scrollTop;
+			clickX = event.clientX + document.body.scrollLeft + document.documentElement.scrollLeft - element.offsetLeft;
+			clickY = event.clientY + document.body.scrollTop + document.documentElement.scrollTop + element.scrollTop - element.offsetTop;
 		}
 
 		const selection = Rangy.getSelection();
@@ -179,15 +169,12 @@ styles = {
 		pointerEvents: 'none',
 		padding: 5,
 		borderRadius: '1px',
-		marginLeft: -173,
+		// marginLeft: -173,
+		marginLeft: -23,
 		marginTop: -5,
 		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
 			display: 'none',
-		},
-		'@media screen and (min-width: 1600px)': {
-			marginLeft: -223,
-		},
-		
+		},		
 	},
 	pluginPopupVisible: {
 		opacity: 1,

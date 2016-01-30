@@ -1,6 +1,5 @@
 import React, {PropTypes} from 'react';
 import createPubPubPlugin from './PubPub';
-// import murmur from 'murmurhash';
 import Radium, {Style} from 'radium';
 import smoothScroll from '../../utils/smoothscroll';
 
@@ -15,8 +14,6 @@ const SelectionConfig = {
 };
 
 let styles;
-let Marklib;
-// let Rangy;
 
 const SelectionPlugin = React.createClass({
 	propTypes: {
@@ -26,9 +23,7 @@ const SelectionPlugin = React.createClass({
 	},
 
 	componentDidMount() {
-		Marklib = require('marklib');
-		// Rangy = require('rangy');
-		// require('rangy/lib/rangy-textrange.js');
+		const Marklib = require('marklib');
 
 		// Timeout is to let DOM elements draw first, so they exist since everything will initially 'mount' at the same time
 		setTimeout(()=>{
@@ -60,7 +55,7 @@ const SelectionPlugin = React.createClass({
 					const destination = document.getElementById('selection-block-' + selection._id);
 					destination.className = destination.className.replace('selection-block-active', 'selection-block');
 				});
-				
+
 			} catch (err) {
 				if (__DEVELOPMENT__) {
 					console.log('selection', err);	
