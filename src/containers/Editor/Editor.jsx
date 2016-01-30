@@ -12,7 +12,7 @@ import ReactFireMixin from 'reactfire';
 import {Discussions, EditorModals} from '../';
 import {LoaderDeterminate, EditorPluginPopup, EditorTopNav, EditorBottomNav, PubBody} from '../../components';
 import {clearPub} from '../../actions/pub';
-import {getPubEdit, toggleEditorViewMode, toggleFormatting, toggleTOC, unmountEditor, closeModal, openModal, publishVersion} from '../../actions/editor';
+import {getPubEdit, toggleEditorViewMode, toggleFormatting, toggleTOC, unmountEditor, closeModal, openModal, addSelection, publishVersion} from '../../actions/editor';
 
 import {debounce} from '../../utils/loadingFunctions';
 import {submitPubToJournal} from '../../actions/journal';
@@ -355,8 +355,8 @@ const Editor = React.createClass({
 
 	addSelection: function(newSelection) {
 		newSelection.pub = this.props.editorData.getIn(['pubEditData', '_id']);
-		newSelection.version = 'draft';
-		// this.props.dispatch(addSelection(newSelection));
+		newSelection.version = 0;
+		this.props.dispatch(addSelection(newSelection));
 	},
 
 	render: function() {

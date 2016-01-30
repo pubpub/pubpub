@@ -3,6 +3,8 @@ import createPubPubPlugin from './PubPub';
 import Radium, {Style} from 'radium';
 import smoothScroll from '../../utils/smoothscroll';
 
+import {FormattedMessage} from 'react-intl';
+
 const SelectionInputFields = [
 	{title: 'index', type: 'selection', params: {}},
 ];
@@ -27,6 +29,7 @@ const SelectionPlugin = React.createClass({
 
 		// Timeout is to let DOM elements draw first, so they exist since everything will initially 'mount' at the same time
 		setTimeout(()=>{
+		// setInterval(()=>{
 
 			const selection = this.props.index;
 
@@ -63,6 +66,7 @@ const SelectionPlugin = React.createClass({
 			}
 
 		}, 10);
+		// }, 1000);
 		
 	},
 
@@ -132,6 +136,7 @@ const SelectionPlugin = React.createClass({
 		}
 		
 		const offsets = this.calculateOffsets();
+
 		return (
 			<div 
 				id={'selection-block-' + this.props.index._id}
@@ -157,7 +162,12 @@ const SelectionPlugin = React.createClass({
 					{/* <span style={styles.quotationMark}>“</span> */}
 					{this.state.showContext
 						? <div>
-							<div style={styles.versionHeader}>Selection made on Version {this.props.index.version}</div>
+							<div style={styles.versionHeader}>
+								{parseInt(this.props.index.version, 10) === 0
+									? <FormattedMessage id="discussion.selectionPreviousDraft" defaultMessage="Selection made on draft version"/>
+									: <FormattedMessage id="discussion.selectionPreviousVersion" defaultMessage="Selection made on Version {version}" values={{version: this.props.index.version}}/>
+								}
+							</div>
 							{offsets[0] === null
 								? this.props.index.context
 								: <span>

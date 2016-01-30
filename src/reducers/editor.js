@@ -26,6 +26,8 @@ import {
 	PUBLISH_SUCCESS,
 	PUBLISH_FAIL,
 
+	ADD_SELECTION,
+
 	ADD_COMMENT, 
 	ADD_COMMENT_SUCCESS, 
 	ADD_COMMENT_FAIL,
@@ -235,6 +237,14 @@ function publishError(state, error) {
 	});
 }
 
+function addSelection(state, selection) {
+	const selectionData = state.getIn(['newDiscussionData', 'selections']);
+	return state.mergeIn(
+		['newDiscussionData', 'selections'], 
+		selectionData.set(selectionData.size + 1, selection)
+	);
+}
+
 function addCommentLoad(state, activeSaveID) {
 	return state.merge({
 		addDiscussionStatus: 'loading',
@@ -323,6 +333,9 @@ export default function editorReducer(state = defaultState, action) {
 		return state;
 	case UPDATE_PUB_SETTINGS_FAIL:
 		return state;
+
+	case ADD_SELECTION:
+		return addSelection(state, action.selection);
 
 	case PUBLISH_LOAD:
 		return publishLoad(state);

@@ -17,6 +17,8 @@ export const MODAL_OPEN = 'editor/MODAL_OPEN';
 
 export const PUB_EDIT_UNMOUNT = 'editor/PUB_EDIT_UNMOUNT';
 
+export const ADD_SELECTION = 'editor/ADD_SELECTION';
+
 export const ADD_COMMENT = 'pub/ADD_COMMENT';
 export const ADD_COMMENT_SUCCESS = 'pub/ADD_COMMENT_SUCCESS';
 export const ADD_COMMENT_FAIL = 'pub/ADD_COMMENT_FAIL';
@@ -97,6 +99,13 @@ export function openModal(activeModal) {
 		type: MODAL_OPEN,
 		activeModal: activeModal
 	};
+}
+
+export function addSelection(selection) {
+	return {
+		type: ADD_SELECTION,
+		selection: selection,
+	};	
 }
 
 export function saveCollaboratorsToPub(newCollaborators, removedUser, slug) {

@@ -31,7 +31,8 @@ const Discussions = React.createClass({
 		pathname: PropTypes.string,
 		query: PropTypes.object,
 
-		dispatch: PropTypes.func
+		dispatch: PropTypes.func,
+
 	},
 
 	getDefaultProps: function() {
@@ -49,7 +50,7 @@ const Discussions = React.createClass({
 		// Check if it's a comment or discussion we're adding.
 		if (this.props.editorCommentMode) {
 			discussionObject.pub = this.props.editorData.getIn(['pubEditData', '_id']);
-			discussionObject.version = this.props.query.version !== undefined && this.props.query.version > 0 && this.props.query.version < (this.props.editorData.getIn(['pubEditData', 'history']).size - 1) ? this.props.query.version : this.props.editorData.getIn(['pubEditData', 'history']).size;
+			discussionObject.version = 0;
 			discussionObject.selections = this.props.editorData.getIn(['newDiscussionData', 'selections']);
 			// console.log('about to dispatch addComment ', discussionObject, activeSaveID);
 			this.props.dispatch(addComment(discussionObject, activeSaveID));

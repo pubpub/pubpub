@@ -43,14 +43,14 @@ const PubSelectionPopup = React.createClass({
 		// We only trigger the selectionPopup for elements that have a data-hash'd ancestor.
 		let clickX;
 		let clickY;
-		console.log('got an event');
 		const element = document.getElementById('pubBodyContent').parentNode.parentNode.parentNode.parentNode;
+		const offsetTop = element.parentNode.style.top ? parseInt(element.parentNode.style.top, 10) : 0;
 		if (event.pageX || event.pageY) {
-			clickX = event.pageX - element.offsetLeft;
-			clickY = event.pageY + element.scrollTop - element.offsetTop;
+			clickX = event.pageX - element.getBoundingClientRect().left;
+			clickY = event.pageY + element.scrollTop - offsetTop;
 		} else {
-			clickX = event.clientX + document.body.scrollLeft + document.documentElement.scrollLeft - element.offsetLeft;
-			clickY = event.clientY + document.body.scrollTop + document.documentElement.scrollTop + element.scrollTop - element.offsetTop;
+			clickX = event.clientX + document.body.scrollLeft + document.documentElement.scrollLeft - element.getBoundingClientRect().left;
+			clickY = event.clientY + document.body.scrollTop + document.documentElement.scrollTop + element.scrollTop - offsetTop;
 		}
 
 		const selection = Rangy.getSelection();

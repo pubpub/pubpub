@@ -228,6 +228,7 @@ pubSchema.statics.getPubEdit = function (slug, readerID, callback) {
 			{ path: 'discussions.author', select: '_id username name firstName lastName thumbnail', model: 'User'},
 			{ path: 'discussions.selections', model: 'Highlight'},
 			{ path: 'editorComments.author', select: '_id username name firstName lastName thumbnail', model: 'User'},
+			{ path: 'editorComments.selections', model: 'Highlight'},
 		];
 
 		this.populate(pub, options, (err, populatedPub)=> {
