@@ -153,7 +153,6 @@ const Discussions = React.createClass({
 							return (<DiscussionsItem 
 								key={discussion._id}
 								slug={this.props.slug}
-								pHashes={this.props.pubData.getIn(['pubData', 'pHashes']) ? this.props.pubData.getIn(['pubData', 'pHashes']).toJS() : {} }
 								discussionItem={discussion}
 								instanceName={this.props.instanceName}
 

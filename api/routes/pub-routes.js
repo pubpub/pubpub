@@ -193,7 +193,6 @@ app.post('/publishPub', function(req, res) {
 				pub.style = req.body.newVersion.style;
 				pub.lastUpdated = publishDate,
 				pub.status = req.body.newVersion.status;
-				pub.pHashes = req.body.newVersion.pHashes;
 				pub.history.push({
 					publishNote: req.body.newVersion.publishNote,
 					publishDate: publishDate,
@@ -207,7 +206,6 @@ app.post('/publishPub', function(req, res) {
 					references: dbReferencesIds,
 					style: req.body.newVersion.style,
 					status: req.body.newVersion.status,
-					pHashes: req.body.newVersion.pHashes,
 					diffObject: {
 						additions:  diffObject.additions,
 						deletions:  diffObject.deletions,

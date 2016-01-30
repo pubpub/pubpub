@@ -5,13 +5,9 @@ import { Link } from 'react-router';
 import dateFormat from 'dateformat';
 import DiscussionsInput from './DiscussionsInput';
 import DiscussionsScore from './DiscussionsScore';
-import smoothScroll from '../../utils/smoothscroll';
 
 import {convertListToObject} from '../../utils/parsePlugins';
 import PPMComponent from '../../markdown/PPMComponent';
-// import marked from '../../markdown/markdown';
-// import markdownExtensions from '../../components/EditorPlugins';
-// marked.setExtensions(markdownExtensions);
 
 // import {globalMessages} from '../../utils/globalMessages';
 import {FormattedMessage} from 'react-intl';
@@ -22,7 +18,6 @@ const DiscussionsItem = React.createClass({
 	propTypes: {
 		slug: PropTypes.string,
 		discussionItem: PropTypes.object,
-		pHashes: PropTypes.object,
 		instanceName: PropTypes.string,
 
 		addDiscussionHandler: PropTypes.func,
@@ -43,7 +38,6 @@ const DiscussionsItem = React.createClass({
 				selections: [],
 				children: [],
 			},
-			pHashes: {},
 		};
 	},
 
@@ -53,67 +47,10 @@ const DiscussionsItem = React.createClass({
 		};
 	},
 
-	componentDidMount() {
-
-		// Timeout is to let DOM elements draw first, so they exist since everything will initially 'mount' at the same time
-		setTimeout(()=>{
-			// Go through all the selections and add them to the body
-			const Marklib = require('marklib');
-			this.props.discussionItem.selections.map((selection)=>{
-				const pIndex = this.props.pHashes[selection.ancestorHash];
-
-				if (pIndex) {
-					// try {
-					// 	const result = {
-					// 		startContainerPath: selection.startContainerPath.replace(/div:nth-of-type\([^\)]+\)/, 'div:nth-of-type(' + pIndex + ')'),
-					// 		endContainerPath: selection.endContainerPath.replace(/div:nth-of-type\([^\)]+\)/, 'div:nth-of-type(' + pIndex + ')'),
-					// 		startOffset: selection.startOffset,
-					// 		endOffset: selection.endOffset,
-					// 	};	
-					// 	// console.log(result);
-
-					// 	// result = {
-					// 	// 	startContainerPath: '[data-hash="2358576322"]>span:nth-of-type(1);0',
-					// 	// 	endContainerPath: '[data-hash="2358576322"]>span:nth-of-type(3);0',
-					// 	// 	startOffset: selection.startOffset,
-					// 	// 	endOffset: selection.endOffset,
-					// 	// };	
-						
-					// 	const renderer = new Marklib.Rendering(document, {className: 'selection selection-' + selection._id}, document.getElementById('pubBodyContent'));
-					// 	renderer.renderWithResult(result);	
-
-
-					// 	renderer.on('click', function(item) {
-					// 		const destination = document.getElementById('selection-block-' + selection._id);
-					// 		const context = document.getElementsByClassName('rightBar')[0];
-					// 		smoothScroll(destination, 500, ()=>{}, context);
-					// 	});
-					// 	renderer.on('hover-enter', function(item) {
-					// 		const destination = document.getElementById('selection-block-' + selection._id);
-					// 		destination.className = destination.className.replace('selection-block', 'selection-block-active');
-					// 	});
-					// 	renderer.on('hover-leave', function(item) {
-					// 		const destination = document.getElementById('selection-block-' + selection._id);
-					// 		destination.className = destination.className.replace('selection-block-active', 'selection-block');
-					// 	});
-					// } catch (err) {
-					// 	if (__DEVELOPMENT__) {
-					// 		console.log('selection', err);	
-					// 	}
-					// }
-				}
-				
-			});
-		}, 10);
-		
-	},
-
 	componentWillReceiveProps(nextProps) {
 		if (this.props.addDiscussionStatus === 'loading' && this.props.activeSaveID === this.props.discussionItem._id && nextProps.addDiscussionStatus === 'loaded') {
 			this.setState({replyActive: false});
-
 		}
-		
 	},
 
 	toggleReplyActive: function() {
@@ -125,14 +62,10 @@ const DiscussionsItem = React.createClass({
 	render: function() {
 
 		const discussionItem = this.props.discussionItem;
-		// console.log('discussionItem', discussionItem);
-		// const assets = discussionItem.assets || {};
-		// const references = discussionItem.references || {};
 
 		const assets = convertListToObject( discussionItem.assets );
 		const references = convertListToObject(discussionItem.references, true);
 		const selections = discussionItem.selections || [];
-		// const md = marked(discussionItem.markdown || '', {assets, references, selections});
 
 		return (
 			<div style={styles.container}>
@@ -215,7 +148,6 @@ const DiscussionsItem = React.createClass({
 							return (<ChildPubDiscussionItem 
 								key={child._id}
 								slug={this.props.slug}
-								pHashes={this.props.pHashes}
 								discussionItem={child}
 
 								activeSaveID={this.props.activeSaveID}

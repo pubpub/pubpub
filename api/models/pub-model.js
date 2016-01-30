@@ -23,7 +23,6 @@ var pubSchema = new Schema({
 	style: { type: Schema.Types.Mixed },
 	lastUpdated: { type: Date },
 	status: { type: String },
-	pHashes: { type: Schema.Types.Mixed }, // Used to track location of comments
 	// --------------
 	// --------------
 
@@ -65,7 +64,6 @@ var pubSchema = new Schema({
 		references: [{ type: ObjectId, ref: 'Reference'}], //Raw References
 		style: { type: Schema.Types.Mixed },
 		status: { type: String },
-		pHashes: { type: Schema.Types.Mixed }, // Used to track location of comments
 	}],
 
 	followers: [{ type: ObjectId, ref: 'User'}],
