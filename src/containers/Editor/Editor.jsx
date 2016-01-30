@@ -67,6 +67,7 @@ const Editor = React.createClass({
 	getInitialState() {
 		return {
 			initialized: false,
+			firepadInitialized: false,
 			markdown: '',
 			tocH1: [],
 			activeFocus: '',
@@ -153,6 +154,10 @@ const Editor = React.createClass({
 					debounce(()=> {
 						this.updateSaveStatus(synced);
 					}, 250)();
+				});
+
+				firepad.on('ready', ()=>{
+					this.setState({firepadInitialized: true});
 				});
 
 				// need to unmount on change
@@ -473,6 +478,8 @@ const Editor = React.createClass({
 									htmlTree={this.state.tree}
 									markdown={this.state.markdown}
 									authors={this.getAuthorsArray()}
+									showPubHighlights={this.state.previewPaneMode === 'discussions'}
+									showPubHighlightsComments={this.state.previewPaneMode === 'comments' || viewMode === 'read'}
 									addSelectionHandler={this.addSelection}
 									style={this.state.firepadData && this.state.firepadData.settings ? this.state.firepadData.settings.pubStyle : undefined}
 									assetsObject={this.state.assetsObject}
@@ -489,7 +496,7 @@ const Editor = React.createClass({
 						{/* ----------------- */}
 						<div id="editor-discussions-wrapper" style={[globalStyles.hiddenUntilLoad, globalStyles[loadStatus], styles.editorDiscussions, viewMode === 'read' && styles[viewMode].editorDiscussionsMobile, this.state.previewPaneMode && styles[viewMode].editorDiscussions]}>
 
-							<div style={[styles.previewBlockWrapper, (this.state.previewPaneMode === 'comments' || viewMode === 'read') && styles.previewBlockWrapperShow]}>
+							<div className="commentsRightBar" style={[styles.previewBlockWrapper, (this.state.previewPaneMode === 'comments' || viewMode === 'read') && styles.previewBlockWrapperShow]}>
 								<div style={styles.previewBlockHeader}>
 									<FormattedMessage {...globalMessages.EditorComments} />
 								</div>
@@ -499,17 +506,25 @@ const Editor = React.createClass({
 									<div><FormattedMessage {...globalMessages.editorCommentsText1} /></div>
 								</div>
 
-								<Discussions editorCommentMode={true} inEditor={true}/>
+								{this.state.firepadInitialized
+									? <Discussions editorCommentMode={true} inEditor={true}/>
+									: null
+								}
+								
 							</div>
 
-							<div style={[styles.previewBlockWrapper, this.state.previewPaneMode === 'discussions' && styles.previewBlockWrapperShow]}>
+							<div className="rightBar" style={[styles.previewBlockWrapper, this.state.previewPaneMode === 'discussions' && styles.previewBlockWrapperShow]}>
 								<div style={styles.previewBlockHeader}>
 									<FormattedMessage {...globalMessages.PublicDiscussion} />
 								</div>
 								<div style={styles.previewBlockText}>
 									<FormattedMessage id="editorDiscussionMessage" defaultMessage="This section shows the discussion from the public, published version of your pub."/>
 								</div>
-								<Discussions editorCommentMode={false} inEditor={true}/>
+								
+								{this.state.firepadInitialized
+									? <Discussions editorCommentMode={false} inEditor={true}/>
+									: null
+								}
 							</div>
 
 						</div>
@@ -708,15 +723,19 @@ styles = {
 	},
 
 	editorMobileCloseBar: {
-		display: 'none',
+		zIndex: 50,
+		position: 'fixed',
+		display: 'block',
+		
+		width: '15%',
+		height: 'calc(100vh - 61px)',
+		top: '61px',
+		left: '50%',
+
 		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
-			display: 'block',
-			left: 0,
 			width: '10%',
-			height: 'calc(100vh - 61px)',
 			top: '61px',
-			zIndex: 50,
-			position: 'fixed',
+			left: 0,
 		},
 	},
 

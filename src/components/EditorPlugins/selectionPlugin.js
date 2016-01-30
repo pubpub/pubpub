@@ -16,6 +16,7 @@ const SelectionConfig = {
 };
 
 let styles;
+let Marklib;
 
 const SelectionPlugin = React.createClass({
 	propTypes: {
@@ -25,49 +26,12 @@ const SelectionPlugin = React.createClass({
 	},
 
 	componentDidMount() {
-		const Marklib = require('marklib');
+		Marklib = require('marklib');
 
 		// Timeout is to let DOM elements draw first, so they exist since everything will initially 'mount' at the same time
 		setTimeout(()=>{
-		// setInterval(()=>{
-
-			const selection = this.props.index;
-
-			try {
-				const result = {
-					startContainerPath: selection.startContainerPath,
-					endContainerPath: selection.endContainerPath,
-					startOffset: selection.startOffset,
-					endOffset: selection.endOffset,
-				};	
-
-				const renderer = new Marklib.Rendering(document, {className: 'selection selection-' + selection._id}, document.getElementById('pubBodyContent'));
-				renderer.renderWithResult(result);	
-
-
-				renderer.on('click', function(item) {
-					const destination = document.getElementById('selection-block-' + selection._id);
-					const context = document.getElementsByClassName('rightBar')[0];
-					smoothScroll(destination, 500, ()=>{}, context);
-				});
-				renderer.on('hover-enter', function(item) {
-					const destination = document.getElementById('selection-block-' + selection._id);
-					destination.className = destination.className.replace('selection-block', 'selection-block-active');
-				});
-				renderer.on('hover-leave', function(item) {
-					const destination = document.getElementById('selection-block-' + selection._id);
-					destination.className = destination.className.replace('selection-block-active', 'selection-block');
-				});
-
-			} catch (err) {
-				if (__DEVELOPMENT__) {
-					console.log('selection', err);	
-				}
-			}
-
+			this.drawHighlight();
 		}, 10);
-		// }, 1000);
-		
 	},
 
 	getInitialState: function() {
@@ -76,14 +40,58 @@ const SelectionPlugin = React.createClass({
 		};
 	},
 
+	drawHighlight: function() {
+		const selection = this.props.index;
+		try {
+			const result = {
+				startContainerPath: selection.startContainerPath,
+				endContainerPath: selection.endContainerPath,
+				startOffset: selection.startOffset,
+				endOffset: selection.endOffset,
+			};	
+
+			const version = parseInt(selection.version, 10);
+			const classname = version ? 'selection' : 'selection selection-editor';
+			const renderer = new Marklib.Rendering(document, {className: classname + ' selection-' + selection._id}, document.getElementById('pubBodyContent'));
+			renderer.renderWithResult(result);	
+
+
+			renderer.on('click', function(item) {
+				const destination = document.getElementById('selection-block-' + selection._id);
+				const context = version ? document.getElementsByClassName('rightBar')[0] : document.getElementsByClassName('commentsRightBar')[0];
+				smoothScroll(destination, 500, ()=>{}, context);
+			});
+			renderer.on('hover-enter', function(item) {
+				const destination = document.getElementById('selection-block-' + selection._id);
+				destination.className = destination.className.replace('selection-block', 'selection-block-active');
+			});
+			renderer.on('hover-leave', function(item) {
+				const destination = document.getElementById('selection-block-' + selection._id);
+				destination.className = destination.className.replace('selection-block-active', 'selection-block');
+			});
+
+		} catch (err) {
+			if (__DEVELOPMENT__) {
+				console.log('selection', err);	
+			}
+		}
+	},
+
 	scrollToHighlight: function() {
+		// If we're on the editor, redraw on click
+		if (parseInt(this.props.index.version, 10) === 0) {
+			this.drawHighlight();
+		}
+
 		const destination = document.getElementsByClassName('selection-' + this.props.index._id)[0];
 		if (!destination) {
 			this.setState({showContext: !this.state.showContext});
+		} else {
+			const context = document.getElementById('pubBodyContent').parentNode.parentNode.parentNode.parentNode;
+			smoothScroll(destination, 500, ()=>{}, context);
+			smoothScroll(destination, 500, ()=>{}, null, -60);
 		}
-		const context = document.getElementsByClassName('centerBar')[0];
-		smoothScroll(destination, 500, ()=>{}, context);
-		smoothScroll(destination, 500, ()=>{}, null, -60);
+		
 	},
 
 	hoverOn: function() {

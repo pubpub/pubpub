@@ -8,6 +8,7 @@ let styles = {};
 const PubGallery = React.createClass({
 	propTypes: {
 		pubs: PropTypes.array,
+		reverseOrder: PropTypes.bool,
 	},
 
 	getDefaultProps: function() {
@@ -17,10 +18,12 @@ const PubGallery = React.createClass({
 	},
 
 	render: function() {
+		const newPubsArray = this.props.reverseOrder ? this.props.pubs.slice(0).reverse() : this.props.pubs.slice(0);
+
 		return (
 			<div style={styles.container}>
 				{
-					this.props.pubs.map((pub, index)=>{
+					newPubsArray.map((pub, index)=>{
 						return (
 							<div style={styles.previewWrapper} key={'PubPreview-' + index}>
 								<PubPreview pubData={pub} />

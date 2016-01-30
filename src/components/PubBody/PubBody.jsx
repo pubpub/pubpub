@@ -30,6 +30,7 @@ const PubBody = React.createClass({
 		addSelectionHandler: PropTypes.func,
 		style: PropTypes.object,
 		showPubHighlights: PropTypes.bool,
+		showPubHighlightsComments: PropTypes.bool,
 		isFeatured: PropTypes.bool,
 		errorView: PropTypes.bool,
 
@@ -123,8 +124,15 @@ const PubBody = React.createClass({
 				backgroundColor: this.props.showPubHighlights ? 'rgba(195, 245, 185, 0.6)' : 'rgba(195, 245, 185, 0.0)',
 				cursor: this.props.showPubHighlights ? 'pointer' : 'text',
 			},
+			'.selection-editor': {
+				backgroundColor: this.props.showPubHighlightsComments ? 'rgba(195, 185, 245, 0.6)' : 'rgba(195, 245, 185, 0.0)',
+				cursor: this.props.showPubHighlights ? 'pointer' : 'text',
+			},
 			'.selection-active': {
 				backgroundColor: 'rgba(78, 164, 61, 0.6)',
+			},
+			'.selection-editor.selection-active': {
+				backgroundColor: 'rgba(78, 61, 164, 0.6)',
 			},
 		});
 	},
