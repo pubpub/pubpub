@@ -451,7 +451,7 @@ const Editor = React.createClass({
 						<div id="editor-live-preview-wrapper" style={[globalStyles.hiddenUntilLoad, globalStyles[loadStatus], styles.editorPreview, styles[viewMode].editorPreview]} className={'editorPreview'}>
 
 							<div className={'editorPreviewNav'} style={styles.bodyNavBar}>
-								<div key={'previewBodyNav0'} style={[styles.bodyNavItem, viewMode === 'read' && globalStyles.invisible]} onClick={this.switchPreviewPaneMode('comments')}>
+								<div key={'previewBodyNav0'} style={[styles.bodyNavItem, viewMode === 'read' && globalStyles.invisible, styles.undoInvisibleInMobile]} onClick={this.switchPreviewPaneMode('comments')}>
 									Editor Comments
 								</div>
 								<div style={[styles.bodyNavSeparator, viewMode === 'read' && globalStyles.invisible]}>|</div>
@@ -466,25 +466,29 @@ const Editor = React.createClass({
 									<FormattedMessage id="editingDisableMobile" defaultMessage="Editing disabled on mobile view. You can still read and comment. Open on a laptop or desktop to edit." />
 								</span>
 
-								<PubBody
-									status={'loaded'}
-									title={this.state.title}
-									abstract={this.state.abstract}
-									authorsNote={this.state.authorsNote}
-									minFont={15}
-									htmlTree={this.state.tree}
-									markdown={this.state.markdown}
-									authors={this.getAuthorsArray()}
-									showPubHighlights={this.state.previewPaneMode === 'discussions'}
-									showPubHighlightsComments={this.state.previewPaneMode === 'comments' || viewMode === 'read'}
-									addSelectionHandler={this.addSelection}
-									style={this.state.firepadData && this.state.firepadData.settings ? this.state.firepadData.settings.pubStyle : undefined}
-									assetsObject={this.state.assetsObject}
-									referencesObject={this.state.referencesObject}
-									selectionsArray={this.state.selectionsArray}
+								<div style={{position: 'relative'}}>
+									<div id="editor-close-bar" style={[this.state.previewPaneMode && styles.editorCloseBar]} onClick={this.switchPreviewPaneMode(undefined)}></div>
+									<PubBody
+										status={'loaded'}
+										title={this.state.title}
+										abstract={this.state.abstract}
+										authorsNote={this.state.authorsNote}
+										minFont={15}
+										htmlTree={this.state.tree}
+										markdown={this.state.markdown}
+										authors={this.getAuthorsArray()}
+										showPubHighlights={this.state.previewPaneMode === 'discussions'}
+										showPubHighlightsComments={this.state.previewPaneMode === 'comments' || viewMode === 'read'}
+										addSelectionHandler={this.addSelection}
+										style={this.state.firepadData && this.state.firepadData.settings ? this.state.firepadData.settings.pubStyle : undefined}
+										assetsObject={this.state.assetsObject}
+										referencesObject={this.state.referencesObject}
+										selectionsArray={this.state.selectionsArray}
 
-									references={referencesList}
-									isFeatured={true} />
+										references={referencesList}
+										isFeatured={true} />
+								</div>
+								
 							</div>
 						</div>
 
@@ -525,8 +529,6 @@ const Editor = React.createClass({
 							</div>
 
 						</div>
-
-						<div id="editor-mobile-close-bar" style={[this.state.previewPaneMode && styles.editorMobileCloseBar]} onClick={this.switchPreviewPaneMode(undefined)}></div>
 
 					</div>
 				}
@@ -625,6 +627,12 @@ styles = {
 			fontSize: '20px',
 		},
 	},
+	undoInvisibleInMobile: {
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+			opacity: 1,
+			pointerEvents: 'auto',
+		},
+	},
 	mobileOnlySeparator: {
 		display: 'none',
 		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
@@ -645,6 +653,9 @@ styles = {
 		position: 'absolute',
 		opacity: '0',
 		pointerEvents: 'none',
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+			height: 'calc(100% - 20px)',
+		},
 	},
 	previewBlockWrapperShow: {
 		opacity: '1',
@@ -719,21 +730,15 @@ styles = {
 		},
 	},
 
-	editorMobileCloseBar: {
+	editorCloseBar: {
 		zIndex: 50,
-		position: 'fixed',
+		position: 'absolute',
 		display: 'block',
 		
-		width: '15%',
-		height: 'calc(100vh - 61px)',
-		top: '61px',
-		left: '50%',
-
-		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
-			width: '10%',
-			top: '61px',
-			left: 0,
-		},
+		width: '100%',
+		top: -10,
+		bottom: -10,
+		left: -10,
 	},
 
 	edit: {

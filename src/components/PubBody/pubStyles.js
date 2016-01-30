@@ -2,7 +2,7 @@ export const scienceStyle = {
 	'#pub-title': {
 		textAlign: 'left',
 		fontSize: '2.6em',
-		margin: '0.7em 0px',
+		padding: '0.7em 0px',
 		fontWeight: '700',
 		lineHeight: '1.3em',
 		color: '#222',
