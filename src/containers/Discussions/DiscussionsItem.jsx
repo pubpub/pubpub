@@ -103,17 +103,13 @@ const DiscussionsItem = React.createClass({
 
 				<div style={styles.discussionBody}>
 					<div style={styles.discussionVoting}>
-						{this.props.noPermalink
-							? null
-							: <DiscussionsScore 
-								discussionID={discussionItem._id}
-								score={discussionItem.yays - discussionItem.nays}
-								userYay={discussionItem.userYay}
-								userNay={discussionItem.userNay} 
-								handleVoteSubmit={this.props.handleVoteSubmit} 
-								readOnly={this.props.noReply}/>
-						}
-						
+						<DiscussionsScore 
+							discussionID={discussionItem._id}
+							score={discussionItem.yays - discussionItem.nays}
+							userYay={discussionItem.userYay}
+							userNay={discussionItem.userNay} 
+							handleVoteSubmit={this.props.handleVoteSubmit} 
+							readOnly={this.props.noReply}/>
 					</div>
 
 					<div style={styles.discussionContent}>

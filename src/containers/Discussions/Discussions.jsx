@@ -135,7 +135,7 @@ const Discussions = React.createClass({
 						: null
 					}
 					
-					{this.props.metaID || (!this.props.editorCommentMode && this.props.inEditor)
+					{this.props.metaID
 						? null
 						: <DiscussionsInput 
 								addDiscussionHandler={this.addDiscussion}
@@ -163,7 +163,7 @@ const Discussions = React.createClass({
 								newDiscussionData={newDiscussionData} 
 								userThumbnail={this.props.loginData.getIn(['userData', 'thumbnail'])} 
 								handleVoteSubmit={this.discussionVoteSubmit} 
-								noReply={!this.props.editorCommentMode && this.props.inEditor}
+								// noReply={!this.props.editorCommentMode && this.props.inEditor}
 								noPermalink={this.props.editorCommentMode}/>
 							);
 						})

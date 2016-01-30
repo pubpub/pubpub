@@ -507,7 +507,7 @@ const Editor = React.createClass({
 								</div>
 
 								{this.state.firepadInitialized
-									? <Discussions editorCommentMode={true} inEditor={true}/>
+									? <Discussions editorCommentMode={true} inEditor={true} instanceName={'editorComments'}/>
 									: null
 								}
 								
@@ -522,7 +522,7 @@ const Editor = React.createClass({
 								</div>
 								
 								{this.state.firepadInitialized
-									? <Discussions editorCommentMode={false} inEditor={true}/>
+									? <Discussions editorCommentMode={false} inEditor={true} instanceName={'editorDiscussions'}/>
 									: null
 								}
 							</div>
