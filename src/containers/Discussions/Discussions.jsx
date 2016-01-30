@@ -8,6 +8,7 @@ import DiscussionsInput from './DiscussionsInput';
 
 import {toggleVisibility} from '../../actions/login';
 import {addDiscussion, discussionVoteSubmit, togglePubHighlights} from '../../actions/pub';
+import {discussionVoteSubmit as discussionVoteSubmitEditor} from '../../actions/editor';
 import {addComment} from '../../actions/editor';
 
 // import {globalMessages} from '../../utils/globalMessages';
@@ -68,7 +69,12 @@ const Discussions = React.createClass({
 		if (!this.props.loginData.get('loggedIn')) {
 			return this.props.dispatch(toggleVisibility());
 		}
-		this.props.dispatch(discussionVoteSubmit(type, discussionID, userYay, userNay));
+
+		if (this.props.editorCommentMode) {
+			this.props.dispatch(discussionVoteSubmitEditor(type, discussionID, userYay, userNay));
+		} else {
+			this.props.dispatch(discussionVoteSubmit(type, discussionID, userYay, userNay));
+		}
 	},
 
 	toggleHighlights: function() {

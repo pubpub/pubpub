@@ -204,7 +204,7 @@ const Editor = React.createClass({
 			CodeMirror.on(completion, 'pick', this.showPopupFromAutocomplete);
 		}
 
-		const start = performance.now();
+		// const start = performance.now();
 
 		const fullMD = cm.getValue();
 
@@ -217,10 +217,7 @@ const Editor = React.createClass({
 		const authorsNote = authorsNoteMatch && authorsNoteMatch.length ? authorsNoteMatch[1].trim() : '';
 
 		// Generate TOC
-		const startTOC = performance.now();
 		const TOCs = generateTOC(fullMD);		
-		const endTOC = performance.now();
-		console.log('tocGen: ', endTOC - startTOC);
 
 		// Format assets and references
 		const assets = convertFirebaseToObject(this.state.firepadData.assets);
@@ -229,7 +226,8 @@ const Editor = React.createClass({
 
 		// Strip markdown of title, abstract, authorsNote
 		const markdown = fullMD.replace(/\[\[title:.*?\]\]/g, '').replace(/\[\[abstract:.*?\]\]/g, '').replace(/\[\[authorsNote:.*?\]\]/g, '').trim();
-		const compiledMarkdown = performance.now();
+		
+		// const compiledMarkdown = performance.now();
 
 		// Set State to trigger re-render
 		this.setState({
@@ -245,10 +243,9 @@ const Editor = React.createClass({
 			selectionsArray: selections,
 		});
 
-		const saveState = performance.now();
-		
-		console.log('saveState', saveState - start, saveState - compiledMarkdown);
-		console.log('total', saveState - start);
+		// const saveState = performance.now();
+		// console.log('saveState', saveState - start, saveState - compiledMarkdown);
+		// console.log('total', saveState - start);
 
 	},
 

@@ -35,6 +35,10 @@ export const PUBLISH_LOAD = 'editor/PUBLISH_LOAD';
 export const PUBLISH_SUCCESS = 'editor/PUBLISH_SUCCESS';
 export const PUBLISH_FAIL = 'editor/PUBLISH_FAIL';
 
+export const DISCUSSION_VOTE = 'editor/DISCUSSION_VOTE';
+export const DISCUSSION_VOTE_SUCCESS = 'editor/DISCUSSION_VOTE_SUCCESS';
+export const DISCUSSION_VOTE_FAIL = 'editor/DISCUSSION_VOTE_FAIL';
+
 /*--------*/
 // Define Action creators
 // 
@@ -134,5 +138,16 @@ export function addComment(discussionObject, activeSaveID) {
 		types: [ADD_COMMENT, ADD_COMMENT_SUCCESS, ADD_COMMENT_FAIL],
 		promise: (client) => client.post('/addDiscussion', {data: {discussionObject: discussionObject, isEditorComment: true}}),
 		activeSaveID: activeSaveID 
+	};
+}
+
+export function discussionVoteSubmit(type, discussionID, userYay, userNay) {
+	return {
+		types: [DISCUSSION_VOTE, DISCUSSION_VOTE_SUCCESS, DISCUSSION_VOTE_FAIL],
+		promise: (client) => client.post('/discussionVote', {data: {type, discussionID, userYay, userNay}}),
+		voteType: type,
+		discussionID: discussionID,
+		userYay: userYay,
+		userNay: userNay,
 	};
 }

@@ -28,6 +28,10 @@ import {
 
 	ADD_SELECTION,
 
+	DISCUSSION_VOTE,
+	DISCUSSION_VOTE_SUCCESS,
+	DISCUSSION_VOTE_FAIL,
+
 	ADD_COMMENT, 
 	ADD_COMMENT_SUCCESS, 
 	ADD_COMMENT_FAIL,
@@ -285,6 +289,51 @@ function addCommentSuccess(state, result, activeSaveID) {
 	});
 }
 
+function discussionVote(state, voteType, discussionID, userYay, userNay) {
+	
+	let scoreChange = 0;
+	let newUserYay = undefined;
+	let newUserNay = undefined;
+
+	if (voteType === 'yay' && !userYay) {
+		scoreChange = userNay ? 2 : 1;
+		newUserYay = true;
+	} else if (voteType === 'yay' && userYay) {
+		scoreChange = -1;
+		newUserYay = false;
+	} else if (voteType === 'nay' && !userNay) {
+		scoreChange = userYay ? 2 : 1;
+		newUserNay = true;
+	} else if (voteType === 'nay' && userNay) {
+		scoreChange = -1;
+		newUserNay = false;
+	}
+	// Find the discussion with result._id
+	// update the yays
+	// update the nays
+	// update useryay
+	// update usernay
+
+	function findDiscussionAndChange(discussions) {
+		discussions.map((discussion)=>{
+			if (discussion._id === discussionID) {
+				discussion[voteType === 'yay' ? 'yays' : 'nays'] += scoreChange;
+				discussion.userYay = newUserYay;
+				discussion.userNay = newUserNay;
+			}
+			if (discussion.children && discussion.children.length) {
+				findDiscussionAndChange(discussion.children);
+			}
+		});
+	}
+
+	const discussionsArray = state.getIn(['pubEditData', 'editorComments']).toJS();
+
+	findDiscussionAndChange(discussionsArray);
+
+	return state.mergeIn(['pubEditData', 'editorComments'], discussionsArray);
+}
+
 function addCommentFail(state, error, activeSaveID) {
 	console.log(error);
 	return state.merge({
@@ -343,6 +392,13 @@ export default function editorReducer(state = defaultState, action) {
 		return publishSuccess(state, action.result);
 	case PUBLISH_FAIL:
 		return publishError(state, action.error);
+
+	case DISCUSSION_VOTE:
+		return discussionVote(state, action.voteType, action.discussionID, action.userYay, action.userNay);
+	case DISCUSSION_VOTE_SUCCESS:
+		return state;
+	case DISCUSSION_VOTE_FAIL:
+		return state;
 		
 	case ADD_COMMENT:
 		return addCommentLoad(state, action.activeSaveID);
