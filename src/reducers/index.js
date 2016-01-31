@@ -6,6 +6,7 @@ import { routerStateReducer } from 'redux-router';
 import autocomplete from './autocomplete';
 import editor from './editor';
 import explore from './explore';
+import group from './group';
 import journal from './journal';
 import landing from './landing';
 import language from './language';
@@ -16,26 +17,35 @@ import pub from './pub';
 import resetPassword from './resetPassword';
 import subdomainTest from './subdomainTest';
 
-
 export default combineReducers({
 	router: routerStateReducer,
 	form: formReducer.normalize({
 		pubCreateForm: {
 			slug: (value, previousValue, allValues, previousAllValues) => {
 				let newVal = value;
-				if (newVal === undefined || newVal === previousAllValues.title.replace(/[^\w\s-]/gi, '').replace(/ /g, '_').toLowerCase()) {
+				if (newVal === undefined || newVal === previousAllValues.title.replace(/[^\w\s-]/gi, '').replace(/ /g, '-').toLowerCase()) {
 					newVal = allValues.title;
 				}
-				return newVal && newVal.replace && newVal.replace(/[^\w\s-]/gi, '').replace(/ /g, '_').toLowerCase();
+				return newVal && newVal.replace && newVal.replace(/[^\w\s-]/gi, '').replace(/ /g, '-').toLowerCase();
 			}
 		},
 		journalCreateForm: {
-			subdomain: value => value && value.replace(/[^\w\s-]/gi, '').replace(/ /g, '_').toLowerCase(),
+			subdomain: value => value && value.replace(/[^\w\s-]/gi, '').replace(/ /g, '-').toLowerCase(),
+		},
+		groupCreateForm: {
+			groupSlug: (value, previousValue, allValues, previousAllValues) => {
+				let newVal = value;
+				if (newVal === undefined || newVal === previousAllValues.groupTitle.replace(/[^\w\s-]/gi, '').replace(/ /g, '-').toLowerCase()) {
+					newVal = allValues.groupTitle;
+				}
+				return newVal && newVal.replace && newVal.replace(/[^\w\s-]/gi, '').replace(/ /g, '-').toLowerCase();
+			}
 		},
 	}),
 	autocomplete,
 	editor,
 	explore,
+	group,
 	journal,
 	landing,
 	language,

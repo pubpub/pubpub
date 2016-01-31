@@ -1,6 +1,7 @@
 export CollectionEdit from './CollectionEdit/CollectionEdit';
 export CollectionMain from './CollectionMain/CollectionMain';
 export CollectionGallery from './CollectionGallery/CollectionGallery';
+export CreateGroupForm from './CreateGroupForm/CreateGroupForm';
 export CreateJournalForm from './CreateJournalForm/CreateJournalForm';
 export CreatePubForm from './CreatePubForm/CreatePubForm';
 export EditorPluginPopup from './EditorPluginPopup/EditorPluginPopup';

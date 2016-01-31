@@ -1,6 +1,6 @@
 import React from 'react';
 import {IndexRoute, Route} from 'react-router';
-import {App, Collection, Editor, Explore, JournalCreate, JournalProfile, Landing, NotFound, PubCreate, PubMeta, PubReader, ResetPassword, SubdomainTest, UserProfile} from 'containers';
+import {App, Collection, Editor, Explore, GroupCreate, GroupProfile, JournalCreate, JournalProfile, Landing, NotFound, PubCreate, PubMeta, PubReader, ResetPassword, SubdomainTest, UserProfile} from 'containers';
 
 export default () => {
 
@@ -17,6 +17,10 @@ export default () => {
 
 			<Route path="/explore" component={Explore}/>
 
+			<Route path="/group/:subdomain" component={GroupProfile}/>
+			<Route path="/group/:subdomain/:mode" component={GroupProfile}/>
+			
+			<Route path="/groups/create" component={GroupCreate}/>
 
 			<Route path="/journal/:subdomain" component={JournalProfile}/>
 			<Route path="/journal/:subdomain/:mode" component={JournalProfile}/>
