@@ -16,6 +16,7 @@ var userSchema = new Schema({
   thumbnail: { type: String },
   title: { type: String },
   bio: { type: String },
+  groups: [{ type: ObjectId, ref: 'Group' }],
   
   pubs: [ { type: ObjectId, ref: 'Pub' } ],
   discussions: [ { type: ObjectId, ref: 'Discussion' } ],

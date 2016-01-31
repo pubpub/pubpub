@@ -178,11 +178,11 @@ pubSchema.statics.getPub = function (slug, readerID, journalID, callback) {
 			if (populatedPub.status === 'Unpublished') { return callback(null, {message: 'Pub not yet published', slug: slug}); }
 
 			// Check if the pub is private, and if so, check readers/authors list
-			if (populatedPub.settings.pubPrivacy === 'private') {
-				if (populatedPub.collaborators.canEdit.indexOf(readerID) === -1 && populatedPub.collaborators.canRead.indexOf(readerID) === -1) {
-					return callback(null, {message: 'Private Pub', slug: slug});
-				}
-			}
+			// if (populatedPub.settings.pubPrivacy === 'private') {
+			// 	if (populatedPub.collaborators.canEdit.indexOf(readerID) === -1 && populatedPub.collaborators.canRead.indexOf(readerID) === -1) {
+			// 		return callback(null, {message: 'Private Pub', slug: slug});
+			// 	}
+			// }
 
 			const outputPub = populatedPub.toObject();
 			if (populatedPub.collaborators.canEdit.indexOf(readerID) > -1) {
