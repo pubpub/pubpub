@@ -191,6 +191,7 @@ pubSchema.statics.getPub = function (slug, readerID, journalID, callback) {
 
 			outputPub.discussions = Discussion.appendUserYayNayFlag(outputPub.discussions, readerID);
 			outputPub.discussions = Discussion.calculateYayNayScore(outputPub.discussions);
+			outputPub.discussions = Discussion.sortDiscussions(outputPub.discussions);
 			outputPub.discussions = Discussion.nestChildren(outputPub.discussions);
 			// console.log(outputPub.isAuthor);
 			return callback(null, outputPub);
@@ -238,10 +239,12 @@ pubSchema.statics.getPubEdit = function (slug, readerID, callback) {
 
 			outputPub.discussions = Discussion.appendUserYayNayFlag(outputPub.discussions, readerID);
 			outputPub.discussions = Discussion.calculateYayNayScore(outputPub.discussions);
+			outputPub.discussions = Discussion.sortDiscussions(outputPub.discussions);
 			outputPub.discussions = Discussion.nestChildren(outputPub.discussions);
 
 			outputPub.editorComments = Discussion.appendUserYayNayFlag(outputPub.editorComments, readerID);
 			outputPub.editorComments = Discussion.calculateYayNayScore(outputPub.editorComments);
+			outputPub.editorComments = Discussion.sortDiscussions(outputPub.editorComments);
 			outputPub.editorComments = Discussion.nestChildren(outputPub.editorComments);
 
 			return callback(null, outputPub);

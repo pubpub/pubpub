@@ -9,10 +9,7 @@ if(process.env.NODE_ENV !== 'production'){
   mongoose.connect(process.env.mongoURI);  
 }
 
-
-
 require('../server.babel'); // babel registration (runtime transpilation for node)
-
 
 import express from 'express';
 import session from 'express-session';

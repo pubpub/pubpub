@@ -37,6 +37,8 @@ import {
 	GET_RANDOM_SLUG_SUCCESS,
 	// GET_RANDOM_SLUG_FAIL,
 
+	CLEAR_COLLECTION_REDIRECT,
+
 } from '../actions/journal';
 
 import {
@@ -56,7 +58,9 @@ export const defaultState = Immutable.Map({
 		error: null,
 		subdomain: null,	
 	},
-	journalData: {},
+	journalData: {
+		collections: [],
+	},
 	status: 'loading',
 	error: null,
 	baseSubdomain: undefined, // Will be null if on pubpub and defined if on a journal
@@ -98,6 +102,13 @@ function createJournalFail(state, error) {
 	return state.mergeIn(['createJournalData'], {
 		status: 'loaded',
 		error: error,
+	});
+}
+
+function clearCollectionRedirect(state) {
+	return state.merge({
+		createCollectionStatus: null,
+		createCollectionSlug: null,
 	});
 }
 
@@ -287,6 +298,9 @@ export default function loginReducer(state = defaultState, action) {
 
 	case GET_RANDOM_SLUG_SUCCESS:
 		return newRandomSlug(state, action.result);
+
+	case CLEAR_COLLECTION_REDIRECT:
+		return clearCollectionRedirect(state);
 
 	default:
 		return ensureImmutable(state);

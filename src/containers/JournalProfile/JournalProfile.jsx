@@ -4,7 +4,7 @@ import { Link } from 'react-router';
 import { pushState } from 'redux-router';
 import Radium from 'radium';
 import Helmet from 'react-helmet';
-import {getJournal, saveJournal, createCollection} from '../../actions/journal';
+import {getJournal, saveJournal, createCollection, clearCollectionRedirect} from '../../actions/journal';
 import {follow, unfollow, toggleVisibility} from '../../actions/login';
 import {LoaderDeterminate, JournalCurate, JournalDesign, JournalMain, JournalSettings} from '../../components';
 import {NotFound} from '../../containers';
@@ -39,6 +39,7 @@ const JournalAdmin = React.createClass({
 	componentWillReceiveProps(nextProps) {
 		if (nextProps.journalData.get('createCollectionStatus') === 'created') {
 			this.props.dispatch(pushState(null, ('/collection/' + nextProps.journalData.get('createCollectionSlug') + '/edit')));
+			this.props.dispatch(clearCollectionRedirect());
 		}
 	},
 

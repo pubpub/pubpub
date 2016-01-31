@@ -49,6 +49,11 @@ export const globalStyles = {
 	hiddenUntilLoad: {
 		// transition: '.3s linear opacity .25s',
 	},
+	ellipsis: {
+		whiteSpace: 'nowrap',
+		overflow: 'hidden',
+		textOverflow: 'ellipsis',
+	},
 	emptyBlock: {
 		backgroundColor: '#f6f6f6',
 		width: '75%',
