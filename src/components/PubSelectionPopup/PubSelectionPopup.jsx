@@ -43,7 +43,7 @@ const PubSelectionPopup = React.createClass({
 		// We only trigger the selectionPopup for elements that have a data-hash'd ancestor.
 		let clickX;
 		let clickY;
-		const element = document.getElementById('pubBodyContent').parentNode.parentNode.parentNode.parentNode;
+		const element = document.getElementsByClassName('pubScrollContainer')[0];
 		const offsetTop = element.parentNode.style.top ? parseInt(element.parentNode.style.top, 10) : 0;
 		if (event.pageX || event.pageY) {
 			clickX = event.pageX - element.getBoundingClientRect().left;

@@ -59,7 +59,7 @@ const SelectionPlugin = React.createClass({
 			renderer.on('click', function(item) {
 				const destination = document.getElementById('selection-block-' + selection._id);
 				const context = version ? document.getElementsByClassName('rightBar')[0] : document.getElementsByClassName('commentsRightBar')[0];
-				smoothScroll(destination, 500, ()=>{}, context);
+				smoothScroll(destination, 500, ()=>{}, context, -25);
 			});
 			renderer.on('hover-enter', function(item) {
 				const destination = document.getElementById('selection-block-' + selection._id);
@@ -78,11 +78,10 @@ const SelectionPlugin = React.createClass({
 	},
 
 	scrollToHighlight: function() {
-		const version = parseInt(this.props.index.version, 10);
 		let destination = document.getElementsByClassName('selection-' + this.props.index._id)[0];
 
 		// If we're on the editor, and we can't find the selectoin, redraw.
-		if (version === 0 && !destination) {
+		if (parseInt(this.props.index.version, 10) === 0 && !destination) {
 			this.drawHighlight();
 			destination = document.getElementsByClassName('selection-' + this.props.index._id)[0];
 		}
@@ -90,7 +89,7 @@ const SelectionPlugin = React.createClass({
 		if (!destination) {
 			this.setState({showContext: !this.state.showContext});
 		} else {
-			const context = version ? document.getElementsByClassName('centerBar')[0] : document.getElementsByClassName('editorBodyView')[0];
+			const context = document.getElementsByClassName('pubScrollContainer')[0];
 			smoothScroll(destination, 500, ()=>{}, context);
 			smoothScroll(destination, 500, ()=>{}, null, -60);
 		}

@@ -12,7 +12,7 @@ import ReactFireMixin from 'reactfire';
 import {Discussions, EditorModals} from '../';
 import {LoaderDeterminate, EditorPluginPopup, EditorTopNav, EditorBottomNav, PubBody} from '../../components';
 import {clearPub} from '../../actions/pub';
-import {getPubEdit, toggleEditorViewMode, toggleFormatting, toggleTOC, unmountEditor, closeModal, openModal, addSelection, publishVersion} from '../../actions/editor';
+import {getPubEdit, toggleEditorViewMode, toggleFormatting, toggleTOC, unmountEditor, closeModal, openModal, addSelection, setEditorViewMode, publishVersion} from '../../actions/editor';
 
 import {debounce} from '../../utils/loadingFunctions';
 import {submitPubToJournal} from '../../actions/journal';
@@ -254,6 +254,14 @@ const Editor = React.createClass({
 		return this.props.dispatch(toggleEditorViewMode());
 	},
 
+	toggleReadMode: function() {
+		if (this.props.editorData.get('viewMode') === 'read') {
+			this.props.dispatch(setEditorViewMode('preview'));	
+		} else {
+			this.props.dispatch(setEditorViewMode('read'));	
+		}
+	},
+
 	// Toggle formatting dropdown
 	// Only has an effect when in livePreview mode
 	toggleFormatting: function() {
@@ -364,6 +372,7 @@ const Editor = React.createClass({
 	render: function() {
 		const editorData = this.props.editorData;
 		const viewMode = this.props.editorData.get('viewMode');
+		const isReader = this.props.editorData.getIn(['pubEditData', 'isReader']);
 		const showBottomLeftMenu = this.props.editorData.get('showBottomLeftMenu');
 		const showBottomRightMenu = this.props.editorData.get('showBottomRightMenu');
 		const loadStatus = this.props.editorData.get('status');
@@ -431,7 +440,7 @@ const Editor = React.createClass({
 						{/* ---------------------- */}
 						{/* Markdown Editing Block */}
 						{/* ---------------------- */}
-						<div id="editor-text-wrapper" style={[globalStyles.hiddenUntilLoad, globalStyles[loadStatus], styles.editorMarkdown, styles[viewMode].editorMarkdown]}>
+						<div id="editor-text-wrapper" style={[globalStyles.hiddenUntilLoad, globalStyles[loadStatus], styles.editorMarkdown, styles[viewMode].editorMarkdown, !isReader && styles[viewMode].editorMarkdownIsEditor]}>
 
 							<EditorPluginPopup ref="pluginPopup" references={this.state.firepadData.references} assets={this.state.firepadData.assets} /* selections={this.state.firepadData.selections} */ activeFocus={this.state.activeFocus} codeMirrorChange={this.state.codeMirrorChange}/>
 
@@ -451,16 +460,27 @@ const Editor = React.createClass({
 						<div id="editor-live-preview-wrapper" style={[globalStyles.hiddenUntilLoad, globalStyles[loadStatus], styles.editorPreview, styles[viewMode].editorPreview]} className={'editorPreview'}>
 
 							<div className={'editorPreviewNav'} style={styles.bodyNavBar}>
-								<div key={'previewBodyNav0'} style={[styles.bodyNavItem, viewMode === 'read' && globalStyles.invisible, styles.undoInvisibleInMobile]} onClick={this.switchPreviewPaneMode('comments')}>
+								<div key={'previewBodyNav0'} style={[styles.bodyNavItem, viewMode === 'read' && globalStyles.hidden, styles.undoHiddenInMobile]} onClick={this.switchPreviewPaneMode('comments')}>
 									Editor Comments
 								</div>
-								<div style={[styles.bodyNavSeparator, viewMode === 'read' && globalStyles.invisible]}>|</div>
-								<div key={'previewBodyNav1'} style={[styles.bodyNavItem, styles.bodyNavItemHiddenMobile, viewMode === 'read' && globalStyles.invisible]} onClick={this.switchPreviewPaneMode('discussions')}>
+								<div style={[styles.bodyNavSeparator, viewMode === 'read' && globalStyles.hidden]}>|</div>
+								<div key={'previewBodyNav1'} style={[styles.bodyNavItem, styles.bodyNavItemHiddenMobile, viewMode === 'read' && globalStyles.hidden]} onClick={this.switchPreviewPaneMode('discussions')}>
 									<FormattedMessage {...globalMessages.PublicDiscussion} />
 								</div>
+
+								<div style={[styles.readModeNav, !isReader && styles.readModeNavShow]}>
+									<div style={[styles.bodyNavSeparator, viewMode === 'read' && globalStyles.hidden]}>|</div>
+									<div key={'previewBodyNav2'} style={[styles.bodyNavItem]} onClick={this.toggleReadMode}>
+										{viewMode === 'read'
+											? 'Edit Mode'
+											: 'Read Mode'
+										}
+									</div>
+								</div>
+								
 							</div>
 
-							<div className="editorBodyView" style={[styles.previewBlockWrapper, styles.previewBlockWrapperShow]}>
+							<div className="editorBodyView pubScrollContainer" style={[styles.previewBlockWrapper, styles.previewBlockWrapperShow]}>
 
 								<span style={[styles.editorDisabledMessage, viewMode !== 'read' && styles.editorDisabledMessageVisible]}>
 									<FormattedMessage id="editingDisableMobile" defaultMessage="Editing disabled on mobile view. You can still read and comment. Open on a laptop or desktop to edit." />
@@ -635,10 +655,9 @@ styles = {
 			fontSize: '20px',
 		},
 	},
-	undoInvisibleInMobile: {
+	undoHiddenInMobile: {
 		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
-			opacity: 1,
-			pointerEvents: 'auto',
+			display: 'block',
 		},
 	},
 	mobileOnlySeparator: {
@@ -648,6 +667,15 @@ styles = {
 		},
 	},
 	bodyNavDiscussionBlock: {
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+			display: 'none',
+		},
+	},
+	readModeNav: {
+		display: 'none',
+	},
+	readModeNavShow: {
+		display: 'block',
 		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
 			display: 'none',
 		},
@@ -829,10 +857,13 @@ styles = {
 		editorMarkdown: {
 			opacity: 0,
 			pointerEvents: 0,
-			transition: '.352s linear transform, .3s linear opacity .25s, 0s linear padding .352s, 0s linear left .352s',
-			transform: 'translateX(0%)',
-			padding: globalStyles.headerHeight + ' 25vw',
-			left: 0,
+			transition: '.352s linear transform, .3s linear opacity .25s',
+			transform: 'translateX(-50%)',
+			padding: globalStyles.headerHeight + ' 0px',
+			left: '25vw'
+		},
+		editorMarkdownIsEditor: {
+			opacity: 1,
 		},
 		editorPreview: {
 			// backgroundColor: 'orange',

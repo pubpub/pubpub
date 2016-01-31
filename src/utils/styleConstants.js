@@ -30,6 +30,9 @@ export const globalStyles = {
 		opacity: 0,
 		pointerEvents: 'none',
 	},
+	hidden: {
+		display: 'none',
+	},
 	button: {
 		color: '#666',
 		fontSize: '20px',

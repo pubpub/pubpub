@@ -232,7 +232,7 @@ const PubReader = React.createClass({
 
 				</div>
 
-				<div className="centerBar" style={[styles.centerBar, this.props.readerData.get('activeModal') !== undefined && styles.centerBarModalActive]}>
+				<div className="centerBar pubScrollContainer" style={[styles.centerBar, this.props.readerData.get('activeModal') !== undefined && styles.centerBarModalActive]}>
 
 					<PubNav
 						height={this.height}

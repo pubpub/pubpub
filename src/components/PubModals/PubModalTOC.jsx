@@ -30,7 +30,7 @@ const PubModalTOC = React.createClass({
 			// document.getElementById(this.props.tocData[index].id).scrollIntoView();
 			setTimeout(()=>{
 				const destination = document.getElementById(this.props.tocData[index].id);
-				const context = document.getElementsByClassName('centerBar')[0];
+				const context = document.getElementsByClassName('pubScrollContainer')[0];
 				smoothScroll(destination, 500, ()=>{}, context);
 				// Do we need to check for mobile and then fire?
 				// Or since we have overflow: hidden, can we just tell body to scroll, and 
