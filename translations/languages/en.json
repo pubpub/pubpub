@@ -1,1 +1,7 @@
-{}
+{
+  "collections.addPubsToCollection": "Add Pubs to Collection",
+  "collections.collectionTitle": "Collection Title",
+  "collections.description": "Description",
+  "collections.headerImage": "Header Image",
+  "collections.noPubsAddedToCollection": "No Pubs Added to Collection"
+}

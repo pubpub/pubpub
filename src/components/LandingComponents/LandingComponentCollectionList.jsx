@@ -110,7 +110,12 @@ const LandingComponentCollectionList = React.createClass({
 													<span> on </span>
 													{dateFormat(pub.discussions[pub.discussions.length - 1].postDate, 'mm/dd/yy, h:MMTT')}
 												</div> */}
-												<div style={styles.commentText}>{pub.discussions[pub.discussions.length - 1].markdown.replace(/\[\[(.*)\]\]/g, '')}</div>
+												<div style={styles.commentText}>
+													{pub.discussions[pub.discussions.length - 1].markdown.replace(/\[\[(.*)\]\]/g, '').length > 100 
+														? pub.discussions[pub.discussions.length - 1].markdown.replace(/\[\[(.*)\]\]/g, '').substring(0, 100).trim() + '...'
+														: pub.discussions[pub.discussions.length - 1].markdown.replace(/\[\[(.*)\]\]/g, '')
+													}
+												</div>
 											</div>
 										</div>
 										: null
