@@ -535,6 +535,7 @@ const Editor = React.createClass({
 
 						</div>
 
+						{/* This bit is only for mobile. Adds a second close bar overlay to cover the top of the menu */}
 						<div id="editor-mobile-close-bar" style={[this.state.previewPaneMode && styles.editorMobileCloseBar]} onClick={this.switchPreviewPaneMode(undefined)}></div>
 
 					</div>

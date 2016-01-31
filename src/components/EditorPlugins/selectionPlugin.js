@@ -79,12 +79,14 @@ const SelectionPlugin = React.createClass({
 
 	scrollToHighlight: function() {
 		const version = parseInt(this.props.index.version, 10);
-		// If we're on the editor, redraw on click
-		if (version === 0) {
+		let destination = document.getElementsByClassName('selection-' + this.props.index._id)[0];
+
+		// If we're on the editor, and we can't find the selectoin, redraw.
+		if (version === 0 && !destination) {
 			this.drawHighlight();
+			destination = document.getElementsByClassName('selection-' + this.props.index._id)[0];
 		}
 
-		const destination = document.getElementsByClassName('selection-' + this.props.index._id)[0];
 		if (!destination) {
 			this.setState({showContext: !this.state.showContext});
 		} else {
