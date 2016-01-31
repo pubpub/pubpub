@@ -2,6 +2,7 @@ var app = require('../api');
 
 var Pub  = require('../models').Pub;
 var User = require('../models').User;
+var Group = require('../models').Group;
 var Asset = require('../models').Asset;
 var Journal = require('../models').Journal;
 var Reference = require('../models').Reference;
@@ -242,7 +243,7 @@ app.post('/updateCollaborators', function(req, res) {
 		if (err) { return res.status(500).json(err);  }
 
 		// Check to make sure the user is authorized to be submitting such changes.
-		if (!req.user || pub.collaborators.canEdit.indexOf(req.user._id) === -1) {
+		if (!req.user || (pub.collaborators.canEdit.indexOf(req.user._id) === -1 && _.intersection(req.user.groups, pub.collaborators.canEdit).length === 0) ) {
 			return res.status(403).json('Not authorized to publish versions to this pub');
 		}
 
@@ -255,10 +256,12 @@ app.post('/updateCollaborators', function(req, res) {
 				canEdit.push(collaborator._id);
 				// Update the user's pubs collection so it is bound to their profile
 				User.update({ _id: collaborator._id }, { $addToSet: { pubs: pubID} }, function(err, result){if(err) return handleError(err)});
+				Group.update({ _id: collaborator._id }, { $addToSet: { pubs: pubID} }, function(err, result){if(err) return handleError(err)});
 			} else {
 				canRead.push(collaborator._id);
 				// Update the user's pubs collection so it is removed from their profile
 				User.update({ _id: collaborator._id }, { $pull: { pubs: pubID} }, function(err, result){if(err) return handleError(err)});
+				Group.update({ _id: collaborator._id }, { $addToSet: { pubs: pubID} }, function(err, result){if(err) return handleError(err)});
 			}
 		});
 		const collaborators = {
@@ -268,6 +271,7 @@ app.post('/updateCollaborators', function(req, res) {
 
 		if (req.body.removedUser) {
 			User.update({ _id: req.body.removedUser }, { $pull: { pubs: pubID} }, function(err, result){if(err) return handleError(err)});
+			Group.update({ _id: req.body.removedUser }, { $pull: { pubs: pubID} }, function(err, result){if(err) return handleError(err)});
 		}
 		// console.log(collaborators);
 		Pub.update({slug: req.body.slug}, { $set: { collaborators: collaborators }}, function(result){
