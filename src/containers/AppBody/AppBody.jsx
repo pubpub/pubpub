@@ -174,7 +174,8 @@ const AppBody = React.createClass({
 								
 								isJournalAdmin={this.props.journalData.getIn(['journalData', 'isAdmin'])}
 								journalSubdomain={this.props.journalData.get('baseSubdomain')}
-								slug={this.props.slug}/>
+								slug={this.props.slug}
+								path={this.props.path}/>
 						</div>
 
 						<div style={styles.headerNav}>

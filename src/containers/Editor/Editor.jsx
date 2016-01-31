@@ -497,6 +497,10 @@ const Editor = React.createClass({
 						{/* ----------------- */}
 						<div id="editor-discussions-wrapper" style={[globalStyles.hiddenUntilLoad, globalStyles[loadStatus], styles.editorDiscussions, viewMode === 'read' && styles[viewMode].editorDiscussionsMobile, this.state.previewPaneMode && styles[viewMode].editorDiscussions]}>
 
+							<div key="editorDiscussions" style={styles.menuClose} onClick={this.switchPreviewPaneMode(undefined)}>
+								<FormattedMessage {...globalMessages.close} />
+							</div>
+
 							<div className="commentsRightBar" style={[styles.previewBlockWrapper, (this.state.previewPaneMode === 'comments' || viewMode === 'read') && styles.previewBlockWrapperShow]}>
 								<div style={styles.previewBlockHeader}>
 									<FormattedMessage {...globalMessages.EditorComments} />
@@ -515,6 +519,7 @@ const Editor = React.createClass({
 							</div>
 
 							<div className="rightBar" style={[styles.previewBlockWrapper, this.state.previewPaneMode === 'discussions' && styles.previewBlockWrapperShow]}>
+
 								<div style={styles.previewBlockHeader}>
 									<FormattedMessage {...globalMessages.PublicDiscussion} />
 								</div>
@@ -529,6 +534,8 @@ const Editor = React.createClass({
 							</div>
 
 						</div>
+
+						<div id="editor-mobile-close-bar" style={[this.state.previewPaneMode && styles.editorMobileCloseBar]} onClick={this.switchPreviewPaneMode(undefined)}></div>
 
 					</div>
 				}
@@ -685,6 +692,27 @@ styles = {
 		},
 	},
 
+	menuClose: {
+		display: 'none',
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+			display: 'block',
+			textAlign: 'right',
+			fontSize: '1.5em',
+			width: 'calc(100% - 100px)',
+			whiteSpace: 'nowrap',
+			overflow: 'hidden',
+			textOverflow: 'ellipsis',
+			padding: '20px 20px',
+			margin: '0px 0px 0px 60px',
+			fontFamily: globalStyles.headerFont,
+			color: '#666',
+			':hover': {
+				cursor: 'pointer',
+				color: 'black',
+			},
+		},
+	},
+
 	editorMarkdown: {
 		margin: '30px 0px',
 		width: '50vw',
@@ -726,7 +754,9 @@ styles = {
 		boxShadow: '-2px -1px 3px -2px rgba(0,0,0,0.7)',
 		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
 			width: '90%',
-			top: '61px',
+			top: '0px',
+			height: '100vh',
+			zIndex: 56,
 		},
 	},
 
@@ -739,6 +769,18 @@ styles = {
 		top: -10,
 		bottom: -10,
 		left: -10,
+	},
+	editorMobileCloseBar: {
+		display: 'none',
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+			zIndex: 55,
+			position: 'fixed',
+			display: 'block',
+			width: '100%',
+			height: 120,
+			top: 0,
+			left: 0,
+		}
 	},
 
 	edit: {
@@ -814,8 +856,8 @@ styles = {
 				transform: 'translateX(110%)',
 				width: '90%',
 				boxShadow: '-2px -1px 3px -2px rgba(0,0,0,0.7)',
-				top: '61px',
-				height: 'calc(100vh - 61px)',
+				top: '0px',
+				height: '100vh',
 			},
 
 		},
@@ -830,8 +872,8 @@ styles = {
 				transform: 'translateX(0%)',
 				width: '90%',
 				boxShadow: '-2px -1px 3px -2px rgba(0,0,0,0.7)',
-				top: '61px',
-				height: 'calc(100vh - 61px)',
+				top: '0px',
+				height: '100vh',
 			},
 
 		},

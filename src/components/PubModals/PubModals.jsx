@@ -148,7 +148,7 @@ styles = {
 			width: '100vw',
 			height: '100vh',
 			// backgroundColor: 'red',
-			zIndex: 9,
+			zIndex: 56,
 			transition: '.2s linear transform',
 			transform: 'translateX(105%)',
 		},
