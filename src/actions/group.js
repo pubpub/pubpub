@@ -9,6 +9,10 @@ export const CREATE_GROUP_LOAD = 'group/CREATE_GROUP_LOAD';
 export const CREATE_GROUP_SUCCESS = 'group/CREATE_GROUP_SUCCESS';
 export const CREATE_GROUP_FAIL = 'group/CREATE_GROUP_FAIL';
 
+export const LOAD_GROUP_LOAD = 'group/LOAD_GROUP_LOAD';
+export const LOAD_GROUP_SUCCESS = 'group/LOAD_GROUP_SUCCESS';
+export const LOAD_GROUP_FAIL = 'group/LOAD_GROUP_FAIL';
+
 
 /*--------*/
 // Define Action creators
@@ -23,11 +27,25 @@ export const CREATE_GROUP_FAIL = 'group/CREATE_GROUP_FAIL';
 // 	};	
 // }
 
-// export function logout() {
-// 	analytics.sendEvent('Logout');
+export function create(groupName, groupSlug) {
+	analytics.sendEvent('GroupCreate', {
+		groupName: groupName,
+		groupSlug: groupSlug
+	});
 
-// 	return {
-// 		types: [LOGOUT_LOAD, LOGOUT_LOAD_SUCCESS, LOGOUT_LOAD_FAIL],
-// 		promise: (client) => client.get('/logout', {})
-// 	};
-// }
+	return {
+		types: [CREATE_GROUP_LOAD, CREATE_GROUP_SUCCESS, CREATE_GROUP_FAIL],
+		promise: (client) => client.post('/groupCreate', {data: {
+			groupName: groupName,
+			groupSlug: groupSlug
+		}})
+	};
+}
+
+
+export function getGroup(groupSlug) {
+	return {
+		types: [LOAD_GROUP_LOAD, LOAD_GROUP_SUCCESS, LOAD_GROUP_FAIL],
+		promise: (client) => client.get('/getGroup', {params: {groupSlug: groupSlug}})
+	};
+}

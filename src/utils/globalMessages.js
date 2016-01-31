@@ -177,6 +177,10 @@ export const globalMessages = defineMessages({
 		id: 'global.GroupUrl',
 		defaultMessage: 'Group Url',
 	},
+	Members: {
+		id: 'global.Members',
+		defaultMessage: 'Members',
+	},
 	clickOrDrag: {
 		id: 'global.clickOrDrag',
 		defaultMessage: 'Click to choose or drag files',

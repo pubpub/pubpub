@@ -23,7 +23,7 @@ export default combineReducers({
 		pubCreateForm: {
 			slug: (value, previousValue, allValues, previousAllValues) => {
 				let newVal = value;
-				if (newVal === undefined || newVal === previousAllValues.title.replace(/[^\w\s-]/gi, '').replace(/ /g, '-').toLowerCase()) {
+				if (newVal === undefined || (previousAllValues.title && previousAllValues.title.replace && newVal === previousAllValues.title.replace(/[^\w\s-]/gi, '').replace(/ /g, '-').toLowerCase())) {
 					newVal = allValues.title;
 				}
 				return newVal && newVal.replace && newVal.replace(/[^\w\s-]/gi, '').replace(/ /g, '-').toLowerCase();
@@ -35,8 +35,8 @@ export default combineReducers({
 		groupCreateForm: {
 			groupSlug: (value, previousValue, allValues, previousAllValues) => {
 				let newVal = value;
-				if (newVal === undefined || newVal === previousAllValues.groupTitle.replace(/[^\w\s-]/gi, '').replace(/ /g, '-').toLowerCase()) {
-					newVal = allValues.groupTitle;
+				if (newVal === undefined || (previousAllValues.groupName && previousAllValues.groupName.replace && newVal === previousAllValues.groupName.replace(/[^\w\s-]/gi, '').replace(/ /g, '-').toLowerCase())) {
+					newVal = allValues.groupName;
 				}
 				return newVal && newVal.replace && newVal.replace(/[^\w\s-]/gi, '').replace(/ /g, '-').toLowerCase();
 			}

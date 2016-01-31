@@ -28,7 +28,7 @@ const GroupCreate = React.createClass({
 	},
 
 	componentWillReceiveProps: function(nextProps) {
-		if (nextProps.groupData.getIn(['creategroupData', 'groupSlug'])) {
+		if (nextProps.groupData.getIn(['createGroupData', 'groupSlug'])) {
 			this.props.dispatch(pushState(null, ('/group/' + nextProps.groupData.getIn(['createGroupData', 'groupSlug']))));
 		}
 		this.setState({ errorMessage: nextProps.groupData.getIn(['createGroupData', 'error']) });
@@ -47,14 +47,13 @@ const GroupCreate = React.createClass({
 			}
 			
 		}
-		
 	},
 
 	render: function() {
 		return (
 			<div style={styles.container}>		
 				<div style={styles.loader}>
-					{this.props.groupData.getIn(['creategroupData', 'status']) === 'loading'
+					{this.props.groupData.getIn(['createGroupData', 'status']) === 'loading'
 						? <LoaderIndeterminate color={globalStyles.sideText}/>
 						: null
 					}
@@ -67,8 +66,8 @@ const GroupCreate = React.createClass({
 				<div style={[styles.error, !this.state.errorMessage && styles.hidden]}>
 					{(()=>{
 						switch (this.state.errorMessage) {
-						case 'Slug is not Unique!':
-							return <FormattedMessage id="group.subdomainUsed" defaultMessage="Group URL is already used"/>;
+						case 'URL is not Unique!':
+							return <FormattedMessage id="group.urlUsed" defaultMessage="Group URL is already used"/>;
 						case 'noName':
 							return <FormattedMessage id="group.journalNameRequired" defaultMessage="A group name is required"/>;
 						case 'noSlug':

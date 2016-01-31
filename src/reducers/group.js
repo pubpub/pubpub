@@ -8,6 +8,11 @@ import {
 	CREATE_GROUP_LOAD,
 	CREATE_GROUP_SUCCESS,
 	CREATE_GROUP_FAIL,
+
+	LOAD_GROUP_LOAD,
+	LOAD_GROUP_SUCCESS,
+	LOAD_GROUP_FAIL,
+
 } from '../actions/group';
 
 /*--------*/
@@ -35,8 +40,32 @@ export const defaultState = Immutable.Map({
 // These functions take in an initial state and return a new
 // state. They are pure functions. We use Immutable to enforce this.
 /*--------*/
-
 function createLoad(state) {
+	return state.mergeIn(['createGroupData'], {
+		status: 'loading',
+		error: null,
+		groupSlug: null,
+	});
+}
+
+function createSuccess(state, result) {
+
+	return state.mergeIn(['createGroupData'], {
+		status: 'loaded',
+		error: null,
+		groupCreated: true,
+		groupSlug: result,
+	});
+}
+
+function createFail(state, error) {
+	return state.mergeIn(['createGroupData'], {
+		status: 'loaded',
+		error: error,
+	});
+}
+
+function load(state) {
 	return state.merge({
 		status: 'loading',
 		groupData: {
@@ -58,6 +87,12 @@ function loadSuccess(state, result) {
 		};
 	}
 
+	if (result === 'Not Authorized') {
+		outputState.groupData = { ...defaultState.get('groupData'),
+			groupName: 'Not Authorized',
+		};
+	}
+	
 	return state.merge(outputState);
 }
 
@@ -67,7 +102,7 @@ function loadFail(state, error) {
 	const outputState = {
 		status: 'loaded',
 		groupData: { ...defaultState.get('groupData'),
-			groupName: 'Error Loading User',
+			groupName: 'Error Loading Group',
 		},
 		error: error
 	};
@@ -87,6 +122,14 @@ export default function profileReducer(state = defaultState, action) {
 		return createSuccess(state, action.result);
 	case CREATE_GROUP_FAIL:
 		return createFail(state, action.error);
+
+	case LOAD_GROUP_LOAD:
+		return load(state);
+	case LOAD_GROUP_SUCCESS:
+		return loadSuccess(state, action.result);
+	case LOAD_GROUP_FAIL:
+		return loadFail(state, action.error);
+
 
 	default:
 		return ensureImmutable(state);

@@ -29,7 +29,7 @@ const GroupCreateForm = React.createClass({
 					<label style={styles.label}>
 						<FormattedMessage {...globalMessages.GroupName} />
 					</label>
-					<input key="groupCreateName" style={styles.input} type="text" placeholder={this.props.intl.formatMessage(globalMessages.title).toLowerCase()} {...groupName}/>
+					<input key="groupCreateName" style={styles.input} type="text" placeholder={this.props.intl.formatMessage(globalMessages.GroupName).toLowerCase()} {...groupName}/>
 				</div>
 				<div style={styles.inputWrapper}>
 					<label style={styles.label}>

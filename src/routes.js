@@ -17,8 +17,8 @@ export default () => {
 
 			<Route path="/explore" component={Explore}/>
 
-			<Route path="/group/:subdomain" component={GroupProfile}/>
-			<Route path="/group/:subdomain/:mode" component={GroupProfile}/>
+			<Route path="/group/:groupSlug" component={GroupProfile}/>
+			<Route path="/group/:groupSlug/:mode" component={GroupProfile}/>
 			
 			<Route path="/groups/create" component={GroupCreate}/>
 
