@@ -13,38 +13,25 @@ const LandingComponentCollectionList = React.createClass({
 		selectCollections: PropTypes.array,
 	},
 
-	getDefaultProps: function() {
-		return {
-			pubList: [
-				{
-					title: 'Human Health by Austin Burt',
-					abstract: 'Insect/human disease transmission. Technology assessment for control of human diseases such as malaria, dengue, and trypanosomiasis: What is the technology? What is its purpose? Features of the ecological systems and technical issues to consider, like feasibility, efficacy and specificity, irreversibility, fitness, etc.',
-					author: 'Sam on Dec 19 at 4:27AM',
-					comment: 'Austin raises an interesting point, but misses a broader issue about the cultural grounding of the construction of risk as associated with infectious artichoke populations.',
-					commentCount: 18
-				},
-				
-			]
-		};
-	},
-
 	getInitialState() {
 		return {
 			activeIndex: 0,
 			collections: [],
 		};
 	},
+	
 	componentWillMount() {
 		const collections = this.props.collections;
 		const collectionObject = {};
 		for (let index = collections.length; index--;) {
 			collectionObject[collections[index].slug] = collections[index];
 		}
+
 		const newCollections = this.props.selectCollections.map((collectionName)=>{
 			return collectionObject[collectionName];
 		});
-		const maxSize = 3;
 
+		const maxSize = 3;
 		this.setState({collections: newCollections.slice(0, maxSize)});
 	},
 
@@ -71,8 +58,10 @@ const LandingComponentCollectionList = React.createClass({
 		return (
 			<div style={[styles.container, this.props.style]}>
 				<div style={styles.leftColumn}>
-					<div style={styles.leftHeader}>{this.state.collections[this.state.activeIndex].title}</div>
-					<div style={styles.leftText}>{this.state.collections[this.state.activeIndex].description}</div>
+					<Link to={'/collection/' + this.state.collections[this.state.activeIndex].slug} style={globalStyles.link}>
+						<div style={styles.leftHeader}>{this.state.collections[this.state.activeIndex].title}</div>
+						<div style={styles.leftText}>{this.state.collections[this.state.activeIndex].description}</div>
+					</Link>
 				</div>
 
 				<div style={styles.rightColumn}>
@@ -97,7 +86,7 @@ const LandingComponentCollectionList = React.createClass({
 
 									<div style={styles.pubDetail}>{dateFormat(pub.lastUpdated, 'mm/dd/yy')}</div>
 									<div style={styles.separator}>|</div>
-									<div style={styles.pubDetail}>{pub.discussions.length} comments</div>
+									<div style={styles.pubDetail}>{pub.discussions ? pub.discussions.length : 0} comments</div>
 
 									<div style={styles.pubAbstract}>
 										{pub.abstract.length > 200 
@@ -107,7 +96,7 @@ const LandingComponentCollectionList = React.createClass({
 									</div>
 									
 									
-									{pub.discussions.length
+									{pub.discussions && pub.discussions.length
 										? <div>
 											<div style={styles.commentTitle}>
 												<span>Latest Comment: </span>

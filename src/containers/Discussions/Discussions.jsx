@@ -48,6 +48,11 @@ const Discussions = React.createClass({
 			return this.props.dispatch(toggleVisibility());
 		}
 
+		console.log(discussionObject);
+		if (!discussionObject.markdown) {
+			return null;
+		}
+
 		// Check if it's a comment or discussion we're adding.
 		if (this.props.editorCommentMode) {
 			discussionObject.pub = this.props.editorData.getIn(['pubEditData', '_id']);

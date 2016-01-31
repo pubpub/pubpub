@@ -137,7 +137,27 @@ app.post('/saveJournal', function(req,res){
 				{path: "pubsFeatured", select:"title abstract slug settings", model: 'Pub'},
 				{path: "pubsSubmitted", select:"title abstract slug settings", model: 'Pub'},
 				{path: "admins", select:"name firstName lastName username thumbnail", model: 'User'},
-				{path: "collections.pubs", select:"title abstract slug authors lastUpdated createDate", model: 'Pub'},
+				{
+					path: "collections.pubs", 
+					select:"title abstract slug authors lastUpdated createDate discussions",
+					populate: [
+						{
+							path: 'authors',
+							model: 'User',
+							select: 'name firstName lastName username thumbnail',
+						},
+						{
+							path: 'discussions',
+							model: 'Discussion',
+							select: 'markdown author postDate',
+							populate: {
+								path: 'author',
+								model: 'User',
+								select: 'name firstName lastName username thumbnail',
+							},
+						}
+					],
+				}
 			];
 
 			Journal.populate(result, options, (err, populatedJournal)=> {
@@ -182,7 +202,27 @@ app.post('/submitPubToJournal', function(req,res){
 				{path: "pubsFeatured", select:"title abstract slug settings", model: 'Pub'},
 				{path: "pubsSubmitted", select:"title abstract slug settings", model: 'Pub'},
 				{path: "admins", select:"name firstName lastName username thumbnail", model: 'User'},
-				{path: "collections.pubs", select:"title abstract slug authors lastUpdated createDate", model: 'Pub'},
+				{
+					path: "collections.pubs", 
+					select:"title abstract slug authors lastUpdated createDate discussions",
+					populate: [
+						{
+							path: 'authors',
+							model: 'User',
+							select: 'name firstName lastName username thumbnail',
+						},
+						{
+							path: 'discussions',
+							model: 'Discussion',
+							select: 'markdown author postDate',
+							populate: {
+								path: 'author',
+								model: 'User',
+								select: 'name firstName lastName username thumbnail',
+							},
+						}
+					],
+				}
 			];
 
 			Journal.populate(result, options, (err, populatedJournal)=> {
@@ -331,7 +371,27 @@ app.post('/createCollection', function(req,res){
 		journal.save(function (err, savedJournal) {
 			if (err) { return res.status(500).json(err);  }
 			const options = [
-				{path: "pubs", select:"title abstract slug authors lastUpdated createDate", model: 'Pub'},
+				{
+					path: "collections.pubs", 
+					select:"title abstract slug authors lastUpdated createDate discussions",
+					populate: [
+						{
+							path: 'authors',
+							model: 'User',
+							select: 'name firstName lastName username thumbnail',
+						},
+						{
+							path: 'discussions',
+							model: 'Discussion',
+							select: 'markdown author postDate',
+							populate: {
+								path: 'author',
+								model: 'User',
+								select: 'name firstName lastName username thumbnail',
+							},
+						}
+					],
+				}
 			];
 
 			Journal.populate(savedJournal, options, (err, populatedJournal)=> {
@@ -365,7 +425,27 @@ app.post('/saveCollection', function(req,res){
 			journal.save(function (err, savedJournal) {
 				if (err) { return res.status(500).json(err);  }
 				const options = [
-					{path: "collections.pubs", select:"title abstract slug authors lastUpdated createDate", model: 'Pub'},
+					{
+						path: "collections.pubs", 
+						select:"title abstract slug authors lastUpdated createDate discussions",
+						populate: [
+							{
+								path: 'authors',
+								model: 'User',
+								select: 'name firstName lastName username thumbnail',
+							},
+							{
+								path: 'discussions',
+								model: 'Discussion',
+								select: 'markdown author postDate',
+								populate: {
+									path: 'author',
+									model: 'User',
+									select: 'name firstName lastName username thumbnail',
+								},
+							}
+						],
+					}
 				];
 
 				Journal.populate(savedJournal, options, (err, populatedJournal)=> {
