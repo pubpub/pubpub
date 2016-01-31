@@ -2,6 +2,8 @@ var mongoose  = require('mongoose');
 var Schema    =  mongoose.Schema;
 var ObjectId  = Schema.Types.ObjectId;
 var Discussion = require('../models').Discussion;
+var _         = require('underscore');
+
 import * as jsdiff from 'diff';
 
 var pubSchema = new Schema({
@@ -200,7 +202,7 @@ pubSchema.statics.getPub = function (slug, readerID, journalID, callback) {
 	})
 };
 
-pubSchema.statics.getPubEdit = function (slug, readerID, callback) {
+pubSchema.statics.getPubEdit = function (slug, readerID, readerGroups, callback) {
 	// Get the pub and check to make sure user is authorized to edit
 	this.findOne({slug: slug})
 	.populate({ path: 'discussions', model: 'Discussion' })
@@ -210,12 +212,20 @@ pubSchema.statics.getPubEdit = function (slug, readerID, callback) {
 
 		if (!pub) { return callback(null, 'Pub Not Found', true); }
 
-		if (pub.collaborators.canEdit.indexOf(readerID) === -1 && pub.collaborators.canRead.indexOf(readerID) === -1) {
+		const readerGroupsStrings = readerGroups.toString().split(',');
+		const canReadStrings = pub.collaborators.canRead.toString().split(',');
+		const canEditStrings = pub.collaborators.canEdit.toString().split(',');
+
+	
+		if (pub.collaborators.canEdit.indexOf(readerID) === -1 && 
+			pub.collaborators.canRead.indexOf(readerID) === -1 && 
+			_.intersection(readerGroupsStrings, canEditStrings).length === 0 && 
+			_.intersection(readerGroupsStrings, canReadStrings).length === 0) {
 			return callback(null, 'Not Authorized', true);
 		}
 
 		let isReader = true;
-		if (pub.collaborators.canEdit.indexOf(readerID) > -1) {
+		if (pub.collaborators.canEdit.indexOf(readerID) > -1 || _.intersection(readerGroupsStrings, canEditStrings).length) {
 			isReader = false;
 		}
 

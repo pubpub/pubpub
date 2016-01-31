@@ -183,13 +183,13 @@ const EditorModalCollaborators = React.createClass({
 									<div style={[styles.imageColumn, styles.columnHeader]}> <img style={styles.userImage} src={collaborator.thumbnail ? collaborator.thumbnail : '/thumbnails/group.png'} /> </div>
 									<div style={[styles.nameColumn]}>{collaborator.name ? collaborator.name : collaborator.groupName}</div>
 									<div style={[styles.permissionsColumn]}>
-										<span key={'collaboratorPermissionsEdit-' + index} style={[styles.permission, collaborator.permission === 'edit' && styles.permissionActive]} onClick={this.setPermission('edit', collaborator.username)}>
+										<span key={'collaboratorPermissionsEdit-' + index} style={[styles.permission, collaborator.permission === 'edit' && styles.permissionActive]} onClick={this.setPermission('edit', collaborator.username ? collaborator.username : collaborator.groupSlug)}>
 											<FormattedMessage
 												id="editor.canEdit"
 												defaultMessage="can edit"/>
 										</span>
 										<span style={[styles.permissionSeparator, collaborator.admin && styles.isAdminHidden]}>|</span>
-										<span key={'collaboratorPermissionsRead-' + index} style={[styles.permission, collaborator.permission === 'read' && styles.permissionActive, collaborator.admin && styles.isAdminHidden]} onClick={this.setPermission('read', collaborator.username)}>
+										<span key={'collaboratorPermissionsRead-' + index} style={[styles.permission, collaborator.permission === 'read' && styles.permissionActive, collaborator.admin && styles.isAdminHidden]} onClick={this.setPermission('read', collaborator.username ? collaborator.username : collaborator.groupSlug)}>
 											<FormattedMessage
 												id="editor.canRead"
 												defaultMessage="can only read"/>

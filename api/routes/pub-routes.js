@@ -33,7 +33,8 @@ app.get('/getPub', function(req, res) {
 
 app.get('/getPubEdit', function(req, res) {
 	const userID = req.user ? req.user._id : undefined;
-	Pub.getPubEdit(req.query.slug, userID, (err, pubEditData, authError)=>{
+	const userGroups = req.user ? req.user.groups : [];
+	Pub.getPubEdit(req.query.slug, userID, userGroups, (err, pubEditData, authError)=>{
 		if (err) {
 			console.log(err);
 			return res.status(500).json(err);
@@ -243,7 +244,11 @@ app.post('/updateCollaborators', function(req, res) {
 		if (err) { return res.status(500).json(err);  }
 
 		// Check to make sure the user is authorized to be submitting such changes.
-		if (!req.user || (pub.collaborators.canEdit.indexOf(req.user._id) === -1 && _.intersection(req.user.groups, pub.collaborators.canEdit).length === 0) ) {
+		const userGroups = req.user ? req.user.groups : [];
+		const userGroupsStrings = userGroups.toString().split(',');
+		const canEditStrings = pub.collaborators.canEdit.toString().split(',');
+
+		if (!req.user || (pub.collaborators.canEdit.indexOf(req.user._id) === -1 && _.intersection(userGroupsStrings, canEditStrings).length === 0) ) {
 			return res.status(403).json('Not authorized to publish versions to this pub');
 		}
 
