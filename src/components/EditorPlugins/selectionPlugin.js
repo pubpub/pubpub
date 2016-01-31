@@ -78,8 +78,9 @@ const SelectionPlugin = React.createClass({
 	},
 
 	scrollToHighlight: function() {
+		const version = parseInt(this.props.index.version, 10);
 		// If we're on the editor, redraw on click
-		if (parseInt(this.props.index.version, 10) === 0) {
+		if (version === 0) {
 			this.drawHighlight();
 		}
 
@@ -87,7 +88,7 @@ const SelectionPlugin = React.createClass({
 		if (!destination) {
 			this.setState({showContext: !this.state.showContext});
 		} else {
-			const context = document.getElementById('pubBodyContent').parentNode.parentNode.parentNode.parentNode;
+			const context = version ? document.getElementsByClassName('centerBar')[0] : document.getElementsByClassName('editorBodyView')[0];
 			smoothScroll(destination, 500, ()=>{}, context);
 			smoothScroll(destination, 500, ()=>{}, null, -60);
 		}
