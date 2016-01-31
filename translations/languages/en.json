@@ -99,7 +99,7 @@
   "journal.subdomainUsed": "Subdomain is already used",
   "journal.journalNameRequired": "A journal name is required",
   "journal.subdomainRequired": "A subdomain is required",
-  "collections.newToPubPub": "New to PubPub? Click to Register",
+  "collections.newToPubPub": "No account? Click to Register",
   "collections.alreadyHaveAccount": "Already have an account? Click to Login",
   "notFound.pageDoesntExist": "Doh - That page does not seem to exist!",
   "pub.createPub": "Create Pub",
