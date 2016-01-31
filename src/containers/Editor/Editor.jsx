@@ -12,7 +12,7 @@ import ReactFireMixin from 'reactfire';
 import {Discussions, EditorModals} from '../';
 import {LoaderDeterminate, EditorPluginPopup, EditorTopNav, EditorBottomNav, PubBody} from '../../components';
 import {clearPub} from '../../actions/pub';
-import {getPubEdit, toggleEditorViewMode, toggleFormatting, toggleTOC, unmountEditor, closeModal, openModal, addSelection, setEditorViewMode, publishVersion} from '../../actions/editor';
+import {getPubEdit, toggleEditorViewMode, toggleFormatting, toggleTOC, unmountEditor, closeModal, openModal, addSelection, setEditorViewMode, publishVersion, updatePubBackendData} from '../../actions/editor';
 
 import {debounce} from '../../utils/loadingFunctions';
 import {submitPubToJournal} from '../../actions/journal';
@@ -150,8 +150,8 @@ const Editor = React.createClass({
 					document.getElementById('userlist'), username, this.props.loginData.getIn(['userData', 'name']), this.props.loginData.getIn(['userData', 'thumbnail']));
 
 				firepad.on('synced', (synced)=>{
-					// console.log('before debounce', synced);
-					debounce(()=> {
+					
+					debounce('saveStatusSync', ()=> {
 						this.updateSaveStatus(synced);
 					}, 250)();
 				});
@@ -195,6 +195,14 @@ const Editor = React.createClass({
 		}
 	},
 
+	updatePubBackendData: function() {
+		const newPubData = {
+			title: this.state.title,
+			abstract: this.state.abstract,
+		};
+		this.props.dispatch(updatePubBackendData(this.props.slug, newPubData));
+	},
+
 	onEditorChange: function(cm, change) {
 
 		CodeMirror.commands.autocomplete(cm, CodeMirror.hint.plugins, {completeSingle: false});
@@ -229,6 +237,9 @@ const Editor = React.createClass({
 		
 		// const compiledMarkdown = performance.now();
 
+		if (this.state.title !== title || this.state.abstract !== abstract) {
+			debounce('backendSync', this.updatePubBackendData, 2000)();
+		}
 		// Set State to trigger re-render
 		this.setState({
 			markdown: markdown,
@@ -387,7 +398,7 @@ const Editor = React.createClass({
 
 		// Set metadata for the page.
 		const metaData = {
-			title: 'PubPub - Editing ' + this.props.slug
+			title: 'Edit - ' + this.props.editorData.getIn(['pubEditData', 'title'])
 		};
 
 		return (

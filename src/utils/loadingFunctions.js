@@ -9,18 +9,18 @@ export function loadCss(path) {
 	head.appendChild(link);
 }
 
-let timeout;
-export function debounce(func, wait, immediate) {
+const timeout = {};
+export function debounce(timerName, func, wait, immediate) {
 	return function() {
 		const context = this;
 		const args = arguments;
 		const later = function() {
-			timeout = null;
+			timeout[timerName] = null;
 			if (!immediate) func.apply(context, args);
 		};
-		const callNow = immediate && !timeout;
-		clearTimeout(timeout);
-		timeout = setTimeout(later, wait);
+		const callNow = immediate && !timeout[timerName];
+		clearTimeout(timeout[timerName]);
+		timeout[timerName] = setTimeout(later, wait);
 		if (callNow) func.apply(context, args);
 	};
 }

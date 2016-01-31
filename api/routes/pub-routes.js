@@ -304,3 +304,29 @@ app.post('/updatePubSettings', function(req, res) {
 
 	});
 });
+
+app.post('/updatePubData', function(req, res) {
+	Pub.findOne({slug: req.body.slug}, function(err, pub){
+
+		if (err) {
+			console.log(err);
+			return res.status(500).json(err);
+		}
+
+		if (!req.user || pub.collaborators.canEdit.indexOf(req.user._id) === -1) {
+			return res.status(403).json('Not authorized to edit this pub');
+		}
+
+		for (const key in req.body.newPubData) {
+			pub[key] = req.body.newPubData[key];
+		}
+		// pub.settings[settingKey] = req.body.newSettings[settingKey];
+
+		pub.save(function(err, result){
+			if (err) { return res.status(500).json(err);  }
+
+			return res.status(201).json(req.body.newPubData);
+		});
+
+	});
+});

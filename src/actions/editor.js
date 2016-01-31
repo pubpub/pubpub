@@ -31,6 +31,10 @@ export const UPDATE_PUB_SETTINGS_LOAD = 'editor/UPDATE_PUB_SETTINGS_LOAD';
 export const UPDATE_PUB_SETTINGS_SUCCESS = 'editor/UPDATE_PUB_SETTINGS_SUCCESS';
 export const UPDATE_PUB_SETTINGS_FAIL = 'editor/UPDATE_PUB_SETTINGS_FAIL';
 
+export const UPDATE_PUB_BACKEND_DATA_LOAD = 'editor/UPDATE_PUB_BACKEND_DATA_LOAD';
+export const UPDATE_PUB_BACKEND_DATA_SUCCESS = 'editor/UPDATE_PUB_BACKEND_DATA_SUCCESS';
+export const UPDATE_PUB_BACKEND_DATA_FAIL = 'editor/UPDATE_PUB_BACKEND_DATA_FAIL';
+
 export const PUBLISH_LOAD = 'editor/PUBLISH_LOAD';
 export const PUBLISH_SUCCESS = 'editor/PUBLISH_SUCCESS';
 export const PUBLISH_FAIL = 'editor/PUBLISH_FAIL';
@@ -129,6 +133,16 @@ export function saveSettingsPubPub(slug, newSettings) {
 		promise: (client) => client.post('/updatePubSettings', {data: {
 			slug: slug,
 			newSettings: newSettings
+		}}) 
+	};
+}
+
+export function updatePubBackendData(slug, newPubData) {
+	return {
+		types: [UPDATE_PUB_BACKEND_DATA_LOAD, UPDATE_PUB_BACKEND_DATA_SUCCESS, UPDATE_PUB_BACKEND_DATA_FAIL],
+		promise: (client) => client.post('/updatePubData', {data: {
+			slug: slug,
+			newPubData: newPubData
 		}}) 
 	};
 }

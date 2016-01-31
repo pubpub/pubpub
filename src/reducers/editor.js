@@ -22,6 +22,11 @@ import {
 	UPDATE_PUB_SETTINGS_LOAD,
 	UPDATE_PUB_SETTINGS_SUCCESS,
 	UPDATE_PUB_SETTINGS_FAIL,
+
+	UPDATE_PUB_BACKEND_DATA_LOAD,
+	UPDATE_PUB_BACKEND_DATA_SUCCESS,
+	UPDATE_PUB_BACKEND_DATA_FAIL,
+
 	PUBLISH_LOAD,
 	PUBLISH_SUCCESS,
 	PUBLISH_FAIL,
@@ -342,6 +347,15 @@ function addCommentFail(state, error, activeSaveID) {
 	});
 }
 
+function updateBackendSuccess(state, result) {
+	return state.merge({
+		pubEditData: {
+			...state.get('pubEditData').toJS(),
+			...result
+		}
+	});
+}
+
 /*--------*/
 // Bind actions to specific reducing functions.
 /*--------*/
@@ -381,6 +395,13 @@ export default function editorReducer(state = defaultState, action) {
 	case UPDATE_PUB_SETTINGS_SUCCESS:
 		return state;
 	case UPDATE_PUB_SETTINGS_FAIL:
+		return state;
+
+	case UPDATE_PUB_BACKEND_DATA_LOAD:
+		return state;
+	case UPDATE_PUB_BACKEND_DATA_SUCCESS:
+		return updateBackendSuccess(state, action.result);
+	case UPDATE_PUB_BACKEND_DATA_FAIL:
 		return state;
 
 	case ADD_SELECTION:
