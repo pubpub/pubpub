@@ -21,7 +21,13 @@ export default combineReducers({
 	router: routerStateReducer,
 	form: formReducer.normalize({
 		pubCreateForm: {
-			slug: value => value && value.replace(/[^\w\s-]/gi, '').replace(/ /g, '_'),
+			slug: (value, previousValue, allValues, previousAllValues) => {
+				let newVal = value;
+				if (newVal === undefined || newVal === previousAllValues.title.replace(/[^\w\s-]/gi, '').replace(/ /g, '_').toLowerCase()) {
+					newVal = allValues.title;
+				}
+				return newVal && newVal.replace && newVal.replace(/[^\w\s-]/gi, '').replace(/ /g, '_').toLowerCase();
+			}
 		},
 		journalCreateForm: {
 			subdomain: value => value && value.replace(/[^\w\s-]/gi, '').replace(/ /g, '_').toLowerCase(),
