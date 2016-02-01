@@ -435,6 +435,7 @@ styles = {
 		float: 'left',
 		overflow: 'hidden',
 		overflowY: 'scroll',
+		WebkitOverflowScrolling: 'touch',
 		boxShadow: '0px 2px 4px 0px rgba(0,0,0,0.4)',
 		zIndex: 65,
 		// Mobile

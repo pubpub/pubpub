@@ -347,6 +347,7 @@ function addCommentFail(state, error, activeSaveID) {
 	});
 }
 
+// TODO: It seems like this function, if fired after the page nav has occurred, will trigger a state.get is not a function error.
 function updateBackendSuccess(state, result) {
 	return state.merge({
 		pubEditData: {
