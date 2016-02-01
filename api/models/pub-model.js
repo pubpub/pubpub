@@ -218,16 +218,20 @@ pubSchema.statics.getPubEdit = function (slug, readerID, readerGroups, callback)
 		const canReadStrings = pub.collaborators.canRead.toString().split(',');
 		const canEditStrings = pub.collaborators.canEdit.toString().split(',');
 
-	
-		if (pub.collaborators.canEdit.indexOf(readerID) === -1 && 
-			pub.collaborators.canRead.indexOf(readerID) === -1 && 
+		console.log(1, canEditStrings.indexOf(readerID.toString()) === -1);
+		console.log(2, canReadStrings.indexOf(readerID.toString()) === -1);
+		console.log(3, _.intersection(readerGroupsStrings, canEditStrings).length === 0);
+		console.log(4, _.intersection(readerGroupsStrings, canReadStrings).length === 0);
+		
+		if (canEditStrings.indexOf(readerID.toString()) === -1 && 
+			canReadStrings.indexOf(readerID.toString()) === -1 && 
 			_.intersection(readerGroupsStrings, canEditStrings).length === 0 && 
 			_.intersection(readerGroupsStrings, canReadStrings).length === 0) {
 			return callback(null, 'Not Authorized', true);
 		}
 
 		let isReader = true;
-		if (pub.collaborators.canEdit.indexOf(readerID) > -1 || _.intersection(readerGroupsStrings, canEditStrings).length) {
+		if (canEditStrings.indexOf(readerID.toString()) > -1 || _.intersection(readerGroupsStrings, canEditStrings).length) {
 			isReader = false;
 		}
 
