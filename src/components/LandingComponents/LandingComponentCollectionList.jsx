@@ -27,9 +27,11 @@ const LandingComponentCollectionList = React.createClass({
 			collectionObject[collections[index].slug] = collections[index];
 		}
 
-		const newCollections = this.props.selectCollections.map((collectionName)=>{
-			return collectionObject[collectionName];
-		});
+		const newCollections = this.props.selectCollections
+			? this.props.selectCollections.map((collectionName)=>{
+				return collectionObject[collectionName];
+			})
+			: [];
 
 		const maxSize = 3;
 		this.setState({collections: newCollections.slice(0, maxSize)});
