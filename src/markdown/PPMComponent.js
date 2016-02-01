@@ -126,6 +126,7 @@ const PPMComponent = React.createClass({
 			if (props['data-language']) {
 				return <Tag {...props} className={'codeBlock'} dangerouslySetInnerHTML={{__html: window.hljs.highlight(props['data-language'], children[0]).value}} />
 			};
+			props.className = 'codeBlock';
 			break;
 
 		case 'math':
