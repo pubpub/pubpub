@@ -2,6 +2,8 @@ var mongoose  = require('mongoose');
 var Schema    =  mongoose.Schema;
 var ObjectId  = Schema.Types.ObjectId;
 var Discussion = require('../models').Discussion;
+var _         = require('underscore');
+
 import * as jsdiff from 'diff';
 
 var pubSchema = new Schema({
@@ -23,7 +25,6 @@ var pubSchema = new Schema({
 	style: { type: Schema.Types.Mixed },
 	lastUpdated: { type: Date },
 	status: { type: String },
-	pHashes: { type: Schema.Types.Mixed }, // Used to track location of comments
 	// --------------
 	// --------------
 
@@ -65,7 +66,6 @@ var pubSchema = new Schema({
 		references: [{ type: ObjectId, ref: 'Reference'}], //Raw References
 		style: { type: Schema.Types.Mixed },
 		status: { type: String },
-		pHashes: { type: Schema.Types.Mixed }, // Used to track location of comments
 	}],
 
 	followers: [{ type: ObjectId, ref: 'User'}],
@@ -180,11 +180,11 @@ pubSchema.statics.getPub = function (slug, readerID, journalID, callback) {
 			if (populatedPub.status === 'Unpublished') { return callback(null, {message: 'Pub not yet published', slug: slug}); }
 
 			// Check if the pub is private, and if so, check readers/authors list
-			if (populatedPub.settings.pubPrivacy === 'private') {
-				if (populatedPub.collaborators.canEdit.indexOf(readerID) === -1 && populatedPub.collaborators.canRead.indexOf(readerID) === -1) {
-					return callback(null, {message: 'Private Pub', slug: slug});
-				}
-			}
+			// if (populatedPub.settings.pubPrivacy === 'private') {
+			// 	if (populatedPub.collaborators.canEdit.indexOf(readerID) === -1 && populatedPub.collaborators.canRead.indexOf(readerID) === -1) {
+			// 		return callback(null, {message: 'Private Pub', slug: slug});
+			// 	}
+			// }
 
 			const outputPub = populatedPub.toObject();
 			if (populatedPub.collaborators.canEdit.indexOf(readerID) > -1) {
@@ -193,6 +193,7 @@ pubSchema.statics.getPub = function (slug, readerID, journalID, callback) {
 
 			outputPub.discussions = Discussion.appendUserYayNayFlag(outputPub.discussions, readerID);
 			outputPub.discussions = Discussion.calculateYayNayScore(outputPub.discussions);
+			outputPub.discussions = Discussion.sortDiscussions(outputPub.discussions);
 			outputPub.discussions = Discussion.nestChildren(outputPub.discussions);
 			// console.log(outputPub.isAuthor);
 			return callback(null, outputPub);
@@ -201,7 +202,7 @@ pubSchema.statics.getPub = function (slug, readerID, journalID, callback) {
 	})
 };
 
-pubSchema.statics.getPubEdit = function (slug, readerID, callback) {
+pubSchema.statics.getPubEdit = function (slug, readerID, readerGroups, callback) {
 	// Get the pub and check to make sure user is authorized to edit
 	this.findOne({slug: slug})
 	.populate({ path: 'discussions', model: 'Discussion' })
@@ -211,12 +212,20 @@ pubSchema.statics.getPubEdit = function (slug, readerID, callback) {
 
 		if (!pub) { return callback(null, 'Pub Not Found', true); }
 
-		if (pub.collaborators.canEdit.indexOf(readerID) === -1 && pub.collaborators.canRead.indexOf(readerID) === -1) {
+		const readerGroupsStrings = readerGroups.toString().split(',');
+		const canReadStrings = pub.collaborators.canRead.toString().split(',');
+		const canEditStrings = pub.collaborators.canEdit.toString().split(',');
+
+	
+		if (pub.collaborators.canEdit.indexOf(readerID) === -1 && 
+			pub.collaborators.canRead.indexOf(readerID) === -1 && 
+			_.intersection(readerGroupsStrings, canEditStrings).length === 0 && 
+			_.intersection(readerGroupsStrings, canReadStrings).length === 0) {
 			return callback(null, 'Not Authorized', true);
 		}
 
 		let isReader = true;
-		if (pub.collaborators.canEdit.indexOf(readerID) > -1) {
+		if (pub.collaborators.canEdit.indexOf(readerID) > -1 || _.intersection(readerGroupsStrings, canEditStrings).length) {
 			isReader = false;
 		}
 
@@ -230,6 +239,7 @@ pubSchema.statics.getPubEdit = function (slug, readerID, callback) {
 			{ path: 'discussions.author', select: '_id username name firstName lastName thumbnail', model: 'User'},
 			{ path: 'discussions.selections', model: 'Highlight'},
 			{ path: 'editorComments.author', select: '_id username name firstName lastName thumbnail', model: 'User'},
+			{ path: 'editorComments.selections', model: 'Highlight'},
 		];
 
 		this.populate(pub, options, (err, populatedPub)=> {
@@ -239,10 +249,12 @@ pubSchema.statics.getPubEdit = function (slug, readerID, callback) {
 
 			outputPub.discussions = Discussion.appendUserYayNayFlag(outputPub.discussions, readerID);
 			outputPub.discussions = Discussion.calculateYayNayScore(outputPub.discussions);
+			outputPub.discussions = Discussion.sortDiscussions(outputPub.discussions);
 			outputPub.discussions = Discussion.nestChildren(outputPub.discussions);
 
 			outputPub.editorComments = Discussion.appendUserYayNayFlag(outputPub.editorComments, readerID);
 			outputPub.editorComments = Discussion.calculateYayNayScore(outputPub.editorComments);
+			outputPub.editorComments = Discussion.sortDiscussions(outputPub.editorComments);
 			outputPub.editorComments = Discussion.nestChildren(outputPub.editorComments);
 
 			return callback(null, outputPub);

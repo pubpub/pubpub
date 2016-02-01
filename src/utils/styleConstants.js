@@ -26,6 +26,13 @@ export const globalStyles = {
 		opacity: 1,
 		transition: '.3s linear opacity .25s',
 	},
+	invisible: {
+		opacity: 0,
+		pointerEvents: 'none',
+	},
+	hidden: {
+		display: 'none',
+	},
 	button: {
 		color: '#666',
 		fontSize: '20px',
@@ -41,6 +48,11 @@ export const globalStyles = {
 	},
 	hiddenUntilLoad: {
 		// transition: '.3s linear opacity .25s',
+	},
+	ellipsis: {
+		whiteSpace: 'nowrap',
+		overflow: 'hidden',
+		textOverflow: 'ellipsis',
 	},
 	emptyBlock: {
 		backgroundColor: '#f6f6f6',

@@ -19,7 +19,7 @@ const EditorBottomNav = React.createClass({
 		toggleFormattingHandler: PropTypes.func,
 		activeFocus: PropTypes.string,
 		focusEditorHandler: PropTypes.func,
-		travisTOC: PropTypes.array,
+		tocH1: PropTypes.array,
 		insertFormattingHandler: PropTypes.func,
 	},
 
@@ -33,11 +33,11 @@ const EditorBottomNav = React.createClass({
 		if (this.props.viewMode !== nextProps.viewMode || this.props.loadStatus !== nextProps.loadStatus || this.props.darkMode !== nextProps.darkMode || this.props.activeFocus !== nextProps.activeFocus || this.props.showBottomLeftMenu !== nextProps.showBottomLeftMenu || this.props.showBottomRightMenu !== nextProps.showBottomRightMenu ) {
 			return true;
 		}
-		if (this.props.travisTOC.length !== nextProps.travisTOC.length) {
+		if (this.props.tocH1.length !== nextProps.tocH1.length) {
 			return true;
 		}
-		for (let index = nextProps.travisTOC.length; index--;) {
-			if (this.props.travisTOC[index].title !== nextProps.travisTOC[index].title) {
+		for (let index = nextProps.tocH1.length; index--;) {
+			if (this.props.tocH1[index].title !== nextProps.tocH1[index].title) {
 				return true;
 			}
 		}
@@ -52,7 +52,7 @@ const EditorBottomNav = React.createClass({
 				return true;
 			}
 		}
-		for (let index = nextProps.travisTOC.length; index--;) {
+		for (let index = nextProps.tocH1.length; index--;) {
 			if (Radium.getState(this.state, 'blNav' + index, ':hover') !== Radium.getState(nextState, 'blNav' + index, ':hover')) {
 				return true;
 			}
@@ -74,7 +74,7 @@ const EditorBottomNav = React.createClass({
 
 	render: function() {
 		return (
-			<div style={[styles.common.editorBottomNav, styles[this.props.viewMode].editorBottomNav, globalStyles.hiddenUntilLoad, globalStyles[this.props.loadStatus]]}>
+			<div style={[styles.common.editorBottomNav, styles[this.props.viewMode].editorBottomNav, globalStyles.hiddenUntilLoad, globalStyles[this.props.loadStatus], this.props.viewMode === 'read' && globalStyles.invisible]}>
 
 				{/* Background header bar that's used in livePreview mode. Provides opaque background. */}
 				<div style={[styles.common.bottomNavBackground, styles[this.props.viewMode].bottomNavBackground, this.props.darkMode && styles.common.bottomNavBackgroundDark]}></div>
@@ -99,7 +99,7 @@ const EditorBottomNav = React.createClass({
 					<ul style={[styles.common.bottomNavList, styles[this.props.viewMode].bottomNavList, this.props.showBottomLeftMenu && styles[this.props.viewMode].listActive]}>
 						{(()=>{
 							// const options = ['Introduction', 'Prior Art', 'Resources', 'Methods', 'A New Approach', 'Data Analysis', 'Results', 'Conclusion'];
-							const options = this.props.travisTOC;
+							const options = this.props.tocH1;
 							return options.map((item, index)=>{
 								return <li key={'blNav' + index} onClick={this.props.focusEditorHandler(item.title, index)} style={[styles.common.bottomNavListItem, styles[this.props.viewMode].bottomNavListItem, this.animateListItemStyle('left', this.props.loadStatus, index), this.props.showBottomLeftMenu && styles[this.props.viewMode].listItemActive, this.props.activeFocus === item.title && styles.common.listItemActiveFocus]}>{item.title}</li>;
 							});
@@ -278,6 +278,20 @@ styles = {
 		},
 		bottomNavBackground: {
 			opacity: 0,
+		},
+	},
+	read: {
+		bottomNavRight: {
+			opacity: 0,
+			pointerEvents: 'none',
+		},
+		bottomNavDividerLarge: {
+			opacity: 0,
+			pointerEvents: 'none',
+		},
+		bottomNavBackground: {
+			opacity: 0,
+			pointerEvents: 'none',
 		},
 	},
 

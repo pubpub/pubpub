@@ -14,6 +14,8 @@ import {License} from '../';
 import {globalMessages} from '../../utils/globalMessages';
 import {FormattedMessage} from 'react-intl';
 
+import PPMComponent from '../../markdown/PPMComponent';
+
 let styles = {};
 
 const PubBody = React.createClass({
@@ -23,22 +25,31 @@ const PubBody = React.createClass({
 		abstract: PropTypes.string,
 		authorsNote: PropTypes.string,
 		htmlTree: PropTypes.array,
+		markdown: PropTypes.string,
 		authors: PropTypes.array,
 		addSelectionHandler: PropTypes.func,
 		style: PropTypes.object,
 		showPubHighlights: PropTypes.bool,
+		showPubHighlightsComments: PropTypes.bool,
 		isFeatured: PropTypes.bool,
 		errorView: PropTypes.bool,
 
+		assetsObject: PropTypes.object,
+		referencesObject: PropTypes.object,
+		selectionsArray: PropTypes.array,
+
 		references: PropTypes.array,
+
 		minFont: PropTypes.number,
 		firstPublishedDate: PropTypes.string,
-		lastPublishedDate: PropTypes.string
+		lastPublishedDate: PropTypes.string,
+
 	},
 	getDefaultProps: function() {
 		return {
 			htmlTree: [],
 			authors: [],
+			text: '',
 			style: {
 				type: 'science',
 				googleFontURL: undefined,
@@ -113,8 +124,15 @@ const PubBody = React.createClass({
 				backgroundColor: this.props.showPubHighlights ? 'rgba(195, 245, 185, 0.6)' : 'rgba(195, 245, 185, 0.0)',
 				cursor: this.props.showPubHighlights ? 'pointer' : 'text',
 			},
+			'.selection-editor': {
+				backgroundColor: this.props.showPubHighlightsComments ? 'rgba(195, 185, 245, 0.6)' : 'rgba(195, 245, 185, 0.0)',
+				cursor: this.props.showPubHighlightsComments ? 'pointer' : 'text',
+			},
 			'.selection-active': {
 				backgroundColor: 'rgba(78, 164, 61, 0.6)',
+			},
+			'.selection-editor.selection-active': {
+				backgroundColor: 'rgba(78, 61, 164, 0.6)',
 			},
 		});
 	},
@@ -128,7 +146,7 @@ const PubBody = React.createClass({
 				<Style rules={this.compileStyleRules()}/>
 
 				<div id="pubContent" style={[styles.contentContainer, globalStyles[this.props.status]]} >
-					
+
 					{!this.props.isFeatured && !this.props.errorView
 						? <div style={styles.submittedNotification}>This Pub has been submitted to - but is not yet featured in - this journal.</div>
 						: null
@@ -170,7 +188,12 @@ const PubBody = React.createClass({
 
 					<div id="pubBodyContent">
 						{/* For Highlights to work, no divs can be placed before htmlTree */}
-						{this.props.htmlTree}
+						{/* this.props.htmlTree */}
+						<PPMComponent 
+							assets={this.props.assetsObject} 
+							references={this.props.referencesObject} 
+							selections={this.props.selectionsArray} 
+							markdown={this.props.markdown} />
 
 						{this.props.addSelectionHandler
 							? <PubSelectionPopup addSelectionHandler={this.props.addSelectionHandler}/>
@@ -202,8 +225,8 @@ const PubBody = React.createClass({
 						? <License />
 						: null
 					}
-					
-					
+
+
 				</div>
 
 			</div>

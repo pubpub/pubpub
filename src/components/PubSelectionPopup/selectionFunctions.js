@@ -1,13 +1,13 @@
-export function isDescendantOfP(child) {
-	let node = child;
-	while (node !== null) {
-		if (node.className === 'p-block') {
-			return true;
-		}
-		node = node.parentNode;
-	}
-	return false;
-}
+// export function isDescendantOfP(child) {
+// 	let node = child;
+// 	while (node !== null) {
+// 		if (node.className === 'p-block') {
+// 			return true;
+// 		}
+// 		node = node.parentNode;
+// 	}
+// 	return false;
+// }
 
 export function getAncestorText(child) {
 	let node = child;
@@ -27,4 +27,15 @@ export function clearTempHighlights() {
 			temps[index].classList.remove('tempHighlight');
 		}	
 	}
+}
+
+export function isDescendantOfHash(child) {
+	let node = child;
+	while (node !== null) {
+		if (node.dataset && node.dataset.hash) {
+			return true;
+		}
+		node = node.parentNode;
+	}
+	return false;
 }

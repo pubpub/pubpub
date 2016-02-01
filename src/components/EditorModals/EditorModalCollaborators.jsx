@@ -49,11 +49,18 @@ const EditorModalCollaborators = React.createClass({
 		});
 	},
 
-	handleAddNew: function(user) {
+	handleAddNew: function(result) {
 		return () => {
 			const newCollaboratorsObject = this.props.collaboratorData;
-			newCollaboratorsObject[user.username] = user;
-			newCollaboratorsObject[user.username].permission = 'read';
+			if (result.username) {
+				newCollaboratorsObject[result.username] = result;
+				newCollaboratorsObject[result.username].permission = 'read';
+			} else {
+				newCollaboratorsObject[result.groupSlug] = result;
+				newCollaboratorsObject[result.groupSlug].permission = 'read';
+			}
+			
+			// console.log(newCollaboratorsObject);
 			this.props.updateCollaborators(newCollaboratorsObject, null);
 		};
 	},
@@ -64,21 +71,34 @@ const EditorModalCollaborators = React.createClass({
 			<div style={styles.results}>
 				{
 
-					results.map((user, index)=>{
-						if (user.username in this.props.collaboratorData) {
+					results.map((result, index)=>{
+						if (result.username in this.props.collaboratorData) {
 							return null;
 						}
+						if (result.groupSlug in this.props.collaboratorData) {
+							return null;
+						}
+
 						totalCount++;
-						return (<div key={'collabSearchUser-' + index} style={styles.result}>
-							
-							<div style={styles.imageWrapper}>
-								<img style={styles.image} src={user.thumbnail} />
+						return (result.username
+							? <div key={'collabSearchUser-' + index} style={styles.result}>
+								
+								<div style={styles.imageWrapper}>
+									<img style={styles.image} src={result.thumbnail} />
+								</div>
+								<div style={styles.name}>{result.name}</div>
+								<div style={styles.action} key={'collabSearchAdd-' + index} onClick={this.handleAddNew(result)}>
+									<FormattedMessage {...globalMessages.add} />
+								</div>
 							</div>
-							<div style={styles.name}>{user.name}</div>
-							<div style={styles.action} key={'collabSearchAdd-' + index} onClick={this.handleAddNew(user)}>
-								<FormattedMessage {...globalMessages.add} />
+							: <div key={'collabSearchUser-' + index} style={styles.result}>
+								<div style={styles.groupName}>{result.groupName}</div>
+								<div style={styles.groupSlug}>{result.groupSlug}</div>
+								<div style={styles.action} key={'collabSearchAdd-' + index} onClick={this.handleAddNew(result)}>
+									<FormattedMessage {...globalMessages.add} />
+								</div>
 							</div>
-						</div>);	
+						);	
 					})
 				}
 				{results.length === 0 || totalCount === 0
@@ -117,7 +137,7 @@ const EditorModalCollaborators = React.createClass({
 				<div style={[baseStyles.rightCornerSearch, styles.mainContent[this.state.showInviteOptions]]}>
 					<Autocomplete 
 						autocompleteKey={'collabAutocomplete'} 
-						route={'autocompleteUsers'} 
+						route={'autocompleteUsersAndGroups'} 
 						placeholder={this.props.intl.formatMessage(messages.addNewCollaborator)}
 						textAlign={'right'}
 						resultRenderFunction={this.renderCollaboratorsSearchResults}/>
@@ -160,22 +180,22 @@ const EditorModalCollaborators = React.createClass({
 							return (
 								<div key={'collaborator-' + index} style={styles.rowContainer}>
 
-									<div style={[styles.imageColumn, styles.columnHeader]}> <img style={styles.userImage} src={collaborator.thumbnail} /> </div>
-									<div style={[styles.nameColumn]}>{collaborator.name}</div>
+									<div style={[styles.imageColumn, styles.columnHeader]}> <img style={styles.userImage} src={collaborator.thumbnail ? collaborator.thumbnail : '/thumbnails/group.png'} /> </div>
+									<div style={[styles.nameColumn]}>{collaborator.name ? collaborator.name : collaborator.groupName}</div>
 									<div style={[styles.permissionsColumn]}>
-										<span key={'collaboratorPermissionsEdit-' + index} style={[styles.permission, collaborator.permission === 'edit' && styles.permissionActive]} onClick={this.setPermission('edit', collaborator.username)}>
+										<span key={'collaboratorPermissionsEdit-' + index} style={[styles.permission, collaborator.permission === 'edit' && styles.permissionActive]} onClick={this.setPermission('edit', collaborator.username ? collaborator.username : collaborator.groupSlug)}>
 											<FormattedMessage
 												id="editor.canEdit"
 												defaultMessage="can edit"/>
 										</span>
 										<span style={[styles.permissionSeparator, collaborator.admin && styles.isAdminHidden]}>|</span>
-										<span key={'collaboratorPermissionsRead-' + index} style={[styles.permission, collaborator.permission === 'read' && styles.permissionActive, collaborator.admin && styles.isAdminHidden]} onClick={this.setPermission('read', collaborator.username)}>
+										<span key={'collaboratorPermissionsRead-' + index} style={[styles.permission, collaborator.permission === 'read' && styles.permissionActive, collaborator.admin && styles.isAdminHidden]} onClick={this.setPermission('read', collaborator.username ? collaborator.username : collaborator.groupSlug)}>
 											<FormattedMessage
 												id="editor.canRead"
 												defaultMessage="can only read"/>
 										</span>
 									</div>
-									<div key={'collaboratorRemove-' + index} style={[styles.optionColumn, styles.optionColumnClickable, collaborator.admin && styles.isAdminHidden]} onClick={this.removeUser(collaborator.username)}>
+									<div key={'collaboratorRemove-' + index} style={[styles.optionColumn, styles.optionColumnClickable, collaborator.admin && styles.isAdminHidden]} onClick={this.removeUser(collaborator.username ? collaborator.username : collaborator.groupSlug)}>
 										<FormattedMessage {...globalMessages.remove} />
 									</div>
 
@@ -335,6 +355,23 @@ styles = {
 		float: 'left',
 		width: '65%',
 		margin: '0px 5%',
+		whiteSpace: 'nowrap',
+		overflow: 'hidden',
+		textOverflow: 'ellipsis',
+	},
+	groupName: {
+		float: 'left',
+		width: '45%',
+		margin: '0px 2.5%',
+		whiteSpace: 'nowrap',
+		overflow: 'hidden',
+		textOverflow: 'ellipsis',
+	},
+	groupSlug: {
+		float: 'left',
+		width: '25%',
+		margin: '0px 15px',
+		fontSize: '12px',
 		whiteSpace: 'nowrap',
 		overflow: 'hidden',
 		textOverflow: 'ellipsis',

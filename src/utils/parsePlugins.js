@@ -43,6 +43,19 @@ export function convertImmutableListToObject(array, shouldCount = false) {
 	return newObject;
 }
 
+export function convertListToObject(array, shouldCount = false) {
+	const newObject = {};
+	if (!array) { return newObject; }
+
+	array.map((item, index)=> {
+		newObject[item.refName] = item;
+		if (shouldCount) {
+			newObject[item.refName].count = index;
+		}
+	});
+	return newObject;
+}
+
 
 /*
 export function getAssetInformation(propDict, assets, assetType) {

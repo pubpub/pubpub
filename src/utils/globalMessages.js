@@ -73,6 +73,10 @@ export const globalMessages = defineMessages({
 		id: 'global.discussion',
 		defaultMessage: 'Discussion',
 	},
+	PublicDiscussion: {
+		id: 'global.PublicDiscussion',
+		defaultMessage: 'Public Discussion',
+	},
 	reviews: {
 		id: 'global.reviews',
 		defaultMessage: 'Reviews',
@@ -164,6 +168,18 @@ export const globalMessages = defineMessages({
 	Title: {
 		id: 'global.Title',
 		defaultMessage: 'Title',
+	},
+	GroupName: {
+		id: 'global.GroupName',
+		defaultMessage: 'Group Name',
+	},
+	GroupUrl: {
+		id: 'global.GroupUrl',
+		defaultMessage: 'Group Url',
+	},
+	Members: {
+		id: 'global.Members',
+		defaultMessage: 'Members',
 	},
 	clickOrDrag: {
 		id: 'global.clickOrDrag',

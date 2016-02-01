@@ -148,7 +148,13 @@ const AppBody = React.createClass({
 
 				<div className="header-bar" style={[styles.headerBar, headerStyle.headerBar]}>
 					
-					<Link to={`/`}><div key="headerLogo" style={[styles.headerText, styles.headerLogo, headerStyle.headerText]}>{this.props.journalData.get('baseSubdomain') !== null ? this.props.journalData.getIn(['journalData', 'journalName']) : 'PubPub'}</div></Link>
+					<div key="headerLogo" style={[styles.headerLogo]}>
+						<Link to={'/'} style={globalStyles.link}>
+							<div style={[styles.headerText, styles.logoLink, headerStyle.headerText]}>
+								{this.props.journalData.get('baseSubdomain') !== null ? this.props.journalData.getIn(['journalData', 'journalName']) : 'PubPub'}
+							</div>
+						</Link>
+					</div>
 					
 					<div style={[styles.headerNavContainer]} >
 						<div style={styles.headerMenu}>
@@ -174,7 +180,8 @@ const AppBody = React.createClass({
 								
 								isJournalAdmin={this.props.journalData.getIn(['journalData', 'isAdmin'])}
 								journalSubdomain={this.props.journalData.get('baseSubdomain')}
-								slug={this.props.slug}/>
+								slug={this.props.slug}
+								path={this.props.path}/>
 						</div>
 
 						<div style={styles.headerNav}>
@@ -220,7 +227,7 @@ styles = {
 		height: globalStyles.headerHeight,
 		backgroundColor: globalStyles.headerBackground,
 		margin: 0,
-		zIndex: 5,
+		zIndex: 55,
 		position: 'fixed',
 
 		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
@@ -248,7 +255,7 @@ styles = {
 
 	headerLogo: {
 		// margin: '0 calc(50% - 105px) 0 0',
-		padding: '0px 15px',
+		padding: '0px',
 		fontSize: '1em',
 		float: 'left',
 		// width: '75px',
@@ -258,12 +265,18 @@ styles = {
 		textOverflow: 'ellipsis',
 		// backgroundColor: 'red',
 		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
-			fontSize: '1.5em',
 			margin: '0',
-			padding: '0px 20px 0px 10px',
-			width: 'calc(100% - 90px - 30px)',
+			width: 'calc(100% - 90px)',
 		},
 		
+	},
+
+	logoLink: {
+		padding: '0px 15px',
+		display: 'inline-block',
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+			padding: '0px 20px 0px 10px',
+		},
 	},
 
 	headerNavContainer: {
@@ -274,7 +287,7 @@ styles = {
 		float: 'left',
 		// width: '50%',
 		// width: 'calc(100% - 105px)',
-		width: 'calc(50% - 30px)',
+		width: 'calc(50%)',
 		textAlign: 'right',
 		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
 			width: '90px',

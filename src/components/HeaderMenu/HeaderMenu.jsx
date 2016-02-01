@@ -32,6 +32,7 @@ const HeaderMenu = React.createClass({
 		journalSubdomain: PropTypes.string,
 
 		slug: PropTypes.string,
+		path: PropTypes.string,
 	},
 
 	headerTextColorStyle: function() {
@@ -60,7 +61,7 @@ const HeaderMenu = React.createClass({
 
 	render: function() {
 		const isLoggedIn = this.props.loginData.get('loggedIn');
-		const isPub = this.props.slug !== undefined;
+		const isPub = this.props.path.indexOf('/pub') > -1 && this.props.path.indexOf('/edit') === -1;
 		return (
 			<div styles={styles.right}>
 

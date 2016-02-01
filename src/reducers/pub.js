@@ -368,7 +368,6 @@ export default function readerReducer(state = defaultState, action) {
 	case DISCUSSION_VOTE:
 		return discussionVote(state, action.voteType, action.discussionID, action.userYay, action.userNay);
 	case DISCUSSION_VOTE_SUCCESS:
-		// return discussionVoteSuccess(state, action.result);
 		return state;
 	case DISCUSSION_VOTE_FAIL:
 		return state;

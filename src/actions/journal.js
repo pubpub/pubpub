@@ -34,9 +34,11 @@ export const SUBMIT_PUB_TO_JOURNAL = 'journal/SUBMIT_PUB_TO_JOURNAL';
 export const SUBMIT_PUB_TO_JOURNAL_SUCCESS = 'journal/SUBMIT_PUB_TO_JOURNAL_SUCCESS';
 export const SUBMIT_PUB_TO_JOURNAL_FAIL = 'journal/SUBMIT_PUB_TO_JOURNAL_FAIL';
 
-export const GET_RANDOM_SLUG_LOAD = 'pub/GET_RANDOM_SLUG_LOAD';
-export const GET_RANDOM_SLUG_SUCCESS = 'pub/GET_RANDOM_SLUG_SUCCESS';
-export const GET_RANDOM_SLUG_FAIL = 'pub/GET_RANDOM_SLUG_FAIL';
+export const GET_RANDOM_SLUG_LOAD = 'journal/GET_RANDOM_SLUG_LOAD';
+export const GET_RANDOM_SLUG_SUCCESS = 'journal/GET_RANDOM_SLUG_SUCCESS';
+export const GET_RANDOM_SLUG_FAIL = 'journal/GET_RANDOM_SLUG_FAIL';
+
+export const CLEAR_COLLECTION_REDIRECT = 'journal/CLEAR_COLLECTION_REDIRECT';
 
 /*--------*/
 // Define Action creators
@@ -106,4 +108,10 @@ export function getRandomSlug(journalID, analyticsData) {
 		types: [GET_RANDOM_SLUG_LOAD, GET_RANDOM_SLUG_SUCCESS, GET_RANDOM_SLUG_FAIL],
 		promise: (client) => client.get('/getRandomSlug', {params: {journalID: journalID}})
 	};
+}
+
+export function clearCollectionRedirect() {
+	return {
+		type: CLEAR_COLLECTION_REDIRECT,
+	};	
 }

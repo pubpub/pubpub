@@ -29,8 +29,9 @@ const DropdownProp = React.createClass({
 	},
 	render: function() {
 		const choices = this.props.choices || [];
+		// note: Key is needed here, because components may not be cleanly re-rendered between refreshes
 		return (
-			<SimpleSelect style={styles.select} onValueChange={this.onValueChange} ref="select" options={choices} defaultValue={this.props.selectedValue}/>
+			<SimpleSelect key={this.props.selectedValue} style={styles.select} onValueChange={this.onValueChange} ref="select" options={choices} defaultValue={this.props.selectedValue}/>
 		);
 	}
 });

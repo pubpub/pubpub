@@ -4,9 +4,8 @@ import {globalStyles} from '../../utils/styleConstants';
 
 import {FormattedMessage} from 'react-intl';
 
-import {isDescendantOfP, getAncestorText} from './selectionFunctions';
-import SHA1 from 'crypto-js/sha1';
-import encHex from 'crypto-js/enc-hex';
+import {isDescendantOfHash, getAncestorText} from './selectionFunctions';
+
 let Marklib = undefined;
 let Rangy = undefined;
 
@@ -41,27 +40,17 @@ const PubSelectionPopup = React.createClass({
 	},
 
 	onMouseUp: function(event) {
-		// Right now, we only trigger the selectionPopup when the selection is
-		// contained to a single P element. Support for headers, multiple paragraphs, and UL/OL
-		// creates many many edge cases for storing and re-highlighting (especially as new 
-		// versions are published). Support for lists could work by wrapping them in a P tag. 
-		// Or, perhaps are more broad solution can be eventually built. For now, I think the bulk of
-		// functionality is met by only supporting P-tag highlights. 
-		// If we aren't supporting the current selection, we make no changes to the range. We could 
-		// automatically snap to a supported section within the current range if we wanted to specifically 
-		// push behavior, but maybe that's overkill. 
-		// We could also start storing the type of element with the selection range. This would allow us to populate across
-		// element types and across versions using the same technique as we do for P tags (replacing the nth-child index number
-		// based on some hash)
+		// We only trigger the selectionPopup for elements that have a data-hash'd ancestor.
 		let clickX;
 		let clickY;
-
+		const element = document.getElementsByClassName('pubScrollContainer')[0];
+		const offsetTop = element.parentNode.style.top ? parseInt(element.parentNode.style.top, 10) : 0;
 		if (event.pageX || event.pageY) {
-			clickX = event.pageX;
-			clickY = event.pageY + document.getElementsByClassName('centerBar')[0].scrollTop;
+			clickX = event.pageX - element.getBoundingClientRect().left;
+			clickY = event.pageY + element.scrollTop - offsetTop;
 		} else {
-			clickX = event.clientX + document.body.scrollLeft + document.documentElement.scrollLeft;
-			clickY = event.clientY + document.body.scrollTop + document.documentElement.scrollTop + document.getElementsByClassName('centerBar')[0].scrollTop;
+			clickX = event.clientX + document.body.scrollLeft + document.documentElement.scrollLeft - element.getBoundingClientRect().left;
+			clickY = event.clientY + document.body.scrollTop + document.documentElement.scrollTop + element.scrollTop - offsetTop;
 		}
 
 		const selection = Rangy.getSelection();
@@ -69,7 +58,7 @@ const PubSelectionPopup = React.createClass({
 		// console.log(range);
 		// console.log(range.commonAncestorContainer);
 
-		if (!selection.isCollapsed && isDescendantOfP(range.commonAncestorContainer)) {
+		if (!selection.isCollapsed && isDescendantOfHash(range.commonAncestorContainer)) {
 			
 			Rangy.getSelection().expand('word');
 			const ancestorText = getAncestorText(range.commonAncestorContainer);
@@ -82,7 +71,6 @@ const PubSelectionPopup = React.createClass({
 				range: Rangy.getSelection().getRangeAt(0),
 				selectionText: Rangy.getSelection().toString(),
 				ancestorText: ancestorText,
-				ancestorHash: SHA1(ancestorText).toString(encHex),
 
 			});
 
@@ -94,21 +82,49 @@ const PubSelectionPopup = React.createClass({
 				
 	},
 
+	replacePathWithHash: function(path) {
+		let newPath = '';
+
+		const splitOnSemicolonArray = path.split(';');
+		
+		if (splitOnSemicolonArray.length === 2) {
+			newPath = ';' + splitOnSemicolonArray[1];
+		}
+
+		const chunkedPath = splitOnSemicolonArray[0].split('>');
+
+		for (let index = chunkedPath.length; index--;) {
+			const tempPath = chunkedPath.slice(0, index + 1).join('>');
+			const tempElement = document.querySelector(tempPath);
+			if (tempElement.dataset && tempElement.dataset.hash) {
+				newPath = '[data-hash="' + tempElement.dataset.hash + '"]' + newPath;
+				break;
+			} else {
+				newPath = '>' + chunkedPath[index] + newPath;
+			}
+		}
+
+		return newPath;
+	},
+
 	onHighlightSave: function() {
 		const renderer = new Marklib.Rendering(document, {className: 'tempHighlight'}, document.getElementById('pubBodyContent'));
 		const result = renderer.renderWithRange(this.state.range);
 
+		// Note - these containers will fail if identical paragraphs or list-items exist (they'll have an identical hash).
+		const newStartContainer = this.replacePathWithHash(result.startContainerPath);
+		const newEndContainer = this.replacePathWithHash(result.endContainerPath);
+
 		const highlightObject = {
 			text: this.state.selectionText,
 			context: this.state.ancestorText,
-			ancestorHash: this.state.ancestorHash,
-			startContainerPath: result.startContainerPath,
-			endContainerPath: result.endContainerPath,
+
+			startContainerPath: newStartContainer,
+			endContainerPath: newEndContainer,
 			startOffset: result.startOffset,
 			endOffset: result.endOffset
 		};
-		// console.log(result);
-		// console.log(highlightObject);
+		
 		this.props.addSelectionHandler(highlightObject);
 
 	},
@@ -153,15 +169,12 @@ styles = {
 		pointerEvents: 'none',
 		padding: 5,
 		borderRadius: '1px',
-		marginLeft: -173,
+		// marginLeft: -173,
+		marginLeft: -23,
 		marginTop: -5,
 		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
 			display: 'none',
-		},
-		'@media screen and (min-width: 1600px)': {
-			marginLeft: -223,
-		},
-		
+		},		
 	},
 	pluginPopupVisible: {
 		opacity: 1,

@@ -4,7 +4,9 @@ import {ensureImmutable} from './';
 /*--------*/
 // Load Actions
 /*--------*/
-import {TOGGLE_VIEW_MODE, 
+import {
+	TOGGLE_VIEW_MODE, 
+	SET_VIEW_MODE, 
 	TOGGLE_FORMATTING, 
 	TOGGLE_TOC, 
 	LOAD_PUB_EDIT, 
@@ -20,9 +22,20 @@ import {TOGGLE_VIEW_MODE,
 	UPDATE_PUB_SETTINGS_LOAD,
 	UPDATE_PUB_SETTINGS_SUCCESS,
 	UPDATE_PUB_SETTINGS_FAIL,
+
+	UPDATE_PUB_BACKEND_DATA_LOAD,
+	UPDATE_PUB_BACKEND_DATA_SUCCESS,
+	UPDATE_PUB_BACKEND_DATA_FAIL,
+
 	PUBLISH_LOAD,
 	PUBLISH_SUCCESS,
 	PUBLISH_FAIL,
+
+	ADD_SELECTION,
+
+	DISCUSSION_VOTE,
+	DISCUSSION_VOTE_SUCCESS,
+	DISCUSSION_VOTE_FAIL,
 
 	ADD_COMMENT, 
 	ADD_COMMENT_SUCCESS, 
@@ -74,6 +87,31 @@ function toggleViewMode(state) {
 			viewMode: 'edit',
 			showBottomRightMenu: true,
 			showBottomLeftMenu: true,
+		};
+	}
+
+	return state.merge(newModes);
+}
+
+function setViewMode(state, viewMode) {
+	let newModes = {};
+	if (viewMode === 'preview') {
+		newModes = {
+			viewMode: 'preview',
+			showBottomRightMenu: false,
+			showBottomLeftMenu: false,
+		};
+	} else if (viewMode === 'edit') {
+		newModes = {
+			viewMode: 'edit',
+			showBottomRightMenu: true,
+			showBottomLeftMenu: true,
+		};
+	} else if (viewMode === 'read') {
+		newModes = {
+			viewMode: 'read',
+			showBottomRightMenu: false,
+			showBottomLeftMenu: false,
 		};
 	}
 
@@ -156,6 +194,10 @@ function loadSuccess(state, result) {
 		outputState.status = 'loading';
 	}
 
+	if (result.isReader) {
+		outputState.viewMode = 'read';
+	}
+
 	return state.merge(outputState);
 }
 
@@ -204,6 +246,14 @@ function publishError(state, error) {
 	});
 }
 
+function addSelection(state, selection) {
+	const selectionData = state.getIn(['newDiscussionData', 'selections']);
+	return state.mergeIn(
+		['newDiscussionData', 'selections'], 
+		selectionData.set(selectionData.size + 1, selection)
+	);
+}
+
 function addCommentLoad(state, activeSaveID) {
 	return state.merge({
 		addDiscussionStatus: 'loading',
@@ -244,11 +294,66 @@ function addCommentSuccess(state, result, activeSaveID) {
 	});
 }
 
+function discussionVote(state, voteType, discussionID, userYay, userNay) {
+	
+	let scoreChange = 0;
+	let newUserYay = undefined;
+	let newUserNay = undefined;
+
+	if (voteType === 'yay' && !userYay) {
+		scoreChange = userNay ? 2 : 1;
+		newUserYay = true;
+	} else if (voteType === 'yay' && userYay) {
+		scoreChange = -1;
+		newUserYay = false;
+	} else if (voteType === 'nay' && !userNay) {
+		scoreChange = userYay ? 2 : 1;
+		newUserNay = true;
+	} else if (voteType === 'nay' && userNay) {
+		scoreChange = -1;
+		newUserNay = false;
+	}
+	// Find the discussion with result._id
+	// update the yays
+	// update the nays
+	// update useryay
+	// update usernay
+
+	function findDiscussionAndChange(discussions) {
+		discussions.map((discussion)=>{
+			if (discussion._id === discussionID) {
+				discussion[voteType === 'yay' ? 'yays' : 'nays'] += scoreChange;
+				discussion.userYay = newUserYay;
+				discussion.userNay = newUserNay;
+			}
+			if (discussion.children && discussion.children.length) {
+				findDiscussionAndChange(discussion.children);
+			}
+		});
+	}
+
+	const discussionsArray = state.getIn(['pubEditData', 'editorComments']).toJS();
+
+	findDiscussionAndChange(discussionsArray);
+
+	return state.mergeIn(['pubEditData', 'editorComments'], discussionsArray);
+}
+
 function addCommentFail(state, error, activeSaveID) {
 	console.log(error);
 	return state.merge({
 		addDiscussionStatus: 'error',
 		activeSaveID: activeSaveID,
+	});
+}
+
+// TODO: It seems like this function, if fired after the page nav has occurred, will trigger a state.get is not a function error.
+function updateBackendSuccess(state, result) {
+	return state.merge({
+		pubEditData: {
+			...state.get('pubEditData').toJS(),
+			...result
+		}
 	});
 }
 
@@ -259,6 +364,8 @@ export default function editorReducer(state = defaultState, action) {
 	switch (action.type) {
 	case TOGGLE_VIEW_MODE:
 		return toggleViewMode(state);
+	case SET_VIEW_MODE:
+		return setViewMode(state, action.viewMode);
 	case TOGGLE_FORMATTING:
 		return toggleFormatting(state);
 	case TOGGLE_TOC:
@@ -291,12 +398,29 @@ export default function editorReducer(state = defaultState, action) {
 	case UPDATE_PUB_SETTINGS_FAIL:
 		return state;
 
+	case UPDATE_PUB_BACKEND_DATA_LOAD:
+		return state;
+	case UPDATE_PUB_BACKEND_DATA_SUCCESS:
+		return updateBackendSuccess(state, action.result);
+	case UPDATE_PUB_BACKEND_DATA_FAIL:
+		return state;
+
+	case ADD_SELECTION:
+		return addSelection(state, action.selection);
+
 	case PUBLISH_LOAD:
 		return publishLoad(state);
 	case PUBLISH_SUCCESS:
 		return publishSuccess(state, action.result);
 	case PUBLISH_FAIL:
 		return publishError(state, action.error);
+
+	case DISCUSSION_VOTE:
+		return discussionVote(state, action.voteType, action.discussionID, action.userYay, action.userNay);
+	case DISCUSSION_VOTE_SUCCESS:
+		return state;
+	case DISCUSSION_VOTE_FAIL:
+		return state;
 		
 	case ADD_COMMENT:
 		return addCommentLoad(state, action.activeSaveID);

@@ -49,11 +49,11 @@ var journalSchema = new Schema({
 journalSchema.statics.isUnique = function (subdomain,callback) {
 
 	this.findOne({'subdomain':subdomain})
-	.exec(function (err, subdomain) {
+	.exec(function (err, journal) {
 			if (err) return callback(err);
 			// if (err) return res.json(500);
 
-			if(subdomain!=null){ //We found a pub
+			if(journal!=null){ //We found a journal
 				return callback(null,false);  //False - is not unique
 			}else{ //We did not find a pub
 				return callback(null,true) //True -  is unique.

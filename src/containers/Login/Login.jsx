@@ -90,7 +90,7 @@ const Login = React.createClass({
 					</div>
 					<div style={styles.viewModeToggle} onClick={this.toggleViewMode}>
 						{(viewMode === 'login'
-							? <FormattedMessage id="collections.newToPubPub" defaultMessage="New to PubPub? Click to Register"/>
+							? <FormattedMessage id="collections.newToPubPub" defaultMessage="No account? Click to Register"/>
 							: <FormattedMessage id="collections.alreadyHaveAccount" defaultMessage="Already have an account? Click to Login"/>
 						)}
 					</div>

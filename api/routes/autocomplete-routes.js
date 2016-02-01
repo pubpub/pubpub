@@ -5,6 +5,7 @@ var _      = require('underscore');
 var Pub = require('../models').Pub;
 var User = require('../models').User;
 var Journal = require('../models').Journal;
+var Group = require('../models').Group;
 
 app.get('/autocompleteJournals', function(req,res){
 	Journal.find({}, {'_id':1,'journalName':1, 'subdomain':1, 'customDomain':1, 'design': 1}).exec(function (err, journals) {
@@ -27,12 +28,12 @@ app.get('/autocompleteJournals', function(req,res){
 });
 
 app.get('/autocompleteUsers', function(req,res){
-	User.find({}, {'_id':1,'username':1, 'thumbnail':1, 'email':1, 'name':1}).exec(function (err, users) {
+	User.find({}, {'_id':1,'username':1, 'thumbnail':1, 'name':1}).exec(function (err, users) {
 		var objects = users;
 		var sifter = new Sifter(objects);
 
 		var result = sifter.search(req.query.string, {
-		    fields: ['username', 'email', 'name'],
+		    fields: ['username', 'name'],
 		    sort: [{field: 'username', direction: 'asc'}],
 		    limit: 10
 		});
@@ -120,6 +121,39 @@ app.get('/autocompletePubsAndUsers', function(req,res){
 			var result = sifter.search(req.query.string, {
 			    fields: ['username', 'name', 'slug', 'title'],
 			    sort: [{field: 'username', direction: 'asc'}, {field: 'title', direction: 'asc'}],
+			    limit: 10
+			});
+
+			var output = [];
+			_.each(result.items, function(item){
+				output.push(objects[item.id]);
+			});
+			return res.status(201).json(output)
+		});
+
+	});
+});
+
+app.get('/autocompleteUsersAndGroups', function(req,res){
+	var objects = [];
+
+	User.find({}, {'_id':1,'username':1, 'thumbnail':1, 'name':1}).lean().exec(function (err, users) {
+		if(users){
+			objects = objects.concat(users);	
+		}
+		
+		Group.find({}, {'_id':1,'groupName':1, 'groupSlug':1}).lean().exec(function (err, groups) {
+			if(groups){
+				objects = objects.concat(groups);			
+			}
+			
+			
+			// console.log(objects)
+			var sifter = new Sifter(objects);
+
+			var result = sifter.search(req.query.string, {
+			    fields: ['username', 'name', 'groupName', 'groupSlug'],
+			    sort: [{field: 'name', direction: 'asc'}, {field: 'groupName', direction: 'asc'}],
 			    limit: 10
 			});
 

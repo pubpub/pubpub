@@ -8,6 +8,7 @@ export const LOAD_PUB_EDIT = 'editor/LOAD_PUB_EDIT';
 export const LOAD_PUB_EDIT_SUCCESS = 'editor/LOAD_PUB_EDIT_SUCCESS';
 export const LOAD_PUB_EDIT_FAIL = 'editor/LOAD_PUB_EDIT_FAIL';
 export const TOGGLE_VIEW_MODE = 'editor/TOGGLE_VIEW_MODE';
+export const SET_VIEW_MODE = 'editor/SET_VIEW_MODE';
 export const TOGGLE_FORMATTING = 'editor/TOGGLE_FORMATTING';
 export const TOGGLE_TOC = 'editor/TOGGLE_TOC';
 
@@ -15,6 +16,8 @@ export const MODAL_CLOSE = 'editor/MODAL_CLOSE';
 export const MODAL_OPEN = 'editor/MODAL_OPEN';
 
 export const PUB_EDIT_UNMOUNT = 'editor/PUB_EDIT_UNMOUNT';
+
+export const ADD_SELECTION = 'editor/ADD_SELECTION';
 
 export const ADD_COMMENT = 'pub/ADD_COMMENT';
 export const ADD_COMMENT_SUCCESS = 'pub/ADD_COMMENT_SUCCESS';
@@ -28,9 +31,17 @@ export const UPDATE_PUB_SETTINGS_LOAD = 'editor/UPDATE_PUB_SETTINGS_LOAD';
 export const UPDATE_PUB_SETTINGS_SUCCESS = 'editor/UPDATE_PUB_SETTINGS_SUCCESS';
 export const UPDATE_PUB_SETTINGS_FAIL = 'editor/UPDATE_PUB_SETTINGS_FAIL';
 
+export const UPDATE_PUB_BACKEND_DATA_LOAD = 'editor/UPDATE_PUB_BACKEND_DATA_LOAD';
+export const UPDATE_PUB_BACKEND_DATA_SUCCESS = 'editor/UPDATE_PUB_BACKEND_DATA_SUCCESS';
+export const UPDATE_PUB_BACKEND_DATA_FAIL = 'editor/UPDATE_PUB_BACKEND_DATA_FAIL';
+
 export const PUBLISH_LOAD = 'editor/PUBLISH_LOAD';
 export const PUBLISH_SUCCESS = 'editor/PUBLISH_SUCCESS';
 export const PUBLISH_FAIL = 'editor/PUBLISH_FAIL';
+
+export const DISCUSSION_VOTE = 'editor/DISCUSSION_VOTE';
+export const DISCUSSION_VOTE_SUCCESS = 'editor/DISCUSSION_VOTE_SUCCESS';
+export const DISCUSSION_VOTE_FAIL = 'editor/DISCUSSION_VOTE_FAIL';
 
 /*--------*/
 // Define Action creators
@@ -56,6 +67,13 @@ export function publishVersion(newVersion) {
 export function toggleEditorViewMode() {
 	return {
 		type: TOGGLE_VIEW_MODE
+	};
+}
+
+export function setEditorViewMode(viewMode) {
+	return {
+		type: SET_VIEW_MODE,
+		viewMode: viewMode
 	};
 }
 
@@ -91,6 +109,13 @@ export function openModal(activeModal) {
 	};
 }
 
+export function addSelection(selection) {
+	return {
+		type: ADD_SELECTION,
+		selection: selection,
+	};	
+}
+
 export function saveCollaboratorsToPub(newCollaborators, removedUser, slug) {
 	return {
 		types: [UPDATE_COLLABORATORS_LOAD, UPDATE_COLLABORATORS_SUCCESS, UPDATE_COLLABORATORS_FAIL],
@@ -112,10 +137,31 @@ export function saveSettingsPubPub(slug, newSettings) {
 	};
 }
 
+export function updatePubBackendData(slug, newPubData) {
+	return {
+		types: [UPDATE_PUB_BACKEND_DATA_LOAD, UPDATE_PUB_BACKEND_DATA_SUCCESS, UPDATE_PUB_BACKEND_DATA_FAIL],
+		promise: (client) => client.post('/updatePubData', {data: {
+			slug: slug,
+			newPubData: newPubData
+		}}) 
+	};
+}
+
 export function addComment(discussionObject, activeSaveID) {
 	return {
 		types: [ADD_COMMENT, ADD_COMMENT_SUCCESS, ADD_COMMENT_FAIL],
 		promise: (client) => client.post('/addDiscussion', {data: {discussionObject: discussionObject, isEditorComment: true}}),
 		activeSaveID: activeSaveID 
+	};
+}
+
+export function discussionVoteSubmit(type, discussionID, userYay, userNay) {
+	return {
+		types: [DISCUSSION_VOTE, DISCUSSION_VOTE_SUCCESS, DISCUSSION_VOTE_FAIL],
+		promise: (client) => client.post('/discussionVote', {data: {type, discussionID, userYay, userNay}}),
+		voteType: type,
+		discussionID: discussionID,
+		userYay: userYay,
+		userNay: userNay,
 	};
 }

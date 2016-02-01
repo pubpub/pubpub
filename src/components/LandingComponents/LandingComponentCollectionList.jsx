@@ -1,123 +1,133 @@
 import React, { PropTypes } from 'react';
 import Radium from 'radium';
 import {globalStyles} from '../../utils/styleConstants';
-// import { Link } from 'react-router';
+import { Link } from 'react-router';
+import dateFormat from 'dateformat';
 
 let styles = {};
 
 const LandingComponentCollectionList = React.createClass({
 	propTypes: {
 		style: PropTypes.object,
-		pubList: PropTypes.array,
+		collections: PropTypes.array,
+		selectCollections: PropTypes.array,
 	},
 
-	getDefaultProps: function() {
+	getInitialState() {
 		return {
-			pubList: [
-				{
-					title: 'Human Health by Austin Burt',
-					abstract: 'Insect/human disease transmission. Technology assessment for control of human diseases such as malaria, dengue, and trypanosomiasis: What is the technology? What is its purpose? Features of the ecological systems and technical issues to consider, like feasibility, efficacy and specificity, irreversibility, fitness, etc.',
-					author: 'Sam on Dec 19 at 4:27AM',
-					comment: 'Austin raises an interesting point, but misses a broader issue about the cultural grounding of the construction of risk as associated with infectious artichoke populations.',
-					commentCount: 18
-				},
-				{
-					title: 'Conservation by Caroline Leitschuh',
-					abstract: 'Technology assessment for invasive rodent control on islands: What is the technology? What is its purpose? Features of the ecological systems and technical issues to consider, like feasibility, efficacy and specificity, irreversibility, fitness, etc.?',
-					author: 'Sam on Dec 12 at 12:27AM',
-					comment: 'Austin raises an interesting point, but misses a broader issue about the cultural grounding of the construction of risk as associated with infectious artichoke populations.',
-					commentCount: 34
-				},
-				{
-					title: 'Agricultural Production by Max Scott',
-					abstract: 'Technology assessment for invasive rodent control on islands: What is the technology? What is its purpose? Features of the ecological systems and technical issues to consider, like feasibility, efficacy and specificity, irreversibility, fitness, etc.?',
-					author: 'Sam on Dec 21 at 4:27AM',
-					comment: 'Austin raises an interesting point, but misses a broader issue about the cultural grounding of the construction of risk as associated with infectious artichoke populations.',
-					commentCount: 15
-				},
-				{
-					title: 'Gene Drive Capabilities by Kevin Esvelt',
-					abstract: 'Technology assessment for invasive rodent control on islands: What is the technology? What is its purpose? Features of the ecological systems and technical issues to consider, like feasibility, efficacy and specificity, irreversibility, fitness, etc.?',
-					author: 'Sam on Nov 19 at 8:17PM',
-					comment: 'Austin raises an interesting point, but misses a broader issue about the cultural grounding of the construction of risk as associated with infectious artichoke populations.',
-					commentCount: 4
-				},
-				{
-					title: 'Skeletal Systems Map by Todd Kuiken',
-					abstract: 'Technology assessment for invasive rodent control on islands: What is the technology? What is its purpose? Features of the ecological systems and technical issues to consider, like feasibility, efficacy and specificity, irreversibility, fitness, etc.?',
-					author: 'Devin on Dec 12 at 9:27AM',
-					comment: 'Austin raises an interesting point, but misses a broader issue about the cultural grounding of the construction of risk as associated with infectious artichoke populations.',
-					commentCount: 98
-				},
-				{
-					title: 'Human Health by Austin Burt',
-					abstract: 'Insect/human disease transmission. Technology assessment for control of human diseases such as malaria, dengue, and trypanosomiasis: What is the technology? What is its purpose? Features of the ecological systems and technical issues to consider, like feasibility, efficacy and specificity, irreversibility, fitness, etc.',
-					author: 'Sam on Dec 19 at 4:27AM',
-					comment: 'Austin raises an interesting point, but misses a broader issue about the cultural grounding of the construction of risk as associated with infectious artichoke populations.',
-					commentCount: 18
-				},
-				{
-					title: 'Conservation by Caroline Leitschuh',
-					abstract: 'Technology assessment for invasive rodent control on islands: What is the technology? What is its purpose? Features of the ecological systems and technical issues to consider, like feasibility, efficacy and specificity, irreversibility, fitness, etc.?',
-					author: 'Sam on Dec 12 at 12:27AM',
-					comment: 'Austin raises an interesting point, but misses a broader issue about the cultural grounding of the construction of risk as associated with infectious artichoke populations.',
-					commentCount: 34
-				},
-				{
-					title: 'Agricultural Production by Max Scott',
-					abstract: 'Technology assessment for invasive rodent control on islands: What is the technology? What is its purpose? Features of the ecological systems and technical issues to consider, like feasibility, efficacy and specificity, irreversibility, fitness, etc.?',
-					author: 'Sam on Dec 21 at 4:27AM',
-					comment: 'Austin raises an interesting point, but misses a broader issue about the cultural grounding of the construction of risk as associated with infectious artichoke populations.',
-					commentCount: 15
-				},
-				{
-					title: 'Gene Drive Capabilities by Kevin Esvelt',
-					abstract: 'Technology assessment for invasive rodent control on islands: What is the technology? What is its purpose? Features of the ecological systems and technical issues to consider, like feasibility, efficacy and specificity, irreversibility, fitness, etc.?',
-					author: 'Sam on Nov 19 at 8:17PM',
-					comment: 'Austin raises an interesting point, but misses a broader issue about the cultural grounding of the construction of risk as associated with infectious artichoke populations.',
-					commentCount: 4
-				},
-				{
-					title: 'Skeletal Systems Map by Todd Kuiken',
-					abstract: 'Technology assessment for invasive rodent control on islands: What is the technology? What is its purpose? Features of the ecological systems and technical issues to consider, like feasibility, efficacy and specificity, irreversibility, fitness, etc.?',
-					author: 'Devin on Dec 12 at 9:27AM',
-					comment: 'Austin raises an interesting point, but misses a broader issue about the cultural grounding of the construction of risk as associated with infectious artichoke populations.',
-					commentCount: 98
-				},
-			]
+			activeIndex: 0,
+			collections: [],
 		};
+	},
+	
+	componentWillMount() {
+		const collections = this.props.collections;
+		const collectionObject = {};
+		for (let index = collections.length; index--;) {
+			collectionObject[collections[index].slug] = collections[index];
+		}
+
+		const newCollections = this.props.selectCollections.map((collectionName)=>{
+			return collectionObject[collectionName];
+		});
+
+		const maxSize = 3;
+		this.setState({collections: newCollections.slice(0, maxSize)});
+	},
+
+	setActiveIndex: function(index) {
+		return ()=>{
+			this.setState({activeIndex: index});
+		};
+		
+	},
+
+	authorString: function(authors) {
+		let output = 'by ';
+		for (let index = authors.length; index--;) {
+			output += authors[index].name;
+			if (index !== 0) {
+				output += ', ';
+			}
+		}
+		return output;
 	},
 
 	render: function() {
+		
 		return (
 			<div style={[styles.container, this.props.style]}>
 				<div style={styles.leftColumn}>
-					<div style={styles.leftHeader}>Conference Drafts</div>
-					<div style={styles.leftText}>This collection features conference drafts that will be used in our upcoming assesment of topological surveys for which adequate funding requirements lead us to believe that in 1905, before the second world war, few had ever even heard of a magical land similar to, but without, the consequences of chief magistrate oversight.</div>
+					<Link to={'/collection/' + this.state.collections[this.state.activeIndex].slug} style={globalStyles.link}>
+						<div style={styles.leftHeader}>{this.state.collections[this.state.activeIndex].title}</div>
+						<div style={styles.leftText}>{this.state.collections[this.state.activeIndex].description}</div>
+					</Link>
 				</div>
 
 				<div style={styles.rightColumn}>
 					<div style={styles.rightHeader}>
-						<div key={'rightHeaderItem0'}style={[styles.rightHeaderItem, styles.rightHeaderItemActive]}>Conference Drafts</div>
-						<div key={'rightHeaderItem1'}style={styles.rightHeaderItem}>Further Perspective</div>
-						<div key={'rightHeaderItem2'}style={styles.rightHeaderItem}>In the News</div>
+						{
+							this.state.collections.map((collection, index)=>{
+								return <div key={'rightHeaderItem-' + collection.slug} style={[styles.rightHeaderItem, this.state.activeIndex === index && styles.rightHeaderItemActive]} onClick={this.setActiveIndex(index)}>{collection.title}</div>;
+							})
+						}
 						<div style={globalStyles.clearFix}></div>
 					</div>
 
 					{
-						this.props.pubList.map((pub, index)=>{
+						this.state.collections[this.state.activeIndex].pubs.map((pub, index)=>{
 							return (
+								<Link to={'/pub/' + pub.slug} style={globalStyles.link} key={'pubItemLink-' + index}>
 								<div style={styles.pubItem} key={'pubItem-' + index}>
 									<div style={styles.pubTitle}>{pub.title}</div>
-									<div style={styles.pubAbstract}>{pub.abstract}</div>
-									<div style={styles.pubAuthor}>{pub.author}</div>
-									<div style={styles.pubComment}>{pub.comment}</div>
-									<div style={styles.pubCommentMore}>Read {pub.commentCount} more</div>
+									<div style={styles.pubAuthor}>{this.authorString(pub.authors)}</div>
+
+									<div></div>
+
+									<div style={styles.pubDetail}>{dateFormat(pub.lastUpdated, 'mm/dd/yy')}</div>
+									<div style={styles.separator}>|</div>
+									<div style={styles.pubDetail}>{pub.discussions ? pub.discussions.length : 0} comments</div>
+
+									<div style={styles.pubAbstract}>
+										{pub.abstract.length > 200 
+											? pub.abstract.substring(0, 200).trim() + '...'
+											: pub.abstract
+										}
+									</div>
+									
+									
+									{pub.discussions && pub.discussions.length
+										? <div>
+											<div style={styles.commentTitle}>
+												<span>Latest Comment: </span>
+												{pub.discussions[pub.discussions.length - 1].author.name} 
+												<span> on </span>
+												{dateFormat(pub.discussions[pub.discussions.length - 1].postDate, 'mm/dd/yy, h:MMTT')}
+											</div>
+											<div style={styles.commentWrapper}>
+												{/* <div style={styles.commentHeader}>
+													{pub.discussions[pub.discussions.length - 1].author.name} 
+													<span> on </span>
+													{dateFormat(pub.discussions[pub.discussions.length - 1].postDate, 'mm/dd/yy, h:MMTT')}
+												</div> */}
+												<div style={styles.commentText}>
+													{pub.discussions[pub.discussions.length - 1].markdown.replace(/\[\[(.*)\]\]/g, '').length > 100 
+														? pub.discussions[pub.discussions.length - 1].markdown.replace(/\[\[(.*)\]\]/g, '').substring(0, 100).trim() + '...'
+														: pub.discussions[pub.discussions.length - 1].markdown.replace(/\[\[(.*)\]\]/g, '')
+													}
+												</div>
+											</div>
+										</div>
+										: null
+									}
+									
 								</div>
+								</Link>
 							);
 						})
 					}
 				</div>
+				<div style={globalStyles.clearFix}></div>
 			</div>
 		);
 	}
@@ -127,7 +137,7 @@ export default Radium(LandingComponentCollectionList);
 
 styles = {
 	container: {
-		height: 800,
+		
 	},
 	leftColumn: {
 		width: 200,
@@ -144,7 +154,6 @@ styles = {
 	},
 	leftText: {
 		fontSize: '16px',
-		paddingLeft: '5px',
 		marginBottom: '30px',
 	},
 	rightColumn: {
@@ -177,10 +186,10 @@ styles = {
 		color: '#222',
 	},
 	pubItem: {
-		width: '90%',
+		width: 'calc(100% - 20px)',
 		margin: '0px auto',
-		padding: '20px 0px',
-		borderBottom: '2px solid #ccc',
+		padding: '20px 10px',
+		borderBottom: '1px solid #ccc',
 		':hover': {
 			cursor: 'pointer',
 			backgroundColor: '#F5F5F5',
@@ -189,30 +198,52 @@ styles = {
 	pubTitle: {
 		fontSize: '20px',
 		color: '#222',
-	},
-	pubAbstract: {
-		fontSize: '16px',
-		color: '#555',
-		paddingBottom: '10px',
+		display: 'inline-block',
+		paddingRight: '20px',
 	},
 	pubAuthor: {
-		fontSize: '14px',
+		fontSize: '15px',
 		color: '#999',
-		paddingLeft: '20px',
+		display: 'inline-block',
 	},
-	pubComment: {
+	pubAbstract: {
 		fontSize: '14px',
 		color: '#555',
-		paddingLeft: '20px',
-		width: 'calc(100% - 20px)',
-		whiteSpace: 'nowrap',
-		overflow: 'hidden',
-		textOverflow: 'ellipsis',
+		padding: '5px 0px 20px 0px',
+		fontFamily: 'Lora',
 	},
-	pubCommentMore: {
+	pubDetail: {
+		fontStyle: 'italic',
 		fontSize: '14px',
-		color: '#777',
+		color: '#999',
+		display: 'inline-block'
+	},
+	separator: {
+		padding: '0px 10px',
+		fontSize: '14px',
+		color: '#999',
+		display: 'inline-block'
+	},
+
+	commentTitle: {
+		marginLeft: '20px',
+		marginBottom: '5px',
+		color: '#555',
+		fontSize: '14px',
+	},
+	commentWrapper: {
+		marginLeft: '20px',
+		borderLeft: '2px solid #ccc',
 		paddingLeft: '20px',
+		color: '#555',
+		fontSize: '14px',
+	},
+	commentHeader: {
+		
+	},
+	commentText: {
+		fontFamily: 'Lora',
+
 	},
 
 };

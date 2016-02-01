@@ -8,6 +8,7 @@ import DiscussionsInput from './DiscussionsInput';
 
 import {toggleVisibility} from '../../actions/login';
 import {addDiscussion, discussionVoteSubmit, togglePubHighlights} from '../../actions/pub';
+import {discussionVoteSubmit as discussionVoteSubmitEditor} from '../../actions/editor';
 import {addComment} from '../../actions/editor';
 
 // import {globalMessages} from '../../utils/globalMessages';
@@ -31,7 +32,8 @@ const Discussions = React.createClass({
 		pathname: PropTypes.string,
 		query: PropTypes.object,
 
-		dispatch: PropTypes.func
+		dispatch: PropTypes.func,
+
 	},
 
 	getDefaultProps: function() {
@@ -46,10 +48,15 @@ const Discussions = React.createClass({
 			return this.props.dispatch(toggleVisibility());
 		}
 
+		console.log(discussionObject);
+		if (!discussionObject.markdown) {
+			return null;
+		}
+
 		// Check if it's a comment or discussion we're adding.
 		if (this.props.editorCommentMode) {
 			discussionObject.pub = this.props.editorData.getIn(['pubEditData', '_id']);
-			discussionObject.version = this.props.query.version !== undefined && this.props.query.version > 0 && this.props.query.version < (this.props.editorData.getIn(['pubEditData', 'history']).size - 1) ? this.props.query.version : this.props.editorData.getIn(['pubEditData', 'history']).size;
+			discussionObject.version = 0;
 			discussionObject.selections = this.props.editorData.getIn(['newDiscussionData', 'selections']);
 			// console.log('about to dispatch addComment ', discussionObject, activeSaveID);
 			this.props.dispatch(addComment(discussionObject, activeSaveID));
@@ -67,7 +74,12 @@ const Discussions = React.createClass({
 		if (!this.props.loginData.get('loggedIn')) {
 			return this.props.dispatch(toggleVisibility());
 		}
-		this.props.dispatch(discussionVoteSubmit(type, discussionID, userYay, userNay));
+
+		if (this.props.editorCommentMode) {
+			this.props.dispatch(discussionVoteSubmitEditor(type, discussionID, userYay, userNay));
+		} else {
+			this.props.dispatch(discussionVoteSubmit(type, discussionID, userYay, userNay));
+		}
 	},
 
 	toggleHighlights: function() {
@@ -134,7 +146,7 @@ const Discussions = React.createClass({
 						: null
 					}
 					
-					{this.props.metaID || (!this.props.editorCommentMode && this.props.inEditor)
+					{this.props.metaID
 						? null
 						: <DiscussionsInput 
 								addDiscussionHandler={this.addDiscussion}
@@ -153,7 +165,6 @@ const Discussions = React.createClass({
 							return (<DiscussionsItem 
 								key={discussion._id}
 								slug={this.props.slug}
-								pHashes={this.props.pubData.getIn(['pubData', 'pHashes']) ? this.props.pubData.getIn(['pubData', 'pHashes']).toJS() : {} }
 								discussionItem={discussion}
 								instanceName={this.props.instanceName}
 
@@ -163,7 +174,7 @@ const Discussions = React.createClass({
 								newDiscussionData={newDiscussionData} 
 								userThumbnail={this.props.loginData.getIn(['userData', 'thumbnail'])} 
 								handleVoteSubmit={this.discussionVoteSubmit} 
-								noReply={!this.props.editorCommentMode && this.props.inEditor}
+								// noReply={!this.props.editorCommentMode && this.props.inEditor}
 								noPermalink={this.props.editorCommentMode}/>
 							);
 						})

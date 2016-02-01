@@ -12,7 +12,7 @@ let styles = {};
 
 // import {loadCss} from '../../utils/loadingFunctions';
 import initCodeMirrorMode from '../../containers/Editor/editorCodeMirrorMode';
-import {codeMirrorStyles} from '../../containers/Editor/editorStyles';
+import {codeMirrorStyles} from '../../containers/Editor/codeMirrorStyles';
 import {clearTempHighlights} from '../../components/PubSelectionPopup/selectionFunctions';
 
 // import marked from '../../modules/markdown/markdown';
@@ -65,7 +65,7 @@ const PubDiscussionsInput = React.createClass({
 			// const cm = document.getElementsByClassName('CodeMirror')[0].CodeMirror;
 			const cm = document.getElementById(this.props.codeMirrorID).childNodes[0].CodeMirror;
 			const spacing = cm.getValue().length ? ' ' : '';
-			cm.setValue(cm.getValue() + spacing + '{{selection: ' + nextProps.newDiscussionData.get('selections').size + '}} ' );	
+			cm.setValue(cm.getValue() + spacing + '[[selection: index=' + nextProps.newDiscussionData.get('selections').size + ']] ' );	
 		}
 		
 	},
@@ -92,8 +92,8 @@ const PubDiscussionsInput = React.createClass({
 		return (
 			<div style={[styles.container, this.props.isReply && styles.replyContainer]}>
 				<Style rules={{
-					...codeMirrorStyles(),
 					'.inputCodeMirror .CodeMirror': {
+						...codeMirrorStyles(),
 						backgroundColor: 'transparent',
 						fontSize: '15px',
 						color: '#555',
@@ -145,7 +145,7 @@ export default injectIntl(Radium(PubDiscussionsInput));
 styles = {
 	container: {
 		width: '100%',
-		// overflow: 'hidden',
+		overflow: 'hidden',
 		margin: '20px 0px',
 		position: 'relative',
 	},

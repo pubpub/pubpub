@@ -38,7 +38,7 @@ const PubDiscussionsScore = React.createClass({
 						<div style={[styles.voteMessage, styles.yayMessage]}>For constructive, insightful, or productive discussion</div> 
 					*/}
 				</div>
-				<div style={styles.voteScore}>{this.props.score}</div>
+				<div style={styles.voteScore}>{this.props.score + 1}</div>
 				<div key={'nay-' + discussionID} style={[styles.voteButton, styles.voteDown, this.props.userNay && styles.activeVote, this.props.readOnly && styles.readOnly]} onClick={this.handleVoteClick('nay', discussionID)}>
 					^
 					{/* We're not quite ready for this. Don't have the right design

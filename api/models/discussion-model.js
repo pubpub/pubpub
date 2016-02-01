@@ -86,7 +86,6 @@ discussionSchema.statics.sortDiscussions = function (input) {
       });
       return _.sortBy(array, propertyName).reverse();
   };
-
   var sortedInput = _.sortRecursive(input, 'points');
   return sortedInput;
 }

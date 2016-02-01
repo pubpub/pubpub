@@ -74,7 +74,7 @@ const CollectionEdit = React.createClass({
 
 	featurePub: function(input) {
 		return ()=> {
-			console.log(input);
+			// console.log(input);
 			const newPubs = this.props.collectionData.pubs.map((item)=>{
 				return item._id;
 			}); 
@@ -87,7 +87,7 @@ const CollectionEdit = React.createClass({
 
 	removePub: function(input) {
 		return ()=> {
-			console.log(input);
+			// console.log(input);
 			const newPubs = this.props.collectionData.pubs.map((item)=>{
 				return item._id;
 			}); 

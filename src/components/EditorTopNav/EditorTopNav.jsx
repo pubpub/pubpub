@@ -14,13 +14,14 @@ const EditorTopNac = React.createClass({
 		openModalHandler: PropTypes.func,
 		editorSaveStatus: PropTypes.string,
 		toggleLivePreviewHandler: PropTypes.func,
+		viewMode: PropTypes.string,
 	},
 
 	render: function() {
 		
 		return (
 			
-			<div style={[styles.editorTopNav, globalStyles.hiddenUntilLoad, globalStyles[this.props.status], this.props.darkMode && styles.editorTopNavDark]}>
+			<div style={[styles.editorTopNav, globalStyles.hiddenUntilLoad, globalStyles[this.props.status], this.props.darkMode && styles.editorTopNavDark, this.props.viewMode === 'read' && globalStyles.invisible]}>
 				<ul style={styles.editorNav}>
 
 					<li key="editorNav0"style={[styles.editorNavItem]} onClick={this.props.openModalHandler('Assets')}>
@@ -79,6 +80,9 @@ styles = {
 		width: '100%',
 		backgroundColor: globalStyles.sideBackground,
 		zIndex: 10,
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+			display: 'none',
+		},
 	},
 	editorTopNavDark: {
 		backgroundColor: '#272727',

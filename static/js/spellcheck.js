@@ -17,7 +17,7 @@ CodeMirror.defineMode("spell-checker", function(config, parserConfig) {
 			if (xhr_aff.readyState === 4 && xhr_aff.status === 200) {
 				aff_data = xhr_aff.responseText;
 				num_loaded++;
-				
+
 				if(num_loaded == 2){
 					typo = new Typo("en_US", aff_data, dic_data, {
 						platform: 'any'
@@ -27,7 +27,7 @@ CodeMirror.defineMode("spell-checker", function(config, parserConfig) {
 		};
 		xhr_aff.send(null);
 	}
-	
+
 	if(!dic_loading){
 		dic_loading = true;
 		var xhr_dic = new XMLHttpRequest();
@@ -36,7 +36,7 @@ CodeMirror.defineMode("spell-checker", function(config, parserConfig) {
 			if (xhr_dic.readyState === 4 && xhr_dic.status === 200) {
 				dic_data = xhr_dic.responseText;
 				num_loaded++;
-				
+
 				if(num_loaded == 2){
 					typo = new Typo("en_US", aff_data, dic_data, {
 						platform: 'any'
@@ -47,19 +47,19 @@ CodeMirror.defineMode("spell-checker", function(config, parserConfig) {
 		xhr_dic.send(null);
 	}
 
-	
-	
+
+
 	// Define what separates a word
 	var rx_word = "!\"#$%&()*+,-./:;<=>?@[\\]^_`{|}~ ";
-	
-	
+
+
 	// Create the overlay and such
 	var overlay = {
 		token: function(stream, state) {
 			var ch = stream.peek();
 			var word = "";
 
-			stream.match(/^{{((?!title|abstract|authorsNote).)*}}/);
+			stream.match(/^\[\[((?!title|abstract|authorsNote).)*\]\]/);
 			stream.match(/^authorsNote/);
 
 			if(rx_word.includes(ch)) {

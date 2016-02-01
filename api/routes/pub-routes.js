@@ -2,6 +2,7 @@ var app = require('../api');
 
 var Pub  = require('../models').Pub;
 var User = require('../models').User;
+var Group = require('../models').Group;
 var Asset = require('../models').Asset;
 var Journal = require('../models').Journal;
 var Reference = require('../models').Reference;
@@ -9,7 +10,7 @@ var Reference = require('../models').Reference;
 var _         = require('underscore');
 var Firebase  = require('firebase');
 
-import {firebaseTokenGen, generateAuthToken} from '../services/firebase';
+import {fireBaseURL, firebaseTokenGen, generateAuthToken} from '../services/firebase';
 
 app.get('/getPub', function(req, res) {
 	const userID = req.user ? req.user._id : undefined;
@@ -23,25 +24,26 @@ app.get('/getPub', function(req, res) {
 				return res.status(201).json(pubData);
 			});
 		} else {
-			return res.status(201).json(pubData);	
+			return res.status(201).json(pubData);
 		}
 
-		
+
 	});
 });
 
 app.get('/getPubEdit', function(req, res) {
 	const userID = req.user ? req.user._id : undefined;
-	Pub.getPubEdit(req.query.slug, userID, (err, pubEditData, authError)=>{
+	const userGroups = req.user ? req.user.groups : [];
+	Pub.getPubEdit(req.query.slug, userID, userGroups, (err, pubEditData, authError)=>{
 		if (err) {
 			console.log(err);
-			return res.status(500).json(err); 
+			return res.status(500).json(err);
 		}
 
 		if (!authError) {
-			pubEditData.token = firebaseTokenGen(req.user.username, req.query.slug);	
+			pubEditData.token = firebaseTokenGen(req.user.username, req.query.slug, pubEditData.isReader);
 		}
-		
+
 
 		return res.status(201).json(pubEditData);
 
@@ -60,12 +62,12 @@ app.post('/createPub', function(req, res) {
 			slug: req.body.slug,
 			abstract: 'Type your abstract here',
 			collaborators: {
-				canEdit:[userID], 
-				canRead:[] 
+				canEdit:[userID],
+				canRead:[]
 			},
 			createDate: new Date().getTime(),
 			status: 'Unpublished',
-			assets: [], 
+			assets: [],
 			history: [],
 			followers: [],
 			featuredIn: [],
@@ -83,7 +85,7 @@ app.post('/createPub', function(req, res) {
 			}
 		});
 		// console.log(pub);
-	  
+
 		pub.save(function (err, savedPub) {
 			if (err) { return res.status(500).json(err);  }
 
@@ -91,7 +93,7 @@ app.post('/createPub', function(req, res) {
 			const userID = req.user['_id'];
 
 			User.update({ _id: userID }, { $addToSet: { pubs: pubID} }, function(err, result){if(err) return handleError(err)});
-			const ref = new Firebase('https://pubpub.firebaseio.com/' + req.body.slug + '/editorData' );
+			const ref = new Firebase(fireBaseURL + req.body.slug + '/editorData' );
 			ref.authWithCustomToken(generateAuthToken(), ()=>{
 				const newEditorData = {
 					collaborators: {},
@@ -113,7 +115,7 @@ app.post('/createPub', function(req, res) {
 
 				return res.status(201).json(savedPub.slug);
 			});
-			
+
 		});
 
 	});
@@ -121,13 +123,13 @@ app.post('/createPub', function(req, res) {
 });
 
 app.post('/updatePub', function(req, res) {
-	// push updates to pub doc, 
+	// push updates to pub doc,
 	// handle updates to other docs
 });
 
 app.post('/publishPub', function(req, res) {
 
-	// Check that the req.user is an editor on the pub. 
+	// Check that the req.user is an editor on the pub.
 	// Beef out the history object with date, etc
 	// Update the pub object with new dates, titles, etc
 	// Push the new history object
@@ -139,12 +141,12 @@ app.post('/publishPub', function(req, res) {
 		}
 		const publishDate = new Date().getTime();
 		// Calculate diff
-		// Take last history object, 
-		// take new object, 
+		// Take last history object,
+		// take new object,
 		// diff them and return object
 			// diff each item in object and store output
 			// iterate over to calculate total additions, deletions
-		const previousHistoryItem = pub.history.length 
+		const previousHistoryItem = pub.history.length
 			? pub.history[pub.history.length-1]
 			: {
 				title: '',
@@ -159,7 +161,7 @@ app.post('/publishPub', function(req, res) {
 		const diffObject = Pub.generateDiffObject(previousHistoryItem, req.body.newVersion);
 		// Append details to assets
 		const assets = [];
-		for (const key in req.body.newVersion.assets) { 
+		for (const key in req.body.newVersion.assets) {
 			const assetObject = req.body.newVersion.assets[key];
 			assetObject.usedInDiscussion = null;
 			assetObject.usedInPub = pub._id;
@@ -170,7 +172,7 @@ app.post('/publishPub', function(req, res) {
 
 		// Append details to references
 		const references = [];
-		for (const key in req.body.newVersion.references) { 
+		for (const key in req.body.newVersion.references) {
 			const referenceObject = req.body.newVersion.references[key];
 			referenceObject.usedInDiscussion = null;
 			referenceObject.usedInPub = pub._id;
@@ -193,7 +195,6 @@ app.post('/publishPub', function(req, res) {
 				pub.style = req.body.newVersion.style;
 				pub.lastUpdated = publishDate,
 				pub.status = req.body.newVersion.status;
-				pub.pHashes = req.body.newVersion.pHashes;
 				pub.history.push({
 					publishNote: req.body.newVersion.publishNote,
 					publishDate: publishDate,
@@ -207,7 +208,6 @@ app.post('/publishPub', function(req, res) {
 					references: dbReferencesIds,
 					style: req.body.newVersion.style,
 					status: req.body.newVersion.status,
-					pHashes: req.body.newVersion.pHashes,
 					diffObject: {
 						additions:  diffObject.additions,
 						deletions:  diffObject.deletions,
@@ -235,7 +235,7 @@ app.post('/publishPub', function(req, res) {
 			});
 
 		});
-		
+
 	});
 });
 
@@ -244,7 +244,11 @@ app.post('/updateCollaborators', function(req, res) {
 		if (err) { return res.status(500).json(err);  }
 
 		// Check to make sure the user is authorized to be submitting such changes.
-		if (!req.user || pub.collaborators.canEdit.indexOf(req.user._id) === -1) {
+		const userGroups = req.user ? req.user.groups : [];
+		const userGroupsStrings = userGroups.toString().split(',');
+		const canEditStrings = pub.collaborators.canEdit.toString().split(',');
+
+		if (!req.user || (pub.collaborators.canEdit.indexOf(req.user._id) === -1 && _.intersection(userGroupsStrings, canEditStrings).length === 0) ) {
 			return res.status(403).json('Not authorized to publish versions to this pub');
 		}
 
@@ -257,10 +261,12 @@ app.post('/updateCollaborators', function(req, res) {
 				canEdit.push(collaborator._id);
 				// Update the user's pubs collection so it is bound to their profile
 				User.update({ _id: collaborator._id }, { $addToSet: { pubs: pubID} }, function(err, result){if(err) return handleError(err)});
+				Group.update({ _id: collaborator._id }, { $addToSet: { pubs: pubID} }, function(err, result){if(err) return handleError(err)});
 			} else {
 				canRead.push(collaborator._id);
 				// Update the user's pubs collection so it is removed from their profile
 				User.update({ _id: collaborator._id }, { $pull: { pubs: pubID} }, function(err, result){if(err) return handleError(err)});
+				Group.update({ _id: collaborator._id }, { $addToSet: { pubs: pubID} }, function(err, result){if(err) return handleError(err)});
 			}
 		});
 		const collaborators = {
@@ -270,6 +276,7 @@ app.post('/updateCollaborators', function(req, res) {
 
 		if (req.body.removedUser) {
 			User.update({ _id: req.body.removedUser }, { $pull: { pubs: pubID} }, function(err, result){if(err) return handleError(err)});
+			Group.update({ _id: req.body.removedUser }, { $pull: { pubs: pubID} }, function(err, result){if(err) return handleError(err)});
 		}
 		// console.log(collaborators);
 		Pub.update({slug: req.body.slug}, { $set: { collaborators: collaborators }}, function(result){
@@ -286,10 +293,10 @@ app.post('/updatePubSettings', function(req, res) {
 	const settingKey = Object.keys(req.body.newSettings)[0];
 
 	Pub.findOne({slug: req.body.slug}, function(err, pub){
-		
+
 		if (err) {
 			console.log(err);
-			return res.status(500).json(err); 
+			return res.status(500).json(err);
 		}
 
 		if (!req.user || pub.collaborators.canEdit.indexOf(req.user._id) === -1) {
@@ -302,6 +309,32 @@ app.post('/updatePubSettings', function(req, res) {
 			if (err) { return res.status(500).json(err);  }
 
 			return res.status(201).json(pub.settings);
+		});
+
+	});
+});
+
+app.post('/updatePubData', function(req, res) {
+	Pub.findOne({slug: req.body.slug}, function(err, pub){
+
+		if (err) {
+			console.log(err);
+			return res.status(500).json(err);
+		}
+
+		if (!req.user || pub.collaborators.canEdit.indexOf(req.user._id) === -1) {
+			return res.status(403).json('Not authorized to edit this pub');
+		}
+
+		for (const key in req.body.newPubData) {
+			pub[key] = req.body.newPubData[key];
+		}
+		// pub.settings[settingKey] = req.body.newSettings[settingKey];
+
+		pub.save(function(err, result){
+			if (err) { return res.status(500).json(err);  }
+
+			return res.status(201).json(req.body.newPubData);
 		});
 
 	});

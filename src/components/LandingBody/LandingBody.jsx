@@ -55,7 +55,9 @@ const LandingBody = React.createClass({
 							return (
 								<LandingComponentCollectionList 
 									key={'LandingComponent-' + index}
-									style={component.style} />
+									style={component.style} 
+									collections={this.props.journalData.get('collections').toJS()} 
+									selectCollections={component.collections && component.collections.replace(/ /g, '').split(',')} />
 							);
 						case 'recentList': 
 							return (
@@ -81,9 +83,3 @@ styles = {
 
 	},
 };
-
-// type
-// text
-// link
-// image
-// style

@@ -5,11 +5,9 @@ import { Link } from 'react-router';
 import dateFormat from 'dateformat';
 import DiscussionsInput from './DiscussionsInput';
 import DiscussionsScore from './DiscussionsScore';
-import smoothScroll from '../../utils/smoothscroll';
 
-import marked from '../../modules/markdown/markdown';
-import markdownExtensions from '../../components/EditorPlugins';
-marked.setExtensions(markdownExtensions);
+import {convertListToObject} from '../../utils/parsePlugins';
+import PPMComponent from '../../markdown/PPMComponent';
 
 // import {globalMessages} from '../../utils/globalMessages';
 import {FormattedMessage} from 'react-intl';
@@ -20,7 +18,6 @@ const DiscussionsItem = React.createClass({
 	propTypes: {
 		slug: PropTypes.string,
 		discussionItem: PropTypes.object,
-		pHashes: PropTypes.object,
 		instanceName: PropTypes.string,
 
 		addDiscussionHandler: PropTypes.func,
@@ -41,7 +38,6 @@ const DiscussionsItem = React.createClass({
 				selections: [],
 				children: [],
 			},
-			pHashes: {},
 		};
 	},
 
@@ -51,56 +47,10 @@ const DiscussionsItem = React.createClass({
 		};
 	},
 
-	componentDidMount() {
-		// Go through all the selections and add them to the body
-		const Marklib = require('marklib');
-		this.props.discussionItem.selections.map((selection)=>{
-			// console.log('selection', selection);
-			setTimeout(()=>{
-				const pIndex = this.props.pHashes[selection.ancestorHash];
-				// console.log('pIndex', pIndex);
-				if (pIndex) {
-					try {
-						const result = {
-							startContainerPath: selection.startContainerPath.replace(/div:nth-of-type\([^\)]+\)/, 'div:nth-of-type(' + pIndex + ')'),
-							endContainerPath: selection.endContainerPath.replace(/div:nth-of-type\([^\)]+\)/, 'div:nth-of-type(' + pIndex + ')'),
-							startOffset: selection.startOffset,
-							endOffset: selection.endOffset,
-						};	
-						// console.log('reproduced result', result);
-						const renderer = new Marklib.Rendering(document, {className: 'selection selection-' + selection._id}, document.getElementById('pubBodyContent'));
-						renderer.renderWithResult(result);	
-						renderer.on('click', function(item) {
-							const destination = document.getElementById('selection-block-' + selection._id);
-							const context = document.getElementsByClassName('rightBar')[0];
-							smoothScroll(destination, 500, ()=>{}, context);
-						});
-						renderer.on('hover-enter', function(item) {
-							const destination = document.getElementById('selection-block-' + selection._id);
-							destination.className = destination.className.replace('selection-block', 'selection-block-active');
-						});
-						renderer.on('hover-leave', function(item) {
-							const destination = document.getElementById('selection-block-' + selection._id);
-							destination.className = destination.className.replace('selection-block-active', 'selection-block');
-						});
-					} catch (err) {
-						if (__DEVELOPMENT__) {
-							console.log('selection', err);	
-						}
-					}
-				}
-			}, 100);
-				
-		});
-		
-	},
-
 	componentWillReceiveProps(nextProps) {
 		if (this.props.addDiscussionStatus === 'loading' && this.props.activeSaveID === this.props.discussionItem._id && nextProps.addDiscussionStatus === 'loaded') {
 			this.setState({replyActive: false});
-
 		}
-		
 	},
 
 	toggleReplyActive: function() {
@@ -110,11 +60,12 @@ const DiscussionsItem = React.createClass({
 	},
 
 	render: function() {
+
 		const discussionItem = this.props.discussionItem;
-		const assets = discussionItem.assets || [];
-		const references = discussionItem.references || [];
+
+		const assets = convertListToObject( discussionItem.assets );
+		const references = convertListToObject(discussionItem.references, true);
 		const selections = discussionItem.selections || [];
-		const md = marked(discussionItem.markdown || '', {assets, references, selections});
 
 		return (
 			<div style={styles.container}>
@@ -152,22 +103,20 @@ const DiscussionsItem = React.createClass({
 
 				<div style={styles.discussionBody}>
 					<div style={styles.discussionVoting}>
-						{this.props.noPermalink
-							? null
-							: <DiscussionsScore 
-								discussionID={discussionItem._id}
-								score={discussionItem.yays - discussionItem.nays}
-								userYay={discussionItem.userYay}
-								userNay={discussionItem.userNay} 
-								handleVoteSubmit={this.props.handleVoteSubmit} 
-								readOnly={this.props.noReply}/>
-						}
-						
+						<DiscussionsScore 
+							discussionID={discussionItem._id}
+							score={discussionItem.yays - discussionItem.nays}
+							userYay={discussionItem.userYay}
+							userNay={discussionItem.userNay} 
+							handleVoteSubmit={this.props.handleVoteSubmit} 
+							readOnly={this.props.noReply}/>
 					</div>
 
 					<div style={styles.discussionContent}>
-						{md.tree}
-						{/* discussionItem.markdown */}
+
+						{/* md.tree */}
+						<PPMComponent assets={assets} references={references} selections={selections} markdown={discussionItem.markdown} />
+
 					</div>
 				</div>
 				
@@ -195,7 +144,6 @@ const DiscussionsItem = React.createClass({
 							return (<ChildPubDiscussionItem 
 								key={child._id}
 								slug={this.props.slug}
-								pHashes={this.props.pHashes}
 								discussionItem={child}
 
 								activeSaveID={this.props.activeSaveID}
@@ -294,7 +242,7 @@ styles = {
 	discussionContent: {
 		width: 'calc(100% - 36px - 30px)',
 		marginLeft: 36,
-		overflow: 'hidden',
+		// overflow: 'hidden',
 		fontFamily: 'Arial',
 		color: '#555',
 		fontSize: '15px',

@@ -1,12 +1,31 @@
 import React, {PropTypes} from 'react';
-import Radium from 'radium';
-import {propSrcRef} from './pluginProps';
 import ErrorMsg from './ErrorPlugin';
 import {Reference} from '../';
-
-export const citeOptions = {reference: propSrcRef};
+import createPubPubPlugin from './PubPub';
 
 let styles = {};
+
+const CiteInputFields = [
+	{title: 'reference', type: 'reference'},
+	{title: 'description', type: 'text', params: {placeholder: 'Caption talking about the reference.'}},
+];
+
+const CiteConfig = {
+	title: 'cite',
+	inline: true,
+	autocomplete: true,
+	prerender: function(globals, pluginProps) {
+		if (!globals.citationCount) {
+			globals.citationCount = 1;
+		} else {
+			globals.citationCount = globals.citationCount + 1;
+		}
+		pluginProps.count = globals.citationCount;
+		return {globals, pluginProps};
+	}
+};
+
+// let styles =
 
 const CitePlugin = React.createClass({
 	propTypes: {
@@ -54,7 +73,7 @@ const CitePlugin = React.createClass({
 				{this.props.error === 'type'
 					? <ErrorMsg>Could not find reference.</ErrorMsg>
 					: <span style={[styles.ref]} onMouseOver={this.mouseOver} onMouseOut={this.mouseOut}>
-						[{this.props.count + 1}]
+						[{this.props.count}]
 						<span style={[styles.hoverRef, this.state.hover && styles.hoverRefVisible]}>
 							<Reference citationObject={this.props.reference} mode={'mla'} />
 						</span>
@@ -208,4 +227,4 @@ styles = {
 };
 
 
-export default Radium(CitePlugin);
+export default createPubPubPlugin(CitePlugin, CiteConfig, CiteInputFields);

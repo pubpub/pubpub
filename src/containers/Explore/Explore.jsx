@@ -73,7 +73,7 @@ const Explore = React.createClass({
 								<div style={styles.header}>
 									<FormattedMessage {...globalMessages.pubs} />
 								</div>
-								<PubGallery pubs={pubData} />
+								<PubGallery pubs={pubData} reverseOrder={true}/>
 							</div>
 							
 						);

@@ -9,36 +9,32 @@ import Helmet from 'react-helmet';
 import PureRenderMixin from 'react-addons-pure-render-mixin';
 import ReactFireMixin from 'reactfire';
 
-import {LoaderDeterminate, EditorPluginPopup, EditorModals, EditorTopNav, EditorBottomNav, PubBody} from '../../components';
+import {Discussions, EditorModals} from '../';
+import {LoaderDeterminate, EditorPluginPopup, EditorTopNav, EditorBottomNav, PubBody} from '../../components';
 import {clearPub} from '../../actions/pub';
-import {getPubEdit, toggleEditorViewMode, toggleFormatting, toggleTOC, unmountEditor, closeModal, openModal, publishVersion, saveCollaboratorsToPub, saveSettingsPubPub} from '../../actions/editor';
-import {saveSettingsUser} from '../../actions/login';
-// import {loadCss} from '../../utils/loadingFunctions';
+import {getPubEdit, toggleEditorViewMode, toggleFormatting, toggleTOC, unmountEditor, closeModal, openModal, addSelection, setEditorViewMode, publishVersion, updatePubBackendData} from '../../actions/editor';
+
 import {debounce} from '../../utils/loadingFunctions';
 import {submitPubToJournal} from '../../actions/journal';
 
 import initCodeMirrorMode from './editorCodeMirrorMode';
-import {styles, codeMirrorStyles} from './editorStyles';
+// import {styles} from './editorStyles';
+import {codeMirrorStyles, codeMirrorStyleClasses} from './codeMirrorStyles';
 import {globalStyles} from '../../utils/styleConstants';
 
 import {insertText, createFocusDoc, addCodeMirrorKeys} from './editorCodeFunctions';
 import {editorDefaultText} from './editorDefaultText';
 
-import SHA1 from 'crypto-js/sha1';
-import encHex from 'crypto-js/enc-hex';
-
-import marked from '../../modules/markdown/markdown';
-import markdownExtensions from '../../components/EditorPlugins';
 import FirepadUserList from './editorFirepadUserlist';
 
-import {Discussions} from '../';
-
 import {convertFirebaseToObject} from '../../utils/parsePlugins';
+import {generateTOC} from '../../markdown/generateTOC';
 
 import {globalMessages} from '../../utils/globalMessages';
 import {FormattedMessage} from 'react-intl';
 
-marked.setExtensions(markdownExtensions);
+let FireBaseURL;
+let styles;
 
 const cmOptions = {
 	lineNumbers: false,
@@ -71,33 +67,33 @@ const Editor = React.createClass({
 	getInitialState() {
 		return {
 			initialized: false,
-			tree: [],
-			travisTOC: [],
-			travisTOCFull: [],
+			firepadInitialized: false,
+			markdown: '',
+			tocH1: [],
 			activeFocus: '',
 			firepadData: {
 				collaborators: {},
 				assets: {},
 				references: {},
+				selections: [],
 				settings: {},
 			},
 			codeMirrorChange: {},
 			editorSaveStatus: 'saved',
-			previewPaneMode: 'preview',
+			previewPaneMode: undefined,
 		};
 	},
 
 	componentDidMount() {
+		FireBaseURL = (process.env.NODE_ENV === 'production' && location.hostname !== 'pubpub-dev.herokuapp.com') ? 'https://pubpub.firebaseio.com/' : 'https://pubpub-dev.firebaseio.com/';
+
 		if (! this.props.editorData.get('error')) {
 
-			// loadCss('/css/codemirror.css');
-			// loadCss('/css/react-select.min.css');
 			initCodeMirrorMode();
 
 			if (this.props.editorData.getIn(['pubEditData', 'token'])) {
 				this.initializeEditorData(this.props.editorData.getIn(['pubEditData', 'token']));
 			}
-			
 		}
 	},
 
@@ -112,13 +108,12 @@ const Editor = React.createClass({
 	},
 
 	componentWillUnmount() {
-		this.props.dispatch(closeModal());
 		this.props.dispatch(unmountEditor());
 	},
 
 	initializeEditorData: function(token) {
 		// Load Firebase and bind using ReactFireMixin. For assets, references, etc.
-		const ref = new Firebase('https://pubpub.firebaseio.com/' + this.props.slug + '/editorData' );
+		const ref = new Firebase(FireBaseURL + this.props.slug + '/editorData' );
 		ref.authWithCustomToken(token, (error, authData)=> {
 			if (error) {
 				console.log('Authentication Failed!', error);
@@ -126,7 +121,7 @@ const Editor = React.createClass({
 				this.bindAsObject(ref, 'firepadData');
 
 				// Load Firebase ref that is used for firepad
-				const firepadRef = new Firebase('https://pubpub.firebaseio.com/' + this.props.slug + '/firepad');
+				const firepadRef = new Firebase(FireBaseURL + this.props.slug + '/firepad');
 
 				// Load codemirror
 				const codeMirror = CodeMirror(document.getElementById('codemirror-wrapper'), cmOptions);
@@ -141,7 +136,7 @@ const Editor = React.createClass({
 					defaultText: editorDefaultText(this.props.pubData.getIn(['createPubData', 'title']))
 				});
 
-				new Firebase('https://pubpub.firebaseio.com/.info/connected').on('value', (connectedSnap)=> {
+				new Firebase(FireBaseURL + '.info/connected').on('value', (connectedSnap)=> {
 					if (connectedSnap.val() === true) {
 						/* we're connected! */
 						this.setState({editorSaveStatus: 'saved'});
@@ -155,10 +150,14 @@ const Editor = React.createClass({
 					document.getElementById('userlist'), username, this.props.loginData.getIn(['userData', 'name']), this.props.loginData.getIn(['userData', 'thumbnail']));
 
 				firepad.on('synced', (synced)=>{
-					// console.log('before debounce', synced);
-					debounce(()=> {
+					
+					debounce('saveStatusSync', ()=> {
 						this.updateSaveStatus(synced);
 					}, 250)();
+				});
+
+				firepad.on('ready', ()=>{
+					this.setState({firepadInitialized: true});
 				});
 
 				// need to unmount on change
@@ -172,13 +171,10 @@ const Editor = React.createClass({
 	},
 
 	getActiveCodemirrorInstance: function() {
-		const cm = this.state.activeFocus === ''
-				? document.getElementById('codemirror-wrapper').childNodes[0].childNodes[0].CodeMirror
-				: document.getElementById('codemirror-focus-wrapper').childNodes[0].CodeMirror;
-
-		return cm;
+		return this.state.activeFocus === ''
+			? document.getElementById('codemirror-wrapper').childNodes[0].childNodes[0].CodeMirror
+			: document.getElementById('codemirror-focus-wrapper').childNodes[0].CodeMirror;
 	},
-
 
 	showPopupFromAutocomplete: function(completion) { // completion, element
 		const cords = this.cm.cursorCoords();
@@ -199,86 +195,82 @@ const Editor = React.createClass({
 		}
 	},
 
+	updatePubBackendData: function() {
+		const newPubData = {
+			title: this.state.title,
+			abstract: this.state.abstract,
+		};
+		this.props.dispatch(updatePubBackendData(this.props.slug, newPubData));
+	},
+
 	onEditorChange: function(cm, change) {
 
-		// const start = performance.now();
 		CodeMirror.commands.autocomplete(cm, CodeMirror.hint.plugins, {completeSingle: false});
 
 		if (cm.state.completionActive && cm.state.completionActive.data) {
 			const completion = cm.state.completionActive.data;
 			CodeMirror.on(completion, 'pick', this.showPopupFromAutocomplete);
 		}
+
 		// const start = performance.now();
 
-		// This feels inefficient.
-		// An alternative is that we don't pass a trimmed version of the text to the markdown processor.
-		// Instead we define header plugins and pass the entire thing to both here and body.
-		// const markdownStart = performance.now();
 		const fullMD = cm.getValue();
-		// const markdownGrab = performance.now();
-		const titleRE = /\{\{title:(.*?)\}\}/i;
-		const titleMatch = fullMD.match(titleRE);
+
+		// Grab title, abstract, and authorsNote
+		const titleMatch = fullMD.match(/\[\[title:(.*?)\]\]/i);
 		const title = titleMatch && titleMatch.length ? titleMatch[1].trim() : '';
-		// const titleGrabAndSet = performance.now();
-
-		const abstractRE = /\{\{abstract:(.*?)\}\}/i;
-		const abstractMatch = fullMD.match(abstractRE);
+		const abstractMatch = fullMD.match(/\[\[abstract:(.*?)\]\]/i);
 		const abstract = abstractMatch && abstractMatch.length ? abstractMatch[1].trim() : '';
-		// const abstractGrabAndSet = performance.now();
-
-		const authorsNoteRE = /\{\{authorsNote:(.*?)\}\}/i;
-		const authorsNoteMatch = fullMD.match(authorsNoteRE);
+		const authorsNoteMatch = fullMD.match(/\[\[authorsNote:(.*?)\]\]/i);
 		const authorsNote = authorsNoteMatch && authorsNoteMatch.length ? authorsNoteMatch[1].trim() : '';
-		// const aNGrabAndSet = performance.now();
 
+		// Generate TOC
+		const TOCs = generateTOC(fullMD);		
+
+		// Format assets and references
 		const assets = convertFirebaseToObject(this.state.firepadData.assets);
 		const references = convertFirebaseToObject(this.state.firepadData.references, true);
 		const selections = [];
-		const markdown = fullMD.replace(/\{\{title:.*?\}\}/g, '').replace(/\{\{abstract:.*?\}\}/g, '').replace(/\{\{authorsNote:.*?\}\}/g, '').trim();
-		// const removeTitleEtc = performance.now();
-		// let compiledMarkdown = 0;
-		// let saveState = 0;
 
-		try {
+		// Strip markdown of title, abstract, authorsNote
+		const markdown = fullMD.replace(/\[\[title:.*?\]\]/g, '').replace(/\[\[abstract:.*?\]\]/g, '').replace(/\[\[authorsNote:.*?\]\]/g, '').trim();
+		
+		// const compiledMarkdown = performance.now();
 
-			const mdOutput = marked(markdown, {assets, references, selections});
-			// compiledMarkdown = performance.now();
-			this.setState({
-				tree: mdOutput.tree,
-				travisTOC: mdOutput.travisTOC,
-				travisTOCFull: mdOutput.travisTOCFull,
-				codeMirrorChange: change,
-				title: title,
-				abstract: abstract,
-				authorsNote: authorsNote,
-			});
-			// saveState = performance.now();
-		} catch (err) {
-			console.log('Compiling error: ', err);
-			this.setState({
-				tree: [],
-				title: 'Error Compiling',
-				abstract: err.toString().replace('Please report this to https://github.com/chjj/marked.', ''),
-			});
+		if (this.state.title !== title || this.state.abstract !== abstract) {
+			debounce('backendSync', this.updatePubBackendData, 2000)();
 		}
-		// console.log('total', saveState - start);
-		// console.log('preMD', markdownStart - start);
-		// console.log('markdownGrab', markdownGrab - start, markdownGrab - markdownStart);
-		// console.log('titleGrab', titleGrabAndSet - start, titleGrabAndSet - markdownGrab);
-		// console.log('abstractGrab', abstractGrabAndSet - start, abstractGrabAndSet - titleGrabAndSet);
-		// console.log('anGrab', aNGrabAndSet - start, aNGrabAndSet - abstractGrabAndSet);
-		// console.log('removeTitleEtc', removeTitleEtc - start, removeTitleEtc - aNGrabAndSet);
-		// console.log('compiledMarkdown', compiledMarkdown - start, compiledMarkdown - removeTitleEtc);
+		// Set State to trigger re-render
+		this.setState({
+			markdown: markdown,
+			tocH1: TOCs.h1,
+			toc: TOCs.full,
+			codeMirrorChange: change,
+			title: title,
+			abstract: abstract,
+			authorsNote: authorsNote,
+			assetsObject: assets,
+			referencesObject: references,
+			selectionsArray: selections,
+		});
+
+		// const saveState = performance.now();
 		// console.log('saveState', saveState - start, saveState - compiledMarkdown);
-		// console.log('~~~~~~~~~~~~~~~~~~');
-		// const end = performance.now();
-		// console.log('timing = ', end - start);
+		// console.log('total', saveState - start);
 
 	},
 
 	toggleLivePreview: function() {
 		this.closeModalHandler();
 		return this.props.dispatch(toggleEditorViewMode());
+	},
+
+	toggleReadMode: function() {
+		if (this.props.editorData.get('viewMode') === 'read') {
+			this.props.dispatch(setEditorViewMode('preview'));	
+		} else {
+			this.props.dispatch(setEditorViewMode('read'));	
+		}
 	},
 
 	// Toggle formatting dropdown
@@ -293,23 +285,7 @@ const Editor = React.createClass({
 		return this.props.dispatch(toggleTOC());
 	},
 
-	publishVersion: function(versionState, versionDescription) {
-
-		// const cm = document.getElementsByClassName('CodeMirror')[0].CodeMirror;
-		const cm = document.getElementById('codemirror-wrapper').childNodes[0].childNodes[0].CodeMirror;
-		const fullMD = cm.getValue();
-
-		const titleRE = /\{\{title:(.*?)\}\}/i;
-		const titleMatch = fullMD.match(titleRE);
-		const title = titleMatch && titleMatch.length ? titleMatch[1].trim() : '';
-
-		const abstractRE = /\{\{abstract:(.*?)\}\}/i;
-		const abstractMatch = fullMD.match(abstractRE);
-		const abstract = abstractMatch && abstractMatch.length ? abstractMatch[1].trim() : '';
-
-		const authorsNoteRE = /\{\{authorsNote:(.*?)\}\}/i;
-		const authorsNoteMatch = fullMD.match(authorsNoteRE);
-		const authorsNote = authorsNoteMatch && authorsNoteMatch.length ? authorsNoteMatch[1].trim() : '';
+	publishVersion: function(versionDescription) {
 
 		const authors = [];
 		for (const collaborator in this.state.firepadData.collaborators) {
@@ -318,94 +294,28 @@ const Editor = React.createClass({
 			}
 		}
 
-		// pHashes are generated and collected to perform discussion highlight synchronization
-		const pTags = document.querySelectorAll('.mainRenderBody .p-block');
-		// console.log(pTags);
-		const pHashes = {};
-		for ( const key in pTags ) {
-			if (pTags.hasOwnProperty(key)) {
-				pHashes[SHA1(pTags[key].innerText).toString(encHex)] = parseInt(key, 10) + 1;
-			}
-		}
-
-		// console.log(pHashes);
-
 		const newVersion = {
 			slug: this.props.slug,
-			title: title,
-			abstract: abstract,
-			authorsNote: authorsNote,
-			markdown: fullMD.replace(/\{\{title:.*?\}\}/g, '').replace(/\{\{abstract:.*?\}\}/g, '').replace(/\{\{authorsNote:.*?\}\}/g, '').trim(),
+			title: this.state.title,
+			abstract: this.state.abstract,
+			authorsNote: this.state.authorsNote,
+			markdown: this.state.markdown,
 			authors: authors,
 			assets: this.state.firepadData.assets,
 			references: this.state.firepadData.references,
 			style: this.state.firepadData.settings.pubStyle,
-			status: versionState,
-			pHashes: pHashes,
 			publishNote: versionDescription,
 		};
-		this.props.dispatch(clearPub());	
+
+		this.props.dispatch(clearPub());
 
 		// This should perhaps be done on the backend in one fell swoop - rather than having two client side calls.
 		if (this.props.journalData.get('baseSubdomain')) {
-			this.props.dispatch(submitPubToJournal(this.props.editorData.getIn(['pubEditData', '_id']), this.props.journalData.getIn(['journalData']).toJS()));	
+			this.props.dispatch(submitPubToJournal(this.props.editorData.getIn(['pubEditData', '_id']), this.props.journalData.getIn(['journalData']).toJS()));
 		}
 
 		this.props.dispatch(publishVersion(newVersion));
-		
-	},
 
-	// Add asset to firebase.
-	// Will trigger other open clients to sync new assets data.
-	addAsset: function(asset) {
-		// Cleanup refname. No special characters, underscores, etc.
-		let refName = asset.originalFilename.replace(/[^0-9a-z]/gi, '');
-
-		// Make sure refname is unique.
-		// If it's not unique, append a timestamp.
-		if (this.state.firepadData.assets && refName in this.state.firepadData.assets) {
-			refName = refName + '_' + Date.now();
-		}
-		// Add refname and author to passed in asset object.
-		asset.refName = refName;
-		asset.author = this.props.loginData.getIn(['userData', 'username']);
-
-		// Push to firebase ref
-		const ref = new Firebase('https://pubpub.firebaseio.com/' + this.props.slug + '/editorData/assets' );
-		ref.push(asset);
-	},
-
-	deleteAsset: function(assetID) {
-		return ()=>{
-			const ref = new Firebase('https://pubpub.firebaseio.com/' + this.props.slug + '/editorData/assets/' + assetID );
-			ref.remove();
-		};
-	},
-
-	saveUpdatedCollaborators: function(newCollaborators, removedUser) {
-		const ref = new Firebase('https://pubpub.firebaseio.com/' + this.props.slug + '/editorData/collaborators' );
-		ref.set(newCollaborators);
-		this.props.dispatch(saveCollaboratorsToPub(newCollaborators, removedUser, this.props.slug));
-	},
-
-	saveUpdatedSettingsUser: function(newSettings) {
-		this.props.dispatch(saveSettingsUser(newSettings));
-	},
-
-	saveUpdatedSettingsFirebase: function(newSettings) {
-		const ref = new Firebase('https://pubpub.firebaseio.com/' + this.props.slug + '/editorData/settings' );
-		ref.update(newSettings);
-	},
-
-	saveUpdatedSettingsFirebaseAndPubPub: function(newSettings) {
-		const ref = new Firebase('https://pubpub.firebaseio.com/' + this.props.slug + '/editorData/settings' );
-		ref.update(newSettings);
-		this.props.dispatch(saveSettingsPubPub(this.props.slug, newSettings));
-	},
-
-	saveReferences: function(newReferences) {
-		const ref = new Firebase('https://pubpub.firebaseio.com/' + this.props.slug + '/editorData/references' );
-		ref.set(newReferences);
 	},
 
 	closeModalHandler: function() {
@@ -454,85 +364,31 @@ const Editor = React.createClass({
 		return outputAuthors;
 	},
 
-	renderNav: function(mobileView) {
-		// if isEditor, add 'Public Discussions' | 'Collaborator Comments'  | 'Live Preview'
-		// remove whichever one is active in state at the moment
-		const discussionsExist = this.props.editorData.getIn(['pubEditData', 'discussions']) && this.props.editorData.getIn(['pubEditData', 'discussions']).size;
-
-		const editorCommentsTab = (
-			<div key={mobileView ? 'mobileBodyNav2' : 'previewBodyNav2'} style={styles.bodyNavItem} onClick={this.switchPreviewPaneMode('comments')}>
-				Editor Comments
-			</div>
-		);
-
-		const publicDiscussionsTab = (
-			<div key={mobileView ? 'mobileBodyNav1' : 'previewBodyNav1'} style={styles.bodyNavItem} onClick={this.switchPreviewPaneMode('discussions')}>
-				Public Discussions
-			</div>
-		);
-
-		const livePreviewTab = (
-			<div key={mobileView ? 'mobileBodyNav3' : 'previewBodyNav3'} style={styles.bodyNavItem} onClick={this.switchPreviewPaneMode('preview')}>
-				Live Preview
-			</div>
-		);
-
-		return (<div className={'editorBodyNav'} style={styles.bodyNavBar}>
-
-			{(()=>{
-				switch (this.state.previewPaneMode) {
-				case 'preview':
-					return (
-						<div>
-							{editorCommentsTab}
-							<div style={[styles.bodyNavSeparator, styles.mobileOnlySeparator]}>|</div>
-							{discussionsExist
-								? <div style={styles.bodyNavDiscussionBlock}>
-									<div style={styles.bodyNavSeparator}>|</div>
-									{publicDiscussionsTab}
-								</div>
-								: null
-							}
-							
-						</div>
-					);
-				case 'comments':
-					return (
-						<div>
-							{livePreviewTab}
-							<div style={[styles.bodyNavSeparator, styles.mobileOnlySeparator]}>|</div>
-							{discussionsExist
-								? <div style={styles.bodyNavDiscussionBlock}>
-									<div style={styles.bodyNavSeparator}>|</div>
-									{publicDiscussionsTab}
-								</div>
-								: null
-							}
-						</div>
-					);
-				case 'discussions':
-					return (
-						<div>
-							{editorCommentsTab}
-							<div style={styles.bodyNavSeparator}>|</div>
-							{livePreviewTab}
-						</div>
-					);
-				default:
-					return null;
-				}
-			})()}
-
-		</div>);
-	},
-
 	switchPreviewPaneMode: function(mode) {
 		return ()=>{
-			this.setState({previewPaneMode: mode});
+			if (mode === this.state.previewPaneMode) {
+				this.setState({previewPaneMode: undefined});
+			} else {
+				this.setState({previewPaneMode: mode});	
+			}
 		};
 	},
 
-	renderBody: function() {
+	addSelection: function(newSelection) {
+		newSelection.pub = this.props.editorData.getIn(['pubEditData', '_id']);
+		newSelection.version = 0;
+		this.props.dispatch(addSelection(newSelection));
+	},
+
+	render: function() {
+		const editorData = this.props.editorData;
+		const viewMode = this.props.editorData.get('viewMode');
+		const isReader = this.props.editorData.getIn(['pubEditData', 'isReader']);
+		const showBottomLeftMenu = this.props.editorData.get('showBottomLeftMenu');
+		const showBottomRightMenu = this.props.editorData.get('showBottomRightMenu');
+		const loadStatus = this.props.editorData.get('status');
+		const darkMode = this.props.loginData.getIn(['userData', 'settings', 'editorColor']) === 'dark';
+
 		const referencesList = [];
 		for ( const key in this.state.firepadData.references ) {
 			if (this.state.firepadData.references.hasOwnProperty(key)) {
@@ -540,36 +396,11 @@ const Editor = React.createClass({
 			}
 		}
 
-		return (
-			<PubBody
-				status={'loaded'}
-				title={this.state.title}
-				abstract={this.state.abstract}
-				authorsNote={this.state.authorsNote}
-				minFont={15}
-				htmlTree={this.state.tree}
-				authors={this.getAuthorsArray()}
-				// addSelectionHandler={this.addSelection}
-				style={this.state.firepadData && this.state.firepadData.settings ? this.state.firepadData.settings.pubStyle : undefined}
-				references={referencesList}
-				isFeatured={true}/>
-		);
-	},
-
-	render: function() {
-		const editorData = this.props.editorData;
-		const viewMode = this.props.editorData.get('viewMode');
-		const showBottomLeftMenu = this.props.editorData.get('showBottomLeftMenu');
-		const showBottomRightMenu = this.props.editorData.get('showBottomRightMenu');
-		const loadStatus = this.props.editorData.get('status');
-		const darkMode = this.props.loginData.getIn(['userData', 'settings', 'editorColor']) === 'dark';
-
 		// Set metadata for the page.
 		const metaData = {
-			title: 'PubPub - Editing ' + this.props.slug
+			title: 'Edit - ' + this.props.editorData.getIn(['pubEditData', 'title'])
 		};
 
-		const isReader = this.props.editorData.getIn(['pubEditData', 'isReader']);
 		return (
 
 			<div style={[styles.editorContainer, darkMode && styles.editorContainerDark]} className={'editor-container'}>
@@ -578,236 +409,165 @@ const Editor = React.createClass({
 
 				<Style rules={{
 					...codeMirrorStyles(this.props.loginData),
-					'.pagebreak': {
-						opacity: '1', // Alternatively, instead of using !important, we could pass a variable to PubBody that differentiates whether we're in the Reader or Editor and toggle the pagebreak opacity accordingly.
-					},
-					'.firepad-userlist-user': {
-						height: '30px',
-						overflow: 'hidden',
-						display: 'inline-block',
-						position: 'relative',
-					},
-					'.firepad-userlist-user:hover': {
-						overflow: 'visible',
-					},
-					'.firepad-userlist-image': {
-						height: '20px',
-						padding: '5px',
-					},
-					'.firepad-userlist-color-indicator': {
-						position: 'absolute',
-						height: '3px',
-						bottom: '2px',
-						left: '5px',
-						width: '20px',
-					},
-					'.firepad-userlist-name': {
-						position: 'absolute',
-						width: '250px',
-						left: '-110px',
-						textAlign: 'center',
-						bottom: '-20px',
-						height: '20px',
-						lineHeight: '20px',
-						backgroundColor: '#F5F5F5',
-
-					},
-
+					...codeMirrorStyleClasses
 				}} />
 
 				{/*	'Not Authorized' or 'Error' Note */}
 				{this.props.editorData.get('error')
 					? <div style={styles.errorTitle}>{this.props.editorData.getIn(['pubEditData', 'title'])}</div>
 					: <div>
-						{/*
-							Mobile
-								renderNav
-								renderBody (switches out in place with comments/discussions)
+						
+						{/*	Component for all modals and their backdrop. */}
+						<EditorModals publishVersionHandler={this.publishVersion} />
 
+						{/* Top Nav. Fixed to the top of the editor page, just below the main pubpub bar */}
+						<EditorTopNav
+							status={editorData.get('status')}
+							darkMode={darkMode}
+							openModalHandler={this.openModalHandler}
+							editorSaveStatus={this.state.editorSaveStatus}
+							toggleLivePreviewHandler={this.toggleLivePreview}
+							viewMode={viewMode} />
 
-							Not Mobile
-								isReader
-									renderBody
-									renderComments
+						{/*	Horizontal loader line - Separates top bar from rest of editor page */}
+						<div style={styles.editorLoadBar}>
+							<LoaderDeterminate value={loadStatus === 'loading' ? 0 : 100}/>
+						</div>
 
-								isEditor
-									renderEditor
-									renderNav
-									renderBody (switches out in place with comments/discussions)
+						{/* Bottom Nav */}
+						<EditorBottomNav
+							viewMode={viewMode}
+							loadStatus={loadStatus}
+							darkMode={darkMode}
+							showBottomLeftMenu={showBottomLeftMenu}
+							showBottomRightMenu={showBottomRightMenu}
+							toggleTOCHandler={this.toggleTOC}
+							toggleFormattingHandler={this.toggleFormatting}
+							activeFocus={this.state.activeFocus}
+							focusEditorHandler={this.focusEditor}
+							tocH1={this.state.tocH1}
+							insertFormattingHandler={this.insertFormatting}/>
 
-						*/}
-						{/* Mobile */}
-						<div style={styles.isMobile}>
-							{/* In mobile - readers and editors have the same view. Editors have a note about screen size. */}
-							{this.renderNav(true)}
-							
-							<div style={[styles.previewBlockWrapper, this.state.previewPaneMode === 'preview' && styles.previewBlockWrapperShow]}>
-								{isReader
-									? null
-									: <span style={styles.editorDisabledMessage}>
-										<FormattedMessage id="editingDisableMobile" defaultMessage="Editing disabled on mobile view - but you can still read and comment. Open on a laptop or desktop to edit." />
-									</span>
-									
-								}
+						{/* ---------------------- */}
+						{/* Markdown Editing Block */}
+						{/* ---------------------- */}
+						<div id="editor-text-wrapper" style={[globalStyles.hiddenUntilLoad, globalStyles[loadStatus], styles.editorMarkdown, styles[viewMode].editorMarkdown, !isReader && styles[viewMode].editorMarkdownIsEditor]}>
 
-								{this.renderBody()}
+							<EditorPluginPopup ref="pluginPopup" references={this.state.firepadData.references} assets={this.state.firepadData.assets} /* selections={this.state.firepadData.selections} */ activeFocus={this.state.activeFocus} codeMirrorChange={this.state.codeMirrorChange}/>
+
+							{/* Insertion point for codemirror and firepad */}
+							<div style={[this.state.activeFocus !== '' && styles.hiddenMainEditor]}>
+								<div id="codemirror-wrapper"></div>
 							</div>
 
-							<div style={[styles.previewBlockWrapper, this.state.previewPaneMode === 'comments' && styles.previewBlockWrapperShow]}>
-								<div style={styles.previewBlockHeader}>Editor Comments</div>
+							{/* Insertion point for Focused codemirror subset */}
+							<div id="codemirror-focus-wrapper"></div>
+
+						</div>
+
+						{/* ------------------ */}
+						{/* Live Preview Block */}
+						{/* ------------------ */}
+						<div id="editor-live-preview-wrapper" style={[globalStyles.hiddenUntilLoad, globalStyles[loadStatus], styles.editorPreview, styles[viewMode].editorPreview]} className={'editorPreview'}>
+
+							<div className={'editorPreviewNav'} style={styles.bodyNavBar}>
+								<div key={'previewBodyNav0'} style={[styles.bodyNavItem, viewMode === 'read' && globalStyles.hidden, styles.undoHiddenInMobile]} onClick={this.switchPreviewPaneMode('comments')}>
+									Editor Comments
+								</div>
+								<div style={[styles.bodyNavSeparator, viewMode === 'read' && globalStyles.hidden]}>|</div>
+								<div key={'previewBodyNav1'} style={[styles.bodyNavItem, styles.bodyNavItemHiddenMobile, viewMode === 'read' && globalStyles.hidden]} onClick={this.switchPreviewPaneMode('discussions')}>
+									<FormattedMessage {...globalMessages.PublicDiscussion} />
+								</div>
+
+								<div style={[styles.readModeNav, !isReader && styles.readModeNavShow]}>
+									<div style={[styles.bodyNavSeparator, viewMode === 'read' && globalStyles.hidden]}>|</div>
+									<div key={'previewBodyNav2'} style={[styles.bodyNavItem]} onClick={this.toggleReadMode}>
+										{viewMode === 'read'
+											? 'Edit Mode'
+											: 'Read Mode'
+										}
+									</div>
+								</div>
+								
+							</div>
+
+							<div className="editorBodyView pubScrollContainer" style={[styles.previewBlockWrapper, styles.previewBlockWrapperShow]}>
+
+								<span style={[styles.editorDisabledMessage, viewMode !== 'read' && styles.editorDisabledMessageVisible]}>
+									<FormattedMessage id="editingDisableMobile" defaultMessage="Editing disabled on mobile view. You can still read and comment. Open on a laptop or desktop to edit." />
+								</span>
+
+								<div style={{position: 'relative'}}>
+									<div id="editor-close-bar" style={[this.state.previewPaneMode && styles.editorCloseBar]} onClick={this.switchPreviewPaneMode(undefined)}></div>
+									<PubBody
+										status={'loaded'}
+										title={this.state.title}
+										abstract={this.state.abstract}
+										authorsNote={this.state.authorsNote}
+										minFont={15}
+										htmlTree={this.state.tree}
+										markdown={this.state.markdown}
+										authors={this.getAuthorsArray()}
+										showPubHighlights={this.state.previewPaneMode === 'discussions'}
+										showPubHighlightsComments={this.state.previewPaneMode === 'comments' || viewMode === 'read'}
+										addSelectionHandler={this.addSelection}
+										style={this.state.firepadData && this.state.firepadData.settings ? this.state.firepadData.settings.pubStyle : undefined}
+										assetsObject={this.state.assetsObject}
+										referencesObject={this.state.referencesObject}
+										selectionsArray={this.state.selectionsArray}
+
+										references={referencesList}
+										isFeatured={true} />
+								</div>
+								
+							</div>
+						</div>
+
+						{/* ----------------- */}
+						{/* Discussions Block */}
+						{/* ----------------- */}
+						<div id="editor-discussions-wrapper" style={[globalStyles.hiddenUntilLoad, globalStyles[loadStatus], styles.editorDiscussions, viewMode === 'read' && styles[viewMode].editorDiscussionsMobile, this.state.previewPaneMode && styles[viewMode].editorDiscussions]}>
+
+							<div key="editorDiscussions" style={styles.menuClose} onClick={this.switchPreviewPaneMode(undefined)}>
+								<FormattedMessage {...globalMessages.close} />
+							</div>
+
+							<div className="commentsRightBar" style={[styles.previewBlockWrapper, (this.state.previewPaneMode === 'comments' || viewMode === 'read') && styles.previewBlockWrapperShow]}>
+								<div style={styles.previewBlockHeader}>
+									<FormattedMessage {...globalMessages.EditorComments} />
+								</div>
+
 								<div style={styles.previewBlockText}>
 									<div><FormattedMessage {...globalMessages.editorCommentsText0} /></div>
 									<div><FormattedMessage {...globalMessages.editorCommentsText1} /></div>
 								</div>
 
-								<Discussions inEditor={true} editorCommentMode={true} instanceName={'mobileEditorComments'}/>
+								{this.state.firepadInitialized
+									? <Discussions editorCommentMode={true} inEditor={true} instanceName={'editorComments'}/>
+									: null
+								}
+								
+							</div>
+
+							<div className="rightBar" style={[styles.previewBlockWrapper, this.state.previewPaneMode === 'discussions' && styles.previewBlockWrapperShow]}>
+
+								<div style={styles.previewBlockHeader}>
+									<FormattedMessage {...globalMessages.PublicDiscussion} />
+								</div>
+								<div style={styles.previewBlockText}>
+									<FormattedMessage id="editorDiscussionMessage" defaultMessage="This section shows the discussion from the public, published version of your pub."/>
+								</div>
+								
+								{this.state.firepadInitialized
+									? <Discussions editorCommentMode={false} inEditor={true} instanceName={'editorDiscussions'}/>
+									: null
+								}
 							</div>
 
 						</div>
 
-						{/* Not Mobile */}
-						<div style={styles.notMobile}>
-							{isReader
-								? <div>
-
-									<div style={styles.hiddenCodeMirror}>
-										{/*  Necessary for body rednering to work */}
-										<EditorTopNav 
-											status={editorData.get('status')}
-											darkMode={darkMode}
-											openModalHandler={this.openModalHandler}
-											editorSaveStatus={this.state.editorSaveStatus}
-											toggleLivePreviewHandler={this.toggleLivePreview}/>
-										<div id="codemirror-wrapper"></div>
-									</div>
-
-									<div className={'editorBodyView'} style={[styles.readerViewBlock, styles.readerViewBlockBody]}>
-										{this.renderBody()}
-									</div>
-
-									<div style={[styles.readerViewBlock]}>
-										<div style={styles.previewBlockHeader}>Editor Comments</div>
-										<div style={styles.previewBlockText}>
-											<div><FormattedMessage {...globalMessages.editorCommentsText0} /></div>
-											<div><FormattedMessage {...globalMessages.editorCommentsText1} /></div>
-										</div>
-										<Discussions inEditor={true} editorCommentMode={true} instanceName={'desktopEditorComments'}/>
-									</div>
-
-								</div>
-
-								: <div>
-									{/* Editor's View */}
-									{/*	Component for all modals and their backdrop. */}
-									<EditorModals
-										closeModalHandler={this.closeModalHandler}
-										activeModal={this.props.editorData.get('activeModal')}
-										slug={this.props.slug}
-										// Asset Props
-										assetData={this.state.firepadData.assets}
-										addAsset={this.addAsset}
-										deleteAsset={this.deleteAsset}
-										// Collaborator Props
-										collaboratorData={this.state.firepadData.collaborators}
-										updateCollaborators={this.saveUpdatedCollaborators}
-										// Publish Props
-										handlePublish={this.publishVersion}
-										currentJournal={this.props.journalData.getIn(['journalData', 'journalName'])}
-
-										// References Props
-										referenceData={this.state.firepadData.references}
-										referenceStyle={this.state.firepadData && this.state.firepadData.settings ? this.state.firepadData.settings.pubReferenceStyle : undefined}
-										updateReferences={this.saveReferences}
-										// Style Props
-										editorFont={this.props.loginData.getIn(['userData', 'settings', 'editorFont'])}
-										editorFontSize={this.props.loginData.getIn(['userData', 'settings', 'editorFontSize'])}
-										editorColor={this.props.loginData.getIn(['userData', 'settings', 'editorColor'])}
-										pubPrivacy={this.state.firepadData && this.state.firepadData.settings ? this.state.firepadData.settings.pubPrivacy : undefined}
-										pubStyle={this.state.firepadData && this.state.firepadData.settings ? this.state.firepadData.settings.pubStyle : undefined}
-										saveUpdatedSettingsUser={this.saveUpdatedSettingsUser}
-										saveUpdatedSettingsFirebase={this.saveUpdatedSettingsFirebase}
-										saveUpdatedSettingsFirebaseAndPubPub={this.saveUpdatedSettingsFirebaseAndPubPub} />
-
-									{/* Top Nav. Fixed to the top of the editor page, just below the main pubpub bar */}
-									<EditorTopNav 
-										status={editorData.get('status')}
-										darkMode={darkMode}
-										openModalHandler={this.openModalHandler}
-										editorSaveStatus={this.state.editorSaveStatus}
-										toggleLivePreviewHandler={this.toggleLivePreview}/>
-
-									{/*	Horizontal loader line - Separates top bar from rest of editor page */}
-									<div style={styles.editorLoadBar}>
-										<LoaderDeterminate value={loadStatus === 'loading' ? 0 : 100}/>
-									</div>
-
-									{/* Bottom Nav */}
-									<EditorBottomNav 
-										viewMode={viewMode}
-										loadStatus={loadStatus}
-										darkMode={darkMode}
-										showBottomLeftMenu={showBottomLeftMenu}
-										showBottomRightMenu={showBottomRightMenu}
-										toggleTOCHandler={this.toggleTOC}
-										toggleFormattingHandler={this.toggleFormatting}
-										activeFocus={this.state.activeFocus}
-										focusEditorHandler={this.focusEditor}
-										travisTOC={this.state.travisTOC}
-										insertFormattingHandler={this.insertFormatting}/>
-
-									{/* Markdown Editing Block */}
-									<div id="editor-text-wrapper" style={[globalStyles.hiddenUntilLoad, globalStyles[loadStatus], styles.common.editorMarkdown, styles[viewMode].editorMarkdown]}>
-
-										<EditorPluginPopup ref="pluginPopup" references={this.state.firepadData.references} assets={this.state.firepadData.assets} activeFocus={this.state.activeFocus} codeMirrorChange={this.state.codeMirrorChange}/>
-
-										{/* Insertion point for codemirror and firepad */}
-										<div style={[this.state.activeFocus !== '' && styles.hiddenMainEditor]}>
-											<div id="codemirror-wrapper"></div>
-										</div>
-
-										{/* Insertion point for Focused codemirror subset */}
-										<div id="codemirror-focus-wrapper"></div>
-
-									</div>
-
-									{/* Live Preview Block */}
-									<div id="editor-live-preview-wrapper" style={[globalStyles.hiddenUntilLoad, globalStyles[loadStatus], styles.common.editorPreview, styles[viewMode].editorPreview]} className={'editorPreview'}>
-
-										{this.renderNav(false)}
-										
-										<div className="editorBodyView" style={[styles.previewBlockWrapper, this.state.previewPaneMode === 'preview' && styles.previewBlockWrapperShow]}>
-											<div className={'mainRenderBody'}>
-												{this.renderBody()}
-											</div>
-										</div>
-
-										<div style={[styles.previewBlockWrapper, this.state.previewPaneMode === 'comments' && styles.previewBlockWrapperShow]}>
-											<div style={styles.previewBlockHeader}>
-												<FormattedMessage {...globalMessages.EditorComments} />
-											</div>
-											<div style={styles.previewBlockText}>
-												<div><FormattedMessage {...globalMessages.editorCommentsText0} /></div>
-												<div><FormattedMessage {...globalMessages.editorCommentsText1} /></div>
-											</div>
-											<Discussions editorCommentMode={true} inEditor={true}/>
-										</div>
-
-										<div style={[styles.previewBlockWrapper, this.state.previewPaneMode === 'discussions' && styles.previewBlockWrapperShow]}>
-											<div style={styles.previewBlockHeader}>
-												<FormattedMessage {...globalMessages.discussion} />
-											</div>
-											<div style={styles.previewBlockText}>
-												<FormattedMessage id="editorDiscussionMessage" defaultMessage="This section shows the discussion from the public, published version of your pub."/>
-											</div>
-											<Discussions editorCommentMode={false} inEditor={true}/>
-										</div>
-
-									</div>
-								</div>
-							}
-
-						</div>
-
+						{/* This bit is only for mobile. Adds a second close bar overlay to cover the top of the menu */}
+						<div id="editor-mobile-close-bar" style={[this.state.previewPaneMode && styles.editorMobileCloseBar]} onClick={this.switchPreviewPaneMode(undefined)}></div>
 
 					</div>
 				}
@@ -826,3 +586,341 @@ export default connect( state => {
 		loginData: state.login
 	};
 })( Radium(Editor) );
+
+styles = {
+	editorContainer: {
+		position: 'relative',
+		color: globalStyles.sideText,
+		fontFamily: globalStyles.headerFont,
+		backgroundColor: globalStyles.sideBackground,
+		height: 'calc(100vh - ' + globalStyles.headerHeight + ')',
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+			height: 'calc(100vh - ' + globalStyles.headerHeightMobile + ')',
+		},
+	},
+	editorContainerDark: {
+		backgroundColor: '#272727',
+
+	},
+	errorTitle: {
+		textAlign: 'center',
+		fontSize: '45px',
+		padding: 40,
+	},
+
+	editorLoadBar: {
+		position: 'fixed',
+		top: 60,
+		width: '100%',
+		zIndex: 10,
+	},
+	hiddenMainEditor: {
+		height: 0,
+		overflow: 'hidden',
+		pointerEvents: 'none',
+	},
+
+	bodyNavBar: {
+		width: '100%',
+		height: '29px',
+		color: 'white',
+		borderBottom: '1px solid #CCC',
+		marginBottom: 0,
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+			height: 'calc(' + globalStyles.headerHeightMobile + ' - 1px)',
+		},
+	},
+	bodyNavItem: {
+		
+		float: 'right',
+		padding: '0px 10px',
+		height: globalStyles.headerHeight,
+		lineHeight: globalStyles.headerHeight,
+		cursor: 'pointer',
+		color: '#888',
+		userSelect: 'none',
+		':hover': {
+			color: 'black',
+		},
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+			height: globalStyles.headerHeightMobile,
+			lineHeight: globalStyles.headerHeightMobile,
+			fontSize: '20px',
+		},
+	},
+	bodyNavItemHiddenMobile: {
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+			display: 'none',
+		},
+	},
+	bodyNavSeparator: {
+		float: 'right',
+		height: globalStyles.headerHeight,
+		lineHeight: globalStyles.headerHeight,
+		userSelect: 'none',
+		padding: '0px 2px',
+		color: '#888',
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+			height: globalStyles.headerHeightMobile,
+			lineHeight: globalStyles.headerHeightMobile,
+			fontSize: '20px',
+		},
+	},
+	undoHiddenInMobile: {
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+			display: 'block',
+		},
+	},
+	mobileOnlySeparator: {
+		display: 'none',
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+			display: 'block',
+		},
+	},
+	bodyNavDiscussionBlock: {
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+			display: 'none',
+		},
+	},
+	readModeNav: {
+		display: 'none',
+	},
+	readModeNavShow: {
+		display: 'block',
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+			display: 'none',
+		},
+	},
+	previewBlockWrapper: {
+		width: 'calc(100% - 20px)',
+		height: 'calc(100% - 50px)',
+		padding: '10px',
+		overflow: 'hidden',
+		overflowY: 'scroll',
+		position: 'absolute',
+		opacity: '0',
+		pointerEvents: 'none',
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+			height: 'calc(100% - 20px)',
+		},
+	},
+	previewBlockWrapperShow: {
+		opacity: '1',
+		pointerEvents: 'auto',
+	},
+	previewBlockHeader: {
+		fontSize: '30px',
+		margin: '10px 0px',
+	},
+	previewBlockText: {
+		fontSize: '15px',
+		margin: '5px 0px 35px 0px',
+	},
+	editorDisabledMessage: {
+		width: '90%',
+		backgroundColor: '#373737',
+		display: 'none',
+		margin: '0 auto',
+		color: 'white',
+		textAlign: 'center',
+		padding: '5px',
+	},
+
+	editorDisabledMessageVisible: {
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+			display: 'block',
+		},
+	},
+
+	menuClose: {
+		display: 'none',
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+			display: 'block',
+			textAlign: 'right',
+			fontSize: '1.5em',
+			width: 'calc(100% - 100px)',
+			whiteSpace: 'nowrap',
+			overflow: 'hidden',
+			textOverflow: 'ellipsis',
+			padding: '20px 20px',
+			margin: '0px 0px 0px 60px',
+			fontFamily: globalStyles.headerFont,
+			color: '#666',
+			':hover': {
+				cursor: 'pointer',
+				color: 'black',
+			},
+		},
+	},
+
+	editorMarkdown: {
+		margin: '30px 0px',
+		width: '50vw',
+		zIndex: 5,
+
+		position: 'fixed',
+		height: 'calc(100vh - 60px - 2*' + globalStyles.headerHeight + ')',
+		overflow: 'hidden',
+		overflowY: 'scroll',
+	},
+	editorPreview: {
+		width: 'calc(50% - 0px)',
+		backgroundColor: '#fff',
+		boxShadow: 'rgba(0,0,0,0.25) 0px 3px 9px 1px',
+		position: 'fixed',
+		right: 0,
+		top: 61,
+		height: 'calc(100vh - 61px)',
+		overflow: 'hidden',
+		zIndex: 20,
+		padding: 0,
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+			width: '100%',
+			transform: 'translateX(0%)',
+		},
+	},
+	editorDiscussions: {
+		width: 'calc(35% - 0px)',
+		position: 'fixed',
+		right: 0,
+		transition: '.252s ease-in-out transform',
+		transform: 'translateX(110%)',
+		top: 91,
+		height: 'calc(100vh - 61px)',
+		overflow: 'hidden',
+		zIndex: 40,
+		padding: 0,
+		backgroundColor: 'rgba(245,245,245,0.97)',
+		boxShadow: '-2px -1px 3px -2px rgba(0,0,0,0.7)',
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+			width: '90%',
+			top: '0px',
+			height: '100vh',
+			zIndex: 56,
+		},
+	},
+
+	editorCloseBar: {
+		zIndex: 50,
+		position: 'absolute',
+		display: 'block',
+		
+		width: '100%',
+		top: -10,
+		bottom: -10,
+		left: -10,
+	},
+	editorMobileCloseBar: {
+		display: 'none',
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+			zIndex: 55,
+			position: 'fixed',
+			display: 'block',
+			width: '100%',
+			height: 120,
+			top: 0,
+			left: 0,
+		}
+	},
+
+	edit: {
+		editorMarkdown: {
+			transition: '.352s linear transform, .3s linear opacity .25s, 0s linear padding .352s, 0s linear left .352s',
+			transform: 'translateX(0%)',
+			padding: globalStyles.headerHeight + ' 25vw',
+			left: 0,
+		},
+		editorPreview: {
+			transition: '.352s linear transform',
+			transform: 'translateX(110%)',
+			'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+				transform: 'translateX(0%)',
+			},
+		},
+		editorDiscussions: {
+			'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+				transform: 'translateX(0%)',
+			},
+		},
+
+	},
+
+	preview: {
+		editorBottomNav: {
+			pointerEvents: 'none',
+		},
+		editorMarkdown: {
+			transition: '.352s linear transform, .3s linear opacity .25s',
+			transform: 'translateX(-50%)',
+			padding: globalStyles.headerHeight + ' 0px',
+			left: '25vw'
+		},
+		editorPreview: {
+			transition: '.352s linear transform',
+			transform: 'translateX(0%)',
+		},
+		editorDiscussions: {
+			transform: 'translateX(0px)',
+		},
+		
+	},
+	read: {
+		editorMarkdown: {
+			opacity: 0,
+			pointerEvents: 0,
+			transition: '.352s linear transform, .3s linear opacity .25s',
+			transform: 'translateX(-50%)',
+			padding: globalStyles.headerHeight + ' 0px',
+			left: '25vw'
+		},
+		editorMarkdownIsEditor: {
+			opacity: 1,
+		},
+		editorPreview: {
+			// backgroundColor: 'orange',
+			transition: '.352s linear transform',
+			transform: 'translateX(calc(-100% - 1px))',
+			top: '31px',
+			height: 'calc(100vh - 31px)',
+			'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+				transform: 'translateX(0%)',
+				top: '61px',
+				height: 'calc(100vh - 61px)',
+			},
+		},
+		editorDiscussionsMobile: {
+			width: 'calc(50%)',
+			backgroundColor: globalStyles.sideBackground,
+			top: '30px',
+			height: 'calc(100vh - 30px + 30px)',
+			transform: 'translateX(0px)',
+			boxShadow: '-2px -1px 4px -2px rgba(0,0,0,0.0)',
+			'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+				transform: 'translateX(110%)',
+				width: '90%',
+				boxShadow: '-2px -1px 3px -2px rgba(0,0,0,0.7)',
+				top: '0px',
+				height: '100vh',
+			},
+
+		},
+		editorDiscussions: {
+			width: 'calc(50%)',
+			backgroundColor: globalStyles.sideBackground,
+			top: '30px',
+			height: 'calc(100vh - 30px + 30px)',
+			transform: 'translateX(0px)',
+			boxShadow: '-2px -1px 4px -2px rgba(0,0,0,0.0)',
+			'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+				transform: 'translateX(0%)',
+				width: '90%',
+				boxShadow: '-2px -1px 3px -2px rgba(0,0,0,0.7)',
+				top: '0px',
+				height: '100vh',
+			},
+
+		},
+
+	},
+
+};
