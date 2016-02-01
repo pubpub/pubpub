@@ -57,8 +57,8 @@ const LandingComponentCollectionList = React.createClass({
 
 	render: function() {
 		
-		return (
-			<div style={[styles.container, this.props.style]}>
+		return (this.state.collections.length
+			? <div style={[styles.container, this.props.style]}>
 				{this.state.collections.length
 					? <div style={styles.leftColumn}>
 						<Link to={'/collection/' + this.state.collections[this.state.activeIndex].slug} style={globalStyles.link}>
@@ -135,6 +135,10 @@ const LandingComponentCollectionList = React.createClass({
 				</div>
 				<div style={globalStyles.clearFix}></div>
 			</div>
+			: <div style={styles.noCollectionsWrapper}>
+				<div style={styles.noCollectionsText}>No collections featured yet</div>
+			</div>
+		
 		);
 	}
 });
@@ -144,6 +148,17 @@ export default Radium(LandingComponentCollectionList);
 styles = {
 	container: {
 		
+	},
+	noCollectionsWrapper: {
+		margin: '20px auto',
+		width: '60%',
+		backgroundColor: '#eee',
+		textAlign: 'center',
+	},
+	noCollectionsText: {
+		fontSize: '20px',
+		padding: '30px 0px',
+		color: '#555',
 	},
 	leftColumn: {
 		width: 200,

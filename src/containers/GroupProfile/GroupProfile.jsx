@@ -84,11 +84,12 @@ const Profile = React.createClass({
 					<div style={[globalStyles.hiddenUntilLoad, globalStyles[this.props.groupData.get('status')]]}>
 
 						<div style={styles.groupHeader}>
-							<div style={styles.groupName}>{groupData.groupName}</div>
+							<Link to={'/group/' + this.props.groupSlug} style={globalStyles.link} >
+								<div style={styles.groupName}>{groupData.groupName}</div>
+							</Link>
 							<div style={styles.groupDescription}>{groupData.description}</div>
 						</div>	
 						
-
 						{(() => {
 							switch (this.props.mode) {
 							case 'members':
