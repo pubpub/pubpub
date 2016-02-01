@@ -81,7 +81,7 @@ const LandingComponentCollectionList = React.createClass({
 					</div>
 
 					{
-						this.state.collections[this.state.activeIndex].pubs.map((pub, index)=>{
+						this.state.collections[this.state.activeIndex] && this.state.collections[this.state.activeIndex].pubs.map((pub, index)=>{
 							return (
 								<Link to={'/pub/' + pub.slug} style={globalStyles.link} key={'pubItemLink-' + index}>
 								<div style={styles.pubItem} key={'pubItem-' + index}>
