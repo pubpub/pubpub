@@ -67,7 +67,10 @@ app.post('/groupSave', function(req,res){
 				// this means we added a new admin - add their membership to their profile
 				const newAdmin = _.difference(newAdmins, oldAdmins);
 				User.update({ _id: newAdmin[0] }, { $addToSet: { groups: group._id} }, function(err, result){if(err) return handleError(err)});
-				group.members.push(newAdmin[0]);
+				if (String(group.members).indexOf(newAdmin[0]) === -1) {
+					group.members.push(newAdmin[0]);	
+				}
+				
 			} else {
 				// this means we removed an admin. We don't alter their membership, just remove them from admin list
 			}
