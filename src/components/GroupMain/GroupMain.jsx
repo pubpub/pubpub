@@ -111,7 +111,7 @@ export default Radium(GroupMain);
 
 styles = {
 	pubItem: {
-		width: 'calc(100% - 20px)',
+		width: 'calc(80% - 20px)',
 		margin: '0px auto',
 		padding: '20px 10px',
 		borderBottom: '1px solid #ccc',
