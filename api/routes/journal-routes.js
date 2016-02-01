@@ -67,7 +67,7 @@ app.get('/getJournal', function(req,res){
 			},
 		}],
 	})
-	.lean().exec(function(err, tempJournal){
+	.lean().exec(function(err, result){
 
 		if (err) { return res.status(500).json(err);  }
 
