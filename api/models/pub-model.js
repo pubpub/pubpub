@@ -212,6 +212,8 @@ pubSchema.statics.getPubEdit = function (slug, readerID, readerGroups, callback)
 
 		if (!pub) { return callback(null, 'Pub Not Found', true); }
 
+		if (!readerID) { return callback(null, 'Not Authorized', true); }
+
 		const readerGroupsStrings = readerGroups.toString().split(',');
 		const canReadStrings = pub.collaborators.canRead.toString().split(',');
 		const canEditStrings = pub.collaborators.canEdit.toString().split(',');
