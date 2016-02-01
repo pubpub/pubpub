@@ -3,7 +3,7 @@ import {connect} from 'react-redux';
 import Radium from 'radium';
 import Helmet from 'react-helmet';
 import { Link } from 'react-router';
-import {getGroup} from '../../actions/group';
+import {getGroup, saveGroup} from '../../actions/group';
 
 import {globalStyles, profileStyles, navStyles} from '../../utils/styleConstants';
 import {LoaderDeterminate, GroupMain, GroupMembers, GroupSettings} from '../../components';
@@ -22,12 +22,6 @@ const Profile = React.createClass({
 		dispatch: PropTypes.func
 	},
 
-	// getInitialState: function() {
-	// 	return {
-	// 		userImageFile: null,
-	// 	};
-	// },
-
 	statics: {
 		fetchDataDeferred: function(getState, dispatch, location, routerParams) {
 			if (getState().group.getIn(['groupData', 'groupSlug']) !== routerParams.groupSlug) {
@@ -39,6 +33,10 @@ const Profile = React.createClass({
 
 	componentWillUnmount() {
 		// this.props.dispatch(groupNavOut());
+	},
+
+	groupSave: function(newObject) {
+		this.props.dispatch(saveGroup(this.props.groupData.getIn(['groupData', '_id']), newObject));
 	},
 
 	render: function() {
@@ -54,7 +52,7 @@ const Profile = React.createClass({
 			groupData = this.props.groupData.get('groupData').toJS();
 		}
 
-		const isAdmin = true;
+		const isAdmin = this.props.groupData.getIn(['groupData', 'isAdmin']);
 		return (
 			<div style={profileStyles.profilePage}>
 
@@ -97,15 +95,16 @@ const Profile = React.createClass({
 									<GroupMembers 
 										groupData={groupData}
 										saveStatus={this.props.groupData.get('memberSaveStatus')}
-										handleMemberSave={this.memberSave} 
+										handleGroupSave={this.groupSave} 
 										isAdmin={isAdmin} />
 								);
 							case 'settings':
 								return (
 									<GroupSettings 
 										groupData={groupData}
+										groupSaving={this.props.groupData.get('groupSaving')}
 										saveStatus={this.props.groupData.get('adminSaveStatus')}
-										handleAdminSave={this.adminSave}
+										handleGroupSave={this.groupSave}
 										isAdmin={isAdmin} />
 								);
 							default:

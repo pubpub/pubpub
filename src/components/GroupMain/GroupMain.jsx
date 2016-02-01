@@ -120,6 +120,9 @@ styles = {
 		':hover': {
 			cursor: 'pointer',
 			backgroundColor: '#F5F5F5',
+		},
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+			width: 'calc(95% - 20px)',
 		}
 	},
 	pubTitle: {

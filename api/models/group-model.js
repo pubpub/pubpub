@@ -84,6 +84,12 @@ groupSchema.statics.getGroup = function (groupSlug, readerID, callback) {
     if (readerID in memberList === false) {
       return callback(null, 'Not Authorized');
     }
+    // Check if the user is an admin of the group
+    const adminList ={};
+    for (let index = group.admins.length; index--;) {
+      adminList[group.admins[index]._id] = true;
+    }
+    group.isAdmin = readerID in adminList;
 
     return callback(null, group);
 

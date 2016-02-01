@@ -13,6 +13,10 @@ export const LOAD_GROUP_LOAD = 'group/LOAD_GROUP_LOAD';
 export const LOAD_GROUP_SUCCESS = 'group/LOAD_GROUP_SUCCESS';
 export const LOAD_GROUP_FAIL = 'group/LOAD_GROUP_FAIL';
 
+export const SAVE_GROUP_LOAD = 'group/SAVE_GROUP_LOAD';
+export const SAVE_GROUP_SUCCESS = 'group/SAVE_GROUP_SUCCESS';
+export const SAVE_GROUP_FAIL = 'group/SAVE_GROUP_FAIL';
+
 
 /*--------*/
 // Define Action creators
@@ -47,5 +51,12 @@ export function getGroup(groupSlug) {
 	return {
 		types: [LOAD_GROUP_LOAD, LOAD_GROUP_SUCCESS, LOAD_GROUP_FAIL],
 		promise: (client) => client.get('/getGroup', {params: {groupSlug: groupSlug}})
+	};
+}
+
+export function saveGroup(groupID, newObject) {
+	return {
+		types: [SAVE_GROUP_LOAD, SAVE_GROUP_SUCCESS, SAVE_GROUP_FAIL],
+		promise: (client) => client.post('/groupSave', {data: {groupID: groupID, newObject: newObject}})
 	};
 }

@@ -61,6 +61,10 @@ export const globalMessages = defineMessages({
 		id: 'global.Curate',
 		defaultMessage: 'Curate',
 	},
+	Description: {
+		id: 'global.Description',
+		defaultMessage: 'Description',
+	},
 	tableOfContents: {
 		id: 'global.tableOfContents',
 		defaultMessage: 'Table of Contents',

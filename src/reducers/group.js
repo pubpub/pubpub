@@ -13,6 +13,10 @@ import {
 	LOAD_GROUP_SUCCESS,
 	LOAD_GROUP_FAIL,
 
+	SAVE_GROUP_LOAD,
+	SAVE_GROUP_SUCCESS,
+	SAVE_GROUP_FAIL,
+
 } from '../actions/group';
 
 /*--------*/
@@ -31,7 +35,9 @@ export const defaultState = Immutable.Map({
 	},
 	status: 'loading',
 	settingsStatus: 'saved',
-	error: null
+	error: null,
+	groupSaving: false,
+	groupSavingError: null,
 });
 
 /*--------*/
@@ -110,6 +116,25 @@ function loadFail(state, error) {
 	return state.merge(outputState);
 }
 
+function saveGroupLoad(state) {
+	return state.set('groupSaving', true);
+}
+
+function saveGroupSuccess(state, groupData) {
+	return state.merge({
+		groupSaving: false,
+		groupSavingError: null,
+		groupData
+	});
+}
+
+function saveGroupFail(state, error) {	
+	return state.merge({
+		groupSaving: false,
+		groupSavingError: error,
+	});
+}
+
 /*--------*/
 // Bind actions to specific reducing functions.
 /*--------*/
@@ -129,6 +154,13 @@ export default function profileReducer(state = defaultState, action) {
 		return loadSuccess(state, action.result);
 	case LOAD_GROUP_FAIL:
 		return loadFail(state, action.error);
+
+	case SAVE_GROUP_LOAD:
+		return saveGroupLoad(state);
+	case SAVE_GROUP_SUCCESS:
+		return saveGroupSuccess(state, action.result);
+	case SAVE_GROUP_FAIL:
+		return saveGroupFail(state, action.error);
 
 
 	default:
