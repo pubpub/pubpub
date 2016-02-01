@@ -33,6 +33,7 @@ const GroupSettings = React.createClass({
 		const newObject = {
 			groupName: this.refs.groupName.value,
 			description: this.refs.description.value,
+			background: this.refs.background.value.replace(/;/g, ''),
 		};
 
 		this.props.handleGroupSave(newObject);
@@ -128,6 +129,13 @@ const GroupSettings = React.createClass({
 						<FormattedMessage {...globalMessages.Description} />
 					</label>
 					<textarea style={[styles.manualFormInput, styles.manualFormTextArea]} name={'description'} id={'groupSettings-description'} ref={'description'} defaultValue={this.props.groupData.description}></textarea>
+				</div>
+
+				<div key={'groupSettings-background'} style={styles.inputWrapper}>
+					<label style={styles.manualFormInputTitle} htmlFor={'groupSettings-background'}>
+						<FormattedMessage id="group.background" defaultMessage="Background CSS" />
+					</label>
+					<input style={styles.manualFormInput} name={'background'} id={'groupSettings-background'} ref={'background'} type="text" defaultValue={this.props.groupData.background}/>
 				</div>
 
 				<div style={styles.saveSettings} key={'groupSettingsSaveButton'} onClick={this.saveSettings}>

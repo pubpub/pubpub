@@ -81,7 +81,7 @@ const Profile = React.createClass({
 
 					<div style={[globalStyles.hiddenUntilLoad, globalStyles[this.props.groupData.get('status')]]}>
 
-						<div style={styles.groupHeader}>
+						<div style={[styles.groupHeader, {background: this.props.groupData.getIn(['groupData', 'background'])}]}>
 							<Link to={'/group/' + this.props.groupSlug} style={globalStyles.link} >
 								<div style={styles.groupName}>{groupData.groupName}</div>
 							</Link>
@@ -139,7 +139,6 @@ styles = {
 		color: 'white',
 		// width: '100vw',
 		minHeight: '150px',
-		background: 'linear-gradient(to left, #6441A5 , #3E1162)',
 		position: 'relative',
 		padding: '20px 20px 30px 20px',
 	},

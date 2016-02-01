@@ -10,6 +10,8 @@ var groupSchema = new Schema({
   
   pubs: [ { type: ObjectId, ref: 'Pub' } ],
   
+  background: { type: String },
+  
   admins: [ { type: ObjectId, ref: 'User' } ],
   members: [ { type: ObjectId, ref: 'User' } ],
   

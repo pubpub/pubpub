@@ -42,6 +42,7 @@
   "editor.disconnected": "Disconnected",
   "group.addNewMember": "Add new member",
   "group.addNewAdmin": "Add new admin",
+  "group.background": "Background CSS",
   "preview.discussionOn": "Discussion on",
   "journal.searchPubsToFeature": "Search Pubs to Feature",
   "journal.featuredPubs": "Featured Pubs",

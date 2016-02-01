@@ -9,6 +9,7 @@ app.post('/groupCreate', function(req,res){
 	Group.isUnique(req.body.subdomain, (err, result)=>{
 		if(!result){ return res.status(500).json('URL is not Unique!'); }
 		
+		const stockBackgrounds = ['linear-gradient(to left, #9D50BB , #6E48AA)', 'linear-gradient(to left, #00d2ff , #3a7bd5)', 'linear-gradient(to left, #C04848 , #480048)', 'linear-gradient(to left, #02AAB0 , #00CDAC)', 'linear-gradient(to left, #fd746c , #ff9068)', 'linear-gradient(to left, #517fa4 , #243949)', 'linear-gradient(to left, #00bf8f , #001510)', 'linear-gradient(to left, #43cea2 , #185a9d)'];
 		const group = new Group({
 			groupName: req.body.groupName,
 			groupSlug: req.body.groupSlug,
@@ -17,6 +18,7 @@ app.post('/groupCreate', function(req,res){
 			admins: [req.user._id],
 			members: [req.user._id],
 			pubs: [],
+			background: stockBackgrounds[Math.floor(Math.random()*stockBackgrounds.length)],
 		});
 
 		group.save(function (err, savedGroup) {
