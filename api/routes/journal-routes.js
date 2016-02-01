@@ -102,11 +102,12 @@ app.post('/saveJournal', function(req,res){
 
 		if (err) { return res.status(500).json(err);  }
 
-		console.log('req.user._id', req.user._id);
-		console.log('String(journal.admins)', String(journal.admins));
-		console.log('String(journal.admins).indexOf(String(req.user._id))', String(journal.admins).indexOf(String(req.user._id)));
+		console.log('req.user', req.user);
+		// console.log('req.user._id', req.user._id);
+		// console.log('String(journal.admins)', String(journal.admins));
+		// console.log('String(journal.admins).indexOf(String(req.user._id))', String(journal.admins).indexOf(String(req.user._id)));
 		if (!req.user || String(journal.admins).indexOf(String(req.user._id)) === -1) {
-			console.log('were gunna fire a 403 from here');
+			// console.log('were gunna fire a 403 from here');
 			return res.status(403).json('Not authorized to administrate this Journal.');
 		}
 
