@@ -27,8 +27,8 @@ const LandingComponentRecentList = React.createClass({
 
 				{this.props.recentPubs.length
 					? <PubGallery pubs={this.props.recentPubs} />
-					: <div style={styles.noCollectionsWrapper}>
-						<div style={styles.noCollectionsText}>No pubs featured yet</div>
+					: <div style={styles.noPubsWrapper}>
+						<div style={styles.noPubsText}>No pubs featured yet</div>
 					</div>
 				}
 				
