@@ -222,7 +222,10 @@ pubSchema.statics.getPubEdit = function (slug, readerID, readerGroups, callback)
 		console.log(2, canReadStrings.indexOf(readerID.toString()) === -1);
 		console.log(3, _.intersection(readerGroupsStrings, canEditStrings).length === 0);
 		console.log(4, _.intersection(readerGroupsStrings, canReadStrings).length === 0);
-		
+		console.log('readerGroupsStrings', readerGroupsStrings);
+		console.log('canReadStrings', canReadStrings);
+		console.log(_.intersection(readerGroupsStrings, canReadStrings));
+
 		if (canEditStrings.indexOf(readerID.toString()) === -1 && 
 			canReadStrings.indexOf(readerID.toString()) === -1 && 
 			_.intersection(readerGroupsStrings, canEditStrings).length === 0 && 
