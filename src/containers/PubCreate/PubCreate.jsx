@@ -29,7 +29,7 @@ const Login = React.createClass({
 
 	componentWillReceiveProps: function(nextProps) {
 		if (nextProps.pubData.getIn(['createPubData', 'slug'])) {
-			this.props.dispatch(pushState(null, ('/pub/' + nextProps.pubData.getIn(['createPubData', 'slug']) + '/edit')));
+			this.props.dispatch(pushState(null, ('/pub/' + nextProps.pubData.getIn(['createPubData', 'slug']) + '/draft')));
 		}
 		this.setState({ errorMessage: nextProps.pubData.getIn(['createPubData', 'error']) });
 	},

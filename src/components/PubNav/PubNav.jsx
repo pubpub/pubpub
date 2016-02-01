@@ -61,7 +61,7 @@ const PubNav = React.createClass({
 							</li>
 
 
-							<Link to={'/pub/' + this.props.slug + '/edit'}><li key="pubNav7"style={[styles.pubNavItem, styles.pubNavRight, styles.pubNavDesktopOnly, styles.pubNavAuthorOnly, styles.pubAuthor[this.props.isAuthor]]}>
+							<Link to={'/pub/' + this.props.slug + '/draft'}><li key="pubNav7"style={[styles.pubNavItem, styles.pubNavRight, styles.pubNavDesktopOnly, styles.pubNavAuthorOnly, styles.pubAuthor[this.props.isAuthor]]}>
 								<FormattedMessage id="pub.editPub" defaultMessage="Edit Pub"/>
 							</li></Link>
 							<li style={[styles.pubNavSeparator, styles.pubNavRight, styles.pubNavDesktopOnly, styles.pubNavAuthorOnly, styles.pubAuthor[this.props.isAuthor]]}></li>

@@ -29,7 +29,7 @@ export default () => {
 			<Route path="/journals/create" component={JournalCreate}/>
 
 			<Route path="/pub/:slug" component={PubReader}/>
-			<Route path="/pub/:slug/edit" component={Editor}/>
+			<Route path="/pub/:slug/draft" component={Editor}/>
 			<Route path="/pub/:slug/:meta" component={PubMeta}/>
 			<Route path="/pub/:slug/:meta/:metaID" component={PubMeta}/> // Used for discussions
 

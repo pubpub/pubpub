@@ -56,7 +56,7 @@ const GroupMain = React.createClass({
 
 					: this.props.groupData.pubs.map((pub, index)=>{
 						const discussionsList = pub.discussions.length ? pub.discussions : pub.editorComments;
-						const linkPath = pub.lastUpdated ? '/pub/' + pub.slug : '/pub/' + pub.slug + '/edit';
+						const linkPath = pub.lastUpdated ? '/pub/' + pub.slug : '/pub/' + pub.slug + '/draft';
 						// console.log(discussionsList);
 						return (
 							<Link to={linkPath} style={globalStyles.link} key={'pubItemLink-' + index}>

@@ -134,7 +134,7 @@ const EditorModalPublish = React.createClass({
 								<FormattedMessage 
 									id="editor.publishMessageJournal2"
 									defaultMessage="If you would like to publish without submitting, please publish from"/>
-								<a style={styles.detailLink} href={'http://www.pubpub.org/pub/' + this.props.slug + '/edit'}> pubpub.org</a>
+								<a style={styles.detailLink} href={'http://www.pubpub.org/pub/' + this.props.slug + '/draft'}> pubpub.org</a>
 							</div>
 						</div>
 						: null

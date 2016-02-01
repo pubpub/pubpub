@@ -60,7 +60,7 @@ const PubPreview = React.createClass({
 				
 				{
 					this.props.canEdit
-						? <HoverLink to={'/pub/' + pub.slug + '/edit'} key={'profilePubEdit-' + pub._id} style={[globalStyles.link, styles.editWrapper]}>
+						? <HoverLink to={'/pub/' + pub.slug + '/draft'} key={'profilePubEdit-' + pub._id} style={[globalStyles.link, styles.editWrapper]}>
 							<FormattedMessage {...globalMessages.edit}/>
 						</HoverLink>
 						: null

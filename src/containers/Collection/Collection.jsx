@@ -78,7 +78,7 @@ const Collection = React.createClass({
 
 							<div style={ this.props.mode && {display: 'none'} }>
 								<ul style={[navStyles.navList, styles.navList]}>
-									<Link to={'/collection/' + this.props.slug + '/edit'} style={globalStyles.link}><li key="collectionNav0" style={[navStyles.navItem, this.props.journalData.getIn(['journalData', 'isAdmin']) && navStyles.navItemShow, styles.navItemBackground]}>
+									<Link to={'/collection/' + this.props.slug + '/draft'} style={globalStyles.link}><li key="collectionNav0" style={[navStyles.navItem, this.props.journalData.getIn(['journalData', 'isAdmin']) && navStyles.navItemShow, styles.navItemBackground]}>
 										<FormattedMessage {...globalMessages.edit} />
 									</li></Link>
 								</ul>

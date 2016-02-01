@@ -61,7 +61,7 @@ const HeaderMenu = React.createClass({
 
 	render: function() {
 		const isLoggedIn = this.props.loginData.get('loggedIn');
-		const isPub = this.props.path.indexOf('/pub') > -1 && this.props.path.indexOf('/edit') === -1;
+		const isPub = this.props.path.indexOf('/pub') > -1 && this.props.path.indexOf('/draft') === -1;
 		return (
 			<div styles={styles.right}>
 
