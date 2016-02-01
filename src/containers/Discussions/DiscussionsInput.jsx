@@ -36,7 +36,7 @@ const PubDiscussionsInput = React.createClass({
 
 	componentDidMount() {
 		initCodeMirrorMode();
-		
+
 		const cmOptions = {
 			lineNumbers: false,
 			value: '',
@@ -49,7 +49,7 @@ const PubDiscussionsInput = React.createClass({
 		};
 
 		const codeMirror = CodeMirror(document.getElementById(this.props.codeMirrorID), cmOptions);
-		codeMirror.on('change', this.onEditorChange);	
+		codeMirror.on('change', this.onEditorChange);
 	},
 
 	componentWillReceiveProps(nextProps) {
@@ -65,9 +65,9 @@ const PubDiscussionsInput = React.createClass({
 			// const cm = document.getElementsByClassName('CodeMirror')[0].CodeMirror;
 			const cm = document.getElementById(this.props.codeMirrorID).childNodes[0].CodeMirror;
 			const spacing = cm.getValue().length ? ' ' : '';
-			cm.setValue(cm.getValue() + spacing + '[[selection: index=' + nextProps.newDiscussionData.get('selections').size + ']] ' );	
+			cm.setValue(cm.getValue() + spacing + '[[selection: index=' + nextProps.newDiscussionData.get('selections').size + ']] ' );
 		}
-		
+
 	},
 
 	onEditorChange: function(cm, change) {
@@ -97,7 +97,7 @@ const PubDiscussionsInput = React.createClass({
 						backgroundColor: 'transparent',
 						fontSize: '15px',
 						color: '#555',
-						fontFamily: 'Arial',
+						fontFamily: 'Helvetica Neue,Helvetica,Arial,sans-serif',
 						padding: '0px 20px',
 						width: 'calc(100% - 40px)',
 						minHeight: '25px',
@@ -109,7 +109,7 @@ const PubDiscussionsInput = React.createClass({
 
 				<div style={styles.inputTopLine}>
 					<div style={styles.thumbnail}>
-						{this.props.userThumbnail 
+						{this.props.userThumbnail
 							? <img style={styles.thumbnailImage}src={this.props.userThumbnail} />
 							: null
 						}
@@ -197,7 +197,7 @@ styles = {
 	topCheckbox: {
 		float: 'right',
 		height: 20,
-		
+
 		userSelect: 'none',
 		color: globalStyles.sideText,
 		':hover': {
