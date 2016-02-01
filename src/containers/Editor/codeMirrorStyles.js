@@ -9,7 +9,7 @@ export function codeMirrorStyles(loginData) {
 
 	switch (editorFont) {
 	case 'serif':
-		editorStyles.fontFamily = 'Arial';
+		editorStyles.fontFamily = 'Helvetica Neue,Helvetica,Arial,sans-serif';
 		break;
 	case 'sans-serif':
 		editorStyles.fontFamily = 'Lato';
@@ -86,7 +86,7 @@ export function codeMirrorStyles(loginData) {
 		'.CodeMirror .cm-spell-error': {
 			borderBottom: '1px dotted red',
 		},
-		'.CodeMirror pre.CodeMirror-placeholder': { 
+		'.CodeMirror pre.CodeMirror-placeholder': {
 			color: '#999',
 		},
 		'.cm-s-default .cm-header': {

@@ -69,7 +69,7 @@ const DiscussionsItem = React.createClass({
 
 		return (
 			<div style={styles.container}>
-				
+
 				<div style={styles.discussionHeader}>
 
 					<div style={styles.discussionAuthorImageWrapper}>
@@ -91,7 +91,7 @@ const DiscussionsItem = React.createClass({
 						</Link>
 
 						<span style={[styles.detailLineItemSeparator, (this.props.noReply || this.props.noPermalink) && {display: 'none'}]}>|</span>
-						
+
 						<span style={[styles.detailLineItem, this.props.noReply && {display: 'none'}]} key={'replyButton-' + discussionItem._id} onClick={this.toggleReplyActive}>
 							<FormattedMessage
 								id="discussion.reply"
@@ -103,12 +103,12 @@ const DiscussionsItem = React.createClass({
 
 				<div style={styles.discussionBody}>
 					<div style={styles.discussionVoting}>
-						<DiscussionsScore 
+						<DiscussionsScore
 							discussionID={discussionItem._id}
 							score={discussionItem.yays - discussionItem.nays}
 							userYay={discussionItem.userYay}
-							userNay={discussionItem.userNay} 
-							handleVoteSubmit={this.props.handleVoteSubmit} 
+							userNay={discussionItem.userNay}
+							handleVoteSubmit={this.props.handleVoteSubmit}
 							readOnly={this.props.noReply}/>
 					</div>
 
@@ -119,16 +119,16 @@ const DiscussionsItem = React.createClass({
 
 					</div>
 				</div>
-				
+
 				{this.props.noReply
 					? null
 					: <div style={[styles.replyWrapper, this.state.replyActive && styles.replyWrapperActive]}>
-						<DiscussionsInput 
+						<DiscussionsInput
 							addDiscussionHandler={this.props.addDiscussionHandler}
-							addDiscussionStatus={this.props.addDiscussionStatus} 
-							newDiscussionData={this.props.newDiscussionData} 
+							addDiscussionStatus={this.props.addDiscussionStatus}
+							newDiscussionData={this.props.newDiscussionData}
 							userThumbnail={this.props.userThumbnail}
-							codeMirrorID={this.props.instanceName + 'replyInput-' + discussionItem._id} 
+							codeMirrorID={this.props.instanceName + 'replyInput-' + discussionItem._id}
 							parentID={discussionItem._id}
 							saveID={discussionItem._id}
 							activeSaveID={this.props.activeSaveID}
@@ -141,24 +141,24 @@ const DiscussionsItem = React.createClass({
 				<div style={styles.discussionChildrenWrapper}>
 					{
 						discussionItem.children.map((child)=>{
-							return (<ChildPubDiscussionItem 
+							return (<ChildPubDiscussionItem
 								key={child._id}
 								slug={this.props.slug}
 								discussionItem={child}
 
 								activeSaveID={this.props.activeSaveID}
 								addDiscussionHandler={this.props.addDiscussionHandler}
-								addDiscussionStatus={this.props.addDiscussionStatus} 
-								newDiscussionData={this.props.newDiscussionData} 
-								userThumbnail={this.props.userThumbnail} 
-								handleVoteSubmit={this.props.handleVoteSubmit} 
+								addDiscussionStatus={this.props.addDiscussionStatus}
+								newDiscussionData={this.props.newDiscussionData}
+								userThumbnail={this.props.userThumbnail}
+								handleVoteSubmit={this.props.handleVoteSubmit}
 								noReply={this.props.noReply}
 								noPermalink={this.props.noPermalink}/>
 							);
 						})
 					}
 				</div>
-				
+
 
 			</div>
 		);
@@ -218,7 +218,7 @@ styles = {
 			cursor: 'pointer',
 		}
 	},
-	discussionDetailsLineBottom: { 
+	discussionDetailsLineBottom: {
 		lineHeight: '18px',
 	},
 	discussionBody: {
@@ -243,12 +243,13 @@ styles = {
 		width: 'calc(100% - 36px - 30px)',
 		marginLeft: 36,
 		// overflow: 'hidden',
-		fontFamily: 'Arial',
 		color: '#555',
-		fontSize: '15px',
 		// padding: '0px 15px',
 		padding: '10px 6px',
-
+		lineHeight: '1.58',
+		fontSize: '0.9em',
+		fontWeight: '300',
+		fontFamily: 'Helvetica Neue,Helvetica,Arial,sans-serif',
 	},
 	discussionChildrenWrapper: {
 		width: 'calc(100% - 20px)',
