@@ -48,7 +48,7 @@ const Discussions = React.createClass({
 			return this.props.dispatch(toggleVisibility());
 		}
 
-		console.log(discussionObject);
+		// console.log(discussionObject);
 		if (!discussionObject.markdown) {
 			return null;
 		}

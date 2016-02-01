@@ -59,12 +59,16 @@ const LandingComponentCollectionList = React.createClass({
 		
 		return (
 			<div style={[styles.container, this.props.style]}>
-				<div style={styles.leftColumn}>
-					<Link to={'/collection/' + this.state.collections[this.state.activeIndex].slug} style={globalStyles.link}>
-						<div style={styles.leftHeader}>{this.state.collections[this.state.activeIndex].title}</div>
-						<div style={styles.leftText}>{this.state.collections[this.state.activeIndex].description}</div>
-					</Link>
-				</div>
+				{this.state.collections.length
+					? <div style={styles.leftColumn}>
+						<Link to={'/collection/' + this.state.collections[this.state.activeIndex].slug} style={globalStyles.link}>
+							<div style={styles.leftHeader}>{this.state.collections[this.state.activeIndex].title}</div>
+							<div style={styles.leftText}>{this.state.collections[this.state.activeIndex].description}</div>
+						</Link>
+					</div>
+					: null
+				}
+				
 
 				<div style={styles.rightColumn}>
 					<div style={styles.rightHeader}>
