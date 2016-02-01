@@ -39,14 +39,19 @@ groupSchema.statics.getGroup = function (groupSlug, readerID, callback) {
   .populate({path: "admins", select:'name firstName lastName username thumbnail'})
   .populate({
     path: "pubs", 
-    select:"title abstract slug collaborators settings",
+    select:"title abstract slug collaborators settings discussions editorComments lastUpdated",
     populate: [{
       path: 'authors',
       model: 'User',
       select: 'name firstName lastName username thumbnail',
     },
     {
-      path: 'discussions',
+      path: 'collaborators.canEdit',
+      model: 'User',
+      select: 'name firstName lastName username thumbnail',
+    },
+    {
+      path: 'discussions editorComments',
       model: 'Discussion',
       select: 'markdown author postDate',
       populate: {

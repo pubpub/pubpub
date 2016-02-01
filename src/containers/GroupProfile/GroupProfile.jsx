@@ -82,6 +82,11 @@ const Profile = React.createClass({
 					<LoaderDeterminate value={this.props.groupData.get('status') === 'loading' ? 0 : 100}/>
 
 					<div style={[globalStyles.hiddenUntilLoad, globalStyles[this.props.groupData.get('status')]]}>
+
+						<div style={styles.groupHeader}>
+							<div style={styles.groupName}>{groupData.groupName}</div>
+							<div style={styles.groupDescription}>{groupData.description}</div>
+						</div>	
 						
 
 						{(() => {
@@ -130,5 +135,21 @@ export default connect( state => {
 })( Radium(Profile) );
 
 styles = {
-	
+	groupHeader: {
+		color: 'white',
+		width: '100vw',
+		minHeight: '150px',
+		background: 'linear-gradient(to left, #6441A5 , #3E1162)',
+		position: 'relative',
+		padding: '20px 20px 30px 20px',
+	},
+	groupName: {
+		fontSize: '60px',
+		paddingBottom: '15px',
+	},
+	groupDescription: {
+		fontSize: '20px',
+		width: '50%',
+		color: '#ddd',
+	},
 };
