@@ -49,8 +49,12 @@ const GroupMain = React.createClass({
 
 		return (
 			<div style={styles.container}>
-				{
-					this.props.groupData.pubs.map((pub, index)=>{
+				{this.props.groupData.pubs.length === 0
+					? <div style={styles.noPubsWrapper}>
+						<div style={styles.noPubsText}>No pubs shared with this group yet</div>
+					</div>
+
+					: this.props.groupData.pubs.map((pub, index)=>{
 						const discussionsList = pub.discussions.length ? pub.discussions : pub.editorComments;
 						const linkPath = pub.lastUpdated ? '/pub/' + pub.slug : '/pub/' + pub.slug + '/edit';
 						// console.log(discussionsList);
@@ -112,6 +116,21 @@ const GroupMain = React.createClass({
 export default Radium(GroupMain);
 
 styles = {
+	noPubsWrapper: {
+		margin: '20px auto',
+		width: '60%',
+		backgroundColor: '#eee',
+		textAlign: 'center',
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+			margin: '40px auto',
+			width: '80%',
+		}
+	},
+	noPubsText: {
+		fontSize: '20px',
+		padding: '30px 0px',
+		color: '#555',
+	},
 	pubItem: {
 		width: 'calc(80% - 20px)',
 		margin: '0px auto',
