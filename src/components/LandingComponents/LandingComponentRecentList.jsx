@@ -24,7 +24,14 @@ const LandingComponentRecentList = React.createClass({
 
 		return (
 			<div style={[styles.container, this.props.style]}>
-				<PubGallery pubs={this.props.recentPubs} />
+
+				{this.props.recentPubs.length
+					? <PubGallery pubs={this.props.recentPubs} />
+					: <div style={styles.noCollectionsWrapper}>
+						<div style={styles.noCollectionsText}>No pubs featured yet</div>
+					</div>
+				}
+				
 			</div>
 		);
 	}
@@ -38,6 +45,17 @@ styles = {
 		padding: '10px 30px',
 		// backgroundColor: 'transparent',
 		color: '#888',
+	},
+	noPubsWrapper: {
+		margin: '20px auto',
+		width: '60%',
+		backgroundColor: '#eee',
+		textAlign: 'center',
+	},
+	noPubsText: {
+		fontSize: '20px',
+		padding: '30px 0px',
+		color: '#555',
 	},
 	
 };
