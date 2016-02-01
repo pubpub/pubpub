@@ -214,9 +214,9 @@ pubSchema.statics.getPubEdit = function (slug, readerID, readerGroups, callback)
 
 		if (!readerID) { return callback(null, 'Not Authorized', true); }
 
-		const readerGroupsStrings = readerGroups.toString().split(',');
-		const canReadStrings = pub.collaborators.canRead.toString().split(',');
-		const canEditStrings = pub.collaborators.canEdit.toString().split(',');
+		const readerGroupsStrings = readerGroups.length ? readerGroups.toString().split(',') : [];
+		const canReadStrings = pub.collaborators.canRead.length ? pub.collaborators.canRead.toString().split(',') : [];
+		const canEditStrings = pub.collaborators.canEdit.length ? pub.collaborators.canEdit.toString().split(',') : [];
 
 		console.log(1, canEditStrings.indexOf(readerID.toString()) === -1);
 		console.log(2, canReadStrings.indexOf(readerID.toString()) === -1);

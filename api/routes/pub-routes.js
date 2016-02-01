@@ -322,6 +322,8 @@ app.post('/updatePubData', function(req, res) {
 			return res.status(500).json(err);
 		}
 
+		if (!pub) { return res.status(403).json('Not authorized to edit this pub'); }
+
 		if (!req.user || pub.collaborators.canEdit.indexOf(req.user._id) === -1) {
 			return res.status(403).json('Not authorized to edit this pub');
 		}
