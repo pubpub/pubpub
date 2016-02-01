@@ -51,7 +51,17 @@ groupSchema.statics.getGroup = function (groupSlug, readerID, callback) {
       select: 'name firstName lastName username thumbnail',
     },
     {
-      path: 'discussions editorComments',
+      path: 'discussions',
+      model: 'Discussion',
+      select: 'markdown author postDate',
+      populate: {
+        path: 'author',
+        model: 'User',
+        select: 'name firstName lastName username thumbnail',
+      },
+    },
+    {
+      path: 'editorComments',
       model: 'Discussion',
       select: 'markdown author postDate',
       populate: {

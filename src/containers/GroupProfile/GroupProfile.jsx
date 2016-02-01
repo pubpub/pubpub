@@ -137,7 +137,7 @@ export default connect( state => {
 styles = {
 	groupHeader: {
 		color: 'white',
-		width: '100vw',
+		// width: '100vw',
 		minHeight: '150px',
 		background: 'linear-gradient(to left, #6441A5 , #3E1162)',
 		position: 'relative',
