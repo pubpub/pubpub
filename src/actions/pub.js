@@ -32,6 +32,10 @@ export const DISCUSSION_VOTE = 'pub/DISCUSSION_VOTE';
 export const DISCUSSION_VOTE_SUCCESS = 'pub/DISCUSSION_VOTE_SUCCESS';
 export const DISCUSSION_VOTE_FAIL = 'pub/DISCUSSION_VOTE_FAIL';
 
+export const ARCHIVE_DISCUSSION_LOAD = 'pub/ARCHIVE_DISCUSSION_LOAD';
+export const ARCHIVE_DISCUSSION_SUCCESS = 'pub/ARCHIVE_DISCUSSION_SUCCESS';
+export const ARCHIVE_DISCUSSION_FAIL = 'pub/ARCHIVE_DISCUSSION_FAIL';
+
 /*--------*/
 // Define Action creators
 // 
@@ -104,6 +108,14 @@ export function addDiscussion(discussionObject, activeSaveID) {
 		types: [ADD_DISCUSSION, ADD_DISCUSSION_SUCCESS, ADD_DISCUSSION_FAIL],
 		promise: (client) => client.post('/addDiscussion', {data: {discussionObject: discussionObject}}),
 		activeSaveID: activeSaveID 
+	};
+}
+
+export function archiveDiscussion(objectID) {
+	return {
+		types: [ARCHIVE_DISCUSSION_LOAD, ARCHIVE_DISCUSSION_SUCCESS, ARCHIVE_DISCUSSION_FAIL],
+		promise: (client) => client.post('/discussionArchive', {data: {objectID: objectID}}),
+		objectID: objectID,
 	};
 }
 

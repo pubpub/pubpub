@@ -37,6 +37,10 @@ import {
 	DISCUSSION_VOTE_SUCCESS,
 	DISCUSSION_VOTE_FAIL,
 
+	ARCHIVE_COMMENT_LOAD,
+	ARCHIVE_COMMENT_SUCCESS,
+	ARCHIVE_COMMENT_FAIL,
+
 	ADD_COMMENT, 
 	ADD_COMMENT_SUCCESS, 
 	ADD_COMMENT_FAIL,
@@ -339,6 +343,25 @@ function discussionVote(state, voteType, discussionID, userYay, userNay) {
 	return state.mergeIn(['pubEditData', 'editorComments'], discussionsArray);
 }
 
+function archiveComment(state, discussionID) {
+
+	function findDiscussionAndChange(discussions) {
+		discussions.map((discussion)=>{
+			if (discussion._id === discussionID) {
+				discussion.archived = !discussion.archived;
+			}
+			if (discussion.children && discussion.children.length) {
+				findDiscussionAndChange(discussion.children);
+			}
+		});
+	}
+
+	const discussionsArray = state.getIn(['pubEditData', 'editorComments']).toJS();
+	findDiscussionAndChange(discussionsArray);
+
+	return state.mergeIn(['pubEditData', 'editorComments'], discussionsArray);
+}
+
 function addCommentFail(state, error, activeSaveID) {
 	console.log(error);
 	return state.merge({
@@ -420,6 +443,13 @@ export default function editorReducer(state = defaultState, action) {
 	case DISCUSSION_VOTE_SUCCESS:
 		return state;
 	case DISCUSSION_VOTE_FAIL:
+		return state;
+
+	case ARCHIVE_COMMENT_LOAD:
+		return archiveComment(state, action.objectID);
+	case ARCHIVE_COMMENT_SUCCESS:
+		return state;
+	case ARCHIVE_COMMENT_FAIL:
 		return state;
 		
 	case ADD_COMMENT:

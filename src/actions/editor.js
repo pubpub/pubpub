@@ -43,6 +43,10 @@ export const DISCUSSION_VOTE = 'editor/DISCUSSION_VOTE';
 export const DISCUSSION_VOTE_SUCCESS = 'editor/DISCUSSION_VOTE_SUCCESS';
 export const DISCUSSION_VOTE_FAIL = 'editor/DISCUSSION_VOTE_FAIL';
 
+export const ARCHIVE_COMMENT_LOAD = 'pub/ARCHIVE_COMMENT_LOAD';
+export const ARCHIVE_COMMENT_SUCCESS = 'pub/ARCHIVE_COMMENT_SUCCESS';
+export const ARCHIVE_COMMENT_FAIL = 'pub/ARCHIVE_COMMENT_FAIL';
+
 /*--------*/
 // Define Action creators
 // 
@@ -152,6 +156,14 @@ export function addComment(discussionObject, activeSaveID) {
 		types: [ADD_COMMENT, ADD_COMMENT_SUCCESS, ADD_COMMENT_FAIL],
 		promise: (client) => client.post('/addDiscussion', {data: {discussionObject: discussionObject, isEditorComment: true}}),
 		activeSaveID: activeSaveID 
+	};
+}
+
+export function archiveComment(objectID) {
+	return {
+		types: [ARCHIVE_COMMENT_LOAD, ARCHIVE_COMMENT_SUCCESS, ARCHIVE_COMMENT_FAIL],
+		promise: (client) => client.post('/discussionArchive', {data: {objectID: objectID}}),
+		objectID: objectID,
 	};
 }
 

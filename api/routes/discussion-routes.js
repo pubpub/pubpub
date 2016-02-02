@@ -102,3 +102,19 @@ app.post('/discussionVote', function(req,res){
 
 	return res.status(201).json(true);
 });
+
+app.post('/discussionArchive', function(req,res){
+	if (!req.user) {return res.status(504).json('Not logged in');}
+
+	const discussionID = req.body.objectID;
+
+	Discussion.findOne({_id:discussionID}).exec(function (err, discussion) {
+		
+		discussion.archived = !discussion.archived;
+
+		discussion.save(function(err, result){
+			return res.status(201).json(result);
+		});
+	});
+
+});

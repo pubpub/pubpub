@@ -7,8 +7,8 @@ import DiscussionsItem from './DiscussionsItem';
 import DiscussionsInput from './DiscussionsInput';
 
 import {toggleVisibility} from '../../actions/login';
-import {addDiscussion, discussionVoteSubmit, togglePubHighlights} from '../../actions/pub';
-import {discussionVoteSubmit as discussionVoteSubmitEditor} from '../../actions/editor';
+import {addDiscussion, discussionVoteSubmit, togglePubHighlights, archiveDiscussion} from '../../actions/pub';
+import {discussionVoteSubmit as discussionVoteSubmitEditor, archiveComment} from '../../actions/editor';
 import {addComment} from '../../actions/editor';
 
 // import {globalMessages} from '../../utils/globalMessages';
@@ -128,6 +128,14 @@ const Discussions = React.createClass({
 		return discussionsData;
 	},
 
+	archiveDiscussion: function(objectID) {
+		if (this.props.editorCommentMode) {
+			this.props.dispatch(archiveComment(objectID));
+		} else {
+			this.props.dispatch(archiveDiscussion(objectID));
+		}
+	},
+
 	render: function() {
 		// const pubData = {discussions: []};
 		
@@ -136,6 +144,7 @@ const Discussions = React.createClass({
 		const addDiscussionStatus = this.props.editorCommentMode ? this.props.editorData.get('addDiscussionStatus') : this.props.pubData.get('addDiscussionStatus');
 		const newDiscussionData = this.props.editorCommentMode ? this.props.editorData.get('newDiscussionData') : this.props.pubData.get('newDiscussionData');
 		const activeSaveID = this.props.editorCommentMode ? this.props.editorData.get('activeSaveID') : this.props.pubData.get('activeSaveID');
+		const isPubAuthor = this.props.editorCommentMode ? !this.props.editorData.getIn(['pubEditData', 'isReader']) : this.props.pubData.getIn(['pubData', 'isAuthor']);
 
 		return (
 			<div style={styles.container}>
@@ -167,6 +176,7 @@ const Discussions = React.createClass({
 								slug={this.props.slug}
 								discussionItem={discussion}
 								instanceName={this.props.instanceName}
+								isPubAuthor={isPubAuthor}
 
 								activeSaveID={activeSaveID}
 								addDiscussionHandler={this.addDiscussion}
@@ -174,6 +184,7 @@ const Discussions = React.createClass({
 								newDiscussionData={newDiscussionData} 
 								userThumbnail={this.props.loginData.getIn(['userData', 'thumbnail'])} 
 								handleVoteSubmit={this.discussionVoteSubmit} 
+								handleArchive={this.archiveDiscussion}
 								// noReply={!this.props.editorCommentMode && this.props.inEditor}
 								noPermalink={this.props.editorCommentMode}/>
 							);

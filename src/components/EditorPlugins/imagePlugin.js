@@ -43,7 +43,6 @@ const ImagePlugin = React.createClass({
 	},
 	render: function() {
 		// const refName = this.props.children;
-		console.log(this.props);
 		if (!this.props.source || !this.props.source.url_s3) {
 			return (<span></span>);
 		}
