@@ -43,16 +43,17 @@ const ImagePlugin = React.createClass({
 	},
 	render: function() {
 		// const refName = this.props.children;
+		console.log(this.props);
 		if (!this.props.source || !this.props.source.url_s3) {
 			return (<span></span>);
 		}
 		const url = this.props.source.url_s3;
 		const size = this.props.size;
-		const align = this.props.align;
+		const align = this.props.align ? this.props.align : 'full';
 		const caption = this.props.caption;
 		const reference = this.props.reference;
 
-		const imgProps = {style: {width: '100%', height: '100%'}};
+		const imgProps = (!this.props.size && !this.props.align) ? {style: {maxWidth: '100%', maxHeight: '100%', display: 'block', margin: '0 auto'}} : {style: {width: '100%', height: '100%'}};
 
 		return (<Media caption={caption} size={size} align={align} reference={reference}>
 				<ImageLoader onLoad={this.loadedImage} imgProps={imgProps} src={url} wrapper={React.DOM.span} preloader={this.preloader}/>
