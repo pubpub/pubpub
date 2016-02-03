@@ -86,7 +86,7 @@ const DiscussionsItem = React.createClass({
 		
 		return (
 			isArchived && !this.state.showArchived
-				? <div style={styles.archivedContainer} key={'archiveBlock-' + discussionItem._id} onClick={this.toggleShowArchived}>
+				? <div style={[styles.archivedContainer, globalStyles.ellipsis]} key={'archiveBlock-' + discussionItem._id} onClick={this.toggleShowArchived}>
 					Archived
 					<span style={{padding: '0px 20px'}}>Comment by {discussionItem.author.name}</span>
 					{(discussionPoints + 1) === 1 ? (discussionPoints + 1) + ' point' : (discussionPoints + 1) + ' points'}
