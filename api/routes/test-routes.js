@@ -368,24 +368,30 @@ app.get('/handleNewFile', function(req,res){
 			}, delay);
 
 		} else if (req.query.contentType.indexOf('video') > -1) {
-			cloudinary.uploader.upload(req.query.url, function(result) { 
-				try{
-					// console.log(result) 
-					result.thumbnail = 'https://res.cloudinary.com/pubpub/video/upload/t_media_lib_thumb/c_limit,h_50,w_50/' + result.public_id + '.jpg';
-					result.assetType = 'video';
-					return res.status(201).json(result);	
-				} catch (err) {
-					console.log('In catch on cloudinary video upload.'); console.log('req.body', req.body); console.log('err', err); console.log('result', result);
-					result = {
-						url: req.query.url,
-						thumbnail: '/thumbnails/file.png',
-						assetType: 'video',
-					};
-					return res.status(201).json(result);
+			// cloudinary.uploader.upload(req.query.url, function(result) { 
+			// 	try{
+			// 		// console.log(result) 
+			// 		result.thumbnail = 'https://res.cloudinary.com/pubpub/video/upload/t_media_lib_thumb/c_limit,h_50,w_50/' + result.public_id + '.jpg';
+			// 		result.assetType = 'video';
+			// 		return res.status(201).json(result);	
+			// 	} catch (err) {
+			// 		console.log('In catch on cloudinary video upload.'); console.log('req.body', req.body); console.log('err', err); console.log('result', result);
+			// 		result = {
+			// 			url: req.query.url,
+			// 			thumbnail: '/thumbnails/file.png',
+			// 			assetType: 'video',
+			// 		};
+			// 		return res.status(201).json(result);
 
-				}
+			// 	}
 				
-			}, { resource_type: "video" });	
+			// }, { resource_type: "video" });	
+			const result = {
+				url: req.query.url,
+				thumbnail: '/thumbnails/file.png',
+				assetType: 'video',
+			};
+			return res.status(201).json(result);
 			
 			
 		} else {
