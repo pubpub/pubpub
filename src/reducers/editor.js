@@ -327,6 +327,7 @@ function discussionVote(state, voteType, discussionID, userYay, userNay) {
 		discussions.map((discussion)=>{
 			if (discussion._id === discussionID) {
 				discussion[voteType === 'yay' ? 'yays' : 'nays'] += scoreChange;
+				discussion.points += (voteType === 'yay' ? 1 : -1) * scoreChange;
 				discussion.userYay = newUserYay;
 				discussion.userNay = newUserNay;
 			}
