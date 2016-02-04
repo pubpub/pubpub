@@ -109,6 +109,7 @@ app.use((req, res) => {
 				)
 				const mainBundle = webpackIsomorphicTools.assets().javascript.main;
 				const head = Helmet.rewind();
+				console.log('journaldata', store.getState().journal.getIn(['journalData', 'randomSlug']));
 				res.send(`<!doctype html>
 					<html lang="en-us">
 						<head>
@@ -149,7 +150,9 @@ app.use((req, res) => {
 							<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.1.0/highlight.min.js"></script>
 							<script src="/js/typo.js"></script>
 							<script src="/js/spellcheck.js"></script>
+							<style id="dynamicStyle">
 
+							</style>
 						</head>
 
 						<body style="width: 100%; margin: 0;">

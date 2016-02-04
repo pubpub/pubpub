@@ -116,6 +116,7 @@
     "intl": "^1.0.1",
     "invariant": "^2.2.0",
     "kerberos": "0.0.17",
+    "less": "^2.6.0",
     "lodash": "^3.10.1",
     "lru-memoize": "1.0.0",
     "map-props": "1.0.0",

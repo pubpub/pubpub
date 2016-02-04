@@ -137,6 +137,11 @@ const PubBody = React.createClass({
 		});
 	},
 
+	// less.render(x, function (e, output) {
+	//   console.log(output.css);
+	//     console.timeEnd("dbsave");
+	// });
+
 	render: function() {
 		return (
 			<ResizingText fontRatio={60} minFont={this.props.minFont}>

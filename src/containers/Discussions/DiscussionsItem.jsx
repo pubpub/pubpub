@@ -72,7 +72,6 @@ const DiscussionsItem = React.createClass({
 	},
 
 	render: function() {
-
 		const discussionItem = this.props.discussionItem;
 
 		const assets = convertListToObject( discussionItem.assets );
@@ -196,6 +195,7 @@ const DiscussionsItem = React.createClass({
 									key={child._id}
 									slug={this.props.slug}
 									discussionItem={child}
+									isPubAuthor={this.props.isPubAuthor}
 
 									activeSaveID={this.props.activeSaveID}
 									addDiscussionHandler={this.props.addDiscussionHandler}
@@ -203,8 +203,10 @@ const DiscussionsItem = React.createClass({
 									newDiscussionData={this.props.newDiscussionData}
 									userThumbnail={this.props.userThumbnail}
 									handleVoteSubmit={this.props.handleVoteSubmit}
+									handleArchive={this.props.handleVoteSubmit}
 									noReply={this.props.noReply}
-									noPermalink={this.props.noPermalink}/>
+									noPermalink={this.props.noPermalink}/>								
+	
 								);
 							})
 						}
