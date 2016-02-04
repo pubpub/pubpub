@@ -166,13 +166,13 @@ app.post('/inviteReviewers', function(req, res) {
 
 			for (let recipient of inviteData) {
 				const recipientEmail = recipient.email;
-				const emailCallback = function(error, email) {
+				
+				sendInviteEmail(senderName, pubName, pubURL, journalName, journalURL, journalIntroduction, recipientEmail, function(error, email) {
 					if (err) {
 						console.log(error);	
 					}
 					// console.log(email);
-				};
-				sendInviteEmail(senderName, pubName, pubURL, journalName, journalURL, journalIntroduction, recipientEmail, emailCallback);
+				});
 
 			}
 

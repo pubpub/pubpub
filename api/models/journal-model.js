@@ -80,4 +80,50 @@ journalSchema.statics.updateHerokuDomains = function (oldDomain, newDomain) {
 	});
 };
 
+journalSchema.statics.populationObject = function(collectionsOnly) {
+	const options = [ 
+		{path: "pubsSubmitted", select:"title abstract slug settings"},
+		{path: "admins", select:"name firstName lastName username thumbnail"},
+		{
+			path: "pubsFeatured", 
+			select:"title abstract slug authors lastUpdated createDate discussions",
+			populate: [{
+				path: 'authors',
+				model: 'User',
+				select: 'name firstName lastName username thumbnail',
+			},
+			{
+				path: 'discussions',
+				model: 'Discussion',
+				select: 'markdown author postDate',
+				populate: {
+					path: 'author',
+					model: 'User',
+					select: 'name firstName lastName username thumbnail',
+				},
+			}],
+		},
+		{
+			path: "collections.pubs", 
+			select:"title abstract slug authors lastUpdated createDate discussions",
+			populate: [{
+				path: 'authors',
+				model: 'User',
+				select: 'name firstName lastName username thumbnail',
+			},
+			{
+				path: 'discussions',
+				model: 'Discussion',
+				select: 'markdown author postDate',
+				populate: {
+					path: 'author',
+					model: 'User',
+					select: 'name firstName lastName username thumbnail',
+				},
+			}],
+		}
+	];
+	return collectionsOnly ? [options[3]] : options;
+};
+
 module.exports = mongoose.model('Journal', journalSchema);
