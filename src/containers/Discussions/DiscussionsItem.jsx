@@ -5,6 +5,7 @@ import { Link } from 'react-router';
 import dateFormat from 'dateformat';
 import DiscussionsInput from './DiscussionsInput';
 import DiscussionsScore from './DiscussionsScore';
+import TimeAgo from 'react-ago-component';
 
 import {convertListToObject} from '../../utils/parsePlugins';
 import PPMComponent from '../../markdown/PPMComponent';
@@ -71,7 +72,7 @@ const DiscussionsItem = React.createClass({
 			showArchived: !this.state.showArchived
 		});
 	},
-	
+
 	render: function() {
 
 		const discussionItem = this.props.discussionItem;
@@ -80,10 +81,10 @@ const DiscussionsItem = React.createClass({
 		const references = convertListToObject(discussionItem.references, true);
 		const selections = discussionItem.selections || [];
 		const isArchived = discussionItem.archived;
-		
+
 		// console.log(discussionItem);
 		const discussionPoints = discussionItem.points ? discussionItem.points : 0; // This is to fix a NaN problem with newly published comments/discussions
-		
+
 		return (
 			isArchived && !this.state.showArchived
 				? <div style={[styles.archivedContainer, globalStyles.ellipsis]} key={'archiveBlock-' + discussionItem._id} onClick={this.toggleShowArchived}>
@@ -100,7 +101,10 @@ const DiscussionsItem = React.createClass({
 							</Link>
 						</div>
 						<div style={styles.discussionDetailsLine}>
-							<Link to={'/user/' + discussionItem.author.username} style={globalStyles.link}><span key={'discussionItemAuthorLink' + discussionItem._id} style={styles.headerText}>{discussionItem.author.name}</span></Link> on {dateFormat(discussionItem.postDate, 'mm/dd/yy, h:MMTT')}
+							<Link to={'/user/' + discussionItem.author.username} style={globalStyles.link}>
+								<span key={'discussionItemAuthorLink' + discussionItem._id} style={styles.headerText}>{discussionItem.author.name}</span>
+							</Link>
+							on <TimeAgo date={discussionItem.postDate} /> 
 						</div>
 
 						<div style={[styles.discussionDetailsLine, styles.discussionDetailsLineBottom]}>
@@ -132,7 +136,7 @@ const DiscussionsItem = React.createClass({
 								</span>
 								: null
 							}
-							
+
 							{isArchived
 								? <span>
 									<span style={[styles.detailLineItemSeparator, (this.props.noReply && this.props.noPermalink && !this.props.isPubAuthor) && {display: 'none'}]}>|</span>
@@ -233,7 +237,7 @@ styles = {
 		padding: '0px 10px',
 		fontSize: '12px',
 		backgroundColor: 'rgba(255,255,255,0.2)',
-		borderBottom: '1px solid #ccc',
+		borderBottom: '1px solid #eee',
 		':hover': {
 			color: '#444',
 			cursor: 'pointer',
@@ -252,6 +256,7 @@ styles = {
 	discussionAuthorImage: {
 		width: '100%',
 		height: '100%',
+		borderRadius: '2px',
 	},
 	discussionDetailsLine: {
 		height: 18,
@@ -289,7 +294,7 @@ styles = {
 		width: '100%',
 		position: 'relative',
 		minHeight: 82,
-		borderBottom: '1px solid #ccc',
+		borderBottom: '1px solid #eee',
 	},
 	discussionVoting: {
 		width: '36',
