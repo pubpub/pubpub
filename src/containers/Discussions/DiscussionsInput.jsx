@@ -34,6 +34,12 @@ const PubDiscussionsInput = React.createClass({
 
 	},
 
+	getInitialState() {
+		return {
+			expanded: false
+		};
+	},
+
 	componentDidMount() {
 		initCodeMirrorMode();
 
@@ -50,6 +56,7 @@ const PubDiscussionsInput = React.createClass({
 
 		const codeMirror = CodeMirror(document.getElementById(this.props.codeMirrorID), cmOptions);
 		codeMirror.on('change', this.onEditorChange);
+		this.cm = codeMirror;
 	},
 
 	componentWillReceiveProps(nextProps) {
@@ -87,6 +94,15 @@ const PubDiscussionsInput = React.createClass({
 		this.props.addDiscussionHandler(newDiscussion, this.props.saveID);
 	},
 
+	onFocus: function() {
+		this.setState({expanded: true});
+	},
+	onBlur: function() {
+		if (this.cm.getValue().length === 0) {
+			this.setState({expanded: false});
+		}
+	},
+
 	render: function() {
 
 		return (
@@ -101,13 +117,14 @@ const PubDiscussionsInput = React.createClass({
 						padding: '0px 20px',
 						width: 'calc(100% - 40px)',
 						minHeight: '25px',
+						fontWeight: '300'
 					},
 					'.inputCodeMirror .CodeMirror-placeholder': {
 						color: '#aaa',
 					},
 				}} />
 
-				<div style={styles.inputTopLine}>
+			<div style={[styles.inputTopLine, styles.expanded(this.state.expanded, true)]}>
 					<div style={styles.thumbnail}>
 						{this.props.userThumbnail
 							? <img style={styles.thumbnailImage}src={this.props.userThumbnail} />
@@ -126,13 +143,13 @@ const PubDiscussionsInput = React.createClass({
 						<input style={styles.checkboxInput} name={'privateDiscussion'} id={'privateDiscussion'} type="checkbox" value={'private'} ref={'privateDiscussion'}/>
 					</div> */}
 				</div>
-				<div id={this.props.codeMirrorID} className={'inputCodeMirror'} style={styles.inputBox}></div>
+				<div id={this.props.codeMirrorID} className={'inputCodeMirror'} style={styles.inputBox(this.state.expanded)} onBlur={this.onBlur} onFocus={this.onFocus}></div>
 
 				<div style={styles.loaderContainer}>
 					{(this.props.addDiscussionStatus === 'loading' && this.props.activeSaveID === this.props.saveID ? <LoaderIndeterminate color="#444"/> : null)}
 				</div>
 
-				<div style={styles.inputBottomLine}>
+				<div style={[styles.inputBottomLine, styles.expanded(this.state.expanded, false)]}>
 					<div style={styles.submitButton} key={'newDiscussionSubmit'} onClick={this.submitDiscussion}>
 						<FormattedMessage {...globalMessages.Submit}/>
 					</div>
@@ -146,6 +163,23 @@ const PubDiscussionsInput = React.createClass({
 export default injectIntl(Radium(PubDiscussionsInput));
 
 styles = {
+	expanded: function(expand, flipUp) {
+		const expandObj = {};
+		if (expand) {
+			expandObj.opacity = 1;
+			expandObj.transform = 'translateY(0px)';
+		} else {
+			expandObj.opacity = 0;
+			if (flipUp) {
+				expandObj.transform = 'translateY(10px)';
+			} else {
+				expandObj.transform = 'translateY(-10px)';
+			}
+		}
+		expandObj.transition = 'transform .15s, opacity .15s';
+
+		return expandObj;
+	},
 	container: {
 		width: '100%',
 		overflow: 'hidden',
@@ -163,12 +197,18 @@ styles = {
 		// backgroundColor: 'rgba(255,0,100,0.1)',
 		height: 20,
 	},
-
-	inputBox: {
-		border: '1px solid #ddd',
-		backgroundColor: '#fff',
-		minHeight: 25,
-		padding: '10px 0px',
+	inputBox: function(expanded) {
+		return {
+			backgroundColor: '#fff',
+			minHeight: 25,
+			padding: (expanded) ? '10px 0px' : '5px 0px',
+			boxShadow: '0 1px 3px 0 rgba(0,0,0,.2),0 1px 1px 0 rgba(0,0,0,.14),0 2px 1px -1px rgba(0,0,0,.12)',
+			margin: '10px 0px',
+			borderRadius: '1px',
+			transition: 'padding .15s',
+			cursor: 'pointer',
+			border: (expanded) ? '1px solid rgb(225, 225, 225)' : '1px solid white',
+		};
 	},
 	loaderContainer: {
 		position: 'absolute',
