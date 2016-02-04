@@ -275,12 +275,12 @@ app.post('/updateCollaborators', function(req, res) {
 			canRead: canRead
 		};
 
+		/* *********************************** */
+		/* Send new user(s) email notification */
+		/* *********************************** */
 		const allUsersOld = pub.collaborators.canEdit.concat(pub.collaborators.canRead).toString().split(',');
 		const allUsersNew = collaborators.canEdit.concat(collaborators.canRead);
 		const newID = _.difference(allUsersNew, allUsersOld);
-		// console.log('allUsersOld', allUsersOld);
-		// console.log('allUsersNew', allUsersNew);
-		// console.log('newID', newID);
 
 		User.findOne({_id: newID}).lean().exec(function(err, user){
 			Group.findOne({_id: newID}).populate({path: "members", select:'email'}).lean().exec(function(err, group){
@@ -297,31 +297,26 @@ app.post('/updateCollaborators', function(req, res) {
 					const pubTitle = pub.title;
 
 					if (user) {
-						// console.log('Got a user: ', user.username);
 						const email = user.email;
-						// console.log('Email User: ', email);
 						sendAddedAsCollaborator(email, url, senderName, pubTitle, groupName, journalName, function(err, result){
-							if (err) {
-								console.log('Error sending email to user: ', error);	
-							}
+							if (err) { console.log('Error sending email to user: ', error);	}
 						});
 					} 
 
 					if (group) {
-						// console.log('Got a group: ', group.groupName);
 						for (let index = group.members.length; index--;) {
 							const email = group.members[index].email;
-							// console.log('Email group member: ', email);
 							sendAddedAsCollaborator(email, url, senderName, pubTitle, groupName, journalName, function(err, result){
-								if (err) {
-									console.log('Error sending email to user: ', error);	
-								}
+								if (err) { console.log('Error sending email to user: ', error);	}
 							});
 						}
 					}
 				});
 			});
 		});
+		/* *********************************** */
+		/*        End notification block       */
+		/* *********************************** */
 
 
 		if (req.body.removedUser) {
