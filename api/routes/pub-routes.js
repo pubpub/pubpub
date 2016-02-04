@@ -11,6 +11,7 @@ var _         = require('underscore');
 var Firebase  = require('firebase');
 
 import {fireBaseURL, firebaseTokenGen, generateAuthToken} from '../services/firebase';
+import {sendAddedAsCollaborator} from '../services/emails';
 
 app.get('/getPub', function(req, res) {
 	const userID = req.user ? req.user._id : undefined;
@@ -273,6 +274,55 @@ app.post('/updateCollaborators', function(req, res) {
 			canEdit: canEdit,
 			canRead: canRead
 		};
+
+		const allUsersOld = pub.collaborators.canEdit.concat(pub.collaborators.canRead).toString().split(',');
+		const allUsersNew = collaborators.canEdit.concat(collaborators.canRead);
+		const newID = _.difference(allUsersNew, allUsersOld);
+		// console.log('allUsersOld', allUsersOld);
+		// console.log('allUsersNew', allUsersNew);
+		// console.log('newID', newID);
+
+		User.findOne({_id: newID}).lean().exec(function(err, user){
+			Group.findOne({_id: newID}).populate({path: "members", select:'email'}).lean().exec(function(err, group){
+				Journal.findOne({ $or:[ {'subdomain':req.query.host.split('.')[0]}, {'customDomain':req.query.host}]}).exec(function(err, journal){
+					let url = '';
+					if (journal) {
+						url = journal.customDomain ? 'http://' + journal.customDomain + '/pub/' + pub.slug + '/draft' : 'http://' + journal.subdomain + '.pubpub.org/pub/' + pub.slug + '/draft';
+					} else {
+						url = 'http://www.pubpub.org/pub/' + pub.slug + '/draft';
+					}
+					const groupName = group ? group.groupName : undefined;
+					const journalName = journal ? journal.journalName : undefined;
+					const senderName = req.user.name;
+					const pubTitle = pub.title;
+
+					if (user) {
+						// console.log('Got a user: ', user.username);
+						const email = user.email;
+						// console.log('Email User: ', email);
+						sendAddedAsCollaborator(email, url, senderName, pubTitle, groupName, journalName, function(err, result){
+							if (err) {
+								console.log('Error sending email to user: ', error);	
+							}
+						});
+					} 
+
+					if (group) {
+						// console.log('Got a group: ', group.groupName);
+						for (let index = group.members.length; index--;) {
+							const email = group.members[index].email;
+							// console.log('Email group member: ', email);
+							sendAddedAsCollaborator(email, url, senderName, pubTitle, groupName, journalName, function(err, result){
+								if (err) {
+									console.log('Error sending email to user: ', error);	
+								}
+							});
+						}
+					}
+				});
+			});
+		});
+
 
 		if (req.body.removedUser) {
 			User.update({ _id: req.body.removedUser }, { $pull: { pubs: pubID} }, function(err, result){if(err) return handleError(err)});
