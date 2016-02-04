@@ -2,16 +2,14 @@ import React, {PropTypes} from 'react';
 import Radium from 'radium';
 import {globalStyles} from '../../utils/styleConstants';
 import { Link } from 'react-router';
-import dateFormat from 'dateformat';
 import DiscussionsInput from './DiscussionsInput';
 import DiscussionsScore from './DiscussionsScore';
-import TimeAgo from 'react-ago-component';
 
 import {convertListToObject} from '../../utils/parsePlugins';
 import PPMComponent from '../../markdown/PPMComponent';
 
 // import {globalMessages} from '../../utils/globalMessages';
-import {FormattedMessage} from 'react-intl';
+import {FormattedMessage, FormattedDate, FormattedRelative} from 'react-intl';
 
 let styles = {};
 
@@ -103,8 +101,11 @@ const DiscussionsItem = React.createClass({
 						<div style={styles.discussionDetailsLine}>
 							<Link to={'/user/' + discussionItem.author.username} style={globalStyles.link}>
 								<span key={'discussionItemAuthorLink' + discussionItem._id} style={styles.headerText}>{discussionItem.author.name}</span>
-							</Link>
-							on <TimeAgo date={discussionItem.postDate} /> 
+							</Link> &nbsp;&nbsp; {
+								(((new Date() - new Date(discussionItem.postDate)) / (1000 * 60 * 60 * 24)) < 7)
+								? <FormattedRelative value={discussionItem.postDate} />
+								: <FormattedDate value={discussionItem.postDate} />
+							}
 						</div>
 
 						<div style={[styles.discussionDetailsLine, styles.discussionDetailsLineBottom]}>
