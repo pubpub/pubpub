@@ -198,10 +198,9 @@ const Editor = React.createClass({
 
 	updatePubBackendData: function() {
 		const newPubData = {
-			title: this.state.title,
+			title: this.state.title ? this.state.title : this.props.slug,
 			abstract: this.state.abstract,
 		};
-		console.log('calling');
 		this.props.dispatch(updatePubBackendData(this.props.slug, newPubData));
 	},
 

@@ -22,7 +22,17 @@ const UserMain = React.createClass({
 		return {
 			profileData: {
 				discussions: [],
-				pubs: [],
+				pubs: {
+					published: [],
+					unpublished: [],
+					canRead: [],
+				},
+				groups: [],
+				follows: {
+					pubs: [],
+					users: [],
+					journals: [],
+				},
 			},
 		};
 	},
@@ -146,16 +156,16 @@ const UserMain = React.createClass({
 						{/* <FormattedMessage {...globalMessages.pubs} /> */}
 						Recent Pubs
 					</div>
-					{(()=>{
-						const outputPubs = [];
-						for (let index = this.props.profileData.pubs.published.length - 1; index > (this.props.profileData.pubs.published.length - 6); index--) {
-							outputPubs.push(<PubPreview 
+
+					{
+						this.props.profileData.pubs.published.slice(0,5).map((pub, index)=>{
+							return (<PubPreview 
 								key={'pubItem-' + index}
-								pubData={this.props.profileData.pubs.published[index]}
-								canEdit={this.props.ownProfile === 'self' ? true : false} />);
-						}
-						return outputPubs;
-					})()}
+								pubData={pub}
+								canEdit={this.props.ownProfile === 'self' ? true : false} />
+							);
+						})
+					}
 					{this.props.profileData.pubs.published.length === 0
 						? <div style={globalStyles.emptyBlock}>
 							<FormattedMessage id="user.noPubs" defaultMessage="No Pubs Yet"/>

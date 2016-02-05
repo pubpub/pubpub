@@ -59,16 +59,15 @@ const UserPubs = React.createClass({
 					: <ul style={[navStyles.navList, styles.subNav]}></ul>
 				}
 
-				{(()=>{
-					const outputPubs = [];
-					for (let index = this.props.profileData.pubs[this.state.mode].length; index--;) {
-						outputPubs.push(<PubPreview 
+				{
+					this.props.profileData.pubs[this.state.mode].map((pub, index)=>{
+						return (<PubPreview 
 							key={'pubItem-' + index}
-							pubData={this.props.profileData.pubs[this.state.mode][index]}
-							canEdit={this.props.ownProfile === 'self' ? true : false} />);
-					}
-					return outputPubs;
-				})()}
+							pubData={pub}
+							canEdit={this.props.ownProfile === 'self' ? true : false} />
+						);
+					})
+				}
 
 			</div>
 		);
