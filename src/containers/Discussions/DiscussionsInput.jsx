@@ -202,18 +202,17 @@ styles = {
 		return {
 			backgroundColor: '#fff',
 			minHeight: 25,
-			padding: (expanded) ? '10px 0px' : '5px 0px',
+			padding: '10px 0px',
 			boxShadow: '0 1px 3px 0 rgba(0,0,0,.2),0 1px 1px 0 rgba(0,0,0,.14),0 2px 1px -1px rgba(0,0,0,.12)',
 			margin: '10px 0px',
 			borderRadius: '1px',
-			transition: 'padding .15s',
 			cursor: 'pointer',
 			border: (expanded) ? '1px solid rgb(225, 225, 225)' : '1px solid white',
 		};
 	},
 	loaderContainer: {
 		position: 'absolute',
-		bottom: '20px',
+		bottom: '30px',
 		width: '100%',
 	},
 	thumbnail: {
