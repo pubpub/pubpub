@@ -31,7 +31,7 @@ const DiscussionPreview = React.createClass({
 						id="preview.discussionOn"
 						defaultMessage="Discussion on"/>
 					{' '}{discussion.pub.title}</div>
-					<div style={styles.scoreLine}><FormattedMessage {...globalMessages.score}/>: {discussion.points}</div>
+					<div style={styles.scoreLine}><FormattedMessage {...globalMessages.score}/>: {discussion.points + 1}</div>
 					<div style={styles.markdown}>{discussion.markdown}</div>
 				</Link>
 			</div>

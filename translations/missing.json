@@ -10,6 +10,7 @@
     "journal.global": "Same as English: Global",
     "journal.autoFeature": "Missing. English is: Automatically Feature Pubs on Submission",
     "pubMeta.inviteMessage": "Missing. English is: Do you know someone who might have a have an interesting opinion on this paper? Invite them to join the discussion! We will send them a message and help them create accounts.",
+    "user.noGroups": "Missing. English is: No Groups Yet",
     "discussion.Unarchive": "Missing. English is: Unarchive",
     "discussion.Archive": "Missing. English is: Archive",
     "discussion.Archived": "Missing. English is: Collapse",
@@ -28,7 +29,12 @@
     "global.Members": "Missing. English is: Members",
     "global.url": "Same as English: url",
     "global.markdown": "Same as English: markdown",
-    "discussionPlaceholder": "Missing. English is: Add discussion or feedback"
+    "global.Published": "Missing. English is: Published",
+    "global.Unpublished": "Missing. English is: Unpublished",
+    "global.readOnly": "Missing. English is: Read-Only",
+    "global.publishedOn": "Missing. English is: Published on",
+    "discussionPlaceholder": "Missing. English is: Add discussion or feedback",
+    "People": "Missing. English is: People"
   },
   "ee": {
     "group.groupWillLiveAt": "Missing. English is: Group will live at",
@@ -46,6 +52,8 @@
     "login.firstName": "Missing. English is: First Name",
     "login.lastName": "Missing. English is: Last Name",
     "pubMeta.inviteMessage": "Missing. English is: Do you know someone who might have a have an interesting opinion on this paper? Invite them to join the discussion! We will send them a message and help them create accounts.",
+    "user.noDiscussions": "Missing. English is: No Discussions Yet",
+    "user.noGroups": "Missing. English is: No Groups Yet",
     "user.noPubs": "Missing. English is: No Pubs Yet",
     "discussion.Unarchive": "Missing. English is: Unarchive",
     "discussion.Archive": "Missing. English is: Archive",
@@ -70,7 +78,10 @@
     "global.Members": "Missing. English is: Members",
     "global.invite": "Missing. English is: invite",
     "global.journals": "Missing. English is: journals",
-    "global.published": "Missing. English is: Published on",
+    "global.Published": "Missing. English is: Published",
+    "global.Unpublished": "Missing. English is: Unpublished",
+    "global.readOnly": "Missing. English is: Read-Only",
+    "global.publishedOn": "Missing. English is: Published on",
     "global.firstPublished": "Missing. English is: First published on",
     "global.lastPublished": "Missing. English is: Last Published on",
     "global.inviteReviewers": "Missing. English is: Invite Reviewers",
@@ -80,6 +91,7 @@
     "editorCommentsText0": "Missing. English is: You are commenting on a draft version of this Pub.",
     "editorCommentsText1": "Missing. English is: This section can only be used by collaborators and is private. It is never published or made public.",
     "EditorComments": "Missing. English is: Editor Comments",
-    "discussionPlaceholder": "Missing. English is: Add discussion or feedback"
+    "discussionPlaceholder": "Missing. English is: Add discussion or feedback",
+    "People": "Missing. English is: People"
   }
 }

@@ -1,7 +1,7 @@
 import React, {PropTypes} from 'react';
 import Radium from 'radium';
-import {globalStyles, navStyles} from '../../utils/styleConstants';
-import {DiscussionPreview, PubPreview} from '../ItemPreviews';
+import {navStyles} from '../../utils/styleConstants';
+import {PubPreview} from '../ItemPreviews';
 
 import {globalMessages} from '../../utils/globalMessages';
 import {FormattedMessage} from 'react-intl';
@@ -12,7 +12,6 @@ const UserPubs = React.createClass({
 	propTypes: {
 		profileData: PropTypes.object,
 		ownProfile: PropTypes.string,
-		username: PropTypes.string,
 	},
 
 	getDefaultProps: function() {
@@ -44,23 +43,21 @@ const UserPubs = React.createClass({
 				{this.props.ownProfile === 'self'
 					? <ul style={[navStyles.navList, styles.subNav]}>
 						<li key="subNav0"style={[navStyles.navItem, navStyles.left, navStyles.navItemShow, styles.noLeftPadding, styles.inactiveNav, this.state.mode === 'published' && styles.activeNav]} onClick={this.setMode('published')}>
-							Published
+							<FormattedMessage {...globalMessages.Published} /> ({this.props.profileData.pubs.published.length})
 						</li>
 						<li style={[navStyles.navSeparator, navStyles.left, navStyles.navItemShow]}></li>
 
 						<li key="subNav1"style={[navStyles.navItem, navStyles.left, navStyles.navItemShow, styles.inactiveNav, this.state.mode === 'unpublished' && styles.activeNav]} onClick={this.setMode('unpublished')}>
-							Unpublished
+							<FormattedMessage {...globalMessages.Unpublished} /> ({this.props.profileData.pubs.unpublished.length})
 						</li>
 						<li style={[navStyles.navSeparator, navStyles.left, navStyles.navItemShow]}></li>
 
 						<li key="subNav2"style={[navStyles.navItem, navStyles.left, navStyles.navItemShow, styles.inactiveNav, this.state.mode === 'canRead' && styles.activeNav]} onClick={this.setMode('canRead')}>
-							Read-Only
+							<FormattedMessage {...globalMessages.readOnly} /> ({this.props.profileData.pubs.canRead.length})
 						</li>
 					</ul>
 					: <ul style={[navStyles.navList, styles.subNav]}></ul>
 				}
-						
-					
 
 				{(()=>{
 					const outputPubs = [];

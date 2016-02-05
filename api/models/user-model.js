@@ -86,7 +86,7 @@ userSchema.statics.getUser = function (username, readerID, callback) {
       path: "discussions", 
       select:"markdown postDate yays nays pub",
       populate: [{
-        path: 'discussions.pub',
+        path: 'pub',
         model: 'Pub',
         select: 'title slug',
       }]

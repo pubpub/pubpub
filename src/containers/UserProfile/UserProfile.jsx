@@ -121,14 +121,14 @@ const Profile = React.createClass({
 							{ /* ************** */ }
 							<Link to={'/user/' + this.props.username + '/pubs'} style={globalStyles.link}>
 							<li key="profileNavLeft0"style={[navStyles.navItem, navStyles.left, navStyles.navItemShow, navStyles.noMobile]}>
-								Pubs
+								<FormattedMessage {...globalMessages.pubs} />
 							</li>
 							</Link>
 							<li style={[navStyles.navSeparator, navStyles.left, navStyles.navItemShow, navStyles.noMobile]}></li>
 							
 							<Link to={'/user/' + this.props.username + '/discussions'} style={globalStyles.link}>
 							<li key="profileNavLeft1"style={[navStyles.navItem, navStyles.left, navStyles.navItemShow, navStyles.noMobile]}>
-								Discussions
+								<FormattedMessage {...globalMessages.discussions} />
 							</li>
 							</Link>
 							<li style={[navStyles.navSeparator, navStyles.left, navStyles.navItemShow, navStyles.noMobile]}></li>
@@ -136,14 +136,14 @@ const Profile = React.createClass({
 
 							<Link to={'/user/' + this.props.username + '/groups'} style={globalStyles.link}>
 							<li key="profileNavLeft2"style={[navStyles.navItem, navStyles.left, ownProfile === 'self' && navStyles.navItemShow, navStyles.noMobile]}>
-								Groups
+								<FormattedMessage {...globalMessages.groups} />
 							</li>
 							</Link>
 							<li style={[navStyles.navSeparator, navStyles.left, ownProfile === 'self' && navStyles.navItemShow, navStyles.noMobile]}></li>
 
 							<Link to={'/user/' + this.props.username + '/follows'} style={globalStyles.link}>
 							<li key="profileNavLeft3"style={[navStyles.navItem, navStyles.left, navStyles.navItemShow, navStyles.noMobile]}>
-								Follows
+								<FormattedMessage {...globalMessages.follows} />
 							</li>
 							</Link>
 							<li style={[navStyles.navSeparator, navStyles.left, navStyles.navItemShow, navStyles.noMobile]}></li>
@@ -224,8 +224,7 @@ const Profile = React.createClass({
 									return (
 										<UserPubs 
 											profileData={profileData}
-											ownProfile={ownProfile}
-											username={this.props.username}/>
+											ownProfile={ownProfile} />
 									);
 								case 'settings':
 									return (

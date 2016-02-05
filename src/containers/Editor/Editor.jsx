@@ -108,6 +108,7 @@ const Editor = React.createClass({
 	},
 
 	componentWillUnmount() {
+		debounce('backendSync', this.updatePubBackendData, 0, true)();
 		this.props.dispatch(unmountEditor());
 	},
 
@@ -200,6 +201,7 @@ const Editor = React.createClass({
 			title: this.state.title,
 			abstract: this.state.abstract,
 		};
+		console.log('calling');
 		this.props.dispatch(updatePubBackendData(this.props.slug, newPubData));
 	},
 
