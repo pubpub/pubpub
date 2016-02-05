@@ -105,6 +105,7 @@ export const navStyles = {
 		float: 'right',
 		display: 'none',
 		color: globalStyles.sideText,
+		userSelect: 'none',
 		':hover': {
 			cursor: 'pointer',
 			color: globalStyles.sideHover,

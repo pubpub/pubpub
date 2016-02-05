@@ -80,6 +80,7 @@ userSchema.statics.getUser = function (username, readerID, callback) {
     {path: "following.pubs", select:"title abstract slug"},
     {path: "following.users", select:"name username thumbnail"},
     {path: "following.journals", select:"customDomain journalName subdomain"},
+    {path: "groups", select:"groupName groupSlug"},
     {path: "followers", select:"name username thumbnail"},
     {
       path: "discussions", 
@@ -130,6 +131,7 @@ userSchema.statics.getUser = function (username, readerID, callback) {
       title: user.title,
       bio: user.bio,
       pubs: sortedPubs,
+      groups: user.groups,
       discussions: Discussion.calculateYayNayScore(user.discussions),
       followers: user.followers,
       following: user.following,

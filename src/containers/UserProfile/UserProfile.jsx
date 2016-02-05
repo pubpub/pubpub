@@ -224,7 +224,8 @@ const Profile = React.createClass({
 									return (
 										<UserPubs 
 											profileData={profileData}
-											ownProfile={ownProfile}/>
+											ownProfile={ownProfile}
+											username={this.props.username}/>
 									);
 								case 'settings':
 									return (
@@ -237,7 +238,8 @@ const Profile = React.createClass({
 									return (
 										<UserMain 
 											profileData={profileData}
-											ownProfile={ownProfile}/>
+											ownProfile={ownProfile}
+											username={this.props.username}/>
 									);
 								}
 							})()}

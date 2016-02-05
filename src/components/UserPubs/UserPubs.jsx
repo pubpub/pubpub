@@ -1,6 +1,6 @@
 import React, {PropTypes} from 'react';
 import Radium from 'radium';
-import {globalStyles} from '../../utils/styleConstants';
+import {globalStyles, navStyles} from '../../utils/styleConstants';
 import {DiscussionPreview, PubPreview} from '../ItemPreviews';
 
 import {globalMessages} from '../../utils/globalMessages';
@@ -12,6 +12,7 @@ const UserPubs = React.createClass({
 	propTypes: {
 		profileData: PropTypes.object,
 		ownProfile: PropTypes.string,
+		username: PropTypes.string,
 	},
 
 	getDefaultProps: function() {
@@ -25,17 +26,53 @@ const UserPubs = React.createClass({
 
 	getInitialState: function() {
 		return {
-			mode: 'pubs',
+			mode: 'published',
 		};
 	},
 
-
+	setMode: function(mode) {
+		return ()=>{
+			this.setState({mode: mode});
+		};
+	},
 
 	render: function() {
 		// console.log(this.props.profileData);
 		return (
 			<div style={styles.container}>
-				Pubs
+
+				{this.props.ownProfile === 'self'
+					? <ul style={[navStyles.navList, styles.subNav]}>
+						<li key="subNav0"style={[navStyles.navItem, navStyles.left, navStyles.navItemShow, styles.noLeftPadding, styles.inactiveNav, this.state.mode === 'published' && styles.activeNav]} onClick={this.setMode('published')}>
+							Published
+						</li>
+						<li style={[navStyles.navSeparator, navStyles.left, navStyles.navItemShow]}></li>
+
+						<li key="subNav1"style={[navStyles.navItem, navStyles.left, navStyles.navItemShow, styles.inactiveNav, this.state.mode === 'unpublished' && styles.activeNav]} onClick={this.setMode('unpublished')}>
+							Unpublished
+						</li>
+						<li style={[navStyles.navSeparator, navStyles.left, navStyles.navItemShow]}></li>
+
+						<li key="subNav2"style={[navStyles.navItem, navStyles.left, navStyles.navItemShow, styles.inactiveNav, this.state.mode === 'canRead' && styles.activeNav]} onClick={this.setMode('canRead')}>
+							Read-Only
+						</li>
+					</ul>
+					: <ul style={[navStyles.navList, styles.subNav]}></ul>
+				}
+						
+					
+
+				{(()=>{
+					const outputPubs = [];
+					for (let index = this.props.profileData.pubs[this.state.mode].length; index--;) {
+						outputPubs.push(<PubPreview 
+							key={'pubItem-' + index}
+							pubData={this.props.profileData.pubs[this.state.mode][index]}
+							canEdit={this.props.ownProfile === 'self' ? true : false} />);
+					}
+					return outputPubs;
+				})()}
+
 			</div>
 		);
 	}
@@ -44,154 +81,17 @@ const UserPubs = React.createClass({
 export default Radium(UserPubs);
 
 styles = {
-	profileDetail: {
-		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
-			textAlign: 'center',
-			fontSize: '20px',
-		},
-	},
-
-	statsWrapper: {
-		borderWidth: '1px 0px 1px 0px',
-		borderColor: '#CCC',
-		borderStyle: 'solid',
-		margin: '20px 0px',
-		padding: '10px 0px',
-		// clear: 'both',
-		// height: 100,
-		// backgroundColor: globalStyles.sideBackground,
-		// backgroundColor: '#F0F0F0',
-		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
-			// height: 300
-			margin: '30px 0px',
-		},
-	},
-	statsList: {
-		listStyle: 'none',
-		margin: 0,
-		padding: 0,
-	},
-	statParenthese: {
-		display: 'inline',
-		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
-			display: 'none',	
-		}
-	},
-	statsItem: {
-		// backgroundColor: 'rgba(200,200,100,0.3)',
-
-		height: '30px',
-		width: 'calc(100% / 3)',
+	subNav: {
 		margin: '10px 0px',
-		display: 'inline-block',
-
-		// whiteSpace: 'nowrap',
-		overflow: 'hidden',
-		// textOverflow: 'ellipsis',
-
-		textDecoration: 'none',
-		color: globalStyles.sideText,
-		userSelect: 'none',
-
-		':hover': {
-			color: globalStyles.sideHover,
-			cursor: 'pointer',
-		},
-		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
-			width: '50%',
-			height: 70,
-			margin: '20px 0px',
-		},
-		
+		borderBottom: '1px solid #CCC',
 	},
-
-	statsTitle: {
-		// backgroundColor: 'rgba(255,0,0,0.2)',
-		// textAlign: 'center',
-		height: 30,
-		lineHeight: '30px',
-		fontSize: '18px',
-		display: 'inline-block',
-		// backgroundColor: 'rgba(70,250,89,0.4)',
-		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
-			display: 'block',
-			height: 25,
-			lineHeight: '25px',
-			fontSize: '25px',
-			textAlign: 'center',
-		},
-
+	noLeftPadding: {
+		padding: '0px 20px 0px 2px',
 	},
-	statsCount: {
-		// backgroundColor: 'rgba(0,92,0,0.2)',
-		height: 30,
-		paddingLeft: 10,
-		// textAlign: 'center',
-		lineHeight: '30px',
-		fontSize: '18px',
-		display: 'inline-block',
-		// backgroundColor: 'rgba(190,70,89,0.4)',
-		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
-			display: 'block',
-			height: 45,
-			lineHeight: '40px',
-			textAlign: 'center',
-			fontSize: '35px',
-		},
+	inactiveNav: {
+		color: '#bbb',
 	},
-	profileContent: {
-		// width: 'calc(100% - 40px)',
-		// margin: '0px 20px',
-	},
-	sectionHeader: {
-		fontSize: '30px',
-		margin: '25px 0px 20px 0px',
-	},
-	pubBlock: {
-		// margin: 15,
-		// float: 'left',
-		// backgroundColor: '#EAEAEA',
-		// fontFamily: 'Lora',
-		// width: 'calc(100% - 30px)',
-		// width: 'calc(100% / 3 - 30px)',
-		// height: 175,
-		// overflow: 'hidden',
-		// position: 'relative',
-		// ':hover': {
-			// backgroundColor: '#E5E5E5',
-		// },
-		// '@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
-			// width: 'calc(100% - 30px)'
-		// },
-
-	},
-	pubTextWrapper: {
-		width: '100%',
-		height: '100%',
-	},
-	pubTitle: {
+	activeNav: {
 		color: '#333',
-		padding: '10px 10px 20px 10px',
-		fontSize: '20px',
-	},
-	pubAbstract: {
-		color: '#888',
-		padding: '5px 15px 0px 15px',
-	},
-	pubEdit: {
-		backgroundColor: '#FCFCFC',
-		textAlign: 'center',
-		position: 'absolute',
-		bottom: 2,
-		left: 2,
-		height: '30px',
-		lineHeight: '30px',
-		color: '#555',
-		width: 'calc(100% - 4px)',
-		':hover': {
-			cusror: 'pointer',
-			color: '#111',
-
-		},
 	},
 };
