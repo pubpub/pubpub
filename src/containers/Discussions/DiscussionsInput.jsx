@@ -170,6 +170,7 @@ styles = {
 			expandObj.transform = 'translateY(0px)';
 		} else {
 			expandObj.opacity = 0;
+			expandObj.pointerEvents = 'none';
 			if (flipUp) {
 				expandObj.transform = 'translateY(10px)';
 			} else {
