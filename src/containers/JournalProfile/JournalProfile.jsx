@@ -106,7 +106,7 @@ const JournalAdmin = React.createClass({
 									<Link to={'/journal/' + this.props.subdomain + '/curate'} style={globalStyles.link}><li key="journalNav2" style={[navStyles.navItem, this.props.journalData.getIn(['journalData', 'isAdmin']) && navStyles.navItemShow]}>
 										<FormattedMessage {...globalMessages.curate} />
 									</li></Link>
-									<li style={[navStyles.navSeparator, this.props.journalData.getIn(['journalData', 'isAdmin']) && navStyles.navItemShow, navStyles.navSeparatorNoMobile]}></li>
+									<li style={[navStyles.navSeparator, this.props.journalData.getIn(['journalData', 'isAdmin']) && navStyles.navItemShow, navStyles.noMobile]}></li>
 
 									<li key="journalNav3" style={[navStyles.navItem, !this.props.journalData.getIn(['journalData', 'isAdmin']) && navStyles.navItemShow]} onClick={this.followJournalToggle}>
 										{this.props.loginData.getIn(['userData', 'following', 'journals']) && this.props.loginData.getIn(['userData', 'following', 'journals']).indexOf(this.props.journalData.getIn(['journalData', '_id'])) > -1 

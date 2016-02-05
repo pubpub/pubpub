@@ -266,7 +266,10 @@ app.post('/updateCollaborators', function(req, res) {
 			} else {
 				canRead.push(collaborator._id);
 				// Update the user's pubs collection so it is removed from their profile
-				User.update({ _id: collaborator._id }, { $pull: { pubs: pubID} }, function(err, result){if(err) return handleError(err)});
+				// User.update({ _id: collaborator._id }, { $pull: { pubs: pubID} }, function(err, result){if(err) return handleError(err)});
+				
+				// Psych! We actually want it on the user's profile - just under the 'canRead' section
+				User.update({ _id: collaborator._id }, { $addToSet: { pubs: pubID} }, function(err, result){if(err) return handleError(err)});
 				Group.update({ _id: collaborator._id }, { $addToSet: { pubs: pubID} }, function(err, result){if(err) return handleError(err)});
 			}
 		});

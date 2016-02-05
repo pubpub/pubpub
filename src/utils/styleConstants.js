@@ -117,6 +117,12 @@ export const navStyles = {
 			fontSize: '20px'
 		},
 	},
+	left: {
+		float: 'left',
+	},
+	right: {
+		float: 'right',
+	},
 	navSeparator: {
 		width: 1,
 		backgroundColor: '#999',
@@ -132,7 +138,7 @@ export const navStyles = {
 	navItemShow: {
 		display: 'block',
 	},
-	navSeparatorNoMobile: {
+	noMobile: {
 		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
 			display: 'none',
 		},

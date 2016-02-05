@@ -9,6 +9,10 @@ export const globalMessages = defineMessages({
 		id: 'global.register',
 		defaultMessage: 'Register',
 	},
+	groups: {
+		id: 'global.groups',
+		defaultMessage: 'Groups',
+	},
 	Logout: {
 		id: 'global.Logout',
 		defaultMessage: 'Logout',
@@ -52,6 +56,10 @@ export const globalMessages = defineMessages({
 	following: {
 		id: 'global.following',
 		defaultMessage: 'Following',
+	},
+	follows: {
+		id: 'global.follows',
+		defaultMessage: 'Follows',
 	},
 	design: {
 		id: 'global.Design',

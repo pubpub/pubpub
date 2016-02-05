@@ -19,7 +19,7 @@ const EditorModalPublish = React.createClass({
 
 	getInitialState() {
 		return {
-			versionState: 'Draft',
+			versionState: 'Published',
 			versionDescription: '',
 			isPublishing: false,
 			descriptionError: false,

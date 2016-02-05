@@ -25,6 +25,12 @@ const UserMain = React.createClass({
 		};
 	},
 
+	getInitialState: function() {
+		return {
+			mode: 'pubs',
+		};
+	},
+
 	statClick: function(id) {
 		return ()=> {
 			const destination = document.getElementById(id);
@@ -38,8 +44,8 @@ const UserMain = React.createClass({
 		for (let index = this.props.profileData.discussions.length; index--;) {
 			rep += this.props.profileData.discussions[index].points;
 		}
-		for (let index = this.props.profileData.pubs.length; index--;) {
-			if (!this.props.profileData.pubs[index].settings || this.props.profileData.pubs[index].settings.pubPrivacy === 'public') {
+		for (let index = this.props.profileData.pubs.published.length; index--;) {
+			if (!this.props.profileData.pubs.published[index].settings || this.props.profileData.pubs.published[index].settings.pubPrivacy === 'public') {
 				rep += 10;	
 			}
 		}
@@ -68,7 +74,7 @@ const UserMain = React.createClass({
 							<div style={styles.statsTitle}>
 								<FormattedMessage {...globalMessages.pubs} />
 							</div>
-							<div style={styles.statsCount}><span style={styles.statParenthese}>(</span>{this.props.profileData.pubs.length}<span style={styles.statParenthese}>)</span></div>
+							<div style={styles.statsCount}><span style={styles.statParenthese}>(</span>{this.props.profileData.pubs.published.length}<span style={styles.statParenthese}>)</span></div>
 						</li>
 						
 						<li key="profileStatsItem3" style={[styles.statsItem]} onClick={this.statClick('discussions-section')}>
@@ -99,22 +105,22 @@ const UserMain = React.createClass({
 					</div>
 					{(()=>{
 						const outputPubs = [];
-						for (let index = this.props.profileData.pubs.length; index--;) {
+						for (let index = this.props.profileData.pubs.published.length; index--;) {
 							outputPubs.push(<PubPreview 
 								key={'pubItem-' + index}
-								pubData={this.props.profileData.pubs[index]}
+								pubData={this.props.profileData.pubs.published[index]}
 								canEdit={this.props.ownProfile === 'self' ? true : false} />);
 						}
 						return outputPubs;
 					})()}
-					{this.props.profileData.pubs.length === 0
+					{this.props.profileData.pubs.published.length === 0
 						? <div style={globalStyles.emptyBlock}>
 							<FormattedMessage id="user.noPubs" defaultMessage="No Pubs Yet"/>
 						</div>
 						: null
 					}
 
-					<div id={'discussions-section'} style={styles.sectionHeader}>
+					{/* <div id={'discussions-section'} style={styles.sectionHeader}>
 						<FormattedMessage {...globalMessages.discussions} />
 					</div>
 					{(()=>{
@@ -132,7 +138,7 @@ const UserMain = React.createClass({
 							<FormattedMessage id="user.noDiscussions" defaultMessage="No Discussions Yet"/>
 						</div>
 						: null
-					}
+					} */}
 
 				</div>
 			</div>
