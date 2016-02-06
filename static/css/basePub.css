@@ -1,3 +1,15 @@
+#pubContent #pub-wrapper{
+	padding: 0px 4em 50px 4em;
+	line-height: 1.58;
+	text-rendering: optimizeLegibility;
+	-webkit-font-smoothing: antialiased;
+}
+@media screen and (min-resolution: 3dppx), screen and (max-width: 767px) {
+	#pubContent #pub-wrapper{
+		padding: 0px 1em 50px;
+	}
+}
+
 #pubContent #pub-title {
 	text-align: left;
 	font-size: 2.6em;

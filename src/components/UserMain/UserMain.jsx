@@ -89,7 +89,7 @@ const UserMain = React.createClass({
 							</div>
 							<div style={styles.statsCount}>
 								<span style={styles.statParenthese}>(</span>
-								{this.props.profileData.pubs.published.length}
+								{this.props.profileData.pubs.published ? this.props.profileData.pubs.published.length : 0}
 								<span style={styles.statParenthese}>)</span>
 							</div>
 						</li>

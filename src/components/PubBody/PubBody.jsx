@@ -69,7 +69,8 @@ const PubBody = React.createClass({
 	},
 
 	componentDidMount() {
-		loadCss(this.props.style.googleFontURL);
+		// loadCss(this.props.style.googleFontURL);
+		document.getElementById('dynamicStyle').innerHTML = this.props.styleScoped;
 	},
 
 	componentWillReceiveProps(nextProps) {
@@ -160,85 +161,86 @@ const PubBody = React.createClass({
 				<Style rules={this.compileStyleRules()}/>
 
 				<div id="pubContent" style={[styles.contentContainer, globalStyles[this.props.status]]} >
-
-					{!this.props.isFeatured && !this.props.errorView
-						? <div style={styles.submittedNotification}>This Pub has been submitted to - but is not yet featured in - this journal.</div>
-						: null
-					}
-
-					{this.props.authorsNote
-						? <div id={'pub-authorsNote'} >{this.props.authorsNote}</div>
-						: null
-					}
-
-					<div id={'pub-title'} >{this.props.title}</div>
-					<div id={'pub-authors'} style={[this.props.authors.length === 0 && {display: 'none'}]}>
-						<span><FormattedMessage {...globalMessages.by}/> </span>
-						{
-							this.props.authors.map((author, index)=>{
-								return (index === this.props.authors.length - 1
-									? <Link to={'/user/' + author.username} key={'pubAuthorLink-' + index} style={globalStyles.link}><span key={'pubAuthor-' + index}>{author.name}</span></Link>
-									: <Link to={'/user/' + author.username} key={'pubAuthorLink-' + index} style={globalStyles.link}><span key={'pubAuthor-' + index}>{author.name}, </span></Link>);
-							})
-						}
-					</div>
-
-					{this.props.firstPublishedDate !== this.props.lastPublishedDate
-						? <div id={'pub-dates'}>
-							<span><FormattedMessage {...globalMessages.firstPublished}/> </span>
-							{dateFormat(this.props.firstPublishedDate, 'mm/dd/yy')}
-							<span style={styles.dateSeparator}>|</span>
-							<span><FormattedMessage {...globalMessages.lastPublished}/> </span>
-							{dateFormat(this.props.lastPublishedDate, 'mm/dd/yy')}
-						</div>
-						: <div id={'pub-dates'} style={[this.props.firstPublishedDate === undefined && {display: 'none'}]}>
-							<span><FormattedMessage {...globalMessages.publishedOn}/> </span>
-							{dateFormat(this.props.firstPublishedDate, 'mm/dd/yy')}
-						</div>
-					}
-
-					<div id={'pub-abstract'}>{this.props.abstract}</div>
-					<div id={'pub-header-divider'}></div>
-
-					<div id="pubBodyContent">
-						{/* For Highlights to work, no divs can be placed before htmlTree */}
-						{/* this.props.htmlTree */}
-						<PPMComponent 
-							assets={this.props.assetsObject} 
-							references={this.props.referencesObject} 
-							selections={this.props.selectionsArray} 
-							markdown={this.props.markdown} />
-
-						{this.props.addSelectionHandler
-							? <PubSelectionPopup addSelectionHandler={this.props.addSelectionHandler}/>
+					<div id="pub-wrapper">
+						{!this.props.isFeatured && !this.props.errorView
+							? <div style={styles.submittedNotification}>This Pub has been submitted to - but is not yet featured in - this journal.</div>
 							: null
 						}
 
-					</div>
+						{this.props.authorsNote
+							? <div id={'pub-authorsNote'} >{this.props.authorsNote}</div>
+							: null
+						}
 
-					{this.props.references && this.props.references.length
-						? <div id={'pub-references'}>
-							<h1><FormattedMessage {...globalMessages.references}/></h1>
-
+						<div id={'pub-title'} >{this.props.title}</div>
+						<div id={'pub-authors'} style={[this.props.authors.length === 0 && {display: 'none'}]}>
+							<span><FormattedMessage {...globalMessages.by}/> </span>
 							{
-								this.props.references.map((reference, index)=>{
-									return (
-										<div key={'pubReference-' + index} >
-											<span style={styles.referenceNumber}>[{index + 1}]</span>
-											<Reference citationObject={reference} mode={'mla'} />
-										</div>
-									);
+								this.props.authors.map((author, index)=>{
+									return (index === this.props.authors.length - 1
+										? <Link to={'/user/' + author.username} key={'pubAuthorLink-' + index} style={globalStyles.link}><span key={'pubAuthor-' + index}>{author.name}</span></Link>
+										: <Link to={'/user/' + author.username} key={'pubAuthorLink-' + index} style={globalStyles.link}><span key={'pubAuthor-' + index}>{author.name}, </span></Link>);
 								})
+							}
+						</div>
+
+						{this.props.firstPublishedDate !== this.props.lastPublishedDate
+							? <div id={'pub-dates'}>
+								<span><FormattedMessage {...globalMessages.firstPublished}/> </span>
+								{dateFormat(this.props.firstPublishedDate, 'mm/dd/yy')}
+								<span style={styles.dateSeparator}>|</span>
+								<span><FormattedMessage {...globalMessages.lastPublished}/> </span>
+								{dateFormat(this.props.lastPublishedDate, 'mm/dd/yy')}
+							</div>
+							: <div id={'pub-dates'} style={[this.props.firstPublishedDate === undefined && {display: 'none'}]}>
+								<span><FormattedMessage {...globalMessages.publishedOn}/> </span>
+								{dateFormat(this.props.firstPublishedDate, 'mm/dd/yy')}
+							</div>
+						}
+
+						<div id={'pub-abstract'}>{this.props.abstract}</div>
+						<div id={'pub-header-divider'}></div>
+
+						<div id="pubBodyContent">
+							{/* For Highlights to work, no divs can be placed before htmlTree */}
+							{/* this.props.htmlTree */}
+							<PPMComponent 
+								assets={this.props.assetsObject} 
+								references={this.props.referencesObject} 
+								selections={this.props.selectionsArray} 
+								markdown={this.props.markdown} />
+
+							{this.props.addSelectionHandler
+								? <PubSelectionPopup addSelectionHandler={this.props.addSelectionHandler}/>
+								: null
 							}
 
 						</div>
-						: null
-					}
 
-					{this.props.isFeatured && !this.props.errorView
-						? <License />
-						: null
-					}
+						{this.props.references && this.props.references.length
+							? <div id={'pub-references'}>
+								<h1><FormattedMessage {...globalMessages.references}/></h1>
+
+								{
+									this.props.references.map((reference, index)=>{
+										return (
+											<div key={'pubReference-' + index} >
+												<span style={styles.referenceNumber}>[{index + 1}]</span>
+												<Reference citationObject={reference} mode={'mla'} />
+											</div>
+										);
+									})
+								}
+
+							</div>
+							: null
+						}
+
+						{this.props.isFeatured && !this.props.errorView
+							? <License />
+							: null
+						}
+					</div>
 
 
 				</div>
@@ -259,14 +261,14 @@ styles = {
 	},
 	contentContainer: {
 		transition: '.3s linear opacity .25s',
-		padding: '0px 4em 50px',
+		// padding: '0px 4em 50px',
 		fontFamily: globalStyles.headerFont,
-		lineHeight: '1.58',
-		textRendering: 'optimizeLegibility',
-		WebkitFontSmoothing: 'antialiased',
-		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
-			padding: '0px 1em 50px',
-		},
+		// lineHeight: '1.58',
+		// textRendering: 'optimizeLegibility',
+		// WebkitFontSmoothing: 'antialiased',
+		// '@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+		// 	padding: '0px 1em 50px',
+		// },
 	},
 	loading: {
 		opacity: 0,
