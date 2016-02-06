@@ -410,8 +410,7 @@ app.post('/transformStyle', function(req, res) {
 		if (err) {
 			return res.status(500).json('Invalid CSS');
 		}
-
-		console.log(output.css);
+		// console.log(output.css);
 		return res.status(201).json(output.css);
 	});
 });
