@@ -110,10 +110,16 @@ app.use((req, res) => {
 				const mainBundle = webpackIsomorphicTools.assets().javascript.main;
 				const head = Helmet.rewind();
 				
-				const versionIndex = store.getState().router.location.query.version !== undefined && store.getState().router.location.query.version > 0 && store.getState().router.location.query.version <= (store.getState().pub.getIn(['pubData', 'history']).size - 1)
-					? store.getState().router.location.query.version - 1
-					: store.getState().pub.getIn(['pubData', 'history']).size - 1;
-				const dynamicStyle = store.getState().pub.getIn(['pubData', 'history', versionIndex, 'styleScoped']);
+				let dynamicStyle;
+				if (store.getState().router.location.pathname.substring(0,4) === '/pub') {
+					// source = store.getState().pub.getIn(['pubData', 'history']);
+					const versionIndex = store.getState().router.location.query.version !== undefined && store.getState().router.location.query.version > 0 && store.getState().router.location.query.version <= (store.getState().pub.getIn(['pubData', 'history']).size - 1)
+						? store.getState().router.location.query.version - 1
+						: store.getState().pub.getIn(['pubData', 'history']).size - 1;
+					dynamicStyle = store.getState().pub.getIn(['pubData', 'history', versionIndex, 'styleScoped']);
+				}
+
+				
 
 				res.send(`<!doctype html>
 					<html lang="en-us">
