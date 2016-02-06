@@ -195,6 +195,9 @@ app.post('/publishPub', function(req, res) {
 				pub.assets = dbAssetsIds;
 				pub.references = dbReferencesIds;
 				pub.style = req.body.newVersion.style;
+				pub.styleRawDesktop = req.body.newVersion.styleRawDesktop;
+				pub.styleRawMobile = req.body.newVersion.styleRawMobile;
+				pub.styleScoped = req.body.newVersion.styleScoped;
 				pub.lastUpdated = publishDate,
 				pub.status = req.body.newVersion.status;
 				pub.history.push({
@@ -209,6 +212,11 @@ app.post('/publishPub', function(req, res) {
 					assets: dbAssetsIds,
 					references: dbReferencesIds,
 					style: req.body.newVersion.style,
+
+					styleRawDesktop: req.body.newVersion.styleRawDesktop,
+					styleRawMobile: req.body.newVersion.styleRawMobile,
+					styleScoped: req.body.newVersion.styleScoped,
+
 					status: req.body.newVersion.status,
 					diffObject: {
 						additions:  diffObject.additions,
@@ -392,7 +400,12 @@ app.post('/updatePubData', function(req, res) {
 });
 
 app.post('/transformStyle', function(req, res) {
-	const fullString = '#pubContent{' + req.body.styleDesktop +'} @media screen and (min-resolution: 3dppx), screen and (max-width: 767px){ #pubContent{' + req.body.styleMobile + '}}';
+	const importsDesktop = req.body.styleDesktop.match(/(@import.*)/g) || [];
+	const importsMobile = req.body.styleMobile.match(/(@import.*)/g) || [];
+	const styleDesktopClean = req.body.styleDesktop.replace(/(@import.*)/g, '');
+	const styleMobileClean = req.body.styleMobile.replace(/(@import.*)/g, '');
+	
+	const fullString = importsDesktop.join(' ') + ' ' + importsMobile.join(' ') + ' #pubContent{' + styleDesktopClean +'} @media screen and (min-resolution: 3dppx), screen and (max-width: 767px){ #pubContent{' + styleMobileClean + '}}';
 	less.render(fullString, function (err, output) {
 		if (err) {
 			return res.status(500).json('Invalid CSS');

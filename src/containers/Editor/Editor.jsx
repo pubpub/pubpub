@@ -203,11 +203,14 @@ const Editor = React.createClass({
 	},
 
 	updatePubBackendData: function() {
-		const newPubData = {
-			title: this.state.title ? this.state.title : this.props.slug,
-			abstract: this.state.abstract,
-		};
-		this.props.dispatch(updatePubBackendData(this.props.slug, newPubData));
+		if (this.state) {
+			const newPubData = {
+				title: this.state.title ? this.state.title : this.props.slug,
+				abstract: this.state.abstract,
+			};
+			this.props.dispatch(updatePubBackendData(this.props.slug, newPubData));	
+		}
+		
 	},
 
 	onEditorChange: function(cm, change) {
@@ -311,6 +314,11 @@ const Editor = React.createClass({
 			assets: this.state.firepadData.assets,
 			references: this.state.firepadData.references,
 			style: this.state.firepadData.settings.pubStyle,
+
+			styleRawDesktop: this.state.firepadData.settings.styleRawDesktop,
+			styleRawMobile: this.state.firepadData.settings.styleRawMobile,
+			styleScoped: this.state.firepadData.settings.styleScoped,
+
 			publishNote: versionDescription,
 		};
 
@@ -675,6 +683,9 @@ styles = {
 		opacity: '1',
 		pointerEvents: 'auto',
 		overflowY: 'scroll',
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+			overflow: 'hidden',
+		},
 	},
 
 	readModeButton: {

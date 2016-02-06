@@ -264,7 +264,6 @@ function saveStyleLoad(state) {
 }
 
 function saveStyleSuccess(state, result) {
-	console.log(result);
 	return state.merge({
 		styleSaving: false,
 		styleError: false,
@@ -401,6 +400,9 @@ function addCommentFail(state, error, activeSaveID) {
 
 // TODO: It seems like this function, if fired after the page nav has occurred, will trigger a state.get is not a function error.
 function updateBackendSuccess(state, result) {
+	if (!state.get('pubEditData').toJS) {
+		return state;
+	}
 	return state.merge({
 		pubEditData: {
 			...state.get('pubEditData').toJS(),

@@ -174,8 +174,8 @@ styles = {
 		marginLeft: '10px',
 	},
 	codeMirrorWrapper: {
-		width: 600,
-		margin: '5px 0px 40px 10px',
+		width: 'calc(100% - 20px)',
+		margin: '5px 10px 40px 10px',
 	},
 	hidden: {
 		opacity: 0,
