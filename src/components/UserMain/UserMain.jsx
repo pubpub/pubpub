@@ -158,7 +158,7 @@ const UserMain = React.createClass({
 					</div>
 
 					{
-						this.props.profileData.pubs.published.slice(0,5).map((pub, index)=>{
+						this.props.profileData.pubs.published.slice(0, 5).map((pub, index)=>{
 							return (<PubPreview 
 								key={'pubItem-' + index}
 								pubData={pub}

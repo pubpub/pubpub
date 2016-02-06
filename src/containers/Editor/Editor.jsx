@@ -381,6 +381,10 @@ const Editor = React.createClass({
 		this.props.dispatch(addSelection(newSelection));
 	},
 
+	toggleStyleMode: function() {
+		console.log('toggling Style Mode');
+	},
+
 	render: function() {
 		const editorData = this.props.editorData;
 		const viewMode = this.props.editorData.get('viewMode');
@@ -480,14 +484,9 @@ const Editor = React.createClass({
 									<FormattedMessage {...globalMessages.PublicDiscussion} />
 								</div>
 
-								<div style={[styles.readModeNav, !isReader && styles.readModeNavShow]}>
-									<div style={[styles.bodyNavSeparator, viewMode === 'read' && globalStyles.hidden]}>|</div>
-									<div key={'previewBodyNav2'} style={[styles.bodyNavItem]} onClick={this.toggleReadMode}>
-										{viewMode === 'read'
-											? 'Edit Mode'
-											: 'Read Mode'
-										}
-									</div>
+								<div style={[styles.bodyNavSeparator, styles.bodyNavItemHiddenMobile, viewMode === 'read' && globalStyles.hidden]}>|</div>
+								<div key={'previewBodyNav4'} style={[styles.bodyNavItem, styles.bodyNavItemHiddenMobile, viewMode === 'read' && globalStyles.hidden]} onClick={this.toggleStyleMode}>
+									Style
 								</div>
 								
 							</div>
@@ -506,7 +505,6 @@ const Editor = React.createClass({
 										abstract={this.state.abstract}
 										authorsNote={this.state.authorsNote}
 										minFont={15}
-										htmlTree={this.state.tree}
 										markdown={this.state.markdown}
 										authors={this.getAuthorsArray()}
 										showPubHighlights={this.state.previewPaneMode === 'discussions'}
@@ -536,6 +534,15 @@ const Editor = React.createClass({
 							<div className="commentsRightBar" style={[styles.previewBlockWrapper, (this.state.previewPaneMode === 'comments' || viewMode === 'read') && styles.previewBlockWrapperShow]}>
 								<div style={styles.previewBlockHeader}>
 									<FormattedMessage {...globalMessages.EditorComments} />
+								</div>
+
+								<div style={[styles.readModeNav, !isReader && styles.readModeNavShow]}>
+									<div key={'previewBodyNav2'} style={[styles.readModeButton]} onClick={this.toggleReadMode}>
+										{viewMode === 'read'
+											? '(Switch to Edit Mode)'
+											: '(Switch to Read-only Mode)'
+										}
+									</div>
 								</div>
 
 								<div style={styles.previewBlockText}>
@@ -621,6 +628,16 @@ styles = {
 		pointerEvents: 'none',
 	},
 
+	readModeButton: {
+		padding: '10px 0px',
+		cursor: 'pointer',
+		color: '#888',
+		userSelect: 'none',
+		':hover': {
+			color: 'black',
+		},
+	},
+
 	bodyNavBar: {
 		width: '100%',
 		height: '29px',
@@ -631,6 +648,8 @@ styles = {
 			height: 'calc(' + globalStyles.headerHeightMobile + ' - 1px)',
 		},
 	},
+
+
 	bodyNavItem: {
 		
 		float: 'right',
