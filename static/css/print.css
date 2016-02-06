@@ -1,4 +1,4 @@
-@media print{
+
 	* {
 		transition: none !important;
 	}
@@ -50,4 +50,4 @@
 		page-break-inside: avoid !important;
 	}
 
-}
+

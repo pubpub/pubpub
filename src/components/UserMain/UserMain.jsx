@@ -158,7 +158,7 @@ const UserMain = React.createClass({
 					</div>
 
 					{
-						this.props.profileData.pubs.published.slice(0, 5).map((pub, index)=>{
+						this.props.profileData.pubs.published && this.props.profileData.pubs.published.slice(0, 5).map((pub, index)=>{
 							return (<PubPreview 
 								key={'pubItem-' + index}
 								pubData={pub}
@@ -166,7 +166,7 @@ const UserMain = React.createClass({
 							);
 						})
 					}
-					{this.props.profileData.pubs.published.length === 0
+					{this.props.profileData.pubs.published && this.props.profileData.pubs.published.length === 0
 						? <div style={globalStyles.emptyBlock}>
 							<FormattedMessage id="user.noPubs" defaultMessage="No Pubs Yet"/>
 						</div>
