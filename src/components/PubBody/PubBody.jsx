@@ -89,37 +89,37 @@ const PubBody = React.createClass({
 	compileStyleRules: function() {
 		// console.log('compiling rules');
 
-		let cssObject = {};
-		switch (this.props.style.type) {
-		case 'science':
-			cssObject = scienceStyle;
-			break;
-		case 'magazine':
-			cssObject = magazineStyle;
-			break;
-		case 'custom':
-			const objectString = this.props.style.cssObjectString || '';
-			cssObject = cssConvert(objectString);
-			// console.log('cssObject', cssObject);
-			break;
-		default:
-			cssObject = scienceStyle;
-			break;
-		}
+		// let cssObject = {};
+		// switch (this.props.style.type) {
+		// case 'science':
+		// 	cssObject = scienceStyle;
+		// 	break;
+		// case 'magazine':
+		// 	cssObject = magazineStyle;
+		// 	break;
+		// case 'custom':
+		// 	const objectString = this.props.style.cssObjectString || '';
+		// 	cssObject = cssConvert(objectString);
+		// 	// console.log('cssObject', cssObject);
+		// 	break;
+		// default:
+		// 	cssObject = scienceStyle;
+		// 	break;
+		// }
 
 		const defaultContentRules = {};
-		Object.keys(scienceStyle).map((cssRule)=> {
-			cssRule.split(',').map((splitRule)=> {
-				defaultContentRules['#pubContent ' + splitRule.replace(/ /g, '')] = scienceStyle[cssRule];
-			});
-		});
+		// Object.keys(scienceStyle).map((cssRule)=> {
+		// 	cssRule.split(',').map((splitRule)=> {
+		// 		defaultContentRules['#pubContent ' + splitRule.replace(/ /g, '')] = scienceStyle[cssRule];
+		// 	});
+		// });
 
 		const pubContentRules = {};
-		Object.keys(cssObject).map((cssRule)=> {
-			cssRule.split(',').map((splitRule)=> {
-				pubContentRules['#pubContent ' + splitRule.replace(/ /g, '')] = cssObject[cssRule];
-			});
-		});
+		// Object.keys(cssObject).map((cssRule)=> {
+		// 	cssRule.split(',').map((splitRule)=> {
+		// 		pubContentRules['#pubContent ' + splitRule.replace(/ /g, '')] = cssObject[cssRule];
+		// 	});
+		// });
 
 		return ({
 			...defaultContentRules,

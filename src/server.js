@@ -109,15 +109,11 @@ app.use((req, res) => {
 				)
 				const mainBundle = webpackIsomorphicTools.assets().javascript.main;
 				const head = Helmet.rewind();
-				// console.log('journaldata', store.getState().journal.getIn(['journalData', 'randomSlug']));
 				
 				const versionIndex = store.getState().router.location.query.version !== undefined && store.getState().router.location.query.version > 0 && store.getState().router.location.query.version <= (store.getState().pub.getIn(['pubData', 'history']).size - 1)
 					? store.getState().router.location.query.version - 1
 					: store.getState().pub.getIn(['pubData', 'history']).size - 1;
-
 				const dynamicStyle = store.getState().pub.getIn(['pubData', 'history', versionIndex, 'styleScoped']);
-				console.log(dynamicStyle);
-				// styleScoped={pubData.history[versionIndex].styleScoped}
 
 				res.send(`<!doctype html>
 					<html lang="en-us">
