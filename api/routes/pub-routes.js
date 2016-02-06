@@ -9,6 +9,7 @@ var Reference = require('../models').Reference;
 
 var _         = require('underscore');
 var Firebase  = require('firebase');
+var less      = require('less');
 
 import {fireBaseURL, firebaseTokenGen, generateAuthToken} from '../services/firebase';
 import {sendAddedAsCollaborator} from '../services/emails';
@@ -387,5 +388,17 @@ app.post('/updatePubData', function(req, res) {
 			return res.status(201).json(req.body.newPubData);
 		});
 
+	});
+});
+
+app.post('/transformStyle', function(req, res) {
+	const fullString = '#pubContent{' + req.body.styleDesktop +'} @media screen and (min-resolution: 3dppx), screen and (max-width: 767px){ #pubContent{' + req.body.styleMobile + '}}';
+	less.render(fullString, function (err, output) {
+		if (err) {
+			return res.status(500).json('Invalid CSS');
+		}
+
+		console.log(output.css);
+		return res.status(201).json(output.css);
 	});
 });

@@ -5,6 +5,7 @@ export CreateGroupForm from './CreateGroupForm/CreateGroupForm';
 export CreateJournalForm from './CreateJournalForm/CreateJournalForm';
 export CreatePubForm from './CreatePubForm/CreatePubForm';
 export EditorPluginPopup from './EditorPluginPopup/EditorPluginPopup';
+export EditorStylePane from './EditorStylePane/EditorStylePane';
 export EditorTopNav from './EditorTopNav/EditorTopNav';
 export EditorBottomNav from './EditorBottomNav/EditorBottomNav';
 export GroupMain from './GroupMain/GroupMain';

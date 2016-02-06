@@ -23,6 +23,10 @@ import {
 	UPDATE_PUB_SETTINGS_SUCCESS,
 	UPDATE_PUB_SETTINGS_FAIL,
 
+	SAVE_STYLE_LOAD,
+	SAVE_STYLE_SUCCESS,
+	SAVE_STYLE_FAIL,
+
 	UPDATE_PUB_BACKEND_DATA_LOAD,
 	UPDATE_PUB_BACKEND_DATA_SUCCESS,
 	UPDATE_PUB_BACKEND_DATA_FAIL,
@@ -67,6 +71,9 @@ const defaultState = Immutable.Map({
 		assets: {},
 		references: {},
 	},
+	styleSaving: false,
+	styleScoped: null,
+	styleError: null,
 	addDiscussionStatus: 'loaded',
 	activeSaveID: null,
 
@@ -247,6 +254,27 @@ function publishSuccess(state) {
 function publishError(state, error) {
 	return state.merge({
 		publishError: error,
+	});
+}
+
+function saveStyleLoad(state) {
+	return state.merge({
+		styleSaving: true,
+	});
+}
+
+function saveStyleSuccess(state, result) {
+	console.log(result);
+	return state.merge({
+		styleSaving: false,
+		styleError: false,
+		styleScoped: result,
+	});
+}
+
+function saveStyleError(state, error) {
+	return state.merge({
+		styleError: error,
 	});
 }
 
@@ -452,6 +480,13 @@ export default function editorReducer(state = defaultState, action) {
 		return state;
 	case ARCHIVE_COMMENT_FAIL:
 		return state;
+
+	case SAVE_STYLE_LOAD:
+		return saveStyleLoad(state);
+	case SAVE_STYLE_SUCCESS:
+		return saveStyleSuccess(state, action.result);
+	case SAVE_STYLE_FAIL:
+		return saveStyleError(state, action.error);
 		
 	case ADD_COMMENT:
 		return addCommentLoad(state, action.activeSaveID);

@@ -158,12 +158,12 @@ const EditorModalSettings = React.createClass({
 			// 	activeOption: this.props.pubPrivacy,
 			// 	options: ['public', 'private'],
 			// },
-			{
-				title: 'pub style',
-				key: 'pubStyle',
-				activeOption: this.props.pubStyle.type,
-				options: ['science', 'magazine', 'custom'],
-			}
+			// {
+			// 	title: 'pub style',
+			// 	key: 'pubStyle',
+			// 	activeOption: this.props.pubStyle.type,
+			// 	options: ['science', 'magazine', 'custom'],
+			// }
 
 		];
 

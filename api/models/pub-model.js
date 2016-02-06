@@ -22,7 +22,12 @@ var pubSchema = new Schema({
 	authors: [{ type: ObjectId, ref: 'User'}],
 	assets: [{ type: ObjectId, ref: 'Asset'}], //Raw sources
 	references: [{ type: ObjectId, ref: 'Reference'}], //Raw References
-	style: { type: Schema.Types.Mixed },
+	style: { type: Schema.Types.Mixed }, // Soon to be deprecated
+
+	styleRawDesktop: { type: String }, // Raw string as user input
+	styleRawMobile: { type: String }, // Raw string as user input
+	styleScoped: { type: String }, // CSS scoped to proper div
+
 	lastUpdated: { type: Date },
 	status: { type: String },
 	// --------------
@@ -64,7 +69,12 @@ var pubSchema = new Schema({
 		authors: [{ type: ObjectId, ref: 'User'}],
 		assets: [{ type: ObjectId, ref: 'Asset'}], //Raw sources
 		references: [{ type: ObjectId, ref: 'Reference'}], //Raw References
-		style: { type: Schema.Types.Mixed },
+		style: { type: Schema.Types.Mixed }, // Soon to be deprecated
+
+		styleRawDesktop: { type: String }, // Raw string as user input
+		styleRawMobile: { type: String }, // Raw string as user input
+		styleScoped: { type: String }, // CSS scoped to proper div
+
 		status: { type: String },
 	}],
 

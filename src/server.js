@@ -130,6 +130,8 @@ app.use((req, res) => {
 							<link href='/css/print.css' rel='stylesheet' type='text/css' />
 							<link href='/css/highlightdefault.css' rel='stylesheet' type='text/css' />
 							<link href='/css/react-select.min.css' rel='stylesheet' type='text/css' />
+							<link href='/css/basePub.css' rel='stylesheet' type='text/css' />
+							<style id="dynamicStyle"></style>
 
 							<link href='https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.9.0/addon/hint/show-hint.css' rel='stylesheet' type='text/css' />
 							<!-- We could dynamically load these in Editor.jsx
@@ -150,9 +152,7 @@ app.use((req, res) => {
 							<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.1.0/highlight.min.js"></script>
 							<script src="/js/typo.js"></script>
 							<script src="/js/spellcheck.js"></script>
-							<style id="dynamicStyle">
-
-							</style>
+							
 						</head>
 
 						<body style="width: 100%; margin: 0;">

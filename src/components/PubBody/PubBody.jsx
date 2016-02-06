@@ -29,6 +29,9 @@ const PubBody = React.createClass({
 		authors: PropTypes.array,
 		addSelectionHandler: PropTypes.func,
 		style: PropTypes.object,
+		
+		styleScoped: PropTypes.string,
+
 		showPubHighlights: PropTypes.bool,
 		showPubHighlightsComments: PropTypes.bool,
 		isFeatured: PropTypes.bool,
@@ -73,6 +76,12 @@ const PubBody = React.createClass({
 		if (this.props.style.googleFontURL !== nextProps.style.googleFontURL) {
 			// console.log('load new fonts!');
 			loadCss(nextProps.style.googleFontURL);
+		}
+		if (this.props.styleScoped !== nextProps.styleScoped) {
+			document.getElementById('dynamicStyle').innerHTML = nextProps.styleScoped;
+		}
+		if (!nextProps.styleScoped) {
+			document.getElementById('dynamicStyle').innerHTML = '';
 		}
 	},
 

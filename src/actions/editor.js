@@ -31,6 +31,10 @@ export const UPDATE_PUB_SETTINGS_LOAD = 'editor/UPDATE_PUB_SETTINGS_LOAD';
 export const UPDATE_PUB_SETTINGS_SUCCESS = 'editor/UPDATE_PUB_SETTINGS_SUCCESS';
 export const UPDATE_PUB_SETTINGS_FAIL = 'editor/UPDATE_PUB_SETTINGS_FAIL';
 
+export const SAVE_STYLE_LOAD = 'editor/SAVE_STYLE_LOAD';
+export const SAVE_STYLE_SUCCESS = 'editor/SAVE_STYLE_SUCCESS';
+export const SAVE_STYLE_FAIL = 'editor/SAVE_STYLE_FAIL';
+
 export const UPDATE_PUB_BACKEND_DATA_LOAD = 'editor/UPDATE_PUB_BACKEND_DATA_LOAD';
 export const UPDATE_PUB_BACKEND_DATA_SUCCESS = 'editor/UPDATE_PUB_BACKEND_DATA_SUCCESS';
 export const UPDATE_PUB_BACKEND_DATA_FAIL = 'editor/UPDATE_PUB_BACKEND_DATA_FAIL';
@@ -65,6 +69,16 @@ export function publishVersion(newVersion) {
 	return {
 		types: [PUBLISH_LOAD, PUBLISH_SUCCESS, PUBLISH_FAIL],
 		promise: (client) => client.post('/publishPub', {data: {newVersion: newVersion}}) 
+	};
+}
+
+export function saveStyle(styleDesktop, styleMobile) {
+	return {
+		types: [SAVE_STYLE_LOAD, SAVE_STYLE_SUCCESS, SAVE_STYLE_FAIL],
+		promise: (client) => client.post('/transformStyle', {data: {
+			styleDesktop: styleDesktop,
+			styleMobile: styleMobile
+		}}) 
 	};
 }
 

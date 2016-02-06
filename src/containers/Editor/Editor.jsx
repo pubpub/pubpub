@@ -10,9 +10,9 @@ import PureRenderMixin from 'react-addons-pure-render-mixin';
 import ReactFireMixin from 'reactfire';
 
 import {Discussions, EditorModals} from '../';
-import {LoaderDeterminate, EditorPluginPopup, EditorTopNav, EditorBottomNav, PubBody} from '../../components';
+import {LoaderDeterminate, EditorPluginPopup, EditorTopNav, EditorBottomNav, EditorStylePane, PubBody} from '../../components';
 import {clearPub} from '../../actions/pub';
-import {getPubEdit, toggleEditorViewMode, toggleFormatting, toggleTOC, unmountEditor, closeModal, openModal, addSelection, setEditorViewMode, publishVersion, updatePubBackendData} from '../../actions/editor';
+import {getPubEdit, toggleEditorViewMode, toggleFormatting, toggleTOC, unmountEditor, closeModal, openModal, addSelection, setEditorViewMode, publishVersion, updatePubBackendData, saveStyle} from '../../actions/editor';
 
 import {debounce} from '../../utils/loadingFunctions';
 import {submitPubToJournal} from '../../actions/journal';
@@ -81,6 +81,7 @@ const Editor = React.createClass({
 			codeMirrorChange: {},
 			editorSaveStatus: 'saved',
 			previewPaneMode: undefined,
+			stylePaneActive: false,
 		};
 	},
 
@@ -103,6 +104,11 @@ const Editor = React.createClass({
 		}
 		if (!this.state.initialized && nextProps.editorData.getIn(['pubEditData', 'token'])) {
 			this.initializeEditorData(nextProps.editorData.getIn(['pubEditData', 'token']));
+		}
+
+		if (this.props.editorData.get('styleScoped') !== nextProps.editorData.get('styleScoped')) {
+			const ref = new Firebase(FireBaseURL + this.props.slug + '/editorData/settings' );
+			ref.update({styleScoped: nextProps.editorData.get('styleScoped')});
 		}
 
 	},
@@ -382,7 +388,15 @@ const Editor = React.createClass({
 	},
 
 	toggleStyleMode: function() {
-		console.log('toggling Style Mode');
+		this.setState({stylePaneActive: !this.state.stylePaneActive});
+	},
+	saveStyle: function(newStyleStringDesktop, newStyleStringMobile) {
+		const ref = new Firebase(FireBaseURL + this.props.slug + '/editorData/settings' );
+		ref.update({
+			styleRawDesktop: newStyleStringDesktop,
+			styleRawMobile: newStyleStringMobile,
+		});
+		this.props.dispatch(saveStyle(newStyleStringDesktop, newStyleStringMobile));
 	},
 
 	render: function() {
@@ -511,6 +525,7 @@ const Editor = React.createClass({
 										showPubHighlightsComments={this.state.previewPaneMode === 'comments' || viewMode === 'read'}
 										addSelectionHandler={this.addSelection}
 										style={this.state.firepadData && this.state.firepadData.settings ? this.state.firepadData.settings.pubStyle : undefined}
+										styleScoped={this.state.firepadData.settings.styleScoped}
 										assetsObject={this.state.assetsObject}
 										referencesObject={this.state.referencesObject}
 										selectionsArray={this.state.selectionsArray}
@@ -540,7 +555,7 @@ const Editor = React.createClass({
 									<div key={'previewBodyNav2'} style={[styles.readModeButton]} onClick={this.toggleReadMode}>
 										{viewMode === 'read'
 											? '(Switch to Edit Mode)'
-											: '(Switch to Read-only Mode)'
+											: '(Switch to Read-Only Mode)'
 										}
 									</div>
 								</div>
@@ -571,6 +586,20 @@ const Editor = React.createClass({
 									: null
 								}
 							</div>
+
+						</div>
+
+						{/* ---------------------- */}
+						{/*   Style Editing Block  */}
+						{/* ---------------------- */}
+						<div id="style-editor-wrapper" style={[styles.styleEditor, viewMode === 'preview' && this.state.stylePaneActive && styles.styleEditorShow]}>
+
+							<EditorStylePane 
+								toggleStyleMode={this.toggleStyleMode}
+								saveStyleHandler={this.saveStyle}
+								saveStyleError={this.props.editorData.get('styleError')}
+								defaultDesktop={this.state.firepadData && this.state.firepadData.settings ? this.state.firepadData.settings.styleRawDesktop : undefined}
+								defaultMobile={this.state.firepadData && this.state.firepadData.settings ? this.state.firepadData.settings.styleRawMobile : undefined} />
 
 						</div>
 
@@ -626,6 +655,26 @@ styles = {
 		height: 0,
 		overflow: 'hidden',
 		pointerEvents: 'none',
+	},
+	styleEditor: {
+		opacity: '0',
+		pointerEvents: 'none',
+		transition: '.1s linear opacity',
+
+		
+		backgroundColor: globalStyles.sideBackground,
+		width: '50%',
+		height: 'calc(100vh - 60px)',
+		position: 'fixed',
+		zIndex: 11,
+		left: 0,
+		top: '61px',
+		overflow: 'hidden',
+	},
+	styleEditorShow: {
+		opacity: '1',
+		pointerEvents: 'auto',
+		overflowY: 'scroll',
 	},
 
 	readModeButton: {
@@ -782,6 +831,9 @@ styles = {
 		height: 'calc(100vh - 60px - 2*' + globalStyles.headerHeight + ')',
 		overflow: 'hidden',
 		overflowY: 'scroll',
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+			overflow: 'hidden',
+		}
 	},
 	editorPreview: {
 		width: 'calc(50% - 0px)',
