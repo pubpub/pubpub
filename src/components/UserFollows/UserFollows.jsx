@@ -42,23 +42,23 @@ const UserFollows = React.createClass({
 
 				<ul style={[navStyles.navList, styles.subNav]}>
 					<li key="subNav0"style={[navStyles.navItem, navStyles.left, navStyles.navItemShow, styles.noLeftPadding, styles.inactiveNav, this.state.mode === 'pubs' && styles.activeNav]} onClick={this.setMode('pubs')}>
-						<FormattedMessage {...globalMessages.pubs} /> ({this.props.profileData.following.pubs.length})
+						<FormattedMessage {...globalMessages.pubs} /> ({this.props.profileData.following ? this.props.profileData.following.pubs.length : 0})
 					</li>
 					<li style={[navStyles.navSeparator, navStyles.left, navStyles.navItemShow]}></li>
 
 					<li key="subNav1"style={[navStyles.navItem, navStyles.left, navStyles.navItemShow, styles.inactiveNav, this.state.mode === 'users' && styles.activeNav]} onClick={this.setMode('users')}>
-						<FormattedMessage {...globalMessages.People} /> ({this.props.profileData.following.users.length})
+						<FormattedMessage {...globalMessages.People} /> ({this.props.profileData.following ? this.props.profileData.following.users.length : 0})
 					</li>
 					<li style={[navStyles.navSeparator, navStyles.left, navStyles.navItemShow]}></li>
 
 					<li key="subNav2"style={[navStyles.navItem, navStyles.left, navStyles.navItemShow, styles.inactiveNav, this.state.mode === 'journals' && styles.activeNav]} onClick={this.setMode('journals')}>
-						<FormattedMessage {...globalMessages.Journals} /> ({this.props.profileData.following.journals.length})
+						<FormattedMessage {...globalMessages.Journals} /> ({this.props.profileData.following ? this.props.profileData.following.journals.length : 0})
 					</li>
 				</ul>
 
 
 				{
-					this.props.profileData.following[this.state.mode].map((item, index)=>{
+					this.props.profileData.following && this.props.profileData.following[this.state.mode].map((item, index)=>{
 						return (<div key={'followsItem-' + index}>
 							{item.slug 
 								? <PubPreview pubData={item} />

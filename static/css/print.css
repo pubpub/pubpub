@@ -6,7 +6,7 @@
 		overflow: visible !important;
 		height: auto !important;
 	}
-	.header-bar,.login-container, .leftBar, .rightBar, .pubModals, .editorModals, .editorBodyNav {
+	.header-bar,.login-container, .leftBar, .rightBar, .pubModals, .editorModals, .editorBodyNav, .editorPreviewNav {
 		display: none !important;
 	}
 	.content {

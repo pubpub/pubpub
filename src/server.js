@@ -121,6 +121,9 @@ app.use((req, res) => {
 					dynamicStyle = store.getState().pub.getIn(['pubData', 'history', versionIndex, 'styleScoped']);
 				}
 
+				// if (pathname === '/') {
+					
+				// }
 				
 
 				res.send(`<!doctype html>
