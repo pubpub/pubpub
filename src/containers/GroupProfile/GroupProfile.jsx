@@ -60,21 +60,24 @@ const Profile = React.createClass({
 
 				<div style={[profileStyles.profileWrapper, styles.wrapperPadding]}>
 					<div style={[globalStyles.hiddenUntilLoad, globalStyles[this.props.groupData.get('status')]]}>
-						<ul style={navStyles.navList}>
+						{this.props.groupData.getIn(['groupData', 'groupName']) !== 'Not Authorized'
+							? <ul style={navStyles.navList}>
+								<Link to={'/group/' + this.props.groupSlug + '/settings'} style={globalStyles.link}><li key="profileNav0"style={[navStyles.navItem, isAdmin && navStyles.navItemShow]}>
+									<FormattedMessage {...globalMessages.settings} />
+								</li></Link>
 
-							<Link to={'/group/' + this.props.groupSlug + '/settings'} style={globalStyles.link}><li key="profileNav0"style={[navStyles.navItem, isAdmin && navStyles.navItemShow]}>
-								<FormattedMessage {...globalMessages.settings} />
-							</li></Link>
+								<li style={[navStyles.navSeparator, isAdmin && navStyles.navItemShow]}></li>
 
-							<li style={[navStyles.navSeparator, isAdmin && navStyles.navItemShow]}></li>
+								<Link to={'/group/' + this.props.groupSlug + '/members'} style={globalStyles.link}><li key="profileNav1"style={[navStyles.navItem, navStyles.navItemShow]}>
+									<FormattedMessage {...globalMessages.Members} />
+								</li></Link>
 
-							<Link to={'/group/' + this.props.groupSlug + '/members'} style={globalStyles.link}><li key="profileNav1"style={[navStyles.navItem, navStyles.navItemShow]}>
-								<FormattedMessage {...globalMessages.Members} />
-							</li></Link>
-
-							<li style={[navStyles.navSeparator, navStyles.navItemShow]}></li>
-							
-						</ul>
+								<li style={[navStyles.navSeparator, navStyles.navItemShow]}></li>
+								
+							</ul>
+							: <ul style={navStyles.navList}></ul>
+						}
+						
 					</div>
 					
 					<LoaderDeterminate value={this.props.groupData.get('status') === 'loading' ? 0 : 100}/>
@@ -89,6 +92,10 @@ const Profile = React.createClass({
 						</div>	
 						
 						{(() => {
+							if (this.props.groupData.getIn(['groupData', 'groupName']) === 'Not Authorized') {
+								return <div style={styles.notAuthorized}>Not Authorized</div>;
+							}
+
 							switch (this.props.mode) {
 							case 'members':
 								return (
@@ -137,6 +144,10 @@ export default connect( state => {
 styles = {
 	wrapperPadding: {
 		paddingBottom: '50px',
+	},
+	notAuthorized: {
+		fontSize: 40,
+		textAlign: 'center',
 	},
 	groupHeader: {
 		color: 'white',
