@@ -159,25 +159,22 @@ const PPMComponent = React.createClass({
 		for (const member in this.globals) delete this.globals[member];
 
 		return (
-			<div>
-				<MDReactComponent
-					text={this.props.markdown}
-					onIterate={this.handleIterate.bind(this, this.globals)}
-					markdownOptions={{
-						typographer: true,
-						linkify: true,
-					}}
-					plugins={[
-						abbr,
-						emoji,
-						sub,
-						sup,
-						{plugin: mathIt, args: [MathOptions]},
-						{plugin: container, args: ['blank', {validate: ()=>{return true;}}]},
-						ppm
-					]} />
-			</div>
-			
+			<MDReactComponent
+				text={this.props.markdown}
+				onIterate={this.handleIterate.bind(this, this.globals)}
+				markdownOptions={{
+					typographer: true,
+					linkify: true,
+				}}
+				plugins={[
+					abbr,
+					emoji,
+					sub,
+					sup,
+					{plugin: mathIt, args: [MathOptions]},
+					{plugin: container, args: ['blank', {validate: ()=>{return true;}}]},
+					ppm
+				]} />
 		);
 	}
 });
