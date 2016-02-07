@@ -143,11 +143,11 @@ const PPMComponent = React.createClass({
 		case 'p':
 			// if (children[0] === null){ return null; }
 			props.className = 'p-block';
-			props['data-hash'] = murmur.v2(children[0]);
+			props['data-hash'] = children[0] ? murmur.v2(children[0]) : 0;
 			Component = 'div';
 			break;
 		case 'li':
-			props['data-hash'] = murmur.v2(children[0]);
+			props['data-hash'] = children[0] ? murmur.v2(children[0]) : 0;
 			break;
 
 		}
