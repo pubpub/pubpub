@@ -102,7 +102,7 @@ const UserMain = React.createClass({
 							</div>
 							<div style={styles.statsCount}>
 								<span style={styles.statParenthese}>(</span>
-								{this.props.profileData.discussions && this.props.profileData.discussions.length}
+								{this.props.profileData.discussions ? this.props.profileData.discussions.length : 0}
 								<span style={styles.statParenthese}>)</span>
 							</div>
 						</li>
@@ -111,12 +111,11 @@ const UserMain = React.createClass({
 						<Link to={'/user/' + this.props.username + '/groups'} style={globalStyles.link}>
 						<li key="profileStatsItem4" style={[ styles.statsItem, this.props.ownProfile !== 'self' && {display: 'none'} ]}>
 							<div style={styles.statsTitle}>
-								{/* <FormattedMessage {...globalMessages.discussions} /> */}
-								Groups
+								<FormattedMessage {...globalMessages.groups} />
 							</div>
 							<div style={styles.statsCount}>
 								<span style={styles.statParenthese}>(</span>
-								{this.props.profileData.groups && this.props.profileData.groups.length}
+								{this.props.profileData.groups ? this.props.profileData.groups.length : 0}
 								<span style={styles.statParenthese}>)</span>
 							</div>
 						</li>
@@ -125,12 +124,11 @@ const UserMain = React.createClass({
 						<Link to={'/user/' + this.props.username + '/follows'} style={globalStyles.link}>
 						<li key="profileStatsItem5" style={[styles.statsItem]}>
 							<div style={styles.statsTitle}>
-								{/* <FormattedMessage {...globalMessages.discussions} /> */}
-								Follows
+								<FormattedMessage {...globalMessages.follows} />
 							</div>
 							<div style={styles.statsCount}>
 								<span style={styles.statParenthese}>(</span>
-								{this.props.profileData.following && this.props.profileData.following.pubs.length + this.props.profileData.following.users.length + this.props.profileData.following.journals.length}
+								{this.props.profileData.following ? this.props.profileData.following.pubs.length + this.props.profileData.following.users.length + this.props.profileData.following.journals.length : 0}
 								<span style={styles.statParenthese}>)</span>
 							</div>
 						</li>
