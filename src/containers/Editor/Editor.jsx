@@ -915,7 +915,9 @@ styles = {
 		},
 		editorPreview: {
 			transition: '.352s linear transform',
-			transform: 'translateX(110%)',
+			'@media screen': { // Have to do this inside a @media screen so that print will work
+				transform: 'translateX(110%)',	
+			},
 			'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
 				transform: 'translateX(0%)',
 			},
@@ -962,7 +964,9 @@ styles = {
 		editorPreview: {
 			// backgroundColor: 'orange',
 			transition: '.352s linear transform',
-			transform: 'translateX(calc(-100% - 1px))',
+			'@media screen': { // Have to do this inside a @media screen so that print will work
+				transform: 'translateX(calc(-100% - 1px))',
+			},
 			top: '31px',
 			height: 'calc(100vh - 31px)',
 			'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {

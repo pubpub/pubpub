@@ -21,7 +21,7 @@ const EditorTopNac = React.createClass({
 		
 		return (
 			
-			<div style={[styles.editorTopNav, globalStyles.hiddenUntilLoad, globalStyles[this.props.status], this.props.darkMode && styles.editorTopNavDark, this.props.viewMode === 'read' && globalStyles.invisible]}>
+			<div id="editorTopNav" style={[styles.editorTopNav, globalStyles.hiddenUntilLoad, globalStyles[this.props.status], this.props.darkMode && styles.editorTopNavDark, this.props.viewMode === 'read' && globalStyles.invisible]}>
 				<ul style={styles.editorNav}>
 
 					<li key="editorNav0"style={[styles.editorNavItem]} onClick={this.props.openModalHandler('Assets')}>

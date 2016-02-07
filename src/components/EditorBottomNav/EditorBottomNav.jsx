@@ -74,7 +74,7 @@ const EditorBottomNav = React.createClass({
 
 	render: function() {
 		return (
-			<div style={[styles.common.editorBottomNav, styles[this.props.viewMode].editorBottomNav, globalStyles.hiddenUntilLoad, globalStyles[this.props.loadStatus], this.props.viewMode === 'read' && globalStyles.invisible]}>
+			<div id="editorBottomNav" style={[styles.common.editorBottomNav, styles[this.props.viewMode].editorBottomNav, globalStyles.hiddenUntilLoad, globalStyles[this.props.loadStatus], this.props.viewMode === 'read' && globalStyles.invisible]}>
 
 				{/* Background header bar that's used in livePreview mode. Provides opaque background. */}
 				<div style={[styles.common.bottomNavBackground, styles[this.props.viewMode].bottomNavBackground, this.props.darkMode && styles.common.bottomNavBackgroundDark]}></div>
