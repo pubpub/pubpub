@@ -915,7 +915,7 @@ styles = {
 		},
 		editorPreview: {
 			transition: '.352s linear transform',
-			'@media screen': { // Have to do this inside a @media screen so that print will work
+			'@media screen and (min-width: 768px)': { // Have to do this inside a @media screen so that print will work
 				transform: 'translateX(110%)',	
 			},
 			'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
