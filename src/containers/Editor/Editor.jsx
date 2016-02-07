@@ -859,7 +859,7 @@ styles = {
 		padding: 0,
 		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
 			width: '100%',
-			transform: 'translateX(0%)',
+			// transform: 'translateX(0%)',
 		},
 	},
 	editorDiscussions: {
@@ -915,9 +915,7 @@ styles = {
 		},
 		editorPreview: {
 			transition: '.352s linear transform',
-			'@media screen and (min-width: 768px)': { // Have to do this inside a @media screen so that print will work
-				transform: 'translateX(110%)',	
-			},
+			transform: 'translateX(110%)',	
 			'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
 				transform: 'translateX(0%)',
 			},
@@ -964,9 +962,7 @@ styles = {
 		editorPreview: {
 			// backgroundColor: 'orange',
 			transition: '.352s linear transform',
-			'@media screen': { // Have to do this inside a @media screen so that print will work
-				transform: 'translateX(calc(-100% - 1px))',
-			},
+			transform: 'translateX(calc(-100% - 1px))',
 			top: '31px',
 			height: 'calc(100vh - 31px)',
 			'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {

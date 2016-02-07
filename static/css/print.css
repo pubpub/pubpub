@@ -21,9 +21,9 @@
 		height: auto !important;
 		overflow: hidden !important;
 		padding: 0px !important;
-		/*-ms-transform: translateX(0px) !important;
+		-ms-transform: translateX(0px) !important;
 		-webkit-transform: translateX(0px) !important;
-		transform: translateX(0px) !important;*/
+		transform: translateX(0px) !important;
 		top: 0px !important;
 		left: 0px !important;
 		position: relative !important;
