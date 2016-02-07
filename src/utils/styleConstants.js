@@ -74,7 +74,7 @@ export const profileStyles = {
 	},
 	profileWrapper: {
 		maxWidth: 1024,
-		margin: '0 auto',
+		margin: '0 auto 0 auto',
 		overflow: 'hidden',
 		backgroundColor: 'white',
 		boxShadow: '0px 0px 4px 0px rgba(0,0,0,0.4)',

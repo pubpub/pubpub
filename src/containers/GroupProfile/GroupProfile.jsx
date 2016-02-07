@@ -136,7 +136,7 @@ export default connect( state => {
 
 styles = {
 	wrapperPadding: {
-		marginBottom: '50px',
+		margin: '0px 0px 50px 0px',
 	},
 	groupHeader: {
 		color: 'white',
