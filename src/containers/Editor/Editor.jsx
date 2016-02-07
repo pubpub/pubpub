@@ -533,7 +533,7 @@ const Editor = React.createClass({
 										showPubHighlightsComments={this.state.previewPaneMode === 'comments' || viewMode === 'read'}
 										addSelectionHandler={this.addSelection}
 										style={this.state.firepadData && this.state.firepadData.settings ? this.state.firepadData.settings.pubStyle : undefined}
-										styleScoped={this.state.firepadData.settings.styleScoped}
+										styleScoped={this.state.firepadData && this.state.firepadData.settings ? this.state.firepadData.settings.styleScoped : undefined}
 										assetsObject={this.state.assetsObject}
 										referencesObject={this.state.referencesObject}
 										selectionsArray={this.state.selectionsArray}
