@@ -58,7 +58,7 @@ const Profile = React.createClass({
 
 				<Helmet {...metaData} />
 
-				<div style={profileStyles.profileWrapper}>
+				<div style={[profileStyles.profileWrapper, styles.wrapperPadding]}>
 					<div style={[globalStyles.hiddenUntilLoad, globalStyles[this.props.groupData.get('status')]]}>
 						<ul style={navStyles.navList}>
 
@@ -135,6 +135,9 @@ export default connect( state => {
 })( Radium(Profile) );
 
 styles = {
+	wrapperPadding: {
+		paddingBottom: '50px',
+	},
 	groupHeader: {
 		color: 'white',
 		// width: '100vw',
