@@ -93,6 +93,7 @@ const PubSelectionPopup = React.createClass({
 
 		const chunkedPath = splitOnSemicolonArray[0].split('>');
 		for (let index = chunkedPath.length; index--;) {
+			const tempPath = chunkedPath.slice(0, index + 1).join('>');
 			const tempElement = document.getElementById('pubBodyContent').querySelector(tempPath);
 			if (tempElement.dataset && tempElement.dataset.hash) {
 				newPath = '[data-hash="' + tempElement.dataset.hash + '"]' + newPath;
