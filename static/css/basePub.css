@@ -73,6 +73,9 @@
 	color: #565656;
 }
 #pubContent .codeBlock {
+	background-color: #f0f0f0;
+}
+#pubContent pre .codeBlock {
 	margin: 0px 20px;
 	padding: 10px;
 	background-color: #f0f0f0;
