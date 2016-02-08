@@ -201,9 +201,7 @@ const PubBody = React.createClass({
 						<div id={'pub-abstract'}>{this.props.abstract}</div>
 						<div id={'pub-header-divider'}></div>
 
-						<div id="pubBodyContent">
-							{/* For Highlights to work, no divs can be placed before htmlTree */}
-							{/* this.props.htmlTree */}
+						<div id="pubBodyContent"> {/* Highlights are dependent on the id 'pubBodyContent' */}
 							<PPMComponent 
 								assets={this.props.assetsObject} 
 								references={this.props.referencesObject} 
