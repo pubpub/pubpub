@@ -400,7 +400,7 @@ export const globalMessages = defineMessages({
 	},
 	inviteReviewers: {
 		id: 'global.inviteReviewers',
-		defaultMessage: 'Invite Reviewers',
+		defaultMessage: 'Request Peer Review',
 	},
 	turnHighlights: {
 		id: 'global.turnHighlights',

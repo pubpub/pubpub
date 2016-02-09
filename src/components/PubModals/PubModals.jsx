@@ -22,6 +22,8 @@ const PubModals = React.createClass({
 		closePubModalHandler: PropTypes.func,
 		closeMenuHandler: PropTypes.func,
 		activeModal: PropTypes.string,
+		isFeatured: PropTypes.bool,
+
 		// TOC Props
 		tocData: PropTypes.array,
 		// Cite Data
@@ -68,7 +70,8 @@ const PubModals = React.createClass({
 								return (
 										<PubModalCite
 											pubData={this.props.pubData} 
-											journalName={this.props.journalName} />
+											journalName={this.props.journalName} 
+											isFeatured={this.props.isFeatured}/>
 									);
 							case 'reviews':
 								return (<div>

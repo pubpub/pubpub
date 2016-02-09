@@ -88,7 +88,6 @@ const Reference = React.createClass({
 				{citationStrings.volume}
 				{citationStrings.publisher}
 				{citationStrings.year}
-				{citationStrings.journal}
 				{citationStrings.number}
 				{citationStrings.pages}
 				<a href={citation.url} style={{textDecoration: 'none', color: 'inherit'}}>{citationStrings.url}</a>
@@ -103,7 +102,6 @@ const Reference = React.createClass({
 				{citationStrings.volume}
 				{citationStrings.publisher}
 				{citationStrings.year}
-				{citationStrings.journal}
 				{citationStrings.number}
 				{citationStrings.pages}
 				<a href={citation.url} style={{textDecoration: 'none', color: 'inherit'}}>{citationStrings.url}</a>
@@ -119,7 +117,6 @@ const Reference = React.createClass({
 				{citationStrings.volume}
 				{citationStrings.publisher}
 				
-				{citationStrings.journal}
 				{citationStrings.number}
 				{citationStrings.pages}
 				<a href={citation.url} style={{textDecoration: 'none', color: 'inherit'}}>{citationStrings.url}</a>

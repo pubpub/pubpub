@@ -12,7 +12,8 @@ let styles = {};
 const PubModalCite = React.createClass({
 	propTypes: {
 		pubData: PropTypes.object,
-		journalName: PropTypes.string
+		journalName: PropTypes.string,
+		isFeatured: PropTypes.bool,
 	},
 
 	getDefaultProps: function() {
@@ -24,11 +25,15 @@ const PubModalCite = React.createClass({
 	render: function() {
 		const referenceObject = {
 			title: this.props.pubData.title,
-			journal: this.props.journalName,
+			journal: this.props.isFeatured ? this.props.journalName : 'PubPub',
 			publisher: 'PubPub',
 			year: new Date(this.props.pubData.publishDate).getFullYear(),
-			url: typeof(window) !== 'undefined' ? window.location.protocol + '//' + window.location.host + window.location.pathname : '',
 		};
+		if (this.props.isFeatured) {
+			referenceObject.url = typeof(window) !== 'undefined' ? window.location.protocol + '//' + window.location.host + window.location.pathname : '';
+		} else {
+			referenceObject.url = typeof(window) !== 'undefined' ? window.location.protocol + '//www.pubpub.org' + window.location.pathname : '';
+		}
 
 		const author = this.props.pubData.authors.reduce((previousValue, currentValue, currentIndex, array)=>{
 			const lastName = array[currentIndex].lastName || 'Lastname';
