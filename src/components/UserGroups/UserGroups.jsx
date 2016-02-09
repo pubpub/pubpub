@@ -43,7 +43,7 @@ const UserGroups = React.createClass({
 				<ul style={[navStyles.navList, styles.subNav]}></ul>
 				
 				{
-					this.props.profileData.groups.map((group)=>{
+					this.props.profileData.groups && this.props.profileData.groups.map((group)=>{
 						return (<div key={'group-' + group.groupSlug}>
 								<Link to={'/group/' + group.groupSlug} style={globalStyles.link}>
 									{group.groupName}
