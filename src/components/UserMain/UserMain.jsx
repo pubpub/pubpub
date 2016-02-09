@@ -128,7 +128,16 @@ const UserMain = React.createClass({
 							</div>
 							<div style={styles.statsCount}>
 								<span style={styles.statParenthese}>(</span>
-								{this.props.profileData.following ? this.props.profileData.following.pubs.length + this.props.profileData.following.users.length + this.props.profileData.following.journals.length : 0}
+								{(()=>{
+									if (!this.props.profileData.following) {
+										return 0;
+									}
+									const pubCount = this.props.profileData.following.pubs ? this.props.profileData.following.pubs.length : 0;
+									const userCount = this.props.profileData.following.users ? this.props.profileData.following.users.length : 0;
+									const journalCount = this.props.profileData.following.journals ? this.props.profileData.following.journals.length : 0;
+
+									return pubCount + userCount + journalCount;
+								}())}
 								<span style={styles.statParenthese}>)</span>
 							</div>
 						</li>
