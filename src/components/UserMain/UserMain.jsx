@@ -137,7 +137,7 @@ const UserMain = React.createClass({
 									const journalCount = this.props.profileData.following.journals ? this.props.profileData.following.journals.length : 0;
 
 									return pubCount + userCount + journalCount;
-								}())}
+								})()}
 								<span style={styles.statParenthese}>)</span>
 							</div>
 						</li>
