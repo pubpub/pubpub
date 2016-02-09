@@ -53,7 +53,7 @@ const UserGroups = React.createClass({
 					})
 
 				}
-				{this.props.profileData.groups.length === 0
+				{this.props.profileData.groups && this.props.profileData.groups.length === 0
 					? <div style={globalStyles.emptyBlock}>
 						<FormattedMessage id="user.noGroups" defaultMessage="No Groups Yet"/>
 					</div>
