@@ -131,7 +131,7 @@ app.post('/submitPubToJournal', function(req,res){
 			return res.status(403).json('Not authorized to administrate this Journal.');
 		}
 
-		if (String(journal.pubsSubmitted).indexOf(req.body.pubID) === -1) {
+		if (String(journal.pubsSubmitted).indexOf(req.body.pubID) === -1 && String(journal.pubsFeatured).indexOf(req.body.pubID) === -1) {
 			
 			Pub.addJournalSubmitted(req.body.pubID, req.body.journalID, req.user._id);
 
