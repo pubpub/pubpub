@@ -51,6 +51,14 @@ import {
 
 } from '../actions/editor';
 
+import {
+
+	ADD_DISCUSSION, 
+	ADD_DISCUSSION_SUCCESS, 
+	ADD_DISCUSSION_FAIL,
+
+} from '../actions/pub';
+
 /*--------*/
 // Initialize Default State 
 /*--------*/
@@ -325,6 +333,64 @@ function addCommentSuccess(state, result, activeSaveID) {
 	});
 }
 
+function addCommentFail(state, error, activeSaveID) {
+	console.log(error);
+	return state.merge({
+		addDiscussionStatus: 'error',
+		activeSaveID: activeSaveID,
+	});
+}
+
+function addDiscussionLoad(state, activeSaveID) {
+	return state.merge({
+		addDiscussionStatus: 'loading',
+		activeSaveID: activeSaveID,
+	});
+}
+
+function addDiscussionSuccess(state, result, activeSaveID, inEditor) {
+	if (!inEditor) {return state;}
+	function findParentAndAdd(discussions, parentID, newChild) {
+		discussions.map((discussion)=>{
+			if (discussion._id === parentID) {
+				discussion.children.unshift(result);
+			}
+			if (discussion.children && discussion.children.length) {
+				findParentAndAdd(discussion.children, parentID, newChild);
+			}
+		});
+	}
+
+	let discussionsObject = state.getIn(['pubEditData', 'discussions']);
+	if (!result.parent) {
+		discussionsObject = discussionsObject.unshift(result);
+	} else {
+		// We have a parent, we gotta go find it and then merge inside of it
+		const discussionsArray = discussionsObject.toJS();
+		findParentAndAdd(discussionsArray, result.parent, result);
+		discussionsObject = discussionsArray;
+	}
+	const newState = state.mergeIn(['pubEditData', 'discussions'], discussionsObject);
+
+	return newState.merge({
+		addDiscussionStatus: 'loaded',
+		activeSaveID: null,
+		newDiscussionData: {
+			selections: {},
+			assets: {},
+			references: {},
+		},
+	});
+}
+
+function addDiscussionFail(state, error, activeSaveID) {
+	console.log(error);
+	return state.merge({
+		addDiscussionStatus: 'error',
+		activeSaveID: activeSaveID,
+	});
+}
+
 function discussionVote(state, voteType, discussionID, userYay, userNay) {
 	
 	let scoreChange = 0;
@@ -388,14 +454,6 @@ function archiveComment(state, discussionID) {
 	findDiscussionAndChange(discussionsArray);
 
 	return state.mergeIn(['pubEditData', 'editorComments'], discussionsArray);
-}
-
-function addCommentFail(state, error, activeSaveID) {
-	console.log(error);
-	return state.merge({
-		addDiscussionStatus: 'error',
-		activeSaveID: activeSaveID,
-	});
 }
 
 // TODO: It seems like this function, if fired after the page nav has occurred, will trigger a state.get is not a function error.
@@ -496,6 +554,14 @@ export default function editorReducer(state = defaultState, action) {
 		return addCommentSuccess(state, action.result, action.activeSaveID);
 	case ADD_COMMENT_FAIL:
 		return addCommentFail(state, action.error, action.activeSaveID);
+
+	case ADD_DISCUSSION:
+		return addDiscussionLoad(state, action.activeSaveID);
+	case ADD_DISCUSSION_SUCCESS:
+		return addDiscussionSuccess(state, action.result, action.activeSaveID, action.inEditor);
+	case ADD_DISCUSSION_FAIL:
+		return addDiscussionFail(state, action.error, action.activeSaveID);
+
 	default:
 		return ensureImmutable(state);
 	}
