@@ -1,6 +1,6 @@
 // CodeMirror styles function can be
 // used to dynamically change font, size, color, etc
-export function codeMirrorStyles(loginData) {
+export function codeMirrorStyles(loginData, parentClass) {
 	const editorFont = loginData ? loginData.getIn(['userData', 'settings', 'editorFont']) : undefined;
 	const editorFontSize = loginData ? loginData.getIn(['userData', 'settings', 'editorFontSize']) : undefined;
 	const editorColor = loginData ? loginData.getIn(['userData', 'settings', 'editorColor']) : undefined;
@@ -67,7 +67,7 @@ export function codeMirrorStyles(loginData) {
 		break;
 	}
 
-	return {
+	const output = {
 		'.CodeMirror': {
 			backgroundColor: 'transparent',
 			fontSize: editorStyles.fontSize,
@@ -149,6 +149,17 @@ export function codeMirrorStyles(loginData) {
 			backgroundColor: 'rgba(233, 201, 153, 0.5);',
 		},
 	};
+
+	if (parentClass) {
+		for (const key in output) {
+			if (output.hasOwnProperty(key)) {
+				output[parentClass + ' ' + key] = output[key];
+				delete output[key];
+			}
+		}
+	}
+
+	return output;
 }
 
 export const codeMirrorStyleClasses = {
