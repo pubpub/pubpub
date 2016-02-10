@@ -33,7 +33,6 @@
   "editor.noRefsAdded": "No References Added",
   "editor.addBibtex": "Add Bibtex",
   "editor.manualEntry": "Manual Entry",
-  "editor.default": "default",
   "discussion.selectionPreviousDraft": "Selection made on draft version",
   "discussion.selectionPreviousVersion": "Selection made on Version {version}",
   "editor.livePreview": "Live Preview",
