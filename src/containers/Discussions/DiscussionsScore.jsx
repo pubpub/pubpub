@@ -22,20 +22,20 @@ const PubDiscussionsScore = React.createClass({
 
 	handleVoteClick: function(type, discussionID) {
 		return ()=> {
-			this.props.handleVoteSubmit(type, discussionID, this.props.userYay, this.props.userNay);	
+			this.props.handleVoteSubmit(type, discussionID, this.props.userYay, this.props.userNay);
 		};
-		
+
 	},
 
 	render: function() {
 		const discussionID = this.props.discussionID;
 		return (
 			<div style={styles.container}>
-				
+
 				<div key={'yay-' + discussionID} style={[styles.voteButton, styles.voteUp, this.props.userYay && styles.activeVote, this.props.readOnly && styles.readOnly]} onClick={this.handleVoteClick('yay', discussionID)}>
 					^
 					{/* We're not quite ready for this. Don't have the right design
-						<div style={[styles.voteMessage, styles.yayMessage]}>For constructive, insightful, or productive discussion</div> 
+						<div style={[styles.voteMessage, styles.yayMessage]}>For constructive, insightful, or productive discussion</div>
 					*/}
 				</div>
 				<div style={styles.voteScore}>{this.props.score + 1}</div>
@@ -44,9 +44,9 @@ const PubDiscussionsScore = React.createClass({
 					{/* We're not quite ready for this. Don't have the right design
 						<div style={[styles.voteMessage, styles.nayMessage]}>For unproductive or trolling discussion. <br/>NOT for thoughtful discussion you happen to disagree with.</div>
 					*/}
-					
+
 				</div>
-				
+
 			</div>
 		);
 	}
@@ -78,9 +78,9 @@ styles = {
 		bottom: 20,
 	},
 	voteUp: {
-		height: 20,
-		lineHeight: '38px',
-		fontSize: '28px',
+		height: 10,
+		lineHeight: '22px',
+		fontSize: '24px',
 		color: '#aaa',
 	},
 	activeVote: {
@@ -94,9 +94,9 @@ styles = {
 		fontFamily: 'Lato',
 	},
 	voteDown: {
-		height: 20,
-		lineHeight: '38px',
-		fontSize: '28px',
+		height: 10,
+		lineHeight: '22px',
+		fontSize: '24px',
 		color: '#aaa',
 		transform: 'rotate(180deg)',
 	},
@@ -108,5 +108,5 @@ styles = {
 		opacity: 0.15,
 		pointerEvents: 'none',
 	},
-	
+
 };

@@ -434,5 +434,8 @@ export const globalMessages = defineMessages({
 		id: 'People',
 		defaultMessage: 'People'
 	},
-	
+	discussionReplyPlaceholder: {
+		id: 'discussionReplyPlaceholder',
+		defaultMessage: 'Add your reply'
+	},
 });

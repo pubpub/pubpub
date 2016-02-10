@@ -43,6 +43,8 @@ const PubDiscussionsInput = React.createClass({
 	componentDidMount() {
 		initCodeMirrorMode();
 
+		const placeholderMsg = (this.props.isReply) ? globalMessages.discussionReplyPlaceholder : globalMessages.discussionPlaceholder;
+
 		const cmOptions = {
 			lineNumbers: false,
 			value: '',
@@ -51,7 +53,7 @@ const PubDiscussionsInput = React.createClass({
 			autofocus: false,
 			mode: 'pubpubmarkdown',
 			extraKeys: {'Ctrl-Space': 'autocomplete'},
-			placeholder: this.props.intl.formatMessage(globalMessages.discussionPlaceholder),
+			placeholder: this.props.intl.formatMessage(placeholderMsg),
 		};
 
 		const codeMirror = CodeMirror(document.getElementById(this.props.codeMirrorID), cmOptions);
@@ -149,7 +151,7 @@ const PubDiscussionsInput = React.createClass({
 					{(this.props.addDiscussionStatus === 'loading' && this.props.activeSaveID === this.props.saveID ? <LoaderIndeterminate color="#444"/> : null)}
 				</div>
 
-				<div style={[styles.inputBottomLine, styles.expanded(this.state.expanded, false)]}>
+				<div style={[styles.inputBottomLine, styles.expanded(this.state.expanded || this.props.isReply, false)]}>
 					<div style={styles.submitButton} key={'newDiscussionSubmit'} onClick={this.submitDiscussion}>
 						<FormattedMessage {...globalMessages.Submit}/>
 					</div>
@@ -184,7 +186,7 @@ styles = {
 	container: {
 		width: '100%',
 		overflow: 'hidden',
-		margin: '20px 0px',
+		margin: '0px 0px',
 		position: 'relative',
 	},
 	replyContainer: {

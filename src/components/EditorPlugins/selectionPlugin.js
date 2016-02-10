@@ -48,12 +48,12 @@ const SelectionPlugin = React.createClass({
 				endContainerPath: selection.endContainerPath,
 				startOffset: selection.startOffset,
 				endOffset: selection.endOffset,
-			};	
+			};
 
 			const version = parseInt(selection.version, 10);
 			const classname = version ? 'selection' : 'selection selection-editor';
 			const renderer = new Marklib.Rendering(document, {className: classname + ' selection-' + selection._id}, document.getElementById('pubBodyContent'));
-			renderer.renderWithResult(result);	
+			renderer.renderWithResult(result);
 
 
 			renderer.on('click', function(item) {
@@ -72,7 +72,7 @@ const SelectionPlugin = React.createClass({
 
 		} catch (err) {
 			if (__DEVELOPMENT__) {
-				console.log('selection', err);	
+				console.log('selection', err);
 			}
 		}
 	},
@@ -93,22 +93,22 @@ const SelectionPlugin = React.createClass({
 			smoothScroll(destination, 500, ()=>{}, context);
 			smoothScroll(destination, 500, ()=>{}, null, -60);
 		}
-		
+
 	},
 
 	hoverOn: function() {
 		const items = document.getElementsByClassName('selection-' + this.props.index._id);
-	
+
 		for (let index = 0; index < items.length; index++) {
-			items[index].className = items[index].className.replace('selection ', 'selection selection-active ');	
+			items[index].className = items[index].className.replace('selection ', 'selection selection-active ');
 		}
-		
+
 	},
 	hoverOff: function() {
 		const items = document.getElementsByClassName('selection-' + this.props.index._id);
 
 		for (let index = 0; index < items.length; index++) {
-			items[index].className = items[index].className.replace('selection selection-active ', 'selection ');	
+			items[index].className = items[index].className.replace('selection selection-active ', 'selection ');
 		}
 	},
 
@@ -116,9 +116,9 @@ const SelectionPlugin = React.createClass({
 		if (!this.props.index.context || !this.props.index.text) {
 			return [null, null];
 		}
-		
+
 		const contextString = this.props.index.context.substring(this.props.index.startOffset, this.props.index.endOffset);
-		
+
 		// If the substring based on our offsets does not match the selection text...
 		if (contextString !== this.props.index.text) {
 			const selectionRegex = new RegExp(this.props.index.text, 'g');
@@ -137,22 +137,22 @@ const SelectionPlugin = React.createClass({
 
 		// If the contextString matches, return our original offsets
 		return [this.props.index.startOffset, this.props.index.endOffset];
-			
+
 	},
 
 	render: function() {
 		if (!this.props.index) {
 			return null;
 		}
-		
+
 		const offsets = this.calculateOffsets();
 
 		return (
-			<div 
+			<div
 				id={'selection-block-' + this.props.index._id}
-				className={'selection-block'} 
+				className={'selection-block'}
 				key={'selection-block-' + this.props.index._id}
-				style={styles.selectionBlock} 
+				style={styles.selectionBlock}
 				onClick={this.scrollToHighlight}
 				onMouseEnter={this.hoverOn}
 				onMouseLeave={this.hoverOff}>
@@ -203,7 +203,7 @@ styles = {
 		padding: '10px 8px',
 		color: '#5B5B5B',
 		cursor: 'pointer',
-		margin: '5px 0px 5px 15px',
+		margin: '5px 0px 5px 5px',
 		fontStyle: 'italic',
 		fontSize: '0.9em',
 	},
