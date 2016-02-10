@@ -64,8 +64,6 @@ const CitePlugin = React.createClass({
 	// 	this.setState({expanded: false, hover: false});
 	// },
 	render: function() {
-		console.log(this.props.reference);
-		// let html;
 		const count = (this.props.reference) ? this.props.reference.count + 1 : 0;
 		if (this.props.error === 'empty') {
 			return <span></span>;
