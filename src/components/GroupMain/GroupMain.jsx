@@ -61,10 +61,10 @@ const GroupMain = React.createClass({
 						return (
 							<Link to={linkPath} style={globalStyles.link} key={'pubItemLink-' + index}>
 							<div style={styles.pubItem} key={'pubItem-' + index}>
-								<div style={styles.pubTitle}>{pub.title}</div>
-								<div style={styles.pubAuthor}>{this.authorString(pub)}</div>
-
-								<div></div>
+								<div>
+									<span style={styles.pubTitle}>{pub.title}</span>
+									<span style={styles.pubAuthor}>{this.authorString(pub)}</span>
+								</div>
 
 								<div style={styles.pubDetail}>{dateFormat(pub.lastUpdated, 'mm/dd/yy')}</div>
 								<div style={styles.separator}>|</div>
@@ -147,13 +147,13 @@ styles = {
 	pubTitle: {
 		fontSize: '20px',
 		color: '#222',
-		display: 'inline-block',
+		// display: 'inline-block',
 		paddingRight: '20px',
 	},
 	pubAuthor: {
 		fontSize: '15px',
 		color: '#999',
-		display: 'inline-block',
+		// display: 'inline-block',
 	},
 	pubAbstract: {
 		fontSize: '14px',

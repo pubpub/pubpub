@@ -103,11 +103,12 @@ export function togglePubHighlights() {
 	};	
 }
 
-export function addDiscussion(discussionObject, activeSaveID) {
+export function addDiscussion(discussionObject, activeSaveID, inEditor) {
 	return {
 		types: [ADD_DISCUSSION, ADD_DISCUSSION_SUCCESS, ADD_DISCUSSION_FAIL],
 		promise: (client) => client.post('/addDiscussion', {data: {discussionObject: discussionObject}}),
-		activeSaveID: activeSaveID 
+		activeSaveID: activeSaveID,
+		inEditor: inEditor
 	};
 }
 

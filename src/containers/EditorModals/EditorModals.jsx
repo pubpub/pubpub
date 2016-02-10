@@ -35,6 +35,7 @@ const Editor = React.createClass({
 	getInitialState() {
 		return {
 			initialized: false,
+			leftPanelMode: false,
 			firepadData: {
 				collaborators: {},
 				assets: {},
@@ -142,7 +143,9 @@ const Editor = React.createClass({
 	closeModalHandler: function() {
 		this.props.dispatch(closeModal());
 	},
-
+	toggleLeftPanelMode: function() {
+		console.log('toggle left panel');
+	},
 
 	render: function() {
 				
@@ -195,7 +198,8 @@ const Editor = React.createClass({
 										pubStyle={this.state.firepadData && this.state.firepadData.settings ? this.state.firepadData.settings.pubStyle : undefined}
 										saveUpdatedSettingsUser={this.saveUpdatedSettingsUser}
 										saveUpdatedSettingsFirebase={this.saveUpdatedSettingsFirebase}
-										saveUpdatedSettingsFirebaseAndPubPub={this.saveUpdatedSettingsFirebaseAndPubPub} />
+										saveUpdatedSettingsFirebaseAndPubPub={this.saveUpdatedSettingsFirebaseAndPubPub} 
+										toggleLeftPanelModeHandler={this.toggleLeftPanelMode}/>
 									);
 							default:
 								return null;

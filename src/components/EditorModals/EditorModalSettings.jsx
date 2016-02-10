@@ -18,6 +18,7 @@ const EditorModalSettings = React.createClass({
 		saveUpdatedSettingsUser: PropTypes.func,
 		saveUpdatedSettingsFirebase: PropTypes.func,
 		saveUpdatedSettingsFirebaseAndPubPub: PropTypes.func,
+		toggleLeftPanelModeHandler: PropTypes.func,
 	},
 	getDefaultProps: function() {
 		return {
@@ -65,8 +66,10 @@ const EditorModalSettings = React.createClass({
 			
 		}
 
+		this.props.toggleLeftPanelModeHandler();
 		this.setState({
 			showAdvanced: !this.state.showAdvanced,	
+			showAdvancedError: false,
 		});
 	},
 
@@ -117,10 +120,13 @@ const EditorModalSettings = React.createClass({
 			googleFontURL: this.refs.googleFontURL.value,
 			cssObjectString: cm.getValue(),
 		};
-		this.setState({
-			showAdvanced: false,
-			showAdvancedError: false,
-		});
+
+		this.props.toggleLeftPanelModeHandler();
+		this.toggleShowAdvanced();
+		// this.setState({
+		// 	showAdvanced: false,
+		// 	showAdvancedError: false,
+		// });
 
 		return this.props.saveUpdatedSettingsFirebase(newSetting);
 	},
@@ -152,12 +158,12 @@ const EditorModalSettings = React.createClass({
 			// 	activeOption: this.props.pubPrivacy,
 			// 	options: ['public', 'private'],
 			// },
-			{
-				title: 'pub style',
-				key: 'pubStyle',
-				activeOption: this.props.pubStyle.type,
-				options: ['science', 'magazine', 'custom'],
-			}
+			// {
+			// 	title: 'pub style',
+			// 	key: 'pubStyle',
+			// 	activeOption: this.props.pubStyle.type,
+			// 	options: ['science', 'magazine', 'custom'],
+			// }
 
 		];
 

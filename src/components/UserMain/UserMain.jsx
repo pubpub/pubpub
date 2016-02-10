@@ -1,9 +1,10 @@
 import React, {PropTypes} from 'react';
 import Radium from 'radium';
 import {globalStyles} from '../../utils/styleConstants';
-// import { Link } from 'react-router';
-import smoothScroll from '../../utils/smoothscroll';
-import {DiscussionPreview, PubPreview} from '../ItemPreviews';
+import { Link } from 'react-router';
+// import smoothScroll from '../../utils/smoothscroll';
+// import {DiscussionPreview, PubPreview} from '../ItemPreviews';
+import {PubPreview} from '../ItemPreviews';
 
 import {globalMessages} from '../../utils/globalMessages';
 import {FormattedMessage} from 'react-intl';
@@ -14,23 +15,40 @@ const UserMain = React.createClass({
 	propTypes: {
 		profileData: PropTypes.object,
 		ownProfile: PropTypes.string,
+		username: PropTypes.string,
 	},
 
 	getDefaultProps: function() {
 		return {
 			profileData: {
 				discussions: [],
-				pubs: [],
+				pubs: {
+					published: [],
+					unpublished: [],
+					canRead: [],
+				},
+				groups: [],
+				follows: {
+					pubs: [],
+					users: [],
+					journals: [],
+				},
 			},
 		};
 	},
 
-	statClick: function(id) {
-		return ()=> {
-			const destination = document.getElementById(id);
-			smoothScroll(destination);
+	getInitialState: function() {
+		return {
+			mode: 'pubs',
 		};
 	},
+
+	// statClick: function(id) {
+	// 	return ()=> {
+	// 		const destination = document.getElementById(id);
+	// 		smoothScroll(destination);
+	// 	};
+	// },
 
 	calculateReputation: function() {
 
@@ -38,8 +56,8 @@ const UserMain = React.createClass({
 		for (let index = this.props.profileData.discussions.length; index--;) {
 			rep += this.props.profileData.discussions[index].points;
 		}
-		for (let index = this.props.profileData.pubs.length; index--;) {
-			if (!this.props.profileData.pubs[index].settings || this.props.profileData.pubs[index].settings.pubPrivacy === 'public') {
+		for (let index = this.props.profileData.pubs.published.length; index--;) {
+			if (!this.props.profileData.pubs.published[index].settings || this.props.profileData.pubs.published[index].settings.pubPrivacy === 'public') {
 				rep += 10;	
 			}
 		}
@@ -57,26 +75,73 @@ const UserMain = React.createClass({
 				{/* Stats and Intra-Profile nav */}
 				<div style={styles.statsWrapper}>
 					<ul style={styles.statsList}>
-						<li key="profileStatsItem1" style={[styles.statsItem]}>
+						{/* <li key="profileStatsItem1" style={[styles.statsItem]}>
 							<div style={styles.statsTitle}>
 								<FormattedMessage id="user.reputation" defaultMessage="Reputation"/>
 							</div>
 							<div style={styles.statsCount}><span style={styles.statParenthese}>(</span>{this.calculateReputation()}<span style={styles.statParenthese}>)</span></div>
-						</li>
+						</li> */ }
 						
-						<li key="profileStatsItem2" style={[styles.statsItem]} onClick={this.statClick('pubs-section')}>
+						<Link to={'/user/' + this.props.username + '/pubs'} style={globalStyles.link}>
+						<li key="profileStatsItem2" style={[styles.statsItem]}>
 							<div style={styles.statsTitle}>
 								<FormattedMessage {...globalMessages.pubs} />
 							</div>
-							<div style={styles.statsCount}><span style={styles.statParenthese}>(</span>{this.props.profileData.pubs.length}<span style={styles.statParenthese}>)</span></div>
+							<div style={styles.statsCount}>
+								<span style={styles.statParenthese}>(</span>
+								{this.props.profileData.pubs.published ? this.props.profileData.pubs.published.length : 0}
+								<span style={styles.statParenthese}>)</span>
+							</div>
 						</li>
+						</Link>
 						
-						<li key="profileStatsItem3" style={[styles.statsItem]} onClick={this.statClick('discussions-section')}>
+						<Link to={'/user/' + this.props.username + '/discussions'} style={globalStyles.link}>
+						<li key="profileStatsItem3" style={[styles.statsItem]}>
 							<div style={styles.statsTitle}>
 								<FormattedMessage {...globalMessages.discussions} />
 							</div>
-							<div style={styles.statsCount}><span style={styles.statParenthese}>(</span>{this.props.profileData.discussions.length}<span style={styles.statParenthese}>)</span></div>
+							<div style={styles.statsCount}>
+								<span style={styles.statParenthese}>(</span>
+								{this.props.profileData.discussions ? this.props.profileData.discussions.length : 0}
+								<span style={styles.statParenthese}>)</span>
+							</div>
 						</li>
+						</Link>
+
+						<Link to={'/user/' + this.props.username + '/groups'} style={globalStyles.link}>
+						<li key="profileStatsItem4" style={[ styles.statsItem, this.props.ownProfile !== 'self' && {display: 'none'} ]}>
+							<div style={styles.statsTitle}>
+								<FormattedMessage {...globalMessages.groups} />
+							</div>
+							<div style={styles.statsCount}>
+								<span style={styles.statParenthese}>(</span>
+								{this.props.profileData.groups ? this.props.profileData.groups.length : 0}
+								<span style={styles.statParenthese}>)</span>
+							</div>
+						</li>
+						</Link>
+
+						<Link to={'/user/' + this.props.username + '/follows'} style={globalStyles.link}>
+						<li key="profileStatsItem5" style={[styles.statsItem]}>
+							<div style={styles.statsTitle}>
+								<FormattedMessage {...globalMessages.follows} />
+							</div>
+							<div style={styles.statsCount}>
+								<span style={styles.statParenthese}>(</span>
+								{(()=>{
+									if (!this.props.profileData.following) {
+										return 0;
+									}
+									const pubCount = this.props.profileData.following.pubs ? this.props.profileData.following.pubs.length : 0;
+									const userCount = this.props.profileData.following.users ? this.props.profileData.following.users.length : 0;
+									const journalCount = this.props.profileData.following.journals ? this.props.profileData.following.journals.length : 0;
+
+									return pubCount + userCount + journalCount;
+								})()}
+								<span style={styles.statParenthese}>)</span>
+							</div>
+						</li>
+						</Link>
 						
 						{/* <li key="profileStatsItem4" style={[styles.statsItem]}>
 							<div style={styles.statsTitle}>Expert Papers</div>
@@ -95,26 +160,27 @@ const UserMain = React.createClass({
 				<div style={styles.profileContent}>
 				
 					<div id={'pubs-section'} style={styles.sectionHeader}>
-						<FormattedMessage {...globalMessages.pubs} />
+						{/* <FormattedMessage {...globalMessages.pubs} /> */}
+						Recent Pubs
 					</div>
-					{(()=>{
-						const outputPubs = [];
-						for (let index = this.props.profileData.pubs.length; index--;) {
-							outputPubs.push(<PubPreview 
+
+					{
+						this.props.profileData.pubs.published && this.props.profileData.pubs.published.slice(0, 5).map((pub, index)=>{
+							return (<PubPreview 
 								key={'pubItem-' + index}
-								pubData={this.props.profileData.pubs[index]}
-								canEdit={this.props.ownProfile === 'self' ? true : false} />);
-						}
-						return outputPubs;
-					})()}
-					{this.props.profileData.pubs.length === 0
+								pubData={pub}
+								canEdit={this.props.ownProfile === 'self' ? true : false} />
+							);
+						})
+					}
+					{this.props.profileData.pubs.published && this.props.profileData.pubs.published.length === 0
 						? <div style={globalStyles.emptyBlock}>
 							<FormattedMessage id="user.noPubs" defaultMessage="No Pubs Yet"/>
 						</div>
 						: null
 					}
 
-					<div id={'discussions-section'} style={styles.sectionHeader}>
+					{/* <div id={'discussions-section'} style={styles.sectionHeader}>
 						<FormattedMessage {...globalMessages.discussions} />
 					</div>
 					{(()=>{
@@ -132,7 +198,7 @@ const UserMain = React.createClass({
 							<FormattedMessage id="user.noDiscussions" defaultMessage="No Discussions Yet"/>
 						</div>
 						: null
-					}
+					} */}
 
 				</div>
 			</div>

@@ -53,19 +53,21 @@ const Discussions = React.createClass({
 			return null;
 		}
 
-		// Check if it's a comment or discussion we're adding.
-		if (this.props.editorCommentMode) {
+		if (this.props.inEditor) {
 			discussionObject.pub = this.props.editorData.getIn(['pubEditData', '_id']);
 			discussionObject.version = 0;
 			discussionObject.selections = this.props.editorData.getIn(['newDiscussionData', 'selections']);
-			// console.log('about to dispatch addComment ', discussionObject, activeSaveID);
-			this.props.dispatch(addComment(discussionObject, activeSaveID));
 		} else {
 			discussionObject.pub = this.props.pubData.getIn(['pubData', '_id']);
 			discussionObject.version = this.props.query.version !== undefined && this.props.query.version > 0 && this.props.query.version < (this.props.pubData.getIn(['pubData', 'history']).size - 1) ? this.props.query.version : this.props.pubData.getIn(['pubData', 'history']).size;
 			discussionObject.selections = this.props.pubData.getIn(['newDiscussionData', 'selections']);
-			// console.log('about to dispatch addDiscussion ', discussionObject, activeSaveID);
-			this.props.dispatch(addDiscussion(discussionObject, activeSaveID));	
+		}
+
+		// Check if it's a comment or discussion we're adding.
+		if (this.props.editorCommentMode) {
+			this.props.dispatch(addComment(discussionObject, activeSaveID));
+		} else {
+			this.props.dispatch(addDiscussion(discussionObject, activeSaveID, this.props.inEditor));	
 		}
 		
 	},
@@ -141,10 +143,10 @@ const Discussions = React.createClass({
 		
 		const discussionsData = this.getDiscussionData();
 		
-		const addDiscussionStatus = this.props.editorCommentMode ? this.props.editorData.get('addDiscussionStatus') : this.props.pubData.get('addDiscussionStatus');
-		const newDiscussionData = this.props.editorCommentMode ? this.props.editorData.get('newDiscussionData') : this.props.pubData.get('newDiscussionData');
-		const activeSaveID = this.props.editorCommentMode ? this.props.editorData.get('activeSaveID') : this.props.pubData.get('activeSaveID');
-		const isPubAuthor = this.props.editorCommentMode ? !this.props.editorData.getIn(['pubEditData', 'isReader']) : this.props.pubData.getIn(['pubData', 'isAuthor']);
+		const addDiscussionStatus = this.props.inEditor ? this.props.editorData.get('addDiscussionStatus') : this.props.pubData.get('addDiscussionStatus');
+		const newDiscussionData = this.props.inEditor ? this.props.editorData.get('newDiscussionData') : this.props.pubData.get('newDiscussionData');
+		const activeSaveID = this.props.inEditor ? this.props.editorData.get('activeSaveID') : this.props.pubData.get('activeSaveID');
+		const isPubAuthor = this.props.inEditor ? !this.props.editorData.getIn(['pubEditData', 'isReader']) : this.props.pubData.getIn(['pubData', 'isAuthor']);
 
 		return (
 			<div style={styles.container}>
@@ -155,17 +157,17 @@ const Discussions = React.createClass({
 						: null
 					}
 					
-					{this.props.metaID
+					{this.props.metaID || (!this.props.editorCommentMode && this.props.inEditor)
 						? null
 						: <DiscussionsInput 
-								addDiscussionHandler={this.addDiscussion}
-								addDiscussionStatus={addDiscussionStatus} 
-								newDiscussionData={newDiscussionData} 
-								userThumbnail={this.props.loginData.getIn(['userData', 'thumbnail'])} 
-								activeSaveID={activeSaveID}
-								saveID={'root'}
-								isReply={false}
-								codeMirrorID={this.props.instanceName + 'rootCommentInput'}/>
+							addDiscussionHandler={this.addDiscussion}
+							addDiscussionStatus={addDiscussionStatus} 
+							newDiscussionData={newDiscussionData} 
+							userThumbnail={this.props.loginData.getIn(['userData', 'thumbnail'])} 
+							activeSaveID={activeSaveID}
+							saveID={'root'}
+							isReply={false}
+							codeMirrorID={this.props.instanceName + 'rootCommentInput'}/>
 					}
 					
 					{
@@ -185,7 +187,7 @@ const Discussions = React.createClass({
 								userThumbnail={this.props.loginData.getIn(['userData', 'thumbnail'])} 
 								handleVoteSubmit={this.discussionVoteSubmit} 
 								handleArchive={this.archiveDiscussion}
-								// noReply={!this.props.editorCommentMode && this.props.inEditor}
+								noReply={!this.props.editorCommentMode && this.props.inEditor}
 								noPermalink={this.props.editorCommentMode}/>
 							);
 						})

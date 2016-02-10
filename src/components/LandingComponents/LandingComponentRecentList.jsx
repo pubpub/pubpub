@@ -54,7 +54,7 @@ const LandingComponentRecentList = React.createClass({
 
 										<div style={styles.pubDetail}>{dateFormat(pub.lastUpdated, 'mm/dd/yy')}</div>
 										<div style={styles.separator}>|</div>
-										<div style={styles.pubDetail}>{pub.discussions ? pub.discussions.length : 0} comments</div>
+										<div style={styles.pubDetail}>{pub.discussions ? pub.discussions.length : 0} comment{pub.discussions && pub.discussions.length === 1 ? '' : 's'}</div>
 
 										<div style={styles.pubAbstract}>
 											{pub.abstract.length > 200 

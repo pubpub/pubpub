@@ -1,6 +1,6 @@
 import React, {PropTypes} from 'react';
 import Radium from 'radium';
-import {LandingComponentBlock, LandingComponentCollectionList, LandingComponentSearch, LandingComponentRecentList} from '../LandingComponents';
+import {LandingComponentBlock, LandingComponentCollectionList, LandingComponentSearch, LandingComponentRecentList, LandingComponentCollectionGallery} from '../LandingComponents';
 // import {globalStyles} from '../../utils/styleConstants';
 
 let styles = {};
@@ -58,6 +58,13 @@ const LandingBody = React.createClass({
 									style={component.style} 
 									collections={this.props.journalData.get('collections').toJS()} 
 									selectCollections={component.collections && component.collections.replace(/ /g, '').split(',')} />
+							);
+						case 'collectionGallery': 
+							return (
+								<LandingComponentCollectionGallery 
+									key={'LandingComponent-' + index}
+									style={component.style} 
+									collections={this.props.journalData.get('collections').toJS()} />
 							);
 						case 'recentList': 
 							return (

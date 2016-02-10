@@ -13,7 +13,7 @@ import isString from 'lodash/lang/isString';
 
 
 const DEFAULT_TAGS = {
-  'html': 'span'
+  'html': 'div'
 };
 
 const DEFAULT_RULES = {

@@ -273,6 +273,9 @@ const PubReader = React.createClass({
 						authors={pubData.history[versionIndex].authors}
 						addSelectionHandler={this.addSelection}
 						style={pubData.history[versionIndex].style}
+
+						styleScoped={pubData.history[versionIndex].styleScoped}
+
 						showPubHighlights={this.props.readerData.get('showPubHighlights')}
 						isFeatured={(pubData.featuredInList && pubData.featuredInList.indexOf(this.props.journalData.getIn(['journalData', '_id'])) > -1) || this.props.journalData.get('baseSubdomain') === null}
 						errorView={pubData.pubErrorView}
@@ -289,7 +292,8 @@ const PubReader = React.createClass({
 						closePubModalHandler={this.closePubModal}
 						closeMenuHandler={this.closeMenu}
 						activeModal={this.props.readerData.get('activeModal')}
-
+						isFeatured={(pubData.featuredInList && pubData.featuredInList.indexOf(this.props.journalData.getIn(['journalData', '_id'])) > -1) || this.props.journalData.get('baseSubdomain') === null}
+						
 						// TOC Props
 						tocData={this.state.TOC}
 						// Cite Props

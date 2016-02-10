@@ -9,6 +9,7 @@ var Reference = require('../models').Reference;
 
 var _         = require('underscore');
 var Firebase  = require('firebase');
+var less      = require('less');
 
 import {fireBaseURL, firebaseTokenGen, generateAuthToken} from '../services/firebase';
 import {sendAddedAsCollaborator} from '../services/emails';
@@ -194,6 +195,9 @@ app.post('/publishPub', function(req, res) {
 				pub.assets = dbAssetsIds;
 				pub.references = dbReferencesIds;
 				pub.style = req.body.newVersion.style;
+				pub.styleRawDesktop = req.body.newVersion.styleRawDesktop;
+				pub.styleRawMobile = req.body.newVersion.styleRawMobile;
+				pub.styleScoped = req.body.newVersion.styleScoped;
 				pub.lastUpdated = publishDate,
 				pub.status = req.body.newVersion.status;
 				pub.history.push({
@@ -208,6 +212,11 @@ app.post('/publishPub', function(req, res) {
 					assets: dbAssetsIds,
 					references: dbReferencesIds,
 					style: req.body.newVersion.style,
+
+					styleRawDesktop: req.body.newVersion.styleRawDesktop,
+					styleRawMobile: req.body.newVersion.styleRawMobile,
+					styleScoped: req.body.newVersion.styleScoped,
+
 					status: req.body.newVersion.status,
 					diffObject: {
 						additions:  diffObject.additions,
@@ -266,7 +275,10 @@ app.post('/updateCollaborators', function(req, res) {
 			} else {
 				canRead.push(collaborator._id);
 				// Update the user's pubs collection so it is removed from their profile
-				User.update({ _id: collaborator._id }, { $pull: { pubs: pubID} }, function(err, result){if(err) return handleError(err)});
+				// User.update({ _id: collaborator._id }, { $pull: { pubs: pubID} }, function(err, result){if(err) return handleError(err)});
+				
+				// Psych! We actually want it on the user's profile - just under the 'canRead' section
+				User.update({ _id: collaborator._id }, { $addToSet: { pubs: pubID} }, function(err, result){if(err) return handleError(err)});
 				Group.update({ _id: collaborator._id }, { $addToSet: { pubs: pubID} }, function(err, result){if(err) return handleError(err)});
 			}
 		});
@@ -384,5 +396,21 @@ app.post('/updatePubData', function(req, res) {
 			return res.status(201).json(req.body.newPubData);
 		});
 
+	});
+});
+
+app.post('/transformStyle', function(req, res) {
+	const importsDesktop = req.body.styleDesktop.match(/(@import.*)/g) || [];
+	const importsMobile = req.body.styleMobile.match(/(@import.*)/g) || [];
+	const styleDesktopClean = req.body.styleDesktop.replace(/(@import.*)/g, '');
+	const styleMobileClean = req.body.styleMobile.replace(/(@import.*)/g, '');
+	
+	const fullString = importsDesktop.join(' ') + ' ' + importsMobile.join(' ') + ' #pubContent{' + styleDesktopClean +'} @media screen and (min-resolution: 3dppx), screen and (max-width: 767px){ #pubContent{' + styleMobileClean + '}}';
+	less.render(fullString, function (err, output) {
+		if (err) {
+			return res.status(500).json('Invalid CSS');
+		}
+		// console.log(output.css);
+		return res.status(201).json(output.css);
 	});
 });

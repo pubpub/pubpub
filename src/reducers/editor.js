@@ -23,6 +23,10 @@ import {
 	UPDATE_PUB_SETTINGS_SUCCESS,
 	UPDATE_PUB_SETTINGS_FAIL,
 
+	SAVE_STYLE_LOAD,
+	SAVE_STYLE_SUCCESS,
+	SAVE_STYLE_FAIL,
+
 	UPDATE_PUB_BACKEND_DATA_LOAD,
 	UPDATE_PUB_BACKEND_DATA_SUCCESS,
 	UPDATE_PUB_BACKEND_DATA_FAIL,
@@ -47,6 +51,14 @@ import {
 
 } from '../actions/editor';
 
+import {
+
+	ADD_DISCUSSION, 
+	ADD_DISCUSSION_SUCCESS, 
+	ADD_DISCUSSION_FAIL,
+
+} from '../actions/pub';
+
 /*--------*/
 // Initialize Default State 
 /*--------*/
@@ -67,6 +79,9 @@ const defaultState = Immutable.Map({
 		assets: {},
 		references: {},
 	},
+	styleSaving: false,
+	styleScoped: null,
+	styleError: null,
 	addDiscussionStatus: 'loaded',
 	activeSaveID: null,
 
@@ -250,6 +265,26 @@ function publishError(state, error) {
 	});
 }
 
+function saveStyleLoad(state) {
+	return state.merge({
+		styleSaving: true,
+	});
+}
+
+function saveStyleSuccess(state, result) {
+	return state.merge({
+		styleSaving: false,
+		styleError: false,
+		styleScoped: result,
+	});
+}
+
+function saveStyleError(state, error) {
+	return state.merge({
+		styleError: error,
+	});
+}
+
 function addSelection(state, selection) {
 	const selectionData = state.getIn(['newDiscussionData', 'selections']);
 	return state.mergeIn(
@@ -295,6 +330,64 @@ function addCommentSuccess(state, result, activeSaveID) {
 			assets: {},
 			references: {},
 		},
+	});
+}
+
+function addCommentFail(state, error, activeSaveID) {
+	console.log(error);
+	return state.merge({
+		addDiscussionStatus: 'error',
+		activeSaveID: activeSaveID,
+	});
+}
+
+function addDiscussionLoad(state, activeSaveID) {
+	return state.merge({
+		addDiscussionStatus: 'loading',
+		activeSaveID: activeSaveID,
+	});
+}
+
+function addDiscussionSuccess(state, result, activeSaveID, inEditor) {
+	if (!inEditor) {return state;}
+	function findParentAndAdd(discussions, parentID, newChild) {
+		discussions.map((discussion)=>{
+			if (discussion._id === parentID) {
+				discussion.children.unshift(result);
+			}
+			if (discussion.children && discussion.children.length) {
+				findParentAndAdd(discussion.children, parentID, newChild);
+			}
+		});
+	}
+
+	let discussionsObject = state.getIn(['pubEditData', 'discussions']);
+	if (!result.parent) {
+		discussionsObject = discussionsObject.unshift(result);
+	} else {
+		// We have a parent, we gotta go find it and then merge inside of it
+		const discussionsArray = discussionsObject.toJS();
+		findParentAndAdd(discussionsArray, result.parent, result);
+		discussionsObject = discussionsArray;
+	}
+	const newState = state.mergeIn(['pubEditData', 'discussions'], discussionsObject);
+
+	return newState.merge({
+		addDiscussionStatus: 'loaded',
+		activeSaveID: null,
+		newDiscussionData: {
+			selections: {},
+			assets: {},
+			references: {},
+		},
+	});
+}
+
+function addDiscussionFail(state, error, activeSaveID) {
+	console.log(error);
+	return state.merge({
+		addDiscussionStatus: 'error',
+		activeSaveID: activeSaveID,
 	});
 }
 
@@ -363,16 +456,11 @@ function archiveComment(state, discussionID) {
 	return state.mergeIn(['pubEditData', 'editorComments'], discussionsArray);
 }
 
-function addCommentFail(state, error, activeSaveID) {
-	console.log(error);
-	return state.merge({
-		addDiscussionStatus: 'error',
-		activeSaveID: activeSaveID,
-	});
-}
-
 // TODO: It seems like this function, if fired after the page nav has occurred, will trigger a state.get is not a function error.
 function updateBackendSuccess(state, result) {
+	if (!state.get('pubEditData').toJS) {
+		return state;
+	}
 	return state.merge({
 		pubEditData: {
 			...state.get('pubEditData').toJS(),
@@ -452,6 +540,13 @@ export default function editorReducer(state = defaultState, action) {
 		return state;
 	case ARCHIVE_COMMENT_FAIL:
 		return state;
+
+	case SAVE_STYLE_LOAD:
+		return saveStyleLoad(state);
+	case SAVE_STYLE_SUCCESS:
+		return saveStyleSuccess(state, action.result);
+	case SAVE_STYLE_FAIL:
+		return saveStyleError(state, action.error);
 		
 	case ADD_COMMENT:
 		return addCommentLoad(state, action.activeSaveID);
@@ -459,6 +554,14 @@ export default function editorReducer(state = defaultState, action) {
 		return addCommentSuccess(state, action.result, action.activeSaveID);
 	case ADD_COMMENT_FAIL:
 		return addCommentFail(state, action.error, action.activeSaveID);
+
+	case ADD_DISCUSSION:
+		return addDiscussionLoad(state, action.activeSaveID);
+	case ADD_DISCUSSION_SUCCESS:
+		return addDiscussionSuccess(state, action.result, action.activeSaveID, action.inEditor);
+	case ADD_DISCUSSION_FAIL:
+		return addDiscussionFail(state, action.error, action.activeSaveID);
+
 	default:
 		return ensureImmutable(state);
 	}

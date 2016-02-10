@@ -10,9 +10,9 @@ import PureRenderMixin from 'react-addons-pure-render-mixin';
 import ReactFireMixin from 'reactfire';
 
 import {Discussions, EditorModals} from '../';
-import {LoaderDeterminate, EditorPluginPopup, EditorTopNav, EditorBottomNav, PubBody} from '../../components';
+import {LoaderDeterminate, EditorPluginPopup, EditorTopNav, EditorBottomNav, EditorStylePane, PubBody} from '../../components';
 import {clearPub} from '../../actions/pub';
-import {getPubEdit, toggleEditorViewMode, toggleFormatting, toggleTOC, unmountEditor, closeModal, openModal, addSelection, setEditorViewMode, publishVersion, updatePubBackendData} from '../../actions/editor';
+import {getPubEdit, toggleEditorViewMode, toggleFormatting, toggleTOC, unmountEditor, closeModal, openModal, addSelection, setEditorViewMode, publishVersion, updatePubBackendData, saveStyle} from '../../actions/editor';
 
 import {debounce} from '../../utils/loadingFunctions';
 import {submitPubToJournal} from '../../actions/journal';
@@ -81,6 +81,7 @@ const Editor = React.createClass({
 			codeMirrorChange: {},
 			editorSaveStatus: 'saved',
 			previewPaneMode: undefined,
+			stylePaneActive: false,
 		};
 	},
 
@@ -105,9 +106,15 @@ const Editor = React.createClass({
 			this.initializeEditorData(nextProps.editorData.getIn(['pubEditData', 'token']));
 		}
 
+		if (this.props.editorData.get('styleScoped') !== nextProps.editorData.get('styleScoped')) {
+			const ref = new Firebase(FireBaseURL + this.props.slug + '/editorData/settings' );
+			ref.update({styleScoped: nextProps.editorData.get('styleScoped')});
+		}
+
 	},
 
 	componentWillUnmount() {
+		debounce('backendSync', this.updatePubBackendData, 0, true)();
 		this.props.dispatch(unmountEditor());
 	},
 
@@ -196,11 +203,14 @@ const Editor = React.createClass({
 	},
 
 	updatePubBackendData: function() {
-		const newPubData = {
-			title: this.state.title,
-			abstract: this.state.abstract,
-		};
-		this.props.dispatch(updatePubBackendData(this.props.slug, newPubData));
+		if (this.state) {
+			const newPubData = {
+				title: this.state.title ? this.state.title : this.props.slug,
+				abstract: this.state.abstract,
+			};
+			this.props.dispatch(updatePubBackendData(this.props.slug, newPubData));	
+		}
+		
 	},
 
 	onEditorChange: function(cm, change) {
@@ -304,6 +314,11 @@ const Editor = React.createClass({
 			assets: this.state.firepadData.assets,
 			references: this.state.firepadData.references,
 			style: this.state.firepadData.settings.pubStyle,
+
+			styleRawDesktop: this.state.firepadData.settings.styleRawDesktop,
+			styleRawMobile: this.state.firepadData.settings.styleRawMobile,
+			styleScoped: this.state.firepadData.settings.styleScoped,
+
 			publishNote: versionDescription,
 		};
 
@@ -378,6 +393,18 @@ const Editor = React.createClass({
 		newSelection.pub = this.props.editorData.getIn(['pubEditData', '_id']);
 		newSelection.version = 0;
 		this.props.dispatch(addSelection(newSelection));
+	},
+
+	toggleStyleMode: function() {
+		this.setState({stylePaneActive: !this.state.stylePaneActive});
+	},
+	saveStyle: function(newStyleStringDesktop, newStyleStringMobile) {
+		const ref = new Firebase(FireBaseURL + this.props.slug + '/editorData/settings' );
+		ref.update({
+			styleRawDesktop: newStyleStringDesktop,
+			styleRawMobile: newStyleStringMobile,
+		});
+		this.props.dispatch(saveStyle(newStyleStringDesktop, newStyleStringMobile));
 	},
 
 	render: function() {
@@ -479,14 +506,9 @@ const Editor = React.createClass({
 									<FormattedMessage {...globalMessages.PublicDiscussion} />
 								</div>
 
-								<div style={[styles.readModeNav, !isReader && styles.readModeNavShow]}>
-									<div style={[styles.bodyNavSeparator, viewMode === 'read' && globalStyles.hidden]}>|</div>
-									<div key={'previewBodyNav2'} style={[styles.bodyNavItem]} onClick={this.toggleReadMode}>
-										{viewMode === 'read'
-											? 'Edit Mode'
-											: 'Read Mode'
-										}
-									</div>
+								<div style={[styles.bodyNavSeparator, styles.bodyNavItemHiddenMobile, viewMode === 'read' && globalStyles.hidden]}>|</div>
+								<div key={'previewBodyNav4'} style={[styles.bodyNavItem, styles.bodyNavItemHiddenMobile, viewMode === 'read' && globalStyles.hidden]} onClick={this.toggleStyleMode}>
+									Style
 								</div>
 								
 							</div>
@@ -505,13 +527,13 @@ const Editor = React.createClass({
 										abstract={this.state.abstract}
 										authorsNote={this.state.authorsNote}
 										minFont={15}
-										htmlTree={this.state.tree}
 										markdown={this.state.markdown}
 										authors={this.getAuthorsArray()}
 										showPubHighlights={this.state.previewPaneMode === 'discussions'}
 										showPubHighlightsComments={this.state.previewPaneMode === 'comments' || viewMode === 'read'}
 										addSelectionHandler={this.addSelection}
 										style={this.state.firepadData && this.state.firepadData.settings ? this.state.firepadData.settings.pubStyle : undefined}
+										styleScoped={this.state.firepadData && this.state.firepadData.settings ? this.state.firepadData.settings.styleScoped : undefined}
 										assetsObject={this.state.assetsObject}
 										referencesObject={this.state.referencesObject}
 										selectionsArray={this.state.selectionsArray}
@@ -535,6 +557,15 @@ const Editor = React.createClass({
 							<div className="commentsRightBar" style={[styles.previewBlockWrapper, (this.state.previewPaneMode === 'comments' || viewMode === 'read') && styles.previewBlockWrapperShow]}>
 								<div style={styles.previewBlockHeader}>
 									<FormattedMessage {...globalMessages.EditorComments} />
+								</div>
+
+								<div style={[styles.readModeNav, !isReader && styles.readModeNavShow]}>
+									<div key={'previewBodyNav2'} style={[styles.readModeButton]} onClick={this.toggleReadMode}>
+										{viewMode === 'read'
+											? '(Switch to Edit Mode)'
+											: '(Switch to Read-Only Mode)'
+										}
+									</div>
 								</div>
 
 								<div style={styles.previewBlockText}>
@@ -563,6 +594,20 @@ const Editor = React.createClass({
 									: null
 								}
 							</div>
+
+						</div>
+
+						{/* ---------------------- */}
+						{/*   Style Editing Block  */}
+						{/* ---------------------- */}
+						<div id="style-editor-wrapper" style={[styles.styleEditor, viewMode === 'preview' && this.state.stylePaneActive && styles.styleEditorShow]}>
+
+							<EditorStylePane 
+								toggleStyleMode={this.toggleStyleMode}
+								saveStyleHandler={this.saveStyle}
+								saveStyleError={this.props.editorData.get('styleError')}
+								defaultDesktop={this.state.firepadData && this.state.firepadData.settings ? this.state.firepadData.settings.styleRawDesktop : undefined}
+								defaultMobile={this.state.firepadData && this.state.firepadData.settings ? this.state.firepadData.settings.styleRawMobile : undefined} />
 
 						</div>
 
@@ -619,6 +664,39 @@ styles = {
 		overflow: 'hidden',
 		pointerEvents: 'none',
 	},
+	styleEditor: {
+		opacity: '0',
+		pointerEvents: 'none',
+		transition: '.1s linear opacity',
+
+		
+		backgroundColor: globalStyles.sideBackground,
+		width: '50%',
+		height: 'calc(100vh - 60px)',
+		position: 'fixed',
+		zIndex: 11,
+		left: 0,
+		top: '61px',
+		overflow: 'hidden',
+	},
+	styleEditorShow: {
+		opacity: '1',
+		pointerEvents: 'auto',
+		overflowY: 'scroll',
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+			overflow: 'hidden',
+		},
+	},
+
+	readModeButton: {
+		padding: '10px 0px',
+		cursor: 'pointer',
+		color: '#888',
+		userSelect: 'none',
+		':hover': {
+			color: 'black',
+		},
+	},
 
 	bodyNavBar: {
 		width: '100%',
@@ -630,6 +708,8 @@ styles = {
 			height: 'calc(' + globalStyles.headerHeightMobile + ' - 1px)',
 		},
 	},
+
+
 	bodyNavItem: {
 		
 		float: 'right',
@@ -762,6 +842,9 @@ styles = {
 		height: 'calc(100vh - 60px - 2*' + globalStyles.headerHeight + ')',
 		overflow: 'hidden',
 		overflowY: 'scroll',
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+			overflow: 'hidden',
+		}
 	},
 	editorPreview: {
 		width: 'calc(50% - 0px)',
@@ -776,7 +859,7 @@ styles = {
 		padding: 0,
 		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
 			width: '100%',
-			transform: 'translateX(0%)',
+			// transform: 'translateX(0%)',
 		},
 	},
 	editorDiscussions: {
@@ -832,7 +915,7 @@ styles = {
 		},
 		editorPreview: {
 			transition: '.352s linear transform',
-			transform: 'translateX(110%)',
+			transform: 'translateX(110%)',	
 			'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
 				transform: 'translateX(0%)',
 			},

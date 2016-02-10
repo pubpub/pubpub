@@ -109,7 +109,23 @@ app.use((req, res) => {
 				)
 				const mainBundle = webpackIsomorphicTools.assets().javascript.main;
 				const head = Helmet.rewind();
-				console.log('journaldata', store.getState().journal.getIn(['journalData', 'randomSlug']));
+				
+				let dynamicStyle;
+				const pathname = store.getState().router.location.pathname;
+				
+				if (pathname.substring(0,5) === '/pub/' && pathname.substring(pathname.length-6, pathname.length) !== '/draft') {
+					// source = store.getState().pub.getIn(['pubData', 'history']);
+					const versionIndex = store.getState().router.location.query.version !== undefined && store.getState().router.location.query.version > 0 && store.getState().router.location.query.version <= (store.getState().pub.getIn(['pubData', 'history']).size - 1)
+						? store.getState().router.location.query.version - 1
+						: store.getState().pub.getIn(['pubData', 'history']).size - 1;
+					dynamicStyle = store.getState().pub.getIn(['pubData', 'history', versionIndex, 'styleScoped']);
+				}
+
+				// if (pathname === '/') {
+					
+				// }
+				
+
 				res.send(`<!doctype html>
 					<html lang="en-us">
 						<head>
@@ -130,6 +146,8 @@ app.use((req, res) => {
 							<link href='/css/print.css' rel='stylesheet' type='text/css' />
 							<link href='/css/highlightdefault.css' rel='stylesheet' type='text/css' />
 							<link href='/css/react-select.min.css' rel='stylesheet' type='text/css' />
+							<link href='/css/basePub.css' rel='stylesheet' type='text/css' />
+							<style id="dynamicStyle">${dynamicStyle}</style>
 
 							<link href='https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.9.0/addon/hint/show-hint.css' rel='stylesheet' type='text/css' />
 							<!-- We could dynamically load these in Editor.jsx
@@ -150,9 +168,7 @@ app.use((req, res) => {
 							<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.1.0/highlight.min.js"></script>
 							<script src="/js/typo.js"></script>
 							<script src="/js/spellcheck.js"></script>
-							<style id="dynamicStyle">
-
-							</style>
+							
 						</head>
 
 						<body style="width: 100%; margin: 0;">

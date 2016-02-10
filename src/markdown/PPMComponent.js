@@ -143,11 +143,11 @@ const PPMComponent = React.createClass({
 		case 'p':
 			// if (children[0] === null){ return null; }
 			props.className = 'p-block';
-			props['data-hash'] = murmur.v2(children[0]);
+			props['data-hash'] = children[0] ? murmur.v2(children[0]) : 0;
 			Component = 'div';
 			break;
 		case 'li':
-			props['data-hash'] = murmur.v2(children[0]);
+			props['data-hash'] = children[0] ? murmur.v2(children[0]) : 0;
 			break;
 
 		}
@@ -159,25 +159,22 @@ const PPMComponent = React.createClass({
 		for (const member in this.globals) delete this.globals[member];
 
 		return (
-			<div>
-				<MDReactComponent
-					text={this.props.markdown}
-					onIterate={this.handleIterate.bind(this, this.globals)}
-					markdownOptions={{
-						typographer: true,
-						linkify: true,
-					}}
-					plugins={[
-						abbr,
-						emoji,
-						sub,
-						sup,
-						{plugin: mathIt, args: [MathOptions]},
-						{plugin: container, args: ['blank', {validate: ()=>{return true;}}]},
-						ppm
-					]} />
-			</div>
-			
+			<MDReactComponent
+				text={this.props.markdown}
+				onIterate={this.handleIterate.bind(this, this.globals)}
+				markdownOptions={{
+					typographer: true,
+					linkify: true,
+				}}
+				plugins={[
+					abbr,
+					emoji,
+					sub,
+					sup,
+					{plugin: mathIt, args: [MathOptions]},
+					{plugin: container, args: ['blank', {validate: ()=>{return true;}}]},
+					ppm
+				]} />
 		);
 	}
 });

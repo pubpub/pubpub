@@ -6,7 +6,7 @@ import { Link } from 'react-router';
 import { pushState } from 'redux-router';
 import {logout, follow, unfollow, toggleVisibility} from '../../actions/login';
 import {getProfile, updateUser, userNavOut, userNavIn} from '../../actions/user';
-import {ImageCropper, LoaderDeterminate, UserMain, UserSettings} from '../../components';
+import {ImageCropper, LoaderDeterminate, UserMain, UserSettings, UserPubs, UserGroups, UserFollows, UserDiscussions} from '../../components';
 import {globalStyles, profileStyles, navStyles} from '../../utils/styleConstants';
 
 import {globalMessages} from '../../utils/globalMessages';
@@ -116,6 +116,41 @@ const Profile = React.createClass({
 					<div style={[globalStyles.hiddenUntilLoad, globalStyles[this.props.profileData.get('status')]]}>
 						<ul style={navStyles.navList}>
 
+							{ /* ************** */ }
+							{ /* Left Align Nav */ }
+							{ /* ************** */ }
+							<Link to={'/user/' + this.props.username + '/pubs'} style={globalStyles.link}>
+							<li key="profileNavLeft0"style={[navStyles.navItem, navStyles.left, navStyles.navItemShow, navStyles.noMobile]}>
+								<FormattedMessage {...globalMessages.pubs} />
+							</li>
+							</Link>
+							<li style={[navStyles.navSeparator, navStyles.left, navStyles.navItemShow, navStyles.noMobile]}></li>
+							
+							<Link to={'/user/' + this.props.username + '/discussions'} style={globalStyles.link}>
+							<li key="profileNavLeft1"style={[navStyles.navItem, navStyles.left, navStyles.navItemShow, navStyles.noMobile]}>
+								<FormattedMessage {...globalMessages.discussions} />
+							</li>
+							</Link>
+							<li style={[navStyles.navSeparator, navStyles.left, navStyles.navItemShow, navStyles.noMobile]}></li>
+							
+
+							<Link to={'/user/' + this.props.username + '/groups'} style={globalStyles.link}>
+							<li key="profileNavLeft2"style={[navStyles.navItem, navStyles.left, ownProfile === 'self' && navStyles.navItemShow, navStyles.noMobile]}>
+								<FormattedMessage {...globalMessages.groups} />
+							</li>
+							</Link>
+							<li style={[navStyles.navSeparator, navStyles.left, ownProfile === 'self' && navStyles.navItemShow, navStyles.noMobile]}></li>
+
+							<Link to={'/user/' + this.props.username + '/follows'} style={globalStyles.link}>
+							<li key="profileNavLeft3"style={[navStyles.navItem, navStyles.left, navStyles.navItemShow, navStyles.noMobile]}>
+								<FormattedMessage {...globalMessages.follows} />
+							</li>
+							</Link>
+							<li style={[navStyles.navSeparator, navStyles.left, navStyles.navItemShow, navStyles.noMobile]}></li>
+
+							{ /* *************** */ }
+							{ /* Right Align Nav */ }
+							{ /* *************** */ }
 							<li key="profileNav0"style={[navStyles.navItem, ownProfile === 'self' && navStyles.navItemShow]} onClick={this.submitLogout}>
 								<FormattedMessage {...globalMessages.Logout} />
 							</li>
@@ -167,6 +202,30 @@ const Profile = React.createClass({
 
 							{(() => {
 								switch (this.props.mode) {
+								case 'discussions':
+									return (
+										<UserDiscussions 
+											profileData={profileData}
+											ownProfile={ownProfile}/>
+									);
+								case 'follows':
+									return (
+										<UserFollows 
+											profileData={profileData}
+											ownProfile={ownProfile}/>
+									);
+								case 'groups':
+									return (
+										<UserGroups 
+											profileData={profileData}
+											ownProfile={ownProfile}/>
+									);
+								case 'pubs':
+									return (
+										<UserPubs 
+											profileData={profileData}
+											ownProfile={ownProfile} />
+									);
 								case 'settings':
 									return (
 										<UserSettings 
@@ -178,7 +237,8 @@ const Profile = React.createClass({
 									return (
 										<UserMain 
 											profileData={profileData}
-											ownProfile={ownProfile}/>
+											ownProfile={ownProfile}
+											username={this.props.username}/>
 									);
 								}
 							})()}

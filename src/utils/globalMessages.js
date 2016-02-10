@@ -9,6 +9,10 @@ export const globalMessages = defineMessages({
 		id: 'global.register',
 		defaultMessage: 'Register',
 	},
+	groups: {
+		id: 'global.groups',
+		defaultMessage: 'Groups',
+	},
 	Logout: {
 		id: 'global.Logout',
 		defaultMessage: 'Logout',
@@ -52,6 +56,10 @@ export const globalMessages = defineMessages({
 	following: {
 		id: 'global.following',
 		defaultMessage: 'Following',
+	},
+	follows: {
+		id: 'global.follows',
+		defaultMessage: 'Follows',
 	},
 	design: {
 		id: 'global.Design',
@@ -366,8 +374,20 @@ export const globalMessages = defineMessages({
 		id: 'global.print',
 		defaultMessage: 'Print',
 	},
-	published: {
-		id: 'global.published',
+	Published: {
+		id: 'global.Published',
+		defaultMessage: 'Published',
+	},
+	Unpublished: {
+		id: 'global.Unpublished',
+		defaultMessage: 'Unpublished',
+	},
+	readOnly: {
+		id: 'global.readOnly',
+		defaultMessage: 'Read-Only',
+	},
+	publishedOn: {
+		id: 'global.publishedOn',
 		defaultMessage: 'Published on',
 	},
 	firstPublished: {
@@ -380,7 +400,7 @@ export const globalMessages = defineMessages({
 	},
 	inviteReviewers: {
 		id: 'global.inviteReviewers',
-		defaultMessage: 'Invite Reviewers',
+		defaultMessage: 'Request Peer Review',
 	},
 	turnHighlights: {
 		id: 'global.turnHighlights',
@@ -410,6 +430,9 @@ export const globalMessages = defineMessages({
 		id: 'discussionPlaceholder',
 		defaultMessage: 'Add discussion or feedback'
 	},
-	
+	People: {
+		id: 'People',
+		defaultMessage: 'People'
+	},
 	
 });

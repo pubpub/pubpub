@@ -19,7 +19,7 @@ const EditorModalPublish = React.createClass({
 
 	getInitialState() {
 		return {
-			versionState: 'Draft',
+			versionState: 'Published',
 			versionDescription: '',
 			isPublishing: false,
 			descriptionError: false,
@@ -38,7 +38,7 @@ const EditorModalPublish = React.createClass({
 	handlePublish: function() {
 		if (this.state.versionDescription) {
 			this.setState({isPublishing: true, descriptionError: false});
-			this.props.handlePublish(this.state.versionState, this.state.versionDescription);	
+			this.props.handlePublish(this.state.versionDescription);	
 		} else {
 			this.setState({descriptionError: true});
 		}

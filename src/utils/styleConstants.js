@@ -74,7 +74,7 @@ export const profileStyles = {
 	},
 	profileWrapper: {
 		maxWidth: 1024,
-		margin: '0 auto',
+		margin: '0 auto 0 auto',
 		overflow: 'hidden',
 		backgroundColor: 'white',
 		boxShadow: '0px 0px 4px 0px rgba(0,0,0,0.4)',
@@ -105,6 +105,7 @@ export const navStyles = {
 		float: 'right',
 		display: 'none',
 		color: globalStyles.sideText,
+		userSelect: 'none',
 		':hover': {
 			cursor: 'pointer',
 			color: globalStyles.sideHover,
@@ -116,6 +117,12 @@ export const navStyles = {
 			textAlign: 'center',
 			fontSize: '20px'
 		},
+	},
+	left: {
+		float: 'left',
+	},
+	right: {
+		float: 'right',
 	},
 	navSeparator: {
 		width: 1,
@@ -132,7 +139,7 @@ export const navStyles = {
 	navItemShow: {
 		display: 'block',
 	},
-	navSeparatorNoMobile: {
+	noMobile: {
 		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
 			display: 'none',
 		},
