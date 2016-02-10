@@ -1,9 +1,8 @@
 import React, {PropTypes} from 'react';
 import Radium from 'radium';
-import {globalStyles} from '../../utils/styleConstants';
-
-import {globalMessages} from '../../utils/globalMessages';
-import {FormattedMessage} from 'react-intl';
+// import {globalStyles} from '../../utils/styleConstants';
+// import {globalMessages} from '../../utils/globalMessages';
+// import {FormattedMessage} from 'react-intl';
 
 let styles = {};
 

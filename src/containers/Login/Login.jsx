@@ -22,7 +22,7 @@ const Login = React.createClass({
 	getInitialState: function() {
 		return {
 			userImageFile: null,
-			userImageURL: 'http://res.cloudinary.com/pubpub/image/upload/c_limit,h_50,w_50/v1448145108/yedqa0ks1s6bvgysv6on.png',
+			userImageURL: 'https://res.cloudinary.com/pubpub/image/upload/c_limit,h_50,w_50/v1448145108/yedqa0ks1s6bvgysv6on.png',
 		};
 	},
 
