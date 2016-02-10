@@ -82,7 +82,7 @@ export function codeMirrorStyles(loginData, parentClass) {
 			pointerEvents: 'none',
 		},
 		'.CodeMirror-cursor': {
-			borderLeft: '3px solid ' + editorStyles.cursorColor,
+			borderLeft: parentClass ? '1px solid ' + editorStyles.cursorColor : '3px solid ' + editorStyles.cursorColor,
 		},
 		'.CodeMirror .cm-spell-error': {
 			borderBottom: '1px dotted red',
