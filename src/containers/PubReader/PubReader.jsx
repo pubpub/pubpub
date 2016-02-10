@@ -69,7 +69,7 @@ const PubReader = React.createClass({
 
 		this.setState({
 			inputMD: inputMD,
-			assetsObject: assets, 
+			assetsObject: assets,
 			referencesObject: references,
 			selectionsArray: selections,
 			TOC: toc,
@@ -95,7 +95,7 @@ const PubReader = React.createClass({
 
 			this.setState({
 				inputMD: inputMD,
-				assetsObject: assets, 
+				assetsObject: assets,
 				referencesObject: references,
 				selectionsArray: selections,
 				TOC: toc,
@@ -186,7 +186,7 @@ const PubReader = React.createClass({
 			const srcRegex = /{{image:.*(source=([^\s,]*)).*}}/;
 			const match = srcRegex.exec(pubData.history[versionIndex].markdown);
 			const refName = match ? match[2] : undefined;
-			
+
 			let leadImage = '';
 			for (let index = pubData.history[versionIndex].assets.length; index--;) {
 				if (pubData.history[versionIndex].assets[index].refName === refName) {
@@ -197,12 +197,12 @@ const PubReader = React.createClass({
 
 			metaData.meta.push({property: 'og:image', content: leadImage});
 			metaData.meta.push({name: 'twitter:image', content: leadImage});
-			
+
 		} else {
 			metaData.title = 'PubPub - ' + this.props.slug;
 		}
 
-		
+
 		// console.log(this.state.htmlTree);
 		// console.log(pubData);
 		return (
@@ -303,32 +303,37 @@ const PubReader = React.createClass({
 						featuredIn={pubData.featuredIn}
 						submittedTo={pubData.submittedTo}
 						// Reviews Data
-						reviewsData={pubData.reviews} 
-						
-						// Discussions Data						
+						reviewsData={pubData.reviews}
+
+						// Discussions Data
 						toggleHighlightsHandler={this.toggleHighlights}
-						showPubHighlights={this.props.readerData.get('showPubHighlights')}/> 
-						
+						showPubHighlights={this.props.readerData.get('showPubHighlights')}/>
+
 
 				</div>
 
 				<div className="rightBar" style={[styles.rightBar, globalStyles[this.props.readerData.get('status')], pubData.markdown === undefined && {display: 'none'}]}>
 
-					<div style={rightBarStyles.sectionHeader}><FormattedMessage {...globalMessages.discussion}/></div>
-					<div style={rightBarStyles.sectionSubHeader}>
-						<div>
-							<Link to={'/pub/' + this.props.slug + '/invite'} style={globalStyles.link}><span key={'discussionButton2'} style={rightBarStyles.sectionSubHeaderSpan}>
-								<FormattedMessage {...globalMessages.inviteReviewers}/>
-							</span></Link>
-							<span style={styles.optionSeparator}>|</span>
-							<span style={styles.option} key={'discussions-highlight-toggle'} onClick={this.toggleHighlights}>
-								<FormattedMessage {...globalMessages.turnHighlights}/>
-								{' '}
-								{this.props.readerData.get('showPubHighlights')
-									? <FormattedMessage {...globalMessages.off}/> 
-									: <FormattedMessage {...globalMessages.on}/> }
+					<div style={rightBarStyles.sectionHeader}>
+
+						<FormattedMessage {...globalMessages.discussion}/>
+
+							<span style={[rightBarStyles.sectionSubHeader, rightBarStyles.sectionSubHeaderInline]}>
+								<span>
+									<Link to={'/pub/' + this.props.slug + '/invite'} style={globalStyles.link}><span key={'discussionButton2'} style={rightBarStyles.sectionSubHeaderSpan}>
+										<FormattedMessage {...globalMessages.inviteReviewers}/>
+									</span></Link>
+									<span style={styles.optionSeparator}>|</span>
+									<span style={styles.option} key={'discussions-highlight-toggle'} onClick={this.toggleHighlights}>
+										<FormattedMessage {...globalMessages.turnHighlights}/>
+										{' '}
+										{this.props.readerData.get('showPubHighlights')
+											? <FormattedMessage {...globalMessages.off}/>
+											: <FormattedMessage {...globalMessages.on}/> }
+										</span>
 								</span>
-						</div>
+							</span>
+
 					</div>
 
 					<Discussions editorCommentMode={false} />
