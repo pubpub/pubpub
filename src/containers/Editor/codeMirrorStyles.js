@@ -75,13 +75,14 @@ export function codeMirrorStyles(loginData) {
 			fontFamily: editorStyles.fontFamily,
 			padding: '0px 20px',
 			width: 'calc(100% - 40px)',
+			lineHeight: '1.75',
 			// fontFamily: 'Alegreya',
 		},
 		'.CodeMirror-cursors': {
 			pointerEvents: 'none',
 		},
 		'.CodeMirror-cursor': {
-			borderLeft: '1px solid ' + editorStyles.cursorColor,
+			borderLeft: '3px solid ' + editorStyles.cursorColor,
 		},
 		'.CodeMirror .cm-spell-error': {
 			borderBottom: '1px dotted red',
@@ -122,6 +123,7 @@ export function codeMirrorStyles(loginData) {
 			cursor: 'pointer',
 			borderRadius: '2px',
 			color: '#555',
+			fontFamily: 'Courier',
 		},
 		'.cm-ppm-pagebreak': {
 			color: editorStyles.colorPagebreak,
