@@ -1,5 +1,7 @@
 // CodeMirror styles function can be
 // used to dynamically change font, size, color, etc
+import Plugins from '../../components/EditorPlugins/index';
+
 export function codeMirrorStyles(loginData) {
 	const editorFont = loginData ? loginData.getIn(['userData', 'settings', 'editorFont']) : undefined;
 	const editorFontSize = loginData ? loginData.getIn(['userData', 'settings', 'editorFontSize']) : undefined;
@@ -67,7 +69,19 @@ export function codeMirrorStyles(loginData) {
 		break;
 	}
 
+	const pluginStyles = {};
+
+	for (const pluginKey in Plugins) {
+		if (Plugins.hasOwnProperty(pluginKey)) {
+			const plugin = Plugins[pluginKey];
+			if (plugin.Config.color) {
+				pluginStyles[`.cm-plugin-${pluginKey}`] = { backgroundColor: plugin.Config.color };
+			}
+		}
+	}
+
 	return {
+		...pluginStyles,
 		'.CodeMirror': {
 			backgroundColor: 'transparent',
 			fontSize: editorStyles.fontSize,
