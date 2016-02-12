@@ -2,7 +2,7 @@
 // used to dynamically change font, size, color, etc
 import Plugins from '../../components/EditorPlugins/index';
 
-export function codeMirrorStyles(loginData) {
+export function codeMirrorStyles(loginData, parentClass) {
 	const editorFont = loginData ? loginData.getIn(['userData', 'settings', 'editorFont']) : undefined;
 	const editorFontSize = loginData ? loginData.getIn(['userData', 'settings', 'editorFontSize']) : undefined;
 	const editorColor = loginData ? loginData.getIn(['userData', 'settings', 'editorColor']) : undefined;
@@ -80,7 +80,7 @@ export function codeMirrorStyles(loginData) {
 		}
 	}
 
-	return {
+	const output = {
 		...pluginStyles,
 		'.CodeMirror': {
 			backgroundColor: 'transparent',
@@ -96,7 +96,7 @@ export function codeMirrorStyles(loginData) {
 			pointerEvents: 'none',
 		},
 		'.CodeMirror-cursor': {
-			borderLeft: '3px solid ' + editorStyles.cursorColor,
+			borderLeft: parentClass ? '1px solid ' + editorStyles.cursorColor : '3px solid ' + editorStyles.cursorColor,
 		},
 		'.CodeMirror .cm-spell-error': {
 			borderBottom: '1px dotted red',
@@ -153,6 +153,17 @@ export function codeMirrorStyles(loginData) {
 			backgroundColor: 'rgba(233, 201, 153, 0.5);',
 		},
 	};
+
+	if (parentClass) {
+		for (const key in output) {
+			if (output.hasOwnProperty(key)) {
+				output[parentClass + ' ' + key] = output[key];
+				delete output[key];
+			}
+		}
+	}
+
+	return output;
 }
 
 export const codeMirrorStyleClasses = {
