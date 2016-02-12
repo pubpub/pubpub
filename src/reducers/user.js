@@ -102,9 +102,10 @@ function updateUserFail(state, error) {
 }
 
 function userNavOut(state) {
-	return state.merge({
-		status: 'loading',
-	});
+	// return state.merge({
+	// 	status: 'loading',
+	// });
+	return defaultState;
 }
 
 function userNavIn(state) {
