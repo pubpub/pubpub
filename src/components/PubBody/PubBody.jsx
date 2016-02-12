@@ -157,14 +157,12 @@ const PubBody = React.createClass({
 	findFootnotes: function(markdown) {
 		const footnoteRegex = /\[\[footnote:.*?\]\]/g;
 		const matches = markdown.match(footnoteRegex);
-		console.log(matches);
 		const footnotes = matches.map((match) => parsePluginString(match).footnote);
 		return footnotes;
 
 	},
 
 	scrollToReference: function(index) {
-		console.log(`footnote-${index}`);
 		document.getElementById(`footnote-${index}`).scrollIntoView();
 	},
 
