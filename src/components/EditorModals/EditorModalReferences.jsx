@@ -176,7 +176,7 @@ const EditorModalReferences = React.createClass({
 					
 				</div> */}
 
-				<div key="refAdvancedText" style={baseStyles.rightCornerAction} onClick={this.toggleShowAddOptions}>
+				<div key="refAdvancedText" style={[baseStyles.rightCornerAction, styles.addOptions, styles.addOptions[!this.state.showAddOptions]]} onClick={this.toggleShowAddOptions}>
 					<FormattedMessage id="editor.addReference" defaultMessage="Add Reference"/>
 				</div>
 
