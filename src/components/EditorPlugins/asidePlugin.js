@@ -9,7 +9,7 @@ let styles = {};
 
 
 const AsideInputFields = [
-	{title: 'aside', type: 'text', params: {placeholder: 'Aside you want to share.'}},
+	{title: 'aside', type: 'textArea', params: {placeholder: 'Aside you want to share.'}},
 	{title: 'placement', type: 'radio', params: {choices: ['bottom', 'right']}},
 	{title: 'reference', type: 'reference'},
 ];
@@ -79,13 +79,13 @@ const AsidePlugin = React.createClass({
 		if (this.props.placement && this.props.placement === 'right') {
 			contentElem = (<div ref="aside" style={styles.asideBox(this.state.hover || this.state.clicked)}
 					onMouseOver={this.mouseOver} onMouseOut={this.mouseOut}>
-					<span style={styles.asideCount(this.state.hover)}>^{count}</span>.&nbsp;{this.props.aside}
+					<span style={styles.asideCount(this.state.hover)}>{count}</span>.&nbsp;{this.props.aside}
 			</div>);
 		} else {
 			contentElem = (<Portal portalId={`asidePortal${count}`} ref="portal">
 			<div ref="aside" style={styles.aside(this.state.hover || this.state.clicked)}
 					onMouseOver={this.mouseOver} onMouseOut={this.mouseOut}>
-					<span style={styles.asideCount(this.state.hover)}>^{count}</span>.&nbsp;{this.props.aside}
+					<span style={styles.asideCount(this.state.hover)}>{count}</span>.&nbsp;{this.props.aside}
 			</div>
 			</Portal>);
 		}

@@ -6,12 +6,14 @@ import referenceField from './referenceField';
 import urlField from './urlField';
 
 import baseTextField from './baseTextField';
+import baseTextAreaField from './baseTextAreaField';
 import baseRadioField from './baseRadioField';
 
 export default {
 	'asset': assetField,
 	'selection': selectionField,
 	'text': baseTextField,
+	'textArea': baseTextAreaField,
 	'align': alignField,
 	'size': sizeField,
 	'reference': referenceField,
