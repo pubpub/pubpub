@@ -1,53 +1,12 @@
 import React, {PropTypes} from 'react';
 import ReactDOM from 'react-dom';
-import ErrorMsg from './ErrorPlugin';
-import {Reference} from '../';
+// import ErrorMsg from './ErrorPlugin';
+// import {Reference} from '../';
 import createPubPubPlugin from './PubPub';
+import Portal from './_parentPortal.js';
 
 let styles = {};
 
-function getParentByClassName(node, classname) {
-	let parent;
-	if (node === null || classname === '') return null;
-	parent = node.parentNode;
-	// const className = classname.toUpperCase();
-
-	while (parent) {
-		if (parent.className.indexOf(classname) !== -1) {
-			return parent;
-		}
-		parent = parent.parentNode;
-	}
-
-	return parent;
-}
-
-
-const Portal = React.createClass({
-	propTypes: {
-		children: PropTypes.string,
-	},
-	render: () => null,
-	portalElement: null,
-	parentNode: null,
-	mountOnNode(node) {
-		let portal = this.props.portalId && document.getElementById(this.props.portalId);
-		this.parentNode = node;
-		if (!portal) {
-			portal = document.createElement('div');
-			portal.id = this.props.portalId;
-			node.appendChild(portal);
-		}
-		this.portalElement = portal;
-		this.componentDidUpdate();
-	},
-	componentWillUnmount() {
-		document.body.removeChild(this.portalElement);
-	},
-	componentDidUpdate() {
-		React.render(<div {...this.props}>{this.props.children}</div>, this.portalElement);
-	}
-});
 
 const AsideInputFields = [
 	{title: 'aside', type: 'text', params: {placeholder: 'Aside you want to share.'}},
@@ -75,6 +34,7 @@ const AsideConfig = {
 const AsidePlugin = React.createClass({
 	propTypes: {
 		reference: PropTypes.object,
+		aside: PropTypes.string,
 		placement: PropTypes.string,
 		children: PropTypes.string,
 		error: PropTypes.string,
@@ -104,12 +64,15 @@ const AsidePlugin = React.createClass({
 	componentDidMount: function() {
 		if (!this.props.placement || this.props.placement === 'aside') {
 			const node = ReactDOM.findDOMNode(this);
-			const pNode = getParentByClassName(node, 'p-block');
-			this.refs.portal.mountOnNode(pNode);
+			this.refs.portal.mountOnNode(node);
 		}
 	},
 	render: function() {
 		const count = (this.props.count) ? this.props.count : 0;
+
+		if (this.props.error) {
+			return <span/>;
+		}
 
 		let contentElem;
 
