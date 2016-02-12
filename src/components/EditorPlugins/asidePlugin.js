@@ -135,7 +135,7 @@ styles = {
 			// left: '5vw',
 			// marginLeft: '-5vw',
 			// width: '100px',
-			padding: '0px 3px 0px 10px',
+			padding: '5px 3px 10px 10px',
 		};
 	},
 	ref: function(highlight) {
