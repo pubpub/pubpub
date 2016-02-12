@@ -50,7 +50,6 @@ const FootnotePlugin = React.createClass({
 	mouseOver: function(evt) {
 		// flip the hover if the element is past the half way point
 		const flipped = ((evt.pageX / document.body.clientWidth) > 0.5);
-		console.log(flipped);
 		// this.hoverTimeout = setTimeout(this.startHover.bind(this), 100);
 		this.setState({hover: true, flipped: flipped});
 	},
