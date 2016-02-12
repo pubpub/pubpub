@@ -232,18 +232,22 @@ const PubBody = React.createClass({
 
 						</div>
 
-						<div id={'pub-footnotes'}>
-								<h2>Footnotes</h2>
+						{(footnotes.length > 0) ?
+							<div id={'pub-footnotes'}>
+								<h2 style={styles.footnoteHeader}>Footnotes</h2>
 								{
 									footnotes.map((footnote, index)=>{
 										return (
 											<div key={'footnote-' + index} onClick={this.scrollToReference.bind(this, index + 1)} >
-												<span style={styles.footerNumber}>{index + 1}. {footnote}</span>
+												<span style={styles.footNote}>{index + 1}. {footnote}</span>
 											</div>
 										);
 									})
 								}
-						</div>
+							</div>
+						: null
+						}
+
 						{this.props.references && this.props.references.length
 							? <div id={'pub-references'}>
 								<h1><FormattedMessage {...globalMessages.references}/></h1>
@@ -311,11 +315,15 @@ styles = {
 		paddingRight: '10px',
 		fontSize: '1em',
 	},
-	footerNumber: {
+	footNote: {
 		color: '#222',
 		paddingRight: '10px',
 		fontSize: '0.75em',
 		cursor: 'pointer',
+	},
+	footnoteHeader: {
+		marginBottom: '0px',
+		paddingBottom: '0px',
 	},
 	submittedNotification: {
 		backgroundColor: '#373737',

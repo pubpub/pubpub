@@ -42,16 +42,20 @@ const FootnotePlugin = React.createClass({
 	getInitialState: function() {
 		return {
 			hover: false,
-			clicked: false
+			clicked: false,
+			flipped: false,
 			// expanded: false
 		};
 	},
-	mouseOver: function() {
+	mouseOver: function(evt) {
+		// flip the hover if the element is past the half way point
+		const flipped = ((evt.pageX / document.body.clientWidth) > 0.5);
+		console.log(flipped);
 		// this.hoverTimeout = setTimeout(this.startHover.bind(this), 100);
-		this.setState({hover: true});
+		this.setState({hover: true, flipped: flipped});
 	},
 	mouseOut: function() {
-		this.setState({hover: false});
+		this.setState({hover: false, flipped: false});
 	},
 	scrollToAside: function() {
 		const asideNode = ReactDOM.findDOMNode(this.refs.aside);
@@ -71,7 +75,7 @@ const FootnotePlugin = React.createClass({
 		let contentElem;
 
 		if (placement === 'hover') {
-			contentElem = (<div ref="aside" style={styles.hoverNote(this.state.hover)}
+			contentElem = (<div ref="aside" style={styles.hoverNote(this.state.hover, this.state.flipped)}
 					onMouseOver={this.mouseOver} onMouseOut={this.mouseOut}>
 					<span style={styles.count(this.state.hover)}>{count}</span>.&nbsp;{this.props.footnote}
 			</div>);
@@ -127,10 +131,11 @@ styles = {
 			padding: '0px 3px 0px 3px'
 		};
 	},
-	hoverNote: function(hover) {
+	hoverNote: function(hover, flipped) {
 		return {
 			display: (hover) ? 'inline-block' : 'none',
 			position: 'absolute',
+			marginLeft: (flipped) ? '-15vw' : '0vw',
 			fontSize: '11px',
 			boxShadow: '0px 0px 5px rgba(0,0,0,0.7)',
 			padding: '10px',
