@@ -14,6 +14,7 @@ const CiteConfig = {
 	title: 'cite',
 	inline: true,
 	autocomplete: true,
+	color: 'rgba(245, 245, 169, 0.5)',
 	prerender: function(globals, pluginProps) {
 		if (!globals.citationCount) {
 			globals.citationCount = 1;

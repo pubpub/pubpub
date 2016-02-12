@@ -143,23 +143,11 @@ export function codeMirrorStyles(loginData) {
 			color: editorStyles.colorPagebreak,
 			fontSize: '16px',
 		},
-		'.cm-plugin-image': {
-			backgroundColor: 'rgba(185, 215, 249, 0.5)',
-		},
-		'.cm-plugin-video': {
-			backgroundColor: 'rgba(158, 219, 176, 0.5)',
-		},
 		'.cm-plugin-audio': {
 			backgroundColor: 'rgba(233, 201, 153, 0.5)',
 		},
 		'.cm-plugin-table': {
 			backgroundColor: 'rgba(211, 172, 223, 0.5)',
-		},
-		'.cm-plugin-cite': {
-			backgroundColor: 'rgba(245, 245, 169, 0.5)',
-		},
-		'.cm-plugin-quote': {
-			backgroundColor: 'rgba(245, 245, 169, 0.5)',
 		},
 		'.cm-plugin-iframe': {
 			backgroundColor: 'rgba(233, 201, 153, 0.5);',

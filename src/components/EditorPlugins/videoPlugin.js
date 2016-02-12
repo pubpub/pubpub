@@ -15,7 +15,8 @@ const VideoInputFields = [
 const VideoConfig = {
 	title: 'video',
 	inline: true,
-	autocomplete: true
+	autocomplete: true,
+	color: 'rgba(158, 219, 176, 0.5)',
 };
 
 let styles = {};

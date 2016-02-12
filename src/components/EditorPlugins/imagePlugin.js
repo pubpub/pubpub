@@ -15,7 +15,8 @@ const ImageInputFields = [
 const ImageConfig = {
 	title: 'image',
 	inline: true,
-	autocomplete: true
+	autocomplete: true,
+	color: 'rgba(185, 215, 249, 0.5)',
 };
 
 // let styles = {};

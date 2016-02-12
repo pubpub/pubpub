@@ -14,7 +14,8 @@ const QuoteInputFields = [
 const QuoteConfig = {
 	title: 'quote',
 	inline: true,
-	autocomplete: true
+	autocomplete: true,
+	color: 'rgba(245, 245, 169, 0.5)',
 };
 
 let styles = {};
