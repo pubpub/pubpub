@@ -3,14 +3,13 @@ import ReactDOM from 'react-dom';
 // import ErrorMsg from './ErrorPlugin';
 // import {Reference} from '../';
 import createPubPubPlugin from './PubPub';
-import Portal from './_parentPortal.js';
 
 let styles = {};
 
 
 const FootnoteInputFields = [
 	{title: 'footnote', type: 'textArea', params: {placeholder: 'Footnote you want to share.'}},
-	{title: 'placement', type: 'radio', params: {choices: ['bottom', 'right']}},
+	{title: 'type', type: 'radio', params: {choices: ['hover', 'side']}},
 	{title: 'reference', type: 'reference'},
 ];
 
@@ -35,7 +34,7 @@ const FootnotePlugin = React.createClass({
 	propTypes: {
 		reference: PropTypes.object,
 		footnote: PropTypes.string,
-		placement: PropTypes.string,
+		type: PropTypes.string,
 		children: PropTypes.string,
 		error: PropTypes.string,
 		count: PropTypes.number
@@ -61,14 +60,9 @@ const FootnotePlugin = React.createClass({
 			asideNode.scrollIntoViewIfNeeded({block: 'start', behavior: 'smooth'});
 		}
 	},
-	componentDidMount: function() {
-		if (!this.props.placement || this.props.placement === 'bottom') {
-			const node = ReactDOM.findDOMNode(this);
-			this.refs.portal.mountOnNode(node);
-		}
-	},
 	render: function() {
 		const count = (this.props.count) ? this.props.count : 0;
+		const placement = (this.props.type) ? this.props.type : 'hover';
 
 		if (this.props.error) {
 			return <span/>;
@@ -76,24 +70,24 @@ const FootnotePlugin = React.createClass({
 
 		let contentElem;
 
-		if (this.props.placement && this.props.placement === 'right') {
-			contentElem = (<div ref="aside" style={styles.asideBox(this.state.hover || this.state.clicked)}
+		console.log(placement);
+
+		if (placement === 'hover') {
+			contentElem = (<div ref="aside" style={styles.hoverNote(this.state.hover)}
 					onMouseOver={this.mouseOver} onMouseOut={this.mouseOut}>
 					<span style={styles.count(this.state.hover)}>{count}</span>.&nbsp;{this.props.footnote}
 			</div>);
 		} else {
-			contentElem = (<Portal portalId={`asidePortal${count}`} ref="portal">
-			<div ref="aside" style={styles.aside(this.state.hover || this.state.clicked)}
+			contentElem = (<div ref="aside" style={styles.asideBox(this.state.hover)}
 					onMouseOver={this.mouseOver} onMouseOut={this.mouseOut}>
 					<span style={styles.count(this.state.hover)}>{count}</span>.&nbsp;{this.props.footnote}
-			</div>
-			</Portal>);
+			</div>);
 		}
 
 		return (
 			<span>
 				<sup style={styles.ref(this.state.hover || this.state.clicked)} ref="ref"
-				onClick={this.scrollToAside} onMouseOver={this.mouseOver} onMouseOut={this.mouseOut}>
+				onMouseOver={this.mouseOver} onMouseOut={this.mouseOut}>
 					{count}
 				</sup>
 				{contentElem}
@@ -105,37 +99,26 @@ const FootnotePlugin = React.createClass({
 styles = {
 	asideBox: function(highlight) {
 		return {
-			width: '100px',
 			fontSize: '0.65em',
-			backgroundColor: 'white',
 			float: 'right',
-			border: '#D8D8D8 dashed 1px',
+			border: (!highlight) ? '#D8D8D8 dashed 1px' : 'white dashed 1px',
+			backgroundColor: (highlight) ? 'rgba(245, 238, 185, 0.6)' : 'white',
 			position: 'relative',
 			left: '3vw',
 			marginLeft: '-2.5vw',
 			marginTop: '20px',
 			marginBottom: '20px',
 			// width: '100px',
-			padding: '1em 3px 1em 3px',
+			padding: '3px 3px 3px 5px',
 			lineHeight: '1.3em',
+			width: '10vw',
+			minWidth: '125px',
+			maxWidth: '300px',
 		};
 	},
 	count: function(highlight) {
 		return {
 			fontWeight: (highlight) ? '700' : '400',
-		};
-	},
-	aside: function(highlight) {
-		// float: 'right',
-		// border: '#D8D8D8 solid 1px'
-		return {
-			fontSize: '0.75em',
-			backgroundColor: (highlight) ? 'rgba(245, 238, 185, 0.6)' : 'white',
-			// position: 'relative',
-			// left: '5vw',
-			// marginLeft: '-5vw',
-			// width: '100px',
-			padding: '5px 3px 10px 10px',
 		};
 	},
 	ref: function(highlight) {
@@ -146,8 +129,21 @@ styles = {
 			padding: '0px 3px 0px 3px'
 		};
 	},
+	hoverNote: function(hover) {
+		return {
+			display: (hover) ? 'inline-block' : 'none',
+			position: 'absolute',
+			fontSize: '11px',
+			boxShadow: '0px 0px 5px rgba(0,0,0,0.7)',
+			padding: '10px',
+			transform: 'translateY(20px)',
+			width: '15vw',
+			minWidth: '100px',
+			maxWidth: '400px',
+			zIndex: 1000
+		};
+	},
 
 };
-
 
 export default createPubPubPlugin(FootnotePlugin, FootnoteConfig, FootnoteInputFields);
