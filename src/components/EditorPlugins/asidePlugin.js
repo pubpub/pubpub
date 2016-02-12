@@ -22,10 +22,10 @@ function getParentByClassName(node, classname) {
 	return parent;
 }
 
+
 const Portal = React.createClass({
 	propTypes: {
-		portalId: PropTypes.string,
-		children: PropTypes.any,
+		children: PropTypes.string,
 	},
 	render: () => null,
 	portalElement: null,
@@ -51,6 +51,7 @@ const Portal = React.createClass({
 
 const AsideInputFields = [
 	{title: 'aside', type: 'text', params: {placeholder: 'Aside you want to share.'}},
+	{title: 'placement', type: 'radio', params: {choices: ['bottom', 'right']}},
 	{title: 'reference', type: 'reference'},
 ];
 
@@ -74,7 +75,7 @@ const AsideConfig = {
 const AsidePlugin = React.createClass({
 	propTypes: {
 		reference: PropTypes.object,
-		aside: PropTypes.string,
+		placement: PropTypes.string,
 		children: PropTypes.string,
 		error: PropTypes.string,
 		count: PropTypes.number
@@ -101,12 +102,30 @@ const AsidePlugin = React.createClass({
 		}
 	},
 	componentDidMount: function() {
-		const node = ReactDOM.findDOMNode(this);
-		const pNode = getParentByClassName(node, 'p-block');
-		this.refs.portal.mountOnNode(pNode);
+		if (!this.props.placement || this.props.placement === 'aside') {
+			const node = ReactDOM.findDOMNode(this);
+			const pNode = getParentByClassName(node, 'p-block');
+			this.refs.portal.mountOnNode(pNode);
+		}
 	},
 	render: function() {
 		const count = (this.props.count) ? this.props.count : 0;
+
+		let contentElem;
+
+		if (this.props.placement && this.props.placement === 'right') {
+			contentElem = (<div ref="aside" style={styles.asideBox(this.state.hover || this.state.clicked)}
+					onMouseOver={this.mouseOver} onMouseOut={this.mouseOut}>
+					<span style={styles.asideCount(this.state.hover)}>^{count}</span>.&nbsp;{this.props.aside}
+			</div>);
+		} else {
+			contentElem = (<Portal portalId={`asidePortal${count}`} ref="portal">
+			<div ref="aside" style={styles.aside(this.state.hover || this.state.clicked)}
+					onMouseOver={this.mouseOver} onMouseOut={this.mouseOut}>
+					<span style={styles.asideCount(this.state.hover)}>^{count}</span>.&nbsp;{this.props.aside}
+			</div>
+			</Portal>);
+		}
 
 		return (
 			<span>
@@ -114,18 +133,35 @@ const AsidePlugin = React.createClass({
 				onClick={this.scrollToAside} onMouseOver={this.mouseOver} onMouseOut={this.mouseOut}>
 					^{count}
 				</sup>
-				<Portal portalId={`asidePortal${count}`} ref="portal">
-				<div ref="aside" style={styles.aside(this.state.hover || this.state.clicked)}
-						onClick={this.scrollToAside} onMouseOver={this.mouseOver} onMouseOut={this.mouseOut}>
-					^{count}.&nbsp;{this.props.aside}
-				</div>
-				</Portal>
+				{contentElem}
 			</span>
 		);
 	}
 });
 
 styles = {
+	asideBox: function(highlight) {
+		return {
+			width: '100px',
+			fontSize: '0.65em',
+			backgroundColor: 'white',
+			float: 'right',
+			border: '#D8D8D8 dashed 1px',
+			position: 'relative',
+			left: '3vw',
+			marginLeft: '-2.5vw',
+			marginTop: '20px',
+			marginBottom: '20px',
+			// width: '100px',
+			padding: '1em 3px 1em 3px',
+			lineHeight: '1.3em',
+		};
+	},
+	asideCount: function(highlight) {
+		return {
+			fontWeight: (highlight) ? '700' : '400',
+		};
+	},
 	aside: function(highlight) {
 		// float: 'right',
 		// border: '#D8D8D8 solid 1px'
@@ -137,7 +173,6 @@ styles = {
 			// marginLeft: '-5vw',
 			// width: '100px',
 			padding: '0px 3px 0px 10px',
-			cursor: 'pointer',
 		};
 	},
 	ref: function(highlight) {

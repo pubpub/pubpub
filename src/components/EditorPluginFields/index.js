@@ -6,7 +6,7 @@ import referenceField from './referenceField';
 import urlField from './urlField';
 
 import baseTextField from './baseTextField';
-// import baseRadioField from './baseRadioField';
+import baseRadioField from './baseRadioField';
 
 export default {
 	'asset': assetField,
@@ -15,7 +15,9 @@ export default {
 	'align': alignField,
 	'size': sizeField,
 	'reference': referenceField,
-	'url': urlField
+	'url': urlField,
+	'radio': baseRadioField
+
 	// 'size' : (radio with small, medium, large and %),
 	// 'align' : (radio with left, right and full)
 	// 'caption' : (text field)
