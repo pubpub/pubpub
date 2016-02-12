@@ -12,6 +12,8 @@ import dateFormat from 'dateformat';
 import {License} from '../';
 
 import {globalMessages} from '../../utils/globalMessages';
+import {parsePluginString} from '../../utils/parsePlugins';
+
 import {FormattedMessage} from 'react-intl';
 
 import PPMComponent from '../../markdown/PPMComponent';
@@ -29,7 +31,7 @@ const PubBody = React.createClass({
 		authors: PropTypes.array,
 		addSelectionHandler: PropTypes.func,
 		style: PropTypes.object,
-		
+
 		styleScoped: PropTypes.string,
 
 		showPubHighlights: PropTypes.bool,
@@ -152,7 +154,24 @@ const PubBody = React.createClass({
 	//     console.timeEnd("dbsave");
 	// });
 
+	findFootnotes: function(markdown) {
+		const footnoteRegex = /\[\[footnote:.*?\]\]/g;
+		const matches = markdown.match(footnoteRegex);
+		console.log(matches);
+		const footnotes = matches.map((match) => parsePluginString(match).footnote);
+		return footnotes;
+
+	},
+
+	scrollToReference: function(index) {
+		console.log(`footnote-${index}`);
+		document.getElementById(`footnote-${index}`).scrollIntoView();
+	},
+
 	render: function() {
+
+		const footnotes = (this.props.markdown) ? this.findFootnotes(this.props.markdown) : [];
+
 		return (
 			<ResizingText fontRatio={60} minFont={this.props.minFont}>
 
@@ -202,10 +221,10 @@ const PubBody = React.createClass({
 						<div id={'pub-header-divider'}></div>
 
 						<div id="pubBodyContent"> {/* Highlights are dependent on the id 'pubBodyContent' */}
-							<PPMComponent 
-								assets={this.props.assetsObject} 
-								references={this.props.referencesObject} 
-								selections={this.props.selectionsArray} 
+							<PPMComponent
+								assets={this.props.assetsObject}
+								references={this.props.referencesObject}
+								selections={this.props.selectionsArray}
 								markdown={this.props.markdown} />
 
 							{this.props.addSelectionHandler
@@ -215,6 +234,18 @@ const PubBody = React.createClass({
 
 						</div>
 
+						<div id={'pub-footnotes'}>
+								<h2>Footnotes</h2>
+								{
+									footnotes.map((footnote, index)=>{
+										return (
+											<div key={'footnote-' + index} onClick={this.scrollToReference.bind(this, index + 1)} >
+												<span style={styles.footerNumber}>{index + 1}. {footnote}</span>
+											</div>
+										);
+									})
+								}
+						</div>
 						{this.props.references && this.props.references.length
 							? <div id={'pub-references'}>
 								<h1><FormattedMessage {...globalMessages.references}/></h1>
@@ -281,6 +312,12 @@ styles = {
 		color: '#222',
 		paddingRight: '10px',
 		fontSize: '1em',
+	},
+	footerNumber: {
+		color: '#222',
+		paddingRight: '10px',
+		fontSize: '0.75em',
+		cursor: 'pointer',
 	},
 	submittedNotification: {
 		backgroundColor: '#373737',

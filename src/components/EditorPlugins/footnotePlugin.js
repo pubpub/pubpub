@@ -70,8 +70,6 @@ const FootnotePlugin = React.createClass({
 
 		let contentElem;
 
-		console.log(placement);
-
 		if (placement === 'hover') {
 			contentElem = (<div ref="aside" style={styles.hoverNote(this.state.hover)}
 					onMouseOver={this.mouseOver} onMouseOut={this.mouseOut}>
@@ -86,7 +84,7 @@ const FootnotePlugin = React.createClass({
 
 		return (
 			<span>
-				<sup style={styles.ref(this.state.hover || this.state.clicked)} ref="ref"
+				<sup id={`footnote-${count}`} style={styles.ref(this.state.hover || this.state.clicked)} ref="ref"
 				onMouseOver={this.mouseOver} onMouseOut={this.mouseOut}>
 					{count}
 				</sup>
@@ -140,7 +138,8 @@ styles = {
 			width: '15vw',
 			minWidth: '100px',
 			maxWidth: '400px',
-			zIndex: 1000
+			zIndex: 1000,
+			backgroundColor: 'white',
 		};
 	},
 
