@@ -8,14 +8,14 @@ import Portal from './_parentPortal.js';
 let styles = {};
 
 
-const AsideInputFields = [
-	{title: 'aside', type: 'textArea', params: {placeholder: 'Aside you want to share.'}},
+const FootnoteInputFields = [
+	{title: 'footnote', type: 'textArea', params: {placeholder: 'Footnote you want to share.'}},
 	{title: 'placement', type: 'radio', params: {choices: ['bottom', 'right']}},
 	{title: 'reference', type: 'reference'},
 ];
 
-const AsideConfig = {
-	title: 'aside',
+const FootnoteConfig = {
+	title: 'footnote',
 	inline: true,
 	autocomplete: true,
 	color: 'rgba(245, 245, 169, 0.5)',
@@ -31,10 +31,10 @@ const AsideConfig = {
 };
 
 
-const AsidePlugin = React.createClass({
+const FootnotePlugin = React.createClass({
 	propTypes: {
 		reference: PropTypes.object,
-		aside: PropTypes.string,
+		footnote: PropTypes.string,
 		placement: PropTypes.string,
 		children: PropTypes.string,
 		error: PropTypes.string,
@@ -62,7 +62,7 @@ const AsidePlugin = React.createClass({
 		}
 	},
 	componentDidMount: function() {
-		if (!this.props.placement || this.props.placement === 'aside') {
+		if (!this.props.placement || this.props.placement === 'right') {
 			const node = ReactDOM.findDOMNode(this);
 			this.refs.portal.mountOnNode(node);
 		}
@@ -79,13 +79,13 @@ const AsidePlugin = React.createClass({
 		if (this.props.placement && this.props.placement === 'right') {
 			contentElem = (<div ref="aside" style={styles.asideBox(this.state.hover || this.state.clicked)}
 					onMouseOver={this.mouseOver} onMouseOut={this.mouseOut}>
-					<span style={styles.asideCount(this.state.hover)}>{count}</span>.&nbsp;{this.props.aside}
+					<span style={styles.count(this.state.hover)}>{count}</span>.&nbsp;{this.props.footnote}
 			</div>);
 		} else {
 			contentElem = (<Portal portalId={`asidePortal${count}`} ref="portal">
 			<div ref="aside" style={styles.aside(this.state.hover || this.state.clicked)}
 					onMouseOver={this.mouseOver} onMouseOut={this.mouseOut}>
-					<span style={styles.asideCount(this.state.hover)}>{count}</span>.&nbsp;{this.props.aside}
+					<span style={styles.count(this.state.hover)}>{count}</span>.&nbsp;{this.props.footnote}
 			</div>
 			</Portal>);
 		}
@@ -120,7 +120,7 @@ styles = {
 			lineHeight: '1.3em',
 		};
 	},
-	asideCount: function(highlight) {
+	count: function(highlight) {
 		return {
 			fontWeight: (highlight) ? '700' : '400',
 		};
@@ -149,4 +149,4 @@ styles = {
 };
 
 
-export default createPubPubPlugin(AsidePlugin, AsideConfig, AsideInputFields);
+export default createPubPubPlugin(FootnotePlugin, FootnoteConfig, FootnoteInputFields);
