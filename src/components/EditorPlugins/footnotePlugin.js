@@ -62,7 +62,7 @@ const FootnotePlugin = React.createClass({
 		}
 	},
 	componentDidMount: function() {
-		if (!this.props.placement || this.props.placement === 'right') {
+		if (!this.props.placement || this.props.placement === 'bottom') {
 			const node = ReactDOM.findDOMNode(this);
 			this.refs.portal.mountOnNode(node);
 		}
@@ -94,7 +94,7 @@ const FootnotePlugin = React.createClass({
 			<span>
 				<sup style={styles.ref(this.state.hover || this.state.clicked)} ref="ref"
 				onClick={this.scrollToAside} onMouseOver={this.mouseOver} onMouseOut={this.mouseOut}>
-					^{count}
+					{count}
 				</sup>
 				{contentElem}
 			</span>
@@ -143,6 +143,7 @@ styles = {
 			fontWeight: '700',
 			backgroundColor: (highlight) ? 'rgba(245, 238, 185, 0.6)' : 'white',
 			cursor: 'pointer',
+			padding: '0px 3px 0px 3px'
 		};
 	},
 
