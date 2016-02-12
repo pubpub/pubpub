@@ -70,7 +70,7 @@
 #pubContent .p-block {
 	font-family: 'Lora';
 	padding: 0.5em 0em;
-	color: #565656;
+	color: #333;
 }
 #pubContent .codeBlock {
 	background-color: #f0f0f0;
@@ -94,7 +94,7 @@
 #pubContent ul, #pubContent ol {
 	font-family: 'Lora';
 	padding: 0px 3em 0px 3em;
-	color: #565656;
+	color: #333;
 }
 #pubContent span + li + span + li {
 	padding-top: 0.7em
