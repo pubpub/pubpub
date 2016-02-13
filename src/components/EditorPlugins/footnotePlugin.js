@@ -142,7 +142,7 @@ styles = {
 			width: '15vw',
 			minWidth: '100px',
 			maxWidth: '400px',
-			zIndex: 1000,
+			zIndex: 50,
 			backgroundColor: 'white',
 		};
 	},
