@@ -28,6 +28,13 @@ notificationSchema.statics.getNotifications = function (user,callback) {
 
   this.find({'recipient':user})
   .sort({'createDate': -1})
+  .populate([ 
+    {path: "pub", select:"title slug"},
+    {path: "sender", select:"name firstName lastName username thumbnail"},
+    {path: "recipient", select:"name firstName lastName username thumbnail"},
+    {path: "discussion", select:"version"},
+  ])
+  .lean()
   .exec(function(err, notifications) {
       if (err) callback(err);
       callback(null,notifications);
@@ -38,6 +45,10 @@ notificationSchema.statics.getNotifications = function (user,callback) {
 notificationSchema.statics.createNotification = function(type, sender, recipient, pub, discussion) {
   var date = new Date().getTime();
 
+  if (sender.toString() === recipient.toString()) {
+    return;
+  }
+  
   const validTypes = [
     'discussion/repliedTo',
     'discussion/pubComment',
