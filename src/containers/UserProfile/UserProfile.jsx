@@ -6,7 +6,7 @@ import { Link } from 'react-router';
 import { pushState } from 'redux-router';
 import {logout, follow, unfollow, toggleVisibility} from '../../actions/login';
 import {getProfile, updateUser, userNavOut, userNavIn} from '../../actions/user';
-import {ImageCropper, LoaderDeterminate, UserMain, UserSettings, UserPubs, UserGroups, UserFollows, UserDiscussions} from '../../components';
+import {ImageCropper, LoaderDeterminate, UserSettings, UserPubs, UserGroups, UserFollows, UserDiscussions} from '../../components';
 import {globalStyles, profileStyles, navStyles} from '../../utils/styleConstants';
 
 import {globalMessages} from '../../utils/globalMessages';
@@ -119,7 +119,7 @@ const Profile = React.createClass({
 							{ /* ************** */ }
 							{ /* Left Align Nav */ }
 							{ /* ************** */ }
-							<Link to={'/user/' + this.props.username + '/pubs'} style={globalStyles.link}>
+							{/* <Link to={'/user/' + this.props.username + '/pubs'} style={globalStyles.link}>
 							<li key="profileNavLeft0"style={[navStyles.navItem, navStyles.left, navStyles.navItemShow, navStyles.noMobile]}>
 								<FormattedMessage {...globalMessages.pubs} />
 							</li>
@@ -146,7 +146,7 @@ const Profile = React.createClass({
 								<FormattedMessage {...globalMessages.follows} />
 							</li>
 							</Link>
-							<li style={[navStyles.navSeparator, navStyles.left, navStyles.navItemShow, navStyles.noMobile]}></li>
+							<li style={[navStyles.navSeparator, navStyles.left, navStyles.navItemShow, navStyles.noMobile]}></li> */}
 
 							{ /* *************** */ }
 							{ /* Right Align Nav */ }
@@ -186,8 +186,7 @@ const Profile = React.createClass({
 
 						{/* Content Wrapper is the right-hand side of the profile page.
 							Everything except the image really */}
-						<div style={styles.contentWrapper}>
-
+						<div style={[styles.contentWrapper, globalStyles[this.props.profileData.get('status')]]}>
 
 							{/* User Details */}
 							<div style={styles.profileNameWrapper}>
@@ -195,10 +194,46 @@ const Profile = React.createClass({
 									<span style={styles.profileName} key={'userProfileName'}>{profileData.name}</span>
 								</Link>
 								{this.props.mode
-									? <span style={styles.headerMode}>{': '}<FormattedMessage {...globalMessages[this.props.mode]} /></span>
+									? null // <span style={styles.headerMode}>{': '}<FormattedMessage {...globalMessages[this.props.mode]} /></span>
 									: null
 								}
 							</div>
+
+							<p style={styles.profileDetail}>{profileData.title}</p>
+							{/* <p style={styles.profileDetail}>Verfied with Twitter</p> */}
+							<p style={styles.profileDetail}>{profileData.bio}</p>
+
+							<ul style={[navStyles.navList, styles.subNav]}>
+								<Link to={'/user/' + this.props.username + '/pubs'} style={globalStyles.link}>
+								<li key="profileNavLeft0"style={[navStyles.navItem, navStyles.left, navStyles.navItemShow, styles.noLeftPadding, styles.inactiveNav, (!this.props.mode || this.props.mode === 'pubs') && styles.activeNav]}>
+									<FormattedMessage {...globalMessages.pubs} />
+								</li>
+								</Link>
+								<li style={[navStyles.navSeparator, navStyles.left, navStyles.navItemShow, navStyles.noMobile]}></li>
+								
+								<Link to={'/user/' + this.props.username + '/discussions'} style={globalStyles.link}>
+								<li key="profileNavLeft1"style={[navStyles.navItem, navStyles.left, navStyles.navItemShow, styles.inactiveNav, this.props.mode === 'discussions' && styles.activeNav]}>
+									<FormattedMessage {...globalMessages.discussions} />
+								</li>
+								</Link>
+								<li style={[navStyles.navSeparator, navStyles.left, navStyles.navItemShow, navStyles.noMobile]}></li>
+								
+
+								<Link to={'/user/' + this.props.username + '/groups'} style={globalStyles.link}>
+								<li key="profileNavLeft2"style={[navStyles.navItem, navStyles.left, ownProfile === 'self' && navStyles.navItemShow, styles.inactiveNav, this.props.mode === 'groups' && styles.activeNav]}>
+									<FormattedMessage {...globalMessages.groups} />
+								</li>
+								</Link>
+								<li style={[navStyles.navSeparator, navStyles.left, ownProfile === 'self' && navStyles.navItemShow, navStyles.noMobile]}></li>
+
+								<Link to={'/user/' + this.props.username + '/follows'} style={globalStyles.link}>
+								<li key="profileNavLeft3"style={[navStyles.navItem, navStyles.left, navStyles.navItemShow, styles.inactiveNav, this.props.mode === 'follows' && styles.activeNav]}>
+									<FormattedMessage {...globalMessages.follows} />
+								</li>
+								</Link>
+								<li style={[navStyles.navSeparator, navStyles.left, navStyles.navItemShow, navStyles.noMobile]}></li>
+								<li style={globalStyles.clearFix}></li>
+							</ul>
 
 							{(() => {
 								switch (this.props.mode) {
@@ -235,11 +270,16 @@ const Profile = React.createClass({
 									);
 								default:
 									return (
-										<UserMain 
+										<UserPubs 
 											profileData={profileData}
-											ownProfile={ownProfile}
-											username={this.props.username}/>
+											ownProfile={ownProfile} />
 									);
+									// return (
+									// 	<UserMain 
+									// 		profileData={profileData}
+									// 		ownProfile={ownProfile}
+									// 		username={this.props.username}/>
+									// );
 								}
 							})()}
 							
@@ -271,6 +311,36 @@ export default connect( state => {
 })( Radium(Profile) );
 
 styles = {
+	profileDetail: {
+		margin: '4px 0px',
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+			textAlign: 'center',
+			fontSize: '20px',
+		},
+	},
+	subNav: {
+		margin: '35px 0px 0px 0px',
+		fontSize: '20px',
+		borderBottom: '1px solid #CCC',
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+			height: 'auto',
+			borderTop: '1px solid #CCC',
+		},
+	},
+	noLeftPadding: {
+		padding: '0px 20px 0px 2px',
+	},
+	inactiveNav: {
+		color: '#bbb',
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+			width: 'calc(100% / 3)',
+			height: 60,
+			margin: '20px 0px',
+		},
+	},
+	activeNav: {
+		color: '#333',
+	},
 	userImageWrapper: {
 		margin: 30,
 		width: 150,

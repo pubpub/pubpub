@@ -68,14 +68,20 @@ export default Radium(UserDiscussions);
 
 styles = {
 	subNav: {
-		margin: '10px 0px',
-		borderBottom: '1px solid #CCC',
+		// margin: '10px 0px',
+		// borderBottom: '1px solid #CCC',
+		fontSize: '15px',
+		margin: '0px 0px 35px 0px',
+
 	},
 	noLeftPadding: {
 		padding: '0px 20px 0px 2px',
 	},
 	inactiveNav: {
 		color: '#bbb',
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+			fontSize: '15px',
+		}
 	},
 	activeNav: {
 		color: '#333',
