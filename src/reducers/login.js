@@ -168,6 +168,9 @@ function unfollowSuccess(state, result) {
 }
 
 function setNotificationsRead(state) {
+	if (!state.get('loggedIn')) {
+		return state;
+	}
 	return state.mergeIn(['userData', 'notificationCount'], 0);
 }
 

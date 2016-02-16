@@ -180,7 +180,8 @@ app.get('/loadJournalAndLogin', function(req,res){
 				if (err) { console.log(err); }
 				languageObject = JSON.parse(data);
 
-				Notification.getUnreadCount(req.user._id, function(err, notificationCount) {
+				const userID = req.user ? req.user._id : undefined;
+				Notification.getUnreadCount(userID, function(err, notificationCount) {
 					const loginData = req.user 
 						? {
 							name: req.user.name,

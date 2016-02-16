@@ -92,7 +92,10 @@ const Profile = React.createClass({
 		}
 	},
 	setNotificationsRead: function() {
-		this.props.dispatch(setNotificationsRead(this.props.profileData.getIn(['profileData', '_id'])));
+		if (this.ownProfile() === 'self') {
+			this.props.dispatch(setNotificationsRead(this.props.profileData.getIn(['profileData', '_id'])));	
+		}
+		
 	},
 
 	render: function() {

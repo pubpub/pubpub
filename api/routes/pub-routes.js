@@ -194,9 +194,9 @@ app.post('/publishPub', function(req, res) {
 			User.findOne({_id: authorID}, {'followers':1}).lean().exec(function (err, author) {
 				author && author.followers.map((follower)=>{
 					if (isNewPub) {
-						Notification.createNotification('followers/newPub', author, follower, pub._id);
+						Notification.createNotification('followers/newPub', req.body.host, author, follower, pub._id);
 					} else {
-						Notification.createNotification('followers/newVersion', author, follower, pub._id);
+						Notification.createNotification('followers/newVersion', req.body.host, author, follower, pub._id);
 					}
 				});	
 			});

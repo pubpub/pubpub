@@ -2,6 +2,7 @@ var _         = require('underscore');
 var mongoose  = require('mongoose');
 var Schema    =  mongoose.Schema;
 var ObjectId  = Schema.Types.ObjectId;
+var Journal = require('../models').Journal;
 
 var notificationSchema = new Schema({
   type: { type: String },
@@ -10,6 +11,8 @@ var notificationSchema = new Schema({
   emailSent: { type: Boolean },
 
   pub: { type: ObjectId, ref: 'Pub' },
+  sourceHost: { type: String },
+  sourceJournal: { type: ObjectId, ref: 'Journal' },
   discussion: { type: ObjectId, ref: 'Discussion' },
   sender: { type: ObjectId, ref: 'User' },
   recipient: { type: ObjectId, ref: 'User', required: true, index: true },
@@ -47,7 +50,7 @@ notificationSchema.statics.getUnreadCount = function(user, callback) {
   return;
 }
 
-notificationSchema.statics.getNotifications = function (user,callback) {
+notificationSchema.statics.getNotifications = function (user, callback) {
 
   this.find({'recipient':user})
   .sort({'createDate': -1})
@@ -65,7 +68,7 @@ notificationSchema.statics.getNotifications = function (user,callback) {
   return;
 };
 
-notificationSchema.statics.createNotification = function(type, sender, recipient, pub, discussion) {
+notificationSchema.statics.createNotification = function(type, sourceHost, sender, recipient, pub, discussion) {
   var date = new Date().getTime();
 
   if (sender.toString() === recipient.toString()) {
@@ -85,24 +88,31 @@ notificationSchema.statics.createNotification = function(type, sender, recipient
     console.log('Invalid type: ' + type);
     return;
   }
+
+  Journal.findOne({ $or:[ {'subdomain':sourceHost.split('.')[0]}, {'customDomain':sourceHost}]}, {'_id': 1}).lean().exec(function(err, journal){
+    var sourceJournal = journal ? journal._id : undefined;
+
+    var notification = new Notification({
+      type: type,
+      createDate: date,    
+      read: false,
+      emailSent: false,
+
+      pub: pub,
+      sourceHost: sourceHost,
+      sourceJournal: sourceJournal,
+      discussion: discussion,
+      sender: sender,
+      recipient: recipient,
+    });
+
+    notification.save(function (err, notification) {
+      if (err) { console.log(err); }
+      //console.log(notification);
+      return;
+    });
+  });
   
-  var notification = new Notification({
-    type: type,
-    createDate: date,    
-    read: false,
-    emailSent: false,
-
-    pub: pub,
-    discussion: discussion,
-    sender: sender,
-    recipient: recipient,
-  });
-
-  notification.save(function (err, notification) {
-    if (err) { console.log(err); }
-    //console.log(notification);
-    return;
-  });
 }
 
 

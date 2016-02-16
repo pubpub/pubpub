@@ -59,7 +59,11 @@ const UserNotifications = React.createClass({
 				}
 				{this.props.profileData.notifications && this.props.profileData.notifications.length === 0
 					? <div style={globalStyles.emptyBlock}>
-						<FormattedMessage id="user.noNotifications" defaultMessage="No Notifications"/>
+						{this.props.ownProfile === 'self'
+							? <FormattedMessage id="user.noNotifications" defaultMessage="No Notifications"/>
+							: <FormattedMessage id="user.mustBeLoggedInNotifications" defaultMessage="Must be logged in to view notifications"/>
+						}
+						
 					</div>
 					: null
 				}

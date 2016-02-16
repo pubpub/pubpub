@@ -95,7 +95,7 @@ app.post('/follow', function(req, res) {
 		Pub.update({ _id: req.body.followedID }, { $addToSet: { followers: userID} }, function(err, result){if(err) return handleError(err)});
 		Pub.findOne({_id: req.body.followedID}, {'authors':1}).lean().exec(function (err, pub) {
 			pub.authors.map((author)=>{
-				Notification.createNotification('follows/followedPub', userID, author._id);
+				Notification.createNotification('follows/followedPub', req.body.host, userID, author._id);
 			});
 		});
 		return res.status(201).json(req.body);
@@ -103,7 +103,7 @@ app.post('/follow', function(req, res) {
 	case 'users':
 		User.update({ _id: userID }, { $addToSet: { 'following.users': req.body.followedID} }, function(err, result){if(err) return handleError(err)});
 		User.update({ _id: req.body.followedID }, { $addToSet: { followers: userID} }, function(err, result){if(err) return handleError(err)});
-		Notification.createNotification('follows/followedYou', userID, req.body.followedID);
+		Notification.createNotification('follows/followedYou', req.body.host, userID, req.body.followedID);
 		return res.status(201).json(req.body);
 
 	case 'journals':
@@ -191,12 +191,18 @@ app.post('/inviteReviewers', function(req, res) {
 });
 
 app.post('/setNotificationsRead', function(req, res) {
+	if (!req.user) {
+		return res.status(201).json(false);
+	}
+	
 	if (req.user._id && String(req.user._id) !== String(req.body.userID) ) {
 		console.log('userIDs do not match');
-		return;
+		return res.status(201).json(false);
 	}
 
 	Notification.setRead({recipient: req.body.userID}, ()=>{});
+	Notification.setSent({recipient: req.body.userID}, ()=>{});
+	return res.status(201).json(true)
 
 });
 

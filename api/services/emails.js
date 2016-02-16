@@ -85,3 +85,56 @@ export function sendAddedAsCollaborator(email, url, senderName, pubTitle, groupN
 
 	sendgrid.send(emailObject, callback);
 };
+
+export function sendNotificationDigest(notifications, email, username, callback) {
+	const rootHost = process.env.NODE_ENV !== 'production' ? 'http://localhost:3000' : 'http://www.pubpub.org';
+
+	const text = 'You have ' + notifications.length + ' new notifications. Visit: ' + rootHost + '/user/' + username + '/notifications to view.';
+	let html = '<div style="padding: 10px 0px">You have ' + notifications.length + ' new notification' + (notifications.length === 1 ? '' : 's') + '. <a href="' + rootHost + '/user/' + username + '/notifications" style="color: inherit; font-weight: bold;">Click here to view them.</a></div>';
+	html += '<ul>';
+	for (var index = 0; index < notifications.length; index++) {
+		let string;
+		const notification = notifications[index];
+		switch (notification.type) {
+		case 'discussion/repliedTo':
+			string = notification.sender.name + ' responded to your discussion';
+			break;
+		case 'discussion/pubComment':
+			string = notification.sender.name + (notification.discussion.version === 0 ? ' commented on the draft of ': ' added a discussion to your pub ') + notification.pub.title;
+			break;
+		case 'follows/followedYou':
+			string = notification.sender.name + ' followed you';
+			break;
+		case 'follows/followedPub':
+			string = notification.sender.name + ' followed your pub, ' + notification.pub.title;
+			break;
+		case 'followers/newPub':
+			string = notification.sender.name + ' published a new pub: ' + notification.pub.title;
+			break;
+		case 'followers/newVersion':
+			string = notification.sender.name + ' published a new version of their pub: ' + notification.pub.title;
+			break;
+		default: 
+			return null;
+		}
+		html += '<li class="listItem" style="padding: 10px 0px"><a href="' + rootHost + '/user/' + username + '/notifications" style="color: inherit; text-decoration: none;">' + string + '</a></li>';
+	}
+	html += '</ul>';
+
+	var emailObject = new sendgrid.Email();
+	emailObject.addTo(email);
+	emailObject.subject = notifications.length + " new " + (notifications.length === 1 ? "notification" : "notifications") + " (PubPub) ";
+	emailObject.from = from;
+	emailObject.fromname = fromname;
+	emailObject.text = text;
+	emailObject.html = html;
+
+	emailObject.addFilter('templates', 'enable', 1);
+	emailObject.addFilter('templates', 'template_id', 'caad4e63-a636-4c81-9cc2-7d65e581a876');
+
+	console.log('sent an email to ', email );
+	
+	sendgrid.send(emailObject, callback);
+
+
+}
