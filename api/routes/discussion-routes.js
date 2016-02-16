@@ -73,7 +73,7 @@ app.post('/addDiscussion', function(req, res) {
 
 
 			var populateQuery = [
-				{path:'author', select:'_id name firstName lastName thumbnail'},
+				{path:'author', select:'_id name username firstName lastName thumbnail'},
 				{path:'selections'},
 			];
 
