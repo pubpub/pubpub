@@ -27,10 +27,10 @@ const UserNotification = React.createClass({
 
 				{this.props.notificationObject.read
 					? <div style={styles.unread}></div>
-					: <div style={styles.unread}>new</div>
+					: <div style={styles.unread}>●</div>
 				}
 
-				<div style={styles.notificationText}>
+				<div style={[styles.notificationText]}>
 					{(() => {
 						switch (this.props.notificationObject.type) {
 						case 'discussion/repliedTo':
@@ -139,13 +139,16 @@ styles = {
 	},
 	
 	unread: {
-		width: '5%',
+		width: '15px',
+		height: '1px',
 		float: 'left',
 		fontFamily: 'Courier',
 		fontSize: '13px',
+		color: '#000',
+		lineHeight: '22px',
 	},
 	notificationText: {
-		width: '80%',
+		width: 'calc(85% - 15px)',
 		float: 'left',
 		color: '#999',
 	},

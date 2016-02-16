@@ -189,3 +189,14 @@ app.post('/inviteReviewers', function(req, res) {
 
 
 });
+
+app.post('/setNotificationsRead', function(req, res) {
+	if (req.user._id && String(req.user._id) !== String(req.body.userID) ) {
+		console.log('userIDs do not match');
+		return;
+	}
+
+	Notification.setRead({recipient: req.body.userID}, ()=>{});
+
+});
+

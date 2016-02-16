@@ -20,6 +20,10 @@ export const INVITE_USER = 'user/INVITE';
 export const INVITE_USER_SUCCESS = 'user/INVITE_SUCCESS';
 export const INVITE_USER_FAIL = 'user/INVITE_FAIL';
 
+export const SET_NOTIFICATIONS_READ_LOAD = 'user/SET_NOTIFICATIONS_READ_LOAD';
+export const SET_NOTIFICATIONS_READ_SUCCESS = 'user/SET_NOTIFICATIONS_READ_SUCCESS';
+export const SET_NOTIFICATIONS_READ_FAIL = 'user/SET_NOTIFICATIONS_READ_FAIL';
+
 
 /*--------*/
 // Define Action creators
@@ -59,5 +63,12 @@ export function inviteReviewers(pubID, inviteData) {
 	return {
 		types: [INVITE_USER, INVITE_USER_SUCCESS, INVITE_USER_FAIL],
 		promise: (client) => client.post('/inviteReviewers', {data: {pubID: pubID, inviteData: inviteData}})
+	};
+}
+
+export function setNotificationsRead(userID) {
+	return {
+		types: [SET_NOTIFICATIONS_READ_LOAD, SET_NOTIFICATIONS_READ_SUCCESS, SET_NOTIFICATIONS_READ_FAIL],
+		promise: (client) => client.post('/setNotificationsRead', {data: {userID: userID}})
 	};
 }

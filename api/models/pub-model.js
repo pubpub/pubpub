@@ -2,6 +2,7 @@ var mongoose  = require('mongoose');
 var Schema    =  mongoose.Schema;
 var ObjectId  = Schema.Types.ObjectId;
 var Discussion = require('../models').Discussion;
+var Notification = require('../models').Notification;
 var _         = require('underscore');
 
 import * as jsdiff from 'diff';
@@ -195,6 +196,9 @@ pubSchema.statics.getPub = function (slug, readerID, journalID, callback) {
 			// 		return callback(null, {message: 'Private Pub', slug: slug});
 			// 	}
 			// }
+
+			// Mark all notifcations about this pub for this reader as 'sent' (i.e. don't send an email, but keep it unread until they go to notifications page)
+			Notification.setSent({pub: populatedPub._id, recipient: readerID}, ()=>{});
 
 			const outputPub = populatedPub.toObject();
 			if (populatedPub.collaborators.canEdit.indexOf(readerID) > -1) {

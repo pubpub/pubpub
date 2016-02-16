@@ -13,6 +13,7 @@ const UserNotifications = React.createClass({
 	propTypes: {
 		profileData: PropTypes.object,
 		ownProfile: PropTypes.string,
+		setNotificationsReadHandler: PropTypes.func,
 	},
 
 	getDefaultProps: function() {
@@ -28,6 +29,10 @@ const UserNotifications = React.createClass({
 		return {
 			mode: '',
 		};
+	},
+
+	componentDidMount() {
+		this.props.setNotificationsReadHandler();
 	},
 
 	setMode: function(mode) {

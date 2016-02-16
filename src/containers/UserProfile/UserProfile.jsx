@@ -5,7 +5,7 @@ import Helmet from 'react-helmet';
 import { Link } from 'react-router';
 import { pushState } from 'redux-router';
 import {logout, follow, unfollow, toggleVisibility} from '../../actions/login';
-import {getProfile, updateUser, userNavOut, userNavIn} from '../../actions/user';
+import {getProfile, updateUser, userNavOut, userNavIn, setNotificationsRead} from '../../actions/user';
 import {ImageCropper, LoaderDeterminate, UserSettings, UserPubs, UserGroups, UserFollows, UserDiscussions, UserNotifications} from '../../components';
 import {globalStyles, profileStyles, navStyles} from '../../utils/styleConstants';
 
@@ -91,7 +91,9 @@ const Profile = React.createClass({
 			this.props.dispatch( follow('users', this.props.profileData.getIn(['profileData', '_id']), analyticsData) );
 		}
 	},
-
+	setNotificationsRead: function() {
+		this.props.dispatch(setNotificationsRead(this.props.profileData.getIn(['profileData', '_id'])));
+	},
 
 	render: function() {
 		const metaData = {};
@@ -273,7 +275,8 @@ const Profile = React.createClass({
 									return (
 										<UserNotifications
 											profileData={profileData}
-											ownProfile={ownProfile} />
+											ownProfile={ownProfile} 
+											setNotificationsReadHandler={this.setNotificationsRead}/>
 									);
 								case 'settings':
 									return (

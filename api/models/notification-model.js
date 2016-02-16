@@ -24,6 +24,20 @@ notificationSchema.statics.getNotification = function(notificationID,callback) {
   });
 }
 
+notificationSchema.statics.setRead = function(query,callback) {
+  this.update(query, { $set: { read: true }}, { multi: true }).exec(function (err, notifications) {
+    if (err) callback(err, false);
+    callback(null, true);
+  });
+}
+
+notificationSchema.statics.setSent = function(query,callback) {
+  this.update(query, { $set: { emailSent: true }}, { multi: true }).exec(function (err, notifications) {
+    if (err) callback(err, false);
+    callback(null, true);
+  });
+}
+
 notificationSchema.statics.getNotifications = function (user,callback) {
 
   this.find({'recipient':user})
@@ -48,7 +62,7 @@ notificationSchema.statics.createNotification = function(type, sender, recipient
   if (sender.toString() === recipient.toString()) {
     return;
   }
-  
+
   const validTypes = [
     'discussion/repliedTo',
     'discussion/pubComment',
