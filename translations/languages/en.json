@@ -42,6 +42,7 @@
   "group.addNewMember": "Add new member",
   "group.addNewAdmin": "Add new admin",
   "group.background": "Background CSS",
+  "nav.userNotifications": "Notifications ({count})",
   "preview.discussionOn": "Discussion on",
   "journal.searchPubsToFeature": "Search Pubs to Feature",
   "journal.featuredPubs": "Featured Pubs",

@@ -62,6 +62,7 @@ const HeaderMenu = React.createClass({
 	render: function() {
 		const isLoggedIn = this.props.loginData.get('loggedIn');
 		const isPub = this.props.path.indexOf('/pub') > -1 && this.props.path.indexOf('/draft') === -1;
+		const notificationCount = this.props.loginData.getIn(['userData', 'notificationCount']);
 		return (
 			<div styles={styles.right}>
 
@@ -84,7 +85,7 @@ const HeaderMenu = React.createClass({
 							{
 								isLoggedIn
 									? <Link to={'/user/' + this.props.loginData.getIn(['userData', 'username'])}>
-										<li key="menuListItem1" style={[styles.menuItem, !this.props.isJournalAdmin && styles.menuItemNoBottom]}>
+										<li key="menuListItem1" style={[styles.menuItem, !this.props.isJournalAdmin && !notificationCount && styles.menuItemNoBottom]}>
 											<span key="headerLogin" style={[styles.loggedIn[isLoggedIn]]}>
 												<img style={styles.userImage} src={this.props.loginData.getIn(['userData', 'thumbnail'])} />
 												{/* <div style={styles.userName}>{this.props.loginData.getIn(['userData', 'name'])}</div> */}
@@ -101,6 +102,16 @@ const HeaderMenu = React.createClass({
 										</span>
 									</li>
 
+							}
+
+							{
+								notificationCount
+									? <Link to={'/user/' + this.props.loginData.getIn(['userData', 'username']) + '/notifications'} style={globalStyles.link}>
+										<li key="menuListItem23" style={[styles.menuItem, !this.props.isJournalAdmin && styles.menuItemNoBottom]}>
+											<FormattedMessage id="nav.userNotifications" defaultMessage="Notifications ({count})" values={{count: notificationCount}}/>
+										</li>
+									</Link> 
+									: null
 							}
 							
 							{
