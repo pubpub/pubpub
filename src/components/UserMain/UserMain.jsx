@@ -58,7 +58,7 @@ const UserMain = React.createClass({
 		}
 		for (let index = this.props.profileData.pubs.published.length; index--;) {
 			if (!this.props.profileData.pubs.published[index].settings || this.props.profileData.pubs.published[index].settings.pubPrivacy === 'public') {
-				rep += 10;	
+				rep += 10;
 			}
 		}
 		return rep;
@@ -66,6 +66,8 @@ const UserMain = React.createClass({
 
 	render: function() {
 		// console.log(this.props.profileData);
+		const publishedPubs = (this.props.profileData.pubs && this.props.profileData.pubs.published) ? this.props.profileData.pubs.published : [];
+
 		return (
 			<div style={styles.container}>
 				<p style={styles.profileDetail}>{this.props.profileData.title}</p>
@@ -81,7 +83,7 @@ const UserMain = React.createClass({
 							</div>
 							<div style={styles.statsCount}><span style={styles.statParenthese}>(</span>{this.calculateReputation()}<span style={styles.statParenthese}>)</span></div>
 						</li> */ }
-						
+
 						<Link to={'/user/' + this.props.username + '/pubs'} style={globalStyles.link}>
 						<li key="profileStatsItem2" style={[styles.statsItem]}>
 							<div style={styles.statsTitle}>
@@ -89,12 +91,12 @@ const UserMain = React.createClass({
 							</div>
 							<div style={styles.statsCount}>
 								<span style={styles.statParenthese}>(</span>
-								{this.props.profileData.pubs.published ? this.props.profileData.pubs.published.length : 0}
+								{publishedPubs.length}
 								<span style={styles.statParenthese}>)</span>
 							</div>
 						</li>
 						</Link>
-						
+
 						<Link to={'/user/' + this.props.username + '/discussions'} style={globalStyles.link}>
 						<li key="profileStatsItem3" style={[styles.statsItem]}>
 							<div style={styles.statsTitle}>
@@ -142,12 +144,12 @@ const UserMain = React.createClass({
 							</div>
 						</li>
 						</Link>
-						
+
 						{/* <li key="profileStatsItem4" style={[styles.statsItem]}>
 							<div style={styles.statsTitle}>Expert Papers</div>
 							<div style={styles.statsCount}><span style={styles.statParenthese}>(</span>14<span style={styles.statParenthese}>)</span></div>
 						</li>
-						
+
 						<li key="profileStatsItem5" style={[styles.statsItem]}>
 							<div style={styles.statsTitle}>Journals</div>
 							<div style={styles.statsCount}><span style={styles.statParenthese}>(</span>20<span style={styles.statParenthese}>)</span></div>
@@ -158,22 +160,22 @@ const UserMain = React.createClass({
 
 				{/* Selected Content based on nav */}
 				<div style={styles.profileContent}>
-				
+
 					<div id={'pubs-section'} style={styles.sectionHeader}>
 						{/* <FormattedMessage {...globalMessages.pubs} /> */}
 						Recent Pubs
 					</div>
 
 					{
-						this.props.profileData.pubs.published && this.props.profileData.pubs.published.slice(0, 5).map((pub, index)=>{
-							return (<PubPreview 
+						publishedPubs.slice(0, 5).map((pub, index)=>{
+							return (<PubPreview
 								key={'pubItem-' + index}
 								pubData={pub}
 								canEdit={this.props.ownProfile === 'self' ? true : false} />
 							);
 						})
 					}
-					{this.props.profileData.pubs.published && this.props.profileData.pubs.published.length === 0
+					{publishedPubs.length === 0
 						? <div style={globalStyles.emptyBlock}>
 							<FormattedMessage id="user.noPubs" defaultMessage="No Pubs Yet"/>
 						</div>
@@ -186,7 +188,7 @@ const UserMain = React.createClass({
 					{(()=>{
 						const outputDiscussions = [];
 						for (let index = this.props.profileData.discussions.length; index--;) {
-							outputDiscussions.push(<DiscussionPreview 
+							outputDiscussions.push(<DiscussionPreview
 								key={'discussionItem-' + index}
 								discussionData={this.props.profileData.discussions[index]}
 								canEdit={this.props.ownProfile === 'self' ? true : false} />);
@@ -239,7 +241,7 @@ styles = {
 	statParenthese: {
 		display: 'inline',
 		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
-			display: 'none',	
+			display: 'none',
 		}
 	},
 	statsItem: {
@@ -267,7 +269,7 @@ styles = {
 			height: 70,
 			margin: '20px 0px',
 		},
-		
+
 	},
 
 	statsTitle: {

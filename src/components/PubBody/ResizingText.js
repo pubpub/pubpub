@@ -6,7 +6,11 @@ class ResizingText extends React.Component {
 	componentDidMount() {
 		this.updateSettings();
 		this.updateWidthFont();
-		window.addEventListener('resize', this.updateWidthFont.bind(this));
+		this.resizeFunc = this.updateWidthFont.bind(this);
+		window.addEventListener('resize', this.resizeFunc);
+	}
+	componentWillUnmountMount() {
+		window.removeEventListener('resize', this.resizeFunc);
 	}
 	componentWillReceiveProps() {
 		this.updateSettings();

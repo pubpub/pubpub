@@ -19,7 +19,7 @@ function getParentByClassName(node, classname) {
 
 const Portal = React.createClass({
 	propTypes: {
-		children: PropTypes.string,
+		children: PropTypes.any,
 		portalId: PropTypes.string
 	},
 	render: () => null,
