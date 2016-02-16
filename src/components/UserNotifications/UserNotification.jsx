@@ -4,7 +4,7 @@ import {globalStyles} from '../../utils/styleConstants';
 import { Link } from 'react-router';
 
 // import {globalMessages} from '../../utils/globalMessages';
-import {FormattedMessage, FormattedDate, FormattedRelative} from 'react-intl';
+import {FormattedDate, FormattedRelative} from 'react-intl';
 
 let styles = {};
 

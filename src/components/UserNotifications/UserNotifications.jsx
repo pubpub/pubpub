@@ -5,7 +5,7 @@ import {globalStyles, navStyles} from '../../utils/styleConstants';
 import UserNotification from './UserNotification';
 
 // import {globalMessages} from '../../utils/globalMessages';
-// import {FormattedMessage} from 'react-intl';
+import {FormattedMessage} from 'react-intl';
 
 let styles = {};
 
