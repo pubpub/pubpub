@@ -13,6 +13,10 @@ export const globalMessages = defineMessages({
 		id: 'global.groups',
 		defaultMessage: 'Groups',
 	},
+	notifications: {
+		id: 'global.notifications',
+		defaultMessage: 'Notifications',
+	},
 	Logout: {
 		id: 'global.Logout',
 		defaultMessage: 'Logout',

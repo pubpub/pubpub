@@ -10,8 +10,9 @@ var notificationSchema = new Schema({
   emailSent: { type: Boolean },
 
   pub: { type: ObjectId, ref: 'Pub' },
+  discussion: { type: ObjectId, ref: 'Discussion' },
   sender: { type: ObjectId, ref: 'User' },
-  recipient: { type: ObjectId, ref: 'User' },
+  recipient: { type: ObjectId, ref: 'User', required: true, index: true },
 
 });
 
@@ -24,6 +25,7 @@ notificationSchema.statics.getNotification = function(notificationID,callback) {
 }
 
 notificationSchema.statics.getNotifications = function (user,callback) {
+
   this.find({'recipient':user})
   .sort({'createDate': -1})
   .exec(function(err, notifications) {
@@ -33,7 +35,7 @@ notificationSchema.statics.getNotifications = function (user,callback) {
   return;
 };
 
-notificationSchema.statics.createNotification = function(type, sender, recipient, pub) {
+notificationSchema.statics.createNotification = function(type, sender, recipient, pub, discussion) {
   var date = new Date().getTime();
 
   const validTypes = [
@@ -57,6 +59,7 @@ notificationSchema.statics.createNotification = function(type, sender, recipient
     emailSent: false,
 
     pub: pub,
+    discussion: discussion,
     sender: sender,
     recipient: recipient,
   });

@@ -6,7 +6,7 @@ import { Link } from 'react-router';
 import { pushState } from 'redux-router';
 import {logout, follow, unfollow, toggleVisibility} from '../../actions/login';
 import {getProfile, updateUser, userNavOut, userNavIn} from '../../actions/user';
-import {ImageCropper, LoaderDeterminate, UserSettings, UserPubs, UserGroups, UserFollows, UserDiscussions} from '../../components';
+import {ImageCropper, LoaderDeterminate, UserSettings, UserPubs, UserGroups, UserFollows, UserDiscussions, UserNotifications} from '../../components';
 import {globalStyles, profileStyles, navStyles} from '../../utils/styleConstants';
 
 import {globalMessages} from '../../utils/globalMessages';
@@ -232,6 +232,14 @@ const Profile = React.createClass({
 								</li>
 								</Link>
 								<li style={[navStyles.navSeparator, navStyles.left, navStyles.navItemShow, navStyles.noMobile]}></li>
+
+								<Link to={'/user/' + this.props.username + '/notifications'} style={globalStyles.link}>
+								<li key="profileNavLeft4"style={[navStyles.navItem, navStyles.left, ownProfile === 'self' && navStyles.navItemShow, styles.inactiveNav, this.props.mode === 'notifications' && styles.activeNav]}>
+									<FormattedMessage {...globalMessages.notifications} />
+								</li>
+								</Link>
+								{/* <li style={[navStyles.navSeparator, navStyles.left, ownProfile === 'self' && navStyles.navItemShow, navStyles.noMobile]}></li> */}
+
 								<li style={globalStyles.clearFix}></li>
 							</ul>
 
@@ -258,6 +266,12 @@ const Profile = React.createClass({
 								case 'pubs':
 									return (
 										<UserPubs 
+											profileData={profileData}
+											ownProfile={ownProfile} />
+									);
+								case 'notifications':
+									return (
+										<UserNotifications
 											profileData={profileData}
 											ownProfile={ownProfile} />
 									);
@@ -322,6 +336,7 @@ styles = {
 		margin: '35px 0px 0px 0px',
 		fontSize: '20px',
 		borderBottom: '1px solid #CCC',
+		minWidth: '569px',
 		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
 			height: 'auto',
 			borderTop: '1px solid #CCC',

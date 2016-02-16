@@ -5,6 +5,7 @@ var ObjectId  = Schema.Types.ObjectId;
 var passportLocalMongoose = require('passport-local-mongoose');
 
 var Discussion = require('../models').Discussion;
+var Notification = require('../models').Notification;
 
 var userSchema = new Schema({
   email: { type: String, required: true, index: { unique: true } },
@@ -119,7 +120,7 @@ userSchema.statics.getUser = function (username, readerID, callback) {
     if (String(readerID) !== String(user._id)) {
       sortedPubs.unpublished = [];
       sortedPubs.canRead = [];
-    }
+    } 
 
     const outputUser = {
       _id: user._id,
@@ -135,8 +136,20 @@ userSchema.statics.getUser = function (username, readerID, callback) {
       discussions: Discussion.calculateYayNayScore(user.discussions),
       followers: user.followers,
       following: user.following,
+      notifications: [],
     }
-    return callback(null, outputUser);
+
+    // This feels a bit awkward - but is nice because we don't populate notifications unless we need to - which should make load times better.
+    if (String(readerID) === String(user._id)) {
+      Notification.getNotifications(user._id, function(err, notifications){
+        outputUser.notifications = notifications;
+        return callback(null, outputUser);
+      });
+    } else {
+      return callback(null, outputUser);  
+    }
+
+    
 
   });
 };

@@ -6,6 +6,7 @@ var Group = require('../models').Group;
 var Asset = require('../models').Asset;
 var Journal = require('../models').Journal;
 var Reference = require('../models').Reference;
+var Notification = require('../models').Notification;
 
 var _         = require('underscore');
 var Firebase  = require('firebase');
@@ -187,6 +188,19 @@ app.post('/publishPub', function(req, res) {
 			referenceObject.createDate = publishDate;
 			references.push(referenceObject);
 		}
+
+		const isNewPub = pub.history.length === 0;
+		req.body.newVersion.authors.map((authorID)=>{
+			User.findOne({_id: authorID}, {'followers':1}).lean().exec(function (err, author) {
+				author && author.followers.map((follower)=>{
+					if (isNewPub) {
+						Notification.createNotification('followers/newPub', author, follower, pub._id);
+					} else {
+						Notification.createNotification('followers/newVersion', author, follower, pub._id);
+					}
+				});	
+			});
+		});
 
 		Asset.insertBulkAndReturnIDs(assets, function(err, dbAssetsIds){
 			if (err) { return res.status(500).json(err);  }

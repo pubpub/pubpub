@@ -1,5 +1,5 @@
 import app from '../api';
-import {User, Pub, Journal} from '../models';
+import {User, Pub, Journal, Notification} from '../models';
 
 import {cloudinary} from '../services/cloudinary';
 import {sendInviteEmail} from '../services/emails';
@@ -93,11 +93,17 @@ app.post('/follow', function(req, res) {
 	case 'pubs':
 		User.update({ _id: userID }, { $addToSet: { 'following.pubs': req.body.followedID} }, function(err, result){if(err) return handleError(err)});
 		Pub.update({ _id: req.body.followedID }, { $addToSet: { followers: userID} }, function(err, result){if(err) return handleError(err)});
+		Pub.findOne({_id: req.body.followedID}, {'authors':1}).lean().exec(function (err, pub) {
+			pub.authors.map((author)=>{
+				Notification.createNotification('follows/followedPub', userID, author._id);
+			});
+		});
 		return res.status(201).json(req.body);
 
 	case 'users':
 		User.update({ _id: userID }, { $addToSet: { 'following.users': req.body.followedID} }, function(err, result){if(err) return handleError(err)});
 		User.update({ _id: req.body.followedID }, { $addToSet: { followers: userID} }, function(err, result){if(err) return handleError(err)});
+		Notification.createNotification('follows/followedYou', userID, req.body.followedID);
 		return res.status(201).json(req.body);
 
 	case 'journals':

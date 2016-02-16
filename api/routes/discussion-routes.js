@@ -6,6 +6,7 @@ var Asset = require('../models').Asset;
 var Discussion = require('../models').Discussion;
 var Reference = require('../models').Reference;
 var Highlight = require('../models').Highlight;
+var Notification = require('../models').Notification;
 
 
 var _         = require('underscore');
@@ -55,6 +56,21 @@ app.post('/addDiscussion', function(req, res) {
 			}
 			
 			Discussion.update({_id: result.parent}, { $addToSet: { children: discussionID} }, function(err, result){if(err) return handleError(err)});
+
+			// Notify all the pub authors
+			// Notify the author of a parent comment
+			Pub.findOne({_id: pubID}, {'authors':1}).lean().exec(function (err, pub) {
+				pub.authors.map((author)=>{
+					Notification.createNotification('discussion/pubComment', userID, author, pubID, discussionID);
+				});
+			});
+			if (result.parent) {
+				Discussion.findOne({_id: result.parent}, {'author':1}).lean().exec(function (err, parentDiscussion) {
+					Notification.createNotification('discussion/repliedTo', userID, parentDiscussion.author, pubID, discussionID);
+				});	
+			}
+			
+
 
 			var populateQuery = [
 				{path:'author', select:'_id name firstName lastName thumbnail'},
