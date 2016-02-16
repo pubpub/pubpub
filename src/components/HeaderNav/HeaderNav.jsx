@@ -12,6 +12,7 @@ const HeaderNav = React.createClass({
 	propTypes: {
 		loginData: PropTypes.object,
 		navData: PropTypes.object,
+		backgroundColor: PropTypes.string,
 		color: PropTypes.string,
 		hoverColor: PropTypes.string,
 		loginToggle: PropTypes.func,
@@ -27,6 +28,16 @@ const HeaderNav = React.createClass({
 			}
 		};
 	},
+	notificationStyle: function() {
+		return {
+			backgroundColor: this.props.color,
+			color: this.props.backgroundColor,
+			':hover': {
+				backgroundColor: this.props.hoverColor,
+				color: this.props.backgroundColor,
+			}
+		};
+	},
 
 	render: function() {
 		const isLoggedIn = this.props.loginData.get('loggedIn');
@@ -34,7 +45,18 @@ const HeaderNav = React.createClass({
 		return (
 			<div styles={styles.right}>
 
-				<div key="headerNavLogin" onClick={this.props.loginToggle} style={[styles.navButton, this.headerTextColorStyle()]}>
+				{
+					this.props.loginData.getIn(['userData', 'notificationCount'])
+						? 	<div>
+								<Link to={'/user/' + this.props.loginData.getIn(['userData', 'username']) + '/notifications'}>
+								<div key="headerNavNotifications" style={[styles.navButton, this.headerTextColorStyle(), styles.notificationBlock, this.notificationStyle()]}>
+									{this.props.loginData.getIn(['userData', 'notificationCount'])}
+								</div></Link>
+							</div>
+						: null
+				}
+
+				<div key="headerNavLogin" onClick={this.props.loginToggle} style={[styles.navButton, this.headerTextColorStyle(), this.props.loginData.getIn(['userData', 'notificationCount']) && styles.accountSpanWithNotification]}>
 					
 					{/* If Logged Out */}
 					{/* ------------- */}
@@ -100,6 +122,17 @@ styles = {
 		':hover': {
 			cursor: 'pointer',
 		}
+	},
+	accountSpanWithNotification: {
+		padding: '0px 5px 0px 15px',
+	},
+	notificationBlock: {
+		height: '18px',
+		lineHeight: '18px',
+		padding: '0px 5px',
+		margin: '6px 6px 6px -0px',
+		textAlign: 'center',
+		borderRadius: '1px',
 	},
 	separator: {
 		width: 1,

@@ -36,6 +36,9 @@ import {
 
 import {
 	UPDATE_USER_SUCCESS,
+
+	SET_NOTIFICATIONS_READ_LOAD,
+
 } from '../actions/user';
 
 import {
@@ -164,6 +167,10 @@ function unfollowSuccess(state, result) {
 	return state.deleteIn(['userData', 'following', result.type, index]);
 }
 
+function setNotificationsRead(state) {
+	return state.mergeIn(['userData', 'notificationCount'], 0);
+}
+
 /*--------*/
 // Bind actions to specific reducing functions.
 /*--------*/
@@ -214,6 +221,9 @@ export default function loginReducer(state = defaultState, action) {
 
 	case UNFOLLOW_SUCCESS:
 		return unfollowSuccess(state, action.result);
+
+	case SET_NOTIFICATIONS_READ_LOAD:
+		return setNotificationsRead(state);
 
 	default:
 		return ensureImmutable(state);

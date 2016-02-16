@@ -38,6 +38,15 @@ notificationSchema.statics.setSent = function(query,callback) {
   });
 }
 
+notificationSchema.statics.getUnreadCount = function(user, callback) {
+  this.find({'recipient':user, read: false}).count(function(err, count) {
+    if (err) callback(err, 0);
+
+    callback(null, count);
+  });
+  return;
+}
+
 notificationSchema.statics.getNotifications = function (user,callback) {
 
   this.find({'recipient':user})

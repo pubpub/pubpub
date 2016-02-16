@@ -188,6 +188,7 @@ const AppBody = React.createClass({
 							<HeaderNav 
 								loginData={this.props.loginData} 
 								navData={this.props.navData}
+								backgroundColor={headerBackground}
 								color={headerTextColor}
 								hoverColor={headerTextColorHover}
 								loginToggle={this.toggleLogin}
