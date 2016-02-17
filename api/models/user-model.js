@@ -46,6 +46,7 @@ var userSchema = new Schema({
   },
 
   followers: [{ type: ObjectId, ref: 'User' }],
+  sendNotificationDigest: { type: Boolean },
 });
 
 userSchema.plugin(passportLocalMongoose,{'usernameField':'email', 'digestAlgorithm':'sha1'});
@@ -137,6 +138,7 @@ userSchema.statics.getUser = function (username, readerID, callback) {
       followers: user.followers,
       following: user.following,
       notifications: [],
+      sendNotificationDigest: user.sendNotificationDigest,
     }
 
     // This feels a bit awkward - but is nice because we don't populate notifications unless we need to - which should make load times better.

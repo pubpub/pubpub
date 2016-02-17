@@ -15,10 +15,11 @@ function sendfollowerDigest () {
 
 	console.log('Starting sendfollowerDigest.');
 
-	User.find({}, {'_id':1, 'name':1, 'email': 1, 'username': 1}).lean().exec(function(err, users) {
+	User.find({sendNotificationDigest: {$ne: false}}, {'_id':1, 'name':1, 'email': 1, 'username': 1}).lean().exec(function(err, users) {
 		var usersProcessed = 0;
 		users.forEach(function(user, index) {
 			if(user) {
+				console.log(user.email);
 				Notification.find({read: false, emailSent: false, recipient: user._id})
 				.sort({'createDate': -1})
 				.populate([ 

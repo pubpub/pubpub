@@ -24,6 +24,7 @@ const UserSettings = React.createClass({
 			name: this.refs.name.value,
 			title: this.refs.title.value,
 			bio: this.refs.bio.value,
+			sendNotificationDigest: this.refs.sendNotificationDigest.checked,
 		};
 		this.props.handleSettingsSave(newDetails);
 	},
@@ -51,6 +52,17 @@ const UserSettings = React.createClass({
 						<FormattedMessage id="user.userBio" defaultMessage="Bio"/>
 					</label>
 					<textarea style={[styles.manualFormInput, styles.manualFormTextArea]} name={'bio'} id={'settingsForm-bio'} ref={'bio'} defaultValue={this.props.profileData.bio}></textarea>
+				</div>
+
+				<div key={'settingsForm-sendNotificationDigest'} style={[styles.inputWrapper, styles.checkboxWrapper]}>
+					<label style={[styles.manualFormInputTitle, styles.checkboxLabel]} htmlFor={'sendNotificationDigest'}>
+						<FormattedMessage id="journal.sendNotificationDigest" defaultMessage="Send Notification Digest"/>
+					</label>
+					<input style={[styles.manualFormInput, styles.checkboxInput]} name={'sendNotificationDigest'} id={'settingsForm-sendNotificationDigest'} ref={'sendNotificationDigest'} type="checkbox" onChange={()=>{return this.setState({});}} defaultChecked={this.props.profileData.sendNotificationDigest === undefined ? true : this.props.profileData.sendNotificationDigest}/>
+					{(this.refs.sendNotificationDigest && this.refs.sendNotificationDigest.checked) || (!this.refs.sendNotificationDigest && this.props.profileData.sendNotificationDigest) || (!this.refs.sendNotificationDigest && this.props.profileData.sendNotificationDigest === undefined)
+						? <label htmlFor={'settingsForm-sendNotificationDigest'}> enabled</label>
+						: <label htmlFor={'settingsForm-sendNotificationDigest'}> disabled</label>
+					}
 				</div>
 
 				<div style={styles.saveSettings} key={'userSettingsSaveButton'} onClick={this.saveSettings}>
@@ -100,6 +112,15 @@ styles = {
 	manualFormTextArea: {
 		borderWidth: '1px 1px 1px 1px',
 		resize: 'vertical',
+	},
+	checkboxWrapper: {
+		width: '600px',
+	},
+	checkboxLabel: {
+		display: 'block',
+	},
+	checkboxInput: {
+		width: 'auto',
 	},
 	saveSettings: {
 		fontSize: 20,

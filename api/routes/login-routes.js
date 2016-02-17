@@ -90,6 +90,7 @@ app.post('/register', function(req, res) {
 				lastName: req.body.lastName,
 				name: req.body.fullname, 
 				registerDate: new Date(Date.now()),
+				sendNotificationDigest: true,
 			});
 
 			User.register(newUser, req.body.password, function(err, account) {

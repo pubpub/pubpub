@@ -97,6 +97,7 @@
   "user.name": "Name",
   "user.titleForPerson": "Title",
   "user.userBio": "Bio",
+  "journal.sendNotificationDigest": "Send Notification Digest",
   "discussion.permalink": "Permalink",
   "discussion.reply": "Reply",
   "discussion.Unarchive": "Unarchive",
