@@ -79,7 +79,7 @@ const UserSettings = React.createClass({
 						</div>
 					</div>
 					: <div style={globalStyles.emptyBlock}>
-						<FormattedMessage id="user.notLoggedIn" defaultMessage="Must be logged in to edit settings"/>
+						<FormattedMessage id="user.notLoggedIn" defaultMessage="Not authorized to edit settings"/>
 					</div>
 				}
 			</div>

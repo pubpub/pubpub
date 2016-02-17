@@ -61,7 +61,7 @@ const UserGroups = React.createClass({
 						}
 					</div>
 					: <div style={[globalStyles.emptyBlock, styles.emptyContainer]}>
-						<FormattedMessage id="user.notLoggedInGroup" defaultMessage="Must be logged in to view groups"/>
+						<FormattedMessage id="user.notLoggedInGroup" defaultMessage="Not authorized to view groups"/>
 					</div>
 				}
 			</div>
