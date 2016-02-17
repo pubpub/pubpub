@@ -91,7 +91,7 @@
   "pub.submitToNew": "Submit to New Journal",
   "user.noDiscussions": "No Discussions Yet",
   "user.noGroups": "No Groups Yet",
-  "user.notLoggedInGroup": "Must be logged in to view groups",
+  "user.notLoggedInGroup": "Not authorized to view groups",
   "user.noPubs": "No Pubs Yet",
   "user.noNotifications": "No Notifications",
   "user.mustBeLoggedInNotifications": "Must be logged in to view notifications",
