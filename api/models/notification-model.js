@@ -71,7 +71,7 @@ notificationSchema.statics.getNotifications = function (user, callback) {
 notificationSchema.statics.createNotification = function(type, sourceHost, sender, recipient, pub, discussion) {
   var date = new Date().getTime();
 
-  if (sender.toString() === recipient.toString()) {
+  if (sender && recipient && String(sender) === String(recipient)) {
     return;
   }
 

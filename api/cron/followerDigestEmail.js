@@ -35,16 +35,18 @@ function sendfollowerDigest () {
 								console.log('Sent digest to ' + user.email + '. Total notifications: ' + notifications.length);
 								usersProcessed += 1;
 								if (usersProcessed >= users.length) {
+									console.log('Closing mongoose connection.');
 									mongoose.disconnect();
-									process.exit()
+									process.exit();
 								}	
 							});	
 						});
 					} else {
 						usersProcessed += 1;
 						if (usersProcessed >= users.length) {
+							console.log('Closing mongoose connection.');
 							mongoose.disconnect();
-							process.exit()
+							process.exit();
 						}	
 					}
 					
@@ -52,8 +54,9 @@ function sendfollowerDigest () {
 			} else {
 				usersProcessed += 1;
 				if (usersProcessed >= users.length) {
+					console.log('Closing mongoose connection.');
 					mongoose.disconnect();
-					process.exit()
+					process.exit();
 				}
 			}
 		});
