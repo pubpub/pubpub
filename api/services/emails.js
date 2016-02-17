@@ -90,7 +90,7 @@ export function sendNotificationDigest(notifications, email, username, callback)
 	const rootHost = process.env.NODE_ENV !== 'production' ? 'http://localhost:3000' : 'http://www.pubpub.org';
 
 	const text = 'You have ' + notifications.length + ' new notifications. Visit: ' + rootHost + '/user/' + username + '/notifications to view.';
-	let html = '<div style="padding: 10px 0px">You have ' + notifications.length + ' new notification' + (notifications.length === 1 ? '' : 's') + '. <a href="' + rootHost + '/user/' + username + '/notifications" style="color: inherit; font-weight: bold;">Click here to view them.</a></div>';
+	let html = '<div style="padding: 10px 0px">You have ' + notifications.length + ' new notification' + (notifications.length === 1 ? '' : 's') + '. <a href="' + rootHost + '/user/' + username + '/notifications" style="color: inherit; font-weight: bold;">Click here to view</a>.</div>';
 	html += '<ul>';
 	for (var index = 0; index < notifications.length; index++) {
 		let string;
@@ -131,8 +131,6 @@ export function sendNotificationDigest(notifications, email, username, callback)
 
 	emailObject.addFilter('templates', 'enable', 1);
 	emailObject.addFilter('templates', 'template_id', 'caad4e63-a636-4c81-9cc2-7d65e581a876');
-
-	console.log('sent an email to ', email );
 	
 	sendgrid.send(emailObject, callback);
 
