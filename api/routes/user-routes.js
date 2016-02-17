@@ -95,7 +95,7 @@ app.post('/follow', function(req, res) {
 		Pub.update({ _id: req.body.followedID }, { $addToSet: { followers: userID} }, function(err, result){if(err) return handleError(err)});
 		Pub.findOne({_id: req.body.followedID}, {'authors':1}).lean().exec(function (err, pub) {
 			pub.authors.map((author)=>{
-				Notification.createNotification('follows/followedPub', req.body.host, userID, author._id);
+				Notification.createNotification('follows/followedPub', req.body.host, userID, author, pub._id);
 			});
 		});
 		return res.status(201).json(req.body);
