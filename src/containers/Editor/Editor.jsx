@@ -410,6 +410,25 @@ const Editor = React.createClass({
 		});
 		this.props.dispatch(saveStyle(newStyleStringDesktop, newStyleStringMobile));
 	},
+	getEditorFont: function() {
+		const editorFont = this.props.loginData ? this.props.loginData.getIn(['userData', 'settings', 'editorFont']) : undefined;
+
+		switch (editorFont) {
+		case 'serif':
+			console.log('in the switch and got serif');
+			return {fontFamily: 'Helvetica Neue,Helvetica,Arial,sans-serif'};
+		case 'sans-serif':
+			console.log('in the switch and got sans');
+			return {fontFamily: 'Lato'};
+		case 'mono':
+			console.log('in the switch and got mono');
+			return {fontFamily: 'Courier'};
+		default:
+			console.log('in the switch and got def');
+			return {fontFamily: 'Courier'};
+		}
+		
+	},
 
 	render: function() {
 
@@ -487,10 +506,16 @@ const Editor = React.createClass({
 						{/* ---------------------- */}
 						<div id="editor-text-wrapper" style={[globalStyles.hiddenUntilLoad, globalStyles[loadStatus], styles.editorMarkdown, styles[viewMode].editorMarkdown, !isReader && styles[viewMode].editorMarkdownIsEditor]}>
 
+
 							{(this.state.firepadInitialized) ? <EditorWidgetHandler ref="widgethandler" isLivePreview={isLivePreview} references={this.state.firepadData.references} assets={this.state.firepadData.assets} activeFocus={this.state.activeFocus} cm={this.cm} /> : null}
 							{/*
 							<EditorPluginPopup ref="pluginPopup" isLivePreview={isLivePreview} references={this.state.firepadData.references} assets={this.state.firepadData.assets} activeFocus={this.state.activeFocus} codeMirrorChange={this.state.codeMirrorChange}/>
 							*/}
+
+							{/* <div style={[styles.editorHeader]}>
+								<input type="text" defaultValue="My Title" style={[styles.headerTitleInput, this.getEditorFont()]} />
+							</div> */}
+
 							{/* Insertion point for codemirror and firepad */}
 							<div style={[this.state.activeFocus !== '' && styles.hiddenMainEditor]}>
 								<div id="codemirror-wrapper"></div>
@@ -856,6 +881,20 @@ styles = {
 			overflow: 'hidden',
 		}
 	},
+	// editorHeader: {
+	// 	padding: '0px 25px',
+	// },
+	// headerTitleInput: {
+	// 	height: '50px',
+	// 	width: '100%',
+	// 	borderWidth: '0px 0px 1px 0px',
+	// 	borderColor: 'rgba(0,0,0,0.2)',
+	// 	backgroundColor: 'transparent',
+	// 	fontSize: '33px',
+	// 	fontWeight: 'bold',
+	// 	marginBottom: '10px',
+	// 	outline: 'none',
+	// },
 	editorPreview: {
 		width: 'calc(50% - 0px)',
 		backgroundColor: '#fff',
