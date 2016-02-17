@@ -19,7 +19,6 @@ function sendfollowerDigest () {
 		var usersProcessed = 0;
 		users.forEach(function(user, index) {
 			if(user) {
-				console.log(user.email);
 				Notification.find({read: false, emailSent: false, recipient: user._id})
 				.sort({'createDate': -1})
 				.populate([ 

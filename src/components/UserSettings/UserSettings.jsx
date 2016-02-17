@@ -11,6 +11,7 @@ let styles = {};
 const UserSettings = React.createClass({
 	propTypes: {
 		profileData: PropTypes.object,
+		ownProfile: PropTypes.string,
 		saveStatus: PropTypes.string,
 		handleSettingsSave: PropTypes.func,
 	},
@@ -32,50 +33,55 @@ const UserSettings = React.createClass({
 	render: function() {
 		return (
 			<div style={styles.container}>
+				{this.props.ownProfile === 'self'
+					? <div>
+						<div key={'settingsForm-name'} style={styles.inputWrapper}>
+							<label style={styles.manualFormInputTitle} htmlFor={'settingsForm-name'}>
+								<FormattedMessage id="user.name" defaultMessage="Name"/>
+							</label>
+							<input style={styles.manualFormInput} name={'name'} id={'settingsForm-name'} ref={'name'} type="text" defaultValue={this.props.profileData.name}/>
+						</div>
 
-				<div key={'settingsForm-name'} style={styles.inputWrapper}>
-					<label style={styles.manualFormInputTitle} htmlFor={'settingsForm-name'}>
-						<FormattedMessage id="user.name" defaultMessage="Name"/>
-					</label>
-					<input style={styles.manualFormInput} name={'name'} id={'settingsForm-name'} ref={'name'} type="text" defaultValue={this.props.profileData.name}/>
-				</div>
+						<div key={'settingsForm-title'} style={styles.inputWrapper}>
+							<label style={styles.manualFormInputTitle} htmlFor={'settingsForm-title'}>
+								<FormattedMessage id="user.titleForPerson" defaultMessage="Title"/>
+							</label>
+							<input style={styles.manualFormInput} name={'title'} id={'settingsForm-title'} ref={'title'} type="text" defaultValue={this.props.profileData.title}/>
+						</div>
 
-				<div key={'settingsForm-title'} style={styles.inputWrapper}>
-					<label style={styles.manualFormInputTitle} htmlFor={'settingsForm-title'}>
-						<FormattedMessage id="user.titleForPerson" defaultMessage="Title"/>
-					</label>
-					<input style={styles.manualFormInput} name={'title'} id={'settingsForm-title'} ref={'title'} type="text" defaultValue={this.props.profileData.title}/>
-				</div>
+						<div key={'settingsForm-bio'} style={styles.inputWrapper}>
+							<label style={styles.manualFormInputTitle} htmlFor={'settingsForm-bio'}>
+								<FormattedMessage id="user.userBio" defaultMessage="Bio"/>
+							</label>
+							<textarea style={[styles.manualFormInput, styles.manualFormTextArea]} name={'bio'} id={'settingsForm-bio'} ref={'bio'} defaultValue={this.props.profileData.bio}></textarea>
+						</div>
 
-				<div key={'settingsForm-bio'} style={styles.inputWrapper}>
-					<label style={styles.manualFormInputTitle} htmlFor={'settingsForm-bio'}>
-						<FormattedMessage id="user.userBio" defaultMessage="Bio"/>
-					</label>
-					<textarea style={[styles.manualFormInput, styles.manualFormTextArea]} name={'bio'} id={'settingsForm-bio'} ref={'bio'} defaultValue={this.props.profileData.bio}></textarea>
-				</div>
+						<div key={'settingsForm-sendNotificationDigest'} style={[styles.inputWrapper, styles.checkboxWrapper]}>
+							<label style={[styles.manualFormInputTitle, styles.checkboxLabel]} htmlFor={'sendNotificationDigest'}>
+								<FormattedMessage id="journal.sendNotificationDigest" defaultMessage="Send Notification Digest"/>
+							</label>
+							<input style={[styles.manualFormInput, styles.checkboxInput]} name={'sendNotificationDigest'} id={'settingsForm-sendNotificationDigest'} ref={'sendNotificationDigest'} type="checkbox" onChange={()=>{return this.setState({});}} defaultChecked={this.props.profileData.sendNotificationDigest === undefined ? true : this.props.profileData.sendNotificationDigest}/>
+							{(this.refs.sendNotificationDigest && this.refs.sendNotificationDigest.checked) || (!this.refs.sendNotificationDigest && this.props.profileData.sendNotificationDigest) || (!this.refs.sendNotificationDigest && this.props.profileData.sendNotificationDigest === undefined)
+								? <label htmlFor={'settingsForm-sendNotificationDigest'}> enabled</label>
+								: <label htmlFor={'settingsForm-sendNotificationDigest'}> disabled</label>
+							}
+						</div>
 
-				<div key={'settingsForm-sendNotificationDigest'} style={[styles.inputWrapper, styles.checkboxWrapper]}>
-					<label style={[styles.manualFormInputTitle, styles.checkboxLabel]} htmlFor={'sendNotificationDigest'}>
-						<FormattedMessage id="journal.sendNotificationDigest" defaultMessage="Send Notification Digest"/>
-					</label>
-					<input style={[styles.manualFormInput, styles.checkboxInput]} name={'sendNotificationDigest'} id={'settingsForm-sendNotificationDigest'} ref={'sendNotificationDigest'} type="checkbox" onChange={()=>{return this.setState({});}} defaultChecked={this.props.profileData.sendNotificationDigest === undefined ? true : this.props.profileData.sendNotificationDigest}/>
-					{(this.refs.sendNotificationDigest && this.refs.sendNotificationDigest.checked) || (!this.refs.sendNotificationDigest && this.props.profileData.sendNotificationDigest) || (!this.refs.sendNotificationDigest && this.props.profileData.sendNotificationDigest === undefined)
-						? <label htmlFor={'settingsForm-sendNotificationDigest'}> enabled</label>
-						: <label htmlFor={'settingsForm-sendNotificationDigest'}> disabled</label>
-					}
-				</div>
+						<div style={styles.saveSettings} key={'userSettingsSaveButton'} onClick={this.saveSettings}>
+							<FormattedMessage {...globalMessages.save} />
+						</div>
 
-				<div style={styles.saveSettings} key={'userSettingsSaveButton'} onClick={this.saveSettings}>
-					<FormattedMessage {...globalMessages.save} />
-				</div>
-
-				<div style={styles.loader}>
-					{this.props.saveStatus === 'saving'
-						? <LoaderIndeterminate color={globalStyles.sideText}/>
-						: null
-					}
-				</div>
-
+						<div style={styles.loader}>
+							{this.props.saveStatus === 'saving'
+								? <LoaderIndeterminate color={globalStyles.sideText}/>
+								: null
+							}
+						</div>
+					</div>
+					: <div style={globalStyles.emptyBlock}>
+						<FormattedMessage id="user.notLoggedIn" defaultMessage="Must be logged in to edit settings"/>
+					</div>
+				}
 			</div>
 		);
 	}

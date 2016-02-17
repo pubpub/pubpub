@@ -183,7 +183,7 @@ const Profile = React.createClass({
 						<div style={styles.userImageWrapper}>
 							<img style={styles.userImage} src={profileData.image} />
 							{/* <div key={'changeUserImageButton'} style={[styles.editImageButton, this.props.mode === 'settings' && styles.editImageButtonShow]} onClick={this.editImageClicked}>Change Image</div> */}
-							<div style={[styles.fileInputWrapper, this.props.mode === 'settings' && styles.fileInputWrapperShow]} key={'changeUserImageButton'}>
+							<div style={[styles.fileInputWrapper, this.props.mode === 'settings' && ownProfile === 'self' && styles.fileInputWrapperShow]} key={'changeUserImageButton'}>
 								<FormattedMessage id="user.changeImage" defaultMessage="Change Image"/>
 								<input style={styles.hiddenFileInput} type="file" accept="image/*" onChange={this.onFileSelect} />
 							</div>
@@ -285,6 +285,7 @@ const Profile = React.createClass({
 									return (
 										<UserSettings 
 											profileData={profileData}
+											ownProfile={ownProfile} 
 											saveStatus={this.props.profileData.get('settingsStatus')}
 											handleSettingsSave={this.settingsSave}/>
 									);

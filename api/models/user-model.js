@@ -121,6 +121,7 @@ userSchema.statics.getUser = function (username, readerID, callback) {
     if (String(readerID) !== String(user._id)) {
       sortedPubs.unpublished = [];
       sortedPubs.canRead = [];
+      user.groups = [];
     } 
 
     const outputUser = {

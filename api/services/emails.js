@@ -119,7 +119,7 @@ export function sendNotificationDigest(notifications, email, username, callback)
 		}
 		html += '<li class="listItem" style="padding: 10px 0px"><a href="' + rootHost + '/user/' + username + '/notifications" style="color: inherit; text-decoration: none;">' + string + '</a></li>';
 	}
-	html += '</ul>';
+	html += '</ul> <a href="' + rootHost + '/user/' + username + '/settings" style="color: #aaa; font-size:11px; text-decoration: none;">Click to edit notification settings.</a>';
 
 	var emailObject = new sendgrid.Email();
 	emailObject.addTo(email);

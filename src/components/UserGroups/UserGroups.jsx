@@ -39,27 +39,31 @@ const UserGroups = React.createClass({
 		// console.log(this.props.profileData);
 		return (
 			<div style={styles.container}>
+				{this.props.ownProfile === 'self'
+					? <div>
+						<ul style={[navStyles.navList, styles.subNav]}></ul>
+						{
+							this.props.profileData.groups && this.props.profileData.groups.map((group)=>{
+								return (<div key={'group-' + group.groupSlug}>
+										<Link to={'/group/' + group.groupSlug} style={globalStyles.link}>
+											{group.groupName}
+										</Link>
+									</div>
+								);
+							})
 
-				<ul style={[navStyles.navList, styles.subNav]}></ul>
-				
-				{
-					this.props.profileData.groups && this.props.profileData.groups.map((group)=>{
-						return (<div key={'group-' + group.groupSlug}>
-								<Link to={'/group/' + group.groupSlug} style={globalStyles.link}>
-									{group.groupName}
-								</Link>
+						}
+						{this.props.profileData.groups && this.props.profileData.groups.length === 0
+							? <div style={globalStyles.emptyBlock}>
+								<FormattedMessage id="user.noGroups" defaultMessage="No Groups Yet"/>
 							</div>
-						);
-					})
-
-				}
-				{this.props.profileData.groups && this.props.profileData.groups.length === 0
-					? <div style={globalStyles.emptyBlock}>
-						<FormattedMessage id="user.noGroups" defaultMessage="No Groups Yet"/>
+							: null
+						}
 					</div>
-					: null
+					: <div style={[globalStyles.emptyBlock, styles.emptyContainer]}>
+						<FormattedMessage id="user.notLoggedInGroup" defaultMessage="Must be logged in to view groups"/>
+					</div>
 				}
-
 			</div>
 		);
 	}
@@ -68,6 +72,10 @@ const UserGroups = React.createClass({
 export default Radium(UserGroups);
 
 styles = {
+	emptyContainer: {
+		margin: '10px auto',
+		fontFamily: 'Courier',
+	},
 	subNav: {
 		// margin: '10px 0px',
 		// borderBottom: '1px solid #CCC',
