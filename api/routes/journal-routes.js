@@ -128,7 +128,9 @@ app.post('/submitPubToJournal', function(req,res){
 	Journal.findOne({_id: req.body.journalID}).exec(function(err, journal) {
 		if (err) { return res.status(500).json(err);  }
 
-		if (!req.user || String(journal.admins).indexOf(String(req.user._id)) === -1) {
+		if (!journal) { return res.status(500).json(err);  }
+
+		if ( !journal.autoFeature && (!req.user || String(journal.admins).indexOf(String(req.user._id)) === -1) ) {
 			return res.status(403).json('Not authorized to administrate this Journal.');
 		}
 

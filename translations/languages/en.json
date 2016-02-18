@@ -99,7 +99,7 @@
   "user.titleForPerson": "Title",
   "user.userBio": "Bio",
   "journal.sendNotificationDigest": "Send Notification Digest",
-  "user.notLoggedIn": "Must be logged in to edit settings",
+  "user.notLoggedIn": "Not authorized to edit settings",
   "discussion.permalink": "Permalink",
   "discussion.reply": "Reply",
   "discussion.Unarchive": "Unarchive",
