@@ -7,6 +7,9 @@ import sub from 'markdown-it-sub';
 import sup from 'markdown-it-sup';
 import container from 'markdown-it-container';
 import ppm from './markdown-it-ppm';
+import pubheader from './markdown-it-pubheader';
+import pubheaderitem from './markdown-it-pubheaderitem';
+
 import mathIt from 'markdown-it-math';
 
 import {parsePluginString} from '../utils/parsePlugins';
@@ -149,8 +152,14 @@ const PPMComponent = React.createClass({
 		case 'li':
 			props['data-hash'] = children[0] ? murmur.v2(children[0]) : 0;
 			break;
-
+		case 'hr':
+			return <Component  {...props} /> 
+		case 'pubheader': 
+			console.log(arguments)
+		case 'pubitem': 
+			console.log(arguments)
 		}
+
 
 		return <Component {...props}>{children}</Component>;
 	},
@@ -173,7 +182,9 @@ const PPMComponent = React.createClass({
 					sup,
 					{plugin: mathIt, args: [MathOptions]},
 					{plugin: container, args: ['blank', {validate: ()=>{return true;}}]},
-					ppm
+					ppm,
+					pubheader,
+					pubheaderitem
 				]} />
 		);
 	}
