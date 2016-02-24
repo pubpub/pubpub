@@ -7,6 +7,7 @@ import {globalStyles} from '../../utils/styleConstants';
 
 import {globalMessages} from '../../utils/globalMessages';
 import {injectIntl, FormattedMessage} from 'react-intl';
+import PPMComponent from '../../markdown/PPMComponent';
 
 let styles = {};
 
@@ -36,7 +37,10 @@ const PubDiscussionsInput = React.createClass({
 
 	getInitialState() {
 		return {
-			expanded: false
+			expanded: false,
+			content: '',
+			selections: {},
+			showPreview: false,
 		};
 	},
 
@@ -77,9 +81,16 @@ const PubDiscussionsInput = React.createClass({
 			cm.setValue(cm.getValue() + spacing + '[[selection: index=' + nextProps.newDiscussionData.get('selections').size + ']] ' );
 		}
 
+		this.setState({selections: nextProps.newDiscussionData.get('selections').toArray()});
+
+		// console.log('selections! ', nextProps.newDiscussionData.get('selections'));
+
 	},
 
 	onEditorChange: function(cm, change) {
+		const content = cm.getValue();
+		const showPreview = (content.indexOf('[[selection:') !== -1);
+		this.setState({content: content, showPreview: showPreview});
 		// console.log('change!');
 		// console.log(cm);
 	},
@@ -109,6 +120,7 @@ const PubDiscussionsInput = React.createClass({
 
 		return (
 			<div style={[styles.container, this.props.isReply && styles.replyContainer]}>
+
 				<Style rules={{
 					'.inputCodeMirror .CodeMirror': {
 						...codeMirrorStyles(),
@@ -136,6 +148,7 @@ const PubDiscussionsInput = React.createClass({
 					<div style={styles.license} key={'discussionLicense'}>
 						<License text={'All discussions are licensed under a'} hover={true} />
 					</div>
+
 					{/* <div style={styles.topCheckbox} key={'newDiscussionAnonymous'} >
 						<label style={styles.checkboxLabel} htmlFor={'anonymousDiscussion'}>Anonymous</label>
 						<input style={styles.checkboxInput} name={'anonymousDiscussion'} id={'anonymousDiscussion'} type="checkbox" value={'anonymous'} ref={'anonymousDiscussion'}/>
@@ -146,7 +159,16 @@ const PubDiscussionsInput = React.createClass({
 					</div> */}
 				</div>
 				<div id={this.props.codeMirrorID} className={'inputCodeMirror'} style={styles.inputBox(this.state.expanded)} onBlur={this.onBlur} onFocus={this.onFocus}></div>
-
+				{
+					(this.state.showPreview) ?
+					<div>
+						<span style={styles.livePreviewText}>Live Preview: <small>(you can use <a href="https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet">markdown</a> to style your comment)</small></span>
+						<div style={styles.livePreviewBox}>
+							<PPMComponent assets={{}} references={{}} selections={this.state.selections} markdown={this.state.content} />
+						</div>
+					</div>
+					: null
+				}
 				<div style={styles.loaderContainer}>
 					{(this.props.addDiscussionStatus === 'loading' && this.props.activeSaveID === this.props.saveID ? <LoaderIndeterminate color="#444"/> : null)}
 				</div>
@@ -188,6 +210,17 @@ styles = {
 		overflow: 'hidden',
 		margin: '0px 0px',
 		position: 'relative',
+	},
+	livePreviewText: {
+		fontSize: '0.8em',
+		fontWeight: '700',
+	},
+	livePreviewBox: {
+		width: '95%',
+		display: 'block',
+		margin: '5px auto 15px',
+		border: '1px solid #E2E2E2',
+		padding: '10px',
 	},
 	replyContainer: {
 		// margin: '0px 10px 10px 0px',
