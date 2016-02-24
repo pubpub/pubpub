@@ -19,8 +19,8 @@ let styles = {};
 const Discussions = React.createClass({
 	propTypes: {
 		metaID: PropTypes.string,
-		editorCommentMode: PropTypes.bool, 
-		inEditor: PropTypes.bool, 
+		editorCommentMode: PropTypes.bool,
+		inEditor: PropTypes.bool,
 		instanceName: PropTypes.string,
 
 		pubData: PropTypes.object,
@@ -67,9 +67,9 @@ const Discussions = React.createClass({
 		if (this.props.editorCommentMode) {
 			this.props.dispatch(addComment(discussionObject, activeSaveID));
 		} else {
-			this.props.dispatch(addDiscussion(discussionObject, activeSaveID, this.props.inEditor));	
+			this.props.dispatch(addDiscussion(discussionObject, activeSaveID, this.props.inEditor));
 		}
-		
+
 	},
 
 	discussionVoteSubmit: function(type, discussionID, userYay, userNay) {
@@ -140,9 +140,9 @@ const Discussions = React.createClass({
 
 	render: function() {
 		// const pubData = {discussions: []};
-		
+
 		const discussionsData = this.getDiscussionData();
-		
+
 		const addDiscussionStatus = this.props.inEditor ? this.props.editorData.get('addDiscussionStatus') : this.props.pubData.get('addDiscussionStatus');
 		const newDiscussionData = this.props.inEditor ? this.props.editorData.get('newDiscussionData') : this.props.pubData.get('newDiscussionData');
 		const activeSaveID = this.props.inEditor ? this.props.editorData.get('activeSaveID') : this.props.pubData.get('activeSaveID');
@@ -150,30 +150,30 @@ const Discussions = React.createClass({
 
 		return (
 			<div style={styles.container}>
-				
+
 				<div className="pub-discussions-wrapper" style={rightBarStyles.sectionWrapper}>
 					{this.props.pubData.getIn(['pubData', 'referrer', 'name'])
 						? <div>{this.props.pubData.getIn(['pubData', 'referrer', 'name'])} invites you to comment!</div>
 						: null
 					}
-					
+
 					{this.props.metaID || (!this.props.editorCommentMode && this.props.inEditor)
 						? null
-						: <DiscussionsInput 
+						: <DiscussionsInput
 							addDiscussionHandler={this.addDiscussion}
-							addDiscussionStatus={addDiscussionStatus} 
-							newDiscussionData={newDiscussionData} 
-							userThumbnail={this.props.loginData.getIn(['userData', 'thumbnail'])} 
+							addDiscussionStatus={addDiscussionStatus}
+							newDiscussionData={newDiscussionData}
+							userThumbnail={this.props.loginData.getIn(['userData', 'thumbnail'])}
 							activeSaveID={activeSaveID}
 							saveID={'root'}
 							isReply={false}
 							codeMirrorID={this.props.instanceName + 'rootCommentInput'}/>
 					}
-					
+
 					{
 						discussionsData.map((discussion)=>{
 							// console.log(discussion);
-							return (<DiscussionsItem 
+							return (<DiscussionsItem
 								key={discussion._id}
 								slug={this.props.slug}
 								discussionItem={discussion}
@@ -182,18 +182,25 @@ const Discussions = React.createClass({
 
 								activeSaveID={activeSaveID}
 								addDiscussionHandler={this.addDiscussion}
-								addDiscussionStatus={addDiscussionStatus} 
-								newDiscussionData={newDiscussionData} 
-								userThumbnail={this.props.loginData.getIn(['userData', 'thumbnail'])} 
-								handleVoteSubmit={this.discussionVoteSubmit} 
+								addDiscussionStatus={addDiscussionStatus}
+								newDiscussionData={newDiscussionData}
+								userThumbnail={this.props.loginData.getIn(['userData', 'thumbnail'])}
+								handleVoteSubmit={this.discussionVoteSubmit}
 								handleArchive={this.archiveDiscussion}
 								noReply={!this.props.editorCommentMode && this.props.inEditor}
 								noPermalink={this.props.editorCommentMode}/>
 							);
 						})
 					}
+
+					{(discussionsData.length === 0) ?
+						<div style={styles.emptyComments}>
+							There are no comments here yet! Be the first to start the discussion.
+						</div>
+					: null }
+
 				</div>
-				
+
 			</div>
 		);
 	}
@@ -216,5 +223,11 @@ styles = {
 		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
 			padding: '0px 10px',
 		},
-	}
+	},
+	emptyComments: {
+		margin: '40% 6% 0px 3%',
+		fontSize: '1.5em',
+		textAlign: 'center',
+		height: '70vh',
+	},
 };
