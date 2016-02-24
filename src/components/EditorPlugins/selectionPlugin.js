@@ -203,7 +203,7 @@ styles = {
 		padding: '10px 8px',
 		color: '#5B5B5B',
 		cursor: 'pointer',
-		margin: '5px 0px 5px 5px',
+		margin: '5px 0px 15px 0px',
 		fontStyle: 'italic',
 		fontSize: '0.9em',
 	},
