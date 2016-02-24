@@ -70,7 +70,7 @@ styles = {
 	caption: {
 		fontSize: '0.8em',
 		color: '#757575',
-		textAlign: 'justify'
+		textAlign: 'left'
 	},
 };
 
