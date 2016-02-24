@@ -37,7 +37,10 @@ const EditorPluginPopup = React.createClass({
 			yLoc: 0,
 			initialString: '',
 			activeLine: undefined,
-			pluginType: ''
+			pluginType: '',
+			assets: [],
+			references: [],
+			selections: [],
 		};
 	},
 
@@ -56,14 +59,18 @@ const EditorPluginPopup = React.createClass({
 	componentWillReceiveProps(nextProps) {
 
 		// If a re-render causes this component to receive new props, but the props haven't changed, return.
-		if (this.props.codeMirrorChange === nextProps.codeMirrorChange) {
+		if (this.props.codeMirrorChange === nextProps.codeMirrorChange
+			&& this.props.assets === nextProps.assets
+			&& this.props.references === nextProps.references
+			&& this.props.selections === nextProps.selections) {
 			return null;
 		}
 
-		this.assets = (this.props.assets) ? Object.values(this.props.assets) : [];
-		this.references = (this.props.references) ? Object.values(this.props.references) : [];
-		this.selections = (this.props.selections) ? Object.values(this.props.selections) : [];
+		const assets = (nextProps.assets) ? Object.values(nextProps.assets) : [];
+		const references = (nextProps.references) ? Object.values(nextProps.references) : [];
+		const selections = (nextProps.selections) ? Object.values(nextProps.selections) : [];
 
+		this.setState({assets: assets, references: references, aselections: selections});
 
 		const change = nextProps.codeMirrorChange;
 
@@ -240,7 +247,7 @@ const EditorPluginPopup = React.createClass({
 									return (<div key={'pluginVal-' + fieldTitle + this.state.pluginType} style={styles.pluginOptionWrapper}>
 														<label htmlFor={fieldType} style={styles.pluginOptionLabel}>{fieldTitle}</label>
 														<div style={styles.pluginPropWrapper}>
-															<FieldComponent selectedValue={value} references={this.references} assets={this.assets} selections={this.selections} {...PluginInputFieldParams} ref={(ref) => this.popupInputFields[fieldTitle] = ref}/>
+															<FieldComponent selectedValue={value} references={this.state.references} assets={this.state.assets} selections={this.state.selections} {...PluginInputFieldParams} ref={(ref) => this.popupInputFields[fieldTitle] = ref}/>
 														</div>
 														<div style={styles.clearfix}></div>
 													</div>);
