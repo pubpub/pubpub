@@ -7,6 +7,7 @@ import {FormattedMessage} from 'react-intl';
 
 import Plugins from '../../components/EditorPlugins/index.js';
 import InputFields from '../EditorPluginFields/index.js';
+import MurmurHash from 'murmurhash';
 
 let styles = {};
 const POPUP_WIDTH = 425;
@@ -155,6 +156,7 @@ const EditorPluginPopup = React.createClass({
 				yLoc: yLoc,
 				activeLine: cm.getCursor().line,
 				pluginType: pluginType,
+				pluginHash: MurmurHash.v2(valueString),
 				initialString: pluginString,
 				values: values,
 				flippedX: flippedX,
@@ -224,7 +226,7 @@ const EditorPluginPopup = React.createClass({
 					style={[styles.pluginPopup, styles.pluginPopupPos(this.state.xLoc, this.state.yLoc, this.state.flippedY), this.state.popupVisible && styles.pluginPopupVisible]}
 				>
 				<div style={styles.pluginPopupArrow(this.state.flippedX, this.state.flippedY)}></div>
-				<div style={styles.pluginContent}>
+				<div key={this.state.pluginHash} style={styles.pluginContent}>
 					<div style={styles.pluginPopupTitle}>
 						{this.state.pluginType}</div>
 						{
