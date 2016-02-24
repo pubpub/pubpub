@@ -162,7 +162,7 @@ const PubDiscussionsInput = React.createClass({
 				{
 					(this.state.showPreview) ?
 					<div>
-						<span style={styles.livePreviewText}>Live Preview: <small>(you can use <a href="https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet">markdown</a> to style your comment)</small></span>
+						<span style={styles.livePreviewText}>Live Preview: <small>(you can use <a target="_blank" href="https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet">markdown</a> to style your comment)</small></span>
 						<div style={styles.livePreviewBox}>
 							<PPMComponent assets={{}} references={{}} selections={this.state.selections} markdown={this.state.content} />
 						</div>
