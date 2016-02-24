@@ -47,6 +47,7 @@ styles = {
 		fontSize: '15px',
 		height: '2.5em',
 		paddingLeft: '5px',
+		resize: 'vertical',
 	},
 };
 
