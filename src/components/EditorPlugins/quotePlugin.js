@@ -4,7 +4,7 @@ import createPubPubPlugin from './PubPub';
 import {Reference} from '../';
 
 const QuoteInputFields = [
-	{title: 'quote', type: 'text', params: {placeholder: 'Caption describing the image'}},
+	{title: 'quote', type: 'textArea', params: {placeholder: 'Caption describing the image'}},
 	{title: 'attribution', type: 'text', params: {placeholder: 'Who said it'}},
 	{title: 'align', type: 'align'},
 	{title: 'size', type: 'size'},
