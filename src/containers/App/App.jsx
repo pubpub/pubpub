@@ -34,6 +34,7 @@ const App = React.createClass({
 	render: function() {
 		const journalURL = this.props.journalData.getIn(['journalData', 'customDomain']) ? 'http://' + this.props.journalData.getIn(['journalData', 'customDomain']) : 'http://' + this.props.journalData.getIn(['journalData', 'subdomain']) + '.pubpub.org';
 		const currentBaseURL = this.props.journalData.get('baseSubdomain') ? journalURL : 'http://www.pubpub.org';
+		const rootImage = this.props.journalData.getIn(['journalData', 'journalLogoURL']) ? this.props.journalData.getIn(['journalData', 'journalLogoURL']) : 'https://s3.amazonaws.com/pubpub-upload/pubpubDefaultTitle.png';
 		const metaData = {
 			meta: [
 				{name: 'description', content: 'PubPub is a platform for totally transparent publishing. Read, Write, Publish, Review.'},
@@ -42,7 +43,7 @@ const App = React.createClass({
 				{property: 'og:description', content: 'PubPub is a platform for totally transparent publishing. Read, Write, Publish, Review.'},
 				{property: 'og:url', content: currentBaseURL + this.props.path},
 				{property: 'og:type', content: 'website'},
-				{property: 'og:image', content: 'https://s3.amazonaws.com/pubpub-upload/pubpubDefaultTitle.png'},
+				{property: 'og:image', content: rootImage},
 				{property: 'fb:app_id', content: '924988584221879'},
 			]
 		};
