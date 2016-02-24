@@ -11,7 +11,9 @@ export default function() {
 			const cur = editor.getCursor();
 			const token = editor.getTokenAt(cur);
 
-			if (token.type === 'pubpub-markdown') {
+			console.log(token.type);
+
+			if (token.type.indexOf('pubpub-markdown') !== -1) {
 
 				const line = editor.getLine(cur.line);
 				let startPos = token.start;
@@ -25,8 +27,12 @@ export default function() {
 
 				const list = [];
 
+
+
 				for (const plugin in Plugins) {
 					if (Plugins.hasOwnProperty(plugin) && Plugins[plugin].Config.autocomplete === true) {
+						console.log(plugin);
+						console.log(completionString);
 						if (completionString.length >= 2 && plugin.charAt(0) === completionString.charAt(1)) {
 							list.unshift({text: plugin + ': ]]', displayText: plugin});
 						} else {
