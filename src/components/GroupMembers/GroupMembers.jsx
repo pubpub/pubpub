@@ -35,7 +35,7 @@ const GroupMembers = React.createClass({
 			outputUsers = outputUsers.map((user)=>{
 				return user._id;
 			});
-			
+
 			this.props.handleGroupSave({members: outputUsers});
 		};
 	},
@@ -47,7 +47,7 @@ const GroupMembers = React.createClass({
 			});
 
 			outputUsers.push(userID);
-			
+
 			this.props.handleGroupSave({members: outputUsers});
 		};
 	},
@@ -70,7 +70,7 @@ const GroupMembers = React.createClass({
 
 						totalCount++;
 						return (<div key={'collabSearchUser-' + index} style={styles.result}>
-							
+
 							<div style={styles.imageWrapper}>
 								<img style={styles.image} src={user.thumbnail} />
 							</div>
@@ -78,7 +78,7 @@ const GroupMembers = React.createClass({
 							<div style={styles.action} key={'collabSearchAdd-' + index} onClick={this.handleAddNew(user._id)}>
 								<FormattedMessage {...globalMessages.add} />
 							</div>
-						</div>);	
+						</div>);
 					})
 				}
 				{results.length === 0 || totalCount === 0
@@ -106,15 +106,15 @@ const GroupMembers = React.createClass({
 
 				{this.props.isAdmin
 					? <div style={styles.memberAddWrapper}>
-						<Autocomplete 
-							autocompleteKey={'groupMemberAutocomplete'} 
-							route={'autocompleteUsers'} 
+						<Autocomplete
+							autocompleteKey={'groupMemberAutocomplete'}
+							route={'autocompleteUsers'}
 							placeholder={this.props.intl.formatMessage(messages.addNewMember)}
 							resultRenderFunction={this.renderMemberSearchResults}/>
 					</div>
 					: null
 				}
-				
+
 				{
 					this.props.groupData.members.map((member, index) => {
 						return (
@@ -122,9 +122,13 @@ const GroupMembers = React.createClass({
 
 								<div style={[styles.imageColumn, styles.columnHeader]}> <img style={styles.userImage} src={member.thumbnail} /> </div>
 								<div style={[styles.nameColumn]}>{member.name}</div>
-								<div key={'adminRemove-' + index} style={[styles.optionColumn, styles.optionColumnClickable, this.props.groupData.members.length === 1 && styles.hideRemove]} onClick={this.removeUser(member._id)}>
-									<FormattedMessage {...globalMessages.remove} />
-								</div>
+								{
+									this.props.isAdmin ?
+									<div key={'adminRemove-' + index} style={[styles.optionColumn, styles.optionColumnClickable, this.props.groupData.members.length === 1 && styles.hideRemove]} onClick={this.removeUser(member._id)}>
+										<FormattedMessage {...globalMessages.remove} />
+									</div>
+								: null
+								}
 								<div style={globalStyles.clearFix}></div>
 
 							</div>
@@ -242,7 +246,7 @@ styles = {
 		height: '50px',
 		lineHeight: '50px',
 		fontSize: '16px',
-		
+
 	},
 	optionColumnClickable: {
 		userSelect: 'none',
