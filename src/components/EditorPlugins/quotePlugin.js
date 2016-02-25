@@ -71,11 +71,11 @@ styles = {
 	full: {
 		borderTop: '#A7A7A7 solid 1px',
 		borderBottom: '#A7A7A7 solid 1px',
-		padding: '1em',
+		padding: '0px 1em',
 		textAlign: 'left'
 	},
 	line: {
-		paddingBottom: '1em',
+		padding: '1em 0px',
 	},
 	inline: {
 		borderLeft: '#A7A7A7 solid 1px',
@@ -88,7 +88,7 @@ styles = {
 	},
 	reference: {
 		fontSize: '0.65em',
-		paddingTop: '0.5em'
+		paddingTop: '0.5em '
 	}
 };
 

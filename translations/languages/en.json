@@ -33,6 +33,7 @@
   "editor.noRefsAdded": "No References Added",
   "editor.addBibtex": "Add Bibtex",
   "editor.manualEntry": "Manual Entry",
+  "editor.default": "default",
   "discussion.selectionPreviousDraft": "Selection made on draft version",
   "discussion.selectionPreviousVersion": "Selection made on Version {version}",
   "editor.livePreview": "Live Preview",
@@ -230,7 +231,7 @@
   "editorCommentsText0": "You are commenting on a draft version of this Pub.",
   "editorCommentsText1": "This section can only be used by collaborators and is private. It is never published or made public.",
   "EditorComments": "Editor Comments",
-  "discussionPlaceholder": "Add discussion or feedback",
+  "discussionPlaceholder": "Leave your feedback! Select text in the document to comment per line.",
   "People": "People",
-  "discussionReplyPlaceholder": "Add your reply"
+  "discussionReplyPlaceholder": "Add your reply. Select text in the document to comment per line."
 }
