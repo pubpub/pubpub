@@ -195,7 +195,8 @@ const Discussions = React.createClass({
 
 					{(discussionsData.length === 0) ?
 						<div style={styles.emptyComments}>
-							There are no comments here yet! Be the first to start the discussion.
+							<div>There are no comments here yet.</div> 
+							<div>Be the first to start the discussion!</div>
 						</div>
 					: null }
 
@@ -226,7 +227,7 @@ styles = {
 	},
 	emptyComments: {
 		margin: '40% 6% 0px 3%',
-		fontSize: '1.5em',
+		fontSize: '1.2em',
 		textAlign: 'center',
 		height: '70vh',
 	},
