@@ -40,6 +40,7 @@ ReactDOM.render(mainHTML, dest);
 
 if (process.env.NODE_ENV !== 'production') {
 	window.React = React; // enable debugger
+	Raven.config('https://270b7f0834134ee9afb6d1834933f583@app.getsentry.com/68428').install();
 
 	if (!dest || !dest.firstChild || !dest.firstChild.attributes || !dest.firstChild.attributes['data-react-checksum']) {
 		console.error('Server-side React render was discarded. Make sure that your initial render does not contain any client-side code.');
