@@ -46,6 +46,11 @@ if (process.env.NODE_ENV !== 'production') {
 	}
 } else {
 	Raven.config('https://270b7f0834134ee9afb6d1834933f583@app.getsentry.com/68428').install();
+
+	const username = store.getState().login.getIn(['userData','username']);
+	if (username) {
+		Raven.setUserContext({ username: username });
+	}
 }
 
 if (__DEVTOOLS__ && !window.devToolsExtension) {
