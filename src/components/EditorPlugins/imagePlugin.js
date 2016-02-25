@@ -53,10 +53,10 @@ const ImagePlugin = React.createClass({
 		const caption = this.props.caption;
 		const reference = this.props.reference;
 
-		const imgProps = (!this.props.size && !this.props.align) ? {style: {maxWidth: '100%', maxHeight: '100%', display: 'block', margin: '0 auto'}} : {style: {width: '100%', height: '100%'}};
+		const imgProps = (!this.props.size && !this.props.align) ?  {maxWidth: '100%', maxHeight: '100%', display: 'block', margin: '0 auto'} : {width: '100%', height: '100%'};
 
 		return (<Media caption={caption} size={size} align={align} reference={reference}>
-				<ImageLoader onLoad={this.loadedImage} imgProps={imgProps} src={url} wrapper={React.DOM.span} preloader={this.preloader}/>
+				<img style={imgProps} src={url} />
 			</Media>
 		);
 	}
