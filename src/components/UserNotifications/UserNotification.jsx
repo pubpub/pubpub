@@ -32,6 +32,8 @@ const UserNotification = React.createClass({
 
 				<div style={[styles.notificationText]}>
 					{(() => {
+						const discussion = notification.discussion || {};
+
 						switch (this.props.notificationObject.type) {
 						case 'discussion/repliedTo':
 							return (
@@ -40,7 +42,7 @@ const UserNotification = React.createClass({
 										<span style={styles.boldLink}>{notification.sender.name}</span>
 									</Link>
 									<span> responded to your </span>
-									<Link to={'/pub/' + notification.pub.slug + '/discussions/' + notification.discussion._id} style={globalStyles.link}>
+									<Link to={'/pub/' + notification.pub.slug + '/discussions/' + discussion._id} style={globalStyles.link}>
 										<span style={styles.boldLink}>discussion</span>
 									</Link>
 								</div>
@@ -51,11 +53,12 @@ const UserNotification = React.createClass({
 									<Link to={'/user/' + notification.sender.username} style={globalStyles.link}>
 										<span style={styles.boldLink}>{notification.sender.name}</span>
 									</Link>
-									{notification.discussion.version === 0
+
+									{discussion.version === 0
 										? <span> commented on the draft of </span>
 										: <span> added a discussion to your pub, </span>
 									}
-									{notification.discussion.version === 0
+									{discussion.version === 0
 										? <Link to={'/pub/' + notification.pub.slug + '/draft'} style={globalStyles.link}>
 											<span style={styles.boldLink}>{notification.pub.title}</span>
 										</Link>
