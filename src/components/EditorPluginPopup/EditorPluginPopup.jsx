@@ -131,10 +131,10 @@ const EditorPluginPopup = React.createClass({
 			clickX = event.clientX + document.body.scrollLeft + document.documentElement.scrollLeft;
 			clickY = event.clientY + document.body.scrollTop + document.documentElement.scrollTop;
 		}
-		this.showAtPos(clickX, clickY, event);
+		this.showAtPos(clickX, clickY);
 	},
 
-	showAtPos: function(clickX, clickY, currentEvent) {
+	showAtPos: function(clickX, clickY) {
 
 		const target = document.elementFromPoint(clickX, clickY);
 		const contentBody = document.getElementById('editor-text-wrapper');
@@ -173,7 +173,7 @@ const EditorPluginPopup = React.createClass({
 			this.focusFields();
 
 		} else {
-			if (document.getElementById('plugin-popup').contains(currentEvent.target)) {
+			if (document.getElementById('plugin-popup').contains(target)) {
 				if (!this.state.popupVisible) {
 					this.setState({
 						popupVisible: true,
