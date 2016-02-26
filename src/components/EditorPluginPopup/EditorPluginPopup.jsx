@@ -173,7 +173,7 @@ const EditorPluginPopup = React.createClass({
 			this.focusFields();
 
 		} else {
-			if (document.getElementById('plugin-popup').contains(event.target)) {
+			if (document.getElementById('plugin-popup').contains(target)) {
 				if (!this.state.popupVisible) {
 					this.setState({
 						popupVisible: true,
