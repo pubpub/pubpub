@@ -344,28 +344,28 @@ app.get('/handleNewFile', function(req,res){
 			// if it had more to do?
 			// Probably need a cleaner solution, but this'll work for now.
 			// setTimeout(function(){		
-					cloudinary.uploader.upload(req.query.url, function(result) { 
-						try{
-							result.thumbnail = result.url ? result.url.replace('/upload', '/upload/c_limit,h_50,w_50') : req.query.url;
-							if (!result.url) {
-								console.log('cloudinaryResponse in test-routes did not have url. Here is the response:');
-								console.log(result);
-							}
-					        result.assetType = 'image';
-							return res.status(201).json(result);	
-						} catch (err){
-							console.log('In catch on cloudinary image upload. '); console.log('req.body', req.body); console.log('err', err);
+					// cloudinary.uploader.upload(req.query.url, function(result) { 
+					// 	try{
+					// 		result.thumbnail = result.url ? result.url.replace('/upload', '/upload/c_limit,h_50,w_50') : req.query.url;
+					// 		if (!result.url) {
+					// 			console.log('cloudinaryResponse in test-routes did not have url. Here is the response:');
+					// 			console.log(result);
+					// 		}
+					//         result.assetType = 'image';
+					// 		return res.status(201).json(result);	
+					// 	} catch (err){
+					// 		console.log('In catch on cloudinary image upload. '); console.log('req.body', req.body); console.log('err', err);
 							// If cloudinary fails - just set the thumbnail url to the full sized amazon version url. We can go through and check all the
 							// items that have .amazon urls in their thumbnail fields.
-							result = {
+							const result = {
 								url: req.query.url,
 								thumbnail: req.query.url,
 								assetType: 'image',
 							};
 							return res.status(201).json(result);
-						}
+					// 	}
 				        
-					});		
+					// });		
 
 				
 			// }, delay);
