@@ -115,7 +115,7 @@ const PubMetaExperts = React.createClass({
 									: <JournalPreview 
 										journalData={journalItem.journal} 
 										hideDetails={true} 
-										customDetails={['Submitted On ' + dateFormat(journalItem.date, 'mm/dd/yy, h:MMTT')]} />
+										customDetails={['Submitted On ' + dateFormat(journalItem.date, 'mmm dd, yyyy h:MMTT')]} />
 								}
 								
 							</div>
@@ -141,7 +141,7 @@ const PubMetaExperts = React.createClass({
 								<JournalPreview 
 									journalData={journalItem.journal} 
 									hideDetails={true} 
-									customDetails={['Featured On ' + dateFormat(journalItem.date, 'mm/dd/yy, h:MMTT')]} />
+									customDetails={['Featured On ' + dateFormat(journalItem.date, 'mmm dd, yyyy h:MMTT')]} />
 							</div>
 						);
 					})}

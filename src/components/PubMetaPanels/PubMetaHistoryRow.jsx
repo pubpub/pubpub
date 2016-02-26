@@ -37,7 +37,7 @@ const PubMetaHistoryRow = React.createClass({
 							? <FormattedMessage id="pub.draftVersion" defaultMessage="Draft Version"/>
 							: <FormattedMessage {...globalMessages.ReadyForPeerReview} />
 						}</span> */}
-						<span style={styles.versionDate}>{dateFormat(this.props.historyItem.publishDate, 'mm/dd/yy, h:MMTT')}</span>
+						<span style={styles.versionDate}>{dateFormat(this.props.historyItem.publishDate, 'mmm dd, yyyy h:MMTT')}</span>
 					</div>
 
 					<div style={styles.versionChangesLine}>

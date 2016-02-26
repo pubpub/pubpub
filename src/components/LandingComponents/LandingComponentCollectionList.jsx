@@ -90,7 +90,7 @@ const LandingComponentCollectionList = React.createClass({
 
 									<div></div>
 
-									<div style={styles.pubDetail}>{dateFormat(pub.lastUpdated, 'mm/dd/yy')}</div>
+									<div style={styles.pubDetail}>{dateFormat(pub.lastUpdated, 'mmm dd, yyyy')}</div>
 									<div style={styles.separator}>|</div>
 									<div style={styles.pubDetail}>{pub.discussions ? pub.discussions.length : 0} comments</div>
 
@@ -108,7 +108,7 @@ const LandingComponentCollectionList = React.createClass({
 												<span>Latest Comment: </span>
 												{pub.discussions[pub.discussions.length - 1].author.name} 
 												<span> on </span>
-												{dateFormat(pub.discussions[pub.discussions.length - 1].postDate, 'mm/dd/yy, h:MMTT')}
+												{dateFormat(pub.discussions[pub.discussions.length - 1].postDate, 'mmm dd, yyyy h:MMTT')}
 											</div>
 											<div style={styles.commentWrapper}>
 												{/* <div style={styles.commentHeader}>

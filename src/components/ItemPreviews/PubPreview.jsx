@@ -37,12 +37,12 @@ const PubPreview = React.createClass({
 							
 							<div style={[styles.pubDate, this.props.textFontSize && {fontSize: this.props.textFontSize}]}>
 								{pub.createDate
-									? <span>Created: {dateFormat(pub.createDate, 'mm/dd/yy')}</span>
+									? <span>Created: {dateFormat(pub.createDate, 'mmm dd, yyyy')}</span>
 									: null
 								}
 
 								{pub.lastUpdated
-									? <span> | Last Updated: {dateFormat(pub.lastUpdated, 'mm/dd/yy')}</span>
+									? <span> | Last Updated: {dateFormat(pub.lastUpdated, 'mmm dd, yyyy')}</span>
 									: null
 								}
 								<div>

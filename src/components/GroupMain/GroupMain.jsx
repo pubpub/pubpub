@@ -66,7 +66,7 @@ const GroupMain = React.createClass({
 									<span style={styles.pubAuthor}>{this.authorString(pub)}</span>
 								</div>
 
-								<div style={styles.pubDetail}>{dateFormat(pub.lastUpdated, 'mm/dd/yy')}</div>
+								<div style={styles.pubDetail}>{dateFormat(pub.lastUpdated, 'mmm dd, yyyy')}</div>
 								<div style={styles.separator}>|</div>
 								<div style={styles.pubDetail}>{pub.discussions ? pub.discussions.length : 0} comments</div>
 
@@ -84,13 +84,13 @@ const GroupMain = React.createClass({
 											<span>Latest Comment: </span>
 											{discussionsList[discussionsList.length - 1].author.name} 
 											<span> on </span>
-											{dateFormat(discussionsList[discussionsList.length - 1].postDate, 'mm/dd/yy, h:MMTT')}
+											{dateFormat(discussionsList[discussionsList.length - 1].postDate, 'mmm dd, yyyy h:MMTT')}
 										</div>
 										<div style={styles.commentWrapper}>
 											{/* <div style={styles.commentHeader}>
 												{discussionsList[discussionsList.length - 1].author.name} 
 												<span> on </span>
-												{dateFormat(discussionsList[discussionsList.length - 1].postDate, 'mm/dd/yy, h:MMTT')}
+												{dateFormat(discussionsList[discussionsList.length - 1].postDate, ''mmm dd, yyyy', h:MMTT')}
 											</div> */}
 											<div style={styles.commentText}>
 												{discussionsList[discussionsList.length - 1].markdown.replace(/\[\[(.*)\]\]/g, '').length > 100 
