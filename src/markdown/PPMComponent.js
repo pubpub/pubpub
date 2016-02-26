@@ -159,9 +159,11 @@ const PPMComponent = React.createClass({
 		case 'pubitem':
 			// console.log(arguments)
 			// debugger;
+
 			props.className = props.pubItemField;
 			return <div {...props}>{children}</div>;
 			console.log('pub item props ',props);
+
 		case 'pubsubitem':
 			// console.log(arguments)
 			// debugger;
