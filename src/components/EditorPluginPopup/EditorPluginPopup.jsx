@@ -50,7 +50,7 @@ const EditorPluginPopup = React.createClass({
 
 	},
 	onpluginKeyPress(evt) {
-		if (evt.keyCode === 13) {
+		if (evt.keyCode === 13 && this.state.popupVisible) {
 			if (document.activeElement === document.body) {
 				this.onPluginSave();
 			}
