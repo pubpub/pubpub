@@ -81,7 +81,8 @@ const PubDiscussionsInput = React.createClass({
 			cm.setValue(cm.getValue() + spacing + '[[selection: index=' + nextProps.newDiscussionData.get('selections').size + ']] ' );
 		}
 
-		this.setState({selections: nextProps.newDiscussionData.get('selections').toArray()});
+		const newSelections = nextProps.newDiscussionData && nextProps.newDiscussionData.get ? nextProps.newDiscussionData.get('selections').toArray() : [];
+		this.setState({selections: newSelections});
 
 		// console.log('selections! ', nextProps.newDiscussionData.get('selections'));
 
