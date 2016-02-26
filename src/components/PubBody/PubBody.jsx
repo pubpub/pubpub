@@ -206,14 +206,14 @@ const PubBody = React.createClass({
 						{this.props.firstPublishedDate !== this.props.lastPublishedDate
 							? <div id={'pub-dates'}>
 								<span><FormattedMessage {...globalMessages.firstPublished}/> </span>
-								{dateFormat(this.props.firstPublishedDate, 'mm/dd/yy')}
+								{dateFormat(this.props.firstPublishedDate, 'mmm dd, yyyy')}
 								<span style={styles.dateSeparator}>|</span>
 								<span><FormattedMessage {...globalMessages.lastPublished}/> </span>
-								{dateFormat(this.props.lastPublishedDate, 'mm/dd/yy')}
+								{dateFormat(this.props.lastPublishedDate, 'mmm dd, yyyy')}
 							</div>
 							: <div id={'pub-dates'} style={[this.props.firstPublishedDate === undefined && {display: 'none'}]}>
 								<span><FormattedMessage {...globalMessages.publishedOn}/> </span>
-								{dateFormat(this.props.firstPublishedDate, 'mm/dd/yy')}
+								{dateFormat(this.props.firstPublishedDate, 'mmm dd, yyyy')}
 							</div>
 						}
 
