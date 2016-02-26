@@ -141,8 +141,30 @@ const EditorPluginPopup = React.createClass({
 
 		if (target && target.className.indexOf('cm-plugin') > -1) {
 			const cm = this.getActiveCodemirrorInstance();
+
+			const selectedLine = cm.coordsChar({left: clickX, top: clickY, mode: 'window'});
+			const activeChar = selectedLine.ch;
+			const activeLine = selectedLine.line;
+			let activeToken = null;
+
+			const selectedTokens = cm.getLineTokens(selectedLine.line);
+			for (const token of selectedTokens) {
+				if (token.start <= activeChar && activeChar <= token.end) {
+					activeToken = token;
+				}
+			}
+
+			if (!activeToken) {
+				console.error('Could not find the active token!');
+				return;
+			}
+
+
 			// const pluginString = target.parentElement.textContent.slice(2, -2); // Original string minus the brackets
-			const pluginString = target.innerHTML.slice(2, -2); // Original string minus the brackets
+			// const pluginString = target.innerHTML.slice(2, -2); // Original string minus the brackets
+
+			const pluginString = activeToken.string.slice(2, -2);
+
 			const pluginSplit = pluginString.split(':');
 			const pluginType = pluginSplit[0];
 			const valueString = pluginSplit.length > 1 ? pluginSplit[1] : ''; // Values split into an array
@@ -161,7 +183,8 @@ const EditorPluginPopup = React.createClass({
 				popupVisible: true,
 				xLoc: xLoc,
 				yLoc: yLoc,
-				activeLine: cm.getCursor().line,
+				activeLine: activeLine,
+				activeToken: activeToken,
 				pluginType: pluginType,
 				pluginHash: MurmurHash.v2(valueString),
 				initialString: pluginString,
@@ -191,13 +214,14 @@ const EditorPluginPopup = React.createClass({
 	onPluginSave: function() {
 		const cm = this.getActiveCodemirrorInstance();
 		const lineNum = this.state.activeLine;
-		const lineContent = cm.getLine(lineNum);
-		const from = {line: lineNum, ch: 0};
-		const to = {line: lineNum, ch: lineContent.length};
+		// const from = {line: lineNum, ch: 0};
+		// const to = {line: lineNum, ch: lineContent.length};
+		const from = {line: lineNum, ch: this.state.activeToken.start};
+		const to = {line: lineNum, ch: this.state.activeToken.end};
 
-		const mergedString = this.createPluginString(this.state.pluginType);
-		const outputString = lineContent.replace(this.state.initialString, mergedString);
-		cm.replaceRange(outputString, from, to); // Since the popup closes on change, this will close the pluginPopup
+		const mergedString = `[[${this.createPluginString(this.state.pluginType)}]]`;
+		// const outputString = lineContent.replace(this.state.initialString, mergedString);
+		cm.replaceRange(mergedString, from, to); // Since the popup closes on change, this will close the pluginPopup
 	},
 
 	createPluginString: function(pluginType) {
