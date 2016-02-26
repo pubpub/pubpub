@@ -139,7 +139,7 @@ const EditorPluginPopup = React.createClass({
 		const target = document.elementFromPoint(clickX, clickY);
 		const contentBody = document.getElementById('editor-text-wrapper');
 
-		if (target.className.indexOf('cm-plugin') > -1) {
+		if (target && target.className.indexOf('cm-plugin') > -1) {
 			const cm = this.getActiveCodemirrorInstance();
 			// const pluginString = target.parentElement.textContent.slice(2, -2); // Original string minus the brackets
 			const pluginString = target.innerHTML.slice(2, -2); // Original string minus the brackets
