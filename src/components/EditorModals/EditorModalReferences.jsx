@@ -238,7 +238,7 @@ const EditorModalReferences = React.createClass({
 				<div className="add-options-content" style={[styles.addOptions, styles.addOptions[this.state.showAddOptions], styles.addOptionsContent]}>
 
 					<div style={[styles.addOptionModes, this.state.editingRefName && styles.hide]}>
-						<div style={[styles.addOptionText]}>Input Mode: </div>
+						{/* <div style={[styles.addOptionText]}>Input Mode: </div> */}
 						<div style={[styles.addOptionMode, this.state.addOptionMode === 'manual' && styles.addOptionModeActive]} key={'addOptionMode-manual'}onClick={this.setAddOptionMode('manual')}>Manual</div>
 						<div style={[styles.addOptionMode, this.state.addOptionMode === 'bibtex' && styles.addOptionModeActive]} key={'addOptionMode-bibtex'}onClick={this.setAddOptionMode('bibtex')}>Bibtex</div>
 					</div>
@@ -417,8 +417,8 @@ styles = {
 		fontSize: 14,
 	},
 	addOptionModes: {
-		fontSize: '20px',
-		marginBottom: '20px',
+		fontSize: '26px',
+		marginBottom: '25px',
 	},
 	addOptionText: {
 		color: '#222',
