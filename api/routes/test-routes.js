@@ -343,6 +343,9 @@ app.get('/handleNewFile', function(req,res){
 			// Perhaps S3 is taking time to process? That seems strange, why would it finish to begin with 
 			// if it had more to do?
 			// Probably need a cleaner solution, but this'll work for now.
+
+			// https://forums.aws.amazon.com/thread.jspa?messageID=370145
+			
 			// setTimeout(function(){		
 					// cloudinary.uploader.upload(req.query.url, function(result) { 
 					// 	try{

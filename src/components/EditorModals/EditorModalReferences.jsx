@@ -30,6 +30,7 @@ const EditorModalReferences = React.createClass({
 		return {
 			isLoading: false,
 			showAddOptions: false,
+			addOptionMode: 'manual',
 			editingRefName: null,
 			manualFormData: {
 				refName: null,
@@ -137,6 +138,12 @@ const EditorModalReferences = React.createClass({
 		return (<div>Results</div>);
 	},
 
+	setAddOptionMode: function(mode) {
+		return ()=>{
+			this.setState({addOptionMode: mode});
+		};
+	},
+
 	render: function() {
 		const referenceData = [];
 		for ( const key in this.props.referenceData ) {
@@ -229,12 +236,19 @@ const EditorModalReferences = React.createClass({
 
 				{/* Content section displayed when in advanced add mode */}
 				<div className="add-options-content" style={[styles.addOptions, styles.addOptions[this.state.showAddOptions], styles.addOptionsContent]}>
-					<div style={this.state.editingRefName && styles.hide}>
-						<div style={styles.sectionHeader}>
+
+					<div style={[styles.addOptionModes, this.state.editingRefName && styles.hide]}>
+						<div style={[styles.addOptionText]}>Input Mode: </div>
+						<div style={[styles.addOptionMode, this.state.addOptionMode === 'manual' && styles.addOptionModeActive]} key={'addOptionMode-manual'}onClick={this.setAddOptionMode('manual')}>Manual</div>
+						<div style={[styles.addOptionMode, this.state.addOptionMode === 'bibtex' && styles.addOptionModeActive]} key={'addOptionMode-bibtex'}onClick={this.setAddOptionMode('bibtex')}>Bibtex</div>
+					</div>
+
+					<div style={[(this.state.editingRefName || this.state.addOptionMode !== 'bibtex') && styles.hide]}>
+						{/* <div style={styles.sectionHeader}>
 							<FormattedMessage
 								id="editor.addBibtex"
 								defaultMessage="Add Bibtex"/>
-						</div>
+						</div> */}
 						<div style={styles.inputFormWrapper}>
 							<textarea style={styles.textArea} ref="bibtexForm"
 								placeholder="@article{bracewell1965fourier,
@@ -247,33 +261,36 @@ const EditorModalReferences = React.createClass({
 						<div style={styles.clearfix}></div>
 					</div>
 
-					<hr style={styles.sectionDivider}/>
-					<div style={[styles.sectionHeader, this.state.editingRefName && styles.hide]}>
-						<FormattedMessage
-								id="editor.manualEntry"
-								defaultMessage="Manual Entry"/>
-					</div>
-					<div style={styles.inputFormWrapper}>
-						{
-							Object.keys(this.state.manualFormData).map((inputItem)=>{
-								return (
-									<div key={'manualForm-' + inputItem} style={styles.manualFormInputWrapper}>
-										<label style={styles.manualFormInputTitle} htmlFor={inputItem}>
-											<FormattedMessage {...globalMessages[inputItem]} />
-										</label>
-										<input style={styles.manualFormInput} name={inputItem} id={inputItem} type="text" onChange={this.handleManualInputFormChange} value={this.state.manualFormData[inputItem]}/>
-									</div>
+					{/* <hr style={styles.sectionDivider}/> */}
 
-								);
-							})
-						}
+					<div style={[(this.state.addOptionMode !== 'manual' && !this.state.editingRefName) && styles.hide]}>
+						{/* <div style={[styles.sectionHeader, this.state.editingRefName && styles.hide]}>
+							<FormattedMessage
+									id="editor.manualEntry"
+									defaultMessage="Manual Entry"/>
+						</div> */}
+						<div style={styles.inputFormWrapper}>
+							{
+								Object.keys(this.state.manualFormData).map((inputItem)=>{
+									return (
+										<div key={'manualForm-' + inputItem} style={styles.manualFormInputWrapper}>
+											<label style={styles.manualFormInputTitle} htmlFor={inputItem}>
+												<FormattedMessage {...globalMessages[inputItem]} />
+											</label>
+											<input style={styles.manualFormInput} name={inputItem} id={inputItem} type="text" onChange={this.handleManualInputFormChange} value={this.state.manualFormData[inputItem]}/>
+										</div>
+
+									);
+								})
+							}
+							<div style={styles.clearfix}></div>
+						</div>
+						<div style={styles.saveForm} key={'referencesManualFormSaveButton'} onClick={this.saveManualForm}>
+							<FormattedMessage {...globalMessages.save} />
+						</div>
+
 						<div style={styles.clearfix}></div>
 					</div>
-					<div style={styles.saveForm} key={'referencesManualFormSaveButton'} onClick={this.saveManualForm}>
-						<FormattedMessage {...globalMessages.save} />
-					</div>
-
-					<div style={styles.clearfix}></div>
 				</div>
 
 			</div>
@@ -398,5 +415,26 @@ styles = {
 		borderColor: '#BBB',
 		outline: 'none',
 		fontSize: 14,
+	},
+	addOptionModes: {
+		fontSize: '20px',
+		marginBottom: '20px',
+	},
+	addOptionText: {
+		color: '#222',
+		display: 'inline-block',
+	},
+	addOptionMode: {
+		display: 'inline-block',
+		padding: '0px 15px',
+		color: '#aaa',
+		':hover': {
+			cursor: 'pointer',
+			color: '#222',
+		},
+	},
+	addOptionModeActive: {
+		color: '#222',
 	}
+
 };
