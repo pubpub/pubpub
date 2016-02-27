@@ -21,7 +21,7 @@ import {Provider} from 'react-redux';
 import qs from 'query-string';
 import getRoutes from './routes';
 import getStatusFromRoutes from './helpers/getStatusFromRoutes';
-import {generateRSS} from './rssGen';
+
 
 const pretty = new PrettyError();
 const app = new Express();
@@ -37,9 +37,9 @@ app.use(favicon(path.join(__dirname, '..', 'static', 'favicon.ico')));
 app.use(require('serve-static')(path.join(__dirname, '..', 'static')));
 
 // Proxy to API server
-app.use('/rss.xml', (req, res) => {
-	generateRSS(req, res);
-});
+// app.use('/rss.xml', (req, res) => {
+// 	require('./rssGen');
+// });
 
 // Proxy to API server
 app.use('/api', (req, res) => {

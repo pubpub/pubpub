@@ -1,12 +1,9 @@
-// require('../server.babel'); // babel registration (runtime transpilation for node)
-
-var RSS = require('rss');
-
+var app = require('../api/api');
 var mongoose = require('mongoose');
 // var mongoURI = process.env.NODE_ENV !== 'production' ? require('../api/authentication/mongoCredentials').mongoURI : process.env.mongoURI;
 // mongoose.connect(mongoURI);  
-var app = require('../api/api');
 
+var RSS = require('rss');
 var Pub  = require('../api/models').Pub;
 
 app.get('/rss.xml', function(req,res){
