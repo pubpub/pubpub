@@ -3,11 +3,14 @@ import Radium from 'radium';
 import {parsePluginString} from '../../utils/parsePlugins';
 
 import {globalMessages} from '../../utils/globalMessages';
+
 import {FormattedMessage} from 'react-intl';
 
 import Plugins from '../../components/EditorPlugins/index.js';
 import InputFields from '../EditorPluginFields/index.js';
 import MurmurHash from 'murmurhash';
+import Portal from 'react-portal';
+
 
 let styles = {};
 const POPUP_WIDTH = 425;
@@ -20,6 +23,7 @@ const EditorPluginPopup = React.createClass({
 		assets: PropTypes.object,
 		references: PropTypes.object,
 		selections: PropTypes.object,
+		isLivePreview: PropTypes.bool,
 	},
 
 	getDefaultProps: function() {
@@ -195,19 +199,6 @@ const EditorPluginPopup = React.createClass({
 
 			this.focusFields();
 
-		} else {
-			if (document.getElementById('plugin-popup').contains(target)) {
-				if (!this.state.popupVisible) {
-					this.setState({
-						popupVisible: true,
-					});
-				}
-			} else if (this.state.popupVisible === true) {
-				this.setState({
-					popupVisible: false,
-					activeLine: undefined,
-				});
-			}
 		}
 	},
 
@@ -246,42 +237,49 @@ const EditorPluginPopup = React.createClass({
 		return mergedString;
 	},
 
+	closePopup: function() {
+		this.setState({popupVisible: false});
+	},
+
 	render: function() {
 
 		const PluginInputFields = (this.state.pluginType) ? Plugins[this.state.pluginType].InputFields : [];
 
 		return (
-			<div id="plugin-popup"
-					ref={(ref) => this.popupBox = ref}
-					className="plugin-popup"
-					style={[styles.pluginPopup, styles.pluginPopupPos(this.state.xLoc, this.state.yLoc, this.state.flippedY), this.state.popupVisible && styles.pluginPopupVisible]}
-				>
-				<div style={styles.pluginPopupArrow(this.state.flippedX, this.state.flippedY)}></div>
-				<div key={this.state.pluginHash} style={styles.pluginContent}>
-					<div style={styles.pluginPopupTitle}>
-						{this.state.pluginType}</div>
-						{
-								PluginInputFields.map((inputField)=>{
-									const fieldType = inputField.type;
-									const fieldTitle = inputField.title;
-									const PluginInputFieldParams = inputField.params;
-									const FieldComponent = InputFields[fieldType];
-									const value = (this.state) ? this.state.values[fieldTitle] || null : null;
+			<Portal onClose={this.closePopup} isOpened={this.state.popupVisible} closeOnOutsideClick closeOnEsc>
+				<div style={styles.pluginFlexBox(this.props.isLivePreview)}>
+					<div id="plugin-popup"
+							ref={(ref) => this.popupBox = ref}
+							className="plugin-popup"
+							style={[styles.pluginPopup(this.props.isLivePreview), this.state.popupVisible && styles.pluginPopupVisible]}
+						>
+						<div key={this.state.pluginHash} style={styles.pluginContent}>
+							<div style={styles.pluginPopupTitle}>
+								{this.state.pluginType}</div>
+								{
+										PluginInputFields.map((inputField)=>{
+											const fieldType = inputField.type;
+											const fieldTitle = inputField.title;
+											const PluginInputFieldParams = inputField.params;
+											const FieldComponent = InputFields[fieldType];
+											const value = (this.state) ? this.state.values[fieldTitle] || null : null;
 
-									return (<div key={'pluginVal-' + fieldTitle + this.state.pluginType} style={styles.pluginOptionWrapper}>
-														<label htmlFor={fieldType} style={styles.pluginOptionLabel}>{fieldTitle}</label>
-														<div style={styles.pluginPropWrapper}>
-															<FieldComponent selectedValue={value} references={this.state.references} assets={this.state.assets} selections={this.state.selections} {...PluginInputFieldParams} ref={(ref) => this.popupInputFields[fieldTitle] = ref}/>
-														</div>
-														<div style={styles.clearfix}></div>
-													</div>);
-								})
-						}
-					<div style={styles.pluginSave} key={'pluginPopupSave'} onClick={this.onPluginSave}>
-						<FormattedMessage {...globalMessages.save} />
+											return (<div key={'pluginVal-' + fieldTitle + this.state.pluginType} style={styles.pluginOptionWrapper}>
+																<label htmlFor={fieldType} style={styles.pluginOptionLabel}>{fieldTitle}</label>
+																<div style={styles.pluginPropWrapper}>
+																	<FieldComponent selectedValue={value} references={this.state.references} assets={this.state.assets} selections={this.state.selections} {...PluginInputFieldParams} ref={(ref) => this.popupInputFields[fieldTitle] = ref}/>
+																</div>
+																<div style={styles.clearfix}></div>
+															</div>);
+										})
+								}
+							<div style={styles.pluginSave} key={'pluginPopupSave'} onClick={this.onPluginSave}>
+								<FormattedMessage {...globalMessages.save} />
+							</div>
+						</div>
 					</div>
 				</div>
-			</div>
+			</Portal>
 		);
 
 	}
@@ -291,33 +289,44 @@ export default Radium(EditorPluginPopup);
 
 
 styles = {
-	pluginPopup: {
-		width: POPUP_WIDTH,
-		// minHeight: 200,
-		backgroundColor: 'white',
-		boxShadow: '0px 0px 2px 0px #333',
-		position: 'absolute',
-		opacity: 0,
-		transform: 'scale(0.8)',
-		transition: '.02s linear transform, .02s linear opacity',
-		zIndex: 50,
-		pointerEvents: 'none',
-		padding: 5,
-		borderRadius: '1px',
+	pluginFlexBox: function(isLivePreview) {
+		return {
+			position: 'fixed',
+			left: '0vw',
+			top: '0vh',
+			// display: 'flex',
+			// alignItems: 'center',
+			height: '100vh',
+			width: (isLivePreview) ? '50vw' : '100vw',
+			zIndex: 50,
+			backgroundColor: 'rgba(255,255,255,0.5)',
+			pointerEvents: 'none',
+		};
+	},
+	pluginPopup: function(isLivePreview) {
+		return {
+			width: (isLivePreview) ? '30vw' : '35vw',
+			minWidth: '425px',
+			position: 'relative',
+			margin: (isLivePreview) ? '0px 7vw' : '0px 29.5vw',
+			top: '10vh',
+			// minHeight: 200,
+			backgroundColor: 'white',
+			boxShadow: '0px 0px 2px 0px #333',
+			// left: `calc(50vw - ${POPUP_WIDTH / 2}px)`,
+			minHeight: '35vh',
+			opacity: 0,
+			transform: 'scale(0.8)',
+			transition: '.02s linear transform, .02s linear opacity',
+			zIndex: 50,
+			padding: '2vh 3vw',
+			borderRadius: '1px',
+		};
 	},
 	pluginPopupVisible: {
 		opacity: 1,
 		transform: 'scale(1.0)',
 		pointerEvents: 'auto',
-	},
-	pluginPopupPos: function(xLoc, yLoc, flipY) {
-		const pos = {left: xLoc};
-		if (flipY) {
-			pos.bottom = yLoc;
-		} else {
-			pos.top = yLoc;
-		}
-		return pos;
 	},
 	pluginPopupArrow: function(flipX, flipY) {
 		const xWidth = (flipX) ? POPUP_WIDTH - 25 : 15;
@@ -356,6 +365,8 @@ styles = {
 		fontSize: '18px',
 		display: 'inline-block',
 		float: 'right',
+		color: '#666',
+		fontFamily: '"Lato", sans-serif',
 		marginBottom: '15px',
 		':hover': {
 			cursor: 'pointer',
