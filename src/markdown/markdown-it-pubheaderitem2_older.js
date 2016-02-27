@@ -122,6 +122,16 @@ module.exports = function pubheaderitem_plugin(md, name, options) {
   console.log('renderer', render);
 
   function pubheaderitem(state, startLine, endLine, silent) {
+
+
+    // check start line for colon
+    // find end line (first line of same depth with colon)
+    // tokenize the innards
+    // set state to continue on 'calcEndLine to endLine'
+    // set state.line to be next line
+
+
+    console.log('state', state);
     var nextLine,
         initial,
         offset,
@@ -140,6 +150,7 @@ module.exports = function pubheaderitem_plugin(md, name, options) {
         markerValue,
         markerCharCode,
         isOrdered,
+        isItem,
         contentStart,
         listTokIdx,
         prevEmptyEnd,
@@ -152,18 +163,34 @@ module.exports = function pubheaderitem_plugin(md, name, options) {
 
     // if (state.parentType !== 'pubheader' && state.parentType !== 'pubheaderitem') { return false; }
     if (state.parentType !== 'pubheader') { return false; }
-
+    
     // Detect list type and position after marker
     if ((posAfterMarker = skipClassAndColonMarker(state, startLine)) >= 0) {
-      isOrdered = true;
-    } else if ((posAfterMarker = skipClassAndColonMarker(state, startLine)) >= 0) {
-      isOrdered = false;
+      isItem = true;
+      console.log('position after marker is', posAfterMarker);
+    // } else if ((posAfterMarker = skipBulletListMarker(state, startLine)) >= 0) {
+    //   isOrdered = false;
     } else {
       return false;
     }
 
+    
+    token        = state.push('pubheaderitem_open', 'pubheaderitem', 1);
+    token.map    = itemLines = [ startLine, 2 ];
+    state.md.block.tokenize(state, startLine, startLine + 2, true);
+    token        = state.push('pubheaderitem_close', 'pubheaderitem', -1);
+    state.line = startLine + 3;
+
+    return true;
+
+
+
+
+
+
     // We should terminate list on style change. Remember first one to compare.
     markerCharCode = state.src.charCodeAt(posAfterMarker - 1);
+    console.log(markerCharCode);
 
     // For validation mode we can terminate immediately
     if (silent) { return true; }
@@ -171,21 +198,22 @@ module.exports = function pubheaderitem_plugin(md, name, options) {
     // Start list
     listTokIdx = state.tokens.length;
 
-    if (isOrdered) {
-      start = state.bMarks[startLine] + state.tShift[startLine];
-      markerValue = Number(state.src.substr(start, posAfterMarker - start - 1));
+    // if (isOrdered) {
+    //   start = state.bMarks[startLine] + state.tShift[startLine];
+    //   markerValue = Number(state.src.substr(start, posAfterMarker - start - 1));
 
-      token       = state.push('ordered_list_open', 'ol', 1);
-      if (markerValue !== 1) {
-        token.attrs = [ [ 'start', markerValue ] ];
-      }
+    //   token       = state.push('ordered_list_open', 'ol', 1);
+    //   if (markerValue !== 1) {
+    //     token.attrs = [ [ 'start', markerValue ] ];
+    //   }
 
-    } else {
-      token       = state.push('bullet_list_open', 'ul', 1);
-    }
+    // } else {
+      // token       = state.push('pubheaderitem_open', 'pubheaderitem', 1);
+    // }
 
-    token.map    = listLines = [ startLine, 0 ];
-    token.markup = String.fromCharCode(markerCharCode);
+    // token.map    = listLines = [ startLine, 0 ];
+    // token.markup = String.fromCharCode(markerCharCode);
+    // console.log ('token.markup', token.markup);
 
     //
     // Iterate list items
@@ -194,16 +222,19 @@ module.exports = function pubheaderitem_plugin(md, name, options) {
     nextLine = startLine;
     prevEmptyEnd = false;
     terminatorRules = state.md.block.ruler.getRules('list');
-
+    console.log('nextLine', nextLine);
+    console.log('endLine', endLine);
+    
     while (nextLine < endLine) {
       pos = posAfterMarker;
       max = state.eMarks[nextLine];
+      console.log('line is', state.src.substring(pos, max));
 
       initial = offset = state.sCount[nextLine] + posAfterMarker - (state.bMarks[startLine] + state.tShift[startLine]);
 
       while (pos < max) {
         ch = state.src.charCodeAt(pos);
-
+        console.log('ch', ch, state.src.charAt(pos));
         if (isSpace(ch)) {
           if (ch === 0x09) {
             offset += 4 - offset % 4;
@@ -235,7 +266,7 @@ module.exports = function pubheaderitem_plugin(md, name, options) {
       indent = initial + indentAfterMarker;
 
       // Run subparser & write tokens
-      token        = state.push('list_item_open', 'li', 1);
+      token        = state.push('pubheaderitem_open', 'pubheaderitem', 1);
       token.markup = String.fromCharCode(markerCharCode);
       token.map    = itemLines = [ startLine, 0 ];
 
@@ -246,7 +277,7 @@ module.exports = function pubheaderitem_plugin(md, name, options) {
       oldParentType = state.parentType;
       state.blkIndent = indent;
       state.tight = true;
-      state.parentType = 'list';
+      state.parentType = 'pubheaderitem';
       state.tShift[startLine] = contentStart - state.bMarks[startLine];
       state.sCount[startLine] = offset;
 
@@ -277,8 +308,9 @@ module.exports = function pubheaderitem_plugin(md, name, options) {
       state.tight = oldTight;
       state.parentType = oldParentType;
 
-      token        = state.push('list_item_close', 'li', -1);
+      token        = state.push('pubheaderitem_close', 'pubheaderitem', -1);
       token.markup = String.fromCharCode(markerCharCode);
+
 
       nextLine = startLine = state.line;
       itemLines[1] = nextLine;
@@ -306,26 +338,26 @@ module.exports = function pubheaderitem_plugin(md, name, options) {
       if (terminate) { break; }
 
       // fail if list has another type
-      if (isOrdered) {
-        posAfterMarker = skipClassAndColonMarker(state, nextLine);
-        if (posAfterMarker < 0) { break; }
-      } else {
-        posAfterMarker = skipClassAndColonMarker(state, nextLine);
-        if (posAfterMarker < 0) { break; }
-      }
+      // if (isOrdered) {
+      //   posAfterMarker = skipOrderedListMarker(state, nextLine);
+      //   if (posAfterMarker < 0) { break; }
+      // } else {
+      //   posAfterMarker = skipBulletListMarker(state, nextLine);
+      //   if (posAfterMarker < 0) { break; }
+      // }
 
       if (markerCharCode !== state.src.charCodeAt(posAfterMarker - 1)) { break; }
     }
 
     // Finilize list
-    if (isOrdered) {
-      token = state.push('ordered_list_close', 'ol', -1);
-    } else {
-      token = state.push('bullet_list_close', 'ul', -1);
-    }
-    token.markup = String.fromCharCode(markerCharCode);
+    // if (isOrdered) {
+      // token = state.push('pubheaderitem_close', 'pubheaderitem', -1);
+    // } else {
+      // token = state.push('pubheaderitem_close', 'pubheaderitem', -1);
+    // }
+    // token.markup = String.fromCharCode(markerCharCode);
 
-    listLines[1] = nextLine;
+    // listLines[1] = nextLine;
     state.line = nextLine;
 
     // mark paragraphs tight if needed
