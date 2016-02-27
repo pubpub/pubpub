@@ -9,11 +9,6 @@ app.get('/rss.xml', function(req,res){
 	Journal.findOne({ $or:[ {'subdomain':host.split('.')[0]}, {'customDomain':host}]})
 	.lean().exec(function(err, journal){
 		var title = journal ? journal.journalName : 'PubPub';
-		// var journalURL = '';
-		// if (journal) {
-		// 	journalURL = journal && journal.customDomain ? 'http://' + journal.customDomain : 'http://' + journal.subdomain + '.pubpub.org';	
-		// }
-		// var baseURL = journal ? journalURL : 'http://www.pubpub.org';
 		var description = journal ? journal.description : 'PubPub is a platform for totally transparent publishing. Read, Write, Publish, Review.';
 		var imageURL = journal ? journal.journalLogoURL : 'https://s3.amazonaws.com/pubpub-upload/pubpubDefaultTitle.png';
 
