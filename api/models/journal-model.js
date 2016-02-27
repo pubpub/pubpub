@@ -20,6 +20,7 @@ var journalSchema = new Schema({
 	customDomain: { type: String, index: true,  unique: true, sparse: true  },
 	journalLogoURL: { type: String},
 	journalLogoThumbnailURL: { type: String},
+	journalDescription: { type: String},
 
 	defaultLanguage: {type: String},
 	createDate: {type: Date},
