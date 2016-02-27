@@ -126,11 +126,8 @@ app.use((req, res) => {
 					dynamicStyle = store.getState().pub.getIn(['pubData', 'history', versionIndex, 'styleScoped']);
 				}
 
-				// if (pathname === '/') {
-					
-				// }
+				const rssRel = pathname === '/' ? 'alternate' : 'home';
 				
-
 				res.send(`<!doctype html>
 					<html lang="en-us">
 						<head>
@@ -142,6 +139,7 @@ app.use((req, res) => {
 							${head.title.toString()}
 							${head.meta.toString()}
 
+							<link rel=${rssRel} type="application/rss+xml" title="RSS" href="/data/rss.xml" />
 							<link rel="shortcut icon" href="/favicon.ico" />
 							<link href='https://fonts.googleapis.com/css?family=Lato:300,300italic,700,700italic,900italic|Lora:400,400italic,700,700italic' rel='stylesheet' type='text/css' />
 
