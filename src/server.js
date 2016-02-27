@@ -21,6 +21,7 @@ import {Provider} from 'react-redux';
 import qs from 'query-string';
 import getRoutes from './routes';
 import getStatusFromRoutes from './helpers/getStatusFromRoutes';
+import {generateRSS} from './rssGen';
 
 const pretty = new PrettyError();
 const app = new Express();
@@ -34,6 +35,11 @@ app.use(compression());
 app.use(favicon(path.join(__dirname, '..', 'static', 'favicon.ico')));
 
 app.use(require('serve-static')(path.join(__dirname, '..', 'static')));
+
+// Proxy to API server
+app.use('/rss.xml', (req, res) => {
+	generateRSS(req, res);
+});
 
 // Proxy to API server
 app.use('/api', (req, res) => {
@@ -109,10 +115,10 @@ app.use((req, res) => {
 				)
 				const mainBundle = webpackIsomorphicTools.assets().javascript.main;
 				const head = Helmet.rewind();
-
+				
 				let dynamicStyle;
 				const pathname = store.getState().router.location.pathname;
-
+				
 				if (pathname.substring(0,5) === '/pub/' && pathname.substring(pathname.length-6, pathname.length) !== '/draft') {
 					// source = store.getState().pub.getIn(['pubData', 'history']);
 					const versionIndex = store.getState().router.location.query.version !== undefined && store.getState().router.location.query.version > 0 && store.getState().router.location.query.version <= (store.getState().pub.getIn(['pubData', 'history']).size - 1)
@@ -122,9 +128,9 @@ app.use((req, res) => {
 				}
 
 				// if (pathname === '/') {
-
+					
 				// }
-
+				
 
 				res.send(`<!doctype html>
 					<html lang="en-us">
@@ -164,12 +170,11 @@ app.use((req, res) => {
 							<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.2.0/mode/javascript/javascript.min.js"></script>
 							<script src="https://cdn.firebase.com/libs/firepad/1.2.0/firepad.min.js"></script>
 							<script src="https://cdn.polyfill.io/v2/polyfill.min.js?features=Intl.~locale.en"></script>
-
+							
 							<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.1.0/highlight.min.js"></script>
 							<script src="/js/typo.js"></script>
 							<script src="/js/spellcheck.js"></script>
-							<script src="https://cdn.ravenjs.com/2.1.0/raven.min.js"></script>
-
+							
 						</head>
 
 						<body style="width: 100%; margin: 0;">
