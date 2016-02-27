@@ -8,7 +8,7 @@ if (typeof window !== 'undefined') {
 }
 
 // Don't register events if we're in DEV
-const analyticsEnabled = __DEVELOPMENT__ ? false : true; 
+const analyticsEnabled = process.env.NODE_ENV === 'production' ? true : false; 
 
 function pageView(path, loggedIn) {
 	ga.pageview(path);

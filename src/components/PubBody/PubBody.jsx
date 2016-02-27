@@ -191,7 +191,7 @@ const PubBody = React.createClass({
 							: null
 						}
 
-						<div id={'pub-title'} >{this.props.title}</div>
+						<h1 id={'pub-title'} >{this.props.title}</h1>
 						<div id={'pub-authors'} style={[this.props.authors.length === 0 && {display: 'none'}]}>
 							<span><FormattedMessage {...globalMessages.by}/> </span>
 							{
