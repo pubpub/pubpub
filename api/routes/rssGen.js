@@ -32,6 +32,7 @@ app.get('/rss.xml', function(req,res){
 
 		Pub.find(query, {'slug':1, 'title':1, 'abstract': 1, 'lastUpdated': 1, 'authors': 1})
 		.populate({ path: 'authors', select: 'name firstName lastName', model: 'User' })
+		.sort({'lastUpdated': -1})
 		.lean().exec(function (err, pubs) {
 			pubs.forEach((pub)=>{
 				var authorString = pub.authors.reduce((previousValue, currentValue, currentIndex, array)=>{
