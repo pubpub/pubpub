@@ -20,7 +20,7 @@ app.get('/rss.xml', function(req,res){
 		var feed = new RSS({
 		    title: title,
 		    description: description,
-		    feed_url: baseURL + 'data/rss.xml',
+		    feed_url: baseURL + '/data/rss.xml',
 		    site_url: baseURL,
 		    image_url: imageURL,
 		});
