@@ -77,7 +77,8 @@ module.exports = function container_plugin(md, name, options) {
     token.info   = params;
     token.map    = [ startLine, nextLine ];
 
-    state.md.block.tokenize(state, startLine + 1, nextLine);
+    state.md.block.tokenize(state, startLine + 1, nextLine); // Use this line to exclude the title line
+    // state.md.block.tokenize(state, startLine + 1, nextLine); // Use this line to include the title line
 
     token        = state.push('pubheader_close', 'pubheader', -1);
     token.markup = state.src.slice(start, pos);

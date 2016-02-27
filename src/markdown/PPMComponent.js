@@ -8,7 +8,7 @@ import sup from 'markdown-it-sup';
 import container from 'markdown-it-container';
 import ppm from './markdown-it-ppm';
 import pubheader from './markdown-it-pubheader';
-import pubheaderitem from './markdown-it-pubheaderitem';
+import pubheaderitem from './markdown-it-pubheaderitem2';
 
 import mathIt from 'markdown-it-math';
 
@@ -170,6 +170,12 @@ const PPMComponent = React.createClass({
 			props.className = 'subItem';
 			console.log('pubsub item props ',props);
 			return <div {...props}>{children}</div>;
+
+		case 'pubheader': 
+			console.log(arguments);
+		case 'pubheaderitem': 
+			console.log(arguments)
+
 		}
 
 

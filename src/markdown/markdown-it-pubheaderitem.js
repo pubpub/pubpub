@@ -29,6 +29,7 @@ module.exports = function container_plugin(md, name, options) {
       // debugger;
     }
     // debugger;
+    return false;
 
     // Since start is found, we can report success here in validation mode
     if (silent) { return true; }
