@@ -20,20 +20,20 @@ function skipClassAndColonMarker(state, startLine) {
   pos = state.bMarks[startLine] + state.tShift[startLine];
   max = state.eMarks[startLine];
 
-  
+  var start = pos;
 
   // Check bullet
-  // console.log('start while');
+  console.log('------------');
   while (pos < max) {
     marker = state.src.charCodeAt(pos);
-    // console.log('marker is ', marker);
-    // console.log('char is ', state.src.charAt(pos))
+
+    console.log('marker, pos', marker, pos);
     if (marker === 58/* : */ ) {
-      console.log('in if');
+      console.log('gunna break');
       console.log('pos is ', pos);
+      pos++;
       break;
     }
-    // console.log('pos++');
     pos++;
   }
   
@@ -43,11 +43,13 @@ function skipClassAndColonMarker(state, startLine) {
 
     if (!isSpace(ch)) {
       // " -test " - is not a list item
+      console.log('gunna return -1');
       return -1;
     }
   }
-  // console.log(state.src.charAt(pos++));
-  // console.log(pos);
+  console.log('char at pos ', state.src.charAt(pos));
+  console.log('gunna return ', pos);
+  console.log('the marker string is', state.src.substring(start, pos));
   return pos;
 }
 
@@ -148,11 +150,13 @@ module.exports = function pubheaderitem_plugin(md, name, options) {
         token,
         i, l, terminate;
 
-    if (state.parentType !== 'pubheader' && state.parentType !== 'pubheaderitem') { return false; }
+    // if (state.parentType !== 'pubheader' && state.parentType !== 'pubheaderitem') { return false; }
+    if (state.parentType !== 'pubheader') { return false; }
     
     // Detect list type and position after marker
     if ((posAfterMarker = skipClassAndColonMarker(state, startLine)) >= 0) {
       isItem = true;
+      console.log('position after marker is', posAfterMarker);
     // } else if ((posAfterMarker = skipBulletListMarker(state, startLine)) >= 0) {
     //   isOrdered = false;
     } else {
