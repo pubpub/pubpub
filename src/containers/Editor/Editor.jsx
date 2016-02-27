@@ -33,6 +33,8 @@ import {generateTOC} from '../../markdown/generateTOC';
 import {globalMessages} from '../../utils/globalMessages';
 import {FormattedMessage} from 'react-intl';
 
+import {Iterable} from 'immutable';
+
 let FireBaseURL;
 let styles;
 
@@ -408,6 +410,9 @@ const Editor = React.createClass({
 	},
 
 	render: function() {
+
+		const isLivePreview = (Iterable.isIterable(this.props.editorData)) ? (this.props.editorData.get('viewMode') === 'preview') : false;
+
 		const editorData = this.props.editorData;
 		const viewMode = this.props.editorData.get('viewMode');
 		const isReader = this.props.editorData.getIn(['pubEditData', 'isReader']);
@@ -480,7 +485,7 @@ const Editor = React.createClass({
 						{/* ---------------------- */}
 						<div id="editor-text-wrapper" style={[globalStyles.hiddenUntilLoad, globalStyles[loadStatus], styles.editorMarkdown, styles[viewMode].editorMarkdown, !isReader && styles[viewMode].editorMarkdownIsEditor]}>
 
-							<EditorPluginPopup ref="pluginPopup" references={this.state.firepadData.references} assets={this.state.firepadData.assets} /* selections={this.state.firepadData.selections} */ activeFocus={this.state.activeFocus} codeMirrorChange={this.state.codeMirrorChange}/>
+							<EditorPluginPopup ref="pluginPopup" isLivePreview={isLivePreview} references={this.state.firepadData.references} assets={this.state.firepadData.assets} /* selections={this.state.firepadData.selections} */ activeFocus={this.state.activeFocus} codeMirrorChange={this.state.codeMirrorChange}/>
 
 							{/* Insertion point for codemirror and firepad */}
 							<div style={[this.state.activeFocus !== '' && styles.hiddenMainEditor]}>
