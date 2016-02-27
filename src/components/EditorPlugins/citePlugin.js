@@ -16,12 +16,22 @@ const CiteConfig = {
 	autocomplete: true,
 	color: 'rgba(245, 245, 169, 0.5)',
 	prerender: function(globals, pluginProps) {
-		if (!globals.citationCount) {
-			globals.citationCount = 1;
-		} else {
-			globals.citationCount = globals.citationCount + 1;
+		if (pluginProps.reference && !isNaN(pluginProps.reference.count)) {
+			const referenceCount = pluginProps.reference.count;
+			if (!globals.citationCount) {
+				globals.citationCountCounter = 1;
+				globals.citationCount = {};
+			}
+
+			const localCount = globals.citationCount[referenceCount];
+			if (!localCount) {
+				globals.citationCount[referenceCount] = globals.citationCountCounter;
+				globals.citationCountCounter += 1;
+			}
+
+			pluginProps.count = globals.citationCount[referenceCount];
 		}
-		pluginProps.count = globals.citationCount;
+
 		return {globals, pluginProps};
 	}
 };
@@ -65,7 +75,7 @@ const CitePlugin = React.createClass({
 	// 	this.setState({expanded: false, hover: false});
 	// },
 	render: function() {
-		const count = (this.props.reference) ? this.props.reference.count + 1 : 0;
+		const count = (this.props.count) ? this.props.count : 0;
 		if (this.props.error === 'empty') {
 			return <span></span>;
 		}
