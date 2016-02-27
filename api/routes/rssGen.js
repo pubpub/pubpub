@@ -9,19 +9,19 @@ app.get('/rss.xml', function(req,res){
 	Journal.findOne({ $or:[ {'subdomain':host.split('.')[0]}, {'customDomain':host}]})
 	.lean().exec(function(err, journal){
 		var title = journal ? journal.journalName : 'PubPub';
-		var journalURL = '';
-		if (journal) {
-			journalURL = journal && journal.customDomain ? 'http://' + journal.customDomain : 'http://' + journal.subdomain + '.pubpub.org';	
-		}
-		var baseURL = journal ? journalURL : 'http://www.pubpub.org';
+		// var journalURL = '';
+		// if (journal) {
+		// 	journalURL = journal && journal.customDomain ? 'http://' + journal.customDomain : 'http://' + journal.subdomain + '.pubpub.org';	
+		// }
+		// var baseURL = journal ? journalURL : 'http://www.pubpub.org';
 		var description = journal ? journal.description : 'PubPub is a platform for totally transparent publishing. Read, Write, Publish, Review.';
 		var imageURL = journal ? journal.journalLogoURL : 'https://s3.amazonaws.com/pubpub-upload/pubpubDefaultTitle.png';
 
 		var feed = new RSS({
 		    title: title,
 		    description: description,
-		    feed_url: baseURL + '/data/rss.xml',
-		    site_url: baseURL,
+		    feed_url: 'http://' + host + '/data/rss.xml',
+		    site_url: 'http://' + host,
 		    image_url: imageURL,
 		});
 
@@ -45,7 +45,7 @@ app.get('/rss.xml', function(req,res){
 				feed.item({
 				    title:  pub.title,
 				    description: pub.abstract,
-				    url: baseURL + '/pub/' + pub.slug,
+				    url: 'http://' + host + '/pub/' + pub.slug,
 				    author: authorString,
 				    date: pub.lastUpdated,
 				});
