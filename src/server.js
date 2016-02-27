@@ -22,7 +22,6 @@ import qs from 'query-string';
 import getRoutes from './routes';
 import getStatusFromRoutes from './helpers/getStatusFromRoutes';
 
-
 const pretty = new PrettyError();
 const app = new Express();
 const server = new http.Server(app);
@@ -174,6 +173,7 @@ app.use((req, res) => {
 							<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.1.0/highlight.min.js"></script>
 							<script src="/js/typo.js"></script>
 							<script src="/js/spellcheck.js"></script>
+							<script src="https://cdn.ravenjs.com/2.1.0/raven.min.js"></script>
 							
 						</head>
 
