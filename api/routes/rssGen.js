@@ -115,9 +115,9 @@ app.get('/rss.xml', function(req,res){
 	});
 });
 
-app.get('/instantarticles.xml', function(req,res){
-	generateRSSXML(req, true, function(xmlFeed){
-		res.set('Content-Type', 'text/xml');
-		res.send(xmlFeed);
-	});
-});
+// app.get('/instantarticles.xml', function(req,res){
+// 	generateRSSXML(req, true, function(xmlFeed){
+// 		res.set('Content-Type', 'text/xml');
+// 		res.send(xmlFeed);
+// 	});
+// });

@@ -93,7 +93,7 @@ const PPMComponent = React.createClass({
 			const pluginName = children[0].split(':')[0];
 			const plugin = Plugins[pluginName];
 			if (!plugin) {
-				if (process.env.NODE_ENV !== 'production') {
+				if (__DEVELOPMENT__) {
 					console.warn('Could not find a plugin');
 				}
 				return <span {...props}>{children}</span>;
