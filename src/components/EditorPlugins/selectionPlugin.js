@@ -121,18 +121,23 @@ const SelectionPlugin = React.createClass({
 
 		// If the substring based on our offsets does not match the selection text...
 		if (contextString !== this.props.index.text) {
-			const selectionRegex = new RegExp(this.props.index.text, 'g');
-			const count = (this.props.index.context.match(selectionRegex) || []).length;
+			try {
+				const selectionRegex = new RegExp(this.props.index.text, 'g');
+				const count = (this.props.index.context.match(selectionRegex) || []).length;
 
-			// If there is more than one occurence of the selection string in the context,
-			// we can't recover it right now - so just don't highlight anything
-			if (count > 1) {
+				// If there is more than one occurence of the selection string in the context,
+				// we can't recover it right now - so just don't highlight anything
+				if (count > 1) {
+					return [null, null];
+				}
+
+				// otherwise, find where the string actually lives, and use those as offsets.
+				const indexOf = this.props.index.context.indexOf(this.props.index.text);
+				return [indexOf, indexOf + this.props.index.text.length];
+			} catch (err) {
 				return [null, null];
 			}
-
-			// otherwise, find where the string actually lives, and use those as offsets.
-			const indexOf = this.props.index.context.indexOf(this.props.index.text);
-			return [indexOf, indexOf + this.props.index.text.length];
+			
 		}
 
 		// If the contextString matches, return our original offsets
