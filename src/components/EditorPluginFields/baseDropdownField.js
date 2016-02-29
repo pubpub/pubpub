@@ -9,6 +9,7 @@ const DropdownProp = React.createClass({
 	propTypes: {
 		choices: PropTypes.array,
 		selectedValue: PropTypes.object,
+		saveChange: PropTypes.func,
 	},
 	onValueChange: function(changedValue, callback) {
 		callback();

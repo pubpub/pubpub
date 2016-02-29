@@ -4,7 +4,8 @@ import DropdownField from './baseDropdownField';
 const ReferenceField = React.createClass({
 	propTypes: {
 		references: PropTypes.array,
-		selectedValue: PropTypes.string
+		selectedValue: PropTypes.string,
+		saveChange: PropTypes.func,
 	},
 	statics: {
 		// Transform is called by PPMComponent.js to transform

@@ -1,12 +1,14 @@
 import React, {PropTypes} from 'react';
 import Radium from 'radium';
+import AutoTextarea from 'react-textarea-autosize';
 
 let styles = {};
 
 const TextAreaProp = React.createClass({
 	propTypes: {
 		selectedValue: PropTypes.string,
-		placeholder: PropTypes.string
+		placeholder: PropTypes.string,
+		saveChange: PropTypes.func,
 	},
 	getInitialState: function() {
 		return {
@@ -15,6 +17,7 @@ const TextAreaProp = React.createClass({
 	},
 	handleChange: function(event) {
 		this.setState({value: event.target.value});
+		this.props.saveChange();
 	},
 	focus: function() {
 		let focused;
@@ -32,14 +35,14 @@ const TextAreaProp = React.createClass({
 	},
 	render: function() {
 		const value = this.state.value || '';
-		return <textarea ref={(ref) => this.textInput = ref} placeholder={this.props.placeholder} style={styles.select} type="text" value={value} onChange={this.handleChange}></textarea>;
+		return <AutoTextarea ref={(ref) => this.textInput = ref} placeholder={this.props.placeholder} style={styles.select} type="text" value={value} onChange={this.handleChange}/>;
 	}
 });
 
 styles = {
 	select: {
 		width: '100%',
-		fontFamily: 'courier',
+		fontFamily: 'Courier',
 		borderTop: 'none',
 		borderLeft: 'none',
 		borderRight: 'none',
@@ -48,6 +51,9 @@ styles = {
 		height: '2.5em',
 		paddingLeft: '5px',
 		resize: 'vertical',
+		lineHeight: '1.58',
+		outline: 'none',
+		backgroundColor: 'whitesmoke',
 	},
 };
 

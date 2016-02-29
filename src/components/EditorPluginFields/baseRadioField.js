@@ -8,6 +8,7 @@ const RadioButtonProp = React.createClass({
 	propTypes: {
 		choices: PropTypes.array,
 		selectedValue: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.number]),
+		saveChange: PropTypes.func,
 	},
 	getInitialState: function() {
 		const state = {};

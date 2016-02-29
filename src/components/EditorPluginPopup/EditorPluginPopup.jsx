@@ -76,6 +76,8 @@ const EditorPluginPopup = React.createClass({
 
 		this.setState({assets: assets, references: references, aselections: selections});
 
+		return true;
+
 		const change = nextProps.codeMirrorChange;
 
 		// If the content changes and the popup is visible, it will be out of date, so hide it.
@@ -237,6 +239,10 @@ const EditorPluginPopup = React.createClass({
 		return mergedString;
 	},
 
+	onInputFieldChange: function() {
+		this.onPluginSave();
+	},
+
 	closePopup: function() {
 		this.setState({popupVisible: false});
 	},
@@ -267,7 +273,14 @@ const EditorPluginPopup = React.createClass({
 											return (<div key={'pluginVal-' + fieldTitle + this.state.pluginType} style={styles.pluginOptionWrapper}>
 																<label htmlFor={fieldType} style={styles.pluginOptionLabel}>{fieldTitle}</label>
 																<div style={styles.pluginPropWrapper}>
-																	<FieldComponent selectedValue={value} references={this.state.references} assets={this.state.assets} selections={this.state.selections} {...PluginInputFieldParams} ref={(ref) => this.popupInputFields[fieldTitle] = ref}/>
+																	<FieldComponent
+																		selectedValue={value}
+																		references={this.state.references}
+																		assets={this.state.assets}
+																		selections={this.state.selections}
+																		saveChange={this.onInputFieldChange}
+																		{...PluginInputFieldParams}
+																		ref={(ref) => this.popupInputFields[fieldTitle] = ref}/>
 																</div>
 																<div style={styles.clearfix}></div>
 															</div>);
@@ -383,7 +396,9 @@ styles = {
 		marginRight: '20px',
 		width: '20%',
 		textTransform: 'capitalize',
-		fontSize: '0.95em'
+		fontSize: '0.95em',
+		verticalAlign: 'top',
+		paddingTop: '3px',
 	},
 	pluginOptionInput: {
 		width: 'calc(50% - 4px)',
