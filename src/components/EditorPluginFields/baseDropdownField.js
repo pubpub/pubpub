@@ -41,7 +41,8 @@ const DropdownProp = React.createClass({
 styles = {
 	select: {
 		minWidth: '75%',
-		fontFamily: 'Courier'
+		fontFamily: 'Courier',
+		backgroundColor: 'whitesmoke',
 	},
 };
 

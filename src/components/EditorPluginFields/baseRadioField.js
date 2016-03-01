@@ -89,6 +89,8 @@ styles = {
 		borderLeft: 'none',
 		borderRight: 'none',
 		borderBottom: 'gainsboro solid 1px',
+		outline: 'none',
+		backgroundColor: 'whitesmoke',
 	}
 };
 

@@ -54,6 +54,7 @@ styles = {
 		lineHeight: '1.58',
 		outline: 'none',
 		backgroundColor: 'whitesmoke',
+		padding: '5px 10px',
 	},
 };
 

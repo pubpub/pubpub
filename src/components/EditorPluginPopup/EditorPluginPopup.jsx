@@ -81,12 +81,10 @@ const EditorPluginPopup = React.createClass({
 		this.setState({assets: assets, references: references, aselections: selections});
 
 		return true;
+		/*
 
 		const change = nextProps.codeMirrorChange;
 
-		// If the content changes and the popup is visible, it will be out of date, so hide it.
-		// Well, we don't want it to close if ANY change is made, only a change to the same line
-		// If the from to to line of the change equal the line of the popup, close it.
 		if (this.state.activeLine !== undefined && this.state.activeLine >= change.from.line && this.state.activeLine <= change.to.line && change.origin !== 'complete') {
 			this.setState({
 				popupVisible: false,
@@ -102,6 +100,7 @@ const EditorPluginPopup = React.createClass({
 			});
 
 		}
+		*/
 	},
 
 	componentWillUnmount() {
@@ -277,6 +276,7 @@ const EditorPluginPopup = React.createClass({
 							style={[styles.pluginPopup(this.props.isLivePreview), this.state.popupVisible && styles.pluginPopupVisible]}
 						>
 						<div key={this.state.pluginHash} style={styles.pluginContent}>
+							<div style={styles.pluginClose} onClick={this.closePopup}>x</div>
 							<div style={styles.pluginPopupTitle}>
 								{this.state.pluginType}</div>
 								{
@@ -321,6 +321,12 @@ export default Radium(EditorPluginPopup);
 
 
 styles = {
+	pluginClose: {
+		position: 'absolute',
+		right: '-10px',
+		top: '0px',
+		cursor: 'pointer',
+	},
 	pluginFlexBox: function(isLivePreview) {
 		return {
 			position: 'fixed',
