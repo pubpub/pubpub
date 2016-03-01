@@ -245,7 +245,7 @@ const Editor = React.createClass({
 		const selections = [];
 
 		// Strip markdown of title, abstract, authorsNote
-		const markdown = fullMD.replace(/\[\[title:.*?\]\]/g, '').replace(/\[\[abstract:.*?\]\]/g, '').replace(/\[\[authorsNote:.*?\]\]/g, '').trim();
+		const markdown = fullMD.replace(/\[\[title:.*?\]\]/gi, '').replace(/\[\[abstract:.*?\]\]/gi, '').replace(/\[\[authorsNote:.*?\]\]/gi, '').trim();
 
 		// const compiledMarkdown = performance.now();
 
