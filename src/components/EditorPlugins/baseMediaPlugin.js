@@ -54,6 +54,7 @@ const baseMediaPlugin = React.createClass({
 		} else if (this.props.align === 'full') {
 			styleObject.margin = '0px auto';
 		}
+		styleObject.whiteSpace = 'pre-wrap';
 
 		const wrapperStyle = Object.assign(styleObject, baseStyle);
 
@@ -70,7 +71,8 @@ styles = {
 	caption: {
 		fontSize: '0.8em',
 		color: '#757575',
-		textAlign: 'left'
+		textAlign: 'left',
+		whiteSpace: 'pre-wrap',
 	},
 };
 

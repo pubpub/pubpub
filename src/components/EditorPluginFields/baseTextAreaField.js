@@ -10,6 +10,16 @@ const TextAreaProp = React.createClass({
 		placeholder: PropTypes.string,
 		saveChange: PropTypes.func,
 	},
+	statics: {
+		// This replaces all \n characters with actual spaces
+		// note: to render this text properly an element must have whiteSpace: 'pre-wrap',
+		transform: function(prop, params, assets, references) {
+			if (prop && prop.replace) {
+				return prop.replace(/\\n/g, '\n');
+			}
+			return prop;
+		}
+	},
 	getInitialState: function() {
 		return {
 			value: this.props.selectedValue || null,
@@ -31,10 +41,13 @@ const TextAreaProp = React.createClass({
 	},
 	value: function() {
 		const value = this.state.value;
-		return (value) ? '"' + value.replace(/\n|\r/g, ' ') + '"' : null; // text captions have to be wrapped in quotes
+		// Our codemirror tokens can only happen on one line, so we replace newlines with a \n character
+		// Text captions should also be wrapped in quotes
+		return (value) ? '"' + value.replace(/\n|\r/g, '\\n') + '"' : null;
 	},
 	render: function() {
-		const value = this.state.value || '';
+		let value = this.state.value || '';
+		if (value && value.replace) value = value.replace(/\\n/g, '\n');
 		return <AutoTextarea ref={(ref) => this.textInput = ref} placeholder={this.props.placeholder} style={styles.select} type="text" value={value} onChange={this.handleChange}/>;
 	}
 });

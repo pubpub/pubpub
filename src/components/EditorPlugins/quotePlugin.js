@@ -37,11 +37,8 @@ const QuotePlugin = React.createClass({
 		const size = this.props.size;
 		const align = this.props.align;
 		const quote = this.props.quote;
-		const quotelines = (quote) ? quote.split('\\n') : [];
 		const attribution = this.props.attribution;
 		const reference = this.props.reference || null;
-
-		const quoteElem = quotelines.map((quoteline, index) => <div style={styles.line} key={index}>{quoteline}</div>);
 
 		let html;
 
@@ -57,7 +54,7 @@ const QuotePlugin = React.createClass({
 			html = <span></span>;
 		} else {
 			html = (<Media style={style} size={size} align={align}>
-				{quoteElem}
+				{quote}
 				{ (attribution) ? <div style={styles.attribute}> - {attribution}</div> : null}
 				{ (reference) ? <div style={styles.reference}> <Reference citationObject={reference} mode={'mla'} /> </div> : null }
 			</Media>
