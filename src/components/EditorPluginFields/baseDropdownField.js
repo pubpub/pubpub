@@ -12,6 +12,7 @@ const DropdownProp = React.createClass({
 		saveChange: PropTypes.func,
 	},
 	onValueChange: function(changedValue, callback) {
+		this.props.saveChange();
 		callback();
 	},
 	focus: function() {

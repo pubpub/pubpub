@@ -5,7 +5,8 @@ const AssetField = React.createClass({
 	propTypes: {
 		assetType: PropTypes.string,
 		assets: PropTypes.array,
-		selectedValue: PropTypes.string
+		selectedValue: PropTypes.string,
+		saveChange: PropTypes.func,
 	},
 	statics: {
 		// Transform is called by PPMComponent.js to transform
@@ -25,7 +26,7 @@ const AssetField = React.createClass({
 		const assets = this.props.assets.filter((asset) => (asset.assetType === this.props.assetType))
 		.map( function(asset) { return {'value': asset.refName, 'label': asset.refName};});
 		const val = (this.props.selectedValue) ? {'label': this.props.selectedValue, 'value': this.props.selectedValue} : undefined;
-		return <DropdownField ref="val" choices={assets} selectedValue={val}/>;
+		return <DropdownField ref="val" choices={assets} selectedValue={val} saveChange={this.props.saveChange}/>;
 	}
 });
 

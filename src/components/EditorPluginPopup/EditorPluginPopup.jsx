@@ -10,6 +10,7 @@ import Plugins from '../../components/EditorPlugins/index.js';
 import InputFields from '../EditorPluginFields/index.js';
 import MurmurHash from 'murmurhash';
 import Portal from 'react-portal';
+import {throttle} from 'lodash';
 
 
 let styles = {};
@@ -35,6 +36,9 @@ const EditorPluginPopup = React.createClass({
 
 	getInitialState() {
 		this.popupInputFields = {};
+		this.fromIndex = null;
+		this.toIndex = null;
+		this.onInputFieldChange = throttle(this._onInputFieldChange, 250);
 		return {
 			popupVisible: false,
 			xLoc: 0,
@@ -140,12 +144,18 @@ const EditorPluginPopup = React.createClass({
 		this.showAtPos(clickX, clickY);
 	},
 
+
 	showAtPos: function(clickX, clickY) {
+
 
 		const target = document.elementFromPoint(clickX, clickY);
 		const contentBody = document.getElementById('editor-text-wrapper');
 
 		if (target && target.className.indexOf('cm-plugin') > -1) {
+
+			this.fromIndex = null;
+			this.toIndex = null;
+
 			const cm = this.getActiveCodemirrorInstance();
 
 			const selectedLine = cm.coordsChar({left: clickX, top: clickY, mode: 'window'});
@@ -199,6 +209,9 @@ const EditorPluginPopup = React.createClass({
 				flippedY: flippedY
 			});
 
+			this.fromIndex = activeToken.start;
+			this.toIndex = activeToken.end;
+
 			this.focusFields();
 
 		}
@@ -209,12 +222,16 @@ const EditorPluginPopup = React.createClass({
 		const lineNum = this.state.activeLine;
 		// const from = {line: lineNum, ch: 0};
 		// const to = {line: lineNum, ch: lineContent.length};
-		const from = {line: lineNum, ch: this.state.activeToken.start};
-		const to = {line: lineNum, ch: this.state.activeToken.end};
+		const from = {line: lineNum, ch: this.fromIndex};
+		const to = {line: lineNum, ch: this.toIndex};
 
 		const mergedString = `[[${this.createPluginString(this.state.pluginType)}]]`;
+
 		// const outputString = lineContent.replace(this.state.initialString, mergedString);
+
 		cm.replaceRange(mergedString, from, to); // Since the popup closes on change, this will close the pluginPopup
+
+		this.toIndex = this.fromIndex + mergedString.length;
 	},
 
 	createPluginString: function(pluginType) {
@@ -239,7 +256,7 @@ const EditorPluginPopup = React.createClass({
 		return mergedString;
 	},
 
-	onInputFieldChange: function() {
+	_onInputFieldChange: function() {
 		this.onPluginSave();
 	},
 
@@ -286,9 +303,11 @@ const EditorPluginPopup = React.createClass({
 															</div>);
 										})
 								}
+							{/*
 							<div style={styles.pluginSave} key={'pluginPopupSave'} onClick={this.onPluginSave}>
 								<FormattedMessage {...globalMessages.save} />
 							</div>
+							*/}
 						</div>
 					</div>
 				</div>

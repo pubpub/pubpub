@@ -16,6 +16,7 @@ const TextProp = React.createClass({
 	},
 	handleChange: function(event) {
 		this.setState({value: event.target.value});
+		this.props.saveChange();
 	},
 	focus: function() {
 		let focused;

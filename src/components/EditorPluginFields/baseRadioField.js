@@ -43,6 +43,7 @@ const RadioButtonProp = React.createClass({
 		this.setState({
 			selectedValue: prop
 		});
+		this.props.saveChange();
 	},
 	value: function() {
 		return (this.state.selectedValue === 'number') ? this.state.number : this.state.selectedValue;
