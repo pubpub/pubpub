@@ -331,7 +331,7 @@ styles = {
 		return {
 			position: 'fixed',
 			left: '0vw',
-			top: '0vh',
+			top: '60px',
 			// display: 'flex',
 			// alignItems: 'center',
 			height: '100vh',
