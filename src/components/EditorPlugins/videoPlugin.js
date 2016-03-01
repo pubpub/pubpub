@@ -7,7 +7,7 @@ const VideoInputFields = [
 	{title: 'source', type: 'asset', params: {assetType: 'video'}},
 	{title: 'align', type: 'align'},
 	{title: 'size', type: 'size'},
-	{title: 'caption', type: 'text', params: {placeholder: 'Caption describing the video'}},
+	{title: 'caption', type: 'textArea', params: {placeholder: 'Caption describing the video'}},
 	{title: 'reference', type: 'reference'},
 
 ];

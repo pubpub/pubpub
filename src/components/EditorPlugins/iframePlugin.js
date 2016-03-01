@@ -9,7 +9,7 @@ const IframeInputFields = [
 	{title: 'height', type: 'text', params: {placeholder: 'iFrame height'}},
 	{title: 'width', type: 'text', params: {placeholder: 'iFrame width'}},
 	{title: 'align', type: 'align'},
-	{title: 'caption', type: 'text', params: {placeholder: 'iFrame caption'}},
+	{title: 'caption', type: 'textArea', params: {placeholder: 'iFrame caption'}},
 	{title: 'reference', type: 'reference'},
 ];
 

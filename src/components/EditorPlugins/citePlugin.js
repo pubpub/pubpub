@@ -7,7 +7,7 @@ let styles = {};
 
 const CiteInputFields = [
 	{title: 'reference', type: 'reference'},
-	{title: 'description', type: 'text', params: {placeholder: 'Caption talking about the reference.'}},
+	{title: 'description', type: 'textArea', params: {placeholder: 'Caption talking about the reference.'}},
 ];
 
 const CiteConfig = {
