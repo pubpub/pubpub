@@ -276,7 +276,7 @@ const EditorPluginPopup = React.createClass({
 							style={[styles.pluginPopup(this.props.isLivePreview), this.state.popupVisible && styles.pluginPopupVisible]}
 						>
 						<div key={this.state.pluginHash} style={styles.pluginContent}>
-							<div style={styles.pluginClose} onClick={this.closePopup}>x</div>
+							<div style={styles.pluginClose} onClick={this.closePopup}>×</div>
 							<div style={styles.pluginPopupTitle}>
 								{this.state.pluginType}</div>
 								{
@@ -323,9 +323,11 @@ export default Radium(EditorPluginPopup);
 styles = {
 	pluginClose: {
 		position: 'absolute',
-		right: '-10px',
+		right: '-25px',
 		top: '0px',
 		cursor: 'pointer',
+		fontSize: '1.25em',
+		userSelect: 'none',
 	},
 	pluginFlexBox: function(isLivePreview) {
 		return {
