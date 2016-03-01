@@ -10,7 +10,7 @@ import Plugins from '../../components/EditorPlugins/index.js';
 import InputFields from '../EditorPluginFields/index.js';
 import MurmurHash from 'murmurhash';
 import Portal from 'react-portal';
-import {throttle} from 'lodash';
+import {throttle, delay} from 'lodash';
 
 
 let styles = {};
@@ -257,7 +257,7 @@ const EditorPluginPopup = React.createClass({
 	},
 
 	_onInputFieldChange: function() {
-		this.onPluginSave();
+		delay(this.onPluginSave, 50);
 	},
 
 	closePopup: function() {
