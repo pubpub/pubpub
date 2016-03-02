@@ -118,7 +118,7 @@ app.use((req, res) => {
 				let dynamicStyle;
 				const pathname = store.getState().router.location.pathname;
 				
-				if (pathname.substring(0,5) === '/pub/' && pathname.substring(pathname.length-6, pathname.length) !== '/draft') {
+				if (pathname.substring(0,5) === '/pub/' && pathname.substring(pathname.length-6, pathname.length) !== '/draft' && store.getState().pub.getIn(['pubData', 'history'])) {
 					// source = store.getState().pub.getIn(['pubData', 'history']);
 					const versionIndex = store.getState().router.location.query.version !== undefined && store.getState().router.location.query.version > 0 && store.getState().router.location.query.version <= (store.getState().pub.getIn(['pubData', 'history']).size - 1)
 						? store.getState().router.location.query.version - 1
