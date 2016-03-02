@@ -220,8 +220,8 @@ module.exports = function pubheaderitem_plugin(md, name, options) {
       state.blkIndent = indent;
       state.tight = false;
       state.parentType = 'pubheaderitem';
-      state.tShift[startLine] = contentStart - state.bMarks[startLine];
       state.bMarks[startLine] += classLength;
+      state.tShift[startLine] = contentStart - state.bMarks[startLine];
       state.sCount[startLine] = offset;
 
       console.log('---------');
