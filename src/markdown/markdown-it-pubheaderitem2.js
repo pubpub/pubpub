@@ -1,125 +1,99 @@
 // Lists
 
 'use strict';
+module.exports = function pubheaderitem_plugin(md, name, options) {
 
-function isSpace(code) {
-  switch (code) {
-    case 0x09:
-    case 0x20:
-      return true;
-  }
-  return false;
-}
-
-
-// Search `[-+*][\n ]`, returns next pos arter marker on success
-// or -1 on fail.
-function skipClassAndColonMarker(state, startLine) {
-  var marker, pos, max, ch;
-
-  pos = state.bMarks[startLine] + state.tShift[startLine];
-  max = state.eMarks[startLine];
-
-  var start = pos;
-
-  // Check bullet
-  console.log('------------');
-  while (pos < max) {
-    marker = state.src.charCodeAt(pos);
-
-    console.log('marker, pos', marker, pos);
-    if (marker === 58/* : */ ) {
-      console.log('gunna break');
-      console.log('pos is ', pos);
-      pos++;
-      break;
+  function isSpace(code) {
+    switch (code) {
+      case 0x09:
+      case 0x20:
+        return true;
     }
-    pos++;
+    return false;
   }
-  
 
-  if (pos < max) {
-    ch = state.src.charCodeAt(pos);
+  // Search `[-+*][\n ]`, returns next pos arter marker on success
+  // or -1 on fail.
+  function skipClassAndColonMarker(state, startLine) {
+    var marker, pos, max, ch;
 
-    if (!isSpace(ch)) {
-      // " -test " - is not a list item
-      console.log('gunna return -1');
+    pos = state.bMarks[startLine] + state.tShift[startLine];
+    max = state.eMarks[startLine];
+
+    // Check bullet
+    console.log('------------');
+    var foundMarker = false;
+    while (pos < max) {
+      marker = state.src.charCodeAt(pos++);
+
+      if (marker === 0x3A/* : */ ) {
+        foundMarker = true;
+        break;
+      }
+
+    }
+
+    if (!foundMarker) {
       return -1;
     }
+    
+
+    if (pos < max) {
+      ch = state.src.charCodeAt(pos);
+
+      if (!isSpace(ch)) {
+        // " -test " - is not a list item
+        return -1;
+      }
+    }
+    return pos;
   }
-  console.log('char at pos ', state.src.charAt(pos));
-  console.log('gunna return ', pos);
-  console.log('the marker string is', state.src.substring(start, pos));
-  return pos;
-}
 
-// // Search `\d+[.)][\n ]`, returns next pos arter marker on success
-// // or -1 on fail.
-// function skipOrderedListMarker(state, startLine) {
-//   var ch,
-//       start = state.bMarks[startLine] + state.tShift[startLine],
-//       pos = start,
-//       max = state.eMarks[startLine];
+  // Search `[-+;][\n ]`, returns next pos arter marker on success
+  // or -1 on fail.
+  function skipBulletListMarker(state, startLine) {
+    var marker, pos, max, ch;
 
-//   // List marker should have at least 2 chars (digit + dot)
-//   if (pos + 1 >= max) { return -1; }
+    pos = state.bMarks[startLine] + state.tShift[startLine];
+    max = state.eMarks[startLine];
 
-//   ch = state.src.charCodeAt(pos++);
+    marker = state.src.charCodeAt(pos++);
+    // Check bullet
+    if (marker !== 0x3A/* : */) {
+      return -1;
+    }
 
-//   if (ch < 0x30/* 0 */ || ch > 0x39/* 9 */) { return -1; }
+    if (pos < max) {
+      ch = state.src.charCodeAt(pos);
 
-//   for (;;) {
-//     // EOL -> fail
-//     if (pos >= max) { return -1; }
+      if (!isSpace(ch)) {
+        // " -test " - is not a list item
+        return -1;
+      }
+    }
 
-//     ch = state.src.charCodeAt(pos++);
+    return pos;
+  }
 
-//     if (ch >= 0x30/* 0 */ && ch <= 0x39/* 9 */) {
+  function markTightParagraphs(state, idx) {
+    var i, l,
+        level = state.level + 2;
 
-//       // List marker should have no more than 9 digits
-//       // (prevents integer overflow in browsers)
-//       if (pos - start >= 10) { return -1; }
-
-//       continue;
-//     }
-
-//     // found valid marker
-//     if (ch === 0x29/* ) */ || ch === 0x2e/* . */) {
-//       break;
-//     }
-
-//     return -1;
-//   }
-
-
-//   if (pos < max) {
-//     ch = state.src.charCodeAt(pos);
-
-//     if (!isSpace(ch)) {
-//       // " 1.test " - is not a list item
-//       return -1;
-//     }
-//   }
-//   return pos;
-// }
-
-function markTightParagraphs(state, idx) {
-  var i, l,
-      level = state.level + 2;
-
-  for (i = idx + 2, l = state.tokens.length - 2; i < l; i++) {
-    if (state.tokens[i].level === level && state.tokens[i].type === 'paragraph_open') {
-      state.tokens[i + 2].hidden = true;
-      state.tokens[i].hidden = true;
-      i += 2;
+    for (i = idx + 2, l = state.tokens.length - 2; i < l; i++) {
+      if (state.tokens[i].level === level && state.tokens[i].type === 'paragraph_open') {
+        state.tokens[i + 2].hidden = true;
+        state.tokens[i].hidden = true;
+        i += 2;
+      }
     }
   }
-}
 
-module.exports = function pubheaderitem_plugin(md, name, options) {
+
+
+
   options = options || {};
-  var render = options.render;
-  console.log('renderer', render);
+  // var render = options.render;
+  // console.log('renderer', render);
 
   function pubheaderitem(state, startLine, endLine, silent) {
     var nextLine,
@@ -150,15 +124,10 @@ module.exports = function pubheaderitem_plugin(md, name, options) {
         token,
         i, l, terminate;
 
-    // if (state.parentType !== 'pubheader' && state.parentType !== 'pubheaderitem') { return false; }
-    if (state.parentType !== 'pubheader') { return false; }
+    if (state.parentType !== 'pubheader' && state.parentType !== 'pubheaderitem') { return false; }
 
-    // Detect list type and position after marker
-    if ((posAfterMarker = skipClassAndColonMarker(state, startLine)) >= 0) {
-      isOrdered = true;
-    } else if ((posAfterMarker = skipClassAndColonMarker(state, startLine)) >= 0) {
-      isOrdered = false;
-    } else {
+    // Detect position after marker
+    if ( (posAfterMarker = skipClassAndColonMarker(state, startLine)) < 0) {
       return false;
     }
 
@@ -171,19 +140,7 @@ module.exports = function pubheaderitem_plugin(md, name, options) {
     // Start list
     listTokIdx = state.tokens.length;
 
-    if (isOrdered) {
-      start = state.bMarks[startLine] + state.tShift[startLine];
-      markerValue = Number(state.src.substr(start, posAfterMarker - start - 1));
-
-      token       = state.push('ordered_list_open', 'ol', 1);
-      if (markerValue !== 1) {
-        token.attrs = [ [ 'start', markerValue ] ];
-      }
-
-    } else {
-      token       = state.push('bullet_list_open', 'ul', 1);
-    }
-
+    token       = state.push('bullet_list_open', 'pubheaderitem', 1);
     token.map    = listLines = [ startLine, 0 ];
     token.markup = String.fromCharCode(markerCharCode);
 
@@ -200,10 +157,13 @@ module.exports = function pubheaderitem_plugin(md, name, options) {
       max = state.eMarks[nextLine];
 
       initial = offset = state.sCount[nextLine] + posAfterMarker - (state.bMarks[startLine] + state.tShift[startLine]);
+      // initial = state.sCount[nextLine];
+      // offset = state.sCount[nextLine] + posAfterMarker - (state.bMarks[startLine] + state.tShift[startLine]);
+
 
       while (pos < max) {
         ch = state.src.charCodeAt(pos);
-
+        console.log('testing if space: ', state.src.charAt(pos));
         if (isSpace(ch)) {
           if (ch === 0x09) {
             offset += 4 - offset % 4;
@@ -226,18 +186,31 @@ module.exports = function pubheaderitem_plugin(md, name, options) {
         indentAfterMarker = offset - initial;
       }
 
+      // console.log('indentAfterMarker', indentAfterMarker);
       // If we have more than 4 spaces, the indent is 1
       // (the rest is just indented code block)
       if (indentAfterMarker > 4) { indentAfterMarker = 1; }
 
       // "  -  test"
       //  ^^^^^ - calculating total length of this thing
-      indent = initial + indentAfterMarker;
+        
+      var mpos = state.bMarks[startLine] + state.tShift[startLine];
+      var mmax = state.eMarks[startLine]
+      // console.log('this line: ', state.src.substring(mpos, mmax));
+      // console.log('this line classLength: ', state.src.substring(mpos, mmax).split(':')[0].trim().length);
+      var classLength = state.src.substring(mpos, mmax).split(':')[0].trim().length;
+
+
+      indent = initial + indentAfterMarker - classLength;
+      // console.log('indent', indent);
+      offset = offset - classLength;
+
+      
 
       // Run subparser & write tokens
-      token        = state.push('list_item_open', 'li', 1);
-      token.markup = String.fromCharCode(markerCharCode);
-      token.map    = itemLines = [ startLine, 0 ];
+      // token        = state.push('list_item_open', 'li', 1);
+      // token.markup = String.fromCharCode(markerCharCode);
+      // token.map    = itemLines = [ startLine, 0 ];
 
       oldIndent = state.blkIndent;
       oldTight = state.tight;
@@ -245,11 +218,25 @@ module.exports = function pubheaderitem_plugin(md, name, options) {
       oldLIndent = state.sCount[startLine];
       oldParentType = state.parentType;
       state.blkIndent = indent;
-      state.tight = true;
-      state.parentType = 'list';
+      state.tight = false;
+      state.parentType = 'pubheaderitem';
       state.tShift[startLine] = contentStart - state.bMarks[startLine];
+      state.bMarks[startLine] += classLength;
       state.sCount[startLine] = offset;
 
+      console.log('---------');
+      console.log('this line: ', state.src.substring(mpos, mmax));
+      console.log('this line classLength: ', state.src.substring(mpos, mmax).split(':')[0].trim().length);
+      console.log('indentAfterMarker', indentAfterMarker);
+      console.log('indent', indent);
+      console.log('offset', offset);
+      console.log('state.tShift[startLine]', state.tShift[startLine]);
+      console.log('state.bMarks[startLine]', state.bMarks[startLine]);
+      console.log('contentStart', contentStart);
+      console.log('state.sCount[startLine]', state.sCount[startLine]);
+      console.log('---------');
+
+      // debugger;
       if (contentStart >= max && state.isEmpty(startLine + 1)) {
         // workaround for this case
         // (list item is empty, list terminates before "foo"):
@@ -274,14 +261,15 @@ module.exports = function pubheaderitem_plugin(md, name, options) {
       state.blkIndent = oldIndent;
       state.tShift[startLine] = oldTShift;
       state.sCount[startLine] = oldLIndent;
+      state.bMarks[startLine] -= classLength;
       state.tight = oldTight;
       state.parentType = oldParentType;
 
-      token        = state.push('list_item_close', 'li', -1);
-      token.markup = String.fromCharCode(markerCharCode);
+      // token        = state.push('list_item_close', 'li', -1);
+      // token.markup = String.fromCharCode(markerCharCode);
 
       nextLine = startLine = state.line;
-      itemLines[1] = nextLine;
+      // itemLines[1] = nextLine;
       contentStart = state.bMarks[startLine];
 
       if (nextLine >= endLine) { break; }
@@ -299,30 +287,23 @@ module.exports = function pubheaderitem_plugin(md, name, options) {
       terminate = false;
       for (i = 0, l = terminatorRules.length; i < l; i++) {
         if (terminatorRules[i](state, nextLine, endLine, true)) {
+          console.log('Got a terminate');
           terminate = true;
           break;
         }
       }
       if (terminate) { break; }
 
-      // fail if list has another type
-      if (isOrdered) {
-        posAfterMarker = skipClassAndColonMarker(state, nextLine);
-        if (posAfterMarker < 0) { break; }
-      } else {
-        posAfterMarker = skipClassAndColonMarker(state, nextLine);
-        if (posAfterMarker < 0) { break; }
-      }
+      
+      posAfterMarker = skipClassAndColonMarker(state, nextLine);
+      if (posAfterMarker < 0) { break; }
 
       if (markerCharCode !== state.src.charCodeAt(posAfterMarker - 1)) { break; }
     }
 
     // Finilize list
-    if (isOrdered) {
-      token = state.push('ordered_list_close', 'ol', -1);
-    } else {
-      token = state.push('bullet_list_close', 'ul', -1);
-    }
+    
+    token = state.push('bullet_list_close', 'pubheaderitem', -1);
     token.markup = String.fromCharCode(markerCharCode);
 
     listLines[1] = nextLine;
@@ -336,9 +317,8 @@ module.exports = function pubheaderitem_plugin(md, name, options) {
     return true;
   };
 
-  md.block.ruler.before('fence', 'pubheaderitem', pubheaderitem, {});
-
-  md.renderer.rules['pubheaderitem_open'] = render;
-  md.renderer.rules['pubheaderitem_close'] = render;
+  md.block.ruler.before('fence', 'pubheaderitem', pubheaderitem, {
+    alt: [ 'paragraph', 'reference', 'blockquote', 'list' ]
+  });
 
 };

@@ -172,10 +172,9 @@ const PPMComponent = React.createClass({
 			return <div {...props}>{children}</div>;
 
 		case 'pubheader': 
-			console.log(arguments);
+			// console.log(arguments);
 		case 'pubheaderitem': 
-			console.log(arguments)
-
+			// console.log(arguments)
 		}
 
 
