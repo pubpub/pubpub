@@ -141,6 +141,7 @@ module.exports = function pubheaderitem_plugin(md, name, options) {
     listTokIdx = state.tokens.length;
 
     token       = state.push('bullet_list_open', 'pubheaderitem', 1);
+    // token.attrPush([ 'className', 'wubaluba' ]);
     token.map    = listLines = [ startLine, 0 ];
     token.markup = String.fromCharCode(markerCharCode);
 
@@ -199,7 +200,7 @@ module.exports = function pubheaderitem_plugin(md, name, options) {
       // console.log('this line: ', state.src.substring(mpos, mmax));
       // console.log('this line classLength: ', state.src.substring(mpos, mmax).split(':')[0].trim().length);
       var classLength = state.src.substring(mpos, mmax).split(':')[0].trim().length;
-
+      token.attrPush([ 'className', state.src.substring(mpos, mmax).split(':')[0].trim() ]);
 
       indent = initial + indentAfterMarker - classLength;
       // console.log('indent', indent);
@@ -304,6 +305,7 @@ module.exports = function pubheaderitem_plugin(md, name, options) {
     // Finilize list
     
     token = state.push('bullet_list_close', 'pubheaderitem', -1);
+
     token.markup = String.fromCharCode(markerCharCode);
 
     listLines[1] = nextLine;
