@@ -145,6 +145,7 @@ const PPMComponent = React.createClass({
 
 		case 'p':
 			// if (children[0] === null){ return null; }
+			// console.log('p arguments', arguments);
 			props.className = 'p-block';
 			props['data-hash'] = children[0] ? murmur.v2(children[0]) : 0;
 			Component = 'div';
@@ -173,8 +174,29 @@ const PPMComponent = React.createClass({
 
 		case 'pubheader': 
 			// console.log(arguments);
+			break;
 		case 'pubheaderitem': 
 			// console.log(arguments)
+			// debugger;
+			// if (children[0] && children[0].props) {
+			// 	children[0] = children[0].props.children[0]
+			// }
+			// if (props.className === 'author') {
+
+			// 	console.log('trying to set to link');
+			// 	props.href="/user/" + children[0];
+			// 	children[0] = "";
+			// 	Component = 'a';
+			// } else {
+				
+			// 	Component = 'div';
+
+			// }
+			Component = 'div';
+			props.className = props.className + ' pubheaderitem';
+			props['data-hash'] = children[0] ? murmur.v2(children[0]) : 0;
+			break;
+
 		}
 
 

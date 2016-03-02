@@ -12,16 +12,12 @@ module.exports = function pubheaderitem_plugin(md, name, options) {
     return false;
   }
 
-  // Search `[-+*][\n ]`, returns next pos arter marker on success
-  // or -1 on fail.
   function skipClassAndColonMarker(state, startLine) {
     var marker, pos, max, ch;
 
     pos = state.bMarks[startLine] + state.tShift[startLine];
     max = state.eMarks[startLine];
 
-    // Check bullet
-    console.log('------------');
     var foundMarker = false;
     while (pos < max) {
       marker = state.src.charCodeAt(pos++);
@@ -30,7 +26,6 @@ module.exports = function pubheaderitem_plugin(md, name, options) {
         foundMarker = true;
         break;
       }
-
     }
 
     if (!foundMarker) {
@@ -49,31 +44,6 @@ module.exports = function pubheaderitem_plugin(md, name, options) {
     return pos;
   }
 
-  // Search `[-+;][\n ]`, returns next pos arter marker on success
-  // or -1 on fail.
-  function skipBulletListMarker(state, startLine) {
-    var marker, pos, max, ch;
-
-    pos = state.bMarks[startLine] + state.tShift[startLine];
-    max = state.eMarks[startLine];
-
-    marker = state.src.charCodeAt(pos++);
-    // Check bullet
-    if (marker !== 0x3A/* : */) {
-      return -1;
-    }
-
-    if (pos < max) {
-      ch = state.src.charCodeAt(pos);
-
-      if (!isSpace(ch)) {
-        // " -test " - is not a list item
-        return -1;
-      }
-    }
-
-    return pos;
-  }
 
   function markTightParagraphs(state, idx) {
     var i, l,
@@ -131,6 +101,10 @@ module.exports = function pubheaderitem_plugin(md, name, options) {
       return false;
     }
 
+    var startpos = state.bMarks[startLine] + state.tShift[startLine];
+    // console.log('string youre testing ', state.src.substring(startpos, posAfterMarker));
+    if (state.src.substring(startpos, posAfterMarker).indexOf(' ') > -1) { return false;}
+
     // We should terminate list on style change. Remember first one to compare.
     markerCharCode = state.src.charCodeAt(posAfterMarker - 1);
 
@@ -140,15 +114,14 @@ module.exports = function pubheaderitem_plugin(md, name, options) {
     // Start list
     listTokIdx = state.tokens.length;
 
-    token       = state.push('bullet_list_open', 'pubheaderitem', 1);
+    token       = state.push('pubheaderitem_open', 'pubheaderitem', 1);
     // token.attrPush([ 'className', 'wubaluba' ]);
     token.map    = listLines = [ startLine, 0 ];
     token.markup = String.fromCharCode(markerCharCode);
 
     //
-    // Iterate list items
+    // Iterate items
     //
-
     nextLine = startLine;
     prevEmptyEnd = false;
     terminatorRules = state.md.block.ruler.getRules('list');
@@ -158,13 +131,9 @@ module.exports = function pubheaderitem_plugin(md, name, options) {
       max = state.eMarks[nextLine];
 
       initial = offset = state.sCount[nextLine] + posAfterMarker - (state.bMarks[startLine] + state.tShift[startLine]);
-      // initial = state.sCount[nextLine];
-      // offset = state.sCount[nextLine] + posAfterMarker - (state.bMarks[startLine] + state.tShift[startLine]);
-
 
       while (pos < max) {
         ch = state.src.charCodeAt(pos);
-        console.log('testing if space: ', state.src.charAt(pos));
         if (isSpace(ch)) {
           if (ch === 0x09) {
             offset += 4 - offset % 4;
@@ -187,7 +156,6 @@ module.exports = function pubheaderitem_plugin(md, name, options) {
         indentAfterMarker = offset - initial;
       }
 
-      // console.log('indentAfterMarker', indentAfterMarker);
       // If we have more than 4 spaces, the indent is 1
       // (the rest is just indented code block)
       if (indentAfterMarker > 4) { indentAfterMarker = 1; }
@@ -209,9 +177,6 @@ module.exports = function pubheaderitem_plugin(md, name, options) {
       
 
       // Run subparser & write tokens
-      // token        = state.push('list_item_open', 'li', 1);
-      // token.markup = String.fromCharCode(markerCharCode);
-      // token.map    = itemLines = [ startLine, 0 ];
 
       oldIndent = state.blkIndent;
       oldTight = state.tight;
@@ -225,17 +190,17 @@ module.exports = function pubheaderitem_plugin(md, name, options) {
       state.tShift[startLine] = contentStart - state.bMarks[startLine];
       state.sCount[startLine] = offset;
 
-      console.log('---------');
-      console.log('this line: ', state.src.substring(mpos, mmax));
-      console.log('this line classLength: ', state.src.substring(mpos, mmax).split(':')[0].trim().length);
-      console.log('indentAfterMarker', indentAfterMarker);
-      console.log('indent', indent);
-      console.log('offset', offset);
-      console.log('state.tShift[startLine]', state.tShift[startLine]);
-      console.log('state.bMarks[startLine]', state.bMarks[startLine]);
-      console.log('contentStart', contentStart);
-      console.log('state.sCount[startLine]', state.sCount[startLine]);
-      console.log('---------');
+      // console.log('---------');
+      // console.log('this line: ', state.src.substring(mpos, mmax));
+      // console.log('this line classLength: ', state.src.substring(mpos, mmax).split(':')[0].trim().length);
+      // console.log('indentAfterMarker', indentAfterMarker);
+      // console.log('indent', indent);
+      // console.log('offset', offset);
+      // console.log('state.tShift[startLine]', state.tShift[startLine]);
+      // console.log('state.bMarks[startLine]', state.bMarks[startLine]);
+      // console.log('contentStart', contentStart);
+      // console.log('state.sCount[startLine]', state.sCount[startLine]);
+      // console.log('---------');
 
       // debugger;
       if (contentStart >= max && state.isEmpty(startLine + 1)) {
@@ -266,11 +231,7 @@ module.exports = function pubheaderitem_plugin(md, name, options) {
       state.tight = oldTight;
       state.parentType = oldParentType;
 
-      // token        = state.push('list_item_close', 'li', -1);
-      // token.markup = String.fromCharCode(markerCharCode);
-
       nextLine = startLine = state.line;
-      // itemLines[1] = nextLine;
       contentStart = state.bMarks[startLine];
 
       if (nextLine >= endLine) { break; }
@@ -288,7 +249,7 @@ module.exports = function pubheaderitem_plugin(md, name, options) {
       terminate = false;
       for (i = 0, l = terminatorRules.length; i < l; i++) {
         if (terminatorRules[i](state, nextLine, endLine, true)) {
-          console.log('Got a terminate');
+          // console.log('Got a terminate');
           terminate = true;
           break;
         }
@@ -304,8 +265,7 @@ module.exports = function pubheaderitem_plugin(md, name, options) {
 
     // Finilize list
     
-    token = state.push('bullet_list_close', 'pubheaderitem', -1);
-
+    token = state.push('pubheaderitem_close', 'pubheaderitem', -1);
     token.markup = String.fromCharCode(markerCharCode);
 
     listLines[1] = nextLine;

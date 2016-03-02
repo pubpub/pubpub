@@ -149,6 +149,7 @@
 	color: inherit;
 }
 
+
 /*PLUGIN STYLING*/
 
 #pubContent .pub-plugin.pub-quote-wrapper {
@@ -204,6 +205,10 @@
 	text-align: left;
 	white-space: normal;
 	line-height: 1.4;
+}
+
+.pubheaderitem {
+	padding-left: 20px;
 	display: block;
 	margin-top: 0.5em;
 }
