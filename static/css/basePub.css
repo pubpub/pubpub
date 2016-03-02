@@ -15,17 +15,24 @@
 	padding: 0px 0em;
 }
 
-#pubContent #pub-title {
 
+#pubContent #pub-header {
+	border-bottom: 1px solid #ccc;
+	padding-bottom: 0.7em;
+	margin-bottom: 0.7em;
+}
+
+#pubContent #pub-title{
 	text-align: left;
 	font-size: 2.6em;
 	padding: 0.7em 0px;
-	font-weight: 700;
+	/*font-weight: 700;*/
 	line-height: 1.3em;
 	color: #222;
 	font-family: 'Lora';
 	margin: 0;
 }
+
 #pubContent #pub-authors {
 	text-align: left;
 	color: #222;

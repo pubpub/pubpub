@@ -69,10 +69,6 @@ module.exports = function container_plugin(md, name, options) {
     old_line_max = state.lineMax;
     state.parentType = 'pubheader';
 
-    token        = state.push('pubtitle_open', 'pubtitle', 1);
-    state.md.block.tokenize(state, startLine, startLine + 1); 
-    token        = state.push('pubtitle_close', 'pubtitle', -1);
-
     // this will prevent lazy continuations from ever going past our end marker
     state.lineMax = nextLine;
 
@@ -81,6 +77,11 @@ module.exports = function container_plugin(md, name, options) {
     token.block  = true;
     token.info   = params;
     token.map    = [ startLine, nextLine ];
+
+
+    token        = state.push('pubtitle_open', 'pubtitle', 1);
+    state.md.block.tokenize(state, startLine, startLine + 1); 
+    token        = state.push('pubtitle_close', 'pubtitle', -1);
 
     state.md.block.tokenize(state, startLine + 1, nextLine); // Use this line to exclude the title line
     // state.md.block.tokenize(state, startLine + 1, nextLine); // Use this line to include the title line

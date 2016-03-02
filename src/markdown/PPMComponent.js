@@ -174,6 +174,8 @@ const PPMComponent = React.createClass({
 
 		case 'pubheader': 
 			// console.log(arguments);
+			Component = 'div';
+			props.id = 'pub-header';
 			break;
 		case 'pubheaderitem': 
 			// console.log(arguments)
