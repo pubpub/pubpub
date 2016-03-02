@@ -64,9 +64,14 @@ module.exports = function container_plugin(md, name, options) {
       break;
     }
 
+
     old_parent = state.parentType;
     old_line_max = state.lineMax;
     state.parentType = 'pubheader';
+
+    token        = state.push('pubtitle_open', 'pubtitle', 1);
+    state.md.block.tokenize(state, startLine, startLine + 1); 
+    token        = state.push('pubtitle_close', 'pubtitle', -1);
 
     // this will prevent lazy continuations from ever going past our end marker
     state.lineMax = nextLine;

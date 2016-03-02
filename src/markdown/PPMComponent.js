@@ -8,7 +8,7 @@ import sup from 'markdown-it-sup';
 import container from 'markdown-it-container';
 import ppm from './markdown-it-ppm';
 import pubheader from './markdown-it-pubheader';
-import pubheaderitem from './markdown-it-pubheaderitem2';
+import pubheaderitem from './markdown-it-pubheaderitem';
 
 import mathIt from 'markdown-it-math';
 
@@ -195,6 +195,13 @@ const PPMComponent = React.createClass({
 			Component = 'div';
 			props.className = props.className + ' pubheaderitem';
 			props['data-hash'] = children[0] ? murmur.v2(children[0]) : 0;
+			break;
+		case 'pubtitle': 
+			if (children[0] && children[0].props) {
+				children[0] = children[0].props.children
+			}
+			Component = 'div';
+			props.id = 'pub-title';
 			break;
 
 		}

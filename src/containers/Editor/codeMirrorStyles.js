@@ -101,6 +101,9 @@ export function codeMirrorStyles(loginData, parentClass) {
 		'.CodeMirror .cm-spell-error': {
 			borderBottom: '1px dotted red',
 		},
+		'.CodeMirror .cm-comment': {
+			color: 'inherit',
+		},
 		'.CodeMirror pre.CodeMirror-placeholder': {
 			color: '#999',
 		},
