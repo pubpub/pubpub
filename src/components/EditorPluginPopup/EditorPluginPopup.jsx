@@ -41,10 +41,10 @@ const EditorPluginPopup = React.createClass({
 		this.onInputFieldChange = throttle(this._onInputFieldChange, 250);
 		return {
 			popupVisible: false,
-			xLoc: 0,
-			yLoc: 0,
 			initialString: '',
 			activeLine: undefined,
+			activeChar: undefined,
+			activeToken: null,
 			pluginType: '',
 			assets: [],
 			references: [],
@@ -67,11 +67,22 @@ const EditorPluginPopup = React.createClass({
 	componentWillReceiveProps(nextProps) {
 
 		// If a re-render causes this component to receive new props, but the props haven't changed, return.
+		console.log(this.props.codeMirrorChange);
+		console.log(nextProps.codeMirrorChange);
+
 		if (this.props.codeMirrorChange === nextProps.codeMirrorChange
 			&& this.props.assets === nextProps.assets
 			&& this.props.references === nextProps.references
 			&& this.props.selections === nextProps.selections) {
 			return null;
+		}
+
+		// If the change comes from another user
+		if (this.props.codeMirrorChange !== nextProps.codeMirrorChange
+			&& this.state.popupVisible === true
+			&& nextProps.codeMirrorChange.origin
+			&& (nextProps.codeMirrorChange.origin.indexOf('cmrt-') !== -1 || nextProps.codeMirrorChange.origin === 'RTCMADAPTER')) {
+			this.updateToken({activeLine: this.state.activeLine, activeChar: this.state.activeChar, isUpdate: true});
 		}
 
 		const assets = (nextProps.assets) ? Object.values(nextProps.assets) : [];
@@ -81,26 +92,6 @@ const EditorPluginPopup = React.createClass({
 		this.setState({assets: assets, references: references, aselections: selections});
 
 		return true;
-		/*
-
-		const change = nextProps.codeMirrorChange;
-
-		if (this.state.activeLine !== undefined && this.state.activeLine >= change.from.line && this.state.activeLine <= change.to.line && change.origin !== 'complete') {
-			this.setState({
-				popupVisible: false,
-				activeLine: undefined,
-			});
-		}
-
-		// If the change causes the line above to change, change the activeLine
-		if (this.state.activeLine !== undefined && change.from.line < this.state.activeLine) {
-
-			this.setState({
-				activeLine: this.state.activeLine + change.text.length - change.removed.length,
-			});
-
-		}
-		*/
 	},
 
 	componentWillUnmount() {
@@ -156,66 +147,65 @@ const EditorPluginPopup = React.createClass({
 			this.toIndex = null;
 
 			const cm = this.getActiveCodemirrorInstance();
+			this.cm = cm;
 
 			const selectedLine = cm.coordsChar({left: clickX, top: clickY, mode: 'window'});
 			const activeChar = selectedLine.ch;
 			const activeLine = selectedLine.line;
-			let activeToken = null;
 
-			const selectedTokens = cm.getLineTokens(selectedLine.line);
-			for (const token of selectedTokens) {
-				if (token.start <= activeChar && activeChar <= token.end) {
-					activeToken = token;
-				}
-			}
-
-			if (!activeToken) {
-				console.error('Could not find the active token!');
-				return;
-			}
-
-
-			// const pluginString = target.parentElement.textContent.slice(2, -2); // Original string minus the brackets
-			// const pluginString = target.innerHTML.slice(2, -2); // Original string minus the brackets
-
-			const pluginString = activeToken.string.slice(2, -2);
-
-			const pluginSplit = pluginString.split(':');
-			const pluginType = pluginSplit[0];
-			const valueString = pluginSplit.length > 1 ? pluginSplit[1] : ''; // Values split into an array
-			const values = parsePluginString(valueString);
-
-			const edgeX = document.elementFromPoint(clickX + POPUP_WIDTH, clickY);
-			const edgeY = document.elementFromPoint(clickX, clickY + POPUP_HEIGHT_ESTIMATE);
-
-			const flippedX = !contentBody.contains(edgeX);
-			const flippedY = !(edgeY !== null);
-
-			const xLoc = (flippedX) ? clickX - POPUP_WIDTH + 22 : clickX - 22;
-			const yLoc = (flippedY) ? (window.innerHeight - clickY) - contentBody.scrollTop + 15 : clickY + 15 - 60 + contentBody.scrollTop;
-
-			this.setState({
-				popupVisible: true,
-				xLoc: xLoc,
-				yLoc: yLoc,
-				activeLine: activeLine,
-				activeToken: activeToken,
-				pluginType: pluginType,
-				pluginHash: MurmurHash.v2(valueString),
-				initialString: pluginString,
-				values: values,
-				flippedX: flippedX,
-				flippedY: flippedY
-			});
-
-			this.fromIndex = activeToken.start;
-			this.toIndex = activeToken.end;
-
+			this.updateToken({activeLine, activeChar, isUpdate: false});
 			this.focusFields();
 
 		}
 	},
 
+	updateToken: function({activeChar, activeLine, isUpdate}) {
+
+
+		const lastToken = (isUpdate) ? this.state.activeToken : null;
+		let activeToken = null;
+
+		const selectedTokens = this.cm.getLineTokens(activeLine);
+		for (const token of selectedTokens) {
+			if (token.start <= activeChar && activeChar <= token.end) {
+				activeToken = token;
+			}
+		}
+
+		const tokenChanged = (isUpdate && activeToken && lastToken && activeToken.type !== lastToken.type);
+
+		if (!activeToken || tokenChanged) {
+			this.setState({
+				popupVisible: false,
+				activeToken: null,
+				pluginHash: null,
+			});
+			return;
+		}
+
+		console.log(activeToken);
+
+		const pluginString = activeToken.string.slice(2, -2);
+		const pluginSplit = pluginString.split(':');
+		const pluginType = pluginSplit[0];
+		const valueString = pluginSplit.length > 1 ? pluginSplit[1] : ''; // Values split into an array
+		const values = parsePluginString(valueString);
+
+		this.setState({
+			popupVisible: true,
+			activeLine: activeLine,
+			activeChar: activeChar,
+			activeToken: activeToken,
+			pluginType: pluginType,
+			pluginHash: MurmurHash.v2(valueString),
+			initialString: pluginString,
+			values: values,
+		});
+
+		this.fromIndex = activeToken.start;
+		this.toIndex = activeToken.end;
+
+	},
 	onPluginSave: function() {
 		const cm = this.getActiveCodemirrorInstance();
 		const lineNum = this.state.activeLine;
