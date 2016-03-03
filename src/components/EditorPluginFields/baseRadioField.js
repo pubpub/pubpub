@@ -28,6 +28,7 @@ const RadioButtonProp = React.createClass({
 		this.setState({
 			selectedValue: 'number'
 		});
+		this.props.saveChange();
 	},
 	handleNumber: function(event) {
 		let val = event.target.value;
@@ -38,6 +39,7 @@ const RadioButtonProp = React.createClass({
 			selectedValue: 'number',
 			number: val
 		});
+		this.props.saveChange();
 	},
 	handleChange: function(prop) {
 		this.setState({
