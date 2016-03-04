@@ -36,6 +36,9 @@ const CiteConfig = {
 	}
 };
 
+const CITE_WRAPPER_CLASS = 'pub-cite-wrapper';
+const CITE_CLASS = 'pub-cite';
+
 // let styles =
 
 const CitePlugin = React.createClass({
@@ -83,9 +86,9 @@ const CitePlugin = React.createClass({
 			<span>
 				{this.props.error === 'type'
 					? <ErrorMsg>Could not find reference.</ErrorMsg>
-					: <span style={[styles.ref]} onMouseOver={this.mouseOver} onMouseOut={this.mouseOut}>
+				: <span className={CITE_WRAPPER_CLASS} style={[styles.ref]} onMouseOver={this.mouseOver} onMouseOut={this.mouseOut}>
 						[{count}]
-						<span style={[styles.hoverRef, this.state.hover && styles.hoverRefVisible]}>
+						<span className={CITE_CLASS} style={[styles.hoverRef, this.state.hover && styles.hoverRefVisible]}>
 							<Reference citationObject={this.props.reference} mode={'mla'} />
 						</span>
 

@@ -9,7 +9,6 @@ const ImageInputFields = [
 	{title: 'size', type: 'size'},
 	{title: 'caption', type: 'textArea', params: {placeholder: 'Caption describing the image'}},
 	{title: 'reference', type: 'reference'},
-
 ];
 
 const ImageConfig = {
@@ -18,6 +17,9 @@ const ImageConfig = {
 	autocomplete: true,
 	color: 'rgba(185, 215, 249, 0.5)',
 };
+
+const IMG_WRAPPER_CLASS = 'pub-img-wrapper';
+const IMG_CLASS = 'pub-img';
 
 // let styles = {};
 
@@ -53,10 +55,11 @@ const ImagePlugin = React.createClass({
 		const caption = this.props.caption;
 		const reference = this.props.reference;
 
+
 		const imgProps = (!this.props.size && !this.props.align) ? {maxWidth: '100%', maxHeight: '100%', display: 'block', margin: '0 auto'} : {width: '100%', height: '100%'};
 
-		return (<Media caption={caption} size={size} align={align} reference={reference}>
-				<img style={imgProps} src={url} />
+		return (<Media className={IMG_WRAPPER_CLASS} caption={caption} size={size} align={align} reference={reference}>
+				<img className={IMG_CLASS} style={imgProps} src={url} />
 			</Media>
 		);
 	}

@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 // import ErrorMsg from './ErrorPlugin';
 // import {Reference} from '../';
 import createPubPubPlugin from './PubPub';
+import classNames from 'classnames';
 
 let styles = {};
 
@@ -28,6 +29,9 @@ const FootnoteConfig = {
 		return {globals, pluginProps};
 	}
 };
+
+const FOOTNOTE_WRAPPER_CLASS = 'pub-footnote-wrapper';
+const FOOTNOTE_CLASS = 'pub-footnote';
 
 
 const FootnotePlugin = React.createClass({
@@ -86,8 +90,8 @@ const FootnotePlugin = React.createClass({
 		}
 
 		return (
-			<span>
-				<sup id={`footnote-${count}`} style={styles.ref(this.state.hover || this.state.clicked)} ref="ref"
+			<span className={FOOTNOTE_WRAPPER_CLASS}>
+				<sup className={FOOTNOTE_CLASS} id={`footnote-${count}`} style={styles.ref(this.state.hover || this.state.clicked)} ref="ref"
 				onMouseOver={this.mouseOver} onMouseOut={this.mouseOut}>
 					{count}
 				</sup>

@@ -19,6 +19,10 @@ const VideoConfig = {
 	color: 'rgba(158, 219, 176, 0.5)',
 };
 
+const VIDEO_WRAPPER_CLASS = 'pub-video-wrapper';
+const VIDEO_CLASS = 'pub-video';
+
+
 let styles = {};
 
 const VideoPlugin = React.createClass({
@@ -53,8 +57,8 @@ const VideoPlugin = React.createClass({
 			html = <ErrorMsg>Could not find video asset.</ErrorMsg>;
 		} else {
 			html = (
-				<Media caption={caption} size={size} align={align}>
-					<video controls style={styles.video}>
+				<Media className={VIDEO_WRAPPER_CLASS} caption={caption} size={size} align={align}>
+					<video className={VIDEO_CLASS} controls style={styles.video}>
 						<source src={url} type="video/mp4"/>
 					</video>
 				</Media>);

@@ -2,7 +2,7 @@ import Radium from 'radium';
 import ErrorMsg from './ErrorPlugin';
 import React from 'react';
 
-function attachWrapper(Component, options, props) {
+function attachWrapper(Component) {
 	const PluginWrapper = React.createClass({
 		render() {
 			try {

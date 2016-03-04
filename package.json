@@ -93,6 +93,7 @@
     "bibtex-parse-js": "0.0.22",
     "body-parser": "1.14.1",
     "camelcase": "^2.0.1",
+    "classnames": "^2.2.3",
     "cloudinary": "^1.2.5",
     "codemirror": "^5.8.0",
     "compression": "1.6.0",

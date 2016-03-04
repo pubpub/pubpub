@@ -18,6 +18,9 @@ const QuoteConfig = {
 	color: 'rgba(245, 245, 169, 0.5)',
 };
 
+const QUOTE_WRAPPER_CLASS = 'pub-quote-wrapper';
+const QUOTE_CLASS = 'pub-quote';
+
 let styles = {};
 
 const QuotePlugin = React.createClass({
@@ -53,10 +56,12 @@ const QuotePlugin = React.createClass({
 		if (this.props.error === 'empty') {
 			html = <span></span>;
 		} else {
-			html = (<Media style={style} size={size} align={align}>
-				{quote}
-				{ (attribution) ? <div style={styles.attribute}> - {attribution}</div> : null}
-				{ (reference) ? <div style={styles.reference}> <Reference citationObject={reference} mode={'mla'} /> </div> : null }
+			html = (<Media className={QUOTE_WRAPPER_CLASS} style={style} size={size} align={align}>
+				<div className={QUOTE_CLASS}>
+					{quote}
+					{ (attribution) ? <div style={styles.attribute}> - {attribution}</div> : null}
+					{ (reference) ? <div style={styles.reference}> <Reference citationObject={reference} mode={'mla'} /> </div> : null }
+				</div>
 			</Media>
 		);
 		}

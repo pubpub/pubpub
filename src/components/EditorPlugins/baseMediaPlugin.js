@@ -13,9 +13,20 @@ const baseMediaPlugin = React.createClass({
 		caption: PropTypes.string,
 		style: PropTypes.object,
 		reference: PropTypes.object,
+		className: PropTypes.string,
 	},
 	getInitialState: function() {
 		return {};
+	},
+	generateClassName: function() {
+		let className = 'pub-plugin ';
+		className += (this.props.className) ? this.props.className : '';
+		className += (this.props.align) ? ` pub-align-${this.props.align}` : '';
+		if (this.props.size) {
+			className += (isNaN(this.props.size)) ? ` pub-size-${this.props.size}` : ' pub-size-custom';
+		}
+		className += (this.props.caption) ? ' pub-caption' : '';
+		return className;
 	},
 	render: function() {
 		const size = this.props.size || 'large';
@@ -58,10 +69,10 @@ const baseMediaPlugin = React.createClass({
 
 		const wrapperStyle = Object.assign(styleObject, baseStyle);
 
-		return (<div style={wrapperStyle}>
+		return (<div className={this.generateClassName()} style={wrapperStyle}>
 			{this.props.children}
-			{ (caption) ? <span style={styles.caption}>{caption}</span> : null }
-			{ (reference) ? <div style={styles.caption}> <Reference citationObject={reference} mode={'mla'} /> </div> : null }
+			{ (caption) ? <span className="pub-sub-caption" style={styles.caption}>{caption}</span> : null }
+			{ (reference) ? <div className="pub-sub-reference" style={styles.caption}> <Reference citationObject={reference} mode={'mla'} /> </div> : null }
 		</div>
 		);
 	}
