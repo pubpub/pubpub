@@ -171,9 +171,9 @@ const DiscussionsItem = React.createClass({
 						</div>
 					</div>
 
-					{this.props.noReply
+				{this.props.noReply || !this.state.replyActive
 						? null
-						: <div style={[styles.replyWrapper, this.state.replyActive && styles.replyWrapperActive]}>
+						: <div style={[styles.replyWrapper, styles.replyWrapperActive]}>
 							<DiscussionsInput
 								addDiscussionHandler={this.props.addDiscussionHandler}
 								addDiscussionStatus={this.props.addDiscussionStatus}

@@ -79,6 +79,10 @@ const PubDiscussionsInput = React.createClass({
 			const cm = document.getElementById(this.props.codeMirrorID).childNodes[0].CodeMirror;
 			const spacing = cm.getValue().length ? ' ' : '';
 			cm.setValue(cm.getValue() + spacing + '[[selection: index=' + nextProps.newDiscussionData.get('selections').size + ']] ' );
+			cm.setCursor(cm.lineCount(), 0);
+			// setTimeout(() => {cm.focus();}, 200);
+			cm.focus();
+			// cm.focus();
 		}
 
 		const newSelections = nextProps.newDiscussionData && nextProps.newDiscussionData.get ? nextProps.newDiscussionData.get('selections').toArray() : [];
