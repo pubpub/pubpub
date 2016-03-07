@@ -4,3 +4,4 @@ export LandingComponentCollectionGallery from './LandingComponentCollectionGalle
 export LandingComponentSearch from './LandingComponentSearch';
 export LandingComponentRecentList from './LandingComponentRecentList';
 
+export LandingComponentCDMXConstitution from './LandingComponentCDMXConstitution';

@@ -2,9 +2,8 @@ import React, {PropTypes} from 'react';
 import Radium from 'radium';
 import {parsePluginString} from '../../utils/parsePlugins';
 
-import {globalMessages} from '../../utils/globalMessages';
-
-import {FormattedMessage} from 'react-intl';
+// import {globalMessages} from '../../utils/globalMessages';
+// import {FormattedMessage} from 'react-intl';
 
 import Plugins from '../../components/EditorPlugins/index.js';
 import InputFields from '../EditorPluginFields/index.js';
@@ -15,7 +14,7 @@ import {throttle, delay} from 'lodash';
 
 let styles = {};
 const POPUP_WIDTH = 425;
-const POPUP_HEIGHT_ESTIMATE = 350;
+// const POPUP_HEIGHT_ESTIMATE = 350;
 
 const EditorPluginPopup = React.createClass({
 	propTypes: {
@@ -139,7 +138,7 @@ const EditorPluginPopup = React.createClass({
 
 
 		const target = document.elementFromPoint(clickX, clickY);
-		const contentBody = document.getElementById('editor-text-wrapper');
+		// const contentBody = document.getElementById('editor-text-wrapper');
 
 		if (target && target.className.indexOf('cm-plugin') > -1) {
 

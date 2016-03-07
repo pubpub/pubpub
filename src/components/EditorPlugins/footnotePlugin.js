@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 // import ErrorMsg from './ErrorPlugin';
 // import {Reference} from '../';
 import createPubPubPlugin from './PubPub';
-import classNames from 'classnames';
+// import classNames from 'classnames';
 
 let styles = {};
 

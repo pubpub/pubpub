@@ -143,6 +143,8 @@ app.use((req, res) => {
 							<link rel="shortcut icon" href="/favicon.ico" />
 							<link href='https://fonts.googleapis.com/css?family=Lato:300,300italic,700,700italic,900italic|Lora:400,400italic,700,700italic' rel='stylesheet' type='text/css' />
 
+							<link href='https://fonts.googleapis.com/css?family=Alegreya+Sans+SC|ABeeZee' rel='stylesheet' type='text/css'>
+
 							<!-- We could dynamically load these in Editor.jsx
 							<!-- If we have to load more local css - we should bundle it all into one minified file and load it here. -->
 							<link href='/css/codemirror.css' rel='stylesheet' type='text/css' /> <!-- I went back to loaded this one because the async css load was causing flicker on Discussion Codemirror -->
