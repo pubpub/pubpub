@@ -10,6 +10,8 @@ const LandingBody = React.createClass({
 		componentsArray: PropTypes.array,
 		journalID: PropTypes.string,
 		journalData: PropTypes.object,
+		query: PropTypes.object,
+		setQueryHandler: PropTypes.func,
 	},
 
 	getDefaultProps: function() {
@@ -78,7 +80,9 @@ const LandingBody = React.createClass({
 							return (
 								<LandingComponentCDMXConstitution 
 									key={'LandingComponent-' + index}
-									collections={this.props.journalData.get('collections').toJS()} />
+									collections={this.props.journalData.get('collections').toJS()}
+									query={this.props.query} 
+									setQueryHandler={this.props.setQueryHandler} />
 							);
 						default:
 							return null;
