@@ -19,6 +19,9 @@ const IframeConfig = {
 	autocomplete: true
 };
 
+const IFRAME_WRAPPER_CLASS = 'pub-iframe-wrapper';
+const IFRAME_CLASS = 'pub-iframe';
+
 let styles = {};
 
 const IframePlugin = React.createClass({
@@ -59,9 +62,8 @@ const IframePlugin = React.createClass({
 		if (this.props.error === 'empty') {
 			html = <span></span>;
 		} else {
-			html = (<Media caption={caption} style={style} align={align}>
-				<iframe src={url} style={{width: '100%', height: height, margin: '0 auto', display: 'block'}} frameBorder="0"></iframe>
-
+			html = (<Media className={IFRAME_WRAPPER_CLASS} caption={caption} style={style} align={align}>
+				<iframe className={IFRAME_CLASS} src={url} style={{width: '100%', height: height, margin: '0 auto', display: 'block'}} frameBorder="0"></iframe>
 				{ (reference) ? <div style={styles.reference}> <Reference citationObject={reference} mode={'mla'} /> </div> : null }
 			</Media>
 		);
