@@ -44,9 +44,9 @@ const LandingComponentCDMXConstitution = React.createClass({
 
 		return ( <div style={styles.container}> 
 			<div style={styles.header}>
-				<img style={styles.headerImage} src="http://i.imgur.com/BxctOW8.png" />
+				<a href="http://www.constitucion.cdmx.gob.mx"><img style={styles.headerImage} src="http://i.imgur.com/BxctOW8.png" /></a>
 				<div style={styles.headerSeparator}></div>
-				<div style={styles.headerParticipa}>Participa</div>
+				<div style={styles.headerParticipa}>Ensayos</div>
 			</div>
 			<div style={styles.collectionTitle}>
 				<div style={styles.collectionTitleText}>{this.props.collections[this.state.activeIndex].title}</div>
@@ -217,7 +217,7 @@ styles = {
 		},
 	},
 	pubItem: {
-		borderTop: '2px solid #DF177C',
+		borderTop: '1px solid #DF177C',
 		padding: '20px 5%',
 		':hover': {
 			color: '#DF177C',
@@ -225,6 +225,7 @@ styles = {
 	},
 	pubTitle: {
 		textTransform: 'uppercase',
+		fontFamily: 'ABeeZee',
 		fontSize: '1.2em',
 	},
 	pubAbstract: {
