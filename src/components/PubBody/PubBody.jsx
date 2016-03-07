@@ -164,6 +164,23 @@ const PubBody = React.createClass({
 		return [];
 	},
 
+	findReferences: function(markdown) {
+		const citeRegex = /\[\[cite:.*?\]\]/g;
+		const matches = markdown.match(citeRegex);
+		if (matches && matches.length > 0) {
+			const indexedCitations = {};
+			for (const [index, match] of matches.entries()) {
+				const citeStr = match.slice(2, -2);
+				const refName = parsePluginString(citeStr).reference;
+				if (refName && !indexedCitations[refName]) {
+					indexedCitations[refName] = index + 1;
+				}
+			}
+			return indexedCitations;
+		}
+		return [];
+	},
+
 	scrollToReference: function(index) {
 		document.getElementById(`footnote-${index}`).scrollIntoView();
 	},
@@ -171,6 +188,8 @@ const PubBody = React.createClass({
 	render: function() {
 
 		const footnotes = (this.props.markdown) ? this.findFootnotes(this.props.markdown) : [];
+		const indexedCitations = (this.props.markdown) ? this.findReferences(this.props.markdown) : [];
+		const sortedReferences = this.props.references.sort((refA, refB) => { return indexedCitations[refA.refName] - indexedCitations[refB.refName]; } );
 
 		return (
 			<ResizingText fontRatio={60} minFont={this.props.minFont}>
@@ -253,9 +272,8 @@ const PubBody = React.createClass({
 						{this.props.references && this.props.references.length
 							? <div id={'pub-references'}>
 								<h1><FormattedMessage {...globalMessages.references}/></h1>
-
 								{
-									this.props.references.map((reference, index)=>{
+									sortedReferences.map((reference, index)=>{
 										return (
 											<div key={'pubReference-' + index} >
 												<span style={styles.referenceNumber}>[{index + 1}]</span>

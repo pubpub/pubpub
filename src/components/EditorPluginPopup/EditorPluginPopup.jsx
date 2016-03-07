@@ -66,9 +66,6 @@ const EditorPluginPopup = React.createClass({
 	componentWillReceiveProps(nextProps) {
 
 		// If a re-render causes this component to receive new props, but the props haven't changed, return.
-		console.log(this.props.codeMirrorChange);
-		console.log(nextProps.codeMirrorChange);
-
 		if (this.props.codeMirrorChange === nextProps.codeMirrorChange
 			&& this.props.assets === nextProps.assets
 			&& this.props.references === nextProps.references
@@ -181,8 +178,6 @@ const EditorPluginPopup = React.createClass({
 			});
 			return;
 		}
-
-		console.log(activeToken);
 
 		const pluginString = activeToken.string.slice(2, -2);
 		const pluginSplit = pluginString.split(':');
