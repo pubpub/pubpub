@@ -95,7 +95,7 @@ const PubDiscussionsInput = React.createClass({
 	onEditorChange: function(cm, change) {
 		const content = cm.getValue();
 		const showPreview = (content.indexOf('[[selection:') !== -1);
-		this.setState({content: content, showPreview: showPreview, expanded: showPreview});
+		this.setState({content: content, showPreview: showPreview, expanded: this.state.expanded || showPreview});
 		// console.log('change!');
 		// console.log(cm);
 	},
@@ -119,6 +119,10 @@ const PubDiscussionsInput = React.createClass({
 		if (this.cm.getValue().length === 0) {
 			this.setState({expanded: false});
 		}
+	},
+
+	toggleLivePreview: function() {
+		this.setState({showPreview: !this.state.showPreview});
 	},
 
 	render: function() {
@@ -164,6 +168,18 @@ const PubDiscussionsInput = React.createClass({
 					</div> */}
 				</div>
 				<div id={this.props.codeMirrorID} className={'inputCodeMirror'} style={styles.inputBox(this.state.expanded)} onBlur={this.onBlur} onFocus={this.onFocus}></div>
+
+				<div style={styles.loaderContainer}>
+					{(this.props.addDiscussionStatus === 'loading' && this.props.activeSaveID === this.props.saveID ? <LoaderIndeterminate color="#444"/> : null)}
+				</div>
+
+				<div style={[styles.inputBottomLine, styles.expanded(this.state.expanded || this.props.isReply, false)]}>
+					<span style={styles.livePreviewText}>Live Preview: <span style={styles.livePreviewToggle} onClick={this.toggleLivePreview}>{(this.state.showPreview) ? 'On' : 'Off'}</span> <span style={styles.lighterText}>(you can use <a target="_blank" href="https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet">markdown</a> for styling)</span></span>
+					<div style={styles.submitButton} key={'newDiscussionSubmit'} onClick={this.submitDiscussion}>
+						<FormattedMessage {...globalMessages.Submit}/>
+					</div>
+				</div>
+
 				{
 					(this.state.showPreview) ?
 					<div>
@@ -173,16 +189,6 @@ const PubDiscussionsInput = React.createClass({
 					</div>
 					: null
 				}
-				<div style={styles.loaderContainer}>
-					{(this.props.addDiscussionStatus === 'loading' && this.props.activeSaveID === this.props.saveID ? <LoaderIndeterminate color="#444"/> : null)}
-				</div>
-
-				<div style={[styles.inputBottomLine, styles.expanded(this.state.expanded || this.props.isReply, false)]}>
-					<span style={styles.livePreviewText}>Live Preview: {(this.state.showPreview) ? <span>On</span> : <span>Off</span> } <small>(you can use <a target="_blank" href="https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet">markdown</a> to style your comment)</small></span>
-					<div style={styles.submitButton} key={'newDiscussionSubmit'} onClick={this.submitDiscussion}>
-						<FormattedMessage {...globalMessages.Submit}/>
-					</div>
-				</div>
 
 			</div>
 		);
@@ -218,14 +224,27 @@ styles = {
 	},
 	livePreviewText: {
 		fontSize: '0.8em',
-		fontWeight: '700',
+		fontWeight: '400',
+		userSelect: 'none',
+		cursor: 'default',
+		marginLeft: '2.5%',
+	},
+	lighterText: {
+		fontWeight: '300',
+	},
+	livePreviewToggle: {
+		textDecoration: 'underline',
+		cursor: 'pointer',
 	},
 	livePreviewBox: {
-		width: '95%',
+		width: '90%',
 		display: 'block',
 		margin: '5px auto 15px',
-		border: '1px solid #E2E2E2',
+		border: '1px dashed #888',
 		padding: '10px',
+		fontFamily: 'Helvetica Neue,Helvetica,Arial,sans-serif',
+		color: '#555',
+		fontSize: '0.85em',
 	},
 	replyContainer: {
 		// margin: '0px 10px 10px 0px',
@@ -237,6 +256,7 @@ styles = {
 	inputBottomLine: {
 		// backgroundColor: 'rgba(255,0,100,0.1)',
 		height: 20,
+		marginBottom: '15px',
 	},
 	inputBox: function(expanded) {
 		return {
