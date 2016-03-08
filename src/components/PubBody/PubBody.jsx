@@ -192,7 +192,7 @@ const PubBody = React.createClass({
 		const sortedReferences = this.props.references.sort((refA, refB) => { return indexedCitations[refA.refName] - indexedCitations[refB.refName]; } );
 
 		return (
-			<ResizingText fontRatio={60} minFont={this.props.minFont}>
+			<ResizingText fontRatio={45} minFont={5}>
 
 			<div style={styles.container}>
 

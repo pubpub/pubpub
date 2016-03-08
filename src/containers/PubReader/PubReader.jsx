@@ -263,7 +263,7 @@ const PubReader = React.createClass({
 						title={pubData.history[versionIndex].title}
 						abstract={pubData.history[versionIndex].abstract}
 						authorsNote={pubData.history[versionIndex].authorsNote}
-						minFont={15}
+						minFont={12}
 						// htmlTree={this.state.htmlTree}
 						markdown={this.state.inputMD}
 						assetsObject={this.state.assetsObject}
@@ -293,7 +293,7 @@ const PubReader = React.createClass({
 						closeMenuHandler={this.closeMenu}
 						activeModal={this.props.readerData.get('activeModal')}
 						isFeatured={(pubData.featuredInList && pubData.featuredInList.indexOf(this.props.journalData.getIn(['journalData', '_id'])) > -1) || this.props.journalData.get('baseSubdomain') === null}
-						
+
 						// TOC Props
 						tocData={this.state.TOC}
 						// Cite Props
@@ -344,6 +344,7 @@ const PubReader = React.createClass({
 	}
 
 });
+
 
 export default connect( state => {
 	return {
@@ -488,7 +489,7 @@ styles = {
 
 	rightBar: {
 		padding: 10,
-		width: 'calc(100% - 800px - 20px)',
+		// width: 'calc(100% - 800px - 20px)',
 		height: 'calc(100vh - ' + globalStyles.headerHeight + ' - 20px)',
 		float: 'left',
 		overflow: 'hidden',
@@ -502,27 +503,27 @@ styles = {
 		// Desktop Sizes
 		'@media screen and (min-width: 768px) and (max-width: 1023px)': {
 			padding: pubSizes.xSmallPadding,
-			width: 'calc(100% - ' + pubSizes.xSmallLeft + 'px - ' + pubSizes.xSmallPub + 'px - ' + (2 * pubSizes.xSmallPadding) + 'px)',
+			width: 'calc(100% - ' + pubSizes.xSmallLeft + 'px - ' + pubSizes.xSmallPub + ' - ' + (2 * pubSizes.xSmallPadding) + 'px)',
 			height: 'calc(100vh - ' + globalStyles.headerHeight + ' - ' + (2 * pubSizes.xSmallPadding) + 'px)',
 		},
 		'@media screen and (min-width: 1024px) and (max-width: 1300px)': {
 			padding: pubSizes.smallPadding,
-			width: 'calc(100% - ' + pubSizes.smallLeft + 'px - ' + pubSizes.smallPub + 'px - ' + (2 * pubSizes.smallPadding) + 'px)',
+			width: 'calc(100% - ' + pubSizes.smallLeft + 'px - ' + pubSizes.smallPub + ' - ' + (2 * pubSizes.smallPadding) + 'px)',
 			height: 'calc(100vh - ' + globalStyles.headerHeight + ' - ' + (2 * pubSizes.smallPadding) + 'px)',
 		},
 		'@media screen and (min-width: 1301px) and (max-width: 1600px)': {
 			padding: pubSizes.mediumPadding,
-			width: 'calc(100% - ' + pubSizes.mediumLeft + 'px - ' + pubSizes.mediumPub + 'px - ' + (2 * pubSizes.mediumPadding) + 'px)',
+			width: 'calc(100% - ' + pubSizes.mediumLeft + 'px - ' + pubSizes.mediumPub + ' - ' + (2 * pubSizes.mediumPadding) + 'px)',
 			height: 'calc(100vh - ' + globalStyles.headerHeight + ' - ' + (2 * pubSizes.mediumPadding) + 'px)',
 		},
 		'@media screen and (min-width: 1600px) and (max-width: 2000px)': {
 			padding: pubSizes.largePadding,
-			width: 'calc(100% - ' + pubSizes.largeLeft + 'px - ' + pubSizes.largePub + 'px - ' + (2 * pubSizes.largePadding) + 'px)',
+			width: 'calc(100% - ' + pubSizes.largeLeft + 'px - ' + pubSizes.largePub + ' - ' + (2 * pubSizes.largePadding) + 'px)',
 			height: 'calc(100vh - ' + globalStyles.headerHeight + ' - ' + (2 * pubSizes.largePadding) + 'px)',
 		},
 		'@media screen and (min-width: 2000px)': {
 			padding: pubSizes.xLargePadding,
-			width: 'calc(100% - ' + pubSizes.xLargeLeft + 'px - ' + pubSizes.xLargePub + 'px - ' + (2 * pubSizes.xLargePadding) + 'px)',
+			width: 'calc(100% - ' + pubSizes.xLargeLeft + 'px - ' + pubSizes.xLargePub + ' - ' + (2 * pubSizes.xLargePadding) + 'px)',
 			height: 'calc(100vh - ' + globalStyles.headerHeight + ' - ' + (2 * pubSizes.xLargePadding) + 'px)',
 		},
 	},

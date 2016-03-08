@@ -135,7 +135,7 @@ const PubDiscussionsInput = React.createClass({
 						...codeMirrorStyles(),
 						backgroundColor: 'transparent',
 						fontSize: '15px',
-						color: '#555',
+						color: '#222',
 						fontFamily: 'Helvetica Neue,Helvetica,Arial,sans-serif',
 						padding: '0px 20px',
 						width: 'calc(100% - 40px)',

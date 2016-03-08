@@ -271,7 +271,7 @@ styles = {
 		lineHeight: '16px',
 		width: 'calc(100% - 36px - 36px - 5px)',
 		paddingLeft: 5,
-		color: '#777',
+		color: '#333',
 		fontSize: '13px',
 		float: 'left',
 		whiteSpace: 'nowrap',
@@ -289,9 +289,10 @@ styles = {
 		padding: '0px 6px',
 	},
 	headerText: {
-		color: '#777',
+		color: '#555',
+		fontFamily: 'Lora',
 		':hover': {
-			color: '#333',
+			color: '#000',
 			cursor: 'pointer',
 		}
 	},
@@ -318,7 +319,7 @@ styles = {
 		width: 'calc(100% - 30px)',
 		marginLeft: 25,
 		// overflow: 'hidden',
-		color: '#555',
+		color: '#222',
 		// padding: '0px 15px',
 		padding: '10px 6px 15px 6px',
 		lineHeight: '1.58',
