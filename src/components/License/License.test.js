@@ -1,33 +1,44 @@
-
+import React from 'react'
+import ReactDOM from 'react-dom';
+import ReactDOMServer from 'react-dom/server';
+import TestUtils from 'react-addons-test-utils'
 import {expect} from 'chai';
-import {renderComponent} from '../../utils/testFunctions';
 import License from './License.jsx'
 
 describe('Components', () => {
-  describe('License.jsx', () => {
-    it('should render correctly', () => {
+	describe('License.jsx', () => {
+  	
+		it('should exist when rendered with empty props', () => {
+			const props = {};
+			const component = TestUtils.renderIntoDocument( 
+				<License {...props} />
+			);
+			const renderedDOM = ReactDOM.findDOMNode(component);
+			expect(renderedDOM).to.exist;
+		});
 
-      const component = renderComponent(License, {});
-      // expect(output.type).toBe('header')
-      // expect(output.props.className).toBe('header')
+		it('should accept custom text', () => {
+			const props = {text: 'My custom text'};
+			const component = TestUtils.renderIntoDocument( 
+				<License {...props} />
+			);
+			const renderedDOM = ReactDOM.findDOMNode(component);
+			expect(renderedDOM.innerText).to.equal('My custom text Creative Commons Attribution 4.0 International License.');
+		});
 
-      // let [ div ] = output.props.children;
+		it('should change when hover prop is true', () => {
 
-      expect('div').to.equal('div');
-      // expect(h1.props.children).toBe('todos')
+			const componentHoverTrue = ReactDOMServer.renderToStaticMarkup(
+				<License hover={true} />
+			);
 
-      // expect(input.type).toBe(TodoTextInput)
-      // expect(input.props.newTodo).toBe(true)
-      // expect(input.props.placeholder).toBe('What needs to be done?')
-    });
+			const componentHoverFalse = ReactDOMServer.renderToStaticMarkup(
+				<License hover={false} />
+			);
 
-    // it('should call addTodo if length of text is greater than 0', () => {
-    //   const { output, props } = setup()
-    //   let input = output.props.children[1]
-    //   input.props.onSave('')
-    //   expect(props.addTodo.calls.length).toBe(0)
-    //   input.props.onSave('Use Redux')
-    //   expect(props.addTodo.calls.length).toBe(1)
-    // })
-  });
+			expect(componentHoverTrue).to.not.equal(componentHoverFalse);
+		});
+
+
+	});
 });

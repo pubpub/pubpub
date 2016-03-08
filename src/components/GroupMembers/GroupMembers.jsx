@@ -116,7 +116,7 @@ const GroupMembers = React.createClass({
 				}
 
 				{
-					this.props.groupData.members.map((member, index) => {
+					this.props.groupData.members && this.props.groupData.members.map((member, index) => {
 						return (
 							<div key={'admin-' + index} style={styles.rowContainer}>
 

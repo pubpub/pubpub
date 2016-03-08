@@ -1,4 +1,5 @@
 var webpack = require('webpack');
+var path = require('path');
 
 module.exports = function (config) {
   config.set({
@@ -39,22 +40,24 @@ module.exports = function (config) {
         ]
       },
       resolve: {
+        root: path.resolve('src'),
         modulesDirectories: [
-          'src',
           'node_modules'
         ],
         extensions: ['', '.json', '.js', '.jsx']
       },
       plugins: [
-        new webpack.IgnorePlugin(/\.json$/),
-        new webpack.NoErrorsPlugin(),
+        // new webpack.NoErrorsPlugin(),
         new webpack.DefinePlugin({
           __CLIENT__: true,
           __SERVER__: false,
           __DEVELOPMENT__: true,
           __DEVTOOLS__: false  // <-------- DISABLE redux-devtools HERE
         })
-      ]
+      ],
+      node: {
+        fs: "empty"
+      },
     },
 
     webpackServer: {
