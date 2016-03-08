@@ -1,6 +1,6 @@
 import React, {PropTypes} from 'react';
 import {connect} from 'react-redux';
-import Radium from 'radium';
+import Radium, {Style} from 'radium';
 // import {globalStyles} from '../../utils/styleConstants';
 import {rightBarStyles} from '../../containers/PubReader/rightBarStyles';
 import DiscussionsItem from './DiscussionsItem';
@@ -151,6 +151,13 @@ const Discussions = React.createClass({
 		return (
 			<div style={styles.container}>
 
+
+				<Style rules={{
+					'.pub-discussions-wrapper .p-block': {
+						padding: '0.5em 0em',
+					}
+				}} />
+
 				<div className="pub-discussions-wrapper" style={rightBarStyles.sectionWrapper}>
 					{this.props.pubData.getIn(['pubData', 'referrer', 'name'])
 						? <div>{this.props.pubData.getIn(['pubData', 'referrer', 'name'])} invites you to comment!</div>
@@ -195,7 +202,7 @@ const Discussions = React.createClass({
 
 					{(discussionsData.length === 0) ?
 						<div style={styles.emptyComments}>
-							<div>There are no comments here yet.</div> 
+							<div>There are no comments here yet.</div>
 							<div>Be the first to start the discussion!</div>
 						</div>
 					: null }

@@ -8,6 +8,8 @@ import DiscussionsScore from './DiscussionsScore';
 import {convertListToObject} from '../../utils/parsePlugins';
 import PPMComponent from '../../markdown/PPMComponent';
 
+import ResizingText from '../../components/PubBody/ResizingText';
+
 // import {globalMessages} from '../../utils/globalMessages';
 import {FormattedMessage, FormattedDate, FormattedRelative} from 'react-intl';
 
@@ -161,6 +163,8 @@ const DiscussionsItem = React.createClass({
 
 					</div>
 
+					<ResizingText fontRatio={45} minFont={13} maxFont={18}>
+
 					<div style={styles.discussionBody}>
 
 						<div style={styles.discussionContent}>
@@ -170,6 +174,8 @@ const DiscussionsItem = React.createClass({
 
 						</div>
 					</div>
+
+					</ResizingText>
 
 				{this.props.noReply || !this.state.replyActive
 						? null
@@ -323,7 +329,7 @@ styles = {
 		// padding: '0px 15px',
 		padding: '10px 6px 15px 6px',
 		lineHeight: '1.58',
-		fontSize: '0.9em',
+		fontSize: '1em',
 		fontWeight: '300',
 		fontFamily: 'Helvetica Neue,Helvetica,Arial,sans-serif',
 	},
