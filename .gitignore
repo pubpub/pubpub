@@ -6,6 +6,7 @@ data/
 tmp/
 misc/
 *.iml
+stats.json
 webpack-stats.json
 npm-debug.log
 .DS_Store

@@ -6,6 +6,7 @@ import {Autocomplete} from '../';
 import {globalStyles} from '../../utils/styleConstants';
 import {LandingBody} from '../../components';
 import {getRandomSlug} from '../../actions/journal';
+import { pushState } from 'redux-router';
 import { Link } from 'react-router';
 const HoverLink = Radium(Link);
 
@@ -15,6 +16,8 @@ const Landing = React.createClass({
 	propTypes: {
 		journalData: PropTypes.object,
 		landingData: PropTypes.object,
+		path: PropTypes.string,
+		query: PropTypes.object,
 		dispatch: PropTypes.func
 	},
 
@@ -28,6 +31,10 @@ const Landing = React.createClass({
 		return {
 			activeFeature: 'editing',
 		};
+	},
+
+	setQuery: function(queryObject) {
+		this.props.dispatch(pushState(null, this.props.path, {...this.props.query, ...queryObject}));
 	},
 
 	renderLandingSearchResults: function(results) {
@@ -177,7 +184,7 @@ const Landing = React.createClass({
 							 </div>
 						</div>
 							
-						: <LandingBody componentsArray={componentsArray} journalID={journalID} journalData={this.props.journalData.get('journalData')}/>
+						: <LandingBody componentsArray={componentsArray} journalID={journalID} journalData={this.props.journalData.get('journalData')} query={this.props.query} setQueryHandler={this.setQuery}/>
 				}
 
 			</div>
@@ -189,7 +196,9 @@ const Landing = React.createClass({
 export default connect( state => {
 	return {
 		journalData: state.journal,
-		landingData: state.landing
+		landingData: state.landing,
+		path: state.router.location.pathname,
+		query: state.router.location.query,
 	};
 })( Radium(Landing) );
 

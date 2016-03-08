@@ -42,8 +42,8 @@ module.exports = {
   },
   progress: true,
   resolve: {
+    root: path.resolve('src'),
     modulesDirectories: [
-      'src',
       'node_modules'
     ],
     extensions: ['', '.json', '.js', '.jsx']

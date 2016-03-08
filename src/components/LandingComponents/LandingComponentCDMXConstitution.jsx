@@ -9,25 +9,43 @@ let styles = {};
 const LandingComponentCDMXConstitution = React.createClass({
 	propTypes: {
 		collections: PropTypes.array,
+		query: PropTypes.object,
+		setQueryHandler: PropTypes.func,
 	},
 
 	getInitialState() {
 		return {
 			activeIndex: 0,
-			showCollectionList: false,
+			// showCollectionList: false,
 		};
 	},
 
+	componentWillMount() {
+		if (this.props.query.c) {
+			this.setState({activeIndex: parseInt(this.props.query.c, 10)});
+		} else {
+			this.setState({activeIndex: 0});	
+		}
+	},
+
+	componentWillReceiveProps(nextProps) {
+		if (nextProps.query.c) {
+			this.setState({activeIndex: parseInt(nextProps.query.c, 10)});
+		} else {
+			this.setState({activeIndex: 0});
+		}
+	},
 	setActiveIndex: function(index) {
 		return ()=>{
-			this.setState({activeIndex: index});
+			// this.setState({activeIndex: index});
+			this.props.setQueryHandler({c: index});
 		};
 		
 	},
 
-	toggleShowCollectionList: function() {
-		this.setState({showCollectionList: !this.state.showCollectionList});
-	},
+	// toggleShowCollectionList: function() {
+	// 	this.setState({showCollectionList: !this.state.showCollectionList});
+	// },
 
 	// authorString: function(authors) {
 	// 	let output = 'by ';
@@ -41,36 +59,37 @@ const LandingComponentCDMXConstitution = React.createClass({
 	// },
 
 	render: function() {
-
+		console.log(this.props.query, this.state.activeIndex);
 		return ( <div style={styles.container}> 
 			<div style={styles.header}>
-				<img style={styles.headerImage} src="http://i.imgur.com/BxctOW8.png" />
+				<a href="http://www.constitucion.cdmx.gob.mx"><img style={styles.headerImage} src="http://i.imgur.com/BxctOW8.png" /></a>
 				<div style={styles.headerSeparator}></div>
-				<div style={styles.headerParticipa}>Participa</div>
+				<div style={styles.headerParticipa}>Ensayos</div>
 			</div>
 			<div style={styles.collectionTitle}>
-				<div style={styles.collectionTitleText}>{this.props.collections[this.state.activeIndex].title}</div>
-				<div style={styles.collectionTitleExpandButton} onClick={this.toggleShowCollectionList}>
+				<div style={[styles.collectionTitleText, this.props.query.c === undefined && styles.collectionTitleTextHide]}>{this.props.collections[this.state.activeIndex].title}</div>
+				{/* <div style={styles.collectionTitleExpandButton} onClick={this.toggleShowCollectionList}>
 					{this.state.showCollectionList
 						? 'menos'
 						: 'más'
 					}
-				</div>
+				</div> */}
 			</div>
 
 			<div style={styles.collectionContent}>
-				<div style={[styles.collectionNav, this.state.showCollectionList && styles.collectionNavMobileShow]}>
+				<div style={[styles.collectionNav, this.props.query.c === undefined && styles.collectionNavMobileShow]}>
 					{
 						this.props.collections.map((collection, index)=>{
 							return (
 								<div key={'collectionButton-' + collection.slug} style={[styles.collectionButton, this.state.activeIndex === index && styles.collectionButtonActive]} onClick={this.setActiveIndex(index)}>
 									{collection.title}
 								</div>
+								
 							);
 						})
 					}
 				</div>
-				<div style={styles.pubList}>
+				<div style={[styles.pubList, this.props.query.c !== undefined && styles.collectionNavMobileShow]}>
 					{this.props.collections[this.state.activeIndex].pubs.length
 						? this.props.collections[this.state.activeIndex].pubs && this.props.collections[this.state.activeIndex].pubs.map((pub, index)=>{
 							return (
@@ -123,7 +142,7 @@ styles = {
 		margin: '0px 30px',
 	},
 	headerParticipa: {
-		textTransform: 'uppercase',
+		textTransform: 'lowercase',
 		float: 'left',
 		lineHeight: '80px',
 		height: '100%',
@@ -145,6 +164,12 @@ styles = {
 		textShadow: '0px 0px 5px black',
 		fontSize: '2em',
 
+	},
+	collectionTitleTextHide: {
+		'@media screen and (min-resolution:3dppx), screen and (max-width:767px)': {
+			display: 'none',
+			
+		}
 	},
 	collectionTitleExpandButton: {
 		position: 'absolute',
@@ -180,6 +205,8 @@ styles = {
 		'@media screen and (min-resolution:3dppx), screen and (max-width:767px)': {
 			width: '100%',
 			display: 'none',
+			backgroundColor: 'transparent',
+
 		},
 	},
 	collectionNavMobileShow: {
@@ -192,7 +219,7 @@ styles = {
 		margin: '20px 10%',
 		padding: '5px 0px',
 		border: '1px solid #999',
-		textTransform: 'uppercase',
+		textTransform: 'lowercase',
 		textAlign: 'center',
 		borderRadius: '2px',
 		':hover': {
@@ -204,6 +231,10 @@ styles = {
 	collectionButtonActive: {
 		backgroundColor: '#DF177C',
 		color: 'white',
+		'@media screen and (min-resolution:3dppx), screen and (max-width:767px)': {
+			backgroundColor: 'transparent',
+			color: 'black',
+		},
 	},
 	pubList: {
 		// display: 'table-cell',
@@ -214,10 +245,11 @@ styles = {
 			width: 'calc(100% - 10%)',
 			padding: '20px 5%',
 			minHeight: 'initial',
+			display: 'none',
 		},
 	},
 	pubItem: {
-		borderTop: '2px solid #DF177C',
+		borderTop: '1px solid #DF177C',
 		padding: '20px 5%',
 		':hover': {
 			color: '#DF177C',
@@ -225,6 +257,7 @@ styles = {
 	},
 	pubTitle: {
 		textTransform: 'uppercase',
+		fontFamily: 'ABeeZee',
 		fontSize: '1.2em',
 	},
 	pubAbstract: {

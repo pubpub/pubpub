@@ -1,15 +1,17 @@
 var webpack = require('webpack');
+var path = require('path');
 
 module.exports = function (config) {
   config.set({
 
-    browsers: [ process.env.CONTINUOUS_INTEGRATION ? 'Firefox' : 'Chrome' ],
+    browsers: ['PhantomJS'],
 
-    singleRun: !!process.env.CONTINUOUS_INTEGRATION,
+    singleRun: !!process.env.CI,
 
     frameworks: [ 'mocha' ],
 
     files: [
+      './node_modules/phantomjs-polyfill/bind-polyfill.js',
       'tests.webpack.js'
     ],
 
@@ -19,32 +21,43 @@ module.exports = function (config) {
 
     reporters: [ 'mocha' ],
 
+    plugins: [
+      require("karma-webpack"),
+      require("karma-mocha"),
+      require("karma-mocha-reporter"),
+      require("karma-phantomjs-launcher"),
+      require("karma-sourcemap-loader")
+    ],
+
     webpack: {
       devtool: 'inline-source-map',
       module: {
         loaders: [
           { test: /\.(jpe?g|png|gif|svg)$/, loader: 'url', query: {limit: 10240} },
           { test: /\.js$/, exclude: /node_modules/, loaders: ['babel']},
+          { test: /\.jsx$/, exclude: /node_modules/, loaders: ['babel']},
           { test: /\.json$/, loader: 'json-loader' },
         ]
       },
       resolve: {
+        root: path.resolve('src'),
         modulesDirectories: [
-          'src',
           'node_modules'
         ],
-        extensions: ['', '.json', '.js']
+        extensions: ['', '.json', '.js', '.jsx']
       },
       plugins: [
-        new webpack.IgnorePlugin(/\.json$/),
-        new webpack.NoErrorsPlugin(),
+        // new webpack.NoErrorsPlugin(),
         new webpack.DefinePlugin({
           __CLIENT__: true,
           __SERVER__: false,
           __DEVELOPMENT__: true,
           __DEVTOOLS__: false  // <-------- DISABLE redux-devtools HERE
         })
-      ]
+      ],
+      node: {
+        fs: "empty"
+      },
     },
 
     webpackServer: {

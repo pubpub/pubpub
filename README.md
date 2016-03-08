@@ -33,7 +33,9 @@ git push heroku master
 heroku ps:scale web=1
 ```
 
-
+# Docs
+- [All docs](/docs)
+- [API](/docs/api)
 
 
 
