@@ -190,11 +190,11 @@ class MDReactComponent extends Component {
   };
   constructor(props) {
     super(props);
-    const { text, ...props } = this.props;
-    this.mdfactory = mdReactFactory(props);
+    const { text, ...newProps } = this.props;
+    this.mdfactory = mdReactFactory(newProps);
   }
   render() {
-    const { text, ...props } = this.props;
+    const { text, ...newProps } = this.props;
     if (this.mdfactory) {
       return this.mdfactory(text);
     } else {
