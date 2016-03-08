@@ -531,7 +531,8 @@ const Editor = React.createClass({
 										title={this.state.title}
 										abstract={this.state.abstract}
 										authorsNote={this.state.authorsNote}
-										minFont={15}
+										minFont={13}
+										maxFont={25}
 										markdown={this.state.markdown}
 										authors={this.getAuthorsArray()}
 										showPubHighlights={this.state.previewPaneMode === 'discussions'}

@@ -20,7 +20,7 @@ class ResizingText extends React.Component {
 		this.settings = {
 			maximum: this.props.maximum || 9999,
 			minimum: this.props.minimum || 1,
-			maxFont: this.props.maxFont || 9999,
+			maxFont: this.props.maxFont || 25,
 			minFont: this.props.minFont || 15,
 			fontRatio: this.props.fontRatio
 		};
@@ -47,14 +47,25 @@ class ResizingText extends React.Component {
 		const width = this.calcWithBounds(settings.maximum, settings.minimum, elw);
 		const fontBase = width / settings.fontRatio;
 		const fontSize = Math.round(this.calcWithBounds(settings.maxFont, settings.minFont, fontBase));
-		this.setState({fontSize: fontSize});
+		let padding = 0;
+
+		if (fontSize >= settings.maxFont) {
+			const maxWidth = settings.maxFont * settings.fontRatio;
+			padding = (width - maxWidth) / 2;
+		}
+
+		this.setState({fontSize: fontSize, padding: padding});
 	}
 	render() {
 		let fontSize = this.state && this.state.fontSize;
+		const padding = this.state && this.state.padding;
+
 		if (isNaN(fontSize)) {
 			fontSize = this.props.default || null;
 		}
 		const divStyle = (fontSize) ? {'fontSize': fontSize + 'px' } : {};
+		if (padding) divStyle.padding = `0px ${padding}px`;
+
 		return (
 			<div style={divStyle} ref="textBody">
 				{this.props.children}

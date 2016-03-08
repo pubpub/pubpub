@@ -46,6 +46,8 @@ const PubBody = React.createClass({
 		references: PropTypes.array,
 
 		minFont: PropTypes.number,
+		maxFont: PropTypes.number,
+
 		firstPublishedDate: PropTypes.string,
 		lastPublishedDate: PropTypes.string,
 
@@ -192,7 +194,7 @@ const PubBody = React.createClass({
 		const sortedReferences = this.props.references.sort((refA, refB) => { return indexedCitations[refA.refName] - indexedCitations[refB.refName]; } );
 
 		return (
-			<ResizingText fontRatio={45} minFont={5}>
+			<ResizingText fontRatio={45} minFont={this.props.minFont} minFont={this.props.maxFont}>
 
 			<div style={styles.container}>
 
