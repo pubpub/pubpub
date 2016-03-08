@@ -21,7 +21,9 @@
     "start-dev-api": "node ./node_modules/better-npm-run start-dev-api",
     "watch-client": "node ./node_modules/better-npm-run watch-client",
     "dev": "concurrent --kill-others \"npm run watch-client\" \"npm run start-dev\" \"npm run start-dev-api\"",
-    "test": "karma start"
+    "test": "mocha $(find src api -name '*.test.js') --compilers js:babel-register",
+    "test:watch": "npm test -- --watch",
+    "test-karma": "karma start"
   },
   "betterScripts": {
     "start-prod": {
@@ -116,6 +118,7 @@
     "immutable": "^3.7.5",
     "intl": "^1.0.1",
     "invariant": "^2.2.0",
+    "karma-phantomjs-launcher": "^1.0.0",
     "kerberos": "0.0.17",
     "less": "^2.6.0",
     "lodash": "^3.10.1",
@@ -138,6 +141,7 @@
     "passport": "^0.3.0",
     "passport-local": "^1.0.0",
     "passport-local-mongoose": "^3.1.0",
+    "phantomjs-prebuilt": "^2.1.5",
     "piping": "0.3.0",
     "postcss": "^5.0.12",
     "pretty-error": "1.2.0",
@@ -211,6 +215,7 @@
     "karma-webpack": "^1.7.0",
     "mkdirp": "^0.5.1",
     "mocha": "^2.3.3",
+    "phantomjs-polyfill": "0.0.2",
     "react-a11y": "^0.2.6",
     "react-addons-test-utils": "^0.14.0",
     "react-transform-catch-errors": "^1.0.0",
