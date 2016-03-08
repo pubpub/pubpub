@@ -77,6 +77,13 @@
 	padding: 0.5em 1.5em;
 	font-size: 0.85em;
 }
+
+#pubContent hr {
+	background-color: #DDD;
+	height: 1px;
+	border: none;
+}
+
 #pubContent .p-block {
 	font-family: 'Lora';
 	padding: 0.5em 0em;
@@ -140,4 +147,27 @@
 }
 #pubContent a {
 	color: inherit;
+}
+
+
+/*PLUGIN STYLING*/
+
+#pubContent .pub-plugin.pub-quote-wrapper {
+	border-top: none;
+	border-bottom: none;
+	border-right: none;
+	border-left: #A7A7A7 solid 1px;
+	padding-left: 1em;
+	text-align: left;
+	text-style: italic;
+}
+
+#pubContent .pub-plugin.pub-quote-wrapper.pub-align-full {
+	border-top: #A7A7A7 solid 1px;
+	border-bottom: #A7A7A7 solid 1px;
+	border-left: none;
+	border-right: none;
+	padding: 0px 1em;
+	text-align: left;
+	text-style: italic;
 }

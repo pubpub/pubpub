@@ -45,18 +45,10 @@ const QuotePlugin = React.createClass({
 
 		let html;
 
-		let style;
-
-		if (align === 'full') {
-			style = styles.full;
-		} else {
-			style = styles.inline;
-		}
-
 		if (this.props.error === 'empty') {
 			html = <span></span>;
 		} else {
-			html = (<Media className={QUOTE_WRAPPER_CLASS} style={style} size={size} align={align}>
+			html = (<Media className={QUOTE_WRAPPER_CLASS}  size={size} align={align}>
 				<div className={QUOTE_CLASS}>
 					{quote}
 					{ (attribution) ? <div style={styles.attribute}> - {attribution}</div> : null}
@@ -70,19 +62,8 @@ const QuotePlugin = React.createClass({
 });
 
 styles = {
-	full: {
-		borderTop: '#A7A7A7 solid 1px',
-		borderBottom: '#A7A7A7 solid 1px',
-		padding: '0px 1em',
-		textAlign: 'left'
-	},
 	line: {
 		padding: '1em 0px',
-	},
-	inline: {
-		borderLeft: '#A7A7A7 solid 1px',
-		paddingLeft: '1em',
-		textAlign: 'left'
 	},
 	attribute: {
 		fontStyle: 'italic',
