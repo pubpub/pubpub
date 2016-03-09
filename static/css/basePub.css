@@ -170,6 +170,7 @@
 	padding: 0px 1em;
 	text-align: left;
 	text-style: italic;
+	background-color: #F9F9F9;
 
 	width: 45vw !important;
 	margin-left: calc(-1 * (45vw - 100%) / 2) !important;
@@ -183,7 +184,6 @@
 	margin-left: calc(-1 * (45vw - 100%) / 2) !important;
 	margin-top: 0.5em !important;
 	margin-bottom: 0.5em !important;
-	background-color: #F9F9F9;
 }
 
 

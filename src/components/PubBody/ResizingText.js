@@ -64,7 +64,16 @@ class ResizingText extends React.Component {
 			fontSize = this.props.default || null;
 		}
 		const divStyle = (fontSize) ? {'fontSize': fontSize + 'px' } : {};
-		if (padding) divStyle.padding = `0px ${padding}px`;
+		if (padding) {
+			if (this.props.paddingType === 'left') {
+				divStyle.paddingLeft = `${padding * 2}px`;
+			} else if (this.props.paddingType === 'right') {
+				divStyle.paddingRight = `${padding * 2}px`;
+			} else {
+				divStyle.padding = `0px ${padding}px`;
+			}
+
+		}
 
 		return (
 			<div style={divStyle} ref="textBody">
@@ -74,6 +83,9 @@ class ResizingText extends React.Component {
 	}
 }
 
+ResizingText.defaultProps = { paddingType: 'full' };
+
+
 ResizingText.propTypes = {
 	default: PropTypes.number,
 	fontRatio: PropTypes.number.isRequired,
@@ -81,7 +93,8 @@ ResizingText.propTypes = {
 	minimum: PropTypes.number,
 	minFont: PropTypes.number,
 	maxFont: PropTypes.number,
-	children: PropTypes.object
+	children: PropTypes.object,
+	paddingType: PropTypes.string
 };
 
 export default ResizingText;
