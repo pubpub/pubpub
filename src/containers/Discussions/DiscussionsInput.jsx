@@ -41,6 +41,7 @@ const PubDiscussionsInput = React.createClass({
 			content: '',
 			selections: {},
 			showPreview: false,
+			showPreviewText: false,
 		};
 	},
 
@@ -95,7 +96,7 @@ const PubDiscussionsInput = React.createClass({
 	onEditorChange: function(cm, change) {
 		const content = cm.getValue();
 		const showPreview = (this.state.showPreview || content.indexOf('[[selection:') !== -1);
-		this.setState({content: content, showPreview: showPreview, expanded: this.state.expanded || showPreview});
+		this.setState({content: content, showPreview: showPreview, expanded: this.state.expanded || showPreview, showPreviewText: true});
 		// console.log('change!');
 		// console.log(cm);
 	},
@@ -174,7 +175,12 @@ const PubDiscussionsInput = React.createClass({
 				</div>
 
 				<div style={[styles.inputBottomLine, styles.expanded(this.state.expanded || this.props.isReply, false)]}>
+
+					{
+						(this.state.showPreviewText) ?
 					<span style={styles.livePreviewText}>Live Preview: <span style={styles.livePreviewToggle} onClick={this.toggleLivePreview}>{(this.state.showPreview) ? 'On' : 'Off'}</span> <span style={styles.lighterText}>(you can use <a target="_blank" href="https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet">markdown</a> for styling)</span></span>
+					: null
+					}
 					<div style={styles.submitButton} key={'newDiscussionSubmit'} onClick={this.submitDiscussion}>
 						<FormattedMessage {...globalMessages.Submit}/>
 					</div>
