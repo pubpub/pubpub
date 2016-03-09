@@ -156,18 +156,27 @@
 	border-top: none;
 	border-bottom: none;
 	border-right: none;
-	border-left: #A7A7A7 solid 1px;
+	border-left: #DDD solid 1px;
 	padding-left: 1em;
 	text-align: left;
-	text-style: italic;
+	font-style: italic;
 }
 
 #pubContent .pub-plugin.pub-quote-wrapper.pub-align-full {
-	border-top: #A7A7A7 solid 1px;
-	border-bottom: #A7A7A7 solid 1px;
+	border-top: #DDD solid 1px;
+	border-bottom: #DDD solid 1px;
 	border-left: none;
 	border-right: none;
 	padding: 0px 1em;
 	text-align: left;
 	text-style: italic;
+
+	width: 45vw !important;
+	margin-left: calc(-1 * (45vw - 100%) / 2) !important;
+	margin-top: 1em !important;
+	margin-bottom: 1em !important;
+}
+
+#pubContent .pub-quote {
+	padding: 2.5% 7.5%;
 }
