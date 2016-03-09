@@ -11,7 +11,7 @@ import {injectIntl, defineMessages, FormattedMessage} from 'react-intl';
 
 let styles = {};
 
-const CollectionEdit = React.createClass({
+export const CollectionEdit = React.createClass({
 	propTypes: {
 		collectionData: PropTypes.object,
 		handleCollectionSave: PropTypes.func,
@@ -158,7 +158,7 @@ const CollectionEdit = React.createClass({
 		const collectionData = this.props.collectionData || {};
 		return (
 			<div style={styles.container}>
-
+				
 				<div key={'collectionForm-title'} style={styles.inputWrapper}>
 					<label style={styles.manualFormInputTitle} htmlFor={'title'}>
 						<FormattedMessage

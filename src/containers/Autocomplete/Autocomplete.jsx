@@ -105,7 +105,7 @@ const Autocomplete = React.createClass({
 
 	render: function() {
 		let resultData = {};
-		if (this.props.autocompleteData.get(this.props.autocompleteKey) !== undefined) {
+		if (this.props.autocompleteData && this.props.autocompleteData.get(this.props.autocompleteKey) !== undefined) {
 			resultData = this.props.autocompleteData.get(this.props.autocompleteKey).toJS();
 		}
 		return (

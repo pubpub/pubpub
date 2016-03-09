@@ -5,7 +5,7 @@ import {LandingComponentBlock, LandingComponentCollectionList, LandingComponentS
 
 let styles = {};
 
-const LandingBody = React.createClass({
+export const LandingBody = React.createClass({
 	propTypes: {
 		componentsArray: PropTypes.array,
 		journalID: PropTypes.string,

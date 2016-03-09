@@ -5,7 +5,7 @@ import {CollectionPreview} from '../../components/ItemPreviews';
 
 let styles = {};
 
-const CollectionGallery = React.createClass({
+export const CollectionGallery = React.createClass({
 	propTypes: {
 		collections: PropTypes.array,
 	},

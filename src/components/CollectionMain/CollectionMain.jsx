@@ -7,7 +7,7 @@ import {FormattedMessage} from 'react-intl';
 
 let styles = {};
 
-const CollectionMain = React.createClass({
+export const CollectionMain = React.createClass({
 	propTypes: {
 		collectionData: PropTypes.object,
 	},

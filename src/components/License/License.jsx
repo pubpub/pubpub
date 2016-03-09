@@ -4,7 +4,7 @@ import Radium from 'radium';
 
 let styles = {};
 
-const License = React.createClass({
+export const License = React.createClass({
 	propTypes: {
 		hover: PropTypes.bool,
 		text: PropTypes.string
