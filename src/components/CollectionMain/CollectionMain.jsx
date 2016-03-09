@@ -13,16 +13,17 @@ const CollectionMain = React.createClass({
 	},
 
 	getDefaultProps: function() {
-		
+
 	},
 
 	render: function() {
+		const collectionPubs = this.props.collectionData && this.props.collectionData.pubs ? this.props.collectionData.pubs : [];
 		return (
 			<div style={styles.container}>
 				
 
 				{(()=>{
-					const length = this.props.collectionData.pubs ? this.props.collectionData.pubs.length : 0;
+					const length = collectionPubs.length;
 					if (!length) {
 						return (<div style={styles.emptyBlock}>
 							<FormattedMessage
@@ -34,7 +35,7 @@ const CollectionMain = React.createClass({
 					for (let index = length; index--;) {
 						output.push(<div key={'pubWrapper-' + index} style={styles.pubWrapper}>
 								<PubPreview 
-									pubData={this.props.collectionData.pubs[index]} 
+									pubData={collectionPubs[index]} 
 									headerFontSize={'22px'}
 									textFontSize={'18px'} />
 							</div>);

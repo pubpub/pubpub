@@ -25,7 +25,7 @@ const LandingBody = React.createClass({
 		return (
 			<div style={styles.container}>
 				{
-					this.props.componentsArray.map((component, index)=>{
+					this.props.componentsArray.asd.map((component, index)=>{
 						// console.log(component);
 						switch (component.type) {
 						case 'block': 

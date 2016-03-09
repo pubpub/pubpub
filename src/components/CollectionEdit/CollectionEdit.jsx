@@ -154,7 +154,6 @@ const CollectionEdit = React.createClass({
 				defaultMessage: 'Add Pubs to Collection',
 			},
 		});
-
 		return (
 			<div style={styles.container}>
 
