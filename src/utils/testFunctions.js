@@ -27,7 +27,8 @@ export function checkRenderSuccess(Component, props) {
 	
 	// In the case of an error, grab the error message from domRender
 	const message = domRender.children && domRender.children[0] ? domRender.children[0].innerText : 'Error (didn\'t catch the error message';
-
+	const isErrorScreen = domRender.innerHTML.indexOf('http://localhost:9876/base/tests.webpack.js') > -1;
+	
 	// Return both results so we can make expect() calls
-	return {domRender, message};
+	return {domRender, message, isErrorScreen};
 }

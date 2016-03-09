@@ -11,11 +11,11 @@ describe('Components', () => {
   	
 		it('should exist when rendered with empty props', () => {
 			const props = {};
-			const {domRender, shallowRender, message} = checkRenderSuccess(License, props) ;
-
+			const {domRender, message, isErrorScreen} = checkRenderSuccess(License, props) ;
+			
 			expect(domRender).to.exist; // Successfully rendered into the DOM
-			expect(shallowRender.type.name, message).to.not.equal('RedBox'); // Did not render a Red warning screen
-		});
+			expect(isErrorScreen, message).to.be.false; // Did not render a Red warning screen
+		}); 
 
 		it('should accept custom text', () => {
 			const props = {text: 'My custom text'};

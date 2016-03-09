@@ -35,7 +35,7 @@ const CollectionMain = React.createClass({
 					for (let index = length; index--;) {
 						output.push(<div key={'pubWrapper-' + index} style={styles.pubWrapper}>
 								<PubPreview 
-									pubData={collectionPubs[index]} 
+									pubData={this.props.collectionData.pubs[index]} 
 									headerFontSize={'22px'}
 									textFontSize={'18px'} />
 							</div>);
