@@ -193,6 +193,7 @@ app.post('/publishPub', function(req, res) {
 		req.body.newVersion.authors.map((authorID)=>{
 			User.findOne({_id: authorID}, {'followers':1}).lean().exec(function (err, author) {
 				author && author.follows && author.followers.map((follower)=>{
+					
 					if (isNewPub) {
 						Notification.createNotification('followers/newPub', req.body.host, author, follower, pub._id);
 					} else {
