@@ -94,7 +94,7 @@ const PubDiscussionsInput = React.createClass({
 
 	onEditorChange: function(cm, change) {
 		const content = cm.getValue();
-		const showPreview = (content.indexOf('[[selection:') !== -1);
+		const showPreview = (this.state.showPreview || content.indexOf('[[selection:') !== -1);
 		this.setState({content: content, showPreview: showPreview, expanded: this.state.expanded || showPreview});
 		// console.log('change!');
 		// console.log(cm);
