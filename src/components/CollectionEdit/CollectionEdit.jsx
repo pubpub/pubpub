@@ -154,6 +154,8 @@ const CollectionEdit = React.createClass({
 				defaultMessage: 'Add Pubs to Collection',
 			},
 		});
+
+		const collectionData = this.props.collectionData || {};
 		return (
 			<div style={styles.container}>
 
@@ -163,7 +165,7 @@ const CollectionEdit = React.createClass({
 							id="collections.collectionTitle"
 							defaultMessage="Collection Title"/>
 					</label>
-					<input style={styles.manualFormInput} name={'title'} id={'collectionForm-title'} ref={'title'} type="text" defaultValue={this.props.collectionData.title}/>
+					<input style={styles.manualFormInput} name={'title'} id={'collectionForm-title'} ref={'title'} type="text" defaultValue={collectionData.title}/>
 				</div>
 
 				{/* <div key={'collectionForm-slug'} style={styles.inputWrapper}>
@@ -178,7 +180,7 @@ const CollectionEdit = React.createClass({
 							id="collections.description"
 							defaultMessage="Description"/>
 					</label>
-					<textarea style={[styles.manualFormInput, styles.manualFormTextArea]} name={'description'} id={'collectionForm-description'} ref={'description'} defaultValue={this.props.collectionData.description}></textarea>
+					<textarea style={[styles.manualFormInput, styles.manualFormTextArea]} name={'description'} id={'collectionForm-description'} ref={'description'} defaultValue={collectionData.description}></textarea>
 				</div>
 
 				<div key={'collectionForm-headerImage'} style={styles.inputWrapper}>
@@ -214,7 +216,7 @@ const CollectionEdit = React.createClass({
 				</div>
 				
 				{(()=>{
-					const length = this.props.collectionData.pubs ? this.props.collectionData.pubs.length : 0;
+					const length = collectionData.pubs ? collectionData.pubs.length : 0;
 					if (!length) {
 						return (<div style={styles.emptyBlock}>
 							<FormattedMessage
@@ -228,14 +230,14 @@ const CollectionEdit = React.createClass({
 
 									<div style={styles.resultDetails}>
 										<PubPreview 
-											pubData={this.props.collectionData.pubs[index]} 
+											pubData={collectionData.pubs[index]} 
 											headerFontSize={'16px'}
 											textFontSize={'13px'} 
 											hideBottomLine={true}/>
 
 									</div>
 									
-									<div style={styles.action} key={'submittedPubItemAdd-' + index} onClick={this.removePub(this.props.collectionData.pubs[index]._id)}>
+									<div style={styles.action} key={'submittedPubItemAdd-' + index} onClick={this.removePub(collectionData.pubs[index]._id)}>
 										<FormattedMessage {...globalMessages.remove} />
 									</div>
 								</div>);
