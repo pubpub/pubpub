@@ -17,17 +17,20 @@ class ResizingText extends React.Component {
 		this.updateFontSize();
 	}
 	updateSettings() {
+		const isMobile = (typeof window !== 'undefined' && document.body.clientWidth < 767) ? true : false;
 		this.settings = {
 			maximum: this.props.maximum || 9999,
 			minimum: this.props.minimum || 1,
-			maxFont: this.props.maxFont || 25,
-			minFont: this.props.minFont || 15,
-			fontRatio: this.props.fontRatio
+			maxFont: (isMobile && this.props.mobileMaxFont) || this.props.maxFont || 25,
+			minFont: (isMobile && this.props.mobileMinFont) || this.props.minFont || 15,
+			fontRatio: (isMobile && this.props.mobileFontRatio) || this.props.fontRatio,
+			isMobile: isMobile,
 		};
 	}
 	updateWidthFont() {
 		const node = findDOMNode(this.refs.textBody);
 		this.elemWidth = node ? node.offsetWidth : 800;
+		this.updateSettings();
 		this.updateFontSize();
 	}
 	calcWithBounds(max, min, elw) {
@@ -93,6 +96,9 @@ ResizingText.propTypes = {
 	minimum: PropTypes.number,
 	minFont: PropTypes.number,
 	maxFont: PropTypes.number,
+	mobileMaxFont: PropTypes.number,
+	mobileMinFont: PropTypes.number,
+	mobileFontRatio: PropTypes.number,
 	children: PropTypes.object,
 	paddingType: PropTypes.string
 };
