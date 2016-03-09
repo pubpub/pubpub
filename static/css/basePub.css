@@ -155,7 +155,7 @@
 #pubContent .pub-plugin.pub-quote-wrapper {
 	border-top: none;
 	border-bottom: none;
-	border-right: none;
+	border-right`: none;
 	border-left: #DDD solid 1px;
 	padding-left: 1em;
 	text-align: left;
@@ -176,6 +176,15 @@
 	margin-top: 1em !important;
 	margin-bottom: 1em !important;
 }
+
+
+@media screen and (min-resolution: 3dppx), screen and (max-width: 767px) {
+	#pubContent .pub-plugin.pub-quote-wrapper.pub-align-full {
+		width: 100vw !important;
+		margin-left: calc(-1 * (100vw - 100%) / 2) !important;
+	}
+}
+
 
 #pubContent .pub-quote {
 	padding: 2.5% 7.5%;
