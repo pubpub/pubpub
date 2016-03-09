@@ -163,7 +163,12 @@ const DiscussionsItem = React.createClass({
 
 					</div>
 
-					<ResizingText fontRatio={35} minFont={14} maxFont={18} paddingType="right">
+					<ResizingText
+						fontRatio={35}
+						mobileFontRatio={20}
+						minFont={14}
+						maxFont={18}
+						paddingType="right">
 
 					<div style={styles.discussionBody}>
 
