@@ -1,8 +1,7 @@
-import React from 'react'
+import React from 'react';
 import ReactDOM from 'react-dom';
-import TestUtils from 'react-addons-test-utils'
-import {expect} from 'chai';
-import { createStore } from 'redux'
+import TestUtils from 'react-addons-test-utils';
+import { createStore } from 'redux';
 import {Provider} from 'react-redux';
 import {IntlProvider} from 'react-intl';
 import {StyleRoot} from 'radium';
@@ -59,9 +58,9 @@ export function checkUnwrappedRenderSuccess(Component, props) {
 // This function shallow renders the components. Real DOMs not used.
 export function checkShallowRenderSuccess(Component, props) {
 	// NOTE: This won't work on mediaQueried/etc components until Radium enables a test-mode to disable the addCSS error it throws.
-	const renderer = TestUtils.createRenderer()
-	renderer.render(<Component {...props} />)
-	const shallowRender = renderer.getRenderOutput()
+	const renderer = TestUtils.createRenderer();
+	renderer.render(<Component {...props} />);
+	const shallowRender = renderer.getRenderOutput();
 	
 	// In the case of an error, grab the error message from shallowRender
 	const message = 'Error';

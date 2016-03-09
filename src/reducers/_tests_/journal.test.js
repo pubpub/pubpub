@@ -1,13 +1,13 @@
 import {expect} from 'chai';
 import {Map} from 'immutable';
 
-import reducer from './landing';
+import reducer from '../journal';
 // import {
 // 	OPEN_MENU,
-// } from '../actions/landing';
+// } from '../../actions/journal';
 
 describe('Reducers', () => {
-	describe('landing.js', () => {
+	describe('journal.js', () => {
 		
 		it('should return a default state', () => {
 			const newState = reducer(undefined, {});

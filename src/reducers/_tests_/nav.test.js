@@ -1,11 +1,11 @@
 import {expect} from 'chai';
 import {Map} from 'immutable';
 
-import reducer from './nav';
+import reducer from '../nav';
 import {
 	OPEN_MENU,
 	CLOSE_MENU,
-} from '../actions/nav';
+} from '../../actions/nav';
 
 describe('Reducers', () => {
 	describe('nav.js', () => {

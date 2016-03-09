@@ -111,14 +111,14 @@ app.use((req, res) => {
 
 				const htmltest = ReactDOM.renderToString(
 					<Html radiumConfig={{userAgent: req.headers['user-agent']}} component={component} />
-				)
+				);
 				const mainBundle = webpackIsomorphicTools.assets().javascript.main;
 				const head = Helmet.rewind();
 				
 				let dynamicStyle;
 				const pathname = store.getState().router.location.pathname;
 				
-				if (pathname.substring(0,5) === '/pub/' && pathname.substring(pathname.length-6, pathname.length) !== '/draft' && store.getState().pub.getIn(['pubData', 'history'])) {
+				if (pathname.substring(0, 5) === '/pub/' && pathname.substring(pathname.length - 6, pathname.length) !== '/draft' && store.getState().pub.getIn(['pubData', 'history'])) {
 					// source = store.getState().pub.getIn(['pubData', 'history']);
 					const versionIndex = store.getState().router.location.query.version !== undefined && store.getState().router.location.query.version > 0 && store.getState().router.location.query.version <= (store.getState().pub.getIn(['pubData', 'history']).size - 1)
 						? store.getState().router.location.query.version - 1
@@ -185,7 +185,7 @@ app.use((req, res) => {
 							<script src=${mainBundle}></script>
 						</body>
 					</html>
-					`)
+					`);
 
 			}).catch((err) => {
 				console.error('DATA FETCHING ERROR:', pretty.render(err));

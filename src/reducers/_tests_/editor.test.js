@@ -1,13 +1,13 @@
 import {expect} from 'chai';
 import {Map} from 'immutable';
 
-import reducer from './resetPassword';
+import reducer from '../editor';
 // import {
 // 	OPEN_MENU,
-// } from '../actions/resetPassword';
+// } from '../../actions/editor';
 
 describe('Reducers', () => {
-	describe('resetPassword.js', () => {
+	describe('editor.js', () => {
 		
 		it('should return a default state', () => {
 			const newState = reducer(undefined, {});

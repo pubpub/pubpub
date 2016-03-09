@@ -1,13 +1,13 @@
 import {expect} from 'chai';
 import {Map} from 'immutable';
 
-import reducer from './autocomplete';
+import reducer from '../login';
 // import {
 // 	OPEN_MENU,
-// } from '../actions/autocomplete';
+// } from '../../actions/login';
 
 describe('Reducers', () => {
-	describe('autocomplete.js', () => {
+	describe('login.js', () => {
 		
 		it('should return a default state', () => {
 			const newState = reducer(undefined, {});

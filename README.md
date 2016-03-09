@@ -38,6 +38,17 @@ heroku ps:scale web=1
 - [API](/docs/api)
 
 
+# Testing
+Tests run using Mocha and Karma. All test files follow the pattern `filename.test.js`.
 
+To run tests:
+
+```
+npm install
+npm run test
+```
+
+Local API tests start an instance of mongodb to confirm database behavior.
+For best practices testing React and Redux components, see https://github.com/reactjs/redux/blob/master/docs/recipes/WritingTests.md
 
 

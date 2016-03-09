@@ -1,13 +1,13 @@
 import {expect} from 'chai';
 import {Map} from 'immutable';
 
-import reducer from './login';
+import reducer from '../language';
 // import {
 // 	OPEN_MENU,
-// } from '../actions/login';
+// } from '../../actions/language';
 
 describe('Reducers', () => {
-	describe('login.js', () => {
+	describe('language.js', () => {
 		
 		it('should return a default state', () => {
 			const newState = reducer(undefined, {});

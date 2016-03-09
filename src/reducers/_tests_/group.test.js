@@ -1,13 +1,13 @@
 import {expect} from 'chai';
 import {Map} from 'immutable';
 
-import reducer from './language';
+import reducer from '../group';
 // import {
 // 	OPEN_MENU,
-// } from '../actions/language';
+// } from '../../actions/group';
 
 describe('Reducers', () => {
-	describe('language.js', () => {
+	describe('group.js', () => {
 		
 		it('should return a default state', () => {
 			const newState = reducer(undefined, {});
