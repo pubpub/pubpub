@@ -178,12 +178,37 @@
 }
 
 
+#pubContent .pub-plugin.pub-img-wrapper.pub-align-full {
+	width: 45vw !important;
+	margin-left: calc(-1 * (45vw - 100%) / 2) !important;
+	margin-top: 0.5em !important;
+	margin-bottom: 0.5em !important;
+}
+
+
 @media screen and (min-resolution: 3dppx), screen and (max-width: 767px) {
 	#pubContent .pub-plugin.pub-quote-wrapper.pub-align-full {
 		width: 100vw !important;
 		margin-left: calc(-1 * (100vw - 100%) / 2) !important;
 	}
+
+	#pubContent .pub-plugin.pub-img-wrapper.pub-align-full {
+		width: 90vw !important;
+		margin-left: calc(-1 * (90vw - 100%) / 2) !important;
+	}
 }
+
+.pub-sub-caption {
+	font-size: 0.8em;
+	color: #757575;
+	text-align: left;
+	white-space: normal;
+	line-height: 1.4;
+	display: block;
+	margin-top: 0.5em;
+}
+
+
 
 
 #pubContent .pub-quote {
