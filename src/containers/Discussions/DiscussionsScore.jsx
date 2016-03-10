@@ -90,7 +90,7 @@ styles = {
 		left: 5,
 	},
 	voteScore: {
-		color: '#888',
+		color: '#333',
 		fontFamily: 'Lato',
 	},
 	voteDown: {

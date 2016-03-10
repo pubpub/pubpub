@@ -1,5 +1,5 @@
 #pubContent #pub-wrapper{
-	padding: 0px 4em 50px 4em;
+	padding: 0px 6em 50px 4em;
 	line-height: 1.58;
 	text-rendering: optimizeLegibility;
 	-webkit-font-smoothing: antialiased;
@@ -8,6 +8,10 @@
 	#pubContent #pub-wrapper{
 		padding: 0px 1em 50px;
 	}
+}
+
+#pubBodyContent {
+	padding: 0px 0em;
 }
 
 #pubContent #pub-title {
@@ -22,9 +26,12 @@
 }
 #pubContent #pub-authors {
 	text-align: left;
-	color: #555;
+	color: #222;
 	font-size: 1.0em;
 	padding: 0px;
+	font-family: 'Lora';
+	text-transform: capitalize;;
+	font-weight: 700;
 }
 #pubContent .pub-author {
 	color: #555;
@@ -35,14 +42,16 @@
 #pubContent #pub-dates {
 	text-align: left;
 	padding: 0px;
-	color: #555;
+	color: #222;
+	font-family: 'Lora';
 }
 #pubContent #pub-abstract {
 	text-align: left;
-	color: #777;
+	color: #222;
 	margin: 2em 0px;
 	font-family: 'Lora';
 	padding: 0px 0px;
+	font-style: italic;
 }
 #pubContent #pub-authorsNote {
 	text-align: center;
@@ -68,6 +77,13 @@
 	padding: 0.5em 1.5em;
 	font-size: 0.85em;
 }
+
+#pubContent hr {
+	background-color: #DDD;
+	height: 1px;
+	border: none;
+}
+
 #pubContent .p-block {
 	font-family: 'Lora';
 	padding: 0.5em 0em;
@@ -118,10 +134,10 @@
 	color: #666;
 }
 #pubContent h1 {
-	font-size: 2em;	
+	font-size: 2em;
 }
 #pubContent h2 {
-	font-size: 1.41421em;	
+	font-size: 1.41421em;
 }
 #pubContent h3 {
 	font-size: 1.25992em;
@@ -131,4 +147,71 @@
 }
 #pubContent a {
 	color: inherit;
+}
+
+
+/*PLUGIN STYLING*/
+
+#pubContent .pub-plugin.pub-quote-wrapper {
+	border-top: none;
+	border-bottom: none;
+	border-right`: none;
+	border-left: #DDD solid 1px;
+	padding-left: 1em;
+	text-align: left;
+	font-style: italic;
+}
+
+#pubContent .pub-plugin.pub-quote-wrapper.pub-align-full {
+	border-top: #DDD solid 1px;
+	border-bottom: #DDD solid 1px;
+	border-left: none;
+	border-right: none;
+	padding: 0px 1em;
+	text-align: left;
+	text-style: italic;
+	background-color: #F9F9F9;
+
+	width: 45vw !important;
+	margin-left: calc(-1 * (45vw - 100%) / 2) !important;
+	margin-top: 1em !important;
+	margin-bottom: 1em !important;
+}
+
+
+#pubContent .pub-plugin.pub-img-wrapper.pub-align-full {
+	width: 45vw !important;
+	margin-left: calc(-1 * (45vw - 100%) / 2) !important;
+	margin-top: 0.5em !important;
+	margin-bottom: 0.5em !important;
+}
+
+
+@media screen and (min-resolution: 3dppx), screen and (max-width: 767px) {
+	#pubContent .pub-plugin.pub-quote-wrapper.pub-align-full {
+		width: 100vw !important;
+		margin-left: calc(-1 * (100vw - 100%) / 2) !important;
+	}
+
+	#pubContent .pub-plugin.pub-img-wrapper.pub-align-full {
+		width: 90vw !important;
+		margin-left: calc(-1 * (90vw - 100%) / 2) !important;
+	}
+}
+
+.pub-sub-caption {
+	font-size: 0.8em;
+	color: #757575;
+	text-align: left;
+	white-space: normal;
+	line-height: 1.4;
+	display: block;
+	margin-top: 0.5em;
+}
+
+
+
+
+#pubContent .pub-quote {
+	padding: 2.5% 7.5%;
 }

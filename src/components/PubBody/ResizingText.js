@@ -17,17 +17,20 @@ class ResizingText extends React.Component {
 		this.updateFontSize();
 	}
 	updateSettings() {
+		const isMobile = (typeof window !== 'undefined' && document.body.clientWidth < 767) ? true : false;
 		this.settings = {
 			maximum: this.props.maximum || 9999,
 			minimum: this.props.minimum || 1,
-			maxFont: this.props.maxFont || 9999,
-			minFont: this.props.minFont || 15,
-			fontRatio: this.props.fontRatio
+			maxFont: (isMobile && this.props.mobileMaxFont) || this.props.maxFont || 25,
+			minFont: (isMobile && this.props.mobileMinFont) || this.props.minFont || 15,
+			fontRatio: (isMobile && this.props.mobileFontRatio) || this.props.fontRatio,
+			isMobile: isMobile,
 		};
 	}
 	updateWidthFont() {
 		const node = findDOMNode(this.refs.textBody);
 		this.elemWidth = node ? node.offsetWidth : 800;
+		this.updateSettings();
 		this.updateFontSize();
 	}
 	calcWithBounds(max, min, elw) {
@@ -47,14 +50,34 @@ class ResizingText extends React.Component {
 		const width = this.calcWithBounds(settings.maximum, settings.minimum, elw);
 		const fontBase = width / settings.fontRatio;
 		const fontSize = Math.round(this.calcWithBounds(settings.maxFont, settings.minFont, fontBase));
-		this.setState({fontSize: fontSize});
+		let padding = 0;
+
+		if (fontSize >= settings.maxFont) {
+			const maxWidth = settings.maxFont * settings.fontRatio;
+			padding = (width - maxWidth) / 2;
+		}
+
+		this.setState({fontSize: fontSize, padding: padding});
 	}
 	render() {
 		let fontSize = this.state && this.state.fontSize;
+		const padding = this.state && this.state.padding;
+
 		if (isNaN(fontSize)) {
 			fontSize = this.props.default || null;
 		}
 		const divStyle = (fontSize) ? {'fontSize': fontSize + 'px' } : {};
+		if (padding) {
+			if (this.props.paddingType === 'left') {
+				divStyle.paddingLeft = `${padding * 2}px`;
+			} else if (this.props.paddingType === 'right') {
+				divStyle.paddingRight = `${padding * 2}px`;
+			} else {
+				divStyle.padding = `0px ${padding}px`;
+			}
+
+		}
+
 		return (
 			<div style={divStyle} ref="textBody">
 				{this.props.children}
@@ -63,6 +86,9 @@ class ResizingText extends React.Component {
 	}
 }
 
+ResizingText.defaultProps = { paddingType: 'full' };
+
+
 ResizingText.propTypes = {
 	default: PropTypes.number,
 	fontRatio: PropTypes.number.isRequired,
@@ -70,7 +96,11 @@ ResizingText.propTypes = {
 	minimum: PropTypes.number,
 	minFont: PropTypes.number,
 	maxFont: PropTypes.number,
-	children: PropTypes.object
+	mobileMaxFont: PropTypes.number,
+	mobileMinFont: PropTypes.number,
+	mobileFontRatio: PropTypes.number,
+	children: PropTypes.object,
+	paddingType: PropTypes.string
 };
 
 export default ResizingText;
