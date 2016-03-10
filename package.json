@@ -22,11 +22,17 @@
     "start-dev-api": "node ./node_modules/better-npm-run start-dev-api",
     "watch-client": "node ./node_modules/better-npm-run watch-client",
     "dev": "concurrent --kill-others \"npm run watch-client\" \"npm run start-dev\" \"npm run start-dev-api\"",
-    "test": "sudo mongod | mocha $(find src api -name '*.test.js') --compilers js:babel-register --require ./tests/jsDomConfig.js --watch",
+    "test": "node ./node_modules/better-npm-run test",
     "test-karma": "karma start",
-    "test-travis": "mocha $(find src api -name '*.test.js') --compilers js:babel-register --require ./tests/jsDomConfig.js"
+    "test-travis": "mocha $(find src api -name '*.test.js') --compilers js:babel-register --require ./tests/mochaEnvInit.js"
   },
   "betterScripts": {
+    "test": {
+        "command": "sudo mongod | mocha $(find src api -name '*.test.js') --compilers js:babel-register --require ./tests/mochaEnvInit.js --watch",
+        "env": {
+            "PORT": 27017
+        }
+    },
     "start-prod": {
       "command": "node ./bin/server.js",
       "env": {
@@ -220,6 +226,7 @@
     "mkdirp": "^0.5.1",
     "mocha": "^2.4.5",
     "mocha-mongoose": "^1.1.1",
+    "node-mocks-http": "^1.5.2",
     "phantomjs-polyfill": "0.0.2",
     "phantomjs-prebuilt": "^2.1.5",
     "react-a11y": "^0.2.6",
