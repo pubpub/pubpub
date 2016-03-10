@@ -48,7 +48,7 @@ const QuotePlugin = React.createClass({
 		if (this.props.error === 'empty') {
 			html = <span></span>;
 		} else {
-			html = (<Media className={QUOTE_WRAPPER_CLASS}  size={size} align={align}>
+			html = (<Media className={QUOTE_WRAPPER_CLASS} size={size} align={align}>
 				<div className={QUOTE_CLASS}>
 					{quote}
 					{ (attribution) ? <div style={styles.attribute}> - {attribution}</div> : null}
