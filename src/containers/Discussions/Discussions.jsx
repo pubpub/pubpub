@@ -173,22 +173,24 @@ const Discussions = React.createClass({
 					{
 						discussionsData.map((discussion)=>{
 							// console.log(discussion);
-							return (<DiscussionsItem
-								key={discussion._id}
-								slug={this.props.slug}
-								discussionItem={discussion}
-								instanceName={this.props.instanceName}
-								isPubAuthor={isPubAuthor}
+							return (discussion
+								? <DiscussionsItem
+									key={discussion._id}
+									slug={this.props.slug}
+									discussionItem={discussion}
+									instanceName={this.props.instanceName}
+									isPubAuthor={isPubAuthor}
 
-								activeSaveID={activeSaveID}
-								addDiscussionHandler={this.addDiscussion}
-								addDiscussionStatus={addDiscussionStatus}
-								newDiscussionData={newDiscussionData}
-								userThumbnail={this.props.loginData.getIn(['userData', 'thumbnail'])}
-								handleVoteSubmit={this.discussionVoteSubmit}
-								handleArchive={this.archiveDiscussion}
-								noReply={!this.props.editorCommentMode && this.props.inEditor}
-								noPermalink={this.props.editorCommentMode}/>
+									activeSaveID={activeSaveID}
+									addDiscussionHandler={this.addDiscussion}
+									addDiscussionStatus={addDiscussionStatus}
+									newDiscussionData={newDiscussionData}
+									userThumbnail={this.props.loginData.getIn(['userData', 'thumbnail'])}
+									handleVoteSubmit={this.discussionVoteSubmit}
+									handleArchive={this.archiveDiscussion}
+									noReply={!this.props.editorCommentMode && this.props.inEditor}
+									noPermalink={this.props.editorCommentMode}/>
+								: <div style={styles.emptyContainer}>No Dicussion Found</div>
 							);
 						})
 					}
@@ -229,6 +231,11 @@ styles = {
 		margin: '40% 6% 0px 3%',
 		fontSize: '1.2em',
 		textAlign: 'center',
-		height: '70vh',
+		height: '40vh',
+	},
+	emptyContainer: {
+		margin: '10px auto',
+		fontFamily: 'Courier',
+		textAlign: 'center',
 	},
 };
