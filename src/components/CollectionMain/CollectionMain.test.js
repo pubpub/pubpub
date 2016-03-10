@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import ReactDOMServer from 'react-dom/server';
 import TestUtils from 'react-addons-test-utils'
 import {expect} from 'chai';
-import {checkWrappedRenderSuccess} from '../../utils/testFunctions';
+import {checkWrappedRenderSuccess} from '../../../tests/helpersClient';
 import CollectionMain from './CollectionMain.jsx';
 
 describe('Components', () => {

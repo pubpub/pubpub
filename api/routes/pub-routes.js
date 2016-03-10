@@ -15,7 +15,8 @@ var less      = require('less');
 import {fireBaseURL, firebaseTokenGen, generateAuthToken} from '../services/firebase';
 import {sendAddedAsCollaborator} from '../services/emails';
 
-app.get('/getPub', function(req, res) {
+
+export function getPub(req, res) {
 	const userID = req.user ? req.user._id : undefined;
 	const journalID = req.query.journalID;
 	Pub.getPub(req.query.slug, userID, journalID, (err, pubData)=>{
@@ -30,9 +31,10 @@ app.get('/getPub', function(req, res) {
 			return res.status(201).json(pubData);
 		}
 
-
 	});
-});
+}
+app.get('/getPub', getPub);
+
 
 app.get('/getPubEdit', function(req, res) {
 	const userID = req.user ? req.user._id : undefined;

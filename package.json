@@ -22,10 +22,9 @@
     "start-dev-api": "node ./node_modules/better-npm-run start-dev-api",
     "watch-client": "node ./node_modules/better-npm-run watch-client",
     "dev": "concurrent --kill-others \"npm run watch-client\" \"npm run start-dev\" \"npm run start-dev-api\"",
-    "test": "sudo mongod | karma start",
-    "test-travis": "karma start",
-    "test-mocha": "mocha $(find src api -name '*.test.js') --compilers js:babel-register",
-    "test-mocha:watch": "mocha $(find src api -name '*.test.js') --compilers js:babel-register --watch"
+    "test": "sudo mongod | mocha $(find src api -name '*.test.js') --compilers js:babel-register --require ./tests/jsDomConfig.js --watch",
+    "test-karma": "karma start",
+    "test-travis": "mocha $(find src api -name '*.test.js') --compilers js:babel-register --require ./tests/jsDomConfig.js"
   },
   "betterScripts": {
     "start-prod": {
@@ -188,6 +187,7 @@
     "webpack-isomorphic-tools": "^2.2.18"
   },
   "devDependencies": {
+    "async": "^1.5.2",
     "autoprefixer-loader": "^3.1.0",
     "babel-eslint": "^5.0.0-beta6",
     "babel-plugin-react-intl": "^2.0.0",
@@ -209,15 +209,17 @@
     "karma": "^0.13.10",
     "karma-chrome-launcher": "^0.2.0",
     "karma-cli": "^0.1.1",
-    "karma-firefox-launcher": "^0.1.6",
+    "karma-firefox-launcher": "^0.1.7",
     "karma-intl-shim": "^1.0.3",
     "karma-mocha": "^0.2.0",
     "karma-mocha-reporter": "^1.1.1",
     "karma-phantomjs-launcher": "^1.0.0",
+    "karma-safari-launcher": "^0.1.1",
     "karma-sourcemap-loader": "^0.3.5",
     "karma-webpack": "^1.7.0",
     "mkdirp": "^0.5.1",
     "mocha": "^2.3.3",
+    "mocha-mongoose": "^1.1.1",
     "phantomjs-polyfill": "0.0.2",
     "phantomjs-prebuilt": "^2.1.5",
     "react-a11y": "^0.2.6",
@@ -228,6 +230,7 @@
     "redux-devtools": "^2.1.5",
     "strip-loader": "^0.1.0",
     "style-loader": "^0.12.4",
+    "testdom": "^2.0.0",
     "webpack": "^1.12.9",
     "webpack-dev-middleware": "^1.4.0",
     "webpack-hot-middleware": "^2.5.0"

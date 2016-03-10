@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import ReactDOMServer from 'react-dom/server';
 import TestUtils from 'react-addons-test-utils'
 import {expect} from 'chai';
-import {checkUnwrappedRenderSuccess} from '../../utils/testFunctions';
+import {checkUnwrappedRenderSuccess} from '../../../tests/helpersClient';
 import License, {License as LicenseUnwrapped} from './License.jsx'
 
 describe('Components', () => {
@@ -15,7 +15,6 @@ describe('Components', () => {
 			
 			expect(domRender).to.exist; // Successfully rendered into the DOM
 			expect(isErrorScreen, message).to.be.false; // Did not render a Red warning screen
-
 		}); 
 
 		it('should accept custom text', () => {
@@ -24,7 +23,7 @@ describe('Components', () => {
 				<License {...props} />
 			);
 			const renderedDOM = ReactDOM.findDOMNode(component);
-			expect(renderedDOM.innerText).to.equal('My custom text Creative Commons Attribution 4.0 International License.');
+			expect(renderedDOM.textContent).to.equal('My custom text Creative Commons Attribution 4.0 International License.');
 		});
 
 		it('should change when hover prop is true', () => {

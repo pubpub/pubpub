@@ -45,10 +45,10 @@ To run tests:
 
 ```
 npm install
-npm run test
+npm run test        # test client and server code with mocha
+npm run test-karma  # test client code with karma (real browsers)
 ```
 
-Local API tests start an instance of mongodb to confirm database behavior.
-For best practices testing React and Redux components, see https://github.com/reactjs/redux/blob/master/docs/recipes/WritingTests.md
+[More on tests](/tests)
 
 

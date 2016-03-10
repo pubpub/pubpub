@@ -4,7 +4,7 @@ var path = require('path');
 module.exports = function (config) {
   config.set({
 
-    browsers: ['PhantomJS'],
+    browsers: ['PhantomJS', 'Chrome', 'Firefox', 'Safari'],
 
     singleRun: !!process.env.CI,
 
@@ -26,6 +26,9 @@ module.exports = function (config) {
       require("karma-mocha"),
       require("karma-mocha-reporter"),
       require("karma-phantomjs-launcher"),
+      require("karma-chrome-launcher"),
+      require("karma-firefox-launcher"),
+      require("karma-safari-launcher"),
       require("karma-sourcemap-loader"),
       require("karma-intl-shim")
     ],

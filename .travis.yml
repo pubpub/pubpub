@@ -10,3 +10,4 @@ services: mongodb
 script:
   - npm run lint
   - npm run test-travis
+  - npm run test-karma
