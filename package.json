@@ -103,6 +103,7 @@
     "connect-mongo": "^0.8.2",
     "crypto-js": "^3.1.5",
     "dateformat": "^1.0.12",
+    "decay": "^1.0.10",
     "diff": "^2.2.1",
     "ent": "^2.2.0",
     "express": "4.13.3",

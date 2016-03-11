@@ -11,6 +11,8 @@ import {addDiscussion, discussionVoteSubmit, togglePubHighlights, archiveDiscuss
 import {discussionVoteSubmit as discussionVoteSubmitEditor, archiveComment} from '../../actions/editor';
 import {addComment} from '../../actions/editor';
 
+import {wilsonScore as hotScore} from 'decay';
+
 // import {globalMessages} from '../../utils/globalMessages';
 // import {FormattedMessage} from 'react-intl';
 
@@ -138,15 +140,27 @@ const Discussions = React.createClass({
 		}
 	},
 
+	getHotness: function(discussion) {
+
+		let points = (discussion.points) ? discussion.points : 0;
+		points = Math.max(points, 0);
+		const timestamp = (discussion.postDate) ? new Date(discussion.postDate) : new Date();
+
+		return hotScore(points, 0, timestamp);
+	},
+
 	render: function() {
 		// const pubData = {discussions: []};
 
 		const discussionsData = this.getDiscussionData();
 
+
 		const addDiscussionStatus = this.props.inEditor ? this.props.editorData.get('addDiscussionStatus') : this.props.pubData.get('addDiscussionStatus');
 		const newDiscussionData = this.props.inEditor ? this.props.editorData.get('newDiscussionData') : this.props.pubData.get('newDiscussionData');
 		const activeSaveID = this.props.inEditor ? this.props.editorData.get('activeSaveID') : this.props.pubData.get('activeSaveID');
 		const isPubAuthor = this.props.inEditor ? !this.props.editorData.getIn(['pubEditData', 'isReader']) : this.props.pubData.getIn(['pubData', 'isAuthor']);
+
+		discussionsData.sort(function(a, b) { return this.getHotness(b) - this.getHotness(a); }.bind(this));
 
 		return (
 			<div style={styles.container}>
