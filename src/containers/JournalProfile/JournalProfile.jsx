@@ -150,7 +150,8 @@ const JournalAdmin = React.createClass({
 													designObject={this.props.journalData.getIn(['journalData', 'design']) ? this.props.journalData.getIn(['journalData', 'design']).toJS() : {}}
 													journalSaving={this.props.journalData.get( 'journalSaving')}
 													journalSaveHandler={this.journalSave}
-													journalData={this.props.journalData}/>
+													journalData={this.props.journalData}
+													query={this.props.query} />
 											);
 										case 'settings':
 											return (
@@ -186,7 +187,8 @@ export default connect( state => {
 		loginData: state.login, 
 		journalData: state.journal, 
 		subdomain: state.router.params.subdomain,
-		mode: state.router.params.mode
+		mode: state.router.params.mode,
+		query: state.router.location.query,
 	};
 })( Radium(JournalAdmin) );
 

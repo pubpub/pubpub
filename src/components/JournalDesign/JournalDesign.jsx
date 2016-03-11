@@ -17,12 +17,14 @@ const JournalDesign = React.createClass({
 		designObject: PropTypes.object,
 		journalSaving: PropTypes.bool,
 		journalData: PropTypes.object,
+		query: PropTypes.object,
 	},
 
 	getDefaultProps: function() {
 		return {
 			designObject: {},
 			journalSaving: false,
+			query: {},
 		};
 	},
 
@@ -312,7 +314,7 @@ const JournalDesign = React.createClass({
 							<div style={[styles.mockHeaderBarLanding, this.colorStyles(this.state.colorSelections.landingHeaderBackground.color, this.state.colorSelections.landingHeaderText.color, this.state.colorSelections.landingHeaderHover.color)]} key={'landingJournalMockHeader'}>
 								<FormattedMessage {...globalMessages.journalName} />
 							</div>
-							<LandingBody componentsArray={this.state.componentsArray} journalID={this.props.journalData.getIn(['journalData', '_id'])} journalData={this.props.journalData.get('journalData')}/>
+							<LandingBody componentsArray={this.state.componentsArray} journalID={this.props.journalData.getIn(['journalData', '_id'])} journalData={this.props.journalData.get('journalData')} query={this.props.query}/>
 						</div>
 						
 					</div>

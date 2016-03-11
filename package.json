@@ -23,7 +23,8 @@
     "start-dev": "node ./node_modules/better-npm-run start-dev",
     "start-dev-api": "node ./node_modules/better-npm-run start-dev-api",
     "watch-client": "node ./node_modules/better-npm-run watch-client",
-    "dev": "concurrently --raw --kill-others \"npm run watch-client\" \"npm run start-dev\" \"npm run start-dev-api\" \"npm run lint:watch\"",
+    "dev": "concurrently --raw --kill-others \"npm run watch-client\" \"npm run start-dev\" \"npm run start-dev-api\"",
+    "dev-broken": "concurrently --raw --kill-others \"npm run watch-client\" \"npm run start-dev\" \"npm run start-dev-api\" \"npm run lint:watch\"",
     "test": "sudo mongod | mocha $(find src api -name '*.test.js') --compilers js:babel-register --require ./tests/mochaEnvInit.js --watch",
     "test-karma": "karma start",
     "test-travis": "mocha $(find src api -name '*.test.js') --compilers js:babel-register --require ./tests/mochaEnvInit.js"

@@ -21,7 +21,7 @@ const LandingComponentCDMXConstitution = React.createClass({
 	},
 
 	componentWillMount() {
-		if (this.props.query.c) {
+		if (this.props.query && this.props.query.c) {
 			this.setState({activeIndex: parseInt(this.props.query.c, 10)});
 		} else {
 			this.setState({activeIndex: 0});	
@@ -59,7 +59,6 @@ const LandingComponentCDMXConstitution = React.createClass({
 	// },
 
 	render: function() {
-		console.log(this.props.query, this.state.activeIndex);
 		return ( <div style={styles.container}> 
 			<div style={styles.header}>
 				<a href="http://www.constitucion.cdmx.gob.mx"><img style={styles.headerImage} src="http://i.imgur.com/BxctOW8.png" /></a>

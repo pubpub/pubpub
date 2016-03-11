@@ -109,5 +109,8 @@
     "discussionPlaceholder": "Missing. English is: Add discussion or feedback",
     "People": "Missing. English is: People",
     "discussionReplyPlaceholder": "Missing. English is: Add your reply"
+  },
+  "mx": {
+    "group.background": "Same as English: Background CSS"
   }
 }
