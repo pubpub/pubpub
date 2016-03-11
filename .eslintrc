@@ -18,7 +18,6 @@
     "import/no-unresolved": 0,
     "import/no-named-as-default": 2,
     "jsx-quotes": 2,
-    "indent": 1,
     "block-scoped-var": 0,
     "padded-blocks": 0,
     "comma-dangle": 0,
@@ -44,7 +43,7 @@
   "settings": {
     "import/parser": "babel-eslint",
     "import/resolve": {
-      moduleDirectory: [src"]
+      moduleDirectory: ["src", "api"]
     }
   },
   "globals": {
