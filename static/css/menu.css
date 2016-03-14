@@ -4,7 +4,7 @@
   padding-left: 0;
   list-style: none;
   z-index: 99999;
-  /*border: 1px solid #d9d9d9;*/
+  border: 1px solid #d9d9d9;
   box-shadow: 0 0 4px #d9d9d9;
   color: #666;
 }
@@ -116,7 +116,7 @@
   background-color: #F3F5F7;
   border: none;
   /*border-bottom: 1px solid transparent;*/
-  border-bottom: 1px solid #aaa;
+  /*border-bottom: 1px solid #aaa;*/
   box-shadow: none;
   margin-top: 0px;
 }

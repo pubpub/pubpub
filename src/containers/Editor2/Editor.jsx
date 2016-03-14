@@ -608,7 +608,9 @@ const Editor = React.createClass({
 						<EditorModals publishVersionHandler={this.publishVersion} />
 						
 						{/* Editor Menu */}
-						<Menu items={editorMenuItems}/>
+						<div id="editor-text-wrapper" style={[globalStyles.hiddenUntilLoad, globalStyles[loadStatus]]}>
+							<Menu items={editorMenuItems}/>
+						</div>
 
 						{/*	Horizontal loader line - Separates menu bar from rest of editor page */}
 						<div style={styles.editorLoadBar}>
