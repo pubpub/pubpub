@@ -198,7 +198,7 @@ export const codeMirrorStyleClasses = {
 		width: '250px',
 		left: '-110px',
 		textAlign: 'center',
-		bottom: '-20px',
+		bottom: '-21px',
 		height: '20px',
 		lineHeight: '20px',
 		backgroundColor: '#F5F5F5',
@@ -207,5 +207,11 @@ export const codeMirrorStyleClasses = {
 		borderBottom: '1px solid rgba(0,0,0,0.2)',
 		fontSize: '33px',
 		fontWeight: 'bold',
+	},
+	'.menuItem-saveStatus': {
+		fontFamily: 'Courier',
+		fontSize: '15px',
+		paddingTop: '2px !important',
+		color: '#AAA',
 	},
 };

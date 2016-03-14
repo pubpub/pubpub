@@ -1,23 +1,19 @@
 import React, {PropTypes} from 'react';
 import Radium, {Style} from 'radium';
 import Menu, {SubMenu, MenuItem} from 'rc-menu';
-// import {globalStyles} from '../../utils/styleConstants';
-// import { Link } from 'react-router';
-// import {globalMessages} from '../../utils/globalMessages';
-// import {FormattedMessage} from 'react-intl';
 
-let styles = {};
-
-// <Menu> accepts an object array, 'items'
-// An item has a key, a string, a function, right-align boolean, and children:
-// {
-//	 key: 'assets', 				(type: String)
-//	 string: 'Assets', 				(type: String)
-//	 function: openModal('asset'), 	(type: function)
-//	 right: true, 					(type: boolean)
-//	 children: [{item},{item}], 	(type: array)
-// }
-
+/* **********************
+<Menu> accepts an object array, 'items'
+An item has a key, a string, a function, right-align boolean, and children:
+	{
+	 key: 'assets', 				(type: String)
+	 string: 'Assets', 				(type: String)
+	 function: openModal('asset'), 	(type: function)
+	 right: true, 					(type: boolean) // floats right
+ 	 notButton: true, 				(type: boolean) // removes line and click behavior
+	 children: [{item},{item}], 	(type: array)
+	}
+********************** */
 const pubpubMenu = React.createClass({
 	propTypes: {
 		items: PropTypes.array,
@@ -64,15 +60,17 @@ const pubpubMenu = React.createClass({
 
 	renderMenuItems: function(menuItems) {
 		return menuItems.map((item)=>{
+			let className = 'menuItem-' + item.key;
+			className += item.notButton ? ' notButton' : '';
 			if (item.children) {
 				return (
-					<SubMenu title={item.string} key={item.key} className={item.right ? 'right' : ''}>
+					<SubMenu title={item.string} key={item.key} className={item.right ? className + ' right' : className} disabled={item.notButton}>
 						{this.renderMenuItems(item.children)}
 					</SubMenu>
 				);
 			}
 
-			return <MenuItem key={item.key} className={item.right ? 'right' : ''}>{item.string}</MenuItem>;
+			return <MenuItem key={item.key} className={item.right ? className + ' right' : className} disabled={item.notButton}>{item.string}</MenuItem>;
 		});
 	},
 
@@ -82,7 +80,7 @@ const pubpubMenu = React.createClass({
 		const menuItems = this.props.items || [];
 
 		return (
-			<div style={styles.container}>
+			<div>
 				<Style rules={{
 					'.rc-menu.rc-menu-horizontal.rc-menu-root': {
 						height: '30px',
@@ -106,7 +104,3 @@ const pubpubMenu = React.createClass({
 });
 
 export default Radium(pubpubMenu);
-
-styles = {
-	
-};
