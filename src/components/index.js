@@ -25,6 +25,7 @@ export LoaderDeterminate from './LoaderDeterminate/LoaderDeterminate';
 export LoaderIndeterminate from './LoaderIndeterminate/LoaderIndeterminate';
 export LoginForm from './LoginForm/LoginForm';
 export LoginFormRegister from './LoginFormRegister/LoginFormRegister';
+export Menu from './Menu/Menu';
 export PubBody from './PubBody/PubBody';
 export PubGallery from './PubGallery/PubGallery';
 export PubLeftBar from './PubLeftBar/PubLeftBar';

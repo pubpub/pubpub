@@ -8,3 +8,5 @@ src/utils/smoothscroll.js
 src/components/ImageCropper/AvatarEditor.jsx
 src/containers/Editor/editorFirepadUserlist.js
 src/components/EditorPlugins/pluginProps.js
+src/containers/Editor2/editorFirepadUserlist.js
+
