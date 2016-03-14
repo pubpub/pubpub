@@ -58,23 +58,21 @@ const pubpubMenu = React.createClass({
 	// Listen for the key of the clickEvent
 	// Call the function associated with that key
 	handleClick: function(clickEvent) {
-		console.log('ClickEvent', clickEvent);
+		console.log('clickEvent');
 		this.state.functionCalls[clickEvent.key.replace('.$', '')]();
 	},
 
 	renderMenuItems: function(menuItems) {
 		return menuItems.map((item)=>{
 			if (item.children) {
-				const props = { title: item.string, key: item.key };
-				if (item.right) { props.right = true; }
 				return (
-					<SubMenu {...props}>
+					<SubMenu title={item.string} key={item.key} className={item.right ? 'right' : ''}>
 						{this.renderMenuItems(item.children)}
 					</SubMenu>
 				);
 			}
 
-			return <MenuItem key={item.key}>{item.string}</MenuItem>;
+			return <MenuItem key={item.key} className={item.right ? 'right' : ''}>{item.string}</MenuItem>;
 		});
 	},
 

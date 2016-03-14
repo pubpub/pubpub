@@ -466,8 +466,8 @@ const Editor = React.createClass({
 				function: ()=>{},
 				children: [
 					{
-						key: 'assets',
-						string: 'Assets',
+						key: 'style',
+						string: 'Style',
 						function: this.printIt('assets!'),
 					},
 					{
@@ -483,32 +483,75 @@ const Editor = React.createClass({
 				]
 			},
 			{
-				key: 'style',
-				string: 'Style Button',
+				key: 'view',
+				string: 'View',
+				function: this.printIt('style!'),
+				children: [
+					{
+						key: '1',
+						string: 'Markdown',
+						function: this.printIt('assets2!'),
+					},
+					{
+						key: '2',
+						string: 'Markdown and Live Preview',
+						function: this.printIt('assets2!'),
+					},
+					{
+						key: 'Markdown and Comments',
+						string: <h1>'Collaborators2'</h1>,
+						function: this.printIt('collabs2!'),
+					},
+					{
+						key: 'things2',
+						string: 'Live Preview and Comments',
+						function: this.printIt('things2!'),
+					},
+				]
+			},
+			{
+				key: 'formatting',
+				string: 'Formatting',
+				function: ()=>{},
+				children: [
+					{
+						key: 'assets2',
+						string: 'header #',
+						function: this.printIt('assets2!'),
+					},
+					{
+						key: 'bold',
+						string: 'bold',
+						function: this.printIt('things2!'),
+					},
+					{
+						key: 'italic',
+						string: 'italic',
+						function: this.printIt('collabs2!'),
+					}
+				]
+			},
+			{
+				key: 'assets',
+				string: 'Assets',
+				function: this.printIt('style!'),
+			},
+			{
+				key: 'Collaborators',
+				string: 'Collaborators',
 				function: this.printIt('style!'),
 			},
 			{
 				key: 'publish',
 				string: 'Publish',
-				function: ()=>{},
 				right: true,
-				children: [
-					{
-						key: 'assets',
-						string: 'Assets',
-						function: this.printIt('assets!'),
-					},
-					{
-						key: 'things',
-						string: 'Things',
-						function: this.printIt('things!'),
-					},
-					{
-						key: 'collaborators',
-						string: 'Collaborators',
-						function: this.printIt('collabs!'),
-					}
-				]
+				function: this.printIt('style!'),
+			},
+			{
+				key: 'preview',
+				string: 'Preview',
+				right: true,
+				function: this.printIt('style!'),
 			},
 		];
 		return (
