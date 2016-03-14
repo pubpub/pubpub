@@ -182,8 +182,8 @@ const EditorPluginPopup = React.createClass({
 		const pluginString = activeToken.string.slice(2, -2);
 		const pluginSplit = pluginString.split(':');
 		const pluginType = pluginSplit[0];
-		const valueString = pluginSplit.length > 1 ? pluginSplit[1] : ''; // Values split into an array
-		const values = parsePluginString(valueString);
+		// const valueString = pluginSplit.length > 1 ? pluginSplit[1] : ''; // Values split into an array
+		const values = parsePluginString(pluginString);
 
 		this.setState({
 			popupVisible: true,
@@ -191,7 +191,7 @@ const EditorPluginPopup = React.createClass({
 			activeChar: activeChar,
 			activeToken: activeToken,
 			pluginType: pluginType,
-			pluginHash: MurmurHash.v2(valueString),
+			pluginHash: MurmurHash.v2(pluginString),
 			initialString: pluginString,
 			values: values,
 		});
