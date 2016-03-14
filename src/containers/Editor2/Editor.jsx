@@ -471,8 +471,8 @@ const Editor = React.createClass({
 						function: this.printIt('assets!'),
 					},
 					{
-						key: 'things',
-						string: 'Things',
+						key: 'Settings',
+						string: 'Editor Settings',
 						function: this.printIt('things!'),
 					},
 					{
@@ -498,8 +498,8 @@ const Editor = React.createClass({
 						function: this.printIt('assets2!'),
 					},
 					{
-						key: 'Markdown and Comments',
-						string: <h1>'Collaborators2'</h1>,
+						key: 'Markdomments',
+						string: 'Markdown and Comments',
 						function: this.printIt('collabs2!'),
 					},
 					{
@@ -526,6 +526,21 @@ const Editor = React.createClass({
 					},
 					{
 						key: 'italic',
+						string: 'italic',
+						function: this.printIt('collabs2!'),
+					},
+					{
+						key: 'assetsasd2',
+						string: 'header #',
+						function: this.printIt('assets2!'),
+					},
+					{
+						key: 'bodasdld',
+						string: 'bold',
+						function: this.printIt('things2!'),
+					},
+					{
+						key: 'italdsadasic',
 						string: 'italic',
 						function: this.printIt('collabs2!'),
 					}
