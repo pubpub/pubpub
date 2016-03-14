@@ -106,6 +106,8 @@ const EditorPluginPopup = React.createClass({
 		this.popupBox.focus();
 	},
 	focusFields: function() {
+		if (!this.state.pluginType || !Plugins[this.state.pluginType]) return;
+
 		const firstRefName = Plugins[this.state.pluginType].InputFields[0].title;
 		const firstRef = (firstRefName) ? this.popupInputFields[firstRefName] : null;
 		if (firstRef && typeof firstRef.focus === 'function') {
