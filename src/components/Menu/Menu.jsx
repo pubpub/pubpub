@@ -91,10 +91,10 @@ const pubpubMenu = React.createClass({
 						height: '30px',
 						lineHeight: '30px',
 					},
-					'.rc-menu-horizontal > .rc-menu-submenu > .rc-menu': {
-						maxHeight: 'calc(100vh - 60px)',
-						overflowY: 'scroll',
-					},
+					// '.rc-menu-horizontal > .rc-menu-submenu > .rc-menu': {
+					// 	maxHeight: 'calc(100vh - 60px)',
+					// 	overflowY: 'scroll',
+					// },
 				}} />
 
 				<Menu mode={'horizontal'} onClick={this.handleClick}>
