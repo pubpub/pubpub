@@ -427,7 +427,9 @@ const Editor = React.createClass({
 	},
 
 	printIt: function(name) {
-		console.log('clicked ', name);
+		return ()=>{
+			console.log('clicked ', name);
+		};	
 	},
 
 	render: function() {
@@ -484,7 +486,30 @@ const Editor = React.createClass({
 				key: 'style',
 				string: 'Style Button',
 				function: this.printIt('style!'),
-			}
+			},
+			{
+				key: 'publish',
+				string: 'Publish',
+				function: ()=>{},
+				right: true,
+				children: [
+					{
+						key: 'assets',
+						string: 'Assets',
+						function: this.printIt('assets!'),
+					},
+					{
+						key: 'things',
+						string: 'Things',
+						function: this.printIt('things!'),
+					},
+					{
+						key: 'collaborators',
+						string: 'Collaborators',
+						function: this.printIt('collabs!'),
+					}
+				]
+			},
 		];
 		return (
 

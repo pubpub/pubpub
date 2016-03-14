@@ -31,10 +31,11 @@
 .rc-menu-submenu-active,
 .rc-menu-submenu-inline.rc-menu-submenu-active > .rc-menu-submenu-title:hover {
   background-color: #eaf8fe;
+  background-color: #DDD;
 }
 .rc-menu-item-selected {
-  background-color: #eaf8fe;
-  transform: translateZ(0);
+  /*background-color: #eaf8fe;*/
+  /*transform: translateZ(0);*/
 }
 .rc-menu > li.rc-menu-submenu {
   padding: 0;
@@ -71,6 +72,12 @@
   display: block;
   padding: 7px 7px 7px 16px;
   white-space: nowrap;
+
+  -webkit-user-select: none;  /* Chrome all / Safari all */
+  -moz-user-select: none;     /* Firefox all */
+  -ms-user-select: none;      /* IE 10+ */
+  user-select: none;  
+  cursor: pointer;
 }
 .rc-menu-item.rc-menu-item-disabled,
 .rc-menu-submenu-title.rc-menu-item-disabled,
@@ -151,8 +158,9 @@
 .rc-menu-horizontal > .rc-menu-submenu-active,
 .rc-menu-horizontal > .rc-menu-item-active {
   /*border-bottom: 2px solid #2db7f5;*/
-  background-color: #F3F3F3;
-  color: #2baee9;
+  /*background-color: #F3F3F3;*/
+  /*color: #2baee9;*/
+  background-color: #DDD;
 }
 
 .rc-menu-horizontal:after {
