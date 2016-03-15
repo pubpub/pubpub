@@ -11,7 +11,7 @@ import {addDiscussion, discussionVoteSubmit, togglePubHighlights, archiveDiscuss
 import {discussionVoteSubmit as discussionVoteSubmitEditor, archiveComment} from '../../actions/editor';
 import {addComment} from '../../actions/editor';
 
-import {wilsonScore as hotScore} from 'decay';
+import {redditHot as hotScore} from 'decay';
 
 // import {globalMessages} from '../../utils/globalMessages';
 // import {FormattedMessage} from 'react-intl';
@@ -142,11 +142,15 @@ const Discussions = React.createClass({
 
 	getHotness: function(discussion) {
 
-		let points = (discussion.points) ? discussion.points : 0;
-		points = Math.max(points, 0);
-		const timestamp = (discussion.postDate) ? new Date(discussion.postDate) : new Date();
+		// let points = (discussion.points) ? discussion.points : 0;
+		// points = Math.max(points, 0);
 
-		return hotScore(points, 0, timestamp);
+		const yays = (discussion.yays) ? discussion.yays : 0;
+		const nays = (discussion.nays) ? discussion.nays : 0;
+
+		const timestamp = (discussion.postDate) ? new Date(discussion.postDate) : new Date(0);
+
+		return hotScore(yays, nays, timestamp);
 	},
 
 	render: function() {
