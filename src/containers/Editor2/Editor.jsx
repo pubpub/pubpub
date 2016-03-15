@@ -917,9 +917,9 @@ styles = {
 		},
 	},
 	previewBlockWrapper: {
-		width: 'calc(100% - 20px)',
-		height: 'calc(100% - 50px)',
-		padding: '10px',
+		width: 'calc(100% - 0px)',
+		height: 'calc(100% - 0px)',
+		padding: '0px',
 		overflow: 'hidden',
 		overflowY: 'scroll',
 		position: 'absolute',
@@ -984,7 +984,7 @@ styles = {
 		zIndex: 5,
 
 		position: 'fixed',
-		height: 'calc(100vh - 60px - 2*' + globalStyles.headerHeight + ')',
+		height: 'calc(100vh - 60px)',
 		overflow: 'hidden',
 		overflowY: 'scroll',
 		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
@@ -1069,7 +1069,7 @@ styles = {
 		editorMarkdown: {
 			transition: '.352s linear transform, .3s linear opacity .25s, 0s linear padding .352s, 0s linear left .352s',
 			transform: 'translateX(0%)',
-			padding: '15px 25vw',
+			padding: '0px 25vw',
 			left: 0,
 		},
 		editorPreview: {
@@ -1094,7 +1094,7 @@ styles = {
 		editorMarkdown: {
 			transition: '.352s linear transform, .3s linear opacity .25s',
 			transform: 'translateX(-50%)',
-			padding: '15px 0px',
+			padding: '0px 0px',
 			left: '25vw'
 		},
 		editorPreview: {

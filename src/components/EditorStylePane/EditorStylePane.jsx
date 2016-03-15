@@ -143,7 +143,8 @@ const EditorStylePane = React.createClass({
 						key={'customStyleSaveButton'}
 						label={'Save'}
 						onClick={this.saveCustomSettings}
-						isLoading={this.state.isSaving} />
+						isLoading={this.state.isSaving}
+						align={'right'} />
 				</div>
 				
 				{

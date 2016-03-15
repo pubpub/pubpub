@@ -42,9 +42,9 @@ export function codeMirrorStyles(loginData, parentClass) {
 	switch (editorColor) {
 	case 'light':
 		editorStyles.cursorColor = '#000';
-		editorStyles.color = '#555';
-		editorStyles.colorHeader = '#676767';
-		editorStyles.colorTitle = '#575757';
+		editorStyles.color = '#333';
+		editorStyles.colorHeader = '#474747';
+		// editorStyles.colorTitle = '#575757';
 		editorStyles.colorPPM = '#474747';
 		editorStyles.colorCite = '#171717';
 		editorStyles.colorPagebreak = '#aaa';
@@ -56,13 +56,13 @@ export function codeMirrorStyles(loginData, parentClass) {
 		editorStyles.colorTitle = '#ccc';
 		editorStyles.colorPPM = '#eee';
 		editorStyles.colorCite = '#fff';
-		editorStyles.colorPagebreak = '#555';
+		editorStyles.colorPagebreak = '#333';
 		break;
 	default:
 		editorStyles.cursorColor = '#000';
-		editorStyles.color = '#555';
-		editorStyles.colorHeader = '#676767';
-		editorStyles.colorTitle = '#575757';
+		editorStyles.color = '#333';
+		editorStyles.colorHeader = '#474747';
+		// editorStyles.colorTitle = '#575757';
 		editorStyles.colorPPM = '#474747';
 		editorStyles.colorCite = '#171717';
 		editorStyles.colorPagebreak = '#aaa';
@@ -139,7 +139,7 @@ export function codeMirrorStyles(loginData, parentClass) {
 		'.cm-plugin': {
 			cursor: 'pointer',
 			borderRadius: '2px',
-			color: '#555',
+			color: '#333',
 			fontFamily: 'Courier',
 		},
 		'.cm-ppm-pagebreak': {
