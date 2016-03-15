@@ -81,6 +81,26 @@ export function getPub(req, res) {
 app.get('/getPub', getPub);
 
 
+app.get('/getPubRecommendation', function(req, res) {
+
+	const userID = req.user ? req.user._id : undefined;
+	const pubID = (req.query.pubID) ? req.query.pubID : undefined;
+	const journalID = (req.query.journalID) ? req.query.journalID : undefined;
+
+	//const suggestedPubID = getRecommendations(UserId, PubId, journalId);
+ 	const suggestedPubID = null;
+
+	Pub.getSimplePub(suggestedPubID, (err, suggestedPubData)=>{
+		if (err) {
+			console.log(err);
+			return res.status(500).json(err);
+		}
+		return res.status(201).json(suggestedPubData);
+
+	});
+});
+
+
 app.get('/getPubEdit', function(req, res) {
 	const userID = req.user ? req.user._id : undefined;
 	const userGroups = req.user ? req.user.groups : [];
