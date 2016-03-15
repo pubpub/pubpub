@@ -1,6 +1,7 @@
 /* global CodeMirror */
 import React, {PropTypes} from 'react';
 import Radium, {Style} from 'radium';
+import {Button} from '../';
 import {globalStyles} from '../../utils/styleConstants';
 
 let styles = {};
@@ -21,6 +22,7 @@ const EditorStylePane = React.createClass({
 	getInitialState() {
 		return {
 			mode: 'desktop',
+			isSaving: false,
 		};
 	},
 
@@ -47,6 +49,10 @@ const EditorStylePane = React.createClass({
 	},
 
 	componentWillReceiveProps(nextProps) {
+		setTimeout(()=>{
+			this.setState({isSaving: false});	
+		}, 1);
+		
 		if (this.props.defaultDesktop !== nextProps.defaultDesktop) {
 			const cmDesktop = document.getElementById('codeMirrorPubCSSDesktop').childNodes[0].CodeMirror;	
 			cmDesktop.setValue(nextProps.defaultDesktop);
@@ -70,6 +76,7 @@ const EditorStylePane = React.createClass({
 		const cmMobile = document.getElementById('codeMirrorPubCSSMobile').childNodes[0].CodeMirror;
 		const newStyleDesktop = cmDesktop.getValue();
 		const newStyleMobile = cmMobile.getValue();
+		this.setState({isSaving: true});
 
 		// const newSetting = {};
 
@@ -129,7 +136,16 @@ const EditorStylePane = React.createClass({
 				<div id={'codeMirrorPubCSSDesktop'} className={'codeMirrorPubCSS'} style={[styles.codeMirrorWrapper, this.state.mode !== 'desktop' && styles.hidden]}></div>
 				<div id={'codeMirrorPubCSSMobile'} className={'codeMirrorPubCSS'} style={[styles.codeMirrorWrapper, this.state.mode !== 'mobile' && styles.hidden]}></div>
 
-				<div style={styles.saveButton} key={'customStyleSaveButton'} onClick={this.saveCustomSettings}>Save</div>
+				{/* <div style={styles.saveButton} key={'customStyleSaveButton'} onClick={this.saveCustomSettings}>Save</div> */}
+
+				<div style={styles.saveButton}>
+					<Button
+						key={'customStyleSaveButton'}
+						label={'Save'}
+						onClick={this.saveCustomSettings}
+						isLoading={this.state.isSaving} />
+				</div>
+				
 				{
 					this.props.saveStyleError
 						? <div>{this.props.saveStyleError}</div>
@@ -203,20 +219,20 @@ styles = {
 		color: '#bbb',
 		float: 'left',
 	},
-	saveButton: {
-		// textAlign: 'center',
-		fontSize: 20,
-		// position: 'relative',
-		// left: '20px',
-		width: '52px',
-		// backgroundColor: 'red',
-		// float: 'right',
-		padding: '0px 20px',
-		marginBottom: 20,
+	// saveButton: {
+	// 	// textAlign: 'center',
+	// 	fontSize: 20,
+	// 	// position: 'relative',
+	// 	// left: '20px',
+	// 	width: '52px',
+	// 	// backgroundColor: 'red',
+	// 	// float: 'right',
+	// 	padding: '0px 20px',
+	// 	marginBottom: 20,
 
-		':hover': {
-			cursor: 'pointer',
-			color: globalStyles.sideHover,
-		}
-	},
+	// 	':hover': {
+	// 		cursor: 'pointer',
+	// 		color: globalStyles.sideHover,
+	// 	}
+	// },
 };

@@ -3,7 +3,7 @@ import Radium, {Style} from 'radium';
 import {PubSelectionPopup} from '../';
 import {globalStyles} from '../../utils/styleConstants';
 import {Reference} from '../';
-import { Link } from 'react-router';
+// import { Link } from 'react-router';
 import {loadCss} from '../../utils/loadingFunctions';
 // import {scienceStyle, magazineStyle} from './pubStyles';
 // import cssConvert from '../../utils/cssToRadium';
@@ -211,13 +211,13 @@ const PubBody = React.createClass({
 							: null
 						}
 
-						{this.props.authorsNote
+						{/* this.props.authorsNote
 							? <div id={'pub-authorsNote'} >{this.props.authorsNote}</div>
-							: null
+							: null */
 						}
 
-						<h1 id={'pub-title'} >{this.props.title}</h1>
-						<div id={'pub-authors'} style={[this.props.authors.length === 0 && {display: 'none'}]}>
+						{/* <div id={'pub-title'} >{this.props.title}</div> */}
+						{/* <div id={'pub-authors'} style={[this.props.authors.length === 0 && {display: 'none'}]}>
 							<span><FormattedMessage {...globalMessages.by}/> </span>
 							{
 								this.props.authors.map((author, index)=>{
@@ -226,7 +226,7 @@ const PubBody = React.createClass({
 										: <Link to={'/user/' + author.username} key={'pubAuthorLink-' + index} style={globalStyles.link}><span key={'pubAuthor-' + index}>{author.name}, </span></Link>);
 								})
 							}
-						</div>
+						</div> */}
 
 						{this.props.firstPublishedDate !== this.props.lastPublishedDate
 							? <div id={'pub-dates'}>
@@ -242,8 +242,8 @@ const PubBody = React.createClass({
 							</div>
 						}
 
-						<div id={'pub-abstract'}>{this.props.abstract}</div>
-						<div id={'pub-header-divider'}></div>
+						{/* <div id={'pub-abstract'}>{this.props.abstract}</div> */}
+						{/* <div id={'pub-header-divider'}></div> */}
 
 						<div id="pubBodyContent"> {/* Highlights are dependent on the id 'pubBodyContent' */}
 							<PPMComponent

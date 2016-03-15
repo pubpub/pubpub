@@ -1,3 +1,4 @@
+export Button from './Button/Button';
 export CollectionEdit from './CollectionEdit/CollectionEdit';
 export CollectionMain from './CollectionMain/CollectionMain';
 export CollectionGallery from './CollectionGallery/CollectionGallery';
