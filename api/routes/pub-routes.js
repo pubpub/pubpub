@@ -30,10 +30,11 @@ export function getPub(req, res) {
 
 			const postedID = userID || sessionID;
 			const postedJournalID = journalID || 'pubpub';
+			const pubID = pubData._id;
 
 			request
 			.post('http://pubrecommend.herokuapp.com/' + postedJournalID)
-			.send({ pub: req.query.slug, user: postedID, action: 'read' })
+			.send({ pub: pubID, user: postedID, action: 'read' })
 			// .set('X-API-Key', 'foobar')
 			.set('Accept', 'application/json')
 			.end(function(recError, recResponse) {
@@ -45,8 +46,8 @@ export function getPub(req, res) {
 			// .set('X-API-Key', 'foobar')
 			.set('Accept', 'application/json')
 			.end(function(recError, recResponse) {
-				console.log(recError);
-				console.log(recResponse.body);
+				// console.log(recError);
+				// console.log(recResponse.body);
 			});
 
 		}
