@@ -135,7 +135,7 @@ const PubBody = React.createClass({
 				backgroundColor: 'rgba(200,200,200, 0.7)',
 			},
 			'.selection': {
-				backgroundColor: this.props.showPubHighlights ? 'rgba(195, 245, 185, 0.6)' : 'rgba(195, 245, 185, 0.0)',
+				backgroundColor: this.props.showPubHighlights ? 'rgba(195, 245, 185, 0.3)' : 'rgba(195, 245, 185, 0.0)',
 				cursor: this.props.showPubHighlights ? 'pointer' : 'text',
 			},
 			'.selection-editor': {
@@ -143,7 +143,7 @@ const PubBody = React.createClass({
 				cursor: this.props.showPubHighlightsComments ? 'pointer' : 'text',
 			},
 			'.selection-active': {
-				backgroundColor: 'rgba(78, 164, 61, 0.6)',
+				backgroundColor: 'rgba(78, 164, 61, 0.4)',
 			},
 			'.selection-editor.selection-active': {
 				backgroundColor: 'rgba(78, 61, 164, 0.6)',
@@ -194,7 +194,7 @@ const PubBody = React.createClass({
 		const sortedReferences = this.props.references.sort((refA, refB) => { return indexedCitations[refA.refName] - indexedCitations[refB.refName]; } );
 
 		return (
-			<ResizingText 
+			<ResizingText
 				fontRatio={45}
 				mobileFontRatio={25}
 				minFont={this.props.minFont}
