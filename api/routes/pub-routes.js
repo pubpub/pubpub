@@ -1,6 +1,6 @@
 var app = require('../api');
 
-var Pub  = require('../models').Pub;
+var Pub	= require('../models').Pub;
 var User = require('../models').User;
 var Group = require('../models').Group;
 var Asset = require('../models').Asset;
@@ -8,9 +8,11 @@ var Journal = require('../models').Journal;
 var Reference = require('../models').Reference;
 var Notification = require('../models').Notification;
 
-var _         = require('underscore');
-var Firebase  = require('firebase');
-var less      = require('less');
+var _				 = require('underscore');
+var Firebase	= require('firebase');
+var less			= require('less');
+
+var request = require('superagent');
 
 import {fireBaseURL, firebaseTokenGen, generateAuthToken} from '../services/firebase';
 import {sendAddedAsCollaborator} from '../services/emails';
@@ -21,6 +23,48 @@ export function getPub(req, res) {
 	const journalID = req.query.journalID;
 	Pub.getPub(req.query.slug, userID, journalID, (err, pubData)=>{
 		if (err) { console.log(err); return res.status(500).json(err); }
+
+		const sessionID = (req.sessionID) ? req.sessionID : undefined;
+
+		if (userID || sessionID) {
+
+			const postedID = userID || sessionID;
+			const postedJournalID = journalID || 'pubpub';
+
+			request
+			.post('http://pubrecommend.herokuapp.com/' + postedJournalID)
+			.send({ pub: req.query.slug, user: postedID, action: 'read' })
+			// .set('X-API-Key', 'foobar')
+			.set('Accept', 'application/json')
+			.end(function(recError, recResponse) {
+			});
+
+			request
+			.get('http://pubrecommend.herokuapp.com/' + postedJournalID )
+			.query({ user: postedID })
+			// .set('X-API-Key', 'foobar')
+			.set('Accept', 'application/json')
+			.end(function(recError, recResponse) {
+				console.log(recError);
+				console.log(recResponse.body);
+			});
+
+		}
+
+
+
+		/*
+		const sessionId = req.session.passport.user;
+
+		request
+		.post('http://pubrecommend.herokuapp.com/' + journalID)
+		.send({ pub: req.query.slug, user: userID, action: 'like' })
+		// .set('X-API-Key', 'foobar')
+		.set('Accept', 'application/json')
+		.end(function(recError, recResponse){
+
+		});
+		*/
 
 		if (req.query.referrer) {
 			User.findOne({'_id':req.query.referrer}, {'_id':1,'image':1, 'thumbnail':1, 'name':1, 'username':1}).exec(function (err, referrer) {
@@ -92,7 +136,7 @@ app.post('/createPub', function(req, res) {
 		// console.log(pub);
 
 		pub.save(function (err, savedPub) {
-			if (err) { return res.status(500).json(err);  }
+			if (err) { return res.status(500).json(err);	}
 
 			const pubID = savedPub.id;
 			const userID = req.user['_id'];
@@ -139,7 +183,7 @@ app.post('/publishPub', function(req, res) {
 	// Update the pub object with new dates, titles, etc
 	// Push the new history object
 	Pub.findOne({ slug: req.body.newVersion.slug }, function (err, pub){
-		if (err) { return res.status(500).json(err);  }
+		if (err) { return res.status(500).json(err);	}
 
 		// if (!req.user || pub.collaborators.canEdit.indexOf(req.user._id) === -1) {
 		const userGroups = req.user ? req.user.groups : [];
@@ -195,22 +239,22 @@ app.post('/publishPub', function(req, res) {
 		req.body.newVersion.authors.map((authorID)=>{
 			User.findOne({_id: authorID}, {'followers':1}).lean().exec(function (err, author) {
 				const followers = author && author.follows ? author.follows : [];
-				
+
 				followers.map((follower)=>{
 					if (isNewPub) {
 						Notification.createNotification('followers/newPub', req.body.host, author, follower, pub._id);
 					} else {
 						Notification.createNotification('followers/newVersion', req.body.host, author, follower, pub._id);
 					}
-				});	
-				
+				});
+
 			});
 		});
 
 		Asset.insertBulkAndReturnIDs(assets, function(err, dbAssetsIds){
-			if (err) { return res.status(500).json(err);  }
+			if (err) { return res.status(500).json(err);	}
 			Reference.insertBulkAndReturnIDs(references, function(err, dbReferencesIds){
-				if (err) { return res.status(500).json(err);  }
+				if (err) { return res.status(500).json(err);	}
 				pub.title = req.body.newVersion.title;
 				pub.abstract = req.body.newVersion.abstract;
 				pub.authorsNote = req.body.newVersion.authorsNote;
@@ -243,21 +287,21 @@ app.post('/publishPub', function(req, res) {
 
 					status: req.body.newVersion.status,
 					diffObject: {
-						additions:  diffObject.additions,
-						deletions:  diffObject.deletions,
-						diffTitle:  diffObject.diffTitle,
-						diffAbstract:  diffObject.diffAbstract,
+						additions:	diffObject.additions,
+						deletions:	diffObject.deletions,
+						diffTitle:	diffObject.diffTitle,
+						diffAbstract:	diffObject.diffAbstract,
 						diffAuthorsNote: diffObject.diffAuthorsNote,
 						diffMarkdown: diffObject.diffMarkdown,
-						// diffAuthors:  diffObject.diffAuthors,
-						// diffAssets:  diffObject.diffAssets,
+						// diffAuthors:	diffObject.diffAuthors,
+						// diffAssets:	diffObject.diffAssets,
 						// diffReferences: diffObject.diffReferences,
-						// diffStyle:  diffObject.diffStyle,
+						// diffStyle:	diffObject.diffStyle,
 					}
 				});
 
 				pub.save(function(err, result){
-					if (err) { return res.status(500).json(err);  }
+					if (err) { return res.status(500).json(err);	}
 					// console.log('in save result');
 					// console.log(result);
 					return res.status(201).json('Published new version');
@@ -275,7 +319,7 @@ app.post('/publishPub', function(req, res) {
 
 app.post('/updateCollaborators', function(req, res) {
 	Pub.findOne({ slug: req.body.slug }, function (err, pub){
-		if (err) { return res.status(500).json(err);  }
+		if (err) { return res.status(500).json(err);	}
 
 		// Check to make sure the user is authorized to be submitting such changes.
 		const userGroups = req.user ? req.user.groups : [];
@@ -300,7 +344,7 @@ app.post('/updateCollaborators', function(req, res) {
 				canRead.push(collaborator._id);
 				// Update the user's pubs collection so it is removed from their profile
 				// User.update({ _id: collaborator._id }, { $pull: { pubs: pubID} }, function(err, result){if(err) return handleError(err)});
-				
+
 				// Psych! We actually want it on the user's profile - just under the 'canRead' section
 				User.update({ _id: collaborator._id }, { $addToSet: { pubs: pubID} }, function(err, result){if(err) return handleError(err)});
 				Group.update({ _id: collaborator._id }, { $addToSet: { pubs: pubID} }, function(err, result){if(err) return handleError(err)});
@@ -337,7 +381,7 @@ app.post('/updateCollaborators', function(req, res) {
 						sendAddedAsCollaborator(email, url, senderName, pubTitle, groupName, journalName, function(err, result){
 							if (err) { console.log('Error sending email to user: ', error);	}
 						});
-					} 
+					}
 
 					if (group) {
 						for (let index = group.members.length; index--;) {
@@ -351,7 +395,7 @@ app.post('/updateCollaborators', function(req, res) {
 			});
 		});
 		/* *********************************** */
-		/*        End notification block       */
+		/*				End notification block			 */
 		/* *********************************** */
 
 
@@ -392,7 +436,7 @@ app.post('/updatePubSettings', function(req, res) {
 		pub.settings[settingKey] = req.body.newSettings[settingKey];
 
 		pub.save(function(err, result){
-			if (err) { return res.status(500).json(err);  }
+			if (err) { return res.status(500).json(err);	}
 
 			return res.status(201).json(pub.settings);
 		});
@@ -425,7 +469,7 @@ app.post('/updatePubData', function(req, res) {
 		// pub.settings[settingKey] = req.body.newSettings[settingKey];
 
 		pub.save(function(err, result){
-			if (err) { return res.status(500).json(err);  }
+			if (err) { return res.status(500).json(err);	}
 
 			return res.status(201).json(req.body.newPubData);
 		});
@@ -438,7 +482,7 @@ app.post('/transformStyle', function(req, res) {
 	const importsMobile = req.body.styleMobile.match(/(@import.*)/g) || [];
 	const styleDesktopClean = req.body.styleDesktop.replace(/(@import.*)/g, '');
 	const styleMobileClean = req.body.styleMobile.replace(/(@import.*)/g, '');
-	
+
 	const fullString = importsDesktop.join(' ') + ' ' + importsMobile.join(' ') + ' #pubContent{' + styleDesktopClean +'} @media screen and (min-resolution: 3dppx), screen and (max-width: 767px){ #pubContent{' + styleMobileClean + '}}';
 	less.render(fullString, function (err, output) {
 		if (err) {
