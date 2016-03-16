@@ -173,11 +173,14 @@ app.post('/publishPub', function(req, res) {
 		const assets = [];
 		for (const key in req.body.newVersion.assets) {
 			const assetObject = req.body.newVersion.assets[key];
-			assetObject.usedInDiscussion = null;
-			assetObject.usedInPub = pub._id;
-			assetObject.owner = req.user._id;
-			assetObject.createDate = publishDate;
-			assets.push(assetObject);
+			if (assetObject) {
+				assetObject.usedInDiscussion = null;
+				assetObject.usedInPub = pub._id;
+				assetObject.owner = req.user._id;
+				assetObject.createDate = publishDate;
+				assets.push(assetObject);	
+			}
+			
 		}
 
 		// Append details to references
