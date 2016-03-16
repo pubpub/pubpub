@@ -187,11 +187,14 @@ app.post('/publishPub', function(req, res) {
 		const references = [];
 		for (const key in req.body.newVersion.references) {
 			const referenceObject = req.body.newVersion.references[key];
-			referenceObject.usedInDiscussion = null;
-			referenceObject.usedInPub = pub._id;
-			referenceObject.owner = req.user._id;
-			referenceObject.createDate = publishDate;
-			references.push(referenceObject);
+			if (referenceObject){
+				referenceObject.usedInDiscussion = null;
+				referenceObject.usedInPub = pub._id;
+				referenceObject.owner = req.user._id;
+				referenceObject.createDate = publishDate;
+				references.push(referenceObject);
+			} 
+			
 		}
 
 		const isNewPub = pub.history.length === 0;
