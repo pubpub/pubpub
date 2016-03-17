@@ -32,6 +32,7 @@ import {generateTOC} from '../../markdown/generateTOC';
 
 import {globalMessages} from '../../utils/globalMessages';
 import {FormattedMessage} from 'react-intl';
+import {Iterable} from 'immutable';
 
 let FireBaseURL;
 let styles;
@@ -185,7 +186,7 @@ const Editor = React.createClass({
 
 	showPopupFromAutocomplete: function(completion) { // completion, element
 		const cords = this.cm.cursorCoords();
-		this.refs.pluginPopup.showAtPos(cords.left - 10, cords.top);
+		this.refs.pluginPopup.showAtPos(cords.left - 15, cords.top + 5);
 		if (completion) {
 			CodeMirror.off(completion, 'pick', this.showPopupFromAutocomplete);
 		}
@@ -242,7 +243,7 @@ const Editor = React.createClass({
 		const selections = [];
 
 		// Strip markdown of title, abstract, authorsNote
-		const markdown = fullMD.replace(/\[\[title:.*?\]\]/g, '').replace(/\[\[abstract:.*?\]\]/g, '').replace(/\[\[authorsNote:.*?\]\]/g, '').trim();
+		const markdown = fullMD.replace(/\[\[title:.*?\]\]/gi, '').replace(/\[\[abstract:.*?\]\]/gi, '').replace(/\[\[authorsNote:.*?\]\]/gi, '').trim();
 		
 		// const compiledMarkdown = performance.now();
 
@@ -447,6 +448,10 @@ const Editor = React.createClass({
 		const loadStatus = this.props.editorData.get('status');
 		const darkMode = this.props.loginData.getIn(['userData', 'settings', 'editorColor']) === 'dark';
 
+		const isLivePreview = (Iterable.isIterable(this.props.editorData)) ? (this.props.editorData.get('viewMode') === 'preview') : false;
+		
+
+
 		const referencesList = [];
 		for ( const key in this.state.firepadData.references ) {
 			if (this.state.firepadData.references.hasOwnProperty(key)) {
@@ -624,8 +629,8 @@ const Editor = React.createClass({
 							{/* <div style={[styles.editorHeader]}>
 								<input type="text" defaultValue="My Title" style={[styles.headerTitleInput, this.getEditorFont()]} />
 							</div> */}
-							<EditorPluginPopup ref="pluginPopup" references={this.state.firepadData.references} assets={this.state.firepadData.assets} /* selections={this.state.firepadData.selections} */ activeFocus={this.state.activeFocus} codeMirrorChange={this.state.codeMirrorChange}/>
-
+							
+							<EditorPluginPopup ref="pluginPopup" isLivePreview={isLivePreview} references={this.state.firepadData.references} assets={this.state.firepadData.assets} /* selections={this.state.firepadData.selections} */ activeFocus={this.state.activeFocus} codeMirrorChange={this.state.codeMirrorChange}/>
 							{/* Insertion point for codemirror and firepad */}
 							<div style={[this.state.activeFocus !== '' && styles.hiddenMainEditor]}>
 								<div id="codemirror-wrapper"></div>
@@ -670,7 +675,8 @@ const Editor = React.createClass({
 										title={this.state.title}
 										abstract={this.state.abstract}
 										authorsNote={this.state.authorsNote}
-										minFont={15}
+										minFont={13}
+										maxFont={25}
 										markdown={this.state.markdown}
 										authors={this.getAuthorsArray()}
 										showPubHighlights={this.state.previewPaneMode === 'discussions'}

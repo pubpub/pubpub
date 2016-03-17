@@ -11,7 +11,7 @@ export default function() {
 			const cur = editor.getCursor();
 			const token = editor.getTokenAt(cur);
 
-			if (token.type === 'pubpub-markdown') {
+			if (token && token.type && token.type.indexOf('pubpub-markdown') !== -1) {
 
 				const line = editor.getLine(cur.line);
 				let startPos = token.start;
