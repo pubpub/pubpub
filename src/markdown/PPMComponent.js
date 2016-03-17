@@ -183,9 +183,16 @@ const PPMComponent = React.createClass({
 			// if (children[0] && children[0].props) {
 			// 	children[0] = children[0].props.children[0]
 			// }
+
+
 			// if (props.className === 'author') {
 
-			// 	console.log('trying to set to link');
+			// 	console.log('trying to set to author');
+			// 	console.log(props, children);
+			// 	return <div>Woopie - {children[0].props.children[0]}</div>
+			// }
+
+			
 			// 	props.href="/user/" + children[0];
 			// 	children[0] = "";
 			// 	Component = 'a';
