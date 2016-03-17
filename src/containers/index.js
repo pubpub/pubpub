@@ -3,7 +3,7 @@ export AppBody from './AppBody/AppBody';
 export Autocomplete from './Autocomplete/Autocomplete';
 export Collection from './Collection/Collection';
 export Discussions from './Discussions/Discussions';
-export Editor from './Editor2/Editor';
+export Editor from './Editor/Editor';
 export EditorModals from './EditorModals/EditorModals';
 export Explore from './Explore/Explore';
 export GroupCreate from './GroupCreate/GroupCreate';
