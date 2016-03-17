@@ -628,7 +628,6 @@ const Editor = React.createClass({
 						{/* Markdown Editing Block */}
 						{/* ---------------------- */}
 						<div id="editor-text-wrapper" style={[globalStyles.hiddenUntilLoad, globalStyles[loadStatus], styles.editorMarkdown, styles[viewMode].editorMarkdown, !isReader && styles[viewMode].editorMarkdownIsEditor]}>
-<<<<<<< HEAD
 
 
 							{(this.state.firepadInitialized) ? <EditorWidgetHandler ref="widgethandler" isLivePreview={isLivePreview} references={this.state.firepadData.references} assets={this.state.firepadData.assets} activeFocus={this.state.activeFocus} cm={this.cm} /> : null}
@@ -636,8 +635,6 @@ const Editor = React.createClass({
 							<EditorPluginPopup ref="pluginPopup" isLivePreview={isLivePreview} references={this.state.firepadData.references} assets={this.state.firepadData.assets} activeFocus={this.state.activeFocus} codeMirrorChange={this.state.codeMirrorChange}/>
 							*/}
 
-=======
->>>>>>> Moving back to Editor tree
 							{/* <div style={[styles.editorHeader]}>
 								<input type="text" defaultValue="My Title" style={[styles.headerTitleInput, this.getEditorFont()]} />
 							</div> */}
