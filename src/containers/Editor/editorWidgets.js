@@ -4,21 +4,57 @@ import ReactDOM from 'react-dom';
 function posEq(a, b) {return a.line == b.line && a.ch == b.ch;}
 
 
+const widgetStyle = {
+  backgroundColor: 'rgba(100,200,100,0.5)',
+  cursor: 'pointer',
+};
+
 const WidgetComponent = React.createClass({
   componentDidMount: function() {
-    console.log('Mounted this!!');
+    // console.log('Mounted this!!');
   },
   componentWillUnmount: function() {
-    console.log('unmounted this!!');
+    // console.log('unmounted this!!');
+  },
+  handleClick: function() {
+    if (this.props.openPopup) {
+      const range = this.range();
+      this.props.openPopup(range.from, range.to, this);
+    }
   },
   render: function() {
-    return (<span className="ppm-widget">Test</span>);
+    return (<span style={widgetStyle} onClick={this.handleClick} className="ppm-widget">{this.props.pluginType}</span>);
   }
 });
 
 
-function Widget(cm, from, to) {
+function Widget(cm, from, to, pluginType, info, clickHandler) {
     // the subclass must define this.domNode before calling this constructor
+
+
+    const btn = document.createElement("span");
+    const element = <WidgetComponent pluginType={pluginType} {...info} />;
+    this.domNode = btn;
+
+    const component = ReactDOM.render(element, btn);
+
+    /*
+
+    this.node.keydown('left', function(event) {
+        if ($(event.target).getCursorPosition()===0) {
+            _this.exit('left');
+        }
+    });
+    this.node.keydown('right', function(event) {
+        var t = $(event.target);
+        if (t.getCursorPosition()==t.val().length) {
+            _this.exit('right');
+        }
+    });
+
+    */
+
+
     var _this = this;
     this.cm = cm;
     // cm.replaceSelection("\u2af7"+cm.getSelection()+"\u2af8", "around");
@@ -69,8 +105,8 @@ Widget.prototype.enterIfDefined = function(direction) {
 
 Widget.prototype.range = function() {
     var find = this.mark.find()
-    find.from.ch+=1
-    find.to.ch-=1
+    // find.from.ch+=1
+    // find.to.ch-=1
     return find;
 }
 Widget.prototype.setText = function(text) {
@@ -82,45 +118,7 @@ Widget.prototype.getText = function() {
     return this.cm.getRange(r.from, r.to);
 }
 
-function IntegerWidget(cm, from, to) {
-    this.value = 0;
-
-    var btn = document.createElement("span");
-    var element = <WidgetComponent />;
-
-
-    this.domNode = btn;
-    var _this = this;
-    Widget.apply(this, arguments);
-
-    var component = ReactDOM.render(element, btn);
-
-    /*
-
-    this.node.keydown('left', function(event) {
-        if ($(event.target).getCursorPosition()===0) {
-            _this.exit('left');
-        }
-    });
-    this.node.keydown('right', function(event) {
-        var t = $(event.target);
-        if (t.getCursorPosition()==t.val().length) {
-            _this.exit('right');
-        }
-    });
-
-    */
-
-    var t = this.getText();
-    if (t !== "") {
-        // this.value = parseInt(t);
-        this.value = t;
-    }
-    // set text to the parsed or default value initially
-    this.changeValue(0);
-}
-IntegerWidget.prototype = Object.create(Widget.prototype)
-IntegerWidget.prototype.enter = function(direction) {
+Widget.prototype.enter = function(direction) {
     /*
     var t = this.node.find('.value');
     t.focus();
@@ -132,7 +130,7 @@ IntegerWidget.prototype.enter = function(direction) {
     */
 }
 
-IntegerWidget.prototype.exit = function(direction) {
+Widget.prototype.exit = function(direction) {
     var range = this.mark.find();
     this.cm.focus();
     if (direction==='left') {
@@ -142,14 +140,5 @@ IntegerWidget.prototype.exit = function(direction) {
     }
 }
 
-IntegerWidget.prototype.changeValue = function(inc) {
-    this.setValue(this.value+inc);
-}
 
-IntegerWidget.prototype.setValue = function(val) {
-    this.value = val;
-    // this.setText(this.value.toString());
-    // this.node.find('.value').val(this.value);
-}
-
-export default IntegerWidget;
+export default Widget;
