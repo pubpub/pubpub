@@ -433,7 +433,8 @@ const Editor = React.createClass({
 	render: function() {
 
 		const isLivePreview = (Iterable.isIterable(this.props.editorData)) ? (this.props.editorData.get('viewMode') === 'preview') : false;
-
+		console.log('isLivePreview', isLivePreview);
+		console.log('this.props.editorData.get('viewMode')', this.props.editorData.get('viewMode'));
 		const editorData = this.props.editorData;
 		const viewMode = this.props.editorData.get('viewMode');
 		const isReader = this.props.editorData.getIn(['pubEditData', 'isReader']);
