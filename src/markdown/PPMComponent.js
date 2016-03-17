@@ -61,12 +61,12 @@ const PPMComponent = React.createClass({
 		let Component = Tag;
 
 		switch(Tag) {
-		case 'h1':
-		case 'h2':
-		case 'h3':
-		case 'h4':
-		case 'h5':
-		case 'h6':
+		case 'h1': 
+		case 'h2': 
+		case 'h3': 
+		case 'h4': 
+		case 'h5': 
+		case 'h6': 
 			props.id = children[0] && children[0].replace ? children[0].replace(/\s/g, '-').toLowerCase() : undefined;
 			break;
 
@@ -130,11 +130,11 @@ const PPMComponent = React.createClass({
 		case 'code':
 			if (props['data-language']) {
 				try{
-					return <Tag {...props} className={'codeBlock'} dangerouslySetInnerHTML={{__html: window.hljs.highlight(props['data-language'], children[0]).value}} />
+					return <Tag {...props} className={'codeBlock'} dangerouslySetInnerHTML={{__html: window.hljs.highlight(props['data-language'], children[0]).value}} />	
 				} catch (err) {
 					// console.log(err);
 				}
-
+				
 			}
 			props.className = 'codeBlock';
 			break;
@@ -154,24 +154,7 @@ const PPMComponent = React.createClass({
 			props['data-hash'] = children[0] ? murmur.v2(children[0]) : 0;
 			break;
 		case 'hr':
-			return <Component  {...props} />
-		// case 'pubheader':
-		// 	console.log(arguments)
-		case 'pubitem':
-			// console.log(arguments)
-			// debugger;
-
-			props.className = props.pubItemField;
-			return <div {...props}>{children}</div>;
-			console.log('pub item props ',props);
-
-		case 'pubsubitem':
-			// console.log(arguments)
-			// debugger;
-			props.className = 'subItem';
-			console.log('pubsub item props ',props);
-			return <div {...props}>{children}</div>;
-
+			return <Component  {...props} /> 
 		case 'pubheader': 
 			// console.log(arguments);
 			Component = 'div';
