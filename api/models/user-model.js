@@ -10,29 +10,32 @@ var Notification = require('../models').Notification;
 var userSchema = new Schema({
   email: { type: String, required: true, index: { unique: true } },
   username: { type: String, required: true, index: { unique: true } },
-  firstName: { type: String },
-  lastName: { type: String },
-  name: { type: String },
-  image: { type: String },
-  thumbnail: { type: String },
-  title: { type: String },
-  bio: { type: String },
-  groups: [{ type: ObjectId, ref: 'Group' }],
+  firstName: { type: String }, // Need to collect first/last for DOI assignment
+  lastName: { type: String }, // Need to collect first/last for DOI assignment
+  name: { type: String }, // Merged from first and last - simpler call.
+  image: { type: String }, // User profile image 
+  thumbnail: { type: String }, // Thumbnail version of image
+  title: { type: String }, // Self assigned title
+  bio: { type: String }, // Self assigned bio
+  groups: [{ type: ObjectId, ref: 'Group' }], // Groups that the user belongs to
   
-  pubs: [ { type: ObjectId, ref: 'Pub' } ],
-  discussions: [ { type: ObjectId, ref: 'Discussion' } ],
-  highlights: [ { type: ObjectId, ref: 'Highlight' } ],
-  assets: [ { type: ObjectId, ref: 'Asset' } ],
-  adminJournals: [ { type: ObjectId, ref: 'Journal' } ],
+  pubs: [ { type: ObjectId, ref: 'Pub' } ], // Pubs that the user has access to (due to collaborator status from within the editor)
+  discussions: [ { type: ObjectId, ref: 'Discussion' } ], // Discussions the user has posted
+  highlights: [ { type: ObjectId, ref: 'Highlight' } ], // Highlights the user has saved
+  assets: [ { type: ObjectId, ref: 'Asset' } ], // Assets the user is an author on
+  references: [ { type: ObjectId, ref: 'Reference' } ], // References the user is has created
+  adminJournals: [ { type: ObjectId, ref: 'Journal' } ], // Journals the user is an admin for
   
-  yays: [ { type: ObjectId, ref: 'Discussion' } ],
-  nays: [ { type: ObjectId, ref: 'Discussion' } ],
-  // reviews: [ { type: ObjectId, ref: 'Review' } ],
+  yays: [ { type: ObjectId, ref: 'Discussion' } ], // Yays cast
+  nays: [ { type: ObjectId, ref: 'Discussion' } ], // Nays cast
   
-  emailPublic: { type: Boolean },
-  resetHash: { type: String },
-  resetHashExpiration: { type: Date },
+  emailPublic: { type: Boolean }, // Display email publicly?
+
+  resetHash: { type: String }, // Used for password reset
+  resetHashExpiration: { type: Date }, // Used for password reset
+  
   registerDate: { type: Date },
+  
   settings: { 
     editorFont: { type: String },
     editorFontSize: { type: String },

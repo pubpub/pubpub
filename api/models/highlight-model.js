@@ -4,7 +4,7 @@ var ObjectId  = Schema.Types.ObjectId;
 
 var highlightSchema = new Schema({
 
-  author: { type: ObjectId, ref: 'User' },
+  owner: { type: ObjectId, ref: 'User' },
   text: {type: String},
   context: {type: String},
   ancestorHash: {type: String},
@@ -15,11 +15,18 @@ var highlightSchema = new Schema({
   startOffset: {type: String},
   
   pub: { type: ObjectId, ref: 'Pub' },
-  version: {type: String},
+  version: {type: Number},
   
-  postDate: {type: String},
-  index: {type: Number},
-  usedInDiscussion: {type: Boolean},
+  usedInDiscussions: [{
+    id: { type: ObjectId, ref: 'Discussion' },
+    version: { type: Number },
+  }],
+  usedInPubs: [{
+    id: { type: ObjectId, ref: 'Pub' },
+    version: { type: Number },
+  }],
+
+  createDate: { type: Date },
 
 });
 
