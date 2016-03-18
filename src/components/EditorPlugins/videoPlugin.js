@@ -22,6 +22,8 @@ const VideoConfig = {
 const VIDEO_WRAPPER_CLASS = 'pub-video-wrapper';
 const VIDEO_CLASS = 'pub-video';
 
+const VideoEditorWidget = (props) => (<span>Image: {props.reference || 'Empty'}</span>);
+
 
 let styles = {};
 
@@ -76,4 +78,4 @@ styles = {
 };
 
 
-export default createPubPubPlugin(VideoPlugin, VideoConfig, VideoInputFields);
+export default createPubPubPlugin(VideoPlugin, VideoConfig, VideoInputFields, VideoEditorWidget);
