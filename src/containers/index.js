@@ -1,5 +1,6 @@
 export App from './App/App';
 export AppBody from './AppBody/AppBody';
+export AssetLibrary from './AssetLibrary/AssetLibrary';
 export Autocomplete from './Autocomplete/Autocomplete';
 export Collection from './Collection/Collection';
 export Discussions from './Discussions/Discussions';

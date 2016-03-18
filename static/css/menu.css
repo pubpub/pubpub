@@ -7,6 +7,7 @@
   border: 1px solid #bbb;
   box-shadow: 0 0 4px #d9d9d9;
   color: #666;
+  font-weight: 300;
 }
 .rc-menu-hidden {
   display: none;
@@ -34,6 +35,7 @@
   background-color: #DDD;
 }
 .rc-menu-item-selected {
+  color: #000;
   /*background-color: #eaf8fe;*/
   /*transform: translateZ(0);*/
 }
@@ -113,7 +115,7 @@
   top: -1px;
 }
 .rc-menu-horizontal {
-  background-color: #F3F5F7;
+  /*background-color: #F3F5F7;*/
   border: none;
   /*border-bottom: 1px solid transparent;*/
   /*border-bottom: 1px solid #aaa;*/

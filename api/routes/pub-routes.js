@@ -5,7 +5,7 @@ var User = require('../models').User;
 var Group = require('../models').Group;
 var Asset = require('../models').Asset;
 var Journal = require('../models').Journal;
-var Reference = require('../models').Reference;
+// var Reference = require('../models').Reference;
 var Notification = require('../models').Notification;
 
 var _         = require('underscore');
@@ -63,31 +63,24 @@ app.post('/createPub', function(req, res) {
 		if(!result){ return res.status(500).json('URL Title is not Unique!'); }
 
 		const pub = new Pub({
-			title: req.body.title,
 			slug: req.body.slug,
-			abstract: 'Type your abstract here',
+			title: req.body.title,
+			abstract: 'Type your abstract here! Your abstract will be used to help users search for pubs throughout the site.',
 			collaborators: {
 				canEdit:[userID],
 				canRead:[]
 			},
 			createDate: new Date().getTime(),
-			status: 'Unpublished',
-			assets: [],
+			isPublished: false,
 			history: [],
 			followers: [],
 			featuredIn: [],
 			featuredInList: [],
 			submittedTo: [],
 			submittedToList: [],
-			reviews: [],
+			
 			discussions: [],
-			experts: {
-				approved: [],
-				suggested: []
-			},
-			settings: {
-				pubPrivacy: 'public',
-			}
+			
 		});
 		// console.log(pub);
 

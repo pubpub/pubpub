@@ -8,6 +8,7 @@ import Radium from 'radium';
 import PureRenderMixin from 'react-addons-pure-render-mixin';
 import ReactFireMixin from 'reactfire';
 
+import {AssetLibrary} from '../../containers';
 import {EditorModalAssets, EditorModalCollaborators, EditorModalPublish, EditorModalReferences, EditorModalSettings} from '../../components/EditorModals';
 
 
@@ -162,12 +163,13 @@ const Editor = React.createClass({
 						{(() => {
 							switch (activeModal) {
 							case 'Assets':
-								return (<EditorModalAssets 
-										slug={this.props.slug} 
-										assetData={this.state.firepadData.assets} 
-										addAsset={this.addAsset} 
-										deleteAsset={this.deleteAsset}/>
-									);
+								return (<AssetLibrary />);
+								// return (<EditorModalAssets 
+								// 		slug={this.props.slug} 
+								// 		assetData={this.state.firepadData.assets} 
+								// 		addAsset={this.addAsset} 
+								// 		deleteAsset={this.deleteAsset}/>
+								// 	);
 
 							case 'Collaborators':
 								return (<EditorModalCollaborators 
@@ -230,9 +232,9 @@ styles = {
 		opacity: 0,
 		pointerEvents: 'none',
 		width: '100vw',
-		height: 'calc(100vh - ' + globalStyles.headerHeight + ')',
+		height: '100vh',
 		position: 'fixed',
-		top: 30,
+		top: 0,
 		backgroundColor: 'rgba(255,255,255,0.7)',
 		transition: '.1s linear opacity',
 		zIndex: 100,
@@ -244,13 +246,13 @@ styles = {
 	modalContainer: {
 		width: '86vw',
 		// minHeight: 400,
-		height: 'calc(100vh - 30px)',
+		height: 'calc(100vh - 27px)',
 		// maxHeight: 'calc(100vh - 150px)',
 		overflow: 'hidden',
 		overflowY: 'scroll',
 		margin: '0 auto',
-		position: 'absolute',
-		top: 0,
+		position: 'fixed',
+		top: 27,
 		left: '7vw',
 		backgroundColor: 'white',
 		boxShadow: '0px 0px 10px 0px rgba(0,0,0,0.25)',
@@ -258,7 +260,7 @@ styles = {
 
 		opacity: 0,
 		pointerEvents: 'none',
-		transform: 'scale(0.8)',
+		transform: 'scale(0.9)',
 		transition: '.1s linear opacity, .1s linear transform',
 
 		'@media screen and (min-width: 1600px)': {

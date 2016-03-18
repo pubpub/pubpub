@@ -18,7 +18,7 @@
 // and update those asset documents to mark which discussion or pub it was used in. For this
 // we store both discussion/pub _id and the version.
 
-// When as asset is cloned, a new asset is created with a blank history.
+// When as asset is cloned, a new asset is created with a blank history, but same asseType, label, and assetData.
 // The parent field marks the _id and version of the asset from which it was cloned.
 // The root field marks the _id of the furthest ancestor. This is used as a querying tool, so
 // that finding the full lineage of an asset can simply query for all docs with the same root.

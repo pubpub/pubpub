@@ -108,13 +108,13 @@ pubSchema.statics.getPub = function (slug, readerID, journalID, callback) {
 	this.findOne({slug: slug})
 	.populate({ path: 'discussions', model: 'Discussion' })
 	.populate({ path: 'assets history.assets', model: 'Asset' })
-	.populate({ path: 'references history.references', model: 'Reference' })
+	// .populate({ path: 'references history.references', model: 'Reference' })
 	.populate({ path: 'featuredIn.journal submittedTo.journal', select: 'journalName subdomain customDomain design', model: 'Journal' })
 	.populate({ path: 'authors history.authors', select: 'username name thumbnail firstName lastName', model: 'User' })
 	.exec((err, pub)=> {
 		const options = [
 			{ path: 'discussions.author', select: '_id username name firstName lastName thumbnail', model: 'User'},
-			{ path: 'discussions.selections', model: 'Highlight'}
+			// { path: 'discussions.selections', model: 'Highlight'}
 		];
 
 		this.populate(pub, options, (err, populatedPub)=> {
@@ -144,10 +144,10 @@ pubSchema.statics.getPub = function (slug, readerID, journalID, callback) {
 				outputPub.isAuthor = true;
 			}
 
-			outputPub.discussions = Discussion.appendUserYayNayFlag(outputPub.discussions, readerID);
-			outputPub.discussions = Discussion.calculateYayNayScore(outputPub.discussions);
-			outputPub.discussions = Discussion.sortDiscussions(outputPub.discussions);
-			outputPub.discussions = Discussion.nestChildren(outputPub.discussions);
+			// outputPub.discussions = Discussion.appendUserYayNayFlag(outputPub.discussions, readerID);
+			// outputPub.discussions = Discussion.calculateYayNayScore(outputPub.discussions);
+			// outputPub.discussions = Discussion.sortDiscussions(outputPub.discussions);
+			// outputPub.discussions = Discussion.nestChildren(outputPub.discussions);
 			// console.log(outputPub.isAuthor);
 			return callback(null, outputPub);
 		});
@@ -192,9 +192,9 @@ pubSchema.statics.getPubEdit = function (slug, readerID, readerGroups, callback)
 		// We gotta pass down discussions if we want to show in editor
 		const options = [
 			{ path: 'discussions.author', select: '_id username name firstName lastName thumbnail', model: 'User'},
-			{ path: 'discussions.selections', model: 'Highlight'},
+			// { path: 'discussions.selections', model: 'Highlight'},
 			{ path: 'editorComments.author', select: '_id username name firstName lastName thumbnail', model: 'User'},
-			{ path: 'editorComments.selections', model: 'Highlight'},
+			// { path: 'editorComments.selections', model: 'Highlight'},
 		];
 
 		this.populate(pub, options, (err, populatedPub)=> {
@@ -202,15 +202,15 @@ pubSchema.statics.getPubEdit = function (slug, readerID, readerGroups, callback)
 			const outputPub = populatedPub.toObject();
 			outputPub.isReader = isReader;
 
-			outputPub.discussions = Discussion.appendUserYayNayFlag(outputPub.discussions, readerID);
-			outputPub.discussions = Discussion.calculateYayNayScore(outputPub.discussions);
-			outputPub.discussions = Discussion.sortDiscussions(outputPub.discussions);
-			outputPub.discussions = Discussion.nestChildren(outputPub.discussions);
+			// outputPub.discussions = Discussion.appendUserYayNayFlag(outputPub.discussions, readerID);
+			// outputPub.discussions = Discussion.calculateYayNayScore(outputPub.discussions);
+			// outputPub.discussions = Discussion.sortDiscussions(outputPub.discussions);
+			// outputPub.discussions = Discussion.nestChildren(outputPub.discussions);
 
-			outputPub.editorComments = Discussion.appendUserYayNayFlag(outputPub.editorComments, readerID);
-			outputPub.editorComments = Discussion.calculateYayNayScore(outputPub.editorComments);
-			outputPub.editorComments = Discussion.sortDiscussions(outputPub.editorComments);
-			outputPub.editorComments = Discussion.nestChildren(outputPub.editorComments);
+			// outputPub.editorComments = Discussion.appendUserYayNayFlag(outputPub.editorComments, readerID);
+			// outputPub.editorComments = Discussion.calculateYayNayScore(outputPub.editorComments);
+			// outputPub.editorComments = Discussion.sortDiscussions(outputPub.editorComments);
+			// outputPub.editorComments = Discussion.nestChildren(outputPub.editorComments);
 
 			return callback(null, outputPub);
 		});

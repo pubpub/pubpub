@@ -342,7 +342,9 @@ styles = {
 	subNav: {
 		margin: '35px 0px 0px 0px',
 		fontSize: '20px',
-		borderBottom: '1px solid #CCC',
+		// borderBottom: '1px solid #CCC',
+		border: '1px solid #EEE',
+		backgroundColor: '#f3f4f5',
 		minWidth: '569px',
 		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
 			height: 'auto',

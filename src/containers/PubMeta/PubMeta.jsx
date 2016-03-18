@@ -111,7 +111,7 @@ const PubMeta = React.createClass({
 				<Helmet {...metaData} />
 
 				<div className="leftBar" style={[styles.leftBar, styles[this.props.readerData.get('status')]]}>
-					{!pubData.history[0].markdown
+					{pubData.history[0] && !pubData.history[0].markdown
 						? null
 						: <PubLeftBar
 							slug={this.props.slug}
@@ -140,7 +140,7 @@ const PubMeta = React.createClass({
 						value={this.props.readerData.get('status') === 'loading' ? 0 : 100}/>
 
 					<div style={[styles.centerContent, styles[this.props.readerData.get('status')]]}>
-						{!pubData.history[0].markdown
+						{pubData.history[0] && !pubData.history[0].markdown
 							? <div style={styles.metaTitle}><span style={styles.metaTitleType}>{pubData.history[0].title}</span></div>
 							: <div>
 								<div style={styles.metaTitle}>

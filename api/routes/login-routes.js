@@ -31,7 +31,9 @@ app.get('/login', function(req,res){
 
 // When an explicit login request is made
 app.post('/login', passport.authenticate('local'), function(req, res) {
-	User.findOne({'email':req.body.email}).exec(function (err, user) {
+	User.findOne({'email':req.body.email})
+	.populate({path: "assets"})
+	.exec(function (err, user) {
 		if (err){
 			console.log(err);
 			return res.status(500).json(err);
@@ -52,9 +54,11 @@ app.post('/login', passport.authenticate('local'), function(req, res) {
 					image: user.image,
 					thumbnail: user.thumbnail,
 					settings: user.settings,
-					following: req.user.following,
+					following: user.following,
 					isAdminToJournal: isAdmin,
 					notificationCount: notificationCount,
+					assets: user.assets
+
 				});
 
 			});
