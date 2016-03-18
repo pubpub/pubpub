@@ -49,6 +49,9 @@ const EditorWidgets = React.createClass({
 	checkMarkRange: function(from, to) {
 		for (const mark of this.marks) {
 			const pos = mark.find();
+			if (!pos) {
+
+			}
 			if (pos && pos.from.line === from.line && pos.from.ch === from.ch ) {
 				return true;
 			}
@@ -110,12 +113,16 @@ const EditorWidgets = React.createClass({
 		}
 		*/
 
-		const fromLine = change.from.line;
-		const toLine = change.to.line;
 
-		for (let line = fromLine; line <= toLine; line++) {
-			this.insertWidget(cm, line);
+		if (change.from && change.to) {
+			const fromLine = change.from.line;
+			const toLine = change.to.line;
+
+			for (let line = fromLine; line <= toLine; line++) {
+				this.insertWidget(cm, line);
+			}
 		}
+
 
 		// Set State to trigger re-render
 		this.setState({
