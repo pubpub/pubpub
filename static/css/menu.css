@@ -7,7 +7,6 @@
   border: 1px solid #bbb;
   box-shadow: 0 0 4px #d9d9d9;
   color: #666;
-  font-weight: 300;
 }
 .rc-menu-hidden {
   display: none;
@@ -35,7 +34,6 @@
   background-color: #DDD;
 }
 .rc-menu-item-selected {
-  color: #000;
   /*background-color: #eaf8fe;*/
   /*transform: translateZ(0);*/
 }

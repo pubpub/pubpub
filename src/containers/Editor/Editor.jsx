@@ -806,6 +806,7 @@ styles = {
 	},
 	editorMenuWrapper: {
 		backgroundColor: '#F0F0F0',
+		// fontWeight: '300',
 	},
 	editorContainerDark: {
 		backgroundColor: '#272727',

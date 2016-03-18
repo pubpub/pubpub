@@ -88,8 +88,8 @@ export const globalStyles = {
 	subMenu: {
 		margin: '0px 20px',
 		border: '1px solid #EEE',
-		fontWeight: '400',
-		backgroundColor: '#f3f3f3',
+		// fontWeight: '400',
+		// backgroundColor: '#f3f3f3',
 	},
 
 };

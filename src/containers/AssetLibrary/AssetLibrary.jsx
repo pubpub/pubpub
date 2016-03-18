@@ -74,7 +74,7 @@ const AssetLibrary = React.createClass({
 				{/* <div style={[globalStyles.simpleButton, styles.topRight]} key={'libraryClose'}>Close</div> */}
 
 				<div style={globalStyles.subMenu}>
-					<Menu items={menuItems}/>
+					<Menu items={menuItems} submenu={true}/>
 				</div>
 
 				<div style={styles.addSection}>
@@ -110,6 +110,5 @@ styles = {
 	},
 	addSection: {
 		padding: '20px',
-
 	},
 };
