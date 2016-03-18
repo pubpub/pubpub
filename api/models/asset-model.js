@@ -30,22 +30,14 @@ var ObjectId  = Schema.Types.ObjectId;
 var assetSchema = new Schema({
 
   assetType: { type: String}, // PubPub asset type, e.g. image, video, data
-  filetype: { type: String}, // Original file extension, e.g. .jpg, .png, .csv
-  originalFilename: { type: String}, // Original filename of the asset. Static for each file
   label: { type: String}, // Human-readable label. Used for drop-down selection, ordering, etc
-  thumbnail: { type: String}, // Scaled version of the document. 
-  url: { type: String}, // Original - full-size version of the asset
-  metaData: { type: Schema.Types.Mixed }, // User-input content about the asset.
+  assetData: { type: Schema.Types.Mixed }, // User-input content about the asset.
   
   history: [{
-  	updateDate: { type: Date },
-  	assetType: { type: String},
-	filetype: { type: String},
-	originalFilename: { type: String},
-	label: { type: String},
-	thumbnail: { type: String},
-	url: { type: String},
-	metaData: { type: Schema.Types.Mixed },
+  	assetType: { type: String },
+	label: { type: String },
+	assetData: { type: Schema.Types.Mixed },
+	updateDate: { type: Date },
   }],
 
   usedInDiscussions: [{

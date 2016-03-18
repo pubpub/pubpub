@@ -21,9 +21,7 @@ var userSchema = new Schema({
   
   pubs: [ { type: ObjectId, ref: 'Pub' } ], // Pubs that the user has access to (due to collaborator status from within the editor)
   discussions: [ { type: ObjectId, ref: 'Discussion' } ], // Discussions the user has posted
-  highlights: [ { type: ObjectId, ref: 'Highlight' } ], // Highlights the user has saved
   assets: [ { type: ObjectId, ref: 'Asset' } ], // Assets the user is an author on
-  references: [ { type: ObjectId, ref: 'Reference' } ], // References the user is has created
   adminJournals: [ { type: ObjectId, ref: 'Journal' } ], // Journals the user is an admin for
   
   yays: [ { type: ObjectId, ref: 'Discussion' } ], // Yays cast
