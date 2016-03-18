@@ -18,10 +18,11 @@ function attachWrapper(Component) {
 
 }
 
-export default function(reactComponent, config, inputFields) {
+export default function(reactComponent, config, inputFields, editorWidget) {
 	return {
 		Config: config,
 		InputFields: inputFields,
-		Component: attachWrapper(Radium(reactComponent))
+		Component: attachWrapper(Radium(reactComponent)),
+		Widget: editorWidget,
 	};
 }

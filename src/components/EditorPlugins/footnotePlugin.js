@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 // import ErrorMsg from './ErrorPlugin';
 // import {Reference} from '../';
 import createPubPubPlugin from './PubPub';
-// import classNames from 'classnames';
+import classNames from 'classnames';
 
 let styles = {};
 
@@ -32,6 +32,18 @@ const FootnoteConfig = {
 
 const FOOTNOTE_WRAPPER_CLASS = 'pub-footnote-wrapper';
 const FOOTNOTE_CLASS = 'pub-footnote';
+
+const FootnoteEditorWidget = (props) => {
+	let content;
+	if (!props.footnote) {
+		content = 'No caption';
+	} else if (props.footnote.length > 10) {
+		content = props.footnote.substring(0,9) + "...";
+	} else {
+		content = props.footnote;
+	}
+	return (<span>Footnote: {content}</span>);
+};
 
 
 const FootnotePlugin = React.createClass({
@@ -70,6 +82,7 @@ const FootnotePlugin = React.createClass({
 	render: function() {
 		const count = (this.props.count) ? this.props.count : 0;
 		const placement = (this.props.type) ? this.props.type : 'hover';
+		const className = classNames(FOOTNOTE_CLASS, {highlight: this.state.hover}, {flipped: this.state.hover} );
 
 		if (this.props.error) {
 			return <span/>;
@@ -78,12 +91,12 @@ const FootnotePlugin = React.createClass({
 		let contentElem;
 
 		if (placement === 'hover') {
-			contentElem = (<div ref="aside" style={styles.hoverNote(this.state.hover, this.state.flipped)}
+			contentElem = (<div className={className} ref="aside" style={styles.hoverNote(this.state.hover, this.state.flipped)}
 					onMouseOver={this.mouseOver} onMouseOut={this.mouseOut}>
 					<span style={styles.count(this.state.hover)}>{count}</span>.&nbsp;{this.props.footnote}
 			</div>);
 		} else {
-			contentElem = (<div ref="aside" style={styles.asideBox(this.state.hover)}
+			contentElem = (<div className={className} ref="aside" style={styles.asideBox(this.state.hover)}
 					onMouseOver={this.mouseOver} onMouseOut={this.mouseOut}>
 					<span style={styles.count(this.state.hover)}>{count}</span>.&nbsp;{this.props.footnote}
 			</div>);
@@ -91,7 +104,7 @@ const FootnotePlugin = React.createClass({
 
 		return (
 			<span className={FOOTNOTE_WRAPPER_CLASS}>
-				<sup className={FOOTNOTE_CLASS} id={`footnote-${count}`} style={styles.ref(this.state.hover || this.state.clicked)} ref="ref"
+				<sup id={`footnote-${count}`} style={styles.ref(this.state.hover || this.state.clicked)} ref="ref"
 				onMouseOver={this.mouseOver} onMouseOut={this.mouseOut}>
 					{count}
 				</sup>
@@ -153,4 +166,4 @@ styles = {
 
 };
 
-export default createPubPubPlugin(FootnotePlugin, FootnoteConfig, FootnoteInputFields);
+export default createPubPubPlugin(FootnotePlugin, FootnoteConfig, FootnoteInputFields, FootnoteEditorWidget);

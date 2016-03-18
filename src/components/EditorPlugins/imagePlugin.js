@@ -23,6 +23,8 @@ const IMG_CLASS = 'pub-img';
 
 // let styles = {};
 
+const ImageEditorWidget = (props) => (<span>Image: {props.source}</span>);
+
 const ImagePlugin = React.createClass({
 	propTypes: {
 		error: PropTypes.string,
@@ -65,4 +67,4 @@ const ImagePlugin = React.createClass({
 	}
 });
 
-export default createPubPubPlugin(ImagePlugin, ImageConfig, ImageInputFields);
+export default createPubPubPlugin(ImagePlugin, ImageConfig, ImageInputFields, ImageEditorWidget);

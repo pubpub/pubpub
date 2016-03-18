@@ -1,5 +1,6 @@
 import React, {PropTypes} from 'react';
 import ReactDOM from 'react-dom';
+import EditorPlugins from '../../components/EditorPlugins/index.js';
 
 function posEq(a, b) {return a.line == b.line && a.ch == b.ch;}
 
@@ -22,7 +23,14 @@ const WidgetComponent = React.createClass({
     }
   },
   render: function() {
-    return (<span style={widgetStyle} onClick={this.handleClick} className="ppm-widget">{this.props.pluginType}</span>);
+    let content;
+    if (this.props.pluginType && EditorPlugins[this.props.pluginType] && EditorPlugins[this.props.pluginType].Widget) {
+      const PluginWidget = EditorPlugins[this.props.pluginType].Widget;
+      content = (<PluginWidget {...this.props}/>);
+    } else {
+      content = (<span>{this.props.pluginType}</span>);
+    }
+    return (<span style={widgetStyle} onClick={this.handleClick} className="ppm-widget">{content}</span>);
   }
 });
 
