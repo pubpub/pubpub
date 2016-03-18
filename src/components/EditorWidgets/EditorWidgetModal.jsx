@@ -12,10 +12,8 @@ import Portal from 'react-portal';
 import {throttle, delay} from 'lodash';
 
 let styles = {};
-const POPUP_WIDTH = 425;
-// const POPUP_HEIGHT_ESTIMATE = 350;
 
-const EditorPluginPopup = React.createClass({
+const EditorWidgetModal = React.createClass({
 	propTypes: {
 		activeFocus: PropTypes.string,
 		codeMirrorChange: PropTypes.object,
@@ -322,7 +320,7 @@ const EditorPluginPopup = React.createClass({
 	}
 });
 
-export default Radium(EditorPluginPopup);
+export default Radium(EditorWidgetModal);
 
 
 styles = {
@@ -372,26 +370,6 @@ styles = {
 		opacity: 1,
 		transform: 'scale(1.0)',
 		pointerEvents: 'auto',
-	},
-	pluginPopupArrow: function(flipX, flipY) {
-		const xWidth = (flipX) ? POPUP_WIDTH - 25 : 15;
-		const arrowStyle = {
-			position: 'absolute',
-			left: xWidth,
-			width: 16,
-			height: 16,
-			backgroundColor: 'white',
-			boxShadow: '-1px -1px 1px 0px #9A9A9A',
-			zIndex: 5,
-		};
-		if (flipY) {
-			arrowStyle.bottom = -8;
-			arrowStyle.transform = 'rotate(225deg)';
-		} else {
-			arrowStyle.top = -8;
-			arrowStyle.transform = 'rotate(45deg)';
-		}
-		return arrowStyle;
 	},
 	pluginContent: {
 		position: 'relative',

@@ -5,7 +5,7 @@ export CollectionGallery from './CollectionGallery/CollectionGallery';
 export CreateGroupForm from './CreateGroupForm/CreateGroupForm';
 export CreateJournalForm from './CreateJournalForm/CreateJournalForm';
 export CreatePubForm from './CreatePubForm/CreatePubForm';
-export EditorPluginPopup from './EditorPluginPopup/EditorPluginPopup';
+export EditorWidgets from './EditorWidgets/EditorWidgets';
 export EditorStylePane from './EditorStylePane/EditorStylePane';
 export EditorTopNav from './EditorTopNav/EditorTopNav';
 export EditorBottomNav from './EditorBottomNav/EditorBottomNav';

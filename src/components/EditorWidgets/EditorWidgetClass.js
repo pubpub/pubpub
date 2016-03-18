@@ -1,38 +1,7 @@
-import React, {PropTypes} from 'react';
+import WidgetComponent from './BaseEditorWidgetComponent';
 import ReactDOM from 'react-dom';
-import EditorPlugins from '../../components/EditorPlugins/index.js';
 
 function posEq(a, b) {return a.line == b.line && a.ch == b.ch;}
-
-
-const widgetStyle = {
-  backgroundColor: 'rgba(100,200,100,0.5)',
-  cursor: 'pointer',
-};
-
-const WidgetComponent = React.createClass({
-  componentDidMount: function() {
-    // console.log('Mounted this!!');
-  },
-  componentWillUnmount: function() {
-    // console.log('unmounted this!!');
-  },
-  handleClick: function() {
-    if (this.props.openPopup) {
-      this.props.openPopup();
-    }
-  },
-  render: function() {
-    let content;
-    if (this.props.pluginType && EditorPlugins[this.props.pluginType] && EditorPlugins[this.props.pluginType].Widget) {
-      const PluginWidget = EditorPlugins[this.props.pluginType].Widget;
-      content = (<PluginWidget {...this.props}/>);
-    } else {
-      content = (<span>{this.props.pluginType}</span>);
-    }
-    return (<span style={widgetStyle} onClick={this.handleClick} className="ppm-widget">{content}</span>);
-  }
-});
 
 
 function Widget(cm, from, to, pluginType, info, clickHandler) {

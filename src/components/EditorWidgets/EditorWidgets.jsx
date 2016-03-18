@@ -7,12 +7,12 @@ import {globalStyles} from '../../utils/styleConstants';
 import {globalMessages} from '../../utils/globalMessages';
 import {FormattedMessage} from 'react-intl';
 import {Iterable} from 'immutable';
-import Widget from './editorWidgets';
+import Widget from './EditorWidgetClass';
 import {parsePluginString} from '../../utils/parsePlugins';
-import {EditorPluginPopup} from '../../components';
+import EditorWidgetModal from './EditorWidgetModal';
 
 
-const EditorWidgetHandler = React.createClass({
+const EditorWidgets = React.createClass({
 	propTypes: {
 		activeFocus: PropTypes.string,
 		assets: PropTypes.object,
@@ -38,7 +38,7 @@ const EditorWidgetHandler = React.createClass({
 
 	showPopupFromAutocomplete: function(completion) {
 		const cords = this.cm.cursorCoords();
-		this.refs.pluginPopup.showAtPos(cords.left - 15, cords.top + 5);
+		this.refs.pluginModal.showAtPos(cords.left - 15, cords.top + 5);
 		if (completion) {
 			CodeMirror.off(completion, 'pick', this.showPopupFromAutocomplete);
 		}
@@ -95,7 +95,7 @@ const EditorWidgetHandler = React.createClass({
 	},
 
 	openPopupOnWidget: function(from, to, widget) {
-		this.refs.pluginPopup.showWithPlugin(from, to, widget);
+		this.refs.pluginModal.showWithPlugin(from, to, widget);
 	},
 
 	onEditorChange: function(cm, change) {
@@ -129,7 +129,7 @@ const EditorWidgetHandler = React.createClass({
 		return (
 			<span>
 
-				<EditorPluginPopup ref="pluginPopup"
+				<EditorWidgetModal ref="pluginModal"
 					isLivePreview={this.props.isLivePreview}
 					references={this.props.references}
 					assets={this.props.assets}
@@ -144,4 +144,4 @@ const EditorWidgetHandler = React.createClass({
 });
 
 
-export default EditorWidgetHandler;
+export default EditorWidgets;
