@@ -21,6 +21,18 @@ const QuoteConfig = {
 const QUOTE_WRAPPER_CLASS = 'pub-quote-wrapper';
 const QUOTE_CLASS = 'pub-quote';
 
+const QuoteEditorWidget = (props) => {
+	let content;
+	if (!props.quote) {
+		content = 'No quote';
+	} else if (props.quote.length > 10) {
+		content = props.quote.substring(0,9) + "...";
+	} else {
+		content = props.quote;
+	}
+	return (<span>Quote: {content}</span>);
+};
+
 let styles = {};
 
 const QuotePlugin = React.createClass({
@@ -75,4 +87,4 @@ styles = {
 	}
 };
 
-export default createPubPubPlugin(QuotePlugin, QuoteConfig, QuoteInputFields);
+export default createPubPubPlugin(QuotePlugin, QuoteConfig, QuoteInputFields, QuoteEditorWidget);
