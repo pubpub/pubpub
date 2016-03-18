@@ -49,7 +49,6 @@ const EditorWidgetHandler = React.createClass({
 	checkMarkRange: function(from, to) {
 		for (const mark of this.marks) {
 			const pos = mark.find();
-			// console.log(pos);
 			if (pos && pos.from.line === from.line && pos.from.ch === from.ch ) {
 				return true;
 			}
@@ -65,9 +64,6 @@ const EditorWidgetHandler = React.createClass({
 		}
 	},
 
-	clickOnWidget: function() {
-
-	},
 
 	insertWidget: function(cm, line) {
 
@@ -86,7 +82,7 @@ const EditorWidgetHandler = React.createClass({
 						const pluginSplit = pluginString.split(':');
 						const pluginType = pluginSplit[0];
 
-						const a = new Widget(cm, from, to, pluginType, pluginData, this.clickOnWidget);
+						const a = new Widget(cm, from, to, pluginType, pluginData, this.openPopupOnWidget);
 						this.marks.push(a.mark);
 					}
 
@@ -99,13 +95,10 @@ const EditorWidgetHandler = React.createClass({
 	},
 
 	openPopupOnWidget: function(from, to, widget) {
-
-
+		this.refs.pluginPopup.showWithPlugin(from, to, widget);
 	},
 
 	onEditorChange: function(cm, change) {
-
-		console.log('Got change!');
 
 		/*
 
@@ -117,7 +110,12 @@ const EditorWidgetHandler = React.createClass({
 		}
 		*/
 
-		this.insertWidget(cm, change.from.line, this.openPopupOnWidget);
+		const fromLine = change.from.line;
+		const toLine = change.to.line;
+
+		for (let line = fromLine; line <= toLine; line++) {
+			this.insertWidget(cm, line);
+		}
 
 		// Set State to trigger re-render
 		this.setState({
@@ -136,7 +134,9 @@ const EditorWidgetHandler = React.createClass({
 					references={this.props.references}
 					assets={this.props.assets}
 					activeFocus={this.props.activeFocus}
-					codeMirrorChange={this.state.codeMirrorChange}/>
+					codeMirrorChange={this.state.codeMirrorChange}
+					cm={this.props.cm}
+					/>
 			</span>
 		);
 	}

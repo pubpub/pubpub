@@ -18,8 +18,7 @@ const WidgetComponent = React.createClass({
   },
   handleClick: function() {
     if (this.props.openPopup) {
-      const range = this.range();
-      this.props.openPopup(range.from, range.to, this);
+      this.props.openPopup();
     }
   },
   render: function() {
@@ -31,9 +30,9 @@ const WidgetComponent = React.createClass({
 function Widget(cm, from, to, pluginType, info, clickHandler) {
     // the subclass must define this.domNode before calling this constructor
 
-
+    this.openPopup = clickHandler;
     const btn = document.createElement("span");
-    const element = <WidgetComponent pluginType={pluginType} {...info} />;
+    const element = <WidgetComponent openPopup={this.onClick.bind(this)} pluginType={pluginType} {...info} />;
     this.domNode = btn;
 
     const component = ReactDOM.render(element, btn);
@@ -68,6 +67,7 @@ function Widget(cm, from, to, pluginType, info, clickHandler) {
 
     CodeMirror.on(this.mark, "hide", function(e) {
       console.log('Hidden token!');
+      console.log(arguments);
     });
 
     if (this.enter) {
@@ -84,6 +84,12 @@ function Widget(cm, from, to, pluginType, info, clickHandler) {
     cm.setCursor(to);
     cm.refresh()
 }
+
+Widget.prototype.onClick = function() {
+  const range = this.range();
+  this.openPopup(range.from, range.to, this);
+}
+
 
 Widget.prototype.enterIfDefined = function(direction) {
     // check to make sure the mark still exists
@@ -104,14 +110,17 @@ Widget.prototype.enterIfDefined = function(direction) {
 }
 
 Widget.prototype.range = function() {
-    var find = this.mark.find()
+    var find = this.mark.find();
     // find.from.ch+=1
     // find.to.ch-=1
     return find;
 }
 Widget.prototype.setText = function(text) {
-    var r = this.range()
+    var r = this.range();
     this.cm.replaceRange(text, r.from, r.to);
+    const newFrom = r.from;
+    const newTo = {line: r.to.line, ch: r.from.ch + text.length};
+    this.mark = this.cm.markText(newFrom, newTo, {replacedWith: this.domNode, clearWhenEmpty: false});
 }
 Widget.prototype.getText = function() {
     var r = this.range()

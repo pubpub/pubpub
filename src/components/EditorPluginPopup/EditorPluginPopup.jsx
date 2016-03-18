@@ -23,6 +23,7 @@ const EditorPluginPopup = React.createClass({
 		references: PropTypes.object,
 		selections: PropTypes.object,
 		isLivePreview: PropTypes.bool,
+		cm: PropTypes.object,
 	},
 
 	getDefaultProps: function() {
@@ -51,7 +52,7 @@ const EditorPluginPopup = React.createClass({
 	},
 
 	componentDidMount() {
-		document.documentElement.addEventListener('click', this.onPluginClick);
+		// document.documentElement.addEventListener('click', this.onPluginClick);
 		document.documentElement.addEventListener('keydown', this.onpluginKeyPress);
 
 	},
@@ -90,16 +91,19 @@ const EditorPluginPopup = React.createClass({
 	},
 
 	componentWillUnmount() {
-		document.documentElement.removeEventListener('click', this.onPluginClick);
+		// document.documentElement.removeEventListener('click', this.onPluginClick);
 		document.documentElement.removeEventListener('keydown', this.onpluginKeyPress);
 	},
 
 	getActiveCodemirrorInstance: function() {
+		return this.props.cm;
+		/*
 		const cm = this.props.activeFocus === ''
 				? document.getElementById('codemirror-wrapper').childNodes[0].childNodes[0].CodeMirror
 				: document.getElementById('codemirror-focus-wrapper').childNodes[0].CodeMirror;
 
 		return cm;
+		*/
 	},
 	focus: function() {
 		this.popupBox.focus();
@@ -144,7 +148,7 @@ const EditorPluginPopup = React.createClass({
 			this.toIndex = null;
 
 			const cm = this.getActiveCodemirrorInstance();
-			this.cm = cm;
+			this.props.cm = cm;
 
 			const selectedLine = cm.coordsChar({left: clickX, top: clickY, mode: 'window'});
 			const activeChar = selectedLine.ch;
@@ -156,13 +160,21 @@ const EditorPluginPopup = React.createClass({
 		}
 	},
 
-	updateToken: function({activeChar, activeLine, isUpdate}) {
+	showWithPlugin: function(from, to, widget) {
+		this.setState({activeWidget: widget});
+		this.updateToken({
+			activeLine: from.line,
+			activeChar: from.ch + 1,
+			isUpdate: false,
+		});
+	},
 
+	updateToken: function({activeChar, activeLine, isUpdate}) {
 
 		const lastToken = (isUpdate) ? this.state.activeToken : null;
 		let activeToken = null;
 
-		const selectedTokens = this.cm.getLineTokens(activeLine);
+		const selectedTokens = this.props.cm.getLineTokens(activeLine);
 		for (const token of selectedTokens) {
 			if (token.start <= activeChar && activeChar <= token.end) {
 				activeToken = token;
@@ -213,7 +225,15 @@ const EditorPluginPopup = React.createClass({
 
 		// const outputString = lineContent.replace(this.state.initialString, mergedString);
 
-		cm.replaceRange(mergedString, from, to); // Since the popup closes on change, this will close the pluginPopup
+		cm.replaceRange(mergedString, from, to);
+		/*
+		if (this.state.activeWidget) {
+			this.state.activeWidget.setText(mergedString);
+		} else {
+			cm.replaceRange(mergedString, from, to);
+		}
+		*/
+
 
 		this.toIndex = this.fromIndex + mergedString.length;
 	},
