@@ -5,6 +5,7 @@ var _         = require('underscore');
 var Journal = require('../models').Journal;
 var User = require('../models').User;
 var Pub = require('../models').Pub;
+var Asset = require('../models').Asset;
 var Notification = require('../models').Notification;
 import {cloudinary} from '../services/cloudinary';
 
@@ -194,59 +195,66 @@ app.get('/loadJournalAndLogin', function(req,res){
 							thumbnail: req.user.thumbnail,
 							settings: req.user.settings,
 							following: req.user.following,
-							notificationCount: notificationCount
+							notificationCount: notificationCount,
+							assets: req.user.assets,
 						}
 						: 'No Session';
-
-					if (result) {
-						// If it is a journal, check if the user is an admin.
-						let isAdmin = false;
-						const userID = req.user ? req.user._id : undefined;
-						const adminsLength = result ? result.admins.length : 0;
-						for(let index = adminsLength; index--; ) {
-							if (String(result.admins[index]._id) === String(userID)) {
-								isAdmin =  true;	
-							}
+						
+					Asset.find({'_id': { $in: loginData.assets } }, function(err, assets){
+						if (assets.length) {
+							loginData.assets = assets;	
 						}
+     					
+     					if (result) {
+							// If it is a journal, check if the user is an admin.
+							let isAdmin = false;
+							const userID = req.user ? req.user._id : undefined;
+							const adminsLength = result ? result.admins.length : 0;
+							for(let index = adminsLength; index--; ) {
+								if (String(result.admins[index]._id) === String(userID)) {
+									isAdmin =  true;	
+								}
+							}
 
-						return res.status(201).json({
-							journalData: {
-								...result,
-								isAdmin: isAdmin,
-								randomSlug: randomSlug,
-							},
-							languageData: {
-								locale: locale,
-								languageObject: languageObject,
-							},
-							loginData: loginData,
-						});
-
-					} else { 
-						// If there was no result, that means we're on pubpub.org, and we need to populate journals and pubs.
-						Journal.find({}, {'_id':1,'journalName':1, 'subdomain':1, 'customDomain':1, 'pubsFeatured':1, 'collections':1, 'design': 1}).lean().exec(function (err, journals) {
-							Pub.find({history: {$not: {$size: 0}},'settings.isPrivate': {$ne: true}}, {'_id':1,'title':1, 'slug':1, 'abstract':1}).lean().exec(function (err, pubs) {
-								// console.log(res);
-								return res.status(201).json({
-									journalData: {
-										...result,
-										allJournals: journals,
-										allPubs: pubs,
-										isAdmin: false,
-										// locale: locale,
-										// languageObject: languageObject,
-										randomSlug: randomSlug,
-									},
-									languageData: {
-										locale: locale,
-										languageObject: languageObject,
-									},
-									loginData: loginData,
-								});
-
+							return res.status(201).json({
+								journalData: {
+									...result,
+									isAdmin: isAdmin,
+									randomSlug: randomSlug,
+								},
+								languageData: {
+									locale: locale,
+									languageObject: languageObject,
+								},
+								loginData: loginData,
 							});
-						});
-					}
+
+						} else { 
+							// If there was no result, that means we're on pubpub.org, and we need to populate journals and pubs.
+							Journal.find({}, {'_id':1,'journalName':1, 'subdomain':1, 'customDomain':1, 'pubsFeatured':1, 'collections':1, 'design': 1}).lean().exec(function (err, journals) {
+								Pub.find({history: {$not: {$size: 0}},'settings.isPrivate': {$ne: true}}, {'_id':1,'title':1, 'slug':1, 'abstract':1}).lean().exec(function (err, pubs) {
+									// console.log(res);
+									return res.status(201).json({
+										journalData: {
+											...result,
+											allJournals: journals,
+											allPubs: pubs,
+											isAdmin: false,
+											// locale: locale,
+											// languageObject: languageObject,
+											randomSlug: randomSlug,
+										},
+										languageData: {
+											locale: locale,
+											languageObject: languageObject,
+										},
+										loginData: loginData,
+									});
+
+								});
+							});
+						}
+					});
 					
 				});
 

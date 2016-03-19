@@ -64,6 +64,34 @@ export const globalStyles = {
 		border: '1px solid rgba(0,0,0,0.05)',
 		borderRadius: '2px',
 	},
+	h1: {
+		fontFamily: 'Lato',
+		fontSize: '42px',
+		fontWeight: '300',
+		padding: '20px',
+		color: '#333',
+	},
+	simpleButton: {
+		padding: '2px 15px',
+		border: '1px solid #bbb',
+		borderRadius: '1px',
+		display: 'inline-block',
+		userSelect: 'none',
+		':hover': {
+			backgroundColor: '#F3F5F7',
+			cursor: 'pointer',
+		},
+		':active': {
+			transform: 'translateY(1px)',
+		}
+	},
+	subMenu: {
+		margin: '0px 20px',
+		border: '1px solid #EEE',
+		// fontWeight: '400',
+		// backgroundColor: '#f3f3f3',
+	},
+
 };
 
 export const profileStyles = {

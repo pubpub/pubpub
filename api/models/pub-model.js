@@ -1,16 +1,14 @@
-var mongoose  = require('mongoose');
-var Schema    =  mongoose.Schema;
-var ObjectId  = Schema.Types.ObjectId;
-var Discussion = require('../models').Discussion;
-var Notification = require('../models').Notification;
-var _         = require('underscore');
-
+const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
+const ObjectId = Schema.Types.ObjectId;
+const Discussion = require('../models').Discussion;
+const Notification = require('../models').Notification;
+const _ = require('underscore');
 import * as jsdiff from 'diff';
 
-var pubSchema = new Schema({
+const pubSchema = new Schema({
 	slug: { type: String, required: true, index: { unique: true } },
 
-	// --------------
 	// --------------
 	// The Items in this block are fozen at publish time.
 	// All changes that are made pre-update-publish are stored and synced to firebase.
@@ -18,21 +16,38 @@ var pubSchema = new Schema({
 	// This is to ensure that non-published updates don't leak into the Reader
 	title: { type: String },
 	abstract: { type: String },
-	authorsNote: { type: String },
-	markdown: { type: String }, //Preprocessed with comments describing all plugin options
+	markdown: { type: String },
 	authors: [{ type: ObjectId, ref: 'User'}],
-	assets: [{ type: ObjectId, ref: 'Asset'}], //Raw sources
-	references: [{ type: ObjectId, ref: 'Reference'}], //Raw References
-	style: { type: Schema.Types.Mixed }, // Soon to be deprecated
-
+	
 	styleRawDesktop: { type: String }, // Raw string as user input
 	styleRawMobile: { type: String }, // Raw string as user input
-	styleScoped: { type: String }, // CSS scoped to proper div
+	style: { type: String }, // CSS scoped to proper div
 
-	lastUpdated: { type: Date },
-	status: { type: String },
+	isPublished: { type: Boolean }, 
 	// --------------
-	// --------------
+	
+	history: [{ //History is appended to each time a 'publish' is made.
+		publishNote: { type: String },
+		publishDate: { type: Date },
+		publishAuthor: { type: ObjectId, ref: 'User'},
+		diffObject: {
+			additions:  { type: Number },
+			deletions: { type: Number },
+			diffMarkdown: [],
+			diffStyle: [],
+		},
+
+		title: { type: String },
+		abstract: { type: String },
+		markdown: { type: String },
+		authors: [{ type: ObjectId, ref: 'User'}],
+		
+		styleRawDesktop: { type: String },
+		styleRawMobile: { type: String },
+		style: { type: String },
+
+		isPublished: { type: Boolean }, 
+	}],
 
 	// A duplicate cache of the parameters as defined in the editor.
 	// Also stored here so that we can privelege access to the editor
@@ -42,102 +57,26 @@ var pubSchema = new Schema({
 		canRead:[{ type: ObjectId, ref: 'User'}]
 	},
 
-	createDate: { type: Date },
-	htmlCache: { type: String }, // Do we want to cache the html render? It might not be any faster...
-
-	history: [{ //History is appended to each time a 'publish' is made.
-		publishNote: { type: String },
-		publishDate: { type: Date },
-		publishAuthor: { type: ObjectId, ref: 'User'},
-		diffObject: {
-			additions:  { type: Number },
-			deletions: { type: Number },
-			diffTitle: [],
-			diffAbstract: [],
-			diffAuthorsNote: [],
-			diffMarkdown: [],
-			// diffAuthors: { type: String },
-			// diffAssets: { type: String },
-			// diffReferences: { type: String },
-			// diffStyle: { type: String },
-		},
-
-		// The following should be enough to entirely reproduce the document
-		title: { type: String },
-		abstract: { type: String },
-		authorsNote: { type: String },
-		markdown: { type: String }, //Preprocessed with comments describing all plugin options
-		authors: [{ type: ObjectId, ref: 'User'}],
-		assets: [{ type: ObjectId, ref: 'Asset'}], //Raw sources
-		references: [{ type: ObjectId, ref: 'Reference'}], //Raw References
-		style: { type: Schema.Types.Mixed }, // Soon to be deprecated
-
-		styleRawDesktop: { type: String }, // Raw string as user input
-		styleRawMobile: { type: String }, // Raw string as user input
-		styleScoped: { type: String }, // CSS scoped to proper div
-
-		status: { type: String },
-	}],
-
 	followers: [{ type: ObjectId, ref: 'User'}],
 
-	settings:{
-		pubPrivacy: { type: String },
-	},
-
+	// An object to track all the the journals this pub is featured in
 	featuredIn: [{
 		journal: { type: ObjectId, ref: 'Journal' },
 		date: { type: Date },
 		by: { type: ObjectId, ref: 'User' },
 		note: { type: String },
 	}],
-	featuredInList: [{type: ObjectId, ref: 'Journal' }],
+	featuredInList: [{type: ObjectId, ref: 'Journal' }], // A aggregate of the journal value in the featuredIn field - used for querying simplicity
 
+	// An object to track all the the journals this pub is submitted to
 	submittedTo: [{
 		journal: { type: ObjectId, ref: 'Journal' },
 		date: { type: Date },
 		by: { type: ObjectId, ref: 'User' },
 		note: { type: String },
 	}],
-	submittedToList: [{type: ObjectId, ref: 'Journal' }],
-
-	reviews: [{
-		doneWell: [{ type: String }],
-		needsWork: [{ type: String }],
-		reviewer: { type: ObjectId, ref: 'User' },
-		// weightLocal: 245, // dynamically calculated based on yays/nays on pub comments
-		// weightGlobal: 1230 // Snapshot of reputation at moment of review. static
-	}],
-
-	discussions: [ { type: ObjectId, ref: 'Discussion' } ],
-	editorComments: [ { type: ObjectId, ref: 'Discussion' } ],
-	experts: {
-		approved: [{
-			// When approved, experts are notified
-			// If they have not participated in the paper,
-			// their name does not appear in the list
-			// We can sort 'invited' experts by those that
-			// have been made an expert, but haven't participated.
-			expert: { type: ObjectId, ref: 'User' },
-			approvedBy: { type: ObjectId, ref: 'User' },
-			approvedDate: { type: Date },
-		}],
-		suggested: [{
-			suggestedExpert: { type: ObjectId, ref: 'User' },
-			votes: [{ type: ObjectId, ref: 'User' }],
-			submitter: { type: ObjectId, ref: 'User' },
-			submitDate: { type: Date },
-		}]
-	},
-
-	analytics: { //Do we cache these every so often? Or calculate them dynamically?
-		views: [{ type: String }],
-		citations: [{ type: ObjectId, ref: 'Asset' }], // A list of the refernce assets that cite it?
-		inTheNews: [{ type: String }],
-	},
-
-	readNext: [{ type: ObjectId, ref: 'Pub' }], //Do we cache these every so often? Or calculate them dynamically?
-})
+	submittedToList: [{type: ObjectId, ref: 'Journal' }], // A aggregate of the journal value in the submittedTo field - used for querying simplicity
+});
 
 
 pubSchema.statics.isUnique = function (slug,callback) {
@@ -169,13 +108,13 @@ pubSchema.statics.getPub = function (slug, readerID, journalID, callback) {
 	this.findOne({slug: slug})
 	.populate({ path: 'discussions', model: 'Discussion' })
 	.populate({ path: 'assets history.assets', model: 'Asset' })
-	.populate({ path: 'references history.references', model: 'Reference' })
+	// .populate({ path: 'references history.references', model: 'Reference' })
 	.populate({ path: 'featuredIn.journal submittedTo.journal', select: 'journalName subdomain customDomain design', model: 'Journal' })
 	.populate({ path: 'authors history.authors', select: 'username name thumbnail firstName lastName', model: 'User' })
 	.exec((err, pub)=> {
 		const options = [
 			{ path: 'discussions.author', select: '_id username name firstName lastName thumbnail', model: 'User'},
-			{ path: 'discussions.selections', model: 'Highlight'}
+			// { path: 'discussions.selections', model: 'Highlight'}
 		];
 
 		this.populate(pub, options, (err, populatedPub)=> {
@@ -205,10 +144,10 @@ pubSchema.statics.getPub = function (slug, readerID, journalID, callback) {
 				outputPub.isAuthor = true;
 			}
 
-			outputPub.discussions = Discussion.appendUserYayNayFlag(outputPub.discussions, readerID);
-			outputPub.discussions = Discussion.calculateYayNayScore(outputPub.discussions);
-			outputPub.discussions = Discussion.sortDiscussions(outputPub.discussions);
-			outputPub.discussions = Discussion.nestChildren(outputPub.discussions);
+			// outputPub.discussions = Discussion.appendUserYayNayFlag(outputPub.discussions, readerID);
+			// outputPub.discussions = Discussion.calculateYayNayScore(outputPub.discussions);
+			// outputPub.discussions = Discussion.sortDiscussions(outputPub.discussions);
+			// outputPub.discussions = Discussion.nestChildren(outputPub.discussions);
 			// console.log(outputPub.isAuthor);
 			return callback(null, outputPub);
 		});
@@ -253,9 +192,9 @@ pubSchema.statics.getPubEdit = function (slug, readerID, readerGroups, callback)
 		// We gotta pass down discussions if we want to show in editor
 		const options = [
 			{ path: 'discussions.author', select: '_id username name firstName lastName thumbnail', model: 'User'},
-			{ path: 'discussions.selections', model: 'Highlight'},
+			// { path: 'discussions.selections', model: 'Highlight'},
 			{ path: 'editorComments.author', select: '_id username name firstName lastName thumbnail', model: 'User'},
-			{ path: 'editorComments.selections', model: 'Highlight'},
+			// { path: 'editorComments.selections', model: 'Highlight'},
 		];
 
 		this.populate(pub, options, (err, populatedPub)=> {
@@ -263,15 +202,15 @@ pubSchema.statics.getPubEdit = function (slug, readerID, readerGroups, callback)
 			const outputPub = populatedPub.toObject();
 			outputPub.isReader = isReader;
 
-			outputPub.discussions = Discussion.appendUserYayNayFlag(outputPub.discussions, readerID);
-			outputPub.discussions = Discussion.calculateYayNayScore(outputPub.discussions);
-			outputPub.discussions = Discussion.sortDiscussions(outputPub.discussions);
-			outputPub.discussions = Discussion.nestChildren(outputPub.discussions);
+			// outputPub.discussions = Discussion.appendUserYayNayFlag(outputPub.discussions, readerID);
+			// outputPub.discussions = Discussion.calculateYayNayScore(outputPub.discussions);
+			// outputPub.discussions = Discussion.sortDiscussions(outputPub.discussions);
+			// outputPub.discussions = Discussion.nestChildren(outputPub.discussions);
 
-			outputPub.editorComments = Discussion.appendUserYayNayFlag(outputPub.editorComments, readerID);
-			outputPub.editorComments = Discussion.calculateYayNayScore(outputPub.editorComments);
-			outputPub.editorComments = Discussion.sortDiscussions(outputPub.editorComments);
-			outputPub.editorComments = Discussion.nestChildren(outputPub.editorComments);
+			// outputPub.editorComments = Discussion.appendUserYayNayFlag(outputPub.editorComments, readerID);
+			// outputPub.editorComments = Discussion.calculateYayNayScore(outputPub.editorComments);
+			// outputPub.editorComments = Discussion.sortDiscussions(outputPub.editorComments);
+			// outputPub.editorComments = Discussion.nestChildren(outputPub.editorComments);
 
 			return callback(null, outputPub);
 		});

@@ -42,6 +42,11 @@ import {
 } from '../actions/user';
 
 import {
+	CREATE_ASSET_SUCCESS,
+
+} from '../actions/assets';
+
+import {
 
 	LOAD_JOURNAL_AND_LOGIN,
 	LOAD_JOURNAL_AND_LOGIN_SUCCESS,
@@ -174,6 +179,13 @@ function setNotificationsRead(state) {
 	return state.mergeIn(['userData', 'notificationCount'], 0);
 }
 
+function assetCreated(state, result) {
+	console.log('in the reducer with ', result);
+	console.log('old assets', state.getIn(['userData', 'assets']));
+	const newAssets = state.getIn(['userData', 'assets']).push(result);
+	return state.mergeIn(['userData', 'assets'], state.getIn(['userData', 'assets']).push(result));
+}
+
 /*--------*/
 // Bind actions to specific reducing functions.
 /*--------*/
@@ -228,6 +240,8 @@ export default function loginReducer(state = defaultState, action) {
 	case SET_NOTIFICATIONS_READ_LOAD:
 		return setNotificationsRead(state);
 
+	case CREATE_ASSET_SUCCESS:
+		return assetCreated(state, action.result);
 	default:
 		return ensureImmutable(state);
 	}

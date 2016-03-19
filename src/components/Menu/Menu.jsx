@@ -17,6 +17,7 @@ An item has a key, a string, a function, right-align boolean, and children:
 const pubpubMenu = React.createClass({
 	propTypes: {
 		items: PropTypes.array,
+		submenu: PropTypes.bool,
 	},
 
 	getDefaultProps: function() {
@@ -80,7 +81,10 @@ const pubpubMenu = React.createClass({
 		const menuItems = this.props.items || [];
 
 		return (
-			<div>
+			<div style={{
+				fontWeight: this.props.submenu ? '400' : '300',
+				backgroundColor: this.props.submenu ? '#F3F3F3' : 'transparent',
+			}}>
 				<Style rules={{
 					'.rc-menu.rc-menu-horizontal.rc-menu-root': {
 						height: '30px',

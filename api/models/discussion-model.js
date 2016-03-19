@@ -6,9 +6,9 @@ var ObjectId  = Schema.Types.ObjectId;
 var discussionSchema = new Schema({
   author: { type: ObjectId, ref: 'User' },
   markdown: { type: String },
-  assets: [{ type: ObjectId, ref: 'Asset'}], //Raw sources 
-  selections: [{ type: ObjectId, ref: 'Highlight'}], //Raw References
-  references: [{ type: ObjectId, ref: 'Reference'}], //Raw References
+  // assets: [{ type: ObjectId, ref: 'Asset'}], //Raw sources 
+  // selections: [{ type: ObjectId, ref: 'Highlight'}], //Raw References
+  // references: [{ type: ObjectId, ref: 'Reference'}], //Raw References
   
   parent: { type: ObjectId, ref: 'Discussion' },
   children: [ { type: ObjectId, ref: 'Discussion' } ],

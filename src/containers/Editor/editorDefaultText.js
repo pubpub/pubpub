@@ -1,9 +1,14 @@
-export function editorDefaultText(title) {
-	return `[[title: ` + title + `]]
+export function editorDefaultText(title, author) {
+	return title + `
 
-[[abstract: Type your abstract here! Your abstract will be used to help users search for pubs throughout the site.]]
+author: ` + author.username + `
+	name: ` + author.name + `
 
-[[authorsNote: An authorsNote is placed at the top of your pub. Use this space to mark if a published piece of work is a draft in-progress or any other pertinent details you think your readers should know - or remove it all together.]]
+abstract: Type your abstract here! Your abstract will be used to help users search for pubs throughout the site.
+
+authorsNote: Use the authorsNote to mark if a pub is a draft in-progress or any other pertinent details you think your readers should know - or remove it all together.
+
+-----
 
 # Welcome to your new Pub!
 PubPub documents let you separate the style from the writing. Click live-preview in the top-right corner to view your rendered document.

@@ -138,11 +138,12 @@ const Editor = React.createClass({
 
 				// Get Login username for firepad use. Shouldn't be undefined, but set default in case.
 				const username = (this.props.loginData.get('loggedIn') === false) ? 'cat' : this.props.loginData.getIn(['userData', 'username']);
+				const name = (this.props.loginData.get('loggedIn') === false) ? 'cat' : this.props.loginData.getIn(['userData', 'name']);
 
 				// Initialize Firepad using codemirror and the ref defined above.
 				const firepad = Firepad.fromCodeMirror(firepadRef, codeMirror, {
 					userId: username,
-					defaultText: editorDefaultText(this.props.pubData.getIn(['createPubData', 'title']))
+					defaultText: editorDefaultText(this.props.pubData.getIn(['createPubData', 'title']), {username: username, name: name})
 				});
 
 				new Firebase(FireBaseURL + '.info/connected').on('value', (connectedSnap)=> {
@@ -616,7 +617,7 @@ const Editor = React.createClass({
 						<EditorModals publishVersionHandler={this.publishVersion} />
 
 						{/* Editor Menu */}
-						<div id="editor-text-wrapper" style={[globalStyles.hiddenUntilLoad, globalStyles[loadStatus]]}>
+						<div id="editor-menu-wrapper" style={[globalStyles.hiddenUntilLoad, globalStyles[loadStatus], styles.editorMenuWrapper]}>
 							<Menu items={editorMenuItems}/>
 						</div>
 
@@ -802,6 +803,10 @@ styles = {
 		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
 			height: 'calc(100vh - ' + globalStyles.headerHeightMobile + ')',
 		},
+	},
+	editorMenuWrapper: {
+		backgroundColor: '#F0F0F0',
+		// fontWeight: '300',
 	},
 	editorContainerDark: {
 		backgroundColor: '#272727',

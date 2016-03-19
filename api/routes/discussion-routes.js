@@ -4,8 +4,8 @@ var Pub  = require('../models').Pub;
 var User = require('../models').User;
 var Asset = require('../models').Asset;
 var Discussion = require('../models').Discussion;
-var Reference = require('../models').Reference;
-var Highlight = require('../models').Highlight;
+// var Reference = require('../models').Reference;
+// var Highlight = require('../models').Highlight;
 var Notification = require('../models').Notification;
 
 

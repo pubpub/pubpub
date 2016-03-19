@@ -129,17 +129,17 @@ const EditorModalCollaborators = React.createClass({
 
 		return (
 			<div>
-				<div style={baseStyles.topHeader}>
+				<div style={globalStyles.h1}>
 					<FormattedMessage {...globalMessages.collaborators} />
 				</div>
 
 				{/* Add new collaborators search bar */}
-				<div style={[baseStyles.rightCornerSearch, styles.mainContent[this.state.showInviteOptions]]}>
+				<div style={[styles.addSection]}>
 					<Autocomplete 
 						autocompleteKey={'collabAutocomplete'} 
-						route={'autocompleteUsersAndGroups'} 
+						route={'autocompleteUsersAndGroups'}
+						showBottomLine={false} 
 						placeholder={this.props.intl.formatMessage(messages.addNewCollaborator)}
-						textAlign={'right'}
 						resultRenderFunction={this.renderCollaboratorsSearchResults}/>
 					{/* <input style={baseStyles.rightCornerSearchInput} type="text" placeholder="Add new collaborator"/> */}
 					{/* <div key="refAdvancedText" style={baseStyles.rightCornerSearchAdvanced} onClick={this.toggleshowInviteOptions}>
@@ -150,13 +150,13 @@ const EditorModalCollaborators = React.createClass({
 				</div>
 
 				{/* Back button when in invite by email mode */}
-				<div style={[baseStyles.rightCornerAction, styles.addOptions, styles.addOptions[this.state.showInviteOptions]]} onClick={this.toggleshowInviteOptions}>
+				{/* <div style={[baseStyles.rightCornerAction, styles.addOptions, styles.addOptions[this.state.showInviteOptions]]} onClick={this.toggleshowInviteOptions}>
 					<FormattedMessage {...globalMessages.back} />
-				</div>
+				</div> */}
 
 				{/* Generate collaborators table */}
 				<div className="main-ref-content" style={styles.mainContent[this.state.showInviteOptions]}>
-					<div style={styles.rowContainer}>
+					{/* <div style={styles.rowContainer}>
 
 						<div style={[styles.imageColumn, styles.columnHeader]}></div>
 						<div style={[styles.nameColumn, styles.columnHeader]}>
@@ -172,7 +172,7 @@ const EditorModalCollaborators = React.createClass({
 						<div style={[styles.optionColumn, styles.columnHeader]}></div>
 
 						<div style={styles.clearfix}></div>
-					</div>
+					</div> */}
 					
 
 					{
@@ -208,7 +208,7 @@ const EditorModalCollaborators = React.createClass({
 				</div>
 
 				{/* Invite by email content */}
-				<div className="add-options-content" style={[styles.addOptions, styles.addOptions[this.state.showInviteOptions], styles.addOptionsContent]}>
+				{/* <div className="add-options-content" style={[styles.addOptions, styles.addOptions[this.state.showInviteOptions], styles.addOptionsContent]}>
 
 					<div style={styles.sectionHeader}>
 						<FormattedMessage
@@ -217,7 +217,7 @@ const EditorModalCollaborators = React.createClass({
 					</div>
 					<input type="text" placeholder={this.props.intl.formatMessage(globalMessages.emailAddress)} />
 
-				</div>
+				</div> */}
 
 			</div>
 		);
@@ -227,6 +227,11 @@ const EditorModalCollaborators = React.createClass({
 export default injectIntl(Radium(EditorModalCollaborators));
 
 styles = {
+	addSection: {
+		margin: '20px',
+		padding: '5px',
+		border: '1px solid #DDD'
+	},
 	mainContent: {
 		true: {
 			display: 'none',
@@ -243,8 +248,8 @@ styles = {
 		padding: '15px 25px',
 	},
 	rowContainer: {
-		width: 'calc(100% - 30px)',
-		padding: 15,
+		width: 'calc(100% - 40px)',
+		padding: '10px 20px',
 		fontFamily: baseStyles.rowTextFontFamily,
 		fontSize: baseStyles.rowTextFontSize,
 	},
@@ -255,7 +260,7 @@ styles = {
 	},
 	imageColumn: {
 		width: '30px',
-		padding: '0px calc(5% - 15px)',
+		padding: '0px calc(10% - 30px) 0px 0px',
 		float: 'left',
 	},
 	userImage: {
@@ -326,7 +331,7 @@ styles = {
 	},
 
 	results: {
-		boxShadow: '0px 0px 2px 2px #D7D7D7',
+		// boxShadow: '0px 0px 2px 2px #D7D7D7',
 		width: 'calc(100% - 6px)',
 		margin: '0 auto 5px auto',
 		backgroundColor: 'white',
@@ -336,7 +341,7 @@ styles = {
 		height: 30,
 		width: 'calc(100% - 10px)',
 		padding: '5px 0px',
-		margin: '0px 5px',
+		margin: '0px 0px',
 		borderBottom: '1px solid #F0F0F0',
 		fontFamily: 'Courier',
 		fontSize: '15px',
