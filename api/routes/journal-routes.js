@@ -201,7 +201,10 @@ app.get('/loadJournalAndLogin', function(req,res){
 						: 'No Session';
 						
 					Asset.find({'_id': { $in: loginData.assets } }, function(err, assets){
-     					loginData.assets = assets;
+						if (assets.length) {
+							loginData.assets = assets;	
+						}
+     					
      					if (result) {
 							// If it is a journal, check if the user is an admin.
 							let isAdmin = false;

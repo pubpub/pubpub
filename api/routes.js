@@ -9,6 +9,7 @@ var app = require('./api');
 //   next();
 // });
 
+require('./routes/asset-routes');
 require('./routes/autocomplete-routes');
 require('./routes/discussion-routes');
 require('./routes/group-routes');

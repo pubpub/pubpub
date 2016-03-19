@@ -16,6 +16,9 @@ import {saveSettingsUser} from '../../actions/login';
 
 import {globalStyles} from '../../utils/styleConstants';
 
+import Dropzone from 'react-dropzone';
+import {s3Upload} from '../../utils/uploadFile';
+
 let FireBaseURL;
 let styles;
 
@@ -30,9 +33,13 @@ const AssetLibrary = React.createClass({
 
 	getInitialState() {
 		return {
-			
+			files: [],
+			uploadRates: [],
+			finishedUploads: 0,
 		};
 	},
+	// TODO: On each load, we gotta load the user's assets again, in
+	// case they've been updated by a co-author
 
 	componentDidMount() {
 	
@@ -43,6 +50,72 @@ const AssetLibrary = React.createClass({
 
 	componentWillUnmount() {
 		this.props.dispatch(closeModal());
+	},
+
+	// On file drop (or on file select)
+	// Upload files automatically to s3
+	// On completion call function that hits the pubpub server to generate asset information
+	// Generated asset information is then sent to Firebase for syncing with other users
+	onDrop: function(files) {
+		
+		// Add new files to existing set, so as to not overwrite existing uploads
+		const existingFiles = this.state.files.length;
+		const tmpFiles = this.state.files.concat(files);
+
+		// For each new file, begin their upload process
+		for (let fileCount = existingFiles; fileCount < existingFiles + files.length; fileCount++) {
+			s3Upload(tmpFiles[fileCount], this.props.slug, this.onFileProgress, this.onFileFinish, fileCount);	
+		}
+
+		// Set state with newly added files
+		this.setState({files: tmpFiles});
+
+	},
+
+	// On button click, trigger dropzone file select
+	onOpenClick: function() {
+		this.refs.dropzone.open();
+	},
+
+	// Update state's progress value when new events received.
+	onFileProgress: function(evt, index) {
+		const percentage = evt.loaded / evt.total;
+		const tempUploadRates = this.state.uploadRates;
+		tempUploadRates[index] = percentage;
+		this.setState({uploadRates: tempUploadRates});
+	},
+
+	// When file finishes s3 upload, send s3 details to PubPub server.
+	// Response is used to craft the asset object that is added to firebase.
+	onFileFinish: function(evt, index, type, filename, originalFilename) {
+		const createAssetObject = new XMLHttpRequest();
+		createAssetObject.addEventListener('load', (success)=> {
+			
+			// Set File to finished in state. This will hide the uploading version
+			const tmpFiles = this.state.files;
+			tmpFiles[index].isFinished = true;
+			this.setState({
+				files: tmpFiles,
+				finishedUploads: this.state.finishedUploads + 1
+			});
+			
+			// Create Firebase object and push it
+			const serverResult = JSON.parse(success.target.responseText);
+			const newAsset = {
+				url_s3: 'https://s3.amazonaws.com/pubpub-upload/' + filename,
+				url: serverResult.url,
+				thumbnail: serverResult.thumbnail,
+				originalFilename: originalFilename,
+				filetype: type,
+				assetType: serverResult.assetType,
+				createDate: new Date().toString(),
+			};
+
+			// Call the addAsset function passed in as a prop
+			this.props.addAsset(newAsset);
+		});
+		createAssetObject.open('GET', '/api/handleNewFile?contentType=' + type + '&url=https://s3.amazonaws.com/pubpub-upload/' + filename );
+		createAssetObject.send();
 	},
 
 	render: function() {
@@ -77,9 +150,17 @@ const AssetLibrary = React.createClass({
 					<Menu items={menuItems} submenu={true}/>
 				</div>
 
-				<div style={styles.addSection}>
-					<div style={[globalStyles.simpleButton]} key={'addAsset'}>Add New Asset</div>
-					<div>or drag files to this window to quickly add</div>
+				<Dropzone ref="dropzone" onDrop={this.onDrop} disableClick style={styles.dropzone} activeStyle={styles.dropzoneActive}>
+
+					<div style={styles.addSection}>
+						<div style={[globalStyles.simpleButton]} key={'addAsset'} onClick={this.onOpenClick}>Add New Asset</div>
+						<div>or drag files to this window to quickly add</div>
+					</div>
+
+				</Dropzone>
+
+				<div>
+					{JSON.stringify(userAssets)}
 				</div>
 				
 				
@@ -110,5 +191,13 @@ styles = {
 	},
 	addSection: {
 		padding: '20px',
+	},
+	dropzone: {
+		width: '100%',
+		minHeight: '430px',
+	},
+	dropzoneActive: {
+		backgroundColor: '#F5F5F5',
+		boxShadow: '0px 0px 20px rgba(0,0,0,0.6)',
 	},
 };
