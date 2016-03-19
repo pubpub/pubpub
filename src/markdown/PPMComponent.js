@@ -61,12 +61,12 @@ const PPMComponent = React.createClass({
 		let Component = Tag;
 
 		switch(Tag) {
-		case 'h1': 
-		case 'h2': 
-		case 'h3': 
-		case 'h4': 
-		case 'h5': 
-		case 'h6': 
+		case 'h1':
+		case 'h2':
+		case 'h3':
+		case 'h4':
+		case 'h5':
+		case 'h6':
 			props.id = children[0] && children[0].replace ? children[0].replace(/\s/g, '-').toLowerCase() : undefined;
 			break;
 
@@ -93,8 +93,12 @@ const PPMComponent = React.createClass({
 				return <div className={'linebreak p-block'} style={{display: 'block', height: '1.5em'}}></div>
 			}
 
-			const pluginName = children[0].split(':')[0];
-			const plugin = Plugins[pluginName];
+			const pluginString = children[0];
+			let pluginProps = parsePluginString(pluginString);
+
+			const pluginName = pluginProps.pluginType;
+			const plugin = (pluginName) ? Plugins[pluginName] : null;
+
 			if (!plugin) {
 				if (__DEVELOPMENT__) {
 					console.warn('Could not find a plugin');
@@ -104,8 +108,6 @@ const PPMComponent = React.createClass({
 
 			Component = plugin.Component;
 			const PluginInputFields = plugin.InputFields;
-			const pluginString = children[0];
-			let pluginProps = parsePluginString(pluginString);
 
 			for (const propName in pluginProps) {
 				const propVal = pluginProps[propName];
@@ -130,11 +132,11 @@ const PPMComponent = React.createClass({
 		case 'code':
 			if (props['data-language']) {
 				try{
-					return <Tag {...props} className={'codeBlock'} dangerouslySetInnerHTML={{__html: window.hljs.highlight(props['data-language'], children[0]).value}} />	
+					return <Tag {...props} className={'codeBlock'} dangerouslySetInnerHTML={{__html: window.hljs.highlight(props['data-language'], children[0]).value}} />
 				} catch (err) {
 					// console.log(err);
 				}
-				
+
 			}
 			props.className = 'codeBlock';
 			break;
@@ -154,13 +156,13 @@ const PPMComponent = React.createClass({
 			props['data-hash'] = children[0] ? murmur.v2(children[0]) : 0;
 			break;
 		case 'hr':
-			return <Component  {...props} /> 
-		case 'pubheader': 
+			return <Component  {...props} />
+		case 'pubheader':
 			// console.log(arguments);
 			Component = 'div';
 			props.id = 'pub-header';
 			break;
-		case 'pubheaderitem': 
+		case 'pubheaderitem':
 			// console.log(arguments)
 			// debugger;
 			// if (children[0] && children[0].props) {
@@ -175,12 +177,12 @@ const PPMComponent = React.createClass({
 			// 	return <div>Woopie - {children[0].props.children[0]}</div>
 			// }
 
-			
+
 			// 	props.href="/user/" + children[0];
 			// 	children[0] = "";
 			// 	Component = 'a';
 			// } else {
-				
+
 			// 	Component = 'div';
 
 			// }
@@ -188,7 +190,7 @@ const PPMComponent = React.createClass({
 			props.className = props.className + ' pubheaderitem';
 			props['data-hash'] = children[0] ? murmur.v2(children[0]) : 0;
 			break;
-		case 'pubtitle': 
+		case 'pubtitle':
 			if (children[0] && children[0].props) {
 				children[0] = children[0].props.children
 			}

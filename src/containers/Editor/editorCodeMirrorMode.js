@@ -27,10 +27,11 @@ export default function() {
 
 				for (const plugin in Plugins) {
 					if (Plugins.hasOwnProperty(plugin) && Plugins[plugin].Config.autocomplete === true) {
+						const pluginString = JSON.stringify({pluginType: plugin});
 						if (completionString.length >= 2 && plugin.charAt(0) === completionString.charAt(1)) {
-							list.unshift({text: plugin + ': ]]', displayText: plugin});
+							list.unshift({text: pluginString + ']]', displayText: plugin});
 						} else {
-							list.push({text: plugin + ': ]]', displayText: plugin});
+							list.push({text: pluginString + ']]', displayText: plugin});
 						}
 					}
 				}
@@ -69,7 +70,7 @@ export default function() {
 			const plugin = Plugins[pluginKey];
 			// console.log(plugin);
 			start.push({
-				regex: new RegExp('\\[\\[' + plugin.Config.title + ':.*\\]\\]'),
+				regex: new RegExp('\\[\\[\{"pluginType":"' + plugin.Config.title + '".*\\]\\]'),
 				token: 'ppm plugin plugin-' + plugin.Config.title
 			});
 		}

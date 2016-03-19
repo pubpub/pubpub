@@ -82,8 +82,7 @@ const EditorWidgets = React.createClass({
 					if (!this.checkMarkRange(from, to)) {
 						const pluginString = token.string.slice(2, -2);
 						const pluginData = parsePluginString(pluginString);
-						const pluginSplit = pluginString.split(':');
-						const pluginType = pluginSplit[0];
+						const pluginType = pluginData.pluginType;
 
 						const a = new Widget(cm, from, to, pluginType, pluginData, this.openPopupOnWidget);
 						this.marks.push(a.mark);

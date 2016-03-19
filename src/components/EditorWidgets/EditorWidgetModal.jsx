@@ -191,10 +191,10 @@ const EditorWidgetModal = React.createClass({
 		}
 
 		const pluginString = activeToken.string.slice(2, -2);
-		const pluginSplit = pluginString.split(':');
-		const pluginType = pluginSplit[0];
+
 		// const valueString = pluginSplit.length > 1 ? pluginSplit[1] : ''; // Values split into an array
 		const values = parsePluginString(pluginString);
+		const pluginType = values.pluginType;
 
 		this.setState({
 			popupVisible: true,
@@ -236,7 +236,29 @@ const EditorWidgetModal = React.createClass({
 		this.toIndex = this.fromIndex + mergedString.length;
 	},
 
+
 	createPluginString: function(pluginType) {
+		const PluginInputFields = Plugins[pluginType].InputFields;
+		const outputObj = {'pluginType': pluginType};
+
+		for (const pluginInputField of PluginInputFields) {
+			// Generate an output string based on the key, values in the object
+			const inputFieldTitle = pluginInputField.title;
+			const ref = this.popupInputFields[inputFieldTitle];
+			const val = ref.value();
+			if (inputFieldTitle === 'source') {
+				debugger;
+			}
+			debugger;
+			outputObj[inputFieldTitle] = val;
+		}
+
+		const mergedString = JSON.stringify(outputObj);
+		return mergedString;
+	},
+
+
+	_createPluginString: function(pluginType) {
 		let outputVariables = '';
 
 		const PluginInputFields = Plugins[pluginType].InputFields;
@@ -269,6 +291,7 @@ const EditorWidgetModal = React.createClass({
 	render: function() {
 
 		const PluginInputFields = (this.state.pluginType) ? Plugins[this.state.pluginType].InputFields : [];
+		debugger;
 
 		return (
 			<Portal onClose={this.closePopup} isOpened={this.state.popupVisible} closeOnOutsideClick closeOnEsc>

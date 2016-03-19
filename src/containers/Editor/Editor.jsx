@@ -189,7 +189,7 @@ const Editor = React.createClass({
 
 	showPopupFromAutocomplete: function(completion) { // completion, element
 		const cords = this.cm.cursorCoords();
-		this.refs.pluginPopup.showAtPos(cords.left - 15, cords.top + 5);
+		// this.refs.pluginPopup.showAtPos(cords.left - 15, cords.top + 5);
 		if (completion) {
 			CodeMirror.off(completion, 'pick', this.showPopupFromAutocomplete);
 		}
