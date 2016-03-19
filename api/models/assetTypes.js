@@ -25,7 +25,7 @@ assetData: {
 	url: { type: String}, // Original - full-size version of the asset	
 }
 
-// Video (.mp4, .ogg, .webm)
+// Highlight
 // --------------------
 assetType: 'highlight',
 assetData: {

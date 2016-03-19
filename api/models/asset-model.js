@@ -35,9 +35,9 @@ var assetSchema = new Schema({
   
   history: [{
   	assetType: { type: String },
-	label: { type: String },
-	assetData: { type: Schema.Types.Mixed },
-	updateDate: { type: Date },
+  	label: { type: String },
+  	assetData: { type: Schema.Types.Mixed },
+  	updateDate: { type: Date },
   }],
 
   usedInDiscussions: [{
