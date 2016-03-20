@@ -189,7 +189,7 @@ const Editor = React.createClass({
 
 	showPopupFromAutocomplete: function(completion) { // completion, element
 		const cords = this.cm.cursorCoords();
-		this.refs.pluginPopup.showAtPos(cords.left - 15, cords.top + 5);
+		// this.refs.pluginPopup.showAtPos(cords.left - 15, cords.top + 5);
 		if (completion) {
 			CodeMirror.off(completion, 'pick', this.showPopupFromAutocomplete);
 		}
@@ -241,8 +241,8 @@ const Editor = React.createClass({
 		const TOCs = generateTOC(fullMD);
 
 		// Format assets and references
-		const assets = convertFirebaseToObject(this.state.firepadData.assets);
-		const references = convertFirebaseToObject(this.state.firepadData.references, true);
+		// const assets = convertFirebaseToObject(this.state.firepadData.assets);
+		// const references = convertFirebaseToObject(this.state.firepadData.references, true);
 		const selections = [];
 
 		// Strip markdown of title, abstract, authorsNote
@@ -262,8 +262,8 @@ const Editor = React.createClass({
 			title: title,
 			abstract: abstract,
 			authorsNote: authorsNote,
-			assetsObject: assets,
-			referencesObject: references,
+			// assetsObject: assets,
+			// referencesObject: references,
 			selectionsArray: selections,
 		});
 
@@ -452,7 +452,8 @@ const Editor = React.createClass({
 		const darkMode = this.props.loginData.getIn(['userData', 'settings', 'editorColor']) === 'dark';
 
 		const isLivePreview = (Iterable.isIterable(this.props.editorData)) ? (this.props.editorData.get('viewMode') === 'preview') : false;
-
+		const userAssets = this.props.loginData.getIn(['userData', 'assets']).toJS() || [];
+		const references = {};
 
 
 		const referencesList = [];
@@ -632,7 +633,7 @@ const Editor = React.createClass({
 						<div id="editor-text-wrapper" style={[globalStyles.hiddenUntilLoad, globalStyles[loadStatus], styles.editorMarkdown, styles[viewMode].editorMarkdown, !isReader && styles[viewMode].editorMarkdownIsEditor]}>
 
 
-							{(this.state.firepadInitialized) ? <EditorWidgets ref="widgethandler" isLivePreview={isLivePreview} references={this.state.firepadData.references} assets={this.state.firepadData.assets} activeFocus={this.state.activeFocus} cm={this.cm} /> : null}
+							{(this.state.firepadInitialized) ? <EditorWidgets ref="widgethandler" isLivePreview={isLivePreview} references={references} assets={userAssets} activeFocus={this.state.activeFocus} cm={this.cm} /> : null}
 							{/*
 							<EditorPluginPopup ref="pluginPopup" isLivePreview={isLivePreview} references={this.state.firepadData.references} assets={this.state.firepadData.assets} activeFocus={this.state.activeFocus} codeMirrorChange={this.state.codeMirrorChange}/>
 							*/}

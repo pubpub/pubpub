@@ -1,5 +1,15 @@
 export function parsePluginString(str) {
-	const propDict = {};
+	let propDict;
+
+	try {
+		propDict = JSON.parse(str);
+	} catch (err) {
+		propDict = {};
+	}
+
+	return propDict;
+
+
 	const regex = /([^=\s]*)\s*=\s*\"?([^"]*)\"?/;
 
 	const matches = str.match(/([^=\s,]*=(?:(?:(?=".*?")".*?")|(?:(?!".+?")[^,]+)))/g);

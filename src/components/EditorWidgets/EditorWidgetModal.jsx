@@ -79,11 +79,10 @@ const EditorWidgetModal = React.createClass({
 			this.updateToken({activeLine: this.state.activeLine, activeChar: this.state.activeChar, isUpdate: true});
 		}
 
-		const assets = (nextProps.assets) ? Object.values(nextProps.assets) : [];
 		const references = (nextProps.references) ? Object.values(nextProps.references) : [];
 		const selections = (nextProps.selections) ? Object.values(nextProps.selections) : [];
 
-		this.setState({assets: assets, references: references, aselections: selections});
+		this.setState({references: references, aselections: selections});
 
 		return true;
 	},
@@ -191,10 +190,10 @@ const EditorWidgetModal = React.createClass({
 		}
 
 		const pluginString = activeToken.string.slice(2, -2);
-		const pluginSplit = pluginString.split(':');
-		const pluginType = pluginSplit[0];
+
 		// const valueString = pluginSplit.length > 1 ? pluginSplit[1] : ''; // Values split into an array
 		const values = parsePluginString(pluginString);
+		const pluginType = values.pluginType;
 
 		this.setState({
 			popupVisible: true,
@@ -236,7 +235,25 @@ const EditorWidgetModal = React.createClass({
 		this.toIndex = this.fromIndex + mergedString.length;
 	},
 
+
 	createPluginString: function(pluginType) {
+		const PluginInputFields = Plugins[pluginType].InputFields;
+		const outputObj = {'pluginType': pluginType};
+
+		for (const pluginInputField of PluginInputFields) {
+			// Generate an output string based on the key, values in the object
+			const inputFieldTitle = pluginInputField.title;
+			const ref = this.popupInputFields[inputFieldTitle];
+			const val = ref.value();
+			outputObj[inputFieldTitle] = val;
+		}
+
+		const mergedString = JSON.stringify(outputObj);
+		return mergedString;
+	},
+
+
+	_createPluginString: function(pluginType) {
 		let outputVariables = '';
 
 		const PluginInputFields = Plugins[pluginType].InputFields;
@@ -296,7 +313,7 @@ const EditorWidgetModal = React.createClass({
 																	<FieldComponent
 																		selectedValue={value}
 																		references={this.state.references}
-																		assets={this.state.assets}
+																		assets={this.props.assets}
 																		selections={this.state.selections}
 																		saveChange={this.onInputFieldChange}
 																		{...PluginInputFieldParams}
