@@ -24,15 +24,17 @@ import {s3Upload} from 'utils/uploadFile';
 
 import Portal from 'react-portal';
 
+import {createAsset, updateAsset} from 'actions/assets';
+
 let FireBaseURL;
 let styles;
 
 const AssetLibrary = React.createClass({
 	propTypes: {
-		addAsset: PropTypes.func,
-		updateAsset: PropTypes.func,
-		userAssets: PropTypes.array,
+		loginData: PropTypes.object,
 		slug: PropTypes.string,
+
+		dispatch: PropTypes.func,
 	},
 
 	getInitialState() {
@@ -172,6 +174,18 @@ const AssetLibrary = React.createClass({
 		this.setState({showAssetEditor: !this.state.showAssetEditor});
 	},
 
+	addAsset: function(newAssetArray) {
+		for(let index = 0; index < newAssetArray.length; index++) {
+			this.props.dispatch(createAsset(newAssetArray[index]));	
+		}
+		
+	},
+	updateAsset: function(updatedAssetArray) {
+		for(let index = 0; index < updatedAssetArray.length; index++) {
+			this.props.dispatch(updateAsset(updatedAssetArray[index]));	
+		}
+	},
+
 	render: function() {
 		const menuItems = [
 			{ key: 'assets', string: 'Assets', function: this.setActiveSection('assets'), isActive: this.state.activeSection === 'assets' },
@@ -179,7 +193,7 @@ const AssetLibrary = React.createClass({
 			{ key: 'highlights', string: 'Highlights', function: this.setActiveSection('highlights'), isActive: this.state.activeSection === 'highlights', noSeparator: true },
 		];
 
-		const userAssets = this.props.userAssets || [];
+		const userAssets = this.props.loginData.getIn(['userData', 'assets']).toJS() || [];
 		const assets = [];
 		const references = [];
 		const highlights = [];
@@ -310,7 +324,12 @@ const AssetLibrary = React.createClass({
 
 });
 
-export default ( Radium(AssetLibrary) );
+export default connect( state => {
+	return {
+		slug: state.router.params.slug,
+		loginData: state.login
+	};
+})( Radium(AssetLibrary) );
 
 styles = {	
 	container: {

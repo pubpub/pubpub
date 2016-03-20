@@ -1,15 +1,13 @@
 import React, {PropTypes} from 'react';
 import Radium, {Style} from 'radium';
-import {PubSelectionPopup} from '../';
 import {globalStyles} from 'utils/styleConstants';
-import {Reference} from '../';
+import {PubSelectionPopup, Reference, License} from 'components/';
 // import { Link } from 'react-router';
 import {loadCss} from 'utils/loadingFunctions';
 // import {scienceStyle, magazineStyle} from './pubStyles';
 // import cssConvert from 'utils/cssToRadium';
 import ResizingText from './ResizingText';
 import dateFormat from 'dateformat';
-import {License} from '../';
 
 import {globalMessages} from 'utils/globalMessages';
 import {parsePluginString} from 'utils/parsePlugins';

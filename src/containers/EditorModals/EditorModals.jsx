@@ -8,16 +8,13 @@ import Radium from 'radium';
 import PureRenderMixin from 'react-addons-pure-render-mixin';
 import ReactFireMixin from 'reactfire';
 
-import {AssetLibrary} from '../../components';
+import {AssetLibrary} from 'containers';
 import {CollaboratorsModal, PublishModal, SettingsModal} from './components';
-
 
 import {closeModal, saveCollaboratorsToPub, saveSettingsPubPub} from '../../actions/editor';
 import {saveSettingsUser} from '../../actions/login';
 
 import {globalStyles} from 'utils/styleConstants';
-
-import {createAsset, updateAsset} from '../../actions/assets';
 
 let FireBaseURL;
 let styles;
@@ -150,22 +147,10 @@ const Editor = React.createClass({
 		console.log('toggle left panel');
 	},
 
-	addAsset: function(newAssetArray) {
-		for(let index = 0; index < newAssetArray.length; index++) {
-			this.props.dispatch(createAsset(newAssetArray[index]));	
-		}
-		
-	},
-	updateAsset: function(updatedAssetArray) {
-		for(let index = 0; index < updatedAssetArray.length; index++) {
-			this.props.dispatch(updateAsset(updatedAssetArray[index]));	
-		}
-	},
 
 	render: function() {
 				
 		const activeModal = this.props.editorData.get('activeModal');
-		const userAssets = this.props.loginData.getIn(['userData', 'assets']).toJS() || [];
 
 		return (
 			<div style={styles.container} className={'editorModals'}>
@@ -178,11 +163,7 @@ const Editor = React.createClass({
 						{(() => {
 							switch (activeModal) {
 							case 'Assets':
-								return (<AssetLibrary 
-									addAsset={this.addAsset}
-									updateAsset={this.updateAsset}
-									slug={this.props.slug}
-									userAssets={userAssets} />);
+								return (<AssetLibrary />);
 
 							case 'Collaborators':
 								return (<CollaboratorsModal 

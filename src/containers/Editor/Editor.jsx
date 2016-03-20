@@ -10,7 +10,7 @@ import PureRenderMixin from 'react-addons-pure-render-mixin';
 import ReactFireMixin from 'reactfire';
 
 import {Discussions, EditorModals} from '../';
-import {LoaderDeterminate, EditorPluginPopup, EditorTopNav, EditorBottomNav, EditorStylePane, PubBody, Menu} from '../../components';
+import {LoaderDeterminate, EditorStylePane, PubBody, Menu} from 'components';
 import {clearPub} from '../../actions/pub';
 import {getPubEdit, toggleEditorViewMode, toggleFormatting, toggleTOC, unmountEditor, closeModal, openModal, addSelection, setEditorViewMode, publishVersion, updatePubBackendData, saveStyle} from '../../actions/editor';
 

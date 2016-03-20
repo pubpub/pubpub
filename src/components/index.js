@@ -26,4 +26,5 @@ export Menu from './Menu/Menu';
 export PubBody from './PubBody/PubBody';
 export PubModals from './PubModals/PubModals';
 export PubNav from './PubNav/PubNav';
+export PubSelectionPopup from './PubSelectionPopup/PubSelectionPopup';
 export Reference from './Reference/Reference';

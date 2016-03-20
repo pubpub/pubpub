@@ -5,13 +5,12 @@ import {connect} from 'react-redux';
 import { pushState } from 'redux-router';
 import Radium, {Style} from 'radium';
 
-import {createAsset} from '../../actions/assets';
+import {createAsset} from 'actions/assets';
 
 
 import {globalStyles} from 'utils/styleConstants';
 
-import ReferenceEditor from './AssetEditorReference';
-import FileEditor from './AssetEditorFile';
+import {FileEditor, ReferenceEditor} from './components';
 
 import Dropzone from 'react-dropzone';
 import {s3Upload} from 'utils/uploadFile';

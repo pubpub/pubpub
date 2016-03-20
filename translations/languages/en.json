@@ -8,6 +8,7 @@
   "discussion.selectionPreviousVersion": "Selection made on Version {version}",
   "pub.readPub": "Read Pub",
   "pub.editPub": "Edit Pub",
+  "pub.addToComment": "Add to Comment",
   "nav.userNotifications": "Notifications ({count})",
   "collections.addPubsToCollection": "Add Pubs to Collection",
   "collections.collectionTitle": "Collection Title",

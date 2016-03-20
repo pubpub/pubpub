@@ -2,7 +2,6 @@ import React, {PropTypes} from 'react';
 import Radium from 'radium';
 import {globalStyles} from 'utils/styleConstants';
 import {PubModalCite, PubModalTOC, } from './';
-import {PubStatus, PubReviews} from '../';
 import {Discussions} from 'containers';
 
 import {rightBarStyles} from 'containers/PubReader/rightBarStyles';

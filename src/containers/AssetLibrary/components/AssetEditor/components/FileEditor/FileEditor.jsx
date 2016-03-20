@@ -3,7 +3,7 @@ import Radium from 'radium';
 
 import {globalStyles} from 'utils/styleConstants';
 import bibtexParse from 'bibtex-parse-js';
-import {Button} from '../';
+import {Button} from 'components';
 
 import {globalMessages} from 'utils/globalMessages';
 import {injectIntl, FormattedMessage} from 'react-intl';
