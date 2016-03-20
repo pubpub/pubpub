@@ -180,7 +180,6 @@ function setNotificationsRead(state) {
 }
 
 function assetCreated(state, result) {
-	const newAssets = state.getIn(['userData', 'assets']).push(result);
 	return state.mergeIn(['userData', 'assets'], state.getIn(['userData', 'assets']).push(result));
 }
 

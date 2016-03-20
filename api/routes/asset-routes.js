@@ -1,9 +1,8 @@
 import app from '../api';
 import {User, Asset} from '../models';
 
-
-app.post('/assetCreate', function(req, res) {
-	if(!req.user) { return res.status(500).json('User not logged in'); }
+export function assetCreate(req, res) {
+	if (!req.user) { return res.status(500).json('User not logged in'); }
 
 	const currentTime = new Date().getTime();
 	const newAsset = new Asset();
@@ -23,26 +22,27 @@ app.post('/assetCreate', function(req, res) {
 	newAsset.history = [historyItem];
 
 	newAsset.save(function(err, savedAsset) {
-		if (err) { return res.status(500).json(err);  }
-		User.update({ _id: req.user._id }, { $addToSet: { assets: savedAsset._id} }, function(err, result){if(err) return handleError(err)});
+		if (err) { return res.status(500).json(err); }
+		User.update({ _id: req.user._id }, { $addToSet: { assets: savedAsset._id} }, function(err2, result) {if (err2) return res.status(500).json(err2); });
 		return res.status(201).json(savedAsset);
 	});
 
-});
+}
+app.post('/assetCreate', assetCreate);
 
-app.post('/assetUpdate', function(req, res) {
-	if(!req.user) { return res.status(500).json('User not logged in'); }
+export function assetUpdate(req, res) {
+	if (!req.user) { return res.status(500).json('User not logged in'); }
 
-	Asset.findOne({'_id':req.body._id}, function(err, asset){
-		if (err) { return res.status(500).json(err);  }
-		if (!asset) { return res.status(500).json('No asset found');  }
+	Asset.findOne({'_id': req.body._id}, function(err, asset) {
+		if (err) { return res.status(500).json(err); }
+		if (!asset) { return res.status(500).json('No asset found'); }
 
 		const currentTime = new Date().getTime();
 		asset.assetType = req.body.assetObject.assetType;
 		asset.label = req.body.assetObject.label;
 		asset.assetData = req.body.assetObject.assetData;
 		asset.authors = req.body.assetObject.authors;
-		asset.lastUpdated = currentTime
+		asset.lastUpdated = currentTime;
 		const historyItem = {
 			assetType: req.body.assetObject.assetType,
 			label: req.body.assetObject.label,
@@ -50,11 +50,12 @@ app.post('/assetUpdate', function(req, res) {
 			updateDate: currentTime,
 		};
 		asset.history.push(historyItem);
-		asset.save(function(err, savedAsset) {
-			if (err) { return res.status(500).json(err);  }
+		asset.save(function(err2, savedAsset) {
+			if (err2) { return res.status(500).json(err2); }
 			return res.status(201).json(savedAsset);
 		});
 
 	});
 
-});
+}
+app.post('/assetUpdate', assetUpdate);

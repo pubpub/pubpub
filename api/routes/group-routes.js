@@ -22,7 +22,7 @@ app.post('/groupCreate', function(req,res){
 		});
 
 		group.save(function (err, savedGroup) {
-			if (err) { return res.status(500).json(err);  }
+			if (err) { return res.status(500).json(err); }
 			User.update({ _id: req.user._id }, { $addToSet: { groups: savedGroup._id} }, function(err, result){if(err) return handleError(err)});
 
 			return res.status(201).json(savedGroup.groupSlug);	
@@ -51,7 +51,7 @@ app.get('/getGroup', function(req, res) {
 app.post('/groupSave', function(req,res){
 	Group.findOne({_id: req.body.groupID}).exec(function(err, group) {
 
-		if (err) { return res.status(500).json(err);  }
+		if (err) { return res.status(500).json(err); }
 
 		if (!req.user || String(group.admins).indexOf(req.user._id) === -1) {
 			return res.status(403).json('Not authorized to administrate this Journal.');
@@ -101,7 +101,7 @@ app.post('/groupSave', function(req,res){
 		}
 		
 		group.save(function(err, result){
-			if (err) { return res.status(500).json(err);  }
+			if (err) { return res.status(500).json(err); }
 			
 			const options = [
 				{path: "members", select:'name firstName lastName username thumbnail'},

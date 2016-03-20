@@ -34,7 +34,7 @@ app.post('/createJournal', function(req,res){
 		});
 
 		journal.save(function (err, savedJournal) {
-			if (err) { return res.status(500).json(err);  }
+			if (err) { return res.status(500).json(err); }
 			User.update({ _id: req.user._id }, { $addToSet: { adminJournals: savedJournal._id} }, function(err, result){if(err) return handleError(err)});
 
 			return res.status(201).json(savedJournal.subdomain);	
@@ -50,7 +50,7 @@ app.get('/getJournal', function(req,res){
 	.populate(Journal.populationObject())
 	.lean().exec(function(err, result){
 
-		if (err) { return res.status(500).json(err);  }
+		if (err) { return res.status(500).json(err); }
 
 		let isAdmin = false;
 		const userID = req.user ? req.user._id : undefined;
@@ -81,7 +81,7 @@ app.post('/saveJournal', function(req,res){
 		// console.log('req.body', req.body);
 		// console.log('journal', journal);
 
-		if (err) { return res.status(500).json(err);  }
+		if (err) { return res.status(500).json(err); }
 
 		if (!req.user || String(journal.admins).indexOf(String(req.user._id)) === -1) {
 			return res.status(403).json('Not authorized to administrate this Journal.');
@@ -111,7 +111,7 @@ app.post('/saveJournal', function(req,res){
 		}
 		
 		journal.save(function(err, result){
-			if (err) { return res.status(500).json(err);  }
+			if (err) { return res.status(500).json(err); }
 			
 			Journal.populate(result, Journal.populationObject(), (err, populatedJournal)=> {
 				return res.status(201).json({
@@ -127,9 +127,9 @@ app.post('/saveJournal', function(req,res){
 
 app.post('/submitPubToJournal', function(req,res){
 	Journal.findOne({_id: req.body.journalID}).exec(function(err, journal) {
-		if (err) { return res.status(500).json(err);  }
+		if (err) { return res.status(500).json(err); }
 
-		if (!journal) { return res.status(500).json(err);  }
+		if (!journal) { return res.status(500).json(err); }
 
 		if ( !journal.autoFeature && (!req.user || String(journal.admins).indexOf(String(req.user._id)) === -1) ) {
 			return res.status(403).json('Not authorized to administrate this Journal.');
@@ -150,7 +150,7 @@ app.post('/submitPubToJournal', function(req,res){
 		}
 
 		journal.save(function(err, result){
-			if (err) { return res.status(500).json(err);  }
+			if (err) { return res.status(500).json(err); }
 			
 			Journal.populate(result, Journal.populationObject(), (err, populatedJournal)=> {
 				return res.status(201).json({
@@ -284,10 +284,10 @@ app.post('/createCollection', function(req,res){
 		journal.collections.push(newCollection);
 		
 		journal.save(function (err, savedJournal) {
-			if (err) { return res.status(500).json(err);  }
+			if (err) { return res.status(500).json(err); }
 
 			Journal.populate(savedJournal, Journal.populationObject(true), (err, populatedJournal)=> {
-				if (err) { return res.status(500).json(err);  }
+				if (err) { return res.status(500).json(err); }
 
 				return res.status(201).json(populatedJournal.collections);		
 			});
@@ -315,10 +315,10 @@ app.post('/saveCollection', function(req,res){
 				}
 			}
 			journal.save(function (err, savedJournal) {
-				if (err) { return res.status(500).json(err);  }
+				if (err) { return res.status(500).json(err); }
 
 				Journal.populate(savedJournal, Journal.populationObject(true), (err, populatedJournal)=> {
-					if (err) { return res.status(500).json(err);  }
+					if (err) { return res.status(500).json(err); }
 
 					return res.status(201).json(populatedJournal.collections);		
 				});
