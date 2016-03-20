@@ -17,6 +17,8 @@ import {saveSettingsUser} from '../../actions/login';
 
 import {globalStyles} from '../../utils/styleConstants';
 
+import {createAsset, updateAsset} from '../../actions/assets';
+
 let FireBaseURL;
 let styles;
 
@@ -148,9 +150,17 @@ const Editor = React.createClass({
 		console.log('toggle left panel');
 	},
 
+	addAsset: function(newAsset) {
+		this.props.dispatch(createAsset(newAsset));
+	},
+	updateAsset: function(updatedAsset) {
+		this.props.dispatch(updateAsset(updatedAsset));
+	},
+
 	render: function() {
 				
 		const activeModal = this.props.editorData.get('activeModal');
+		const userAssets = this.props.loginData.getIn(['userData', 'assets']).toJS() || [];
 
 		return (
 			<div style={styles.container} className={'editorModals'}>
@@ -163,7 +173,11 @@ const Editor = React.createClass({
 						{(() => {
 							switch (activeModal) {
 							case 'Assets':
-								return (<AssetLibrary />);
+								return (<AssetLibrary 
+									addAsset={this.addAsset}
+									updateAsset={this.updateAsset}
+									slug={this.props.slug}
+									userAssets={userAssets} />);
 								// return (<EditorModalAssets 
 								// 		slug={this.props.slug} 
 								// 		assetData={this.state.firepadData.assets} 

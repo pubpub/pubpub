@@ -18,15 +18,17 @@ let styles;
 
 const AssetEditor = React.createClass({
 	propTypes: {
-		journalData: PropTypes.object,
-		editorData: PropTypes.object,
-		loginData: PropTypes.object, // User login data
-		slug: PropTypes.string, // equal to project uniqueTitle
-		dispatch: PropTypes.func,
+		assetObject: PropTypes.object,
+		assetType: PropTypes.string,
+
+		addAsset: PropTypes.func,
+		updateAsset: PropTypes.func,
 	},
 
 	getInitialState() {
 		return {
+			assetType: undefined,
+
 			files: [],
 			uploadRates: [],
 			finishedUploads: 0,
@@ -36,8 +38,8 @@ const AssetEditor = React.createClass({
 	// TODO: On each load, we gotta load the user's assets again, in
 	// case they've been updated by a co-author
 
-	componentDidMount() {
-	
+	componentWillMount() {
+		this.setState({assetType: this.props.assetType});
 	},
 
 	componentWillReceiveProps(nextProps) {
@@ -121,14 +123,14 @@ const AssetEditor = React.createClass({
 
 	},
 
-	test: function() {
-		console.log('focusingggg');
+	setAssetType: function(type){
+
+		this.setState({assetType: type ? type.value : undefined});
 	},
-	
 
 	render: function() {
-		const options = ["image", "video", "data", "reference"].map(function(fruit){
-			return {label: fruit, value: fruit}
+		const options = ["image", "video", "data", "reference"].map(function(type){
+			return {label: type, value: type}
 		});
 
 		return (
@@ -157,13 +159,16 @@ const AssetEditor = React.createClass({
 						margin: '0px 2px',
 					},
 					'.assetEditorTitle .react-selectize.dropdown-menu.default': {
-						fontSize: '0.7em',
+						fontSize: '0.6em',
 					}
 				}} />
 
 				<div className={'assetEditorTitle'} style={globalStyles.h1}>
-					Add <SimpleSelect key={'selector'} style={styles.select} ref="select" options={options} placeholder={'Select Type'} transitionEnter={true} transitionLeave={true} onFocus={this.test} autofocus={true}/>
+					<span>{this.props.assetObject ? 'Edit' : 'Add'} </span>
+					<SimpleSelect key={'selector'} style={styles.select} ref="select" options={options} value={{label: this.state.assetType, value: this.state.assetType}} onValueChange={this.setAssetType} placeholder={'Select Type'} transitionEnter={true} transitionLeave={true} autofocus={!this.state.assetType}/>
 				</div>
+
+				{this.state.assetType}
 				
 				
 			</div>

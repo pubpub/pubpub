@@ -442,6 +442,7 @@ const Editor = React.createClass({
 		};
 	},
 
+
 	render: function() {
 		const editorData = this.props.editorData;
 		const viewMode = this.props.editorData.get('viewMode');

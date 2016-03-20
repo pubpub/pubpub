@@ -13,7 +13,7 @@ import {Menu} from '../../components';
 import {AssetEditor} from '../';
 
 import {closeModal, saveCollaboratorsToPub, saveSettingsPubPub} from '../../actions/editor';
-import {createAsset} from '../../actions/assets';
+// import {createAsset} from '../../actions/assets';
 import {saveSettingsUser} from '../../actions/login';
 
 import {globalStyles} from '../../utils/styleConstants';
@@ -26,11 +26,10 @@ let styles;
 
 const AssetLibrary = React.createClass({
 	propTypes: {
-		journalData: PropTypes.object,
-		editorData: PropTypes.object,
-		loginData: PropTypes.object, // User login data
+		addAsset: PropTypes.func,
+		updateAsset: PropTypes.func,
+		userAssets: PropTypes.array,
 		slug: PropTypes.string, // equal to project uniqueTitle
-		dispatch: PropTypes.func,
 	},
 
 	getInitialState() {
@@ -172,7 +171,7 @@ const AssetLibrary = React.createClass({
 			{ key: 'highlights', string: 'Highlights', function: this.setActiveSection('highlights'), isActive: this.state.activeSection === 'highlights' },
 		];
 
-		const userAssets = this.props.loginData.getIn(['userData', 'assets']).toJS() || [];
+		const userAssets = this.props.userAssets || [];
 		const assets = [];
 		const references = [];
 		const highlights = [];
@@ -192,7 +191,7 @@ const AssetLibrary = React.createClass({
 			<Dropzone ref="dropzone" onDrop={this.onDrop} disableClick style={styles.dropzone} activeStyle={this.state.activeSection === 'assets' ? styles.dropzoneActive : {}}>
 				<div>
 					<div style={styles.assetEditorWrapper}>
-						<AssetEditor />
+						<AssetEditor assetType={'image'}/>
 					</div>
 
 					<div style={styles.container}>
