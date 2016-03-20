@@ -10,6 +10,7 @@ import ReactFireMixin from 'reactfire';
 
 import {EditorModalAssetsRow, EditorModalCollaborators, EditorModalPublish, EditorModalReferences, EditorModalSettings} from '../../components/EditorModals';
 import {Menu} from '../../components';
+import {AssetEditor} from '../';
 
 import {closeModal, saveCollaboratorsToPub, saveSettingsPubPub} from '../../actions/editor';
 import {createAsset} from '../../actions/assets';
@@ -37,6 +38,7 @@ const AssetLibrary = React.createClass({
 			files: [],
 			uploadRates: [],
 			finishedUploads: 0,
+			activeSection: 'assets',
 		};
 	},
 	// TODO: On each load, we gotta load the user's assets again, in
@@ -58,7 +60,11 @@ const AssetLibrary = React.createClass({
 	// On completion call function that hits the pubpub server to generate asset information
 	// Generated asset information is then sent to Firebase for syncing with other users
 	onDrop: function(files) {
-		
+		if (this.state.activeSection !== 'assets') {
+			return;
+		}
+
+		console.log('inDrop');
 		// Add new files to existing set, so as to not overwrite existing uploads
 		const existingFiles = this.state.files.length;
 		const tmpFiles = this.state.files.concat(files);
@@ -121,19 +127,23 @@ const AssetLibrary = React.createClass({
 
 
 		let assetType = 'data';
+		let thumbnail = '/thumbnails/data.png';
+		
 		if (type.indexOf('image') > -1) {
 			assetType = 'image';
+			thumbnail = 'https://s3.amazonaws.com/pubpub-upload/' + filename;
 		} else if (type.indexOf('video') > -1) {
 			assetType = 'video';
+			thumbnail = '/thumbnails/file.png';
 		}
 		const newAsset = {
 			assetType: assetType,
-			label: filename, 
+			label: originalFilename, 
 			assetData: {
 				filetype: type,
 				originalFilename: originalFilename,
 				url: 'https://s3.amazonaws.com/pubpub-upload/' + filename,
-				thumbnail: 'https://s3.amazonaws.com/pubpub-upload/' + filename,
+				thumbnail: thumbnail,
 			}
 		};
 
@@ -149,11 +159,17 @@ const AssetLibrary = React.createClass({
 
 	},
 
+	setActiveSection: function(section) {
+		return ()=>{
+			this.setState({activeSection: section});
+		}
+	},
+
 	render: function() {
 		const menuItems = [
-			{ key: 'assets', string: 'Assets', function: ()=>{} },
-			{ key: 'references', string: 'References', function: ()=>{} },
-			{ key: 'highlights', string: 'Highlights', function: ()=>{} },
+			{ key: 'assets', string: 'Assets', function: this.setActiveSection('assets'), isActive: this.state.activeSection === 'assets' },
+			{ key: 'references', string: 'References', function: this.setActiveSection('references'), isActive: this.state.activeSection === 'references' },
+			{ key: 'highlights', string: 'Highlights', function: this.setActiveSection('highlights'), isActive: this.state.activeSection === 'highlights' },
 		];
 
 		const userAssets = this.props.loginData.getIn(['userData', 'assets']).toJS() || [];
@@ -173,48 +189,83 @@ const AssetLibrary = React.createClass({
 
 
 		return (
-			<div style={styles.container}>
-				<div style={globalStyles.h1}>Media Library</div>
-				{/* <div style={[globalStyles.simpleButton, styles.topRight]} key={'libraryClose'}>Close</div> */}
-
-				<div style={globalStyles.subMenu}>
-					<Menu items={menuItems} submenu={true}/>
-				</div>
-
-				<Dropzone ref="dropzone" onDrop={this.onDrop} disableClick style={styles.dropzone} activeStyle={styles.dropzoneActive}>
-
-					<div style={styles.addSection}>
-						<div style={[globalStyles.simpleButton]} key={'addAsset'} onClick={this.onOpenClick}>Add New Asset</div>
-						<div>or drag files to this window to quickly add</div>
+			<Dropzone ref="dropzone" onDrop={this.onDrop} disableClick style={styles.dropzone} activeStyle={this.state.activeSection === 'assets' ? styles.dropzoneActive : {}}>
+				<div>
+					<div style={styles.assetEditorWrapper}>
+						<AssetEditor />
 					</div>
 
-				</Dropzone>
+					<div style={styles.container}>
 
-				<div>
-					{/* Display all existing assets using EditorModalAssetsRow */}
-					{(() => {
-						const assetList = [];
+						<div style={globalStyles.h1}>Media Library</div>
+						{/* <div style={[globalStyles.simpleButton, styles.topRight]} key={'libraryClose'}>Close</div> */}
 
-						// Iterate through assetList in reverse order. So newest are at top
-						for (let index = userAssets.length; index > 0; index--) {
-							const asset = userAssets[index - 1];
-							if (asset.assetData) {
-								assetList.push(<EditorModalAssetsRow 
-									key={'modalAsset-' + index} 
-									keyChild={'modalAsset-' + index} 
-									filename={asset.assetData.originalFilename} 
-									thumbnail={asset.assetData.url} 
-									assetType={asset.assetType}
-									date={asset.createDate}/>);	
+						<div style={globalStyles.subMenu}>
+							<Menu items={menuItems} submenu={true}/>
+						</div>
+						
+
+						{(() => {
+							switch (this.state.activeSection) {
+							case 'assets':
+								return (
+									<div>
+										<div style={styles.addSection}>
+											<div style={[globalStyles.simpleButton]} key={'addAsset'} onClick={this.onOpenClick}>Add New Asset</div>
+											<div>or drag files to this window to quickly add</div>
+										</div>
+
+										
+
+										<div>
+											<div>{this.state.activeSection}</div>
+											{/* Display all existing assets using EditorModalAssetsRow */}
+											{(() => {
+												const assetList = [];
+
+												// Iterate through assetList in reverse order. So newest are at top
+												for (let index = assets.length; index > 0; index--) {
+													const asset = assets[index - 1];
+													if (asset.assetData) {
+														assetList.push(<EditorModalAssetsRow 
+															key={'modalAsset-' + index} 
+															keyChild={'modalAsset-' + index} 
+															filename={asset.assetData.originalFilename} 
+															thumbnail={asset.assetData.url} 
+															assetType={asset.assetType}
+															date={asset.createDate}/>);	
+													}
+													
+												}
+												return assetList;
+											})()}
+										</div>
+									</div>
+								);
+
+							case 'references':
+								return (
+									<EditorModalReferences
+										referenceData={references}
+										referenceStyle={undefined}
+										updateReferences={()=>{}}/>
+								);
+
+							case 'highlights':
+								return (
+									<div>Highlights</div>
+								);
+							default:
+								return null;
 							}
-							
-						}
-						return assetList;
-					})()}
+						})()}
+						
+					</div>
+
 				</div>
 				
-				
-			</div>
+
+			</Dropzone>
 
 		);
 	}
@@ -234,20 +285,23 @@ styles = {
 	container: {
 		position: 'relative',
 	},
-	topRight: {
-		position: 'absolute',
-		top: '20px',
-		right: '20px',
-	},
+	// topRight: {
+	// 	position: 'absolute',
+	// 	top: '20px',
+	// 	right: '20px',
+	// },
 	addSection: {
 		padding: '20px',
 	},
 	dropzone: {
-		width: '100%',
-		minHeight: '430px',
+		minHeight: '100%',
 	},
 	dropzoneActive: {
-		backgroundColor: '#F5F5F5',
-		boxShadow: '0px 0px 20px rgba(0,0,0,0.6)',
+		backgroundColor: '#CCC'
+	},
+	assetEditorWrapper: {
+		position: 'absolute',
+		width: '100%',
+		minHeight: '100%',
 	},
 };

@@ -14,7 +14,7 @@ let styles = {};
 
 const EditorModalReferences = React.createClass({
 	propTypes: {
-		referenceData: PropTypes.object,
+		referenceData: PropTypes.array,
 		updateReferences: PropTypes.func,
 		referenceStyle: PropTypes.string,
 		intl: PropTypes.object,
@@ -145,12 +145,12 @@ const EditorModalReferences = React.createClass({
 	},
 
 	render: function() {
-		const referenceData = [];
-		for ( const key in this.props.referenceData ) {
-			if (this.props.referenceData.hasOwnProperty(key)) {
-				referenceData.push(this.props.referenceData[key]);
-			}
-		}
+		const referenceData = this.props.referenceData;
+		// for ( const key in this.props.referenceData ) {
+			// if (this.props.referenceData.hasOwnProperty(key)) {
+				// referenceData.push(this.props.referenceData[key]);
+			// }
+		// }
 		// Disabled: Searching for References
 		/*
 		const messages = defineMessages({
@@ -224,7 +224,7 @@ const EditorModalReferences = React.createClass({
 							return (
 								<EditorModalReferencesRow
 									key={'citation-' + index}
-									citation={citation}
+									citation={citation.assetData}
 									index={index}
 									editRefFunction={this.editReference}
 									deleteRefFunction={this.deleteReference}/>

@@ -6,7 +6,7 @@
   z-index: 99999;
   border: 1px solid #bbb;
   box-shadow: 0 0 4px #d9d9d9;
-  color: #666;
+  /*color: #666;*/
 }
 .rc-menu-hidden {
   display: none;
@@ -83,6 +83,11 @@
 .rc-menu-item.notButton,
 .rc-menu-submenu-title.notButton {
   cursor: default;
+}
+
+.rc-menu-item.isActive,
+.rc-menu-submenu-title.isActive {
+  color: #000;
 }
 
 .rc-menu-item.rc-menu-item-disabled,

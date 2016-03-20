@@ -11,6 +11,7 @@ An item has a key, a string, a function, right-align boolean, and children:
 	 function: openModal('asset'), 	(type: function)
 	 right: true, 					(type: boolean) // floats right
  	 notButton: true, 				(type: boolean) // removes line and click behavior
+ 	 isActive: true, 				(type: boolean) // adds isActive class and style
 	 children: [{item},{item}], 	(type: array)
 	}
 ********************** */
@@ -63,6 +64,7 @@ const pubpubMenu = React.createClass({
 		return menuItems.map((item)=>{
 			let className = 'menuItem-' + item.key;
 			className += item.notButton ? ' notButton' : '';
+			className += item.isActive ? ' isActive' : '';
 			if (item.children) {
 				return (
 					<SubMenu title={item.string} key={item.key} className={item.right ? className + ' right' : className} disabled={item.notButton}>
@@ -84,6 +86,7 @@ const pubpubMenu = React.createClass({
 			<div style={{
 				fontWeight: this.props.submenu ? '400' : '300',
 				backgroundColor: this.props.submenu ? '#F3F3F3' : 'transparent',
+				color: this.props.submenu ? '#999' : '#333',
 			}}>
 				<Style rules={{
 					'.rc-menu.rc-menu-horizontal.rc-menu-root': {
