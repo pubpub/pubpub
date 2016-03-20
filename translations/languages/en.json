@@ -26,7 +26,6 @@
   "editor.publishMessageJournal2": "If you would like to publish without submitting, please publish from",
   "editor.publishMessage4": "A description is required.",
   "editor.publishButton": "Publish version",
-  "editor.addReference": "Add Reference",
   "editor.noRefsAdded": "No References Added",
   "discussion.selectionPreviousDraft": "Selection made on draft version",
   "discussion.selectionPreviousVersion": "Selection made on Version {version}",

@@ -8,7 +8,7 @@ import Radium from 'radium';
 import PureRenderMixin from 'react-addons-pure-render-mixin';
 import ReactFireMixin from 'reactfire';
 
-import {AssetLibrary} from '../../containers';
+import {AssetLibrary} from '../../components';
 import {EditorModalAssets, EditorModalCollaborators, EditorModalPublish, EditorModalReferences, EditorModalSettings} from '../../components/EditorModals';
 
 
@@ -92,30 +92,30 @@ const Editor = React.createClass({
 
 	// Add asset to firebase.
 	// Will trigger other open clients to sync new assets data.
-	addAsset: function(asset) {
-		// Cleanup refname. No special characters, underscores, etc.
-		let refName = asset.originalFilename.replace(/[^0-9a-z]/gi, '');
+	// addAsset: function(asset) {
+	// 	// Cleanup refname. No special characters, underscores, etc.
+	// 	let refName = asset.originalFilename.replace(/[^0-9a-z]/gi, '');
 
-		// Make sure refname is unique.
-		// If it's not unique, append a timestamp.
-		if (this.state.firepadData.assets && refName in this.state.firepadData.assets) {
-			refName = refName + '_' + Date.now();
-		}
-		// Add refname and author to passed in asset object.
-		asset.refName = refName;
-		asset.author = this.props.loginData.getIn(['userData', 'username']);
+	// 	// Make sure refname is unique.
+	// 	// If it's not unique, append a timestamp.
+	// 	if (this.state.firepadData.assets && refName in this.state.firepadData.assets) {
+	// 		refName = refName + '_' + Date.now();
+	// 	}
+	// 	// Add refname and author to passed in asset object.
+	// 	asset.refName = refName;
+	// 	asset.author = this.props.loginData.getIn(['userData', 'username']);
 
-		// Push to firebase ref
-		const ref = new Firebase(FireBaseURL + this.props.slug + '/editorData/assets' );
-		ref.push(asset);
-	},
+	// 	// Push to firebase ref
+	// 	const ref = new Firebase(FireBaseURL + this.props.slug + '/editorData/assets' );
+	// 	ref.push(asset);
+	// },
 
-	deleteAsset: function(assetID) {
-		return ()=>{
-			const ref = new Firebase(FireBaseURL + this.props.slug + '/editorData/assets/' + assetID );
-			ref.remove();
-		};
-	},
+	// deleteAsset: function(assetID) {
+	// 	return ()=>{
+	// 		const ref = new Firebase(FireBaseURL + this.props.slug + '/editorData/assets/' + assetID );
+	// 		ref.remove();
+	// 	};
+	// },
 
 	saveUpdatedCollaborators: function(newCollaborators, removedUser) {
 		const ref = new Firebase(FireBaseURL + this.props.slug + '/editorData/collaborators' );
@@ -150,11 +150,16 @@ const Editor = React.createClass({
 		console.log('toggle left panel');
 	},
 
-	addAsset: function(newAsset) {
-		this.props.dispatch(createAsset(newAsset));
+	addAsset: function(newAssetArray) {
+		for(let index = 0; index < newAssetArray.length; index++) {
+			this.props.dispatch(createAsset(newAssetArray[index]));	
+		}
+		
 	},
-	updateAsset: function(updatedAsset) {
-		this.props.dispatch(updateAsset(updatedAsset));
+	updateAsset: function(updatedAssetArray) {
+		for(let index = 0; index < updatedAssetArray.length; index++) {
+			this.props.dispatch(updateAsset(updatedAssetArray[index]));	
+		}
 	},
 
 	render: function() {
@@ -178,12 +183,6 @@ const Editor = React.createClass({
 									updateAsset={this.updateAsset}
 									slug={this.props.slug}
 									userAssets={userAssets} />);
-								// return (<EditorModalAssets 
-								// 		slug={this.props.slug} 
-								// 		assetData={this.state.firepadData.assets} 
-								// 		addAsset={this.addAsset} 
-								// 		deleteAsset={this.deleteAsset}/>
-								// 	);
 
 							case 'Collaborators':
 								return (<EditorModalCollaborators 
@@ -258,18 +257,7 @@ styles = {
 		pointerEvents: 'auto',
 	},
 	modalContainer: {
-		width: '86vw',
-		// minHeight: 400,
-		height: 'calc(100vh - 27px)',
-		// maxHeight: 'calc(100vh - 150px)',
-		overflow: 'hidden',
-		overflowY: 'scroll',
-		margin: '0 auto',
-		position: 'fixed',
-		top: 27,
-		left: '7vw',
-		backgroundColor: 'white',
-		boxShadow: '0px 0px 10px 0px rgba(0,0,0,0.25)',
+		...globalStyles.largeModal,
 		zIndex: 150,
 
 		opacity: 0,

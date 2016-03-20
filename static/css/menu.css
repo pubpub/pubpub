@@ -164,7 +164,9 @@
 }
 
 .rc-menu-horizontal > .rc-menu-submenu.notButton:after,
-.rc-menu-horizontal > .rc-menu-item.notButton:after {
+.rc-menu-horizontal > .rc-menu-item.notButton:after 
+.rc-menu-horizontal > .rc-menu-submenu.noSeparator:after,
+.rc-menu-horizontal > .rc-menu-item.noSeparator:after {
   display: none;
 }
 

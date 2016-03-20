@@ -85,6 +85,18 @@ export const globalStyles = {
 			transform: 'translateY(1px)',
 		}
 	},
+	largeModal: {
+		width: '86vw',
+		height: 'calc(100vh - 27px)',
+		overflow: 'hidden',
+		overflowY: 'scroll',
+		margin: '0 auto',
+		position: 'fixed',
+		top: 27,
+		left: '7vw',
+		backgroundColor: 'white',
+		boxShadow: '0px 0px 10px 0px rgba(0,0,0,0.25)',
+	},
 	subMenu: {
 		margin: '0px 20px',
 		border: '1px solid #EEE',

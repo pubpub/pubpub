@@ -91,6 +91,7 @@ styles = {
 		borderRadius: '1px',
 		textAlign: 'center',
 		display: 'inline-block',
+		fontFamily: 'Lato',
 		':hover': {
 			cursor: 'pointer',
 			// backgroundColor: '#DDD',

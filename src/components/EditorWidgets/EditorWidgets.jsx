@@ -15,7 +15,7 @@ import EditorWidgetModal from './EditorWidgetModal';
 const EditorWidgets = React.createClass({
 	propTypes: {
 		activeFocus: PropTypes.string,
-		assets: PropTypes.object,
+		assets: PropTypes.array,
 		references: PropTypes.object,
 		isLivePreview: PropTypes.bool,
 		cm: PropTypes.object,

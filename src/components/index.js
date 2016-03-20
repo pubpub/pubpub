@@ -1,3 +1,5 @@
+export AssetEditor from './AssetEditor/AssetEditor';
+export AssetLibrary from './AssetLibrary/AssetLibrary';
 export Button from './Button/Button';
 export CollectionEdit from './CollectionEdit/CollectionEdit';
 export CollectionMain from './CollectionMain/CollectionMain';

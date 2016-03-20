@@ -1,35 +1,41 @@
 import React, {PropTypes} from 'react';
 import Radium from 'radium';
-// import {Autocomplete} from '../../containers';
-// import {Reference} from '../';
-import {EditorModalReferencesRow} from './';
-import {baseStyles} from './editorModalStyle';
+
 import {globalStyles} from '../../utils/styleConstants';
 import bibtexParse from 'bibtex-parse-js';
+import {Button} from '../';
 
 import {globalMessages} from '../../utils/globalMessages';
 import {injectIntl, FormattedMessage} from 'react-intl';
 
 let styles = {};
 
-const EditorModalReferences = React.createClass({
-	propTypes: {
-		referenceData: PropTypes.array,
-		updateReferences: PropTypes.func,
-		referenceStyle: PropTypes.string,
-		intl: PropTypes.object,
-	},
+const defaultFields = {
+	title: '',
+	url: '',
+	author: '',
+	journal: '',
+	volume: '',
+	number: '',
+	pages: '',
+	year: '',
+	publisher: '',
+	doi: '',
+	note: '',
+};
 
-	getDefaultProps: function() {
-		return {
-			referenceData: {},
-		};
+const ReferenceEditor = React.createClass({
+	propTypes: {
+		assetObject: PropTypes.object,
+		addAset: PropTypes.func,
+		updateAset: PropTypes.func,
+
 	},
 
 	getInitialState: function() {
 		return {
 			isLoading: false,
-			showAddOptions: false,
+			showAddOptions: true,
 			addOptionMode: 'manual',
 			editingRefName: null,
 			manualFormData: {
@@ -48,15 +54,15 @@ const EditorModalReferences = React.createClass({
 		};
 	},
 
-	toggleShowAddOptions: function() {
-		this.setState({
-			isLoading: false,
-			showAddOptions: !this.state.showAddOptions,
-			editingRefName: null,
-			manualFormData: this.getInitialState().manualFormData,
-		});
-		this.refs.bibtexForm.value = '';
-	},
+	// toggleShowAddOptions: function() {
+	// 	this.setState({
+	// 		isLoading: false,
+	// 		showAddOptions: !this.state.showAddOptions,
+	// 		editingRefName: null,
+	// 		manualFormData: this.getInitialState().manualFormData,
+	// 	});
+	// 	this.refs.bibtexForm.value = '';
+	// },
 
 	handleManualInputFormChange: function(event) {
 		const newManualFormData = {...this.state.manualFormData};
@@ -124,20 +130,6 @@ const EditorModalReferences = React.createClass({
 		};
 	},
 
-	deleteReference: function(refName) {
-		return ()=>{
-			const newReferencesObject = this.props.referenceData;
-			delete newReferencesObject[refName];
-			this.props.updateReferences(newReferencesObject);
-		};
-
-	},
-
-	renderReferencesSearchResults: function(results) {
-		console.log(results);
-		return (<div>Results</div>);
-	},
-
 	setAddOptionMode: function(mode) {
 		return ()=>{
 			this.setState({addOptionMode: mode});
@@ -145,97 +137,28 @@ const EditorModalReferences = React.createClass({
 	},
 
 	render: function() {
-		const referenceData = this.props.referenceData;
-		// for ( const key in this.props.referenceData ) {
-			// if (this.props.referenceData.hasOwnProperty(key)) {
-				// referenceData.push(this.props.referenceData[key]);
-			// }
-		// }
-		// Disabled: Searching for References
-		/*
-		const messages = defineMessages({
-			searchForRef: {
-				id: 'editor.searchForRef',
-				defaultMessage: 'Search for a reference',
-			},
-		});
-		*/
+		const assetData = this.props.assetData || {};
 
 		return (
 			<div>
-				<div style={baseStyles.topHeader}>
-					<FormattedMessage {...globalMessages.references} />
-					<span style={[styles.topHeaderSubtext, this.state.editingRefName && styles.showOnEdit]}> : <FormattedMessage {...globalMessages.edit} /></span></div>
-
-				{/* Search for new Ref bar and advanced add option */}
-
-				{
-				// Disabled: Searching for References
-				/*
-				<div style={[baseStyles.rightCornerSearch, styles.mainContent[this.state.showAddOptions]]}>
-
-					<Autocomplete
-						autocompleteKey={'referencesAutocomplete'}
-						route={'autocompleteReferences'}
-						placeholder={this.props.intl.formatMessage(messages.searchForRef)}
-						textAlign={'right'}
-						resultRenderFunction={this.renderReferencesSearchResults}/>
-					
-				</div> */}
-
-				{/* <div key="refAdvancedText" style={[baseStyles.rightCornerAction, styles.addOptions, styles.addOptions[!this.state.showAddOptions]]} onClick={this.toggleShowAddOptions}>
-					<FormattedMessage id="editor.addReference" defaultMessage="Add Reference"/>
-				</div> */}
-
-
-				{/* Back button that displays in advanced mode */}
-				<div style={[baseStyles.rightCornerAction, styles.addOptions, styles.addOptions[this.state.showAddOptions]]} onClick={this.toggleShowAddOptions}>
-					<FormattedMessage {...globalMessages.back} />
-				</div>
-
-				{/* Show a note if no content has been added yet */}
-				{referenceData.length === 0 && this.state.showAddOptions === false
-					? <div style={baseStyles.noContentBlock}>
-						<FormattedMessage
-							id="editor.noRefsAdded"
-							defaultMessage="No References Added"/>
+				<div style={styles.buttons}>
+					<div style={styles.buttonWrapper}>
+						<Button
+							key={'customStyleSaveButton'}
+							label={'Save'}
+							onClick={undefined}/>
 					</div>
-					: null
-				}
-
-				{/* Main References table */}
-				<div className="main-ref-content" style={[styles.mainContent[this.state.showAddOptions], referenceData.length === 0 && styles.hide]}>
-					{/* References table header */}
-					<div style={styles.rowContainer}>
-						<div style={[styles.refNameColumn, styles.columnHeader]}>
-							<FormattedMessage {...globalMessages.refName} />
-						</div>
-						<div style={[styles.bodyColumn, styles.columnHeader]}>
-							<FormattedMessage {...globalMessages.citation} />
-						</div>
-						<div style={[styles.optionColumn, styles.columnHeader]}></div>
-						<div style={[styles.optionColumn, styles.columnHeader]}></div>
-						<div style={styles.clearfix}></div>
+					<div style={styles.buttonWrapper}>
+						<Button
+							key={'customStyleSaveButton'}
+							label={'Cancel'}
+							onClick={undefined}/>
 					</div>
-
-					{/* Iterate over citations */}
-					{
-						referenceData.map((citation, index) => {
-							return (
-								<EditorModalReferencesRow
-									key={'citation-' + index}
-									citation={citation.assetData}
-									index={index}
-									editRefFunction={this.editReference}
-									deleteRefFunction={this.deleteReference}/>
-							);
-						})
-					}
 
 				</div>
 
 				{/* Content section displayed when in advanced add mode */}
-				<div className="add-options-content" style={[styles.addOptions, styles.addOptions[this.state.showAddOptions], styles.addOptionsContent]}>
+				<div className="add-options-content" style={[styles.addOptions, styles.addOptionsContent]}>
 
 					<div style={[styles.addOptionModes, this.state.editingRefName && styles.hide]}>
 						{/* <div style={[styles.addOptionText]}>Input Mode: </div> */}
@@ -255,9 +178,7 @@ const EditorModalReferences = React.createClass({
 								title={The Fourier Transform and IIS Applications},
 								author={Bracewell, Ron},journal={New York},year={1965}}"></textarea>
 						</div>
-						<div style={styles.saveForm} key={'referencesBibtexFormSaveButton'} onClick={this.saveBibtexForm}>
-							<FormattedMessage {...globalMessages.save} />
-						</div>
+
 						<div style={styles.clearfix}></div>
 					</div>
 
@@ -271,13 +192,14 @@ const EditorModalReferences = React.createClass({
 						</div> */}
 						<div style={styles.inputFormWrapper}>
 							{
-								Object.keys(this.state.manualFormData).map((inputItem)=>{
+								Object.keys(defaultFields).map((inputItem)=>{
 									return (
 										<div key={'manualForm-' + inputItem} style={styles.manualFormInputWrapper}>
 											<label style={styles.manualFormInputTitle} htmlFor={inputItem}>
-												<FormattedMessage {...globalMessages[inputItem]} />
+												{/* <FormattedMessage {...globalMessages[inputItem]} /> */}
+												{inputItem}
 											</label>
-											<input style={styles.manualFormInput} name={inputItem} id={inputItem} type="text" onChange={this.handleManualInputFormChange} value={this.state.manualFormData[inputItem]}/>
+											<input style={styles.manualFormInput} name={inputItem} id={inputItem} type="text" onChange={this.handleManualInputFormChange} defaultValue={assetData[inputItem]}/>
 										</div>
 
 									);
@@ -285,9 +207,7 @@ const EditorModalReferences = React.createClass({
 							}
 							<div style={styles.clearfix}></div>
 						</div>
-						<div style={styles.saveForm} key={'referencesManualFormSaveButton'} onClick={this.saveManualForm}>
-							<FormattedMessage {...globalMessages.save} />
-						</div>
+
 
 						<div style={styles.clearfix}></div>
 					</div>
@@ -298,7 +218,7 @@ const EditorModalReferences = React.createClass({
 	}
 });
 
-export default injectIntl(Radium(EditorModalReferences));
+export default injectIntl(Radium(ReferenceEditor));
 
 styles = {
 	mainContent: {
@@ -307,30 +227,25 @@ styles = {
 		},
 	},
 	addOptions: {
-		true: {
-			display: 'block',
-		},
-		display: 'none',
+		
+		display: 'block',
+		
 
 	},
+	buttons: {
+		position: 'absolute',
+		top: 30,
+		right: 20,
+	},
+	buttonWrapper: {
+		float: 'right',
+		marginLeft: '20px',
+	},
+
 	addOptionsContent: {
-		padding: '15px 25px',
+		padding: '15px 2px',
 	},
-	rowContainer: {
-		width: 'calc(100% - 30px)',
-		padding: 15,
-		fontFamily: baseStyles.rowTextFontFamily,
-		fontSize: baseStyles.rowTextFontSize,
-	},
-	refNameColumn: {
-		width: 'calc(25% - 20px)',
-		padding: '0px 10px',
-		float: 'left',
-	},
-	columnHeader: {
-		fontFamily: baseStyles.rowHeaderFontFamily,
-		fontSize: baseStyles.rowHeaderFontSize,
-	},
+	
 	bodyColumn: {
 		width: 'calc(55% - 20px)',
 		padding: '0px 10px',

@@ -56,7 +56,6 @@
     "editor.publishMessageJournal1": "Missing. English is: Publishing will automatically submit this pub to: {currentJournal}.",
     "editor.publishMessageJournal2": "Missing. English is: If you would like to publish without submitting, please publish from",
     "editor.publishMessage4": "Missing. English is: A description is required.",
-    "editor.addReference": "Missing. English is: Add Reference",
     "discussion.selectionPreviousDraft": "Missing. English is: Selection made on draft version",
     "discussion.selectionPreviousVersion": "Missing. English is: Selection made on Version {version}",
     "group.addNewMember": "Missing. English is: Add new member",

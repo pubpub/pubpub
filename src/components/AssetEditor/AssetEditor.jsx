@@ -10,6 +10,9 @@ import {createAsset} from '../../actions/assets';
 
 import {globalStyles} from '../../utils/styleConstants';
 
+import ReferenceEditor from './AssetEditorReference';
+import FileEditor from './AssetEditorFile';
+
 import Dropzone from 'react-dropzone';
 import {s3Upload} from '../../utils/uploadFile';
 import {SimpleSelect} from 'react-selectize';
@@ -23,6 +26,7 @@ const AssetEditor = React.createClass({
 
 		addAsset: PropTypes.func,
 		updateAsset: PropTypes.func,
+		slug: PropTypes.string,
 	},
 
 	getInitialState() {
@@ -168,7 +172,20 @@ const AssetEditor = React.createClass({
 					<SimpleSelect key={'selector'} style={styles.select} ref="select" options={options} value={{label: this.state.assetType, value: this.state.assetType}} onValueChange={this.setAssetType} placeholder={'Select Type'} transitionEnter={true} transitionLeave={true} autofocus={!this.state.assetType}/>
 				</div>
 
-				{this.state.assetType}
+				{(() => {
+					switch (this.state.assetType) {
+					case 'image':
+					case 'video':
+					case 'data':
+						return ( <FileEditor assetObject={this.props.assetObject} addAsset={this.props.addAsset} updateAsset={this.props.updateAsset} /> );
+
+					case 'reference':
+						return ( <ReferenceEditor assetObject={this.props.assetObject} addAsset={this.props.addAsset} updateAsset={this.props.updateAsset} /> );
+
+					default:
+						return null;
+					}
+				})()}
 				
 				
 			</div>
@@ -178,14 +195,7 @@ const AssetEditor = React.createClass({
 
 });
 
-export default connect( state => {
-	return {
-		journalData: state.journal,
-		editorData: state.editor,
-		slug: state.router.params.slug,
-		loginData: state.login
-	};
-})( Radium(AssetEditor) );
+export default ( Radium(AssetEditor) );
 
 styles = {	
 	container: {

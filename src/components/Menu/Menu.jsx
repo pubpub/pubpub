@@ -12,6 +12,7 @@ An item has a key, a string, a function, right-align boolean, and children:
 	 right: true, 					(type: boolean) // floats right
  	 notButton: true, 				(type: boolean) // removes line and click behavior
  	 isActive: true, 				(type: boolean) // adds isActive class and style
+ 	 noSeparator: true, 			(type: boolean) // removes line separator after item
 	 children: [{item},{item}], 	(type: array)
 	}
 ********************** */
@@ -64,6 +65,7 @@ const pubpubMenu = React.createClass({
 		return menuItems.map((item)=>{
 			let className = 'menuItem-' + item.key;
 			className += item.notButton ? ' notButton' : '';
+			className += item.noSeparator ? ' noSeparator' : '';
 			className += item.isActive ? ' isActive' : '';
 			if (item.children) {
 				return (

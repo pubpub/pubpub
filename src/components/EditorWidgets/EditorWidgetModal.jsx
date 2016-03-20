@@ -17,7 +17,7 @@ const EditorWidgetModal = React.createClass({
 	propTypes: {
 		activeFocus: PropTypes.string,
 		codeMirrorChange: PropTypes.object,
-		assets: PropTypes.object,
+		assets: PropTypes.array,
 		references: PropTypes.object,
 		selections: PropTypes.object,
 		isLivePreview: PropTypes.bool,

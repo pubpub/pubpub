@@ -9,8 +9,8 @@ import PureRenderMixin from 'react-addons-pure-render-mixin';
 import ReactFireMixin from 'reactfire';
 
 import {EditorModalAssetsRow, EditorModalCollaborators, EditorModalPublish, EditorModalReferences, EditorModalSettings} from '../../components/EditorModals';
-import {Menu} from '../../components';
-import {AssetEditor} from '../';
+
+import {AssetEditor, Menu, Button} from '../';
 
 import {closeModal, saveCollaboratorsToPub, saveSettingsPubPub} from '../../actions/editor';
 // import {createAsset} from '../../actions/assets';
@@ -21,6 +21,8 @@ import {globalStyles} from '../../utils/styleConstants';
 import Dropzone from 'react-dropzone';
 import {s3Upload} from '../../utils/uploadFile';
 
+import Portal from 'react-portal';
+
 let FireBaseURL;
 let styles;
 
@@ -29,7 +31,7 @@ const AssetLibrary = React.createClass({
 		addAsset: PropTypes.func,
 		updateAsset: PropTypes.func,
 		userAssets: PropTypes.array,
-		slug: PropTypes.string, // equal to project uniqueTitle
+		slug: PropTypes.string,
 	},
 
 	getInitialState() {
@@ -38,6 +40,7 @@ const AssetLibrary = React.createClass({
 			uploadRates: [],
 			finishedUploads: 0,
 			activeSection: 'assets',
+			showAssetEditor: false,
 		};
 	},
 	// TODO: On each load, we gotta load the user's assets again, in
@@ -51,7 +54,7 @@ const AssetLibrary = React.createClass({
 	},
 
 	componentWillUnmount() {
-		this.props.dispatch(closeModal());
+		// this.props.dispatch(closeModal());
 	},
 
 	// On file drop (or on file select)
@@ -164,11 +167,15 @@ const AssetLibrary = React.createClass({
 		}
 	},
 
+	toggleAssetEditor: function() {
+		this.setState({showAssetEditor: !this.state.showAssetEditor});
+	},
+
 	render: function() {
 		const menuItems = [
 			{ key: 'assets', string: 'Assets', function: this.setActiveSection('assets'), isActive: this.state.activeSection === 'assets' },
 			{ key: 'references', string: 'References', function: this.setActiveSection('references'), isActive: this.state.activeSection === 'references' },
-			{ key: 'highlights', string: 'Highlights', function: this.setActiveSection('highlights'), isActive: this.state.activeSection === 'highlights' },
+			{ key: 'highlights', string: 'Highlights', function: this.setActiveSection('highlights'), isActive: this.state.activeSection === 'highlights', noSeparator: true },
 		];
 
 		const userAssets = this.props.userAssets || [];
@@ -188,97 +195,121 @@ const AssetLibrary = React.createClass({
 
 
 		return (
-			<Dropzone ref="dropzone" onDrop={this.onDrop} disableClick style={styles.dropzone} activeStyle={this.state.activeSection === 'assets' ? styles.dropzoneActive : {}}>
-				<div>
+			<div>
+				<Portal isOpened={this.state.showAssetEditor}>
 					<div style={styles.assetEditorWrapper}>
-						<AssetEditor assetType={'image'}/>
+						<AssetEditor 
+							assetType={'image'}
+							assetData={undefined}
+							addAsset={this.props.addAsset}
+							updateAsset={this.props.updateAsset}
+							slug={this.props.slug} />
 					</div>
+				</Portal>
 
-					<div style={styles.container}>
 
-						<div style={globalStyles.h1}>Media Library</div>
-						{/* <div style={[globalStyles.simpleButton, styles.topRight]} key={'libraryClose'}>Close</div> */}
-
-						<div style={globalStyles.subMenu}>
-							<Menu items={menuItems} submenu={true}/>
-						</div>
+				<Dropzone ref="dropzone" onDrop={this.onDrop} disableClick style={styles.dropzone} activeStyle={this.state.activeSection === 'assets' ? styles.dropzoneActive : {}}>
+					<div>
 						
 
-						{(() => {
-							switch (this.state.activeSection) {
-							case 'assets':
-								return (
-									<div>
-										<div style={styles.addSection}>
-											<div style={[globalStyles.simpleButton]} key={'addAsset'} onClick={this.onOpenClick}>Add New Asset</div>
-											<div>or drag files to this window to quickly add</div>
-										</div>
+						<div style={styles.container}>
 
-										
+							<div style={globalStyles.h1}>Media Library</div>
+							{/* <div style={[globalStyles.simpleButton, styles.topRight]} key={'libraryClose'}>Close</div> */}
 
+							<div style={globalStyles.subMenu}>
+								<Menu items={menuItems} submenu={true}/>
+							</div>
+							
+							<div onClick={this.toggleAssetEditor}>ToggleIt</div>
+
+							{(() => {
+								switch (this.state.activeSection) {
+								case 'assets':
+									return (
 										<div>
-											<div>{this.state.activeSection}</div>
-											{/* Display all existing assets using EditorModalAssetsRow */}
-											{(() => {
-												const assetList = [];
+											<div style={styles.newButtonWrapper}>
+												<Button
+													key={'customStyleSaveButton'}
+													label={'Add New Asset'}
+													onClick={undefined}/>
+											</div>
 
-												// Iterate through assetList in reverse order. So newest are at top
-												for (let index = assets.length; index > 0; index--) {
-													const asset = assets[index - 1];
-													if (asset.assetData) {
-														assetList.push(<EditorModalAssetsRow 
-															key={'modalAsset-' + index} 
-															keyChild={'modalAsset-' + index} 
-															filename={asset.assetData.originalFilename} 
-															thumbnail={asset.assetData.url} 
-															assetType={asset.assetType}
-															date={asset.createDate}/>);	
+											<div style={styles.addSection}>
+												<div>or drag files to this window to quickly add</div>
+											</div>
+
+											<div style={styles.filterBar}>
+												Filter: <div style={styles.filterMenuWrapper}> <Menu items={menuItems} submenu={true}/> </div>
+											</div>
+
+											<div>
+												{/* Display all existing assets using EditorModalAssetsRow */}
+												{(() => {
+													const assetList = [];
+
+													// Iterate through assetList in reverse order. So newest are at top
+													for (let index = assets.length; index > 0; index--) {
+														const asset = assets[index - 1];
+														if (asset.assetData) {
+															assetList.push(<EditorModalAssetsRow 
+																key={'modalAsset-' + index} 
+																keyChild={'modalAsset-' + index} 
+																filename={asset.assetData.originalFilename} 
+																thumbnail={asset.assetData.url} 
+																assetType={asset.assetType}
+																date={asset.createDate}/>);	
+														}
+														
 													}
-													
-												}
-												return assetList;
-											})()}
+													return assetList;
+												})()}
+											</div>
 										</div>
-									</div>
-								);
+									);
 
-							case 'references':
-								return (
-									<EditorModalReferences
-										referenceData={references}
-										referenceStyle={undefined}
-										updateReferences={()=>{}}/>
-								);
+								case 'references':
+									return (
+										<div>
+											<div style={styles.newButtonWrapper}>
+												<Button
+													key={'customStyleSaveButton'}
+													label={'Add New Reference'}
+													onClick={undefined}/>
+											</div>
 
-							case 'highlights':
-								return (
-									<div>Highlights</div>
-								);
-							default:
-								return null;
-							}
-						})()}
-						
+											<EditorModalReferences
+												referenceData={references}
+												referenceStyle={undefined}
+												updateReferences={()=>{}}/>
+										</div>
+										
+									);
+
+								case 'highlights':
+									return (
+										<div>Highlights</div>
+									);
+								default:
+									return null;
+								}
+							})()}
+							
+						</div>
+
 					</div>
+					
 
-				</div>
-				
+				</Dropzone>
 
-			</Dropzone>
+			</div>
 
 		);
 	}
 
 });
 
-export default connect( state => {
-	return {
-		journalData: state.journal,
-		editorData: state.editor,
-		slug: state.router.params.slug,
-		loginData: state.login
-	};
-})( Radium(AssetLibrary) );
+export default ( Radium(AssetLibrary) );
 
 styles = {	
 	container: {
@@ -289,6 +320,18 @@ styles = {
 	// 	top: '20px',
 	// 	right: '20px',
 	// },
+	newButtonWrapper: {
+		position: 'absolute',
+		top: 30,
+		right: 20,
+	},
+	filterBar: {
+		borderBottom: '1px solid #ccc',
+		margin: '0px 20px',
+	},
+	filterMenuWrapper: {
+		display: 'inline-block',
+	},
 	addSection: {
 		padding: '20px',
 	},
@@ -299,8 +342,8 @@ styles = {
 		backgroundColor: '#CCC'
 	},
 	assetEditorWrapper: {
-		position: 'absolute',
-		width: '100%',
-		minHeight: '100%',
+		...globalStyles.largeModal,
+		zIndex: 200,
+		fontFamily: 'Lato',
 	},
 };
