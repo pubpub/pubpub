@@ -4,13 +4,13 @@ import { Link } from 'react-router';
 import { pushState } from 'redux-router';
 import Radium from 'radium';
 import Helmet from 'react-helmet';
-import {getJournal, saveJournal, createCollection, clearCollectionRedirect} from '../../actions/journal';
-import {follow, unfollow, toggleVisibility} from '../../actions/login';
-import {LoaderDeterminate, JournalCurate, JournalDesign, JournalMain, JournalSettings} from '../../components';
-import {NotFound} from '../../containers';
-import {globalStyles, profileStyles, navStyles} from '../../utils/styleConstants';
+import {getJournal, saveJournal, createCollection, clearCollectionRedirect} from 'actions/journal';
+import {follow, unfollow, toggleVisibility} from 'actions/login';
+import {LoaderDeterminate, JournalCurate, JournalDesign, JournalMain, JournalSettings} from 'components';
+import {NotFound} from 'containers';
+import {globalStyles, profileStyles, navStyles} from 'utils/styleConstants';
 
-import {globalMessages} from '../../utils/globalMessages';
+import {globalMessages} from 'utils/globalMessages';
 import {FormattedMessage} from 'react-intl';
 
 let styles = {};

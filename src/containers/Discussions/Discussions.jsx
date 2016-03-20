@@ -1,8 +1,8 @@
 import React, {PropTypes} from 'react';
 import {connect} from 'react-redux';
 import Radium, {Style} from 'radium';
-// import {globalStyles} from '../../utils/styleConstants';
-import {rightBarStyles} from '../../containers/PubReader/rightBarStyles';
+// import {globalStyles} from 'utils/styleConstants';
+import {rightBarStyles} from 'containers/PubReader/rightBarStyles';
 import DiscussionsItem from './DiscussionsItem';
 import DiscussionsInput from './DiscussionsInput';
 
@@ -13,7 +13,7 @@ import {addComment} from '../../actions/editor';
 
 import {redditHot as hotScore} from 'decay';
 
-// import {globalMessages} from '../../utils/globalMessages';
+// import {globalMessages} from 'utils/globalMessages';
 // import {FormattedMessage} from 'react-intl';
 
 let styles = {};

@@ -5,10 +5,10 @@ import Helmet from 'react-helmet';
 import { Link } from 'react-router';
 import {getGroup, saveGroup} from '../../actions/group';
 
-import {globalStyles, profileStyles, navStyles} from '../../utils/styleConstants';
+import {globalStyles, profileStyles, navStyles} from 'utils/styleConstants';
 import {LoaderDeterminate, GroupMain, GroupMembers, GroupSettings} from '../../components';
 
-import {globalMessages} from '../../utils/globalMessages';
+import {globalMessages} from 'utils/globalMessages';
 import {FormattedMessage} from 'react-intl';
 
 let styles = {};

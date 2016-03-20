@@ -1,4 +1,4 @@
-import {globalStyles} from '../../utils/styleConstants';
+import {globalStyles} from 'utils/styleConstants';
 
 export const baseStyles = {
 	pubModalContainer: {

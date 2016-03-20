@@ -9,13 +9,13 @@ import PureRenderMixin from 'react-addons-pure-render-mixin';
 import ReactFireMixin from 'reactfire';
 
 import {AssetLibrary} from '../../components';
-import {EditorModalAssets, EditorModalCollaborators, EditorModalPublish, EditorModalReferences, EditorModalSettings} from '../../components/EditorModals';
+import {CollaboratorsModal, PublishModal, SettingsModal} from './components';
 
 
 import {closeModal, saveCollaboratorsToPub, saveSettingsPubPub} from '../../actions/editor';
 import {saveSettingsUser} from '../../actions/login';
 
-import {globalStyles} from '../../utils/styleConstants';
+import {globalStyles} from 'utils/styleConstants';
 
 import {createAsset, updateAsset} from '../../actions/assets';
 
@@ -185,27 +185,27 @@ const Editor = React.createClass({
 									userAssets={userAssets} />);
 
 							case 'Collaborators':
-								return (<EditorModalCollaborators 
+								return (<CollaboratorsModal 
 										collaboratorData={this.state.firepadData.collaborators} 
 										updateCollaborators={this.saveUpdatedCollaborators}/>
 									);
 
 							case 'Publish':
-								return (<EditorModalPublish 
+								return (<PublishModal 
 										slug={this.props.slug} 
 										handlePublish={this.props.publishVersionHandler}
 										currentJournal={this.props.journalData.getIn(['journalData', 'journalName'])}/>
 									);
 
-							case 'References':
-								return (<EditorModalReferences
-										referenceData={this.state.firepadData.references}
-										referenceStyle={this.state.firepadData && this.state.firepadData.settings ? this.state.firepadData.settings.pubReferenceStyle : undefined}
-										updateReferences={this.saveReferences}/>
-									);
+							// case 'References':
+							// 	return (<EditorModalReferences
+							// 			referenceData={this.state.firepadData.references}
+							// 			referenceStyle={this.state.firepadData && this.state.firepadData.settings ? this.state.firepadData.settings.pubReferenceStyle : undefined}
+							// 			updateReferences={this.saveReferences}/>
+							// 		);
 
 							case 'Style':
-								return (<EditorModalSettings
+								return (<SettingsModal
 										editorFont={this.props.loginData.getIn(['userData', 'settings', 'editorFont'])}
 										editorFontSize={this.props.loginData.getIn(['userData', 'settings', 'editorFontSize'])}
 										editorColor={this.props.loginData.getIn(['userData', 'settings', 'editorColor'])}

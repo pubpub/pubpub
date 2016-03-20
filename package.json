@@ -41,7 +41,7 @@
     "start-prod-api": {
       "command": "node ./bin/api.js",
       "env": {
-        "NODE_PATH": "./api",
+        "NODE_PATH": "./api:./src",
         "NODE_ENV": "production",
         "APIPORT": 3030
       }
@@ -58,7 +58,7 @@
     "start-dev-api": {
       "command": "node ./bin/api.js",
       "env": {
-        "NODE_PATH": "./api",
+        "NODE_PATH": "./api:./src",
         "NODE_ENV": "development",
         "APIPORT": 3030
       }

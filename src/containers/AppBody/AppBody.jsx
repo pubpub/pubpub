@@ -7,9 +7,9 @@ import {toggleVisibility, follow, unfollow} from '../../actions/login';
 import {loadJournalAndLogin} from '../../actions/journal';
 import {openMenu, closeMenu} from '../../actions/nav';
 import {openPubModal} from '../../actions/pub';
-import {HeaderNav, HeaderMenu} from '../../components';
-import {globalStyles} from '../../utils/styleConstants';
-import analytics from '../../utils/analytics';
+import {HeaderNav, HeaderMenu} from './components';
+import {globalStyles} from 'utils/styleConstants';
+import analytics from 'utils/analytics';
 
 let styles = {};
 

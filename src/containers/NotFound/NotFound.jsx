@@ -1,7 +1,7 @@
 import React from 'react';
 import Radium from 'radium';
 import Helmet from 'react-helmet';
-import {globalStyles} from '../../utils/styleConstants';
+import {globalStyles} from 'utils/styleConstants';
 
 import {FormattedMessage} from 'react-intl';
 

@@ -14,23 +14,23 @@ import {LoaderDeterminate, EditorPluginPopup, EditorTopNav, EditorBottomNav, Edi
 import {clearPub} from '../../actions/pub';
 import {getPubEdit, toggleEditorViewMode, toggleFormatting, toggleTOC, unmountEditor, closeModal, openModal, addSelection, setEditorViewMode, publishVersion, updatePubBackendData, saveStyle} from '../../actions/editor';
 
-import {debounce} from '../../utils/loadingFunctions';
+import {debounce} from 'utils/loadingFunctions';
 import {submitPubToJournal} from '../../actions/journal';
 
 import initCodeMirrorMode from './editorCodeMirrorMode';
 // import {styles} from './editorStyles';
 import {codeMirrorStyles, codeMirrorStyleClasses} from './codeMirrorStyles';
-import {globalStyles} from '../../utils/styleConstants';
+import {globalStyles} from 'utils/styleConstants';
 
 import {insertText, createFocusDoc, addCodeMirrorKeys} from './editorCodeFunctions';
 import {editorDefaultText} from './editorDefaultText';
 
 import FirepadUserList from './editorFirepadUserlist';
 
-import {convertFirebaseToObject} from '../../utils/parsePlugins';
+import {convertFirebaseToObject} from 'utils/parsePlugins';
 import {generateTOC} from '../../markdown/generateTOC';
 
-import {globalMessages} from '../../utils/globalMessages';
+import {globalMessages} from 'utils/globalMessages';
 import {FormattedMessage} from 'react-intl';
 import {Iterable} from 'immutable';
 import EditorWidgets from '../../components/EditorWidgets/EditorWidgets';

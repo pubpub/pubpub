@@ -1,16 +1,16 @@
 import React, {PropTypes} from 'react';
 import Radium from 'radium';
-import {globalStyles} from '../../utils/styleConstants';
+import {globalStyles} from 'utils/styleConstants';
 import { Link } from 'react-router';
 import DiscussionsInput from './DiscussionsInput';
 import DiscussionsScore from './DiscussionsScore';
 
-import {convertListToObject} from '../../utils/parsePlugins';
+import {convertListToObject} from 'utils/parsePlugins';
 import PPMComponent from '../../markdown/PPMComponent';
 
 import ResizingText from '../../components/PubBody/ResizingText';
 
-// import {globalMessages} from '../../utils/globalMessages';
+// import {globalMessages} from 'utils/globalMessages';
 import {FormattedMessage, FormattedDate, FormattedRelative} from 'react-intl';
 
 let styles = {};

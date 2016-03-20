@@ -6,10 +6,11 @@ import { Link } from 'react-router';
 import { pushState } from 'redux-router';
 import {logout, follow, unfollow, toggleVisibility} from '../../actions/login';
 import {getProfile, updateUser, userNavOut, userNavIn, setNotificationsRead} from '../../actions/user';
-import {ImageCropper, LoaderDeterminate, UserSettings, UserPubs, UserGroups, UserFollows, UserDiscussions, UserNotifications} from '../../components';
-import {globalStyles, profileStyles, navStyles} from '../../utils/styleConstants';
+import {ImageCropper, LoaderDeterminate} from '../../components';
+import {UserSettings, UserPubs, UserGroups, UserFollows, UserDiscussions, UserNotifications} from './components';
+import {globalStyles, profileStyles, navStyles} from 'utils/styleConstants';
 
-import {globalMessages} from '../../utils/globalMessages';
+import {globalMessages} from 'utils/globalMessages';
 import {FormattedMessage} from 'react-intl';
 
 let styles = {};

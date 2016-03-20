@@ -1,13 +1,13 @@
 import React, {PropTypes} from 'react';
 import Radium from 'radium';
-import {globalStyles} from '../../utils/styleConstants';
+import {globalStyles} from 'utils/styleConstants';
 import {PubModalCite, PubModalTOC, } from './';
 import {PubStatus, PubReviews} from '../';
-import {Discussions} from '../../containers';
+import {Discussions} from 'containers';
 
-import {rightBarStyles} from '../../containers/PubReader/rightBarStyles';
+import {rightBarStyles} from 'containers/PubReader/rightBarStyles';
 import { Link } from 'react-router';
-import {globalMessages} from '../../utils/globalMessages';
+import {globalMessages} from 'utils/globalMessages';
 import {FormattedMessage} from 'react-intl';
 
 let styles = {};
@@ -73,17 +73,6 @@ const PubModals = React.createClass({
 											journalName={this.props.journalName} 
 											isFeatured={this.props.isFeatured}/>
 									);
-							case 'reviews':
-								return (<div>
-										<PubStatus 
-											slug={this.props.slug}
-											pubStatus={this.props.pubStatus}
-											featuredIn={this.props.featuredIn}
-											submittedTo={this.props.submittedTo}/>
-										<PubReviews 
-											slug={this.props.slug}
-											reviewsData={this.props.reviewsData} />
-									</div>);
 										
 
 							case 'discussions':

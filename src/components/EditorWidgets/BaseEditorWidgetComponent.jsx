@@ -1,5 +1,5 @@
 import React, {PropTypes} from 'react';
-import EditorPlugins from '../../components/EditorPlugins/index.js';
+import EditorPlugins from 'components/EditorPlugins/index.js';
 import Radium from 'radium';
 
 const widgetStyle = function(PluginColor) {

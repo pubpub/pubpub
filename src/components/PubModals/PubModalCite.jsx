@@ -1,10 +1,10 @@
 import React, { PropTypes } from 'react';
 import Radium from 'radium';
 import {baseStyles} from './pubModalStyle';
-// import {globalStyles} from '../../utils/styleConstants';
+// import {globalStyles} from 'utils/styleConstants';
 import {Reference} from '../';
 
-import {globalMessages} from '../../utils/globalMessages';
+import {globalMessages} from 'utils/globalMessages';
 import {FormattedMessage} from 'react-intl';
 
 let styles = {};

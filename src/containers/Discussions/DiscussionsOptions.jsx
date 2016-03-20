@@ -1,8 +1,8 @@
 // import React, {PropTypes} from 'react';
 // import Radium from 'radium';
 // import { Link } from 'react-router';
-// import {globalStyles} from '../../utils/styleConstants';
-// import {rightBarStyles} from '../../containers/PubReader/rightBarStyles';
+// import {globalStyles} from 'utils/styleConstants';
+// import {rightBarStyles} from 'containers/PubReader/rightBarStyles';
 
 // import {FormattedMessage} from 'react-intl';
 

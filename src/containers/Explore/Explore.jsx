@@ -3,10 +3,10 @@ import {connect} from 'react-redux';
 import Radium from 'radium';
 import Helmet from 'react-helmet';
 import {CollectionGallery, PubGallery, JournalGallery} from '../../components';
-import {NotFound} from '../../containers';
-import {globalStyles} from '../../utils/styleConstants';
+import {NotFound} from 'containers';
+import {globalStyles} from 'utils/styleConstants';
 
-import {globalMessages} from '../../utils/globalMessages';
+import {globalMessages} from 'utils/globalMessages';
 import {FormattedMessage} from 'react-intl';
 
 let styles = {};
