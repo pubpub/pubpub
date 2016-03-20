@@ -29,6 +29,7 @@ const ReferenceEditor = React.createClass({
 		assetObject: PropTypes.object,
 		addAset: PropTypes.func,
 		updateAset: PropTypes.func,
+		cancel: PropTypes.func,
 
 	},
 
@@ -137,7 +138,7 @@ const ReferenceEditor = React.createClass({
 	},
 
 	render: function() {
-		const assetData = this.props.assetData || {};
+		const assetObject = this.props.assetObject || {};
 
 		return (
 			<div>
@@ -152,12 +153,12 @@ const ReferenceEditor = React.createClass({
 						<Button
 							key={'customStyleSaveButton'}
 							label={'Cancel'}
-							onClick={undefined}/>
+							onClick={this.props.cancel}/>
 					</div>
 
 				</div>
 
-				<p>Here's some file context!</p>
+				<p>{JSON.stringify(assetObject)}</p>
 				
 			</div>
 		);

@@ -135,10 +135,10 @@ const Editor = React.createClass({
 		this.props.dispatch(saveSettingsPubPub(this.props.slug, newSettings));
 	},
 
-	saveReferences: function(newReferences) {
-		const ref = new Firebase(FireBaseURL + this.props.slug + '/editorData/references' );
-		ref.set(newReferences);
-	},
+	// saveReferences: function(newReferences) {
+	// 	const ref = new Firebase(FireBaseURL + this.props.slug + '/editorData/references' );
+	// 	ref.set(newReferences);
+	// },
 
 	closeModalHandler: function() {
 		this.props.dispatch(closeModal());
@@ -245,11 +245,6 @@ styles = {
 		pointerEvents: 'none',
 		transform: 'scale(0.9)',
 		transition: '.1s linear opacity, .1s linear transform',
-
-		'@media screen and (min-width: 1600px)': {
-			width: 1200,
-			left: 'calc(50vw - 600px)',
-		},
 
 	},
 	modalContainerActive: {

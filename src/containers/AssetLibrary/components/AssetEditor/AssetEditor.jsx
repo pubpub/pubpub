@@ -25,6 +25,7 @@ const AssetEditor = React.createClass({
 
 		addAsset: PropTypes.func,
 		updateAsset: PropTypes.func,
+		cancel: PropTypes.func,
 		slug: PropTypes.string,
 	},
 
@@ -113,6 +114,7 @@ const AssetEditor = React.createClass({
 				thumbnail: thumbnail,
 			}
 		};
+		const xass = 6;
 
 		this.props.dispatch(createAsset(newAsset));
 
@@ -176,10 +178,10 @@ const AssetEditor = React.createClass({
 					case 'image':
 					case 'video':
 					case 'data':
-						return ( <FileEditor assetObject={this.props.assetObject} addAsset={this.props.addAsset} updateAsset={this.props.updateAsset} /> );
+						return ( <FileEditor assetObject={this.props.assetObject} addAsset={this.props.addAsset} updateAsset={this.props.updateAsset} cancel={this.props.cancel}/> );
 
 					case 'reference':
-						return ( <ReferenceEditor assetObject={this.props.assetObject} addAsset={this.props.addAsset} updateAsset={this.props.updateAsset} /> );
+						return ( <ReferenceEditor assetObject={this.props.assetObject} addAsset={this.props.addAsset} updateAsset={this.props.updateAsset} cancel={this.props.cancel} /> );
 
 					default:
 						return null;
@@ -196,7 +198,7 @@ const AssetEditor = React.createClass({
 
 export default ( Radium(AssetEditor) );
 
-styles = {	
+styles = {
 	container: {
 		width: '100%',
 		minHeight: '100%',

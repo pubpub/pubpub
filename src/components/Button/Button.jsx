@@ -84,21 +84,22 @@ styles = {
 		opacity: 1,
 	},
 	button: {
-		padding: '5px 30px',
+		padding: '5px 15px',
 		overflow: 'hidden',
 		position: 'relative',
-		border: '1px solid #999',
+		border: '1px solid #aaa',
 		borderRadius: '1px',
 		textAlign: 'center',
 		display: 'inline-block',
 		fontFamily: 'Lato',
+		userSelect: 'none',
 		':hover': {
 			cursor: 'pointer',
-			// backgroundColor: '#DDD',
-			border: '1px solid #333',
+			backgroundColor: '#F3F3F3',
+			// border: '1px solid #333',
 		},
 		':active': {
-			top: '1px',
+			transform: 'translateY(1px)',
 		}
 	},
 	loaderWrapper: {

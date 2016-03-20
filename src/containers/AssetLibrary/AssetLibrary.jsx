@@ -2,20 +2,12 @@
 
 import React, { PropTypes } from 'react';
 import {connect} from 'react-redux';
-import { pushState } from 'redux-router';
 import Radium from 'radium';
 
-import PureRenderMixin from 'react-addons-pure-render-mixin';
-import ReactFireMixin from 'reactfire';
-
-// import {EditorModalAssetsRow, EditorModalCollaborators, EditorModalPublish, EditorModalReferences, EditorModalSettings} from '../../components/EditorModals';
-
 import {Menu, Button} from 'components';
-import {AssetEditor} from './components';
+import {AssetEditor, AssetRow} from './components';
 
 import {closeModal, saveCollaboratorsToPub, saveSettingsPubPub} from 'actions/editor';
-// import {createAsset} from '../../actions/assets';
-import {saveSettingsUser} from 'actions/login';
 
 import {globalStyles} from 'utils/styleConstants';
 
@@ -34,6 +26,7 @@ const AssetLibrary = React.createClass({
 		loginData: PropTypes.object,
 		slug: PropTypes.string,
 
+		// assetEditorOnly: PropTypes.bool // If this is true, don't render any of the library content, just load straight into AssetEditor. Will need to pass through object
 		dispatch: PropTypes.func,
 	},
 
@@ -43,7 +36,10 @@ const AssetLibrary = React.createClass({
 			uploadRates: [],
 			finishedUploads: 0,
 			activeSection: 'assets',
+
 			showAssetEditor: false,
+			assetEditorType: undefined,
+			assetEditorObject: {}
 		};
 	},
 	// TODO: On each load, we gotta load the user's assets again, in
@@ -100,36 +96,6 @@ const AssetLibrary = React.createClass({
 	// When file finishes s3 upload, send s3 details to PubPub server.
 	// Response is used to craft the asset object that is added to firebase.
 	onFileFinish: function(evt, index, type, filename, originalFilename) {
-		// const createAssetObject = new XMLHttpRequest();
-		// createAssetObject.addEventListener('load', (success)=> {
-			
-		// 	// Set File to finished in state. This will hide the uploading version
-		// 	const tmpFiles = this.state.files;
-		// 	tmpFiles[index].isFinished = true;
-		// 	this.setState({
-		// 		files: tmpFiles,
-		// 		finishedUploads: this.state.finishedUploads + 1
-		// 	});
-			
-		// 	// Create Firebase object and push it
-		// 	const serverResult = JSON.parse(success.target.responseText);
-		// 	const newAsset = {
-		// 		url_s3: 'https://s3.amazonaws.com/pubpub-upload/' + filename,
-		// 		url: serverResult.url,
-		// 		thumbnail: serverResult.thumbnail,
-		// 		originalFilename: originalFilename,
-		// 		filetype: type,
-		// 		assetType: serverResult.assetType,
-		// 		createDate: new Date().toString(),
-		// 	};
-
-		// 	// Call the addAsset function passed in as a prop
-		// 	this.props.addAsset(newAsset);
-		// });
-		// createAssetObject.open('GET', '/api/handleNewFile?contentType=' + type + '&url=https://s3.amazonaws.com/pubpub-upload/' + filename );
-		// createAssetObject.send();
-
-
 
 		let assetType = 'data';
 		let thumbnail = '/thumbnails/data.png';
@@ -170,8 +136,22 @@ const AssetLibrary = React.createClass({
 		}
 	},
 
-	toggleAssetEditor: function() {
-		this.setState({showAssetEditor: !this.state.showAssetEditor});
+	openAssetEditor: function(assetObject) {
+		return ()=>{
+			this.setState({
+				showAssetEditor: true,
+				assetEditorType: assetObject.assetType,
+				assetEditorObject: assetObject,
+			});	
+		}
+		
+	},
+	closeAssetEditor: function() {
+		this.setState({
+			showAssetEditor: false,
+			assetEditorType: undefined,
+			assetEditorObject: {},
+		});	
 	},
 
 	addAsset: function(newAssetArray) {
@@ -186,6 +166,26 @@ const AssetLibrary = React.createClass({
 		}
 	},
 
+	separateAssets: function(assetArray) {
+		const assets = [];
+		const references = [];
+		const highlights = [];
+		for (let index = 0; index < assetArray.length; index++) {
+			if (assetArray[index].assetType === 'reference') {
+				references.push(assetArray[index]);
+			} else if (assetArray[index].assetType === 'highlight') {
+				highlights.push(assetArray[index]);
+			} else {
+				assets.push(assetArray[index]);
+			}
+		}
+		return {
+			assets: assets,
+			references: references,
+			highlights: highlights
+		};
+	},
+
 	render: function() {
 		const menuItems = [
 			{ key: 'assets', string: 'Assets', function: this.setActiveSection('assets'), isActive: this.state.activeSection === 'assets' },
@@ -194,30 +194,18 @@ const AssetLibrary = React.createClass({
 		];
 
 		const userAssets = this.props.loginData.getIn(['userData', 'assets']).toJS() || [];
-		const assets = [];
-		const references = [];
-		const highlights = [];
-		for (let index = 0; index < userAssets.length; index++) {
-			if (userAssets[index].assetType === 'reference') {
-				references.push(userAssets[index]);
-			} else if (userAssets[index].assetType === 'highlight') {
-				highlights.push(userAssets[index]);
-			} else {
-				assets.push(userAssets[index]);
-			}
-		}
-		console.log(assets, references, highlights);
-
+		const {assets, references, highlights} = this.separateAssets(userAssets);
 
 		return (
 			<div>
 				<Portal isOpened={this.state.showAssetEditor}>
 					<div style={styles.assetEditorWrapper}>
 						<AssetEditor 
-							assetType={'image'}
-							assetData={undefined}
+							assetType={this.state.assetEditorType}
+							assetObject={this.state.assetEditorObject}
 							addAsset={this.props.addAsset}
 							updateAsset={this.props.updateAsset}
+							cancel={this.closeAssetEditor}
 							slug={this.props.slug} />
 					</div>
 				</Portal>
@@ -230,14 +218,12 @@ const AssetLibrary = React.createClass({
 						<div style={styles.container}>
 
 							<div style={globalStyles.h1}>Media Library</div>
-							{/* <div style={[globalStyles.simpleButton, styles.topRight]} key={'libraryClose'}>Close</div> */}
+			
 
 							<div style={globalStyles.subMenu}>
 								<Menu items={menuItems} submenu={true}/>
 							</div>
 							
-							<div onClick={this.toggleAssetEditor}>ToggleIt</div>
-
 							{(() => {
 								switch (this.state.activeSection) {
 								case 'assets':
@@ -267,6 +253,14 @@ const AssetLibrary = React.createClass({
 													for (let index = assets.length; index > 0; index--) {
 														const asset = assets[index - 1];
 														if (asset.assetData) {
+															assetList.push(<AssetRow 
+																key={'assetRow-' + index}
+																assetObject={asset}
+																isLoading={false}
+																insertHandler={()=>{}}
+																editHandler={this.openAssetEditor}
+																removeHandler={()=>{}} />
+															);
 															// assetList.push(<EditorModalAssetsRow 
 															// 	key={'modalAsset-' + index} 
 															// 	keyChild={'modalAsset-' + index} 

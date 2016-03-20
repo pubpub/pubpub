@@ -29,6 +29,7 @@ const ReferenceEditor = React.createClass({
 		assetObject: PropTypes.object,
 		addAset: PropTypes.func,
 		updateAset: PropTypes.func,
+		cancel: PropTypes.func,
 
 	},
 
@@ -152,7 +153,7 @@ const ReferenceEditor = React.createClass({
 						<Button
 							key={'customStyleSaveButton'}
 							label={'Cancel'}
-							onClick={undefined}/>
+							onClick={this.props.cancel}/>
 					</div>
 
 				</div>
