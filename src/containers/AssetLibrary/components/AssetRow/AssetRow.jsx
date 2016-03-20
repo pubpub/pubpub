@@ -19,6 +19,13 @@ const AssetRow = React.createClass({
 		editHandler: PropTypes.func,
 		removeHandler: PropTypes.func,
 	},
+	getDefaultProps: function() {
+		return {
+			insertHandler: ()=>{},
+			editHandler: ()=>{},
+			removeHandler: ()=>{},
+		};
+	},
 	
 	render: function() {
 		const assetObject = this.props.assetObject || {};

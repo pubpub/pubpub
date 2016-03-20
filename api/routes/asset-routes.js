@@ -24,7 +24,6 @@ app.post('/assetCreate', function(req, res) {
 
 	newAsset.save(function(err, savedAsset) {
 		if (err) { return res.status(500).json(err);  }
-		console.log('saved asset is', savedAsset);
 		User.update({ _id: req.user._id }, { $addToSet: { assets: savedAsset._id} }, function(err, result){if(err) return handleError(err)});
 		return res.status(201).json(savedAsset);
 	});

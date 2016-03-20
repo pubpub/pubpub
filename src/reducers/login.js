@@ -180,8 +180,6 @@ function setNotificationsRead(state) {
 }
 
 function assetCreated(state, result) {
-	console.log('in the reducer with ', result);
-	console.log('old assets', state.getIn(['userData', 'assets']));
 	const newAssets = state.getIn(['userData', 'assets']).push(result);
 	return state.mergeIn(['userData', 'assets'], state.getIn(['userData', 'assets']).push(result));
 }

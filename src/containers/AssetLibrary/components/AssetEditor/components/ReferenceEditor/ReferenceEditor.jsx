@@ -138,7 +138,8 @@ const ReferenceEditor = React.createClass({
 	},
 
 	render: function() {
-		const assetData = this.props.assetData || {};
+		const assetObject = this.props.assetObject || {};
+		const assetData = assetObject.assetData || {};
 
 		return (
 			<div>
@@ -193,7 +194,7 @@ const ReferenceEditor = React.createClass({
 						</div> */}
 						<div style={styles.inputFormWrapper}>
 							{
-								Object.keys(defaultFields).map((inputItem)=>{
+								Object.keys({...defaultFields, ...assetData}).map((inputItem)=>{
 									return (
 										<div key={'manualForm-' + inputItem} style={styles.manualFormInputWrapper}>
 											<label style={styles.manualFormInputTitle} htmlFor={inputItem}>

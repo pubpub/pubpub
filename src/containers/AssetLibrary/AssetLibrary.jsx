@@ -5,7 +5,7 @@ import {connect} from 'react-redux';
 import Radium from 'radium';
 
 import {Menu, Button} from 'components';
-import {AssetEditor, AssetRow} from './components';
+import {AssetEditor, AssetRow, ReferenceRow} from './components';
 
 import {closeModal, saveCollaboratorsToPub, saveSettingsPubPub} from 'actions/editor';
 
@@ -197,23 +197,22 @@ const AssetLibrary = React.createClass({
 		const {assets, references, highlights} = this.separateAssets(userAssets);
 
 		return (
-			<div>
-				<Portal isOpened={this.state.showAssetEditor}>
-					<div style={styles.assetEditorWrapper}>
-						<AssetEditor 
-							assetType={this.state.assetEditorType}
-							assetObject={this.state.assetEditorObject}
-							addAsset={this.props.addAsset}
-							updateAsset={this.props.updateAsset}
-							cancel={this.closeAssetEditor}
-							slug={this.props.slug} />
-					</div>
-				</Portal>
+				
 
 
 				<Dropzone ref="dropzone" onDrop={this.onDrop} disableClick style={styles.dropzone} activeStyle={this.state.activeSection === 'assets' ? styles.dropzoneActive : {}}>
 					<div>
-						
+						<Portal isOpened={this.state.showAssetEditor}>
+							<div style={styles.assetEditorWrapper}>
+								<AssetEditor 
+									assetType={this.state.assetEditorType}
+									assetObject={this.state.assetEditorObject}
+									addAsset={this.props.addAsset}
+									updateAsset={this.props.updateAsset}
+									cancel={this.closeAssetEditor}
+									slug={this.props.slug} />
+							</div>
+						</Portal>
 
 						<div style={styles.container}>
 
@@ -237,14 +236,34 @@ const AssetLibrary = React.createClass({
 											</div>
 
 											<div style={styles.addSection}>
-												<div>or drag files to this window to quickly add</div>
+												<div>Drag files to this window to quickly add</div>
 											</div>
 
-											<div style={styles.filterBar}>
+											{/* <div style={styles.filterBar}>
 												Filter: <div style={styles.filterMenuWrapper}> <Menu items={menuItems} submenu={true}/> </div>
-											</div>
+											</div> */}
 
 											<div>
+												{/* Display all uploading using EditorModalAssetsRow */}
+												{this.state.files.map((uploadAsset, index) => {
+													const thumbnailImage = (uploadAsset.type.indexOf('image') > -1) ? uploadAsset.preview : '/thumbnails/file.png';
+													return (uploadAsset.isFinished !== true
+														? <AssetRow 
+															key={'modalAssetUploading-' + index} 
+															assetObject={{
+																_id: 'modalAssetUploading-' + index,
+																label: uploadAsset.name,
+																assetData: {
+																	thumbnail: thumbnailImage
+																}
+															}}
+															thumbnail={thumbnailImage}
+															isLoading={true}
+															percentLoaded={this.state.uploadRates[index] * 100}/>
+														: null);
+													
+												})}
+
 												{/* Display all existing assets using EditorModalAssetsRow */}
 												{(() => {
 													const assetList = [];
@@ -256,7 +275,6 @@ const AssetLibrary = React.createClass({
 															assetList.push(<AssetRow 
 																key={'assetRow-' + index}
 																assetObject={asset}
-																isLoading={false}
 																insertHandler={()=>{}}
 																editHandler={this.openAssetEditor}
 																removeHandler={()=>{}} />
@@ -287,10 +305,27 @@ const AssetLibrary = React.createClass({
 													onClick={undefined}/>
 											</div>
 
-											{/* <EditorModalReferences
-												referenceData={references}
-												referenceStyle={undefined}
-												updateReferences={()=>{}}/> */}
+											{/* Display all existing assets using EditorModalAssetsRow */}
+											{(() => {
+												const referenceList = [];
+
+												// Iterate through referenceList in reverse order. So newest are at top
+												for (let index = references.length; index > 0; index--) {
+													const reference = references[index - 1];
+													if (reference.assetData) {
+														referenceList.push(<ReferenceRow 
+															key={'referenceRow-' + index}
+															assetObject={reference}
+															insertHandler={()=>{}}
+															editHandler={this.openAssetEditor}
+															removeHandler={()=>{}} />
+														);
+
+													}
+													
+												}
+												return referenceList;
+											})()}
 										</div>
 										
 									);
@@ -311,7 +346,6 @@ const AssetLibrary = React.createClass({
 
 				</Dropzone>
 
-			</div>
 
 		);
 	}
