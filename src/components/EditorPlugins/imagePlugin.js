@@ -23,7 +23,7 @@ const IMG_CLASS = 'pub-img';
 
 // let styles = {};
 
-const ImageEditorWidget = (props) => (<span>Image: {props.reference || 'Empty'}</span>);
+const ImageEditorWidget = (props) => (<span>Image: {(((props.source) ? props.source.label : false) || 'Empty')}</span>);
 
 const ImagePlugin = React.createClass({
 	propTypes: {
@@ -48,10 +48,11 @@ const ImagePlugin = React.createClass({
 	},
 	render: function() {
 		// const refName = this.props.children;
-		if (!this.props.source || !this.props.source.url_s3) {
+		if (!this.props.source && this.props.source && this.props.source.assetData.url) {
 			return (<span></span>);
 		}
-		const url = this.props.source.url_s3;
+		// debugger;
+		const url = this.props.source.assetData.url;
 		const size = this.props.size;
 		const align = this.props.align ? this.props.align : 'full';
 		const caption = this.props.caption;

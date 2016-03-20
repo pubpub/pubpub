@@ -79,11 +79,10 @@ const EditorWidgetModal = React.createClass({
 			this.updateToken({activeLine: this.state.activeLine, activeChar: this.state.activeChar, isUpdate: true});
 		}
 
-		const assets = (nextProps.assets) ? Object.values(nextProps.assets) : [];
 		const references = (nextProps.references) ? Object.values(nextProps.references) : [];
 		const selections = (nextProps.selections) ? Object.values(nextProps.selections) : [];
 
-		this.setState({assets: assets, references: references, aselections: selections});
+		this.setState({references: references, aselections: selections});
 
 		return true;
 	},
@@ -246,10 +245,6 @@ const EditorWidgetModal = React.createClass({
 			const inputFieldTitle = pluginInputField.title;
 			const ref = this.popupInputFields[inputFieldTitle];
 			const val = ref.value();
-			if (inputFieldTitle === 'source') {
-				debugger;
-			}
-			debugger;
 			outputObj[inputFieldTitle] = val;
 		}
 
@@ -291,7 +286,6 @@ const EditorWidgetModal = React.createClass({
 	render: function() {
 
 		const PluginInputFields = (this.state.pluginType) ? Plugins[this.state.pluginType].InputFields : [];
-		debugger;
 
 		return (
 			<Portal onClose={this.closePopup} isOpened={this.state.popupVisible} closeOnOutsideClick closeOnEsc>
@@ -319,7 +313,7 @@ const EditorWidgetModal = React.createClass({
 																	<FieldComponent
 																		selectedValue={value}
 																		references={this.state.references}
-																		assets={this.state.assets}
+																		assets={this.props.assets}
 																		selections={this.state.selections}
 																		saveChange={this.onInputFieldChange}
 																		{...PluginInputFieldParams}
