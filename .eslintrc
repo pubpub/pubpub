@@ -35,7 +35,8 @@
     "no-trailing-spaces": 0,
     "indent": [2, "tab"],
     "new-cap": 0,
-    "no-unused-vars": [1, {"vars": "local", "args": "none"}]
+    "no-unused-vars": [1, {"vars": "local", "args": "none"}],
+    "id-length": [2, {"exceptions": ["_"]}]
   },
   "plugins": [
     "react", "import"

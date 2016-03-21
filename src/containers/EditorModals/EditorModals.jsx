@@ -8,16 +8,13 @@ import Radium from 'radium';
 import PureRenderMixin from 'react-addons-pure-render-mixin';
 import ReactFireMixin from 'reactfire';
 
-import {AssetLibrary} from '../../components';
-import {EditorModalAssets, EditorModalCollaborators, EditorModalPublish, EditorModalReferences, EditorModalSettings} from '../../components/EditorModals';
-
+import {AssetLibrary} from 'containers';
+import {CollaboratorsModal, PublishModal, SettingsModal} from './components';
 
 import {closeModal, saveCollaboratorsToPub, saveSettingsPubPub} from '../../actions/editor';
 import {saveSettingsUser} from '../../actions/login';
 
-import {globalStyles} from '../../utils/styleConstants';
-
-import {createAsset, updateAsset} from '../../actions/assets';
+import {globalStyles} from 'utils/styleConstants';
 
 let FireBaseURL;
 let styles;
@@ -138,10 +135,10 @@ const Editor = React.createClass({
 		this.props.dispatch(saveSettingsPubPub(this.props.slug, newSettings));
 	},
 
-	saveReferences: function(newReferences) {
-		const ref = new Firebase(FireBaseURL + this.props.slug + '/editorData/references' );
-		ref.set(newReferences);
-	},
+	// saveReferences: function(newReferences) {
+	// 	const ref = new Firebase(FireBaseURL + this.props.slug + '/editorData/references' );
+	// 	ref.set(newReferences);
+	// },
 
 	closeModalHandler: function() {
 		this.props.dispatch(closeModal());
@@ -150,22 +147,10 @@ const Editor = React.createClass({
 		console.log('toggle left panel');
 	},
 
-	addAsset: function(newAssetArray) {
-		for(let index = 0; index < newAssetArray.length; index++) {
-			this.props.dispatch(createAsset(newAssetArray[index]));	
-		}
-		
-	},
-	updateAsset: function(updatedAssetArray) {
-		for(let index = 0; index < updatedAssetArray.length; index++) {
-			this.props.dispatch(updateAsset(updatedAssetArray[index]));	
-		}
-	},
 
 	render: function() {
 				
 		const activeModal = this.props.editorData.get('activeModal');
-		const userAssets = this.props.loginData.getIn(['userData', 'assets']).toJS() || [];
 
 		return (
 			<div style={styles.container} className={'editorModals'}>
@@ -178,34 +163,30 @@ const Editor = React.createClass({
 						{(() => {
 							switch (activeModal) {
 							case 'Assets':
-								return (<AssetLibrary 
-									addAsset={this.addAsset}
-									updateAsset={this.updateAsset}
-									slug={this.props.slug}
-									userAssets={userAssets} />);
+								return (<AssetLibrary />);
 
 							case 'Collaborators':
-								return (<EditorModalCollaborators 
+								return (<CollaboratorsModal 
 										collaboratorData={this.state.firepadData.collaborators} 
 										updateCollaborators={this.saveUpdatedCollaborators}/>
 									);
 
 							case 'Publish':
-								return (<EditorModalPublish 
+								return (<PublishModal 
 										slug={this.props.slug} 
 										handlePublish={this.props.publishVersionHandler}
 										currentJournal={this.props.journalData.getIn(['journalData', 'journalName'])}/>
 									);
 
-							case 'References':
-								return (<EditorModalReferences
-										referenceData={this.state.firepadData.references}
-										referenceStyle={this.state.firepadData && this.state.firepadData.settings ? this.state.firepadData.settings.pubReferenceStyle : undefined}
-										updateReferences={this.saveReferences}/>
-									);
+							// case 'References':
+							// 	return (<EditorModalReferences
+							// 			referenceData={this.state.firepadData.references}
+							// 			referenceStyle={this.state.firepadData && this.state.firepadData.settings ? this.state.firepadData.settings.pubReferenceStyle : undefined}
+							// 			updateReferences={this.saveReferences}/>
+							// 		);
 
 							case 'Style':
-								return (<EditorModalSettings
+								return (<SettingsModal
 										editorFont={this.props.loginData.getIn(['userData', 'settings', 'editorFont'])}
 										editorFontSize={this.props.loginData.getIn(['userData', 'settings', 'editorFontSize'])}
 										editorColor={this.props.loginData.getIn(['userData', 'settings', 'editorColor'])}
@@ -264,11 +245,6 @@ styles = {
 		pointerEvents: 'none',
 		transform: 'scale(0.9)',
 		transition: '.1s linear opacity, .1s linear transform',
-
-		'@media screen and (min-width: 1600px)': {
-			width: 1200,
-			left: 'calc(50vw - 600px)',
-		},
 
 	},
 	modalContainerActive: {

@@ -2,9 +2,9 @@ import React, { PropTypes } from 'react';
 import {reduxForm} from 'redux-form';
 import Radium from 'radium';
 import PureRenderMixin from 'react-addons-pure-render-mixin';
-import {globalStyles} from '../../utils/styleConstants';
+import {globalStyles} from 'utils/styleConstants';
 
-import {globalMessages} from '../../utils/globalMessages';
+import {globalMessages} from 'utils/globalMessages';
 import {injectIntl, defineMessages, FormattedMessage} from 'react-intl';
 
 let styles = {};

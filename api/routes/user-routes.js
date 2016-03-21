@@ -46,13 +46,13 @@ app.post('/updateUser', function(req, res) {
 				user.thumbnail = thumbnail;
 				outputObject.thumbnail = thumbnail;
 				user.save(function(err, result){
-					if (err) { return res.status(500).json(err);  }
+					if (err) { return res.status(500).json(err); }
 					return res.status(201).json(outputObject);
 				});
 			});
 		} else {
 			user.save(function(err, result){
-				if (err) { return res.status(500).json(err);  }
+				if (err) { return res.status(500).json(err); }
 				// console.log('outputObject', outputObject);
 				return res.status(201).json(outputObject);
 			});
@@ -76,7 +76,7 @@ app.post('/updateUserSettings', function(req, res) {
 		user.settings[settingKey] = req.body.newSettings[settingKey];
 
 		user.save(function(err, result){
-			if (err) { return res.status(500).json(err);  }
+			if (err) { return res.status(500).json(err); }
 
 			return res.status(201).json(user.settings);
 		});

@@ -9,15 +9,15 @@ import {getRandomSlug} from '../../actions/journal';
 import {toggleVisibility, follow, unfollow} from '../../actions/login';
 import {closeMenu} from '../../actions/nav';
 
-import {convertImmutableListToObject} from '../../utils/parsePlugins';
+import {convertImmutableListToObject} from 'utils/parsePlugins';
 
 import {PubBody, PubModals, PubNav, LoaderDeterminate, PubLeftBar} from '../../components';
 import {Discussions} from '../';
 
-import {globalStyles, pubSizes} from '../../utils/styleConstants';
+import {globalStyles, pubSizes} from 'utils/styleConstants';
 import {rightBarStyles} from './rightBarStyles';
 
-import {globalMessages} from '../../utils/globalMessages';
+import {globalMessages} from 'utils/globalMessages';
 import {generateTOC} from '../../markdown/generateTOC';
 import {FormattedMessage} from 'react-intl';
 

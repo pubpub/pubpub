@@ -71,31 +71,21 @@ export const globalStyles = {
 		padding: '20px',
 		color: '#333',
 	},
-	simpleButton: {
-		padding: '2px 15px',
-		border: '1px solid #bbb',
-		borderRadius: '1px',
-		display: 'inline-block',
-		userSelect: 'none',
-		':hover': {
-			backgroundColor: '#F3F5F7',
-			cursor: 'pointer',
-		},
-		':active': {
-			transform: 'translateY(1px)',
-		}
-	},
 	largeModal: {
 		width: '86vw',
-		height: 'calc(100vh - 27px)',
+		height: '100vh',
 		overflow: 'hidden',
 		overflowY: 'scroll',
 		margin: '0 auto',
 		position: 'fixed',
-		top: 27,
+		top: 0,
 		left: '7vw',
 		backgroundColor: 'white',
 		boxShadow: '0px 0px 10px 0px rgba(0,0,0,0.25)',
+		'@media screen and (min-width: 1395px)': {
+			width: 1200,
+			left: 'calc(50vw - 600px)',
+		},
 	},
 	subMenu: {
 		margin: '0px 20px',

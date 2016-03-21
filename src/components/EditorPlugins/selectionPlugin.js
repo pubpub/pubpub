@@ -1,7 +1,7 @@
 import React, {PropTypes} from 'react';
 import createPubPubPlugin from './PubPub';
 import Radium, {Style} from 'radium';
-import smoothScroll from '../../utils/smoothscroll';
+import smoothScroll from 'utils/smoothscroll';
 
 import {FormattedMessage} from 'react-intl';
 

@@ -2,13 +2,13 @@ import React, { PropTypes } from 'react';
 import {connect} from 'react-redux';
 import Radium, {Style} from 'radium';
 import PureRenderMixin from 'react-addons-pure-render-mixin';
-import {debounce} from '../../utils/loadingFunctions';
-import {globalStyles} from '../../utils/styleConstants';
-import {globalMessages} from '../../utils/globalMessages';
+import {debounce} from 'utils/loadingFunctions';
+import {globalStyles} from 'utils/styleConstants';
+import {globalMessages} from 'utils/globalMessages';
 import {FormattedMessage} from 'react-intl';
 import {Iterable} from 'immutable';
 import Widget from './EditorWidgetClass';
-import {parsePluginString} from '../../utils/parsePlugins';
+import {parsePluginString} from 'utils/parsePlugins';
 import EditorWidgetModal from './EditorWidgetModal';
 
 

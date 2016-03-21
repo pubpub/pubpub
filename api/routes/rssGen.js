@@ -3,8 +3,8 @@ var RSS = require('rss');
 var fs = require('fs');
 import React from 'react';
 import ReactDOM from 'react-dom/server';
-import {PubBody} from '../../src/components';
-import {convertListToObject} from '../../src/utils/parsePlugins';
+import {PubBody} from 'components';
+import {convertListToObject} from 'utils/parsePlugins';
 
 import {StyleRoot} from 'radium';
 import {IntlProvider} from 'react-intl';

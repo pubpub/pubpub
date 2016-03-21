@@ -3,18 +3,18 @@ import {connect} from 'react-redux';
 import Radium from 'radium';
 import Helmet from 'react-helmet';
 import PureRenderMixin from 'react-addons-pure-render-mixin';
-import {getPub, pubNavIn} from '../../actions/pub';
-// import {toggleVisibility} from '../../actions/login';
-import {submitPubToJournal} from '../../actions/journal';
-import {inviteReviewers} from '../../actions/user';
+import {getPub, pubNavIn} from 'actions/pub';
+// import {toggleVisibility} from 'actions/login';
+import {submitPubToJournal} from 'actions/journal';
+import {inviteReviewers} from 'actions/user';
 import { Link } from 'react-router';
-import {PubLeftBar, PubNav, LoaderDeterminate} from '../../components';
-import {Discussions} from '../../containers';
+import {PubLeftBar, PubNav, LoaderDeterminate} from 'components';
+import {Discussions} from 'containers';
 // import {PubMetaDiscussions, PubMetaExperts, PubMetaHistory, PubMetaHistoryDiff, PubMetaReview, PubMetaReviews, PubMetaSource} from '../../components/PubMetaPanels';
-import {PubMetaAnalytics, PubMetaCitations, PubMetaHistory, PubMetaHistoryDiff, PubMetaInTheNews, PubMetaInvite, PubMetaJournals, PubMetaSource} from '../../components/PubMetaPanels';
-import {globalStyles, pubSizes} from '../../utils/styleConstants';
+import {PubMetaAnalytics, PubMetaCitations, PubMetaHistory, PubMetaHistoryDiff, PubMetaInTheNews, PubMetaInvite, PubMetaJournals, PubMetaSource} from './components';
+import {globalStyles, pubSizes} from 'utils/styleConstants';
 
-import {globalMessages} from '../../utils/globalMessages';
+import {globalMessages} from 'utils/globalMessages';
 import {FormattedMessage} from 'react-intl';
 
 let styles = {};

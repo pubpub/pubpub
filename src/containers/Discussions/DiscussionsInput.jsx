@@ -2,19 +2,19 @@
 
 import React, {PropTypes} from 'react';
 import Radium, {Style} from 'radium';
-import {LoaderIndeterminate, License} from '../../components';
-import {globalStyles} from '../../utils/styleConstants';
+import {LoaderIndeterminate, License} from 'components';
+import {globalStyles} from 'utils/styleConstants';
 
-import {globalMessages} from '../../utils/globalMessages';
+import {globalMessages} from 'utils/globalMessages';
 import {injectIntl, FormattedMessage} from 'react-intl';
 import PPMComponent from '../../markdown/PPMComponent';
 
 let styles = {};
 
-// import {loadCss} from '../../utils/loadingFunctions';
-import initCodeMirrorMode from '../../containers/Editor/editorCodeMirrorMode';
-import {codeMirrorStyles} from '../../containers/Editor/codeMirrorStyles';
-import {clearTempHighlights} from '../../components/PubSelectionPopup/selectionFunctions';
+// import {loadCss} from 'utils/loadingFunctions';
+import initCodeMirrorMode from 'containers/Editor/editorCodeMirrorMode';
+import {codeMirrorStyles} from 'containers/Editor/codeMirrorStyles';
+import {clearTempHighlights} from 'components/PubSelectionPopup/selectionFunctions';
 
 // import marked from '../../modules/markdown/markdown';
 // import markdownExtensions from '../../components/EditorPlugins';

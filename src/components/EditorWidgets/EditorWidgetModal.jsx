@@ -1,11 +1,11 @@
 import React, {PropTypes} from 'react';
 import Radium from 'radium';
-import {parsePluginString} from '../../utils/parsePlugins';
+import {parsePluginString} from 'utils/parsePlugins';
 
-// import {globalMessages} from '../../utils/globalMessages';
+// import {globalMessages} from 'utils/globalMessages';
 // import {FormattedMessage} from 'react-intl';
 
-import Plugins from '../../components/EditorPlugins/index.js';
+import Plugins from 'components/EditorPlugins/index.js';
 import InputFields from '../EditorPluginFields/index.js';
 import MurmurHash from 'murmurhash';
 import Portal from 'react-portal';

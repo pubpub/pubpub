@@ -35,13 +35,13 @@ app.post('/addDiscussion', function(req, res) {
 	}
 
 	Highlight.insertBulkAndReturnIDs(selections, function(err, selectionIds){
-		if (err) { return res.status(500).json(err);  }
+		if (err) { return res.status(500).json(err); }
 
 		newDiscussion.selections = selectionIds;
 
 		const discussion = new Discussion(newDiscussion);
 		discussion.save(function (err, result) {
-			if (err) { return res.status(500).json(err);  }
+			if (err) { return res.status(500).json(err); }
 			var discussionID = result.id;
 			var userID = result.author;
 			var pubID = result.pub;
@@ -78,7 +78,7 @@ app.post('/addDiscussion', function(req, res) {
 			];
 
 			Discussion.populate(result, populateQuery, function(err,populatedResult){
-				if (err) { return res.status(500).json(err);  }
+				if (err) { return res.status(500).json(err); }
 				res.status(201).json(populatedResult);
 				
 			});

@@ -2,14 +2,14 @@ import React, { PropTypes } from 'react';
 import {connect} from 'react-redux';
 import Radium from 'radium';
 import Helmet from 'react-helmet';
-import {NotFound} from '../../containers';
+import {NotFound} from 'containers';
 import {checkHash, resetPassword, submitResetRequest} from '../../actions/resetPassword';
 import {toggleVisibility} from '../../actions/login';
-import {globalStyles} from '../../utils/styleConstants';
+import {globalStyles} from 'utils/styleConstants';
 
-import {LoaderIndeterminate} from '../../components';
+import {LoaderIndeterminate} from 'components';
 
-// import {globalMessages} from '../../utils/globalMessages';
+// import {globalMessages} from 'utils/globalMessages';
 // import {FormattedMessage} from 'react-intl';
 
 let styles = {};

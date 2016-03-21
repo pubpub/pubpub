@@ -1,11 +1,11 @@
 import React, {PropTypes} from 'react';
 import Radium from 'radium';
-// import {globalStyles} from '../../utils/styleConstants';
+// import {globalStyles} from 'utils/styleConstants';
 import {LoaderIndeterminate} from '../';
 import AvatarEditor from './AvatarEditor';
-import {s3Upload} from '../../utils/uploadFile';
+import {s3Upload} from 'utils/uploadFile';
 
-import {globalMessages} from '../../utils/globalMessages';
+import {globalMessages} from 'utils/globalMessages';
 import {FormattedMessage} from 'react-intl';
 
 let styles = {};

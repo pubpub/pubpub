@@ -2,7 +2,7 @@
 import React, {PropTypes} from 'react';
 import Radium, {Style} from 'radium';
 import {Button} from '../';
-import {globalStyles} from '../../utils/styleConstants';
+import {globalStyles} from 'utils/styleConstants';
 
 let styles = {};
 

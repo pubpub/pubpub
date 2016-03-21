@@ -1,8 +1,8 @@
 import React, { PropTypes } from 'react';
 import {connect} from 'react-redux';
 import Radium, {Style} from 'radium';
-import {LoaderIndeterminate} from '../../components';
-import {complete, completeFromCache, clear} from '../../actions/autocomplete';
+import {LoaderIndeterminate} from 'components';
+import {complete, completeFromCache, clear} from 'actions/autocomplete';
 
 let styles = {};
 
