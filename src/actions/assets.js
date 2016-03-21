@@ -8,6 +8,10 @@ export const CREATE_ASSET_LOAD = 'asset/CREATE_ASSET_LOAD';
 export const CREATE_ASSET_SUCCESS = 'asset/CREATE_ASSET_SUCCESS';
 export const CREATE_ASSET_FAIL = 'asset/CREATE_ASSET_FAIL';
 
+export const UPDATE_ASSET_LOAD = 'asset/UPDATE_ASSET_LOAD';
+export const UPDATE_ASSET_SUCCESS = 'asset/UPDATE_ASSET_SUCCESS';
+export const UPDATE_ASSET_FAIL = 'asset/UPDATE_ASSET_FAIL';
+
 /*--------*/
 // Define Action creators
 // 
@@ -20,6 +24,16 @@ export function createAsset(assetObject) {
 	return {
 		types: [CREATE_ASSET_LOAD, CREATE_ASSET_SUCCESS, CREATE_ASSET_FAIL],
 		promise: (client) => client.post('/assetCreate', {data: {
+			assetObject: assetObject
+		}})
+	};
+}
+
+export function updateAsset(assetObject) {
+
+	return {
+		types: [UPDATE_ASSET_LOAD, UPDATE_ASSET_SUCCESS, UPDATE_ASSET_FAIL],
+		promise: (client) => client.post('/assetUpdate', {data: {
 			assetObject: assetObject
 		}})
 	};

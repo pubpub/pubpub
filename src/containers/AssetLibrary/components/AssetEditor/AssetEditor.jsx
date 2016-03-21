@@ -23,9 +23,10 @@ const AssetEditor = React.createClass({
 		assetObject: PropTypes.object,
 		assetType: PropTypes.string,
 
-		addAsset: PropTypes.func,
-		updateAsset: PropTypes.func,
-		cancel: PropTypes.func,
+		addAssets: PropTypes.func,
+		updateAssets: PropTypes.func,
+		close: PropTypes.func,
+		assetLoading: PropTypes.bool,
 		slug: PropTypes.string,
 	},
 
@@ -170,7 +171,7 @@ const AssetEditor = React.createClass({
 
 				<div className={'assetEditorTitle'} style={globalStyles.h1}>
 					<span>{this.props.assetObject ? 'Edit' : 'Add'} </span>
-					<SimpleSelect key={'selector'} style={styles.select} ref="select" options={options} value={{label: this.state.assetType, value: this.state.assetType}} onValueChange={this.setAssetType} placeholder={'Select Type'} transitionEnter={true} transitionLeave={true} autofocus={!this.state.assetType}/>
+					<SimpleSelect key={'selector'} style={styles.select} placeholder={'Select Type'} ref="select" options={options} value={this.state.assetType ? {label: this.state.assetType, value: this.state.assetType} : undefined} onValueChange={this.setAssetType} transitionEnter={true} transitionLeave={true} autofocus={this.state.assetType === undefined}/>
 				</div>
 
 				{(() => {
@@ -178,10 +179,10 @@ const AssetEditor = React.createClass({
 					case 'image':
 					case 'video':
 					case 'data':
-						return ( <FileEditor assetObject={this.props.assetObject} addAsset={this.props.addAsset} updateAsset={this.props.updateAsset} cancel={this.props.cancel}/> );
+						return ( <FileEditor assetObject={this.props.assetObject} assetLoading={this.props.assetLoading} addAssets={this.props.addAssets} updateAssets={this.props.updateAssets} close={this.props.close}/> );
 
 					case 'reference':
-						return ( <ReferenceEditor assetObject={this.props.assetObject} addAsset={this.props.addAsset} updateAsset={this.props.updateAsset} cancel={this.props.cancel} /> );
+						return ( <ReferenceEditor assetObject={this.props.assetObject} assetLoading={this.props.assetLoading} addAssets={this.props.addAssets} updateAssets={this.props.updateAssets} close={this.props.close} /> );
 
 					default:
 						return null;

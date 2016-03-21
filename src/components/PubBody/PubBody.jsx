@@ -1,7 +1,7 @@
 import React, {PropTypes} from 'react';
 import Radium, {Style} from 'radium';
 import {globalStyles} from 'utils/styleConstants';
-import {PubSelectionPopup, Reference, License} from 'components/';
+import {PubSelectionPopup, Reference, License} from 'components';
 // import { Link } from 'react-router';
 import {loadCss} from 'utils/loadingFunctions';
 // import {scienceStyle, magazineStyle} from './pubStyles';
@@ -14,7 +14,7 @@ import {parsePluginString} from 'utils/parsePlugins';
 
 import {FormattedMessage} from 'react-intl';
 
-import PPMComponent from '../../markdown/PPMComponent';
+import PPMComponent from 'markdown/PPMComponent';
 
 let styles = {};
 

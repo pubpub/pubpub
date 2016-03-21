@@ -2,7 +2,6 @@ import React, {PropTypes} from 'react';
 import Radium from 'radium';
 
 import {globalStyles} from 'utils/styleConstants';
-import bibtexParse from 'bibtex-parse-js';
 import {Button} from 'components';
 
 import {globalMessages} from 'utils/globalMessages';
@@ -11,50 +10,47 @@ import {injectIntl, FormattedMessage} from 'react-intl';
 let styles = {};
 
 const defaultFields = {
-	title: '',
 	url: '',
-	author: '',
-	journal: '',
-	volume: '',
-	number: '',
-	pages: '',
-	year: '',
-	publisher: '',
-	doi: '',
-	note: '',
+	thumbnail: '',
+	
 };
 
 const ReferenceEditor = React.createClass({
 	propTypes: {
 		assetObject: PropTypes.object,
-		addAset: PropTypes.func,
-		updateAset: PropTypes.func,
-		cancel: PropTypes.func,
-
+		addAssets: PropTypes.func,
+		updateAsets: PropTypes.func,
+		close: PropTypes.func,
+		assetLoading: PropTypes.bool,
 	},
 
 	getInitialState: function() {
 		return {
-			isLoading: false,
-			showAddOptions: true,
-			addOptionMode: 'manual',
-			editingRefName: null,
-			manualFormData: {
-				refName: null,
-				title: null,
-				url: null,
-				author: null,
-				journal: null,
-				volume: null,
-				number: null,
-				pages: null,
-				year: null,
-				publisher: null,
-				note: null,
-			}
+			// isLoading: false,
+			// showAddOptions: true,
+			// addOptionMode: 'manual',
+			// editingRefName: null,
+			// manualFormData: {
+			// 	refName: null,
+			// 	title: null,
+			// 	url: null,
+			// 	author: null,
+			// 	journal: null,
+			// 	volume: null,
+			// 	number: null,
+			// 	pages: null,
+			// 	year: null,
+			// 	publisher: null,
+			// 	note: null,
+			// }
 		};
 	},
 
+	componentWillReceiveProps(nextProps) {
+		if (this.props.assetLoading && !nextProps.assetLoading) {
+			this.props.close();
+		}
+	},
 	// toggleShowAddOptions: function() {
 	// 	this.setState({
 	// 		isLoading: false,
@@ -65,77 +61,7 @@ const ReferenceEditor = React.createClass({
 	// 	this.refs.bibtexForm.value = '';
 	// },
 
-	handleManualInputFormChange: function(event) {
-		const newManualFormData = {...this.state.manualFormData};
-		newManualFormData[event.target.name] = event.target.value;
-		this.setState({manualFormData: newManualFormData});
-	},
-
-	saveManualForm: function() {
-		const newReferencesObject = this.props.referenceData;
-		if (this.state.editingRefName) {
-			delete newReferencesObject[this.state.editingRefName];
-		}
-		// Check for refname or create
-		const thisRefName = this.state.manualFormData.refName ? this.state.manualFormData.refName : 'newRef' + Date.now();
-		const newRefData = this.state.manualFormData;
-		newRefData.refName = thisRefName; // This is redundant if it has a refName, but sets one in case it wasn't input
-
-		newReferencesObject[thisRefName] = newRefData;
-		this.props.updateReferences(newReferencesObject);
-		this.toggleShowAddOptions();
-	},
-
-	saveBibtexForm: function() {
-
-		// console.log(this.refs.bibtexForm.value);
-		// Convert all the text into new reference objects
-		const output = bibtexParse.toJSON(this.refs.bibtexForm.value);
-		console.log(output);
-
-		const newReferencesObject = this.props.referenceData;
-
-		// Add all the new bibtex items to newReferencesObject
-		output.map((newRef)=>{
-			const refName = newRef.citationKey ? newRef.citationKey.replace(/[^a-zA-Z0-9 ]/g, '') : 'newRef' + Date.now();
-			newReferencesObject[refName] = {
-				refName: refName,
-				title: newRef.entryTags.title ? newRef.entryTags.title : null,
-				author: newRef.entryTags.author ? newRef.entryTags.author : null,
-				url: newRef.entryTags.url ? newRef.entryTags.url : null,
-				journal: newRef.entryTags.journal ? newRef.entryTags.journal : null,
-				volume: newRef.entryTags.volume ? newRef.entryTags.volume : null,
-				number: newRef.entryTags.number ? newRef.entryTags.number : null,
-				pages: newRef.entryTags.pages ? newRef.entryTags.pages : null,
-				year: newRef.entryTags.year ? newRef.entryTags.year : null,
-				publisher: newRef.entryTags.publisher ? newRef.entryTags.publisher : null,
-				note: newRef.entryTags.note ? newRef.entryTags.note : null,
-			};
-		});
-
-		// console.log(newReferencesObject);
-		this.props.updateReferences(newReferencesObject);
-		this.toggleShowAddOptions();
-
-
-	},
-
-	editReference: function(referenceObject) {
-		return ()=>{
-			this.setState({
-				isLoading: false,
-				showAddOptions: true,
-				editingRefName: referenceObject.refName,
-				manualFormData: {...this.getInitialState().manualFormData, ...referenceObject},
-			});
-		};
-	},
-
-	setAddOptionMode: function(mode) {
-		return ()=>{
-			this.setState({addOptionMode: mode});
-		};
-	},
+	
 
 	render: function() {
 		const assetObject = this.props.assetObject || {};
@@ -147,13 +73,14 @@ const ReferenceEditor = React.createClass({
 						<Button
 							key={'customStyleSaveButton'}
 							label={'Save'}
-							onClick={undefined}/>
+							onClick={undefined}
+							isLoading={this.props.assetLoading} />
 					</div>
 					<div style={styles.buttonWrapper}>
 						<Button
 							key={'customStyleSaveButton'}
 							label={'Cancel'}
-							onClick={this.props.cancel}/>
+							onClick={this.props.close}/>
 					</div>
 
 				</div>

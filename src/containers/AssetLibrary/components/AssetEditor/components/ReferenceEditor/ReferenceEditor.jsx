@@ -27,110 +27,104 @@ const defaultFields = {
 const ReferenceEditor = React.createClass({
 	propTypes: {
 		assetObject: PropTypes.object,
-		addAset: PropTypes.func,
-		updateAset: PropTypes.func,
-		cancel: PropTypes.func,
-
+		addAssets: PropTypes.func,
+		updateAssets: PropTypes.func,
+		close: PropTypes.func,
+		assetLoading: PropTypes.bool,
 	},
 
 	getInitialState: function() {
 		return {
-			isLoading: false,
-			showAddOptions: true,
 			addOptionMode: 'manual',
-			editingRefName: null,
-			manualFormData: {
-				refName: null,
-				title: null,
-				url: null,
-				author: null,
-				journal: null,
-				volume: null,
-				number: null,
-				pages: null,
-				year: null,
-				publisher: null,
-				note: null,
-			}
 		};
 	},
 
-	// toggleShowAddOptions: function() {
-	// 	this.setState({
-	// 		isLoading: false,
-	// 		showAddOptions: !this.state.showAddOptions,
-	// 		editingRefName: null,
-	// 		manualFormData: this.getInitialState().manualFormData,
-	// 	});
-	// 	this.refs.bibtexForm.value = '';
-	// },
-
-	handleManualInputFormChange: function(event) {
-		const newManualFormData = {...this.state.manualFormData};
-		newManualFormData[event.target.name] = event.target.value;
-		this.setState({manualFormData: newManualFormData});
+	componentWillReceiveProps(nextProps) {
+		if (this.props.assetLoading && !nextProps.assetLoading) {
+			this.props.close();
+		}
 	},
 
 	saveManualForm: function() {
-		const newReferencesObject = this.props.referenceData;
-		if (this.state.editingRefName) {
-			delete newReferencesObject[this.state.editingRefName];
-		}
-		// Check for refname or create
-		const thisRefName = this.state.manualFormData.refName ? this.state.manualFormData.refName : 'newRef' + Date.now();
-		const newRefData = this.state.manualFormData;
-		newRefData.refName = thisRefName; // This is redundant if it has a refName, but sets one in case it wasn't input
+		const oldAssetData = this.props.assetObject.assetData || {};
+		const newAssetObject = {};
+		const newAssetData = {};
 
-		newReferencesObject[thisRefName] = newRefData;
-		this.props.updateReferences(newReferencesObject);
-		this.toggleShowAddOptions();
+		newAssetObject._id = this.props.assetObject._id;
+		newAssetObject.assetType = 'reference';
+		newAssetObject.label = this.refs.label.value;
+		newAssetObject.authors = this.props.assetObject.authors;
+
+		for (const key in {...defaultFields, ...oldAssetData}) {
+			newAssetData[key] = this.refs[key].value;
+		}
+
+		newAssetObject.assetData = newAssetData;
+		console.log('oldobject', this.props.assetObject);
+		console.log('newAssetObject', newAssetObject);
+
+		// If there is an _id, update
+		// Else, save it as new asset
+		if (newAssetObject._id) {
+			this.props.updateAssets([newAssetObject]);
+		} else {
+			this.props.addAssets([newAssetObject]);
+		}
 	},
 
 	saveBibtexForm: function() {
-
+		console.log('saving bibtex');
 		// console.log(this.refs.bibtexForm.value);
 		// Convert all the text into new reference objects
-		const output = bibtexParse.toJSON(this.refs.bibtexForm.value);
-		console.log(output);
 
-		const newReferencesObject = this.props.referenceData;
 
-		// Add all the new bibtex items to newReferencesObject
-		output.map((newRef)=>{
-			const refName = newRef.citationKey ? newRef.citationKey.replace(/[^a-zA-Z0-9 ]/g, '') : 'newRef' + Date.now();
-			newReferencesObject[refName] = {
-				refName: refName,
-				title: newRef.entryTags.title ? newRef.entryTags.title : null,
-				author: newRef.entryTags.author ? newRef.entryTags.author : null,
-				url: newRef.entryTags.url ? newRef.entryTags.url : null,
-				journal: newRef.entryTags.journal ? newRef.entryTags.journal : null,
-				volume: newRef.entryTags.volume ? newRef.entryTags.volume : null,
-				number: newRef.entryTags.number ? newRef.entryTags.number : null,
-				pages: newRef.entryTags.pages ? newRef.entryTags.pages : null,
-				year: newRef.entryTags.year ? newRef.entryTags.year : null,
-				publisher: newRef.entryTags.publisher ? newRef.entryTags.publisher : null,
-				note: newRef.entryTags.note ? newRef.entryTags.note : null,
-			};
-		});
+		// const output = bibtexParse.toJSON(this.refs.bibtexForm.value);
+		// console.log(output);
+
+		// const newReferencesObject = this.props.referenceData;
+
+		// // Add all the new bibtex items to newReferencesObject
+		// output.map((newRef)=>{
+		// 	const refName = newRef.citationKey ? newRef.citationKey.replace(/[^a-zA-Z0-9 ]/g, '') : 'newRef' + Date.now();
+		// 	newReferencesObject[refName] = {
+		// 		refName: refName,
+		// 		title: newRef.entryTags.title ? newRef.entryTags.title : null,
+		// 		author: newRef.entryTags.author ? newRef.entryTags.author : null,
+		// 		url: newRef.entryTags.url ? newRef.entryTags.url : null,
+		// 		journal: newRef.entryTags.journal ? newRef.entryTags.journal : null,
+		// 		volume: newRef.entryTags.volume ? newRef.entryTags.volume : null,
+		// 		number: newRef.entryTags.number ? newRef.entryTags.number : null,
+		// 		pages: newRef.entryTags.pages ? newRef.entryTags.pages : null,
+		// 		year: newRef.entryTags.year ? newRef.entryTags.year : null,
+		// 		publisher: newRef.entryTags.publisher ? newRef.entryTags.publisher : null,
+		// 		note: newRef.entryTags.note ? newRef.entryTags.note : null,
+		// 	};
+		// });
 
 		// console.log(newReferencesObject);
-		this.props.updateReferences(newReferencesObject);
-		this.toggleShowAddOptions();
+		// this.props.updateReferences(newReferencesObject);
+		// this.toggleShowAddOptions();
 
 
 	},
 
-	editReference: function(referenceObject) {
-		return ()=>{
-			this.setState({
-				isLoading: false,
-				showAddOptions: true,
-				editingRefName: referenceObject.refName,
-				manualFormData: {...this.getInitialState().manualFormData, ...referenceObject},
-			});
-		};
+	// editReference: function(referenceObject) {
+	// 	return ()=>{
+	// 		this.setState({
+	// 			isLoading: false,
+	// 			showAddOptions: true,
+	// 			editingRefName: referenceObject.refName,
+	// 			manualFormData: {...this.getInitialState().manualFormData, ...referenceObject},
+	// 		});
+	// 	};
+	// },
+	handleSaveClick: function() {
+		if (this.state.addOptionMode === 'manual') {
+			this.saveManualForm();
+		} else if (this.state.addOptionMode === 'bibtex') {
+			this.saveBibtexForm();
+		}
 	},
-
 	setAddOptionMode: function(mode) {
 		return ()=>{
 			this.setState({addOptionMode: mode});
@@ -148,13 +142,14 @@ const ReferenceEditor = React.createClass({
 						<Button
 							key={'customStyleSaveButton'}
 							label={'Save'}
-							onClick={undefined}/>
+							onClick={this.handleSaveClick}
+							isLoading={this.props.assetLoading} />
 					</div>
 					<div style={styles.buttonWrapper}>
 						<Button
 							key={'customStyleSaveButton'}
 							label={'Cancel'}
-							onClick={this.props.cancel}/>
+							onClick={this.props.close} />
 					</div>
 
 				</div>
@@ -162,18 +157,14 @@ const ReferenceEditor = React.createClass({
 				{/* Content section displayed when in advanced add mode */}
 				<div className="add-options-content" style={[styles.addOptions, styles.addOptionsContent]}>
 
-					<div style={[styles.addOptionModes, this.state.editingRefName && styles.hide]}>
-						{/* <div style={[styles.addOptionText]}>Input Mode: </div> */}
+					{/* Input mode toggle buttons */}
+					<div style={[styles.addOptionModes, this.props.assetObject.assetData && styles.hide]}>
 						<div style={[styles.addOptionMode, this.state.addOptionMode === 'manual' && styles.addOptionModeActive]} key={'addOptionMode-manual'}onClick={this.setAddOptionMode('manual')}>Manual</div>
 						<div style={[styles.addOptionMode, this.state.addOptionMode === 'bibtex' && styles.addOptionModeActive]} key={'addOptionMode-bibtex'}onClick={this.setAddOptionMode('bibtex')}>Bibtex</div>
 					</div>
 
+					{/* Bibtex input form */}
 					<div style={[(this.state.editingRefName || this.state.addOptionMode !== 'bibtex') && styles.hide]}>
-						{/* <div style={styles.sectionHeader}>
-							<FormattedMessage
-								id="editor.addBibtex"
-								defaultMessage="Add Bibtex"/>
-						</div> */}
 						<div style={styles.inputFormWrapper}>
 							<textarea style={styles.textArea} ref="bibtexForm"
 								placeholder="@article{bracewell1965fourier,
@@ -184,15 +175,19 @@ const ReferenceEditor = React.createClass({
 						<div style={styles.clearfix}></div>
 					</div>
 
-					{/* <hr style={styles.sectionDivider}/> */}
-
+					
+					{/* Manual input and edit form */}
 					<div style={[(this.state.addOptionMode !== 'manual' && !this.state.editingRefName) && styles.hide]}>
-						{/* <div style={[styles.sectionHeader, this.state.editingRefName && styles.hide]}>
-							<FormattedMessage
-									id="editor.manualEntry"
-									defaultMessage="Manual Entry"/>
-						</div> */}
+
 						<div style={styles.inputFormWrapper}>
+							<div key={'manualForm-labeldefault'} style={[styles.manualFormInputWrapper, {float: 'none', width: 'calc(100% - 40px)'}]}>
+								<label style={styles.manualFormInputTitle} htmlFor={'label'}>
+									{/* <FormattedMessage {...globalMessages['Label']} /> */}
+									Label
+								</label>
+								<input style={styles.manualFormInput} ref={'label'} name={'label'} id={'label'} type="text" onChange={this.handleManualInputFormChange} defaultValue={assetObject.label}/>
+							</div>
+
 							{
 								Object.keys({...defaultFields, ...assetData}).map((inputItem)=>{
 									return (
@@ -201,7 +196,7 @@ const ReferenceEditor = React.createClass({
 												{/* <FormattedMessage {...globalMessages[inputItem]} /> */}
 												{inputItem}
 											</label>
-											<input style={styles.manualFormInput} name={inputItem} id={inputItem} type="text" onChange={this.handleManualInputFormChange} defaultValue={assetData[inputItem]}/>
+											<input style={styles.manualFormInput} ref={inputItem} name={inputItem} id={inputItem} type="text" onChange={this.handleManualInputFormChange} defaultValue={assetData[inputItem]}/>
 										</div>
 
 									);
@@ -303,7 +298,7 @@ styles = {
 		height: 50,
 		outline: 'none',
 		fontFamily: 'Courier',
-		fontSize: 13,
+		fontSize: 16,
 		padding: 5,
 	},
 	hide: {
@@ -317,12 +312,12 @@ styles = {
 		fontFamily: 'Courier',
 	},
 	manualFormInputWrapper: {
-		width: '29%',
-		margin: '8px 20px',
+		width: 'calc(50% - 40px)',
+		margin: '8px 20px 16px 20px',
 		float: 'left',
 	},
 	manualFormInputTitle: {
-		fontSize: 13,
+		fontSize: 14,
 		color: '#BBB',
 	},
 	manualFormInput: {
@@ -331,7 +326,7 @@ styles = {
 		borderWidth: '0px 0px 1px 0px',
 		borderColor: '#BBB',
 		outline: 'none',
-		fontSize: 14,
+		fontSize: 16,
 	},
 	addOptionModes: {
 		fontSize: '26px',

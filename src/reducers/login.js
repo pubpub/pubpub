@@ -42,7 +42,10 @@ import {
 } from '../actions/user';
 
 import {
+	CREATE_ASSET_LOAD,
 	CREATE_ASSET_SUCCESS,
+	UPDATE_ASSET_LOAD,
+	UPDATE_ASSET_SUCCESS,
 
 } from '../actions/assets';
 
@@ -63,6 +66,7 @@ export const defaultState = Immutable.Map({
 	viewMode: 'login',
 	attemptedRestoreState: false,
 	userData: {},
+	assetLoading: false,
 	error: undefined
 });
 
@@ -180,7 +184,26 @@ function setNotificationsRead(state) {
 }
 
 function assetCreated(state, result) {
-	return state.mergeIn(['userData', 'assets'], state.getIn(['userData', 'assets']).push(result));
+	const newState = state.mergeIn(['userData', 'assets'], state.getIn(['userData', 'assets']).push(result));
+	return newState.set('assetLoading', false);
+}
+
+function assetUpdated(state, result) {
+	console.log('in asset created', result);
+	const assets = state.getIn(['userData', 'assets']).toJS();
+	const newAssets = assets.map((asset)=>{
+		if (asset._id === result._id) {
+			return result;
+		} else {
+			return asset;
+		}
+	});
+	const newState = state.mergeIn(['userData', 'assets'], newAssets);
+	return newState.set('assetLoading', false);
+}
+
+function assetLoading(state) {
+	return state.set('assetLoading', true);
 }
 
 /*--------*/
@@ -237,8 +260,15 @@ export default function loginReducer(state = defaultState, action) {
 	case SET_NOTIFICATIONS_READ_LOAD:
 		return setNotificationsRead(state);
 
+	case CREATE_ASSET_LOAD:
+		return assetLoading(state);
 	case CREATE_ASSET_SUCCESS:
 		return assetCreated(state, action.result);
+	case UPDATE_ASSET_LOAD:
+		return assetLoading(state);
+	case UPDATE_ASSET_SUCCESS:
+		return assetUpdated(state, action.result);
+
 	default:
 		return ensureImmutable(state);
 	}

@@ -154,13 +154,13 @@ const AssetLibrary = React.createClass({
 		});	
 	},
 
-	addAsset: function(newAssetArray) {
+	addAssets: function(newAssetArray) {
 		for(let index = 0; index < newAssetArray.length; index++) {
 			this.props.dispatch(createAsset(newAssetArray[index]));	
 		}
 		
 	},
-	updateAsset: function(updatedAssetArray) {
+	updateAssets: function(updatedAssetArray) {
 		for(let index = 0; index < updatedAssetArray.length; index++) {
 			this.props.dispatch(updateAsset(updatedAssetArray[index]));	
 		}
@@ -207,9 +207,10 @@ const AssetLibrary = React.createClass({
 								<AssetEditor 
 									assetType={this.state.assetEditorType}
 									assetObject={this.state.assetEditorObject}
-									addAsset={this.props.addAsset}
-									updateAsset={this.props.updateAsset}
-									cancel={this.closeAssetEditor}
+									addAssets={this.addAssets}
+									updateAssets={this.updateAssets}
+									close={this.closeAssetEditor}
+									assetLoading={this.props.loginData.get('assetLoading')}
 									slug={this.props.slug} />
 							</div>
 						</Portal>
@@ -232,7 +233,7 @@ const AssetLibrary = React.createClass({
 												<Button
 													key={'customStyleSaveButton'}
 													label={'Add New Asset'}
-													onClick={undefined}/>
+													onClick={this.openAssetEditor({})}/>
 											</div>
 
 											<div style={styles.addSection}>
@@ -279,13 +280,6 @@ const AssetLibrary = React.createClass({
 																editHandler={this.openAssetEditor}
 																removeHandler={()=>{}} />
 															);
-															// assetList.push(<EditorModalAssetsRow 
-															// 	key={'modalAsset-' + index} 
-															// 	keyChild={'modalAsset-' + index} 
-															// 	filename={asset.assetData.originalFilename} 
-															// 	thumbnail={asset.assetData.url} 
-															// 	assetType={asset.assetType}
-															// 	date={asset.createDate}/>);	
 														}
 														
 													}
@@ -302,10 +296,10 @@ const AssetLibrary = React.createClass({
 												<Button
 													key={'customStyleSaveButton'}
 													label={'Add New Reference'}
-													onClick={undefined}/>
+													onClick={this.openAssetEditor({assetType: 'reference'})}/>
 											</div>
 
-											{/* Display all existing assets using EditorModalAssetsRow */}
+											{/* Display all existing references using ReferenceRow */}
 											{(() => {
 												const referenceList = [];
 

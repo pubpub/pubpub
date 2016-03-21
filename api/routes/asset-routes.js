@@ -33,7 +33,7 @@ app.post('/assetCreate', assetCreate);
 export function assetUpdate(req, res) {
 	if (!req.user) { return res.status(500).json('User not logged in'); }
 
-	Asset.findOne({'_id': req.body._id}, function(err, asset) {
+	Asset.findOne({'_id': req.body.assetObject._id}, function(err, asset) {
 		if (err) { return res.status(500).json(err); }
 		if (!asset) { return res.status(500).json('No asset found'); }
 
