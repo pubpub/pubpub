@@ -1,49 +1,34 @@
 import React, {PropTypes} from 'react';
 import Radium from 'radium';
 
-import {globalStyles} from 'utils/styleConstants';
+// import {globalStyles} from 'utils/styleConstants';
 import {Button} from 'components';
 
-import {globalMessages} from 'utils/globalMessages';
-import {injectIntl, FormattedMessage} from 'react-intl';
+// import {globalMessages} from 'utils/globalMessages';
+import {injectIntl} from 'react-intl';
 
 let styles = {};
 
 const defaultFields = {
-	url: '',
-	thumbnail: '',
-	
+	// filetype: '', // READONLY: Original file extension, e.g. .jpg, .png, .csv
+	// originalFilename: '', // READONLY: Original filename of the asset. Static for each file
+	// thumbnail: '', // READONLY: Scaled version of the document.
+	// url: '', // READONLY: Original - full-size version of the asset
+	license: '',
+	attribution: '',
 };
 
 const ReferenceEditor = React.createClass({
 	propTypes: {
 		assetObject: PropTypes.object,
 		addAssets: PropTypes.func,
-		updateAsets: PropTypes.func,
+		updateAssets: PropTypes.func,
 		close: PropTypes.func,
 		assetLoading: PropTypes.bool,
 	},
 
 	getInitialState: function() {
-		return {
-			// isLoading: false,
-			// showAddOptions: true,
-			// addOptionMode: 'manual',
-			// editingRefName: null,
-			// manualFormData: {
-			// 	refName: null,
-			// 	title: null,
-			// 	url: null,
-			// 	author: null,
-			// 	journal: null,
-			// 	volume: null,
-			// 	number: null,
-			// 	pages: null,
-			// 	year: null,
-			// 	publisher: null,
-			// 	note: null,
-			// }
-		};
+		return { };
 	},
 
 	componentWillReceiveProps(nextProps) {
@@ -51,20 +36,40 @@ const ReferenceEditor = React.createClass({
 			this.props.close();
 		}
 	},
-	// toggleShowAddOptions: function() {
-	// 	this.setState({
-	// 		isLoading: false,
-	// 		showAddOptions: !this.state.showAddOptions,
-	// 		editingRefName: null,
-	// 		manualFormData: this.getInitialState().manualFormData,
-	// 	});
-	// 	this.refs.bibtexForm.value = '';
-	// },
 
-	
+	saveAsset: function() {
+		const oldAssetData = this.props.assetObject.assetData || {};
+		const newAssetObject = {};
+		const newAssetData = {};
+
+		newAssetObject._id = this.props.assetObject._id;
+		newAssetObject.assetType = this.props.assetObject.assetType;
+		newAssetObject.label = this.refs.label.value;
+		newAssetObject.authors = this.props.assetObject.authors;
+
+		for (const key in {...defaultFields, ...oldAssetData}) {
+			if (key && this.refs[key]) {
+				newAssetData[key] = this.refs[key].value;
+			} else {
+				newAssetData[key] = oldAssetData[key];
+			}
+
+		}
+		newAssetObject.assetData = newAssetData;
+
+		// If there is an _id, update
+		// Else, save it as new asset
+		if (newAssetObject._id) {
+			this.props.updateAssets([newAssetObject]);
+		} else {
+			this.props.addAssets([newAssetObject]);
+		}
+	},
+
 
 	render: function() {
 		const assetObject = this.props.assetObject || {};
+		const assetData = assetObject.assetData || {};
 
 		return (
 			<div>
@@ -73,7 +78,7 @@ const ReferenceEditor = React.createClass({
 						<Button
 							key={'customStyleSaveButton'}
 							label={'Save'}
-							onClick={undefined}
+							onClick={this.saveAsset}
 							isLoading={this.props.assetLoading} />
 					</div>
 					<div style={styles.buttonWrapper}>
@@ -85,8 +90,42 @@ const ReferenceEditor = React.createClass({
 
 				</div>
 
-				<p>{JSON.stringify(assetObject)}</p>
-				
+				<div style={styles.thumbnailWrapper}>
+					<img style={styles.thumbnail} src={this.props.assetObject.assetData.thumbnail} />
+				</div>
+
+				<div style={styles.inputFormWrapper}>
+					<div key={'manualForm-labeldefault'} style={[styles.manualFormInputWrapper, {float: 'none', width: 'calc(100% - 40px)'}]}>
+						<label style={styles.manualFormInputTitle} htmlFor={'label'}>
+							{/* <FormattedMessage {...globalMessages['Label']} /> */}
+							Label
+						</label>
+						<input style={styles.manualFormInput} ref={'label'} name={'label'} id={'label'} type="text" onChange={this.handleManualInputFormChange} defaultValue={assetObject.label}/>
+					</div>
+
+					{
+						Object.keys({...defaultFields, ...assetData}).map((inputItem)=>{
+							if (inputItem === 'filetype' || inputItem === 'originalFilename' || inputItem === 'thumbnail' || inputItem === 'url') {
+								return null;
+							}
+							return (
+								<div key={'manualForm-' + inputItem} style={styles.manualFormInputWrapper}>
+									<label style={styles.manualFormInputTitle} htmlFor={inputItem}>
+										{/* <FormattedMessage {...globalMessages[inputItem]} /> */}
+										{inputItem}
+									</label>
+									<input style={styles.manualFormInput} ref={inputItem} name={inputItem} id={inputItem} type="text" onChange={this.handleManualInputFormChange} defaultValue={assetData[inputItem]}/>
+								</div>
+
+							);
+						})
+					}
+					<div style={styles.clearfix}></div>
+				</div>
+
+
+				<div style={styles.clearfix}></div>
+
 			</div>
 		);
 	}
@@ -101,9 +140,9 @@ styles = {
 		},
 	},
 	addOptions: {
-		
+
 		display: 'block',
-		
+
 
 	},
 	buttons: {
@@ -115,74 +154,12 @@ styles = {
 		float: 'right',
 		marginLeft: '20px',
 	},
-
-	addOptionsContent: {
-		padding: '15px 2px',
+	thumbnailWrapper: {
+		margin: '10px 20px',
+		width: '100px',
 	},
-	
-	bodyColumn: {
-		width: 'calc(55% - 20px)',
-		padding: '0px 10px',
-		float: 'left',
-		overflow: 'hidden',
-	},
-	optionColumn: {
-		width: 'calc(10% - 10px)',
-		padding: '0px 5px',
-		float: 'left',
-		textAlign: 'center',
-	},
-	clearfix: {
-		// necessary because we float elements with variable height
-		display: 'table',
-		clear: 'both',
-	},
-	sectionHeader: {
-		margin: 0,
-		fontSize: '1.5em',
-	},
-	sectionDivider: {
-		width: '90%',
-		marginBottom: '30px',
-		borderColor: 'rgba(102, 102, 102, 0.15)',
-		backgroundColor: 'transparent',
-	},
-	topHeaderSubtext: {
-		display: 'none',
-		fontSize: 25,
-		margin: '.83em 0px',
-	},
-	saveForm: {
-		// textAlign: 'center',
-		fontSize: 20,
-		// position: 'relative',
-		// left: '20px',
-		width: '52px',
-		// backgroundColor: 'red',
-		// float: 'right',
-		padding: '0px 20px',
-		marginBottom: 20,
-
-		':hover': {
-			cursor: 'pointer',
-			color: globalStyles.sideHover,
-		}
-	},
-	textArea: {
-		margin: '8px 20px',
-		maxWidth: '96%',
-		width: '60%',
-		height: 50,
-		outline: 'none',
-		fontFamily: 'Courier',
-		fontSize: 13,
-		padding: 5,
-	},
-	hide: {
-		display: 'none',
-	},
-	showOnEdit: {
-		display: 'inline',
+	thumbnail: {
+		width: '100%',
 	},
 	inputFormWrapper: {
 		margin: '10px 0px',
@@ -205,25 +182,5 @@ styles = {
 		outline: 'none',
 		fontSize: 14,
 	},
-	addOptionModes: {
-		fontSize: '26px',
-		marginBottom: '25px',
-	},
-	addOptionText: {
-		color: '#222',
-		display: 'inline-block',
-	},
-	addOptionMode: {
-		display: 'inline-block',
-		padding: '0px 15px',
-		color: '#aaa',
-		':hover': {
-			cursor: 'pointer',
-			color: '#222',
-		},
-	},
-	addOptionModeActive: {
-		color: '#222',
-	}
 
 };

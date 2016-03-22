@@ -162,7 +162,10 @@ const Editor = React.createClass({
 				firepad.on('synced', (synced)=>{
 
 					debounce('saveStatusSync', ()=> {
-						this.updateSaveStatus(synced);
+						if (this.isMounted()) {
+							this.updateSaveStatus(synced);
+						}
+
 					}, 250)();
 				});
 

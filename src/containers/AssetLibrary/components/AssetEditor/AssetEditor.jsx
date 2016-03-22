@@ -1,9 +1,8 @@
 /* global Firebase Firepad CodeMirror */
 
 import React, { PropTypes } from 'react';
-
 import Radium, {Style} from 'radium';
-
+import {Button} from 'components';
 import {createAsset} from 'actions/assets';
 
 
@@ -132,7 +131,7 @@ const AssetEditor = React.createClass({
 	},
 
 	render: function() {
-		const options = ['image', 'video', 'data', 'reference'].map(function(type){
+		const options = ['image', 'video', 'data', 'reference'].map(function(type) {
 			return {label: type, value: type};
 		});
 
@@ -167,8 +166,8 @@ const AssetEditor = React.createClass({
 				}} />
 
 				<div className={'assetEditorTitle'} style={globalStyles.h1}>
-					<span>{this.props.assetObject ? 'Edit' : 'Add'} </span>
-					<SimpleSelect key={'selector'} style={styles.select} placeholder={'Select Type'} ref="select" options={options} onValueChange={this.setAssetType} transitionEnter={true} transitionLeave={true} autofocus={this.state.assetType === undefined}/>
+					<span>{this.props.assetObject && this.props.assetObject.assetData ? 'Edit' : 'Add'} </span>
+					<SimpleSelect key={'selector'} style={styles.select} placeholder={'Select Type'} ref="select" options={options} value={this.state.assetType ? {label: this.state.assetType, value: this.state.assetType} : undefined} onValueChange={this.setAssetType} transitionEnter={true} transitionLeave={true} autofocus={!this.state.assetType} />
 				</div>
 
 				{(() => {
@@ -182,7 +181,14 @@ const AssetEditor = React.createClass({
 						return ( <ReferenceEditor assetObject={this.props.assetObject} assetLoading={this.props.assetLoading} addAssets={this.props.addAssets} updateAssets={this.props.updateAssets} close={this.props.close} /> );
 
 					default:
-						return null;
+						return (
+							<div style={styles.cancelButtonWrapper}>
+								<Button
+									key={'customStyleSaveButton'}
+									label={'Cancel'}
+									onClick={this.props.close} />
+							</div>
+						);
 					}
 				})()}
 
@@ -209,5 +215,10 @@ styles = {
 		padding: '0px',
 		display: 'inline-block',
 		position: 'absolute',
-	}
+	},
+	cancelButtonWrapper: {
+		position: 'absolute',
+		top: 30,
+		right: 20,
+	},
 };

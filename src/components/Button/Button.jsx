@@ -25,10 +25,13 @@ const Button = React.createClass({
 		if (this.props.isLoading === true && nextProps.isLoading === false) {
 			this.setState({showDone: true});
 			setTimeout(()=>{
-				this.setState({showDone: false});
+				if (this.isMounted()) {
+					this.setState({showDone: false});
+				}
+
 			}, 2000);
 		}
-	}, 
+	},
 
 	render: function() {
 		return (
@@ -46,11 +49,11 @@ const Button = React.createClass({
 						</div>
 
 					</div>
-					
+
 				</div>
 				<div style={globalStyles.clearFix}></div>
 			</div>
-			
+
 		);
 	}
 });
