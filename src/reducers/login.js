@@ -57,7 +57,7 @@ import {
 
 } from '../actions/journal';
 /*--------*/
-// Initialize Default State 
+// Initialize Default State
 /*--------*/
 export const defaultState = Immutable.Map({
 	isVisible: false,
@@ -71,10 +71,10 @@ export const defaultState = Immutable.Map({
 });
 
 /*--------*/
-// Define reducing functions 
+// Define reducing functions
 //
 // These functions take in an initial state and return a new
-// state. They are pure functions. We use Immutable to enforce this. 
+// state. They are pure functions. We use Immutable to enforce this.
 /*--------*/
 function toggle(state) {
 	return state.merge({
@@ -143,7 +143,7 @@ function failed(state, error) {
 	} else {
 		errorMessage = 'Email already used';
 	}
-	
+
 	return state.merge({
 		loggedIn: false,
 		loggingIn: false,
@@ -189,14 +189,12 @@ function assetCreated(state, result) {
 }
 
 function assetUpdated(state, result) {
-	console.log('in asset created', result);
 	const assets = state.getIn(['userData', 'assets']).toJS();
 	const newAssets = assets.map((asset)=>{
 		if (asset._id === result._id) {
 			return result;
-		} else {
-			return asset;
 		}
+		return asset;
 	});
 	const newState = state.mergeIn(['userData', 'assets'], newAssets);
 	return newState.set('assetLoading', false);

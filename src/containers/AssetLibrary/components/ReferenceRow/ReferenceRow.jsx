@@ -75,8 +75,8 @@ styles = {
 
 	},
 	filename: {
-		width: 'calc(22% - 8%)',
-		padding: '0px 4%',
+		width: 'calc(15% - 4%)',
+		padding: '0px 4% 0px 0px',
 		whiteSpace: 'nowrap',
 		overflow: 'hidden',
 		textOverflow: 'ellipsis',
@@ -85,7 +85,7 @@ styles = {
 		float: 'left',
 	},
 	type: {
-		width: 'calc(48% - 4%)',
+		width: 'calc(52% - 4%)',
 		padding: '0px 2%',
 		float: 'left',
 	},
