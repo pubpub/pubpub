@@ -1,8 +1,7 @@
 /* global Firebase Firepad CodeMirror */
 
 import React, { PropTypes } from 'react';
-import {connect} from 'react-redux';
-import { pushState } from 'redux-router';
+
 import Radium, {Style} from 'radium';
 
 import {createAsset} from 'actions/assets';
@@ -70,7 +69,7 @@ const AssetEditor = React.createClass({
 
 		// For each new file, begin their upload process
 		for (let fileCount = existingFiles; fileCount < existingFiles + files.length; fileCount++) {
-			s3Upload(tmpFiles[fileCount], this.props.slug, this.onFileProgress, this.onFileFinish, fileCount);	
+			s3Upload(tmpFiles[fileCount], this.props.slug, this.onFileProgress, this.onFileFinish, fileCount);
 		}
 
 		// Set state with newly added files
@@ -97,7 +96,7 @@ const AssetEditor = React.createClass({
 
 		let assetType = 'data';
 		let thumbnail = '/thumbnails/data.png';
-		
+
 		if (type.indexOf('image') > -1) {
 			assetType = 'image';
 			thumbnail = 'https://s3.amazonaws.com/pubpub-upload/' + filename;
@@ -107,7 +106,7 @@ const AssetEditor = React.createClass({
 		}
 		const newAsset = {
 			assetType: assetType,
-			label: filename, 
+			label: filename,
 			assetData: {
 				filetype: type,
 				originalFilename: originalFilename,
@@ -115,7 +114,6 @@ const AssetEditor = React.createClass({
 				thumbnail: thumbnail,
 			}
 		};
-		const xass = 6;
 
 		this.props.dispatch(createAsset(newAsset));
 
@@ -129,14 +127,13 @@ const AssetEditor = React.createClass({
 
 	},
 
-	setAssetType: function(type){
-
+	setAssetType: function(type) {
 		this.setState({assetType: type ? type.value : undefined});
 	},
 
 	render: function() {
-		const options = ["image", "video", "data", "reference"].map(function(type){
-			return {label: type, value: type}
+		const options = ['image', 'video', 'data', 'reference'].map(function(type){
+			return {label: type, value: type};
 		});
 
 		return (
@@ -161,7 +158,7 @@ const AssetEditor = React.createClass({
 						padding: '0px',
 						margin: '0px 2px',
 					},
-					'.assetEditorTitle .simple-select.react-selectize.root-node .simple-value' : {
+					'.assetEditorTitle .simple-select.react-selectize.root-node .simple-value': {
 						margin: '0px 2px',
 					},
 					'.assetEditorTitle .react-selectize.dropdown-menu.default': {
@@ -171,7 +168,7 @@ const AssetEditor = React.createClass({
 
 				<div className={'assetEditorTitle'} style={globalStyles.h1}>
 					<span>{this.props.assetObject ? 'Edit' : 'Add'} </span>
-					<SimpleSelect key={'selector'} style={styles.select} placeholder={'Select Type'} ref="select" options={options} value={this.state.assetType ? {label: this.state.assetType, value: this.state.assetType} : undefined} onValueChange={this.setAssetType} transitionEnter={true} transitionLeave={true} autofocus={this.state.assetType === undefined}/>
+					<SimpleSelect key={'selector'} style={styles.select} placeholder={'Select Type'} ref="select" options={options} onValueChange={this.setAssetType} transitionEnter={true} transitionLeave={true} autofocus={this.state.assetType === undefined}/>
 				</div>
 
 				{(() => {
@@ -188,8 +185,8 @@ const AssetEditor = React.createClass({
 						return null;
 					}
 				})()}
-				
-				
+
+
 			</div>
 
 		);
@@ -210,7 +207,7 @@ styles = {
 	select: {
 		...globalStyles.h1,
 		padding: '0px',
-	    display: 'inline-block',
-	    position: 'absolute',
+		display: 'inline-block',
+		position: 'absolute',
 	}
 };

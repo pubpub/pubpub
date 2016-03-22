@@ -23,18 +23,18 @@ const ReferenceRow = React.createClass({
 			removeHandler: ()=>{},
 		};
 	},
-	
+
 	render: function() {
 		const assetObject = this.props.assetObject || {};
 		const assetData = assetObject.assetData || {};
 
 		return (
-			
+
 			<div style={[styles.assetRowContainer]}>
-				
+
 				{/* label */}
 				<div style={[styles.filename]}>{assetObject.label}</div>
-				
+
 				{/* Type */}
 				<div style={[styles.type]}>
 					<Reference citationObject={assetData} />
@@ -49,15 +49,15 @@ const ReferenceRow = React.createClass({
 				<div key={'editButton-' + assetObject._id} style={[styles.delete]} onClick={this.props.editHandler(assetObject)}>
 					<FormattedMessage {...globalMessages.edit} />
 				</div>
-				
+
 				{/* Remove Button */}
 				<div key={'removeButton-' + assetObject._id} style={[styles.delete]} onClick={this.props.removeHandler(assetObject)}>
 					<FormattedMessage {...globalMessages.delete} />
 				</div>
 
-
+				<div style={globalStyles.clearFix}></div>
 			</div>
-							
+
 		);
 	}
 });
@@ -67,9 +67,9 @@ export default Radium(ReferenceRow);
 const rowHeight = '30px';
 styles = {
 	assetRowContainer: {
-		height: rowHeight,
+		// height: rowHeight,
 		width: 'calc(100% - 40px)',
-		margin: '5px 20px',
+		margin: '15px 20px',
 		fontFamily: 'Courier',
 		fontSize: '14px',
 
@@ -85,18 +85,14 @@ styles = {
 		float: 'left',
 	},
 	type: {
-		lineHeight: '16px',
-		height: 16,
-		width: 'calc(36% - 4%)',
+		width: 'calc(48% - 4%)',
 		padding: '0px 2%',
-		borderRadius: 2,
 		float: 'left',
-		textAlign: 'center',
 	},
-	
+
 	delete: {
-		width: '10%',
-		padding: '0px 2%',
+		width: '8%',
+		padding: '0px 1%',
 		textAlign: 'center',
 		whiteSpace: 'nowrap',
 		overflow: 'hidden',
@@ -128,6 +124,6 @@ styles = {
 		width: '70%',
 		float: 'left',
 		overflow: 'hidden',
-		marginTop: 15, 
+		marginTop: 15,
 	},
 };

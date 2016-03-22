@@ -5,8 +5,8 @@ import {globalStyles} from 'utils/styleConstants';
 import bibtexParse from 'bibtex-parse-js';
 import {Button} from 'components';
 
-import {globalMessages} from 'utils/globalMessages';
-import {injectIntl, FormattedMessage} from 'react-intl';
+// import {globalMessages} from 'utils/globalMessages';
+import {injectIntl} from 'react-intl';
 
 let styles = {};
 
@@ -56,12 +56,13 @@ const ReferenceEditor = React.createClass({
 		newAssetObject.authors = this.props.assetObject.authors;
 
 		for (const key in {...defaultFields, ...oldAssetData}) {
-			newAssetData[key] = this.refs[key].value;
+			if (key) {
+				newAssetData[key] = this.refs[key].value;
+			}
+
 		}
 
 		newAssetObject.assetData = newAssetData;
-		console.log('oldobject', this.props.assetObject);
-		console.log('newAssetObject', newAssetObject);
 
 		// If there is an _id, update
 		// Else, save it as new asset
@@ -73,51 +74,37 @@ const ReferenceEditor = React.createClass({
 	},
 
 	saveBibtexForm: function() {
-		console.log('saving bibtex');
-		// console.log(this.refs.bibtexForm.value);
-		// Convert all the text into new reference objects
+		if (!Array.isArray(this.state.bibtexResult)) {
+			return;
+		}
 
-
-		// const output = bibtexParse.toJSON(this.refs.bibtexForm.value);
-		// console.log(output);
-
-		// const newReferencesObject = this.props.referenceData;
-
-		// // Add all the new bibtex items to newReferencesObject
-		// output.map((newRef)=>{
-		// 	const refName = newRef.citationKey ? newRef.citationKey.replace(/[^a-zA-Z0-9 ]/g, '') : 'newRef' + Date.now();
-		// 	newReferencesObject[refName] = {
-		// 		refName: refName,
-		// 		title: newRef.entryTags.title ? newRef.entryTags.title : null,
-		// 		author: newRef.entryTags.author ? newRef.entryTags.author : null,
-		// 		url: newRef.entryTags.url ? newRef.entryTags.url : null,
-		// 		journal: newRef.entryTags.journal ? newRef.entryTags.journal : null,
-		// 		volume: newRef.entryTags.volume ? newRef.entryTags.volume : null,
-		// 		number: newRef.entryTags.number ? newRef.entryTags.number : null,
-		// 		pages: newRef.entryTags.pages ? newRef.entryTags.pages : null,
-		// 		year: newRef.entryTags.year ? newRef.entryTags.year : null,
-		// 		publisher: newRef.entryTags.publisher ? newRef.entryTags.publisher : null,
-		// 		note: newRef.entryTags.note ? newRef.entryTags.note : null,
-		// 	};
-		// });
-
-		// console.log(newReferencesObject);
-		// this.props.updateReferences(newReferencesObject);
-		// this.toggleShowAddOptions();
-
-
+		const newReferences = this.state.bibtexResult.map((result)=>{
+			const newReference = {
+				assetType: 'reference',
+				label: result.citationKey || result.title || Date(),
+				assetData: {},
+			};
+			for (const key in result.entryTags) {
+				if (key) {
+					newReference.assetData[key] = result.entryTags[key];
+				}
+			}
+			return newReference;
+		});
+		this.props.addAssets(newReferences);
 	},
 
-	// editReference: function(referenceObject) {
-	// 	return ()=>{
-	// 		this.setState({
-	// 			isLoading: false,
-	// 			showAddOptions: true,
-	// 			editingRefName: referenceObject.refName,
-	// 			manualFormData: {...this.getInitialState().manualFormData, ...referenceObject},
-	// 		});
-	// 	};
-	// },
+	bibtexUpdate: function() {
+		let output;
+		try {
+			output = bibtexParse.toJSON(this.refs.bibtexForm.value);
+		} catch (err) {
+			output = 'Error parsing Bibtex: ' + err;
+		}
+
+		this.setState({bibtexResult: output});
+	},
+
 	handleSaveClick: function() {
 		if (this.state.addOptionMode === 'manual') {
 			this.saveManualForm();
@@ -169,13 +156,33 @@ const ReferenceEditor = React.createClass({
 							<textarea style={styles.textArea} ref="bibtexForm"
 								placeholder="@article{bracewell1965fourier,
 								title={The Fourier Transform and IIS Applications},
-								author={Bracewell, Ron},journal={New York},year={1965}}"></textarea>
+								author={Bracewell, Ron},journal={New York},year={1965}}" onChange={this.bibtexUpdate}></textarea>
+
+								<div style={styles.bibtexRenderArea}>
+									{Array.isArray(this.state.bibtexResult) && this.state.bibtexResult.map((result, index)=>{
+										return (<div key={'bibtexResult-' + index}>
+											<div style={styles.bibtexResultHeader}>
+												{result.citationKey || result.title || Date()}
+											</div>
+											{Object.keys(result.entryTags).map((key)=>{
+												return (
+													<div key={'bibtexResultField-' + key}>
+														<div style={styles.bibtexResultLabel}> {key} </div>
+														<div style={styles.bibtexResultItem}> {result.entryTags[key]} </div>
+													</div>
+												);
+											})}
+											<hr/>
+										</div>);
+									})}
+									{!Array.isArray(this.state.bibtexResult) && this.state.bibtexResult}
+								</div>
 						</div>
 
 						<div style={styles.clearfix}></div>
 					</div>
 
-					
+
 					{/* Manual input and edit form */}
 					<div style={[(this.state.addOptionMode !== 'manual' && !this.state.editingRefName) && styles.hide]}>
 
@@ -224,9 +231,9 @@ styles = {
 		},
 	},
 	addOptions: {
-		
+
 		display: 'block',
-		
+
 
 	},
 	buttons: {
@@ -242,7 +249,7 @@ styles = {
 	addOptionsContent: {
 		padding: '15px 2px',
 	},
-	
+
 	bodyColumn: {
 		width: 'calc(55% - 20px)',
 		padding: '0px 10px',
@@ -294,12 +301,28 @@ styles = {
 	textArea: {
 		margin: '8px 20px',
 		maxWidth: '96%',
-		width: '60%',
-		height: 50,
+		width: 'calc(50% - 40px - 10px - 2px)',
+		height: 150,
 		outline: 'none',
 		fontFamily: 'Courier',
 		fontSize: 16,
 		padding: 5,
+		float: 'left',
+	},
+	bibtexRenderArea: {
+		margin: '8px 20px',
+		padding: 5,
+		width: 'calc(50% - 40px - 10px)',
+		float: 'left',
+	},
+	bibtexResultLabel: {
+		paddingLeft: '20px',
+	},
+	bibtexResultItem: {
+		paddingLeft: '40px',
+		paddingBottom: '10px',
+		color: '#777',
+		wordWrap: 'break-word',
 	},
 	hide: {
 		display: 'none',

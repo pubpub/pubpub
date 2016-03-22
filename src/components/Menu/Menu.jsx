@@ -57,7 +57,6 @@ const pubpubMenu = React.createClass({
 	// Listen for the key of the clickEvent
 	// Call the function associated with that key
 	handleClick: function(clickEvent) {
-		console.log('clickEvent');
 		this.state.functionCalls[clickEvent.key.replace('.$', '')]();
 	},
 

@@ -46,7 +46,7 @@ const AssetLibrary = React.createClass({
 	// case they've been updated by a co-author
 
 	componentDidMount() {
-	
+
 	},
 
 	componentWillReceiveProps(nextProps) {
@@ -72,7 +72,7 @@ const AssetLibrary = React.createClass({
 
 		// For each new file, begin their upload process
 		for (let fileCount = existingFiles; fileCount < existingFiles + files.length; fileCount++) {
-			s3Upload(tmpFiles[fileCount], this.props.slug, this.onFileProgress, this.onFileFinish, fileCount);	
+			s3Upload(tmpFiles[fileCount], this.props.slug, this.onFileProgress, this.onFileFinish, fileCount);
 		}
 
 		// Set state with newly added files
@@ -99,7 +99,7 @@ const AssetLibrary = React.createClass({
 
 		let assetType = 'data';
 		let thumbnail = '/thumbnails/data.png';
-		
+
 		if (type.indexOf('image') > -1) {
 			assetType = 'image';
 			thumbnail = 'https://s3.amazonaws.com/pubpub-upload/' + filename;
@@ -109,7 +109,7 @@ const AssetLibrary = React.createClass({
 		}
 		const newAsset = {
 			assetType: assetType,
-			label: originalFilename, 
+			label: originalFilename,
 			assetData: {
 				filetype: type,
 				originalFilename: originalFilename,
@@ -142,27 +142,27 @@ const AssetLibrary = React.createClass({
 				showAssetEditor: true,
 				assetEditorType: assetObject.assetType,
 				assetEditorObject: assetObject,
-			});	
+			});
 		}
-		
+
 	},
 	closeAssetEditor: function() {
 		this.setState({
 			showAssetEditor: false,
 			assetEditorType: undefined,
 			assetEditorObject: {},
-		});	
+		});
 	},
 
 	addAssets: function(newAssetArray) {
 		for(let index = 0; index < newAssetArray.length; index++) {
-			this.props.dispatch(createAsset(newAssetArray[index]));	
+			this.props.dispatch(createAsset(newAssetArray[index]));
 		}
-		
+
 	},
 	updateAssets: function(updatedAssetArray) {
 		for(let index = 0; index < updatedAssetArray.length; index++) {
-			this.props.dispatch(updateAsset(updatedAssetArray[index]));	
+			this.props.dispatch(updateAsset(updatedAssetArray[index]));
 		}
 	},
 
@@ -197,14 +197,14 @@ const AssetLibrary = React.createClass({
 		const {assets, references, highlights} = this.separateAssets(userAssets);
 
 		return (
-				
+
 
 
 				<Dropzone ref="dropzone" onDrop={this.onDrop} disableClick style={styles.dropzone} activeStyle={this.state.activeSection === 'assets' ? styles.dropzoneActive : {}}>
 					<div>
 						<Portal isOpened={this.state.showAssetEditor}>
 							<div style={styles.assetEditorWrapper}>
-								<AssetEditor 
+								<AssetEditor
 									assetType={this.state.assetEditorType}
 									assetObject={this.state.assetEditorObject}
 									addAssets={this.addAssets}
@@ -218,12 +218,12 @@ const AssetLibrary = React.createClass({
 						<div style={styles.container}>
 
 							<div style={globalStyles.h1}>Media Library</div>
-			
+
 
 							<div style={globalStyles.subMenu}>
 								<Menu items={menuItems} submenu={true}/>
 							</div>
-							
+
 							{(() => {
 								switch (this.state.activeSection) {
 								case 'assets':
@@ -249,8 +249,8 @@ const AssetLibrary = React.createClass({
 												{this.state.files.map((uploadAsset, index) => {
 													const thumbnailImage = (uploadAsset.type.indexOf('image') > -1) ? uploadAsset.preview : '/thumbnails/file.png';
 													return (uploadAsset.isFinished !== true
-														? <AssetRow 
-															key={'modalAssetUploading-' + index} 
+														? <AssetRow
+															key={'modalAssetUploading-' + index}
 															assetObject={{
 																_id: 'modalAssetUploading-' + index,
 																label: uploadAsset.name,
@@ -262,7 +262,7 @@ const AssetLibrary = React.createClass({
 															isLoading={true}
 															percentLoaded={this.state.uploadRates[index] * 100}/>
 														: null);
-													
+
 												})}
 
 												{/* Display all existing assets using EditorModalAssetsRow */}
@@ -273,7 +273,7 @@ const AssetLibrary = React.createClass({
 													for (let index = assets.length; index > 0; index--) {
 														const asset = assets[index - 1];
 														if (asset.assetData) {
-															assetList.push(<AssetRow 
+															assetList.push(<AssetRow
 																key={'assetRow-' + index}
 																assetObject={asset}
 																insertHandler={()=>{}}
@@ -281,7 +281,7 @@ const AssetLibrary = React.createClass({
 																removeHandler={()=>{}} />
 															);
 														}
-														
+
 													}
 													return assetList;
 												})()}
@@ -316,12 +316,12 @@ const AssetLibrary = React.createClass({
 														);
 
 													}
-													
+
 												}
 												return referenceList;
 											})()}
 										</div>
-										
+
 									);
 
 								case 'highlights':
@@ -332,11 +332,11 @@ const AssetLibrary = React.createClass({
 									return null;
 								}
 							})()}
-							
+
 						</div>
 
 					</div>
-					
+
 
 				</Dropzone>
 
@@ -353,7 +353,7 @@ export default connect( state => {
 	};
 })( Radium(AssetLibrary) );
 
-styles = {	
+styles = {
 	container: {
 		position: 'relative',
 	},
