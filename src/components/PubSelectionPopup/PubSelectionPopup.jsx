@@ -34,7 +34,7 @@ const PubSelectionPopup = React.createClass({
 		require('rangy/lib/rangy-textrange.js');
 		document.getElementById('pubBodyContent').addEventListener('mouseup', this.onMouseUp);
 	},
-	
+
 	componentWillUnmount() {
 		document.getElementById('pubBodyContent').removeEventListener('mouseup', this.onMouseUp);
 	},
@@ -54,12 +54,18 @@ const PubSelectionPopup = React.createClass({
 		}
 
 		const selection = Rangy.getSelection();
-		const range = selection.getRangeAt(0);
+		let range;
+		try {
+			range = selection.getRangeAt(0);
+		} catch (err) {
+			console.log('caught range error', err);
+			return;
+		}
 		// console.log(range);
 		// console.log(range.commonAncestorContainer);
 
 		if (!selection.isCollapsed && isDescendantOfHash(range.commonAncestorContainer)) {
-			
+
 			Rangy.getSelection().expand('word');
 			const ancestorText = getAncestorText(range.commonAncestorContainer);
 			// console.log(ancestorText);
@@ -79,14 +85,14 @@ const PubSelectionPopup = React.createClass({
 				popupVisible: false,
 			});
 		}
-				
+
 	},
 
 	replacePathWithHash: function(path) {
 		let newPath = '';
 
 		const splitOnSemicolonArray = path.split(';');
-		
+
 		if (splitOnSemicolonArray.length === 2) {
 			newPath = ';' + splitOnSemicolonArray[1];
 		}
@@ -123,7 +129,7 @@ const PubSelectionPopup = React.createClass({
 			startOffset: result.startOffset,
 			endOffset: result.endOffset
 		};
-		
+
 		this.props.addSelectionHandler(highlightObject);
 
 	},
@@ -134,7 +140,7 @@ const PubSelectionPopup = React.createClass({
 			left: this.state.xLoc,
 		};
 	},
-	
+
 	render: function() {
 
 		return (
@@ -173,7 +179,7 @@ styles = {
 		marginTop: -5,
 		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
 			display: 'none',
-		},		
+		},
 	},
 	pluginPopupVisible: {
 		opacity: 1,

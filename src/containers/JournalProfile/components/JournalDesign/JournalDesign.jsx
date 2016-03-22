@@ -1,10 +1,12 @@
 /* global CodeMirror */
-
 import React, {PropTypes} from 'react';
 import Radium, {Style} from 'radium';
-import {LandingBody, LoaderIndeterminate} from 'components';
+import {LoaderIndeterminate} from 'components';
+import {LandingBody} from 'containers/Landing/components';
 import ColorPicker from 'react-color';
 import {globalStyles} from 'utils/styleConstants';
+
+// import Playground from 'component-playground';
 
 import {globalMessages} from 'utils/globalMessages';
 import {FormattedMessage} from 'react-intl';
@@ -58,7 +60,7 @@ const JournalDesign = React.createClass({
 			},
 			activeKey: undefined,
 			jsonError: undefined,
-			landingPreviewHeight: 50, 
+			landingPreviewHeight: 50,
 			landingPreviewScale: 1.0,
 		};
 	},
@@ -135,7 +137,7 @@ const JournalDesign = React.createClass({
 				jsonError: err.toString(),
 			});
 		}
-		
+
 	},
 
 	handleClick: function(key) {
@@ -147,7 +149,7 @@ const JournalDesign = React.createClass({
 				activeKey: key,
 			});
 		};
-		
+
 	},
 
 	handleClose: function(key) {
@@ -156,7 +158,7 @@ const JournalDesign = React.createClass({
 			output[key].display = false;
 			this.setState(output);
 		};
-		
+
 	},
 
 	handleChange: function(color) {
@@ -171,9 +173,9 @@ const JournalDesign = React.createClass({
 				<div style={styles.swatch} onClick={this.handleClick(key)}>
 					<div style={[styles.color, {background: this.state.colorSelections[key].color}]}></div>
 				</div>
-				<ColorPicker 
+				<ColorPicker
 					type="chrome"
-					color={this.state.colorSelections[key].color} 
+					color={this.state.colorSelections[key].color}
 					display={this.state.colorSelections[key].display}
 					positionCSS={styles.popupPosition}
 					onChange={this.handleChange}
@@ -196,7 +198,7 @@ const JournalDesign = React.createClass({
 		this.setState({
 			landingPreviewHeight: typeof(window) !== 'undefined' ? document.getElementById('landingMockContainer').clientHeight * (document.getElementById('landingPreviewContainer').clientWidth / window.innerWidth) : 50,
 		});
-		// return 
+		// return
 	},
 	calcLandingPreviewScale: function() {
 		return typeof(window) !== 'undefined' ? document.getElementById('landingPreviewContainer').clientWidth / window.innerWidth : 1.0;
@@ -234,13 +236,16 @@ const JournalDesign = React.createClass({
 						width: 'calc(100% - 20px)',
 						minHeight: '50px',
 					},
-					'#codeMirrorJSON .CodeMirror pre.CodeMirror-placeholder': { 
+					'#codeMirrorJSON .CodeMirror pre.CodeMirror-placeholder': {
 						color: '#999',
 					},
 				}} />
+
+				{/* <Playground codeText={'<div>Testing</div>'} scope={{React: React}} /> */}
+
 				<div style={styles.sectionHeader}>
 					<FormattedMessage id="journal.global" defaultMessage="Global"/>
-				</div> 
+				</div>
 				<div style={styles.sectionContent}>
 					<div style={styles.sectionContentLeft}>
 						<div style={styles.colorRow}>
@@ -273,12 +278,12 @@ const JournalDesign = React.createClass({
 					</div>
 
 					<div style={globalStyles.clearFix}></div>
-					
+
 				</div>
 
 				<div style={styles.sectionHeader}>
 					<FormattedMessage id="journal.landingPage" defaultMessage="Landing Page"/>
-				</div> 
+				</div>
 
 				<div style={styles.sectionContent}>
 					<div style={styles.sectionContentLeft}>
@@ -300,11 +305,11 @@ const JournalDesign = React.createClass({
 							</div>
 							{this.renderColorPicker('landingHeaderHover')}
 						</div>
-					
+
 
 						<div style={[styles.sectionHeader, styles.sectionHeaderInternal]}>
 							<FormattedMessage id="journal.landingPageComponents" defaultMessage="Landing Page Components"/>
-						</div> 
+						</div>
 						<div id={'codeMirrorJSON'} style={styles.codeMirrorWrapper}></div>
 						<div style={styles.jsonError}>{this.state.jsonError}</div>
 					</div>
@@ -316,7 +321,7 @@ const JournalDesign = React.createClass({
 							</div>
 							<LandingBody componentsArray={this.state.componentsArray} journalID={this.props.journalData.getIn(['journalData', '_id'])} journalData={this.props.journalData.get('journalData')} query={this.props.query}/>
 						</div>
-						
+
 					</div>
 
 					<div style={globalStyles.clearFix}></div>
@@ -385,7 +390,7 @@ styles = {
 		// transformOrigin: '0% 0%',
 		transformOrigin: '0% 0%',
 	},
-	
+
 	swatch: {
 		padding: '5px',
 		background: '#fff',
@@ -402,7 +407,7 @@ styles = {
 	colorRow: {
 		height: 24,
 		margin: '10px 0px',
-		
+
 	},
 	colorRowHeader: {
 		lineHeight: '24px',

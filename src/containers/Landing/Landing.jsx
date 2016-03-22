@@ -56,7 +56,7 @@ const Landing = React.createClass({
 								<div style={styles.name}>{item.title}</div>
 							</HoverLink>
 
-						</div>);	
+						</div>);
 					})
 				}
 
@@ -92,9 +92,9 @@ const Landing = React.createClass({
 			? JSON.parse(this.props.journalData.getIn(['journalData', 'design', 'layoutString']).replace(/(['"])?([:]?[a-zA-Z0-9_]+)(['"])?: /g, '"$2": ').replace(/'/g, '"'))
 			: [];
 
-		
+
 		const journalID = this.props.journalData.getIn(['journalData', '_id']);
-		
+
 		return (
 			<div style={styles.container}>
 
@@ -109,10 +109,10 @@ const Landing = React.createClass({
 								<div key="showMeScience" style={styles.showMeScience} onClick={this.showMeScienceClick}><Link to={'/pub/' + this.props.journalData.getIn(['journalData', 'randomSlug'])}style={styles.scienceText}>Show Me Science</Link></div>
 							</div>
 							<div style={styles.search}>
-								<Autocomplete 
-									autocompleteKey={'landingSearch'} 
-									route={'autocompletePubsAndUsers'} 
-									placeholder="Search Pubs and People" 
+								<Autocomplete
+									autocompleteKey={'landingSearch'}
+									route={'autocompletePubsAndUsers'}
+									placeholder="Search Pubs and People"
 									height={40}
 									showBottomLine={false}
 									hideResultsOnClickOut={false}
@@ -183,7 +183,7 @@ const Landing = React.createClass({
 								<span style={styles.footerItem} key={'footerItem' + 3}><a target="_blank" style={globalStyles.link} href="mailto:pubpub@media.mit.edu">Contact</a></span>
 							 </div>
 						</div>
-							
+
 						: <LandingBody componentsArray={componentsArray} journalID={journalID} journalData={this.props.journalData.get('journalData')} query={this.props.query} setQueryHandler={this.setQuery}/>
 				}
 
@@ -305,7 +305,7 @@ styles = {
 	image: {
 		height: '100%',
 	},
-	
+
 	type: {
 		width: 40,
 		float: 'left',

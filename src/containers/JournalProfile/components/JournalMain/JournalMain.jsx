@@ -1,6 +1,6 @@
 import React, {PropTypes} from 'react';
 import Radium from 'radium';
-import {CollectionGallery, PubGallery, UserGallery} from '../';
+import {CollectionGallery, PubGallery, UserGallery} from 'components';
 // import {globalStyles} from 'utils/styleConstants';
 
 import {globalMessages} from 'utils/globalMessages';

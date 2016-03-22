@@ -1,5 +1,6 @@
 {
   "es": {
+    "journal.global": "Same as English: Global",
     "global.analytics": "Same as English: Analytics",
     "global.markdown": "Same as English: markdown"
   },
@@ -16,6 +17,8 @@
     "group.urlUsed": "Missing. English is: Group URL is already used",
     "group.journalNameRequired": "Missing. English is: A group name is required",
     "group.subdomainRequired": "Missing. English is: A group URL is required",
+    "journal.global": "Same as English: Global",
+    "journal.autoFeature": "Missing. English is: Automatically Feature Pubs on Submission",
     "pubMeta.inviteMessage": "Missing. English is: Do you know someone who might have a have an interesting opinion on this paper? Invite them to join the discussion! We will send them a message and help them create accounts.",
     "user.noGroups": "Missing. English is: No Groups Yet",
     "user.notLoggedInGroup": "Missing. English is: Not authorized to view groups",
@@ -61,6 +64,7 @@
     "group.urlUsed": "Missing. English is: Group URL is already used",
     "group.journalNameRequired": "Missing. English is: A group name is required",
     "group.subdomainRequired": "Missing. English is: A group URL is required",
+    "journal.autoFeature": "Missing. English is: Automatically Feature Pubs on Submission",
     "login.firstName": "Missing. English is: First Name",
     "login.lastName": "Missing. English is: Last Name",
     "pubMeta.inviteMessage": "Missing. English is: Do you know someone who might have a have an interesting opinion on this paper? Invite them to join the discussion! We will send them a message and help them create accounts.",

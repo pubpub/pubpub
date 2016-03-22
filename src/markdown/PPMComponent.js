@@ -163,7 +163,7 @@ const PPMComponent = React.createClass({
 			props.id = 'pub-header';
 			break;
 		case 'pubheaderitem':
-			// console.log(arguments)
+			console.log(arguments)
 			// debugger;
 			// if (children[0] && children[0].props) {
 			// 	children[0] = children[0].props.children[0]
@@ -184,11 +184,24 @@ const PPMComponent = React.createClass({
 			// } else {
 
 			// 	Component = 'div';
-
+			const newChildren = [];
+			for (let index = 0; index < children.length; index++) {
+				if (children[index].props && children[index].props.className === 'p-block') {
+					console.log('got a p-block');
+					newChildren.push(children[index].props.children);
+				} else {
+					newChildren.push(children[index]);
+				}
+			}
+			console.log(newChildren);
+			children = newChildren;
+			// if (children[0] && children.length === 1 && children[0].props && children[0].props.className === 'p-block') {
+			//
+			// }
 			// }
 			Component = 'div';
 			props.className = props.className + ' pubheaderitem';
-			props['data-hash'] = children[0] ? murmur.v2(children[0]) : 0;
+			// props['data-hash'] = children[0] ? murmur.v2(children[0]) : 0;
 			break;
 		case 'pubtitle':
 			if (children[0] && children[0].props) {
