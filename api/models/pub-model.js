@@ -1,60 +1,58 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const ObjectId = Schema.Types.ObjectId;
-const Discussion = require('../models').Discussion;
 const Notification = require('../models').Notification;
 const _ = require('underscore');
 import * as jsdiff from 'diff';
 
 const pubSchema = new Schema({
 	slug: { type: String, required: true, index: { unique: true } },
+	title: { type: String },
+	abstract: { type: String },
 
 	// --------------
 	// The Items in this block are fozen at publish time.
 	// All changes that are made pre-update-publish are stored and synced to firebase.
 	// Their change has no reflection in the variables stored here.
 	// This is to ensure that non-published updates don't leak into the Reader
-	title: { type: String },
-	abstract: { type: String },
 	markdown: { type: String },
 	authors: [{ type: ObjectId, ref: 'User'}],
-	
-	styleRawDesktop: { type: String }, // Raw string as user input
-	styleRawMobile: { type: String }, // Raw string as user input
-	style: { type: String }, // CSS scoped to proper div
 
-	isPublished: { type: Boolean }, 
+	styleDesktop: { type: String }, // Raw string as user input
+	styleMobile: { type: String }, // Raw string as user input
+	styleScoped: { type: String }, // CSS scoped to proper div
+
+	isPublished: { type: Boolean },
 	// --------------
-	
-	history: [{ //History is appended to each time a 'publish' is made.
+
+	history: [{ // History is appended to each time a 'publish' is made.
 		publishNote: { type: String },
 		publishDate: { type: Date },
 		publishAuthor: { type: ObjectId, ref: 'User'},
 		diffObject: {
-			additions:  { type: Number },
+			additions: { type: Number },
 			deletions: { type: Number },
 			diffMarkdown: [],
-			diffStyle: [],
+			diffStyleDesktop: [],
+			diffStyleMarkdown: [],
 		},
 
-		title: { type: String },
-		abstract: { type: String },
 		markdown: { type: String },
 		authors: [{ type: ObjectId, ref: 'User'}],
-		
-		styleRawDesktop: { type: String },
-		styleRawMobile: { type: String },
-		style: { type: String },
 
-		isPublished: { type: Boolean }, 
+		styleDesktop: { type: String },
+		styleMobile: { type: String },
+		styleScoped: { type: String },
+
+		isPublished: { type: Boolean },
 	}],
 
 	// A duplicate cache of the parameters as defined in the editor.
 	// Also stored here so that we can privelege access to the editor
 	// and to private pubs
 	collaborators: {
-		canEdit:[{ type: ObjectId, ref: 'User'}],
-		canRead:[{ type: ObjectId, ref: 'User'}]
+		canEdit: [{ type: ObjectId, ref: 'User'}],
+		canRead: [{ type: ObjectId, ref: 'User'}]
 	},
 
 	followers: [{ type: ObjectId, ref: 'User'}],
@@ -172,9 +170,9 @@ pubSchema.statics.getPubEdit = function (slug, readerID, readerGroups, callback)
 		const canEditStrings = pub.collaborators.canEdit.length ? pub.collaborators.canEdit.toString().split(',') : [];
 
 		if (readerID.toString() !== '568abdd9332c142a0095117f' &&
-			canEditStrings.indexOf(readerID.toString()) === -1 && 
-			canReadStrings.indexOf(readerID.toString()) === -1 && 
-			_.intersection(readerGroupsStrings, canEditStrings).length === 0 && 
+			canEditStrings.indexOf(readerID.toString()) === -1 &&
+			canReadStrings.indexOf(readerID.toString()) === -1 &&
+			_.intersection(readerGroupsStrings, canEditStrings).length === 0 &&
 			_.intersection(readerGroupsStrings, canReadStrings).length === 0) {
 			return callback(null, 'Not Authorized', true);
 		}
@@ -223,37 +221,29 @@ pubSchema.statics.getPubEdit = function (slug, readerID, readerGroups, callback)
 
 pubSchema.statics.generateDiffObject = function(oldPubObject, newPubObject) {
 
-	const t0 = new Date();
 	const outputObject = {};
-	outputObject.diffTitle = jsdiff.diffWords(oldPubObject.title, newPubObject.title, {newlineIsToken: true});
-	outputObject.diffAbstract = jsdiff.diffWords(oldPubObject.abstract, newPubObject.abstract, {newlineIsToken: true});
-	outputObject.diffAuthorsNote = jsdiff.diffWords(oldPubObject.authorsNote, newPubObject.authorsNote, {newlineIsToken: true});
-	if (newPubObject.slug === 'cdmxglobal') {
-		outputObject.diffMarkdown = jsdiff.diffSentences(oldPubObject.markdown, newPubObject.markdown, {newlineIsToken: true});
-	} else {
-		outputObject.diffMarkdown = jsdiff.diffWords(oldPubObject.markdown, newPubObject.markdown, {newlineIsToken: true});
-	}
 
-
+	outputObject.diffMarkdown = jsdiff.diffWords(oldPubObject.markdown, newPubObject.markdown, {newlineIsToken: true});
+	outputObject.diffStyleDesktop = jsdiff.diffWords(oldPubObject.styleDesktop, newPubObject.styleDesktop, {newlineIsToken: true});
+	outputObject.diffStyleMobile = jsdiff.diffWords(oldPubObject.styleMobile, newPubObject.styleMobile, {newlineIsToken: true});
 
 	let additions = 0;
 	let deletions = 0;
 	for (const key in outputObject) {
-		outputObject[key].map((diffArrayItem)=>{
-			if (diffArrayItem.added) {
-				additions += 1;
-			}
-			if (diffArrayItem.removed) {
-				deletions += 1;
-			}
-		});
+		if (outputObject.hasOwnProperty(key)) {
+			outputObject[key].map((diffArrayItem)=>{
+				if (diffArrayItem.added) {
+					additions += 1;
+				}
+				if (diffArrayItem.removed) {
+					deletions += 1;
+				}
+			});
+		}
 	}
 
 	outputObject.additions = additions;
 	outputObject.deletions = deletions;
-	const t1 =  new Date() - t0;
-	// console.info("Execution time: %dms", t1);
-	// console.log('outputObject', outputObject);
 
 	return outputObject;
 

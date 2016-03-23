@@ -45,7 +45,7 @@ export default function() {
 			console.warn(err);
 		}
 		return result;
-	});
+	}); 
 
 
 	/*
