@@ -230,26 +230,24 @@ const Editor = React.createClass({
 
 		// const start = performance.now();
 
-		const fullMD = cm.getValue();
+		const markdown = cm.getValue();
 
 		// Grab title, abstract, and authorsNote
-		const titleMatch = fullMD.match(/\[\[title:(.*?)\]\]/i);
+		const titleMatch = markdown.match(/title: (.*)/i);
 		const title = titleMatch && titleMatch.length ? titleMatch[1].trim() : '';
-		const abstractMatch = fullMD.match(/\[\[abstract:(.*?)\]\]/i);
+		const abstractMatch = markdown.match(/abstract:(.*)/i);
 		const abstract = abstractMatch && abstractMatch.length ? abstractMatch[1].trim() : '';
-		const authorsNoteMatch = fullMD.match(/\[\[authorsNote:(.*?)\]\]/i);
-		const authorsNote = authorsNoteMatch && authorsNoteMatch.length ? authorsNoteMatch[1].trim() : '';
 
 		// Generate TOC
-		const TOCs = generateTOC(fullMD);
+		const TOCs = generateTOC(markdown);
 
 		// Format assets and references
 		// const assets = convertFirebaseToObject(this.state.firepadData.assets);
 		// const references = convertFirebaseToObject(this.state.firepadData.references, true);
-		const selections = [];
+		// const selections = [];
 
 		// Strip markdown of title, abstract, authorsNote
-		const markdown = fullMD.replace(/\[\[title:.*?\]\]/gi, '').replace(/\[\[abstract:.*?\]\]/gi, '').replace(/\[\[authorsNote:.*?\]\]/gi, '').trim();
+		// const markdown = fullMD.replace(/\[\[title:.*?\]\]/gi, '').replace(/\[\[abstract:.*?\]\]/gi, '').replace(/\[\[authorsNote:.*?\]\]/gi, '').trim();
 
 		// const compiledMarkdown = performance.now();
 
@@ -264,10 +262,9 @@ const Editor = React.createClass({
 			codeMirrorChange: change,
 			title: title,
 			abstract: abstract,
-			authorsNote: authorsNote,
 			// assetsObject: assets,
 			// referencesObject: references,
-			selectionsArray: selections,
+			// selectionsArray: selections,
 		});
 
 		// const saveState = performance.now();
@@ -314,15 +311,14 @@ const Editor = React.createClass({
 			slug: this.props.slug,
 			title: this.state.title,
 			abstract: this.state.abstract,
-			authorsNote: this.state.authorsNote,
 			markdown: this.state.markdown,
 			authors: authors,
-			assets: this.state.firepadData.assets,
-			references: this.state.firepadData.references,
-			style: this.state.firepadData.settings.pubStyle,
+			// assets: this.state.firepadData.assets,
+			// references: this.state.firepadData.references,
+			// style: this.state.firepadData.settings.pubStyle,
 
-			styleRawDesktop: this.state.firepadData.settings.styleRawDesktop,
-			styleRawMobile: this.state.firepadData.settings.styleRawMobile,
+			styleDesktop: this.state.firepadData.settings.styleDesktop,
+			styleMobile: this.state.firepadData.settings.styleMobile,
 			styleScoped: this.state.firepadData.settings.styleScoped,
 
 			publishNote: versionDescription,
@@ -414,8 +410,8 @@ const Editor = React.createClass({
 	saveStyle: function(newStyleStringDesktop, newStyleStringMobile) {
 		const ref = new Firebase(FireBaseURL + this.props.slug + '/editorData/settings' );
 		ref.update({
-			styleRawDesktop: newStyleStringDesktop,
-			styleRawMobile: newStyleStringMobile,
+			styleDesktop: newStyleStringDesktop,
+			styleMobile: newStyleStringMobile,
 		});
 		this.props.dispatch(saveStyle(newStyleStringDesktop, newStyleStringMobile));
 	},
@@ -771,8 +767,8 @@ const Editor = React.createClass({
 								toggleStyleMode={this.toggleStyleMode}
 								saveStyleHandler={this.saveStyle}
 								saveStyleError={this.props.editorData.get('styleError')}
-								defaultDesktop={this.state.firepadData && this.state.firepadData.settings ? this.state.firepadData.settings.styleRawDesktop : undefined}
-								defaultMobile={this.state.firepadData && this.state.firepadData.settings ? this.state.firepadData.settings.styleRawMobile : undefined} />
+								defaultDesktop={this.state.firepadData && this.state.firepadData.settings ? this.state.firepadData.settings.styleDesktop : undefined}
+								defaultMobile={this.state.firepadData && this.state.firepadData.settings ? this.state.firepadData.settings.styleMobile : undefined} />
 
 						</div>
 

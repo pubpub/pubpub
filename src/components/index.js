@@ -24,6 +24,7 @@ export LoaderDeterminate from './LoaderDeterminate/LoaderDeterminate';
 export LoaderIndeterminate from './LoaderIndeterminate/LoaderIndeterminate';
 export Menu from './Menu/Menu';
 export PubBody from './PubBody/PubBody';
+export PubLeftBar from './PubLeftBar/PubLeftBar';
 export PubModals from './PubModals/PubModals';
 export PubNav from './PubNav/PubNav';
 export PubSelectionPopup from './PubSelectionPopup/PubSelectionPopup';

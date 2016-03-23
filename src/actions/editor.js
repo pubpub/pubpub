@@ -68,7 +68,7 @@ export function getPubEdit(slug) {
 export function publishVersion(newVersion) {
 	return {
 		types: [PUBLISH_LOAD, PUBLISH_SUCCESS, PUBLISH_FAIL],
-		promise: (client) => client.post('/publishPub', {data: {newVersion: newVersion}})
+		promise: (client) => client.post('/saveVersionPub', {data: {newVersion: newVersion}})
 	};
 }
 

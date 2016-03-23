@@ -21,30 +21,31 @@ const PubMetaSource = React.createClass({
 	render: function() {
 
 		const renderOrder = [
-			'title',
-			'abstract',
-			'authorsNote',
 			'markdown',
+			'styleDesktop',
+			'styleMobile'
 		];
 
+		console.log(this.props.historyObject);
 		return (
 			<div style={styles.container}>
 
-					{
-						renderOrder.map((key, itemIndex)=>{
-							if (this.props.historyObject[key].length) {
-								return (
-									<div key={'historyObject-' + itemIndex} style={styles.historyContentWrapper}>
-										<div style={styles.historyTitle}>
-											<FormattedMessage {...globalMessages[key]} />
-										</div>
-										<div style={styles.historyContent} spellCheck="false">{this.props.historyObject[key]}</div>
+				{
+					renderOrder.map((key, itemIndex)=>{
+						if (this.props.historyObject[key]) {
+							return (
+								<div key={'historyObject-' + itemIndex} style={styles.historyContentWrapper}>
+									<div style={styles.historyTitle}>
+										{/* <FormattedMessage {...globalMessages[key]} /> */}
+										{key}
 									</div>
-								);	
-							}	
-						})
-					}
-					
+									<div style={styles.historyContent}>{this.props.historyObject[key]}</div>
+								</div>
+							);
+						}
+					})
+				}
+
 			</div>
 		);
 	}

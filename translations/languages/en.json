@@ -6,6 +6,8 @@
   "preview.discussionOn": "Discussion on",
   "discussion.selectionPreviousDraft": "Selection made on draft version",
   "discussion.selectionPreviousVersion": "Selection made on Version {version}",
+  "pub.home": "Home",
+  "pub.randomPub": "Random Pub",
   "pub.readPub": "Read Pub",
   "pub.editPub": "Edit Pub",
   "pub.addToComment": "Add to Comment",

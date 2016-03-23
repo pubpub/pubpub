@@ -4,21 +4,21 @@ import Radium, {Style} from 'radium';
 import Helmet from 'react-helmet';
 import PureRenderMixin from 'react-addons-pure-render-mixin';
 import { Link } from 'react-router';
-import {getPub, openPubModal, closePubModal, addSelection, pubNavOut, pubNavIn, togglePubHighlights} from '../../actions/pub';
-import {getRandomSlug} from '../../actions/journal';
-import {toggleVisibility, follow, unfollow} from '../../actions/login';
-import {closeMenu} from '../../actions/nav';
+import {getPub, openPubModal, closePubModal, addSelection, pubNavOut, pubNavIn, togglePubHighlights} from 'actions/pub';
+import {getRandomSlug} from 'actions/journal';
+import {toggleVisibility, follow, unfollow} from 'actions/login';
+import {closeMenu} from 'actions/nav';
 
 import {convertImmutableListToObject} from 'utils/parsePlugins';
 
-import {PubBody, PubModals, PubNav, LoaderDeterminate, PubLeftBar} from '../../components';
-import {Discussions} from '../';
+import {PubBody, PubModals, PubNav, LoaderDeterminate, PubLeftBar} from 'components';
+import {Discussions} from 'containers';
 
 import {globalStyles, pubSizes} from 'utils/styleConstants';
 import {rightBarStyles} from './rightBarStyles';
 
 import {globalMessages} from 'utils/globalMessages';
-import {generateTOC} from '../../markdown/generateTOC';
+import {generateTOC} from 'markdown/generateTOC';
 import {FormattedMessage} from 'react-intl';
 
 let styles = {};
@@ -188,12 +188,12 @@ const PubReader = React.createClass({
 			const refName = match ? match[2] : undefined;
 
 			let leadImage = '';
-			for (let index = pubData.history[versionIndex].assets.length; index--;) {
-				if (pubData.history[versionIndex].assets[index].refName === refName) {
-					leadImage = pubData.history[versionIndex].assets[index].url_s3;
-					break;
-				}
-			}
+			// for (let index = pubData.history[versionIndex].assets.length; index--;) {
+			// 	if (pubData.history[versionIndex].assets[index].refName === refName) {
+			// 		leadImage = pubData.history[versionIndex].assets[index].url_s3;
+			// 		break;
+			// 	}
+			// }
 
 			metaData.meta.push({property: 'og:image', content: leadImage});
 			metaData.meta.push({name: 'twitter:image', content: leadImage});

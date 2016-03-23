@@ -36,7 +36,7 @@ const pubSchema = new Schema({
 			deletions: { type: Number },
 			diffMarkdown: [],
 			diffStyleDesktop: [],
-			diffStyleMarkdown: [],
+			diffStyleMobile: [],
 		},
 
 		markdown: { type: String },
@@ -223,11 +223,11 @@ pubSchema.statics.getPubEdit = function (slug, readerID, readerGroups, callback)
 pubSchema.statics.generateDiffObject = function(oldPubObject, newPubObject) {
 	// Diff each item in object and store output
 	// Iterate over to calculate total additions, deletions
-
+	
 	const outputObject = {};
-	outputObject.diffMarkdown = jsdiff.diffWords(oldPubObject.markdown, newPubObject.markdown, {newlineIsToken: true});
-	outputObject.diffStyleDesktop = jsdiff.diffWords(oldPubObject.styleDesktop, newPubObject.styleDesktop, {newlineIsToken: true});
-	outputObject.diffStyleMobile = jsdiff.diffWords(oldPubObject.styleMobile, newPubObject.styleMobile, {newlineIsToken: true});
+	outputObject.diffMarkdown = jsdiff.diffWords(oldPubObject.markdown || '', newPubObject.markdown || '', {newlineIsToken: true});
+	outputObject.diffStyleDesktop = jsdiff.diffWords(oldPubObject.styleDesktop || '', newPubObject.styleDesktop || '', {newlineIsToken: true});
+	outputObject.diffStyleMobile = jsdiff.diffWords(oldPubObject.styleMobile || '', newPubObject.styleMobile || '', {newlineIsToken: true});
 
 	let additions = 0;
 	let deletions = 0;
@@ -246,7 +246,6 @@ pubSchema.statics.generateDiffObject = function(oldPubObject, newPubObject) {
 
 	outputObject.additions = additions;
 	outputObject.deletions = deletions;
-
 	return outputObject;
 
 };

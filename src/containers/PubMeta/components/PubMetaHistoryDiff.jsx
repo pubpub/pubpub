@@ -12,20 +12,18 @@ const PubMetaHistoryDiff = React.createClass({
 	getDefaultProps: function() {
 		return {
 			diffObject: {
-				diffTitle: [],
-				diffAbstract: [],
-				diffAuthorsNote: [],
 				diffMarkdown: [],
+				diffStyleDesktop: [],
+				diffStyleMobile: [],
 			},
 		};
 	},
 
 	render: function() {
 		const renderOrder = [
-			'diffTitle',
-			'diffAbstract',
-			'diffAuthorsNote',
 			'diffMarkdown',
+			'diffStyleDesktop',
+			'diffStyleMobile',
 		];
 
 		return (
@@ -35,7 +33,7 @@ const PubMetaHistoryDiff = React.createClass({
 					renderOrder.map((key, itemIndex)=>{
 						const diffItem = this.props.diffObject[key];
 						if (diffItem.length > 1 || ((diffItem[0] && diffItem[0].added) || (diffItem[0] && diffItem[0].removed))) {
-							
+
 							return (
 								<div key={'diffObject-' + itemIndex} style={styles.diffContentWrapper}>
 									<div style={styles.diffTitle}>{key.replace('diff', '')}</div>
@@ -48,11 +46,11 @@ const PubMetaHistoryDiff = React.createClass({
 									</div>
 								</div>
 							);
-							
+
 						}
 					})
 				}
-									
+
 			</div>
 		);
 	}
@@ -64,7 +62,7 @@ styles = {
 	container: {
 		padding: 15,
 	},
-	
+
 	diffTitle: {
 		margin: '15px 0px',
 		fontFamily: 'Courier',

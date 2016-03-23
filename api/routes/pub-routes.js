@@ -144,7 +144,7 @@ export function saveVersionPub(req, res) {
 		const diffObject = Pub.generateDiffObject(previousHistoryItem, req.body.newVersion);
 
 		// Update Asset docs to reflect that they were used in this pub
-		const assetIDStrings = req.body.newVersion.markdown.match(/"_id":"(.*?)"/g);
+		const assetIDStrings = req.body.newVersion.markdown.match(/"_id":"(.*?)"/g) || [];
 		const assetIDs = assetIDStrings.map((string)=>{
 			return string.substring(7, string.length - 1);
 		});
@@ -157,8 +157,8 @@ export function saveVersionPub(req, res) {
 
 		pub.markdown = req.body.newVersion.markdown;
 		pub.authors = req.body.newVersion.authors;
-		pub.styleRawDesktop = req.body.newVersion.styleRawDesktop;
-		pub.styleRawMobile = req.body.newVersion.styleRawMobile;
+		pub.styleDesktop = req.body.newVersion.styleDesktop;
+		pub.styleMobile = req.body.newVersion.styleMobile;
 		pub.styleScoped = req.body.newVersion.styleScoped;
 
 		pub.lastUpdated = publishDate;
