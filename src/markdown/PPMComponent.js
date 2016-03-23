@@ -17,8 +17,10 @@ import Plugins from '../components/EditorPlugins/index';
 import InputFields from '../components/EditorPluginFields/index';
 
 import MathComponent from './MathComponent';
+import HTMLComponent from './HTMLComponent';
 
 import murmur from 'murmurhash';
+
 
 const MathOptions = {
 	inlineOpen: '$$',
@@ -144,7 +146,12 @@ const PPMComponent = React.createClass({
 		case 'math':
 			return <MathComponent>{children[0]}</MathComponent>;
 			break;
-
+		case 'htmlblock':
+			const text = children[0];
+			if (typeof text === 'string' || text instanceof String) {
+				return <HTMLComponent>{text}</HTMLComponent>;
+				break;
+	    }
 		case 'p':
 			// if (children[0] === null){ return null; }
 			// console.log('p arguments', arguments);

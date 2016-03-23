@@ -54,11 +54,11 @@ const DEFAULT_RULES = {
   },
 
   htmlBlock(token) {
-    return token.content;
+    return [['htmlblock', compact(['htmlblock', {}, token.content])]];
   },
 
   htmlInline(token) {
-    return token.content;
+    return [['htmlblock', compact(['htmlblock', {}, token.content])]];
   },
 
   inline(token, attrs, children) {
@@ -135,7 +135,7 @@ function mdReactFactory(options={}) {
     onGenerateKey=(tag, index) => `mdrct-${tag}-${index}`,
     className } = options;
 
-  let md = markdown(markdownOptions || presetName)
+  let md = markdown({html:false, linkify: true, typographer: true})
     .enable(enableRules)
     .disable(disableRules);
 

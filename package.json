@@ -178,6 +178,7 @@
     "redux-router": "1.0.0-beta5",
     "request": "^2.65.0",
     "rss": "^1.2.1",
+    "sanitize-html": "^1.11.3",
     "scroll-behavior": "^0.3.0",
     "sendgrid": "^2.0.0",
     "serialize-javascript": "1.1.2",
