@@ -11,7 +11,7 @@ import ReactFireMixin from 'reactfire';
 import {AssetLibrary} from 'containers';
 import {CollaboratorsModal, PublishModal, SettingsModal} from './components';
 
-import {closeModal, saveCollaboratorsToPub, saveSettingsPubPub} from '../../actions/editor';
+import {closeModal, saveCollaboratorsToPub} from '../../actions/editor';
 import {saveSettingsUser} from '../../actions/login';
 
 import {globalStyles} from 'utils/styleConstants';
@@ -43,7 +43,7 @@ const Editor = React.createClass({
 				selections: [],
 				settings: {},
 			},
-			
+
 		};
 	},
 
@@ -129,12 +129,6 @@ const Editor = React.createClass({
 		ref.update(newSettings);
 	},
 
-	saveUpdatedSettingsFirebaseAndPubPub: function(newSettings) {
-		const ref = new Firebase(FireBaseURL + this.props.slug + '/editorData/settings' );
-		ref.update(newSettings);
-		this.props.dispatch(saveSettingsPubPub(this.props.slug, newSettings));
-	},
-
 	// saveReferences: function(newReferences) {
 	// 	const ref = new Firebase(FireBaseURL + this.props.slug + '/editorData/references' );
 	// 	ref.set(newReferences);
@@ -149,7 +143,7 @@ const Editor = React.createClass({
 
 
 	render: function() {
-				
+
 		const activeModal = this.props.editorData.get('activeModal');
 
 		return (
@@ -166,14 +160,14 @@ const Editor = React.createClass({
 								return (<AssetLibrary />);
 
 							case 'Collaborators':
-								return (<CollaboratorsModal 
-										collaboratorData={this.state.firepadData.collaborators} 
+								return (<CollaboratorsModal
+										collaboratorData={this.state.firepadData.collaborators}
 										updateCollaborators={this.saveUpdatedCollaborators}/>
 									);
 
 							case 'Publish':
-								return (<PublishModal 
-										slug={this.props.slug} 
+								return (<PublishModal
+										slug={this.props.slug}
 										handlePublish={this.props.publishVersionHandler}
 										currentJournal={this.props.journalData.getIn(['journalData', 'journalName'])}/>
 									);
@@ -194,7 +188,6 @@ const Editor = React.createClass({
 										pubStyle={this.state.firepadData && this.state.firepadData.settings ? this.state.firepadData.settings.pubStyle : undefined}
 										saveUpdatedSettingsUser={this.saveUpdatedSettingsUser}
 										saveUpdatedSettingsFirebase={this.saveUpdatedSettingsFirebase}
-										saveUpdatedSettingsFirebaseAndPubPub={this.saveUpdatedSettingsFirebaseAndPubPub} 
 										toggleLeftPanelModeHandler={this.toggleLeftPanelMode}/>
 									);
 							default:
@@ -221,7 +214,7 @@ export default connect( state => {
 	};
 })( Radium(Editor) );
 
-styles = {	
+styles = {
 	modalSplash: {
 		opacity: 0,
 		pointerEvents: 'none',

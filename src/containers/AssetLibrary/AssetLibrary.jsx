@@ -7,7 +7,7 @@ import Radium from 'radium';
 import {Menu, Button} from 'components';
 import {AssetEditor, AssetRow, ReferenceRow} from './components';
 
-import {closeModal, saveCollaboratorsToPub, saveSettingsPubPub} from 'actions/editor';
+import {closeModal, saveCollaboratorsToPub} from 'actions/editor';
 
 import {globalStyles} from 'utils/styleConstants';
 
@@ -307,7 +307,7 @@ const AssetLibrary = React.createClass({
 												for (let index = references.length; index > 0; index--) {
 													const reference = references[index - 1];
 													if (reference.assetData) {
-														referenceList.push(<ReferenceRow 
+														referenceList.push(<ReferenceRow
 															key={'referenceRow-' + index}
 															assetObject={reference}
 															insertHandler={()=>{}}

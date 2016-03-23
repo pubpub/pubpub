@@ -1,7 +1,7 @@
 /*--------*/
 // Define Action types
-// 
-// All action types are defined as constants. Do not manually pass action 
+//
+// All action types are defined as constants. Do not manually pass action
 // types as strings in action creators
 /*--------*/
 export const LOAD_PUB_EDIT = 'editor/LOAD_PUB_EDIT';
@@ -53,7 +53,7 @@ export const ARCHIVE_COMMENT_FAIL = 'pub/ARCHIVE_COMMENT_FAIL';
 
 /*--------*/
 // Define Action creators
-// 
+//
 // All calls to dispatch() call one of these functions. Do not manually create
 // action objects (e.g. {type:example, payload:data} ) within dispatch()
 // function calls
@@ -61,14 +61,14 @@ export const ARCHIVE_COMMENT_FAIL = 'pub/ARCHIVE_COMMENT_FAIL';
 export function getPubEdit(slug) {
 	return {
 		types: [LOAD_PUB_EDIT, LOAD_PUB_EDIT_SUCCESS, LOAD_PUB_EDIT_FAIL],
-		promise: (client) => client.get('/getPubEdit', {params: {slug: slug}}) 
+		promise: (client) => client.get('/getPubEdit', {params: {slug: slug}})
 	};
 }
 
 export function publishVersion(newVersion) {
 	return {
 		types: [PUBLISH_LOAD, PUBLISH_SUCCESS, PUBLISH_FAIL],
-		promise: (client) => client.post('/publishPub', {data: {newVersion: newVersion}}) 
+		promise: (client) => client.post('/publishPub', {data: {newVersion: newVersion}})
 	};
 }
 
@@ -78,7 +78,7 @@ export function saveStyle(styleDesktop, styleMobile) {
 		promise: (client) => client.post('/transformStyle', {data: {
 			styleDesktop: styleDesktop,
 			styleMobile: styleMobile
-		}}) 
+		}})
 	};
 }
 
@@ -131,7 +131,7 @@ export function addSelection(selection) {
 	return {
 		type: ADD_SELECTION,
 		selection: selection,
-	};	
+	};
 }
 
 export function saveCollaboratorsToPub(newCollaborators, removedUser, slug) {
@@ -141,19 +141,19 @@ export function saveCollaboratorsToPub(newCollaborators, removedUser, slug) {
 			newCollaborators: newCollaborators,
 			removedUser: removedUser,
 			slug: slug
-		}}) 
+		}})
 	};
 }
 
-export function saveSettingsPubPub(slug, newSettings) {
-	return {
-		types: [UPDATE_PUB_SETTINGS_LOAD, UPDATE_PUB_SETTINGS_SUCCESS, UPDATE_PUB_SETTINGS_FAIL],
-		promise: (client) => client.post('/updatePubSettings', {data: {
-			slug: slug,
-			newSettings: newSettings
-		}}) 
-	};
-}
+// export function saveSettingsPubPub(slug, newSettings) {
+// 	return {
+// 		types: [UPDATE_PUB_SETTINGS_LOAD, UPDATE_PUB_SETTINGS_SUCCESS, UPDATE_PUB_SETTINGS_FAIL],
+// 		promise: (client) => client.post('/updatePubSettings', {data: {
+// 			slug: slug,
+// 			newSettings: newSettings
+// 		}})
+// 	};
+// }
 
 export function updatePubBackendData(slug, newPubData) {
 	return {
@@ -161,7 +161,7 @@ export function updatePubBackendData(slug, newPubData) {
 		promise: (client) => client.post('/updatePubData', {data: {
 			slug: slug,
 			newPubData: newPubData
-		}}) 
+		}})
 	};
 }
 
@@ -169,7 +169,7 @@ export function addComment(discussionObject, activeSaveID) {
 	return {
 		types: [ADD_COMMENT, ADD_COMMENT_SUCCESS, ADD_COMMENT_FAIL],
 		promise: (client) => client.post('/addDiscussion', {data: {discussionObject: discussionObject, isEditorComment: true}}),
-		activeSaveID: activeSaveID 
+		activeSaveID: activeSaveID
 	};
 }
 

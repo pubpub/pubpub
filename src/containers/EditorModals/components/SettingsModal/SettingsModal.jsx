@@ -17,7 +17,7 @@ const EditorModalSettings = React.createClass({
 		pubStyle: PropTypes.object,
 		saveUpdatedSettingsUser: PropTypes.func,
 		saveUpdatedSettingsFirebase: PropTypes.func,
-		saveUpdatedSettingsFirebaseAndPubPub: PropTypes.func,
+		// saveUpdatedSettingsFirebaseAndPubPub: PropTypes.func,
 		toggleLeftPanelModeHandler: PropTypes.func,
 	},
 	getDefaultProps: function() {
@@ -63,12 +63,12 @@ const EditorModalSettings = React.createClass({
 			const cm = document.getElementById('codeMirrorJSX').childNodes[0].CodeMirror;
 			// console.log(this.props.pubStyle.cssObjectString);
 			cm.setValue(this.props.pubStyle.cssObjectString || '');
-			
+
 		}
 
 		this.props.toggleLeftPanelModeHandler();
 		this.setState({
-			showAdvanced: !this.state.showAdvanced,	
+			showAdvanced: !this.state.showAdvanced,
 			showAdvancedError: false,
 		});
 	},
@@ -87,7 +87,7 @@ const EditorModalSettings = React.createClass({
 			this.setState({isLoading: true});
 
 			switch (key) {
-			case 'editorFont': 
+			case 'editorFont':
 			case 'editorColor':
 			case 'editorFontSize':
 				return this.props.saveUpdatedSettingsUser(newSetting);
@@ -95,8 +95,8 @@ const EditorModalSettings = React.createClass({
 				newSetting[key] = {...this.props.pubStyle, type: option};
 				return this.props.saveUpdatedSettingsFirebase(newSetting);
 
-			case 'pubPrivacy':
-				return this.props.saveUpdatedSettingsFirebaseAndPubPub(newSetting);
+			// case 'pubPrivacy':
+			// 	return this.props.saveUpdatedSettingsFirebaseAndPubPub(newSetting);
 			default:
 				return console.log('hit default');
 			}
@@ -109,10 +109,10 @@ const EditorModalSettings = React.createClass({
 		// this.setState({showAdvancedError: false});
 		const cm = document.getElementById('codeMirrorJSX').childNodes[0].CodeMirror;
 		// console.log(cm.getValue());
-		
+
 		// We should test before save
 		cssConvert(cm.getValue());
-	
+
 		const newSetting = {};
 
 		newSetting.pubStyle = {
@@ -180,10 +180,10 @@ const EditorModalSettings = React.createClass({
 						width: 'calc(100% - 20px)',
 						minHeight: '150px',
 					},
-					'#codeMirrorJSX .CodeMirror pre.CodeMirror-placeholder': { 
+					'#codeMirrorJSX .CodeMirror pre.CodeMirror-placeholder': {
 						color: '#999',
 					},
-					'#codeMirrorJSX .CodeMirror-empty .CodeMirror-scroll': { 
+					'#codeMirrorJSX .CodeMirror-empty .CodeMirror-scroll': {
 						overflow: 'visible !important',
 					},
 				}} />
@@ -202,7 +202,7 @@ const EditorModalSettings = React.createClass({
 				</div>
 
 				<div className="main-ref-content" style={styles.mainContent[this.state.showAdvanced]}>
-					
+
 					{/* Iterate over options types */}
 					{
 						options.map((optionObject)=> {
@@ -220,8 +220,8 @@ const EditorModalSettings = React.createClass({
 												return (
 													<span key={optionObject.title + '-' + index}>
 														<span key={optionObject.title + '-' + option} style={[styles.option, optionObject.activeOption === option && styles.optionActive]} onClick={this.handleOptionClick(optionObject.key, option)}>{option}</span>
-														{(index !== optionObject.options.length - 1 
-															? <span style={styles.optionSeparator}>|</span> 
+														{(index !== optionObject.options.length - 1
+															? <span style={styles.optionSeparator}>|</span>
 															: null
 														)}
 													</span>
@@ -234,7 +234,7 @@ const EditorModalSettings = React.createClass({
 							);
 						})
 					}
-					
+
 				</div>
 
 				{/* Additional options mode */}
@@ -256,7 +256,7 @@ const EditorModalSettings = React.createClass({
 							? <div>Error</div>
 							: null
 					}
-					
+
 
 				</div>
 
@@ -294,7 +294,7 @@ styles = {
 		height: 0,
 		pointerEvents: 'none',
 		overflow: 'hidden',
-		
+
 	},
 	advancedTitle: {
 		true: {
@@ -302,7 +302,7 @@ styles = {
 		},
 		display: 'none',
 		fontSize: '25px',
-		
+
 	},
 	advancedContent: {
 		padding: '15px 25px',

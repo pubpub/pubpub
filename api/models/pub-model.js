@@ -9,6 +9,8 @@ const pubSchema = new Schema({
 	slug: { type: String, required: true, index: { unique: true } },
 	title: { type: String },
 	abstract: { type: String },
+	createDate: { type: Date },
+	lastUpdated: { type: Date },
 
 	// --------------
 	// The Items in this block are fozen at publish time.
@@ -17,7 +19,6 @@ const pubSchema = new Schema({
 	// This is to ensure that non-published updates don't leak into the Reader
 	markdown: { type: String },
 	authors: [{ type: ObjectId, ref: 'User'}],
-
 	styleDesktop: { type: String }, // Raw string as user input
 	styleMobile: { type: String }, // Raw string as user input
 	styleScoped: { type: String }, // CSS scoped to proper div
@@ -29,6 +30,7 @@ const pubSchema = new Schema({
 		publishNote: { type: String },
 		publishDate: { type: Date },
 		publishAuthor: { type: ObjectId, ref: 'User'},
+
 		diffObject: {
 			additions: { type: Number },
 			deletions: { type: Number },
@@ -39,7 +41,6 @@ const pubSchema = new Schema({
 
 		markdown: { type: String },
 		authors: [{ type: ObjectId, ref: 'User'}],
-
 		styleDesktop: { type: String },
 		styleMobile: { type: String },
 		styleScoped: { type: String },
@@ -77,9 +78,9 @@ const pubSchema = new Schema({
 });
 
 
-pubSchema.statics.isUnique = function (slug,callback) {
+pubSchema.statics.isUnique = function (slug, callback) {
 
-	this.findOne({'slug':slug})
+	this.findOne({'slug': slug})
 	.exec(function (err, pub) {
 			if (err) return callback(err);
 			// if (err) return res.json(500);
@@ -220,9 +221,10 @@ pubSchema.statics.getPubEdit = function (slug, readerID, readerGroups, callback)
 };
 
 pubSchema.statics.generateDiffObject = function(oldPubObject, newPubObject) {
+	// Diff each item in object and store output
+	// Iterate over to calculate total additions, deletions
 
 	const outputObject = {};
-
 	outputObject.diffMarkdown = jsdiff.diffWords(oldPubObject.markdown, newPubObject.markdown, {newlineIsToken: true});
 	outputObject.diffStyleDesktop = jsdiff.diffWords(oldPubObject.styleDesktop, newPubObject.styleDesktop, {newlineIsToken: true});
 	outputObject.diffStyleMobile = jsdiff.diffWords(oldPubObject.styleMobile, newPubObject.styleMobile, {newlineIsToken: true});

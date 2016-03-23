@@ -77,9 +77,7 @@ export function createPub(req, res) {
 			featuredInList: [],
 			submittedTo: [],
 			submittedToList: [],
-			
-			discussions: [],
-			
+
 		});
 		// console.log(pub);
 
@@ -120,150 +118,100 @@ export function createPub(req, res) {
 }
 app.post('/createPub', createPub);
 
-export function publishPub(req, res) {
-	// Check that the req.user is an editor on the pub.
-	// Beef out the history object with date, etc
-	// Update the pub object with new dates, titles, etc
-	// Push the new history object
+
+
+// Publish Pub turns to just toggling 'isPublished'
+// the current publish funciton is what we do on save version
+export function saveVersionPub(req, res) {
+	// Find pub
+	// Authenticate user
+	// Calculate diff
+	// Updates assets usedIn field
+	// Update doc and save
+	// Send notifications
 	Pub.findOne({ slug: req.body.newVersion.slug }, function(err, pub) {
 		if (err) { return res.status(500).json(err); }
 
-		// if (!req.user || pub.collaborators.canEdit.indexOf(req.user._id) === -1) {
+		// Check that the req.user is an editor on the pub.
 		const userGroups = req.user ? req.user.groups : [];
 		const userGroupsStrings = userGroups.toString().split(',');
 		const canEditStrings = pub.collaborators.canEdit.toString().split(',');
-
 		if (!req.user || (pub.collaborators.canEdit.indexOf(req.user._id) === -1 && _.intersection(userGroupsStrings, canEditStrings).length === 0 && req.user._id.toString() !== '568abdd9332c142a0095117f') ) {
 			return res.status(403).json('Not authorized to publish versions to this pub');
 		}
-		const publishDate = new Date().getTime();
-		// Calculate diff
-		// Take last history object,
-		// take new object,
-		// diff them and return object
-			// diff each item in object and store output
-			// iterate over to calculate total additions, deletions
-		const previousHistoryItem = pub.history.length
-			? pub.history[pub.history.length - 1]
-			: {
-				title: '',
-				abstract: '',
-				authorsNote: '',
-				markdown: '',
-				// authors: {}, // We need to save an author's string and then diff that...
-				// assets: [],
-				// references: [],
-				// style: {},
-			};
+
+		const previousHistoryItem = pub.history.length ? pub.history[pub.history.length - 1] : {markdown: '', styleDesktop: '', styleMobile: ''};
 		const diffObject = Pub.generateDiffObject(previousHistoryItem, req.body.newVersion);
-		// Append details to assets
-		const assets = [];
-		for (const key in req.body.newVersion.assets) {
-			const assetObject = req.body.newVersion.assets[key];
-			if (assetObject) {
-				assetObject.usedInDiscussion = null;
-				assetObject.usedInPub = pub._id;
-				assetObject.owner = req.user._id;
-				assetObject.createDate = publishDate;
-				assets.push(assetObject);	
-			}
-			
-		}
 
-		// Append details to references
-		const references = [];
-		for (const key in req.body.newVersion.references) {
-			const referenceObject = req.body.newVersion.references[key];
-			if (referenceObject) {
-				referenceObject.usedInDiscussion = null;
-				referenceObject.usedInPub = pub._id;
-				referenceObject.owner = req.user._id;
-				referenceObject.createDate = publishDate;
-				references.push(referenceObject);
-			} 
-			
-		}
-
-		const isNewPub = pub.history.length === 0;
-		req.body.newVersion.authors.map((authorID)=>{
-			User.findOne({_id: authorID}, {'followers':1}).lean().exec(function(err, author) {
-				const followers = author && author.follows ? author.follows : [];
-				
-				followers.map((follower)=>{
-					if (isNewPub) {
-						Notification.createNotification('followers/newPub', req.body.host, author, follower, pub._id);
-					} else {
-						Notification.createNotification('followers/newVersion', req.body.host, author, follower, pub._id);
-					}
-				});	
-				
-			});
+		// Update Asset docs to reflect that they were used in this pub
+		const assetIDStrings = req.body.newVersion.markdown.match(/"_id":"(.*?)"/g);
+		const assetIDs = assetIDStrings.map((string)=>{
+			return string.substring(7, string.length - 1);
 		});
 
-		Asset.insertBulkAndReturnIDs(assets, function(err, dbAssetsIds) {
-			if (err) { return res.status(500).json(err); }
-			Reference.insertBulkAndReturnIDs(references, function(err, dbReferencesIds) {
-				if (err) { return res.status(500).json(err); }
-				pub.title = req.body.newVersion.title;
-				pub.abstract = req.body.newVersion.abstract;
-				pub.authorsNote = req.body.newVersion.authorsNote;
-				pub.markdown = req.body.newVersion.markdown;
-				pub.authors = req.body.newVersion.authors;
-				pub.assets = dbAssetsIds;
-				pub.references = dbReferencesIds;
-				pub.style = req.body.newVersion.style;
-				pub.styleRawDesktop = req.body.newVersion.styleRawDesktop;
-				pub.styleRawMobile = req.body.newVersion.styleRawMobile;
-				pub.styleScoped = req.body.newVersion.styleScoped;
-				pub.lastUpdated = publishDate,
-				pub.status = req.body.newVersion.status;
-				pub.history.push({
-					publishNote: req.body.newVersion.publishNote,
-					publishDate: publishDate,
-					publishAuthor: req.user._id,
-					title: req.body.newVersion.title,
-					abstract: req.body.newVersion.abstract,
-					authorsNote: req.body.newVersion.authorsNote,
-					markdown: req.body.newVersion.markdown,
-					authors: req.body.newVersion.authors,
-					assets: dbAssetsIds,
-					references: dbReferencesIds,
-					style: req.body.newVersion.style,
+		Asset.update({'_id': {$in: assetIDs}}, { $addToSet: { usedInPubs: {id: pub._id, version: pub.history.length || 1}} }, function(assetUpdateErr, result) {if (assetUpdateErr) return console.log('Failed to update assets usedInPubs field'); });
 
-					styleRawDesktop: req.body.newVersion.styleRawDesktop,
-					styleRawMobile: req.body.newVersion.styleRawMobile,
-					styleScoped: req.body.newVersion.styleScoped,
+		const publishDate = new Date().getTime();
+		pub.title = req.body.newVersion.title;
+		pub.abstract = req.body.newVersion.abstract;
 
-					status: req.body.newVersion.status,
-					diffObject: {
-						additions: diffObject.additions,
-						deletions: diffObject.deletions,
-						diffTitle: diffObject.diffTitle,
-						diffAbstract: diffObject.diffAbstract,
-						diffAuthorsNote: diffObject.diffAuthorsNote,
-						diffMarkdown: diffObject.diffMarkdown,
-						// diffAuthors:  diffObject.diffAuthors,
-						// diffAssets:  diffObject.diffAssets,
-						// diffReferences: diffObject.diffReferences,
-						// diffStyle:  diffObject.diffStyle,
-					}
-				});
+		pub.markdown = req.body.newVersion.markdown;
+		pub.authors = req.body.newVersion.authors;
+		pub.styleRawDesktop = req.body.newVersion.styleRawDesktop;
+		pub.styleRawMobile = req.body.newVersion.styleRawMobile;
+		pub.styleScoped = req.body.newVersion.styleScoped;
 
-				pub.save(function(err, result) {
-					if (err) { return res.status(500).json(err); }
-					// console.log('in save result');
-					// console.log(result);
-					return res.status(201).json('Published new version');
+		pub.lastUpdated = publishDate;
+
+		pub.history.push({
+			publishNote: req.body.newVersion.publishNote,
+			publishDate: publishDate,
+			publishAuthor: req.user._id,
+
+			diffObject: {
+				additions: diffObject.additions,
+				deletions: diffObject.deletions,
+				diffMarkdown: diffObject.diffMarkdown,
+				diffStyleDesktop: diffObject.diffStyleDesktop,
+				diffStyleMobile: diffObject.diffStyleMobile,
+			},
+
+			markdown: req.body.newVersion.markdown,
+			authors: req.body.newVersion.authors,
+			styleDesktop: req.body.newVersion.styleDesktop,
+			styleMobile: req.body.newVersion.styleMobile,
+			styleScoped: req.body.newVersion.styleScoped,
+
+			isPublished: pub.isPublished,
+
+		});
+
+		pub.save(function(errPubSave, result) {
+			if (errPubSave) { return res.status(500).json(err); }
+
+			// Create notification objects about new pub
+			const isNewPub = pub.history.length === 0;
+			req.body.newVersion.authors.map((authorID)=>{
+				User.findOne({_id: authorID}, {'followers': 1}).lean().exec(function(userFindErr, author) {
+					const followers = author && author.follows ? author.follows : [];
+					followers.map((follower)=>{
+						if (isNewPub) {
+							Notification.createNotification('followers/newPub', req.body.host, author, follower, pub._id);
+						} else {
+							Notification.createNotification('followers/newVersion', req.body.host, author, follower, pub._id);
+						}
+					});
 
 				});
-
 			});
+
+			return res.status(201).json('Published new version');
 
 		});
 
 	});
 }
-app.post('/publishPub', publishPub);
+app.post('/saveVersionPub', saveVersionPub);
 
 export function updateCollaborators(req, res) {
 	Pub.findOne({ slug: req.body.slug }, function (err, pub) {
@@ -292,7 +240,7 @@ export function updateCollaborators(req, res) {
 				canRead.push(collaborator._id);
 				// Update the user's pubs collection so it is removed from their profile
 				// User.update({ _id: collaborator._id }, { $pull: { pubs: pubID} }, function(err, result){if(err) return handleError(err)});
-				
+
 				// Psych! We actually want it on the user's profile - just under the 'canRead' section
 				User.update({ _id: collaborator._id }, { $addToSet: { pubs: pubID} }, function(err, result){if(err) return handleError(err)});
 				Group.update({ _id: collaborator._id }, { $addToSet: { pubs: pubID} }, function(err, result){if(err) return handleError(err)});
@@ -329,7 +277,7 @@ export function updateCollaborators(req, res) {
 						sendAddedAsCollaborator(email, url, senderName, pubTitle, groupName, journalName, function(err, result) {
 							if (err) { console.log('Error sending email to user: ', err);	}
 						});
-					} 
+					}
 
 					if (group) {
 						for (let index = group.members.length; index--;) {
@@ -363,36 +311,36 @@ export function updateCollaborators(req, res) {
 app.post('/updateCollaborators', updateCollaborators);
 
 
-export function updatePubSettings(req, res) {
-	const settingKey = Object.keys(req.body.newSettings)[0];
-
-	Pub.findOne({slug: req.body.slug}, function(err, pub) {
-
-		if (err) {
-			console.log(err);
-			return res.status(500).json(err);
-		}
-
-		// if (!req.user || pub.collaborators.canEdit.indexOf(req.user._id) === -1) {
-		const userGroups = req.user ? req.user.groups : [];
-		const userGroupsStrings = userGroups.toString().split(',');
-		const canEditStrings = pub.collaborators.canEdit.toString().split(',');
-
-		if (!req.user || (pub.collaborators.canEdit.indexOf(req.user._id) === -1 && _.intersection(userGroupsStrings, canEditStrings).length === 0 && req.user._id.toString() !== '568abdd9332c142a0095117f') ) {
-			return res.status(403).json('Not authorized to publish versions to this pub');
-		}
-
-		pub.settings[settingKey] = req.body.newSettings[settingKey];
-
-		pub.save(function(err, result) {
-			if (err) { return res.status(500).json(err); }
-
-			return res.status(201).json(pub.settings);
-		});
-
-	});
-}
-app.post('/updatePubSettings', updatePubSettings);
+// export function updatePubSettings(req, res) {
+// 	const settingKey = Object.keys(req.body.newSettings)[0];
+//
+// 	Pub.findOne({slug: req.body.slug}, function(err, pub) {
+//
+// 		if (err) {
+// 			console.log(err);
+// 			return res.status(500).json(err);
+// 		}
+//
+// 		// if (!req.user || pub.collaborators.canEdit.indexOf(req.user._id) === -1) {
+// 		const userGroups = req.user ? req.user.groups : [];
+// 		const userGroupsStrings = userGroups.toString().split(',');
+// 		const canEditStrings = pub.collaborators.canEdit.toString().split(',');
+//
+// 		if (!req.user || (pub.collaborators.canEdit.indexOf(req.user._id) === -1 && _.intersection(userGroupsStrings, canEditStrings).length === 0 && req.user._id.toString() !== '568abdd9332c142a0095117f') ) {
+// 			return res.status(403).json('Not authorized to publish versions to this pub');
+// 		}
+//
+// 		pub.settings[settingKey] = req.body.newSettings[settingKey];
+//
+// 		pub.save(function(err, result) {
+// 			if (err) { return res.status(500).json(err); }
+//
+// 			return res.status(201).json(pub.settings);
+// 		});
+//
+// 	});
+// }
+// app.post('/updatePubSettings', updatePubSettings);
 
 export function updatePubData(req, res) {
 	Pub.findOne({slug: req.body.slug}, function(err, pub) {
@@ -433,7 +381,7 @@ export function transformStyle(req, res) {
 	const importsMobile = req.body.styleMobile.match(/(@import.*)/g) || [];
 	const styleDesktopClean = req.body.styleDesktop.replace(/(@import.*)/g, '');
 	const styleMobileClean = req.body.styleMobile.replace(/(@import.*)/g, '');
-	
+
 	const fullString = importsDesktop.join(' ') + ' ' + importsMobile.join(' ') + ' #pubContent{' + styleDesktopClean + '} @media screen and (min-resolution: 3dppx), screen and (max-width: 767px){ #pubContent{' + styleMobileClean + '}}';
 	less.render(fullString, function(err, output) {
 		if (err) {
