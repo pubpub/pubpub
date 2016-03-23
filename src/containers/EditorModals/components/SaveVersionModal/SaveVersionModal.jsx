@@ -12,7 +12,7 @@ let styles = {};
 const EditorModalPublish = React.createClass({
 	propTypes: {
 		slug: PropTypes.string,
-		handlePublish: PropTypes.func,
+		handleSaveVersion: PropTypes.func,
 		currentJournal: PropTypes.string,
 		intl: PropTypes.object,
 	},
@@ -28,21 +28,23 @@ const EditorModalPublish = React.createClass({
 
 	handleStateClick: function(newState) {
 		return ()=>{
-			this.setState({versionState: newState});	
+			this.setState({versionState: newState});
 		};
 	},
 	handleDescriptionChange: function(event) {
 		this.setState({versionDescription: event.target.value});
 	},
 
-	handlePublish: function() {
-		if (this.state.versionDescription) {
-			this.setState({isPublishing: true, descriptionError: false});
-			this.props.handlePublish(this.state.versionDescription);	
-		} else {
-			this.setState({descriptionError: true});
+	handleSaveVersion: function(publish) {
+		return ()=>{
+			if (this.state.versionDescription) {
+				this.setState({isPublishing: true, descriptionError: false});
+				this.props.handleSaveVersion(this.state.versionDescription, publish);
+			} else {
+				this.setState({descriptionError: true});
+			}
 		}
-		
+
 	},
 
 	render: function() {
@@ -60,16 +62,16 @@ const EditorModalPublish = React.createClass({
 				</div>
 
 				<div style={baseStyles.topHeader}>
-					<FormattedMessage 
+					<FormattedMessage
 						id="editor.publish"
 						defaultMessage="Publish"/>
 				</div>
 
-				{/* Draft or Review-ready option 
+				{/* Draft or Review-ready option
 					Should default to review-ready if a past version was */}
 				{/* <div style={styles.optionContainer}>
 					<div style={styles.optionHeader}>
-						<FormattedMessage 
+						<FormattedMessage
 							id="editor.versionState"
 							defaultMessage="version state"/>
 					</div>
@@ -77,7 +79,7 @@ const EditorModalPublish = React.createClass({
 						<span key={'publishModal-draft'} onClick={this.handleStateClick('Draft')} style={[styles.option, this.state.versionState === 'Draft' && styles.optionActive]}>
 							<FormattedMessage {...globalMessages.Draft} />
 						</span>
-						<span style={styles.optionSeparator}>|</span> 
+						<span style={styles.optionSeparator}>|</span>
 						<span key={'publishModal-journal'} onClick={this.handleStateClick('PeerReviewReady')} style={[styles.option, this.state.versionState === 'PeerReviewReady' && styles.optionActive]}>
 							<FormattedMessage {...globalMessages.ReadyForPeerReview} />
 						</span>
@@ -87,7 +89,7 @@ const EditorModalPublish = React.createClass({
 				{/* Version message input */}
 				<div style={styles.optionContainer}>
 					<div style={styles.optionHeader}>
-						<FormattedMessage 
+						<FormattedMessage
 							id="editor.versionDescription"
 							defaultMessage="version description"/>
 					</div>
@@ -97,18 +99,18 @@ const EditorModalPublish = React.createClass({
 				{/* Publish Message */}
 				<div style={styles.publishText}>
 					<div style={styles.publishTextP}>
-						<FormattedMessage 
+						<FormattedMessage
 							id="editor.publishMessage1"
 							defaultMessage="You can publish versions to your Pub as frequently as you like."/>
-					</div> 
+					</div>
 
 					<div style={styles.publishTextP}>
-						<FormattedMessage 
+						<FormattedMessage
 							id="editor.publishMessage2"
 							defaultMessage="We encourage you to publish early and often."/>
-					</div> 
+					</div>
 					<div style={styles.publishTextP}>
-						<FormattedMessage 
+						<FormattedMessage
 							id="editor.publishMessage3"
 							defaultMessage="The full history will be maintained and accessible."/>
 					</div>
@@ -119,19 +121,19 @@ const EditorModalPublish = React.createClass({
 						<div style={styles.license}>
 							<License text={'Your pub will be licensed under a'} hover={true} />
 						</div>
-					
+
 					</div>
 
 					{this.props.currentJournal
 						? <div style={styles.autoSubmitWrapper}>
 							<div style={[styles.publishTextP, styles.autoSubmitText]}>
-								<FormattedMessage 
+								<FormattedMessage
 									id="editor.publishMessageJournal1"
 									defaultMessage="Publishing will automatically submit this pub to: {currentJournal}."
 									values={{currentJournal: this.props.currentJournal}} />
 							</div>
 							<div style={[styles.publishTextP, styles.autoSubmitText]}>
-								<FormattedMessage 
+								<FormattedMessage
 									id="editor.publishMessageJournal2"
 									defaultMessage="If you would like to publish without submitting, please publish from"/>
 								<a style={styles.detailLink} href={'http://www.pubpub.org/pub/' + this.props.slug + '/draft'}> pubpub.org</a>
@@ -141,17 +143,24 @@ const EditorModalPublish = React.createClass({
 					}
 
 					<div style={[styles.publishTextP, styles.publishTextPError, this.state.descriptionError && {display: 'block'}]}>
-						<FormattedMessage 
+						<FormattedMessage
 							id="editor.publishMessage4"
 							defaultMessage="A description is required."/>
 					</div>
 				</div>
 
 				{/* Publish button */}
-				<div key="publish-button" style={styles.publishButton} onClick={this.handlePublish}>
-					<FormattedMessage 
+				<div key="publish-button" style={styles.publishButton} onClick={this.handleSaveVersion(false)}>
+					<FormattedMessage
+						id="editor.saveVersionButton"
+						defaultMessage="Save version"/>
+				</div>
+
+				{/* Publish button */}
+				<div key="publish-button" style={styles.publishButton} onClick={this.handleSaveVersion(true)}>
+					<FormattedMessage
 						id="editor.publishButton"
-						defaultMessage="Publish version"/>
+						defaultMessage="Publish"/>
 				</div>
 			</div>
 		);

@@ -175,8 +175,8 @@ const PubReader = React.createClass({
 				{property: 'og:title', content: pubData.history[versionIndex].title},
 				{property: 'og:type', content: 'article'},
 				{property: 'og:description', content: pubData.history[versionIndex].abstract},
-				{property: 'article:published_time', content: pubData.history[versionIndex].publishDate},
-				{property: 'article:modified_time', content: pubData.history[pubData.history.length - 1].publishDate},
+				{property: 'article:published_time', content: pubData.history[versionIndex].versionDate},
+				{property: 'article:modified_time', content: pubData.history[pubData.history.length - 1].versionDate},
 				{name: 'twitter:card', content: 'summary_large_image'},
 				{name: 'twitter:site', content: '@isPubPub'},
 				{name: 'twitter:title', content: pubData.history[versionIndex].title},
@@ -282,8 +282,8 @@ const PubReader = React.createClass({
 						errorView={pubData.pubErrorView}
 
 						references={this.props.readerData.getIn(['pubData', 'history', versionIndex, 'references']) !== undefined ? this.props.readerData.getIn(['pubData', 'history', versionIndex, 'references']).toJS() : []}
-						firstPublishedDate={this.props.readerData.getIn(['pubData', 'history', 0, 'publishDate'])}
-						lastPublishedDate={this.props.readerData.getIn(['pubData', 'history', this.props.readerData.getIn(['pubData', 'history']).size - 1, 'publishDate'])} />
+						firstPublishedDate={this.props.readerData.getIn(['pubData', 'history', 0, 'versionDate'])}
+						lastPublishedDate={this.props.readerData.getIn(['pubData', 'history', this.props.readerData.getIn(['pubData', 'history']).size - 1, 'versionDate'])} />
 
 					<PubModals
 						slug={this.props.slug}

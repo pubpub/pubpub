@@ -1,3 +1,3 @@
 export CollaboratorsModal from './CollaboratorsModal/CollaboratorsModal';
-export PublishModal from './PublishModal/PublishModal';
+export SaveVersionModal from './SaveVersionModal/SaveVersionModal';
 export SettingsModal from './SettingsModal/SettingsModal';

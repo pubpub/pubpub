@@ -33,21 +33,21 @@ const PubMetaHistoryRow = React.createClass({
 				<div style={styles.versionDetails}>
 					<div style={styles.versionTitleLine}>
 						<span style={styles.versionNumber}>{this.props.index + 1}.</span>
-						{/* <span style={styles.versionStatus}>{this.props.historyItem.status === 'Draft' 
+						{/* <span style={styles.versionStatus}>{this.props.historyItem.status === 'Draft'
 							? <FormattedMessage id="pub.draftVersion" defaultMessage="Draft Version"/>
 							: <FormattedMessage {...globalMessages.ReadyForPeerReview} />
 						}</span> */}
-						<span style={styles.versionDate}>{dateFormat(this.props.historyItem.publishDate, 'mmm dd, yyyy h:MMTT')}</span>
+						<span style={styles.versionDate}>{dateFormat(this.props.historyItem.versionDate, 'mmm dd, yyyy h:MMTT')}</span>
 					</div>
 
 					<div style={styles.versionChangesLine}>
-						<span style={styles.additions}>{diffObject.additions} <FormattedMessage id="pub.additions" defaultMessage="additions"/></span> 
-						<span style={styles.changeCountSeparator}>|</span> 
+						<span style={styles.additions}>{diffObject.additions} <FormattedMessage id="pub.additions" defaultMessage="additions"/></span>
+						<span style={styles.changeCountSeparator}>|</span>
 						<span style={styles.deletions}>{diffObject.deletions} <FormattedMessage id="pub.deletions" defaultMessage="deletions"/></span>
 					</div>
 
 					<div style={styles.versionMessage}>
-						{this.props.historyItem.publishNote}
+						{this.props.historyItem.versionNote}
 					</div>
 				</div>
 
@@ -61,10 +61,10 @@ const PubMetaHistoryRow = React.createClass({
 						</div></Link>
 					</div>
 				</div>
-					
-					
+
+
 				<div style={styles.clearFix}></div>
-							
+
 			</div>
 		);
 	}
@@ -118,7 +118,7 @@ styles = {
 		paddingLeft: 40
 	},
 	versionMessage: {
-	
+
 		padding: '15px 15px 0px 40px',
 		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
 			padding: '15px 15px 30px 40px',

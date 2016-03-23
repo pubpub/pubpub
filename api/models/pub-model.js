@@ -27,9 +27,9 @@ const pubSchema = new Schema({
 	// --------------
 
 	history: [{ // History is appended to each time a 'publish' is made.
-		publishNote: { type: String },
-		publishDate: { type: Date },
-		publishAuthor: { type: ObjectId, ref: 'User'},
+		versionNote: { type: String },
+		versionDate: { type: Date },
+		versionAuthor: { type: ObjectId, ref: 'User'},
 
 		diffObject: {
 			additions: { type: Number },
@@ -223,7 +223,7 @@ pubSchema.statics.getPubEdit = function (slug, readerID, readerGroups, callback)
 pubSchema.statics.generateDiffObject = function(oldPubObject, newPubObject) {
 	// Diff each item in object and store output
 	// Iterate over to calculate total additions, deletions
-	
+
 	const outputObject = {};
 	outputObject.diffMarkdown = jsdiff.diffWords(oldPubObject.markdown || '', newPubObject.markdown || '', {newlineIsToken: true});
 	outputObject.diffStyleDesktop = jsdiff.diffWords(oldPubObject.styleDesktop || '', newPubObject.styleDesktop || '', {newlineIsToken: true});

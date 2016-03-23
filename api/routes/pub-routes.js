@@ -151,7 +151,7 @@ export function saveVersionPub(req, res) {
 
 		Asset.update({'_id': {$in: assetIDs}}, { $addToSet: { usedInPubs: {id: pub._id, version: pub.history.length || 1}} }, function(assetUpdateErr, result) {if (assetUpdateErr) return console.log('Failed to update assets usedInPubs field'); });
 
-		const publishDate = new Date().getTime();
+		const versionDate = new Date().getTime();
 		pub.title = req.body.newVersion.title;
 		pub.abstract = req.body.newVersion.abstract;
 
@@ -161,12 +161,12 @@ export function saveVersionPub(req, res) {
 		pub.styleMobile = req.body.newVersion.styleMobile;
 		pub.styleScoped = req.body.newVersion.styleScoped;
 
-		pub.lastUpdated = publishDate;
+		pub.lastUpdated = versionDate;
 
 		pub.history.push({
-			publishNote: req.body.newVersion.publishNote,
-			publishDate: publishDate,
-			publishAuthor: req.user._id,
+			versionNote: req.body.newVersion.versionNote,
+			versionDate: versionDate,
+			versionAuthor: req.user._id,
 
 			diffObject: {
 				additions: diffObject.additions,
@@ -182,7 +182,7 @@ export function saveVersionPub(req, res) {
 			styleMobile: req.body.newVersion.styleMobile,
 			styleScoped: req.body.newVersion.styleScoped,
 
-			isPublished: pub.isPublished,
+			isPublished: pub.isPublished || req.body.newVersion.isPublished,
 
 		});
 

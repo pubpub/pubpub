@@ -26,7 +26,6 @@ const PubMetaSource = React.createClass({
 			'styleMobile'
 		];
 
-		console.log(this.props.historyObject);
 		return (
 			<div style={styles.container}>
 

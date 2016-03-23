@@ -12,7 +12,7 @@ import ReactFireMixin from 'reactfire';
 import {Discussions, EditorModals} from '../';
 import {LoaderDeterminate, EditorStylePane, PubBody, Menu} from 'components';
 import {clearPub} from '../../actions/pub';
-import {getPubEdit, toggleEditorViewMode, toggleFormatting, toggleTOC, unmountEditor, closeModal, openModal, addSelection, setEditorViewMode, publishVersion, updatePubBackendData, saveStyle} from '../../actions/editor';
+import {getPubEdit, toggleEditorViewMode, toggleFormatting, toggleTOC, unmountEditor, closeModal, openModal, addSelection, setEditorViewMode, saveVersion, updatePubBackendData, saveStyle} from '../../actions/editor';
 
 import {debounce} from 'utils/loadingFunctions';
 import {submitPubToJournal} from '../../actions/journal';
@@ -298,7 +298,7 @@ const Editor = React.createClass({
 		return this.props.dispatch(toggleTOC());
 	},
 
-	publishVersion: function(versionDescription) {
+	saveVersion: function(versionDescription, publish) {
 
 		const authors = [];
 		for (const collaborator in this.state.firepadData.collaborators) {
@@ -321,7 +321,9 @@ const Editor = React.createClass({
 			styleMobile: this.state.firepadData.settings.styleMobile,
 			styleScoped: this.state.firepadData.settings.styleScoped,
 
-			publishNote: versionDescription,
+			versionNote: versionDescription,
+
+			isPublished: publish,
 		};
 
 		this.props.dispatch(clearPub());
@@ -331,7 +333,7 @@ const Editor = React.createClass({
 			this.props.dispatch(submitPubToJournal(this.props.editorData.getIn(['pubEditData', '_id']), this.props.journalData.getIn(['journalData']).toJS()));
 		}
 
-		this.props.dispatch(publishVersion(newVersion));
+		this.props.dispatch(saveVersion(newVersion));
 
 	},
 
@@ -615,7 +617,7 @@ const Editor = React.createClass({
 					: <div>
 
 						{/*	Component for all modals and their backdrop. */}
-						<EditorModals publishVersionHandler={this.publishVersion} />
+						<EditorModals saveVersionHandler={this.saveVersion} />
 
 						{/* Editor Menu */}
 						<div id="editor-menu-wrapper" style={[globalStyles.hiddenUntilLoad, globalStyles[loadStatus], styles.editorMenuWrapper]}>

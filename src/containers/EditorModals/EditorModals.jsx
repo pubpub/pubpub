@@ -9,7 +9,7 @@ import PureRenderMixin from 'react-addons-pure-render-mixin';
 import ReactFireMixin from 'reactfire';
 
 import {AssetLibrary} from 'containers';
-import {CollaboratorsModal, PublishModal, SettingsModal} from './components';
+import {CollaboratorsModal, SaveVersionModal, SettingsModal} from './components';
 
 import {closeModal, saveCollaboratorsToPub} from '../../actions/editor';
 import {saveSettingsUser} from '../../actions/login';
@@ -27,7 +27,7 @@ const Editor = React.createClass({
 		slug: PropTypes.string, // equal to project uniqueTitle
 		dispatch: PropTypes.func,
 
-		publishVersionHandler: PropTypes.func,
+		saveVersionHandler: PropTypes.func,
 	},
 
 	mixins: [PureRenderMixin, ReactFireMixin],
@@ -166,9 +166,9 @@ const Editor = React.createClass({
 									);
 
 							case 'Publish':
-								return (<PublishModal
+								return (<SaveVersionModal
 										slug={this.props.slug}
-										handlePublish={this.props.publishVersionHandler}
+										handleSaveVersion={this.props.saveVersionHandler}
 										currentJournal={this.props.journalData.getIn(['journalData', 'journalName'])}/>
 									);
 
