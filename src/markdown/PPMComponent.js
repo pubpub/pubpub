@@ -17,8 +17,10 @@ import Plugins from '../components/EditorPlugins/index';
 import InputFields from '../components/EditorPluginFields/index';
 
 import MathComponent from './MathComponent';
+import HTMLComponent from './HTMLComponent';
 
 import murmur from 'murmurhash';
+
 
 const MathOptions = {
 	inlineOpen: '$$',
@@ -144,7 +146,12 @@ const PPMComponent = React.createClass({
 		case 'math':
 			return <MathComponent>{children[0]}</MathComponent>;
 			break;
-
+		case 'htmlblock':
+			const text = children[0];
+			if (typeof text === 'string' || text instanceof String) {
+				return <HTMLComponent>{text}</HTMLComponent>;
+				break;
+	    }
 		case 'p':
 			// if (children[0] === null){ return null; }
 			// console.log('p arguments', arguments);
@@ -163,7 +170,6 @@ const PPMComponent = React.createClass({
 			props.id = 'pub-header';
 			break;
 		case 'pubheaderitem':
-			console.log(arguments)
 			// debugger;
 			// if (children[0] && children[0].props) {
 			// 	children[0] = children[0].props.children[0]
@@ -187,13 +193,11 @@ const PPMComponent = React.createClass({
 			const newChildren = [];
 			for (let index = 0; index < children.length; index++) {
 				if (children[index].props && children[index].props.className === 'p-block') {
-					console.log('got a p-block');
 					newChildren.push(children[index].props.children);
 				} else {
 					newChildren.push(children[index]);
 				}
 			}
-			console.log(newChildren);
 			children = newChildren;
 			// if (children[0] && children.length === 1 && children[0].props && children[0].props.className === 'p-block') {
 			//
