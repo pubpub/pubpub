@@ -203,11 +203,11 @@ export const codeMirrorStyleClasses = {
 		lineHeight: '20px',
 		backgroundColor: '#F5F5F5',
 	},
-	'body div #editor-text-wrapper .CodeMirror-code pre:first-of-type': {
-		borderBottom: '1px solid rgba(0,0,0,0.2)',
-		fontSize: '33px',
-		fontWeight: 'bold',
-	},
+	// 'body div #editor-text-wrapper .CodeMirror-code pre:first-of-type': {
+	// 	borderBottom: '1px solid rgba(0,0,0,0.2)',
+	// 	fontSize: '33px',
+	// 	fontWeight: 'bold',
+	// },
 	'.menuItem-saveStatus': {
 		fontFamily: 'Courier',
 		fontSize: '15px',

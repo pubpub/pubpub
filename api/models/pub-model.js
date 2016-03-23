@@ -103,62 +103,62 @@ pubSchema.statics.getSimplePub = function (id,callback) {
 };
 
 
-pubSchema.statics.getPub = function (slug, readerID, journalID, callback) {
+pubSchema.statics.getPub = function(slug, readerID, journalID, callback) {
 	this.findOne({slug: slug})
-	.populate({ path: 'discussions', model: 'Discussion' })
-	.populate({ path: 'assets history.assets', model: 'Asset' })
+	// .populate({ path: 'discussions', model: 'Discussion' })
+	// .populate({ path: 'assets history.assets', model: 'Asset' })
 	// .populate({ path: 'references history.references', model: 'Reference' })
 	.populate({ path: 'featuredIn.journal submittedTo.journal', select: 'journalName subdomain customDomain design', model: 'Journal' })
 	.populate({ path: 'authors history.authors', select: 'username name thumbnail firstName lastName', model: 'User' })
-	.exec((err, pub)=> {
-		const options = [
-			{ path: 'discussions.author', select: '_id username name firstName lastName thumbnail', model: 'User'},
-			// { path: 'discussions.selections', model: 'Highlight'}
-		];
+	.exec((err, populatedPub)=> {
+		// const options = [
+		// 	{ path: 'discussions.author', select: '_id username name firstName lastName thumbnail', model: 'User'},
+		// 	// { path: 'discussions.selections', model: 'Highlight'}
+		// ];
 
-		this.populate(pub, options, (err, populatedPub)=> {
-			if (err) { return callback(err, null); }
+		// this.populate(pub, options, (err, populatedPub)=> {
+		if (err) { return callback(err, null); }
 
-			if (!populatedPub) { return callback(null, {message: 'Pub Not Found', slug: slug}); }
+		if (!populatedPub) { return callback(null, {message: 'Pub Not Found', slug: slug}); }
 
-			// Check if the pub is not allowed in the journal
-			if (journalID && String(populatedPub.featuredInList).indexOf(journalID) === -1 && String(populatedPub.submittedToList).indexOf(journalID) === -1) {
-				return callback(null, {message: 'Pub not in this journal', slug: slug});
-			}
+		// Check if the pub is not allowed in the journal
+		if (journalID && String(populatedPub.featuredInList).indexOf(journalID) === -1 && String(populatedPub.submittedToList).indexOf(journalID) === -1) {
+			return callback(null, {message: 'Pub not in this journal', slug: slug});
+		}
 
-			if (populatedPub.status === 'Unpublished') { return callback(null, {message: 'Pub not yet published', slug: slug}); }
+		if (populatedPub.status === 'Unpublished') { return callback(null, {message: 'Pub not yet published', slug: slug}); }
 
-			// Check if the pub is private, and if so, check readers/authors list
-			// if (populatedPub.settings.pubPrivacy === 'private') {
-			// 	if (populatedPub.collaborators.canEdit.indexOf(readerID) === -1 && populatedPub.collaborators.canRead.indexOf(readerID) === -1) {
-			// 		return callback(null, {message: 'Private Pub', slug: slug});
-			// 	}
-			// }
+		// Check if the pub is private, and if so, check readers/authors list
+		// if (populatedPub.settings.pubPrivacy === 'private') {
+		// 	if (populatedPub.collaborators.canEdit.indexOf(readerID) === -1 && populatedPub.collaborators.canRead.indexOf(readerID) === -1) {
+		// 		return callback(null, {message: 'Private Pub', slug: slug});
+		// 	}
+		// }
 
-			// Mark all notifcations about this pub for this reader as 'sent' (i.e. don't send an email, but keep it unread until they go to notifications page)
-			Notification.setSent({pub: populatedPub._id, recipient: readerID}, ()=>{});
+		// Mark all notifcations about this pub for this reader as 'sent' (i.e. don't send an email, but keep it unread until they go to notifications page)
+		Notification.setSent({pub: populatedPub._id, recipient: readerID}, ()=>{});
 
-			const outputPub = populatedPub.toObject();
-			if (populatedPub.collaborators.canEdit.indexOf(readerID) > -1) {
-				outputPub.isAuthor = true;
-			}
+		const outputPub = populatedPub.toObject();
+		if (populatedPub.collaborators.canEdit.indexOf(readerID) > -1) {
+			outputPub.isAuthor = true;
+		}
 
-			// outputPub.discussions = Discussion.appendUserYayNayFlag(outputPub.discussions, readerID);
-			// outputPub.discussions = Discussion.calculateYayNayScore(outputPub.discussions);
-			// outputPub.discussions = Discussion.sortDiscussions(outputPub.discussions);
-			// outputPub.discussions = Discussion.nestChildren(outputPub.discussions);
-			// console.log(outputPub.isAuthor);
-			return callback(null, outputPub);
-		});
+		// outputPub.discussions = Discussion.appendUserYayNayFlag(outputPub.discussions, readerID);
+		// outputPub.discussions = Discussion.calculateYayNayScore(outputPub.discussions);
+		// outputPub.discussions = Discussion.sortDiscussions(outputPub.discussions);
+		// outputPub.discussions = Discussion.nestChildren(outputPub.discussions);
+		// console.log(outputPub.isAuthor);
+		return callback(null, outputPub);
+		// });
 
-	})
+	});
 };
 
 pubSchema.statics.getPubEdit = function (slug, readerID, readerGroups, callback) {
 	// Get the pub and check to make sure user is authorized to edit
 	this.findOne({slug: slug})
-	.populate({ path: 'discussions', model: 'Discussion' })
-	.populate({ path: 'editorComments', model: 'Discussion' })
+	// .populate({ path: 'discussions', model: 'Discussion' })
+	// .populate({ path: 'editorComments', model: 'Discussion' })
 	.exec((err, pub) =>{
 		if (err) { return callback(err, null); }
 
@@ -189,17 +189,17 @@ pubSchema.statics.getPubEdit = function (slug, readerID, readerGroups, callback)
 		// You can go and publish draft...
 
 		// We gotta pass down discussions if we want to show in editor
-		const options = [
-			{ path: 'discussions.author', select: '_id username name firstName lastName thumbnail', model: 'User'},
+		// const options = [
+			// { path: 'discussions.author', select: '_id username name firstName lastName thumbnail', model: 'User'},
 			// { path: 'discussions.selections', model: 'Highlight'},
-			{ path: 'editorComments.author', select: '_id username name firstName lastName thumbnail', model: 'User'},
+			// { path: 'editorComments.author', select: '_id username name firstName lastName thumbnail', model: 'User'},
 			// { path: 'editorComments.selections', model: 'Highlight'},
-		];
+		// ];
 
-		this.populate(pub, options, (err, populatedPub)=> {
-			if (err) { return callback(err, null); }
-			const outputPub = populatedPub.toObject();
-			outputPub.isReader = isReader;
+		// this.populate(pub, options, (err, populatedPub)=> {
+		if (err) { return callback(err, null); }
+		const outputPub = pub.toObject();
+		outputPub.isReader = isReader;
 
 			// outputPub.discussions = Discussion.appendUserYayNayFlag(outputPub.discussions, readerID);
 			// outputPub.discussions = Discussion.calculateYayNayScore(outputPub.discussions);
@@ -211,8 +211,8 @@ pubSchema.statics.getPubEdit = function (slug, readerID, readerGroups, callback)
 			// outputPub.editorComments = Discussion.sortDiscussions(outputPub.editorComments);
 			// outputPub.editorComments = Discussion.nestChildren(outputPub.editorComments);
 
-			return callback(null, outputPub);
-		});
+		return callback(null, outputPub);
+		// });
 
 		// return callback(null, {});
 
@@ -271,7 +271,7 @@ pubSchema.statics.addJournalSubmitted = function(pubID, journalID, userID) {
 
 pubSchema.statics.getRandomSlug = function(journalID, callback) {
 	var objects = [];
-	var query = {history: {$not: {$size: 0}},'settings.isPrivate': {$ne: true}};
+	var query = {history: {$not: {$size: 0}}, 'isPublished': true};
 	if(journalID){
 		query['featuredInList'] = journalID;
 	}

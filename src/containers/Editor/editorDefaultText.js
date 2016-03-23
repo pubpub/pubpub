@@ -1,5 +1,6 @@
 export function editorDefaultText(title, author) {
-	return title + `
+	return `-----
+title: ` + title + `
 
 author: ` + author.username + `
 	name: ` + author.name + `
