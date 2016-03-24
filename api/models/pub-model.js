@@ -57,6 +57,7 @@ const pubSchema = new Schema({
 	},
 
 	followers: [{ type: ObjectId, ref: 'User'}],
+	discussions: [{ type: ObjectId, ref: 'Discussion'}],
 
 	// An object to track all the the journals this pub is featured in
 	featuredIn: [{
@@ -121,6 +122,7 @@ pubSchema.statics.createPub = function(slug, title, userID, isPage, callback) {
 		isPublished: false,
 		history: [],
 		followers: [],
+		discussions: [],
 		featuredIn: [],
 		featuredInList: [],
 		submittedTo: [],
@@ -233,7 +235,7 @@ pubSchema.statics.getPubEdit = function(slug, readerID, readerGroups, readerAdmi
 
 		let isReader = true;
 		if (readerID.toString() === '568abdd9332c142a0095117f' ||
-			canEditStrings.indexOf(readerID.toString()) > -1 || 
+			canEditStrings.indexOf(readerID.toString()) > -1 ||
 			_.intersection(readerGroupsStrings, canEditStrings).length ||
 			_.intersection(readerAdminJournalsStrings, canEditStrings).length) {
 			isReader = false;

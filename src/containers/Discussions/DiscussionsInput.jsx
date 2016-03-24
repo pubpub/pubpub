@@ -24,7 +24,7 @@ const PubDiscussionsInput = React.createClass({
 	propTypes: {
 		addDiscussionHandler: PropTypes.func,
 		addDiscussionStatus: PropTypes.string,
-		newDiscussionData: PropTypes.object,
+		// newDiscussionData: PropTypes.object,
 		userThumbnail: PropTypes.string,
 		codeMirrorID: PropTypes.string,
 		parentID: PropTypes.string,
@@ -75,19 +75,20 @@ const PubDiscussionsInput = React.createClass({
 			cm.setValue('');
 			clearTempHighlights();
 
-		} else if (this.props.newDiscussionData && this.props.newDiscussionData.get && nextProps.newDiscussionData && nextProps.newDiscussionData.get && this.props.newDiscussionData.get('selections').size !== nextProps.newDiscussionData.get('selections').size) {
-			// const cm = document.getElementsByClassName('CodeMirror')[0].CodeMirror;
-			const cm = document.getElementById(this.props.codeMirrorID).childNodes[0].CodeMirror;
-			const spacing = cm.getValue().length ? ' ' : '';
-			cm.setValue(cm.getValue() + spacing + '[[selection: index=' + nextProps.newDiscussionData.get('selections').size + ']] ' );
-			cm.setCursor(cm.lineCount(), 0);
-			// setTimeout(() => {cm.focus();}, 200);
-			cm.focus();
-			// cm.focus();
 		}
-
-		const newSelections = nextProps.newDiscussionData && nextProps.newDiscussionData.get ? nextProps.newDiscussionData.get('selections').toArray() : [];
-		this.setState({selections: newSelections});
+		// else if (this.props.newDiscussionData && this.props.newDiscussionData.get && nextProps.newDiscussionData && nextProps.newDiscussionData.get && this.props.newDiscussionData.get('selections').size !== nextProps.newDiscussionData.get('selections').size) {
+		// 	// const cm = document.getElementsByClassName('CodeMirror')[0].CodeMirror;
+		// 	const cm = document.getElementById(this.props.codeMirrorID).childNodes[0].CodeMirror;
+		// 	const spacing = cm.getValue().length ? ' ' : '';
+		// 	cm.setValue(cm.getValue() + spacing + '[[selection: index=' + nextProps.newDiscussionData.get('selections').size + ']] ' );
+		// 	cm.setCursor(cm.lineCount(), 0);
+		// 	// setTimeout(() => {cm.focus();}, 200);
+		// 	cm.focus();
+		// 	// cm.focus();
+		// }
+		//
+		// const newSelections = nextProps.newDiscussionData && nextProps.newDiscussionData.get ? nextProps.newDiscussionData.get('selections').toArray() : [];
+		// this.setState({selections: newSelections});
 
 		// console.log('selections! ', nextProps.newDiscussionData.get('selections'));
 
@@ -173,6 +174,11 @@ const PubDiscussionsInput = React.createClass({
 
 				<div style={styles.loaderContainer}>
 					{(this.props.addDiscussionStatus === 'loading' && this.props.activeSaveID === this.props.saveID ? <LoaderIndeterminate color="#444"/> : null)}
+				</div>
+
+				<div style={styles.topCheckbox} key={'newDiscussionPrivate'} >
+					<label style={styles.checkboxLabel} htmlFor={'isPrivate'}>Private</label>
+					<input style={styles.checkboxInput} name={'isPrivate'} id={'isPrivate'} type="checkbox" value={'private'} ref={'isPrivate'}/>
 				</div>
 
 				<div style={[styles.inputBottomLine, styles.expanded(this.state.expanded || this.props.isReply, false)]}>

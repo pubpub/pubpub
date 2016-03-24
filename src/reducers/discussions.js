@@ -5,6 +5,10 @@ import {ensureImmutable} from './';
 // Load Actions
 /*--------*/
 import {
+    GET_DISCUSSIONS_LOAD,
+	GET_DISCUSSIONS_SUCCESS,
+	GET_DISCUSSIONS_FAIL,
+
 	ADD_DISCUSSION,
 	ADD_DISCUSSION_SUCCESS,
 	ADD_DISCUSSION_FAIL,
@@ -27,7 +31,7 @@ import {
 /*--------*/
 export const defaultState = Immutable.Map({
 	discussions: [],
-
+    discussionsStatus: 'loaded',
 	addDiscussionStatus: 'loaded',
 	activeSaveID: null,
 	status: 'loading',
@@ -42,6 +46,23 @@ export const defaultState = Immutable.Map({
 // These functions take in an initial state and return a new
 // state. They are pure functions. We use Immutable to enforce this.
 /*--------*/
+
+function getDiscussionsLoad(state) {
+	return state.merge({
+		discussionsStatus: 'loading'
+	});
+}
+function getDiscussionsSuccess(state, result) {
+	return state.merge({
+        discussions: result,
+		discussionsStatus: 'loaded'
+	});
+}
+function getDiscussionsFail(state, result) {
+	return state.merge({
+		discussionsStatus: 'error'
+	});
+}
 
 function addDiscussionLoad(state, activeSaveID) {
 	return state.merge({
@@ -71,7 +92,7 @@ function addDiscussionSuccess(state, result, activeSaveID, inEditor) {
 		findParentAndAdd(discussionsArray, result.parent, result);
 		discussionsObject = discussionsArray;
 	}
-	const newState = state.merge('discussions', discussionsObject);
+	const newState = state.merge({'discussions': discussionsObject});
 
 	return newState.merge({
 		addDiscussionStatus: 'loaded',
@@ -136,7 +157,7 @@ function discussionVote(state, voteType, discussionID, userYay, userNay) {
 	const discussionsArray = state.get('discussions').toJS();
 	findDiscussionAndChange(discussionsArray);
 
-	return state.merge('discussions', discussionsArray);
+	return state.merge({'discussions': discussionsArray});
 }
 
 function archiveDiscussion(state, discussionID) {
@@ -155,7 +176,7 @@ function archiveDiscussion(state, discussionID) {
 	const discussionsArray = state.get('discussions').toJS();
 	findDiscussionAndChange(discussionsArray);
 
-	return state.merge('discussions', discussionsArray);
+	return state.merge({'discussions': discussionsArray});
 }
 
 /*--------*/
@@ -164,7 +185,13 @@ function archiveDiscussion(state, discussionID) {
 export default function readerReducer(state = defaultState, action) {
 
 	switch (action.type) {
-	case ADD_DISCUSSION:
+    case GET_DISCUSSIONS_LOAD:
+		return getDiscussionsLoad(state);
+	case GET_DISCUSSIONS_SUCCESS:
+		return getDiscussionsSuccess(state, action.result);
+	case GET_DISCUSSIONS_FAIL:
+		return getDiscussionsFail(state, action.error);
+    case ADD_DISCUSSION:
 		return addDiscussionLoad(state, action.activeSaveID);
 	case ADD_DISCUSSION_SUCCESS:
 		return addDiscussionSuccess(state, action.result, action.activeSaveID, action.inEditor);

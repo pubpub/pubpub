@@ -5,6 +5,7 @@ import Helmet from 'react-helmet';
 import PureRenderMixin from 'react-addons-pure-render-mixin';
 import { Link } from 'react-router';
 import {getPub, openPubModal, closePubModal, addSelection, pubNavOut, pubNavIn, togglePubHighlights} from 'actions/pub';
+import {getDiscussions} from 'actions/discussions';
 import {getRandomSlug} from 'actions/journal';
 import {toggleVisibility, follow, unfollow} from 'actions/login';
 import {closeMenu} from 'actions/nav';
@@ -44,6 +45,7 @@ const PubReader = React.createClass({
 	statics: {
 		fetchDataDeferred: function(getState, dispatch, location, routeParams) {
 			if (getState().pub.getIn(['pubData', 'slug']) !== routeParams.slug) {
+				dispatch(getDiscussions(routeParams.slug, getState().journal.getIn(['journalData', '_id']) ));
 				return dispatch(getPub(routeParams.slug, getState().journal.getIn(['journalData', '_id']), location.query.referrer ));
 			}
 			return dispatch(pubNavIn());
@@ -62,16 +64,16 @@ const PubReader = React.createClass({
 		const versionIndex = this.props.query.version !== undefined ? this.props.query.version - 1 : this.props.readerData.getIn(['pubData', 'history']).size - 1;
 
 		const inputMD = this.props.readerData.getIn(['pubData', 'history', versionIndex, 'markdown']) || '';
-		const assets = convertImmutableListToObject( this.props.readerData.getIn(['pubData', 'history', versionIndex, 'assets']) );
-		const references = convertImmutableListToObject(this.props.readerData.getIn(['pubData', 'history', versionIndex, 'references']), true);
-		const selections = [];
+		// const assets = convertImmutableListToObject( this.props.readerData.getIn(['pubData', 'history', versionIndex, 'assets']) );
+		// const references = convertImmutableListToObject(this.props.readerData.getIn(['pubData', 'history', versionIndex, 'references']), true);
+		// const selections = [];
 		const toc = generateTOC(inputMD).full;
 
 		this.setState({
 			inputMD: inputMD,
-			assetsObject: assets,
-			referencesObject: references,
-			selectionsArray: selections,
+			// assetsObject: assets,
+			// referencesObject: references,
+			// selectionsArray: selections,
 			TOC: toc,
 		});
 	},
@@ -88,16 +90,16 @@ const PubReader = React.createClass({
 		if (oldVersionIndex !== versionIndex || this.state.htmlTree.length === 0 || oldMarkdown !== newMarkdown) {
 			// console.log('compiling markdown for version ' + versionIndex);
 			const inputMD = nextProps.readerData.getIn(['pubData', 'history', versionIndex, 'markdown']) || '';
-			const assets = convertImmutableListToObject( nextProps.readerData.getIn(['pubData', 'history', versionIndex, 'assets']) );
-			const references = convertImmutableListToObject(nextProps.readerData.getIn(['pubData', 'history', versionIndex, 'references']), true);
-			const selections = [];
+			// const assets = convertImmutableListToObject( nextProps.readerData.getIn(['pubData', 'history', versionIndex, 'assets']) );
+			// const references = convertImmutableListToObject(nextProps.readerData.getIn(['pubData', 'history', versionIndex, 'references']), true);
+			// const selections = [];
 			const toc = generateTOC(inputMD).full;
 
 			this.setState({
 				inputMD: inputMD,
-				assetsObject: assets,
-				referencesObject: references,
-				selectionsArray: selections,
+				// assetsObject: assets,
+				// referencesObject: references,
+				// selectionsArray: selections,
 				TOC: toc,
 			});
 		}

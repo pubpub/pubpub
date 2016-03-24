@@ -24,7 +24,7 @@ const DiscussionsItem = React.createClass({
 
 		addDiscussionHandler: PropTypes.func,
 		addDiscussionStatus: PropTypes.string,
-		newDiscussionData: PropTypes.object,
+		// newDiscussionData: PropTypes.object,
 		userThumbnail: PropTypes.string,
 
 		activeSaveID: PropTypes.string,
@@ -76,9 +76,9 @@ const DiscussionsItem = React.createClass({
 	render: function() {
 		const discussionItem = this.props.discussionItem;
 
-		const assets = convertListToObject( discussionItem.assets );
-		const references = convertListToObject(discussionItem.references, true);
-		const selections = discussionItem.selections || [];
+		// const assets = convertListToObject( discussionItem.assets );
+		// const references = convertListToObject(discussionItem.references, true);
+		// const selections = discussionItem.selections || [];
 		const isArchived = discussionItem.archived;
 
 		// console.log(discussionItem);
@@ -112,9 +112,9 @@ const DiscussionsItem = React.createClass({
 							<Link to={'/user/' + discussionItem.author.username} style={globalStyles.link}>
 								<span key={'discussionItemAuthorLink' + discussionItem._id} style={[styles.headerText, styles.authorName]}>{discussionItem.author.name}</span>
 							</Link> <span style={styles.dot}>●</span> {
-								(((new Date() - new Date(discussionItem.postDate)) / (1000 * 60 * 60 * 24)) < 7)
-								? <FormattedRelative value={discussionItem.postDate} />
-								: <FormattedDate value={discussionItem.postDate} />
+								(((new Date() - new Date(discussionItem.createDate)) / (1000 * 60 * 60 * 24)) < 7)
+								? <FormattedRelative value={discussionItem.createDate} />
+								: <FormattedDate value={discussionItem.createDate} />
 							}
 						</div>
 
@@ -187,7 +187,6 @@ const DiscussionsItem = React.createClass({
 							<DiscussionsInput
 								addDiscussionHandler={this.props.addDiscussionHandler}
 								addDiscussionStatus={this.props.addDiscussionStatus}
-								newDiscussionData={this.props.newDiscussionData}
 								userThumbnail={this.props.userThumbnail}
 								codeMirrorID={this.props.instanceName + 'replyInput-' + discussionItem._id}
 								parentID={discussionItem._id}
@@ -211,7 +210,6 @@ const DiscussionsItem = React.createClass({
 									activeSaveID={this.props.activeSaveID}
 									addDiscussionHandler={this.props.addDiscussionHandler}
 									addDiscussionStatus={this.props.addDiscussionStatus}
-									newDiscussionData={this.props.newDiscussionData}
 									userThumbnail={this.props.userThumbnail}
 									handleVoteSubmit={this.props.handleVoteSubmit}
 									handleArchive={this.props.handleVoteSubmit} />

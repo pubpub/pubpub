@@ -1,6 +1,6 @@
 const app = require('../api');
 
-// const Pub  = require('../models').Pub;
+const Pub = require('../models').Pub;
 const User = require('../models').User;
 // const Asset = require('../models').Asset;
 const Discussion = require('../models').Discussion;
@@ -10,6 +10,23 @@ const Notification = require('../models').Notification;
 
 
 // const _ = require('underscore');
+app.get('/getDiscussions', function(req, res) {
+	Pub.findOne({slug: req.query.slug})
+	.populate({
+		path: 'discussions',
+		model: 'Discussion',
+		populate: {
+			path: 'author',
+			model: 'User',
+			select: 'name firstName lastName username thumbnail',
+		},
+	})
+	.exec((err, populatedPub)=> {
+		if (err) { return res.status(500).json(err); }
+		const outputDiscussions = populatedPub.toObject().discussions;
+		return res.status(201).json(outputDiscussions);
+	});
+});
 
 app.post('/addDiscussion', function(req, res) {
 	const currentDate = new Date().getTime();
@@ -47,6 +64,7 @@ app.post('/addDiscussion', function(req, res) {
 		var pubID = result.pub;
 
 		User.update({ _id: userID }, { $addToSet: { discussions: discussionID} }, function(err, result){if(err) return handleError(err)});
+		Pub.update({ _id: pubID }, { $addToSet: { discussions: discussionID} }, function(err, result){if(err) return handleError(err)});
 		Discussion.update({_id: result.parent}, { $addToSet: { children: discussionID} }, function(err, result){if(err) return handleError(err)});
 
 		// Notify all the pub authors

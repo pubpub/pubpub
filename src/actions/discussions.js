@@ -4,6 +4,10 @@
 // All action types are defined as constants. Do not manually pass action
 // types as strings in action creators
 /*--------*/
+export const GET_DISCUSSIONS_LOAD = 'discussions/GET_DISCUSSIONS_LOAD';
+export const GET_DISCUSSIONS_SUCCESS = 'discussions/GET_DISCUSSIONS_SUCCESS';
+export const GET_DISCUSSIONS_FAIL = 'discussions/GET_DISCUSSIONS_FAIL';
+
 export const ADD_DISCUSSION = 'discussions/ADD_DISCUSSION';
 export const ADD_DISCUSSION_SUCCESS = 'discussions/ADD_DISCUSSION_SUCCESS';
 export const ADD_DISCUSSION_FAIL = 'discussions/ADD_DISCUSSION_FAIL';
@@ -25,12 +29,21 @@ export const ARCHIVE_DISCUSSION_FAIL = 'discussions/ARCHIVE_DISCUSSION_FAIL';
 // action objects (e.g. {type:example, payload:data} ) within dispatch()
 // function calls
 /*--------*/
-export function addDiscussion(discussionObject, activeSaveID, inEditor) {
+export function getDiscussions(slug, journalID) {
+	return {
+		types: [GET_DISCUSSIONS_LOAD, GET_DISCUSSIONS_SUCCESS, GET_DISCUSSIONS_FAIL],
+		promise: (client) => client.get('/getDiscussions', {params: {
+            slug: slug,
+            journalID: journalID,
+        }}),
+	};
+}
+
+export function addDiscussion(discussionObject, activeSaveID) {
 	return {
 		types: [ADD_DISCUSSION, ADD_DISCUSSION_SUCCESS, ADD_DISCUSSION_FAIL],
 		promise: (client) => client.post('/addDiscussion', {data: {discussionObject: discussionObject}}),
-		activeSaveID: activeSaveID,
-		inEditor: inEditor
+		activeSaveID: activeSaveID
 	};
 }
 

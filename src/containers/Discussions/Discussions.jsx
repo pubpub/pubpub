@@ -2,12 +2,12 @@ import React, {PropTypes} from 'react';
 import {connect} from 'react-redux';
 import Radium, {Style} from 'radium';
 // import {globalStyles} from 'utils/styleConstants';
-import {rightBarStyles} from 'containers/PubReader/rightBarStyles';
+// import {rightBarStyles} from 'containers/PubReader/rightBarStyles';
 import DiscussionsItem from './DiscussionsItem';
 import DiscussionsInput from './DiscussionsInput';
 
 import {toggleVisibility} from 'actions/login';
-import {addDiscussion, discussionVoteSubmit, togglePubHighlights, archiveDiscussion} from 'actions/discussions';
+import {addDiscussion, discussionVoteSubmit, archiveDiscussion} from 'actions/discussions';
 
 import {redditHot as hotScore} from 'decay';
 
@@ -15,7 +15,6 @@ import {redditHot as hotScore} from 'decay';
 // import {FormattedMessage} from 'react-intl';
 
 let styles = {};
-
 const Discussions = React.createClass({
 	propTypes: {
 		metaID: PropTypes.string,
@@ -23,7 +22,7 @@ const Discussions = React.createClass({
 		// inEditor: PropTypes.bool,
 		// instanceName: PropTypes.string,
 
-		discussionData: PropTypes.object,
+		discussionsData: PropTypes.object,
 		pubData: PropTypes.object,
 		// editorData: PropTypes.object,
 		loginData: PropTypes.object,
@@ -37,25 +36,14 @@ const Discussions = React.createClass({
 
 	},
 
-	// getDefaultProps: function() {
-	// 	return {
-	// 		editorCommentMode: false,
-	// 		inEditor: false,
-	// 	};
-	// },
-
 	addDiscussion: function(discussionObject, activeSaveID) {
 		if (!this.props.loginData.get('loggedIn')) {
 			return this.props.dispatch(toggleVisibility());
 		}
 
-		// console.log(discussionObject);
-		if (!discussionObject.markdown) {
-			return null;
-		}
+		if (!discussionObject.markdown) { return null; }
 
 		const pathname = this.props.pathname;
-
 		if (pathname.substring(pathname.length-6, pathname.length) === '/draft') {
 			// We are commenting from the draft, so mark it so.
 			discussionObject.version = 0;
@@ -63,10 +51,9 @@ const Discussions = React.createClass({
 			discussionObject.version = this.props.query.version !== undefined && this.props.query.version > 0 && this.props.query.version < (this.props.pubData.getIn(['pubData', 'history']).size - 1) ? this.props.query.version : this.props.pubData.getIn(['pubData', 'history']).size;
 		}
 		discussionObject.pub = this.props.pubData.getIn(['pubData', '_id']);
-
 		discussionObject.sourceJournal = this.props.journalData.getIn(['journalData', '_id']);
 
-		this.props.dispatch(addDiscussion(discussionObject, activeSaveID, this.props.inEditor));
+		this.props.dispatch(addDiscussion(discussionObject, activeSaveID));
 	},
 
 	discussionVoteSubmit: function(type, discussionID, userYay, userNay) {
@@ -81,9 +68,9 @@ const Discussions = React.createClass({
 		// }
 	},
 
-	toggleHighlights: function() {
-		this.props.dispatch(togglePubHighlights());
-	},
+	// toggleHighlights: function() {
+	// 	this.props.dispatch(togglePubHighlights());
+	// },
 
 
 	filterDiscussions: function(discussionsData) {
@@ -127,11 +114,7 @@ const Discussions = React.createClass({
 	// },
 
 	archiveDiscussion: function(objectID) {
-		if (this.props.editorCommentMode) {
-			this.props.dispatch(archiveComment(objectID));
-		} else {
-			this.props.dispatch(archiveDiscussion(objectID));
-		}
+		this.props.dispatch(archiveDiscussion(objectID));
 	},
 
 	getHotness: function(discussion) {
@@ -150,16 +133,15 @@ const Discussions = React.createClass({
 	render: function() {
 		// const pubData = {discussions: []};
 
-		let discussionsData = this.props.discussionsData.get('discussions') || [];
+		let discussionsData = this.props.discussionsData.get('discussions').toJS ? this.props.discussionsData.get('discussions').toJS() : [];
 		discussionsData = this.props.metaID ? this.filterDiscussions(discussionsData) : discussionsData;
 
 		const addDiscussionStatus = this.props.discussionsData.get('addDiscussionStatus');
-		const newDiscussionData = this.props.discussionsData.get('newDiscussionData');
+		// const newDiscussionData = this.props.discussionsData.get('newDiscussionData');
 		const activeSaveID = this.props.discussionsData.get('activeSaveID');
 		const isPubAuthor = this.props.pubData.getIn(['pubData', 'isAuthor']);
 
-		discussionsData.sort(function(a, b) { return this.getHotness(b) - this.getHotness(a); }.bind(this));
-
+		discussionsData.sort(function(aIndex, bIndex) { return this.getHotness(bIndex) - this.getHotness(aIndex); }.bind(this));
 		return (
 			<div style={styles.container}>
 
@@ -180,12 +162,11 @@ const Discussions = React.createClass({
 						: <DiscussionsInput
 							addDiscussionHandler={this.addDiscussion}
 							addDiscussionStatus={addDiscussionStatus}
-							newDiscussionData={newDiscussionData}
 							userThumbnail={this.props.loginData.getIn(['userData', 'thumbnail'])}
 							activeSaveID={activeSaveID}
 							saveID={'root'}
 							isReply={false}
-							codeMirrorID={this.props.instanceName + 'rootCommentInput'}/>
+							codeMirrorID={'rootCommentInput'}/>
 					}
 
 					{
@@ -201,7 +182,6 @@ const Discussions = React.createClass({
 									activeSaveID={activeSaveID}
 									addDiscussionHandler={this.addDiscussion}
 									addDiscussionStatus={addDiscussionStatus}
-									newDiscussionData={newDiscussionData}
 									userThumbnail={this.props.loginData.getIn(['userData', 'thumbnail'])}
 									handleVoteSubmit={this.discussionVoteSubmit}
 									handleArchive={this.archiveDiscussion} />
