@@ -116,7 +116,9 @@ const Editor = React.createClass({
 	},
 
 	componentWillUnmount() {
-		debounce('backendSync', this.updatePubBackendData, 0, true)();
+		if (!this.props.editorData.getIn(['pubEditData', 'isPage'])) {
+			debounce('backendSync', this.updatePubBackendData, 0, true)();
+		}
 		this.props.dispatch(unmountEditor());
 	},
 
@@ -251,7 +253,7 @@ const Editor = React.createClass({
 
 		// const compiledMarkdown = performance.now();
 
-		if (this.state.title !== title || this.state.abstract !== abstract) {
+		if ((this.state.title !== title || this.state.abstract !== abstract) && !this.props.editorData.getIn(['pubEditData', 'isPage'])) {
 			debounce('backendSync', this.updatePubBackendData, 2000)();
 		}
 		// Set State to trigger re-render

@@ -172,7 +172,7 @@
     "react-select": "^0.9.1",
     "react-selectize": "^0.9.0",
     "react-textarea-autosize": "^3.3.0",
-    "reactfire": "^0.5.1",
+    "reactfire": "^0.6.0",
     "redux": "^3.0.4",
     "redux-form": "^3.0.12",
     "redux-router": "1.0.0-beta5",

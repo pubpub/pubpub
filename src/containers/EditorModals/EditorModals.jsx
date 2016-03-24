@@ -81,7 +81,10 @@ const Editor = React.createClass({
 			} else {
 				this.bindAsObject(ref, 'firepadData');
 
-				this.setState({initialized: true});
+				if (this.isMounted()) {
+					this.setState({initialized: true});
+				}
+
 			}
 		});
 

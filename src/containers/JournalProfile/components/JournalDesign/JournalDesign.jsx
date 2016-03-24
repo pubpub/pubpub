@@ -1,11 +1,11 @@
 /* global CodeMirror */
 import React, {PropTypes} from 'react';
 import Radium, {Style} from 'radium';
-import {LoaderIndeterminate} from 'components';
-import {LandingBody} from 'containers/Landing/components';
+import {Button, LoaderIndeterminate} from 'components';
+// import {LandingBody} from 'containers/Landing/components';
 import ColorPicker from 'react-color';
 import {globalStyles} from 'utils/styleConstants';
-
+import { Link } from 'react-router';
 // import Playground from 'component-playground';
 
 import {globalMessages} from 'utils/globalMessages';
@@ -70,27 +70,27 @@ const JournalDesign = React.createClass({
 	},
 
 	componentDidMount() {
-		const codeMirror = CodeMirror(document.getElementById('codeMirrorJSON'), {
-			lineNumbers: false,
-			lineWrapping: true,
-			viewportMargin: Infinity, // This will cause bad performance on large documents. Rendering the entire thing...
-			autofocus: false,
-			mode: {name: 'javascript', json: true},
-			tabSize: 2,
-			extraKeys: {'Ctrl-Space': 'autocomplete'},
-			placeholder: 'Add Components...',
-		});
-		codeMirror.on('change', this.onCodeChange);
-		codeMirror.setValue(this.props.designObject.layoutString);
-		window.addEventListener('resize', this.updatePreviewSize);
-		setTimeout(()=>{
-			this.setLandingPreviewHeight();
-		}, 1000);
+		// const codeMirror = CodeMirror(document.getElementById('codeMirrorJSON'), {
+		// 	lineNumbers: false,
+		// 	lineWrapping: true,
+		// 	viewportMargin: Infinity, // This will cause bad performance on large documents. Rendering the entire thing...
+		// 	autofocus: false,
+		// 	mode: {name: 'javascript', json: true},
+		// 	tabSize: 2,
+		// 	extraKeys: {'Ctrl-Space': 'autocomplete'},
+		// 	placeholder: 'Add Components...',
+		// });
+		// codeMirror.on('change', this.onCodeChange);
+		// codeMirror.setValue(this.props.designObject.layoutString);
+		// window.addEventListener('resize', this.updatePreviewSize);
+		// setTimeout(()=>{
+		// 	this.setLandingPreviewHeight();
+		// }, 1000);
 		// codeMirror.setValue(JSON.stringify(this.props.pubStyle.cssObjectString));
 	},
 
 	componentWillUnmount() {
-		window.removeEventListener('resize', this.updatePreviewSize);
+		// window.removeEventListener('resize', this.updatePreviewSize);
 	},
 
 	loadSavedColors: function() {
@@ -106,39 +106,39 @@ const JournalDesign = React.createClass({
 		});
 	},
 
-	updatePreviewSize: function() {
-		this.setState({
-			landingPreviewScale: this.calcLandingPreviewScale(),
-		});
-		setTimeout(()=>{
-			this.setLandingPreviewHeight();
-		}, 50);
-	},
+	// updatePreviewSize: function() {
+	// 	this.setState({
+	// 		landingPreviewScale: this.calcLandingPreviewScale(),
+	// 	});
+	// 	setTimeout(()=>{
+	// 		this.setLandingPreviewHeight();
+	// 	}, 50);
+	// },
 
-	onCodeChange: function(cm, change) {
-		// console.log(cm.getValue());
-		try {
-			// console.log('string', cm.getValue().replace(/(['"])?([:]?[a-zA-Z0-9_]+)(['"])?: /g, '"$2": ').replace(/'/g, '"'));
-			// console.log(cm.getValue().replace(/(['"])?([:]?[a-zA-Z0-9_]+)(['"])?: /g, '"$2": ').replace(/'/g, '"'));
-			const array = JSON.parse(cm.getValue().replace(/(['"])?([:]?[a-zA-Z0-9_]+)(['"])?: /g, '"$2": ').replace(/'/g, '"'));
-			// const array = JSON.parse(cm.getValue());
-
-			// console.log('array', array);
-			this.setState({
-				componentsArray: array,
-				jsonError: undefined,
-				landingPreviewScale: this.calcLandingPreviewScale(),
-			});
-			setTimeout(()=>{
-				this.setLandingPreviewHeight();
-			}, 50);
-		} catch (err) {
-			this.setState({
-				jsonError: err.toString(),
-			});
-		}
-
-	},
+	// onCodeChange: function(cm, change) {
+	// 	// console.log(cm.getValue());
+	// 	try {
+	// 		// console.log('string', cm.getValue().replace(/(['"])?([:]?[a-zA-Z0-9_]+)(['"])?: /g, '"$2": ').replace(/'/g, '"'));
+	// 		// console.log(cm.getValue().replace(/(['"])?([:]?[a-zA-Z0-9_]+)(['"])?: /g, '"$2": ').replace(/'/g, '"'));
+	// 		const array = JSON.parse(cm.getValue().replace(/(['"])?([:]?[a-zA-Z0-9_]+)(['"])?: /g, '"$2": ').replace(/'/g, '"'));
+	// 		// const array = JSON.parse(cm.getValue());
+	//
+	// 		// console.log('array', array);
+	// 		this.setState({
+	// 			componentsArray: array,
+	// 			jsonError: undefined,
+	// 			landingPreviewScale: this.calcLandingPreviewScale(),
+	// 		});
+	// 		setTimeout(()=>{
+	// 			this.setLandingPreviewHeight();
+	// 		}, 50);
+	// 	} catch (err) {
+	// 		this.setState({
+	// 			jsonError: err.toString(),
+	// 		});
+	// 	}
+	//
+	// },
 
 	handleClick: function(key) {
 		return ()=> {
@@ -194,18 +194,18 @@ const JournalDesign = React.createClass({
 		};
 	},
 
-	setLandingPreviewHeight: function() {
-		this.setState({
-			landingPreviewHeight: typeof(window) !== 'undefined' ? document.getElementById('landingMockContainer').clientHeight * (document.getElementById('landingPreviewContainer').clientWidth / window.innerWidth) : 50,
-		});
-		// return
-	},
-	calcLandingPreviewScale: function() {
-		return typeof(window) !== 'undefined' ? document.getElementById('landingPreviewContainer').clientWidth / window.innerWidth : 1.0;
-	},
+	// setLandingPreviewHeight: function() {
+	// 	this.setState({
+	// 		landingPreviewHeight: typeof(window) !== 'undefined' ? document.getElementById('landingMockContainer').clientHeight * (document.getElementById('landingPreviewContainer').clientWidth / window.innerWidth) : 50,
+	// 	});
+	// 	// return
+	// },
+	// calcLandingPreviewScale: function() {
+	// 	return typeof(window) !== 'undefined' ? document.getElementById('landingPreviewContainer').clientWidth / window.innerWidth : 1.0;
+	// },
 
 	saveDesign: function() {
-		const cm = document.getElementById('codeMirrorJSON').childNodes[0].CodeMirror;
+		// const cm = document.getElementById('codeMirrorJSON').childNodes[0].CodeMirror;
 
 		const object = {
 			headerBackground: this.state.colorSelections.headerBackground.color,
@@ -214,18 +214,18 @@ const JournalDesign = React.createClass({
 			landingHeaderBackground: this.state.colorSelections.landingHeaderBackground.color,
 			landingHeaderText: this.state.colorSelections.landingHeaderText.color,
 			landingHeaderHover: this.state.colorSelections.landingHeaderHover.color,
-			layoutString: cm.getValue(),
+			// layoutString: cm.getValue(),
 		};
 		this.props.journalSaveHandler({design: object});
 	},
 
 	render: function() {
 		// console.log(this.props.designObject);
-		const color = this.state.jsonError ? '#c22' : '#ccc';
+		// const color = this.state.jsonError ? '#c22' : '#ccc';
 		return (
 			<div style={styles.container}>
 
-				<Style rules={{
+				{/* <Style rules={{
 					'#codeMirrorJSON .CodeMirror': {
 						// backgroundColor: '#efefef',
 						border: '1px solid ' + color,
@@ -239,7 +239,7 @@ const JournalDesign = React.createClass({
 					'#codeMirrorJSON .CodeMirror pre.CodeMirror-placeholder': {
 						color: '#999',
 					},
-				}} />
+				}} /> */}
 
 				{/* <Playground codeText={'<div>Testing</div>'} scope={{React: React}} /> */}
 
@@ -307,14 +307,25 @@ const JournalDesign = React.createClass({
 						</div>
 
 
-						<div style={[styles.sectionHeader, styles.sectionHeaderInternal]}>
+						{/* <div style={[styles.sectionHeader, styles.sectionHeaderInternal]}>
 							<FormattedMessage id="journal.landingPageComponents" defaultMessage="Landing Page Components"/>
 						</div>
 						<div id={'codeMirrorJSON'} style={styles.codeMirrorWrapper}></div>
-						<div style={styles.jsonError}>{this.state.jsonError}</div>
+						<div style={styles.jsonError}>{this.state.jsonError}</div> */}
 					</div>
 
-					<div id="landingPreviewContainer" style={[styles.sectionContentRight, styles.sectionContentRightLanding, {height: this.state.landingPreviewHeight}]}>
+
+					<div style={styles.sectionContentRight}>
+						<div style={[styles.mockHeaderBar, this.colorStyles(this.state.colorSelections.landingHeaderBackground.color, this.state.colorSelections.landingHeaderText.color, this.state.colorSelections.landingHeaderHover.color)]} key={'landingJournalMockHeader'}>
+							<FormattedMessage {...globalMessages.journalName} />
+						</div>
+						<div style={styles.mockBody}></div>
+						<div style={styles.mockPub}></div>
+					</div>
+
+					<div style={globalStyles.clearFix}></div>
+
+					{/* <div id="landingPreviewContainer" style={[styles.sectionContentRight, styles.sectionContentRightLanding, {height: this.state.landingPreviewHeight}]}>
 						<div id="landingMockContainer" style={[styles.landingMockContainer, {transform: 'scale(' + this.state.landingPreviewScale + ')'}]}>
 							<div style={[styles.mockHeaderBarLanding, this.colorStyles(this.state.colorSelections.landingHeaderBackground.color, this.state.colorSelections.landingHeaderText.color, this.state.colorSelections.landingHeaderHover.color)]} key={'landingJournalMockHeader'}>
 								<FormattedMessage {...globalMessages.journalName} />
@@ -322,11 +333,16 @@ const JournalDesign = React.createClass({
 							<LandingBody componentsArray={this.state.componentsArray} journalID={this.props.journalData.getIn(['journalData', '_id'])} journalData={this.props.journalData.get('journalData')} query={this.props.query}/>
 						</div>
 
-					</div>
+					</div> */}
 
 					<div style={globalStyles.clearFix}></div>
 
 				</div>
+
+
+				<Link to={'/pub/' + this.props.journalData.getIn(['journalData', 'subdomain']) + '-landingpage/draft'}>
+					<Button label={'Edit Landing Page Design'}/>
+				</Link>
 
 				<div style={styles.saveButton} key={'journalDesignSaveButton'} onClick={this.saveDesign}>
 					<FormattedMessage {...globalMessages.save} />

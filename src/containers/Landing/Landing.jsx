@@ -2,10 +2,11 @@ import React, { PropTypes } from 'react';
 import {connect} from 'react-redux';
 import Radium from 'radium';
 import Helmet from 'react-helmet';
-import {Autocomplete} from '../';
+import {Autocomplete} from 'containers';
 import {globalStyles} from 'utils/styleConstants';
-import {LandingBody} from './components';
-import {getRandomSlug} from '../../actions/journal';
+// import {LandingBody} from './components';
+import PPMComponent from 'markdown/PPMComponent';
+import {getRandomSlug} from 'actions/journal';
 import { pushState } from 'redux-router';
 import { Link } from 'react-router';
 const HoverLink = Radium(Link);
@@ -184,9 +185,9 @@ const Landing = React.createClass({
 							 </div>
 						</div>
 
-						: <LandingBody componentsArray={componentsArray} journalID={journalID} journalData={this.props.journalData.get('journalData')} query={this.props.query} setQueryHandler={this.setQuery}/>
+						: <PPMComponent markdown={this.props.journalData.getIn(['journalData', 'landingPage', 'markdown'])} isPage={true}/>
 				}
-
+				{/* <LandingBody componentsArray={componentsArray} journalID={journalID} journalData={this.props.journalData.get('journalData')} query={this.props.query} setQueryHandler={this.setQuery}/> */}
 			</div>
 		);
 	}
@@ -205,14 +206,14 @@ export default connect( state => {
 styles = {
 	container: {
 
-		height: '100%',
-		overflow: 'hidden',
-		overflowY: 'scroll',
+		// height: '100%',
+		// overflow: 'hidden',
+		// overflowY: 'scroll',
 		fontFamily: globalStyles.headerFont,
-		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
-			height: 'auto',
-			overflow: 'hidden',
-		},
+		// '@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+		// 	height: 'auto',
+		// 	overflow: 'hidden',
+		// },
 	},
 	top: {
 		backgroundColor: globalStyles.headerText,
