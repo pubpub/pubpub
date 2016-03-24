@@ -1,47 +1,50 @@
-var _         = require('underscore');
-var mongoose  = require('mongoose');
-var Schema    =  mongoose.Schema;
-var ObjectId  = Schema.Types.ObjectId;
+const _ = require('underscore');
+const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
+const ObjectId = Schema.Types.ObjectId;
 
-var discussionSchema = new Schema({
-  author: { type: ObjectId, ref: 'User' },
-  markdown: { type: String },
-  // assets: [{ type: ObjectId, ref: 'Asset'}], //Raw sources 
-  // selections: [{ type: ObjectId, ref: 'Highlight'}], //Raw References
-  // references: [{ type: ObjectId, ref: 'Reference'}], //Raw References
-  
-  parent: { type: ObjectId, ref: 'Discussion' },
-  children: [ { type: ObjectId, ref: 'Discussion' } ],
-  
-  pub: { type: ObjectId, ref: 'Pub' },
-  version: { type: Number },
-  sourceJournal: { type: ObjectId, ref: 'Journal' },
-  postDate: { type: Date },
+const discussionSchema = new Schema({
+    author: { type: ObjectId, ref: 'User' },
+    markdown: { type: String },
 
-  archived: { type: Boolean },
+    history: [{
+    	markdown: { type: String },
+        datePosted: { type: Date },
+    }],
 
-  yays: [ { type: ObjectId, ref: 'User' } ],
-  nays: [ { type: ObjectId, ref: 'User' } ],
-  
+    parent: { type: ObjectId, ref: 'Discussion' },
+    children: [ { type: ObjectId, ref: 'Discussion' } ],
+
+    pub: { type: ObjectId, ref: 'Pub' },
+    version: { type: Number },
+    sourceJournal: { type: ObjectId, ref: 'Journal' },
+
+    createDate: { type: Date },
+    lastUpdated: { type: Date },
+
+    archived: { type: Boolean },
+    private: {type: Boolean}, // Private comments can only be read be active collaborators.
+
+    yays: [ { type: ObjectId, ref: 'User' } ],
+    nays: [ { type: ObjectId, ref: 'User' } ],
 });
-
 
 
 discussionSchema.statics.nestChildren = function (input) {
 
-  // input = _.map(input,function(d) {return d.toObject() });
-  input = _.map(input,function(d) {return d});
+    // input = _.map(input,function(d) {return d.toObject() });
+    input = _.map(input,function(d) {return d});
 
-  input.forEach(function(d){
-    
-    d.children = _.filter(input,function(i){
-      return (i.parent == d["_id"].toString()) 
+    input.forEach(function(d){
+
+        d.children = _.filter(input,function(i){
+            return (i.parent == d["_id"].toString())
+        });
+        return d;
     });
-    return d;
-  });
 
-  const top_children = _.filter(input,function(d) {return !(d.parent)});
-  return top_children;
+    const top_children = _.filter(input,function(d) {return !(d.parent)});
+    return top_children;
 
 };
 
@@ -59,12 +62,12 @@ discussionSchema.statics.appendUserYayNayFlag = function (input, userID) {
     if(!item.userYay){ //If we found a Yay, there's not going to be a nay - so don't check
       if(item.nays.toString().indexOf(userID) > -1){
         item.userNay = true;
-      }  
+      }
     }
   });
 
   return input;
-  
+
 }
 
 discussionSchema.statics.calculateYayNayScore = function (input) {
@@ -93,6 +96,4 @@ discussionSchema.statics.sortDiscussions = function (input) {
 }
 
 
-module.exports = mongoose.model('Discussion',discussionSchema);
-
-
+module.exports = mongoose.model('Discussion', discussionSchema);

@@ -1,91 +1,103 @@
-var app = require('../api');
+const app = require('../api');
 
-var Pub  = require('../models').Pub;
-var User = require('../models').User;
-var Asset = require('../models').Asset;
-var Discussion = require('../models').Discussion;
-// var Reference = require('../models').Reference;
-// var Highlight = require('../models').Highlight;
-var Notification = require('../models').Notification;
+// const Pub  = require('../models').Pub;
+const User = require('../models').User;
+// const Asset = require('../models').Asset;
+const Discussion = require('../models').Discussion;
+// const Reference = require('../models').Reference;
+// const Highlight = require('../models').Highlight;
+const Notification = require('../models').Notification;
 
 
-var _         = require('underscore');
+// const _ = require('underscore');
 
 app.post('/addDiscussion', function(req, res) {
-	const postDate = new Date().getTime();
+	const currentDate = new Date().getTime();
 
-	const newDiscussion = req.body.discussionObject;
+	const newDiscussion = new Discussion({});
 	newDiscussion.author = req.user._id;
-	newDiscussion.assets = []; // Ingest assets object and spit back array of ObjectIDs
-	newDiscussion.references = []; // Ingest references object and spit back array of ObjectIDs
-	newDiscussion.sourceJournal = undefined; // We will have to call something to get the journalID of the given host
-	newDiscussion.postDate = postDate;
+	newDiscussion.markdown = req.body.discussionObject.markdown;
+	newDiscussion.history = [{
+		markdown: req.body.discussionObject.markdown,
+		datePosted: currentDate,
+	}];
+
+	newDiscussion.parent = req.body.discussionObject.parent;
+	newDiscussion.children = [];
+
+	newDiscussion.pub = req.body.discussionObject.pub;
+	newDiscussion.version = req.body.discussionObject.version;
+	newDiscussion.sourceJournal = req.body.discussionObject.sourceJournal;
+
+	newDiscussion.createDate = currentDate;
+	newDiscussion.lastUpdated = currentDate;
+
+	newDiscussion.archived = false;
+	newDiscussion.private = req.body.discussionObject.private;
+
 	newDiscussion.yays = [];
 	newDiscussion.nays = [];
 
 	// Ingest selections object and spit back array of ObjectIDs
-	const selections = [];
-	for (const key in req.body.discussionObject.selections) { 
-		const selectionObject = req.body.discussionObject.selections[key];
-		selectionObject.author = req.user._id;
-		selectionObject.postDate = postDate;
-		selectionObject.index = key;
-		selectionObject.usedInDiscussion = true;
-		selections.push(selectionObject);
-	}
+	// const selections = [];
+	// for (const key in req.body.discussionObject.selections) {
+	// 	const selectionObject = req.body.discussionObject.selections[key];
+	// 	selectionObject.author = req.user._id;
+	// 	selectionObject.postDate = postDate;
+	// 	selectionObject.index = key;
+	// 	selectionObject.usedInDiscussion = true;
+	// 	selections.push(selectionObject);
+	// }
 
-	Highlight.insertBulkAndReturnIDs(selections, function(err, selectionIds){
+	// Highlight.insertBulkAndReturnIDs(selections, function(err, selectionIds){
+		// if (err) { return res.status(500).json(err); }
+
+	// newDiscussion.selections = selectionIds;
+
+	newDiscussion.save(function(err, result) {
 		if (err) { return res.status(500).json(err); }
+		var discussionID = result.id;
+		var userID = result.author;
+		var pubID = result.pub;
 
-		newDiscussion.selections = selectionIds;
+		// if (req.body.isEditorComment) {
+			// console.log('got an editor comment!');
+			// Pub.update({ _id: pubID }, { $addToSet: { editorComments: discussionID} }, function(err, result){if(err) return handleError(err)});
+		// } else {
+			// console.log('got a discussion!');
+			// Pub.update({ _id: pubID }, { $addToSet: { discussions: discussionID} }, function(err, result){if(err) return handleError(err)});
+			// User.update({ _id: userID }, { $addToSet: { discussions: discussionID} }, function(err, result){if(err) return handleError(err)});
+		// }
+		User.update({ _id: userID }, { $addToSet: { discussions: discussionID} }, function(err, result){if(err) return handleError(err)});
+		Discussion.update({_id: result.parent}, { $addToSet: { children: discussionID} }, function(err, result){if(err) return handleError(err)});
 
-		const discussion = new Discussion(newDiscussion);
-		discussion.save(function (err, result) {
+		// Notify all the pub authors
+		// Notify the author of a parent comment
+		Pub.findOne({_id: pubID}, {'authors':1}).lean().exec(function (err, pub) {
+			pub.authors.map((author)=>{
+				Notification.createNotification('discussion/pubComment', req.body.host, userID, author, pubID, discussionID);
+			});
+		});
+		if (result.parent) {
+			Discussion.findOne({_id: result.parent}, {'author':1}).lean().exec(function (err, parentDiscussion) {
+				Notification.createNotification('discussion/repliedTo', req.body.host, userID, parentDiscussion.author, pubID, discussionID);
+			});
+		}
+
+		var populateQuery = [
+			{path:'author', select:'_id name username firstName lastName thumbnail'},
+			// {path:'selections'},
+		];
+
+		Discussion.populate(result, populateQuery, function(err, populatedResult){
 			if (err) { return res.status(500).json(err); }
-			var discussionID = result.id;
-			var userID = result.author;
-			var pubID = result.pub;
-
-			if (req.body.isEditorComment) {
-				// console.log('got an editor comment!');
-				Pub.update({ _id: pubID }, { $addToSet: { editorComments: discussionID} }, function(err, result){if(err) return handleError(err)});
-			} else {
-				// console.log('got a discussion!');
-				Pub.update({ _id: pubID }, { $addToSet: { discussions: discussionID} }, function(err, result){if(err) return handleError(err)});
-				User.update({ _id: userID }, { $addToSet: { discussions: discussionID} }, function(err, result){if(err) return handleError(err)});
-			}
-			
-			Discussion.update({_id: result.parent}, { $addToSet: { children: discussionID} }, function(err, result){if(err) return handleError(err)});
-
-			// Notify all the pub authors
-			// Notify the author of a parent comment
-			Pub.findOne({_id: pubID}, {'authors':1}).lean().exec(function (err, pub) {
-				pub.authors.map((author)=>{
-					Notification.createNotification('discussion/pubComment', req.body.host, userID, author, pubID, discussionID);
-				});
-			});
-			if (result.parent) {
-				Discussion.findOne({_id: result.parent}, {'author':1}).lean().exec(function (err, parentDiscussion) {
-					Notification.createNotification('discussion/repliedTo', req.body.host, userID, parentDiscussion.author, pubID, discussionID);
-				});	
-			}
-			
-
-
-			var populateQuery = [
-				{path:'author', select:'_id name username firstName lastName thumbnail'},
-				{path:'selections'},
-			];
-
-			Discussion.populate(result, populateQuery, function(err,populatedResult){
-				if (err) { return res.status(500).json(err); }
-				res.status(201).json(populatedResult);
-				
-			});
+			res.status(201).json(populatedResult);
 
 		});
 
-	});	
+	});
+
+	// });
 
 });
 
@@ -125,7 +137,7 @@ app.post('/discussionArchive', function(req,res){
 	const discussionID = req.body.objectID;
 
 	Discussion.findOne({_id:discussionID}).exec(function (err, discussion) {
-		
+
 		discussion.archived = !discussion.archived;
 
 		discussion.save(function(err, result){

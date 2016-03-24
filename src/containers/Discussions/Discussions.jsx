@@ -58,11 +58,13 @@ const Discussions = React.createClass({
 		if (this.props.inEditor) {
 			discussionObject.pub = this.props.editorData.getIn(['pubEditData', '_id']);
 			discussionObject.version = 0;
-			discussionObject.selections = this.props.editorData.getIn(['newDiscussionData', 'selections']);
+			discussionObject.sourceJournal = this.props.journalData.getIn(['journalData', '_id']);
+			// discussionObject.selections = this.props.editorData.getIn(['newDiscussionData', 'selections']);
 		} else {
 			discussionObject.pub = this.props.pubData.getIn(['pubData', '_id']);
 			discussionObject.version = this.props.query.version !== undefined && this.props.query.version > 0 && this.props.query.version < (this.props.pubData.getIn(['pubData', 'history']).size - 1) ? this.props.query.version : this.props.pubData.getIn(['pubData', 'history']).size;
-			discussionObject.selections = this.props.pubData.getIn(['newDiscussionData', 'selections']);
+			discussionObject.sourceJournal = this.props.journalData.getIn(['journalData', '_id']);
+			// discussionObject.selections = this.props.pubData.getIn(['newDiscussionData', 'selections']);
 		}
 
 		// Check if it's a comment or discussion we're adding.

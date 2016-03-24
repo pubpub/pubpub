@@ -106,10 +106,11 @@ const PubDiscussionsInput = React.createClass({
 		// const cm = document.getElementsByClassName('CodeMirror')[0].CodeMirror;
 		const cm = document.getElementById(this.props.codeMirrorID).childNodes[0].CodeMirror;
 		newDiscussion.markdown = cm.getValue();
-		newDiscussion.assets = {};
-		newDiscussion.selections = {};
-		newDiscussion.references = {};
+		// newDiscussion.assets = {};
+		// newDiscussion.selections = {};
+		// newDiscussion.references = {};
 		newDiscussion.parent = this.props.parentID;
+		newDiscussion.private = this.refs.isPrivate.checked;
 		this.props.addDiscussionHandler(newDiscussion, this.props.saveID);
 	},
 
