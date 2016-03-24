@@ -39,9 +39,9 @@ export const UPDATE_PUB_BACKEND_DATA_LOAD = 'editor/UPDATE_PUB_BACKEND_DATA_LOAD
 export const UPDATE_PUB_BACKEND_DATA_SUCCESS = 'editor/UPDATE_PUB_BACKEND_DATA_SUCCESS';
 export const UPDATE_PUB_BACKEND_DATA_FAIL = 'editor/UPDATE_PUB_BACKEND_DATA_FAIL';
 
-export const PUBLISH_LOAD = 'editor/PUBLISH_LOAD';
-export const PUBLISH_SUCCESS = 'editor/PUBLISH_SUCCESS';
-export const PUBLISH_FAIL = 'editor/PUBLISH_FAIL';
+export const SAVE_VERSION_LOAD = 'editor/SAVE_VERSION_LOAD';
+export const SAVE_VERSION_SUCCESS = 'editor/SAVE_VERSION_SUCCESS';
+export const SAVE_VERSION_FAIL = 'editor/SAVE_VERSION_FAIL';
 
 export const DISCUSSION_VOTE = 'editor/DISCUSSION_VOTE';
 export const DISCUSSION_VOTE_SUCCESS = 'editor/DISCUSSION_VOTE_SUCCESS';
@@ -65,9 +65,9 @@ export function getPubEdit(slug) {
 	};
 }
 
-export function publishVersion(newVersion) {
+export function saveVersion(newVersion) {
 	return {
-		types: [PUBLISH_LOAD, PUBLISH_SUCCESS, PUBLISH_FAIL],
+		types: [SAVE_VERSION_LOAD, SAVE_VERSION_SUCCESS, SAVE_VERSION_FAIL],
 		promise: (client) => client.post('/saveVersionPub', {data: {newVersion: newVersion}})
 	};
 }

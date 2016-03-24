@@ -15,6 +15,7 @@ const EditorModalPublish = React.createClass({
 		handleSaveVersion: PropTypes.func,
 		currentJournal: PropTypes.string,
 		intl: PropTypes.object,
+		isPublished: PropTypes.bool,
 	},
 
 	getInitialState() {
@@ -150,14 +151,14 @@ const EditorModalPublish = React.createClass({
 				</div>
 
 				{/* Publish button */}
-				<div key="publish-button" style={styles.publishButton} onClick={this.handleSaveVersion(false)}>
+				<div key="saveVersion-button" style={styles.publishButton} onClick={this.handleSaveVersion(false)}>
 					<FormattedMessage
 						id="editor.saveVersionButton"
 						defaultMessage="Save version"/>
 				</div>
 
 				{/* Publish button */}
-				<div key="publish-button" style={styles.publishButton} onClick={this.handleSaveVersion(true)}>
+				<div key="publish-button" style={[styles.publishButton, this.props.isPublished && styles.isPublished]} onClick={this.handleSaveVersion(true)}>
 					<FormattedMessage
 						id="editor.publishButton"
 						defaultMessage="Publish"/>
@@ -254,5 +255,9 @@ styles = {
 			cursor: 'pointer',
 			color: 'black',
 		},
-	}
+	},
+	isPublished: {
+		pointerEvents: 'none',
+		opacity: '0.5',
+	},
 };

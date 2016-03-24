@@ -5,13 +5,13 @@ import {ensureImmutable} from './';
 // Load Actions
 /*--------*/
 import {
-	TOGGLE_VIEW_MODE, 
-	SET_VIEW_MODE, 
-	TOGGLE_FORMATTING, 
-	TOGGLE_TOC, 
-	LOAD_PUB_EDIT, 
-	LOAD_PUB_EDIT_SUCCESS, 
-	LOAD_PUB_EDIT_FAIL, 
+	TOGGLE_VIEW_MODE,
+	SET_VIEW_MODE,
+	TOGGLE_FORMATTING,
+	TOGGLE_TOC,
+	LOAD_PUB_EDIT,
+	LOAD_PUB_EDIT_SUCCESS,
+	LOAD_PUB_EDIT_FAIL,
 	PUB_EDIT_UNMOUNT,
 	MODAL_OPEN,
 	MODAL_CLOSE,
@@ -31,9 +31,9 @@ import {
 	UPDATE_PUB_BACKEND_DATA_SUCCESS,
 	UPDATE_PUB_BACKEND_DATA_FAIL,
 
-	PUBLISH_LOAD,
-	PUBLISH_SUCCESS,
-	PUBLISH_FAIL,
+	SAVE_VERSION_LOAD,
+	SAVE_VERSION_SUCCESS,
+	SAVE_VERSION_FAIL,
 
 	ADD_SELECTION,
 
@@ -45,22 +45,22 @@ import {
 	ARCHIVE_COMMENT_SUCCESS,
 	ARCHIVE_COMMENT_FAIL,
 
-	ADD_COMMENT, 
-	ADD_COMMENT_SUCCESS, 
+	ADD_COMMENT,
+	ADD_COMMENT_SUCCESS,
 	ADD_COMMENT_FAIL,
 
 } from '../actions/editor';
 
 import {
 
-	ADD_DISCUSSION, 
-	ADD_DISCUSSION_SUCCESS, 
+	ADD_DISCUSSION,
+	ADD_DISCUSSION_SUCCESS,
 	ADD_DISCUSSION_FAIL,
 
 } from '../actions/pub';
 
 /*--------*/
-// Initialize Default State 
+// Initialize Default State
 /*--------*/
 const defaultState = Immutable.Map({
 	pubEditData: {
@@ -72,8 +72,8 @@ const defaultState = Immutable.Map({
 	activeModal: undefined,
 	status: 'loading',
 	error: null,
-	publishError: null,
-	publishSuccess: null,
+	saveVersionError: null,
+	saveVersionSuccess: null,
 	newDiscussionData: {
 		selections: {},
 		assets: {},
@@ -88,10 +88,10 @@ const defaultState = Immutable.Map({
 });
 
 /*--------*/
-// Define reducing functions 
+// Define reducing functions
 //
 // These functions take in an initial state and return a new
-// state. They are pure functions. We use Immutable to enforce this. 
+// state. They are pure functions. We use Immutable to enforce this.
 /*--------*/
 function toggleViewMode(state) {
 	let newModes = {};
@@ -151,13 +151,13 @@ function toggleFormatting(state) {
 				showBottomLeftMenu: false,
 			};
 		}
-	} else { 
+	} else {
 		newModes = {
 			showBottomRightMenu: true,
 			showBottomLeftMenu: true,
 		};
 	}
-	
+
 	return state.merge(newModes);
 }
 
@@ -175,13 +175,13 @@ function toggleTOC(state) {
 				showBottomRightMenu: false,
 			};
 		}
-	} else { 
+	} else {
 		newModes = {
 			showBottomLeftMenu: true,
 			showBottomRightMenu: true,
 		};
 	}
-	
+
 	return state.merge(newModes);
 }
 
@@ -248,20 +248,19 @@ function closeModal(state) {
 	});
 }
 
-function publishLoad(state) {
+function saveVersionLoad(state) {
 	return state;
 }
 
-// function publishSuccess(state, result) {
-function publishSuccess(state) {
+function saveVersionSuccess(state) {
 	return state.merge({
-		publishSuccess: true,
+		saveVersionSuccess: true,
 	});
 }
 
-function publishError(state, error) {
+function saveVersionError(state, error) {
 	return state.merge({
-		publishError: error,
+		saveVersionError: error,
 	});
 }
 
@@ -288,7 +287,7 @@ function saveStyleError(state, error) {
 function addSelection(state, selection) {
 	const selectionData = state.getIn(['newDiscussionData', 'selections']);
 	return state.mergeIn(
-		['newDiscussionData', 'selections'], 
+		['newDiscussionData', 'selections'],
 		selectionData.set(selectionData.size + 1, selection)
 	);
 }
@@ -392,7 +391,7 @@ function addDiscussionFail(state, error, activeSaveID) {
 }
 
 function discussionVote(state, voteType, discussionID, userYay, userNay) {
-	
+
 	let scoreChange = 0;
 	let newUserYay = undefined;
 	let newUserNay = undefined;
@@ -490,10 +489,10 @@ export default function editorReducer(state = defaultState, action) {
 		return loadFail(state, action.error);
 	case PUB_EDIT_UNMOUNT:
 		return unmountEditor();
-		
-	case MODAL_OPEN: 
+
+	case MODAL_OPEN:
 		return openModal(state, action.activeModal);
-	case MODAL_CLOSE: 
+	case MODAL_CLOSE:
 		return closeModal(state);
 
 	case UPDATE_COLLABORATORS_LOAD:
@@ -520,12 +519,12 @@ export default function editorReducer(state = defaultState, action) {
 	case ADD_SELECTION:
 		return addSelection(state, action.selection);
 
-	case PUBLISH_LOAD:
-		return publishLoad(state);
-	case PUBLISH_SUCCESS:
-		return publishSuccess(state, action.result);
-	case PUBLISH_FAIL:
-		return publishError(state, action.error);
+	case SAVE_VERSION_LOAD:
+		return saveVersionLoad(state);
+	case SAVE_VERSION_SUCCESS:
+		return saveVersionSuccess(state, action.result);
+	case SAVE_VERSION_FAIL:
+		return saveVersionError(state, action.error);
 
 	case DISCUSSION_VOTE:
 		return discussionVote(state, action.voteType, action.discussionID, action.userYay, action.userNay);
@@ -547,7 +546,7 @@ export default function editorReducer(state = defaultState, action) {
 		return saveStyleSuccess(state, action.result);
 	case SAVE_STYLE_FAIL:
 		return saveStyleError(state, action.error);
-		
+
 	case ADD_COMMENT:
 		return addCommentLoad(state, action.activeSaveID);
 	case ADD_COMMENT_SUCCESS:

@@ -101,7 +101,7 @@ const Editor = React.createClass({
 	},
 
 	componentWillReceiveProps(nextProps) {
-		if (nextProps.editorData.get('publishSuccess')) {
+		if (nextProps.editorData.get('saveVersionSuccess')) {
 			this.props.dispatch(pushState(null, ('/pub/' + nextProps.slug)));
 		}
 		if (!this.state.initialized && nextProps.editorData.getIn(['pubEditData', 'token'])) {
@@ -569,10 +569,10 @@ const Editor = React.createClass({
 				notButton: true,
 			},
 			{
-				key: 'publish',
-				string: 'Publish',
+				key: 'saveVersion',
+				string: 'Save Version',
 				right: true,
-				function: this.openModalHandler('Publish'),
+				function: this.openModalHandler('SaveVersion'),
 			},
 			{
 				key: 'preview',

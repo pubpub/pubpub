@@ -165,11 +165,12 @@ const Editor = React.createClass({
 										updateCollaborators={this.saveUpdatedCollaborators}/>
 									);
 
-							case 'Publish':
+							case 'SaveVersion':
 								return (<SaveVersionModal
 										slug={this.props.slug}
 										handleSaveVersion={this.props.saveVersionHandler}
-										currentJournal={this.props.journalData.getIn(['journalData', 'journalName'])}/>
+										currentJournal={this.props.journalData.getIn(['journalData', 'journalName'])}
+										isPublished={this.props.editorData.getIn(['pubEditData', 'isPublished'])}/>
 									);
 
 							// case 'References':

@@ -160,7 +160,8 @@ export function saveVersionPub(req, res) {
 		pub.styleDesktop = req.body.newVersion.styleDesktop;
 		pub.styleMobile = req.body.newVersion.styleMobile;
 		pub.styleScoped = req.body.newVersion.styleScoped;
-
+		pub.isPublished = pub.isPublished || req.body.newVersion.isPublished;
+		
 		pub.lastUpdated = versionDate;
 
 		pub.history.push({
