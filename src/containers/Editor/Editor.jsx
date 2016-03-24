@@ -317,9 +317,9 @@ const Editor = React.createClass({
 			// references: this.state.firepadData.references,
 			// style: this.state.firepadData.settings.pubStyle,
 
-			styleDesktop: this.state.firepadData.settings.styleDesktop,
-			styleMobile: this.state.firepadData.settings.styleMobile,
-			styleScoped: this.state.firepadData.settings.styleScoped,
+			styleDesktop: this.state.firepadData.settings ? this.state.firepadData.settings.styleDesktop : '',
+			styleMobile: this.state.firepadData.settings ? this.state.firepadData.settings.styleMobile : '',
+			styleScoped: this.state.firepadData.settings ? this.state.firepadData.settings.styleScoped : '',
 
 			versionNote: versionDescription,
 
@@ -329,7 +329,7 @@ const Editor = React.createClass({
 		this.props.dispatch(clearPub());
 
 		// This should perhaps be done on the backend in one fell swoop - rather than having two client side calls.
-		if (this.props.journalData.get('baseSubdomain')) {
+		if (this.props.journalData.get('baseSubdomain') && publish) {
 			this.props.dispatch(submitPubToJournal(this.props.editorData.getIn(['pubEditData', '_id']), this.props.journalData.getIn(['journalData']).toJS()));
 		}
 

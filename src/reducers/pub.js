@@ -139,13 +139,13 @@ function loadSuccess(state, result) {
 		};
 	}
 
-	// if (result.message === 'Private Pub') {
-	// 	outputState.pubData = { ...defaultState.get('pubData'),
-	// 		history: [{markdown: '# Private Pub'}],
-	// 		slug: result.slug,
-	// 		pubErrorView: true,
-	// 	};
-	// }
+	if (result.message === 'No versions saved') {
+		outputState.pubData = { ...defaultState.get('pubData'),
+			history: [{markdown: '# No versions saved'}],
+			slug: result.slug,
+			pubErrorView: true,
+		};
+	}
 
 	if (result.message === 'Pub not yet published') {
 		outputState.pubData = { ...defaultState.get('pubData'),

@@ -75,6 +75,12 @@ const pubSchema = new Schema({
 		note: { type: String },
 	}],
 	submittedToList: [{type: ObjectId, ref: 'Journal' }], // A aggregate of the journal value in the submittedTo field - used for querying simplicity
+
+	// Pages are pubs that are designed to be use as site pages in journals
+	// e.g. the landing page, an about page, etc.
+	// They are the same as a pub, but with a different default css
+	isPage: {type: Boolean},
+
 });
 
 
@@ -102,8 +108,37 @@ pubSchema.statics.getSimplePub = function (id,callback) {
 
 };
 
+pubSchema.statics.createPub = function(slug, title, userID, isPage, callback) {
+	const pub = new this({
+		slug: slug,
+		title: title,
+		abstract: 'Type your abstract here! Your abstract will be used to help users search for pubs throughout the site.',
+		collaborators: {
+			canEdit: [userID],
+			canRead: []
+		},
+		createDate: new Date().getTime(),
+		isPublished: false,
+		history: [],
+		followers: [],
+		featuredIn: [],
+		featuredInList: [],
+		submittedTo: [],
+		submittedToList: [],
+		isPage: isPage,
+	});
+	// console.log(pub);
 
-pubSchema.statics.getPub = function(slug, readerID, readerGroups, journalID, callback) {
+	pub.save(function(err, savedPub) {
+		if (err) { return callback(err, null); }
+
+		return callback(null, savedPub);
+
+	});
+
+};
+
+pubSchema.statics.getPub = function(slug, readerID, readerGroups, readerAdminJournals, journalID, callback) {
 	this.findOne({slug: slug})
 	// .populate({ path: 'discussions', model: 'Discussion' })
 	// .populate({ path: 'assets history.assets', model: 'Asset' })
@@ -121,23 +156,27 @@ pubSchema.statics.getPub = function(slug, readerID, readerGroups, journalID, cal
 
 		if (!populatedPub) { return callback(null, {message: 'Pub Not Found', slug: slug}); }
 
+		if (!populatedPub.history.length) { return callback(null, {message: 'No versions saved', slug: slug}); }
+
 		if (!populatedPub.isPublished && !readerID) { return callback(null, {message: 'Pub not yet published', slug: slug}); }
 
-		// Check if the pub is not allowed in the journal
-		if (journalID && String(populatedPub.featuredInList).indexOf(journalID) === -1 && String(populatedPub.submittedToList).indexOf(journalID) === -1) {
-			return callback(null, {message: 'Pub not in this journal', slug: slug});
-		}
-
 		const readerGroupsStrings = readerGroups.length ? readerGroups.toString().split(',') : [];
+		const readerAdminJournalsStrings = readerAdminJournals.length ? readerAdminJournals.toString().split(',') : [];
 		const canReadStrings = populatedPub.collaborators.canRead.length ? populatedPub.collaborators.canRead.toString().split(',') : [];
 		const canEditStrings = populatedPub.collaborators.canEdit.length ? populatedPub.collaborators.canEdit.toString().split(',') : [];
 		if (!populatedPub.isPublished &&
 			readerID.toString() !== '568abdd9332c142a0095117f' &&
 			canEditStrings.indexOf(readerID.toString()) === -1 &&
 			canReadStrings.indexOf(readerID.toString()) === -1 &&
+			_.intersection(readerAdminJournalsStrings, canEditStrings).length === 0 &&
 			_.intersection(readerGroupsStrings, canEditStrings).length === 0 &&
 			_.intersection(readerGroupsStrings, canReadStrings).length === 0) {
 			return callback(null, {message: 'Pub not yet published', slug: slug});
+		}
+
+		// Check if the pub is not allowed in the journal
+		if (journalID && String(populatedPub.featuredInList).indexOf(journalID) === -1 && String(populatedPub.submittedToList).indexOf(journalID) === -1) {
+			return callback(null, {message: 'Pub not in this journal', slug: slug});
 		}
 
 		// Check if the pub is private, and if so, check readers/authors list
@@ -166,7 +205,7 @@ pubSchema.statics.getPub = function(slug, readerID, readerGroups, journalID, cal
 	});
 };
 
-pubSchema.statics.getPubEdit = function(slug, readerID, readerGroups, callback) {
+pubSchema.statics.getPubEdit = function(slug, readerID, readerGroups, readerAdminJournals, callback) {
 	// Get the pub and check to make sure user is authorized to edit
 	this.findOne({slug: slug})
 	// .populate({ path: 'discussions', model: 'Discussion' })
@@ -179,19 +218,24 @@ pubSchema.statics.getPubEdit = function(slug, readerID, readerGroups, callback) 
 		if (!readerID) { return callback(null, 'Not Authorized', true); }
 
 		const readerGroupsStrings = readerGroups.length ? readerGroups.toString().split(',') : [];
+		const readerAdminJournalsStrings = readerAdminJournals.length ? readerAdminJournals.toString().split(',') : [];
 		const canReadStrings = pub.collaborators.canRead.length ? pub.collaborators.canRead.toString().split(',') : [];
 		const canEditStrings = pub.collaborators.canEdit.length ? pub.collaborators.canEdit.toString().split(',') : [];
 
 		if (readerID.toString() !== '568abdd9332c142a0095117f' &&
 			canEditStrings.indexOf(readerID.toString()) === -1 &&
 			canReadStrings.indexOf(readerID.toString()) === -1 &&
+			_.intersection(readerAdminJournalsStrings, canEditStrings).length === 0 &&
 			_.intersection(readerGroupsStrings, canEditStrings).length === 0 &&
 			_.intersection(readerGroupsStrings, canReadStrings).length === 0) {
 			return callback(null, 'Not Authorized', true);
 		}
 
 		let isReader = true;
-		if (canEditStrings.indexOf(readerID.toString()) > -1 || _.intersection(readerGroupsStrings, canEditStrings).length || readerID.toString() === '568abdd9332c142a0095117f') {
+		if (readerID.toString() === '568abdd9332c142a0095117f' ||
+			canEditStrings.indexOf(readerID.toString()) > -1 || 
+			_.intersection(readerGroupsStrings, canEditStrings).length ||
+			_.intersection(readerAdminJournalsStrings, canEditStrings).length) {
 			isReader = false;
 		}
 

@@ -1,17 +1,18 @@
-var app = require('../api');
-var passport = require('passport');
-var _         = require('underscore');
+const app = require('../api');
+const _ = require('underscore');
 
-var Journal = require('../models').Journal;
-var User = require('../models').User;
-var Pub = require('../models').Pub;
-var Asset = require('../models').Asset;
-var Notification = require('../models').Notification;
+const Journal = require('../models').Journal;
+const User = require('../models').User;
+const Pub = require('../models').Pub;
+const Asset = require('../models').Asset;
+const Notification = require('../models').Notification;
 import {cloudinary} from '../services/cloudinary';
+const Firebase = require('firebase');
+import {fireBaseURL, generateAuthToken} from '../services/firebase';
 
-app.post('/createJournal', function(req,res){
+app.post('/createJournal', function(req, res) {
 	Journal.isUnique(req.body.subdomain, (err, result)=>{
-		if(!result){ return res.status(500).json('Subdomain is not Unique!'); }
+		if (!result) { return res.status(500).json('Subdomain is not Unique!'); }
 
 		const journal = new Journal({
 			journalName: req.body.journalName,
@@ -29,20 +30,46 @@ app.post('/createJournal', function(req,res){
 				landingHeaderText: '#373737',
 				landingHeaderHover: '#000',
 			},
-
-				
 		});
 
-		journal.save(function (err, savedJournal) {
+		journal.save(function(errSavingJournal, savedJournal) {
 			if (err) { return res.status(500).json(err); }
-			User.update({ _id: req.user._id }, { $addToSet: { adminJournals: savedJournal._id} }, function(err, result){if(err) return handleError(err)});
+			User.update({ _id: req.user._id }, { $addToSet: { adminJournals: savedJournal._id} }, function(adminAddErr, addAdminResult) {if (adminAddErr) return res.status(500).json('Failed to add as admin'); });
 
-			return res.status(201).json(savedJournal.subdomain);	
+			const journalLandingSlug = savedJournal.subdomain + '-landingpage'; // Guaranteed unique because we don't allow pubs to be created ending with 'landingpage' and subdomain is unique
+			const journalLandingTitle = savedJournal.journalName + ' Landing Page';
+			Pub.createPub(journalLandingSlug, journalLandingTitle, savedJournal._id, true, function(createErr, savedPub) {
+
+				const ref = new Firebase(fireBaseURL + journalLandingSlug + '/editorData' );
+				ref.authWithCustomToken(generateAuthToken(), ()=>{
+					const newEditorData = {
+						collaborators: {},
+						settings: {styleDesktop: ''},
+					};
+					newEditorData.collaborators[savedJournal.subdomain] = {
+						_id: savedJournal._id.toString(),
+						name: savedJournal.journalName + ' Admins',
+						firstName: savedJournal.journalName || '',
+						lastName: 'Admins',
+						thumbnail: '/thumbnails/group.png',
+						permission: 'edit',
+						admin: true,
+					};
+					ref.set(newEditorData);
+
+					savedJournal.landingPage = savedPub.id;
+					savedJournal.save(function(errSavingLanding, savedJournalWithPub) {
+						return res.status(201).json(savedJournalWithPub.subdomain);
+					});
+
+				});
+			});
+
 
 		});
 	});
 
-	
+
 });
 
 app.get('/getJournal', function(req,res){
@@ -57,7 +84,7 @@ app.get('/getJournal', function(req,res){
 		const adminsLength = result ? result.admins.length : 0;
 		for(let index = adminsLength; index--; ) {
 			if (String(result.admins[index]._id) === String(userID)) {
-				isAdmin =  true;	
+				isAdmin =  true;
 			}
 		}
 
@@ -70,11 +97,11 @@ app.get('/getJournal', function(req,res){
 
 app.get('/getRandomSlug', function(req, res) {
 	Pub.getRandomSlug(req.query.journalID, function(err, result){
-		if (err){console.log(err); return res.json(500);} 
+		if (err){console.log(err); return res.json(500);}
 		return res.status(201).json(result);
 	});
 });
-	
+
 app.post('/saveJournal', function(req,res){
 	Journal.findOne({subdomain: req.body.subdomain}).exec(function(err, journal) {
 		// console.log('in server save journal');
@@ -109,18 +136,18 @@ app.post('/saveJournal', function(req,res){
 				journal[key] = req.body.newObject[key];
 			}
 		}
-		
+
 		journal.save(function(err, result){
 			if (err) { return res.status(500).json(err); }
-			
+
 			Journal.populate(result, Journal.populationObject(), (err, populatedJournal)=> {
 				return res.status(201).json({
 					...populatedJournal.toObject(),
 					isAdmin: true,
-				});		
+				});
 			});
-			
-			
+
+
 		});
 	});
 });
@@ -136,7 +163,7 @@ app.post('/submitPubToJournal', function(req,res){
 		}
 
 		if (String(journal.pubsSubmitted).indexOf(req.body.pubID) === -1 && String(journal.pubsFeatured).indexOf(req.body.pubID) === -1) {
-			
+
 			Pub.addJournalSubmitted(req.body.pubID, req.body.journalID, req.user._id);
 
 			if (journal.autoFeature) {
@@ -151,15 +178,15 @@ app.post('/submitPubToJournal', function(req,res){
 
 		journal.save(function(err, result){
 			if (err) { return res.status(500).json(err); }
-			
+
 			Journal.populate(result, Journal.populationObject(), (err, populatedJournal)=> {
 				return res.status(201).json({
 					...populatedJournal.toObject(),
 					isAdmin: true,
-				});		
+				});
 			});
-			
-			
+
+
 		});
 	});
 });
@@ -185,7 +212,7 @@ app.get('/loadJournalAndLogin', function(req,res){
 
 				const userID = req.user ? req.user._id : undefined;
 				Notification.getUnreadCount(userID, function(err, notificationCount) {
-					const loginData = req.user 
+					const loginData = req.user
 						? {
 							name: req.user.name,
 							firstName: req.user.firstName,
@@ -199,12 +226,12 @@ app.get('/loadJournalAndLogin', function(req,res){
 							assets: req.user.assets,
 						}
 						: 'No Session';
-						
+
 					Asset.find({'_id': { $in: loginData.assets } }, function(err, assets){
 						if (assets.length) {
-							loginData.assets = assets;	
+							loginData.assets = assets;
 						}
-     					
+
      					if (result) {
 							// If it is a journal, check if the user is an admin.
 							let isAdmin = false;
@@ -212,7 +239,7 @@ app.get('/loadJournalAndLogin', function(req,res){
 							const adminsLength = result ? result.admins.length : 0;
 							for(let index = adminsLength; index--; ) {
 								if (String(result.admins[index]._id) === String(userID)) {
-									isAdmin =  true;	
+									isAdmin =  true;
 								}
 							}
 
@@ -229,7 +256,7 @@ app.get('/loadJournalAndLogin', function(req,res){
 								loginData: loginData,
 							});
 
-						} else { 
+						} else {
 							// If there was no result, that means we're on pubpub.org, and we need to populate journals and pubs.
 							Journal.find({}, {'_id':1,'journalName':1, 'subdomain':1, 'customDomain':1, 'pubsFeatured':1, 'collections':1, 'design': 1}).lean().exec(function (err, journals) {
 								Pub.find({history: {$not: {$size: 0}},'settings.isPrivate': {$ne: true}}, {'_id':1,'title':1, 'slug':1, 'abstract':1}).lean().exec(function (err, pubs) {
@@ -255,7 +282,7 @@ app.get('/loadJournalAndLogin', function(req,res){
 							});
 						}
 					});
-					
+
 				});
 
 			});
@@ -282,14 +309,14 @@ app.post('/createCollection', function(req,res){
 			headerImage: defaultHeaderImages[Math.floor(Math.random() * defaultHeaderImages.length)],
 		};
 		journal.collections.push(newCollection);
-		
+
 		journal.save(function (err, savedJournal) {
 			if (err) { return res.status(500).json(err); }
 
 			Journal.populate(savedJournal, Journal.populationObject(true), (err, populatedJournal)=> {
 				if (err) { return res.status(500).json(err); }
 
-				return res.status(201).json(populatedJournal.collections);		
+				return res.status(201).json(populatedJournal.collections);
 			});
 
 		});
@@ -320,17 +347,17 @@ app.post('/saveCollection', function(req,res){
 				Journal.populate(savedJournal, Journal.populationObject(true), (err, populatedJournal)=> {
 					if (err) { return res.status(500).json(err); }
 
-					return res.status(201).json(populatedJournal.collections);		
+					return res.status(201).json(populatedJournal.collections);
 				});
 
 			});
 		}
 
 		if (req.body.newCollectionObject.headerImageURL) {
-			cloudinary.uploader.upload(req.body.newCollectionObject.headerImageURL, function(cloudinaryResponse) { 
-				const cloudinaryURL = cloudinaryResponse.url; 
+			cloudinary.uploader.upload(req.body.newCollectionObject.headerImageURL, function(cloudinaryResponse) {
+				const cloudinaryURL = cloudinaryResponse.url;
 				updateAndSave(cloudinaryURL);
-				
+
 			});
 		} else {
 			updateAndSave();

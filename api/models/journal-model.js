@@ -16,8 +16,8 @@ if(process.env.NODE_ENV !== 'production'){
 var journalSchema = new Schema({
 
 	journalName: { type: String},
-	subdomain: { type: String, required: true, index: true,  unique: true  },
-	customDomain: { type: String, index: true,  unique: true, sparse: true  },
+	subdomain: { type: String, required: true, index: true, unique: true },
+	customDomain: { type: String, index: true, unique: true, sparse: true },
 	journalLogoURL: { type: String},
 	journalLogoThumbnailURL: { type: String},
 	journalDescription: { type: String},
@@ -33,6 +33,8 @@ var journalSchema = new Schema({
 	autoFeature: { type: Boolean },
 
 	design: { type: Schema.Types.Mixed },
+	landingPage: { type: ObjectId, ref: 'Pub' },
+
 	settings: { type: Schema.Types.Mixed },
 
 	collections: [{
@@ -47,7 +49,7 @@ var journalSchema = new Schema({
 
 });
 
-journalSchema.statics.isUnique = function (subdomain,callback) {
+journalSchema.statics.isUnique = function (subdomain, callback) {
 
 	this.findOne({'subdomain':subdomain})
 	.exec(function (err, journal) {
@@ -82,11 +84,11 @@ journalSchema.statics.updateHerokuDomains = function (oldDomain, newDomain) {
 };
 
 journalSchema.statics.populationObject = function(collectionsOnly) {
-	const options = [ 
+	const options = [
 		{path: "pubsSubmitted", select:"title abstract slug settings"},
 		{path: "admins", select:"name firstName lastName username thumbnail"},
 		{
-			path: "pubsFeatured", 
+			path: "pubsFeatured",
 			select:"title abstract slug authors lastUpdated createDate discussions",
 			populate: [{
 				path: 'authors',
@@ -105,7 +107,7 @@ journalSchema.statics.populationObject = function(collectionsOnly) {
 			}],
 		},
 		{
-			path: "collections.pubs", 
+			path: "collections.pubs",
 			select:"title abstract slug authors lastUpdated createDate discussions",
 			populate: [{
 				path: 'authors',
