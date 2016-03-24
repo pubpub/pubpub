@@ -260,6 +260,7 @@ const PubReader = React.createClass({
 
 					<PubBody
 						status={this.props.readerData.get('status')}
+						isPublished={pubData.isPublished}
 						title={pubData.history[versionIndex].title}
 						abstract={pubData.history[versionIndex].abstract}
 						authorsNote={pubData.history[versionIndex].authorsNote}

@@ -21,6 +21,7 @@ let styles = {};
 const PubBody = React.createClass({
 	propTypes: {
 		status: PropTypes.string,
+		isPublished: PropTypes.bool,
 		title: PropTypes.string,
 		abstract: PropTypes.string,
 		authorsNote: PropTypes.string,
@@ -291,7 +292,7 @@ const PubBody = React.createClass({
 							: null
 						}
 
-						{this.props.isFeatured && !this.props.errorView
+						{this.props.isFeatured && !this.props.errorView && this.props.isPublished
 							? <div id="pub-license"><License /></div>
 							: null
 						}

@@ -685,6 +685,7 @@ const Editor = React.createClass({
 									<div id="editor-close-bar" style={[this.state.previewPaneMode && styles.editorCloseBar]} onClick={this.switchPreviewPaneMode(undefined)}></div>
 									<PubBody
 										status={'loaded'}
+										isPublished={this.props.editorData.getIn(['pubEditData', 'isPublished'])}
 										title={this.state.title}
 										abstract={this.state.abstract}
 										authorsNote={this.state.authorsNote}
