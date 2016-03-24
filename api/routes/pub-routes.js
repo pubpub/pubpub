@@ -18,8 +18,9 @@ import {sendAddedAsCollaborator} from '../services/emails';
 
 export function getPub(req, res) {
 	const userID = req.user ? req.user._id : undefined;
+	const userGroups = req.user ? req.user.groups : [];
 	const journalID = req.query.journalID;
-	Pub.getPub(req.query.slug, userID, journalID, (err, pubData)=>{
+	Pub.getPub(req.query.slug, userID, userGroups, journalID, (err, pubData)=>{
 		if (err) { console.log(err); return res.status(500).json(err); }
 
 		if (req.query.referrer) {
@@ -161,7 +162,7 @@ export function saveVersionPub(req, res) {
 		pub.styleMobile = req.body.newVersion.styleMobile;
 		pub.styleScoped = req.body.newVersion.styleScoped;
 		pub.isPublished = pub.isPublished || req.body.newVersion.isPublished;
-		
+
 		pub.lastUpdated = versionDate;
 
 		pub.history.push({

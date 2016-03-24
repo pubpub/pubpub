@@ -9,16 +9,16 @@ import {
 	CREATE_PUB_SUCCESS,
 	CREATE_PUB_FAIL,
 
-	CLEAR_PUB, 
-	LOAD_PUB, 
-	LOAD_PUB_SUCCESS, 
+	CLEAR_PUB,
+	LOAD_PUB,
+	LOAD_PUB_SUCCESS,
 	LOAD_PUB_FAIL,
-	
+
 	OPEN_PUB_MODAL,
 	CLOSE_PUB_MODAL,
 
-	ADD_DISCUSSION, 
-	ADD_DISCUSSION_SUCCESS, 
+	ADD_DISCUSSION,
+	ADD_DISCUSSION_SUCCESS,
 	ADD_DISCUSSION_FAIL,
 
 	ADD_SELECTION,
@@ -46,7 +46,7 @@ import {
 } from '../actions/journal';
 
 /*--------*/
-// Initialize Default State 
+// Initialize Default State
 /*--------*/
 export const defaultState = Immutable.Map({
 	createPubData: {
@@ -79,14 +79,14 @@ export const defaultState = Immutable.Map({
 	status: 'loading',
 	error: null,
 	showPubHighlights: true,
-	
+
 });
 
 /*--------*/
-// Define reducing functions 
+// Define reducing functions
 //
 // These functions take in an initial state and return a new
-// state. They are pure functions. We use Immutable to enforce this. 
+// state. They are pure functions. We use Immutable to enforce this.
 /*--------*/
 function createPubLoad(state) {
 	return state.mergeIn(['createPubData'], {
@@ -133,36 +133,36 @@ function loadSuccess(state, result) {
 
 	if (result.message === 'Pub Not Found') {
 		outputState.pubData = { ...defaultState.get('pubData'),
-			history: [{title: 'Pub Not Found'}],
+			history: [{markdown: '# Pub not found'}],
 			slug: result.slug,
 			pubErrorView: true,
 		};
 	}
 
-	if (result.message === 'Private Pub') {
-		outputState.pubData = { ...defaultState.get('pubData'),
-			history: [{title: 'Private Pub'}],
-			slug: result.slug,
-			pubErrorView: true,
-		};
-	}
+	// if (result.message === 'Private Pub') {
+	// 	outputState.pubData = { ...defaultState.get('pubData'),
+	// 		history: [{markdown: '# Private Pub'}],
+	// 		slug: result.slug,
+	// 		pubErrorView: true,
+	// 	};
+	// }
 
 	if (result.message === 'Pub not yet published') {
 		outputState.pubData = { ...defaultState.get('pubData'),
-			history: [{title: 'Pub not yet published'}],
+			history: [{markdown: '# Pub not yet published'}],
 			slug: result.slug,
 			pubErrorView: true,
 		};
-	} 
+	}
 
 	if (result.message === 'Pub not in this journal') {
 		outputState.pubData = { ...defaultState.get('pubData'),
-			history: [{title: 'Pub not in this journal', markdown: '[Available on PubPub](http://www.pubpub.org/pub/' + result.slug + ')', styleScoped: '#pubContent a {text-align: center; color: #555; padding: 15px 0px; display: block; font-size: 1.2em; margin: 10px auto; background-color: #F6F6F6; width: 75%; border-radius: 2px; text-decoration: none;}'}],
+			history: [{markdown: '# Pub not in this journal \n [Available on PubPub](http://www.pubpub.org/pub/' + result.slug + ')', styleScoped: '#pubContent a {text-align: center; color: #555; padding: 15px 0px; display: block; font-size: 1.2em; margin: 10px auto; background-color: #F6F6F6; width: 75%; border-radius: 2px; text-decoration: none;}'}],
 			slug: result.slug,
 			pubErrorView: true,
 		};
-	} 
-    
+	}
+
 	return state.merge(outputState);
 }
 
@@ -245,7 +245,7 @@ function addDiscussionFail(state, error, activeSaveID) {
 function addSelection(state, selection) {
 	const selectionData = state.getIn(['newDiscussionData', 'selections']);
 	return state.mergeIn(
-		['newDiscussionData', 'selections'], 
+		['newDiscussionData', 'selections'],
 		selectionData.set(selectionData.size + 1, selection)
 	);
 }

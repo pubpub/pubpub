@@ -5,8 +5,8 @@ module.exports = function container_plugin(md, name, options) {
 
   options = options || {};
 
-  var min_markers = 3,
-      marker_str  = options.marker || '-',
+  var min_markers = 5,
+      marker_str  = '-',
       marker_char = marker_str.charCodeAt(0),
       marker_len  = marker_str.length,
       render      = options.render
@@ -18,8 +18,37 @@ module.exports = function container_plugin(md, name, options) {
         start = state.bMarks[startLine] + state.tShift[startLine],
         max = state.eMarks[startLine];
 
-    // Open pubheader on first line of doc
-    if (state.parentType !== 'root' || start !== 0) { return false; }
+    // Only allow root-level
+    if (state.parentType !== 'root') { return false; }
+
+    // --------
+
+    // Check out the first character quickly,
+    // this should filter out most of non-containers
+    //
+    if (marker_char !== state.src.charCodeAt(start)) { return false; }
+
+    // Check out the rest of the marker string
+    //
+    for (pos = start + 1; pos <= max; pos++) {
+      if (marker_str[(pos - start) % marker_len] !== state.src[pos]) {
+        break;
+      }
+    }
+
+    marker_count = Math.floor((pos - start) / marker_len);
+    if (marker_count < min_markers) { return false; }
+    pos -= (pos - start) % marker_len;
+
+    markup = state.src.slice(start, pos);
+    params = state.src.slice(pos, max);
+    // --------
+
+
+
+
+
+
 
     // Since start is found, we can report success here in validation mode
     if (silent) { return true; }
@@ -51,8 +80,14 @@ module.exports = function container_plugin(md, name, options) {
         continue;
       }
 
+      for (pos = start + 1; pos <= max; pos++) {
+        if (marker_str[(pos - start) % marker_len] !== state.src[pos]) {
+          break;
+        }
+      }
+
       // closing code fence must be at least as long as the opening one
-      if (Math.floor((pos - start) / marker_len) < 3) { continue; }
+      if (Math.floor((pos - start) / marker_len) < marker_count) { continue; }
 
       // make sure tail has spaces only
       pos -= (pos - start) % marker_len;
@@ -79,9 +114,9 @@ module.exports = function container_plugin(md, name, options) {
     token.map    = [ startLine, nextLine ];
 
 
-    token        = state.push('pubtitle_open', 'pubtitle', 1);
-    state.md.block.tokenize(state, startLine, startLine + 1); 
-    token        = state.push('pubtitle_close', 'pubtitle', -1);
+    // token        = state.push('pubtitle_open', 'pubtitle', 1);
+    // state.md.block.tokenize(state, startLine, startLine + 1);
+    // token        = state.push('pubtitle_close', 'pubtitle', -1);
 
     state.md.block.tokenize(state, startLine + 1, nextLine); // Use this line to exclude the title line
     // state.md.block.tokenize(state, startLine + 1, nextLine); // Use this line to include the title line

@@ -103,7 +103,7 @@ pubSchema.statics.getSimplePub = function (id,callback) {
 };
 
 
-pubSchema.statics.getPub = function(slug, readerID, journalID, callback) {
+pubSchema.statics.getPub = function(slug, readerID, readerGroups, journalID, callback) {
 	this.findOne({slug: slug})
 	// .populate({ path: 'discussions', model: 'Discussion' })
 	// .populate({ path: 'assets history.assets', model: 'Asset' })
@@ -121,12 +121,24 @@ pubSchema.statics.getPub = function(slug, readerID, journalID, callback) {
 
 		if (!populatedPub) { return callback(null, {message: 'Pub Not Found', slug: slug}); }
 
+		if (!populatedPub.isPublished && !readerID) { return callback(null, {message: 'Pub not yet published', slug: slug}); }
+
 		// Check if the pub is not allowed in the journal
 		if (journalID && String(populatedPub.featuredInList).indexOf(journalID) === -1 && String(populatedPub.submittedToList).indexOf(journalID) === -1) {
 			return callback(null, {message: 'Pub not in this journal', slug: slug});
 		}
 
-		if (populatedPub.status === 'Unpublished') { return callback(null, {message: 'Pub not yet published', slug: slug}); }
+		const readerGroupsStrings = readerGroups.length ? readerGroups.toString().split(',') : [];
+		const canReadStrings = populatedPub.collaborators.canRead.length ? populatedPub.collaborators.canRead.toString().split(',') : [];
+		const canEditStrings = populatedPub.collaborators.canEdit.length ? populatedPub.collaborators.canEdit.toString().split(',') : [];
+		if (!populatedPub.isPublished &&
+			readerID.toString() !== '568abdd9332c142a0095117f' &&
+			canEditStrings.indexOf(readerID.toString()) === -1 &&
+			canReadStrings.indexOf(readerID.toString()) === -1 &&
+			_.intersection(readerGroupsStrings, canEditStrings).length === 0 &&
+			_.intersection(readerGroupsStrings, canReadStrings).length === 0) {
+			return callback(null, {message: 'Pub not yet published', slug: slug});
+		}
 
 		// Check if the pub is private, and if so, check readers/authors list
 		// if (populatedPub.settings.pubPrivacy === 'private') {
@@ -154,7 +166,7 @@ pubSchema.statics.getPub = function(slug, readerID, journalID, callback) {
 	});
 };
 
-pubSchema.statics.getPubEdit = function (slug, readerID, readerGroups, callback) {
+pubSchema.statics.getPubEdit = function(slug, readerID, readerGroups, callback) {
 	// Get the pub and check to make sure user is authorized to edit
 	this.findOne({slug: slug})
 	// .populate({ path: 'discussions', model: 'Discussion' })
