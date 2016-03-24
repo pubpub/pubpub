@@ -31,8 +31,8 @@ const DiscussionsItem = React.createClass({
 		handleVoteSubmit: PropTypes.func,
 		handleArchive: PropTypes.func,
 
-		noPermalink: PropTypes.bool,
-		noReply: PropTypes.bool,
+		// noPermalink: PropTypes.bool,
+		// noReply: PropTypes.bool,
 	},
 
 	getDefaultProps: function() {
@@ -100,8 +100,7 @@ const DiscussionsItem = React.createClass({
 								score={discussionPoints}
 								userYay={discussionItem.userYay}
 								userNay={discussionItem.userNay}
-								handleVoteSubmit={this.props.handleVoteSubmit}
-								readOnly={this.props.noReply}/>
+								handleVoteSubmit={this.props.handleVoteSubmit}/>
 						</div>
 
 						<div style={styles.discussionAuthorImageWrapper}>
@@ -163,26 +162,26 @@ const DiscussionsItem = React.createClass({
 
 					</div>
 
-					<ResizingText
+					{/* <ResizingText
 						fontRatio={35}
 						mobileFontRatio={20}
 						minFont={14}
 						maxFont={18}
-						paddingType="right">
+						paddingType="right"> */}
 
 					<div style={styles.discussionBody}>
 
 						<div style={styles.discussionContent}>
 
 							{/* md.tree */}
-							<PPMComponent assets={assets} references={references} selections={selections} markdown={discussionItem.markdown} />
+							<PPMComponent markdown={discussionItem.markdown} />
 
 						</div>
 					</div>
 
-					</ResizingText>
+					{/* </ResizingText> */}
 
-				{this.props.noReply || !this.state.replyActive
+					{this.props.noReply || !this.state.replyActive
 						? null
 						: <div style={[styles.replyWrapper, styles.replyWrapperActive]}>
 							<DiscussionsInput
@@ -215,9 +214,7 @@ const DiscussionsItem = React.createClass({
 									newDiscussionData={this.props.newDiscussionData}
 									userThumbnail={this.props.userThumbnail}
 									handleVoteSubmit={this.props.handleVoteSubmit}
-									handleArchive={this.props.handleVoteSubmit}
-									noReply={this.props.noReply}
-									noPermalink={this.props.noPermalink}/>
+									handleArchive={this.props.handleVoteSubmit} />
 
 								);
 							})

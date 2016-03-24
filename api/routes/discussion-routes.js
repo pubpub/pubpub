@@ -109,7 +109,7 @@ app.post('/updateDiscussion', function(req, res) {
 	});
 });
 
-app.post('/discussionVote', function(req,res){
+app.post('/voteDiscussion', function(req,res){
 	if (!req.user) {return res.status(504).json('Not logged in');}
 
 	const userID = req.user._id;
@@ -139,7 +139,7 @@ app.post('/discussionVote', function(req,res){
 	return res.status(201).json(true);
 });
 
-app.post('/discussionArchive', function(req,res){
+app.post('/archiveDiscussion', function(req,res){
 	if (!req.user) {return res.status(504).json('Not logged in');}
 
 	const discussionID = req.body.objectID;

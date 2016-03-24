@@ -11,7 +11,7 @@ import {closeMenu} from 'actions/nav';
 
 import {convertImmutableListToObject} from 'utils/parsePlugins';
 
-import {PubBody, PubModals, PubNav, LoaderDeterminate, PubLeftBar} from 'components';
+import {Button, PubBody, PubModals, PubNav, LoaderDeterminate, PubLeftBar} from 'components';
 import {Discussions} from 'containers';
 
 import {globalStyles, pubSizes} from 'utils/styleConstants';
@@ -316,7 +316,7 @@ const PubReader = React.createClass({
 
 				<div className="rightBar" style={[styles.rightBar, globalStyles[this.props.readerData.get('status')], pubData.markdown === undefined && {display: 'none'}]}>
 
-					<div style={rightBarStyles.sectionHeader}>
+					{/* <div style={rightBarStyles.sectionHeader}>
 
 						<FormattedMessage {...globalMessages.discussion}/>
 
@@ -336,9 +336,15 @@ const PubReader = React.createClass({
 								</span>
 							</span>
 
+					</div> */}
+					<div style={styles.rightHeaderButtonsWrapper}>
+						<div style={styles.buttonWrapper} key={'topbutton1'}>Submit To Journal</div>
+						<div style={styles.buttonWrapper} key={'topbutton2'}>Request Review</div>
+						<div style={styles.buttonWrapper} key={'topbutton3'}>Expand</div>
+						<div style={globalStyles.clearFix}></div>
 					</div>
 
-					<Discussions editorCommentMode={false} />
+					<Discussions/>
 				</div>
 
 			</div>
@@ -369,23 +375,21 @@ styles = {
 			maxWidth: '100%',
 			height: 'auto'
 		},
-		// Desktop Sizes
-		'@media screen and (min-width: 768px) and (max-width: 1023px)': {
-			// backgroundColor: 'red',
-		},
-		'@media screen and (min-width: 1024px) and (max-width: 1300px)': {
-			// backgroundColor: 'orange',
-		},
-		'@media screen and (min-width: 1301px) and (max-width: 1600px)': {
-			// backgroundColor: 'yellow',
-		},
-		'@media screen and (min-width: 1600px) and (max-width: 2000px)': {
-			// backgroundColor: 'green',
-		},
-		'@media screen and (min-width: 2000px)': {
-			// backgroundColor: 'blue',
-		},
+	},
+	rightHeaderButtonsWrapper: {
 
+	},
+	buttonWrapper: {
+		float: 'left',
+		width: 'calc((100% / 3) - 4% - 2px)',
+		margin: '10px 2%',
+		padding: '5px 0px',
+		border: '1px solid #444',
+		textAlign: 'center',
+		fontSize: '12px',
+		':active': {
+			transform: 'translateY(1px)',
+		},
 	},
 	leftBar: {
 		padding: 10,
@@ -490,7 +494,7 @@ styles = {
 	},
 
 	rightBar: {
-		padding: 10,
+		padding: '10px 0px',
 		// width: 'calc(100% - 800px - 20px)',
 		height: 'calc(100vh - ' + globalStyles.headerHeight + ' - 20px)',
 		float: 'left',

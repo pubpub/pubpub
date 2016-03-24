@@ -9,7 +9,7 @@ import {
 	ADD_DISCUSSION_SUCCESS,
 	ADD_DISCUSSION_FAIL,
 
-	ADD_SELECTION,
+	// ADD_SELECTION,
 
 	DISCUSSION_VOTE,
 	DISCUSSION_VOTE_SUCCESS,
@@ -26,31 +26,8 @@ import {
 // Initialize Default State
 /*--------*/
 export const defaultState = Immutable.Map({
-	createPubData: {
-		pubCreated: false,
-		status: 'loaded',
-		error: null,
-		slug: null,
-		title: undefined,
-	},
-	pubData: {
-		assets: {},
-		references: {},
-		discussions: [],
-		readNext: [],
-		featuredIn: [],
-		submittedTo: [],
-		reviews: [],
-		experts: {approved: []},
-		history: [{}],
-		pubErrorView: false,
-	},
-	activeModal: undefined,
-	newDiscussionData: {
-		selections: {},
-		assets: {},
-		references: {},
-	},
+	discussions: [],
+
 	addDiscussionStatus: 'loaded',
 	activeSaveID: null,
 	status: 'loading',
@@ -74,7 +51,6 @@ function addDiscussionLoad(state, activeSaveID) {
 }
 
 function addDiscussionSuccess(state, result, activeSaveID, inEditor) {
-	if (inEditor) {return state;}
 	function findParentAndAdd(discussions, parentID, newChild) {
 		discussions.map((discussion)=>{
 			if (discussion._id === parentID) {
@@ -86,7 +62,7 @@ function addDiscussionSuccess(state, result, activeSaveID, inEditor) {
 		});
 	}
 
-	let discussionsObject = state.getIn(['pubData', 'discussions']);
+	let discussionsObject = state.get('discussions');
 	if (!result.parent) {
 		discussionsObject = discussionsObject.unshift(result);
 	} else {
@@ -95,16 +71,11 @@ function addDiscussionSuccess(state, result, activeSaveID, inEditor) {
 		findParentAndAdd(discussionsArray, result.parent, result);
 		discussionsObject = discussionsArray;
 	}
-	const newState = state.mergeIn(['pubData', 'discussions'], discussionsObject);
+	const newState = state.merge('discussions', discussionsObject);
 
 	return newState.merge({
 		addDiscussionStatus: 'loaded',
 		activeSaveID: null,
-		newDiscussionData: {
-			selections: {},
-			assets: {},
-			references: {},
-		},
 	});
 }
 
@@ -116,13 +87,13 @@ function addDiscussionFail(state, error, activeSaveID) {
 	});
 }
 
-function addSelection(state, selection) {
-	const selectionData = state.getIn(['newDiscussionData', 'selections']);
-	return state.mergeIn(
-		['newDiscussionData', 'selections'],
-		selectionData.set(selectionData.size + 1, selection)
-	);
-}
+// function addSelection(state, selection) {
+// 	const selectionData = state.getIn(['newDiscussionData', 'selections']);
+// 	return state.mergeIn(
+// 		['newDiscussionData', 'selections'],
+// 		selectionData.set(selectionData.size + 1, selection)
+// 	);
+// }
 
 function discussionVote(state, voteType, discussionID, userYay, userNay) {
 	let scoreChange = 0;
@@ -162,10 +133,10 @@ function discussionVote(state, voteType, discussionID, userYay, userNay) {
 		});
 	}
 
-	const discussionsArray = state.getIn(['pubData', 'discussions']).toJS();
+	const discussionsArray = state.get('discussions').toJS();
 	findDiscussionAndChange(discussionsArray);
 
-	return state.mergeIn(['pubData', 'discussions'], discussionsArray);
+	return state.merge('discussions', discussionsArray);
 }
 
 function archiveDiscussion(state, discussionID) {
@@ -181,10 +152,10 @@ function archiveDiscussion(state, discussionID) {
 		});
 	}
 
-	const discussionsArray = state.getIn(['pubData', 'discussions']).toJS();
+	const discussionsArray = state.get('discussions').toJS();
 	findDiscussionAndChange(discussionsArray);
 
-	return state.mergeIn(['pubData', 'discussions'], discussionsArray);
+	return state.merge('discussions', discussionsArray);
 }
 
 /*--------*/
@@ -200,8 +171,8 @@ export default function readerReducer(state = defaultState, action) {
 	case ADD_DISCUSSION_FAIL:
 		return addDiscussionFail(state, action.error, action.activeSaveID);
 
-	case ADD_SELECTION:
-		return addSelection(state, action.selection);
+	// case ADD_SELECTION:
+	// 	return addSelection(state, action.selection);
 
 	case DISCUSSION_VOTE:
 		return discussionVote(state, action.voteType, action.discussionID, action.userYay, action.userNay);

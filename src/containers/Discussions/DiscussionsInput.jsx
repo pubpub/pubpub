@@ -7,7 +7,7 @@ import {globalStyles} from 'utils/styleConstants';
 
 import {globalMessages} from 'utils/globalMessages';
 import {injectIntl, FormattedMessage} from 'react-intl';
-import PPMComponent from '../../markdown/PPMComponent';
+import PPMComponent from 'markdown/PPMComponent';
 
 let styles = {};
 
