@@ -20,6 +20,7 @@ app.post('/addDiscussion', function(req, res) {
 	newDiscussion.history = [{
 		markdown: req.body.discussionObject.markdown,
 		datePosted: currentDate,
+		version: req.body.discussionObject.version,
 	}];
 
 	newDiscussion.parent = req.body.discussionObject.parent;
@@ -38,21 +39,6 @@ app.post('/addDiscussion', function(req, res) {
 	newDiscussion.yays = [];
 	newDiscussion.nays = [];
 
-	// Ingest selections object and spit back array of ObjectIDs
-	// const selections = [];
-	// for (const key in req.body.discussionObject.selections) {
-	// 	const selectionObject = req.body.discussionObject.selections[key];
-	// 	selectionObject.author = req.user._id;
-	// 	selectionObject.postDate = postDate;
-	// 	selectionObject.index = key;
-	// 	selectionObject.usedInDiscussion = true;
-	// 	selections.push(selectionObject);
-	// }
-
-	// Highlight.insertBulkAndReturnIDs(selections, function(err, selectionIds){
-		// if (err) { return res.status(500).json(err); }
-
-	// newDiscussion.selections = selectionIds;
 
 	newDiscussion.save(function(err, result) {
 		if (err) { return res.status(500).json(err); }
@@ -60,14 +46,6 @@ app.post('/addDiscussion', function(req, res) {
 		var userID = result.author;
 		var pubID = result.pub;
 
-		// if (req.body.isEditorComment) {
-			// console.log('got an editor comment!');
-			// Pub.update({ _id: pubID }, { $addToSet: { editorComments: discussionID} }, function(err, result){if(err) return handleError(err)});
-		// } else {
-			// console.log('got a discussion!');
-			// Pub.update({ _id: pubID }, { $addToSet: { discussions: discussionID} }, function(err, result){if(err) return handleError(err)});
-			// User.update({ _id: userID }, { $addToSet: { discussions: discussionID} }, function(err, result){if(err) return handleError(err)});
-		// }
 		User.update({ _id: userID }, { $addToSet: { discussions: discussionID} }, function(err, result){if(err) return handleError(err)});
 		Discussion.update({_id: result.parent}, { $addToSet: { children: discussionID} }, function(err, result){if(err) return handleError(err)});
 
@@ -96,9 +74,39 @@ app.post('/addDiscussion', function(req, res) {
 		});
 
 	});
+});
 
-	// });
+app.post('/updateDiscussion', function(req, res) {
 
+
+	Discussion.findOne({ _id: req.body.updatedDiscussion._id }, function(err, discussion) {
+		const currentDate = new Date().getTime();
+		discussion.markdown = req.body.updatedDiscussion.markdown;
+		discussion.history.push({
+			markdown: req.body.updatedDiscussion.markdown,
+			datePosted: currentDate,
+			version: req.body.updatedDiscussion.version,
+		});
+
+		discussion.version = req.body.updatedDiscussion.version;
+		discussion.lastUpdated = currentDate;
+
+
+		discussion.save(function(err, result) {
+			if (err) { return res.status(500).json(err); }
+
+			var populateQuery = [
+				{path:'author', select:'_id name username firstName lastName thumbnail'},
+				// {path:'selections'},
+			];
+
+			Discussion.populate(result, populateQuery, function(err, populatedResult){
+				if (err) { return res.status(500).json(err); }
+				res.status(201).json(populatedResult);
+			});
+
+		});
+	});
 });
 
 app.post('/discussionVote', function(req,res){

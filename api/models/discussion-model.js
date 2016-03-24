@@ -10,6 +10,7 @@ const discussionSchema = new Schema({
     history: [{
     	markdown: { type: String },
         datePosted: { type: Date },
+        version: { type: Number },
     }],
 
     parent: { type: ObjectId, ref: 'Discussion' },
@@ -23,6 +24,7 @@ const discussionSchema = new Schema({
     lastUpdated: { type: Date },
 
     archived: { type: Boolean },
+    deleted: {type: Boolean}, // We may enable people to delete their comment with n-minutes of posting. It wouldn't remove the object, but show [deleted] where the markdown was.
     private: {type: Boolean}, // Private comments can only be read be active collaborators.
 
     yays: [ { type: ObjectId, ref: 'User' } ],
