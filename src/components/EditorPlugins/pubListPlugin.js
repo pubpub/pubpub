@@ -19,16 +19,13 @@ const Plugin = React.createClass({
 		children: PropTypes.string,
 	},
 	componentWillMount() {
+		const setState = this;
 		fetch('/api/autocompletePubsAll?string=auto')
 		.then(function(response) {
-			if (response.status >= 400) {
-				throw new Error('Bad response from server');
-			}
+			if (response.status >= 400) { throw new Error('Bad response from server'); }
 			return response.json();
 		})
-		.then(function(stories) {
-			console.log(stories);
-		});
+		.then(function(stories) { setState.setState({stories: stories}); });
 	},
 	getInitialState: function() {
 		return {};
@@ -36,7 +33,8 @@ const Plugin = React.createClass({
 	render: function() {
 
 		return (
-			<div>Here is the pub list!!</div>
+			<div>Here is the pub list!! {JSON.stringify(this.state.stories)}</div>
+
 		);
 	}
 });

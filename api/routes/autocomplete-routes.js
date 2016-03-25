@@ -50,6 +50,7 @@ export function autocompleteUsers(req, res) {
 app.get('/autocompleteUsers', autocompleteUsers);
 
 export function autocompletePubsAll(req, res) {
+	console.log('calling autocomplet');
 	const query = {history: {$not: {$size: 0}}, 'settings.isPrivate': {$ne: true}};
 
 	Pub.find(query, {'slug': 1, 'title': 1, 'abstract': 1}).exec(function(err, pubs) {
@@ -108,15 +109,15 @@ export function autocompletePubsAndUsers(req, res) {
 
 	User.find({}, {'_id': 1, 'username': 1, 'thumbnail': 1, 'name': 1}).lean().exec(function(err, users) {
 		if (users) {
-			objects = objects.concat(users);	
+			objects = objects.concat(users);
 		}
-		
+
 		Pub.find({history: {$not: {$size: 0}}, 'settings.isPrivate': {$ne: true}}, {'_id': 0, 'slug': 1, 'title': 1}).exec(function(err2, pubs) {
 			if (pubs) {
-				objects = objects.concat(pubs);			
+				objects = objects.concat(pubs);
 			}
-			
-			
+
+
 			// console.log(objects)
 			const sifter = new Sifter(objects);
 
@@ -142,15 +143,15 @@ export function autocompleteUsersAndGroups(req, res) {
 
 	User.find({}, {'_id': 1, 'username': 1, 'thumbnail': 1, 'name': 1}).lean().exec(function(err, users) {
 		if (users) {
-			objects = objects.concat(users);	
+			objects = objects.concat(users);
 		}
-		
+
 		Group.find({}, {'_id': 1, 'groupName': 1, 'groupSlug': 1}).lean().exec(function(err2, groups) {
 			if (groups) {
-				objects = objects.concat(groups);			
+				objects = objects.concat(groups);
 			}
-			
-			
+
+
 			// console.log(objects)
 			const sifter = new Sifter(objects);
 
