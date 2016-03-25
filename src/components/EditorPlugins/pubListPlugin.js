@@ -18,7 +18,7 @@ const Plugin = React.createClass({
 		error: PropTypes.string,
 		children: PropTypes.string,
 	},
-	componentWillMount() {
+	componentDidMount() {
 		const setState = this;
 		fetch('/api/autocompletePubsAll?string=auto')
 		.then(function(response) {

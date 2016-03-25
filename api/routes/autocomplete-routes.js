@@ -50,7 +50,6 @@ export function autocompleteUsers(req, res) {
 app.get('/autocompleteUsers', autocompleteUsers);
 
 export function autocompletePubsAll(req, res) {
-	console.log('calling autocomplet');
 	const query = {history: {$not: {$size: 0}}, 'settings.isPrivate': {$ne: true}};
 
 	Pub.find(query, {'slug': 1, 'title': 1, 'abstract': 1}).exec(function(err, pubs) {
