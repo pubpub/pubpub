@@ -6,6 +6,9 @@ import IframePlugin 	from './iframePlugin';
 import SelectionPlugin 	from './selectionPlugin';
 import FootnotePlugin 	from './footnotePlugin';
 
+// Page-only Plugins
+import pubListPlugin 	from './pubListPlugin';
+
 export default {
 	image: ImagePlugin,
 	quote: QuotePlugin,
@@ -14,4 +17,5 @@ export default {
 	iframe: IframePlugin,
 	selection: SelectionPlugin,
 	footnote: FootnotePlugin,
+	pubList: pubListPlugin,
 };

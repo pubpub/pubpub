@@ -340,7 +340,7 @@ const JournalDesign = React.createClass({
 				</div>
 
 
-				<Link to={'/pub/' + this.props.journalData.getIn(['journalData', 'subdomain']) + '-landingpage/draft'}>
+				<Link style={globalStyles.link} to={'/pub/' + this.props.journalData.getIn(['journalData', 'subdomain']) + '-landingpage/draft'}>
 					<Button label={'Edit Landing Page Design'}/>
 				</Link>
 
