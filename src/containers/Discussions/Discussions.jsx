@@ -133,7 +133,7 @@ const Discussions = React.createClass({
 				<div>
 					<div className="modal-splash" onClick={this.closeAssetLibrary} style={[styles.modalSplash, this.state.showAssetLibrary && styles.modalSplashActive]}></div>
 					<div style={[styles.assetLibraryWrapper, this.state.showAssetLibrary && styles.assetLibraryWrapperActive]}>
-						<AssetLibrary />
+						{this.state.showAssetLibrary ? <AssetLibrary /> : null}
 					</div>
 				</div>
 

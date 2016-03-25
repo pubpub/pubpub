@@ -206,7 +206,7 @@ const AssetLibrary = React.createClass({
 
 				<Dropzone ref="dropzone" onDrop={this.onDrop} disableClick style={styles.dropzone} activeStyle={this.state.activeSection === 'assets' ? styles.dropzoneActive : {}}>
 					<div>
-						<Portal isOpened={this.state.showAssetEditor} onClose={this.closeAssetEditor} closeOnOutsideClick>
+						<Portal isOpened={this.state.showAssetEditor}>
 							<div style={styles.assetEditorWrapper}>
 								<AssetEditor
 									assetType={this.state.assetEditorType}
