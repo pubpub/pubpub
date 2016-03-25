@@ -54,7 +54,7 @@ app.post('/addDiscussion', function(req, res) {
 				Notification.createNotification('discussion/pubComment', req.body.host, userID, author, pubID, discussionID);
 			});
 		});
-		if (result.parent) {
+		if (result.parent && !result.private) { // Don't notify parent author if reply is private. We don't want a public comment being told about private responses.
 			Discussion.findOne({_id: result.parent}, {'author':1}).lean().exec(function (err, parentDiscussion) {
 				Notification.createNotification('discussion/repliedTo', req.body.host, userID, parentDiscussion.author, pubID, discussionID);
 			});

@@ -212,6 +212,7 @@ pubSchema.statics.getPub = function(slug, readerID, readerGroups, readerAdminJou
 		outputPub.isCollaborator = isCollaborator;
 		outputPub.discussions = Discussion.removePrivateIfNeeded(outputPub.discussions, isCollaborator);
 		outputPub.discussions = Discussion.appendUserYayNayFlag(outputPub.discussions, readerID);
+		outputPub.discussions = Discussion.appendIsAuthor(outputPub.discussions, readerID);
 		outputPub.discussions = Discussion.calculateYayNayScore(outputPub.discussions);
 		outputPub.discussions = Discussion.sortDiscussions(outputPub.discussions);
 		outputPub.discussions = Discussion.nestChildren(outputPub.discussions);
@@ -284,6 +285,7 @@ pubSchema.statics.getPubEdit = function(slug, readerID, readerGroups, readerAdmi
 		outputPub.isReader = isReader;
 
 		outputPub.discussions = Discussion.appendUserYayNayFlag(outputPub.discussions, readerID);
+		outputPub.discussions = Discussion.appendIsAuthor(outputPub.discussions, readerID);
 		outputPub.discussions = Discussion.calculateYayNayScore(outputPub.discussions);
 		outputPub.discussions = Discussion.sortDiscussions(outputPub.discussions);
 		outputPub.discussions = Discussion.nestChildren(outputPub.discussions);

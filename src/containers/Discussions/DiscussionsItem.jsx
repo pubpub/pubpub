@@ -5,10 +5,9 @@ import { Link } from 'react-router';
 import DiscussionsInput from './DiscussionsInput';
 import DiscussionsScore from './DiscussionsScore';
 
-import {convertListToObject} from 'utils/parsePlugins';
 import PPMComponent from '../../markdown/PPMComponent';
 
-import ResizingText from '../../components/PubBody/ResizingText';
+// import ResizingText from '../../components/PubBody/ResizingText';
 
 // import {globalMessages} from 'utils/globalMessages';
 import {FormattedMessage, FormattedDate, FormattedRelative} from 'react-intl';
@@ -77,13 +76,7 @@ const DiscussionsItem = React.createClass({
 
 	render: function() {
 		const discussionItem = this.props.discussionItem;
-
-		// const assets = convertListToObject( discussionItem.assets );
-		// const references = convertListToObject(discussionItem.references, true);
-		// const selections = discussionItem.selections || [];
 		const isArchived = discussionItem.archived;
-
-		// console.log(discussionItem);
 		const discussionPoints = discussionItem.points ? discussionItem.points : 0; // This is to fix a NaN problem with newly published comments/discussions
 
 		return (
@@ -94,7 +87,7 @@ const DiscussionsItem = React.createClass({
 					{(discussionPoints + 1) === 1 ? (discussionPoints + 1) + ' point' : (discussionPoints + 1) + ' points'}
 				</div>
 				: <div style={[styles.container, isArchived && styles.archived]}>
-					<div style={[styles.discussionHeader, discussionItem.private && {backgroundColor: 'red'}]}>
+					<div style={[styles.discussionHeader]}>
 
 						<div style={styles.discussionVoting}>
 							<DiscussionsScore
@@ -122,25 +115,30 @@ const DiscussionsItem = React.createClass({
 
 						<div style={[styles.discussionDetailsLine, styles.discussionDetailsLineBottom]}>
 							<Link style={globalStyles.link} to={'/pub/' + this.props.slug + '/discussions/' + discussionItem._id}>
-							<span style={[styles.detailLineItem, this.props.noPermalink && {display: 'none'}]}>
-								<FormattedMessage
-									id="discussion.permalink"
-									defaultMessage="Permalink"/>
+							<span style={[styles.detailLineItem]}>
+								<FormattedMessage id="discussion.permalink" defaultMessage="Permalink"/>
 							</span>
 							</Link>
 
-							<span style={[styles.detailLineItemSeparator, (this.props.noReply || this.props.noPermalink) && {display: 'none'}]}>|</span>
+							<span style={[styles.detailLineItemSeparator]}>|</span>
+							<span style={[styles.detailLineItem]} key={'replyButton-' + discussionItem._id} onClick={this.toggleReplyActive}>
+								<FormattedMessage id="discussion.reply" defaultMessage="Reply"/>
+							</span>
 
-							<span style={[styles.detailLineItem, this.props.noReply && {display: 'none'}]} key={'replyButton-' + discussionItem._id} onClick={this.toggleReplyActive}>
-								<FormattedMessage
-									id="discussion.reply"
-									defaultMessage="Reply"/>
+							<span style={[styles.detailLineItemSeparator, !discussionItem.isAuthor && styles.hide]}>|</span>
+							<span style={[styles.detailLineItem, !discussionItem.isAuthor && styles.hide]} key={'editButton-' + discussionItem._id} onClick={this.edit}>
+								<FormattedMessage id="discussion.edit" defaultMessage="Edit"/>
+							</span>
+
+							<span style={[styles.detailLineItemSeparator, discussionItem.isAuthor && styles.hide]}>|</span>
+							<span style={[styles.detailLineItem, discussionItem.isAuthor && styles.hide]} key={'flagButton-' + discussionItem._id} onClick={this.toggleFlag}>
+								<FormattedMessage id="discussion.flag" defaultMessage="Flag"/>
 							</span>
 
 							{this.props.isPubAuthor
 								? <span>
-									<span style={[styles.detailLineItemSeparator, (this.props.noReply && this.props.noPermalink) && {display: 'none'}]}>|</span>
-									<span style={[styles.detailLineItem, this.props.noReply && {display: 'none'}]} key={'archiveButton-' + discussionItem._id} onClick={this.archive}>
+									<span style={[styles.detailLineItemSeparator]}>|</span>
+									<span style={[styles.detailLineItem]} key={'archiveButton-' + discussionItem._id} onClick={this.archive}>
 										{isArchived
 											? <FormattedMessage id="discussion.Unarchive" defaultMessage="Unarchive"/>
 											: <FormattedMessage id="discussion.Archive" defaultMessage="Archive"/>
@@ -174,7 +172,7 @@ const DiscussionsItem = React.createClass({
 					<div style={styles.discussionBody}>
 
 						<div style={styles.discussionContent}>
-
+							<div style={[styles.privateBlock, discussionItem.private && {display: 'inline-block'}]}>Private. Collaborators only.</div>
 							{/* md.tree */}
 							<PPMComponent markdown={discussionItem.markdown} />
 
@@ -183,7 +181,7 @@ const DiscussionsItem = React.createClass({
 
 					{/* </ResizingText> */}
 
-					{this.props.noReply || !this.state.replyActive
+					{!this.state.replyActive
 						? null
 						: <div style={[styles.replyWrapper, styles.replyWrapperActive]}>
 							<DiscussionsInput
@@ -262,6 +260,9 @@ styles = {
 		/* borderBottom: '1px solid #bbb', */
 		fontWeight: 700,
 	},
+	hide: {
+		display: 'none',
+	},
 	discussionHeader: {
 		height: 36,
 		width: '100%',
@@ -337,6 +338,16 @@ styles = {
 		fontSize: '1em',
 		fontWeight: '300',
 		fontFamily: 'Helvetica Neue,Helvetica,Arial,sans-serif',
+	},
+	privateBlock: {
+		textAlign: 'center',
+		display: 'none',
+		backgroundColor: '#444',
+		color: 'white',
+		borderRadius: '1px',
+		padding: '0px 10px',
+		fontSize: '0.8em',
+
 	},
 	discussionChildrenWrapper: {
 		width: 'calc(100% - 20px)',

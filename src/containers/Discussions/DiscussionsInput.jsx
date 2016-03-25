@@ -2,7 +2,7 @@
 
 import React, {PropTypes} from 'react';
 import Radium, {Style} from 'radium';
-import {LoaderIndeterminate, License} from 'components';
+import {Button, LoaderIndeterminate, License} from 'components';
 import {globalStyles} from 'utils/styleConstants';
 
 import {globalMessages} from 'utils/globalMessages';
@@ -173,25 +173,33 @@ const PubDiscussionsInput = React.createClass({
 				</div>
 				<div id={this.props.codeMirrorID} className={'inputCodeMirror'} style={styles.inputBox(this.state.expanded)} onBlur={this.onBlur} onFocus={this.onFocus}></div>
 
-				<div style={styles.loaderContainer}>
+				{/* <div style={styles.loaderContainer}>
 					{(this.props.addDiscussionStatus === 'loading' && this.props.activeSaveID === this.props.saveID ? <LoaderIndeterminate color="#444"/> : null)}
-				</div>
+				</div> */}
 
 
 
 				<div style={[styles.inputBottomLine, styles.expanded(this.state.expanded || this.props.isReply, false)]}>
+
 					<div style={[styles.topCheckbox, this.props.isCollaborator && {display:'block'}]} key={'newDiscussionPrivate'} >
-						<label style={styles.checkboxLabel} htmlFor={'isPrivate'}>Private</label>
+						<label style={styles.checkboxLabel} htmlFor={'isPrivate'}>Collaborators Only</label>
 						<input style={styles.checkboxInput} name={'isPrivate'} id={'isPrivate'} type="checkbox" value={'private'} ref={'isPrivate'}/>
 					</div>
-					{
+					<div style={globalStyles.clearFix}></div>
+					{/* {
 						(this.state.showPreviewText) ?
 					<span style={styles.livePreviewText}>Live Preview: <span style={styles.livePreviewToggle} onClick={this.toggleLivePreview}>{(this.state.showPreview) ? 'On' : 'Off'}</span> <span style={styles.lighterText}>(you can use <a target="_blank" href="https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet">markdown</a> for styling)</span></span>
 					: null
-					}
-					<div style={styles.submitButton} key={'newDiscussionSubmit'} onClick={this.submitDiscussion}>
+					} */}
+					<Button
+						key={this.props.codeMirrorID + '-submitButton'}
+						label={'Submit'}
+						onClick={this.submitDiscussion}
+						isLoading={this.props.addDiscussionStatus === 'loading' && this.props.activeSaveID === this.props.saveID}
+						align={'right'} />
+					{/*<div style={styles.submitButton} key={'newDiscussionSubmit'} onClick={this.submitDiscussion}>
 						<FormattedMessage {...globalMessages.Submit}/>
-					</div>
+					</div>*/}
 				</div>
 
 				{
@@ -323,7 +331,7 @@ styles = {
 		}
 	},
 	checkboxLabel: {
-		fontSize: '14px',
+		fontSize: '15px',
 		margin: '0px 3px 0px 15px',
 		cursor: 'pointer',
 	},

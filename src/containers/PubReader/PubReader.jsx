@@ -338,9 +338,15 @@ const PubReader = React.createClass({
 
 					</div> */}
 					<div style={styles.rightHeaderButtonsWrapper}>
-						<div style={styles.buttonWrapper} key={'topbutton1'}>Submit To Journal</div>
-						<div style={styles.buttonWrapper} key={'topbutton2'}>Request Review</div>
-						<div style={styles.buttonWrapper} key={'topbutton3'}>Expand</div>
+						<Link style={globalStyles.link} to={'/pub/' + this.props.slug + '/journals'}>
+							<div style={[styles.buttonWrapper, !pubData.isAuthor && {opacity: '0', pointerEvents: 'none'}]} key={'topbutton1'}>Submit To Journal</div>
+						</Link>
+						<Link style={globalStyles.link} to={'/pub/' + this.props.slug + '/invite'}>
+							<div style={styles.buttonWrapper} key={'topbutton2'}>Request Review</div>
+						</Link>
+						<Link style={globalStyles.link} to={'/pub/' + this.props.slug + '/discussions'}>
+							<div style={styles.buttonWrapper} key={'topbutton3'}>Expand</div>
+						</Link>
 						<div style={globalStyles.clearFix}></div>
 					</div>
 
@@ -382,8 +388,8 @@ styles = {
 	buttonWrapper: {
 		float: 'left',
 		width: 'calc((100% / 3) - 4% - 2px)',
-		margin: '10px 2%',
-		padding: '5px 0px',
+		margin: '0px 2%',
+		padding: '2px 0px',
 		border: '1px solid #444',
 		textAlign: 'center',
 		fontSize: '12px',

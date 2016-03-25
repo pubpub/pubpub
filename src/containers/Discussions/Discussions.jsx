@@ -44,7 +44,7 @@ const Discussions = React.createClass({
 		if (!discussionObject.markdown) { return null; }
 
 		const pathname = this.props.pathname;
-		if (pathname.substring(pathname.length-6, pathname.length) === '/draft') {
+		if (pathname.substring(pathname.length - 6, pathname.length) === '/draft') {
 			// We are commenting from the draft, so mark it so.
 			discussionObject.version = 0;
 		} else {
@@ -52,7 +52,6 @@ const Discussions = React.createClass({
 		}
 		discussionObject.pub = this.props.pubData.getIn(['pubData', '_id']);
 		discussionObject.sourceJournal = this.props.journalData.getIn(['journalData', '_id']);
-
 		this.props.dispatch(addDiscussion(discussionObject, activeSaveID));
 	},
 
@@ -60,18 +59,8 @@ const Discussions = React.createClass({
 		if (!this.props.loginData.get('loggedIn')) {
 			return this.props.dispatch(toggleVisibility());
 		}
-
-		// if (this.props.editorCommentMode) {
-		// 	this.props.dispatch(discussionVoteSubmitEditor(type, discussionID, userYay, userNay));
-		// } else {
 		this.props.dispatch(discussionVoteSubmit(type, discussionID, userYay, userNay));
-		// }
 	},
-
-	// toggleHighlights: function() {
-	// 	this.props.dispatch(togglePubHighlights());
-	// },
-
 
 	filterDiscussions: function(discussionsData) {
 		function findDiscussionRoot(discussions, searchID) {
@@ -87,51 +76,22 @@ const Discussions = React.createClass({
 			}
 		}
 
-		// const pubData = this.getDiscussionData();
 		const output = [findDiscussionRoot(discussionsData, this.props.metaID)];
 		return output;
 	},
-
-	// getDiscussionData: function() {
-	// 	// Point to the right state source
-	// 	// let pubData = {};
-	// 	// // if (this.props.inEditor) {
-	// 	// // 	pubData = this.props.editorData.get('pubEditData') && this.props.editorData.get('pubEditData').toJS ? this.props.editorData.get('pubEditData').toJS() : {};
-	// 	// // } else {
-	// 	// pubData = this.props.pubData.get('pubData') && this.props.pubData.get('pubData').toJS ? this.props.pubData.get('pubData').toJS() : {};
-	// 	// // }
-	// 	//
-	// 	// // Point to the right list of discssion items
-	// 	// let discussionsData = [];
-	// 	// if (this.props.editorCommentMode) {
-	// 	// 	discussionsData = pubData.editorComments;
-	// 	// } else {
-	// 	// 	discussionsData = pubData.discussions;
-	// 	// }
-	// 	// Filter the items if we have a metaID
-	//
-	// 	return discussionsData;
-	// },
 
 	archiveDiscussion: function(objectID) {
 		this.props.dispatch(archiveDiscussion(objectID));
 	},
 
 	getHotness: function(discussion) {
-
-		// let points = (discussion.points) ? discussion.points : 0;
-		// points = Math.max(points, 0);
-
 		const yays = (discussion.yays) ? discussion.yays : 0;
 		const nays = (discussion.nays) ? discussion.nays : 0;
-
 		const timestamp = (discussion.postDate) ? new Date(discussion.postDate) : new Date(0);
-
 		return hotScore(yays, nays, timestamp);
 	},
 
 	render: function() {
-		// const pubData = {discussions: []};
 
 		let discussionsData = this.props.discussionsData.get('discussions') && this.props.discussionsData.get('discussions').toJS ? this.props.discussionsData.get('discussions').toJS() : [];
 		discussionsData = this.props.metaID ? this.filterDiscussions(discussionsData) : discussionsData;

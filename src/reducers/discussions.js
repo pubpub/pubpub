@@ -37,7 +37,7 @@ import {
 /*--------*/
 export const defaultState = Immutable.Map({
 	discussions: [],
-    discussionsStatus: 'loaded',
+	discussionsStatus: 'loaded',
 	addDiscussionStatus: 'loaded',
 	activeSaveID: null,
 	status: 'loading',

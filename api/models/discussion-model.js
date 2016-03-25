@@ -77,7 +77,20 @@ discussionSchema.statics.appendUserYayNayFlag = function (input, userID) {
 
   return input;
 
-}
+};
+
+discussionSchema.statics.appendIsAuthor = function (input, userID) {
+    // for each item, check if userID is same as authorID, add isAuthor = true,
+    input.forEach(function(item){
+
+      if(userID && userID.toString() === item.author._id.toString()){
+        item.isAuthor = true;
+      }
+    });
+
+    return input;
+
+};
 
 discussionSchema.statics.calculateYayNayScore = function (input) {
   input.forEach(function(item){
@@ -86,7 +99,7 @@ discussionSchema.statics.calculateYayNayScore = function (input) {
     item.points = item.yays - item.nays;
   });
   return input
-}
+};
 
 discussionSchema.statics.sortDiscussions = function (input) {
   _.sortRecursive = function (array, propertyName) {
@@ -102,7 +115,7 @@ discussionSchema.statics.sortDiscussions = function (input) {
   };
   var sortedInput = _.sortRecursive(input, 'points');
   return sortedInput;
-}
+};
 
 
 module.exports = mongoose.model('Discussion', discussionSchema);
