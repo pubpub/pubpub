@@ -31,6 +31,13 @@ const discussionSchema = new Schema({
     nays: [ { type: ObjectId, ref: 'User' } ],
 });
 
+discussionSchema.statics.removePrivateIfNeeded = function (input, isCollaborator) {
+    if (isCollaborator) {return input;}
+
+    return input.filter((item)=>{
+        return !item.private;
+    });
+};
 
 discussionSchema.statics.nestChildren = function (input) {
 

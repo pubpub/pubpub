@@ -133,7 +133,7 @@ const Discussions = React.createClass({
 	render: function() {
 		// const pubData = {discussions: []};
 
-		let discussionsData = this.props.discussionsData.get('discussions').toJS ? this.props.discussionsData.get('discussions').toJS() : [];
+		let discussionsData = this.props.discussionsData.get('discussions') && this.props.discussionsData.get('discussions').toJS ? this.props.discussionsData.get('discussions').toJS() : [];
 		discussionsData = this.props.metaID ? this.filterDiscussions(discussionsData) : discussionsData;
 
 		const addDiscussionStatus = this.props.discussionsData.get('addDiscussionStatus');
@@ -165,6 +165,8 @@ const Discussions = React.createClass({
 							userThumbnail={this.props.loginData.getIn(['userData', 'thumbnail'])}
 							activeSaveID={activeSaveID}
 							saveID={'root'}
+							isCollaborator={this.props.pubData.getIn(['pubData', 'isCollaborator'])}
+							parentIsPrivate={false}
 							isReply={false}
 							codeMirrorID={'rootCommentInput'}/>
 					}
@@ -179,6 +181,7 @@ const Discussions = React.createClass({
 									discussionItem={discussion}
 									isPubAuthor={isPubAuthor}
 
+									isCollaborator={this.props.pubData.getIn(['pubData', 'isCollaborator'])}
 									activeSaveID={activeSaveID}
 									addDiscussionHandler={this.addDiscussion}
 									addDiscussionStatus={addDiscussionStatus}

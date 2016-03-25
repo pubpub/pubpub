@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const ObjectId = Schema.Types.ObjectId;
+const Discussion = require('../models').Discussion;
 const Notification = require('../models').Notification;
 const _ = require('underscore');
 import * as jsdiff from 'diff';
@@ -145,6 +146,15 @@ pubSchema.statics.getPub = function(slug, readerID, readerGroups, readerAdminJou
 	// .populate({ path: 'discussions', model: 'Discussion' })
 	// .populate({ path: 'assets history.assets', model: 'Asset' })
 	// .populate({ path: 'references history.references', model: 'Reference' })
+	.populate({
+		path: 'discussions',
+		model: 'Discussion',
+		populate: {
+			path: 'author',
+			model: 'User',
+			select: 'name firstName lastName username thumbnail',
+		},
+	})
 	.populate({ path: 'featuredIn.journal submittedTo.journal', select: 'journalName subdomain customDomain design', model: 'Journal' })
 	.populate({ path: 'authors history.authors', select: 'username name thumbnail firstName lastName', model: 'User' })
 	.exec((err, populatedPub)=> {
@@ -162,17 +172,21 @@ pubSchema.statics.getPub = function(slug, readerID, readerGroups, readerAdminJou
 
 		if (!populatedPub.isPublished && !readerID) { return callback(null, {message: 'Pub not yet published', slug: slug}); }
 
+		let isCollaborator = true;
 		const readerGroupsStrings = readerGroups.length ? readerGroups.toString().split(',') : [];
 		const readerAdminJournalsStrings = readerAdminJournals.length ? readerAdminJournals.toString().split(',') : [];
 		const canReadStrings = populatedPub.collaborators.canRead.length ? populatedPub.collaborators.canRead.toString().split(',') : [];
 		const canEditStrings = populatedPub.collaborators.canEdit.length ? populatedPub.collaborators.canEdit.toString().split(',') : [];
-		if (!populatedPub.isPublished &&
-			readerID.toString() !== '568abdd9332c142a0095117f' &&
+		if (!readerID ||
+			(readerID.toString() !== '568abdd9332c142a0095117f' &&
 			canEditStrings.indexOf(readerID.toString()) === -1 &&
 			canReadStrings.indexOf(readerID.toString()) === -1 &&
 			_.intersection(readerAdminJournalsStrings, canEditStrings).length === 0 &&
 			_.intersection(readerGroupsStrings, canEditStrings).length === 0 &&
-			_.intersection(readerGroupsStrings, canReadStrings).length === 0) {
+			_.intersection(readerGroupsStrings, canReadStrings).length === 0)) {
+			isCollaborator = false;
+		}
+		if (!populatedPub.isPublished && !isCollaborator) {
 			return callback(null, {message: 'Pub not yet published', slug: slug});
 		}
 
@@ -195,11 +209,12 @@ pubSchema.statics.getPub = function(slug, readerID, readerGroups, readerAdminJou
 		if (populatedPub.collaborators.canEdit.indexOf(readerID) > -1) {
 			outputPub.isAuthor = true;
 		}
-
-		// outputPub.discussions = Discussion.appendUserYayNayFlag(outputPub.discussions, readerID);
-		// outputPub.discussions = Discussion.calculateYayNayScore(outputPub.discussions);
-		// outputPub.discussions = Discussion.sortDiscussions(outputPub.discussions);
-		// outputPub.discussions = Discussion.nestChildren(outputPub.discussions);
+		outputPub.isCollaborator = isCollaborator;
+		outputPub.discussions = Discussion.removePrivateIfNeeded(outputPub.discussions, isCollaborator);
+		outputPub.discussions = Discussion.appendUserYayNayFlag(outputPub.discussions, readerID);
+		outputPub.discussions = Discussion.calculateYayNayScore(outputPub.discussions);
+		outputPub.discussions = Discussion.sortDiscussions(outputPub.discussions);
+		outputPub.discussions = Discussion.nestChildren(outputPub.discussions);
 		// console.log(outputPub.isAuthor);
 		return callback(null, outputPub);
 		// });
@@ -210,6 +225,15 @@ pubSchema.statics.getPub = function(slug, readerID, readerGroups, readerAdminJou
 pubSchema.statics.getPubEdit = function(slug, readerID, readerGroups, readerAdminJournals, callback) {
 	// Get the pub and check to make sure user is authorized to edit
 	this.findOne({slug: slug})
+	.populate({
+		path: 'discussions',
+		model: 'Discussion',
+		populate: {
+			path: 'author',
+			model: 'User',
+			select: 'name firstName lastName username thumbnail',
+		},
+	})
 	// .populate({ path: 'discussions', model: 'Discussion' })
 	// .populate({ path: 'editorComments', model: 'Discussion' })
 	.exec((err, pub) =>{
@@ -259,10 +283,10 @@ pubSchema.statics.getPubEdit = function(slug, readerID, readerGroups, readerAdmi
 		const outputPub = pub.toObject();
 		outputPub.isReader = isReader;
 
-			// outputPub.discussions = Discussion.appendUserYayNayFlag(outputPub.discussions, readerID);
-			// outputPub.discussions = Discussion.calculateYayNayScore(outputPub.discussions);
-			// outputPub.discussions = Discussion.sortDiscussions(outputPub.discussions);
-			// outputPub.discussions = Discussion.nestChildren(outputPub.discussions);
+		outputPub.discussions = Discussion.appendUserYayNayFlag(outputPub.discussions, readerID);
+		outputPub.discussions = Discussion.calculateYayNayScore(outputPub.discussions);
+		outputPub.discussions = Discussion.sortDiscussions(outputPub.discussions);
+		outputPub.discussions = Discussion.nestChildren(outputPub.discussions);
 
 			// outputPub.editorComments = Discussion.appendUserYayNayFlag(outputPub.editorComments, readerID);
 			// outputPub.editorComments = Discussion.calculateYayNayScore(outputPub.editorComments);

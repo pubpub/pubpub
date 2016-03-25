@@ -5,7 +5,6 @@ import Helmet from 'react-helmet';
 import PureRenderMixin from 'react-addons-pure-render-mixin';
 import { Link } from 'react-router';
 import {getPub, openPubModal, closePubModal, addSelection, pubNavOut, pubNavIn, togglePubHighlights} from 'actions/pub';
-import {getDiscussions} from 'actions/discussions';
 import {getRandomSlug} from 'actions/journal';
 import {toggleVisibility, follow, unfollow} from 'actions/login';
 import {closeMenu} from 'actions/nav';
@@ -45,7 +44,6 @@ const PubReader = React.createClass({
 	statics: {
 		fetchDataDeferred: function(getState, dispatch, location, routeParams) {
 			if (getState().pub.getIn(['pubData', 'slug']) !== routeParams.slug) {
-				dispatch(getDiscussions(routeParams.slug, getState().journal.getIn(['journalData', '_id']) ));
 				return dispatch(getPub(routeParams.slug, getState().journal.getIn(['journalData', '_id']), location.query.referrer ));
 			}
 			return dispatch(pubNavIn());

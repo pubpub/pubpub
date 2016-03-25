@@ -5,10 +5,6 @@ import {ensureImmutable} from './';
 // Load Actions
 /*--------*/
 import {
-    GET_DISCUSSIONS_LOAD,
-	GET_DISCUSSIONS_SUCCESS,
-	GET_DISCUSSIONS_FAIL,
-
 	ADD_DISCUSSION,
 	ADD_DISCUSSION_SUCCESS,
 	ADD_DISCUSSION_FAIL,
@@ -23,8 +19,18 @@ import {
 	ARCHIVE_DISCUSSION_SUCCESS,
 	ARCHIVE_DISCUSSION_FAIL,
 
-
 } from '../actions/discussions';
+
+import {
+    LOAD_PUB,
+    LOAD_PUB_SUCCESS,
+    LOAD_PUB_FAIL,
+} from '../actions/pub';
+import {
+	LOAD_PUB_EDIT,
+	LOAD_PUB_EDIT_SUCCESS,
+	LOAD_PUB_EDIT_FAIL,
+} from '../actions/editor';
 
 /*--------*/
 // Initialize Default State
@@ -47,18 +53,18 @@ export const defaultState = Immutable.Map({
 // state. They are pure functions. We use Immutable to enforce this.
 /*--------*/
 
-function getDiscussionsLoad(state) {
+function getPubLoad(state) {
 	return state.merge({
 		discussionsStatus: 'loading'
 	});
 }
-function getDiscussionsSuccess(state, result) {
+function getPubSuccess(state, result) {
 	return state.merge({
-        discussions: result,
+		discussions: result.discussions,
 		discussionsStatus: 'loaded'
 	});
 }
-function getDiscussionsFail(state, result) {
+function getPubFail(state, result) {
 	return state.merge({
 		discussionsStatus: 'error'
 	});
@@ -185,13 +191,16 @@ function archiveDiscussion(state, discussionID) {
 export default function readerReducer(state = defaultState, action) {
 
 	switch (action.type) {
-    case GET_DISCUSSIONS_LOAD:
-		return getDiscussionsLoad(state);
-	case GET_DISCUSSIONS_SUCCESS:
-		return getDiscussionsSuccess(state, action.result);
-	case GET_DISCUSSIONS_FAIL:
-		return getDiscussionsFail(state, action.error);
-    case ADD_DISCUSSION:
+	case LOAD_PUB:
+	case LOAD_PUB_EDIT:
+		return getPubLoad(state);
+	case LOAD_PUB_SUCCESS:
+	case LOAD_PUB_EDIT_SUCCESS:
+		return getPubSuccess(state, action.result);
+	case LOAD_PUB_FAIL:
+	case LOAD_PUB_EDIT_FAIL:
+		return getPubFail(state, action.error);
+	case ADD_DISCUSSION:
 		return addDiscussionLoad(state, action.activeSaveID);
 	case ADD_DISCUSSION_SUCCESS:
 		return addDiscussionSuccess(state, action.result, action.activeSaveID, action.inEditor);

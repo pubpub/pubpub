@@ -29,6 +29,8 @@ const PubDiscussionsInput = React.createClass({
 		codeMirrorID: PropTypes.string,
 		parentID: PropTypes.string,
 		isReply: PropTypes.bool,
+		isCollaborator: PropTypes.bool,
+		parentIsPrivate: PropTypes.bool,
 		activeSaveID: PropTypes.string,
 		saveID: PropTypes.string,
 		intl: PropTypes.object,
@@ -111,7 +113,7 @@ const PubDiscussionsInput = React.createClass({
 		// newDiscussion.selections = {};
 		// newDiscussion.references = {};
 		newDiscussion.parent = this.props.parentID;
-		newDiscussion.private = this.refs.isPrivate.checked;
+		newDiscussion.private = this.props.parentIsPrivate || this.refs.isPrivate.checked;
 		this.props.addDiscussionHandler(newDiscussion, this.props.saveID);
 	},
 
@@ -132,7 +134,6 @@ const PubDiscussionsInput = React.createClass({
 
 		return (
 			<div style={[styles.container, this.props.isReply && styles.replyContainer]}>
-
 				<Style rules={{
 					'.inputCodeMirror .CodeMirror': {
 						...codeMirrorStyles(),
@@ -176,13 +177,13 @@ const PubDiscussionsInput = React.createClass({
 					{(this.props.addDiscussionStatus === 'loading' && this.props.activeSaveID === this.props.saveID ? <LoaderIndeterminate color="#444"/> : null)}
 				</div>
 
-				<div style={styles.topCheckbox} key={'newDiscussionPrivate'} >
-					<label style={styles.checkboxLabel} htmlFor={'isPrivate'}>Private</label>
-					<input style={styles.checkboxInput} name={'isPrivate'} id={'isPrivate'} type="checkbox" value={'private'} ref={'isPrivate'}/>
-				</div>
+
 
 				<div style={[styles.inputBottomLine, styles.expanded(this.state.expanded || this.props.isReply, false)]}>
-
+					<div style={[styles.topCheckbox, this.props.isCollaborator && {display:'block'}]} key={'newDiscussionPrivate'} >
+						<label style={styles.checkboxLabel} htmlFor={'isPrivate'}>Private</label>
+						<input style={styles.checkboxInput} name={'isPrivate'} id={'isPrivate'} type="checkbox" value={'private'} ref={'isPrivate'}/>
+					</div>
 					{
 						(this.state.showPreviewText) ?
 					<span style={styles.livePreviewText}>Live Preview: <span style={styles.livePreviewToggle} onClick={this.toggleLivePreview}>{(this.state.showPreview) ? 'On' : 'Off'}</span> <span style={styles.lighterText}>(you can use <a target="_blank" href="https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet">markdown</a> for styling)</span></span>
@@ -312,6 +313,7 @@ styles = {
 	topCheckbox: {
 		float: 'right',
 		height: 20,
+		display: 'none',
 
 		userSelect: 'none',
 		color: globalStyles.sideText,

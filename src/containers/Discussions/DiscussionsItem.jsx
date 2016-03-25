@@ -22,6 +22,8 @@ const DiscussionsItem = React.createClass({
 		instanceName: PropTypes.string,
 		isPubAuthor: PropTypes.bool,
 
+		isCollaborator: PropTypes.bool,
+
 		addDiscussionHandler: PropTypes.func,
 		addDiscussionStatus: PropTypes.string,
 		// newDiscussionData: PropTypes.object,
@@ -92,7 +94,7 @@ const DiscussionsItem = React.createClass({
 					{(discussionPoints + 1) === 1 ? (discussionPoints + 1) + ' point' : (discussionPoints + 1) + ' points'}
 				</div>
 				: <div style={[styles.container, isArchived && styles.archived]}>
-					<div style={styles.discussionHeader}>
+					<div style={[styles.discussionHeader, discussionItem.private && {backgroundColor: 'red'}]}>
 
 						<div style={styles.discussionVoting}>
 							<DiscussionsScore
@@ -190,6 +192,8 @@ const DiscussionsItem = React.createClass({
 								userThumbnail={this.props.userThumbnail}
 								codeMirrorID={this.props.instanceName + 'replyInput-' + discussionItem._id}
 								parentID={discussionItem._id}
+								isCollaborator={this.props.isCollaborator}
+								parentIsPrivate={discussionItem.private}
 								saveID={discussionItem._id}
 								activeSaveID={this.props.activeSaveID}
 								isReply={true}/>
@@ -206,6 +210,7 @@ const DiscussionsItem = React.createClass({
 									slug={this.props.slug}
 									discussionItem={child}
 									isPubAuthor={this.props.isPubAuthor}
+									isCollaborator={this.props.isCollaborator}
 
 									activeSaveID={this.props.activeSaveID}
 									addDiscussionHandler={this.props.addDiscussionHandler}
