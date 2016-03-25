@@ -30,6 +30,7 @@ const PubDiscussionsInput = React.createClass({
 		parentID: PropTypes.string,
 		isReply: PropTypes.bool,
 		isCollaborator: PropTypes.bool,
+		isPublished: PropTypes.bool,
 		parentIsPrivate: PropTypes.bool,
 		activeSaveID: PropTypes.string,
 		saveID: PropTypes.string,
@@ -44,9 +45,13 @@ const PubDiscussionsInput = React.createClass({
 			selections: {},
 			showPreview: false,
 			showPreviewText: false,
+			isPrivateChecked: false,
 		};
 	},
 
+	componentWillMount() {
+			this.setState({isPrivateChecked: this.props.parentIsPrivate});
+	},
 	componentDidMount() {
 		initCodeMirrorMode();
 
@@ -130,11 +135,15 @@ const PubDiscussionsInput = React.createClass({
 		this.setState({showPreview: !this.state.showPreview});
 	},
 
+	togglePrivate: function() {
+		this.setState({isPrivateChecked: !this.state.isPrivateChecked});
+	},
+
 	render: function() {
 		const menuItems = [
 			{ key: 'preview', string: 'Preview', function: ()=>{}},
 			{ key: 'formatting', string: 'Formatting', function: ()=>{} },
-			{ key: 'assets', string: 'Assets', function: ()=>{}, noSeparator: true  },
+			{ key: 'assets', string: 'Assets', function: ()=>{}, noSeparator: true },
 		];
 
 		return (
@@ -156,7 +165,7 @@ const PubDiscussionsInput = React.createClass({
 					},
 				}} />
 
-			<div style={[styles.inputTopLine, styles.expanded(this.state.expanded, true)]}>
+				<div style={[styles.inputTopLine, styles.expanded(this.state.expanded, true)]}>
 					<div style={styles.thumbnail}>
 						{this.props.userThumbnail
 							? <img style={styles.thumbnailImage}src={this.props.userThumbnail} />
@@ -179,7 +188,7 @@ const PubDiscussionsInput = React.createClass({
 
 				<div style={styles.inputBox(this.state.expanded)}>
 					<div style={styles.inputMenuWrapper}>
-						<Menu items={menuItems} height={'20px'} fontSize={'0.9em'}/>
+						<Menu items={menuItems} customClass={'discussionInputMenu'} height={'20px'} fontSize={'0.9em'} fontWeight={'400'}/>
 					</div>
 
 
@@ -192,15 +201,19 @@ const PubDiscussionsInput = React.createClass({
 					{(this.props.addDiscussionStatus === 'loading' && this.props.activeSaveID === this.props.saveID ? <LoaderIndeterminate color="#444"/> : null)}
 				</div> */}
 
-
-
 				<div style={[styles.inputBottomLine, styles.expanded(this.state.expanded || this.props.isReply, false)]}>
 
-					<div style={[styles.topCheckbox, this.props.isCollaborator && {display:'block'}]} key={'newDiscussionPrivate'} >
-						<label style={styles.checkboxLabel} htmlFor={'isPrivate'}>Collaborators Only</label>
-						<input style={styles.checkboxInput} name={'isPrivate'} id={'isPrivate'} type="checkbox" value={'private'} ref={'isPrivate'}/>
+					<div style={[styles.topCheckbox, this.props.isCollaborator && styles.topCheckboxVisible, this.props.parentIsPrivate && styles.topCheckboxLocked ]} key={'newDiscussionPrivate'} >
+						<label style={styles.checkboxLabel} htmlFor={'isPrivate-' + this.props.saveID} onBlur={this.onBlur} onFocus={this.onFocus}>Collaborators Only</label>
+						<input style={styles.checkboxInput} name={'isPrivate-' + this.props.saveID} id={'isPrivate-' + this.props.saveID} type="checkbox" value={'private'} onChange={this.togglePrivate} checked={this.state.isPrivateChecked} ref={'isPrivate'} onBlur={this.onBlur} onFocus={this.onFocus}/>
 					</div>
 					<div style={globalStyles.clearFix}></div>
+					<div style={styles.privacyMessage}>
+						{!this.props.isPublished && !this.state.isPrivateChecked && !this.props.parentIsPrivate ? 'Your comment will be public when this pub is published!' : ''}
+						{!this.props.isPublished && !this.state.isPrivateChecked && !this.props.parentIsPrivate && this.props.isCollaborator ? <div>If you wish to keep it private, check 'Collaborators Only'</div> : ''}
+						{this.state.isPrivateChecked && !this.props.parentIsPrivate ? 'Your comment will be private forever, only visible to collaborators.' : ''}
+						{this.props.parentIsPrivate  ? 'Your comment will be private forever, only visible to collaborators, because you are replying to a private comment.' : ''}
+					</div>
 					{/* {
 						(this.state.showPreviewText) ?
 					<span style={styles.livePreviewText}>Live Preview: <span style={styles.livePreviewToggle} onClick={this.toggleLivePreview}>{(this.state.showPreview) ? 'On' : 'Off'}</span> <span style={styles.lighterText}>(you can use <a target="_blank" href="https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet">markdown</a> for styling)</span></span>
@@ -306,7 +319,7 @@ styles = {
 			padding: '0px 0px 10px 0px',
 			// boxShadow: '0 1px 3px 0 rgba(0,0,0,.2),0 1px 1px 0 rgba(0,0,0,.14),0 2px 1px -1px rgba(0,0,0,.12)',
 			boxShadow: '0px 0px 2px rgba(0,0,0,0.4)',
-			margin: '10px auto',
+			margin: '5px auto',
 			width: 'calc(100% - 4px)',
 			borderRadius: '1px',
 			cursor: 'pointer',
@@ -339,15 +352,25 @@ styles = {
 	},
 	topCheckbox: {
 		float: 'right',
-		height: 20,
-		display: 'none',
-		marginBottom: '2px',
 		userSelect: 'none',
 		color: globalStyles.sideText,
+		pointerEvents: 'none',
+		height: 0,
+		overflow: 'hidden',
+		marginBottom: 0,
 		':hover': {
 			cursor: 'pointer',
 			color: globalStyles.sideHover,
 		}
+	},
+	topCheckboxVisible: {
+		pointerEvents: 'auto',
+		height: '20px',
+		marginBottom: '2px',
+	},
+	topCheckboxLocked: {
+		opacity: 0.75,
+		pointerEvents: 'none'
 	},
 	checkboxLabel: {
 		fontSize: '15px',
@@ -356,6 +379,12 @@ styles = {
 	},
 	checkboxInput: {
 		cursor: 'pointer',
+	},
+	privacyMessage: {
+		textAlign: 'right',
+		fontSize: '0.9em',
+		color: '#E40303',
+		margin: '2px 0px',
 	},
 	submitButton: {
 		float: 'right',

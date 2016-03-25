@@ -100,6 +100,7 @@ const Discussions = React.createClass({
 		// const newDiscussionData = this.props.discussionsData.get('newDiscussionData');
 		const activeSaveID = this.props.discussionsData.get('activeSaveID');
 		const isPubAuthor = this.props.pubData.getIn(['pubData', 'isAuthor']);
+		const isPublished = this.props.pubData.getIn(['pubData', 'isPublished']);
 
 		discussionsData.sort(function(aIndex, bIndex) { return this.getHotness(bIndex) - this.getHotness(aIndex); }.bind(this));
 		return (
@@ -128,7 +129,8 @@ const Discussions = React.createClass({
 							isCollaborator={this.props.pubData.getIn(['pubData', 'isCollaborator'])}
 							parentIsPrivate={false}
 							isReply={false}
-							codeMirrorID={'rootCommentInput'}/>
+							codeMirrorID={'rootCommentInput'}
+							isPublished={isPublished} />
 					}
 
 					{
@@ -147,7 +149,8 @@ const Discussions = React.createClass({
 									addDiscussionStatus={addDiscussionStatus}
 									userThumbnail={this.props.loginData.getIn(['userData', 'thumbnail'])}
 									handleVoteSubmit={this.discussionVoteSubmit}
-									handleArchive={this.archiveDiscussion} />
+									handleArchive={this.archiveDiscussion}
+									isPublished={isPublished} />
 
 								: <div style={styles.emptyContainer}>No Discussions Found</div>
 							);

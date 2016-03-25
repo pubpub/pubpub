@@ -22,6 +22,7 @@ const DiscussionsItem = React.createClass({
 		isPubAuthor: PropTypes.bool,
 
 		isCollaborator: PropTypes.bool,
+		isPublished: PropTypes.bool,
 
 		addDiscussionHandler: PropTypes.func,
 		addDiscussionStatus: PropTypes.string,
@@ -194,7 +195,8 @@ const DiscussionsItem = React.createClass({
 								parentIsPrivate={discussionItem.private}
 								saveID={discussionItem._id}
 								activeSaveID={this.props.activeSaveID}
-								isReply={true}/>
+								isReply={true}
+								isPublished={this.props.isPublished} />
 						</div>
 
 					}
@@ -209,7 +211,7 @@ const DiscussionsItem = React.createClass({
 									discussionItem={child}
 									isPubAuthor={this.props.isPubAuthor}
 									isCollaborator={this.props.isCollaborator}
-
+									isPublished={this.props.isPublished} 
 									activeSaveID={this.props.activeSaveID}
 									addDiscussionHandler={this.props.addDiscussionHandler}
 									addDiscussionStatus={this.props.addDiscussionStatus}
