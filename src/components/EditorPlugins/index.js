@@ -13,5 +13,5 @@ export default {
 	cite: CitePlugin,
 	iframe: IframePlugin,
 	selection: SelectionPlugin,
-	footnote: FootnotePlugin,
+	footnote: FootnotePlugin, 
 };
