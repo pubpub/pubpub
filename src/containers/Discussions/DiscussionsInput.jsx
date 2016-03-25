@@ -2,7 +2,7 @@
 
 import React, {PropTypes} from 'react';
 import Radium, {Style} from 'radium';
-import {Button, LoaderIndeterminate, License} from 'components';
+import {Button, LoaderIndeterminate, License, Menu} from 'components';
 import {globalStyles} from 'utils/styleConstants';
 
 import {globalMessages} from 'utils/globalMessages';
@@ -131,6 +131,11 @@ const PubDiscussionsInput = React.createClass({
 	},
 
 	render: function() {
+		const menuItems = [
+			{ key: 'preview', string: 'Preview', function: ()=>{}},
+			{ key: 'formatting', string: 'Formatting', function: ()=>{} },
+			{ key: 'assets', string: 'Assets', function: ()=>{}, noSeparator: true  },
+		];
 
 		return (
 			<div style={[styles.container, this.props.isReply && styles.replyContainer]}>
@@ -171,7 +176,17 @@ const PubDiscussionsInput = React.createClass({
 						<input style={styles.checkboxInput} name={'privateDiscussion'} id={'privateDiscussion'} type="checkbox" value={'private'} ref={'privateDiscussion'}/>
 					</div> */}
 				</div>
-				<div id={this.props.codeMirrorID} className={'inputCodeMirror'} style={styles.inputBox(this.state.expanded)} onBlur={this.onBlur} onFocus={this.onFocus}></div>
+
+				<div style={styles.inputBox(this.state.expanded)}>
+					<div style={styles.inputMenuWrapper}>
+						<Menu items={menuItems} height={'20px'} fontSize={'0.9em'}/>
+					</div>
+
+
+					<div id={this.props.codeMirrorID} className={'inputCodeMirror'} onBlur={this.onBlur} onFocus={this.onFocus}></div>
+
+				</div>
+
 
 				{/* <div style={styles.loaderContainer}>
 					{(this.props.addDiscussionStatus === 'loading' && this.props.activeSaveID === this.props.saveID ? <LoaderIndeterminate color="#444"/> : null)}
@@ -275,6 +290,10 @@ styles = {
 		// backgroundColor: 'rgba(255,0,0,0.1)',
 		height: 22,
 	},
+	inputMenuWrapper: {
+		borderBottom: '1px solid #ccc',
+		marginBottom: '10px',
+	},
 	inputBottomLine: {
 		// backgroundColor: 'rgba(255,0,100,0.1)',
 		height: 20,
@@ -284,7 +303,7 @@ styles = {
 		return {
 			backgroundColor: '#fff',
 			minHeight: 25,
-			padding: '10px 0px',
+			padding: '0px 0px 10px 0px',
 			// boxShadow: '0 1px 3px 0 rgba(0,0,0,.2),0 1px 1px 0 rgba(0,0,0,.14),0 2px 1px -1px rgba(0,0,0,.12)',
 			boxShadow: '0px 0px 2px rgba(0,0,0,0.4)',
 			margin: '10px auto',
@@ -322,7 +341,7 @@ styles = {
 		float: 'right',
 		height: 20,
 		display: 'none',
-
+		marginBottom: '2px',
 		userSelect: 'none',
 		color: globalStyles.sideText,
 		':hover': {

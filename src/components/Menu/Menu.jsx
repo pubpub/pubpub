@@ -20,6 +20,8 @@ const pubpubMenu = React.createClass({
 	propTypes: {
 		items: PropTypes.array,
 		submenu: PropTypes.bool,
+		height: PropTypes.string,
+		fontSize: PropTypes.string,
 	},
 
 	getDefaultProps: function() {
@@ -85,17 +87,18 @@ const pubpubMenu = React.createClass({
 
 		return (
 			<div style={{
+				fontSize: this.props.fontSize || '1em',
 				fontWeight: this.props.submenu ? '400' : '300',
 				backgroundColor: this.props.submenu ? '#F3F3F3' : 'transparent',
 				color: this.props.submenu ? '#999' : '#333',
 			}}>
 				<Style rules={{
 					'.rc-menu.rc-menu-horizontal.rc-menu-root': {
-						height: '30px',
+						height: this.props.height || '30px',
 					},
 					'.rc-menu-horizontal > .rc-menu-submenu, .rc-menu-horizontal > .rc-menu-item': {
-						height: '30px',
-						lineHeight: '30px',
+						height: this.props.height || '30px',
+						lineHeight: this.props.height || '30px',
 					},
 					// '.rc-menu-horizontal > .rc-menu-submenu > .rc-menu': {
 					// 	maxHeight: 'calc(100vh - 60px)',
