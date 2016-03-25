@@ -358,7 +358,7 @@ styles = {
 		overflow: 'hidden',
 		overflowY: 'scroll',
 		boxShadow: '0px 2px 4px 0px rgba(0,0,0,0.4)',
-		zIndex: 10,
+		// zIndex: 10,
 		// Mobile
 		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
 			width: '100%',
