@@ -33,6 +33,7 @@ const DiscussionsItem = React.createClass({
 		handleVoteSubmit: PropTypes.func,
 		handleArchive: PropTypes.func,
 
+		toggleAssetLibrary: PropTypes.func,
 		// noPermalink: PropTypes.bool,
 		// noReply: PropTypes.bool,
 	},
@@ -196,7 +197,8 @@ const DiscussionsItem = React.createClass({
 								saveID={discussionItem._id}
 								activeSaveID={this.props.activeSaveID}
 								isReply={true}
-								isPublished={this.props.isPublished} />
+								isPublished={this.props.isPublished}
+								toggleAssetLibrary={this.props.toggleAssetLibrary}/>
 						</div>
 
 					}
@@ -211,13 +213,14 @@ const DiscussionsItem = React.createClass({
 									discussionItem={child}
 									isPubAuthor={this.props.isPubAuthor}
 									isCollaborator={this.props.isCollaborator}
-									isPublished={this.props.isPublished} 
+									isPublished={this.props.isPublished}
 									activeSaveID={this.props.activeSaveID}
 									addDiscussionHandler={this.props.addDiscussionHandler}
 									addDiscussionStatus={this.props.addDiscussionStatus}
 									userThumbnail={this.props.userThumbnail}
 									handleVoteSubmit={this.props.handleVoteSubmit}
-									handleArchive={this.props.handleVoteSubmit} />
+									handleArchive={this.props.handleVoteSubmit}
+									toggleAssetLibrary={this.props.toggleAssetLibrary}/>
 
 								);
 							})

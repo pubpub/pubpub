@@ -91,7 +91,7 @@ const ReferenceEditor = React.createClass({
 				</div>
 
 				<div style={styles.thumbnailWrapper}>
-					<img style={styles.thumbnail} src={this.props.assetObject.assetData.thumbnail} />
+					<img style={styles.thumbnail} src={assetData.thumbnail} />
 				</div>
 
 				<div style={styles.inputFormWrapper}>

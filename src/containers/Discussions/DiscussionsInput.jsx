@@ -35,6 +35,7 @@ const PubDiscussionsInput = React.createClass({
 		activeSaveID: PropTypes.string,
 		saveID: PropTypes.string,
 		intl: PropTypes.object,
+		toggleAssetLibrary: PropTypes.func,
 
 	},
 
@@ -141,16 +142,16 @@ const PubDiscussionsInput = React.createClass({
 
 	render: function() {
 		const menuItems = [
-			{ key: 'preview', string: 'Preview', function: ()=>{}},
+			{ key: 'preview', string: 'Preview', function: this.toggleLivePreview, isActive: this.state.showPreview },
 			{ key: 'formatting', string: 'Formatting', function: ()=>{} },
-			{ key: 'assets', string: 'Assets', function: ()=>{}, noSeparator: true },
+			{ key: 'assets', string: 'Assets', function: this.props.toggleAssetLibrary, noSeparator: true },
 		];
 
 		return (
 			<div style={[styles.container, this.props.isReply && styles.replyContainer]}>
 				<Style rules={{
+					...codeMirrorStyles(undefined, '.inputCodeMirror'),
 					'.inputCodeMirror .CodeMirror': {
-						...codeMirrorStyles(),
 						backgroundColor: 'transparent',
 						fontSize: '15px',
 						color: '#222',
@@ -196,6 +197,13 @@ const PubDiscussionsInput = React.createClass({
 
 				</div>
 
+				{this.state.showPreview
+					? <div style={styles.livePreviewBox}>
+						<PPMComponent markdown={this.state.content} />
+					</div>
+					: null
+				}
+
 
 				{/* <div style={styles.loaderContainer}>
 					{(this.props.addDiscussionStatus === 'loading' && this.props.activeSaveID === this.props.saveID ? <LoaderIndeterminate color="#444"/> : null)}
@@ -229,16 +237,6 @@ const PubDiscussionsInput = React.createClass({
 						<FormattedMessage {...globalMessages.Submit}/>
 					</div>*/}
 				</div>
-
-				{
-					(this.state.showPreview) ?
-					<div>
-						<div style={styles.livePreviewBox}>
-							<PPMComponent assets={{}} references={{}} selections={this.state.selections} markdown={this.state.content} />
-						</div>
-					</div>
-					: null
-				}
 
 			</div>
 		);
@@ -287,7 +285,7 @@ styles = {
 		cursor: 'pointer',
 	},
 	livePreviewBox: {
-		width: '90%',
+		width: 'calc(100% - 26px)',
 		display: 'block',
 		margin: '5px auto 15px',
 		border: '1px dashed #888',
@@ -295,6 +293,7 @@ styles = {
 		fontFamily: 'Helvetica Neue,Helvetica,Arial,sans-serif',
 		color: '#555',
 		fontSize: '0.85em',
+		backgroundColor: '#E8E8E8',
 	},
 	replyContainer: {
 		// margin: '0px 10px 10px 0px',

@@ -193,6 +193,10 @@ const AssetLibrary = React.createClass({
 			{ key: 'highlights', string: 'Highlights', function: this.setActiveSection('highlights'), isActive: this.state.activeSection === 'highlights', noSeparator: true },
 		];
 
+		if (!this.props.loginData.get('loggedIn')) {
+			return <h1>Must be Logged In</h1>;
+		}
+
 		const userAssets = this.props.loginData.getIn(['userData', 'assets']).toJS() || [];
 		const {assets, references, highlights} = this.separateAssets(userAssets);
 
@@ -202,7 +206,7 @@ const AssetLibrary = React.createClass({
 
 				<Dropzone ref="dropzone" onDrop={this.onDrop} disableClick style={styles.dropzone} activeStyle={this.state.activeSection === 'assets' ? styles.dropzoneActive : {}}>
 					<div>
-						<Portal isOpened={this.state.showAssetEditor}>
+						<Portal isOpened={this.state.showAssetEditor} onClose={this.closeAssetEditor} closeOnOutsideClick>
 							<div style={styles.assetEditorWrapper}>
 								<AssetEditor
 									assetType={this.state.assetEditorType}

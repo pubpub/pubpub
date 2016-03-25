@@ -1,10 +1,13 @@
 import React, {PropTypes} from 'react';
 import {connect} from 'react-redux';
 import Radium, {Style} from 'radium';
-// import {globalStyles} from 'utils/styleConstants';
+import {globalStyles} from 'utils/styleConstants';
 // import {rightBarStyles} from 'containers/PubReader/rightBarStyles';
 import DiscussionsItem from './DiscussionsItem';
 import DiscussionsInput from './DiscussionsInput';
+
+import Portal from 'react-portal';
+import {AssetLibrary} from 'containers';
 
 import {toggleVisibility} from 'actions/login';
 import {addDiscussion, discussionVoteSubmit, archiveDiscussion} from 'actions/discussions';
@@ -34,6 +37,11 @@ const Discussions = React.createClass({
 
 		dispatch: PropTypes.func,
 
+	},
+	getInitialState() {
+		return {
+			showAssetLibrary: false,
+		};
 	},
 
 	addDiscussion: function(discussionObject, activeSaveID) {
@@ -91,6 +99,16 @@ const Discussions = React.createClass({
 		return hotScore(yays, nays, timestamp);
 	},
 
+	toggleAssetLibrary: function() {
+		if (!this.props.loginData.get('loggedIn')) {
+			return this.props.dispatch(toggleVisibility());
+		}
+		this.setState({showAssetLibrary: !this.state.showAssetLibrary});
+	},
+	closeAssetLibrary: function() {
+		this.setState({showAssetLibrary: false});
+	},
+
 	render: function() {
 
 		let discussionsData = this.props.discussionsData.get('discussions') && this.props.discussionsData.get('discussions').toJS ? this.props.discussionsData.get('discussions').toJS() : [];
@@ -112,6 +130,13 @@ const Discussions = React.createClass({
 					}
 				}} />
 
+				<div>
+					<div className="modal-splash" onClick={this.closeAssetLibrary} style={[styles.modalSplash, this.state.showAssetLibrary && styles.modalSplashActive]}></div>
+					<div style={[styles.assetLibraryWrapper, this.state.showAssetLibrary && styles.assetLibraryWrapperActive]}>
+						<AssetLibrary />
+					</div>
+				</div>
+
 				<div className="pub-discussions-wrapper" style={styles.sectionWrapper}>
 					{this.props.pubData.getIn(['pubData', 'referrer', 'name'])
 						? <div>{this.props.pubData.getIn(['pubData', 'referrer', 'name'])} invites you to comment!</div>
@@ -130,7 +155,8 @@ const Discussions = React.createClass({
 							parentIsPrivate={false}
 							isReply={false}
 							codeMirrorID={'rootCommentInput'}
-							isPublished={isPublished} />
+							isPublished={isPublished}
+							toggleAssetLibrary={this.toggleAssetLibrary}/>
 					}
 
 					{
@@ -150,7 +176,8 @@ const Discussions = React.createClass({
 									userThumbnail={this.props.loginData.getIn(['userData', 'thumbnail'])}
 									handleVoteSubmit={this.discussionVoteSubmit}
 									handleArchive={this.archiveDiscussion}
-									isPublished={isPublished} />
+									isPublished={isPublished}
+									toggleAssetLibrary={this.toggleAssetLibrary}/>
 
 								: <div style={styles.emptyContainer}>No Discussions Found</div>
 							);
@@ -202,5 +229,36 @@ styles = {
 	},
 	sectionWrapper: {
 		margin: '10px 0px 30px 0px',
+	},
+	modalSplash: {
+		opacity: 0,
+		pointerEvents: 'none',
+		width: '100vw',
+		height: '100vh',
+		position: 'fixed',
+		top: 0,
+		left: 0,
+		backgroundColor: 'rgba(255,255,255,0.7)',
+		transition: '.1s linear opacity',
+		zIndex: 100,
+	},
+	modalSplashActive: {
+		opacity: 1,
+		pointerEvents: 'auto',
+	},
+	assetLibraryWrapper: {
+		...globalStyles.largeModal,
+		zIndex: 150,
+		fontFamily: 'Lato',
+
+		opacity: 0,
+		pointerEvents: 'none',
+		transform: 'scale(0.9)',
+		transition: '.1s linear opacity, .1s linear transform',
+	},
+	assetLibraryWrapperActive: {
+		opacity: 1,
+		pointerEvents: 'auto',
+		transform: 'scale(1.0)',
 	},
 };
