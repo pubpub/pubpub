@@ -1,5 +1,5 @@
 // When created, assets are stored as their own document (with this schema).
-// They are also stored in the user's object under the 'Assets' field. 
+// They are also stored in the user's object under the 'Assets' field.
 // All owners of an asset have the asset stored in their backend document.
 // This allows us to display them in aggregate as a user navigates around the
 // site, or from their profile page.
@@ -7,7 +7,7 @@
 // Assets can be updated - each update stores all parts of the document needed
 // to trace history (meta, url, filetype, etc).
 
-// When used in pubs or discussions, the asset is inlined into markdown with 
+// When used in pubs or discussions, the asset is inlined into markdown with
 // its _id, and the version used.
 // All data necessary to render the asset is included in text within the plugin when used.
 // This allows the asset to be rendered without querying any of the asset documents.
@@ -22,53 +22,52 @@
 // The parent field marks the _id and version of the asset from which it was cloned.
 // The root field marks the _id of the furthest ancestor. This is used as a querying tool, so
 // that finding the full lineage of an asset can simply query for all docs with the same root.
+const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
+const ObjectId = Schema.Types.ObjectId;
 
-var mongoose  = require('mongoose');
-var Schema    =  mongoose.Schema;
-var ObjectId  = Schema.Types.ObjectId;
+const assetSchema = new Schema({
 
-var assetSchema = new Schema({
+	assetType: { type: String}, // PubPub asset type, e.g. image, video, data
+	label: { type: String}, // Human-readable label. Used for drop-down selection, ordering, etc
+	assetData: { type: Schema.Types.Mixed }, // User-input content about the asset.
 
-  assetType: { type: String}, // PubPub asset type, e.g. image, video, data
-  label: { type: String}, // Human-readable label. Used for drop-down selection, ordering, etc
-  assetData: { type: Schema.Types.Mixed }, // User-input content about the asset.
-  
-  history: [{
-  	assetType: { type: String },
-  	label: { type: String },
-  	assetData: { type: Schema.Types.Mixed },
-  	updateDate: { type: Date },
-  }],
+	history: [{
+		assetType: { type: String },
+		label: { type: String },
+		assetData: { type: Schema.Types.Mixed },
+		updateDate: { type: Date },
+	}],
 
-  usedInDiscussions: [{
-  	id: { type: ObjectId, ref: 'Discussion' },
-  	version: { type: Number },
-  }],
-  usedInPubs: [{
-  	id: { type: ObjectId, ref: 'Pub' },
-  	version: { type: Number },
-  }],
-  
-  parent: { // If cloned from an asset, this field stores which asset doc, and which version
-  	id: { type: ObjectId, ref: 'Asset' },
-  	version: { type: Number },
-  },
-  root: { type: ObjectId, ref: 'Asset' }, // Furthest ancestor - used as a query tool to grab entire lineage
+	usedInDiscussions: [{
+		id: { type: ObjectId, ref: 'Discussion' },
+		version: { type: Number },
+	}],
+	usedInPubs: [{
+		id: { type: ObjectId, ref: 'Pub' },
+		version: { type: Number },
+	}],
 
-  authors: [{ type: ObjectId, ref: 'User' }], // Authors have edit access to the asset
-  
-  createDate: { type: Date },
-  lastUpdated: { type: Date },
-})
+	parent: { // If cloned from an asset, this field stores which asset doc, and which version
+		id: { type: ObjectId, ref: 'Asset' },
+		version: { type: Number },
+	},
+	root: { type: ObjectId, ref: 'Asset' }, // Furthest ancestor - used as a query tool to grab entire lineage
 
-assetSchema.statics.insertBulkAndReturnIDs = function (array, callback) {
+	authors: [{ type: ObjectId, ref: 'User' }], // Authors have edit access to the asset
 
-	this.create(array, function(err, dbArray){
+	createDate: { type: Date },
+	lastUpdated: { type: Date },
+});
+
+assetSchema.statics.insertBulkAndReturnIDs = function(array, callback) {
+
+	this.create(array, function(err, dbArray) {
 		if (err) return callback(err);
 
-		dbArray = dbArray || [];
+		const tempArray = dbArray || [];
 		const dbArrayIds = [];
-		dbArray.map((item)=>{
+		tempArray.map((item)=>{
 			dbArrayIds.push(item._id);
 		});
 
