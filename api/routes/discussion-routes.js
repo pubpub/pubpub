@@ -8,7 +8,7 @@ const Discussion = require('../models').Discussion;
 // const Highlight = require('../models').Highlight;
 const Notification = require('../models').Notification;
 
-app.post('/addDiscussion', function(req, res) {
+export function addDiscussion(req, res) {
 	const currentDate = new Date().getTime();
 
 	const newDiscussion = new Discussion({});
@@ -39,44 +39,43 @@ app.post('/addDiscussion', function(req, res) {
 
 	newDiscussion.save(function(err, result) {
 		if (err) { return res.status(500).json(err); }
-		var discussionID = result.id;
-		var userID = result.author;
-		var pubID = result.pub;
+		const discussionID = result.id;
+		const userID = result.author;
+		const pubID = result.pub;
 
-		User.update({ _id: userID }, { $addToSet: { discussions: discussionID} }, function(err, result){if(err) return handleError(err)});
-		Pub.update({ _id: pubID }, { $addToSet: { discussions: discussionID} }, function(err, result){if(err) return handleError(err)});
-		Discussion.update({_id: result.parent}, { $addToSet: { children: discussionID} }, function(err, result){if(err) return handleError(err)});
+		User.update({ _id: userID }, { $addToSet: { discussions: discussionID} }, function(errUpdate, resultUpdate) {if (errUpdate) return console.log(errUpdate);});
+		Pub.update({ _id: pubID }, { $addToSet: { discussions: discussionID} }, function(errUpdate, resultUpdate) {if (errUpdate) return console.log(errUpdate);});
+		Discussion.update({_id: result.parent}, { $addToSet: { children: discussionID} }, function(errUpdate, resultUpdate) {if (errUpdate) return console.log(errUpdate);});
 
 		// Notify all the pub authors
 		// Notify the author of a parent comment
-		Pub.findOne({_id: pubID}, {'authors':1}).lean().exec(function (err, pub) {
+		Pub.findOne({_id: pubID}, {authors: 1}).lean().exec(function(errPubFind, pub) {
 			pub.authors.map((author)=>{
 				Notification.createNotification('discussion/pubComment', req.body.host, userID, author, pubID, discussionID);
 			});
 		});
 		if (result.parent && !result.private) { // Don't notify parent author if reply is private. We don't want a public comment being told about private responses.
-			Discussion.findOne({_id: result.parent}, {'author':1}).lean().exec(function (err, parentDiscussion) {
+			Discussion.findOne({_id: result.parent}, {author: 1}).lean().exec(function(errDiscussionFind, parentDiscussion) {
 				Notification.createNotification('discussion/repliedTo', req.body.host, userID, parentDiscussion.author, pubID, discussionID);
 			});
 		}
 
-		var populateQuery = [
-			{path:'author', select:'_id name username firstName lastName thumbnail'},
+		const populateQuery = [
+			{path: 'author', select: '_id name username firstName lastName thumbnail'},
 			// {path:'selections'},
 		];
 
-		Discussion.populate(result, populateQuery, function(err, populatedResult){
+		Discussion.populate(result, populateQuery, function(errDiscPopulate, populatedResult) {
 			if (err) { return res.status(500).json(err); }
 			res.status(201).json(populatedResult);
 
 		});
 
 	});
-});
+}
+app.post('/addDiscussion', addDiscussion);
 
-app.post('/updateDiscussion', function(req, res) {
-
-
+export function updateDiscussion(req, res) {
 	Discussion.findOne({ _id: req.body.updatedDiscussion._id }, function(err, discussion) {
 		const currentDate = new Date().getTime();
 		discussion.markdown = req.body.updatedDiscussion.markdown;
@@ -90,24 +89,25 @@ app.post('/updateDiscussion', function(req, res) {
 		discussion.lastUpdated = currentDate;
 
 
-		discussion.save(function(err, result) {
-			if (err) { return res.status(500).json(err); }
+		discussion.save(function(errSave, result) {
+			if (errSave) { return res.status(500).json(errSave); }
 
-			var populateQuery = [
-				{path:'author', select:'_id name username firstName lastName thumbnail'},
+			const populateQuery = [
+				{path: 'author', select: '_id name username firstName lastName thumbnail'},
 				// {path:'selections'},
 			];
 
-			Discussion.populate(result, populateQuery, function(err, populatedResult){
-				if (err) { return res.status(500).json(err); }
+			Discussion.populate(result, populateQuery, function(errPop, populatedResult) {
+				if (errPop) { return res.status(500).json(errPop); }
 				res.status(201).json(populatedResult);
 			});
 
 		});
 	});
-});
+}
+app.post('/updateDiscussion', updateDiscussion);
 
-app.post('/voteDiscussion', function(req,res){
+export function voteDiscussion(req, res) {
 	if (!req.user) {return res.status(504).json('Not logged in');}
 
 	const userID = req.user._id;
@@ -117,38 +117,40 @@ app.post('/voteDiscussion', function(req,res){
 	const type = req.body.type;
 
 	if (type === 'yay' && !userYay) {
-		Discussion.update({_id: discussionID}, { $addToSet: { yays: userID} }, function(err, result){if(err) return handleError(err)});
-		Discussion.update({_id: discussionID}, { $pull: { nays: userID} }, function(err, result){if(err) return handleError(err)});
-		User.update({ _id: userID}, { $addToSet: { yays: discussionID} }, function(err, result){if(err) return handleError(err)});
-		User.update({ _id: userID}, { $pull: { nays: discussionID} }, function(err, result){if(err) return handleError(err)});
+		Discussion.update({_id: discussionID}, { $addToSet: { yays: userID} }, function(err, result) {if (err) return console.log(err);});
+		Discussion.update({_id: discussionID}, { $pull: { nays: userID} }, function(err, result) {if (err) return console.log(err);});
+		User.update({ _id: userID}, { $addToSet: { yays: discussionID} }, function(err, result) {if (err) return console.log(err);});
+		User.update({ _id: userID}, { $pull: { nays: discussionID} }, function(err, result) {if (err) return console.log(err);});
 	} else if (type === 'yay' && userYay) {
-		Discussion.update({_id: discussionID}, { $pull: { yays: userID} }, function(err, result){if(err) return handleError(err)});
-		User.update({ _id: userID}, { $pull: { yays: discussionID} }, function(err, result){if(err) return handleError(err)});
+		Discussion.update({_id: discussionID}, { $pull: { yays: userID} }, function(err, result) {if (err) return console.log(err);});
+		User.update({ _id: userID}, { $pull: { yays: discussionID} }, function(err, result) {if (err) return console.log(err);});
 	} else if (type === 'nay' && !userNay) {
-		Discussion.update({_id: discussionID}, { $addToSet: { nays: userID} }, function(err, result){if(err) return handleError(err)});
-		Discussion.update({_id: discussionID}, { $pull: { yays: userID} }, function(err, result){if(err) return handleError(err)});
-		User.update({ _id: userID}, { $addToSet: { nays: discussionID} }, function(err, result){if(err) return handleError(err)});
-		User.update({ _id: userID}, { $pull: { yays: discussionID} }, function(err, result){if(err) return handleError(err)});
+		Discussion.update({_id: discussionID}, { $addToSet: { nays: userID} }, function(err, result) {if (err) return console.log(err);});
+		Discussion.update({_id: discussionID}, { $pull: { yays: userID} }, function(err, result) {if (err) return console.log(err);});
+		User.update({ _id: userID}, { $addToSet: { nays: discussionID} }, function(err, result) {if (err) return console.log(err);});
+		User.update({ _id: userID}, { $pull: { yays: discussionID} }, function(err, result) {if (err) return console.log(err);});
 	} else if (type === 'nay' && userNay) {
-		Discussion.update({_id: discussionID}, { $pull: { nays: userID} }, function(err, result){if(err) return handleError(err)});
-		User.update({ _id: userID}, { $pull: { nays: discussionID} }, function(err, result){if(err) return handleError(err)});
+		Discussion.update({_id: discussionID}, { $pull: { nays: userID} }, function(err, result) {if (err) return console.log(err);});
+		User.update({ _id: userID}, { $pull: { nays: discussionID} }, function(err, result) {if (err) return console.log(err);});
 	}
 
 	return res.status(201).json(true);
-});
+}
+app.post('/voteDiscussion', voteDiscussion);
 
-app.post('/archiveDiscussion', function(req,res){
+export function archiveDiscussion(req, res) {
 	if (!req.user) {return res.status(504).json('Not logged in');}
 
 	const discussionID = req.body.objectID;
 
-	Discussion.findOne({_id:discussionID}).exec(function (err, discussion) {
+	Discussion.findOne({_id: discussionID}).exec(function(err, discussion) {
 
 		discussion.archived = !discussion.archived;
 
-		discussion.save(function(err, result){
+		discussion.save(function(errSave, result) {
 			return res.status(201).json(result);
 		});
 	});
 
-});
+}
+app.post('/archiveDiscussion', archiveDiscussion);
