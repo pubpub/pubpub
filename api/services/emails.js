@@ -68,7 +68,7 @@ export function sendAddedAsCollaborator(email, url, senderName, pubTitle, groupN
 	const text = groupName
 		? groupName + ' has been added as a collaborator on ' + pubTitle + ' As a member of this group, you too are now a collaborator!. You can collaborate by visiting this pub at ' + url + '.'
 		: 'You\'ve been added as a collaborator on ' + pubTitle + '. You can collaborate by visiting this pub at ' + url + '.';
-	const html = groupName 
+	const html = groupName
 		? '<div style="padding: 10px 0px">' + groupName + ' has been added as a collaborator on <a href="' + url + '" style="color: inherit; font-weight: bold;">' + pubTitle + '</a>. As a member of this group, you too are now a collaborator!</div><div style="padding: 10px 0px"><a href="' + url + '" style="color: inherit; font-weight: bold;">Click here to collaborate</a>.</div>'
 		: '<div style="padding: 10px 0px">You\'ve been added as a collaborator on <a href="' + url + '" style="color: inherit; font-weight: bold;">' + pubTitle + '</a>.</div><div style="padding: 10px 0px"><a href="' + url + '" style="color: inherit; font-weight: bold;">Click here to collaborate</a>.</div>';
 
@@ -114,7 +114,7 @@ export function sendNotificationDigest(notifications, email, username, callback)
 		case 'followers/newVersion':
 			string = notification.sender.name + ' published a new version of their pub: ' + notification.pub.title;
 			break;
-		default: 
+		default:
 			return null;
 		}
 		html += '<li class="listItem" style="padding: 10px 0px"><a href="' + rootHost + '/user/' + username + '/notifications" style="color: inherit; text-decoration: none;">' + string + '</a></li>';
@@ -131,8 +131,7 @@ export function sendNotificationDigest(notifications, email, username, callback)
 
 	emailObject.addFilter('templates', 'enable', 1);
 	emailObject.addFilter('templates', 'template_id', 'caad4e63-a636-4c81-9cc2-7d65e581a876');
-	
-	sendgrid.send(emailObject, callback);
 
+	sendgrid.send(emailObject, callback);
 
 }

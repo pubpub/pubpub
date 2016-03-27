@@ -4,7 +4,7 @@ import {User, Pub, Journal, Notification} from '../models';
 import {cloudinary} from '../services/cloudinary';
 import {sendInviteEmail} from '../services/emails';
 
-app.get('/getUser', function(req, res) {
+export function getUser(req, res) {
 	const userID = req.user ? req.user._id : undefined;
 
 	User.getUser(req.query.username, userID, (err, userData)=>{
@@ -18,13 +18,14 @@ app.get('/getUser', function(req, res) {
 
 	});
 
-});
+}
+app.get('/getUser', getUser);
 
-app.post('/updateUser', function(req, res) {
+export function updateUser(req, res) {
 	const userID = req.user ? req.user._id : undefined;
 	if (!userID) { return res.status(403).json('Not authorized to edit this user'); }
 
-	User.findById(userID, function(err, user){
+	User.findById(userID, function(err, user) {
 		if (err) { console.log(err); return res.status(500).json(err); }
 
 		const outputObject = req.body.newDetails;
@@ -45,110 +46,110 @@ app.post('/updateUser', function(req, res) {
 				}
 				user.thumbnail = thumbnail;
 				outputObject.thumbnail = thumbnail;
-				user.save(function(err, result){
-					if (err) { return res.status(500).json(err); }
+				user.save(function(errUserSave, result) {
+					if (errUserSave) { return res.status(500).json(errUserSave); }
 					return res.status(201).json(outputObject);
 				});
 			});
 		} else {
-			user.save(function(err, result){
-				if (err) { return res.status(500).json(err); }
+			user.save(function(errUserSave, result) {
+				if (errUserSave) { return res.status(500).json(errUserSave); }
 				// console.log('outputObject', outputObject);
 				return res.status(201).json(outputObject);
 			});
 
 		}
 	});
+}
+app.post('/updateUser', updateUser);
 
-});
-
-app.post('/updateUserSettings', function(req, res) {
+export function updateUserSettings(req, res) {
 	const settingKey = Object.keys(req.body.newSettings)[0];
 
-	User.findById(req.user._id, function(err, user){
+	User.findById(req.user._id, function(err, user) {
 
 		if (err) {
 			console.log(err);
 			return res.status(500).json(err);
 		}
 
-		user.settings = user.settings ?  user.settings : {};
+		user.settings = user.settings ? user.settings : {};
 		user.settings[settingKey] = req.body.newSettings[settingKey];
 
-		user.save(function(err, result){
-			if (err) { return res.status(500).json(err); }
+		user.save(function(errUserSave, result) {
+			if (errUserSave) { return res.status(500).json(errUserSave); }
 
 			return res.status(201).json(user.settings);
 		});
 
 	});
-});
+}
+app.post('/updateUserSettings', updateUserSettings);
 
-app.post('/follow', function(req, res) {
+export function follow(req, res) {
 	if (!req.user) { return res.status(403).json('Not authorized for this action'); }
 
 	const userID = req.user._id;
 
-	switch (req.body.type){
+	switch (req.body.type) {
 	case 'pubs':
-		User.update({ _id: userID }, { $addToSet: { 'following.pubs': req.body.followedID} }, function(err, result){if(err) return handleError(err)});
-		Pub.update({ _id: req.body.followedID }, { $addToSet: { followers: userID} }, function(err, result){if(err) return handleError(err)});
-		Pub.findOne({_id: req.body.followedID}, {'authors':1}).lean().exec(function (err, pub) {
+		User.update({ _id: userID }, { $addToSet: { 'following.pubs': req.body.followedID} }, function(err, result) {if (err) return console.log(err);});
+		Pub.update({ _id: req.body.followedID }, { $addToSet: { followers: userID} }, function(err, result) {if (err) return console.log(err);});
+		Pub.findOne({_id: req.body.followedID}, {authors: 1}).lean().exec(function(err, pub) {
 			if (pub) {
 				pub.authors.map((author)=>{
 					Notification.createNotification('follows/followedPub', req.body.host, userID, author, pub._id);
 				});
-			} 
+			}
 		});
 		return res.status(201).json(req.body);
 
 	case 'users':
-		User.update({ _id: userID }, { $addToSet: { 'following.users': req.body.followedID} }, function(err, result){if(err) return handleError(err)});
-		User.update({ _id: req.body.followedID }, { $addToSet: { followers: userID} }, function(err, result){if(err) return handleError(err)});
+		User.update({ _id: userID }, { $addToSet: { 'following.users': req.body.followedID} }, function(err, result) {if (err) return console.log(err);});
+		User.update({ _id: req.body.followedID }, { $addToSet: { followers: userID} }, function(err, result) {if (err) return console.log(err);});
 		Notification.createNotification('follows/followedYou', req.body.host, userID, req.body.followedID);
 		return res.status(201).json(req.body);
 
 	case 'journals':
-		User.update({ _id: userID }, { $addToSet: { 'following.journals': req.body.followedID} }, function(err, result){if(err) return handleError(err)});
-		Journal.update({ _id: req.body.followedID }, { $addToSet: { followers: userID} }, function(err, result){if(err) return handleError(err)});
+		User.update({ _id: userID }, { $addToSet: { 'following.journals': req.body.followedID} }, function(err, result) {if (err) return console.log(err);});
+		Journal.update({ _id: req.body.followedID }, { $addToSet: { followers: userID} }, function(err, result) {if (err) return console.log(err);});
 		return res.status(201).json(req.body);
 
 	default:
 		return res.status(500).json('Invalid type');
 	}
 
-});
+}
+app.post('/follow', follow);
 
-app.post('/unfollow', function(req, res) {
+export function unfollow(req, res) {
 	if (!req.user) { return res.status(403).json('Not authorized for this action'); }
 
 	const userID = req.user._id;
 
-	switch (req.body.type){
+	switch (req.body.type) {
 	case 'pubs':
-		User.update({ _id: userID }, { $pull: { 'following.pubs': req.body.followedID} }, function(err, result){if(err) return handleError(err)});
-		Pub.update({ _id: req.body.followedID }, { $pull: { followers: userID} }, function(err, result){if(err) return handleError(err)});
+		User.update({ _id: userID }, { $pull: { 'following.pubs': req.body.followedID} }, function(err, result) {if (err) return console.log(err);});
+		Pub.update({ _id: req.body.followedID }, { $pull: { followers: userID} }, function(err, result) {if (err) return console.log(err);});
 		return res.status(201).json(req.body);
 
 	case 'users':
-		User.update({ _id: userID }, { $pull: { 'following.users': req.body.followedID} }, function(err, result){if(err) return handleError(err)});
-		User.update({ _id: req.body.followedID }, { $pull: { followers: userID} }, function(err, result){if(err) return handleError(err)});
+		User.update({ _id: userID }, { $pull: { 'following.users': req.body.followedID} }, function(err, result) {if (err) return console.log(err);});
+		User.update({ _id: req.body.followedID }, { $pull: { followers: userID} }, function(err, result) {if (err) return console.log(err);});
 		return res.status(201).json(req.body);
 
 	case 'journals':
-		User.update({ _id: userID }, { $pull: { 'following.journals': req.body.followedID} }, function(err, result){if(err) return handleError(err)});
-		Journal.update({ _id: req.body.followedID }, { $pull: { followers: userID} }, function(err, result){if(err) return handleError(err)});
+		User.update({ _id: userID }, { $pull: { 'following.journals': req.body.followedID} }, function(err, result) {if (err) return console.log(err);});
+		Journal.update({ _id: req.body.followedID }, { $pull: { followers: userID} }, function(err, result) {if (err) return console.log(err);});
 		return res.status(201).json(req.body);
 
 	default:
 		return res.status(500).json('Invalid type');
 	}
+}
+app.post('/unfollow', unfollow);
 
-
-});
-
-
-app.post('/inviteReviewers', function(req, res) {
+export function inviteReviewers(req, res) {
 	const inviteData = req.body.inviteData;
 	const pubId = req.body.pubID;
 	Pub.getSimplePub(pubId, function(err, pub) {
@@ -156,47 +157,45 @@ app.post('/inviteReviewers', function(req, res) {
 		if (err) {res.status(500); }
 		const senderName = req.user ? req.user.name : 'An anonymous user';
 		const pubName = pub.title;
-		
 
-		Journal.findByHost(req.query.host, function(err, journ) {
-			
+
+		Journal.findByHost(req.query.host, function(errJournalFind, journ) {
+
 			const journalName = journ ? journ.journalName : 'PubPub';
 			let journalURL = '';
 			if (journ) {
 				journalURL = journ.customDomain ? 'http://' + journ.customDomain : 'http://' + journ.subdomain + '.pubpub.org';
 			} else {
-				journalURL = 'http://www.pubpub.org'
+				journalURL = 'http://www.pubpub.org';
 			}
 
 			const journalIntroduction = journ ? journalName + ' is a journal built on PubPub:' : 'PubPub is';
 
 			const pubURL = journalURL + '/pub/' + pub.slug;
 
-			for (let recipient of inviteData) {
-				const recipientEmail = recipient.email;
-				
-				sendInviteEmail(senderName, pubName, pubURL, journalName, journalURL, journalIntroduction, recipientEmail, function(error, email) {
-					if (err) {
-						console.log(error);	
-					}
-					// console.log(email);
-				});
+			for (const recipient in inviteData) {
+				if (inviteData.hasOwnProperty(recipient)) {
+					const recipientEmail = recipient.email;
 
+					sendInviteEmail(senderName, pubName, pubURL, journalName, journalURL, journalIntroduction, recipientEmail, function(error, email) {
+						if (err) { console.log(error);	}
+						// console.log(email);
+					});
+				}
 			}
-
 			res.status(201).json({});
 		});
 
 	});
 
+}
+app.post('/inviteReviewers', inviteReviewers);
 
-});
-
-app.post('/setNotificationsRead', function(req, res) {
+export function setNotificationsRead(req, res) {
 	if (!req.user) {
 		return res.status(201).json(false);
 	}
-	
+
 	if (req.user._id && String(req.user._id) !== String(req.body.userID) ) {
 		console.log('userIDs do not match');
 		return res.status(201).json(false);
@@ -204,7 +203,7 @@ app.post('/setNotificationsRead', function(req, res) {
 
 	Notification.setRead({recipient: req.body.userID}, ()=>{});
 	Notification.setSent({recipient: req.body.userID}, ()=>{});
-	return res.status(201).json(true)
+	return res.status(201).json(true);
 
-});
-
+}
+app.post('/setNotificationsRead', setNotificationsRead);
