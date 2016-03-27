@@ -22,7 +22,7 @@ const VideoConfig = {
 const VIDEO_WRAPPER_CLASS = 'pub-video-wrapper';
 const VIDEO_CLASS = 'pub-video';
 
-const VideoEditorWidget = (props) => (<span>Video: {props.reference || 'Empty'}</span>);
+const VideoEditorWidget = (inputProps) => (<span>Video: {inputProps.reference || 'Empty'}</span>);
 
 
 let styles = {};

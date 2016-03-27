@@ -11,7 +11,7 @@ const Config = {
 	color: 'rgba(185, 215, 249, 0.5)',
 };
 
-const EditorWidget = (props) => (<span>Pub List</span>);
+const EditorWidget = (inputProps) => (<span>Pub List</span>);
 
 const Plugin = React.createClass({
 	propTypes: {

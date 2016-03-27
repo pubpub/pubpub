@@ -21,14 +21,14 @@ const QuoteConfig = {
 const QUOTE_WRAPPER_CLASS = 'pub-quote-wrapper';
 const QUOTE_CLASS = 'pub-quote';
 
-const QuoteEditorWidget = (props) => {
+const QuoteEditorWidget = (inputProps) => {
 	let content;
-	if (!props.quote) {
+	if (!inputProps.quote) {
 		content = 'No quote';
-	} else if (props.quote.length > 10) {
-		content = props.quote.substring(0,9) + "...";
+	} else if (inputProps.quote.length > 10) {
+		content = inputProps.quote.substring(0, 9) + '...';
 	} else {
-		content = props.quote;
+		content = inputProps.quote;
 	}
 	return (<span>Quote: {content}</span>);
 };

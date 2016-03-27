@@ -69,7 +69,7 @@ export function createPub(req, res) {
 		Pub.createPub(req.body.slug, req.body.title, userID, false, function(createErr, savedPub) {
 			const pubID = savedPub.id;
 
-			User.update({ _id: userID }, { $addToSet: { pubs: pubID} }, function(err, result){if(err) return handleError(err)});
+			User.update({ _id: userID }, { $addToSet: { pubs: pubID} }, function(errUpdate, resultUpdate) {if (errUpdate) return console.log(errUpdate);});
 
 			const ref = new Firebase(fireBaseURL + req.body.slug + '/editorData' );
 			ref.authWithCustomToken(generateAuthToken(), ()=>{
@@ -121,7 +121,7 @@ export function createPub(req, res) {
 		// 	const pubID = savedPub.id;
 		// 	const userID = req.user['_id'];
 		//
-		// 	User.update({ _id: userID }, { $addToSet: { pubs: pubID} }, function(err, result){if(err) return handleError(err)});
+		// 	User.update({ _id: userID }, { $addToSet: { pubs: pubID} }, function(err, result){if (err) return console.log(err)});
 		// 	const ref = new Firebase(fireBaseURL + req.body.slug + '/editorData' );
 		// 	ref.authWithCustomToken(generateAuthToken(), ()=>{
 		// 		const newEditorData = {
@@ -150,7 +150,6 @@ export function createPub(req, res) {
 
 }
 app.post('/createPub', createPub);
-
 
 
 // Publish Pub turns to just toggling 'isPublished'
@@ -251,7 +250,7 @@ export function saveVersionPub(req, res) {
 app.post('/saveVersionPub', saveVersionPub);
 
 export function updateCollaborators(req, res) {
-	Pub.findOne({ slug: req.body.slug }, function (err, pub) {
+	Pub.findOne({ slug: req.body.slug }, function(err, pub) {
 		if (err) { return res.status(500).json(err); }
 
 		// Check to make sure the user is authorized to be submitting such changes.
@@ -269,20 +268,20 @@ export function updateCollaborators(req, res) {
 		const canEdit = [];
 		const canRead = [];
 		// Iterate through each user in the collaborators object, add them to appropriate array.
-		_.forEach(req.body.newCollaborators, function(collaborator){
+		_.forEach(req.body.newCollaborators, function(collaborator) {
 			if (collaborator.permission === 'edit') {
 				canEdit.push(collaborator._id);
 				// Update the user's pubs collection so it is bound to their profile
-				User.update({ _id: collaborator._id }, { $addToSet: { pubs: pubID} }, function(err, result){if(err) return handleError(err)});
-				Group.update({ _id: collaborator._id }, { $addToSet: { pubs: pubID} }, function(err, result){if(err) return handleError(err)});
+				User.update({ _id: collaborator._id }, { $addToSet: { pubs: pubID} }, function(errUpdate, result) {if (errUpdate) return console.log(errUpdate);});
+				Group.update({ _id: collaborator._id }, { $addToSet: { pubs: pubID} }, function(errUpdate, result) {if (errUpdate) return console.log(errUpdate);});
 			} else {
 				canRead.push(collaborator._id);
 				// Update the user's pubs collection so it is removed from their profile
-				// User.update({ _id: collaborator._id }, { $pull: { pubs: pubID} }, function(err, result){if(err) return handleError(err)});
+				// User.update({ _id: collaborator._id }, { $pull: { pubs: pubID} }, function(errUpdate, result) {if (errUpdate) return console.log(errUpdate);});
 
 				// Psych! We actually want it on the user's profile - just under the 'canRead' section
-				User.update({ _id: collaborator._id }, { $addToSet: { pubs: pubID} }, function(err, result){if(err) return handleError(err)});
-				Group.update({ _id: collaborator._id }, { $addToSet: { pubs: pubID} }, function(err, result){if(err) return handleError(err)});
+				User.update({ _id: collaborator._id }, { $addToSet: { pubs: pubID} }, function(errUpdate, result) {if (errUpdate) return console.log(errUpdate);});
+				Group.update({ _id: collaborator._id }, { $addToSet: { pubs: pubID} }, function(errUpdate, result) {if (errUpdate) return console.log(errUpdate);});
 			}
 		});
 		const collaborators = {
@@ -297,9 +296,9 @@ export function updateCollaborators(req, res) {
 		const allUsersNew = collaborators.canEdit.concat(collaborators.canRead);
 		const newID = _.difference(allUsersNew, allUsersOld);
 
-		User.findOne({_id: newID}).lean().exec(function(err, user) {
-			Group.findOne({_id: newID}).populate({path: 'members', select: 'email'}).lean().exec(function(err, group){
-				Journal.findOne({ $or: [ {'subdomain': req.query.host.split('.')[0]}, {'customDomain': req.query.host}]}).exec(function(err, journal) {
+		User.findOne({_id: newID}).lean().exec(function(errUserFind, user) {
+			Group.findOne({_id: newID}).populate({path: 'members', select: 'email'}).lean().exec(function(errGroupFind, group) {
+				Journal.findOne({ $or: [ {'subdomain': req.query.host.split('.')[0]}, {'customDomain': req.query.host}]}).exec(function(errJournalFind, journal) {
 					let url = '';
 					if (journal) {
 						url = journal.customDomain ? 'http://' + journal.customDomain + '/pub/' + pub.slug + '/draft' : 'http://' + journal.subdomain + '.pubpub.org/pub/' + pub.slug + '/draft';
@@ -313,16 +312,16 @@ export function updateCollaborators(req, res) {
 
 					if (user) {
 						const email = user.email;
-						sendAddedAsCollaborator(email, url, senderName, pubTitle, groupName, journalName, function(err, result) {
-							if (err) { console.log('Error sending email to user: ', err);	}
+						sendAddedAsCollaborator(email, url, senderName, pubTitle, groupName, journalName, function(errSendAdded, result) {
+							if (errSendAdded) { console.log('Error sending email to user: ', errSendAdded);	}
 						});
 					}
 
 					if (group) {
 						for (let index = group.members.length; index--;) {
 							const email = group.members[index].email;
-							sendAddedAsCollaborator(email, url, senderName, pubTitle, groupName, journalName, function(err, result) {
-								if (err) { console.log('Error sending email to user: ', err);	}
+							sendAddedAsCollaborator(email, url, senderName, pubTitle, groupName, journalName, function(errSendAdded, result) {
+								if (errSendAdded) { console.log('Error sending email to user: ', errSendAdded);	}
 							});
 						}
 					}
@@ -335,8 +334,8 @@ export function updateCollaborators(req, res) {
 
 
 		if (req.body.removedUser) {
-			User.update({ _id: req.body.removedUser }, { $pull: { pubs: pubID} }, function(err, result) { if (err) return handleError(err); });
-			Group.update({ _id: req.body.removedUser }, { $pull: { pubs: pubID} }, function(err, result) { if (err) return handleError(err); });
+			User.update({ _id: req.body.removedUser }, { $pull: { pubs: pubID} }, function(errUpdate, result) { if (errUpdate) return console.log(errUpdate); });
+			Group.update({ _id: req.body.removedUser }, { $pull: { pubs: pubID} }, function(errUpdate, result) { if (errUpdate) return console.log(errUpdate); });
 		}
 		// console.log(collaborators);
 		Pub.update({slug: req.body.slug}, { $set: { collaborators: collaborators }}, function(result) {
@@ -403,12 +402,14 @@ export function updatePubData(req, res) {
 		}
 
 		for (const key in req.body.newPubData) {
-			pub[key] = req.body.newPubData[key];
+			if (req.body.newPubData.hasOwnProperty(key)) {
+				pub[key] = req.body.newPubData[key];
+			}
 		}
 		// pub.settings[settingKey] = req.body.newSettings[settingKey];
 
-		pub.save(function(err, result) {
-			if (err) { return res.status(500).json(err); }
+		pub.save(function(errPubSave, result) {
+			if (errPubSave) { return res.status(500).json(errPubSave); }
 
 			return res.status(201).json(req.body.newPubData);
 		});

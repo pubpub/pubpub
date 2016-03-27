@@ -10,19 +10,19 @@ export function parsePluginString(str) {
 	return propDict;
 
 
-	const regex = /([^=\s]*)\s*=\s*\"?([^"]*)\"?/;
-
-	const matches = str.match(/([^=\s,]*=(?:(?:(?=".*?")".*?")|(?:(?!".+?")[^,]+)))/g);
-
-	if (matches) {
-		for (const prop of matches) {
-			const match = regex.exec(prop);
-			if (match && match[1] && match[2]) {
-				propDict[match[1]] = match[2];
-			}
-		}
-	}
-	return propDict;
+	// const regex = /([^=\s]*)\s*=\s*\"?([^"]*)\"?/;
+	//
+	// const matches = str.match(/([^=\s,]*=(?:(?:(?=".*?")".*?")|(?:(?!".+?")[^,]+)))/g);
+	//
+	// if (matches) {
+	// 	for (const prop of matches) {
+	// 		const match = regex.exec(prop);
+	// 		if (match && match[1] && match[2]) {
+	// 			propDict[match[1]] = match[2];
+	// 		}
+	// 	}
+	// }
+	// return propDict;
 }
 
 export function convertFirebaseToObject(firebaseObj, shouldCount = false) {

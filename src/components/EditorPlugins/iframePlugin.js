@@ -22,7 +22,7 @@ const IframeConfig = {
 const IFRAME_WRAPPER_CLASS = 'pub-iframe-wrapper';
 const IFRAME_CLASS = 'pub-iframe';
 
-const IframeEditorWidget = (props) => (<span>iFrame: {props.url || 'Empty'}</span>);
+const IframeEditorWidget = (inputProps) => (<span>iFrame: {inputProps.url || 'Empty'}</span>);
 
 let styles = {};
 

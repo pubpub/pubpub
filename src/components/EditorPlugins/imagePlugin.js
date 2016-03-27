@@ -23,7 +23,7 @@ const IMG_CLASS = 'pub-img';
 
 // let styles = {};
 
-const ImageEditorWidget = (props) => (<span>Image: {(((props.source) ? props.source.label : false) || 'Empty')}</span>);
+const ImageEditorWidget = (inputProps) => (<span>Image: {(((inputProps.source) ? inputProps.source.label : false) || 'Empty')}</span>);
 
 const ImagePlugin = React.createClass({
 	propTypes: {

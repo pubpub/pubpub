@@ -33,14 +33,14 @@ const FootnoteConfig = {
 const FOOTNOTE_WRAPPER_CLASS = 'pub-footnote-wrapper';
 const FOOTNOTE_CLASS = 'pub-footnote';
 
-const FootnoteEditorWidget = (props) => {
+const FootnoteEditorWidget = (inputProps) => {
 	let content;
-	if (!props.footnote) {
+	if (!inputProps.footnote) {
 		content = 'No caption';
-	} else if (props.footnote.length > 10) {
-		content = props.footnote.substring(0,9) + "...";
+	} else if (inputProps.footnote.length > 10) {
+		content = inputProps.footnote.substring(0, 9) + '...';
 	} else {
-		content = props.footnote;
+		content = inputProps.footnote;
 	}
 	return (<span>Footnote: {content}</span>);
 };

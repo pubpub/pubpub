@@ -86,25 +86,25 @@ const pubSchema = new Schema({
 });
 
 
-pubSchema.statics.isUnique = function (slug, callback) {
+pubSchema.statics.isUnique = function(slug, callback) {
 
 	this.findOne({'slug': slug})
-	.exec(function (err, pub) {
-			if (err) return callback(err);
-			// if (err) return res.json(500);
+	.exec(function(err, pub) {
+		if (err) return callback(err);
+		// if (err) return res.json(500);
 
-			if(pub!=null){ //We found a pub
-				return callback(null,false);  //False - is not unique
-			}else{ //We did not find a pub
-				return callback(null,true) //True -  is unique.
-			}
-		});
+		if (pub !== null) { // We found a pub
+			return callback(null, false);  // False - is not unique
+		}
+		// We did not find a pub
+		return callback(null, true); // True -  is unique.
+	});
 };
 
-pubSchema.statics.getSimplePub = function (id,callback) {
+pubSchema.statics.getSimplePub = function(id, callback) {
 	this.findById(id)
 	.exec((err, pub)=> {
-		callback(err,pub);
+		callback(err, pub);
 	});
 
 
@@ -340,7 +340,7 @@ pubSchema.statics.addJournalFeatured = function(pubID, journalID, adminID) {
 		date: new Date().getTime(),
 		by: adminID,
 	};
-	this.update({ _id: pubID }, { $addToSet: { 'featuredInList': journalID, 'featuredIn': featureObject} }, function(err, result){if(err) console.log('Error in addJournalFeatured ', err);});
+	this.update({ _id: pubID }, { $addToSet: { 'featuredInList': journalID, 'featuredIn': featureObject} }, function(err, result) {if (err) console.log('Error in addJournalFeatured ', err);});
 };
 
 pubSchema.statics.addJournalSubmitted = function(pubID, journalID, userID) {
@@ -349,27 +349,26 @@ pubSchema.statics.addJournalSubmitted = function(pubID, journalID, userID) {
 		date: new Date().getTime(),
 		by: userID,
 	};
-	this.update({ _id: pubID }, { $addToSet: { 'submittedToList': journalID, 'submittedTo': submittedObject} }, function(err, result){if(err) console.log('Error in addJournalSubmitted ', err);});
+	this.update({ _id: pubID }, { $addToSet: { 'submittedToList': journalID, 'submittedTo': submittedObject} }, function(err, result) {if (err) console.log('Error in addJournalSubmitted ', err);});
 };
 
 pubSchema.statics.getRandomSlug = function(journalID, callback) {
-	var objects = [];
-	var query = {history: {$not: {$size: 0}}, 'isPublished': true};
-	if(journalID){
-		query['featuredInList'] = journalID;
+	const query = {history: {$not: {$size: 0}}, 'isPublished': true};
+	if (journalID) {
+		query.featuredInList = journalID;
 	}
 
-	this.count(query, {'slug':1}).exec((err, count)=> {
-		if (err){ return callback(err, null); }
+	this.count(query, {slug: 1}).exec((err, count)=> {
+		if (err) { return callback(err, null); }
 
-		const skip = Math.floor(Math.random()*count);
+		const skip = Math.floor(Math.random() * count);
 
-		this.find(query, {'slug':1}).skip(skip).limit(1).exec((err, pub)=> {
-				if (err){ return callback(err, null); }
+		this.find(query, {slug: 1}).skip(skip).limit(1).exec((errFind, pub)=> {
+			if (errFind) { return callback(errFind, null); }
 
-				if(!pub[0]){ return callback(err, null); }
+			if (!pub[0]) { return callback(errFind, null); }
 
-				return callback(null, pub[0].slug);
+			return callback(null, pub[0].slug);
 		});
 
 	});
