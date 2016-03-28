@@ -34,7 +34,7 @@ const Plugin = React.createClass({
 	render: function() {
 		const pubs = this.state.pubs || [];
 		return (
-			<div>
+			<div className={'pubList wrapper'}>
 				{
 					pubs.map((pub, index)=>{
 						return (

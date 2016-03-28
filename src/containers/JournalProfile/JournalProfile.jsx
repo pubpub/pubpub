@@ -39,7 +39,7 @@ const JournalAdmin = React.createClass({
 
 	componentWillReceiveProps(nextProps) {
 		if (nextProps.journalData.get('createCollectionStatus') === 'created') {
-			this.props.dispatch(pushState(null, ('/collection/' + nextProps.journalData.get('createCollectionSlug') + '/draft')));
+			this.props.dispatch(pushState(null, ('/collection/' + nextProps.journalData.get('createCollectionSlug') + '/edit')));
 			this.props.dispatch(clearCollectionRedirect());
 		}
 	},

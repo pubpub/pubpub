@@ -8,6 +8,7 @@ import FootnotePlugin 	from './footnotePlugin';
 
 // Page-only Plugins
 import pubListPlugin 	from './pubListPlugin';
+import collectionListPlugin 	from './collectionListPlugin';
 
 export default {
 	image: ImagePlugin,
@@ -18,4 +19,5 @@ export default {
 	selection: SelectionPlugin,
 	footnote: FootnotePlugin,
 	pubList: pubListPlugin,
+	collectionList: collectionListPlugin,
 };
