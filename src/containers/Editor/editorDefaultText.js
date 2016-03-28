@@ -1,4 +1,4 @@
-export function editorDefaultText(title, author) {
+export function editorDefaultPubText(title, author) {
 	return `-----
 title: ` + title + `
 
@@ -29,5 +29,19 @@ Markdown has great support for lists
 Things like editor font, editor font-size and other options can be found in the settings pane (top-right).
 
 Feel free to contact us at pubpub@media.mit.edu with any questions.
+`;
+}
+
+export function editorDefaultPageText(journalName) {
+	return `-----
+journalName: ` + journalName + `
+description: This is your journal's landing page. 
+-----
+# Section 1
+Pub content here.
+
+You can use plugins like pubList to add dynamic content to your landing page:
+
+[[{"pluginType":"pubList"}]]
 `;
 }

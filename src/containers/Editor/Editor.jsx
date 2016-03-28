@@ -23,7 +23,7 @@ import {codeMirrorStyles, codeMirrorStyleClasses} from './codeMirrorStyles';
 import {globalStyles} from 'utils/styleConstants';
 
 import {insertText, createFocusDoc, addCodeMirrorKeys} from './editorCodeFunctions';
-import {editorDefaultText} from './editorDefaultText';
+import {editorDefaultPubText, editorDefaultPageText} from './editorDefaultText';
 
 import FirepadUserList from './editorFirepadUserlist';
 
@@ -145,7 +145,9 @@ const Editor = React.createClass({
 				// Initialize Firepad using codemirror and the ref defined above.
 				const firepad = Firepad.fromCodeMirror(firepadRef, codeMirror, {
 					userId: username,
-					defaultText: editorDefaultText(this.props.pubData.getIn(['createPubData', 'title']), {username: username, name: name})
+					defaultText: this.props.editorData.getIn(['pubEditData', 'isPage'])
+						? editorDefaultPageText(this.props.journalData.getIn(['journalData', 'journalName']))
+						: editorDefaultPubText(this.props.pubData.getIn(['createPubData', 'title']), {username: username, name: name})
 				});
 
 				new Firebase(FireBaseURL + '.info/connected').on('value', (connectedSnap)=> {

@@ -5,6 +5,7 @@ const Discussion = require('../models').Discussion;
 const Notification = require('../models').Notification;
 const _ = require('underscore');
 import * as jsdiff from 'diff';
+import {editorDefaultPageText} from 'containers/Editor/editorDefaultText';
 
 const pubSchema = new Schema({
 	slug: { type: String, required: true, index: { unique: true } },
@@ -50,7 +51,7 @@ const pubSchema = new Schema({
 	}],
 
 	tags: [{ type: String }],
-	
+
 	// A duplicate cache of the parameters as defined in the editor.
 	// Also stored here so that we can privelege access to the editor
 	// and to private pubs
@@ -117,6 +118,7 @@ pubSchema.statics.createPub = function(slug, title, userID, isPage, callback) {
 		slug: slug,
 		title: title,
 		abstract: 'Type your abstract here! Your abstract will be used to help users search for pubs throughout the site.',
+		markdown: isPage ? editorDefaultPageText(title) : undefined,
 		collaborators: {
 			canEdit: [userID],
 			canRead: []

@@ -37,7 +37,7 @@ export function createJournal(req, res) {
 			User.update({ _id: req.user._id }, { $addToSet: { adminJournals: savedJournal._id} }, function(adminAddErr, addAdminResult) {if (adminAddErr) return res.status(500).json('Failed to add as admin'); });
 
 			const journalLandingSlug = savedJournal.subdomain + '-landingpage'; // Guaranteed unique because we don't allow pubs to be created ending with 'landingpage' and subdomain is unique
-			const journalLandingTitle = savedJournal.journalName + ' Landing Page';
+			const journalLandingTitle = savedJournal.journalName;
 			Pub.createPub(journalLandingSlug, journalLandingTitle, savedJournal._id, true, function(createErr, savedPub) {
 
 				const ref = new Firebase(fireBaseURL + journalLandingSlug + '/editorData' );
