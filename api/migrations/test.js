@@ -1,4 +1,4 @@
-import {migrateAllPubText} from './migrateMarkdown';
+// import {migrateAllPubText} from './migrateMarkdown';
 import {migrateDiscussions} from './migrateDiscussions';
 
 migrateDiscussions();
