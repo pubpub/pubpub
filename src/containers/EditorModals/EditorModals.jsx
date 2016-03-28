@@ -160,21 +160,24 @@ const Editor = React.createClass({
 						{(() => {
 							switch (activeModal) {
 							case 'Assets':
-								return (<AssetLibrary />);
+								return (<AssetLibrary
+									closeLibrary={this.closeModalHandler}
+									codeMirrorInstance={document.getElementById('codemirror-wrapper').childNodes[0].childNodes[0].CodeMirror} />
+								);
 
 							case 'Collaborators':
 								return (<CollaboratorsModal
-										collaboratorData={this.state.firepadData.collaborators}
-										updateCollaborators={this.saveUpdatedCollaborators}/>
-									);
+									collaboratorData={this.state.firepadData.collaborators}
+									updateCollaborators={this.saveUpdatedCollaborators}/>
+								);
 
 							case 'SaveVersion':
 								return (<SaveVersionModal
-										slug={this.props.slug}
-										handleSaveVersion={this.props.saveVersionHandler}
-										currentJournal={this.props.journalData.getIn(['journalData', 'journalName'])}
-										isPublished={this.props.editorData.getIn(['pubEditData', 'isPublished'])}/>
-									);
+									slug={this.props.slug}
+									handleSaveVersion={this.props.saveVersionHandler}
+									currentJournal={this.props.journalData.getIn(['journalData', 'journalName'])}
+									isPublished={this.props.editorData.getIn(['pubEditData', 'isPublished'])}/>
+								);
 
 							// case 'References':
 							// 	return (<EditorModalReferences
@@ -185,15 +188,15 @@ const Editor = React.createClass({
 
 							case 'Style':
 								return (<SettingsModal
-										editorFont={this.props.loginData.getIn(['userData', 'settings', 'editorFont'])}
-										editorFontSize={this.props.loginData.getIn(['userData', 'settings', 'editorFontSize'])}
-										editorColor={this.props.loginData.getIn(['userData', 'settings', 'editorColor'])}
-										pubPrivacy={this.state.firepadData && this.state.firepadData.settings ? this.state.firepadData.settings.pubPrivacy : undefined}
-										pubStyle={this.state.firepadData && this.state.firepadData.settings ? this.state.firepadData.settings.pubStyle : undefined}
-										saveUpdatedSettingsUser={this.saveUpdatedSettingsUser}
-										saveUpdatedSettingsFirebase={this.saveUpdatedSettingsFirebase}
-										toggleLeftPanelModeHandler={this.toggleLeftPanelMode}/>
-									);
+									editorFont={this.props.loginData.getIn(['userData', 'settings', 'editorFont'])}
+									editorFontSize={this.props.loginData.getIn(['userData', 'settings', 'editorFontSize'])}
+									editorColor={this.props.loginData.getIn(['userData', 'settings', 'editorColor'])}
+									pubPrivacy={this.state.firepadData && this.state.firepadData.settings ? this.state.firepadData.settings.pubPrivacy : undefined}
+									pubStyle={this.state.firepadData && this.state.firepadData.settings ? this.state.firepadData.settings.pubStyle : undefined}
+									saveUpdatedSettingsUser={this.saveUpdatedSettingsUser}
+									saveUpdatedSettingsFirebase={this.saveUpdatedSettingsFirebase}
+									toggleLeftPanelModeHandler={this.toggleLeftPanelMode}/>
+								);
 							default:
 								return null;
 							}

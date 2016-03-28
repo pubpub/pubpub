@@ -57,7 +57,7 @@ export function createJournal(req, res) {
 					};
 					ref.set(newEditorData);
 
-					savedJournal.landingPage = savedPub.id;
+					savedJournal.landingPage = savedPub._id;
 					savedJournal.save(function(errSavingLanding, savedJournalWithPub) {
 						return res.status(201).json(savedJournalWithPub.subdomain);
 					});

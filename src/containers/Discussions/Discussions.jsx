@@ -41,6 +41,7 @@ const Discussions = React.createClass({
 	getInitialState() {
 		return {
 			showAssetLibrary: false,
+			assetLibraryCodeMirrorID: undefined,
 		};
 	},
 
@@ -99,14 +100,24 @@ const Discussions = React.createClass({
 		return hotScore(yays, nays, timestamp);
 	},
 
-	toggleAssetLibrary: function() {
-		if (!this.props.loginData.get('loggedIn')) {
-			return this.props.dispatch(toggleVisibility());
-		}
-		this.setState({showAssetLibrary: !this.state.showAssetLibrary});
+	toggleAssetLibrary: function(codeMirrorID) {
+		return ()=>{
+			if (!this.props.loginData.get('loggedIn')) {
+				return this.props.dispatch(toggleVisibility());
+			}
+			console.log(codeMirrorID);
+			this.setState({
+				showAssetLibrary: !this.state.showAssetLibrary,
+				assetLibraryCodeMirrorID: codeMirrorID
+			});
+		};
+
 	},
 	closeAssetLibrary: function() {
-		this.setState({showAssetLibrary: false});
+		this.setState({
+			showAssetLibrary: false,
+			assetLibraryCodeMirrorID: undefined,
+		});
 	},
 
 	render: function() {
@@ -133,7 +144,12 @@ const Discussions = React.createClass({
 				<div>
 					<div className="modal-splash" onClick={this.closeAssetLibrary} style={[styles.modalSplash, this.state.showAssetLibrary && styles.modalSplashActive]}></div>
 					<div style={[styles.assetLibraryWrapper, this.state.showAssetLibrary && styles.assetLibraryWrapperActive]}>
-						{this.state.showAssetLibrary ? <AssetLibrary /> : null}
+						{this.state.showAssetLibrary
+							? <AssetLibrary
+								closeLibrary={this.closeAssetLibrary}
+								codeMirrorInstance={document.getElementById(this.state.assetLibraryCodeMirrorID).childNodes[0].CodeMirror} />
+							: null
+						}
 					</div>
 				</div>
 

@@ -7,7 +7,7 @@ import Radium from 'radium';
 import {Menu, Button} from 'components';
 import {AssetEditor, AssetRow, ReferenceRow} from './components';
 
-import {closeModal, saveCollaboratorsToPub} from 'actions/editor';
+// import {saveCollaboratorsToPub} from 'actions/editor';
 
 import {globalStyles} from 'utils/styleConstants';
 
@@ -18,13 +18,15 @@ import Portal from 'react-portal';
 
 import {createAsset, updateAsset} from 'actions/assets';
 
-let FireBaseURL;
+// let FireBaseURL;
 let styles;
 
 const AssetLibrary = React.createClass({
 	propTypes: {
 		loginData: PropTypes.object,
 		slug: PropTypes.string,
+		closeLibrary: PropTypes.func,
+		codeMirrorInstance: PropTypes.object,
 
 		// assetEditorOnly: PropTypes.bool // If this is true, don't render any of the library content, just load straight into AssetEditor. Will need to pass through object
 		dispatch: PropTypes.func,
@@ -133,7 +135,7 @@ const AssetLibrary = React.createClass({
 	setActiveSection: function(section) {
 		return ()=>{
 			this.setState({activeSection: section});
-		}
+		};
 	},
 
 	openAssetEditor: function(assetObject) {
@@ -143,7 +145,7 @@ const AssetLibrary = React.createClass({
 				assetEditorType: assetObject.assetType,
 				assetEditorObject: assetObject,
 			});
-		}
+		};
 
 	},
 	closeAssetEditor: function() {
@@ -155,13 +157,13 @@ const AssetLibrary = React.createClass({
 	},
 
 	addAssets: function(newAssetArray) {
-		for(let index = 0; index < newAssetArray.length; index++) {
+		for (let index = 0; index < newAssetArray.length; index++) {
 			this.props.dispatch(createAsset(newAssetArray[index]));
 		}
 
 	},
 	updateAssets: function(updatedAssetArray) {
-		for(let index = 0; index < updatedAssetArray.length; index++) {
+		for (let index = 0; index < updatedAssetArray.length; index++) {
 			this.props.dispatch(updateAsset(updatedAssetArray[index]));
 		}
 	},
@@ -186,6 +188,33 @@ const AssetLibrary = React.createClass({
 		};
 	},
 
+	insertAsset: function(assetObject) {
+		return ()=>{
+			const cm = this.props.codeMirrorInstance;
+			const currentSelection = cm.getCursor();
+
+			let inlineObject = {};
+			switch (assetObject.assetType) {
+			case 'image':
+			case 'video':
+				inlineObject = {pluginType: assetObject.assetType, source: assetObject};
+				break;
+			case 'reference':
+				inlineObject = {pluginType: 'cite', reference: assetObject};
+				break;
+			default:
+				inlineObject = undefined;
+				break;
+			}
+			if (inlineObject) {
+				cm.replaceRange('[[' + JSON.stringify(inlineObject) + ']]', {line: currentSelection.line, ch: currentSelection.ch});
+				this.props.closeLibrary();
+			}
+
+		};
+
+	},
+
 	render: function() {
 		const menuItems = [
 			{ key: 'assets', string: 'Assets', function: this.setActiveSection('assets'), isActive: this.state.activeSection === 'assets' },
@@ -201,7 +230,6 @@ const AssetLibrary = React.createClass({
 		const {assets, references, highlights} = this.separateAssets(userAssets);
 
 		return (
-
 
 
 				<Dropzone ref="dropzone" onDrop={this.onDrop} disableClick style={styles.dropzone} activeStyle={this.state.activeSection === 'assets' ? styles.dropzoneActive : {}}>
@@ -280,7 +308,7 @@ const AssetLibrary = React.createClass({
 															assetList.push(<AssetRow
 																key={'assetRow-' + index}
 																assetObject={asset}
-																insertHandler={()=>{}}
+																insertHandler={this.insertAsset}
 																editHandler={this.openAssetEditor}
 																removeHandler={()=>{}} />
 															);

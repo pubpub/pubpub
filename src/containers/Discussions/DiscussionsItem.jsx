@@ -18,7 +18,7 @@ const DiscussionsItem = React.createClass({
 	propTypes: {
 		slug: PropTypes.string,
 		discussionItem: PropTypes.object,
-		instanceName: PropTypes.string,
+		// instanceName: PropTypes.string,
 		isPubAuthor: PropTypes.bool,
 
 		isCollaborator: PropTypes.bool,
@@ -190,7 +190,7 @@ const DiscussionsItem = React.createClass({
 								addDiscussionHandler={this.props.addDiscussionHandler}
 								addDiscussionStatus={this.props.addDiscussionStatus}
 								userThumbnail={this.props.userThumbnail}
-								codeMirrorID={this.props.instanceName + 'replyInput-' + discussionItem._id}
+								codeMirrorID={'replyInput-' + discussionItem._id}
 								parentID={discussionItem._id}
 								isCollaborator={this.props.isCollaborator}
 								parentIsPrivate={discussionItem.private}
