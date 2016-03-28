@@ -1,4 +1,5 @@
 import React, { PropTypes } from 'react';
+import { Link } from 'react-router';
 import MDReactComponent from './MDReactComponent';
 
 import abbr from 'markdown-it-abbr';
@@ -170,26 +171,17 @@ const PPMComponent = React.createClass({
 			props.id = 'pub-header';
 			break;
 		case 'pubheaderitem':
-			// debugger;
-			// if (children[0] && children[0].props) {
-			// 	children[0] = children[0].props.children[0]
-			// }
 
 
-			// if (props.className === 'author') {
+			if (props.className === 'author') {
 
 			// 	console.log('trying to set to author');
-			// 	console.log(props, children);
-			// 	return <div>Woopie - {children[0].props.children[0]}</div>
-			// }
-
-
-			// 	props.href="/user/" + children[0];
-			// 	children[0] = "";
-			// 	Component = 'a';
-			// } else {
-
-			// 	Component = 'div';
+				console.log(props, children);
+				if (children.length > 1) { // If the author field has multiple children, and thus is nested, it is assumed the first field is the user's username, and thus we link to it.
+					return <Link className={'author pubheaderitem'} to={'/user/' + children[0].props.children[0]}>{children.slice(1, children.length)}</Link>;
+				}
+				// return <div>Woopie - {children[0].props.children[0]}</div>
+			}
 
 			// Removes the unnecessary p-block wrapper from headeritems
 			const newChildren = [];
@@ -201,10 +193,7 @@ const PPMComponent = React.createClass({
 				}
 			}
 			children = newChildren;
-			// if (children[0] && children.length === 1 && children[0].props && children[0].props.className === 'p-block') {
-			//
-			// }
-			// }
+
 			Component = 'div';
 			props.className = props.className + ' pubheaderitem';
 			// props['data-hash'] = children[0] ? murmur.v2(children[0]) : 0;
