@@ -122,17 +122,17 @@ export function codeMirrorStyles(loginData, parentClass) {
 		'.cm-ppm': {
 			color: editorStyles.colorPPM,
 		},
-		'.cm-ppm-title': {
-			fontSize: '23px',
-			color: editorStyles.colorTitle,
+		'.cm-pubheadertitle': {
+			fontSize: '26px',
+			color: editorStyles.colorHeader,
 			fontWeight: 'bold',
 		},
-		'.cm-ppm-abstract': {
-			fontSize: '16px',
-		},
-		'.cm-ppm-authorsNote': {
-			fontSize: '16px',
-		},
+		// '.cm-ppm-abstract': {
+		// 	fontSize: '16px',
+		// },
+		// '.cm-ppm-authorsNote': {
+		// 	fontSize: '16px',
+		// },
 		'.cm-ppm-math': {
 			fontStyle: 'italic',
 		},

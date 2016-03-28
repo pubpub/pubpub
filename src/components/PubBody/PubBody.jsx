@@ -245,11 +245,7 @@ const PubBody = React.createClass({
 						{/* <div id={'pub-header-divider'}></div> */}
 
 						<div id="pubBodyContent"> {/* Highlights are dependent on the id 'pubBodyContent' */}
-							<PPMComponent
-								assets={this.props.assetsObject}
-								references={this.props.referencesObject}
-								selections={this.props.selectionsArray}
-								markdown={this.props.markdown} />
+							<PPMComponent markdown={this.props.markdown} />
 
 							{this.props.addSelectionHandler
 								? <PubSelectionPopup addSelectionHandler={this.props.addSelectionHandler}/>

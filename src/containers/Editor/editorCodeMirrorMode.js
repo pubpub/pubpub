@@ -45,7 +45,7 @@ export default function() {
 			console.warn(err);
 		}
 		return result;
-	}); 
+	});
 
 
 	/*
@@ -86,6 +86,13 @@ export default function() {
 		]
 	});
 
+	CodeMirror.defineSimpleMode('header', {
+		start: [
+			{regex: /title: .*/, token: 'pubheadertitle'}
+		]
+	});
+
+
 	CodeMirror.defineMode('pubpubmarkdown', function(config) {
 		return CodeMirror.multiplexingMode(
 			CodeMirror.getMode(config, 'markdown'),
@@ -101,6 +108,11 @@ export default function() {
 			// 	innerStyle: 'ppm-math',
 			// 	parseDelimiters: false
 			// }
+			{
+				open: 'title:', close: '\n',
+				mode: CodeMirror.getMode(config, 'header'),
+				parseDelimiters: true
+			}
 
 
 		);

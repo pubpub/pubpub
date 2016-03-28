@@ -22,7 +22,7 @@
 	margin-bottom: 0.7em;
 }
 
-#pubContent #pub-title{
+#pubContent .pubheaderitem.title{
 	text-align: left;
 	font-size: 2.6em;
 	padding: 0.7em 0px;
@@ -54,7 +54,7 @@
 	color: #222;
 	font-family: 'Lora';
 }
-#pubContent #pub-abstract {
+#pubContent .pubheaderitem.abstract {
 	text-align: left;
 	color: #222;
 	margin: 2em 0px;
@@ -62,7 +62,7 @@
 	padding: 0px 0px;
 	font-style: italic;
 }
-#pubContent #pub-authorsNote {
+#pubContent .pubheaderitem.authorsNote {
 	text-align: center;
 	margin: 30px auto 0px auto;
 	background-color: #EAEAEA;
@@ -215,15 +215,6 @@
 	white-space: normal;
 	line-height: 1.4;
 }
-
-.pubheaderitem {
-	padding-left: 20px;
-	display: block;
-	margin-top: 0.5em;
-}
-
-
-
 
 #pubContent .pub-quote {
 	padding: 2.5% 7.5%;

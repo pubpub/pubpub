@@ -173,14 +173,8 @@ const PPMComponent = React.createClass({
 		case 'pubheaderitem':
 
 
-			if (props.className === 'author') {
-
-			// 	console.log('trying to set to author');
-				console.log(props, children);
-				if (children.length > 1) { // If the author field has multiple children, and thus is nested, it is assumed the first field is the user's username, and thus we link to it.
-					return <Link className={'author pubheaderitem'} to={'/user/' + children[0].props.children[0]}>{children.slice(1, children.length)}</Link>;
-				}
-				// return <div>Woopie - {children[0].props.children[0]}</div>
+			if (props.className === 'author' && children.length > 1) { // If the author field has multiple children, and thus is nested, it is assumed the first field is the user's username, and thus we link to it.
+				return <Link key={props.key} className={'author pubheaderitem'} to={'/user/' + children[0].props.children[0]}>{children.slice(1, children.length)}</Link>;
 			}
 
 			// Removes the unnecessary p-block wrapper from headeritems
