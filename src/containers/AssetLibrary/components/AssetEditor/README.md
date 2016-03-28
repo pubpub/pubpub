@@ -1,49 +1,53 @@
-// --------------------
-// This file is a documentation file for the sake
-// of stating expected asset type structures.
-// There may be a better place to aggregate this in the future
-// (perhaps editorPlugins, etc)
-// --------------------
+# Asset Editor
 
-// Images (.jpg, .png, .gif)
-// --------------------
+The asset editor is the place where all asset type specifications are held,
+in part because this is also where we need to be creating and updating asets.
+
+## Images (.jpg, .png, .gif)
+
+```
 assetType: 'image',
 assetData: {
 	filetype: { type: String}, // Original file extension, e.g. .jpg, .png, .csv
 	originalFilename: { type: String}, // Original filename of the asset. Static for each file
-	thumbnail: { type: String}, // Scaled version of the document. 
-	url: { type: String}, // Original - full-size version of the asset	
+	thumbnail: { type: String}, // Scaled version of the document.
+	url: { type: String}, // Original - full-size version of the asset
 }
+```
 
-// Video (.mp4, .ogg, .webm)
-// --------------------
+## Video (.mp4, .ogg, .webm)
+
+```
 assetType: 'video',
 assetData: {
 	filetype: { type: String}, // Original file extension, e.g. .mp4, .ogg, .webm
 	originalFilename: { type: String}, // Original filename of the asset. Static for each file
-	thumbnail: { type: String}, // Scaled version of the document. 
-	url: { type: String}, // Original - full-size version of the asset	
+	thumbnail: { type: String}, // Scaled version of the document.
+	url: { type: String}, // Original - full-size version of the asset
 }
+```
+## Highlight
 
-// Highlight
-// --------------------
+```
 assetType: 'highlight',
 assetData: {
 	text: {type: String},
 	context: {type: String},
 	ancestorHash: {type: String},
-	
+
 	endContainerPath: {type: String},
 	endOffset: {type: String},
 	startContainerPath: {type: String},
 	startOffset: {type: String},
-	
+
 	sourcePub: { type: ObjectId, ref: 'Pub' },
 	sourceVersion: {type: Number},
 }
+```
 
-// Reference
-// --------------------
+## Reference
+
+```
 assetType: 'reference',
 assetData: {
 	// Many more fields could be added. We should list them all, and then provide a dropdown
@@ -60,4 +64,4 @@ assetData: {
 	doi: { type: String },
 	note: { type: String },
 }
-
+```

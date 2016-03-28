@@ -1,11 +1,13 @@
+/* eslint no-unused-vars: [2, { "varsIgnorePattern": "pretty|server" }] */
+
 // Connect to Mongo database
 const mongoose = require('mongoose');
 
 if (process.env.NODE_ENV !== 'production') {
 	const mongoURI = require('./authentication/mongoCredentials').mongoURI;
-	mongoose.connect(mongoURI);  
+	mongoose.connect(mongoURI);
 } else {
-	mongoose.connect(process.env.mongoURI);  
+	mongoose.connect(process.env.mongoURI);
 }
 
 require('../server.babel'); // babel registration (runtime transpilation for node)
@@ -55,7 +57,7 @@ app.use(session({
 	secret: 'fuzzyelephantfun',
 	resave: true,
 	saveUninitialized: true,
-	store: new MongoStore({ 
+	store: new MongoStore({
 		mongooseConnection: mongoose.connection,
 		ttl: 30 * 24 * 60 * 60 // = 30 days.
 	}),
@@ -83,7 +85,7 @@ require('./routes');
 // Take the setup and start listening!
 /*--------*/
 if (config.apiPort) {
-	const runnable = app.listen(config.apiPort, (err) => {
+	app.listen(config.apiPort, (err) => {
 		if (err) {
 			console.error(err);
 		}

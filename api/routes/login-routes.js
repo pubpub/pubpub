@@ -149,7 +149,7 @@ export function requestReset(req, res) {
 			return res.status(201).json('User Not Found');
 		}
 
-		const resetHash = '';
+		let resetHash = '';
 		const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
 
 		for ( let index = 0; index < 12; index++) {
