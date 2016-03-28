@@ -18,7 +18,7 @@ Formatting actions like **bold** or *italic* can be found on the right, while a 
 
 # You can focus on sections!
 
-Rich media and content can be uploaded using the assets popup (top-left). Using plugins like [[image: ]] or [[video: ]] to add your assets into your pub. Available plugins can be found on the right-hand formatting bar.
+Rich media and content can be uploaded using the assets popup (top-left). Using plugins like [[image]] or [[video]] to add your assets into your pub. Available plugins can be found on the right-hand formatting bar.
 
 Markdown has great support for lists
 
@@ -35,7 +35,7 @@ Feel free to contact us at pubpub@media.mit.edu with any questions.
 export function editorDefaultPageText(journalName) {
 	return `-----
 journalName: ` + journalName + `
-description: This is your journal's landing page. 
+description: This is your journal's landing page.
 -----
 # Section 1
 Pub content here.

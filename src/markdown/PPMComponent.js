@@ -168,7 +168,7 @@ const PPMComponent = React.createClass({
 		case 'pubheader':
 			// console.log(arguments);
 			Component = 'div';
-			props.id = 'pub-header';
+			props.className = 'headerBlock';
 			break;
 		case 'pubheaderitem':
 
@@ -192,14 +192,14 @@ const PPMComponent = React.createClass({
 			props.className = props.className + ' pubheaderitem';
 			// props['data-hash'] = children[0] ? murmur.v2(children[0]) : 0;
 			break;
-		case 'pubtitle':
-			if (children[0] && children[0].props) {
-				children[0] = children[0].props.children
-			}
-			Component = 'div';
-			props.id = 'pub-title';
-			break;
-
+		// case 'pubtitle':
+		// 	if (children[0] && children[0].props) {
+		// 		children[0] = children[0].props.children
+		// 	}
+		// 	Component = 'div';
+		// 	props.id = 'pub-title';
+		// 	break;
+		//
 		}
 
 

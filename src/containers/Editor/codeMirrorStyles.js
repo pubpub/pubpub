@@ -127,6 +127,11 @@ export function codeMirrorStyles(loginData, parentClass) {
 			color: editorStyles.colorHeader,
 			fontWeight: 'bold',
 		},
+		'.cm-pubheaderkey': {
+			fontSize: '15px',
+			color: editorStyles.colorHeader,
+			fontWeight: 'bold',
+		},
 		// '.cm-ppm-abstract': {
 		// 	fontSize: '16px',
 		// },

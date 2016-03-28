@@ -88,7 +88,8 @@ export default function() {
 
 	CodeMirror.defineSimpleMode('header', {
 		start: [
-			{regex: /title: .*/, token: 'pubheadertitle'}
+			{regex: /title: .*/, token: 'pubheadertitle'},
+			{regex: /.*:/, token: 'pubheaderkey'}
 		]
 	});
 
@@ -109,7 +110,7 @@ export default function() {
 			// 	parseDelimiters: false
 			// }
 			{
-				open: 'title:', close: '\n',
+				open: /^.*:/, close: '\n',
 				mode: CodeMirror.getMode(config, 'header'),
 				parseDelimiters: true
 			}

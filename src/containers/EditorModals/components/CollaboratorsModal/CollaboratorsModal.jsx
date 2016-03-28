@@ -22,14 +22,42 @@ const EditorModalCollaborators = React.createClass({
 		};
 	},
 
-	setPermission: function(mode, username) {
+	setPermission: function(mode, username, name) {
 		return () => {
 			// if the selected value is different than the set value
 			if (mode !== this.props.collaboratorData[username].permission) {
-				
+
 				const newCollaboratorsObject = this.props.collaboratorData;
 				newCollaboratorsObject[username].permission = mode;
 				this.props.updateCollaborators(newCollaboratorsObject, null);
+				if (mode === 'edit') {
+					const cm = document.getElementById('codemirror-wrapper').childNodes[0].childNodes[0].CodeMirror;
+					// check if the author string is in the pub, if not add
+					if (cm.getValue().indexOf('author: ' + username) < 0) {
+
+						let headerLine = undefined;
+						let titleLine = undefined;
+						let firstAuthorLine = undefined;
+
+						// Iterate over all lines in the doc
+						cm.eachLine(function(line) {
+							if (typeof(headerLine) === 'undefined' && line.text.substring(0, 5) === '-----') {
+								headerLine = cm.getLineNumber(line);
+							}
+							if (typeof(titleLine) === 'undefined' && line.text.substring(0, 6) === 'title:') {
+								titleLine = cm.getLineNumber(line);
+							}
+							if (typeof(firstAuthorLine) === 'undefined' && line.text.substring(0, 7) === 'author:') {
+								firstAuthorLine = cm.getLineNumber(line);
+							}
+
+						});
+
+						// Insert the author string at the best location we can find
+						cm.replaceRange('author: ' + username + '\n\tname: ' + name + '\n', {line: firstAuthorLine || titleLine + 1 || headerLine + 1 || 0, ch: 0});
+					}
+
+				}
 			}
 		};
 	},
@@ -45,7 +73,7 @@ const EditorModalCollaborators = React.createClass({
 
 	toggleshowInviteOptions: function() {
 		this.setState({
-			showInviteOptions: !this.state.showInviteOptions,	
+			showInviteOptions: !this.state.showInviteOptions,
 		});
 	},
 
@@ -59,7 +87,7 @@ const EditorModalCollaborators = React.createClass({
 				newCollaboratorsObject[result.groupSlug] = result;
 				newCollaboratorsObject[result.groupSlug].permission = 'read';
 			}
-			
+
 			// console.log(newCollaboratorsObject);
 			this.props.updateCollaborators(newCollaboratorsObject, null);
 		};
@@ -82,7 +110,7 @@ const EditorModalCollaborators = React.createClass({
 						totalCount++;
 						return (result.username
 							? <div key={'collabSearchUser-' + index} style={styles.result}>
-								
+
 								<div style={styles.imageWrapper}>
 									<img style={styles.image} src={result.thumbnail} />
 								</div>
@@ -98,7 +126,7 @@ const EditorModalCollaborators = React.createClass({
 									<FormattedMessage {...globalMessages.add} />
 								</div>
 							</div>
-						);	
+						);
 					})
 				}
 				{results.length === 0 || totalCount === 0
@@ -135,10 +163,10 @@ const EditorModalCollaborators = React.createClass({
 
 				{/* Add new collaborators search bar */}
 				<div style={[styles.addSection]}>
-					<Autocomplete 
-						autocompleteKey={'collabAutocomplete'} 
+					<Autocomplete
+						autocompleteKey={'collabAutocomplete'}
 						route={'autocompleteUsersAndGroups'}
-						showBottomLine={false} 
+						showBottomLine={false}
 						placeholder={this.props.intl.formatMessage(messages.addNewCollaborator)}
 						resultRenderFunction={this.renderCollaboratorsSearchResults}/>
 					{/* <input style={baseStyles.rightCornerSearchInput} type="text" placeholder="Add new collaborator"/> */}
@@ -173,7 +201,7 @@ const EditorModalCollaborators = React.createClass({
 
 						<div style={styles.clearfix}></div>
 					</div> */}
-					
+
 
 					{
 						collaboratorData.map((collaborator, index) => {
@@ -183,7 +211,7 @@ const EditorModalCollaborators = React.createClass({
 									<div style={[styles.imageColumn, styles.columnHeader]}> <img style={styles.userImage} src={collaborator.thumbnail ? collaborator.thumbnail : '/thumbnails/group.png'} /> </div>
 									<div style={[styles.nameColumn]}>{collaborator.name ? collaborator.name : collaborator.groupName}</div>
 									<div style={[styles.permissionsColumn]}>
-										<span key={'collaboratorPermissionsEdit-' + index} style={[styles.permission, collaborator.permission === 'edit' && styles.permissionActive]} onClick={this.setPermission('edit', collaborator.username ? collaborator.username : collaborator.groupSlug)}>
+										<span key={'collaboratorPermissionsEdit-' + index} style={[styles.permission, collaborator.permission === 'edit' && styles.permissionActive]} onClick={this.setPermission('edit', collaborator.username ? collaborator.username : collaborator.groupSlug, collaborator.name ? collaborator.name : collaborator.groupName)}>
 											<FormattedMessage
 												id="editor.canEdit"
 												defaultMessage="can edit"/>
@@ -204,7 +232,7 @@ const EditorModalCollaborators = React.createClass({
 							);
 						})
 					}
-					
+
 				</div>
 
 				{/* Invite by email content */}
@@ -242,7 +270,7 @@ styles = {
 			display: 'block',
 		},
 		display: 'none',
-		
+
 	},
 	addOptionsContent: {
 		padding: '15px 25px',
@@ -290,7 +318,7 @@ styles = {
 		textAlign: 'center',
 		height: '30px',
 		lineHeight: '30px',
-		
+
 	},
 	optionColumnClickable: {
 		userSelect: 'none',
@@ -301,7 +329,7 @@ styles = {
 		}
 	},
 	clearfix: {
-		// necessary because we float elements with variable height 
+		// necessary because we float elements with variable height
 		display: 'table',
 		clear: 'both',
 	},
