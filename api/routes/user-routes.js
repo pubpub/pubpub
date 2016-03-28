@@ -173,15 +173,13 @@ export function inviteReviewers(req, res) {
 
 			const pubURL = journalURL + '/pub/' + pub.slug;
 
-			for (const recipient in inviteData) {
-				if (inviteData.hasOwnProperty(recipient)) {
-					const recipientEmail = recipient.email;
+			for (const recipient of inviteData) {
+				const recipientEmail = recipient.email;
 
-					sendInviteEmail(senderName, pubName, pubURL, journalName, journalURL, journalIntroduction, recipientEmail, function(error, email) {
-						if (err) { console.log(error);	}
-						// console.log(email);
-					});
-				}
+				sendInviteEmail(senderName, pubName, pubURL, journalName, journalURL, journalIntroduction, recipientEmail, function(error, email) {
+					if (err) { console.log(error);	}
+					// console.log(email);
+				});
 			}
 			res.status(201).json({});
 		});
