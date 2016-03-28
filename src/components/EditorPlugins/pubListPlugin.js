@@ -1,7 +1,9 @@
 import React, {PropTypes} from 'react';
 import createPubPubPlugin from './PubPub';
-require('es6-promise').polyfill();
-require('isomorphic-fetch');
+import request from 'superagent';
+import { Link } from 'react-router';
+import {globalStyles} from 'utils/styleConstants';
+import dateFormat from 'dateformat';
 
 const InputFields = [];
 
@@ -18,23 +20,43 @@ const Plugin = React.createClass({
 		error: PropTypes.string,
 		children: PropTypes.string,
 	},
+	getInitialState() {
+		return {
+			pubs: [],
+		};
+	},
 	componentDidMount() {
-		const setState = this;
-		fetch('/api/autocompletePubsAll?string=auto')
-		.then(function(response) {
-			if (response.status >= 400) { throw new Error('Bad response from server'); }
-			return response.json();
-		})
-		.then(function(stories) { setState.setState({stories: stories}); });
+		request.get('/api/getJournalPubs').end((err, response)=>{
+			this.setState({pubs: response.body});
+		});
 	},
-	getInitialState: function() {
-		return {};
-	},
+
 	render: function() {
-
+		const pubs = this.state.pubs || [];
 		return (
-			<div>Here is the pub list!! {JSON.stringify(this.state.stories)}</div>
+			<div>
+				{
+					pubs.map((pub, index)=>{
+						return (
+							<div key={'pub-' + index} className={'pubList pub'}>
+								<Link style={globalStyles.link} to={'/pub/' + pub.slug}>
+									<div className={'pubList title'}>{pub.title}</div>
+									<div className={'pubList authors'}>
+										{pub.authors.map((author, authorIndex)=>{
+											return <div className={'pubList author'} key={'pub-' + index + '-author-' + authorIndex}>{author.name}</div>;
+										})}
+									</div>
+									<div className={'pubList abstract'}>{pub.abstract}</div>
+									<div className={'pubList createDate'}>{dateFormat(pub.createDate, 'mmm dd, yyyy')}</div>
+									<div className={'pubList lastUpdated'}>{dateFormat(pub.lastUpdated, 'mmm dd, yyyy')}</div>
+									<div className={'pubList discussionCount'}>{pub.discussions.length}</div>
+								</Link>
 
+							</div>
+						);
+					})
+				}
+			</div>
 		);
 	}
 });

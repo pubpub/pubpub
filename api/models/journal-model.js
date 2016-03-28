@@ -83,7 +83,7 @@ journalSchema.statics.updateHerokuDomains = function(oldDomain, newDomain) {
 	});
 };
 
-journalSchema.statics.populationObject = function(collectionsOnly) {
+journalSchema.statics.populationObject = function(collectionsOnly, pubsOnly) {
 	const options = [
 		{path: 'landingPage', select: 'markdown'},
 
@@ -101,7 +101,7 @@ journalSchema.statics.populationObject = function(collectionsOnly) {
 				{
 					path: 'discussions',
 					model: 'Discussion',
-					select: 'markdown author postDate',
+					select: 'markdown author createDate',
 					populate: {
 						path: 'author',
 						model: 'User',
@@ -122,7 +122,7 @@ journalSchema.statics.populationObject = function(collectionsOnly) {
 				{
 					path: 'discussions',
 					model: 'Discussion',
-					select: 'markdown author postDate',
+					select: 'markdown author createDate',
 					populate: {
 						path: 'author',
 						model: 'User',
@@ -132,7 +132,14 @@ journalSchema.statics.populationObject = function(collectionsOnly) {
 			],
 		}
 	];
-	return collectionsOnly ? [options[3]] : options;
+	let output = options;
+	if (collectionsOnly) {
+		output = [options[4]];
+	}
+	if (pubsOnly) {
+		output = [options[3]];
+	}
+	return output;
 };
 
 module.exports = mongoose.model('Journal', journalSchema);

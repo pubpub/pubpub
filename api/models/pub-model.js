@@ -49,6 +49,8 @@ const pubSchema = new Schema({
 		isPublished: { type: Boolean },
 	}],
 
+	tags: [{ type: String }],
+	
 	// A duplicate cache of the parameters as defined in the editor.
 	// Also stored here so that we can privelege access to the editor
 	// and to private pubs

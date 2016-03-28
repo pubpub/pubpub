@@ -83,6 +83,7 @@ export function autocompletePubs(req, res) {
 		query.featuredInList = req.query.journalID;
 	}
 
+	// Pub.find(query, {'slug': 1, 'title': 1, 'abstract': 1, 'tags': 1, 'discussions': 1, 'lastUpdated': 1}).exec(function(err, pubs) {
 	Pub.find(query, {'slug': 1, 'title': 1, 'abstract': 1}).exec(function(err, pubs) {
 		const objects = pubs;
 		// console.log(objects);

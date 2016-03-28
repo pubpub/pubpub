@@ -366,3 +366,14 @@ export function saveCollection(req, res) {
 	});
 }
 app.post('/saveCollection', saveCollection);
+
+export function getJournalPubs(req, res) {
+	const host = req.headers.host.split(':')[0];
+	Journal.findOne({ $or: [ {subdomain: host.split('.')[0]}, {customDomain: host}]})
+	.populate(Journal.populationObject(false, true))
+	.lean().exec(function(err, journal) {
+		console.log(journal);
+		return res.status(201).json(journal.pubsFeatured);
+	});
+}
+app.get('/getJournalPubs', getJournalPubs);
