@@ -34,6 +34,8 @@ const journalSchema = new Schema({
 
 	design: { type: Schema.Types.Mixed },
 	landingPage: { type: ObjectId, ref: 'Pub' },
+	locale: {type: String}, // Two character identifier for language pack, e.g 'en', 'es', etc.
+	customLanguageMessages: {type: String}, // A JSON.stringify object that will be parsed and merged with base locale messages.
 
 	settings: { type: Schema.Types.Mixed },
 

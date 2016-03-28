@@ -52,7 +52,7 @@ const EditorModalPublish = React.createClass({
 		const messages = defineMessages({
 			descriptionPlaceholder: {
 				id: 'collections.descriptionPlaceholder',
-				defaultMessage: 'e.g. Initial draft version,or updating dataset caption',
+				defaultMessage: 'e.g. \'Initial draft version\', \'Updating dataset caption\', \'Restructing argument\'',
 			},
 		});
 
@@ -63,36 +63,13 @@ const EditorModalPublish = React.createClass({
 				</div>
 
 				<div style={baseStyles.topHeader}>
-					<FormattedMessage
-						id="editor.publish"
-						defaultMessage="Publish"/>
+					<FormattedMessage id="editor.saveVersion" defaultMessage="Save Version"/>
 				</div>
-
-				{/* Draft or Review-ready option
-					Should default to review-ready if a past version was */}
-				{/* <div style={styles.optionContainer}>
-					<div style={styles.optionHeader}>
-						<FormattedMessage
-							id="editor.versionState"
-							defaultMessage="version state"/>
-					</div>
-					<div style={styles.optionChoices}>
-						<span key={'publishModal-draft'} onClick={this.handleStateClick('Draft')} style={[styles.option, this.state.versionState === 'Draft' && styles.optionActive]}>
-							<FormattedMessage {...globalMessages.Draft} />
-						</span>
-						<span style={styles.optionSeparator}>|</span>
-						<span key={'publishModal-journal'} onClick={this.handleStateClick('PeerReviewReady')} style={[styles.option, this.state.versionState === 'PeerReviewReady' && styles.optionActive]}>
-							<FormattedMessage {...globalMessages.ReadyForPeerReview} />
-						</span>
-					</div>
-				</div> */}
 
 				{/* Version message input */}
 				<div style={styles.optionContainer}>
 					<div style={styles.optionHeader}>
-						<FormattedMessage
-							id="editor.versionDescription"
-							defaultMessage="version description"/>
+						<FormattedMessage id="editor.versionDescription" defaultMessage="version description"/>
 					</div>
 					<textarea onChange={this.handleDescriptionChange} style={styles.messageTextarea} placeholder={this.props.intl.formatMessage(messages.descriptionPlaceholder)}></textarea>
 				</div>
@@ -100,25 +77,31 @@ const EditorModalPublish = React.createClass({
 				{/* Publish Message */}
 				<div style={styles.publishText}>
 					<div style={styles.publishTextP}>
-						<FormattedMessage
-							id="editor.publishMessage1"
-							defaultMessage="You can publish versions to your Pub as frequently as you like."/>
+						<FormattedMessage id="editor.publishMessage1" defaultMessage="You can save versions to your Pub as frequently as you like."/>
 					</div>
 
 					<div style={styles.publishTextP}>
-						<FormattedMessage
-							id="editor.publishMessage2"
-							defaultMessage="We encourage you to publish early and often."/>
+						<FormattedMessage id="editor.publishMessage2" defaultMessage="Versions are private until you publish."/>
 					</div>
 					<div style={styles.publishTextP}>
-						<FormattedMessage
-							id="editor.publishMessage3"
-							defaultMessage="The full history will be maintained and accessible."/>
+						<FormattedMessage id="editor.publishMessage3" defaultMessage="The full history will be maintained and accessible."/>
+					</div>
+
+					{/* Publish button */}
+					<div key="saveVersion-button" style={styles.publishButton} onClick={this.handleSaveVersion(false)}>
+						<FormattedMessage id="editor.saveVersionButton" defaultMessage="Save version"/>
+					</div>
+
+					<div style={styles.publishTextP}>
+						<FormattedMessage id="editor.publishMessage4" defaultMessage="Publishing your work will make your pub public."/>
 					</div>
 					<div style={styles.publishTextP}>
+						<FormattedMessage id="editor.publishMessage5" defaultMessage="You cannot 'unpublish' once a document has been made public."/>
+					</div>
 
-						<FormattedMessage id="editor.publishMessage5" defaultMessage="By publishing, you agree to a Creative Commons By license for your work."/>
+					<div style={styles.publishTextP}>
 
+						<FormattedMessage id="editor.publishMessage6" defaultMessage="By publishing, you agree to a Creative Commons By license for your work."/>
 						<div style={styles.license}>
 							<License text={'Your pub will be licensed under a'} hover={true} />
 						</div>
@@ -144,25 +127,18 @@ const EditorModalPublish = React.createClass({
 					}
 
 					<div style={[styles.publishTextP, styles.publishTextPError, this.state.descriptionError && {display: 'block'}]}>
-						<FormattedMessage
-							id="editor.publishMessage4"
-							defaultMessage="A description is required."/>
+						<FormattedMessage id="editor.publishMessage7" defaultMessage="A description is required."/>
+					</div>
+
+					{/* Publish button */}
+					<div key="publish-button" style={[styles.publishButton, this.props.isPublished && styles.isPublished]} onClick={this.handleSaveVersion(true)}>
+						<FormattedMessage id="editor.publishButton" defaultMessage="Publish"/>
 					</div>
 				</div>
 
-				{/* Publish button */}
-				<div key="saveVersion-button" style={styles.publishButton} onClick={this.handleSaveVersion(false)}>
-					<FormattedMessage
-						id="editor.saveVersionButton"
-						defaultMessage="Save version"/>
-				</div>
 
-				{/* Publish button */}
-				<div key="publish-button" style={[styles.publishButton, this.props.isPublished && styles.isPublished]} onClick={this.handleSaveVersion(true)}>
-					<FormattedMessage
-						id="editor.publishButton"
-						defaultMessage="Publish"/>
-				</div>
+
+
 			</div>
 		);
 	}
@@ -246,14 +222,18 @@ styles = {
 		position: 'absolute',
 	},
 	publishButton: {
-		fontSize: '35px',
-		padding: '25px',
-		textAlign: 'right',
+		fontSize: '1.5em',
+		padding: '10px 25px',
+		textAlign: 'center',
 		marginLeft: 'calc(100% - 230px - 50px)',
 		userSelect: 'none',
+		border: '1px solid #ccc',
 		':hover': {
 			cursor: 'pointer',
 			color: 'black',
+		},
+		':active': {
+			transform: 'translateY(1px)',
 		},
 	},
 	isPublished: {
