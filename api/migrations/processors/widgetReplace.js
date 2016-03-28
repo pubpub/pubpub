@@ -39,6 +39,20 @@ function refactorMarkdown({markdown, assets}) {
 			}
 		}
 
+
+		if ((pluginDict.pluginType === 'highlight' || pluginDict.pluginType === 'selection') && pluginDict.index) {
+			const index = parseInt(pluginDict.index);
+			const asset = assets.find((asset) => (asset.assetData.index === index));
+			if (asset) {
+				pluginDict.source = asset;
+			} else {
+				console.log(' - Could not find selection with index', pluginDict.index);
+			}
+			// delete pluginDict.index;
+			pluginDict.pluginType = 'highlight';
+		}
+
+
 		if (pluginDict.source && (typeof pluginDict.source === 'string' || pluginDict.source instanceof String)) {
 			const asset = assets.find((asset) => (asset.label === pluginDict.source));
 			if (asset) {
@@ -64,7 +78,7 @@ function refactorMarkdown({markdown, assets}) {
 	return newMarkdown;
 }
 
-export default function widgetProcessor({pub, markdown, assets}) {
+export default function widgetProcessor({markdown, assets}) {
 	const newMarkdown = refactorMarkdown({markdown, assets});
 	return newMarkdown;
 }

@@ -5,10 +5,11 @@ import oldAsset from './oldModels/old-asset-model';
 import Reference from './oldModels/old-reference-model';
 import Pub from './oldModels/old-pub-model';
 import User from '../models/user-model';
+import Discussion from '../models/discussion-model';
 
 import {refactorTitleFirebase, refactorTitleMongo} from './processors/titleRefactor';
 import widgetProcessor from './processors/widgetReplace';
-import assetProcessor from './processors/assetRefactor';
+import {assetRefactorPub} from './processors/assetRefactor';
 
 const Firepad = require('firepad');
 
@@ -27,8 +28,9 @@ export function migrateAllPubText(PUBS_TO_MIGRATE) {
 
 		// console.log(mongoose.modelNames());
 
-		const cursor = Pub.find({slug: 'newsclouds'})
+		// const cursor = Pub.find({slug: 'newsclouds'})
 		// const cursor = Pub.find({})
+		const cursor = Pub.find({slug: 'VidVid-Moving_images_in_context'})
 		.populate({ path: 'assets history.assets', model: 'oldAsset' })
 		.populate({ path: 'references history.references', model: 'oldReference' })
 		.populate({ path: 'authors history.authors', select: 'username name thumbnail firstName lastName', model: 'User' })
@@ -140,20 +142,79 @@ const migrateSinglePub = function({ref, pub, assets, references}, callback) {
 
 			// migrateSinglePubFirebase({ref, pub, assets: newAssets}, callback);
 
-			Pub.update({_id: pub._id}, newDoc, function(err2, results) {
-				if (err2) {
-					callback(err2);
+			newDoc.StyleDesktop = newDoc.StyleRawDesktop
+			newDoc.StyleRawDesktop = undefined;
+
+			newDoc.StyleMobile = newDoc.StyleRawMobile
+			newDoc.StyleRawMobile = undefined;
+
+			newDoc.status = undefined;
+			newDoc.isPublished = (newDoc.history.length >= 1);
+			newDoc.settings = undefined;
+
+
+			for (let history of newDoc.history) {
+				history.versionNote = history.publishNote;
+				history.versionDate = history.publishDate;
+				history.versionAuthor = history.publishAuthor;
+				history.publishNote = undefined;
+				history.publishDate = undefined;
+				history.publishAuthor = undefined;
+				history.diffStyleDesktop = history.styleRawDesktop;
+				history.diffStyleMobile = history.styleRawMobile;
+				history.styleRawDesktop = undefined;
+				history.styleRawMobile = undefined;
+				history.isPublished = true;
+				history.diffObject.diffStyleDesktop = [];
+				history.diffObject.diffStyleMobile = [];
+				history.diffObject.diffTitle = undefined;
+				history.diffObject.diffAbstract = undefined;
+				history.diffObject.diffAuthorsNote = undefined;
+
+				history.tags = [];
+				history.style = undefined;
+			}
+
+
+			const unset = {
+				status: 1,
+				StyleRawMobile: 1,
+				StyleRawDesktop: 1,
+				settings: 1,
+				'history.$.publishNote': 1,
+				'history.$.publishDate': 1,
+				'history.$.publishAuthor': 1,
+				'history.$.styleRawDesktop': 1,
+				'history.$.styleRawMobile': 1,
+				'history.$.diffObject.diffTitle': 1,
+				'history.$.diffObject.diffAbstract': 1,
+				'history.$.style': 1,
+
+			};
+
+
+			Discussion.update({ $in: pub.editorComments}, {$set:{"private":true}}, {upsert: false, multi: true}, function(err,numAffected) {
+
+				if (err) {
+					cnsole.log(err);
+					callback(err);
 					return;
 				}
-				migrateSinglePubFirebase({ref, pub, assets: newAssets}, callback);
-				// callback(err);
-			});
+				console.log('- Updated editor discussion comments');
+				Pub.update({_id: pub._id}, {$set: newDoc, $unset: unset}, function(err2, results) {
+					if (err2) {
+						callback(err2);
+						return;
+					}
+					migrateSinglePubFirebase({ref, pub, assets: newAssets}, callback);
+					// callback(err);
+				});
 
+			});
 
 		} catch (err1) {
 			callback(err1);
 		}
-
 
 		/*
 		for (var index = pub.history.length; index--;) {
@@ -162,13 +223,11 @@ const migrateSinglePub = function({ref, pub, assets, references}, callback) {
 
 			}
 		}
-
 		*/
-
-
 
 	};
 
-	assetProcessor({pub: pub, assets, references, callback: processorCallback});
+
+	assetRefactorPub({pub: pub, assets, references, callback: processorCallback});
 
 }
