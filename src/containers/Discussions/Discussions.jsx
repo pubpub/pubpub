@@ -45,6 +45,21 @@ const Discussions = React.createClass({
 		};
 	},
 
+	componentWillReceiveProps(nextProps) {
+		if (this.props.loginData.get('addedHighlight') === undefined && nextProps.loginData.get('addedHighlight')) {
+			const highlightObjectData = nextProps.loginData.get('addedHighlight').toJS().assetData;
+
+			const cmInstances = document.getElementsByClassName('CodeMirror');
+			for (const instance of cmInstances) {
+				const cm = instance.CodeMirror;
+				const currentSelection = cm.getCursor();
+				const inlineObject = {pluginType: 'highlight', source: highlightObjectData};
+				cm.replaceRange('[[' + JSON.stringify(inlineObject) + ']]', {line: currentSelection.line, ch: currentSelection.ch});
+			}
+
+		}
+	},
+
 	addDiscussion: function(discussionObject, activeSaveID) {
 		if (!this.props.loginData.get('loggedIn')) {
 			return this.props.dispatch(toggleVisibility());

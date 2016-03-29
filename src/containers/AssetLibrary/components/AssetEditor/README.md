@@ -33,7 +33,6 @@ assetType: 'highlight',
 assetData: {
 	text: {type: String},
 	context: {type: String},
-	ancestorHash: {type: String},
 
 	endContainerPath: {type: String},
 	endOffset: {type: String},

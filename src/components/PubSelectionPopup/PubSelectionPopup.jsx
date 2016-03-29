@@ -100,7 +100,7 @@ const PubSelectionPopup = React.createClass({
 		const chunkedPath = splitOnSemicolonArray[0].split('>');
 		for (let index = chunkedPath.length; index--;) {
 			const tempPath = chunkedPath.slice(0, index + 1).join('>');
-			const tempElement = document.getElementById('pubBodyContent').querySelector(tempPath);
+			const tempElement = document.querySelector(tempPath);
 			if (tempElement.dataset && tempElement.dataset.hash) {
 				newPath = '[data-hash="' + tempElement.dataset.hash + '"]' + newPath;
 				break;
@@ -113,7 +113,7 @@ const PubSelectionPopup = React.createClass({
 	},
 
 	onHighlightSave: function() {
-		const renderer = new Marklib.Rendering(document, {className: 'tempHighlight'}, document.getElementById('pubBodyContent'));
+		const renderer = new Marklib.Rendering(document, {className: 'tempHighlight'}, document);
 		const result = renderer.renderWithRange(this.state.range);
 
 		// Note - these containers will fail if identical paragraphs or list-items exist (they'll have an identical hash).

@@ -67,6 +67,7 @@ export const defaultState = Immutable.Map({
 	attemptedRestoreState: false,
 	userData: {},
 	assetLoading: false,
+	addedHighlight: undefined,
 	error: undefined
 });
 
@@ -183,9 +184,12 @@ function setNotificationsRead(state) {
 	return state.mergeIn(['userData', 'notificationCount'], 0);
 }
 
-function assetCreated(state, result) {
+function assetCreated(state, result, isHighlight) {
 	const newState = state.mergeIn(['userData', 'assets'], state.getIn(['userData', 'assets']).push(result));
-	return newState.set('assetLoading', false);
+	return newState.merge({
+		assetLoading: false,
+		addedHighlight: isHighlight && result,
+	});
 }
 
 function assetUpdated(state, result) {
@@ -201,7 +205,10 @@ function assetUpdated(state, result) {
 }
 
 function assetLoading(state) {
-	return state.set('assetLoading', true);
+	return state.merge({
+		assetLoading: true,
+		addedHighlight: undefined,
+	});
 }
 
 /*--------*/
@@ -261,7 +268,7 @@ export default function loginReducer(state = defaultState, action) {
 	case CREATE_ASSET_LOAD:
 		return assetLoading(state);
 	case CREATE_ASSET_SUCCESS:
-		return assetCreated(state, action.result);
+		return assetCreated(state, action.result, action.isHighlight);
 	case UPDATE_ASSET_LOAD:
 		return assetLoading(state);
 	case UPDATE_ASSET_SUCCESS:

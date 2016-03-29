@@ -4,12 +4,13 @@ import Radium, {Style} from 'radium';
 import Helmet from 'react-helmet';
 import PureRenderMixin from 'react-addons-pure-render-mixin';
 import { Link } from 'react-router';
-import {getPub, openPubModal, closePubModal, addSelection, pubNavOut, pubNavIn, togglePubHighlights} from 'actions/pub';
+import {getPub, openPubModal, closePubModal, pubNavOut, pubNavIn, togglePubHighlights} from 'actions/pub';
 import {getRandomSlug} from 'actions/journal';
 import {toggleVisibility, follow, unfollow} from 'actions/login';
 import {closeMenu} from 'actions/nav';
+import {createHighlight} from 'actions/assets';
 
-import {convertImmutableListToObject} from 'utils/parsePlugins';
+// import {convertImmutableListToObject} from 'utils/parsePlugins';
 
 import {Button, PubBody, PubModals, PubNav, LoaderDeterminate, PubLeftBar} from 'components';
 import {Discussions} from 'containers';
@@ -124,9 +125,14 @@ const PubReader = React.createClass({
 	},
 
 	addSelection: function(newSelection) {
-		newSelection.pub = this.props.readerData.getIn(['pubData', '_id']);
-		newSelection.version = this.props.query.version !== undefined && this.props.query.version > 0 && this.props.query.version < (this.props.readerData.getIn(['pubData', 'history']).size - 1) ? this.props.query.version : this.props.readerData.getIn(['pubData', 'history']).size;
-		this.props.dispatch(addSelection(newSelection));
+		newSelection.sourcePub = this.props.readerData.getIn(['pubData', '_id']);
+		newSelection.sourceVersion = this.props.query.version !== undefined && this.props.query.version > 0 && this.props.query.version < (this.props.readerData.getIn(['pubData', 'history']).size - 1) ? this.props.query.version : this.props.readerData.getIn(['pubData', 'history']).size;
+
+		const newHighLight = {};
+		newHighLight.assetType = 'highlight';
+		newHighLight.label = newSelection.text.substring(0, 10);
+		newHighLight.assetData = newSelection;
+		this.props.dispatch(createHighlight(newHighLight));
 	},
 
 	toggleHighlights: function() {
