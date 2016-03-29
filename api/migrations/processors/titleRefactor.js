@@ -23,9 +23,9 @@ export function refactorTitleFirebase({pub, markdown, authors}) {
 	let foundAuthorsNote = null;
 	let newMarkdown = markdown;
 
-	const titleRegex = /\[\[title:(.*?)\]\]/g;
-	const abstractRegex = /\[\[abstract:(.*?)\]\]/g;
-	const authorsnoteRegex = /\[\[authorsnote:(.*?)\]\]/g;
+	const titleRegex = /\[\[title:(.*?)\]\]/gi;
+	const abstractRegex = /\[\[abstract:(.*?)\]\]/gi;
+	const authorsnoteRegex = /\[\[authorsNote:(.*?)\]\]/gi;
 
 
 	const processTitle = function(match, p1) {
@@ -48,7 +48,7 @@ export function refactorTitleFirebase({pub, markdown, authors}) {
 	newMarkdown = newMarkdown.replace(authorsnoteRegex, processAuthorsNote);
 
 	if (!foundTitle) {
-		console.log('- Could not find title in ' + pub.slug);
+		// console.log('- Could not find title in ' + pub.slug);
 	}
 
 	// console.log(foundTitle, foundAbstract, foundAuthorsNote);

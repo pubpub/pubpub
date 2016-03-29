@@ -1,6 +1,9 @@
 import mongoose from './connectMongo';
 // import Discussion from '../models/discussion-model';
 import Discussion from './oldModels/old-discussion-model';
+import newDiscussion from '../models/discussion-model';
+
+
 import Highlight from './oldModels/old-highlight-model';
 import widgetProcessor from './processors/widgetReplace';
 import {queue} from 'async';
@@ -74,7 +77,7 @@ function migrateDiscussion({discussion}, callback) {
 
       console.log('About to update discussion!');
 
-      Discussion.update({_id: discussion._id}, {$set: discussion, $unset: {postDate: 1, assets: 1, references: 1 }}, function(err, numAffected) {
+      newDiscussion.update({_id: discussion._id}, {$set: discussion, $unset: {postDate: 1, assets: 1, references: 1 }}, function(err, numAffected) {
         if (err) {
           console.log(err);
         }

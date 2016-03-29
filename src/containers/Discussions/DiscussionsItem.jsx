@@ -81,6 +81,8 @@ const DiscussionsItem = React.createClass({
 		const isArchived = discussionItem.archived;
 		const discussionPoints = discussionItem.points ? discussionItem.points : 0; // This is to fix a NaN problem with newly published comments/discussions
 
+
+
 		return (
 			isArchived && !this.state.showArchived
 				? <div style={[styles.archivedContainer, globalStyles.ellipsis]} key={'archiveBlock-' + discussionItem._id} onClick={this.toggleShowArchived}>
@@ -111,7 +113,7 @@ const DiscussionsItem = React.createClass({
 							</Link> <span style={styles.dot}>●</span> {
 								(((new Date() - new Date(discussionItem.createDate)) / (1000 * 60 * 60 * 24)) < 7)
 								? <FormattedRelative value={discussionItem.createDate} />
-								: <FormattedDate value={discussionItem.createDate} />
+							: <FormattedDate value={discussionItem.createDate || new Date()} />
 							}
 						</div>
 

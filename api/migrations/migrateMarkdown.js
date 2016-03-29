@@ -4,6 +4,8 @@ import {queue} from 'async';
 import oldAsset from './oldModels/old-asset-model';
 import Reference from './oldModels/old-reference-model';
 import Pub from './oldModels/old-pub-model';
+import NewPub from '../models/pub-model';
+
 import User from '../models/user-model';
 import Discussion from '../models/discussion-model';
 
@@ -21,7 +23,7 @@ export function migrateAllPubText(PUBS_TO_MIGRATE) {
 
 	connectFirebase(function(ref) {
 
-		var mongoQueue = queue(migrateSinglePub, 2);
+		var mongoQueue = queue(migrateSinglePub, 1);
 		// var firebaseQueue = queue(migrateSinglePubFirebase, 2);
 
 		// testing slugs: VidVid-Moving_images_in_context
@@ -96,22 +98,32 @@ const migrateSinglePubFirebase = function({ref, pub, assets}, callback) {
 
 	var childRef = ref.child(pub.slug + '/firepad');
 	var headless = new Firepad.Headless(childRef);
+	console.log('Trying firepad!');
 	try {
 		headless.getText(function(text) {
+			console.log('Got text!');
+			// console.log(text);
 			try {
 				let newMarkdown = refactorTitleFirebase({pub, markdown: text, authors: pub.authors});
 				newMarkdown = widgetProcessor({markdown: newMarkdown, assets: assets});
 				// callback();
+				console.log(newMarkdown);
 
 				try {
+					console.log('Trying to set text!');
 					headless.setText(newMarkdown, function() {
+						console.log('set firepad!');
 						callback();
 					});
 				} catch (err1) {
+					console.log('error with text!');
+					console.log(err1);
 					callback(err1);
 				}
 
 			} catch (err) {
+				console.log('error with text!');
+				console.log(err2);
 				callback(err);
 			}
 
@@ -152,7 +164,8 @@ const migrateSinglePub = function({ref, pub, assets, references}, callback) {
 			newDoc.StyleRawMobile = undefined;
 
 			newDoc.status = undefined;
-			newDoc.isPublished = (newDoc.history.length >= 1);
+			newDoc.isPublished = (pub.history.length >= 1);
+			console.log('isPublished', newDoc.isPublished);
 			newDoc.settings = undefined;
 
 
@@ -181,37 +194,7 @@ const migrateSinglePub = function({ref, pub, assets, references}, callback) {
 				history.style = undefined;
 				let newHistoryMarkdown = history.markdown;
 				newHistoryMarkdown = refactorTitleMongo({pub: {title: history.title, abstract: history.abstract, authorsNote: history.authorsNote, slug: pub.slug}, markdown: newHistoryMarkdown, authors: history.authors});
-				newDoc.markdown = widgetProcessor({markdown: newHistoryMarkdown, assets: newAssets});
-			}
-
-
-			let unset;
-
-			if (newDoc.history.length >= 1) {
-				// console.log(newDoc.history);
-				unset = {
-	 				status: 1,
-	 				StyleRawMobile: 1,
-	 				StyleRawDesktop: 1,
-	 				settings: 1,
-					/*
-	 				'history.$.publishNote': 1,
-	 				'history.$.publishDate': 1,
-	 				'history.$.publishAuthor': 1,
-	 				'history.$.styleRawDesktop': 1,
-	 				'history.$.styleRawMobile': 1,
-	 				'history.$.diffObject.diffTitle': 1,
-	 				'history.$.diffObject.diffAbstract': 1,
-	 				'history.$.style': 1,
-					*/
- 				};
-			} else {
-				unset = {
-	 				status: 1,
-	 				StyleRawMobile: 1,
-	 				StyleRawDesktop: 1,
-	 				settings: 1,
- 				};
+				history.markdown = widgetProcessor({markdown: newHistoryMarkdown, assets: newAssets});
 			}
 
 
@@ -225,7 +208,18 @@ const migrateSinglePub = function({ref, pub, assets, references}, callback) {
 				}
 				console.log('- Updated editor discussion comments');
 				// console.log(unset);
-				Pub.update({_id: pub._id}, {$set: newDoc, $unset: unset}, function(err2, results) {
+
+				/*
+				const unset = {
+					status: 1,
+					StyleRawMobile: 1,
+					StyleRawDesktop: 1,
+					settings: 1,
+				};
+				*/
+
+				NewPub.update({_id: pub._id}, {$set: newDoc}, function(err2, results) {
+					console.log('Got update!');
 					if (err2) {
 						callback(err2);
 						return;
