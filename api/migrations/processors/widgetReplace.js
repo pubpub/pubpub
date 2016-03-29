@@ -44,7 +44,8 @@ function refactorMarkdown({markdown, assets}) {
 			const index = parseInt(pluginDict.index);
 			const asset = assets.find((asset) => (asset.assetData.index === index));
 			if (asset) {
-				pluginDict.source = asset;
+				pluginDict.source = asset.assetData
+				pluginDict.source._id = asset._id;
 			} else {
 				console.log(' - Could not find selection with index', pluginDict.index);
 			}
@@ -56,14 +57,17 @@ function refactorMarkdown({markdown, assets}) {
 		if (pluginDict.source && (typeof pluginDict.source === 'string' || pluginDict.source instanceof String)) {
 			const asset = assets.find((asset) => (asset.label === pluginDict.source));
 			if (asset) {
-				pluginDict.source = asset;
+				pluginDict.source = asset.assetData;
+				pluginDict.source._id = asset._id;
 			}
 		}
 
 		if (pluginDict.reference && (typeof pluginDict.reference === 'string' || pluginDict.reference instanceof String)) {
 			const asset = assets.find((asset) => (asset.label === pluginDict.reference));
 			if (asset) {
-				pluginDict.reference = asset;
+				pluginDict.reference = asset.assetData;
+				pluginDict.reference._id = asset._id;
+
 			}
 		}
 

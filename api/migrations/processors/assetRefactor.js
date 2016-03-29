@@ -180,10 +180,8 @@ export function assetRefactorPub({pub, assets, references, callback}) {
 		const referenceModels = references.map((reference) => convertReference(pub, reference));
 		const insertModels = assetModels.concat(referenceModels);
 
-		// callback(null, insertModels);
-
 		Asset.create(insertModels, function(err, assets) {
-			if (err) return callback(err);
+			if (err) return callback(err, assets);
 			return callback(null, assets);
 		});
 

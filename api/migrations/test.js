@@ -1,7 +1,9 @@
-// import {migrateAllPubText} from './migrateMarkdown';
+import {migrateAllPubText} from './migrateMarkdown';
 import {migrateDiscussions} from './migrateDiscussions';
+import {migrateJournals} from './migrateJournals';
 
-migrateDiscussions();
+migrateJournals();
+//migrateDiscussions(1000000);
 
 // const PUBS_TO_MIGRATE = 4;
-// migrateAllPubText(PUBS_TO_MIGRATE);
+//migrateAllPubText(1000000);

@@ -14,9 +14,9 @@ export function migrateDiscussions (MAX_TO_MIGRATE) {
   const errorDiscussions = [];
 
 
-  Discussion.find({})
-  .populate({ path: 'selections', model: 'oldHighlight' })
+  Discussion.find({}).populate({ path: 'selections', model: 'oldHighlight' })
   .exec(function(err, discussions) {
+    console.log('Fetched discussions');
     for (let discussion of discussions) {
 
       if (err || !discussion || migrateCount >= MAX_TO_MIGRATE) {
@@ -71,6 +71,8 @@ function migrateDiscussion({discussion}, callback) {
         datePosted: postDate,
         version: discussion.version,
       }];
+
+      console.log('About to update discussion!');
 
       Discussion.update({_id: discussion._id}, {$set: discussion, $unset: {postDate: 1, assets: 1, references: 1 }}, function(err, numAffected) {
         if (err) {

@@ -29,8 +29,8 @@ export function migrateAllPubText(PUBS_TO_MIGRATE) {
 		// console.log(mongoose.modelNames());
 
 		// const cursor = Pub.find({slug: 'newsclouds'})
-		// const cursor = Pub.find({})
-		const cursor = Pub.find({slug: 'VidVid-Moving_images_in_context'})
+		const cursor = Pub.find({})
+		//const cursor = Pub.find({slug: 'VidVid-Moving_images_in_context'})
 		.populate({ path: 'assets history.assets', model: 'oldAsset' })
 		.populate({ path: 'references history.references', model: 'oldReference' })
 		.populate({ path: 'authors history.authors', select: 'username name thumbnail firstName lastName', model: 'User' })
@@ -131,9 +131,12 @@ const migrateSinglePub = function({ref, pub, assets, references}, callback) {
 
 	const processorCallback = (err, newAssets) => {
 		if (err) {
+			// console.log(newAssets);
+			// console.log(arguments);
 			callback(err);
 			return;
 		}
+		newAssets = newAssets || [];
 		try {
 			if (pub.markdown) {
 				newDoc.markdown = refactorTitleMongo({pub, markdown: pub.markdown, authors: pub.authors});
@@ -170,37 +173,58 @@ const migrateSinglePub = function({ref, pub, assets, references}, callback) {
 				history.diffObject.diffTitle = undefined;
 				history.diffObject.diffAbstract = undefined;
 				history.diffObject.diffAuthorsNote = undefined;
+				history.diffObject.additions = 0;
+				history.diffObject.deletions = 0;
+				history.diffObject.diffMarkdown = [];
 
 				history.tags = [];
 				history.style = undefined;
+				let newHistoryMarkdown = history.markdown;
+				newHistoryMarkdown = refactorTitleMongo({pub: {title: history.title, abstract: history.abstract, authorsNote: history.authorsNote, slug: pub.slug}, markdown: newHistoryMarkdown, authors: history.authors});
+				newDoc.markdown = widgetProcessor({markdown: newHistoryMarkdown, assets: newAssets});
 			}
 
 
-			const unset = {
-				status: 1,
-				StyleRawMobile: 1,
-				StyleRawDesktop: 1,
-				settings: 1,
-				'history.$.publishNote': 1,
-				'history.$.publishDate': 1,
-				'history.$.publishAuthor': 1,
-				'history.$.styleRawDesktop': 1,
-				'history.$.styleRawMobile': 1,
-				'history.$.diffObject.diffTitle': 1,
-				'history.$.diffObject.diffAbstract': 1,
-				'history.$.style': 1,
+			let unset;
 
-			};
+			if (newDoc.history.length >= 1) {
+				// console.log(newDoc.history);
+				unset = {
+	 				status: 1,
+	 				StyleRawMobile: 1,
+	 				StyleRawDesktop: 1,
+	 				settings: 1,
+					/*
+	 				'history.$.publishNote': 1,
+	 				'history.$.publishDate': 1,
+	 				'history.$.publishAuthor': 1,
+	 				'history.$.styleRawDesktop': 1,
+	 				'history.$.styleRawMobile': 1,
+	 				'history.$.diffObject.diffTitle': 1,
+	 				'history.$.diffObject.diffAbstract': 1,
+	 				'history.$.style': 1,
+					*/
+ 				};
+			} else {
+				unset = {
+	 				status: 1,
+	 				StyleRawMobile: 1,
+	 				StyleRawDesktop: 1,
+	 				settings: 1,
+ 				};
+			}
 
 
-			Discussion.update({ $in: pub.editorComments}, {$set:{"private":true}}, {upsert: false, multi: true}, function(err,numAffected) {
+
+			Discussion.update({ _id: {$in: pub.editorComments}}, {$set:{"private":true}}, {upsert: false, multi: true}, function(err,numAffected) {
 
 				if (err) {
-					cnsole.log(err);
+					console.log(err);
 					callback(err);
 					return;
 				}
 				console.log('- Updated editor discussion comments');
+				// console.log(unset);
 				Pub.update({_id: pub._id}, {$set: newDoc, $unset: unset}, function(err2, results) {
 					if (err2) {
 						callback(err2);
@@ -228,6 +252,6 @@ const migrateSinglePub = function({ref, pub, assets, references}, callback) {
 	};
 
 
-	assetRefactorPub({pub: pub, assets, references, callback: processorCallback});
+	assetRefactorPub({pub: pub, assets: assets || [], references: references || [], callback: processorCallback});
 
 }
