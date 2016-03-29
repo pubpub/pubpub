@@ -1,7 +1,7 @@
 /*--------*/
 // Define Action types
-// 
-// All action types are defined as constants. Do not manually pass action 
+//
+// All action types are defined as constants. Do not manually pass action
 // types as strings in action creators
 /*--------*/
 export const CREATE_PUB_LOAD = 'pub/CREATE_PUB_LOAD';
@@ -36,9 +36,13 @@ export const ARCHIVE_DISCUSSION_LOAD = 'pub/ARCHIVE_DISCUSSION_LOAD';
 export const ARCHIVE_DISCUSSION_SUCCESS = 'pub/ARCHIVE_DISCUSSION_SUCCESS';
 export const ARCHIVE_DISCUSSION_FAIL = 'pub/ARCHIVE_DISCUSSION_FAIL';
 
+export const SUGGEST_PUB = 'pub/SUGGEST_PUB';
+export const SUGGEST_PUB_SUCCESS = 'pub/SUGGEST_PUB_SUCCESS';
+export const SUGGEST_PUB_FAIL = 'pub/SUGGEST_PUB_FAIL';
+
 /*--------*/
 // Define Action creators
-// 
+//
 // All calls to dispatch() call one of these functions. Do not manually create
 // action objects (e.g. {type:example, payload:data} ) within dispatch()
 // function calls
@@ -64,10 +68,20 @@ export function getPub(slug, journalID, referrer) {
 	return {
 		types: [LOAD_PUB, LOAD_PUB_SUCCESS, LOAD_PUB_FAIL],
 		promise: (client) => client.get('/getPub', {params: {
-			slug: slug, 
+			slug: slug,
 			journalID: journalID,
 			referrer: referrer,
-		}}) 
+		}})
+	};
+}
+
+export function getPubRecommendations(pubID, journalID, referrer) {
+	return {
+		types: [SUGGEST_PUB, SUGGEST_PUB_SUCCESS, SUGGEST_PUB_FAIL],
+		promise: (client) => client.get('/getPubRecommendation', {params: {
+			pubID: slug,
+			journalID: journalID,
+		}})
 	};
 }
 
@@ -75,32 +89,32 @@ export function openPubModal(modal) {
 	return {
 		type: OPEN_PUB_MODAL,
 		modal: modal,
-	};	
+	};
 }
 
 export function closePubModal() {
 	return {
 		type: CLOSE_PUB_MODAL,
-	};	
+	};
 }
 
 export function pubNavOut() {
 	return {
 		type: PUB_NAV_OUT,
-	};	
+	};
 }
 
 export function pubNavIn() {
 	return {
 		type: PUB_NAV_IN,
-	};	
+	};
 }
 
 
 export function togglePubHighlights() {
 	return {
 		type: TOGGLE_PUB_HIGHLIGHTS,
-	};	
+	};
 }
 
 export function addDiscussion(discussionObject, activeSaveID, inEditor) {
@@ -124,7 +138,7 @@ export function addSelection(selection) {
 	return {
 		type: ADD_SELECTION,
 		selection: selection,
-	};	
+	};
 }
 
 export function discussionVoteSubmit(type, discussionID, userYay, userNay) {
