@@ -68,7 +68,6 @@ const AssetLibrary = React.createClass({
 			return;
 		}
 
-		console.log('inDrop');
 		// Add new files to existing set, so as to not overwrite existing uploads
 		const existingFiles = this.state.files.length;
 		const tmpFiles = this.state.files.concat(files);

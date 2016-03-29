@@ -11,7 +11,7 @@ if (process.env.NODE_ENV !== 'production') {
 	awsDetails.secret_key_aws = process.env.secret_key_aws;
 }
 
-export function uploadPolicy(req, res) {
+app.get('/uploadPolicy', function(req, res) {
 	// if(req.user){
 	const s3 = {
 		access_key: awsDetails.access_key_aws,
@@ -31,12 +31,13 @@ export function uploadPolicy(req, res) {
 			const date = new Date( now.getTime() + (3600 * 1000) );
 			let ed = date.getFullYear() + '-' + this.pad(date.getMonth() + 1) + '-' + this.pad(date.getDate());
 			ed += 'T' + this.pad(date.getHours()) + ':' + this.pad(date.getMinutes()) + ':' + this.pad(date.getSeconds()) + '.000Z';
+			// return ed;
 			return new Date(Date.now() + 60000);
 		}
 	};
 
-	const awsAccessKey = s3.access_key; // your acces key to Amazon services (get if from https://portal.aws.amazon.com/gp/aws/securityCredentials)
-	// const awsSecretKey = s3.secret_key; // secret access key (get it from https://portal.aws.amazon.com/gp/aws/securityCredentials)
+	// const awsAccessKey = s3.access_key; // your acces key to Amazon services (get if from https://portal.aws.amazon.com/gp/aws/securityCredentials)
+	// const aws_secret_key = s3.secret_key; // secret access key (get it from https://portal.aws.amazon.com/gp/aws/securityCredentials)
 
 	const bucket = s3.bucket; // the name you've chosen for the bucket
 	const key = '/${filename}'; // the folder and adress where the file will be uploaded; ${filename} will be replaced by original file name (the folder needs to be public on S3!)
@@ -61,12 +62,12 @@ export function uploadPolicy(req, res) {
 	};
 	policy = new Buffer(JSON.stringify(policy)).toString('base64').replace(/\n|\r/, '');
 	const hmac = crypto.createHmac('sha1', s3.secret_key);
-	// const hash2 = hmac.update(policy);
+	hmac.update(policy);
 	const signature = hmac.digest('base64');
 
 	res.status(200).json({
 		bucket: bucket,
-		aws_key: awsAccessKey,
+		aws_key: s3.access_key,
 		acl: acl,
 		key: key,
 		redirect: successActionRedirect,
@@ -74,5 +75,7 @@ export function uploadPolicy(req, res) {
 		policy: policy,
 		signature: signature
 	});
-}
-app.get('/uploadPolicy', uploadPolicy);
+	// }else{
+	// 	res.status(500).json('Not Logged In');
+	// }
+});
