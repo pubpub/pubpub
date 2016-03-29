@@ -176,11 +176,11 @@ const PubDiscussionsInput = React.createClass({
 
 				<div style={[styles.inputBottomLine, styles.expanded(this.state.expanded || this.props.isReply, false)]}>
 
-					{
+					{/*
 						(this.state.showPreviewText) ?
 					<span style={styles.livePreviewText}>Live Preview: <span style={styles.livePreviewToggle} onClick={this.toggleLivePreview}>{(this.state.showPreview) ? 'On' : 'Off'}</span> <span style={styles.lighterText}>(you can use <a target="_blank" href="https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet">markdown</a> for styling)</span></span>
 					: null
-					}
+					*/}
 					<div style={styles.submitButton} key={'newDiscussionSubmit'} onClick={this.submitDiscussion}>
 						<FormattedMessage {...globalMessages.Submit}/>
 					</div>
