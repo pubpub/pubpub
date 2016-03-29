@@ -3,6 +3,11 @@
 	font-family: 'Helvetica', Serif;
 }
 
+#pageContent a{
+	color: inherit;;
+}
+
+
 #pageContent .header {
 	padding: 50px;
 	background: linear-gradient(to left, #5f2c82 , #49a09d);
