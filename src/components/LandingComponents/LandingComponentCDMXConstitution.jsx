@@ -24,7 +24,7 @@ const LandingComponentCDMXConstitution = React.createClass({
 		if (this.props.query && this.props.query.c) {
 			this.setState({activeIndex: parseInt(this.props.query.c, 10)});
 		} else {
-			this.setState({activeIndex: 0});	
+			this.setState({activeIndex: 0});
 		}
 	},
 
@@ -40,7 +40,7 @@ const LandingComponentCDMXConstitution = React.createClass({
 			// this.setState({activeIndex: index});
 			this.props.setQueryHandler({c: index});
 		};
-		
+
 	},
 
 	// toggleShowCollectionList: function() {
@@ -59,7 +59,7 @@ const LandingComponentCDMXConstitution = React.createClass({
 	// },
 
 	render: function() {
-		return ( <div style={styles.container}> 
+		return ( <div style={styles.container}>
 			<div style={styles.header}>
 				<a href="http://www.constitucion.cdmx.gob.mx"><img style={styles.headerImage} src="http://i.imgur.com/BxctOW8.png" /></a>
 				<div style={styles.headerSeparator}></div>
@@ -83,7 +83,7 @@ const LandingComponentCDMXConstitution = React.createClass({
 								<div key={'collectionButton-' + collection.slug} style={[styles.collectionButton, this.state.activeIndex === index && styles.collectionButtonActive]} onClick={this.setActiveIndex(index)}>
 									{collection.title}
 								</div>
-								
+
 							);
 						})
 					}
@@ -94,25 +94,25 @@ const LandingComponentCDMXConstitution = React.createClass({
 							return (
 								<Link to={'/pub/' + pub.slug} style={globalStyles.link} key={'pubItemLink-' + index}>
 								<div style={styles.pubItem} key={'pubItem-' + index}>
-									
+
 									<div style={styles.pubTitle}>{pub.title}</div>
-									
+
 									<div style={styles.pubAbstract}>
-										{pub.abstract.length > 200 
+										{pub.abstract.length > 200
 											? pub.abstract.substring(0, 200).trim() + '...'
 											: pub.abstract
 										}
 									</div>
-									
+
 								</div>
 								</Link>
 							);
 						})
-						: <div>No Pubs</div>
+						: <div style={{padding: '20px 5%', backgroundColor: '#F7F7F7', textAlign: 'center'}}>Próximamente</div>
 					}
 				</div>
 			</div>
-			
+
 		</div>);
 
 	}
@@ -167,7 +167,7 @@ styles = {
 	collectionTitleTextHide: {
 		'@media screen and (min-resolution:3dppx), screen and (max-width:767px)': {
 			display: 'none',
-			
+
 		}
 	},
 	collectionTitleExpandButton: {
