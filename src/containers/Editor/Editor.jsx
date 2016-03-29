@@ -165,13 +165,15 @@ const Editor = React.createClass({
 					document.getElementsByClassName('menuItem-activeCollabs')[0], username, this.props.loginData.getIn(['userData', 'name']), this.props.loginData.getIn(['userData', 'thumbnail']));
 
 				firepad.on('synced', (synced)=>{
+					if (!this.props.editorData.getIn(['pubEditData', 'isPage'])) {
+						debounce('saveStatusSync', ()=> {
+							if (this.isMounted()) {
+								this.updateSaveStatus(synced);
+							}
 
-					debounce('saveStatusSync', ()=> {
-						if (this.isMounted()) {
-							this.updateSaveStatus(synced);
-						}
+						}, 250)();
+					}
 
-					}, 250)();
 				});
 
 				firepad.on('ready', ()=>{
