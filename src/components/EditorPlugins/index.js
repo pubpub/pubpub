@@ -18,7 +18,7 @@ export default {
 	video: VideoPlugin,
 	cite: CitePlugin,
 	iframe: IframePlugin,
-	selection: SelectionPlugin,
+	highlight: SelectionPlugin,
 	footnote: FootnotePlugin,
 	pubList: pubListPlugin,
 	collectionList: collectionListPlugin,

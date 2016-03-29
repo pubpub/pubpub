@@ -10,13 +10,26 @@ const SelectionInputFields = [
 ];
 
 const SelectionConfig = {
-	title: 'selection',
+	title: 'highlight',
 	inline: true,
 	autocomplete: false
 };
 
 let styles;
 let Marklib;
+
+const SelectionEditorWidget = (inputProps) => {
+	let content;
+	if (!inputProps.source || !inputProps.source.text) {
+		content = 'No highlight';
+	} else if (inputProps.source.text.length > 30) {
+		content = '"' + inputProps.source.text.substring(0, 29) + '...' + '"';
+	} else {
+		content = '"' + inputProps.source.text + '"';
+	}
+	return (<span>Highlight: {content}</span>);
+};
+
 
 const SelectionPlugin = React.createClass({
 	propTypes: {
@@ -41,7 +54,7 @@ const SelectionPlugin = React.createClass({
 	},
 
 	drawHighlight: function() {
-		const selection = this.props.index;
+		const selection = this.props.source;
 		try {
 			const result = {
 				startContainerPath: selection.startContainerPath,
@@ -78,12 +91,12 @@ const SelectionPlugin = React.createClass({
 	},
 
 	scrollToHighlight: function() {
-		let destination = document.getElementsByClassName('selection-' + this.props.index._id)[0];
+		let destination = document.getElementsByClassName('selection-' + this.props.source._id)[0];
 
 		// If we're on the editor, and we can't find the selectoin, redraw.
-		if (parseInt(this.props.index.version, 10) === 0 && !destination) {
+		if (parseInt(this.props.source.version, 10) === 0 && !destination) {
 			this.drawHighlight();
-			destination = document.getElementsByClassName('selection-' + this.props.index._id)[0];
+			destination = document.getElementsByClassName('selection-' + this.props.source._id)[0];
 		}
 
 		if (!destination) {
@@ -97,7 +110,7 @@ const SelectionPlugin = React.createClass({
 	},
 
 	hoverOn: function() {
-		const items = document.getElementsByClassName('selection-' + this.props.index._id);
+		const items = document.getElementsByClassName('selection-' + this.props.source._id);
 
 		for (let index = 0; index < items.length; index++) {
 			items[index].className = items[index].className.replace('selection ', 'selection selection-active ');
@@ -105,7 +118,7 @@ const SelectionPlugin = React.createClass({
 
 	},
 	hoverOff: function() {
-		const items = document.getElementsByClassName('selection-' + this.props.index._id);
+		const items = document.getElementsByClassName('selection-' + this.props.source._id);
 
 		for (let index = 0; index < items.length; index++) {
 			items[index].className = items[index].className.replace('selection selection-active ', 'selection ');
@@ -113,17 +126,17 @@ const SelectionPlugin = React.createClass({
 	},
 
 	calculateOffsets: function() {
-		if (!this.props.index.context || !this.props.index.text) {
+		if (!this.props.source.context || !this.props.source.text) {
 			return [null, null];
 		}
 
-		const contextString = this.props.index.context.substring(this.props.index.startOffset, this.props.index.endOffset);
+		const contextString = this.props.source.context.substring(this.props.source.startOffset, this.props.source.endOffset);
 
 		// If the substring based on our offsets does not match the selection text...
-		if (contextString !== this.props.index.text) {
+		if (contextString !== this.props.source.text) {
 			try {
-				const selectionRegex = new RegExp(this.props.index.text, 'g');
-				const count = (this.props.index.context.match(selectionRegex) || []).length;
+				const selectionRegex = new RegExp(this.props.source.text, 'g');
+				const count = (this.props.source.context.match(selectionRegex) || []).length;
 
 				// If there is more than one occurence of the selection string in the context,
 				// we can't recover it right now - so just don't highlight anything
@@ -132,21 +145,21 @@ const SelectionPlugin = React.createClass({
 				}
 
 				// otherwise, find where the string actually lives, and use those as offsets.
-				const indexOf = this.props.index.context.indexOf(this.props.index.text);
-				return [indexOf, indexOf + this.props.index.text.length];
+				const indexOf = this.props.source.context.indexOf(this.props.source.text);
+				return [indexOf, indexOf + this.props.source.text.length];
 			} catch (err) {
 				return [null, null];
 			}
-			
+
 		}
 
 		// If the contextString matches, return our original offsets
-		return [this.props.index.startOffset, this.props.index.endOffset];
+		return [this.props.source.startOffset, this.props.source.endOffset];
 
 	},
 
 	render: function() {
-		if (!this.props.index) {
+		if (!this.props.source) {
 			return null;
 		}
 
@@ -154,9 +167,9 @@ const SelectionPlugin = React.createClass({
 
 		return (
 			<div
-				id={'selection-block-' + this.props.index._id}
+				id={'selection-block-' + this.props.source._id}
 				className={'selection-block'}
-				key={'selection-block-' + this.props.index._id}
+				key={'selection-block-' + this.props.source._id}
 				style={styles.selectionBlock}
 				onClick={this.scrollToHighlight}
 				onMouseEnter={this.hoverOn}
@@ -178,22 +191,22 @@ const SelectionPlugin = React.createClass({
 					{this.state.showContext
 						? <div>
 							<div style={styles.versionHeader}>
-								{parseInt(this.props.index.version, 10) === 0
+								{parseInt(this.props.source.version, 10) === 0
 									? <FormattedMessage id="discussion.selectionPreviousDraft" defaultMessage="Selection made on draft version"/>
-									: <FormattedMessage id="discussion.selectionPreviousVersion" defaultMessage="Selection made on Version {version}" values={{version: this.props.index.version}}/>
+								: <FormattedMessage id="discussion.selectionPreviousVersion" defaultMessage="Selection made on Version {version}" values={{version: this.props.source.version}}/>
 								}
 							</div>
 							{offsets[0] === null
-								? this.props.index.context
+								? this.props.source.context
 								: <span>
-									{this.props.index.context.substring(0, offsets[0])}
-									<span style={styles.highlight}>{this.props.index.text}</span>
-									{this.props.index.context.substring(offsets[1], this.props.index.context.length)}
+									{this.props.source.context.substring(0, offsets[0])}
+									<span style={styles.highlight}>{this.props.source.text}</span>
+									{this.props.source.context.substring(offsets[1], this.props.source.context.length)}
 								</span>
 							}
 
 						</div>
-						: this.props.index.text
+						: this.props.source.text
 					}
 
 			</div>
@@ -230,4 +243,4 @@ styles = {
 	// },
 };
 
-export default createPubPubPlugin(Radium(SelectionPlugin), SelectionConfig, SelectionInputFields);
+export default createPubPubPlugin(Radium(SelectionPlugin), SelectionConfig, SelectionInputFields, SelectionEditorWidget);

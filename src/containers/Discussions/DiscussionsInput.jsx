@@ -52,7 +52,7 @@ const PubDiscussionsInput = React.createClass({
 	},
 
 	componentWillMount() {
-			this.setState({isPrivateChecked: this.props.parentIsPrivate});
+		this.setState({isPrivateChecked: this.props.parentIsPrivate});
 	},
 	componentDidMount() {
 		initCodeMirrorMode();
@@ -78,15 +78,18 @@ const PubDiscussionsInput = React.createClass({
 	},
 
 	componentWillReceiveProps(nextProps) {
+
+		// This means the discussion was succesfully submitted
+		// Reset any form options here.
+		// const cm = document.getElementsByClassName('CodeMirror')[0].CodeMirror;
+
 		if (this.props.addDiscussionStatus === 'loading' && this.props.activeSaveID === this.props.saveID && nextProps.addDiscussionStatus === 'loaded') {
-			// This means the discussion was succesfully submitted
-			// Reset any form options here.
-			// const cm = document.getElementsByClassName('CodeMirror')[0].CodeMirror;
 			const cm = document.getElementById(this.props.codeMirrorID).childNodes[0].CodeMirror;
 			cm.setValue('');
 			clearTempHighlights();
 
 		}
+
 		// else if (this.props.newDiscussionData && this.props.newDiscussionData.get && nextProps.newDiscussionData && nextProps.newDiscussionData.get && this.props.newDiscussionData.get('selections').size !== nextProps.newDiscussionData.get('selections').size) {
 		// 	// const cm = document.getElementsByClassName('CodeMirror')[0].CodeMirror;
 		// 	const cm = document.getElementById(this.props.codeMirrorID).childNodes[0].CodeMirror;
@@ -169,7 +172,7 @@ const PubDiscussionsInput = React.createClass({
 					},
 				}} />
 
-			{(this.state.initialized) ? <EditorWidgets ref="widgethandler" isLivePreview={false} references={{}} assets={[]} cm={this.cm} /> : null }
+			{(this.state.initialized) ? <EditorWidgets ref="widgethandler" mode="discussions" references={{}} assets={[]} cm={this.cm} /> : null }
 
 				<div style={[styles.inputTopLine, styles.expanded(this.state.expanded, true)]}>
 					<div style={styles.thumbnail}>

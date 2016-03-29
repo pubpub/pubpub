@@ -507,13 +507,13 @@ const Editor = React.createClass({
 	render: function() {
 		// const editorData = this.props.editorData;
 		const viewMode = this.props.editorData.getIn(['pubEditData', 'isPage']) ? 'preview' : this.props.editorData.get('viewMode');
-		const isLivePreview = viewMode === 'preview';
 		const isReader = this.props.editorData.getIn(['pubEditData', 'isReader']);
 		// const showBottomLeftMenu = this.props.editorData.get('showBottomLeftMenu');
 		// const showBottomRightMenu = this.props.editorData.get('showBottomRightMenu');
 		const loadStatus = this.props.editorData.get('status');
 		const darkMode = this.props.loginData.getIn(['userData', 'settings', 'editorColor']) === 'dark';
 
+		const widgetMode = viewMode === 'preview' ? 'preview' : 'full';
 
 		const userAssets = this.props.loginData.getIn(['userData', 'assets']).toJS() || [];
 		const references = {};
@@ -629,7 +629,7 @@ const Editor = React.createClass({
 						<div id="editor-text-wrapper" style={[globalStyles.hiddenUntilLoad, globalStyles[loadStatus], styles.editorMarkdown, styles[viewMode].editorMarkdown, !isReader && styles[viewMode].editorMarkdownIsEditor]}>
 
 
-							{(this.state.firepadInitialized) ? <EditorWidgets ref="widgethandler" isLivePreview={isLivePreview} references={references} assets={userAssets} activeFocus={this.state.activeFocus} cm={this.cm} /> : null}
+							{(this.state.firepadInitialized) ? <EditorWidgets ref="widgethandler" mode={widgetMode} references={references} assets={userAssets} activeFocus={this.state.activeFocus} cm={this.cm} /> : null}
 							{/*
 							<EditorPluginPopup ref="pluginPopup" isLivePreview={isLivePreview} references={this.state.firepadData.references} assets={this.state.firepadData.assets} activeFocus={this.state.activeFocus} codeMirrorChange={this.state.codeMirrorChange}/>
 							*/}
