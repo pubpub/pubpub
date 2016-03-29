@@ -107,7 +107,7 @@ const migrateSinglePubFirebase = function({ref, pub, assets}, callback) {
 				let newMarkdown = refactorTitleFirebase({pub, markdown: text, authors: pub.authors});
 				newMarkdown = widgetProcessor({markdown: newMarkdown, assets: assets});
 				// callback();
-				console.log(newMarkdown);
+				// console.log(newMarkdown);
 
 				try {
 					console.log('Trying to set text!');
@@ -224,8 +224,9 @@ const migrateSinglePub = function({ref, pub, assets, references}, callback) {
 						callback(err2);
 						return;
 					}
-					migrateSinglePubFirebase({ref, pub, assets: newAssets}, callback);
+					// migrateSinglePubFirebase({ref, pub, assets: newAssets}, callback);
 					// callback(err);
+					callback();
 				});
 
 			});

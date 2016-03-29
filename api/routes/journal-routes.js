@@ -209,7 +209,7 @@ export function loadJournalAndLogin(req, res) {
 			let languageObject = {};
 			fs.readFile(__dirname + '/../../translations/languages/' + locale + '.json', 'utf8', function(errFSRead, data) {
 				if (err) { console.log(err); }
-				const customMessages = JSON.parse(result.customLanguageMessages || '{}');
+				const customMessages = JSON.parse(result ? result.customLanguageMessages || '{}' : '{}');
 				languageObject = {...JSON.parse(data), ...customMessages};
 
 				const userID = req.user ? req.user._id : undefined;
