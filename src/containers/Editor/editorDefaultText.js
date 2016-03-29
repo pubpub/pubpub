@@ -34,14 +34,27 @@ Feel free to contact us at pubpub@media.mit.edu with any questions.
 
 export function editorDefaultPageText(journalName) {
 	return `-----
-journalName: ` + journalName + `
-description: This is your journal's landing page.
+header:
+	journalName: ` + journalName + `
+    description: Describe your journal - what's your tagline?
+    searchBox: [[{"pluginType":"search","fontColor":null,"bottomLineColor":null,"placeholderText":null,"placeholderColor":null}]]
 -----
-# Section 1
-Pub content here.
 
-You can use plugins like pubList to add dynamic content to your landing page:
 
+::: section
+# Featured Pubs
 [[{"pluginType":"pubList"}]]
-`;
+:::
+
+::: section
+# About this Journal
+Write descriptive text here
+:::
+
+-----
+footer:
+	footeritem: [[{"pluginType":"link","source":null,"text":"Great Link","url":"/pub/about"}]]
+    footeritem: [[{"pluginType":"link","source":{"lastUpdated":"2016-03-19T18:43:00.694Z","authors":["56520598b74ece9c2bcb0817"],"usedInDiscussions":[],"assetType":"image","createDate":"2016-03-19T18:43:00.694Z","history":[],"label":"for-real-testing-new/1458412980518_width.png","__v":0,"usedInPubs":[{"id":"56f3e07cc64f9b583f622795","version":7,"_id":"56fae74dbde53a6f0800a954"}],"_id":"56ed9db4f080d985bc9eb4f2","assetData":{"filetype":"image/png","originalFilename":"width.png","url":"https://s3.amazonaws.com/pubpub-upload/for-real-testing-new/1458412980518_width.png","thumbnail":"https://s3.amazonaws.com/pubpub-upload/for-real-testing-new/1458412980518_width.png"}},"text":"Fantastic Link","url":"/pub/about"}]]
+    footeritem: [[{"pluginType":"link","source":{"lastUpdated":"2016-03-19T18:43:00.694Z","authors":["56520598b74ece9c2bcb0817"],"usedInDiscussions":[],"assetType":"image","createDate":"2016-03-19T18:43:00.694Z","history":[],"label":"for-real-testing-new/1458412980518_width.png","__v":0,"usedInPubs":[{"id":"56f3e07cc64f9b583f622795","version":7,"_id":"56fae74dbde53a6f0800a954"}],"_id":"56ed9db4f080d985bc9eb4f2","assetData":{"filetype":"image/png","originalFilename":"width.png","url":"https://s3.amazonaws.com/pubpub-upload/for-real-testing-new/1458412980518_width.png","thumbnail":"https://s3.amazonaws.com/pubpub-upload/for-real-testing-new/1458412980518_width.png"}},"text":"Astonishing Link","url":"/pub/about"}]]
+-----`;
 }
