@@ -265,6 +265,14 @@ const PubReader = React.createClass({
 							: null
 					}
 
+					{
+						!pubData.isPublished
+							? <div key={'unpublishNotification'} style={[styles.unpublishedNotification, globalStyles[this.props.readerData.get('status')]]}>
+								<FormattedMessage id="pub.unpublishedNotification" defaultMessage="This pub is unpublished, and thus is only accessible to collaborators."/>
+							</div>
+							: null
+					}
+
 					<PubBody
 						status={this.props.readerData.get('status')}
 						isPublished={pubData.isPublished}
@@ -573,6 +581,19 @@ styles = {
 			fontSize: '20px',
 		},
 
+	},
+
+	unpublishedNotification: {
+		textAlign: 'center',
+		backgroundColor: globalStyles.headerBackground,
+		padding: '5px 20px',
+		margin: 5,
+		fontFamily: globalStyles.headerFont,
+		color: globalStyles.headerText,
+		userSelect: 'none',
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+			fontSize: '20px',
+		},
 	},
 	versionNotificationLink: {
 		textDecoration: 'none',
