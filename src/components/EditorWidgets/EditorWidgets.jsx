@@ -137,8 +137,8 @@ const EditorWidgets = React.createClass({
 
 				<EditorWidgetModal ref="pluginModal"
 					isLivePreview={this.props.isLivePreview}
-					references={this.props.references}
-					assets={this.props.assets}
+					references={this.props.references || []}
+					assets={this.props.assets || []}
 					activeFocus={this.props.activeFocus}
 					codeMirrorChange={this.state.codeMirrorChange}
 					cm={this.props.cm}

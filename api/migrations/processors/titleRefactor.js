@@ -5,7 +5,7 @@
 title: ${title}
 abstract: ${abstract}
 ${authors.map((author) => {
-	return `author: ${author.username}\n\tname:${author.name}\n`;
+	return `author: ${author.username}\n\tname: ${author.name}\n`;
 }).join('')}
 ${(authorsNote) ? `authorsNote: ${authorsNote}` : '' }
 -----

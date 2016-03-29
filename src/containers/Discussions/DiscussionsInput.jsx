@@ -15,6 +15,7 @@ let styles = {};
 import initCodeMirrorMode from 'containers/Editor/editorCodeMirrorMode';
 import {codeMirrorStyles} from 'containers/Editor/codeMirrorStyles';
 import {clearTempHighlights} from 'components/PubSelectionPopup/selectionFunctions';
+import EditorWidgets from 'components/EditorWidgets/EditorWidgets';
 
 // import marked from '../../modules/markdown/markdown';
 // import markdownExtensions from '../../components/EditorPlugins';
@@ -165,6 +166,8 @@ const PubDiscussionsInput = React.createClass({
 						color: '#aaa',
 					},
 				}} />
+
+				<EditorWidgets ref="widgethandler" isLivePreview={isLivePreview} references={references} assets={userAssets} cm={this.cm} />
 
 				<div style={[styles.inputTopLine, styles.expanded(this.state.expanded, true)]}>
 					<div style={styles.thumbnail}>
