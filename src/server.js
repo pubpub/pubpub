@@ -152,6 +152,7 @@ app.use((req, res) => {
 							<link href='/css/highlightdefault.css' rel='stylesheet' type='text/css' />
 							<link href='/css/react-select.min.css' rel='stylesheet' type='text/css' />
 							<link href='/css/basePub.css' rel='stylesheet' type='text/css' />
+							<link href='/css/basePage.css' rel='stylesheet' type='text/css' />
 							<link href='/css/menu.css' rel='stylesheet' type='text/css' />
 							<style id="dynamicStyle">${dynamicStyle}</style>
 

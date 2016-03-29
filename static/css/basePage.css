@@ -1,0 +1,39 @@
+#pageContent {
+	color: #111;
+	font-family: 'Helvetica', Serif;
+}
+
+#pageContent .header {
+	padding: 50px;
+	background: linear-gradient(to left, #5f2c82 , #49a09d);
+}
+
+#pageContent .journalName {
+	font-size: 2em;
+}
+
+#pageContent .description {
+	font-size: 1.2em;
+}
+
+#pageContent .section {
+	padding: 50px;
+}
+
+#pageContent .footer {
+	padding: 10px 50px ;
+	background-color: #373737;
+}
+
+#pageContent .footer:after {
+	content: "";
+	display: table;
+	clear: both;
+}
+
+#pageContent .footeritem {
+	float: left;
+	width: calc(100% / 3);
+	text-align: center;
+	color: #ddd;
+}

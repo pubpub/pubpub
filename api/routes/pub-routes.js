@@ -424,7 +424,8 @@ export function transformStyle(req, res) {
 	const styleDesktopClean = req.body.styleDesktop.replace(/(@import.*)/g, '');
 	const styleMobileClean = req.body.styleMobile.replace(/(@import.*)/g, '');
 
-	const fullString = importsDesktop.join(' ') + ' ' + importsMobile.join(' ') + ' #pubContent{' + styleDesktopClean + '} @media screen and (min-resolution: 3dppx), screen and (max-width: 767px){ #pubContent{' + styleMobileClean + '}}';
+	const wrapperID = req.body.isPage ? '#pageContent' : '#pubContent';
+	const fullString = importsDesktop.join(' ') + ' ' + importsMobile.join(' ') + ' ' + wrapperID + '{' + styleDesktopClean + '} @media screen and (min-resolution: 3dppx), screen and (max-width: 767px){ ' + wrapperID + '{' + styleMobileClean + '}}';
 	less.render(fullString, function(err, output) {
 		if (err) {
 			return res.status(500).json('Invalid CSS');

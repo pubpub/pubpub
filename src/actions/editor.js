@@ -72,12 +72,13 @@ export function saveVersion(newVersion) {
 	};
 }
 
-export function saveStyle(styleDesktop, styleMobile) {
+export function saveStyle(styleDesktop, styleMobile, isPage) {
 	return {
 		types: [SAVE_STYLE_LOAD, SAVE_STYLE_SUCCESS, SAVE_STYLE_FAIL],
 		promise: (client) => client.post('/transformStyle', {data: {
 			styleDesktop: styleDesktop,
-			styleMobile: styleMobile
+			styleMobile: styleMobile,
+			isPage: isPage
 		}})
 	};
 }

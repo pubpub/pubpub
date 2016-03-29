@@ -268,7 +268,7 @@ const PubReader = React.createClass({
 					{
 						!pubData.isPublished
 							? <div key={'unpublishNotification'} style={[styles.unpublishedNotification, globalStyles[this.props.readerData.get('status')]]}>
-								<FormattedMessage id="pub.unpublishedNotification" defaultMessage="This pub is unpublished, and thus is only accessible to collaborators."/>
+								<FormattedMessage id="pub.unpublishedNotification" defaultMessage="This pub is unpublished, and thus only accessible to collaborators."/>
 							</div>
 							: null
 					}
@@ -276,6 +276,7 @@ const PubReader = React.createClass({
 					<PubBody
 						status={this.props.readerData.get('status')}
 						isPublished={pubData.isPublished}
+						isPage={pubData.isPage}
 						title={pubData.history[versionIndex].title}
 						abstract={pubData.history[versionIndex].abstract}
 						authorsNote={pubData.history[versionIndex].authorsNote}

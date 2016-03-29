@@ -88,8 +88,8 @@ const Editor = React.createClass({
 	},
 
 	componentDidMount() {
-		//FireBaseURL = (process.env.NODE_ENV === 'production' && location.hostname !== 'pubpub-dev.herokuapp.com') ? 'https://pubpub.firebaseio.com/' : 'https://pubpub-dev.firebaseio.com/';
-		FireBaseURL = 'https://pubpub-migration.firebaseio.com/';
+		FireBaseURL = (process.env.NODE_ENV === 'production' && location.hostname !== 'pubpub-dev.herokuapp.com') ? 'https://pubpub.firebaseio.com/' : 'https://pubpub-dev.firebaseio.com/';
+		// FireBaseURL = 'https://pubpub-migration.firebaseio.com/';
 
 		if (! this.props.editorData.get('error')) {
 
@@ -420,7 +420,8 @@ const Editor = React.createClass({
 			styleDesktop: newStyleStringDesktop,
 			styleMobile: newStyleStringMobile,
 		});
-		this.props.dispatch(saveStyle(newStyleStringDesktop, newStyleStringMobile));
+		const isPage = this.props.editorData.getIn(['pubEditData', 'isPage']);
+		this.props.dispatch(saveStyle(newStyleStringDesktop, newStyleStringMobile, isPage));
 	},
 	getEditorFont: function() {
 		const editorFont = this.props.loginData ? this.props.loginData.getIn(['userData', 'settings', 'editorFont']) : undefined;
@@ -691,6 +692,7 @@ const Editor = React.createClass({
 									<PubBody
 										status={'loaded'}
 										isPublished={this.props.editorData.getIn(['pubEditData', 'isPublished'])}
+										isPage={this.props.editorData.getIn(['pubEditData', 'isPage'])}
 										title={this.state.title}
 										abstract={this.state.abstract}
 										authorsNote={this.state.authorsNote}

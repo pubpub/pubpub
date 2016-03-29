@@ -185,7 +185,9 @@ const Landing = React.createClass({
 							 </div>
 						</div>
 
-						: <PPMComponent markdown={this.props.journalData.getIn(['journalData', 'landingPage', 'markdown'])} isPage={true}/>
+						: <div id={'pageContent'}>
+							<PPMComponent markdown={this.props.journalData.getIn(['journalData', 'landingPage', 'markdown'])} isPage={true}/>
+						</div>
 				}
 				{/* <LandingBody componentsArray={componentsArray} journalID={journalID} journalData={this.props.journalData.get('journalData')} query={this.props.query} setQueryHandler={this.setQuery}/> */}
 			</div>

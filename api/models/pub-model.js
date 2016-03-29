@@ -379,4 +379,5 @@ pubSchema.statics.getRandomSlug = function(journalID, callback) {
 	});
 };
 
-module.exports = mongoose.model('Pub', pubSchema, 'newpub');
+// module.exports = mongoose.model('Pub', pubSchema, 'newpub');
+module.exports = mongoose.model('Pub', pubSchema);

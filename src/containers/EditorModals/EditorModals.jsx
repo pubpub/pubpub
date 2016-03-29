@@ -48,8 +48,8 @@ const Editor = React.createClass({
 	},
 
 	componentDidMount() {
-		// FireBaseURL = (process.env.NODE_ENV === 'production' && location.hostname !== 'pubpub-dev.herokuapp.com') ? 'https://pubpub.firebaseio.com/' : 'https://pubpub-dev.firebaseio.com/';
-		FireBaseURL = 'https://pubpub-migration.firebaseio.com/';
+		FireBaseURL = (process.env.NODE_ENV === 'production' && location.hostname !== 'pubpub-dev.herokuapp.com') ? 'https://pubpub.firebaseio.com/' : 'https://pubpub-dev.firebaseio.com/';
+		// FireBaseURL = 'https://pubpub-migration.firebaseio.com/';
 		if (! this.props.editorData.get('error')) {
 
 			if (this.props.editorData.getIn(['pubEditData', 'token'])) {

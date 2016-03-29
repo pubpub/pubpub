@@ -22,6 +22,7 @@ const PubBody = React.createClass({
 	propTypes: {
 		status: PropTypes.string,
 		isPublished: PropTypes.bool,
+		isPage: PropTypes.bool,
 		title: PropTypes.string,
 		abstract: PropTypes.string,
 		authorsNote: PropTypes.string,
@@ -110,14 +111,14 @@ const PubBody = React.createClass({
 		// 	break;
 		// }
 
-		const defaultContentRules = {};
+		// const defaultContentRules = {};
 		// Object.keys(scienceStyle).map((cssRule)=> {
 		// 	cssRule.split(',').map((splitRule)=> {
 		// 		defaultContentRules['#pubContent ' + splitRule.replace(/ /g, '')] = scienceStyle[cssRule];
 		// 	});
 		// });
 
-		const pubContentRules = {};
+		// const pubContentRules = {};
 		// Object.keys(cssObject).map((cssRule)=> {
 		// 	cssRule.split(',').map((splitRule)=> {
 		// 		pubContentRules['#pubContent ' + splitRule.replace(/ /g, '')] = cssObject[cssRule];
@@ -125,8 +126,8 @@ const PubBody = React.createClass({
 		// });
 
 		return ({
-			...defaultContentRules,
-			...pubContentRules,
+			// ...defaultContentRules,
+			// ...pubContentRules,
 			'.marking': {
 				backgroundColor: 'rgba(124, 235, 124, 0.7)',
 			},
@@ -203,7 +204,7 @@ const PubBody = React.createClass({
 
 				<Style rules={this.compileStyleRules()}/>
 
-				<div id="pubContent" style={[styles.contentContainer, globalStyles[this.props.status]]} >
+				<div id={this.props.isPage ? 'pageContent' : 'pubContent'} style={[styles.contentContainer, globalStyles[this.props.status]]} >
 					<div id="pub-wrapper">
 						{!this.props.isFeatured && !this.props.errorView
 							? <div style={styles.submittedNotification}>This Pub has been submitted to - but is not yet featured in - this journal.</div>
@@ -245,7 +246,7 @@ const PubBody = React.createClass({
 						{/* <div id={'pub-header-divider'}></div> */}
 
 						<div id="pubBodyContent"> {/* Highlights are dependent on the id 'pubBodyContent' */}
-							<PPMComponent markdown={this.props.markdown} />
+							<PPMComponent markdown={this.props.markdown} isPage={this.props.isPage}/>
 
 							{this.props.addSelectionHandler
 								? <PubSelectionPopup addSelectionHandler={this.props.addSelectionHandler}/>
@@ -288,7 +289,7 @@ const PubBody = React.createClass({
 							: null
 						}
 
-						{this.props.isFeatured && !this.props.errorView && this.props.isPublished
+						{this.props.isFeatured && !this.props.errorView && this.props.isPublished && !this.props.isPage
 							? <div id="pub-license"><License /></div>
 							: null
 						}
@@ -312,9 +313,9 @@ styles = {
 		// minHeight: 'calc(100vh - 2 * ' + globalStyles.headerHeight + ' + 2px)',
 	},
 	contentContainer: {
-		transition: '.3s linear opacity .25s',
+		// transition: '.3s linear opacity .25s',
 		// padding: '0px 4em 50px',
-		fontFamily: globalStyles.headerFont,
+		// fontFamily: globalStyles.headerFont,
 		// lineHeight: '1.58',
 		// textRendering: 'optimizeLegibility',
 		// WebkitFontSmoothing: 'antialiased',
