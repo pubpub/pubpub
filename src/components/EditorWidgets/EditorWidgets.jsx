@@ -17,7 +17,7 @@ const EditorWidgets = React.createClass({
 		activeFocus: PropTypes.string,
 		assets: PropTypes.array,
 		references: PropTypes.object,
-		isLivePreview: PropTypes.bool,
+		mode: PropTypes.string,
 		cm: PropTypes.object,
 	},
 
@@ -112,6 +112,7 @@ const EditorWidgets = React.createClass({
 		}
 		*/
 
+		console.log(change);
 
 		if (change.from && change.to) {
 			const fromLine = change.from.line;
@@ -124,9 +125,11 @@ const EditorWidgets = React.createClass({
 
 
 		// Set State to trigger re-render
+		/*
 		this.setState({
 			codeMirrorChange: change,
 		});
+		*/
 
 	},
 
@@ -136,7 +139,7 @@ const EditorWidgets = React.createClass({
 			<span>
 
 				<EditorWidgetModal ref="pluginModal"
-					isLivePreview={this.props.isLivePreview}
+					mode={this.props.mode}
 					references={this.props.references || []}
 					assets={this.props.assets || []}
 					activeFocus={this.props.activeFocus}

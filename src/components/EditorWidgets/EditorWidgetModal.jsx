@@ -20,7 +20,7 @@ const EditorWidgetModal = React.createClass({
 		assets: PropTypes.array,
 		references: PropTypes.object,
 		selections: PropTypes.object,
-		isLivePreview: PropTypes.bool,
+		mode: PropTypes.string,
 		cm: PropTypes.object,
 	},
 
@@ -289,11 +289,11 @@ const EditorWidgetModal = React.createClass({
 
 		return (
 			<Portal onClose={this.closePopup} isOpened={this.state.popupVisible} closeOnOutsideClick closeOnEsc>
-				<div style={styles.pluginFlexBox(this.props.isLivePreview)}>
+				<div style={styles.pluginFlexBox(this.props.mode)}>
 					<div id="plugin-popup"
 							ref={(ref) => this.popupBox = ref}
 							className="plugin-popup"
-							style={[styles.pluginPopup(this.props.isLivePreview), this.state.popupVisible && styles.pluginPopupVisible]}
+							style={[styles.pluginPopup(this.props.mode), this.state.popupVisible && styles.pluginPopupVisible]}
 						>
 						<div key={this.state.pluginHash} style={styles.pluginContent}>
 							<div style={styles.pluginClose} onClick={this.closePopup}>×</div>
@@ -349,26 +349,59 @@ styles = {
 		fontSize: '1.25em',
 		userSelect: 'none',
 	},
-	pluginFlexBox: function(isLivePreview) {
+	pluginFlexBox: function(mode) {
+
+		const modeStyles = {
+			'preview': {
+				width: '30vw',
+				left: '0px',
+			},
+			'discussions': {
+				width: '35vw',
+				right: '0px',
+			},
+			'full': {
+				width: '50vw',
+				left: '0px',
+			},
+		};
+
+		const modeStyle = modeStyles[mode];
+
 		return {
+			...modeStyle,
 			position: 'fixed',
-			left: '0vw',
 			top: '60px',
 			// display: 'flex',
 			// alignItems: 'center',
 			height: '100vh',
-			width: (isLivePreview) ? '50vw' : '100vw',
 			zIndex: 50,
 			backgroundColor: 'rgba(255,255,255,0.5)',
 			pointerEvents: 'none',
 		};
 	},
-	pluginPopup: function(isLivePreview) {
+	pluginPopup: function(mode) {
+
+		const popupWidths = {
+			'preview': '30vw',
+			'discussions': '25vw',
+			'full': '35vw',
+		};
+
+		const popupMargins = {
+			'preview': '0px 7vw',
+			'discussions': '0px auto',
+			'full': '0px 29.5vw',
+		};
+
+		const popupWidth = popupWidths[mode];
+		const popupMargin = popupMargins[mode];
+
 		return {
-			width: (isLivePreview) ? '30vw' : '35vw',
+			width: popupWidth,
 			minWidth: '425px',
 			position: 'relative',
-			margin: (isLivePreview) ? '0px 7vw' : '0px 29.5vw',
+			margin: popupMargin,
 			top: '10vh',
 			// minHeight: 200,
 			backgroundColor: 'white',
