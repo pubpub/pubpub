@@ -48,11 +48,11 @@ const ImagePlugin = React.createClass({
 	},
 	render: function() {
 		// const refName = this.props.children;
-		if (!this.props.source && this.props.source && this.props.source.assetData.url) {
+		if (!this.props.source && this.props.source && this.props.source.url) {
 			return (<span></span>);
 		}
 		// debugger;
-		const url = this.props.source.assetData.url;
+		const url = this.props.source.url;
 		const size = this.props.size;
 		const align = this.props.align ? this.props.align : 'full';
 		const caption = this.props.caption;
