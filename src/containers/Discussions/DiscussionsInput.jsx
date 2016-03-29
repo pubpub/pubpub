@@ -65,7 +65,8 @@ const PubDiscussionsInput = React.createClass({
 			lineWrapping: true,
 			viewportMargin: Infinity, // This will cause bad performance on large documents. Rendering the entire thing...
 			autofocus: false,
-			mode: 'pubpubmarkdown',
+			mode: 'spell-checker',
+			backdrop: 'pubpubmarkdown',
 			extraKeys: {'Ctrl-Space': 'autocomplete'},
 			placeholder: this.props.intl.formatMessage(placeholderMsg),
 		};
@@ -73,6 +74,7 @@ const PubDiscussionsInput = React.createClass({
 		const codeMirror = CodeMirror(document.getElementById(this.props.codeMirrorID), cmOptions);
 		codeMirror.on('change', this.onEditorChange);
 		this.cm = codeMirror;
+		this.setState({initialized: true});
 	},
 
 	componentWillReceiveProps(nextProps) {
@@ -167,7 +169,7 @@ const PubDiscussionsInput = React.createClass({
 					},
 				}} />
 
-				<EditorWidgets ref="widgethandler" isLivePreview={isLivePreview} references={references} assets={userAssets} cm={this.cm} />
+			{(this.state.initialized) ? <EditorWidgets ref="widgethandler" isLivePreview={false} references={{}} assets={[]} cm={this.cm} /> : null }
 
 				<div style={[styles.inputTopLine, styles.expanded(this.state.expanded, true)]}>
 					<div style={styles.thumbnail}>

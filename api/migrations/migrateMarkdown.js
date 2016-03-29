@@ -139,7 +139,7 @@ const migrateSinglePub = function({ref, pub, assets, references}, callback) {
 
 	console.log('started processing ' + pub.slug);
 
-	var newDoc = pub;
+	var newDoc = JSON.parse(JSON.stringify(pub));
 
 	const processorCallback = (err, newAssets) => {
 		if (err) {
@@ -165,7 +165,6 @@ const migrateSinglePub = function({ref, pub, assets, references}, callback) {
 
 			newDoc.status = undefined;
 			newDoc.isPublished = (pub.history.length >= 1);
-			console.log('isPublished', newDoc.isPublished);
 			newDoc.settings = undefined;
 
 
@@ -197,8 +196,6 @@ const migrateSinglePub = function({ref, pub, assets, references}, callback) {
 				history.markdown = widgetProcessor({markdown: newHistoryMarkdown, assets: newAssets});
 			}
 
-
-
 			Discussion.update({ _id: {$in: pub.editorComments}}, {$set:{"private":true}}, {upsert: false, multi: true}, function(err,numAffected) {
 
 				if (err) {
@@ -218,7 +215,9 @@ const migrateSinglePub = function({ref, pub, assets, references}, callback) {
 				};
 				*/
 
-				NewPub.update({_id: pub._id}, {$set: newDoc}, function(err2, results) {
+				console.log(newDoc);
+
+				NewPub.create(newDoc, function(err2, results) {
 					console.log('Got update!');
 					if (err2) {
 						callback(err2);
