@@ -198,7 +198,8 @@ const PubBody = React.createClass({
 				fontRatio={45}
 				mobileFontRatio={25}
 				minFont={this.props.minFont}
-				maxFont={this.props.maxFont}>
+				maxFont={this.props.maxFont}
+				disable={this.props.isPage}>
 
 			<div style={styles.container}>
 

@@ -1,5 +1,5 @@
 #pageContent {
-	color: #111;
+	color: #333;
 	font-family: 'Helvetica', Serif;
 }
 
@@ -10,24 +10,101 @@
 
 #pageContent .header {
 	padding: 50px;
-	background: linear-gradient(to left, #5f2c82 , #49a09d);
+	text-align: center;
+	font-family: 'Lora';
 }
 
 #pageContent .journalName {
-	font-size: 2em;
+	font-size: 5em;
 }
 
 #pageContent .description {
+	font-size: 1.5em;
+	padding: .5em 0;
+}
+
+#pageContent .searchBox {
+	width: 600px;
+	max-width: 80%;
+	margin: 20px auto;
+}
+
+#pageContent .searchBox .resultsWrapper {
+	-moz-box-shadow: 0 0 0 1px #777;
+	-webkit-box-shadow: 0 0 0 1px #777;
+	box-shadow: 0 0 0 1px #777;
+	margin: 0px 1px;
+	text-align: left;
+}
+
+#pageContent .searchBox .searchResult {
+	padding: 15px 5px;
+}
+#pageContent .searchBox .searchResult:hover {
+	background-color: #F0F0F0;
+}
+#pageContent .searchBox .searchResultLink {
+	text-decoration: none;
+}
+#pageContent .searchBox .searchResultTitle {
+	font-family: 'Lato';
 	font-size: 1.2em;
+}
+#pageContent .searchBox .searchResultAbstract {
+	padding-left: 5px;
+}
+#pageContent .searchBox .noResults {
+	text-align: center;
+	padding: 10px 0px;
 }
 
 #pageContent .section {
 	padding: 50px;
 }
 
+#pageContent .section:nth-child(even) {
+	background-color: #F0F0F0;
+}
+
+
+#pageContent .pubList.pub {
+	padding: 25px 0px;
+	border-top: 1px solid transparent;
+	border-bottom: 1px solid transparent;
+}
+#pageContent .pubList.pub:hover {
+	border-color: #888;
+}
+#pageContent .pubList.title {
+	font-size: 1.5em;
+}
+#pageContent .pubList.author {
+	display: inline-block;
+	padding-right: 1em;
+}
+#pageContent .pubList.createDate, #pageContent .pubList.lastUpdated, #pageContent .pubList.discussionCount  {
+	display: inline-block;
+	color: #555;
+}
+#pageContent .pubList.createDate  {
+	display: none;
+}
+#pageContent .pubList.lastUpdated:before  {
+	content: "Latest Version: ";
+}
+#pageContent .pubList.discussionCount:before  {
+	content: "| Discussions: ";
+	padding-left: 1em;
+}
+
 #pageContent .footer {
 	padding: 10px 50px ;
 	background-color: #373737;
+}
+#pageContent .pubList.abstract {
+	font-size: 1em;
+	font-family: 'Lora';
+	padding: 5px 20px;
 }
 
 #pageContent .footer:after {

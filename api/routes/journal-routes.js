@@ -26,7 +26,7 @@ export function createJournal(req, res) {
 				headerBackground: '#373737',
 				headerText: '#E0E0E0',
 				headerHover: '#FFF',
-				landingHeaderBackground: '#E0E0E0',
+				landingHeaderBackground: '#FFF',
 				landingHeaderText: '#373737',
 				landingHeaderHover: '#000',
 			},

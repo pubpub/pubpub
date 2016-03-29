@@ -4,17 +4,24 @@ import {findDOMNode} from 'react-dom';
 class ResizingText extends React.Component {
 
 	componentDidMount() {
-		this.updateSettings();
-		this.updateWidthFont();
-		this.resizeFunc = this.updateWidthFont.bind(this);
-		window.addEventListener('resize', this.resizeFunc);
+		if (!this.props.disable) {
+			this.updateSettings();
+			this.updateWidthFont();
+			this.resizeFunc = this.updateWidthFont.bind(this);
+			window.addEventListener('resize', this.resizeFunc);
+		}
+
 	}
 	componentWillUnmountMount() {
-		window.removeEventListener('resize', this.resizeFunc);
+		if (!this.props.disable) {
+			window.removeEventListener('resize', this.resizeFunc);
+		}
 	}
 	componentWillReceiveProps() {
-		this.updateSettings();
-		this.updateFontSize();
+		if (!this.props.disable) {
+			this.updateSettings();
+			this.updateFontSize();
+		}
 	}
 	updateSettings() {
 		const isMobile = (typeof window !== 'undefined' && document.body.clientWidth < 767) ? true : false;
@@ -60,6 +67,9 @@ class ResizingText extends React.Component {
 		this.setState({fontSize: fontSize, padding: padding});
 	}
 	render() {
+		if (this.props.disable) {
+			return this.props.children;
+		}
 		let fontSize = this.state && this.state.fontSize;
 		const padding = this.state && this.state.padding;
 
@@ -100,7 +110,8 @@ ResizingText.propTypes = {
 	mobileMinFont: PropTypes.number,
 	mobileFontRatio: PropTypes.number,
 	children: PropTypes.object,
-	paddingType: PropTypes.string
+	paddingType: PropTypes.string,
+	disable: PropTypes.bool,
 };
 
 export default ResizingText;
