@@ -142,9 +142,9 @@ const PubDiscussionsInput = React.createClass({
 
 	render: function() {
 		const menuItems = [
-			{ key: 'preview', string: 'Preview', function: this.toggleLivePreview, isActive: this.state.showPreview },
-			{ key: 'formatting', string: 'Formatting', function: ()=>{} },
-			{ key: 'assets', string: 'Assets', function: this.props.toggleAssetLibrary(this.props.codeMirrorID), noSeparator: true },
+			{ key: 'preview', string: <FormattedMessage {...globalMessages.Preview}/>, function: this.toggleLivePreview, isActive: this.state.showPreview },
+			{ key: 'formatting', string: <FormattedMessage {...globalMessages.Formatting}/>, function: ()=>{} },
+			{ key: 'assets', string: <FormattedMessage {...globalMessages.assets}/>, function: this.props.toggleAssetLibrary(this.props.codeMirrorID), noSeparator: true },
 		];
 
 		return (

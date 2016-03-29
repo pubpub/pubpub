@@ -107,6 +107,7 @@ styles = {
 		height: rowHeight,
 		float: 'left',
 		color: globalStyles.veryLight,
+		textTransform: 'lowercase',
 		':hover': {
 			cursor: 'pointer',
 			color: globalStyles.sideText,

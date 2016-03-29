@@ -10,7 +10,8 @@ import {AssetEditor, AssetRow, ReferenceRow, HighlightRow} from './components';
 // import {saveCollaboratorsToPub} from 'actions/editor';
 
 import {globalStyles} from 'utils/styleConstants';
-
+import {globalMessages} from 'utils/globalMessages';
+import {FormattedMessage} from 'react-intl';
 import Dropzone from 'react-dropzone';
 import {s3Upload} from 'utils/uploadFile';
 
@@ -220,13 +221,13 @@ const AssetLibrary = React.createClass({
 
 	render: function() {
 		const menuItems = [
-			{ key: 'assets', string: 'Assets', function: this.setActiveSection('assets'), isActive: this.state.activeSection === 'assets' },
-			{ key: 'references', string: 'References', function: this.setActiveSection('references'), isActive: this.state.activeSection === 'references' },
-			{ key: 'highlights', string: 'Highlights', function: this.setActiveSection('highlights'), isActive: this.state.activeSection === 'highlights', noSeparator: true },
+			{ key: 'assets', string: <FormattedMessage {...globalMessages.assets}/>, function: this.setActiveSection('assets'), isActive: this.state.activeSection === 'assets' },
+			{ key: 'references', string: <FormattedMessage {...globalMessages.references}/>, function: this.setActiveSection('references'), isActive: this.state.activeSection === 'references' },
+			{ key: 'highlights', string: <FormattedMessage {...globalMessages.Highlights}/>, function: this.setActiveSection('highlights'), isActive: this.state.activeSection === 'highlights', noSeparator: true },
 		];
 
 		if (!this.props.loginData.get('loggedIn')) {
-			return <h1>Must be Logged In</h1>;
+			return <h1><FormattedMessage id="asset.mustBeLogged" defaultMessage="Must be Logged In"/></h1>;
 		}
 
 		const userAssets = this.props.loginData.getIn(['userData', 'assets']).toJS() || [];
@@ -272,7 +273,7 @@ const AssetLibrary = React.createClass({
 											</div>
 
 											<div style={styles.addSection}>
-												<div>Drag files to this window to quickly add</div>
+												<div><FormattedMessage id="asset.dragToAdd" defaultMessage="Drag files to this window to quickly add"/></div>
 											</div>
 
 											{/* <div style={styles.filterBar}>

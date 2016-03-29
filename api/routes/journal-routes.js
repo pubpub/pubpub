@@ -204,11 +204,13 @@ export function loadJournalAndLogin(req, res) {
 		// console.timeEnd("dbsave");
 		const journalID = result ? result._id : null;
 		Pub.getRandomSlug(journalID, function(errPubSlug, randomSlug) {
+			// const locale = result && result.locale ? result.locale : 'en';
 			const locale = result && result.locale ? result.locale : 'en';
 			let languageObject = {};
 			fs.readFile(__dirname + '/../../translations/languages/' + locale + '.json', 'utf8', function(errFSRead, data) {
 				if (err) { console.log(err); }
-				languageObject = JSON.parse(data);
+				const customMessages = JSON.parse(result.customLanguageMessages || '{}');
+				languageObject = {...JSON.parse(data), ...customMessages};
 
 				const userID = req.user ? req.user._id : undefined;
 				Notification.getUnreadCount(userID, function(errNotificationUnread, notificationCount) {

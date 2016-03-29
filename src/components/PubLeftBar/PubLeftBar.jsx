@@ -15,7 +15,7 @@ const PubLeftBar = React.createClass({
 		pubStatus: PropTypes.string,
 		readRandomPubHandler: PropTypes.func,
 		randomSlug: PropTypes.string,
-		journalCount: PropTypes.number, 
+		journalCount: PropTypes.number,
 		historyCount: PropTypes.number,
 		analyticsCount: PropTypes.number,
 		citationsCount: PropTypes.number,
@@ -33,7 +33,7 @@ const PubLeftBar = React.createClass({
 		const versionURL = this.props.query.version !== undefined ? '?version=' + this.props.query.version : '';
 		return (
 			<div style={styles.container}>
-				
+
 				<Link style={globalStyles.link} to={'/'}><div key={'leftBar0'} style={styles.detail}>
 					<FormattedMessage id="pub.home" defaultMessage="Home"/>
 				</div></Link>
@@ -53,12 +53,12 @@ const PubLeftBar = React.createClass({
 				</div></a>
 
 				<div style={styles.leftBarDivider}></div>
-				{/* 
+				{/*
 					<Link style={globalStyles.link} to={'/pub/' + this.props.slug + '/reviews'}><div key={'leftBar8'} style={[styles.detail, this.props.pubStatus === 'Draft' && styles.hidden]}>
 						<FormattedMessage {...globalMessages.reviews} />
 					</div></Link>
 				*/}
-				
+
 				{/* <Link style={globalStyles.link} to={'/pub/' + this.props.slug + '/experts'}><div key={'leftBar9'} style={styles.detail}>Experts</div></Link> */}
 				<Link style={globalStyles.link} to={'/pub/' + this.props.slug + '/journals'}><div key={'leftBar13'} style={styles.detail}>
 					<FormattedMessage {...globalMessages.Journals} /> <span style={styles.count}>({this.props.journalCount || 0})</span>
@@ -66,24 +66,24 @@ const PubLeftBar = React.createClass({
 				<Link style={globalStyles.link} to={'/pub/' + this.props.slug + '/history'}><div key={'leftBar3'} style={styles.detail}>
 					<FormattedMessage {...globalMessages.history} /> <span style={styles.count}>({this.props.historyCount || 0})</span>
 				</div></Link>
-				<Link style={globalStyles.link} to={'/pub/' + this.props.slug + '/analytics'}><div key={'leftBar5'} style={styles.detail}>
+				{/* <Link style={globalStyles.link} to={'/pub/' + this.props.slug + '/analytics'}><div key={'leftBar5'} style={styles.detail}>
 					<FormattedMessage {...globalMessages.analytics} /> <span style={styles.count}>({this.props.analyticsCount || 0})</span>
 				</div></Link>
 				<Link style={globalStyles.link} to={'/pub/' + this.props.slug + '/citations'}><div key={'leftBar6'} style={styles.detail}>
 					<FormattedMessage {...globalMessages.citations} /> <span style={styles.count}>({this.props.citationsCount || 0})</span>
-				</div></Link>				
+				</div></Link>
 				<Link style={globalStyles.link} to={'/pub/' + this.props.slug + '/news'}><div key={'leftBar7'} style={styles.detail}>
 					<FormattedMessage {...globalMessages.inthenews} /> <span style={styles.count}>({this.props.newsCount || 0})</span>
-				</div></Link>
+				</div></Link> */}
 				<Link style={globalStyles.link} to={'/pub/' + this.props.slug + '/source' + versionURL}><div key={'leftBar4'} style={styles.detail}>
 					<FormattedMessage {...globalMessages.source} />
 				</div></Link>
 
 				{/* <div style={styles.leftBarDivider}></div> */}
-				
+
 				{/* <div style={styles.detail}>Related Pub</div> */}
 				{/* <div style={styles.detail}>Share</div> */}
-				
+
 			</div>
 		);
 	}

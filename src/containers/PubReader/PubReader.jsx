@@ -132,7 +132,7 @@ const PubReader = React.createClass({
 		newHighLight.assetType = 'highlight';
 		newHighLight.label = newSelection.text.substring(0, 15);
 		newHighLight.assetData = newSelection;
-		console.log(newHighLight);
+
 		this.props.dispatch(createHighlight(newHighLight));
 	},
 
@@ -349,10 +349,14 @@ const PubReader = React.createClass({
 							<div style={[styles.buttonWrapper, !pubData.isAuthor && {opacity: '0', pointerEvents: 'none'}]} key={'topbutton1'}>Submit To Journal</div>
 						</Link>
 						<Link style={globalStyles.link} to={'/pub/' + this.props.slug + '/invite'}>
-							<div style={styles.buttonWrapper} key={'topbutton2'}>Request Review</div>
+							<div style={styles.buttonWrapper} key={'topbutton2'}>
+								<FormattedMessage id="pub.RequestReview" defaultMessage="Request Review"/>
+							</div>
 						</Link>
 						<Link style={globalStyles.link} to={'/pub/' + this.props.slug + '/discussions'}>
-							<div style={styles.buttonWrapper} key={'topbutton3'}>Expand</div>
+							<div style={styles.buttonWrapper} key={'topbutton3'}>
+								<FormattedMessage id="pub.Expand" defaultMessage="Expand"/>
+							</div>
 						</Link>
 						<div style={globalStyles.clearFix}></div>
 					</div>

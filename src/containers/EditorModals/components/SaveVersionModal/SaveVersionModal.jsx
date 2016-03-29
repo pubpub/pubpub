@@ -77,14 +77,14 @@ const EditorModalPublish = React.createClass({
 				{/* Publish Message */}
 				<div style={styles.publishText}>
 					<div style={styles.publishTextP}>
-						<FormattedMessage id="editor.publishMessage1" defaultMessage="You can save versions to your Pub as frequently as you like."/>
+						<FormattedMessage id="editor.saveVersionMessage1" defaultMessage="You can save versions to your Pub as frequently as you like."/>
 					</div>
 
 					<div style={styles.publishTextP}>
-						<FormattedMessage id="editor.publishMessage2" defaultMessage="Versions are private until you publish."/>
+						<FormattedMessage id="editor.saveVersionMessage2" defaultMessage="Versions are private until you publish."/>
 					</div>
 					<div style={styles.publishTextP}>
-						<FormattedMessage id="editor.publishMessage3" defaultMessage="The full history will be maintained and accessible."/>
+						<FormattedMessage id="editor.saveVersionMessage3" defaultMessage="The full history will be maintained and accessible."/>
 					</div>
 
 					{/* Publish button */}
@@ -93,15 +93,15 @@ const EditorModalPublish = React.createClass({
 					</div>
 
 					<div style={styles.publishTextP}>
-						<FormattedMessage id="editor.publishMessage4" defaultMessage="Publishing your work will make your pub public."/>
+						<FormattedMessage id="editor.saveVersionMessage4" defaultMessage="Publishing your work will make your pub public."/>
 					</div>
 					<div style={styles.publishTextP}>
-						<FormattedMessage id="editor.publishMessage5" defaultMessage="You cannot 'unpublish' once a document has been made public."/>
+						<FormattedMessage id="editor.saveVersionMessage5" defaultMessage="You cannot 'unpublish' once a document has been made public."/>
 					</div>
 
 					<div style={styles.publishTextP}>
 
-						<FormattedMessage id="editor.publishMessage6" defaultMessage="By publishing, you agree to a Creative Commons By license for your work."/>
+						<FormattedMessage id="editor.saveVersionMessage6" defaultMessage="By publishing, you agree to a Creative Commons By license for your work."/>
 						<div style={styles.license}>
 							<License text={'Your pub will be licensed under a'} hover={true} />
 						</div>

@@ -27,7 +27,7 @@ import {editorDefaultPubText, editorDefaultPageText} from './editorDefaultText';
 
 import FirepadUserList from './editorFirepadUserlist';
 
-import {convertFirebaseToObject} from 'utils/parsePlugins';
+// import {convertFirebaseToObject} from 'utils/parsePlugins';
 import {generateTOC} from '../../markdown/generateTOC';
 
 import {globalMessages} from 'utils/globalMessages';
@@ -477,51 +477,51 @@ const Editor = React.createClass({
 		const editorMenuItems = [
 			{
 				key: 'file',
-				string: 'File',
+				string: <FormattedMessage id="editor.File" defaultMessage="File"/>,
 				function: ()=>{},
 				children: [
 					{
 						key: 'style',
-						string: 'Style',
+						string: <FormattedMessage id="editor.Style" defaultMessage="Style"/>,
 						function: this.toggleStyleMode,
 					},
 					{
 						key: 'Settings',
-						string: 'Editor Settings',
+						string: <FormattedMessage id="editor.EditorSettings" defaultMessage="Editor Settings"/>,
 						function: this.openModalHandler('Style'),
 					}
 				]
 			},
-			{
-				key: 'view',
-				string: 'View',
-				function: this.printIt('style!'),
-				children: [
-					{
-						key: '1',
-						string: 'Markdown',
-						function: this.printIt('assets2!'),
-					},
-					{
-						key: '2',
-						string: 'Markdown and Live Preview',
-						function: this.printIt('assets2!'),
-					},
-					{
-						key: 'Markdomments',
-						string: 'Markdown and Comments',
-						function: this.printIt('collabs2!'),
-					},
-					{
-						key: 'things2',
-						string: 'Live Preview and Comments',
-						function: this.printIt('things2!'),
-					},
-				]
-			},
+			// {
+			// 	key: 'view',
+			// 	string: <FormattedMessage id="editor.View" defaultMessage="View"/>,
+			// 	function: this.printIt('style!'),
+			// 	children: [
+			// 		{
+			// 			key: '1',
+			// 			string: 'Markdown',
+			// 			function: this.printIt('assets2!'),
+			// 		},
+			// 		{
+			// 			key: '2',
+			// 			string: 'Markdown and Live Preview',
+			// 			function: this.printIt('assets2!'),
+			// 		},
+			// 		{
+			// 			key: 'Markdomments',
+			// 			string: 'Markdown and Comments',
+			// 			function: this.printIt('collabs2!'),
+			// 		},
+			// 		{
+			// 			key: 'things2',
+			// 			string: 'Live Preview and Comments',
+			// 			function: this.printIt('things2!'),
+			// 		},
+			// 	]
+			// },
 			{
 				key: 'formatting',
-				string: 'Formatting',
+				string: <FormattedMessage {...globalMessages.Formatting}/>,
 				function: ()=>{},
 				children: [
 					{
@@ -558,12 +558,12 @@ const Editor = React.createClass({
 			},
 			{
 				key: 'assets',
-				string: 'Assets',
+				string: <FormattedMessage {...globalMessages.assets}/>,
 				function: this.openModalHandler('Assets'),
 			},
 			{
 				key: 'collaborators',
-				string: 'Collaborators',
+				string: <FormattedMessage {...globalMessages.collaborators}/>,
 				function: this.openModalHandler('Collaborators'),
 			},
 			{
@@ -574,13 +574,13 @@ const Editor = React.createClass({
 			},
 			{
 				key: 'saveVersion',
-				string: 'Save Version',
+				string: <FormattedMessage id="editor.SaveVersion" defaultMessage="Save Version"/>,
 				right: true,
 				function: this.openModalHandler('SaveVersion'),
 			},
 			{
 				key: 'preview',
-				string: 'Preview',
+				string: <FormattedMessage {...globalMessages.Preview}/>,
 				right: true,
 				function: this.toggleLivePreview,
 			},

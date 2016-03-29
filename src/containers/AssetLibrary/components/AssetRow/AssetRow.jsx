@@ -26,15 +26,15 @@ const AssetRow = React.createClass({
 			removeHandler: ()=>{},
 		};
 	},
-	
+
 	render: function() {
 		const assetObject = this.props.assetObject || {};
 		const assetData = assetObject.assetData || {};
 		const isLoading = this.props.isLoading || false;
 		return (
-			
+
 			<div style={[styles.assetRowContainer]}>
-				
+
 				{/* Thumbnail */}
 				<div style={styles.thumbnail}>
 					<div style={styles.inlineBlockHelper}></div>
@@ -43,24 +43,24 @@ const AssetRow = React.createClass({
 
 				{/* label */}
 				<div style={[styles.filename]}>{assetObject.label}</div>
-				
+
 				{/* Type */}
 				<div style={[styles.hideOnLoad[isLoading], styles.type, styles.typeColors[assetObject.assetType]]}>{assetObject.assetType}</div>
-				
+
 				{/* Create Date */}
 				<div style={[styles.hideOnLoad[isLoading], styles.date]}>{assetObject.createDate}</div>
-				
+
 
 				{/* Insert Button */}
 				<div key={'insertButton-' + assetObject._id} style={[styles.hideOnLoad[isLoading], styles.delete]} onClick={this.props.insertHandler(assetObject)}>
-					insert
+					<FormattedMessage {...globalMessages.insert} />
 				</div>
 
 				{/* Edit Button */}
 				<div key={'editButton-' + assetObject._id} style={[styles.hideOnLoad[isLoading], styles.delete]} onClick={this.props.editHandler(assetObject)}>
 					<FormattedMessage {...globalMessages.edit} />
 				</div>
-				
+
 				{/* Remove Button */}
 				<div key={'removeButton-' + assetObject._id} style={[styles.hideOnLoad[isLoading], styles.delete]} onClick={this.props.removeHandler(assetObject)}>
 					<FormattedMessage {...globalMessages.delete} />
@@ -69,8 +69,8 @@ const AssetRow = React.createClass({
 				{/*	Loading Bar.
 				 	Only shown when file is uploading */}
 				<div style={[styles.showOnLoad[isLoading], styles.loadingBarWrapper]}>
-					
-					{/*	If it's fully uploaded, show the indeterminate processing bar, 
+
+					{/*	If it's fully uploaded, show the indeterminate processing bar,
 						otherwise, show the determinate loader */}
 					{ this.props.percentLoaded === 100
 						? <LoaderIndeterminate color="#999"/>
@@ -80,7 +80,7 @@ const AssetRow = React.createClass({
 				</div>
 
 			</div>
-							
+
 		);
 	}
 });
@@ -179,6 +179,7 @@ styles = {
 		height: rowHeight,
 		float: 'left',
 		color: globalStyles.veryLight,
+		textTransform: 'lowercase',
 		':hover': {
 			cursor: 'pointer',
 			color: globalStyles.sideText,
@@ -202,6 +203,6 @@ styles = {
 		width: '70%',
 		float: 'left',
 		overflow: 'hidden',
-		marginTop: 15, 
+		marginTop: 15,
 	},
 };

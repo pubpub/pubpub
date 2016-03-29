@@ -9,7 +9,7 @@ import PPMComponent from '../../markdown/PPMComponent';
 
 // import ResizingText from '../../components/PubBody/ResizingText';
 
-// import {globalMessages} from 'utils/globalMessages';
+import {globalMessages} from 'utils/globalMessages';
 import {FormattedMessage, FormattedDate, FormattedRelative} from 'react-intl';
 
 let styles = {};
@@ -127,10 +127,10 @@ const DiscussionsItem = React.createClass({
 								<FormattedMessage id="discussion.reply" defaultMessage="Reply"/>
 							</span>
 
-							<span style={[styles.detailLineItemSeparator, !discussionItem.isAuthor && styles.hide]}>|</span>
+							{/* <span style={[styles.detailLineItemSeparator, !discussionItem.isAuthor && styles.hide]}>|</span>
 							<span style={[styles.detailLineItem, !discussionItem.isAuthor && styles.hide]} key={'editButton-' + discussionItem._id} onClick={this.edit}>
 								<FormattedMessage id="discussion.edit" defaultMessage="Edit"/>
-							</span>
+							</span> */}
 
 							<span style={[styles.detailLineItemSeparator, discussionItem.isAuthor && styles.hide]}>|</span>
 							<span style={[styles.detailLineItem, discussionItem.isAuthor && styles.hide]} key={'flagButton-' + discussionItem._id} onClick={this.toggleFlag}>
@@ -174,7 +174,10 @@ const DiscussionsItem = React.createClass({
 					<div style={styles.discussionBody}>
 
 						<div style={styles.discussionContent}>
-							<div style={[styles.privateBlock, discussionItem.private && {display: 'inline-block'}]}>Private. Collaborators only.</div>
+							<div style={[styles.privateBlock, discussionItem.private && {display: 'inline-block'}]}>
+
+								<FormattedMessage id="discussion.PrivateCollaboraotrsOnly" defaultMessage="Private. Collaborators only."/>
+							</div>
 							{/* md.tree */}
 							<PPMComponent markdown={discussionItem.markdown} />
 

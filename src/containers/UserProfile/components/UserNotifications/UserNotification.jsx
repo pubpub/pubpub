@@ -19,7 +19,7 @@ const UserNotification = React.createClass({
 	},
 
 	render: function() {
-		
+
 		const notification = this.props.notificationObject;
 		// console.log(notification);
 		return (
@@ -33,13 +33,14 @@ const UserNotification = React.createClass({
 				<div style={[styles.notificationText]}>
 					{(() => {
 						const discussion = notification.discussion || {};
+						const sender = notification.sender || {};
 
 						switch (this.props.notificationObject.type) {
 						case 'discussion/repliedTo':
 							return (
 								<div>
-									<Link to={'/user/' + notification.sender.username} style={globalStyles.link}>
-										<span style={styles.boldLink}>{notification.sender.name}</span>
+									<Link to={'/user/' + sender.username} style={globalStyles.link}>
+										<span style={styles.boldLink}>{sender.name}</span>
 									</Link>
 									<span> responded to your </span>
 									<Link to={'/pub/' + notification.pub.slug + '/discussions/' + discussion._id} style={globalStyles.link}>
@@ -50,8 +51,8 @@ const UserNotification = React.createClass({
 						case 'discussion/pubComment':
 							return (
 								<div>
-									<Link to={'/user/' + notification.sender.username} style={globalStyles.link}>
-										<span style={styles.boldLink}>{notification.sender.name}</span>
+									<Link to={'/user/' + sender.username} style={globalStyles.link}>
+										<span style={styles.boldLink}>{sender.name}</span>
 									</Link>
 
 									{discussion.version === 0
@@ -71,8 +72,8 @@ const UserNotification = React.createClass({
 						case 'follows/followedYou':
 							return (
 								<div>
-									<Link to={'/user/' + notification.sender.username} style={globalStyles.link}>
-										<span style={styles.boldLink}>{notification.sender.name}</span>
+									<Link to={'/user/' + sender.username} style={globalStyles.link}>
+										<span style={styles.boldLink}>{sender.name}</span>
 									</Link>
 									<span> followed you</span>
 								</div>
@@ -80,8 +81,8 @@ const UserNotification = React.createClass({
 						case 'follows/followedPub':
 							return (
 								<div>
-									<Link to={'/user/' + notification.sender.username} style={globalStyles.link}>
-										<span style={styles.boldLink}>{notification.sender.name}</span>
+									<Link to={'/user/' + sender.username} style={globalStyles.link}>
+										<span style={styles.boldLink}>{sender.name}</span>
 									</Link>
 									<span> followed your pub, </span>
 									<Link to={'/pub/' + notification.pub.slug} style={globalStyles.link}>
@@ -92,8 +93,8 @@ const UserNotification = React.createClass({
 						case 'followers/newPub':
 							return (
 								<div>
-									<Link to={'/user/' + notification.sender.username} style={globalStyles.link}>
-										<span style={styles.boldLink}>{notification.sender.name}</span>
+									<Link to={'/user/' + sender.username} style={globalStyles.link}>
+										<span style={styles.boldLink}>{sender.name}</span>
 									</Link>
 									<span> published a new pub: </span>
 									<Link to={'/pub/' + notification.pub.slug} style={globalStyles.link}>
@@ -104,8 +105,8 @@ const UserNotification = React.createClass({
 						case 'followers/newVersion':
 							return (
 								<div>
-									<Link to={'/user/' + notification.sender.username} style={globalStyles.link}>
-										<span style={styles.boldLink}>{notification.sender.name}</span>
+									<Link to={'/user/' + sender.username} style={globalStyles.link}>
+										<span style={styles.boldLink}>{sender.name}</span>
 									</Link>
 									<span> published a new version of their pub: </span>
 									<Link to={'/pub/' + notification.pub.slug} style={globalStyles.link}>
@@ -113,19 +114,19 @@ const UserNotification = React.createClass({
 									</Link>
 								</div>
 							);
-						default: 
+						default:
 							return null;
 						}
-					})()}	
+					})()}
 				</div>
-				
+
 
 				<div style={styles.date}>
 					{((new Date() - new Date(this.props.notificationObject.createDate)) / (1000 * 60 * 60 * 24)) < 7
 						? <FormattedRelative value={this.props.notificationObject.createDate} />
 						: <FormattedDate value={this.props.notificationObject.createDate} />
 					}
-				</div>							
+				</div>
 
 				<div style={globalStyles.clearFix}></div>
 			</div>
@@ -140,7 +141,7 @@ styles = {
 		padding: '10px 0px',
 		borderBottom: '1px solid rgba(0,0,0,0.1)',
 	},
-	
+
 	unread: {
 		width: '15px',
 		height: '1px',
