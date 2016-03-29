@@ -287,5 +287,7 @@
   "editorDiscussionMessage": "Esta sección muestra la discusión del público en una versión pública de tu ensayo.",
   "editor.saveVersionMessage1": "Puedes salvar diferentes versiones de tu ensayo cuantas veces quieras.",
   "editor.saveVersionMessage2": "Tu versión de este enseayo es privada hasta que la haces pública",
-  "editor.saveVersionMessage4": "Al publicar tu ensayo harás que todos puedan accederlo."
+  "editor.saveVersionMessage4": "Al publicar tu ensayo harás que todos puedan accederlo.",
+  "discussion.blank1": "No hay comentarios todavía.",
+  "discussion.blank2": "¡Se el primero en empezar el diálogo!"
 }
