@@ -21,6 +21,7 @@ export function assetCreate(req, res) {
 	};
 	newAsset.history = [historyItem];
 
+	console.log(newAsset);
 	newAsset.save(function(err, savedAsset) {
 		if (err) { return res.status(500).json(err); }
 		User.update({ _id: req.user._id }, { $addToSet: { assets: savedAsset._id} }, function(err2, result) {if (err2) return res.status(500).json(err2); });

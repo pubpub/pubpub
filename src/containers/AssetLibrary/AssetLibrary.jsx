@@ -5,7 +5,7 @@ import {connect} from 'react-redux';
 import Radium from 'radium';
 
 import {Menu, Button} from 'components';
-import {AssetEditor, AssetRow, ReferenceRow} from './components';
+import {AssetEditor, AssetRow, ReferenceRow, HighlightRow} from './components';
 
 // import {saveCollaboratorsToPub} from 'actions/editor';
 
@@ -197,10 +197,13 @@ const AssetLibrary = React.createClass({
 			switch (assetObject.assetType) {
 			case 'image':
 			case 'video':
-				inlineObject = {pluginType: assetObject.assetType, source: assetObject};
+				inlineObject = {pluginType: assetObject.assetType, source: {...assetObject.assetData, ...{_id: assetObject._id} }};
 				break;
 			case 'reference':
-				inlineObject = {pluginType: 'cite', reference: assetObject};
+				inlineObject = {pluginType: 'cite', reference: {...assetObject.assetData, ...{_id: assetObject._id} }};
+				break;
+			case 'highlight':
+				inlineObject = {pluginType: 'highlight', source: {...assetObject.assetData, ...{_id: assetObject._id} }};
 				break;
 			default:
 				inlineObject = undefined;
@@ -342,7 +345,7 @@ const AssetLibrary = React.createClass({
 														referenceList.push(<ReferenceRow
 															key={'referenceRow-' + index}
 															assetObject={reference}
-															insertHandler={()=>{}}
+															insertHandler={this.insertAsset}
 															editHandler={this.openAssetEditor}
 															removeHandler={()=>{}} />
 														);
@@ -358,7 +361,29 @@ const AssetLibrary = React.createClass({
 
 								case 'highlights':
 									return (
-										<div>Highlights</div>
+										<div>
+											{/* Display all existing references using ReferenceRow */}
+											{(() => {
+												const highlightList = [];
+
+												// Iterate through referenceList in reverse order. So newest are at top
+												for (let index = highlights.length; index > 0; index--) {
+													const highlight = highlights[index - 1];
+													if (highlight.assetData) {
+														highlightList.push(<HighlightRow
+															key={'highlightRow-' + index}
+															assetObject={highlight}
+															insertHandler={this.insertAsset}
+															editHandler={this.openAssetEditor}
+															removeHandler={()=>{}} />
+														);
+
+													}
+
+												}
+												return highlightList;
+											})()}
+										</div>
 									);
 								default:
 									return null;

@@ -2,7 +2,7 @@ const app = require('../api');
 
 const Pub = require('../models').Pub;
 const User = require('../models').User;
-// const Asset = require('../models').Asset;
+const Asset = require('../models').Asset;
 const Discussion = require('../models').Discussion;
 // const Reference = require('../models').Reference;
 // const Highlight = require('../models').Highlight;
@@ -42,6 +42,13 @@ export function addDiscussion(req, res) {
 		const discussionID = result.id;
 		const userID = result.author;
 		const pubID = result.pub;
+
+		// Update Asset docs to reflect that they were used in this discussion
+		const assetIDStrings = req.body.discussionObject.markdown.match(/"_id":"(.*?)"/g) || [];
+		const assetIDs = assetIDStrings.map((string)=>{
+			return string.substring(7, string.length - 1);
+		});
+		Asset.update({'_id': {$in: assetIDs}}, { $addToSet: { usedInDiscussions: {id: result._id, version: 1}} }, function(assetUpdateErr, updateResult) {if (assetUpdateErr) return console.log('Failed to update assets usedInDiscussionss field'); });
 
 		User.update({ _id: userID }, { $addToSet: { discussions: discussionID} }, function(errUpdate, resultUpdate) {if (errUpdate) return console.log(errUpdate);});
 		Pub.update({ _id: pubID }, { $addToSet: { discussions: discussionID} }, function(errUpdate, resultUpdate) {if (errUpdate) return console.log(errUpdate);});
@@ -88,6 +95,12 @@ export function updateDiscussion(req, res) {
 		discussion.version = req.body.updatedDiscussion.version;
 		discussion.lastUpdated = currentDate;
 
+		// Update Asset docs to reflect that they were used in this pub
+		const assetIDStrings = req.body.newVersion.markdown.match(/"_id":"(.*?)"/g) || [];
+		const assetIDs = assetIDStrings.map((string)=>{
+			return string.substring(7, string.length - 1);
+		});
+		Asset.update({'_id': {$in: assetIDs}}, { $addToSet: { usedInDiscussions: {id: discussion._id, version: discussion.history.length || 1}} }, function(assetUpdateErr, updateResult) {if (assetUpdateErr) return console.log('Failed to update assets usedInDiscussionss field'); });
 
 		discussion.save(function(errSave, result) {
 			if (errSave) { return res.status(500).json(errSave); }

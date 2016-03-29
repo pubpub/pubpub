@@ -130,8 +130,9 @@ const PubReader = React.createClass({
 
 		const newHighLight = {};
 		newHighLight.assetType = 'highlight';
-		newHighLight.label = newSelection.text.substring(0, 10);
+		newHighLight.label = newSelection.text.substring(0, 15);
 		newHighLight.assetData = newSelection;
+		console.log(newHighLight);
 		this.props.dispatch(createHighlight(newHighLight));
 	},
 
