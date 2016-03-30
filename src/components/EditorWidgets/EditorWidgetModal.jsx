@@ -10,6 +10,7 @@ import InputFields from '../EditorPluginFields/index.js';
 import MurmurHash from 'murmurhash';
 import Portal from 'react-portal';
 import {throttle, delay} from 'lodash';
+import {pubSizes} from 'utils/styleConstants';
 
 let styles = {};
 
@@ -202,14 +203,11 @@ const EditorWidgetModal = React.createClass({
 	onPluginSave: function() {
 		const cm = this.getActiveCodemirrorInstance();
 		const lineNum = this.state.activeLine;
-		// const from = {line: lineNum, ch: 0};
-		// const to = {line: lineNum, ch: lineContent.length};
+
 		const from = {line: lineNum, ch: this.fromIndex};
 		const to = {line: lineNum, ch: this.toIndex};
 
 		const mergedString = `[[${this.createPluginString(this.state.pluginType)}]]`;
-
-		// const outputString = lineContent.replace(this.state.initialString, mergedString);
 
 		cm.replaceRange(mergedString, from, to);
 		/*
@@ -241,7 +239,6 @@ const EditorWidgetModal = React.createClass({
 		}
 
 		const mergedString = JSON.stringify(outputObj);
-		console.log(mergedString);
 		return mergedString;
 	},
 
@@ -344,16 +341,22 @@ styles = {
 
 		const modeStyles = {
 			'preview': {
-				width: '30vw',
-				left: '0px',
-			},
-			'discussions': {
-				width: '35vw',
-				right: '0px',
-			},
-			'full': {
 				width: '50vw',
 				left: '0px',
+				backgroundColor: 'rgba(255,255,255,0.5)',
+				top: '60px',
+			},
+			'discussions': {
+				width: pubSizes.defaultRightWidth,
+				right: '0px',
+				backgroundColor: 'rgba(255,255,255,0.5)',
+				top: '30px',
+			},
+			'full': {
+				width: '100vw',
+				left: '0px',
+				backgroundColor: 'rgba(255,255,255,0.5)',
+				top: '60px',
 			},
 		};
 
@@ -362,39 +365,37 @@ styles = {
 		return {
 			...modeStyle,
 			position: 'fixed',
-			top: '60px',
-			// display: 'flex',
-			// alignItems: 'center',
 			height: '100vh',
-			zIndex: 50,
-			backgroundColor: 'rgba(255,255,255,0.5)',
+			zIndex: 450,
 			pointerEvents: 'none',
 		};
 	},
 	pluginPopup: function(mode) {
 
-		const popupWidths = {
-			'preview': '30vw',
-			'discussions': '25vw',
-			'full': '35vw',
+		const modeStyles = {
+			'preview': {
+				width: '30vw',
+				margin: '0px 7vw',
+				minWidth: '425px',
+			},
+			'discussions': {
+				width: '25vw',
+				margin: '0px auto',
+				minWidth: '350px',
+			},
+			'full': {
+				full: '35vw',
+				margin: '0px 29.5vw',
+				minWidth: '425px',
+			},
 		};
 
-		const popupMargins = {
-			'preview': '0px 7vw',
-			'discussions': '0px auto',
-			'full': '0px 29.5vw',
-		};
-
-		const popupWidth = popupWidths[mode];
-		const popupMargin = popupMargins[mode];
+		const modeStyle = modeStyles[mode];
 
 		return {
-			width: popupWidth,
-			minWidth: '425px',
+			...modeStyle,
 			position: 'relative',
-			margin: popupMargin,
 			top: '10vh',
-			// minHeight: 200,
 			backgroundColor: 'white',
 			boxShadow: '0px 0px 2px 0px #333',
 			// left: `calc(50vw - ${POPUP_WIDTH / 2}px)`,
@@ -402,7 +403,7 @@ styles = {
 			opacity: 0,
 			transform: 'scale(0.8)',
 			transition: '.02s linear transform, .02s linear opacity',
-			zIndex: 50,
+			zIndex: 450,
 			padding: '2vh 3vw',
 			borderRadius: '1px',
 		};

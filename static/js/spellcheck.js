@@ -59,8 +59,7 @@ CodeMirror.defineMode("spell-checker", function(config, parserConfig) {
 			var ch = stream.peek();
 			var word = "";
 
-			stream.match(/^\[\[((?!title|abstract|authorsNote).)*\]\]/);
-			stream.match(/^authorsNote/);
+			stream.match(/^\[\[.*?\]\]/);
 
 			if(rx_word.includes(ch)) {
 				stream.next();
