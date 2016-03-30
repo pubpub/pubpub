@@ -8,6 +8,12 @@
 .react-selectize.root-node.disabled {
   pointer-events: none;
 }
+
+/*Without this we get into a wierd bug where clicking on the selected value closes the dropdown*/
+.react-selectize-search-field-and-selected-values {
+  pointer-events: none;
+}
+
 .react-selectize.root-node .react-selectize-control {
   cursor: pointer;
   display: -webkit-box;

@@ -47,7 +47,6 @@ const EditorWidgetModal = React.createClass({
 	},
 
 	componentDidMount() {
-		// document.documentElement.addEventListener('click', this.onPluginClick);
 		document.documentElement.addEventListener('keydown', this.onpluginKeyPress);
 
 	},
@@ -78,7 +77,6 @@ const EditorWidgetModal = React.createClass({
 	},
 
 	componentWillUnmount() {
-		// document.documentElement.removeEventListener('click', this.onPluginClick);
 		document.documentElement.removeEventListener('keydown', this.onpluginKeyPress);
 	},
 
@@ -108,18 +106,6 @@ const EditorWidgetModal = React.createClass({
 		} else {
 			document.body.focus();
 		}
-	},
-	onPluginClick: function(event) {
-		let clickX;
-		let clickY;
-		if (event.pageX || event.pageY) {
-			clickX = event.pageX;
-			clickY = event.pageY;
-		} else {
-			clickX = event.clientX + document.body.scrollLeft + document.documentElement.scrollLeft;
-			clickY = event.clientY + document.body.scrollTop + document.documentElement.scrollTop;
-		}
-		this.showAtPos(clickX, clickY);
 	},
 
 
@@ -331,7 +317,7 @@ export default Radium(EditorWidgetModal);
 styles = {
 	pluginClose: {
 		position: 'absolute',
-		right: '-25px',
+		right: '0px',
 		top: '0px',
 		cursor: 'pointer',
 		fontSize: '1.25em',
@@ -375,8 +361,8 @@ styles = {
 		const modeStyles = {
 			'preview': {
 				width: '30vw',
-				margin: '0px 7vw',
-				minWidth: '425px',
+				margin: '0px auto',
+				minWidth: '350px',
 			},
 			'discussions': {
 				width: '25vw',
@@ -384,9 +370,9 @@ styles = {
 				minWidth: '350px',
 			},
 			'full': {
-				full: '35vw',
-				margin: '0px 29.5vw',
-				minWidth: '425px',
+				width: '40vw',
+				margin: '0px auto',
+				minWidth: '350px',
 			},
 		};
 
