@@ -125,6 +125,9 @@ app.use((req, res) => {
 						: store.getState().pub.getIn(['pubData', 'history']).size - 1;
 					dynamicStyle = store.getState().pub.getIn(['pubData', 'history', versionIndex, 'styleScoped']);
 				}
+				if (pathname === '/') {
+					dynamicStyle = store.getState().journal.getIn(['journalData', 'landingPage', 'styleScoped']);
+				}
 
 				const rssRel = pathname === '/' ? 'alternate' : 'home';
 

@@ -33,6 +33,7 @@ const Plugin = React.createClass({
 
 	render: function() {
 		const pubs = this.state.pubs || [];
+
 		return (
 			<div className={'pubList wrapper'}>
 				{
@@ -46,10 +47,11 @@ const Plugin = React.createClass({
 											return <div className={'pubList author'} key={'pub-' + index + '-author-' + authorIndex}>{author.name}</div>;
 										})}
 									</div>
+									<div className={'pubList abstract'}>{pub.abstract}</div>
 									<div className={'pubList createDate'}>{dateFormat(pub.createDate, 'mmm dd, yyyy')}</div>
 									<div className={'pubList lastUpdated'}>{dateFormat(pub.lastUpdated, 'mmm dd, yyyy')}</div>
 									<div className={'pubList discussionCount'}>{pub.discussions.length}</div>
-									<div className={'pubList abstract'}>{pub.abstract}</div>
+
 								</Link>
 
 							</div>

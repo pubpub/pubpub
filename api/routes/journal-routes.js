@@ -374,6 +374,8 @@ export function getJournalPubs(req, res) {
 	Journal.findOne({ $or: [ {subdomain: host.split('.')[0]}, {customDomain: host}]})
 	.populate(Journal.populationObject(false, true))
 	.lean().exec(function(err, journal) {
+		if (err) {console.log(err); return res.status(500).json(err);}
+		if (!journal) {return res.status(201).json([]);}
 		return res.status(201).json(journal.pubsFeatured);
 	});
 }
@@ -384,6 +386,7 @@ export function getJournalCollections(req, res) {
 	Journal.findOne({ $or: [ {subdomain: host.split('.')[0]}, {customDomain: host}]})
 	.populate(Journal.populationObject(true, false))
 	.lean().exec(function(err, journal) {
+		if (err) {console.log(err); return res.status(201).json();}
 		return res.status(201).json(journal.collections);
 	});
 }

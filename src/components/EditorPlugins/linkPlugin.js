@@ -41,15 +41,15 @@ const Plugin = React.createClass({
 		const imageURL = this.props.source ? this.props.source.url : '';
 		const text = this.props.text;
 
-		const isExternal = linkURL.indexOf('http://') > -1 || linkURL.indexOf('https://') > -1;
+		const isExternal = linkURL.indexOf('http://') > -1 || linkURL.indexOf('https://') > -1 || linkURL.indexOf('matilto:') > -1;
 		return isExternal
 			? <a href={linkURL}>
-				{this.props.imageURL ? <img src={imageURL} /> : null}
-				{this.props.text ? <div>{text}</div> : null}
+				{imageURL ? <img src={imageURL} /> : null}
+				{text ? <div>{text}</div> : null}
 			</a>
 			: <Link to={linkURL}>
-				{this.props.imageURL ? <img src={imageURL} /> : null}
-				{this.props.text ? <div>{text}</div> : null}
+				{imageURL ? <img src={imageURL} /> : null}
+				{text ? <div>{text}</div> : null}
 			</Link>;
 	}
 });

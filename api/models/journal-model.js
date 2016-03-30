@@ -85,7 +85,7 @@ journalSchema.statics.updateHerokuDomains = function(oldDomain, newDomain) {
 
 journalSchema.statics.populationObject = function(collectionsOnly, pubsOnly) {
 	const options = [
-		{path: 'landingPage', select: 'markdown'},
+		{path: 'landingPage', select: 'markdown styleScoped'},
 
 		{path: 'pubsSubmitted', select: 'title abstract slug settings'},
 		{path: 'admins', select: 'name firstName lastName username thumbnail'},

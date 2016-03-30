@@ -34,6 +34,10 @@ const Landing = React.createClass({
 		};
 	},
 
+	componentDidMount() {
+		document.getElementById('dynamicStyle').innerHTML = this.props.journalData.getIn(['journalData', 'landingPage', 'styleScoped']);
+	},
+
 	setQuery: function(queryObject) {
 		this.props.dispatch(pushState(null, this.props.path, {...this.props.query, ...queryObject}));
 	},

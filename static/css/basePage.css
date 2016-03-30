@@ -70,21 +70,29 @@
 #pageContent .pubList.pub {
 	padding: 25px 0px;
 	border-top: 1px solid transparent;
-	border-bottom: 1px solid transparent;
+	border-bottom: 1px solid #ccc;
 }
 #pageContent .pubList.pub:hover {
 	border-color: #888;
 }
 #pageContent .pubList.title {
 	font-size: 1.5em;
+	color: #444;
 }
 #pageContent .pubList.author {
 	display: inline-block;
+	color: #999;
 	padding-right: 1em;
+	font-size: 0.9em;
+}
+#pageContent .pubList.abstract {
+	padding: 10px 0px;
+	font-family: 'Lora';
 }
 #pageContent .pubList.createDate, #pageContent .pubList.lastUpdated, #pageContent .pubList.discussionCount  {
 	display: inline-block;
-	color: #555;
+	color: #999;
+	font-size: 0.9em;
 }
 #pageContent .pubList.createDate  {
 	display: none;
@@ -92,19 +100,18 @@
 #pageContent .pubList.lastUpdated:before  {
 	content: "Latest Version: ";
 }
+#pageContent .pubList.lastUpdated:after  {
+	content: "|";
+	padding-left: 1em;
+}
 #pageContent .pubList.discussionCount:before  {
-	content: "| Discussions: ";
+	content: "Discussions: ";
 	padding-left: 1em;
 }
 
 #pageContent .footer {
 	padding: 10px 50px ;
 	background-color: #373737;
-}
-#pageContent .pubList.abstract {
-	font-size: 1em;
-	font-family: 'Lora';
-	padding: 5px 20px;
 }
 
 #pageContent .footer:after {
