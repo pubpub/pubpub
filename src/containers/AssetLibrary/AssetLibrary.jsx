@@ -197,13 +197,13 @@ const AssetLibrary = React.createClass({
 			switch (assetObject.assetType) {
 			case 'image':
 			case 'video':
-				inlineObject = {pluginType: assetObject.assetType, source: {...assetObject.assetData, ...{_id: assetObject._id} }};
+				inlineObject = {pluginType: assetObject.assetType, source: {...assetObject.assetData, _id: assetObject._id, label: assetObject.label }};
 				break;
 			case 'reference':
-				inlineObject = {pluginType: 'cite', reference: {...assetObject.assetData, ...{_id: assetObject._id} }};
+				inlineObject = {pluginType: 'cite', reference: {...assetObject.assetData, _id: assetObject._id, label: assetObject.label }};
 				break;
 			case 'highlight':
-				inlineObject = {pluginType: 'highlight', source: {...assetObject.assetData, ...{_id: assetObject._id} }};
+				inlineObject = {pluginType: 'highlight', source: {...assetObject.assetData, _id: assetObject._id, label: assetObject.label }};
 				break;
 			default:
 				inlineObject = undefined;

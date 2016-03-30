@@ -39,7 +39,7 @@ const CiteConfig = {
 const CITE_WRAPPER_CLASS = 'pub-cite-wrapper';
 const CITE_CLASS = 'pub-cite';
 
-const CiteEditorWidget = (inputProps) => (<span>Citation: {inputProps.reference || 'Empty'}</span>);
+const CiteEditorWidget = (inputProps) => (<span>Citation: {(inputProps.reference !== null && inputProps.reference.label) || 'Empty'}</span>);
 
 const CitePlugin = React.createClass({
 	propTypes: {

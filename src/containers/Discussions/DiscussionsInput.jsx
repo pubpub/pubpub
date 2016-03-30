@@ -37,7 +37,7 @@ const PubDiscussionsInput = React.createClass({
 		saveID: PropTypes.string,
 		intl: PropTypes.object,
 		toggleAssetLibrary: PropTypes.func,
-
+		userAssets: PropTypes.array,
 	},
 
 	getInitialState() {
@@ -172,7 +172,7 @@ const PubDiscussionsInput = React.createClass({
 					},
 				}} />
 
-			{(this.state.initialized) ? <EditorWidgets ref="widgethandler" mode="discussions" references={{}} assets={[]} cm={this.cm} /> : null }
+			{(this.state.initialized) ? <EditorWidgets assets={this.props.userAssets} ref="widgethandler" mode="discussions" references={{}} cm={this.cm} /> : null }
 
 				<div style={[styles.inputTopLine, styles.expanded(this.state.expanded, true)]}>
 					<div style={styles.thumbnail}>

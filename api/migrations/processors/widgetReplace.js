@@ -46,6 +46,8 @@ function refactorMarkdown({markdown, assets}) {
 			if (asset) {
 				pluginDict.source = asset.assetData
 				pluginDict.source._id = asset._id;
+				pluginDict.source.label = asset.label;
+
 			} else {
 				console.log(' - Could not find selection with index', pluginDict.index);
 			}

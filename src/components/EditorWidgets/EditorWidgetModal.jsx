@@ -1,6 +1,6 @@
 import React, {PropTypes} from 'react';
 import Radium from 'radium';
-import {parsePluginString} from 'utils/parsePlugins';
+import {parsePluginString, inlineAsset} from 'utils/parsePlugins';
 
 // import {globalMessages} from 'utils/globalMessages';
 // import {FormattedMessage} from 'react-intl';
@@ -18,8 +18,6 @@ const EditorWidgetModal = React.createClass({
 		activeFocus: PropTypes.string,
 		codeMirrorChange: PropTypes.object,
 		assets: PropTypes.array,
-		references: PropTypes.object,
-		selections: PropTypes.object,
 		mode: PropTypes.string,
 		cm: PropTypes.object,
 	},
@@ -44,8 +42,6 @@ const EditorWidgetModal = React.createClass({
 			activeToken: null,
 			pluginType: '',
 			assets: [],
-			references: [],
-			selections: [],
 		};
 	},
 
@@ -65,9 +61,7 @@ const EditorWidgetModal = React.createClass({
 
 		// If a re-render causes this component to receive new props, but the props haven't changed, return.
 		if (this.props.codeMirrorChange === nextProps.codeMirrorChange
-			&& this.props.assets === nextProps.assets
-			&& this.props.references === nextProps.references
-			&& this.props.selections === nextProps.selections) {
+			&& this.props.assets === nextProps.assets) {
 			return null;
 		}
 
@@ -78,11 +72,6 @@ const EditorWidgetModal = React.createClass({
 			&& (nextProps.codeMirrorChange.origin.indexOf('cmrt-') !== -1 || nextProps.codeMirrorChange.origin === 'RTCMADAPTER')) {
 			this.updateToken({activeLine: this.state.activeLine, activeChar: this.state.activeChar, isUpdate: true});
 		}
-
-		const references = (nextProps.references) ? Object.values(nextProps.references) : [];
-		const selections = (nextProps.selections) ? Object.values(nextProps.selections) : [];
-
-		this.setState({references: references, aselections: selections});
 
 		return true;
 	},
@@ -244,11 +233,15 @@ const EditorWidgetModal = React.createClass({
 			// Generate an output string based on the key, values in the object
 			const inputFieldTitle = pluginInputField.title;
 			const ref = this.popupInputFields[inputFieldTitle];
-			const val = ref.value();
+			let val = ref.value();
+			if (val instanceof Object) {
+				val = inlineAsset(val);
+			}
 			outputObj[inputFieldTitle] = val;
 		}
 
 		const mergedString = JSON.stringify(outputObj);
+		console.log(mergedString);
 		return mergedString;
 	},
 
@@ -312,9 +305,7 @@ const EditorWidgetModal = React.createClass({
 																<div style={styles.pluginPropWrapper}>
 																	<FieldComponent
 																		selectedValue={value}
-																		references={this.state.references}
 																		assets={this.props.assets}
-																		selections={this.state.selections}
 																		saveChange={this.onInputFieldChange}
 																		{...PluginInputFieldParams}
 																		ref={(ref) => this.popupInputFields[fieldTitle] = ref}/>

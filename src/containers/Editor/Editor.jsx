@@ -228,13 +228,6 @@ const Editor = React.createClass({
 
 	onEditorChange: function(cm, change) {
 
-		CodeMirror.commands.autocomplete(cm, CodeMirror.hint.plugins, {completeSingle: false});
-
-		if (cm.state.completionActive && cm.state.completionActive.data) {
-			const completion = cm.state.completionActive.data;
-			CodeMirror.on(completion, 'pick', this.showPopupFromAutocomplete);
-		}
-
 		// const start = performance.now();
 
 		const markdown = cm.getValue();

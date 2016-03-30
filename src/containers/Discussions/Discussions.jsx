@@ -150,6 +150,8 @@ const Discussions = React.createClass({
 		const isPubAuthor = this.props.pubData.getIn(['pubData', 'isAuthor']);
 		const isPublished = this.props.pubData.getIn(['pubData', 'isPublished']);
 
+		const userAssets = this.props.loginData.getIn(['userData', 'assets']).toJS() || [];
+
 		discussionsData.sort(function(aIndex, bIndex) { return this.getHotness(bIndex) - this.getHotness(aIndex); }.bind(this));
 		return (
 			<div style={styles.container}>
@@ -191,6 +193,7 @@ const Discussions = React.createClass({
 							isReply={false}
 							codeMirrorID={'rootCommentInput'}
 							isPublished={isPublished}
+							userAssets={userAssets}
 							toggleAssetLibrary={this.toggleAssetLibrary}/>
 					}
 

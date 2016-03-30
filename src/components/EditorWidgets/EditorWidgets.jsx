@@ -16,7 +16,6 @@ const EditorWidgets = React.createClass({
 	propTypes: {
 		activeFocus: PropTypes.string,
 		assets: PropTypes.array,
-		references: PropTypes.object,
 		mode: PropTypes.string,
 		cm: PropTypes.object,
 	},
@@ -37,7 +36,7 @@ const EditorWidgets = React.createClass({
 
 
 	showPopupFromAutocomplete: function(completion) {
-		const cords = this.cm.cursorCoords();
+		const cords = this.props.cm.cursorCoords();
 		this.refs.pluginModal.showAtPos(cords.left - 15, cords.top + 5);
 		if (completion) {
 			CodeMirror.off(completion, 'pick', this.showPopupFromAutocomplete);
@@ -102,17 +101,12 @@ const EditorWidgets = React.createClass({
 
 	onEditorChange: function(cm, change) {
 
-		/*
-
 		CodeMirror.commands.autocomplete(cm, CodeMirror.hint.plugins, {completeSingle: false});
 
 		if (cm.state.completionActive && cm.state.completionActive.data) {
 			const completion = cm.state.completionActive.data;
 			CodeMirror.on(completion, 'pick', this.showPopupFromAutocomplete);
 		}
-		*/
-
-		console.log(change);
 
 		if (change.from && change.to) {
 			const fromLine = change.from.line;
@@ -140,7 +134,6 @@ const EditorWidgets = React.createClass({
 
 				<EditorWidgetModal ref="pluginModal"
 					mode={this.props.mode}
-					references={this.props.references || []}
 					assets={this.props.assets || []}
 					activeFocus={this.props.activeFocus}
 					codeMirrorChange={this.state.codeMirrorChange}

@@ -25,6 +25,15 @@ export function parsePluginString(str) {
 	// return propDict;
 }
 
+
+export function inlineAsset(assetObj) {
+	const result = assetObj.assetData;
+	result._id = assetObj._id;
+	result.label = assetObj.label;
+	return result;
+}
+
+
 export function convertFirebaseToObject(firebaseObj, shouldCount = false) {
 	// It seems this could be removed if we did a better job of creating the firebase
 	// data to use the refNames as key to that object.
@@ -76,19 +85,3 @@ export function convertListToObject(array, shouldCount = false) {
 	});
 	return newObject;
 }
-
-
-/*
-export function getAssetInformation(propDict, assets, assetType) {
-const refName = propDict.src || 'none';
-const asset = assets.find(asst => (asst.refName === refName));
-let url = null;
-if (asset && asset.assetType === 'image') {
-url = asset.url_s3;
-} else if (asset) {
-url = 'error:type';
-}
-propDict.url = url;
-return propDict;
-}
-*/
