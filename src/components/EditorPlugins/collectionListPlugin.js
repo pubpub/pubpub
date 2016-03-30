@@ -44,15 +44,17 @@ const Plugin = React.createClass({
 		const pubs = activeCollection.pubs || [];
 		return (
 			<div className={'collectionList wrapper'}>
-				{
-					collections.map((collection, index)=>{
-						return (
-							<div key={'collectionButton-' + index} className={'collectionList collectionButton'} onClick={this.setActiveIndex(index)}>
-								{collection.title}
-							</div>
-						);
-					})
-				}
+				<div className={'collectionList collectionButtons'}>
+					{
+						collections.map((collection, index)=>{
+							return (
+								<div key={'collectionButton-' + index} className={'collectionList collectionButton' + (this.state.activeIndex === index ? ' active' : '')} onClick={this.setActiveIndex(index)}>
+									{collection.title}
+								</div>
+							);
+						})
+					}
+				</div>
 
 				<div className={'collectionList collectionTitle'}>{activeCollection.title}</div>
 
@@ -60,18 +62,18 @@ const Plugin = React.createClass({
 					{
 						pubs.map((pub, pubIndex)=>{
 							return (
-								<div key={'collectionPub-' + pubIndex} className={'collectionList pub'}>
+								<div key={'collectionPub-' + pubIndex} className={'collectionList pubList pub'}>
 									<Link style={globalStyles.link} to={'/pub/' + pub.slug}>
-										<div className={'pubList title'}>{pub.title}</div>
-										<div className={'pubList authors'}>
+										<div className={'collectionList pubList title'}>{pub.title}</div>
+										<div className={'collectionList pubList authors'}>
 											{pub.authors.map((author, authorIndex)=>{
-												return <div className={'pubList author'} key={'pub-' + pubIndex + '-author-' + authorIndex}>{author.name}</div>;
+												return <div className={'collectionList pubList author'} key={'pub-' + pubIndex + '-author-' + authorIndex}>{author.name}</div>;
 											})}
 										</div>
-										<div className={'pubList abstract'}>{pub.abstract}</div>
-										<div className={'pubList createDate'}>{dateFormat(pub.createDate, 'mmm dd, yyyy')}</div>
-										<div className={'pubList lastUpdated'}>{dateFormat(pub.lastUpdated, 'mmm dd, yyyy')}</div>
-										<div className={'pubList discussionCount'}>{pub.discussions.length}</div>
+										<div className={'collectionList pubList abstract'}>{pub.abstract}</div>
+										<div className={'collectionList pubList createDate'}>{dateFormat(pub.createDate, 'mmm dd, yyyy')}</div>
+										<div className={'collectionList pubList lastUpdated'}>{dateFormat(pub.lastUpdated, 'mmm dd, yyyy')}</div>
+										<div className={'collectionList pubList discussionCount'}>{pub.discussions.length}</div>
 									</Link>
 								</div>
 							);
