@@ -4,7 +4,7 @@ import DropdownField from './baseDropdownField';
 const ReferenceField = React.createClass({
 	propTypes: {
 		assets: PropTypes.array,
-		selectedValue: PropTypes.string,
+		selectedValue: PropTypes.object,
 		saveChange: PropTypes.func,
 	},
 	getDefaultProps: function() {
@@ -20,8 +20,9 @@ const ReferenceField = React.createClass({
 		const references = this.props.assets.filter((asset) => (asset.assetType === 'reference' && asset.label))
 		.map( function(asset) { return {'value': asset, 'label': asset.label};});
 
-		const val = (this.props.selectedValue) ? {'label': this.props.selectedValue, 'value': this.props.selectedValue} : undefined;
-		return <DropdownField saveChange={this.props.saveChange} ref="val" choices={references} selectedValue={val}/>;
+		const selectedRef = (this.props.selectedValue) ? this.props.assets.find((asset) => (asset._id === this.props.selectedValue._id)) : null;
+
+		return <DropdownField saveChange={this.props.saveChange} ref="val" choices={references} selectedValue={selectedRef}/>;
 	}
 });
 
