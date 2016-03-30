@@ -69,6 +69,7 @@ const PubDiscussionsInput = React.createClass({
 			backdrop: 'pubpubmarkdown',
 			extraKeys: {'Ctrl-Space': 'autocomplete'},
 			placeholder: this.props.intl.formatMessage(placeholderMsg),
+			dragDrop: false,
 		};
 
 		const codeMirror = CodeMirror(document.getElementById(this.props.codeMirrorID), cmOptions);
