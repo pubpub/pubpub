@@ -6,7 +6,7 @@ import smoothScroll from 'utils/smoothscroll';
 import {FormattedMessage} from 'react-intl';
 
 const SelectionInputFields = [
-	{title: 'index', type: 'selection', params: {}},
+	{title: 'source', type: 'selection', params: {}},
 ];
 
 const SelectionConfig = {
