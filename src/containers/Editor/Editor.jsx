@@ -45,7 +45,8 @@ const cmOptions = {
 	autofocus: false,
 	mode: 'spell-checker',
 	backdrop: 'pubpubmarkdown',
-	extraKeys: {'Ctrl-Space': 'autocomplete'}
+	extraKeys: {'Ctrl-Space': 'autocomplete'},
+	dragDrop: false,
 };
 
 const Editor = React.createClass({
