@@ -203,14 +203,11 @@ const EditorWidgetModal = React.createClass({
 	onPluginSave: function() {
 		const cm = this.getActiveCodemirrorInstance();
 		const lineNum = this.state.activeLine;
-		// const from = {line: lineNum, ch: 0};
-		// const to = {line: lineNum, ch: lineContent.length};
+
 		const from = {line: lineNum, ch: this.fromIndex};
 		const to = {line: lineNum, ch: this.toIndex};
 
 		const mergedString = `[[${this.createPluginString(this.state.pluginType)}]]`;
-
-		// const outputString = lineContent.replace(this.state.initialString, mergedString);
 
 		cm.replaceRange(mergedString, from, to);
 		/*
@@ -242,7 +239,6 @@ const EditorWidgetModal = React.createClass({
 		}
 
 		const mergedString = JSON.stringify(outputObj);
-		console.log(mergedString);
 		return mergedString;
 	},
 
@@ -357,7 +353,7 @@ styles = {
 				top: '30px',
 			},
 			'full': {
-				width: '50vw',
+				width: '100vw',
 				left: '0px',
 				backgroundColor: 'rgba(255,255,255,0.5)',
 				top: '60px',

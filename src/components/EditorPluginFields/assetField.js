@@ -26,12 +26,12 @@ const AssetField = React.createClass({
 	},
 	render: function() {
 		const assets = this.props.assets.filter((asset) => (asset.assetType === this.props.assetType && asset.label))
-		.map( function(asset) { return {'value': asset, 'label': asset.label};});
+		.map( function(asset) { return {'value': asset, 'label': asset.label.substring(0, 15) };});
 
 		const selectedAsset = (this.props.selectedValue) ? this.props.assets.find((asset) => (asset._id === this.props.selectedValue._id)) : null;
+		const selectedVal = (selectedAsset) ? {'value': selectedAsset, 'label': selectedAsset.label.substring(0, 15) } : null;
 
-		const val = (selectedAsset) ? {'label': selectedAsset.label, 'value': selectedAsset} : undefined;
-		return <DropdownField ref="val" choices={assets} selectedValue={val} saveChange={this.props.saveChange}/>;
+		return <DropdownField ref="val" choices={assets} selectedValue={selectedVal} saveChange={this.props.saveChange}/>;
 	}
 });
 
