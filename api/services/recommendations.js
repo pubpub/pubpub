@@ -55,7 +55,7 @@ export function getRecommendations(type, query, journalId, callback){
  * @param: {string} action - The action to be recorded
  * @callback: callback
  */
-
+//TODO: Rewrite action as a list of string to reduce the number of requests
 export function inpRecAction(journalId, pubId, userId, action, callback){ 
   request
   .post(recURL + journalId)

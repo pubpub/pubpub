@@ -16,7 +16,7 @@ var request = require('superagent');
 
 import {fireBaseURL, firebaseTokenGen, generateAuthToken} from '../services/firebase';
 import {sendAddedAsCollaborator} from '../services/emails';
-
+import {featurePub, getRecommendations, inpRecAction, removeAction} from '../services/recommendations'; 
 
 export function getPub(req, res) {
 	const userID = req.user ? req.user._id : undefined;
@@ -31,7 +31,7 @@ export function getPub(req, res) {
 			const postedID = userID || sessionID;
 			const postedJournalID = journalID || 'pubpub';
 			const pubID = pubData._id;
-
+      /*
 			request
 			.post('http://pubrecommend.herokuapp.com/' + postedJournalID)
 			.send({ pub: pubID, user: postedID, action: 'read' })
@@ -39,7 +39,14 @@ export function getPub(req, res) {
 			.set('Accept', 'application/json')
 			.end(function(recError, recResponse) {
 			});
-
+      */
+      inpRecAction(postedJournalID, pubID, userID, 'read',
+         function(recError, recResponse){
+           if (recResponse.error) {
+            console.log(recResponse.error);
+           } 
+         });
+      
 			request
 			.get('http://pubrecommend.herokuapp.com/' + postedJournalID )
 			.query({ user: postedID })
@@ -89,19 +96,20 @@ app.get('/getPubRecommendation', function(req, res) {
 	const pubID = (req.query.pubID) ? req.query.pubID : undefined;
 	const journalID = (req.query.journalID) ? req.query.journalID : undefined;
 
-	const queryId = userID || sessionID;
+	const queryID = userID || sessionID;
 
 	//const suggestedPubID = getRecommendations(queryId, PubId, journalId);
  	const suggestedPubID = null;
+  getRecommendations('user', queryID, journalID, function(err, recResponse){
+    suggestedPubID = recResponse.recommendations[0].thing;
 
-	Pub.getSimplePub(suggestedPubID, (err, suggestedPubData)=>{
-		if (err) {
-			console.log(err);
-			return res.status(500).json(err);
-		}
-		return res.status(201).json(suggestedPubData);
-
-	});
+	  Pub.getSimplePub(suggestedPubID, (err, suggestedPubData)=>{
+		  if (err) {
+			  console.log(err);
+			  return res.status(500).json(err);
+		  }
+		  return res.status(201).json(suggestedPubData);
+	  });
 });
 
 
