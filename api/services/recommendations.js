@@ -1,6 +1,6 @@
 import request from 'superagent';
 
-const recURL = env.process.RECOMMENDURL;
+const recURL = 'http://pubrecommend.herokuapp.com/';
 
 /* 
  * Feature a Pub
@@ -85,3 +85,5 @@ export function removeAction(journalId, pubId, userId, action, callback){
     action : action
   })
   .end(callback);
+}
+

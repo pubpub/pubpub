@@ -85,6 +85,7 @@ export function getPub(req, res) {
 
 	});
 }
+
 app.get('/getPub', getPub);
 
 
@@ -98,8 +99,7 @@ app.get('/getPubRecommendation', function(req, res) {
 
 	const queryID = userID || sessionID;
 
-	//const suggestedPubID = getRecommendations(queryId, PubId, journalId);
- 	const suggestedPubID = null;
+  var suggestedPubID = null;
   getRecommendations('user', queryID, journalID, function(err, recResponse){
     suggestedPubID = recResponse.recommendations[0].thing;
 
@@ -110,6 +110,7 @@ app.get('/getPubRecommendation', function(req, res) {
 		  }
 		  return res.status(201).json(suggestedPubData);
 	  });
+  });
 });
 
 
