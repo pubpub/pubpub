@@ -18,6 +18,7 @@ export CreateJournalForm from './CreateJournalForm/CreateJournalForm';
 export CreatePubForm from './CreatePubForm/CreatePubForm';
 export EditorWidgets from './EditorWidgets/EditorWidgets';
 export EditorStylePane from './EditorStylePane/EditorStylePane';
+export Formatting from './Formatting/Formatting';
 export ImageCropper from './ImageCropper/ImageCropper';
 export License from './License/License';
 export LoaderDeterminate from './LoaderDeterminate/LoaderDeterminate';

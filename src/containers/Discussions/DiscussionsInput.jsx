@@ -2,7 +2,7 @@
 
 import React, {PropTypes} from 'react';
 import Radium, {Style} from 'radium';
-import {Button, LoaderIndeterminate, License, Menu} from 'components';
+import {Button, Formatting, LoaderIndeterminate, License, Menu} from 'components';
 import {globalStyles} from 'utils/styleConstants';
 
 import {globalMessages} from 'utils/globalMessages';
@@ -14,8 +14,10 @@ let styles = {};
 // import {loadCss} from 'utils/loadingFunctions';
 import initCodeMirrorMode from 'containers/Editor/editorCodeMirrorMode';
 import {codeMirrorStyles} from 'containers/Editor/codeMirrorStyles';
+import {insertText} from 'containers/Editor/editorCodeFunctions';
 import {clearTempHighlights} from 'components/PubSelectionPopup/selectionFunctions';
 import EditorWidgets from 'components/EditorWidgets/EditorWidgets';
+
 
 // import marked from '../../modules/markdown/markdown';
 // import markdownExtensions from '../../components/EditorPlugins';
@@ -147,11 +149,34 @@ const PubDiscussionsInput = React.createClass({
 		this.setState({isPrivateChecked: !this.state.isPrivateChecked});
 	},
 
+	insertFormatting: function(formatting) {
+		return ()=>{
+			const cm = document.getElementById(this.props.codeMirrorID).childNodes[0].CodeMirror;
+			insertText(cm, formatting, ()=>{});
+			// this.toggleFormatting();
+		};
+	},
+
 	render: function() {
+		const formattingItems = [
+			{key: 'header1', string: <Formatting type={'header1'} />, function: this.insertFormatting('header1')	},
+			{key: 'header2', string: <Formatting type={'header2'} />, function: this.insertFormatting('header2')	},
+			{key: 'header3', string: <Formatting type={'header3'} />, function: this.insertFormatting('header3')	},
+			{key: 'bold', string: <Formatting type={'bold'} />, function: this.insertFormatting('bold')	},
+			{key: 'italic', string: <Formatting type={'italic'} />, function: this.insertFormatting('italic')	},
+			{key: 'ol', string: <Formatting type={'ol'} />, function: this.insertFormatting('ol')	},
+			{key: 'ul', string: <Formatting type={'ul'} />, function: this.insertFormatting('ul')	},
+			{key: 'link', string: <Formatting type={'link'} />, function: this.insertFormatting('link')	},
+			{key: 'image', string: <Formatting type={'image'} />, function: this.insertFormatting('image')	},
+			{key: 'video', string: <Formatting type={'video'} />, function: this.insertFormatting('video')	},
+			{key: 'cite', string: <Formatting type={'cite'} />, function: this.insertFormatting('cite')	},
+			{key: 'quote', string: <Formatting type={'quote'} />, function: this.insertFormatting('quote')	},
+			{key: 'linebreak', string: <Formatting type={'linebreak'} />, function: this.insertFormatting('linebreak')	},
+		];
 		const menuItems = [
-			{ key: 'preview', string: <FormattedMessage {...globalMessages.Preview}/>, function: this.toggleLivePreview, isActive: this.state.showPreview },
-			{ key: 'formatting', string: <FormattedMessage {...globalMessages.Formatting}/>, function: ()=>{} },
+			{ key: 'formatting', string: <FormattedMessage {...globalMessages.Formatting}/>, function: ()=>{}, children: formattingItems},
 			{ key: 'assets', string: <FormattedMessage {...globalMessages.assets}/>, function: this.props.toggleAssetLibrary(this.props.codeMirrorID), noSeparator: true },
+			{ key: 'preview', string: <FormattedMessage {...globalMessages.Preview}/>, function: this.toggleLivePreview, isActive: this.state.showPreview },
 		];
 
 		return (
@@ -275,7 +300,7 @@ styles = {
 	},
 	container: {
 		width: '100%',
-		overflow: 'hidden',
+		// overflow: 'hidden',
 		margin: '0px 0px',
 		position: 'relative',
 	},

@@ -10,9 +10,9 @@ import PureRenderMixin from 'react-addons-pure-render-mixin';
 import ReactFireMixin from 'reactfire';
 
 import {Discussions, EditorModals} from '../';
-import {LoaderDeterminate, EditorStylePane, PubBody, Menu} from 'components';
+import {LoaderDeterminate, Formatting, EditorStylePane, PubBody, Menu} from 'components';
 import {clearPub} from '../../actions/pub';
-import {getPubEdit, toggleEditorViewMode, toggleFormatting, toggleTOC, unmountEditor, closeModal, openModal, addSelection, setEditorViewMode, saveVersion, updatePubBackendData, saveStyle} from '../../actions/editor';
+import {getPubEdit, toggleEditorViewMode, toggleTOC, unmountEditor, closeModal, openModal, addSelection, setEditorViewMode, saveVersion, updatePubBackendData, saveStyle} from '../../actions/editor';
 
 import {debounce} from 'utils/loadingFunctions';
 import {submitPubToJournal} from '../../actions/journal';
@@ -289,9 +289,9 @@ const Editor = React.createClass({
 
 	// Toggle formatting dropdown
 	// Only has an effect when in livePreview mode
-	toggleFormatting: function() {
-		return this.props.dispatch(toggleFormatting());
-	},
+	// toggleFormatting: function() {
+	// 	return this.props.dispatch(toggleFormatting());
+	// },
 
 	// Toggle Table of Contents dropdown
 	// Only has an effect when in livePreview mode
@@ -350,7 +350,7 @@ const Editor = React.createClass({
 		return ()=>{
 			const cm = this.getActiveCodemirrorInstance();
 			insertText(cm, formatting, this.showPopupFromAutocomplete);
-			this.toggleFormatting();
+			// this.toggleFormatting();
 		};
 	},
 
@@ -461,14 +461,30 @@ const Editor = React.createClass({
 				]}
 			);
 		}
-		output.push(
-			{key: 'formatting', string: <FormattedMessage {...globalMessages.Formatting}/>, function: ()=>{}, children: [
-				{key: 'assets2', string: 'header #', function: this.printIt('assets2!')	},
-				{key: 'bold', string: 'bold', function: this.printIt('things2!') },
-				{key: 'italic', string: 'italic', function: this.printIt('collabs2!') },
-				{key: 'assetsasd2', string: 'header #', function: this.printIt('assets2!') },
-			]}
-		);
+		let formattingItems = [
+			{key: 'header1', string: <Formatting type={'header1'} />, function: this.insertFormatting('header1')	},
+			{key: 'header2', string: <Formatting type={'header2'} />, function: this.insertFormatting('header2')	},
+			{key: 'header3', string: <Formatting type={'header3'} />, function: this.insertFormatting('header3')	},
+			{key: 'bold', string: <Formatting type={'bold'} />, function: this.insertFormatting('bold')	},
+			{key: 'italic', string: <Formatting type={'italic'} />, function: this.insertFormatting('italic')	},
+			{key: 'ol', string: <Formatting type={'ol'} />, function: this.insertFormatting('ol')	},
+			{key: 'ul', string: <Formatting type={'ul'} />, function: this.insertFormatting('ul')	},
+			{key: 'link', string: <Formatting type={'link'} />, function: this.insertFormatting('link')	},
+			{key: 'image', string: <Formatting type={'image'} />, function: this.insertFormatting('image')	},
+			{key: 'video', string: <Formatting type={'video'} />, function: this.insertFormatting('video')	},
+			{key: 'cite', string: <Formatting type={'cite'} />, function: this.insertFormatting('cite')	},
+			{key: 'quote', string: <Formatting type={'quote'} />, function: this.insertFormatting('quote')	},
+			{key: 'linebreak', string: <Formatting type={'linebreak'} />, function: this.insertFormatting('linebreak')	},
+		];
+		if (isPage) {
+			const formattingItemsPage = [
+				{key: 'pubList', string: <Formatting type={'pubList'} />, function: this.insertFormatting('pubList')	},
+				{key: 'collectionList', string: <Formatting type={'collectionList'} />, function: this.insertFormatting('collectionList')	},
+				{key: 'pageLink', string: <Formatting type={'pageLink'} />, function: this.insertFormatting('pageLink')	},
+			]
+			formattingItems = formattingItems.concat(formattingItemsPage);
+		}
+		output.push({key: 'formatting', string: <FormattedMessage {...globalMessages.Formatting}/>, function: ()=>{}, children: formattingItems});
 		output.push({key: 'assets', string: <FormattedMessage {...globalMessages.assets}/>, function: this.openModalHandler('Assets') });
 		output.push({key: 'collaborators', string: <FormattedMessage {...globalMessages.collaborators}/>, function: this.openModalHandler('Collaborators')});
 		output.push({key: 'activeCollabs', string: '', function: ()=>{}, notButton: true});
@@ -526,6 +542,8 @@ const Editor = React.createClass({
 		};
 
 		const editorMenuItems = this.buildEditorMenuItems();
+
+
 		// [
 		// 	{key: 'file', string: <FormattedMessage id="editor.File" defaultMessage="File"/>, function: ()=>{}, children: [
 		// 		{key: 'style', string: <FormattedMessage id="editor.Style" defaultMessage="Style"/>, function: this.toggleStyleMode},

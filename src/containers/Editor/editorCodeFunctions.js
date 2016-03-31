@@ -6,53 +6,62 @@ export function insertText(cm, formatting, showPopup) {
 	const baseText = currentSelection !== '' ? currentSelection : 'example';
 
 	switch (formatting) {
-	case 'H1':
+	case 'header1':
 		cm.replaceSelection('# ' + baseText + '\n');
 		break;
-	case 'H2':
+	case 'header2':
 		cm.replaceSelection('## ' + baseText + '\n');
 		break;
-	case 'H3':
+	case 'header3':
 		cm.replaceSelection('### ' + baseText + '\n');
 		break;
-	case 'Bold':
+	case 'bold':
 		cm.replaceSelection('**' + baseText + '**');
 		break;
-	case 'Italic':
+	case 'italic':
 		cm.replaceSelection('*' + baseText + '*');
 		break;
-	case '# List':
+	case 'ol':
 		cm.replaceSelection('\n 1. ' + baseText + '\n');
 		break;
-	case '- List':
+	case 'ul':
 		cm.replaceSelection('\n -  ' + baseText + '\n');
 		break;
-	case 'Line':
+	case 'line':
 		cm.replaceSelection('\n***\n');
 		break;
-	case 'Link':
-		cm.replaceSelection('[Link Title](http:// Link URL)');
+	case 'link':
+		cm.replaceSelection('[Link Title](http://www.URL.com)');
 		break;
-	case 'Image':
-		cm.replaceSelection('[[image: ]]');
+	case 'image':
+		cm.replaceSelection('[[image]]');
 		showPopup();
 		break;
-	case 'Video':
-		cm.replaceSelection('[[video: ]]');
+	case 'video':
+		cm.replaceSelection('[[video]]');
 		showPopup();
 		break;
-	case 'Cite':
-		cm.replaceSelection('[[cite: ]]');
+	case 'cite':
+		cm.replaceSelection('[[cite]]');
 		showPopup();
 		break;
-	case 'Pagebreak':
+	case 'pagebreak':
 		cm.replaceSelection('[[pagebreak]]');
 		break;
-	case 'Linebreak':
+	case 'linebreak':
 		cm.replaceSelection('[[linebreak]]');
 		break;
-	case 'Quote':
-		cm.replaceSelection('[[quote: ]]');
+	case 'quote':
+		cm.replaceSelection('[[quote]]');
+		break;
+	case 'pubList':
+		cm.replaceSelection('[[pubList]]');
+		break;
+	case 'collectionList':
+		cm.replaceSelection('[[collectionList]]');
+		break;
+	case 'pageLink':
+		cm.replaceSelection('[[link]]');
 		break;
 	default:
 		throw new Error('Insert command not found');

@@ -247,6 +247,7 @@ styles = {
 		// overflow: 'hidden',
 		margin: '15px 0px 10px 0px',
 		backgroundColor: 'rgba(255,255,255,0.2)',
+		clear: 'both',
 	},
 	archived: {
 		opacity: 0.7,
