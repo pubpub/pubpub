@@ -36,6 +36,10 @@ export const TOGGLE_PUB_HIGHLIGHTS = 'pub/TOGGLE_PUB_HIGHLIGHTS';
 // export const ARCHIVE_DISCUSSION_SUCCESS = 'pub/ARCHIVE_DISCUSSION_SUCCESS';
 // export const ARCHIVE_DISCUSSION_FAIL = 'pub/ARCHIVE_DISCUSSION_FAIL';
 
+export const SUGGEST_PUB = 'pub/SUGGEST_PUB';
+export const SUGGEST_PUB_SUCCESS = 'pub/SUGGEST_PUB_SUCCESS';
+export const SUGGEST_PUB_FAIL = 'pub/SUGGEST_PUB_FAIL';
+
 /*--------*/
 // Define Action creators
 //
@@ -67,6 +71,16 @@ export function getPub(slug, journalID, referrer) {
 			slug: slug,
 			journalID: journalID,
 			referrer: referrer,
+		}})
+	};
+}
+
+export function getPubRecommendations(pubID, journalID, referrer) {
+	return {
+		types: [SUGGEST_PUB, SUGGEST_PUB_SUCCESS, SUGGEST_PUB_FAIL],
+		promise: (client) => client.get('/getPubRecommendation', {params: {
+			pubID: slug,
+			journalID: journalID,
 		}})
 	};
 }
