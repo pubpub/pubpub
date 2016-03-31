@@ -207,7 +207,7 @@ const PubBody = React.createClass({
 
 				<div id={this.props.isPage ? 'pageContent' : 'pubContent'} style={[styles.contentContainer, globalStyles[this.props.status]]} >
 					<div id="pub-wrapper">
-						{!this.props.isFeatured && !this.props.errorView
+						{!this.props.isFeatured && !this.props.errorView && !this.props.isPage
 							? <div style={styles.submittedNotification}>This Pub has been submitted to - but is not yet featured in - this journal.</div>
 							: null
 						}
