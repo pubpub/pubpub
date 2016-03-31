@@ -7,6 +7,7 @@ var User = require('../models').User;
 var Pub = require('../models').Pub;
 var Notification = require('../models').Notification;
 import {cloudinary} from '../services/cloudinary';
+import {featurePub} from '../services/recommendations';
 
 app.post('/createJournal', function(req,res){
 	Journal.isUnique(req.body.subdomain, (err, result)=>{
@@ -100,6 +101,7 @@ app.post('/saveJournal', function(req,res){
 			const pubsToUpdateFeature = _.difference(newFeatured, oldFeatured);
 			for (let index = pubsToUpdateFeature.length; index--;) {
 				Pub.addJournalFeatured(pubsToUpdateFeature[index], journal._id, req.user._id);
+				featurePub(journal._id, pubsToUpdateFeature[index], null);
 				/* PUBFEATURE */
 			}
 
