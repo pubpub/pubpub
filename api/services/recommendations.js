@@ -15,7 +15,7 @@ export function featurePub(journalID, pub, callback) {
   .post(recURL + journalID)
   .send({
     pub : pub,
-    action: 'featured'
+    action: 'feature'
   })
   .end(callback);
 };
