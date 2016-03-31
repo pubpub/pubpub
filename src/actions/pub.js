@@ -17,24 +17,24 @@ export const LOAD_PUB_FAIL = 'pub/LOAD_PUB_FAIL';
 export const OPEN_PUB_MODAL = 'pub/OPEN_PUB_MODAL';
 export const CLOSE_PUB_MODAL = 'pub/CLOSE_PUB_MODAL';
 
-export const ADD_DISCUSSION = 'pub/ADD_DISCUSSION';
-export const ADD_DISCUSSION_SUCCESS = 'pub/ADD_DISCUSSION_SUCCESS';
-export const ADD_DISCUSSION_FAIL = 'pub/ADD_DISCUSSION_FAIL';
+// export const ADD_DISCUSSION = 'pub/ADD_DISCUSSION';
+// export const ADD_DISCUSSION_SUCCESS = 'pub/ADD_DISCUSSION_SUCCESS';
+// export const ADD_DISCUSSION_FAIL = 'pub/ADD_DISCUSSION_FAIL';
 
-export const ADD_SELECTION = 'pub/ADD_SELECTION';
+// export const ADD_SELECTION = 'pub/ADD_SELECTION';
 
 export const PUB_NAV_OUT = 'pub/PUB_NAV_OUT';
 export const PUB_NAV_IN = 'pub/PUB_NAV_IN';
 
 export const TOGGLE_PUB_HIGHLIGHTS = 'pub/TOGGLE_PUB_HIGHLIGHTS';
 
-export const DISCUSSION_VOTE = 'pub/DISCUSSION_VOTE';
-export const DISCUSSION_VOTE_SUCCESS = 'pub/DISCUSSION_VOTE_SUCCESS';
-export const DISCUSSION_VOTE_FAIL = 'pub/DISCUSSION_VOTE_FAIL';
+// export const DISCUSSION_VOTE = 'pub/DISCUSSION_VOTE';
+// export const DISCUSSION_VOTE_SUCCESS = 'pub/DISCUSSION_VOTE_SUCCESS';
+// export const DISCUSSION_VOTE_FAIL = 'pub/DISCUSSION_VOTE_FAIL';
 
-export const ARCHIVE_DISCUSSION_LOAD = 'pub/ARCHIVE_DISCUSSION_LOAD';
-export const ARCHIVE_DISCUSSION_SUCCESS = 'pub/ARCHIVE_DISCUSSION_SUCCESS';
-export const ARCHIVE_DISCUSSION_FAIL = 'pub/ARCHIVE_DISCUSSION_FAIL';
+// export const ARCHIVE_DISCUSSION_LOAD = 'pub/ARCHIVE_DISCUSSION_LOAD';
+// export const ARCHIVE_DISCUSSION_SUCCESS = 'pub/ARCHIVE_DISCUSSION_SUCCESS';
+// export const ARCHIVE_DISCUSSION_FAIL = 'pub/ARCHIVE_DISCUSSION_FAIL';
 
 export const SUGGEST_PUB = 'pub/SUGGEST_PUB';
 export const SUGGEST_PUB_SUCCESS = 'pub/SUGGEST_PUB_SUCCESS';
@@ -117,37 +117,37 @@ export function togglePubHighlights() {
 	};
 }
 
-export function addDiscussion(discussionObject, activeSaveID, inEditor) {
-	return {
-		types: [ADD_DISCUSSION, ADD_DISCUSSION_SUCCESS, ADD_DISCUSSION_FAIL],
-		promise: (client) => client.post('/addDiscussion', {data: {discussionObject: discussionObject}}),
-		activeSaveID: activeSaveID,
-		inEditor: inEditor
-	};
-}
-
-export function archiveDiscussion(objectID) {
-	return {
-		types: [ARCHIVE_DISCUSSION_LOAD, ARCHIVE_DISCUSSION_SUCCESS, ARCHIVE_DISCUSSION_FAIL],
-		promise: (client) => client.post('/discussionArchive', {data: {objectID: objectID}}),
-		objectID: objectID,
-	};
-}
-
-export function addSelection(selection) {
-	return {
-		type: ADD_SELECTION,
-		selection: selection,
-	};
-}
-
-export function discussionVoteSubmit(type, discussionID, userYay, userNay) {
-	return {
-		types: [DISCUSSION_VOTE, DISCUSSION_VOTE_SUCCESS, DISCUSSION_VOTE_FAIL],
-		promise: (client) => client.post('/discussionVote', {data: {type, discussionID, userYay, userNay}}),
-		voteType: type,
-		discussionID: discussionID,
-		userYay: userYay,
-		userNay: userNay,
-	};
-}
+// export function addDiscussion(discussionObject, activeSaveID, inEditor) {
+// 	return {
+// 		types: [ADD_DISCUSSION, ADD_DISCUSSION_SUCCESS, ADD_DISCUSSION_FAIL],
+// 		promise: (client) => client.post('/addDiscussion', {data: {discussionObject: discussionObject}}),
+// 		activeSaveID: activeSaveID,
+// 		inEditor: inEditor
+// 	};
+// }
+//
+// export function archiveDiscussion(objectID) {
+// 	return {
+// 		types: [ARCHIVE_DISCUSSION_LOAD, ARCHIVE_DISCUSSION_SUCCESS, ARCHIVE_DISCUSSION_FAIL],
+// 		promise: (client) => client.post('/discussionArchive', {data: {objectID: objectID}}),
+// 		objectID: objectID,
+// 	};
+// }
+//
+// export function addSelection(selection) {
+// 	return {
+// 		type: ADD_SELECTION,
+// 		selection: selection,
+// 	};
+// }
+//
+// export function discussionVoteSubmit(type, discussionID, userYay, userNay) {
+// 	return {
+// 		types: [DISCUSSION_VOTE, DISCUSSION_VOTE_SUCCESS, DISCUSSION_VOTE_FAIL],
+// 		promise: (client) => client.post('/discussionVote', {data: {type, discussionID, userYay, userNay}}),
+// 		voteType: type,
+// 		discussionID: discussionID,
+// 		userYay: userYay,
+// 		userNay: userNay,
+// 	};
+// }

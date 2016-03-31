@@ -11,6 +11,7 @@
     "react/jsx-boolean-value": 0,
     "react/jsx-quotes": 0,
     "react/sort-comp": 0,
+    "react/no-multi-comp": 0,
     "import/default": 0,
     "import/no-duplicates": 0,
     "import/named": 0,
@@ -25,8 +26,8 @@
     "no-console": 0,
     "no-multiple-empty-lines": 1,
     "no-undef": 1,
-    "no-loop-func": 1,
-	"no-debugger": 0,
+    "no-loop-func": 0,
+    "no-debugger": 0,
     "prefer-const": 1,
     "no-alert": 1,
     "func-names": 0,
@@ -35,7 +36,8 @@
     "no-trailing-spaces": 0,
     "indent": [2, "tab"],
     "new-cap": 0,
-    "no-unused-vars": [1, {"vars": "local", "args": "none"}]
+    "no-unused-vars": [1, {"vars": "local", "args": "none"}],
+    "id-length": [2, {"exceptions": ["_"]}]
   },
   "plugins": [
     "react", "import"

@@ -10,11 +10,19 @@
 	}
 }
 
+
 #pubBodyContent {
 	padding: 0px 0em;
 }
 
-#pubContent #pub-title {
+
+#pubContent .headerBlock {
+	border-bottom: 1px solid #ccc;
+	padding-bottom: 0.7em;
+	margin-bottom: 0.7em;
+}
+
+#pubContent .title{
 	text-align: left;
 	font-size: 2.6em;
 	padding: 0.7em 0px;
@@ -24,7 +32,22 @@
 	font-family: 'Lora';
 	margin: 0;
 }
-#pubContent #pub-authors {
+
+#pubContent .author {
+	display: inline-block;
+	color: #222;
+	font-size: 1.0em;
+	padding: 0px;
+	font-family: 'Lora';
+	text-decoration: none;
+	padding-right: 1em;
+	vertical-align: top;
+}
+#pubContent a.author:hover {
+	text-decoration: underline;
+}
+
+/*#pubContent #pub-authors {
 	text-align: left;
 	color: #222;
 	font-size: 1.0em;
@@ -32,20 +55,20 @@
 	font-family: 'Lora';
 	text-transform: capitalize;;
 	font-weight: 700;
-}
-#pubContent .pub-author {
+}*/
+/*#pubContent .pub-author {
 	color: #555;
 }
 #pubContent .pub-author:hover {
 	color: #111;
-}
+}*/
 #pubContent #pub-dates {
 	text-align: left;
 	padding: 0px;
 	color: #222;
 	font-family: 'Lora';
 }
-#pubContent #pub-abstract {
+#pubContent .abstract {
 	text-align: left;
 	color: #222;
 	margin: 2em 0px;
@@ -53,7 +76,7 @@
 	padding: 0px 0px;
 	font-style: italic;
 }
-#pubContent #pub-authorsNote {
+#pubContent .authorsNote {
 	text-align: center;
 	margin: 30px auto 0px auto;
 	background-color: #EAEAEA;
@@ -205,12 +228,7 @@
 	text-align: left;
 	white-space: normal;
 	line-height: 1.4;
-	display: block;
-	margin-top: 0.5em;
 }
-
-
-
 
 #pubContent .pub-quote {
 	padding: 2.5% 7.5%;

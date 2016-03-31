@@ -22,6 +22,8 @@ const VideoConfig = {
 const VIDEO_WRAPPER_CLASS = 'pub-video-wrapper';
 const VIDEO_CLASS = 'pub-video';
 
+const VideoEditorWidget = (inputProps) => (<span>Video: {inputProps.reference || 'Empty'}</span>);
+
 
 let styles = {};
 
@@ -41,10 +43,10 @@ const VideoPlugin = React.createClass({
 	render: function() {
 		let html;
 
-		if (!this.props.source || !this.props.source.url_s3) {
+		if (!this.props.source || !this.props.source.url) {
 			return (<span></span>);
 		}
-		const url = this.props.source.url_s3;
+		const url = this.props.source.url;
 
 		const size = this.props.size;
 		const align = this.props.align;
@@ -76,4 +78,4 @@ styles = {
 };
 
 
-export default createPubPubPlugin(VideoPlugin, VideoConfig, VideoInputFields);
+export default createPubPubPlugin(VideoPlugin, VideoConfig, VideoInputFields, VideoEditorWidget);

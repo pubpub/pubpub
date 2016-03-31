@@ -54,11 +54,11 @@ const DEFAULT_RULES = {
   },
 
   htmlBlock(token) {
-    return token.content;
+    return [['htmlblock', compact(['htmlblock', {}, token.content])]];
   },
 
   htmlInline(token) {
-    return token.content;
+    return [['htmlblock', compact(['htmlblock', {}, token.content])]];
   },
 
   inline(token, attrs, children) {
@@ -70,6 +70,16 @@ const DEFAULT_RULES = {
   mathInline(token, attrs, children) {
     return [['math', compact([token.tag, attrs, token.content])]];
   },
+
+  /*
+  pubitemOpen(token, attrs, children) {
+    if (token.pubItemField) {
+      attrs = assign({}, attrs, { 'pubItemField': token.pubItemField });
+    }
+    return [['pubitem', compact([token.tag, attrs, token.content])]];
+  },
+  */
+
   default(token, attrs, children, options, getNext) {
     if (token.nesting === 1 && token.hidden) {
       return getNext();
@@ -80,6 +90,9 @@ const DEFAULT_RULES = {
     }
     if (token.info) {
       attrs = assign({}, attrs, { 'data-info': token.info.trim() });
+    }
+    if (token.pubItemField) {
+      attrs = assign({}, attrs, { 'pubItemField': token.pubItemField });
     }
     /* plugin-related */
     return [compact([token.tag, attrs].concat((token.nesting === 1) && getNext()))];
@@ -122,7 +135,7 @@ function mdReactFactory(options={}) {
     onGenerateKey=(tag, index) => `mdrct-${tag}-${index}`,
     className } = options;
 
-  let md = markdown(markdownOptions || presetName)
+  let md = markdown({html:false, linkify: true, typographer: true})
     .enable(enableRules)
     .disable(disableRules);
 

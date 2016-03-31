@@ -2,10 +2,11 @@ import React, { PropTypes } from 'react';
 import {connect} from 'react-redux';
 import Radium from 'radium';
 import Helmet from 'react-helmet';
-import {Autocomplete} from '../';
-import {globalStyles} from '../../utils/styleConstants';
-import {LandingBody} from '../../components';
-import {getRandomSlug} from '../../actions/journal';
+import {Autocomplete} from 'containers';
+import {globalStyles} from 'utils/styleConstants';
+// import {LandingBody} from './components';
+import PPMComponent from 'markdown/PPMComponent';
+import {getRandomSlug} from 'actions/journal';
 import { pushState } from 'redux-router';
 import { Link } from 'react-router';
 const HoverLink = Radium(Link);
@@ -33,6 +34,10 @@ const Landing = React.createClass({
 		};
 	},
 
+	componentDidMount() {
+		document.getElementById('dynamicStyle').innerHTML = this.props.journalData.getIn(['journalData', 'landingPage', 'styleScoped']);
+	},
+
 	setQuery: function(queryObject) {
 		this.props.dispatch(pushState(null, this.props.path, {...this.props.query, ...queryObject}));
 	},
@@ -56,7 +61,7 @@ const Landing = React.createClass({
 								<div style={styles.name}>{item.title}</div>
 							</HoverLink>
 
-						</div>);	
+						</div>);
 					})
 				}
 
@@ -92,9 +97,9 @@ const Landing = React.createClass({
 			? JSON.parse(this.props.journalData.getIn(['journalData', 'design', 'layoutString']).replace(/(['"])?([:]?[a-zA-Z0-9_]+)(['"])?: /g, '"$2": ').replace(/'/g, '"'))
 			: [];
 
-		
+
 		const journalID = this.props.journalData.getIn(['journalData', '_id']);
-		
+
 		return (
 			<div style={styles.container}>
 
@@ -109,10 +114,10 @@ const Landing = React.createClass({
 								<div key="showMeScience" style={styles.showMeScience} onClick={this.showMeScienceClick}><Link to={'/pub/' + this.props.journalData.getIn(['journalData', 'randomSlug'])}style={styles.scienceText}>Show Me Science</Link></div>
 							</div>
 							<div style={styles.search}>
-								<Autocomplete 
-									autocompleteKey={'landingSearch'} 
-									route={'autocompletePubsAndUsers'} 
-									placeholder="Search Pubs and People" 
+								<Autocomplete
+									autocompleteKey={'landingSearch'}
+									route={'autocompletePubsAndUsers'}
+									placeholder="Search Pubs and People"
 									height={40}
 									showBottomLine={false}
 									hideResultsOnClickOut={false}
@@ -183,10 +188,12 @@ const Landing = React.createClass({
 								<span style={styles.footerItem} key={'footerItem' + 3}><a target="_blank" style={globalStyles.link} href="mailto:pubpub@media.mit.edu">Contact</a></span>
 							 </div>
 						</div>
-							
-						: <LandingBody componentsArray={componentsArray} journalID={journalID} journalData={this.props.journalData.get('journalData')} query={this.props.query} setQueryHandler={this.setQuery}/>
-				}
 
+						: <div id={'pageContent'}>
+							<PPMComponent markdown={this.props.journalData.getIn(['journalData', 'landingPage', 'markdown'])} isPage={true}/>
+						</div>
+				}
+				{/* <LandingBody componentsArray={componentsArray} journalID={journalID} journalData={this.props.journalData.get('journalData')} query={this.props.query} setQueryHandler={this.setQuery}/> */}
 			</div>
 		);
 	}
@@ -205,14 +212,14 @@ export default connect( state => {
 styles = {
 	container: {
 
-		height: '100%',
-		overflow: 'hidden',
-		overflowY: 'scroll',
+		// height: '100%',
+		// overflow: 'hidden',
+		// overflowY: 'scroll',
 		fontFamily: globalStyles.headerFont,
-		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
-			height: 'auto',
-			overflow: 'hidden',
-		},
+		// '@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+		// 	height: 'auto',
+		// 	overflow: 'hidden',
+		// },
 	},
 	top: {
 		backgroundColor: globalStyles.headerText,
@@ -305,7 +312,7 @@ styles = {
 	image: {
 		height: '100%',
 	},
-	
+
 	type: {
 		width: 40,
 		float: 'left',

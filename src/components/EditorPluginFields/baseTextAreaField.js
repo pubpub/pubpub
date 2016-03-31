@@ -43,7 +43,7 @@ const TextAreaProp = React.createClass({
 		const value = this.state.value;
 		// Our codemirror tokens can only happen on one line, so we replace newlines with a \n character
 		// Text captions should also be wrapped in quotes
-		return (value) ? '"' + value.replace(/\n|\r/g, '\\n') + '"' : null;
+		return (value) ? value.replace(/\n|\r/g, '\\n') : null;
 	},
 	render: function() {
 		let value = this.state.value || '';

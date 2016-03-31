@@ -1,10 +1,10 @@
 import React, { PropTypes } from 'react';
 import Radium from 'radium';
 import {baseStyles} from './pubModalStyle';
-// import {globalStyles} from '../../utils/styleConstants';
+// import {globalStyles} from 'utils/styleConstants';
 import {Reference} from '../';
 
-import {globalMessages} from '../../utils/globalMessages';
+import {globalMessages} from 'utils/globalMessages';
 import {FormattedMessage} from 'react-intl';
 
 let styles = {};
@@ -27,7 +27,7 @@ const PubModalCite = React.createClass({
 			title: this.props.pubData.title,
 			journal: this.props.isFeatured ? this.props.journalName : 'PubPub',
 			publisher: 'PubPub',
-			year: new Date(this.props.pubData.publishDate).getFullYear(),
+			year: new Date(this.props.pubData.versionDate).getFullYear(),
 		};
 		if (this.props.isFeatured) {
 			referenceObject.url = typeof(window) !== 'undefined' ? window.location.protocol + '//' + window.location.host + window.location.pathname : '';
@@ -41,7 +41,7 @@ const PubModalCite = React.createClass({
 			const authorString = array.length === currentIndex + 1 ? lastName + ', ' + firstName : lastName + ', ' + firstName + ', ';
 			return previousValue + authorString;
 		}, '');
-		
+
 
 		referenceObject.author = author;
 

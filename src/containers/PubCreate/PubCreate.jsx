@@ -6,7 +6,7 @@ import PureRenderMixin from 'react-addons-pure-render-mixin';
 import {LoaderIndeterminate, CreatePubForm} from '../../components';
 import {create} from '../../actions/pub';
 import {toggleVisibility} from '../../actions/login';
-import {globalStyles} from '../../utils/styleConstants';
+import {globalStyles} from 'utils/styleConstants';
 
 import {FormattedMessage} from 'react-intl';
 

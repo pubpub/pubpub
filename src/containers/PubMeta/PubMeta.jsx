@@ -3,18 +3,18 @@ import {connect} from 'react-redux';
 import Radium from 'radium';
 import Helmet from 'react-helmet';
 import PureRenderMixin from 'react-addons-pure-render-mixin';
-import {getPub, pubNavIn} from '../../actions/pub';
-// import {toggleVisibility} from '../../actions/login';
-import {submitPubToJournal} from '../../actions/journal';
-import {inviteReviewers} from '../../actions/user';
+import {getPub, pubNavIn} from 'actions/pub';
+// import {toggleVisibility} from 'actions/login';
+import {submitPubToJournal} from 'actions/journal';
+import {inviteReviewers} from 'actions/user';
 import { Link } from 'react-router';
-import {PubLeftBar, PubNav, LoaderDeterminate} from '../../components';
-import {Discussions} from '../../containers';
+import {PubLeftBar, PubNav, LoaderDeterminate} from 'components';
+import {Discussions} from 'containers';
 // import {PubMetaDiscussions, PubMetaExperts, PubMetaHistory, PubMetaHistoryDiff, PubMetaReview, PubMetaReviews, PubMetaSource} from '../../components/PubMetaPanels';
-import {PubMetaAnalytics, PubMetaCitations, PubMetaHistory, PubMetaHistoryDiff, PubMetaInTheNews, PubMetaInvite, PubMetaJournals, PubMetaSource} from '../../components/PubMetaPanels';
-import {globalStyles, pubSizes} from '../../utils/styleConstants';
+import {PubMetaAnalytics, PubMetaCitations, PubMetaHistory, PubMetaHistoryDiff, PubMetaInTheNews, PubMetaInvite, PubMetaJournals, PubMetaSource} from './components';
+import {globalStyles, pubSizes} from 'utils/styleConstants';
 
-import {globalMessages} from '../../utils/globalMessages';
+import {globalMessages} from 'utils/globalMessages';
 import {FormattedMessage} from 'react-intl';
 
 let styles = {};
@@ -104,14 +104,14 @@ const PubMeta = React.createClass({
 		// const pubData = this.props.readerData.get('pubData').toJS();
 		const versionIndex = this.props.query.version !== undefined ? this.props.query.version - 1 : this.props.readerData.getIn(['pubData', 'history']).size - 1;
 		const versionURL = this.props.query.version !== undefined ? '?version=' + this.props.query.version : '';
-		
+
 		return (
 			<div style={styles.container}>
 
 				<Helmet {...metaData} />
 
 				<div className="leftBar" style={[styles.leftBar, styles[this.props.readerData.get('status')]]}>
-					{!pubData.history[0].markdown
+					{pubData.history[0] && !pubData.history[0].markdown
 						? null
 						: <PubLeftBar
 							slug={this.props.slug}
@@ -125,7 +125,7 @@ const PubMeta = React.createClass({
 							citationsCount={pubData.citations ? pubData.citations.length : 0}
 							newsCount={pubData.news ? pubData.news.length : 0} />
 					}
-					
+
 				</div>
 
 				<div className="centerBar" style={[styles.centerBar]}>
@@ -140,7 +140,7 @@ const PubMeta = React.createClass({
 						value={this.props.readerData.get('status') === 'loading' ? 0 : 100}/>
 
 					<div style={[styles.centerContent, styles[this.props.readerData.get('status')]]}>
-						{!pubData.history[0].markdown
+						{pubData.history[0] && !pubData.history[0].markdown
 							? <div style={styles.metaTitle}><span style={styles.metaTitleType}>{pubData.history[0].title}</span></div>
 							: <div>
 								<div style={styles.metaTitle}>
@@ -177,7 +177,7 @@ const PubMeta = React.createClass({
 												diffObject={this.props.readerData.getIn(['pubData', 'history', versionIndex, 'diffObject']).toJS()}/>
 											);
 									case 'discussions':
-										return <Discussions editorCommentMode={false} metaID={this.props.metaID} />;
+										return <Discussions metaID={this.props.metaID} />;
 										// return (<PubMetaDiscussions
 										// 	metaID={this.props.metaID}
 										// 	slug={this.props.slug}
@@ -222,7 +222,7 @@ const PubMeta = React.createClass({
 								})()}
 							</div>
 						}
-						
+
 
 					</div>
 
@@ -358,7 +358,7 @@ styles = {
 		overflow: 'hidden',
 		overflowY: 'scroll',
 		boxShadow: '0px 2px 4px 0px rgba(0,0,0,0.4)',
-		zIndex: 10,
+		// zIndex: 10,
 		// Mobile
 		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
 			width: '100%',

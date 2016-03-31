@@ -114,10 +114,10 @@ app.use((req, res) => {
 				);
 				const mainBundle = webpackIsomorphicTools.assets().javascript.main;
 				const head = Helmet.rewind();
-				
+
 				let dynamicStyle;
 				const pathname = store.getState().router.location.pathname;
-				
+
 				if (pathname.substring(0, 5) === '/pub/' && pathname.substring(pathname.length - 6, pathname.length) !== '/draft' && store.getState().pub.getIn(['pubData', 'history'])) {
 					// source = store.getState().pub.getIn(['pubData', 'history']);
 					const versionIndex = store.getState().router.location.query.version !== undefined && store.getState().router.location.query.version > 0 && store.getState().router.location.query.version <= (store.getState().pub.getIn(['pubData', 'history']).size - 1)
@@ -125,9 +125,12 @@ app.use((req, res) => {
 						: store.getState().pub.getIn(['pubData', 'history']).size - 1;
 					dynamicStyle = store.getState().pub.getIn(['pubData', 'history', versionIndex, 'styleScoped']);
 				}
+				if (pathname === '/') {
+					dynamicStyle = store.getState().journal.getIn(['journalData', 'landingPage', 'styleScoped']);
+				}
 
 				const rssRel = pathname === '/' ? 'alternate' : 'home';
-				
+
 				res.send(`<!doctype html>
 					<html lang="en-us">
 						<head>
@@ -141,7 +144,7 @@ app.use((req, res) => {
 
 							<link rel=${rssRel} type="application/rss+xml" title="RSS" href="/data/rss.xml" />
 							<link rel="shortcut icon" href="/favicon.ico" />
-							<link href='https://fonts.googleapis.com/css?family=Lato:300,300italic,700,700italic,900italic|Lora:400,400italic,700,700italic' rel='stylesheet' type='text/css' />
+							<link href='https://fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic,900italic|Lora:400,400italic,700,700italic' rel='stylesheet' type='text/css' />
 
 							<link href='https://fonts.googleapis.com/css?family=Alegreya+Sans+SC|ABeeZee' rel='stylesheet' type='text/css'>
 
@@ -152,6 +155,8 @@ app.use((req, res) => {
 							<link href='/css/highlightdefault.css' rel='stylesheet' type='text/css' />
 							<link href='/css/react-select.min.css' rel='stylesheet' type='text/css' />
 							<link href='/css/basePub.css' rel='stylesheet' type='text/css' />
+							<link href='/css/basePage.css' rel='stylesheet' type='text/css' />
+							<link href='/css/menu.css' rel='stylesheet' type='text/css' />
 							<style id="dynamicStyle">${dynamicStyle}</style>
 
 							<link href='https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.9.0/addon/hint/show-hint.css' rel='stylesheet' type='text/css' />
@@ -169,12 +174,12 @@ app.use((req, res) => {
 							<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.2.0/mode/javascript/javascript.min.js"></script>
 							<script src="https://cdn.firebase.com/libs/firepad/1.2.0/firepad.min.js"></script>
 							<script src="https://cdn.polyfill.io/v2/polyfill.min.js?features=Intl.~locale.en"></script>
-							
+
 							<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.1.0/highlight.min.js"></script>
 							<script src="/js/typo.js"></script>
 							<script src="/js/spellcheck.js"></script>
 							<script src="https://cdn.ravenjs.com/2.1.0/raven.min.js"></script>
-							
+
 						</head>
 
 						<body style="width: 100%; margin: 0;">

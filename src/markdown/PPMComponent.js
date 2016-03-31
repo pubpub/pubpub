@@ -1,4 +1,5 @@
 import React, { PropTypes } from 'react';
+import { Link } from 'react-router';
 import MDReactComponent from './MDReactComponent';
 
 import abbr from 'markdown-it-abbr';
@@ -7,6 +8,9 @@ import sub from 'markdown-it-sub';
 import sup from 'markdown-it-sup';
 import container from 'markdown-it-container';
 import ppm from './markdown-it-ppm';
+import pubheader from './markdown-it-pubheader';
+import pubheaderitem from './markdown-it-pubheaderitem';
+
 import mathIt from 'markdown-it-math';
 
 import {parsePluginString} from '../utils/parsePlugins';
@@ -14,8 +18,10 @@ import Plugins from '../components/EditorPlugins/index';
 import InputFields from '../components/EditorPluginFields/index';
 
 import MathComponent from './MathComponent';
+import HTMLComponent from './HTMLComponent';
 
 import murmur from 'murmurhash';
+
 
 const MathOptions = {
 	inlineOpen: '$$',
@@ -58,12 +64,12 @@ const PPMComponent = React.createClass({
 		let Component = Tag;
 
 		switch(Tag) {
-		case 'h1': 
-		case 'h2': 
-		case 'h3': 
-		case 'h4': 
-		case 'h5': 
-		case 'h6': 
+		case 'h1':
+		case 'h2':
+		case 'h3':
+		case 'h4':
+		case 'h5':
+		case 'h6':
 			props.id = children[0] && children[0].replace ? children[0].replace(/\s/g, '-').toLowerCase() : undefined;
 			break;
 
@@ -90,8 +96,12 @@ const PPMComponent = React.createClass({
 				return <div className={'linebreak p-block'} style={{display: 'block', height: '1.5em'}}></div>
 			}
 
-			const pluginName = children[0].split(':')[0];
-			const plugin = Plugins[pluginName];
+			const pluginString = children[0];
+			let pluginProps = parsePluginString(pluginString);
+
+			const pluginName = pluginProps.pluginType;
+			const plugin = (pluginName) ? Plugins[pluginName] : null;
+
 			if (!plugin) {
 				if (__DEVELOPMENT__) {
 					console.warn('Could not find a plugin');
@@ -101,8 +111,6 @@ const PPMComponent = React.createClass({
 
 			Component = plugin.Component;
 			const PluginInputFields = plugin.InputFields;
-			const pluginString = children[0];
-			let pluginProps = parsePluginString(pluginString);
 
 			for (const propName in pluginProps) {
 				const propVal = pluginProps[propName];
@@ -127,11 +135,11 @@ const PPMComponent = React.createClass({
 		case 'code':
 			if (props['data-language']) {
 				try{
-					return <Tag {...props} className={'codeBlock'} dangerouslySetInnerHTML={{__html: window.hljs.highlight(props['data-language'], children[0]).value}} />	
+					return <Tag {...props} className={'codeBlock'} dangerouslySetInnerHTML={{__html: window.hljs.highlight(props['data-language'], children[0]).value}} />
 				} catch (err) {
 					// console.log(err);
 				}
-				
+
 			}
 			props.className = 'codeBlock';
 			break;
@@ -139,9 +147,15 @@ const PPMComponent = React.createClass({
 		case 'math':
 			return <MathComponent>{children[0]}</MathComponent>;
 			break;
-
+		case 'htmlblock':
+			const text = children[0];
+			if (typeof text === 'string' || text instanceof String) {
+				return <HTMLComponent>{text}</HTMLComponent>;
+				break;
+	    }
 		case 'p':
 			// if (children[0] === null){ return null; }
+			// console.log('p arguments', arguments);
 			props.className = 'p-block';
 			props['data-hash'] = children[0] ? murmur.v2(children[0]) : 0;
 			Component = 'div';
@@ -149,8 +163,45 @@ const PPMComponent = React.createClass({
 		case 'li':
 			props['data-hash'] = children[0] ? murmur.v2(children[0]) : 0;
 			break;
+		case 'hr':
+			return <Component  {...props} />
+		case 'pubheader':
+			// console.log(arguments);
+			Component = 'div';
+			props.className = 'headerBlock';
+			break;
+		case 'pubheaderitem':
 
+
+			if (props.className === 'author' && children.length > 1) { // If the author field has multiple children, and thus is nested, it is assumed the first field is the user's username, and thus we link to it.
+				return <Link key={props.key} className={'author pubheaderitem'} to={'/user/' + children[0].props.children[0]}>{children.slice(1, children.length)}</Link>;
+			}
+
+			// Removes the unnecessary p-block wrapper from headeritems
+			const newChildren = [];
+			for (let index = 0; index < children.length; index++) {
+				if (children[index].props && children[index].props.className === 'p-block') {
+					newChildren.push(children[index].props.children);
+				} else {
+					newChildren.push(children[index]);
+				}
+			}
+			children = newChildren;
+
+			Component = 'div';
+			props.className = props.className + ' pubheaderitem';
+			// props['data-hash'] = children[0] ? murmur.v2(children[0]) : 0;
+			break;
+		// case 'pubtitle':
+		// 	if (children[0] && children[0].props) {
+		// 		children[0] = children[0].props.children
+		// 	}
+		// 	Component = 'div';
+		// 	props.id = 'pub-title';
+		// 	break;
+		//
 		}
+
 
 		return <Component {...props}>{children}</Component>;
 	},
@@ -173,7 +224,9 @@ const PPMComponent = React.createClass({
 					sup,
 					{plugin: mathIt, args: [MathOptions]},
 					{plugin: container, args: ['blank', {validate: ()=>{return true;}}]},
-					ppm
+					ppm,
+					pubheader,
+					pubheaderitem
 				]} />
 		);
 	}

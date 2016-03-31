@@ -1,12 +1,13 @@
+/* eslint no-unused-vars: [2, { "varsIgnorePattern": "pretty|server" }] */
+
 // Connect to Mongo database
+const mongoose = require('mongoose');
 
-var mongoose = require('mongoose');
-
-if(process.env.NODE_ENV !== 'production'){
-  var mongoURI = require('./authentication/mongoCredentials').mongoURI;
-  mongoose.connect(mongoURI);  
-}else{
-  mongoose.connect(process.env.mongoURI);  
+if (process.env.NODE_ENV !== 'production') {
+	const mongoURI = require('./authentication/mongoCredentials').mongoURI;
+	mongoose.connect(mongoURI);
+} else {
+	mongoose.connect(process.env.mongoURI);
 }
 
 require('../server.babel'); // babel registration (runtime transpilation for node)
@@ -17,7 +18,6 @@ import bodyParser from 'body-parser';
 import config from '../src/config';
 import PrettyError from 'pretty-error';
 import http from 'http';
-import request from 'request';
 
 const pretty = new PrettyError();
 const app = express();
@@ -26,23 +26,23 @@ const server = new http.Server(app);
 /*--------*/
 // Configure app login, session, and passport settings
 /*--------*/
-var MongoStore = require('connect-mongo')(session);
-var passport = require('passport');
-var LocalStrategy = require('passport-local').Strategy;
-var User = require('./models').User;
+const MongoStore = require('connect-mongo')(session);
+const passport = require('passport');
+const LocalStrategy = require('passport-local').Strategy;
+const User = require('./models').User;
 
 passport.use(new LocalStrategy(
   function(username, password, done) {
-    User.findOne({ username: username }, function (err, user) {
-      if (err) { return done(err); }
-      if (!user) {
-        return done(null, false, { message: 'Incorrect username.' });
-      }
-      if (!user.validPassword(password)) {
-        return done(null, false, { message: 'Incorrect password.' });
-      }
-      return done(null, user);
-    });
+	User.findOne({ username: username }, function(err, user) {
+		if (err) { return done(err); }
+		if (!user) {
+			return done(null, false, { message: 'Incorrect username.' });
+		}
+		if (!user.validPassword(password)) {
+			return done(null, false, { message: 'Incorrect password.' });
+		}
+		return done(null, user);
+	});
   }
 ));
 
@@ -54,21 +54,21 @@ app.use(bodyParser.json({limit: '50mb'}));
 app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));
 
 app.use(session({
-    secret: 'fuzzyelephantfun',
-    resave: true,
-    saveUninitialized: true,
-    store: new MongoStore({ 
-      mongooseConnection: mongoose.connection,
-      ttl: 30 * 24 * 60 * 60 // = 30 days.
-    }),
-    cookie: {
-      path: '/',
-      // domain: process.env.NODE_ENV === 'production' ? '.pubpub.org' : '' ,
-      domain: '',
-      httpOnly: false,
-      secure: false,
-      maxAge: 30 * 24 * 60 * 60 * 1000// = 30 days.
-    },
+	secret: 'fuzzyelephantfun',
+	resave: true,
+	saveUninitialized: true,
+	store: new MongoStore({
+		mongooseConnection: mongoose.connection,
+		ttl: 30 * 24 * 60 * 60 // = 30 days.
+	}),
+	cookie: {
+		path: '/',
+		// domain: process.env.NODE_ENV === 'production' ? '.pubpub.org' : '' ,
+		domain: '',
+		httpOnly: false,
+		secure: false,
+		maxAge: 30 * 24 * 60 * 60 * 1000// = 30 days.
+	},
 }));
 
 app.use(passport.initialize());
@@ -85,7 +85,7 @@ require('./routes');
 // Take the setup and start listening!
 /*--------*/
 if (config.apiPort) {
-	const runnable = app.listen(config.apiPort, (err) => {
+	app.listen(config.apiPort, (err) => {
 		if (err) {
 			console.error(err);
 		}

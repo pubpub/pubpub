@@ -42,6 +42,14 @@ import {
 } from '../actions/user';
 
 import {
+	CREATE_ASSET_LOAD,
+	CREATE_ASSET_SUCCESS,
+	UPDATE_ASSET_LOAD,
+	UPDATE_ASSET_SUCCESS,
+
+} from '../actions/assets';
+
+import {
 
 	LOAD_JOURNAL_AND_LOGIN,
 	LOAD_JOURNAL_AND_LOGIN_SUCCESS,
@@ -49,7 +57,7 @@ import {
 
 } from '../actions/journal';
 /*--------*/
-// Initialize Default State 
+// Initialize Default State
 /*--------*/
 export const defaultState = Immutable.Map({
 	isVisible: false,
@@ -58,14 +66,16 @@ export const defaultState = Immutable.Map({
 	viewMode: 'login',
 	attemptedRestoreState: false,
 	userData: {},
+	assetLoading: false,
+	addedHighlight: undefined,
 	error: undefined
 });
 
 /*--------*/
-// Define reducing functions 
+// Define reducing functions
 //
 // These functions take in an initial state and return a new
-// state. They are pure functions. We use Immutable to enforce this. 
+// state. They are pure functions. We use Immutable to enforce this.
 /*--------*/
 function toggle(state) {
 	return state.merge({
@@ -134,7 +144,7 @@ function failed(state, error) {
 	} else {
 		errorMessage = 'Email already used';
 	}
-	
+
 	return state.merge({
 		loggedIn: false,
 		loggingIn: false,
@@ -172,6 +182,33 @@ function setNotificationsRead(state) {
 		return state;
 	}
 	return state.mergeIn(['userData', 'notificationCount'], 0);
+}
+
+function assetCreated(state, result, isHighlight) {
+	const newState = state.mergeIn(['userData', 'assets'], state.getIn(['userData', 'assets']).push(result));
+	return newState.merge({
+		assetLoading: false,
+		addedHighlight: isHighlight && result,
+	});
+}
+
+function assetUpdated(state, result) {
+	const assets = state.getIn(['userData', 'assets']).toJS();
+	const newAssets = assets.map((asset)=>{
+		if (asset._id === result._id) {
+			return result;
+		}
+		return asset;
+	});
+	const newState = state.mergeIn(['userData', 'assets'], newAssets);
+	return newState.set('assetLoading', false);
+}
+
+function assetLoading(state) {
+	return state.merge({
+		assetLoading: true,
+		addedHighlight: undefined,
+	});
 }
 
 /*--------*/
@@ -227,6 +264,15 @@ export default function loginReducer(state = defaultState, action) {
 
 	case SET_NOTIFICATIONS_READ_LOAD:
 		return setNotificationsRead(state);
+
+	case CREATE_ASSET_LOAD:
+		return assetLoading(state);
+	case CREATE_ASSET_SUCCESS:
+		return assetCreated(state, action.result, action.isHighlight);
+	case UPDATE_ASSET_LOAD:
+		return assetLoading(state);
+	case UPDATE_ASSET_SUCCESS:
+		return assetUpdated(state, action.result);
 
 	default:
 		return ensureImmutable(state);

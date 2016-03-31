@@ -1,7 +1,8 @@
 /* global CodeMirror */
 import React, {PropTypes} from 'react';
 import Radium, {Style} from 'radium';
-import {globalStyles} from '../../utils/styleConstants';
+import {Button} from '../';
+import {globalStyles} from 'utils/styleConstants';
 
 let styles = {};
 
@@ -16,11 +17,12 @@ const EditorStylePane = React.createClass({
 	},
 
 	getDefaultProps: function() {
-		
+
 	},
 	getInitialState() {
 		return {
 			mode: 'desktop',
+			isSaving: false,
 		};
 	},
 
@@ -47,13 +49,19 @@ const EditorStylePane = React.createClass({
 	},
 
 	componentWillReceiveProps(nextProps) {
+		setTimeout(()=>{
+			if (this.isMounted()) {
+				this.setState({isSaving: false});
+			}
+		}, 1);
+
 		if (this.props.defaultDesktop !== nextProps.defaultDesktop) {
-			const cmDesktop = document.getElementById('codeMirrorPubCSSDesktop').childNodes[0].CodeMirror;	
+			const cmDesktop = document.getElementById('codeMirrorPubCSSDesktop').childNodes[0].CodeMirror;
 			cmDesktop.setValue(nextProps.defaultDesktop);
 		}
 
 		if (this.props.defaultMobile !== nextProps.defaultMobile) {
-			const cmMobile = document.getElementById('codeMirrorPubCSSMobile').childNodes[0].CodeMirror;	
+			const cmMobile = document.getElementById('codeMirrorPubCSSMobile').childNodes[0].CodeMirror;
 			cmMobile.setValue(nextProps.defaultMobile);
 		}
 	},
@@ -70,6 +78,7 @@ const EditorStylePane = React.createClass({
 		const cmMobile = document.getElementById('codeMirrorPubCSSMobile').childNodes[0].CodeMirror;
 		const newStyleDesktop = cmDesktop.getValue();
 		const newStyleMobile = cmMobile.getValue();
+		this.setState({isSaving: true});
 
 		// const newSetting = {};
 
@@ -105,20 +114,20 @@ const EditorStylePane = React.createClass({
 						width: 'calc(100% - 20px)',
 						minHeight: '150px',
 					},
-					'.codeMirrorPubCSS .CodeMirror pre.CodeMirror-placeholder': { 
+					'.codeMirrorPubCSS .CodeMirror pre.CodeMirror-placeholder': {
 						color: '#999',
 					},
-					'.codeMirrorPubCSS .CodeMirror-empty .CodeMirror-scroll': { 
+					'.codeMirrorPubCSS .CodeMirror-empty .CodeMirror-scroll': {
 						overflow: 'visible !important',
 					},
 				}} />
-				
+
 				<div style={styles.header}>Style Editor</div>
 				<div style={[styles.rightCornerAction]} key={'styleCloseButton'} onClick={this.props.toggleStyleMode}>Close</div>
 
 				<div style={styles.customDetail}>Custom styles can be designed for your pub.</div>
 				<div style={styles.customDetail}>Available selectors: <span style={styles.url}>#pub-title, #pub-authors, .pub-author, #pub-abstract, #pub-header-divider, .p-block, h1, h2, h3, h4, h5, h6, ul, ol</span></div>
-				
+
 				<div style={styles.modeButtons}>
 					<div style={[styles.modeButton, this.state.mode === 'desktop' && styles.modeButtonActive]} key={'modeButton0'} onClick={this.setMode('desktop')}>Desktop</div>
 					<div style={styles.modeSeparator}>|</div>
@@ -129,7 +138,17 @@ const EditorStylePane = React.createClass({
 				<div id={'codeMirrorPubCSSDesktop'} className={'codeMirrorPubCSS'} style={[styles.codeMirrorWrapper, this.state.mode !== 'desktop' && styles.hidden]}></div>
 				<div id={'codeMirrorPubCSSMobile'} className={'codeMirrorPubCSS'} style={[styles.codeMirrorWrapper, this.state.mode !== 'mobile' && styles.hidden]}></div>
 
-				<div style={styles.saveButton} key={'customStyleSaveButton'} onClick={this.saveCustomSettings}>Save</div>
+				{/* <div style={styles.saveButton} key={'customStyleSaveButton'} onClick={this.saveCustomSettings}>Save</div> */}
+
+				<div style={styles.saveButton}>
+					<Button
+						key={'customStyleSaveButton'}
+						label={'Save'}
+						onClick={this.saveCustomSettings}
+						isLoading={this.state.isSaving}
+						align={'right'} />
+				</div>
+
 				{
 					this.props.saveStyleError
 						? <div>{this.props.saveStyleError}</div>
@@ -203,20 +222,20 @@ styles = {
 		color: '#bbb',
 		float: 'left',
 	},
-	saveButton: {
-		// textAlign: 'center',
-		fontSize: 20,
-		// position: 'relative',
-		// left: '20px',
-		width: '52px',
-		// backgroundColor: 'red',
-		// float: 'right',
-		padding: '0px 20px',
-		marginBottom: 20,
+	// saveButton: {
+	// 	// textAlign: 'center',
+	// 	fontSize: 20,
+	// 	// position: 'relative',
+	// 	// left: '20px',
+	// 	width: '52px',
+	// 	// backgroundColor: 'red',
+	// 	// float: 'right',
+	// 	padding: '0px 20px',
+	// 	marginBottom: 20,
 
-		':hover': {
-			cursor: 'pointer',
-			color: globalStyles.sideHover,
-		}
-	},
+	// 	':hover': {
+	// 		cursor: 'pointer',
+	// 		color: globalStyles.sideHover,
+	// 	}
+	// },
 };

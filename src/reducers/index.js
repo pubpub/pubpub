@@ -6,6 +6,7 @@ import { routerStateReducer } from 'redux-router';
 import autocomplete from './autocomplete';
 import editor from './editor';
 import explore from './explore';
+import discussions from './discussions';
 import group from './group';
 import journal from './journal';
 import landing from './landing';
@@ -45,6 +46,7 @@ export default combineReducers({
 	autocomplete,
 	editor,
 	explore,
+	discussions,
 	group,
 	journal,
 	landing,
@@ -65,7 +67,7 @@ export function ensureImmutable(state) {
 	if (!Immutable.Iterable.isIterable(state)) {
 		output = Immutable.fromJS(state);
 	} else {
-		output = state;	
+		output = state;
 	}
 	return output;
 }

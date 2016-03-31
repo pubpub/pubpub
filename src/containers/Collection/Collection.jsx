@@ -4,11 +4,11 @@ import { Link } from 'react-router';
 import Radium from 'radium';
 import Helmet from 'react-helmet';
 import {saveCollection} from '../../actions/journal';
-import {CollectionEdit, CollectionMain} from '../../components';
-import {NotFound} from '../../containers';
-import {globalStyles, navStyles} from '../../utils/styleConstants';
+import {CollectionEdit, CollectionMain} from './components';
+import {NotFound} from 'containers';
+import {globalStyles, navStyles} from 'utils/styleConstants';
 
-import {globalMessages} from '../../utils/globalMessages';
+import {globalMessages} from 'utils/globalMessages';
 import {FormattedMessage} from 'react-intl';
 
 let styles = {};

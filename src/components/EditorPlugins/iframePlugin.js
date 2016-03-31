@@ -22,6 +22,8 @@ const IframeConfig = {
 const IFRAME_WRAPPER_CLASS = 'pub-iframe-wrapper';
 const IFRAME_CLASS = 'pub-iframe';
 
+const IframeEditorWidget = (inputProps) => (<span>iFrame: {inputProps.url || 'Empty'}</span>);
+
 let styles = {};
 
 const IframePlugin = React.createClass({
@@ -87,4 +89,4 @@ styles = {
 	}
 };
 
-export default createPubPubPlugin(IframePlugin, IframeConfig, IframeInputFields);
+export default createPubPubPlugin(IframePlugin, IframeConfig, IframeInputFields, IframeEditorWidget);

@@ -4,21 +4,22 @@ import Radium, {Style} from 'radium';
 import Helmet from 'react-helmet';
 import PureRenderMixin from 'react-addons-pure-render-mixin';
 import { Link } from 'react-router';
-import {getPub, openPubModal, closePubModal, addSelection, pubNavOut, pubNavIn, togglePubHighlights} from '../../actions/pub';
-import {getRandomSlug} from '../../actions/journal';
-import {toggleVisibility, follow, unfollow} from '../../actions/login';
-import {closeMenu} from '../../actions/nav';
+import {getPub, openPubModal, closePubModal, pubNavOut, pubNavIn, togglePubHighlights} from 'actions/pub';
+import {getRandomSlug} from 'actions/journal';
+import {toggleVisibility, follow, unfollow} from 'actions/login';
+import {closeMenu} from 'actions/nav';
+import {createHighlight} from 'actions/assets';
 
-import {convertImmutableListToObject} from '../../utils/parsePlugins';
+// import {convertImmutableListToObject} from 'utils/parsePlugins';
 
-import {PubBody, PubModals, PubNav, LoaderDeterminate, PubLeftBar} from '../../components';
-import {Discussions} from '../';
+import {Button, PubBody, PubModals, PubNav, LoaderDeterminate, PubLeftBar} from 'components';
+import {Discussions} from 'containers';
 
-import {globalStyles, pubSizes} from '../../utils/styleConstants';
+import {globalStyles, pubSizes} from 'utils/styleConstants';
 import {rightBarStyles} from './rightBarStyles';
 
-import {globalMessages} from '../../utils/globalMessages';
-import {generateTOC} from '../../markdown/generateTOC';
+import {globalMessages} from 'utils/globalMessages';
+import {generateTOC} from 'markdown/generateTOC';
 import {FormattedMessage} from 'react-intl';
 
 let styles = {};
@@ -62,16 +63,16 @@ const PubReader = React.createClass({
 		const versionIndex = this.props.query.version !== undefined ? this.props.query.version - 1 : this.props.readerData.getIn(['pubData', 'history']).size - 1;
 
 		const inputMD = this.props.readerData.getIn(['pubData', 'history', versionIndex, 'markdown']) || '';
-		const assets = convertImmutableListToObject( this.props.readerData.getIn(['pubData', 'history', versionIndex, 'assets']) );
-		const references = convertImmutableListToObject(this.props.readerData.getIn(['pubData', 'history', versionIndex, 'references']), true);
-		const selections = [];
+		// const assets = convertImmutableListToObject( this.props.readerData.getIn(['pubData', 'history', versionIndex, 'assets']) );
+		// const references = convertImmutableListToObject(this.props.readerData.getIn(['pubData', 'history', versionIndex, 'references']), true);
+		// const selections = [];
 		const toc = generateTOC(inputMD).full;
 
 		this.setState({
 			inputMD: inputMD,
-			assetsObject: assets,
-			referencesObject: references,
-			selectionsArray: selections,
+			// assetsObject: assets,
+			// referencesObject: references,
+			// selectionsArray: selections,
 			TOC: toc,
 		});
 	},
@@ -88,16 +89,16 @@ const PubReader = React.createClass({
 		if (oldVersionIndex !== versionIndex || this.state.htmlTree.length === 0 || oldMarkdown !== newMarkdown) {
 			// console.log('compiling markdown for version ' + versionIndex);
 			const inputMD = nextProps.readerData.getIn(['pubData', 'history', versionIndex, 'markdown']) || '';
-			const assets = convertImmutableListToObject( nextProps.readerData.getIn(['pubData', 'history', versionIndex, 'assets']) );
-			const references = convertImmutableListToObject(nextProps.readerData.getIn(['pubData', 'history', versionIndex, 'references']), true);
-			const selections = [];
+			// const assets = convertImmutableListToObject( nextProps.readerData.getIn(['pubData', 'history', versionIndex, 'assets']) );
+			// const references = convertImmutableListToObject(nextProps.readerData.getIn(['pubData', 'history', versionIndex, 'references']), true);
+			// const selections = [];
 			const toc = generateTOC(inputMD).full;
 
 			this.setState({
 				inputMD: inputMD,
-				assetsObject: assets,
-				referencesObject: references,
-				selectionsArray: selections,
+				// assetsObject: assets,
+				// referencesObject: references,
+				// selectionsArray: selections,
 				TOC: toc,
 			});
 		}
@@ -124,9 +125,15 @@ const PubReader = React.createClass({
 	},
 
 	addSelection: function(newSelection) {
-		newSelection.pub = this.props.readerData.getIn(['pubData', '_id']);
-		newSelection.version = this.props.query.version !== undefined && this.props.query.version > 0 && this.props.query.version < (this.props.readerData.getIn(['pubData', 'history']).size - 1) ? this.props.query.version : this.props.readerData.getIn(['pubData', 'history']).size;
-		this.props.dispatch(addSelection(newSelection));
+		newSelection.sourcePub = this.props.readerData.getIn(['pubData', '_id']);
+		newSelection.sourceVersion = this.props.query.version !== undefined && this.props.query.version > 0 && this.props.query.version < (this.props.readerData.getIn(['pubData', 'history']).size - 1) ? this.props.query.version : this.props.readerData.getIn(['pubData', 'history']).size;
+
+		const newHighLight = {};
+		newHighLight.assetType = 'highlight';
+		newHighLight.label = newSelection.text.substring(0, 15);
+		newHighLight.assetData = newSelection;
+
+		this.props.dispatch(createHighlight(newHighLight));
 	},
 
 	toggleHighlights: function() {
@@ -175,8 +182,8 @@ const PubReader = React.createClass({
 				{property: 'og:title', content: pubData.history[versionIndex].title},
 				{property: 'og:type', content: 'article'},
 				{property: 'og:description', content: pubData.history[versionIndex].abstract},
-				{property: 'article:published_time', content: pubData.history[versionIndex].publishDate},
-				{property: 'article:modified_time', content: pubData.history[pubData.history.length - 1].publishDate},
+				{property: 'article:published_time', content: pubData.history[versionIndex].versionDate},
+				{property: 'article:modified_time', content: pubData.history[pubData.history.length - 1].versionDate},
 				{name: 'twitter:card', content: 'summary_large_image'},
 				{name: 'twitter:site', content: '@isPubPub'},
 				{name: 'twitter:title', content: pubData.history[versionIndex].title},
@@ -188,12 +195,12 @@ const PubReader = React.createClass({
 			const refName = match ? match[2] : undefined;
 
 			let leadImage = '';
-			for (let index = pubData.history[versionIndex].assets.length; index--;) {
-				if (pubData.history[versionIndex].assets[index].refName === refName) {
-					leadImage = pubData.history[versionIndex].assets[index].url_s3;
-					break;
-				}
-			}
+			// for (let index = pubData.history[versionIndex].assets.length; index--;) {
+			// 	if (pubData.history[versionIndex].assets[index].refName === refName) {
+			// 		leadImage = pubData.history[versionIndex].assets[index].url_s3;
+			// 		break;
+			// 	}
+			// }
 
 			metaData.meta.push({property: 'og:image', content: leadImage});
 			metaData.meta.push({name: 'twitter:image', content: leadImage});
@@ -258,8 +265,18 @@ const PubReader = React.createClass({
 							: null
 					}
 
+					{
+						!pubData.isPublished
+							? <div key={'unpublishNotification'} style={[styles.unpublishedNotification, globalStyles[this.props.readerData.get('status')]]}>
+								<FormattedMessage id="pub.unpublishedNotification" defaultMessage="This pub is unpublished, and thus only accessible to collaborators."/>
+							</div>
+							: null
+					}
+
 					<PubBody
 						status={this.props.readerData.get('status')}
+						isPublished={pubData.isPublished}
+						isPage={pubData.isPage}
 						title={pubData.history[versionIndex].title}
 						abstract={pubData.history[versionIndex].abstract}
 						authorsNote={pubData.history[versionIndex].authorsNote}
@@ -282,8 +299,8 @@ const PubReader = React.createClass({
 						errorView={pubData.pubErrorView}
 
 						references={this.props.readerData.getIn(['pubData', 'history', versionIndex, 'references']) !== undefined ? this.props.readerData.getIn(['pubData', 'history', versionIndex, 'references']).toJS() : []}
-						firstPublishedDate={this.props.readerData.getIn(['pubData', 'history', 0, 'publishDate'])}
-						lastPublishedDate={this.props.readerData.getIn(['pubData', 'history', this.props.readerData.getIn(['pubData', 'history']).size - 1, 'publishDate'])} />
+						firstPublishedDate={this.props.readerData.getIn(['pubData', 'history', 0, 'versionDate'])}
+						lastPublishedDate={this.props.readerData.getIn(['pubData', 'history', this.props.readerData.getIn(['pubData', 'history']).size - 1, 'versionDate'])} />
 
 					<PubModals
 						slug={this.props.slug}
@@ -315,7 +332,7 @@ const PubReader = React.createClass({
 
 				<div className="rightBar" style={[styles.rightBar, globalStyles[this.props.readerData.get('status')], pubData.markdown === undefined && {display: 'none'}]}>
 
-					<div style={rightBarStyles.sectionHeader}>
+					{/* <div style={rightBarStyles.sectionHeader}>
 
 						<FormattedMessage {...globalMessages.discussion}/>
 
@@ -335,9 +352,25 @@ const PubReader = React.createClass({
 								</span>
 							</span>
 
+					</div> */}
+					<div style={styles.rightHeaderButtonsWrapper}>
+						<Link style={globalStyles.link} to={'/pub/' + this.props.slug + '/journals'}>
+							<div style={[styles.buttonWrapper, !pubData.isAuthor && {opacity: '0', pointerEvents: 'none'}]} key={'topbutton1'}>Submit To Journal</div>
+						</Link>
+						<Link style={globalStyles.link} to={'/pub/' + this.props.slug + '/invite'}>
+							<div style={styles.buttonWrapper} key={'topbutton2'}>
+								<FormattedMessage id="pub.RequestReview" defaultMessage="Request Review"/>
+							</div>
+						</Link>
+						<Link style={globalStyles.link} to={'/pub/' + this.props.slug + '/discussions'}>
+							<div style={styles.buttonWrapper} key={'topbutton3'}>
+								<FormattedMessage id="pub.Expand" defaultMessage="Expand"/>
+							</div>
+						</Link>
+						<div style={globalStyles.clearFix}></div>
 					</div>
 
-					<Discussions editorCommentMode={false} />
+					<Discussions/>
 				</div>
 
 			</div>
@@ -368,23 +401,21 @@ styles = {
 			maxWidth: '100%',
 			height: 'auto'
 		},
-		// Desktop Sizes
-		'@media screen and (min-width: 768px) and (max-width: 1023px)': {
-			// backgroundColor: 'red',
-		},
-		'@media screen and (min-width: 1024px) and (max-width: 1300px)': {
-			// backgroundColor: 'orange',
-		},
-		'@media screen and (min-width: 1301px) and (max-width: 1600px)': {
-			// backgroundColor: 'yellow',
-		},
-		'@media screen and (min-width: 1600px) and (max-width: 2000px)': {
-			// backgroundColor: 'green',
-		},
-		'@media screen and (min-width: 2000px)': {
-			// backgroundColor: 'blue',
-		},
+	},
+	rightHeaderButtonsWrapper: {
 
+	},
+	buttonWrapper: {
+		float: 'left',
+		width: 'calc((100% / 3) - 4% - 2px)',
+		margin: '0px 2%',
+		padding: '2px 0px',
+		border: '1px solid #444',
+		textAlign: 'center',
+		fontSize: '12px',
+		':active': {
+			transform: 'translateY(1px)',
+		},
 	},
 	leftBar: {
 		padding: 10,
@@ -404,31 +435,31 @@ styles = {
 		// Desktop Sizes
 		'@media screen and (min-width: 768px) and (max-width: 1023px)': {
 			padding: pubSizes.xSmallLeftBarPadding,
-			width: 'calc(' + pubSizes.xSmallLeft + 'px - ' + (2 * pubSizes.xSmallLeftBarPadding) + 'px)',
+			width: 'calc(' + pubSizes.xSmallLeft + ' - ' + (2 * pubSizes.xSmallLeftBarPadding) + 'px)',
 			height: 'calc(100vh - ' + globalStyles.headerHeight + ' - ' + (2 * pubSizes.xSmallLeftBarPadding) + 'px)',
 			marginRight: pubSizes.xSmallPub
 		},
 		'@media screen and (min-width: 1024px) and (max-width: 1300px)': {
 			padding: pubSizes.smallLeftBarPadding,
-			width: 'calc(' + pubSizes.smallLeft + 'px - ' + (2 * pubSizes.smallLeftBarPadding) + 'px)',
+			width: 'calc(' + pubSizes.smallLeft + ' - ' + (2 * pubSizes.smallLeftBarPadding) + 'px)',
 			height: 'calc(100vh - ' + globalStyles.headerHeight + ' - ' + (2 * pubSizes.smallLeftBarPadding) + 'px)',
 			marginRight: pubSizes.smallPub
 		},
 		'@media screen and (min-width: 1301px) and (max-width: 1600px)': {
 			padding: pubSizes.mediumLeftBarPadding,
-			width: 'calc(' + pubSizes.mediumLeft + 'px - ' + (2 * pubSizes.mediumLeftBarPadding) + 'px)',
+			width: 'calc(' + pubSizes.mediumLeft + ' - ' + (2 * pubSizes.mediumLeftBarPadding) + 'px)',
 			height: 'calc(100vh - ' + globalStyles.headerHeight + ' - ' + (2 * pubSizes.mediumLeftBarPadding) + 'px)',
 			marginRight: pubSizes.mediumPub
 		},
 		'@media screen and (min-width: 1600px) and (max-width: 2000px)': {
 			padding: pubSizes.largeLeftBarPadding,
-			width: 'calc(' + pubSizes.largeLeft + 'px - ' + (2 * pubSizes.largeLeftBarPadding) + 'px)',
+			width: 'calc(' + pubSizes.largeLeft + ' - ' + (2 * pubSizes.largeLeftBarPadding) + 'px)',
 			height: 'calc(100vh - ' + globalStyles.headerHeight + ' - ' + (2 * pubSizes.largeLeftBarPadding) + 'px)',
 			marginRight: pubSizes.largePub
 		},
 		'@media screen and (min-width: 2000px)': {
 			padding: pubSizes.xLargeLeftBarPadding,
-			width: 'calc(' + pubSizes.xLargeLeft + 'px - ' + (2 * pubSizes.xLargeLeftBarPadding) + 'px)',
+			width: 'calc(' + pubSizes.xLargeLeft + ' - ' + (2 * pubSizes.xLargeLeftBarPadding) + 'px)',
 			height: 'calc(100vh - ' + globalStyles.headerHeight + ' - ' + (2 * pubSizes.xLargeLeftBarPadding) + 'px)',
 			marginRight: pubSizes.xLargePub
 		},
@@ -464,23 +495,23 @@ styles = {
 		// Desktop Sizes
 		'@media screen and (min-width: 768px) and (max-width: 1023px)': {
 			width: pubSizes.xSmallPub,
-			left: pubSizes.xSmallLeft,
+			left: 'calc(' + pubSizes.xSmallLeft + ')',
 		},
 		'@media screen and (min-width: 1024px) and (max-width: 1300px)': {
 			width: pubSizes.smallPub,
-			left: pubSizes.smallLeft,
+			left: 'calc(' + pubSizes.smallLeft + ')',
 		},
 		'@media screen and (min-width: 1301px) and (max-width: 1600px)': {
 			width: pubSizes.mediumPub,
-			left: pubSizes.mediumLeft,
+			left: 'calc(' + pubSizes.mediumLeft + ')',
 		},
 		'@media screen and (min-width: 1600px) and (max-width: 2000px)': {
 			width: pubSizes.largePub,
-			left: pubSizes.largeLeft,
+			left: 'calc(' + pubSizes.largeLeft + ')',
 		},
 		'@media screen and (min-width: 2000px)': {
 			width: pubSizes.xLargePub,
-			left: pubSizes.xLargeLeft,
+			left: 'calc(' + pubSizes.xLargeLeft + ')',
 		},
 	},
 	centerBarModalActive: {
@@ -489,7 +520,7 @@ styles = {
 	},
 
 	rightBar: {
-		padding: 10,
+		padding: '10px 0px',
 		// width: 'calc(100% - 800px - 20px)',
 		height: 'calc(100vh - ' + globalStyles.headerHeight + ' - 20px)',
 		float: 'left',
@@ -504,27 +535,27 @@ styles = {
 		// Desktop Sizes
 		'@media screen and (min-width: 768px) and (max-width: 1023px)': {
 			padding: pubSizes.xSmallPadding,
-			width: 'calc(100% - ' + pubSizes.xSmallLeft + 'px - ' + pubSizes.xSmallPub + ' - ' + (2 * pubSizes.xSmallPadding) + 'px)',
+			width: 'calc(100% - (' + pubSizes.xSmallLeft + ') - ' + pubSizes.xSmallPub + ' - ' + (2 * pubSizes.xSmallPadding) + 'px)',
 			height: 'calc(100vh - ' + globalStyles.headerHeight + ' - ' + (2 * pubSizes.xSmallPadding) + 'px)',
 		},
 		'@media screen and (min-width: 1024px) and (max-width: 1300px)': {
 			padding: pubSizes.smallPadding,
-			width: 'calc(100% - ' + pubSizes.smallLeft + 'px - ' + pubSizes.smallPub + ' - ' + (2 * pubSizes.smallPadding) + 'px)',
+			width: 'calc(100% - (' + pubSizes.smallLeft + ') - ' + pubSizes.smallPub + ' - ' + (2 * pubSizes.smallPadding) + 'px)',
 			height: 'calc(100vh - ' + globalStyles.headerHeight + ' - ' + (2 * pubSizes.smallPadding) + 'px)',
 		},
 		'@media screen and (min-width: 1301px) and (max-width: 1600px)': {
 			padding: pubSizes.mediumPadding,
-			width: 'calc(100% - ' + pubSizes.mediumLeft + 'px - ' + pubSizes.mediumPub + ' - ' + (2 * pubSizes.mediumPadding) + 'px)',
+			width: 'calc(100% - (' + pubSizes.mediumLeft + ') - ' + pubSizes.mediumPub + ' - ' + (2 * pubSizes.mediumPadding) + 'px)',
 			height: 'calc(100vh - ' + globalStyles.headerHeight + ' - ' + (2 * pubSizes.mediumPadding) + 'px)',
 		},
 		'@media screen and (min-width: 1600px) and (max-width: 2000px)': {
 			padding: pubSizes.largePadding,
-			width: 'calc(100% - ' + pubSizes.largeLeft + 'px - ' + pubSizes.largePub + ' - ' + (2 * pubSizes.largePadding) + 'px)',
+			width: 'calc(100% - (' + pubSizes.largeLeft + ') - ' + pubSizes.largePub + ' - ' + (2 * pubSizes.largePadding) + 'px)',
 			height: 'calc(100vh - ' + globalStyles.headerHeight + ' - ' + (2 * pubSizes.largePadding) + 'px)',
 		},
 		'@media screen and (min-width: 2000px)': {
 			padding: pubSizes.xLargePadding,
-			width: 'calc(100% - ' + pubSizes.xLargeLeft + 'px - ' + pubSizes.xLargePub + ' - ' + (2 * pubSizes.xLargePadding) + 'px)',
+			width: 'calc(100% - (' + pubSizes.xLargeLeft + ') - ' + pubSizes.xLargePub + ' - ' + (2 * pubSizes.xLargePadding) + 'px)',
 			height: 'calc(100vh - ' + globalStyles.headerHeight + ' - ' + (2 * pubSizes.xLargePadding) + 'px)',
 		},
 	},
@@ -551,6 +582,19 @@ styles = {
 			fontSize: '20px',
 		},
 
+	},
+
+	unpublishedNotification: {
+		textAlign: 'center',
+		backgroundColor: globalStyles.headerBackground,
+		padding: '5px 20px',
+		margin: 5,
+		fontFamily: globalStyles.headerFont,
+		color: globalStyles.headerText,
+		userSelect: 'none',
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+			fontSize: '20px',
+		},
 	},
 	versionNotificationLink: {
 		textDecoration: 'none',

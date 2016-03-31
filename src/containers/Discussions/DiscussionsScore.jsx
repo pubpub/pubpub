@@ -1,6 +1,6 @@
 import React, {PropTypes} from 'react';
 import Radium from 'radium';
-import {globalStyles} from '../../utils/styleConstants';
+import {globalStyles} from 'utils/styleConstants';
 
 let styles = {};
 
@@ -11,7 +11,7 @@ const PubDiscussionsScore = React.createClass({
 		userYay: PropTypes.bool,
 		userNay: PropTypes.bool,
 		handleVoteSubmit: PropTypes.func,
-		readOnly: PropTypes.bool,
+		// readOnly: PropTypes.bool,
 	},
 
 	getDefaultProps: function() {
@@ -32,14 +32,14 @@ const PubDiscussionsScore = React.createClass({
 		return (
 			<div style={styles.container}>
 
-				<div key={'yay-' + discussionID} style={[styles.voteButton, styles.voteUp, this.props.userYay && styles.activeVote, this.props.readOnly && styles.readOnly]} onClick={this.handleVoteClick('yay', discussionID)}>
+				<div key={'yay-' + discussionID} style={[styles.voteButton, styles.voteUp, this.props.userYay && styles.activeVote]} onClick={this.handleVoteClick('yay', discussionID)}>
 					^
 					{/* We're not quite ready for this. Don't have the right design
 						<div style={[styles.voteMessage, styles.yayMessage]}>For constructive, insightful, or productive discussion</div>
 					*/}
 				</div>
 				<div style={styles.voteScore}>{this.props.score + 1}</div>
-				<div key={'nay-' + discussionID} style={[styles.voteButton, styles.voteDown, this.props.userNay && styles.activeVote, this.props.readOnly && styles.readOnly]} onClick={this.handleVoteClick('nay', discussionID)}>
+				<div key={'nay-' + discussionID} style={[styles.voteButton, styles.voteDown, this.props.userNay && styles.activeVote]} onClick={this.handleVoteClick('nay', discussionID)}>
 					^
 					{/* We're not quite ready for this. Don't have the right design
 						<div style={[styles.voteMessage, styles.nayMessage]}>For unproductive or trolling discussion. <br/>NOT for thoughtful discussion you happen to disagree with.</div>
@@ -103,10 +103,6 @@ styles = {
 	nayMessage: {
 		right: 5,
 		transform: 'rotate(180deg)',
-	},
-	readOnly: {
-		opacity: 0.15,
-		pointerEvents: 'none',
 	},
 
 };

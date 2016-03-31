@@ -1,7 +1,7 @@
 import React, {PropTypes} from 'react';
 import Radium from 'radium';
-import {globalStyles} from '../../utils/styleConstants';
-import {UserPreview} from '../../components/ItemPreviews';
+import {globalStyles} from 'utils/styleConstants';
+import {UserPreview} from 'components';
 
 let styles = {};
 

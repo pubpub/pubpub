@@ -1,29 +1,30 @@
 import React, {PropTypes} from 'react';
-import DropdownField from './baseDropdownField';
 
-const AssetField = React.createClass({
+const SelectionField = React.createClass({
 	propTypes: {
-		selections: PropTypes.array,
-		selectedValue: PropTypes.string
-	},
-	statics: {
-		// Transform is called by PPMComponent.js to transform
-		// 'prop' -- the text value of the asset into the asset object
-		transform: function(prop, params, assets, references, selections) {
-			if (selections.length >= prop) {
-				return selections[prop - 1];
-			}
-			return new Error('Could not find selection');
-		}
+		selectedValue: PropTypes.object
 	},
 	value: function() {
-		return this.refs.val.value();
+		return this.props.selectedValue;
 	},
 	render: function() {
-		const selections = this.props.selections.map( function(selection, index) { return {'value': index, 'label': selection.text};});
-		const val = (this.props.selectedValue) ? {'label': this.props.selectedValue, 'value': this.props.selectedValue} : undefined;
-		return <DropdownField ref="val" choices={selections} selectedValue={val}/>;
+		const selectionData = this.props.selectedValue;
+
+		if (!selectionData || !selectionData.text) {
+			return <span>None</span>;
+		}
+
+		const highlightStyle = {
+			backgroundColor: 'rgba(111, 232, 111, 0.45)',
+			borderRadius: '2px',
+		};
+
+		return (<div>
+			<span>{selectionData.context.substring(0, selectionData.context.indexOf(selectionData.text))}</span>
+			<span style={highlightStyle}>{selectionData.text}</span>
+			<span>{selectionData.context.substring(selectionData.context.indexOf(selectionData.text) + selectionData.text.length, selectionData.context.length)}</span>
+		</div>);
 	}
 });
 
-export default AssetField;
+export default SelectionField;

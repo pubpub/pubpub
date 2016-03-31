@@ -8,13 +8,13 @@ import Radium from 'radium';
 import PureRenderMixin from 'react-addons-pure-render-mixin';
 import ReactFireMixin from 'reactfire';
 
-import {EditorModalAssets, EditorModalCollaborators, EditorModalPublish, EditorModalReferences, EditorModalSettings} from '../../components/EditorModals';
+import {AssetLibrary} from 'containers';
+import {CollaboratorsModal, SaveVersionModal, SettingsModal} from './components';
 
-
-import {closeModal, saveCollaboratorsToPub, saveSettingsPubPub} from '../../actions/editor';
+import {closeModal, saveCollaboratorsToPub} from '../../actions/editor';
 import {saveSettingsUser} from '../../actions/login';
 
-import {globalStyles} from '../../utils/styleConstants';
+import {globalStyles} from 'utils/styleConstants';
 
 let FireBaseURL;
 let styles;
@@ -27,7 +27,7 @@ const Editor = React.createClass({
 		slug: PropTypes.string, // equal to project uniqueTitle
 		dispatch: PropTypes.func,
 
-		publishVersionHandler: PropTypes.func,
+		saveVersionHandler: PropTypes.func,
 	},
 
 	mixins: [PureRenderMixin, ReactFireMixin],
@@ -43,13 +43,13 @@ const Editor = React.createClass({
 				selections: [],
 				settings: {},
 			},
-			
+
 		};
 	},
 
 	componentDidMount() {
 		FireBaseURL = (process.env.NODE_ENV === 'production' && location.hostname !== 'pubpub-dev.herokuapp.com') ? 'https://pubpub.firebaseio.com/' : 'https://pubpub-dev.firebaseio.com/';
-
+		// FireBaseURL = 'https://pubpub-migration.firebaseio.com/';
 		if (! this.props.editorData.get('error')) {
 
 			if (this.props.editorData.getIn(['pubEditData', 'token'])) {
@@ -81,7 +81,10 @@ const Editor = React.createClass({
 			} else {
 				this.bindAsObject(ref, 'firepadData');
 
-				this.setState({initialized: true});
+				if (this.isMounted()) {
+					this.setState({initialized: true});
+				}
+
 			}
 		});
 
@@ -89,30 +92,30 @@ const Editor = React.createClass({
 
 	// Add asset to firebase.
 	// Will trigger other open clients to sync new assets data.
-	addAsset: function(asset) {
-		// Cleanup refname. No special characters, underscores, etc.
-		let refName = asset.originalFilename.replace(/[^0-9a-z]/gi, '');
+	// addAsset: function(asset) {
+	// 	// Cleanup refname. No special characters, underscores, etc.
+	// 	let refName = asset.originalFilename.replace(/[^0-9a-z]/gi, '');
 
-		// Make sure refname is unique.
-		// If it's not unique, append a timestamp.
-		if (this.state.firepadData.assets && refName in this.state.firepadData.assets) {
-			refName = refName + '_' + Date.now();
-		}
-		// Add refname and author to passed in asset object.
-		asset.refName = refName;
-		asset.author = this.props.loginData.getIn(['userData', 'username']);
+	// 	// Make sure refname is unique.
+	// 	// If it's not unique, append a timestamp.
+	// 	if (this.state.firepadData.assets && refName in this.state.firepadData.assets) {
+	// 		refName = refName + '_' + Date.now();
+	// 	}
+	// 	// Add refname and author to passed in asset object.
+	// 	asset.refName = refName;
+	// 	asset.author = this.props.loginData.getIn(['userData', 'username']);
 
-		// Push to firebase ref
-		const ref = new Firebase(FireBaseURL + this.props.slug + '/editorData/assets' );
-		ref.push(asset);
-	},
+	// 	// Push to firebase ref
+	// 	const ref = new Firebase(FireBaseURL + this.props.slug + '/editorData/assets' );
+	// 	ref.push(asset);
+	// },
 
-	deleteAsset: function(assetID) {
-		return ()=>{
-			const ref = new Firebase(FireBaseURL + this.props.slug + '/editorData/assets/' + assetID );
-			ref.remove();
-		};
-	},
+	// deleteAsset: function(assetID) {
+	// 	return ()=>{
+	// 		const ref = new Firebase(FireBaseURL + this.props.slug + '/editorData/assets/' + assetID );
+	// 		ref.remove();
+	// 	};
+	// },
 
 	saveUpdatedCollaborators: function(newCollaborators, removedUser) {
 		const ref = new Firebase(FireBaseURL + this.props.slug + '/editorData/collaborators' );
@@ -129,16 +132,10 @@ const Editor = React.createClass({
 		ref.update(newSettings);
 	},
 
-	saveUpdatedSettingsFirebaseAndPubPub: function(newSettings) {
-		const ref = new Firebase(FireBaseURL + this.props.slug + '/editorData/settings' );
-		ref.update(newSettings);
-		this.props.dispatch(saveSettingsPubPub(this.props.slug, newSettings));
-	},
-
-	saveReferences: function(newReferences) {
-		const ref = new Firebase(FireBaseURL + this.props.slug + '/editorData/references' );
-		ref.set(newReferences);
-	},
+	// saveReferences: function(newReferences) {
+	// 	const ref = new Firebase(FireBaseURL + this.props.slug + '/editorData/references' );
+	// 	ref.set(newReferences);
+	// },
 
 	closeModalHandler: function() {
 		this.props.dispatch(closeModal());
@@ -147,8 +144,9 @@ const Editor = React.createClass({
 		console.log('toggle left panel');
 	},
 
+
 	render: function() {
-				
+
 		const activeModal = this.props.editorData.get('activeModal');
 
 		return (
@@ -162,45 +160,43 @@ const Editor = React.createClass({
 						{(() => {
 							switch (activeModal) {
 							case 'Assets':
-								return (<EditorModalAssets 
-										slug={this.props.slug} 
-										assetData={this.state.firepadData.assets} 
-										addAsset={this.addAsset} 
-										deleteAsset={this.deleteAsset}/>
-									);
+								return (<AssetLibrary
+									closeLibrary={this.closeModalHandler}
+									codeMirrorInstance={document.getElementById('codemirror-wrapper').childNodes[0].childNodes[0].CodeMirror} />
+								);
 
 							case 'Collaborators':
-								return (<EditorModalCollaborators 
-										collaboratorData={this.state.firepadData.collaborators} 
-										updateCollaborators={this.saveUpdatedCollaborators}/>
-									);
+								return (<CollaboratorsModal
+									collaboratorData={this.state.firepadData.collaborators}
+									updateCollaborators={this.saveUpdatedCollaborators}/>
+								);
 
-							case 'Publish':
-								return (<EditorModalPublish 
-										slug={this.props.slug} 
-										handlePublish={this.props.publishVersionHandler}
-										currentJournal={this.props.journalData.getIn(['journalData', 'journalName'])}/>
-									);
+							case 'SaveVersion':
+								return (<SaveVersionModal
+									slug={this.props.slug}
+									handleSaveVersion={this.props.saveVersionHandler}
+									currentJournal={this.props.journalData.getIn(['journalData', 'journalName'])}
+									isPublished={this.props.editorData.getIn(['pubEditData', 'isPublished'])}/>
+								);
 
-							case 'References':
-								return (<EditorModalReferences
-										referenceData={this.state.firepadData.references}
-										referenceStyle={this.state.firepadData && this.state.firepadData.settings ? this.state.firepadData.settings.pubReferenceStyle : undefined}
-										updateReferences={this.saveReferences}/>
-									);
+							// case 'References':
+							// 	return (<EditorModalReferences
+							// 			referenceData={this.state.firepadData.references}
+							// 			referenceStyle={this.state.firepadData && this.state.firepadData.settings ? this.state.firepadData.settings.pubReferenceStyle : undefined}
+							// 			updateReferences={this.saveReferences}/>
+							// 		);
 
 							case 'Style':
-								return (<EditorModalSettings
-										editorFont={this.props.loginData.getIn(['userData', 'settings', 'editorFont'])}
-										editorFontSize={this.props.loginData.getIn(['userData', 'settings', 'editorFontSize'])}
-										editorColor={this.props.loginData.getIn(['userData', 'settings', 'editorColor'])}
-										pubPrivacy={this.state.firepadData && this.state.firepadData.settings ? this.state.firepadData.settings.pubPrivacy : undefined}
-										pubStyle={this.state.firepadData && this.state.firepadData.settings ? this.state.firepadData.settings.pubStyle : undefined}
-										saveUpdatedSettingsUser={this.saveUpdatedSettingsUser}
-										saveUpdatedSettingsFirebase={this.saveUpdatedSettingsFirebase}
-										saveUpdatedSettingsFirebaseAndPubPub={this.saveUpdatedSettingsFirebaseAndPubPub} 
-										toggleLeftPanelModeHandler={this.toggleLeftPanelMode}/>
-									);
+								return (<SettingsModal
+									editorFont={this.props.loginData.getIn(['userData', 'settings', 'editorFont'])}
+									editorFontSize={this.props.loginData.getIn(['userData', 'settings', 'editorFontSize'])}
+									editorColor={this.props.loginData.getIn(['userData', 'settings', 'editorColor'])}
+									pubPrivacy={this.state.firepadData && this.state.firepadData.settings ? this.state.firepadData.settings.pubPrivacy : undefined}
+									pubStyle={this.state.firepadData && this.state.firepadData.settings ? this.state.firepadData.settings.pubStyle : undefined}
+									saveUpdatedSettingsUser={this.saveUpdatedSettingsUser}
+									saveUpdatedSettingsFirebase={this.saveUpdatedSettingsFirebase}
+									toggleLeftPanelModeHandler={this.toggleLeftPanelMode}/>
+								);
 							default:
 								return null;
 							}
@@ -225,14 +221,15 @@ export default connect( state => {
 	};
 })( Radium(Editor) );
 
-styles = {	
+styles = {
 	modalSplash: {
 		opacity: 0,
 		pointerEvents: 'none',
 		width: '100vw',
-		height: 'calc(100vh - 2 * ' + globalStyles.headerHeight + ')',
+		height: '100vh',
 		position: 'fixed',
-		top: 60,
+		top: 0,
+		left: 0,
 		backgroundColor: 'rgba(255,255,255,0.7)',
 		transition: '.1s linear opacity',
 		zIndex: 100,
@@ -242,28 +239,13 @@ styles = {
 		pointerEvents: 'auto',
 	},
 	modalContainer: {
-		width: '76vw',
-		minHeight: 400,
-		maxHeight: 'calc(100vh - 150px)',
-		overflow: 'hidden',
-		overflowY: 'scroll',
-		margin: '0 auto',
-		position: 'absolute',
-		top: 60,
-		left: '12vw',
-		backgroundColor: 'white',
-		boxShadow: '0px 0px 10px 0px rgba(0,0,0,0.25)',
+		...globalStyles.largeModal,
 		zIndex: 150,
 
 		opacity: 0,
 		pointerEvents: 'none',
-		transform: 'scale(0.8)',
+		transform: 'scale(0.9)',
 		transition: '.1s linear opacity, .1s linear transform',
-
-		'@media screen and (min-width: 1600px)': {
-			width: 1200,
-			left: 'calc(50vw - 600px)',
-		},
 
 	},
 	modalContainerActive: {

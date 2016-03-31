@@ -3,10 +3,11 @@ import {connect} from 'react-redux';
 import Radium from 'radium';
 import PureRenderMixin from 'react-addons-pure-render-mixin';
 import {toggleVisibility, toggleViewMode, login, register} from '../../actions/login';
-import {ImageCropper, LoaderIndeterminate, LoginForm, LoginFormRegister} from '../../components';
-import {globalStyles} from '../../utils/styleConstants';
+import {ImageCropper, LoaderIndeterminate} from '../../components';
+import {LoginForm, LoginFormRegister} from './components';
+import {globalStyles} from 'utils/styleConstants';
 
-import {globalMessages} from '../../utils/globalMessages';
+import {globalMessages} from 'utils/globalMessages';
 import {FormattedMessage} from 'react-intl';
 
 let styles = {};

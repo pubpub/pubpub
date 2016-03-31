@@ -6,10 +6,11 @@ import { Link } from 'react-router';
 import { pushState } from 'redux-router';
 import {logout, follow, unfollow, toggleVisibility} from '../../actions/login';
 import {getProfile, updateUser, userNavOut, userNavIn, setNotificationsRead} from '../../actions/user';
-import {ImageCropper, LoaderDeterminate, UserSettings, UserPubs, UserGroups, UserFollows, UserDiscussions, UserNotifications} from '../../components';
-import {globalStyles, profileStyles, navStyles} from '../../utils/styleConstants';
+import {ImageCropper, LoaderDeterminate} from 'components';
+import {UserSettings, UserPubs, UserGroups, UserFollows, UserDiscussions, UserNotifications} from './components';
+import {globalStyles, profileStyles, navStyles} from 'utils/styleConstants';
 
-import {globalMessages} from '../../utils/globalMessages';
+import {globalMessages} from 'utils/globalMessages';
 import {FormattedMessage} from 'react-intl';
 
 let styles = {};
@@ -342,7 +343,9 @@ styles = {
 	subNav: {
 		margin: '35px 0px 0px 0px',
 		fontSize: '20px',
-		borderBottom: '1px solid #CCC',
+		// borderBottom: '1px solid #CCC',
+		border: '1px solid #EEE',
+		backgroundColor: '#f3f4f5',
 		minWidth: '569px',
 		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
 			height: 'auto',

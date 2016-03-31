@@ -1,6 +1,6 @@
 import React, {PropTypes} from 'react';
 import Radium from 'radium';
-import {globalStyles} from '../../utils/styleConstants';
+import {globalStyles} from 'utils/styleConstants';
 
 import {FormattedMessage} from 'react-intl';
 
@@ -34,7 +34,7 @@ const PubSelectionPopup = React.createClass({
 		require('rangy/lib/rangy-textrange.js');
 		document.getElementById('pubBodyContent').addEventListener('mouseup', this.onMouseUp);
 	},
-	
+
 	componentWillUnmount() {
 		document.getElementById('pubBodyContent').removeEventListener('mouseup', this.onMouseUp);
 	},
@@ -54,12 +54,18 @@ const PubSelectionPopup = React.createClass({
 		}
 
 		const selection = Rangy.getSelection();
-		const range = selection.getRangeAt(0);
+		let range;
+		try {
+			range = selection.getRangeAt(0);
+		} catch (err) {
+			console.log('caught range error', err);
+			return;
+		}
 		// console.log(range);
 		// console.log(range.commonAncestorContainer);
 
 		if (!selection.isCollapsed && isDescendantOfHash(range.commonAncestorContainer)) {
-			
+
 			Rangy.getSelection().expand('word');
 			const ancestorText = getAncestorText(range.commonAncestorContainer);
 			// console.log(ancestorText);
@@ -79,14 +85,14 @@ const PubSelectionPopup = React.createClass({
 				popupVisible: false,
 			});
 		}
-				
+
 	},
 
 	replacePathWithHash: function(path) {
 		let newPath = '';
 
 		const splitOnSemicolonArray = path.split(';');
-		
+
 		if (splitOnSemicolonArray.length === 2) {
 			newPath = ';' + splitOnSemicolonArray[1];
 		}
@@ -94,7 +100,7 @@ const PubSelectionPopup = React.createClass({
 		const chunkedPath = splitOnSemicolonArray[0].split('>');
 		for (let index = chunkedPath.length; index--;) {
 			const tempPath = chunkedPath.slice(0, index + 1).join('>');
-			const tempElement = document.getElementById('pubBodyContent').querySelector(tempPath);
+			const tempElement = document.querySelector(tempPath);
 			if (tempElement.dataset && tempElement.dataset.hash) {
 				newPath = '[data-hash="' + tempElement.dataset.hash + '"]' + newPath;
 				break;
@@ -107,7 +113,7 @@ const PubSelectionPopup = React.createClass({
 	},
 
 	onHighlightSave: function() {
-		const renderer = new Marklib.Rendering(document, {className: 'tempHighlight'}, document.getElementById('pubBodyContent'));
+		const renderer = new Marklib.Rendering(document, {className: 'tempHighlight'}, document);
 		const result = renderer.renderWithRange(this.state.range);
 
 		// Note - these containers will fail if identical paragraphs or list-items exist (they'll have an identical hash).
@@ -123,7 +129,7 @@ const PubSelectionPopup = React.createClass({
 			startOffset: result.startOffset,
 			endOffset: result.endOffset
 		};
-		
+
 		this.props.addSelectionHandler(highlightObject);
 
 	},
@@ -134,7 +140,7 @@ const PubSelectionPopup = React.createClass({
 			left: this.state.xLoc,
 		};
 	},
-	
+
 	render: function() {
 
 		return (
@@ -173,7 +179,7 @@ styles = {
 		marginTop: -5,
 		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
 			display: 'none',
-		},		
+		},
 	},
 	pluginPopupVisible: {
 		opacity: 1,

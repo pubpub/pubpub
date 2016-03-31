@@ -1,32 +1,33 @@
 import React, {PropTypes} from 'react';
 import {connect} from 'react-redux';
 import Radium, {Style} from 'radium';
-// import {globalStyles} from '../../utils/styleConstants';
-import {rightBarStyles} from '../../containers/PubReader/rightBarStyles';
+import {globalStyles} from 'utils/styleConstants';
+// import {rightBarStyles} from 'containers/PubReader/rightBarStyles';
 import DiscussionsItem from './DiscussionsItem';
 import DiscussionsInput from './DiscussionsInput';
 
-import {toggleVisibility} from '../../actions/login';
-import {addDiscussion, discussionVoteSubmit, togglePubHighlights, archiveDiscussion} from '../../actions/pub';
-import {discussionVoteSubmit as discussionVoteSubmitEditor, archiveComment} from '../../actions/editor';
-import {addComment} from '../../actions/editor';
+// import Portal from 'react-portal';
+import {AssetLibrary} from 'containers';
+
+import {toggleVisibility} from 'actions/login';
+import {addDiscussion, discussionVoteSubmit, archiveDiscussion} from 'actions/discussions';
 
 import {redditHot as hotScore} from 'decay';
 
-// import {globalMessages} from '../../utils/globalMessages';
+// import {globalMessages} from 'utils/globalMessages';
 // import {FormattedMessage} from 'react-intl';
 
 let styles = {};
-
 const Discussions = React.createClass({
 	propTypes: {
 		metaID: PropTypes.string,
-		editorCommentMode: PropTypes.bool,
-		inEditor: PropTypes.bool,
-		instanceName: PropTypes.string,
+		// editorCommentMode: PropTypes.bool,
+		// inEditor: PropTypes.bool,
+		// instanceName: PropTypes.string,
 
+		discussionsData: PropTypes.object,
 		pubData: PropTypes.object,
-		editorData: PropTypes.object,
+		// editorData: PropTypes.object,
 		loginData: PropTypes.object,
 		journalData: PropTypes.object,
 
@@ -37,12 +38,30 @@ const Discussions = React.createClass({
 		dispatch: PropTypes.func,
 
 	},
-
-	getDefaultProps: function() {
+	getInitialState() {
 		return {
-			editorCommentMode: false,
-			inEditor: false,
+			showAssetLibrary: false,
+			assetLibraryCodeMirrorID: undefined,
 		};
+	},
+
+	componentWillReceiveProps(nextProps) {
+		const hasHighlight = (this.props.loginData.get('addedHighlight') === undefined && nextProps.loginData.get('addedHighlight'));
+
+		if (this.props.loginData.get('addedHighlight') === undefined && nextProps.loginData.get('addedHighlight')) {
+			const assetObject = nextProps.loginData.get('addedHighlight').toJS();
+
+			const cmInstances = document.getElementsByClassName('CodeMirror');
+
+			// return;
+
+			// for (const instance of cmInstances) {
+			const cm = cmInstances[0].CodeMirror;
+			const currentSelection = cm.getCursor();
+			const inlineObject = {pluginType: 'highlight', source: {...assetObject.assetData, ...{_id: assetObject._id} }};
+			cm.replaceRange('[[' + JSON.stringify(inlineObject) + ']]', {line: currentSelection.line, ch: currentSelection.ch});
+			// }
+		}
 	},
 
 	addDiscussion: function(discussionObject, activeSaveID) {
@@ -50,46 +69,26 @@ const Discussions = React.createClass({
 			return this.props.dispatch(toggleVisibility());
 		}
 
-		// console.log(discussionObject);
-		if (!discussionObject.markdown) {
-			return null;
-		}
+		if (!discussionObject.markdown) { return null; }
 
-		if (this.props.inEditor) {
-			discussionObject.pub = this.props.editorData.getIn(['pubEditData', '_id']);
+		const pathname = this.props.pathname;
+		if (pathname.substring(pathname.length - 6, pathname.length) === '/draft') {
+			// We are commenting from the draft, so mark it so.
 			discussionObject.version = 0;
-			discussionObject.selections = this.props.editorData.getIn(['newDiscussionData', 'selections']);
 		} else {
-			discussionObject.pub = this.props.pubData.getIn(['pubData', '_id']);
 			discussionObject.version = this.props.query.version !== undefined && this.props.query.version > 0 && this.props.query.version < (this.props.pubData.getIn(['pubData', 'history']).size - 1) ? this.props.query.version : this.props.pubData.getIn(['pubData', 'history']).size;
-			discussionObject.selections = this.props.pubData.getIn(['newDiscussionData', 'selections']);
 		}
-
-		// Check if it's a comment or discussion we're adding.
-		if (this.props.editorCommentMode) {
-			this.props.dispatch(addComment(discussionObject, activeSaveID));
-		} else {
-			this.props.dispatch(addDiscussion(discussionObject, activeSaveID, this.props.inEditor));
-		}
-
+		discussionObject.pub = this.props.pubData.getIn(['pubData', '_id']);
+		discussionObject.sourceJournal = this.props.journalData.getIn(['journalData', '_id']);
+		this.props.dispatch(addDiscussion(discussionObject, activeSaveID));
 	},
 
 	discussionVoteSubmit: function(type, discussionID, userYay, userNay) {
 		if (!this.props.loginData.get('loggedIn')) {
 			return this.props.dispatch(toggleVisibility());
 		}
-
-		if (this.props.editorCommentMode) {
-			this.props.dispatch(discussionVoteSubmitEditor(type, discussionID, userYay, userNay));
-		} else {
-			this.props.dispatch(discussionVoteSubmit(type, discussionID, userYay, userNay));
-		}
+		this.props.dispatch(discussionVoteSubmit(type, discussionID, userYay, userNay));
 	},
-
-	toggleHighlights: function() {
-		this.props.dispatch(togglePubHighlights());
-	},
-
 
 	filterDiscussions: function(discussionsData) {
 		function findDiscussionRoot(discussions, searchID) {
@@ -105,70 +104,57 @@ const Discussions = React.createClass({
 			}
 		}
 
-		// const pubData = this.getDiscussionData();
 		const output = [findDiscussionRoot(discussionsData, this.props.metaID)];
 		return output;
 	},
 
-	getDiscussionData: function() {
-		// Point to the right state source
-		let pubData = {};
-		if (this.props.inEditor) {
-			pubData = this.props.editorData.get('pubEditData') && this.props.editorData.get('pubEditData').toJS ? this.props.editorData.get('pubEditData').toJS() : {};
-		} else {
-			pubData = this.props.pubData.get('pubData') && this.props.pubData.get('pubData').toJS ? this.props.pubData.get('pubData').toJS() : {};
-		}
-		// Point to the right list of discssion items
-		let discussionsData = [];
-		if (this.props.editorCommentMode) {
-			discussionsData = pubData.editorComments;
-		} else {
-			discussionsData = pubData.discussions;
-		}
-		// Filter the items if we have a metaID
-		discussionsData = this.props.metaID ? this.filterDiscussions(discussionsData) : discussionsData;
-		// Check to make sure it's not undefined
-		discussionsData = discussionsData ? discussionsData : [];
-		return discussionsData;
-	},
-
 	archiveDiscussion: function(objectID) {
-		if (this.props.editorCommentMode) {
-			this.props.dispatch(archiveComment(objectID));
-		} else {
-			this.props.dispatch(archiveDiscussion(objectID));
-		}
+		this.props.dispatch(archiveDiscussion(objectID));
 	},
 
 	getHotness: function(discussion) {
-
-		// let points = (discussion.points) ? discussion.points : 0;
-		// points = Math.max(points, 0);
-
 		const yays = (discussion.yays) ? discussion.yays : 0;
 		const nays = (discussion.nays) ? discussion.nays : 0;
-
 		const timestamp = (discussion.postDate) ? new Date(discussion.postDate) : new Date(0);
-
 		return hotScore(yays, nays, timestamp);
 	},
 
+	toggleAssetLibrary: function(codeMirrorID) {
+		return ()=>{
+			if (!this.props.loginData.get('loggedIn')) {
+				return this.props.dispatch(toggleVisibility());
+			}
+			console.log(codeMirrorID);
+			this.setState({
+				showAssetLibrary: !this.state.showAssetLibrary,
+				assetLibraryCodeMirrorID: codeMirrorID
+			});
+		};
+
+	},
+	closeAssetLibrary: function() {
+		this.setState({
+			showAssetLibrary: false,
+			assetLibraryCodeMirrorID: undefined,
+		});
+	},
+
 	render: function() {
-		// const pubData = {discussions: []};
 
-		const discussionsData = this.getDiscussionData();
+		let discussionsData = this.props.discussionsData.get('discussions') && this.props.discussionsData.get('discussions').toJS ? this.props.discussionsData.get('discussions').toJS() : [];
+		discussionsData = this.props.metaID ? this.filterDiscussions(discussionsData) : discussionsData;
 
+		const addDiscussionStatus = this.props.discussionsData.get('addDiscussionStatus');
+		// const newDiscussionData = this.props.discussionsData.get('newDiscussionData');
+		const activeSaveID = this.props.discussionsData.get('activeSaveID');
+		const isPubAuthor = this.props.pubData.getIn(['pubData', 'isAuthor']);
+		const isPublished = this.props.pubData.getIn(['pubData', 'isPublished']);
 
-		const addDiscussionStatus = this.props.inEditor ? this.props.editorData.get('addDiscussionStatus') : this.props.pubData.get('addDiscussionStatus');
-		const newDiscussionData = this.props.inEditor ? this.props.editorData.get('newDiscussionData') : this.props.pubData.get('newDiscussionData');
-		const activeSaveID = this.props.inEditor ? this.props.editorData.get('activeSaveID') : this.props.pubData.get('activeSaveID');
-		const isPubAuthor = this.props.inEditor ? !this.props.editorData.getIn(['pubEditData', 'isReader']) : this.props.pubData.getIn(['pubData', 'isAuthor']);
+		const userAssets = this.props.loginData.getIn(['userData', 'assets']).toJS() || [];
 
-		discussionsData.sort(function(a, b) { return this.getHotness(b) - this.getHotness(a); }.bind(this));
-
+		discussionsData.sort(function(aIndex, bIndex) { return this.getHotness(bIndex) - this.getHotness(aIndex); }.bind(this));
 		return (
 			<div style={styles.container}>
-
 
 				<Style rules={{
 					'.pub-discussions-wrapper .p-block': {
@@ -176,23 +162,39 @@ const Discussions = React.createClass({
 					}
 				}} />
 
-				<div className="pub-discussions-wrapper" style={rightBarStyles.sectionWrapper}>
+				<div>
+					<div className="modal-splash" onClick={this.closeAssetLibrary} style={[styles.modalSplash, this.state.showAssetLibrary && styles.modalSplashActive]}></div>
+					<div style={[styles.assetLibraryWrapper, this.state.showAssetLibrary && styles.assetLibraryWrapperActive]}>
+						{this.state.showAssetLibrary
+							? <AssetLibrary
+								closeLibrary={this.closeAssetLibrary}
+								codeMirrorInstance={document.getElementById(this.state.assetLibraryCodeMirrorID).childNodes[0].CodeMirror} />
+							: null
+						}
+					</div>
+				</div>
+
+				<div className="pub-discussions-wrapper" style={styles.sectionWrapper}>
 					{this.props.pubData.getIn(['pubData', 'referrer', 'name'])
 						? <div>{this.props.pubData.getIn(['pubData', 'referrer', 'name'])} invites you to comment!</div>
 						: null
 					}
 
-					{this.props.metaID || (!this.props.editorCommentMode && this.props.inEditor)
+					{this.props.metaID
 						? null
 						: <DiscussionsInput
 							addDiscussionHandler={this.addDiscussion}
 							addDiscussionStatus={addDiscussionStatus}
-							newDiscussionData={newDiscussionData}
 							userThumbnail={this.props.loginData.getIn(['userData', 'thumbnail'])}
 							activeSaveID={activeSaveID}
 							saveID={'root'}
+							isCollaborator={this.props.pubData.getIn(['pubData', 'isCollaborator'])}
+							parentIsPrivate={false}
 							isReply={false}
-							codeMirrorID={this.props.instanceName + 'rootCommentInput'}/>
+							codeMirrorID={'rootCommentInput'}
+							isPublished={isPublished}
+							userAssets={userAssets}
+							toggleAssetLibrary={this.toggleAssetLibrary}/>
 					}
 
 					{
@@ -203,19 +205,19 @@ const Discussions = React.createClass({
 									key={discussion._id}
 									slug={this.props.slug}
 									discussionItem={discussion}
-									instanceName={this.props.instanceName}
 									isPubAuthor={isPubAuthor}
 
+									isCollaborator={this.props.pubData.getIn(['pubData', 'isCollaborator'])}
 									activeSaveID={activeSaveID}
 									addDiscussionHandler={this.addDiscussion}
 									addDiscussionStatus={addDiscussionStatus}
-									newDiscussionData={newDiscussionData}
 									userThumbnail={this.props.loginData.getIn(['userData', 'thumbnail'])}
 									handleVoteSubmit={this.discussionVoteSubmit}
 									handleArchive={this.archiveDiscussion}
-									noReply={!this.props.editorCommentMode && this.props.inEditor}
-									noPermalink={this.props.editorCommentMode}/>
-								: <div style={styles.emptyContainer}>No Dicussion Found</div>
+									isPublished={isPublished}
+									toggleAssetLibrary={this.toggleAssetLibrary}/>
+
+								: <div style={styles.emptyContainer}>No Discussions Found</div>
 							);
 						})
 					}
@@ -237,8 +239,8 @@ const Discussions = React.createClass({
 export default connect( state => {
 	return {
 		pubData: state.pub,
-		editorData: state.editor,
 		loginData: state.login,
+		discussionsData: state.discussions,
 		journalData: state.journal,
 		slug: state.router.params.slug,
 		pathname: state.router.location.pathname,
@@ -262,5 +264,39 @@ styles = {
 		margin: '10px auto',
 		fontFamily: 'Courier',
 		textAlign: 'center',
+	},
+	sectionWrapper: {
+		margin: '10px 0px 30px 0px',
+	},
+	modalSplash: {
+		opacity: 0,
+		pointerEvents: 'none',
+		width: '100vw',
+		height: '100vh',
+		position: 'fixed',
+		top: 0,
+		left: 0,
+		backgroundColor: 'rgba(255,255,255,0.7)',
+		transition: '.1s linear opacity',
+		zIndex: 100,
+	},
+	modalSplashActive: {
+		opacity: 1,
+		pointerEvents: 'auto',
+	},
+	assetLibraryWrapper: {
+		...globalStyles.largeModal,
+		zIndex: 150,
+		fontFamily: 'Lato',
+
+		opacity: 0,
+		pointerEvents: 'none',
+		transform: 'scale(0.9)',
+		transition: '.1s linear opacity, .1s linear transform',
+	},
+	assetLibraryWrapperActive: {
+		opacity: 1,
+		pointerEvents: 'auto',
+		transform: 'scale(1.0)',
 	},
 };

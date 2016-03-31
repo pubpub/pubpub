@@ -30,7 +30,7 @@ const TextProp = React.createClass({
 	},
 	value: function() {
 		const value = this.state.value;
-		return (value) ? '"' + value + '"' : null; // text captions have to be wrapped in quotes
+		return (value) ? value : null; // text captions have to be wrapped in quotes
 	},
 	render: function() {
 		const value = this.state.value || '';

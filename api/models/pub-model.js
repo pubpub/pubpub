@@ -1,226 +1,247 @@
-var mongoose  = require('mongoose');
-var Schema    =  mongoose.Schema;
-var ObjectId  = Schema.Types.ObjectId;
-var Discussion = require('../models').Discussion;
-var Notification = require('../models').Notification;
-var _         = require('underscore');
-
+const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
+const ObjectId = Schema.Types.ObjectId;
+const Discussion = require('../models').Discussion;
+const Notification = require('../models').Notification;
+const _ = require('underscore');
 import * as jsdiff from 'diff';
+// import {editorDefaultPageText} from 'containers/Editor/editorDefaultText';
+const editorDefaultPageText = function() { return 'test' }
 
-var pubSchema = new Schema({
+const pubSchema = new Schema({
 	slug: { type: String, required: true, index: { unique: true } },
+	title: { type: String },
+	abstract: { type: String },
+	createDate: { type: Date },
+	lastUpdated: { type: Date },
 
-	// --------------
 	// --------------
 	// The Items in this block are fozen at publish time.
 	// All changes that are made pre-update-publish are stored and synced to firebase.
 	// Their change has no reflection in the variables stored here.
 	// This is to ensure that non-published updates don't leak into the Reader
-	title: { type: String },
-	abstract: { type: String },
-	authorsNote: { type: String },
-	markdown: { type: String }, //Preprocessed with comments describing all plugin options
+	markdown: { type: String },
 	authors: [{ type: ObjectId, ref: 'User'}],
-	assets: [{ type: ObjectId, ref: 'Asset'}], //Raw sources
-	references: [{ type: ObjectId, ref: 'Reference'}], //Raw References
-	style: { type: Schema.Types.Mixed }, // Soon to be deprecated
-
-	styleRawDesktop: { type: String }, // Raw string as user input
-	styleRawMobile: { type: String }, // Raw string as user input
+	styleDesktop: { type: String }, // Raw string as user input
+	styleMobile: { type: String }, // Raw string as user input
 	styleScoped: { type: String }, // CSS scoped to proper div
 
-	lastUpdated: { type: Date },
-	status: { type: String },
+	isPublished: { type: Boolean },
 	// --------------
-	// --------------
+
+	history: [{ // History is appended to each time a 'publish' is made.
+		versionNote: { type: String },
+		versionDate: { type: Date },
+		versionAuthor: { type: ObjectId, ref: 'User'},
+
+		diffObject: {
+			additions: { type: Number },
+			deletions: { type: Number },
+			diffMarkdown: [],
+			diffStyleDesktop: [],
+			diffStyleMobile: [],
+		},
+
+		markdown: { type: String },
+		authors: [{ type: ObjectId, ref: 'User'}],
+		styleDesktop: { type: String },
+		styleMobile: { type: String },
+		styleScoped: { type: String },
+
+		isPublished: { type: Boolean },
+	}],
+
+	tags: [{ type: String }],
 
 	// A duplicate cache of the parameters as defined in the editor.
 	// Also stored here so that we can privelege access to the editor
 	// and to private pubs
 	collaborators: {
-		canEdit:[{ type: ObjectId, ref: 'User'}],
-		canRead:[{ type: ObjectId, ref: 'User'}]
+		canEdit: [{ type: ObjectId, ref: 'User'}],
+		canRead: [{ type: ObjectId, ref: 'User'}]
 	},
-
-	createDate: { type: Date },
-	htmlCache: { type: String }, // Do we want to cache the html render? It might not be any faster...
-
-	history: [{ //History is appended to each time a 'publish' is made.
-		publishNote: { type: String },
-		publishDate: { type: Date },
-		publishAuthor: { type: ObjectId, ref: 'User'},
-		diffObject: {
-			additions:  { type: Number },
-			deletions: { type: Number },
-			diffTitle: [],
-			diffAbstract: [],
-			diffAuthorsNote: [],
-			diffMarkdown: [],
-			// diffAuthors: { type: String },
-			// diffAssets: { type: String },
-			// diffReferences: { type: String },
-			// diffStyle: { type: String },
-		},
-
-		// The following should be enough to entirely reproduce the document
-		title: { type: String },
-		abstract: { type: String },
-		authorsNote: { type: String },
-		markdown: { type: String }, //Preprocessed with comments describing all plugin options
-		authors: [{ type: ObjectId, ref: 'User'}],
-		assets: [{ type: ObjectId, ref: 'Asset'}], //Raw sources
-		references: [{ type: ObjectId, ref: 'Reference'}], //Raw References
-		style: { type: Schema.Types.Mixed }, // Soon to be deprecated
-
-		styleRawDesktop: { type: String }, // Raw string as user input
-		styleRawMobile: { type: String }, // Raw string as user input
-		styleScoped: { type: String }, // CSS scoped to proper div
-
-		status: { type: String },
-	}],
 
 	followers: [{ type: ObjectId, ref: 'User'}],
+	discussions: [{ type: ObjectId, ref: 'Discussion'}],
 
-	settings:{
-		pubPrivacy: { type: String },
-	},
-
+	// An object to track all the the journals this pub is featured in
 	featuredIn: [{
 		journal: { type: ObjectId, ref: 'Journal' },
 		date: { type: Date },
 		by: { type: ObjectId, ref: 'User' },
 		note: { type: String },
 	}],
-	featuredInList: [{type: ObjectId, ref: 'Journal' }],
+	featuredInList: [{type: ObjectId, ref: 'Journal' }], // A aggregate of the journal value in the featuredIn field - used for querying simplicity
 
+	// An object to track all the the journals this pub is submitted to
 	submittedTo: [{
 		journal: { type: ObjectId, ref: 'Journal' },
 		date: { type: Date },
 		by: { type: ObjectId, ref: 'User' },
 		note: { type: String },
 	}],
-	submittedToList: [{type: ObjectId, ref: 'Journal' }],
+	submittedToList: [{type: ObjectId, ref: 'Journal' }], // A aggregate of the journal value in the submittedTo field - used for querying simplicity
 
-	reviews: [{
-		doneWell: [{ type: String }],
-		needsWork: [{ type: String }],
-		reviewer: { type: ObjectId, ref: 'User' },
-		// weightLocal: 245, // dynamically calculated based on yays/nays on pub comments
-		// weightGlobal: 1230 // Snapshot of reputation at moment of review. static
-	}],
+	// Pages are pubs that are designed to be use as site pages in journals
+	// e.g. the landing page, an about page, etc.
+	// They are the same as a pub, but with a different default css
+	isPage: {type: Boolean},
 
-	discussions: [ { type: ObjectId, ref: 'Discussion' } ],
-	editorComments: [ { type: ObjectId, ref: 'Discussion' } ],
-	experts: {
-		approved: [{
-			// When approved, experts are notified
-			// If they have not participated in the paper,
-			// their name does not appear in the list
-			// We can sort 'invited' experts by those that
-			// have been made an expert, but haven't participated.
-			expert: { type: ObjectId, ref: 'User' },
-			approvedBy: { type: ObjectId, ref: 'User' },
-			approvedDate: { type: Date },
-		}],
-		suggested: [{
-			suggestedExpert: { type: ObjectId, ref: 'User' },
-			votes: [{ type: ObjectId, ref: 'User' }],
-			submitter: { type: ObjectId, ref: 'User' },
-			submitDate: { type: Date },
-		}]
-	},
-
-	analytics: { //Do we cache these every so often? Or calculate them dynamically?
-		views: [{ type: String }],
-		citations: [{ type: ObjectId, ref: 'Asset' }], // A list of the refernce assets that cite it?
-		inTheNews: [{ type: String }],
-	},
-
-	readNext: [{ type: ObjectId, ref: 'Pub' }], //Do we cache these every so often? Or calculate them dynamically?
-})
+});
 
 
-pubSchema.statics.isUnique = function (slug,callback) {
+pubSchema.statics.isUnique = function(slug, callback) {
 
-	this.findOne({'slug':slug})
-	.exec(function (err, pub) {
-			if (err) return callback(err);
-			// if (err) return res.json(500);
+	this.findOne({'slug': slug})
+	.exec(function(err, pub) {
+		if (err) return callback(err);
+		// if (err) return res.json(500);
 
-			if(pub!=null){ //We found a pub
-				return callback(null,false);  //False - is not unique
-			}else{ //We did not find a pub
-				return callback(null,true) //True -  is unique.
-			}
-		});
+		if (pub !== null) { // We found a pub
+			return callback(null, false);  // False - is not unique
+		}
+		// We did not find a pub
+		return callback(null, true); // True -  is unique.
+	});
 };
 
-pubSchema.statics.getSimplePub = function (id,callback) {
+pubSchema.statics.getSimplePub = function(id, callback) {
 	this.findById(id)
 	.exec((err, pub)=> {
-		callback(err,pub);
+		callback(err, pub);
 	});
 
 
 };
 
+pubSchema.statics.createPub = function(slug, title, userID, isPage, callback) {
+	const pub = new this({
+		slug: slug,
+		title: title,
+		abstract: 'Type your abstract here! Your abstract will be used to help users search for pubs throughout the site.',
+		markdown: isPage ? editorDefaultPageText(title) : undefined,
+		collaborators: {
+			canEdit: [userID],
+			canRead: []
+		},
+		createDate: new Date().getTime(),
+		isPublished: false,
+		history: [],
+		followers: [],
+		discussions: [],
+		featuredIn: [],
+		featuredInList: [],
+		submittedTo: [],
+		submittedToList: [],
+		isPage: isPage,
+	});
+	// console.log(pub);
 
-pubSchema.statics.getPub = function (slug, readerID, journalID, callback) {
-	this.findOne({slug: slug})
-	.populate({ path: 'discussions', model: 'Discussion' })
-	.populate({ path: 'assets history.assets', model: 'Asset' })
-	.populate({ path: 'references history.references', model: 'Reference' })
-	.populate({ path: 'featuredIn.journal submittedTo.journal', select: 'journalName subdomain customDomain design', model: 'Journal' })
-	.populate({ path: 'authors history.authors', select: 'username name thumbnail firstName lastName', model: 'User' })
-	.exec((err, pub)=> {
-		const options = [
-			{ path: 'discussions.author', select: '_id username name firstName lastName thumbnail', model: 'User'},
-			{ path: 'discussions.selections', model: 'Highlight'}
-		];
+	pub.save(function(err, savedPub) {
+		if (err) { return callback(err, null); }
 
-		this.populate(pub, options, (err, populatedPub)=> {
-			if (err) { return callback(err, null); }
+		return callback(null, savedPub);
 
-			if (!populatedPub) { return callback(null, {message: 'Pub Not Found', slug: slug}); }
+	});
 
-			// Check if the pub is not allowed in the journal
-			if (journalID && String(populatedPub.featuredInList).indexOf(journalID) === -1 && String(populatedPub.submittedToList).indexOf(journalID) === -1) {
-				return callback(null, {message: 'Pub not in this journal', slug: slug});
-			}
-
-			if (populatedPub.status === 'Unpublished') { return callback(null, {message: 'Pub not yet published', slug: slug}); }
-
-			// Check if the pub is private, and if so, check readers/authors list
-			// if (populatedPub.settings.pubPrivacy === 'private') {
-			// 	if (populatedPub.collaborators.canEdit.indexOf(readerID) === -1 && populatedPub.collaborators.canRead.indexOf(readerID) === -1) {
-			// 		return callback(null, {message: 'Private Pub', slug: slug});
-			// 	}
-			// }
-
-			// Mark all notifcations about this pub for this reader as 'sent' (i.e. don't send an email, but keep it unread until they go to notifications page)
-			Notification.setSent({pub: populatedPub._id, recipient: readerID}, ()=>{});
-
-			const outputPub = populatedPub.toObject();
-			if (populatedPub.collaborators.canEdit.indexOf(readerID) > -1) {
-				outputPub.isAuthor = true;
-			}
-
-			outputPub.discussions = Discussion.appendUserYayNayFlag(outputPub.discussions, readerID);
-			outputPub.discussions = Discussion.calculateYayNayScore(outputPub.discussions);
-			outputPub.discussions = Discussion.sortDiscussions(outputPub.discussions);
-			outputPub.discussions = Discussion.nestChildren(outputPub.discussions);
-			// console.log(outputPub.isAuthor);
-			return callback(null, outputPub);
-		});
-
-	})
 };
 
-pubSchema.statics.getPubEdit = function (slug, readerID, readerGroups, callback) {
+pubSchema.statics.getPub = function(slug, readerID, readerGroups, readerAdminJournals, journalID, callback) {
+	this.findOne({slug: slug})
+	// .populate({ path: 'discussions', model: 'Discussion' })
+	// .populate({ path: 'assets history.assets', model: 'Asset' })
+	// .populate({ path: 'references history.references', model: 'Reference' })
+	.populate({
+		path: 'discussions',
+		model: 'Discussion',
+		populate: {
+			path: 'author',
+			model: 'User',
+			select: 'name firstName lastName username thumbnail',
+		},
+	})
+	.populate({ path: 'featuredIn.journal submittedTo.journal', select: 'journalName subdomain customDomain design', model: 'Journal' })
+	.populate({ path: 'authors history.authors', select: 'username name thumbnail firstName lastName', model: 'User' })
+	.exec((err, populatedPub)=> {
+		// const options = [
+		// 	{ path: 'discussions.author', select: '_id username name firstName lastName thumbnail', model: 'User'},
+		// 	// { path: 'discussions.selections', model: 'Highlight'}
+		// ];
+
+		// this.populate(pub, options, (err, populatedPub)=> {
+		if (err) { return callback(err, null); }
+
+		if (!populatedPub) { return callback(null, {message: 'Pub Not Found', slug: slug}); }
+
+		if (!populatedPub.history.length) { return callback(null, {message: 'No versions saved', slug: slug}); }
+
+		if (!populatedPub.isPublished && !readerID) { return callback(null, {message: 'Pub not yet published', slug: slug}); }
+
+		let isCollaborator = true;
+		const readerGroupsStrings = readerGroups.length ? readerGroups.toString().split(',') : [];
+		const readerAdminJournalsStrings = readerAdminJournals.length ? readerAdminJournals.toString().split(',') : [];
+		const canReadStrings = populatedPub.collaborators.canRead.length ? populatedPub.collaborators.canRead.toString().split(',') : [];
+		const canEditStrings = populatedPub.collaborators.canEdit.length ? populatedPub.collaborators.canEdit.toString().split(',') : [];
+		if (!readerID ||
+			(readerID.toString() !== '568abdd9332c142a0095117f' &&
+			canEditStrings.indexOf(readerID.toString()) === -1 &&
+			canReadStrings.indexOf(readerID.toString()) === -1 &&
+			_.intersection(readerAdminJournalsStrings, canEditStrings).length === 0 &&
+			_.intersection(readerGroupsStrings, canEditStrings).length === 0 &&
+			_.intersection(readerGroupsStrings, canReadStrings).length === 0)) {
+			isCollaborator = false;
+		}
+		if (!populatedPub.isPublished && !isCollaborator) {
+			return callback(null, {message: 'Pub not yet published', slug: slug});
+		}
+
+		// Check if the pub is not allowed in the journal
+		if (journalID && String(populatedPub.featuredInList).indexOf(journalID) === -1 && String(populatedPub.submittedToList).indexOf(journalID) === -1) {
+			return callback(null, {message: 'Pub not in this journal', slug: slug});
+		}
+
+		// Check if the pub is private, and if so, check readers/authors list
+		// if (populatedPub.settings.pubPrivacy === 'private') {
+		// 	if (populatedPub.collaborators.canEdit.indexOf(readerID) === -1 && populatedPub.collaborators.canRead.indexOf(readerID) === -1) {
+		// 		return callback(null, {message: 'Private Pub', slug: slug});
+		// 	}
+		// }
+
+		// Mark all notifcations about this pub for this reader as 'sent' (i.e. don't send an email, but keep it unread until they go to notifications page)
+		Notification.setSent({pub: populatedPub._id, recipient: readerID}, ()=>{});
+
+		const outputPub = populatedPub.toObject();
+		if (populatedPub.collaborators.canEdit.indexOf(readerID) > -1) {
+			outputPub.isAuthor = true;
+		}
+		outputPub.isCollaborator = isCollaborator;
+		outputPub.discussions = Discussion.removePrivateIfNeeded(outputPub.discussions, isCollaborator);
+		outputPub.discussions = Discussion.appendUserYayNayFlag(outputPub.discussions, readerID);
+		outputPub.discussions = Discussion.appendIsAuthor(outputPub.discussions, readerID);
+		outputPub.discussions = Discussion.calculateYayNayScore(outputPub.discussions);
+		outputPub.discussions = Discussion.sortDiscussions(outputPub.discussions);
+		outputPub.discussions = Discussion.nestChildren(outputPub.discussions);
+		// console.log(outputPub.isAuthor);
+		return callback(null, outputPub);
+		// });
+
+	});
+};
+
+pubSchema.statics.getPubEdit = function(slug, readerID, readerGroups, readerAdminJournals, callback) {
 	// Get the pub and check to make sure user is authorized to edit
 	this.findOne({slug: slug})
-	.populate({ path: 'discussions', model: 'Discussion' })
-	.populate({ path: 'editorComments', model: 'Discussion' })
+	.populate({
+		path: 'discussions',
+		model: 'Discussion',
+		populate: {
+			path: 'author',
+			model: 'User',
+			select: 'name firstName lastName username thumbnail',
+		},
+	})
+	// .populate({ path: 'discussions', model: 'Discussion' })
+	// .populate({ path: 'editorComments', model: 'Discussion' })
 	.exec((err, pub) =>{
 		if (err) { return callback(err, null); }
 
@@ -229,19 +250,24 @@ pubSchema.statics.getPubEdit = function (slug, readerID, readerGroups, callback)
 		if (!readerID) { return callback(null, 'Not Authorized', true); }
 
 		const readerGroupsStrings = readerGroups.length ? readerGroups.toString().split(',') : [];
+		const readerAdminJournalsStrings = readerAdminJournals.length ? readerAdminJournals.toString().split(',') : [];
 		const canReadStrings = pub.collaborators.canRead.length ? pub.collaborators.canRead.toString().split(',') : [];
 		const canEditStrings = pub.collaborators.canEdit.length ? pub.collaborators.canEdit.toString().split(',') : [];
 
 		if (readerID.toString() !== '568abdd9332c142a0095117f' &&
-			canEditStrings.indexOf(readerID.toString()) === -1 && 
-			canReadStrings.indexOf(readerID.toString()) === -1 && 
-			_.intersection(readerGroupsStrings, canEditStrings).length === 0 && 
+			canEditStrings.indexOf(readerID.toString()) === -1 &&
+			canReadStrings.indexOf(readerID.toString()) === -1 &&
+			_.intersection(readerAdminJournalsStrings, canEditStrings).length === 0 &&
+			_.intersection(readerGroupsStrings, canEditStrings).length === 0 &&
 			_.intersection(readerGroupsStrings, canReadStrings).length === 0) {
 			return callback(null, 'Not Authorized', true);
 		}
 
 		let isReader = true;
-		if (canEditStrings.indexOf(readerID.toString()) > -1 || _.intersection(readerGroupsStrings, canEditStrings).length || readerID.toString() === '568abdd9332c142a0095117f') {
+		if (readerID.toString() === '568abdd9332c142a0095117f' ||
+			canEditStrings.indexOf(readerID.toString()) > -1 ||
+			_.intersection(readerGroupsStrings, canEditStrings).length ||
+			_.intersection(readerAdminJournalsStrings, canEditStrings).length) {
 			isReader = false;
 		}
 
@@ -251,30 +277,31 @@ pubSchema.statics.getPubEdit = function (slug, readerID, readerGroups, callback)
 		// You can go and publish draft...
 
 		// We gotta pass down discussions if we want to show in editor
-		const options = [
-			{ path: 'discussions.author', select: '_id username name firstName lastName thumbnail', model: 'User'},
-			{ path: 'discussions.selections', model: 'Highlight'},
-			{ path: 'editorComments.author', select: '_id username name firstName lastName thumbnail', model: 'User'},
-			{ path: 'editorComments.selections', model: 'Highlight'},
-		];
+		// const options = [
+			// { path: 'discussions.author', select: '_id username name firstName lastName thumbnail', model: 'User'},
+			// { path: 'discussions.selections', model: 'Highlight'},
+			// { path: 'editorComments.author', select: '_id username name firstName lastName thumbnail', model: 'User'},
+			// { path: 'editorComments.selections', model: 'Highlight'},
+		// ];
 
-		this.populate(pub, options, (err, populatedPub)=> {
-			if (err) { return callback(err, null); }
-			const outputPub = populatedPub.toObject();
-			outputPub.isReader = isReader;
+		// this.populate(pub, options, (err, populatedPub)=> {
+		if (err) { return callback(err, null); }
+		const outputPub = pub.toObject();
+		outputPub.isReader = isReader;
 
-			outputPub.discussions = Discussion.appendUserYayNayFlag(outputPub.discussions, readerID);
-			outputPub.discussions = Discussion.calculateYayNayScore(outputPub.discussions);
-			outputPub.discussions = Discussion.sortDiscussions(outputPub.discussions);
-			outputPub.discussions = Discussion.nestChildren(outputPub.discussions);
+		outputPub.discussions = Discussion.appendUserYayNayFlag(outputPub.discussions, readerID);
+		outputPub.discussions = Discussion.appendIsAuthor(outputPub.discussions, readerID);
+		outputPub.discussions = Discussion.calculateYayNayScore(outputPub.discussions);
+		outputPub.discussions = Discussion.sortDiscussions(outputPub.discussions);
+		outputPub.discussions = Discussion.nestChildren(outputPub.discussions);
 
-			outputPub.editorComments = Discussion.appendUserYayNayFlag(outputPub.editorComments, readerID);
-			outputPub.editorComments = Discussion.calculateYayNayScore(outputPub.editorComments);
-			outputPub.editorComments = Discussion.sortDiscussions(outputPub.editorComments);
-			outputPub.editorComments = Discussion.nestChildren(outputPub.editorComments);
+			// outputPub.editorComments = Discussion.appendUserYayNayFlag(outputPub.editorComments, readerID);
+			// outputPub.editorComments = Discussion.calculateYayNayScore(outputPub.editorComments);
+			// outputPub.editorComments = Discussion.sortDiscussions(outputPub.editorComments);
+			// outputPub.editorComments = Discussion.nestChildren(outputPub.editorComments);
 
-			return callback(null, outputPub);
-		});
+		return callback(null, outputPub);
+		// });
 
 		// return callback(null, {});
 
@@ -283,39 +310,31 @@ pubSchema.statics.getPubEdit = function (slug, readerID, readerGroups, callback)
 };
 
 pubSchema.statics.generateDiffObject = function(oldPubObject, newPubObject) {
+	// Diff each item in object and store output
+	// Iterate over to calculate total additions, deletions
 
-	const t0 = new Date();
 	const outputObject = {};
-	outputObject.diffTitle = jsdiff.diffWords(oldPubObject.title, newPubObject.title, {newlineIsToken: true});
-	outputObject.diffAbstract = jsdiff.diffWords(oldPubObject.abstract, newPubObject.abstract, {newlineIsToken: true});
-	outputObject.diffAuthorsNote = jsdiff.diffWords(oldPubObject.authorsNote, newPubObject.authorsNote, {newlineIsToken: true});
-	if (newPubObject.slug === 'cdmxglobal') {
-		outputObject.diffMarkdown = jsdiff.diffSentences(oldPubObject.markdown, newPubObject.markdown, {newlineIsToken: true});
-	} else {
-		outputObject.diffMarkdown = jsdiff.diffWords(oldPubObject.markdown, newPubObject.markdown, {newlineIsToken: true});
-	}
-
-
+	outputObject.diffMarkdown = jsdiff.diffWords(oldPubObject.markdown || '', newPubObject.markdown || '', {newlineIsToken: true});
+	outputObject.diffStyleDesktop = jsdiff.diffWords(oldPubObject.styleDesktop || '', newPubObject.styleDesktop || '', {newlineIsToken: true});
+	outputObject.diffStyleMobile = jsdiff.diffWords(oldPubObject.styleMobile || '', newPubObject.styleMobile || '', {newlineIsToken: true});
 
 	let additions = 0;
 	let deletions = 0;
 	for (const key in outputObject) {
-		outputObject[key].map((diffArrayItem)=>{
-			if (diffArrayItem.added) {
-				additions += 1;
-			}
-			if (diffArrayItem.removed) {
-				deletions += 1;
-			}
-		});
+		if (outputObject.hasOwnProperty(key)) {
+			outputObject[key].map((diffArrayItem)=>{
+				if (diffArrayItem.added) {
+					additions += 1;
+				}
+				if (diffArrayItem.removed) {
+					deletions += 1;
+				}
+			});
+		}
 	}
 
 	outputObject.additions = additions;
 	outputObject.deletions = deletions;
-	const t1 =  new Date() - t0;
-	// console.info("Execution time: %dms", t1);
-	// console.log('outputObject', outputObject);
-
 	return outputObject;
 
 };
@@ -326,7 +345,7 @@ pubSchema.statics.addJournalFeatured = function(pubID, journalID, adminID) {
 		date: new Date().getTime(),
 		by: adminID,
 	};
-	this.update({ _id: pubID }, { $addToSet: { 'featuredInList': journalID, 'featuredIn': featureObject} }, function(err, result){if(err) console.log('Error in addJournalFeatured ', err);});
+	this.update({ _id: pubID }, { $addToSet: { 'featuredInList': journalID, 'featuredIn': featureObject} }, function(err, result) {if (err) console.log('Error in addJournalFeatured ', err);});
 };
 
 pubSchema.statics.addJournalSubmitted = function(pubID, journalID, userID) {
@@ -335,30 +354,30 @@ pubSchema.statics.addJournalSubmitted = function(pubID, journalID, userID) {
 		date: new Date().getTime(),
 		by: userID,
 	};
-	this.update({ _id: pubID }, { $addToSet: { 'submittedToList': journalID, 'submittedTo': submittedObject} }, function(err, result){if(err) console.log('Error in addJournalSubmitted ', err);});
+	this.update({ _id: pubID }, { $addToSet: { 'submittedToList': journalID, 'submittedTo': submittedObject} }, function(err, result) {if (err) console.log('Error in addJournalSubmitted ', err);});
 };
 
 pubSchema.statics.getRandomSlug = function(journalID, callback) {
-	var objects = [];
-	var query = {history: {$not: {$size: 0}},'settings.isPrivate': {$ne: true}};
-	if(journalID){
-		query['featuredInList'] = journalID;
+	const query = {history: {$not: {$size: 0}}, 'isPublished': true};
+	if (journalID) {
+		query.featuredInList = journalID;
 	}
 
-	this.count(query, {'slug':1}).exec((err, count)=> {
-		if (err){ return callback(err, null); }
+	this.count(query, {slug: 1}).exec((err, count)=> {
+		if (err) { return callback(err, null); }
 
-		const skip = Math.floor(Math.random()*count);
+		const skip = Math.floor(Math.random() * count);
 
-		this.find(query, {'slug':1}).skip(skip).limit(1).exec((err, pub)=> {
-				if (err){ return callback(err, null); }
+		this.find(query, {slug: 1}).skip(skip).limit(1).exec((errFind, pub)=> {
+			if (errFind) { return callback(errFind, null); }
 
-				if(!pub[0]){ return callback(err, null); }
+			if (!pub[0]) { return callback(errFind, null); }
 
-				return callback(null, pub[0].slug);
+			return callback(null, pub[0].slug);
 		});
 
 	});
 };
 
+// module.exports = mongoose.model('Pub', pubSchema, 'newpub');
 module.exports = mongoose.model('Pub', pubSchema);

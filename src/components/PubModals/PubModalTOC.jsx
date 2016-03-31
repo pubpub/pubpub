@@ -2,10 +2,10 @@ import React, { PropTypes } from 'react';
 import Radium from 'radium';
 import {baseStyles} from './pubModalStyle';
 import PubModalTOCRow from './PubModalTOCRow';
-// import {globalStyles} from '../../utils/styleConstants';
-import smoothScroll from '../../utils/smoothscroll';
+// import {globalStyles} from 'utils/styleConstants';
+import smoothScroll from 'utils/smoothscroll';
 
-import {globalMessages} from '../../utils/globalMessages';
+import {globalMessages} from 'utils/globalMessages';
 import {FormattedMessage} from 'react-intl';
 
 // let styles = {};

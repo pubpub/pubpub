@@ -1,6 +1,6 @@
 // CodeMirror styles function can be
 // used to dynamically change font, size, color, etc
-import Plugins from '../../components/EditorPlugins/index';
+import Plugins from 'components/EditorPlugins/index';
 
 export function codeMirrorStyles(loginData, parentClass) {
 	const editorFont = loginData ? loginData.getIn(['userData', 'settings', 'editorFont']) : undefined;
@@ -42,9 +42,9 @@ export function codeMirrorStyles(loginData, parentClass) {
 	switch (editorColor) {
 	case 'light':
 		editorStyles.cursorColor = '#000';
-		editorStyles.color = '#555';
-		editorStyles.colorHeader = '#676767';
-		editorStyles.colorTitle = '#575757';
+		editorStyles.color = '#333';
+		editorStyles.colorHeader = '#474747';
+		// editorStyles.colorTitle = '#575757';
 		editorStyles.colorPPM = '#474747';
 		editorStyles.colorCite = '#171717';
 		editorStyles.colorPagebreak = '#aaa';
@@ -56,13 +56,13 @@ export function codeMirrorStyles(loginData, parentClass) {
 		editorStyles.colorTitle = '#ccc';
 		editorStyles.colorPPM = '#eee';
 		editorStyles.colorCite = '#fff';
-		editorStyles.colorPagebreak = '#555';
+		editorStyles.colorPagebreak = '#333';
 		break;
 	default:
 		editorStyles.cursorColor = '#000';
-		editorStyles.color = '#555';
-		editorStyles.colorHeader = '#676767';
-		editorStyles.colorTitle = '#575757';
+		editorStyles.color = '#333';
+		editorStyles.colorHeader = '#474747';
+		// editorStyles.colorTitle = '#575757';
 		editorStyles.colorPPM = '#474747';
 		editorStyles.colorCite = '#171717';
 		editorStyles.colorPagebreak = '#aaa';
@@ -101,6 +101,9 @@ export function codeMirrorStyles(loginData, parentClass) {
 		'.CodeMirror .cm-spell-error': {
 			borderBottom: '1px dotted red',
 		},
+		'.CodeMirror .cm-comment': {
+			color: 'inherit',
+		},
 		'.CodeMirror pre.CodeMirror-placeholder': {
 			color: '#999',
 		},
@@ -119,24 +122,29 @@ export function codeMirrorStyles(loginData, parentClass) {
 		'.cm-ppm': {
 			color: editorStyles.colorPPM,
 		},
-		'.cm-ppm-title': {
-			fontSize: '23px',
-			color: editorStyles.colorTitle,
+		'.cm-pubheadertitle': {
+			fontSize: '26px',
+			color: editorStyles.colorHeader,
 			fontWeight: 'bold',
 		},
-		'.cm-ppm-abstract': {
-			fontSize: '16px',
+		'.cm-pubheaderkey': {
+			fontSize: '15px',
+			color: editorStyles.colorHeader,
+			fontWeight: 'bold',
 		},
-		'.cm-ppm-authorsNote': {
-			fontSize: '16px',
-		},
+		// '.cm-ppm-abstract': {
+		// 	fontSize: '16px',
+		// },
+		// '.cm-ppm-authorsNote': {
+		// 	fontSize: '16px',
+		// },
 		'.cm-ppm-math': {
 			fontStyle: 'italic',
 		},
 		'.cm-plugin': {
 			cursor: 'pointer',
 			borderRadius: '2px',
-			color: '#555',
+			color: '#333',
 			fontFamily: 'Courier',
 		},
 		'.cm-ppm-pagebreak': {
@@ -195,9 +203,20 @@ export const codeMirrorStyleClasses = {
 		width: '250px',
 		left: '-110px',
 		textAlign: 'center',
-		bottom: '-20px',
+		bottom: '-21px',
 		height: '20px',
 		lineHeight: '20px',
 		backgroundColor: '#F5F5F5',
+	},
+	// 'body div #editor-text-wrapper .CodeMirror-code pre:first-of-type': {
+	// 	borderBottom: '1px solid rgba(0,0,0,0.2)',
+	// 	fontSize: '33px',
+	// 	fontWeight: 'bold',
+	// },
+	'.menuItem-saveStatus': {
+		fontFamily: 'Courier',
+		fontSize: '15px',
+		paddingTop: '2px !important',
+		color: '#AAA',
 	},
 };

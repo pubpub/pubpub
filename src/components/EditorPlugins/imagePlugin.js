@@ -23,6 +23,8 @@ const IMG_CLASS = 'pub-img';
 
 // let styles = {};
 
+const ImageEditorWidget = (inputProps) => (<span>Image: {(((inputProps.source) ? inputProps.source.label : false) || 'Empty')}</span>);
+
 const ImagePlugin = React.createClass({
 	propTypes: {
 		error: PropTypes.string,
@@ -46,10 +48,11 @@ const ImagePlugin = React.createClass({
 	},
 	render: function() {
 		// const refName = this.props.children;
-		if (!this.props.source || !this.props.source.url_s3) {
+		if (!this.props.source || !this.props.source.url) {
 			return (<span></span>);
 		}
-		const url = this.props.source.url_s3;
+		// debugger;
+		const url = this.props.source.url;
 		const size = this.props.size;
 		const align = this.props.align ? this.props.align : 'full';
 		const caption = this.props.caption;
@@ -65,4 +68,4 @@ const ImagePlugin = React.createClass({
 	}
 });
 
-export default createPubPubPlugin(ImagePlugin, ImageConfig, ImageInputFields);
+export default createPubPubPlugin(ImagePlugin, ImageConfig, ImageInputFields, ImageEditorWidget);

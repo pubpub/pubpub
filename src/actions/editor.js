@@ -1,7 +1,7 @@
 /*--------*/
 // Define Action types
-// 
-// All action types are defined as constants. Do not manually pass action 
+//
+// All action types are defined as constants. Do not manually pass action
 // types as strings in action creators
 /*--------*/
 export const LOAD_PUB_EDIT = 'editor/LOAD_PUB_EDIT';
@@ -17,11 +17,11 @@ export const MODAL_OPEN = 'editor/MODAL_OPEN';
 
 export const PUB_EDIT_UNMOUNT = 'editor/PUB_EDIT_UNMOUNT';
 
-export const ADD_SELECTION = 'editor/ADD_SELECTION';
-
-export const ADD_COMMENT = 'pub/ADD_COMMENT';
-export const ADD_COMMENT_SUCCESS = 'pub/ADD_COMMENT_SUCCESS';
-export const ADD_COMMENT_FAIL = 'pub/ADD_COMMENT_FAIL';
+// export const ADD_SELECTION = 'editor/ADD_SELECTION';
+//
+// export const ADD_COMMENT = 'pub/ADD_COMMENT';
+// export const ADD_COMMENT_SUCCESS = 'pub/ADD_COMMENT_SUCCESS';
+// export const ADD_COMMENT_FAIL = 'pub/ADD_COMMENT_FAIL';
 
 export const UPDATE_COLLABORATORS_LOAD = 'editor/UPDATE_COLLABORATORS_LOAD';
 export const UPDATE_COLLABORATORS_SUCCESS = 'editor/UPDATE_COLLABORATORS_SUCCESS';
@@ -39,21 +39,21 @@ export const UPDATE_PUB_BACKEND_DATA_LOAD = 'editor/UPDATE_PUB_BACKEND_DATA_LOAD
 export const UPDATE_PUB_BACKEND_DATA_SUCCESS = 'editor/UPDATE_PUB_BACKEND_DATA_SUCCESS';
 export const UPDATE_PUB_BACKEND_DATA_FAIL = 'editor/UPDATE_PUB_BACKEND_DATA_FAIL';
 
-export const PUBLISH_LOAD = 'editor/PUBLISH_LOAD';
-export const PUBLISH_SUCCESS = 'editor/PUBLISH_SUCCESS';
-export const PUBLISH_FAIL = 'editor/PUBLISH_FAIL';
+export const SAVE_VERSION_LOAD = 'editor/SAVE_VERSION_LOAD';
+export const SAVE_VERSION_SUCCESS = 'editor/SAVE_VERSION_SUCCESS';
+export const SAVE_VERSION_FAIL = 'editor/SAVE_VERSION_FAIL';
 
-export const DISCUSSION_VOTE = 'editor/DISCUSSION_VOTE';
-export const DISCUSSION_VOTE_SUCCESS = 'editor/DISCUSSION_VOTE_SUCCESS';
-export const DISCUSSION_VOTE_FAIL = 'editor/DISCUSSION_VOTE_FAIL';
-
-export const ARCHIVE_COMMENT_LOAD = 'pub/ARCHIVE_COMMENT_LOAD';
-export const ARCHIVE_COMMENT_SUCCESS = 'pub/ARCHIVE_COMMENT_SUCCESS';
-export const ARCHIVE_COMMENT_FAIL = 'pub/ARCHIVE_COMMENT_FAIL';
+// export const DISCUSSION_VOTE = 'editor/DISCUSSION_VOTE';
+// export const DISCUSSION_VOTE_SUCCESS = 'editor/DISCUSSION_VOTE_SUCCESS';
+// export const DISCUSSION_VOTE_FAIL = 'editor/DISCUSSION_VOTE_FAIL';
+//
+// export const ARCHIVE_COMMENT_LOAD = 'pub/ARCHIVE_COMMENT_LOAD';
+// export const ARCHIVE_COMMENT_SUCCESS = 'pub/ARCHIVE_COMMENT_SUCCESS';
+// export const ARCHIVE_COMMENT_FAIL = 'pub/ARCHIVE_COMMENT_FAIL';
 
 /*--------*/
 // Define Action creators
-// 
+//
 // All calls to dispatch() call one of these functions. Do not manually create
 // action objects (e.g. {type:example, payload:data} ) within dispatch()
 // function calls
@@ -61,24 +61,25 @@ export const ARCHIVE_COMMENT_FAIL = 'pub/ARCHIVE_COMMENT_FAIL';
 export function getPubEdit(slug) {
 	return {
 		types: [LOAD_PUB_EDIT, LOAD_PUB_EDIT_SUCCESS, LOAD_PUB_EDIT_FAIL],
-		promise: (client) => client.get('/getPubEdit', {params: {slug: slug}}) 
+		promise: (client) => client.get('/getPubEdit', {params: {slug: slug}})
 	};
 }
 
-export function publishVersion(newVersion) {
+export function saveVersion(newVersion) {
 	return {
-		types: [PUBLISH_LOAD, PUBLISH_SUCCESS, PUBLISH_FAIL],
-		promise: (client) => client.post('/publishPub', {data: {newVersion: newVersion}}) 
+		types: [SAVE_VERSION_LOAD, SAVE_VERSION_SUCCESS, SAVE_VERSION_FAIL],
+		promise: (client) => client.post('/saveVersionPub', {data: {newVersion: newVersion}})
 	};
 }
 
-export function saveStyle(styleDesktop, styleMobile) {
+export function saveStyle(styleDesktop, styleMobile, isPage) {
 	return {
 		types: [SAVE_STYLE_LOAD, SAVE_STYLE_SUCCESS, SAVE_STYLE_FAIL],
 		promise: (client) => client.post('/transformStyle', {data: {
 			styleDesktop: styleDesktop,
-			styleMobile: styleMobile
-		}}) 
+			styleMobile: styleMobile,
+			isPage: isPage
+		}})
 	};
 }
 
@@ -127,12 +128,12 @@ export function openModal(activeModal) {
 	};
 }
 
-export function addSelection(selection) {
-	return {
-		type: ADD_SELECTION,
-		selection: selection,
-	};	
-}
+// export function addSelection(selection) {
+// 	return {
+// 		type: ADD_SELECTION,
+// 		selection: selection,
+// 	};
+// }
 
 export function saveCollaboratorsToPub(newCollaborators, removedUser, slug) {
 	return {
@@ -141,19 +142,19 @@ export function saveCollaboratorsToPub(newCollaborators, removedUser, slug) {
 			newCollaborators: newCollaborators,
 			removedUser: removedUser,
 			slug: slug
-		}}) 
+		}})
 	};
 }
 
-export function saveSettingsPubPub(slug, newSettings) {
-	return {
-		types: [UPDATE_PUB_SETTINGS_LOAD, UPDATE_PUB_SETTINGS_SUCCESS, UPDATE_PUB_SETTINGS_FAIL],
-		promise: (client) => client.post('/updatePubSettings', {data: {
-			slug: slug,
-			newSettings: newSettings
-		}}) 
-	};
-}
+// export function saveSettingsPubPub(slug, newSettings) {
+// 	return {
+// 		types: [UPDATE_PUB_SETTINGS_LOAD, UPDATE_PUB_SETTINGS_SUCCESS, UPDATE_PUB_SETTINGS_FAIL],
+// 		promise: (client) => client.post('/updatePubSettings', {data: {
+// 			slug: slug,
+// 			newSettings: newSettings
+// 		}})
+// 	};
+// }
 
 export function updatePubBackendData(slug, newPubData) {
 	return {
@@ -161,33 +162,33 @@ export function updatePubBackendData(slug, newPubData) {
 		promise: (client) => client.post('/updatePubData', {data: {
 			slug: slug,
 			newPubData: newPubData
-		}}) 
+		}})
 	};
 }
 
-export function addComment(discussionObject, activeSaveID) {
-	return {
-		types: [ADD_COMMENT, ADD_COMMENT_SUCCESS, ADD_COMMENT_FAIL],
-		promise: (client) => client.post('/addDiscussion', {data: {discussionObject: discussionObject, isEditorComment: true}}),
-		activeSaveID: activeSaveID 
-	};
-}
-
-export function archiveComment(objectID) {
-	return {
-		types: [ARCHIVE_COMMENT_LOAD, ARCHIVE_COMMENT_SUCCESS, ARCHIVE_COMMENT_FAIL],
-		promise: (client) => client.post('/discussionArchive', {data: {objectID: objectID}}),
-		objectID: objectID,
-	};
-}
-
-export function discussionVoteSubmit(type, discussionID, userYay, userNay) {
-	return {
-		types: [DISCUSSION_VOTE, DISCUSSION_VOTE_SUCCESS, DISCUSSION_VOTE_FAIL],
-		promise: (client) => client.post('/discussionVote', {data: {type, discussionID, userYay, userNay}}),
-		voteType: type,
-		discussionID: discussionID,
-		userYay: userYay,
-		userNay: userNay,
-	};
-}
+// export function addComment(discussionObject, activeSaveID) {
+// 	return {
+// 		types: [ADD_COMMENT, ADD_COMMENT_SUCCESS, ADD_COMMENT_FAIL],
+// 		promise: (client) => client.post('/addDiscussion', {data: {discussionObject: discussionObject, isEditorComment: true}}),
+// 		activeSaveID: activeSaveID
+// 	};
+// }
+//
+// export function archiveComment(objectID) {
+// 	return {
+// 		types: [ARCHIVE_COMMENT_LOAD, ARCHIVE_COMMENT_SUCCESS, ARCHIVE_COMMENT_FAIL],
+// 		promise: (client) => client.post('/discussionArchive', {data: {objectID: objectID}}),
+// 		objectID: objectID,
+// 	};
+// }
+//
+// export function discussionVoteSubmit(type, discussionID, userYay, userNay) {
+// 	return {
+// 		types: [DISCUSSION_VOTE, DISCUSSION_VOTE_SUCCESS, DISCUSSION_VOTE_FAIL],
+// 		promise: (client) => client.post('/discussionVote', {data: {type, discussionID, userYay, userNay}}),
+// 		voteType: type,
+// 		discussionID: discussionID,
+// 		userYay: userYay,
+// 		userNay: userNay,
+// 	};
+// }

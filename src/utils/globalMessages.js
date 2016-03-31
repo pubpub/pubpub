@@ -205,6 +205,10 @@ export const globalMessages = defineMessages({
 		id: 'global.assets',
 		defaultMessage: 'Assets',
 	},
+	Formatting: {
+		id: 'global.Formatting',
+		defaultMessage: 'Formatting',
+	},
 	filename: {
 		id: 'global.filename',
 		defaultMessage: 'filename',
@@ -237,6 +241,10 @@ export const globalMessages = defineMessages({
 		id: 'global.back',
 		defaultMessage: 'Back',
 	},
+	Preview: {
+		id: 'global.Preview',
+		defaultMessage: 'Preview',
+	},
 	emailAddress: {
 		id: 'global.emailAddress',
 		defaultMessage: 'email address',
@@ -264,6 +272,10 @@ export const globalMessages = defineMessages({
 	edit: {
 		id: 'global.edit',
 		defaultMessage: 'Edit',
+	},
+	insert: {
+		id: 'global.insert',
+		defaultMessage: 'Insert',
 	},
 	refName: {
 		id: 'global.refName',
@@ -409,6 +421,10 @@ export const globalMessages = defineMessages({
 	turnHighlights: {
 		id: 'global.turnHighlights',
 		defaultMessage: 'Turn Highlights',
+	},
+	Highlights: {
+		id: 'global.Highlights',
+		defaultMessage: 'Highlights',
 	},
 	on: {
 		id: 'global.on',

@@ -5,7 +5,7 @@ import PureRenderMixin from 'react-addons-pure-render-mixin';
 import {LoaderIndeterminate, CreateJournalForm} from '../../components';
 import {create} from '../../actions/journal';
 import {toggleVisibility} from '../../actions/login';
-import {globalStyles} from '../../utils/styleConstants';
+import {globalStyles} from 'utils/styleConstants';
 
 import {FormattedMessage} from 'react-intl';
 
