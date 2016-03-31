@@ -9,7 +9,7 @@ const InputFields = [
 	{title: 'fontColor', type: 'text', params: {placeholder: '#222'}},
 	{title: 'bottomLineColor', type: 'text', params: {placeholder: '#222'}},
 	{title: 'placeholderText', type: 'text', params: {placeholder: 'Search Pubs'}},
-	{title: 'placeholderColor', type: 'text', params: {placeholder: 'Search Pubs'}},
+	{title: 'placeholderColor', type: 'text', params: {placeholder: '#CCC'}},
 ];
 
 const Config = {

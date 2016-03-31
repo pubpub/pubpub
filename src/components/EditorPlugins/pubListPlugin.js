@@ -58,6 +58,12 @@ const Plugin = React.createClass({
 						);
 					})
 				}
+				{!pubs.length
+					? <div className={'pubList noPubsWrapper'}>
+						<div className={'pubList noPubsText'}>No pubs in this journal yet.</div>
+					</div>
+					: null
+				}
 			</div>
 		);
 	}

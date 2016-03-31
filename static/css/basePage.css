@@ -131,6 +131,19 @@
 	font-size: 2em;
 }
 
+#pageContent .pubList.noPubsWrapper, #pageContent .collectionList.noCollectionsWrapper {
+	margin: 0 auto;
+    width: 60%;
+    text-align: center;
+    background-color: #CCC;
+    border-radius: 1px;
+    padding: 20px 0px;
+}
+
+#pageContent .pubList.noPubsText, #pageContent .collectionList.noCollectionsText {
+	
+}
+
 #pageContent .footer {
 	padding: 10px 50px ;
 	background-color: #373737;

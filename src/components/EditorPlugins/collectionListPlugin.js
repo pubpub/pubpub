@@ -81,6 +81,13 @@ const Plugin = React.createClass({
 					}
 				</div>
 
+				{!collections.length
+					? <div className={'collectionList noCollectionsWrapper'}>
+						<div className={'collectionList noCollectionsText'}>No Collections in this journal yet.</div>
+					</div>
+					: null
+				}
+
 			</div>
 		);
 	}
