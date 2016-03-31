@@ -9,6 +9,7 @@ const Notification = require('../models').Notification;
 import {cloudinary} from '../services/cloudinary';
 const Firebase = require('firebase');
 import {fireBaseURL, generateAuthToken} from '../services/firebase';
+import {featurePub} from '../services/recommendations'; 
 
 export function createJournal(req, res) {
 	Journal.isUnique(req.body.subdomain, (err, result)=>{
@@ -129,6 +130,7 @@ export function saveJournal(req, res) {
 			const pubsToUpdateFeature = _.difference(newFeatured, oldFeatured);
 			for (let index = pubsToUpdateFeature.length; index--;) {
 				Pub.addJournalFeatured(pubsToUpdateFeature[index], journal._id, req.user._id);
+				featurePub(journal._id, pubsToUpdateFeature[index], null);
 			}
 		}
 

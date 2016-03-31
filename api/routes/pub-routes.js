@@ -14,6 +14,7 @@ const less = require('less');
 
 import {fireBaseURL, firebaseTokenGen, generateAuthToken} from '../services/firebase';
 import {sendAddedAsCollaborator} from '../services/emails';
+import {featurePub, getRecommendations, inpRecAction, removeAction} from '../services/recommendations';
 
 
 export function getPub(req, res) {
@@ -23,6 +24,19 @@ export function getPub(req, res) {
 	const journalID = req.query.journalID;
 	Pub.getPub(req.query.slug, userID, userGroups, userAdminJournals, journalID, (err, pubData)=>{
 		if (err) { console.log(err); return res.status(500).json(err); }
+
+		const sessionID = (req.sessionID) ? req.sessionID : undefined;
+		if (userID || sessionID) {
+			const postedID = userID || sessionID;
+			const postedJournalID = journalID || 'pubpub';
+			const pubID = pubData._id;
+      inpRecAction(postedJournalID, pubID, userID, 'read',
+         function(recError, recResponse){
+           if (recResponse.error) {
+            console.log(recResponse.error);
+           }
+         });
+		}
 
 		if (req.query.referrer) {
 			User.findOne({'_id': req.query.referrer}, {'_id': 1, 'image': 1, 'thumbnail': 1, 'name': 1, 'username': 1}).exec(function(error, referrer) {
@@ -149,6 +163,29 @@ export function createPub(req, res) {
 	});
 
 }
+
+app.get('/getPubRecommendation', function(req, res) {
+
+	const userID = req.user ? req.user._id : undefined;
+	const sessionID = (req.sessionID) ? req.sessionID : undefined;
+
+	const journalID = (req.query.journalID) ? req.query.journalID : undefined;
+
+	const queryID = userID || sessionID;
+
+	getRecommendations('user', queryID, journalID, function(err, recResponse){
+		const suggestedPubID = recResponse.recommendations[0].thing;
+
+		Pub.getSimplePub(suggestedPubID, (err, suggestedPubData) => {
+			if (err) {
+				console.log(err);
+				return res.status(500).json(err);
+			}
+			return res.status(201).json(suggestedPubData);
+		});
+	});
+});
+
 app.post('/createPub', createPub);
 
 
