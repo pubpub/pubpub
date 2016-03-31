@@ -2,6 +2,14 @@ import request from 'superagent';
 
 const recURL = env.process.RECOMMENDURL;
 
+/* 
+ * Feature a Pub
+ * @param: {string} jounralId - The journal's id
+ * @param: {string} pubId - pub's id to be featured
+ * @callback: callback 
+ *
+ */
+
 export function featurePub(journalID, pub, callback) {
   request
   .post(recURL + journalID)
@@ -12,6 +20,18 @@ export function featurePub(journalID, pub, callback) {
   .end(callback);
 };
 
+/**
+ * Get recommendations by Pub or by User
+ * @param: {string} type - Type to get recommendations by
+ *         either 'user' or 'pub'
+ * @param: {string} query - The query to get recommendations for
+ *         either a pub's ID or a user's ID
+ * @param: {string} journalId - The journal's id
+ *
+ * @callback : callback
+ * @param: {object[]} recommendations - Recommendations per requested
+ *
+ */
 export function getRecommendations(type, query, journalId, callback){
   let recQuery = {}; 
   
@@ -27,6 +47,14 @@ export function getRecommendations(type, query, journalId, callback){
   .end(callback);
 } 
 
+/**
+ * Record an action to recommendation backend
+ * @param: {string} jounralId - The journal's ID
+ * @param: {string} pubId - The pub's ID
+ * @param: {string} userId - The user's ID 
+ * @param: {string} action - The action to be recorded
+ * @callback: callback
+ */
 
 export function inpRecAction(journalId, pubId, userId, action, callback){ 
   request
@@ -38,6 +66,15 @@ export function inpRecAction(journalId, pubId, userId, action, callback){
   })
   .end(callback);
 }
+
+/**
+ * Remove previous actions from recommendation backend
+ * @param: {string} journalId - The journal's ID
+ * @param: {string} pubId - The pub's ID
+ * @param: {string} userId - The user's ID
+ * @param: {string} action - Action to be removed
+ * @callback: callback
+ */
 
 export function removeAction(journalId, pubId, userId, action, callback){
   request
