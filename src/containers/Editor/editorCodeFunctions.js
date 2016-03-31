@@ -74,8 +74,8 @@ export function insertText(cm, formatting, showPopup) {
 export function addCodeMirrorKeys(cm) {
 	const map = {
 		'Cmd-S': ()=>{},
-		'Cmd-B': ()=>{insertText(cm, 'Bold');},
-		'Cmd-I': ()=>{insertText(cm, 'Italic');},
+		'Cmd-B': ()=>{insertText(cm, 'bold');},
+		'Cmd-I': ()=>{insertText(cm, 'italic');},
 	};
 	cm.addKeyMap(map);
 	return;
