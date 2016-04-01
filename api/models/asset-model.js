@@ -76,5 +76,5 @@ assetSchema.statics.insertBulkAndReturnIDs = function (array, callback) {
 	});
 };
 
-// module.exports = mongoose.model('Asset', assetSchema, 'newassets');
-module.exports = mongoose.model('Asset', assetSchema);
+module.exports = mongoose.model('Asset', assetSchema, 'newassets');
+// module.exports = mongoose.model('Asset', assetSchema);

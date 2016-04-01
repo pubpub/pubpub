@@ -1,4 +1,5 @@
 import Asset from '../../models/asset-model.js'
+import User from '../../models/user-model.js'
 
 function convertAsset(pub, asset) {
 
@@ -146,11 +147,11 @@ function convertReference(pub, reference) {
 
 	var assetModel = {
 		_id: reference._id,
-		assetType: reference.assetType,
+		assetType: 'reference',
 		label: reference.refName,
 		assetData: assetData,
 		history: [{
-			assetType:	reference.assetType,
+			assetType: 'reference',
 			label:	reference.refName,
 			assetData: assetData,
 			updateDate: reference.createDate,
@@ -169,8 +170,18 @@ function convertReference(pub, reference) {
 		lastUpdated: reference.createDate,
 	};
 
-
 	return assetModel;
+}
+
+function updateAuthor({author, assets}) {
+	const assetIDs = assets.map((asset) => (asset._id) ? asset._id : asset);
+	const authorID = (author._id) ? author._id : author;
+
+	User.update({ _id: authorID }, {
+		 $push: { assets: { $each: assetIDs} }
+	}, function(err2, result) {
+		if (err2) console.log(err2);
+	});
 }
 
 export function assetRefactorPub({pub, assets, references, callback}) {
@@ -182,7 +193,19 @@ export function assetRefactorPub({pub, assets, references, callback}) {
 
 		Asset.create(insertModels, function(err, assets) {
 			if (err) return callback(err, assets);
-			return callback(null, assets);
+
+			if (assets && assets.length > 1) {
+				console.log('- INSERTING ASSETS');
+				for (const asset of assets) {
+					for (const author of asset.authors) {
+						updateAuthor({author, assets: [asset]});
+					}
+				}
+			}
+
+
+
+			callback(null, assets);
 		});
 
 	} catch (err1) {
@@ -191,17 +214,30 @@ export function assetRefactorPub({pub, assets, references, callback}) {
 }
 
 
+
 export function assetRefactorDiscussion({discussion, highlights, callback}) {
 
 	try {
 		const highlightModels = highlights.map((highlight) => convertHighlight(discussion, highlight));
 
 		// callback(null, insertModels);
-		// console.log('highlights', highlightModels);
+		// console.log('highlights', highlightModels);3
+
 
 		Asset.create(highlightModels, function(err, assets) {
-			if (err) return callback(err, assets);
-			return callback(null, assets);
+			if (err && err.code === 11000) {
+				return callback(err, highlightModels);
+			} else if (err) {
+				return callback(err, assets);
+			}
+
+			callback(null, assets);
+
+			if (discussion.author && assets && assets.length >= 1) {
+				console.log('- Updating author!');
+				updateAuthor({author: discussion.author, assets});
+			}
+
 		});
 
 	} catch (err1) {

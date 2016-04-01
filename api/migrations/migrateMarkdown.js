@@ -16,7 +16,7 @@ import {assetRefactorPub} from './processors/assetRefactor';
 const Firepad = require('firepad');
 
 
-export function migrateAllPubText(PUBS_TO_MIGRATE) {
+export function migrateAllPubText(PUBS_TO_MIGRATE, DO_FIREBASE) {
 
 	const errorPubs = [];
 	let migrateCount = 0;
@@ -60,7 +60,7 @@ export function migrateAllPubText(PUBS_TO_MIGRATE) {
 				const assets = pub.assets;
 				const references = pub.references;
 
-				mongoQueue.push({ref, pub, assets, references}, function (err) {
+				mongoQueue.push({ref, pub, assets, references, DO_FIREBASE}, function (err) {
 					if (err) {
 						console.log(err);
 						errorPubs.push(pub);
@@ -98,31 +98,25 @@ const migrateSinglePubFirebase = function({ref, pub, assets}, callback) {
 
 	var childRef = ref.child(pub.slug + '/firepad');
 	var headless = new Firepad.Headless(childRef);
-	console.log('Trying firepad!');
 	try {
 		headless.getText(function(text) {
-			console.log('Got text!');
-			// console.log(text);
 			try {
 				let newMarkdown = refactorTitleFirebase({pub, markdown: text, authors: pub.authors});
 				newMarkdown = widgetProcessor({markdown: newMarkdown, assets: assets});
-				// callback();
-				// console.log(newMarkdown);
 
 				try {
-					console.log('Trying to set text!');
 					headless.setText(newMarkdown, function() {
-						console.log('set firepad!');
+						console.log(' - set firepad');
 						callback();
 					});
 				} catch (err1) {
-					console.log('error with text!');
+					console.log(' -! error with firepad');
 					console.log(err1);
 					callback(err1);
 				}
 
 			} catch (err) {
-				console.log('error with text!');
+				console.log(' -! error with text!');
 				console.log(err2);
 				callback(err);
 			}
@@ -135,7 +129,7 @@ const migrateSinglePubFirebase = function({ref, pub, assets}, callback) {
 
 };
 
-const migrateSinglePub = function({ref, pub, assets, references}, callback) {
+const migrateSinglePub = function({ref, pub, assets, references, DO_FIREBASE}, callback) {
 
 	console.log('started processing ' + pub.slug);
 
@@ -151,7 +145,7 @@ const migrateSinglePub = function({ref, pub, assets, references}, callback) {
 		newAssets = newAssets || [];
 		try {
 			if (pub.markdown) {
-				newDoc.markdown = refactorTitleMongo({pub, markdown: pub.markdown, authors: pub.authors});
+				newDoc.markdown = refactorTitleMongo({pub: newDoc, markdown: newDoc.markdown, authors: newDoc.authors});
 				newDoc.markdown = widgetProcessor({markdown: newDoc.markdown, assets: newAssets});
 			}
 
@@ -164,7 +158,7 @@ const migrateSinglePub = function({ref, pub, assets, references}, callback) {
 			newDoc.StyleRawMobile = undefined;
 
 			newDoc.status = undefined;
-			newDoc.isPublished = (pub.history.length >= 1);
+			newDoc.isPublished = (newDoc.history.length >= 1);
 			newDoc.settings = undefined;
 
 
@@ -204,28 +198,20 @@ const migrateSinglePub = function({ref, pub, assets, references}, callback) {
 					return;
 				}
 				console.log('- Updated editor discussion comments');
-				// console.log(unset);
 
-				/*
-				const unset = {
-					status: 1,
-					StyleRawMobile: 1,
-					StyleRawDesktop: 1,
-					settings: 1,
-				};
-				*/
-
-				console.log(newDoc);
+				// console.log(newDoc);
 
 				NewPub.create(newDoc, function(err2, results) {
-					console.log('Got update!');
 					if (err2) {
 						callback(err2);
 						return;
 					}
-					// migrateSinglePubFirebase({ref, pub, assets: newAssets}, callback);
+					if (DO_FIREBASE) {
+						migrateSinglePubFirebase({ref, pub: newDoc, assets: newAssets}, callback);
+					} else {
+						callback(err);
+					}
 					// callback(err);
-					callback();
 				});
 
 			});
@@ -234,14 +220,6 @@ const migrateSinglePub = function({ref, pub, assets, references}, callback) {
 			callback(err1);
 		}
 
-		/*
-		for (var index = pub.history.length; index--;) {
-			newDoc.history[index].markdown = processor({markdown: pub.history[index].markdown, assets, references});
-			if (pub.history[index].diffObject) {
-
-			}
-		}
-		*/
 
 	};
 

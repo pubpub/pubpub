@@ -48,7 +48,8 @@ export function refactorTitleFirebase({pub, markdown, authors}) {
 	newMarkdown = newMarkdown.replace(authorsnoteRegex, processAuthorsNote);
 
 	if (!foundTitle) {
-		// console.log('- Could not find title in ' + pub.slug);
+		const hasTitleMigration = (markdown.indexOf('title:') !== -1);
+    return markdown;
 	}
 
 	// console.log(foundTitle, foundAbstract, foundAuthorsNote);
