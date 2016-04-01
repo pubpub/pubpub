@@ -517,7 +517,7 @@ const Editor = React.createClass({
 
 		const widgetMode = viewMode === 'preview' ? 'preview' : 'full';
 
-		const userAssets = this.props.loginData.getIn(['userData', 'assets']).toJS() || [];
+		const userAssets = this.props.loginData.getIn(['userData', 'assets']) ? this.props.loginData.getIn(['userData', 'assets']).toJS() : [];
 		const references = {};
 
 
