@@ -134,10 +134,10 @@ const DiscussionsItem = React.createClass({
 								<FormattedMessage id="discussion.edit" defaultMessage="Edit"/>
 							</span> */}
 
-							<span style={[styles.detailLineItemSeparator, discussionItem.isAuthor && styles.hide]}>|</span>
+							{/* <span style={[styles.detailLineItemSeparator, discussionItem.isAuthor && styles.hide]}>|</span>
 							<span style={[styles.detailLineItem, discussionItem.isAuthor && styles.hide]} key={'flagButton-' + discussionItem._id} onClick={this.toggleFlag}>
 								<FormattedMessage id="discussion.flag" defaultMessage="Flag"/>
-							</span>
+							</span> */}
 
 							{this.props.isPubAuthor
 								? <span>

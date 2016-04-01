@@ -63,9 +63,8 @@ const SelectionPlugin = React.createClass({
 				endOffset: selection.endOffset,
 			};
 
-			const version = parseInt(selection.version, 10);
-			const classname = version ? 'selection' : 'selection selection-editor';
-			const renderer = new Marklib.Rendering(document, {className: classname + ' selection-' + selection._id}, document.getElementById('pubBodyContent'));
+			const version = parseInt(selection.sourceVersion, 10);
+			const renderer = new Marklib.Rendering(document, {className:'selection selection-' + selection._id}, document);
 			renderer.renderWithResult(result);
 
 

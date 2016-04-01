@@ -59,7 +59,7 @@ const Discussions = React.createClass({
 			const cm = cmInstances[0].CodeMirror;
 			const currentSelection = cm.getCursor();
 			const inlineObject = {pluginType: 'highlight', source: {...assetObject.assetData, ...{_id: assetObject._id} }};
-			cm.replaceRange('[[' + JSON.stringify(inlineObject) + ']]', {line: currentSelection.line, ch: currentSelection.ch});
+			cm.replaceRange('[[' + JSON.stringify(inlineObject) + ']] ', {line: currentSelection.line, ch: currentSelection.ch});
 			// }
 		}
 	},

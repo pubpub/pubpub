@@ -62,9 +62,9 @@ const AssetRow = React.createClass({
 				</div>
 
 				{/* Remove Button */}
-				<div key={'removeButton-' + assetObject._id} style={[styles.hideOnLoad[isLoading], styles.delete]} onClick={this.props.removeHandler(assetObject)}>
+				{/* <div key={'removeButton-' + assetObject._id} style={[styles.hideOnLoad[isLoading], styles.delete]} onClick={this.props.removeHandler(assetObject)}>
 					<FormattedMessage {...globalMessages.delete} />
-				</div>
+				</div> */}
 
 				{/*	Loading Bar.
 				 	Only shown when file is uploading */}
@@ -118,7 +118,7 @@ styles = {
 		height: '100%',
 	},
 	filename: {
-		width: 'calc(22% - 8%)',
+		width: 'calc(22% - 8% + 14%)',
 		padding: '0px 4%',
 		whiteSpace: 'nowrap',
 		overflow: 'hidden',

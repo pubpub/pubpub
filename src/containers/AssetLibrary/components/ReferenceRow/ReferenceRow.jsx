@@ -51,9 +51,9 @@ const ReferenceRow = React.createClass({
 				</div>
 
 				{/* Remove Button */}
-				<div key={'removeButton-' + assetObject._id} style={[styles.delete]} onClick={this.props.removeHandler(assetObject)}>
+				{/* <div key={'removeButton-' + assetObject._id} style={[styles.delete]} onClick={this.props.removeHandler(assetObject)}>
 					<FormattedMessage {...globalMessages.delete} />
-				</div>
+				</div> */}
 
 				<div style={globalStyles.clearFix}></div>
 			</div>
@@ -85,7 +85,7 @@ styles = {
 		float: 'left',
 	},
 	type: {
-		width: 'calc(52% - 4%)',
+		width: 'calc(52% - 4% + 10%)',
 		padding: '0px 2%',
 		float: 'left',
 	},
