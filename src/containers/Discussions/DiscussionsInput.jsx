@@ -72,6 +72,7 @@ const PubDiscussionsInput = React.createClass({
 			extraKeys: {'Ctrl-Space': 'autocomplete'},
 			placeholder: this.props.intl.formatMessage(placeholderMsg),
 			dragDrop: false,
+			isPage: false,
 		};
 
 		const codeMirror = CodeMirror(document.getElementById(this.props.codeMirrorID), cmOptions);

@@ -16,6 +16,7 @@ const Config = {
 	title: 'search',
 	autocomplete: true,
 	color: 'rgba(185, 215, 249, 0.5)',
+	page: true,
 };
 
 const EditorWidget = (inputProps) => (<span>Search</span>);

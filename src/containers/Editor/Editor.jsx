@@ -137,6 +137,7 @@ const Editor = React.createClass({
 				const firepadRef = new Firebase(FireBaseURL + this.props.slug + '/firepad');
 
 				// Load codemirror
+				cmOptions.isPage = this.props.editorData.getIn(['pubEditData', 'isPage']);
 				const codeMirror = CodeMirror(document.getElementById('codemirror-wrapper'), cmOptions);
 				this.cm = codeMirror;
 
@@ -243,12 +244,6 @@ const Editor = React.createClass({
 		const TOCs = generateTOC(markdown);
 
 		// Format assets and references
-		// const assets = convertFirebaseToObject(this.state.firepadData.assets);
-		// const references = convertFirebaseToObject(this.state.firepadData.references, true);
-		// const selections = [];
-
-		// Strip markdown of title, abstract, authorsNote
-		// const markdown = fullMD.replace(/\[\[title:.*?\]\]/gi, '').replace(/\[\[abstract:.*?\]\]/gi, '').replace(/\[\[authorsNote:.*?\]\]/gi, '').trim();
 
 		// const compiledMarkdown = performance.now();
 
@@ -263,9 +258,6 @@ const Editor = React.createClass({
 			codeMirrorChange: change,
 			title: title,
 			abstract: abstract,
-			// assetsObject: assets,
-			// referencesObject: references,
-			// selectionsArray: selections,
 		});
 
 		// const saveState = performance.now();

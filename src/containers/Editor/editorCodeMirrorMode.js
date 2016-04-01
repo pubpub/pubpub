@@ -10,6 +10,7 @@ export default function() {
 		try {
 			const cur = editor.getCursor();
 			const token = editor.getTokenAt(cur);
+			const isPageEditor = editor.getOption('isPage');
 
 			if (token && token.type && token.type.indexOf('pubpub-markdown') !== -1) {
 
@@ -26,7 +27,7 @@ export default function() {
 				const list = [];
 
 				for (const plugin in Plugins) {
-					if (Plugins.hasOwnProperty(plugin) && Plugins[plugin].Config.autocomplete === true) {
+					if (Plugins.hasOwnProperty(plugin) && Plugins[plugin].Config.autocomplete === true && (!Plugins[plugin].Config.page || isPageEditor)) {
 						const pluginString = JSON.stringify({pluginType: plugin});
 						if (completionString.length >= 2 && plugin.charAt(0) === completionString.charAt(1)) {
 							list.unshift({text: pluginString + ']]', displayText: plugin});
@@ -47,17 +48,6 @@ export default function() {
 		return result;
 	});
 
-
-	/*
-	for (const plugin in plugins) {
-		if (plugins.hasOwnProperty(plugin)) {
-			start.push({
-				regex: new RegExp('\\{\\{' + plugin + ':.*\\}\\}'),
-				token: 'ppm plugin plugin-' + plugin
-			});
-		}
-	}
-	*/
 
 	const start = [
 		{regex: /\[\[[a-zA-Z]*\]\]/, token: 'ppm ppm-autofill'}

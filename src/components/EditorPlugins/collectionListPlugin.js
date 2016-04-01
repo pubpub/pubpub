@@ -11,6 +11,7 @@ const Config = {
 	title: 'collectionList',
 	autocomplete: true,
 	color: 'rgba(185, 215, 249, 0.5)',
+	page: true,
 };
 
 const EditorWidget = (inputProps) => (<span>Collection List</span>);
