@@ -73,20 +73,30 @@ const EditorWidgets = React.createClass({
 
 			const selectedTokens = cm.getLineTokens(line);
 			for (const token of selectedTokens) {
-				// console.log(token.type);
-				if (token.type && token.type.indexOf('plugin') !== -1 && token.type.indexOf('ppm') !== -1) {
-					// console.log(token);
-					const from = {line: line, ch: token.start};
-					const to = {line: line, ch: token.end};
-					if (!this.checkMarkRange(from, to)) {
-						const pluginString = token.string.slice(2, -2);
-						const pluginData = parsePluginString(pluginString);
-						const pluginType = pluginData.pluginType;
+				try {
 
-						const a = new Widget(cm, from, to, pluginType, pluginData, this.openPopupOnWidget);
-						this.marks.push(a.mark);
+					if (token.type && (token.type.indexOf('plugin') !== -1 || token.type.indexOf('ppm-autofill') !== -1) && token.type.indexOf('ppm') !== -1) {
+
+						const autofill = (token.type.indexOf('ppm-autofill') !== -1);
+						const from = {line: line, ch: token.start};
+						const to = {line: line, ch: token.end};
+						if (!this.checkMarkRange(from, to)) {
+							const pluginString = token.string.slice(2, -2);
+							if (!autofill) {
+								const pluginData = parsePluginString(pluginString);
+								const pluginType = pluginData.pluginType;
+								const a = new Widget(cm, from, to, pluginType, pluginData, this.openPopupOnWidget);
+								this.marks.push(a.mark);
+							} else {
+								const pluginData = {pluginType: pluginString};
+								cm.replaceRange(`[[${JSON.stringify(pluginData)}]]`, from, to);
+							}
+
+						}
+
 					}
-
+				} catch (err) {
+					console.log(err);
 				}
 			}
 		} catch (err) {

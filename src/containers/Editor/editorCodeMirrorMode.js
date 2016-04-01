@@ -60,9 +60,7 @@ export default function() {
 	*/
 
 	const start = [
-		{regex: /\[\[title:.*\]\]/, token: 'ppm ppm-title'},
-		{regex: /\[\[abstract:.*\]\]/, token: 'ppm ppm-abstract'},
-		{regex: /\[\[authorsNote:.*\]\]/, token: 'ppm ppm-authorsNote'}
+		{regex: /\[\[[a-zA-Z]*\]\]/, token: 'ppm ppm-autofill'}
 	];
 
 	for (const pluginKey in Plugins) {
