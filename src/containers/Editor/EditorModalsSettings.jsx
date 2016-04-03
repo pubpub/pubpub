@@ -2,7 +2,7 @@
 import React, {PropTypes} from 'react';
 import Radium, {Style} from 'radium';
 import {LoaderIndeterminate} from 'components';
-import {baseStyles} from '../editorModalStyle';
+import {baseStyles} from './utils/editorModalStyle';
 import {globalStyles} from 'utils/styleConstants';
 import cssConvert from 'utils/cssToRadium';
 

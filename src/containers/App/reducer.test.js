@@ -1,15 +1,15 @@
 import {expect} from 'chai';
 import {Map} from 'immutable';
 
-import reducer from '../nav';
+import reducer from './reducer';
 import {
 	OPEN_MENU,
 	CLOSE_MENU,
-} from '../../actions/nav';
+} from './actions';
 
 describe('Reducers', () => {
 	describe('nav.js', () => {
-		
+
 		it('should return a default state', () => {
 			const newState = reducer(undefined, {});
 			expect(newState).to.exist;

@@ -2,7 +2,7 @@ import React, {PropTypes} from 'react';
 import Radium from 'radium';
 import {globalStyles} from 'utils/styleConstants';
 import {LoaderIndeterminate} from 'components';
-import {PubPreview} from 'components';
+import {PreviewPub} from 'components';
 import {s3Upload} from 'utils/uploadFile';
 import {Autocomplete} from 'containers';
 
@@ -21,7 +21,7 @@ export const CollectionEdit = React.createClass({
 	},
 
 	getDefaultProps: function() {
-		
+
 	},
 
 	getInitialState() {
@@ -60,7 +60,7 @@ export const CollectionEdit = React.createClass({
 				const array = [];
 				for (let iii = 0; iii < binary.length; iii++) { array.push(binary.charCodeAt(iii));}
 				const file = new Blob([new Uint8Array(array)], {type: mimeString});
-				s3Upload(file, 'collectionHeaders', ()=>{}, this.onFileFinish, 0);	
+				s3Upload(file, 'collectionHeaders', ()=>{}, this.onFileFinish, 0);
 			};
 			reader.readAsDataURL(evt.target.files[0]);
 		}
@@ -77,7 +77,7 @@ export const CollectionEdit = React.createClass({
 			// console.log(input);
 			const newPubs = this.props.collectionData.pubs.map((item)=>{
 				return item._id;
-			}); 
+			});
 			newPubs.push(input);
 			// console.log(newPubs);
 			this.props.handleCollectionSave({pubs: newPubs});
@@ -90,7 +90,7 @@ export const CollectionEdit = React.createClass({
 			// console.log(input);
 			const newPubs = this.props.collectionData.pubs.map((item)=>{
 				return item._id;
-			}); 
+			});
 			const index = newPubs.indexOf(input);
 			if (index > -1) {
 				newPubs.splice(index, 1);
@@ -122,18 +122,18 @@ export const CollectionEdit = React.createClass({
 						return (<div key={'featuredPubSearch-' + index} style={styles.result}>
 
 							<div style={styles.resultDetails}>
-								<PubPreview 
-									pubData={pub} 
+								<PreviewPub 
+									pubData={pub}
 									headerFontSize={'16px'}
-									textFontSize={'13px'} 
+									textFontSize={'13px'}
 									hideBottomLine={true}/>
 
 							</div>
-							
+
 							<div style={styles.action} key={'featuredPubSearchAdd-' + index} onClick={this.featurePub(pub._id)}>
 								<FormattedMessage {...globalMessages.add} />
 							</div>
-						</div>);	
+						</div>);
 					})
 				}
 				{results.length === 0 || totalCount === 0
@@ -142,7 +142,7 @@ export const CollectionEdit = React.createClass({
 					</div>
 					: null
 				}
-				
+
 			</div>
 		);
 	},
@@ -158,7 +158,7 @@ export const CollectionEdit = React.createClass({
 		const collectionData = this.props.collectionData || {};
 		return (
 			<div style={styles.container}>
-				
+
 				<div key={'collectionForm-title'} style={styles.inputWrapper}>
 					<label style={styles.manualFormInputTitle} htmlFor={'title'}>
 						<FormattedMessage
@@ -208,13 +208,13 @@ export const CollectionEdit = React.createClass({
 					<FormattedMessage {...globalMessages.pubs} />
 				</div>
 				<div style={styles.autocompleteWrapper}>
-					<Autocomplete 
-						autocompleteKey={'collectionFeatureAutocomplete'} 
-						route={'autocompletePubs?journalID=' + this.props.journalID} 
+					<Autocomplete
+						autocompleteKey={'collectionFeatureAutocomplete'}
+						route={'autocompletePubs?journalID=' + this.props.journalID}
 						placeholder={this.props.intl.formatMessage(messages.addPubsToCollection)}
 						resultRenderFunction={this.renderPubSearchResults}/>
 				</div>
-				
+
 				{(()=>{
 					const length = collectionData.pubs ? collectionData.pubs.length : 0;
 					if (!length) {
@@ -223,20 +223,20 @@ export const CollectionEdit = React.createClass({
 								id="collections.noPubsAddedToCollection"
 								defaultMessage="No Pubs Added to Collection"/>
 						</div>);
-					} 
+					}
 					const output = [];
 					for (let index = length; index--;) {
 						output.push(<div key={'collectionPubItem-' + index} style={styles.result}>
 
 									<div style={styles.resultDetails}>
-										<PubPreview 
-											pubData={collectionData.pubs[index]} 
+										<PreviewPub 
+											pubData={collectionData.pubs[index]}
 											headerFontSize={'16px'}
-											textFontSize={'13px'} 
+											textFontSize={'13px'}
 											hideBottomLine={true}/>
 
 									</div>
-									
+
 									<div style={styles.action} key={'submittedPubItemAdd-' + index} onClick={this.removePub(collectionData.pubs[index]._id)}>
 										<FormattedMessage {...globalMessages.remove} />
 									</div>

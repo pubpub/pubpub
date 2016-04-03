@@ -11,7 +11,6 @@ import PPMComponent from 'markdown/PPMComponent';
 
 let styles = {};
 
-// import {loadCss} from 'utils/loadingFunctions';
 import initCodeMirrorMode from 'containers/Editor/editorCodeMirrorMode';
 import {codeMirrorStyles} from 'containers/Editor/codeMirrorStyles';
 import {insertText} from 'containers/Editor/editorCodeFunctions';

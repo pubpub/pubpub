@@ -9,10 +9,12 @@ import PureRenderMixin from 'react-addons-pure-render-mixin';
 import ReactFireMixin from 'reactfire';
 
 import {AssetLibrary} from 'containers';
-import {CollaboratorsModal, SaveVersionModal, SettingsModal} from './components';
+import EditorModalsCollaborators from './EditorModalsCollaborators';
+import EditorModalsSaveVersion from './EditorModalsSaveVersion';
+import EditorModalsSettings from './EditorModalsSettings';
 
-import {closeModal, saveCollaboratorsToPub} from '../../actions/editor';
-import {saveSettingsUser} from '../../actions/login';
+import {closeModal, saveCollaboratorsToPub} from './actions';
+import {saveSettingsUser} from 'containers/Login/actions';
 
 import {globalStyles} from 'utils/styleConstants';
 
@@ -166,13 +168,13 @@ const Editor = React.createClass({
 								);
 
 							case 'Collaborators':
-								return (<CollaboratorsModal
+								return (<EditorModalsCollaborators
 									collaboratorData={this.state.firepadData.collaborators}
 									updateCollaborators={this.saveUpdatedCollaborators}/>
 								);
 
 							case 'SaveVersion':
-								return (<SaveVersionModal
+								return (<EditorModalsSaveVersion
 									slug={this.props.slug}
 									handleSaveVersion={this.props.saveVersionHandler}
 									currentJournal={this.props.journalData.getIn(['journalData', 'journalName'])}
@@ -187,7 +189,7 @@ const Editor = React.createClass({
 							// 		);
 
 							case 'Style':
-								return (<SettingsModal
+								return (<EditorModalsSettings
 									editorFont={this.props.loginData.getIn(['userData', 'settings', 'editorFont'])}
 									editorFontSize={this.props.loginData.getIn(['userData', 'settings', 'editorFontSize'])}
 									editorColor={this.props.loginData.getIn(['userData', 'settings', 'editorColor'])}

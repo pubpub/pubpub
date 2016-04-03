@@ -9,10 +9,6 @@ import {
 	CREATE_JOURNAL_SUCCESS,
 	CREATE_JOURNAL_FAIL,
 
-	LOAD_JOURNAL_AND_LOGIN,
-	LOAD_JOURNAL_AND_LOGIN_SUCCESS,
-	LOAD_JOURNAL_AND_LOGIN_FAIL,
-
 	LOAD_JOURNAL,
 	LOAD_JOURNAL_SUCCESS,
 	LOAD_JOURNAL_FAIL,
@@ -49,21 +45,21 @@ import {
 } from '../actions/login';
 
 /*--------*/
-// Initialize Default State 
+// Initialize Default State
 /*--------*/
 export const defaultState = Immutable.Map({
 	createJournalData: {
 		journalCreated: false,
 		status: 'loaded',
 		error: null,
-		subdomain: null,	
+		subdomain: null,
 	},
 	journalData: {
 		collections: [],
 	},
 	status: 'loading',
 	error: null,
-	baseSubdomain: undefined, // Will be null if on pubpub and defined if on a journal
+	// baseSubdomain: undefined, // Will be null if on pubpub and defined if on a journal
 	journalSaving: false,
 	journalSavingError: null,
 	createCollectionStatus: null,
@@ -74,10 +70,10 @@ export const defaultState = Immutable.Map({
 });
 
 /*--------*/
-// Define reducing functions 
+// Define reducing functions
 //
 // These functions take in an initial state and return a new
-// state. They are pure functions. We use Immutable to enforce this. 
+// state. They are pure functions. We use Immutable to enforce this.
 /*--------*/
 
 function createJournalLoad(state) {
@@ -112,27 +108,6 @@ function clearCollectionRedirect(state) {
 	});
 }
 
-function loadJournal(state) {
-	return state.set('status', 'loading');
-}
-
-function loadJournalSuccess(state, journalData) {
-	const newBaseSubdomain = journalData.subdomain ? journalData.subdomain : null;
-	return state.merge({
-		status: 'loaded',
-		error: null,
-		baseSubdomain: state.get('baseSubdomain') === undefined ? newBaseSubdomain : state.get('baseSubdomain'),
-		journalData
-	});
-}
-
-function loadJournalFail(state, error) {	
-	return state.merge({
-		status: 'loaded',
-		error: error,
-	});
-}
-
 function saveJournal(state) {
 	return state.set('journalSaving', true);
 }
@@ -145,7 +120,7 @@ function saveJournalSuccess(state, journalData) {
 	});
 }
 
-function saveJournalFail(state, error) {	
+function saveJournalFail(state, error) {
 	return state.merge({
 		journalSaving: false,
 		journalSavingError: error,
@@ -167,7 +142,7 @@ function createCollectionSuccess(state, result, newSlug) {
 	});
 }
 
-function createCollectionFail(state, error) {	
+function createCollectionFail(state, error) {
 	console.log('createCollection Failed: ', error);
 	return state.set('createCollectionStatus', 'failed');
 }
@@ -186,7 +161,7 @@ function saveCollectionSuccess(state, result) {
 	});
 }
 
-function saveCollectionFail(state, error) {	
+function saveCollectionFail(state, error) {
 	console.log('createCollection Failed: ', error);
 	return state.set('saveCollectionStatus', 'saved');
 }
@@ -199,13 +174,13 @@ function submitPubToJournalSuccess(state, result) {
 	if (result._id !== state.getIn(['journalData', '_id'])) {
 		return state;
 	}
-	
+
 	return state.merge({
 		journalData: result
 	});
 }
 
-function submitPubToJournalFail(state, error) {	
+function submitPubToJournalFail(state, error) {
 	console.log('submitPubToJournalFail Failed: ', error);
 	return state;
 }
@@ -233,7 +208,7 @@ function newRandomSlug(state, result) {
 
 	return state.mergeIn(['journalData'], {
 		randomSlug: result,
-	});	
+	});
 }
 
 /*--------*/
@@ -248,13 +223,6 @@ export default function loginReducer(state = defaultState, action) {
 		return createJournalSuccess(state, action.result);
 	case CREATE_JOURNAL_FAIL:
 		return createJournalFail(state, action.error);
-
-	case LOAD_JOURNAL_AND_LOGIN:
-		return loadJournal(state);
-	case LOAD_JOURNAL_AND_LOGIN_SUCCESS:
-		return loadJournalSuccess(state, action.result.journalData);
-	case LOAD_JOURNAL_AND_LOGIN_FAIL:
-		return loadJournalFail(state, action.error);
 
 	case LOAD_JOURNAL:
 		return loadJournal(state);

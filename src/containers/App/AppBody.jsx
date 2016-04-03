@@ -2,12 +2,13 @@ import React, { PropTypes } from 'react';
 import Radium, {Style} from 'radium';
 import { Link } from 'react-router';
 import {reset} from 'redux-form';
-import {Login} from '../index';
-import {toggleVisibility, follow, unfollow} from '../../actions/login';
-import {loadJournalAndLogin} from '../../actions/journal';
-import {openMenu, closeMenu} from '../../actions/nav';
-import {openPubModal} from '../../actions/pub';
-import {HeaderNav, HeaderMenu} from './components';
+import HeaderNav from './HeaderNav';
+import HeaderMenu from './HeaderMenu';
+import {Login} from 'containers';
+import {loadAppAndLogin, openMenu, closeMenu} from './actions';
+import {toggleVisibility, follow, unfollow} from 'containers/Login/actions';
+import {openPubModal} from 'containers/PubReader/actions';
+
 import {globalStyles} from 'utils/styleConstants';
 import analytics from 'utils/analytics';
 
@@ -15,8 +16,7 @@ let styles = {};
 
 const AppBody = React.createClass({
 	propTypes: {
-		journalData: PropTypes.object,
-		languageData: PropTypes.object,
+		appData: PropTypes.object,
 		loginData: PropTypes.object,
 		navData: PropTypes.object,
 		pubData: PropTypes.object,
@@ -40,10 +40,10 @@ const AppBody = React.createClass({
 	componentDidMount() {
 		analytics.pageView(this.props.path, this.props.loginData.get('loggedIn'));
 
-		if (!this.props.loginData.get('loggedIn') && this.props.journalData.get('baseSubdomain') !== null) {
+		if (!this.props.loginData.get('loggedIn') && this.props.appData.get('baseSubdomain') !== null) {
 			// If we're not logged in, and on a journal domain (i.e. not www.pubpub.org)...
 			this.testAndRestoreLogin();
-		}	
+		}
 	},
 
 	testAndRestoreLogin: function() {
@@ -60,7 +60,7 @@ const AppBody = React.createClass({
 			if (evt.origin !== 'http://www.pubpub.org') { return; } // Only listen to iFrame messages from pubpub.org
 			if (evt.data) {
 				document.cookie = evt.data;
-				this.props.dispatch(loadJournalAndLogin());
+				this.props.dispatch(loadAppAndLogin());
 			}
 		}, false);
 
@@ -75,7 +75,7 @@ const AppBody = React.createClass({
 		if (!this.props.loginData.get('loggedIn')) {
 			this.props.dispatch(toggleVisibility());
 			this.props.dispatch(reset('loginForm'));
-			this.props.dispatch(reset('loginFormRegister'));	
+			this.props.dispatch(reset('loginFormRegister'));
 		}
 	},
 
@@ -113,13 +113,13 @@ const AppBody = React.createClass({
 	},
 
 	render: function() {
-		let headerBackground = (this.props.journalData.get('baseSubdomain') && this.props.journalData.getIn(['journalData', 'design', 'headerBackground'])) || globalStyles.headerBackground;
-		let headerTextColor = (this.props.journalData.get('baseSubdomain') && this.props.journalData.getIn(['journalData', 'design', 'headerText'])) || globalStyles.headerText;
-		let headerTextColorHover = (this.props.journalData.get('baseSubdomain') && this.props.journalData.getIn(['journalData', 'design', 'headerHover'])) || globalStyles.headerHover;
+		let headerBackground = (this.props.appData.get('baseSubdomain') && this.props.appData.getIn(['journalData', 'design', 'headerBackground'])) || globalStyles.headerBackground;
+		let headerTextColor = (this.props.appData.get('baseSubdomain') && this.props.appData.getIn(['journalData', 'design', 'headerText'])) || globalStyles.headerText;
+		let headerTextColorHover = (this.props.appData.get('baseSubdomain') && this.props.appData.getIn(['journalData', 'design', 'headerHover'])) || globalStyles.headerHover;
 		if (this.props.path === '/') {
-			headerBackground = (this.props.journalData.get('baseSubdomain') && this.props.journalData.getIn(['journalData', 'design', 'landingHeaderBackground'])) || globalStyles.headerText;
-			headerTextColor = (this.props.journalData.get('baseSubdomain') && this.props.journalData.getIn(['journalData', 'design', 'landingHeaderText'])) || globalStyles.headerBackground;
-			headerTextColorHover = (this.props.journalData.get('baseSubdomain') && this.props.journalData.getIn(['journalData', 'design', 'landingHeaderHover'])) || 'black';
+			headerBackground = (this.props.appData.get('baseSubdomain') && this.props.appData.getIn(['journalData', 'design', 'landingHeaderBackground'])) || globalStyles.headerText;
+			headerTextColor = (this.props.appData.get('baseSubdomain') && this.props.appData.getIn(['journalData', 'design', 'landingHeaderText'])) || globalStyles.headerBackground;
+			headerTextColorHover = (this.props.appData.get('baseSubdomain') && this.props.appData.getIn(['journalData', 'design', 'landingHeaderHover'])) || 'black';
 		}
 
 		const headerStyle = {
@@ -132,8 +132,8 @@ const AppBody = React.createClass({
 			headerBar: {
 				backgroundColor: headerBackground,
 			},
-		};		
-		
+		};
+
 		const pubData = this.props.pubData.get('pubData').toJS ? this.props.pubData.get('pubData').toJS() : {};
 
 		return (
@@ -147,19 +147,19 @@ const AppBody = React.createClass({
 				}
 
 				<div className="header-bar" style={[styles.headerBar, headerStyle.headerBar]}>
-					
+
 					<div key="headerLogo" style={[styles.headerLogo]}>
 						<Link to={'/'} style={globalStyles.link}>
 							<div style={[styles.headerText, styles.logoLink, headerStyle.headerText]}>
-								{this.props.journalData.get('baseSubdomain') !== null ? this.props.journalData.getIn(['journalData', 'journalName']) : 'PubPub'}
+								{this.props.appData.get('baseSubdomain') !== null ? this.props.appData.getIn(['journalData', 'journalName']) : 'PubPub'}
 							</div>
 						</Link>
 					</div>
-					
+
 					<div style={[styles.headerNavContainer]} >
 						<div style={styles.headerMenu}>
-							<HeaderMenu 
-								loginData={this.props.loginData} 
+							<HeaderMenu
+								loginData={this.props.loginData}
 								// navData={this.props.navData}
 								color={headerTextColor}
 								hoverColor={headerTextColorHover}
@@ -177,23 +177,23 @@ const AppBody = React.createClass({
 								analyticsCount={pubData.views ? pubData.views : 0}
 								citationsCount={pubData.citations ? pubData.citations.length : 0}
 								newsCount={pubData.news ? pubData.news.length : 0}
-								
-								isJournalAdmin={this.props.journalData.getIn(['journalData', 'isAdmin'])}
-								journalSubdomain={this.props.journalData.get('baseSubdomain')}
+
+								isJournalAdmin={this.props.appData.getIn(['journalData', 'isAdmin'])}
+								journalSubdomain={this.props.appData.get('baseSubdomain')}
 								slug={this.props.slug}
 								path={this.props.path}/>
 						</div>
 
 						<div style={styles.headerNav}>
-							<HeaderNav 
-								loginData={this.props.loginData} 
+							<HeaderNav
+								loginData={this.props.loginData}
 								navData={this.props.navData}
 								backgroundColor={headerBackground}
 								color={headerTextColor}
 								hoverColor={headerTextColorHover}
 								loginToggle={this.toggleLogin}
-								isJournalAdmin={this.props.journalData.getIn(['journalData', 'isAdmin'])}
-								journalSubdomain={this.props.journalData.get('baseSubdomain')} />
+								isJournalAdmin={this.props.appData.getIn(['journalData', 'isAdmin'])}
+								journalSubdomain={this.props.appData.get('baseSubdomain')} />
 						</div>
 					</div>
 
@@ -204,7 +204,7 @@ const AppBody = React.createClass({
 				<div className="content" style={styles.content}>
 					{this.props.children}
 				</div>
-	
+
 			</div>
 		);
 	}
@@ -223,7 +223,7 @@ styles = {
 		},
 	},
 	headerBar: {
-		
+
 		width: '100%',
 		height: globalStyles.headerHeight,
 		backgroundColor: globalStyles.headerBackground,
@@ -238,7 +238,7 @@ styles = {
 	},
 
 	headerText: {
-		
+
 		lineHeight: globalStyles.headerHeight,
 		color: globalStyles.headerText,
 		textDecoration: 'none',
@@ -251,7 +251,7 @@ styles = {
 			lineHeight: globalStyles.headerHeightMobile,
 			fontSize: '1.5em',
 		},
-		
+
 	},
 
 	headerLogo: {
@@ -269,7 +269,7 @@ styles = {
 			margin: '0',
 			width: 'calc(100% - 90px)',
 		},
-		
+
 	},
 
 	logoLink: {
@@ -298,7 +298,7 @@ styles = {
 		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
 			display: 'none',
 		},
-	}, 
+	},
 	headerMenu: {
 		display: 'none',
 		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
@@ -330,7 +330,7 @@ styles = {
 		// backgroundColor: 'red',
 		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
 			marginTop: globalStyles.headerHeightMobile,
-			
+
 		},
 	},
 

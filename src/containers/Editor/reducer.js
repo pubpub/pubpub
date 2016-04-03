@@ -7,8 +7,7 @@ import {ensureImmutable} from './';
 import {
 	TOGGLE_VIEW_MODE,
 	SET_VIEW_MODE,
-	TOGGLE_FORMATTING,
-	TOGGLE_TOC,
+
 	LOAD_PUB_EDIT,
 	LOAD_PUB_EDIT_SUCCESS,
 	LOAD_PUB_EDIT_FAIL,
@@ -35,29 +34,7 @@ import {
 	SAVE_VERSION_SUCCESS,
 	SAVE_VERSION_FAIL,
 
-	// ADD_SELECTION,
-
-	// DISCUSSION_VOTE,
-	// DISCUSSION_VOTE_SUCCESS,
-	// DISCUSSION_VOTE_FAIL,
-
-	// ARCHIVE_COMMENT_LOAD,
-	// ARCHIVE_COMMENT_SUCCESS,
-	// ARCHIVE_COMMENT_FAIL,
-
-	// ADD_COMMENT,
-	// ADD_COMMENT_SUCCESS,
-	// ADD_COMMENT_FAIL,
-
-} from '../actions/editor';
-
-// import {
-//
-// 	ADD_DISCUSSION,
-// 	ADD_DISCUSSION_SUCCESS,
-// 	ADD_DISCUSSION_FAIL,
-//
-// } from '../actions/pub';
+} from './actions';
 
 /*--------*/
 // Initialize Default State
@@ -67,24 +44,14 @@ const defaultState = Immutable.Map({
 		discussions: [],
 	},
 	viewMode: 'edit', // or 'preview'
-	showBottomLeftMenu: true,
-	showBottomRightMenu: true,
 	activeModal: undefined,
 	status: 'loading',
 	error: null,
 	saveVersionError: null,
 	saveVersionSuccess: null,
-	newDiscussionData: {
-		selections: {},
-		assets: {},
-		references: {},
-	},
 	styleSaving: false,
 	styleScoped: null,
 	styleError: null,
-	addDiscussionStatus: 'loaded',
-	activeSaveID: null,
-
 });
 
 /*--------*/
@@ -98,8 +65,6 @@ function toggleViewMode(state) {
 	if (state.get('viewMode') === 'edit') {
 		newModes = {
 			viewMode: 'preview',
-			showBottomRightMenu: false,
-			showBottomLeftMenu: false,
 		};
 	} else {
 		newModes = {
@@ -117,74 +82,19 @@ function setViewMode(state, viewMode) {
 	if (viewMode === 'preview') {
 		newModes = {
 			viewMode: 'preview',
-			showBottomRightMenu: false,
-			showBottomLeftMenu: false,
 		};
 	} else if (viewMode === 'edit') {
 		newModes = {
 			viewMode: 'edit',
-			showBottomRightMenu: true,
-			showBottomLeftMenu: true,
 		};
 	} else if (viewMode === 'read') {
 		newModes = {
 			viewMode: 'read',
-			showBottomRightMenu: false,
-			showBottomLeftMenu: false,
 		};
 	}
 
 	return state.merge(newModes);
 }
-
-function toggleFormatting(state) {
-	let newModes = {};
-	if (state.get('viewMode') === 'preview') {
-		if (state.get('showBottomRightMenu') === false) {
-			newModes = {
-				showBottomRightMenu: true,
-				showBottomLeftMenu: false,
-			};
-		} else {
-			newModes = {
-				showBottomRightMenu: false,
-				showBottomLeftMenu: false,
-			};
-		}
-	} else {
-		newModes = {
-			showBottomRightMenu: true,
-			showBottomLeftMenu: true,
-		};
-	}
-
-	return state.merge(newModes);
-}
-
-function toggleTOC(state) {
-	let newModes = {};
-	if (state.get('viewMode') === 'preview') {
-		if (state.get('showBottomLeftMenu') === false) {
-			newModes = {
-				showBottomLeftMenu: true,
-				showBottomRightMenu: false,
-			};
-		} else {
-			newModes = {
-				showBottomLeftMenu: false,
-				showBottomRightMenu: false,
-			};
-		}
-	} else {
-		newModes = {
-			showBottomLeftMenu: true,
-			showBottomRightMenu: true,
-		};
-	}
-
-	return state.merge(newModes);
-}
-
 
 function load(state) {
 	return state.set('status', 'loading');
@@ -284,177 +194,6 @@ function saveStyleError(state, error) {
 	});
 }
 
-// function addSelection(state, selection) {
-// 	const selectionData = state.getIn(['newDiscussionData', 'selections']);
-// 	return state.mergeIn(
-// 		['newDiscussionData', 'selections'],
-// 		selectionData.set(selectionData.size + 1, selection)
-// 	);
-// }
-//
-// function addCommentLoad(state, activeSaveID) {
-// 	return state.merge({
-// 		addDiscussionStatus: 'loading',
-// 		activeSaveID: activeSaveID,
-// 	});
-// }
-//
-// function addCommentSuccess(state, result, activeSaveID) {
-// 	function findParentAndAdd(discussions, parentID, newChild) {
-// 		discussions.map((discussion)=>{
-// 			if (discussion._id === parentID) {
-// 				discussion.children.unshift(result);
-// 			}
-// 			if (discussion.children && discussion.children.length) {
-// 				findParentAndAdd(discussion.children, parentID, newChild);
-// 			}
-// 		});
-// 	}
-//
-// 	let discussionsObject = state.getIn(['pubEditData', 'editorComments']);
-// 	if (!result.parent) {
-// 		discussionsObject = discussionsObject.unshift(result);
-// 	} else {
-// 		// We have a parent, we gotta go find it and then merge inside of it
-// 		const discussionsArray = discussionsObject.toJS();
-// 		findParentAndAdd(discussionsArray, result.parent, result);
-// 		discussionsObject = discussionsArray;
-// 	}
-// 	const newState = state.mergeIn(['pubEditData', 'editorComments'], discussionsObject);
-// 	return newState.merge({
-// 		addDiscussionStatus: 'loaded',
-// 		activeSaveID: null,
-// 		newDiscussionData: {
-// 			selections: {},
-// 			assets: {},
-// 			references: {},
-// 		},
-// 	});
-// }
-
-// function addCommentFail(state, error, activeSaveID) {
-// 	console.log(error);
-// 	return state.merge({
-// 		addDiscussionStatus: 'error',
-// 		activeSaveID: activeSaveID,
-// 	});
-// }
-//
-// function addDiscussionLoad(state, activeSaveID) {
-// 	return state.merge({
-// 		addDiscussionStatus: 'loading',
-// 		activeSaveID: activeSaveID,
-// 	});
-// }
-//
-// function addDiscussionSuccess(state, result, activeSaveID, inEditor) {
-// 	if (!inEditor) {return state;}
-// 	function findParentAndAdd(discussions, parentID, newChild) {
-// 		discussions.map((discussion)=>{
-// 			if (discussion._id === parentID) {
-// 				discussion.children.unshift(result);
-// 			}
-// 			if (discussion.children && discussion.children.length) {
-// 				findParentAndAdd(discussion.children, parentID, newChild);
-// 			}
-// 		});
-// 	}
-//
-// 	let discussionsObject = state.getIn(['pubEditData', 'discussions']);
-// 	if (!result.parent) {
-// 		discussionsObject = discussionsObject.unshift(result);
-// 	} else {
-// 		// We have a parent, we gotta go find it and then merge inside of it
-// 		const discussionsArray = discussionsObject.toJS();
-// 		findParentAndAdd(discussionsArray, result.parent, result);
-// 		discussionsObject = discussionsArray;
-// 	}
-// 	const newState = state.mergeIn(['pubEditData', 'discussions'], discussionsObject);
-//
-// 	return newState.merge({
-// 		addDiscussionStatus: 'loaded',
-// 		activeSaveID: null,
-// 		newDiscussionData: {
-// 			selections: {},
-// 			assets: {},
-// 			references: {},
-// 		},
-// 	});
-// }
-
-// function addDiscussionFail(state, error, activeSaveID) {
-// 	console.log(error);
-// 	return state.merge({
-// 		addDiscussionStatus: 'error',
-// 		activeSaveID: activeSaveID,
-// 	});
-// }
-//
-// function discussionVote(state, voteType, discussionID, userYay, userNay) {
-//
-// 	let scoreChange = 0;
-// 	let newUserYay = undefined;
-// 	let newUserNay = undefined;
-//
-// 	if (voteType === 'yay' && !userYay) {
-// 		scoreChange = userNay ? 2 : 1;
-// 		newUserYay = true;
-// 	} else if (voteType === 'yay' && userYay) {
-// 		scoreChange = -1;
-// 		newUserYay = false;
-// 	} else if (voteType === 'nay' && !userNay) {
-// 		scoreChange = userYay ? 2 : 1;
-// 		newUserNay = true;
-// 	} else if (voteType === 'nay' && userNay) {
-// 		scoreChange = -1;
-// 		newUserNay = false;
-// 	}
-// 	// Find the discussion with result._id
-// 	// update the yays
-// 	// update the nays
-// 	// update useryay
-// 	// update usernay
-//
-// 	function findDiscussionAndChange(discussions) {
-// 		discussions.map((discussion)=>{
-// 			if (discussion._id === discussionID) {
-// 				discussion[voteType === 'yay' ? 'yays' : 'nays'] += scoreChange;
-// 				discussion.points += (voteType === 'yay' ? 1 : -1) * scoreChange;
-// 				discussion.userYay = newUserYay;
-// 				discussion.userNay = newUserNay;
-// 			}
-// 			if (discussion.children && discussion.children.length) {
-// 				findDiscussionAndChange(discussion.children);
-// 			}
-// 		});
-// 	}
-//
-// 	const discussionsArray = state.getIn(['pubEditData', 'editorComments']).toJS();
-//
-// 	findDiscussionAndChange(discussionsArray);
-//
-// 	return state.mergeIn(['pubEditData', 'editorComments'], discussionsArray);
-// }
-
-// function archiveComment(state, discussionID) {
-//
-// 	function findDiscussionAndChange(discussions) {
-// 		discussions.map((discussion)=>{
-// 			if (discussion._id === discussionID) {
-// 				discussion.archived = !discussion.archived;
-// 			}
-// 			if (discussion.children && discussion.children.length) {
-// 				findDiscussionAndChange(discussion.children);
-// 			}
-// 		});
-// 	}
-//
-// 	const discussionsArray = state.getIn(['pubEditData', 'editorComments']).toJS();
-// 	findDiscussionAndChange(discussionsArray);
-//
-// 	return state.mergeIn(['pubEditData', 'editorComments'], discussionsArray);
-// }
-
 // TODO: It seems like this function, if fired after the page nav has occurred, will trigger a state.get is not a function error.
 function updateBackendSuccess(state, result) {
 	if (!state.get('pubEditData').toJS) {
@@ -477,10 +216,10 @@ export default function editorReducer(state = defaultState, action) {
 		return toggleViewMode(state);
 	case SET_VIEW_MODE:
 		return setViewMode(state, action.viewMode);
-	case TOGGLE_FORMATTING:
-		return toggleFormatting(state);
-	case TOGGLE_TOC:
-		return toggleTOC(state);
+	// case TOGGLE_FORMATTING:
+		// return toggleFormatting(state);
+	// case TOGGLE_TOC:
+		// return toggleTOC(state);
 	case LOAD_PUB_EDIT:
 		return load(state);
 	case LOAD_PUB_EDIT_SUCCESS:
@@ -516,9 +255,6 @@ export default function editorReducer(state = defaultState, action) {
 	case UPDATE_PUB_BACKEND_DATA_FAIL:
 		return state;
 
-	// case ADD_SELECTION:
-	// 	return addSelection(state, action.selection);
-
 	case SAVE_VERSION_LOAD:
 		return saveVersionLoad(state);
 	case SAVE_VERSION_SUCCESS:
@@ -526,40 +262,12 @@ export default function editorReducer(state = defaultState, action) {
 	case SAVE_VERSION_FAIL:
 		return saveVersionError(state, action.error);
 
-	// case DISCUSSION_VOTE:
-	// 	return discussionVote(state, action.voteType, action.discussionID, action.userYay, action.userNay);
-	// case DISCUSSION_VOTE_SUCCESS:
-	// 	return state;
-	// case DISCUSSION_VOTE_FAIL:
-	// 	return state;
-	//
-	// case ARCHIVE_COMMENT_LOAD:
-	// 	return archiveComment(state, action.objectID);
-	// case ARCHIVE_COMMENT_SUCCESS:
-	// 	return state;
-	// case ARCHIVE_COMMENT_FAIL:
-	// 	return state;
-
 	case SAVE_STYLE_LOAD:
 		return saveStyleLoad(state);
 	case SAVE_STYLE_SUCCESS:
 		return saveStyleSuccess(state, action.result);
 	case SAVE_STYLE_FAIL:
 		return saveStyleError(state, action.error);
-
-	// case ADD_COMMENT:
-	// 	return addCommentLoad(state, action.activeSaveID);
-	// case ADD_COMMENT_SUCCESS:
-	// 	return addCommentSuccess(state, action.result, action.activeSaveID);
-	// case ADD_COMMENT_FAIL:
-	// 	return addCommentFail(state, action.error, action.activeSaveID);
-	//
-	// case ADD_DISCUSSION:
-	// 	return addDiscussionLoad(state, action.activeSaveID);
-	// case ADD_DISCUSSION_SUCCESS:
-	// 	return addDiscussionSuccess(state, action.result, action.activeSaveID, action.inEditor);
-	// case ADD_DISCUSSION_FAIL:
-	// 	return addDiscussionFail(state, action.error, action.activeSaveID);
 
 	default:
 		return ensureImmutable(state);

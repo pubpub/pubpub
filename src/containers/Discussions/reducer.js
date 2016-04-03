@@ -19,18 +19,18 @@ import {
 	ARCHIVE_DISCUSSION_SUCCESS,
 	ARCHIVE_DISCUSSION_FAIL,
 
-} from '../actions/discussions';
+} from 'containers/Discussions/actions';
 
 import {
     LOAD_PUB,
     LOAD_PUB_SUCCESS,
     LOAD_PUB_FAIL,
-} from '../actions/pub';
+} from 'containers/PubReader/actions';
 import {
 	LOAD_PUB_EDIT,
 	LOAD_PUB_EDIT_SUCCESS,
 	LOAD_PUB_EDIT_FAIL,
-} from '../actions/editor';
+} from 'containers/Editor/actions';
 
 /*--------*/
 // Initialize Default State

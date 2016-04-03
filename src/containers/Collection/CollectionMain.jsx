@@ -1,7 +1,7 @@
 import React, {PropTypes} from 'react';
 import Radium from 'radium';
 // import {globalStyles} from 'utils/styleConstants';
-import {PubPreview} from 'components';
+import {PreviewPub} from 'components';
 
 import {FormattedMessage} from 'react-intl';
 
@@ -20,7 +20,7 @@ export const CollectionMain = React.createClass({
 		const collectionPubs = this.props.collectionData && this.props.collectionData.pubs ? this.props.collectionData.pubs : [];
 		return (
 			<div style={styles.container}>
-				
+
 
 				{(()=>{
 					const length = collectionPubs.length;
@@ -30,16 +30,16 @@ export const CollectionMain = React.createClass({
 								id="collections.noPubsAdded"
 								defaultMessage="No Pubs Added"/>
 						</div>);
-					} 
+					}
 					const output = [];
 					for (let index = length; index--;) {
 						output.push(<div key={'pubWrapper-' + index} style={styles.pubWrapper}>
-								<PubPreview 
-									pubData={this.props.collectionData.pubs[index]} 
+								<PreviewPub
+									pubData={this.props.collectionData.pubs[index]}
 									headerFontSize={'22px'}
 									textFontSize={'18px'} />
 							</div>);
-							
+
 					}
 					return output;
 				})()}

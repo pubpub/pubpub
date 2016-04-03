@@ -1,7 +1,7 @@
 import React, {PropTypes} from 'react';
 import Radium from 'radium';
 import {Autocomplete} from 'containers';
-import {baseStyles} from '../editorModalStyle';
+import {baseStyles} from './utils/editorModalStyle';
 import {globalStyles} from 'utils/styleConstants';
 
 import {globalMessages} from 'utils/globalMessages';

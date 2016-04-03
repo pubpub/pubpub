@@ -3,6 +3,7 @@ import { combineReducers } from 'redux';
 import {reducer as formReducer} from 'redux-form';
 import { routerStateReducer } from 'redux-router';
 
+import app from './containers/App/reducer';
 import autocomplete from './containers/Autocomplete/reducer';
 import editor from './containers/editor/reducer';
 import explore from './containers/explore/reducer';
@@ -10,7 +11,6 @@ import discussions from './containers/discussions/reducer';
 import group from './containers/group/reducer';
 import journal from './containers/journal/reducer';
 import landing from './containers/landing/reducer';
-import language from './containers/language/reducer';
 import login from './containers/login/reducer';
 import nav from './containers/nav/reducer';
 import user from './containers/user/reducer';
@@ -43,6 +43,7 @@ export default combineReducers({
 			}
 		},
 	}),
+	app,
 	autocomplete,
 	editor,
 	explore,
@@ -50,7 +51,6 @@ export default combineReducers({
 	group,
 	journal,
 	landing,
-	language,
 	login,
 	nav,
 	user,

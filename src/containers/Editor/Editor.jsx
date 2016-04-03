@@ -9,31 +9,28 @@ import Helmet from 'react-helmet';
 import PureRenderMixin from 'react-addons-pure-render-mixin';
 import ReactFireMixin from 'reactfire';
 
-import {Discussions, EditorModals} from '../';
+import {Discussions, EditorModals} from 'containers';
 import {LoaderDeterminate, Formatting, EditorStylePane, PubBody, Menu} from 'components';
-import {clearPub} from '../../actions/pub';
-import {getPubEdit, toggleEditorViewMode, toggleTOC, unmountEditor, closeModal, openModal, addSelection, setEditorViewMode, saveVersion, updatePubBackendData, saveStyle} from '../../actions/editor';
+import {clearPub} from 'containers/PubReader/actions';
+import {getPubEdit, toggleEditorViewMode, unmountEditor, closeModal, openModal, addSelection, setEditorViewMode, saveVersion, updatePubBackendData, saveStyle} from './actions';
 
 import {debounce} from 'utils/loadingFunctions';
-import {submitPubToJournal} from '../../actions/journal';
+import {submitPubToJournal} from 'containers/JournalProfile/actions';
 
-import initCodeMirrorMode from './editorCodeMirrorMode';
-// import {styles} from './editorStyles';
-import {codeMirrorStyles, codeMirrorStyleClasses} from './codeMirrorStyles';
-import {globalStyles} from 'utils/styleConstants';
-
-import {insertText, createFocusDoc, addCodeMirrorKeys} from './editorCodeFunctions';
-import {editorDefaultPubText, editorDefaultPageText} from './editorDefaultText';
-
-import FirepadUserList from './editorFirepadUserlist';
+import initCodeMirrorMode from './utils/editorCodeMirrorMode';
+import {codeMirrorStyles, codeMirrorStyleClasses} from './utils/codeMirrorStyles';
+import {insertText, createFocusDoc, addCodeMirrorKeys} from './utils/editorCodeFunctions';
+import {editorDefaultPubText, editorDefaultPageText} from './utils/editorDefaultText';
+import FirepadUserList from './utils/editorFirepadUserlist';
 
 // import {convertFirebaseToObject} from 'utils/parsePlugins';
-import {generateTOC} from '../../markdown/generateTOC';
+import {generateTOC} from 'utils/generateTOC';
+import {globalStyles} from 'utils/styleConstants';
 
 import {globalMessages} from 'utils/globalMessages';
 import {FormattedMessage} from 'react-intl';
-import {Iterable} from 'immutable';
-import EditorWidgets from '../../components/EditorWidgets/EditorWidgets';
+// import {Iterable} from 'immutable';
+import EditorWidgets from 'components/EditorWidgets/EditorWidgets';
 
 let FireBaseURL;
 let styles;
@@ -287,9 +284,9 @@ const Editor = React.createClass({
 
 	// Toggle Table of Contents dropdown
 	// Only has an effect when in livePreview mode
-	toggleTOC: function() {
-		return this.props.dispatch(toggleTOC());
-	},
+	// toggleTOC: function() {
+	// 	return this.props.dispatch(toggleTOC());
+	// },
 
 	saveVersion: function(versionDescription, publish) {
 

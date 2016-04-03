@@ -5,11 +5,11 @@ import { Link } from 'react-router';
 import DiscussionsInput from './DiscussionsInput';
 import DiscussionsScore from './DiscussionsScore';
 
-import PPMComponent from '../../markdown/PPMComponent';
+import PPMComponent from 'markdown/PPMComponent';
 
 // import ResizingText from '../../components/PubBody/ResizingText';
 
-import {globalMessages} from 'utils/globalMessages';
+// import {globalMessages} from 'utils/globalMessages';
 import {FormattedMessage, FormattedDate, FormattedRelative} from 'react-intl';
 
 let styles = {};
