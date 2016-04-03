@@ -23,14 +23,14 @@ const PubBody = React.createClass({
 		status: PropTypes.string,
 		isPublished: PropTypes.bool,
 		isPage: PropTypes.bool,
-		title: PropTypes.string,
-		abstract: PropTypes.string,
-		authorsNote: PropTypes.string,
-		htmlTree: PropTypes.array,
+		// title: PropTypes.string,
+		// abstract: PropTypes.string,
+		// authorsNote: PropTypes.string,
+		// htmlTree: PropTypes.array,
 		markdown: PropTypes.string,
-		authors: PropTypes.array,
+		// authors: PropTypes.array,
 		addSelectionHandler: PropTypes.func,
-		style: PropTypes.object,
+		// style: PropTypes.object,
 
 		styleScoped: PropTypes.string,
 
@@ -39,36 +39,36 @@ const PubBody = React.createClass({
 		isFeatured: PropTypes.bool,
 		errorView: PropTypes.bool,
 
-		assetsObject: PropTypes.object,
-		referencesObject: PropTypes.object,
-		selectionsArray: PropTypes.array,
+		// assetsObject: PropTypes.object,
+		// referencesObject: PropTypes.object,
+		// selectionsArray: PropTypes.array,
 
 		references: PropTypes.array,
 
 		minFont: PropTypes.number,
 		maxFont: PropTypes.number,
 
-		firstPublishedDate: PropTypes.string,
-		lastPublishedDate: PropTypes.string,
+		// firstPublishedDate: PropTypes.string,
+		// lastPublishedDate: PropTypes.string,
 
 	},
 	getDefaultProps: function() {
 		return {
-			htmlTree: [],
-			authors: [],
-			text: '',
-			style: {
-				type: 'science',
-				googleFontURL: undefined,
-				cssObjectString: {},
-			},
+			// htmlTree: [],
+			// authors: [],
+			// text: '',
+			// style: {
+			// 	type: 'science',
+			// 	googleFontURL: undefined,
+			// 	cssObjectString: {},
+			// },
 		};
 	},
 
 	getInitialState() {
 		return {
-			htmlTree: [],
-			TOC: []
+			// htmlTree: [],
+			// TOC: []
 		};
 	},
 
@@ -78,10 +78,10 @@ const PubBody = React.createClass({
 	},
 
 	componentWillReceiveProps(nextProps) {
-		if (this.props.style.googleFontURL !== nextProps.style.googleFontURL) {
-			// console.log('load new fonts!');
-			loadCss(nextProps.style.googleFontURL);
-		}
+		// if (this.props.style.googleFontURL !== nextProps.style.googleFontURL) {
+		// 	// console.log('load new fonts!');
+		// 	loadCss(nextProps.style.googleFontURL);
+		// }
 		if (this.props.styleScoped !== nextProps.styleScoped) {
 			document.getElementById('dynamicStyle').innerHTML = nextProps.styleScoped;
 		}

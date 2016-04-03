@@ -43,7 +43,7 @@ const PubReader = React.createClass({
 	mixins: [PureRenderMixin],
 
 	statics: {
-		fetchDataDeferred: function(getState, dispatch, location, routeParams) {
+		fetchData: function(getState, dispatch, location, routeParams) {
 			if (getState().pub.getIn(['pubData', 'slug']) !== routeParams.slug) {
 				return dispatch(getPub(routeParams.slug, getState().journal.getIn(['journalData', '_id']), location.query.referrer ));
 			}
