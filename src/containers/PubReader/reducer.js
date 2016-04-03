@@ -1,5 +1,5 @@
 import Immutable from 'immutable';
-import {ensureImmutable} from './';
+import {ensureImmutable} from 'reducers';
 
 /*--------*/
 // Load Actions

@@ -4,11 +4,14 @@ import { Link } from 'react-router';
 import { pushState } from 'redux-router';
 import Radium from 'radium';
 import Helmet from 'react-helmet';
-import {getJournal, saveJournal, createCollection, clearCollectionRedirect} from 'actions/journal';
-import {follow, unfollow, toggleVisibility} from 'actions/login';
-import {LoaderDeterminate} from 'components';
-import {JournalDesign, JournalCurate, JournalMain, JournalSettings} from './components';
-import {NotFound} from 'containers';
+import {getJournal, saveJournal, createCollection, clearCollectionRedirect} from './actions';
+import {follow, unfollow, toggleVisibility} from 'containers/Login/actions';
+import {LoaderDeterminate, NotFound} from 'components';
+import JournalDesign from './JournalDesign';
+import JournalCurate from './JournalCurate';
+import JournalMain from './JournalMain';
+import JournalSettings from './JournalSettings';
+
 import {globalStyles, profileStyles, navStyles} from 'utils/styleConstants';
 
 import {globalMessages} from 'utils/globalMessages';

@@ -2,9 +2,10 @@ import React, { PropTypes } from 'react';
 import {connect} from 'react-redux';
 import Radium from 'radium';
 import PureRenderMixin from 'react-addons-pure-render-mixin';
-import {LoaderIndeterminate, CreateJournalForm} from '../../components';
-import {create} from '../../actions/journal';
-import {toggleVisibility} from '../../actions/login';
+import {LoaderIndeterminate} from 'components';
+import CreateJournalForm from './CreateJournalForm';
+import {create} from 'containers/JournalProfile/actions';
+import {toggleVisibility} from 'containers/Login/actions';
 import {globalStyles} from 'utils/styleConstants';
 
 import {FormattedMessage} from 'react-intl';
@@ -42,27 +43,27 @@ const Login = React.createClass({
 			} else if (!formValues.subdomain) {
 				this.setState({errorMessage: 'noSubdomain'});
 			} else {
-				this.props.dispatch(create(formValues.journalName, formValues.subdomain));	
+				this.props.dispatch(create(formValues.journalName, formValues.subdomain));
 			}
-			
+
 		}
-		
+
 	},
 
 	render: function() {
 		return (
-			<div style={styles.container}>		
+			<div style={styles.container}>
 				<div style={styles.loader}>
 					{this.props.journalData.getIn(['createJournalData', 'status']) === 'loading'
 						? <LoaderIndeterminate color={globalStyles.sideText}/>
 						: null
 					}
-				</div>	
-				
+				</div>
+
 				<div style={styles.header}>
 					<FormattedMessage id="journal.createJournal" defaultMessage="Create Journal"/>
 				</div>
-				<CreateJournalForm onSubmit={this.handleCreateSubmit} /> 
+				<CreateJournalForm onSubmit={this.handleCreateSubmit} />
 				<div style={[styles.error, !this.state.errorMessage && styles.hidden]}>
 					{(()=>{
 						switch (this.state.errorMessage) {

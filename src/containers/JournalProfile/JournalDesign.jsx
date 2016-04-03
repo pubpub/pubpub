@@ -1,6 +1,6 @@
 /* global CodeMirror */
 import React, {PropTypes} from 'react';
-import Radium, {Style} from 'radium';
+import Radium from 'radium';
 import {Button, LoaderIndeterminate} from 'components';
 // import {LandingBody} from 'containers/Landing/components';
 import ColorPicker from 'react-color';

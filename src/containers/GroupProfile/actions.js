@@ -1,8 +1,8 @@
-import analytics from '../utils/analytics';
+import analytics from 'utils/analytics';
 /*--------*/
 // Define Action types
-// 
-// All action types are defined as constants. Do not manually pass action 
+//
+// All action types are defined as constants. Do not manually pass action
 // types as strings in action creators
 /*--------*/
 export const CREATE_GROUP_LOAD = 'group/CREATE_GROUP_LOAD';
@@ -20,7 +20,7 @@ export const SAVE_GROUP_FAIL = 'group/SAVE_GROUP_FAIL';
 
 /*--------*/
 // Define Action creators
-// 
+//
 // All calls to dispatch() call one of these functions. Do not manually create
 // action objects (e.g. {type:example, payload:data} ) within dispatch()
 // function calls
@@ -28,7 +28,7 @@ export const SAVE_GROUP_FAIL = 'group/SAVE_GROUP_FAIL';
 // export function toggleVisibility() {
 // 	return {
 // 		type: TOGGLE_VISIBILITY
-// 	};	
+// 	};
 // }
 
 export function create(groupName, groupSlug) {

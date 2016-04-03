@@ -1,5 +1,5 @@
 import Immutable from 'immutable';
-import {ensureImmutable} from './';
+import {ensureImmutable} from 'reducers';
 
 /*--------*/
 // Load Actions
@@ -12,15 +12,15 @@ import {
 } from 'containers/Autocomplete/actions';
 
 /*--------*/
-// Initialize Default State 
+// Initialize Default State
 /*--------*/
 export const defaultState = Immutable.Map({});
 
 /*--------*/
-// Define reducing functions 
+// Define reducing functions
 //
 // These functions take in an initial state and return a new
-// state. They are pure functions. We use Immutable to enforce this. 
+// state. They are pure functions. We use Immutable to enforce this.
 /*--------*/
 function loading(state, autocompleteKey) {
 	return state.setIn([autocompleteKey, 'loading'], true);
@@ -66,11 +66,11 @@ export default function autocompleteReducer(state = defaultState, action) {
 		return success(state, action.autocompleteKey, action.string, action.result);
 	case AUTOCOMPLETE_FAIL:
 		return failed(state, action.autocompleteKey, action.error);
-	case AUTOCOMPLETE_CLEAR: 
+	case AUTOCOMPLETE_CLEAR:
 		return clear(state, action.autocompleteKey);
-		
+
 	default:
 		return ensureImmutable(state);
 	}
-	
+
 }

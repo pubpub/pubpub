@@ -1,5 +1,5 @@
 import Immutable from 'immutable';
-import {ensureImmutable} from './';
+import {ensureImmutable} from 'reducers';
 
 /*--------*/
 // Load Actions
@@ -10,7 +10,10 @@ import {
 	LOAD_APP_AND_LOGIN_FAIL,
 	OPEN_MENU,
 	CLOSE_MENU,
-} from '../actions/nav';
+	// GET_RANDOM_SLUG_LOAD,
+	GET_RANDOM_SLUG_SUCCESS,
+	// GET_RANDOM_SLUG_FAIL,
+} from './actions';
 
 /*--------*/
 // Initialize Default State
@@ -71,6 +74,14 @@ function closeMenu(state) {
 	});
 }
 
+function newRandomSlug(state, result) {
+	if (!result) { return state; }
+
+	return state.mergeIn(['journalData'], {
+		randomSlug: result,
+	});
+}
+
 /*--------*/
 // Bind actions to specific reducing functions.
 /*--------*/
@@ -87,6 +98,8 @@ export default function appReducer(state = defaultState, action) {
 		return openMenu(state);
 	case CLOSE_MENU:
 		return closeMenu(state);
+	case GET_RANDOM_SLUG_SUCCESS:
+		return newRandomSlug(state, action.result);
 	default:
 		return ensureImmutable(state);
 	}

@@ -102,3 +102,11 @@ export function loadAppAndLogin(req, res) {
 	});
 }
 app.get('/loadAppAndLogin', loadAppAndLogin);
+
+export function getRandomSlug(req, res) {
+	Pub.getRandomSlug(req.query.journalID, function(err, result) {
+		if (err) {console.log(err); return res.json(500);}
+		return res.status(201).json(result);
+	});
+}
+app.get('/getRandomSlug', getRandomSlug);

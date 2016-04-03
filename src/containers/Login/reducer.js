@@ -1,5 +1,5 @@
 import Immutable from 'immutable';
-import {ensureImmutable} from './';
+import {ensureImmutable} from 'reducers';
 
 /*--------*/
 // Load Actions
@@ -32,14 +32,14 @@ import {
 	UNFOLLOW_SUCCESS,
 	// UNFOLLOW_FAIL,
 
-} from '../actions/login';
+} from './actions';
 
 import {
 	UPDATE_USER_SUCCESS,
 
 	SET_NOTIFICATIONS_READ_LOAD,
 
-} from '../actions/user';
+} from 'containers/UserProfile/actions';
 
 import {
 	CREATE_ASSET_LOAD,
@@ -47,15 +47,15 @@ import {
 	UPDATE_ASSET_LOAD,
 	UPDATE_ASSET_SUCCESS,
 
-} from '../actions/assets';
+} from 'containers/MediaLibrary/actions';
 
 import {
 
-	LOAD_JOURNAL_AND_LOGIN,
-	LOAD_JOURNAL_AND_LOGIN_SUCCESS,
-	LOAD_JOURNAL_AND_LOGIN_FAIL,
+	LOAD_APP_AND_LOGIN_LOAD,
+	LOAD_APP_AND_LOGIN_SUCCESS,
+	LOAD_APP_AND_LOGIN_FAIL,
 
-} from '../actions/journal';
+} from 'containers/App/actions';
 /*--------*/
 // Initialize Default State
 /*--------*/
@@ -246,11 +246,11 @@ export default function loginReducer(state = defaultState, action) {
 	case UPDATE_USER_SETTINGS_FAIL:
 		return state;
 
-	case LOAD_JOURNAL_AND_LOGIN:
+	case LOAD_APP_AND_LOGIN_LOAD:
 		return state;
-	case LOAD_JOURNAL_AND_LOGIN_SUCCESS:
+	case LOAD_APP_AND_LOGIN_SUCCESS:
 		return loggedIn(state, action.result.loginData);
-	case LOAD_JOURNAL_AND_LOGIN_FAIL:
+	case LOAD_APP_AND_LOGIN_FAIL:
 		return failed(state, action.error);
 
 	case UPDATE_USER_SUCCESS:

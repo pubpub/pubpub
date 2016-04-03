@@ -3,10 +3,14 @@ import {connect} from 'react-redux';
 import Radium from 'radium';
 import Helmet from 'react-helmet';
 import { Link } from 'react-router';
-import {getGroup, saveGroup} from '../../actions/group';
+import {getGroup, saveGroup} from './actions';
 
 import {globalStyles, profileStyles, navStyles} from 'utils/styleConstants';
-import {LoaderDeterminate, GroupMain, GroupMembers, GroupSettings} from '../../components';
+import {LoaderDeterminate} from 'components';
+
+import GroupMain from './GroupMain';
+import GroupMembers from './GroupMembers';
+import GroupSettings from './GroupSettings';
 
 import {globalMessages} from 'utils/globalMessages';
 import {FormattedMessage} from 'react-intl';
@@ -73,13 +77,13 @@ const Profile = React.createClass({
 								</li></Link>
 
 								<li style={[navStyles.navSeparator, navStyles.navItemShow]}></li>
-								
+
 							</ul>
 							: <ul style={navStyles.navList}></ul>
 						}
-						
+
 					</div>
-					
+
 					<LoaderDeterminate value={this.props.groupData.get('status') === 'loading' ? 0 : 100}/>
 
 					<div style={[globalStyles.hiddenUntilLoad, globalStyles[this.props.groupData.get('status')]]}>
@@ -89,8 +93,8 @@ const Profile = React.createClass({
 								<div style={styles.groupName}>{groupData.groupName}</div>
 							</Link>
 							<div style={styles.groupDescription}>{groupData.description}</div>
-						</div>	
-						
+						</div>
+
 						{(() => {
 							if (this.props.groupData.getIn(['groupData', 'groupName']) === 'Not Authorized') {
 								return <div style={styles.notAuthorized}>Not Authorized</div>;
@@ -99,15 +103,15 @@ const Profile = React.createClass({
 							switch (this.props.mode) {
 							case 'members':
 								return (
-									<GroupMembers 
+									<GroupMembers
 										groupData={groupData}
 										saveStatus={this.props.groupData.get('memberSaveStatus')}
-										handleGroupSave={this.groupSave} 
+										handleGroupSave={this.groupSave}
 										isAdmin={isAdmin} />
 								);
 							case 'settings':
 								return (
-									<GroupSettings 
+									<GroupSettings
 										groupData={groupData}
 										groupSaving={this.props.groupData.get('groupSaving')}
 										saveStatus={this.props.groupData.get('adminSaveStatus')}
@@ -116,14 +120,14 @@ const Profile = React.createClass({
 								);
 							default:
 								return (
-									<GroupMain 
+									<GroupMain
 										groupData={groupData} />
 								);
 							}
 						})()}
 
 					</div>
-							
+
 				</div>
 
 			</div>
@@ -134,8 +138,8 @@ const Profile = React.createClass({
 
 export default connect( state => {
 	return {
-		loginData: state.login, 
-		groupData: state.group, 
+		loginData: state.login,
+		groupData: state.group,
 		groupSlug: state.router.params.groupSlug,
 		mode: state.router.params.mode,
 	};

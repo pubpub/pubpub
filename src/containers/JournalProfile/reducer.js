@@ -1,5 +1,5 @@
 import Immutable from 'immutable';
-import {ensureImmutable} from './';
+import {ensureImmutable} from 'reducers';
 
 /*--------*/
 // Load Actions
@@ -29,20 +29,16 @@ import {
 	SUBMIT_PUB_TO_JOURNAL_SUCCESS,
 	SUBMIT_PUB_TO_JOURNAL_FAIL,
 
-	// GET_RANDOM_SLUG_LOAD,
-	GET_RANDOM_SLUG_SUCCESS,
-	// GET_RANDOM_SLUG_FAIL,
-
 	CLEAR_COLLECTION_REDIRECT,
 
-} from '../actions/journal';
+} from './actions';
 
 import {
 
 	LOGIN_LOAD_SUCCESS,
 	LOGOUT_LOAD_SUCCESS,
 
-} from '../actions/login';
+} from 'containers/Login/actions';
 
 /*--------*/
 // Initialize Default State
@@ -203,11 +199,22 @@ function logoutLoad(state) {
 	});
 }
 
-function newRandomSlug(state, result) {
-	if (!result) { return state; }
+function loadJournal(state) {
+	return state.set('status', 'loading');
+}
 
-	return state.mergeIn(['journalData'], {
-		randomSlug: result,
+function loadJournalSuccess(state, journalData) {
+	return state.merge({
+		status: 'loaded',
+		error: null,
+		journalData
+	});
+}
+
+function loadJournalFail(state, error) {
+	return state.merge({
+		status: 'loaded',
+		error: error,
 	});
 }
 
@@ -263,9 +270,6 @@ export default function loginReducer(state = defaultState, action) {
 		return loginLoad(state, action.result);
 	case LOGOUT_LOAD_SUCCESS:
 		return logoutLoad(state);
-
-	case GET_RANDOM_SLUG_SUCCESS:
-		return newRandomSlug(state, action.result);
 
 	case CLEAR_COLLECTION_REDIRECT:
 		return clearCollectionRedirect(state);

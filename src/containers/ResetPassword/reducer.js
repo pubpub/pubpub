@@ -1,5 +1,5 @@
 import Immutable from 'immutable';
-import {ensureImmutable} from './';
+import {ensureImmutable} from 'reducers';
 
 /*--------*/
 // Load Actions
@@ -18,7 +18,7 @@ import {
 	RESET_FAIL,
 } from '../actions/resetPassword';
 /*--------*/
-// Initialize Default State 
+// Initialize Default State
 /*--------*/
 export const defaultState = Immutable.Map({
 	loading: false,
@@ -27,10 +27,10 @@ export const defaultState = Immutable.Map({
 });
 
 /*--------*/
-// Define reducing functions 
+// Define reducing functions
 //
 // These functions take in an initial state and return a new
-// state. They are pure functions. We use Immutable to enforce this. 
+// state. They are pure functions. We use Immutable to enforce this.
 /*--------*/
 function loading(state) {
 	return state.merge({
@@ -110,5 +110,5 @@ export default function autocompleteReducer(state = defaultState, action) {
 	default:
 		return ensureImmutable(state);
 	}
-	
+
 }

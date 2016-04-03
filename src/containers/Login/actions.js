@@ -1,11 +1,11 @@
 import SHA3 from 'crypto-js/sha3';
 import encHex from 'crypto-js/enc-hex';
-import analytics from '../utils/analytics';
+import analytics from 'utils/analytics';
 
  /*--------*/
 // Define Action types
-// 
-// All action types are defined as constants. Do not manually pass action 
+//
+// All action types are defined as constants. Do not manually pass action
 // types as strings in action creators
 /*--------*/
 export const TOGGLE_VISIBILITY = 'login/TOGGLE_VISIBILITY';
@@ -37,7 +37,7 @@ export const UNFOLLOW_FAIL = 'user/UNFOLLOW_FAIL';
 
 /*--------*/
 // Define Action creators
-// 
+//
 // All calls to dispatch() call one of these functions. Do not manually create
 // action objects (e.g. {type:example, payload:data} ) within dispatch()
 // function calls
@@ -45,13 +45,13 @@ export const UNFOLLOW_FAIL = 'user/UNFOLLOW_FAIL';
 export function toggleVisibility() {
 	return {
 		type: TOGGLE_VISIBILITY
-	};	
+	};
 }
 
 export function toggleViewMode() {
 	return {
 		type: TOGGLE_VIEWMODE
-	};	
+	};
 }
 
 export function login(email, password) {
@@ -93,7 +93,7 @@ export function register(email, password, firstName, lastName, image) {
 		lastName: lastName,
 	};
 	analytics.sendEvent('Register', analyticsData);
-	
+
 	return {
 		types: [REGISTER_LOAD, REGISTER_LOAD_SUCCESS, REGISTER_LOAD_FAIL],
 		promise: (client) => client.post('/register', {data: {
@@ -112,7 +112,7 @@ export function saveSettingsUser(newSettings) {
 		types: [UPDATE_USER_SETTINGS_LOAD, UPDATE_USER_SETTINGS_SUCCESS, UPDATE_USER_SETTINGS_FAIL],
 		promise: (client) => client.post('/updateUserSettings', {data: {
 			newSettings: newSettings,
-		}}) 
+		}})
 	};
 }
 
@@ -124,18 +124,18 @@ export function follow(type, followedID, analyticsData) {
 		promise: (client) => client.post('/follow', {data: {
 			type: type,
 			followedID: followedID,
-		}}) 
+		}})
 	};
 }
 
 export function unfollow(type, followedID, analyticsData) {
 	analytics.sendEvent('Unfollow: ' + type, analyticsData);
-	
+
 	return {
 		types: [UNFOLLOW_LOAD, UNFOLLOW_SUCCESS, UNFOLLOW_FAIL],
 		promise: (client) => client.post('/unfollow', {data: {
 			type: type,
 			followedID: followedID,
-		}}) 
+		}})
 	};
 }

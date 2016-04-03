@@ -96,14 +96,6 @@ export function getJournal(req, res) {
 }
 app.get('/getJournal', getJournal);
 
-export function getRandomSlug(req, res) {
-	Pub.getRandomSlug(req.query.journalID, function(err, result) {
-		if (err) {console.log(err); return res.json(500);}
-		return res.status(201).json(result);
-	});
-}
-app.get('/getRandomSlug', getRandomSlug);
-
 export function saveJournal(req, res) {
 	Journal.findOne({subdomain: req.body.subdomain}).exec(function(err, journal) {
 		// console.log('in server save journal');

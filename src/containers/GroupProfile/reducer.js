@@ -1,5 +1,5 @@
 import Immutable from 'immutable';
-import {ensureImmutable} from './';
+import {ensureImmutable} from 'reducers';
 
 /*--------*/
 // Load Actions
@@ -17,7 +17,7 @@ import {
 	SAVE_GROUP_SUCCESS,
 	SAVE_GROUP_FAIL,
 
-} from '../actions/group';
+} from './actions';
 
 /*--------*/
 // Initialize Default State
@@ -27,7 +27,7 @@ export const defaultState = Immutable.Map({
 		groupCreated: false,
 		status: 'loaded',
 		error: null,
-		groupSlug: null,	
+		groupSlug: null,
 	},
 	groupData: {
 		pubs: [],
@@ -98,7 +98,7 @@ function loadSuccess(state, result) {
 			groupName: 'Not Authorized',
 		};
 	}
-	
+
 	return state.merge(outputState);
 }
 
@@ -128,7 +128,7 @@ function saveGroupSuccess(state, groupData) {
 	});
 }
 
-function saveGroupFail(state, error) {	
+function saveGroupFail(state, error) {
 	return state.merge({
 		groupSaving: false,
 		groupSavingError: error,

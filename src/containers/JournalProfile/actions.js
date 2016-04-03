@@ -1,4 +1,4 @@
-import analytics from '../utils/analytics';
+// import analytics from 'utils/analytics';
 
 /*--------*/
 // Define Action types
@@ -29,10 +29,6 @@ export const SAVE_COLLECTION_FAIL = 'journal/SAVE_COLLECTION_FAIL';
 export const SUBMIT_PUB_TO_JOURNAL = 'journal/SUBMIT_PUB_TO_JOURNAL';
 export const SUBMIT_PUB_TO_JOURNAL_SUCCESS = 'journal/SUBMIT_PUB_TO_JOURNAL_SUCCESS';
 export const SUBMIT_PUB_TO_JOURNAL_FAIL = 'journal/SUBMIT_PUB_TO_JOURNAL_FAIL';
-
-export const GET_RANDOM_SLUG_LOAD = 'journal/GET_RANDOM_SLUG_LOAD';
-export const GET_RANDOM_SLUG_SUCCESS = 'journal/GET_RANDOM_SLUG_SUCCESS';
-export const GET_RANDOM_SLUG_FAIL = 'journal/GET_RANDOM_SLUG_FAIL';
 
 export const CLEAR_COLLECTION_REDIRECT = 'journal/CLEAR_COLLECTION_REDIRECT';
 
@@ -88,14 +84,6 @@ export function submitPubToJournal(pubID, journalData) {
 		types: [SUBMIT_PUB_TO_JOURNAL, SUBMIT_PUB_TO_JOURNAL_SUCCESS, SUBMIT_PUB_TO_JOURNAL_FAIL],
 		promise: (client) => client.post('/submitPubToJournal', {data: {pubID: pubID, journalID: journalData._id}}),
 		journalData: journalData,
-	};
-}
-
-export function getRandomSlug(journalID, analyticsData) {
-	analytics.sendEvent('Random Pub', analyticsData);
-	return {
-		types: [GET_RANDOM_SLUG_LOAD, GET_RANDOM_SLUG_SUCCESS, GET_RANDOM_SLUG_FAIL],
-		promise: (client) => client.get('/getRandomSlug', {params: {journalID: journalID}})
 	};
 }
 

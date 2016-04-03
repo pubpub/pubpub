@@ -1,14 +1,14 @@
 import {expect} from 'chai';
 import {Map} from 'immutable';
 
-import reducer from '../explore';
+import reducer from './reducer';
 // import {
 // 	OPEN_MENU,
-// } from '../../actions/explore';
+// } from '../../actions/group';
 
 describe('Reducers', () => {
-	describe('explore.js', () => {
-		
+	describe('group.js', () => {
+
 		it('should return a default state', () => {
 			const newState = reducer(undefined, {});
 			expect(newState).to.exist;

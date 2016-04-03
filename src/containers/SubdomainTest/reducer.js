@@ -1,5 +1,5 @@
 import Immutable from 'immutable';
-import {ensureImmutable} from './';
+import {ensureImmutable} from 'reducers';
 
 /*--------*/
 // Load Actions
@@ -7,7 +7,7 @@ import {ensureImmutable} from './';
 import {LOAD, LOAD_SUCCESS, LOAD_FAIL} from '../actions/subdomainTest';
 
 /*--------*/
-// Initialize Default State 
+// Initialize Default State
 /*--------*/
 const defaultState = Immutable.Map({
 	testGetEmpty: {},
@@ -17,10 +17,10 @@ const defaultState = Immutable.Map({
 });
 
 /*--------*/
-// Define reducing functions 
+// Define reducing functions
 //
 // These functions take in an initial state and return a new
-// state. They are pure functions. We use Immutable to enforce this. 
+// state. They are pure functions. We use Immutable to enforce this.
 /*--------*/
 function load(state) {
 	return state.set('loading', 50);

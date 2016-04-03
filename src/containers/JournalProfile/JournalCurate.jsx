@@ -1,7 +1,7 @@
 import React, {PropTypes} from 'react';
 import Radium from 'radium';
 import {Autocomplete} from 'containers';
-import {CollectionGallery, LoaderIndeterminate, PubPreview} from 'components';
+import {GalleryCollection, LoaderIndeterminate, PreviewPub} from 'components';
 import {globalStyles} from 'utils/styleConstants';
 // import { Link } from 'react-router';
 
@@ -71,7 +71,7 @@ const JournalCurate = React.createClass({
 						return (<div key={'featuredPubSearch-' + index} style={styles.result}>
 
 							<div style={styles.resultDetails}>
-								<PubPreview
+								<PreviewPub
 									pubData={pub}
 									headerFontSize={'16px'}
 									textFontSize={'13px'}
@@ -154,7 +154,7 @@ const JournalCurate = React.createClass({
 							const output = [];
 							for (let index = length; index--;) {
 								output.push(<div key={'featuredPubItem-' + index} style={styles.featuredPubsSection}>
-									<PubPreview
+									<PreviewPub
 										pubData={this.props.journalData.pubsFeatured[index]}
 										headerFontSize={'16px'}
 										textFontSize={'13px'} />
@@ -193,7 +193,7 @@ const JournalCurate = React.createClass({
 									output.push(<div key={'submittedPubItem-' + index} style={styles.result}>
 
 												<div style={styles.resultDetails}>
-													<PubPreview
+													<PreviewPub
 														pubData={this.props.journalData.pubsSubmitted[index]}
 														headerFontSize={'16px'}
 														textFontSize={'13px'}
@@ -221,7 +221,7 @@ const JournalCurate = React.createClass({
 					</div>
 						{
 							this.props.journalData.collections && this.props.journalData.collections.length
-								? <CollectionGallery collections={this.props.journalData.collections} />
+								? <GalleryCollection collections={this.props.journalData.collections} />
 								: <div style={globalStyles.emptyBlock}>
 									<FormattedMessage
 										id="journal.noCollections"
