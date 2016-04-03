@@ -3,20 +3,20 @@ import { combineReducers } from 'redux';
 import {reducer as formReducer} from 'redux-form';
 import { routerStateReducer } from 'redux-router';
 
-import autocomplete from './autocomplete';
-import editor from './editor';
-import explore from './explore';
-import discussions from './discussions';
-import group from './group';
-import journal from './journal';
-import landing from './landing';
-import language from './language';
-import login from './login';
-import nav from './nav';
-import user from './user';
-import pub from './pub';
-import resetPassword from './resetPassword';
-import subdomainTest from './subdomainTest';
+import autocomplete from './containers/Autocomplete/reducer';
+import editor from './containers/editor/reducer';
+import explore from './containers/explore/reducer';
+import discussions from './containers/discussions/reducer';
+import group from './containers/group/reducer';
+import journal from './containers/journal/reducer';
+import landing from './containers/landing/reducer';
+import language from './containers/language/reducer';
+import login from './containers/login/reducer';
+import nav from './containers/nav/reducer';
+import user from './containers/user/reducer';
+import pub from './containers/pub/reducer';
+import resetPassword from './containers/resetPassword/reducer';
+import subdomainTest from './containers/subdomainTest/reducer';
 
 export default combineReducers({
 	router: routerStateReducer,

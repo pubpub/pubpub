@@ -3,7 +3,7 @@ import {StyleRoot} from 'radium';
 import Helmet from 'react-helmet';
 import {connect} from 'react-redux';
 import {loadJournalAndLogin} from '../../actions/journal';
-import {AppBody} from '../';
+import {AppBody} from './AppBody';
 
 
 import {IntlProvider} from 'react-intl';
@@ -25,9 +25,9 @@ const App = React.createClass({
 	statics: {
 		fetchData: function(getState, dispatch) {
 			if (getState().journal.get('status') === 'loading') {
-				return dispatch(loadJournalAndLogin());				
+				return dispatch(loadJournalAndLogin());
 			}
-			return ()=>{};		
+			return ()=>{};
 		}
 	},
 
@@ -47,14 +47,14 @@ const App = React.createClass({
 				{property: 'fb:app_id', content: '924988584221879'},
 			]
 		};
-		
+
 		return (
-			
+
 			<IntlProvider locale={'en'} messages={this.props.languageData.get('languageObject').toJS()}>
 				<StyleRoot>
 					<Helmet {...metaData} />
 
-					<AppBody 
+					<AppBody
 						journalData={this.props.journalData}
 						languageData={this.props.languageData}
 						loginData={this.props.loginData}
@@ -75,7 +75,7 @@ export default connect( state => {
 	return {
 		journalData: state.journal,
 		languageData: state.language,
-		loginData: state.login, 
+		loginData: state.login,
 		navData: state.nav,
 		pubData: state.pub,
 		path: state.router.location.pathname,

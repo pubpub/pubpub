@@ -9,7 +9,8 @@ import {
 	AUTOCOMPLETE_SUCCESS,
 	AUTOCOMPLETE_FAIL,
 	AUTOCOMPLETE_CLEAR
-} from '../actions/autocomplete';
+} from 'containers/Autocomplete/actions';
+
 /*--------*/
 // Initialize Default State 
 /*--------*/
@@ -21,7 +22,6 @@ export const defaultState = Immutable.Map({});
 // These functions take in an initial state and return a new
 // state. They are pure functions. We use Immutable to enforce this. 
 /*--------*/
-
 function loading(state, autocompleteKey) {
 	return state.setIn([autocompleteKey, 'loading'], true);
 }
@@ -59,18 +59,16 @@ function clear(state, autocompleteKey) {
 export default function autocompleteReducer(state = defaultState, action) {
 
 	switch (action.type) {
+
 	case AUTOCOMPLETE_LOAD:
 		return loading(state, action.autocompleteKey);
-
 	case AUTOCOMPLETE_SUCCESS:
 		return success(state, action.autocompleteKey, action.string, action.result);
-
 	case AUTOCOMPLETE_FAIL:
 		return failed(state, action.autocompleteKey, action.error);
-
 	case AUTOCOMPLETE_CLEAR: 
 		return clear(state, action.autocompleteKey);
-
+		
 	default:
 		return ensureImmutable(state);
 	}
