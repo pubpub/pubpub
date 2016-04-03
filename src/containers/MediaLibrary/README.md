@@ -1,7 +1,17 @@
-# Asset Editor
+# Media Library
+
+The Media Library holds all of the users assets (assets, references, highlights, etc). The Media Library
+
+1. Let's a user view/edit/delete these assets
+2. Let's a user insert an asset into a document
+3. Let's a user add new assets
+
+# Media Library Editor
 
 The asset editor is the place where all asset type specifications are held,
-in part because this is also where we need to be creating and updating asets.
+in part because this is also where we need to be creating and updating assets.
+
+# Asset Types
 
 ## Images (.jpg, .png, .gif)
 

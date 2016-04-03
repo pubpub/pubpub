@@ -2,7 +2,7 @@ import React, {PropTypes} from 'react';
 import Radium from 'radium';
 import {globalStyles, navStyles} from 'utils/styleConstants';
 // import { Link } from 'react-router';
-import UserNotification from './UserNotification';
+import UserNotificationsRow from './UserNotificationsRow';
 
 // import {globalMessages} from 'utils/globalMessages';
 import {FormattedMessage} from 'react-intl';
@@ -47,11 +47,11 @@ const UserNotifications = React.createClass({
 			<div style={styles.container}>
 
 				<ul style={[navStyles.navList, styles.subNav]}></ul>
-				
+
 				{
 					this.props.profileData.notifications && this.props.profileData.notifications.map((notification)=>{
 						return (<div key={'notificationWrapper-' + notification._id}>
-								<UserNotification notificationObject={notification} />
+								<UserNotificationsRow notificationObject={notification} />
 							</div>
 						);
 					})
@@ -63,7 +63,7 @@ const UserNotifications = React.createClass({
 							? <FormattedMessage id="user.noNotifications" defaultMessage="No Notifications"/>
 							: <FormattedMessage id="user.mustBeLoggedInNotifications" defaultMessage="Must be logged in to view notifications"/>
 						}
-						
+
 					</div>
 					: null
 				}

@@ -1,7 +1,7 @@
 import React, {PropTypes} from 'react';
 import Radium from 'radium';
 import {globalStyles} from 'utils/styleConstants';
-import {LoaderDeterminate, LoaderIndeterminate, Reference} from 'components';
+import {Reference} from 'components';
 
 import {globalMessages} from 'utils/globalMessages';
 import {FormattedMessage} from 'react-intl';

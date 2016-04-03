@@ -4,7 +4,7 @@ import {ensureImmutable} from 'reducers';
 /*--------*/
 // Load Actions
 /*--------*/
-import {LOAD, LOAD_SUCCESS, LOAD_FAIL} from '../actions/subdomainTest';
+import {LOAD, LOAD_SUCCESS, LOAD_FAIL} from './actions';
 
 /*--------*/
 // Initialize Default State

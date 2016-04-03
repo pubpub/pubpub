@@ -20,7 +20,7 @@ import {
 	INVITE_USER_SUCCESS,
 	INVITE_USER_FAIL,
 
-} from '../actions/user';
+} from './actions';
 
 /*--------*/
 // Initialize Default State

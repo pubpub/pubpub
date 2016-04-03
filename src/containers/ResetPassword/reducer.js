@@ -16,7 +16,7 @@ import {
 	RESET_LOAD,
 	RESET_SUCCESS,
 	RESET_FAIL,
-} from '../actions/resetPassword';
+} from './actions';
 /*--------*/
 // Initialize Default State
 /*--------*/

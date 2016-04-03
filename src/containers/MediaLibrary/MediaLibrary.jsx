@@ -5,7 +5,11 @@ import {connect} from 'react-redux';
 import Radium from 'radium';
 
 import {Menu, Button} from 'components';
-import {AssetEditor, AssetRow, ReferenceRow, HighlightRow} from './components';
+
+import MediaLibraryEditor from './MediaLibraryEditor';
+import MediaLibraryRowAsset from './MediaLibraryRowAsset';
+import MediaLibraryRowHighlight from './MediaLibraryRowHighlight';
+import MediaLibraryRowReference from './MediaLibraryRowReference';
 
 // import {saveCollaboratorsToPub} from 'actions/editor';
 
@@ -17,7 +21,7 @@ import {s3Upload} from 'utils/uploadFile';
 
 import Portal from 'react-portal';
 
-import {createAsset, updateAsset} from 'actions/assets';
+import {createAsset, updateAsset} from './actions';
 
 // let FireBaseURL;
 let styles;
@@ -29,7 +33,7 @@ const AssetLibrary = React.createClass({
 		closeLibrary: PropTypes.func,
 		codeMirrorInstance: PropTypes.object,
 
-		// assetEditorOnly: PropTypes.bool // If this is true, don't render any of the library content, just load straight into AssetEditor. Will need to pass through object
+		// assetEditorOnly: PropTypes.bool // If this is true, don't render any of the library content, just load straight into MediaLibraryEditor. Will need to pass through object
 		dispatch: PropTypes.func,
 	},
 
@@ -40,7 +44,7 @@ const AssetLibrary = React.createClass({
 			finishedUploads: 0,
 			activeSection: 'assets',
 
-			showAssetEditor: false,
+			showMediaLibraryEditor: false,
 			assetEditorType: undefined,
 			assetEditorObject: {}
 		};
@@ -138,19 +142,19 @@ const AssetLibrary = React.createClass({
 		};
 	},
 
-	openAssetEditor: function(assetObject) {
+	openMediaLibraryEditor: function(assetObject) {
 		return ()=>{
 			this.setState({
-				showAssetEditor: true,
+				showMediaLibraryEditor: true,
 				assetEditorType: assetObject.assetType,
 				assetEditorObject: assetObject,
 			});
 		};
 
 	},
-	closeAssetEditor: function() {
+	closeMediaLibraryEditor: function() {
 		this.setState({
-			showAssetEditor: false,
+			showMediaLibraryEditor: false,
 			assetEditorType: undefined,
 			assetEditorObject: {},
 		});
@@ -237,14 +241,14 @@ const AssetLibrary = React.createClass({
 
 				<Dropzone ref="dropzone" onDrop={this.onDrop} disableClick style={styles.dropzone} activeStyle={this.state.activeSection === 'assets' ? styles.dropzoneActive : {}}>
 					<div>
-						<Portal isOpened={this.state.showAssetEditor}>
+						<Portal isOpened={this.state.showMediaLibraryEditor}>
 							<div style={styles.assetEditorWrapper}>
-								<AssetEditor
+								<MediaLibraryEditor
 									assetType={this.state.assetEditorType}
 									assetObject={this.state.assetEditorObject}
 									addAssets={this.addAssets}
 									updateAssets={this.updateAssets}
-									close={this.closeAssetEditor}
+									close={this.closeMediaLibraryEditor}
 									assetLoading={this.props.loginData.get('assetLoading')}
 									slug={this.props.slug} />
 							</div>
@@ -268,7 +272,7 @@ const AssetLibrary = React.createClass({
 												<Button
 													key={'customStyleSaveButton'}
 													label={'Add New Asset'}
-													onClick={this.openAssetEditor({})}/>
+													onClick={this.openMediaLibraryEditor({})}/>
 											</div>
 
 											<div style={styles.addSection}>
@@ -284,7 +288,7 @@ const AssetLibrary = React.createClass({
 												{this.state.files.map((uploadAsset, index) => {
 													const thumbnailImage = (uploadAsset.type.indexOf('image') > -1) ? uploadAsset.preview : '/thumbnails/file.png';
 													return (uploadAsset.isFinished !== true
-														? <AssetRow
+														? <MediaLibraryRowAsset
 															key={'modalAssetUploading-' + index}
 															assetObject={{
 																_id: 'modalAssetUploading-' + index,
@@ -308,11 +312,11 @@ const AssetLibrary = React.createClass({
 													for (let index = assets.length; index > 0; index--) {
 														const asset = assets[index - 1];
 														if (asset.assetData) {
-															assetList.push(<AssetRow
+															assetList.push(<MediaLibraryRowAsset
 																key={'assetRow-' + index}
 																assetObject={asset}
 																insertHandler={this.insertAsset}
-																editHandler={this.openAssetEditor}
+																editHandler={this.openMediaLibraryEditor}
 																removeHandler={()=>{}} />
 															);
 														}
@@ -331,10 +335,10 @@ const AssetLibrary = React.createClass({
 												<Button
 													key={'customStyleSaveButton'}
 													label={'Add New Reference'}
-													onClick={this.openAssetEditor({assetType: 'reference'})}/>
+													onClick={this.openMediaLibraryEditor({assetType: 'reference'})}/>
 											</div>
 
-											{/* Display all existing references using ReferenceRow */}
+											{/* Display all existing references using MediaLibraryRowReference */}
 											{(() => {
 												const referenceList = [];
 
@@ -342,11 +346,11 @@ const AssetLibrary = React.createClass({
 												for (let index = references.length; index > 0; index--) {
 													const reference = references[index - 1];
 													if (reference.assetData) {
-														referenceList.push(<ReferenceRow
+														referenceList.push(<MediaLibraryRowReference
 															key={'referenceRow-' + index}
 															assetObject={reference}
 															insertHandler={this.insertAsset}
-															editHandler={this.openAssetEditor}
+															editHandler={this.openMediaLibraryEditor}
 															removeHandler={()=>{}} />
 														);
 
@@ -362,7 +366,7 @@ const AssetLibrary = React.createClass({
 								case 'highlights':
 									return (
 										<div>
-											{/* Display all existing references using ReferenceRow */}
+											{/* Display all existing references using MediaLibraryRowReference */}
 											{(() => {
 												const highlightList = [];
 
@@ -370,11 +374,11 @@ const AssetLibrary = React.createClass({
 												for (let index = highlights.length; index > 0; index--) {
 													const highlight = highlights[index - 1];
 													if (highlight.assetData) {
-														highlightList.push(<HighlightRow
+														highlightList.push(<MediaLibraryRowHighlight
 															key={'highlightRow-' + index}
 															assetObject={highlight}
 															insertHandler={this.insertAsset}
-															editHandler={this.openAssetEditor}
+															editHandler={this.openMediaLibraryEditor}
 															removeHandler={()=>{}} />
 														);
 

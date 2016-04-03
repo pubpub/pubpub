@@ -3,8 +3,8 @@ import {connect} from 'react-redux';
 import Radium from 'radium';
 import Helmet from 'react-helmet';
 
-import {checkHash, resetPassword, submitResetRequest} from '../../actions/resetPassword';
-import {toggleVisibility} from '../../actions/login';
+import {checkHash, resetPassword, submitResetRequest} from './actions';
+import {toggleVisibility} from 'containers/Login/actions/';
 import {globalStyles} from 'utils/styleConstants';
 
 import {LoaderIndeterminate, NotFound} from 'components';

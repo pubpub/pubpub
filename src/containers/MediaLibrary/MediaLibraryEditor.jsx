@@ -3,14 +3,15 @@
 import React, { PropTypes } from 'react';
 import Radium, {Style} from 'radium';
 import {Button} from 'components';
-import {createAsset} from 'actions/assets';
+// import {createAsset} from './actions';
 
 
 import {globalStyles} from 'utils/styleConstants';
 
-import {FileEditor, ReferenceEditor} from './components';
+import MediaLibraryEditorFile from './MediaLibraryEditorFile';
+import MediaLibraryEditorReference from './MediaLibraryEditorReference';
 
-import Dropzone from 'react-dropzone';
+// import Dropzone from 'react-dropzone';
 import {s3Upload} from 'utils/uploadFile';
 import {SimpleSelect} from 'react-selectize';
 
@@ -93,36 +94,36 @@ const AssetEditor = React.createClass({
 	// Response is used to craft the asset object that is added to firebase.
 	onFileFinish: function(evt, index, type, filename, originalFilename) {
 
-		let assetType = 'data';
-		let thumbnail = '/thumbnails/data.png';
-
-		if (type.indexOf('image') > -1) {
-			assetType = 'image';
-			thumbnail = 'https://s3.amazonaws.com/pubpub-upload/' + filename;
-		} else if (type.indexOf('video') > -1) {
-			assetType = 'video';
-			thumbnail = '/thumbnails/file.png';
-		}
-		const newAsset = {
-			assetType: assetType,
-			label: filename,
-			assetData: {
-				filetype: type,
-				originalFilename: originalFilename,
-				url: 'https://s3.amazonaws.com/pubpub-upload/' + filename,
-				thumbnail: thumbnail,
-			}
-		};
-
-		this.props.dispatch(createAsset(newAsset));
-
-		// Set File to finished in state. This will hide the uploading version
-		const tmpFiles = this.state.files;
-		tmpFiles[index].isFinished = true;
-		this.setState({
-			files: tmpFiles,
-			finishedUploads: this.state.finishedUploads + 1
-		});
+		// let assetType = 'data';
+		// let thumbnail = '/thumbnails/data.png';
+		//
+		// if (type.indexOf('image') > -1) {
+		// 	assetType = 'image';
+		// 	thumbnail = 'https://s3.amazonaws.com/pubpub-upload/' + filename;
+		// } else if (type.indexOf('video') > -1) {
+		// 	assetType = 'video';
+		// 	thumbnail = '/thumbnails/file.png';
+		// }
+		// const newAsset = {
+		// 	assetType: assetType,
+		// 	label: filename,
+		// 	assetData: {
+		// 		filetype: type,
+		// 		originalFilename: originalFilename,
+		// 		url: 'https://s3.amazonaws.com/pubpub-upload/' + filename,
+		// 		thumbnail: thumbnail,
+		// 	}
+		// };
+		//
+		// this.props.dispatch(createAsset(newAsset));
+		//
+		// // Set File to finished in state. This will hide the uploading version
+		// const tmpFiles = this.state.files;
+		// tmpFiles[index].isFinished = true;
+		// this.setState({
+		// 	files: tmpFiles,
+		// 	finishedUploads: this.state.finishedUploads + 1
+		// });
 
 	},
 
@@ -175,10 +176,10 @@ const AssetEditor = React.createClass({
 					case 'image':
 					case 'video':
 					case 'data':
-						return ( <FileEditor assetObject={this.props.assetObject} assetLoading={this.props.assetLoading} addAssets={this.props.addAssets} updateAssets={this.props.updateAssets} close={this.props.close}/> );
+						return ( <MediaLibraryEditorFile assetObject={this.props.assetObject} assetLoading={this.props.assetLoading} addAssets={this.props.addAssets} updateAssets={this.props.updateAssets} close={this.props.close}/> );
 
 					case 'reference':
-						return ( <ReferenceEditor assetObject={this.props.assetObject} assetLoading={this.props.assetLoading} addAssets={this.props.addAssets} updateAssets={this.props.updateAssets} close={this.props.close} /> );
+						return ( <MediaLibraryEditorReference assetObject={this.props.assetObject} assetLoading={this.props.assetLoading} addAssets={this.props.addAssets} updateAssets={this.props.updateAssets} close={this.props.close} /> );
 
 					default:
 						return (
