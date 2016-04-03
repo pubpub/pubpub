@@ -4,7 +4,30 @@ import {globalStyles} from 'utils/styleConstants';
 
 import {FormattedMessage} from 'react-intl';
 
-import {isDescendantOfHash, getAncestorText} from './selectionFunctions';
+// import {isDescendantOfHash, getAncestorText} from './selectionFunctions';
+
+function getAncestorText(child) {
+	let node = child;
+	while (node !== null) {
+		if (node.className === 'p-block') {
+			return node.innerText;
+		}
+		node = node.parentNode;
+	}
+	return null;
+}
+
+
+function isDescendantOfHash(child) {
+	let node = child;
+	while (node !== null) {
+		if (node.dataset && node.dataset.hash) {
+			return true;
+		}
+		node = node.parentNode;
+	}
+	return false;
+}
 
 let Marklib = undefined;
 let Rangy = undefined;

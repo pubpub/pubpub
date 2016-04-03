@@ -15,9 +15,17 @@ let styles = {};
 import initCodeMirrorMode from 'containers/Editor/editorCodeMirrorMode';
 import {codeMirrorStyles} from 'containers/Editor/codeMirrorStyles';
 import {insertText} from 'containers/Editor/editorCodeFunctions';
-import {clearTempHighlights} from 'components/PubSelectionPopup/selectionFunctions';
+// import {clearTempHighlights} from 'components/PubSelectionPopup/selectionFunctions';
 import EditorWidgets from 'components/EditorWidgets/EditorWidgets';
 
+function clearTempHighlights() {
+	const temps = document.getElementsByClassName('tempHighlight');
+	while (temps.length) {
+		for (let index = 0; index < temps.length; index += 1) {
+			temps[index].classList.remove('tempHighlight');
+		}	
+	}
+}
 
 // import marked from '../../modules/markdown/markdown';
 // import markdownExtensions from '../../components/EditorPlugins';
