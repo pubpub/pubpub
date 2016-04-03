@@ -29,19 +29,19 @@ app.post('/createJournal', function(req,res){
 				landingHeaderHover: '#000',
 			},
 
-				
+
 		});
 
 		journal.save(function (err, savedJournal) {
 			if (err) { return res.status(500).json(err);  }
 			User.update({ _id: req.user._id }, { $addToSet: { adminJournals: savedJournal._id} }, function(err, result){if(err) return handleError(err)});
 
-			return res.status(201).json(savedJournal.subdomain);	
+			return res.status(201).json(savedJournal.subdomain);
 
 		});
 	});
 
-	
+
 });
 
 app.get('/getJournal', function(req,res){
@@ -56,7 +56,7 @@ app.get('/getJournal', function(req,res){
 		const adminsLength = result ? result.admins.length : 0;
 		for(let index = adminsLength; index--; ) {
 			if (String(result.admins[index]._id) === String(userID)) {
-				isAdmin =  true;	
+				isAdmin =  true;
 			}
 		}
 
@@ -69,11 +69,11 @@ app.get('/getJournal', function(req,res){
 
 app.get('/getRandomSlug', function(req, res) {
 	Pub.getRandomSlug(req.query.journalID, function(err, result){
-		if (err){console.log(err); return res.json(500);} 
+		if (err){console.log(err); return res.json(500);}
 		return res.status(201).json(result);
 	});
 });
-	
+
 app.post('/saveJournal', function(req,res){
 	Journal.findOne({subdomain: req.body.subdomain}).exec(function(err, journal) {
 		// console.log('in server save journal');
@@ -108,34 +108,34 @@ app.post('/saveJournal', function(req,res){
 				journal[key] = req.body.newObject[key];
 			}
 		}
-		
+
 		journal.save(function(err, result){
 			if (err) { return res.status(500).json(err);  }
-			
+
 			Journal.populate(result, Journal.populationObject(), (err, populatedJournal)=> {
 				return res.status(201).json({
 					...populatedJournal.toObject(),
 					isAdmin: true,
-				});		
+				});
 			});
-			
-			
+
+
 		});
 	});
 });
 
-app.post('/submitPubToJournal', function(req,res){
+app.post('/submitPubToJournal', function(req, res) {
 	Journal.findOne({_id: req.body.journalID}).exec(function(err, journal) {
 		if (err) { return res.status(500).json(err);  }
 
 		if (!journal) { return res.status(500).json(err);  }
 
-		if ( !journal.autoFeature && (!req.user || String(journal.admins).indexOf(String(req.user._id)) === -1) ) {
+		if ( !req.user ) {
 			return res.status(403).json('Not authorized to administrate this Journal.');
 		}
 
 		if (String(journal.pubsSubmitted).indexOf(req.body.pubID) === -1 && String(journal.pubsFeatured).indexOf(req.body.pubID) === -1) {
-			
+
 			Pub.addJournalSubmitted(req.body.pubID, req.body.journalID, req.user._id);
 
 			if (journal.autoFeature) {
@@ -150,15 +150,15 @@ app.post('/submitPubToJournal', function(req,res){
 
 		journal.save(function(err, result){
 			if (err) { return res.status(500).json(err);  }
-			
+
 			Journal.populate(result, Journal.populationObject(), (err, populatedJournal)=> {
 				return res.status(201).json({
 					...populatedJournal.toObject(),
 					isAdmin: true,
-				});		
+				});
 			});
-			
-			
+
+
 		});
 	});
 });
@@ -184,7 +184,7 @@ app.get('/loadJournalAndLogin', function(req,res){
 
 				const userID = req.user ? req.user._id : undefined;
 				Notification.getUnreadCount(userID, function(err, notificationCount) {
-					const loginData = req.user 
+					const loginData = req.user
 						? {
 							name: req.user.name,
 							firstName: req.user.firstName,
@@ -205,7 +205,7 @@ app.get('/loadJournalAndLogin', function(req,res){
 						const adminsLength = result ? result.admins.length : 0;
 						for(let index = adminsLength; index--; ) {
 							if (String(result.admins[index]._id) === String(userID)) {
-								isAdmin =  true;	
+								isAdmin =  true;
 							}
 						}
 
@@ -222,7 +222,7 @@ app.get('/loadJournalAndLogin', function(req,res){
 							loginData: loginData,
 						});
 
-					} else { 
+					} else {
 						// If there was no result, that means we're on pubpub.org, and we need to populate journals and pubs.
 						Journal.find({}, {'_id':1,'journalName':1, 'subdomain':1, 'customDomain':1, 'pubsFeatured':1, 'collections':1, 'design': 1}).lean().exec(function (err, journals) {
 							Pub.find({history: {$not: {$size: 0}},'settings.isPrivate': {$ne: true}}, {'_id':1,'title':1, 'slug':1, 'abstract':1}).lean().exec(function (err, pubs) {
@@ -247,7 +247,7 @@ app.get('/loadJournalAndLogin', function(req,res){
 							});
 						});
 					}
-					
+
 				});
 
 			});
@@ -274,14 +274,14 @@ app.post('/createCollection', function(req,res){
 			headerImage: defaultHeaderImages[Math.floor(Math.random() * defaultHeaderImages.length)],
 		};
 		journal.collections.push(newCollection);
-		
+
 		journal.save(function (err, savedJournal) {
 			if (err) { return res.status(500).json(err);  }
 
 			Journal.populate(savedJournal, Journal.populationObject(true), (err, populatedJournal)=> {
 				if (err) { return res.status(500).json(err);  }
 
-				return res.status(201).json(populatedJournal.collections);		
+				return res.status(201).json(populatedJournal.collections);
 			});
 
 		});
@@ -312,17 +312,17 @@ app.post('/saveCollection', function(req,res){
 				Journal.populate(savedJournal, Journal.populationObject(true), (err, populatedJournal)=> {
 					if (err) { return res.status(500).json(err);  }
 
-					return res.status(201).json(populatedJournal.collections);		
+					return res.status(201).json(populatedJournal.collections);
 				});
 
 			});
 		}
 
 		if (req.body.newCollectionObject.headerImageURL) {
-			cloudinary.uploader.upload(req.body.newCollectionObject.headerImageURL, function(cloudinaryResponse) { 
-				const cloudinaryURL = cloudinaryResponse.url; 
+			cloudinary.uploader.upload(req.body.newCollectionObject.headerImageURL, function(cloudinaryResponse) {
+				const cloudinaryURL = cloudinaryResponse.url;
 				updateAndSave(cloudinaryURL);
-				
+
 			});
 		} else {
 			updateAndSave();
