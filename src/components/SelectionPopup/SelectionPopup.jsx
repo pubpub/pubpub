@@ -34,7 +34,7 @@ let Rangy = undefined;
 
 let styles = {};
 
-const PubSelectionPopup = React.createClass({
+const SelectionPopup = React.createClass({
 	propTypes: {
 		addSelectionHandler: PropTypes.func,
 	},
@@ -180,7 +180,7 @@ const PubSelectionPopup = React.createClass({
 	}
 });
 
-export default Radium(PubSelectionPopup);
+export default Radium(SelectionPopup);
 
 styles = {
 	pluginPopup: {

@@ -2,7 +2,7 @@
 
 import React, {PropTypes} from 'react';
 import Radium, {Style} from 'radium';
-import {Button, Formatting, LoaderIndeterminate, License, Menu} from 'components';
+import {Button, Formatting, License, Menu} from 'components';
 import {globalStyles} from 'utils/styleConstants';
 
 import {globalMessages} from 'utils/globalMessages';
@@ -15,7 +15,6 @@ let styles = {};
 import initCodeMirrorMode from 'containers/Editor/editorCodeMirrorMode';
 import {codeMirrorStyles} from 'containers/Editor/codeMirrorStyles';
 import {insertText} from 'containers/Editor/editorCodeFunctions';
-// import {clearTempHighlights} from 'components/PubSelectionPopup/selectionFunctions';
 import EditorWidgets from 'components/EditorWidgets/EditorWidgets';
 
 function clearTempHighlights() {
@@ -23,7 +22,7 @@ function clearTempHighlights() {
 	while (temps.length) {
 		for (let index = 0; index < temps.length; index += 1) {
 			temps[index].classList.remove('tempHighlight');
-		}	
+		}
 	}
 }
 

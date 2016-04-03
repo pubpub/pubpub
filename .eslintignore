@@ -5,6 +5,5 @@ tests.webpack.js
 src/markdown/*
 src/utils/cssToRadium.js
 src/utils/smoothscroll.js
-src/components/ImageCropper/AvatarEditor.jsx
 src/containers/Editor/editorFirepadUserlist.js
 api/migrations
