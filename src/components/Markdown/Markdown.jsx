@@ -1,4 +1,3 @@
-console.log('made it to markdown');
 import React, { PropTypes } from 'react';
 import { Link } from 'react-router';
 import MarkdownMDReact from './MarkdownMDReact';

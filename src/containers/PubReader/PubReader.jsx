@@ -375,6 +375,8 @@ const PubReader = React.createClass({
 					<Discussions/>
 				</div>
 
+				<div style={globalStyles.clearFix}></div>
+
 			</div>
 		);
 	}
@@ -395,7 +397,7 @@ export default connect( state => {
 styles = {
 	container: {
 		width: '100%',
-		height: 'calc(100vh - ' + globalStyles.headerHeight + ')',
+		// height: 'calc(100vh - ' + globalStyles.headerHeight + ')',
 		backgroundColor: globalStyles.sideBackground,
 		// Mobile
 		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
@@ -422,12 +424,12 @@ styles = {
 	leftBar: {
 		padding: 10,
 		width: 'calc(150px - 20px)',
-		height: 'calc(100vh - ' + globalStyles.headerHeight + ' - 20px)',
+		// height: 'calc(100vh - ' + globalStyles.headerHeight + ' - 20px)',
 		marginRight: 650,
 		float: 'left',
 		transition: '.3s linear opacity .25s',
-		overflow: 'hidden',
-		overflowY: 'scroll',
+		// overflow: 'hidden',
+		// overflowY: 'scroll',
 		fontFamily: 'Lato',
 		color: globalStyles.sideText,
 		// Mobile
@@ -472,14 +474,14 @@ styles = {
 	centerBar: {
 		backgroundColor: 'white',
 		width: 650,
-		height: 'calc(100vh - ' + globalStyles.headerHeight + ' + 3px)',
+		minHeight: 'calc(100vh - ' + globalStyles.headerHeight + ' + 3px)',
 		position: 'absolute',
 		top: '-3px',
 		left: 150,
 		float: 'left',
-		overflow: 'hidden',
-		overflowY: 'scroll',
-		WebkitOverflowScrolling: 'touch',
+		// overflow: 'hidden',
+		// overflowY: 'scroll',
+		// WebkitOverflowScrolling: 'touch',
 		boxShadow: '0px 2px 4px 0px rgba(0,0,0,0.4)',
 		zIndex: 65,
 		// Mobile
@@ -524,10 +526,10 @@ styles = {
 	rightBar: {
 		padding: '10px 0px',
 		// width: 'calc(100% - 800px - 20px)',
-		height: 'calc(100vh - ' + globalStyles.headerHeight + ' - 20px)',
+		// height: 'calc(100vh - ' + globalStyles.headerHeight + ' - 20px)',
 		float: 'left',
-		overflow: 'hidden',
-		overflowY: 'scroll',
+		// overflow: 'hidden',
+		// overflowY: 'scroll',
 		fontFamily: 'Lato',
 		transition: '.3s linear opacity .25s',
 		// Mobile

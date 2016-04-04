@@ -214,8 +214,9 @@ export default Radium(AppBody) ;
 styles = {
 	body: {
 		// width: '100vw',
-		overflow: 'hidden',
+		// overflow: 'hidden',
 		height: 'auto',
+		backgroundColor: globalStyles.sideBackground,
 		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
 			// overflow: 'scroll',
 		},
@@ -227,7 +228,7 @@ styles = {
 		backgroundColor: globalStyles.headerBackground,
 		margin: 0,
 		zIndex: 55,
-		position: 'fixed',
+		// position: 'fixed',
 
 		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
 			// backgroundColor: 'red',
@@ -323,7 +324,7 @@ styles = {
 	content: {
 		width: '100%',
 		position: 'relative',
-		marginTop: globalStyles.headerHeight,
+		// marginTop: globalStyles.headerHeight,
 		height: 'auto',
 		// backgroundColor: 'red',
 		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
