@@ -397,15 +397,7 @@ export default connect( state => {
 
 styles = {
 	container: {
-		width: '100%',
-		// height: 'calc(100vh - ' + globalStyles.headerHeight + ')',
-		backgroundColor: globalStyles.sideBackground,
-		// Mobile
-		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
-			width: '100%',
-			maxWidth: '100%',
-			height: 'auto'
-		},
+
 	},
 	rightHeaderButtonsWrapper: {
 
@@ -425,7 +417,6 @@ styles = {
 	readerLeft: {
 		padding: 10,
 		width: 'calc(150px - 20px)',
-		transition: '.3s linear opacity .25s',
 		position: 'absolute',
 		// height: 'calc(100vh - ' + globalStyles.headerHeight + ' - 20px)',
 		// marginRight: 650,

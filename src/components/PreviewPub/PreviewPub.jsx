@@ -28,7 +28,6 @@ const PreviewPub = React.createClass({
 
 	render: function() {
 		const pub = this.props.pubData;
-		console.log(pub);
 		return (
 			<div style={[styles.container, this.props.hideBottomLine && styles.containerNoLine]} >
 
