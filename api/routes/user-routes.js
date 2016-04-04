@@ -1,7 +1,7 @@
 import app from '../api';
 import {User, Pub, Journal, Notification} from '../models';
 
-import {cloudinary} from '../services/cloudinary';
+// import {cloudinary} from '../services/cloudinary';
 import {sendInviteEmail} from '../services/emails';
 
 export function getUser(req, res) {
@@ -37,20 +37,21 @@ export function updateUser(req, res) {
 		}
 
 		if (req.body.newDetails.image) {
-			cloudinary.uploader.upload(req.body.newDetails.image, function(cloudinaryResponse) {
+			// cloudinary.uploader.upload(req.body.newDetails.image, function(cloudinaryResponse) {
 
-				const thumbnail = cloudinaryResponse.url ? cloudinaryResponse.url.replace('/upload', '/upload/c_limit,h_50,w_50') : req.body.newDetails.image;
-				if (!cloudinaryResponse.url) {
-					console.log('cloudinaryResponse did not have url. Here is the response:');
-					console.log(cloudinaryResponse);
-				}
-				user.thumbnail = thumbnail;
-				outputObject.thumbnail = thumbnail;
-				user.save(function(errUserSave, result) {
-					if (errUserSave) { return res.status(500).json(errUserSave); }
-					return res.status(201).json(outputObject);
-				});
+			// const thumbnail = cloudinaryResponse.url ? cloudinaryResponse.url.replace('/upload', '/upload/c_limit,h_50,w_50') : req.body.newDetails.image;
+			const thumbnail = req.body.newDetails.image;
+			// if (!cloudinaryResponse.url) {
+			// 	console.log('cloudinaryResponse did not have url. Here is the response:');
+			// 	console.log(cloudinaryResponse);
+			// }
+			user.thumbnail = thumbnail;
+			outputObject.thumbnail = thumbnail;
+			user.save(function(errUserSave, result) {
+				if (errUserSave) { return res.status(500).json(errUserSave); }
+				return res.status(201).json(outputObject);
 			});
+			// });
 		} else {
 			user.save(function(errUserSave, result) {
 				if (errUserSave) { return res.status(500).json(errUserSave); }
