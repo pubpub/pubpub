@@ -30,7 +30,7 @@ const PubReader = React.createClass({
 	propTypes: {
 		readerData: PropTypes.object,
 		loginData: PropTypes.object,
-		journalData: PropTypes.object,
+		appData: PropTypes.object,
 		slug: PropTypes.string,
 		query: PropTypes.object, // version: integer
 		dispatch: PropTypes.func
@@ -47,7 +47,7 @@ const PubReader = React.createClass({
 	statics: {
 		fetchData: function(getState, dispatch, location, routeParams) {
 			if (getState().pub.getIn(['pubData', 'slug']) !== routeParams.slug) {
-				return dispatch(getPub(routeParams.slug, getState().journal.getIn(['journalData', '_id']), location.query.referrer ));
+				return dispatch(getPub(routeParams.slug, getState().app.getIn(['journalData', '_id']), location.query.referrer ));
 			}
 			return dispatch(pubNavIn());
 		}
@@ -145,10 +145,10 @@ const PubReader = React.createClass({
 	readRandomPub: function() {
 		const analyticsData = {
 			location: 'pub/' + this.props.slug,
-			journalID: this.props.journalData.getIn(['journalData', '_id']),
-			journalName: this.props.journalData.getIn(['journalData', 'journalName']),
+			journalID: this.props.appData.getIn(['journalData', '_id']),
+			journalName: this.props.appData.getIn(['journalData', 'journalName']),
 		};
-		this.props.dispatch(getRandomSlug(this.props.journalData.getIn(['journalData', '_id']), analyticsData));
+		this.props.dispatch(getRandomSlug(this.props.appData.getIn(['journalData', '_id']), analyticsData));
 	},
 
 	followPubToggle: function() {
@@ -232,7 +232,7 @@ const PubReader = React.createClass({
 						query={this.props.query}
 						pubStatus={pubData.status}
 						readRandomPubHandler={this.readRandomPub}
-						randomSlug={this.props.journalData.getIn(['journalData', 'randomSlug'])}
+						randomSlug={this.props.appData.getIn(['journalData', 'randomSlug'])}
 						journalCount={pubData.featuredInList ? pubData.featuredInList.length : 0}
 						historyCount={pubData.history ? pubData.history.length : 0}
 						analyticsCount={pubData.views ? pubData.views : 0}
@@ -297,7 +297,7 @@ const PubReader = React.createClass({
 						styleScoped={pubData.history[versionIndex].styleScoped}
 
 						showPubHighlights={this.props.readerData.get('showPubHighlights')}
-						isFeatured={(pubData.featuredInList && pubData.featuredInList.indexOf(this.props.journalData.getIn(['journalData', '_id'])) > -1) || this.props.journalData.get('baseSubdomain') === null}
+						isFeatured={(pubData.featuredInList && pubData.featuredInList.indexOf(this.props.appData.getIn(['journalData', '_id'])) > -1) || this.props.appData.get('baseSubdomain') === null}
 						errorView={pubData.pubErrorView}
 
 						references={this.props.readerData.getIn(['pubData', 'history', versionIndex, 'references']) !== undefined ? this.props.readerData.getIn(['pubData', 'history', versionIndex, 'references']).toJS() : []}
@@ -312,13 +312,13 @@ const PubReader = React.createClass({
 						closePubModalHandler={this.closePubModal}
 						closeMenuHandler={this.closeMenu}
 						activeModal={this.props.readerData.get('activeModal')}
-						isFeatured={(pubData.featuredInList && pubData.featuredInList.indexOf(this.props.journalData.getIn(['journalData', '_id'])) > -1) || this.props.journalData.get('baseSubdomain') === null}
+						isFeatured={(pubData.featuredInList && pubData.featuredInList.indexOf(this.props.appData.getIn(['journalData', '_id'])) > -1) || this.props.appData.get('baseSubdomain') === null}
 
 						// TOC Props
 						tocData={this.state.TOC}
 						// Cite Props
 						pubData={pubData.history[versionIndex]}
-						journalName={this.props.journalData.get('baseSubdomain') ? this.props.journalData.getIn(['journalData', 'journalName']) : ''}
+						journalName={this.props.appData.get('baseSubdomain') ? this.props.appData.getIn(['journalData', 'journalName']) : ''}
 						// Status Data
 						featuredIn={pubData.featuredIn}
 						submittedTo={pubData.submittedTo}
@@ -386,7 +386,7 @@ export default connect( state => {
 	return {
 		readerData: state.pub,
 		loginData: state.login,
-		journalData: state.journal,
+		appData: state.app,
 		slug: state.router.params.slug,
 		query: state.router.location.query,
 	};

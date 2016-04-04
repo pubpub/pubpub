@@ -1,7 +1,7 @@
 import React, {PropTypes} from 'react';
 import Radium from 'radium';
 import {globalStyles} from 'utils/styleConstants';
-import {JournalPreview} from 'components';
+import {PreviewJournal} from 'components';
 
 let styles = {};
 
@@ -23,7 +23,7 @@ const JournalGallery = React.createClass({
 					this.props.journals.map((journal, index)=>{
 						return (
 							<div style={styles.previewWrapper} key={'journalPreview-' + index}>
-								<JournalPreview journalData={journal} />
+								<PreviewJournal journalData={journal} />
 							</div>
 						);
 					})

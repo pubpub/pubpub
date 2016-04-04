@@ -9,8 +9,10 @@ import Helmet from 'react-helmet';
 import PureRenderMixin from 'react-addons-pure-render-mixin';
 import ReactFireMixin from 'reactfire';
 
-import {Discussions, EditorModals} from 'containers';
-import {LoaderDeterminate, Formatting, EditorStylePane, PubBody, Menu} from 'components';
+import {Discussions} from 'containers';
+import EditorModals from './EditorModals';
+import EditorStylePane from './EditorStylePane';
+import {LoaderDeterminate, Formatting, PubBody, Menu} from 'components';
 import {clearPub} from 'containers/PubReader/actions';
 import {getPubEdit, toggleEditorViewMode, unmountEditor, closeModal, openModal, addSelection, setEditorViewMode, saveVersion, updatePubBackendData, saveStyle} from './actions';
 
@@ -49,7 +51,7 @@ const cmOptions = {
 const Editor = React.createClass({
 	propTypes: {
 		pubData: PropTypes.object, // Used to get new pub titles
-		journalData: PropTypes.object,
+		appData: PropTypes.object,
 		editorData: PropTypes.object,
 		loginData: PropTypes.object, // User login data
 		slug: PropTypes.string, // equal to project uniqueTitle
@@ -146,7 +148,7 @@ const Editor = React.createClass({
 				const firepad = Firepad.fromCodeMirror(firepadRef, codeMirror, {
 					userId: username,
 					defaultText: this.props.editorData.getIn(['pubEditData', 'isPage'])
-						? editorDefaultPageText(this.props.journalData.getIn(['journalData', 'journalName']))
+						? editorDefaultPageText(this.props.appData.getIn(['journalData', 'journalName']))
 						: editorDefaultPubText(this.props.pubData.getIn(['createPubData', 'title']), {username: username, name: name})
 				});
 
@@ -319,8 +321,8 @@ const Editor = React.createClass({
 		this.props.dispatch(clearPub());
 
 		// This should perhaps be done on the backend in one fell swoop - rather than having two client side calls.
-		if (this.props.journalData.get('baseSubdomain') && publish) {
-			this.props.dispatch(submitPubToJournal(this.props.editorData.getIn(['pubEditData', '_id']), this.props.journalData.getIn(['journalData']).toJS()));
+		if (this.props.appData.get('baseSubdomain') && publish) {
+			this.props.dispatch(submitPubToJournal(this.props.editorData.getIn(['pubEditData', '_id']), this.props.appData.getIn(['journalData']).toJS()));
 		}
 
 		this.props.dispatch(saveVersion(newVersion));
@@ -786,7 +788,7 @@ const Editor = React.createClass({
 export default connect( state => {
 	return {
 		pubData: state.pub,
-		journalData: state.journal,
+		appData: state.app,
 		editorData: state.editor,
 		slug: state.router.params.slug,
 		loginData: state.login

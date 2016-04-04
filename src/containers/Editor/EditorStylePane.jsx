@@ -1,7 +1,7 @@
 /* global CodeMirror */
 import React, {PropTypes} from 'react';
 import Radium, {Style} from 'radium';
-import {Button} from '../';
+import {Button} from 'components';
 import {globalStyles} from 'utils/styleConstants';
 
 let styles = {};

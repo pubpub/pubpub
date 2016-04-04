@@ -124,7 +124,6 @@ const Discussions = React.createClass({
 			if (!this.props.loginData.get('loggedIn')) {
 				return this.props.dispatch(toggleVisibility());
 			}
-			console.log(codeMirrorID);
 			this.setState({
 				showMediaLibrary: !this.state.showMediaLibrary,
 				assetLibraryCodeMirrorID: codeMirrorID

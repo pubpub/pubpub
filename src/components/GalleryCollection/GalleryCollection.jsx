@@ -1,7 +1,7 @@
 import React, {PropTypes} from 'react';
 import Radium from 'radium';
 import {globalStyles} from 'utils/styleConstants';
-import {CollectionPreview} from 'components';
+import {PreviewCollection} from 'components';
 
 let styles = {};
 
@@ -22,8 +22,8 @@ export const CollectionGallery = React.createClass({
 				{
 					this.props.collections.map((collection, index)=>{
 						return (
-							<div style={styles.previewWrapper} key={'CollectionPreview-' + index}>
-								<CollectionPreview collectionData={collection} />
+							<div style={styles.previewWrapper} key={'PreviewCollection-' + index}>
+								<PreviewCollection collectionData={collection} />
 							</div>
 						);
 					})

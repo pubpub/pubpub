@@ -44,7 +44,7 @@ const PubDiscussionsInput = React.createClass({
 		activeSaveID: PropTypes.string,
 		saveID: PropTypes.string,
 		intl: PropTypes.object,
-		toggleAssetLibrary: PropTypes.func,
+		toggleMediaLibrary: PropTypes.func,
 		userAssets: PropTypes.array,
 	},
 
@@ -182,7 +182,7 @@ const PubDiscussionsInput = React.createClass({
 		];
 		const menuItems = [
 			{ key: 'formatting', string: <FormattedMessage {...globalMessages.Formatting}/>, function: ()=>{}, children: formattingItems},
-			{ key: 'assets', string: <FormattedMessage {...globalMessages.assets}/>, function: this.props.toggleAssetLibrary(this.props.codeMirrorID)},
+			{ key: 'assets', string: <FormattedMessage {...globalMessages.assets}/>, function: this.props.toggleMediaLibrary(this.props.codeMirrorID)},
 			{ key: 'preview', string: <FormattedMessage {...globalMessages.Preview}/>, function: this.toggleLivePreview, isActive: this.state.showPreview, noSeparator: true  },
 		];
 

@@ -8,7 +8,7 @@ import Radium from 'radium';
 import PureRenderMixin from 'react-addons-pure-render-mixin';
 import ReactFireMixin from 'reactfire';
 
-import {AssetLibrary} from 'containers';
+import {MediaLibrary} from 'containers';
 import EditorModalsCollaborators from './EditorModalsCollaborators';
 import EditorModalsSaveVersion from './EditorModalsSaveVersion';
 import EditorModalsSettings from './EditorModalsSettings';
@@ -162,7 +162,7 @@ const Editor = React.createClass({
 						{(() => {
 							switch (activeModal) {
 							case 'Assets':
-								return (<AssetLibrary
+								return (<MediaLibrary
 									closeLibrary={this.closeModalHandler}
 									codeMirrorInstance={document.getElementById('codemirror-wrapper').childNodes[0].childNodes[0].CodeMirror} />
 								);

@@ -1,7 +1,7 @@
 import React, {PropTypes} from 'react';
 import Radium from 'radium';
 import {globalStyles} from 'utils/styleConstants';
-import {UserPreview} from 'components';
+import {PreviewUser} from 'components';
 
 let styles = {};
 
@@ -22,8 +22,8 @@ const UserGallery = React.createClass({
 				{
 					this.props.users.map((user, index)=>{
 						return (
-							<div style={styles.previewWrapper} key={'UserPreview-' + index}>
-								<UserPreview userData={user} />
+							<div style={styles.previewWrapper} key={'PreviewUser-' + index}>
+								<PreviewUser userData={user} />
 							</div>
 						);
 					})
