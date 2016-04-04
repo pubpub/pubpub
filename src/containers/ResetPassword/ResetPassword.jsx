@@ -4,7 +4,7 @@ import Radium from 'radium';
 import Helmet from 'react-helmet';
 
 import {checkHash, resetPassword, submitResetRequest} from './actions';
-import {toggleVisibility} from 'containers/Login/actions/';
+import {toggleVisibility} from 'containers/Login/actions';
 import {globalStyles} from 'utils/styleConstants';
 
 import {LoaderIndeterminate, NotFound} from 'components';

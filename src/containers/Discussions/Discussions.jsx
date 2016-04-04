@@ -7,7 +7,7 @@ import DiscussionsItem from './DiscussionsItem';
 import DiscussionsInput from './DiscussionsInput';
 
 // import Portal from 'react-portal';
-import {MediaLibrary} from 'MediaLibrary';
+import {MediaLibrary} from 'containers';
 
 import {toggleVisibility} from 'containers/Login/actions';
 import {addDiscussion, discussionVoteSubmit, archiveDiscussion} from './actions';

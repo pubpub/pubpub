@@ -1,6 +1,6 @@
 import React, {PropTypes} from 'react';
 import ErrorMsg from './ErrorPlugin';
-import {Reference} from '../';
+import {Reference} from 'components';
 import createPubPubPlugin from './PubPub';
 
 let styles = {};

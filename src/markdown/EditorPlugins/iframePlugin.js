@@ -1,7 +1,7 @@
 import React, {PropTypes} from 'react';
 import Media from './baseMediaPlugin';
 import createPubPubPlugin from './PubPub';
-import {Reference} from '../';
+import {Reference} from 'components';
 
 
 const IframeInputFields = [

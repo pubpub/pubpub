@@ -4,22 +4,24 @@ import Radium, {Style} from 'radium';
 import Helmet from 'react-helmet';
 import PureRenderMixin from 'react-addons-pure-render-mixin';
 import { Link } from 'react-router';
-import {getPub, openPubModal, closePubModal, pubNavOut, pubNavIn, togglePubHighlights} from 'actions/pub';
-import {getRandomSlug} from 'actions/journal';
-import {toggleVisibility, follow, unfollow} from 'actions/login';
-import {closeMenu} from 'actions/nav';
-import {createHighlight} from 'actions/assets';
+import {getPub, openPubModal, closePubModal, pubNavOut, pubNavIn, togglePubHighlights} from './actions';
+import {getRandomSlug} from 'containers/App/actions';
+import {toggleVisibility, follow, unfollow} from 'containers/Login/actions';
+import {closeMenu} from 'containers/App/actions';
+import {createHighlight} from 'containers/MediaLibrary/actions';
 
 // import {convertImmutableListToObject} from 'utils/parsePlugins';
 
-import {Button, PubBody, PubModals, PubNav, LoaderDeterminate, PubLeftBar} from 'components';
+import {PubBody, LoaderDeterminate} from 'components';
+
+import PubReaderLeftBar from './PubReaderLeftBar';
+import PubReaderNav from './PubReaderNav';
 import {Discussions} from 'containers';
 
 import {globalStyles, pubSizes} from 'utils/styleConstants';
-import {rightBarStyles} from './rightBarStyles';
 
-import {globalMessages} from 'utils/globalMessages';
-import {generateTOC} from 'markdown/generateTOC';
+// import {globalMessages} from 'utils/globalMessages';
+import {generateTOC} from 'utils/generateTOC';
 import {FormattedMessage} from 'react-intl';
 
 let styles = {};
@@ -225,7 +227,7 @@ const PubReader = React.createClass({
 
 				<div className="leftBar" style={[styles.leftBar, globalStyles[this.props.readerData.get('status')], pubData.markdown === undefined && {display: 'none'}]}>
 
-					<PubLeftBar
+					<PubReaderLeftBar
 						slug={this.props.slug}
 						query={this.props.query}
 						pubStatus={pubData.status}
@@ -241,7 +243,7 @@ const PubReader = React.createClass({
 
 				<div className="centerBar pubScrollContainer" style={[styles.centerBar, this.props.readerData.get('activeModal') !== undefined && styles.centerBarModalActive]}>
 
-					<PubNav
+					<PubReaderNav
 						height={this.height}
 						openPubModalHandler={this.openPubModal}
 						status={pubData.history[0].markdown ? this.props.readerData.get('status') : 'loading'}
@@ -284,9 +286,9 @@ const PubReader = React.createClass({
 						maxFont={21}
 						// htmlTree={this.state.htmlTree}
 						markdown={this.state.inputMD}
-						assetsObject={this.state.assetsObject}
-						referencesObject={this.state.referencesObject}
-						selectionsArray={this.state.selectionsArray}
+						// assetsObject={this.state.assetsObject}
+						// referencesObject={this.state.referencesObject}
+						// selectionsArray={this.state.selectionsArray}
 
 						authors={pubData.history[versionIndex].authors}
 						addSelectionHandler={this.addSelection}
@@ -302,7 +304,7 @@ const PubReader = React.createClass({
 						firstPublishedDate={this.props.readerData.getIn(['pubData', 'history', 0, 'versionDate'])}
 						lastPublishedDate={this.props.readerData.getIn(['pubData', 'history', this.props.readerData.getIn(['pubData', 'history']).size - 1, 'versionDate'])} />
 
-					<PubModals
+					{/* <PubModals
 						slug={this.props.slug}
 						status={this.props.readerData.get('status')}
 						pubStatus={pubData.status}
@@ -325,7 +327,7 @@ const PubReader = React.createClass({
 
 						// Discussions Data
 						toggleHighlightsHandler={this.toggleHighlights}
-						showPubHighlights={this.props.readerData.get('showPubHighlights')}/>
+						showPubHighlights={this.props.readerData.get('showPubHighlights')}/> */}
 
 
 				</div>

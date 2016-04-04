@@ -1,7 +1,7 @@
 import React, {PropTypes} from 'react';
 import ReactDOM from 'react-dom';
 // import ErrorMsg from './ErrorPlugin';
-// import {Reference} from '../';
+// import {Reference} from 'components';
 import createPubPubPlugin from './PubPub';
 import classNames from 'classnames';
 

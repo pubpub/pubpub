@@ -30,7 +30,7 @@ import {globalStyles} from 'utils/styleConstants';
 import {globalMessages} from 'utils/globalMessages';
 import {FormattedMessage} from 'react-intl';
 // import {Iterable} from 'immutable';
-import EditorWidgets from 'components/EditorWidgets/EditorWidgets';
+import EditorWidgets from 'markdown/EditorWidgets/EditorWidgets';
 
 let FireBaseURL;
 let styles;

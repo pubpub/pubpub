@@ -1,6 +1,6 @@
 import React, {PropTypes} from 'react';
 import Radium from 'radium';
-import {Reference} from '../';
+import {Reference} from 'components';
 
 
 let styles = {};

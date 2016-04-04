@@ -13,9 +13,9 @@ import pubheaderitem from './markdown-it-pubheaderitem';
 
 import mathIt from 'markdown-it-math';
 
-import {parsePluginString} from '../utils/parsePlugins';
-import Plugins from '../components/EditorPlugins/index';
-import InputFields from '../components/EditorPluginFields/index';
+import {parsePluginString} from 'utils/parsePlugins';
+import Plugins from './EditorPlugins';
+import InputFields from './EditorPluginFields';
 
 import MathComponent from './MathComponent';
 import HTMLComponent from './HTMLComponent';

@@ -1,7 +1,7 @@
 import React, {PropTypes} from 'react';
 import Media from './baseMediaPlugin';
 import createPubPubPlugin from './PubPub';
-import {Reference} from '../';
+import {Reference} from 'components';
 
 const QuoteInputFields = [
 	{title: 'quote', type: 'textArea', params: {placeholder: 'Caption for the quote.'}},

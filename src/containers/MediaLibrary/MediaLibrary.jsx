@@ -26,7 +26,7 @@ import {createAsset, updateAsset} from './actions';
 // let FireBaseURL;
 let styles;
 
-const AssetLibrary = React.createClass({
+const MediaLibrary = React.createClass({
 	propTypes: {
 		loginData: PropTypes.object,
 		slug: PropTypes.string,
@@ -412,7 +412,7 @@ export default connect( state => {
 		slug: state.router.params.slug,
 		loginData: state.login
 	};
-})( Radium(AssetLibrary) );
+})( Radium(MediaLibrary) );
 
 styles = {
 	container: {

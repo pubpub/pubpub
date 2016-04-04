@@ -10,7 +10,7 @@ import {inviteReviewers} from 'actions/user';
 import { Link } from 'react-router';
 import {PubLeftBar, PubNav, LoaderDeterminate} from 'components';
 import {Discussions} from 'containers';
-// import {PubMetaDiscussions, PubMetaExperts, PubMetaHistory, PubMetaHistoryDiff, PubMetaReview, PubMetaReviews, PubMetaSource} from '../../components/PubMetaPanels';
+
 import {PubMetaAnalytics, PubMetaCitations, PubMetaHistory, PubMetaHistoryDiff, PubMetaInTheNews, PubMetaInvite, PubMetaJournals, PubMetaSource} from './components';
 import {globalStyles, pubSizes} from 'utils/styleConstants';
 

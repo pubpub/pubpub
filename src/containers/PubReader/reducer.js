@@ -37,13 +37,13 @@ import {
 	PUB_NAV_IN,
 
 
-} from '../actions/pub';
+} from './actions';
 
 import {
 	SUBMIT_PUB_TO_JOURNAL,
 	SUBMIT_PUB_TO_JOURNAL_SUCCESS,
 	SUBMIT_PUB_TO_JOURNAL_FAIL,
-} from '../actions/journal';
+} from 'containers/JournalProfile/actions';
 
 /*--------*/
 // Initialize Default State

@@ -11,10 +11,10 @@ import PPMComponent from 'markdown/PPMComponent';
 
 let styles = {};
 
-import initCodeMirrorMode from 'containers/Editor/editorCodeMirrorMode';
-import {codeMirrorStyles} from 'containers/Editor/codeMirrorStyles';
-import {insertText} from 'containers/Editor/editorCodeFunctions';
-import EditorWidgets from 'components/EditorWidgets/EditorWidgets';
+import initCodeMirrorMode from 'containers/Editor/utils/editorCodeMirrorMode';
+import {codeMirrorStyles} from 'containers/Editor/utils/codeMirrorStyles';
+import {insertText} from 'containers/Editor/utils/editorCodeFunctions';
+import EditorWidgets from 'markdown/EditorWidgets/EditorWidgets';
 
 function clearTempHighlights() {
 	const temps = document.getElementsByClassName('tempHighlight');

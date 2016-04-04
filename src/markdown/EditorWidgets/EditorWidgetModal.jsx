@@ -5,8 +5,8 @@ import {parsePluginString, inlineAsset} from 'utils/parsePlugins';
 // import {globalMessages} from 'utils/globalMessages';
 // import {FormattedMessage} from 'react-intl';
 
-import Plugins from 'components/EditorPlugins/index.js';
-import InputFields from '../EditorPluginFields/index.js';
+import Plugins from 'markdown/EditorPlugins';
+import InputFields from 'markdown/EditorPluginFields';
 import MurmurHash from 'murmurhash';
 import Portal from 'react-portal';
 import {throttle, delay} from 'lodash';

@@ -6,7 +6,7 @@ import {SelectionPopup, Reference, License} from 'components';
 import {loadCss} from 'utils/loadingFunctions';
 // import {scienceStyle, magazineStyle} from './pubStyles';
 // import cssConvert from 'utils/cssToRadium';
-import ResizingText from './ResizingText';
+import ResizingText from 'utils/ResizingText';
 import dateFormat from 'dateformat';
 
 import {globalMessages} from 'utils/globalMessages';

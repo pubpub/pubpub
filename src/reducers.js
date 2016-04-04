@@ -5,18 +5,17 @@ import { routerStateReducer } from 'redux-router';
 
 import app from './containers/App/reducer';
 import autocomplete from './containers/Autocomplete/reducer';
-import editor from './containers/editor/reducer';
-import explore from './containers/explore/reducer';
-import discussions from './containers/discussions/reducer';
-import group from './containers/group/reducer';
-import journal from './containers/journal/reducer';
-import landing from './containers/landing/reducer';
-import login from './containers/login/reducer';
-import nav from './containers/nav/reducer';
-import user from './containers/user/reducer';
-import pub from './containers/pub/reducer';
-import resetPassword from './containers/resetPassword/reducer';
-import subdomainTest from './containers/subdomainTest/reducer';
+import editor from './containers/Editor/reducer';
+import explore from './containers/Explore/reducer';
+import discussions from './containers/Discussions/reducer';
+import group from './containers/GroupProfile/reducer';
+import journal from './containers/JournalProfile/reducer';
+import landing from './containers/Landing/reducer';
+import login from './containers/Login/reducer';
+import user from './containers/UserProfile/reducer';
+import pub from './containers/PubReader/reducer';
+import resetPassword from './containers/ResetPassword/reducer';
+import subdomainTest from './containers/SubdomainTest/reducer';
 
 export default combineReducers({
 	router: routerStateReducer,
@@ -52,7 +51,6 @@ export default combineReducers({
 	journal,
 	landing,
 	login,
-	nav,
 	user,
 	pub,
 	resetPassword,

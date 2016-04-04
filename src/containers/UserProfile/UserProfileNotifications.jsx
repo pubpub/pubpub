@@ -2,7 +2,7 @@ import React, {PropTypes} from 'react';
 import Radium from 'radium';
 import {globalStyles, navStyles} from 'utils/styleConstants';
 // import { Link } from 'react-router';
-import UserNotificationsRow from './UserNotificationsRow';
+import UserProfileNotificationsRow from './UserProfileNotificationsRow';
 
 // import {globalMessages} from 'utils/globalMessages';
 import {FormattedMessage} from 'react-intl';
@@ -51,7 +51,7 @@ const UserNotifications = React.createClass({
 				{
 					this.props.profileData.notifications && this.props.profileData.notifications.map((notification)=>{
 						return (<div key={'notificationWrapper-' + notification._id}>
-								<UserNotificationsRow notificationObject={notification} />
+								<UserProfileNotificationsRow notificationObject={notification} />
 							</div>
 						);
 					})
