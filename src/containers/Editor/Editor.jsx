@@ -184,7 +184,7 @@ const Editor = React.createClass({
 				// need to unmount on change
 				codeMirror.on('change', this.onEditorChange);
 				codeMirror.on('mousedown', function(instance, evt) {
-					if (evt.which === 3) {
+					if (evt.which === 3) { // On right click. It was scrolling. Prevent that. Also can hijack for custom contextmenu?
 						evt.preventDefault();
 					}
 				});

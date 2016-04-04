@@ -203,7 +203,7 @@ const AppBody = React.createClass({
 					{this.props.children}
 				</div>
 
-				<div className="footer" style={[styles.footer, this.props.path.substring(this.props.path.length - 6, this.props.path.length) === '/draft' && {display: 'none'} ]}>
+				<div className="footer" style={[styles.footer, (this.props.path.substring(this.props.path.length - 6, this.props.path.length) === '/draft' || this.props.appData.get('baseSubdomain') !== null) && {display: 'none'} ]}>
 					Here's my footer stuff
 				</div>
 			</div>
@@ -219,6 +219,7 @@ styles = {
 		// width: '100vw',
 		// overflow: 'hidden',
 		height: 'auto',
+		minHeight: '100vh',
 		backgroundColor: globalStyles.sideBackground,
 		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
 			// overflow: 'scroll',

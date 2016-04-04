@@ -32,7 +32,7 @@ const PreviewPub = React.createClass({
 			<div style={[styles.container, this.props.hideBottomLine && styles.containerNoLine]} >
 
 				<div style={[styles.detailsWrapper, !this.props.canEdit && styles.detailsWrapperNoEdit]} key={'detailsWrapper-' + pub._id}>
-					<Link to={'/pub/' + pub.slug + (pub.history.length ? '' : '/draft')} style={globalStyles.link}>
+					<Link to={'/pub/' + pub.slug + (pub.history && pub.history.length ? '' : '/draft')} style={globalStyles.link}>
 							<div style={[styles.pubTitle, this.props.headerFontSize && {fontSize: this.props.headerFontSize}]}>{pub.title}</div>
 
 							<div style={[styles.pubDate, this.props.textFontSize && {fontSize: this.props.textFontSize}]}>

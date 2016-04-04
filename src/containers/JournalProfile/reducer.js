@@ -33,13 +33,6 @@ import {
 
 } from './actions';
 
-import {
-
-	LOGIN_LOAD_SUCCESS,
-	LOGOUT_LOAD_SUCCESS,
-
-} from 'containers/Login/actions';
-
 /*--------*/
 // Initialize Default State
 /*--------*/
@@ -181,24 +174,6 @@ function submitPubToJournalFail(state, error) {
 	return state;
 }
 
-function loginLoad(state, result) {
-	return state.merge({
-		journalData: {
-			...state.get('journalData').toJS(),
-			isAdmin: result.isAdminToJournal,
-		},
-	});
-}
-
-function logoutLoad(state) {
-	return state.merge({
-		journalData: {
-			...state.get('journalData').toJS(),
-			isAdmin: false,
-		},
-	});
-}
-
 function loadJournal(state) {
 	return state.set('status', 'loading');
 }
@@ -265,11 +240,6 @@ export default function loginReducer(state = defaultState, action) {
 		return submitPubToJournalSuccess(state, action.result);
 	case SUBMIT_PUB_TO_JOURNAL_FAIL:
 		return submitPubToJournalFail(state, action.error);
-
-	case LOGIN_LOAD_SUCCESS:
-		return loginLoad(state, action.result);
-	case LOGOUT_LOAD_SUCCESS:
-		return logoutLoad(state);
 
 	case CLEAR_COLLECTION_REDIRECT:
 		return clearCollectionRedirect(state);

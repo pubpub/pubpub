@@ -21,7 +21,7 @@ const App = React.createClass({
 
 	statics: {
 		fetchData: function(getState, dispatch) {
-			if (getState().app.get('status') === 'loading') {
+			if (getState().app.get('baseSubdomain') === undefined) {
 				return dispatch(loadAppAndLogin());
 			}
 			return ()=>{};
@@ -29,7 +29,7 @@ const App = React.createClass({
 	},
 
 	render: function() {
-		if (this.props.appData.get('status') === 'loading') {
+		if (this.props.appData.get('baseSubdomain') === undefined) {
 			return (
 				<IntlProvider locale={'en'} messages={{}}>
 					<StyleRoot>

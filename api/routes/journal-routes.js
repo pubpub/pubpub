@@ -76,7 +76,6 @@ export function getJournal(req, res) {
 	Journal.findOne({subdomain: req.query.subdomain})
 	.populate(Journal.populationObject())
 	.lean().exec(function(err, result) {
-
 		if (err) { return res.status(500).json(err); }
 
 		let isAdmin = false;

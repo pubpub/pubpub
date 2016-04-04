@@ -18,6 +18,7 @@ let styles = {};
 const Collection = React.createClass({
 	propTypes: {
 		journalData: PropTypes.object,
+		appData: PropTypes.object,
 		loginData: PropTypes.object,
 		slug: PropTypes.string,
 		mode: PropTypes.string,
@@ -42,7 +43,7 @@ const Collection = React.createClass({
 
 	collectionSave: function(newCollectionData) {
 		// console.log('saving', this.props.journalData.get('baseSubdomain'), this.props.slug, newCollectionData);
-		this.props.dispatch(saveCollection(this.props.journalData.get('baseSubdomain'), this.props.slug, newCollectionData));
+		this.props.dispatch(saveCollection(this.props.appData.get('baseSubdomain'), this.props.slug, newCollectionData));
 	},
 
 	render: function() {
@@ -57,7 +58,7 @@ const Collection = React.createClass({
 				<Helmet {...metaData} />
 
 				{
-					(!collectionData.slug) || (this.props.journalData.get('baseSubdomain') !== this.props.journalData.getIn(['journalData', 'subdomain'])) || (this.props.mode && !this.props.journalData.getIn(['journalData', 'isAdmin']))
+					(!collectionData.slug) || (this.props.appData.get('baseSubdomain') !== this.props.journalData.getIn(['journalData', 'subdomain'])) || (this.props.mode && !this.props.journalData.getIn(['journalData', 'isAdmin']))
 						? <NotFound />
 						: <div>
 
@@ -126,6 +127,7 @@ export default connect( state => {
 	return {
 		loginData: state.login,
 		journalData: state.journal,
+		appData: state.app,
 		slug: state.router.params.slug,
 		mode: state.router.params.mode
 	};

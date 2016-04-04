@@ -15,13 +15,20 @@ import {
 	// GET_RANDOM_SLUG_FAIL,
 } from './actions';
 
+import {
+
+	LOGIN_LOAD_SUCCESS,
+	LOGOUT_LOAD_SUCCESS,
+
+} from 'containers/Login/actions';
+
 /*--------*/
 // Initialize Default State
 /*--------*/
 export const defaultState = Immutable.Map({
 	status: 'loading',
 	error: null,
-	baseSubdomain: null,
+	baseSubdomain: undefined, // Will be null if on pubpub, defined if on a journal, and undefined if not yet loaded
 	journalData: {
 		collections: [],
 	},
@@ -44,6 +51,7 @@ function loadApp(state) {
 }
 
 function loadAppSuccess(state, journalData, languageData) {
+	// console.log('in success', journalData);
 	const newBaseSubdomain = journalData.subdomain ? journalData.subdomain : null;
 	return state.merge({
 		status: 'loaded',
@@ -82,6 +90,23 @@ function newRandomSlug(state, result) {
 	});
 }
 
+function loginLoad(state, result) {
+	return state.merge({
+		journalData: {
+			...state.get('journalData').toJS(),
+			isAdmin: result.isAdminToJournal,
+		},
+	});
+}
+
+function logoutLoad(state) {
+	return state.merge({
+		journalData: {
+			...state.get('journalData').toJS(),
+			isAdmin: false,
+		},
+	});
+}
 /*--------*/
 // Bind actions to specific reducing functions.
 /*--------*/
@@ -100,6 +125,10 @@ export default function appReducer(state = defaultState, action) {
 		return closeMenu(state);
 	case GET_RANDOM_SLUG_SUCCESS:
 		return newRandomSlug(state, action.result);
+	case LOGIN_LOAD_SUCCESS:
+		return loginLoad(state, action.result);
+	case LOGOUT_LOAD_SUCCESS:
+		return logoutLoad(state);
 	default:
 		return ensureImmutable(state);
 	}
