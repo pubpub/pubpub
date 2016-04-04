@@ -219,6 +219,7 @@ const AppBody = React.createClass({
 							<div style={styles.footerHeader}>Explore</div>
 							<div style={styles.footerItem}>Pubs</div>
 							<div style={styles.footerItem}>Journals</div>
+							<div style={styles.footerItem}>Random Pub</div>
 						</div>
 
 						<div style={styles.footerColumn}>

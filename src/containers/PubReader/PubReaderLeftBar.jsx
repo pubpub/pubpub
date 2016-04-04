@@ -34,7 +34,44 @@ const PubLeftBar = React.createClass({
 		return (
 			<div style={styles.container}>
 
-				<Link style={globalStyles.link} to={'/'}><div key={'leftBar0'} style={styles.detail}>
+				<Link style={globalStyles.link} to={'/pubs'}><div key={'test1'} style={styles.detail}>
+					Read
+				</div></Link>
+				<Link style={globalStyles.link} to={'/pubs'}><div key={'test2'} style={styles.detail}>
+					Edit
+				</div></Link>
+				<Link style={globalStyles.link} to={'/pubs'}><div key={'test3'} style={styles.detail}>
+					Discussions
+				</div></Link>
+				<Link style={globalStyles.link} to={'/pubs'}><div key={'test4'} style={styles.detail}>
+					Journals
+				</div></Link>
+				<Link style={globalStyles.link} to={'/pubs'}><div key={'test5'} style={styles.detail}>
+					History
+				</div></Link>
+				<Link style={globalStyles.link} to={'/pubs'}><div key={'test6'} style={styles.detail}>
+					Source
+				</div></Link>
+				<Link style={globalStyles.link} to={'/pubs'}><div key={'test7'} style={styles.detail}>
+					Cite
+				</div></Link>
+
+				<div style={styles.leftBarDivider}></div>
+
+				<Link style={globalStyles.link} to={'/pubs'}><div key={'test8'} style={styles.detail}>
+					Follow
+				</div></Link>
+				<Link style={globalStyles.link} to={'/pubs'}><div key={'test67'} style={styles.detail}>
+					Table of Contents
+				</div></Link>
+				<Link style={globalStyles.link} to={'/pubs'}><div key={'test76'} style={styles.detail}>
+					Print
+				</div></Link>
+				<Link style={globalStyles.link} to={'/pubs'}><div key={'test43'} style={styles.detail}>
+					Permalink
+				</div></Link>
+
+				{/* <Link style={globalStyles.link} to={'/'}><div key={'leftBar0'} style={styles.detail}>
 					<FormattedMessage id="pub.home" defaultMessage="Home"/>
 				</div></Link>
 				<Link style={globalStyles.link} to={'/pub/' + this.props.randomSlug}><div key={'leftBar1'} style={styles.detail} onClick={this.props.readRandomPubHandler}>
@@ -50,9 +87,9 @@ const PubLeftBar = React.createClass({
 
 				<a style={globalStyles.link} target="_blank" href={'mailto:pubpub@media.mit.edu'}><div key={'leftBar10'} style={styles.detail}>
 					<FormattedMessage {...globalMessages.Feedback} />
-				</div></a>
+				</div></a> */}
 
-				<div style={styles.leftBarDivider}></div>
+				{/* <div style={styles.leftBarDivider}></div> */}
 				{/*
 					<Link style={globalStyles.link} to={'/pub/' + this.props.slug + '/reviews'}><div key={'leftBar8'} style={[styles.detail, this.props.pubStatus === 'Draft' && styles.hidden]}>
 						<FormattedMessage {...globalMessages.reviews} />
@@ -60,12 +97,18 @@ const PubLeftBar = React.createClass({
 				*/}
 
 				{/* <Link style={globalStyles.link} to={'/pub/' + this.props.slug + '/experts'}><div key={'leftBar9'} style={styles.detail}>Experts</div></Link> */}
-				<Link style={globalStyles.link} to={'/pub/' + this.props.slug + '/journals'}><div key={'leftBar13'} style={styles.detail}>
+
+
+
+				{/* <Link style={globalStyles.link} to={'/pub/' + this.props.slug + '/journals'}><div key={'leftBar13'} style={styles.detail}>
 					<FormattedMessage {...globalMessages.Journals} /> <span style={styles.count}>({this.props.journalCount || 0})</span>
 				</div></Link>
 				<Link style={globalStyles.link} to={'/pub/' + this.props.slug + '/history'}><div key={'leftBar3'} style={styles.detail}>
 					<FormattedMessage {...globalMessages.history} /> <span style={styles.count}>({this.props.historyCount || 0})</span>
-				</div></Link>
+				</div></Link> */}
+
+
+
 				{/* <Link style={globalStyles.link} to={'/pub/' + this.props.slug + '/analytics'}><div key={'leftBar5'} style={styles.detail}>
 					<FormattedMessage {...globalMessages.analytics} /> <span style={styles.count}>({this.props.analyticsCount || 0})</span>
 				</div></Link>
@@ -75,9 +118,13 @@ const PubLeftBar = React.createClass({
 				<Link style={globalStyles.link} to={'/pub/' + this.props.slug + '/news'}><div key={'leftBar7'} style={styles.detail}>
 					<FormattedMessage {...globalMessages.inthenews} /> <span style={styles.count}>({this.props.newsCount || 0})</span>
 				</div></Link> */}
-				<Link style={globalStyles.link} to={'/pub/' + this.props.slug + '/source' + versionURL}><div key={'leftBar4'} style={styles.detail}>
+
+
+				{/* <Link style={globalStyles.link} to={'/pub/' + this.props.slug + '/source' + versionURL}><div key={'leftBar4'} style={styles.detail}>
 					<FormattedMessage {...globalMessages.source} />
-				</div></Link>
+				</div></Link> */}
+
+
 
 				{/* <div style={styles.leftBarDivider}></div> */}
 
