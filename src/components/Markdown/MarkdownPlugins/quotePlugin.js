@@ -3,7 +3,7 @@ import Media from './baseMediaPlugin';
 import createPubPubPlugin from './PubPub';
 import {Reference} from 'components';
 
-const QuoteInputFields = [
+const InputFields = [
 	{title: 'quote', type: 'textArea', params: {placeholder: 'Caption for the quote.'}},
 	{title: 'attribution', type: 'text', params: {placeholder: 'Who said it'}},
 	{title: 'align', type: 'align'},
@@ -11,7 +11,7 @@ const QuoteInputFields = [
 	{title: 'reference', type: 'reference'},
 ];
 
-const QuoteConfig = {
+const Config = {
 	title: 'quote',
 	inline: true,
 	autocomplete: true,
@@ -21,7 +21,7 @@ const QuoteConfig = {
 const QUOTE_WRAPPER_CLASS = 'pub-quote-wrapper';
 const QUOTE_CLASS = 'pub-quote';
 
-const QuoteEditorWidget = (inputProps) => {
+const EditorWidget = (inputProps) => {
 	let content;
 	if (!inputProps.quote) {
 		content = 'No quote';
@@ -35,7 +35,7 @@ const QuoteEditorWidget = (inputProps) => {
 
 let styles = {};
 
-const QuotePlugin = React.createClass({
+const Plugin = React.createClass({
 	propTypes: {
 		error: PropTypes.string,
 		children: PropTypes.string,
@@ -87,4 +87,4 @@ styles = {
 	}
 };
 
-export default createPubPubPlugin(QuotePlugin, QuoteConfig, QuoteInputFields, QuoteEditorWidget);
+export default createPubPubPlugin(Plugin, Config, InputFields, EditorWidget);

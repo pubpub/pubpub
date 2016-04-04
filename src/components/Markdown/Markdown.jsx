@@ -1,24 +1,24 @@
+console.log('made it to markdown');
 import React, { PropTypes } from 'react';
 import { Link } from 'react-router';
-import MDReactComponent from './MDReactComponent';
+import MarkdownMDReact from './MarkdownMDReact';
 
 import abbr from 'markdown-it-abbr';
 import emoji from 'markdown-it-emoji';
 import sub from 'markdown-it-sub';
 import sup from 'markdown-it-sup';
 import container from 'markdown-it-container';
+import mathIt from 'markdown-it-math';
 import ppm from './markdown-it-ppm';
 import pubheader from './markdown-it-pubheader';
 import pubheaderitem from './markdown-it-pubheaderitem';
 
-import mathIt from 'markdown-it-math';
-
 import {parsePluginString} from 'utils/parsePlugins';
-import Plugins from './EditorPlugins';
-import InputFields from './EditorPluginFields';
+import Plugins from './MarkdownPlugins';
+import InputFields from './MarkdownPluginFields';
 
-import MathComponent from './MathComponent';
-import HTMLComponent from './HTMLComponent';
+import MarkdownMath from './MarkdownMath';
+import MarkdownHTML from './MarkdownHTML';
 
 import murmur from 'murmurhash';
 
@@ -36,7 +36,7 @@ const MathOptions = {
 	},
 };
 
-const PPMComponent = React.createClass({
+const Markdown = React.createClass({
 	propTypes: {
 		markdown: PropTypes.string,
 
@@ -63,7 +63,7 @@ const PPMComponent = React.createClass({
 	handleIterate: function(globals, Tag, props, children) {
 		let Component = Tag;
 
-		switch(Tag) {
+		switch (Tag) {
 		case 'h1':
 		case 'h2':
 		case 'h3':
@@ -90,10 +90,10 @@ const PPMComponent = React.createClass({
 			}
 
 			if (children[0] === 'pagebreak') {
-				return <div className={'pagebreak'} style={{display: 'block', borderTop: '1px dashed #ddd'}}></div>
+				return <div className={'pagebreak'} style={{display: 'block', borderTop: '1px dashed #ddd'}}></div>;
 			}
 			if (children[0] === 'linebreak') {
-				return <div className={'linebreak p-block'} style={{display: 'block', height: '1.5em'}}></div>
+				return <div className={'linebreak p-block'} style={{display: 'block', height: '1.5em'}}></div>;
 			}
 
 			const pluginString = children[0];
@@ -116,9 +116,9 @@ const PPMComponent = React.createClass({
 				const propVal = pluginProps[propName];
 				const pluginInputField = PluginInputFields.find( field => field.title === propName);
 				if (pluginInputField) {
-					let inputVal = pluginProps[propName];
+					const inputVal = pluginProps[propName];
 					const InputFieldType = pluginInputField.type;
-					const Field = InputFields[InputFieldType];
+					// const Field = InputFields[InputFieldType];
 					if (InputFields[InputFieldType].transform) {
 						pluginProps[propName] = InputFields[InputFieldType].transform(propVal, pluginInputField.params, this.props.assets, this.props.references, this.props.selections);
 					}
@@ -134,8 +134,8 @@ const PPMComponent = React.createClass({
 
 		case 'code':
 			if (props['data-language']) {
-				try{
-					return <Tag {...props} className={'codeBlock'} dangerouslySetInnerHTML={{__html: window.hljs.highlight(props['data-language'], children[0]).value}} />
+				try {
+					return <Tag {...props} className={'codeBlock'} dangerouslySetInnerHTML={{__html: window.hljs.highlight(props['data-language'], children[0]).value}} />;
 				} catch (err) {
 					// console.log(err);
 				}
@@ -145,14 +145,13 @@ const PPMComponent = React.createClass({
 			break;
 
 		case 'math':
-			return <MathComponent>{children[0]}</MathComponent>;
-			break;
+			return <MarkdownMath>{children[0]}</MarkdownMath>;
 		case 'htmlblock':
 			const text = children[0];
 			if (typeof text === 'string' || text instanceof String) {
-				return <HTMLComponent>{text}</HTMLComponent>;
-				break;
-	    }
+				return <MarkdownHTML>{text}</MarkdownHTML>;
+			}
+			break;
 		case 'p':
 			// if (children[0] === null){ return null; }
 			// console.log('p arguments', arguments);
@@ -164,7 +163,7 @@ const PPMComponent = React.createClass({
 			props['data-hash'] = children[0] ? murmur.v2(children[0]) : 0;
 			break;
 		case 'hr':
-			return <Component  {...props} />
+			return <Component {...props} />;
 		case 'pubheader':
 			// console.log(arguments);
 			Component = 'div';
@@ -207,10 +206,14 @@ const PPMComponent = React.createClass({
 	},
 
 	render: function() {
-		for (const member in this.globals) delete this.globals[member];
+		for (const member in this.globals) {
+			if (this.globals.hasOwnProperty(member)) {
+				delete this.globals[member];
+			}
+		}
 
 		return (
-			<MDReactComponent
+			<MarkdownMDReact
 				text={this.props.markdown}
 				onIterate={this.handleIterate.bind(this, this.globals)}
 				markdownOptions={{
@@ -232,4 +235,4 @@ const PPMComponent = React.createClass({
 	}
 });
 
-export default PPMComponent;
+export default Markdown;

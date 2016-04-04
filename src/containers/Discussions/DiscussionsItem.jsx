@@ -5,7 +5,7 @@ import { Link } from 'react-router';
 import DiscussionsInput from './DiscussionsInput';
 import DiscussionsScore from './DiscussionsScore';
 
-import PPMComponent from 'markdown/PPMComponent';
+import {Markdown} from 'components';
 
 // import ResizingText from '../../components/PubBody/ResizingText';
 
@@ -181,7 +181,7 @@ const DiscussionsItem = React.createClass({
 								<FormattedMessage id="discussion.PrivateCollaboraotrsOnly" defaultMessage="Private. Collaborators only."/>
 							</div>
 							{/* md.tree */}
-							<PPMComponent markdown={discussionItem.markdown} />
+							<Markdown markdown={discussionItem.markdown} />
 
 						</div>
 					</div>

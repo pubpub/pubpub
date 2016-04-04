@@ -1,5 +1,5 @@
 /* global CodeMirror */
-import WidgetComponent from './BaseEditorWidgetComponent';
+import WidgetComponent from './BaseMarkdownWidgetComponent';
 import ReactDOM from 'react-dom';
 import React from 'react';
 

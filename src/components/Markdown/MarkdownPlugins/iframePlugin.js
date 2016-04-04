@@ -4,7 +4,7 @@ import createPubPubPlugin from './PubPub';
 import {Reference} from 'components';
 
 
-const IframeInputFields = [
+const InputFields = [
 	{title: 'url', type: 'url', params: {}},
 	{title: 'height', type: 'text', params: {placeholder: 'iFrame height'}},
 	{title: 'width', type: 'text', params: {placeholder: 'iFrame width'}},
@@ -13,7 +13,7 @@ const IframeInputFields = [
 	{title: 'reference', type: 'reference'},
 ];
 
-const IframeConfig = {
+const Config = {
 	title: 'iframe',
 	inline: true,
 	autocomplete: true
@@ -22,11 +22,11 @@ const IframeConfig = {
 const IFRAME_WRAPPER_CLASS = 'pub-iframe-wrapper';
 const IFRAME_CLASS = 'pub-iframe';
 
-const IframeEditorWidget = (inputProps) => (<span>iFrame: {inputProps.url || 'Empty'}</span>);
+const EditorWidget = (inputProps) => (<span>iFrame: {inputProps.url || 'Empty'}</span>);
 
 let styles = {};
 
-const IframePlugin = React.createClass({
+const Plugin = React.createClass({
 	propTypes: {
 		error: PropTypes.string,
 		children: PropTypes.string,
@@ -89,4 +89,4 @@ styles = {
 	}
 };
 
-export default createPubPubPlugin(IframePlugin, IframeConfig, IframeInputFields, IframeEditorWidget);
+export default createPubPubPlugin(Plugin, Config, InputFields, EditorWidget);

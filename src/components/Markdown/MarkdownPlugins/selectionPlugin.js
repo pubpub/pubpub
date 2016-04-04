@@ -5,11 +5,11 @@ import smoothScroll from 'utils/smoothscroll';
 
 import {FormattedMessage} from 'react-intl';
 
-const SelectionInputFields = [
+const InputFields = [
 	{title: 'source', type: 'selection', params: {}},
 ];
 
-const SelectionConfig = {
+const Config = {
 	title: 'highlight',
 	inline: true,
 	autocomplete: false
@@ -18,7 +18,7 @@ const SelectionConfig = {
 let styles;
 let Marklib;
 
-const SelectionEditorWidget = (inputProps) => {
+const EditorWidget = (inputProps) => {
 	let content;
 	if (!inputProps.source || !inputProps.source.text) {
 		content = 'No highlight';
@@ -31,7 +31,7 @@ const SelectionEditorWidget = (inputProps) => {
 };
 
 
-const SelectionPlugin = React.createClass({
+const Plugin = React.createClass({
 	propTypes: {
 		error: PropTypes.string,
 		children: PropTypes.string,
@@ -242,4 +242,4 @@ styles = {
 	// },
 };
 
-export default createPubPubPlugin(Radium(SelectionPlugin), SelectionConfig, SelectionInputFields, SelectionEditorWidget);
+export default createPubPubPlugin(Radium(Plugin), Config, InputFields, EditorWidget);

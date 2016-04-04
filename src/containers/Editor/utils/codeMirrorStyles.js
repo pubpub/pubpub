@@ -1,6 +1,6 @@
 // CodeMirror styles function can be
 // used to dynamically change font, size, color, etc
-import Plugins from 'markdown/EditorPlugins';
+import Plugins from 'components/Markdown/MarkdownPlugins';
 
 export function codeMirrorStyles(loginData, parentClass) {
 	const editorFont = loginData ? loginData.getIn(['userData', 'settings', 'editorFont']) : undefined;

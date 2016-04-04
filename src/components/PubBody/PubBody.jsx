@@ -1,9 +1,9 @@
 import React, {PropTypes} from 'react';
 import Radium, {Style} from 'radium';
 import {globalStyles} from 'utils/styleConstants';
-import {SelectionPopup, Reference, License} from 'components';
+import {Markdown, SelectionPopup, Reference, License} from 'components';
 // import { Link } from 'react-router';
-import {loadCss} from 'utils/loadingFunctions';
+// import {loadCss} from 'utils/loadingFunctions';
 // import {scienceStyle, magazineStyle} from './pubStyles';
 // import cssConvert from 'utils/cssToRadium';
 import ResizingText from 'utils/ResizingText';
@@ -13,8 +13,6 @@ import {globalMessages} from 'utils/globalMessages';
 import {parsePluginString} from 'utils/parsePlugins';
 
 import {FormattedMessage} from 'react-intl';
-
-import PPMComponent from 'markdown/PPMComponent';
 
 let styles = {};
 
@@ -247,7 +245,7 @@ const PubBody = React.createClass({
 						{/* <div id={'pub-header-divider'}></div> */}
 
 						<div id="pubBodyContent"> {/* Highlights are dependent on the id 'pubBodyContent' */}
-							<PPMComponent markdown={this.props.markdown} isPage={this.props.isPage}/>
+							<Markdown markdown={this.props.markdown} isPage={this.props.isPage}/>
 
 							{this.props.addSelectionHandler
 								? <SelectionPopup addSelectionHandler={this.props.addSelectionHandler}/>

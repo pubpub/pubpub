@@ -32,7 +32,7 @@ import {globalStyles} from 'utils/styleConstants';
 import {globalMessages} from 'utils/globalMessages';
 import {FormattedMessage} from 'react-intl';
 // import {Iterable} from 'immutable';
-import EditorWidgets from 'markdown/EditorWidgets/EditorWidgets';
+import MarkdownWidgets from 'components/Markdown/MarkdownWidgets/MarkdownWidgets';
 
 let FireBaseURL;
 let styles;
@@ -632,7 +632,7 @@ const Editor = React.createClass({
 						<div id="editor-text-wrapper" style={[globalStyles.hiddenUntilLoad, globalStyles[loadStatus], styles.editorMarkdown, styles[viewMode].editorMarkdown, !isReader && styles[viewMode].editorMarkdownIsEditor]}>
 
 
-							{(this.state.firepadInitialized) ? <EditorWidgets ref="widgethandler" mode={widgetMode} references={references} assets={userAssets} activeFocus={this.state.activeFocus} cm={this.cm} /> : null}
+							{(this.state.firepadInitialized) ? <MarkdownWidgets ref="widgethandler" mode={widgetMode} references={references} assets={userAssets} activeFocus={this.state.activeFocus} cm={this.cm} /> : null}
 							{/*
 							<EditorPluginPopup ref="pluginPopup" isLivePreview={isLivePreview} references={this.state.firepadData.references} assets={this.state.firepadData.assets} activeFocus={this.state.activeFocus} codeMirrorChange={this.state.codeMirrorChange}/>
 							*/}

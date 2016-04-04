@@ -5,7 +5,7 @@ import Helmet from 'react-helmet';
 import {Autocomplete} from 'containers';
 import {globalStyles} from 'utils/styleConstants';
 // import {LandingBody} from './components';
-import PPMComponent from 'markdown/PPMComponent';
+import {Markdown} from 'components';
 import {getRandomSlug} from 'containers/App/actions';
 import { pushState } from 'redux-router';
 import { Link } from 'react-router';
@@ -190,7 +190,7 @@ const Landing = React.createClass({
 						</div>
 
 						: <div id={'pageContent'}>
-							<PPMComponent markdown={this.props.appData.getIn(['journalData', 'landingPage', 'markdown'])} isPage={true}/>
+							<Markdown markdown={this.props.appData.getIn(['journalData', 'landingPage', 'markdown'])} isPage={true}/>
 						</div>
 				}
 				{/* <LandingBody componentsArray={componentsArray} journalID={journalID} journalData={this.props.appData.get('journalData')} query={this.props.query} setQueryHandler={this.setQuery}/> */}

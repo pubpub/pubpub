@@ -8,6 +8,7 @@ export ImageCropper from './ImageCropper/ImageCropper';
 export License from './License/License';
 export LoaderDeterminate from './LoaderDeterminate/LoaderDeterminate';
 export LoaderIndeterminate from './LoaderIndeterminate/LoaderIndeterminate';
+export Markdown from './Markdown/Markdown';
 export Menu from './Menu/Menu';
 export NotFound from './NotFound/NotFound';
 export PreviewCollection from './PreviewCollection/PreviewCollection';

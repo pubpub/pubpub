@@ -1,4 +1,6 @@
 {
+  "discussion.selectionPreviousDraft": "Selection made on draft version",
+  "discussion.selectionPreviousVersion": "Selection made on Version {version}",
   "notFound.pageDoesntExist": "Doh - That page does not seem to exist!",
   "preview.discussionOn": "Discussion on",
   "pub.addToComment": "Add to Comment",
@@ -107,8 +109,6 @@
   "user.userBio": "Bio",
   "journal.sendNotificationDigest": "Send Notification Digest",
   "user.notLoggedIn": "Not authorized to edit settings",
-  "discussion.selectionPreviousDraft": "Selection made on draft version",
-  "discussion.selectionPreviousVersion": "Selection made on Version {version}",
   "global.login": "Login",
   "global.register": "Register",
   "global.groups": "Groups",

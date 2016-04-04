@@ -7,14 +7,14 @@ import {globalStyles} from 'utils/styleConstants';
 
 import {globalMessages} from 'utils/globalMessages';
 import {injectIntl, FormattedMessage} from 'react-intl';
-import PPMComponent from 'markdown/PPMComponent';
+import {Markdown} from 'components';
 
 let styles = {};
 
 import initCodeMirrorMode from 'containers/Editor/utils/editorCodeMirrorMode';
 import {codeMirrorStyles} from 'containers/Editor/utils/codeMirrorStyles';
 import {insertText} from 'containers/Editor/utils/editorCodeFunctions';
-import EditorWidgets from 'markdown/EditorWidgets/EditorWidgets';
+import MarkdownWidgets from 'components/Markdown/MarkdownWidgets/MarkdownWidgets';
 
 function clearTempHighlights() {
 	const temps = document.getElementsByClassName('tempHighlight');
@@ -26,7 +26,7 @@ function clearTempHighlights() {
 }
 
 // import marked from '../../modules/markdown/markdown';
-// import markdownExtensions from '../../components/EditorPlugins';
+// import markdownExtensions from '../../components/MarkdownPlugins';
 // marked.setExtensions(markdownExtensions);
 
 const PubDiscussionsInput = React.createClass({
@@ -205,7 +205,7 @@ const PubDiscussionsInput = React.createClass({
 					},
 				}} />
 
-			{(this.state.initialized) ? <EditorWidgets assets={this.props.userAssets} ref="widgethandler" mode="discussions" references={{}} cm={this.cm} /> : null }
+			{(this.state.initialized) ? <MarkdownWidgets assets={this.props.userAssets} ref="widgethandler" mode="discussions" references={{}} cm={this.cm} /> : null }
 
 				<div style={[styles.inputTopLine, styles.expanded(this.state.expanded, true)]}>
 					<div style={styles.thumbnail}>
@@ -240,7 +240,7 @@ const PubDiscussionsInput = React.createClass({
 
 				{this.state.showPreview
 					? <div style={styles.livePreviewBox}>
-						<PPMComponent markdown={this.state.content} />
+						<Markdown markdown={this.state.content} />
 					</div>
 					: null
 				}

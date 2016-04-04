@@ -3,7 +3,7 @@ import Media from './baseMediaPlugin';
 import createPubPubPlugin from './PubPub';
 import ErrorMsg from './ErrorPlugin';
 
-const VideoInputFields = [
+const InputFields = [
 	{title: 'source', type: 'asset', params: {assetType: 'video'}},
 	{title: 'align', type: 'align'},
 	{title: 'size', type: 'size'},
@@ -12,7 +12,7 @@ const VideoInputFields = [
 
 ];
 
-const VideoConfig = {
+const Config = {
 	title: 'video',
 	inline: true,
 	autocomplete: true,
@@ -22,12 +22,12 @@ const VideoConfig = {
 const VIDEO_WRAPPER_CLASS = 'pub-video-wrapper';
 const VIDEO_CLASS = 'pub-video';
 
-const VideoEditorWidget = (inputProps) => (<span>Video: {inputProps.reference || 'Empty'}</span>);
+const EditorWidget = (inputProps) => (<span>Video: {inputProps.reference || 'Empty'}</span>);
 
 
 let styles = {};
 
-const VideoPlugin = React.createClass({
+const Plugin = React.createClass({
 	propTypes: {
 		url: PropTypes.string,
 		error: PropTypes.string,
@@ -78,4 +78,4 @@ styles = {
 };
 
 
-export default createPubPubPlugin(VideoPlugin, VideoConfig, VideoInputFields, VideoEditorWidget);
+export default createPubPubPlugin(Plugin, Config, InputFields, EditorWidget);

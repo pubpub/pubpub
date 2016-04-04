@@ -3,7 +3,7 @@ import React, {PropTypes} from 'react';
 import Media from './baseMediaPlugin';
 import createPubPubPlugin from './PubPub';
 
-const ImageInputFields = [
+const InputFields = [
 	{title: 'source', type: 'asset', params: {assetType: 'image'}},
 	{title: 'align', type: 'align'},
 	{title: 'size', type: 'size'},
@@ -11,7 +11,7 @@ const ImageInputFields = [
 	{title: 'reference', type: 'reference'},
 ];
 
-const ImageConfig = {
+const Config = {
 	title: 'image',
 	inline: true,
 	autocomplete: true,
@@ -23,9 +23,9 @@ const IMG_CLASS = 'pub-img';
 
 // let styles = {};
 
-const ImageEditorWidget = (inputProps) => (<span>Image: {(((inputProps.source) ? inputProps.source.label : false) || 'Empty')}</span>);
+const EditorWidget = (inputProps) => (<span>Image: {(((inputProps.source) ? inputProps.source.label : false) || 'Empty')}</span>);
 
-const ImagePlugin = React.createClass({
+const Plugin = React.createClass({
 	propTypes: {
 		error: PropTypes.string,
 		children: PropTypes.string,
@@ -68,4 +68,4 @@ const ImagePlugin = React.createClass({
 	}
 });
 
-export default createPubPubPlugin(ImagePlugin, ImageConfig, ImageInputFields, ImageEditorWidget);
+export default createPubPubPlugin(Plugin, Config, InputFields, EditorWidget);

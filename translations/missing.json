@@ -29,6 +29,8 @@
     "global.Highlights": "Missing. English is: Highlights"
   },
   "ld": {
+    "discussion.selectionPreviousDraft": "Missing. English is: Selection made on draft version",
+    "discussion.selectionPreviousVersion": "Missing. English is: Selection made on Version {version}",
     "nav.userNotifications": "Missing. English is: Notifications ({count})",
     "discussion.Unarchive": "Missing. English is: Unarchive",
     "discussion.Archive": "Missing. English is: Archive",
@@ -68,8 +70,6 @@
     "user.mustBeLoggedInNotifications": "Missing. English is: Must be logged in to view notifications",
     "journal.sendNotificationDigest": "Missing. English is: Send Notification Digest",
     "user.notLoggedIn": "Missing. English is: Not authorized to edit settings",
-    "discussion.selectionPreviousDraft": "Missing. English is: Selection made on draft version",
-    "discussion.selectionPreviousVersion": "Missing. English is: Selection made on Version {version}",
     "global.groups": "Missing. English is: Groups",
     "global.notifications": "Missing. English is: Notifications",
     "global.follows": "Missing. English is: Follows",

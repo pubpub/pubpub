@@ -8,13 +8,13 @@ import classNames from 'classnames';
 let styles = {};
 
 
-const FootnoteInputFields = [
+const InputFields = [
 	{title: 'footnote', type: 'textArea', params: {placeholder: 'Footnote you want to share.'}},
 	{title: 'type', type: 'radio', params: {choices: ['hover', 'side']}},
 	{title: 'reference', type: 'reference'},
 ];
 
-const FootnoteConfig = {
+const Config = {
 	title: 'footnote',
 	inline: true,
 	autocomplete: true,
@@ -33,7 +33,7 @@ const FootnoteConfig = {
 const FOOTNOTE_WRAPPER_CLASS = 'pub-footnote-wrapper';
 const FOOTNOTE_CLASS = 'pub-footnote';
 
-const FootnoteEditorWidget = (inputProps) => {
+const EditorWidget = (inputProps) => {
 	let content;
 	if (!inputProps.footnote) {
 		content = 'No caption';
@@ -46,7 +46,7 @@ const FootnoteEditorWidget = (inputProps) => {
 };
 
 
-const FootnotePlugin = React.createClass({
+const Plugin = React.createClass({
 	propTypes: {
 		reference: PropTypes.object,
 		footnote: PropTypes.string,
@@ -166,4 +166,4 @@ styles = {
 
 };
 
-export default createPubPubPlugin(FootnotePlugin, FootnoteConfig, FootnoteInputFields, FootnoteEditorWidget);
+export default createPubPubPlugin(Plugin, Config, InputFields, EditorWidget);

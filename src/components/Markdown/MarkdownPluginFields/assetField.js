@@ -9,7 +9,7 @@ const AssetField = React.createClass({
 		saveChange: PropTypes.func,
 	},
 	statics: {
-		// Transform is called by PPMComponent.js to transform
+		// Transform is called by Markdown.jsx to transform
 		// 'prop' -- the text value of the asset into the asset object
 		/*
 		transform: function(prop, params, assets, references) {

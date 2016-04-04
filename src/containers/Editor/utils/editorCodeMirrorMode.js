@@ -1,6 +1,6 @@
 /* global CodeMirror */
 
-import Plugins from 'markdown/EditorPlugins';
+import Plugins from 'components/Markdown/MarkdownPlugins';
 
 export default function() {
 

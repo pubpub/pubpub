@@ -5,12 +5,12 @@ import createPubPubPlugin from './PubPub';
 
 let styles = {};
 
-const CiteInputFields = [
+const InputFields = [
 	{title: 'reference', type: 'reference'},
 	{title: 'description', type: 'textArea', params: {placeholder: 'Caption talking about the reference.'}},
 ];
 
-const CiteConfig = {
+const Config = {
 	title: 'cite',
 	inline: true,
 	autocomplete: true,
@@ -39,9 +39,9 @@ const CiteConfig = {
 const CITE_WRAPPER_CLASS = 'pub-cite-wrapper';
 const CITE_CLASS = 'pub-cite';
 
-const CiteEditorWidget = (inputProps) => (<span>Citation: {(inputProps.reference && inputProps.reference.label) || 'Empty'}</span>);
+const EditorWidget = (inputProps) => (<span>Citation: {(inputProps.reference && inputProps.reference.label) || 'Empty'}</span>);
 
-const CitePlugin = React.createClass({
+const Plugin = React.createClass({
 	propTypes: {
 		reference: PropTypes.object,
 		ref: PropTypes.string,
@@ -241,4 +241,4 @@ styles = {
 };
 
 
-export default createPubPubPlugin(CitePlugin, CiteConfig, CiteInputFields, CiteEditorWidget);
+export default createPubPubPlugin(Plugin, Config, InputFields, EditorWidget);

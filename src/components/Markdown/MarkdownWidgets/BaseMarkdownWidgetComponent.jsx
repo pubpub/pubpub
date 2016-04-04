@@ -1,5 +1,5 @@
 import React, {PropTypes} from 'react';
-import EditorPlugins from 'markdown/EditorPlugins';
+import MarkdownPlugins from 'components/Markdown/MarkdownPlugins';
 import Radium from 'radium';
 
 const widgetStyle = function(PluginColor) {
@@ -33,7 +33,7 @@ const WidgetComponent = React.createClass({
 	},
 	render: function() {
 		let content;
-		const Plugin = (this.props.pluginType && EditorPlugins[this.props.pluginType]) ? EditorPlugins[this.props.pluginType] : null;
+		const Plugin = (this.props.pluginType && MarkdownPlugins[this.props.pluginType]) ? MarkdownPlugins[this.props.pluginType] : null;
 		const PluginWidget = (Plugin	&& Plugin.Widget) ? Plugin.Widget : null;
 		const PluginColor = (Plugin && Plugin.Config) ? Plugin.Config.color : null;
 
