@@ -339,8 +339,8 @@ styles = {
 		// backgroundColor: 'rgba(255,0,100,0.2)',
 	},
 	discussionContent: {
-		width: 'calc(100% - 30px)',
-		marginLeft: 25,
+		width: 'calc(100% -12px)',
+		// marginLeft: 25,
 		// overflow: 'hidden',
 		color: '#222',
 		// padding: '0px 15px',

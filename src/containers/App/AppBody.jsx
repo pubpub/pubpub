@@ -328,7 +328,7 @@ styles = {
 		height: 'auto',
 		// backgroundColor: 'red',
 		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
-			marginTop: globalStyles.headerHeightMobile,
+			// marginTop: globalStyles.headerHeightMobile,
 
 		},
 	},

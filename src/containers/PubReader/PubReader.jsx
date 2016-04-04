@@ -220,12 +220,10 @@ const PubReader = React.createClass({
 				<Helmet {...metaData} />
 
 				<Style rules={{
-					'.pagebreak': {
-						opacity: '0',
-					}
+					'.pagebreak': { opacity: '0', }
 				}} />
 
-				<div className="leftBar" style={[styles.leftBar, globalStyles[this.props.readerData.get('status')], pubData.markdown === undefined && {display: 'none'}]}>
+				<div className="reader-left" style={[styles.readerLeft, globalStyles[this.props.readerData.get('status')], pubData.markdown === undefined && {display: 'none'}]}>
 
 					<PubReaderLeftBar
 						slug={this.props.slug}
@@ -241,141 +239,144 @@ const PubReader = React.createClass({
 
 				</div>
 
-				<div className="centerBar pubScrollContainer" style={[styles.centerBar, this.props.readerData.get('activeModal') !== undefined && styles.centerBarModalActive]}>
+				<div className="reader-content" style={styles.readerContent}>
+					<div className="centerBar pubScrollContainer" style={[styles.centerBar, this.props.readerData.get('activeModal') !== undefined && styles.centerBarModalActive]}>
 
-					<PubReaderNav
-						height={this.height}
-						openPubModalHandler={this.openPubModal}
-						status={pubData.history[0].markdown ? this.props.readerData.get('status') : 'loading'}
-						slug={this.props.slug}
-						isAuthor={pubData.isAuthor}
-						pubStatus={pubData.status}
-						isFollowing={this.props.loginData.getIn(['userData', 'following', 'pubs']) ? this.props.loginData.getIn(['userData', 'following', 'pubs']).indexOf(this.props.readerData.getIn(['pubData', '_id'])) > -1 : false}
-						handleFollow={this.followPubToggle}/>
+						<PubReaderNav
+							height={this.height}
+							openPubModalHandler={this.openPubModal}
+							status={pubData.history[0].markdown ? this.props.readerData.get('status') : 'loading'}
+							slug={this.props.slug}
+							isAuthor={pubData.isAuthor}
+							pubStatus={pubData.status}
+							isFollowing={this.props.loginData.getIn(['userData', 'following', 'pubs']) ? this.props.loginData.getIn(['userData', 'following', 'pubs']).indexOf(this.props.readerData.getIn(['pubData', '_id'])) > -1 : false}
+							handleFollow={this.followPubToggle}/>
 
-					<LoaderDeterminate
-						value={this.props.readerData.get('status') === 'loading' ? 0 : 100}/>
+						<LoaderDeterminate
+							value={this.props.readerData.get('status') === 'loading' ? 0 : 100}/>
 
-					{
-						this.props.query.version && this.props.query.version !== pubData.history.length.toString()
-							? <Link to={'/pub/' + this.props.slug} style={globalStyles.link}>
-								<div key={'versionNotification'} style={[styles.versionNotification, globalStyles[this.props.readerData.get('status')]]}>
-									<p>Reading Version {this.props.query.version}. Click to read the most recent version ({pubData.history.length}).</p>
-									{/* <p>This was a {pubData.history[versionIndex].status === 'Draft' ? 'Draft' : 'Peer-Review Ready'} version.</p> */}
+						{
+							this.props.query.version && this.props.query.version !== pubData.history.length.toString()
+								? <Link to={'/pub/' + this.props.slug} style={globalStyles.link}>
+									<div key={'versionNotification'} style={[styles.versionNotification, globalStyles[this.props.readerData.get('status')]]}>
+										<p>Reading Version {this.props.query.version}. Click to read the most recent version ({pubData.history.length}).</p>
+										{/* <p>This was a {pubData.history[versionIndex].status === 'Draft' ? 'Draft' : 'Peer-Review Ready'} version.</p> */}
+									</div>
+								</Link>
+								: null
+						}
+
+						{
+							!pubData.isPublished
+								? <div key={'unpublishNotification'} style={[styles.unpublishedNotification, globalStyles[this.props.readerData.get('status')]]}>
+									<FormattedMessage id="pub.unpublishedNotification" defaultMessage="This pub is unpublished, and thus only accessible to collaborators."/>
 								</div>
-							</Link>
-							: null
-					}
+								: null
+						}
 
-					{
-						!pubData.isPublished
-							? <div key={'unpublishNotification'} style={[styles.unpublishedNotification, globalStyles[this.props.readerData.get('status')]]}>
-								<FormattedMessage id="pub.unpublishedNotification" defaultMessage="This pub is unpublished, and thus only accessible to collaborators."/>
-							</div>
-							: null
-					}
+						<PubBody
+							status={this.props.readerData.get('status')}
+							isPublished={pubData.isPublished}
+							isPage={pubData.isPage}
+							title={pubData.history[versionIndex].title}
+							abstract={pubData.history[versionIndex].abstract}
+							authorsNote={pubData.history[versionIndex].authorsNote}
+							minFont={14}
+							maxFont={21}
+							// htmlTree={this.state.htmlTree}
+							markdown={this.state.inputMD}
+							// assetsObject={this.state.assetsObject}
+							// referencesObject={this.state.referencesObject}
+							// selectionsArray={this.state.selectionsArray}
 
-					<PubBody
-						status={this.props.readerData.get('status')}
-						isPublished={pubData.isPublished}
-						isPage={pubData.isPage}
-						title={pubData.history[versionIndex].title}
-						abstract={pubData.history[versionIndex].abstract}
-						authorsNote={pubData.history[versionIndex].authorsNote}
-						minFont={14}
-						maxFont={21}
-						// htmlTree={this.state.htmlTree}
-						markdown={this.state.inputMD}
-						// assetsObject={this.state.assetsObject}
-						// referencesObject={this.state.referencesObject}
-						// selectionsArray={this.state.selectionsArray}
+							authors={pubData.history[versionIndex].authors}
+							addSelectionHandler={this.addSelection}
+							style={pubData.history[versionIndex].style}
 
-						authors={pubData.history[versionIndex].authors}
-						addSelectionHandler={this.addSelection}
-						style={pubData.history[versionIndex].style}
+							styleScoped={pubData.history[versionIndex].styleScoped}
 
-						styleScoped={pubData.history[versionIndex].styleScoped}
+							showPubHighlights={this.props.readerData.get('showPubHighlights')}
+							isFeatured={(pubData.featuredInList && pubData.featuredInList.indexOf(this.props.appData.getIn(['journalData', '_id'])) > -1) || this.props.appData.get('baseSubdomain') === null}
+							errorView={pubData.pubErrorView}
 
-						showPubHighlights={this.props.readerData.get('showPubHighlights')}
-						isFeatured={(pubData.featuredInList && pubData.featuredInList.indexOf(this.props.appData.getIn(['journalData', '_id'])) > -1) || this.props.appData.get('baseSubdomain') === null}
-						errorView={pubData.pubErrorView}
+							references={this.props.readerData.getIn(['pubData', 'history', versionIndex, 'references']) !== undefined ? this.props.readerData.getIn(['pubData', 'history', versionIndex, 'references']).toJS() : []}
+							firstPublishedDate={this.props.readerData.getIn(['pubData', 'history', 0, 'versionDate'])}
+							lastPublishedDate={this.props.readerData.getIn(['pubData', 'history', this.props.readerData.getIn(['pubData', 'history']).size - 1, 'versionDate'])} />
 
-						references={this.props.readerData.getIn(['pubData', 'history', versionIndex, 'references']) !== undefined ? this.props.readerData.getIn(['pubData', 'history', versionIndex, 'references']).toJS() : []}
-						firstPublishedDate={this.props.readerData.getIn(['pubData', 'history', 0, 'versionDate'])}
-						lastPublishedDate={this.props.readerData.getIn(['pubData', 'history', this.props.readerData.getIn(['pubData', 'history']).size - 1, 'versionDate'])} />
+						{/* <PubModals
+							slug={this.props.slug}
+							status={this.props.readerData.get('status')}
+							pubStatus={pubData.status}
+							openPubModalHandler={this.openPubModal}
+							closePubModalHandler={this.closePubModal}
+							closeMenuHandler={this.closeMenu}
+							activeModal={this.props.readerData.get('activeModal')}
+							isFeatured={(pubData.featuredInList && pubData.featuredInList.indexOf(this.props.appData.getIn(['journalData', '_id'])) > -1) || this.props.appData.get('baseSubdomain') === null}
 
-					{/* <PubModals
-						slug={this.props.slug}
-						status={this.props.readerData.get('status')}
-						pubStatus={pubData.status}
-						openPubModalHandler={this.openPubModal}
-						closePubModalHandler={this.closePubModal}
-						closeMenuHandler={this.closeMenu}
-						activeModal={this.props.readerData.get('activeModal')}
-						isFeatured={(pubData.featuredInList && pubData.featuredInList.indexOf(this.props.appData.getIn(['journalData', '_id'])) > -1) || this.props.appData.get('baseSubdomain') === null}
+							// TOC Props
+							tocData={this.state.TOC}
+							// Cite Props
+							pubData={pubData.history[versionIndex]}
+							journalName={this.props.appData.get('baseSubdomain') ? this.props.appData.getIn(['journalData', 'journalName']) : ''}
+							// Status Data
+							featuredIn={pubData.featuredIn}
+							submittedTo={pubData.submittedTo}
+							// Reviews Data
+							reviewsData={pubData.reviews}
 
-						// TOC Props
-						tocData={this.state.TOC}
-						// Cite Props
-						pubData={pubData.history[versionIndex]}
-						journalName={this.props.appData.get('baseSubdomain') ? this.props.appData.getIn(['journalData', 'journalName']) : ''}
-						// Status Data
-						featuredIn={pubData.featuredIn}
-						submittedTo={pubData.submittedTo}
-						// Reviews Data
-						reviewsData={pubData.reviews}
-
-						// Discussions Data
-						toggleHighlightsHandler={this.toggleHighlights}
-						showPubHighlights={this.props.readerData.get('showPubHighlights')}/> */}
+							// Discussions Data
+							toggleHighlightsHandler={this.toggleHighlights}
+							showPubHighlights={this.props.readerData.get('showPubHighlights')}/> */}
 
 
-				</div>
-
-				<div className="rightBar" style={[styles.rightBar, globalStyles[this.props.readerData.get('status')], pubData.markdown === undefined && {display: 'none'}]}>
-
-					{/* <div style={rightBarStyles.sectionHeader}>
-
-						<FormattedMessage {...globalMessages.discussion}/>
-
-							<span style={[rightBarStyles.sectionSubHeader, rightBarStyles.sectionSubHeaderInline]}>
-								<span>
-									<Link to={'/pub/' + this.props.slug + '/invite'} style={globalStyles.link}><span key={'discussionButton2'} style={rightBarStyles.sectionSubHeaderSpan}>
-										<FormattedMessage {...globalMessages.inviteReviewers}/>
-									</span></Link>
-									<span style={styles.optionSeparator}>|</span>
-									<span style={styles.option} key={'discussions-highlight-toggle'} onClick={this.toggleHighlights}>
-										<FormattedMessage {...globalMessages.turnHighlights}/>
-										{' '}
-										{this.props.readerData.get('showPubHighlights')
-											? <FormattedMessage {...globalMessages.off}/>
-											: <FormattedMessage {...globalMessages.on}/> }
-										</span>
-								</span>
-							</span>
-
-					</div> */}
-					<div style={styles.rightHeaderButtonsWrapper}>
-						<Link style={globalStyles.link} to={'/pub/' + this.props.slug + '/journals'}>
-							<div style={[styles.buttonWrapper, !pubData.isAuthor && {opacity: '0', pointerEvents: 'none'}]} key={'topbutton1'}>Submit To Journal</div>
-						</Link>
-						<Link style={globalStyles.link} to={'/pub/' + this.props.slug + '/invite'}>
-							<div style={styles.buttonWrapper} key={'topbutton2'}>
-								<FormattedMessage id="pub.RequestReview" defaultMessage="Request Review"/>
-							</div>
-						</Link>
-						<Link style={globalStyles.link} to={'/pub/' + this.props.slug + '/discussions'}>
-							<div style={styles.buttonWrapper} key={'topbutton3'}>
-								<FormattedMessage id="pub.Expand" defaultMessage="Expand"/>
-							</div>
-						</Link>
-						<div style={globalStyles.clearFix}></div>
 					</div>
 
-					<Discussions/>
+					<div className="rightBar" style={[styles.rightBar, globalStyles[this.props.readerData.get('status')], pubData.markdown === undefined && {display: 'none'}]}>
+
+						{/* <div style={rightBarStyles.sectionHeader}>
+
+							<FormattedMessage {...globalMessages.discussion}/>
+
+								<span style={[rightBarStyles.sectionSubHeader, rightBarStyles.sectionSubHeaderInline]}>
+									<span>
+										<Link to={'/pub/' + this.props.slug + '/invite'} style={globalStyles.link}><span key={'discussionButton2'} style={rightBarStyles.sectionSubHeaderSpan}>
+											<FormattedMessage {...globalMessages.inviteReviewers}/>
+										</span></Link>
+										<span style={styles.optionSeparator}>|</span>
+										<span style={styles.option} key={'discussions-highlight-toggle'} onClick={this.toggleHighlights}>
+											<FormattedMessage {...globalMessages.turnHighlights}/>
+											{' '}
+											{this.props.readerData.get('showPubHighlights')
+												? <FormattedMessage {...globalMessages.off}/>
+												: <FormattedMessage {...globalMessages.on}/> }
+											</span>
+									</span>
+								</span>
+
+						</div> */}
+						<div style={styles.rightHeaderButtonsWrapper}>
+							<Link style={globalStyles.link} to={'/pub/' + this.props.slug + '/journals'}>
+								<div style={[styles.buttonWrapper, !pubData.isAuthor && {opacity: '0', pointerEvents: 'none'}]} key={'topbutton1'}>Submit To Journal</div>
+							</Link>
+							<Link style={globalStyles.link} to={'/pub/' + this.props.slug + '/invite'}>
+								<div style={styles.buttonWrapper} key={'topbutton2'}>
+									<FormattedMessage id="pub.RequestReview" defaultMessage="Request Review"/>
+								</div>
+							</Link>
+							<Link style={globalStyles.link} to={'/pub/' + this.props.slug + '/discussions'}>
+								<div style={styles.buttonWrapper} key={'topbutton3'}>
+									<FormattedMessage id="pub.Expand" defaultMessage="Expand"/>
+								</div>
+							</Link>
+							<div style={globalStyles.clearFix}></div>
+						</div>
+
+						<Discussions/>
+					</div>
+
+					<div style={globalStyles.clearFix}></div>
 				</div>
 
-				<div style={globalStyles.clearFix}></div>
 
 			</div>
 		);
@@ -421,63 +422,73 @@ styles = {
 			transform: 'translateY(1px)',
 		},
 	},
-	leftBar: {
+	readerLeft: {
 		padding: 10,
 		width: 'calc(150px - 20px)',
-		// height: 'calc(100vh - ' + globalStyles.headerHeight + ' - 20px)',
-		marginRight: 650,
-		float: 'left',
 		transition: '.3s linear opacity .25s',
+		position: 'absolute',
+		// height: 'calc(100vh - ' + globalStyles.headerHeight + ' - 20px)',
+		// marginRight: 650,
+		// float: 'left',
+
 		// overflow: 'hidden',
 		// overflowY: 'scroll',
-		fontFamily: 'Lato',
-		color: globalStyles.sideText,
+		// fontFamily: 'Lato',
+		// color: globalStyles.sideText,
 		// Mobile
 		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
 			display: 'none',
 		},
-		// Desktop Sizes
-		'@media screen and (min-width: 768px) and (max-width: 1023px)': {
-			padding: pubSizes.xSmallLeftBarPadding,
-			width: 'calc(' + pubSizes.xSmallLeft + ' - ' + (2 * pubSizes.xSmallLeftBarPadding) + 'px)',
-			height: 'calc(100vh - ' + globalStyles.headerHeight + ' - ' + (2 * pubSizes.xSmallLeftBarPadding) + 'px)',
-			marginRight: pubSizes.xSmallPub
-		},
-		'@media screen and (min-width: 1024px) and (max-width: 1300px)': {
-			padding: pubSizes.smallLeftBarPadding,
-			width: 'calc(' + pubSizes.smallLeft + ' - ' + (2 * pubSizes.smallLeftBarPadding) + 'px)',
-			height: 'calc(100vh - ' + globalStyles.headerHeight + ' - ' + (2 * pubSizes.smallLeftBarPadding) + 'px)',
-			marginRight: pubSizes.smallPub
-		},
-		'@media screen and (min-width: 1301px) and (max-width: 1600px)': {
-			padding: pubSizes.mediumLeftBarPadding,
-			width: 'calc(' + pubSizes.mediumLeft + ' - ' + (2 * pubSizes.mediumLeftBarPadding) + 'px)',
-			height: 'calc(100vh - ' + globalStyles.headerHeight + ' - ' + (2 * pubSizes.mediumLeftBarPadding) + 'px)',
-			marginRight: pubSizes.mediumPub
-		},
-		'@media screen and (min-width: 1600px) and (max-width: 2000px)': {
-			padding: pubSizes.largeLeftBarPadding,
-			width: 'calc(' + pubSizes.largeLeft + ' - ' + (2 * pubSizes.largeLeftBarPadding) + 'px)',
-			height: 'calc(100vh - ' + globalStyles.headerHeight + ' - ' + (2 * pubSizes.largeLeftBarPadding) + 'px)',
-			marginRight: pubSizes.largePub
-		},
-		'@media screen and (min-width: 2000px)': {
-			padding: pubSizes.xLargeLeftBarPadding,
-			width: 'calc(' + pubSizes.xLargeLeft + ' - ' + (2 * pubSizes.xLargeLeftBarPadding) + 'px)',
-			height: 'calc(100vh - ' + globalStyles.headerHeight + ' - ' + (2 * pubSizes.xLargeLeftBarPadding) + 'px)',
-			marginRight: pubSizes.xLargePub
-		},
+		// // Desktop Sizes
+		// '@media screen and (min-width: 768px) and (max-width: 1023px)': {
+		// 	padding: pubSizes.xSmallLeftBarPadding,
+		// 	width: 'calc(' + pubSizes.xSmallLeft + ' - ' + (2 * pubSizes.xSmallLeftBarPadding) + 'px)',
+		// 	height: 'calc(100vh - ' + globalStyles.headerHeight + ' - ' + (2 * pubSizes.xSmallLeftBarPadding) + 'px)',
+		// 	marginRight: pubSizes.xSmallPub
+		// },
+		// '@media screen and (min-width: 1024px) and (max-width: 1300px)': {
+		// 	padding: pubSizes.smallLeftBarPadding,
+		// 	width: 'calc(' + pubSizes.smallLeft + ' - ' + (2 * pubSizes.smallLeftBarPadding) + 'px)',
+		// 	height: 'calc(100vh - ' + globalStyles.headerHeight + ' - ' + (2 * pubSizes.smallLeftBarPadding) + 'px)',
+		// 	marginRight: pubSizes.smallPub
+		// },
+		// '@media screen and (min-width: 1301px) and (max-width: 1600px)': {
+		// 	padding: pubSizes.mediumLeftBarPadding,
+		// 	width: 'calc(' + pubSizes.mediumLeft + ' - ' + (2 * pubSizes.mediumLeftBarPadding) + 'px)',
+		// 	height: 'calc(100vh - ' + globalStyles.headerHeight + ' - ' + (2 * pubSizes.mediumLeftBarPadding) + 'px)',
+		// 	marginRight: pubSizes.mediumPub
+		// },
+		// '@media screen and (min-width: 1600px) and (max-width: 2000px)': {
+		// 	padding: pubSizes.largeLeftBarPadding,
+		// 	width: 'calc(' + pubSizes.largeLeft + ' - ' + (2 * pubSizes.largeLeftBarPadding) + 'px)',
+		// 	height: 'calc(100vh - ' + globalStyles.headerHeight + ' - ' + (2 * pubSizes.largeLeftBarPadding) + 'px)',
+		// 	marginRight: pubSizes.largePub
+		// },
+		// '@media screen and (min-width: 2000px)': {
+		// 	padding: pubSizes.xLargeLeftBarPadding,
+		// 	width: 'calc(' + pubSizes.xLargeLeft + ' - ' + (2 * pubSizes.xLargeLeftBarPadding) + 'px)',
+		// 	height: 'calc(100vh - ' + globalStyles.headerHeight + ' - ' + (2 * pubSizes.xLargeLeftBarPadding) + 'px)',
+		// 	marginRight: pubSizes.xLargePub
+		// },
 
 
 	},
 
+	readerContent: {
+		marginLeft: '150px',
+		backgroundColor: 'red',
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+			marginLeft: '0px',
+		}
+	},
 	centerBar: {
 		backgroundColor: 'white',
-		width: 650,
+		// width: 650,
+		width: '60%',
 		minHeight: 'calc(100vh - ' + globalStyles.headerHeight + ' + 3px)',
-		position: 'absolute',
+		position: 'relative',
 		top: '-3px',
-		left: 150,
+		// left: 150,
 		float: 'left',
 		// overflow: 'hidden',
 		// overflowY: 'scroll',
@@ -494,29 +505,29 @@ styles = {
 			float: 'none',
 			zIndex: 'auto',
 			top: 0,
-			left: 0,
+			// left: 0,
 		},
 		// Desktop Sizes
-		'@media screen and (min-width: 768px) and (max-width: 1023px)': {
-			width: pubSizes.xSmallPub,
-			left: 'calc(' + pubSizes.xSmallLeft + ')',
-		},
-		'@media screen and (min-width: 1024px) and (max-width: 1300px)': {
-			width: pubSizes.smallPub,
-			left: 'calc(' + pubSizes.smallLeft + ')',
-		},
-		'@media screen and (min-width: 1301px) and (max-width: 1600px)': {
-			width: pubSizes.mediumPub,
-			left: 'calc(' + pubSizes.mediumLeft + ')',
-		},
-		'@media screen and (min-width: 1600px) and (max-width: 2000px)': {
-			width: pubSizes.largePub,
-			left: 'calc(' + pubSizes.largeLeft + ')',
-		},
-		'@media screen and (min-width: 2000px)': {
-			width: pubSizes.xLargePub,
-			left: 'calc(' + pubSizes.xLargeLeft + ')',
-		},
+		// '@media screen and (min-width: 768px) and (max-width: 1023px)': {
+		// 	width: pubSizes.xSmallPub,
+		// 	left: 'calc(' + pubSizes.xSmallLeft + ')',
+		// },
+		// '@media screen and (min-width: 1024px) and (max-width: 1300px)': {
+		// 	width: pubSizes.smallPub,
+		// 	left: 'calc(' + pubSizes.smallLeft + ')',
+		// },
+		// '@media screen and (min-width: 1301px) and (max-width: 1600px)': {
+		// 	width: pubSizes.mediumPub,
+		// 	left: 'calc(' + pubSizes.mediumLeft + ')',
+		// },
+		// '@media screen and (min-width: 1600px) and (max-width: 2000px)': {
+		// 	width: pubSizes.largePub,
+		// 	left: 'calc(' + pubSizes.largeLeft + ')',
+		// },
+		// '@media screen and (min-width: 2000px)': {
+		// 	width: pubSizes.xLargePub,
+		// 	left: 'calc(' + pubSizes.xLargeLeft + ')',
+		// },
 	},
 	centerBarModalActive: {
 		pointerEvents: 'none',
@@ -524,44 +535,45 @@ styles = {
 	},
 
 	rightBar: {
-		padding: '10px 0px',
+		// padding: '10px 0px',
 		// width: 'calc(100% - 800px - 20px)',
 		// height: 'calc(100vh - ' + globalStyles.headerHeight + ' - 20px)',
 		float: 'left',
+		width: 'calc(40% - 0px)',
 		// overflow: 'hidden',
 		// overflowY: 'scroll',
-		fontFamily: 'Lato',
-		transition: '.3s linear opacity .25s',
+		// fontFamily: 'Lato',
+		// transition: '.3s linear opacity .25s',
 		// Mobile
 		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
 			display: 'none',
 		},
 		// Desktop Sizes
-		'@media screen and (min-width: 768px) and (max-width: 1023px)': {
-			padding: pubSizes.xSmallPadding,
-			width: 'calc(100% - (' + pubSizes.xSmallLeft + ') - ' + pubSizes.xSmallPub + ' - ' + (2 * pubSizes.xSmallPadding) + 'px)',
-			height: 'calc(100vh - ' + globalStyles.headerHeight + ' - ' + (2 * pubSizes.xSmallPadding) + 'px)',
-		},
-		'@media screen and (min-width: 1024px) and (max-width: 1300px)': {
-			padding: pubSizes.smallPadding,
-			width: 'calc(100% - (' + pubSizes.smallLeft + ') - ' + pubSizes.smallPub + ' - ' + (2 * pubSizes.smallPadding) + 'px)',
-			height: 'calc(100vh - ' + globalStyles.headerHeight + ' - ' + (2 * pubSizes.smallPadding) + 'px)',
-		},
-		'@media screen and (min-width: 1301px) and (max-width: 1600px)': {
-			padding: pubSizes.mediumPadding,
-			width: 'calc(100% - (' + pubSizes.mediumLeft + ') - ' + pubSizes.mediumPub + ' - ' + (2 * pubSizes.mediumPadding) + 'px)',
-			height: 'calc(100vh - ' + globalStyles.headerHeight + ' - ' + (2 * pubSizes.mediumPadding) + 'px)',
-		},
-		'@media screen and (min-width: 1600px) and (max-width: 2000px)': {
-			padding: pubSizes.largePadding,
-			width: 'calc(100% - (' + pubSizes.largeLeft + ') - ' + pubSizes.largePub + ' - ' + (2 * pubSizes.largePadding) + 'px)',
-			height: 'calc(100vh - ' + globalStyles.headerHeight + ' - ' + (2 * pubSizes.largePadding) + 'px)',
-		},
-		'@media screen and (min-width: 2000px)': {
-			padding: pubSizes.xLargePadding,
-			width: 'calc(100% - (' + pubSizes.xLargeLeft + ') - ' + pubSizes.xLargePub + ' - ' + (2 * pubSizes.xLargePadding) + 'px)',
-			height: 'calc(100vh - ' + globalStyles.headerHeight + ' - ' + (2 * pubSizes.xLargePadding) + 'px)',
-		},
+		// '@media screen and (min-width: 768px) and (max-width: 1023px)': {
+		// 	padding: pubSizes.xSmallPadding,
+		// 	width: 'calc(100% - (' + pubSizes.xSmallLeft + ') - ' + pubSizes.xSmallPub + ' - ' + (2 * pubSizes.xSmallPadding) + 'px)',
+		// 	height: 'calc(100vh - ' + globalStyles.headerHeight + ' - ' + (2 * pubSizes.xSmallPadding) + 'px)',
+		// },
+		// '@media screen and (min-width: 1024px) and (max-width: 1300px)': {
+		// 	padding: pubSizes.smallPadding,
+		// 	width: 'calc(100% - (' + pubSizes.smallLeft + ') - ' + pubSizes.smallPub + ' - ' + (2 * pubSizes.smallPadding) + 'px)',
+		// 	height: 'calc(100vh - ' + globalStyles.headerHeight + ' - ' + (2 * pubSizes.smallPadding) + 'px)',
+		// },
+		// '@media screen and (min-width: 1301px) and (max-width: 1600px)': {
+		// 	padding: pubSizes.mediumPadding,
+		// 	width: 'calc(100% - (' + pubSizes.mediumLeft + ') - ' + pubSizes.mediumPub + ' - ' + (2 * pubSizes.mediumPadding) + 'px)',
+		// 	height: 'calc(100vh - ' + globalStyles.headerHeight + ' - ' + (2 * pubSizes.mediumPadding) + 'px)',
+		// },
+		// '@media screen and (min-width: 1600px) and (max-width: 2000px)': {
+		// 	padding: pubSizes.largePadding,
+		// 	width: 'calc(100% - (' + pubSizes.largeLeft + ') - ' + pubSizes.largePub + ' - ' + (2 * pubSizes.largePadding) + 'px)',
+		// 	height: 'calc(100vh - ' + globalStyles.headerHeight + ' - ' + (2 * pubSizes.largePadding) + 'px)',
+		// },
+		// '@media screen and (min-width: 2000px)': {
+		// 	padding: pubSizes.xLargePadding,
+		// 	width: 'calc(100% - (' + pubSizes.xLargeLeft + ') - ' + pubSizes.xLargePub + ' - ' + (2 * pubSizes.xLargePadding) + 'px)',
+		// 	height: 'calc(100vh - ' + globalStyles.headerHeight + ' - ' + (2 * pubSizes.xLargePadding) + 'px)',
+		// },
 	},
 	loading: {
 		opacity: 0,
