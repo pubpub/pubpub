@@ -173,7 +173,7 @@ const Discussions = React.createClass({
 					</div>
 				</div>
 
-				<div className="pub-discussions-wrapper" style={styles.sectionWrapper}>
+				<div id="pub-discussions-wrapper" className="pub-discussions-wrapper" style={styles.sectionWrapper}>
 					{this.props.pubData.getIn(['pubData', 'referrer', 'name'])
 						? <div>{this.props.pubData.getIn(['pubData', 'referrer', 'name'])} invites you to comment!</div>
 						: null
@@ -266,6 +266,7 @@ styles = {
 		textAlign: 'center',
 	},
 	sectionWrapper: {
+		transition: '.25s ease-out transform',
 		margin: '10px 0px 30px 0px',
 	},
 	modalSplash: {
