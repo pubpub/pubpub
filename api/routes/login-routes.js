@@ -72,7 +72,8 @@ app.get('/logout', function(req, res) {
 
 // When a user registers
 app.post('/register', function(req, res) {
-	if (req.body.firstname === 'undefined' && req.body.lastname === 'undefined') { // Spammers inputting 'undefined undefined' are posting lots of pubs
+	if ((req.body.firstname === 'undefined' && req.body.lastname === 'undefined') || req.body.email.indexOf('@yopmail.com') > -1) { // Spammers inputting 'undefined undefined' are posting lots of pubs
+		console.log('Blocked register of spam');
 		return res.status(500).json();
 	}
 	// console.log(req.body);
