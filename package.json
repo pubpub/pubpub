@@ -22,7 +22,7 @@
     "start-dev-api": "node ./node_modules/better-npm-run start-dev-api",
     "watch-client": "node ./node_modules/better-npm-run watch-client",
     "dev": "concurrently --raw --kill-others \"npm run watch-client\" \"npm run start-dev\" \"npm run start-dev-api\"",
-    "test": "sudo mongod | mocha $(find src api -name '*.test.js') --compilers js:babel-register --require ./tests/mochaEnvInit.js --watch",
+    "test": "sudo mongod | NODE_PATH=./src mocha $(find src api -name '*.test.js') --compilers js:babel-register --require ./src/tests/mochaEnvInit.js --watch",
     "test-karma": "karma start"
   },
   "betterScripts": {

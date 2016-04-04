@@ -2,7 +2,6 @@ webpack/*
 karma.conf.js
 tests.webpack.js
 **/*.test.js
-src/markdown/*
 src/utils/cssToRadium.js
 src/utils/smoothscroll.js
 src/containers/Editor/editorFirepadUserlist.js

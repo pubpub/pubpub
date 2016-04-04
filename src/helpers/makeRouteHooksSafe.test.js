@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import React from 'react';
 import { IndexRoute, Route } from 'react-router';
-import makeRouteHooksSafe from '../makeRouteHooksSafe';
+import makeRouteHooksSafe from './makeRouteHooksSafe';
 
 describe('Helpers', () => {
   describe('makeRouteHooksSafe', () => {

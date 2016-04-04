@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import getStatusFromRoutes from '../getStatusFromRoutes';
+import getStatusFromRoutes from './getStatusFromRoutes';
 
 describe('Helpers', () => {
   describe('getStatusFromRoutes', () => {

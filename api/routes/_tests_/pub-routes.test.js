@@ -1,6 +1,6 @@
 // import httpMocks from 'node-mocks-http';
 // import {expect} from 'chai';
-// import {beforeEachMongoose, afterMongoose} from '../../../tests/helpersServer';
+// import {beforeEachMongoose, afterMongoose} from 'tests/helpersServer';
 // import {getPub} from '../pub-routes';
 
 // describe('API', () => {
@@ -31,4 +31,3 @@
 
 // 	});
 // });
-
