@@ -149,7 +149,7 @@ const Discussions = React.createClass({
 		const isPubAuthor = this.props.pubData.getIn(['pubData', 'isAuthor']);
 		const isPublished = this.props.pubData.getIn(['pubData', 'isPublished']);
 
-		const userAssets = this.props.loginData.getIn(['userData', 'assets']).toJS() || [];
+		const userAssets = this.props.loginData.getIn(['userData', 'assets']) ? this.props.loginData.getIn(['userData', 'assets']).toJS() : [];
 
 		discussionsData.sort(function(aIndex, bIndex) { return this.getHotness(bIndex) - this.getHotness(aIndex); }.bind(this));
 		return (
