@@ -6,8 +6,7 @@ const Heroku = require('heroku-client');
 let heroku = undefined;
 
 if (process.env.NODE_ENV !== 'production') {
-	// import {herokuApiKey} from '../authentication/herokuCredentials';
-	const herokuApiKey = require('../authentication/herokuCredentials').herokuApiKey;
+	const herokuApiKey = require('../config').herokuApiKey;
 	heroku = new Heroku({ token: herokuApiKey });
 } else {
 	heroku = new Heroku({ token: process.env.HEROKU_API_KEY });

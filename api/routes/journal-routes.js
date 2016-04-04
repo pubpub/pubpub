@@ -6,7 +6,7 @@ const User = require('../models').User;
 const Pub = require('../models').Pub;
 const Asset = require('../models').Asset;
 const Notification = require('../models').Notification;
-import {cloudinary} from '../services/cloudinary';
+// import {cloudinary} from '../services/cloudinary';
 const Firebase = require('firebase');
 import {fireBaseURL, generateAuthToken} from '../services/firebase';
 import {featurePub} from '../services/recommendations';
@@ -251,11 +251,11 @@ export function saveCollection(req, res) {
 		}
 
 		if (req.body.newCollectionObject.headerImageURL) {
-			cloudinary.uploader.upload(req.body.newCollectionObject.headerImageURL, function(cloudinaryResponse) {
-				const cloudinaryURL = cloudinaryResponse.url;
-				updateAndSave(cloudinaryURL);
+			// cloudinary.uploader.upload(req.body.newCollectionObject.headerImageURL, function(cloudinaryResponse) {
+				// const cloudinaryURL = cloudinaryResponse.url;
+			updateAndSave(req.body.newCollectionObject.headerImageURL);
 
-			});
+			// });
 		} else {
 			updateAndSave();
 		}
