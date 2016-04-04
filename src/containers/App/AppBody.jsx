@@ -322,15 +322,8 @@ styles = {
 	},
 
 	content: {
-		width: '100%',
 		position: 'relative',
-		// marginTop: globalStyles.headerHeight,
-		height: 'auto',
-		// backgroundColor: 'red',
-		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
-			// marginTop: globalStyles.headerHeightMobile,
-
-		},
+		fontFamily: globalStyles.headerFont,
 	},
 
 };

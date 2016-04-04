@@ -22,7 +22,7 @@ const HeaderMenu = React.createClass({
 		pubStatus: PropTypes.string,
 		followPubToggleHandler: PropTypes.func,
 		isFollowing: PropTypes.bool,
-		journalCount: PropTypes.number, 
+		journalCount: PropTypes.number,
 		historyCount: PropTypes.number,
 		analyticsCount: PropTypes.number,
 		citationsCount: PropTypes.number,
@@ -53,7 +53,7 @@ const HeaderMenu = React.createClass({
 	// },
 
 	// openPubModal: function(mode) {
-		
+
 	// 		// this.props.setQueryHandler({mode: mode});
 	// 		this.props.openPubModalHandler
 	// 	};
@@ -110,30 +110,30 @@ const HeaderMenu = React.createClass({
 										<li key="menuListItem23" style={[styles.menuItem, !this.props.isJournalAdmin && styles.menuItemNoBottom]}>
 											<FormattedMessage id="nav.userNotifications" defaultMessage="Notifications ({count})" values={{count: notificationCount}}/>
 										</li>
-									</Link> 
+									</Link>
 									: null
 							}
-							
+
 							{
-								this.props.isJournalAdmin 
+								this.props.isJournalAdmin
 									? <Link to={'/journal/' + this.props.journalSubdomain} style={globalStyles.link}><li key="menuListItem22" style={[styles.menuItem, styles.menuItemNoBottom]}>
 										<FormattedMessage {...globalMessages.journalAdmin} />
-									</li></Link> 
+									</li></Link>
 									: null
 							}
 
 							{/* <li key="menuListItem2" style={[styles.menuItem, styles.menuItemNoBottom, styles.menuItemLink]}><Link style={styles.innerLink}to={'/pubs/create'}>New Pub</Link></li> */}
-							
+
 							{(isPub === true
 								? <div>
 									<li key="menuListItem3" style={styles.menuItemseparator}></li>
 									<li key="menuListItem4" style={styles.menuItem} onClick={this.props.followPubToggleHandler}>
-										{this.props.isFollowing 
+										{this.props.isFollowing
 											? <FormattedMessage {...globalMessages.following} />
 											: <FormattedMessage {...globalMessages.follow} />
 										}
 									</li>
-									
+
 									<li key="menuListItem5" style={styles.menuItem} onClick={this.props.openPubModalHandler('tableOfContents')}>
 										<FormattedMessage {...globalMessages.tableOfContents} />
 									</li>
@@ -186,7 +186,7 @@ const HeaderMenu = React.createClass({
 									</div>
 								: null
 							)}
-							
+
 							<li key="menuListItem11" style={styles.menuItemseparator}></li>
 
 							<Link style={globalStyles.link} to={'/pub/about'}><li key="menuListItem12" style={styles.menuItem}>
@@ -196,11 +196,11 @@ const HeaderMenu = React.createClass({
 							<a style={globalStyles.link} target="_blank" href={'mailto:pubpub@media.mit.edu'}><li key="menuListItem14" style={styles.menuItem}>
 								<FormattedMessage {...globalMessages.contact} />
 							</li></a>
-							
+
 						</ul>
 					</div>
 				</div>
-				
+
 			</div>
 		);
 	}
@@ -232,6 +232,7 @@ styles = {
 		height: '100vh',
 		// backgroundColor: 'rgba(255,0,190,0.2)',
 		position: 'absolute',
+		zIndex: 3,
 		top: 0,
 		right: 0,
 		transition: '.2s linear transform',

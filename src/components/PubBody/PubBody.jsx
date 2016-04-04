@@ -7,7 +7,7 @@ import {Markdown, SelectionPopup, Reference, License} from 'components';
 // import {scienceStyle, magazineStyle} from './pubStyles';
 // import cssConvert from 'utils/cssToRadium';
 import ResizingText from 'utils/ResizingText';
-import dateFormat from 'dateformat';
+// import dateFormat from 'dateformat';
 
 import {globalMessages} from 'utils/globalMessages';
 import {parsePluginString} from 'utils/parsePlugins';
@@ -21,52 +21,23 @@ const PubBody = React.createClass({
 		status: PropTypes.string,
 		isPublished: PropTypes.bool,
 		isPage: PropTypes.bool,
-		// title: PropTypes.string,
-		// abstract: PropTypes.string,
-		// authorsNote: PropTypes.string,
-		// htmlTree: PropTypes.array,
 		markdown: PropTypes.string,
-		// authors: PropTypes.array,
 		addSelectionHandler: PropTypes.func,
-		// style: PropTypes.object,
-
 		styleScoped: PropTypes.string,
-
 		showPubHighlights: PropTypes.bool,
-		showPubHighlightsComments: PropTypes.bool,
 		isFeatured: PropTypes.bool,
 		errorView: PropTypes.bool,
-
-		// assetsObject: PropTypes.object,
-		// referencesObject: PropTypes.object,
-		// selectionsArray: PropTypes.array,
-
-		references: PropTypes.array,
-
 		minFont: PropTypes.number,
 		maxFont: PropTypes.number,
-
-		// firstPublishedDate: PropTypes.string,
-		// lastPublishedDate: PropTypes.string,
 
 	},
 	getDefaultProps: function() {
 		return {
-			// htmlTree: [],
-			// authors: [],
-			// text: '',
-			// style: {
-			// 	type: 'science',
-			// 	googleFontURL: undefined,
-			// 	cssObjectString: {},
-			// },
 		};
 	},
 
 	getInitialState() {
 		return {
-			// htmlTree: [],
-			// TOC: []
 		};
 	},
 
