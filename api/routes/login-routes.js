@@ -36,7 +36,7 @@ app.post('/login', passport.authenticate('local'), function(req, res) {
 			console.log(err);
 			return res.status(500).json(err);
 		}
-		
+
 		Journal.findOne({ $or:[ {'subdomain':req.query.host.split('.')[0]}, {'customDomain':req.query.host}]}).lean().exec(function(err, journal){
 
 			const userID = user._id;
@@ -60,7 +60,7 @@ app.post('/login', passport.authenticate('local'), function(req, res) {
 			});
 
 		});
-		
+
 	});
 });
 
@@ -72,23 +72,26 @@ app.get('/logout', function(req, res) {
 
 // When a user registers
 app.post('/register', function(req, res) {
+	if (req.body.firstname === 'undefined' && req.body.lastname === 'undefined') { // Spammers inputting 'undefined undefined' are posting lots of pubs
+		return res.status(500).json();
+	}
 	// console.log(req.body);
 	User.generateUniqueUsername(req.body.fullname, function(newUsername){
-		
+
 		// Upload to cloudinary so we can have a thumbnail and CDN action.
-		cloudinary.uploader.upload(req.body.image, function(cloudinaryResponse) { 
+		cloudinary.uploader.upload(req.body.image, function(cloudinaryResponse) {
 			if (!cloudinaryResponse.url) {
 				console.log('cloudinaryResponse in login-routes did not have url. Here is the response:');
 				console.log(cloudinaryResponse);
 			}
-			const newUser = new User({ 
-				email : req.body.email, 
-				username: newUsername, 
-				image: req.body.image, 
+			const newUser = new User({
+				email : req.body.email,
+				username: newUsername,
+				image: req.body.image,
 				thumbnail: cloudinaryResponse.url ? cloudinaryResponse.url.replace('/upload', '/upload/c_limit,h_50,w_50') : req.body.image,
 				firstName: req.body.firstName,
 				lastName: req.body.lastName,
-				name: req.body.fullname, 
+				name: req.body.fullname,
 				registerDate: new Date(Date.now()),
 				sendNotificationDigest: true,
 			});
@@ -100,7 +103,7 @@ app.post('/register', function(req, res) {
 				}
 
 				passport.authenticate('local')(req,res,function(){
-					
+
 					return res.status(201).json({
 						firstName: account.firstName,
 						lastName: account.lastName,
@@ -115,7 +118,7 @@ app.post('/register', function(req, res) {
 
 			});
 		});
-		
+
 	});
 
 });
@@ -128,20 +131,20 @@ app.get('/testLogin', function(req,res){
 		const referDomain = req.get('referrer').split('://')[1].replace('/','');
 		Journal.findOne({ $or:[ {'subdomain':referDomain.split('.')[0]}, {'customDomain':referDomain}]}, {'_id':1}).lean().exec(function(err, journal){
 			if (journal || referDomain === 'pubpub.media.mit.edu') {
-				return res.status(201).type('.html').send('<div><script type="text/javascript">var loginCookie = null; try {loginCookie = "connect.sid="+document.cookie.split("connect.sid=")[1].split(";")[0]+";";}catch(err){console.log(err);} parent.postMessage(loginCookie, "' + req.get('referrer') + '");</script></div>');		
+				return res.status(201).type('.html').send('<div><script type="text/javascript">var loginCookie = null; try {loginCookie = "connect.sid="+document.cookie.split("connect.sid=")[1].split(";")[0]+";";}catch(err){console.log(err);} parent.postMessage(loginCookie, "' + req.get('referrer') + '");</script></div>');
 			}
 			return res.status(201).type('.html').send('');
 	 	});
 	} else {
 		return res.status(201).type('.html').send('');
 	}
-	
+
 });
 
 app.post('/requestReset', function(req, res) {
-	
+
 	User.findOne({'email':req.body.email}).exec(function (err, user) {
-		
+
 		if(!user){
 		  return res.status(201).json('User Not Found');
 		}
@@ -162,13 +165,13 @@ app.post('/requestReset', function(req, res) {
 			if (err){ console.log(err); return res.status(500).json(err); }
 			return res.status(201).json(success);
 		});
-		
+
 	});
 
 });
 
 app.post('/checkResetHash', function(req, res) {
-	
+
 	User.findOne({'resetHash':req.body.resetHash, 'username':req.body.username}).exec(function (err, user) {
 		const currentTime = Date.now();
 		if (!user || user.resetHashExpiration < currentTime) {
@@ -177,10 +180,10 @@ app.post('/checkResetHash', function(req, res) {
 
 		return res.status(201).json('valid');
 	});
-});	
+});
 
 app.post('/passwordReset', function(req, res) {
-	
+
 	User.findOne({'resetHash':req.body.resetHash, 'username':req.body.username}).exec(function (err, user) {
 		const currentTime = Date.now();
 		if (!user || user.resetHashExpiration < currentTime) {
@@ -192,12 +195,8 @@ app.post('/passwordReset', function(req, res) {
 			user.resetHash = '';
 			user.resetHashExpiration = currentTime;
 			user.save();
-			return res.status(201).json('success');      
-		});			
+			return res.status(201).json('success');
+		});
 	});
 
-});	
-
-
-
-
+});
