@@ -1,7 +1,7 @@
 import React, {PropTypes} from 'react';
 import Radium from 'radium';
 import {navStyles} from 'utils/styleConstants';
-import {PubPreview, UserPreview, JournalPreview} from 'components';
+import {PreviewPub, PreviewUser, PreviewJournal} from 'components';
 
 import {globalMessages} from 'utils/globalMessages';
 import {FormattedMessage} from 'react-intl';
@@ -60,18 +60,18 @@ const UserFollows = React.createClass({
 				{
 					this.props.profileData.following && this.props.profileData.following[this.state.mode] && this.props.profileData.following[this.state.mode].map((item, index)=>{
 						return (<div key={'followsItem-' + index}>
-							{item.slug 
-								? <PubPreview pubData={item} />
+							{item.slug
+								? <PreviewPub pubData={item} />
 								: null
 							}
 
-							{item.username 
-								? <UserPreview userData={item} />
+							{item.username
+								? <PreviewUser userData={item} />
 								: null
 							}
 
-							{item.subdomain 
-								? <JournalPreview journalData={item} />
+							{item.subdomain
+								? <PreviewJournal journalData={item} />
 								: null
 							}
 

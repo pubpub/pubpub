@@ -1,7 +1,7 @@
 import React, {PropTypes} from 'react';
 import Radium from 'radium';
 import {globalStyles, navStyles} from 'utils/styleConstants';
-import {DiscussionPreview} from 'components';
+import {PreviewDiscussion} from 'components';
 
 // import {globalMessages} from 'utils/globalMessages';
 import {FormattedMessage} from 'react-intl';
@@ -41,11 +41,11 @@ const UserDiscussions = React.createClass({
 			<div style={styles.container}>
 
 				<ul style={[navStyles.navList, styles.subNav]}></ul>
-				
+
 				{(()=>{
 					const outputDiscussions = [];
 					for (let index = this.props.profileData.discussions.length; index--;) {
-						outputDiscussions.push(<DiscussionPreview 
+						outputDiscussions.push(<PreviewDiscussion 
 							key={'discussionItem-' + index}
 							discussionData={this.props.profileData.discussions[index]}
 							canEdit={this.props.ownProfile === 'self' ? true : false} />);

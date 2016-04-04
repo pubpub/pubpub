@@ -19,7 +19,7 @@ import {
 // Initialize Default State
 /*--------*/
 export const defaultState = Immutable.Map({
-	status: 'loaded',
+	status: 'loading',
 	error: null,
 	baseSubdomain: null,
 	journalData: {

@@ -1,7 +1,7 @@
 import React, {PropTypes} from 'react';
 import Radium from 'radium';
 import {globalStyles} from 'utils/styleConstants';
-import {PubPreview} from 'components';
+import {PreviewPub} from 'components';
 
 let styles = {};
 
@@ -25,8 +25,8 @@ const PubGallery = React.createClass({
 				{
 					newPubsArray.map((pub, index)=>{
 						return (
-							<div style={styles.previewWrapper} key={'PubPreview-' + index}>
-								<PubPreview pubData={pub} />
+							<div style={styles.previewWrapper} key={'PreviewPub-' + index}>
+								<PreviewPub pubData={pub} />
 							</div>
 						);
 					})

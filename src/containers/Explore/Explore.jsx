@@ -2,8 +2,7 @@ import React, { PropTypes } from 'react';
 import {connect} from 'react-redux';
 import Radium from 'radium';
 import Helmet from 'react-helmet';
-import {GalleryCollection, GalleryPub, GalleryJournal} from 'components';
-import {NotFound} from 'components';
+import {GalleryCollection, GalleryPub, GalleryJournal, NotFound} from 'components';
 import {globalStyles} from 'utils/styleConstants';
 
 import {globalMessages} from 'utils/globalMessages';
@@ -104,7 +103,7 @@ const Explore = React.createClass({
 export default connect( state => {
 	return {
 		exploreData: state.explore,
-		appData: state.journal,
+		appData: state.app,
 		path: state.router.location.pathname
 	};
 })( Radium(Explore) );

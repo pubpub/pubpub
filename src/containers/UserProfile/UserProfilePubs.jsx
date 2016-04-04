@@ -1,7 +1,7 @@
 import React, {PropTypes} from 'react';
 import Radium from 'radium';
 import {navStyles} from 'utils/styleConstants';
-import {PubPreview} from 'components';
+import {PreviewPub} from 'components';
 
 import {globalMessages} from 'utils/globalMessages';
 import {FormattedMessage} from 'react-intl';
@@ -69,7 +69,7 @@ const UserPubs = React.createClass({
 
 				{
 					profileData.pubs[this.state.mode].map((pub, index)=>{
-						return (<PubPreview 
+						return (<PreviewPub 
 							key={'pubItem-' + index}
 							pubData={pub}
 							canEdit={this.props.ownProfile === 'self' ? true : false} />

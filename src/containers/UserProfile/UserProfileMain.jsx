@@ -3,8 +3,8 @@ import Radium from 'radium';
 import {globalStyles} from 'utils/styleConstants';
 import { Link } from 'react-router';
 // import smoothScroll from 'utils/smoothscroll';
-// import {DiscussionPreview, PubPreview} from 'components';
-import {PubPreview} from 'components';
+// import {DiscussionPreview, PreviewPub} from 'components';
+import {PreviewPub} from 'components';
 
 import {globalMessages} from 'utils/globalMessages';
 import {FormattedMessage} from 'react-intl';
@@ -168,7 +168,7 @@ const UserMain = React.createClass({
 
 					{
 						publishedPubs.slice(0, 5).map((pub, index)=>{
-							return (<PubPreview
+							return (<PreviewPub
 								key={'pubItem-' + index}
 								pubData={pub}
 								canEdit={this.props.ownProfile === 'self' ? true : false} />

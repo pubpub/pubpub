@@ -3,17 +3,15 @@ import {StyleRoot} from 'radium';
 import Helmet from 'react-helmet';
 import {connect} from 'react-redux';
 import {loadAppAndLogin} from './actions';
-import {AppBody} from './AppBody';
-
+import AppBody from './AppBody';
+import {NotFound} from 'components';
 
 import {IntlProvider} from 'react-intl';
-
 
 const App = React.createClass({
 	propTypes: {
 		appData: PropTypes.object,
 		loginData: PropTypes.object,
-		navData: PropTypes.object,
 		pubData: PropTypes.object,
 		path: PropTypes.string,
 		slug: PropTypes.string,
@@ -23,7 +21,7 @@ const App = React.createClass({
 
 	statics: {
 		fetchData: function(getState, dispatch) {
-			if (getState().journal.get('status') === 'loading') {
+			if (getState().app.get('status') === 'loading') {
 				return dispatch(loadAppAndLogin());
 			}
 			return ()=>{};
@@ -31,6 +29,15 @@ const App = React.createClass({
 	},
 
 	render: function() {
+		if (this.props.appData.get('status') === 'loading') {
+			return (
+				<IntlProvider locale={'en'} messages={{}}>
+					<StyleRoot>
+						<NotFound />
+					</StyleRoot>
+				</IntlProvider>
+			);
+		}
 		const journalURL = this.props.appData.getIn(['journalData', 'customDomain']) ? 'http://' + this.props.appData.getIn(['journalData', 'customDomain']) : 'http://' + this.props.appData.getIn(['journalData', 'subdomain']) + '.pubpub.org';
 		const currentBaseURL = this.props.appData.get('baseSubdomain') ? journalURL : 'http://www.pubpub.org';
 		const rootImage = this.props.appData.getIn(['journalData', 'journalLogoURL']) ? this.props.appData.getIn(['journalData', 'journalLogoURL']) : 'https://s3.amazonaws.com/pubpub-upload/pubpubDefaultTitle.png';
@@ -56,7 +63,6 @@ const App = React.createClass({
 					<AppBody
 						appData={this.props.appData}
 						loginData={this.props.loginData}
-						navData={this.props.navData}
 						pubData={this.props.pubData}
 						path={this.props.path}
 						slug={this.props.slug}
@@ -71,9 +77,8 @@ const App = React.createClass({
 
 export default connect( state => {
 	return {
-		appData: state.journal,
+		appData: state.app,
 		loginData: state.login,
-		navData: state.nav,
 		pubData: state.pub,
 		path: state.router.location.pathname,
 		slug: state.router.params.slug,

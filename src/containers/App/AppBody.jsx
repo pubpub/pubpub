@@ -18,7 +18,6 @@ const AppBody = React.createClass({
 	propTypes: {
 		appData: PropTypes.object,
 		loginData: PropTypes.object,
-		navData: PropTypes.object,
 		pubData: PropTypes.object,
 		path: PropTypes.string,
 		slug: PropTypes.string,
@@ -28,7 +27,7 @@ const AppBody = React.createClass({
 
 	componentWillReceiveProps: function(nextProps) {
 		// Close the menu if we're changing routes and it's open
-		if (this.props.path !== nextProps.path && nextProps.navData.get('menuOpen')) {
+		if (this.props.path !== nextProps.path && nextProps.appData.get('menuOpen')) {
 			this.props.dispatch(closeMenu());
 		}
 		if (this.props.path !== nextProps.path) {
@@ -141,7 +140,7 @@ const AppBody = React.createClass({
 
 				{
 					// Set the body to not scroll if you have the login window or the mobile menu open
-					this.props.loginData.get('isVisible') || this.props.navData.get('menuOpen') || (this.props.pubData.get('activeModal') !== undefined && this.props.path.indexOf('/pub/') > -1)
+					this.props.loginData.get('isVisible') || this.props.appData.get('menuOpen') || (this.props.pubData.get('activeModal') !== undefined && this.props.path.indexOf('/pub/') > -1)
 						? <Style rules={{'body': {overflow: 'hidden'}}} />
 						: null
 				}
@@ -160,12 +159,12 @@ const AppBody = React.createClass({
 						<div style={styles.headerMenu}>
 							<HeaderMenu
 								loginData={this.props.loginData}
-								// navData={this.props.navData}
+								// appData={this.props.appData}
 								color={headerTextColor}
 								hoverColor={headerTextColorHover}
 								loginToggle={this.toggleLogin}
 
-								menuOpen={this.props.navData.get('menuOpen') ? true : false}
+								menuOpen={this.props.appData.get('menuOpen') ? true : false}
 								openMenuHandler={this.openMenu}
 								closeMenuHandler={this.closeMenu}
 								openPubModalHandler={this.openPubModal}
@@ -187,7 +186,6 @@ const AppBody = React.createClass({
 						<div style={styles.headerNav}>
 							<HeaderNav
 								loginData={this.props.loginData}
-								navData={this.props.navData}
 								backgroundColor={headerBackground}
 								color={headerTextColor}
 								hoverColor={headerTextColorHover}

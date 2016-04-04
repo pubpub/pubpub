@@ -11,7 +11,6 @@ let styles = {};
 const HeaderNav = React.createClass({
 	propTypes: {
 		loginData: PropTypes.object,
-		navData: PropTypes.object,
 		backgroundColor: PropTypes.string,
 		color: PropTypes.string,
 		hoverColor: PropTypes.string,
@@ -57,7 +56,7 @@ const HeaderNav = React.createClass({
 				}
 
 				<div key="headerNavLogin" onClick={this.props.loginToggle} style={[styles.navButton, this.headerTextColorStyle(), this.props.loginData.getIn(['userData', 'notificationCount']) && styles.accountSpanWithNotification]}>
-					
+
 					{/* If Logged Out */}
 					{/* ------------- */}
 					<span style={styles.loggedOut[isLoggedIn]}>
@@ -68,13 +67,13 @@ const HeaderNav = React.createClass({
 					{/* ------------ */}
 					<Link to={'/user/' + this.props.loginData.getIn(['userData', 'username'])}>
 						<span key="headerLogin" style={[styles.loggedIn[isLoggedIn]]}>
-							
+
 							<img style={styles.userImage} src={this.props.loginData.getIn(['userData', 'thumbnail'])} />
 							{/* <div style={styles.userName}>{this.props.loginData.getIn(['userData', 'name'])}</div> */}
 							<div style={[styles.userName, this.headerTextColorStyle()]}>
 								<FormattedMessage {...globalMessages.account} />
 							</div>
-						
+
 						</span>
 					</Link>
 
@@ -88,7 +87,7 @@ const HeaderNav = React.createClass({
 									<FormattedMessage {...globalMessages.newPub} />
 								</div></Link>
 								{
-									this.props.isJournalAdmin 
+									this.props.isJournalAdmin
 										? <div>
 											<div style={styles.separator}></div>
 											<Link to={'/journal/' + this.props.journalSubdomain}><div key="headerNavAdmin" style={[styles.navButton, this.headerTextColorStyle()]}>
@@ -100,7 +99,7 @@ const HeaderNav = React.createClass({
 							</div>
 						: null
 				}
-				
+
 
 			</div>
 		);
@@ -167,7 +166,7 @@ styles = {
 // {( this.props.loginData.get('loggedIn') === false
 // 	? <span>Login</span>
 // 	: ( <div>
-// 			<img src={this.props.loginData.getIn(['userData', 'image'])} /> 
+// 			<img src={this.props.loginData.getIn(['userData', 'image'])} />
 // 			{this.props.loginData.getIn(['userData', 'name'])}
 // 		</div>)
 // )}
