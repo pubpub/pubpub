@@ -18,22 +18,22 @@ var userSchema = new Schema({
   title: { type: String },
   bio: { type: String },
   groups: [{ type: ObjectId, ref: 'Group' }],
-  
+
   pubs: [ { type: ObjectId, ref: 'Pub' } ],
   discussions: [ { type: ObjectId, ref: 'Discussion' } ],
   highlights: [ { type: ObjectId, ref: 'Highlight' } ],
   assets: [ { type: ObjectId, ref: 'Asset' } ],
   adminJournals: [ { type: ObjectId, ref: 'Journal' } ],
-  
+
   yays: [ { type: ObjectId, ref: 'Discussion' } ],
   nays: [ { type: ObjectId, ref: 'Discussion' } ],
   // reviews: [ { type: ObjectId, ref: 'Review' } ],
-  
+
   emailPublic: { type: Boolean },
   resetHash: { type: String },
   resetHashExpiration: { type: Date },
   registerDate: { type: Date },
-  settings: { 
+  settings: {
     editorFont: { type: String },
     editorFontSize: { type: String },
     editorColor: { type: String },
@@ -68,7 +68,7 @@ userSchema.statics.generateUniqueUsername = function (fullname, callback) {
         // console.log('Next one');
         return findUniqueName(username,count+1);
       }
-    });  
+    });
   };
 
   var username = fullname.replace(/[^\w\s]/gi, '').replace(/ /g, '_').toLowerCase();
@@ -77,15 +77,15 @@ userSchema.statics.generateUniqueUsername = function (fullname, callback) {
 
 userSchema.statics.getUser = function (username, readerID, callback) {
   this.findOne({username: username})
-  .populate([ 
-    {path: "pubs", select:"title abstract slug collaborators settings status"},
+  .populate([
+    {path: "pubs", select:"title abstract slug collaborators settings status history"},
     {path: "following.pubs", select:"title abstract slug"},
     {path: "following.users", select:"name username thumbnail"},
     {path: "following.journals", select:"customDomain journalName subdomain"},
     {path: "groups", select:"groupName groupSlug"},
     {path: "followers", select:"name username thumbnail"},
     {
-      path: "discussions", 
+      path: "discussions",
       select:"markdown postDate yays nays pub",
       populate: [{
         path: 'pub',
@@ -107,7 +107,7 @@ userSchema.statics.getUser = function (username, readerID, callback) {
     for (let index = user.pubs.length; index--;) {
 
       if (user.pubs[index].collaborators.canEdit.toString().split(',').indexOf(user._id.toString()) > -1) {
-        if (user.pubs[index].status === 'Unpublished') { 
+        if (user.pubs[index].status === 'Unpublished') {
           sortedPubs.unpublished.push(user.pubs[index]);
         } else {
           sortedPubs.published.push(user.pubs[index]);
@@ -117,12 +117,12 @@ userSchema.statics.getUser = function (username, readerID, callback) {
       }
 
     }
-    
+
     if (String(readerID) !== String(user._id)) {
       sortedPubs.unpublished = [];
       sortedPubs.canRead = [];
       user.groups = [];
-    } 
+    }
 
     const outputUser = {
       _id: user._id,
@@ -149,10 +149,10 @@ userSchema.statics.getUser = function (username, readerID, callback) {
         return callback(null, outputUser);
       });
     } else {
-      return callback(null, outputUser);  
+      return callback(null, outputUser);
     }
 
-    
+
 
   });
 };
