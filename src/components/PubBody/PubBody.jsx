@@ -159,8 +159,8 @@ const PubBody = React.createClass({
 	render: function() {
 
 		const footnotes = (this.props.markdown) ? this.findFootnotes(this.props.markdown) : [];
-		const indexedCitations = (this.props.markdown) ? this.findReferences(this.props.markdown) : [];
-		const sortedReferences = this.props.references.sort((refA, refB) => { return indexedCitations[refA.refName] - indexedCitations[refB.refName]; } );
+		// const indexedCitations = (this.props.markdown) ? this.findReferences(this.props.markdown) : [];
+		// const sortedReferences = this.props.references.sort((refA, refB) => { return indexedCitations[refA.refName] - indexedCitations[refB.refName]; } );
 
 		return (
 			<ResizingText
@@ -241,7 +241,7 @@ const PubBody = React.createClass({
 						: null
 						}
 
-						{this.props.references && this.props.references.length
+						{/* this.props.references && this.props.references.length
 							? <div id={'pub-references'}>
 								<h1><FormattedMessage {...globalMessages.references}/></h1>
 								{
@@ -257,7 +257,7 @@ const PubBody = React.createClass({
 
 							</div>
 							: null
-						}
+						*/ }
 
 						{this.props.isFeatured && !this.props.errorView && this.props.isPublished && !this.props.isPage
 							? <div id="pub-license"><License /></div>

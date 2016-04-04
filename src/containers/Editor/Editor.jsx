@@ -183,6 +183,11 @@ const Editor = React.createClass({
 
 				// need to unmount on change
 				codeMirror.on('change', this.onEditorChange);
+				codeMirror.on('mousedown', function(instance, evt) {
+					if (evt.which === 3) {
+						evt.preventDefault();
+					}
+				});
 				addCodeMirrorKeys(codeMirror);
 
 				this.setState({initialized: true});

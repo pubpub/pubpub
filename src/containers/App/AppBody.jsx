@@ -203,6 +203,9 @@ const AppBody = React.createClass({
 					{this.props.children}
 				</div>
 
+				<div className="footer" style={[styles.footer, this.props.path.substring(this.props.path.length - 6, this.props.path.length) === '/draft' && {display: 'none'} ]}>
+					Here's my footer stuff
+				</div>
 			</div>
 		);
 	}
@@ -324,6 +327,13 @@ styles = {
 	content: {
 		position: 'relative',
 		fontFamily: globalStyles.headerFont,
+	},
+
+	footer: {
+		width: '95%',
+		margin: '40px auto 0px auto',
+		borderTop: '1px solid #CCC',
+		padding: '40px 0px',
 	},
 
 };

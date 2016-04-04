@@ -61,6 +61,7 @@
     "journal.autoFeature": "Missing. English is: Automatically Feature Pubs on Submission",
     "asset.mustBeLogged": "Missing. English is: Must be Logged In",
     "asset.dragToAdd": "Missing. English is: Drag files to this window to quickly add",
+    "pubMeta.inviteMessage": "Missing. English is: Do you know someone who might have a have an interesting opinion on this paper? Invite them to join the discussion! We will send them a message and help them create accounts.",
     "pub.unpublishedNotification": "Missing. English is: This pub is unpublished, and thus only accessible to collaborators.",
     "pub.RequestReview": "Missing. English is: Request Review",
     "pub.Expand": "Missing. English is: Expand",

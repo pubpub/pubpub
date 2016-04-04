@@ -14,8 +14,9 @@ import {createHighlight} from 'containers/MediaLibrary/actions';
 
 import {PubBody, LoaderDeterminate} from 'components';
 
+import PubMeta from './PubMeta/PubMeta';
 import PubReaderLeftBar from './PubReaderLeftBar';
-import PubReaderNav from './PubReaderNav';
+// import PubReaderNav from './PubReaderNav';
 import {Discussions} from 'containers';
 
 import {globalStyles, pubSizes} from 'utils/styleConstants';
@@ -33,6 +34,9 @@ const PubReader = React.createClass({
 		appData: PropTypes.object,
 		slug: PropTypes.string,
 		query: PropTypes.object, // version: integer
+		meta: PropTypes.string,
+		metaID: PropTypes.string,
+		inviteStatus: PropTypes.string,
 		dispatch: PropTypes.func
 	},
 
@@ -240,104 +244,117 @@ const PubReader = React.createClass({
 				</div>
 
 				<div className="reader-content" style={styles.readerContent}>
-					<div className="centerBar pubScrollContainer" style={[styles.centerBar]}>
-
-						{/* <PubReaderNav
-							height={this.height}
-							openPubModalHandler={this.openPubModal}
-							status={pubData.history[0].markdown ? this.props.readerData.get('status') : 'loading'}
+					{this.props.meta
+						? <PubMeta
+							readerData={this.props.readerData}
+							loginData={this.props.loginData}
 							slug={this.props.slug}
-							isAuthor={pubData.isAuthor}
-							pubStatus={pubData.status}
-							isFollowing={this.props.loginData.getIn(['userData', 'following', 'pubs']) ? this.props.loginData.getIn(['userData', 'following', 'pubs']).indexOf(this.props.readerData.getIn(['pubData', '_id'])) > -1 : false}
-							handleFollow={this.followPubToggle}/> */}
+							meta={this.props.meta}
+							metaID={this.props.metaID}
+							inviteStatus={this.props.inviteStatus}
+							query={this.props.query}
+							dispatch={this.props.dispatch} />
+						: <div>
+							<div className="centerBar pubScrollContainer" style={[styles.centerBar]}>
 
-						{/* <LoaderDeterminate value={this.props.readerData.get('status') === 'loading' ? 0 : 100}/> */}
+								{/* <PubReaderNav
+									height={this.height}
+									openPubModalHandler={this.openPubModal}
+									status={pubData.history[0].markdown ? this.props.readerData.get('status') : 'loading'}
+									slug={this.props.slug}
+									isAuthor={pubData.isAuthor}
+									pubStatus={pubData.status}
+									isFollowing={this.props.loginData.getIn(['userData', 'following', 'pubs']) ? this.props.loginData.getIn(['userData', 'following', 'pubs']).indexOf(this.props.readerData.getIn(['pubData', '_id'])) > -1 : false}
+									handleFollow={this.followPubToggle}/> */}
 
-						{
-							this.props.query.version && this.props.query.version !== pubData.history.length.toString()
-								? <Link to={'/pub/' + this.props.slug} style={globalStyles.link}>
-									<div key={'versionNotification'} style={[styles.versionNotification, globalStyles[this.props.readerData.get('status')]]}>
-										<p>Reading Version {this.props.query.version}. Click to read the most recent version ({pubData.history.length}).</p>
-										{/* <p>This was a {pubData.history[versionIndex].status === 'Draft' ? 'Draft' : 'Peer-Review Ready'} version.</p> */}
-									</div>
-								</Link>
-								: null
-						}
+								{/* <LoaderDeterminate value={this.props.readerData.get('status') === 'loading' ? 0 : 100}/> */}
 
-						{
-							!pubData.isPublished
-								? <div key={'unpublishNotification'} style={[styles.unpublishedNotification, globalStyles[this.props.readerData.get('status')]]}>
-									<FormattedMessage id="pub.unpublishedNotification" defaultMessage="This pub is unpublished, and thus only accessible to collaborators."/>
+								{
+									this.props.query.version && this.props.query.version !== pubData.history.length.toString()
+										? <Link to={'/pub/' + this.props.slug} style={globalStyles.link}>
+											<div key={'versionNotification'} style={[styles.versionNotification, globalStyles[this.props.readerData.get('status')]]}>
+												<p>Reading Version {this.props.query.version}. Click to read the most recent version ({pubData.history.length}).</p>
+												{/* <p>This was a {pubData.history[versionIndex].status === 'Draft' ? 'Draft' : 'Peer-Review Ready'} version.</p> */}
+											</div>
+										</Link>
+										: null
+								}
+
+								{
+									!pubData.isPublished
+										? <div key={'unpublishNotification'} style={[styles.unpublishedNotification, globalStyles[this.props.readerData.get('status')]]}>
+											<FormattedMessage id="pub.unpublishedNotification" defaultMessage="This pub is unpublished, and thus only accessible to collaborators."/>
+										</div>
+										: null
+								}
+
+								<PubBody
+									status={this.props.readerData.get('status')}
+									isPublished={pubData.isPublished}
+									isPage={pubData.isPage}
+									markdown={this.state.inputMD}
+									addSelectionHandler={this.addSelection}
+									styleScoped={pubData.history[versionIndex].styleScoped}
+									showPubHighlights={this.props.readerData.get('showPubHighlights')}
+									isFeatured={(pubData.featuredInList && pubData.featuredInList.indexOf(this.props.appData.getIn(['journalData', '_id'])) > -1) || this.props.appData.get('baseSubdomain') === null}
+									errorView={pubData.pubErrorView}
+									minFont={14}
+									maxFont={21}/>
+
+
+								{/* <PubModals
+									slug={this.props.slug}
+									status={this.props.readerData.get('status')}
+									pubStatus={pubData.status}
+									openPubModalHandler={this.openPubModal}
+									closePubModalHandler={this.closePubModal}
+									closeMenuHandler={this.closeMenu}
+									activeModal={this.props.readerData.get('activeModal')}
+									isFeatured={(pubData.featuredInList && pubData.featuredInList.indexOf(this.props.appData.getIn(['journalData', '_id'])) > -1) || this.props.appData.get('baseSubdomain') === null}
+
+									// TOC Props
+									tocData={this.state.TOC}
+									// Cite Props
+									pubData={pubData.history[versionIndex]}
+									journalName={this.props.appData.get('baseSubdomain') ? this.props.appData.getIn(['journalData', 'journalName']) : ''}
+									// Status Data
+									featuredIn={pubData.featuredIn}
+									submittedTo={pubData.submittedTo}
+									// Reviews Data
+									reviewsData={pubData.reviews}
+
+									// Discussions Data
+									toggleHighlightsHandler={this.toggleHighlights}
+									showPubHighlights={this.props.readerData.get('showPubHighlights')}/> */}
+
+
+							</div>
+
+							<div className="rightBar" style={[styles.rightBar, globalStyles[this.props.readerData.get('status')], pubData.markdown === undefined && {display: 'none'}]}>
+
+								<div style={styles.rightHeaderButtonsWrapper}>
+									<Link style={globalStyles.link} to={'/pub/' + this.props.slug + '/journals'}>
+										<div style={[styles.buttonWrapper, !pubData.isAuthor && {opacity: '0', pointerEvents: 'none'}]} key={'topbutton1'}>Submit To Journal</div>
+									</Link>
+									<Link style={globalStyles.link} to={'/pub/' + this.props.slug + '/invite'}>
+										<div style={styles.buttonWrapper} key={'topbutton2'}>
+											<FormattedMessage id="pub.RequestReview" defaultMessage="Request Review"/>
+										</div>
+									</Link>
+									<Link style={globalStyles.link} to={'/pub/' + this.props.slug + '/discussions'}>
+										<div style={styles.buttonWrapper} key={'topbutton3'}>
+											<FormattedMessage id="pub.Expand" defaultMessage="Expand"/>
+										</div>
+									</Link>
+									<div style={globalStyles.clearFix}></div>
 								</div>
-								: null
-						}
 
-						<PubBody
-							status={this.props.readerData.get('status')}
-							isPublished={pubData.isPublished}
-							isPage={pubData.isPage}
-							markdown={this.state.inputMD}
-							addSelectionHandler={this.addSelection}
-							styleScoped={pubData.history[versionIndex].styleScoped}
-							showPubHighlights={this.props.readerData.get('showPubHighlights')}
-							isFeatured={(pubData.featuredInList && pubData.featuredInList.indexOf(this.props.appData.getIn(['journalData', '_id'])) > -1) || this.props.appData.get('baseSubdomain') === null}
-							errorView={pubData.pubErrorView}
-							minFont={14}
-							maxFont={21}/>
-
-
-						{/* <PubModals
-							slug={this.props.slug}
-							status={this.props.readerData.get('status')}
-							pubStatus={pubData.status}
-							openPubModalHandler={this.openPubModal}
-							closePubModalHandler={this.closePubModal}
-							closeMenuHandler={this.closeMenu}
-							activeModal={this.props.readerData.get('activeModal')}
-							isFeatured={(pubData.featuredInList && pubData.featuredInList.indexOf(this.props.appData.getIn(['journalData', '_id'])) > -1) || this.props.appData.get('baseSubdomain') === null}
-
-							// TOC Props
-							tocData={this.state.TOC}
-							// Cite Props
-							pubData={pubData.history[versionIndex]}
-							journalName={this.props.appData.get('baseSubdomain') ? this.props.appData.getIn(['journalData', 'journalName']) : ''}
-							// Status Data
-							featuredIn={pubData.featuredIn}
-							submittedTo={pubData.submittedTo}
-							// Reviews Data
-							reviewsData={pubData.reviews}
-
-							// Discussions Data
-							toggleHighlightsHandler={this.toggleHighlights}
-							showPubHighlights={this.props.readerData.get('showPubHighlights')}/> */}
-
-
-					</div>
-
-					<div className="rightBar" style={[styles.rightBar, globalStyles[this.props.readerData.get('status')], pubData.markdown === undefined && {display: 'none'}]}>
-
-						<div style={styles.rightHeaderButtonsWrapper}>
-							<Link style={globalStyles.link} to={'/pub/' + this.props.slug + '/journals'}>
-								<div style={[styles.buttonWrapper, !pubData.isAuthor && {opacity: '0', pointerEvents: 'none'}]} key={'topbutton1'}>Submit To Journal</div>
-							</Link>
-							<Link style={globalStyles.link} to={'/pub/' + this.props.slug + '/invite'}>
-								<div style={styles.buttonWrapper} key={'topbutton2'}>
-									<FormattedMessage id="pub.RequestReview" defaultMessage="Request Review"/>
-								</div>
-							</Link>
-							<Link style={globalStyles.link} to={'/pub/' + this.props.slug + '/discussions'}>
-								<div style={styles.buttonWrapper} key={'topbutton3'}>
-									<FormattedMessage id="pub.Expand" defaultMessage="Expand"/>
-								</div>
-							</Link>
+								<Discussions/>
+							</div>
 							<div style={globalStyles.clearFix}></div>
 						</div>
 
-						<Discussions/>
-					</div>
-
-					<div style={globalStyles.clearFix}></div>
+					}
 				</div>
 
 
@@ -355,6 +372,10 @@ export default connect( state => {
 		appData: state.app,
 		slug: state.router.params.slug,
 		query: state.router.location.query,
+
+		meta: state.router.params.meta,
+		metaID: state.router.params.metaID,
+		inviteStatus: state.user.get('inviteStatus')
 	};
 })( Radium(PubReader) );
 
