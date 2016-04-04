@@ -266,7 +266,7 @@ styles = {
 		textAlign: 'center',
 	},
 	sectionWrapper: {
-		transition: '.25s ease-out transform',
+		transition: '.5s ease-in-out transform',
 		margin: '10px 0px 30px 0px',
 	},
 	modalSplash: {

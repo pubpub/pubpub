@@ -16,7 +16,7 @@ import {PubBody, LoaderDeterminate} from 'components';
 
 import PubMeta from './PubMeta/PubMeta';
 import PubReaderLeftBar from './PubReaderLeftBar';
-// import PubReaderNav from './PubReaderNav';
+import PubReaderNav from './PubReaderNav';
 import {Discussions} from 'containers';
 
 import {globalStyles, pubSizes} from 'utils/styleConstants';
@@ -257,17 +257,20 @@ const PubReader = React.createClass({
 						: <div>
 							<div className="centerBar pubScrollContainer" style={[styles.centerBar]}>
 
-								{/* <PubReaderNav
-									height={this.height}
-									openPubModalHandler={this.openPubModal}
-									status={pubData.history[0].markdown ? this.props.readerData.get('status') : 'loading'}
-									slug={this.props.slug}
-									isAuthor={pubData.isAuthor}
-									pubStatus={pubData.status}
-									isFollowing={this.props.loginData.getIn(['userData', 'following', 'pubs']) ? this.props.loginData.getIn(['userData', 'following', 'pubs']).indexOf(this.props.readerData.getIn(['pubData', '_id'])) > -1 : false}
-									handleFollow={this.followPubToggle}/> */}
+								<div style={styles.mobileOnly}>
+									<PubReaderNav
+										height={this.height}
+										openPubModalHandler={this.openPubModal}
+										status={pubData.history[0].markdown ? this.props.readerData.get('status') : 'loading'}
+										slug={this.props.slug}
+										isAuthor={pubData.isAuthor}
+										pubStatus={pubData.status}
+										isFollowing={this.props.loginData.getIn(['userData', 'following', 'pubs']) ? this.props.loginData.getIn(['userData', 'following', 'pubs']).indexOf(this.props.readerData.getIn(['pubData', '_id'])) > -1 : false}
+										handleFollow={this.followPubToggle}/>
 
-								{/* <LoaderDeterminate value={this.props.readerData.get('status') === 'loading' ? 0 : 100}/> */}
+										<LoaderDeterminate value={this.props.readerData.get('status') === 'loading' ? 0 : 100}/>
+								</div>
+
 
 								{
 									this.props.query.version && this.props.query.version !== pubData.history.length.toString()
@@ -476,5 +479,11 @@ styles = {
 	versionNotificationLink: {
 		textDecoration: 'none',
 	},
+	mobileOnly: {
+		display: 'none',
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+			display: 'block',
+		},
+	}
 
 };

@@ -15,7 +15,7 @@ const PubNav = React.createClass({
 		status: PropTypes.string,
 		slug: PropTypes.string,
 		query: PropTypes.object,
-		meta: PropTypes.string, 
+		meta: PropTypes.string,
 		isAuthor: PropTypes.bool,
 		pubStatus: PropTypes.string,
 		isFollowing: PropTypes.bool,
@@ -38,7 +38,7 @@ const PubNav = React.createClass({
 		return (
 			<div>
 				{
-					this.props.meta 
+					this.props.meta
 						? <ul style={[styles.pubNav, globalStyles[this.props.status]]}>
 							<Link to={'/pub/' + this.props.slug + versionURL}><li key="pubNav8"style={[styles.pubNavItem, styles.pubNavRight]}>
 								<FormattedMessage id="pub.readPub" defaultMessage="Read Pub"/>
@@ -66,30 +66,32 @@ const PubNav = React.createClass({
 							</li></Link>
 							<li style={[styles.pubNavSeparator, styles.pubNavRight, styles.pubNavDesktopOnly, styles.pubNavAuthorOnly, styles.pubAuthor[this.props.isAuthor]]}></li>
 
-							<li key="pubNav5"style={[styles.pubNavItem, styles.pubNavRight, styles.pubNavMobileOnly]} onClick={this.props.openPubModalHandler('discussions')}>
-								<FormattedMessage {...globalMessages.discussions} />
-							</li>
+							<Link to={'/pub/' + this.props.slug + '/discussions'}>
+								<li key="pubNav5"style={[styles.pubNavItem, styles.pubNavRight, styles.pubNavMobileOnly]} >
+									<FormattedMessage {...globalMessages.discussions} />
+								</li>
+							</Link>
 							<li style={[styles.pubNavSeparator, styles.pubNavMobileOnly, styles.pubNavRight]}></li>
-							
+
 							{/* <li key="pubNav6"style={[styles.pubNavItem, styles.pubNavRight, styles.pubNavMobileOnly, this.props.pubStatus === 'Draft' && styles.draftNav]} onClick={this.props.pubStatus !== 'Draft' ? this.props.openPubModalHandler('reviews') : null}>
 								{this.props.pubStatus === 'Draft' ? <FormattedMessage {...globalMessages.Draft} /> : ''}
 							</li> */}
 							<li key="pubNav6"style={[styles.pubNavItem, styles.pubNavRight, styles.pubNavMobileOnly]} >
-								
+
 							</li>
 
 							<li style={[styles.pubNavSeparator, styles.pubNavMobileOnly, styles.pubNavRight]}></li>
 
 							<li key="pubNav8"style={[styles.pubNavItem, styles.pubNavRight]} onClick={this.props.handleFollow}>
-								{this.props.isFollowing 
+								{this.props.isFollowing
 									? <FormattedMessage {...globalMessages.following} />
 									: <FormattedMessage {...globalMessages.follow} />
 								}
 							</li>
-							
+
 						</ul>
 				}
-				
+
 			</div>
 		);
 	}
@@ -117,7 +119,7 @@ styles = {
 	},
 	loading: {
 		opacity: 0,
-	}, 
+	},
 	loaded: {
 		opacity: 1
 	},

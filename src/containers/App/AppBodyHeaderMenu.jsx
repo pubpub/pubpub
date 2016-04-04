@@ -138,13 +138,15 @@ const HeaderMenu = React.createClass({
 										<FormattedMessage {...globalMessages.tableOfContents} />
 									</li>
 
-									<li key="menuListItem7" style={styles.menuItem} onClick={this.props.openPubModalHandler('discussions')}>
-										<FormattedMessage {...globalMessages.discussions} />
-									</li>
+									<Link to={'/pub/' + this.props.slug + '/discussions'} style={globalStyles.link}>
+										<li key="menuListItem7" style={styles.menuItem} onClick={this.props.openPubModalHandler('discussions')}>
+											<FormattedMessage {...globalMessages.discussions} />
+										</li>
+									</Link>
 
-									<li key="menuListItem6" style={[styles.menuItem, this.props.pubStatus === 'Draft' && styles.hidden]} onClick={this.props.openPubModalHandler('reviews')}>
+									{/* <li key="menuListItem6" style={[styles.menuItem, this.props.pubStatus === 'Draft' && styles.hidden]} onClick={this.props.openPubModalHandler('reviews')}>
 										<FormattedMessage {...globalMessages.reviews} />
-									</li>
+									</li> */}
 
 									{/* <Link to={'/pub/' + this.props.slug + '/experts'} style={globalStyles.link}><li key="menuListItem16" style={[styles.menuItem]}>
 										<FormattedMessage {...globalMessages.experts} />
@@ -157,31 +159,27 @@ const HeaderMenu = React.createClass({
 
 									<Link to={'/pub/' + this.props.slug + '/history'} style={globalStyles.link}><li key="menuListItem8" style={styles.menuItem}>
 										<FormattedMessage {...globalMessages.history} />
-										{/* <span style={styles.count}> ({this.props.historyCount})</span> */}
 									</li></Link>
 
-									<Link to={'/pub/' + this.props.slug + '/analytics'} style={globalStyles.link}><li key="menuListItem18" style={styles.menuItem}>
+									{/* <Link to={'/pub/' + this.props.slug + '/analytics'} style={globalStyles.link}><li key="menuListItem18" style={styles.menuItem}>
 										<FormattedMessage {...globalMessages.analytics} />
-										{/* <span style={styles.count}> ({this.props.analyticsCount})</span> */}
-									</li></Link>
+									</li></Link> */}
 
-									<Link to={'/pub/' + this.props.slug + '/citations'} style={globalStyles.link}><li key="menuListItem19" style={styles.menuItem}>
+									{/* <Link to={'/pub/' + this.props.slug + '/citations'} style={globalStyles.link}><li key="menuListItem19" style={styles.menuItem}>
 										<FormattedMessage {...globalMessages.citations} />
-										{/* <span style={styles.count}> ({this.props.citationsCount})</span> */}
-									</li></Link>
+									</li></Link> */}
 
-									<Link to={'/pub/' + this.props.slug + '/news'} style={globalStyles.link}><li key="menuListItem20" style={styles.menuItem}>
+									{/* <Link to={'/pub/' + this.props.slug + '/news'} style={globalStyles.link}><li key="menuListItem20" style={styles.menuItem}>
 										<FormattedMessage {...globalMessages.inthenews} />
-										{/* <span style={styles.count}> ({this.props.newsCount})</span> */}
-									</li></Link>
+									</li></Link> */}
 
 									<Link to={'/pub/' + this.props.slug + '/source'} style={globalStyles.link}><li key="menuListItem9" style={styles.menuItem}>
 										<FormattedMessage {...globalMessages.source} />
 									</li></Link>
 
-									<li key="menuListItem10" style={[styles.menuItem, styles.menuItemNoBottom]} onClick={this.props.openPubModalHandler('cite')}>
+									{/* <li key="menuListItem10" style={[styles.menuItem, styles.menuItemNoBottom]} onClick={this.props.openPubModalHandler('cite')}>
 										<FormattedMessage {...globalMessages.cite} />
-									</li>
+									</li> */}
 
 									</div>
 								: null

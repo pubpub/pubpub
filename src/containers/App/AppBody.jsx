@@ -204,7 +204,32 @@ const AppBody = React.createClass({
 				</div>
 
 				<div className="footer" style={[styles.footer, (this.props.path.substring(this.props.path.length - 6, this.props.path.length) === '/draft' || this.props.appData.get('baseSubdomain') !== null) && {display: 'none'} ]}>
-					Here's my footer stuff
+					<div style={{display: 'table', margin: '0 auto'}}>
+						<div style={styles.footerColumn}>
+							<div style={styles.footerHeader}>PubPub</div>
+							<div style={styles.footerItem}>About</div>
+							<div style={styles.footerItem}>Code</div>
+							<div style={styles.footerItem}>Jobs</div>
+							<div style={styles.footerItem}>Terms of Service</div>
+							<div style={styles.footerItem}>Privacy Policy</div>
+							<div style={styles.footerItem}>Twitter</div>
+						</div>
+
+						<div style={styles.footerColumn}>
+							<div style={styles.footerHeader}>Explore</div>
+							<div style={styles.footerItem}>Pubs</div>
+							<div style={styles.footerItem}>Journals</div>
+						</div>
+
+						<div style={styles.footerColumn}>
+							<div style={styles.footerHeader}>Support</div>
+							<div style={styles.footerItem}>FAQ</div>
+							<div style={styles.footerItem}>Publishing</div>
+							<div style={styles.footerItem}>Editing</div>
+							<div style={styles.footerItem}>Contact</div>
+						</div>
+					</div>
+
 				</div>
 			</div>
 		);
@@ -335,6 +360,21 @@ styles = {
 		margin: '40px auto 0px auto',
 		borderTop: '1px solid #CCC',
 		padding: '40px 0px',
+	},
+	footerColumn: {
+		display: 'table-cell',
+		width: '1px',
+		padding: '0px 20px',
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+			width: '100%',
+			float: 'left',
+		},
+	},
+	footerHeader: {
+		fontWeight: 'bold',
+	},
+	footerItem: {
+		color: '#888',
 	},
 
 };

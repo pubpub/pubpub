@@ -127,7 +127,7 @@ const Plugin = React.createClass({
 			// const context = document.getElementsByClassName('pubScrollContainer')[0];
 			// const context = document;
 			// smoothScroll(selectionElement, 250, ()=>{}, context);
-			smoothScroll(destination, 250, ()=>{}, null, -60);
+			smoothScroll(destination, 500, ()=>{}, null, -60);
 			// smoothScroll(destination, 250, ()=>{});
 		}
 
