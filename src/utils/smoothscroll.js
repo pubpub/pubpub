@@ -44,50 +44,14 @@ var getTop = function(element, context) {
 // ease in out function thanks to:
 // http://blog.greweb.fr/2012/02/bezier-curve-based-easing-functions-from-concept-to-implementation/
 var easeInOutCubic = function (t) { return t<.5 ? 4*t*t*t : (t-1)*(2*t-2)*(2*t-2)+1 }
-var easeInOutQuad = function (t) { return t<.5 ? 2*t*t : -1+(4-2*t)*t }
-var KeySpline = function (mX1, mY1, mX2, mY2) {
 
-  this.get = function(aX) {
-    if (mX1 == mY1 && mX2 == mY2) return aX; // linear
-    return CalcBezier(GetTForX(aX), mY1, mY2);
-  }
-
-  function A(aA1, aA2) { return 1.0 - 3.0 * aA2 + 3.0 * aA1; }
-  function B(aA1, aA2) { return 3.0 * aA2 - 6.0 * aA1; }
-  function C(aA1)      { return 3.0 * aA1; }
-
-  // Returns x(t) given t, x1, and x2, or y(t) given t, y1, and y2.
-  function CalcBezier(aT, aA1, aA2) {
-    return ((A(aA1, aA2)*aT + B(aA1, aA2))*aT + C(aA1))*aT;
-  }
-
-  // Returns dx/dt given t, x1, and x2, or dy/dt given t, y1, and y2.
-  function GetSlope(aT, aA1, aA2) {
-    return 3.0 * A(aA1, aA2)*aT*aT + 2.0 * B(aA1, aA2) * aT + C(aA1);
-  }
-
-  function GetTForX(aX) {
-    // Newton raphson iteration
-    var aGuessT = aX;
-    for (var i = 0; i < 4; ++i) {
-      var currentSlope = GetSlope(aGuessT, mX1, mX2);
-      if (currentSlope == 0.0) return aGuessT;
-      var currentX = CalcBezier(aGuessT, mX1, mX2) - aX;
-      aGuessT -= currentX / currentSlope;
-    }
-    return aGuessT;
-  }
-}
 // calculate the scroll position we should be in
 // given the start and end point of the scroll
 // the time elapsed from the beginning of the scroll
 // and the total duration of the scroll (default 500ms)
 var position = function(start, end, elapsed, duration) {
     if (elapsed > duration) return end;
-    // return start + (end - start) * easeInOutQuad(elapsed / duration); // <-- you can change the easing funtion there
-    // return start + (end - start) * (elapsed / duration); // <-- this would give a linear scroll
-	var spline = new KeySpline(0.42, 0.0, 0.58, 1.0)
-	return start + (end - start) * spline.get(elapsed / duration);
+    return start + (end - start) * easeInOutCubic(elapsed / duration); // <-- you can change the easing funtion there
 }
 
 // we use requestAnimationFrame to be called by the browser before every repaint

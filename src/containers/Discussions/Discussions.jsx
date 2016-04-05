@@ -144,7 +144,7 @@ const Discussions = React.createClass({
 
 		let discussionsData = this.props.discussionsData.get('discussions') && this.props.discussionsData.get('discussions').toJS ? this.props.discussionsData.get('discussions').toJS() : [];
 		discussionsData = this.props.metaID ? this.filterDiscussions(discussionsData) : discussionsData;
-		discussionsData = this.props.selectionID ? this.filterDiscussionsForSelection(discussionsData): discussionsData;
+		discussionsData = this.props.selectionID ? this.filterDiscussionsForSelection(discussionsData) : discussionsData;
 
 		const addDiscussionStatus = this.props.discussionsData.get('addDiscussionStatus');
 		// const newDiscussionData = this.props.discussionsData.get('newDiscussionData');

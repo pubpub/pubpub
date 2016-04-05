@@ -64,8 +64,8 @@ const Plugin = React.createClass({
 				endOffset: selection.endOffset,
 			};
 
-			const version = parseInt(selection.sourceVersion, 10);
-			const renderer = new Marklib.Rendering(document, {className:'selection selection-' + selection._id}, document);
+			// const version = parseInt(selection.sourceVersion, 10);
+			const renderer = new Marklib.Rendering(document, {className: 'selection selection-' + selection._id}, document);
 			renderer.renderWithResult(result);
 
 
@@ -105,11 +105,11 @@ const Plugin = React.createClass({
 
 	scrollToHighlight: function() {
 		const destination = document.getElementsByClassName('selection-' + this.props.source._id)[0];
-		smoothScroll(destination, 500, ()=>{}, null, -60);
-
+		smoothScroll(destination, 500, ()=>{});
+		this.hoverOff();
 
 		// // If we're on the editor, and we can't find the selectoin, redraw.
-		// // if (parseInt(this.props.source.version, 10) === 0 && !destination) {
+		// // if (parseInt(this.props.source.sourceVersion, 10) === 0 && !destination) {
 		// // 	this.drawHighlight();
 		// // 	destination = document.getElementsByClassName('selection-' + this.props.source._id)[0];
 		// // }
@@ -171,6 +171,15 @@ const Plugin = React.createClass({
 		}
 	},
 
+	toggleContext: function() {
+		const selectionElement = document.getElementsByClassName('selection-' + this.props.source._id)[0];
+		this.setState({
+			showContext: !this.state.showContext,
+			canScroll: selectionElement,
+		});
+
+	},
+
 	calculateOffsets: function() {
 		if (!this.props.source.context || !this.props.source.text) {
 			return [null, null];
@@ -210,14 +219,13 @@ const Plugin = React.createClass({
 		}
 
 		const offsets = this.calculateOffsets();
-
 		return (
 			<div
 				id={'selection-block-' + this.props.source._id}
 				className={'selection-block'}
 				key={'selection-block-' + this.props.source._id}
 				style={styles.selectionBlock}
-				onClick={this.scrollToHighlight}
+				onClick={this.toggleContext}
 				onMouseEnter={this.hoverOn}
 				onMouseLeave={this.hoverOff}>
 
@@ -237,9 +245,9 @@ const Plugin = React.createClass({
 					{this.state.showContext
 						? <div>
 							<div style={styles.versionHeader}>
-								{parseInt(this.props.source.version, 10) === 0
+								{parseInt(this.props.source.sourceVersion, 10) === 0
 									? <FormattedMessage id="discussion.selectionPreviousDraft" defaultMessage="Selection made on draft version"/>
-									: <FormattedMessage id="discussion.selectionPreviousVersion" defaultMessage="Selection made on Version {version}" values={{version: this.props.source.version}}/>
+									: <FormattedMessage id="discussion.selectionPreviousVersion" defaultMessage="Selection made on Version {version}" values={{version: this.props.source.sourceVersion}}/>
 								}
 							</div>
 							{offsets[0] === null
@@ -250,7 +258,10 @@ const Plugin = React.createClass({
 									{this.props.source.context.substring(offsets[1], this.props.source.context.length)}
 								</span>
 							}
-
+							{this.state.canScroll
+								? <div style={styles.contextFooter} onClick={this.scrollToHighlight}><FormattedMessage id="discussion.selectionScrollToHighlight" defaultMessage="Scroll to highlight in Pub"/></div>
+								: null
+							}
 						</div>
 						: this.props.source.text
 					}
@@ -282,7 +293,16 @@ styles = {
 		fontStyle: 'initial',
 		color: '#777',
 		fontSize: '0.85em',
-	}
+	},
+	contextFooter: {
+		textAlign: 'center',
+		borderTop: '1px dashed #ddd',
+		paddingTop: '8px',
+		marginTop: '8px',
+		fontStyle: 'initial',
+		color: '#777',
+		fontSize: '0.85em',
+	},
 	// quotationMark: {
 	// 	fontSize: '2em',
 	// 	fontFamily: 'serif',

@@ -1,5 +1,6 @@
 {
   "es": {
+    "discussion.selectionScrollToHighlight": "Missing. English is: Scroll to highlight in Pub",
     "discussion.PrivateCollaboraotrsOnly": "Missing. English is: Private. Collaborators only.",
     "editor.File": "Missing. English is: File",
     "editor.Style": "Missing. English is: Style",
@@ -30,6 +31,7 @@
   "ld": {
     "discussion.selectionPreviousDraft": "Missing. English is: Selection made on draft version",
     "discussion.selectionPreviousVersion": "Missing. English is: Selection made on Version {version}",
+    "discussion.selectionScrollToHighlight": "Missing. English is: Scroll to highlight in Pub",
     "nav.userNotifications": "Missing. English is: Notifications ({count})",
     "discussion.Unarchive": "Missing. English is: Unarchive",
     "discussion.Archive": "Missing. English is: Archive",
@@ -94,6 +96,7 @@
     "discussionReplyPlaceholder": "Missing. English is: Add your reply"
   },
   "ee": {
+    "discussion.selectionScrollToHighlight": "Missing. English is: Scroll to highlight in Pub",
     "editor.saveVersionMessage1": "Missing. English is: You can save versions to your Pub as frequently as you like.",
     "editor.saveVersionMessage2": "Missing. English is: Versions are private until you publish.",
     "editor.saveVersionMessage3": "Missing. English is: The full history will be maintained and accessible.",

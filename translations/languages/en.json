@@ -1,6 +1,7 @@
 {
   "discussion.selectionPreviousDraft": "Selection made on draft version",
   "discussion.selectionPreviousVersion": "Selection made on Version {version}",
+  "discussion.selectionScrollToHighlight": "Scroll to highlight in Pub",
   "notFound.pageDoesntExist": "Doh - That page does not seem to exist!",
   "preview.discussionOn": "Discussion on",
   "pub.addToComment": "Add to Comment",
