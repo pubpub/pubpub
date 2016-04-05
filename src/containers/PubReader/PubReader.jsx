@@ -73,7 +73,6 @@ const PubReader = React.createClass({
 		// const references = convertImmutableListToObject(this.props.readerData.getIn(['pubData', 'history', versionIndex, 'references']), true);
 		// const selections = [];
 		const toc = generateTOC(inputMD).full;
-
 		this.setState({
 			inputMD: inputMD,
 			// assetsObject: assets,
@@ -82,7 +81,11 @@ const PubReader = React.createClass({
 			TOC: toc,
 		});
 	},
-
+	componentDidMount() {
+		// This is a bit janky, but we attach handleHighlightClick to document so that selectionPlugins can call document.handleHighlightClick
+		// to trigger a discussion modal to pop up.
+		document.handleHighlightClick = this.handleHighlightClick;
+	},
 	componentWillReceiveProps(nextProps) {
 		const oldVersionIndex = this.props.query.version !== undefined ? this.props.query.version - 1 : this.props.readerData.getIn(['pubData', 'history']).size - 1;
 		const versionIndex = nextProps.query.version !== undefined ? nextProps.query.version - 1 : nextProps.readerData.getIn(['pubData', 'history']).size - 1;
@@ -114,6 +117,10 @@ const PubReader = React.createClass({
 	componentWillUnmount() {
 		this.closePubModal();
 		this.props.dispatch(pubNavOut());
+	},
+
+	handleHighlightClick: function(item) {
+		console.log(item);
 	},
 
 	openPubModal: function(modal) {
@@ -357,6 +364,7 @@ const PubReader = React.createClass({
 								</div>
 
 								<Discussions/>
+
 							</div>
 							<div style={globalStyles.clearFix}></div>
 						</div>
@@ -371,7 +379,8 @@ const PubReader = React.createClass({
 
 });
 
-
+// const rightBar = document.getElementsByClassname('rightBar')[0];
+// if (rightBar.scrollheight > rightBar.clientHeight)
 export default connect( state => {
 	return {
 		readerData: state.pub,
@@ -417,6 +426,7 @@ styles = {
 
 	readerContent: {
 		marginLeft: '150px',
+		position: 'relative',
 		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
 			marginLeft: '0px',
 		}
@@ -445,6 +455,13 @@ styles = {
 		float: 'left',
 		width: '36%',
 		padding: '0px 2%',
+
+		// To make discussions only as long as the pub:
+		// position: 'absolute',
+		// right: 0,
+		// height: '100%',
+		// overflow: 'hidden',
+
 		// Mobile
 		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
 			display: 'none',

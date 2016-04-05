@@ -70,17 +70,18 @@ const Plugin = React.createClass({
 
 
 			renderer.on('click', (item)=> {
-				const selectionElement = document.getElementById('selection-block-' + selection._id);
-				const selectionY = this.getPosition(selectionElement).yloc; // The y-coord of where it is by default
-				const destY = this.getPosition(item.target).yloc; // The y-coord of where it needs to be
-				const scrollAmount = destY - selectionY;
-
-				const discussions = document.getElementById('pub-discussions-wrapper');
-				discussions.style.webkitTransform = 'translateY(' + scrollAmount + 'px)';
-				discussions.style.MozTransform = 'translateY(' + scrollAmount + 'px)';
-				discussions.style.msTransform = 'translateY(' + scrollAmount + 'px)';
-				discussions.style.OTransform = 'translateY(' + scrollAmount + 'px)';
-				discussions.style.transform = 'translateY(' + scrollAmount + 'px)';
+				document.handleHighlightClick({item, selection});
+				// const selectionElement = document.getElementById('selection-block-' + selection._id);
+				// const selectionY = this.getPosition(selectionElement).yloc; // The y-coord of where it is by default
+				// const destY = this.getPosition(item.target).yloc; // The y-coord of where it needs to be
+				// const scrollAmount = destY - selectionY;
+				//
+				// const discussions = document.getElementById('pub-discussions-wrapper');
+				// discussions.style.webkitTransform = 'translateY(' + scrollAmount + 'px)';
+				// discussions.style.MozTransform = 'translateY(' + scrollAmount + 'px)';
+				// discussions.style.msTransform = 'translateY(' + scrollAmount + 'px)';
+				// discussions.style.OTransform = 'translateY(' + scrollAmount + 'px)';
+				// discussions.style.transform = 'translateY(' + scrollAmount + 'px)';
 
 
 				// const context = version ? document.getElementsByClassName('rightBar')[0] : document.getElementsByClassName('commentsRightBar')[0];
@@ -104,32 +105,35 @@ const Plugin = React.createClass({
 
 	scrollToHighlight: function() {
 		const destination = document.getElementsByClassName('selection-' + this.props.source._id)[0];
-		// If we're on the editor, and we can't find the selectoin, redraw.
-		// if (parseInt(this.props.source.version, 10) === 0 && !destination) {
-		// 	this.drawHighlight();
-		// 	destination = document.getElementsByClassName('selection-' + this.props.source._id)[0];
+		smoothScroll(destination, 500, ()=>{}, null, -60);
+
+
+		// // If we're on the editor, and we can't find the selectoin, redraw.
+		// // if (parseInt(this.props.source.version, 10) === 0 && !destination) {
+		// // 	this.drawHighlight();
+		// // 	destination = document.getElementsByClassName('selection-' + this.props.source._id)[0];
+		// // }
+		// const selectionElement = document.getElementById('selection-block-' + this.props.source._id);
+		// const selectionY = this.getPosition(selectionElement).yloc; // The y-coord of where it is by default
+		// const destY = this.getPosition(destination).yloc; // The y-coord of where it needs to be
+		// const scrollAmount = destY - selectionY;
+		//
+		// const discussions = document.getElementById('pub-discussions-wrapper');
+		// discussions.style.webkitTransform = 'translateY(' + scrollAmount + 'px)';
+		// discussions.style.MozTransform = 'translateY(' + scrollAmount + 'px)';
+		// discussions.style.msTransform = 'translateY(' + scrollAmount + 'px)';
+		// discussions.style.OTransform = 'translateY(' + scrollAmount + 'px)';
+		// discussions.style.transform = 'translateY(' + scrollAmount + 'px)';
+		//
+		// if (!selectionElement) {
+		// 	this.setState({showContext: !this.state.showContext});
+		// } else {
+		// 	// const context = document.getElementsByClassName('pubScrollContainer')[0];
+		// 	// const context = document;
+		// 	// smoothScroll(selectionElement, 250, ()=>{}, context);
+		// 	smoothScroll(destination, 500, ()=>{}, null, -60);
+		// 	// smoothScroll(destination, 250, ()=>{});
 		// }
-		const selectionElement = document.getElementById('selection-block-' + this.props.source._id);
-		const selectionY = this.getPosition(selectionElement).yloc; // The y-coord of where it is by default
-		const destY = this.getPosition(destination).yloc; // The y-coord of where it needs to be
-		const scrollAmount = destY - selectionY;
-
-		const discussions = document.getElementById('pub-discussions-wrapper');
-		discussions.style.webkitTransform = 'translateY(' + scrollAmount + 'px)';
-		discussions.style.MozTransform = 'translateY(' + scrollAmount + 'px)';
-		discussions.style.msTransform = 'translateY(' + scrollAmount + 'px)';
-		discussions.style.OTransform = 'translateY(' + scrollAmount + 'px)';
-		discussions.style.transform = 'translateY(' + scrollAmount + 'px)';
-
-		if (!selectionElement) {
-			this.setState({showContext: !this.state.showContext});
-		} else {
-			// const context = document.getElementsByClassName('pubScrollContainer')[0];
-			// const context = document;
-			// smoothScroll(selectionElement, 250, ()=>{}, context);
-			smoothScroll(destination, 500, ()=>{}, null, -60);
-			// smoothScroll(destination, 250, ()=>{});
-		}
 
 	},
 
@@ -235,7 +239,7 @@ const Plugin = React.createClass({
 							<div style={styles.versionHeader}>
 								{parseInt(this.props.source.version, 10) === 0
 									? <FormattedMessage id="discussion.selectionPreviousDraft" defaultMessage="Selection made on draft version"/>
-								: <FormattedMessage id="discussion.selectionPreviousVersion" defaultMessage="Selection made on Version {version}" values={{version: this.props.source.version}}/>
+									: <FormattedMessage id="discussion.selectionPreviousVersion" defaultMessage="Selection made on Version {version}" values={{version: this.props.source.version}}/>
 								}
 							</div>
 							{offsets[0] === null

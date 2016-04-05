@@ -260,7 +260,7 @@ styles = {
 		lineHeight: '17px',
 		padding: '0px 10px',
 		fontSize: '12px',
-		backgroundColor: 'rgba(255,255,255,0.2)',
+		// backgroundColor: 'rgba(255,255,255,0.2)',
 		borderBottom: '1px solid #DDD',
 		':hover': {
 			color: '#444',

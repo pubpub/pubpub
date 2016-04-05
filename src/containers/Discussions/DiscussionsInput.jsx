@@ -346,7 +346,7 @@ styles = {
 	inputMenuWrapper: {
 		borderBottom: '1px solid #ccc',
 		marginBottom: '10px',
-		opacity: .2,
+		opacity: 0,
 	},
 	inputMenuWrapperActive: {
 		opacity: 1,
