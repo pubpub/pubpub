@@ -232,6 +232,7 @@ const PubReader = React.createClass({
 					<PubReaderLeftBar
 						slug={this.props.slug}
 						query={this.props.query}
+						meta={this.props.meta}
 						pubStatus={pubData.status}
 						readRandomPubHandler={this.readRandomPub}
 						randomSlug={this.props.appData.getIn(['journalData', 'randomSlug'])}
@@ -239,7 +240,10 @@ const PubReader = React.createClass({
 						historyCount={pubData.history ? pubData.history.length : 0}
 						analyticsCount={pubData.views ? pubData.views : 0}
 						citationsCount={pubData.citations ? pubData.citations.length : 0}
-						newsCount={pubData.news ? pubData.news.length : 0} />
+						newsCount={pubData.news ? pubData.news.length : 0}
+						isFollowing={this.props.loginData.getIn(['userData', 'following', 'pubs']) ? this.props.loginData.getIn(['userData', 'following', 'pubs']).indexOf(this.props.readerData.getIn(['pubData', '_id'])) > -1 : false}
+						handleFollow={this.followPubToggle}
+						isAuthor={pubData.isAuthor}/>
 
 				</div>
 

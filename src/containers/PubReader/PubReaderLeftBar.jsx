@@ -12,6 +12,7 @@ const PubLeftBar = React.createClass({
 	propTypes: {
 		slug: PropTypes.string,
 		query: PropTypes.object,
+		meta: PropTypes.string,
 		pubStatus: PropTypes.string,
 		readRandomPubHandler: PropTypes.func,
 		randomSlug: PropTypes.string,
@@ -20,7 +21,9 @@ const PubLeftBar = React.createClass({
 		analyticsCount: PropTypes.number,
 		citationsCount: PropTypes.number,
 		newsCount: PropTypes.number,
-
+		isFollowing: PropTypes.bool,
+		handleFollow: PropTypes.func,
+		isAuthor: PropTypes.bool,
 	},
 
 	getDefaultProps: function() {
@@ -29,47 +32,49 @@ const PubLeftBar = React.createClass({
 		};
 	},
 
+	handlePrint: function() {
+		window.print();
+	},
+
 	render: function() {
 		const versionURL = this.props.query.version !== undefined ? '?version=' + this.props.query.version : '';
+		const pubViews = [
+			{label: 'Read', metaPath: undefined},
+			{label: 'Edit', metaPath: 'draft'},
+			{label: 'Discussions', metaPath: 'discussions'},
+			{label: 'Journals', metaPath: 'journals'},
+			{label: 'History', metaPath: 'history'},
+			{label: 'Source', metaPath: 'source'},
+			// {label: 'Cite', metaPath: 'cite'},
+		];
 		return (
 			<div style={styles.container}>
-
-				<Link style={globalStyles.link} to={'/pubs'}><div key={'test1'} style={styles.detail}>
-					Read
-				</div></Link>
-				<Link style={globalStyles.link} to={'/pubs'}><div key={'test2'} style={styles.detail}>
-					Edit
-				</div></Link>
-				<Link style={globalStyles.link} to={'/pubs'}><div key={'test3'} style={styles.detail}>
-					Discussions
-				</div></Link>
-				<Link style={globalStyles.link} to={'/pubs'}><div key={'test4'} style={styles.detail}>
-					Journals
-				</div></Link>
-				<Link style={globalStyles.link} to={'/pubs'}><div key={'test5'} style={styles.detail}>
-					History
-				</div></Link>
-				<Link style={globalStyles.link} to={'/pubs'}><div key={'test6'} style={styles.detail}>
-					Source
-				</div></Link>
-				<Link style={globalStyles.link} to={'/pubs'}><div key={'test7'} style={styles.detail}>
-					Cite
-				</div></Link>
+				{pubViews.map((view, index)=>{
+					const path = view.metaPath || '';
+					const authorOnlyStyle = !this.props.isAuthor && view.label === 'Edit' && {display: 'none'};
+					return (
+						<Link style={globalStyles.link} to={'/pub/' + this.props.slug + '/' + path + versionURL} key={'metaLink-' + index}>
+						<div key={'metaLinkLabel-' + index} style={[styles.detail, this.props.meta === view.metaPath && styles.detailActive, authorOnlyStyle]}>{view.label}</div>
+						</Link>
+					);
+				})}
 
 				<div style={styles.leftBarDivider}></div>
 
-				<Link style={globalStyles.link} to={'/pubs'}><div key={'test8'} style={styles.detail}>
-					Follow
-				</div></Link>
-				<Link style={globalStyles.link} to={'/pubs'}><div key={'test67'} style={styles.detail}>
+				<div key="pubNav8" style={[styles.detail]} onClick={this.props.handleFollow}>
+					{this.props.isFollowing
+						? <FormattedMessage {...globalMessages.following} />
+						: <FormattedMessage {...globalMessages.follow} />
+					}
+				</div>
+
+				{/* <Link style={globalStyles.link} to={'/pubs'}><div key={'test67'} style={styles.detail}>
 					Table of Contents
-				</div></Link>
-				<Link style={globalStyles.link} to={'/pubs'}><div key={'test76'} style={styles.detail}>
-					Print
-				</div></Link>
-				<Link style={globalStyles.link} to={'/pubs'}><div key={'test43'} style={styles.detail}>
-					Permalink
-				</div></Link>
+				</div></Link> */}
+
+				<div key={'test76'} style={styles.detail} onClick={this.handlePrint}>
+					<FormattedMessage {...globalMessages.print} />
+				</div>
 
 				{/* <Link style={globalStyles.link} to={'/'}><div key={'leftBar0'} style={styles.detail}>
 					<FormattedMessage id="pub.home" defaultMessage="Home"/>
@@ -152,6 +157,9 @@ styles = {
 			color: globalStyles.sideHover,
 			cursor: 'pointer',
 		},
+	},
+	detailActive: {
+		fontWeight: 'bold',
 	},
 	hidden: {
 		display: 'none',

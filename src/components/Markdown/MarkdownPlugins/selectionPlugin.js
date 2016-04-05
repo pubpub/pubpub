@@ -35,7 +35,7 @@ const Plugin = React.createClass({
 	propTypes: {
 		error: PropTypes.string,
 		children: PropTypes.string,
-		index: PropTypes.object,
+		index: PropTypes.string,
 		source: PropTypes.object,
 	},
 

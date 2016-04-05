@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react';
 import Radium from 'radium';
-import {JournalPreview} from 'components';
+import {PreviewJournal} from 'components';
 import dateFormat from 'dateformat';
 import {Autocomplete} from 'containers';
 // import {globalStyles} from 'utils/styleConstants';
@@ -10,7 +10,7 @@ import {injectIntl, defineMessages, FormattedMessage} from 'react-intl';
 
 let styles = {};
 
-const PubMetaExperts = React.createClass({
+const PubMetaJournals = React.createClass({
 	propTypes: {
 		featuredIn: PropTypes.array,
 		featuredInList: PropTypes.array,
@@ -60,14 +60,14 @@ const PubMetaExperts = React.createClass({
 						return (
 							<div key={'journalSearch-' + index} style={styles.result}>
 								<div style={styles.resultDetails}>
-									<JournalPreview journalData={journal}/>
+									<PreviewJournal journalData={journal}/>
 								</div>
-								
+
 								<div style={styles.action} key={'featuredPubSearchAdd-' + index} onClick={this.submitToJournal(journal)}>
 									<FormattedMessage {...globalMessages.submit} />
 								</div>
 							</div>
-						);	
+						);
 					})
 				}
 				{results.length === 0 || totalCount === 0
@@ -76,7 +76,7 @@ const PubMetaExperts = React.createClass({
 					</div>
 					: null
 				}
-				
+
 			</div>
 		);
 	},
@@ -97,10 +97,10 @@ const PubMetaExperts = React.createClass({
 				</div>
 				{this.props.isAuthor
 					? <div style={styles.searchWrapper}>
-						<Autocomplete 
-							autocompleteKey={'pubSubmitToJournalAutocomplete'} 
-							route={'autocompleteJournals'} 
-							placeholder={this.props.intl.formatMessage(messages.searchJournals)} 
+						<Autocomplete
+							autocompleteKey={'pubSubmitToJournalAutocomplete'}
+							route={'autocompleteJournals'}
+							placeholder={this.props.intl.formatMessage(messages.searchJournals)}
 							resultRenderFunction={this.renderJournalSearchResults}/>
 					</div>
 					: null
@@ -112,17 +112,17 @@ const PubMetaExperts = React.createClass({
 							<div key={'submittedTo-' + index}>
 								{String(this.props.featuredInList).indexOf(journalItem.journal._id) > -1
 									? null
-									: <JournalPreview 
-										journalData={journalItem.journal} 
-										hideDetails={true} 
+									: <PreviewJournal
+										journalData={journalItem.journal}
+										hideDetails={true}
 										customDetails={['Submitted On ' + dateFormat(journalItem.date, 'mmm dd, yyyy h:MMTT')]} />
 								}
-								
+
 							</div>
 						);
 					})}
 				</div>
-				
+
 
 				{this.props.submittedTo.length
 					? null
@@ -138,15 +138,15 @@ const PubMetaExperts = React.createClass({
 					{this.props.featuredIn.map((journalItem, index)=>{
 						return (
 							<div key={'featuredIn-' + index}>
-								<JournalPreview 
-									journalData={journalItem.journal} 
-									hideDetails={true} 
+								<PreviewJournal
+									journalData={journalItem.journal}
+									hideDetails={true}
 									customDetails={['Featured On ' + dateFormat(journalItem.date, 'mmm dd, yyyy h:MMTT')]} />
 							</div>
 						);
 					})}
 				</div>
-				
+
 				{this.props.featuredIn.length
 					? null
 					: <div style={styles.emptyBlock}>
@@ -154,13 +154,13 @@ const PubMetaExperts = React.createClass({
 					</div>
 				}
 
-					
+
 			</div>
 		);
 	}
 });
 
-export default injectIntl(Radium(PubMetaExperts));
+export default injectIntl(Radium(PubMetaJournals));
 
 styles = {
 	container: {
