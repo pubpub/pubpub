@@ -327,6 +327,7 @@ styles = {
 		width: '100%',
 		position: 'relative',
 		borderBottom: '1px solid #eee',
+		overflow: 'hidden',
 	},
 	discussionVoting: {
 		width: '25px',

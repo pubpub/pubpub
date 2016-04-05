@@ -1,12 +1,15 @@
 export const globalStyles = {
-	headerBackground: '#373737',
+	// headerBackground: '#373737',
+	headerBackground: '#2A2A2A',
 	headerHeight: '30px',
 	headerHeightMobile: '60px',
 	headerText: '#E0E0E0',
 	headerHover: '#FFFFFF',
 	headerFont: "'Lato', sans-serif",
-	sideBackground: '#F5F5F5',
-	sideText: '#666',
+	// sideBackground: '#F5F5F5',
+	sideBackground: '#EBEBEB',
+	// sideText: '#666',
+	sideText: '#222',
 	sideHover: '#000',
 	veryLight: '#BBB',
 	clearFix: {

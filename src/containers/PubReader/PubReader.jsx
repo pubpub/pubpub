@@ -348,11 +348,11 @@ const PubReader = React.createClass({
 											<FormattedMessage id="pub.RequestReview" defaultMessage="Request Review"/>
 										</div>
 									</Link>
-									<Link style={globalStyles.link} to={'/pub/' + this.props.slug + '/discussions'}>
+									{/* <Link style={globalStyles.link} to={'/pub/' + this.props.slug + '/discussions'}>
 										<div style={styles.buttonWrapper} key={'topbutton3'}>
 											<FormattedMessage id="pub.Expand" defaultMessage="Expand"/>
 										</div>
-									</Link>
+									</Link> */}
 									<div style={globalStyles.clearFix}></div>
 								</div>
 
@@ -391,11 +391,11 @@ styles = {
 
 	},
 	rightHeaderButtonsWrapper: {
-
+		margin: '10px 0px',
 	},
 	buttonWrapper: {
 		float: 'left',
-		width: 'calc((100% / 3) - 4% - 2px)',
+		width: 'calc((100% / 2) - 4% - 2px)',
 		margin: '0px 2%',
 		padding: '2px 0px',
 		border: '1px solid #444',
