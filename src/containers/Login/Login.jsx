@@ -2,11 +2,12 @@ import React, { PropTypes } from 'react';
 import {connect} from 'react-redux';
 import Radium from 'radium';
 import PureRenderMixin from 'react-addons-pure-render-mixin';
-import {toggleVisibility, toggleViewMode, login, register} from '../../actions/login';
-import {ImageCropper, LoaderIndeterminate} from '../../components';
-import {LoginForm, LoginFormRegister} from './components';
-import {globalStyles} from 'utils/styleConstants';
+import {toggleVisibility, toggleViewMode, login, register} from './actions';
+import {ImageCropper, LoaderIndeterminate} from 'components';
+import LoginForm from './LoginForm';
+import LoginFormRegister from './LoginFormRegister';
 
+import {globalStyles} from 'utils/styleConstants';
 import {globalMessages} from 'utils/globalMessages';
 import {FormattedMessage} from 'react-intl';
 
@@ -58,7 +59,7 @@ const Login = React.createClass({
 
 	handleFileSelect: function(evt) {
 		if (evt.target.files.length) {
-			this.setState({userImageFile: evt.target.files[0]});	
+			this.setState({userImageFile: evt.target.files[0]});
 		}
 	},
 	cancelImageUpload: function() {
@@ -74,7 +75,7 @@ const Login = React.createClass({
 			<div className={'login-container'} style={[
 				styles.container,
 				this.props.loginData.get('isVisible') && styles.visible
-			]}>			
+			]}>
 
 				<div key="loginCancel" style={styles.cancel} onClick={this.toggleLogin}>
 					<FormattedMessage {...globalMessages.cancel} />
@@ -106,7 +107,7 @@ const Login = React.createClass({
 					</div>
 
 				</div>
-				
+
 				<div style={[styles.imageCropperWrapper, this.state.userImageFile !== null && styles.imageCropperWrapperVisible]} >
 					<ImageCropper height={150} width={150} image={this.state.userImageFile} onCancel={this.cancelImageUpload} onUpload={this.userImageUploaded}/>
 				</div>

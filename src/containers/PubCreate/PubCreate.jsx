@@ -3,9 +3,10 @@ import {connect} from 'react-redux';
 import Radium from 'radium';
 import { pushState } from 'redux-router';
 import PureRenderMixin from 'react-addons-pure-render-mixin';
-import {LoaderIndeterminate, CreatePubForm} from '../../components';
-import {create} from '../../actions/pub';
-import {toggleVisibility} from '../../actions/login';
+import {LoaderIndeterminate} from 'components';
+import CreatePubForm from './CreatePubForm';
+import {create} from 'containers/PubReader/actions';
+import {toggleVisibility} from 'containers/Login/actions';
 import {globalStyles} from 'utils/styleConstants';
 
 import {FormattedMessage} from 'react-intl';
@@ -43,27 +44,27 @@ const Login = React.createClass({
 			} else if (!formValues.slug) {
 				this.setState({errorMessage: 'noSlug'});
 			} else {
-				this.props.dispatch(create(formValues.title, formValues.slug));		
+				this.props.dispatch(create(formValues.title, formValues.slug));
 			}
-			
+
 		}
-		
+
 	},
 
 	render: function() {
 		return (
-			<div style={styles.container}>		
+			<div style={styles.container}>
 				<div style={styles.loader}>
 					{this.props.pubData.getIn(['createPubData', 'status']) === 'loading'
 						? <LoaderIndeterminate color={globalStyles.sideText}/>
 						: null
 					}
-				</div>	
-				
+				</div>
+
 				<div style={styles.header}>
 					<FormattedMessage id="pub.createPub" defaultMessage="Create Pub"/>
 				</div>
-				<CreatePubForm onSubmit={this.handleCreateSubmit} /> 
+				<CreatePubForm onSubmit={this.handleCreateSubmit} />
 				<div style={[styles.error, !this.state.errorMessage && styles.hidden]}>
 					{(()=>{
 						switch (this.state.errorMessage) {

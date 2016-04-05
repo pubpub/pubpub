@@ -5,11 +5,11 @@ import { Link } from 'react-router';
 import DiscussionsInput from './DiscussionsInput';
 import DiscussionsScore from './DiscussionsScore';
 
-import PPMComponent from '../../markdown/PPMComponent';
+import {Markdown} from 'components';
 
 // import ResizingText from '../../components/PubBody/ResizingText';
 
-import {globalMessages} from 'utils/globalMessages';
+// import {globalMessages} from 'utils/globalMessages';
 import {FormattedMessage, FormattedDate, FormattedRelative} from 'react-intl';
 
 let styles = {};
@@ -181,7 +181,7 @@ const DiscussionsItem = React.createClass({
 								<FormattedMessage id="discussion.PrivateCollaboraotrsOnly" defaultMessage="Private. Collaborators only."/>
 							</div>
 							{/* md.tree */}
-							<PPMComponent markdown={discussionItem.markdown} />
+							<Markdown markdown={discussionItem.markdown} />
 
 						</div>
 					</div>
@@ -339,8 +339,8 @@ styles = {
 		// backgroundColor: 'rgba(255,0,100,0.2)',
 	},
 	discussionContent: {
-		width: 'calc(100% - 30px)',
-		marginLeft: 25,
+		width: 'calc(100% -12px)',
+		// marginLeft: 25,
 		// overflow: 'hidden',
 		color: '#222',
 		// padding: '0px 15px',

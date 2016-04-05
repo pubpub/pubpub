@@ -1,7 +1,5 @@
 {
   "es": {
-    "asset.mustBeLogged": "Missing. English is: Must be Logged In",
-    "asset.dragToAdd": "Missing. English is: Drag files to this window to quickly add",
     "discussion.PrivateCollaboraotrsOnly": "Missing. English is: Private. Collaborators only.",
     "editor.File": "Missing. English is: File",
     "editor.Style": "Missing. English is: Style",
@@ -16,7 +14,10 @@
     "editor.saveVersionMessage5": "Missing. English is: You cannot 'unpublish' once a document has been made public.",
     "editor.saveVersionMessage6": "Missing. English is: By publishing, you agree to a Creative Commons By license for your work.",
     "editor.publishMessage7": "Missing. English is: A description is required.",
+    "group.background": "Same as English: Background CSS",
     "journal.global": "Same as English: Global",
+    "asset.mustBeLogged": "Missing. English is: Must be Logged In",
+    "asset.dragToAdd": "Missing. English is: Drag files to this window to quickly add",
     "pub.unpublishedNotification": "Missing. English is: This pub is unpublished, and thus only accessible to collaborators.",
     "pub.RequestReview": "Missing. English is: Request Review",
     "pub.Expand": "Missing. English is: Expand",
@@ -28,12 +29,9 @@
     "global.Highlights": "Missing. English is: Highlights"
   },
   "ld": {
-    "group.groupWillLiveAt": "Missing. English is: Group will live at",
     "discussion.selectionPreviousDraft": "Missing. English is: Selection made on draft version",
     "discussion.selectionPreviousVersion": "Missing. English is: Selection made on Version {version}",
     "nav.userNotifications": "Missing. English is: Notifications ({count})",
-    "asset.mustBeLogged": "Missing. English is: Must be Logged In",
-    "asset.dragToAdd": "Missing. English is: Drag files to this window to quickly add",
     "discussion.Unarchive": "Missing. English is: Unarchive",
     "discussion.Archive": "Missing. English is: Archive",
     "discussion.Archived": "Missing. English is: Collapse",
@@ -51,12 +49,18 @@
     "editor.saveVersionMessage5": "Missing. English is: You cannot 'unpublish' once a document has been made public.",
     "editor.saveVersionMessage6": "Missing. English is: By publishing, you agree to a Creative Commons By license for your work.",
     "editor.publishMessage7": "Missing. English is: A description is required.",
+    "group.groupWillLiveAt": "Missing. English is: Group will live at",
     "group.createGroup": "Missing. English is: Create Group",
     "group.urlUsed": "Missing. English is: Group URL is already used",
     "group.journalNameRequired": "Missing. English is: A group name is required",
     "group.subdomainRequired": "Missing. English is: A group URL is required",
+    "group.addNewMember": "Missing. English is: Add new member",
+    "group.addNewAdmin": "Missing. English is: Add new admin",
+    "group.background": "Missing. English is: Background CSS",
     "journal.global": "Same as English: Global",
     "journal.autoFeature": "Missing. English is: Automatically Feature Pubs on Submission",
+    "asset.mustBeLogged": "Missing. English is: Must be Logged In",
+    "asset.dragToAdd": "Missing. English is: Drag files to this window to quickly add",
     "pubMeta.inviteMessage": "Missing. English is: Do you know someone who might have a have an interesting opinion on this paper? Invite them to join the discussion! We will send them a message and help them create accounts.",
     "pub.unpublishedNotification": "Missing. English is: This pub is unpublished, and thus only accessible to collaborators.",
     "pub.RequestReview": "Missing. English is: Request Review",
@@ -98,6 +102,9 @@
     "editor.saveVersionMessage4": "Missing. English is: Publishing your work will make your pub public.",
     "editor.saveVersionMessage5": "Missing. English is: You cannot 'unpublish' once a document has been made public.",
     "editor.saveVersionMessage6": "Missing. English is: By publishing, you agree to a Creative Commons By license for your work.",
+    "group.addNewMember": "Missing. English is: Add new member",
+    "group.addNewAdmin": "Missing. English is: Add new admin",
+    "group.background": "Missing. English is: Background CSS",
     "pub.unpublishedNotification": "Missing. English is: This pub is unpublished, and thus only accessible to collaborators."
   }
 }

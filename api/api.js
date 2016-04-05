@@ -4,7 +4,7 @@
 const mongoose = require('mongoose');
 
 if (process.env.NODE_ENV !== 'production') {
-	const mongoURI = require('./authentication/mongoCredentials').mongoURI;
+	const mongoURI = require('./config').mongoURI;
 	mongoose.connect(mongoURI);
 } else {
 	mongoose.connect(process.env.mongoURI);

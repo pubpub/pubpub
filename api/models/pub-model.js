@@ -271,18 +271,6 @@ pubSchema.statics.getPubEdit = function(slug, readerID, readerGroups, readerAdmi
 			isReader = false;
 		}
 
-		// Once authorized, it doesn't seem like we need to provide any data to the editor
-		// That will likely change when we implement better authentication for the firepad
-		// This will change when we have to pass down status to the editor. Once you publish peer-review-ready
-		// You can go and publish draft...
-
-		// We gotta pass down discussions if we want to show in editor
-		// const options = [
-			// { path: 'discussions.author', select: '_id username name firstName lastName thumbnail', model: 'User'},
-			// { path: 'discussions.selections', model: 'Highlight'},
-			// { path: 'editorComments.author', select: '_id username name firstName lastName thumbnail', model: 'User'},
-			// { path: 'editorComments.selections', model: 'Highlight'},
-		// ];
 
 		// this.populate(pub, options, (err, populatedPub)=> {
 		if (err) { return callback(err, null); }
@@ -294,11 +282,6 @@ pubSchema.statics.getPubEdit = function(slug, readerID, readerGroups, readerAdmi
 		outputPub.discussions = Discussion.calculateYayNayScore(outputPub.discussions);
 		outputPub.discussions = Discussion.sortDiscussions(outputPub.discussions);
 		outputPub.discussions = Discussion.nestChildren(outputPub.discussions);
-
-			// outputPub.editorComments = Discussion.appendUserYayNayFlag(outputPub.editorComments, readerID);
-			// outputPub.editorComments = Discussion.calculateYayNayScore(outputPub.editorComments);
-			// outputPub.editorComments = Discussion.sortDiscussions(outputPub.editorComments);
-			// outputPub.editorComments = Discussion.nestChildren(outputPub.editorComments);
 
 		return callback(null, outputPub);
 		// });

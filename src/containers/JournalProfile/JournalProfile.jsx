@@ -4,11 +4,14 @@ import { Link } from 'react-router';
 import { pushState } from 'redux-router';
 import Radium from 'radium';
 import Helmet from 'react-helmet';
-import {getJournal, saveJournal, createCollection, clearCollectionRedirect} from 'actions/journal';
-import {follow, unfollow, toggleVisibility} from 'actions/login';
-import {LoaderDeterminate} from 'components';
-import {JournalDesign, JournalCurate, JournalMain, JournalSettings} from './components';
-import {NotFound} from 'containers';
+import {getJournal, saveJournal, createCollection, clearCollectionRedirect} from './actions';
+import {follow, unfollow, toggleVisibility} from 'containers/Login/actions';
+import {LoaderDeterminate, NotFound} from 'components';
+import JournalDesign from './JournalDesign';
+import JournalCurate from './JournalCurate';
+import JournalMain from './JournalMain';
+import JournalSettings from './JournalSettings';
+
 import {globalStyles, profileStyles, navStyles} from 'utils/styleConstants';
 
 import {globalMessages} from 'utils/globalMessages';
@@ -30,7 +33,7 @@ const JournalAdmin = React.createClass({
 			// If there is a baseSubdomain, that means we're on a journal. If baseSubdomain is null, that means we're on pubpub.
 			// Only fetch if we're on pubpub - otherwise, the journalData we display is the data for that journal.
 			// Elsewhere, we render default pubpub styling by checking for null baseSubdomain (or maybe it's sourced from the backend, with null kept as subdomain field)
-			if (getState().journal.get('baseSubdomain') === null && getState().journal.getIn(['journalData', 'subdomain']) !== routerParams.subdomain) {
+			if (getState().journal.getIn(['journalData', 'subdomain']) !== routerParams.subdomain) {
 				return dispatch(getJournal(routerParams.subdomain));
 			}
 			return ()=>{};
@@ -81,14 +84,13 @@ const JournalAdmin = React.createClass({
 	render: function() {
 		const metaData = {};
 		metaData.title = 'Journal';
-
 		return (
 			<div style={profileStyles.profilePage}>
 
 				<Helmet {...metaData} />
 
 				{
-					(this.props.subdomain !== this.props.journalData.get('baseSubdomain') && this.props.journalData.get('baseSubdomain') !== null) || (this.props.mode && !this.props.journalData.getIn(['journalData', 'isAdmin']))
+					this.props.mode && !this.props.journalData.getIn(['journalData', 'isAdmin'])
 						? <NotFound />
 						: <div style={profileStyles.profileWrapper}>
 

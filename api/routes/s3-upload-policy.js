@@ -3,19 +3,18 @@ const crypto = require('crypto');
 
 const awsDetails = {};
 if (process.env.NODE_ENV !== 'production') {
-	// import {access_key_aws, secret_key_aws} from '../authentication/awsCredentials';
-	awsDetails.access_key_aws = require('../authentication/awsCredentials').access_key_aws;
-	awsDetails.secret_key_aws = require('../authentication/awsCredentials').secret_key_aws;
+	awsDetails.accessKeyAws = require('../config').accessKeyAws;
+	awsDetails.secretKeyAws = require('../config').secretKeyAws;
 } else {
-	awsDetails.access_key_aws = process.env.access_key_aws;
-	awsDetails.secret_key_aws = process.env.secret_key_aws;
+	awsDetails.accessKeyAws = process.env.accessKeyAws;
+	awsDetails.secretKeyAws = process.env.secretKeyAws;
 }
 
 app.get('/uploadPolicy', function(req, res) {
 	// if(req.user){
 	const s3 = {
-		access_key: awsDetails.access_key_aws,
-		secret_key: awsDetails.secret_key_aws,
+		access_key: awsDetails.accessKeyAws,
+		secret_key: awsDetails.secretKeyAws,
 		bucket: 'pubpub-upload',
 		acl: 'public-read',
 		https: 'false',

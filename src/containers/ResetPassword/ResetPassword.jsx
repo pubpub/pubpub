@@ -2,12 +2,12 @@ import React, { PropTypes } from 'react';
 import {connect} from 'react-redux';
 import Radium from 'radium';
 import Helmet from 'react-helmet';
-import {NotFound} from 'containers';
-import {checkHash, resetPassword, submitResetRequest} from '../../actions/resetPassword';
-import {toggleVisibility} from '../../actions/login';
+
+import {checkHash, resetPassword, submitResetRequest} from './actions';
+import {toggleVisibility} from 'containers/Login/actions';
 import {globalStyles} from 'utils/styleConstants';
 
-import {LoaderIndeterminate} from 'components';
+import {LoaderIndeterminate, NotFound} from 'components';
 
 // import {globalMessages} from 'utils/globalMessages';
 // import {FormattedMessage} from 'react-intl';
@@ -25,7 +25,7 @@ const ResetPassword = React.createClass({
 	statics: {
 		fetchData: function(getState, dispatch, location, routeParams) {
 			if (routeParams.hash) {
-				return dispatch(checkHash(routeParams.hash, routeParams.username));	
+				return dispatch(checkHash(routeParams.hash, routeParams.username));
 			}
 			return ()=>{};
 		}
@@ -61,7 +61,7 @@ const ResetPassword = React.createClass({
 					? null
 					: <div style={styles.header}>Password Reset</div>
 				}
-				
+
 				<div style={styles.content}>
 
 					<div style={styles.loaderWrapper}>
@@ -70,12 +70,12 @@ const ResetPassword = React.createClass({
 							: null
 						}
 					</div>
-					
+
 					{this.props.hash
 						? <div>
 							{(()=>{
 								switch (this.props.resetData.get('resetSuccess')) {
-								case 'success': 
+								case 'success':
 									return (
 										<div>
 											<div style={styles.detail}>Password Reset successful!</div>
@@ -84,7 +84,7 @@ const ResetPassword = React.createClass({
 									);
 								case 'invalid':
 									return <NotFound />;
-								case 'valid': 
+								case 'valid':
 									return (
 										<form onSubmit={this.resetPasswordSubmit}>
 											<input style={styles.input} type="password" ref={'resetPassword'} placeholder={'new password'}/>
@@ -99,7 +99,7 @@ const ResetPassword = React.createClass({
 						: <div>
 							{(()=>{
 								switch (this.props.resetData.get('requestSuccess')) {
-								case 'success': 
+								case 'success':
 									return (
 										<div>
 											<div style={styles.detail}>Password Reset Request Submitted.</div>
@@ -124,7 +124,7 @@ const ResetPassword = React.createClass({
 						</div>
 					}
 				</div>
-				
+
 			</div>
 		);
 	}
@@ -150,7 +150,7 @@ styles = {
 			padding: '0px 20px',
 			maxWidth: '100%',
 		},
-	},	
+	},
 	header: {
 		color: globalStyles.sideText,
 		padding: '20px 0px',

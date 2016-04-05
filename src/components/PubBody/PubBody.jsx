@@ -1,20 +1,18 @@
 import React, {PropTypes} from 'react';
 import Radium, {Style} from 'radium';
 import {globalStyles} from 'utils/styleConstants';
-import {PubSelectionPopup, Reference, License} from 'components';
+import {Markdown, SelectionPopup, Reference, License} from 'components';
 // import { Link } from 'react-router';
-import {loadCss} from 'utils/loadingFunctions';
+// import {loadCss} from 'utils/loadingFunctions';
 // import {scienceStyle, magazineStyle} from './pubStyles';
 // import cssConvert from 'utils/cssToRadium';
-import ResizingText from './ResizingText';
-import dateFormat from 'dateformat';
+import ResizingText from 'utils/ResizingText';
+// import dateFormat from 'dateformat';
 
 import {globalMessages} from 'utils/globalMessages';
 import {parsePluginString} from 'utils/parsePlugins';
 
 import {FormattedMessage} from 'react-intl';
-
-import PPMComponent from 'markdown/PPMComponent';
 
 let styles = {};
 
@@ -23,52 +21,23 @@ const PubBody = React.createClass({
 		status: PropTypes.string,
 		isPublished: PropTypes.bool,
 		isPage: PropTypes.bool,
-		// title: PropTypes.string,
-		// abstract: PropTypes.string,
-		// authorsNote: PropTypes.string,
-		// htmlTree: PropTypes.array,
 		markdown: PropTypes.string,
-		// authors: PropTypes.array,
 		addSelectionHandler: PropTypes.func,
-		// style: PropTypes.object,
-
 		styleScoped: PropTypes.string,
-
 		showPubHighlights: PropTypes.bool,
-		showPubHighlightsComments: PropTypes.bool,
 		isFeatured: PropTypes.bool,
 		errorView: PropTypes.bool,
-
-		// assetsObject: PropTypes.object,
-		// referencesObject: PropTypes.object,
-		// selectionsArray: PropTypes.array,
-
-		references: PropTypes.array,
-
 		minFont: PropTypes.number,
 		maxFont: PropTypes.number,
-
-		// firstPublishedDate: PropTypes.string,
-		// lastPublishedDate: PropTypes.string,
 
 	},
 	getDefaultProps: function() {
 		return {
-			// htmlTree: [],
-			// authors: [],
-			// text: '',
-			// style: {
-			// 	type: 'science',
-			// 	googleFontURL: undefined,
-			// 	cssObjectString: {},
-			// },
 		};
 	},
 
 	getInitialState() {
 		return {
-			// htmlTree: [],
-			// TOC: []
 		};
 	},
 
@@ -190,8 +159,8 @@ const PubBody = React.createClass({
 	render: function() {
 
 		const footnotes = (this.props.markdown) ? this.findFootnotes(this.props.markdown) : [];
-		const indexedCitations = (this.props.markdown) ? this.findReferences(this.props.markdown) : [];
-		const sortedReferences = this.props.references.sort((refA, refB) => { return indexedCitations[refA.refName] - indexedCitations[refB.refName]; } );
+		// const indexedCitations = (this.props.markdown) ? this.findReferences(this.props.markdown) : [];
+		// const sortedReferences = this.props.references.sort((refA, refB) => { return indexedCitations[refA.refName] - indexedCitations[refB.refName]; } );
 
 		return (
 			<ResizingText
@@ -247,10 +216,10 @@ const PubBody = React.createClass({
 						{/* <div id={'pub-header-divider'}></div> */}
 
 						<div id="pubBodyContent"> {/* Highlights are dependent on the id 'pubBodyContent' */}
-							<PPMComponent markdown={this.props.markdown} isPage={this.props.isPage}/>
+							<Markdown markdown={this.props.markdown} isPage={this.props.isPage}/>
 
 							{this.props.addSelectionHandler
-								? <PubSelectionPopup addSelectionHandler={this.props.addSelectionHandler}/>
+								? <SelectionPopup addSelectionHandler={this.props.addSelectionHandler}/>
 								: null
 							}
 
@@ -272,7 +241,7 @@ const PubBody = React.createClass({
 						: null
 						}
 
-						{this.props.references && this.props.references.length
+						{/* this.props.references && this.props.references.length
 							? <div id={'pub-references'}>
 								<h1><FormattedMessage {...globalMessages.references}/></h1>
 								{
@@ -288,7 +257,7 @@ const PubBody = React.createClass({
 
 							</div>
 							: null
-						}
+						*/ }
 
 						{this.props.isFeatured && !this.props.errorView && this.props.isPublished && !this.props.isPage
 							? <div id="pub-license"><License /></div>

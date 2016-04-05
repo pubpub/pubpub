@@ -2,7 +2,7 @@ import React, { PropTypes } from 'react';
 import {connect} from 'react-redux';
 import Radium, {Style} from 'radium';
 import {LoaderIndeterminate} from 'components';
-import {complete, completeFromCache, clear} from 'actions/autocomplete';
+import {complete, completeFromCache, clear} from './actions';
 
 let styles = {};
 
@@ -53,7 +53,7 @@ const Autocomplete = React.createClass({
 		if (this.props.hideResultsOnClickOut === true) {
 			document.documentElement.addEventListener('click', this.handleClicks);
 		}
-		
+
 	},
 
 	componentWillUnmount: function() {
@@ -72,12 +72,12 @@ const Autocomplete = React.createClass({
 
 	handleOnChange: function(event) {
 		this.setState({inputString: event.target.value});
-		
+
 		const cachePath = [this.props.autocompleteKey, 'cache', event.target.value];
 		return this.props.autocompleteData.hasIn(cachePath) === true
 			? this.props.dispatch(completeFromCache(this.props.autocompleteKey, event.target.value, this.props.autocompleteData.getIn(cachePath)))
 			: this.props.dispatch(complete(this.props.autocompleteKey, this.props.route, event.target.value));
-		
+
 	},
 
 	containerStyle: function() {
@@ -126,10 +126,10 @@ const Autocomplete = React.createClass({
 					},
 				}} />
 
-				<input id={'autocomplete-input'} type="text" 
-					placeholder={this.props.placeholder} 
-					style={[styles.input, this.inputStyle()]} 
-					onChange={this.handleOnChange} 
+				<input id={'autocomplete-input'} type="text"
+					placeholder={this.props.placeholder}
+					style={[styles.input, this.inputStyle()]}
+					onChange={this.handleOnChange}
 					value={this.state.inputString}/>
 
 				<div style={[styles.loader, this.loaderStyle()]}>

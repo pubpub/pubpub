@@ -7,10 +7,10 @@ import DiscussionsItem from './DiscussionsItem';
 import DiscussionsInput from './DiscussionsInput';
 
 // import Portal from 'react-portal';
-import {AssetLibrary} from 'containers';
+import {MediaLibrary} from 'containers';
 
-import {toggleVisibility} from 'actions/login';
-import {addDiscussion, discussionVoteSubmit, archiveDiscussion} from 'actions/discussions';
+import {toggleVisibility} from 'containers/Login/actions';
+import {addDiscussion, discussionVoteSubmit, archiveDiscussion} from './actions';
 
 import {redditHot as hotScore} from 'decay';
 
@@ -29,7 +29,7 @@ const Discussions = React.createClass({
 		pubData: PropTypes.object,
 		// editorData: PropTypes.object,
 		loginData: PropTypes.object,
-		journalData: PropTypes.object,
+		appData: PropTypes.object,
 
 		slug: PropTypes.string,
 		pathname: PropTypes.string,
@@ -40,7 +40,7 @@ const Discussions = React.createClass({
 	},
 	getInitialState() {
 		return {
-			showAssetLibrary: false,
+			showMediaLibrary: false,
 			assetLibraryCodeMirrorID: undefined,
 		};
 	},
@@ -79,7 +79,7 @@ const Discussions = React.createClass({
 			discussionObject.version = this.props.query.version !== undefined && this.props.query.version > 0 && this.props.query.version < (this.props.pubData.getIn(['pubData', 'history']).size - 1) ? this.props.query.version : this.props.pubData.getIn(['pubData', 'history']).size;
 		}
 		discussionObject.pub = this.props.pubData.getIn(['pubData', '_id']);
-		discussionObject.sourceJournal = this.props.journalData.getIn(['journalData', '_id']);
+		discussionObject.sourceJournal = this.props.appData.getIn(['journalData', '_id']);
 		this.props.dispatch(addDiscussion(discussionObject, activeSaveID));
 	},
 
@@ -119,22 +119,21 @@ const Discussions = React.createClass({
 		return hotScore(yays, nays, timestamp);
 	},
 
-	toggleAssetLibrary: function(codeMirrorID) {
+	toggleMediaLibrary: function(codeMirrorID) {
 		return ()=>{
 			if (!this.props.loginData.get('loggedIn')) {
 				return this.props.dispatch(toggleVisibility());
 			}
-			console.log(codeMirrorID);
 			this.setState({
-				showAssetLibrary: !this.state.showAssetLibrary,
+				showMediaLibrary: !this.state.showMediaLibrary,
 				assetLibraryCodeMirrorID: codeMirrorID
 			});
 		};
 
 	},
-	closeAssetLibrary: function() {
+	closeMediaLibrary: function() {
 		this.setState({
-			showAssetLibrary: false,
+			showMediaLibrary: false,
 			assetLibraryCodeMirrorID: undefined,
 		});
 	},
@@ -150,7 +149,7 @@ const Discussions = React.createClass({
 		const isPubAuthor = this.props.pubData.getIn(['pubData', 'isAuthor']);
 		const isPublished = this.props.pubData.getIn(['pubData', 'isPublished']);
 
-		const userAssets = this.props.loginData.getIn(['userData', 'assets']).toJS() || [];
+		const userAssets = this.props.loginData.getIn(['userData', 'assets']) ? this.props.loginData.getIn(['userData', 'assets']).toJS() : [];
 
 		discussionsData.sort(function(aIndex, bIndex) { return this.getHotness(bIndex) - this.getHotness(aIndex); }.bind(this));
 		return (
@@ -163,18 +162,18 @@ const Discussions = React.createClass({
 				}} />
 
 				<div>
-					<div className="modal-splash" onClick={this.closeAssetLibrary} style={[styles.modalSplash, this.state.showAssetLibrary && styles.modalSplashActive]}></div>
-					<div style={[styles.assetLibraryWrapper, this.state.showAssetLibrary && styles.assetLibraryWrapperActive]}>
-						{this.state.showAssetLibrary
-							? <AssetLibrary
-								closeLibrary={this.closeAssetLibrary}
+					<div className="modal-splash" onClick={this.closeMediaLibrary} style={[styles.modalSplash, this.state.showMediaLibrary && styles.modalSplashActive]}></div>
+					<div style={[styles.assetLibraryWrapper, this.state.showMediaLibrary && styles.assetLibraryWrapperActive]}>
+						{this.state.showMediaLibrary
+							? <MediaLibrary
+								closeLibrary={this.closeMediaLibrary}
 								codeMirrorInstance={document.getElementById(this.state.assetLibraryCodeMirrorID).childNodes[0].CodeMirror} />
 							: null
 						}
 					</div>
 				</div>
 
-				<div className="pub-discussions-wrapper" style={styles.sectionWrapper}>
+				<div id="pub-discussions-wrapper" className="pub-discussions-wrapper" style={styles.sectionWrapper}>
 					{this.props.pubData.getIn(['pubData', 'referrer', 'name'])
 						? <div>{this.props.pubData.getIn(['pubData', 'referrer', 'name'])} invites you to comment!</div>
 						: null
@@ -194,7 +193,7 @@ const Discussions = React.createClass({
 							codeMirrorID={'rootCommentInput'}
 							isPublished={isPublished}
 							userAssets={userAssets}
-							toggleAssetLibrary={this.toggleAssetLibrary}/>
+							toggleMediaLibrary={this.toggleMediaLibrary}/>
 					}
 
 					{
@@ -215,7 +214,7 @@ const Discussions = React.createClass({
 									handleVoteSubmit={this.discussionVoteSubmit}
 									handleArchive={this.archiveDiscussion}
 									isPublished={isPublished}
-									toggleAssetLibrary={this.toggleAssetLibrary}/>
+									toggleMediaLibrary={this.toggleMediaLibrary}/>
 
 								: <div style={styles.emptyContainer}>No Discussions Found</div>
 							);
@@ -238,10 +237,11 @@ const Discussions = React.createClass({
 
 export default connect( state => {
 	return {
+		appData: state.app,
 		pubData: state.pub,
 		loginData: state.login,
 		discussionsData: state.discussions,
-		journalData: state.journal,
+
 		slug: state.router.params.slug,
 		pathname: state.router.location.pathname,
 		query: state.router.location.query,
@@ -266,6 +266,7 @@ styles = {
 		textAlign: 'center',
 	},
 	sectionWrapper: {
+		transition: '.5s ease-in-out transform',
 		margin: '10px 0px 30px 0px',
 	},
 	modalSplash: {
