@@ -60,7 +60,7 @@ function Widget(cm, from, to, pluginType, info, clickHandler) {
 		});
 	}
 
-	cm.setCursor(to);
+	cm.setCursor({line: to.line, ch: to.ch + 1});
 	cm.refresh();
 }
 

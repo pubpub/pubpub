@@ -114,7 +114,6 @@ const PubBody = React.createClass({
 
 		const footnotes = (this.props.markdown) ? this.findFootnotes(this.props.markdown) : [];
 		const sortedReferences = (this.props.markdown) ? this.findReferences(this.props.markdown) : [];
-		console.log(sortedReferences);
 		// const sortedReferences = this.props.references.sort((refA, refB) => { return indexedCitations[refA.refName] - indexedCitations[refB.refName]; } );
 
 		return (
@@ -136,7 +135,8 @@ const PubBody = React.createClass({
 							: null
 						}
 
-						{/* this.props.firstPublishedDate !== this.props.lastPublishedDate
+						{
+							/* this.props.firstPublishedDate !== this.props.lastPublishedDate
 							? <div id={'pub-dates'}>
 								<span><FormattedMessage {...globalMessages.firstPublished}/> </span>
 								{dateFormat(this.props.firstPublishedDate, 'mmm dd, yyyy')}

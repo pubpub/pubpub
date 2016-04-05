@@ -91,8 +91,8 @@ function convertHighlight(discussion, selection) {
 		endOffset: selection.endOffset,
 		startContainerPath: selection.startContainerPath,
 		startOffset: selection.startOffset,
-		sourcePub: selection.pub._id,
-		sourceVersion: selection.pub.version,
+		sourcePub: selection.pub,
+		sourceVersion: selection.version,
 		index: selection.index,
 	};
 
