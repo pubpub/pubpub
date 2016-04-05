@@ -218,14 +218,14 @@ const AppBody = React.createClass({
 							<div style={styles.footerHeader}>Explore</div>
 							<Link style={globalStyles.link} to={'/pubs'}><div style={styles.footerItem}>Pubs</div></Link>
 							<Link style={globalStyles.link} to={'/journals'}><div style={styles.footerItem}>Journals</div></Link>
-							<Link style={globalStyles.link} to={'/'}><div style={styles.footerItem}>Random Pub</div></Link>
+							<Link style={globalStyles.link} to={'/pub/' + this.props.appData.getIn(['journalData', 'randomSlug'])}><div style={styles.footerItem}>Random Pub</div></Link>
 						</div>
 
 						<div style={styles.footerColumn}>
 							<div style={styles.footerHeader}>Contact</div>
-							<Link style={globalStyles.link} to={'mailto:pubpub@media.mit.edu'}><div style={styles.footerItem}>Email</div></Link>
-							<Link style={globalStyles.link} to={'https://twitter.com/pubpub'}><div style={styles.footerItem}>Twitter</div></Link>
-							<a style={globalStyles.link} href="http://eepurl.com/bLkuVn"><div style={styles.footerItem}>Mailing List</div></a>
+							<a style={globalStyles.link} href={'mailto:pubpub@media.mit.edu'}><div style={styles.footerItem}>Email</div></a>
+							<a style={globalStyles.link} href={'https://twitter.com/pubpub'}><div style={styles.footerItem}>Twitter</div></a>
+							<a style={globalStyles.link} href={'http://eepurl.com/bLkuVn'}><div style={styles.footerItem}>Mailing List</div></a>
 						</div>
 
 						<div style={styles.footerColumn}>
