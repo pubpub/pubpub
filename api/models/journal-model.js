@@ -97,16 +97,16 @@ journalSchema.statics.populationObject = function(collectionsOnly, pubsOnly) {
 					model: 'User',
 					select: 'name firstName lastName username thumbnail',
 				},
-				{
-					path: 'discussions',
-					model: 'Discussion',
-					select: 'markdown author createDate',
-					populate: {
-						path: 'author',
-						model: 'User',
-						select: 'name firstName lastName username thumbnail',
-					},
-				}
+				// {
+				// 	path: 'discussions',
+				// 	model: 'Discussion',
+				// 	select: 'markdown author createDate',
+				// 	populate: {
+				// 		path: 'author',
+				// 		model: 'User',
+				// 		select: 'name firstName lastName username thumbnail',
+				// 	},
+				// }
 			],
 		},
 		{
@@ -118,16 +118,16 @@ journalSchema.statics.populationObject = function(collectionsOnly, pubsOnly) {
 					model: 'User',
 					select: 'name firstName lastName username thumbnail',
 				},
-				{
-					path: 'discussions',
-					model: 'Discussion',
-					select: 'markdown author createDate',
-					populate: {
-						path: 'author',
-						model: 'User',
-						select: 'name firstName lastName username thumbnail',
-					},
-				}
+				// {
+				// 	path: 'discussions',
+				// 	model: 'Discussion',
+				// 	select: 'markdown author createDate',
+				// 	populate: {
+				// 		path: 'author',
+				// 		model: 'User',
+				// 		select: 'name firstName lastName username thumbnail',
+				// 	},
+				// }
 			],
 		}
 	];

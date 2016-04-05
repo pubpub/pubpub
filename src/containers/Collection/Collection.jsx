@@ -25,9 +25,6 @@ const Collection = React.createClass({
 		dispatch: PropTypes.func
 	},
 
-	statics: {
-
-	},
 
 	// journalSave: function(newObject) {
 	// 	this.props.dispatch(saveJournal(this.props.subdomain, newObject));

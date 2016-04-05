@@ -33,6 +33,10 @@ import {
 
 } from './actions';
 
+import {
+	LOAD_APP_AND_LOGIN_SUCCESS,
+} from 'containers/App/actions';
+
 /*--------*/
 // Initialize Default State
 /*--------*/
@@ -193,6 +197,15 @@ function loadJournalFail(state, error) {
 	});
 }
 
+function loadAppSuccess(state, journalData) {
+	// console.log('in success', journalData);
+	return state.merge({
+		status: 'loaded',
+		error: null,
+		journalData
+	});
+}
+
 /*--------*/
 // Bind actions to specific reducing functions.
 /*--------*/
@@ -244,6 +257,8 @@ export default function loginReducer(state = defaultState, action) {
 	case CLEAR_COLLECTION_REDIRECT:
 		return clearCollectionRedirect(state);
 
+	case LOAD_APP_AND_LOGIN_SUCCESS:
+		return loadAppSuccess(state, action.result.journalData);
 	default:
 		return ensureImmutable(state);
 	}

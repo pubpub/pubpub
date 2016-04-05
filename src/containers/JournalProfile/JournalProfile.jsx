@@ -22,6 +22,7 @@ let styles = {};
 const JournalAdmin = React.createClass({
 	propTypes: {
 		journalData: PropTypes.object,
+		appData: PropTypes.object,
 		loginData: PropTypes.object,
 		subdomain: PropTypes.string,
 		mode: PropTypes.string,
@@ -90,7 +91,7 @@ const JournalAdmin = React.createClass({
 				<Helmet {...metaData} />
 
 				{
-					this.props.mode && !this.props.journalData.getIn(['journalData', 'isAdmin'])
+					(this.props.subdomain !== this.props.appData.get('baseSubdomain') && this.props.appData.get('baseSubdomain') !== null) || (this.props.mode && !this.props.journalData.getIn(['journalData', 'isAdmin']))
 						? <NotFound />
 						: <div style={profileStyles.profileWrapper}>
 
@@ -189,6 +190,7 @@ export default connect( state => {
 	return {
 		loginData: state.login,
 		journalData: state.journal,
+		appData: state.app,
 		subdomain: state.router.params.subdomain,
 		mode: state.router.params.mode,
 		query: state.router.location.query,

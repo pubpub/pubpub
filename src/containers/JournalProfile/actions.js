@@ -74,7 +74,7 @@ export function createCollection(subdomain, newCollectionObject) {
 
 export function saveCollection(subdomain, slug, newCollectionObject) {
 	return {
-		types: [CREATE_COLLECTION, CREATE_COLLECTION_SUCCESS, CREATE_COLLECTION_FAIL],
+		types: [SAVE_COLLECTION, SAVE_COLLECTION_SUCCESS, SAVE_COLLECTION_FAIL],
 		promise: (client) => client.post('/saveCollection', {data: {subdomain: subdomain, slug: slug, newCollectionObject: newCollectionObject}}),
 	};
 }

@@ -22,6 +22,10 @@ import {
 
 } from 'containers/Login/actions';
 
+import {
+	SAVE_JOURNAL_SUCCESS,
+} from 'containers/JournalProfile/actions';
+
 /*--------*/
 // Initialize Default State
 /*--------*/
@@ -107,6 +111,12 @@ function logoutLoad(state) {
 		},
 	});
 }
+
+function saveJournalSuccess(state, journalData) {
+	return state.merge({
+		journalData
+	});
+}
 /*--------*/
 // Bind actions to specific reducing functions.
 /*--------*/
@@ -129,6 +139,8 @@ export default function appReducer(state = defaultState, action) {
 		return loginLoad(state, action.result);
 	case LOGOUT_LOAD_SUCCESS:
 		return logoutLoad(state);
+	case SAVE_JOURNAL_SUCCESS:
+		return saveJournalSuccess(state, action.result);
 	default:
 		return ensureImmutable(state);
 	}

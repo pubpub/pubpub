@@ -104,8 +104,6 @@
   "pub.unpublishedNotification": "This pub is unpublished, and thus only accessible to collaborators.",
   "pub.RequestReview": "Request Review",
   "pub.Expand": "Expand",
-  "pub.home": "Home",
-  "pub.randomPub": "Random Pub",
   "pub.readPub": "Read Pub",
   "pub.editPub": "Edit Pub",
   "user.changeImage": "Change Image",
