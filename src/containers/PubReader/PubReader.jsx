@@ -399,6 +399,7 @@ styles = {
 		margin: '0px 2%',
 		padding: '2px 0px',
 		border: '1px solid #444',
+		borderRadius: '2px',
 		textAlign: 'center',
 		fontSize: '12px',
 		':active': {
@@ -406,7 +407,7 @@ styles = {
 		},
 	},
 	readerLeft: {
-		padding: 10,
+		padding: '10px 15px',
 		width: 'calc(150px - 20px)',
 		position: 'absolute',
 		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {

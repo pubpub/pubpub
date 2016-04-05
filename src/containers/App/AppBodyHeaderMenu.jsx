@@ -134,9 +134,9 @@ const HeaderMenu = React.createClass({
 										}
 									</li>
 
-									<li key="menuListItem5" style={styles.menuItem} onClick={this.props.openPubModalHandler('tableOfContents')}>
+									{/* <li key="menuListItem5" style={styles.menuItem} onClick={this.props.openPubModalHandler('tableOfContents')}>
 										<FormattedMessage {...globalMessages.tableOfContents} />
-									</li>
+									</li> */}
 
 									<Link to={'/pub/' + this.props.slug + '/discussions'} style={globalStyles.link}>
 										<li key="menuListItem7" style={styles.menuItem} onClick={this.props.openPubModalHandler('discussions')}>

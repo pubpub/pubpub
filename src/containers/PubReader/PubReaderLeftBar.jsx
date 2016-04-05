@@ -42,8 +42,8 @@ const PubLeftBar = React.createClass({
 			{label: 'Read', metaPath: undefined},
 			{label: 'Edit', metaPath: 'draft'},
 			{label: 'Discussions', metaPath: 'discussions'},
-			{label: 'Journals', metaPath: 'journals'},
-			{label: 'History', metaPath: 'history'},
+			{label: <span><FormattedMessage {...globalMessages.Journals} /> <span style={styles.count}>({this.props.journalCount || 0})</span></span>, metaPath: 'journals'},
+			{label: <span><FormattedMessage {...globalMessages.history} /> <span style={styles.count}>({this.props.historyCount || 0})</span></span>, metaPath: 'history'},
 			{label: 'Source', metaPath: 'source'},
 			// {label: 'Cite', metaPath: 'cite'},
 		];
@@ -128,8 +128,6 @@ const PubLeftBar = React.createClass({
 				{/* <Link style={globalStyles.link} to={'/pub/' + this.props.slug + '/source' + versionURL}><div key={'leftBar4'} style={styles.detail}>
 					<FormattedMessage {...globalMessages.source} />
 				</div></Link> */}
-
-
 
 				{/* <div style={styles.leftBarDivider}></div> */}
 

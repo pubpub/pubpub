@@ -229,7 +229,7 @@ const PubDiscussionsInput = React.createClass({
 				</div>
 
 				<div style={styles.inputBox(this.state.expanded)}>
-					<div style={styles.inputMenuWrapper}>
+					<div style={[styles.inputMenuWrapper, this.state.expanded && styles.inputMenuWrapperActive]}>
 						<Menu items={menuItems} customClass={'discussionInputMenu'} height={'20px'} fontSize={'0.9em'} fontWeight={'400'}/>
 					</div>
 
@@ -346,6 +346,10 @@ styles = {
 	inputMenuWrapper: {
 		borderBottom: '1px solid #ccc',
 		marginBottom: '10px',
+		opacity: .2,
+	},
+	inputMenuWrapperActive: {
+		opacity: 1,
 	},
 	inputBottomLine: {
 		// backgroundColor: 'rgba(255,0,100,0.1)',

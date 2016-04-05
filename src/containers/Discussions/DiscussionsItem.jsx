@@ -246,7 +246,7 @@ styles = {
 		width: '100%',
 		// overflow: 'hidden',
 		margin: '15px 0px 10px 0px',
-		backgroundColor: 'rgba(255,255,255,0.2)',
+		// backgroundColor: 'rgba(255,255,255,0.2)',
 		clear: 'both',
 	},
 	archived: {
@@ -261,7 +261,7 @@ styles = {
 		padding: '0px 10px',
 		fontSize: '12px',
 		backgroundColor: 'rgba(255,255,255,0.2)',
-		borderBottom: '1px solid #eee',
+		borderBottom: '1px solid #DDD',
 		':hover': {
 			color: '#444',
 			cursor: 'pointer',
@@ -326,8 +326,9 @@ styles = {
 	discussionBody: {
 		width: '100%',
 		position: 'relative',
-		borderBottom: '1px solid #eee',
-		overflow: 'hidden',
+		borderBottom: '1px solid #ddd',
+		// overflow: 'hidden',
+		wordWrap: 'break-word',
 	},
 	discussionVoting: {
 		width: '25px',
