@@ -141,10 +141,14 @@ const PubDiscussionsInput = React.createClass({
 
 	onFocus: function() {
 		this.setState({expanded: true});
+		window.clearTimeout(this.blurTimeout);
 	},
 	onBlur: function() {
 		if (this.cm.getValue().length === 0) {
-			this.setState({expanded: false});
+			this.blurTimeout = window.setTimeout(()=>{
+				this.setState({expanded: false});
+			}, 150);
+
 		}
 	},
 
@@ -228,8 +232,8 @@ const PubDiscussionsInput = React.createClass({
 					</div> */}
 				</div>
 
-				<div style={styles.inputBox(this.state.expanded)}>
-					<div style={[styles.inputMenuWrapper, this.state.expanded && styles.inputMenuWrapperActive]}>
+				<div style={styles.inputBox(this.state.expanded)} onClick={this.onFocus}>
+					<div style={[styles.inputMenuWrapper, styles.expanded(this.state.expanded, true)]}>
 						<Menu items={menuItems} customClass={'discussionInputMenu'} height={'20px'} fontSize={'0.9em'} fontWeight={'400'}/>
 					</div>
 
@@ -291,7 +295,7 @@ styles = {
 		const expandObj = {};
 		if (expand) {
 			expandObj.opacity = 1;
-			expandObj.transform = 'translateY(0px)';
+			expandObj.transform = 'none';
 		} else {
 			expandObj.opacity = 0;
 			expandObj.pointerEvents = 'none';
@@ -344,9 +348,11 @@ styles = {
 		height: 22,
 	},
 	inputMenuWrapper: {
-		borderBottom: '1px solid #ccc',
+		// borderBottom: '1px solid #ccc',
 		marginBottom: '10px',
 		opacity: 0,
+		position: 'absolute',
+		top: '6px',
 	},
 	inputMenuWrapperActive: {
 		opacity: 1,
@@ -360,7 +366,7 @@ styles = {
 		return {
 			backgroundColor: '#fff',
 			minHeight: 25,
-			padding: '0px 0px 10px 0px',
+			padding: '10px 0px 10px 0px',
 			// boxShadow: '0 1px 3px 0 rgba(0,0,0,.2),0 1px 1px 0 rgba(0,0,0,.14),0 2px 1px -1px rgba(0,0,0,.12)',
 			boxShadow: '0px 0px 2px rgba(0,0,0,0.4)',
 			margin: '5px auto',

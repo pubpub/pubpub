@@ -33,7 +33,7 @@ const DiscussionsItem = React.createClass({
 		handleVoteSubmit: PropTypes.func,
 		handleArchive: PropTypes.func,
 
-		toggleAssetLibrary: PropTypes.func,
+		toggleMediaLibrary: PropTypes.func,
 		// noPermalink: PropTypes.bool,
 		// noReply: PropTypes.bool,
 	},
@@ -203,7 +203,7 @@ const DiscussionsItem = React.createClass({
 								activeSaveID={this.props.activeSaveID}
 								isReply={true}
 								isPublished={this.props.isPublished}
-								toggleAssetLibrary={this.props.toggleAssetLibrary}/>
+								toggleMediaLibrary={this.props.toggleMediaLibrary}/>
 						</div>
 
 					}
@@ -225,7 +225,7 @@ const DiscussionsItem = React.createClass({
 									userThumbnail={this.props.userThumbnail}
 									handleVoteSubmit={this.props.handleVoteSubmit}
 									handleArchive={this.props.handleVoteSubmit}
-									toggleAssetLibrary={this.props.toggleAssetLibrary}/>
+									toggleMediaLibrary={this.props.toggleMediaLibrary}/>
 
 								);
 							})
