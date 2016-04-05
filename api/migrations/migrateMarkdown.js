@@ -7,7 +7,7 @@ import Pub from './oldModels/old-pub-model';
 import NewPub from '../models/pub-model';
 
 import User from '../models/user-model';
-import Discussion from '../models/discussion-model';
+import Discussion from './oldModels/old-discussion-model';
 
 import {refactorTitleFirebase, refactorTitleMongo} from './processors/titleRefactor';
 import widgetProcessor from './processors/widgetReplace';
