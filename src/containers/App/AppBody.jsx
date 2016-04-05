@@ -207,27 +207,31 @@ const AppBody = React.createClass({
 					<div style={{display: 'table', margin: '0 auto'}}>
 						<div style={styles.footerColumn}>
 							<div style={styles.footerHeader}>PubPub</div>
-							<div style={styles.footerItem}>About</div>
-							<div style={styles.footerItem}>Code</div>
-							<div style={styles.footerItem}>Jobs</div>
-							<div style={styles.footerItem}>Terms of Service</div>
-							<div style={styles.footerItem}>Privacy Policy</div>
-							<div style={styles.footerItem}>Twitter</div>
+							<Link style={globalStyles.link} to={'/'}><div style={styles.footerItem}>About</div></Link>
+							<Link style={globalStyles.link} to={'/pub/faq'}><div style={styles.footerItem}>FAQ</div></Link>
+							<a style={globalStyles.link} href={'https://github.com/pubpub/pubpub'}><div style={styles.footerItem}>Code</div></a>
+							<Link style={globalStyles.link} to={'/pub/jobs'}><div style={styles.footerItem}>Jobs</div></Link>
+
 						</div>
 
 						<div style={styles.footerColumn}>
 							<div style={styles.footerHeader}>Explore</div>
-							<div style={styles.footerItem}>Pubs</div>
-							<div style={styles.footerItem}>Journals</div>
-							<div style={styles.footerItem}>Random Pub</div>
+							<Link style={globalStyles.link} to={'/pubs'}><div style={styles.footerItem}>Pubs</div></Link>
+							<Link style={globalStyles.link} to={'/journals'}><div style={styles.footerItem}>Journals</div></Link>
+							<Link style={globalStyles.link} to={'/'}><div style={styles.footerItem}>Random Pub</div></Link>
 						</div>
 
 						<div style={styles.footerColumn}>
-							<div style={styles.footerHeader}>Support</div>
-							<div style={styles.footerItem}>FAQ</div>
-							<div style={styles.footerItem}>Publishing</div>
-							<div style={styles.footerItem}>Editing</div>
-							<div style={styles.footerItem}>Contact</div>
+							<div style={styles.footerHeader}>Contact</div>
+							<Link style={globalStyles.link} to={'mailto:pubpub@media.mit.edu'}><div style={styles.footerItem}>Email</div></Link>
+							<Link style={globalStyles.link} to={'https://twitter.com/pubpub'}><div style={styles.footerItem}>Twitter</div></Link>
+							<a style={globalStyles.link} href="http://eepurl.com/bLkuVn"><div style={styles.footerItem}>Mailing List</div></a>
+						</div>
+
+						<div style={styles.footerColumn}>
+							<div style={styles.footerHeader}>Terms</div>
+							<Link style={globalStyles.link} to={'/pub/tos'}><div style={styles.footerItem}>Terms of Service</div></Link>
+							<Link style={globalStyles.link} to={'/pub/privacy'}><div style={styles.footerItem}>Privacy Policy</div></Link>
 						</div>
 					</div>
 
@@ -361,11 +365,13 @@ styles = {
 		margin: '40px auto 0px auto',
 		borderTop: '1px solid #CCC',
 		padding: '40px 0px',
+		fontFamily: globalStyles.headerFont,
+		fontSize: '.9em',
 	},
 	footerColumn: {
 		display: 'table-cell',
 		width: '1px',
-		padding: '0px 20px',
+		padding: '0px 4vw',
 		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
 			width: '100%',
 			float: 'left',
@@ -373,9 +379,14 @@ styles = {
 	},
 	footerHeader: {
 		fontWeight: 'bold',
+		whiteSpace: 'nowrap',
+		paddingBottom: '2px',
+		marginBottom: '8px',
+		borderBottom: '1px solid #ccc',
 	},
 	footerItem: {
-		color: '#888',
+		color: '#333',
+		whiteSpace: 'nowrap',
 	},
 
 };

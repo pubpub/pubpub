@@ -178,7 +178,7 @@ const Landing = React.createClass({
 								<div style={globalStyles.clearFix}></div>
 							</div>
 
-							<div style={styles.footer}>
+							{/* <div style={styles.footer}>
 								<span style={styles.footerItem} key={'footerItem' + 0}><Link to={'/pub/about'} style={globalStyles.link}>About PubPub</Link></span>
 								<span style={styles.footerSeparator}>|</span>
 								<span style={styles.footerItem} key={'footerItem' + 1}><a target="_blank" style={globalStyles.link} href="http://www.twitter.com/isPubPub">@isPubPub</a></span>
@@ -186,7 +186,7 @@ const Landing = React.createClass({
 								<span style={styles.footerItem} key={'footerItem' + 2}><a target="_blank" style={globalStyles.link} href="http://eepurl.com/bLkuVn">Stay up to date</a></span>
 								<span style={styles.footerSeparator}>|</span>
 								<span style={styles.footerItem} key={'footerItem' + 3}><a target="_blank" style={globalStyles.link} href="mailto:pubpub@media.mit.edu">Contact</a></span>
-							 </div>
+							 </div> */}
 						</div>
 
 						: <div id={'pageContent'}>
