@@ -1,17 +1,18 @@
 require('babel-polyfill');
 
 // const env = (process.env.NODE_ENV === 'production' && location.hostname !== 'pubpub-dev.herokuapp.com') ? 'production' : 'development';
-const env = (process.env.NODE_ENV === 'production') ? 'production' : 'development';
+const heroku = (process.env.NODE_ENV === 'production');
+const env = (heroku) ? 'production' : 'development';
 
 const environment = {
 	development: {
 		isProduction: false,
 		// FireBaseURL: 'https://pubpub-dev.firebaseio.com/',
-		FireBaseURL: 'https://pubpub-migration.firebaseio.com/',
+		FireBaseURL: process.env.FIREBASE_URL || 'https://pubpub-migration.firebaseio.com/',
 	},
 	production: {
 		isProduction: true,
-		FireBaseURL: 'https://pubpub.firebaseio.com/'
+		FireBaseURL: process.env.FIREBASE_URL || 'https://pubpub.firebaseio.com/'
 	}
 }[env];
 
