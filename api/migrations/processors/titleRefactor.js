@@ -3,7 +3,7 @@
 
 	const headerMarkdown = `-----
 title: ${title}
-${(abstract) ? `abstract: ${abstract}` : null}
+${(abstract) ? `abstract: ${abstract}` : ''}
 ${authors.map((author) => {
 	return `author: ${author.username}\n\tname: ${author.name}\n`;
 }).join('')}
