@@ -1,18 +1,18 @@
-# PubPub 
+# PubPub
 
-Open Reading, Writing, and Publishing
+PubPub is a platform for open reading, writing, and publishing.
+For more details, see [http://www.pubpub.org/pub/about](http://www.pubpub.org/pub/about).
 
-## Installation
+## Getting Started
 
+PubPub can be run on your own local machines or controlled servers. There are a few external dependencies which must first be configured. See [/api/config.sample.js](/api/config.sample.js) to configure these services. We strive to make PubPub completely independent from any external proprietary services, but our team is still small, so for the moment it is necessary.
+
+Once the services are configured, run the following commands to install packages and run the dev server. Note, you will need [https://nodejs.org/en/download/](node and npm) installed on your machine:
 ```
 npm install
-```
-
-## Running Dev Server
-
-```
 npm run dev
 ```
+
 
 ## Building and Running Production Server
 
@@ -22,7 +22,7 @@ npm run start
 ```
 
 ## Deploying to Heroku
-
+For testing or production services, PubPub deploys easily to Heroku. A few config variables must be set:
 ```
 heroku create
 heroku config:set NODE_ENV=production
@@ -34,6 +34,7 @@ heroku ps:scale web=1
 ```
 
 # Docs
+...we need more work on our docs - coming very soon.
 - [All docs](/docs)
 - [API](/docs/api)
 
@@ -50,5 +51,3 @@ npm run test-karma  # test client code with karma (real browsers)
 ```
 
 [More on tests](/tests)
-
-

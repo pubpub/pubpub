@@ -1,8 +1,7 @@
 {
   "name": "PubPub",
-  "description": "PubPub Open Publishing",
-  "repository": "",
-  "logo": "",
+  "description": "Open Publishing",
+  "repository": "https://github.com/pubpub/pubpub.git",
   "keywords": [
     "PubPub",
     "MIT Media Lab"
