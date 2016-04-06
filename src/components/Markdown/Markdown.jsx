@@ -161,6 +161,9 @@ const Markdown = React.createClass({
 		case 'li':
 			props['data-hash'] = children[0] ? murmur.v2(children[0]) : 0;
 			break;
+		case 'a':
+			props['target'] = "_blank";
+			break;
 		case 'hr':
 			return <Component {...props} />;
 		case 'pubheader':
