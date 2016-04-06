@@ -1,6 +1,7 @@
 #pageContent {
 	color: #333;
 	font-family: 'Helvetica', Serif;
+	background-color: white;
 }
 
 #pageContent a{
@@ -141,7 +142,7 @@
 }
 
 #pageContent .pubList.noPubsText, #pageContent .collectionList.noCollectionsText {
-	
+
 }
 
 #pageContent .footer {
