@@ -162,7 +162,6 @@ const ImageCropperEditor = React.createClass({
 			document.addEventListener(deviceEvents.native.up, this.handleMouseUp, false);
 		}
 
-
 		// if (isTouchDevice) React.initializeTouchEvents(true);
 	},
 
@@ -231,7 +230,7 @@ const ImageCropperEditor = React.createClass({
 			const position = this.calculatePosition(image, border);
 			context.save();
 			context.globalCompositeOperation = 'destination-over';
-			context.drawImage(image.resource, position.x, position.y, position.width, position.height);
+			context.drawImage(image.resource, position.xloc, position.yloc, position.width, position.height);
 
 			context.restore();
 		}
@@ -343,7 +342,7 @@ const ImageCropperEditor = React.createClass({
 		evt.preventDefault();
 
 		if (evt.dataTransfer.files.length) {
-			console.log(evt);
+			// console.log(e);
 			this.props.onDropFile(evt);
 			const reader = new FileReader();
 			const file = evt.dataTransfer.files[0];
@@ -367,7 +366,7 @@ const ImageCropperEditor = React.createClass({
 		attributes[deviceEvents.react.drag] = this.handleDragOver;
 		attributes[deviceEvents.react.drop] = this.handleDrop;
 
-		return <canvas ref="canvas" {...attributes} />;
+		return <canvas ref={'canvas'} {...attributes} />;
 	}
 });
 
