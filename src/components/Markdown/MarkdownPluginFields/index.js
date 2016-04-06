@@ -4,6 +4,7 @@ import selectionField from './selectionField';
 import sizeField from './sizeField';
 import referenceField from './referenceField';
 import urlField from './urlField';
+import explainerField from './explainerField';
 
 import baseTextField from './baseTextField';
 import baseTextAreaField from './baseTextAreaField';
@@ -18,7 +19,8 @@ export default {
 	'size': sizeField,
 	'reference': referenceField,
 	'url': urlField,
-	'radio': baseRadioField
+	'radio': baseRadioField,
+	'explainer': explainerField,
 
 	// 'size' : (radio with small, medium, large and %),
 	// 'align' : (radio with left, right and full)
