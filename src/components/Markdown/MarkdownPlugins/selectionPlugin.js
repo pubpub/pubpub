@@ -82,10 +82,11 @@ const Plugin = React.createClass({
 
 				console.log(currentNode);
 
-
-
 				function ontheClick(evt) {
+					console.log(evt);
+					console.log('contains ', currentNode.contains(evt.target));
 					if (currentNode.contains(evt.target)) { return; }
+
 					console.log('inside the click');
 					currentNode.style.backgroundColor = '';
 					currentNode.style.position = '';
@@ -295,29 +296,31 @@ const Plugin = React.createClass({
 					}} />
 
 					{/* <span style={styles.quotationMark}>“</span> */}
-					{this.state.showContext
-						? <div>
-							<div style={styles.versionHeader}>
-								{parseInt(this.props.source.sourceVersion, 10) === 0
-									? <FormattedMessage id="discussion.selectionPreviousDraft" defaultMessage="Selection made on draft version"/>
-									: <FormattedMessage id="discussion.selectionPreviousVersion" defaultMessage="Selection made on Version {version}" values={{version: this.props.source.sourceVersion}}/>
-								}
-							</div>
-							{offsets[0] === null
-								? this.props.source.context
-								: <span>
-									{this.props.source.context.substring(0, offsets[0])}
-									<span style={styles.highlight}>{this.props.source.text}</span>
-									{this.props.source.context.substring(offsets[1], this.props.source.context.length)}
-								</span>
-							}
-							{this.state.canScroll
-								? <div style={styles.contextFooter} onClick={this.scrollToHighlight}><FormattedMessage id="discussion.selectionScrollToHighlight" defaultMessage="Scroll to highlight in Pub"/></div>
-								: null
+
+					{/* Show the context if this.state.showcontext is true */}
+					<div style={[this.state.showContext === false && {display: 'none'}]}>
+						<div style={styles.versionHeader}>
+							{parseInt(this.props.source.sourceVersion, 10) === 0
+								? <FormattedMessage id="discussion.selectionPreviousDraft" defaultMessage="Selection made on draft version"/>
+								: <FormattedMessage id="discussion.selectionPreviousVersion" defaultMessage="Selection made on Version {version}" values={{version: this.props.source.sourceVersion}}/>
 							}
 						</div>
-						: this.props.source.text
-					}
+						{offsets[0] === null
+							? this.props.source.context
+							: <span>
+								{this.props.source.context.substring(0, offsets[0])}
+								<span style={styles.highlight}>{this.props.source.text}</span>
+								{this.props.source.context.substring(offsets[1], this.props.source.context.length)}
+							</span>
+						}
+						{this.state.canScroll
+							? <div style={styles.contextFooter} onClick={this.scrollToHighlight}><FormattedMessage id="discussion.selectionScrollToHighlight" defaultMessage="Scroll to highlight in Pub"/></div>
+							: null
+						}
+					</div>
+
+					{/* Show just the highlight text if this.state.showcontext is false */}
+					<span style={[this.state.showContext === true && {display: 'none'}]}>this.props.source.text</span>
 
 			</div>
 		);

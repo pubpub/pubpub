@@ -36,9 +36,15 @@ const ReferenceRow = React.createClass({
 
 				{/* Type */}
 				<div style={[styles.type]}>
-					<span>{assetData.context.substring(0, assetData.context.indexOf(assetData.text))}</span>
-					<span style={styles.highlight}>{assetData.text}</span>
-					<span>{assetData.context.substring(assetData.context.indexOf(assetData.text) + assetData.text.length, assetData.context.length)}</span>
+					{assetData.context
+						? <span>
+							<span>{assetData.context.substring(0, assetData.context.indexOf(assetData.text))}</span>
+							<span style={styles.highlight}>{assetData.text}</span>
+							<span>{assetData.context.substring(assetData.context.indexOf(assetData.text) + assetData.text.length, assetData.context.length)}</span>
+						</span>
+						: <span>{assetData.text}</span>
+					}
+
 				</div>
 
 				{/* Insert Button */}

@@ -2,12 +2,12 @@
  function generateHeaderString({markdown, title, abstract, authorsNote, authors}) {
 
 	const headerMarkdown = `-----
+${(authorsNote) ? `authorsNote: ${authorsNote}` : '' }
 title: ${title}
 ${(abstract) ? `abstract: ${abstract}` : ''}
 ${authors.map((author) => {
 	return `author: ${author.username}\n\tname: ${author.name}\n`;
 }).join('')}
-${(authorsNote) ? `authorsNote: ${authorsNote}` : '' }
 -----
 `;
 

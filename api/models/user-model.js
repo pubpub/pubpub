@@ -77,7 +77,7 @@ userSchema.statics.generateUniqueUsername = function(fullname, callback) {
 userSchema.statics.getUser = function(username, readerID, callback) {
 	this.findOne({username: username})
 	.populate([
-		{path: 'pubs', select: 'title abstract slug collaborators settings status history'},
+		{path: 'pubs', select: 'title abstract slug collaborators history isPublished'},
 		{path: 'following.pubs', select: 'title abstract slug'},
 		{path: 'following.users', select: 'name username thumbnail'},
 		{path: 'following.journals', select: 'customDomain journalName subdomain'},
@@ -106,7 +106,7 @@ userSchema.statics.getUser = function(username, readerID, callback) {
 	for (let index = user.pubs.length; index--;) {
 
 		if (user.pubs[index].collaborators.canEdit.toString().split(',').indexOf(user._id.toString()) > -1) {
-			if (user.pubs[index].status === 'Unpublished') {
+			if (!user.pubs[index].isPublished) {
 				sortedPubs.unpublished.push(user.pubs[index]);
 			} else {
 				sortedPubs.published.push(user.pubs[index]);
