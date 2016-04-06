@@ -5,14 +5,14 @@ export function s3Upload(file, folderName, progressEvent, finishEvent, index) {
 		const formData = new FormData();
 
 		formData.append('key', filename);
-		formData.append('AWSAccessKeyId', 'AKIAJ5ELPUZ6MKEZGCOQ');
+		formData.append('AWSAccessKeyId', 'AKIAJUWJHTNGRRTA2GTQ');
 		formData.append('acl', 'public-read');
 		formData.append('policy', JSON.parse(this.responseText).policy);
 		formData.append('signature', JSON.parse(this.responseText).signature);
 		formData.append('Content-Type', fileType);
 		formData.append('success_action_status', '200');
 		formData.append('file', file);
-		
+
 		const sendFile = new XMLHttpRequest();
 		sendFile.upload.addEventListener('progress', (evt)=>{
 			progressEvent(evt, index);
