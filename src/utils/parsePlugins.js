@@ -8,7 +8,9 @@ export function parsePluginString(str) {
 	.replace(/\t/g, "\\t")
 	.replace(/\f/g, "\\f")
 	.replace(/\\*#/g, "#")
+	//.replace(/\\*l/g, "#")
 	.replace(/\\*&/g, "&");
+	//.replace(/\\*([^u\\])/g, function(match, p1) { return p1;});
 
 	try {
 		propDict = JSON.parse(str);
