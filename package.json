@@ -7,7 +7,7 @@
     "url": "https://github.com/pubpub/pubpub.git"
   },
   "license": "GPLv2",
-  "version": "0.3.0",
+  "version": "0.2.0",
   "keywords": [],
   "main": "bin/server.js",
   "scripts": {
