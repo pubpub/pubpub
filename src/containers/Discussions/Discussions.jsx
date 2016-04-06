@@ -35,8 +35,6 @@ const Discussions = React.createClass({
 		pathname: PropTypes.string,
 		query: PropTypes.object,
 
-		selectionID: PropTypes.string,
-
 		dispatch: PropTypes.func,
 
 	},
@@ -48,7 +46,7 @@ const Discussions = React.createClass({
 	},
 
 	componentWillReceiveProps(nextProps) {
-		// const hasHighlight = (this.props.loginData.get('addedHighlight') === undefined && nextProps.loginData.get('addedHighlight'));
+		const hasHighlight = (this.props.loginData.get('addedHighlight') === undefined && nextProps.loginData.get('addedHighlight'));
 
 		if (this.props.loginData.get('addedHighlight') === undefined && nextProps.loginData.get('addedHighlight')) {
 			const assetObject = nextProps.loginData.get('addedHighlight').toJS();
@@ -144,7 +142,6 @@ const Discussions = React.createClass({
 
 		let discussionsData = this.props.discussionsData.get('discussions') && this.props.discussionsData.get('discussions').toJS ? this.props.discussionsData.get('discussions').toJS() : [];
 		discussionsData = this.props.metaID ? this.filterDiscussions(discussionsData) : discussionsData;
-		discussionsData = this.props.selectionID ? this.filterDiscussionsForSelection(discussionsData) : discussionsData;
 
 		const addDiscussionStatus = this.props.discussionsData.get('addDiscussionStatus');
 		// const newDiscussionData = this.props.discussionsData.get('newDiscussionData');
@@ -176,7 +173,7 @@ const Discussions = React.createClass({
 					</div>
 				</div>
 
-				<div id="pub-discussions-wrapper" className="pub-discussions-wrapper" style={styles.sectionWrapper}>
+				<div id="pub-discussions-wrapper" className="pub-discussions-wrapper" style={styles.sectionWrapper}> {/* The classname pub-discussions-wrapper is used by selectionPlugin*/}
 					{this.props.pubData.getIn(['pubData', 'referrer', 'name'])
 						? <div>{this.props.pubData.getIn(['pubData', 'referrer', 'name'])} invites you to comment!</div>
 						: null

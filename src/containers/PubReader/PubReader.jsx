@@ -81,11 +81,7 @@ const PubReader = React.createClass({
 			TOC: toc,
 		});
 	},
-	componentDidMount() {
-		// This is a bit janky, but we attach handleHighlightClick to document so that selectionPlugins can call document.handleHighlightClick
-		// to trigger a discussion modal to pop up.
-		document.handleHighlightClick = this.handleHighlightClick;
-	},
+
 	componentWillReceiveProps(nextProps) {
 		const oldVersionIndex = this.props.query.version !== undefined ? this.props.query.version - 1 : this.props.readerData.getIn(['pubData', 'history']).size - 1;
 		const versionIndex = nextProps.query.version !== undefined ? nextProps.query.version - 1 : nextProps.readerData.getIn(['pubData', 'history']).size - 1;
@@ -117,10 +113,6 @@ const PubReader = React.createClass({
 	componentWillUnmount() {
 		this.closePubModal();
 		this.props.dispatch(pubNavOut());
-	},
-
-	handleHighlightClick: function(item) {
-		console.log(item);
 	},
 
 	openPubModal: function(modal) {

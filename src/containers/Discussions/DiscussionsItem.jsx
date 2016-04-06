@@ -81,8 +81,6 @@ const DiscussionsItem = React.createClass({
 		const isArchived = discussionItem.archived;
 		const discussionPoints = discussionItem.points ? discussionItem.points : 0; // This is to fix a NaN problem with newly published comments/discussions
 
-
-
 		return (
 			isArchived && !this.state.showArchived
 				? <div style={[styles.archivedContainer, globalStyles.ellipsis]} key={'archiveBlock-' + discussionItem._id} onClick={this.toggleShowArchived}>
@@ -90,7 +88,7 @@ const DiscussionsItem = React.createClass({
 					<span style={{padding: '0px 20px'}}>Comment by {discussionItem.author.name}</span>
 					{(discussionPoints + 1) === 1 ? (discussionPoints + 1) + ' point' : (discussionPoints + 1) + ' points'}
 				</div>
-				: <div style={[styles.container, isArchived && styles.archived]}>
+				: <div className={'discussion-item'} style={[styles.container, isArchived && styles.archived]}> {/* The classname discussion-item is used by selectionPlugin*/}
 					<div style={[styles.discussionHeader]}>
 
 						<div style={styles.discussionVoting}>

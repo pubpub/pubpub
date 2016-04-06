@@ -31,7 +31,7 @@ const GroupMain = React.createClass({
 					output += ', ';
 				}
 			}
-			return output;	
+			return output;
 		}
 		let output = 'by ';
 		for (let index = pub.collaborators.canEdit.length; index--;) {
@@ -40,8 +40,8 @@ const GroupMain = React.createClass({
 				output += ', ';
 			}
 		}
-		return output;	
-		
+		return output;
+
 	},
 
 	render: function() {
@@ -71,38 +71,12 @@ const GroupMain = React.createClass({
 								<div style={styles.pubDetail}>{pub.discussions ? pub.discussions.length : 0} comments</div>
 
 								<div style={styles.pubAbstract}>
-									{pub.abstract.length > 200 
+									{pub.abstract.length > 200
 										? pub.abstract.substring(0, 200).trim() + '...'
 										: pub.abstract
 									}
 								</div>
-								
-								
-								{discussionsList.length
-									? <div>
-										<div style={styles.commentTitle}>
-											<span>Latest Comment: </span>
-											{discussionsList[discussionsList.length - 1].author.name} 
-											<span> on </span>
-											{dateFormat(discussionsList[discussionsList.length - 1].postDate, 'mmm dd, yyyy h:MMTT')}
-										</div>
-										<div style={styles.commentWrapper}>
-											{/* <div style={styles.commentHeader}>
-												{discussionsList[discussionsList.length - 1].author.name} 
-												<span> on </span>
-												{dateFormat(discussionsList[discussionsList.length - 1].postDate, ''mmm dd, yyyy', h:MMTT')}
-											</div> */}
-											<div style={styles.commentText}>
-												{discussionsList[discussionsList.length - 1].markdown.replace(/\[\[(.*)\]\]/g, '').length > 100 
-													? discussionsList[discussionsList.length - 1].markdown.replace(/\[\[(.*)\]\]/g, '').substring(0, 100).trim() + '...'
-													: discussionsList[discussionsList.length - 1].markdown.replace(/\[\[(.*)\]\]/g, '')
-												}
-											</div>
-										</div>
-									</div>
-									: null
-								}
-								
+
 							</div>
 							</Link>
 						);
@@ -188,7 +162,7 @@ styles = {
 		fontSize: '14px',
 	},
 	commentHeader: {
-		
+
 	},
 	commentText: {
 		fontFamily: 'Lora',

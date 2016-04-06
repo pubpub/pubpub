@@ -70,7 +70,39 @@ const Plugin = React.createClass({
 
 
 			renderer.on('click', (item)=> {
-				document.handleHighlightClick({item, selection});
+				// Find element with selectionPreviousDraft
+				// Find parent, until we get the root
+				// modify css
+				// Apply splash to close on click
+				let currentNode = document.getElementById('selection-block-' + selection._id); // The selection block
+
+				while (currentNode.parentNode.className !== 'pub-discussions-wrapper') {
+					currentNode = currentNode.parentNode;
+				}
+				console.log(currentNode.cssText);
+				console.log(currentNode);
+				// currentNode.cssText = 'background-color: red;';
+				currentNode.style = {...currentNode.style, ...{backgroundColor: 'blue'}};
+				console.log(currentNode.cssText);
+				// debugger;
+
+
+
+// position: absolute;
+// right: 33px;
+// z-index: 20;
+// /* width: 40%; */
+// top: 2000px;
+// top: 2050px;
+// background-color: white;
+// padding: 5px;
+// box-shadow: 0px 0px 6px #444;
+// max-height: 60vh;
+// overflow: scroll;
+// transition: .1s linear top;
+// }
+
+				// document.handleHighlightClick(selection);
 				// const selectionElement = document.getElementById('selection-block-' + selection._id);
 				// const selectionY = this.getPosition(selectionElement).yloc; // The y-coord of where it is by default
 				// const destY = this.getPosition(item.target).yloc; // The y-coord of where it needs to be
@@ -233,11 +265,13 @@ const Plugin = React.createClass({
 						'.selection-block': {
 							boxShadow: '0 1px 3px 0 rgba(0,0,0,.2),0 1px 1px 0 rgba(0,0,0,.14),0 2px 1px -1px rgba(0,0,0,.12)',
 							transition: '.05s linear box-shadow, .05s linear transform',
+							backgroundColor: 'rgba(255,255,255,0.65)',
 						},
 						'.selection-block-active': {
 							boxShadow: '0 2px 4px -1px rgba(0,0,0,.2),0 4px 5px 0 rgba(0,0,0,.14),0 1px 10px 0 rgba(0,0,0,.12)',
 							transition: '.05s linear box-shadow, .05s linear transform',
-							transform: 'translateX(-15px)'
+							transform: 'translateX(-15px)',
+							backgroundColor: 'rgba(195, 245, 185, 0.6)',
 						},
 					}} />
 
@@ -273,7 +307,6 @@ const Plugin = React.createClass({
 
 styles = {
 	selectionBlock: {
-		backgroundColor: 'rgba(255,255,255,0.65)',
 		borderRadius: '1px',
 		padding: '10px 8px',
 		color: '#5B5B5B',
