@@ -190,6 +190,8 @@ const migrateSinglePub = function({ref, pub, assets, references, DO_FIREBASE}, c
 				history.markdown = widgetProcessor({markdown: newHistoryMarkdown, assets: newAssets});
 			}
 
+			newDoc.discussions = pub.discussions.concat(pub.editorComments);
+
 			Discussion.update({ _id: {$in: pub.editorComments}}, {$set:{"private":true}}, {upsert: false, multi: true}, function(err,numAffected) {
 
 				if (err) {
