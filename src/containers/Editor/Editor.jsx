@@ -89,36 +89,36 @@ const Editor = React.createClass({
 
 	componentDidMount() {
 
-		// if (! this.props.editorData.get('error')) {
-		//
-		// 	initCodeMirrorMode();
-		//
-		// 	if (this.props.editorData.getIn(['pubEditData', 'token'])) {
-		// 		this.initializeEditorData(this.props.editorData.getIn(['pubEditData', 'token']));
-		// 	}
-		// }
+		if (! this.props.editorData.get('error')) {
+
+			initCodeMirrorMode();
+
+			if (this.props.editorData.getIn(['pubEditData', 'token'])) {
+				this.initializeEditorData(this.props.editorData.getIn(['pubEditData', 'token']));
+			}
+		}
 	},
 
 	componentWillReceiveProps(nextProps) {
-		// if (nextProps.editorData.get('saveVersionSuccess')) {
-		// 	this.props.dispatch(pushState(null, ('/pub/' + nextProps.slug)));
-		// }
-		// if (!this.state.initialized && nextProps.editorData.getIn(['pubEditData', 'token'])) {
-		// 	this.initializeEditorData(nextProps.editorData.getIn(['pubEditData', 'token']));
-		// }
-		//
-		// if (this.props.editorData.get('styleScoped') !== nextProps.editorData.get('styleScoped')) {
-		// 	const ref = new Firebase(FireBaseURL + this.props.slug + '/editorData/settings' );
-		// 	ref.update({styleScoped: nextProps.editorData.get('styleScoped')});
-		// }
+		if (nextProps.editorData.get('saveVersionSuccess')) {
+			this.props.dispatch(pushState(null, ('/pub/' + nextProps.slug)));
+		}
+		if (!this.state.initialized && nextProps.editorData.getIn(['pubEditData', 'token'])) {
+			this.initializeEditorData(nextProps.editorData.getIn(['pubEditData', 'token']));
+		}
+
+		if (this.props.editorData.get('styleScoped') !== nextProps.editorData.get('styleScoped')) {
+			const ref = new Firebase(FireBaseURL + this.props.slug + '/editorData/settings' );
+			ref.update({styleScoped: nextProps.editorData.get('styleScoped')});
+		}
 
 	},
 
 	componentWillUnmount() {
-		// if (!this.props.editorData.getIn(['pubEditData', 'isPage'])) {
-		// 	debounce('backendSync', this.updatePubBackendData, 0, true)();
-		// }
-		// this.props.dispatch(unmountEditor());
+		if (!this.props.editorData.getIn(['pubEditData', 'isPage'])) {
+			debounce('backendSync', this.updatePubBackendData, 0, true)();
+		}
+		this.props.dispatch(unmountEditor());
 	},
 
 	initializeEditorData: function(token) {
@@ -475,7 +475,7 @@ const Editor = React.createClass({
 				{key: 'pubList', string: <Formatting type={'pubList'} />, function: this.insertFormatting('pubList')	},
 				{key: 'collectionList', string: <Formatting type={'collectionList'} />, function: this.insertFormatting('collectionList')	},
 				{key: 'pageLink', string: <Formatting type={'pageLink'} />, function: this.insertFormatting('pageLink')	},
-			]
+			];
 			formattingItems = formattingItems.concat(formattingItemsPage);
 		}
 		output.push({key: 'formatting', string: <FormattedMessage {...globalMessages.Formatting}/>, function: ()=>{}, children: formattingItems});
@@ -508,8 +508,8 @@ const Editor = React.createClass({
 
 	},
 
-	render: function() { 
-		return <h1 style={{textAlign: 'center', margin: '50px auto', width: '80%'}}>The PubPub Editor is currently down for maintenance. We'll be back shortly!</h1>;
+	render: function() {
+		// return <h1 style={{textAlign: 'center', margin: '50px auto', width: '80%'}}>The PubPub Editor is currently down for maintenance. We'll be back shortly!</h1>;
 		// const editorData = this.props.editorData;
 		const viewMode = this.props.editorData.getIn(['pubEditData', 'isPage']) ? 'preview' : this.props.editorData.get('viewMode');
 		const isReader = this.props.editorData.getIn(['pubEditData', 'isReader']);

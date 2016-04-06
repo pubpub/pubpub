@@ -1,1 +1,4 @@
 [API](./api)
+
+Translations
+Highlighting

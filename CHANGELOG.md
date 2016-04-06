@@ -8,7 +8,7 @@ See [http://keepachangelog.com/](http://keepachangelog.com/) for best practices.
 - Import options for creating a pub. Import from PDF, .doc, etc
 - Reference import tools. Import from endnote, mendeley, etc.
 - Richer on-boarding tutorials for all aspects of the project
-- Style Library that allows users to share and use Pub and Page styles. 
+- Style Library that allows users to share and use Pub and Page styles.
 
 ## [Unreleased]
 ### Added
@@ -25,9 +25,10 @@ See [http://keepachangelog.com/](http://keepachangelog.com/) for best practices.
 - Discussions and Editor comments combined. A single discussions thread exists per pub now. Discussions can be marked 'collaborator-only' for private comments. Are shown in line with public comments.
 - Journals use pub Pages for their landing page
 - Assets are grouped by user, rather than by pub. This lets users use assets, references, etc across different pubs and in discussions.
+- Assets support history, editing, and metadata
 - Pub styling much more powerful. All pub styles moved to css (out of radium in-line), so they can be customized by author
 - Custom language fields enabled on backend for journals. Allowing default language strings to be overwritten per-journal
 
 
-[Unreleased]: https://github.com/pubpub/pubpub/compare/v0.3.0...HEAD
+[Unreleased]: https://github.com/pubpub/pubpub/compare/v0.2.0...HEAD
 [0.2.0]: https://github.com/pubpub/pubpub/compare/v0.2.0...HEAD
