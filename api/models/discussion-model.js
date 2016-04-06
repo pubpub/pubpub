@@ -13,12 +13,6 @@ const discussionSchema = new Schema({
 		version: { type: Number },
 	}],
 
-	// REMOVE THIS
-	assets: [{ type: ObjectId, ref: 'Asset'}], //Raw sources
-	references: [{ type: ObjectId, ref: 'Reference'}], //Raw References
-	postDate: { type: Date },
-	//TO HERE
-
 	parent: { type: ObjectId, ref: 'Discussion' },
 	children: [ { type: ObjectId, ref: 'Discussion' } ],
 

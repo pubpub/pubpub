@@ -177,10 +177,10 @@ const PubMeta = React.createClass({
 										return (
 											<PubMetaAnalytics />
 										);
-									case 'news':
-										return (
-											<PubMetaInTheNews />
-										);
+									// case 'news':
+									// 	return (
+									// 		<PubMetaInTheNews />
+									// 	);
 									// case 'reviews':
 									// 	return (<PubMetaReviews />
 									// 		);
