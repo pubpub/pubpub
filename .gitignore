@@ -2,6 +2,7 @@
 node_modules/
 authentication/
 dist/
+
 data/
 tmp/
 misc/
@@ -12,3 +13,4 @@ npm-debug.log
 .DS_Store
 translations/messages
 api/migrations/backupdata/
+api/config.js

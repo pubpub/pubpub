@@ -61,6 +61,8 @@ function refactorMarkdown({markdown, assets}) {
 			if (asset) {
 				pluginDict.source = asset.assetData;
 				pluginDict.source._id = asset._id;
+				pluginDict.source.label = asset.label;
+
 			}
 		}
 
@@ -69,7 +71,7 @@ function refactorMarkdown({markdown, assets}) {
 			if (asset) {
 				pluginDict.reference = asset.assetData;
 				pluginDict.reference._id = asset._id;
-
+				pluginDict.reference.label = asset.label;
 			}
 		}
 

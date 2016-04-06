@@ -5,11 +5,11 @@ import { Link } from 'react-router';
 import DiscussionsInput from './DiscussionsInput';
 import DiscussionsScore from './DiscussionsScore';
 
-import PPMComponent from '../../markdown/PPMComponent';
+import {Markdown} from 'components';
 
 // import ResizingText from '../../components/PubBody/ResizingText';
 
-import {globalMessages} from 'utils/globalMessages';
+// import {globalMessages} from 'utils/globalMessages';
 import {FormattedMessage, FormattedDate, FormattedRelative} from 'react-intl';
 
 let styles = {};
@@ -33,7 +33,7 @@ const DiscussionsItem = React.createClass({
 		handleVoteSubmit: PropTypes.func,
 		handleArchive: PropTypes.func,
 
-		toggleAssetLibrary: PropTypes.func,
+		toggleMediaLibrary: PropTypes.func,
 		// noPermalink: PropTypes.bool,
 		// noReply: PropTypes.bool,
 	},
@@ -81,8 +81,6 @@ const DiscussionsItem = React.createClass({
 		const isArchived = discussionItem.archived;
 		const discussionPoints = discussionItem.points ? discussionItem.points : 0; // This is to fix a NaN problem with newly published comments/discussions
 
-
-
 		return (
 			isArchived && !this.state.showArchived
 				? <div style={[styles.archivedContainer, globalStyles.ellipsis]} key={'archiveBlock-' + discussionItem._id} onClick={this.toggleShowArchived}>
@@ -90,7 +88,7 @@ const DiscussionsItem = React.createClass({
 					<span style={{padding: '0px 20px'}}>Comment by {discussionItem.author.name}</span>
 					{(discussionPoints + 1) === 1 ? (discussionPoints + 1) + ' point' : (discussionPoints + 1) + ' points'}
 				</div>
-				: <div style={[styles.container, isArchived && styles.archived]}>
+				: <div className={'discussion-item'} style={[styles.container, isArchived && styles.archived]}> {/* The classname discussion-item is used by selectionPlugin*/}
 					<div style={[styles.discussionHeader]}>
 
 						<div style={styles.discussionVoting}>
@@ -134,10 +132,10 @@ const DiscussionsItem = React.createClass({
 								<FormattedMessage id="discussion.edit" defaultMessage="Edit"/>
 							</span> */}
 
-							<span style={[styles.detailLineItemSeparator, discussionItem.isAuthor && styles.hide]}>|</span>
+							{/* <span style={[styles.detailLineItemSeparator, discussionItem.isAuthor && styles.hide]}>|</span>
 							<span style={[styles.detailLineItem, discussionItem.isAuthor && styles.hide]} key={'flagButton-' + discussionItem._id} onClick={this.toggleFlag}>
 								<FormattedMessage id="discussion.flag" defaultMessage="Flag"/>
-							</span>
+							</span> */}
 
 							{this.props.isPubAuthor
 								? <span>
@@ -181,7 +179,7 @@ const DiscussionsItem = React.createClass({
 								<FormattedMessage id="discussion.PrivateCollaboraotrsOnly" defaultMessage="Private. Collaborators only."/>
 							</div>
 							{/* md.tree */}
-							<PPMComponent markdown={discussionItem.markdown} />
+							<Markdown markdown={discussionItem.markdown} />
 
 						</div>
 					</div>
@@ -203,7 +201,7 @@ const DiscussionsItem = React.createClass({
 								activeSaveID={this.props.activeSaveID}
 								isReply={true}
 								isPublished={this.props.isPublished}
-								toggleAssetLibrary={this.props.toggleAssetLibrary}/>
+								toggleMediaLibrary={this.props.toggleMediaLibrary}/>
 						</div>
 
 					}
@@ -225,7 +223,7 @@ const DiscussionsItem = React.createClass({
 									userThumbnail={this.props.userThumbnail}
 									handleVoteSubmit={this.props.handleVoteSubmit}
 									handleArchive={this.props.handleVoteSubmit}
-									toggleAssetLibrary={this.props.toggleAssetLibrary}/>
+									toggleMediaLibrary={this.props.toggleMediaLibrary}/>
 
 								);
 							})
@@ -245,8 +243,9 @@ styles = {
 	container: {
 		width: '100%',
 		// overflow: 'hidden',
-		margin: '15px 0px 10px 0px',
-		backgroundColor: 'rgba(255,255,255,0.2)',
+		margin: '15px 0px 0px 0px',
+		// backgroundColor: 'rgba(255,255,255,0.2)',
+		clear: 'both',
 	},
 	archived: {
 		opacity: 0.7,
@@ -259,8 +258,8 @@ styles = {
 		lineHeight: '17px',
 		padding: '0px 10px',
 		fontSize: '12px',
-		backgroundColor: 'rgba(255,255,255,0.2)',
-		borderBottom: '1px solid #eee',
+		// backgroundColor: 'rgba(255,255,255,0.2)',
+		borderBottom: '1px solid #DDD',
 		':hover': {
 			color: '#444',
 			cursor: 'pointer',
@@ -325,7 +324,9 @@ styles = {
 	discussionBody: {
 		width: '100%',
 		position: 'relative',
-		borderBottom: '1px solid #eee',
+		borderBottom: '1px solid #ddd',
+		// overflow: 'hidden',
+		wordWrap: 'break-word',
 	},
 	discussionVoting: {
 		width: '25px',
@@ -338,8 +339,8 @@ styles = {
 		// backgroundColor: 'rgba(255,0,100,0.2)',
 	},
 	discussionContent: {
-		width: 'calc(100% - 30px)',
-		marginLeft: 25,
+		width: 'calc(100% -12px)',
+		// marginLeft: 25,
 		// overflow: 'hidden',
 		color: '#222',
 		// padding: '0px 15px',

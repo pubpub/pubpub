@@ -2,7 +2,7 @@ import React, {PropTypes} from 'react';
 import Radium from 'radium';
 // import {globalStyles} from 'utils/styleConstants';
 import {LoaderIndeterminate} from '../';
-import AvatarEditor from './AvatarEditor';
+import ImageCropperEditor from './ImageCropperEditor';
 import {s3Upload} from 'utils/uploadFile';
 
 import {globalMessages} from 'utils/globalMessages';
@@ -44,8 +44,8 @@ const ImageCropper = React.createClass({
 		const file = new Blob([new Uint8Array(array)], {type: mimeString});
 
 		this.setState({isUploading: true});
-		s3Upload(file, 'users', ()=>{}, this.onFileFinish, 0);	
-		
+		s3Upload(file, 'users', ()=>{}, this.onFileFinish, 0);
+
 	},
 	handleScale: function() {
 		const scale = this.refs.scale.value;
@@ -56,7 +56,7 @@ const ImageCropper = React.createClass({
 	handleCancel: function() {
 		this.props.onCancel();
 	},
-	
+
 	render: function() {
 
 		return (
@@ -65,7 +65,7 @@ const ImageCropper = React.createClass({
 					{(this.state.isUploading ? <LoaderIndeterminate color="#555"/> : null)}
 				</div>
 				<div style={styles.avatarWrapper}>
-					<AvatarEditor
+					<ImageCropperEditor
 						ref="userImageCrop"
 						image={this.props.image}
 						width={this.props.width}
@@ -73,7 +73,7 @@ const ImageCropper = React.createClass({
 						border={25}
 						color={[0, 0, 0, 0.7]} // RGBA
 						scale={parseFloat(this.state.scale)}
-						onImageReady={this.handleUpdate} 
+						onImageReady={this.handleUpdate}
 						onImageChange={this.handleUpdate}/>
 
 						<input style={styles.slider} name="scale" type="range" ref="scale" onChange={this.handleScale} min="1" max="3" step="0.01" defaultValue="1" />
@@ -87,7 +87,7 @@ const ImageCropper = React.createClass({
 						<FormattedMessage {...globalMessages.save} />
 					</div>
 				</div>
-				
+
 
 			</div>
 		);

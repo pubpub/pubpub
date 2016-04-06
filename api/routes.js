@@ -8,6 +8,7 @@
 //   next();
 // });
 
+require('./routes/app-routes');
 require('./routes/asset-routes');
 require('./routes/autocomplete-routes');
 require('./routes/discussion-routes');

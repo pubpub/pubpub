@@ -1,4 +1,4 @@
-const sendgridKey = process.env.NODE_ENV !== 'production' ? require('../authentication/sendgridCredentials').sendgridAPIKey : process.env.SENDGRID_API_KEY;
+const sendgridKey = process.env.NODE_ENV !== 'production' ? require('../config').sendgridAPIKey : process.env.SENDGRID_API_KEY;
 const sendgrid = require('sendgrid')(sendgridKey);
 
 const fromname = 'PubPub';
@@ -63,7 +63,7 @@ export function sendInviteEmail(senderName, pubName, pubURL, journalName, journa
 	sendgrid.send(emailObject, callback);
 }
 
-export function sendAddedAsCollaborator(email, url, senderName, pubTitle, groupName, journalName, callback) {
+export function sendAddedAsCollaborator(email, url, senderName, senderEmail, pubTitle, groupName, journalName, callback) {
 
 	const text = groupName
 		? groupName + ' has been added as a collaborator on ' + pubTitle + ' As a member of this group, you too are now a collaborator!. You can collaborate by visiting this pub at ' + url + '.'
@@ -76,6 +76,7 @@ export function sendAddedAsCollaborator(email, url, senderName, pubTitle, groupN
 	emailObject.addTo(email);
 	emailObject.subject = pubTitle + ' - Added as Collaborator';
 	emailObject.from = from;
+	emailObject.replyto = senderEmail;
 	emailObject.fromname = senderName + ' (PubPub)';
 	emailObject.text = text;
 	emailObject.html = html;

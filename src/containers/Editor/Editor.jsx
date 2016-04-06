@@ -9,33 +9,32 @@ import Helmet from 'react-helmet';
 import PureRenderMixin from 'react-addons-pure-render-mixin';
 import ReactFireMixin from 'reactfire';
 
-import {Discussions, EditorModals} from '../';
-import {LoaderDeterminate, EditorStylePane, PubBody, Menu} from 'components';
-import {clearPub} from '../../actions/pub';
-import {getPubEdit, toggleEditorViewMode, toggleFormatting, toggleTOC, unmountEditor, closeModal, openModal, addSelection, setEditorViewMode, saveVersion, updatePubBackendData, saveStyle} from '../../actions/editor';
+import {Discussions} from 'containers';
+import EditorModals from './EditorModals';
+import EditorStylePane from './EditorStylePane';
+import {LoaderDeterminate, Formatting, PubBody, Menu} from 'components';
+import {clearPub} from 'containers/PubReader/actions';
+import {getPubEdit, toggleEditorViewMode, unmountEditor, closeModal, openModal, addSelection, setEditorViewMode, saveVersion, updatePubBackendData, saveStyle} from './actions';
 
 import {debounce} from 'utils/loadingFunctions';
-import {submitPubToJournal} from '../../actions/journal';
+import {submitPubToJournal} from 'containers/JournalProfile/actions';
 
-import initCodeMirrorMode from './editorCodeMirrorMode';
-// import {styles} from './editorStyles';
-import {codeMirrorStyles, codeMirrorStyleClasses} from './codeMirrorStyles';
-import {globalStyles} from 'utils/styleConstants';
-
-import {insertText, createFocusDoc, addCodeMirrorKeys} from './editorCodeFunctions';
-import {editorDefaultPubText, editorDefaultPageText} from './editorDefaultText';
-
-import FirepadUserList from './editorFirepadUserlist';
+import initCodeMirrorMode from './utils/editorCodeMirrorMode';
+import {codeMirrorStyles, codeMirrorStyleClasses} from './utils/codeMirrorStyles';
+import {insertText, createFocusDoc, addCodeMirrorKeys} from './utils/editorCodeFunctions';
+import {editorDefaultPubText, editorDefaultPageText} from './utils/editorDefaultText';
+import FirepadUserList from './utils/editorFirepadUserlist';
 
 // import {convertFirebaseToObject} from 'utils/parsePlugins';
-import {generateTOC} from '../../markdown/generateTOC';
+import {generateTOC} from 'utils/generateTOC';
+import {globalStyles} from 'utils/styleConstants';
 
 import {globalMessages} from 'utils/globalMessages';
 import {FormattedMessage} from 'react-intl';
-import {Iterable} from 'immutable';
-import EditorWidgets from '../../components/EditorWidgets/EditorWidgets';
+// import {Iterable} from 'immutable';
+import MarkdownWidgets from 'components/Markdown/MarkdownWidgets/MarkdownWidgets';
+import {FireBaseURL} from 'config';
 
-let FireBaseURL;
 let styles;
 
 const cmOptions = {
@@ -52,7 +51,7 @@ const cmOptions = {
 const Editor = React.createClass({
 	propTypes: {
 		pubData: PropTypes.object, // Used to get new pub titles
-		journalData: PropTypes.object,
+		appData: PropTypes.object,
 		editorData: PropTypes.object,
 		loginData: PropTypes.object, // User login data
 		slug: PropTypes.string, // equal to project uniqueTitle
@@ -89,8 +88,6 @@ const Editor = React.createClass({
 	},
 
 	componentDidMount() {
-		FireBaseURL = (process.env.NODE_ENV === 'production' && location.hostname !== 'pubpub-dev.herokuapp.com') ? 'https://pubpub.firebaseio.com/' : 'https://pubpub-dev.firebaseio.com/';
-		// FireBaseURL = 'https://pubpub-migration.firebaseio.com/';
 
 		if (! this.props.editorData.get('error')) {
 
@@ -137,6 +134,7 @@ const Editor = React.createClass({
 				const firepadRef = new Firebase(FireBaseURL + this.props.slug + '/firepad');
 
 				// Load codemirror
+				cmOptions.isPage = this.props.editorData.getIn(['pubEditData', 'isPage']);
 				const codeMirror = CodeMirror(document.getElementById('codemirror-wrapper'), cmOptions);
 				this.cm = codeMirror;
 
@@ -148,7 +146,7 @@ const Editor = React.createClass({
 				const firepad = Firepad.fromCodeMirror(firepadRef, codeMirror, {
 					userId: username,
 					defaultText: this.props.editorData.getIn(['pubEditData', 'isPage'])
-						? editorDefaultPageText(this.props.journalData.getIn(['journalData', 'journalName']))
+						? editorDefaultPageText(this.props.appData.getIn(['journalData', 'journalName']))
 						: editorDefaultPubText(this.props.pubData.getIn(['createPubData', 'title']), {username: username, name: name})
 				});
 
@@ -183,6 +181,11 @@ const Editor = React.createClass({
 
 				// need to unmount on change
 				codeMirror.on('change', this.onEditorChange);
+				codeMirror.on('mousedown', function(instance, evt) {
+					if (evt.which === 3) { // On right click. It was scrolling. Prevent that. Also can hijack for custom contextmenu?
+						evt.preventDefault();
+					}
+				});
 				addCodeMirrorKeys(codeMirror);
 
 				this.setState({initialized: true});
@@ -243,12 +246,6 @@ const Editor = React.createClass({
 		const TOCs = generateTOC(markdown);
 
 		// Format assets and references
-		// const assets = convertFirebaseToObject(this.state.firepadData.assets);
-		// const references = convertFirebaseToObject(this.state.firepadData.references, true);
-		// const selections = [];
-
-		// Strip markdown of title, abstract, authorsNote
-		// const markdown = fullMD.replace(/\[\[title:.*?\]\]/gi, '').replace(/\[\[abstract:.*?\]\]/gi, '').replace(/\[\[authorsNote:.*?\]\]/gi, '').trim();
 
 		// const compiledMarkdown = performance.now();
 
@@ -263,9 +260,6 @@ const Editor = React.createClass({
 			codeMirrorChange: change,
 			title: title,
 			abstract: abstract,
-			// assetsObject: assets,
-			// referencesObject: references,
-			// selectionsArray: selections,
 		});
 
 		// const saveState = performance.now();
@@ -289,15 +283,15 @@ const Editor = React.createClass({
 
 	// Toggle formatting dropdown
 	// Only has an effect when in livePreview mode
-	toggleFormatting: function() {
-		return this.props.dispatch(toggleFormatting());
-	},
+	// toggleFormatting: function() {
+	// 	return this.props.dispatch(toggleFormatting());
+	// },
 
 	// Toggle Table of Contents dropdown
 	// Only has an effect when in livePreview mode
-	toggleTOC: function() {
-		return this.props.dispatch(toggleTOC());
-	},
+	// toggleTOC: function() {
+	// 	return this.props.dispatch(toggleTOC());
+	// },
 
 	saveVersion: function(versionDescription, publish) {
 
@@ -330,8 +324,8 @@ const Editor = React.createClass({
 		this.props.dispatch(clearPub());
 
 		// This should perhaps be done on the backend in one fell swoop - rather than having two client side calls.
-		if (this.props.journalData.get('baseSubdomain') && publish) {
-			this.props.dispatch(submitPubToJournal(this.props.editorData.getIn(['pubEditData', '_id']), this.props.journalData.getIn(['journalData']).toJS()));
+		if (this.props.appData.get('baseSubdomain') && publish) {
+			this.props.dispatch(submitPubToJournal(this.props.editorData.getIn(['pubEditData', '_id']), this.props.appData.getIn(['journalData']).toJS()));
 		}
 
 		this.props.dispatch(saveVersion(newVersion));
@@ -350,7 +344,7 @@ const Editor = React.createClass({
 		return ()=>{
 			const cm = this.getActiveCodemirrorInstance();
 			insertText(cm, formatting, this.showPopupFromAutocomplete);
-			this.toggleFormatting();
+			// this.toggleFormatting();
 		};
 	},
 
@@ -461,14 +455,30 @@ const Editor = React.createClass({
 				]}
 			);
 		}
-		output.push(
-			{key: 'formatting', string: <FormattedMessage {...globalMessages.Formatting}/>, function: ()=>{}, children: [
-				{key: 'assets2', string: 'header #', function: this.printIt('assets2!')	},
-				{key: 'bold', string: 'bold', function: this.printIt('things2!') },
-				{key: 'italic', string: 'italic', function: this.printIt('collabs2!') },
-				{key: 'assetsasd2', string: 'header #', function: this.printIt('assets2!') },
-			]}
-		);
+		let formattingItems = [
+			{key: 'header1', string: <Formatting type={'header1'} />, function: this.insertFormatting('header1')	},
+			{key: 'header2', string: <Formatting type={'header2'} />, function: this.insertFormatting('header2')	},
+			{key: 'header3', string: <Formatting type={'header3'} />, function: this.insertFormatting('header3')	},
+			{key: 'bold', string: <Formatting type={'bold'} />, function: this.insertFormatting('bold')	},
+			{key: 'italic', string: <Formatting type={'italic'} />, function: this.insertFormatting('italic')	},
+			{key: 'ol', string: <Formatting type={'ol'} />, function: this.insertFormatting('ol')	},
+			{key: 'ul', string: <Formatting type={'ul'} />, function: this.insertFormatting('ul')	},
+			{key: 'link', string: <Formatting type={'link'} />, function: this.insertFormatting('link')	},
+			{key: 'image', string: <Formatting type={'image'} />, function: this.insertFormatting('image')	},
+			{key: 'video', string: <Formatting type={'video'} />, function: this.insertFormatting('video')	},
+			{key: 'cite', string: <Formatting type={'cite'} />, function: this.insertFormatting('cite')	},
+			{key: 'quote', string: <Formatting type={'quote'} />, function: this.insertFormatting('quote')	},
+			{key: 'linebreak', string: <Formatting type={'linebreak'} />, function: this.insertFormatting('linebreak')	},
+		];
+		if (isPage) {
+			const formattingItemsPage = [
+				{key: 'pubList', string: <Formatting type={'pubList'} />, function: this.insertFormatting('pubList')	},
+				{key: 'collectionList', string: <Formatting type={'collectionList'} />, function: this.insertFormatting('collectionList')	},
+				{key: 'pageLink', string: <Formatting type={'pageLink'} />, function: this.insertFormatting('pageLink')	},
+			]
+			formattingItems = formattingItems.concat(formattingItemsPage);
+		}
+		output.push({key: 'formatting', string: <FormattedMessage {...globalMessages.Formatting}/>, function: ()=>{}, children: formattingItems});
 		output.push({key: 'assets', string: <FormattedMessage {...globalMessages.assets}/>, function: this.openModalHandler('Assets') });
 		output.push({key: 'collaborators', string: <FormattedMessage {...globalMessages.collaborators}/>, function: this.openModalHandler('Collaborators')});
 		output.push({key: 'activeCollabs', string: '', function: ()=>{}, notButton: true});
@@ -509,7 +519,7 @@ const Editor = React.createClass({
 
 		const widgetMode = viewMode === 'preview' ? 'preview' : 'full';
 
-		const userAssets = this.props.loginData.getIn(['userData', 'assets']).toJS() || [];
+		const userAssets = this.props.loginData.getIn(['userData', 'assets']) ? this.props.loginData.getIn(['userData', 'assets']).toJS() : [];
 		const references = {};
 
 
@@ -526,6 +536,8 @@ const Editor = React.createClass({
 		};
 
 		const editorMenuItems = this.buildEditorMenuItems();
+
+
 		// [
 		// 	{key: 'file', string: <FormattedMessage id="editor.File" defaultMessage="File"/>, function: ()=>{}, children: [
 		// 		{key: 'style', string: <FormattedMessage id="editor.Style" defaultMessage="Style"/>, function: this.toggleStyleMode},
@@ -623,7 +635,7 @@ const Editor = React.createClass({
 						<div id="editor-text-wrapper" style={[globalStyles.hiddenUntilLoad, globalStyles[loadStatus], styles.editorMarkdown, styles[viewMode].editorMarkdown, !isReader && styles[viewMode].editorMarkdownIsEditor]}>
 
 
-							{(this.state.firepadInitialized) ? <EditorWidgets ref="widgethandler" mode={widgetMode} references={references} assets={userAssets} activeFocus={this.state.activeFocus} cm={this.cm} /> : null}
+							{(this.state.firepadInitialized) ? <MarkdownWidgets ref="widgethandler" mode={widgetMode} references={references} assets={userAssets} activeFocus={this.state.activeFocus} cm={this.cm} /> : null}
 							{/*
 							<EditorPluginPopup ref="pluginPopup" isLivePreview={isLivePreview} references={this.state.firepadData.references} assets={this.state.firepadData.assets} activeFocus={this.state.activeFocus} codeMirrorChange={this.state.codeMirrorChange}/>
 							*/}
@@ -779,7 +791,7 @@ const Editor = React.createClass({
 export default connect( state => {
 	return {
 		pubData: state.pub,
-		journalData: state.journal,
+		appData: state.app,
 		editorData: state.editor,
 		slug: state.router.params.slug,
 		loginData: state.login

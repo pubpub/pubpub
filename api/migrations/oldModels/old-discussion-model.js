@@ -19,6 +19,7 @@ var discussionSchema = new Schema({
   postDate: { type: Date },
 
   archived: { type: Boolean },
+  private: { type: Boolean }, //added for backwards compatability
 
   yays: [ { type: ObjectId, ref: 'User' } ],
   nays: [ { type: ObjectId, ref: 'User' } ],

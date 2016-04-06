@@ -52,14 +52,13 @@ var easeInOutCubic = function (t) { return t<.5 ? 4*t*t*t : (t-1)*(2*t-2)*(2*t-2
 var position = function(start, end, elapsed, duration) {
     if (elapsed > duration) return end;
     return start + (end - start) * easeInOutCubic(elapsed / duration); // <-- you can change the easing funtion there
-    // return start + (end - start) * (elapsed / duration); // <-- this would give a linear scroll
 }
 
 // we use requestAnimationFrame to be called by the browser before every repaint
 // if the first argument is an element then scroll to the top of this element
 // if the first argument is numeric then scroll to this location
 // if the callback exist, it is called when the scrolling is finished
-// if context is set then scroll that element, else scroll window 
+// if context is set then scroll that element, else scroll window
 var smoothScroll = function(el, duration, callback, context, offset){
     duration = duration || 500;
     context = context || window;
@@ -74,7 +73,7 @@ var smoothScroll = function(el, duration, callback, context, offset){
 
     // var endContext = context === window ? document.body : context;
     // end = Math.min(end, endContext.scrollHeight - endContext.offsetHeight);
-    
+
     var clock = Date.now();
     var requestAnimationFrame = window.requestAnimationFrame ||
         window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame ||
@@ -103,7 +102,7 @@ var smoothScroll = function(el, duration, callback, context, offset){
 smoothScroll.attachToAllLinks = function() {
     var linkHandler = function(ev) {
       ev.preventDefault();
-  
+
       if (location.hash !== this.hash) window.history.pushState(null, null, this.hash)
       // using the history api to solve issue #1 - back doesn't work
       // most browser don't update :target when the history api is used:
@@ -114,7 +113,7 @@ smoothScroll.attachToAllLinks = function() {
           // this will cause the :target to be activated.
       });
     }
-  
+
     // We look for all the internal links in the documents and attach the smoothscroll function
     document.addEventListener("DOMContentLoaded", function () {
         var internal = document.querySelectorAll('a[href^="#"]:not([href="#"])'), a;

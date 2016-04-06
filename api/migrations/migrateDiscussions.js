@@ -54,30 +54,32 @@ function migrateDiscussion({discussion}, callback) {
 
     if (err) {
       console.log(err);
-      callback(err);
-      return;
+      if (err.code !== 11000) {
+        callback(err);
+        return;
+      }
     }
 
     try {
-      const postDate = discussion.postDate;
-      discussion.createDate = postDate;
-      discussion.lastUpdated = postDate;
-      discussion.postDate = undefined;
-      discussion.assets = undefined;
-      discussion.references = undefined;
-      discussion.markdown = widgetProcessor({markdown: discussion.markdown, assets: newAssets});
+      const newDiscussionDoc = JSON.parse(JSON.stringify(discussion));
+      const postDate = newDiscussionDoc.postDate;
+      newDiscussionDoc.createDate = postDate;
+      newDiscussionDoc.lastUpdated = postDate;
+      newDiscussionDoc.markdown = widgetProcessor({markdown: newDiscussionDoc.markdown, assets: newAssets});
+      newDiscussionDoc.postDate = undefined;
+      newDiscussionDoc.assets = undefined;
+      newDiscussionDoc.references = undefined;
       // console.log(discussion.markdown);
       // discussion.selections = undefined;
 
-      discussion.history = [{
-        markdown: discussion.markdown,
+      newDiscussionDoc.history = [{
+        markdown: newDiscussionDoc.markdown,
         datePosted: postDate,
-        version: discussion.version,
+        version: newDiscussionDoc.version,
       }];
 
-      console.log('About to update discussion!');
 
-      newDiscussion.update({_id: discussion._id}, {$set: discussion, $unset: {postDate: 1, assets: 1, references: 1 }}, function(err, numAffected) {
+      newDiscussion.create(newDiscussionDoc, function(err2, results) {
         if (err) {
           console.log(err);
         }

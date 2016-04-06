@@ -2,8 +2,7 @@ import React, { PropTypes } from 'react';
 import {connect} from 'react-redux';
 import Radium from 'radium';
 import Helmet from 'react-helmet';
-import {CollectionGallery, PubGallery, JournalGallery} from '../../components';
-import {NotFound} from 'containers';
+import {GalleryCollection, GalleryPub, GalleryJournal, NotFound} from 'components';
 import {globalStyles} from 'utils/styleConstants';
 
 import {globalMessages} from 'utils/globalMessages';
@@ -14,7 +13,7 @@ let styles = {};
 const Explore = React.createClass({
 	propTypes: {
 		exploreData: PropTypes.object,
-		journalData: PropTypes.object,
+		appData: PropTypes.object,
 		path: PropTypes.string,
 		dispatch: PropTypes.func
 	},
@@ -42,7 +41,7 @@ const Explore = React.createClass({
 			mode = 'journals';
 			metaData.title = 'Journals';
 
-		} 
+		}
 
 		// TODO: We may want to have some fetchData functions in the statics section. We would fetch collections and pubs when on pubpub.org to display in their respective galleries.
 		// Pubs and collections are already populated in journalData when we're in a journal - so this is the only place that it's an issue.
@@ -56,38 +55,38 @@ const Explore = React.createClass({
 					switch (mode) {
 					case 'collections':
 						/* This should only be available on journals */
-						return (!this.props.journalData.get('baseSubdomain')
+						return (!this.props.appData.get('baseSubdomain')
 							? <NotFound />
 							: <div>
 								<div style={styles.header}>
 									<FormattedMessage {...globalMessages.collections} />
 								</div>
-								<CollectionGallery collections={this.props.journalData.getIn(['journalData', 'collections']).toJS()} />
+								<GalleryCollection collections={this.props.appData.getIn(['journalData', 'collections']).toJS()} />
 							</div>
 						);
 
 					case 'pubs':
-						const pubData = this.props.journalData.get('baseSubdomain') ? this.props.journalData.getIn(['journalData', 'pubsFeatured']).toJS() : this.props.journalData.getIn(['journalData', 'allPubs']).toJS();
+						const pubData = this.props.appData.get('baseSubdomain') ? this.props.appData.getIn(['journalData', 'pubsFeatured']).toJS() : this.props.appData.getIn(['journalData', 'allPubs']).toJS();
 						return (
 							<div>
 								<div style={styles.header}>
 									<FormattedMessage {...globalMessages.pubs} />
 								</div>
-								<PubGallery pubs={pubData} reverseOrder={true}/>
+								<GalleryPub pubs={pubData} reverseOrder={true}/>
 							</div>
-							
+
 						);
 
 					case 'journals':
 						/* This should only be available on pubpub */
-						return (this.props.journalData.get('baseSubdomain')
+						return (this.props.appData.get('baseSubdomain')
 							? <NotFound />
 							: <div>
 								<div style={styles.header}>
 									<FormattedMessage {...globalMessages.Journals} />
 								</div>
-								<JournalGallery journals={this.props.journalData.getIn(['journalData', 'allJournals']).toJS()} />
-							</div>	
+								<GalleryJournal journals={this.props.appData.getIn(['journalData', 'allJournals']).toJS()} />
+							</div>
 						);
 
 					default:
@@ -104,7 +103,7 @@ const Explore = React.createClass({
 export default connect( state => {
 	return {
 		exploreData: state.explore,
-		journalData: state.journal,
+		appData: state.app,
 		path: state.router.location.pathname
 	};
 })( Radium(Explore) );
@@ -120,7 +119,7 @@ styles = {
 			padding: '0px 20px',
 			maxWidth: '100%',
 		},
-	},	
+	},
 	header: {
 		color: globalStyles.sideText,
 		padding: '20px 0px',

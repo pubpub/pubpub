@@ -3,9 +3,11 @@ import {connect} from 'react-redux';
 import { Link } from 'react-router';
 import Radium from 'radium';
 import Helmet from 'react-helmet';
-import {saveCollection} from '../../actions/journal';
-import {CollectionEdit, CollectionMain} from './components';
-import {NotFound} from 'containers';
+import {saveCollection} from 'containers/JournalProfile/actions';
+// import {saveCollection} from './actions';
+import CollectionEdit from './CollectionEdit';
+import CollectionMain from './CollectionMain';
+import {NotFound} from 'components';
 import {globalStyles, navStyles} from 'utils/styleConstants';
 
 import {globalMessages} from 'utils/globalMessages';
@@ -16,15 +18,13 @@ let styles = {};
 const Collection = React.createClass({
 	propTypes: {
 		journalData: PropTypes.object,
+		appData: PropTypes.object,
 		loginData: PropTypes.object,
 		slug: PropTypes.string,
 		mode: PropTypes.string,
 		dispatch: PropTypes.func
 	},
 
-	statics: {
-		
-	},
 
 	// journalSave: function(newObject) {
 	// 	this.props.dispatch(saveJournal(this.props.subdomain, newObject));
@@ -40,12 +40,12 @@ const Collection = React.createClass({
 
 	collectionSave: function(newCollectionData) {
 		// console.log('saving', this.props.journalData.get('baseSubdomain'), this.props.slug, newCollectionData);
-		this.props.dispatch(saveCollection(this.props.journalData.get('baseSubdomain'), this.props.slug, newCollectionData));
+		this.props.dispatch(saveCollection(this.props.appData.get('baseSubdomain'), this.props.slug, newCollectionData));
 	},
 
 	render: function() {
 		const metaData = {};
-		
+
 		const collectionData = this.getCollectionData(this.props.slug);
 		metaData.title = collectionData.title + ' - ' + this.props.journalData.getIn(['journalData', 'journalName']);
 
@@ -55,24 +55,24 @@ const Collection = React.createClass({
 				<Helmet {...metaData} />
 
 				{
-					(!collectionData.slug) || (this.props.journalData.get('baseSubdomain') !== this.props.journalData.getIn(['journalData', 'subdomain'])) || (this.props.mode && !this.props.journalData.getIn(['journalData', 'isAdmin']))
+					(!collectionData.slug) || (this.props.appData.get('baseSubdomain') !== this.props.journalData.getIn(['journalData', 'subdomain'])) || (this.props.mode && !this.props.journalData.getIn(['journalData', 'isAdmin']))
 						? <NotFound />
 						: <div>
-							
+
 							<div style={[styles.headerImage, {backgroundImage: 'url(' + collectionData.headerImage + ')'}]}>
 
 								<div style={styles.title}>
-									<Link style={globalStyles.link} to={'/collection/' + this.props.slug}><span style={styles.headerTitle}>{collectionData.title}</span></Link> 
-									{this.props.mode 
-										? <span style={styles.headerModeText}>{' : '}<FormattedMessage {...globalMessages[this.props.mode]} /></span> 
+									<Link style={globalStyles.link} to={'/collection/' + this.props.slug}><span style={styles.headerTitle}>{collectionData.title}</span></Link>
+									{this.props.mode
+										? <span style={styles.headerModeText}>{' : '}<FormattedMessage {...globalMessages[this.props.mode]} /></span>
 										: null
 									}
 								</div>
-								
+
 								<div style={styles.descriptionWrapper}>
 									<div style={styles.description}>{collectionData.description}</div>
 								</div>
-								
+
 
 							</div>
 
@@ -83,37 +83,37 @@ const Collection = React.createClass({
 									</li></Link>
 								</ul>
 							</div>
-							
+
 							<div style={styles.contentWrapper}>
-								
-								
+
+
 								<div style={styles.CollectionContent}>
 									{(() => {
 										switch (this.props.mode) {
 										case 'edit':
 											return (
-												<CollectionEdit 
+												<CollectionEdit
 													collectionData={collectionData}
 													handleCollectionSave={this.collectionSave}
 													saveStatus={this.props.journalData.get('saveCollectionStatus')}
 													journalID={this.props.journalData.getIn(['journalData', '_id'])}/>
 											);
-										
+
 										default:
 											return (
-												<CollectionMain 
+												<CollectionMain
 													collectionData={collectionData} />
 											);
 										}
 									})()}
 								</div>
-								
+
 
 							</div>
 
 						</div>
 				}
-								
+
 			</div>
 		);
 	}
@@ -122,8 +122,9 @@ const Collection = React.createClass({
 
 export default connect( state => {
 	return {
-		loginData: state.login, 
-		journalData: state.journal, 
+		loginData: state.login,
+		journalData: state.journal,
+		appData: state.app,
 		slug: state.router.params.slug,
 		mode: state.router.params.mode
 	};
@@ -145,7 +146,7 @@ styles = {
 		// position: 'absolute',
 		minHeight: 250,
 		width: '100%',
-		color: 'white',	
+		color: 'white',
 	},
 	// headerContent: {
 	// 	minHeight: 250,
@@ -175,7 +176,7 @@ styles = {
 		textShadow: '0px 0px 1px black',
 		width: 500,
 	},
-	
+
 	contentWrapper: {
 		margin: globalStyles.headerHeight + ' auto',
 		width: 'calc(100% - 40px)',

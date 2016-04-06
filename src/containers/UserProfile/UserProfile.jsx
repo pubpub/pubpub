@@ -4,10 +4,16 @@ import Radium from 'radium';
 import Helmet from 'react-helmet';
 import { Link } from 'react-router';
 import { pushState } from 'redux-router';
-import {logout, follow, unfollow, toggleVisibility} from '../../actions/login';
-import {getProfile, updateUser, userNavOut, userNavIn, setNotificationsRead} from '../../actions/user';
+import {logout, follow, unfollow, toggleVisibility} from 'containers/Login/actions';
+import {getProfile, updateUser, userNavOut, userNavIn, setNotificationsRead} from './actions';
 import {ImageCropper, LoaderDeterminate} from 'components';
-import {UserSettings, UserPubs, UserGroups, UserFollows, UserDiscussions, UserNotifications} from './components';
+import UserProfileDiscussions from './UserProfileDiscussions';
+import UserProfileSettings from './UserProfileSettings';
+import UserProfilePubs from './UserProfilePubs';
+import UserProfileGroups from './UserProfileGroups';
+import UserProfileFollows from './UserProfileFollows';
+import UserProfileNotifications from './UserProfileNotifications';
+
 import {globalStyles, profileStyles, navStyles} from 'utils/styleConstants';
 
 import {globalMessages} from 'utils/globalMessages';
@@ -60,7 +66,7 @@ const Profile = React.createClass({
 	},
 	onFileSelect: function(evt) {
 		if (evt.target.files.length) {
-			this.setState({userImageFile: evt.target.files[0]});	
+			this.setState({userImageFile: evt.target.files[0]});
 		}
 	},
 	cancelImageUpload: function() {
@@ -94,9 +100,9 @@ const Profile = React.createClass({
 	},
 	setNotificationsRead: function() {
 		if (this.ownProfile() === 'self') {
-			this.props.dispatch(setNotificationsRead(this.props.profileData.getIn(['profileData', '_id'])));	
+			this.props.dispatch(setNotificationsRead(this.props.profileData.getIn(['profileData', '_id'])));
 		}
-		
+
 	},
 
 	render: function() {
@@ -131,14 +137,14 @@ const Profile = React.createClass({
 							</li>
 							</Link>
 							<li style={[navStyles.navSeparator, navStyles.left, navStyles.navItemShow, navStyles.noMobile]}></li>
-							
+
 							<Link to={'/user/' + this.props.username + '/discussions'} style={globalStyles.link}>
 							<li key="profileNavLeft1"style={[navStyles.navItem, navStyles.left, navStyles.navItemShow, navStyles.noMobile]}>
 								<FormattedMessage {...globalMessages.discussions} />
 							</li>
 							</Link>
 							<li style={[navStyles.navSeparator, navStyles.left, navStyles.navItemShow, navStyles.noMobile]}></li>
-							
+
 
 							<Link to={'/user/' + this.props.username + '/groups'} style={globalStyles.link}>
 							<li key="profileNavLeft2"style={[navStyles.navItem, navStyles.left, ownProfile === 'self' && navStyles.navItemShow, navStyles.noMobile]}>
@@ -168,16 +174,16 @@ const Profile = React.createClass({
 							<li style={[navStyles.navSeparator, ownProfile === 'self' && navStyles.navItemShow]}></li>
 
 							<li key="profileNav2"style={[navStyles.navItem, ownProfile === 'other' && navStyles.navItemShow]} onClick={this.followUserToggle}>
-								{this.props.loginData.getIn(['userData', 'following', 'users']) && this.props.loginData.getIn(['userData', 'following', 'users']).indexOf(this.props.profileData.getIn(['profileData', '_id'])) > -1 
+								{this.props.loginData.getIn(['userData', 'following', 'users']) && this.props.loginData.getIn(['userData', 'following', 'users']).indexOf(this.props.profileData.getIn(['profileData', '_id'])) > -1
 									? <FormattedMessage {...globalMessages.following} />
 									: <FormattedMessage {...globalMessages.follow} />
 								}
 							</li>
 							<li style={[navStyles.navSeparator, ownProfile === 'other' && styles.navItemShow]}></li>
-							
+
 						</ul>
 					</div>
-					
+
 					<LoaderDeterminate value={this.props.profileData.get('status') === 'loading' ? 0 : 100}/>
 
 					<div style={[globalStyles.hiddenUntilLoad, globalStyles[this.props.profileData.get('status')]]}>
@@ -216,14 +222,14 @@ const Profile = React.createClass({
 								</li>
 								</Link>
 								<li style={[navStyles.navSeparator, navStyles.left, navStyles.navItemShow, navStyles.noMobile]}></li>
-								
+
 								<Link to={'/user/' + this.props.username + '/discussions'} style={globalStyles.link}>
 								<li key="profileNavLeft1"style={[navStyles.navItem, navStyles.left, navStyles.navItemShow, styles.inactiveNav, this.props.mode === 'discussions' && styles.activeNav]}>
 									<FormattedMessage {...globalMessages.discussions} />
 								</li>
 								</Link>
 								<li style={[navStyles.navSeparator, navStyles.left, navStyles.navItemShow, navStyles.noMobile]}></li>
-								
+
 
 								<Link to={'/user/' + this.props.username + '/groups'} style={globalStyles.link}>
 								<li key="profileNavLeft2"style={[navStyles.navItem, navStyles.left, ownProfile === 'self' && navStyles.navItemShow, styles.inactiveNav, this.props.mode === 'groups' && styles.activeNav]}>
@@ -253,58 +259,58 @@ const Profile = React.createClass({
 								switch (this.props.mode) {
 								case 'discussions':
 									return (
-										<UserDiscussions 
+										<UserProfileDiscussions
 											profileData={profileData}
 											ownProfile={ownProfile}/>
 									);
 								case 'follows':
 									return (
-										<UserFollows 
+										<UserProfileFollows
 											profileData={profileData}
 											ownProfile={ownProfile}/>
 									);
 								case 'groups':
 									return (
-										<UserGroups 
+										<UserProfileGroups
 											profileData={profileData}
 											ownProfile={ownProfile}/>
 									);
 								case 'pubs':
 									return (
-										<UserPubs 
+										<UserProfilePubs
 											profileData={profileData}
 											ownProfile={ownProfile} />
 									);
 								case 'notifications':
 									return (
-										<UserNotifications
+										<UserProfileNotifications
 											profileData={profileData}
-											ownProfile={ownProfile} 
+											ownProfile={ownProfile}
 											setNotificationsReadHandler={this.setNotificationsRead}/>
 									);
 								case 'settings':
 									return (
-										<UserSettings 
+										<UserProfileSettings
 											profileData={profileData}
-											ownProfile={ownProfile} 
+											ownProfile={ownProfile}
 											saveStatus={this.props.profileData.get('settingsStatus')}
 											handleSettingsSave={this.settingsSave}/>
 									);
 								default:
 									return (
-										<UserPubs 
+										<UserProfilePubs
 											profileData={profileData}
 											ownProfile={ownProfile} />
 									);
 									// return (
-									// 	<UserMain 
+									// 	<UserMain
 									// 		profileData={profileData}
 									// 		ownProfile={ownProfile}
 									// 		username={this.props.username}/>
 									// );
 								}
 							})()}
-							
+
 						</div>
 					</div>
 
@@ -313,7 +319,7 @@ const Profile = React.createClass({
 						<div style={styles.imageCropperContainer}>
 							<ImageCropper height={150} width={150} image={this.state.userImageFile} onCancel={this.cancelImageUpload} onUpload={this.userImageUploaded}/>
 						</div>
-						
+
 					</div>
 				</div>
 
@@ -325,8 +331,8 @@ const Profile = React.createClass({
 
 export default connect( state => {
 	return {
-		loginData: state.login, 
-		profileData: state.user, 
+		loginData: state.login,
+		profileData: state.user,
 		username: state.router.params.username,
 		mode: state.router.params.mode,
 	};
@@ -382,7 +388,7 @@ styles = {
 	userImage: {
 		width: '100%',
 		height: '100%',
-		
+
 	},
 	editImageButton: {
 		width: '100%',

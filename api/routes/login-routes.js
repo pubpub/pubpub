@@ -4,7 +4,7 @@ const passport = require('passport');
 const User = require('../models').User;
 const Journal = require('../models').Journal;
 const Notification = require('../models').Notification;
-import {cloudinary} from '../services/cloudinary';
+// import {cloudinary} from '../services/cloudinary';
 import {sendResetEmail} from '../services/emails';
 
 // When an implicit login request is made using the cookie
@@ -76,48 +76,53 @@ app.get('/logout', logout);
 
 // When a user registers
 export function register(req, res) {
+	if ((req.body.firstname === 'undefined' && req.body.lastname === 'undefined') || req.body.email.indexOf('@yopmail.com') > -1) { // Spammers inputting 'undefined undefined' are posting lots of pubs
+		console.log('Blocked register of spam');
+		return res.status(500).json();
+	}
+
 	User.generateUniqueUsername(req.body.fullname, function(newUsername) {
 
 		// Upload to cloudinary so we can have a thumbnail and CDN action.
-		cloudinary.uploader.upload(req.body.image, function(cloudinaryResponse) {
-			if (!cloudinaryResponse.url) {
-				console.log('cloudinaryResponse in login-routes did not have url. Here is the response:');
-				console.log(cloudinaryResponse);
+		// cloudinary.uploader.upload(req.body.image, function(cloudinaryResponse) {
+			// if (!cloudinaryResponse.url) {
+			// 	console.log('cloudinaryResponse in login-routes did not have url. Here is the response:');
+			// 	console.log(cloudinaryResponse);
+			// }
+		const newUser = new User({
+			email: req.body.email,
+			username: newUsername,
+			image: req.body.image,
+			thumbnail: req.body.image,
+			firstName: req.body.firstName,
+			lastName: req.body.lastName,
+			name: req.body.fullname,
+			registerDate: new Date(Date.now()),
+			sendNotificationDigest: true,
+		});
+
+		User.register(newUser, req.body.password, function(err, account) {
+			if (err) {
+				console.log(err);
+				return res.status(500).json(err);
 			}
-			const newUser = new User({
-				email: req.body.email,
-				username: newUsername,
-				image: req.body.image,
-				thumbnail: cloudinaryResponse.url ? cloudinaryResponse.url.replace('/upload', '/upload/c_limit,h_50,w_50') : req.body.image,
-				firstName: req.body.firstName,
-				lastName: req.body.lastName,
-				name: req.body.fullname,
-				registerDate: new Date(Date.now()),
-				sendNotificationDigest: true,
-			});
 
-			User.register(newUser, req.body.password, function(err, account) {
-				if (err) {
-					console.log(err);
-					return res.status(500).json(err);
-				}
+			passport.authenticate('local')(req, res, function() {
 
-				passport.authenticate('local')(req, res, function() {
-
-					return res.status(201).json({
-						firstName: account.firstName,
-						lastName: account.lastName,
-						name: account.name,
-						username: account.username,
-						image: account.image,
-						thumbnail: account.thumbnail,
-						settings: account.settings
-					});
-
+				return res.status(201).json({
+					firstName: account.firstName,
+					lastName: account.lastName,
+					name: account.name,
+					username: account.username,
+					image: account.image,
+					thumbnail: account.thumbnail,
+					settings: account.settings
 				});
 
 			});
+
 		});
+		// });
 
 	});
 }

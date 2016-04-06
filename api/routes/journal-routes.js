@@ -6,10 +6,10 @@ const User = require('../models').User;
 const Pub = require('../models').Pub;
 const Asset = require('../models').Asset;
 const Notification = require('../models').Notification;
-import {cloudinary} from '../services/cloudinary';
+// import {cloudinary} from '../services/cloudinary';
 const Firebase = require('firebase');
 import {fireBaseURL, generateAuthToken} from '../services/firebase';
-import {featurePub} from '../services/recommendations'; 
+import {featurePub} from '../services/recommendations';
 
 export function createJournal(req, res) {
 	Journal.isUnique(req.body.subdomain, (err, result)=>{
@@ -76,7 +76,6 @@ export function getJournal(req, res) {
 	Journal.findOne({subdomain: req.query.subdomain})
 	.populate(Journal.populationObject())
 	.lean().exec(function(err, result) {
-
 		if (err) { return res.status(500).json(err); }
 
 		let isAdmin = false;
@@ -95,14 +94,6 @@ export function getJournal(req, res) {
 	});
 }
 app.get('/getJournal', getJournal);
-
-export function getRandomSlug(req, res) {
-	Pub.getRandomSlug(req.query.journalID, function(err, result) {
-		if (err) {console.log(err); return res.json(500);}
-		return res.status(201).json(result);
-	});
-}
-app.get('/getRandomSlug', getRandomSlug);
 
 export function saveJournal(req, res) {
 	Journal.findOne({subdomain: req.body.subdomain}).exec(function(err, journal) {
@@ -162,7 +153,7 @@ export function submitPubToJournal(req, res) {
 
 		if (!journal) { return res.status(500).json(err); }
 
-		if ( !journal.autoFeature && (!req.user || String(journal.admins).indexOf(String(req.user._id)) === -1) ) {
+		if ( !req.user ) {
 			return res.status(403).json('Not authorized to administrate this Journal.');
 		}
 
@@ -195,104 +186,6 @@ export function submitPubToJournal(req, res) {
 	});
 }
 app.post('/submitPubToJournal', submitPubToJournal);
-
-export function loadJournalAndLogin(req, res) {
-	// Load journal Data
-	// When an implicit login request is made using the cookie
-	// console.time("dbsave");
-	Journal.findOne({ $or: [ {subdomain: req.query.host.split('.')[0]}, {customDomain: req.query.host}]})
-	.populate(Journal.populationObject())
-	.lean().exec(function(err, result) {
-		// console.timeEnd("dbsave");
-		const journalID = result ? result._id : null;
-		Pub.getRandomSlug(journalID, function(errPubSlug, randomSlug) {
-			// const locale = result && result.locale ? result.locale : 'en';
-			const locale = result && result.locale ? result.locale : 'en';
-			let languageObject = {};
-			fs.readFile(__dirname + '/../../translations/languages/' + locale + '.json', 'utf8', function(errFSRead, data) {
-				if (err) { console.log(err); }
-				const customMessages = JSON.parse(result ? result.customLanguageMessages || '{}' : '{}');
-				languageObject = {...JSON.parse(data), ...customMessages};
-
-				const userID = req.user ? req.user._id : undefined;
-				Notification.getUnreadCount(userID, function(errNotificationUnread, notificationCount) {
-					const loginData = req.user
-						? {
-							name: req.user.name,
-							firstName: req.user.firstName,
-							lastName: req.user.lastName,
-							username: req.user.username,
-							image: req.user.image,
-							thumbnail: req.user.thumbnail,
-							settings: req.user.settings,
-							following: req.user.following,
-							notificationCount: notificationCount,
-							assets: req.user.assets,
-						}
-						: 'No Session';
-
-					Asset.find({_id: { $in: loginData.assets } }, function(errAssetFind, assets) {
-						if (assets.length) {
-							loginData.assets = assets;
-						}
-
-						if (result) {
-							// If it is a journal, check if the user is an admin.
-							let isAdmin = false;
-							const resultUserID = req.user ? req.user._id : undefined;
-							const adminsLength = result ? result.admins.length : 0;
-							for (let index = adminsLength; index--; ) {
-								if (String(result.admins[index]._id) === String(resultUserID)) {
-									isAdmin = true;
-								}
-							}
-
-							return res.status(201).json({
-								journalData: {
-									...result,
-									isAdmin: isAdmin,
-									randomSlug: randomSlug,
-								},
-								languageData: {
-									locale: locale,
-									languageObject: languageObject,
-								},
-								loginData: loginData,
-							});
-
-						}
-						// If there was no result, that means we're on pubpub.org, and we need to populate journals and pubs.
-						Journal.find({}, {_id: 1, journalName: 1, subdomain: 1, customDomain: 1, pubsFeatured: 1, collections: 1, design: 1}).lean().exec(function(errJournalFind, journals) {
-							Pub.find({history: {$not: {$size: 0}}, 'settings.isPrivate': {$ne: true}}, {_id: 1, title: 1, slug: 1, abstract: 1}).lean().exec(function(errPubFind, pubs) {
-								// console.log(res);
-								return res.status(201).json({
-									journalData: {
-										...result,
-										allJournals: journals,
-										allPubs: pubs,
-										isAdmin: false,
-										// locale: locale,
-										// languageObject: languageObject,
-										randomSlug: randomSlug,
-									},
-									languageData: {
-										locale: locale,
-										languageObject: languageObject,
-									},
-									loginData: loginData,
-								});
-
-							});
-						});
-					});
-
-				});
-
-			});
-		});
-	});
-}
-app.get('/loadJournalAndLogin', loadJournalAndLogin);
 
 export function createCollection(req, res) {
 	// return res.status(201).json(['cat','dog']);
@@ -358,11 +251,11 @@ export function saveCollection(req, res) {
 		}
 
 		if (req.body.newCollectionObject.headerImageURL) {
-			cloudinary.uploader.upload(req.body.newCollectionObject.headerImageURL, function(cloudinaryResponse) {
-				const cloudinaryURL = cloudinaryResponse.url;
-				updateAndSave(cloudinaryURL);
+			// cloudinary.uploader.upload(req.body.newCollectionObject.headerImageURL, function(cloudinaryResponse) {
+				// const cloudinaryURL = cloudinaryResponse.url;
+			updateAndSave(req.body.newCollectionObject.headerImageURL);
 
-			});
+			// });
 		} else {
 			updateAndSave();
 		}

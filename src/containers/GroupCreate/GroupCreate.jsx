@@ -3,9 +3,10 @@ import {connect} from 'react-redux';
 import Radium from 'radium';
 import { pushState } from 'redux-router';
 import PureRenderMixin from 'react-addons-pure-render-mixin';
-import {LoaderIndeterminate, CreateGroupForm} from '../../components';
-import {create} from '../../actions/group';
-import {toggleVisibility} from '../../actions/login';
+import {LoaderIndeterminate} from 'components';
+import CreateGroupForm from './CreateGroupForm';
+import {create} from 'containers/GroupProfile/actions';
+import {toggleVisibility} from 'containers/Login/actions';
 import {globalStyles} from 'utils/styleConstants';
 
 import {FormattedMessage} from 'react-intl';
@@ -43,26 +44,26 @@ const GroupCreate = React.createClass({
 			} else if (!formValues.groupSlug) {
 				this.setState({errorMessage: 'noSlug'});
 			} else {
-				this.props.dispatch(create(formValues.groupName, formValues.groupSlug));	
+				this.props.dispatch(create(formValues.groupName, formValues.groupSlug));
 			}
-			
+
 		}
 	},
 
 	render: function() {
 		return (
-			<div style={styles.container}>		
+			<div style={styles.container}>
 				<div style={styles.loader}>
 					{this.props.groupData.getIn(['createGroupData', 'status']) === 'loading'
 						? <LoaderIndeterminate color={globalStyles.sideText}/>
 						: null
 					}
-				</div>	
-				
+				</div>
+
 				<div style={styles.header}>
 					<FormattedMessage id="group.createGroup" defaultMessage="Create Group"/>
 				</div>
-				<CreateGroupForm onSubmit={this.handleCreateSubmit} /> 
+				<CreateGroupForm onSubmit={this.handleCreateSubmit} />
 				<div style={[styles.error, !this.state.errorMessage && styles.hidden]}>
 					{(()=>{
 						switch (this.state.errorMessage) {

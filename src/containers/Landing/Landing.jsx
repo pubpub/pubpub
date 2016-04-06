@@ -5,8 +5,8 @@ import Helmet from 'react-helmet';
 import {Autocomplete} from 'containers';
 import {globalStyles} from 'utils/styleConstants';
 // import {LandingBody} from './components';
-import PPMComponent from 'markdown/PPMComponent';
-import {getRandomSlug} from 'actions/journal';
+import {Markdown} from 'components';
+import {getRandomSlug} from 'containers/App/actions';
 import { pushState } from 'redux-router';
 import { Link } from 'react-router';
 const HoverLink = Radium(Link);
@@ -15,7 +15,7 @@ let styles = {};
 
 const Landing = React.createClass({
 	propTypes: {
-		journalData: PropTypes.object,
+		appData: PropTypes.object,
 		landingData: PropTypes.object,
 		path: PropTypes.string,
 		query: PropTypes.object,
@@ -35,7 +35,7 @@ const Landing = React.createClass({
 	},
 
 	componentDidMount() {
-		document.getElementById('dynamicStyle').innerHTML = this.props.journalData.getIn(['journalData', 'landingPage', 'styleScoped']);
+		document.getElementById('dynamicStyle').innerHTML = this.props.appData.getIn(['journalData', 'landingPage', 'styleScoped']);
 	},
 
 	setQuery: function(queryObject) {
@@ -76,10 +76,10 @@ const Landing = React.createClass({
 	showMeScienceClick: function() {
 		const analyticsData = {
 			location: '/',
-			journalID: this.props.journalData.getIn(['journalData', '_id']),
-			journalName: this.props.journalData.getIn(['journalData', 'journalName']),
+			journalID: this.props.appData.getIn(['journalData', '_id']),
+			journalName: this.props.appData.getIn(['journalData', 'journalName']),
 		};
-		this.props.dispatch(getRandomSlug(this.props.journalData.getIn(['journalData', '_id']), analyticsData));
+		this.props.dispatch(getRandomSlug(this.props.appData.getIn(['journalData', '_id']), analyticsData));
 	},
 
 	setFeature: function(newFeature) {
@@ -90,15 +90,15 @@ const Landing = React.createClass({
 
 	render: function() {
 		const metaData = {
-			title: this.props.journalData.getIn(['journalData', 'journalName']) || 'PubPub',
+			title: this.props.appData.getIn(['journalData', 'journalName']) || 'PubPub',
 		};
 		// console.log(this.props);
-		const componentsArray = this.props.journalData.getIn(['journalData', 'design', 'layoutString'])
-			? JSON.parse(this.props.journalData.getIn(['journalData', 'design', 'layoutString']).replace(/(['"])?([:]?[a-zA-Z0-9_]+)(['"])?: /g, '"$2": ').replace(/'/g, '"'))
-			: [];
+		// const componentsArray = this.props.appData.getIn(['journalData', 'design', 'layoutString'])
+		// 	? JSON.parse(this.props.appData.getIn(['journalData', 'design', 'layoutString']).replace(/(['"])?([:]?[a-zA-Z0-9_]+)(['"])?: /g, '"$2": ').replace(/'/g, '"'))
+		// 	: [];
 
 
-		const journalID = this.props.journalData.getIn(['journalData', '_id']);
+		// const journalID = this.props.appData.getIn(['journalData', '_id']);
 
 		return (
 			<div style={styles.container}>
@@ -106,12 +106,12 @@ const Landing = React.createClass({
 				<Helmet {...metaData} />
 
 				{
-					this.props.journalData.get('baseSubdomain') === null
+					this.props.appData.get('baseSubdomain') === null
 						? <div>
 							<div style={styles.top}>
 								<h1 style={styles.topPub}>PubPub</h1>
 								<div style={styles.subheader}>Open Publishing</div>
-								<div key="showMeScience" style={styles.showMeScience} onClick={this.showMeScienceClick}><Link to={'/pub/' + this.props.journalData.getIn(['journalData', 'randomSlug'])}style={styles.scienceText}>Show Me Science</Link></div>
+								<div key="showMeScience" style={styles.showMeScience} onClick={this.showMeScienceClick}><Link to={'/pub/' + this.props.appData.getIn(['journalData', 'randomSlug'])}style={styles.scienceText}>Show Me Science</Link></div>
 							</div>
 							<div style={styles.search}>
 								<Autocomplete
@@ -178,7 +178,7 @@ const Landing = React.createClass({
 								<div style={globalStyles.clearFix}></div>
 							</div>
 
-							<div style={styles.footer}>
+							{/* <div style={styles.footer}>
 								<span style={styles.footerItem} key={'footerItem' + 0}><Link to={'/pub/about'} style={globalStyles.link}>About PubPub</Link></span>
 								<span style={styles.footerSeparator}>|</span>
 								<span style={styles.footerItem} key={'footerItem' + 1}><a target="_blank" style={globalStyles.link} href="http://www.twitter.com/isPubPub">@isPubPub</a></span>
@@ -186,14 +186,14 @@ const Landing = React.createClass({
 								<span style={styles.footerItem} key={'footerItem' + 2}><a target="_blank" style={globalStyles.link} href="http://eepurl.com/bLkuVn">Stay up to date</a></span>
 								<span style={styles.footerSeparator}>|</span>
 								<span style={styles.footerItem} key={'footerItem' + 3}><a target="_blank" style={globalStyles.link} href="mailto:pubpub@media.mit.edu">Contact</a></span>
-							 </div>
+							 </div> */}
 						</div>
 
 						: <div id={'pageContent'}>
-							<PPMComponent markdown={this.props.journalData.getIn(['journalData', 'landingPage', 'markdown'])} isPage={true}/>
+							<Markdown markdown={this.props.appData.getIn(['journalData', 'landingPage', 'markdown'])} isPage={true}/>
 						</div>
 				}
-				{/* <LandingBody componentsArray={componentsArray} journalID={journalID} journalData={this.props.journalData.get('journalData')} query={this.props.query} setQueryHandler={this.setQuery}/> */}
+				{/* <LandingBody componentsArray={componentsArray} journalID={journalID} journalData={this.props.appData.get('journalData')} query={this.props.query} setQueryHandler={this.setQuery}/> */}
 			</div>
 		);
 	}
@@ -202,7 +202,7 @@ const Landing = React.createClass({
 
 export default connect( state => {
 	return {
-		journalData: state.journal,
+		appData: state.app,
 		landingData: state.landing,
 		path: state.router.location.pathname,
 		query: state.router.location.query,

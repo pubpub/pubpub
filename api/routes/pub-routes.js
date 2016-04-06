@@ -345,11 +345,12 @@ export function updateCollaborators(req, res) {
 					const groupName = group ? group.groupName : undefined;
 					const journalName = journal ? journal.journalName : undefined;
 					const senderName = req.user.name;
+					const senderEmail = req.user.email;
 					const pubTitle = pub.title;
 
 					if (user) {
 						const email = user.email;
-						sendAddedAsCollaborator(email, url, senderName, pubTitle, groupName, journalName, function(errSendAdded, result) {
+						sendAddedAsCollaborator(email, url, senderName, senderEmail, pubTitle, groupName, journalName, function(errSendAdded, result) {
 							if (errSendAdded) { console.log('Error sending email to user: ', errSendAdded);	}
 						});
 					}
@@ -357,7 +358,7 @@ export function updateCollaborators(req, res) {
 					if (group) {
 						for (let index = group.members.length; index--;) {
 							const email = group.members[index].email;
-							sendAddedAsCollaborator(email, url, senderName, pubTitle, groupName, journalName, function(errSendAdded, result) {
+							sendAddedAsCollaborator(email, url, senderName, senderEmail, pubTitle, groupName, journalName, function(errSendAdded, result) {
 								if (errSendAdded) { console.log('Error sending email to user: ', errSendAdded);	}
 							});
 						}

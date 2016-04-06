@@ -2,23 +2,31 @@
 
 import React, {PropTypes} from 'react';
 import Radium, {Style} from 'radium';
-import {Button, LoaderIndeterminate, License, Menu} from 'components';
+import {Button, Formatting, License, Menu} from 'components';
 import {globalStyles} from 'utils/styleConstants';
 
 import {globalMessages} from 'utils/globalMessages';
 import {injectIntl, FormattedMessage} from 'react-intl';
-import PPMComponent from 'markdown/PPMComponent';
+import {Markdown} from 'components';
 
 let styles = {};
 
-// import {loadCss} from 'utils/loadingFunctions';
-import initCodeMirrorMode from 'containers/Editor/editorCodeMirrorMode';
-import {codeMirrorStyles} from 'containers/Editor/codeMirrorStyles';
-import {clearTempHighlights} from 'components/PubSelectionPopup/selectionFunctions';
-import EditorWidgets from 'components/EditorWidgets/EditorWidgets';
+import initCodeMirrorMode from 'containers/Editor/utils/editorCodeMirrorMode';
+import {codeMirrorStyles} from 'containers/Editor/utils/codeMirrorStyles';
+import {insertText} from 'containers/Editor/utils/editorCodeFunctions';
+import MarkdownWidgets from 'components/Markdown/MarkdownWidgets/MarkdownWidgets';
+
+function clearTempHighlights() {
+	const temps = document.getElementsByClassName('tempHighlight');
+	while (temps.length) {
+		for (let index = 0; index < temps.length; index += 1) {
+			temps[index].classList.remove('tempHighlight');
+		}
+	}
+}
 
 // import marked from '../../modules/markdown/markdown';
-// import markdownExtensions from '../../components/EditorPlugins';
+// import markdownExtensions from '../../components/MarkdownPlugins';
 // marked.setExtensions(markdownExtensions);
 
 const PubDiscussionsInput = React.createClass({
@@ -36,7 +44,7 @@ const PubDiscussionsInput = React.createClass({
 		activeSaveID: PropTypes.string,
 		saveID: PropTypes.string,
 		intl: PropTypes.object,
-		toggleAssetLibrary: PropTypes.func,
+		toggleMediaLibrary: PropTypes.func,
 		userAssets: PropTypes.array,
 	},
 
@@ -70,6 +78,7 @@ const PubDiscussionsInput = React.createClass({
 			extraKeys: {'Ctrl-Space': 'autocomplete'},
 			placeholder: this.props.intl.formatMessage(placeholderMsg),
 			dragDrop: false,
+			isPage: false,
 		};
 
 		const codeMirror = CodeMirror(document.getElementById(this.props.codeMirrorID), cmOptions);
@@ -132,10 +141,14 @@ const PubDiscussionsInput = React.createClass({
 
 	onFocus: function() {
 		this.setState({expanded: true});
+		window.clearTimeout(this.blurTimeout);
 	},
 	onBlur: function() {
 		if (this.cm.getValue().length === 0) {
-			this.setState({expanded: false});
+			this.blurTimeout = window.setTimeout(()=>{
+				this.setState({expanded: false});
+			}, 150);
+
 		}
 	},
 
@@ -147,11 +160,34 @@ const PubDiscussionsInput = React.createClass({
 		this.setState({isPrivateChecked: !this.state.isPrivateChecked});
 	},
 
+	insertFormatting: function(formatting) {
+		return ()=>{
+			const cm = document.getElementById(this.props.codeMirrorID).childNodes[0].CodeMirror;
+			insertText(cm, formatting, ()=>{});
+			// this.toggleFormatting();
+		};
+	},
+
 	render: function() {
+		const formattingItems = [
+			{key: 'header1', string: <Formatting type={'header1'} />, function: this.insertFormatting('header1')	},
+			{key: 'header2', string: <Formatting type={'header2'} />, function: this.insertFormatting('header2')	},
+			{key: 'header3', string: <Formatting type={'header3'} />, function: this.insertFormatting('header3')	},
+			{key: 'bold', string: <Formatting type={'bold'} />, function: this.insertFormatting('bold')	},
+			{key: 'italic', string: <Formatting type={'italic'} />, function: this.insertFormatting('italic')	},
+			{key: 'ol', string: <Formatting type={'ol'} />, function: this.insertFormatting('ol')	},
+			{key: 'ul', string: <Formatting type={'ul'} />, function: this.insertFormatting('ul')	},
+			{key: 'link', string: <Formatting type={'link'} />, function: this.insertFormatting('link')	},
+			{key: 'image', string: <Formatting type={'image'} />, function: this.insertFormatting('image')	},
+			{key: 'video', string: <Formatting type={'video'} />, function: this.insertFormatting('video')	},
+			{key: 'cite', string: <Formatting type={'cite'} />, function: this.insertFormatting('cite')	},
+			{key: 'quote', string: <Formatting type={'quote'} />, function: this.insertFormatting('quote')	},
+			{key: 'linebreak', string: <Formatting type={'linebreak'} />, function: this.insertFormatting('linebreak')	},
+		];
 		const menuItems = [
-			{ key: 'preview', string: <FormattedMessage {...globalMessages.Preview}/>, function: this.toggleLivePreview, isActive: this.state.showPreview },
-			{ key: 'formatting', string: <FormattedMessage {...globalMessages.Formatting}/>, function: ()=>{} },
-			{ key: 'assets', string: <FormattedMessage {...globalMessages.assets}/>, function: this.props.toggleAssetLibrary(this.props.codeMirrorID), noSeparator: true },
+			{ key: 'formatting', string: <FormattedMessage {...globalMessages.Formatting}/>, function: ()=>{}, children: formattingItems},
+			{ key: 'assets', string: <FormattedMessage {...globalMessages.assets}/>, function: this.props.toggleMediaLibrary(this.props.codeMirrorID)},
+			{ key: 'preview', string: <FormattedMessage {...globalMessages.Preview}/>, function: this.toggleLivePreview, isActive: this.state.showPreview, noSeparator: true  },
 		];
 
 		return (
@@ -173,7 +209,7 @@ const PubDiscussionsInput = React.createClass({
 					},
 				}} />
 
-			{(this.state.initialized) ? <EditorWidgets assets={this.props.userAssets} ref="widgethandler" mode="discussions" references={{}} cm={this.cm} /> : null }
+			{(this.state.initialized) ? <MarkdownWidgets assets={this.props.userAssets} ref="widgethandler" mode="discussions" references={{}} cm={this.cm} /> : null }
 
 				<div style={[styles.inputTopLine, styles.expanded(this.state.expanded, true)]}>
 					<div style={styles.thumbnail}>
@@ -196,8 +232,8 @@ const PubDiscussionsInput = React.createClass({
 					</div> */}
 				</div>
 
-				<div style={styles.inputBox(this.state.expanded)}>
-					<div style={styles.inputMenuWrapper}>
+				<div style={styles.inputBox(this.state.expanded)} onClick={this.onFocus}>
+					<div style={[styles.inputMenuWrapper, styles.expanded(this.state.expanded, true)]}>
 						<Menu items={menuItems} customClass={'discussionInputMenu'} height={'20px'} fontSize={'0.9em'} fontWeight={'400'}/>
 					</div>
 
@@ -208,7 +244,7 @@ const PubDiscussionsInput = React.createClass({
 
 				{this.state.showPreview
 					? <div style={styles.livePreviewBox}>
-						<PPMComponent markdown={this.state.content} />
+						<Markdown markdown={this.state.content} />
 					</div>
 					: null
 				}
@@ -242,9 +278,9 @@ const PubDiscussionsInput = React.createClass({
 						onClick={this.submitDiscussion}
 						isLoading={this.props.addDiscussionStatus === 'loading' && this.props.activeSaveID === this.props.saveID}
 						align={'right'} />
-					{/*<div style={styles.submitButton} key={'newDiscussionSubmit'} onClick={this.submitDiscussion}>
+					{/* <div style={styles.submitButton} key={'newDiscussionSubmit'} onClick={this.submitDiscussion}>
 						<FormattedMessage {...globalMessages.Submit}/>
-					</div>*/}
+					</div> */}
 				</div>
 
 			</div>
@@ -259,7 +295,7 @@ styles = {
 		const expandObj = {};
 		if (expand) {
 			expandObj.opacity = 1;
-			expandObj.transform = 'translateY(0px)';
+			expandObj.transform = 'none';
 		} else {
 			expandObj.opacity = 0;
 			expandObj.pointerEvents = 'none';
@@ -275,7 +311,7 @@ styles = {
 	},
 	container: {
 		width: '100%',
-		overflow: 'hidden',
+		// overflow: 'hidden',
 		margin: '0px 0px',
 		position: 'relative',
 	},
@@ -312,8 +348,14 @@ styles = {
 		height: 22,
 	},
 	inputMenuWrapper: {
-		borderBottom: '1px solid #ccc',
+		// borderBottom: '1px solid #ccc',
 		marginBottom: '10px',
+		opacity: 0,
+		position: 'absolute',
+		top: '6px',
+	},
+	inputMenuWrapperActive: {
+		opacity: 1,
 	},
 	inputBottomLine: {
 		// backgroundColor: 'rgba(255,0,100,0.1)',
@@ -324,7 +366,7 @@ styles = {
 		return {
 			backgroundColor: '#fff',
 			minHeight: 25,
-			padding: '0px 0px 10px 0px',
+			padding: '10px 0px 10px 0px',
 			// boxShadow: '0 1px 3px 0 rgba(0,0,0,.2),0 1px 1px 0 rgba(0,0,0,.14),0 2px 1px -1px rgba(0,0,0,.12)',
 			boxShadow: '0px 0px 2px rgba(0,0,0,0.4)',
 			margin: '5px auto',

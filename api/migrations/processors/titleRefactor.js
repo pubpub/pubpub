@@ -2,12 +2,12 @@
  function generateHeaderString({markdown, title, abstract, authorsNote, authors}) {
 
 	const headerMarkdown = `-----
+${(authorsNote) ? `authorsNote: ${authorsNote}` : '' }
 title: ${title}
-abstract: ${abstract}
+${(abstract) ? `abstract: ${abstract}` : ''}
 ${authors.map((author) => {
 	return `author: ${author.username}\n\tname: ${author.name}\n`;
 }).join('')}
-${(authorsNote) ? `authorsNote: ${authorsNote}` : '' }
 -----
 `;
 
@@ -48,7 +48,8 @@ export function refactorTitleFirebase({pub, markdown, authors}) {
 	newMarkdown = newMarkdown.replace(authorsnoteRegex, processAuthorsNote);
 
 	if (!foundTitle) {
-		// console.log('- Could not find title in ' + pub.slug);
+		const hasTitleMigration = (markdown.indexOf('title:') !== -1);
+    return markdown;
 	}
 
 	// console.log(foundTitle, foundAbstract, foundAuthorsNote);

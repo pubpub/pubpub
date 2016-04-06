@@ -3,7 +3,7 @@ import {connect} from 'react-redux';
 import Radium from 'radium';
 import Helmet from 'react-helmet';
 import PureRenderMixin from 'react-addons-pure-render-mixin';
-import {testGetEmpty, testGetParams, testPostEmpty, testPostData} from '../../actions/subdomainTest';
+import {testGetEmpty, testGetParams, testPostEmpty, testPostData} from './actions';
 
 let styles = {};
 
@@ -55,7 +55,7 @@ const Subdomain = React.createClass({
 					<h3>testPostData</h3>
 					{JSON.stringify(this.props.subdomainData.get('testPostData'))}
 				</div>
-				
+
 			</div>
 		);
 	}

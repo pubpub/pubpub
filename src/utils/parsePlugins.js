@@ -1,10 +1,22 @@
 export function parsePluginString(str) {
 	let propDict;
 
+
+	//Problems escaping, see: http://stackoverflow.com/questions/36436331
+	str = String(str).replace(/\n/g, "\\n")
+	.replace(/\r/g, "\\r")
+	.replace(/\t/g, "\\t")
+	.replace(/\f/g, "\\f")
+	.replace(/\\*#/g, "#")
+	.replace(/\\*&/g, "&");
+
 	try {
 		propDict = JSON.parse(str);
 	} catch (err) {
 		propDict = {};
+		console.log('Could not parse JSON!');
+		console.log(err);
+		console.log(str);
 	}
 
 	return propDict;
