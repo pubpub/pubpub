@@ -40,7 +40,7 @@ groupSchema.statics.getGroup = function(groupSlug, readerID, callback) {
 	.populate({path: 'admins', select: 'name firstName lastName username thumbnail'})
 	.populate({
 		path: 'pubs',
-		select: 'title abstract slug collaborators settings discussions editorComments lastUpdated',
+		select: 'title abstract slug collaborators settings discussions lastUpdated',
 		populate: [
 			{
 				path: 'authors',
@@ -62,16 +62,16 @@ groupSchema.statics.getGroup = function(groupSlug, readerID, callback) {
 					select: 'name firstName lastName username thumbnail',
 				},
 			},
-			{
-				path: 'editorComments',
-				model: 'Discussion',
-				select: 'markdown author postDate',
-				populate: {
-					path: 'author',
-					model: 'User',
-					select: 'name firstName lastName username thumbnail',
-				},
-			}
+			// {
+			// 	path: 'editorComments',
+			// 	model: 'Discussion',
+			// 	select: 'markdown author postDate',
+			// 	populate: {
+			// 		path: 'author',
+			// 		model: 'User',
+			// 		select: 'name firstName lastName username thumbnail',
+			// 	},
+			// }
 		]
 	})
 	.lean().exec((err, group) =>{

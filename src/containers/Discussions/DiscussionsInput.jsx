@@ -278,9 +278,9 @@ const PubDiscussionsInput = React.createClass({
 						onClick={this.submitDiscussion}
 						isLoading={this.props.addDiscussionStatus === 'loading' && this.props.activeSaveID === this.props.saveID}
 						align={'right'} />
-					{/*<div style={styles.submitButton} key={'newDiscussionSubmit'} onClick={this.submitDiscussion}>
+					{/* <div style={styles.submitButton} key={'newDiscussionSubmit'} onClick={this.submitDiscussion}>
 						<FormattedMessage {...globalMessages.Submit}/>
-					</div>*/}
+					</div> */}
 				</div>
 
 			</div>

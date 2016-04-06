@@ -73,49 +73,50 @@ const Plugin = React.createClass({
 				// Find element with selectionPreviousDraft
 				// Find parent, until we get the root
 				// modify css
-				// Apply splash to close on click
-				let currentNode = document.getElementById('selection-block-' + selection._id); // The selection block
+				// Add listener that can reset css
 
+				let currentNode = document.getElementById('selection-block-' + selection._id); // The selection block
 				while (currentNode.parentNode.className !== 'pub-discussions-wrapper') {
 					currentNode = currentNode.parentNode;
 				}
-				console.log(currentNode.cssText);
+
 				console.log(currentNode);
 				const destY = this.getPosition(item.target).yloc;
-				// currentNode.cssText = 'background-color: red;';
-				// currentNode.style = {...currentNode.style, ...{backgroundColor: 'blue'}};
-				currentNode.style.backgroundColor = 'white';
+				currentNode.style.backgroundColor = '#F0F0F0';
 				currentNode.style.position = 'absolute';
 				currentNode.style.right = '50px';
 				currentNode.style.zIndex = '20';
-				currentNode.style.top = (destY - 30) + 'px';
+				currentNode.style.top = (destY - 50) + 'px';
 				currentNode.style.padding = '5px';
 				currentNode.style.boxShadow = '0px 0px 6px #444';
-				// currentNode.style.transition = '50px';
+				currentNode.style.opacity = '0';
+				setTimeout(()=>{
+					currentNode.style.transition = '.15s linear opacity';
+				}, 25);
+				setTimeout(()=>{
+					currentNode.style.opacity = '1';
+				}, 50);
 
-				function ontheClick() {
-					console.log('clicked!');
+
+				function ontheClick(evt) {
+					if (currentNode.contains(evt.target)) { return; }
+					console.log('inside the click');
+					currentNode.style.backgroundColor = '';
+					currentNode.style.position = '';
+					currentNode.style.right = '';
+					currentNode.style.zIndex = '';
+					currentNode.style.top = '';
+					currentNode.style.padding = '';
+					currentNode.style.boxShadow = '';
+
+					currentNode.style.opacity = '';
+					currentNode.style.transition = '';
 					window.removeEventListener('click', ontheClick);
 				}
-				item.stopPropagation();
-				console.log(currentNode.cssText);
-				window.addEventListener('click', ontheClick);
-				// debugger;
-
-
-// position: absolute;
-// right: 33px;
-// z-index: 20;
-// /* width: 40%; */
-// top: 2000px;
-// top: 2050px;
-// background-color: white;
-// padding: 5px;
-// box-shadow: 0px 0px 6px #444;
-// max-height: 60vh;
-// overflow: scroll;
-// transition: .1s linear top;
-// }
+				setTimeout(()=>{
+					// Timeout so that the eventListener doesn't fire on this click eventListener bubbling up
+					window.addEventListener('click', ontheClick);
+				}, 200);
 
 				// document.handleHighlightClick(selection);
 				// const selectionElement = document.getElementById('selection-block-' + selection._id);
