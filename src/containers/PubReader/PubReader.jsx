@@ -447,7 +447,7 @@ styles = {
 		float: 'left',
 		width: '36%',
 		padding: '0px 2%',
-
+		position: 'relative',
 		// To make discussions only as long as the pub:
 		// position: 'absolute',
 		// right: 0,

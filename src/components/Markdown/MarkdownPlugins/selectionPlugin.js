@@ -81,11 +81,26 @@ const Plugin = React.createClass({
 				}
 				console.log(currentNode.cssText);
 				console.log(currentNode);
+				const destY = this.getPosition(item.target).yloc;
 				// currentNode.cssText = 'background-color: red;';
-				currentNode.style = {...currentNode.style, ...{backgroundColor: 'blue'}};
-				console.log(currentNode.cssText);
-				// debugger;
+				// currentNode.style = {...currentNode.style, ...{backgroundColor: 'blue'}};
+				currentNode.style.backgroundColor = 'white';
+				currentNode.style.position = 'absolute';
+				currentNode.style.right = '50px';
+				currentNode.style.zIndex = '20';
+				currentNode.style.top = (destY - 30) + 'px';
+				currentNode.style.padding = '5px';
+				currentNode.style.boxShadow = '0px 0px 6px #444';
+				// currentNode.style.transition = '50px';
 
+				function ontheClick() {
+					console.log('clicked!');
+					window.removeEventListener('click', ontheClick);
+				}
+				item.stopPropagation();
+				console.log(currentNode.cssText);
+				window.addEventListener('click', ontheClick);
+				// debugger;
 
 
 // position: absolute;
@@ -270,7 +285,7 @@ const Plugin = React.createClass({
 						'.selection-block-active': {
 							boxShadow: '0 2px 4px -1px rgba(0,0,0,.2),0 4px 5px 0 rgba(0,0,0,.14),0 1px 10px 0 rgba(0,0,0,.12)',
 							transition: '.05s linear box-shadow, .05s linear transform',
-							transform: 'translateX(-15px)',
+							transform: 'translateX(-5px)',
 							backgroundColor: 'rgba(195, 245, 185, 0.6)',
 						},
 					}} />
