@@ -424,6 +424,7 @@ styles = {
 		}
 	},
 	centerBar: {
+		overflow: 'hidden',
 		backgroundColor: 'white',
 		width: '60%',
 		minHeight: 'calc(100vh - ' + globalStyles.headerHeight + ' + 3px)',

@@ -37,6 +37,11 @@ import {
 	LOAD_APP_AND_LOGIN_SUCCESS,
 } from 'containers/App/actions';
 
+import {
+	LOGIN_LOAD_SUCCESS,
+	LOGOUT_LOAD_SUCCESS,
+} from 'containers/Login/actions';
+
 /*--------*/
 // Initialize Default State
 /*--------*/
@@ -206,6 +211,23 @@ function loadAppSuccess(state, journalData) {
 	});
 }
 
+function loginLoad(state, result) {
+	return state.merge({
+		journalData: {
+			...state.get('journalData').toJS(),
+			isAdmin: result.isAdminToJournal,
+		},
+	});
+}
+
+function logoutLoad(state) {
+	return state.merge({
+		journalData: {
+			...state.get('journalData').toJS(),
+			isAdmin: false,
+		},
+	});
+}
 /*--------*/
 // Bind actions to specific reducing functions.
 /*--------*/
@@ -259,6 +281,11 @@ export default function loginReducer(state = defaultState, action) {
 
 	case LOAD_APP_AND_LOGIN_SUCCESS:
 		return loadAppSuccess(state, action.result.journalData);
+
+	case LOGIN_LOAD_SUCCESS:
+		return loginLoad(state, action.result);
+	case LOGOUT_LOAD_SUCCESS:
+		return logoutLoad(state);
 	default:
 		return ensureImmutable(state);
 	}

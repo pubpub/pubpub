@@ -320,7 +320,7 @@ const Plugin = React.createClass({
 					</div>
 
 					{/* Show just the highlight text if this.state.showcontext is false */}
-					<span style={[this.state.showContext === true && {display: 'none'}]}>this.props.source.text</span>
+					<span style={[this.state.showContext === true && {display: 'none'}]}>{this.props.source.text}</span>
 
 			</div>
 		);

@@ -16,10 +16,8 @@ import {
 } from './actions';
 
 import {
-
 	LOGIN_LOAD_SUCCESS,
 	LOGOUT_LOAD_SUCCESS,
-
 } from 'containers/Login/actions';
 
 import {
