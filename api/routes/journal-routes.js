@@ -153,7 +153,7 @@ export function submitPubToJournal(req, res) {
 
 		if (!journal) { return res.status(500).json(err); }
 
-		if ( !journal.autoFeature && (!req.user || String(journal.admins).indexOf(String(req.user._id)) === -1) ) {
+		if ( !req.user ) {
 			return res.status(403).json('Not authorized to administrate this Journal.');
 		}
 

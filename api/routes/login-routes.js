@@ -76,9 +76,11 @@ app.get('/logout', logout);
 
 // When a user registers
 export function register(req, res) {
-	if (req.body.firstname === 'undefined' && req.body.lastname === 'undefined') { // Spammers inputting 'undefined undefined' are posting lots of pubs
+	if ((req.body.firstname === 'undefined' && req.body.lastname === 'undefined') || req.body.email.indexOf('@yopmail.com') > -1) { // Spammers inputting 'undefined undefined' are posting lots of pubs
+		console.log('Blocked register of spam');
 		return res.status(500).json();
 	}
+
 	User.generateUniqueUsername(req.body.fullname, function(newUsername) {
 
 		// Upload to cloudinary so we can have a thumbnail and CDN action.

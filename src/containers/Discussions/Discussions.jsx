@@ -15,7 +15,7 @@ import {addDiscussion, discussionVoteSubmit, archiveDiscussion} from './actions'
 import {redditHot as hotScore} from 'decay';
 
 // import {globalMessages} from 'utils/globalMessages';
-// import {FormattedMessage} from 'react-intl';
+import {FormattedMessage} from 'react-intl';
 
 let styles = {};
 const Discussions = React.createClass({
@@ -220,8 +220,8 @@ const Discussions = React.createClass({
 
 					{(discussionsData.length === 0) ?
 						<div style={styles.emptyComments}>
-							<div>There are no comments here yet.</div>
-							<div>Be the first to start the discussion!</div>
+							<div><FormattedMessage id="discussion.blank1" defaultMessage="There are no comments here yet."/></div>
+							<div><FormattedMessage id="discussion.blank2" defaultMessage="Be the first to start the discussion!"/></div>
 						</div>
 					: null }
 
