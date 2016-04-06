@@ -1,7 +1,7 @@
 require('babel-polyfill');
 
-
-const env = (process.env.NODE_ENV === 'production' && location.hostname !== 'pubpub-dev.herokuapp.com') ? 'production' : 'development';
+// const env = (process.env.NODE_ENV === 'production' && location.hostname !== 'pubpub-dev.herokuapp.com') ? 'production' : 'development';
+const env = (process.env.NODE_ENV === 'production') ? 'production' : 'development';
 
 const environment = {
 	development: {
