@@ -2,12 +2,7 @@ import React, {PropTypes} from 'react';
 import Radium, {Style} from 'radium';
 import {globalStyles} from 'utils/styleConstants';
 import {Markdown, SelectionPopup, Reference, License} from 'components';
-// import { Link } from 'react-router';
-// import {loadCss} from 'utils/loadingFunctions';
-// import {scienceStyle, magazineStyle} from './pubStyles';
-// import cssConvert from 'utils/cssToRadium';
 import ResizingText from 'utils/ResizingText';
-// import dateFormat from 'dateformat';
 
 import {globalMessages} from 'utils/globalMessages';
 import {parsePluginString} from 'utils/parsePlugins';
@@ -29,7 +24,7 @@ const PubBody = React.createClass({
 		errorView: PropTypes.bool,
 		minFont: PropTypes.number,
 		maxFont: PropTypes.number,
-
+		showPubHighlightsComments: PropTypes.bool,
 	},
 	getDefaultProps: function() {
 		return {
@@ -42,15 +37,10 @@ const PubBody = React.createClass({
 	},
 
 	componentDidMount() {
-		// loadCss(this.props.style.googleFontURL);
 		document.getElementById('dynamicStyle').innerHTML = this.props.styleScoped;
 	},
 
 	componentWillReceiveProps(nextProps) {
-		// if (this.props.style.googleFontURL !== nextProps.style.googleFontURL) {
-		// 	// console.log('load new fonts!');
-		// 	loadCss(nextProps.style.googleFontURL);
-		// }
 		if (this.props.styleScoped !== nextProps.styleScoped) {
 			document.getElementById('dynamicStyle').innerHTML = nextProps.styleScoped;
 		}
@@ -60,39 +50,7 @@ const PubBody = React.createClass({
 	},
 
 	compileStyleRules: function() {
-		// console.log('compiling rules');
 
-		// let cssObject = {};
-		// switch (this.props.style.type) {
-		// case 'science':
-		// 	cssObject = scienceStyle;
-		// 	break;
-		// case 'magazine':
-		// 	cssObject = magazineStyle;
-		// 	break;
-		// case 'custom':
-		// 	const objectString = this.props.style.cssObjectString || '';
-		// 	cssObject = cssConvert(objectString);
-		// 	// console.log('cssObject', cssObject);
-		// 	break;
-		// default:
-		// 	cssObject = scienceStyle;
-		// 	break;
-		// }
-
-		// const defaultContentRules = {};
-		// Object.keys(scienceStyle).map((cssRule)=> {
-		// 	cssRule.split(',').map((splitRule)=> {
-		// 		defaultContentRules['#pubContent ' + splitRule.replace(/ /g, '')] = scienceStyle[cssRule];
-		// 	});
-		// });
-
-		// const pubContentRules = {};
-		// Object.keys(cssObject).map((cssRule)=> {
-		// 	cssRule.split(',').map((splitRule)=> {
-		// 		pubContentRules['#pubContent ' + splitRule.replace(/ /g, '')] = cssObject[cssRule];
-		// 	});
-		// });
 
 		return ({
 			// ...defaultContentRules,
@@ -120,13 +78,8 @@ const PubBody = React.createClass({
 		});
 	},
 
-	// less.render(x, function (e, output) {
-	//   console.log(output.css);
-	//     console.timeEnd("dbsave");
-	// });
-
 	findFootnotes: function(markdown) {
-		const footnoteRegex = /\[\[footnote:.*?\]\]/g;
+		const footnoteRegex = /\[\[{"pluginType":"footnote".*?\]\]/g;
 		const matches = markdown.match(footnoteRegex);
 		if (matches && matches.length > 0) {
 			const footnotes = matches.map((match) => parsePluginString(match).footnote);
@@ -136,20 +89,21 @@ const PubBody = React.createClass({
 	},
 
 	findReferences: function(markdown) {
-		const citeRegex = /\[\[cite:.*?\]\]/g;
+		// const citeRegex = /\[\[cite:.*?\]\]/g;
+		// [[{"pluginType":"cite","srcRef":"gauch1999real"}]
+		const references = [];
+		const citeRegex = /\[\[{"pluginType":"cite".*?\]\]/g;
 		const matches = markdown.match(citeRegex);
-		if (matches && matches.length > 0) {
-			const indexedCitations = {};
-			for (const [index, match] of matches.entries()) {
+		if (matches) {
+			for (const match of matches) {
 				const citeStr = match.slice(2, -2);
-				const refName = parsePluginString(citeStr).reference;
-				if (refName && !indexedCitations[refName]) {
-					indexedCitations[refName] = index + 1;
-				}
+				const ref = parsePluginString(citeStr).reference;
+				references.push(ref);
 			}
-			return indexedCitations;
+		} else {
+			return [];
 		}
-		return [];
+		return references;
 	},
 
 	scrollToReference: function(index) {
@@ -159,7 +113,7 @@ const PubBody = React.createClass({
 	render: function() {
 
 		const footnotes = (this.props.markdown) ? this.findFootnotes(this.props.markdown) : [];
-		// const indexedCitations = (this.props.markdown) ? this.findReferences(this.props.markdown) : [];
+		const sortedReferences = (this.props.markdown) ? this.findReferences(this.props.markdown) : [];
 		// const sortedReferences = this.props.references.sort((refA, refB) => { return indexedCitations[refA.refName] - indexedCitations[refB.refName]; } );
 
 		return (
@@ -181,24 +135,8 @@ const PubBody = React.createClass({
 							: null
 						}
 
-						{/* this.props.authorsNote
-							? <div id={'pub-authorsNote'} >{this.props.authorsNote}</div>
-							: null */
-						}
-
-						{/* <div id={'pub-title'} >{this.props.title}</div> */}
-						{/* <div id={'pub-authors'} style={[this.props.authors.length === 0 && {display: 'none'}]}>
-							<span><FormattedMessage {...globalMessages.by}/> </span>
-							{
-								this.props.authors.map((author, index)=>{
-									return (index === this.props.authors.length - 1
-										? <Link to={'/user/' + author.username} key={'pubAuthorLink-' + index} style={globalStyles.link}><span key={'pubAuthor-' + index}>{author.name}</span></Link>
-										: <Link to={'/user/' + author.username} key={'pubAuthorLink-' + index} style={globalStyles.link}><span key={'pubAuthor-' + index}>{author.name}, </span></Link>);
-								})
-							}
-						</div> */}
-
-						{/* this.props.firstPublishedDate !== this.props.lastPublishedDate
+						{
+							/* this.props.firstPublishedDate !== this.props.lastPublishedDate
 							? <div id={'pub-dates'}>
 								<span><FormattedMessage {...globalMessages.firstPublished}/> </span>
 								{dateFormat(this.props.firstPublishedDate, 'mmm dd, yyyy')}
@@ -211,9 +149,6 @@ const PubBody = React.createClass({
 								{dateFormat(this.props.firstPublishedDate, 'mmm dd, yyyy')}
 							</div>
 						*/}
-
-						{/* <div id={'pub-abstract'}>{this.props.abstract}</div> */}
-						{/* <div id={'pub-header-divider'}></div> */}
 
 						<div id="pubBodyContent"> {/* Highlights are dependent on the id 'pubBodyContent' */}
 							<Markdown markdown={this.props.markdown} isPage={this.props.isPage}/>
@@ -241,7 +176,7 @@ const PubBody = React.createClass({
 						: null
 						}
 
-						{/* this.props.references && this.props.references.length
+						{ sortedReferences && sortedReferences.length
 							? <div id={'pub-references'}>
 								<h1><FormattedMessage {...globalMessages.references}/></h1>
 								{
@@ -257,7 +192,7 @@ const PubBody = React.createClass({
 
 							</div>
 							: null
-						*/ }
+						}
 
 						{this.props.isFeatured && !this.props.errorView && this.props.isPublished && !this.props.isPage
 							? <div id="pub-license"><License /></div>

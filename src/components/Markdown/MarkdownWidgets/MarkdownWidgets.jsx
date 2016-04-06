@@ -85,6 +85,9 @@ const EditorWidgets = React.createClass({
 							const pluginString = token.string.slice(2, -2);
 							if (!autofill) {
 								const pluginData = parsePluginString(pluginString);
+								if (Object.keys(pluginData).length === 0) {
+									continue;
+								}
 								const pluginType = pluginData.pluginType;
 								const a = new Widget(cm, from, to, pluginType, pluginData, this.openPopupOnWidget);
 								this.marks.push(a.mark);

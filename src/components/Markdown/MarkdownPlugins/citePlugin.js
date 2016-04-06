@@ -16,20 +16,20 @@ const Config = {
 	autocomplete: true,
 	color: 'rgba(245, 245, 169, 0.5)',
 	prerender: function(globals, pluginProps) {
-		if (pluginProps.reference && !isNaN(pluginProps.reference.count)) {
-			const referenceCount = pluginProps.reference.count;
+		if (pluginProps.reference && pluginProps.reference.label) {
 			if (!globals.citationCount) {
 				globals.citationCountCounter = 1;
 				globals.citationCount = {};
 			}
 
-			const localCount = globals.citationCount[referenceCount];
+			const refLabel = pluginProps.reference.label;
+			const localCount = globals.citationCount[refLabel];
 			if (!localCount) {
-				globals.citationCount[referenceCount] = globals.citationCountCounter;
+				globals.citationCount[refLabel] = globals.citationCountCounter;
 				globals.citationCountCounter += 1;
 			}
 
-			pluginProps.count = globals.citationCount[referenceCount];
+			pluginProps.count = globals.citationCount[refLabel];
 		}
 
 		return {globals, pluginProps};
