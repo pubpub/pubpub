@@ -508,7 +508,7 @@ const Editor = React.createClass({
 
 	},
 
-	render: function() {
+	render: function() { 
 		return <h1 style={{textAlign: 'center', margin: '50px auto', width: '80%'}}>The PubPub Editor is currently down for maintenance. We'll be back shortly!</h1>;
 		// const editorData = this.props.editorData;
 		const viewMode = this.props.editorData.getIn(['pubEditData', 'isPage']) ? 'preview' : this.props.editorData.get('viewMode');
