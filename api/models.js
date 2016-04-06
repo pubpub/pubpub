@@ -1,6 +1,6 @@
 module.exports = {};
 
-// The following is used in the static functions of other models.
+// The following are used in the static functions of other models.
 // They thus then need to be declared first. This is a bit wonky. We probably
 // just shouldn't be relying on cross dependencies in model static functions.. duh
 module.exports.Asset = require('./models/asset-model');

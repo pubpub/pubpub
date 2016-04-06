@@ -6,8 +6,6 @@ But, we're still small, so until then - the following services are used and must
 Copy the contents below and create a file named config.js (remove the .sample from the filename)
 DO NOT store config.js in your git repo. It is currently git ignored, you should leave it that way for security purposes.
 Keep config.js private to your development team.
-
-
 *********************** */
 
 // AWS Credentials

@@ -23,58 +23,43 @@
 // The root field marks the _id of the furthest ancestor. This is used as a querying tool, so
 // that finding the full lineage of an asset can simply query for all docs with the same root.
 
-var mongoose  = require('mongoose');
-var Schema    =  mongoose.Schema;
-var ObjectId  = Schema.Types.ObjectId;
+const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
+const ObjectId = Schema.Types.ObjectId;
 
-var assetSchema = new Schema({
+const assetSchema = new Schema({
 
-  assetType: { type: String}, // PubPub asset type, e.g. image, video, data
-  label: { type: String}, // Human-readable label. Used for drop-down selection, ordering, etc
-  assetData: { type: Schema.Types.Mixed }, // User-input content about the asset.
+	assetType: { type: String}, // PubPub asset type, e.g. image, video, data
+	label: { type: String}, // Human-readable label. Used for drop-down selection, ordering, etc
+	assetData: { type: Schema.Types.Mixed }, // User-input content about the asset.
 
-  history: [{
-  	assetType: { type: String },
-  	label: { type: String },
-  	assetData: { type: Schema.Types.Mixed },
-  	updateDate: { type: Date },
-  }],
+	history: [{
+		assetType: { type: String },
+		label: { type: String },
+		assetData: { type: Schema.Types.Mixed },
+		updateDate: { type: Date },
+	}],
 
-  usedInDiscussions: [{
-  	id: { type: ObjectId, ref: 'Discussion' },
-  	version: { type: Number },
-  }],
-  usedInPubs: [{
-  	id: { type: ObjectId, ref: 'Pub' },
-  	version: { type: Number },
-  }],
+	usedInDiscussions: [{
+		id: { type: ObjectId, ref: 'Discussion' },
+		version: { type: Number },
+	}],
+	usedInPubs: [{
+		id: { type: ObjectId, ref: 'Pub' },
+		version: { type: Number },
+	}],
 
-  parent: { // If cloned from an asset, this field stores which asset doc, and which version
-  	id: { type: ObjectId, ref: 'Asset' },
-  	version: { type: Number },
-  },
-  root: { type: ObjectId, ref: 'Asset' }, // Furthest ancestor - used as a query tool to grab entire lineage
+	parent: { // If cloned from an asset, this field stores which asset doc, and which version
+		id: { type: ObjectId, ref: 'Asset' },
+		version: { type: Number },
+	},
+	root: { type: ObjectId, ref: 'Asset' }, // Furthest ancestor - used as a query tool to grab entire lineage
 
-  authors: [{ type: ObjectId, ref: 'User' }], // Authors have edit access to the asset
+	authors: [{ type: ObjectId, ref: 'User' }], // Authors have edit access to the asset
 
-  createDate: { type: Date },
-  lastUpdated: { type: Date },
-})
-
-assetSchema.statics.insertBulkAndReturnIDs = function (array, callback) {
-
-	this.create(array, function(err, dbArray) {
-		if (err) return callback(err);
-
-		dbArray = dbArray || [];
-		const dbArrayIds = [];
-		dbArray.map((item)=>{
-			dbArrayIds.push(item._id);
-		});
-
-		return callback(null, dbArrayIds);
-	});
-};
+	createDate: { type: Date },
+	lastUpdated: { type: Date },
+});
 
 module.exports = mongoose.model('Asset', assetSchema, 'newassets');
 // module.exports = mongoose.model('Asset', assetSchema);

@@ -148,9 +148,6 @@ pubSchema.statics.createPub = function(slug, title, userID, isPage, callback) {
 
 pubSchema.statics.getPub = function(slug, readerID, readerGroups, readerAdminJournals, journalID, callback) {
 	this.findOne({slug: slug})
-	// .populate({ path: 'discussions', model: 'Discussion' })
-	// .populate({ path: 'assets history.assets', model: 'Asset' })
-	// .populate({ path: 'references history.references', model: 'Reference' })
 	.populate({
 		path: 'discussions',
 		model: 'Discussion',
@@ -163,12 +160,6 @@ pubSchema.statics.getPub = function(slug, readerID, readerGroups, readerAdminJou
 	.populate({ path: 'featuredIn.journal submittedTo.journal', select: 'journalName subdomain customDomain design', model: 'Journal' })
 	.populate({ path: 'authors history.authors', select: 'username name thumbnail firstName lastName', model: 'User' })
 	.exec((err, populatedPub)=> {
-		// const options = [
-		// 	{ path: 'discussions.author', select: '_id username name firstName lastName thumbnail', model: 'User'},
-		// 	// { path: 'discussions.selections', model: 'Highlight'}
-		// ];
-
-		// this.populate(pub, options, (err, populatedPub)=> {
 		if (err) { return callback(err, null); }
 
 		if (!populatedPub) { return callback(null, {message: 'Pub Not Found', slug: slug}); }
@@ -200,13 +191,6 @@ pubSchema.statics.getPub = function(slug, readerID, readerGroups, readerAdminJou
 			return callback(null, {message: 'Pub not in this journal', slug: slug});
 		}
 
-		// Check if the pub is private, and if so, check readers/authors list
-		// if (populatedPub.settings.pubPrivacy === 'private') {
-		// 	if (populatedPub.collaborators.canEdit.indexOf(readerID) === -1 && populatedPub.collaborators.canRead.indexOf(readerID) === -1) {
-		// 		return callback(null, {message: 'Private Pub', slug: slug});
-		// 	}
-		// }
-
 		// Mark all notifcations about this pub for this reader as 'sent' (i.e. don't send an email, but keep it unread until they go to notifications page)
 		Notification.setSent({pub: populatedPub._id, recipient: readerID}, ()=>{});
 
@@ -221,9 +205,7 @@ pubSchema.statics.getPub = function(slug, readerID, readerGroups, readerAdminJou
 		outputPub.discussions = Discussion.calculateYayNayScore(outputPub.discussions);
 		outputPub.discussions = Discussion.sortDiscussions(outputPub.discussions);
 		outputPub.discussions = Discussion.nestChildren(outputPub.discussions);
-		// console.log(outputPub.isAuthor);
 		return callback(null, outputPub);
-		// });
 
 	});
 };
@@ -240,8 +222,6 @@ pubSchema.statics.getPubEdit = function(slug, readerID, readerGroups, readerAdmi
 			select: 'name firstName lastName username thumbnail',
 		},
 	})
-	// .populate({ path: 'discussions', model: 'Discussion' })
-	// .populate({ path: 'editorComments', model: 'Discussion' })
 	.exec((err, pub) =>{
 		if (err) { return callback(err, null); }
 
@@ -271,8 +251,6 @@ pubSchema.statics.getPubEdit = function(slug, readerID, readerGroups, readerAdmi
 			isReader = false;
 		}
 
-
-		// this.populate(pub, options, (err, populatedPub)=> {
 		if (err) { return callback(err, null); }
 		const outputPub = pub.toObject();
 		outputPub.isReader = isReader;
@@ -282,11 +260,7 @@ pubSchema.statics.getPubEdit = function(slug, readerID, readerGroups, readerAdmi
 		outputPub.discussions = Discussion.calculateYayNayScore(outputPub.discussions);
 		outputPub.discussions = Discussion.sortDiscussions(outputPub.discussions);
 		outputPub.discussions = Discussion.nestChildren(outputPub.discussions);
-
 		return callback(null, outputPub);
-		// });
-
-		// return callback(null, {});
 
 	});
 

@@ -13,6 +13,7 @@ npm install
 npm run dev
 ```
 
+PubPub is built with react, redux, node, express, and mongoose. For great react/redux testing, we use [https://github.com/gaearon/redux-devtools](Redux devtools). We suggest installing the [https://chrome.google.com/webstore/detail/redux-devtools/lmhkpmbekcpmknklioeibfkpmmfibljd](chrome extension) for a less popup-y dev environment. 
 
 ## Building and Running Production Server
 
