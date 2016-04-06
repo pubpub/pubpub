@@ -33,8 +33,8 @@ import {globalMessages} from 'utils/globalMessages';
 import {FormattedMessage} from 'react-intl';
 // import {Iterable} from 'immutable';
 import MarkdownWidgets from 'components/Markdown/MarkdownWidgets/MarkdownWidgets';
+import {FireBaseURL} from 'config';
 
-let FireBaseURL;
 let styles;
 
 const cmOptions = {
@@ -88,8 +88,6 @@ const Editor = React.createClass({
 	},
 
 	componentDidMount() {
-		// FireBaseURL = (process.env.NODE_ENV === 'production' && location.hostname !== 'pubpub-dev.herokuapp.com') ? 'https://pubpub.firebaseio.com/' : 'https://pubpub-dev.firebaseio.com/';
-		FireBaseURL = 'https://pubpub-prod-test-2.firebaseio.com/';
 
 		if (! this.props.editorData.get('error')) {
 
