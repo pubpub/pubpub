@@ -51,16 +51,13 @@ const Discussions = React.createClass({
 		if (this.props.loginData.get('addedHighlight') === undefined && nextProps.loginData.get('addedHighlight')) {
 			const assetObject = nextProps.loginData.get('addedHighlight').toJS();
 
-			const cmInstances = document.getElementsByClassName('CodeMirror');
-
-			// return;
-
-			// for (const instance of cmInstances) {
-			const cm = cmInstances[0].CodeMirror;
-			const currentSelection = cm.getCursor();
-			const inlineObject = {pluginType: 'highlight', source: {...assetObject.assetData, ...{_id: assetObject._id} }};
-			cm.replaceRange('[[' + JSON.stringify(inlineObject) + ']] ', {line: currentSelection.line, ch: currentSelection.ch});
-			// }
+			const cmInstances = document.querySelectorAll('.CodeMirror');
+			for (const instance of cmInstances) {
+				const cm = instance.CodeMirror;
+				const currentSelection = cm.getCursor();
+				const inlineObject = {pluginType: 'highlight', source: {...assetObject.assetData, ...{_id: assetObject._id} }};
+				cm.replaceRange('[[' + JSON.stringify(inlineObject) + ']] ', {line: currentSelection.line, ch: currentSelection.ch});
+			}
 		}
 	},
 
