@@ -243,7 +243,7 @@ styles = {
 	container: {
 		width: '100%',
 		// overflow: 'hidden',
-		margin: '15px 0px 10px 0px',
+		margin: '15px 0px 0px 0px',
 		// backgroundColor: 'rgba(255,255,255,0.2)',
 		clear: 'both',
 	},
@@ -256,7 +256,7 @@ styles = {
 		// margin: '4px 0px',
 		height: '17px',
 		lineHeight: '17px',
-		padding: '0px 10px 10px 10px',
+		padding: '0px 10px',
 		fontSize: '12px',
 		// backgroundColor: 'rgba(255,255,255,0.2)',
 		borderBottom: '1px solid #DDD',
