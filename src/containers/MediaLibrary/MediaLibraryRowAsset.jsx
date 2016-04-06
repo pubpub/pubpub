@@ -200,7 +200,7 @@ styles = {
 	},
 	loadingBarWrapper: {
 		height: 15,
-		width: '70%',
+		width: '51%',
 		float: 'left',
 		overflow: 'hidden',
 		marginTop: 15,
