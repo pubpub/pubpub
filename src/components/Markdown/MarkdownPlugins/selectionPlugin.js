@@ -81,21 +81,7 @@ const Plugin = React.createClass({
 				}
 
 				console.log(currentNode);
-				const destY = this.getPosition(item.target).yloc;
-				currentNode.style.backgroundColor = '#F0F0F0';
-				currentNode.style.position = 'absolute';
-				currentNode.style.right = '50px';
-				currentNode.style.zIndex = '20';
-				currentNode.style.top = (destY - 50) + 'px';
-				currentNode.style.padding = '5px';
-				currentNode.style.boxShadow = '0px 0px 6px #444';
-				currentNode.style.opacity = '0';
-				setTimeout(()=>{
-					currentNode.style.transition = '.15s linear opacity';
-				}, 25);
-				setTimeout(()=>{
-					currentNode.style.opacity = '1';
-				}, 50);
+
 
 
 				function ontheClick(evt) {
@@ -115,8 +101,25 @@ const Plugin = React.createClass({
 				}
 				setTimeout(()=>{
 					// Timeout so that the eventListener doesn't fire on this click eventListener bubbling up
+					// window.removeEventListener('click', ontheClick);
+					const destY = this.getPosition(item.target).yloc;
+					currentNode.style.backgroundColor = '#F0F0F0';
+					currentNode.style.position = 'absolute';
+					currentNode.style.right = '50px';
+					currentNode.style.zIndex = '20';
+					currentNode.style.top = (destY - 50) + 'px';
+					currentNode.style.padding = '10px';
+					currentNode.style.boxShadow = '0px 0px 6px #444';
+					currentNode.style.opacity = '0';
+					setTimeout(()=>{
+						currentNode.style.transition = '.1s linear opacity';
+						setTimeout(()=>{
+							currentNode.style.opacity = '1';
+						}, 1);
+					}, 1);
+
 					window.addEventListener('click', ontheClick);
-				}, 200);
+				}, 1);
 
 				// document.handleHighlightClick(selection);
 				// const selectionElement = document.getElementById('selection-block-' + selection._id);
