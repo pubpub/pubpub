@@ -114,6 +114,7 @@
     "http-proxy": "1.11.3",
     "immutable": "^3.7.5",
     "intl": "^1.1.0",
+    "invariant": "^2.2.1",
     "less": "^2.6.0",
     "lodash": "^3.10.1",
     "markdown-it": "^5.1.0",
