@@ -367,14 +367,19 @@ styles = {
 		padding: '40px 0px',
 		fontFamily: globalStyles.headerFont,
 		fontSize: '.9em',
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+			width: 'auto',
+		}
 	},
 	footerColumn: {
 		display: 'table-cell',
 		width: '1px',
 		padding: '0px 4vw',
 		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
-			width: '100%',
+			width: 'calc(100% - 20px)',
 			float: 'left',
+			marginBottom: '25px',
+			padding: '0px 10px',
 		},
 	},
 	footerHeader: {
@@ -383,10 +388,20 @@ styles = {
 		paddingBottom: '2px',
 		marginBottom: '8px',
 		borderBottom: '1px solid #ccc',
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+			// marginTop: '3em'
+			// float: 'left',
+			fontSize: '1.7em',
+		},
 	},
 	footerItem: {
 		color: '#333',
 		whiteSpace: 'nowrap',
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+			fontSize: '1.5em',
+			padding: '15px',
+		}
+
 	},
 
 };

@@ -96,9 +96,13 @@
 	padding-top: 1.5em;
 	border-top: 1px solid #eee;
 }
-#pubContent .pub-reference {
-	padding: 0.5em 1.5em;
-	font-size: 0.85em;
+#pubContent .reference-content {
+	font-size: 0.9em;
+}
+#pubContent .reference-number {
+	color: #222;
+	padding-right: 10px;
+	font-size: 1em;
 }
 
 #pubContent hr {

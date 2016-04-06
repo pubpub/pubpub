@@ -182,9 +182,11 @@ const PubBody = React.createClass({
 								{
 									sortedReferences.map((reference, index)=>{
 										return (
-											<div key={'pubReference-' + index} >
-												<span style={styles.referenceNumber}>[{index + 1}]</span>
-												<Reference citationObject={reference} mode={'mla'} />
+											<div key={'pubReference-' + index} className={'reference'}>
+												<span className={'reference-number'}>[{index + 1}]</span>
+												<span className={'reference-content'}>
+													<Reference citationObject={reference} mode={'mla'} />
+												</span>
 											</div>
 										);
 									})
@@ -237,11 +239,11 @@ styles = {
 	dateSeparator: {
 		padding: '0px 10px',
 	},
-	referenceNumber: {
-		color: '#222',
-		paddingRight: '10px',
-		fontSize: '1em',
-	},
+	// referenceNumber: {
+	// 	color: '#222',
+	// 	paddingRight: '10px',
+	// 	fontSize: '1em',
+	// },
 	footNote: {
 		color: '#222',
 		paddingRight: '10px',
