@@ -5,7 +5,7 @@ const Discussion = require('../models').Discussion;
 const Notification = require('../models').Notification;
 const _ = require('underscore');
 import * as jsdiff from 'diff';
-import {editorDefaultPageText} from 'containers/Editor/editorDefaultText';
+import {editorDefaultPageText} from 'containers/Editor/utils/editorDefaultText';
 // const editorDefaultPageText = function() { return 'test' }
 
 const pubSchema = new Schema({
