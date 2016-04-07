@@ -1,6 +1,9 @@
 # PubPub
 
 PubPub is a platform for open reading, writing, and publishing.
+
+PubPub is open to all and available at [www.pubpub.org](http://www.pubpub.org)
+
 For more details, see [http://www.pubpub.org/pub/about](http://www.pubpub.org/pub/about).
 
 ## Getting Started
@@ -38,12 +41,16 @@ heroku ps:scale web=1
 
 Most documentation is spread throughout the project alongside the code it is describing. The [DOCUMENTATION.md](./DOCUMENTATION.md) file aggregates those READMEs for easy navigation.
 
-- [Contributing](./CONTRIBUTING.md)
-- [Tests](./src/tests)
-- [API](./api)
-- [Translations](./translations)
-- [Assets and Media Library](./src/containers/MediaLibrary)
+## Updates and Roadmap
+Changes to the project and future features are documented in the Changelog:
 
+[CHANGELOG.md](./CHANGELOG.md)
+
+
+## Contributing
+We welcome contributions to PubPub in the form of feedback, bug reports, feature ideas, and code!
+
+Contributing guidelines are documented in [CONTRIBUTING.md](./CONTRIBUTING.md)
 
 # Testing
 Tests run using Mocha and Karma. All test files follow the pattern `filename.test.js`.
