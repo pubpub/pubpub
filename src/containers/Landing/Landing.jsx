@@ -149,7 +149,7 @@ const Landing = React.createClass({
 									<div style={globalStyles.clearFix}></div>
 								</div>
 							</div>
-							
+
 							<div style={styles.section}>
 								<div style={styles.sectionContent}>
 									<div style={styles.sectionDetails}>
@@ -204,7 +204,7 @@ const Landing = React.createClass({
 												Updates and Roadmap
 											</div>
 										</a>
-										<a href={'https://github.com/pubpub/pubpub/blob/master/CONTRIBUTE.md'} style={globalStyles.link}>
+										<a href={'https://github.com/pubpub/pubpub/blob/master/CONTRIBUTING.md'} style={globalStyles.link}>
 											<div style={styles.sectionExample}>
 												+ Contribute
 											</div>
