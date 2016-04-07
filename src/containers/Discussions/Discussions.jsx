@@ -21,9 +21,6 @@ let styles = {};
 const Discussions = React.createClass({
 	propTypes: {
 		metaID: PropTypes.string,
-		// editorCommentMode: PropTypes.bool,
-		// inEditor: PropTypes.bool,
-		// instanceName: PropTypes.string,
 
 		discussionsData: PropTypes.object,
 		pubData: PropTypes.object,

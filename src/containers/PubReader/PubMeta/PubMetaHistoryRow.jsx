@@ -27,7 +27,6 @@ const PubMetaHistoryRow = React.createClass({
 
 	render: function() {
 		const diffObject = this.props.historyItem.diffObject || {};
-		console.log(diffObject);
 		return (
 			<div style={[styles.container, this.props.index === 0 && styles.noBottomBorder]}>
 

@@ -109,7 +109,7 @@ app.use((req, res) => {
 					res.status(status);
 				}
 
-				const htmltest = ReactDOM.renderToString(
+				const serverHTML = ReactDOM.renderToString(
 					<Html radiumConfig={{userAgent: req.headers['user-agent']}} component={component} />
 				);
 				const mainBundle = webpackIsomorphicTools.assets().javascript.main;
@@ -183,10 +183,11 @@ app.use((req, res) => {
 						</head>
 
 						<body style="width: 100%; margin: 0;">
-							<div id="content">${htmltest}</div>
+							<div id="content">${serverHTML}</div>
 							<script>
 					          window.__INITIAL_STATE__ = ${JSON.stringify(store.getState())};
 					        </script>
+
 							<script src=${mainBundle}></script>
 						</body>
 					</html>

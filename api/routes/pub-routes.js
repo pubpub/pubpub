@@ -107,59 +107,6 @@ export function createPub(req, res) {
 				return res.status(201).json(savedPub.slug);
 			});
 		});
-
-
-		// const pub = new Pub({
-		// 	slug: req.body.slug,
-		// 	title: req.body.title,
-		// 	abstract: 'Type your abstract here! Your abstract will be used to help users search for pubs throughout the site.',
-		// 	collaborators: {
-		// 		canEdit: [userID],
-		// 		canRead: []
-		// 	},
-		// 	createDate: new Date().getTime(),
-		// 	isPublished: false,
-		// 	history: [],
-		// 	followers: [],
-		// 	featuredIn: [],
-		// 	featuredInList: [],
-		// 	submittedTo: [],
-		// 	submittedToList: [],
-		//
-		// });
-		// // console.log(pub);
-		//
-		// pub.save(function(err2, savedPub) {
-		// 	if (err2) { return res.status(500).json(err2); }
-		//
-		// 	const pubID = savedPub.id;
-		// 	const userID = req.user['_id'];
-		//
-		// 	User.update({ _id: userID }, { $addToSet: { pubs: pubID} }, function(err, result){if (err) return console.log(err)});
-		// 	const ref = new Firebase(fireBaseURL + req.body.slug + '/editorData' );
-		// 	ref.authWithCustomToken(generateAuthToken(), ()=>{
-		// 		const newEditorData = {
-		// 			collaborators: {},
-		// 			settings: {},
-		// 		};
-		// 		newEditorData.collaborators[req.user.username] = {
-		// 			_id: userID.toString(),
-		// 			name: req.user.name,
-		// 			firstName: req.user.firstName || '',
-		// 			lastName: req.user.lastName || '',
-		// 			username: req.user.username,
-		// 			email: req.user.email,
-		// 			thumbnail: req.user.thumbnail,
-		// 			permission: 'edit',
-		// 			admin: true,
-		// 		};
-		// 		ref.set(newEditorData);
-		//
-		// 		return res.status(201).json(savedPub.slug);
-		// 	});
-		//
-		// });
-
 	});
 
 }
@@ -385,38 +332,6 @@ export function updateCollaborators(req, res) {
 
 }
 app.post('/updateCollaborators', updateCollaborators);
-
-
-// export function updatePubSettings(req, res) {
-// 	const settingKey = Object.keys(req.body.newSettings)[0];
-//
-// 	Pub.findOne({slug: req.body.slug}, function(err, pub) {
-//
-// 		if (err) {
-// 			console.log(err);
-// 			return res.status(500).json(err);
-// 		}
-//
-// 		// if (!req.user || pub.collaborators.canEdit.indexOf(req.user._id) === -1) {
-// 		const userGroups = req.user ? req.user.groups : [];
-// 		const userGroupsStrings = userGroups.toString().split(',');
-// 		const canEditStrings = pub.collaborators.canEdit.toString().split(',');
-//
-// 		if (!req.user || (pub.collaborators.canEdit.indexOf(req.user._id) === -1 && _.intersection(userGroupsStrings, canEditStrings).length === 0 && req.user._id.toString() !== '568abdd9332c142a0095117f') ) {
-// 			return res.status(403).json('Not authorized to publish versions to this pub');
-// 		}
-//
-// 		pub.settings[settingKey] = req.body.newSettings[settingKey];
-//
-// 		pub.save(function(err, result) {
-// 			if (err) { return res.status(500).json(err); }
-//
-// 			return res.status(201).json(pub.settings);
-// 		});
-//
-// 	});
-// }
-// app.post('/updatePubSettings', updatePubSettings);
 
 export function updatePubData(req, res) {
 	Pub.findOne({slug: req.body.slug}, function(err, pub) {
