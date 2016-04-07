@@ -39,18 +39,18 @@ heroku ps:scale web=1
 
 # Docs
 
-Most documentation is spread throughout the project alongside the code it is describing. The [DOCUMENTATION.md](./DOCUMENTATION.md) file aggregates those READMEs for easy navigation.
+Most documentation is spread throughout the project alongside the code it is describing.
+
+[DOCUMENTATION.md](./DOCUMENTATION.md) aggregates those READMEs for easy navigation.
 
 ## Updates and Roadmap
-Changes to the project and future features are documented in the Changelog:
-
-[CHANGELOG.md](./CHANGELOG.md)
+[CHANGELOG.md](./CHANGELOG.md) documents changes to the project and future features.
 
 
 ## Contributing
 We welcome contributions to PubPub in the form of feedback, bug reports, feature ideas, and code!
 
-Contributing guidelines are documented in [CONTRIBUTING.md](./CONTRIBUTING.md)
+[CONTRIBUTING.md](./CONTRIBUTING.md) documents contributing guidelines.
 
 # Testing
 Tests run using Mocha and Karma. All test files follow the pattern `filename.test.js`.
