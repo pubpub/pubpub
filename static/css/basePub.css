@@ -212,8 +212,8 @@
 
 
 #pubContent .pub-plugin.pub-img-wrapper.pub-align-full {
-	width: 45vw !important;
-	margin-left: calc(-1 * (45vw - 100%) / 2) !important;
+	/*width: 45vw !important;*/
+	/*margin-left: calc(-1 * (45vw - 100%) / 2) !important;*/
 	margin-top: 0.5em !important;
 	margin-bottom: 0.5em !important;
 }
