@@ -62,4 +62,3 @@ const assetSchema = new Schema({
 });
 
 module.exports = mongoose.model('Asset', assetSchema);
-// module.exports = mongoose.model('Asset', assetSchema);

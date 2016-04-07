@@ -35,9 +35,10 @@ heroku ps:scale web=1
 ```
 
 # Docs
-...we need more work on our docs - coming very soon.
-- [All docs](/docs)
-- [API](/docs/api)
+
+- [All docs](./DOCUMENTATION.md)
+- [API](/api/README.md)
+- [Translations](/translations/README.md)
 
 
 # Testing

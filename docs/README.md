@@ -1,4 +1,0 @@
-[API](./api)
-
-Translations
-Highlighting
