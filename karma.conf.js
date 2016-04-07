@@ -4,8 +4,7 @@ var path = require('path');
 module.exports = function (config) {
   config.set({
 
-    // browsers: ['PhantomJS', 'Chrome', 'Firefox', 'Safari'],
-	browsers: ['PhantomJS'],
+    browsers: ['PhantomJS', 'Chrome', 'Firefox', 'Safari'],
 
     singleRun: !!process.env.CI,
 
@@ -70,4 +69,7 @@ module.exports = function (config) {
     }
 
   });
+  if(process.eng.CI) {
+	  config.browsers = ['PhantomJS'];
+  }
 };
