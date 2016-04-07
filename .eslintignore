@@ -4,4 +4,5 @@ tests.webpack.js
 **/*.test.js
 src/utils/cssToRadium.js
 src/utils/smoothscroll.js
-src/containers/Editor/editorFirepadUserlist.js
+src/containers/Editor/utils/editorFirepadUserlist.js
+src/components/Markdown/*

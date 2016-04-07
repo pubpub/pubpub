@@ -1,11 +1,8 @@
 const app = require('../api');
 const _ = require('underscore');
-const fs = require('fs');
 const Journal = require('../models').Journal;
 const User = require('../models').User;
 const Pub = require('../models').Pub;
-const Asset = require('../models').Asset;
-const Notification = require('../models').Notification;
 // import {cloudinary} from '../services/cloudinary';
 const Firebase = require('firebase');
 import {fireBaseURL, generateAuthToken} from '../services/firebase';

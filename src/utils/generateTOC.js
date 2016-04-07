@@ -23,5 +23,5 @@ export function generateTOC(markdown) {
 	}
 
 	return TOCs;
-	
+
 }

@@ -14,8 +14,8 @@ const less = require('less');
 
 import {fireBaseURL, firebaseTokenGen, generateAuthToken} from '../services/firebase';
 import {sendAddedAsCollaborator} from '../services/emails';
-import {featurePub, getRecommendations, inpRecAction, removeAction} from '../services/recommendations';
-
+// import {featurePub, getRecommendations, inpRecAction, removeAction} from '../services/recommendations';
+import {getRecommendations, inpRecAction} from '../services/recommendations';
 
 export function getPub(req, res) {
 	const userID = req.user ? req.user._id : undefined;
@@ -27,15 +27,14 @@ export function getPub(req, res) {
 
 		const sessionID = (req.sessionID) ? req.sessionID : undefined;
 		if (userID || sessionID) {
-			const postedID = userID || sessionID;
+			// const postedID = userID || sessionID;
 			const postedJournalID = journalID || 'pubpub';
 			const pubID = pubData._id;
-      inpRecAction(postedJournalID, pubID, userID, 'read',
-         function(recError, recResponse){
-           if (recResponse.error) {
-            console.log(recResponse.error);
-           }
-         });
+			inpRecAction(postedJournalID, pubID, userID, 'read', function(recError, recResponse) {
+				if (recResponse.error) {
+					console.log(recResponse.error);
+				}
+			});
 		}
 
 		if (req.query.referrer) {
@@ -120,13 +119,13 @@ app.get('/getPubRecommendation', function(req, res) {
 
 	const queryID = userID || sessionID;
 
-	getRecommendations('user', queryID, journalID, function(err, recResponse){
+	getRecommendations('user', queryID, journalID, function(err, recResponse) {
 		const suggestedPubID = recResponse.recommendations[0].thing;
 
-		Pub.getSimplePub(suggestedPubID, (err, suggestedPubData) => {
-			if (err) {
-				console.log(err);
-				return res.status(500).json(err);
+		Pub.getSimplePub(suggestedPubID, (errGetSimple, suggestedPubData)=> {
+			if (errGetSimple) {
+				console.log(errGetSimple);
+				return res.status(500).json(errGetSimple);
 			}
 			return res.status(201).json(suggestedPubData);
 		});

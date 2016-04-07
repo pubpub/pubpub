@@ -1,16 +1,19 @@
-var mongoose = require('mongoose');
+const mongoose = require('mongoose');
 
 export function clearDB() {
-	for (var i in mongoose.connection.collections) {
-		mongoose.connection.collections[i].remove(function() {});
+	for (const index in mongoose.connection.collections) {
+		if (mongoose.connection.collections.hasOwnProperty(index)) {
+			mongoose.connection.collections[index].remove(function() {});
+		}
+
 	}
 }
 
-export function beforeEachMongoose(done)  {
-	const dbURI    = 'mongodb://localhost:27017/pubpub_test';
+export function beforeEachMongoose(done) {
+	const dbURI = 'mongodb://localhost:27017/pubpub_test';
 
 	if (mongoose.connection.readyState === 0) {
-		mongoose.connect(dbURI, function (err) {
+		mongoose.connect(dbURI, function(err) {
 			if (err) {
 				throw err;
 			}
@@ -21,10 +24,10 @@ export function beforeEachMongoose(done)  {
 		clearDB();
 		return done();
 	}
-	
-};
 
-export function afterMongoose(done){
+}
+
+export function afterMongoose(done) {
 	mongoose.models = {};
 	mongoose.modelSchemas = {};
 	done();

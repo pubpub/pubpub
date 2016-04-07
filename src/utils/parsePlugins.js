@@ -2,41 +2,27 @@ export function parsePluginString(str) {
 	let propDict;
 
 
-	//Problems escaping, see: http://stackoverflow.com/questions/36436331
-	str = String(str).replace(/\n/g, "\\n")
-	.replace(/\r/g, "\\r")
-	.replace(/\t/g, "\\t")
-	.replace(/\f/g, "\\f")
-	.replace(/\\*#/g, "#")
-	//.replace(/\\*l/g, "#")
-	.replace(/\\*&/g, "&");
-	//.replace(/\\*([^u\\])/g, function(match, p1) { return p1;});
+	// Problems escaping, see: http://stackoverflow.com/questions/36436331
+	const replacedStr = String(str).replace(/\n/g, '\\n')
+	.replace(/\r/g, '\\r')
+	.replace(/\t/g, '\\t')
+	.replace(/\f/g, '\\f')
+	.replace(/\\*#/g, '#')
+	// .replace(/\\*l/g, '#')
+	.replace(/\\*&/g, '&');
+	// .replace(/\\*([^u\\])/g, function(match, p1) { return p1;});
 
 	try {
-		propDict = JSON.parse(str);
+		propDict = JSON.parse(replacedStr);
 	} catch (err) {
 		propDict = {};
 		console.log('Could not parse JSON!');
 		console.log(err);
-		console.log(str);
+		console.log(replacedStr);
 	}
 
 	return propDict;
 
-
-	// const regex = /([^=\s]*)\s*=\s*\"?([^"]*)\"?/;
-	//
-	// const matches = str.match(/([^=\s,]*=(?:(?:(?=".*?")".*?")|(?:(?!".+?")[^,]+)))/g);
-	//
-	// if (matches) {
-	// 	for (const prop of matches) {
-	// 		const match = regex.exec(prop);
-	// 		if (match && match[1] && match[2]) {
-	// 			propDict[match[1]] = match[2];
-	// 		}
-	// 	}
-	// }
-	// return propDict;
 }
 
 
