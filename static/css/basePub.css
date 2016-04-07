@@ -24,12 +24,13 @@
 
 #pubContent .title{
 	text-align: left;
-	font-size: 2.6em;
+	font-size: 3.0em;
 	padding: 0.7em 0px;
 	font-weight: 700;
 	line-height: 1.3em;
 	color: #222;
-	font-family: 'Lora';
+	/*font-family: 'Lora';*/
+	font-family: 'Yrsa', Georgia, serif;
 	margin: 0;
 }
 
@@ -112,7 +113,9 @@
 }
 
 #pubContent .p-block {
-	font-family: 'Lora';
+	/*font-family: 'Lora';*/
+	font-family: 'Yrsa', Georgia, serif;
+	font-size: 1.1em;
 	padding: 0.5em 0em;
 	color: #333;
 }
@@ -136,7 +139,8 @@
 	border-left: 5px solid #eee;
 }
 #pubContent ul, #pubContent ol {
-	font-family: 'Lora';
+	/*font-family: 'Lora';*/
+	font-family: 'Yrsa', Georgia, serif;
 	padding: 0px 3em 0px 3em;
 	color: #333;
 }
@@ -159,6 +163,7 @@
 }
 #pubContent h1, #pubContent h2, #pubContent h3, #pubContent h4, #pubContent h5, #pubContent h6 {
 	color: #666;
+	font-family: 'Clear Sans Light', Helvetica Neue, Arial, serif;
 }
 #pubContent h1 {
 	font-size: 2em;
