@@ -12,7 +12,8 @@ See [http://keepachangelog.com/](http://keepachangelog.com/) for best practices.
 
 ## [Unreleased]
 ### Added
-
+- Landing page redesign.
+- Font and padding improvements.
 
 ## [0.2.0] - 2015-04-06
 ### Added
@@ -23,11 +24,11 @@ See [http://keepachangelog.com/](http://keepachangelog.com/) for best practices.
 - Pubs can now have saved versions that are not published. Allows commenting and default PubReader to be used on unpublished work.
 - Discussions can now used assets, references, and highlights as richly as the Pub Editor can.
 - Discussions and Editor comments combined. A single discussions thread exists per pub now. Discussions can be marked 'collaborator-only' for private comments. Are shown in line with public comments.
-- Journals use pub Pages for their landing page
+- Journals use pub Pages for their landing page.
 - Assets are grouped by user, rather than by pub. This lets users use assets, references, etc across different pubs and in discussions.
-- Assets support history, editing, and metadata
-- Pub styling much more powerful. All pub styles moved to css (out of radium in-line), so they can be customized by author
-- Custom language fields enabled on backend for journals. Allowing default language strings to be overwritten per-journal
+- Assets support history, editing, and metadata.
+- Pub styling much more powerful. All pub styles moved to css (out of radium in-line), so they can be customized by author.
+- Custom language fields enabled on backend for journals. Allowing default language strings to be overwritten per-journal.
 
 
 [Unreleased]: https://github.com/pubpub/pubpub/compare/v0.2.0...HEAD
