@@ -273,6 +273,10 @@ export const globalMessages = defineMessages({
 		id: 'global.edit',
 		defaultMessage: 'Edit',
 	},
+	read: {
+		id: 'global.read',
+		defaultMessage: 'Read',
+	},
 	insert: {
 		id: 'global.insert',
 		defaultMessage: 'Insert',

@@ -31,6 +31,7 @@
     "global.newPub": "Missing. English is: New Pub",
     "global.analytics": "Same as English: Analytics",
     "global.pubs": "Missing. English is: Pubs",
+    "global.read": "Missing. English is: Read",
     "global.Explore": "Missing. English is: Explore",
     "global.markdown": "Same as English: markdown",
     "editorCommentsText0": "Missing. English is: You are commenting on a draft version of this Pub."
@@ -48,6 +49,7 @@
     "group.addNewMember": "Missing. English is: Add new member",
     "group.addNewAdmin": "Missing. English is: Add new admin",
     "group.background": "Missing. English is: Background CSS",
-    "pub.unpublishedNotification": "Missing. English is: This pub is unpublished, and thus only accessible to collaborators."
+    "pub.unpublishedNotification": "Missing. English is: This pub is unpublished, and thus only accessible to collaborators.",
+    "global.read": "Missing. English is: Read"
   }
 }

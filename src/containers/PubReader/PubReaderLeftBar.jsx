@@ -39,12 +39,12 @@ const PubLeftBar = React.createClass({
 	render: function() {
 		const versionURL = this.props.query.version !== undefined ? '?version=' + this.props.query.version : '';
 		const pubViews = [
-			{label: 'Read', metaPath: undefined},
-			{label: 'Edit', metaPath: 'draft'},
-			{label: 'Discussions', metaPath: 'discussions'},
+			{label: <FormattedMessage {...globalMessages.read} />, metaPath: undefined},
+			{label: <FormattedMessage {...globalMessages.edit} />, metaPath: 'draft'},
+			{label: <FormattedMessage {...globalMessages.discussions} />, metaPath: 'discussions'},
 			{label: <span><FormattedMessage {...globalMessages.Journals} /> <span style={styles.count}>({this.props.journalCount || 0})</span></span>, metaPath: 'journals'},
 			{label: <span><FormattedMessage {...globalMessages.history} /> <span style={styles.count}>({this.props.historyCount || 0})</span></span>, metaPath: 'history'},
-			{label: 'Source', metaPath: 'source'},
+			{label: <FormattedMessage {...globalMessages.source} />, metaPath: 'source'},
 			// {label: 'Cite', metaPath: 'cite'},
 		];
 		return (
