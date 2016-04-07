@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/pubpub/pubpub.svg?branch=master)](https://travis-ci.org/pubpub/pubpub)
+
 # PubPub
 
 PubPub is a platform for open reading, writing, and publishing.
