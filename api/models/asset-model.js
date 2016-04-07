@@ -61,5 +61,5 @@ const assetSchema = new Schema({
 	lastUpdated: { type: Date },
 });
 
-module.exports = mongoose.model('Asset', assetSchema, 'newassets');
+module.exports = mongoose.model('Asset', assetSchema);
 // module.exports = mongoose.model('Asset', assetSchema);

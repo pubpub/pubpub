@@ -114,4 +114,4 @@ discussionSchema.statics.sortDiscussions = function(input) {
 };
 
 
-module.exports = mongoose.model('Discussion', discussionSchema, 'newdiscussions');
+module.exports = mongoose.model('Discussion', discussionSchema);
