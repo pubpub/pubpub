@@ -7,3 +7,5 @@ Most documentation is spread throughout the project alongside the code it is des
 - [API](./api)
 - [Translations](./translations)
 - [Assets and Media Library](./src/containers/MediaLibrary)
+- [Components](./src/components)
+- [Markdown](./src/components/Markdown)

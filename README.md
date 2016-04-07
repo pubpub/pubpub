@@ -36,9 +36,13 @@ heroku ps:scale web=1
 
 # Docs
 
-- [All docs](./DOCUMENTATION.md)
-- [API](/api/README.md)
-- [Translations](/translations/README.md)
+Most documentation is spread throughout the project alongside the code it is describing. The [DOCUMENTATION.md](./DOCUMENTATION.md) file aggregates those READMEs for easy navigation.
+
+- [Contributing](./CONTRIBUTING.md)
+- [Tests](./src/tests)
+- [API](./api)
+- [Translations](./translations)
+- [Assets and Media Library](./src/containers/MediaLibrary)
 
 
 # Testing
