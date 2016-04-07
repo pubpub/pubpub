@@ -15,8 +15,9 @@ export function featurePub(journalID, pub, callback) {
 	.post(recURL + journalID)
 	.send({
 		pub: pub,
-		action: ['feature'],
+		actions: ['feature'],
 	})
+  .set('Accept', 'application/json')
 	.end(callback);
 }
 
@@ -44,6 +45,7 @@ export function getRecommendations(type, query, journalId, callback) {
 	request
 	.get(recURL + journalId)
 	.query(recQuery)
+  .set('Accept', 'application/json')
 	.end(callback);
 }
 
@@ -62,8 +64,9 @@ export function inpRecAction(journalId, pubId, userId, action, callback) {
 	.send({
 		user: userId,
 		pub: pubId,
-		action: action
+		actions: action
 	})
+  .set('Accept', 'application/json')
 	.end(callback);
 }
 
@@ -84,5 +87,6 @@ export function removeAction(journalId, pubId, userId, action, callback) {
 		pub: pubId,
 		action: action
 	})
+  .set('Accept', 'application/json')
 	.end(callback);
 }
