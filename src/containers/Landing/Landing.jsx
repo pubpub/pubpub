@@ -127,105 +127,6 @@ const Landing = React.createClass({
 									{/* fontColor={'#F4F4F4'}/> */}
 							</div>
 
-							<div style={styles.section}>
-								<div style={styles.sectionContent}>
-									<div style={styles.sectionDetails}>
-										<div style={styles.sectionTitle}>Open, Rich Publishing</div>
-										<div style={styles.sectionDetail}>Author-driven publishing</div>
-										<div style={styles.sectionDetail}>Free and immediate publishing</div>
-										<div style={styles.sectionDetail}>Versioned histories</div>
-									</div>
-
-									<div style={styles.sectionExamples}>
-										<Link to={'/'} style={globalStyles.link}>
-											<div style={styles.sectionExample}>
-												<span style={styles.sectionExampleTitle}>Design and Science</span>
-												<span style={styles.sectionExampleAuthor}>by Joi Ito</span>
-											</div>
-										</Link>
-										<Link to={'/'} style={globalStyles.link}>
-											<div style={styles.sectionExample}>
-												<span style={styles.sectionExampleTitle}>Design as Participation</span>
-												<span style={styles.sectionExampleAuthor}>by Kevin Slavin</span>
-											</div>
-										</Link>
-										<Link to={'/'} style={globalStyles.link}>
-											<div style={styles.sectionExample}>
-												+ Create new Pub
-											</div>
-										</Link>
-									</div>
-									<div style={globalStyles.clearFix}></div>
-								</div>
-							</div>
-
-							<div style={styles.sectionDark}>
-								<div style={styles.sectionContent}>
-
-									<div style={[styles.sectionDetails, styles.sectionDetailsRight, globalStyles.right]}>
-										<div style={styles.sectionTitle}>Built Open</div>
-										<div style={styles.sectionDetail}>An open medium for dynamic, rich peer-review and discussion</div>
-										<div style={styles.sectionDetail}>Open-sourced and evolving. PubPub is a dedicated to building a platform accessible to all</div>
-										<div style={styles.sectionDetail}>Focused on implementing open standards that make your publication exportable, machine-readable, and interopable.</div>
-									</div>
-
-									<div style={[styles.sectionExamples, globalStyles.right]}>
-
-										<Link to={'/'} style={globalStyles.link}>
-											<div style={styles.sectionExample}>
-												Code
-											</div>
-										</Link>
-										<Link to={'/'} style={globalStyles.link}>
-											<div style={styles.sectionExample}>
-												Updates and Roadmap
-											</div>
-										</Link>
-										<Link to={'/'} style={globalStyles.link}>
-											<div style={styles.sectionExample}>
-												+ Contribute
-											</div>
-										</Link>
-									</div>
-									<div style={globalStyles.clearFix}></div>
-								</div>
-							</div>
-
-
-							<div style={styles.section}>
-								<div style={styles.sectionContent}>
-									<div style={styles.sectionDetails}>
-										<div style={styles.sectionTitle}>Grassroots Journals</div>
-										<div style={styles.sectionDetail}>Created by anyone for any community</div>
-										<div style={styles.sectionDetail}>Journals become tools for curating published content. Not gatekeepers of scientific progress</div>
-									</div>
-
-									<div style={styles.sectionExamples}>
-										<Link to={'/'} style={globalStyles.link}>
-											<div style={[styles.sectionExample, styles.exampleJoDS]}>
-												Journal of Design and Science
-											</div>
-										</Link>
-										<Link to={'/'} style={globalStyles.link}>
-											<div style={[styles.sectionExample, styles.exampleCDMX]}>
-												CDMX Global
-											</div>
-										</Link>
-										<Link to={'/'} style={globalStyles.link}>
-											<div style={[styles.sectionExample, styles.exampleViral]}>
-												Viral Communications
-											</div>
-										</Link>
-										<Link to={'/'} style={globalStyles.link}>
-											<div style={styles.sectionExample}>
-												+ Create new Journal
-											</div>
-										</Link>
-									</div>
-									<div style={globalStyles.clearFix}></div>
-								</div>
-							</div>
-
 							<div style={styles.lower}>
 								<div style={styles.textDark}>
 									<div style={styles.centerMedium}>Read, Write, Publish, Review.</div>
@@ -248,6 +149,105 @@ const Landing = React.createClass({
 									<div style={globalStyles.clearFix}></div>
 								</div>
 							</div>
+							
+							<div style={styles.section}>
+								<div style={styles.sectionContent}>
+									<div style={styles.sectionDetails}>
+										<div style={styles.sectionTitle}>Open, Rich Publishing</div>
+										<div style={styles.sectionDetail}>Author-driven publishing</div>
+										<div style={styles.sectionDetail}>Free and immediate publishing</div>
+										<div style={styles.sectionDetail}>Versioned histories</div>
+									</div>
+
+									<div style={styles.sectionExamples}>
+										<Link to={'/pub/designandscience'} style={globalStyles.link}>
+											<div style={styles.sectionExample}>
+												<span style={styles.sectionExampleTitle}>Design and Science</span>
+												<span style={styles.sectionExampleAuthor}>by Joi Ito</span>
+											</div>
+										</Link>
+										<Link to={'/pub/design-as-participation'} style={globalStyles.link}>
+											<div style={styles.sectionExample}>
+												<span style={styles.sectionExampleTitle}>Design as Participation</span>
+												<span style={styles.sectionExampleAuthor}>by Kevin Slavin</span>
+											</div>
+										</Link>
+										<Link to={'/pubs/create'} style={globalStyles.link}>
+											<div style={styles.sectionExample}>
+												+ Create new Pub
+											</div>
+										</Link>
+									</div>
+									<div style={globalStyles.clearFix}></div>
+								</div>
+							</div>
+
+							<div style={styles.sectionDark}>
+								<div style={styles.sectionContent}>
+
+									<div style={[styles.sectionDetails, styles.sectionDetailsRight, globalStyles.right]}>
+										<div style={styles.sectionTitle}>Built Open</div>
+										<div style={styles.sectionDetail}>An open medium for dynamic, rich peer-review and discussion</div>
+										<div style={styles.sectionDetail}>Open-sourced and evolving. PubPub is a dedicated to building a platform accessible to all</div>
+										<div style={styles.sectionDetail}>Focused on implementing open standards that make your publication exportable, machine-readable, and interopable.</div>
+									</div>
+
+									<div style={[styles.sectionExamples, globalStyles.right]}>
+
+										<a href={'https://github.com/pubpub/pubpub'} style={globalStyles.link}>
+											<div style={styles.sectionExample}>
+												Code
+											</div>
+										</a>
+										<a href={'https://github.com/pubpub/pubpub/blob/master/CHANGELOG.md'} style={globalStyles.link}>
+											<div style={styles.sectionExample}>
+												Updates and Roadmap
+											</div>
+										</a>
+										<a href={'https://github.com/pubpub/pubpub/blob/master/CONTRIBUTE.md'} style={globalStyles.link}>
+											<div style={styles.sectionExample}>
+												+ Contribute
+											</div>
+										</a>
+									</div>
+									<div style={globalStyles.clearFix}></div>
+								</div>
+							</div>
+
+
+							<div style={styles.section}>
+								<div style={styles.sectionContent}>
+									<div style={styles.sectionDetails}>
+										<div style={styles.sectionTitle}>Grassroots Journals</div>
+										<div style={styles.sectionDetail}>Created by anyone for any community</div>
+										<div style={styles.sectionDetail}>Journals become tools for curating published content. Not gatekeepers of scientific progress</div>
+									</div>
+
+									<div style={styles.sectionExamples}>
+										<a href={'http://jods.mitpress.mit.edu'} style={globalStyles.link}>
+											<div style={[styles.sectionExample, styles.exampleJoDS]}>
+												Journal of Design and Science
+											</div>
+										</a>
+										<a href={'http://cdmxglobal.pubpub.org'} style={globalStyles.link}>
+											<div style={[styles.sectionExample, styles.exampleCDMX]}>
+												CDMX Global
+											</div>
+										</a>
+										<a href={'http://viral.pubpub.org'} style={globalStyles.link}>
+											<div style={[styles.sectionExample, styles.exampleViral]}>
+												Viral Communications
+											</div>
+										</a>
+										<Link to={'/journals/create'} style={globalStyles.link}>
+											<div style={styles.sectionExample}>
+												+ Create new Journal
+											</div>
+										</Link>
+									</div>
+									<div style={globalStyles.clearFix}></div>
+								</div>
+							</div>
 
 							<div style={styles.featureDemos}>
 								<div style={styles.features}>
@@ -262,15 +262,15 @@ const Landing = React.createClass({
 										{(()=>{
 											switch (this.state.activeFeature) {
 											case 'editing':
-												return <img style={styles.featurePreviewImage} src={'http://res.cloudinary.com/pubpub/image/upload/c_scale,w_600/v1451416401/editing_hires_svywu2.gif'}/>;
+												return <img style={styles.featurePreviewImage} src={'https://res.cloudinary.com/pubpub/image/upload/c_scale,w_600/v1451416401/editing_hires_svywu2.gif'}/>;
 											case 'discussions':
-												return <img style={styles.featurePreviewImage} src={'http://res.cloudinary.com/pubpub/image/upload/c_scale,w_600/v1451416396/discussion_hires_jhdoga.gif'}/>;
+												return <img style={styles.featurePreviewImage} src={'https://res.cloudinary.com/pubpub/image/upload/c_scale,w_600/v1451416396/discussion_hires_jhdoga.gif'}/>;
 											case 'history':
-												return <img style={styles.featurePreviewImage} src={'http://res.cloudinary.com/pubpub/image/upload/c_scale,w_600/v1451416390/history_hires_ou47rn.gif'}/>;
+												return <img style={styles.featurePreviewImage} src={'https://res.cloudinary.com/pubpub/image/upload/c_scale,w_600/v1451416390/history_hires_ou47rn.gif'}/>;
 											case 'journals':
-												return <img style={styles.featurePreviewImage} src={'http://res.cloudinary.com/pubpub/image/upload/c_scale,w_600/v1451417712/outputjournal_qcdqyh.gif'}/>;
+												return <img style={styles.featurePreviewImage} src={'https://res.cloudinary.com/pubpub/image/upload/c_scale,w_600/v1451417712/outputjournal_qcdqyh.gif'}/>;
 											default:
-												return <img style={styles.featurePreviewImage} src={'http://i.imgur.com/X5ZSCJT.jpg'}/>;
+												return <img style={styles.featurePreviewImage} src={'https://i.imgur.com/X5ZSCJT.jpg'}/>;
 											}
 										})()}
 									</div>
