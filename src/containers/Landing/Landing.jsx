@@ -548,7 +548,7 @@ styles = {
 	},
 	experimentTitle: {
 		fontWeight: 900,
-		fontSize: '50px',
+		fontSize: '22px',
 		textAlign: 'center',
 		color: '#D1D1D1',
 	},
