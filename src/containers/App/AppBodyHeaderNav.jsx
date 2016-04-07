@@ -127,7 +127,7 @@ styles = {
 	},
 	notificationBlock: {
 		height: '18px',
-		lineHeight: '18px',
+		lineHeight: '16px',
 		padding: '0px 5px',
 		margin: '6px 6px 6px -0px',
 		textAlign: 'center',
