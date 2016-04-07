@@ -24,7 +24,7 @@
 
 #pubContent .title{
 	text-align: left;
-	font-size: 3.0em;
+	font-size: 3.2em;
 	padding: 0.7em 0px;
 	font-weight: 700;
 	line-height: 1.3em;
@@ -115,7 +115,7 @@
 #pubContent .p-block {
 	/*font-family: 'Lora';*/
 	font-family: 'Yrsa', Georgia, serif;
-	font-size: 1.1em;
+	font-size: 1.2em;
 	padding: 0.5em 0em;
 	color: #333;
 }

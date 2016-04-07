@@ -530,7 +530,7 @@ styles = {
 		color: '#A8A8A8',
 	},
 	centerTitle: {
-		fontSize: '40px',
+		fontSize: '50px',
 		textAlign: 'center',
 		// fontFamily: globalStyles.headerFont,
 		fontFamily: '"Yrsa", Georgia, serif',
@@ -548,7 +548,7 @@ styles = {
 	},
 	experimentTitle: {
 		fontWeight: 900,
-		fontSize: '22px',
+		fontSize: '50px',
 		textAlign: 'center',
 		color: '#D1D1D1',
 	},
