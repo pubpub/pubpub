@@ -69,7 +69,7 @@ module.exports = function (config) {
     }
 
   });
-  if(process.eng.CI) {
+  if(process.env.CI) {
 	  config.browsers = ['PhantomJS'];
   }
 };
