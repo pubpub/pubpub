@@ -1,7 +1,5 @@
 # Tests
 
-**We need lots of work on tests. As a small team, tests weren't out first priority from the start and it shows. We're getting better, but any suggestions or contributions to the unit and browser tests are welcome!**
-
 Tests run using Mocha and Karma. All test files follow the pattern `filename.test.js`.
 
 Tests can be run with `npm run test`. This will launch Mocha to watch all files and run tests on updates. This will test server and client code. Client code uses jsDOM to mock a DOM environment.
@@ -17,3 +15,5 @@ For faster debugging, `npm run test` will serve the majority of the job while `n
 Local API tests start an instance of mongodb to confirm database behavior.
 
 For best practices testing React and Redux components, see https://github.com/reactjs/redux/blob/master/docs/recipes/WritingTests.md
+
+**We need lots of work on tests. As a small team, tests weren't out first priority from the start and it shows. We're getting better, but any suggestions or contributions to the unit and browser tests are welcome!**

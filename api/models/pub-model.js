@@ -271,7 +271,7 @@ pubSchema.statics.generateDiffObject = function(oldPubObject, newPubObject) {
 	// Iterate over to calculate total additions, deletions
 
 	const outputObject = {};
-	outputObject.diffMarkdown = jsdiff.diffWords(oldPubObject.markdown || '', newPubObject.markdown || '', {newlineIsToken: true});
+	outputObject.diffMarkdown = jsdiff.diffSentences(oldPubObject.markdown || '', newPubObject.markdown || '', {newlineIsToken: true});
 	outputObject.diffStyleDesktop = jsdiff.diffWords(oldPubObject.styleDesktop || '', newPubObject.styleDesktop || '', {newlineIsToken: true});
 	outputObject.diffStyleMobile = jsdiff.diffWords(oldPubObject.styleMobile || '', newPubObject.styleMobile || '', {newlineIsToken: true});
 
