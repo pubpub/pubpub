@@ -235,11 +235,13 @@ styles = {
 		right: 0,
 		transition: '.2s linear transform',
 		// transform: 'translateX(105%)',
-		transform: 'translate3d(105%,0,0)',
+		// transform: 'translate3d(105%,0,0)',
+		display: 'none',
 	},
 	menuDrawerOpen: {
 		// transform: 'translateX(0%)',
-		transform: 'translate3d(0%,0,0)',
+		// transform: 'translate3d(0%,0,0)', // Transform isn't working with overflows. It's just visible off screen if you scroll horizontal.
+		display: 'block',
 	},
 	closeBar: {
 		float: 'left',

@@ -111,7 +111,7 @@ const Landing = React.createClass({
 							<div style={styles.top}>
 								<h1 style={styles.topPub}>PubPub</h1>
 								<div style={styles.subheader}>Open Publishing</div>
-								<div key="showMeScience" style={styles.showMeScience} onClick={this.showMeScienceClick}><Link to={'/pub/' + this.props.appData.getIn(['journalData', 'randomSlug'])}style={styles.scienceText}>Show Me Science</Link></div>
+								<Link to={'/pub/' + this.props.appData.getIn(['journalData', 'randomSlug'])} style={globalStyles.link}><div key="showMeScience" style={styles.showMeScience} onClick={this.showMeScienceClick}>Show Me Science</div></Link>
 							</div>
 							<div style={styles.search}>
 								<Autocomplete
@@ -123,8 +123,109 @@ const Landing = React.createClass({
 									hideResultsOnClickOut={false}
 									resultRenderFunction={this.renderLandingSearchResults}
 									loaderOffset={-20}
-									padding={'10px 0px'}/>
+									padding={'10px 0px'} />
+									{/* fontColor={'#F4F4F4'}/> */}
 							</div>
+
+							<div style={styles.section}>
+								<div style={styles.sectionContent}>
+									<div style={styles.sectionDetails}>
+										<div style={styles.sectionTitle}>Open, Rich Publishing</div>
+										<div style={styles.sectionDetail}>Author-driven publishing</div>
+										<div style={styles.sectionDetail}>Free and immediate publishing</div>
+										<div style={styles.sectionDetail}>Versioned histories</div>
+									</div>
+
+									<div style={styles.sectionExamples}>
+										<Link to={'/'} style={globalStyles.link}>
+											<div style={styles.sectionExample}>
+												<span style={styles.sectionExampleTitle}>Design and Science</span>
+												<span style={styles.sectionExampleAuthor}>by Joi Ito</span>
+											</div>
+										</Link>
+										<Link to={'/'} style={globalStyles.link}>
+											<div style={styles.sectionExample}>
+												<span style={styles.sectionExampleTitle}>Design as Participation</span>
+												<span style={styles.sectionExampleAuthor}>by Kevin Slavin</span>
+											</div>
+										</Link>
+										<Link to={'/'} style={globalStyles.link}>
+											<div style={styles.sectionExample}>
+												+ Create new Pub
+											</div>
+										</Link>
+									</div>
+									<div style={globalStyles.clearFix}></div>
+								</div>
+							</div>
+
+							<div style={styles.sectionDark}>
+								<div style={styles.sectionContent}>
+
+									<div style={[styles.sectionDetails, styles.sectionDetailsRight, globalStyles.right]}>
+										<div style={styles.sectionTitle}>Built Open</div>
+										<div style={styles.sectionDetail}>An open medium for dynamic, rich peer-review and discussion</div>
+										<div style={styles.sectionDetail}>Open-sourced and evolving. PubPub is a dedicated to building a platform accessible to all</div>
+										<div style={styles.sectionDetail}>Focused on implementing open standards that make your publication exportable, machine-readable, and interopable.</div>
+									</div>
+
+									<div style={[styles.sectionExamples, globalStyles.right]}>
+
+										<Link to={'/'} style={globalStyles.link}>
+											<div style={styles.sectionExample}>
+												Code
+											</div>
+										</Link>
+										<Link to={'/'} style={globalStyles.link}>
+											<div style={styles.sectionExample}>
+												Updates and Roadmap
+											</div>
+										</Link>
+										<Link to={'/'} style={globalStyles.link}>
+											<div style={styles.sectionExample}>
+												+ Contribute
+											</div>
+										</Link>
+									</div>
+									<div style={globalStyles.clearFix}></div>
+								</div>
+							</div>
+
+
+							<div style={styles.section}>
+								<div style={styles.sectionContent}>
+									<div style={styles.sectionDetails}>
+										<div style={styles.sectionTitle}>Grassroots Journals</div>
+										<div style={styles.sectionDetail}>Created by anyone for any community</div>
+										<div style={styles.sectionDetail}>Journals become tools for curating published content. Not gatekeepers of scientific progress</div>
+									</div>
+
+									<div style={styles.sectionExamples}>
+										<Link to={'/'} style={globalStyles.link}>
+											<div style={[styles.sectionExample, styles.exampleJoDS]}>
+												Journal of Design and Science
+											</div>
+										</Link>
+										<Link to={'/'} style={globalStyles.link}>
+											<div style={[styles.sectionExample, styles.exampleCDMX]}>
+												CDMX Global
+											</div>
+										</Link>
+										<Link to={'/'} style={globalStyles.link}>
+											<div style={[styles.sectionExample, styles.exampleViral]}>
+												Viral Communications
+											</div>
+										</Link>
+										<Link to={'/'} style={globalStyles.link}>
+											<div style={styles.sectionExample}>
+												+ Create new Journal
+											</div>
+										</Link>
+									</div>
+									<div style={globalStyles.clearFix}></div>
+								</div>
+							</div>
+
 							<div style={styles.lower}>
 								<div style={styles.textDark}>
 									<div style={styles.centerMedium}>Read, Write, Publish, Review.</div>
@@ -177,23 +278,12 @@ const Landing = React.createClass({
 								</div>
 								<div style={globalStyles.clearFix}></div>
 							</div>
-
-							{/* <div style={styles.footer}>
-								<span style={styles.footerItem} key={'footerItem' + 0}><Link to={'/pub/about'} style={globalStyles.link}>About PubPub</Link></span>
-								<span style={styles.footerSeparator}>|</span>
-								<span style={styles.footerItem} key={'footerItem' + 1}><a target="_blank" style={globalStyles.link} href="http://www.twitter.com/isPubPub">@isPubPub</a></span>
-								<span style={styles.footerSeparator}>|</span>
-								<span style={styles.footerItem} key={'footerItem' + 2}><a target="_blank" style={globalStyles.link} href="http://eepurl.com/bLkuVn">Stay up to date</a></span>
-								<span style={styles.footerSeparator}>|</span>
-								<span style={styles.footerItem} key={'footerItem' + 3}><a target="_blank" style={globalStyles.link} href="mailto:pubpub@media.mit.edu">Contact</a></span>
-							 </div> */}
 						</div>
 
 						: <div id={'pageContent'}>
 							<Markdown markdown={this.props.appData.getIn(['journalData', 'landingPage', 'markdown'])} isPage={true}/>
 						</div>
 				}
-				{/* <LandingBody componentsArray={componentsArray} journalID={journalID} journalData={this.props.appData.get('journalData')} query={this.props.query} setQueryHandler={this.setQuery}/> */}
 			</div>
 		);
 	}
@@ -222,53 +312,67 @@ styles = {
 		// },
 	},
 	top: {
-		backgroundColor: globalStyles.headerText,
+		// backgroundColor: globalStyles.headerText,
+		backgroundColor: '#F4F4F4',
 		overflow: 'hidden',
-		height: 400
+		height: 400,
+		textAlign: 'center',
 	},
 	topPub: {
+		fontFamily: '"Yrsa", Georgia, serif',
 		fontWeight: 900,
-		fontStyle: 'italic',
-		textAlign: 'center',
-		fontSize: '90px',
+		fontSize: '6.5em',
 		margin: '30px 0px 0px 0px',
-		color: globalStyles.headerBackground,
+		color: '#2C2A2B',
 
 	},
 	subheader: {
-		color: globalStyles.headerBackground,
-		textAlign: 'center',
-		fontSize: '40px',
-		margin: 0
+		fontFamily: '"Clear Sans", Helvetica Neue, Arial, sans-serif',
+		// color: globalStyles.headerBackground,
+		color: '#2C2A2B',
+		fontSize: '1.2em',
+		textTransform: 'uppercase',
+		letterSpacing: '.2em',
+		margin: '-20px 0px 50px 0px',
 	},
 	showMeScience: {
-		width: 250,
-		height: 80,
-		lineHeight: '80px',
+		// width: 250,
+		// height: 80,
+		// lineHeight: '80px',
 		textAlign: 'center',
-		fontSize: '22px',
-		backgroundColor: globalStyles.headerBackground,
-		margin: '80px auto',
+		display: 'inline-block',
+		// fontSize: '22px',
+		// backgroundColor: globalStyles.headerBackground,
+		// margin: '80px auto',
+		fontFamily: '"Clear Sans", Helvetica Neue, Arial, sans-serif',
+		fontSize: '1.2em',
+		border: '2px solid #585858',
+		padding: '.9em 1.8em',
+		':hover': {
+			backgroundColor: '#58585B',
+			color: '#F4F4F4',
+		},
 		':active': {
 			position: 'relative',
 			top: '1px',
 		},
 	},
-	scienceText: {
-		textDecoration: 'none',
-		color: globalStyles.headerText,
-		width: '100%',
-		height: '100%',
-		display: 'block',
-		':hover': {
-			color: globalStyles.headerHover,
-		},
-	},
+	// scienceText: {
+	// 	textDecoration: 'none',
+	// 	// color: '#58585B',
+	// 	width: '100%',
+	// 	height: '100%',
+	// 	display: 'block',
+	// 	// ':hover': {
+	// 	// 	color: globalStyles.headerHover,
+	// 	// },
+	// },
 	search: {
 		width: 'calc(100% - 60px)',
 		padding: '10px 30px',
+		// backgroundColor: '#2A2A2A',
+		// color: '#EFEFEF',
 		backgroundColor: 'white',
-		color: '#888',
 	},
 	text: {
 		color: globalStyles.headerBackground,
@@ -286,6 +390,81 @@ styles = {
 		overflow: 'hidden',
 		// height: 900,
 		backgroundColor: globalStyles.headerBackground
+	},
+	section: {
+		backgroundColor: '#F4F4F4',
+		// backgroundColor: '#BBBDC0',
+	},
+	sectionDark: {
+		backgroundColor: 'inherit',
+		// backgroundColor: '#F4F4F4',
+	},
+	sectionContent: {
+		maxWidth: 1024,
+		padding: '60px 20px 60px 20px',
+		margin: '0 auto',
+	},
+	sectionDetails: {
+		float: 'left',
+		width: '55%',
+		paddingRight: '5%',
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+			width: 'auto',
+			paddingRight: '0px',
+			margin: '0 auto',
+			float: 'none',
+		},
+	},
+	sectionDetailsRight: {
+		paddingRight: '0px',
+		paddingLeft: '5%',
+		textAlign: 'right',
+	},
+	sectionTitle: {
+		fontSize: '2em',
+		textTransform: 'uppercase',
+		letterSpacing: '.1em',
+		paddingBottom: '20px',
+	},
+	sectionDetail: {
+		padding: '15px 0px',
+		fontSize: '1.2em',
+	},
+	sectionExamples: {
+		float: 'left',
+		width: '40%',
+		paddingTop: '78px', // Height of sectionTitle + scetionTitlePadding + detailPadding
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+			width: '85%',
+			margin: '0 auto',
+			float: 'none',
+		},
+	},
+	sectionExample: {
+		border: '2px solid #585858',
+		borderRadius: '2px',
+		textAlign: 'center',
+		margin: '10px 0px',
+		padding: '10px 0px',
+	},
+	sectionExampleAuthor: {
+		fontSize: '0.8em',
+		fontStyle: 'italic',
+		paddingLeft: '0.5em',
+	},
+	exampleJoDS: {
+		backgroundColor: 'black',
+		color: 'white',
+		fontFamily: 'Helvetica'
+	},
+	exampleCDMX: {
+		backgroundColor: 'white',
+		color: '#D61A7B',
+		fontFamily: 'Helvetica'
+	},
+	exampleViral: {
+		fontFamily: 'Helvetica',
+		backgroundColor: '#CCCCCC',
 	},
 	results: {
 		// backgroundColor: 'rgba(255,90,80,0.3)',
@@ -338,8 +517,10 @@ styles = {
 		display: 'inline-block',
 		height: '100%',
 		color: globalStyles.sideText,
+		// color: '#F4F4F4',
 		':hover': {
 			color: globalStyles.sideHover,
+			// color: '#CCC'
 		},
 	},
 	centerMedium: {
@@ -351,7 +532,8 @@ styles = {
 	centerTitle: {
 		fontSize: '40px',
 		textAlign: 'center',
-		fontFamily: globalStyles.headerFont,
+		// fontFamily: globalStyles.headerFont,
+		fontFamily: '"Yrsa", Georgia, serif',
 		fontWeight: 900,
 		color: '#D1D1D1',
 		margin: '40px 0px 70px 0px',
@@ -431,29 +613,29 @@ styles = {
 		width: '100%',
 		boxShadow: '0px 3px 4px rgba(0,0,0,0.4)',
 	},
-	footer: {
-		padding: '50px 0px',
-		backgroundColor: globalStyles.headerBackground,
-		color: globalStyles.headerText,
-		fontSize: '18px',
-		textAlign: 'center',
-	},
-	footerItem: {
-		color: '#aaa',
-		':hover': {
-			color: '#fff',
-		},
-		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
-			display: 'block',
-			padding: '15px 0px',
-		},
-	},
-	footerSeparator: {
-		padding: '0px 30px',
-		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
-			display: 'none',
-		}
-	},
+	// footer: {
+	// 	padding: '50px 0px',
+	// 	backgroundColor: globalStyles.headerBackground,
+	// 	color: globalStyles.headerText,
+	// 	fontSize: '18px',
+	// 	textAlign: 'center',
+	// },
+	// footerItem: {
+	// 	color: '#aaa',
+	// 	':hover': {
+	// 		color: '#fff',
+	// 	},
+	// 	'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+	// 		display: 'block',
+	// 		padding: '15px 0px',
+	// 	},
+	// },
+	// footerSeparator: {
+	// 	padding: '0px 30px',
+	// 	'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+	// 		display: 'none',
+	// 	}
+	// },
 
 
 };

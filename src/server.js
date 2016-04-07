@@ -147,6 +147,14 @@ app.use((req, res) => {
 							<link href='https://fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic,900italic|Lora:400,400italic,700,700italic' rel='stylesheet' type='text/css' />
 
 							<link href='https://fonts.googleapis.com/css?family=Alegreya+Sans+SC|ABeeZee' rel='stylesheet' type='text/css'>
+							<link href='https://fonts.googleapis.com/css?family=Merriweather:400italic,700italic' rel='stylesheet' type='text/css'>
+							<style>
+								@font-face { font-family: Yrsa; font-weight: 400; src: url('https://s3.amazonaws.com/pubpub-statics/Yrsa-Regular.otf'); }
+								@font-face { font-family: Yrsa; font-weight: 700; src: url('https://s3.amazonaws.com/pubpub-statics/Yrsa-Bold.otf');}
+								@font-face { font-family: ClearSans; font-weight: 100; src: url('https://s3.amazonaws.com/pubpub-statics/ClearSans-Light.ttf');}
+								@font-face { font-family: ClearSans; font-weight: 400; src: url('https://s3.amazonaws.com/pubpub-statics/ClearSans-Regular.ttf');}
+								@font-face { font-family: ClearSans; font-weight: 700; src: url('https://s3.amazonaws.com/pubpub-statics/ClearSans-Bold.ttf');}
+							</style>
 
 							<!-- We could dynamically load these in Editor.jsx
 							<!-- If we have to load more local css - we should bundle it all into one minified file and load it here. -->

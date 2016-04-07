@@ -3,9 +3,10 @@ export const globalStyles = {
 	headerBackground: '#2A2A2A',
 	headerHeight: '30px',
 	headerHeightMobile: '60px',
-	headerText: '#E0E0E0',
+	headerText: '#F4F4F4',
 	headerHover: '#FFFFFF',
-	headerFont: "'Lato', sans-serif",
+	// headerFont: "'Lato', sans-serif",
+	headerFont: '"ClearSans", Helvetica Neue, Arial, sans-serif',
 	// sideBackground: '#F5F5F5',
 	sideBackground: '#EBEBEB',
 	// sideText: '#666',
@@ -95,6 +96,12 @@ export const globalStyles = {
 		border: '1px solid #EEE',
 		// fontWeight: '400',
 		// backgroundColor: '#f3f3f3',
+	},
+	left: {
+		float: 'left',
+	},
+	right: {
+		float: 'right',
 	},
 
 };
