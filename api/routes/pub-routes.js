@@ -30,11 +30,12 @@ export function getPub(req, res) {
 			// const postedID = userID || sessionID;
 			const postedJournalID = journalID || 'pubpub';
 			const pubID = pubData._id;
-			inpRecAction(postedJournalID, pubID, userID, 'read', function(recError, recResponse) {
-				if (recResponse.error) {
+
+			inpRecAction(postedJournalID, pubID, userID, ['read'], function(recError, recResponse) {
+				 if (recResponse.error) {
 					console.log(recResponse.error);
-				}
-			});
+				 }
+			 });
 		}
 
 		if (req.query.referrer) {
@@ -313,7 +314,7 @@ export function updateCollaborators(req, res) {
 			});
 		});
 		/* *********************************** */
-		/*        End notification block       */
+		/*				End notification block			 */
 		/* *********************************** */
 
 
