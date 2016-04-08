@@ -92,13 +92,18 @@ const PubBody = React.createClass({
 		// const citeRegex = /\[\[cite:.*?\]\]/g;
 		// [[{"pluginType":"cite","srcRef":"gauch1999real"}]
 		const references = [];
+		const referencesObj = {};
 		const citeRegex = /\[\[{"pluginType":"cite".*?\]\]/g;
 		const matches = markdown.match(citeRegex);
 		if (matches) {
 			for (const match of matches) {
 				const citeStr = match.slice(2, -2);
 				const ref = parsePluginString(citeStr).reference;
-				references.push(ref);
+				const label = (ref) ? ref.label : null;
+				if (label && !referencesObj[label]) {
+					referencesObj[label] = 1;
+					references.push(ref);
+				}
 			}
 		} else {
 			return [];
