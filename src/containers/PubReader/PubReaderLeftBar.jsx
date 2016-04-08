@@ -51,7 +51,7 @@ const PubLeftBar = React.createClass({
 			<div style={styles.container}>
 				{pubViews.map((view, index)=>{
 					const path = view.metaPath || '';
-					const authorOnlyStyle = !this.props.isAuthor && view.label === 'Edit' && {display: 'none'};
+					const authorOnlyStyle = !this.props.isAuthor && view.metaPath === 'draft' && {display: 'none'};
 					return (
 						<Link style={globalStyles.link} to={'/pub/' + this.props.slug + '/' + path + versionURL} key={'metaLink-' + index}>
 						<div key={'metaLinkLabel-' + index} style={[styles.detail, this.props.meta === view.metaPath && styles.detailActive, authorOnlyStyle]}>{view.label}</div>
