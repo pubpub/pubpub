@@ -32,7 +32,7 @@ export function getPub(req, res) {
 			const pubID = pubData._id;
 
 			inpRecAction(postedJournalID, pubID, userID, ['read'], function(recError, recResponse) {
-				 if (recResponse.error) {
+				 if (recResponse && recResponse.error) {
 					console.log(recResponse.error);
 				 }
 			 });

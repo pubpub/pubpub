@@ -9,6 +9,13 @@ See [http://keepachangelog.com/](http://keepachangelog.com/) for best practices.
 - Reference import tools. Import from endnote, mendeley, etc.
 - Richer on-boarding tutorials for all aspects of the project
 - Style Library that allows users to share and use Pub and Page styles.
+- Clean exporting - xml, pdf, etc
+- Tags for Pubs and Discussions
+- Analytics
+- Tools for filters, sorting comments
+- Clear archive and backup instructions
+- Make Discussions Editable - and history of edits visible
+
 
 ## [Unreleased]
 ### Added
