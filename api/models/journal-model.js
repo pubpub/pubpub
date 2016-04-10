@@ -86,11 +86,11 @@ journalSchema.statics.populationObject = function(collectionsOnly, pubsOnly) {
 	const options = [
 		{path: 'landingPage', select: 'markdown styleScoped'},
 
-		{path: 'pubsSubmitted', select: 'title abstract slug settings history'},
+		{path: 'pubsSubmitted', select: 'title abstract slug settings createDate lastUpdated'},
 		{path: 'admins', select: 'name firstName lastName username thumbnail'},
 		{
 			path: 'pubsFeatured',
-			select: 'title abstract slug authors lastUpdated createDate discussions history',
+			select: 'title abstract slug authors lastUpdated createDate discussions createDate lastUpdated',
 			populate: [
 				{
 					path: 'authors',
@@ -101,7 +101,7 @@ journalSchema.statics.populationObject = function(collectionsOnly, pubsOnly) {
 		},
 		{
 			path: 'collections.pubs',
-			select: 'title abstract slug authors lastUpdated createDate discussions history',
+			select: 'title abstract slug authors lastUpdated createDate discussions createDate lastUpdated',
 			populate: [
 				{
 					path: 'authors',

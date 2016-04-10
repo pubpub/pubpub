@@ -52,7 +52,7 @@ app.get('/autocompleteUsers', autocompleteUsers);
 export function autocompletePubsAll(req, res) {
 	const query = {history: {$not: {$size: 0}}, 'settings.isPrivate': {$ne: true}};
 
-	Pub.find(query, {'slug': 1, 'title': 1, 'abstract': 1, 'history': 1}).exec(function(err, pubs) {
+	Pub.find(query, {'slug': 1, 'title': 1, 'abstract': 1, 'createDate': 1, 'lastUpdated': 1}).exec(function(err, pubs) {
 		const objects = pubs;
 		// console.log(objects);
 		const sifter = new Sifter(objects);
@@ -84,7 +84,7 @@ export function autocompletePubs(req, res) {
 	}
 
 	// Pub.find(query, {'slug': 1, 'title': 1, 'abstract': 1, 'tags': 1, 'discussions': 1, 'lastUpdated': 1}).exec(function(err, pubs) {
-	Pub.find(query, {'slug': 1, 'title': 1, 'abstract': 1, 'history': 1}).exec(function(err, pubs) {
+	Pub.find(query, {'slug': 1, 'title': 1, 'abstract': 1, 'createDate': 1, 'lastUpdated': 1}).exec(function(err, pubs) {
 		const objects = pubs;
 		// console.log(objects);
 		const sifter = new Sifter(objects);
@@ -115,7 +115,7 @@ export function autocompletePubsForJournal(req, res) {
 		}
 
 		// Pub.find(query, {'slug': 1, 'title': 1, 'abstract': 1, 'tags': 1, 'discussions': 1, 'lastUpdated': 1}).exec(function(err, pubs) {
-		Pub.find(query, {'slug': 1, 'title': 1, 'abstract': 1, 'history': 1}).exec(function(errPubFind, pubs) {
+		Pub.find(query, {'slug': 1, 'title': 1, 'abstract': 1, 'createDate': 1, 'lastUpdated': 1}).exec(function(errPubFind, pubs) {
 			const objects = pubs;
 			// console.log(objects);
 			const sifter = new Sifter(objects);
@@ -144,7 +144,7 @@ export function autocompletePubsAndUsers(req, res) {
 			objects = objects.concat(users);
 		}
 
-		Pub.find({history: {$not: {$size: 0}}, 'settings.isPrivate': {$ne: true}}, {'_id': 0, 'slug': 1, 'title': 1, 'history': 1}).exec(function(err2, pubs) {
+		Pub.find({history: {$not: {$size: 0}}, 'settings.isPrivate': {$ne: true}}, {'_id': 0, 'slug': 1, 'title': 1, 'createDate': 1, 'lastUpdated': 1}).exec(function(err2, pubs) {
 			if (pubs) {
 				objects = objects.concat(pubs);
 			}
