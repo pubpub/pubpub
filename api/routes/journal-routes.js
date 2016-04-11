@@ -122,6 +122,28 @@ export function saveJournal(req, res) {
 			}
 		}
 
+		if ('admins' in req.body.newObject) {
+			// If there are admins to be updated, we need to appropriately add this journal's _id
+			// to the user's profile, and remove for removed admins
+			const newAdminStrings = req.body.newObject.admins.length ? req.body.newObject.admins.toString().split(',') : [];
+			const oldAdminStrings = journal.admins.length ? journal.admins.toString().split(',') : [];
+
+			journal.admins.map((adminID)=>{
+				// If it was in the old, but is not in the new, pull it
+				if (newAdminStrings.indexOf(adminID.toString()) === -1) {
+					User.update({ _id: adminID }, { $pull: { adminJournals: journal._id} }, function(adminAddErr, addAdminResult) {if (adminAddErr) return res.status(500).json('Failed to add as admin'); });	
+				}
+			});
+
+			req.body.newObject.admins.map((adminID)=>{
+				// If it is in the new, but was not in the old, add it
+				if (oldAdminStrings.indexOf(adminID.toString()) === -1) {
+					User.update({ _id: adminID }, { $addToSet: { adminJournals: journal._id} }, function(adminAddErr, addAdminResult) {if (adminAddErr) return res.status(500).json('Failed to add as admin'); });	
+				}
+			});
+			
+		} 
+
 		for (const key in req.body.newObject) {
 			if (req.body.newObject.hasOwnProperty(key)) {
 				journal[key] = req.body.newObject[key];

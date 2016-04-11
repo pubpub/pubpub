@@ -7,11 +7,14 @@
 		overflow: visible !important;
 		height: auto !important;
 	}
-	.header-bar,.login-container, .leftBar, .rightBar, .pubModals, .editorModals, .editorBodyNav, .editorPreviewNav, #editor-text-wrapper, #editor-discussions-wrapper, #style-editor-wrapper, #editorTopNav, #editorBottomNav {
+	.header-bar,.login-container, .leftBar, .rightBar, .pubModals, .editorModals, .editorBodyNav, .editorPreviewNav, #editor-text-wrapper, #editor-discussions-wrapper, #style-editor-wrapper, #editorTopNav, #editorBottomNav, .reader-left {
 		display: none !important;
 	}
 	.content {
 		margin-top: 0px !important;
+	}
+	.reader-content {
+		margin: 0 !important;
 	}
 	.editor-container {
 		height: auto !important;
@@ -46,7 +49,7 @@
 		page-break-after: always !important;
 	}
 	
-	table, figure, image {
+	table, figure, image, .reference, h1, h2, h3, h4, h5, h6 {
 		page-break-inside: avoid !important;
 	}
 
