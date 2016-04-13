@@ -207,7 +207,7 @@ const AppBody = React.createClass({
 					<div style={{display: 'table', margin: '0 auto'}}>
 						<div style={styles.footerColumn}>
 							<div style={styles.footerHeader}>PubPub</div>
-							<Link style={globalStyles.link} to={'/'}><div style={styles.footerItem}>About</div></Link>
+							<Link style={globalStyles.link} to={'/pub/about'}><div style={styles.footerItem}>About</div></Link>
 							<Link style={globalStyles.link} to={'/pub/faq'}><div style={styles.footerItem}>FAQ</div></Link>
 							<a style={globalStyles.link} href={'https://github.com/pubpub/pubpub'}><div style={styles.footerItem}>Code</div></a>
 							<Link style={globalStyles.link} to={'/pub/jobs'}><div style={styles.footerItem}>Jobs</div></Link>
