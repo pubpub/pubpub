@@ -184,15 +184,15 @@ const PubReader = React.createClass({
 		if (pubData.title) {
 			metaData.title = pubData.history[versionIndex].title;
 			metaData.meta = [
-				{property: 'og:title', content: pubData.history[versionIndex].title},
+				{property: 'og:title', content: pubData.title || ''},
 				{property: 'og:type', content: 'article'},
-				{property: 'og:description', content: pubData.history[versionIndex].abstract},
+				{property: 'og:description', content: pubData.abstract || ''},
 				{property: 'article:published_time', content: pubData.history[versionIndex].versionDate},
 				{property: 'article:modified_time', content: pubData.history[pubData.history.length - 1].versionDate},
 				{name: 'twitter:card', content: 'summary_large_image'},
-				{name: 'twitter:site', content: '@isPubPub'},
-				{name: 'twitter:title', content: pubData.history[versionIndex].title},
-				{name: 'twitter:description', content: pubData.history[versionIndex].abstract},
+				{name: 'twitter:site', content: '@pubpub'},
+				{name: 'twitter:title', content: pubData.title || ''},
+				{name: 'twitter:description', content: pubData.abstract || ''},
 			];
 
 			const srcRegex = /{{image:.*(source=([^\s,]*)).*}}/;
