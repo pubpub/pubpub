@@ -302,7 +302,7 @@ const PubReader = React.createClass({
 									addSelectionHandler={this.addSelection}
 									styleScoped={pubData.history[versionIndex].styleScoped}
 									showPubHighlights={this.props.readerData.get('showPubHighlights')}
-									isFeatured={(pubData.featuredInList && pubData.featuredInList.indexOf(this.props.appData.getIn(['journalData', '_id'])) > -1) || this.props.appData.get('baseSubdomain') === null}
+									isFeatured={(pubData.featuredInList && pubData.featuredInList.indexOf(this.props.appData.getIn(['journalData', '_id'])) > -1) || this.props.appData.get('baseSubdomain') === null || !pubData.isPublished}
 									errorView={pubData.pubErrorView}
 									minFont={14}
 									maxFont={21}/>

@@ -186,18 +186,19 @@ pubSchema.statics.getPub = function(slug, readerID, readerGroups, readerAdminJou
 			return callback(null, {message: 'Pub not yet published', slug: slug});
 		}
 
+		const outputPub = populatedPub.toObject();
+		if (populatedPub.collaborators.canEdit.indexOf(readerID) > -1) {
+			outputPub.isAuthor = true;
+		}
+
 		// Check if the pub is not allowed in the journal
-		if (!populatedPub.isPage && journalID && String(populatedPub.featuredInList).indexOf(journalID) === -1 && String(populatedPub.submittedToList).indexOf(journalID) === -1) {
+		if (!outputPub.isAuthor && !isCollaborator && !populatedPub.isPage && journalID && String(populatedPub.featuredInList).indexOf(journalID) === -1 && String(populatedPub.submittedToList).indexOf(journalID) === -1) {
 			return callback(null, {message: 'Pub not in this journal', slug: slug});
 		}
 
 		// Mark all notifcations about this pub for this reader as 'sent' (i.e. don't send an email, but keep it unread until they go to notifications page)
 		Notification.setSent({pub: populatedPub._id, recipient: readerID}, ()=>{});
 
-		const outputPub = populatedPub.toObject();
-		if (populatedPub.collaborators.canEdit.indexOf(readerID) > -1) {
-			outputPub.isAuthor = true;
-		}
 		outputPub.isCollaborator = isCollaborator;
 		outputPub.discussions = Discussion.removePrivateIfNeeded(outputPub.discussions, isCollaborator);
 		outputPub.discussions = Discussion.appendUserYayNayFlag(outputPub.discussions, readerID);
