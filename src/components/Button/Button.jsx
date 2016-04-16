@@ -6,7 +6,7 @@ let styles = {};
 
 const Button = React.createClass({
 	propTypes: {
-		key: PropTypes.string,
+		btnKey: PropTypes.string,
 		label: PropTypes.string,
 		onClick: PropTypes.func,
 		isLoading: PropTypes.bool,
@@ -41,7 +41,7 @@ const Button = React.createClass({
 						✓
 					</div>
 
-					<div style={styles.button} key={this.props.key} onClick={this.props.onClick}>
+					<div style={styles.button} key={this.props.btnKey} onClick={this.props.onClick}>
 						{this.props.label}
 
 						<div style={styles.loaderWrapper}>

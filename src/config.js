@@ -7,8 +7,8 @@ const env = (heroku) ? 'production' : 'development';
 const environment = {
 	development: {
 		isProduction: false,
-		// FireBaseURL: 'https://pubpub-dev.firebaseio.com/',
-		FireBaseURL: process.env.FIREBASE_URL || 'https://pubpub-migration.firebaseio.com/',
+		FireBaseURL: 'https://pubpub-dev.firebaseio.com/',
+		// FireBaseURL: process.env.FIREBASE_URL || 'https://pubpub-migration.firebaseio.com/',
 	},
 	production: {
 		isProduction: true,
