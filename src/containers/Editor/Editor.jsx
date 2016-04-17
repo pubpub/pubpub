@@ -518,6 +518,24 @@ const Editor = React.createClass({
 
 	},
 
+	componentDidUpdate: function() {
+
+		const shouldScroll = (this.props.loginData.getIn(['userData', 'settings', 'editorScrollCursor']) !== 'off');
+
+		if (!shouldScroll) {
+			return;
+		}
+
+		const cursorElem = document.querySelector('.markdown-cursor');
+		if (cursorElem) {
+			if (cursorElem.scrollIntoViewIfNeeded) {
+				cursorElem.scrollIntoViewIfNeeded();
+			} else {
+				cursorElem.scrollIntoView();
+			}
+		}
+	},
+
 	render: function() {
 		// return <h1 style={{textAlign: 'center', margin: '50px auto', width: '80%'}}>The PubPub Editor is currently down for maintenance. We'll be back shortly!</h1>;
 		// const editorData = this.props.editorData;
@@ -547,68 +565,6 @@ const Editor = React.createClass({
 		};
 
 		const editorMenuItems = this.buildEditorMenuItems();
-
-
-		// [
-		// 	{key: 'file', string: <FormattedMessage id="editor.File" defaultMessage="File"/>, function: ()=>{}, children: [
-		// 		{key: 'style', string: <FormattedMessage id="editor.Style" defaultMessage="Style"/>, function: this.toggleStyleMode},
-		// 		{key: 'Settings', string: <FormattedMessage id="editor.EditorSettings" defaultMessage="Editor Settings"/>, function: this.openModalHandler('Style')}
-		// 	]},
-		// 	// {
-		// 	// 	key: 'view',
-		// 	// 	string: <FormattedMessage id="editor.View" defaultMessage="View"/>,
-		// 	// 	function: this.printIt('style!'),
-		// 	// 	children: [
-		// 	// 		{
-		// 	// 			key: '1',
-		// 	// 			string: 'Markdown',
-		// 	// 			function: this.printIt('assets2!'),
-		// 	// 		},
-		// 	// 		{
-		// 	// 			key: '2',
-		// 	// 			string: 'Markdown and Live Preview',
-		// 	// 			function: this.printIt('assets2!'),
-		// 	// 		},
-		// 	// 		{
-		// 	// 			key: 'Markdomments',
-		// 	// 			string: 'Markdown and Comments',
-		// 	// 			function: this.printIt('collabs2!'),
-		// 	// 		},
-		// 	// 		{
-		// 	// 			key: 'things2',
-		// 	// 			string: 'Live Preview and Comments',
-		// 	// 			function: this.printIt('things2!'),
-		// 	// 		},
-		// 	// 	]
-		// 	// },
-		// 	{key: 'formatting', string: <FormattedMessage {...globalMessages.Formatting}/>, function: ()=>{}, children: [
-		// 		{key: 'assets2', string: 'header #', function: this.printIt('assets2!')	},
-		// 		{key: 'bold', string: 'bold', function: this.printIt('things2!') },
-		// 		{key: 'italic', string: 'italic', function: this.printIt('collabs2!') },
-		// 		{key: 'assetsasd2', string: 'header #', function: this.printIt('assets2!') },
-		// 	]},
-		// 	{key: 'assets', string: <FormattedMessage {...globalMessages.assets}/>, function: this.openModalHandler('Assets') },
-		// 	{key: 'collaborators', string: <FormattedMessage {...globalMessages.collaborators}/>, function: this.openModalHandler('Collaborators')},
-		// 	{key: 'activeCollabs', string: '', function: ()=>{}, notButton: true},
-		// 	{key: 'saveVersion', string: <FormattedMessage id="editor.SaveVersion" defaultMessage="Save Version"/>, right: true, function: this.openModalHandler('SaveVersion')},
-		// 	{key: 'preview', string: <FormattedMessage {...globalMessages.Preview}/>, right: true, function: this.toggleLivePreview},
-		// 	{key: 'saveStatus',
-		// 		string: (()=>{
-		// 			switch (this.state.editorSaveStatus) {
-		// 			case 'saved':
-		// 				return <FormattedMessage id="editor.pubSaved" defaultMessage="Pub Saved"/>;
-		// 			case 'saving':
-		// 				return <FormattedMessage id="editor.pubSaving" defaultMessage="Pub Saving..."/>;
-		// 			default:
-		// 				return <FormattedMessage id="editor.disconnected" defaultMessage="Disconnected"/>;
-		// 			}
-		// 			// this.state.editorSaveStatus === 'saved' ? 'Pub Saved' : 'Pub Saving...'}
-		// 		})(),
-		// 		function: ()=>{},
-		// 		right: true,
-		// 		notButton: true,
-		// 	},
-		// ];
 
 		return (
 

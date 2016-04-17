@@ -42,7 +42,7 @@ styles = {
 		position: 'relative',
 		top: '0.2em',
 		display: 'inline-block',
-		margin: '0px 2px',
+		margin: '0px 0px',
 		// filter: 'invert(100%)',
 		// backgroundColor: 'black',
 		animation: 'x 1s linear 0s infinite',

@@ -192,6 +192,7 @@ const Editor = React.createClass({
 									editorFont={this.props.loginData.getIn(['userData', 'settings', 'editorFont'])}
 									editorFontSize={this.props.loginData.getIn(['userData', 'settings', 'editorFontSize'])}
 									editorColor={this.props.loginData.getIn(['userData', 'settings', 'editorColor'])}
+									editorScrollCursor={this.props.loginData.getIn(['userData', 'settings', 'editorScrollCursor'])}
 									pubPrivacy={this.state.firepadData && this.state.firepadData.settings ? this.state.firepadData.settings.pubPrivacy : undefined}
 									pubStyle={this.state.firepadData && this.state.firepadData.settings ? this.state.firepadData.settings.pubStyle : undefined}
 									saveUpdatedSettingsUser={this.saveUpdatedSettingsUser}

@@ -38,6 +38,7 @@ const userSchema = new Schema({
 		editorFont: { type: String },
 		editorFontSize: { type: String },
 		editorColor: { type: String },
+		editorScrollCursor: { type: String },
 	},
 
 	following: {
