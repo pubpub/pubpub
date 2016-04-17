@@ -2,7 +2,7 @@ import * as fs from 'fs';
 import {sync as globSync} from 'glob';
 import {sync as mkdirpSync} from 'mkdirp';
 
-// I'm not sure why babel-plugin-react-intl is putting everything into a nested 
+// I'm not sure why babel-plugin-react-intl is putting everything into a nested
 // tree under messages/node_modules. I can't seem to fix it. maybe in babel6 it'll be better?
 const MESSAGES_PATTERN = './translations/messages/src/**/*.json';
 const TRANSLATIONS_DIR = './translations/';
@@ -14,10 +14,10 @@ const findMissingStrings = function() {
     let englishJSON = {};
     let languageJSONs = [];
     let languages = [];
-    globSync(LANG_PATTERN).map((filename) => { 
+    globSync(LANG_PATTERN).map((filename) => {
         const file = fs.readFileSync(filename, 'utf8');
         if (filename.indexOf('en.json') > -1) {
-            englishJSON = JSON.parse(file);  
+            englishJSON = JSON.parse(file);
         } else {
             languages.push(filename.substring(filename.length - 7, filename.length - 5));
             languageJSONs.push( JSON.parse(file) );
@@ -25,7 +25,7 @@ const findMissingStrings = function() {
     });
 
     const outputJSON = {};
-    
+
     for (let index = languageJSONs.length; index--;) {
         outputJSON[languages[index]] = {};
         for (const englishKey in englishJSON) {
@@ -54,7 +54,7 @@ const compileTranslations = function() {
         descriptors.forEach(({id, defaultMessage}) => {
             if (collection.hasOwnProperty(id)) {
                 // throw new Error(`Duplicate message id: ${id}`);
-                console.log('Warning: Duplicate message id:', id);
+                // console.log('Warning: Duplicate message id:', id);
             }
 
             collection[id] = defaultMessage;

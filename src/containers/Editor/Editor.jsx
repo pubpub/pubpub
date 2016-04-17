@@ -234,7 +234,7 @@ const Editor = React.createClass({
 
 		// const start = performance.now();
 
-		const markdown = cm.getValue();
+		let markdown = cm.getValue();
 
 		// Grab title, abstract, and authorsNote
 		const titleMatch = markdown.match(/title: (.*)/i);
@@ -252,6 +252,16 @@ const Editor = React.createClass({
 		if ((this.state.title !== title || this.state.abstract !== abstract) && !this.props.editorData.getIn(['pubEditData', 'isPage'])) {
 			debounce('backendSync', this.updatePubBackendData, 2000)();
 		}
+
+
+		const cursor = cm.getCursor();
+		if (cursor) {
+			const cursorIndex = cm.indexFromPos(cursor);
+			const cursorString = '[[{"pluginType": "cursor"}]]';
+			markdown = markdown.slice(0, cursorIndex) + cursorString + markdown.slice(cursorIndex);
+		}
+
+
 		// Set State to trigger re-render
 		this.setState({
 			markdown: markdown,
@@ -694,6 +704,7 @@ const Editor = React.createClass({
 										minFont={13}
 										maxFont={25}
 										markdown={this.state.markdown}
+										markdownChange={this.state.codeMirrorChange}
 										authors={this.getAuthorsArray()}
 										showPubHighlights={this.state.previewPaneMode === 'discussions'}
 										showPubHighlightsComments={this.state.previewPaneMode === 'comments' || viewMode === 'read'}

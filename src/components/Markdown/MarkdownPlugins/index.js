@@ -7,6 +7,7 @@ import SelectionPlugin from './selectionPlugin';
 import FootnotePlugin from './footnotePlugin';
 import PagebreakPlugin from './pagebreakPlugin';
 import LinebreakPlugin from './linebreakPlugin';
+import CursorPlugin from './cursorPlugin';
 
 // Page-only Plugins
 import pubListPlugin from './pubListPlugin';
@@ -19,6 +20,7 @@ export default {
 	quote: QuotePlugin,
 	video: VideoPlugin,
 	cite: CitePlugin,
+	cursor: CursorPlugin,
 	iframe: IframePlugin,
 	highlight: SelectionPlugin,
 	footnote: FootnotePlugin,

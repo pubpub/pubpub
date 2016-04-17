@@ -156,7 +156,7 @@ const PubBody = React.createClass({
 						*/}
 
 						<div id="pubBodyContent"> {/* Highlights are dependent on the id 'pubBodyContent' */}
-							<Markdown markdown={this.props.markdown} isPage={this.props.isPage}/>
+							<Markdown markdownChange={this.props.markdownChange} markdown={this.props.markdown} isPage={this.props.isPage}/>
 
 							{this.props.addSelectionHandler
 								? <SelectionPopup addSelectionHandler={this.props.addSelectionHandler}/>
