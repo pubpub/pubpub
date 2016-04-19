@@ -17,6 +17,7 @@ const PubBody = React.createClass({
 		isPublished: PropTypes.bool,
 		isPage: PropTypes.bool,
 		markdown: PropTypes.string,
+		pubURL: PropTypes.string,
 		addSelectionHandler: PropTypes.func,
 		styleScoped: PropTypes.string,
 		showPubHighlights: PropTypes.bool,
@@ -156,6 +157,10 @@ const PubBody = React.createClass({
 						*/}
 
 						<div id="pubBodyContent"> {/* Highlights are dependent on the id 'pubBodyContent' */}
+							{this.props.pubURL ?
+								<div className="onlineURL">This publication can be found online at {this.props.pubURL}. </div>
+							: null}
+
 							<Markdown markdown={this.props.markdown} isPage={this.props.isPage}/>
 
 							{this.props.addSelectionHandler

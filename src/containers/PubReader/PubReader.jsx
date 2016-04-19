@@ -10,7 +10,6 @@ import {toggleVisibility, follow, unfollow} from 'containers/Login/actions';
 import {closeMenu} from 'containers/App/actions';
 import {createHighlight} from 'containers/MediaLibrary/actions';
 
-// import {convertImmutableListToObject} from 'utils/parsePlugins';
 
 import {PubBody, LoaderDeterminate} from 'components';
 
@@ -23,6 +22,8 @@ import {globalStyles, pubSizes} from 'utils/styleConstants';
 
 // import {globalMessages} from 'utils/globalMessages';
 import {generateTOC} from 'utils/generateTOC';
+import {createJournalURL} from 'utils/journalHelpers';
+
 import {FormattedMessage} from 'react-intl';
 
 let styles = {};
@@ -69,15 +70,10 @@ const PubReader = React.createClass({
 		const versionIndex = this.props.query.version !== undefined ? this.props.query.version - 1 : this.props.readerData.getIn(['pubData', 'history']).size - 1;
 
 		const inputMD = this.props.readerData.getIn(['pubData', 'history', versionIndex, 'markdown']) || '';
-		// const assets = convertImmutableListToObject( this.props.readerData.getIn(['pubData', 'history', versionIndex, 'assets']) );
-		// const references = convertImmutableListToObject(this.props.readerData.getIn(['pubData', 'history', versionIndex, 'references']), true);
-		// const selections = [];
+
 		const toc = generateTOC(inputMD).full;
 		this.setState({
 			inputMD: inputMD,
-			// assetsObject: assets,
-			// referencesObject: references,
-			// selectionsArray: selections,
 			TOC: toc,
 		});
 	},
@@ -94,9 +90,7 @@ const PubReader = React.createClass({
 		if (oldVersionIndex !== versionIndex || this.state.htmlTree.length === 0 || oldMarkdown !== newMarkdown) {
 			// console.log('compiling markdown for version ' + versionIndex);
 			const inputMD = nextProps.readerData.getIn(['pubData', 'history', versionIndex, 'markdown']) || '';
-			// const assets = convertImmutableListToObject( nextProps.readerData.getIn(['pubData', 'history', versionIndex, 'assets']) );
-			// const references = convertImmutableListToObject(nextProps.readerData.getIn(['pubData', 'history', versionIndex, 'references']), true);
-			// const selections = [];
+
 			const toc = generateTOC(inputMD).full;
 
 			this.setState({
@@ -215,6 +209,13 @@ const PubReader = React.createClass({
 		}
 
 
+		const pubURL = createJournalURL({
+			customDomain: this.props.appData.getIn(['journalData', 'customDomain']),
+			subDomain: this.props.appData.getIn(['journalData', 'subdomain']),
+			slug: this.props.slug,
+		});
+
+
 		// console.log(this.state.htmlTree);
 		// console.log(pubData);
 		return (
@@ -288,7 +289,7 @@ const PubReader = React.createClass({
 
 								{
 									!pubData.isPublished
-										? <div key={'unpublishNotification'} style={[styles.unpublishedNotification, globalStyles[this.props.readerData.get('status')]]}>
+										? <div className="publishedMsg" key={'unpublishNotification'} style={[styles.unpublishedNotification, globalStyles[this.props.readerData.get('status')]]}>
 											<FormattedMessage id="pub.unpublishedNotification" defaultMessage="This pub is unpublished, and thus only accessible to collaborators."/>
 										</div>
 										: null
@@ -299,6 +300,7 @@ const PubReader = React.createClass({
 									isPublished={pubData.isPublished}
 									isPage={pubData.isPage}
 									markdown={this.state.inputMD}
+									pubURL={pubURL}
 									addSelectionHandler={this.addSelection}
 									styleScoped={pubData.history[versionIndex].styleScoped}
 									showPubHighlights={this.props.readerData.get('showPubHighlights')}

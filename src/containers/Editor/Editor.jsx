@@ -25,7 +25,6 @@ import {insertText, createFocusDoc, addCodeMirrorKeys} from './utils/editorCodeF
 import {editorDefaultPubText, editorDefaultPageText} from './utils/editorDefaultText';
 import FirepadUserList from './utils/editorFirepadUserlist';
 
-// import {convertFirebaseToObject} from 'utils/parsePlugins';
 import {generateTOC} from 'utils/generateTOC';
 import {globalStyles} from 'utils/styleConstants';
 

@@ -1,3 +1,25 @@
+.onlineURL {
+	display: none;
+}
+
+
+@media print {
+
+	@page :first {
+	   margin-top: 0;
+		 margin-bottom: 0;
+		 padding: 0cm 2.5cm!important;
+	}
+
+	body {
+		margin-top: 2cm !important;
+	}
+
+}
+
+
+
+
 @media print{
 	* {
 		transition: 0s linear all !important;
@@ -7,7 +29,7 @@
 		overflow: visible !important;
 		height: auto !important;
 	}
-	.header-bar,.login-container, .leftBar, .rightBar, .pubModals, .editorModals, .editorBodyNav, .editorPreviewNav, #editor-text-wrapper, #editor-discussions-wrapper, #style-editor-wrapper, #editorTopNav, #editorBottomNav, .reader-left {
+	.header-bar,.publishedMsg, .login-container, .leftBar, .rightBar, .footer, .pubModals, .editorModals, .editorBodyNav, .editorPreviewNav, #editor-text-wrapper, #editor-discussions-wrapper, #style-editor-wrapper, #editorTopNav, #editorBottomNav, .reader-left {
 		display: none !important;
 	}
 	.content {
@@ -19,6 +41,26 @@
 	.editor-container {
 		height: auto !important;
 	}
+
+	.p-block {
+	 orphans: 3;
+	  windows: 3;
+ 	}
+
+	.p-block span {
+	 orphans: 3;
+	  windows: 3;
+ 	}
+
+	.onlineURL {
+		display: block !important;
+		font-size: 0.9em;
+		color: #444;
+	}
+
+	/* print the URLs after a link */
+	#pubContent a:not(.author):after{content:" (" attr(href) ") ";font-size:0.8em;font-weight:normal;}
+
 	#editor-live-preview-wrapper {
 		width: 100% !important;
 		height: auto !important;
@@ -43,12 +85,18 @@
 	}
 	#pubContent {
 		overflow: hidden !important;
+		font-size: 13px !important;
+		padding: 0px !important;
 	}
+	.p-block div{
+		page-break-inside: avoid !important;
+	}
+
 	.pagebreak {
 		opacity: 0 !important;
 		page-break-after: always !important;
 	}
-	
+
 	table, figure, image, .reference, h1, h2, h3, h4, h5, h6 {
 		page-break-inside: avoid !important;
 	}
