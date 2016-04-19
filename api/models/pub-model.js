@@ -316,7 +316,14 @@ pubSchema.statics.addJournalSubmitted = function(pubID, journalID, userID) {
 };
 
 pubSchema.statics.getRandomSlug = function(journalID, callback) {
-	const query = {history: {$not: {$size: 0}}, 'isPublished': true};
+	// featuredInList
+	const query = {
+		history: {$not: {$size: 0}},
+		featuredInList: {$not: {$size: 0}},
+		// discussions: {$not: {$size: 0}},
+		'isPublished': true
+	};
+
 	if (journalID) {
 		query.featuredInList = journalID;
 	}
