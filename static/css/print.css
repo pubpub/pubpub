@@ -18,15 +18,15 @@
 }
 
 
+.pagebreak {
+	page-break-before: always !important;
+}
 
 
 @media print{
 	* {
 		transition: 0s linear all !important;
 		-webkit-transition: 0s linear all !important;
-	}
-	.pagebreak {
-		page-break-after: always;
 	}
 	body {
 		overflow: visible !important;
