@@ -13,6 +13,7 @@ const EditorModalSettings = React.createClass({
 		editorFont: PropTypes.string,
 		editorColor: PropTypes.string,
 		editorFontSize: PropTypes.string,
+		editorScrollCursor: PropTypes.string,
 		pubPrivacy: PropTypes.string,
 		pubStyle: PropTypes.object,
 		saveUpdatedSettingsUser: PropTypes.func,
@@ -25,6 +26,7 @@ const EditorModalSettings = React.createClass({
 			editorFont: 'mono',
 			editorColor: 'light',
 			editorFontSize: 'medium',
+			editorScrollCursor: 'on',
 			pubPrivacy: 'public',
 			pubStyle: {
 				type: 'science',
@@ -90,6 +92,7 @@ const EditorModalSettings = React.createClass({
 			case 'editorFont':
 			case 'editorColor':
 			case 'editorFontSize':
+			case 'editorScrollCursor':
 				return this.props.saveUpdatedSettingsUser(newSetting);
 			case 'pubStyle':
 				newSetting[key] = {...this.props.pubStyle, type: option};
@@ -109,7 +112,6 @@ const EditorModalSettings = React.createClass({
 		// this.setState({showAdvancedError: false});
 		const cm = document.getElementById('codeMirrorJSX').childNodes[0].CodeMirror;
 		// console.log(cm.getValue());
-
 		// We should test before save
 		cssConvert(cm.getValue());
 
@@ -151,6 +153,12 @@ const EditorModalSettings = React.createClass({
 				key: 'editorFontSize',
 				activeOption: this.props.editorFontSize,
 				options: ['small', 'medium', 'large'],
+			},
+			{
+				title: 'scroll to cursor',
+				key: 'editorScrollCursor',
+				activeOption: this.props.editorScrollCursor,
+				options: ['on', 'off'],
 			},
 			// {
 			// 	title: 'pub privacy',

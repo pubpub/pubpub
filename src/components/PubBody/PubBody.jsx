@@ -157,11 +157,12 @@ const PubBody = React.createClass({
 						*/}
 
 						<div id="pubBodyContent"> {/* Highlights are dependent on the id 'pubBodyContent' */}
+
 							{this.props.pubURL ?
 								<div className="onlineURL">This publication can be found online at {this.props.pubURL}. </div>
 							: null}
 
-							<Markdown markdown={this.props.markdown} isPage={this.props.isPage}/>
+							<Markdown markdownChange={this.props.markdownChange} markdown={this.props.markdown} isPage={this.props.isPage}/>
 
 							{this.props.addSelectionHandler
 								? <SelectionPopup addSelectionHandler={this.props.addSelectionHandler}/>
