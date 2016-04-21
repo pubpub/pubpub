@@ -5,6 +5,7 @@ import {globalStyles} from 'utils/styleConstants';
 
 import {globalMessages} from 'utils/globalMessages';
 import {FormattedMessage} from 'react-intl';
+import {RelatedPub} from 'components';
 
 let styles = {};
 
@@ -75,6 +76,13 @@ const PubLeftBar = React.createClass({
 				<div key={'test76'} style={styles.detail} onClick={this.handlePrint}>
 					<FormattedMessage {...globalMessages.print} />
 				</div>
+
+				{
+				/*
+				<div style={styles.leftBarDivider}></div>
+				<RelatedPub/>
+				*/
+				}
 
 				{/* <Link style={globalStyles.link} to={'/'}><div key={'leftBar0'} style={styles.detail}>
 					<FormattedMessage id="pub.home" defaultMessage="Home"/>

@@ -35,7 +35,9 @@ import {
 
 	PUB_NAV_OUT,
 	PUB_NAV_IN,
-
+	SUGGEST_PUB,
+	SUGGEST_PUB_SUCCESS,
+	SUGGEST_PUB_FAIL,
 
 } from './actions';
 
@@ -266,6 +268,10 @@ function pubNavIn(state) {
 	});
 }
 
+function pubRecommendationsSuccess(state, pubData) {
+	return state.set('recommendedPub', pubData);
+}
+
 // function discussionVote(state, voteType, discussionID, userYay, userNay) {
 // 	let scoreChange = 0;
 // 	let newUserYay = undefined;
@@ -404,6 +410,16 @@ export default function readerReducer(state = defaultState, action) {
 	// 	return state;
 	// case ARCHIVE_DISCUSSION_FAIL:
 	// 	return state;
+
+
+	case SUGGEST_PUB:
+		console.log(action);
+		return state;
+	case SUGGEST_PUB_SUCCESS:
+		console.log(action);
+		return pubRecommendationsSuccess(state, action.pubData);
+	case SUGGEST_PUB_FAIL:
+		return pubRecommendationsSuccess(state, null);
 
 	case SUBMIT_PUB_TO_JOURNAL:
 		return state;

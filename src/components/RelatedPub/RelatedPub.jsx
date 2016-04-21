@@ -1,5 +1,6 @@
 import React, {PropTypes} from 'react';
 import Radium from 'radium';
+import request from 'superagent';
 // import {globalStyles} from 'utils/styleConstants';
 // import {globalMessages} from 'utils/globalMessages';
 // import {FormattedMessage} from 'react-intl';
@@ -17,13 +18,26 @@ const RelatedPub = React.createClass({
 		};
 	},
 
+	componentDidMount: function() {
+
+	},
+
+	trimString: function(trimString, limit) {
+		let trimmedString = trimString.substr(0, limit);
+		trimmedString = trimmedString.substr(0, Math.min(trimmedString.length, trimmedString.lastIndexOf(' ')));
+	},
+
 	render: function() {
 		return (
 			<div>
 			<div style={styles.relatedTitle}>Read Next</div>
 			<div style={styles.relatedBox}>
-			<div style={styles.relatedText}>Hello, PubPub</div>
-			<img src="https://d13yacurqjgara.cloudfront.net/users/106718/screenshots/504036/scientist.jpg" style={styles.relatedPic}/>
+			<div style={styles.relatedText}>Hello, PubPub. Hello, Pub.</div>
+			{
+				/*
+				<img src="https://d13yacurqjgara.cloudfront.net/users/106718/screenshots/504036/scientist.jpg" style={styles.relatedPic}/>
+				*/
+			}
 			<div style={styles.smallText}>An introduction to our grand experiment</div>
 			</div>
 			</div>
@@ -35,9 +49,11 @@ export default Radium(RelatedPub);
 
 styles = {
 	relatedTitle: {
-		textAlign: 'center',
+		fontSize: '13px',
+		textAlign: 'left',
 		marginBottom: '0.75em',
 		userSelect: 'none',
+		fontWeight: 'bold',
 	},
 	relatedBox: {
 		width: '75%%',

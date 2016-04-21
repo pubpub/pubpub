@@ -4,7 +4,7 @@ import Radium, {Style} from 'radium';
 import Helmet from 'react-helmet';
 import PureRenderMixin from 'react-addons-pure-render-mixin';
 import { Link } from 'react-router';
-import {getPub, openPubModal, closePubModal, pubNavOut, pubNavIn, togglePubHighlights} from './actions';
+import {getPub, openPubModal, closePubModal, pubNavOut, pubNavIn, togglePubHighlights, getPubRecommendations} from './actions';
 import {getRandomSlug} from 'containers/App/actions';
 import {toggleVisibility, follow, unfollow} from 'containers/Login/actions';
 import {closeMenu} from 'containers/App/actions';
@@ -76,6 +76,17 @@ const PubReader = React.createClass({
 			inputMD: inputMD,
 			TOC: toc,
 		});
+	},
+
+	componentDidMount() {
+		// this.requestRecommendation();
+	},
+
+	requestRecommendation() {
+
+		const journalID = this.props.appData.getIn(['journalData', '_id']);
+		const pubID = this.props.readerData.getIn(['pubData', '_id']);
+		this.props.dispatch(getPubRecommendations(pubID, journalID));
 	},
 
 	componentWillReceiveProps(nextProps) {

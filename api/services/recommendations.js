@@ -42,8 +42,10 @@ export function getRecommendations(type, query, journalId, callback) {
 		recQuery = {pub: query};
 	}
 
+	const recStr = (journalId) ? recURL + journalId : recURL + 'pubpub';
+
 	request
-	.get(recURL + journalId)
+	.get(recStr)
 	.query(recQuery)
   .set('Accept', 'application/json')
 	.end(callback);

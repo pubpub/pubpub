@@ -121,7 +121,8 @@ app.get('/getPubRecommendation', function(req, res) {
 	const queryID = userID || sessionID;
 
 	getRecommendations('user', queryID, journalID, function(err, recResponse) {
-		const suggestedPubID = recResponse.recommendations[0].thing;
+		const recExists = (recResponse && recResponse.body && recResponse.body.recommendations && recResponse.body.recommendations[0]);
+		const suggestedPubID = (recExists) ? recResponse.body.recommendations[0].thing : null;
 
 		Pub.getSimplePub(suggestedPubID, (errGetSimple, suggestedPubData)=> {
 			if (errGetSimple) {

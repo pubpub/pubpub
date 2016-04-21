@@ -75,7 +75,7 @@ export function getPub(slug, journalID, referrer) {
 	};
 }
 
-export function getPubRecommendations(pubID, journalID, referrer) {
+export function getPubRecommendations(pubID, journalID) {
 	return {
 		types: [SUGGEST_PUB, SUGGEST_PUB_SUCCESS, SUGGEST_PUB_FAIL],
 		promise: (client) => client.get('/getPubRecommendation', {params: {
