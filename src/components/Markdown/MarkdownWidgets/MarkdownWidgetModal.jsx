@@ -82,13 +82,6 @@ const EditorWidgetModal = React.createClass({
 
 	getActiveCodemirrorInstance: function() {
 		return this.props.cm;
-		/*
-		const cm = this.props.activeFocus === ''
-				? document.getElementById('codemirror-wrapper').childNodes[0].childNodes[0].CodeMirror
-				: document.getElementById('codemirror-focus-wrapper').childNodes[0].CodeMirror;
-
-		return cm;
-		*/
 	},
 	focus: function() {
 		this.popupBox.focus();
@@ -228,28 +221,6 @@ const EditorWidgetModal = React.createClass({
 		return mergedString;
 	},
 
-
-	_createPluginString: function(pluginType) {
-		let outputVariables = '';
-
-		const PluginInputFields = Plugins[pluginType].InputFields;
-
-		for (const pluginInputField of PluginInputFields) {
-			// Generate an output string based on the key, values in the object
-			const inputFieldTitle = pluginInputField.title;
-
-			const ref = this.popupInputFields[inputFieldTitle];
-			const val = ref.value();
-
-			if (val && val.length) {
-				outputVariables += inputFieldTitle + '=' + val + ', ';
-			}
-
-		}
-		outputVariables = outputVariables.slice(0, -2); // Remove the last comma and space
-		const mergedString = outputVariables.length ? pluginType + ': ' + outputVariables : pluginType;
-		return mergedString;
-	},
 
 	_onInputFieldChange: function() {
 		delay(this.onPluginSave, 50);
