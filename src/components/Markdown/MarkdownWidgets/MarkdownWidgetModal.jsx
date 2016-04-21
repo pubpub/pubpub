@@ -203,6 +203,11 @@ const EditorWidgetModal = React.createClass({
 
 
 	createPluginString: function(pluginType) {
+		const mergedString = JSON.stringify(this.generateProperties(pluginType));
+		return mergedString;
+	},
+
+	generateProperties: function(pluginType) {
 		const PluginInputFields = Plugins[pluginType].InputFields;
 		const outputObj = {'pluginType': pluginType};
 
@@ -210,15 +215,17 @@ const EditorWidgetModal = React.createClass({
 			// Generate an output string based on the key, values in the object
 			const inputFieldTitle = pluginInputField.title;
 			const ref = this.popupInputFields[inputFieldTitle];
-			let val = ref.value();
-			if (val instanceof Object) {
-				val = inlineAsset(val);
+			if (ref) {
+				let val = ref.value();
+				if (val instanceof Object) {
+					val = inlineAsset(val);
+				}
+				outputObj[inputFieldTitle] = val;
 			}
-			outputObj[inputFieldTitle] = val;
 		}
 
-		const mergedString = JSON.stringify(outputObj);
-		return mergedString;
+		return outputObj;
+
 	},
 
 
@@ -233,6 +240,8 @@ const EditorWidgetModal = React.createClass({
 	render: function() {
 
 		const PluginInputFields = (this.state.pluginType) ? Plugins[this.state.pluginType].InputFields : [];
+		const PluginComponent = (this.state.pluginType) ? Plugins[this.state.pluginType].Component : null;
+		const PluginProps = (this.state.pluginType) ? this.generateProperties(this.state.pluginType) : {};
 
 		return (
 			<Portal onClose={this.closePopup} isOpened={this.state.popupVisible} closeOnOutsideClick closeOnEsc>
@@ -273,6 +282,8 @@ const EditorWidgetModal = React.createClass({
 								<FormattedMessage {...globalMessages.save} />
 							</div>
 							*/}
+
+						{ (PluginComponent) ? <div> <div style={styles.previewText}>Preview:</div> <div style={styles.previewContainer}> <PluginComponent {...PluginProps} /></div> </div> : null}
 						</div>
 					</div>
 				</div>
@@ -286,6 +297,23 @@ export default Radium(EditorWidgetModal);
 
 
 styles = {
+	previewDiv: {
+		width: '75%',
+		marginLeft: '10px',
+	},
+	previewContainer: {
+		padding: '30px',
+		backgroundColor: '#F1F1F1',
+		fontFamily: 'Courier',
+		width: '75%',
+		overflow: 'hidden',
+	},
+	previewText: {
+		display: 'block',
+		marginBottom: '10px',
+		fontStyle: 'italic',
+		fontFamily: 'Courier',
+	},
 	pluginClose: {
 		position: 'absolute',
 		right: '0px',
