@@ -21,6 +21,7 @@ import PubMetaJournals from './PubMetaJournals';
 import PubMetaSource from './PubMetaSource';
 
 import {globalStyles} from 'utils/styleConstants';
+import {safeGetInToJS} from 'utils/safeParse';
 
 import {globalMessages} from 'utils/globalMessages';
 import {FormattedMessage} from 'react-intl';
@@ -102,6 +103,12 @@ const PubMeta = React.createClass({
 	render: function() {
 		const pubData = this.props.readerData.get('pubData').toJS();
 
+		const featuredIn = safeGetInToJS(this.props.readerData, ['pubData', 'featuredIn']) || [];
+		const featuredInList = safeGetInToJS(this.props.readerData, ['pubData', 'featuredInList']) || [];
+		const submittedTo = safeGetInToJS(this.props.readerData, ['pubData', 'submittedTo']) || [];
+		const submittedToList = safeGetInToJS(this.props.readerData, ['pubData', 'submittedToList']) || [];
+		const historyData = safeGetInToJS(this.props.readerData, ['pubData', 'history']) || [];
+
 		// const pubData = this.props.readerData.get('pubData').toJS();
 		const versionIndex = this.props.query.version !== undefined ? this.props.query.version - 1 : this.props.readerData.getIn(['pubData', 'history']).size - 1;
 		const versionURL = this.props.query.version !== undefined ? '?version=' + this.props.query.version : '';
@@ -128,15 +135,15 @@ const PubMeta = React.createClass({
 									switch (this.props.meta) {
 									case 'history':
 										return (<PubMetaHistory
-												historyData={this.props.readerData.getIn(['pubData', 'history']).toJS()}
+												historyData={historyData}
 												slug={this.props.slug}/>
 											);
 									case 'journals':
 										return (<PubMetaJournals
-												featuredIn={this.props.readerData.getIn(['pubData', 'featuredIn']).toJS()}
-												featuredInList={this.props.readerData.getIn(['pubData', 'featuredInList']).toJS()}
-												submittedTo={this.props.readerData.getIn(['pubData', 'submittedTo']).toJS()}
-												submittedToList={this.props.readerData.getIn(['pubData', 'submittedToList']).toJS()}
+												featuredIn={featuredIn}
+												featuredInList={featuredInList}
+												submittedTo={submittedTo}
+												submittedToList={submittedToList}
 												handleSubmitToJournal={this.submitToJournal}
 												isAuthor={this.props.readerData.getIn(['pubData', 'isAuthor'])}/>
 											);
