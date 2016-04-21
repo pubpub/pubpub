@@ -75,6 +75,10 @@ app.get('/getPubEdit', getPubEdit);
 export function createPub(req, res) {
 	const userID = req.user ? req.user._id : undefined;
 
+	if (!req.user) {
+		return res.status(500).json('User does not exist!'); 
+	}
+
 	Pub.isUnique(req.body.slug, (err, result)=>{
 		if (!result) { return res.status(500).json('URL Title is not Unique!'); }
 		if (req.body.slug.substring(req.body.slug.length - 12, req.body.slug.length) === '-landingpage') { return res.status(500).json('URL Title is not Unique!'); }
