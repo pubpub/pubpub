@@ -259,5 +259,6 @@
     "global.Preview": "Vista previa",
     "global.insert": "Insertar",
     "global.markdown": "markdown",
-    "global.Highlights": "Resaltados"
+    "global.Highlights": "Resaltados",
+    "collectionList.noPubs": "No hay ensayos en esta colección"
 }

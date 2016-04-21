@@ -4,6 +4,7 @@ import request from 'superagent';
 import { Link } from 'react-router';
 import {globalStyles} from 'utils/styleConstants';
 import dateFormat from 'dateformat';
+import {FormattedMessage} from 'react-intl';
 
 const InputFields = [];
 
@@ -79,6 +80,14 @@ const Plugin = React.createClass({
 								</div>
 							);
 						})
+					}
+					{!pubs.length
+						? <div key={'collectionPub-empty'} className={'collectionList pubList pub emptyPub'}>
+							<div className={'collectionList pubList title emptyTitle'}>
+								<FormattedMessage id="collectionList.noPubs" defaultMessage="No Pubs in this Collection"/>
+							</div>
+						</div>
+						: null
 					}
 				</div>
 
