@@ -380,7 +380,7 @@ styles = {
 		return {
 			...modeStyle,
 			position: 'relative',
-			top: '10vh',
+			top: '5vh',
 			backgroundColor: 'white',
 			boxShadow: '0px 0px 2px 0px #333',
 			// left: `calc(50vw - ${POPUP_WIDTH / 2}px)`,
@@ -391,6 +391,8 @@ styles = {
 			zIndex: 450,
 			padding: '2vh 3vw',
 			borderRadius: '1px',
+			maxHeight: '75vh',
+			overflow: 'scroll',
 		};
 	},
 	pluginPopupVisible: {
