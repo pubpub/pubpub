@@ -253,12 +253,14 @@ const Editor = React.createClass({
 		}
 
 
+		/*
 		const cursor = cm.getCursor();
 		if (cursor) {
 			const cursorIndex = cm.indexFromPos(cursor);
 			const cursorString = '[[{"pluginType": "cursor"}]]';
 			markdown = markdown.slice(0, cursorIndex) + cursorString + markdown.slice(cursorIndex);
 		}
+		*/
 
 
 		// Set State to trigger re-render
@@ -293,7 +295,7 @@ const Editor = React.createClass({
 	// Toggle formatting dropdown
 	// Only has an effect when in livePreview mode
 	// toggleFormatting: function() {
-	// 	return this.props.dispatch(toggleFormatting());
+	// 	return this.props.dispatch(toggleFormatting());3
 	// },
 
 	// Toggle Table of Contents dropdown

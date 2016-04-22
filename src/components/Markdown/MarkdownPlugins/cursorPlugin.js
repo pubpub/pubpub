@@ -22,7 +22,8 @@ const Plugin = React.createClass({
 	},
 	render: function() {
 
-		return (<span className='markdown-cursor' style={styles.cursor}></span>);
+		// return (<span className='markdown-cursor' style={styles.cursor}></span>);
+		return (<span className='markdown-cursor'></span>);
 	}
 });
 
