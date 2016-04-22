@@ -45,7 +45,7 @@ discussionSchema.statics.nestChildren = function(input) {
 
 	tempArray.forEach(function(index) {
 		index.children = _.filter(tempArray, function(child) {
-			return (child.parent === index._id.toString());
+			return (child.parent && child.parent.toString() === index._id.toString());
 		});
 		return index;
 	});
