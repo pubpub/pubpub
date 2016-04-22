@@ -1,4 +1,5 @@
 {
+  "collectionList.noPubs": "No Pubs in this Collection",
   "discussion.selectionPreviousDraft": "Selection made on draft version",
   "discussion.selectionPreviousVersion": "Selection made on Version {version}",
   "discussion.selectionScrollToHighlight": "Scroll to highlight in Pub",
