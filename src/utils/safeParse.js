@@ -2,9 +2,9 @@ import Immutable from 'immutable';
 
 //Example: safeGetInToJS(this.props.readerData, ['pubData', 'featuredInList']) || [])
 export function safeGetInToJS(obj, props) {
-	if (obj && obj.hasOwnProperty('getIn')) {
+	if (obj && obj.getIn) {
 		const val = obj.getIn(props);
-		if (Immutable.Iterable.isIterable(val) && val.hasOwnProperty('toJS')) {
+		if (Immutable.Iterable.isIterable(val) && val.toJS) {
 			return val.toJS();
 		}
 	}
