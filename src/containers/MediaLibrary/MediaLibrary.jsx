@@ -268,7 +268,7 @@ const MediaLibrary = React.createClass({
 								case 'assets':
 									return (
 										<div>
-											<div style={styles.newButtonWrapper}>
+											<div style={[styles.newButtonWrapper, {display: 'none'}]}>
 												<Button
 													key={'customStyleSaveButton'}
 													label={'Add New Asset'}
