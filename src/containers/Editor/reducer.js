@@ -33,8 +33,14 @@ import {
 	SAVE_VERSION_LOAD,
 	SAVE_VERSION_SUCCESS,
 	SAVE_VERSION_FAIL,
+	WAIT_FOR_UPLOAD,
+	STOP_WAIT_FOR_UPLOAD,
 
 } from './actions';
+
+import {
+	CREATE_ASSET_SUCCESS
+} from '../MediaLibrary/actions';
 
 /*--------*/
 // Initialize Default State
@@ -207,6 +213,30 @@ function updateBackendSuccess(state, result) {
 	});
 }
 
+function waitForUpload(state, open) {
+	console.log('Waiting for upload!', open);
+	return state.merge({
+		waitForUpload: open,
+		activeModal: 'AssetsUpload',
+	});
+}
+
+function waitForUploadSuccess(state, asset) {
+
+	console.log('We got the asset guys!!', state);
+	console.log(state.get('waitForUpload'));
+
+	if (!state.get('waitForUpload')) {
+		return state;
+	}
+	return state.merge({
+		requestedAsset: asset,
+		activeModal: undefined,
+	});
+
+}
+
+
 /*--------*/
 // Bind actions to specific reducing functions.
 /*--------*/
@@ -268,6 +298,14 @@ export default function editorReducer(state = defaultState, action) {
 		return saveStyleSuccess(state, action.result);
 	case SAVE_STYLE_FAIL:
 		return saveStyleError(state, action.error);
+
+	case WAIT_FOR_UPLOAD:
+		return waitForUpload(state, true);
+	case STOP_WAIT_FOR_UPLOAD:
+		return waitForUpload(state, false);
+
+	case CREATE_ASSET_SUCCESS:
+		return waitForUploadSuccess(state, action.result);
 
 	default:
 		return ensureImmutable(state);

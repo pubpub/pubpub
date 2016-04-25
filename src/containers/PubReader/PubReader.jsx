@@ -79,7 +79,7 @@ const PubReader = React.createClass({
 	},
 
 	componentDidMount() {
-		// this.requestRecommendation();
+		this.requestRecommendation();
 	},
 
 	requestRecommendation() {

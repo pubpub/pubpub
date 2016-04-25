@@ -208,7 +208,7 @@ styles = {
 		width: '100%',
 		minHeight: '100%',
 		backgroundColor: 'white',
-		zIndex: '250',
+		zIndex: '550',
 		position: 'absolute',
 	},
 	select: {

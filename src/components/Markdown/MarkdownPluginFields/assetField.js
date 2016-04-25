@@ -7,31 +7,51 @@ const AssetField = React.createClass({
 		assets: PropTypes.array,
 		selectedValue: PropTypes.object,
 		saveChange: PropTypes.func,
+		requestAssetUpload: PropTypes.func,
+		requestedAsset: PropTypes.object,
 	},
 	statics: {
-		// Transform is called by Markdown.jsx to transform
-		// 'prop' -- the text value of the asset into the asset object
-		/*
-		transform: function(prop, params, assets, references) {
-			const asset = assets[prop];
-			if (asset && asset.assetType === params.assetType) {
-				return asset;
-			}
-			return new Error('Could not find asset');
+	},
+	componentWillReceiveProps(nextProps) {
+		if (!nextProps.requestedAsset) {
+			return;
 		}
-		*/
+		const oneExists = (!this.props.requestedAsset && nextProps.requestedAsset);
+		const bothExist = (!oneExists && this.props.requestedAsset && nextProps.requestedAsset && this.props.requestedAsset._id !== nextProps.requestedAsset._id);
+
+		if (oneExists || bothExist) {
+			this.refs.val.setValue(nextProps.requestedAsset);
+		}
 	},
 	value: function() {
 		return this.refs.val.value();
+	},
+	requestUpload: function() {
+		this.props.requestAssetUpload(this.props.assetType);
 	},
 	render: function() {
 		const assets = this.props.assets.filter((asset) => (asset.assetType === this.props.assetType && asset.label))
 		.map( function(asset) { return {'value': asset, 'label': asset.label.substring(0, 15) };});
 
-		const selectedAsset = (this.props.selectedValue) ? this.props.assets.find((asset) => (asset._id === this.props.selectedValue._id)) : null;
+		const defVal = this.props.requestedAsset || this.props.selectedAsset;
+
+		const selectedAsset = (defVal) ? this.props.assets.find((asset) => (asset._id === defVal._id)) : null;
 		const selectedVal = (selectedAsset) ? {'value': selectedAsset, 'label': selectedAsset.label.substring(0, 15) } : null;
 
-		return <DropdownField ref="val" choices={assets} selectedValue={selectedVal} saveChange={this.props.saveChange}/>;
+		// assets.push({value: 'REQUEST_UPLOAD', label: 'Upload New'});
+
+		const uploadStyle = {
+			fontSize: '0.75em',
+			textDecoration: 'underline',
+			marginTop: '3px',
+			float: 'right',
+			cursor: 'pointer',
+		};
+
+		return (<span>
+				<DropdownField ref="val" choices={assets} selectedValue={selectedVal} saveChange={this.props.saveChange}/>
+				<span style={uploadStyle} onClick={this.requestUpload}>Upload Asset</span>
+			</span>);
 	}
 });
 

@@ -6,14 +6,30 @@ const ReferenceField = React.createClass({
 		assets: PropTypes.array,
 		selectedValue: PropTypes.object,
 		saveChange: PropTypes.func,
+		requestAssetUpload: PropTypes.func,
+		requestedAsset: PropTypes.object,
 	},
 	getDefaultProps: function() {
 		return {
 			assets: []
 		};
 	},
+	componentWillReceiveProps(nextProps) {
+		if (!nextProps.requestedAsset) {
+			return;
+		}
+		const oneExists = (!this.props.requestedAsset && nextProps.requestedAsset);
+		const bothExist = (!oneExists && this.props.requestedAsset && nextProps.requestedAsset && this.props.requestedAsset._id !== nextProps.requestedAsset._id);
+
+		if (oneExists || bothExist) {
+			this.refs.val.setValue(nextProps.requestedAsset);
+		}
+	},
 	value: function() {
 		return this.refs.val.value();
+	},
+	requestUpload: function() {
+		this.props.requestAssetUpload('reference');
 	},
 	render: function() {
 
@@ -23,7 +39,20 @@ const ReferenceField = React.createClass({
 		const selectedRef = (this.props.selectedValue) ? this.props.assets.find((asset) => (asset._id === this.props.selectedValue._id)) : null;
 		const selectedVal = (selectedRef) ? {'value': selectedRef, 'label': selectedRef.label.substring(0, 15) } : null;
 
-		return <DropdownField saveChange={this.props.saveChange} ref="val" choices={references} selectedValue={selectedVal}/>;
+		const uploadStyle = {
+			fontSize: '0.75em',
+			textDecoration: 'underline',
+			marginTop: '3px',
+			float: 'right',
+			cursor: 'pointer',
+		};
+
+		// return <DropdownField saveChange={this.props.saveChange} ref="val" choices={references} selectedValue={selectedVal}/>;
+		return (<span>
+				<DropdownField ref="val" choices={references} selectedValue={selectedVal} saveChange={this.props.saveChange}/>
+				<span style={uploadStyle} onClick={this.requestUpload}>Upload Reference</span>
+			</span>);
+
 	}
 });
 

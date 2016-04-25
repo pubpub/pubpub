@@ -166,6 +166,13 @@ const Editor = React.createClass({
 									codeMirrorInstance={document.getElementById('codemirror-wrapper').childNodes[0].childNodes[0].CodeMirror} />
 								);
 
+							case 'AssetsUpload':
+								return (<MediaLibrary
+									closeLibrary={this.closeModalHandler}
+									showAssetEditorType="image"
+									codeMirrorInstance={document.getElementById('codemirror-wrapper').childNodes[0].childNodes[0].CodeMirror} />
+								);
+
 							case 'Collaborators':
 								return (<EditorModalsCollaborators
 									collaboratorData={this.state.firepadData.collaborators}
@@ -234,7 +241,7 @@ styles = {
 		left: 0,
 		backgroundColor: 'rgba(255,255,255,0.7)',
 		transition: '.1s linear opacity',
-		zIndex: 100,
+		zIndex: 500,
 	},
 	modalSplashActive: {
 		opacity: 1,
@@ -242,7 +249,7 @@ styles = {
 	},
 	modalContainer: {
 		...globalStyles.largeModal,
-		zIndex: 150,
+		zIndex: 501,
 
 		opacity: 0,
 		pointerEvents: 'none',

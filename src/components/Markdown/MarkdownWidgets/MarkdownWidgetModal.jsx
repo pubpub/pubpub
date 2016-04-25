@@ -14,13 +14,15 @@ import {pubSizes} from 'utils/styleConstants';
 
 let styles = {};
 
-const EditorWidgetModal = React.createClass({
+const MarkdownWidgetModal = React.createClass({
 	propTypes: {
 		activeFocus: PropTypes.string,
 		codeMirrorChange: PropTypes.object,
 		assets: PropTypes.array,
 		mode: PropTypes.string,
 		cm: PropTypes.object,
+		requestedAsset: PropTypes.object,
+		requestAssetUpload: PropTypes.func,
 	},
 
 	getDefaultProps: function() {
@@ -233,8 +235,15 @@ const EditorWidgetModal = React.createClass({
 		delay(this.onPluginSave, 50);
 	},
 
+	requestAssetUpload: function(assetType) {
+		this.setState({requestingUpload: true});
+		this.props.requestAssetUpload(assetType);
+	},
+
 	closePopup: function() {
-		this.setState({popupVisible: false});
+		if (!this.state.requestingUpload) {
+			this.setState({popupVisible: false});			
+		}
 	},
 
 	render: function() {
@@ -270,6 +279,8 @@ const EditorWidgetModal = React.createClass({
 																		selectedValue={value}
 																		assets={this.props.assets}
 																		saveChange={this.onInputFieldChange}
+																		requestAssetUpload={this.requestAssetUpload}
+																		requestedAsset={this.props.requestedAsset}
 																		{...PluginInputFieldParams}
 																		ref={(ref) => this.popupInputFields[fieldTitle] = ref}/>
 																</div>
@@ -293,7 +304,7 @@ const EditorWidgetModal = React.createClass({
 	}
 });
 
-export default Radium(EditorWidgetModal);
+export default Radium(MarkdownWidgetModal);
 
 
 styles = {

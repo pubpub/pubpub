@@ -15,6 +15,8 @@ import EditorWidgetModal from './MarkdownWidgetModal';
 
 const EditorWidgets = React.createClass({
 	propTypes: {
+		requestedAsset: PropTypes.object,
+		requestAssetUpload: PropTypes.func,
 		activeFocus: PropTypes.string,
 		assets: PropTypes.array,
 		mode: PropTypes.string,
@@ -147,6 +149,8 @@ const EditorWidgets = React.createClass({
 			<span>
 
 				<EditorWidgetModal ref="pluginModal"
+					requestedAsset={this.props.requestedAsset}
+					requestAssetUpload={this.props.requestAssetUpload}
 					mode={this.props.mode}
 					assets={this.props.assets || []}
 					activeFocus={this.props.activeFocus}

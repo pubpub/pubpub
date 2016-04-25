@@ -32,22 +32,31 @@ const MediaLibrary = React.createClass({
 		slug: PropTypes.string,
 		closeLibrary: PropTypes.func,
 		codeMirrorInstance: PropTypes.object,
-
+		showAssetEditorType: PropTypes.string,
 		// assetEditorOnly: PropTypes.bool // If this is true, don't render any of the library content, just load straight into MediaLibraryEditor. Will need to pass through object
 		dispatch: PropTypes.func,
 	},
 
 	getInitialState() {
-		return {
+		const initialState = {
 			files: [],
 			uploadRates: [],
 			finishedUploads: 0,
-			activeSection: 'assets',
-
-			showMediaLibraryEditor: false,
-			assetEditorType: undefined,
-			assetEditorObject: {}
 		};
+
+		if (!this.props.showAssetEditorType) {
+			initialState.showMediaLibraryEditor = false;
+			initialState.assetEditorType = undefined;
+			initialState.assetEditorObject = {};
+			initialState.activeSection = 'assets';
+		} else {
+			initialState.showMediaLibraryEditor = true;
+			initialState.assetEditorType = 'image'
+			initialState.assetEditorObject = {};
+			initialState.activeSection = 'assets';
+		}
+
+		return initialState;
 	},
 	// TODO: On each load, we gotta load the user's assets again, in
 	// case they've been updated by a co-author
@@ -153,11 +162,17 @@ const MediaLibrary = React.createClass({
 
 	},
 	closeMediaLibraryEditor: function() {
+
+		if (this.props.showAssetEditorType) {
+			this.props.closeLibrary();
+		}
+
 		this.setState({
 			showMediaLibraryEditor: false,
 			assetEditorType: undefined,
 			assetEditorObject: {},
 		});
+
 	},
 
 	addAssets: function(newAssetArray) {
@@ -235,6 +250,8 @@ const MediaLibrary = React.createClass({
 
 		const userAssets = this.props.loginData.getIn(['userData', 'assets']).toJS() || [];
 		const {assets, references, highlights} = this.separateAssets(userAssets);
+
+		console.log(this.state);
 
 		return (
 
@@ -446,7 +463,7 @@ styles = {
 	},
 	assetEditorWrapper: {
 		...globalStyles.largeModal,
-		zIndex: 200,
+		zIndex: 502,
 		fontFamily: 'Lato',
 	},
 };

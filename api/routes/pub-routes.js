@@ -76,13 +76,12 @@ export function createPub(req, res) {
 	const userID = req.user ? req.user._id : undefined;
 
 	if (!req.user) {
-		return res.status(500).json('User does not exist!'); 
+		return res.status(500).json('User does not exist!');
 	}
 
 	Pub.isUnique(req.body.slug, (err, result)=>{
 		if (!result) { return res.status(500).json('URL Title is not Unique!'); }
 		if (req.body.slug.substring(req.body.slug.length - 12, req.body.slug.length) === '-landingpage') { return res.status(500).json('URL Title is not Unique!'); }
-
 
 		Pub.createPub(req.body.slug, req.body.title, userID, false, function(createErr, savedPub) {
 			const pubID = savedPub.id;
@@ -120,13 +119,16 @@ app.get('/getPubRecommendation', function(req, res) {
 	const userID = req.user ? req.user._id : undefined;
 	const sessionID = (req.sessionID) ? req.sessionID : undefined;
 
-	const journalID = (req.query.journalID) ? req.query.journalID : undefined;
+	const journalID = (req.query.journalID) ? req.query.journalID : 'pubpub';
 
 	const queryID = userID || sessionID;
 
 	getRecommendations('user', queryID, journalID, function(err, recResponse) {
+		console.log(recResponse.body);
+		console.log(recResponse.body.recommendations[0]);
+
 		const recExists = (recResponse && recResponse.body && recResponse.body.recommendations && recResponse.body.recommendations[0]);
-		const suggestedPubID = (recExists) ? recResponse.body.recommendations[0].thing : null;
+		const suggestedPubID = (recExists) ? recResponse.body.recommendations[0] : null;
 
 		Pub.getSimplePub(suggestedPubID, (errGetSimple, suggestedPubData)=> {
 			if (errGetSimple) {
