@@ -242,3 +242,8 @@
 #pubContent .pub-quote {
 	padding: 2.5% 7.5%;
 }
+
+.pagebreak {
+	opacity: 0 !important;
+	page-break-before: always !important;
+}
