@@ -15,12 +15,12 @@ See [http://keepachangelog.com/](http://keepachangelog.com/) for best practices.
 - Tools for filters, sorting comments
 - Clear archive and backup instructions
 - Make Discussions Editable - and history of edits visible
-- Server-side PDF generation
 
 ## [Unreleased]
 ### Added
 - Landing page redesign.
 - Font and padding improvements.
+- Server-side PDF generation
 
 ## [0.2.0] - 2015-04-06
 ### Added
