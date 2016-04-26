@@ -44,7 +44,7 @@ const baseMediaPlugin = React.createClass({
 
 		if (!isNaN(size)) {
 			styleObject.width = size + '%';
-			styleObject.height = size + '%';
+			// styleObject.height = size + '%';
 		} else {
 			const sizeOptions = {
 				'small': (this.props.align === 'full') ? '30%' : '25%',
@@ -52,7 +52,7 @@ const baseMediaPlugin = React.createClass({
 				'large': (this.props.align === 'full') ? '100%' : '60%'
 			};
 			styleObject.width = sizeOptions[size];
-			styleObject.height = sizeOptions[size];
+			// styleObject.height = sizeOptions[size];
 		}
 
 		if (align === 'left' || align === 'right' ) {
