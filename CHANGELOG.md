@@ -15,7 +15,7 @@ See [http://keepachangelog.com/](http://keepachangelog.com/) for best practices.
 - Tools for filters, sorting comments
 - Clear archive and backup instructions
 - Make Discussions Editable - and history of edits visible
-
+- Server-side PDF generation
 
 ## [Unreleased]
 ### Added

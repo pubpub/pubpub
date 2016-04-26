@@ -21,3 +21,4 @@ require('./routes/test-routes');
 require('./routes/math-routes');
 require('./routes/s3-upload-policy');
 require('./routes/rssGen.js');
+require('./routes/export-routes');

@@ -26,6 +26,7 @@ const PubBody = React.createClass({
 		minFont: PropTypes.number,
 		maxFont: PropTypes.number,
 		showPubHighlightsComments: PropTypes.bool,
+		disableResize: PropTypes.bool,
 	},
 	getDefaultProps: function() {
 		return {
@@ -128,7 +129,7 @@ const PubBody = React.createClass({
 				mobileFontRatio={25}
 				minFont={this.props.minFont}
 				maxFont={this.props.maxFont}
-				disable={this.props.isPage}>
+				disable={this.props.isPage || this.props.disableResize}>
 
 			<div style={styles.container}>
 

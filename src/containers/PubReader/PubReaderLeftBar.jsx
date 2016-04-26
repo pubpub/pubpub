@@ -73,9 +73,11 @@ const PubLeftBar = React.createClass({
 					Table of Contents
 				</div></Link> */}
 
-				<div key={'test76'} style={styles.detail} onClick={this.handlePrint}>
-					<FormattedMessage {...globalMessages.print} />
-				</div>
+				{/* <a href={'/api/print?slug=' + this.props.slug} target="_blank" style={globalStyles.link}>
+					<div key={'test76'} style={styles.detail}>
+						PDF
+					</div>
+				</a> */}
 
 				{
 				/*
