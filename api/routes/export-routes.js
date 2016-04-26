@@ -45,7 +45,7 @@ export function getPDF(req, res) {
 			};
 
 			const html = '<body> <style>' + css + 'body{font-size:12px;}</style> ' + pubHTML + '</body>';
-			pdf.create(html, options).toFile('./' + pub.title + '.pdf', function(err, result) {
+			pdf.create(html, options).toFile('./pdfs/' + pub.title + '.pdf', function(err, result) {
 				if (err) return console.log(err);
 				res.download(result.filename);
 				res.status(200).end();

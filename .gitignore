@@ -3,6 +3,7 @@ node_modules/
 authentication/
 dist/
 data/
+pdfs/
 tmp/
 misc/
 *.iml
