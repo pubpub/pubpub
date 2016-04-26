@@ -44,7 +44,29 @@ export function getPDF(req, res) {
 				}
 			};
 
-			const html = '<body> <style>' + css + 'body{font-size:12px;}</style> ' + pubHTML + '</body>';
+			const html = `<!doctype html>
+				<html lang="en-us">
+					<head>
+						<meta charSet="utf-8"/>
+						<link href='https://fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic,900italic|Lora:400,400italic,700,700italic' rel='stylesheet' type='text/css' />
+						<link href='https://fonts.googleapis.com/css?family=Alegreya+Sans+SC|ABeeZee' rel='stylesheet' type='text/css'>
+						<link href='https://fonts.googleapis.com/css?family=Merriweather:400italic,700italic' rel='stylesheet' type='text/css'>
+						<style>
+							@font-face { font-family: Yrsa; font-weight: 400; src: url('https://s3.amazonaws.com/pubpub-statics/Yrsa-Regular.otf'); }
+							@font-face { font-family: Yrsa; font-weight: 700; src: url('https://s3.amazonaws.com/pubpub-statics/Yrsa-Bold.otf');}
+							@font-face { font-family: ClearSans; font-weight: 100; src: url('https://s3.amazonaws.com/pubpub-statics/ClearSans-Light.ttf');}
+							@font-face { font-family: ClearSans; font-weight: 400; src: url('https://s3.amazonaws.com/pubpub-statics/ClearSans-Regular.ttf');}
+							@font-face { font-family: ClearSans; font-weight: 700; src: url('https://s3.amazonaws.com/pubpub-statics/ClearSans-Bold.ttf');}
+						</style>
+						<style> ${css} body{font-size:12px;}</style>
+
+					</head>
+
+					<body>
+						${pubHTML}
+					</body>
+				</html>`;
+
 			pdf.create(html, options).toFile('./pdfs/' + pub.title + '.pdf', function(err, result) {
 				if (err) return console.log(err);
 				res.download(result.filename, result.filename, function(downloadErr, downloadResult) {
