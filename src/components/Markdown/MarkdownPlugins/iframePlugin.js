@@ -16,7 +16,8 @@ const InputFields = [
 const Config = {
 	title: 'iframe',
 	inline: true,
-	autocomplete: true
+	autocomplete: true,
+	preview: false,
 };
 
 const IFRAME_WRAPPER_CLASS = 'pub-iframe-wrapper';

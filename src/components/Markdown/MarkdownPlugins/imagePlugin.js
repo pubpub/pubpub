@@ -15,6 +15,7 @@ const Config = {
 	title: 'image',
 	inline: true,
 	autocomplete: true,
+	preview: true,
 	color: 'rgba(185, 215, 249, 0.5)',
 };
 
