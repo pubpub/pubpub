@@ -105,11 +105,10 @@ function generateRSSXML(req, instantArticleMode, callback) {
 }
 
 export function rss(req, res) {
-	// generateRSSXML(req, false, function(xmlFeed) {
-	// 	res.set('Content-Type', 'text/xml');
-	// 	res.send(xmlFeed);
-	// });
-	return res.status(201).json({});
+	generateRSSXML(req, false, function(xmlFeed) {
+		res.set('Content-Type', 'text/xml');
+		res.send(xmlFeed);
+	});
 }
 app.get('/rss.xml', rss);
 
