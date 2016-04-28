@@ -36,6 +36,7 @@ function generateRSSXML(req, instantArticleMode, callback) {
 		Pub.find(query, {slug: 1, title: 1, abstract: 1, createDate: 1, lastUpdated: 1, authors: 1, authorsNote: 1, markdown: 1, assets: 1, references: 1})
 		.populate({ path: 'authors', select: 'name firstName lastName', model: 'User' })
 		.populate({ path: 'assets', model: 'Asset' })
+		.limit(50)
 		.sort({'lastUpdated': -1})
 		.lean().exec(function(errPubFind, pubs) {
 			if (errPubFind) { console.log(errPubFind); }
