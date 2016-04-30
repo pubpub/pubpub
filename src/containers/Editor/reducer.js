@@ -161,6 +161,7 @@ function openModal(state, activeModal) {
 function closeModal(state) {
 	return state.merge({
 		activeModal: undefined,
+		waitForUpload: false,
 	});
 }
 
@@ -213,18 +214,15 @@ function updateBackendSuccess(state, result) {
 	});
 }
 
-function waitForUpload(state, open) {
-	console.log('Waiting for upload!', open);
+function waitForUpload(state, open, assetType) {
 	return state.merge({
 		waitForUpload: open,
 		activeModal: 'AssetsUpload',
+		waitForUploadType: assetType,
 	});
 }
 
 function waitForUploadSuccess(state, asset) {
-
-	console.log('We got the asset guys!!', state);
-	console.log(state.get('waitForUpload'));
 
 	if (!state.get('waitForUpload')) {
 		return state;
@@ -232,6 +230,7 @@ function waitForUploadSuccess(state, asset) {
 	return state.merge({
 		requestedAsset: asset,
 		activeModal: undefined,
+		waitForUpload: false,
 	});
 
 }
@@ -300,7 +299,7 @@ export default function editorReducer(state = defaultState, action) {
 		return saveStyleError(state, action.error);
 
 	case WAIT_FOR_UPLOAD:
-		return waitForUpload(state, true);
+		return waitForUpload(state, true, action.assetType);
 	case STOP_WAIT_FOR_UPLOAD:
 		return waitForUpload(state, false);
 

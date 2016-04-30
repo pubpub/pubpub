@@ -169,7 +169,7 @@ const Editor = React.createClass({
 							case 'AssetsUpload':
 								return (<MediaLibrary
 									closeLibrary={this.closeModalHandler}
-									showAssetEditorType="image"
+									showAssetEditorType={this.props.editorData.get('waitForUploadType')}
 									codeMirrorInstance={document.getElementById('codemirror-wrapper').childNodes[0].childNodes[0].CodeMirror} />
 								);
 

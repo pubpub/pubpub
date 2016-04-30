@@ -6,6 +6,7 @@ import {Button} from 'components';
 
 // import {globalMessages} from 'utils/globalMessages';
 import {injectIntl} from 'react-intl';
+import FileUploader from './MediaLibraryFileUploader';
 
 let styles = {};
 
@@ -25,10 +26,11 @@ const ReferenceEditor = React.createClass({
 		updateAssets: PropTypes.func,
 		close: PropTypes.func,
 		assetLoading: PropTypes.bool,
+		slug: PropTypes.string,
 	},
 
 	getInitialState: function() {
-		return { };
+		return {assetObject: this.props.assetObject || {}};
 	},
 
 	componentWillReceiveProps(nextProps) {
@@ -38,24 +40,16 @@ const ReferenceEditor = React.createClass({
 	},
 
 	saveAsset: function() {
-		const oldAssetData = this.props.assetObject.assetData || {};
+		const oldAssetData = this.state.assetObject.assetData || {};
 		const newAssetObject = {};
 		const newAssetData = {};
 
 		newAssetObject._id = this.props.assetObject._id;
-		newAssetObject.assetType = this.props.assetObject.assetType;
+		newAssetObject.assetType = this.state.assetObject.assetType;
 		newAssetObject.label = this.refs.label.value;
 		newAssetObject.authors = this.props.assetObject.authors;
 
-		for (const key in {...defaultFields, ...oldAssetData}) {
-			if (key && this.refs[key]) {
-				newAssetData[key] = this.refs[key].value;
-			} else {
-				newAssetData[key] = oldAssetData[key];
-			}
-
-		}
-		newAssetObject.assetData = newAssetData;
+		newAssetObject.assetData = oldAssetData;
 
 		// If there is an _id, update
 		// Else, save it as new asset
@@ -66,9 +60,13 @@ const ReferenceEditor = React.createClass({
 		}
 	},
 
+	getUploadedAsset: function(asset) {
+
+		this.setState({assetObject: asset});
+	},
 
 	render: function() {
-		const assetObject = this.props.assetObject || {};
+		const assetObject = this.state.assetObject || {};
 		const assetData = assetObject.assetData || {};
 
 		return (
@@ -100,26 +98,14 @@ const ReferenceEditor = React.createClass({
 							{/* <FormattedMessage {...globalMessages['Label']} /> */}
 							Label
 						</label>
-						<input style={styles.manualFormInput} ref={'label'} name={'label'} id={'label'} type="text" onChange={this.handleManualInputFormChange} defaultValue={assetObject.label}/>
+						<input style={styles.manualFormInput} key={assetObject.label} ref={'label'} name={'label'} id={'label'} type="text" onChange={this.handleManualInputFormChange} defaultValue={assetObject.label}/>
 					</div>
 
-					{
-						Object.keys({...defaultFields, ...assetData}).map((inputItem)=>{
-							if (inputItem === 'filetype' || inputItem === 'originalFilename' || inputItem === 'thumbnail' || inputItem === 'url') {
-								return null;
-							}
-							return (
-								<div key={'manualForm-' + inputItem} style={styles.manualFormInputWrapper}>
-									<label style={styles.manualFormInputTitle} htmlFor={inputItem}>
-										{/* <FormattedMessage {...globalMessages[inputItem]} /> */}
-										{inputItem}
-									</label>
-									<input style={styles.manualFormInput} ref={inputItem} name={inputItem} id={inputItem} type="text" onChange={this.handleManualInputFormChange} defaultValue={assetData[inputItem]}/>
-								</div>
+					<FileUploader
+						onFileUpload={this.getUploadedAsset}
+						slug={this.props.slug}
+						/>
 
-							);
-						})
-					}
 					<div style={styles.clearfix}></div>
 				</div>
 

@@ -62,10 +62,13 @@ const MarkdownWidgetModal = React.createClass({
 	componentWillReceiveProps(nextProps) {
 
 		// If a re-render causes this component to receive new props, but the props haven't changed, return.
+		/*
 		if (this.props.codeMirrorChange === nextProps.codeMirrorChange
-			&& this.props.assets === nextProps.assets) {
+			&& this.props.assets === nextProps.assets
+		) {
 			return null;
 		}
+		*/
 
 		// If the change comes from another user
 		if (this.props.codeMirrorChange !== nextProps.codeMirrorChange
@@ -199,7 +202,6 @@ const MarkdownWidgetModal = React.createClass({
 		}
 		*/
 
-
 		this.toIndex = this.fromIndex + mergedString.length;
 	},
 
@@ -235,14 +237,14 @@ const MarkdownWidgetModal = React.createClass({
 		delay(this.onPluginSave, 50);
 	},
 
-	requestAssetUpload: function(assetType) {
-		this.setState({requestingUpload: true});
+	requestAssetUpload: function(field, assetType) {
+		this.setState({requestingUpload: true, requestingField: field});
 		this.props.requestAssetUpload(assetType);
 	},
 
 	closePopup: function() {
 		if (!this.state.requestingUpload) {
-			this.setState({popupVisible: false});			
+			this.setState({popupVisible: false});
 		}
 	},
 
@@ -251,6 +253,7 @@ const MarkdownWidgetModal = React.createClass({
 		const PluginInputFields = (this.state.pluginType) ? Plugins[this.state.pluginType].InputFields : [];
 		const PluginComponent = (this.state.pluginType) ? Plugins[this.state.pluginType].Component : null;
 		const PluginProps = (this.state.pluginType) ? this.generateProperties(this.state.pluginType) : {};
+		const PluginConfig = (this.state.pluginType) ? Plugins[this.state.pluginType].Config : {};
 
 		return (
 			<Portal onClose={this.closePopup} isOpened={this.state.popupVisible} closeOnOutsideClick closeOnEsc>
@@ -279,8 +282,8 @@ const MarkdownWidgetModal = React.createClass({
 																		selectedValue={value}
 																		assets={this.props.assets}
 																		saveChange={this.onInputFieldChange}
-																		requestAssetUpload={this.requestAssetUpload}
-																		requestedAsset={this.props.requestedAsset}
+																		requestAssetUpload={this.requestAssetUpload.bind(this, fieldTitle)}
+																		requestedAsset={(this.state.requestingField === fieldTitle && this.props.requestedAsset) ? this.props.requestedAsset : null}
 																		{...PluginInputFieldParams}
 																		ref={(ref) => this.popupInputFields[fieldTitle] = ref}/>
 																</div>
@@ -294,7 +297,7 @@ const MarkdownWidgetModal = React.createClass({
 							</div>
 							*/}
 
-						{ (PluginComponent) ? <div> <div style={styles.previewText}>Preview:</div> <div style={styles.previewContainer}> <PluginComponent {...PluginProps} /></div> </div> : null}
+						{ (PluginComponent && PluginConfig.preview) ? <div> <div key={`preview-${this.state.pluginHash}`} style={styles.previewText}>Preview:</div> <div style={styles.previewContainer}> <PluginComponent {...PluginProps} /></div> </div> : null}
 						</div>
 					</div>
 				</div>

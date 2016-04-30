@@ -51,7 +51,7 @@ const MediaLibrary = React.createClass({
 			initialState.activeSection = 'assets';
 		} else {
 			initialState.showMediaLibraryEditor = true;
-			initialState.assetEditorType = 'image'
+			initialState.assetEditorType = this.props.showAssetEditorType;
 			initialState.assetEditorObject = {};
 			initialState.activeSection = 'assets';
 		}

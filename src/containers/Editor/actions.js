@@ -109,13 +109,14 @@ export function closeModal() {
 	};
 }
 
-export function waitForUpload() {
+export function waitForUpload(assetType) {
 	return {
-		type: WAIT_FOR_UPLOAD
+		type: WAIT_FOR_UPLOAD,
+		assetType: assetType,
 	};
 }
 
-export function stopWaitForAction() {
+export function stopWaitForUpload() {
 	return {
 		type: STOP_WAIT_FOR_UPLOAD
 	};
