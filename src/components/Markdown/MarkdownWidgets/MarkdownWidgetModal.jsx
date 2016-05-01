@@ -297,7 +297,7 @@ const MarkdownWidgetModal = React.createClass({
 							</div>
 							*/}
 
-						{ (PluginComponent && PluginConfig.preview) ? <div> <div key={`preview-${this.state.pluginHash}`} style={styles.previewText}>Preview:</div> <div style={styles.previewContainer}> <PluginComponent {...PluginProps} /></div> </div> : null}
+						{ (PluginComponent && PluginConfig.preview && Object.keys(PluginProps).length > 0) ? <div> <div key={`preview-${this.state.pluginHash}`} style={styles.previewText}>Preview:</div> <div style={styles.previewContainer}> <PluginComponent {...PluginProps} /></div> </div> : null}
 						</div>
 					</div>
 				</div>

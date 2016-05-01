@@ -11,7 +11,7 @@ import React, { PropTypes } from 'react';
 import Widget from './MarkdownWidgetClass';
 import {parsePluginString} from 'utils/parsePlugins';
 import EditorWidgetModal from './MarkdownWidgetModal';
-
+import MarkdownPopover from './MarkdownPopover';
 
 const EditorWidgets = React.createClass({
 	propTypes: {
@@ -34,8 +34,10 @@ const EditorWidgets = React.createClass({
 	// only mount after codemirror is activated
 	componentDidMount() {
 		this.props.cm.on('change', this.onEditorChange);
+		// this.props.cm.on('beforeSelectionChange', this.selectionChange);
 		this.markAll(this.props.cm);
 	},
+
 
 
 	showPopupFromAutocomplete: function(completion) {
@@ -147,6 +149,10 @@ const EditorWidgets = React.createClass({
 	render: function() {
 		return (
 			<span>
+
+				<MarkdownPopover
+					ref="popover"
+					cm={this.props.cm}/>
 
 				<EditorWidgetModal ref="pluginModal"
 					requestedAsset={this.props.requestedAsset}
