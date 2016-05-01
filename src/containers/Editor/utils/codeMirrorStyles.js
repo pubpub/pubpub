@@ -42,7 +42,7 @@ export function codeMirrorStyles(loginData, parentClass) {
 	switch (editorColor) {
 	case 'light':
 		editorStyles.cursorColor = '#000';
-		editorStyles.color = '#333';
+		editorStyles.color = '#2C2A2B';
 		editorStyles.colorHeader = '#474747';
 		// editorStyles.colorTitle = '#575757';
 		editorStyles.colorPPM = '#474747';
@@ -60,7 +60,7 @@ export function codeMirrorStyles(loginData, parentClass) {
 		break;
 	default:
 		editorStyles.cursorColor = '#000';
-		editorStyles.color = '#333';
+		editorStyles.color = '#2C2A2B';
 		editorStyles.colorHeader = '#474747';
 		// editorStyles.colorTitle = '#575757';
 		editorStyles.colorPPM = '#474747';
@@ -83,15 +83,25 @@ export function codeMirrorStyles(loginData, parentClass) {
 	const output = {
 		...pluginStyles,
 		'.CodeMirror': {
-			backgroundColor: 'transparent',
+			// backgroundColor: 'transparent',
+			backgroundColor: 'white',
 			fontSize: editorStyles.fontSize,
 			color: editorStyles.color,
 			fontFamily: editorStyles.fontFamily,
-			padding: '0px 20px',
+			padding: '10px 40px 0px 40px',
 			width: 'calc(100% - 40px)',
 			lineHeight: '1.75',
+			marginTop: '10px',
+			transition: 'all .5s ease-out',
 			// fontFamily: 'Alegreya',
 		},
+
+		'.editor-container.editor-preview .CodeMirror': {
+			backgroundColor: '#F3F3F4',
+			marginTop: '0px',
+			padding: '20px 20px 0px 20px',
+		},
+
 		'.CodeMirror-cursors': {
 			pointerEvents: 'none',
 		},

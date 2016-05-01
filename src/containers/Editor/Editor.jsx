@@ -573,10 +573,15 @@ const Editor = React.createClass({
 
 		const editorMenuItems = this.buildEditorMenuItems();
 
+		let editorWrapperClass = 'editor-container';
+		if (viewMode === 'preview') {
+			editorWrapperClass += ' editor-preview';
+		}
+
 		return (
 
 
-			<div style={[styles.editorContainer, darkMode && styles.editorContainerDark]} className={'editor-container'}>
+			<div style={[styles.editorContainer, darkMode && styles.editorContainerDark]} className={editorWrapperClass}>
 
 				<Helmet {...metaData} />
 
@@ -795,7 +800,9 @@ styles = {
 		},
 	},
 	editorMenuWrapper: {
-		backgroundColor: '#F0F0F0',
+		// backgroundColor: '#F0F0F0',
+		backgroundColor: 'white',
+		fontSize: '0.9em',
 		// fontWeight: '300',
 	},
 	editorContainerDark: {
