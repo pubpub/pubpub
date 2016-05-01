@@ -282,7 +282,7 @@ const MarkdownWidgetModal = React.createClass({
 																		selectedValue={value}
 																		assets={this.props.assets}
 																		saveChange={this.onInputFieldChange}
-																		requestAssetUpload={this.requestAssetUpload.bind(this, fieldTitle)}
+																		requestAssetUpload={(this.props.requestAssetUpload) ? this.requestAssetUpload.bind(this, fieldTitle) : null}
 																		requestedAsset={(this.state.requestingField === fieldTitle && this.props.requestedAsset) ? this.props.requestedAsset : null}
 																		{...PluginInputFieldParams}
 																		ref={(ref) => this.popupInputFields[fieldTitle] = ref}/>

@@ -52,7 +52,7 @@ const AssetField = React.createClass({
 
 		return (<span>
 				<DropdownField ref="val" choices={assets} selectedValue={selectedVal} saveChange={this.props.saveChange}/>
-				<span style={uploadStyle} onClick={this.requestUpload}>Upload Asset</span>
+				{(this.props.requestAssetUpload) ? <span style={uploadStyle} onClick={this.requestUpload}>Upload Asset</span> : null}
 			</span>);
 	}
 });

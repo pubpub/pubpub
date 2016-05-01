@@ -50,7 +50,7 @@ const ReferenceField = React.createClass({
 		// return <DropdownField saveChange={this.props.saveChange} ref="val" choices={references} selectedValue={selectedVal}/>;
 		return (<span>
 				<DropdownField ref="val" choices={references} selectedValue={selectedVal} saveChange={this.props.saveChange}/>
-				<span style={uploadStyle} onClick={this.requestUpload}>Upload Reference</span>
+				{(this.props.requestAssetUpload) ? <span style={uploadStyle} onClick={this.requestUpload}>Upload Reference</span> : null}
 			</span>);
 
 	}

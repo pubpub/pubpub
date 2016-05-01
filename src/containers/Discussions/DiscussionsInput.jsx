@@ -216,7 +216,7 @@ const PubDiscussionsInput = React.createClass({
 					ref="widgethandler"
 					mode="discussions"
 					references={{}}
-					requestAssetUpload={this.props.requestAssetUpload}
+					requestAssetUpload={null} // disables asset uploading for comments
 					cm={this.cm} />
 			: null }
 
