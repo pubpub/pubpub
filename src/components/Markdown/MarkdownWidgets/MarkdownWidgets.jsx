@@ -21,6 +21,7 @@ const EditorWidgets = React.createClass({
 		assets: PropTypes.array,
 		mode: PropTypes.string,
 		cm: PropTypes.object,
+		requestedAssetStatus: PropTypes.bool,
 	},
 
 	getInitialState() {
@@ -157,6 +158,7 @@ const EditorWidgets = React.createClass({
 				<EditorWidgetModal ref="pluginModal"
 					requestedAsset={this.props.requestedAsset}
 					requestAssetUpload={this.props.requestAssetUpload}
+					requestedAssetStatus={this.props.requestedAssetStatus}
 					mode={this.props.mode}
 					assets={this.props.assets || []}
 					activeFocus={this.props.activeFocus}

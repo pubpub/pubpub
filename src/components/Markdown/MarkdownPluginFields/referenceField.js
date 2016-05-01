@@ -22,7 +22,8 @@ const ReferenceField = React.createClass({
 		const bothExist = (!oneExists && this.props.requestedAsset && nextProps.requestedAsset && this.props.requestedAsset._id !== nextProps.requestedAsset._id);
 
 		if (oneExists || bothExist) {
-			this.refs.val.setValue(nextProps.requestedAsset);
+			const requestedVal = {'value': nextProps.requestedAsset, 'label': nextProps.requestedAsset.label.substring(0, 15) };
+			this.refs.val.setValue(requestedVal);
 		}
 	},
 	value: function() {

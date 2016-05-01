@@ -557,7 +557,7 @@ const Editor = React.createClass({
 		const references = {};
 
 		const requestedAsset = (this.props.editorData.get('requestedAsset')) ? this.props.editorData.get('requestedAsset').toJS() : null;
-
+		const requestedAssetStatus = this.props.editorData.get('waitForUpload');
 
 		const referencesList = [];
 		for ( const key in this.state.firepadData.references ) {
@@ -618,6 +618,7 @@ const Editor = React.createClass({
 									assets={userAssets}
 									activeFocus={this.state.activeFocus}
 									requestAssetUpload={this.requestAssetUpload}
+									requestedAssetStatus={requestedAssetStatus}
 									cm={this.cm} /> : null}
 							{/*
 							<EditorPluginPopup ref="pluginPopup" isLivePreview={isLivePreview} references={this.state.firepadData.references} assets={this.state.firepadData.assets} activeFocus={this.state.activeFocus} codeMirrorChange={this.state.codeMirrorChange}/>

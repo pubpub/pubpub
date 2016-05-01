@@ -23,6 +23,7 @@ const MarkdownWidgetModal = React.createClass({
 		cm: PropTypes.object,
 		requestedAsset: PropTypes.object,
 		requestAssetUpload: PropTypes.func,
+		requestedAssetStatus: PropTypes.bool,
 	},
 
 	getDefaultProps: function() {
@@ -238,12 +239,12 @@ const MarkdownWidgetModal = React.createClass({
 	},
 
 	requestAssetUpload: function(field, assetType) {
-		this.setState({requestingUpload: true, requestingField: field});
+		this.setState({requestingField: field});
 		this.props.requestAssetUpload(assetType);
 	},
 
 	closePopup: function() {
-		if (!this.state.requestingUpload) {
+		if (!this.props.requestedAssetStatus) {
 			this.setState({popupVisible: false});
 		}
 	},
