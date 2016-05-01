@@ -92,8 +92,8 @@ const FileUploader = React.createClass({
 		return (
 
 			<div style={[styles.assetRowContainer]}>
-        UPLOAD HERE: <input type="file" onChange={this.onFileSelect} />;
-        { this.state.percentLoaded ? <LoaderDeterminate value={this.state.percentLoaded}/> : null }
+        <input type="file" onChange={this.onFileSelect} />
+        { (this.state.percentLoaded && this.state.percentLoaded <= 0.95) ? <LoaderDeterminate value={this.state.percentLoaded}/> : null }
 			</div>
 
 		);

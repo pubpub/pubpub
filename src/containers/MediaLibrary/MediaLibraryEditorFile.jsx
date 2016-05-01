@@ -88,23 +88,39 @@ const ReferenceEditor = React.createClass({
 
 				</div>
 
-				<div style={styles.thumbnailWrapper}>
-					<img style={styles.thumbnail} src={assetData.thumbnail} />
-				</div>
 
 				<div style={styles.inputFormWrapper}>
 					<div key={'manualForm-labeldefault'} style={[styles.manualFormInputWrapper, {float: 'none', width: 'calc(100% - 40px)'}]}>
 						<label style={styles.manualFormInputTitle} htmlFor={'label'}>
 							{/* <FormattedMessage {...globalMessages['Label']} /> */}
-							Label
+							File
+						</label>
+						<FileUploader
+							onFileUpload={this.getUploadedAsset}
+							slug={this.props.slug}
+							/>
+
+							{/* <FormattedMessage {...globalMessages['Label']} /> */}
+
+						{(Object.keys(assetObject).length > 0 ) ?
+							<span>
+
+								<label style={styles.manualFormInputTitle} htmlFor={'label'}>
+									Thumbnail
+								</label>
+								<div style={styles.thumbnailWrapper}>
+									<img style={styles.thumbnail} src={assetData.thumbnail} />
+								</div>
+
+						<label style={styles.manualFormInputTitle} htmlFor={'label'}>
+							Name
 						</label>
 						<input style={styles.manualFormInput} key={assetObject.label} ref={'label'} name={'label'} id={'label'} type="text" onChange={this.handleManualInputFormChange} defaultValue={assetObject.label}/>
-					</div>
+						</span>
+					: null }
 
-					<FileUploader
-						onFileUpload={this.getUploadedAsset}
-						slug={this.props.slug}
-						/>
+	 </div>
+
 
 					<div style={styles.clearfix}></div>
 				</div>
@@ -148,7 +164,7 @@ styles = {
 		width: '100%',
 	},
 	inputFormWrapper: {
-		margin: '10px 0px',
+		margin: '10px 0px 10px 50px',
 		fontFamily: 'Courier',
 	},
 	manualFormInputWrapper: {
@@ -161,12 +177,14 @@ styles = {
 		color: '#BBB',
 	},
 	manualFormInput: {
-		width: '100%',
+		width: '75%',
 		fontFamily: 'Courier',
 		borderWidth: '0px 0px 1px 0px',
 		borderColor: '#BBB',
 		outline: 'none',
 		fontSize: 14,
+		marginBottom: 10,
+		marginRight: '50%',
 	},
 
 };
