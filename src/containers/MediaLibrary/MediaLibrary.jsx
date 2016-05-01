@@ -53,7 +53,7 @@ const MediaLibrary = React.createClass({
 			initialState.showMediaLibraryEditor = true;
 			initialState.assetEditorType = this.props.showAssetEditorType;
 			initialState.assetEditorObject = {};
-			initialState.activeSection = 'assets';
+			initialState.activeSection = null;
 		}
 
 		return initialState;
@@ -251,15 +251,13 @@ const MediaLibrary = React.createClass({
 		const userAssets = this.props.loginData.getIn(['userData', 'assets']).toJS() || [];
 		const {assets, references, highlights} = this.separateAssets(userAssets);
 
-		console.log(this.state);
-
 		return (
 
 
 				<Dropzone ref="dropzone" onDrop={this.onDrop} disableClick style={styles.dropzone} activeStyle={this.state.activeSection === 'assets' ? styles.dropzoneActive : {}}>
 					<div>
 						<Portal isOpened={this.state.showMediaLibraryEditor}>
-							<div style={styles.assetEditorWrapper}>
+							<div style={(!this.props.showAssetEditorType) ? styles.assetEditorWrapper : styles.assetUploaderWrapper}>
 								<MediaLibraryEditor
 									assetType={this.state.assetEditorType}
 									assetObject={this.state.assetEditorObject}
@@ -270,6 +268,8 @@ const MediaLibrary = React.createClass({
 									slug={this.props.slug} />
 							</div>
 						</Portal>
+
+						{(this.state.activeSection) ?
 
 						<div style={styles.container}>
 
@@ -412,6 +412,7 @@ const MediaLibrary = React.createClass({
 							})()}
 
 						</div>
+						: null }
 
 					</div>
 
@@ -463,6 +464,11 @@ styles = {
 	},
 	assetEditorWrapper: {
 		...globalStyles.largeModal,
+		zIndex: 502,
+		fontFamily: 'Lato',
+	},
+	assetUploaderWrapper: {
+		...globalStyles.mediumModal,
 		zIndex: 502,
 		fontFamily: 'Lato',
 	},

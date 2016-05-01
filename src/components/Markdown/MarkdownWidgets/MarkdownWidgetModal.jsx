@@ -257,7 +257,7 @@ const MarkdownWidgetModal = React.createClass({
 		const PluginConfig = (this.state.pluginType) ? Plugins[this.state.pluginType].Config : {};
 
 		return (
-			<Portal onClose={this.closePopup} isOpened={this.state.popupVisible} closeOnOutsideClick closeOnEsc>
+			<Portal onClose={this.closePopup} isOpened={this.state.popupVisible} closeOnOutsideClick={!this.props.requestedAssetStatus} closeOnEsc={!this.props.requestedAssetStatus}>
 				<div style={styles.pluginFlexBox(this.props.mode)}>
 					<div id="plugin-popup"
 							ref={(ref) => this.popupBox = ref}

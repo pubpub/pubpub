@@ -149,6 +149,8 @@ const Editor = React.createClass({
 	render: function() {
 
 		const activeModal = this.props.editorData.get('activeModal');
+		const modalSize = (this.props.editorData.get('waitForUpload')) ? 'medium' : 'large';
+		const modalStyle = (modalSize === 'large') ? styles.modalContainer : styles.mediumModalContainer;
 
 		return (
 			<div style={styles.container} className={'editorModals'}>
@@ -156,7 +158,7 @@ const Editor = React.createClass({
 				{/*	Container for all modals and their backdrop. */}
 				<div className="modals">
 					<div className="modal-splash" onClick={this.closeModalHandler} style={[styles.modalSplash, activeModal !== undefined && styles.modalSplashActive]}></div>
-					<div id="modal-container" className="modal-container" style={[styles.modalContainer, activeModal !== undefined && styles.modalContainerActive]}>
+					<div id="modal-container" className="modal-container" style={[modalStyle, activeModal !== undefined && styles.modalContainerActive]}>
 						{/*	Switch which modal is displayed based on the activeModal parameter */}
 						{(() => {
 							switch (activeModal) {
@@ -250,12 +252,18 @@ styles = {
 	modalContainer: {
 		...globalStyles.largeModal,
 		zIndex: 501,
-
 		opacity: 0,
 		pointerEvents: 'none',
 		transform: 'scale(0.9)',
 		transition: '.1s linear opacity, .1s linear transform',
-
+	},
+	mediumModalContainer: {
+		...globalStyles.mediumModal,
+		zIndex: 501,
+		opacity: 0,
+		pointerEvents: 'none',
+		transform: 'scale(0.9)',
+		transition: '.1s linear opacity, .1s linear transform',
 	},
 	modalContainerActive: {
 		opacity: 1,
