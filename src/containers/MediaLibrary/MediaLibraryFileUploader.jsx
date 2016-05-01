@@ -72,18 +72,7 @@ const FileUploader = React.createClass({
 
 
   onDrop: function(files) {
-
-		// Add new files to existing set, so as to not overwrite existing uploads
-		const existingFiles = this.state.files.length;
-		const tmpFiles = this.state.files.concat(files);
-
-		// For each new file, begin their upload process
-		for (let fileCount = existingFiles; fileCount < existingFiles + files.length; fileCount++) {
-			s3Upload(tmpFiles[fileCount], this.props.slug, this.onFileProgress, this.onFileFinish, fileCount);
-		}
-
-		// Set state with newly added files
-
+    s3Upload(files[0], this.props.slug, this.onFileProgress, this.onFileFinish, 1);
 	},
 
 
@@ -92,9 +81,13 @@ const FileUploader = React.createClass({
 		return (
 
 			<div style={[styles.assetRowContainer]}>
-        <input type="file" onChange={this.onFileSelect} />
         { (this.state.percentLoaded && this.state.percentLoaded <= 0.95) ? <LoaderDeterminate value={this.state.percentLoaded}/> : null }
-			</div>
+
+        <Dropzone ref="dropzone" onDrop={this.onDrop} disableClick style={styles.dropzone} activeStyle={styles.activeDrop} >
+          <input style={styles.fileInput} type="file" onChange={this.onFileSelect} />
+          <div> or <br/> drag & drop here</div>
+        </Dropzone>
+    	</div>
 
 		);
 	}
@@ -104,6 +97,21 @@ export default Radium(FileUploader);
 
 const rowHeight = '30px';
 styles = {
+  dropzone: {
+    backgroundColor: '#F3F3F4',
+    width: '75%',
+    height: 'auto',
+    padding: 20,
+    textAlign: 'center',
+    lineHeight: '1.5em',
+    transition: 'all .2s ease-out',
+  },
+  activeDrop: {
+    backgroundColor: '#BBBDC0'
+  },
+  fileInput: {
+    marginLeft: '20%',
+  },
 	assetRowContainer: {
 		// height: rowHeight,
 		width: 'calc(100% - 40px)',
