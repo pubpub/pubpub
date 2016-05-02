@@ -101,7 +101,9 @@ export function codeMirrorStyles(loginData, parentClass) {
 			marginTop: '0px',
 			padding: '20px 20px 0px 20px',
 		},
-
+		'.editor-container .CodeMirror-scroll': {
+			overflow: 'hidden !important',
+		},
 		'.CodeMirror-cursors': {
 			pointerEvents: 'none',
 		},
