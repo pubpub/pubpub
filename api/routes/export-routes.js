@@ -12,7 +12,7 @@ import {IntlProvider} from 'react-intl';
 export function getPDF(req, res) {
 	const css = fs.readFileSync(__dirname + '/../../static/css/basePub.css', 'utf8');
 	// return res.status(201).json(css);
-	Pub.findOne({slug: req.query.slug}, {slug: 1, title: 1, createDate: 1, lastUpdated: 1, markdown: 1, isPublished: 1})
+	Pub.findOne({slug: req.query.slug}, {slug: 1, title: 1, createDate: 1, lastUpdated: 1, markdown: 1, isPublished: 1, history: 1})
 	.lean().exec(function(errPubFind, pub) {
 		if (errPubFind) { console.log(errPubFind); return res.status(500).json(errPubFind);}
 		if (!pub) {return res.status(200).json('Pub Not Found');}
@@ -44,10 +44,13 @@ export function getPDF(req, res) {
 				}
 			};
 
+			const dynamicStyle = pub.history[pub.history.length - 1].styleScoped;
+
 			const html = `<!doctype html>
 				<html lang="en-us">
 					<head>
 						<style> ${css} body{font-size:10px;}</style>
+						<style id="dynamicStyle">${dynamicStyle}</style>
 					</head>
 
 					<body>
