@@ -44,7 +44,7 @@ export function getPDF(req, res) {
 				}
 			};
 
-			const dynamicStyle = pub.history[pub.history.length - 1].styleScoped;
+			const dynamicStyle = pub.history[pub.history.length - 1] && pub.history[pub.history.length - 1].styleScoped;
 
 			const html = `<!doctype html>
 				<html lang="en-us">
