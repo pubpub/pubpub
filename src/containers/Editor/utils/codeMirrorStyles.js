@@ -83,27 +83,24 @@ export function codeMirrorStyles(loginData, parentClass) {
 	const output = {
 		...pluginStyles,
 		'.CodeMirror': {
-			// backgroundColor: 'transparent',
-			backgroundColor: 'white',
+			backgroundColor: 'transparent',
+			// backgroundColor: 'white',
 			fontSize: editorStyles.fontSize,
 			color: editorStyles.color,
 			fontFamily: editorStyles.fontFamily,
-			padding: '10px 40px 0px 40px',
+			padding: '0px 20px',
 			width: 'calc(100% - 40px)',
 			lineHeight: '1.75',
-			marginTop: '10px',
-			transition: 'all .5s ease-out',
-			// fontFamily: 'Alegreya',
 		},
 
-		'.editor-container.editor-preview .CodeMirror': {
-			backgroundColor: '#F3F3F4',
-			marginTop: '0px',
-			padding: '20px 20px 0px 20px',
-		},
-		'.editor-container .CodeMirror-scroll': {
-			overflow: 'hidden !important',
-		},
+		// '.editor-container.editor-preview .CodeMirror': {
+		// 	backgroundColor: '#F3F3F4',
+		// 	marginTop: '0px',
+		// 	padding: '20px 20px 0px 20px',
+		// },
+		// '.editor-container .CodeMirror-scroll': {
+		// 	overflow: 'hidden !important',
+		// },
 		'.CodeMirror-cursors': {
 			pointerEvents: 'none',
 		},
