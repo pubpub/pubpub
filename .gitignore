@@ -1,6 +1,7 @@
 .idea/
 node_modules/
 authentication/
+coverage/
 dist/
 data/
 pdfs/
