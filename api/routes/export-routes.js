@@ -15,7 +15,7 @@ export function getPDF(req, res) {
 	Pub.findOne({slug: req.query.slug}, {slug: 1, title: 1, createDate: 1, lastUpdated: 1, markdown: 1, isPublished: 1, history: 1})
 	.lean().exec(function(errPubFind, pub) {
 		if (errPubFind) { console.log(errPubFind); return res.status(500).json(errPubFind);}
-		if (!pub) {return res.status(200).json('Pub Not Found');}
+		if (!pub || !pub.history || !pub.history.length) {return res.status(200).json('Pub Not Found');}
 
 		let languageObject = {};
 		const locale = 'en';
