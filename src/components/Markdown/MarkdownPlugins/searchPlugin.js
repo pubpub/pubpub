@@ -15,6 +15,7 @@ const InputFields = [
 const Config = {
 	title: 'search',
 	autocomplete: true,
+	preview: false,
 	color: 'rgba(185, 215, 249, 0.5)',
 	page: true,
 };

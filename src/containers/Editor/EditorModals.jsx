@@ -149,6 +149,8 @@ const Editor = React.createClass({
 	render: function() {
 
 		const activeModal = this.props.editorData.get('activeModal');
+		const modalSize = (this.props.editorData.get('waitForUpload')) ? 'medium' : 'large';
+		const modalStyle = (modalSize === 'large') ? styles.modalContainer : styles.mediumModalContainer;
 
 		return (
 			<div style={styles.container} className={'editorModals'}>
@@ -156,13 +158,20 @@ const Editor = React.createClass({
 				{/*	Container for all modals and their backdrop. */}
 				<div className="modals">
 					<div className="modal-splash" onClick={this.closeModalHandler} style={[styles.modalSplash, activeModal !== undefined && styles.modalSplashActive]}></div>
-					<div id="modal-container" className="modal-container" style={[styles.modalContainer, activeModal !== undefined && styles.modalContainerActive]}>
+					<div id="modal-container" className="modal-container" style={[modalStyle, activeModal !== undefined && styles.modalContainerActive]}>
 						{/*	Switch which modal is displayed based on the activeModal parameter */}
 						{(() => {
 							switch (activeModal) {
 							case 'Assets':
 								return (<MediaLibrary
 									closeLibrary={this.closeModalHandler}
+									codeMirrorInstance={document.getElementById('codemirror-wrapper').childNodes[0].childNodes[0].CodeMirror} />
+								);
+
+							case 'AssetsUpload':
+								return (<MediaLibrary
+									closeLibrary={this.closeModalHandler}
+									showAssetEditorType={this.props.editorData.get('waitForUploadType')}
 									codeMirrorInstance={document.getElementById('codemirror-wrapper').childNodes[0].childNodes[0].CodeMirror} />
 								);
 
@@ -234,7 +243,7 @@ styles = {
 		left: 0,
 		backgroundColor: 'rgba(255,255,255,0.7)',
 		transition: '.1s linear opacity',
-		zIndex: 100,
+		zIndex: 500,
 	},
 	modalSplashActive: {
 		opacity: 1,
@@ -242,13 +251,19 @@ styles = {
 	},
 	modalContainer: {
 		...globalStyles.largeModal,
-		zIndex: 150,
-
+		zIndex: 501,
 		opacity: 0,
 		pointerEvents: 'none',
 		transform: 'scale(0.9)',
 		transition: '.1s linear opacity, .1s linear transform',
-
+	},
+	mediumModalContainer: {
+		...globalStyles.mediumModal,
+		zIndex: 501,
+		opacity: 0,
+		pointerEvents: 'none',
+		transform: 'scale(0.9)',
+		transition: '.1s linear opacity, .1s linear transform',
 	},
 	modalContainerActive: {
 		opacity: 1,

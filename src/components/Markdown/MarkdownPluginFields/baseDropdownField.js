@@ -11,9 +11,17 @@ const DropdownProp = React.createClass({
 		selectedValue: PropTypes.object,
 		saveChange: PropTypes.func,
 	},
+	getInitialState: function() {
+		return {selValue: this.props.selectedValue};
+	},
 	onValueChange: function(changedValue, callback) {
 		this.props.saveChange();
+		this.setState({selValue: changedValue});
 		callback();
+	},
+	setValue: function(val) {
+		this.setState({selValue: val});
+		setTimeout(() => this.props.saveChange(),100);
 	},
 	focus: function() {
 		let focused;
@@ -33,7 +41,7 @@ const DropdownProp = React.createClass({
 		const choices = this.props.choices || [];
 		// note: Key is needed here, because components may not be cleanly re-rendered between refreshes
 		return (
-			<SimpleSelect key={this.props.selectedValue} style={styles.select} onValueChange={this.onValueChange} ref="select" options={choices} defaultValue={this.props.selectedValue}/>
+			<SimpleSelect key={this.props.selectedValue} style={styles.select} value={(this.state.selValue) ? this.state.selValue: undefined} onValueChange={this.onValueChange} ref="select" options={choices} defaultValue={this.props.selectedValue}/>
 		);
 	}
 });

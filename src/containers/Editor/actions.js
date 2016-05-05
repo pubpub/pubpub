@@ -37,6 +37,8 @@ export const SAVE_VERSION_LOAD = 'editor/SAVE_VERSION_LOAD';
 export const SAVE_VERSION_SUCCESS = 'editor/SAVE_VERSION_SUCCESS';
 export const SAVE_VERSION_FAIL = 'editor/SAVE_VERSION_FAIL';
 
+export const WAIT_FOR_UPLOAD = 'editor/WAIT_FOR_UPLOAD';
+export const STOP_WAIT_FOR_UPLOAD = 'editor/STOP_WAIT_FOR_UPLOAD';
 
 /*--------*/
 // Define Action creators
@@ -106,6 +108,20 @@ export function closeModal() {
 		type: MODAL_CLOSE
 	};
 }
+
+export function waitForUpload(assetType) {
+	return {
+		type: WAIT_FOR_UPLOAD,
+		assetType: assetType,
+	};
+}
+
+export function stopWaitForUpload() {
+	return {
+		type: STOP_WAIT_FOR_UPLOAD
+	};
+}
+
 
 export function openModal(activeModal) {
 	document.getElementById('modal-container').scrollTop = 0;

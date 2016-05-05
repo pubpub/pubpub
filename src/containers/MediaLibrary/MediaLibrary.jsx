@@ -32,22 +32,31 @@ const MediaLibrary = React.createClass({
 		slug: PropTypes.string,
 		closeLibrary: PropTypes.func,
 		codeMirrorInstance: PropTypes.object,
-
+		showAssetEditorType: PropTypes.string,
 		// assetEditorOnly: PropTypes.bool // If this is true, don't render any of the library content, just load straight into MediaLibraryEditor. Will need to pass through object
 		dispatch: PropTypes.func,
 	},
 
 	getInitialState() {
-		return {
+		const initialState = {
 			files: [],
 			uploadRates: [],
 			finishedUploads: 0,
-			activeSection: 'assets',
-
-			showMediaLibraryEditor: false,
-			assetEditorType: undefined,
-			assetEditorObject: {}
 		};
+
+		if (!this.props.showAssetEditorType) {
+			initialState.showMediaLibraryEditor = false;
+			initialState.assetEditorType = undefined;
+			initialState.assetEditorObject = {};
+			initialState.activeSection = 'assets';
+		} else {
+			initialState.showMediaLibraryEditor = true;
+			initialState.assetEditorType = this.props.showAssetEditorType;
+			initialState.assetEditorObject = {};
+			initialState.activeSection = null;
+		}
+
+		return initialState;
 	},
 	// TODO: On each load, we gotta load the user's assets again, in
 	// case they've been updated by a co-author
@@ -153,11 +162,17 @@ const MediaLibrary = React.createClass({
 
 	},
 	closeMediaLibraryEditor: function() {
+
+		if (this.props.showAssetEditorType) {
+			this.props.closeLibrary();
+		}
+
 		this.setState({
 			showMediaLibraryEditor: false,
 			assetEditorType: undefined,
 			assetEditorObject: {},
 		});
+
 	},
 
 	addAssets: function(newAssetArray) {
@@ -242,7 +257,7 @@ const MediaLibrary = React.createClass({
 				<Dropzone ref="dropzone" onDrop={this.onDrop} disableClick style={styles.dropzone} activeStyle={this.state.activeSection === 'assets' ? styles.dropzoneActive : {}}>
 					<div>
 						<Portal isOpened={this.state.showMediaLibraryEditor}>
-							<div style={styles.assetEditorWrapper}>
+							<div style={(!this.props.showAssetEditorType) ? styles.assetEditorWrapper : styles.assetUploaderWrapper}>
 								<MediaLibraryEditor
 									assetType={this.state.assetEditorType}
 									assetObject={this.state.assetEditorObject}
@@ -253,6 +268,8 @@ const MediaLibrary = React.createClass({
 									slug={this.props.slug} />
 							</div>
 						</Portal>
+
+						{(this.state.activeSection) ?
 
 						<div style={styles.container}>
 
@@ -395,6 +412,7 @@ const MediaLibrary = React.createClass({
 							})()}
 
 						</div>
+						: null }
 
 					</div>
 
@@ -446,7 +464,12 @@ styles = {
 	},
 	assetEditorWrapper: {
 		...globalStyles.largeModal,
-		zIndex: 200,
+		zIndex: 502,
+		fontFamily: 'Lato',
+	},
+	assetUploaderWrapper: {
+		...globalStyles.mediumModal,
+		zIndex: 502,
 		fontFamily: 'Lato',
 	},
 };

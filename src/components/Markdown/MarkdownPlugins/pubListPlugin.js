@@ -12,6 +12,7 @@ const Config = {
 	autocomplete: true,
 	color: 'rgba(185, 215, 249, 0.5)',
 	page: true,
+	preview: false,
 };
 
 const EditorWidget = (inputProps) => (<span>Pub List</span>);

@@ -176,7 +176,7 @@ const AssetEditor = React.createClass({
 					case 'image':
 					case 'video':
 					case 'data':
-						return ( <MediaLibraryEditorFile assetObject={this.props.assetObject} assetLoading={this.props.assetLoading} addAssets={this.props.addAssets} updateAssets={this.props.updateAssets} close={this.props.close}/> );
+						return ( <MediaLibraryEditorFile slug={this.props.slug} assetObject={this.props.assetObject} assetLoading={this.props.assetLoading} addAssets={this.props.addAssets} updateAssets={this.props.updateAssets} close={this.props.close}/> );
 
 					case 'reference':
 						return ( <MediaLibraryEditorReference assetObject={this.props.assetObject} assetLoading={this.props.assetLoading} addAssets={this.props.addAssets} updateAssets={this.props.updateAssets} close={this.props.close} /> );
@@ -208,7 +208,7 @@ styles = {
 		width: '100%',
 		minHeight: '100%',
 		backgroundColor: 'white',
-		zIndex: '250',
+		zIndex: '550',
 		position: 'absolute',
 	},
 	select: {

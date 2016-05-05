@@ -14,13 +14,16 @@ import {pubSizes} from 'utils/styleConstants';
 
 let styles = {};
 
-const EditorWidgetModal = React.createClass({
+const MarkdownWidgetModal = React.createClass({
 	propTypes: {
 		activeFocus: PropTypes.string,
 		codeMirrorChange: PropTypes.object,
 		assets: PropTypes.array,
 		mode: PropTypes.string,
 		cm: PropTypes.object,
+		requestedAsset: PropTypes.object,
+		requestAssetUpload: PropTypes.func,
+		requestedAssetStatus: PropTypes.bool,
 	},
 
 	getDefaultProps: function() {
@@ -60,10 +63,13 @@ const EditorWidgetModal = React.createClass({
 	componentWillReceiveProps(nextProps) {
 
 		// If a re-render causes this component to receive new props, but the props haven't changed, return.
+		/*
 		if (this.props.codeMirrorChange === nextProps.codeMirrorChange
-			&& this.props.assets === nextProps.assets) {
+			&& this.props.assets === nextProps.assets
+		) {
 			return null;
 		}
+		*/
 
 		// If the change comes from another user
 		if (this.props.codeMirrorChange !== nextProps.codeMirrorChange
@@ -197,7 +203,6 @@ const EditorWidgetModal = React.createClass({
 		}
 		*/
 
-
 		this.toIndex = this.fromIndex + mergedString.length;
 	},
 
@@ -233,8 +238,15 @@ const EditorWidgetModal = React.createClass({
 		delay(this.onPluginSave, 50);
 	},
 
+	requestAssetUpload: function(field, assetType) {
+		this.setState({requestingField: field});
+		this.props.requestAssetUpload(assetType);
+	},
+
 	closePopup: function() {
-		this.setState({popupVisible: false});
+		if (!this.props.requestedAssetStatus) {
+			this.setState({popupVisible: false});
+		}
 	},
 
 	render: function() {
@@ -242,9 +254,10 @@ const EditorWidgetModal = React.createClass({
 		const PluginInputFields = (this.state.pluginType) ? Plugins[this.state.pluginType].InputFields : [];
 		const PluginComponent = (this.state.pluginType) ? Plugins[this.state.pluginType].Component : null;
 		const PluginProps = (this.state.pluginType) ? this.generateProperties(this.state.pluginType) : {};
+		const PluginConfig = (this.state.pluginType) ? Plugins[this.state.pluginType].Config : {};
 
 		return (
-			<Portal onClose={this.closePopup} isOpened={this.state.popupVisible} closeOnOutsideClick closeOnEsc>
+			<Portal onClose={this.closePopup} isOpened={this.state.popupVisible} closeOnOutsideClick={!this.props.requestedAssetStatus} closeOnEsc={!this.props.requestedAssetStatus}>
 				<div style={styles.pluginFlexBox(this.props.mode)}>
 					<div id="plugin-popup"
 							ref={(ref) => this.popupBox = ref}
@@ -270,6 +283,8 @@ const EditorWidgetModal = React.createClass({
 																		selectedValue={value}
 																		assets={this.props.assets}
 																		saveChange={this.onInputFieldChange}
+																		requestAssetUpload={(this.props.requestAssetUpload) ? this.requestAssetUpload.bind(this, fieldTitle) : null}
+																		requestedAsset={(this.state.requestingField === fieldTitle && this.props.requestedAsset) ? this.props.requestedAsset : null}
 																		{...PluginInputFieldParams}
 																		ref={(ref) => this.popupInputFields[fieldTitle] = ref}/>
 																</div>
@@ -283,7 +298,7 @@ const EditorWidgetModal = React.createClass({
 							</div>
 							*/}
 
-						{ (PluginComponent) ? <div> <div style={styles.previewText}>Preview:</div> <div style={styles.previewContainer}> <PluginComponent {...PluginProps} /></div> </div> : null}
+						{ (PluginComponent && PluginConfig.preview && Object.keys(PluginProps).length > 0) ? <div> <div key={`preview-${this.state.pluginHash}`} style={styles.previewText}>Preview:</div> <div style={styles.previewContainer}> <PluginComponent {...PluginProps} /></div> </div> : null}
 						</div>
 					</div>
 				</div>
@@ -293,7 +308,7 @@ const EditorWidgetModal = React.createClass({
 	}
 });
 
-export default Radium(EditorWidgetModal);
+export default Radium(MarkdownWidgetModal);
 
 
 styles = {

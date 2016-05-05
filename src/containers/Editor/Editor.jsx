@@ -14,7 +14,7 @@ import EditorModals from './EditorModals';
 import EditorStylePane from './EditorStylePane';
 import {LoaderDeterminate, Formatting, PubBody, Menu} from 'components';
 import {clearPub} from 'containers/PubReader/actions';
-import {getPubEdit, toggleEditorViewMode, unmountEditor, closeModal, openModal, addSelection, setEditorViewMode, saveVersion, updatePubBackendData, saveStyle} from './actions';
+import {getPubEdit, toggleEditorViewMode, unmountEditor, closeModal, openModal, addSelection, setEditorViewMode, saveVersion, updatePubBackendData, saveStyle, waitForUpload} from './actions';
 
 import {debounce} from 'utils/loadingFunctions';
 import {submitPubToJournal} from 'containers/JournalProfile/actions';
@@ -519,6 +519,10 @@ const Editor = React.createClass({
 
 	},
 
+	requestAssetUpload: function(assetType) {
+		return this.props.dispatch(waitForUpload(assetType));
+	},
+
 	componentDidUpdate: function() {
 
 		const shouldScroll = (this.props.loginData.getIn(['userData', 'settings', 'editorScrollCursor']) !== 'off');
@@ -552,6 +556,8 @@ const Editor = React.createClass({
 		const userAssets = this.props.loginData.getIn(['userData', 'assets']) ? this.props.loginData.getIn(['userData', 'assets']).toJS() : [];
 		const references = {};
 
+		const requestedAsset = (this.props.editorData.get('requestedAsset')) ? this.props.editorData.get('requestedAsset').toJS() : null;
+		const requestedAssetStatus = this.props.editorData.get('waitForUpload');
 
 		const referencesList = [];
 		for ( const key in this.state.firepadData.references ) {
@@ -567,10 +573,15 @@ const Editor = React.createClass({
 
 		const editorMenuItems = this.buildEditorMenuItems();
 
+		let editorWrapperClass = 'editor-container';
+		if (viewMode === 'preview') {
+			editorWrapperClass += ' editor-preview';
+		}
+
 		return (
 
 
-			<div style={[styles.editorContainer, darkMode && styles.editorContainerDark]} className={'editor-container'}>
+			<div style={[styles.editorContainer, darkMode && styles.editorContainerDark]} className={editorWrapperClass}>
 
 				<Helmet {...metaData} />
 
@@ -603,7 +614,17 @@ const Editor = React.createClass({
 						<div id="editor-text-wrapper" style={[globalStyles.hiddenUntilLoad, globalStyles[loadStatus], styles.editorMarkdown, styles[viewMode].editorMarkdown, !isReader && styles[viewMode].editorMarkdownIsEditor]}>
 
 
-							{(this.state.firepadInitialized) ? <MarkdownWidgets ref="widgethandler" mode={widgetMode} references={references} assets={userAssets} activeFocus={this.state.activeFocus} cm={this.cm} /> : null}
+							{(this.state.firepadInitialized) ?
+								<MarkdownWidgets
+									requestedAsset={requestedAsset}
+									ref="widgethandler"
+									mode={widgetMode}
+									references={references}
+									assets={userAssets}
+									activeFocus={this.state.activeFocus}
+									requestAssetUpload={this.requestAssetUpload}
+									requestedAssetStatus={requestedAssetStatus}
+									cm={this.cm} /> : null}
 							{/*
 							<EditorPluginPopup ref="pluginPopup" isLivePreview={isLivePreview} references={this.state.firepadData.references} assets={this.state.firepadData.assets} activeFocus={this.state.activeFocus} codeMirrorChange={this.state.codeMirrorChange}/>
 							*/}
@@ -779,7 +800,9 @@ styles = {
 		},
 	},
 	editorMenuWrapper: {
-		backgroundColor: '#F0F0F0',
+		// backgroundColor: '#F0F0F0',
+		backgroundColor: 'white',
+		fontSize: '0.9em',
 		// fontWeight: '300',
 	},
 	editorContainerDark: {

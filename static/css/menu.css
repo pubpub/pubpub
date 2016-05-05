@@ -76,7 +76,7 @@
   -webkit-user-select: none;  /* Chrome all / Safari all */
   -moz-user-select: none;     /* Firefox all */
   -ms-user-select: none;      /* IE 10+ */
-  user-select: none;  
+  user-select: none;
   cursor: pointer;
 }
 
@@ -140,6 +140,7 @@
   float: right;
 }
 
+/*
 .rc-menu-horizontal > .rc-menu-submenu:after,
 .rc-menu-horizontal > .rc-menu-item:after {
   content: "";
@@ -162,9 +163,10 @@
   left: 0;
   top: 25%;
 }
+*/
 
 .rc-menu-horizontal > .rc-menu-submenu.notButton:after,
-.rc-menu-horizontal > .rc-menu-item.notButton:after, 
+.rc-menu-horizontal > .rc-menu-item.notButton:after,
 .rc-menu-horizontal > .rc-menu-submenu.noSeparator:after,
 .rc-menu-horizontal > .rc-menu-item.noSeparator:after {
   display: none;

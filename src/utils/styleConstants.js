@@ -75,6 +75,25 @@ export const globalStyles = {
 		padding: '20px',
 		color: '#333',
 	},
+
+	// Used by the asset uploading modal
+	mediumModal: {
+		width: '50vw',
+		height: '85vh',
+		overflow: 'hidden',
+		overflowY: 'scroll',
+		margin: '0 auto',
+		position: 'fixed',
+		top: '10vh',
+		left: '25vw',
+		backgroundColor: 'white',
+		boxShadow: '0px 0px 10px 0px rgba(0,0,0,0.25)',
+		'@media screen and (min-width: 1395px)': {
+			width: 1200,
+			left: 'calc(50vw - 600px)',
+		},
+	},
+
 	largeModal: {
 		width: '86vw',
 		height: '100vh',

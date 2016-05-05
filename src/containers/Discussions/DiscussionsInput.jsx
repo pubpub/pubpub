@@ -45,6 +45,7 @@ const PubDiscussionsInput = React.createClass({
 		saveID: PropTypes.string,
 		intl: PropTypes.object,
 		toggleMediaLibrary: PropTypes.func,
+		requestAssetUpload: PropTypes.func,
 		userAssets: PropTypes.array,
 	},
 
@@ -209,7 +210,15 @@ const PubDiscussionsInput = React.createClass({
 					},
 				}} />
 
-			{(this.state.initialized) ? <MarkdownWidgets assets={this.props.userAssets} ref="widgethandler" mode="discussions" references={{}} cm={this.cm} /> : null }
+			{(this.state.initialized) ?
+				<MarkdownWidgets
+					assets={this.props.userAssets}
+					ref="widgethandler"
+					mode="discussions"
+					references={{}}
+					requestAssetUpload={null} // disables asset uploading for comments
+					cm={this.cm} />
+			: null }
 
 				<div style={[styles.inputTopLine, styles.expanded(this.state.expanded, true)]}>
 					<div style={styles.thumbnail}>

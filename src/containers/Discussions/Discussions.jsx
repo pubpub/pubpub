@@ -10,9 +10,12 @@ import DiscussionsInput from './DiscussionsInput';
 import {MediaLibrary} from 'containers';
 
 import {toggleVisibility} from 'containers/Login/actions';
+import {waitForUpload} from 'containers/Editor/actions';
 import {addDiscussion, discussionVoteSubmit, archiveDiscussion} from './actions';
 
 import {redditHot as hotScore} from 'decay';
+
+
 
 // import {globalMessages} from 'utils/globalMessages';
 import {FormattedMessage} from 'react-intl';
@@ -132,6 +135,10 @@ const Discussions = React.createClass({
 		});
 	},
 
+	requestAssetUpload: function(assetType) {
+		return this.props.dispatch(waitForUpload(assetType));
+	},
+
 	render: function() {
 
 		let discussionsData = this.props.discussionsData.get('discussions') && this.props.discussionsData.get('discussions').toJS ? this.props.discussionsData.get('discussions').toJS() : [];
@@ -187,7 +194,9 @@ const Discussions = React.createClass({
 							codeMirrorID={'rootCommentInput'}
 							isPublished={isPublished}
 							userAssets={userAssets}
-							toggleMediaLibrary={this.toggleMediaLibrary}/>
+							toggleMediaLibrary={this.toggleMediaLibrary}
+							requestAssetUpload={this.requestAssetUpload}
+							/>
 					}
 
 					{

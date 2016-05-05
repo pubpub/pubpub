@@ -11,6 +11,7 @@ const InputFields = [
 const Config = {
 	title: 'link',
 	autocomplete: true,
+	preview: false,
 	color: 'rgba(185, 215, 249, 0.5)',
 };
 

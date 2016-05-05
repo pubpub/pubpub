@@ -18,6 +18,7 @@ const Config = {
 	title: 'footnote',
 	inline: true,
 	autocomplete: true,
+	preview: false,
 	color: 'rgba(245, 245, 169, 0.5)',
 	prerender: function(globals, pluginProps) {
 		if (!globals.asideCount) {

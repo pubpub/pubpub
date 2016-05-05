@@ -12,7 +12,8 @@ const InputFields = [
 const Config = {
 	title: 'highlight',
 	inline: true,
-	autocomplete: false
+	autocomplete: false,
+	preview: false,
 };
 
 let styles;
