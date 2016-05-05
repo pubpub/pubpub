@@ -11,3 +11,5 @@ script:
   - npm run lint
   - npm run test-travis
   - npm run test-karma
+  - npm run coverage
+  - npm run coveralls
