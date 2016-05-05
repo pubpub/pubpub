@@ -17,4 +17,4 @@ New features and functionality should be accompanied by associated tests validat
 
 ### Linting
 
-Before commiting any changes, be sure to run `npm run lint`. This will lint all relevant files using [ESLint](http://eslint.org/) and report on any changes that you need to make.
+Before committing any changes, be sure to run `npm run lint`. This will lint all relevant files using [ESLint](http://eslint.org/) and report on any changes that you need to make.
