@@ -1,4 +1,5 @@
 [![Build Status](https://travis-ci.org/pubpub/pubpub.svg?branch=master)](https://travis-ci.org/pubpub/pubpub)
+[![Coverage Status](https://coveralls.io/repos/github/pubpub/pubpub/badge.svg?branch=master)](https://coveralls.io/github/pubpub/pubpub?branch=master)
 
 # PubPub
 
