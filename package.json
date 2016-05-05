@@ -26,7 +26,7 @@
     "test-karma": "karma start",
     "test-travis": "NODE_PATH=./src mocha $(find src api -name '*.test.js') --compilers js:babel-register --require ./src/tests/mochaEnvInit.js",
     "coverage": "NODE_PATH=./src ./node_modules/istanbul/lib/cli.js cover node_modules/mocha/bin/_mocha -- $(find src api -name '*.test.js') --compilers js:babel-register --require ./src/tests/mochaEnvInit.js",
-    "coveralls": "npm run-script coverage && node bin/coveralls.js < coverage/lcov.info"
+    "coveralls": "./node_modules/coveralls/bin/coveralls.js < coverage/lcov.info"
   },
   "betterScripts": {
     "start-prod": {
