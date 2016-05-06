@@ -19,6 +19,7 @@ import InputFields from './MarkdownPluginFields';
 import MarkdownMath from './MarkdownComponents/MarkdownMath';
 import MarkdownHTML from './MarkdownComponents/MarkdownHTML';
 import MarkdownReferences from './MarkdownComponents/MarkdownReferences';
+import MarkdownFootnotes from './MarkdownComponents/MarkdownFootnotes';
 
 import murmur from 'murmurhash';
 
@@ -169,8 +170,10 @@ const Markdown = React.createClass({
 			return <Component {...props} />;
 
 		case 'references':
-			console.log('references', globals.sortedReferences);
 			return <MarkdownReferences references={globals.sortedReferences}/>;
+
+		case 'footnotes':
+			return <MarkdownFootnotes footnotes={globals.footnotes}/>;
 
 		case 'pubheader':
 			// console.log(arguments);
@@ -219,7 +222,7 @@ const Markdown = React.createClass({
 		const footnoteRegex = /\[\[{"pluginType":"footnote".*?\]\]/g;
 		const matches = markdown.match(footnoteRegex);
 		if (matches && matches.length > 0) {
-			const footnotes = matches.map((match) => parsePluginString(match).footnote);
+			const footnotes = matches.map((match) => parsePluginString(match)).filter((footnote) => (!!footnote.footnote));
 			return footnotes;
 		}
 		return [];

@@ -80,48 +80,7 @@ const PubBody = React.createClass({
 		});
 	},
 
-	findFootnotes: function(markdown) {
-		const footnoteRegex = /\[\[{"pluginType":"footnote".*?\]\]/g;
-		const matches = markdown.match(footnoteRegex);
-		if (matches && matches.length > 0) {
-			const footnotes = matches.map((match) => parsePluginString(match).footnote);
-			return footnotes;
-		}
-		return [];
-	},
-
-	findReferences: function(markdown) {
-		// const citeRegex = /\[\[cite:.*?\]\]/g;
-		// [[{"pluginType":"cite","srcRef":"gauch1999real"}]
-		const references = [];
-		const referencesObj = {};
-		const citeRegex = /\[\[{"pluginType":"cite".*?\]\]/g;
-		const matches = markdown.match(citeRegex);
-		if (matches) {
-			for (const match of matches) {
-				const citeStr = match.slice(2, -2);
-				const ref = parsePluginString(citeStr).reference;
-				const label = (ref) ? ref.label : null;
-				if (label && !referencesObj[label]) {
-					referencesObj[label] = 1;
-					references.push(ref);
-				}
-			}
-		} else {
-			return [];
-		}
-		return references;
-	},
-
-	scrollToReference: function(index) {
-		document.getElementById(`footnote-${index}`).scrollIntoView();
-	},
-
 	render: function() {
-
-		const footnotes = (this.props.markdown) ? this.findFootnotes(this.props.markdown) : [];
-		const sortedReferences = (this.props.markdown) ? this.findReferences(this.props.markdown) : [];
-		// const sortedReferences = this.props.references.sort((refA, refB) => { return indexedCitations[refA.refName] - indexedCitations[refB.refName]; } );
 
 		return (
 			<ResizingText
@@ -220,16 +179,6 @@ styles = {
 	// 	paddingRight: '10px',
 	// 	fontSize: '1em',
 	// },
-	footNote: {
-		color: '#222',
-		paddingRight: '10px',
-		fontSize: '0.75em',
-		cursor: 'pointer',
-	},
-	footnoteHeader: {
-		marginBottom: '0px',
-		paddingBottom: '0px',
-	},
 	submittedNotification: {
 		backgroundColor: '#373737',
 		textAlign: 'center',
