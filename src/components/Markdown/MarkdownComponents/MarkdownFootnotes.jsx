@@ -12,7 +12,6 @@ const Footnotes = React.createClass({
 
     // <h1><FormattedMessage {...globalMessages.references}/></h1>
     const footnotes = this.props.footnotes || [];
-    console.log(footnotes);
     if (!footnotes || footnotes.length === 0) {
       return (<span></span>);
     }
