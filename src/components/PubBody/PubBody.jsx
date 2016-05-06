@@ -172,42 +172,6 @@ const PubBody = React.createClass({
 
 						</div>
 
-						{(footnotes.length > 0) ?
-							<div id={'pub-footnotes'}>
-								<h2 style={styles.footnoteHeader}>Footnotes</h2>
-								{
-									footnotes.map((footnote, index)=>{
-										return (
-											<div key={'footnote-' + index} onClick={this.scrollToReference.bind(this, index + 1)} >
-												<span style={styles.footNote}>{index + 1}. {footnote}</span>
-											</div>
-										);
-									})
-								}
-							</div>
-						: null
-						}
-
-						{ sortedReferences && sortedReferences.length
-							? <div id={'pub-references'}>
-								<h1><FormattedMessage {...globalMessages.references}/></h1>
-								{
-									sortedReferences.map((reference, index)=>{
-										return (
-											<div key={'pubReference-' + index} className={'reference'}>
-												<span className={'reference-number'}>[{index + 1}]</span>
-												<span className={'reference-content'}>
-													<Reference citationObject={reference} mode={'mla'} />
-												</span>
-											</div>
-										);
-									})
-								}
-
-							</div>
-							: null
-						}
-
 						{this.props.isFeatured && !this.props.errorView && this.props.isPublished && !this.props.isPage
 							? <div id="pub-license"><License /></div>
 							: null

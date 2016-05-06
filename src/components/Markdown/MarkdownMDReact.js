@@ -133,7 +133,7 @@ function mdReactFactory(options={}) {
 		presetName, markdownOptions,
 		enableRules=[], disableRules=[], plugins=[],
 		onGenerateKey=(tag, index) => `mdrct-${tag}-${index}`,
-		className } = options;
+		className, treeProcessor } = options;
 
 		let md = markdown({html:false, linkify: true, typographer: true})
 		.enable(enableRules)
@@ -182,7 +182,10 @@ function mdReactFactory(options={}) {
 	}
 
 	return function(text) {
-		const tree = convertTree(md.parse(text, {}), convertRules, md.options);
+		let tree = convertTree(md.parse(text, {}), convertRules, md.options);
+		if (treeProcessor) {
+			tree = treeProcessor(tree);
+		}
 		return iterateTree(tree);
 	};
 }
@@ -199,7 +202,8 @@ class MDReactComponent extends Component {
 		disableRules: PropTypes.array,
 		convertRules: PropTypes.object,
 		plugins: PropTypes.array,
-		className: PropTypes.string
+		className: PropTypes.string,
+		treeProcessor: PropTypes.func,
 	};
 	constructor(props) {
 		super(props);

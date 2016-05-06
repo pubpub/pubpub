@@ -16,8 +16,9 @@ import {parsePluginString} from 'utils/parsePlugins';
 import Plugins from './MarkdownPlugins';
 import InputFields from './MarkdownPluginFields';
 
-import MarkdownMath from './MarkdownMath';
-import MarkdownHTML from './MarkdownHTML';
+import MarkdownMath from './MarkdownComponents/MarkdownMath';
+import MarkdownHTML from './MarkdownComponents/MarkdownHTML';
+import MarkdownReferences from './MarkdownComponents/MarkdownReferences';
 
 import murmur from 'murmurhash';
 
@@ -166,6 +167,11 @@ const Markdown = React.createClass({
 			break;
 		case 'hr':
 			return <Component {...props} />;
+
+		case 'references':
+			console.log('references', globals.sortedReferences);
+			return <MarkdownReferences references={globals.sortedReferences}/>;
+
 		case 'pubheader':
 			// console.log(arguments);
 			Component = 'div';
@@ -207,6 +213,51 @@ const Markdown = React.createClass({
 		return <Component {...props}>{children}</Component>;
 	},
 
+
+
+	findFootnotes: function(markdown) {
+		const footnoteRegex = /\[\[{"pluginType":"footnote".*?\]\]/g;
+		const matches = markdown.match(footnoteRegex);
+		if (matches && matches.length > 0) {
+			const footnotes = matches.map((match) => parsePluginString(match).footnote);
+			return footnotes;
+		}
+		return [];
+	},
+
+	findReferences: function(markdown) {
+		// const citeRegex = /\[\[cite:.*?\]\]/g;
+		// [[{"pluginType":"cite","srcRef":"gauch1999real"}]
+		const references = [];
+		const referencesObj = {};
+		const citeRegex = /\[\[{"pluginType":"cite".*?\]\]/g;
+		const matches = markdown.match(citeRegex);
+		if (matches) {
+			for (const match of matches) {
+				const citeStr = match.slice(2, -2);
+				const ref = parsePluginString(citeStr).reference;
+				const label = (ref) ? ref.label : null;
+				if (label && !referencesObj[label]) {
+					referencesObj[label] = 1;
+					references.push(ref);
+				}
+			}
+		} else {
+			return [];
+		}
+		return references;
+	},
+
+	treeProcessor: function(tree) {
+		const footnotes = (this.props.markdown) ? this.findFootnotes(this.props.markdown) : [];
+		const sortedReferences = (this.props.markdown) ? this.findReferences(this.props.markdown) : [];
+		this.globals.sortedReferences = sortedReferences;
+		this.globals.footnotes = footnotes;
+		tree.push(['references']);
+		tree.push(['footnotes']);
+		return tree;
+	},
+
 	render: function() {
 		for (const member in this.globals) {
 			if (this.globals.hasOwnProperty(member)) {
@@ -214,10 +265,12 @@ const Markdown = React.createClass({
 			}
 		}
 
+
 		return (
 			<MarkdownMDReact
 				text={this.props.markdown}
 				onIterate={this.handleIterate.bind(this, this.globals)}
+				treeProcessor={this.treeProcessor}
 				markdownOptions={{
 					typographer: true,
 					linkify: true,
