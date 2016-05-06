@@ -1,5 +1,7 @@
 [![Build Status](https://travis-ci.org/pubpub/pubpub.svg?branch=master)](https://travis-ci.org/pubpub/pubpub)
 [![Coverage Status](https://coveralls.io/repos/github/pubpub/pubpub/badge.svg?branch=master)](https://coveralls.io/github/pubpub/pubpub?branch=master)
+[![Dependency Status](https://david-dm.org/pubpub/pubpub.svg)](https://david-dm.org/pubpub/pubpub)
+[![devDependency Status](https://david-dm.org/pubpub/pubpub/dev-status.svg)](https://david-dm.org/pubpub/pubpub#info=devDependencies)
 
 # PubPub
 
