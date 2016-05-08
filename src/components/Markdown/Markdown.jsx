@@ -15,11 +15,13 @@ import pubheaderitem from './markdown-it-pubheaderitem';
 import {parsePluginString} from 'utils/parsePlugins';
 import Plugins from './MarkdownPlugins';
 import InputFields from './MarkdownPluginFields';
+import Modes from './MarkdownModes/index';
 
 import MarkdownMath from './MarkdownComponents/MarkdownMath';
 import MarkdownHTML from './MarkdownComponents/MarkdownHTML';
 import MarkdownReferences from './MarkdownComponents/MarkdownReferences';
 import MarkdownFootnotes from './MarkdownComponents/MarkdownFootnotes';
+import MarkdownHeader from './MarkdownComponents/MarkdownHeader';
 
 import murmur from 'murmurhash';
 
@@ -40,10 +42,10 @@ const MathOptions = {
 const Markdown = React.createClass({
 	propTypes: {
 		markdown: PropTypes.string,
-
 		assets: PropTypes.object,
 		references: PropTypes.object,
 		selections: PropTypes.array,
+		mode: PropTypes.string,
 
 	},
 
@@ -63,6 +65,14 @@ const Markdown = React.createClass({
 
 	handleIterate: function(globals, Tag, props, children) {
 		let Component = Tag;
+
+
+		if (this.props.mode && Modes[this.props.mode] && Modes[this.props.mode].handleIterate) {
+			const iterate = Modes[this.props.mode].handleIterate(globals, Tag, props, children);
+			if (iterate) {
+				return iterate;
+			}
+		}
 
 		switch (Tag) {
 		case 'h1':
@@ -91,10 +101,10 @@ const Markdown = React.createClass({
 			}
 
 			if (children[0] === 'pagebreak') {
-				return <div className={'pagebreak'} style={{display: 'block', borderTop: '1px dashed #ddd'}}></div>;
+				return <div mode={this.props.mode} className={'pagebreak'} style={{display: 'block', borderTop: '1px dashed #ddd'}}></div>;
 			}
 			if (children[0] === 'linebreak') {
-				return <div className={'linebreak p-block'} style={{display: 'block', height: '1.5em'}}></div>;
+				return <div  mode={this.props.mode} className={'linebreak p-block'} style={{display: 'block', height: '1.5em'}}></div>;
 			}
 
 			const pluginString = children[0];
@@ -130,13 +140,13 @@ const Markdown = React.createClass({
 				({globals, pluginProps} = plugin.Config.prerender(globals, pluginProps));
 			}
 
-			return <Component {...props} {...pluginProps} />;
+			return <Component mode={this.props.mode} {...props} {...pluginProps} />;
 			break;
 
 		case 'code':
 			if (props['data-language']) {
 				try {
-					return <Tag {...props} className={'codeBlock'} dangerouslySetInnerHTML={{__html: window.hljs.highlight(props['data-language'], children[0]).value}} />;
+					return <Tag mode={this.props.mode}  {...props} className={'codeBlock'} dangerouslySetInnerHTML={{__html: window.hljs.highlight(props['data-language'], children[0]).value}} />;
 				} catch (err) {
 					// console.log(err);
 				}
@@ -146,11 +156,11 @@ const Markdown = React.createClass({
 			break;
 
 		case 'math':
-			return <MarkdownMath>{children[0]}</MarkdownMath>;
+			return <MarkdownMath mode={this.props.mode}>{children[0]}</MarkdownMath>;
 		case 'htmlblock':
 			const text = children[0];
 			if (typeof text === 'string' || text instanceof String) {
-				return <MarkdownHTML>{text}</MarkdownHTML>;
+				return <MarkdownHTML mode={this.props.mode}>{text}</MarkdownHTML>;
 			}
 			break;
 		case 'p':
@@ -167,18 +177,19 @@ const Markdown = React.createClass({
 			props['target'] = "_blank";
 			break;
 		case 'hr':
-			return <Component {...props} />;
+			return <Component mode={this.props.mode} {...props} />;
 
 		case 'references':
-			return <MarkdownReferences references={globals.sortedReferences}/>;
+			return <MarkdownReferences mode={this.props.mode} references={globals.sortedReferences}/>;
 
 		case 'footnotes':
-			return <MarkdownFootnotes footnotes={globals.footnotes}/>;
+			return <MarkdownFootnotes mode={this.props.mode} footnotes={globals.footnotes}/>;
 
 		case 'pubheader':
 			// console.log(arguments);
 			Component = 'div';
 			props.className = 'headerBlock';
+			return <MarkdownHeader mode={this.props.mode}>{children}</MarkdownHeader>;
 			break;
 		case 'pubheaderitem':
 
@@ -200,20 +211,11 @@ const Markdown = React.createClass({
 
 			Component = 'div';
 			props.className = props.className + ' pubheaderitem';
-			// props['data-hash'] = children[0] ? murmur.v2(children[0]) : 0;
 			break;
-		// case 'pubtitle':
-		// 	if (children[0] && children[0].props) {
-		// 		children[0] = children[0].props.children
-		// 	}
-		// 	Component = 'div';
-		// 	props.id = 'pub-title';
-		// 	break;
-		//
 		}
 
 
-		return <Component {...props}>{children}</Component>;
+		return <Component mode={this.props.mode}{...props}>{children}</Component>;
 	},
 
 
@@ -229,8 +231,6 @@ const Markdown = React.createClass({
 	},
 
 	findReferences: function(markdown) {
-		// const citeRegex = /\[\[cite:.*?\]\]/g;
-		// [[{"pluginType":"cite","srcRef":"gauch1999real"}]
 		const references = [];
 		const referencesObj = {};
 		const citeRegex = /\[\[{"pluginType":"cite".*?\]\]/g;

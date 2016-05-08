@@ -122,7 +122,7 @@ const PubBody = React.createClass({
 								<div className="onlineURL">This publication can be found online at {this.props.pubURL}. </div>
 							: null}
 
-							<Markdown markdownChange={this.props.markdownChange} markdown={this.props.markdown} isPage={this.props.isPage}/>
+							<Markdown mode="html" markdownChange={this.props.markdownChange} markdown={this.props.markdown} isPage={this.props.isPage}/>
 
 							{this.props.addSelectionHandler
 								? <SelectionPopup addSelectionHandler={this.props.addSelectionHandler}/>
