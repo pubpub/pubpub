@@ -119,7 +119,7 @@
     "intl": "^1.1.0",
     "invariant": "^2.2.1",
     "less": "^2.6.0",
-    "lodash": "^3.10.1",
+    "lodash": "^4.12.0",
     "markdown-it": "^5.1.0",
     "markdown-it-abbr": "^1.0.3",
     "markdown-it-container": "^2.0.0",

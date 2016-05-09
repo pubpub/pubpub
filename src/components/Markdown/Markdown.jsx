@@ -189,11 +189,8 @@ const Markdown = React.createClass({
 			// console.log(arguments);
 			Component = 'div';
 			props.className = 'headerBlock';
-			return <MarkdownHeader mode={this.props.mode}>{children}</MarkdownHeader>;
 			break;
 		case 'pubheaderitem':
-
-
 			if (props.className === 'author' && children.length > 1) { // If the author field has multiple children, and thus is nested, it is assumed the first field is the user's username, and thus we link to it.
 				return <Link key={props.key} className={'author pubheaderitem'} to={'/user/' + children[0].props.children[0]}>{children.slice(1, children.length)}</Link>;
 			}
@@ -211,6 +208,7 @@ const Markdown = React.createClass({
 
 			Component = 'div';
 			props.className = props.className + ' pubheaderitem';
+			// props['data-hash'] = children[0] ? murmur.v2(children[0]) : 0;
 			break;
 		}
 
