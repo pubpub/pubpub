@@ -102,9 +102,9 @@ const Markdown = React.createClass({
 			const plugin = (pluginName) ? Plugins[pluginName] : null;
 
 			if (!plugin) {
-				if (__DEVELOPMENT__) {
-					console.warn('Could not find a plugin');
-				}
+				// if (__DEVELOPMENT__) {
+					// console.warn('Could not find a plugin');
+				// }
 				return <span {...props}></span>;
 			}
 
