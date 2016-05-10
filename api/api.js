@@ -2,6 +2,7 @@
 
 // Connect to Mongo database
 const mongoose = require('mongoose');
+mongoose.Promise = require('bluebird');
 
 if (process.env.NODE_ENV !== 'production') {
 	const mongoURI = require('./config').mongoURI;

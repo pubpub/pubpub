@@ -11,7 +11,7 @@ import {FormattedMessage} from 'react-intl';
 
 let styles = {};
 
-const PubBodyRSS = React.createClass({
+const PubBody = React.createClass({
 	propTypes: {
 		status: PropTypes.string,
 		isPublished: PropTypes.bool,
@@ -24,6 +24,8 @@ const PubBodyRSS = React.createClass({
 		isFeatured: PropTypes.bool,
 		errorView: PropTypes.bool,
 		minFont: PropTypes.number,
+		maxFont: PropTypes.number,
+		showPubHighlightsComments: PropTypes.bool,
 	},
 	getDefaultProps: function() {
 		return {
@@ -34,6 +36,13 @@ const PubBodyRSS = React.createClass({
 		return {
 		};
 	},
+
+	componentDidMount() {
+	},
+
+	componentWillReceiveProps(nextProps) {
+	},
+
 
 	render: function() {
 
@@ -47,15 +56,30 @@ const PubBodyRSS = React.createClass({
 							: null
 						}
 
-						<div id="pubBodyContent"> {/* Highlights are dependent on the id 'pubBodyContent' */}
-							<Markdown mode="rss" markdown={this.props.markdown} isPage={this.props.isPage}/>
+						<header>
+						</header>
+
+						<div id="pubBodyContent">
+
+							{this.props.pubURL ?
+								<div className="onlineURL">This publication can be found online at {this.props.pubURL}. </div>
+							: null}
+
+							<Markdown markdown={this.props.markdown} isPage={this.props.isPage}/>
+
 						</div>
 
-						{this.props.isFeatured && !this.props.errorView && this.props.isPublished && !this.props.isPage
-							? <div id="pub-license"><License /></div>
-							: null
-						}
+
+						<footer>
+							{this.props.isFeatured && !this.props.errorView && this.props.isPublished && !this.props.isPage
+								? <div id="pub-license"><License /></div>
+								: null
+							}
+						</footer>
+
 					</div>
+
+
 				</div>
 
 			</div>
@@ -67,7 +91,20 @@ const PubBodyRSS = React.createClass({
 styles = {
 	container: {
 		width: '100%',
+		// overflow: 'hidden',
 		borderRadius: 1,
+		// minHeight: 'calc(100vh - 2 * ' + globalStyles.headerHeight + ' + 2px)',
+	},
+	contentContainer: {
+		// transition: '.3s linear opacity .25s',
+		// padding: '0px 4em 50px',
+		// fontFamily: globalStyles.headerFont,
+		// lineHeight: '1.58',
+		// textRendering: 'optimizeLegibility',
+		// WebkitFontSmoothing: 'antialiased',
+		// '@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+		// 	padding: '0px 1em 50px',
+		// },
 	},
 	loading: {
 		opacity: 0,
@@ -77,6 +114,21 @@ styles = {
 	},
 	dateSeparator: {
 		padding: '0px 10px',
+	},
+	// referenceNumber: {
+	// 	color: '#222',
+	// 	paddingRight: '10px',
+	// 	fontSize: '1em',
+	// },
+	footNote: {
+		color: '#222',
+		paddingRight: '10px',
+		fontSize: '0.75em',
+		cursor: 'pointer',
+	},
+	footnoteHeader: {
+		marginBottom: '0px',
+		paddingBottom: '0px',
 	},
 	submittedNotification: {
 		backgroundColor: '#373737',
@@ -89,4 +141,4 @@ styles = {
 
 };
 
-export default Radium(PubBodyRSS);
+export default Radium(PubBody);
