@@ -413,10 +413,8 @@ export default function readerReducer(state = defaultState, action) {
 
 
 	case SUGGEST_PUB:
-		console.log(action);
 		return state;
 	case SUGGEST_PUB_SUCCESS:
-		console.log(action);
 		return pubRecommendationsSuccess(state, action.pubData);
 	case SUGGEST_PUB_FAIL:
 		return pubRecommendationsSuccess(state, null);

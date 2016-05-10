@@ -2,14 +2,14 @@
 
 import markdown from 'markdown-it';
 import React, { PropTypes, Component } from 'react';
-import isPlainObject from 'lodash/lang/isPlainObject';
-import assign from 'lodash/object/assign';
-import reduce from 'lodash/collection/reduce';
-import zipObject from 'lodash/array/zipObject';
-import sortBy from 'lodash/collection/sortBy';
-import compact from 'lodash/array/compact';
-import camelCase from 'lodash/string/camelCase';
-import isString from 'lodash/lang/isString';
+import isPlainObject from 'lodash/isPlainObject';
+import assign from 'lodash/assign';
+import reduce from 'lodash/reduce';
+import zipObject from 'lodash/fromPairs';
+import sortBy from 'lodash/sortBy';
+import compact from 'lodash/compact';
+import camelCase from 'lodash/camelCase';
+import isString from 'lodash/isString';
 
 
 const DEFAULT_TAGS = {
@@ -133,7 +133,7 @@ function mdReactFactory(options={}) {
 		presetName, markdownOptions,
 		enableRules=[], disableRules=[], plugins=[],
 		onGenerateKey=(tag, index) => `mdrct-${tag}-${index}`,
-		className } = options;
+		className, treeProcessor } = options;
 
 		let md = markdown({html:false, linkify: true, typographer: true})
 		.enable(enableRules)
@@ -153,8 +153,8 @@ function mdReactFactory(options={}) {
 		const key = onGenerateKey(tag, index);
 
 		const props = (tree.length && isPlainObject(tree[0])) ?
-		assign(tree.shift(), { key }) :
-		{ key };
+		Object.assign(tree.shift(), { key: key }) :
+		{ key: key };
 
 		if (level === 0 && className) {
 			props.className = className;
@@ -182,7 +182,10 @@ function mdReactFactory(options={}) {
 	}
 
 	return function(text) {
-		const tree = convertTree(md.parse(text, {}), convertRules, md.options);
+		let tree = convertTree(md.parse(text, {}), convertRules, md.options);
+		if (treeProcessor) {
+			tree = treeProcessor(tree);
+		}
 		return iterateTree(tree);
 	};
 }
@@ -199,7 +202,8 @@ class MDReactComponent extends Component {
 		disableRules: PropTypes.array,
 		convertRules: PropTypes.object,
 		plugins: PropTypes.array,
-		className: PropTypes.string
+		className: PropTypes.string,
+		treeProcessor: PropTypes.func,
 	};
 	constructor(props) {
 		super(props);
