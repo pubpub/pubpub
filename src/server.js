@@ -138,7 +138,7 @@ app.use((req, res) => {
 							<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 							<meta name="google-site-verification" content="jmmJFnkSOeIEuS54adOzGMwc0kwpsa8wQ-L4GyPpPDg" />
 							<meta name="referrer" content="always">
-
+							<meta property="fb:pages" content="228105957546675" />
 							${head.title.toString()}
 							${head.meta.toString()}
 
