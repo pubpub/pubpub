@@ -109,7 +109,7 @@ const PubMeta = React.createClass({
 		const submittedToList = safeGetInToJS(this.props.readerData, ['pubData', 'submittedToList']) || [];
 		const historyData = safeGetInToJS(this.props.readerData, ['pubData', 'history']) || [];
 
-		console.log(historyData);
+		// console.log(historyData);
 
 		// const pubData = this.props.readerData.get('pubData').toJS();
 		const versionIndex = this.props.query.version !== undefined ? this.props.query.version - 1 : this.props.readerData.getIn(['pubData', 'history']).size - 1;

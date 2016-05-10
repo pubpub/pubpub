@@ -124,8 +124,8 @@ app.get('/getPubRecommendation', function(req, res) {
 	const queryID = userID || sessionID;
 
 	getRecommendations('user', queryID, journalID, function(err, recResponse) {
-		console.log(recResponse.body);
-		console.log(recResponse.body.recommendations[0]);
+		// console.log(recResponse.body);
+		// console.log(recResponse.body.recommendations[0]);
 
 		const recExists = (recResponse && recResponse.body && recResponse.body.recommendations && recResponse.body.recommendations[0]);
 		const suggestedPubID = (recExists) ? recResponse.body.recommendations[0] : null;
