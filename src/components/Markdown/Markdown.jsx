@@ -66,7 +66,6 @@ const Markdown = React.createClass({
 	handleIterate: function(globals, Tag, props, children) {
 		let Component = Tag;
 
-
 		if (this.props.mode && Modes[this.props.mode] && Modes[this.props.mode].handleIterate) {
 			const iterate = Modes[this.props.mode].handleIterate(globals, Tag, props, children);
 			if (iterate) {

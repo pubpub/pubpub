@@ -65,7 +65,7 @@ const PubBody = React.createClass({
 						 : null
 					 }
 
-					 <Markdown markdown={this.props.markdown} isPage={this.props.isPage}/>
+					 <Markdown mode="rss" markdown={this.props.markdown} isPage={this.props.isPage}/>
 				 <footer>
 					 {this.props.isFeatured && !this.props.errorView && this.props.isPublished && !this.props.isPage
 						 ? <div id="pub-license"><License /></div>
