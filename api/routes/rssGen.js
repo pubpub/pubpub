@@ -85,10 +85,19 @@ function generateRSSXML(req, instantArticleMode, callback) {
 			image_url: imageURL,
 		});
 
+		/*
 		const query = {history: {$not: {$size: 0}}};
 		if (journal) {
 			query.featuredInList = journal._id;
 		}
+		*/
+
+		const query = {
+			history: {$not: {$size: 0}},
+			featuredInList: {$not: {$size: 0}},
+			// discussions: {$not: {$size: 0}},
+			'isPublished': true
+		};
 
 		Pub.find(query, {slug: 1, title: 1, abstract: 1, createDate: 1, lastUpdated: 1, authors: 1, authorsNote: 1, markdown: 1})
 		.populate({ path: 'authors', select: 'name firstName lastName', model: 'User' })
