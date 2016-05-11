@@ -37,29 +37,17 @@ function renderPub(languageObject, host, pub) {
 
 			let articleHTML;
 			try {
-				articleHTML = ReactDOM.renderToStaticMarkup(
-					 <html lang="en" prefix="op: http://media.facebook.com/op#">
-							<head>
-								<meta charset="utf-8"/>
-								<link rel="canonical" href={pubUrl}/>
-								<meta property="op:markup_version" content="v1.0"/>
-							</head>
-							<body>
-						<article>
-						<IntlProvider locale={'en'} messages={languageObject}>
-							<PubBodyRSS
+				articleHTML = ReactDOM.renderToStaticMarkup(<PubBodyRSS
 								title={pub.title}
 								abstract={pub.abstract}
 								authorsNote={pub.authorsNote}
+								authorString={authorString}
 								markdown={pub.markdown}
 								authors={pub.authors}
+								pubURL={pubUrl}
+								discussionCount={pub.discussions.length}
 								firstPublishedDate={pub.createDate}
-								lastPublishedDate={pub.lastUpdated} />
-						</IntlProvider>
-					</article>
-					</body>
-				</html>
-				);
+								lastPublishedDate={pub.lastUpdated} />);
 			} catch (err) {
 				console.log('Error rendering markdown', err);
 			}
@@ -105,35 +93,25 @@ function generateRSSXML(req, instantArticleMode, callback) {
 		Pub.find(query, {slug: 1, title: 1, abstract: 1, createDate: 1, lastUpdated: 1, authors: 1, authorsNote: 1, markdown: 1})
 		.populate({ path: 'authors', select: 'name firstName lastName', model: 'User' })
 		.populate({ path: 'assets', model: 'Asset' })
-		.limit(2)
+		.limit(10)
 		.sort({'lastUpdated': -1})
 		.lean()
 		.exec()
 		.then(function(pubs) {
 
-
-			console.log('FETCHED PUBS2',__dirname );
 			// if (errPubFind) { console.log(errPubFind); }
 
 			let languageObject = {};
 			// const locale = journal && journal.locale ? journal.locale : 'en';
-			console.log('trying lagnugages');
 			// console.log('file name',__dirname + '/../../translations/languages/' + locale + '.json');
 			fs.readFile(__dirname + '/../../translations/languages/en.json', 'utf8', function(errFSRead, data) {
-				console.log('read file!!');
-				// if (errFSRead) { console.log(errFSRead); }
-
+				if (errFSRead) { console.log(errFSRead); }
 				languageObject = JSON.parse(data);
-
 				Promise.all(pubs.map((pub) => renderPub(languageObject, host, pub)))
 				.then(function(newPubs) {
-					console.log('resolved all promises!');
-
 					for (const pubItem of newPubs) {
 						feed.item(pubItem);
 					}
-					// console.log(newPubs);
-					// console.log('RETURNED!');
 					callback(feed.xml());
 				});
 
@@ -145,7 +123,6 @@ function generateRSSXML(req, instantArticleMode, callback) {
 
 export function rss(req, res) {
 	generateRSSXML(req, false, function(xmlFeed) {
-		console.log('returning!');
 		res.set('Content-Type', 'text/xml');
 		res.send(xmlFeed);
 	});

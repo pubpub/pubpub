@@ -1,5 +1,7 @@
 import React, {PropTypes} from 'react';
 import Radium, {Style} from 'radium';
+import {IntlProvider} from 'react-intl';
+
 import {globalStyles} from 'utils/styleConstants';
 import {Markdown, SelectionPopup, Reference, License} from 'components';
 import ResizingText from 'utils/ResizingText';
@@ -18,14 +20,9 @@ const PubBody = React.createClass({
 		isPage: PropTypes.bool,
 		markdown: PropTypes.string,
 		pubURL: PropTypes.string,
-		addSelectionHandler: PropTypes.func,
-		styleScoped: PropTypes.string,
-		showPubHighlights: PropTypes.bool,
 		isFeatured: PropTypes.bool,
 		errorView: PropTypes.bool,
-		minFont: PropTypes.number,
-		maxFont: PropTypes.number,
-		showPubHighlightsComments: PropTypes.bool,
+		discussionCount: PropTypes.number,
 	},
 	getDefaultProps: function() {
 		return {
@@ -47,42 +44,40 @@ const PubBody = React.createClass({
 	render: function() {
 
 		return (
-			<div style={styles.container}>
-
-				<div id={this.props.isPage ? 'pageContent' : 'pubContent'} style={[styles.contentContainer, globalStyles[this.props.status]]} >
-					<div id="pub-wrapper">
-						{!this.props.isFeatured && !this.props.errorView && !this.props.isPage
-							? <div style={styles.submittedNotification}>This Pub has been submitted to - but is not yet featured in - this journal.</div>
-							: null
-						}
+			<html lang="en" prefix="op: http://media.facebook.com/op#">
+				 <head>
+					 <meta charset="utf-8"/>
+					 <link rel="canonical" href={this.props.pubURL}/>
+					 <meta property="op:markup_version" content="v1.0"/>
+				 </head>
+				 <body>
+				 <article>
+				 	<IntlProvider locale={'en'} messages={languageObject}>
 
 						<header>
+							<h1>{this.props.title}</h1>
+							<address>{this.props.authorString}</address>
+							<h2>{this.props.abstract}</h2>
+							{(this.props.discussionCount > 0) ? <h3>{this.props.discussionCount} comments. <a href={this.props.pubURL}>Click here to read and participate</a></h3> : null}
 						</header>
 
-						<div id="pubBodyContent">
+					 {!this.props.isFeatured && !this.props.errorView && !this.props.isPage
+						 ? <div style={styles.submittedNotification}>This Pub has been submitted to - but is not yet featured in - this journal.</div>
+						 : null
+					 }
 
-							{this.props.pubURL ?
-								<div className="onlineURL">This publication can be found online at {this.props.pubURL}. </div>
-							: null}
+					 <Markdown markdown={this.props.markdown} isPage={this.props.isPage}/>
+				 </IntlProvider>
+				 <footer>
+					 {this.props.isFeatured && !this.props.errorView && this.props.isPublished && !this.props.isPage
+						 ? <div id="pub-license"><License /></div>
+						 : null
+					 }
+				 </footer>
 
-							<Markdown markdown={this.props.markdown} isPage={this.props.isPage}/>
-
-						</div>
-
-
-						<footer>
-							{this.props.isFeatured && !this.props.errorView && this.props.isPublished && !this.props.isPage
-								? <div id="pub-license"><License /></div>
-								: null
-							}
-						</footer>
-
-					</div>
-
-
-				</div>
-
-			</div>
+			 </article>
+			 </body>
+	 </html>
 		);
 	}
 });
