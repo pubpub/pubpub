@@ -37,17 +37,21 @@ function renderPub(languageObject, host, pub) {
 
 			let articleHTML;
 			try {
-				articleHTML = ReactDOM.renderToStaticMarkup(<PubBodyRSS
-								title={pub.title}
-								abstract={pub.abstract}
-								authorsNote={pub.authorsNote}
-								authorString={authorString}
-								markdown={pub.markdown}
-								authors={pub.authors}
-								pubURL={pubUrl}
-								discussionCount={pub.discussions.length}
-								firstPublishedDate={pub.createDate}
-								lastPublishedDate={pub.lastUpdated} />);
+				articleHTML = ReactDOM.renderToStaticMarkup(
+					<IntlProvider locale={'en'} messages={languageObject}>
+						<PubBodyRSS
+									title={pub.title}
+									abstract={pub.abstract}
+									authorsNote={pub.authorsNote}
+									authorString={authorString}
+									markdown={pub.markdown}
+									authors={pub.authors}
+									pubURL={pubUrl}
+									discussionCount={pub.discussions.length}
+									firstPublishedDate={pub.createDate}
+									lastPublishedDate={pub.lastUpdated} />
+					</IntlProvider>
+				 );
 			} catch (err) {
 				console.log('Error rendering markdown', err);
 			}
@@ -99,7 +103,7 @@ function generateRSSXML(req, instantArticleMode, callback) {
 			'isPublished': true
 		};
 
-		Pub.find(query, {slug: 1, title: 1, abstract: 1, createDate: 1, lastUpdated: 1, authors: 1, authorsNote: 1, markdown: 1})
+		Pub.find(query, {slug: 1, title: 1, abstract: 1, createDate: 1, lastUpdated: 1, authors: 1, authorsNote: 1, markdown: 1, discussions: 1})
 		.populate({ path: 'authors', select: 'name firstName lastName', model: 'User' })
 		.populate({ path: 'assets', model: 'Asset' })
 		.limit(10)

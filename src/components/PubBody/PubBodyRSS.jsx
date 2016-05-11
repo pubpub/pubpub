@@ -52,7 +52,6 @@ const PubBody = React.createClass({
 				 </head>
 				 <body>
 				 <article>
-				 	<IntlProvider locale={'en'} messages={languageObject}>
 
 						<header>
 							<h1>{this.props.title}</h1>
@@ -67,7 +66,6 @@ const PubBody = React.createClass({
 					 }
 
 					 <Markdown markdown={this.props.markdown} isPage={this.props.isPage}/>
-				 </IntlProvider>
 				 <footer>
 					 {this.props.isFeatured && !this.props.errorView && this.props.isPublished && !this.props.isPage
 						 ? <div id="pub-license"><License /></div>
