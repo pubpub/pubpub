@@ -212,9 +212,13 @@ class MDReactComponent extends Component {
 	}
 	render() {
 		const { text, ...newProps } = this.props;
-		if (this.mdfactory) {
-			return this.mdfactory(text);
-		} else {
+		try {
+			if (this.mdfactory) {
+				return this.mdfactory(text);
+			} else {
+				return <span></span>;
+			}
+		} catch (err) {
 			return <span></span>;
 		}
 	}
