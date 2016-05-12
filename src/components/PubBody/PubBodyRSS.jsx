@@ -77,7 +77,7 @@ const PubBody = React.createClass({
 							<h1>{this.props.title}</h1>
 							<address>{this.props.authorString}</address>
 							<h2>{this.props.abstract}</h2>
-							{(this.props.discussionCount > 0) ? <h3>{this.props.discussionCount} comments. <a href={this.props.pubURL}>Click here to read and participate</a></h3> : null}
+							{(this.props.discussionCount > 0) ? <h3 class="op-kicker">{this.props.discussionCount} comments. <a href={this.props.pubURL}>Click here to read and participate</a></h3> : null}
 						</header>
 
 					 {!this.props.isFeatured && !this.props.errorView && !this.props.isPage
