@@ -96,9 +96,11 @@ function generateRSSXML(req, instantArticleMode, callback) {
 		}
 		*/
 
+		const featuredInList = (journal) ? { $in: [journal._id] } : {$not: {$size: 0}};
+
 		const query = {
 			history: {$not: {$size: 0}},
-			featuredInList: {$not: {$size: 0}},
+			featuredInList: featuredInList,
 			discussions: {$not: {$size: 0}},
 			'isPublished': true
 		};
