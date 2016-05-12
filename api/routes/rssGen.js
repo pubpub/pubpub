@@ -32,7 +32,7 @@ function renderPub(languageObject, host, pub) {
 				url: 'http://' + host + '/pub/' + pub.slug,
 				author: authorString,
 				guid: String(pub._id),
-				pubDate: pub.lastUpdated,
+				date: pub.lastUpdated,
 			};
 
 			let articleHTML;
