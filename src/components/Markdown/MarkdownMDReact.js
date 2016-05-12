@@ -182,11 +182,15 @@ function mdReactFactory(options={}) {
 	}
 
 	return function(text) {
-		let tree = convertTree(md.parse(text, {}), convertRules, md.options);
-		if (treeProcessor) {
-			tree = treeProcessor(tree);
+		try {
+			let tree = convertTree(md.parse(text, {}), convertRules, md.options);
+			if (treeProcessor) {
+				tree = treeProcessor(tree);
+			}
+			return iterateTree(tree);
+		} catch(err) {
+			return null;
 		}
-		return iterateTree(tree);
 	};
 }
 
