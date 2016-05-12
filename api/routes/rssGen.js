@@ -3,18 +3,16 @@ const RSS = require('rss');
 const fs = require('fs');
 import React from 'react';
 import ReactDOM from 'react-dom/server';
-import {StyleRoot} from 'radium';
 import {IntlProvider} from 'react-intl';
 
 import {PubBodyRSS} from 'components';
-import {convertListToObject} from 'utils/parsePlugins';
 
-import {Pub, Asset, Journal} from '../models';
+import {Pub, Journal} from '../models';
 
 
 function renderPub(languageObject, host, pub) {
 
-	const p = new Promise((resolve, reject) => {
+	return new Promise((resolve, reject) => {
 
 		const authorString = pub.authors.reduce((previousValue, currentValue, currentIndex, array)=>{
 			const lastName = array[currentIndex].lastName || 'Lastname';
@@ -23,52 +21,51 @@ function renderPub(languageObject, host, pub) {
 			return previousValue + nextAuthorString;
 		}, '');
 
-			const pubUrl = 'http://' + host + '/pub/' + pub.slug;
+		const pubUrl = 'http://' + host + '/pub/' + pub.slug;
 
-			const feedItem = {
-				title: pub.title,
-				description: pub.abstract,
-				url: 'http://' + host + '/pub/' + pub.slug,
-				author: authorString,
-				guid: String(pub._id),
-				date: pub.lastUpdated,
-			};
+		const feedItem = {
+			title: pub.title,
+			description: pub.abstract,
+			url: 'http://' + host + '/pub/' + pub.slug,
+			author: authorString,
+			guid: String(pub._id),
+			date: pub.lastUpdated,
+		};
 
-			let articleHTML;
-			try {
-				articleHTML = ReactDOM.renderToStaticMarkup(
-					<IntlProvider locale={'en'} messages={languageObject}>
-						<PubBodyRSS
-									title={pub.title}
-									abstract={pub.abstract}
-									authorsNote={pub.authorsNote}
-									authorString={authorString}
-									markdown={pub.markdown}
-									authors={pub.authors}
-									pubURL={pubUrl}
-									discussionCount={pub.discussions.length}
-									firstPublishedDate={pub.createDate}
-									lastPublishedDate={pub.lastUpdated} />
-					</IntlProvider>
-				 );
-			} catch (err) {
-				console.log('Error rendering markdown', err);
-			}
+		let articleHTML;
+		try {
+			articleHTML = ReactDOM.renderToStaticMarkup(
+				<IntlProvider locale={'en'} messages={languageObject}>
+					<PubBodyRSS
+						title={pub.title}
+						abstract={pub.abstract}
+						authorsNote={pub.authorsNote}
+						authorString={authorString}
+						markdown={pub.markdown}
+						authors={pub.authors}
+						pubURL={pubUrl}
+						discussionCount={pub.discussions.length}
+						firstPublishedDate={pub.createDate}
+						lastPublishedDate={pub.lastUpdated} />
+				</IntlProvider>
+			);
+		} catch (err) {
+			console.log('Error rendering markdown', err);
+		}
 
-			articleHTML = `<![CDATA[
-        <!doctype html>
-				${articleHTML}
-			]]>`;
+		articleHTML = `<![CDATA[
+			<!doctype html>
+			${articleHTML}
+		]]>`;
 
-			feedItem.custom_elements = [
-				{'content:encoded': articleHTML},
-			];
+		feedItem.custom_elements = [
+			{'content:encoded': articleHTML},
+		];
 
-			resolve(feedItem);
+		resolve(feedItem);
 
-		});
+	});
 
-	return p;
 }
 
 
@@ -91,7 +88,7 @@ function generateRSSXML(req, instantArticleMode, callback) {
 		/*
 		const query = {history: {$not: {$size: 0}}};
 		if (journal) {
-			query.featuredInList = journal._id;
+		query.featuredInList = journal._id;
 		}
 		*/
 
