@@ -8,7 +8,6 @@ import {IntlProvider} from 'react-intl';
 
 import {PubBodyRSS} from 'components';
 import {convertListToObject} from 'utils/parsePlugins';
-import Promise from 'bluebird';
 
 import {Pub, Asset, Journal} from '../models';
 
