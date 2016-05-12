@@ -108,7 +108,7 @@ function generateRSSXML(req, instantArticleMode, callback) {
 		Pub.find(query, {slug: 1, title: 1, abstract: 1, createDate: 1, lastUpdated: 1, authors: 1, authorsNote: 1, markdown: 1, discussions: 1})
 		.populate({ path: 'authors', select: 'name firstName lastName', model: 'User' })
 		.populate({ path: 'assets', model: 'Asset' })
-		.limit(50)
+		.limit(25)
 		.sort({'lastUpdated': -1})
 		.lean()
 		.exec()
@@ -128,10 +128,18 @@ function generateRSSXML(req, instantArticleMode, callback) {
 						feed.item(pubItem);
 					}
 					callback(feed.xml());
+				})
+				.catch(function() {
+					console.log('Failed to parse RSS.');
+					callback(null);
 				});
 
 
 			});
+		})
+		.catch(function() {
+			console.log('Failed to load RSS.');
+			callback(null);
 		});
 	});
 }
