@@ -1,6 +1,7 @@
 import React, {PropTypes} from 'react';
 import Radium, {Style} from 'radium';
 import {IntlProvider} from 'react-intl';
+import dateFormat from 'dateformat';
 
 import {globalStyles} from 'utils/styleConstants';
 import {parsePluginString} from 'utils/parsePlugins';
@@ -77,7 +78,9 @@ const PubBody = React.createClass({
 							<h1>{this.props.title}</h1>
 							<address>{this.props.authorString}</address>
 							<h2>{this.props.abstract}</h2>
-							{(this.props.discussionCount > 0) ? <h3 class="op-kicker">{this.props.discussionCount} comments. <a href={this.props.pubURL}>Click here to read and participate</a></h3> : null}
+							{(this.props.discussionCount > 0) ? <h3 className="op-kicker">{this.props.discussionCount} comments. <a href={this.props.pubURL}>Click here to read and participate</a></h3> : null}
+							<time className="op-published" dateTime={dateFormat(this.props.firstPublishedDate, "isoDateTime")}>{dateFormat(this.props.firstPublishedDate, "fullDate")}</time>
+	 					 	<time className="op-modified"  dateTime={dateFormat(this.props.lastPublishedDate, "isoDateTime")}>{dateFormat(this.props.lastPublishedDate, "fullDate")}</time>
 						</header>
 
 					 {!this.props.isFeatured && !this.props.errorView && !this.props.isPage
