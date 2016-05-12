@@ -66,7 +66,6 @@ const Markdown = React.createClass({
 	handleIterate: function(globals, Tag, props, children) {
 		let Component = Tag;
 
-
 		if (this.props.mode && Modes[this.props.mode] && Modes[this.props.mode].handleIterate) {
 			const iterate = Modes[this.props.mode].handleIterate(globals, Tag, props, children);
 			if (iterate) {
@@ -187,8 +186,7 @@ const Markdown = React.createClass({
 
 		case 'pubheader':
 			// console.log(arguments);
-			Component = 'div';
-			props.className = 'headerBlock';
+			return <MarkdownHeader mode={this.props.mode}>{children}</MarkdownHeader>;
 			break;
 		case 'pubheaderitem':
 			if (props.className === 'author' && children.length > 1) { // If the author field has multiple children, and thus is nested, it is assumed the first field is the user's username, and thus we link to it.
