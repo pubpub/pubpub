@@ -1,6 +1,6 @@
 import React from 'react';
 import {IndexRoute, Route} from 'react-router';
-import {App, Collection, Editor, Explore, GroupCreate, GroupProfile, JournalCreate, JournalProfile, Landing, PubCreate, PubReader, ResetPassword, SubdomainTest, UserProfile} from 'containers';
+import {App, Collection, Editor, Explore, GroupCreate, GroupProfile, JournalCreate, JournalProfile, Landing, PubCreate, PubReader, ResetPassword, UserProfile} from 'containers';
 import {NotFound} from 'components';
 
 export default () => {
@@ -39,8 +39,6 @@ export default () => {
 
 			<Route path="/resetpassword" component={ResetPassword}/>
 			<Route path="/resetpassword/:hash/:username" component={ResetPassword}/>
-
-			<Route path="/subdomain" component={SubdomainTest}/>
 
 			<Route path="/user/:username" component={UserProfile}/>
 			<Route path="/user/:username/:mode" component={UserProfile}/>

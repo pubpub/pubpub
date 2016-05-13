@@ -17,5 +17,4 @@ export PubCreate from './PubCreate/PubCreate';
 // export PubMeta from './PubMeta/PubMeta';
 export PubReader from './PubReader/PubReader';
 export ResetPassword from './ResetPassword/ResetPassword';
-export SubdomainTest from './SubdomainTest/SubdomainTest';
 export UserProfile from './UserProfile/UserProfile';

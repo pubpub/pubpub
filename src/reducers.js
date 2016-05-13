@@ -15,7 +15,6 @@ import login from './containers/Login/reducer';
 import user from './containers/UserProfile/reducer';
 import pub from './containers/PubReader/reducer';
 import resetPassword from './containers/ResetPassword/reducer';
-import subdomainTest from './containers/SubdomainTest/reducer';
 
 export default combineReducers({
 	router: routerStateReducer,
@@ -53,8 +52,7 @@ export default combineReducers({
 	login,
 	user,
 	pub,
-	resetPassword,
-	subdomainTest
+	resetPassword
 });
 
 export function ensureImmutable(state) {
