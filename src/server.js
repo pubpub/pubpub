@@ -148,9 +148,8 @@ app.use((req, res) => {
 
 							<link href='https://fonts.googleapis.com/css?family=Alegreya+Sans+SC|ABeeZee' rel='stylesheet' type='text/css'>
 							<link href='https://fonts.googleapis.com/css?family=Merriweather:400italic,700italic' rel='stylesheet' type='text/css'>
+							<link href='https://assets.pubpub.org/_fonts/Yrsa.css' rel='stylesheet' type='text/css'>
 							<style>
-								@font-face { font-family: Yrsa; font-weight: 400; src: url('https://s3.amazonaws.com/pubpub-statics/Yrsa-Regular.otf'); }
-								@font-face { font-family: Yrsa; font-weight: 700; src: url('https://s3.amazonaws.com/pubpub-statics/Yrsa-Bold.otf');}
 								@font-face { font-family: ClearSans; font-weight: 100; src: url('https://s3.amazonaws.com/pubpub-statics/ClearSans-Light.ttf');}
 								@font-face { font-family: ClearSans; font-weight: 400; src: url('https://s3.amazonaws.com/pubpub-statics/ClearSans-Regular.ttf');}
 								@font-face { font-family: ClearSans; font-weight: 700; src: url('https://s3.amazonaws.com/pubpub-statics/ClearSans-Bold.ttf');}
