@@ -1,4 +1,5 @@
 .idea/
+.happypack/
 node_modules/
 authentication/
 coverage/
