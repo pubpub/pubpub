@@ -2,14 +2,8 @@ import React, { PropTypes } from 'react';
 import {connect} from 'react-redux';
 import Radium from 'radium';
 import Helmet from 'react-helmet';
-import {Autocomplete} from 'containers';
 import {globalStyles} from 'utils/styleConstants';
-// import {LandingBody} from './components';
-import {Markdown} from 'components';
-import {getRandomSlug} from 'containers/App/actions';
-import { pushState } from 'redux-router';
 import { Link } from 'react-router';
-const HoverLink = Radium(Link);
 
 let styles = {};
 
@@ -22,64 +16,10 @@ const Landing = React.createClass({
 		dispatch: PropTypes.func
 	},
 
-	statics: {
-		// fetchData: function(getState, dispatch) {
-		// 	return dispatch(getProjects());
-		// }
-	},
-
 	getInitialState() {
 		return {
 			activeFeature: 'editing',
 		};
-	},
-
-	componentDidMount() {
-		document.getElementById('dynamicStyle').innerHTML = this.props.appData.getIn(['journalData', 'landingPage', 'styleScoped']);
-	},
-
-	setQuery: function(queryObject) {
-		this.props.dispatch(pushState(null, this.props.path, {...this.props.query, ...queryObject}));
-	},
-
-	renderLandingSearchResults: function(results) {
-		// console.log(results);
-		return (
-			<div style={styles.results}>
-				{
-
-					results.map((item, index)=>{
-						const url = item.slug ? '/pub/' + item.slug : '/user/' + item.username;
-						const type = item.slug ? 'pub' : 'user';
-						return (<div key={'landingSearchResult-' + index} style={styles.result}>
-							<HoverLink key={'landingSearchResultLink-' + index} style={styles.resultLink} to={url}>
-								<div style={styles.type}>{type}</div>
-								<div style={[styles.imageWrapper, styles[type].imageWrapper]}>
-									<img style={styles.image} src={item.thumbnail} />
-								</div>
-								<div style={styles.name}>{item.name}</div>
-								<div style={styles.name}>{item.title}</div>
-							</HoverLink>
-
-						</div>);
-					})
-				}
-
-				{results.length === 0
-					? <div style={styles.noResults}>No Results</div>
-					: null
-				}
-			</div>
-		);
-	},
-
-	showMeScienceClick: function() {
-		const analyticsData = {
-			location: '/',
-			journalID: this.props.appData.getIn(['journalData', '_id']),
-			journalName: this.props.appData.getIn(['journalData', 'journalName']),
-		};
-		this.props.dispatch(getRandomSlug(this.props.appData.getIn(['journalData', '_id']), analyticsData));
 	},
 
 	setFeature: function(newFeature) {
@@ -90,200 +30,173 @@ const Landing = React.createClass({
 
 	render: function() {
 		const metaData = {
-			title: this.props.appData.getIn(['journalData', 'journalName']) || 'PubPub',
+			title: 'PubPub',
 		};
-		// console.log(this.props);
-		// const componentsArray = this.props.appData.getIn(['journalData', 'design', 'layoutString'])
-		// 	? JSON.parse(this.props.appData.getIn(['journalData', 'design', 'layoutString']).replace(/(['"])?([:]?[a-zA-Z0-9_]+)(['"])?: /g, '"$2": ').replace(/'/g, '"'))
-		// 	: [];
-
-
-		// const journalID = this.props.appData.getIn(['journalData', '_id']);
 
 		return (
 			<div style={styles.container}>
 
 				<Helmet {...metaData} />
 
-				{
-					this.props.appData.get('baseSubdomain') === null
-						? <div>
-							<div style={styles.top}>
-								<h1 style={styles.topPub}>PubPub</h1>
-								<div style={styles.subheader}>Open Publishing</div>
-								<Link to={'/pub/' + this.props.appData.getIn(['journalData', 'randomSlug'])} style={globalStyles.link}><div key="showMeScience" style={styles.showMeScience} onClick={this.showMeScienceClick}>Show Me Science</div></Link>
-							</div>
-							<div style={styles.search}>
-								<Autocomplete
-									autocompleteKey={'landingSearch'}
-									route={'autocompletePubsAndUsers'}
-									placeholder="Search Pubs and People"
-									height={40}
-									showBottomLine={false}
-									hideResultsOnClickOut={false}
-									resultRenderFunction={this.renderLandingSearchResults}
-									loaderOffset={-20}
-									padding={'10px 0px'} />
-									{/* fontColor={'#F4F4F4'}/> */}
+				<div>
+					<div style={styles.top}>
+						<h1 style={styles.topPub}>PubPub</h1>
+						<div style={styles.subheader}>Open Publishing</div>
+					</div>
+
+					<div style={styles.lower}>
+						<div style={styles.textDark}>
+							<div style={styles.centerMedium}>Read, Write, Publish, Review.</div>
+							<div style={styles.centerMedium}>PubPub is a platform for totally transparent publishing.</div>
+							<div style={styles.centerTitle}>Three Core Experiments</div>
+							<div style={styles.experimentBlock}>
+								<div style={styles.experimentTitle}>Modern Publishing</div>
+								<div style={styles.experimentText}>A rich and collaborative open-source editor allows for evolving content and formats. Publishing is by the author and immediate. Publishing is versioned and we encourage publishing early and often to capture the full history of your work.</div>
 							</div>
 
-							<div style={styles.lower}>
-								<div style={styles.textDark}>
-									<div style={styles.centerMedium}>Read, Write, Publish, Review.</div>
-									<div style={styles.centerMedium}>PubPub is a platform for totally transparent publishing.</div>
-									<div style={styles.centerTitle}>Three Core Experiments</div>
-									<div style={styles.experimentBlock}>
-										<div style={styles.experimentTitle}>Modern Publishing</div>
-										<div style={styles.experimentText}>A rich and collaborative open-source editor allows for evolving content and formats. Publishing is by the author and immediate. Publishing is versioned and we encourage publishing early and often to capture the full history of your work.</div>
-									</div>
-
-									<div style={styles.experimentBlock}>
-										<div style={styles.experimentTitle}>Distributed Review</div>
-										<div style={styles.experimentText}>Review is distributed across many communities and done in the open. Rewarding constructive reviews and incentivizing progress rather than elitism opens the process to all that are capable.</div>
-									</div>
-
-									<div style={styles.experimentBlock}>
-										<div style={styles.experimentTitle}>Grassroots Journals</div>
-										<div style={styles.experimentText}>Journals serve as curators rather than gatekeepers. Pubs can be submitted to and featured in as many journals as is relevant. No more silos. Journals can be run for large or small audiences, by institutions or individuals. Everyone can be a journal.</div>
-									</div>
-									<div style={globalStyles.clearFix}></div>
-								</div>
+							<div style={styles.experimentBlock}>
+								<div style={styles.experimentTitle}>Distributed Review</div>
+								<div style={styles.experimentText}>Review is distributed across many communities and done in the open. Rewarding constructive reviews and incentivizing progress rather than elitism opens the process to all that are capable.</div>
 							</div>
 
-							<div style={styles.section}>
-								<div style={styles.sectionContent}>
-									<div style={styles.sectionDetails}>
-										<div style={styles.sectionTitle}>Open, Rich Publishing</div>
-										<div style={styles.sectionDetail}>Author-driven publishing</div>
-										<div style={styles.sectionDetail}>Free and immediate publishing</div>
-										<div style={styles.sectionDetail}>Versioned histories</div>
-									</div>
-
-									<div style={styles.sectionExamples}>
-										<Link to={'/pub/designandscience'} style={globalStyles.link}>
-											<div style={styles.sectionExample}>
-												<span style={styles.sectionExampleTitle}>Design and Science</span>
-												<span style={styles.sectionExampleAuthor}>by Joi Ito</span>
-											</div>
-										</Link>
-										<Link to={'/pub/design-as-participation'} style={globalStyles.link}>
-											<div style={styles.sectionExample}>
-												<span style={styles.sectionExampleTitle}>Design as Participation</span>
-												<span style={styles.sectionExampleAuthor}>by Kevin Slavin</span>
-											</div>
-										</Link>
-										<Link to={'/pubs/create'} style={globalStyles.link}>
-											<div style={styles.sectionExample}>
-												+ Create new Pub
-											</div>
-										</Link>
-									</div>
-									<div style={globalStyles.clearFix}></div>
-								</div>
+							<div style={styles.experimentBlock}>
+								<div style={styles.experimentTitle}>Grassroots Journals</div>
+								<div style={styles.experimentText}>Journals serve as curators rather than gatekeepers. Pubs can be submitted to and featured in as many journals as is relevant. No more silos. Journals can be run for large or small audiences, by institutions or individuals. Everyone can be a journal.</div>
 							</div>
-
-							<div style={styles.sectionDark}>
-								<div style={styles.sectionContent}>
-
-									<div style={[styles.sectionDetails, styles.sectionDetailsRight, globalStyles.right]}>
-										<div style={styles.sectionTitle}>Built Open</div>
-										<div style={styles.sectionDetail}>An open medium for dynamic, rich peer-review and discussion</div>
-										<div style={styles.sectionDetail}>Open-sourced and evolving. PubPub is a dedicated to building a platform accessible to all</div>
-										<div style={styles.sectionDetail}>Focused on implementing open standards that make your publication exportable, machine-readable, and interopable.</div>
-									</div>
-
-									<div style={[styles.sectionExamples, globalStyles.right]}>
-
-										<a href={'https://github.com/pubpub/pubpub'} style={globalStyles.link}>
-											<div style={styles.sectionExample}>
-												Code
-											</div>
-										</a>
-										<a href={'https://github.com/pubpub/pubpub/blob/master/CHANGELOG.md'} style={globalStyles.link}>
-											<div style={styles.sectionExample}>
-												Updates and Roadmap
-											</div>
-										</a>
-										<a href={'https://github.com/pubpub/pubpub/blob/master/CONTRIBUTING.md'} style={globalStyles.link}>
-											<div style={styles.sectionExample}>
-												+ Contribute
-											</div>
-										</a>
-									</div>
-									<div style={globalStyles.clearFix}></div>
-								</div>
-							</div>
-
-
-							<div style={styles.section}>
-								<div style={styles.sectionContent}>
-									<div style={styles.sectionDetails}>
-										<div style={styles.sectionTitle}>Grassroots Journals</div>
-										<div style={styles.sectionDetail}>Created by anyone for any community</div>
-										<div style={styles.sectionDetail}>Journals become tools for curating published content. Not gatekeepers of scientific progress</div>
-									</div>
-
-									<div style={styles.sectionExamples}>
-										<a href={'http://jods.mitpress.mit.edu'} style={globalStyles.link}>
-											<div style={[styles.sectionExample, styles.exampleJoDS]}>
-												Journal of Design and Science
-											</div>
-										</a>
-										<a href={'http://cdmxglobal.pubpub.org'} style={globalStyles.link}>
-											<div style={[styles.sectionExample, styles.exampleCDMX]}>
-												CDMX Global
-											</div>
-										</a>
-										<a href={'http://viral.pubpub.org'} style={globalStyles.link}>
-											<div style={[styles.sectionExample, styles.exampleViral]}>
-												Viral Communications
-											</div>
-										</a>
-										<Link to={'/journals/create'} style={globalStyles.link}>
-											<div style={styles.sectionExample}>
-												+ Create new Journal
-											</div>
-										</Link>
-									</div>
-									<div style={globalStyles.clearFix}></div>
-								</div>
-							</div>
-
-							<div style={styles.featureDemos}>
-								<div style={styles.features}>
-									<div key={'feature0'} style={[styles.feature, this.state.activeFeature === 'editing' && styles.featureActive]} onClick={this.setFeature('editing')}>Rich, Collaborative Editing</div>
-									<div key={'feature1'} style={[styles.feature, this.state.activeFeature === 'discussions' && styles.featureActive]} onClick={this.setFeature('discussions')}>In-line rich discussion</div>
-									<div key={'feature2'} style={[styles.feature, this.state.activeFeature === 'history' && styles.featureActive]} onClick={this.setFeature('history')}>Versioned Publication History</div>
-									<div key={'feature3'} style={[styles.feature, this.state.activeFeature === 'journals' && styles.featureActive]} onClick={this.setFeature('journals')}>Custom grassroots journals</div>
-								</div>
-								<div style={styles.featurePreview}>
-
-									<div style={styles.featurePreviewImageWrapper}>
-										{(()=>{
-											switch (this.state.activeFeature) {
-											case 'editing':
-												return <img style={styles.featurePreviewImage} src={'https://res.cloudinary.com/pubpub/image/upload/c_scale,w_600/v1451416401/editing_hires_svywu2.gif'}/>;
-											case 'discussions':
-												return <img style={styles.featurePreviewImage} src={'https://res.cloudinary.com/pubpub/image/upload/c_scale,w_600/v1451416396/discussion_hires_jhdoga.gif'}/>;
-											case 'history':
-												return <img style={styles.featurePreviewImage} src={'https://res.cloudinary.com/pubpub/image/upload/c_scale,w_600/v1451416390/history_hires_ou47rn.gif'}/>;
-											case 'journals':
-												return <img style={styles.featurePreviewImage} src={'https://res.cloudinary.com/pubpub/image/upload/c_scale,w_600/v1451417712/outputjournal_qcdqyh.gif'}/>;
-											default:
-												return <img style={styles.featurePreviewImage} src={'https://i.imgur.com/X5ZSCJT.jpg'}/>;
-											}
-										})()}
-									</div>
-
-								</div>
-								<div style={globalStyles.clearFix}></div>
-							</div>
+							<div style={globalStyles.clearFix}></div>
 						</div>
+					</div>
 
-						: <div id={'pageContent'}>
-							<Markdown markdown={this.props.appData.getIn(['journalData', 'landingPage', 'markdown'])} isPage={true}/>
+					<div style={styles.section}>
+						<div style={styles.sectionContent}>
+							<div style={styles.sectionDetails}>
+								<div style={styles.sectionTitle}>Open, Rich Publishing</div>
+								<div style={styles.sectionDetail}>Author-driven publishing</div>
+								<div style={styles.sectionDetail}>Free and immediate publishing</div>
+								<div style={styles.sectionDetail}>Versioned histories</div>
+							</div>
+
+							<div style={styles.sectionExamples}>
+								<Link to={'/pub/designandscience'} style={globalStyles.link}>
+									<div style={styles.sectionExample}>
+										<span style={styles.sectionExampleTitle}>Design and Science</span>
+										<span style={styles.sectionExampleAuthor}>by Joi Ito</span>
+									</div>
+								</Link>
+								<Link to={'/pub/design-as-participation'} style={globalStyles.link}>
+									<div style={styles.sectionExample}>
+										<span style={styles.sectionExampleTitle}>Design as Participation</span>
+										<span style={styles.sectionExampleAuthor}>by Kevin Slavin</span>
+									</div>
+								</Link>
+								<Link to={'/pubs/create'} style={globalStyles.link}>
+									<div style={styles.sectionExample}>
+										+ Create new Pub
+									</div>
+								</Link>
+							</div>
+							<div style={globalStyles.clearFix}></div>
 						</div>
-				}
+					</div>
+
+					<div style={styles.sectionDark}>
+						<div style={styles.sectionContent}>
+
+							<div style={[styles.sectionDetails, styles.sectionDetailsRight, globalStyles.right]}>
+								<div style={styles.sectionTitle}>Built Open</div>
+								<div style={styles.sectionDetail}>An open medium for dynamic, rich peer-review and discussion</div>
+								<div style={styles.sectionDetail}>Open-sourced and evolving. PubPub is a dedicated to building a platform accessible to all</div>
+								<div style={styles.sectionDetail}>Focused on implementing open standards that make your publication exportable, machine-readable, and interopable.</div>
+							</div>
+
+							<div style={[styles.sectionExamples, globalStyles.right]}>
+
+								<a href={'https://github.com/pubpub/pubpub'} style={globalStyles.link}>
+									<div style={styles.sectionExample}>
+										Code
+									</div>
+								</a>
+								<a href={'https://github.com/pubpub/pubpub/blob/master/CHANGELOG.md'} style={globalStyles.link}>
+									<div style={styles.sectionExample}>
+										Updates and Roadmap
+									</div>
+								</a>
+								<a href={'https://github.com/pubpub/pubpub/blob/master/CONTRIBUTING.md'} style={globalStyles.link}>
+									<div style={styles.sectionExample}>
+										+ Contribute
+									</div>
+								</a>
+							</div>
+							<div style={globalStyles.clearFix}></div>
+						</div>
+					</div>
+
+
+					<div style={styles.section}>
+						<div style={styles.sectionContent}>
+							<div style={styles.sectionDetails}>
+								<div style={styles.sectionTitle}>Grassroots Journals</div>
+								<div style={styles.sectionDetail}>Created by anyone for any community</div>
+								<div style={styles.sectionDetail}>Journals become tools for curating published content. Not gatekeepers of scientific progress</div>
+							</div>
+
+							<div style={styles.sectionExamples}>
+								<a href={'http://jods.mitpress.mit.edu'} style={globalStyles.link}>
+									<div style={[styles.sectionExample, styles.exampleJoDS]}>
+										Journal of Design and Science
+									</div>
+								</a>
+								<a href={'http://cdmxglobal.pubpub.org'} style={globalStyles.link}>
+									<div style={[styles.sectionExample, styles.exampleCDMX]}>
+										CDMX Global
+									</div>
+								</a>
+								<a href={'http://viral.pubpub.org'} style={globalStyles.link}>
+									<div style={[styles.sectionExample, styles.exampleViral]}>
+										Viral Communications
+									</div>
+								</a>
+								<Link to={'/journals/create'} style={globalStyles.link}>
+									<div style={styles.sectionExample}>
+										+ Create new Journal
+									</div>
+								</Link>
+							</div>
+							<div style={globalStyles.clearFix}></div>
+						</div>
+					</div>
+
+					<div style={styles.featureDemos}>
+						<div style={styles.features}>
+							<div key={'feature0'} style={[styles.feature, this.state.activeFeature === 'editing' && styles.featureActive]} onClick={this.setFeature('editing')}>Rich, Collaborative Editing</div>
+							<div key={'feature1'} style={[styles.feature, this.state.activeFeature === 'discussions' && styles.featureActive]} onClick={this.setFeature('discussions')}>In-line rich discussion</div>
+							<div key={'feature2'} style={[styles.feature, this.state.activeFeature === 'history' && styles.featureActive]} onClick={this.setFeature('history')}>Versioned Publication History</div>
+							<div key={'feature3'} style={[styles.feature, this.state.activeFeature === 'journals' && styles.featureActive]} onClick={this.setFeature('journals')}>Custom grassroots journals</div>
+						</div>
+						<div style={styles.featurePreview}>
+
+							<div style={styles.featurePreviewImageWrapper}>
+								{(()=>{
+									switch (this.state.activeFeature) {
+									case 'editing':
+										return <img style={styles.featurePreviewImage} src={'https://res.cloudinary.com/pubpub/image/upload/c_scale,w_600/v1451416401/editing_hires_svywu2.gif'}/>;
+									case 'discussions':
+										return <img style={styles.featurePreviewImage} src={'https://res.cloudinary.com/pubpub/image/upload/c_scale,w_600/v1451416396/discussion_hires_jhdoga.gif'}/>;
+									case 'history':
+										return <img style={styles.featurePreviewImage} src={'https://res.cloudinary.com/pubpub/image/upload/c_scale,w_600/v1451416390/history_hires_ou47rn.gif'}/>;
+									case 'journals':
+										return <img style={styles.featurePreviewImage} src={'https://res.cloudinary.com/pubpub/image/upload/c_scale,w_600/v1451417712/outputjournal_qcdqyh.gif'}/>;
+									default:
+										return <img style={styles.featurePreviewImage} src={'https://i.imgur.com/X5ZSCJT.jpg'}/>;
+									}
+								})()}
+							</div>
+
+						</div>
+						<div style={globalStyles.clearFix}></div>
+					</div>
+				</div>
+
 			</div>
 		);
 	}

@@ -4,7 +4,6 @@ import Helmet from 'react-helmet';
 import {connect} from 'react-redux';
 import {loadAppAndLogin} from './actions';
 import AppBody from './AppBody';
-import {NotFound} from 'components';
 
 import {IntlProvider} from 'react-intl';
 
@@ -29,15 +28,6 @@ const App = React.createClass({
 	},
 
 	render: function() {
-		if (this.props.appData.get('baseSubdomain') === undefined) {
-			return (
-				<IntlProvider locale={'en'} messages={{}}>
-					<StyleRoot>
-						<NotFound />
-					</StyleRoot>
-				</IntlProvider>
-			);
-		}
 		const journalURL = this.props.appData.getIn(['journalData', 'customDomain']) ? 'http://' + this.props.appData.getIn(['journalData', 'customDomain']) : 'http://' + this.props.appData.getIn(['journalData', 'subdomain']) + '.pubpub.org';
 		const currentBaseURL = this.props.appData.get('baseSubdomain') ? journalURL : 'http://www.pubpub.org';
 		const rootImage = this.props.appData.getIn(['journalData', 'journalLogoURL']) ? this.props.appData.getIn(['journalData', 'journalLogoURL']) : 'https://s3.amazonaws.com/pubpub-upload/pubpubDefaultTitle.png';
