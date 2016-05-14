@@ -2,13 +2,14 @@ import React, {PropTypes} from 'react';
 
 const Header = React.createClass({
   propTypes: {
-    footnotes: PropTypes.array,
+    mode: PropTypes.string,
   },
   render: function() {
-
-    console.log(this.props.children);
+    if (this.props.mode === 'rss') {
+      return (<span></span>);
+    }
     return (<div class="headerBlock">
-    {this.props.children}
+      {this.props.children}
     </div>);
 }
 });

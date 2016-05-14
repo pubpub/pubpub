@@ -17,6 +17,7 @@ export PreviewJournal from './PreviewJournal/PreviewJournal';
 export PreviewPub from './PreviewPub/PreviewPub';
 export PreviewUser from './PreviewUser/PreviewUser';
 export PubBody from './PubBody/PubBody';
+export PubBodyRSS from './PubBody/PubBodyRSS';
 export Reference from './Reference/Reference';
 export RelatedPub from './RelatedPub/RelatedPub';
 export SelectionPopup from './SelectionPopup/SelectionPopup';
