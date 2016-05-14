@@ -155,7 +155,7 @@ const PubMeta = React.createClass({
 											);
 									case 'historydiff':
 										return (<PubMetaHistoryDiff
-												diffObject={this.props.readerData.getIn(['pubData', 'history', versionIndex, 'diffObject']).toJS()}/>
+												diffObject={this.props.readerData.getIn(['pubData', 'history', versionIndex, 'diffObject']) && this.props.readerData.getIn(['pubData', 'history', versionIndex, 'diffObject']).toJS && this.props.readerData.getIn(['pubData', 'history', versionIndex, 'diffObject']).toJS()}/>
 											);
 									case 'discussions':
 										return <Discussions metaID={this.props.metaID} />;
