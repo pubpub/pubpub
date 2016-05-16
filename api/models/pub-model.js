@@ -25,6 +25,7 @@ const pubSchema = new Schema({
 	styleDesktop: { type: String }, // Raw string as user input
 	styleMobile: { type: String }, // Raw string as user input
 	styleScoped: { type: String }, // CSS scoped to proper div
+	fbPagesTag: { type: String }, // fbPages tag for instant articles
 
 	isPublished: { type: Boolean },
 	// --------------
