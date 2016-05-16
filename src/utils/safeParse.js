@@ -1,6 +1,6 @@
 import Immutable from 'immutable';
 
-// Example: safeGetInToJS(this.props.readerData, ['pubData', 'featuredInList']) || [])
+// Example: safeGetInToJS(this.props.readerData, ['pubData', 'featuredInList']) || []
 export function safeGetInToJS(obj, props) {
 	if (obj && obj.getIn) {
 		const val = obj.getIn(props);

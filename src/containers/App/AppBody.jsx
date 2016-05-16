@@ -18,7 +18,7 @@ const AppBody = React.createClass({
 	propTypes: {
 		appData: PropTypes.object,
 		loginData: PropTypes.object,
-		pubData: PropTypes.object,
+		// pubData: PropTypes.object,
 		path: PropTypes.string,
 		slug: PropTypes.string,
 		children: PropTypes.object.isRequired,
@@ -39,36 +39,36 @@ const AppBody = React.createClass({
 	componentDidMount() {
 		analytics.pageView(this.props.path, this.props.loginData.get('loggedIn'));
 
-		if (!this.props.loginData.get('loggedIn') && this.props.appData.get('baseSubdomain') !== null) {
-			// If we're not logged in, and on a journal domain (i.e. not www.pubpub.org)...
-			this.testAndRestoreLogin();
-		}
+		// if (!this.props.loginData.get('loggedIn') && this.props.appData.get('baseSubdomain') !== null) {
+		// 	// If we're not logged in, and on a journal domain (i.e. not www.pubpub.org)...
+		// 	this.testAndRestoreLogin();
+		// }
 	},
 
-	testAndRestoreLogin: function() {
-		// If the user is not logged in. We
-		// 1) Create a listener that will listen to postMessage calls
-		// 2) Create an iframe to pubpub.org to check for a login cookie
-		// 3) On the backend, check to verify that the given domain requesting the login cookie is within our system of journalSubdomain
-		// 4) On verification of referring domain, send down iframe content that will read the cookies and post a message with the login cookie (if available)
-		// A larger scale implementation of a similar approach described by Stack Overflow here: http://meta.stackexchange.com/questions/64260/how-does-sos-new-auto-login-feature-work
-		// About window.postMessage: https://developer.mozilla.org/en-US/docs/Web/API/Window/postMessage
+	// testAndRestoreLogin: function() {
+	// 	// If the user is not logged in. We
+	// 	// 1) Create a listener that will listen to postMessage calls
+	// 	// 2) Create an iframe to pubpub.org to check for a login cookie
+	// 	// 3) On the backend, check to verify that the given domain requesting the login cookie is within our system of journalSubdomain
+	// 	// 4) On verification of referring domain, send down iframe content that will read the cookies and post a message with the login cookie (if available)
+	// 	// A larger scale implementation of a similar approach described by Stack Overflow here: http://meta.stackexchange.com/questions/64260/how-does-sos-new-auto-login-feature-work
+	// 	// About window.postMessage: https://developer.mozilla.org/en-US/docs/Web/API/Window/postMessage
 
-		// Create the Listener
-		window.addEventListener( 'message', (evt)=> {
-			if (evt.origin !== 'http://www.pubpub.org') { return; } // Only listen to iFrame messages from pubpub.org
-			if (evt.data) {
-				document.cookie = evt.data;
-				this.props.dispatch(loadAppAndLogin());
-			}
-		}, false);
+	// 	// Create the Listener
+	// 	window.addEventListener( 'message', (evt)=> {
+	// 		if (evt.origin !== 'http://www.pubpub.org') { return; } // Only listen to iFrame messages from pubpub.org
+	// 		if (evt.data) {
+	// 			document.cookie = evt.data;
+	// 			this.props.dispatch(loadAppAndLogin());
+	// 		}
+	// 	}, false);
 
-		// Create the iFrame
-		const iframe = document.createElement('iframe');
-		iframe.src = 'http://www.pubpub.org/api/testLogin';
-		iframe.style.cssText = 'opacity:0;position:absolute;border:0;height:0;width:0;';
-		document.body.appendChild(iframe);
-	},
+	// 	// Create the iFrame
+	// 	const iframe = document.createElement('iframe');
+	// 	iframe.src = 'http://www.pubpub.org/api/testLogin';
+	// 	iframe.style.cssText = 'opacity:0;position:absolute;border:0;height:0;width:0;';
+	// 	document.body.appendChild(iframe);
+	// },
 
 	toggleLogin: function() {
 		if (!this.props.loginData.get('loggedIn')) {
@@ -85,41 +85,41 @@ const AppBody = React.createClass({
 	openMenu: function() {
 		this.props.dispatch(openMenu());
 	},
-	openPubModal: function(modal) {
-		return ()=> {
-			this.props.dispatch(openPubModal(modal));
-		};
-	},
+	// openPubModal: function(modal) {
+	// 	return ()=> {
+	// 		this.props.dispatch(openPubModal(modal));
+	// 	};
+	// },
 
-	followPubToggle: function() {
-		if (!this.props.loginData.get('loggedIn')) {
-			return this.props.dispatch(toggleVisibility());
-		}
+	// followPubToggle: function() {
+	// 	if (!this.props.loginData.get('loggedIn')) {
+	// 		return this.props.dispatch(toggleVisibility());
+	// 	}
 
-		const analyticsData = {
-			type: 'pubs',
-			followedID: this.props.pubData.getIn(['pubData', '_id']),
-			pubtitle: this.props.pubData.getIn(['pubData', 'title']),
-			numFollowers: this.props.pubData.getIn(['pubData', 'followers']) ? this.props.pubData.getIn(['pubData', 'followers']).size : 0,
-		};
+	// 	const analyticsData = {
+	// 		type: 'pubs',
+	// 		followedID: this.props.pubData.getIn(['pubData', '_id']),
+	// 		pubtitle: this.props.pubData.getIn(['pubData', 'title']),
+	// 		numFollowers: this.props.pubData.getIn(['pubData', 'followers']) ? this.props.pubData.getIn(['pubData', 'followers']).size : 0,
+	// 	};
 
-		const isFollowing = this.props.loginData.getIn(['userData', 'following', 'pubs']) ? this.props.loginData.getIn(['userData', 'following', 'pubs']).indexOf(this.props.pubData.getIn(['pubData', '_id'])) > -1 : false;
-		if (isFollowing) {
-			this.props.dispatch( unfollow('pubs', this.props.pubData.getIn(['pubData', '_id']), analyticsData ));
-		} else {
-			this.props.dispatch( follow('pubs', this.props.pubData.getIn(['pubData', '_id']), analyticsData ));
-		}
-	},
+	// 	const isFollowing = this.props.loginData.getIn(['userData', 'following', 'pubs']) ? this.props.loginData.getIn(['userData', 'following', 'pubs']).indexOf(this.props.pubData.getIn(['pubData', '_id'])) > -1 : false;
+	// 	if (isFollowing) {
+	// 		this.props.dispatch( unfollow('pubs', this.props.pubData.getIn(['pubData', '_id']), analyticsData ));
+	// 	} else {
+	// 		this.props.dispatch( follow('pubs', this.props.pubData.getIn(['pubData', '_id']), analyticsData ));
+	// 	}
+	// },
 
 	render: function() {
-		let headerBackground = (this.props.appData.get('baseSubdomain') && this.props.appData.getIn(['journalData', 'design', 'headerBackground'])) || globalStyles.headerBackground;
-		let headerTextColor = (this.props.appData.get('baseSubdomain') && this.props.appData.getIn(['journalData', 'design', 'headerText'])) || globalStyles.headerText;
-		let headerTextColorHover = (this.props.appData.get('baseSubdomain') && this.props.appData.getIn(['journalData', 'design', 'headerHover'])) || globalStyles.headerHover;
-		if (this.props.path === '/') {
-			headerBackground = (this.props.appData.get('baseSubdomain') && this.props.appData.getIn(['journalData', 'design', 'landingHeaderBackground'])) || globalStyles.headerText;
-			headerTextColor = (this.props.appData.get('baseSubdomain') && this.props.appData.getIn(['journalData', 'design', 'landingHeaderText'])) || globalStyles.headerBackground;
-			headerTextColorHover = (this.props.appData.get('baseSubdomain') && this.props.appData.getIn(['journalData', 'design', 'landingHeaderHover'])) || 'black';
-		}
+		// let headerBackground = (this.props.appData.get('baseSubdomain') && this.props.appData.getIn(['journalData', 'design', 'headerBackground'])) || globalStyles.headerBackground;
+		// let headerTextColor = (this.props.appData.get('baseSubdomain') && this.props.appData.getIn(['journalData', 'design', 'headerText'])) || globalStyles.headerText;
+		// let headerTextColorHover = (this.props.appData.get('baseSubdomain') && this.props.appData.getIn(['journalData', 'design', 'headerHover'])) || globalStyles.headerHover;
+		// if (this.props.path === '/') {
+		// 	headerBackground = (this.props.appData.get('baseSubdomain') && this.props.appData.getIn(['journalData', 'design', 'landingHeaderBackground'])) || globalStyles.headerText;
+		// 	headerTextColor = (this.props.appData.get('baseSubdomain') && this.props.appData.getIn(['journalData', 'design', 'landingHeaderText'])) || globalStyles.headerBackground;
+		// 	headerTextColorHover = (this.props.appData.get('baseSubdomain') && this.props.appData.getIn(['journalData', 'design', 'landingHeaderHover'])) || 'black';
+		// }
 
 		const headerStyle = {
 			headerText: {
@@ -203,38 +203,7 @@ const AppBody = React.createClass({
 					{this.props.children}
 				</div>
 
-				<div className="footer" style={[styles.footer, (this.props.path.substring(this.props.path.length - 6, this.props.path.length) === '/draft' || this.props.appData.get('baseSubdomain') !== null) && {display: 'none'} ]}>
-					<div style={{display: 'table', margin: '0 auto'}}>
-						<div style={styles.footerColumn}>
-							<div style={styles.footerHeader}>PubPub</div>
-							<Link style={globalStyles.link} to={'/pub/about'}><div style={styles.footerItem}>About</div></Link>
-							<a style={globalStyles.link} href={'https://github.com/pubpub/pubpub'}><div style={styles.footerItem}>Code</div></a>
-							<Link style={globalStyles.link} to={'/pub/jobs'}><div style={styles.footerItem}>Jobs</div></Link>
-
-						</div>
-
-						<div style={styles.footerColumn}>
-							<div style={styles.footerHeader}>Explore</div>
-							<Link style={globalStyles.link} to={'/pubs'}><div style={styles.footerItem}>Pubs</div></Link>
-							<Link style={globalStyles.link} to={'/journals'}><div style={styles.footerItem}>Journals</div></Link>
-							<Link style={globalStyles.link} to={'/pub/' + this.props.appData.getIn(['journalData', 'randomSlug'])}><div style={styles.footerItem}>Random Pub</div></Link>
-						</div>
-
-						<div style={styles.footerColumn}>
-							<div style={styles.footerHeader}>Contact</div>
-							<a style={globalStyles.link} href={'mailto:pubpub@media.mit.edu'}><div style={styles.footerItem}>Email</div></a>
-							<a style={globalStyles.link} href={'https://twitter.com/pubpub'}><div style={styles.footerItem}>Twitter</div></a>
-							<a style={globalStyles.link} href={'http://eepurl.com/bLkuVn'}><div style={styles.footerItem}>Mailing List</div></a>
-						</div>
-
-						<div style={styles.footerColumn}>
-							<div style={styles.footerHeader}>Terms</div>
-							<Link style={globalStyles.link} to={'/pub/tos'}><div style={styles.footerItem}>Terms of Service</div></Link>
-							<Link style={globalStyles.link} to={'/pub/privacy'}><div style={styles.footerItem}>Privacy Policy</div></Link>
-						</div>
-					</div>
-
-				</div>
+				
 			</div>
 		);
 	}
