@@ -105,7 +105,7 @@ function loading(state) {
 
 function loggedIn(state, user) {
 	let outputMerge = {};
-	if (user === 'No Session') {
+	if (!user || !user.username) {
 		outputMerge = {
 			isVisible: false,
 			loggingIn: false,

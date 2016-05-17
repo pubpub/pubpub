@@ -1,8 +1,8 @@
 export const globalStyles = {
 	// headerBackground: '#373737',
 	headerBackground: '#2A2A2A',
-	headerHeight: '30px',
-	headerHeightMobile: '60px',
+	headerHeight: '40px',
+	headerHeightMobile: '80px',
 	headerText: '#F4F4F4',
 	headerHover: '#FFFFFF',
 	// headerFont: "'Lato', sans-serif",
@@ -21,6 +21,13 @@ export const globalStyles = {
 	link: {
 		textDecoration: 'none',
 		color: 'inherit',
+	},
+	blockLink: {
+		textDecoration: 'none',
+		color: 'inherit',
+		display: 'block',
+		width: '100%',
+		height: '100%',
 	},
 	loading: {
 		opacity: 0,

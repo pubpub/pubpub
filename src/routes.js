@@ -1,6 +1,6 @@
 import React from 'react';
 import {IndexRoute, Route} from 'react-router';
-import {App, Editor, GroupCreate, GroupProfile, JournalCreate, JournalProfile, Landing, PubCreate, PubReader, ResetPassword, UserProfile} from 'containers';
+import {App, Editor, GroupCreate, GroupProfile, JournalCreate, JournalProfile, Landing, Login, PubCreate, PubReader, ResetPassword, UserProfile} from 'containers';
 import {NotFound} from 'components';
 
 export default () => {
@@ -17,6 +17,8 @@ export default () => {
 			<Route path="/groups/create" component={GroupCreate}/>
 
 			<Route path="/journals/create" component={JournalCreate}/>
+
+			<Route path="/login" component={Login}/>
 
 			<Route path="/pub/:slug" component={PubReader}/> {/* /pub/designandscience?journal=jods or /pub/designandscience?journal=impacts&version=8 */}
 			<Route path="/pub/:slug/draft" component={Editor}/> {/* /pub/designandscience/draft */}

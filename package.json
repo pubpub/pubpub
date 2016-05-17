@@ -96,6 +96,7 @@
     "babel-register": "^6.3.13",
     "babel-runtime": "^6.3.19",
     "bibtex-parse-js": "0.0.22",
+    "bluebird": "^3.3.5",
     "body-parser": "1.15.1",
     "camelcase": "^3.0.0",
     "classnames": "^2.2.3",

@@ -2,7 +2,7 @@ import React, { PropTypes } from 'react';
 import {StyleRoot} from 'radium';
 import Helmet from 'react-helmet';
 import {connect} from 'react-redux';
-// import {loadAppAndLogin} from './actions';
+import {loadAppAndLogin} from './actions';
 import {IntlProvider} from 'react-intl';
 import {safeGetInToJS} from 'utils/safeParse';
 
@@ -22,15 +22,14 @@ export const App = React.createClass({
 	},
 
 
-	// statics: {
-	// 	fetchData: function(getState, dispatch) {
-	// 		// This should instead be logging in - iff the user login hasn't already been attempted
-	// 		if (getState().app.get('baseSubdomain') === undefined) {
-	// 			return dispatch(loadAppAndLogin());
-	// 		}
-	// 		return ()=>{};
-	// 	}
-	// },
+	statics: {
+		fetchData: function(getState, dispatch) {
+			if (getState().app.get('loadAttempted') === false) {
+				return dispatch(loadAppAndLogin());
+			}
+			return ()=>{};
+		}
+	},
 
 	componentDidMount() {
 		analytics.pageView(this.props.path, this.props.loginData.get('loggedIn'));
@@ -55,7 +54,7 @@ export const App = React.createClass({
 					
 					<Helmet {...metaData} />
 
-					{/* <AppHeader loginData={this.props.loginData} /> */}
+					<AppHeader loginData={this.props.loginData} />
 					
 					<div className="content"> {this.props.children} </div>
 
