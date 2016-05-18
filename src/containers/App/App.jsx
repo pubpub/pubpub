@@ -6,8 +6,10 @@ import {loadAppAndLogin} from './actions';
 import {IntlProvider} from 'react-intl';
 import {safeGetInToJS} from 'utils/safeParse';
 
+import AppLoadingBar from './AppLoadingBar';
 import AppHeader from './AppHeader';
 import AppFooter from './AppFooter';
+
 import analytics from 'utils/analytics';
 
 
@@ -54,10 +56,9 @@ export const App = React.createClass({
 					
 					<Helmet {...metaData} />
 
+					<AppLoadingBar color={'#BBBDC0'} show={this.props.appData.get('loading')} />
 					<AppHeader loginData={this.props.loginData} />
-					
 					<div className="content"> {this.props.children} </div>
-
 					<AppFooter hideFooter={hideFooter} />
 
 				</StyleRoot>
