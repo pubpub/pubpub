@@ -94,49 +94,67 @@ function generateRSSXML(req, instantArticleMode, callback) {
 
 		const featuredInList = (journal) ? { $in: [journal._id] } : {$not: {$size: 0}};
 
-		const query = {
+		let query = {
 			history: {$not: {$size: 0}},
 			featuredInList: featuredInList,
 			discussions: {$not: {$size: 0}},
 			'isPublished': true
 		};
 
-		Pub.find(query, {slug: 1, title: 1, abstract: 1, createDate: 1, lastUpdated: 1, authors: 1, authorsNote: 1, markdown: 1, discussions: 1})
-		.populate({ path: 'authors', select: 'name firstName lastName', model: 'User' })
-		.populate({ path: 'assets', model: 'Asset' })
-		.limit(25)
-		.sort({'lastUpdated': -1})
-		.lean()
+		Pub.find(query)
+		.count()
 		.exec()
-		.then(function(pubs) {
+		.then(function(rssCount) {
 
-			// if (errPubFind) { console.log(errPubFind); }
+			let newQuery;
+			// only pad RSS if instant articles is enabled for the journal
+			if (rssCount < 10 && journal && journal.fbPagesTag) {
+				const slugArray = [ 'about', 'privacy', 'hello', 'tos', 'design-as-participation', 'enlightenment-to-entanglement', 'designandscience',].slice(0, 10 - rssCount);
+				const paddingQuery = {slug: { $in: slugArray } };
+				newQuery = { $or: [query, paddingQuery] };
+			} else {
+				newQuery = query;
+			}
 
-			let languageObject = {};
-			// const locale = journal && journal.locale ? journal.locale : 'en';
-			// console.log('file name',__dirname + '/../../translations/languages/' + locale + '.json');
-			fs.readFile(__dirname + '/../../translations/languages/en.json', 'utf8', function(errFSRead, data) {
-				if (errFSRead) { console.log(errFSRead); }
-				languageObject = JSON.parse(data);
-				Promise.all(pubs.map((pub) => renderPub(languageObject, host, pub)))
-				.then(function(newPubs) {
-					for (const pubItem of newPubs) {
-						feed.item(pubItem);
-					}
-					callback(feed.xml());
-				})
-				.catch(function() {
-					console.log('Failed to parse RSS.');
-					callback(null);
+
+			Pub.find(newQuery, {slug: 1, title: 1, abstract: 1, createDate: 1, lastUpdated: 1, authors: 1, authorsNote: 1, markdown: 1, discussions: 1})
+			.populate({ path: 'authors', select: 'name firstName lastName', model: 'User' })
+			.populate({ path: 'assets', model: 'Asset' })
+			.limit(25)
+			.sort({'lastUpdated': -1})
+			.lean()
+			.exec()
+			.then(function(pubs) {
+
+				console.log('Fetched!', pubs.length);
+
+				let languageObject = {};
+				fs.readFile(__dirname + '/../../translations/languages/en.json', 'utf8', function(errFSRead, data) {
+					if (errFSRead) { console.log(errFSRead); }
+					languageObject = JSON.parse(data);
+					Promise.all(pubs.map((pub) => renderPub(languageObject, host, pub)))
+					.then(function(newPubs) {
+						for (const pubItem of newPubs) {
+							feed.item(pubItem);
+						}
+						callback(feed.xml());
+					})
+					.catch(function() {
+						console.log('Failed to parse RSS.');
+						callback(null);
+					});
+
+
 				});
-
-
+			})
+			.catch(function() {
+				console.log('Failed to load RSS.');
+				callback(null);
 			});
-		})
-		.catch(function() {
-			console.log('Failed to load RSS.');
-			callback(null);
+
 		});
+
+
 	});
 }
 

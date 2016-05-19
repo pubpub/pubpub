@@ -61,7 +61,7 @@ const PubBody = React.createClass({
 		return (
 			<html lang="en" prefix="op: http://media.facebook.com/op#">
 				 <head>
-					 	<meta charset="utf-8"/>
+					 	<meta charSet="utf-8"/>
 					 	<link rel="canonical" href={this.props.pubURL}/>
 					 	<meta property="op:markup_version" content="v1.0"/>
 						<meta property="og:title" content={this.props.title}/>
@@ -77,8 +77,10 @@ const PubBody = React.createClass({
 						<header>
 							<h1>{this.props.title}</h1>
 							<address>{this.props.authorString}</address>
-							<h2>{this.props.abstract}</h2>
-							{(this.props.discussionCount > 0) ? <h3 className="op-kicker">{this.props.discussionCount} comments. <a href={this.props.pubURL}>Click here to read and participate</a></h3> : null}
+							{(this.props.abstract) ? <h2>{this.props.abstract}</h2> : null }
+							{ /*
+								(this.props.discussionCount > 0) ? <h3 className="op-kicker">{this.props.discussionCount} comments. <a href={this.props.pubURL}>Click here to read and participate</a></h3> : null
+							*/ }
 							<time className="op-published" dateTime={dateFormat(this.props.firstPublishedDate, "isoDateTime")}>{dateFormat(this.props.firstPublishedDate, "fullDate")}</time>
 	 					 	<time className="op-modified"  dateTime={dateFormat(this.props.lastPublishedDate, "isoDateTime")}>{dateFormat(this.props.lastPublishedDate, "fullDate")}</time>
 						</header>
