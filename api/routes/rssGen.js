@@ -126,8 +126,6 @@ function generateRSSXML(req, instantArticleMode, callback) {
 			.exec()
 			.then(function(pubs) {
 
-				console.log('Fetched!', pubs.length);
-
 				let languageObject = {};
 				fs.readFile(__dirname + '/../../translations/languages/en.json', 'utf8', function(errFSRead, data) {
 					if (errFSRead) { console.log(errFSRead); }
