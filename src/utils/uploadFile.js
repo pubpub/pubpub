@@ -17,9 +17,19 @@ export function s3Upload(file, folderName, progressEvent, finishEvent, index) {
 		sendFile.upload.addEventListener('progress', (evt)=>{
 			progressEvent(evt, index);
 		}, false);
-		sendFile.upload.addEventListener('load', (evt)=>{
-			finishEvent(evt, index, file.type, filename, file.name);
-		}, false);
+		const extension = file.name.split(".")[file.name.split(".").length - 1];
+		switch (extension){
+
+			case "stl":
+				sendFile.upload.addEventListener('load', (evt)=>{
+					finishEvent(evt, index, extension, filename, file.name);
+					}, false);
+				break;
+			default:
+				sendFile.upload.addEventListener('load', (evt)=>{
+					finishEvent(evt, index, file.type, filename, file.name);
+				}, false);
+		}
 		sendFile.open('POST', 'http://pubpub-upload.s3.amazonaws.com/', true);
 		sendFile.send(formData);
 	}

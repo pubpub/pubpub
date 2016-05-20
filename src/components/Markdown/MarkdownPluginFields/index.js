@@ -9,6 +9,8 @@ import explainerField from './explainerField';
 import baseTextField from './baseTextField';
 import baseTextAreaField from './baseTextAreaField';
 import baseRadioField from './baseRadioField';
+import colorField from './colorField';
+import preloadField from './preloadField';
 
 export default {
 	'asset': assetField,
@@ -21,7 +23,8 @@ export default {
 	'url': urlField,
 	'radio': baseRadioField,
 	'explainer': explainerField,
-
+	'color': colorField,
+	'preload': preloadField,
 	// 'size' : (radio with small, medium, large and %),
 	// 'align' : (radio with left, right and full)
 	// 'caption' : (text field)

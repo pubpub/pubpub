@@ -25,6 +25,7 @@ const AssetField = React.createClass({
 		return this.refs.val.value();
 	},
 	render: function() {
+		console.log(this.props.assets);
 		const assets = this.props.assets.filter((asset) => (asset.assetType === this.props.assetType && asset.label))
 		.map( function(asset) { return {'value': asset, 'label': asset.label.substring(0, 15) };});
 

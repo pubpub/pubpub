@@ -8,6 +8,7 @@ import FootnotePlugin from './footnotePlugin';
 import PagebreakPlugin from './pagebreakPlugin';
 import LinebreakPlugin from './linebreakPlugin';
 import CursorPlugin from './cursorPlugin';
+import STLPlugin from './stlFile';
 
 // Page-only Plugins
 import pubListPlugin from './pubListPlugin';
@@ -30,4 +31,5 @@ export default {
 	collectionList: collectionListPlugin,
 	link: linkPlugin,
 	search: searchPlugin,
+	stl: STLPlugin,
 };

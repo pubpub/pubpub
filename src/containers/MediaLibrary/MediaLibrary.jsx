@@ -105,13 +105,15 @@ const MediaLibrary = React.createClass({
 
 		let assetType = 'data';
 		let thumbnail = '/thumbnails/data.png';
-
 		if (type.indexOf('image') > -1) {
 			assetType = 'image';
 			thumbnail = 'https://s3.amazonaws.com/pubpub-upload/' + filename;
 		} else if (type.indexOf('video') > -1) {
 			assetType = 'video';
 			thumbnail = '/thumbnails/file.png';
+		} else if (type.toLowerCase().indexOf('stl') > -1){
+			assetType = 'stl';
+			thumbnail = '/thumbnails/data.png'
 		}
 		const newAsset = {
 			assetType: assetType,
@@ -122,8 +124,8 @@ const MediaLibrary = React.createClass({
 				url: 'https://s3.amazonaws.com/pubpub-upload/' + filename,
 				thumbnail: thumbnail,
 			}
-		};
 
+		};
 		this.props.dispatch(createAsset(newAsset));
 
 		// Set File to finished in state. This will hide the uploading version
@@ -200,6 +202,7 @@ const MediaLibrary = React.createClass({
 			let inlineObject = {};
 			switch (assetObject.assetType) {
 			case 'image':
+			case 'stl':
 			case 'video':
 				inlineObject = {pluginType: assetObject.assetType, source: {...assetObject.assetData, _id: assetObject._id, label: assetObject.label }};
 				break;
@@ -209,6 +212,7 @@ const MediaLibrary = React.createClass({
 			case 'highlight':
 				inlineObject = {pluginType: 'highlight', source: {...assetObject.assetData, _id: assetObject._id, label: assetObject.label }};
 				break;
+
 			default:
 				inlineObject = undefined;
 				break;
