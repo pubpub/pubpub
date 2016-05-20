@@ -8,8 +8,15 @@ let interval = undefined;
 
 export const AppLoadingBar = React.createClass({
 	propTypes: {
-		color: PropTypes.string.isRequired,
+		color: PropTypes.string,
 		show: PropTypes.bool
+	},
+
+	getDefaultProps() {
+		return {
+			color: '#BBBDC0',
+			show: false,
+		};
 	},
 
 	getInitialState() {
@@ -117,9 +124,8 @@ export const AppLoadingBar = React.createClass({
 	render() {
 		return (
 			<div style={styles.loading}>
-				<div
-				style={this.getBarStyle()}>
-				<div style={styles.peg}></div>
+				<div style={this.getBarStyle()}>
+					<div style={styles.peg}></div>
 				</div>
 			</div>
 		);

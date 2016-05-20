@@ -15,5 +15,3 @@ For faster debugging, `npm run test` will serve the majority of the job while `n
 Local API tests start an instance of mongodb to confirm database behavior.
 
 For best practices testing React and Redux components, see https://github.com/reactjs/redux/blob/master/docs/recipes/WritingTests.md
-
-**We need lots of work on tests. As a small team, tests weren't out first priority from the start and it shows. We're getting better, but any suggestions or contributions to the unit and browser tests are welcome!**

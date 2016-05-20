@@ -14,7 +14,7 @@ const HeaderNav = React.createClass({
 	},
 
 	render: function() {
-		const isLoggedIn = this.props.loginData.get('loggedIn');
+		const isLoggedIn = this.props.loginData && this.props.loginData.get('loggedIn');
 
 		return (
 			<div className="header-bar darkest-bg lightest-color" style={styles.headerBar}>

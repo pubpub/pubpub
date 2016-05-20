@@ -1,10 +1,29 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 import TestUtils from 'react-addons-test-utils';
-import { createStore } from 'redux';
-import {Provider} from 'react-redux';
-import {IntlProvider} from 'react-intl';
-import {StyleRoot} from 'radium';
+// import ReactDOM from 'react-dom';
+// import { createStore } from 'redux';
+// import {Provider} from 'react-redux';
+// import {IntlProvider} from 'react-intl';
+// import Radium, {StyleRoot} from 'radium';
+import Radium from 'radium';
+Radium.TestMode.enable(); // used to avoid addCSS errors which arise when shallowRendering
+
+// Use this function to test an unwrapped component (i.e. not wrapped in export Radium(Component) ).
+// This function shallow renders the components. Real DOMs not used.
+export function shallowRender(Component, props) {
+	const renderer = TestUtils.createRenderer();
+	renderer.render(<Component {...props} />);
+	const renderOutput = renderer.getRenderOutput();
+	const error = renderOutput.props.error;
+
+	return {renderOutput, error};
+}
+
+/*
+From experience so far, the errors that have caused any issues have been ones that shallowRender would catch.
+DOM-specific errors have not arisen, so let's see how far shallow rendering gets us,
+given that it is much simpler to write and faster to test. Easier test dev environment = less barrier to writing tests.
+
 
 // Use this function to test connected components (containers)
 // and for tests that need Radium or Intl. 
@@ -54,19 +73,6 @@ export function checkUnwrappedRenderSuccess(Component, props) {
 	return {domRender, message, isErrorScreen};
 }
 
-// Use this function to test an unwrapped component (i.e. not wrapped in export Radium(Component) ).
-// This function shallow renders the components. Real DOMs not used.
-export function checkShallowRenderSuccess(Component, props) {
-	// NOTE: This won't work on mediaQueried/etc components until Radium enables a test-mode to disable the addCSS error it throws.
-	const renderer = TestUtils.createRenderer();
-	renderer.render(<Component {...props} />);
-	const shallowRender = renderer.getRenderOutput();
-	
-	// In the case of an error, grab the error message from shallowRender
-	const message = 'Error';
-	const isErrorScreen = shallowRender.type && shallowRender.type.name === 'RedBox';
-
-	return {shallowRender, message, isErrorScreen};
-}
+*/
 
 
