@@ -84,6 +84,7 @@ export function createPub(req, res) {
 		if (req.body.slug.substring(req.body.slug.length - 12, req.body.slug.length) === '-landingpage') { return res.status(500).json('URL Title is not Unique!'); }
 
 		Pub.createPub(req.body.slug, req.body.title, userID, false, function(createErr, savedPub) {
+			if (createErr || !savedPub) { return res.status(500).json('Error Creating Pub'); }
 			const pubID = savedPub.id;
 
 			User.update({ _id: userID }, { $addToSet: { pubs: pubID} }, function(errUpdate, resultUpdate) {if (errUpdate) return console.log(errUpdate);});
