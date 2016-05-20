@@ -129,6 +129,14 @@ app.use((req, res) => {
 					dynamicStyle = store.getState().journal.getIn(['journalData', 'landingPage', 'styleScoped']);
 				}
 
+				let fbPagesTag;
+				if (store.getState().journal && store.getState().journal.getIn(['journalData', 'fbPagesTag'])) {
+					const tag = store.getState().journal.getIn(['journalData', 'fbPagesTag']);
+					fbPagesTag = `<meta property="fb:pages" content="${tag}" />`;
+				} else {
+					fbPagesTag = `<meta property="fb:pages" content="228105957546675" />`;
+				}
+
 				const rssRel = pathname === '/' ? 'alternate' : 'home';
 
 				res.send(`<!doctype html>
@@ -138,7 +146,7 @@ app.use((req, res) => {
 							<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 							<meta name="google-site-verification" content="jmmJFnkSOeIEuS54adOzGMwc0kwpsa8wQ-L4GyPpPDg" />
 							<meta name="referrer" content="always">
-							<meta property="fb:pages" content="228105957546675" />
+							${fbPagesTag}
 							${head.title.toString()}
 							${head.meta.toString()}
 

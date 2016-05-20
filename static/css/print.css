@@ -45,6 +45,10 @@
 		height: auto !important;
 	}
 
+	iframe {
+		display: none;
+	}
+
 	.p-block {
 	 orphans: 3;
 	  windows: 3;
