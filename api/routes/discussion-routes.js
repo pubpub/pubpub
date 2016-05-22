@@ -57,6 +57,7 @@ export function addDiscussion(req, res) {
 		// Notify all the pub authors
 		// Notify the author of a parent comment
 		Pub.findOne({_id: pubID}, {authors: 1}).lean().exec(function(errPubFind, pub) {
+			if (!pub) { return res.status(500).json('commenting on non-existant pub'); }
 			pub.authors.map((author)=>{
 				Notification.createNotification('discussion/pubComment', req.body.host, userID, author, pubID, discussionID);
 			});
