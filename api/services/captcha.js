@@ -1,9 +1,8 @@
 import request from 'superagent';
-import {captchaKey} from '../config';
 
 export function checkCaptcha({token, remoteip}) {
 
-	const key = process.env.CAPTCHA_KEY || captchaKey;
+	const key = process.env.CAPTCHA_KEY || require('../config').captchaKey;
 	return new Promise(function(resolve, reject) {
 
 		if (!key) {
