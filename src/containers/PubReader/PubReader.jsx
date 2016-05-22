@@ -186,6 +186,7 @@ const PubReader = React.createClass({
 			: this.props.readerData.getIn(['pubData', 'history']).size - 1;
 
 		const metaData = {};
+		metaData.meta = [];
 		if (pubData.title) {
 			metaData.title = pubData.history[versionIndex].title;
 			metaData.meta = [
@@ -199,10 +200,7 @@ const PubReader = React.createClass({
 				{name: 'twitter:title', content: pubData.title || ''},
 				{name: 'twitter:description', content: pubData.abstract || ''},
 			];
-			if (pubData.pubErrorView) {
-				metaData.meta.push({name: 'robots', content: 'noindex'});
-			}
-
+			
 			const srcRegex = /{{image:.*(source=([^\s,]*)).*}}/;
 			const match = srcRegex.exec(pubData.history[versionIndex].markdown);
 			const refName = match ? match[2] : undefined;
@@ -220,6 +218,10 @@ const PubReader = React.createClass({
 
 		} else {
 			metaData.title = 'PubPub - ' + this.props.slug;
+		}
+
+		if (pubData.pubErrorView) {
+			metaData.meta.push({name: 'robots', content: 'noindex'});
 		}
 
 
