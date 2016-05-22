@@ -155,6 +155,9 @@ export function saveVersionPub(req, res) {
 	// Send notifications
 	Pub.findOne({ slug: req.body.newVersion.slug }, function(err, pub) {
 		if (err) { return res.status(500).json(err); }
+		if (!pub) {
+			return res.status(500).json('Pub does not exist!');
+		}
 
 		// Check to make sure the user is authorized to be submitting such changes.
 		const userGroups = req.user ? req.user.groups : [];
@@ -244,6 +247,9 @@ app.post('/saveVersionPub', saveVersionPub);
 export function updateCollaborators(req, res) {
 	Pub.findOne({ slug: req.body.slug }, function(err, pub) {
 		if (err) { return res.status(500).json(err); }
+		if (!pub) {
+			return res.status(500).json('Pub does not exist!');
+		}
 
 		// Check to make sure the user is authorized to be submitting such changes.
 		const userGroups = req.user ? req.user.groups : [];
