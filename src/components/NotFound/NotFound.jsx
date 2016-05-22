@@ -11,7 +11,10 @@ const NotFound = React.createClass({
 
 	render: function() {
 		const metaData = {
-			title: 'PubPub - Not Found'
+			title: 'PubPub - Not Found',
+			meta: [
+				{name: 'robots', content: 'noindex'}
+			]
 		};
 
 		return (
