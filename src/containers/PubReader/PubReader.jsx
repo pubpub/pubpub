@@ -220,9 +220,9 @@ const PubReader = React.createClass({
 			metaData.title = 'PubPub - ' + this.props.slug;
 		}
 
-		if (pubData.pubErrorView) {
-			metaData.meta.push({name: 'robots', content: 'noindex'});
-		}
+		// if (pubData.pubErrorView) {
+		metaData.meta.push({name: 'robots', content: 'noindex'}); // Stop indexing all pages to reduce spam. TODO: Privelege indexing for pubs which are verified
+		// }
 
 
 		const pubURL = createJournalURL({
