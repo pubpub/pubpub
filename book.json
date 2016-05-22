@@ -1,6 +1,4 @@
 {
-    "plugins": [
-        "asciinema"
-    ],
+    "plugins": [],
     "pluginsConfig": {}
 }
