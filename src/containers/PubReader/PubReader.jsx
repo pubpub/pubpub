@@ -200,7 +200,7 @@ const PubReader = React.createClass({
 				{name: 'twitter:description', content: pubData.abstract || ''},
 			];
 			if (pubData.pubErrorView) {
-				metaData.push({name: 'robots', content: 'noindex'});
+				metaData.meta.push({name: 'robots', content: 'noindex'});
 			}
 
 			const srcRegex = /{{image:.*(source=([^\s,]*)).*}}/;
