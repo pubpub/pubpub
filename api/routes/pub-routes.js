@@ -17,7 +17,6 @@ import {sendAddedAsCollaborator} from '../services/emails';
 // import {featurePub, getRecommendations, inpRecAction, removeAction} from '../services/recommendations';
 import {getRecommendations, inpRecAction} from '../services/recommendations';
 import {checkCaptcha} from '../services/captcha';
-import {captchaKey} from '../config';
 
 
 export function getPub(req, res) {
