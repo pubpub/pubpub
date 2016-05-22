@@ -9,6 +9,8 @@ import {fireBaseURL, generateAuthToken} from '../services/firebase';
 import {featurePub} from '../services/recommendations';
 
 export function createJournal(req, res) {
+	if (!req.user) { return res.status(500).json('Not logged in'); }
+	
 	Journal.isUnique(req.body.subdomain, (err, result)=>{
 		if (!result) { return res.status(500).json('Subdomain is not Unique!'); }
 
