@@ -125,6 +125,7 @@ export function createPub(req, res) {
 		verifyAndCreatePub();
 	})
 	.catch(function() {
+		console.log('Failed Captcha', userID);
 		res.status(500).json('Could not validate Captcha!');
 	});
 
