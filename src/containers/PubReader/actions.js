@@ -47,12 +47,13 @@ export const SUGGEST_PUB_FAIL = 'pub/SUGGEST_PUB_FAIL';
 // action objects (e.g. {type:example, payload:data} ) within dispatch()
 // function calls
 /*--------*/
-export function create(title, slug) {
+export function create(title, slug, reCaptchaToken) {
 	return {
 		types: [CREATE_PUB_LOAD, CREATE_PUB_SUCCESS, CREATE_PUB_FAIL],
 		promise: (client) => client.post('/createPub', {data: {
 			'title': title,
-			'slug': slug
+			'slug': slug,
+			'reCaptchaToken': reCaptchaToken,
 		}}),
 		title: title,
 	};

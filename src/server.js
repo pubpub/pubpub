@@ -129,6 +129,7 @@ app.use((req, res) => {
 					dynamicStyle = store.getState().journal.getIn(['journalData', 'landingPage', 'styleScoped']);
 				}
 
+
 				let fbPagesTag;
 				if (store.getState().journal && store.getState().journal.getIn(['journalData', 'fbPagesTag'])) {
 					const tag = store.getState().journal.getIn(['journalData', 'fbPagesTag']);
@@ -195,6 +196,7 @@ app.use((req, res) => {
 							<script src="/js/typo.js"></script>
 							<script src="/js/spellcheck.js"></script>
 							<script src="https://cdn.ravenjs.com/2.1.0/raven.min.js"></script>
+							<script src='https://www.google.com/recaptcha/api.js'></script>
 
 						</head>
 

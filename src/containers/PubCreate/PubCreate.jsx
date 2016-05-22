@@ -44,7 +44,7 @@ const Login = React.createClass({
 			} else if (!formValues.slug) {
 				this.setState({errorMessage: 'noSlug'});
 			} else {
-				this.props.dispatch(create(formValues.title, formValues.slug));
+				this.props.dispatch(create(formValues.title, formValues.slug, formValues.recaptchaToken));
 			}
 
 		}
@@ -64,7 +64,7 @@ const Login = React.createClass({
 				<div style={styles.header}>
 					<FormattedMessage id="pub.createPub" defaultMessage="Create Pub"/>
 				</div>
-				<CreatePubForm onSubmit={this.handleCreateSubmit} />
+				<CreatePubForm onCreatePub={this.handleCreateSubmit}  />
 				<div style={[styles.error, !this.state.errorMessage && styles.hidden]}>
 					{(()=>{
 						switch (this.state.errorMessage) {

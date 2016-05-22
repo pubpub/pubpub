@@ -10,6 +10,7 @@ export const globalStyles = {
 	// sideBackground: '#F5F5F5',
 	sideBackground: '#EBEBEB',
 	// sideText: '#666',
+	sideTextDisabled: '#808284',
 	sideText: '#222',
 	sideHover: '#000',
 	veryLight: '#BBB',

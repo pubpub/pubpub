@@ -16,6 +16,9 @@ import {fireBaseURL, firebaseTokenGen, generateAuthToken} from '../services/fire
 import {sendAddedAsCollaborator} from '../services/emails';
 // import {featurePub, getRecommendations, inpRecAction, removeAction} from '../services/recommendations';
 import {getRecommendations, inpRecAction} from '../services/recommendations';
+import {checkCaptcha} from '../services/captcha';
+import {captchaKey} from '../config';
+
 
 export function getPub(req, res) {
 	const userID = req.user ? req.user._id : undefined;
@@ -79,38 +82,51 @@ export function createPub(req, res) {
 		return res.status(500).json('User does not exist!');
 	}
 
-	Pub.isUnique(req.body.slug, (err, result)=>{
-		if (!result) { return res.status(500).json('URL Title is not Unique!'); }
-		if (req.body.slug.substring(req.body.slug.length - 12, req.body.slug.length) === '-landingpage') { return res.status(500).json('URL Title is not Unique!'); }
+	const token = req.body.reCaptchaToken;
+	const remoteip = req.connection.remoteAddress;
 
-		Pub.createPub(req.body.slug, req.body.title, userID, false, function(createErr, savedPub) {
-			if (createErr || !savedPub) { return res.status(500).json('Error Creating Pub'); }
-			const pubID = savedPub.id;
+	const verifyAndCreatePub = () => {
+		Pub.isUnique(req.body.slug, (err, result)=>{
+			if (!result) { return res.status(500).json('URL Title is not Unique!'); }
+			if (req.body.slug.substring(req.body.slug.length - 12, req.body.slug.length) === '-landingpage') { return res.status(500).json('URL Title is not Unique!'); }
 
-			User.update({ _id: userID }, { $addToSet: { pubs: pubID} }, function(errUpdate, resultUpdate) {if (errUpdate) return console.log(errUpdate);});
+			Pub.createPub(req.body.slug, req.body.title, userID, false, function(createErr, savedPub) {
+				if (createErr || !savedPub) { return res.status(500).json('Error Creating Pub'); }
+				const pubID = savedPub.id;
 
-			const ref = new Firebase(fireBaseURL + req.body.slug + '/editorData' );
-			ref.authWithCustomToken(generateAuthToken(), ()=>{
-				const newEditorData = {
-					collaborators: {},
-					settings: {styleDesktop: ''},
-				};
-				newEditorData.collaborators[req.user.username] = {
-					_id: userID.toString(),
-					name: req.user.name,
-					firstName: req.user.firstName || '',
-					lastName: req.user.lastName || '',
-					username: req.user.username,
-					email: req.user.email,
-					thumbnail: req.user.thumbnail,
-					permission: 'edit',
-					admin: true,
-				};
-				ref.set(newEditorData);
+				User.update({ _id: userID }, { $addToSet: { pubs: pubID} }, function(errUpdate, resultUpdate) {if (errUpdate) return console.log(errUpdate);});
 
-				return res.status(201).json(savedPub.slug);
+				const ref = new Firebase(fireBaseURL + req.body.slug + '/editorData' );
+				ref.authWithCustomToken(generateAuthToken(), ()=>{
+					const newEditorData = {
+						collaborators: {},
+						settings: {styleDesktop: ''},
+					};
+					newEditorData.collaborators[req.user.username] = {
+						_id: userID.toString(),
+						name: req.user.name,
+						firstName: req.user.firstName || '',
+						lastName: req.user.lastName || '',
+						username: req.user.username,
+						email: req.user.email,
+						thumbnail: req.user.thumbnail,
+						permission: 'edit',
+						admin: true,
+					};
+					ref.set(newEditorData);
+
+					return res.status(201).json(savedPub.slug);
+				});
 			});
 		});
+	};
+
+	checkCaptcha({token, remoteip})
+	.then(function() {
+		verifyAndCreatePub();
+	})
+	.catch(function() {
+		res.status(500).json('Could not validate Captcha!');
 	});
 
 }

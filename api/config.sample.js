@@ -23,3 +23,4 @@ export const mongoURI = '<YOUR-URI-HERE>'; // Can point to an external mongo hos
 
 // Sendgrid Credentials
 export const sendgridAPIKey = '<YOUR-KEY-HERE>'; // Sendgrid used to send transactional emails
+export const captchaKey = '<YOUR-KEY-HERE>';
