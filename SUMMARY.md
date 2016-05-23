@@ -1,8 +1,8 @@
 # PubPub Documentation 
 
-[Change Log](CHANGELOG.md)
-[Contributing](CONTRIBUTING.md)
-[Documentation](DOCUMENTATION.md)
+- [Change Log](CHANGELOG.md)
+- [Contributing](CONTRIBUTING.md)
+- [Documentation](DOCUMENTATION.md)
 
 ## Guide
 
