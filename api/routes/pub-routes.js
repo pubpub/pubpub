@@ -16,7 +16,7 @@ import {fireBaseURL, firebaseTokenGen, generateAuthToken} from '../services/fire
 import {sendAddedAsCollaborator} from '../services/emails';
 // import {featurePub, getRecommendations, inpRecAction, removeAction} from '../services/recommendations';
 import {getRecommendations, inpRecAction} from '../services/recommendations';
-import {checkCaptcha} from '../services/captcha';
+import {checkCaptcha, checkSpam} from '../services/spam';
 
 
 export function getPub(req, res) {
@@ -80,8 +80,6 @@ export function createPub(req, res) {
 	if (!req.user) {
 		return res.status(500).json('User does not exist!');
 	}
-
-	console.log('CREATE_PUB', req.body);
 
 	const token = req.body.reCaptchaToken;
 	const remoteip = req.connection.remoteAddress;
@@ -186,6 +184,14 @@ export function saveVersionPub(req, res) {
 
 		if (!req.user || (pub.collaborators.canEdit.indexOf(req.user._id) === -1 && _.intersection(userGroupsStrings, canEditStrings).length === 0 && _.intersection(userAdminJournalsStrings, canEditStrings).length === 0 && req.user._id.toString() !== '568abdd9332c142a0095117f') ) {
 			return res.status(403).json('Not authorized to publish versions to this pub');
+		}
+
+		if (req.body.newVersion && req.body.newVersion.markdown) {
+			const foundSpam = checkSpam(req.body.newVersion.markdown);
+			if (foundSpam) {
+				console.log('PUB_SPAM_FILTER', req.user.id);
+				return res.status(403).json('');
+			}
 		}
 
 		const previousHistoryItem = pub.history.length ? pub.history[pub.history.length - 1] : {markdown: '', styleDesktop: '', styleMobile: ''};
