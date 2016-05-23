@@ -81,6 +81,8 @@ export function createPub(req, res) {
 		return res.status(500).json('User does not exist!');
 	}
 
+	console.log('CREATE_PUB', req.body);
+
 	const token = req.body.reCaptchaToken;
 	const remoteip = req.connection.remoteAddress;
 
