@@ -1,3 +1,5 @@
+# Translations
+
 The translations folder has two folders:
 
 1. `languages/` - This folder contains .json files with all language translation strings. The en.json file is compiled from source while others are translated by humans.
