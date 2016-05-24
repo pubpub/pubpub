@@ -4,7 +4,7 @@ require('babel-polyfill');
 var fs = require('fs');
 var path = require('path');
 var webpack = require('webpack');
-var HappyPack = require('happypack');
+// var HappyPack = require('happypack');
 var assetsPath = path.resolve(__dirname, '../static/dist');
 var host = (process.env.HOST || 'localhost');
 var port = parseInt(process.env.PORT) + 1 || 3001;
@@ -80,8 +80,8 @@ module.exports = {
 	},
 	module: {
 		loaders: [
-			// { test: /\.(js|jsx)$/, exclude: /node_modules/, loaders: ['babel?' + JSON.stringify(babelLoaderQuery)]},
-			{ test: /\.(js|jsx)$/, exclude: /node_modules/, loaders: ['happypack/loader?id=babel']},
+			{ test: /\.(js|jsx)$/, exclude: /node_modules/, loaders: ['babel?' + JSON.stringify(babelLoaderQuery)]},
+			// { test: /\.(js|jsx)$/, exclude: /node_modules/, loaders: ['happypack/loader?id=babel']},
 			{ test: /\.json$/, loader: 'json-loader' }
 		]
 	},
@@ -97,10 +97,10 @@ module.exports = {
 		fs: "empty"
 	},
 	plugins: [
-		new HappyPack({
-			id: 'babel',
-			loaders: ['babel?' + JSON.stringify(babelLoaderQuery)]
-		}),
+		// new HappyPack({
+		// 	id: 'babel',
+		// 	loaders: ['babel?' + JSON.stringify(babelLoaderQuery)]
+		// }),
 		// hot reload
 		new webpack.HotModuleReplacementPlugin(),
 		new webpack.IgnorePlugin(/webpack-stats\.json$/),
