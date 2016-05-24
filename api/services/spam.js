@@ -45,28 +45,28 @@ export function checkCaptcha({token, remoteip}) {
  */
 function occurrences(string, subString, allowOverlapping) {
 
-    string += "";
-    subString += "";
-    if (subString.length <= 0) return (string.length + 1);
+	const newString = string + '';
+	const newSubString = subString + '';
+	if (subString.length <= 0) return (newString.length + 1);
 
-    var n = 0,
-        pos = 0,
-        step = allowOverlapping ? 1 : subString.length;
+	let index = 0;
+	let pos = 0;
+	const step = allowOverlapping ? 1 : newSubString.length;
 
-    while (true) {
-        pos = string.indexOf(subString, pos);
-        if (pos >= 0) {
-            ++n;
-            pos += step;
-        } else break;
-    }
-    return n;
+	while (true) {
+		pos = newString.indexOf(newSubString, pos);
+		if (pos >= 0) {
+			++index;
+			pos += step;
+		} else break;
+	}
+	return index;
 }
 
 
 export function checkSpam(markdown) {
 
-	const cleanedString = markdown.replace(/[^a-zA-Z0-9! ]+/g, "");
+	const cleanedString = markdown.replace(/[^a-zA-Z0-9! ]+/g, '');
 	let foundWords = 0;
 
 	const hardspamwords = ['stream', 'watch', 'online', 'live', 'free', 'episode'];
