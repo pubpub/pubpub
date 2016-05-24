@@ -2,7 +2,7 @@ import React, { PropTypes } from 'react';
 import {connect} from 'react-redux';
 import Radium from 'radium';
 import Helmet from 'react-helmet';
-import {GalleryCollection, GalleryPub, GalleryJournal, NotFound} from 'components';
+import {GalleryPub, GalleryJournal, NotFound} from 'components';
 import {globalStyles} from 'utils/styleConstants';
 
 import {globalMessages} from 'utils/globalMessages';
@@ -61,7 +61,7 @@ const Explore = React.createClass({
 								<div style={styles.header}>
 									<FormattedMessage {...globalMessages.collections} />
 								</div>
-								<GalleryCollection collections={this.props.appData.getIn(['journalData', 'collections']).toJS()} />
+								<div></div>
 							</div>
 						);
 

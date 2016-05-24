@@ -96,5 +96,7 @@ if (config.apiPort) {
 
 
 } else {
-	console.error('==>     ERROR: No PORT environment variable has been specified');
+	if (!process.env.TESTING) {
+		console.error('==>     ERROR: No PORT environment variable has been specified');	
+	}
 }

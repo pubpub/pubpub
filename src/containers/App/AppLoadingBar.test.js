@@ -1,6 +1,6 @@
 import {expect} from 'chai';
 import {shallowRender} from 'tests/helpersClient';
-import AppLoadingBar from './AppLoadingBar.jsx'
+import {AppLoadingBar} from './AppLoadingBar.jsx'
 
 describe('Components', () => {
 	describe('AppLoadingBar.jsx', () => {

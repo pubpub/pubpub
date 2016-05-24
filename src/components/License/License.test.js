@@ -3,18 +3,19 @@ import ReactDOM from 'react-dom';
 import ReactDOMServer from 'react-dom/server';
 import TestUtils from 'react-addons-test-utils'
 import {expect} from 'chai';
-import {checkUnwrappedRenderSuccess} from 'tests/helpersClient';
+import {shallowRender} from 'tests/helpersClient';
 import License, {License as LicenseUnwrapped} from './License.jsx'
 
 describe('Components', () => {
 	describe('License.jsx', () => {
 
-		it('should exist when rendered with empty props', () => {
+		it('should render with empty props', () => {
 			const props = {};
-			const {domRender, message, isErrorScreen} = checkUnwrappedRenderSuccess(LicenseUnwrapped, props) ;
+			const {renderOutput, error} = shallowRender(LicenseUnwrapped, props) ;
 
-			expect(domRender).to.exist; // Successfully rendered into the DOM
-			expect(isErrorScreen, message).to.be.false; // Did not render a Red warning screen
+			expect(error).to.not.exist; // Did not render an error
+			expect(renderOutput).to.exist; // Successfully rendered
+			
 		});
 
 		it('should accept custom text', () => {

@@ -1,6 +1,6 @@
 import React, {PropTypes} from 'react';
 import Radium from 'radium';
-import {GalleryCollection, GalleryPub, GalleryUser} from 'components';
+import {GalleryPub, GalleryUser} from 'components';
 // import {globalStyles} from 'utils/styleConstants';
 
 import {globalMessages} from 'utils/globalMessages';
@@ -27,11 +27,6 @@ const JournalMain = React.createClass({
 					<FormattedMessage {...globalMessages.pubs} />
 				</div>
 				<GalleryPub pubs={this.props.journalData.pubsFeatured} />
-
-				<div style={styles.sectionHeader}>
-					<FormattedMessage {...globalMessages.collections} />
-				</div>
-				<GalleryCollection collections={this.props.journalData.collections} />
 
 				<div style={styles.sectionHeader}>
 					<FormattedMessage {...globalMessages.admins} />

@@ -1,6 +1,5 @@
 export Button from './Button/Button';
 export Formatting from './Formatting/Formatting';
-export GalleryCollection from './GalleryCollection/GalleryCollection';
 export GalleryJournal from './GalleryJournal/GalleryJournal';
 export GalleryPub from './GalleryPub/GalleryPub';
 export GalleryUser from './GalleryUser/GalleryUser';
