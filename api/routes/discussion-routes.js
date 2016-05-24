@@ -58,26 +58,29 @@ export function addDiscussion(req, res) {
 		// Notify the author of a parent comment
 		Pub.findOne({_id: pubID}, {authors: 1}).lean().exec(function(errPubFind, pub) {
 			if (!pub) { return res.status(500).json('commenting on non-existant pub'); }
+			
 			pub.authors.map((author)=>{
 				Notification.createNotification('discussion/pubComment', req.body.host, userID, author, pubID, discussionID);
 			});
-		});
-		if (result.parent && !result.private) { // Don't notify parent author if reply is private. We don't want a public comment being told about private responses.
-			Discussion.findOne({_id: result.parent}, {author: 1}).lean().exec(function(errDiscussionFind, parentDiscussion) {
-				Notification.createNotification('discussion/repliedTo', req.body.host, userID, parentDiscussion.author, pubID, discussionID);
+
+			if (result.parent && !result.private) { // Don't notify parent author if reply is private. We don't want a public comment being told about private responses.
+				Discussion.findOne({_id: result.parent}, {author: 1}).lean().exec(function(errDiscussionFind, parentDiscussion) {
+					Notification.createNotification('discussion/repliedTo', req.body.host, userID, parentDiscussion.author, pubID, discussionID);
+				});
+			}
+
+			const populateQuery = [
+				{path: 'author', select: '_id name username firstName lastName thumbnail'},
+				// {path:'selections'},
+			];
+
+			Discussion.populate(result, populateQuery, function(errDiscPopulate, populatedResult) {
+				if (err) { return res.status(500).json(err); }
+				res.status(201).json(populatedResult);
 			});
-		}
-
-		const populateQuery = [
-			{path: 'author', select: '_id name username firstName lastName thumbnail'},
-			// {path:'selections'},
-		];
-
-		Discussion.populate(result, populateQuery, function(errDiscPopulate, populatedResult) {
-			if (err) { return res.status(500).json(err); }
-			res.status(201).json(populatedResult);
 
 		});
+
 
 	});
 }
