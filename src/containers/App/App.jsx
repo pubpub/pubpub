@@ -19,10 +19,9 @@ export const App = React.createClass({
 		loginData: PropTypes.object,
 		path: PropTypes.string,
 		slug: PropTypes.string,
-		children: PropTypes.object.isRequired,
+		children: PropTypes.object,
 		dispatch: PropTypes.func
 	},
-
 
 	statics: {
 		fetchData: function(getState, dispatch) {

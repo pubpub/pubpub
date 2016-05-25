@@ -137,8 +137,8 @@ export const globalMessages = defineMessages({
 		id: 'global.aboutPubPub',
 		defaultMessage: 'About PubPub',
 	},
-	contact: {
-		id: 'global.contact',
+	Contact: {
+		id: 'global.Contact',
 		defaultMessage: 'Contact',
 	},
 	add: {
@@ -163,6 +163,10 @@ export const globalMessages = defineMessages({
 	},
 	pubs: {
 		id: 'global.pubs',
+		defaultMessage: 'Pubs',
+	},
+	Pubs: {
+		id: 'global.Pubs',
 		defaultMessage: 'Pubs',
 	},
 	score: {

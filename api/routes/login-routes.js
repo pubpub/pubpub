@@ -2,16 +2,16 @@ const app = require('../api');
 const passport = require('passport');
 
 const User = require('../models').User;
-const Journal = require('../models').Journal;
 const Notification = require('../models').Notification;
-// import {cloudinary} from '../services/cloudinary';
+const Promise = require('bluebird');
+const readFile = Promise.promisify(require('fs').readFile);
 import {sendResetEmail} from '../services/emails';
 
-// When an implicit login request is made using the cookie
-export function loginGet(req, res) {
-	if (req.user) {
-
-		return res.status(201).json({
+export function login(req, res) {
+	// Load the app language data and login the user if a login cookie exists
+	const loginData = req.user
+		? {
+			_id: req.user._id,
 			name: req.user.name,
 			firstName: req.user.firstName,
 			lastName: req.user.lastName,
@@ -20,52 +20,42 @@ export function loginGet(req, res) {
 			thumbnail: req.user.thumbnail,
 			settings: req.user.settings,
 			following: req.user.following,
-		});
-
-	}
-	return res.status(201).json('No Session');
-}
-app.get('/login', loginGet);
-
-// When an explicit login request is made
-export function loginPost(req, res) {
-	User.findOne({email: req.body.email})
-	.populate({path: 'assets'})
-	.exec(function(err, user) {
-		if (err) {
-			console.log(err);
-			return res.status(500).json(err);
+			assets: req.user.assets,
+			locale: req.user.locale,
 		}
+		: {};
+	const locale = loginData.locale || 'en';
+	
+	const tasks = [
+		readFile(__dirname + '/../../translations/languages/' + locale + '.json', 'utf8'), // Load the language data
+		Notification.find({recipient: loginData._id, read: false}).count().exec() // Query for the notifcation count
+	];
 
-		Journal.findOne({ $or: [ {subdomain: req.query.host.split('.')[0]}, {'customDomain': req.query.host}]}).lean().exec(function(errJournalFind, journal) {
+	// Run all tasks and return app and login data
+	Promise.all(tasks).then(function(results) {
+		const languageObject = results[0];
+		const notificationCount = results[1];
 
-			const userID = user._id;
-			const isAdmin = journal && String(journal.admins).indexOf(String(userID)) > -1 ? true : false;
-
-			Notification.getUnreadCount(user._id, function(errNotifGet, notificationCount) {
-
-				return res.status(201).json({
-					name: user.name,
-					firstName: user.firstName,
-					lastName: user.lastName,
-					username: user.username,
-					image: user.image,
-					thumbnail: user.thumbnail,
-					settings: user.settings,
-					following: user.following,
-					isAdminToJournal: isAdmin,
-					notificationCount: notificationCount,
-					assets: user.assets
-
-				});
-
-			});
-
+		return res.status(201).json({
+			languageData: {
+				locale: locale,
+				languageObject: languageObject,
+			},
+			loginData: {
+				...loginData,
+				notificationCount: notificationCount
+			}
 		});
-
+	})
+	.catch(function(error) {
+		console.log('error', error);
+		return res.status(500).json(error);
 	});
+
 }
-app.post('/login', passport.authenticate('local'), loginPost);
+app.get('/loadAppAndLogin', login);
+app.post('/login', passport.authenticate('local'), login);
+
 
 // When a user logs out
 export function logout(req, res) {

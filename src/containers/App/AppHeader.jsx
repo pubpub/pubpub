@@ -8,9 +8,19 @@ import {FormattedMessage} from 'react-intl';
 
 let styles = {};
 
-const HeaderNav = React.createClass({
+export const AppHeader = React.createClass({
 	propTypes: {
 		loginData: PropTypes.object,
+	},
+
+	getInitialState() {
+		return {
+			accountMenuOpen: false
+		};
+	},
+
+	toggleAccountMenu: function() {
+		this.setState({accountMenuOpen: !this.state.accountMenuOpen});
 	},
 
 	render: function() {
@@ -19,44 +29,49 @@ const HeaderNav = React.createClass({
 		return (
 			<div className="header-bar darkest-bg lightest-color" style={styles.headerBar}>
 
+				{/* PubPub Logo */}
 				<Link to={'/'} style={globalStyles.link}>
-					<div className="header-logo title-font" key="headerLogo" style={[styles.headerLogo]}>
+					<div className="header-logo title-font" key="headerLogo" style={[styles.headerButton, styles.headerLogo]}>
 						PubPub
 					</div>
 				</Link>
 
-				{isLoggedIn 
-					? <div className="header-nav" key="headerNav" style={[styles.headerNav]}>
-						{this.props.loginData.getIn(['userData', 'notificationCount'])
-							? 	<div>
-									<Link to={'/user/' + this.props.loginData.getIn(['userData', 'username']) + '/notifications'}>
-										<div key="headerNavNotifications" style={[styles.navButton, styles.notificationBlock, this.notificationStyle()]}>
-											{this.props.loginData.getIn(['userData', 'notificationCount'])}
-										</div>
-									</Link>
-								</div>
-							: null
-						}
-						<Link to={'/user/' + this.props.loginData.getIn(['userData', 'username'])}>
-							<span key="headerLogin" style={[styles.loggedIn[isLoggedIn]]}>
-
-								<img style={styles.userImage} src={this.props.loginData.getIn(['userData', 'thumbnail'])} />
-								{/* <div style={styles.userName}>{this.props.loginData.getIn(['userData', 'name'])}</div> */}
-								<div style={[styles.userName, this.headerTextColorStyle()]}>
-									<FormattedMessage {...globalMessages.account} />
-								</div>
-
-							</span>
-						</Link>
-					</div>
-					: <Link to={'/login'} style={globalStyles.link}>
-						<div className="header-nav" key="headerNav" style={[styles.headerNav]}>
+				{/* Login Button */}
+				{!isLoggedIn && // Render if not logged in
+					<Link to={'/login'} style={globalStyles.link}>
+						<div style={[styles.headerButton, styles.headerNav]}>
 							<FormattedMessage {...globalMessages.login} />
 						</div>
 					</Link>
 				}
+
+				{/* Account Button */}
+				{isLoggedIn && // Render if logged in
+					<div style={[styles.headerButton, styles.headerNav]} onClick={this.toggleAccountMenu}>
+
+						<img style={styles.userImage} src={this.props.loginData.getIn(['userData', 'thumbnail'])} />
+						<div style={[styles.userName]}>
+							<FormattedMessage {...globalMessages.account} />
+						</div>
+
+					</div>
+				}
+
+				{/* Notication Count Button */}
+				{isLoggedIn && this.props.loginData.getIn(['userData', 'notificationCount']) && // Render if logged in and has notification count
+					<Link to={'/user/' + this.props.loginData.getIn(['userData', 'username']) + '/notifications'}>
+						<div style={[styles.headerButton, styles.headerNav]}>
+							<div key="headerNavNotifications" style={styles.notificationBlock}>
+								{this.props.loginData.getIn(['userData', 'notificationCount'])}
+							</div>
+						</div>
+					</Link>
+				}			
 				
-				<div className="header-menu"></div>
+				{/* Account Menu */}
+				{this.state.accountMenuOpen && // Render if the account menu is set open
+					<div className="header-menu">CAT</div>
+				}
 
 			</div>
 			
@@ -64,36 +79,36 @@ const HeaderNav = React.createClass({
 	}
 });
 
-export default Radium(HeaderNav);
+export default Radium(AppHeader);
 
 styles = {
 	headerBar: {
-		minHeight: globalStyles.headerHeight,
-		lineHeight: globalStyles.headerHeight,
 		fontSize: '1em',
 		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
-			minHeight: globalStyles.headerHeightMobile,
-			lineHeight: globalStyles.headerHeightMobile,
 			fontSize: '2em',
 		},
 	},
 
-	headerLogo: {
-		fontSize: '1.4em',
+	headerButton: {
 		padding: '0px 15px',
 		display: 'inline-block',
-		
+		height: globalStyles.headerHeight,
+		lineHeight: globalStyles.headerHeight,
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+			height: globalStyles.headerHeightMobile,
+			lineHeight: globalStyles.headerHeightMobile,
+		}
+	},
+	headerLogo: {
+		fontSize: '1.4em',
+		transform: 'translateY(2px)', // The logo looks like it is set a bit too high by default
 	},
 	
 	headerNav: {
 		fontSize: '0.9em',
-		padding: '0px 15px',
-		display: 'inline-block',
 		float: 'right',
-	}
-	// right: {
-	// 	float: 'right',
-	// },
+	},
+
 	// navButton: {
 	// 	float: 'right',
 	// 	height: globalStyles.headerHeight,
@@ -107,14 +122,14 @@ styles = {
 	// accountSpanWithNotification: {
 	// 	padding: '0px 5px 0px 15px',
 	// },
-	// notificationBlock: {
-	// 	height: '18px',
-	// 	lineHeight: '16px',
-	// 	padding: '0px 5px',
-	// 	margin: '6px 6px 6px -0px',
-	// 	textAlign: 'center',
-	// 	borderRadius: '1px',
-	// },
+	notificationBlock: {
+		height: '18px',
+		lineHeight: '16px',
+		padding: '0px 5px',
+		margin: '6px 6px 6px -0px',
+		textAlign: 'center',
+		borderRadius: '1px',
+	},
 	// separator: {
 	// 	width: 1,
 	// 	backgroundColor: '#999',
@@ -123,98 +138,14 @@ styles = {
 	// 	float: 'right',
 	// },
 
-	// loggedOut: {
-	// 	true: {
-	// 		display: 'none',
-	// 	}
-	// },
-	// loggedIn: {
-	// 	false: {
-	// 		display: 'none',
-	// 	}
-	// },
-	// userImage: {
-	// 	height: 18,
-	// 	width: 18,
-	// 	padding: 6,
-	// 	float: 'right',
-	// },
-	// userName: {
-	// 	float: 'right',
-	// 	padding: '0px 3px 0px 0px',
-	// },
+	userImage: {
+		height: 18,
+		width: 18,
+		padding: 6,
+		float: 'right',
+	},
+	userName: {
+		float: 'right',
+		padding: '0px 3px 0px 0px',
+	},
 };
-
-
-// {( this.props.loginData.get('loggedIn') === false
-// 	? <span>Login</span>
-// 	: ( <div>
-// 			<img src={this.props.loginData.getIn(['userData', 'image'])} />
-// 			{this.props.loginData.getIn(['userData', 'name'])}
-// 		</div>)
-// )}
-
-
-// <div style={[styles.headerNavContainer]} >
-					
-// 	<div style={styles.headerNav}>
-// 		<div styles={styles.right}>
-
-// 			{
-// 				this.props.loginData.getIn(['userData', 'notificationCount'])
-// 					? 	<div>
-// 							<Link to={'/user/' + this.props.loginData.getIn(['userData', 'username']) + '/notifications'}>
-// 							<div key="headerNavNotifications" style={[styles.navButton, styles.notificationBlock, this.notificationStyle()]}>
-// 								{this.props.loginData.getIn(['userData', 'notificationCount'])}
-// 							</div></Link>
-// 						</div>
-// 					: null
-// 			}
-
-// 			<div key="headerNavLogin" >
-
-// 				{/* If Logged Out */}
-// 				{/* ------------- */}
-// 				<span style={styles.loggedOut[isLoggedIn]}>
-// 					<FormattedMessage {...globalMessages.login} />
-// 				</span>
-
-// 				{/* If Logged In */}
-// 				{/* ------------ */}
-// 				<Link to={'/user/' + this.props.loginData.getIn(['userData', 'username'])}>
-// 					<span key="headerLogin" style={[styles.loggedIn[isLoggedIn]]}>
-
-// 						<img style={styles.userImage} src={this.props.loginData.getIn(['userData', 'thumbnail'])} />
-// 						{/* <div style={styles.userName}>{this.props.loginData.getIn(['userData', 'name'])}</div> */}
-// 						<div style={[styles.userName, this.headerTextColorStyle()]}>
-// 							<FormattedMessage {...globalMessages.account} />
-// 						</div>
-
-// 					</span>
-// 				</Link>
-
-// 			</div>
-
-// 				this.props.loginData.get('loggedIn') === true
-// 					? 	<div>
-// 							<div style={styles.separator}></div>
-// 							<Link to={'/pubs/create'}><div key="headerNavNewPub" style={[styles.navButton, this.headerTextColorStyle()]}>
-// 								<FormattedMessage {...globalMessages.newPub} />
-// 							</div></Link>
-// 							{
-// 								this.props.isJournalAdmin
-// 									? <div>
-// 										<div style={styles.separator}></div>
-// 										<Link to={'/journal/' + this.props.journalSubdomain}><div key="headerNavAdmin" style={[styles.navButton, this.headerTextColorStyle()]}>
-// 											<FormattedMessage {...globalMessages.journalAdmin} />
-// 										</div></Link>
-// 									</div>
-// 									: null
-// 							}
-// 						</div>
-// 					: null
-
-
-// 		</div>
-// 	</div>
-// </div>

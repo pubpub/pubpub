@@ -1,13 +1,13 @@
 import {expect} from 'chai';
 import {shallowRender} from 'tests/helpersClient';
-import {AppHeader} from './AppHeader.jsx'
+import AppFooter from './AppFooter.jsx'
 
 describe('Components', () => {
-	describe('AppHeader.jsx', () => {
+	describe('AppFooter.jsx', () => {
 
 		it('should render with empty props', () => {
 			const props = {};
-			const {renderOutput, error} = shallowRender(AppHeader, props) ;
+			const {renderOutput, error} = shallowRender(AppFooter, props) ;
 
 			expect(error).to.not.exist; // Did not render an error
 			expect(renderOutput).to.exist; // Successfully rendered

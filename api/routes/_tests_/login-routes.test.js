@@ -1,21 +1,21 @@
 import httpMocks from 'node-mocks-http';
 import {expect} from 'chai';
 import {beforeEachMongoose, afterMongoose} from 'tests/helpersServer';
-import {loadAppAndLogin} from '../app-routes';
+import {login} from '../login-routes';
 
 describe('API', () => {
-	describe('app-routes.js', () => {
+	describe('login-routes.js', () => {
 
 		beforeEach(beforeEachMongoose);
 		after(afterMongoose);
 
-		it('should load with empty request data', function(done){
+		it('login() should load with empty request data', function(done){
 			const req = {};
 			const res = httpMocks.createResponse({
 			  eventEmitter: require('events').EventEmitter
 			});
 
-			loadAppAndLogin(req, res);
+			login(req, res);
 
 			res.on('end', function() {
 				const data = JSON.parse( res._getData() );
@@ -27,13 +27,13 @@ describe('API', () => {
 
 		});
 
-		it('should load en locale by default', function(done){
+		it('login() should load en locale by default', function(done){
 			const req = {};
 			const res = httpMocks.createResponse({
 			  eventEmitter: require('events').EventEmitter
 			});
 
-			loadAppAndLogin(req, res);
+			login(req, res);
 
 			res.on('end', function() {
 				const data = JSON.parse( res._getData() );
@@ -45,7 +45,7 @@ describe('API', () => {
 
 		});
 
-		it('should load user data from req', function(done){
+		it('login() should load user data from req', function(done){
 			const req = {
 				user: {
 					_id: '507f191e810c19729de860ea'
@@ -55,7 +55,7 @@ describe('API', () => {
 			  eventEmitter: require('events').EventEmitter
 			});
 
-			loadAppAndLogin(req, res);
+			login(req, res);
 
 			res.on('end', function() {
 				const data = JSON.parse( res._getData() );

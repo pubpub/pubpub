@@ -1,14 +1,12 @@
 import React, {PropTypes} from 'react';
 import Radium from 'radium';
-import {globalStyles} from 'utils/styleConstants';
 import { Link } from 'react-router';
-
-// import {globalMessages} from 'utils/globalMessages';
-// import {FormattedMessage} from 'react-intl';
+import {globalMessages} from 'utils/globalMessages';
+import {FormattedMessage} from 'react-intl';
 
 let styles = {};
 
-const AppFooter = React.createClass({
+export const AppFooter = React.createClass({
 	propTypes: {
 		hideFooter: PropTypes.bool
 	},
@@ -19,29 +17,32 @@ const AppFooter = React.createClass({
 				<div style={{display: 'table', margin: '0 auto'}}>
 					<div style={styles.footerColumn}>
 						<div style={styles.footerHeader}>PubPub</div>
-						<Link style={globalStyles.link} to={'/pub/about'}><div style={styles.footerItem}>About</div></Link>
-						<a style={globalStyles.link} href={'https://github.com/pubpub/pubpub'}><div style={styles.footerItem}>Code</div></a>
-						<Link style={globalStyles.link} to={'/pub/jobs'}><div style={styles.footerItem}>Jobs</div></Link>
 
+						<Link style={styles.footerItem} to={'/pub/about'}> <FormattedMessage id="footer.about" defaultMessage="About"/> </Link>
+						<a style={styles.footerItem} href={'https://github.com/pubpub/pubpub'}> <FormattedMessage id="footer.code" defaultMessage="Code"/> </a>
+						<Link style={styles.footerItem} to={'/pub/jobs'}> <FormattedMessage id="footer.jobs" defaultMessage="Jobs"/> </Link>
 					</div>
 
 					<div style={styles.footerColumn}>
-						<div style={styles.footerHeader}>Explore</div>
-						<Link style={globalStyles.link} to={'/pubs'}><div style={styles.footerItem}>Pubs</div></Link>
-						<Link style={globalStyles.link} to={'/journals'}><div style={styles.footerItem}>Journals</div></Link>
+						<div style={styles.footerHeader}> <FormattedMessage {...globalMessages.Explore} /> </div>
+
+						<Link style={styles.footerItem} to={'/pubs'}> <FormattedMessage {...globalMessages.Pubs} /> </Link>
+						<Link style={styles.footerItem} to={'/journals'}> <FormattedMessage {...globalMessages.Journals} /> </Link>
 					</div>
 
 					<div style={styles.footerColumn}>
-						<div style={styles.footerHeader}>Contact</div>
-						<a style={globalStyles.link} href={'mailto:pubpub@media.mit.edu'}><div style={styles.footerItem}>Email</div></a>
-						<a style={globalStyles.link} href={'https://twitter.com/pubpub'}><div style={styles.footerItem}>Twitter</div></a>
-						<a style={globalStyles.link} href={'http://eepurl.com/bLkuVn'}><div style={styles.footerItem}>Mailing List</div></a>
+						<div style={styles.footerHeader}> <FormattedMessage {...globalMessages.Contact} /> </div>
+
+						<a style={styles.footerItem} href={'mailto:pubpub@media.mit.edu'}> <FormattedMessage id="footer.Email" defaultMessage="Email"/> </a>
+						<a style={styles.footerItem} href={'https://twitter.com/pubpub'}>Twitter</a>
+						<a style={styles.footerItem} href={'http://eepurl.com/bLkuVn'}> <FormattedMessage id="footer.MailingList" defaultMessage="Mailing List"/> </a>
 					</div>
 
 					<div style={styles.footerColumn}>
-						<div style={styles.footerHeader}>Terms</div>
-						<Link style={globalStyles.link} to={'/pub/tos'}><div style={styles.footerItem}>Terms of Service</div></Link>
-						<Link style={globalStyles.link} to={'/pub/privacy'}><div style={styles.footerItem}>Privacy Policy</div></Link>
+						<div style={styles.footerHeader}> <FormattedMessage id="footer.Terms" defaultMessage="Terms"/> </div>
+						
+						<Link style={styles.footerItem} to={'/pub/tos'}> <FormattedMessage id="footer.TermsOfService" defaultMessage="Terms Of Service"/> </Link>
+						<Link style={styles.footerItem} to={'/pub/privacy'}> <FormattedMessage id="footer.PrivacyPolicy" defaultMessage="Privacy Policy"/> </Link>
 					</div>
 				</div>
 
@@ -58,7 +59,6 @@ styles = {
 		margin: '40px auto 0px auto',
 		borderTop: '1px solid #CCC',
 		padding: '40px 0px',
-		fontFamily: globalStyles.headerFont,
 		fontSize: '.9em',
 		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
 			width: 'auto',
@@ -68,7 +68,9 @@ styles = {
 		display: 'table-cell',
 		width: '1px',
 		padding: '0px 4vw',
+		fontSize: '1em',
 		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+			fontSize: '1.2em',
 			width: 'calc(100% - 20px)',
 			float: 'left',
 			marginBottom: '25px',
@@ -81,19 +83,11 @@ styles = {
 		paddingBottom: '2px',
 		marginBottom: '8px',
 		borderBottom: '1px solid #ccc',
-		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
-			// marginTop: '3em'
-			// float: 'left',
-			fontSize: '1.7em',
-		},
 	},
 	footerItem: {
+		display: 'block',
 		color: '#333',
 		whiteSpace: 'nowrap',
-		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
-			fontSize: '1.5em',
-			padding: '15px',
-		}
-
+		textDecoration: 'none',
 	},
 };

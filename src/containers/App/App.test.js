@@ -1,17 +1,24 @@
-// import {expect} from 'chai';
-// import {checkShallowRenderSuccess} from 'tests/helpersClient';
-// import {App} from './App.jsx';
+import {expect} from 'chai';
+import {shallowRender} from 'tests/helpersClient';
+import {Map} from 'immutable';
+import {App} from './App.jsx'
 
-// describe('Containers', () => {
-// 	describe('App.jsx', () => {
+// This test is mostly meaningless as App.jsx is simply a wrapper around other components.
+// The nesting of these wrappers mean that shallowRender won't actually do anything of importance.
+describe('Components', () => {
+	describe('App.jsx', () => {
 
-// 		it('should exist when rendered with empty props', () => {
-// 			const props = {};
-// 			const {domRender, message, isErrorScreen} = checkShallowRenderSuccess(App, props);
-// 			console.log(message);
-// 			expect(domRender).to.exist; // Successfully rendered into the DOM
-// 			expect(isErrorScreen, message).to.be.false; // Did not render a Red warning screen
-// 		});
+		it('should render with null props', () => {
+			const props = {
+				path: '',
+				appData: Map(),
+			};
+			const {renderOutput, error} = shallowRender(App, props) ;
 
-// 	});
-// });
+			expect(error).to.not.exist; // Did not render an error
+			expect(renderOutput).to.exist; // Successfully rendered
+			
+		});
+
+	});
+});

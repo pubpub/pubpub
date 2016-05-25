@@ -8,6 +8,10 @@ import {
 	LOAD_APP_AND_LOGIN_FAIL,
 } from './actions';
 
+import {
+	LOGIN_LOAD_SUCCESS,
+} from 'containers/Login/actions';
+
 describe('Reducers', () => {
 	describe('app.js', () => {
 
@@ -55,6 +59,24 @@ describe('Reducers', () => {
 			const newState = reducer(state, action);
 
 			expect(newState.get('error')).to.equal('fakeError');
+		});
+
+		it('should handle LOGIN_LOAD_SUCCESS', () => {
+			const action = {
+				type: LOGIN_LOAD_SUCCESS,
+				result: {
+					languageData: {
+						locale: 'fakeLocale',
+						languageObject: 'fakeLanguageObject'
+					}
+				}
+			};
+
+			const state = Map();
+			const newState = reducer(state, action);
+
+			expect(newState.get('locale')).to.equal('fakeLocale');
+			expect(newState.get('languageObject')).to.equal('fakeLanguageObject');
 		});
 
 	});
