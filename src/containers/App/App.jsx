@@ -3,6 +3,7 @@ import {StyleRoot} from 'radium';
 import Helmet from 'react-helmet';
 import {connect} from 'react-redux';
 import {loadAppAndLogin} from './actions';
+import {logout} from 'containers/Login/actions';
 import {IntlProvider} from 'react-intl';
 import {safeGetInToJS} from 'utils/safeParse';
 
@@ -36,6 +37,10 @@ export const App = React.createClass({
 		analytics.pageView(this.props.path, this.props.loginData.get('loggedIn'));
 	},
 
+	logoutHandler: function() {
+		this.props.dispatch(logout());
+	},
+
 	render: function() {
 		const messages = safeGetInToJS(this.props.appData, ['languageObject']) || {}; // Messages includes all of the strings used on the site. Language support is implemented by sending a different messages object.
 		const hideFooter = this.props.path.substring(this.props.path.length - 6, this.props.path.length) === '/draft' || this.props.path.substring(this.props.path.length - 6, this.props.path.length) === '/login'; // We want to hide the footer if we are in the editor or login. All other views show the footer.
@@ -56,7 +61,7 @@ export const App = React.createClass({
 					<Helmet {...metaData} />
 
 					<AppLoadingBar color={'#BBBDC0'} show={this.props.appData.get('loading')} />
-					<AppHeader loginData={this.props.loginData} path={this.props.path}/>
+					<AppHeader loginData={this.props.loginData} path={this.props.path} logoutHandler={this.logoutHandler}/>
 					<div className="content"> {this.props.children} </div>
 					<AppFooter hideFooter={hideFooter} />
 

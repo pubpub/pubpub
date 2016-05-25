@@ -12,6 +12,7 @@ export const AppHeader = React.createClass({
 	propTypes: {
 		loginData: PropTypes.object,
 		path: PropTypes.string, 
+		logoutHandler: PropTypes.func,
 	},
 
 	getInitialState() {
@@ -20,12 +21,26 @@ export const AppHeader = React.createClass({
 		};
 	},
 
+	componentWillReceiveProps(nextProps) {
+		// If the path changes, close the menu
+		if (this.props.path !== nextProps.path) {
+			this.setState({accountMenuOpen: false});
+		}
+	},
+
 	toggleAccountMenu: function() {
 		this.setState({accountMenuOpen: !this.state.accountMenuOpen});
 	},
 
+	logout: function() {
+		this.toggleAccountMenu();
+		this.props.logoutHandler();
+	},
+
 	render: function() {
 		const isLoggedIn = this.props.loginData && this.props.loginData.get('loggedIn');
+		const name = this.props.loginData && this.props.loginData.getIn(['userData', 'name']);
+		const username = this.props.loginData && this.props.loginData.getIn(['userData', 'username']);
 		const loginQuery = this.props.path && this.props.path !== '/' ? '?redirect=' + this.props.path : ''; // Query appended to login route. Used to redirect to a given page after succesful login.
 
 		return (
@@ -56,7 +71,7 @@ export const AppHeader = React.createClass({
 
 				{/* Notication Count Button */}
 				{isLoggedIn && !!this.props.loginData.getIn(['userData', 'notificationCount']) && // Render if logged in and has notification count
-					<Link to={'/user/' + this.props.loginData.getIn(['userData', 'username']) + '/notifications'}>
+					<Link to={'/user/' + username + '/notifications'}>
 						<div className={'lightest-bg darkest-color'} style={styles.notificationBlock}>
 							{this.props.loginData.getIn(['userData', 'notificationCount'])}
 						</div>
@@ -70,12 +85,19 @@ export const AppHeader = React.createClass({
 
 				{/* Account Menu */}
 				{this.state.accountMenuOpen && // Render if the account menu is set open
-					<div className="header-menu darker-bg" style={styles.headerMenu}>
-						<ul>
-							<li>Cats</li>
-							<li>Dogs</li>
-							<li>Turtles</li>
-						</ul>
+					<div className="header-menu lightest-bg darkest-color arrow-box" style={styles.headerMenu}>
+						<div style={styles.menuName}>{name}</div>
+
+						<div className={'menu-separator'} ></div>
+
+						<Link className={'menu-option'} to={'/pubs/create'}>New Pub</Link>
+						<Link className={'menu-option'} to={'/user/' + username + '/journals'}>My Journals</Link>
+						
+						<div className={'menu-separator'} ></div>
+
+						<Link className={'menu-option'} to={'/user/' + username}>Profile</Link>
+						<Link className={'menu-option'} to={'/user/' + username + '/settings'}>Settings</Link>
+						<div className={'menu-option'} onClick={this.logout}>Logout</div>
 					</div>
 				}
 
@@ -148,18 +170,23 @@ styles = {
 		}
 	},
 	headerMenu: {
-		overflow: 'hidden',
 		position: 'absolute',
-		width: '250px',
-		boxShadow: '0px 0px 8px black',
-		border: '1px solid white',
+		width: '175px',
+		boxShadow: '0px 0px 2px #808284',
+		border: '1px solid #808284',
+		borderRadius: '1px',
 		right: 5,
-		top: 35,
+		top: 45,
+		padding: '.2em 0em',
 		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
 			position: 'static',
 			width: 'auto',
-			boxShadow: '0px 0px 0px transparent',
-			border: '0px solid transparent'
+			boxShadow: 'inset 0px -4px 4px -2px #BBBDC0',
+			border: '0px solid transparent',
+			fontSize: '0.6em',
 		}
 	},
+	menuName: {
+		padding: '.2em 2em .2em 1em',
+	}
 };

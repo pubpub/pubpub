@@ -53,7 +53,6 @@ export function login(req, res) {
 	});
 
 }
-app.get('/loadAppAndLogin', login);
 app.post('/login', passport.authenticate('local'), login);
 
 
