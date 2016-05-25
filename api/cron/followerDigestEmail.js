@@ -1,7 +1,7 @@
 require('../../server.babel'); // babel registration (runtime transpilation for node)
 
 const mongoose = require('mongoose');
-const mongoURI = process.env.NODE_ENV !== 'production' ? require('../config').mongoURI : process.env.mongoURI;
+const mongoURI = process.env.NODE_ENV !== 'production' && !process.env.TESTING ? require('../config').mongoURI : process.env.mongoURI;
 mongoose.connect(mongoURI);
 
 const sendNotificationDigest = require('../services/emails').sendNotificationDigest;

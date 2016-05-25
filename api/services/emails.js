@@ -1,4 +1,4 @@
-const sendgridKey = process.env.NODE_ENV !== 'production' ? require('../config').sendgridAPIKey : process.env.SENDGRID_API_KEY;
+const sendgridKey = process.env.NODE_ENV !== 'production' && !process.env.TESTING ? require('../config').sendgridAPIKey : process.env.SENDGRID_API_KEY;
 const sendgrid = require('sendgrid')(sendgridKey);
 
 const fromname = 'PubPub';

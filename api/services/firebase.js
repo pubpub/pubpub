@@ -1,4 +1,4 @@
-const firebaseSecret = process.env.NODE_ENV !== 'production' ? require('../config').firebaseSecret : process.env.FIREBASE_SECRET;
+const firebaseSecret = process.env.NODE_ENV !== 'production' && !process.env.TESTING ? require('../config').firebaseSecret : process.env.FIREBASE_SECRET;
 const FirebaseTokenGenerator = require('firebase-token-generator');
 
 export function firebaseTokenGen(username, pubSlug, isReader) {

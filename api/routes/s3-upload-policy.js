@@ -2,7 +2,7 @@ const app = require('../api');
 const crypto = require('crypto');
 
 const awsDetails = {};
-if (process.env.NODE_ENV !== 'production') {
+if (process.env.NODE_ENV !== 'production' && !process.env.TESTING) {
 	awsDetails.accessKeyAws = require('../config').accessKeyAws;
 	awsDetails.secretKeyAws = require('../config').secretKeyAws;
 } else {

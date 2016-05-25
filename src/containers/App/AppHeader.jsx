@@ -159,7 +159,6 @@ styles = {
 			display: 'none',
 		}
 	},
-
 	headerMenuSplash: {
 		position: 'fixed',
 		width: '100vw',
