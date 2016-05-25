@@ -10,5 +10,5 @@ services: mongodb
 script:
   - npm run lint
   - npm run test-travis
-  - npm run coverage
+  - npm run coverage-travis
   - npm run coveralls
