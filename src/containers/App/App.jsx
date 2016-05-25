@@ -56,7 +56,7 @@ export const App = React.createClass({
 					<Helmet {...metaData} />
 
 					<AppLoadingBar color={'#BBBDC0'} show={this.props.appData.get('loading')} />
-					<AppHeader loginData={this.props.loginData} />
+					<AppHeader loginData={this.props.loginData} path={this.props.path}/>
 					<div className="content"> {this.props.children} </div>
 					<AppFooter hideFooter={hideFooter} />
 

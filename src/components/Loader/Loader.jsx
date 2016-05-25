@@ -16,7 +16,6 @@ export const Loader = React.createClass({
 
 	componentWillReceiveProps(nextProps) {
 		if (this.props.loading === true && nextProps.loading === false && nextProps.showCompletion === true) {
-			console.log('clearing this');
 			this.setState({showDone: true});
 			setTimeout(()=>{
 				if (this.isMounted()) {

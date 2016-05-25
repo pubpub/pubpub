@@ -11,6 +11,7 @@ let styles = {};
 export const AppHeader = React.createClass({
 	propTypes: {
 		loginData: PropTypes.object,
+		path: PropTypes.string, 
 	},
 
 	getInitialState() {
@@ -25,6 +26,7 @@ export const AppHeader = React.createClass({
 
 	render: function() {
 		const isLoggedIn = this.props.loginData && this.props.loginData.get('loggedIn');
+		const loginQuery = this.props.path && this.props.path !== '/' ? '?redirect=' + this.props.path : ''; // Query appended to login route. Used to redirect to a given page after succesful login.
 
 		return (
 			<div className="header-bar darkest-bg lightest-color" style={styles.headerBar}>
@@ -38,7 +40,7 @@ export const AppHeader = React.createClass({
 
 				{/* Login Button */}
 				{!isLoggedIn && // Render if not logged in
-					<Link to={'/login'} style={globalStyles.link}>
+					<Link to={'/login' + loginQuery} style={globalStyles.link}>
 						<div style={[styles.headerButton, styles.headerNavItem]}>
 							<FormattedMessage {...globalMessages.login} />
 						</div>

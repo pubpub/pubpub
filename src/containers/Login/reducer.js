@@ -57,7 +57,7 @@ function loginFailed(state, error) {
 		errorMessage = 'Email already used'; break;
 	}
 
-	return defaultState.merge({loading: false, error: errorMessage});
+	return state.merge({loading: false, error: errorMessage});
 }
 
 function loggedOut(state) {

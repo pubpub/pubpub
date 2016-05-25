@@ -1,10 +1,12 @@
-import React, { PropTypes } from 'react';
+import React, {PropTypes} from 'react';
 import {connect} from 'react-redux';
+import {pushState} from 'redux-router';
 import Radium from 'radium';
 import Helmet from 'react-helmet';
 import {login} from './actions';
 import {Link} from 'react-router';
 import {Loader} from 'components';
+
 
 import {globalStyles} from 'utils/styleConstants';
 import {globalMessages} from 'utils/globalMessages';
@@ -16,6 +18,7 @@ export const Login = React.createClass({
 	propTypes: {
 		loginData: PropTypes.object,
 		dispatch: PropTypes.func,
+		query: PropTypes.object,
 	},
 
 	handleLoginSubmit: function(evt) {
@@ -24,9 +27,13 @@ export const Login = React.createClass({
 	},
 
 	componentWillReceiveProps(nextProps) {
-		const username = this.props.loginData && this.props.loginData.get('username');
-		if (!!username){
-			
+		// If there is a new username in loginData, login was a sucess, so redirect
+		const oldUsername = this.props.loginData && this.props.loginData.getIn(['userData', 'username']);
+		const newUsername = nextProps.loginData && nextProps.loginData.getIn(['userData', 'username']);
+		if (newUsername && oldUsername !== newUsername) {
+			const userProfile = '/user/' + newUsername;
+			const redirectQuery = this.props.query && this.props.query.redirect;
+			this.props.dispatch(pushState(null, (redirectQuery || userProfile)));
 		}
 	},
 
@@ -82,7 +89,10 @@ export const Login = React.createClass({
 });
 
 export default connect( state => {
-	return {loginData: state.login};
+	return {
+		loginData: state.login,
+		query: state.router.location.query
+	};
 })( Radium(Login) );
 
 styles = {
