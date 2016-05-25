@@ -24,7 +24,7 @@
     "dev": "concurrently --raw --kill-others \"npm run watch-client\" \"npm run start-dev\" \"npm run start-dev-api\"",
     "test": "sudo mongod | NODE_PATH=./src TESTING=true mocha $(find src api -name '*.test.js') --compilers js:babel-register --require ./src/tests/mochaEnvInit.js --watch --watch-extensions jsx,js --reporter list",
     "test-travis": "NODE_PATH=./src TESTING=true mocha $(find src api -name '*.test.js') --compilers js:babel-register --require ./src/tests/mochaEnvInit.js",
-    "coverage": "NODE_PATH=./src ./node_modules/istanbul/lib/cli.js cover node_modules/mocha/bin/_mocha -- $(find src api -name '*.test.js') --compilers js:babel-register --require ./src/tests/mochaEnvInit.js",
+    "coverage": "NODE_PATH=./src TESTING=true ./node_modules/istanbul/lib/cli.js cover node_modules/mocha/bin/_mocha -- $(find src api -name '*.test.js') --compilers js:babel-register --require ./src/tests/mochaEnvInit.js",
     "coveralls": "./node_modules/coveralls/bin/coveralls.js < coverage/lcov.info"
   },
   "betterScripts": {

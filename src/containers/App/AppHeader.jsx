@@ -84,22 +84,21 @@ export const AppHeader = React.createClass({
 				}
 
 				{/* Account Menu */}
-				{this.state.accountMenuOpen && // Render if the account menu is set open
-					<div className="header-menu lightest-bg darkest-color arrow-box" style={styles.headerMenu}>
-						<div style={styles.menuName}>{name}</div>
+				{/* Use CSS to toggle display:none, to avoid flicker on mobile */}
+				<div className="header-menu lightest-bg darkest-color arrow-box" style={[styles.headerMenu, !this.state.accountMenuOpen && {display: 'none'}]}>
+					<div style={styles.menuName}>{name}</div>
 
-						<div className={'menu-separator'} ></div>
+					<div className={'menu-separator'} ></div>
 
-						<Link className={'menu-option'} to={'/pubs/create'}>New Pub</Link>
-						<Link className={'menu-option'} to={'/user/' + username + '/journals'}>My Journals</Link>
-						
-						<div className={'menu-separator'} ></div>
+					<Link className={'menu-option'} to={'/pubs/create'}>New Pub</Link>
+					<Link className={'menu-option'} to={'/user/' + username + '/journals'}>My Journals</Link>
+					
+					<div className={'menu-separator'} ></div>
 
-						<Link className={'menu-option'} to={'/user/' + username}>Profile</Link>
-						<Link className={'menu-option'} to={'/user/' + username + '/settings'}>Settings</Link>
-						<div className={'menu-option'} onClick={this.logout}>Logout</div>
-					</div>
-				}
+					<Link className={'menu-option'} to={'/user/' + username}>Profile</Link>
+					<Link className={'menu-option'} to={'/user/' + username + '/settings'}>Settings</Link>
+					<div className={'menu-option'} onClick={this.logout}>Logout</div>
+				</div>
 
 			</div>
 			
