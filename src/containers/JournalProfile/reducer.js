@@ -282,10 +282,10 @@ export default function loginReducer(state = defaultState, action) {
 	case LOAD_APP_AND_LOGIN_SUCCESS:
 		return loadAppSuccess(state, action.result.journalData);
 
-	case LOGIN_LOAD_SUCCESS:
-		return loginLoad(state, action.result);
-	case LOGOUT_LOAD_SUCCESS:
-		return logoutLoad(state);
+	// case LOGIN_LOAD_SUCCESS:
+		// return loginLoad(state, action.result);
+	// case LOGOUT_LOAD_SUCCESS:
+		// return logoutLoad(state);
 	default:
 		return ensureImmutable(state);
 	}

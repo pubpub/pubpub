@@ -3,13 +3,16 @@
 // Connect to Mongo database
 const mongoose = require('mongoose');
 mongoose.Promise = require('bluebird');
-
-if (process.env.NODE_ENV !== 'production') {
-	const mongoURI = require('./config').mongoURI;
-	mongoose.connect(mongoURI);
-} else {
-	mongoose.connect(process.env.mongoURI);
+if (!process.env.TESTING) {
+	if (process.env.NODE_ENV !== 'production') {
+		const mongoURI = require('./config').mongoURI;
+		mongoose.connect(mongoURI);
+	} else {
+		mongoose.connect(process.env.mongoURI);
+	}
+	
 }
+
 
 // require('../server.babel'); // babel registration (runtime transpilation for node)
 

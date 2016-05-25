@@ -34,3 +34,47 @@ lightest: #F3F3F4
 body {
 	font-family: 'Open Sans', Helvetica Neue, Arial, sans-serif;
 }
+
+label {
+	display: block;	
+	color: #58585B;
+}
+
+input {
+	display: block;	
+	padding: 5px 10px;
+	border: 2px solid #BBBDC0;
+	border-radius: 1px;
+	font-size: 1.2em;
+	margin-bottom: 1em;
+}
+input:focus{
+	outline: none;
+	border: 2px solid #58585B;
+}
+
+.button {
+	display: inline-block;
+	border: solid 2px #58585B;
+	color: #58585B;
+	padding: .3em 1.8em;
+	transition: .2s ease-out color, .2s ease-out background-color, .2s ease-out border;
+	background-color: white;
+	font-size: 1em;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;   
+	user-select: none;
+}
+
+.button:hover {
+	border: solid 2px #2C2A2B;
+	background-color: #2C2A2B;
+	color: #FEFEFE;
+	cursor: pointer;
+}
+.button:active {
+	-webkit-transform: translateY(1px);
+	-ms-transform: translateY(1px);
+    transform: translateY(1px);
+}
