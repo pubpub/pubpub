@@ -3,7 +3,8 @@ import {connect} from 'react-redux';
 import Radium from 'radium';
 import Helmet from 'react-helmet';
 import {login} from './actions';
-import { Link } from 'react-router';
+import {Link} from 'react-router';
+import {Loader} from 'components';
 
 import {globalStyles} from 'utils/styleConstants';
 import {globalMessages} from 'utils/globalMessages';
@@ -11,7 +12,7 @@ import {FormattedMessage} from 'react-intl';
 
 let styles = {};
 
-const Login = React.createClass({
+export const Login = React.createClass({
 	propTypes: {
 		loginData: PropTypes.object,
 		dispatch: PropTypes.func,
@@ -22,10 +23,19 @@ const Login = React.createClass({
 		this.props.dispatch(login(this.refs.loginEmail.value, this.refs.loginPassword.value));
 	},
 
+	componentWillReceiveProps(nextProps) {
+		const username = this.props.loginData && this.props.loginData.get('username');
+		if (!!username){
+			
+		}
+	},
+
 	render: function() {
 		const metaData = {
 			title: 'PubPub Login',
 		};
+		const isLoading = this.props.loginData && this.props.loginData.get('loading');
+		const errorMessage = this.props.loginData && this.props.loginData.get('error');
 
 		return (
 			<div className={'login-container'} style={styles.container}>
@@ -54,6 +64,11 @@ const Login = React.createClass({
 					<button className={'button'} style={styles.submit} onClick={this.handleLoginSubmit}>
 						<FormattedMessage {...globalMessages.Login}/>
 					</button>
+
+					<div style={styles.loaderContainer}><Loader loading={isLoading} showCompletion={!errorMessage}/></div>
+
+					<div style={styles.errorMessage}>{errorMessage}</div>
+
 				</form>
 				
 				<Link style={styles.registerLink} to={'/register'}>
@@ -87,6 +102,15 @@ styles = {
 		textDecoration: 'none',
 		position: 'relative',
 		top: '-1.7em',
+	},
+	loaderContainer: {
+		display: 'inline-block',
+		position: 'relative',
+		top: 15,
+	},
+	errorMessage: {
+		padding: '10px 0px',
+		color: globalStyles.errorRed,
 	},
 	registerLink: {
 		...globalStyles.link,

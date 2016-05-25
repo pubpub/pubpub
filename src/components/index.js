@@ -5,6 +5,7 @@ export GalleryPub from './GalleryPub/GalleryPub';
 export GalleryUser from './GalleryUser/GalleryUser';
 export ImageCropper from './ImageCropper/ImageCropper';
 export License from './License/License';
+export Loader from './Loader/Loader';
 export LoaderDeterminate from './LoaderDeterminate/LoaderDeterminate';
 export LoaderIndeterminate from './LoaderIndeterminate/LoaderIndeterminate';
 export Markdown from './Markdown/Markdown';

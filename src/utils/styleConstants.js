@@ -1,4 +1,5 @@
 export const globalStyles = {
+	errorRed: '#D8000C',
 	// headerBackground: '#373737',
 	headerBackground: '#2A2A2A',
 	headerHeight: '40px',
