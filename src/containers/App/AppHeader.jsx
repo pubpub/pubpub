@@ -61,6 +61,11 @@ export const AppHeader = React.createClass({
 					</Link>
 				}
 				
+				{/* Account Menu Splash*/}
+				{this.state.accountMenuOpen && // Render if the account menu is set open
+					<div className={'header-menu-splash'} style={styles.headerMenuSplash} onClick={this.toggleAccountMenu}></div>
+				}
+
 				{/* Account Menu */}
 				{this.state.accountMenuOpen && // Render if the account menu is set open
 					<div className="header-menu darker-bg" style={styles.headerMenu}>
@@ -130,13 +135,29 @@ styles = {
 			display: 'none',
 		}
 	},
+
+	headerMenuSplash: {
+		position: 'fixed',
+		width: '100vw',
+		height: '100vh',
+		top: 0,
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+			display: 'none',
+		}
+	},
 	headerMenu: {
 		overflow: 'hidden',
 		position: 'absolute',
 		width: '250px',
+		boxShadow: '0px 0px 8px black',
+		border: '1px solid white',
+		right: 5,
+		top: 35,
 		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
-			position: 'relative',
+			position: 'static',
 			width: 'auto',
+			boxShadow: '0px 0px 0px transparent',
+			border: '0px solid transparent'
 		}
 	},
 };
