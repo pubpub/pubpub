@@ -38,14 +38,14 @@ const Login = React.createClass({
 						<label style={styles.label} htmlFor={'email'}>
 							<FormattedMessage {...globalMessages.Email} />
 						</label>
-						<input ref={'loginEmail'} id={'email'} name={'email'} type="text" />
+						<input ref={'loginEmail'} id={'email'} name={'email'} type="text" style={styles.input}/>
 					</div>
 
 					<div>
 						<label style={styles.label} htmlFor={'password'}>
 							<FormattedMessage {...globalMessages.Password} />
 						</label>
-						<input ref={'loginPassword'} id={'password'} name={'password'} type="password" />
+						<input ref={'loginPassword'} id={'password'} name={'password'} type="password" style={styles.input}/>
 						<Link className={'light-color'} to={'/resetpassword'} style={styles.forgotPasswordLink}>
 							<FormattedMessage id="login.ForgotPassword" defaultMessage="Forgot Password?"/>
 						</Link>
@@ -72,9 +72,15 @@ export default connect( state => {
 
 styles = {
 	container: {
-		maxWidth: '800px',
+		width: '500px',
 		padding: '0px 15px',
-		margin: '0 auto 200px auto',
+		margin: '0 auto',
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+			width: 'calc(100% - 30px)',
+		}
+	},
+	input: {
+		width: 'calc(100% - 20px - 4px)',
 	},
 	forgotPasswordLink: {
 		fontSize: '0.8em',
