@@ -39,7 +39,7 @@ export const AppHeader = React.createClass({
 				{/* Login Button */}
 				{!isLoggedIn && // Render if not logged in
 					<Link to={'/login'} style={globalStyles.link}>
-						<div style={[styles.headerButton, styles.headerNav]}>
+						<div style={[styles.headerButton, styles.headerNavItem]}>
 							<FormattedMessage {...globalMessages.login} />
 						</div>
 					</Link>
@@ -47,26 +47,19 @@ export const AppHeader = React.createClass({
 
 				{/* Account Button */}
 				{isLoggedIn && // Render if logged in
-					<div style={[styles.headerButton, styles.headerNav]} onClick={this.toggleAccountMenu}>
-
+					<div style={[styles.headerButton, styles.headerNavItem]} onClick={this.toggleAccountMenu}>
 						<img style={styles.userImage} src={this.props.loginData.getIn(['userData', 'thumbnail'])} />
-						<div style={[styles.userName]}>
-							<FormattedMessage {...globalMessages.account} />
-						</div>
-
 					</div>
 				}
 
 				{/* Notication Count Button */}
-				{isLoggedIn && this.props.loginData.getIn(['userData', 'notificationCount']) && // Render if logged in and has notification count
+				{isLoggedIn && !!this.props.loginData.getIn(['userData', 'notificationCount']) && // Render if logged in and has notification count
 					<Link to={'/user/' + this.props.loginData.getIn(['userData', 'username']) + '/notifications'}>
-						<div style={[styles.headerButton, styles.headerNav]}>
-							<div key="headerNavNotifications" style={styles.notificationBlock}>
-								{this.props.loginData.getIn(['userData', 'notificationCount'])}
-							</div>
+						<div className={'lightest-bg darkest-color'} style={styles.notificationBlock}>
+							{this.props.loginData.getIn(['userData', 'notificationCount'])}
 						</div>
 					</Link>
-				}			
+				}
 				
 				{/* Account Menu */}
 				{this.state.accountMenuOpen && // Render if the account menu is set open
@@ -88,12 +81,11 @@ styles = {
 			fontSize: '2em',
 		},
 	},
-
 	headerButton: {
 		padding: '0px 15px',
 		display: 'inline-block',
 		height: globalStyles.headerHeight,
-		lineHeight: globalStyles.headerHeight,
+		lineHeight: 'calc(' + globalStyles.headerHeight + ' + 2px)',
 		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
 			height: globalStyles.headerHeightMobile,
 			lineHeight: globalStyles.headerHeightMobile,
@@ -103,49 +95,33 @@ styles = {
 		fontSize: '1.4em',
 		transform: 'translateY(2px)', // The logo looks like it is set a bit too high by default
 	},
-	
-	headerNav: {
+	headerNavItem: {
 		fontSize: '0.9em',
 		float: 'right',
+		cursor: 'pointer'
 	},
-
-	// navButton: {
-	// 	float: 'right',
-	// 	height: globalStyles.headerHeight,
-	// 	lineHeight: globalStyles.headerHeight,
-	// 	fontFamily: globalStyles.headerFont,
-	// 	padding: '0px 15px',
-	// 	':hover': {
-	// 		cursor: 'pointer',
-	// 	}
-	// },
-	// accountSpanWithNotification: {
-	// 	padding: '0px 5px 0px 15px',
-	// },
+	userImage: {
+		height: 22,
+		width: 22,
+		padding: 9,
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+			height: 40,
+			width: 40,
+			padding: 20,
+		}
+	},
 	notificationBlock: {
-		height: '18px',
-		lineHeight: '16px',
+		display: 'inline-block',
+		float: 'right',
+		fontSize: '0.9em',
+		height: 18,
+		lineHeight: '18px',
 		padding: '0px 5px',
-		margin: '6px 6px 6px -0px',
+		margin: '11px 0px',
 		textAlign: 'center',
 		borderRadius: '1px',
-	},
-	// separator: {
-	// 	width: 1,
-	// 	backgroundColor: '#999',
-	// 	height: 'calc(' + globalStyles.headerHeight + ' - 16px)',
-	// 	margin: '8px 0px',
-	// 	float: 'right',
-	// },
-
-	userImage: {
-		height: 18,
-		width: 18,
-		padding: 6,
-		float: 'right',
-	},
-	userName: {
-		float: 'right',
-		padding: '0px 3px 0px 0px',
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+			display: 'none',
+		}
 	},
 };
