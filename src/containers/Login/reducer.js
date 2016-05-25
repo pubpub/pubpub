@@ -42,7 +42,7 @@ function loginLoading(state) {
 function loginSuccess(state, loginData) {
 	return state.merge({
 		loggedIn: !!loginData.username && true,
-		userData: !!loginData.username && {...loginData, notificationCount: 8},
+		userData: !!loginData.username && loginData,
 		loading: false,
 		error: undefined
 	});

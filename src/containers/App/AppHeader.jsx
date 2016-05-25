@@ -63,7 +63,13 @@ export const AppHeader = React.createClass({
 				
 				{/* Account Menu */}
 				{this.state.accountMenuOpen && // Render if the account menu is set open
-					<div className="header-menu">CAT</div>
+					<div className="header-menu darker-bg" style={styles.headerMenu}>
+						<ul>
+							<li>Cats</li>
+							<li>Dogs</li>
+							<li>Turtles</li>
+						</ul>
+					</div>
 				}
 
 			</div>
@@ -122,6 +128,15 @@ styles = {
 		borderRadius: '1px',
 		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
 			display: 'none',
+		}
+	},
+	headerMenu: {
+		overflow: 'hidden',
+		position: 'absolute',
+		width: '250px',
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+			position: 'relative',
+			width: 'auto',
 		}
 	},
 };
