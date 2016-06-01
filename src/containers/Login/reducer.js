@@ -6,9 +6,9 @@ import {ensureImmutable} from 'reducers';
 /*--------*/
 import {
 	LOGIN_LOAD,
-	LOGIN_LOAD_SUCCESS,
-	LOGIN_LOAD_FAIL,
-	LOGOUT_LOAD_SUCCESS,
+	LOGIN_SUCCESS,
+	LOGIN_FAIL,
+	LOGOUT_SUCCESS,
 } from './actions';
 
 import {
@@ -72,12 +72,12 @@ export default function loginReducer(state = defaultState, action) {
 	switch (action.type) {
 	case LOGIN_LOAD:
 		return loginLoading(state);
-	case LOGIN_LOAD_SUCCESS:
+	case LOGIN_SUCCESS:
 	case LOAD_APP_AND_LOGIN_SUCCESS:
 		return loginSuccess(state, action.result.loginData);
-	case LOGIN_LOAD_FAIL:
+	case LOGIN_FAIL:
 		return loginFailed(state, action.error);
-	case LOGOUT_LOAD_SUCCESS:
+	case LOGOUT_SUCCESS:
 		return loggedOut(state);
 
 	default:

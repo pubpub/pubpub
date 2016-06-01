@@ -14,14 +14,12 @@ import {FormattedMessage} from 'react-intl';
 
 let styles = {};
 
-export const Login = React.createClass({
+export const SignUpForm = React.createClass({
 	propTypes: {
-		loginData: PropTypes.object,
-		dispatch: PropTypes.func,
-		query: PropTypes.object,
+		signUpSubmitHandler: PropTypes.func,
 	},
 
-	handleLoginSubmit: function(evt) {
+	signUpSubmit: function(evt) {
 		evt.preventDefault();
 		this.props.dispatch(login(this.refs.loginEmail.value, this.refs.loginPassword.value));
 	},
@@ -39,37 +37,52 @@ export const Login = React.createClass({
 
 	render: function() {
 		const metaData = {
-			title: 'PubPub Login',
+			title: 'PubPub | Sign Up',
 		};
 		const isLoading = this.props.loginData && this.props.loginData.get('loading');
 		const errorMessage = this.props.loginData && this.props.loginData.get('error');
 
 		return (
-			<div className={'login-container'} style={styles.container}>
+			<div className={'signup-container'} style={styles.container}>
 				<Helmet {...metaData} />
 
-				<h1><FormattedMessage {...globalMessages.Login}/></h1>
-
+				<h1><FormattedMessage {...globalMessages.SignUp}/></h1>
+				<p style={styles.subHeader}>Sign up to publish documents and follow content!</p>
 				<form onSubmit={this.handleLoginSubmit}>
+					<div>
+						<label style={styles.label} htmlFor={'firstName'}>
+							<FormattedMessage id="signup.FirstName" defaultMessage="First Name"/>
+						</label>
+						<input ref={'signupFirstName'} id={'firstName'} name={'first name'} type="text" style={styles.input}/>
+					</div>
+
+					<div>
+						<label style={styles.label} htmlFor={'lastName'}>
+							<FormattedMessage id="signup.LastName" defaultMessage="Last Name"/>
+						</label>
+						<input ref={'signupLastName'} id={'lastName'} name={'last name'} type="text" style={styles.input}/>
+					</div>
+
+
 					<div>
 						<label style={styles.label} htmlFor={'email'}>
 							<FormattedMessage {...globalMessages.Email} />
 						</label>
-						<input ref={'loginEmail'} id={'email'} name={'email'} type="text" style={styles.input}/>
+						<input ref={'signupEmail'} id={'email'} name={'email'} type="text" style={styles.input}/>
 					</div>
 
 					<div>
 						<label style={styles.label} htmlFor={'password'}>
 							<FormattedMessage {...globalMessages.Password} />
 						</label>
-						<input ref={'loginPassword'} id={'password'} name={'password'} type="password" style={styles.input}/>
-						<Link className={'light-color inputSubtext'} to={'/resetpassword'}>
-							<FormattedMessage id="login.ForgotPassword" defaultMessage="Forgot Password?"/>
-						</Link>
+						<input ref={'signupPassword'} id={'password'} name={'password'} type="password" style={styles.input}/>
+						<div className={'light-color inputSubtext'} to={'/resetpassword'}>
+							<FormattedMessage id="signup.PasswordLength" defaultMessage="Must be 8-32 characters long"/>
+						</div>
 					</div>
 
 					<button className={'button'} onClick={this.handleLoginSubmit}>
-						<FormattedMessage {...globalMessages.Login}/>
+						<FormattedMessage {...globalMessages.SignUp}/>
 					</button>
 
 					<div style={styles.loaderContainer}><Loader loading={isLoading} showCompletion={!errorMessage}/></div>
@@ -78,8 +91,8 @@ export const Login = React.createClass({
 
 				</form>
 				
-				<Link style={styles.registerLink} to={'/signup'}>
-					<FormattedMessage id="login.newToPubPub" defaultMessage="New to PubPub? Click to Sign Up!"/>
+				<Link style={styles.registerLink} to={'/login'}>
+					<FormattedMessage id="signup.alreadyHaveAccount" defaultMessage="Already have a PubPub? Click to Login!"/>
 				</Link>
 				
 			</div>
@@ -88,12 +101,7 @@ export const Login = React.createClass({
 
 });
 
-export default connect( state => {
-	return {
-		loginData: state.login,
-		query: state.router.location.query
-	};
-})( Radium(Login) );
+export default Radium(SignUpForm);
 
 styles = {
 	container: {
@@ -103,6 +111,10 @@ styles = {
 		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
 			width: 'calc(100% - 30px)',
 		}
+	},
+	subHeader: {  
+		margin: '-20px 0px 20px 0px',
+		fontSize: '0.9em',
 	},
 	input: {
 		width: 'calc(100% - 20px - 4px)',

@@ -14,14 +14,12 @@ import {FormattedMessage} from 'react-intl';
 
 let styles = {};
 
-export const Login = React.createClass({
+export const SignUpDetails = React.createClass({
 	propTypes: {
-		loginData: PropTypes.object,
-		dispatch: PropTypes.func,
-		query: PropTypes.object,
+		signUpSubmitHandler: PropTypes.func,
 	},
 
-	handleLoginSubmit: function(evt) {
+	signUpSubmit: function(evt) {
 		evt.preventDefault();
 		this.props.dispatch(login(this.refs.loginEmail.value, this.refs.loginPassword.value));
 	},
@@ -39,48 +37,21 @@ export const Login = React.createClass({
 
 	render: function() {
 		const metaData = {
-			title: 'PubPub Login',
+			title: 'PubPub | Add Details',
 		};
 		const isLoading = this.props.loginData && this.props.loginData.get('loading');
 		const errorMessage = this.props.loginData && this.props.loginData.get('error');
 
 		return (
-			<div className={'login-container'} style={styles.container}>
+			<div className={'signup-container'} style={styles.container}>
 				<Helmet {...metaData} />
 
-				<h1><FormattedMessage {...globalMessages.Login}/></h1>
-
-				<form onSubmit={this.handleLoginSubmit}>
-					<div>
-						<label style={styles.label} htmlFor={'email'}>
-							<FormattedMessage {...globalMessages.Email} />
-						</label>
-						<input ref={'loginEmail'} id={'email'} name={'email'} type="text" style={styles.input}/>
-					</div>
-
-					<div>
-						<label style={styles.label} htmlFor={'password'}>
-							<FormattedMessage {...globalMessages.Password} />
-						</label>
-						<input ref={'loginPassword'} id={'password'} name={'password'} type="password" style={styles.input}/>
-						<Link className={'light-color inputSubtext'} to={'/resetpassword'}>
-							<FormattedMessage id="login.ForgotPassword" defaultMessage="Forgot Password?"/>
-						</Link>
-					</div>
-
-					<button className={'button'} onClick={this.handleLoginSubmit}>
-						<FormattedMessage {...globalMessages.Login}/>
-					</button>
-
-					<div style={styles.loaderContainer}><Loader loading={isLoading} showCompletion={!errorMessage}/></div>
-
-					<div style={styles.errorMessage}>{errorMessage}</div>
-
-				</form>
-				
-				<Link style={styles.registerLink} to={'/signup'}>
-					<FormattedMessage id="login.newToPubPub" defaultMessage="New to PubPub? Click to Sign Up!"/>
-				</Link>
+				<h1><FormattedMessage {...globalMessages.SignUp}/></h1>
+				<p style={styles.subHeader}>Validate your identity to be part of the community and to be rewarded for your contributions!</p>
+				<div>Add your image</div>
+				<p>Personal website</p>
+				<p>bio</p>
+				<p>Verify with Twitter ORCID FB</p>
 				
 			</div>
 		);
@@ -88,12 +59,7 @@ export const Login = React.createClass({
 
 });
 
-export default connect( state => {
-	return {
-		loginData: state.login,
-		query: state.router.location.query
-	};
-})( Radium(Login) );
+export default Radium(SignUpDetails);
 
 styles = {
 	container: {
@@ -103,6 +69,10 @@ styles = {
 		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
 			width: 'calc(100% - 30px)',
 		}
+	},
+	subHeader: {  
+		margin: '-20px 0px 20px 0px',
+		fontSize: '0.9em',
 	},
 	input: {
 		width: 'calc(100% - 20px - 4px)',

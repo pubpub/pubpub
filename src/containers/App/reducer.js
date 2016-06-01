@@ -11,7 +11,7 @@ import {
 } from './actions';
 
 import {
-	LOGIN_LOAD_SUCCESS,
+	LOGIN_SUCCESS,
 } from 'containers/Login/actions';
 
 
@@ -58,7 +58,7 @@ export default function appReducer(state = defaultState, action) {
 	case LOAD_APP_AND_LOGIN_LOAD:
 		return loadApp(state);
 	case LOAD_APP_AND_LOGIN_SUCCESS:
-	case LOGIN_LOAD_SUCCESS:
+	case LOGIN_SUCCESS:
 		return loadAppSuccess(state, action.result.languageData);
 	case LOAD_APP_AND_LOGIN_FAIL:
 		return loadAppFail(state, action.error);

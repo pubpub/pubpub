@@ -4,9 +4,9 @@ import reducer from './reducer';
 
 import {
 	LOGIN_LOAD,
-	LOGIN_LOAD_SUCCESS,
-	LOGIN_LOAD_FAIL,
-	LOGOUT_LOAD_SUCCESS,
+	LOGIN_SUCCESS,
+	LOGIN_FAIL,
+	LOGOUT_SUCCESS,
 } from './actions';
 
 import {
@@ -32,9 +32,9 @@ describe('Reducers', () => {
 			expect(newState.get('loading')).to.be.true;
 		});
 
-		it('should handle LOGIN_LOAD_SUCCESS', () => {
+		it('should handle LOGIN_SUCCESS', () => {
 			const action = {
-				type: LOGIN_LOAD_SUCCESS,
+				type: LOGIN_SUCCESS,
 				result: {
 					loginData: {
 						username: 'fakeUser'
@@ -48,9 +48,9 @@ describe('Reducers', () => {
 			expect(newState.getIn(['userData', 'username'])).to.equal('fakeUser');
 		});
 
-		it('should handle LOGIN_LOAD_FAIL', () => {
+		it('should handle LOGIN_FAIL', () => {
 			const action = {
-				type: LOGIN_LOAD_FAIL,
+				type: LOGIN_FAIL,
 				error: 'fakeError'
 			};
 
@@ -60,9 +60,9 @@ describe('Reducers', () => {
 			expect(newState.get('error')).to.exist;
 		});
 
-		it('should handle LOGOUT_LOAD_SUCCESS', () => {
+		it('should handle LOGOUT_SUCCESS', () => {
 			const action = {
-				type: LOGOUT_LOAD_SUCCESS,
+				type: LOGOUT_SUCCESS,
 			};
 
 			const state = Map();
@@ -74,7 +74,7 @@ describe('Reducers', () => {
 
 		it('should handle LOAD_APP_AND_LOGIN_SUCCESS', () => {
 			const action = {
-				type: LOGIN_LOAD_SUCCESS,
+				type: LOAD_APP_AND_LOGIN_SUCCESS,
 				result: {
 					loginData: {
 						username: 'fakeUser'

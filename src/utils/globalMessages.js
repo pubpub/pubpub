@@ -9,6 +9,10 @@ export const globalMessages = defineMessages({
 		id: 'global.Login',
 		defaultMessage: 'Login',
 	},
+	SignUp: {
+		id: 'global.SignUp',
+		defaultMessage: 'Sign Up',
+	},
 	register: {
 		id: 'global.register',
 		defaultMessage: 'Register',

@@ -9,7 +9,7 @@ import {
 } from './actions';
 
 import {
-	LOGIN_LOAD_SUCCESS,
+	LOGIN_SUCCESS,
 } from 'containers/Login/actions';
 
 describe('Reducers', () => {
@@ -61,9 +61,9 @@ describe('Reducers', () => {
 			expect(newState.get('error')).to.equal('fakeError');
 		});
 
-		it('should handle LOGIN_LOAD_SUCCESS', () => {
+		it('should handle LOGIN_SUCCESS', () => {
 			const action = {
-				type: LOGIN_LOAD_SUCCESS,
+				type: LOGIN_SUCCESS,
 				result: {
 					languageData: {
 						locale: 'fakeLocale',

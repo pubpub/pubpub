@@ -11,14 +11,14 @@ import analytics from 'utils/analytics';
 // export const TOGGLE_VISIBILITY = 'login/TOGGLE_VISIBILITY';
 // export const TOGGLE_VIEWMODE = 'login/TOGGLE_VIEWMODE';
 export const LOGIN_LOAD = 'login/LOGIN_LOAD';
-export const LOGIN_LOAD_SUCCESS = 'login/LOGIN_LOAD_SUCCESS';
-export const LOGIN_LOAD_FAIL = 'login/LOGIN_LOAD_FAIL';
+export const LOGIN_SUCCESS = 'login/LOGIN_SUCCESS';
+export const LOGIN_FAIL = 'login/LOGIN_FAIL';
 // export const RESTORE_LOGIN_LOAD = 'login/RESTORE_LOGIN_LOAD';
 // export const RESTORE_LOGIN_LOAD_SUCCESS = 'login/RESTORE_LOGIN_LOAD_SUCCESS';
 // export const RESTORE_LOGIN_LOAD_FAIL = 'login/RESTORE_LOGIN_LOAD_FAIL';
 export const LOGOUT_LOAD = 'login/LOGOUT_LOAD';
-export const LOGOUT_LOAD_SUCCESS = 'login/LOGOUT_LOAD_SUCCESS';
-export const LOGOUT_LOAD_FAIL = 'login/LOGOUT_LOAD_FAIL';
+export const LOGOUT_SUCCESS = 'login/LOGOUT_SUCCESS';
+export const LOGOUT_FAIL = 'login/LOGOUT_FAIL';
 // export const REGISTER_LOAD = 'login/REGISTER_LOAD';
 // export const REGISTER_LOAD_SUCCESS = 'login/REGISTER_LOAD_SUCCESS';
 // export const REGISTER_LOAD_FAIL = 'login/REGISTER_LOAD_FAIL';
@@ -61,7 +61,7 @@ export function login(email, password) {
 	analytics.sendEvent('Login', analyticsData);
 
 	return {
-		types: [LOGIN_LOAD, LOGIN_LOAD_SUCCESS, LOGIN_LOAD_FAIL],
+		types: [LOGIN_LOAD, LOGIN_SUCCESS, LOGIN_FAIL],
 		promise: (client) => client.post('/login', {data: {
 			'email': email.toLowerCase(),
 			'password': SHA3(password).toString(encHex)
@@ -80,7 +80,7 @@ export function logout() {
 	analytics.sendEvent('Logout');
 
 	return {
-		types: [LOGOUT_LOAD, LOGOUT_LOAD_SUCCESS, LOGOUT_LOAD_FAIL],
+		types: [LOGOUT_LOAD, LOGOUT_SUCCESS, LOGOUT_FAIL],
 		promise: (client) => client.get('/logout', {})
 	};
 }

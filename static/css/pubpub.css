@@ -53,6 +53,13 @@ input:focus{
 	border: 2px solid #58585B;
 }
 
+.inputSubtext {
+	font-size: 0.8em;
+	text-decoration: none;
+	position: relative;
+	top: -1.7em;
+}
+
 .menu-option {
 	width: calc(100% - 3em);
 	text-decoration: none;
