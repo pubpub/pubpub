@@ -8,14 +8,21 @@ import {
 	SIGNUP_LOAD,
 	SIGNUP_SUCCESS,
 	SIGNUP_FAIL,
+
+	SIGNUP_DETAILS_LOAD,
+	SIGNUP_DETAILS_SUCCESS,
+	SIGNUP_DETAILS_FAIL,
+
+	SIGNUP_FOLLOW_LOAD,
+	SIGNUP_FOLLOW_SUCCESS,
+	SIGNUP_FOLLOW_FAIL,
 } from './actions';
 
 /*--------*/
 // Initialize Default State
 /*--------*/
 export const defaultState = Immutable.Map({
-	loggedIn: false,
-	userData: {},
+	currentStage: 'signup',
 	loading: false,
 	error: undefined
 });
@@ -27,7 +34,11 @@ export const defaultState = Immutable.Map({
 // state. They are pure functions. We use Immutable to enforce this.
 /*--------*/
 function signupLoading(state) {
-	return state;
+	console.log('signup');
+	return state.merge({
+		loading: true,
+		error: undefined
+	});
 }
 
 function signupSuccess(state) {
@@ -35,6 +46,38 @@ function signupSuccess(state) {
 }
 
 function signupFailed(state) {
+	return state;
+}
+
+function detailsLoading(state) {
+	console.log('details');
+	return state.merge({
+		loading: true,
+		error: undefined
+	});
+}
+
+function detailsSuccess(state) {
+	return state;
+}
+
+function detailsFailed(state) {
+	return state;
+}
+
+function followLoading(state) {
+	console.log('following');
+	return state.merge({
+		loading: true,
+		error: undefined
+	});
+}
+
+function followSuccess(state) {
+	return state;
+}
+
+function followFailed(state) {
 	return state;
 }
 
@@ -50,6 +93,20 @@ export default function loginReducer(state = defaultState, action) {
 		return signupSuccess(state, action.result.loginData);
 	case SIGNUP_FAIL:
 		return signupFailed(state, action.error);
+
+	case SIGNUP_DETAILS_LOAD:
+		return detailsLoading(state);
+	case SIGNUP_DETAILS_SUCCESS:
+		return detailsSuccess(state, action.result.loginData);
+	case SIGNUP_DETAILS_FAIL:
+		return detailsFailed(state, action.error);
+
+	case SIGNUP_FOLLOW_LOAD:
+		return followLoading(state);
+	case SIGNUP_FOLLOW_SUCCESS:
+		return followSuccess(state, action.result.loginData);
+	case SIGNUP_FOLLOW_FAIL:
+		return followFailed(state, action.error);
 
 	default:
 		return ensureImmutable(state);

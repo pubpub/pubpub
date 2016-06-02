@@ -1,7 +1,6 @@
 import React, {PropTypes} from 'react';
 import Radium from 'radium';
 import Helmet from 'react-helmet';
-import {login} from './actions';
 import {Link} from 'react-router';
 import {Loader} from 'components';
 
@@ -14,13 +13,14 @@ let styles = {};
 
 export const SignUpForm = React.createClass({
 	propTypes: {
-		signUpSubmitHandler: PropTypes.func,
+		submitHandler: PropTypes.func,
 		errorMessage: PropTypes.string,
 		isLoading: PropTypes.bool,
 	},
 
 	signUpSubmit: function(evt) {
 		evt.preventDefault();
+		this.props.submitHandler({password: 'cat', email: 'email', firstName: 'john'});
 		// this.props.dispatch(login(this.refs.loginEmail.value, this.refs.loginPassword.value));
 	},
 

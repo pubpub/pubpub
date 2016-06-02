@@ -31,9 +31,9 @@ export const Login = React.createClass({
 		const oldUsername = this.props.loginData && this.props.loginData.getIn(['userData', 'username']);
 		const newUsername = nextProps.loginData && nextProps.loginData.getIn(['userData', 'username']);
 		if (newUsername && oldUsername !== newUsername) {
-			const userProfile = '/user/' + newUsername;
-			const redirectQuery = this.props.query && this.props.query.redirect;
-			this.props.dispatch(pushState(null, (redirectQuery || userProfile)));
+			const userProfileRoute = '/user/' + newUsername;
+			const redirectRoute = this.props.query && this.props.query.redirect;
+			this.props.dispatch(pushState(null, (redirectRoute || userProfileRoute)));
 		}
 	},
 

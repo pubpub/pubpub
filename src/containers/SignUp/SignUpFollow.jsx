@@ -14,7 +14,7 @@ let styles = {};
 
 export const SignUpFollow = React.createClass({
 	propTypes: {
-		signUpSubmitHandler: PropTypes.func,
+		submitHandler: PropTypes.func,
 		errorMessage: PropTypes.string,
 		isLoading: PropTypes.bool,
 	},
