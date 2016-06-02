@@ -1,6 +1,4 @@
 import React, {PropTypes} from 'react';
-import {connect} from 'react-redux';
-import {pushState} from 'redux-router';
 import Radium from 'radium';
 import Helmet from 'react-helmet';
 import {login} from './actions';
@@ -17,30 +15,21 @@ let styles = {};
 export const SignUpForm = React.createClass({
 	propTypes: {
 		signUpSubmitHandler: PropTypes.func,
+		errorMessage: PropTypes.string,
+		isLoading: PropTypes.bool,
 	},
 
 	signUpSubmit: function(evt) {
 		evt.preventDefault();
-		this.props.dispatch(login(this.refs.loginEmail.value, this.refs.loginPassword.value));
-	},
-
-	componentWillReceiveProps(nextProps) {
-		// If there is a new username in loginData, login was a sucess, so redirect
-		const oldUsername = this.props.loginData && this.props.loginData.getIn(['userData', 'username']);
-		const newUsername = nextProps.loginData && nextProps.loginData.getIn(['userData', 'username']);
-		if (newUsername && oldUsername !== newUsername) {
-			const userProfile = '/user/' + newUsername;
-			const redirectQuery = this.props.query && this.props.query.redirect;
-			this.props.dispatch(pushState(null, (redirectQuery || userProfile)));
-		}
+		// this.props.dispatch(login(this.refs.loginEmail.value, this.refs.loginPassword.value));
 	},
 
 	render: function() {
 		const metaData = {
 			title: 'PubPub | Sign Up',
 		};
-		const isLoading = this.props.loginData && this.props.loginData.get('loading');
-		const errorMessage = this.props.loginData && this.props.loginData.get('error');
+		const isLoading = this.props.isLoading;
+		const errorMessage = this.props.errorMessage;
 
 		return (
 			<div className={'signup-container'} style={styles.container}>
@@ -48,7 +37,7 @@ export const SignUpForm = React.createClass({
 
 				<h1><FormattedMessage {...globalMessages.SignUp}/></h1>
 				<p style={styles.subHeader}>Sign up to publish documents and follow content!</p>
-				<form onSubmit={this.handleLoginSubmit}>
+				<form onSubmit={this.signUpSubmit}>
 					<div>
 						<label style={styles.label} htmlFor={'firstName'}>
 							<FormattedMessage id="signup.FirstName" defaultMessage="First Name"/>
@@ -81,7 +70,7 @@ export const SignUpForm = React.createClass({
 						</div>
 					</div>
 
-					<button className={'button'} onClick={this.handleLoginSubmit}>
+					<button className={'button'} onClick={this.signUpSubmit}>
 						<FormattedMessage {...globalMessages.SignUp}/>
 					</button>
 
@@ -104,14 +93,6 @@ export const SignUpForm = React.createClass({
 export default Radium(SignUpForm);
 
 styles = {
-	container: {
-		width: '500px',
-		padding: '0px 15px',
-		margin: '0 auto',
-		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
-			width: 'calc(100% - 30px)',
-		}
-	},
 	subHeader: {  
 		margin: '-20px 0px 20px 0px',
 		fontSize: '0.9em',
