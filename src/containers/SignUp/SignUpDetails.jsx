@@ -27,8 +27,19 @@ export const SignUpDetails = React.createClass({
 		};
 	},
 
-	signUpSubmit: function(evt) {
+	detailsSubmit: function(evt) {
 		evt.preventDefault();
+		const detailsData = {
+			image: this.state.userImageURL,
+			bio: this.refs.detailsBio.value,
+			website: this.refs.detailsWebsite.value,
+			twitter: this.refs.detailsTwitter.value,
+			orcid: this.refs.detailsOrcid.value,
+			github: this.refs.detailsGithub.value,
+			googleScholar: this.refs.detailsGoogleScholar.value,
+		};
+		console.log(detailsData);
+		// this.props.submitHandler(detailsData);	
 	},
 
 	handleFileSelect: function(evt) {
@@ -63,13 +74,13 @@ export const SignUpDetails = React.createClass({
 				<h2>About You</h2>
 				<p style={styles.subHeader}>Add details to identify yourself to the community and to be rewarded for your contributions!</p>
 				
-				<form onSubmit={this.signUpSubmit}>
+				<form onSubmit={this.detailsSubmit}>
 					<div>
 						<label style={styles.label} htmlFor={'userImage'}>
 							<FormattedMessage id="details.Image" defaultMessage="Image"/>
 						</label>
 						<img style={styles.userImage} src={this.state.userImageURL} />
-						<input id={'userImage'} name={'user image'} type="file" accept="image/*" onChange={this.handleFileSelect} value=" "/>
+						<input id={'userImage'} name={'user image'} type="file" accept="image/*" onChange={this.handleFileSelect} />
 						
 					</div>
 
@@ -123,11 +134,11 @@ export const SignUpDetails = React.createClass({
 						</label>
 						<div style={styles.prefixedInputWrapper}>
 							<div style={styles.prefix}>http://scholar.google.com/citations?user=</div>
-							<input ref={'detailsgoogleScholar'} id={'googleScholar'} name={'google scholar'} type="text" style={[styles.input, styles.prefixedInput]}/>	
+							<input ref={'detailsGoogleScholar'} id={'googleScholar'} name={'google scholar'} type="text" style={[styles.input, styles.prefixedInput]}/>	
 						</div>
 					</div>
 
-					<button className={'button'} onClick={this.signUpSubmit}>
+					<button className={'button'} onClick={this.detailsSubmit}>
 						Save Details
 					</button>
 

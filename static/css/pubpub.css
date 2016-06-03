@@ -102,12 +102,11 @@ input[type="file"]:focus {
 	user-select: none;
 }
 
-.button:hover, .button:focus {
+.button:hover {
 	border: solid 2px #2C2A2B;
 	background-color: #2C2A2B;
 	color: #FEFEFE;
 	cursor: pointer;
-	outline: none;
 }
 
 .button:active {
