@@ -6,6 +6,7 @@ import { routerStateReducer } from 'redux-router';
 import app from './containers/App/reducer';
 import autocomplete from './containers/Autocomplete/reducer';
 import editor from './containers/Editor/reducer';
+import emailVerification from './containers/EmailVerification/reducer';
 import explore from './containers/Explore/reducer';
 import discussions from './containers/Discussions/reducer';
 import group from './containers/GroupProfile/reducer';
@@ -45,6 +46,7 @@ export default combineReducers({
 	app,
 	autocomplete,
 	editor,
+	emailVerification,
 	explore,
 	discussions,
 	group,

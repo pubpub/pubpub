@@ -14,6 +14,10 @@ import {
 	LOGIN_SUCCESS,
 } from 'containers/Login/actions';
 
+import {
+	SIGNUP_SUCCESS,
+} from 'containers/SignUp/actions';
+
 
 /*--------*/
 // Initialize Default State
@@ -52,13 +56,14 @@ function loadAppFail(state, error) {
 /*--------*/
 // Bind actions to specific reducing functions.
 /*--------*/
-export default function appReducer(state = defaultState, action) {
+export default function reducer(state = defaultState, action) {
 
 	switch (action.type) {
 	case LOAD_APP_AND_LOGIN_LOAD:
 		return loadApp(state);
 	case LOAD_APP_AND_LOGIN_SUCCESS:
 	case LOGIN_SUCCESS:
+	case SIGNUP_SUCCESS:
 		return loadAppSuccess(state, action.result.languageData);
 	case LOAD_APP_AND_LOGIN_FAIL:
 		return loadAppFail(state, action.error);

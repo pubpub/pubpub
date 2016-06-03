@@ -18,10 +18,56 @@ export const SignUpForm = React.createClass({
 		isLoading: PropTypes.bool,
 	},
 
+	getInitialState() {
+		return {
+			validationError: undefined,
+		};
+	},
+
+	validate: function(signUpData) {
+		// Check to make sure firstName exists
+		if (!signUpData.firstName || !signUpData.firstName.length) {
+			return {isValid: false, validationError: 'First Name required'};
+		}
+
+		// Check to make sure lastName exists
+		if (!signUpData.lastName || !signUpData.lastName.length) {
+			return {isValid: false, validationError: 'Last Name required'};
+		}
+
+		// Check to make sure email exists
+		if (!signUpData.email || !signUpData.email.length) {
+			return {isValid: false, validationError: 'Email required'};
+		}
+
+		// Check to make sure email is lightly valid (complete validation is impossible in JS - so just check for the most common error)
+		const regexTest = /\S+@\S+/;
+		if (!regexTest.test(signUpData.email)) {
+			return {isValid: false, validationError: 'Email is invalid'};
+		}
+
+		// Check to make sure password exists
+		if (!signUpData.password || signUpData.password.length < 8) {
+			return {isValid: false, validationError: 'Password too short'};
+		}
+
+		return {isValid: true, validationError: undefined};
+
+	},
+
 	signUpSubmit: function(evt) {
 		evt.preventDefault();
-		this.props.submitHandler({password: 'cat', email: 'email', firstName: 'john'});
-		// this.props.dispatch(login(this.refs.loginEmail.value, this.refs.loginPassword.value));
+		const signUpData = {
+			firstName: this.refs.signupFirstName.value,
+			lastName: this.refs.signupLastName.value,
+			email: this.refs.signupEmail.value,
+			password: this.refs.signupPassword.value
+		};
+		const {isValid, validationError} = this.validate(signUpData);
+		this.setState({validationError: validationError});
+		if (isValid) {
+			this.props.submitHandler(signUpData);	
+		}
 	},
 
 	render: function() {
@@ -29,7 +75,7 @@ export const SignUpForm = React.createClass({
 			title: 'PubPub | Sign Up',
 		};
 		const isLoading = this.props.isLoading;
-		const errorMessage = this.props.errorMessage;
+		const errorMessage = this.props.errorMessage || this.state.validationError;
 
 		return (
 			<div className={'signup-container'} style={styles.container}>
@@ -66,7 +112,7 @@ export const SignUpForm = React.createClass({
 						</label>
 						<input ref={'signupPassword'} id={'password'} name={'password'} type="password" style={styles.input}/>
 						<div className={'light-color inputSubtext'} to={'/resetpassword'}>
-							<FormattedMessage id="signup.PasswordLength" defaultMessage="Must be 8-32 characters long"/>
+							<FormattedMessage id="signup.PasswordLength" defaultMessage="Must be at least 8 characters"/>
 						</div>
 					</div>
 

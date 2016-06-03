@@ -19,6 +19,7 @@ export const LOGIN_FAIL = 'login/LOGIN_FAIL';
 export const LOGOUT_LOAD = 'login/LOGOUT_LOAD';
 export const LOGOUT_SUCCESS = 'login/LOGOUT_SUCCESS';
 export const LOGOUT_FAIL = 'login/LOGOUT_FAIL';
+
 // export const REGISTER_LOAD = 'login/REGISTER_LOAD';
 // export const REGISTER_LOAD_SUCCESS = 'login/REGISTER_LOAD_SUCCESS';
 // export const REGISTER_LOAD_FAIL = 'login/REGISTER_LOAD_FAIL';

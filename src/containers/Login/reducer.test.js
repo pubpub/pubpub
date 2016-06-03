@@ -13,6 +13,10 @@ import {
 	LOAD_APP_AND_LOGIN_SUCCESS,
 } from 'containers/App/actions';
 
+import {
+	SIGNUP_SUCCESS,
+} from 'containers/SignUp/actions';
+
 describe('Reducers', () => {
 	describe('login.js', () => {
 
@@ -75,6 +79,22 @@ describe('Reducers', () => {
 		it('should handle LOAD_APP_AND_LOGIN_SUCCESS', () => {
 			const action = {
 				type: LOAD_APP_AND_LOGIN_SUCCESS,
+				result: {
+					loginData: {
+						username: 'fakeUser'
+					}
+				}
+			};
+
+			const state = Map();
+			const newState = reducer(state, action);
+
+			expect(newState.getIn(['userData', 'username'])).to.equal('fakeUser');
+		});
+		
+		it('should handle SIGNUP_SUCCESS', () => {
+			const action = {
+				type: SIGNUP_SUCCESS,
 				result: {
 					loginData: {
 						username: 'fakeUser'

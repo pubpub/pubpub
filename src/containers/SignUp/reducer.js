@@ -34,23 +34,29 @@ export const defaultState = Immutable.Map({
 // state. They are pure functions. We use Immutable to enforce this.
 /*--------*/
 function signupLoading(state) {
-	console.log('signup');
 	return state.merge({
 		loading: true,
-		error: undefined
+		error: undefined,
+		currentStage: 'signup',
 	});
 }
 
 function signupSuccess(state) {
-	return state;
+	return state.merge({
+		loading: false,
+		error: undefined,
+		currentStage: 'details',
+	});
 }
 
-function signupFailed(state) {
-	return state;
+function signupFailed(state, error) {
+	return state.merge({
+		loading: false,
+		error: error
+	});
 }
 
 function detailsLoading(state) {
-	console.log('details');
 	return state.merge({
 		loading: true,
 		error: undefined
@@ -66,7 +72,6 @@ function detailsFailed(state) {
 }
 
 function followLoading(state) {
-	console.log('following');
 	return state.merge({
 		loading: true,
 		error: undefined
@@ -84,13 +89,13 @@ function followFailed(state) {
 /*--------*/
 // Bind actions to specific reducing functions.
 /*--------*/
-export default function loginReducer(state = defaultState, action) {
+export default function reducer(state = defaultState, action) {
 
 	switch (action.type) {
 	case SIGNUP_LOAD:
 		return signupLoading(state);
 	case SIGNUP_SUCCESS:
-		return signupSuccess(state, action.result.loginData);
+		return signupSuccess(state);
 	case SIGNUP_FAIL:
 		return signupFailed(state, action.error);
 

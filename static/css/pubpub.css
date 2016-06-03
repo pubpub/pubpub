@@ -40,17 +40,27 @@ label {
 	color: #58585B;
 }
 
-input {
+input, textarea {
 	display: block;	
 	padding: 5px 10px;
 	border: 2px solid #BBBDC0;
 	border-radius: 1px;
 	font-size: 1.2em;
 	margin-bottom: 1em;
+	resize: vertical;
 }
-input:focus{
+input:focus, textarea:focus{
 	outline: none;
 	border: 2px solid #58585B;
+}
+input[type="file"] {
+	padding: 5px 0px;
+	border: 0;
+	font-size: 1em;
+}
+
+input[type="file"]:focus {
+	outline: 2px solid #58585B;
 }
 
 .inputSubtext {
@@ -92,12 +102,14 @@ input:focus{
 	user-select: none;
 }
 
-.button:hover {
+.button:hover, .button:focus {
 	border: solid 2px #2C2A2B;
 	background-color: #2C2A2B;
 	color: #FEFEFE;
 	cursor: pointer;
+	outline: none;
 }
+
 .button:active {
 	-webkit-transform: translateY(1px);
 	-ms-transform: translateY(1px);

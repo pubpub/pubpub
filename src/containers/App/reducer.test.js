@@ -12,6 +12,10 @@ import {
 	LOGIN_SUCCESS,
 } from 'containers/Login/actions';
 
+import {
+	SIGNUP_SUCCESS,
+} from 'containers/SignUp/actions';
+
 describe('Reducers', () => {
 	describe('app.js', () => {
 
@@ -64,6 +68,24 @@ describe('Reducers', () => {
 		it('should handle LOGIN_SUCCESS', () => {
 			const action = {
 				type: LOGIN_SUCCESS,
+				result: {
+					languageData: {
+						locale: 'fakeLocale',
+						languageObject: 'fakeLanguageObject'
+					}
+				}
+			};
+
+			const state = Map();
+			const newState = reducer(state, action);
+
+			expect(newState.get('locale')).to.equal('fakeLocale');
+			expect(newState.get('languageObject')).to.equal('fakeLanguageObject');
+		});
+
+		it('should handle SIGNUP_SUCCESS', () => {
+			const action = {
+				type: SIGNUP_SUCCESS,
 				result: {
 					languageData: {
 						locale: 'fakeLocale',

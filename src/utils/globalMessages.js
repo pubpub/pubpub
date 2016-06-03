@@ -13,6 +13,14 @@ export const globalMessages = defineMessages({
 		id: 'global.SignUp',
 		defaultMessage: 'Sign Up',
 	},
+	Bio: {
+		id: 'global.Bio',
+		defaultMessage: 'Bio',
+	},
+	Website: {
+		id: 'global.Website',
+		defaultMessage: 'Website',
+	},
 	register: {
 		id: 'global.register',
 		defaultMessage: 'Register',

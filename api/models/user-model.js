@@ -29,6 +29,9 @@ const userSchema = new Schema({
 
 	emailPublic: { type: Boolean }, // Display email publicly?
 
+	verificationHash: { type: String },
+	verifiedEmail: { type: Boolean },
+
 	resetHash: { type: String }, // Used for password reset
 	resetHashExpiration: { type: Date }, // Used for password reset
 

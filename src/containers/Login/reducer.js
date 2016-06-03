@@ -8,12 +8,17 @@ import {
 	LOGIN_LOAD,
 	LOGIN_SUCCESS,
 	LOGIN_FAIL,
+
 	LOGOUT_SUCCESS,
 } from './actions';
 
 import {
 	LOAD_APP_AND_LOGIN_SUCCESS,
 } from 'containers/App/actions';
+
+import {
+	SIGNUP_SUCCESS,
+} from 'containers/SignUp/actions';
 
 /*--------*/
 // Initialize Default State
@@ -67,16 +72,18 @@ function loggedOut(state) {
 /*--------*/
 // Bind actions to specific reducing functions.
 /*--------*/
-export default function loginReducer(state = defaultState, action) {
+export default function reducer(state = defaultState, action) {
 
 	switch (action.type) {
 	case LOGIN_LOAD:
 		return loginLoading(state);
 	case LOGIN_SUCCESS:
 	case LOAD_APP_AND_LOGIN_SUCCESS:
+	case SIGNUP_SUCCESS:
 		return loginSuccess(state, action.result.loginData);
 	case LOGIN_FAIL:
 		return loginFailed(state, action.error);
+
 	case LOGOUT_SUCCESS:
 		return loggedOut(state);
 

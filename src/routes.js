@@ -1,6 +1,6 @@
 import React from 'react';
 import {IndexRoute, Route} from 'react-router';
-import {App, Editor, GroupCreate, GroupProfile, JournalCreate, JournalProfile, Landing, Login, PubCreate, PubReader, ResetPassword, SignUp, UserProfile} from 'containers';
+import {App, Editor, EmailVerification, GroupCreate, GroupProfile, JournalCreate, JournalProfile, Landing, Login, PubCreate, PubReader, ResetPassword, SignUp, UserProfile} from 'containers';
 import {NotFound} from 'components';
 
 export default () => {
@@ -32,6 +32,8 @@ export default () => {
 			<Route path="/user/:username/:mode" component={UserProfile}/> {/* /user/kate/discussions?page=4 or /user/kate/settings */}
 			
 			<Route path="/signup" component={SignUp}/>
+
+			<Route path="/verify/:hash" component={EmailVerification}/>
 
 			<Route path="/:subdomain" component={JournalProfile}/> {/* /jods or /jods?collection=fall2015 */}
 			<Route path="/:subdomain/:mode" component={JournalProfile}/> {/* /jods/about or /jods/settings */}
