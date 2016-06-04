@@ -40,7 +40,7 @@ label {
 	color: #58585B;
 }
 
-input, textarea {
+input[type="text"], textarea {
 	display: block;	
 	padding: 5px 10px;
 	border: 2px solid #BBBDC0;
@@ -49,11 +49,12 @@ input, textarea {
 	margin-bottom: 1em;
 	resize: vertical;
 }
-input:focus, textarea:focus{
+input[type="text"]:focus, textarea:focus{
 	outline: none;
 	border: 2px solid #58585B;
 }
 input[type="file"] {
+	display: block;
 	padding: 5px 0px;
 	border: 0;
 	font-size: 1em;

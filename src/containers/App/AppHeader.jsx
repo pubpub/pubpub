@@ -65,7 +65,7 @@ export const AppHeader = React.createClass({
 				{/* Account Button */}
 				{isLoggedIn && // Render if logged in
 					<div style={[styles.headerButton, styles.headerNavItem]} onClick={this.toggleAccountMenu}>
-						<img style={styles.userImage} src={this.props.loginData.getIn(['userData', 'thumbnail'])} />
+						<img style={styles.userImage} src={'https://jake.pubpub.org/unsafe/50x50/' + this.props.loginData.getIn(['userData', 'image'])} />
 					</div>
 				}
 

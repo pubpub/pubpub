@@ -1,5 +1,4 @@
 import React, {PropTypes} from 'react';
-import {pushState} from 'redux-router';
 import Radium from 'radium';
 import Helmet from 'react-helmet';
 import {ImageCropper} from 'components';
@@ -77,7 +76,7 @@ export const SignUpDetails = React.createClass({
 				<form onSubmit={this.detailsSubmit}>
 					<div>
 						<label style={styles.label} htmlFor={'userImage'}>
-							<FormattedMessage id="details.Image" defaultMessage="Image"/>
+							<FormattedMessage id="details.Image" defaultMessage="Profile Image"/>
 						</label>
 						<img style={styles.userImage} src={this.state.userImageURL} />
 						<input id={'userImage'} name={'user image'} type="file" accept="image/*" onChange={this.handleFileSelect} />
@@ -144,6 +143,7 @@ export const SignUpDetails = React.createClass({
 
 					<div style={styles.loaderContainer}><Loader loading={isLoading} showCompletion={!errorMessage}/></div>
 
+					<Link to={'/signup?stage=follow'} style={globalStyles.link}>Skip this step</Link>
 					<div style={styles.errorMessage}>{errorMessage}</div>
 
 				</form>
@@ -181,6 +181,7 @@ styles = {
 	prefix: {
 		display: 'table-cell',
 		backgroundColor: '#F3F3F4',
+		verticalAlign: 'middle',
 		textAlign: 'center',
 		padding: '4px 10px',
 		borderWidth: '2px 0px 2px 2px',

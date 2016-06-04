@@ -15,9 +15,9 @@ app.get('/uploadPolicy', function(req, res) {
 	const s3 = {
 		access_key: awsDetails.accessKeyAws,
 		secret_key: awsDetails.secretKeyAws,
-		bucket: 'pubpub-upload',
+		bucket: 'assets.pubpub.org',
 		acl: 'public-read',
-		https: 'false',
+		https: 'true',
 		error_message: '',
 		pad: function(padding) {
 			if ((padding + '').length === 1) {

@@ -121,7 +121,7 @@
   "signup.LastName": "Last Name",
   "signup.PasswordLength": "Must be at least 8 characters",
   "signup.alreadyHaveAccount": "Already have a PubPub? Click to Login!",
-  "details.Image": "Image",
+  "details.Image": "Profile Image",
   "user.changeImage": "Change Image",
   "user.noDiscussions": "No Discussions Yet",
   "user.noGroups": "No Groups Yet",

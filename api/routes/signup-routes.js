@@ -27,7 +27,6 @@ export function signup(req, res) {
 			registerDate: new Date(Date.now()),
 			sendNotificationDigest: true,
 			image: 'https://assets.pubpub.org/happyPub.png',
-			thumbnail: 'https://jake.pubpub.org/unsafe/50x50/https://assets.pubpub.org/happyPub.png',
 			verificationHash: verificationHash,
 			verifiedEmail: false,
 		});
@@ -47,7 +46,6 @@ export function signup(req, res) {
 					name: account.name,
 					username: account.username,
 					image: account.image,
-					thumbnail: account.thumbnail,
 					settings: account.settings,
 					verifiedEmail: account.verifiedEmail
 				};

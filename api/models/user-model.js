@@ -14,7 +14,6 @@ const userSchema = new Schema({
 	lastName: { type: String }, // Need to collect first/last for DOI assignment
 	name: { type: String }, // Merged from first and last - simpler call.
 	image: { type: String }, // User profile image
-	thumbnail: { type: String }, // Thumbnail version of image
 	title: { type: String }, // Self assigned title
 	bio: { type: String }, // Self assigned bio
 	groups: [{ type: ObjectId, ref: 'Group' }], // Groups that the user belongs to

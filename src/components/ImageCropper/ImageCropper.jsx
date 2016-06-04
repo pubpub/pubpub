@@ -1,7 +1,6 @@
 import React, {PropTypes} from 'react';
 import Radium from 'radium';
-// import {globalStyles} from 'utils/styleConstants';
-import {LoaderIndeterminate} from '../';
+import {Loader} from 'components';
 import ImageCropperEditor from './ImageCropperEditor';
 import {s3Upload} from 'utils/uploadFile';
 
@@ -30,7 +29,7 @@ const ImageCropper = React.createClass({
 		// console.log('https://s3.amazonaws.com/pubpub-upload/' + filename);
 		// console.log('finish');
 		this.setState({isUploading: false});
-		this.props.onUpload('https://s3.amazonaws.com/pubpub-upload/' + filename);
+		this.props.onUpload('https://assets.pubpub.org/' + filename);
 	},
 	handleUpdate: function() {
 		const img = this.refs.userImageCrop.getImage('image/jpeg');
@@ -44,7 +43,7 @@ const ImageCropper = React.createClass({
 		const file = new Blob([new Uint8Array(array)], {type: mimeString});
 
 		this.setState({isUploading: true});
-		s3Upload(file, 'users', ()=>{}, this.onFileFinish, 0);
+		s3Upload(file, ()=>{}, this.onFileFinish, 0);
 
 	},
 	handleScale: function() {
@@ -61,9 +60,6 @@ const ImageCropper = React.createClass({
 
 		return (
 			<div style={styles.container}>
-				<div style={styles.loaderWrapper}>
-					{(this.state.isUploading ? <LoaderIndeterminate color="#555"/> : null)}
-				</div>
 				<div style={styles.avatarWrapper}>
 					<ImageCropperEditor
 						ref="userImageCrop"
@@ -80,12 +76,15 @@ const ImageCropper = React.createClass({
 				</div>
 				<div style={styles.previewAndOptions}>
 					<img style={styles.preview}src={this.state.preview} />
-					<div style={styles.option} key="userUploadCancel" onClick={this.handleCancel}>
+					<div className={'button'} style={styles.option} key="userUploadCancel" onClick={this.handleCancel}>
 						<FormattedMessage {...globalMessages.cancel} />
 					</div>
-					<div style={styles.option} key="userUploadSave" onClick={this.handleSaveImage}>
+					<div className={'button'} style={styles.option} key="userUploadSave" onClick={this.handleSaveImage}>
 						<FormattedMessage {...globalMessages.save} />
 					</div>
+				</div>
+				<div style={styles.loaderWrapper}>
+					<Loader loading={this.state.isUploading}/>
 				</div>
 
 
@@ -105,8 +104,13 @@ styles = {
 	},
 	loaderWrapper: {
 		position: 'absolute',
-		width: '100%',
-		top: 10,
+		width: '40px',
+		bottom: 0,
+		right: 0,
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+			position: 'static',
+			margin: '0 auto',
+		},
 	},
 	avatarWrapper: {
 		height: 200,
@@ -144,18 +148,26 @@ styles = {
 	},
 	option: {
 		clear: 'both',
-		textAlign: 'right',
-		fontSize: '25px',
-		color: '#555',
-		margin: '20px 0px',
-		':hover': {
-			cursor: 'pointer',
-			color: '#222',
-		},
+		width: '75px',
+		fontSize: '0.9em',
+		float: 'right',
+		textAlign: 'center',
+		marginBottom: '20px',
+		// textAlign: 'right',
+		// fontSize: '25px',
+		// color: '#555',
+		
+		// ':hover': {
+		// 	cursor: 'pointer',
+		// 	color: '#222',
+		// },
 		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
-			width: '100%',
-			textAlign: 'center',
-			fontSize: '35px',
+			width: '50%',
+			float: 'none',
+			display: 'block',
+			margin: '20px auto'
+		// 	textAlign: 'center',
+		// 	fontSize: '35px',
 		},
 	},
 	slider: {

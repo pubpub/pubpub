@@ -17,7 +17,6 @@ export function login(req, res) {
 			lastName: req.user.lastName,
 			username: req.user.username,
 			image: req.user.image,
-			thumbnail: req.user.thumbnail,
 			settings: req.user.settings,
 			following: req.user.following,
 			assets: req.user.assets,
