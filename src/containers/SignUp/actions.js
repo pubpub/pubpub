@@ -46,23 +46,20 @@ export function signup(firstName, lastName, email, password) {
 	};
 }
 
-export function signupDetails(image, bio, orcid, website) {
-	const analyticsData = {
+export function signupDetails(image, bio, website, twitter, orcid, github, googleScholar) {
+	const data = {
 		image: image,
 		bio: bio,
-		orcid: orcid,
 		website: website,
+		twitter: twitter,
+		orcid: orcid,
+		github: github,
+		googleScholar: googleScholar,
 	};
-	analytics.sendEvent('SignUpDetails', analyticsData);
-
+	analytics.sendEvent('SignUpDetails', data);
 	return {
 		types: [SIGNUP_DETAILS_LOAD, SIGNUP_DETAILS_SUCCESS, SIGNUP_DETAILS_FAIL],
-		promise: (client) => client.post('/signup-details', {data: {
-			'image': image,
-			'bio': bio,
-			'orcid': orcid,
-			'website': website,
-		}})
+		promise: (client) => client.post('/signup-details', {data: data})
 	};
 }
 

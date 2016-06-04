@@ -18,6 +18,7 @@ import {
 
 import {
 	SIGNUP_SUCCESS,
+	SIGNUP_DETAILS_SUCCESS,
 } from 'containers/SignUp/actions';
 
 /*--------*/
@@ -69,6 +70,10 @@ function loggedOut(state) {
 	return defaultState;
 }
 
+function signUpDetailsSuccess(state, result) {
+	return state.mergeIn(['userData'], result);
+}
+
 /*--------*/
 // Bind actions to specific reducing functions.
 /*--------*/
@@ -86,6 +91,9 @@ export default function reducer(state = defaultState, action) {
 
 	case LOGOUT_SUCCESS:
 		return loggedOut(state);
+
+	case SIGNUP_DETAILS_SUCCESS: 
+		return signUpDetailsSuccess(state, action.result);
 
 	default:
 		return ensureImmutable(state);

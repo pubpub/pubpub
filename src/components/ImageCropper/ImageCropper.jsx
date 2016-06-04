@@ -9,7 +9,7 @@ import {FormattedMessage} from 'react-intl';
 
 let styles = {};
 
-const ImageCropper = React.createClass({
+export const ImageCropper = React.createClass({
 	propTypes: {
 		width: PropTypes.number,
 		height: PropTypes.number,

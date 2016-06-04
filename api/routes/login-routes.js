@@ -22,6 +22,12 @@ export function login(req, res) {
 			assets: req.user.assets,
 			locale: req.user.locale,
 			verifiedEmail: req.user.verifiedEmail,
+			bio: req.user.bio,
+			website: req.user.website,
+			github: req.user.github,
+			orcid: req.user.orcid,
+			twitter: req.user.twitter,
+			googleScholar: req.user.googleScholar,
 		}
 		: {};
 	const locale = loginData.locale || 'en';

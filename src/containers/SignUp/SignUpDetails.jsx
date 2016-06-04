@@ -1,9 +1,8 @@
 import React, {PropTypes} from 'react';
 import Radium from 'radium';
 import Helmet from 'react-helmet';
-import {ImageCropper} from 'components';
+import {Loader, ImageCropper} from 'components';
 import {Link} from 'react-router';
-import {Loader} from 'components';
 
 
 import {globalStyles} from 'utils/styleConstants';
@@ -17,12 +16,13 @@ export const SignUpDetails = React.createClass({
 		submitHandler: PropTypes.func,
 		errorMessage: PropTypes.string,
 		isLoading: PropTypes.bool,
+		userImage: PropTypes.string,
 	},
 
 	getInitialState: function() {
 		return {
 			userImageFile: null,
-			userImageURL: 'https://jake.pubpub.org/unsafe/100x100/https://assets.pubpub.org/happyPub.png',
+			userImageURL: undefined,
 		};
 	},
 
@@ -37,12 +37,10 @@ export const SignUpDetails = React.createClass({
 			github: this.refs.detailsGithub.value,
 			googleScholar: this.refs.detailsGoogleScholar.value,
 		};
-		console.log(detailsData);
-		// this.props.submitHandler(detailsData);	
+		this.props.submitHandler(detailsData);	
 	},
 
 	handleFileSelect: function(evt) {
-		console.log('wasd');
 		if (evt.target.files.length) {
 			this.setState({userImageFile: evt.target.files[0]});
 		}
@@ -78,7 +76,7 @@ export const SignUpDetails = React.createClass({
 						<label style={styles.label} htmlFor={'userImage'}>
 							<FormattedMessage id="details.Image" defaultMessage="Profile Image"/>
 						</label>
-						<img style={styles.userImage} src={this.state.userImageURL} />
+						<img style={styles.userImage} src={this.state.userImageURL || this.props.userImage} />
 						<input id={'userImage'} name={'user image'} type="file" accept="image/*" onChange={this.handleFileSelect} />
 						
 					</div>
@@ -112,7 +110,7 @@ export const SignUpDetails = React.createClass({
 							ORCID
 						</label>
 						<div style={styles.prefixedInputWrapper}>
-							<div style={styles.prefix}>http://orcid.org/</div>
+							<div style={styles.prefix}>orcid.org/</div>
 							<input ref={'detailsOrcid'} id={'orcid'} name={'orcid'} type="text" style={[styles.input, styles.prefixedInput]}/>	
 						</div>
 					</div>
@@ -122,7 +120,7 @@ export const SignUpDetails = React.createClass({
 							Github
 						</label>
 						<div style={styles.prefixedInputWrapper}>
-							<div style={styles.prefix}>https://github.com/</div>
+							<div style={styles.prefix}>github.com/</div>
 							<input ref={'detailsGithub'} id={'github'} name={'github'} type="text" style={[styles.input, styles.prefixedInput]}/>	
 						</div>
 					</div>
@@ -132,7 +130,7 @@ export const SignUpDetails = React.createClass({
 							Google Scholar
 						</label>
 						<div style={styles.prefixedInputWrapper}>
-							<div style={styles.prefix}>http://scholar.google.com/citations?user=</div>
+							<div style={styles.prefix}>scholar.google.com/citations?user=</div>
 							<input ref={'detailsGoogleScholar'} id={'googleScholar'} name={'google scholar'} type="text" style={[styles.input, styles.prefixedInput]}/>	
 						</div>
 					</div>
@@ -143,7 +141,7 @@ export const SignUpDetails = React.createClass({
 
 					<div style={styles.loaderContainer}><Loader loading={isLoading} showCompletion={!errorMessage}/></div>
 
-					<Link to={'/signup?stage=follow'} style={globalStyles.link}>Skip this step</Link>
+					<Link to={'/signup?stage=follow'} style={styles.skipLink}>Skip this step</Link>
 					<div style={styles.errorMessage}>{errorMessage}</div>
 
 				</form>
@@ -207,10 +205,9 @@ styles = {
 		padding: '10px 0px',
 		color: globalStyles.errorRed,
 	},
-	registerLink: {
+	skipLink: {
 		...globalStyles.link,
-		display: 'block',
-		margin: '3em 0em'
+		fontSize: '0.85em',
 	},
 	imageCropperWrapper: {
 		height: '100vh',

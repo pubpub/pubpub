@@ -21,7 +21,7 @@ export const SignUp = React.createClass({
 		this.props.dispatch(signup(signUpData.firstName, signUpData.lastName, signUpData.email, signUpData.password));
 	},
 	detailsSubmit: function(detailsData) {
-		this.props.dispatch(signupDetails(detailsData));
+		this.props.dispatch(signupDetails(detailsData.image, detailsData.bio, detailsData.website, detailsData.twitter, detailsData.orcid, detailsData.github, detailsData.googleScholar));
 	},
 	followsSubmit: function(followsData) {
 		this.props.dispatch(signupFollow(followsData));
@@ -52,7 +52,8 @@ export const SignUp = React.createClass({
 		const isLoading = this.props.signUpData && this.props.signUpData.get('loading');
 		const errorMessage = this.props.signUpData && this.props.signUpData.get('error');
 		const signUpMode = loggedIn && this.props.query && this.props.query.stage; // If not logged in, signUpMode is false, trigger <SignUpForm> to render, otherwise set mode to query
-		
+		const userImage = this.props.loginData && this.props.loginData.getIn(['userData', 'image']);
+
 		return (
 			<div className={'signup-container'} style={styles.container}>
 
@@ -69,7 +70,8 @@ export const SignUp = React.createClass({
 					<SignUpDetails
 						submitHandler={this.detailsSubmit} 
 						errorMessage={errorMessage}
-						isLoading={isLoading}/>
+						isLoading={isLoading}
+						userImage={userImage} />
 				}
 
 				{/* Sign Up Follow */}

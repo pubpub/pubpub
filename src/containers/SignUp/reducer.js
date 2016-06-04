@@ -59,22 +59,31 @@ function signupFailed(state, error) {
 function detailsLoading(state) {
 	return state.merge({
 		loading: true,
-		error: undefined
+		error: undefined,
+		currentStage: 'details',
 	});
 }
 
 function detailsSuccess(state) {
-	return state;
+	return state.merge({
+		loading: false,
+		error: undefined,
+		currentStage: 'follow',
+	});
 }
 
-function detailsFailed(state) {
-	return state;
+function detailsFailed(state, error) {
+	return state.merge({
+		loading: false,
+		error: error
+	});
 }
 
 function followLoading(state) {
 	return state.merge({
 		loading: true,
-		error: undefined
+		error: undefined,
+		currentStage: 'follow',
 	});
 }
 

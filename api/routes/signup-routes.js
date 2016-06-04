@@ -84,3 +84,37 @@ export function signup(req, res) {
 	});
 }
 app.post('/signup', signup);
+
+
+export function signupDetails(req, res) {
+	const userID = req.user ? req.user._id : undefined;
+	if (!userID) { return res.status(403).json('Not authorized to edit this user'); }
+
+	User.findById(userID).exec()
+	.then(function(result) {
+		result.image = req.body.image || result.image;
+		result.bio = req.body.bio || result.bio;
+		result.website = req.body.website || result.website;
+		result.twitter = req.body.twitter || result.twitter;
+		result.orcid = req.body.orcid || result.orcid;
+		result.github = req.body.github || result.github;
+		result.googleScholar = req.body.googleScholar || result.googleScholar;
+		return result.save();
+	})
+	.then(function(savedResult) {
+		return res.status(201).json({
+			image: savedResult.image,
+			bio: savedResult.bio,
+			website: savedResult.website,
+			twitter: savedResult.twitter,
+			orcid: savedResult.orcid,
+			github: savedResult.github,
+			googleScholar: savedResult.googleScholar,
+		});
+	})
+	.catch(function(error) {
+		console.log('error', error);
+		return res.status(500).json(error);
+	});
+}
+app.post('/signup-details', signupDetails);

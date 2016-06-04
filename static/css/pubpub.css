@@ -40,7 +40,7 @@ label {
 	color: #58585B;
 }
 
-input[type="text"], textarea {
+input[type="text"], input[type="password"], textarea {
 	display: block;	
 	padding: 5px 10px;
 	border: 2px solid #BBBDC0;
@@ -49,7 +49,7 @@ input[type="text"], textarea {
 	margin-bottom: 1em;
 	resize: vertical;
 }
-input[type="text"]:focus, textarea:focus{
+input[type="text"]:focus, input[type="password"]:focus, textarea:focus{
 	outline: none;
 	border: 2px solid #58585B;
 }

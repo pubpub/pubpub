@@ -14,8 +14,14 @@ const userSchema = new Schema({
 	lastName: { type: String }, // Need to collect first/last for DOI assignment
 	name: { type: String }, // Merged from first and last - simpler call.
 	image: { type: String }, // User profile image
-	title: { type: String }, // Self assigned title
+	
 	bio: { type: String }, // Self assigned bio
+	github: { type: String }, // Github account
+	orcid: { type: String }, // orcid number
+	twitter: { type: String }, // twitter hadnle
+	website: { type: String }, // website url
+	googleScholar: { type: String }, // googleScholar id
+
 	groups: [{ type: ObjectId, ref: 'Group' }], // Groups that the user belongs to
 
 	pubs: [ { type: ObjectId, ref: 'Pub' } ], // Pubs that the user has access to (due to collaborator status from within the editor)
