@@ -68,7 +68,7 @@ const UserSettings = React.createClass({
 						</div>
 
 						<div style={styles.saveSettings} key={'userSettingsSaveButton'} onClick={this.saveSettings}>
-							<FormattedMessage {...globalMessages.save} />
+							<FormattedMessage {...globalMessages.Save} />
 						</div>
 
 						<div style={styles.loader}>

@@ -13,6 +13,14 @@ export const globalMessages = defineMessages({
 		id: 'global.SignUp',
 		defaultMessage: 'Sign Up',
 	},
+	Skipthisstep: {
+		id: 'global.Skipthisstep',
+		defaultMessage: 'Skip this step',
+	},
+	ProfileImage: {
+		id: 'global.ProfileImage',
+		defaultMessage: 'Profile Image',
+	},
 	Bio: {
 		id: 'global.Bio',
 		defaultMessage: 'Bio',
@@ -165,12 +173,12 @@ export const globalMessages = defineMessages({
 		id: 'global.noResults',
 		defaultMessage: 'No Results',
 	},
-	save: {
-		id: 'global.save',
+	Save: {
+		id: 'global.Save',
 		defaultMessage: 'Save',
 	},
-	cancel: {
-		id: 'global.cancel',
+	Cancel: {
+		id: 'global.Cancel',
 		defaultMessage: 'Cancel',
 	},
 	remove: {

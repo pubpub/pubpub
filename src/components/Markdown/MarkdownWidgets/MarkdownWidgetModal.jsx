@@ -294,7 +294,7 @@ const MarkdownWidgetModal = React.createClass({
 								}
 							{/*
 							<div style={styles.pluginSave} key={'pluginPopupSave'} onClick={this.onPluginSave}>
-								<FormattedMessage {...globalMessages.save} />
+								<FormattedMessage {...globalMessages.Save} />
 							</div>
 							*/}
 

@@ -345,7 +345,7 @@ const JournalDesign = React.createClass({
 				</Link>
 
 				<div style={styles.saveButton} key={'journalDesignSaveButton'} onClick={this.saveDesign}>
-					<FormattedMessage {...globalMessages.save} />
+					<FormattedMessage {...globalMessages.Save} />
 				</div>
 
 				<div style={styles.loader}>

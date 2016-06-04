@@ -27,28 +27,28 @@ export const SignUpForm = React.createClass({
 	validate: function(signUpData) {
 		// Check to make sure firstName exists
 		if (!signUpData.firstName || !signUpData.firstName.length) {
-			return {isValid: false, validationError: 'First Name required'};
+			return {isValid: false, validationError: <FormattedMessage id="signup.FirstNamerequired" defaultMessage="First Name required"/>};
 		}
 
 		// Check to make sure lastName exists
 		if (!signUpData.lastName || !signUpData.lastName.length) {
-			return {isValid: false, validationError: 'Last Name required'};
+			return {isValid: false, validationError: <FormattedMessage id="signup.LastNamerequired" defaultMessage="Last Name required"/>};
 		}
 
 		// Check to make sure email exists
 		if (!signUpData.email || !signUpData.email.length) {
-			return {isValid: false, validationError: 'Email required'};
+			return {isValid: false, validationError: <FormattedMessage id="signup.Emailrequired" defaultMessage="Email required"/>};
 		}
 
 		// Check to make sure email is lightly valid (complete validation is impossible in JS - so just check for the most common error)
 		const regexTest = /\S+@\S+/;
 		if (!regexTest.test(signUpData.email)) {
-			return {isValid: false, validationError: 'Email is invalid'};
+			return {isValid: false, validationError: <FormattedMessage id="signup.Emailisinvalid" defaultMessage="Email is invalid"/>};
 		}
 
 		// Check to make sure password exists
 		if (!signUpData.password || signUpData.password.length < 8) {
-			return {isValid: false, validationError: 'Password too short'};
+			return {isValid: false, validationError: <FormattedMessage id="signup.Passwordtooshort" defaultMessage="Password too short"/>};
 		}
 
 		return {isValid: true, validationError: undefined};
@@ -74,15 +74,20 @@ export const SignUpForm = React.createClass({
 		const metaData = {
 			title: 'PubPub | Sign Up',
 		};
+		const serverErrors = {
+			emailAlreadyUsed: <FormattedMessage id="signup.Emailalreadyused" defaultMessage="Email already used"/>
+		};
 		const isLoading = this.props.isLoading;
-		const errorMessage = this.props.errorMessage || this.state.validationError;
+		const errorMessage = serverErrors[this.props.errorMessage] || this.state.validationError;
 
 		return (
 			<div className={'signup-container'} style={styles.container}>
 				<Helmet {...metaData} />
 
 				<h1><FormattedMessage {...globalMessages.SignUp}/></h1>
-				<p style={styles.subHeader}>Sign up to publish documents and follow content!</p>
+				<p style={styles.subHeader}>
+					<FormattedMessage id="signup.Signupto" defaultMessage="Sign up to publish documents and follow content!"/>
+				</p>
 				<form onSubmit={this.signUpSubmit}>
 					<div>
 						<label style={styles.label} htmlFor={'firstName'}>

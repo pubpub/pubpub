@@ -32,7 +32,7 @@ export function signup(req, res) {
 		});
 
 		User.register(newUser, req.body.password, function(err, account) {
-			if (err) { console.log(err); return res.status(500).json('Email already used'); }
+			if (err) { console.log(err); return res.status(500).json('emailAlreadyUsed'); }
 
 			sendVerificationEmail(newUser.email, verificationHash, function(errSendRest, success) {
 				if (errSendRest) { console.log(errSendRest); }

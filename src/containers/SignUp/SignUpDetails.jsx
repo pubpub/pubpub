@@ -65,16 +65,20 @@ export const SignUpDetails = React.createClass({
 			<div className={'signup-container'} style={styles.container}>
 				<Helmet {...metaData} />
 
-				<h1>Welcome to PubPub!</h1>
-				<p style={styles.subHeader}>We've sent you a verification email. Please click the link there to verify your account!</p>
+				<h1><FormattedMessage id="details.WelcomeToPubPub" defaultMessage="Welcome to PubPub!"/></h1>
+				<p style={styles.subHeader}>
+					<FormattedMessage id="details.VerificationMessage" defaultMessage="We've sent you a verification email. Please click the link there to verify your account!"/>
+				</p>
 
-				<h2>About You</h2>
-				<p style={styles.subHeader}>Add details to identify yourself to the community and to be rewarded for your contributions!</p>
+				<h2><FormattedMessage id="details.AboutYou" defaultMessage="About You"/></h2>
+				<p style={styles.subHeader}>
+					<FormattedMessage id="details.AddDetailsTo" defaultMessage="Add details to identify yourself to the community and to be rewarded for your contributions!"/>
+				</p>
 				
 				<form onSubmit={this.detailsSubmit}>
 					<div>
 						<label style={styles.label} htmlFor={'userImage'}>
-							<FormattedMessage id="details.Image" defaultMessage="Profile Image"/>
+							<FormattedMessage {...globalMessages.ProfileImage}/>
 						</label>
 						<img style={styles.userImage} src={this.state.userImageURL || this.props.userImage} />
 						<input id={'userImage'} name={'user image'} type="file" accept="image/*" onChange={this.handleFileSelect} />
@@ -136,12 +140,12 @@ export const SignUpDetails = React.createClass({
 					</div>
 
 					<button className={'button'} onClick={this.detailsSubmit}>
-						Save Details
+						<FormattedMessage id="details.SaveDetails" defaultMessage="Save Details"/>
 					</button>
 
 					<div style={styles.loaderContainer}><Loader loading={isLoading} showCompletion={!errorMessage}/></div>
 
-					<Link to={'/signup?stage=follow'} style={styles.skipLink}>Skip this step</Link>
+					<Link to={'/signup?stage=follow'} style={styles.skipLink}><FormattedMessage {...globalMessages.Skipthisstep}/></Link>
 					<div style={styles.errorMessage}>{errorMessage}</div>
 
 				</form>
