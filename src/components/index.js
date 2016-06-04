@@ -11,6 +11,7 @@ export LoaderIndeterminate from './LoaderIndeterminate/LoaderIndeterminate';
 export Markdown from './Markdown/Markdown';
 export Menu from './Menu/Menu';
 export NotFound from './NotFound/NotFound';
+export PreviewCard from './PreviewCard/PreviewCard';
 export PreviewCollection from './PreviewCollection/PreviewCollection';
 export PreviewDiscussion from './PreviewDiscussion/PreviewDiscussion';
 export PreviewJournal from './PreviewJournal/PreviewJournal';

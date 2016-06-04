@@ -58,6 +58,7 @@ input[type="file"] {
 	padding: 5px 0px;
 	border: 0;
 	font-size: 1em;
+	margin-bottom: 1.2em;
 }
 
 input[type="file"]:focus {

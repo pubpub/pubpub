@@ -47,6 +47,7 @@
     "details.AboutYou": "Missing. English is: About You",
     "details.AddDetailsTo": "Missing. English is: Add details to identify yourself to the community and to be rewarded for your contributions!",
     "details.SaveDetails": "Missing. English is: Save Details",
+    "follow.FinishSignUp": "Missing. English is: Finish Sign Up",
     "signup.FirstNamerequired": "Missing. English is: First Name required",
     "signup.LastNamerequired": "Missing. English is: Last Name required",
     "signup.Emailrequired": "Missing. English is: Email required",
@@ -63,6 +64,8 @@
     "global.newPub": "Missing. English is: New Pub",
     "global.analytics": "Same as English: Analytics",
     "global.Contact": "Missing. English is: Contact",
+    "global.Save": "Missing. English is: Save",
+    "global.Cancel": "Missing. English is: Cancel",
     "global.pubs": "Missing. English is: Pubs",
     "global.Pubs": "Missing. English is: Pubs",
     "global.Explore": "Missing. English is: Explore",
@@ -103,6 +106,7 @@
     "details.AboutYou": "Missing. English is: About You",
     "details.AddDetailsTo": "Missing. English is: Add details to identify yourself to the community and to be rewarded for your contributions!",
     "details.SaveDetails": "Missing. English is: Save Details",
+    "follow.FinishSignUp": "Missing. English is: Finish Sign Up",
     "signup.FirstNamerequired": "Missing. English is: First Name required",
     "signup.LastNamerequired": "Missing. English is: Last Name required",
     "signup.Emailrequired": "Missing. English is: Email required",
@@ -117,6 +121,8 @@
     "global.Bio": "Missing. English is: Bio",
     "global.Website": "Missing. English is: Website",
     "global.Contact": "Missing. English is: Contact",
+    "global.Save": "Missing. English is: Save",
+    "global.Cancel": "Missing. English is: Cancel",
     "global.Pubs": "Missing. English is: Pubs",
     "global.read": "Missing. English is: Read"
   }

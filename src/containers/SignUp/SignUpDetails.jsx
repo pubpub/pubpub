@@ -23,7 +23,12 @@ export const SignUpDetails = React.createClass({
 		return {
 			userImageFile: null,
 			userImageURL: undefined,
+			bio: '',
 		};
+	},
+
+	bioUpdate: function() {
+		this.setState({bio: this.refs.detailsBio.value.substring(0, 140)});
 	},
 
 	detailsSubmit: function(evt) {
@@ -89,7 +94,10 @@ export const SignUpDetails = React.createClass({
 						<label style={styles.label} htmlFor={'bio'}>
 							<FormattedMessage {...globalMessages.Bio}/>
 						</label>
-						<textarea ref={'detailsBio'} id={'bio'} name={'bio'} type="text" style={styles.input}></textarea>
+						<textarea ref={'detailsBio'} id={'bio'} name={'bio'} type="text" style={[styles.input, styles.bio]} onChange={this.bioUpdate} value={this.state.bio}></textarea>
+						<div className={'light-color inputSubtext'} to={'/resetpassword'}>
+							{this.state.bio.length} / 140
+						</div>
 					</div>
 
 					<div>
@@ -174,6 +182,9 @@ styles = {
 	},
 	input: {
 		width: 'calc(100% - 20px - 4px)',
+	},
+	bio: {
+		height: '4em',
 	},
 	prefixedInputWrapper: {
 		display: 'table',
