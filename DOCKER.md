@@ -1,4 +1,4 @@
-## Docker commands
+## Get running
 
     docker pull docker-registry.media.mit.edu/mongodb
     docker pull docker-registry.media.mit.edu/pubpub
@@ -17,3 +17,14 @@ Or, if you have copied api/config.sample.js to api/config.js and edited it, then
 
 Again this will direct port 8080 to port 8080 in the container, adjust that to match your configuration
 
+### Docker Image
+
+First, you should copy `api/config.sample.js` to `api/config.js`. You can either then load the environment variables as the same above with `-e ...` or you can adjust `api/config.js` and hardcode that information in the appropriate places.
+
+Then build the image:
+
+    docker build pubpub .
+
+Now you should have a `pubpub` local image and you should be able to use it using the same commands above, e.g.
+
+    docker run -d -p 3030:3030 -p 8080:8080 --name pubpub --link=pubpub_mongodb --hostname=pubpub pubpub
