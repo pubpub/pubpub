@@ -9,18 +9,19 @@ Keep config.js private to your development team.
 *********************** */
 
 // AWS Credentials
-export const accessKeyAws = '<YOUR-ACCESS-KEY-HERE>'; // S3 used for file storage
-export const secretKeyAws = '<YOUR-SECRET-KEY-HERE>';
+export const accessKeyAws = process.env.ACCESSKEYAWS || '<YOUR-ACCESS-KEY-HERE>'; // S3 used for file storage
+export const secretKeyAws = process.env.SECRETKEYAWS || '<YOUR-SECRET-KEY-HERE>';
 
 // Firebase Credentials
-export const firebaseSecret = '<YOUR-SECRET-HERE>'; // Firebase used for synchronizing collaborative editing
+export const firebaseSecret = process.env.FIREBASESECRET || '<YOUR-SECRET-HERE>'; // Firebase used for synchronizing collaborative editing
 
 // Heroku Credentials
-export const herokuApiKey = '<YOUR-KEY-HERE>'; // Heroku used to host and serve the project
+export const herokuApiKey = process.env.HEROKUAPIKEY || '<YOUR-KEY-HERE>'; // Heroku used to host and serve the project
 
 // Mongo Credentials
-export const mongoURI = '<YOUR-URI-HERE>'; // Can point to an external mongo hosting service, or your local instance
+export const mongoURI = process.env.MONGOURI || '<YOUR-URI-HERE>'; // Can point to an external mongo hosting service, or your local instance
 
 // Sendgrid Credentials
-export const sendgridAPIKey = '<YOUR-KEY-HERE>'; // Sendgrid used to send transactional emails
+export const sendgridAPIKey = process.env.SENDGRIDAPIKEY || '<YOUR-KEY-HERE>'; // Sendgrid used to send transactional emails
 export const captchaKey = '<YOUR-KEY-HERE>';
+
