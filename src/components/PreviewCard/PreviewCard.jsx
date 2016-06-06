@@ -1,5 +1,7 @@
 import React, {PropTypes} from 'react';
 import Radium from 'radium';
+import {Link} from 'react-router';
+import {globalStyles} from 'utils/styleConstants';
 let styles = {};
 
 export const PreviewCard = React.createClass({
@@ -9,22 +11,30 @@ export const PreviewCard = React.createClass({
 		image: PropTypes.string,
 		title: PropTypes.string,
 		description: PropTypes.string,
+		slug: PropTypes.string,
 		onFollowHandler: PropTypes.func,
 	},
 
 
 	render: function() {
-
+		const href = '/';
 		return (
 			<div style={styles.container}>
 				
-				<div style={styles.left}>
-					<img style={styles.image} src={this.props.image} alt={this.props.title}/>
-					<div className={'button'} style={styles.follow}>Follow</div>
+				<div style={[styles.tableCell, styles.edges]}>
+					<Link to={href} style={globalStyles.link}>
+						<img style={styles.image} src={this.props.image} alt={this.props.title}/>
+					</Link>
 				</div>
-				<div style={styles.right}>
-					<h2 style={styles.title}>{this.props.title}</h2>
+				<div style={styles.tableCell}>
+					<Link to={href} style={globalStyles.link}>
+						<h3 style={styles.title}>{this.props.title}</h3>
+					</Link>
 					<p style={styles.description}>{this.props.description}</p>
+				</div>
+				<div style={[styles.tableCell, styles.edges]}>
+					<div className={'button'} style={[styles.button, styles.follow]}>Follow</div>
+					<div className={'button'} style={[styles.button]}>Edit</div>
 				</div>
 
 			</div>
@@ -43,25 +53,30 @@ styles = {
 		backgroundColor: 'white',
 	},
 	image: {
-		width: '5em',
+		width: '4em',
+	},
+	button: {
+		display: 'block',
+		textAlign: 'center',
+		padding: '.1em 2em',
+		fontSize: '.8em',
+		marginBottom: '.5em',
 	},
 	follow: {
-		display: 'block',
-		width: 'calc(5em - 4px)',
-		textAlign: 'center',
-		padding: '.1em 0em',
+		minWidth: '5em', // Need min width so Follow -> Following doesn't cause resize
 	},
-	left: {
-		display: 'table-cell',
-		width: '1%',
-		padding: '.5em',
-	},
-	right: {
+	tableCell: {
 		display: 'table-cell',
 		verticalAlign: 'top',
 		padding: '.5em',
 	},
+	edges: {
+		width: '1%',
+	},
 	title: {
-		marginTop: 0,
+		margin: 0,
+	},
+	description: {
+		fontSize: '.9em',
 	}
 };

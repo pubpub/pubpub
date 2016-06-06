@@ -47,6 +47,10 @@ export const SignUpFollow = React.createClass({
 						image={'https://s3.amazonaws.com/pubpub-upload/users/1451933144166.jpg'}
 						title={'PubPub Team'}
 						description={'The team behind the development of PubPub. Based out of MIT Media Lab'} />
+					<PreviewCard 
+						image={'http://res.cloudinary.com/pubpub/image/upload/c_limit,h_250,w_250/v1449761714/3eb7882_iavg9s.jpg'}
+						title={'Thariq Shihipar'}
+						description={'Intent on eating every bagel on earth until I burst.'} />
 				</div>
 				
 				<button className={'button'} onClick={this.followSubmit}>
