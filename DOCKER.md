@@ -27,7 +27,8 @@ Then build the image:
 
 Now you should have a `pubpub` local image and you should be able to use it using the same commands above, e.g.
 
-    docker run -d -p 8080:8080 --name pubpub --link=pubpub_mongodb --hostname=pubpub pubpub
+    docker run -d -p 8080:8080 -e "NODE_ENV=production" -e MONGOURI -e "PORT=8080" \
+      --name pubpub --link=pubpub_mongodb --hostname=pubpub pubpub
 
 #### Access to API
 
