@@ -22,7 +22,7 @@ export const AboutHeader = React.createClass({
 						</div>
 
 						<div style={styles.headerButtons}>
-							<a href={'#journals'} className={'underlineOnHover'} style={styles.buttonTitle}>For Readers</a>
+							<a href={'#readers'} className={'underlineOnHover'} style={styles.buttonTitle}>For Readers</a>
 							<p style={styles.buttonText}>All is free to read and share</p>
 
 							<a href={'#authors'} className={'underlineOnHover'} style={styles.buttonTitle}>For Authors</a>
@@ -43,42 +43,42 @@ export const AboutHeader = React.createClass({
 						<h2 style={styles.sectionHeader}>Made with PubPub</h2>
 						
 						<Link style={globalStyles.link} to={'/jods'}>
-						<div style={styles.madeWithBlock}>
+						<div style={styles.madeWithBlock} className={'lightest-bg-hover'}>
 							<img style={styles.madeWithImage} src={'https://jake.pubpub.org/unsafe/75x75/https://assets.pubpub.org/_site/jodsIcon.png'} alt={'Journal of Design and Science'} />
 							<div style={styles.madeWithTextWrapper}>
-								<h3 style={styles.madeWithText}>Journal of Design and Science</h3>
-								<div style={styles.madeWithText}>MIT Press and MIT Media Lab</div>
+								<h3 style={styles.noMargin}>Journal of Design and Science</h3>
+								<div style={styles.noMargin}>MIT Press and MIT Media Lab</div>
 							</div>
 						</div>
 						</Link>
 
 						<Link style={globalStyles.link} to={'/constitucioncdmx'}>
-						<div style={styles.madeWithBlock}>
+						<div style={styles.madeWithBlock} className={'lightest-bg-hover'}>
 							<img style={styles.madeWithImage} src={'https://jake.pubpub.org/unsafe/75x75/https://assets.pubpub.org/_site/cdmxIcon.png'} alt={'Constitucion CDMX'} />
 							<div style={styles.madeWithTextWrapper}>
-								<h3 style={styles.madeWithText}>Constitucion CDMX</h3>
-								<div style={styles.madeWithText}>Laboratoria CDMX, Government Mexico City</div>
+								<h3 style={styles.noMargin}>Constitucion CDMX</h3>
+								<div style={styles.noMargin}>Laboratoria CDMX, Government Mexico City</div>
 							</div>
 							
 						</div>
 						</Link>
 
 						<Link style={globalStyles.link} to={'/tjoe'}>
-						<div style={styles.madeWithBlock}>
+						<div style={styles.madeWithBlock} className={'lightest-bg-hover'}>
 							<img style={styles.madeWithImage} src={'https://jake.pubpub.org/unsafe/75x75/https://assets.pubpub.org/_site/tjoeIcon.png'} alt={'The Journal of Open Engineering'} />
 							<div style={styles.madeWithTextWrapper}>
-								<h3 style={styles.madeWithText}>Journal of Open Engineering</h3>
-								<div style={styles.madeWithText}>Devin Berg, University of Wisconsin</div>
+								<h3 style={styles.noMargin}>Journal of Open Engineering</h3>
+								<div style={styles.noMargin}>Devin Berg, University of Wisconsin</div>
 							</div>
 						</div>
 						</Link>
 
 						<Link style={globalStyles.link} to={'/resci'}>
-						<div style={styles.madeWithBlock}>
+						<div style={styles.madeWithBlock} className={'lightest-bg-hover'}>
 							<img style={styles.madeWithImage} src={'https://jake.pubpub.org/unsafe/75x75/https://assets.pubpub.org/_site/resciIcon.png'} alt={'Responsive Science'} />
 							<div style={styles.madeWithTextWrapper}>
-								<h3 style={styles.madeWithText}>Responsive Science</h3>
-								<div style={styles.madeWithText}>Kevin Esvelt, MIT</div>
+								<h3 style={styles.noMargin}>Responsive Science</h3>
+								<div style={styles.noMargin}>Kevin Esvelt, MIT</div>
 							</div>
 						</div>
 						</Link>
@@ -89,10 +89,39 @@ export const AboutHeader = React.createClass({
 				<div className={'lightest-bg'} style={styles.sectionWrapper}>
 					<div style={styles.section}>
 						<h2 style={styles.sectionHeader}>A full-stack publishing tool</h2>
-						<div style={styles.sectionSubHeader}>For Readers</div>
-						<div style={styles.sectionSubHeader}>For Authors</div>
-						<div style={styles.sectionSubHeader}>For Reviewers</div>
-						<div style={styles.sectionSubHeader}>For Journals</div>
+
+						<div style={[styles.forWhoBlock, styles.forWhoBorderBottom]} id={'readers'}>
+							<div style={styles.forWhoText}>
+								<h3 style={styles.noMargin}>For Readers</h3>
+								<p>A rich and collaborative open-source editor allows for evolving content and formats. Publishing is by the author and immediate. Publishing is versioned and we encourage publishing early and often to capture the full history of your work.</p>
+							</div>
+							<img style={styles.forWhoImage} src={'https://res.cloudinary.com/pubpub/image/upload/c_scale,w_415/v1451416390/history_hires_ou47rn.gif'} alt={'PubPub Reading'}/>
+						</div>
+						<div style={[styles.forWhoBlock, styles.forWhoBorderBottom]} id={'authors'}>
+							<img style={styles.forWhoImage} src={'https://res.cloudinary.com/pubpub/image/upload/c_scale,w_415/v1451416401/editing_hires_svywu2.gif'} alt={'PubPub Authoring'}/>
+							<div style={styles.forWhoText}>
+								<h3 style={styles.noMargin}>For Authors</h3>
+								<p>A rich and collaborative open-source editor allows for evolving content and formats. Publishing is by the author and immediate. Publishing is versioned and we encourage publishing early and often to capture the full history of your work.</p>
+								<div className={'button'}>More on Pubs</div>
+							</div>
+						</div>
+						<div style={[styles.forWhoBlock, styles.forWhoBorderBottom]} id={'reviewers'}>
+							<div style={styles.forWhoText}>
+								<h3 style={styles.noMargin}>For Reviewers</h3>
+								<p>Review is distributed across many communities and done in the open. Rewarding constructive reviews and incentivizing progress rather than elitism opens the process to all that are capable.</p>
+								<div className={'button'}>More on Reviews</div>
+							</div>
+							<img style={styles.forWhoImage} src={'https://res.cloudinary.com/pubpub/image/upload/c_scale,w_415/v1451416396/discussion_hires_jhdoga.gif'} alt={'PubPub Reviews'}/>
+						</div>
+						<div style={styles.forWhoBlock} id={'journals'}>
+							<img style={styles.forWhoImage} src={'https://res.cloudinary.com/pubpub/image/upload/c_scale,w_415/v1451417712/outputjournal_qcdqyh.gif'} alt={'PubPub Journals'}/>
+							<div style={styles.forWhoText}>
+								<h3 style={styles.noMargin}>For Journals</h3>
+								<p>Journals serve as curators rather than gatekeepers. Pubs can be submitted to and featured in as many journals as is relevant. No more silos. Journals can be run for large or small audiences, by institutions or individuals. Everyone can be a journal.</p>
+								<div className={'button'}>More on Journals</div>
+							</div>
+						</div>
+
 					</div>
 				</div>
 
@@ -100,7 +129,7 @@ export const AboutHeader = React.createClass({
 					<div style={styles.section}>
 						<h2 style={styles.sectionHeader}>Build the publishing world you want</h2>
 						<p style={styles.headerTextMax}>PubPub is an open-source tool built for and by the community that uses it. Join PubPub, contribute code, design, features. Keep up to date with where we’re heading.</p>
-						<a style={globalStyles.link} href={'https://github.com/pubpub/pubpub'}><div className={'button'} style={styles.signUpButton}>Sign Up</div></a>
+						<a style={globalStyles.link} href={'https://github.com/pubpub/pubpub'}><div className={'button'} style={styles.signUpButton}>View Code</div></a>
 					</div>
 				</div>
 
@@ -196,8 +225,35 @@ styles = {
 		width: '100%',
 		padding: '.5em',
 	},
-	madeWithText: {
+	noMargin: {
 		margin: 0,
-	}
+	},
+	forWhoBlock: {
+		display: 'table',
+		padding: '4em 0em',
+	},
+	forWhoBorderBottom: {
+		borderBottom: '1px solid #BBBDC0',
+	},
+	forWhoText: {
+		display: 'table-cell',
+		width: '50%',
+		verticalAlign: 'top',
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+			display: 'block',
+			width: '100%',
+		}
+	},
+	forWhoImage: {
+		display: 'table-cell',
+		width: 'calc(100% - 100px)',
+		margin: '0px 50px',
+		boxShadow: '0px 0px 5px #808284',
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+			display: 'block',
+			width: '100%',
+			margin: '2em 0em',
+		}
+	},
 
 };

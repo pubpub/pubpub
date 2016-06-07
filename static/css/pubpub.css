@@ -23,6 +23,7 @@ lightest: #F3F3F4
 .lighter-color { color: #BBBDC0; }
 
 .lightest-bg { background-color: #F3F3F4; }
+.lightest-bg-hover:hover { background-color: #F3F3F4; }
 .lightest-color { color: #F3F3F4; }
 
 
