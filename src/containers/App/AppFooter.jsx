@@ -1,6 +1,7 @@
 import React, {PropTypes} from 'react';
 import Radium from 'radium';
 import { Link } from 'react-router';
+import {globalStyles} from 'utils/styleConstants';
 import {globalMessages} from 'utils/globalMessages';
 import {FormattedMessage} from 'react-intl';
 
@@ -13,7 +14,7 @@ export const AppFooter = React.createClass({
 
 	render: function() {
 		return (
-			<div className="footer" style={[this.props.hideFooter && {display: 'none'}]}>
+			<div className="footer darkest-bg lighter-color" style={[styles.footer, this.props.hideFooter && {display: 'none'}]}>
 				<div style={{display: 'table', margin: '0 auto'}}>
 					<div style={styles.footerColumn}>
 						<div style={styles.footerHeader}>PubPub</div>
@@ -55,14 +56,8 @@ export default Radium(AppFooter);
 
 styles = {
 	footer: {
-		width: '95%',
-		margin: '40px auto 0px auto',
-		borderTop: '1px solid #CCC',
 		padding: '40px 0px',
-		fontSize: '.9em',
-		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
-			width: 'auto',
-		}
+		// fontSize: '.9em',
 	},
 	footerColumn: {
 		display: 'table-cell',
@@ -70,11 +65,9 @@ styles = {
 		padding: '0px 4vw',
 		fontSize: '1em',
 		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
-			fontSize: '1.2em',
-			width: 'calc(100% - 20px)',
-			float: 'left',
-			marginBottom: '25px',
-			padding: '0px 10px',
+			display: 'inline-block',
+			verticalAlign: 'top',
+			padding: '25px',
 		},
 	},
 	footerHeader: {
@@ -85,8 +78,8 @@ styles = {
 		borderBottom: '1px solid #ccc',
 	},
 	footerItem: {
+		...globalStyles.link,
 		display: 'block',
-		color: '#333',
 		whiteSpace: 'nowrap',
 		textDecoration: 'none',
 	},

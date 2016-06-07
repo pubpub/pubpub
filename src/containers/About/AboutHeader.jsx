@@ -88,7 +88,7 @@ export const AboutHeader = React.createClass({
 
 				<div className={'lightest-bg'} style={styles.sectionWrapper}>
 					<div style={styles.section}>
-						<h2 style={styles.sectionHeader}>A full-stack publishing tool</h2>
+						<h2 style={[styles.sectionHeader, styles.noMargin]}>A full-stack publishing tool</h2>
 
 						<div style={[styles.forWhoBlock, styles.forWhoBorderBottom]} id={'readers'}>
 							<div style={[styles.forWhoText, styles.forWhoLeft]}>
@@ -102,7 +102,7 @@ export const AboutHeader = React.createClass({
 						<div style={[styles.forWhoBlock, styles.forWhoBorderBottom]} id={'authors'}>
 							<div style={[styles.forWhoText, styles.forWhoRight]}>
 								<h3 style={styles.noMargin}>For Authors</h3>
-								<p>A rich and collaborative open-source editor allows for evolving content and formats. Publishing is by the author and immediate. Publishing is versioned and we encourage publishing early and often to capture the full history of your work.</p>
+								<p>Author-driven. Free and immediate publishing. Versioned Histories. A rich and collaborative open-source editor allows for evolving content and formats. Publishing is by the author and immediate. Publishing is versioned and we encourage publishing early and often to capture the full history of your work.</p>
 								<div className={'button'}>More on Pubs</div>
 							</div>
 							<img style={[styles.forWhoImage, styles.forWhoLeft]} src={'https://res.cloudinary.com/pubpub/image/upload/c_scale,w_415/v1451416401/editing_hires_svywu2.gif'} alt={'PubPub Authoring'}/>
@@ -122,7 +122,7 @@ export const AboutHeader = React.createClass({
 						<div style={styles.forWhoBlock} id={'journals'}>
 							<div style={[styles.forWhoText, styles.forWhoRight]}>
 								<h3 style={styles.noMargin}>For Journals</h3>
-								<p>Journals serve as curators rather than gatekeepers. Pubs can be submitted to and featured in as many journals as is relevant. No more silos. Journals can be run for large or small audiences, by institutions or individuals. Everyone can be a journal.</p>
+								<p>Created by anyone for any community. Journals become tools for curating published content. Not gatekeepers of scientific progress. Journals serve as curators rather than gatekeepers. Pubs can be submitted to and featured in as many journals as is relevant. No more silos. Journals can be run for large or small audiences, by institutions or individuals. Everyone can be a journal.</p>
 								<div className={'button'}>More on Journals</div>
 							</div>
 							<img style={[styles.forWhoImage, styles.forWhoLeft]} src={'https://res.cloudinary.com/pubpub/image/upload/c_scale,w_415/v1451417712/outputjournal_qcdqyh.gif'} alt={'PubPub Journals'}/>
@@ -136,7 +136,7 @@ export const AboutHeader = React.createClass({
 					<div style={styles.section}>
 						<h2 style={styles.sectionHeader}>Build the publishing world you want</h2>
 						<p style={styles.headerTextMax}>PubPub is an open-source tool built for and by the community that uses it. Join PubPub, contribute code, design, features. Keep up to date with where we’re heading.</p>
-						<a style={globalStyles.link} href={'https://github.com/pubpub/pubpub'}><div className={'button'} style={styles.signUpButton}>View Code</div></a>
+						<a style={globalStyles.link} href={'https://github.com/pubpub/pubpub'} className={'button'}>View Code</a>
 					</div>
 				</div>
 
@@ -233,7 +233,8 @@ styles = {
 		padding: '.5em',
 	},
 	noMargin: {
-		margin: 0,
+		marginTop: 0,
+		marginBottom: 0,
 	},
 	forWhoBlock: {
 		padding: '4em 0em',
