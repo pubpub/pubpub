@@ -31,9 +31,8 @@ export const Login = React.createClass({
 		const oldUsername = this.props.loginData && this.props.loginData.getIn(['userData', 'username']);
 		const newUsername = nextProps.loginData && nextProps.loginData.getIn(['userData', 'username']);
 		if (newUsername && oldUsername !== newUsername) {
-			const userProfileRoute = '/user/' + newUsername;
 			const redirectRoute = this.props.query && this.props.query.redirect;
-			this.props.dispatch(pushState(null, (redirectRoute || userProfileRoute)));
+			this.props.dispatch(pushState(null, (redirectRoute || '/')));
 		}
 	},
 
@@ -43,6 +42,8 @@ export const Login = React.createClass({
 		};
 		const isLoading = this.props.loginData && this.props.loginData.get('loading');
 		const errorMessage = this.props.loginData && this.props.loginData.get('error');
+		const redirectRoute = this.props.query && this.props.query.redirect;
+		const redirectQuery = redirectRoute ? '?redirect=' + redirectRoute : '';
 
 		return (
 			<div className={'login-container'} style={styles.container}>
@@ -78,7 +79,7 @@ export const Login = React.createClass({
 
 				</form>
 				
-				<Link style={styles.registerLink} to={'/signup'}>
+				<Link style={styles.registerLink} to={'/signup' + redirectQuery}>
 					<FormattedMessage id="login.newToPubPub" defaultMessage="New to PubPub? Click to Sign Up!"/>
 				</Link>
 				

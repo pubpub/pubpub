@@ -17,6 +17,8 @@ export const SignUpDetails = React.createClass({
 		errorMessage: PropTypes.string,
 		isLoading: PropTypes.bool,
 		userImage: PropTypes.string,
+		redirectRoute: PropTypes.string,
+
 	},
 
 	getInitialState: function() {
@@ -153,7 +155,7 @@ export const SignUpDetails = React.createClass({
 
 					<div style={styles.loaderContainer}><Loader loading={isLoading} showCompletion={!errorMessage}/></div>
 
-					<Link to={'/signup?stage=follow'} style={styles.skipLink}><FormattedMessage {...globalMessages.Skipthisstep}/></Link>
+					<Link to={this.props.redirectRoute || '/'} style={styles.skipLink}><FormattedMessage {...globalMessages.Skipthisstep}/></Link>
 					<div style={styles.errorMessage}>{errorMessage}</div>
 
 				</form>

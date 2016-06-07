@@ -2,10 +2,9 @@ import React, {PropTypes} from 'react';
 import {connect} from 'react-redux';
 import {pushState} from 'redux-router';
 import Radium from 'radium';
-import {signup, signupDetails, signupFollow} from './actions';
+import {signup, signupDetails} from './actions';
 import SignUpForm from './SignUpForm';
 import SignUpDetails from './SignUpDetails';
-import SignUpFollow from './SignUpFollow';
 
 let styles = {};
 
@@ -23,9 +22,6 @@ export const SignUp = React.createClass({
 	detailsSubmit: function(detailsData) {
 		this.props.dispatch(signupDetails(detailsData.image, detailsData.bio, detailsData.website, detailsData.twitter, detailsData.orcid, detailsData.github, detailsData.googleScholar));
 	},
-	followsSubmit: function(followsData) {
-		this.props.dispatch(signupFollow(followsData));
-	},
 
 	componentWillReceiveProps(nextProps) {
 		// If the currentStage has changed, update the route
@@ -33,14 +29,12 @@ export const SignUp = React.createClass({
 		const nextStage = nextProps.signUpData && nextProps.signUpData.get('currentStage');
 		
 		if (lastStage !== nextStage) { // If the stage has changed
-			const username = nextProps.loginData && nextProps.loginData.getIn(['userData', 'username']);
-			const userProfileRoute = '/user/' + username;
 			const redirectRoute = this.props.query && this.props.query.redirect;
 
 			// If the signup process is complete, redirect the path
 			// else update the stage query
 			if (nextStage === 'complete') { 
-				this.props.dispatch(pushState(null, (redirectRoute || userProfileRoute)));	
+				this.props.dispatch(pushState(null, (redirectRoute || '/')));	
 			} else {
 				this.props.dispatch(pushState(null, '/signup', {redirect: redirectRoute, stage: nextStage}));	
 			}
@@ -54,11 +48,13 @@ export const SignUp = React.createClass({
 		const signUpMode = loggedIn && this.props.query && this.props.query.stage; // If not logged in, signUpMode is false, trigger <SignUpForm> to render, otherwise set mode to query
 		const userImage = this.props.loginData && this.props.loginData.getIn(['userData', 'image']);
 
+		const redirectRoute = this.props.query && this.props.query.redirect;
+
 		return (
 			<div className={'signup-container'} style={styles.container}>
 
 				{/* Sign Up Form */}
-				{signUpMode !== 'details' && signUpMode !== 'follow' && // Render if not details or follow stage (this is default)
+				{signUpMode !== 'details' && // Render if not details stage (this is default)
 					<SignUpForm 
 						submitHandler={this.signUpSubmit} 
 						errorMessage={errorMessage}
@@ -71,15 +67,8 @@ export const SignUp = React.createClass({
 						submitHandler={this.detailsSubmit} 
 						errorMessage={errorMessage}
 						isLoading={isLoading}
-						userImage={userImage} />
-				}
-
-				{/* Sign Up Follow */}
-				{signUpMode === 'follow' && // Render if details Sign Up mode
-					<SignUpFollow
-						submitHandler={this.followsSubmit} 
-						errorMessage={errorMessage}
-						isLoading={isLoading}/>
+						userImage={userImage} 
+						redirectRoute={redirectRoute}/>
 				}
 				
 			</div>

@@ -12,10 +12,7 @@ import {
 	SIGNUP_DETAILS_LOAD,
 	SIGNUP_DETAILS_SUCCESS,
 	SIGNUP_DETAILS_FAIL,
-
-	SIGNUP_FOLLOW_LOAD,
-	SIGNUP_FOLLOW_SUCCESS,
-	SIGNUP_FOLLOW_FAIL,
+	
 } from './actions';
 
 /*--------*/
@@ -68,7 +65,7 @@ function detailsSuccess(state) {
 	return state.merge({
 		loading: false,
 		error: undefined,
-		currentStage: 'follow',
+		currentStage: 'complete',
 	});
 }
 
@@ -79,21 +76,6 @@ function detailsFailed(state, error) {
 	});
 }
 
-function followLoading(state) {
-	return state.merge({
-		loading: true,
-		error: undefined,
-		currentStage: 'follow',
-	});
-}
-
-function followSuccess(state) {
-	return state;
-}
-
-function followFailed(state) {
-	return state;
-}
 
 /*--------*/
 // Bind actions to specific reducing functions.
@@ -114,13 +96,6 @@ export default function reducer(state = defaultState, action) {
 		return detailsSuccess(state, action.result.loginData);
 	case SIGNUP_DETAILS_FAIL:
 		return detailsFailed(state, action.error);
-
-	case SIGNUP_FOLLOW_LOAD:
-		return followLoading(state);
-	case SIGNUP_FOLLOW_SUCCESS:
-		return followSuccess(state, action.result.loginData);
-	case SIGNUP_FOLLOW_FAIL:
-		return followFailed(state, action.error);
 
 	default:
 		return ensureImmutable(state);

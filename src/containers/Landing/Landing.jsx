@@ -3,6 +3,7 @@ import {connect} from 'react-redux';
 import Radium from 'radium';
 import Helmet from 'react-helmet';
 import {globalStyles} from 'utils/styleConstants';
+import {PreviewCard} from 'components';
 import { Link } from 'react-router';
 
 let styles = {};
@@ -43,6 +44,10 @@ const Landing = React.createClass({
 						<h1 style={styles.topPub}>PubPub</h1>
 						<div style={styles.subheader}>Open Publishing</div>
 					</div>
+					<PreviewCard 
+						image={'http://res.cloudinary.com/pubpub/image/upload/c_limit,h_250,w_250/v1449761714/3eb7882_iavg9s.jpg'}
+						title={'Thariq Shihipar'}
+						description={'Intent on eating every bagel on earth until I burst.'} />
 
 					<div style={styles.lower}>
 						<div style={styles.textDark}>
