@@ -2,6 +2,7 @@ import React, { PropTypes } from 'react';
 import {StyleRoot} from 'radium';
 import Helmet from 'react-helmet';
 import {connect} from 'react-redux';
+import {pushState} from 'redux-router';
 import {loadAppAndLogin} from './actions';
 import {logout} from 'containers/Login/actions';
 import {IntlProvider} from 'react-intl';
@@ -35,6 +36,13 @@ export const App = React.createClass({
 
 	componentDidMount() {
 		analytics.pageView(this.props.path, this.props.loginData.get('loggedIn'));
+	},
+
+	componentWillReceiveProps(nextProps) {
+		// Redirect to home if logged out
+		if (this.props.loginData.get('loggedIn') && !nextProps.loginData.get('loggedIn')) {
+			this.props.dispatch(pushState(null, '/'));
+		}
 	},
 
 	logoutHandler: function() {
