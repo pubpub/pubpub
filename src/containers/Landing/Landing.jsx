@@ -4,16 +4,14 @@ import Radium from 'radium';
 import Helmet from 'react-helmet';
 import {globalStyles} from 'utils/styleConstants';
 import {PreviewCard} from 'components';
+import AboutHeader from 'containers/About/AboutHeader';
 import { Link } from 'react-router';
 
 let styles = {};
 
 const Landing = React.createClass({
 	propTypes: {
-		appData: PropTypes.object,
 		landingData: PropTypes.object,
-		path: PropTypes.string,
-		query: PropTypes.object,
 		dispatch: PropTypes.func
 	},
 
@@ -39,16 +37,9 @@ const Landing = React.createClass({
 
 				<Helmet {...metaData} />
 
-				<div>
-					<div style={styles.top}>
-						<h1 style={styles.topPub}>PubPub</h1>
-						<div style={styles.subheader}>Open Publishing</div>
-					</div>
-					<PreviewCard 
-						image={'http://res.cloudinary.com/pubpub/image/upload/c_limit,h_250,w_250/v1449761714/3eb7882_iavg9s.jpg'}
-						title={'Thariq Shihipar'}
-						description={'Intent on eating every bagel on earth until I burst.'} />
+				<AboutHeader />
 
+				<div>
 					<div style={styles.lower}>
 						<div style={styles.textDark}>
 							<div style={styles.centerMedium}>Read, Write, Publish, Review.</div>
@@ -136,6 +127,11 @@ const Landing = React.createClass({
 						</div>
 					</div>
 
+					<PreviewCard 
+						image={'http://res.cloudinary.com/pubpub/image/upload/c_limit,h_250,w_250/v1449761714/3eb7882_iavg9s.jpg'}
+						title={'Thariq Shihipar'}
+						description={'Intent on eating every bagel on earth until I burst.'} />
+
 
 					<div style={styles.section}>
 						<div style={styles.sectionContent}>
@@ -210,10 +206,8 @@ const Landing = React.createClass({
 
 export default connect( state => {
 	return {
-		appData: state.app,
+		loginData: state.login,
 		landingData: state.landing,
-		path: state.router.location.pathname,
-		query: state.router.location.query,
 	};
 })( Radium(Landing) );
 
@@ -223,7 +217,7 @@ styles = {
 		// height: '100%',
 		// overflow: 'hidden',
 		// overflowY: 'scroll',
-		fontFamily: globalStyles.headerFont,
+		// fontFamily: globalStyles.headerFont,
 		// '@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
 		// 	height: 'auto',
 		// 	overflow: 'hidden',

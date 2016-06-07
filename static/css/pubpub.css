@@ -72,6 +72,10 @@ input[type="file"]:focus {
 	top: -1.7em;
 }
 
+.underlineOnHover:hover {
+	text-decoration: underline !important;
+}
+
 .menu-option {
 	width: calc(100% - 3em);
 	text-decoration: none;
@@ -98,6 +102,7 @@ input[type="file"]:focus {
 	transition: .2s ease-out color, .2s ease-out background-color, .2s ease-out border;
 	background-color: white;
 	font-size: 1em;
+	text-align: center;
 	-webkit-user-select: none;
 	-moz-user-select: none;
 	-ms-user-select: none;   
