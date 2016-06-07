@@ -6,13 +6,13 @@ let styles = {};
 
 export const PreviewCard = React.createClass({
 	propTypes: {
-		targetBlank: PropTypes.bool,
 		type: PropTypes.string,
 		image: PropTypes.string,
 		title: PropTypes.string,
 		description: PropTypes.string,
 		slug: PropTypes.string,
 		onFollowHandler: PropTypes.func,
+		showEdit: PropTypes.bool,
 	},
 
 
@@ -78,5 +78,6 @@ styles = {
 	},
 	description: {
 		fontSize: '.9em',
+		margin: '.5em 0em',
 	}
 };

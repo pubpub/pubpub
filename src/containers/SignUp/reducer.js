@@ -12,7 +12,7 @@ import {
 	SIGNUP_DETAILS_LOAD,
 	SIGNUP_DETAILS_SUCCESS,
 	SIGNUP_DETAILS_FAIL,
-	
+
 } from './actions';
 
 /*--------*/
@@ -93,7 +93,7 @@ export default function reducer(state = defaultState, action) {
 	case SIGNUP_DETAILS_LOAD:
 		return detailsLoading(state);
 	case SIGNUP_DETAILS_SUCCESS:
-		return detailsSuccess(state, action.result.loginData);
+		return detailsSuccess(state);
 	case SIGNUP_DETAILS_FAIL:
 		return detailsFailed(state, action.error);
 
