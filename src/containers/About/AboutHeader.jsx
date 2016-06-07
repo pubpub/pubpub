@@ -91,35 +91,42 @@ export const AboutHeader = React.createClass({
 						<h2 style={styles.sectionHeader}>A full-stack publishing tool</h2>
 
 						<div style={[styles.forWhoBlock, styles.forWhoBorderBottom]} id={'readers'}>
-							<div style={styles.forWhoText}>
+							<div style={[styles.forWhoText, styles.forWhoLeft]}>
 								<h3 style={styles.noMargin}>For Readers</h3>
 								<p>A rich and collaborative open-source editor allows for evolving content and formats. Publishing is by the author and immediate. Publishing is versioned and we encourage publishing early and often to capture the full history of your work.</p>
 							</div>
-							<img style={styles.forWhoImage} src={'https://res.cloudinary.com/pubpub/image/upload/c_scale,w_415/v1451416390/history_hires_ou47rn.gif'} alt={'PubPub Reading'}/>
+							<img style={[styles.forWhoImage, styles.forWhoRight]} src={'https://res.cloudinary.com/pubpub/image/upload/c_scale,w_415/v1451416390/history_hires_ou47rn.gif'} alt={'PubPub Reading'}/>
+							<div style={globalStyles.clearFix}></div>
 						</div>
+
 						<div style={[styles.forWhoBlock, styles.forWhoBorderBottom]} id={'authors'}>
-							<img style={styles.forWhoImage} src={'https://res.cloudinary.com/pubpub/image/upload/c_scale,w_415/v1451416401/editing_hires_svywu2.gif'} alt={'PubPub Authoring'}/>
-							<div style={styles.forWhoText}>
+							<div style={[styles.forWhoText, styles.forWhoRight]}>
 								<h3 style={styles.noMargin}>For Authors</h3>
 								<p>A rich and collaborative open-source editor allows for evolving content and formats. Publishing is by the author and immediate. Publishing is versioned and we encourage publishing early and often to capture the full history of your work.</p>
 								<div className={'button'}>More on Pubs</div>
 							</div>
+							<img style={[styles.forWhoImage, styles.forWhoLeft]} src={'https://res.cloudinary.com/pubpub/image/upload/c_scale,w_415/v1451416401/editing_hires_svywu2.gif'} alt={'PubPub Authoring'}/>
+							<div style={globalStyles.clearFix}></div>
 						</div>
+
 						<div style={[styles.forWhoBlock, styles.forWhoBorderBottom]} id={'reviewers'}>
-							<div style={styles.forWhoText}>
+							<div style={[styles.forWhoText, styles.forWhoLeft]}>
 								<h3 style={styles.noMargin}>For Reviewers</h3>
 								<p>Review is distributed across many communities and done in the open. Rewarding constructive reviews and incentivizing progress rather than elitism opens the process to all that are capable.</p>
 								<div className={'button'}>More on Reviews</div>
 							</div>
-							<img style={styles.forWhoImage} src={'https://res.cloudinary.com/pubpub/image/upload/c_scale,w_415/v1451416396/discussion_hires_jhdoga.gif'} alt={'PubPub Reviews'}/>
+							<img style={[styles.forWhoImage, styles.forWhoRight]} src={'https://res.cloudinary.com/pubpub/image/upload/c_scale,w_415/v1451416396/discussion_hires_jhdoga.gif'} alt={'PubPub Reviews'}/>
+							<div style={globalStyles.clearFix}></div>
 						</div>
+
 						<div style={styles.forWhoBlock} id={'journals'}>
-							<img style={styles.forWhoImage} src={'https://res.cloudinary.com/pubpub/image/upload/c_scale,w_415/v1451417712/outputjournal_qcdqyh.gif'} alt={'PubPub Journals'}/>
-							<div style={styles.forWhoText}>
+							<div style={[styles.forWhoText, styles.forWhoRight]}>
 								<h3 style={styles.noMargin}>For Journals</h3>
 								<p>Journals serve as curators rather than gatekeepers. Pubs can be submitted to and featured in as many journals as is relevant. No more silos. Journals can be run for large or small audiences, by institutions or individuals. Everyone can be a journal.</p>
 								<div className={'button'}>More on Journals</div>
 							</div>
+							<img style={[styles.forWhoImage, styles.forWhoLeft]} src={'https://res.cloudinary.com/pubpub/image/upload/c_scale,w_415/v1451417712/outputjournal_qcdqyh.gif'} alt={'PubPub Journals'}/>
+							<div style={globalStyles.clearFix}></div>
 						</div>
 
 					</div>
@@ -229,30 +236,37 @@ styles = {
 		margin: 0,
 	},
 	forWhoBlock: {
-		display: 'table',
 		padding: '4em 0em',
 	},
 	forWhoBorderBottom: {
 		borderBottom: '1px solid #BBBDC0',
 	},
 	forWhoText: {
-		display: 'table-cell',
 		width: '50%',
 		verticalAlign: 'top',
 		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
-			display: 'block',
 			width: '100%',
 		}
 	},
 	forWhoImage: {
-		display: 'table-cell',
-		width: 'calc(100% - 100px)',
-		margin: '0px 50px',
+		width: 'calc(50% - 100px)',
 		boxShadow: '0px 0px 5px #808284',
+		margin: '0px 50px',
 		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
-			display: 'block',
 			width: '100%',
 			margin: '2em 0em',
+		}
+	},
+	forWhoLeft: {
+		float: 'left',
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+			float: 'none',
+		}
+	},
+	forWhoRight: {
+		float: 'right',
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+			float: 'none',
 		}
 	},
 
