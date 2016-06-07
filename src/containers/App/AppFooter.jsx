@@ -68,6 +68,7 @@ styles = {
 			display: 'inline-block',
 			verticalAlign: 'top',
 			padding: '25px',
+			width: 'auto',
 		},
 	},
 	footerHeader: {
