@@ -62,6 +62,7 @@ styles = {
 	container: {
 		width: 'calc(100% - 2em)',
 		border: '1px solid #BBBDC0',
+		borderRadius: '1px',
 		display: 'table',
 		margin: '1em',
 		backgroundColor: 'white',

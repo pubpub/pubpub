@@ -92,4 +92,8 @@ styles = {
 		maxWidth: '1024px',
 		margin: '0 auto',
 	},
+	sectionHeader: {
+		fontSize: '2.5em',
+		marginTop: '0em',
+	},
 };
