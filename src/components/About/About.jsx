@@ -2,15 +2,23 @@ import React from 'react';
 import Radium from 'radium';
 import {globalStyles} from 'utils/styleConstants';
 import { Link } from 'react-router';
+import Helmet from 'react-helmet';
+
+import {styles as aboutStyles} from './aboutStyles';
 
 let styles = {};
 
-export const AboutHeader = React.createClass({
+export const About = React.createClass({
 
 	render: function() {
+		const metaData = {
+			title: 'PubPub',
+		};
 
 		return (
 			<div style={styles.container}>
+
+				<Helmet {...metaData} />
 
 				<div className={'lightest-bg'} style={styles.sectionWrapper}>
 					<div style={[styles.section, styles.table]}>
@@ -18,7 +26,7 @@ export const AboutHeader = React.createClass({
 						<div style={styles.headerText}>
 							<h1 style={[styles.headerTitle, styles.headerTextMax]}>Open, Continuous Publishing</h1>
 							<p style={[styles.headerSubtitle, styles.headerTextMax]}>PubPub is a free and open tool for collaborative editing, instant publishing, continuous review, and grassroots journals.</p>
-							<Link style={globalStyles.link} to={'/signup'}><div className={'button'} style={styles.signUpButton}>Sign Up</div></Link>
+							<Link style={globalStyles.link} to={'/signup'}><div className={'button'} style={styles.headerButton}>Sign Up</div></Link>
 						</div>
 
 						<div style={styles.headerButtons}>
@@ -148,24 +156,11 @@ export const AboutHeader = React.createClass({
 });
 
 
-export default Radium(AboutHeader);
+export default Radium(About);
 
 styles = {
-	container: {
-	},
-	sectionWrapper: {
-		padding: '3em 2em',
-		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
-			padding: '3em 1em',
-		}
-	},
-	section: {
-		maxWidth: '1024px',
-		margin: '0 auto',
-	},
-	table: {
-		display: 'table',
-	},
+	...aboutStyles,
+	
 	headerText: {
 		display: 'table-cell',
 	},
@@ -179,28 +174,7 @@ styles = {
 			display: 'none',
 		}
 	},
-	headerTitle: {
-		fontSize: '3.5em',
-		marginTop: '0em',
-		letterSpacing: '-3px',
-		lineHeight: '1em',
-	},
-	headerSubtitle: {
-		fontSize: '1.5em',
-	},
-	headerTextMax: {
-		maxWidth: '600px',
-	},
 
-	sectionHeader: {
-		fontSize: '2.5em',
-		marginTop: '0em',
-	},
-
-	signUpButton: {
-		margin: '2em 0em 0em 0em',
-		padding: '1em 5em',
-	},
 	buttonTitle: {
 		...globalStyles.link,
 		fontSize: '1.1em',

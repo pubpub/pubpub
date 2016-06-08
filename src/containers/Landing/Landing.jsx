@@ -2,46 +2,50 @@ import React, { PropTypes } from 'react';
 import {connect} from 'react-redux';
 import Radium from 'radium';
 import Helmet from 'react-helmet';
-import {globalStyles} from 'utils/styleConstants';
+// import {globalStyles} from 'utils/styleConstants';
 import {PreviewCard} from 'components';
-import AboutHeader from 'containers/About/AboutHeader';
-import { Link } from 'react-router';
+import {About} from 'components';
+// import { Link } from 'react-router';
 
 let styles = {};
 
 const Landing = React.createClass({
 	propTypes: {
 		landingData: PropTypes.object,
+		loginData: PropTypes.object,
 		dispatch: PropTypes.func
 	},
 
 	getInitialState() {
 		return {
-			activeFeature: 'editing',
+			
 		};
 	},
 
-	setFeature: function(newFeature) {
-		return ()=> {
-			this.setState({activeFeature: newFeature});
-		};
-	},
 
 	render: function() {
 		const metaData = {
 			title: 'PubPub',
 		};
+		const loggedIn = this.props.loginData && this.props.loginData.get('loggedIn');
 
 		return (
 			<div style={styles.container}>
 
 				<Helmet {...metaData} />
 
-				<AboutHeader />
+				{/* If not loggedIn, display the About PubPub content*/}
+				{!loggedIn &&
+					<About />
+				}
+				
 
 				<div className={'lightest-bg'} style={styles.sectionWrapper}>
 					<div style={styles.section}>
-						<h2 style={styles.sectionHeader}>Explore PubPub</h2>
+						<h2 style={styles.sectionHeader}>Recent Activity</h2>
+
+						{/* If no activity, display - follow these suggested accounts*/}
+
 						<PreviewCard 
 							image={'http://res.cloudinary.com/pubpub/image/upload/c_limit,h_250,w_250/v1449761714/3eb7882_iavg9s.jpg'}
 							title={'Thariq Shihipar'}

@@ -1,3 +1,7 @@
+export About from './About/About';
+export AboutJournals from './About/AboutJournals';
+export AboutPubs from './About/AboutPubs';
+export AboutReviews from './About/AboutReviews';
 export Button from './Button/Button';
 export Formatting from './Formatting/Formatting';
 export GalleryJournal from './GalleryJournal/GalleryJournal';
