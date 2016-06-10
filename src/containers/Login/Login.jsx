@@ -1,16 +1,16 @@
-import React, {PropTypes} from 'react';
-import {connect} from 'react-redux';
-import {pushState} from 'redux-router';
-import Radium from 'radium';
-import Helmet from 'react-helmet';
-import {login} from './actions';
-import {Link} from 'react-router';
-import {Loader} from 'components';
+import React, {PropTypes} from 'react'; //React is the UI functionality. {PropTypes} is used to validate the type of a prop recieved. The {} are because it is not the defualt export. This is only used in devmode? 'react' is node module. 
+import {connect} from 'react-redux'; //{connect} is used to generate containers for "Dumb/Pure" components. Connect(function ReduxState->Prop)(component). React component takes props and returns UI.
+import {pushState} from 'redux-router'; //Stores router state in redux store. See differences between React-router-redux and redux-router.
+import Radium from 'radium'; //Styling tools for react. CSS free. Imports whole.
+import Helmet from 'react-helmet'; //I dont understand this but i think it has to do with global stuff.
+import {login} from './actions'; //Grabs exported {login} function from actions.js. Why action type variables and action creator functions? Login (action creator), given email/passs, returns action.
+import {Link} from 'react-router'; //React-Router maps different routes to various react componenets. Link Routes from app files.
+import {Loader} from 'components'; //How does it get in loader folder? Loader is a componenet.
 
 
-import {globalStyles} from 'utils/styleConstants';
-import {globalMessages} from 'utils/globalMessages';
-import {FormattedMessage} from 'react-intl';
+import {globalStyles} from 'utils/styleConstants'; //These are global styles, accessed from utilities.
+import {globalMessages} from 'utils/globalMessages'; //These are global messages, accessed from utilities.
+import {FormattedMessage} from 'react-intl'; //Used for international language functionality.
 
 let styles = {};
 

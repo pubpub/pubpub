@@ -19,7 +19,7 @@
     "lint": "eslint src api",
     "lint:watch": "node_modules/eslint-watch/bin/esw --watch --config .eslintrc src api",
     "start-dev": "node ./node_modules/better-npm-run start-dev",
-    "start-dev-api": "node ./node_modules/better-npm-run start-dev-api",
+    "start-dev-api": "SET NODE_PATH=./src && node ./node_modules/better-npm-run start-dev-api",
     "watch-client": "node ./node_modules/better-npm-run watch-client",
     "dev": "concurrently --raw --kill-others \"npm run watch-client\" \"npm run start-dev\" \"npm run start-dev-api\"",
     "test": "sudo mongod | NODE_PATH=./src TESTING=true mocha $(find src api -name '*.test.js') --compilers js:babel-register --require ./src/tests/mochaEnvInit.js --watch --watch-extensions jsx,js --reporter list",
