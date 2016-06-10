@@ -69,6 +69,17 @@ const baseMediaPlugin = React.createClass({
 
 		const wrapperStyle = Object.assign(styleObject, baseStyle);
 
+		if (this.props.mode === 'rss') {
+			return (<figure>
+				{this.props.children}
+				<figcaption>
+					{ (caption) ? {caption}: null }
+					{ (reference) ? <Reference citationObject={reference} mode={'mla'}/> : null }
+				</figcaption>
+			</figure>
+			);
+		}
+
 		return (<div className={this.generateClassName()} style={wrapperStyle}>
 			{this.props.children}
 			{ (caption) ? <span className="pub-sub-caption" style={styles.caption}>{caption}</span> : null }

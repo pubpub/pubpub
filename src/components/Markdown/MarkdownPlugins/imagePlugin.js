@@ -58,11 +58,11 @@ const Plugin = React.createClass({
 		const align = this.props.align ? this.props.align : 'full';
 		const caption = this.props.caption;
 		const reference = this.props.reference;
-
+		const mode = this.props.mode;
 
 		const imgProps = (!this.props.size && !this.props.align) ? {maxWidth: '100%', maxHeight: '100%', display: 'block', margin: '0 auto'} : {width: '100%'};
 
-		return (<Media className={IMG_WRAPPER_CLASS} caption={caption} size={size} align={align} reference={reference}>
+		return (<Media className={IMG_WRAPPER_CLASS} mode={mode} caption={caption} size={size} align={align} reference={reference}>
 				<img className={IMG_CLASS} style={imgProps} src={url} />
 			</Media>
 		);
