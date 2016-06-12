@@ -249,6 +249,9 @@ styles = {
 		marginTop: '0em',
 		letterSpacing: '-3px',
 		lineHeight: '1em',
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+			fontSize: '2.5em',
+		},
 	},
 	contentNavLink: {
 		display: 'block',
