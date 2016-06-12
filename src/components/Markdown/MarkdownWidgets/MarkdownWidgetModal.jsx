@@ -276,12 +276,20 @@ const MarkdownWidgetModal = React.createClass({
 											const FieldComponent = InputFields[fieldType];
 											const value = (this.state) ? this.state.values[fieldTitle] || null : null;
 
+											const foundInAsset = (value) ? !!(this.props.assets.find((asset) => (asset._id === value._id))) : true;
+											let passedAssets = this.props.assets;
+
+											//if the asset doesn't exist in the existing library, pass it through using the serialized form
+											if (!foundInAsset) {
+												passedAssets = passedAssets.concat(value);
+											}
+
 											return (<div key={'pluginVal-' + fieldTitle + this.state.pluginType} style={styles.pluginOptionWrapper}>
 																<label htmlFor={fieldType} style={styles.pluginOptionLabel}>{fieldTitle}</label>
 																<div style={styles.pluginPropWrapper}>
 																	<FieldComponent
 																		selectedValue={value}
-																		assets={this.props.assets}
+																		assets={passedAssets}
 																		saveChange={this.onInputFieldChange}
 																		requestAssetUpload={(this.props.requestAssetUpload) ? this.requestAssetUpload.bind(this, fieldTitle) : null}
 																		requestedAsset={(this.state.requestingField === fieldTitle && this.props.requestedAsset) ? this.props.requestedAsset : null}
