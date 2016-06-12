@@ -57,6 +57,10 @@ export const ImageCropper = React.createClass({
 	},
 
 	render: function() {
+		const canvasStyle = {
+			transform: 'scale(' + 200 / (this.props.width + 50) + ')',
+			transformOrigin: 'top left',
+		};
 
 		return (
 			<div style={styles.container}>
@@ -70,7 +74,8 @@ export const ImageCropper = React.createClass({
 						color={[0, 0, 0, 0.7]} // RGBA
 						scale={parseFloat(this.state.scale)}
 						onImageReady={this.handleUpdate}
-						onImageChange={this.handleUpdate}/>
+						onImageChange={this.handleUpdate}
+						style={canvasStyle}/>
 
 						<input style={styles.slider} name="scale" type="range" ref="scale" onChange={this.handleScale} min="1" max="3" step="0.01" defaultValue="1" />
 				</div>

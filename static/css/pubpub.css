@@ -148,3 +148,12 @@ input[type="file"]:focus {
 	border-width: 9px;
 	margin-right: 20px;
 }
+
+.footer a {
+	text-decoration: none;
+	color: inherit;
+}
+
+.footer a:hover {
+	text-decoration: underline;
+}

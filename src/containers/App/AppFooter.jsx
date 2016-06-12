@@ -79,9 +79,7 @@ styles = {
 		borderBottom: '1px solid #ccc',
 	},
 	footerItem: {
-		...globalStyles.link,
 		display: 'block',
 		whiteSpace: 'nowrap',
-		textDecoration: 'none',
 	},
 };
