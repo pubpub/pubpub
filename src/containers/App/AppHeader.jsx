@@ -128,6 +128,9 @@ styles = {
 	headerLogo: {
 		fontSize: '1.4em',
 		transform: 'translateY(2px)', // The logo looks like it is set a bit too high by default
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+			fontSize: '1em',
+		}
 	},
 	headerNavItem: {
 		fontSize: '0.9em',

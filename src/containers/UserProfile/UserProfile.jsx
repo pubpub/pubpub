@@ -120,29 +120,33 @@ const Profile = React.createClass({
 
 		const ownProfile = this.ownProfile();
 		return (
-			<div style={styles.container}>
+			<div>
 
 				<Helmet {...metaData} />
 
-
-				<div className={'profile-header'} style={styles.profileHeader} >
-					<img style={styles.headerImage} src={profileData.image} />
-					<div style={styles.headerText}>
-						<h1 style={styles.headerName}>{profileData.name}</h1>
+				<div className={'profile-header section'}>
+					<div style={styles.headerImageWrapper}>
+						<img src={'https://jake.pubpub.org/unsafe/200x200/' + profileData.image} />
+					</div>
+					<div style={styles.headerTextWrapper}>
+						<h1>{profileData.name}</h1>
 						<p>{profileData.bio}</p>
 					</div>
 				</div>
 
-				<div className={'profile-content'} style={styles.profileContent}>
-					<div style={styles.profileContentNav}>
-						<Link to={'/'} style={styles.contentNavLink}>Recent Activity</Link>
-						<div style={styles.contentNavSpacer}></div>
-						<Link to={'/'} style={styles.contentNavLink}>Pubs</Link>
-						<Link to={'/'} style={styles.contentNavLink}>Groups</Link>
-						<Link to={'/'} style={styles.contentNavLink}>Journals</Link>
-						<Link to={'/'} style={styles.contentNavLink}>Assets</Link>
+				<div className={'profile-content section'} style={styles.profileContentSection}>
+					
+					<div className={'contentNav'}>
+						<Link to={'/'} className={'contentNavLink'}>Recent Activity</Link>
+						<div className={'contentNavSpacer'}></div>
+						<Link to={'/'} className={'contentNavLink'}>Pubs</Link>
+						<Link to={'/'} className={'contentNavLink'}>Groups</Link>
+						<Link to={'/'} className={'contentNavLink'}>Journals</Link>
+						<Link to={'/'} className={'contentNavLink'}>Assets</Link>
+						<div className={'contentNavSpacer'}></div>
 					</div>
-					<div style={styles.profileContentBody}>
+
+					<div className={'contentBody'}>
 						{(() => {
 							switch (this.props.mode) {
 							case 'discussions':
@@ -193,6 +197,7 @@ const Profile = React.createClass({
 							}
 						})()}
 					</div>
+
 				</div>
 
 			</div>
@@ -211,68 +216,56 @@ export default connect( state => {
 })( Radium(Profile) );
 
 styles = {
-	container: {
-		maxWidth: '1024px',
-		margin: '0 auto',
-		padding: '3em 2em',
-		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
-			padding: '3em 1em',
-		}
-	},
-	profileHeader: {
-		display: 'table',
-		paddingBottom: '2em',
-		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
-			display: 'block'
-		}
-	},
-	headerImage: {
-		width: '200px',
-		display: 'table-cell',
-		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
-			display: 'block',
-			margin: '0 auto',
-		}
-	},
-	headerText: {
+	headerImageWrapper: {
+		textAlign: 'center',
 		display: 'table-cell',
 		verticalAlign: 'top',
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+			display: 'block',
+		}
+	},
+	headerTextWrapper: {
 		padding: '0em 1em',
+		display: 'table-cell',
+		verticalAlign: 'top',
 		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
 			display: 'block',
 			textAlign: 'center',
 			padding: '0em',
 		}
 	},
-	headerName: {
-		fontSize: '3.5em',
-		marginTop: '0em',
-		letterSpacing: '-3px',
-		lineHeight: '1em',
-		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
-			fontSize: '2.5em',
-		},
+	profileContentSection: {
+		paddingTop: '0em',
 	},
-	contentNavLink: {
-		display: 'block',
-		textDecoration: 'none',
-		color: 'inherit',
-		padding: '.25em 2em .25em .25em',
-		borderRight: '1px solid #BBBDC0',
-	},
-	contentNavSpacer: {
-		height: '1em',
-		borderRight: '1px solid #BBBDC0',
-	},
-	profileContentNav: {
-		display: 'table-cell',
-		width: '1%',
-		whiteSpace: 'nowrap',
-		verticalAlign: 'top',
-	},
-	profileContentBody: {
-		display: 'table-cell',
-		padding: '.5em 1em',
-	},
+
+	// contentNavLink: {
+	// 	display: 'block',
+	// 	textDecoration: 'none',
+	// 	color: 'inherit',
+	// 	padding: '.25em 2em .25em .25em',
+	// 	borderRight: '1px solid #BBBDC0',
+	// },
+	// contentNavSpacer: {
+	// 	height: '1em',
+	// 	borderRight: '1px solid #BBBDC0',
+	// },
+	// profileContentNav: {
+	// 	whiteSpace: 'nowrap',
+	// 	display: 'table-cell',
+	// 	verticalAlign: 'top',
+	// 	'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+	// 		display: 'block',
+	// 	}
+
+	// },
+	// profileContentBody: {
+	// 	display: 'table-cell',
+	// 	verticalAlign: 'top',
+	// 	padding: '.5em 1em',
+	// 	'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+	// 		display: 'block',
+	// 		padding: '0em',
+	// 	}
+	// },
 	
 };

@@ -90,7 +90,7 @@ h1 {
 	line-height: 1em;
 }
 h2 {
-	font-size: 2.5em;
+	font-size: 2em;
 	margin-top: 0em;
 }
 .section {
@@ -99,6 +99,9 @@ h2 {
 	max-width: 1024px;
 }
 @media screen and (min-resolution: 3dppx), screen and (max-width: 767px) {
+	h1 {
+		font-size: 3em;
+	}
 	.section {
 		padding: 2em 1em;
 	}
@@ -190,6 +193,47 @@ h2 {
 	margin-right: 20px;
 }
 /* ------------ */
+
+
+/* Arrow Box */
+/* ------------ */
+.contentNav {
+	white-space: nowrap;
+	display: table-cell;
+	vertical-align: top;
+}
+.contentBody {
+	white-space: nowrap;
+	display: table-cell;
+	vertical-align: top;
+	padding-left: 1em;
+}
+.contentNavLink {
+	display: block;
+	text-decoration: none;
+	color: inherit;
+	padding: .25em 2em .25em .25em;
+	border-right: 1px solid #BBBDC0;
+}
+.contentNavLink:hover, .contentNavLink-active {
+	background-color: #BBBDC0;
+}
+.contentNavSpacer {
+	height: 1em;
+	border-right: 1px solid #BBBDC0;
+}
+
+@media screen and (min-resolution: 3dppx), screen and (max-width: 767px) {
+	.contentNav, .contentBody {
+		display: block;
+		padding-left: 0em;
+	}
+	.contentNavLink, .contentNavSpacer {
+		border-right: 0px solid #BBBDC0;
+	}
+}
+/* ------------ */
+
 
 /* Footer Links */
 /* ------------ */
