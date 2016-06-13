@@ -3,6 +3,7 @@ export AboutJournals from './About/AboutJournals';
 export AboutPubs from './About/AboutPubs';
 export AboutReviews from './About/AboutReviews';
 export Button from './Button/Button';
+export ContentNav from './ContentNav/ContentNav';
 export Formatting from './Formatting/Formatting';
 export GalleryJournal from './GalleryJournal/GalleryJournal';
 export GalleryPub from './GalleryPub/GalleryPub';

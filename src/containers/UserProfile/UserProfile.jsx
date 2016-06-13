@@ -6,7 +6,7 @@ import { Link } from 'react-router';
 import { pushState } from 'redux-router';
 import {logout, follow, unfollow, toggleVisibility} from 'containers/Login/actions';
 import {getProfile, updateUser, userNavOut, userNavIn, setNotificationsRead} from './actions';
-import {ImageCropper, LoaderDeterminate} from 'components';
+import {ContentNav} from 'components';
 import UserProfileDiscussions from './UserProfileDiscussions';
 import UserProfileSettings from './UserProfileSettings';
 import UserProfilePubs from './UserProfilePubs';
@@ -119,6 +119,18 @@ const Profile = React.createClass({
 		}
 
 		const ownProfile = this.ownProfile();
+
+		const navItems = [
+			{ type: 'button', mobile: true, text: 'Follow', action: ()=>{console.log('clicked follow');} },
+			{ type: 'button', mobile: true, text: 'Menu', action: undefined },
+			{ type: 'link', text: 'Recent Activity', link: '/' },
+			{ type: 'spacer' },
+			{ type: 'link', text: 'Pubs', link: '/' },
+			{ type: 'link', text: 'Groups', link: '/' },
+			{ type: 'link', text: 'Journals', link: '/' },
+			{ type: 'spacer' },
+		];
+
 		return (
 			<div>
 
@@ -134,17 +146,17 @@ const Profile = React.createClass({
 					</div>
 				</div>
 
-				<div className={'profile-content section'} style={styles.profileContentSection}>
+				<div className={'section contentSection'}>
 					
-					<div className={'contentNav'}>
-						<Link to={'/'} className={'contentNavLink'}>Recent Activity</Link>
-						<div className={'contentNavSpacer'}></div>
-						<Link to={'/'} className={'contentNavLink'}>Pubs</Link>
-						<Link to={'/'} className={'contentNavLink'}>Groups</Link>
-						<Link to={'/'} className={'contentNavLink'}>Journals</Link>
-						<Link to={'/'} className={'contentNavLink'}>Assets</Link>
-						<div className={'contentNavSpacer'}></div>
-					</div>
+					{/* <Link to={'/'} className={'contentNavLink'}>Recent Activity</Link>
+					<div className={'contentNavSpacer'}></div>
+					<Link to={'/'} className={'contentNavLink'}>Pubs</Link>
+					<Link to={'/'} className={'contentNavLink'}>Groups</Link>
+					<Link to={'/'} className={'contentNavLink'}>Journals</Link>
+					<Link to={'/'} className={'contentNavLink'}>Assets</Link>
+					<div className={'contentNavSpacer'}></div> */}
+					<ContentNav navItems={navItems} />
+
 
 					<div className={'contentBody'}>
 						{(() => {
@@ -234,9 +246,12 @@ styles = {
 			padding: '0em',
 		}
 	},
-	profileContentSection: {
-		paddingTop: '0em',
-	},
+	// profileContentSection: {
+	// 	paddingTop: '0em',
+	// 	'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+	// 		padding: '0em',
+	// 	}
+	// },
 
 	// contentNavLink: {
 	// 	display: 'block',
