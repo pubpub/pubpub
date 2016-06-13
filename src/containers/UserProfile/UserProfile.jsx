@@ -6,7 +6,7 @@ import { Link } from 'react-router';
 import { pushState } from 'redux-router';
 import {logout, follow, unfollow, toggleVisibility} from 'containers/Login/actions';
 import {getProfile, updateUser, userNavOut, userNavIn, setNotificationsRead} from './actions';
-import {ContentNav} from 'components';
+import {NavContentWrapper} from 'components';
 import UserProfileDiscussions from './UserProfileDiscussions';
 import UserProfileSettings from './UserProfileSettings';
 import UserProfilePubs from './UserProfilePubs';
@@ -121,7 +121,7 @@ const Profile = React.createClass({
 		const ownProfile = this.ownProfile();
 
 		const navItems = [
-			{ type: 'button', mobile: true, text: 'Follow', action: ()=>{console.log('clicked follow');} },
+			{ type: 'button', mobile: true, text: 'Follow', action: this.followUserToggle },
 			{ type: 'button', mobile: true, text: 'Menu', action: undefined },
 			{ type: 'spacer' },
 			{ type: 'link', text: 'Recent Activity', link: '/user/' + this.props.username },
@@ -147,63 +147,57 @@ const Profile = React.createClass({
 					</div>
 				</div>
 
-				<div className={'section contentSection'}>
-
-					<ContentNav navItems={navItems} />
-
-					<div className={'contentBody'}>
-						{(() => {
-							switch (this.props.mode) {
-							case 'discussions':
-								return (
-									<UserProfileDiscussions
-										profileData={profileData}
-										ownProfile={ownProfile}/>
-								);
-							case 'follows':
-								return (
-									<UserProfileFollows
-										profileData={profileData}
-										ownProfile={ownProfile}/>
-								);
-							case 'groups':
-								return (
-									<UserProfileGroups
-										profileData={profileData}
-										ownProfile={ownProfile}/>
-								);
-							case 'pubs':
-								return (
-									<UserProfilePubs
-										profileData={profileData}
-										ownProfile={ownProfile} />
-								);
-							case 'notifications':
-								return (
-									<UserProfileNotifications
-										profileData={profileData}
-										ownProfile={ownProfile}
-										setNotificationsReadHandler={this.setNotificationsRead}/>
-								);
-							case 'settings':
-								return (
-									<UserProfileSettings
-										profileData={profileData}
-										ownProfile={ownProfile}
-										saveStatus={this.props.profileData.get('settingsStatus')}
-										handleSettingsSave={this.settingsSave}/>
-								);
-							default:
-								return (
-									<UserProfilePubs
-										profileData={profileData}
-										ownProfile={ownProfile} />
-								);
-							}
-						})()}
-					</div>
-
-				</div>
+				<NavContentWrapper navItems={navItems}>
+					{(() => {
+						switch (this.props.mode) {
+						case 'discussions':
+							return (
+								<UserProfileDiscussions
+									profileData={profileData}
+									ownProfile={ownProfile}/>
+							);
+						case 'follows':
+							return (
+								<UserProfileFollows
+									profileData={profileData}
+									ownProfile={ownProfile}/>
+							);
+						case 'groups':
+							return (
+								<UserProfileGroups
+									profileData={profileData}
+									ownProfile={ownProfile}/>
+							);
+						case 'pubs':
+							return (
+								<UserProfilePubs
+									profileData={profileData}
+									ownProfile={ownProfile} />
+							);
+						case 'notifications':
+							return (
+								<UserProfileNotifications
+									profileData={profileData}
+									ownProfile={ownProfile}
+									setNotificationsReadHandler={this.setNotificationsRead}/>
+							);
+						case 'settings':
+							return (
+								<UserProfileSettings
+									profileData={profileData}
+									ownProfile={ownProfile}
+									saveStatus={this.props.profileData.get('settingsStatus')}
+									handleSettingsSave={this.settingsSave}/>
+							);
+						default:
+							return (
+								<UserProfilePubs
+									profileData={profileData}
+									ownProfile={ownProfile} />
+							);
+						}
+					})()}
+				</NavContentWrapper>
 
 			</div>
 		);
