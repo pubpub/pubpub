@@ -46,7 +46,7 @@ export const Login = React.createClass({
 		const redirectQuery = redirectRoute ? '?redirect=' + redirectRoute : '';
 
 		return (
-			<div className={'login-container'} style={styles.container}>
+			<div className={'login-container section'} style={styles.container}>
 				<Helmet {...metaData} />
 
 				<h1><FormattedMessage {...globalMessages.Login}/></h1>
@@ -99,14 +99,12 @@ export default connect( state => {
 styles = {
 	container: {
 		width: '500px',
-		padding: '0px 15px',
-		margin: '0 auto',
 		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
-			width: 'calc(100% - 30px)',
+			width: 'auto',
 		}
 	},
 	input: {
-		width: 'calc(100% - 20px - 4px)',
+		width: 'calc(100% - 20px - 4px)', // Calculations come from padding and border in pubpub.css
 	},
 	loaderContainer: {
 		display: 'inline-block',

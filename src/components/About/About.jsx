@@ -20,11 +20,11 @@ export const About = React.createClass({
 
 				<Helmet {...metaData} />
 
-				<div className={'lightest-bg'} style={styles.sectionWrapper}>
-					<div style={[styles.section, styles.table]}>
+				<div className={'lightest-bg'}>
+					<div className={'section'}>
 
 						<div style={styles.headerText}>
-							<h1 style={[styles.headerTitle, styles.headerTextMax]}>Open, Continuous Publishing</h1>
+							<h1 style={styles.headerTextMax}>Open, Continuous Publishing</h1>
 							<p style={[styles.headerSubtitle, styles.headerTextMax]}>PubPub is a free and open tool for collaborative editing, instant publishing, continuous review, and grassroots journals.</p>
 							<Link style={globalStyles.link} to={'/signup'}><div className={'button'} style={styles.headerButton}>Sign Up</div></Link>
 						</div>
@@ -46,9 +46,9 @@ export const About = React.createClass({
 					</div>
 				</div>
 
-				<div style={styles.sectionWrapper}>
-					<div style={styles.section}>
-						<h2 style={styles.sectionHeader}>Made with PubPub</h2>
+				<div>
+					<div className={'section'} >
+						<h2>Made with PubPub</h2>
 						
 						<Link style={globalStyles.link} to={'/jods'}>
 						<div style={styles.madeWithBlock} className={'lightest-bg-hover'}>
@@ -94,9 +94,9 @@ export const About = React.createClass({
 					</div>
 				</div>
 
-				<div className={'lightest-bg'} style={styles.sectionWrapper}>
-					<div style={styles.section}>
-						<h2 style={[styles.sectionHeader, styles.noMargin]}>A full-stack publishing tool</h2>
+				<div className={'lightest-bg'}>
+					<div className={'section'} >
+						<h2 style={styles.noMargin}>A full-stack publishing tool</h2>
 
 						<div style={[styles.forWhoBlock, styles.forWhoBorderBottom]} id={'readers'}>
 							<div style={[styles.forWhoText, styles.forWhoLeft]}>
@@ -140,9 +140,9 @@ export const About = React.createClass({
 					</div>
 				</div>
 
-				<div style={styles.sectionWrapper}>
-					<div style={styles.section}>
-						<h2 style={styles.sectionHeader}>Build the publishing world you want</h2>
+				<div>
+					<div className={'section'} >
+						<h2>Build the publishing world you want</h2>
 						<p style={styles.headerTextMax}>PubPub is an open-source tool built for and by the community that uses it. Join PubPub, contribute code, design, features. Keep up to date with where we’re heading.</p>
 						<a style={globalStyles.link} href={'https://github.com/pubpub/pubpub'}><div className={'button'}>View Code</div></a>
 					</div>

@@ -257,7 +257,7 @@ styles = {
 		display: 'block',
 		textDecoration: 'none',
 		color: 'inherit',
-		padding: '.25em 2em .25em 0em',
+		padding: '.25em 2em .25em .25em',
 		borderRight: '1px solid #BBBDC0',
 	},
 	contentNavSpacer: {

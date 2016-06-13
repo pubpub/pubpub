@@ -35,7 +35,13 @@ lightest: #F3F3F4
 body {
 	font-family: 'Open Sans', Helvetica Neue, Arial, sans-serif;
 }
+.underlineOnHover:hover {
+	text-decoration: underline !important;
+}
 
+
+/* Input Fields */
+/* ------------ */
 label {
 	display: block;	
 	color: #58585B;
@@ -72,11 +78,36 @@ input[type="file"]:focus {
 	position: relative;
 	top: -1.7em;
 }
+/* ------------ */
 
-.underlineOnHover:hover {
-	text-decoration: underline !important;
+
+/* headers */
+/* ------------ */
+h1 {
+	font-size: 3.5em;
+	margin-top: 0em;
+	letter-spacing: -3px;
+	line-height: 1em;
 }
+h2 {
+	font-size: 2.5em;
+	margin-top: 0em;
+}
+.section {
+	padding: 3em 2em;
+	margin: 0 auto;
+	max-width: 1024px;
+}
+@media screen and (min-resolution: 3dppx), screen and (max-width: 767px) {
+	.section {
+		padding: 2em 1em;
+	}
+}
+/* ------------ */
 
+
+/* Account Menu */
+/* ------------ */
 .menu-option {
 	width: calc(100% - 3em);
 	text-decoration: none;
@@ -94,7 +125,13 @@ input[type="file"]:focus {
 	background-color: #BBBDC0;
 	margin: .2em 0em;
 }
+/* ------------ */
 
+
+
+
+/* Buttons */
+/* ------------ */
 .button {
 	display: inline-block;
 	border: solid 2px #58585B;
@@ -122,7 +159,11 @@ input[type="file"]:focus {
 	-ms-transform: translateY(1px);
     transform: translateY(1px);
 }
+/* ------------ */
 
+
+/* Arrow Box */
+/* ------------ */
 .arrow-box {
 	border: 1px solid #808284;
 }
@@ -148,7 +189,10 @@ input[type="file"]:focus {
 	border-width: 9px;
 	margin-right: 20px;
 }
+/* ------------ */
 
+/* Footer Links */
+/* ------------ */
 .footer a {
 	text-decoration: none;
 	color: inherit;
@@ -157,3 +201,4 @@ input[type="file"]:focus {
 .footer a:hover {
 	text-decoration: underline;
 }
+/* ------------ */

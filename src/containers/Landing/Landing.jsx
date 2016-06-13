@@ -39,10 +39,9 @@ const Landing = React.createClass({
 					<About />
 				}
 				
-
-				<div className={'lightest-bg'} style={styles.sectionWrapper}>
-					<div style={styles.section}>
-						<h2 style={styles.sectionHeader}>Recent Activity</h2>
+				<div className={'lightest-bg'}>
+					<div className={'section'}>
+						<h2>Recent Activity</h2>
 
 						{/* If no activity, display - follow these suggested accounts*/}
 
@@ -83,21 +82,5 @@ export default connect( state => {
 })( Radium(Landing) );
 
 styles = {
-	container: {
 
-	},
-	sectionWrapper: {
-		padding: '3em 2em',
-		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
-			padding: '3em 1em',
-		}
-	},
-	section: {
-		maxWidth: '1024px',
-		margin: '0 auto',
-	},
-	sectionHeader: {
-		fontSize: '2.5em',
-		marginTop: '0em',
-	},
 };

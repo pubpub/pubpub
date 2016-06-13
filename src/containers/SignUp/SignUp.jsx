@@ -51,7 +51,7 @@ export const SignUp = React.createClass({
 		const redirectRoute = this.props.query && this.props.query.redirect;
 
 		return (
-			<div className={'signup-container'} style={styles.container}>
+			<div className={'signup-container section'} style={styles.container}>
 
 				{/* Sign Up Form */}
 				{signUpMode !== 'details' && // Render if not details stage (this is default)
@@ -88,10 +88,8 @@ export default connect( state => {
 styles = {
 	container: {
 		width: '500px',
-		padding: '0px 15px',
-		margin: '0 auto',
 		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
-			width: 'calc(100% - 30px)',
+			width: 'auto',
 		}
 	}
 };

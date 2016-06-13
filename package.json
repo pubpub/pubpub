@@ -15,7 +15,6 @@
     "start-prod": "node ./node_modules/better-npm-run start-prod",
     "start-prod-api": "node ./node_modules/better-npm-run start-prod-api",
     "build": "node ./node_modules/better-npm-run build",
-    "postinstall": "node ./node_modules/better-npm-run build",
     "lint": "eslint src api",
     "lint:watch": "node_modules/eslint-watch/bin/esw --watch --config .eslintrc src api",
     "start-dev": "node ./node_modules/better-npm-run start-dev",

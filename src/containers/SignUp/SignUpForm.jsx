@@ -81,13 +81,14 @@ export const SignUpForm = React.createClass({
 		const errorMessage = serverErrors[this.props.errorMessage] || this.state.validationError;
 
 		return (
-			<div className={'signup-container'} style={styles.container}>
+			<div>
 				<Helmet {...metaData} />
 
 				<h1><FormattedMessage {...globalMessages.SignUp}/></h1>
 				<p style={styles.subHeader}>
 					<FormattedMessage id="signup.Signupto" defaultMessage="Sign up to publish documents and follow content!"/>
 				</p>
+				
 				<form onSubmit={this.signUpSubmit}>
 					<div>
 						<label style={styles.label} htmlFor={'firstName'}>

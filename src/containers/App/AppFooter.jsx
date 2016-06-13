@@ -1,7 +1,6 @@
 import React, {PropTypes} from 'react';
 import Radium from 'radium';
 import { Link } from 'react-router';
-import {globalStyles} from 'utils/styleConstants';
 import {globalMessages} from 'utils/globalMessages';
 import {FormattedMessage} from 'react-intl';
 
@@ -56,8 +55,7 @@ export default Radium(AppFooter);
 
 styles = {
 	footer: {
-		padding: '40px 0px',
-		// fontSize: '.9em',
+		padding: '3em 0px',
 	},
 	footerColumn: {
 		display: 'table-cell',

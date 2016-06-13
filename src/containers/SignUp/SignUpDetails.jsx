@@ -69,10 +69,10 @@ export const SignUpDetails = React.createClass({
 		const errorMessage = this.props.errorMessage;
 
 		return (
-			<div className={'signup-container'} style={styles.container}>
+			<div>
 				<Helmet {...metaData} />
 
-				<h1><FormattedMessage id="details.WelcomeToPubPub" defaultMessage="Welcome to PubPub!"/></h1>
+				<h1><FormattedMessage id="details.Welcome" defaultMessage="Welcome!"/></h1>
 				<p style={styles.subHeader}>
 					<FormattedMessage id="details.VerificationMessage" defaultMessage="We've sent you a verification email. Please click the link there to verify your account!"/>
 				</p>

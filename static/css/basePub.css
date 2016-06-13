@@ -1,8 +1,8 @@
 #pubContent #pub-wrapper{
 	padding: 0px 6em 50px 4em;
 	line-height: 1.58;
-	text-rendering: optimizeLegibility;
-	-webkit-font-smoothing: antialiased;
+	/*text-rendering: optimizeLegibility;
+	-webkit-font-smoothing: antialiased;*/
 }
 @media screen and (min-resolution: 3dppx), screen and (max-width: 767px) {
 	#pubContent #pub-wrapper{
