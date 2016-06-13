@@ -199,14 +199,15 @@ h2 {
 /* ------------ */
 .contentSection {
 	padding-top: 0em;
+	display: table;
 }
 .contentNav {
 	white-space: nowrap;
 	display: table-cell;
 	vertical-align: top;
+	width: 1%;
 }
 .contentBody {
-	white-space: nowrap;
 	display: table-cell;
 	vertical-align: top;
 	padding-left: 1em;
@@ -227,35 +228,46 @@ h2 {
 }
 .contentNavSpacer {
 	height: 1em;
+	display: block;
 	border-right: 1px solid #BBBDC0;
+}
+.contentNavSpacer:first-of-type {
+	display: none;
+}
+.contentNavNoBorder {
+	border-right: 0px solid #BBBDC0;
 }
 
 @media screen and (min-resolution: 3dppx), screen and (max-width: 767px) {
-	.contentNav, .contentBody {
+	.contentSection, .contentNav, .contentBody {
 		display: block;
-		width: 100%;
+	}
+	.contentBody {
 		padding-left: 0em;
 	}
 	.contentNav {
-		width: calc(100% + 2em); /* This is to offset the padding implied by .section*/
+		width: calc(100% + 2em); /* This is to offset the padding implied by .section */
 		position: relative;
 		left: -1em;
 		font-size: 1.2em;
+	}
+	.contentBody {
+		padding-top: 2em; /* This matches the top offset defined by .section */
 	}
 	.contentNavLink, .contentNavSpacer {
 		border-right: 0px solid #BBBDC0;
 		background-color: #F3F3F4;
 	    padding: .2em 1em;
+	    display: none;
 	}
-	.contentNavLink:first-of-type {
-		padding-top: 1em;
+	.contentMenuShow {
+		display: block;
 	}
-	.contentNavLink:last-of-type {
+	.contentMenuShow:first-of-type {
+		display: block;
+	}
+	.contentNavSpacer:last-of-type {
 		box-shadow: inset 0px -4px 6px -4px #BBBDC0;
-		padding-bottom: 1em;
-	}
-	.contentNavSpacer:last-child {
-		display: none;
 	}
 	.contentNavLinkMobile {
 		display: inline-block;

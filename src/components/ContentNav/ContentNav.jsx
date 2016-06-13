@@ -1,11 +1,18 @@
 import React, {PropTypes} from 'react';
 import Radium from 'radium';
 import { Link } from 'react-router';
-let styles = {};
 
+/*
+This is used as a base for the common left-nav
+layout common throughout PubPub (profiles, settings, pub).
+
+The styles for contentNav, contentBody, and contentSection are CSS (rather than JS) based 
+so that we can more quickly edit and test layouts.
+*/
 export const ContentNav = React.createClass({
 	propTypes: {
 		navItems: PropTypes.array,
+		hideRightBorder: PropTypes.bool,
 	},
 
 	getInitialState() {
@@ -15,6 +22,7 @@ export const ContentNav = React.createClass({
 	},
 	toggleMenu: function() {
 		console.log('toggle menu');
+		this.setState({showMenu: !this.state.showMenu});
 	},
 
 	render: function() {
@@ -24,16 +32,22 @@ export const ContentNav = React.createClass({
 			<div className={'contentNav'}>
 				{navItems.map((option, index)=>{
 
-					const contentNavClass = option.mobile ? 'contentNavLinkMobile' : 'contentNavLink';
+					let contentNavClass = option.mobile ? 'contentNavLinkMobile' : 'contentNavLink';
+					contentNavClass = !option.mobile && this.state.showMenu ? contentNavClass + ' contentMenuShow' : contentNavClass;
+					contentNavClass = option.active ? contentNavClass + ' contentNavLink-active' : contentNavClass;
+					contentNavClass = this.props.hideRightBorder ? contentNavClass + ' contentNavNoBorder' : contentNavClass;
+
+					let contentNavSpacerClass = this.state.showMenu ? 'contentNavSpacer contentMenuShow' : 'contentNavSpacer';
+					contentNavSpacerClass = this.props.hideRightBorder ? contentNavSpacerClass + ' contentNavNoBorder' : contentNavSpacerClass;
 
 					if (option.type === 'link') {
-						return <Link key={'navItem-' + index} className={contentNavClass} to={option.link}>{option.text}</Link>;
+						return <Link key={'navItem-' + index} className={contentNavClass} to={option.link} onClick={this.toggleMenu}>{option.text}</Link>;
 					}
 					if (option.type === 'button') {
 						return <div key={'navItem-' + index} className={contentNavClass} onClick={option.action || this.toggleMenu}>{option.text}</div>;
 					}
 					if (option.type === 'spacer') {
-						return <div key={'navItem-' + index} className={'contentNavSpacer'}></div>;
+						return <span key={'navItem-' + index} className={contentNavSpacerClass}></span>;
 					}
 
 				})}
@@ -43,8 +57,3 @@ export const ContentNav = React.createClass({
 });
 
 export default Radium(ContentNav);
-
-
-styles = {
-
-};

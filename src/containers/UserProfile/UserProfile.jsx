@@ -123,11 +123,12 @@ const Profile = React.createClass({
 		const navItems = [
 			{ type: 'button', mobile: true, text: 'Follow', action: ()=>{console.log('clicked follow');} },
 			{ type: 'button', mobile: true, text: 'Menu', action: undefined },
-			{ type: 'link', text: 'Recent Activity', link: '/' },
 			{ type: 'spacer' },
-			{ type: 'link', text: 'Pubs', link: '/' },
-			{ type: 'link', text: 'Groups', link: '/' },
-			{ type: 'link', text: 'Journals', link: '/' },
+			{ type: 'link', text: 'Recent Activity', link: '/user/' + this.props.username },
+			{ type: 'spacer' },
+			{ type: 'link', text: 'Pubs', link: '/user/' + this.props.username + '/pubs', active: true },
+			{ type: 'link', text: 'Groups', link: '/user/' + this.props.username + '/groups' },
+			{ type: 'link', text: 'Journals', link: '/user/' + this.props.username + '/journals' },
 			{ type: 'spacer' },
 		];
 
@@ -147,16 +148,8 @@ const Profile = React.createClass({
 				</div>
 
 				<div className={'section contentSection'}>
-					
-					{/* <Link to={'/'} className={'contentNavLink'}>Recent Activity</Link>
-					<div className={'contentNavSpacer'}></div>
-					<Link to={'/'} className={'contentNavLink'}>Pubs</Link>
-					<Link to={'/'} className={'contentNavLink'}>Groups</Link>
-					<Link to={'/'} className={'contentNavLink'}>Journals</Link>
-					<Link to={'/'} className={'contentNavLink'}>Assets</Link>
-					<div className={'contentNavSpacer'}></div> */}
-					<ContentNav navItems={navItems} />
 
+					<ContentNav navItems={navItems} />
 
 					<div className={'contentBody'}>
 						{(() => {
@@ -246,41 +239,4 @@ styles = {
 			padding: '0em',
 		}
 	},
-	// profileContentSection: {
-	// 	paddingTop: '0em',
-	// 	'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
-	// 		padding: '0em',
-	// 	}
-	// },
-
-	// contentNavLink: {
-	// 	display: 'block',
-	// 	textDecoration: 'none',
-	// 	color: 'inherit',
-	// 	padding: '.25em 2em .25em .25em',
-	// 	borderRight: '1px solid #BBBDC0',
-	// },
-	// contentNavSpacer: {
-	// 	height: '1em',
-	// 	borderRight: '1px solid #BBBDC0',
-	// },
-	// profileContentNav: {
-	// 	whiteSpace: 'nowrap',
-	// 	display: 'table-cell',
-	// 	verticalAlign: 'top',
-	// 	'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
-	// 		display: 'block',
-	// 	}
-
-	// },
-	// profileContentBody: {
-	// 	display: 'table-cell',
-	// 	verticalAlign: 'top',
-	// 	padding: '.5em 1em',
-	// 	'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
-	// 		display: 'block',
-	// 		padding: '0em',
-	// 	}
-	// },
-	
 };
