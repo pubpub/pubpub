@@ -40,7 +40,6 @@ body {
 	text-decoration: underline !important;
 }
 
-
 /* Input Fields */
 /* ------------ */
 label {
@@ -192,105 +191,6 @@ h2 {
 	border-bottom-color: #F3F3F4;
 	border-width: 9px;
 	margin-right: 20px;
-}
-/* ------------ */
-
-
-/* Left-Nav'd Content Section */
-/* ------------ */
-.contentSection {
-	padding-top: 0em;
-	display: table;
-}
-.contentNav {
-	white-space: nowrap;
-	display: table-cell;
-	vertical-align: top;
-	width: 1%;
-}
-.contentBody {
-	display: table-cell;
-	vertical-align: top;
-	padding-left: 1em;
-}
-.contentNavLink {
-	display: block;
-	text-decoration: none;
-	color: inherit;
-	padding: .25em 2em .25em .25em;
-	border-right: 1px solid #BBBDC0;
-	cursor: pointer;
-}
-.contentNavLink:hover, .contentNavLink-active {
-	background-color: #BBBDC0;
-}
-.contentNavLinkMobile {
-	display: none;
-}
-.contentNavSpacer {
-	height: 1em;
-	display: block;
-	border-right: 1px solid #BBBDC0;
-}
-.contentNavSpacer:first-of-type {
-	display: none;
-}
-.contentNavNoBorder {
-	border-right: 0px solid #BBBDC0;
-}
-
-@media screen and (min-resolution: 3dppx), screen and (max-width: 767px) {
-	.contentSection, .contentNav, .contentBody {
-		display: block;
-	}
-	.contentBody {
-		padding-left: 0em;
-	}
-	.contentNav {
-		width: calc(100% + 2em); /* This is to offset the padding implied by .section */
-		position: relative;
-		left: -1em;
-		font-size: 1.2em;
-	}
-	.contentBody {
-		padding-top: 2em; /* This matches the top offset defined by .section */
-	}
-	.contentNavLink, .contentNavSpacer {
-		border-right: 0px solid #BBBDC0;
-		background-color: #F3F3F4;
-	    padding: .2em 1em;
-	    display: none;
-	}
-	.contentMenuShow {
-		display: block;
-	}
-	.contentMenuShow:first-of-type {
-		display: block;
-	}
-	.contentNavSpacer:last-of-type {
-		box-shadow: inset 0px -4px 6px -4px #BBBDC0;
-	}
-	.contentNavLinkMobile {
-		display: inline-block;
-		width: 50%;
-		text-align: center;
-		cursor: pointer;
-		padding: 1em 0px;
-		border-width: 1px 0px 1px 0px;
-		border-color: #BBBDC0;
-		border-style: solid;
-		position: relative;
-	}
-	.contentNavLinkMobile:first-child:after {
-		content: "";
-		width: 1px;
-		height: 60%;
-		background-color: #BBBDC0;
-		position: absolute;
-		right: 0;
-		top: 20%; 
-	}
-	
 }
 /* ------------ */
 

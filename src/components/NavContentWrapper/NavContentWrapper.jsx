@@ -1,17 +1,13 @@
 import React, {PropTypes} from 'react';
 import Radium from 'radium';
-import { Link } from 'react-router';
+import { Link as UnwrappedLink } from 'react-router';
+const Link = Radium(UnwrappedLink);
+let styles = {};
 
-/*
-This is used as a base for the common left-nav
-layout common throughout PubPub (profiles, settings, pub).
-
-The styles for contentNav, contentBody, and contentSection are CSS (rather than JS) based 
-so that we can more quickly edit and test layouts.
-*/
 export const NavContentWrapper = React.createClass({
 	propTypes: {
 		navItems: PropTypes.array,
+		mobileNavButtons: PropTypes.array,
 		hideRightBorder: PropTypes.bool,
 		children: PropTypes.object
 	},
@@ -22,40 +18,51 @@ export const NavContentWrapper = React.createClass({
 		};
 	},
 	toggleMenu: function() {
-		console.log('toggle menu');
 		this.setState({showMenu: !this.state.showMenu});
 	},
 
 	render: function() {
 		const navItems = this.props.navItems || [];
+		const mobileNavButtons = this.props.mobileNavButtons || [];
+		const hideRightBorder = this.props.hideRightBorder;
 
 		return (
-			<div className={'section contentSection'}>
-				<div className={'contentNav'}>
-					{navItems.map((option, index)=>{
+			<div className={'section'} style={styles.contentSection}>
+				<div style={styles.contentNav}>
 
-						let contentNavClass = option.mobile ? 'contentNavLinkMobile' : 'contentNavLink';
-						contentNavClass = !option.mobile && this.state.showMenu ? contentNavClass + ' contentMenuShow' : contentNavClass;
-						contentNavClass = option.active ? contentNavClass + ' contentNavLink-active' : contentNavClass;
-						contentNavClass = this.props.hideRightBorder ? contentNavClass + ' contentNavNoBorder' : contentNavClass;
+					<div style={styles.contentNavMobileButtons}>
+						{mobileNavButtons.slice(0, 2).map((option, index)=>{
 
-						let contentNavSpacerClass = this.state.showMenu ? 'contentNavSpacer contentMenuShow' : 'contentNavSpacer';
-						contentNavSpacerClass = this.props.hideRightBorder ? contentNavSpacerClass + ' contentNavNoBorder' : contentNavSpacerClass;
+							if (option.type === 'link') {
+								return <Link key={'navItem-' + index} className={'lighter-bg-hover'} style={styles.contentNavLinkMobile} to={option.link} onClick={this.toggleMenu}>{option.text}</Link>;
+							}
+							if (option.type === 'button') {
+								return <div key={'navItem-' + index} className={'lighter-bg-hover'} style={styles.contentNavLinkMobile} onClick={option.action || this.toggleMenu}>{option.text}</div>;
+							}
 
-						if (option.type === 'link') {
-							return <Link key={'navItem-' + index} className={contentNavClass} to={option.link} onClick={this.toggleMenu}>{option.text}</Link>;
-						}
-						if (option.type === 'button') {
-							return <div key={'navItem-' + index} className={contentNavClass} onClick={option.action || this.toggleMenu}>{option.text}</div>;
-						}
-						if (option.type === 'spacer') {
-							return <span key={'navItem-' + index} className={contentNavSpacerClass}></span>;
-						}
+						})}
+						<div style={styles.contentNavMobileButtonSeparator}></div>
+					</div>
 
-					})}
+					<div style={[styles.contentNavItems, !hideRightBorder && styles.contentNavItemsRightBorder, !this.state.showMenu && styles.hideOnMobile]}>
+						{navItems.map((option, index)=>{
+
+							if (option.type === 'link') {
+								return <Link key={'navItem-' + index} className={'lighter-bg-hover'} style={[styles.contentNavLink, option.active && styles.contentNavLinkActive]} to={option.link} onClick={this.toggleMenu}>{option.text}</Link>;
+							}
+							if (option.type === 'button') {
+								return <div key={'navItem-' + index} className={'lighter-bg-hover'} style={[styles.contentNavLink, option.active && styles.contentNavLinkActive]} onClick={option.action || this.toggleMenu}>{option.text}</div>;
+							}
+							if (option.type === 'spacer') {
+								return <div key={'navItem-' + index} style={styles.contentNavSpacer}></div>;
+							}
+
+						})}
+					</div>
+					
 				</div>
 
-				<div className={'contentBody'}>
+				<div style={styles.contentBody}>
 					{this.props.children}		
 				</div>
 			</div>
@@ -64,3 +71,99 @@ export const NavContentWrapper = React.createClass({
 });
 
 export default Radium(NavContentWrapper);
+
+styles = {
+	contentSection: {
+		paddingTop: '0em',
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+			display: 'block',
+		}
+	},
+	contentNav: {
+		whiteSpace: 'nowrap',
+		display: 'table-cell',
+		verticalAlign: 'top',
+		width: '1%',
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+			display: 'block',
+			width: 'calc(100% + 2em)', // This is to offset the padding implied by .section
+			position: 'relative',
+			left: '-1em',
+			fontSize: '1.2em',
+		}
+	},
+	contentBody: {
+		display: 'table-cell',
+		verticalAlign: 'top',
+		paddingLeft: '1em',
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+			display: 'block',
+			paddingLeft: '0em',
+			paddingTop: '2em', // This matches the top offset defined by .section
+		}
+	},
+	contentNavMobileButtons: {
+		position: 'relative',
+	},
+	contentNavMobileButtonSeparator: {
+		width: '1px',
+		height: '60%',
+		backgroundColor: '#BBBDC0',
+		position: 'absolute',
+		right: '50%',
+		top: '20%',
+	},
+	contentNavItems: {
+		padding: '0em 0em 1em 0em',
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+			boxShadow: 'inset 0px -4px 6px -4px #BBBDC0',
+			padding: '1em 0em',
+			backgroundColor: '#F3F3F4',
+		}
+	},
+	contentNavItemsRightBorder: {
+		borderRight: '1px solid #BBBDC0',
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+			borderRight: '0px solid #BBBDC0',
+		}
+	},
+	contentNavLink: {
+		display: 'block',
+		textDecoration: 'none',
+		color: 'inherit',
+		padding: '.25em 2em .25em .25em',
+		cursor: 'pointer',
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+			padding: '.2em 1em',
+		}
+	},
+	contentNavLinkActive: {
+		backgroundColor: '#BBBDC0',
+	},
+	contentNavLinkMobile: {
+		display: 'none',
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+			display: 'inline-block',
+			width: '50%',
+			textAlign: 'center',
+			cursor: 'pointer',
+			padding: '1em 0px',
+			borderWidth: '1px 0px 1px 0px',
+			borderColor: '#BBBDC0',
+			borderStyle: 'solid',
+			position: 'relative',
+		}
+	},
+	contentNavSpacer: {
+		height: '1em',
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+			padding: '.2em 1em',
+		}
+	},
+	hideOnMobile: {
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+			display: 'none',
+		}
+	},
+
+};

@@ -120,16 +120,17 @@ const Profile = React.createClass({
 
 		const ownProfile = this.ownProfile();
 
-		const navItems = [
+		const mobileNavButtons = [
 			{ type: 'button', mobile: true, text: 'Follow', action: this.followUserToggle },
 			{ type: 'button', mobile: true, text: 'Menu', action: undefined },
-			{ type: 'spacer' },
+			{ type: 'button', mobile: true, text: 'M2enu', action: undefined },
+		];
+		const navItems = [
 			{ type: 'link', text: 'Recent Activity', link: '/user/' + this.props.username },
 			{ type: 'spacer' },
 			{ type: 'link', text: 'Pubs', link: '/user/' + this.props.username + '/pubs', active: true },
 			{ type: 'link', text: 'Groups', link: '/user/' + this.props.username + '/groups' },
 			{ type: 'link', text: 'Journals', link: '/user/' + this.props.username + '/journals' },
-			{ type: 'spacer' },
 		];
 
 		return (
@@ -147,7 +148,7 @@ const Profile = React.createClass({
 					</div>
 				</div>
 
-				<NavContentWrapper navItems={navItems}>
+				<NavContentWrapper navItems={navItems} mobileNavButtons={mobileNavButtons}>
 					{(() => {
 						switch (this.props.mode) {
 						case 'discussions':
