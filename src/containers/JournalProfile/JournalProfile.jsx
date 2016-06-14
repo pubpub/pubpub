@@ -11,6 +11,7 @@ import JournalDesign from './JournalDesign';
 import JournalCurate from './JournalCurate';
 import JournalMain from './JournalMain';
 import JournalSettings from './JournalSettings';
+import {NavContentWrapper} from 'components';
 
 import {globalStyles, profileStyles, navStyles} from 'utils/styleConstants';
 
@@ -85,100 +86,141 @@ const JournalAdmin = React.createClass({
 	render: function() {
 		const metaData = {};
 		metaData.title = 'Journal';
+
+		const mobileNavButtons = [
+			{ type: 'link', mobile: true, text: 'About', link: '/' + this.props.subdomain + '/about' },
+			{ type: 'button', mobile: true, text: 'Menu', action: undefined },
+		];
+
+		const navItems = [
+			{ type: 'link', text: 'About', link: '/' + this.props.subdomain + '/about' },
+			{ type: 'spacer' },
+			{ type: 'link', text: 'Category1', link: '/user/pubs' },
+			{ type: 'link', text: 'Category2', link: '/user/groups' },
+			{ type: 'link', text: 'Category3', link: '/user/journals' },
+		];
+
+		const backgroundStyle = {
+			paddingBottom: '3em',
+			marginBottom: '3em',
+			position: 'relative',
+			color: 'white',
+			backgroundColor: 'magenta',
+			backgroundImage: 'url(http://www.planwallpaper.com/static/images/colorful-triangles-background_yB0qTG6.jpg)',
+			backgroundRepeat: 'no-repeat',
+			backgroundPosition: 'center center',
+			backgroundSize: 'cover',
+			'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+				marginBottom: '0em',
+			}
+		};
+
 		return (
-			<div style={profileStyles.profilePage}>
+			<div>
 
 				<Helmet {...metaData} />
 
-				{
-					(this.props.subdomain !== this.props.appData.get('baseSubdomain') && this.props.appData.get('baseSubdomain') !== null) || (this.props.mode && !this.props.journalData.getIn(['journalData', 'isAdmin']))
-						? <NotFound />
-						: <div style={profileStyles.profileWrapper}>
-
-							<div style={[globalStyles.hiddenUntilLoad, globalStyles[this.props.journalData.get('status')]]}>
-								<ul style={navStyles.navList}>
-									<Link to={'/journal/' + this.props.subdomain + '/settings'} style={globalStyles.link}><li key="journalNav0" style={[navStyles.navItem, this.props.journalData.getIn(['journalData', 'isAdmin']) && navStyles.navItemShow]}>
-										<FormattedMessage {...globalMessages.settings} />
-									</li></Link>
-									<li style={[navStyles.navSeparator, this.props.journalData.getIn(['journalData', 'isAdmin']) && navStyles.navItemShow]}></li>
-
-									<Link to={'/journal/' + this.props.subdomain + '/design'} style={globalStyles.link}><li key="journalNav1" style={[navStyles.navItem, this.props.journalData.getIn(['journalData', 'isAdmin']) && navStyles.navItemShow]}>
-										<FormattedMessage {...globalMessages.design} />
-									</li></Link>
-									<li style={[navStyles.navSeparator, this.props.journalData.getIn(['journalData', 'isAdmin']) && navStyles.navItemShow]}></li>
-
-									<Link to={'/journal/' + this.props.subdomain + '/curate'} style={globalStyles.link}><li key="journalNav2" style={[navStyles.navItem, this.props.journalData.getIn(['journalData', 'isAdmin']) && navStyles.navItemShow]}>
-										<FormattedMessage {...globalMessages.curate} />
-									</li></Link>
-									<li style={[navStyles.navSeparator, this.props.journalData.getIn(['journalData', 'isAdmin']) && navStyles.navItemShow, navStyles.noMobile]}></li>
-
-									<li key="journalNav3" style={[navStyles.navItem, !this.props.journalData.getIn(['journalData', 'isAdmin']) && navStyles.navItemShow]} onClick={this.followJournalToggle}>
-										{this.props.loginData.getIn(['userData', 'following', 'journals']) && this.props.loginData.getIn(['userData', 'following', 'journals']).indexOf(this.props.journalData.getIn(['journalData', '_id'])) > -1
-											? <FormattedMessage {...globalMessages.following} />
-											: <FormattedMessage {...globalMessages.follow} />
-										}
-									</li>
-									<li style={[navStyles.navSeparator, !this.props.journalData.getIn(['journalData', 'isAdmin']) && navStyles.navItemShow]}></li>
-								</ul>
-							</div>
-
-							<LoaderDeterminate value={this.props.journalData.get('status') === 'loading' ? 0 : 100}/>
-
-							<div style={[globalStyles.hiddenUntilLoad, globalStyles[this.props.journalData.get('status')], styles.contentWrapper]}>
-
-								<div>
-									<Link to={'/journal/' + this.props.subdomain} style={globalStyles.link}>
-										<span style={styles.headerJournalName} key={'headerJournalName'}>{this.props.journalData.getIn(['journalData', 'journalName'])}</span>
-									</Link>
-									{this.props.mode
-										? <span style={styles.headerMode}>: <FormattedMessage {...globalMessages[this.props.mode]} /></span>
-										: null
-
-									}
-								</div>
-								<div style={styles.journalProfileContent}>
-									{(() => {
-										switch (this.props.mode) {
-										case 'curate':
-											return (
-												<JournalCurate
-													journalData={this.props.journalData.get('journalData').toJS()}
-													journalSaving={this.props.journalData.get('journalSaving')}
-													journalSaveHandler={this.journalSave}
-													createCollectionHandler={this.createCollection}
-													createCollectionStatus={this.props.journalData.get('createCollectionStatus')}/>
-											);
-										case 'design':
-											return (
-												<JournalDesign
-													designObject={this.props.journalData.getIn(['journalData', 'design']) ? this.props.journalData.getIn(['journalData', 'design']).toJS() : {}}
-													journalSaving={this.props.journalData.get( 'journalSaving')}
-													journalSaveHandler={this.journalSave}
-													journalData={this.props.journalData}
-													query={this.props.query} />
-											);
-										case 'settings':
-											return (
-												<JournalSettings
-													journalData={this.props.journalData.get('journalData').toJS()}
-													journalSaving={this.props.journalData.get( 'journalSaving')}
-													journalSaveHandler={this.journalSave}/>
-											);
-
-										default:
-											return (
-												<JournalMain
-													journalData={this.props.journalData.get('journalData').toJS()}/>
-											);
-										}
-									})()}
-								</div>
-
-
-							</div>
-
+				<div style={backgroundStyle}>
+					<div style={styles.backgroundGrey}></div>
+					<div className={'profile-header section'}>
+						<div style={styles.headerTextWrapper}>
+							<h1>{this.props.journalData.getIn(['journalData', 'journalName'])}</h1>
+							{/* <p>{this.props.journalData.getIn(['journalData', 'description'])}</p> */}
+							<p>Exploring the interface of peanut butter and jelly.</p>
 						</div>
-				}
+					</div>
+				</div>
+
+				<NavContentWrapper navItems={navItems} mobileNavButtons={mobileNavButtons}>
+
+					<JournalMain journalData={this.props.journalData.get('journalData').toJS()}/>
+
+				</NavContentWrapper>
+
+				{/* <div style={profileStyles.profileWrapper}>
+
+					<div style={[globalStyles.hiddenUntilLoad, globalStyles[this.props.journalData.get('status')]]}>
+						<ul style={navStyles.navList}>
+							<Link to={'/journal/' + this.props.subdomain + '/settings'} style={globalStyles.link}><li key="journalNav0" style={[navStyles.navItem, this.props.journalData.getIn(['journalData', 'isAdmin']) && navStyles.navItemShow]}>
+								<FormattedMessage {...globalMessages.settings} />
+							</li></Link>
+							<li style={[navStyles.navSeparator, this.props.journalData.getIn(['journalData', 'isAdmin']) && navStyles.navItemShow]}></li>
+
+							<Link to={'/journal/' + this.props.subdomain + '/design'} style={globalStyles.link}><li key="journalNav1" style={[navStyles.navItem, this.props.journalData.getIn(['journalData', 'isAdmin']) && navStyles.navItemShow]}>
+								<FormattedMessage {...globalMessages.design} />
+							</li></Link>
+							<li style={[navStyles.navSeparator, this.props.journalData.getIn(['journalData', 'isAdmin']) && navStyles.navItemShow]}></li>
+
+							<Link to={'/journal/' + this.props.subdomain + '/curate'} style={globalStyles.link}><li key="journalNav2" style={[navStyles.navItem, this.props.journalData.getIn(['journalData', 'isAdmin']) && navStyles.navItemShow]}>
+								<FormattedMessage {...globalMessages.curate} />
+							</li></Link>
+							<li style={[navStyles.navSeparator, this.props.journalData.getIn(['journalData', 'isAdmin']) && navStyles.navItemShow, navStyles.noMobile]}></li>
+
+							<li key="journalNav3" style={[navStyles.navItem, !this.props.journalData.getIn(['journalData', 'isAdmin']) && navStyles.navItemShow]} onClick={this.followJournalToggle}>
+								{this.props.loginData.getIn(['userData', 'following', 'journals']) && this.props.loginData.getIn(['userData', 'following', 'journals']).indexOf(this.props.journalData.getIn(['journalData', '_id'])) > -1
+									? <FormattedMessage {...globalMessages.following} />
+									: <FormattedMessage {...globalMessages.follow} />
+								}
+							</li>
+							<li style={[navStyles.navSeparator, !this.props.journalData.getIn(['journalData', 'isAdmin']) && navStyles.navItemShow]}></li>
+						</ul>
+					</div>
+
+					<LoaderDeterminate value={this.props.journalData.get('status') === 'loading' ? 0 : 100}/>
+
+					<div style={[globalStyles.hiddenUntilLoad, globalStyles[this.props.journalData.get('status')], styles.contentWrapper]}>
+
+						<div>
+							<Link to={'/journal/' + this.props.subdomain} style={globalStyles.link}>
+								<span style={styles.headerJournalName} key={'headerJournalName'}>{this.props.journalData.getIn(['journalData', 'journalName'])}</span>
+							</Link>
+							{this.props.mode
+								? <span style={styles.headerMode}>: <FormattedMessage {...globalMessages[this.props.mode]} /></span>
+								: null
+
+							}
+						</div>
+						<div style={styles.journalProfileContent}>
+							{(() => {
+								switch (this.props.mode) {
+								case 'curate':
+									return (
+										<JournalCurate
+											journalData={this.props.journalData.get('journalData').toJS()}
+											journalSaving={this.props.journalData.get('journalSaving')}
+											journalSaveHandler={this.journalSave}
+											createCollectionHandler={this.createCollection}
+											createCollectionStatus={this.props.journalData.get('createCollectionStatus')}/>
+									);
+								case 'design':
+									return (
+										<JournalDesign
+											designObject={this.props.journalData.getIn(['journalData', 'design']) ? this.props.journalData.getIn(['journalData', 'design']).toJS() : {}}
+											journalSaving={this.props.journalData.get( 'journalSaving')}
+											journalSaveHandler={this.journalSave}
+											journalData={this.props.journalData}
+											query={this.props.query} />
+									);
+								case 'settings':
+									return (
+										<JournalSettings
+											journalData={this.props.journalData.get('journalData').toJS()}
+											journalSaving={this.props.journalData.get( 'journalSaving')}
+											journalSaveHandler={this.journalSave}/>
+									);
+
+								default:
+									return (
+										<JournalMain journalData={this.props.journalData.get('journalData').toJS()}/>
+									);
+								}
+							})()}
+						</div> 
+
+
+					</div> 
+
+				</div> */}
 
 			</div>
 		);
@@ -198,25 +240,57 @@ export default connect( state => {
 })( Radium(JournalAdmin) );
 
 styles = {
-	contentWrapper: {
-		margin: globalStyles.headerHeight,
+	backgroundGrey: {
+		position: 'absolute',
+		width: '100%',
+		height: '100%',
+		backgroundColor: 'rgba(0,0,0,0.15)',
+		top: 0,
+		left: 0,
+		zIndex: 1,
 	},
-	headerJournalName: {
-		color: globalStyles.sideText,
-		fontSize: 35,
-		':hover': {
-			color: 'black',
-		},
+	headerImageWrapper: {
+		textAlign: 'center',
+		display: 'table-cell',
+		verticalAlign: 'top',
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+			display: 'block',
+		}
 	},
-	headerMode: {
-		color: '#888',
-		fontSize: 25,
+	headerTextWrapper: {
+		position: 'relative',
+		zIndex: 2,
+		padding: '0em 1em',
+		display: 'table-cell',
+		verticalAlign: 'top',
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+			display: 'block',
+			textAlign: 'center',
+			padding: '0em',
+		}
 	},
-	journalProfileContent: {
-		marginLeft: 10,
-	},
-
 };
+
+// styles = {
+// 	contentWrapper: {
+// 		margin: globalStyles.headerHeight,
+// 	},
+// 	headerJournalName: {
+// 		color: globalStyles.sideText,
+// 		fontSize: 35,
+// 		':hover': {
+// 			color: 'black',
+// 		},
+// 	},
+// 	headerMode: {
+// 		color: '#888',
+// 		fontSize: 25,
+// 	},
+// 	journalProfileContent: {
+// 		marginLeft: 10,
+// 	},
+
+// };
 
 // const output = [
 // 	block: {

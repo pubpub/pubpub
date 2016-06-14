@@ -1,6 +1,6 @@
 import React from 'react';
 import {IndexRoute, Route} from 'react-router';
-import {App, Editor, EmailVerification, GroupCreate, GroupProfile, JournalCreate, JournalProfile, Landing, Login, PubCreate, PubReader, ResetPassword, SignUp, UserProfile} from 'containers';
+import {App, Editor, EmailVerification, GroupCreate, GroupProfile, JournalCreate, JournalProfile, Landing, Login, PubCreate, PubReader, ResetPassword, SignUp, UserProfile, UserSettings} from 'containers';
 import {About, AboutJournals, AboutPubs, AboutReviews, NotFound} from 'components';
 
 export default () => {
@@ -33,6 +33,9 @@ export default () => {
 			<Route path="/resetpassword/:hash/:username" component={ResetPassword}/>
 
 			<Route path="/reviews" component={AboutReviews}/>
+
+			<Route path="/settings" component={UserSettings}/> {/* /settings */}
+			<Route path="/settings/:mode" component={UserSettings}/> {/* /settings/password */}
 
 			<Route path="/user/:username" component={UserProfile}/> {/* /user/kate?filter=unpublished */}
 			<Route path="/user/:username/:mode" component={UserProfile}/> {/* /user/kate/discussions?page=4 or /user/kate/settings */}

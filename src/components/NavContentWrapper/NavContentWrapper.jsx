@@ -143,6 +143,8 @@ styles = {
 	contentNavLinkMobile: {
 		display: 'none',
 		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+			textDecoration: 'none',
+			color: 'inherit',
 			display: 'inline-block',
 			width: '50%',
 			textAlign: 'center',

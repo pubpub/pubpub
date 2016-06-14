@@ -18,6 +18,12 @@ import {
 	SIGNUP_SUCCESS,
 } from 'containers/SignUp/actions';
 
+import {
+	LOAD_PROFILE,
+	LOAD_PROFILE_SUCCESS,
+	LOAD_PROFILE_FAIL,
+} from 'containers/UserProfile/actions';
+
 
 /*--------*/
 // Initialize Default State
@@ -28,6 +34,8 @@ export const defaultState = Immutable.Map({
 	
 	locale: 'en',
 	languageObject: {},
+
+	loading: false, // Used to animate the loading bar
 });
 
 /*--------*/
@@ -53,6 +61,13 @@ function loadAppFail(state, error) {
 	});
 }
 
+function setLoading(state) {
+	return state.set('loading', true);
+}
+function unsetLoading(state) {
+	return state.set('loading', false);
+}
+
 /*--------*/
 // Bind actions to specific reducing functions.
 /*--------*/
@@ -67,6 +82,14 @@ export default function reducer(state = defaultState, action) {
 		return loadAppSuccess(state, action.result.languageData);
 	case LOAD_APP_AND_LOGIN_FAIL:
 		return loadAppFail(state, action.error);
+
+
+	case LOAD_PROFILE:
+		return setLoading(state);
+	case LOAD_PROFILE_SUCCESS:
+	case LOAD_PROFILE_FAIL:
+		return unsetLoading(state);
+
 	default:
 		return ensureImmutable(state);
 	}

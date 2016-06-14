@@ -131,7 +131,7 @@ export const About = React.createClass({
 							<div style={[styles.forWhoText, styles.forWhoRight]}>
 								<h3 style={styles.noMargin}>For Journals</h3>
 								<p>Created by anyone for any community. Journals become tools for curating published content. Not gatekeepers of scientific progress. Journals serve as curators rather than gatekeepers. Pubs can be submitted to and featured in as many journals as is relevant. No more silos. Journals can be run for large or small audiences, by institutions or individuals. Everyone can be a journal.</p>
-								<Link to={'/journals'} style={globalStyles.link}><div className={'button'}>More on Journals</div></Link>
+								<Link to={'/user/testing_fish1'} style={globalStyles.link}><div className={'button'}>More on Journals</div></Link>
 							</div>
 							<img style={[styles.forWhoImage, styles.forWhoLeft]} src={'https://res.cloudinary.com/pubpub/image/upload/c_scale,w_415/v1451417712/outputjournal_qcdqyh.gif'} alt={'PubPub Journals'}/>
 							<div style={globalStyles.clearFix}></div>

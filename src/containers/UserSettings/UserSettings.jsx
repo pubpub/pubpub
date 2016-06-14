@@ -7,12 +7,7 @@ import { pushState } from 'redux-router';
 import {logout, follow, unfollow, toggleVisibility} from 'containers/Login/actions';
 import {getProfile, updateUser, userNavOut, userNavIn, setNotificationsRead} from './actions';
 import {NavContentWrapper} from 'components';
-import UserProfileDiscussions from './UserProfileDiscussions';
-import UserProfileSettings from './UserProfileSettings';
-import UserProfilePubs from './UserProfilePubs';
-import UserProfileGroups from './UserProfileGroups';
-import UserProfileFollows from './UserProfileFollows';
-import UserProfileNotifications from './UserProfileNotifications';
+
 
 import {globalStyles, profileStyles, navStyles} from 'utils/styleConstants';
 
@@ -21,7 +16,7 @@ import {FormattedMessage} from 'react-intl';
 
 let styles = {};
 
-const Profile = React.createClass({
+export const UserSettings = React.createClass({
 	propTypes: {
 		profileData: PropTypes.object,
 		loginData: PropTypes.object,
@@ -37,9 +32,12 @@ const Profile = React.createClass({
 	},
 
 	statics: {
-		fetchData: function(getState, dispatch, location, routerParams) {
-			return dispatch(getProfile(routerParams.username));
-		}
+		// fetchDataDeferred: function(getState, dispatch, location, routerParams) {
+		// 	if (getState().user.getIn(['profileData', 'username']) !== routerParams.username) {
+		// 		return dispatch(getProfile(routerParams.username));
+		// 	}
+		// 	return dispatch(userNavIn());
+		// }
 	},
 
 	// componentWillUnmount() {
@@ -111,8 +109,8 @@ const Profile = React.createClass({
 		}
 
 		let profileData = {};
-		if (this.props.profileData.get('profileData').toJS) {
-			profileData = this.props.profileData.get('profileData').toJS();
+		if (this.props.loginData.get('userData').toJS) {
+			profileData = this.props.loginData.get('userData').toJS();
 		}
 
 		const ownProfile = this.ownProfile();
@@ -120,8 +118,8 @@ const Profile = React.createClass({
 		const mobileNavButtons = [
 			{ type: 'button', mobile: true, text: 'Follow', action: this.followUserToggle },
 			{ type: 'button', mobile: true, text: 'Menu', action: undefined },
+			{ type: 'button', mobile: true, text: 'M2enu', action: undefined },
 		];
-
 		const navItems = [
 			{ type: 'link', text: 'Recent Activity', link: '/user/' + this.props.username },
 			{ type: 'spacer' },
@@ -140,62 +138,14 @@ const Profile = React.createClass({
 						<img src={'https://jake.pubpub.org/unsafe/200x200/' + profileData.image} />
 					</div>
 					<div style={styles.headerTextWrapper}>
-						<h1>{profileData.name}</h1>
-						<p>{profileData.bio}</p>
-						<p>{profileData.links}</p>
+						<h1>User Settings</h1>
+						<h1 style={styles.subH1}>{profileData.name}</h1>
 					</div>
 				</div>
 
 				<NavContentWrapper navItems={navItems} mobileNavButtons={mobileNavButtons}>
-					{(() => {
-						switch (this.props.mode) {
-						case 'discussions':
-							return (
-								<UserProfileDiscussions
-									profileData={profileData}
-									ownProfile={ownProfile}/>
-							);
-						case 'follows':
-							return (
-								<UserProfileFollows
-									profileData={profileData}
-									ownProfile={ownProfile}/>
-							);
-						case 'groups':
-							return (
-								<UserProfileGroups
-									profileData={profileData}
-									ownProfile={ownProfile}/>
-							);
-						case 'pubs':
-							return (
-								<UserProfilePubs
-									profileData={profileData}
-									ownProfile={ownProfile} />
-							);
-						case 'notifications':
-							return (
-								<UserProfileNotifications
-									profileData={profileData}
-									ownProfile={ownProfile}
-									setNotificationsReadHandler={this.setNotificationsRead}/>
-							);
-						case 'settings':
-							return (
-								<UserProfileSettings
-									profileData={profileData}
-									ownProfile={ownProfile}
-									saveStatus={this.props.profileData.get('settingsStatus')}
-									handleSettingsSave={this.settingsSave}/>
-							);
-						default:
-							return (
-								<UserProfilePubs
-									profileData={profileData}
-									ownProfile={ownProfile} />
-							);
-						}
-					})()}
+					<h2>User Details</h2>
+					
 				</NavContentWrapper>
 
 			</div>
@@ -211,7 +161,7 @@ export default connect( state => {
 		username: state.router.params.username,
 		mode: state.router.params.mode,
 	};
-})( Radium(Profile) );
+})( Radium(UserSettings) );
 
 styles = {
 	headerImageWrapper: {
@@ -231,5 +181,10 @@ styles = {
 			textAlign: 'center',
 			padding: '0em',
 		}
+	},
+	subH1: {
+		fontWeight: 'normal',
+		fontSize: '3em',
+		marginTop: '-.5em',
 	},
 };
