@@ -139,6 +139,7 @@ app.use((req, res) => {
 							<meta name="google-site-verification" content="jmmJFnkSOeIEuS54adOzGMwc0kwpsa8wQ-L4GyPpPDg" />
 							<meta name="referrer" content="always">
 							<meta property="fb:pages" content="228105957546675" />
+							<meta name="theme-color" content="#2C2A2B">
 							${head.title.toString()}
 							${head.meta.toString()}
 

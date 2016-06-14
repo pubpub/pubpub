@@ -64,7 +64,7 @@ styles = {
 		border: '1px solid #BBBDC0',
 		borderRadius: '1px',
 		display: 'table',
-		margin: '1em',
+		margin: '1em 0em',
 		backgroundColor: 'white',
 		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
 			display: 'block',

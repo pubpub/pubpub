@@ -101,7 +101,7 @@ const JournalAdmin = React.createClass({
 		];
 
 		const backgroundStyle = {
-			paddingBottom: '3em',
+			padding: '2em 0em',
 			marginBottom: '3em',
 			position: 'relative',
 			color: 'white',
