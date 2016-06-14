@@ -124,6 +124,7 @@ const JournalAdmin = React.createClass({
 					<div style={styles.backgroundGrey}></div>
 					<div className={'profile-header section'}>
 						<div style={styles.headerTextWrapper}>
+							{/* <img src={journalLogo} /> */}
 							<h1>{this.props.journalData.getIn(['journalData', 'journalName'])}</h1>
 							{/* <p>{this.props.journalData.getIn(['journalData', 'description'])}</p> */}
 							<p>Exploring the interface of peanut butter and jelly.</p>
@@ -249,19 +250,9 @@ styles = {
 		left: 0,
 		zIndex: 1,
 	},
-	headerImageWrapper: {
-		textAlign: 'center',
-		display: 'table-cell',
-		verticalAlign: 'top',
-		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
-			display: 'block',
-		}
-	},
 	headerTextWrapper: {
 		position: 'relative',
 		zIndex: 2,
-		padding: '0em 1em',
-		display: 'table-cell',
 		verticalAlign: 'top',
 		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
 			display: 'block',
