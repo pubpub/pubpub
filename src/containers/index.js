@@ -2,6 +2,7 @@ export App from './App/App';
 
 export Autocomplete from './Autocomplete/Autocomplete';
 // export Collection from './Collection/Collection';
+export Femi from './Femi/Femi';
 export Discussions from './Discussions/Discussions';
 export Editor from './Editor/Editor';
 // export EditorModals from './EditorModals/EditorModals';

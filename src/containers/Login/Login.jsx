@@ -15,7 +15,7 @@ import {login} from './actions';
 import {Link} from 'react-router';
 //React-Router maps different routes to various react componenets. Link Routes from app files.
 import {Loader} from 'components';
-//Components forlder has an index.js that exports Loader.jsx from Louder folder
+//Components forlder has an index.js that exports Loader.jsx from Loader folder
 //Loader is a component.
 
 

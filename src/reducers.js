@@ -4,6 +4,7 @@ import {reducer as formReducer} from 'redux-form';
 import { routerStateReducer } from 'redux-router';
 
 import app from './containers/App/reducer';
+import femi from './containers/Femi/reducer';
 import autocomplete from './containers/Autocomplete/reducer';
 import editor from './containers/Editor/reducer';
 import emailVerification from './containers/EmailVerification/reducer';
@@ -44,6 +45,7 @@ export default combineReducers({
 		},
 	}),
 	app,
+	femi,
 	autocomplete,
 	editor,
 	emailVerification,
