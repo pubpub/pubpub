@@ -120,7 +120,7 @@
   "signup.FirstName": "First Name",
   "signup.LastName": "Last Name",
   "signup.PasswordLength": "Must be at least 8 characters",
-  "signup.alreadyHaveAccount": "Already have a PubPub? Click to Login!",
+  "signup.alreadyHaveAccount": "Already have an account? Click to Login!",
   "details.Welcome": "Welcome!",
   "details.VerificationMessage": "We've sent you a verification email. Please click the link there to verify your account!",
   "details.AboutYou": "About You",

@@ -253,12 +253,6 @@ styles = {
 	headerTextWrapper: {
 		position: 'relative',
 		zIndex: 2,
-		verticalAlign: 'top',
-		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
-			display: 'block',
-			textAlign: 'center',
-			padding: '0em',
-		}
 	},
 };
 

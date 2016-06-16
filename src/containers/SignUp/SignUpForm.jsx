@@ -133,7 +133,7 @@ export const SignUpForm = React.createClass({
 				</form>
 				
 				<Link style={styles.registerLink} to={'/login'}>
-					<FormattedMessage id="signup.alreadyHaveAccount" defaultMessage="Already have a PubPub? Click to Login!"/>
+					<FormattedMessage id="signup.alreadyHaveAccount" defaultMessage="Already have an account? Click to Login!"/>
 				</Link>
 				
 			</div>

@@ -179,6 +179,7 @@ styles = {
 		right: 5,
 		top: 45,
 		padding: '.2em 0em',
+		zIndex: 99999999999,
 		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
 			position: 'static',
 			width: 'auto',

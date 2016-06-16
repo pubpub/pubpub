@@ -1,128 +1,120 @@
-#pubContent #pub-wrapper{
-	padding: 0px 6em 50px 4em;
-	line-height: 1.58;
-	/*text-rendering: optimizeLegibility;
-	-webkit-font-smoothing: antialiased;*/
-}
-@media screen and (min-resolution: 3dppx), screen and (max-width: 767px) {
-	#pubContent #pub-wrapper{
-		padding: 0px 1em 50px;
-	}
+#pub-body {
+	font-family: 'Lora', serif;
 }
 
-
-#pubBodyContent {
-	padding: 0px 0em;
+#pub-body h1, #pub-body h2, #pub-body h3, #pub-body h4, #pub-body h5, #pub-body h6, #pub-body p, #pub-body ul, #pub-body ol, #pub-body div.p-block {
+	margin: 1em 0em;
+}
+#pub-body h1:nth-child(2), #pub-body h2:nth-child(2), #pub-body h3:nth-child(2), #pub-body h4:nth-child(2), #pub-body h5:nth-child(2), #pub-body h6:nth-child(2), #pub-body p:nth-child(2), #pub-body ul:nth-child(2), #pub-body ol:nth-child(2), #pub-body div:nth-child(2) {
+	/* This makes the content (assuming there is no headerBlock displayed) flush with the top of the div*/
+	margin-top: 0em;
+}
+#pub-body h1, #pub-body h2, #pub-body h3, #pub-body h4, #pub-body h5, #pub-body h6 {
+	color: #222;
+	font-family: 'Open Sans', Helvetica Neue, Arial, sans-serif;
+}
+#pub-body h1 {
+	font-size: 2em;
+}
+#pub-body h2 {
+	font-size: 1.41421em;
+}
+#pub-body h3 {
+	font-size: 1.25992em;
+}
+#pub-body h4 {
+	font-size: 1.12246em;
+}
+#pub-body a {
+	color: inherit;
 }
 
-
-#pubContent .headerBlock {
+#pub-body .headerBlock {
 	border-bottom: 1px solid #ccc;
 	padding-bottom: 0.7em;
 	margin-bottom: 0.7em;
 }
 
-#pubContent .title{
+#pub-body .title{
+	font-family: 'Lora', serif;
 	text-align: left;
 	font-size: 3.2em;
 	padding: 0.7em 0px;
 	font-weight: 700;
 	line-height: 1.3em;
 	color: #222;
-	/*font-family: 'Lora';*/
-	font-family: 'Yrsa', Georgia, serif;
 	margin: 0;
 }
 
-#pubContent .author {
+#pub-body .author {
 	display: inline-block;
 	color: #222;
 	font-size: 1.0em;
 	padding: 0px;
-	font-family: 'Lora';
 	text-decoration: none;
 	padding-right: 1em;
 	vertical-align: top;
 }
-#pubContent a.author:hover {
+#pub-body a.author:hover {
 	text-decoration: underline;
 }
 
-/*#pubContent #pub-authors {
-	text-align: left;
-	color: #222;
-	font-size: 1.0em;
-	padding: 0px;
-	font-family: 'Lora';
-	text-transform: capitalize;;
-	font-weight: 700;
-}*/
-/*#pubContent .pub-author {
-	color: #555;
-}
-#pubContent .pub-author:hover {
-	color: #111;
-}*/
-#pubContent #pub-dates {
+#pub-body #pub-dates {
 	text-align: left;
 	padding: 0px;
 	color: #222;
-	font-family: 'Lora';
 }
-#pubContent .abstract {
+#pub-body .abstract {
 	text-align: left;
 	color: #222;
 	margin: 2em 0px;
-	font-family: 'Lora';
 	padding: 0px 0px;
 	font-style: italic;
 }
-#pubContent .authorsNote {
+#pub-body .authorsNote {
 	text-align: center;
 	margin: 30px auto 0px auto;
 	background-color: #EAEAEA;
 	color: #666;
-	font-family: 'Lora';
 	padding: 10px 20px;
 	width: 80%;
 }
-#pubContent #pub-header-divider {
+#pub-body #pub-header-divider {
 	height: 1px;
 	width: 100%;
 	margin: 0 auto;
 	background-color: #DDD;
 }
-#pubContent #pub-references {
-	margin-top: 1.5em;
-	padding-top: 1.5em;
+#pub-body #pub-references {
 	border-top: 1px solid #eee;
 }
-#pubContent .reference-content {
+#pub-body .reference-content {
 	font-size: 0.9em;
 }
-#pubContent .reference-number {
+#pub-body .reference {
+	margin: .5em;
+}
+#pub-body .reference-number {
 	color: #222;
 	padding-right: 10px;
 	font-size: 1em;
 }
 
-#pubContent hr {
+#pub-body hr {
 	background-color: #DDD;
 	height: 1px;
 	border: none;
 }
 
-#pubContent .p-block {
-	/*font-family: 'Lora';*/
-	font-family: 'Yrsa', Georgia, serif;
-	font-size: 1.2em;
-	padding: 0.5em 0em;
+#pub-body .p-block {
+	font-size: 1.1em;
+	line-height: 1.5em;
 	color: #333;
 }
-#pubContent .codeBlock {
+#pub-body .codeBlock {
 	background-color: #f0f0f0;
 }
-#pubContent pre .codeBlock {
+#pub-body pre .codeBlock {
 	margin: 0px 20px;
 	padding: 10px;
 	background-color: #f0f0f0;
@@ -132,69 +124,49 @@
 	overflow-x: scroll;
 
 }
-#pubContent blockquote {
+#pub-body blockquote {
 	padding: 10px 20px;
 	margin: 0 0 20px;
 	font-size: 17.5px;
 	border-left: 5px solid #eee;
 }
-#pubContent ul, #pubContent ol {
-	/*font-family: 'Lora';*/
-	font-family: 'Yrsa', Georgia, serif;
+#pub-body ul, #pub-body ol {
 	padding: 0px 3em 0px 3em;
 	color: #333;
 }
-#pubContent span + li + span + li {
+#pub-body span + li + span + li {
 	padding-top: 0.7em
 }
-#pubContent table {
+#pub-body table {
 	border-spacing: 0px;
 	border-collapse: collapse;
 }
-#pubContent td {
+#pub-body td {
 	border: 1px solid #ccc;
 	padding: 0.3em;
 }
-#pubContent th {
+#pub-body th {
 	border: 1px solid #ccc;
 	padding: 0.3em;
 	background-color: #eee;
 	color: #111;
 }
-#pubContent h1, #pubContent h2, #pubContent h3, #pubContent h4, #pubContent h5, #pubContent h6 {
-	color: #666;
-	font-family: 'Clear Sans Light', Helvetica Neue, Arial, serif;
-}
-#pubContent h1 {
-	font-size: 2em;
-}
-#pubContent h2 {
-	font-size: 1.41421em;
-}
-#pubContent h3 {
-	font-size: 1.25992em;
-}
-#pubContent h4 {
-	font-size: 1.12246em;
-}
-#pubContent a {
-	color: inherit;
-}
+
 
 
 /*PLUGIN STYLING*/
 
-#pubContent .pub-plugin.pub-quote-wrapper {
+#pub-body .pub-plugin.pub-quote-wrapper {
 	border-top: none;
 	border-bottom: none;
-	border-right`: none;
+	border-right: none;
 	border-left: #DDD solid 1px;
 	padding-left: 1em;
 	text-align: left;
 	font-style: italic;
 }
 
-#pubContent .pub-plugin.pub-quote-wrapper.pub-align-full {
+#pub-body .pub-plugin.pub-quote-wrapper.pub-align-full {
 	border-top: #DDD solid 1px;
 	border-bottom: #DDD solid 1px;
 	border-left: none;
@@ -204,32 +176,9 @@
 	text-style: italic;
 	background-color: #F9F9F9;
 
-	width: 45vw !important;
-	margin-left: calc(-1 * (45vw - 100%) / 2) !important;
-	margin-top: 1em !important;
-	margin-bottom: 1em !important;
+	width: 100%
 }
 
-
-#pubContent .pub-plugin.pub-img-wrapper.pub-align-full {
-	/*width: 45vw !important;*/
-	/*margin-left: calc(-1 * (45vw - 100%) / 2) !important;*/
-	margin-top: 0.5em !important;
-	margin-bottom: 0.5em !important;
-}
-
-
-@media screen and (min-resolution: 3dppx), screen and (max-width: 767px) {
-	#pubContent .pub-plugin.pub-quote-wrapper.pub-align-full {
-		width: 100vw !important;
-		margin-left: calc(-1 * (100vw - 100%) / 2) !important;
-	}
-
-	#pubContent .pub-plugin.pub-img-wrapper.pub-align-full {
-		width: 90vw !important;
-		margin-left: calc(-1 * (90vw - 100%) / 2) !important;
-	}
-}
 
 .pub-sub-caption {
 	font-size: 0.8em;
@@ -239,11 +188,26 @@
 	line-height: 1.4;
 }
 
-#pubContent .pub-quote {
+#pub-body .pub-quote {
 	padding: 2.5% 7.5%;
 }
 
 .pagebreak {
 	opacity: 0 !important;
 	page-break-before: always !important;
+}
+
+.marking {
+	background-color: rgba(124, 235, 124, 0.7);
+}
+.tempHighlight {
+	background-color: rgba(200,200,200, 0.7);
+}
+.selection {
+}
+.selection-active {
+	background-color: rgba(78, 164, 61, 0.4);
+}
+.selection-editor.selection-active {
+	background-color: rgba(78, 61, 164, 0.6);
 }

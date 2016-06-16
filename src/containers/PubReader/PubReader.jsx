@@ -9,7 +9,7 @@ import {getRandomSlug} from 'containers/App/actions';
 import {toggleVisibility, follow, unfollow} from 'containers/Login/actions';
 import {closeMenu} from 'containers/App/actions';
 import {createHighlight} from 'containers/MediaLibrary/actions';
-
+import {NavContentWrapper} from 'components';
 
 import {PubBody, LoaderDeterminate} from 'components';
 
@@ -227,6 +227,22 @@ const PubReader = React.createClass({
 		});
 
 
+		const mobileNavButtons = [
+			{ type: 'link', mobile: true, text: 'About', link: '/' + this.props.subdomain + '/about' },
+			{ type: 'button', mobile: true, text: 'Menu', action: undefined },
+		];
+
+		const navItems = [
+			{ type: 'link', text: 'Read', link: '/' + this.props.subdomain + '/about' },
+			{ type: 'link', text: 'Discussions', link: '/user/pubs' },
+			{ type: 'link', text: 'Journals', link: '/user/groups' },
+			{ type: 'link', text: 'History', link: '/user/journals' },
+			{ type: 'link', text: 'Source', link: '/user/journals' },
+			{ type: 'spacer' },
+			{ type: 'link', text: 'Follow', link: '/user/journals' },
+
+		];
+
 		// console.log(this.state.htmlTree);
 		// console.log(pubData);
 		return (
@@ -235,10 +251,51 @@ const PubReader = React.createClass({
 				<Helmet {...metaData} />
 
 				<Style rules={{
-					'.pagebreak': { opacity: '0', }
+					'.pagebreak': { opacity: '0', },
+					'.section': {maxWidth: '1600px'},
+					'.headerBlock': {display: 'none'},
+
 				}} />
 
-				<div className="reader-left" style={[styles.readerLeft, globalStyles[this.props.readerData.get('status')], pubData.markdown === undefined && {display: 'none'}]}>
+
+				<div>
+					<div className={'section'} style={{maxWidth: 'auto'}}>
+						<h1 className={'serif-font'}>{pubData.title}</h1>
+					</div>
+					<NavContentWrapper navItems={navItems} mobileNavButtons={mobileNavButtons} hideRightBorder={true}>
+						<div style={styles.readWrapper}>
+							<div style={styles.bodyWrapper}>
+								<PubBody
+								status={this.props.readerData.get('status')}
+								isPublished={pubData.isPublished}
+								isPage={pubData.isPage}
+								markdown={this.state.inputMD}
+								pubURL={pubURL}
+								addSelectionHandler={this.addSelection}
+								styleScoped={pubData.history[versionIndex].styleScoped}
+								showPubHighlights={this.props.readerData.get('showPubHighlights')}
+								isFeatured={(pubData.featuredInList && pubData.featuredInList.indexOf(this.props.appData.getIn(['journalData', '_id'])) > -1) || this.props.appData.get('baseSubdomain') === null || !pubData.isPublished}
+								errorView={pubData.pubErrorView}
+								minFont={14}
+								maxFont={21}/>
+
+							</div>
+							<div style={styles.discussionWrapper}>
+								<Discussions/>	
+							</div>
+						</div>
+						
+
+						
+
+					</NavContentWrapper>
+				</div>
+				
+				
+
+				
+
+				{/* <div className="reader-left" style={[styles.readerLeft, globalStyles[this.props.readerData.get('status')], pubData.markdown === undefined && {display: 'none'}]}>
 
 					<PubReaderLeftBar
 						slug={this.props.slug}
@@ -256,9 +313,9 @@ const PubReader = React.createClass({
 						handleFollow={this.followPubToggle}
 						isAuthor={pubData.isAuthor}/>
 
-				</div>
+				</div>*/}
 
-				<div className="reader-content" style={styles.readerContent}>
+				{/* <div className="reader-content" style={styles.readerContent}>
 					{this.props.meta
 						? <PubMeta
 							readerData={this.props.readerData}
@@ -292,7 +349,6 @@ const PubReader = React.createClass({
 										? <Link to={'/pub/' + this.props.slug} style={globalStyles.link}>
 											<div key={'versionNotification'} style={[styles.versionNotification, globalStyles[this.props.readerData.get('status')]]}>
 												<p>Reading Version {this.props.query.version}. Click to read the most recent version ({pubData.history.length}).</p>
-												{/* <p>This was a {pubData.history[versionIndex].status === 'Draft' ? 'Draft' : 'Peer-Review Ready'} version.</p> */}
 											</div>
 										</Link>
 										: null
@@ -320,62 +376,17 @@ const PubReader = React.createClass({
 									minFont={14}
 									maxFont={21}/>
 
-
-								{/* <PubModals
-									slug={this.props.slug}
-									status={this.props.readerData.get('status')}
-									pubStatus={pubData.status}
-									openPubModalHandler={this.openPubModal}
-									closePubModalHandler={this.closePubModal}
-									closeMenuHandler={this.closeMenu}
-									activeModal={this.props.readerData.get('activeModal')}
-									isFeatured={(pubData.featuredInList && pubData.featuredInList.indexOf(this.props.appData.getIn(['journalData', '_id'])) > -1) || this.props.appData.get('baseSubdomain') === null}
-
-									// TOC Props
-									tocData={this.state.TOC}
-									// Cite Props
-									pubData={pubData.history[versionIndex]}
-									journalName={this.props.appData.get('baseSubdomain') ? this.props.appData.getIn(['journalData', 'journalName']) : ''}
-									// Status Data
-									featuredIn={pubData.featuredIn}
-									submittedTo={pubData.submittedTo}
-									// Reviews Data
-									reviewsData={pubData.reviews}
-
-									// Discussions Data
-									toggleHighlightsHandler={this.toggleHighlights}
-									showPubHighlights={this.props.readerData.get('showPubHighlights')}/> */}
-
-
 							</div>
 
-							<div className="rightBar" style={[styles.rightBar, globalStyles[this.props.readerData.get('status')], pubData.markdown === undefined && {display: 'none'}]}>
-
-								<div style={styles.rightHeaderButtonsWrapper}>
-									<Link style={globalStyles.link} to={'/pub/' + this.props.slug + '/journals'}>
-										<div style={[styles.buttonWrapper, !pubData.isAuthor && {opacity: '0', pointerEvents: 'none'}]} key={'topbutton1'}>Submit To Journal</div>
-									</Link>
-									<Link style={globalStyles.link} to={'/pub/' + this.props.slug + '/invite'}>
-										<div style={styles.buttonWrapper} key={'topbutton2'}>
-											<FormattedMessage id="pub.RequestReview" defaultMessage="Request Review"/>
-										</div>
-									</Link>
-									{/* <Link style={globalStyles.link} to={'/pub/' + this.props.slug + '/discussions'}>
-										<div style={styles.buttonWrapper} key={'topbutton3'}>
-											<FormattedMessage id="pub.Expand" defaultMessage="Expand"/>
-										</div>
-									</Link> */}
-									<div style={globalStyles.clearFix}></div>
-								</div>
+							<div className="rightBar" style={[styles.rightBar]}>
 
 								<Discussions/>
 
 							</div>
-							<div style={globalStyles.clearFix}></div>
 						</div>
 
 					}
-				</div>
+				</div> */}
 
 
 			</div>
@@ -401,8 +412,26 @@ export default connect( state => {
 })( Radium(PubReader) );
 
 styles = {
-	container: {
+	readWrapper: {
+		display: 'table',
+		width: '100%',
+		tableLayout: 'fixed',
 
+	},
+	bodyWrapper: {
+		display: 'table-cell',
+		// maxWidth: '700px',
+		width: '60%',
+		verticalAlign: 'top',
+	},
+	discussionWrapper: {
+		display: 'table-cell',
+		verticalAlign: 'top',
+	},
+
+
+	container: {
+		// backgroundColor: '#F3F3F4',
 	},
 	rightHeaderButtonsWrapper: {
 		margin: '10px 0px',

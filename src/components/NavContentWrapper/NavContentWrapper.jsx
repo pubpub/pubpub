@@ -34,10 +34,10 @@ export const NavContentWrapper = React.createClass({
 						{mobileNavButtons.slice(0, 2).map((option, index)=>{
 
 							if (option.type === 'link') {
-								return <Link key={'navItem-' + index} className={'lighter-bg-hover'} style={styles.contentNavLinkMobile} to={option.link} onClick={this.toggleMenu}>{option.text}</Link>;
+								return <Link key={'navItem-' + index} style={styles.contentNavLinkMobile} to={option.link} onClick={this.toggleMenu}>{option.text}</Link>;
 							}
 							if (option.type === 'button') {
-								return <div key={'navItem-' + index} className={'lighter-bg-hover'} style={styles.contentNavLinkMobile} onClick={option.action || this.toggleMenu}>{option.text}</div>;
+								return <div key={'navItem-' + index} style={styles.contentNavLinkMobile} onClick={option.action || this.toggleMenu}>{option.text}</div>;
 							}
 
 						})}
@@ -86,10 +86,10 @@ styles = {
 		width: '1%',
 		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
 			display: 'block',
-			width: 'calc(100% + 2em)', // This is to offset the padding implied by .section
-			position: 'relative',
-			left: '-1em',
 			fontSize: '1.2em',
+			width: 'calc(100% + 2em / 1.2)', // This is to offset the padding implied by .section
+			position: 'relative',
+			left: 'calc(-1em / 1.2)',
 		}
 	},
 	contentBody: {
@@ -154,6 +154,7 @@ styles = {
 			borderColor: '#BBBDC0',
 			borderStyle: 'solid',
 			position: 'relative',
+			userSelect: 'none',
 		}
 	},
 	contentNavSpacer: {
