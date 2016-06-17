@@ -9,7 +9,11 @@ export const NavContentWrapper = React.createClass({
 		navItems: PropTypes.array,
 		mobileNavButtons: PropTypes.array,
 		hideRightBorder: PropTypes.bool,
+		contentSectionStyle: PropTypes.object,
+		contentNavStyle: PropTypes.object,
+		contentBodyStyle: PropTypes.object,
 		children: PropTypes.object
+
 	},
 
 	getInitialState() {
@@ -27,8 +31,8 @@ export const NavContentWrapper = React.createClass({
 		const hideRightBorder = this.props.hideRightBorder;
 
 		return (
-			<div className={'section'} style={styles.contentSection}>
-				<div style={styles.contentNav}>
+			<div className={'section'} style={[styles.contentSection, this.props.contentSectionStyle]}>
+				<div style={[styles.contentNav, this.props.contentNavStyle]}>
 
 					<div style={styles.contentNavMobileButtons}>
 						{mobileNavButtons.slice(0, 2).map((option, index)=>{
@@ -62,7 +66,7 @@ export const NavContentWrapper = React.createClass({
 					
 				</div>
 
-				<div style={styles.contentBody}>
+				<div style={[styles.contentBody, this.props.contentBodyStyle]}>
 					{this.props.children}		
 				</div>
 			</div>

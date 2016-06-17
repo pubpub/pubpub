@@ -248,7 +248,28 @@ const PubReader = React.createClass({
 
 		const readMode = false; // True sets the discussions to hide and tuck away
 		const hideDiscussions = !!this.props.meta || readMode;
-		console.log('rendering');
+
+		const customContentNavStyles = {
+			contentSectionStyle: {
+				display: 'table',
+				tableLayout: 'fixed',
+				width: 'calc(100% - 4em)',
+				'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+					width: 'calc(100% - 2em)',
+				},
+			},
+			contentNavStyle: {
+				width: '125px',
+			},
+			contentBodyStyle: {
+				paddingLeft: '5%',
+				paddingRight: '5%',
+				'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+					paddingLeft: '0%',
+					paddingRight: '0%',
+				},
+			},
+		};
 		return (
 			<div style={styles.container}>
 
@@ -262,17 +283,25 @@ const PubReader = React.createClass({
 						/* This makes the content (assuming there is no headerBlock displayed) flush with the top of the div */
 						marginTop: '0em',
 					},
+					mediaQueries: {
+						'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+							'#pub-body h1:nth-child(2), #pub-body h2:nth-child(2), #pub-body h3:nth-child(2), #pub-body h4:nth-child(2), #pub-body h5:nth-child(2), #pub-body h6:nth-child(2), #pub-body p:nth-child(2), #pub-body ul:nth-child(2), #pub-body ol:nth-child(2), #pub-body div:nth-child(2)': {
+								marginTop: 'inherit',
+							},
+						}
+					}
 
 				}} />
 
 				<div style={[styles.readWrapper, hideDiscussions && styles.readerWrapperAnimate]}>
-					<div className={'section'} style={{maxWidth: 'auto', position: 'relative'}}>
+					<div className={'section'} style={styles.readerHeader}>
 						<h1 className={'serif-font'} style={styles.header}>{pubData.title}</h1>
 						<p style={styles.subHeader}>Travis Rich, Dan Canova, Mitch McDuffy, Jane Austin</p>
 						<p style={styles.subHeader}>First published: Nov 16, 2016  |  Most recent version: Nov 28, 2016</p>
 						{/* <div className={'button'} style={{position: 'absolute', top: '3em', right: '2em'}}>Follow</div> */}
+						<div style={styles.headerBorder}></div>
 					</div>
-					<NavContentWrapper navItems={navItems} mobileNavButtons={mobileNavButtons} hideRightBorder={false}>
+					<NavContentWrapper navItems={navItems} mobileNavButtons={mobileNavButtons} hideRightBorder={true} {...customContentNavStyles}>
 						<PubBody
 							markdown={this.state.inputMD}
 							isPublished={pubData.isPublished}
@@ -285,7 +314,9 @@ const PubReader = React.createClass({
 					<Discussions/>	
 				</div>
 				
-			
+				
+
+		
 
 				{/* <div className="reader-left" style={[styles.readerLeft, globalStyles[this.props.readerData.get('status')], pubData.markdown === undefined && {display: 'none'}]}>
 
@@ -408,6 +439,22 @@ styles = {
 		width: '100%',
 		tableLayout: 'fixed',
 		overflow: 'hidden',
+	},
+	readerHeader: {
+		// Use 
+		paddingBottom: '0em',
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+			paddingBottom: '2em'
+		},
+	},
+	headerBorder: {
+		width: '100%',
+		height: '1px',
+		backgroundColor: '#F3F3F4',
+		margin: '1.5em auto',
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+			display: 'none',
+		},
 	},
 	readWrapper: {
 		display: 'table-cell',

@@ -60,7 +60,7 @@ export default Radium(PreviewCard);
 
 styles = {
 	container: {
-		width: 'calc(100% - 2em)',
+		width: '100%',
 		border: '1px solid #BBBDC0',
 		borderRadius: '1px',
 		display: 'table',
