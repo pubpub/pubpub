@@ -254,15 +254,22 @@ const PubReader = React.createClass({
 					'.pagebreak': { opacity: '0', },
 					'.section': {maxWidth: '1600px'},
 					'.headerBlock': {display: 'none'},
+					'#pub-body h1:nth-child(2), #pub-body h2:nth-child(2), #pub-body h3:nth-child(2), #pub-body h4:nth-child(2), #pub-body h5:nth-child(2), #pub-body h6:nth-child(2), #pub-body p:nth-child(2), #pub-body ul:nth-child(2), #pub-body ol:nth-child(2), #pub-body div:nth-child(2)': {
+						/* This makes the content (assuming there is no headerBlock displayed) flush with the top of the div */
+						marginTop: '0em',
+					},
 
 				}} />
 
 
 				<div>
-					<div className={'section'} style={{maxWidth: 'auto'}}>
-						<h1 className={'serif-font'}>{pubData.title}</h1>
+					<div className={'section'} style={{maxWidth: 'auto', position: 'relative'}}>
+						<h1 className={'serif-font'} style={styles.header}>{pubData.title}</h1>
+						<p style={styles.subHeader}>Travis Rich, Dan Canova, Mitch McDuffy, Jane Austin</p>
+						<p style={styles.subHeader}>First published: Nov 16, 2016  |  Most recent version: Nov 28, 2016</p>
+						<div className={'button'} style={{position: 'absolute', top: '3em', right: '2em'}}>Follow</div>
 					</div>
-					<NavContentWrapper navItems={navItems} mobileNavButtons={mobileNavButtons} hideRightBorder={true}>
+					<NavContentWrapper navItems={navItems} mobileNavButtons={mobileNavButtons} hideRightBorder={false}>
 						<div style={styles.readWrapper}>
 							<div style={styles.bodyWrapper}>
 								<PubBody
@@ -281,7 +288,10 @@ const PubReader = React.createClass({
 
 							</div>
 							<div style={styles.discussionWrapper}>
-								<Discussions/>	
+								<div style={styles.borderWrapper}>
+									<Discussions/>	
+								</div>
+								
 							</div>
 						</div>
 						
@@ -395,8 +405,7 @@ const PubReader = React.createClass({
 
 });
 
-// const rightBar = document.getElementsByClassname('rightBar')[0];
-// if (rightBar.scrollheight > rightBar.clientHeight)
+
 export default connect( state => {
 	return {
 		readerData: state.pub,
@@ -423,12 +432,23 @@ styles = {
 		// maxWidth: '700px',
 		width: '60%',
 		verticalAlign: 'top',
+		padding: '0% 2.5%',
 	},
 	discussionWrapper: {
 		display: 'table-cell',
 		verticalAlign: 'top',
+		
 	},
-
+	borderWrapper: {
+		padding: '0% 6.25% 1em 6.25%', // 6.25 = 2.5/.4 because this section is 40% of the whole thing, so has to divide by .4 to match teh 2.5% in bodyWrapper
+		borderLeft: '1px solid #BBBDC0',
+	},
+	header: {
+		marginBottom: '.25em',
+	},
+	subHeader: {
+		margin: '0em',
+	},
 
 	container: {
 		// backgroundColor: '#F3F3F4',

@@ -146,7 +146,7 @@ app.use((req, res) => {
 							<link rel=${rssRel} type="application/rss+xml" title="RSS" href="/data/rss.xml" />
 							<link rel="shortcut icon" href="/favicon.ico?v=2" />
 							
-							<link href='https://fonts.googleapis.com/css?family=Lora:400,400italic,700,700italic|Open+Sans:400,400italic,700,700italic' rel='stylesheet' type='text/css'>
+							<link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
 							<link href='https://assets.pubpub.org/_fonts/Yrsa.css' rel='stylesheet' type='text/css'>
 
 							<!-- We could dynamically load these in Editor.jsx

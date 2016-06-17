@@ -1,19 +1,136 @@
-#pub-body {
-	font-family: 'Lora', serif;
+/* Undo the header style set in pubpub.css*/
+#pub-body h1 {
+	font-size: 2em;
+	margin-top: 0.67em;
+	letter-spacing: 0px;
+	line-height: initial;
+}
+#pub-body h2 {
+	font-size: 1.5em;
+	margin-top: 0.83em;
+}
+@media screen and (min-resolution: 3dppx), screen and (max-width: 767px) {
+	#pub-body h1 {
+		font-size: 2em;
+	}
 }
 
-#pub-body h1, #pub-body h2, #pub-body h3, #pub-body h4, #pub-body h5, #pub-body h6, #pub-body p, #pub-body ul, #pub-body ol, #pub-body div.p-block {
+/* Set default paragraph margins on .p-block since we don't use <p> */
+#pub-body .p-block {
 	margin: 1em 0em;
 }
-#pub-body h1:nth-child(2), #pub-body h2:nth-child(2), #pub-body h3:nth-child(2), #pub-body h4:nth-child(2), #pub-body h5:nth-child(2), #pub-body h6:nth-child(2), #pub-body p:nth-child(2), #pub-body ul:nth-child(2), #pub-body ol:nth-child(2), #pub-body div:nth-child(2) {
-	/* This makes the content (assuming there is no headerBlock displayed) flush with the top of the div*/
-	margin-top: 0em;
+
+
+
+/*#pub-body {
+	font-family: Palatino; 
+	color: #444;
+	-webkit-hyphens: auto;
+	-ms-hyphens: auto;
+	hyphens: auto;
 }
 #pub-body h1, #pub-body h2, #pub-body h3, #pub-body h4, #pub-body h5, #pub-body h6 {
+	font-family: 'Open Sans', sans-serif;
+	line-height: 1;
+	margin-top: 0;
 	color: #222;
-	font-family: 'Open Sans', Helvetica Neue, Arial, sans-serif;
 }
-#pub-body h1 {
+
+#pub-body blockquote + figcaption cite {
+  display: block;
+  font-size: inherit;
+  text-align: right;
+}
+
+#pub-body pre code {
+  word-wrap: normal;
+}
+
+
+#pub-body h2 {
+  font-size: 2em;
+  margin-bottom: 1.21212rem;
+}
+
+#pub-body h3 {
+  font-size: 1.33333em;
+  margin-bottom: 0.80808rem;
+}
+
+#pub-body h4 {
+  font-size: 1em;
+  margin-bottom: 0.60606rem;
+}
+
+.p-block {
+  margin: auto auto 1.5rem;
+}
+
+#pub-body small {
+  font-size: 65%;
+}
+
+#pub-body input,
+#pub-body abbr,
+#pub-body acronym,
+#pub-body blockquote,
+#pub-body code,
+#pub-body kbd,
+#pub-body q,
+#pub-body samp,
+#pub-body var {
+  -webkit-hyphens: none;
+  -ms-hyphens: none;
+  hyphens: none;
+}
+
+#pub-body pre {
+  white-space: pre;
+}
+
+#pub-body pre code {
+  white-space: -moz-pre-wrap;
+  white-space: pre-wrap;
+}
+
+#pub-body code {
+  white-space: pre;
+  font-family: monospace;
+}
+
+#pub-body abbr {
+  -webkit-font-variant: small-caps;
+  -moz-font-variant: small-caps;
+  -ms-font-variant: small-caps;
+  font-variant: small-caps;
+  font-weight: 600;
+  text-transform: lowercase;
+  color: gray;
+}
+
+
+
+
+
+
+
+*/
+
+
+
+
+#pub-body {
+	font-family: serif;
+	font-size: 1.2em;
+	line-height: 1.5em;
+	color: #444;
+}
+
+#pub-body h1, #pub-body h2, #pub-body h3, #pub-body h4, #pub-body h5, #pub-body h6 {
+	font-family: 'Open Sans', Helvetica Neue, Arial, sans-serif;
+	line-height:1em;
+}
+/*#pub-body h1 {
 	font-size: 2em;
 }
 #pub-body h2 {
@@ -24,7 +141,10 @@
 }
 #pub-body h4 {
 	font-size: 1.12246em;
-}
+}*/
+
+
+
 #pub-body a {
 	color: inherit;
 }
@@ -106,11 +226,7 @@
 	border: none;
 }
 
-#pub-body .p-block {
-	font-size: 1.1em;
-	line-height: 1.5em;
-	color: #333;
-}
+
 #pub-body .codeBlock {
 	background-color: #f0f0f0;
 }
@@ -132,7 +248,6 @@
 }
 #pub-body ul, #pub-body ol {
 	padding: 0px 3em 0px 3em;
-	color: #333;
 }
 #pub-body span + li + span + li {
 	padding-top: 0.7em
@@ -196,6 +311,8 @@
 	opacity: 0 !important;
 	page-break-before: always !important;
 }
+
+/*HIGHLIGHT STYLING*/
 
 .marking {
 	background-color: rgba(124, 235, 124, 0.7);

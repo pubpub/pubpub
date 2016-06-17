@@ -131,10 +131,12 @@ styles = {
 		display: 'block',
 		textDecoration: 'none',
 		color: 'inherit',
-		padding: '.25em 2em .25em .25em',
+		padding: '.15em 2em .15em .15em',
+		fontSize: '0.9em',
 		cursor: 'pointer',
 		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
 			padding: '.2em 1em',
+			fontSize: '1em',
 		}
 	},
 	contentNavLinkActive: {
