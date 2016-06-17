@@ -127,9 +127,10 @@
 }
 
 #pub-body h1, #pub-body h2, #pub-body h3, #pub-body h4, #pub-body h5, #pub-body h6 {
-	font-family: 'Open Sans', Helvetica Neue, Arial, sans-serif;
 	line-height:1em;
-	font-family: 'Palatino', serif;
+	/*font-family: 'Open Sans', Helvetica Neue, Arial, sans-serif;*/
+	/*font-family: 'Palatino', serif;*/
+	font-family: 'Yrsa', Georgia, serif;
 }
 /*#pub-body h1 {
 	font-size: 2em;

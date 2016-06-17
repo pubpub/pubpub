@@ -38,10 +38,10 @@ export const NavContentWrapper = React.createClass({
 						{mobileNavButtons.slice(0, 2).map((option, index)=>{
 
 							if (option.type === 'link') {
-								return <Link key={'navItem-' + index} style={styles.contentNavLinkMobile} to={option.link} onClick={this.toggleMenu}>{option.text}</Link>;
+								return <Link key={'navItem-' + index} style={[styles.contentNavLinkMobile, option.style]} to={option.link} onClick={this.toggleMenu}>{option.text}</Link>;
 							}
 							if (option.type === 'button') {
-								return <div key={'navItem-' + index} style={styles.contentNavLinkMobile} onClick={option.action || this.toggleMenu}>{option.text}</div>;
+								return <div key={'navItem-' + index} style={[styles.contentNavLinkMobile, option.style]} onClick={option.action || this.toggleMenu}>{option.text}</div>;
 							}
 
 						})}
@@ -52,10 +52,10 @@ export const NavContentWrapper = React.createClass({
 						{navItems.map((option, index)=>{
 
 							if (option.type === 'link') {
-								return <Link key={'navItem-' + index} className={'lighter-bg-hover'} style={[styles.contentNavLink, option.active && styles.contentNavLinkActive]} to={option.link} onClick={this.toggleMenu}>{option.text}</Link>;
+								return <Link key={'navItem-' + index} className={option.className || 'underlineOnHover'} style={[styles.contentNavLink, option.active && styles.contentNavLinkActive, option.style]} to={option.link} onClick={this.toggleMenu}>{option.text}</Link>;
 							}
 							if (option.type === 'button') {
-								return <div key={'navItem-' + index} className={'lighter-bg-hover'} style={[styles.contentNavLink, option.active && styles.contentNavLinkActive]} onClick={option.action || this.toggleMenu}>{option.text}</div>;
+								return <div key={'navItem-' + index} className={option.className || 'underlineOnHover'} style={[styles.contentNavLink, option.active && styles.contentNavLinkActive, option.style]} onClick={option.action || this.toggleMenu}>{option.text}</div>;
 							}
 							if (option.type === 'spacer') {
 								return <div key={'navItem-' + index} style={styles.contentNavSpacer}></div>;
@@ -138,6 +138,8 @@ styles = {
 		padding: '.15em 2em .15em .15em',
 		fontSize: '0.9em',
 		cursor: 'pointer',
+		overflow: 'hidden',
+		textOverflow: 'ellipsis',
 		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
 			padding: '.2em 1em',
 			fontSize: '1em',

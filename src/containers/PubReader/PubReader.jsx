@@ -20,8 +20,9 @@ import {Discussions} from 'containers';
 
 import {globalStyles, pubSizes} from 'utils/styleConstants';
 
-// import {globalMessages} from 'utils/globalMessages';
 import {generateTOC} from 'utils/generateTOC';
+
+// import {globalMessages} from 'utils/globalMessages';
 import {createJournalURL} from 'utils/journalHelpers';
 
 import {FormattedMessage} from 'react-intl';
@@ -227,6 +228,58 @@ const PubReader = React.createClass({
 		});
 
 
+		const tocStyles = {
+			contents: {
+				position: 'relative',
+				overflow: 'visible',
+			},
+			item: {
+				display: 'block',
+				textDecoration: 'none',
+				color: 'inherit',
+				paddingRight: '.5em',
+				paddingTop: '.25em',
+				paddingBottom: '.25em',
+			},
+
+			levels: [
+				{paddingLeft: '0em'},
+				{paddingLeft: '2em'},
+				{paddingLeft: '3em'},
+				{paddingLeft: '4em'},
+				{paddingLeft: '5em'},
+				{paddingLeft: '6em'},
+			],
+			tocBlock: {
+				position: 'absolute',
+				top: '1em',
+				left: '0',
+				maxWidth: '600px',
+				boxShadow: '0px 0px 5px #ccc',
+				backgroundColor: 'white',
+				border: '1px solid #bbbdc0',
+				padding: '1.5em',
+				fontSize: '1.1em',
+				borderRadius: '1px',
+			}
+		};
+
+
+
+		const toc = generateTOC(pubData.markdown).full;
+		console.log(toc);
+		const contents = (
+			<div className={'showChildOnHover'}>
+				Contents
+				<div className={'hoverChild'} style={tocStyles.tocBlock}>
+					{toc.map((object, index)=>{
+						return <a href={'#' + object.id} className={'underlineOnHover'} style={[tocStyles.item, tocStyles.levels[object.level - 1]]}>{object.title}</a>
+					})}
+				</div>
+				
+			</div>
+		);
+
 		const mobileNavButtons = [
 			{ type: 'button', mobile: true, text: 'Follow', action: ()=>{} },
 			{ type: 'button', mobile: true, text: 'Menu', action: undefined },
@@ -239,7 +292,7 @@ const PubReader = React.createClass({
 			{ type: 'link', text: 'History', link: '/pub/' + this.props.slug + '/history' },
 			{ type: 'link', text: 'Source', link: '/pub/' + this.props.slug + '/source' },
 			{ type: 'spacer' },
-			{ type: 'link', text: 'Follow', link: '/user/journals' },
+			{ type: 'button', text: contents, style: tocStyles.contents, className: '', action: ()=>{} },
 
 		];
 
@@ -289,13 +342,16 @@ const PubReader = React.createClass({
 								marginTop: 'inherit',
 							},
 						}
-					}
+					},
+					'.contents li': {
+
+					},
 
 				}} />
 
 				<div style={[styles.readWrapper, hideDiscussions && styles.readerWrapperAnimate]}>
 					<div className={'section'} style={styles.readerHeader}>
-						<h1 className={'serif-font'} style={styles.header}>{pubData.title}</h1>
+						<h1 className={'title-font'} style={styles.header}>{pubData.title}</h1>
 						<p style={styles.subHeader}>Travis Rich, Dan Canova, Mitch McDuffy, Jane Austin</p>
 						<p style={styles.subHeader}>First published: Nov 16, 2016  |  Most recent version: Nov 28, 2016</p>
 						{/* <div className={'button'} style={{position: 'absolute', top: '3em', right: '2em'}}>Follow</div> */}
@@ -474,7 +530,8 @@ styles = {
 		width: '30%',
 		padding: '3em 2%',
 		verticalAlign: 'top',
-		boxShadow: 'inset 1px 0px 8px -4px black',
+		// boxShadow: 'inset 1px 0px 8px -4px black',
+		borderLeft: '1px solid #E4E4E4',
 		transition: '.35s ease-in transform',
 		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
 			display: 'none',

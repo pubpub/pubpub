@@ -31,14 +31,27 @@ lightest: #F3F3F4
 /* Font Styles */
 .title-font { font-family: 'Yrsa', Georgia, serif; }
 .sans-font  { font-family: 'Open Sans', Helvetica Neue, Arial, sans-serif; }
-/*.serif-font { font-family: 'Lora', serif; }*/
-.serif-font { font-family: 'Palatino', serif; }
+/*.serif-font { font-family: 'Palatino', serif; }*/
+.serif-font { font-family: serif; }
 
 body {
 	font-family: 'Open Sans', Helvetica Neue, Arial, sans-serif;
 }
 .underlineOnHover:hover {
 	text-decoration: underline !important;
+}
+
+.showChildOnHover .hoverChild {
+	/*display: none;*/
+	opacity: 0;
+	transition: .1s linear opacity;
+	pointer-events: none;
+}
+
+.showChildOnHover:hover .hoverChild {
+	/*display: block;*/
+	opacity: 1;
+	pointer-events: auto;
 }
 
 /* Input Fields */
