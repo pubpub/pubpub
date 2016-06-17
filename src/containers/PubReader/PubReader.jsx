@@ -228,16 +228,16 @@ const PubReader = React.createClass({
 
 
 		const mobileNavButtons = [
-			{ type: 'link', mobile: true, text: 'About', link: '/' + this.props.subdomain + '/about' },
+			{ type: 'button', mobile: true, text: 'Follow', action: ()=>{} },
 			{ type: 'button', mobile: true, text: 'Menu', action: undefined },
 		];
 
 		const navItems = [
-			{ type: 'link', text: 'Read', link: '/' + this.props.subdomain + '/about' },
-			{ type: 'link', text: 'Discussions', link: '/user/pubs' },
-			{ type: 'link', text: 'Journals', link: '/user/groups' },
-			{ type: 'link', text: 'History', link: '/user/journals' },
-			{ type: 'link', text: 'Source', link: '/user/journals' },
+			{ type: 'link', text: 'Read', link: '/pub/' + this.props.slug },
+			{ type: 'link', text: 'Discussions', link: '/pub/' + this.props.slug + '/discussions' },
+			{ type: 'link', text: 'Journals', link: '/pub/' + this.props.slug + '/journals' },
+			{ type: 'link', text: 'History', link: '/pub/' + this.props.slug + '/history' },
+			{ type: 'link', text: 'Source', link: '/pub/' + this.props.slug + '/source' },
 			{ type: 'spacer' },
 			{ type: 'link', text: 'Follow', link: '/user/journals' },
 
@@ -245,6 +245,10 @@ const PubReader = React.createClass({
 
 		// console.log(this.state.htmlTree);
 		// console.log(pubData);
+
+		const readMode = false; // True sets the discussions to hide and tuck away
+		const hideDiscussions = !!this.props.meta || readMode;
+		console.log('rendering');
 		return (
 			<div style={styles.container}>
 
@@ -252,7 +256,7 @@ const PubReader = React.createClass({
 
 				<Style rules={{
 					'.pagebreak': { opacity: '0', },
-					'.section': {maxWidth: '1600px'},
+					'.section': {maxWidth: '800px'},
 					'.headerBlock': {display: 'none'},
 					'#pub-body h1:nth-child(2), #pub-body h2:nth-child(2), #pub-body h3:nth-child(2), #pub-body h4:nth-child(2), #pub-body h5:nth-child(2), #pub-body h6:nth-child(2), #pub-body p:nth-child(2), #pub-body ul:nth-child(2), #pub-body ol:nth-child(2), #pub-body div:nth-child(2)': {
 						/* This makes the content (assuming there is no headerBlock displayed) flush with the top of the div */
@@ -261,49 +265,27 @@ const PubReader = React.createClass({
 
 				}} />
 
-
-				<div>
+				<div style={[styles.readWrapper, hideDiscussions && styles.readerWrapperAnimate]}>
 					<div className={'section'} style={{maxWidth: 'auto', position: 'relative'}}>
 						<h1 className={'serif-font'} style={styles.header}>{pubData.title}</h1>
 						<p style={styles.subHeader}>Travis Rich, Dan Canova, Mitch McDuffy, Jane Austin</p>
 						<p style={styles.subHeader}>First published: Nov 16, 2016  |  Most recent version: Nov 28, 2016</p>
-						<div className={'button'} style={{position: 'absolute', top: '3em', right: '2em'}}>Follow</div>
+						{/* <div className={'button'} style={{position: 'absolute', top: '3em', right: '2em'}}>Follow</div> */}
 					</div>
 					<NavContentWrapper navItems={navItems} mobileNavButtons={mobileNavButtons} hideRightBorder={false}>
-						<div style={styles.readWrapper}>
-							<div style={styles.bodyWrapper}>
-								<PubBody
-								status={this.props.readerData.get('status')}
-								isPublished={pubData.isPublished}
-								isPage={pubData.isPage}
-								markdown={this.state.inputMD}
-								pubURL={pubURL}
-								addSelectionHandler={this.addSelection}
-								styleScoped={pubData.history[versionIndex].styleScoped}
-								showPubHighlights={this.props.readerData.get('showPubHighlights')}
-								isFeatured={(pubData.featuredInList && pubData.featuredInList.indexOf(this.props.appData.getIn(['journalData', '_id'])) > -1) || this.props.appData.get('baseSubdomain') === null || !pubData.isPublished}
-								errorView={pubData.pubErrorView}
-								minFont={14}
-								maxFont={21}/>
-
-							</div>
-							<div style={styles.discussionWrapper}>
-								<div style={styles.borderWrapper}>
-									<Discussions/>	
-								</div>
-								
-							</div>
-						</div>
-						
-
-						
-
+						<PubBody
+							markdown={this.state.inputMD}
+							isPublished={pubData.isPublished}
+							addSelectionHandler={this.addSelection}
+							styleScoped={pubData.history[versionIndex].styleScoped}/>
 					</NavContentWrapper>
 				</div>
-				
-				
 
+				<div style={[styles.discussionWrapper, hideDiscussions && styles.discussionWrapperHidden]}>
+					<Discussions/>	
+				</div>
 				
+			
 
 				{/* <div className="reader-left" style={[styles.readerLeft, globalStyles[this.props.readerData.get('status')], pubData.markdown === undefined && {display: 'none'}]}>
 
@@ -421,24 +403,47 @@ export default connect( state => {
 })( Radium(PubReader) );
 
 styles = {
-	readWrapper: {
+	container: {
 		display: 'table',
 		width: '100%',
 		tableLayout: 'fixed',
-
+		overflow: 'hidden',
 	},
-	bodyWrapper: {
+	readWrapper: {
 		display: 'table-cell',
-		// maxWidth: '700px',
-		width: '60%',
 		verticalAlign: 'top',
-		padding: '0% 2.5%',
+		transition: '.35s ease-in transform',
 	},
+	// bodyWrapper: {
+	// 	display: 'table-cell',
+	// 	// maxWidth: '700px',
+	// 	width: '60%',
+	// 	verticalAlign: 'top',
+	// 	padding: '0% 2.5%',
+	// },
 	discussionWrapper: {
+		backgroundColor: '#F3F3F4',
 		display: 'table-cell',
+		width: '30%',
+		padding: '3em 2%',
 		verticalAlign: 'top',
-		
+		boxShadow: 'inset 1px 0px 8px -4px black',
+		transition: '.35s ease-in transform',
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+			display: 'none',
+		},
 	},
+	discussionWrapperHidden: {
+		transform: 'translate3d(100%,0,0)',
+	},
+	readerWrapperAnimate: {
+		transform: 'translate3d(21%,0,0)',
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+			transform: 'translate3d(0%,0,0)',
+			transition: '.0s ease-in transform',
+		},
+	},
+
 	borderWrapper: {
 		padding: '0% 6.25% 1em 6.25%', // 6.25 = 2.5/.4 because this section is 40% of the whole thing, so has to divide by .4 to match teh 2.5% in bodyWrapper
 		borderLeft: '1px solid #BBBDC0',
@@ -448,10 +453,6 @@ styles = {
 	},
 	subHeader: {
 		margin: '0em',
-	},
-
-	container: {
-		// backgroundColor: '#F3F3F4',
 	},
 	rightHeaderButtonsWrapper: {
 		margin: '10px 0px',

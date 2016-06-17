@@ -4,7 +4,6 @@ import {Markdown, SelectionPopup, License} from 'components';
 
 export const PubBody = React.createClass({
 	propTypes: {
-		status: PropTypes.string,
 		markdown: PropTypes.string,
 		addSelectionHandler: PropTypes.func,
 		styleScoped: PropTypes.string,

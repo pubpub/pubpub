@@ -31,7 +31,8 @@ lightest: #F3F3F4
 /* Font Styles */
 .title-font { font-family: 'Yrsa', Georgia, serif; }
 .sans-font  { font-family: 'Open Sans', Helvetica Neue, Arial, sans-serif; }
-.serif-font { font-family: 'Lora', serif; }
+/*.serif-font { font-family: 'Lora', serif; }*/
+.serif-font { font-family: 'Palatino', serif; }
 
 body {
 	font-family: 'Open Sans', Helvetica Neue, Arial, sans-serif;
