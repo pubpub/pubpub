@@ -152,7 +152,7 @@
 }
 
 #pub-body .headerBlock {
-	border-bottom: 1px solid #ccc;
+	/*border-bottom: 1px solid #ccc;*/
 	padding-bottom: 0.7em;
 	margin-bottom: 0.7em;
 }

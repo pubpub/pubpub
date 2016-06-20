@@ -63,6 +63,9 @@ const PubReader = React.createClass({
 		return {
 			htmlTree: [],
 			TOC: [],
+			showTOC: false,
+			showDiscussions: true,
+			lastClicked: undefined,
 		};
 	},
 
@@ -81,6 +84,36 @@ const PubReader = React.createClass({
 
 	componentDidMount() {
 		this.requestRecommendation();
+	},
+
+	toggleTOC: function() {
+		const showingTOC = this.state.showTOC && !this.state.showDiscussions || this.state.showTOC && this.state.lastCliked === 'toc';
+		if (showingTOC) {
+			this.setState({
+				showTOC: false,
+				lastCliked: 'toc'
+			});
+		} else {
+			this.setState({
+				showTOC: true,
+				lastCliked: 'toc'
+			});
+		}
+	},
+	toggleDiscussions: function() {
+		const showingDiscussions = this.state.showDiscussions && !this.state.showTOC || this.state.showDiscussions && this.state.lastCliked === 'discussions';
+		if (showingDiscussions) {
+			this.setState({
+				showDiscussions: false,
+				lastCliked: 'discussions'
+			});
+		} else {
+			this.setState({
+				showDiscussions: true,
+				lastCliked: 'discussions'
+			});
+		}
+		
 	},
 
 	requestRecommendation() {
@@ -237,18 +270,19 @@ const PubReader = React.createClass({
 				display: 'block',
 				textDecoration: 'none',
 				color: 'inherit',
-				paddingRight: '.5em',
-				paddingTop: '.25em',
-				paddingBottom: '.25em',
+				paddingRight: '2em',
+				paddingTop: '1em',
+				paddingBottom: '1em',
+				paddingLeft: '2em',
 			},
 
 			levels: [
-				{paddingLeft: '0em'},
 				{paddingLeft: '2em'},
-				{paddingLeft: '3em'},
 				{paddingLeft: '4em'},
 				{paddingLeft: '5em'},
 				{paddingLeft: '6em'},
+				{paddingLeft: '7em'},
+				{paddingLeft: '8em'},
 			],
 			tocBlock: {
 				position: 'absolute',
@@ -267,7 +301,6 @@ const PubReader = React.createClass({
 
 
 		const toc = generateTOC(pubData.markdown).full;
-		console.log(toc);
 		const contents = (
 			<div className={'showChildOnHover'}>
 				Contents
@@ -323,6 +356,20 @@ const PubReader = React.createClass({
 				},
 			},
 		};
+		const icon = (
+			<div>
+				<div style={[styles.tocIcon]}></div>
+				<div style={[styles.tocIcon]}></div>
+				<div style={[styles.tocIcon]}></div>
+				<div style={[styles.tocIcon]}></div>	
+			</div>
+			
+		);
+
+		const hideTableCell = {display: 'none'};
+		const showDiscussions = this.state.showDiscussions && !this.state.showTOC || this.state.showDiscussions && this.state.lastCliked === 'discussions';
+		const showTOC = this.state.showTOC && !this.state.showDiscussions || this.state.showTOC && this.state.lastCliked === 'toc';
+
 		return (
 			<div style={styles.container}>
 
@@ -331,30 +378,29 @@ const PubReader = React.createClass({
 				<Style rules={{
 					'.pagebreak': { opacity: '0', },
 					'.section': {maxWidth: '800px'},
-					'.headerBlock': {display: 'none'},
-					'#pub-body h1:nth-child(2), #pub-body h2:nth-child(2), #pub-body h3:nth-child(2), #pub-body h4:nth-child(2), #pub-body h5:nth-child(2), #pub-body h6:nth-child(2), #pub-body p:nth-child(2), #pub-body ul:nth-child(2), #pub-body ol:nth-child(2), #pub-body div:nth-child(2)': {
-						/* This makes the content (assuming there is no headerBlock displayed) flush with the top of the div */
-						marginTop: '0em',
-					},
-					mediaQueries: {
-						'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
-							'#pub-body h1:nth-child(2), #pub-body h2:nth-child(2), #pub-body h3:nth-child(2), #pub-body h4:nth-child(2), #pub-body h5:nth-child(2), #pub-body h6:nth-child(2), #pub-body p:nth-child(2), #pub-body ul:nth-child(2), #pub-body ol:nth-child(2), #pub-body div:nth-child(2)': {
-								marginTop: 'inherit',
-							},
-						}
-					},
+					// '.headerBlock': {display: 'none'},
+					// '#pub-body h1:nth-child(2), #pub-body h2:nth-child(2), #pub-body h3:nth-child(2), #pub-body h4:nth-child(2), #pub-body h5:nth-child(2), #pub-body h6:nth-child(2), #pub-body p:nth-child(2), #pub-body ul:nth-child(2), #pub-body ol:nth-child(2), #pub-body div:nth-child(2)': {
+					// 	/* This makes the content (assuming there is no headerBlock displayed) flush with the top of the div */
+					// 	marginTop: '0em',
+					// },
+					// mediaQueries: {
+					// 	'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+					// 		'#pub-body h1:nth-child(2), #pub-body h2:nth-child(2), #pub-body h3:nth-child(2), #pub-body h4:nth-child(2), #pub-body h5:nth-child(2), #pub-body h6:nth-child(2), #pub-body p:nth-child(2), #pub-body ul:nth-child(2), #pub-body ol:nth-child(2), #pub-body div:nth-child(2)': {
+					// 			marginTop: 'inherit',
+					// 		},
+					// 	}
+					// },
 					'.contents li': {
 
 					},
 
 				}} />
 
-				<div style={[styles.readWrapper, hideDiscussions && styles.readerWrapperAnimate]}>
+				{/* <div style={[styles.readWrapper, hideDiscussions && styles.readerWrapperAnimate]}>
 					<div className={'section'} style={styles.readerHeader}>
 						<h1 className={'title-font'} style={styles.header}>{pubData.title}</h1>
 						<p style={styles.subHeader}>Travis Rich, Dan Canova, Mitch McDuffy, Jane Austin</p>
 						<p style={styles.subHeader}>First published: Nov 16, 2016  |  Most recent version: Nov 28, 2016</p>
-						{/* <div className={'button'} style={{position: 'absolute', top: '3em', right: '2em'}}>Follow</div> */}
 						<div style={styles.headerBorder}></div>
 					</div>
 					<NavContentWrapper navItems={navItems} mobileNavButtons={mobileNavButtons} hideRightBorder={true} {...customContentNavStyles}>
@@ -368,9 +414,46 @@ const PubReader = React.createClass({
 
 				<div style={[styles.discussionWrapper, hideDiscussions && styles.discussionWrapperHidden]}>
 					<Discussions/>	
+				</div> */}
+				
+				
+
+				<div style={[styles.tocSection, !showTOC && hideTableCell]}>
+
+					{toc.map((object, index)=>{
+						return <a href={'#' + object.id} className={'underlineOnHover'} style={[tocStyles.item, tocStyles.levels[object.level - 1]]}>{object.title}</a>
+					})}
+					
 				</div>
-				
-				
+				<div style={styles.pubSection}>
+					<div className={'lighter-bg-hover'} style={styles.iconLeft} onClick={this.toggleTOC}></div>
+					<div className={'lighter-bg-hover'} style={styles.iconRight} onClick={this.toggleDiscussions}></div>
+					<div className={'pubSectionNav'} style={styles.pubSectionNav}>
+						<div className={'pubNavDate'}  style={styles.pubNavVersion}>Version 29: Nov 12, 2015</div>
+
+						<div className={'pubNavButtons'} style={styles.pubNavButtons}>
+							<div className={'underlineOnHover'} style={styles.pubNavButton}>Contributors</div>
+							<div className={'underlineOnHover'} style={styles.pubNavButton}>Journals</div>
+							<div className={'underlineOnHover'} style={styles.pubNavButton}>Analytics</div>
+							<div className={'underlineOnHover'} style={[styles.pubNavButton, styles.pubNavButtonLast]}>Source</div>
+
+						</div>
+						
+					</div>
+
+					<div style={styles.pubBodyWrapper}>
+						<PubBody
+							markdown={this.state.inputMD}
+							isPublished={pubData.isPublished}
+							addSelectionHandler={this.addSelection}
+							styleScoped={pubData.history[versionIndex].styleScoped}/>
+					</div>
+					
+				</div>
+				<div style={[styles.discussionSection, !showDiscussions && hideTableCell]}>
+					<Discussions/>	
+				</div>
+
 
 		
 
@@ -490,182 +573,285 @@ export default connect( state => {
 })( Radium(PubReader) );
 
 styles = {
+	tocSection: {
+		display: 'table-cell',
+		verticalAlign: 'top',
+		width: '300px',
+		backgroundColor: '#F3F3F4',
+		borderRight: '1px solid #E4E4E4',
+		fontSize: '0.9em',
+	},
+	tocHover: {
+		width: '2em',
+		position: 'absolute',
+		top: '0px',
+		bottom: '0px',
+		paddingTop: '15px',
+	},
+	tocIcon: {
+		position: 'relative',
+		width: '10px',
+		height: '2px',
+		marginBottom: '1px',
+		backgroundColor: '#BBBDC0',
+		borderRadius: '1px',
+	},
+
+	tocPopout: {
+		overflow: 'hidden',
+		overflowY: 'scroll',
+		padding: '2em',
+	},
+	pubSection: {
+		display: 'table-cell',
+		verticalAlign: 'top',
+		padding: '0em 2em',
+		position: 'relative',
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+			display: 'block',
+			padding: '0em 1em',
+		},
+	},
+	iconLeft: {
+		position: 'absolute',
+		width: '1.5em',
+		height: '100%',
+		cursor: 'pointer',
+		top: 0,
+		left: 0,
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+			display: 'none',
+		},
+	},
+	iconRight: {
+		position: 'absolute',
+		width: '1.5em',
+		height: '100%',
+		cursor: 'pointer',
+		top: 0,
+		right: 0,
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+			display: 'none',
+		},
+	},
+	discussionSection: {
+		display: 'table-cell',
+		verticalAlign: 'top',
+		padding: '0em 2%',
+		width: '40%',
+		backgroundColor: '#F3F3F4',
+		borderLeft: '1px solid #E4E4E4',
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+			display: 'none',
+		},
+	},
+	pubSectionNav: {
+		borderBottom: '1px solid #F3F3F4',
+		fontSize: '0.85em',
+		color: '#808284',
+		maxWidth: '1024px',
+		margin: '0 auto',
+	},
+	pubNavVersion: {
+		display: 'inline-block',
+		padding: '10px 0px',
+	},
+	pubNavButtons: {
+		float: 'right',
+	},
+	pubNavButton: {
+		display: 'inline-block',
+		padding: '10px',
+	},
+	pubNavButtonLast: {
+		padding: '10px 0px 10px 10px',
+	},
+	pubBodyWrapper: {
+		maxWidth: '650px',
+		margin: '0 auto',
+		padding: '0em 3em',
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+			maxWidth: 'auto',
+			padding: '0em 0em',
+		},
+	},
+
 	container: {
 		display: 'table',
 		width: '100%',
 		tableLayout: 'fixed',
 		overflow: 'hidden',
 	},
-	readerHeader: {
-		// Use 
-		paddingBottom: '0em',
-		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
-			paddingBottom: '2em'
-		},
-	},
-	headerBorder: {
-		width: '100%',
-		height: '1px',
-		backgroundColor: '#F3F3F4',
-		margin: '1.5em auto',
-		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
-			display: 'none',
-		},
-	},
-	readWrapper: {
-		display: 'table-cell',
-		verticalAlign: 'top',
-		transition: '.35s ease-in transform',
-	},
-	// bodyWrapper: {
-	// 	display: 'table-cell',
-	// 	// maxWidth: '700px',
-	// 	width: '60%',
-	// 	verticalAlign: 'top',
-	// 	padding: '0% 2.5%',
+	// readerHeader: {
+	// 	// Use 
+	// 	paddingBottom: '0em',
+	// 	'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+	// 		paddingBottom: '2em'
+	// 	},
 	// },
-	discussionWrapper: {
-		backgroundColor: '#F3F3F4',
-		display: 'table-cell',
-		width: '30%',
-		padding: '3em 2%',
-		verticalAlign: 'top',
-		// boxShadow: 'inset 1px 0px 8px -4px black',
-		borderLeft: '1px solid #E4E4E4',
-		transition: '.35s ease-in transform',
-		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
-			display: 'none',
-		},
-	},
-	discussionWrapperHidden: {
-		transform: 'translate3d(100%,0,0)',
-	},
-	readerWrapperAnimate: {
-		transform: 'translate3d(21%,0,0)',
-		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
-			transform: 'translate3d(0%,0,0)',
-			transition: '.0s ease-in transform',
-		},
-	},
+	// headerBorder: {
+	// 	width: '100%',
+	// 	height: '1px',
+	// 	backgroundColor: '#F3F3F4',
+	// 	margin: '1.5em auto',
+	// 	'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+	// 		display: 'none',
+	// 	},
+	// },
+	// readWrapper: {
+	// 	display: 'table-cell',
+	// 	verticalAlign: 'top',
+	// 	transition: '.35s ease-in transform',
+	// },
+	// // bodyWrapper: {
+	// // 	display: 'table-cell',
+	// // 	// maxWidth: '700px',
+	// // 	width: '60%',
+	// // 	verticalAlign: 'top',
+	// // 	padding: '0% 2.5%',
+	// // },
+	// discussionWrapper: {
+	// 	backgroundColor: '#F3F3F4',
+	// 	display: 'table-cell',
+	// 	width: '30%',
+	// 	padding: '3em 2%',
+	// 	verticalAlign: 'top',
+	// 	// boxShadow: 'inset 1px 0px 8px -4px black',
+	// 	borderLeft: '1px solid #E4E4E4',
+	// 	transition: '.35s ease-in transform',
+	// 	'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+	// 		display: 'none',
+	// 	},
+	// },
+	// discussionWrapperHidden: {
+	// 	transform: 'translate3d(100%,0,0)',
+	// },
+	// readerWrapperAnimate: {
+	// 	transform: 'translate3d(21%,0,0)',
+	// 	'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+	// 		transform: 'translate3d(0%,0,0)',
+	// 		transition: '.0s ease-in transform',
+	// 	},
+	// },
 
-	borderWrapper: {
-		padding: '0% 6.25% 1em 6.25%', // 6.25 = 2.5/.4 because this section is 40% of the whole thing, so has to divide by .4 to match teh 2.5% in bodyWrapper
-		borderLeft: '1px solid #BBBDC0',
-	},
-	header: {
-		marginBottom: '.25em',
-	},
-	subHeader: {
-		margin: '0em',
-	},
-	rightHeaderButtonsWrapper: {
-		margin: '10px 0px',
-	},
-	buttonWrapper: {
-		float: 'left',
-		width: 'calc((100% / 2) - 4% - 2px)',
-		margin: '0px 2%',
-		padding: '2px 0px',
-		border: '1px solid #444',
-		borderRadius: '2px',
-		textAlign: 'center',
-		fontSize: '12px',
-		':active': {
-			transform: 'translateY(1px)',
-		},
-	},
-	readerLeft: {
-		padding: '10px 15px',
-		width: 'calc(150px - 20px)',
-		position: 'absolute',
-		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
-			display: 'none',
-		},
-	},
+	// borderWrapper: {
+	// 	padding: '0% 6.25% 1em 6.25%', // 6.25 = 2.5/.4 because this section is 40% of the whole thing, so has to divide by .4 to match teh 2.5% in bodyWrapper
+	// 	borderLeft: '1px solid #BBBDC0',
+	// },
+	// header: {
+	// 	marginBottom: '.25em',
+	// },
+	// subHeader: {
+	// 	margin: '0em',
+	// },
+	// rightHeaderButtonsWrapper: {
+	// 	margin: '10px 0px',
+	// },
+	// buttonWrapper: {
+	// 	float: 'left',
+	// 	width: 'calc((100% / 2) - 4% - 2px)',
+	// 	margin: '0px 2%',
+	// 	padding: '2px 0px',
+	// 	border: '1px solid #444',
+	// 	borderRadius: '2px',
+	// 	textAlign: 'center',
+	// 	fontSize: '12px',
+	// 	':active': {
+	// 		transform: 'translateY(1px)',
+	// 	},
+	// },
+	// readerLeft: {
+	// 	padding: '10px 15px',
+	// 	width: 'calc(150px - 20px)',
+	// 	position: 'absolute',
+	// 	'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+	// 		display: 'none',
+	// 	},
+	// },
 
-	readerContent: {
-		marginLeft: '150px',
-		position: 'relative',
-		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
-			marginLeft: '0px',
-		}
-	},
-	centerBar: {
-		overflow: 'hidden',
-		backgroundColor: 'white',
-		width: '60%',
-		minHeight: 'calc(100vh - ' + globalStyles.headerHeight + ' + 3px)',
-		position: 'relative',
-		top: '-3px',
-		float: 'left',
-		boxShadow: '0px 2px 4px 0px rgba(0,0,0,0.4)',
-		zIndex: 2,
-		// Mobile
-		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
-			width: '100%',
-			height: 'auto',
-			position: 'relative',
-			float: 'none',
-			zIndex: 'auto',
-			top: 0,
-		},
-	},
+	// readerContent: {
+	// 	marginLeft: '150px',
+	// 	position: 'relative',
+	// 	'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+	// 		marginLeft: '0px',
+	// 	}
+	// },
+	// centerBar: {
+	// 	overflow: 'hidden',
+	// 	backgroundColor: 'white',
+	// 	width: '60%',
+	// 	minHeight: 'calc(100vh - ' + globalStyles.headerHeight + ' + 3px)',
+	// 	position: 'relative',
+	// 	top: '-3px',
+	// 	float: 'left',
+	// 	boxShadow: '0px 2px 4px 0px rgba(0,0,0,0.4)',
+	// 	zIndex: 2,
+	// 	// Mobile
+	// 	'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+	// 		width: '100%',
+	// 		height: 'auto',
+	// 		position: 'relative',
+	// 		float: 'none',
+	// 		zIndex: 'auto',
+	// 		top: 0,
+	// 	},
+	// },
 
-	rightBar: {
-		float: 'left',
-		width: '36%',
-		padding: '0px 2%',
-		position: 'relative',
-		// To make discussions only as long as the pub:
-		// position: 'absolute',
-		// right: 0,
-		// height: '100%',
-		// overflow: 'hidden',
+	// rightBar: {
+	// 	float: 'left',
+	// 	width: '36%',
+	// 	padding: '0px 2%',
+	// 	position: 'relative',
+	// 	// To make discussions only as long as the pub:
+	// 	// position: 'absolute',
+	// 	// right: 0,
+	// 	// height: '100%',
+	// 	// overflow: 'hidden',
 
-		// Mobile
-		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
-			display: 'none',
-		}
-	},
+	// 	// Mobile
+	// 	'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+	// 		display: 'none',
+	// 	}
+	// },
 
-	versionNotification: {
-		textAlign: 'center',
-		backgroundColor: globalStyles.sideBackground,
-		padding: '5px 20px',
-		margin: 5,
-		fontFamily: globalStyles.headerFont,
-		color: globalStyles.sideText,
-		userSelect: 'none',
-		':hover': {
-			color: globalStyles.sideHover,
-			cursor: 'pointer',
-		},
-		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
-			fontSize: '20px',
-		},
+	// versionNotification: {
+	// 	textAlign: 'center',
+	// 	backgroundColor: globalStyles.sideBackground,
+	// 	padding: '5px 20px',
+	// 	margin: 5,
+	// 	fontFamily: globalStyles.headerFont,
+	// 	color: globalStyles.sideText,
+	// 	userSelect: 'none',
+	// 	':hover': {
+	// 		color: globalStyles.sideHover,
+	// 		cursor: 'pointer',
+	// 	},
+	// 	'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+	// 		fontSize: '20px',
+	// 	},
 
-	},
+	// },
 
-	unpublishedNotification: {
-		textAlign: 'center',
-		backgroundColor: globalStyles.headerBackground,
-		padding: '5px 20px',
-		margin: 5,
-		fontFamily: globalStyles.headerFont,
-		color: globalStyles.headerText,
-		userSelect: 'none',
-		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
-			fontSize: '20px',
-		},
-	},
-	versionNotificationLink: {
-		textDecoration: 'none',
-	},
-	mobileOnly: {
-		display: 'none',
-		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
-			display: 'block',
-		},
-	}
+	// unpublishedNotification: {
+	// 	textAlign: 'center',
+	// 	backgroundColor: globalStyles.headerBackground,
+	// 	padding: '5px 20px',
+	// 	margin: 5,
+	// 	fontFamily: globalStyles.headerFont,
+	// 	color: globalStyles.headerText,
+	// 	userSelect: 'none',
+	// 	'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+	// 		fontSize: '20px',
+	// 	},
+	// },
+	// versionNotificationLink: {
+	// 	textDecoration: 'none',
+	// },
+	// mobileOnly: {
+	// 	display: 'none',
+	// 	'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+	// 		display: 'block',
+	// 	},
+	// }
 
 };

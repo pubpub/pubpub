@@ -8,10 +8,6 @@ export const NavContentWrapper = React.createClass({
 	propTypes: {
 		navItems: PropTypes.array,
 		mobileNavButtons: PropTypes.array,
-		hideRightBorder: PropTypes.bool,
-		contentSectionStyle: PropTypes.object,
-		contentNavStyle: PropTypes.object,
-		contentBodyStyle: PropTypes.object,
 		children: PropTypes.object
 
 	},
@@ -28,34 +24,33 @@ export const NavContentWrapper = React.createClass({
 	render: function() {
 		const navItems = this.props.navItems || [];
 		const mobileNavButtons = this.props.mobileNavButtons || [];
-		const hideRightBorder = this.props.hideRightBorder;
 
 		return (
-			<div className={'section'} style={[styles.contentSection, this.props.contentSectionStyle]}>
-				<div style={[styles.contentNav, this.props.contentNavStyle]}>
+			<div className={'section'} style={styles.contentSection}>
+				<div style={styles.contentNav}>
 
 					<div style={styles.contentNavMobileButtons}>
 						{mobileNavButtons.slice(0, 2).map((option, index)=>{
 
 							if (option.type === 'link') {
-								return <Link key={'navItem-' + index} style={[styles.contentNavLinkMobile, option.style]} to={option.link} onClick={this.toggleMenu}>{option.text}</Link>;
+								return <Link key={'navItem-' + index} style={styles.contentNavLinkMobile} to={option.link} onClick={this.toggleMenu}>{option.text}</Link>;
 							}
 							if (option.type === 'button') {
-								return <div key={'navItem-' + index} style={[styles.contentNavLinkMobile, option.style]} onClick={option.action || this.toggleMenu}>{option.text}</div>;
+								return <div key={'navItem-' + index} style={styles.contentNavLinkMobile} onClick={option.action || this.toggleMenu}>{option.text}</div>;
 							}
 
 						})}
 						<div style={styles.contentNavMobileButtonSeparator}></div>
 					</div>
 
-					<div style={[styles.contentNavItems, !hideRightBorder && styles.contentNavItemsRightBorder, !this.state.showMenu && styles.hideOnMobile]}>
+					<div style={[styles.contentNavItems, !this.state.showMenu && styles.hideOnMobile]}>
 						{navItems.map((option, index)=>{
 
 							if (option.type === 'link') {
-								return <Link key={'navItem-' + index} className={option.className || 'underlineOnHover'} style={[styles.contentNavLink, option.active && styles.contentNavLinkActive, option.style]} to={option.link} onClick={this.toggleMenu}>{option.text}</Link>;
+								return <Link key={'navItem-' + index} className={'underlineOnHover'} style={[styles.contentNavLink, option.active && styles.contentNavLinkActive]} to={option.link} onClick={this.toggleMenu}>{option.text}</Link>;
 							}
 							if (option.type === 'button') {
-								return <div key={'navItem-' + index} className={option.className || 'underlineOnHover'} style={[styles.contentNavLink, option.active && styles.contentNavLinkActive, option.style]} onClick={option.action || this.toggleMenu}>{option.text}</div>;
+								return <div key={'navItem-' + index} className={'underlineOnHover'} style={[styles.contentNavLink, option.active && styles.contentNavLinkActive]} onClick={option.action || this.toggleMenu}>{option.text}</div>;
 							}
 							if (option.type === 'spacer') {
 								return <div key={'navItem-' + index} style={styles.contentNavSpacer}></div>;
@@ -66,7 +61,7 @@ export const NavContentWrapper = React.createClass({
 					
 				</div>
 
-				<div style={[styles.contentBody, this.props.contentBodyStyle]}>
+				<div style={styles.contentBody}>
 					{this.props.children}		
 				</div>
 			</div>
@@ -119,15 +114,11 @@ styles = {
 	},
 	contentNavItems: {
 		padding: '0em 0em 1em 0em',
+		borderRight: '1px solid #BBBDC0',
 		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
 			boxShadow: 'inset 0px -4px 6px -4px #BBBDC0',
 			padding: '1em 0em',
 			backgroundColor: '#F3F3F4',
-		}
-	},
-	contentNavItemsRightBorder: {
-		borderRight: '1px solid #BBBDC0',
-		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
 			borderRight: '0px solid #BBBDC0',
 		}
 	},
