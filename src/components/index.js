@@ -7,6 +7,7 @@ export Formatting from './Formatting/Formatting';
 export GalleryJournal from './GalleryJournal/GalleryJournal';
 export GalleryPub from './GalleryPub/GalleryPub';
 export GalleryUser from './GalleryUser/GalleryUser';
+export HorizontalNav from './HorizontalNav/HorizontalNav';
 export ImageCropper from './ImageCropper/ImageCropper';
 export License from './License/License';
 export Loader from './Loader/Loader';
