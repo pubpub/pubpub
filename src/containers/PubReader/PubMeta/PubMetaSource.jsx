@@ -28,7 +28,7 @@ const PubMetaSource = React.createClass({
 
 		return (
 			<div style={styles.container}>
-
+				<h2>Source</h2>
 				{
 					renderOrder.map((key, itemIndex)=>{
 						if (this.props.historyObject[key]) {
@@ -54,7 +54,6 @@ export default Radium(PubMetaSource);
 
 styles = {
 	container: {
-		padding: 15,
 	},
 	sourceText: {
 		fontFamily: 'Courier',

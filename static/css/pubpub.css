@@ -41,6 +41,10 @@ body {
 	text-decoration: underline !important;
 }
 
+.opacity-on-hover:hover {
+	opacity: 1 !important;
+}
+
 .showChildOnHover .hoverChild {
 	/*display: none;*/
 	opacity: 0;

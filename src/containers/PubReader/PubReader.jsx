@@ -237,8 +237,8 @@ const PubReader = React.createClass({
 
 				{/* Pub Section */}
 				<div style={styles.pubSection}>
-					<div className={'lighter-bg-hover'} style={styles.iconLeft} onClick={this.toggleTOC}></div>
-					<div className={'lighter-bg-hover'} style={styles.iconRight} onClick={this.toggleDiscussions}></div>
+					<div className={'opacity-on-hover'} style={styles.iconLeft} onClick={this.toggleTOC}></div>
+					<div className={'opacity-on-hover'} style={styles.iconRight} onClick={this.toggleDiscussions}></div>
 
 					<div className={'pubSectionNav'} style={styles.pubSectionNav}>
 						{/* Need some indicator to show if this version is public or not */}
@@ -248,6 +248,8 @@ const PubReader = React.createClass({
 							<Link to={'/pub/' + this.props.slug + '/contributors'} style={globalStyles.link}><div className={'underlineOnHover'} style={styles.pubNavButton}>Contributors</div></Link>
 							<Link to={'/pub/' + this.props.slug + '/journals'} style={globalStyles.link}><div className={'underlineOnHover'} style={styles.pubNavButton}>Journals</div></Link>
 							<Link to={'/pub/' + this.props.slug + '/analytics'} style={globalStyles.link}><div className={'underlineOnHover'} style={styles.pubNavButton}>Analytics</div></Link>
+							<Link to={'/pub/' + this.props.slug + '/cite'} style={globalStyles.link}><div className={'underlineOnHover'} style={styles.pubNavButton}>Cite</div></Link>
+							<Link to={'/pub/' + this.props.slug + '/export'} style={globalStyles.link}><div className={'underlineOnHover'} style={styles.pubNavButton}>Export</div></Link>
 							<Link to={'/pub/' + this.props.slug + '/source'} style={globalStyles.link}><div className={'underlineOnHover'} style={[styles.pubNavButton, styles.pubNavButtonLast]}>Source</div></Link>
 
 						</div>
@@ -256,8 +258,7 @@ const PubReader = React.createClass({
 
 					{this.props.meta
 						? <div style={styles.pubMetaWrapper}>
-							<h1>{pubData.title}</h1>
-							<h2>{this.props.meta}</h2>
+							<h1 style={styles.noBottomMargin}>{pubData.title}</h1>
 							<PubMeta
 								readerData={this.props.readerData}
 								loginData={this.props.loginData}
@@ -357,6 +358,9 @@ styles = {
 		cursor: 'pointer',
 		top: 0,
 		left: 0,
+		opacity: 0,
+		backgroundColor: '#F3F3F4',
+		borderRight: '1px solid #E4E4E4',
 		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
 			display: 'none',
 		},
@@ -368,6 +372,9 @@ styles = {
 		cursor: 'pointer',
 		top: 0,
 		right: 0,
+		opacity: 0,
+		backgroundColor: '#F3F3F4',
+		borderLeft: '1px solid #E4E4E4',
 		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
 			display: 'none',
 		},
@@ -376,7 +383,7 @@ styles = {
 		display: 'table-cell',
 		verticalAlign: 'top',
 		padding: '0em 2%',
-		width: '40%',
+		width: '35%',
 		backgroundColor: '#F3F3F4',
 		borderLeft: '1px solid #E4E4E4',
 		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
@@ -448,8 +455,8 @@ styles = {
 		{paddingLeft: '7em'},
 		{paddingLeft: '8em'},
 	],
-
-
-
+	noBottomMargin: {
+		marginBottom: '0px',
+	},
 
 };
