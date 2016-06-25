@@ -12,6 +12,7 @@ export const AppHeader = React.createClass({
 	propTypes: {
 		loginData: PropTypes.object,
 		path: PropTypes.string, 
+		createDocument: PropTypes.func,
 		logoutHandler: PropTypes.func,
 	},
 
@@ -90,7 +91,7 @@ export const AppHeader = React.createClass({
 
 					<div className={'menu-separator'} ></div>
 
-					<Link className={'menu-option'} to={'/pubs/create'}>New Pub</Link>
+					<div className={'menu-option'} onClick={this.props.createDocument}>New Document</div>
 					<Link className={'menu-option'} to={'/user/' + username + '/journals'}>My Journals</Link>
 					
 					<div className={'menu-separator'} ></div>

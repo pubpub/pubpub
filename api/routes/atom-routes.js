@@ -1,12 +1,17 @@
 const app = require('../api');
 
 const Atom = require('../models').Atom;
+const Link = require('../models').Link;
 const User = require('../models').User;
 const Group = require('../models').Group;
 const Asset = require('../models').Asset;
 const Journal = require('../models').Journal;
 // const Reference = require('../models').Reference;
 const Notification = require('../models').Notification;
+const Promise = require('bluebird');
+
+const SHA1 = require('crypto-js/sha1');
+const encHex = require('crypto-js/enc-hex');
 
 const _ = require('underscore');
 const Firebase = require('firebase');
@@ -14,8 +19,78 @@ const less = require('less');
 
 import {fireBaseURL, firebaseTokenGen, generateAuthToken} from '../services/firebase';
 import {sendAddedAsCollaborator} from '../services/emails';
-// import {featurePub, getRecommendations, inpRecAction, removeAction} from '../services/recommendations';
-import {getRecommendations, inpRecAction} from '../services/recommendations';
+
+export function createAtom(req, res) {
+	console.time("dbsave");
+	if (!req.user) {
+		return res.status(403).json('Not Logged In');
+	}
+
+	const userID = req.user._id;
+	const now = new Date().getTime();
+	const type = req.body.type || 'markdown';
+	const hash = SHA1(type + new Date().getTime() + req.user._id).toString(encHex);
+	const ref = new Firebase(fireBaseURL + hash + '/editorData' );
+
+	const atom = new Atom({
+		slug: hash,
+		title: 'New Pub: ' + new Date().getTime(),
+		type: type,
+
+		createDate: now,
+		lastUpdated: now,
+		isPublished: false,
+
+		versions: [],
+		tags: [],
+	});
+
+	atom.save() // Save new atom data
+	.then(function(newAtom) { // Create new Links pointing between atom and author
+		const newAtomID = newAtom._id;
+		const linksToCreate = [
+			Link.createLink('editor', userID, newAtomID, userID, now),
+			Link.createLink('author', userID, newAtomID, userID, now),
+		];
+		return Promise.all(linksToCreate);
+	})
+	.then(function() { // If type is markdown, authenticate firebase connection
+		if (type !== 'markdown') { return; } 
+		else {
+			return ref.authWithCustomToken(generateAuthToken())
+		}
+	})
+	.then(function() { // If type is markdown, add author to firebase permissions
+		if (type !== 'markdown') { return; } 
+		else {
+			const newEditorData = {
+				collaborators: {},
+				settings: {styleDesktop: ''},
+			};
+			newEditorData.collaborators[req.user.username] = {
+				_id: userID.toString(),
+				name: req.user.name,
+				firstName: req.user.firstName || '',
+				lastName: req.user.lastName || '',
+				username: req.user.username,
+				email: req.user.email,
+				image: req.user.image,
+				permission: 'edit',
+				admin: true,
+			};
+			return ref.set(newEditorData);
+		}
+	})
+	.then(function() { // Return hash of new atom
+		console.timeEnd("dbsave");
+		return res.status(201).json(hash);
+	})
+	.catch(function(error) {
+		console.log('error', error);
+		return res.status(500).json(error);
+	});
+}
+app.post('/createAtom', createAtom);
 
 export function getAtomData(req, res) {
 	const {slug, meta, version} = req.query;
@@ -56,8 +131,10 @@ export function getAtomData(req, res) {
 	];
 	const fieldObject = {};
 
+	console.time("dbsave");
 	Atom.findOne({slug: slug}, fieldObject).populate(populationArray).exec()
 	.then(function(result) {
+		console.timeEnd("dbsave");
 		console.log(result);
 		return res.status(201).json(result);
 	})

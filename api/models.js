@@ -4,7 +4,11 @@ module.exports = {};
 // They thus then need to be declared first. This is a bit wonky. We probably
 // just shouldn't be relying on cross dependencies in model static functions.. duh
 module.exports.Asset = require('./models/asset-model');
+
 module.exports.Atom = require('./models/atom-model');
+module.exports.Link = require('./models/link-model');
+module.exports.Version = require('./models/version-model');
+
 module.exports.Discussion = require('./models/discussion-model');
 module.exports.Group = require('./models/group-model');
 module.exports.Journal = require('./models/journal-model');

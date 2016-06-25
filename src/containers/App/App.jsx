@@ -5,6 +5,7 @@ import {connect} from 'react-redux';
 import {pushState} from 'redux-router';
 import {loadAppAndLogin} from './actions';
 import {logout} from 'containers/Login/actions';
+import {createAtom} from 'containers/AtomEditor/actions';
 import {IntlProvider} from 'react-intl';
 import {safeGetInToJS} from 'utils/safeParse';
 
@@ -45,6 +46,10 @@ export const App = React.createClass({
 		}
 	},
 
+	createDocument: function() {
+		this.props.dispatch(createAtom('markdown'));
+	},
+
 	logoutHandler: function() {
 		this.props.dispatch(logout());
 	},
@@ -69,7 +74,7 @@ export const App = React.createClass({
 					<Helmet {...metaData} />
 
 					<AppLoadingBar color={'#BBBDC0'} show={this.props.appData.get('loading')} />
-					<AppHeader loginData={this.props.loginData} path={this.props.path} logoutHandler={this.logoutHandler}/>
+					<AppHeader loginData={this.props.loginData} path={this.props.path} createDocument={this.createDocument} logoutHandler={this.logoutHandler}/>
 					<div className="content"> {this.props.children} </div>
 					<AppFooter hideFooter={hideFooter} />
 
