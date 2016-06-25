@@ -70,12 +70,12 @@ const AtomEditor = React.createClass({
 
 
 		const navItems = [
-			{link: '/a/' + this.props.slug, text: 'View'},
-			{link: '/a/' + this.props.slug + '/draft', text: 'Edit', active: true},
-			{link: '/a/' + this.props.slug + '/analytics', text: 'Details', rightAlign: true},
-			{link: '/a/' + this.props.slug + '/contributors', text: 'Collaborators', rightAlign: true},
-			{link: '/a/' + this.props.slug + '/source', text: 'Styles', rightAlign: true},
-			{link: '/a/' + this.props.slug + '/journals', text: 'Publishing', rightAlign: true},
+			{text: 'View', link: '/a/' + this.props.slug},
+			{text: 'Edit', link: '/a/' + this.props.slug + '/draft', active: true},
+			{text: 'Details', rightAlign: true, link: '/a/' + this.props.slug + '/analytics'},
+			{text: 'Collaborators', rightAlign: true, link: '/a/' + this.props.slug + '/contributors'},
+			{text: 'Styles', rightAlign: true, link: '/a/' + this.props.slug + '/source'},
+			{text: 'Publishing', rightAlign: true, link: '/a/' + this.props.slug + '/journals'},
 		];
 
 		return (

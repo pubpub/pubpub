@@ -36,6 +36,7 @@ export const MarkdownEditor = React.createClass({
 		// Load Firebase and bind using ReactFireMixin. For assets, references, etc.
 		const ref = new Firebase(FireBaseURL + this.props.atomEditData.getIn(['atomData', 'slug']) + '/editorData' );
 		const token = this.props.atomEditData.getIn(['atomData', 'token']);
+		console.log('token', token);
 		ref.authWithCustomToken(token, (error, authData)=> {
 			if (error) { console.log('Authentication Failed!', error); return; } 
 
@@ -69,16 +70,12 @@ export const MarkdownEditor = React.createClass({
 			// FirepadUserList.fromDiv(firepadRef.child('users'),
 			// 	document.getElementsByClassName('menuItem-activeCollabs')[0], username, this.props.loginData.getIn(['userData', 'name']), this.props.loginData.getIn(['userData', 'thumbnail']));
 
-			// need to unmount on change
 			codeMirror.on('change', this.onEditorChange);
 			// codeMirror.on('mousedown', function(instance, evt) {
-			// 	if (evt.which === 3) { // On right click. It was scrolling. Prevent that. Also can hijack for custom contextmenu?
-			// 		evt.preventDefault();
-			// 	}
+			// 	// On right click. It was scrolling. Prevent that. Also can hijack for custom contextmenu?
+			// 	if (evt.which === 3) { evt.preventDefault(); }
 			// });
 			// addCodeMirrorKeys(codeMirror);
-
-			// this.setState({initialized: true});
 		});
 	},
 
@@ -109,6 +106,7 @@ export default Radium(MarkdownEditor);
 styles = {
 	block: {
 		display: 'table-cell',
+		verticalAlign: 'top',
 		width: '50%',
 	},
 };
