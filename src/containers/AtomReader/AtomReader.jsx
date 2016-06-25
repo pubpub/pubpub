@@ -154,7 +154,7 @@ const AtomReader = React.createClass({
 
 					<HorizontalNav navItems={navItems} />
 
-					<div className={'atom-reader'}>
+					<div id={'atom-reader'}>
 						<AtomReaderHeader
 							title={this.props.atomData.getIn(['atomData', 'title'])}
 							authors={'Jane Doe and Marcus Aurilie'}
@@ -182,6 +182,7 @@ const AtomReader = React.createClass({
 						})()}
 					</div>
 
+					{/* License will go here */}
 					
 				</div>
 

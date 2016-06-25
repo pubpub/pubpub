@@ -55,31 +55,29 @@ export function createAtom(req, res) {
 		return Promise.all(linksToCreate);
 	})
 	.then(function() { // If type is markdown, authenticate firebase connection
-		if (type !== 'markdown') { return; } 
-		else {
-			return ref.authWithCustomToken(generateAuthToken())
-		}
+		if (type !== 'markdown') { return undefined; } 
+
+		return ref.authWithCustomToken(generateAuthToken());
 	})
 	.then(function() { // If type is markdown, add author to firebase permissions
-		if (type !== 'markdown') { return; } 
-		else {
-			const newEditorData = {
-				collaborators: {},
-				settings: {styleDesktop: ''},
-			};
-			newEditorData.collaborators[req.user.username] = {
-				_id: userID.toString(),
-				name: req.user.name,
-				firstName: req.user.firstName || '',
-				lastName: req.user.lastName || '',
-				username: req.user.username,
-				email: req.user.email,
-				image: req.user.image,
-				permission: 'edit',
-				admin: true,
-			};
-			return ref.set(newEditorData);
-		}
+		if (type !== 'markdown') { return undefined; } 
+		
+		const newEditorData = {
+			collaborators: {},
+			settings: {styleDesktop: ''},
+		};
+		newEditorData.collaborators[req.user.username] = {
+			_id: userID.toString(),
+			name: req.user.name,
+			firstName: req.user.firstName || '',
+			lastName: req.user.lastName || '',
+			username: req.user.username,
+			email: req.user.email,
+			image: req.user.image,
+			permission: 'edit',
+			admin: true,
+		};
+		return ref.set(newEditorData);
 	})
 	.then(function() { // Return hash of new atom
 		return res.status(201).json(hash);

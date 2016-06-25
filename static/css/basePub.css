@@ -1,219 +1,61 @@
-.atom-reader {
+#atom-reader {
 	max-width: 650px;
 	margin: 0 auto;
+	font-family: serif;
+	font-size: 1.2em;
+	line-height: 1.5em;
+	color: #333;
 }
 
-.atom-reader .atom-header-title {
-	font-size: 3em;
-	margin-top: .75em;
-	margin-bottom: .25em;
-}
-
-.atom-reader .atom-header-p {
-	margin: .5em 0em;
-}
-
-.atom-reader .headerBlock {
+#atom-reader .headerBlock { /* This hides old markdown titles in case they're still there*/
 	display: none;
 }
 
 /* Undo the header style set in pubpub.css*/
-#pub-body h1 {
+#atom-reader h1 {
 	font-size: 2em;
 	margin-top: 0.67em;
 	letter-spacing: 0px;
-	line-height: initial;
 }
-#pub-body h2 {
+#atom-reader h2 {
 	font-size: 1.5em;
 	margin-top: 0.83em;
 }
+
+#atom-reader h1, #atom-reader h2, #atom-reader h3, #atom-reader h4, #atom-reader h5, #atom-reader h6 {
+	line-height:1em;
+	font-family: 'Yrsa', Georgia, serif;
+}
+
 @media screen and (min-resolution: 3dppx), screen and (max-width: 767px) {
-	#pub-body h1 {
+	#atom-reader h1 {
 		font-size: 2em;
 	}
 }
 
 /* Set default paragraph margins on .p-block since we don't use <p> */
-#pub-body .p-block {
+#atom-reader .p-block {
 	margin: 1em 0em;
 }
 
-
-
-/*#pub-body {
-	font-family: Palatino; 
-	color: #444;
-	-webkit-hyphens: auto;
-	-ms-hyphens: auto;
-	hyphens: auto;
-}
-#pub-body h1, #pub-body h2, #pub-body h3, #pub-body h4, #pub-body h5, #pub-body h6 {
-	font-family: 'Open Sans', sans-serif;
-	line-height: 1;
-	margin-top: 0;
-	color: #222;
+#atom-reader .atom-reader-header h1 {
+	font-size: 2.5em;
+	margin-top: .75em;
+	margin-bottom: .25em;
+	font-family: 'Open Sans', Helvetica Neue, Arial, sans-serif;
+	color: #222; 
 }
 
-#pub-body blockquote + figcaption cite {
-  display: block;
-  font-size: inherit;
-  text-align: right;
-}
-
-#pub-body pre code {
-  word-wrap: normal;
+#atom-reader .atom-reader-header p {
+	margin: .5em 0em;
 }
 
 
-#pub-body h2 {
-  font-size: 2em;
-  margin-bottom: 1.21212rem;
-}
-
-#pub-body h3 {
-  font-size: 1.33333em;
-  margin-bottom: 0.80808rem;
-}
-
-#pub-body h4 {
-  font-size: 1em;
-  margin-bottom: 0.60606rem;
-}
-
-.p-block {
-  margin: auto auto 1.5rem;
-}
-
-#pub-body small {
-  font-size: 65%;
-}
-
-#pub-body input,
-#pub-body abbr,
-#pub-body acronym,
-#pub-body blockquote,
-#pub-body code,
-#pub-body kbd,
-#pub-body q,
-#pub-body samp,
-#pub-body var {
-  -webkit-hyphens: none;
-  -ms-hyphens: none;
-  hyphens: none;
-}
-
-#pub-body pre {
-  white-space: pre;
-}
-
-#pub-body pre code {
-  white-space: -moz-pre-wrap;
-  white-space: pre-wrap;
-}
-
-#pub-body code {
-  white-space: pre;
-  font-family: monospace;
-}
-
-#pub-body abbr {
-  -webkit-font-variant: small-caps;
-  -moz-font-variant: small-caps;
-  -ms-font-variant: small-caps;
-  font-variant: small-caps;
-  font-weight: 600;
-  text-transform: lowercase;
-  color: gray;
-}
-
-
-
-
-
-
-
-*/
-
-
-
-
-#pub-body {
-	font-family: serif;
-	font-size: 1.2em;
-	line-height: 1.5em;
-	color: #444;
-}
-
-#pub-body h1, #pub-body h2, #pub-body h3, #pub-body h4, #pub-body h5, #pub-body h6 {
-	line-height:1em;
-	/*font-family: 'Open Sans', Helvetica Neue, Arial, sans-serif;*/
-	/*font-family: 'Palatino', serif;*/
-	font-family: 'Yrsa', Georgia, serif;
-}
-/*#pub-body h1 {
-	font-size: 2em;
-}
-#pub-body h2 {
-	font-size: 1.41421em;
-}
-#pub-body h3 {
-	font-size: 1.25992em;
-}
-#pub-body h4 {
-	font-size: 1.12246em;
-}*/
-
-
-
-#pub-body a {
+#atom-reader a {
 	color: inherit;
 }
 
-#pub-body .headerBlock {
-	/*border-bottom: 1px solid #ccc;*/
-	padding-bottom: 0.7em;
-	margin-bottom: 0.7em;
-}
-
-#pub-body .title{
-	font-family: 'Lora', serif;
-	font-family: 'Open Sans', Helvetica Neue, Arial, sans-serif; 
-	text-align: left;
-	font-size: 3.2em;
-	padding: 0.7em 0px;
-	font-weight: 700;
-	line-height: 1.3em;
-	color: #222;
-	margin: 0;
-}
-
-#pub-body .author {
-	display: inline-block;
-	color: #222;
-	font-size: 1.0em;
-	padding: 0px;
-	text-decoration: none;
-	padding-right: 1em;
-	vertical-align: top;
-}
-#pub-body a.author:hover {
-	text-decoration: underline;
-}
-
-#pub-body #pub-dates {
-	text-align: left;
-	padding: 0px;
-	color: #222;
-}
-#pub-body .abstract {
-	text-align: left;
-	color: #222;
-	margin: 2em 0px;
-	padding: 0px 0px;
-	font-style: italic;
-}
-#pub-body .authorsNote {
+#atom-reader .authorsNote {
 	text-align: center;
 	margin: 30px auto 0px auto;
 	background-color: #EAEAEA;
@@ -221,38 +63,33 @@
 	padding: 10px 20px;
 	width: 80%;
 }
-#pub-body #pub-header-divider {
-	height: 1px;
-	width: 100%;
-	margin: 0 auto;
-	background-color: #DDD;
-}
-#pub-body #pub-references {
+
+#atom-reader #pub-references {
 	border-top: 1px solid #eee;
 }
-#pub-body .reference-content {
+#atom-reader .reference-content {
 	font-size: 0.9em;
 }
-#pub-body .reference {
+#atom-reader .reference {
 	margin: .5em;
 }
-#pub-body .reference-number {
+#atom-reader .reference-number {
 	color: #222;
 	padding-right: 10px;
 	font-size: 1em;
 }
 
-#pub-body hr {
+#atom-reader hr {
 	background-color: #DDD;
 	height: 1px;
 	border: none;
 }
 
 
-#pub-body .codeBlock {
+#atom-reader .codeBlock {
 	background-color: #f0f0f0;
 }
-#pub-body pre .codeBlock {
+#atom-reader pre .codeBlock {
 	margin: 0px 20px;
 	padding: 10px;
 	background-color: #f0f0f0;
@@ -262,27 +99,27 @@
 	overflow-x: scroll;
 
 }
-#pub-body blockquote {
+#atom-reader blockquote {
 	padding: 10px 20px;
 	margin: 0 0 20px;
 	font-size: 17.5px;
 	border-left: 5px solid #eee;
 }
-#pub-body ul, #pub-body ol {
+#atom-reader ul, #atom-reader ol {
 	padding: 0px 3em 0px 3em;
 }
-#pub-body span + li + span + li {
+#atom-reader span + li + span + li {
 	padding-top: 0.7em
 }
-#pub-body table {
+#atom-reader table {
 	border-spacing: 0px;
 	border-collapse: collapse;
 }
-#pub-body td {
+#atom-reader td {
 	border: 1px solid #ccc;
 	padding: 0.3em;
 }
-#pub-body th {
+#atom-reader th {
 	border: 1px solid #ccc;
 	padding: 0.3em;
 	background-color: #eee;
@@ -293,7 +130,7 @@
 
 /*PLUGIN STYLING*/
 
-#pub-body .pub-plugin.pub-quote-wrapper {
+#atom-reader .pub-plugin.pub-quote-wrapper {
 	border-top: none;
 	border-bottom: none;
 	border-right: none;
@@ -303,7 +140,7 @@
 	font-style: italic;
 }
 
-#pub-body .pub-plugin.pub-quote-wrapper.pub-align-full {
+#atom-reader .pub-plugin.pub-quote-wrapper.pub-align-full {
 	border-top: #DDD solid 1px;
 	border-bottom: #DDD solid 1px;
 	border-left: none;
@@ -325,7 +162,7 @@
 	line-height: 1.4;
 }
 
-#pub-body .pub-quote {
+#atom-reader .pub-quote {
 	padding: 2.5% 7.5%;
 }
 
