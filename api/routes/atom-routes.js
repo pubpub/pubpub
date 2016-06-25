@@ -22,7 +22,6 @@ import {fireBaseURL, firebaseTokenGen, generateAuthToken} from '../services/fire
 import {sendAddedAsCollaborator} from '../services/emails';
 
 export function createAtom(req, res) {
-	console.time("dbsave");
 	if (!req.user) {
 		return res.status(403).json('Not Logged In');
 	}
@@ -83,7 +82,6 @@ export function createAtom(req, res) {
 		}
 	})
 	.then(function() { // Return hash of new atom
-		console.timeEnd("dbsave");
 		return res.status(201).json(hash);
 	})
 	.catch(function(error) {
@@ -132,12 +130,12 @@ export function getAtomData(req, res) {
 	];
 	const fieldObject = {};
 
-	console.time("dbsave");
 	Atom.findOne({slug: slug}, fieldObject).populate(populationArray).exec()
 	.then(function(result) {
-		console.timeEnd("dbsave");
-		console.log(result);
-		return res.status(201).json(result);
+		return res.status(201).json({
+			atomData: result,
+			versionData: null,
+		});
 	})
 	.catch(function(error) {
 		console.log('error', error);

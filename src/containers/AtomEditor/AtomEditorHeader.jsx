@@ -3,17 +3,19 @@ import Radium from 'radium';
 import { Link as UnwrappedLink } from 'react-router';
 const Link = Radium(UnwrappedLink);
 
+let styles = {};
+
 export const AtomEditorHeader = React.createClass({
 	propTypes: {
-		title: PropTypes.array,
+		title: PropTypes.string,
 	},
 
 	render: function() {
 
 		return (
-			<div className={'atom-editor-header'}>
+			<div className={'atom-editor-header'} style={styles.container}>
 				
-				<h1>{this.props.title}</h1>
+				<h1 style={styles.title}>{this.props.title}</h1>
 				
 			</div>
 		);
@@ -21,3 +23,13 @@ export const AtomEditorHeader = React.createClass({
 });
 
 export default Radium(AtomEditorHeader);
+
+styles = {
+	container: {
+
+	},
+	title: {
+		fontSize: '2em',
+		margin: '.25em 0em',
+	},
+};

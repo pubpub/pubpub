@@ -15,6 +15,7 @@ import {AtomReaderExport} from './AtomReaderExport';
 import {AtomReaderHeader} from './AtomReaderHeader';
 import {AtomReaderJournals} from './AtomReaderJournals';
 import {AtomReaderVersions} from './AtomReaderVersions';
+import {AtomViewerPane} from './AtomViewerPane';
 
 import {Discussions} from 'containers';
 
@@ -176,7 +177,7 @@ const AtomReader = React.createClass({
 							case 'export':
 								return <AtomReaderExport data={this.props.atomData}/>;
 							default:
-								return <PubBody markdown={this.props.atomData.getIn(['atomData', 'markdown'])} />;
+								return <AtomViewerPane atomData={this.props.atomData} />;
 							}
 						})()}
 					</div>

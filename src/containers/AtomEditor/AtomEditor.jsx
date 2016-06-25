@@ -9,6 +9,7 @@ import {createHighlight} from 'containers/MediaLibrary/actions';
 
 import {PubBody, HorizontalNav} from 'components';
 import {AtomEditorHeader} from './AtomEditorHeader';
+import {AtomEditorPane} from './AtomEditorPane';
 
 // import PubMeta from './PubMeta/PubMeta';
 // import PubReaderLeftBar from './PubReaderLeftBar';
@@ -29,12 +30,7 @@ const AtomEditor = React.createClass({
 	propTypes: {
 		atomEditData: PropTypes.object,
 		loginData: PropTypes.object,
-		appData: PropTypes.object,
 		slug: PropTypes.string,
-		query: PropTypes.object, // version: integer
-		meta: PropTypes.string,
-		metaID: PropTypes.string,
-		inviteStatus: PropTypes.string,
 		dispatch: PropTypes.func
 	},
 
@@ -56,10 +52,6 @@ const AtomEditor = React.createClass({
 	},
 
 	render: function() {
-		// const pubData = this.props.readerData.get('pubData').toJS();
-		// const versionIndex = this.props.query.version !== undefined && this.props.query.version > 0 && this.props.query.version <= (this.props.readerData.getIn(['pubData', 'history']).size - 1)
-		// 	? this.props.query.version - 1
-		// 	: this.props.readerData.getIn(['pubData', 'history']).size - 1;
 
 		const metaData = {};
 
@@ -87,11 +79,7 @@ const AtomEditor = React.createClass({
 					<AtomEditorHeader
 						title={this.props.atomEditData.getIn(['atomData', 'title'])}/>
 
-					<h3>EDITOR</h3>
-					{/* this.props.meta
-						? this.renderMeta()
-						: this.renderAtom()
-					*/}
+					<AtomEditorPane atomEditData={this.props.atomEditData} />
 
 					
 				</div>
