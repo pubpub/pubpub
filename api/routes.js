@@ -25,3 +25,4 @@ require('./routes/s3-upload-policy');
 require('./routes/rssGen.js');
 require('./routes/export-routes');
 require('./routes/email-verification-routes');
+require('./routes/version-routes');

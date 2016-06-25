@@ -12,6 +12,10 @@ import {
 	GET_ATOM_EDIT_LOAD,
 	GET_ATOM_EDIT_SUCCESS,
 	GET_ATOM_EDIT_FAIL,
+
+	SAVE_VERSION_LOAD,
+	SAVE_VERSION_SUCCESS,
+	SAVE_VERSION_FAIL,
 } from './actions';
 
 /*--------*/
@@ -70,6 +74,26 @@ function getAtomEditFail(state, error) {
 	});
 }
 
+function saveVersionLoad(state) {
+	return state;
+}
+
+function saveVersionSuccess(state, result) {
+	const newAtomData = state.get('atomData').toJS();
+	console.log('newAtomData', newAtomData);
+	newAtomData.versions.push(result);
+	return state.merge({
+		status: 'loaded',
+		atomData: newAtomData,
+		versionData: result,
+		error: null
+	});
+}
+
+function saveVersionFail(state, error) {
+	return state;
+}
+
 
 /*--------*/
 // Bind actions to specific reducing functions.
@@ -91,6 +115,12 @@ export default function readerReducer(state = defaultState, action) {
 	case GET_ATOM_EDIT_FAIL:
 		return getAtomEditFail(state, action.error);
 
+	case SAVE_VERSION_LOAD:
+		return saveVersionLoad(state);
+	case SAVE_VERSION_SUCCESS:
+		return saveVersionSuccess(state, action.result);
+	case SAVE_VERSION_FAIL:
+		return saveVersionFail(state, action.error);
 	default:
 		return ensureImmutable(state);
 	}

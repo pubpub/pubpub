@@ -12,6 +12,10 @@ export const GET_ATOM_EDIT_LOAD = 'atomEdit/GET_ATOM_EDIT_LOAD';
 export const GET_ATOM_EDIT_SUCCESS = 'atomEdit/GET_ATOM_EDIT_SUCCESS';
 export const GET_ATOM_EDIT_FAIL = 'atomEdit/GET_ATOM_EDIT_FAIL';
 
+export const SAVE_VERSION_LOAD = 'atomEdit/SAVE_VERSION_LOAD';
+export const SAVE_VERSION_SUCCESS = 'atomEdit/SAVE_VERSION_SUCCESS';
+export const SAVE_VERSION_FAIL = 'atomEdit/SAVE_VERSION_FAIL';
+
 /*--------*/
 // Define Action creators
 //
@@ -36,3 +40,14 @@ export function getAtomEdit(slug) {
 		}})
 	};
 }
+
+export function saveVersion(newVersion) {
+	return {
+		types: [SAVE_VERSION_LOAD, SAVE_VERSION_SUCCESS, SAVE_VERSION_FAIL],
+		promise: (client) => client.post('/saveVersion', {data: {
+			'newVersion': newVersion,
+		}})
+	};
+}
+
+

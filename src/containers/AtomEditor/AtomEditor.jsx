@@ -3,7 +3,7 @@ import {connect} from 'react-redux';
 import Radium, {Style} from 'radium';
 import Helmet from 'react-helmet';
 import { Link } from 'react-router';
-import {getAtomEdit} from './actions';
+import {getAtomEdit, saveVersion} from './actions';
 import {toggleVisibility, follow, unfollow} from 'containers/Login/actions';
 import {createHighlight} from 'containers/MediaLibrary/actions';
 
@@ -51,9 +51,17 @@ const AtomEditor = React.createClass({
 		};
 	},
 
-	saveVersion: function() {
-		const newVersion = this.refs.atomEditorPane.refs.editor.getSaveVersionData();
-		console.log(newVersion);
+	saveVersionSubmit: function() {
+		const newVersionContent = this.refs.atomEditorPane.refs.editor.getSaveVersionContent();
+		const atomData = this.props.atomEditData.get('atomData').toJS();
+		const newVersion = {
+			type: atomData.type,
+			message: '',
+			parent: atomData._id,
+			content: newVersionContent
+		};
+		this.props.dispatch(saveVersion(newVersion));
+		// dispatch saveVersion
 	},
 
 	render: function() {
@@ -83,7 +91,7 @@ const AtomEditor = React.createClass({
 
 					<AtomEditorHeader
 						title={this.props.atomEditData.getIn(['atomData', 'title'])}
-						saveVersionHandler={this.saveVersion} />
+						saveVersionHandler={this.saveVersionSubmit} />
 
 					<AtomEditorPane ref={'atomEditorPane'} atomEditData={this.props.atomEditData} />
 

@@ -114,25 +114,29 @@ export function getAtomData(req, res) {
 	// 	fieldObject.contributors = 1;
 	// }
 
-	const populationArray = [
-		{
-			path: 'discussions',
-			model: 'Discussion',
-			populate: {
-				path: 'author',
-				model: 'User',
-				select: 'name firstName lastName username thumbnail',
-			},
-		},
-		{ path: 'authors history.authors', select: 'username name thumbnail firstName lastName', model: 'User' },
-	];
-	const fieldObject = {};
+	// const populationArray = [
+	// 	{
+	// 		path: 'discussions',
+	// 		model: 'Discussion',
+	// 		populate: {
+	// 			path: 'author',
+	// 			model: 'User',
+	// 			select: 'name firstName lastName username thumbnail',
+	// 		},
+	// 	},
+	// 	{ path: 'authors history.authors', select: 'username name thumbnail firstName lastName', model: 'User' },
+	// ];
+	// const fieldObject = {};
 
-	Atom.findOne({slug: slug}, fieldObject).populate(populationArray).exec()
-	.then(function(result) {
+	Atom.findOne({slug: slug}).lean().exec()
+	.then(function(atomResult) { // Get most recent version
+		const mostRecentVersionId = atomResult.versions[atomResult.versions.length - 1];
+		return [atomResult, Version.findOne({_id: mostRecentVersionId}).exec()];
+	})
+	.spread(function(atomResult, versionResult) { // Send response
 		return res.status(201).json({
-			atomData: result,
-			versionData: null,
+			atomData: atomResult,
+			versionData: versionResult
 		});
 	})
 	.catch(function(error) {
@@ -148,14 +152,17 @@ export function getAtomEdit(req, res) {
 	const userID = req.user ? req.user._id : undefined;
 	// Check permission type
 
-	Atom.findOne({slug: slug}).exec()
+	Atom.findOne({slug: slug}).lean().exec()
 	.then(function(atomResult) { // Get most recent version
-		const mostRecentVersionId = atomResult.versions[atomResult.versions.length];
+		const mostRecentVersionId = atomResult.versions[atomResult.versions.length - 1];
 		return [atomResult, Version.findOne({_id: mostRecentVersionId}).exec()];
 	})
 	.spread(function(atomResult, versionResult) { // Send response
 		return res.status(201).json({
-			atomData: atomResult,
+			atomData: {
+				...atomResult,
+				token: firebaseTokenGen(req.user.username, slug, false) // the false should be {isReader}
+			},
 			versionData: versionResult
 		});
 	})

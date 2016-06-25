@@ -154,7 +154,13 @@ const AtomReader = React.createClass({
 
 					<HorizontalNav navItems={navItems} />
 
-					<div id={'atom-reader'}>
+					{/* <div style={styles.buttonWrapper}>
+						<div className={'button'} style={styles.button} onClick={()=>{}}>Follow</div>
+					</div> */}
+
+					<div id={'atom-reader'} style={styles.atomReader}>
+						
+
 						<AtomReaderHeader
 							title={this.props.atomData.getIn(['atomData', 'title'])}
 							authors={'Jane Doe and Marcus Aurilie'}
@@ -356,6 +362,15 @@ styles = {
 	],
 	noBottomMargin: {
 		marginBottom: '0px',
+	},
+	buttonWrapper: {
+		float: 'right',
+		position: 'relative',
+		top: '8px',
+	},
+	button: {
+		fontSize: '.85em',
+		padding: '.25em 1.5em',
 	},
 
 };
