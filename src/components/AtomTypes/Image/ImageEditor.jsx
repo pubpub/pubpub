@@ -8,6 +8,10 @@ export const ImageEditor = React.createClass({
 		atomEditData: PropTypes.object,
 	},
 
+	getSaveVersionData: function() {
+		return 'Saving from Image Editor';
+	},
+
 	render: function() {
 
 		return (

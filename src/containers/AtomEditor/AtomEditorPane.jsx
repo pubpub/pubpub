@@ -10,9 +10,9 @@ export const AtomEditorPane = React.createClass({
 	render: function() {
 		switch (this.props.atomEditData.getIn(['atomData', 'type'])) {
 		case 'markdown': 
-			return <MarkdownEditor atomEditData={this.props.atomEditData} />;
+			return <MarkdownEditor ref={'editor'} atomEditData={this.props.atomEditData} />;
 		case 'image': 
-			return <ImageEditor atomEditData={this.props.atomEditData} />;
+			return <ImageEditor ref={'editor'} atomEditData={this.props.atomEditData} />;
 		default: 
 			return null;
 		}

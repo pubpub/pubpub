@@ -8,6 +8,10 @@ export const MarkdownEditor = React.createClass({
 		atomEditData: PropTypes.object,
 	},
 
+	getSaveVersionData: function() {
+		return 'Saving from Markdown Editor';
+	},
+
 	render: function() {
 
 		return (

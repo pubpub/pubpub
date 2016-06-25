@@ -51,6 +51,11 @@ const AtomEditor = React.createClass({
 		};
 	},
 
+	saveVersion: function() {
+		const newVersion = this.refs.atomEditorPane.refs.editor.getSaveVersionData();
+		console.log(newVersion);
+	},
+
 	render: function() {
 
 		const metaData = {};
@@ -77,9 +82,10 @@ const AtomEditor = React.createClass({
 					<HorizontalNav navItems={navItems} />
 
 					<AtomEditorHeader
-						title={this.props.atomEditData.getIn(['atomData', 'title'])}/>
+						title={this.props.atomEditData.getIn(['atomData', 'title'])}
+						saveVersionHandler={this.saveVersion} />
 
-					<AtomEditorPane atomEditData={this.props.atomEditData} />
+					<AtomEditorPane ref={'atomEditorPane'} atomEditData={this.props.atomEditData} />
 
 					
 				</div>
