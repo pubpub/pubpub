@@ -19,6 +19,7 @@ import analytics from 'utils/analytics';
 export const App = React.createClass({
 	propTypes: {
 		appData: PropTypes.object,
+		atomEditData: PropTypes.object,
 		loginData: PropTypes.object,
 		path: PropTypes.string,
 		slug: PropTypes.string,
@@ -43,6 +44,9 @@ export const App = React.createClass({
 		// Redirect to home if logged out
 		if (this.props.loginData.get('loggedIn') && !nextProps.loginData.get('loggedIn')) {
 			this.props.dispatch(pushState(null, '/'));
+		}
+		if (!this.props.atomEditData.get('newAtomHash') && nextProps.atomEditData.get('newAtomHash')) {
+			this.props.dispatch(pushState(null, '/a/' + nextProps.atomEditData.get('newAtomHash') + '/edit'));
 		}
 	},
 
@@ -89,6 +93,7 @@ export default connect( state => {
 	return {
 		appData: state.app,
 		loginData: state.login,
+		atomEditData: state.atomEdit,
 		path: state.router.location.pathname,
 		slug: state.router.params.slug,
 	};

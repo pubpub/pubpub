@@ -6,6 +6,7 @@ const User = require('../models').User;
 const Group = require('../models').Group;
 const Asset = require('../models').Asset;
 const Journal = require('../models').Journal;
+const Version = require('../models').Version;
 // const Reference = require('../models').Reference;
 const Notification = require('../models').Notification;
 const Promise = require('bluebird');
@@ -145,3 +146,27 @@ export function getAtomData(req, res) {
 
 }
 app.get('/getAtomData', getAtomData);
+
+export function getAtomEdit(req, res) {
+	const {slug} = req.query;
+	const userID = req.user ? req.user._id : undefined;
+	// Check permission type
+
+	Atom.findOne({slug: slug}).exec()
+	.then(function(atomResult) { // Get most recent version
+		const mostRecentVersionId = atomResult.versions[atomResult.versions.length];
+		return [atomResult, Version.findOne({_id: mostRecentVersionId}).exec()];
+	})
+	.spread(function(atomResult, versionResult) { // Send response
+		return res.status(201).json({
+			atomData: atomResult,
+			versionData: versionResult
+		});
+	})
+	.catch(function(error) {
+		console.log('error', error);
+		return res.status(500).json(error);
+	});
+
+}
+app.get('/getAtomEdit', getAtomEdit);

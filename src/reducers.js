@@ -5,6 +5,7 @@ import { routerStateReducer } from 'redux-router';
 
 import app from './containers/App/reducer';
 import atom from './containers/AtomReader/reducer';
+import atomEdit from './containers/AtomEditor/reducer';
 import autocomplete from './containers/Autocomplete/reducer';
 import editor from './containers/Editor/reducer';
 import emailVerification from './containers/EmailVerification/reducer';
@@ -46,6 +47,7 @@ export default combineReducers({
 	}),
 	app,
 	atom,
+	atomEdit,
 	autocomplete,
 	editor,
 	emailVerification,

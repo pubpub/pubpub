@@ -3,7 +3,7 @@ import {connect} from 'react-redux';
 import Radium, {Style} from 'radium';
 import Helmet from 'react-helmet';
 import { Link } from 'react-router';
-// import {getPub} from './actions';
+import {getAtomEdit} from './actions';
 import {toggleVisibility, follow, unfollow} from 'containers/Login/actions';
 import {createHighlight} from 'containers/MediaLibrary/actions';
 
@@ -27,7 +27,7 @@ let styles = {};
 
 const AtomEditor = React.createClass({
 	propTypes: {
-		readerData: PropTypes.object,
+		atomEditData: PropTypes.object,
 		loginData: PropTypes.object,
 		appData: PropTypes.object,
 		slug: PropTypes.string,
@@ -46,8 +46,7 @@ const AtomEditor = React.createClass({
 
 	statics: {
 		fetchData: function(getState, dispatch, location, routeParams) {
-			// return dispatch(getPub(routeParams.slug, getState().app.getIn(['journalData', '_id']), location.query.referrer ));
-			// return dispatch(getAtomData(routeParams.slug, location.query.referrer, getState().router.params.meta, location.query.version));
+			return dispatch(getAtomEdit(routeParams.slug));
 		}
 	},
 
@@ -86,7 +85,7 @@ const AtomEditor = React.createClass({
 					<HorizontalNav navItems={navItems} />
 
 					<AtomEditorHeader
-						title={'Taxonomy of Testing things'}/>
+						title={this.props.atomEditData.getIn(['atomData', 'title'])}/>
 
 					<h3>EDITOR</h3>
 					{/* this.props.meta
@@ -106,7 +105,7 @@ const AtomEditor = React.createClass({
 
 export default connect( state => {
 	return {
-		readerData: state.pub,
+		atomEditData: state.atomEdit,
 		loginData: state.login,
 		appData: state.app,
 		slug: state.router.params.slug,

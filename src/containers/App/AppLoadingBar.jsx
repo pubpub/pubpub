@@ -29,12 +29,12 @@ export const AppLoadingBar = React.createClass({
 	},
 
 	componentWillReceiveProps(nextProps) {
-		const { show } = nextProps;
 
-		if (show) {
+		if (!this.props.show && nextProps.show) {
 			this.show();
 			interval = setInterval(this.show, 200);
-		} else {
+		} 
+		if (!nextProps.show) {
 			this.hide();
 			clearInterval(interval);
 		}

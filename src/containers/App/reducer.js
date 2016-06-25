@@ -25,10 +25,17 @@ import {
 } from 'containers/UserProfile/actions';
 
 import {
-	GET_PUB_DATA_LOAD,
-	GET_PUB_DATA_SUCCESS,
-	GET_PUB_DATA_FAIL,
+	GET_ATOM_DATA_LOAD,
+	GET_ATOM_DATA_SUCCESS,
+	GET_ATOM_DATA_FAIL,
 } from 'containers/AtomReader/actions';
+
+import {
+	CREATE_ATOM_LOAD,
+	GET_ATOM_EDIT_LOAD,
+	GET_ATOM_EDIT_SUCCESS,
+	GET_ATOM_EDIT_FAIL,
+} from 'containers/AtomEditor/actions';
 
 
 /*--------*/
@@ -91,12 +98,16 @@ export default function reducer(state = defaultState, action) {
 
 
 	case LOAD_PROFILE:
-	case GET_PUB_DATA_LOAD:
+	case GET_ATOM_DATA_LOAD:
+	case CREATE_ATOM_LOAD:
+	case GET_ATOM_EDIT_LOAD:
 		return setLoading(state);
 	case LOAD_PROFILE_SUCCESS:
 	case LOAD_PROFILE_FAIL:
-	case GET_PUB_DATA_SUCCESS:
-	case GET_PUB_DATA_FAIL:
+	case GET_ATOM_DATA_SUCCESS:
+	case GET_ATOM_DATA_FAIL:
+	case GET_ATOM_EDIT_SUCCESS:
+	case GET_ATOM_EDIT_FAIL:
 		return unsetLoading(state);
 
 	default:
