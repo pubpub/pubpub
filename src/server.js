@@ -144,7 +144,7 @@ app.use((req, res) => {
 							${head.meta.toString()}
 
 							<link rel=${rssRel} type="application/rss+xml" title="RSS" href="/data/rss.xml" />
-							<link rel="shortcut icon" href="/favicon.ico?v=2" />
+							<link rel="shortcut icon" href="/favicon.ico?v=21cb1" />
 							
 							<link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
 							<link href='https://assets.pubpub.org/_fonts/Yrsa.css' rel='stylesheet' type='text/css'>

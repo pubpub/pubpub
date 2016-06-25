@@ -69,11 +69,11 @@ const UserPubs = React.createClass({
 
 				{
 					profileData.pubs[this.state.mode].map((pub, index)=>{
-						return (<PreviewPub 
-							key={'pubItem-' + index}
-							pubData={pub}
-							canEdit={this.props.ownProfile === 'self' ? true : false} />
-						);
+						// return (<PreviewPub 
+						// 	key={'pubItem-' + index}
+						// 	pubData={pub}
+						// 	canEdit={this.props.ownProfile === 'self' ? true : false} />
+						// );
 					})
 				}
 

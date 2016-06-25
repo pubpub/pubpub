@@ -137,7 +137,7 @@ const Profile = React.createClass({
 
 				<div className={'profile-header section'}>
 					<div style={styles.headerImageWrapper}>
-						<img src={'https://jake.pubpub.org/unsafe/200x200/' + profileData.image} />
+						<img src={'https://jake.pubpub.org/unsafe/150x150/' + profileData.image} />
 					</div>
 					<div style={styles.headerTextWrapper}>
 						<h1>{profileData.name}</h1>

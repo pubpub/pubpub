@@ -41,6 +41,11 @@ body {
 	text-decoration: underline !important;
 }
 
+.horizontalNavHover:hover {
+	border-bottom: 2px solid #808284 !important;
+	padding: 10px 10px 8px 10px !important;
+}
+
 .opacity-on-hover:hover {
 	opacity: 1 !important;
 }

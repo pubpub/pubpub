@@ -1,3 +1,22 @@
+.atom-reader {
+	max-width: 650px;
+	margin: 0 auto;
+}
+
+.atom-reader .atom-header-title {
+	font-size: 3em;
+	margin-top: .75em;
+	margin-bottom: .25em;
+}
+
+.atom-reader .atom-header-p {
+	margin: .5em 0em;
+}
+
+.atom-reader .headerBlock {
+	display: none;
+}
+
 /* Undo the header style set in pubpub.css*/
 #pub-body h1 {
 	font-size: 2em;

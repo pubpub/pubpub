@@ -1,5 +1,6 @@
 export App from './App/App';
-
+export AtomEditor from './AtomEditor/AtomEditor';
+export AtomReader from './AtomReader/AtomReader';
 export Autocomplete from './Autocomplete/Autocomplete';
 // export Collection from './Collection/Collection';
 export Discussions from './Discussions/Discussions';

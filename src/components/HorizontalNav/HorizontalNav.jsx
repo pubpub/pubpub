@@ -20,12 +20,12 @@ export const HorizontalNav = React.createClass({
 				
 				{/* Need some indicator to show if this version is public or not */}
 				{leftNavItems.map((item, index)=>{
-					return <Link to={item.link} style={[styles.pubNavButton, item.active && styles.pubNavButtonActive]} key={'leftNav-' + index} className={'underlineOnHover'}>{item.text}</Link>;
+					return <Link to={item.link} style={[styles.pubNavButton, item.active && styles.pubNavButtonActive]} key={'leftNav-' + index} className={'horizontalNavHover'}>{item.text}</Link>;
 				})}
 				
 				<div style={styles.pubNavButtonsRight}>
 					{rightNavItems.map((item, index)=>{
-						return <Link to={item.link} style={[styles.pubNavButton, item.active && styles.pubNavButtonActive]} key={'rightNav-' + index} className={'underlineOnHover'}>{item.text}</Link>;
+						return <Link to={item.link} style={[styles.pubNavButton, item.active && styles.pubNavButtonActive]} key={'rightNav-' + index} className={'horizontalNavHover'}>{item.text}</Link>;
 					})}	
 				</div>
 				
