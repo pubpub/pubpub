@@ -2,24 +2,15 @@ const app = require('../api');
 
 const Atom = require('../models').Atom;
 const Link = require('../models').Link;
-const User = require('../models').User;
-const Group = require('../models').Group;
-const Asset = require('../models').Asset;
-const Journal = require('../models').Journal;
 const Version = require('../models').Version;
-// const Reference = require('../models').Reference;
-const Notification = require('../models').Notification;
 const Promise = require('bluebird');
 
 const SHA1 = require('crypto-js/sha1');
 const encHex = require('crypto-js/enc-hex');
 
-const _ = require('underscore');
 const Firebase = require('firebase');
-const less = require('less');
 
 import {fireBaseURL, firebaseTokenGen, generateAuthToken} from '../services/firebase';
-import {sendAddedAsCollaborator} from '../services/emails';
 
 export function createAtom(req, res) {
 	if (!req.user) {

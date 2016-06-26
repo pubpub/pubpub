@@ -4,13 +4,9 @@ import Radium, {Style} from 'radium';
 
 import ReactFireMixin from 'reactfire';
 
-
-import {globalStyles} from 'utils/styleConstants';
-
-import {globalMessages} from 'utils/globalMessages';
-import {FormattedMessage} from 'react-intl';
-
 import MarkdownWidgets from 'components/Markdown/MarkdownWidgets/MarkdownWidgets';
+import FirepadUserList from 'containers/Editor/utils/editorFirepadUserlist';
+import {codeMirrorStyles, codeMirrorStyleClasses} from 'containers/Editor/utils/codeMirrorStyles';
 import {FireBaseURL} from 'config';
 import {Markdown} from 'components';
 
@@ -28,6 +24,7 @@ const cmOptions = {
 export const MarkdownEditor = React.createClass({
 	propTypes: {
 		atomEditData: PropTypes.object,
+		loginData: PropTypes.object,
 	},
 
 	mixins: [ReactFireMixin],
@@ -36,28 +33,21 @@ export const MarkdownEditor = React.createClass({
 		// Load Firebase and bind using ReactFireMixin. For assets, references, etc.
 		const ref = new Firebase(FireBaseURL + this.props.atomEditData.getIn(['atomData', 'slug']) + '/editorData' );
 		const token = this.props.atomEditData.getIn(['atomData', 'token']);
+		const username = this.props.loginData.getIn(['userData', 'username']);
+		const name = this.props.loginData.getIn(['userData', 'name']);
+		const image = this.props.loginData.getIn(['userData', 'image']);
 		console.log('token', token);
 		ref.authWithCustomToken(token, (error, authData)=> {
 			if (error) { console.log('Authentication Failed!', error); return; } 
 
 			this.bindAsObject(ref, 'firepadData');
-
 			// Load Firebase ref that is used for firepad
 			const firepadRef = new Firebase(FireBaseURL + this.props.atomEditData.getIn(['atomData', 'slug']) + '/firepad');
-
 			// Load codemirror
-			const codeMirror = CodeMirror(document.getElementById('codemirror-wrapper'), cmOptions);
-			this.cm = codeMirror;
-
-			// Get Login username for firepad use. Shouldn't be undefined, but set default in case.
-			const username = 'TravisUsername';
-			const name = 'Travis';
+			const codeMirror = CodeMirror(document.getElementById('codemirror-wrapper'), cmOptions); 
 
 			// Initialize Firepad using codemirror and the ref defined above.
-			const firepad = Firepad.fromCodeMirror(firepadRef, codeMirror, {
-				userId: username,
-				defaultText: '# Begin writing here',
-			});
+			Firepad.fromCodeMirror(firepadRef, codeMirror, {userId: username, defaultText: '# Introduction'});
 
 			new Firebase(FireBaseURL + '.info/connected').on('value', (connectedSnap)=> {
 				if (connectedSnap.val() === true) { /* we're connected! */
@@ -67,8 +57,7 @@ export const MarkdownEditor = React.createClass({
 				}
 			});
 
-			// FirepadUserList.fromDiv(firepadRef.child('users'),
-			// 	document.getElementsByClassName('menuItem-activeCollabs')[0], username, this.props.loginData.getIn(['userData', 'name']), this.props.loginData.getIn(['userData', 'thumbnail']));
+			FirepadUserList.fromDiv(firepadRef.child('users'), document.getElementById('active-collaborators'), username, name, image);
 
 			codeMirror.on('change', this.onEditorChange);
 			// codeMirror.on('mousedown', function(instance, evt) {
@@ -92,8 +81,13 @@ export const MarkdownEditor = React.createClass({
 	render: function() {
 		return (
 			<div>
+				<Style rules={{
+					...codeMirrorStyles(),
+					...codeMirrorStyleClasses
+				}} />
 
-				<div id="codemirror-wrapper" style={styles.block}></div>
+				<div id={'active-collaborators'}></div>
+				<div id={'codemirror-wrapper'} style={styles.block}></div>
 				<div id={'atom-reader'} style={styles.block}> <Markdown markdown={this.state.markdown}/></div>
 				
 			</div>

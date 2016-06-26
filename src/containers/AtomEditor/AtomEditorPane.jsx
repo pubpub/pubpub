@@ -5,14 +5,20 @@ import {MarkdownEditor, ImageEditor} from 'components/AtomTypes' ;
 export const AtomEditorPane = React.createClass({
 	propTypes: {
 		atomEditData: PropTypes.object,
+		loginData: PropTypes.object,
 	},
 
 	render: function() {
+		const props = {
+			ref: 'editor',
+			atomEditData: this.props.atomEditData
+		};
+
 		switch (this.props.atomEditData.getIn(['atomData', 'type'])) {
 		case 'markdown': 
-			return <MarkdownEditor ref={'editor'} atomEditData={this.props.atomEditData} />;
+			return <MarkdownEditor {...props} loginData={this.props.loginData} />;
 		case 'image': 
-			return <ImageEditor ref={'editor'} atomEditData={this.props.atomEditData} />;
+			return <ImageEditor {...props} />;
 		default: 
 			return null;
 		}

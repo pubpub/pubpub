@@ -8,8 +8,9 @@ import {toggleVisibility, follow, unfollow} from 'containers/Login/actions';
 import {createHighlight} from 'containers/MediaLibrary/actions';
 
 import {PubBody, HorizontalNav} from 'components';
-import {AtomEditorHeader} from './AtomEditorHeader';
-import {AtomEditorPane} from './AtomEditorPane';
+import AtomEditorHeader from './AtomEditorHeader';
+import AtomEditorPane from './AtomEditorPane';
+import AtomEditorModals from './AtomEditorModals';
 
 // import PubMeta from './PubMeta/PubMeta';
 // import PubReaderLeftBar from './PubReaderLeftBar';
@@ -48,6 +49,7 @@ const AtomEditor = React.createClass({
 
 	getInitialState() {
 		return {
+			modalMode: undefined,
 		};
 	},
 
@@ -62,6 +64,14 @@ const AtomEditor = React.createClass({
 		};
 		this.props.dispatch(saveVersion(newVersion));
 		// dispatch saveVersion
+	},
+
+	openModal: function(mode) {
+		this.setState({modalMode: mode});
+	},
+
+	closeModal: function() {
+		this.setState({modalMode: undefined});
 	},
 
 	render: function() {
@@ -86,16 +96,17 @@ const AtomEditor = React.createClass({
 
 				{/* Pub Section */}
 				<div style={styles.pubSection}>
-
+					<div className={'button'} onClick={this.openModal.bind(this, 'fish')}>Fish</div>
 					<HorizontalNav navItems={navItems} />
 
 					<AtomEditorHeader
 						title={this.props.atomEditData.getIn(['atomData', 'title'])}
 						saveVersionHandler={this.saveVersionSubmit} />
 
-					<AtomEditorPane ref={'atomEditorPane'} atomEditData={this.props.atomEditData} />
+					<AtomEditorPane ref={'atomEditorPane'} atomEditData={this.props.atomEditData} loginData={this.props.loginData}/>
 
-					
+					<AtomEditorModals mode={this.state.modalMode} closeModalHandler={this.closeModal}/>
+
 				</div>
 
 			</div>
@@ -109,7 +120,6 @@ export default connect( state => {
 	return {
 		atomEditData: state.atomEdit,
 		loginData: state.login,
-		appData: state.app,
 		slug: state.router.params.slug,
 		query: state.router.location.query,
 
