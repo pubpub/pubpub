@@ -130,7 +130,7 @@ const AtomReader = React.createClass({
 			{link: '/a/' + this.props.slug + '/export', text: 'Export', rightAlign: true, active: this.props.meta === 'export'},
 		];
 		
-		const toc = generateTOC(this.props.atomData.getIn(['atomData', 'markdown'])).full;
+		const toc = generateTOC(this.props.atomData.getIn(['versionData', 'content', 'markdown'])).full;
 		return (
 			<div style={styles.container}>
 

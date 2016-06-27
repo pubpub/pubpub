@@ -36,7 +36,6 @@ export const MarkdownEditor = React.createClass({
 		const username = this.props.loginData.getIn(['userData', 'username']);
 		const name = this.props.loginData.getIn(['userData', 'name']);
 		const image = this.props.loginData.getIn(['userData', 'image']);
-		console.log('token', token);
 		ref.authWithCustomToken(token, (error, authData)=> {
 			if (error) { console.log('Authentication Failed!', error); return; } 
 
