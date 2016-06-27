@@ -116,12 +116,11 @@ export function getAtomData(req, res) {
 			}
 		});
 
-		const getVersions = new Promise(function(resolve){
+		const getVersions = new Promise(function(resolve) {
 			if (meta === 'versions') {
-				const query = Version.find({_id: {$in: atomResult.versions}});
+				const query = Version.find({_id: {$in: atomResult.versions}}).sort({createDate: -1});
 				resolve(query);
-			}
-			else {
+			} else {
 				resolve();
 			}
 		});
