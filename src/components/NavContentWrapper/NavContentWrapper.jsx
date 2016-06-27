@@ -47,10 +47,10 @@ export const NavContentWrapper = React.createClass({
 						{navItems.map((option, index)=>{
 
 							if (option.type === 'link') {
-								return <Link key={'navItem-' + index} className={'underlineOnHover'} style={[styles.contentNavLink, option.active && styles.contentNavLinkActive]} to={option.link} onClick={this.toggleMenu}>{option.text}</Link>;
+								return <Link key={'navItem-' + index} className={'verticalNavHover'} style={[styles.contentNavLink, option.active && styles.contentNavLinkActive]} to={option.link} onClick={this.toggleMenu}>{option.text}</Link>;
 							}
 							if (option.type === 'button') {
-								return <div key={'navItem-' + index} className={'underlineOnHover'} style={[styles.contentNavLink, option.active && styles.contentNavLinkActive]} onClick={option.action || this.toggleMenu}>{option.text}</div>;
+								return <div key={'navItem-' + index} className={'verticalNavHover'} style={[styles.contentNavLink, option.active && styles.contentNavLinkActive]} onClick={option.action || this.toggleMenu}>{option.text}</div>;
 							}
 							if (option.type === 'spacer') {
 								return <div key={'navItem-' + index} style={styles.contentNavSpacer}></div>;
@@ -126,7 +126,7 @@ styles = {
 		display: 'block',
 		textDecoration: 'none',
 		color: 'inherit',
-		padding: '.15em 2em .15em .15em',
+		padding: '.15em 2em .15em .5em',
 		fontSize: '0.9em',
 		cursor: 'pointer',
 		overflow: 'hidden',
@@ -137,7 +137,8 @@ styles = {
 		}
 	},
 	contentNavLinkActive: {
-		backgroundColor: '#BBBDC0',
+		padding: '.15em 2em .15em calc(.5em - 3px)',
+		borderLeft: '3px solid #2C2A2B',
 	},
 	contentNavLinkMobile: {
 		display: 'none',

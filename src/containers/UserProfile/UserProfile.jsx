@@ -123,11 +123,11 @@ const Profile = React.createClass({
 		];
 
 		const navItems = [
-			{ type: 'link', text: 'Recent Activity', link: '/user/' + this.props.username },
+			{ type: 'link', text: 'Recent Activity', link: '/user/' + this.props.username, active: this.props.mode === undefined},
 			{ type: 'spacer' },
-			{ type: 'link', text: 'Pubs', link: '/user/' + this.props.username + '/pubs', active: true },
-			{ type: 'link', text: 'Groups', link: '/user/' + this.props.username + '/groups' },
-			{ type: 'link', text: 'Journals', link: '/user/' + this.props.username + '/journals' },
+			{ type: 'link', text: 'Pubs', link: '/user/' + this.props.username + '/pubs', active: this.props.mode === 'pubs' },
+			{ type: 'link', text: 'Groups', link: '/user/' + this.props.username + '/groups', active: this.props.mode === 'groups'},
+			{ type: 'link', text: 'Journals', link: '/user/' + this.props.username + '/journals', active: this.props.mode === 'journals'},
 		];
 
 		return (

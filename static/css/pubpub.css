@@ -45,6 +45,10 @@ body {
 	border-bottom: 2px solid #808284 !important;
 	padding: 10px 10px 8px 10px !important;
 }
+.verticalNavHover:hover {
+	padding: .15em 2em .15em calc(.5em - 3px) !important;
+	border-left: 3px solid #2C2A2B !important;
+}
 
 .opacity-on-hover:hover {
 	opacity: 1 !important;
@@ -179,6 +183,7 @@ h2 {
 	-moz-user-select: none;
 	-ms-user-select: none;   
 	user-select: none;
+	text-decoration: none;
 }
 
 .button:hover {

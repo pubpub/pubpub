@@ -1,20 +1,37 @@
 import app from '../api';
-import {User, Pub, Journal, Notification} from '../models';
+import {User, Pub, Journal, Notification, Link, Atom} from '../models';
 
 // import {cloudinary} from '../services/cloudinary';
 import {sendInviteEmail} from '../services/emails';
 
 export function getUser(req, res) {
 	const userID = req.user ? req.user._id : undefined;
-
+	console.time('dbsave');
 	User.getUser(req.query.username, userID, (err, userData)=>{
-
+		console.log('----')
+		console.timeEnd('dbsave');
 		if (err) {
 			console.log(err);
 			return res.status(500).json(err);
 		}
-
-		return res.status(201).json(userData);
+		console.time('dbsave');
+		Link.find({source: userData._id}).lean().exec()
+		.then(function(linksResult) { // Get most recent version
+			const atomIDs = linksResult.map((link)=>{
+				return link.destination;
+			});
+			return Atom.find({_id: {$in: atomIDs}}).lean().exec();
+		})
+		.then(function(atomsResult) { // Get most recent version
+			userData.atoms = atomsResult;
+			console.timeEnd('dbsave');
+			console.log('----')
+			return res.status(201).json(userData);
+		})
+		.catch(function(error) {
+			console.log('error', error);
+			return res.status(500).json(error);
+		});
 
 	});
 
