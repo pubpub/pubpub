@@ -27,6 +27,10 @@
 	font-family: 'Yrsa', Georgia, serif;
 }
 
+#atom-reader.atom-reader-meta h1, #atom-reader.atom-reader-meta h2, #atom-reader.atom-reader-meta h3, #atom-reader.atom-reader-meta h4, #atom-reader.atom-reader-meta h5, #atom-reader.atom-reader-meta h6 {
+	font-family: 'Open Sans', Helvetica Neue, Arial, sans-serif;
+}
+
 @media screen and (min-resolution: 3dppx), screen and (max-width: 767px) {
 	#atom-reader h1 {
 		font-size: 2em;

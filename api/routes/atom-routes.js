@@ -82,65 +82,68 @@ app.post('/createAtom', createAtom);
 
 export function getAtomData(req, res) {
 	const {slug, meta, version} = req.query;
-	const userID = req.user ? req.user._id : undefined;
+	// const userID = req.user ? req.user._id : undefined;
 	// Check permission type
 	// Load specific data
 	// const populationArray = [];
 	// const fieldObject = {'_id': 1, 'title': 1, 'slug': 1};
 
-	// if (!slug) {
-	// 	return res.status(404).json();
-	// } else if (meta === 'contributors') {
-	// 	populationArray.push({
-	// 		path: 'pubsFeatured',
-	// 		select: 'title abstract slug authors lastUpdated createDate discussions createDate lastUpdated',
-	// 		populate: [
-	// 			{
-	// 				path: 'authors',
-	// 				model: 'User',
-	// 				select: 'name firstName lastName username thumbnail',
-	// 			},
-	// 		],
-	// 	});
-	// 	fieldObject.contributors = 1;
-	// }
-
-	// const populationArray = [
-	// 	{
-	// 		path: 'discussions',
-	// 		model: 'Discussion',
-	// 		populate: {
-	// 			path: 'author',
-	// 			model: 'User',
-	// 			select: 'name firstName lastName username thumbnail',
-	// 		},
-	// 	},
-	// 	{ path: 'authors history.authors', select: 'username name thumbnail firstName lastName', model: 'User' },
-	// ];
-	// const fieldObject = {};
 
 	Atom.findOne({slug: slug}).lean().exec()
-	.then(function(atomResult) { // Get most recent version
-		const mostRecentVersionId = atomResult.versions[atomResult.versions.length - 1];
-		return [atomResult, Version.findOne({_id: mostRecentVersionId}).exec()];
+	.then(function(atomResult) { // Get most recent version	
+
+		// Get the most recent version
+		// This query fires if no meta and no version are specified
+		const getRecentVersion = new Promise(function(resolve) {
+			if (!meta && !version) {
+				const mostRecentVersionId = atomResult.versions[atomResult.versions.length - 1];
+				resolve(Version.findOne({_id: mostRecentVersionId}).exec());
+			} else {
+				resolve();
+			}
+		});
+
+		// Get the collaborators associated with the atom
+		// This query fires if meta is equal to 'collaborators'
+		const getContributors = new Promise(function(resolve) {
+			if (meta === 'contributors') {
+				// const query = Link.find({destination: atomResult._id, type: {$in: ['isAuthor', 'isEditor', 'isReader']}}).exec();
+				console.log('About to calll Link query');
+				const query = Link.find({destination: atomResult._id}).exec();
+				resolve(query);
+			} else {
+				resolve();
+			}
+		});
+
+		const tasks = [
+			getRecentVersion,
+			getContributors
+		];
+
+		return [atomResult, Promise.all(tasks)];
 	})
-	.spread(function(atomResult, versionResult) { // Send response
+	.spread(function(atomResult, taskData) { // Send response 
+		// What's spread? See here: http://stackoverflow.com/questions/18849312/what-is-the-best-way-to-pass-resolved-promise-values-down-to-a-final-then-chai
+		console.log(taskData);
 		return res.status(201).json({
 			atomData: atomResult,
-			versionData: versionResult
+			versionData: taskData[0],
+			contributorData: taskData[1],
 		});
 	})
 	.catch(function(error) {
 		console.log('error', error);
 		return res.status(500).json(error);
 	});
+	
 
 }
 app.get('/getAtomData', getAtomData);
 
 export function getAtomEdit(req, res) {
 	const {slug} = req.query;
-	const userID = req.user ? req.user._id : undefined;
+	// const userID = req.user ? req.user._id : undefined;
 	// Check permission type
 
 	Atom.findOne({slug: slug}).lean().exec()

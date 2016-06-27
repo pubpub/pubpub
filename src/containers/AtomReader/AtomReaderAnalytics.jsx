@@ -9,7 +9,7 @@ export const AtomReaderAnalytics = React.createClass({
 	render: function() {
 
 		return (
-			<div className={'atom-reader-header'}>
+			<div>
 				
 				<h2>Analytics</h2>
 				

@@ -158,7 +158,7 @@ const AtomReader = React.createClass({
 						<div className={'button'} style={styles.button} onClick={()=>{}}>Follow</div>
 					</div> */}
 
-					<div id={'atom-reader'} style={styles.atomReader}>
+					<div id={'atom-reader'} className={this.props.meta && 'atom-reader-meta'}>
 						
 
 						<AtomReaderHeader
