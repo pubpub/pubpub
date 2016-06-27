@@ -15,7 +15,7 @@ import {
 /*--------*/
 export const defaultState = Immutable.Map({
 	atomData: {},
-	versionData: {},
+	currentVersionData: {},
 	contributorData: {},
 	status: 'loading',
 	error: null
@@ -37,7 +37,7 @@ function getAtomDataSuccess(state, result) {
 	return state.merge({
 		status: 'loaded',
 		atomData: result.atomData,
-		versionData: result.versionData,
+		currentVersionData: result.currentVersionData,
 		contributorData: result.contributorData,
 		error: null
 	});
@@ -47,7 +47,7 @@ function getAtomDataFail(state, error) {
 	return state.merge({
 		status: 'loaded',
 		atomData: {},
-		versionData: {},
+		currentVersionData: {},
 		contributorData: {},
 		error: error,
 	});

@@ -1,28 +1,19 @@
 import React, {PropTypes} from 'react';
 import Radium from 'radium';
-import Helmet from 'react-helmet';
-import {Loader, ImageCropper} from 'components';
-import {Link} from 'react-router';
-import {safeGetInToJS} from 'utils/safeParse';
-
-import {globalStyles} from 'utils/styleConstants';
 import {globalMessages} from 'utils/globalMessages';
 import {FormattedMessage} from 'react-intl';
 
+import {safeGetInToJS} from 'utils/safeParse';
+import {Loader, ImageCropper} from 'components';
+import {globalStyles} from 'utils/styleConstants';
+
 let styles = {};
 
-export const SignUpDetails = React.createClass({
+export const UserSettingsProfile = React.createClass({
 	propTypes: {
-		submitHandler: PropTypes.func,
-		errorMessage: PropTypes.string,
-		isLoading: PropTypes.bool,
+		settingsData: PropTypes.object,
 		loginData: PropTypes.object,
-		redirectRoute: PropTypes.string,
-
-	},
-
-	componentWillMount() {
-		this.setState({bio: safeGetInToJS(this.props.loginData, ['userData']).bio || ''});
+		saveSettingsHandler: PropTypes.func,
 	},
 
 	getInitialState: function() {
@@ -33,13 +24,15 @@ export const SignUpDetails = React.createClass({
 		};
 	},
 
-	bioUpdate: function() {
-		this.setState({bio: this.refs.bio.value.substring(0, 140)});
+	componentWillMount() {
+		this.setState({bio: safeGetInToJS(this.props.loginData, ['userData']).bio || ''});
 	},
 
-	detailsSubmit: function(evt) {
+	saveSubmit: function(evt) {
 		evt.preventDefault();
-		const detailsData = {
+		this.props.saveSettingsHandler({
+			firstName: this.refs.firstName.value,
+			lastName: this.refs.lastName.value,
 			image: this.state.userImageURL,
 			bio: this.refs.bio.value,
 			website: this.refs.website.value,
@@ -47,8 +40,11 @@ export const SignUpDetails = React.createClass({
 			orcid: this.refs.orcid.value,
 			github: this.refs.github.value,
 			googleScholar: this.refs.googleScholar.value,
-		};
-		this.props.submitHandler(detailsData);	
+		});
+	},
+
+	bioUpdate: function() {
+		this.setState({bio: this.refs.bio.value.substring(0, 140)});
 	},
 
 	handleFileSelect: function(evt) {
@@ -66,33 +62,33 @@ export const SignUpDetails = React.createClass({
 	},
 
 	render: function() {
-		const metaData = {
-			title: 'PubPub | Add Details',
-		};
-		const isLoading = this.props.isLoading;
-		const errorMessage = this.props.errorMessage;
+		const isLoading = this.props.settingsData && this.props.settingsData.get('loading');
+		const errorMessage = this.props.settingsData && this.props.settingsData.get('error');
 		const userData = safeGetInToJS(this.props.loginData, ['userData']) || {};
 
 		return (
 			<div>
-				<Helmet {...metaData} />
-
-				<h1><FormattedMessage id="details.Welcome" defaultMessage="Welcome!"/></h1>
-				<p style={styles.subHeader}>
-					<FormattedMessage id="details.VerificationMessage" defaultMessage="We've sent you a verification email. Please click the link there to verify your account!"/>
-				</p>
-
-				<h2><FormattedMessage id="details.AboutYou" defaultMessage="About You"/></h2>
-				<p style={styles.subHeader}>
-					<FormattedMessage id="details.AddDetailsTo" defaultMessage="Add details to identify yourself to the community and to be rewarded for your contributions!"/>
-				</p>
 				
-				<form onSubmit={this.detailsSubmit}>
+				<form onSubmit={this.saveSubmit} style={styles.form}>
+					<div>
+						<label style={styles.label} htmlFor={'firstName'}>
+							<FormattedMessage id="signup.FirstName" defaultMessage="First Name"/>
+						</label>
+						<input ref={'firstName'} id={'firstName'} name={'first name'} type="text" style={styles.input} defaultValue={userData.firstName}/>
+					</div>
+
+					<div>
+						<label style={styles.label} htmlFor={'lastName'}>
+							<FormattedMessage id="signup.LastName" defaultMessage="Last Name"/>
+						</label>
+						<input ref={'lastName'} id={'lastName'} name={'last name'} type="text" style={styles.input} defaultValue={userData.lastName}/>
+					</div>
+
 					<div>
 						<label style={styles.label} htmlFor={'userImage'}>
 							<FormattedMessage {...globalMessages.ProfileImage}/>
 						</label>
-						<img style={styles.userImage} src={this.state.userImageURL || userData.image} />
+						<img style={styles.userImage} src={this.state.userImageURL || 'https://jake.pubpub.org/unsafe/100x100/' + userData.image} />
 						<input id={'userImage'} name={'user image'} type="file" accept="image/*" onChange={this.handleFileSelect} />
 						
 					</div>
@@ -154,13 +150,13 @@ export const SignUpDetails = React.createClass({
 						</div>
 					</div>
 
-					<button className={'button'} onClick={this.detailsSubmit}>
-						<FormattedMessage id="details.SaveDetails" defaultMessage="Save Details"/>
+
+					<button className={'button'} onClick={this.saveSubmit}>
+						Save Profile
 					</button>
 
 					<div style={styles.loaderContainer}><Loader loading={isLoading} showCompletion={!errorMessage}/></div>
 
-					<Link to={this.props.redirectRoute || '/'} style={styles.skipLink}><FormattedMessage {...globalMessages.Skipthisstep}/></Link>
 					<div style={styles.errorMessage}>{errorMessage}</div>
 
 				</form>
@@ -174,21 +170,31 @@ export const SignUpDetails = React.createClass({
 			</div>
 		);
 	}
-
 });
 
-export default Radium(SignUpDetails);
+export default Radium(UserSettingsProfile);
 
 styles = {
-	subHeader: {  
-		margin: '-20px 0px 20px 0px',
-		fontSize: '0.9em',
+	form: {
+		width: '600px',
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+			width: 'auto',
+		},
+	},
+	input: {
+		width: 'calc(100% - 20px - 4px)', // Calculations come from padding and border in pubpub.css
 	},
 	userImage: {
 		width: '100px',
 	},
-	input: {
-		width: 'calc(100% - 20px - 4px)',
+	loaderContainer: {
+		display: 'inline-block',
+		position: 'relative',
+		top: 15,
+	},
+	errorMessage: {
+		padding: '10px 0px',
+		color: globalStyles.errorRed,
 	},
 	bio: {
 		height: '4em',
@@ -216,20 +222,6 @@ styles = {
 		display: 'table-cell',
 		marginBottom: 0,
 		borderRadius: '0px 1px 1px 0px',
-	},
-
-	loaderContainer: {
-		display: 'inline-block',
-		position: 'relative',
-		top: 15,
-	},
-	errorMessage: {
-		padding: '10px 0px',
-		color: globalStyles.errorRed,
-	},
-	skipLink: {
-		...globalStyles.link,
-		fontSize: '0.85em',
 	},
 	imageCropperWrapper: {
 		height: '100vh',

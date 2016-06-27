@@ -21,6 +21,10 @@ import {
 	SIGNUP_DETAILS_SUCCESS,
 } from 'containers/SignUp/actions';
 
+import {
+	SAVE_SETTINGS_SUCCESS,
+} from 'containers/UserSettings/actions';
+
 /*--------*/
 // Initialize Default State
 /*--------*/
@@ -92,7 +96,8 @@ export default function reducer(state = defaultState, action) {
 	case LOGOUT_SUCCESS:
 		return loggedOut(state);
 
-	case SIGNUP_DETAILS_SUCCESS: 
+	case SIGNUP_DETAILS_SUCCESS:
+	case SAVE_SETTINGS_SUCCESS: 
 		return signUpDetailsSuccess(state, action.result);
 
 	default:

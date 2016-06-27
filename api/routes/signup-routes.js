@@ -92,13 +92,13 @@ export function signupDetails(req, res) {
 
 	User.findById(userID).exec()
 	.then(function(result) {
-		result.image = req.body.image || result.image;
-		result.bio = req.body.bio && req.body.bio.substring(0, 140) || result.bio;
-		result.website = req.body.website || result.website;
-		result.twitter = req.body.twitter || result.twitter;
-		result.orcid = req.body.orcid || result.orcid;
-		result.github = req.body.github || result.github;
-		result.googleScholar = req.body.googleScholar || result.googleScholar;
+		result.image = req.body.image;
+		result.bio = req.body.bio && req.body.bio.substring(0, 140);
+		result.website = req.body.website;
+		result.twitter = req.body.twitter;
+		result.orcid = req.body.orcid;
+		result.github = req.body.github;
+		result.googleScholar = req.body.googleScholar;
 		return result.save();
 	})
 	.then(function(savedResult) {

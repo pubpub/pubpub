@@ -23,7 +23,7 @@ export const Login = React.createClass({
 
 	handleLoginSubmit: function(evt) {
 		evt.preventDefault();
-		this.props.dispatch(login(this.refs.loginEmail.value, this.refs.loginPassword.value));
+		this.props.dispatch(login(this.refs.email.value, this.refs.password.value));
 	},
 
 	componentWillReceiveProps(nextProps) {
@@ -56,14 +56,14 @@ export const Login = React.createClass({
 						<label style={styles.label} htmlFor={'email'}>
 							<FormattedMessage {...globalMessages.Email} />
 						</label>
-						<input ref={'loginEmail'} id={'email'} name={'email'} type="text" style={styles.input}/>
+						<input ref={'email'} id={'email'} name={'email'} type="text" style={styles.input}/>
 					</div>
 
 					<div>
 						<label style={styles.label} htmlFor={'password'}>
 							<FormattedMessage {...globalMessages.Password} />
 						</label>
-						<input ref={'loginPassword'} id={'password'} name={'password'} type="password" style={styles.input}/>
+						<input ref={'password'} id={'password'} name={'password'} type="password" style={styles.input}/>
 						<Link className={'light-color inputSubtext'} to={'/resetpassword'}>
 							<FormattedMessage id="login.ForgotPassword" defaultMessage="Forgot Password?"/>
 						</Link>

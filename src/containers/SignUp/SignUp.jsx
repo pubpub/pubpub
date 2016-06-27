@@ -46,7 +46,6 @@ export const SignUp = React.createClass({
 		const isLoading = this.props.signUpData && this.props.signUpData.get('loading');
 		const errorMessage = this.props.signUpData && this.props.signUpData.get('error');
 		const signUpMode = loggedIn && this.props.query && this.props.query.stage; // If not logged in, signUpMode is false, trigger <SignUpForm> to render, otherwise set mode to query
-		const userImage = this.props.loginData && this.props.loginData.getIn(['userData', 'image']);
 
 		const redirectRoute = this.props.query && this.props.query.redirect;
 
@@ -67,7 +66,7 @@ export const SignUp = React.createClass({
 						submitHandler={this.detailsSubmit} 
 						errorMessage={errorMessage}
 						isLoading={isLoading}
-						userImage={userImage} 
+						loginData={this.props.loginData} 
 						redirectRoute={redirectRoute}/>
 				}
 				

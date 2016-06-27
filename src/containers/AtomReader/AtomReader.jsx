@@ -130,7 +130,7 @@ const AtomReader = React.createClass({
 			{link: '/a/' + this.props.slug + '/export', text: 'Export', rightAlign: true, active: this.props.meta === 'export'},
 		];
 		
-		const toc = generateTOC(this.props.atomData.getIn(['versionData', 'content', 'markdown'])).full;
+		const toc = generateTOC(this.props.atomData.getIn(['currentVersionData', 'content', 'markdown'])).full;
 		return (
 			<div style={styles.container}>
 
@@ -171,17 +171,17 @@ const AtomReader = React.createClass({
 						{(()=>{
 							switch (this.props.meta) {
 							case 'contributors':
-								return <AtomReaderContributors data={this.props.atomData}/>;
+								return <AtomReaderContributors atomData={this.props.atomData}/>;
 							case 'versions':
-								return <AtomReaderVersions data={this.props.atomData}/>;
+								return <AtomReaderVersions atomData={this.props.atomData}/>;
 							case 'journals':
-								return <AtomReaderJournals data={this.props.atomData}/>;
+								return <AtomReaderJournals atomData={this.props.atomData}/>;
 							case 'analytics':
-								return <AtomReaderAnalytics data={this.props.atomData}/>;
+								return <AtomReaderAnalytics atomData={this.props.atomData}/>;
 							case 'cite':
-								return <AtomReaderCite data={this.props.atomData}/>;
+								return <AtomReaderCite atomData={this.props.atomData}/>;
 							case 'export':
-								return <AtomReaderExport data={this.props.atomData}/>;
+								return <AtomReaderExport atomData={this.props.atomData}/>;
 							default:
 								return <AtomViewerPane atomData={this.props.atomData} />;
 							}

@@ -85,8 +85,6 @@ export function getAtomData(req, res) {
 	// const userID = req.user ? req.user._id : undefined;
 	// Check permission type
 	// Load specific data
-	// const populationArray = [];
-	// const fieldObject = {'_id': 1, 'title': 1, 'slug': 1};
 
 
 	Atom.findOne({slug: slug}).lean().exec()
@@ -108,7 +106,6 @@ export function getAtomData(req, res) {
 		const getContributors = new Promise(function(resolve) {
 			if (meta === 'contributors') {
 				// const query = Link.find({destination: atomResult._id, type: {$in: ['isAuthor', 'isEditor', 'isReader']}}).exec();
-				console.log('About to calll Link query');
 				const query = Link.find({destination: atomResult._id}).exec();
 				resolve(query);
 			} else {
@@ -125,10 +122,9 @@ export function getAtomData(req, res) {
 	})
 	.spread(function(atomResult, taskData) { // Send response 
 		// What's spread? See here: http://stackoverflow.com/questions/18849312/what-is-the-best-way-to-pass-resolved-promise-values-down-to-a-final-then-chai
-		console.log(taskData);
 		return res.status(201).json({
 			atomData: atomResult,
-			versionData: taskData[0],
+			currentVersionData: taskData[0],
 			contributorData: taskData[1],
 		});
 	})
@@ -157,7 +153,7 @@ export function getAtomEdit(req, res) {
 				...atomResult,
 				token: firebaseTokenGen(req.user.username, slug, false) // the false should be {isReader}
 			},
-			versionData: versionResult
+			currentVersionData: versionResult
 		});
 	})
 	.catch(function(error) {

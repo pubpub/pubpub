@@ -26,3 +26,4 @@ require('./routes/rssGen.js');
 require('./routes/export-routes');
 require('./routes/email-verification-routes');
 require('./routes/version-routes');
+require('./routes/settings-routes');

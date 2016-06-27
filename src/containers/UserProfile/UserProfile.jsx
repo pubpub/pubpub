@@ -128,6 +128,8 @@ const Profile = React.createClass({
 			{ type: 'link', text: 'Pubs', link: '/user/' + this.props.username + '/pubs', active: this.props.mode === 'pubs' },
 			{ type: 'link', text: 'Groups', link: '/user/' + this.props.username + '/groups', active: this.props.mode === 'groups'},
 			{ type: 'link', text: 'Journals', link: '/user/' + this.props.username + '/journals', active: this.props.mode === 'journals'},
+			{ type: 'spacer' },
+			{ type: 'link', text: 'Settings', link: '/settings'},
 		];
 
 		return (
@@ -179,14 +181,6 @@ const Profile = React.createClass({
 									profileData={profileData}
 									ownProfile={ownProfile}
 									setNotificationsReadHandler={this.setNotificationsRead}/>
-							);
-						case 'settings':
-							return (
-								<UserProfileSettings
-									profileData={profileData}
-									ownProfile={ownProfile}
-									saveStatus={this.props.profileData.get('settingsStatus')}
-									handleSettingsSave={this.settingsSave}/>
 							);
 						default:
 							return (

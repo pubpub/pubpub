@@ -2,131 +2,70 @@ import React, { PropTypes } from 'react';
 import {connect} from 'react-redux';
 import Radium from 'radium';
 import Helmet from 'react-helmet';
-import { Link } from 'react-router';
-import { pushState } from 'redux-router';
-import {logout, follow, unfollow, toggleVisibility} from 'containers/Login/actions';
-import {getProfile, updateUser, userNavOut, userNavIn, setNotificationsRead} from './actions';
+
+import {saveUserSettings} from './actions';
+
 import {NavContentWrapper} from 'components';
-
-
-import {globalStyles, profileStyles, navStyles} from 'utils/styleConstants';
-
-import {globalMessages} from 'utils/globalMessages';
-import {FormattedMessage} from 'react-intl';
+import UserSettingsProfile from './UserSettingsProfile';
+import UserSettingsAccount from './UserSettingsAccount';
+import UserSettingsNotifications from './UserSettingsNotifications';
+import {safeGetInToJS} from 'utils/safeParse';
 
 let styles = {};
 
 export const UserSettings = React.createClass({
 	propTypes: {
-		profileData: PropTypes.object,
 		loginData: PropTypes.object,
+		userSettingsData: PropTypes.object,
 		username: PropTypes.string,
 		mode: PropTypes.string,
 		dispatch: PropTypes.func
 	},
 
-	getInitialState: function() {
-		return {
-			userImageFile: null,
-		};
-	},
-
-	statics: {
-		// fetchDataDeferred: function(getState, dispatch, location, routerParams) {
-		// 	if (getState().user.getIn(['profileData', 'username']) !== routerParams.username) {
-		// 		return dispatch(getProfile(routerParams.username));
-		// 	}
-		// 	return dispatch(userNavIn());
-		// }
-	},
-
-	// componentWillUnmount() {
-	// 	this.props.dispatch(userNavOut());
+	// getInitialState: function() {
+	// 	return {
+	// 		userImageFile: null,
+	// 	};
 	// },
 
-	ownProfile: function() {
-		return this.props.loginData.getIn(['userData', 'username']) === this.props.username ? 'self' : 'other';
-	},
-
-	submitLogout: function() {
-		this.props.dispatch(logout());
-		this.props.dispatch(pushState(null, ('/')));
-	},
-
-	settingsSave: function(settingsObject) {
+	saveSettings: function(settings) {
 		// Send it off and save
 		// If user image is in the settingsObject, on the server, save to cloudinary, etc.
 		// console.log('settingsObject', settingsObject);
-		this.props.dispatch(updateUser(settingsObject));
+		console.log(settings);
+		this.props.dispatch(saveUserSettings(settings));
 	},
-	onFileSelect: function(evt) {
-		if (evt.target.files.length) {
-			this.setState({userImageFile: evt.target.files[0]});
-		}
-	},
-	cancelImageUpload: function() {
-		this.setState({userImageFile: null});
-	},
-	userImageUploaded: function(url) {
-		this.setState({userImageFile: null});
-		this.settingsSave({image: url});
-	},
-	followUserToggle: function() {
-		if (!this.props.loginData.get('loggedIn')) {
-			return this.props.dispatch(toggleVisibility());
-		}
-
-		const analyticsData = {
-			type: 'pubs',
-			followedID: this.props.profileData.getIn(['profileData', '_id']),
-			username: this.props.profileData.getIn(['profileData', 'username']),
-			fullname: this.props.profileData.getIn(['profileData', 'fullname']),
-			image: this.props.profileData.getIn(['profileData', 'image']),
-			numFollowers: this.props.profileData.getIn(['profileData', 'followers']) ? this.props.profileData.getIn(['profileData', 'followers']).size : 0,
-		};
-
-		const isFollowing = this.props.loginData.getIn(['userData', 'following', 'users']) ? this.props.loginData.getIn(['userData', 'following', 'users']).indexOf(this.props.profileData.getIn(['profileData', '_id'])) > -1 : false;
-
-		if (isFollowing) {
-			this.props.dispatch( unfollow('users', this.props.profileData.getIn(['profileData', '_id']), analyticsData) );
-		} else {
-			this.props.dispatch( follow('users', this.props.profileData.getIn(['profileData', '_id']), analyticsData) );
-		}
-	},
-	setNotificationsRead: function() {
-		if (this.ownProfile() === 'self') {
-			this.props.dispatch(setNotificationsRead(this.props.profileData.getIn(['profileData', '_id'])));
-		}
-
-	},
+	// onFileSelect: function(evt) {
+	// 	if (evt.target.files.length) {
+	// 		this.setState({userImageFile: evt.target.files[0]});
+	// 	}
+	// },
+	// cancelImageUpload: function() {
+	// 	this.setState({userImageFile: null});
+	// },
+	// userImageUploaded: function(url) {
+	// 	this.setState({userImageFile: null});
+	// 	this.settingsSave({image: url});
+	// },
+	
 
 	render: function() {
-		const metaData = {};
-		if (this.props.profileData.getIn(['profileData', 'name'])) {
-			metaData.title = 'PubPub - ' + this.props.profileData.getIn(['profileData', 'name']);
-		} else {
-			metaData.title = 'PubPub - ' + this.props.username;
-		}
+		const userData = safeGetInToJS(this.props.loginData, ['userData']) || {};
 
-		let profileData = {};
-		if (this.props.loginData.get('userData').toJS) {
-			profileData = this.props.loginData.get('userData').toJS();
-		}
-
-		const ownProfile = this.ownProfile();
+		const metaData = {
+			title: 'Settings · ' + userData.name,
+		};
 
 		const mobileNavButtons = [
 			{ type: 'button', mobile: true, text: 'Follow', action: this.followUserToggle },
 			{ type: 'button', mobile: true, text: 'Menu', action: undefined },
-			{ type: 'button', mobile: true, text: 'M2enu', action: undefined },
 		];
 		const navItems = [
-			{ type: 'link', text: 'Recent Activity', link: '/user/' + this.props.username },
-			{ type: 'spacer' },
-			{ type: 'link', text: 'Pubs', link: '/user/' + this.props.username + '/pubs', active: true },
-			{ type: 'link', text: 'Groups', link: '/user/' + this.props.username + '/groups' },
-			{ type: 'link', text: 'Journals', link: '/user/' + this.props.username + '/journals' },
+			{ type: 'link', text: 'Profile', link: '/settings', active: !this.props.mode},
+			{ type: 'link', text: 'Account', link: '/settings/account', active: this.props.mode === 'account'},
+			{ type: 'link', text: 'Notifications', link: '/settings/notifications', active: this.props.mode === 'notifications' },
 		];
+
 
 		return (
 			<div>
@@ -135,16 +74,40 @@ export const UserSettings = React.createClass({
 
 				<div className={'profile-header section'}>
 					<div style={styles.headerImageWrapper}>
-						<img src={'https://jake.pubpub.org/unsafe/200x200/' + profileData.image} />
+						<img src={'https://jake.pubpub.org/unsafe/150x150/' + userData.image} />
 					</div>
 					<div style={styles.headerTextWrapper}>
 						<h1>User Settings</h1>
-						<h1 style={styles.subH1}>{profileData.name}</h1>
+						<h1 style={styles.subH1}>{userData.name}</h1>
 					</div>
 				</div>
 
 				<NavContentWrapper navItems={navItems} mobileNavButtons={mobileNavButtons}>
-					<h2>User Details</h2>
+					{(() => {
+						switch (this.props.mode) {
+						case 'account':
+							return (
+								<UserSettingsAccount
+									settingsData={this.props.userSettingsData}
+									loginData={this.props.loginData}
+									saveSettingsHandler={this.saveSettings}/>
+							);
+						case 'notifications':
+							return (
+								<UserSettingsNotifications
+									settingsData={this.props.userSettingsData}
+									loginData={this.props.loginData}
+									saveSettingsHandler={this.saveSettings}/>
+							);
+						default:
+							return (
+								<UserSettingsProfile
+									settingsData={this.props.userSettingsData}
+									loginData={this.props.loginData}
+									saveSettingsHandler={this.saveSettings}/>
+							);
+						}
+					})()}
 					
 				</NavContentWrapper>
 
@@ -157,7 +120,7 @@ export const UserSettings = React.createClass({
 export default connect( state => {
 	return {
 		loginData: state.login,
-		profileData: state.user,
+		userSettingsData: state.userSettings,
 		username: state.router.params.username,
 		mode: state.router.params.mode,
 	};
@@ -184,7 +147,7 @@ styles = {
 	},
 	subH1: {
 		fontWeight: 'normal',
-		fontSize: '3em',
+		fontSize: '2.5em',
 		marginTop: '-.5em',
 	},
 };
