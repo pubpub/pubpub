@@ -1,6 +1,6 @@
 import React from 'react';
 import {IndexRoute, Route} from 'react-router';
-import {App, Editor, EmailVerification, Femi, GroupCreate, GroupProfile, JournalCreate, JournalProfile, Landing, Login, PubCreate, PubReader, ResetPassword, SignUp, UserProfile} from 'containers';
+import {App, Analytics, Editor, EmailVerification, Femi, GroupCreate, GroupProfile, JournalCreate, JournalProfile, Landing, Login, PubCreate, PubReader, ResetPassword, SignUp, UserProfile} from 'containers';
 import {About, AboutJournals, AboutPubs, AboutReviews, NotFound} from 'components';
 
 export default () => {
@@ -15,6 +15,7 @@ export default () => {
 			<Route path="/about" component={About}/>
 
 			<Route path="/femi" component={Femi}/>
+			<Route path="/analytics" component={Analytics}/>
 
 			<Route path="/group/:groupSlug" component={GroupProfile}/>
 			<Route path="/group/:groupSlug/:mode" component={GroupProfile}/>

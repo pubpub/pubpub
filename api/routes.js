@@ -10,6 +10,7 @@
 
 require('./routes/app-routes');
 require('./routes/femi-routes');
+require('./routes/analytics-routes');
 require('./routes/asset-routes');
 require('./routes/autocomplete-routes');
 require('./routes/discussion-routes');

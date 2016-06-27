@@ -51,7 +51,7 @@ export const App = React.createClass({
 
 	render: function() {
 		const messages = safeGetInToJS(this.props.appData, ['languageObject']) || {}; // Messages includes all of the strings used on the site. Language support is implemented by sending a different messages object.
-		const hideFooter = this.props.path.substring(this.props.path.length - 6, this.props.path.length) === '/draft' || this.props.path.substring(this.props.path.length - 6, this.props.path.length) === '/login' || this.props.path.substring(this.props.path.length - 5, this.props.path.length) === '/femi' || this.props.path.substring(this.props.path.length - 7, this.props.path.length) === '/signup'; // We want to hide the footer if we are in the editor or login. All other views show the footer.
+		const hideFooter = this.props.path.substring(this.props.path.length - 6, this.props.path.length) === '/draft' || this.props.path.substring(this.props.path.length - 6, this.props.path.length) === '/login' || this.props.path.substring(this.props.path.length - 5, this.props.path.length) === '/femi' || this.props.path.substring(this.props.path.length - 10, this.props.path.length) === '/analytics' || this.props.path.substring(this.props.path.length - 7, this.props.path.length) === '/signup'; // We want to hide the footer if we are in the editor or login. All other views show the footer.
 		const metaData = { // Metadata that will be used by Helmet to populate the <head> tag
 			meta: [
 				{property: 'og:site_name', content: 'PubPub'},
