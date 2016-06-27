@@ -16,6 +16,7 @@ import {
 export const defaultState = Immutable.Map({
 	atomData: {},
 	currentVersionData: {},
+	versionsData: {},
 	contributorData: {},
 	status: 'loading',
 	error: null
@@ -38,6 +39,7 @@ function getAtomDataSuccess(state, result) {
 		status: 'loaded',
 		atomData: result.atomData,
 		currentVersionData: result.currentVersionData,
+		versionsData: result.versionsData,
 		contributorData: result.contributorData,
 		error: null
 	});
@@ -48,6 +50,7 @@ function getAtomDataFail(state, error) {
 		status: 'loaded',
 		atomData: {},
 		currentVersionData: {},
+		versionsData: {},
 		contributorData: {},
 		error: error,
 	});
