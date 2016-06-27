@@ -25,7 +25,13 @@ export const HorizontalNav = React.createClass({
 				
 				<div style={styles.pubNavButtonsRight}>
 					{rightNavItems.map((item, index)=>{
-						return <Link to={item.link} style={[styles.pubNavButton, item.active && styles.pubNavButtonActive]} key={'rightNav-' + index} className={'horizontalNavHover'}>{item.text}</Link>;
+						if (item.link) {
+							return <Link to={item.link} style={[styles.pubNavButton, item.active && styles.pubNavButtonActive]} key={'rightNav-' + index} className={'horizontalNavHover'}>{item.text}</Link>;
+						}
+						if (item.action) {
+							return <div onClick={item.action} style={[styles.pubNavButton, item.active && styles.pubNavButtonActive]} key={'rightNav-' + index} className={'horizontalNavHover'}>{item.text}</div>;
+						}
+						
 					})}	
 				</div>
 				
@@ -51,6 +57,8 @@ styles = {
 		padding: '10px',
 		color: 'inherit',
 		textDecoration: 'none',
+		userSelect: 'none',
+		cursor: 'pointer',
 	},
 	pubNavButtonActive: {
 		borderBottom: '2px solid #808284',

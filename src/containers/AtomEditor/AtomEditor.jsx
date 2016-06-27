@@ -82,10 +82,10 @@ const AtomEditor = React.createClass({
 		const navItems = [
 			{text: 'View', link: '/a/' + this.props.slug},
 			{text: 'Edit', link: '/a/' + this.props.slug + '/draft', active: true},
-			{text: 'Details', rightAlign: true, link: '/a/' + this.props.slug + '/analytics'},
-			{text: 'Collaborators', rightAlign: true, link: '/a/' + this.props.slug + '/contributors'},
-			{text: 'Styles', rightAlign: true, link: '/a/' + this.props.slug + '/source'},
-			{text: 'Publishing', rightAlign: true, link: '/a/' + this.props.slug + '/journals'},
+			{text: 'Details', rightAlign: true, action: this.openModal.bind(this, 'details')},
+			{text: 'Collaborators', rightAlign: true, action: this.openModal.bind(this, 'collaborators')},
+			{text: 'Styles', rightAlign: true, action: this.openModal.bind(this, 'styles')},
+			{text: 'Publishing', rightAlign: true, action: this.openModal.bind(this, 'publishing')},
 		];
 
 		return (
@@ -96,7 +96,6 @@ const AtomEditor = React.createClass({
 
 				{/* Pub Section */}
 				<div style={styles.pubSection}>
-					<div className={'button'} onClick={this.openModal.bind(this, 'fish')}>Fish</div>
 					<HorizontalNav navItems={navItems} />
 
 					<AtomEditorHeader
