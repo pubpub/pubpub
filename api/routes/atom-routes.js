@@ -116,27 +116,38 @@ export function getAtomData(req, res) {
 			}
 		});
 
+		const getVersions = new Promise(function(resolve){
+			if (meta === 'versions') {
+				const query = Version.find({_id: {$in: atomResult.versions}});
+				resolve(query);
+			}
+			else {
+				resolve();
+			}
+		});
+
 		const tasks = [
 			getRecentVersion,
-			getContributors
+			getContributors,
+			getVersions
 		];
 
 		return [atomResult, Promise.all(tasks)];
 	})
-	.spread(function(atomResult, taskData) { // Send response 
+	.spread(function(atomResult, taskData) { // Send response
 		// What's spread? See here: http://stackoverflow.com/questions/18849312/what-is-the-best-way-to-pass-resolved-promise-values-down-to-a-final-then-chai
-		console.log(taskData);
 		return res.status(201).json({
 			atomData: atomResult,
 			versionData: taskData[0],
 			contributorData: taskData[1],
+			versionsData: taskData[2]
 		});
 	})
 	.catch(function(error) {
 		console.log('error', error);
 		return res.status(500).json(error);
 	});
-	
+
 
 }
 app.get('/getAtomData', getAtomData);

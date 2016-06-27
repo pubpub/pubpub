@@ -159,29 +159,29 @@ const AtomReader = React.createClass({
 					</div> */}
 
 					<div id={'atom-reader'} className={this.props.meta && 'atom-reader-meta'}>
-						
+
 
 						<AtomReaderHeader
 							title={this.props.atomData.getIn(['atomData', 'title'])}
 							authors={'Jane Doe and Marcus Aurilie'}
 							version={25}
-							versionDate={'Sept 25, 2015'} 
+							versionDate={'Sept 25, 2015'}
 							titleOnly={!!this.props.meta}/>
 
 						{(()=>{
 							switch (this.props.meta) {
 							case 'contributors':
-								return <AtomReaderContributors data={this.props.atomData}/>;
+								return <AtomReaderContributors atomData={this.props.atomData}/>;
 							case 'versions':
-								return <AtomReaderVersions data={this.props.atomData}/>;
+								return <AtomReaderVersions atomData={this.props.atomData}/>;
 							case 'journals':
-								return <AtomReaderJournals data={this.props.atomData}/>;
+								return <AtomReaderJournals atomData={this.props.atomData}/>;
 							case 'analytics':
-								return <AtomReaderAnalytics data={this.props.atomData}/>;
+								return <AtomReaderAnalytics atomData={this.props.atomData}/>;
 							case 'cite':
-								return <AtomReaderCite data={this.props.atomData}/>;
+								return <AtomReaderCite atomData={this.props.atomData}/>;
 							case 'export':
-								return <AtomReaderExport data={this.props.atomData}/>;
+								return <AtomReaderExport atomData={this.props.atomData}/>;
 							default:
 								return <AtomViewerPane atomData={this.props.atomData} />;
 							}
