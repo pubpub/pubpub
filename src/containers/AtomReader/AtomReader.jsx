@@ -159,13 +159,13 @@ const AtomReader = React.createClass({
 					</div> */}
 
 					<div id={'atom-reader'} className={this.props.meta && 'atom-reader-meta'}>
-						
+
 
 						<AtomReaderHeader
 							title={this.props.atomData.getIn(['atomData', 'title'])}
 							authors={'Jane Doe and Marcus Aurilie'}
 							version={25}
-							versionDate={'Sept 25, 2015'} 
+							versionDate={'Sept 25, 2015'}
 							titleOnly={!!this.props.meta}/>
 
 						{(()=>{
