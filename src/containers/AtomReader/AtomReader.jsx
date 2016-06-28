@@ -92,7 +92,7 @@ export const AtomReader = React.createClass({
 				lastCliked: 'discussions'
 			});
 		}
-		
+
 	},
 
 
@@ -128,7 +128,7 @@ export const AtomReader = React.createClass({
 			{link: '/a/' + this.props.slug + '/cite', text: 'Cite', rightAlign: true, active: this.props.meta === 'cite'},
 			{link: '/a/' + this.props.slug + '/export', text: 'Export', rightAlign: true, active: this.props.meta === 'export'},
 		];
-		
+
 		const atomData = safeGetInToJS(this.props.atomData, ['atomData']) || {};
 		const currentVersionContent = safeGetInToJS(this.props.atomData, ['currentVersionData', 'content']) || {};
 		const toc = generateTOC(currentVersionContent.markdown).full;
@@ -140,7 +140,7 @@ export const AtomReader = React.createClass({
 				<Style rules={{
 					'.pagebreak': { opacity: '0', },
 				}} />
-				
+
 				{/* Table of Contents Section */}
 				<div style={[styles.tocSection, !showTOC && {display: 'none'}]}>
 					{toc.map((object, index)=>{
@@ -190,12 +190,12 @@ export const AtomReader = React.createClass({
 					</div>
 
 					{/* License will go here */}
-					
+
 				</div>
 
 				{/* Discussion Section */}
 				<div style={[styles.discussionSection, !showDiscussions && {display: 'none'}]}>
-					<Discussions/>	
+					<Discussions/>
 				</div>
 
 
