@@ -1,33 +1,25 @@
 import React, { PropTypes } from 'react';
 import {connect} from 'react-redux';
-import Radium, {Style} from 'radium';
+import Radium from 'radium';
 import Helmet from 'react-helmet';
-import { Link } from 'react-router';
 import {getAtomEdit, saveVersion} from './actions';
-import {toggleVisibility, follow, unfollow} from 'containers/Login/actions';
-import {createHighlight} from 'containers/MediaLibrary/actions';
+import {safeGetInToJS} from 'utils/safeParse';
 
-import {PubBody, HorizontalNav} from 'components';
+import {HorizontalNav} from 'components';
 import AtomEditorHeader from './AtomEditorHeader';
 import AtomEditorPane from './AtomEditorPane';
 import AtomEditorModals from './AtomEditorModals';
 
-// import PubMeta from './PubMeta/PubMeta';
-// import PubReaderLeftBar from './PubReaderLeftBar';
-// import PubReaderNav from './PubReaderNav';
-import {Discussions} from 'containers';
 
-import {globalStyles} from 'utils/styleConstants';
-
-import {generateTOC} from 'utils/generateTOC';
+// import {globalStyles} from 'utils/styleConstants';
+// import {generateTOC} from 'utils/generateTOC';
 
 // import {globalMessages} from 'utils/globalMessages';
-
-import {FormattedMessage} from 'react-intl';
+// import {FormattedMessage} from 'react-intl';
 
 let styles = {};
 
-const AtomEditor = React.createClass({
+export const AtomEditor = React.createClass({
 	propTypes: {
 		atomEditData: PropTypes.object,
 		loginData: PropTypes.object,
@@ -63,7 +55,6 @@ const AtomEditor = React.createClass({
 			content: newVersionContent
 		};
 		this.props.dispatch(saveVersion(newVersion));
-		// dispatch saveVersion
 	},
 
 	openModal: function(mode) {
@@ -88,6 +79,8 @@ const AtomEditor = React.createClass({
 			{text: 'Publishing', rightAlign: true, action: this.openModal.bind(this, 'publishing')},
 		];
 
+		const atomEditData = safeGetInToJS(this.props.atomEditData, ['atomData']) || {};
+
 		return (
 			<div style={styles.container}>
 
@@ -99,7 +92,7 @@ const AtomEditor = React.createClass({
 					<HorizontalNav navItems={navItems} />
 
 					<AtomEditorHeader
-						title={this.props.atomEditData.getIn(['atomData', 'title'])}
+						title={atomEditData.title}
 						saveVersionHandler={this.saveVersionSubmit} />
 
 					<AtomEditorPane ref={'atomEditorPane'} atomEditData={this.props.atomEditData} loginData={this.props.loginData}/>
@@ -207,27 +200,6 @@ styles = {
 			display: 'none',
 		},
 	},
-	// pubSectionNav: {
-	// 	borderBottom: '1px solid #F3F3F4',
-	// 	fontSize: '0.85em',
-	// 	color: '#808284',
-	// 	maxWidth: '1024px',
-	// 	margin: '0 auto',
-	// },
-	// pubNavVersion: {
-	// 	display: 'inline-block',
-	// 	padding: '10px 0px',
-	// },
-	// pubNavButtons: {
-	// 	float: 'right',
-	// },
-	// pubNavButton: {
-	// 	display: 'inline-block',
-	// 	padding: '10px',
-	// },
-	// pubNavButtonLast: {
-	// 	padding: '10px 0px 10px 10px',
-	// },
 	pubBodyWrapper: {
 		maxWidth: '650px',
 		margin: '0 auto',

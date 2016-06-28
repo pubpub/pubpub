@@ -29,6 +29,12 @@ export const MarkdownEditor = React.createClass({
 
 	mixins: [ReactFireMixin],
 
+	getInitialState() {
+		return {
+			markdown: '',
+		};
+	},
+
 	componentDidMount() {
 		// Load Firebase and bind using ReactFireMixin. For assets, references, etc.
 		const ref = new Firebase(FireBaseURL + this.props.atomEditData.getIn(['atomData', 'slug']) + '/editorData' );

@@ -1,6 +1,7 @@
 import React, {PropTypes} from 'react';
 import Radium from 'radium';
 import {Markdown} from 'components';
+import {safeGetInToJS} from 'utils/safeParse';
 
 let styles = {};
 
@@ -11,7 +12,7 @@ export const MarkdownViewer = React.createClass({
 	},
 
 	render: function() {
-		const markdown = this.props.atomData.getIn(['currentVersionData', 'content', 'markdown']);
+		const markdown = safeGetInToJS(this.props.atomData, ['currentVersionData', 'content', 'markdown']);
 
 		switch (this.props.renderType) {
 		case 'embed':

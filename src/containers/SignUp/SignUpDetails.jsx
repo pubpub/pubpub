@@ -22,7 +22,8 @@ export const SignUpDetails = React.createClass({
 	},
 
 	componentWillMount() {
-		this.setState({bio: safeGetInToJS(this.props.loginData, ['userData']).bio || ''});
+		const userData = safeGetInToJS(this.props.loginData, ['userData']) || {};
+		this.setState({bio: userData.bio || ''});
 	},
 
 	getInitialState: function() {

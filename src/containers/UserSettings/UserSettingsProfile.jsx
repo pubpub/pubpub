@@ -25,7 +25,8 @@ export const UserSettingsProfile = React.createClass({
 	},
 
 	componentWillMount() {
-		this.setState({bio: safeGetInToJS(this.props.loginData, ['userData']).bio || ''});
+		const userData = safeGetInToJS(this.props.loginData, ['userData']) || {};
+		this.setState({bio: userData.bio || ''});
 	},
 
 	saveSubmit: function(evt) {

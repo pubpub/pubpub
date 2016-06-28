@@ -7,6 +7,7 @@ export function safeGetInToJS(obj, props) {
 		if (Immutable.Iterable.isIterable(val) && val.toJS) {
 			return val.toJS();
 		}
+		return val; // If there is no toJS(), it is like just a string or other static value. So return that.
 	}
 	return null;
 }

@@ -6,8 +6,9 @@ import { Link } from 'react-router';
 import {getAtomData} from './actions';
 import {toggleVisibility, follow, unfollow} from 'containers/Login/actions';
 import {createHighlight} from 'containers/MediaLibrary/actions';
+import {safeGetInToJS} from 'utils/safeParse';
 
-import {PubBody, HorizontalNav} from 'components';
+import {HorizontalNav} from 'components';
 import {AtomReaderAnalytics} from './AtomReaderAnalytics';
 import {AtomReaderCite} from './AtomReaderCite';
 import {AtomReaderContributors} from './AtomReaderContributors';
@@ -29,7 +30,7 @@ import {FormattedMessage} from 'react-intl';
 
 let styles = {};
 
-const AtomReader = React.createClass({
+export const AtomReader = React.createClass({
 	propTypes: {
 		atomData: PropTypes.object,
 		loginData: PropTypes.object,
@@ -113,9 +114,7 @@ const AtomReader = React.createClass({
 		// const versionIndex = this.props.query.version !== undefined && this.props.query.version > 0 && this.props.query.version <= (this.props.pubData.getIn(['pubData', 'history']).size - 1)
 		// 	? this.props.query.version - 1
 		// 	: this.props.pubData.getIn(['pubData', 'history']).size - 1;
-		const atomData = {};
 		const metaData = {};
-		
 		const showDiscussions = !this.props.meta && (this.state.showDiscussions && !this.state.showTOC || this.state.showDiscussions && this.state.lastCliked === 'discussions');
 		const showTOC = !this.props.meta && (this.state.showTOC && !this.state.showDiscussions || this.state.showTOC && this.state.lastCliked === 'toc');
 
@@ -130,7 +129,9 @@ const AtomReader = React.createClass({
 			{link: '/a/' + this.props.slug + '/export', text: 'Export', rightAlign: true, active: this.props.meta === 'export'},
 		];
 		
-		const toc = generateTOC(this.props.atomData.getIn(['currentVersionData', 'content', 'markdown'])).full;
+		const atomData = safeGetInToJS(this.props.atomData, ['atomData']) || {};
+		const currentVersionContent = safeGetInToJS(this.props.atomData, ['currentVersionData', 'content']) || {};
+		const toc = generateTOC(currentVersionContent.markdown).full;
 		return (
 			<div style={styles.container}>
 
@@ -162,7 +163,7 @@ const AtomReader = React.createClass({
 
 
 						<AtomReaderHeader
-							title={this.props.atomData.getIn(['atomData', 'title'])}
+							title={atomData.title}
 							authors={'Jane Doe and Marcus Aurilie'}
 							version={25}
 							versionDate={'Sept 25, 2015'}

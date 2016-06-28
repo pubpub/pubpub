@@ -8,7 +8,7 @@ export function getUser(req, res) {
 	const userID = req.user ? req.user._id : undefined;
 	console.time('dbsave');
 	User.getUser(req.query.username, userID, (err, userData)=>{
-		console.log('----')
+		console.log('----');
 		console.timeEnd('dbsave');
 		if (err) {
 			console.log(err);
@@ -25,7 +25,7 @@ export function getUser(req, res) {
 		.then(function(atomsResult) { // Get most recent version
 			userData.atoms = atomsResult;
 			console.timeEnd('dbsave');
-			console.log('----')
+			console.log('----');
 			return res.status(201).json(userData);
 		})
 		.catch(function(error) {
