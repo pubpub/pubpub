@@ -94,7 +94,7 @@ function generateRSSXML(req, instantArticleMode, callback) {
 
 		const featuredInList = (journal) ? { $in: [journal._id] } : {$not: {$size: 0}};
 
-		let query = {
+		const query = {
 			history: {$not: {$size: 0}},
 			featuredInList: featuredInList,
 			discussions: {$not: {$size: 0}},
@@ -109,7 +109,7 @@ function generateRSSXML(req, instantArticleMode, callback) {
 			let newQuery;
 			// only pad RSS if instant articles is enabled for the journal
 			if (rssCount < 10 && journal && journal.fbPagesTag) {
-				const slugArray = [ 'about', 'privacy', 'hello', 'tos', 'design-as-participation', 'enlightenment-to-entanglement', 'designandscience', 'extended-intelligence'].slice(0, 10 - rssCount);
+				const slugArray = [ 'about', 'privacy', 'hello', 'tos', 'design-as-participation', 'enlightenment-to-entanglement', 'designandscience', 'extended-intelligence', 'dbdb', 'retractions', 'SolarCoin', 'medrec'].slice(0, 14 - rssCount);
 				const paddingQuery = {slug: { $in: slugArray } };
 				newQuery = { $or: [query, paddingQuery] };
 			} else {

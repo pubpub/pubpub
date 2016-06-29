@@ -1,4 +1,5 @@
 import request from 'superagent';
+import words from 'lodash/words';
 
 export function checkCaptcha({token, remoteip}) {
 
@@ -66,15 +67,22 @@ function occurrences(string, subString, allowOverlapping) {
 
 export function checkSpam(markdown) {
 
-	const cleanedString = markdown.replace(/[^a-zA-Z0-9! ]+/g, '');
+	const cleanedString = markdown.replace(/[^a-zA-Z0-9! ]+/g, '').toLowerCase();
 	let foundWords = 0;
+	let uniqueWords = 0;
+	const wordCount = words(cleanedString).length;
 
-	const hardspamwords = ['stream', 'watch', 'online', 'live', 'free', 'episode'];
+	const hardspamwords = ['stream', 'watch', 'online', 'live', 'free', 'episode', 'thrones'];
 
 	for (const spamWord of hardspamwords) {
-		foundWords += occurrences(cleanedString, spamWord);
+		const spamWordCount = occurrences(cleanedString, spamWord);
+		foundWords += spamWordCount;
+		if (spamWordCount > 1) {
+			uniqueWords++;
+		}
 	}
-	if (foundWords >= 4) {
+
+	if (uniqueWords >= 2 && foundWords >= (3 + Math.round(wordCount / 100)) ) {
 		return true;
 	}
 	return false;

@@ -9,8 +9,8 @@ import {fireBaseURL, generateAuthToken} from '../services/firebase';
 import {featurePub} from '../services/recommendations';
 
 export function createJournal(req, res) {
-	if (!req.user) { 
-		return res.status(500).json('Not logged in'); 
+	if (!req.user) {
+		return res.status(500).json('Not logged in');
 	}
 
 	Journal.isUnique(req.body.subdomain, (err, result)=>{
@@ -135,18 +135,18 @@ export function saveJournal(req, res) {
 			journal.admins.map((adminID)=>{
 				// If it was in the old, but is not in the new, pull it
 				if (newAdminStrings.indexOf(adminID.toString()) === -1) {
-					User.update({ _id: adminID }, { $pull: { adminJournals: journal._id} }, function(adminAddErr, addAdminResult) {if (adminAddErr) return res.status(500).json('Failed to add as admin'); });	
+					User.update({ _id: adminID }, { $pull: { adminJournals: journal._id} }, function(adminAddErr, addAdminResult) {if (adminAddErr) return res.status(500).json('Failed to add as admin'); });
 				}
 			});
 
 			req.body.newObject.admins.map((adminID)=>{
 				// If it is in the new, but was not in the old, add it
 				if (oldAdminStrings.indexOf(adminID.toString()) === -1) {
-					User.update({ _id: adminID }, { $addToSet: { adminJournals: journal._id} }, function(adminAddErr, addAdminResult) {if (adminAddErr) return res.status(500).json('Failed to add as admin'); });	
+					User.update({ _id: adminID }, { $addToSet: { adminJournals: journal._id} }, function(adminAddErr, addAdminResult) {if (adminAddErr) return res.status(500).json('Failed to add as admin'); });
 				}
 			});
-			
-		} 
+
+		}
 
 		for (const key in req.body.newObject) {
 			if (req.body.newObject.hasOwnProperty(key)) {
@@ -304,7 +304,10 @@ export function getJournalCollections(req, res) {
 	Journal.findOne({ $or: [ {subdomain: host.split('.')[0]}, {customDomain: host}]})
 	.populate(Journal.populationObject(true, false))
 	.lean().exec(function(err, journal) {
-		if (err) {console.log(err); return res.status(201).json();}
+		if (err || !journal) {
+			console.log(err);
+			return res.status(201).json();
+		}
 		return res.status(201).json(journal.collections);
 	});
 }

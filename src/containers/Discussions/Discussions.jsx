@@ -152,7 +152,17 @@ const Discussions = React.createClass({
 
 		const userAssets = this.props.loginData.getIn(['userData', 'assets']) ? this.props.loginData.getIn(['userData', 'assets']).toJS() : [];
 
-		discussionsData.sort(function(aIndex, bIndex) { return this.getHotness(bIndex) - this.getHotness(aIndex); }.bind(this));
+		const sortedDiscussions = discussionsData.sort(function(aIndex, bIndex) {
+			const aScore = this.getHotness(aIndex);
+			const bScore = this.getHotness(bIndex);
+			if (aScore < bScore) {
+				return -1;
+			} else if (aScore > bScore) {
+				return 1;
+			}
+			return 0;
+		}.bind(this));
+
 		return (
 			<div style={styles.container}>
 
@@ -200,7 +210,7 @@ const Discussions = React.createClass({
 					}
 
 					{
-						discussionsData.map((discussion)=>{
+						sortedDiscussions.map((discussion)=>{
 							// console.log(discussion);
 							return (discussion
 								? <DiscussionsItem
