@@ -11,5 +11,26 @@ table, figure, image, .reference, h1, h2, h3, h4, h5, h6 {
 }
 
 .pagebreak {
+	opacity: 0 !important;
 	page-break-before: always !important;
+}
+
+
+blockquote {
+	padding: 10px 20px;
+	margin: 0 0 20px;
+	font-size: 1em;
+	border-left: 5px solid #eee;
+}
+#pubContent h1, #pubContent h2, #pubContent h3, #pubContent h4, #pubContent h5, #pubContent h6, h1, h2, h3, h4, h5, h6 {
+	color: #222;
+}
+
+
+table, figure, image, .reference, h1, h2, h3, h4, h5, h6 {
+	page-break-inside: avoid !important;
+}
+
+.codeBlockPre{
+	page-break-inside: avoid !important;
 }
