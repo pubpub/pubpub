@@ -31,10 +31,6 @@ const Landing = React.createClass({
 	},
 
 	onFileFinish: function(evt, index, type, filename) {
-		// this.setState({
-		// 	url: 'https://assets.pubpub.org/' + filename,
-		// 	isUploading: false,
-		// });
 
 		let atomType = undefined;
 		const extension = filename.split('.').pop();
