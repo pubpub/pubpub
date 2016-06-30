@@ -72,21 +72,21 @@ export const UserSettingsProfile = React.createClass({
 				
 				<form onSubmit={this.saveSubmit} style={styles.form}>
 					<div>
-						<label style={styles.label} htmlFor={'firstName'}>
+						<label htmlFor={'firstName'}>
 							<FormattedMessage id="signup.FirstName" defaultMessage="First Name"/>
 						</label>
 						<input ref={'firstName'} id={'firstName'} name={'first name'} type="text" style={styles.input} defaultValue={userData.firstName}/>
 					</div>
 
 					<div>
-						<label style={styles.label} htmlFor={'lastName'}>
+						<label htmlFor={'lastName'}>
 							<FormattedMessage id="signup.LastName" defaultMessage="Last Name"/>
 						</label>
 						<input ref={'lastName'} id={'lastName'} name={'last name'} type="text" style={styles.input} defaultValue={userData.lastName}/>
 					</div>
 
 					<div>
-						<label style={styles.label} htmlFor={'userImage'}>
+						<label htmlFor={'userImage'}>
 							<FormattedMessage {...globalMessages.ProfileImage}/>
 						</label>
 						<img style={styles.userImage} src={this.state.userImageURL || 'https://jake.pubpub.org/unsafe/100x100/' + userData.image} />
@@ -95,7 +95,7 @@ export const UserSettingsProfile = React.createClass({
 					</div>
 
 					<div>
-						<label style={styles.label} htmlFor={'bio'}>
+						<label htmlFor={'bio'}>
 							<FormattedMessage {...globalMessages.Bio}/>
 						</label>
 						<textarea ref={'bio'} id={'bio'} name={'bio'} type="text" style={[styles.input, styles.bio]} onChange={this.bioUpdate} value={this.state.bio}></textarea>
@@ -105,14 +105,14 @@ export const UserSettingsProfile = React.createClass({
 					</div>
 
 					<div>
-						<label style={styles.label} htmlFor={'website'}>
+						<label htmlFor={'website'}>
 							<FormattedMessage {...globalMessages.Website}/>
 						</label>
 						<input ref={'website'} id={'website'} name={'website'} type="text" style={styles.input} defaultValue={userData.website}/>
 					</div>
 
 					<div>
-						<label style={styles.label} htmlFor={'twitter'}>
+						<label htmlFor={'twitter'}>
 							Twitter
 						</label>
 						<div style={styles.prefixedInputWrapper}>
@@ -122,7 +122,7 @@ export const UserSettingsProfile = React.createClass({
 					</div>
 
 					<div>
-						<label style={styles.label} htmlFor={'orcid'}>
+						<label htmlFor={'orcid'}>
 							ORCID
 						</label>
 						<div style={styles.prefixedInputWrapper}>
@@ -132,7 +132,7 @@ export const UserSettingsProfile = React.createClass({
 					</div>
 
 					<div>
-						<label style={styles.label} htmlFor={'github'}>
+						<label htmlFor={'github'}>
 							Github
 						</label>
 						<div style={styles.prefixedInputWrapper}>
@@ -142,7 +142,7 @@ export const UserSettingsProfile = React.createClass({
 					</div>
 
 					<div>
-						<label style={styles.label} htmlFor={'googleScholar'}>
+						<label htmlFor={'googleScholar'}>
 							Google Scholar
 						</label>
 						<div style={styles.prefixedInputWrapper}>

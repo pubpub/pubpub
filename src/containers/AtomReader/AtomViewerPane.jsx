@@ -10,7 +10,6 @@ export const AtomViewerPane = React.createClass({
 
 	render: function() {
 		const type = safeGetInToJS(this.props.atomData, ['atomData', 'type']);
-		console.log('type is');
 		switch (type) {
 		case 'markdown': 
 			return <MarkdownViewer atomData={this.props.atomData} />;

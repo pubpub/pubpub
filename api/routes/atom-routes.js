@@ -159,13 +159,16 @@ export function getAtomEdit(req, res) {
 		return [atomResult, Version.findOne({_id: mostRecentVersionId}).exec()];
 	})
 	.spread(function(atomResult, versionResult) { // Send response
-		return res.status(201).json({
-			atomData: {
-				...atomResult,
-				token: firebaseTokenGen(req.user.username, slug, false) // the false should be {isReader}
-			},
+		const output = {
+			atomData: atomResult,
 			currentVersionData: versionResult
-		});
+		};
+
+		if (atomResult.type === 'markdown') { // If we're sending down Editor data for a markdown atom, include the firebase token so we can do collaborative editing
+			output.atomData.token = firebaseTokenGen(req.user.username, slug, false); // the false should be {isReader}
+		}
+
+		return res.status(201).json(output);
 	})
 	.catch(function(error) {
 		console.log('error', error);

@@ -90,7 +90,7 @@ export const SignUpDetails = React.createClass({
 				
 				<form onSubmit={this.detailsSubmit}>
 					<div>
-						<label style={styles.label} htmlFor={'userImage'}>
+						<label htmlFor={'userImage'}>
 							<FormattedMessage {...globalMessages.ProfileImage}/>
 						</label>
 						<img style={styles.userImage} src={this.state.userImageURL || userData.image} />
@@ -99,7 +99,7 @@ export const SignUpDetails = React.createClass({
 					</div>
 
 					<div>
-						<label style={styles.label} htmlFor={'bio'}>
+						<label htmlFor={'bio'}>
 							<FormattedMessage {...globalMessages.Bio}/>
 						</label>
 						<textarea ref={'bio'} id={'bio'} name={'bio'} type="text" style={[styles.input, styles.bio]} onChange={this.bioUpdate} value={this.state.bio}></textarea>
@@ -109,14 +109,14 @@ export const SignUpDetails = React.createClass({
 					</div>
 
 					<div>
-						<label style={styles.label} htmlFor={'website'}>
+						<label htmlFor={'website'}>
 							<FormattedMessage {...globalMessages.Website}/>
 						</label>
 						<input ref={'website'} id={'website'} name={'website'} type="text" style={styles.input} defaultValue={userData.website}/>
 					</div>
 
 					<div>
-						<label style={styles.label} htmlFor={'twitter'}>
+						<label htmlFor={'twitter'}>
 							Twitter
 						</label>
 						<div style={styles.prefixedInputWrapper}>
@@ -126,7 +126,7 @@ export const SignUpDetails = React.createClass({
 					</div>
 
 					<div>
-						<label style={styles.label} htmlFor={'orcid'}>
+						<label htmlFor={'orcid'}>
 							ORCID
 						</label>
 						<div style={styles.prefixedInputWrapper}>
@@ -136,7 +136,7 @@ export const SignUpDetails = React.createClass({
 					</div>
 
 					<div>
-						<label style={styles.label} htmlFor={'github'}>
+						<label htmlFor={'github'}>
 							Github
 						</label>
 						<div style={styles.prefixedInputWrapper}>
@@ -146,7 +146,7 @@ export const SignUpDetails = React.createClass({
 					</div>
 
 					<div>
-						<label style={styles.label} htmlFor={'googleScholar'}>
+						<label htmlFor={'googleScholar'}>
 							Google Scholar
 						</label>
 						<div style={styles.prefixedInputWrapper}>

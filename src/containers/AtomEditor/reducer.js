@@ -80,7 +80,6 @@ function saveVersionLoad(state) {
 
 function saveVersionSuccess(state, result) {
 	const newAtomData = state.get('atomData').toJS();
-	console.log('newAtomData', newAtomData);
 	newAtomData.versions.push(result);
 	return state.merge({
 		status: 'loaded',
