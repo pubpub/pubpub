@@ -2,7 +2,7 @@ import React, {PropTypes} from 'react';
 import Radium from 'radium';
 import {safeGetInToJS} from 'utils/safeParse';
 import {s3Upload} from 'utils/uploadFile';
-import {Loader} from 'components';
+import {Loader, CustomizableForm} from 'components';
 
 let styles = {};
 
@@ -19,10 +19,35 @@ export const ImageEditor = React.createClass({
 		};
 	},
 
+	componentWillMount() {
+		const metadata = safeGetInToJS(this.props.atomEditData, ['currentVersionData', 'content', 'metadata']) || {};
+		const defaultMetadata = {
+			location: {
+				title: 'Location',
+				value: ''
+			},
+			originData: {
+				title: 'Date of origin',
+				value: '',
+			},
+		};
+		this.setState({metadata: {
+			...defaultMetadata,
+			...metadata
+		}});
+	},
+
 	getSaveVersionContent: function() {
+		const cleanMetadata = {};
+		Object.keys(this.state.metadata).map((key, index)=>{
+			// Clear all the metadata entries that don't have a value
+			if (this.state.metadata[key].value) {
+				cleanMetadata[key] = this.state.metadata[key];
+			}
+		});
 		return {
-			url: this.state.url,
-			metadata: this.state.metadata,
+			url: this.state.url || safeGetInToJS(this.props.atomEditData, ['currentVersionData', 'content', 'url']),
+			metadata: cleanMetadata,
 		};
 	},
 
@@ -32,11 +57,16 @@ export const ImageEditor = React.createClass({
 			s3Upload(evt.target.files[0], ()=>{}, this.onFileFinish, 0);
 		}
 	},
+
 	onFileFinish: function(evt, index, type, filename) {
 		this.setState({
 			url: 'https://assets.pubpub.org/' + filename,
 			isUploading: false,
 		});
+	},
+
+	metadataUpdate: function(newMetadata) {
+		this.setState({metadata: newMetadata});
 	},
 
 	render: function() {
@@ -50,30 +80,13 @@ export const ImageEditor = React.createClass({
 				<div style={styles.loaderWrapper}>
 					<Loader loading={this.state.isUploading} showCompletion={true}/>
 				</div>
+				<a href={imageSource} alt={'Original Size: ' + title} target="_blank" className={'underlineOnHover'} style={styles.originalLink}>View Original</a>
+
 				<h3>Choose new file</h3>
-				<form style={styles.form}>
-					<div>
-						<input id={'imageFile'} name={'image file'} type="file" accept="image/*" onChange={this.handleFileSelect} />
-					</div>
-				</form>
+				<input id={'imageFile'} name={'image file'} type="file" accept="image/*" onChange={this.handleFileSelect} />
 
 				<h3>Metadata</h3>
-				<form style={styles.form}>
-					<div>
-						<label htmlFor={'firstName'}>
-							Name
-						</label>
-						<input ref={'firstName'} id={'firstName'} name={'first name'} type="text" style={styles.input} defaultValue={''}/>
-					</div>
-
-					<div>
-						<label htmlFor={'lastName'}>
-							Other Name
-						</label>
-						<input ref={'lastName'} id={'lastName'} name={'last name'} type="text" style={styles.input} defaultValue={''}/>
-					</div>
-
-				</form>
+				<CustomizableForm formData={this.state.metadata} onUpdate={this.metadataUpdate}/>
 				
 			</div>
 		);
@@ -86,13 +99,10 @@ styles = {
 	loaderWrapper: {
 		display: 'inline-block',
 	},
-	form: {
-		width: '600px',
-		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
-			width: 'auto',
-		},
-	},
-	input: {
-		width: 'calc(100% - 20px - 4px)', // Calculations come from padding and border in pubpub.css
+	originalLink: {
+		display: 'table-cell',
+		color: 'inherit',
+		textDecoration: 'none',
+		fontSize: '0.9em',
 	},
 };

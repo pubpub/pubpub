@@ -3,6 +3,7 @@ export AboutJournals from './About/AboutJournals';
 export AboutPubs from './About/AboutPubs';
 export AboutReviews from './About/AboutReviews';
 export Button from './Button/Button';
+export CustomizableForm from './CustomizableForm/CustomizableForm';
 export Formatting from './Formatting/Formatting';
 export HorizontalNav from './HorizontalNav/HorizontalNav';
 export ImageCropper from './ImageCropper/ImageCropper';
