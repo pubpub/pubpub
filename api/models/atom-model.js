@@ -13,6 +13,8 @@ const atomSchema = new Schema({
 	lastUpdated: { type: Date },
 	isPublished: { type: Boolean }, // True if any version is published
 	
+	// language: { type: String }, // For search and sorting.
+
 	versions: [{ type: ObjectId, ref: 'Version'}],
 	// links: [{ type: ObjectId, ref: 'Link'}],
 
