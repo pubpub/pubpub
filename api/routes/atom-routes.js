@@ -39,11 +39,30 @@ export function createAtom(req, res) {
 	atom.save() // Save new atom data
 	.then(function(newAtom) { // Create new Links pointing between atom and author
 		const newAtomID = newAtom._id;
-		const linksToCreate = [
+		const tasks = [
 			Link.createLink('editor', userID, newAtomID, userID, now),
 			Link.createLink('author', userID, newAtomID, userID, now),
 		];
-		return Promise.all(linksToCreate);
+
+		// If there is version data, create the version!
+		if (req.body.versionContent) {
+			const newVersion = new Version({
+				type: newAtom.type,
+				message: '',
+				parent: newAtom._id,
+				content: req.body.versionContent
+			});
+			tasks.push(newVersion.save());
+		}
+
+		return Promise.all(tasks);
+	})
+	.then(function(taskResults) { // If we created a version, make sure to add that version to parent
+		if (taskResults.length === 3) {
+			const versionData = taskResults[2];
+			return Atom.update({ _id: versionData.parent }, { $addToSet: { versions: versionData._id} }).exec();
+		}
+		return undefined;
 	})
 	.then(function() { // If type is markdown, authenticate firebase connection
 		if (type !== 'markdown') { return undefined; } 

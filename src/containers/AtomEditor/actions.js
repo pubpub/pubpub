@@ -23,11 +23,12 @@ export const SAVE_VERSION_FAIL = 'atomEdit/SAVE_VERSION_FAIL';
 // action objects (e.g. {type:example, payload:data} ) within dispatch()
 // function calls
 /*--------*/
-export function createAtom(type) {
+export function createAtom(type, versionContent) {
 	return {
 		types: [CREATE_ATOM_LOAD, CREATE_ATOM_SUCCESS, CREATE_ATOM_FAIL],
 		promise: (client) => client.post('/createAtom', {data: {
-			'type': type,
+			type: type,
+			versionContent: versionContent
 		}})
 	};
 }

@@ -6,6 +6,8 @@ import Helmet from 'react-helmet';
 import {PreviewCard} from 'components';
 import {About} from 'components';
 // import { Link } from 'react-router';
+import {s3Upload} from 'utils/uploadFile';
+import {createAtom} from 'containers/AtomEditor/actions';
 
 let styles = {};
 
@@ -22,6 +24,39 @@ const Landing = React.createClass({
 		};
 	},
 
+	handleFileSelect: function(evt) {
+		if (evt.target.files.length) {
+			s3Upload(evt.target.files[0], ()=>{}, this.onFileFinish, 0);
+		}
+	},
+
+	onFileFinish: function(evt, index, type, filename) {
+		// this.setState({
+		// 	url: 'https://assets.pubpub.org/' + filename,
+		// 	isUploading: false,
+		// });
+
+		let atomType = undefined;
+		const extension = filename.split('.').pop();
+		switch (extension) {
+		case 'jpg':
+		case 'png':
+		case 'jpeg':
+		case 'tiff':
+			atomType = 'image'; break;
+		case 'pdf':
+			atomType = 'pdf'; break;
+		case 'ipynb':
+			atomType = 'jupyter'; break;
+		default:
+			break;
+		}
+		
+		const versionContent = {
+			url: 'https://assets.pubpub.org/' + filename
+		};
+		this.props.dispatch(createAtom(atomType, versionContent));
+	},
 
 	render: function() {
 		const metaData = {
@@ -38,9 +73,13 @@ const Landing = React.createClass({
 				{!loggedIn &&
 					<About />
 				}
-				
+
+					
 				<div className={'lightest-bg'}>
 					<div className={'section'}>
+
+						<input type="file" accept="*" onChange={this.handleFileSelect} />
+
 						<h2>Recent Activity</h2>
 
 						{/* If no activity, display - follow these suggested accounts*/}
