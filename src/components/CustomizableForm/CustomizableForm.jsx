@@ -60,7 +60,7 @@ export const CustomizableForm = React.createClass({
 		return (
 			<div style={styles.container}>
 				
-				{Object.keys(this.props.formData).map((key, index)=>{
+				{Object.keys(this.props.formData || {}).map((key, index)=>{
 					return (
 						<div key={key + '-input'}>
 							<label htmlFor={key}>
