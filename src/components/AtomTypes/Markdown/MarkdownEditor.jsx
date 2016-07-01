@@ -85,15 +85,17 @@ export const MarkdownEditor = React.createClass({
 
 	render: function() {
 		return (
-			<div>
+			<div style={styles.container}>
 				<Style rules={{
 					...codeMirrorStyles(),
 					...codeMirrorStyleClasses
 				}} />
 
-				<div id={'active-collaborators'}></div>
-				<div id={'codemirror-wrapper'} style={styles.block}></div>
-				<div id={'atom-reader'} style={styles.block}> <Markdown markdown={this.state.markdown}/></div>
+				<div id={'active-collaborators'} style={styles.collaborators}></div>
+				<div id={'codemirror-wrapper'} style={[styles.block, styles.codeBlock]}></div>
+				<div id={'atom-reader'} style={[styles.block, styles.previewBlock]}> 
+					<Markdown markdown={this.state.markdown}/>
+				</div>
 				
 			</div>
 		);
@@ -103,9 +105,22 @@ export const MarkdownEditor = React.createClass({
 export default Radium(MarkdownEditor);
 
 styles = {
+	container: {
+		display: 'table',
+		width: '100%',
+	},
+	collaborators: {
+		position: 'absolute',
+	},
 	block: {
 		display: 'table-cell',
 		verticalAlign: 'top',
 		width: '50%',
+	},
+	codeBlock: {
+		backgroundColor: '#F3F3F4',
+	},
+	previewBlock: {
+		boxShadow: '0px 2px 2px #aaa',
 	},
 };
