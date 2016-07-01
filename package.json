@@ -126,6 +126,7 @@
     "markdown-it-abbr": "^1.0.3",
     "markdown-it-container": "^2.0.0",
     "markdown-it-emoji": "^1.1.0",
+    "markdown-it-footnote": "^3.0.0",
     "markdown-it-math": "^4.0.1",
     "markdown-it-sub": "^1.0.0",
     "markdown-it-sup": "^1.0.0",

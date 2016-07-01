@@ -71,6 +71,21 @@ const DEFAULT_RULES = {
 		return [['math', compact([token.tag, attrs, token.content])]];
 	},
 
+	footnoteInline(token, attrs, children) {
+		return [['footnote2', compact([token.tag, attrs, token.content])]];
+	},
+
+	footnoteDef(token, attrs, children) {
+		console.log('Footnote def', token, attrs, children);
+
+		return [['footnote', compact([token.tag, attrs, token.content])]];
+	},
+
+	footnoteBlockOpen(token, attrs, children) {
+		console.log('Footnote open', token, attrs, children);
+		return [['footnote', compact([token.tag, attrs, token.content])]];
+	},
+
 	/*
 	pubitemOpen(token, attrs, children) {
 	if (token.pubItemField) {
@@ -83,6 +98,9 @@ const DEFAULT_RULES = {
 	default(token, attrs, children, options, getNext) {
 		if (token.nesting === 1 && token.hidden) {
 			return getNext();
+		}
+		if (token.tag.indexOf('footnote') !== -1) {
+			console.log('WE GOT A FOOTNOTE', token.tag);
 		}
 		/* plugin-related */
 		if (!token.tag) {
