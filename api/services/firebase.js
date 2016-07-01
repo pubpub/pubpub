@@ -3,6 +3,7 @@ const FirebaseTokenGenerator = require('firebase-token-generator');
 
 export function firebaseTokenGen(username, pubSlug, isReader) {
 	const tokenGenerator = new FirebaseTokenGenerator(firebaseSecret);
+	console.log('firebaseSecret', firebaseSecret);
 	return tokenGenerator.createToken({ uid: username, pubSlug: pubSlug, isReader: isReader });
 }
 
