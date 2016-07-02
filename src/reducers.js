@@ -13,6 +13,8 @@ import explore from './containers/Explore/reducer';
 import discussions from './containers/Discussions/reducer';
 import group from './containers/GroupProfile/reducer';
 import journal from './containers/JournalProfile/reducer';
+import jrnlCreate from './containers/JrnlCreate/reducer';
+import jrnl from './containers/JrnlProfile/reducer';
 import landing from './containers/Landing/reducer';
 import login from './containers/Login/reducer';
 import signUp from './containers/SignUp/reducer';
@@ -56,6 +58,8 @@ export default combineReducers({
 	discussions,
 	group,
 	journal,
+	jrnlCreate,
+	jrnl,
 	landing,
 	login,
 	signUp,

@@ -26,7 +26,7 @@ export function signup(req, res) {
 			name: fullName,
 			registerDate: new Date(Date.now()),
 			sendNotificationDigest: true,
-			image: 'https://assets.pubpub.org/happyPub.png',
+			image: 'https://assets.pubpub.org/_site/happyPub.png',
 			verificationHash: verificationHash,
 			verifiedEmail: false,
 		});

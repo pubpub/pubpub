@@ -39,10 +39,10 @@ export const MarkdownEditor = React.createClass({
 	componentDidMount() {
 		const prosemirror = require('prosemirror');
 		const schema = require('prosemirror/dist/schema-basic').schema;
-		var editor = new prosemirror.ProseMirror({
-		  place: document.getElementById('codemirror-wrapper'),
-		  schema: schema
-		})
+		const editor = new prosemirror.ProseMirror({
+			place: document.getElementById('codemirror-wrapper'),
+			schema: schema
+		});
 
 		// Load Firebase and bind using ReactFireMixin. For assets, references, etc.
 		// const ref = new Firebase(FireBaseURL + this.props.atomEditData.getIn(['atomData', 'slug']) + '/editorData' );

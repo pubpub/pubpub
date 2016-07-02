@@ -1,6 +1,6 @@
 import React from 'react';
 import {IndexRoute, Route} from 'react-router';
-import {App, AtomReader, AtomEditor, Editor, EmailVerification, GroupCreate, GroupProfile, JournalCreate, JournalProfile, Landing, Login, PubCreate, PubReader, ResetPassword, SignUp, UserProfile, UserSettings} from 'containers';
+import {App, AtomReader, AtomEditor, Editor, EmailVerification, GroupCreate, GroupProfile, JournalCreate, JournalProfile, JrnlCreate, JrnlProfile, Landing, Login, PubCreate, PubReader, ResetPassword, SignUp, UserProfile, UserSettings} from 'containers';
 import {About, AboutJournals, AboutPubs, AboutReviews, NotFound} from 'components';
 
 export default () => {
@@ -25,6 +25,9 @@ export default () => {
 			<Route path="/journals" component={AboutJournals}/>
 			<Route path="/journals/create" component={JournalCreate}/>
 
+			<Route path="/jrnls/create" component={JrnlCreate}/>
+
+
 			<Route path="/login" component={Login}/>
 
 			<Route path="/pub/:slug" component={PubReader}/> {/* /pub/designandscience?journal=jods or /pub/designandscience?journal=impacts&version=8 */}
@@ -48,8 +51,8 @@ export default () => {
 
 			<Route path="/verify/:hash" component={EmailVerification}/>
 
-			<Route path="/:subdomain" component={JournalProfile}/> {/* /jods or /jods?collection=fall2015 */}
-			<Route path="/:subdomain/:mode" component={JournalProfile}/> {/* /jods/about or /jods/settings */}
+			<Route path="/:slug" component={JrnlProfile}/> {/* /jods or /jods?collection=fall2015 */}
+			<Route path="/:slug/:mode" component={JrnlProfile}/> {/* /jods/about or /jods/settings */}
 
 			{ /* Catch all route */ }
 			<Route path="*" component={NotFound} status={404} />
