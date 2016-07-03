@@ -37,43 +37,43 @@ export const MarkdownEditor = React.createClass({
 	},
 
 	componentDidMount() {
-		const prosemirror = require('prosemirror');
-		const schema = require('prosemirror/dist/schema-basic').schema;
-		const editor = new prosemirror.ProseMirror({
-			place: document.getElementById('codemirror-wrapper'),
-			schema: schema
-		});
+		// const prosemirror = require('prosemirror');
+		// const schema = require('prosemirror/dist/schema-basic').schema;
+		// const editor = new prosemirror.ProseMirror({
+		// 	place: document.getElementById('codemirror-wrapper'),
+		// 	schema: schema
+		// });
 
 		// Load Firebase and bind using ReactFireMixin. For assets, references, etc.
-		// const ref = new Firebase(FireBaseURL + this.props.atomEditData.getIn(['atomData', 'slug']) + '/editorData' );
-		// const token = this.props.atomEditData.getIn(['atomData', 'token']);
-		// const username = this.props.loginData.getIn(['userData', 'username']);
-		// const name = this.props.loginData.getIn(['userData', 'name']);
-		// const image = this.props.loginData.getIn(['userData', 'image']);
-		// ref.authWithCustomToken(token, (error, authData)=> {
-		// 	if (error) { console.log('Authentication Failed!', error); return; } 
+		const ref = new Firebase(FireBaseURL + this.props.atomEditData.getIn(['atomData', 'slug']) + '/editorData' );
+		const token = this.props.atomEditData.getIn(['atomData', 'token']);
+		const username = this.props.loginData.getIn(['userData', 'username']);
+		const name = this.props.loginData.getIn(['userData', 'name']);
+		const image = this.props.loginData.getIn(['userData', 'image']);
+		ref.authWithCustomToken(token, (error, authData)=> {
+			if (error) { console.log('Authentication Failed!', error); return; } 
 
-		// 	this.bindAsObject(ref, 'firepadData');
-		// 	// Load Firebase ref that is used for firepad
-		// 	const firepadRef = new Firebase(FireBaseURL + this.props.atomEditData.getIn(['atomData', 'slug']) + '/firepad');
-		// 	// Load codemirror
-		// 	const codeMirror = CodeMirror(document.getElementById('codemirror-wrapper'), cmOptions); 
+			this.bindAsObject(ref, 'firepadData');
+			// Load Firebase ref that is used for firepad
+			const firepadRef = new Firebase(FireBaseURL + this.props.atomEditData.getIn(['atomData', 'slug']) + '/firepad');
+			// Load codemirror
+			const codeMirror = CodeMirror(document.getElementById('codemirror-wrapper'), cmOptions); 
 
-		// 	// Initialize Firepad using codemirror and the ref defined above.
-		// 	Firepad.fromCodeMirror(firepadRef, codeMirror, {userId: username, defaultText: '# Introduction'});
+			// Initialize Firepad using codemirror and the ref defined above.
+			Firepad.fromCodeMirror(firepadRef, codeMirror, {userId: username, defaultText: '# Introduction'});
 
-		// 	new Firebase(FireBaseURL + '.info/connected').on('value', (connectedSnap)=> {
-		// 		if (connectedSnap.val() === true) { /* we're connected! */
-		// 			this.setState({editorSaveStatus: 'saved'});
-		// 		} else { /* we're disconnected! */
-		// 			this.setState({editorSaveStatus: 'disconnected'});
-		// 		}
-		// 	});
+			new Firebase(FireBaseURL + '.info/connected').on('value', (connectedSnap)=> {
+				if (connectedSnap.val() === true) { /* we're connected! */
+					this.setState({editorSaveStatus: 'saved'});
+				} else { /* we're disconnected! */
+					this.setState({editorSaveStatus: 'disconnected'});
+				}
+			});
 
-		// 	FirepadUserList.fromDiv(firepadRef.child('users'), document.getElementById('active-collaborators'), username, name, image);
+			FirepadUserList.fromDiv(firepadRef.child('users'), document.getElementById('active-collaborators'), username, name, image);
 
-		// 	codeMirror.on('change', this.onEditorChange);
-		// });
+			codeMirror.on('change', this.onEditorChange);
+		});
 	},
 
 	onEditorChange: function(cm, change) {
