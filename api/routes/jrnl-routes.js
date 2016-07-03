@@ -12,7 +12,7 @@ export function createJrnl(req, res) {
 	const jrnl = new Jrnl({
 		jrnlName: newJrnlData.jrnlName,
 		slug: newJrnlData.slug.replace(/[^\w\s-]/gi, '').replace(/ /g, '-').toLowerCase(),
-		description: newJrnlData.description,
+		description: newJrnlData.description && newJrnlData.description.substring(0, 140),
 		icon: newJrnlData.icon || 'https://assets.pubpub.org/_site/journal.png',
 		createDate: now,
 	});
@@ -59,3 +59,39 @@ export function getJrnl(req, res) {
 
 }
 app.get('/getJrnl', getJrnl);
+
+export function updateJrnl(req, res) {
+	const userID = req.user ? req.user._id : undefined;
+	if (!userID) { return res.status(403).json('Not authorized to edit this user'); }
+	// Check that the user is an admin
+
+	Jrnl.findOne({slug: req.body.slug}).exec()
+	.then(function(jrnl) {
+		// Validate and clean submitted values
+		// Take (cleaned) new values if they exist, otherwise set to old value
+		const newData = req.body.newJrnlData;
+		jrnl.jrnlName = newData.jrnlName || jrnl.jrnlName;
+		jrnl.description = newData.description && newData.description.substring(0, 140) || jrnl.description;
+		jrnl.logo = newData.logo || jrnl.logo;
+		jrnl.icon = newData.icon || jrnl.icon;
+		jrnl.about = newData.about || jrnl.about;
+		jrnl.website = newData.website || jrnl.website;
+		jrnl.twitter = newData.twitter || jrnl.twitter;
+		jrnl.facebook = newData.facebook || jrnl.facebook;
+		jrnl.headerMode = newData.headerMode || jrnl.headerMode;
+		jrnl.headerAlign = newData.headerAlign || jrnl.headerAlign;
+		jrnl.headerColor = newData.headerColor || jrnl.headerColor;
+		jrnl.headerImage = newData.headerImage || jrnl.headerImage;
+		jrnl.collections = newData.collections || jrnl.collections;
+		return jrnl.save();
+	})
+	.then(function(savedResult) {
+		return res.status(201).json(savedResult);
+	})
+	.catch(function(error) {
+		console.log('error', error);
+		return res.status(500).json(error);
+	});
+}
+app.post('/updateJrnl', updateJrnl);
+

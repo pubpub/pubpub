@@ -10,6 +10,9 @@ export const GET_JRNL_LOAD = 'jrnl/GET_JRNL_LOAD';
 export const GET_JRNL_SUCCESS = 'jrnl/GET_JRNL_SUCCESS';
 export const GET_JRNL_FAIL = 'jrnl/GET_JRNL_FAIL';
 
+export const UPDATE_JRNL_LOAD = 'jrnl/UPDATE_JRNL_LOAD';
+export const UPDATE_JRNL_SUCCESS = 'jrnl/UPDATE_JRNL_SUCCESS';
+export const UPDATE_JRNL_FAIL = 'jrnl/UPDATE_JRNL_FAIL';
 
 /*--------*/
 // Define Action creators
@@ -24,6 +27,16 @@ export function getJrnl(slug, mode) {
 		promise: (client) => client.get('/getJrnl', {params: {
 			slug: slug,
 			mode: mode
+		}})
+	};
+}
+
+export function updateJrnl(slug, newJrnlData) {
+	return {
+		types: [UPDATE_JRNL_LOAD, UPDATE_JRNL_SUCCESS, UPDATE_JRNL_FAIL],
+		promise: (client) => client.post('/updateJrnl', {data: {
+			slug: slug,
+			newJrnlData: newJrnlData
 		}})
 	};
 }

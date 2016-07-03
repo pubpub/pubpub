@@ -2,8 +2,10 @@ import React, { PropTypes } from 'react';
 import {connect} from 'react-redux';
 import Radium from 'radium';
 import Helmet from 'react-helmet';
-import {getJrnl} from './actions';
+import {getJrnl, updateJrnl} from './actions';
 // import {NotFound} from 'components';
+import JrnlProfileDetails from './JrnlProfileDetails';
+import JrnlProfileRecent from './JrnlProfileRecent';
 import {NavContentWrapper} from 'components';
 import {safeGetInToJS} from 'utils/safeParse';
 
@@ -27,6 +29,9 @@ const JrnlProfile = React.createClass({
 		}
 	},
 
+	handleUpdateJrnl: function(newJrnlData) {
+		this.props.dispatch(updateJrnl(this.props.slug, newJrnlData));
+	},
 
 	render: function() {
 		const jrnlData = safeGetInToJS(this.props.jrnlData, ['jrnlData']) || {};
@@ -39,18 +44,26 @@ const JrnlProfile = React.createClass({
 			{ type: 'button', mobile: true, text: 'Menu', action: undefined },
 		];
 
-		const navItems = [
-			{ type: 'link', text: 'About', link: '/' + this.props.slug + '/about' },
-			{ type: 'link', text: 'Featured Pubs', link: '/' + this.props.slug + '/featured' },
-			{ type: 'link', text: 'Submitted Pubs', link: '/' + this.props.slug + '/submitted' },
+		const adminNav = [
+			{ type: 'link', text: 'Details', link: '/' + this.props.slug + '/details', active: this.props.mode === 'details' },
+			{ type: 'link', text: 'Curate', link: '/' + this.props.slug + '/curate', active: this.props.mode === 'curate' },
+			{ type: 'link', text: 'Layout', link: '/' + this.props.slug + '/layout', active: this.props.mode === 'layout' },
+			{ type: 'link', text: 'Collections', link: '/' + this.props.slug + '/collections', active: this.props.mode === 'collections' },
 			{ type: 'spacer' },
-			{ type: 'link', text: 'Category 1', link: '/' + this.props.slug + '/category1' },
-			{ type: 'link', text: 'Category 2', link: '/' + this.props.slug + '/category2' },
+		];
+
+		const navItems = [
+			...adminNav,
+			{ type: 'link', text: 'About', link: '/' + this.props.slug + '/about', active: this.props.mode === 'about' },
+			{ type: 'link', text: 'Recent Activity', link: '/' + this.props.slug, active: !this.props.mode},
+			{ type: 'spacer' },
+			{ type: 'link', text: 'Category 1', link: '/' + this.props.slug + '/category1', active: this.props.mode === 'category1' },
+			{ type: 'link', text: 'Category 2', link: '/' + this.props.slug + '/category2', active: this.props.mode === 'category2' },
 		];
 
 		const customBackgroundStyle = {
 			backgroundColor: jrnlData.headerColor || '#13A6EF',
-			backgroundImage: jrnlData.headerImage,
+			backgroundImage: 'url("' + jrnlData.headerImage + '")',
 		};
 
 		return (
@@ -71,7 +84,18 @@ const JrnlProfile = React.createClass({
 
 				<NavContentWrapper navItems={navItems} mobileNavButtons={mobileNavButtons}>
 
-					<div>Content Goes Here</div>
+					{(() => {
+						switch (this.props.mode) {
+						case 'details':
+							return (
+								<JrnlProfileDetails jrnlData={this.props.jrnlData} handleUpdateJrnl={this.handleUpdateJrnl}/>
+							);
+						default:
+							return (
+								<JrnlProfileRecent jrnlData={this.props.jrnlData} />
+							);
+						}
+					})()}
 
 				</NavContentWrapper>
 

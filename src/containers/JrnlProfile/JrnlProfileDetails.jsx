@@ -1,11 +1,8 @@
 import React, {PropTypes} from 'react';
-import {connect} from 'react-redux';
-import {pushState} from 'redux-router';
 import Radium from 'radium';
 import Helmet from 'react-helmet';
-import {createJrnl} from './actions';
 import {Loader, ImageCropper} from 'components';
-
+import {safeGetInToJS} from 'utils/safeParse';
 
 import {globalStyles} from 'utils/styleConstants';
 import {globalMessages} from 'utils/globalMessages';
@@ -13,33 +10,27 @@ import {FormattedMessage} from 'react-intl';
 
 let styles = {};
 
-export const JrnlCreate = React.createClass({
+export const JrnlProfileDetails = React.createClass({
 	propTypes: {
-		jrnlCreateData: PropTypes.object,
-		dispatch: PropTypes.func,
+		jrnlData: PropTypes.object,
+		handleUpdateJrnl: PropTypes.func,
 	},
 
 	getInitialState: function() {
 		return {
 			iconFile: null,
-			iconURL: 'https://assets.pubpub.org/_site/journal.png',
+			iconURL: undefined,
 			slug: '',
 			description: '',
 		};
 	},
 
-	componentWillReceiveProps(nextProps) {
-		// If there is a new slug in createJrnl, creation was a sucess, so redirect
-		const oldSlug = this.props.jrnlCreateData && this.props.jrnlCreateData.get('newJrnlSlug');
-		const newSlug = nextProps.jrnlCreateData && nextProps.jrnlCreateData.get('newJrnlSlug');
-		console.log(oldSlug, newSlug);
-		if (newSlug && oldSlug !== newSlug) {
-			this.props.dispatch(pushState(null, '/' + newSlug));
-		}
-	},
-
-	slugUpdate: function() {
-		this.setState({slug: this.refs.slug.value.replace(/[^\w\s-]/gi, '').replace(/ /g, '-').toLowerCase()});
+	componentWillMount() {
+		const jrnlData = safeGetInToJS(this.props.jrnlData, ['jrnlData']) || {};
+		this.setState({
+			description: jrnlData.description || '',
+			iconURL: jrnlData.icon || 'https://assets.pubpub.org/_site/journal.png',
+		});
 	},
 
 	descriptionUpdate: function() {
@@ -60,47 +51,38 @@ export const JrnlCreate = React.createClass({
 		this.setState({iconFile: null, iconURL: url});
 	},
 
-	handleJournalCreate: function(evt) {
+	saveDetails: function(evt) {
 		evt.preventDefault();
 		const newJrnlData = {
 			jrnlName: this.refs.jrnlName.value,
-			slug: this.state.slug,
 			description: this.state.description,
 			icon: this.state.iconURL,
 		};
-		this.props.dispatch(createJrnl(newJrnlData));
+		this.props.handleUpdateJrnl(newJrnlData);
 	},
 
 	render: function() {
+		const jrnlData = safeGetInToJS(this.props.jrnlData, ['jrnlData']) || {};
+
 		const metaData = {
-			title: 'Create Journal · PubPub',
+			title: 'Details · ' + jrnlData.jrnlName,
 		};
-		const isLoading = this.props.jrnlCreateData && this.props.jrnlCreateData.get('loading');
-		const errorMessage = this.props.jrnlCreateData && this.props.jrnlCreateData.get('error');
+		const isLoading = this.props.jrnlData && this.props.jrnlData.get('saveLoading');
+		const errorMessage = this.props.jrnlData && this.props.jrnlData.get('saveError');
 
 		return (
-			<div className={'section'} style={styles.container}>
+			<div>
 				<Helmet {...metaData} />
 
-				<h1>Create Jrnl</h1>
 
-				<form onSubmit={this.handleJournalCreate}>
+				<form onSubmit={this.saveDetails} style={styles.form}>
 					<div>
 						<label style={styles.label} htmlFor={'jrnlName'}>
 							Jrnl Name
 						</label>
-						<input ref={'jrnlName'} id={'jrnlName'} name={'Jrnl Name'} type="text" style={styles.input}/>
+						<input ref={'jrnlName'} id={'jrnlName'} name={'Jrnl Name'} type="text" style={styles.input} defaultValue={jrnlData.jrnlName}/>
 					</div>
 
-					<div>
-						<label htmlFor={'slug'}>
-							Jrnl URL
-						</label>
-						<div style={styles.prefixedInputWrapper}>
-							<div style={styles.prefix}>pubpub.org/</div>
-							<input ref={'slug'} id={'slug'} name={'jrnl URL'} type="text" style={[styles.input, styles.prefixedInput]} value={this.state.slug} onChange={this.slugUpdate}/>	
-						</div>
-					</div>
 
 					<div>
 						<label htmlFor={'description'}>
@@ -121,8 +103,8 @@ export const JrnlCreate = React.createClass({
 						
 					</div>
 
-					<button className={'button'} onClick={this.handleJournalCreate}>
-						Create Jrnl
+					<button className={'button'} onClick={this.saveDetails}>
+						Save Details
 					</button>
 
 					<div style={styles.loaderContainer}><Loader loading={isLoading} showCompletion={!errorMessage}/></div>
@@ -143,14 +125,10 @@ export const JrnlCreate = React.createClass({
 
 });
 
-export default connect( state => {
-	return {
-		jrnlCreateData: state.jrnlCreate,
-	};
-})( Radium(JrnlCreate) );
+export default Radium(JrnlProfileDetails);
 
 styles = {
-	container: {
+	form: {
 		width: '500px',
 		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
 			width: 'auto',
