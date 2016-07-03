@@ -15,6 +15,7 @@ require('./routes/autocomplete-routes');
 require('./routes/discussion-routes');
 require('./routes/group-routes');
 require('./routes/journal-routes');
+require('./routes/jrnl-routes');
 require('./routes/login-routes');
 require('./routes/pub-routes');
 require('./routes/signup-routes');

@@ -166,6 +166,7 @@ styles = {
 		width: '100vw',
 		height: '100vh',
 		top: 0,
+		zIndex: 99999998,
 		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
 			display: 'none',
 		}
@@ -179,7 +180,7 @@ styles = {
 		right: 5,
 		top: 45,
 		padding: '.2em 0em',
-		zIndex: 99999999999,
+		zIndex: 99999999,
 		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
 			position: 'static',
 			width: 'auto',

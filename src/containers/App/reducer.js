@@ -37,6 +37,12 @@ import {
 	GET_ATOM_EDIT_FAIL,
 } from 'containers/AtomEditor/actions';
 
+import {
+	GET_JRNL_LOAD,
+	GET_JRNL_SUCCESS,
+	GET_JRNL_FAIL,
+} from 'containers/JrnlProfile/actions';
+
 
 /*--------*/
 // Initialize Default State
@@ -101,6 +107,7 @@ export default function reducer(state = defaultState, action) {
 	case GET_ATOM_DATA_LOAD:
 	case CREATE_ATOM_LOAD:
 	case GET_ATOM_EDIT_LOAD:
+	case GET_JRNL_LOAD:
 		return setLoading(state);
 	case LOAD_PROFILE_SUCCESS:
 	case LOAD_PROFILE_FAIL:
@@ -108,6 +115,8 @@ export default function reducer(state = defaultState, action) {
 	case GET_ATOM_DATA_FAIL:
 	case GET_ATOM_EDIT_SUCCESS:
 	case GET_ATOM_EDIT_FAIL:
+	case GET_JRNL_SUCCESS:
+	case GET_JRNL_FAIL:
 		return unsetLoading(state);
 
 	default:

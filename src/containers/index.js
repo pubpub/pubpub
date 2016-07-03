@@ -12,6 +12,8 @@ export GroupCreate from './GroupCreate/GroupCreate';
 export GroupProfile from './GroupProfile/GroupProfile';
 export JournalCreate from './JournalCreate/JournalCreate';
 export JournalProfile from './JournalProfile/JournalProfile';
+export JrnlCreate from './JrnlCreate/JrnlCreate';
+export JrnlProfile from './JrnlProfile/JrnlProfile';
 export Landing from './Landing/Landing';
 export Login from './Login/Login';
 export MediaLibrary from './MediaLibrary/MediaLibrary';

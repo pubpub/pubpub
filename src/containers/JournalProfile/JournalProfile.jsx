@@ -94,6 +94,8 @@ const JournalAdmin = React.createClass({
 
 		const navItems = [
 			{ type: 'link', text: 'About', link: '/' + this.props.subdomain + '/about' },
+			{ type: 'link', text: 'Featured Pubs', link: '/' + this.props.subdomain + '/about' },
+			{ type: 'link', text: 'Submitted Pubs', link: '/' + this.props.subdomain + '/about' },
 			{ type: 'spacer' },
 			{ type: 'link', text: 'Category1', link: '/user/pubs' },
 			{ type: 'link', text: 'Category2', link: '/user/groups' },

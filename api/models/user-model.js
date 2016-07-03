@@ -18,7 +18,7 @@ const userSchema = new Schema({
 	bio: { type: String }, // Self assigned bio
 	github: { type: String }, // Github account
 	orcid: { type: String }, // orcid number
-	twitter: { type: String }, // twitter hadnle
+	twitter: { type: String }, // twitter handle
 	website: { type: String }, // website url
 	googleScholar: { type: String }, // googleScholar id
 
