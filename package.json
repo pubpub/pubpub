@@ -149,7 +149,6 @@
     "react-addons-css-transition-group": "^15.0.2",
     "react-addons-pure-render-mixin": "^15.0.2",
     "react-addons-shallow-compare": "^15.0.2",
-    "react-color": "^2.1.0",
     "react-dom": "^15.0.2",
     "react-dropzone": "^3.0.0",
     "react-ga": "^1.2.0",

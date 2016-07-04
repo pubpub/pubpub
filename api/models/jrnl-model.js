@@ -7,7 +7,6 @@ const jrnlSchema = new Schema({
 	jrnlName: { type: String },
 	slug: { type: String, required: true, index: true, unique: true },
 	description: { type: String },
-	about: { type: String },
 	logo: { type: String }, // Full size for use on header
 	icon: { type: String }, // Square image for use on searches, preview cards
 

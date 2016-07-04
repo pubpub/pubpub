@@ -5,6 +5,7 @@ import Helmet from 'react-helmet';
 import {getJrnl, updateJrnl} from './actions';
 // import {NotFound} from 'components';
 import JrnlProfileDetails from './JrnlProfileDetails';
+import JrnlProfileLayout from './JrnlProfileLayout';
 import JrnlProfileRecent from './JrnlProfileRecent';
 import {NavContentWrapper} from 'components';
 import {safeGetInToJS} from 'utils/safeParse';
@@ -91,6 +92,10 @@ const JrnlProfile = React.createClass({
 						case 'details':
 							return (
 								<JrnlProfileDetails jrnlData={this.props.jrnlData} handleUpdateJrnl={this.handleUpdateJrnl}/>
+							);
+						case 'layout':
+							return (
+								<JrnlProfileLayout jrnlData={this.props.jrnlData} handleUpdateJrnl={this.handleUpdateJrnl}/>
 							);
 						default:
 							return (

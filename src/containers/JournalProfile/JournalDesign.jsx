@@ -3,7 +3,7 @@ import React, {PropTypes} from 'react';
 import Radium from 'radium';
 import {Button, LoaderIndeterminate} from 'components';
 // import {LandingBody} from 'containers/Landing/components';
-import ColorPicker from 'react-color';
+// import ColorPicker from 'react-color';
 import {globalStyles} from 'utils/styleConstants';
 import { Link } from 'react-router';
 // import Playground from 'component-playground';
@@ -173,13 +173,13 @@ const JournalDesign = React.createClass({
 				<div style={styles.swatch} onClick={this.handleClick(key)}>
 					<div style={[styles.color, {background: this.state.colorSelections[key].color}]}></div>
 				</div>
-				<ColorPicker
+				{/* <ColorPicker
 					type="chrome"
 					color={this.state.colorSelections[key].color}
 					display={this.state.colorSelections[key].display}
 					positionCSS={styles.popupPosition}
 					onChange={this.handleChange}
-					onClose={this.handleClose(key)}/>
+					onClose={this.handleClose(key)}/> */}
 			</div>
 		);
 	},
