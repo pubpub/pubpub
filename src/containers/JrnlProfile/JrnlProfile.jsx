@@ -45,11 +45,13 @@ const JrnlProfile = React.createClass({
 		];
 
 		const adminNav = [
+			{ type: 'title', text: 'Admin'},
 			{ type: 'link', text: 'Details', link: '/' + this.props.slug + '/details', active: this.props.mode === 'details' },
 			{ type: 'link', text: 'Curate', link: '/' + this.props.slug + '/curate', active: this.props.mode === 'curate' },
 			{ type: 'link', text: 'Layout', link: '/' + this.props.slug + '/layout', active: this.props.mode === 'layout' },
 			{ type: 'link', text: 'Collections', link: '/' + this.props.slug + '/collections', active: this.props.mode === 'collections' },
 			{ type: 'spacer' },
+			{ type: 'title', text: 'Public'},
 		];
 
 		const navItems = [

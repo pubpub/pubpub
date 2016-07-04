@@ -20,8 +20,8 @@ export const JrnlProfileDetails = React.createClass({
 		return {
 			iconFile: null,
 			iconURL: undefined,
-			slug: '',
 			description: '',
+			about: ''
 		};
 	},
 
@@ -29,12 +29,17 @@ export const JrnlProfileDetails = React.createClass({
 		const jrnlData = safeGetInToJS(this.props.jrnlData, ['jrnlData']) || {};
 		this.setState({
 			description: jrnlData.description || '',
+			about: jrnlData.about || '',
 			iconURL: jrnlData.icon || 'https://assets.pubpub.org/_site/journal.png',
 		});
 	},
 
 	descriptionUpdate: function() {
 		this.setState({description: this.refs.description.value.substring(0, 140)});
+	},
+
+	aboutUpdate: function() {
+		this.setState({about: this.refs.about.value});
 	},
 
 	handleFileSelect: function(evt) {
@@ -57,6 +62,10 @@ export const JrnlProfileDetails = React.createClass({
 			jrnlName: this.refs.jrnlName.value,
 			description: this.state.description,
 			icon: this.state.iconURL,
+			website: this.refs.website.value,
+			twitter: this.refs.twitter.value,
+			facebook: this.refs.facebook.value,
+			about: this.state.about,
 		};
 		this.props.handleUpdateJrnl(newJrnlData);
 	},
@@ -101,6 +110,43 @@ export const JrnlProfileDetails = React.createClass({
 						<img style={styles.image} src={this.state.iconURL} />
 						<input id={'icon'} name={'icon image'} type="file" accept="image/*" onChange={this.handleFileSelect} />
 						
+					</div>
+
+					<div>
+						<label htmlFor={'website'}>
+							<FormattedMessage {...globalMessages.Website}/>
+						</label>
+						<input ref={'website'} id={'website'} name={'website'} type="text" style={styles.input} defaultValue={jrnlData.website}/>
+					</div>
+
+					<div>
+						<label htmlFor={'twitter'}>
+							Twitter
+						</label>
+						<div style={styles.prefixedInputWrapper}>
+							<div style={styles.prefix}>@</div>
+							<input ref={'twitter'} id={'twitter'} name={'twitter'} type="text" style={[styles.input, styles.prefixedInput]} defaultValue={jrnlData.twitter}/>	
+						</div>
+					</div>
+
+					<div>
+						<label htmlFor={'facebook'}>
+							Facebook
+						</label>
+						<div style={styles.prefixedInputWrapper}>
+							<div style={styles.prefix}>facebook.com/</div>
+							<input ref={'facebook'} id={'facebook'} name={'facebook'} type="text" style={[styles.input, styles.prefixedInput]} defaultValue={jrnlData.facebook}/>	
+						</div>
+					</div>
+
+					<div>
+						<label htmlFor={'about'}>
+							About
+						</label>
+						<textarea ref={'about'} id={'about'} name={'about'} type="text" style={[styles.input, styles.description]} onChange={this.aboutUpdate} value={this.state.about}></textarea>
+						<div className={'light-color inputSubtext'}>
+							Use to describe longer details, peer-review process, featuring standards, etc. This text will appear at pubpub.org/{jrnlData.slug}/about.
+						</div>
 					</div>
 
 					<button className={'button'} onClick={this.saveDetails}>

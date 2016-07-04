@@ -72,6 +72,7 @@ export function updateJrnl(req, res) {
 		const newData = req.body.newJrnlData;
 		jrnl.jrnlName = newData.jrnlName || jrnl.jrnlName;
 		jrnl.description = newData.description && newData.description.substring(0, 140) || jrnl.description;
+		jrnl.about = newData.about || jrnl.about;
 		jrnl.logo = newData.logo || jrnl.logo;
 		jrnl.icon = newData.icon || jrnl.icon;
 		jrnl.about = newData.about || jrnl.about;

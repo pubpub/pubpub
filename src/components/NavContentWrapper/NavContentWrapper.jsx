@@ -55,6 +55,10 @@ export const NavContentWrapper = React.createClass({
 							if (option.type === 'spacer') {
 								return <div key={'navItem-' + index} style={styles.contentNavSpacer}></div>;
 							}
+							if (option.type === 'title') {
+								return <div key={'navItem-' + index} style={[styles.contentNavLink, styles.contentNavTitle]}>{option.text}</div>;
+							}
+
 
 						})}
 					</div>
@@ -134,6 +138,15 @@ styles = {
 		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
 			padding: '.2em 1em',
 			fontSize: '1em',
+		}
+	},
+	contentNavTitle: {
+		color: '#808284',
+		fontSize: '0.85em',
+		padding: '.15em 2em .15em 0em',
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+			padding: '.2em 1em .2em .25em',
+			fontSize: '0.9em',
 		}
 	},
 	contentNavLinkActive: {
