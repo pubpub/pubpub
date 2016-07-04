@@ -5,6 +5,7 @@ import {Loader} from 'components';
 import {safeGetInToJS} from 'utils/safeParse';
 import {s3Upload} from 'utils/uploadFile';
 import {RadioGroup, Radio} from 'utils/ReactRadioGroup';
+import {ChromePicker} from 'react-color';
 
 import {globalStyles} from 'utils/styleConstants';
 // import {globalMessages} from 'utils/globalMessages';
@@ -123,7 +124,7 @@ export const JrnlProfileLayout = React.createClass({
 						<label htmlFor={'headerAlign'}>
 							Background Color
 						</label>
-						
+						<ChromePicker color={this.state.backgroundColor} disableAlpha={true} onChange={this.handleColorChange}/>
 					</div>
 
 					<div>
