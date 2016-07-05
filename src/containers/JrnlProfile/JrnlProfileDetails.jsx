@@ -109,6 +109,9 @@ export const JrnlProfileDetails = React.createClass({
 						</label>
 						<img style={styles.image} src={this.state.iconURL} />
 						<input id={'icon'} name={'icon image'} type="file" accept="image/*" onChange={this.handleFileSelect} />
+						<div className={'light-color inputSubtext'}>
+							Used as the Jrnl's preview image in search results and throughout the site.
+						</div>
 						
 					</div>
 

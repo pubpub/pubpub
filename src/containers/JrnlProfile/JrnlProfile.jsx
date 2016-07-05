@@ -4,6 +4,7 @@ import Radium from 'radium';
 import Helmet from 'react-helmet';
 import {getJrnl, updateJrnl} from './actions';
 // import {NotFound} from 'components';
+import JrnlProfileAbout from './JrnlProfileAbout';
 import JrnlProfileDetails from './JrnlProfileDetails';
 import JrnlProfileLayout from './JrnlProfileLayout';
 import JrnlProfileRecent from './JrnlProfileRecent';
@@ -111,6 +112,10 @@ export const JrnlProfile = React.createClass({
 
 					{(() => {
 						switch (this.props.mode) {
+						case 'about':
+							return (
+								<JrnlProfileAbout jrnlData={this.props.jrnlData}/>
+							);
 						case 'details':
 							return (
 								<JrnlProfileDetails jrnlData={this.props.jrnlData} handleUpdateJrnl={this.handleUpdateJrnl}/>
