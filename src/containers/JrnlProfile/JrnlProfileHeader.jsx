@@ -3,7 +3,7 @@ import Radium from 'radium';
 
 let styles = {};
 
-export const JrnlProfileLayout = React.createClass({
+export const JrnlProfileHeader = React.createClass({
 	propTypes: {
 		jrnlName: PropTypes.string,
 		description: PropTypes.string,
@@ -45,7 +45,7 @@ export const JrnlProfileLayout = React.createClass({
 
 });
 
-export default Radium(JrnlProfileLayout);
+export default Radium(JrnlProfileHeader);
 
 styles = {
 	headerBackground: {

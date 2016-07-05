@@ -17,7 +17,7 @@ import {safeGetInToJS} from 'utils/safeParse';
 
 let styles;
 
-const JrnlProfile = React.createClass({
+export const JrnlProfile = React.createClass({
 	propTypes: {
 		jrnlData: PropTypes.object,
 		slug: PropTypes.string,
