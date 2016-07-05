@@ -7,6 +7,7 @@ import {getJrnl, updateJrnl} from './actions';
 import JrnlProfileDetails from './JrnlProfileDetails';
 import JrnlProfileLayout from './JrnlProfileLayout';
 import JrnlProfileRecent from './JrnlProfileRecent';
+import JrnlProfileHeader from './JrnlProfileHeader';
 import {NavContentWrapper} from 'components';
 import {safeGetInToJS} from 'utils/safeParse';
 
@@ -30,8 +31,21 @@ const JrnlProfile = React.createClass({
 		}
 	},
 
+	getInitialState: function() {
+		return {
+			logo: undefined,
+			headerColor: '',
+			headerMode: '',
+			headerAlign: '',
+		};
+	},
+
 	handleUpdateJrnl: function(newJrnlData) {
 		this.props.dispatch(updateJrnl(this.props.slug, newJrnlData));
+	},
+
+	handleHeaderUpdate: function(updateObject) {
+		this.setState(updateObject);
 	},
 
 	render: function() {
@@ -64,26 +78,33 @@ const JrnlProfile = React.createClass({
 			{ type: 'link', text: 'Category 2', link: '/' + this.props.slug + '/category2', active: this.props.mode === 'category2' },
 		];
 
-		const customBackgroundStyle = {
-			backgroundColor: jrnlData.headerColor || '#13A6EF',
-			backgroundImage: 'url("' + jrnlData.headerImage + '")',
-		};
+		// const customBackgroundStyle = {
+		// 	backgroundColor: jrnlData.headerColor || '#13A6EF',
+		// 	backgroundImage: 'url("' + jrnlData.headerImage + '")',
+		// };
 
 		return (
 			<div>
 
 				<Helmet {...metaData} />
 
-				<div style={[styles.headerBackground, customBackgroundStyle]}>
+				{/* <div style={[styles.headerBackground, customBackgroundStyle]}>
 					<div style={styles.backgroundGrey}></div>
 					<div className={'section'}>
 						<div style={styles.headerTextWrapper}>
-							{/* <img src={journalLogo} /> */}
 							<h1>{jrnlData.jrnlName}</h1>
 							<p>{jrnlData.description}</p>
 						</div>
 					</div>
-				</div>
+				</div> */}
+				<JrnlProfileHeader 
+					jrnlName={this.state.jrnlName || jrnlData.jrnlName}
+					description={this.state.description || jrnlData.description}
+					logo={this.state.logo || jrnlData.logo}
+					headerColor={this.state.headerColor || jrnlData.headerColor} 
+					headerImage={this.state.headerImage || jrnlData.headerImage} 
+					headerMode={this.state.headerMode || jrnlData.headerMode}
+					headerAlign={this.state.headerAlign || jrnlData.headerAlign}/>
 
 				<NavContentWrapper navItems={navItems} mobileNavButtons={mobileNavButtons}>
 
@@ -95,7 +116,7 @@ const JrnlProfile = React.createClass({
 							);
 						case 'layout':
 							return (
-								<JrnlProfileLayout jrnlData={this.props.jrnlData} handleUpdateJrnl={this.handleUpdateJrnl}/>
+								<JrnlProfileLayout jrnlData={this.props.jrnlData} handleUpdateJrnl={this.handleUpdateJrnl} handleHeaderUpdate={this.handleHeaderUpdate}/>
 							);
 						default:
 							return (
@@ -121,31 +142,7 @@ export default connect( state => {
 })( Radium(JrnlProfile) );
 
 styles = {
-	headerBackground: {
-		padding: '2em 0em',
-		marginBottom: '3em',
-		position: 'relative',
-		color: 'white',
-		backgroundRepeat: 'no-repeat',
-		backgroundPosition: 'center center',
-		backgroundSize: 'cover',
-		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
-			marginBottom: '0em',
-		}
-	},
-	backgroundGrey: {
-		position: 'absolute',
-		width: '100%',
-		height: '100%',
-		backgroundColor: 'rgba(0,0,0,0.15)',
-		top: 0,
-		left: 0,
-		zIndex: 1,
-	},
-	headerTextWrapper: {
-		position: 'relative',
-		zIndex: 2,
-	},
+		
 };
 
 

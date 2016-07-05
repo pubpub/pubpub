@@ -1,5 +1,5 @@
 import React, {PropTypes} from 'react';
-import Radium from 'radium';
+import Radium, {Style} from 'radium';
 import Helmet from 'react-helmet';
 import {Loader} from 'components';
 import {safeGetInToJS} from 'utils/safeParse';
@@ -17,12 +17,13 @@ export const JrnlProfileLayout = React.createClass({
 	propTypes: {
 		jrnlData: PropTypes.object,
 		handleUpdateJrnl: PropTypes.func,
+		handleHeaderUpdate: PropTypes.func,
 	},
 
 	getInitialState: function() {
 		return {
-			logoURL: undefined,
-			backgroundColor: '',
+			logo: undefined,
+			headerColor: '',
 			headerMode: '',
 			headerAlign: '',
 		};
@@ -31,9 +32,17 @@ export const JrnlProfileLayout = React.createClass({
 	componentWillMount() {
 		const jrnlData = safeGetInToJS(this.props.jrnlData, ['jrnlData']) || {};
 		this.setState({
-			backgroundColor: jrnlData.backgroundColor || '#13A6EF',
+			headerColor: jrnlData.headerColor || '#13A6EF',
 			headerMode: jrnlData.headerMode || 'title',
 			headerAlign: jrnlData.headerAlign || 'left',
+		});
+	},
+	componentWillUnmount() {
+		this.props.handleHeaderUpdate({
+			logo: undefined,
+			headerColor: undefined,
+			headerMode: undefined,
+			headerAlign: undefined,
 		});
 	},
 
@@ -44,30 +53,31 @@ export const JrnlProfileLayout = React.createClass({
 	},
 
 	onFileFinish: function(evt, index, type, filename) {
-		this.setState({logoUrl: 'https://assets.pubpub.org/' + filename});
+		this.setState({logo: 'https://assets.pubpub.org/' + filename});
+		this.props.handleHeaderUpdate({logo: 'https://assets.pubpub.org/' + filename});
 	},
 
 	handleColorChange: function(colorChange) {
-		this.setState({backgroundColor: colorChange.hex});
+		this.setState({headerColor: colorChange.hex});
+		this.props.handleHeaderUpdate({headerColor: colorChange.hex});
 	},
 	handleHeaderModeChange: function(newHeaderMode) {
 		this.setState({headerMode: newHeaderMode});
+		this.props.handleHeaderUpdate({headerMode: newHeaderMode});
 	},
 
 	handleHeaderAlignChange: function(newHeaderAlign) {
 		this.setState({headerAlign: newHeaderAlign});
+		this.props.handleHeaderUpdate({headerAlign: newHeaderAlign});
 	},
 
-	saveDetails: function(evt) {
+	saveLayout: function(evt) {
 		evt.preventDefault();
 		const newJrnlData = {
-			jrnlName: this.refs.jrnlName.value,
-			description: this.state.description,
-			logo: this.state.logoURL,
-			website: this.refs.website.value,
-			twitter: this.refs.twitter.value,
-			facebook: this.refs.facebook.value,
-			about: this.state.about,
+			logo: this.state.logo,
+			headerColor: this.state.headerColor,
+			headerMode: this.state.headerMode,
+			headerAlign: this.state.headerAlign,
 		};
 		this.props.handleUpdateJrnl(newJrnlData);
 	},
@@ -85,15 +95,19 @@ export const JrnlProfileLayout = React.createClass({
 			<div>
 				<Helmet {...metaData} />
 
+				<Style rules={{
+					'.colorPicker': { margin: '1em 0.5em', },
+					'.colorPicker > div': { boxShadow: '0px 0px 0px black', border: '1px solid #BBBDC0' },
+				}} />
 
-				<form onSubmit={this.saveDetails} style={styles.form}>
+				<form onSubmit={this.saveLayout} style={styles.form}>
 					
 					<div>
 						<label htmlFor={'logo'}>
 							Jrnl Logo
 						</label>
-						{(this.state.logoURL || jrnlData.logo) &&
-							<img style={styles.image} src={'https://jake.pubpub.org/unsafe/fit-in/500x75/' + (this.state.logoURL || jrnlData.logo)} />
+						{(this.state.logo || jrnlData.logo) &&
+							<img style={styles.image} src={'https://jake.pubpub.org/unsafe/fit-in/500x75/' + (this.state.logo || jrnlData.logo)} />
 						}
 						<input id={'logo'} name={'logo image'} type="file" accept="image/*" onChange={this.handleFileSelect} />
 						
@@ -124,23 +138,26 @@ export const JrnlProfileLayout = React.createClass({
 						<label htmlFor={'headerAlign'}>
 							Background Color
 						</label>
-						<ChromePicker color={this.state.backgroundColor} disableAlpha={true} onChange={this.handleColorChange}/>
+						<div className={'colorPicker'}>
+							<ChromePicker color={this.state.headerColor} disableAlpha={true} onChange={this.handleColorChange}/>
+						</div>
+						
 					</div>
 
 					<div>
 						<label htmlFor={'logo'}>
 							Background Image
 						</label>
-						{(this.state.logoURL || jrnlData.logo) &&
-							<img style={styles.image} src={'https://jake.pubpub.org/unsafe/fit-in/500x75/' + (this.state.logoURL || jrnlData.logo)} />
+						{(this.state.logo || jrnlData.logo) &&
+							<img style={styles.image} src={'https://jake.pubpub.org/unsafe/fit-in/500x75/' + (this.state.logo || jrnlData.logo)} />
 						}
 						<input id={'logo'} name={'logo image'} type="file" accept="image/*" onChange={this.handleFileSelect} />
 						
 					</div>
 
 
-					<button className={'button'} onClick={this.saveDetails}>
-						Save Details
+					<button className={'button'} onClick={this.saveLayout}>
+						Save Layout
 					</button>
 
 					<div style={styles.loaderContainer}><Loader loading={isLoading} showCompletion={!errorMessage}/></div>
