@@ -26,6 +26,7 @@ export const JrnlProfileLayout = React.createClass({
 			headerColor: '',
 			headerMode: '',
 			headerAlign: '',
+			headerImage: undefined,
 		};
 	},
 
@@ -43,18 +44,30 @@ export const JrnlProfileLayout = React.createClass({
 			headerColor: undefined,
 			headerMode: undefined,
 			headerAlign: undefined,
+			headerImage: undefined,
 		});
 	},
 
-	handleFileSelect: function(evt) {
+	handleLogoSelect: function(evt) {
 		if (evt.target.files.length) {
-			s3Upload(evt.target.files[0], ()=>{}, this.onFileFinish, 0);
+			s3Upload(evt.target.files[0], ()=>{}, this.onLogoFinish, 0);
 		}
 	},
 
-	onFileFinish: function(evt, index, type, filename) {
+	onLogoFinish: function(evt, index, type, filename) {
 		this.setState({logo: 'https://assets.pubpub.org/' + filename});
 		this.props.handleHeaderUpdate({logo: 'https://assets.pubpub.org/' + filename});
+	},
+
+	handleHeaderImageSelect: function(evt) {
+		if (evt.target.files.length) {
+			s3Upload(evt.target.files[0], ()=>{}, this.onHeaderImageFinish, 0);
+		}
+	},
+
+	onHeaderImageFinish: function(evt, index, type, filename) {
+		this.setState({headerImage: 'https://assets.pubpub.org/' + filename});
+		this.props.handleHeaderUpdate({headerImage: 'https://assets.pubpub.org/' + filename});
 	},
 
 	handleColorChange: function(colorChange) {
@@ -78,6 +91,7 @@ export const JrnlProfileLayout = React.createClass({
 			headerColor: this.state.headerColor,
 			headerMode: this.state.headerMode,
 			headerAlign: this.state.headerAlign,
+			headerImage: this.state.headerImage,
 		};
 		this.props.handleUpdateJrnl(newJrnlData);
 	},
@@ -97,7 +111,7 @@ export const JrnlProfileLayout = React.createClass({
 
 				<Style rules={{
 					'.colorPicker': { margin: '1em 0.5em', },
-					'.colorPicker > div': { boxShadow: '0px 0px 0px black', border: '1px solid #BBBDC0' },
+					'.colorPicker > div': { boxShadow: '0px 0px 0px black !important', border: '1px solid #BBBDC0 !important' },
 				}} />
 
 				<form onSubmit={this.saveLayout} style={styles.form}>
@@ -109,7 +123,7 @@ export const JrnlProfileLayout = React.createClass({
 						{(this.state.logo || jrnlData.logo) &&
 							<img style={styles.image} src={'https://jake.pubpub.org/unsafe/fit-in/500x75/' + (this.state.logo || jrnlData.logo)} />
 						}
-						<input id={'logo'} name={'logo image'} type="file" accept="image/*" onChange={this.handleFileSelect} />
+						<input id={'logo'} name={'logo image'} type="file" accept="image/*" onChange={this.handleLogoSelect} />
 						
 					</div>
 
@@ -145,13 +159,13 @@ export const JrnlProfileLayout = React.createClass({
 					</div>
 
 					<div>
-						<label htmlFor={'logo'}>
+						<label htmlFor={'headerImage'}>
 							Background Image
 						</label>
-						{(this.state.logo || jrnlData.logo) &&
-							<img style={styles.image} src={'https://jake.pubpub.org/unsafe/fit-in/500x75/' + (this.state.logo || jrnlData.logo)} />
+						{(this.state.headerImage || jrnlData.headerImage) &&
+							<img style={styles.image} src={'https://jake.pubpub.org/unsafe/fit-in/500x0/' + (this.state.headerImage || jrnlData.headerImage)} />
 						}
-						<input id={'logo'} name={'logo image'} type="file" accept="image/*" onChange={this.handleFileSelect} />
+						<input id={'headerImage'} name={'background image'} type="file" accept="image/*" onChange={this.handleHeaderImageSelect} />
 						
 					</div>
 
@@ -184,6 +198,9 @@ styles = {
 	input: {
 		width: 'calc(100% - 20px - 4px)', // Calculations come from padding and border in pubpub.css
 	},
+	image: {
+		maxWidth: '100%',
+	},
 	loaderContainer: {
 		display: 'inline-block',
 		position: 'relative',
@@ -192,9 +209,6 @@ styles = {
 	errorMessage: {
 		padding: '10px 0px',
 		color: globalStyles.errorRed,
-	},
-	image: {
-		width: '100px',
 	},
 	radioInput: {
 		margin: '0em 1em',

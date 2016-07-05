@@ -37,6 +37,7 @@ const JrnlProfile = React.createClass({
 			headerColor: '',
 			headerMode: '',
 			headerAlign: '',
+			headerImage: '',
 		};
 	},
 
@@ -102,9 +103,9 @@ const JrnlProfile = React.createClass({
 					description={this.state.description || jrnlData.description}
 					logo={this.state.logo || jrnlData.logo}
 					headerColor={this.state.headerColor || jrnlData.headerColor} 
-					headerImage={this.state.headerImage || jrnlData.headerImage} 
 					headerMode={this.state.headerMode || jrnlData.headerMode}
-					headerAlign={this.state.headerAlign || jrnlData.headerAlign}/>
+					headerAlign={this.state.headerAlign || jrnlData.headerAlign}
+					headerImage={this.state.headerImage || jrnlData.headerImage} />
 
 				<NavContentWrapper navItems={navItems} mobileNavButtons={mobileNavButtons}>
 
