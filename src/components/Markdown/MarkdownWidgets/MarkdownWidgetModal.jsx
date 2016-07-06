@@ -10,7 +10,6 @@ import InputFields from 'components/Markdown/MarkdownPluginFields';
 import MurmurHash from 'murmurhash';
 import Portal from 'react-portal';
 import {throttle, delay} from 'lodash';
-import {pubSizes} from 'utils/styleConstants';
 
 let styles = {};
 
@@ -302,7 +301,7 @@ const MarkdownWidgetModal = React.createClass({
 								}
 							{/*
 							<div style={styles.pluginSave} key={'pluginPopupSave'} onClick={this.onPluginSave}>
-								<FormattedMessage {...globalMessages.save} />
+								<FormattedMessage {...globalMessages.Save} />
 							</div>
 							*/}
 
@@ -355,7 +354,6 @@ styles = {
 				top: '60px',
 			},
 			'discussions': {
-				width: pubSizes.defaultRightWidth,
 				right: '0px',
 				backgroundColor: 'rgba(255,255,255,0.5)',
 				top: '30px',

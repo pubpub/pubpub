@@ -4,18 +4,24 @@ import {reducer as formReducer} from 'redux-form';
 import { routerStateReducer } from 'redux-router';
 
 import app from './containers/App/reducer';
+import atom from './containers/AtomReader/reducer';
+import atomEdit from './containers/AtomEditor/reducer';
 import autocomplete from './containers/Autocomplete/reducer';
 import editor from './containers/Editor/reducer';
+import emailVerification from './containers/EmailVerification/reducer';
 import explore from './containers/Explore/reducer';
 import discussions from './containers/Discussions/reducer';
 import group from './containers/GroupProfile/reducer';
 import journal from './containers/JournalProfile/reducer';
+import jrnlCreate from './containers/JrnlCreate/reducer';
+import jrnl from './containers/JrnlProfile/reducer';
 import landing from './containers/Landing/reducer';
 import login from './containers/Login/reducer';
+import signUp from './containers/SignUp/reducer';
 import user from './containers/UserProfile/reducer';
+import userSettings from './containers/UserSettings/reducer';
 import pub from './containers/PubReader/reducer';
 import resetPassword from './containers/ResetPassword/reducer';
-import subdomainTest from './containers/SubdomainTest/reducer';
 
 export default combineReducers({
 	router: routerStateReducer,
@@ -43,18 +49,24 @@ export default combineReducers({
 		},
 	}),
 	app,
+	atom,
+	atomEdit,
 	autocomplete,
 	editor,
+	emailVerification,
 	explore,
 	discussions,
 	group,
 	journal,
+	jrnlCreate,
+	jrnl,
 	landing,
 	login,
+	signUp,
 	user,
+	userSettings,
 	pub,
-	resetPassword,
-	subdomainTest
+	resetPassword
 });
 
 export function ensureImmutable(state) {

@@ -4,6 +4,7 @@ require('babel-polyfill');
 var fs = require('fs');
 var path = require('path');
 var webpack = require('webpack');
+// var HappyPack = require('happypack');
 var assetsPath = path.resolve(__dirname, '../static/dist');
 var host = (process.env.HOST || 'localhost');
 var port = parseInt(process.env.PORT) + 1 || 3001;
@@ -41,7 +42,7 @@ var reactTransform = null;
 for (var i = 0; i < babelLoaderQuery.plugins.length; ++i) {
   var plugin = babelLoaderQuery.plugins[i];
   if (Array.isArray(plugin) && plugin[0] === 'react-transform') {
-    reactTransform = plugin;
+	reactTransform = plugin;
   }
 }
 
@@ -49,6 +50,7 @@ if (!reactTransform) {
   reactTransform = ['react-transform', {transforms: []}];
   babelLoaderQuery.plugins.push(reactTransform);
 }
+// babelLoaderQuery.cacheDirectory = true;
 
 if (!reactTransform[1] || !reactTransform[1].transforms) {
   reactTransform[1] = Object.assign({}, reactTransform[1], {transforms: []});
@@ -65,50 +67,49 @@ module.exports = {
   devtool: 'inline-source-map',
   context: path.resolve(__dirname, '..'),
   entry: {
-    'main': [
-      'webpack-hot-middleware/client?path=http://' + host + ':' + port + '/__webpack_hmr',
-      './src/client.js'
-    ]
+	'main': [
+	  'webpack-hot-middleware/client?path=http://' + host + ':' + port + '/__webpack_hmr',
+	  './src/client.js'
+	]
   },
-  output: {
-    path: assetsPath,
-    filename: '[name]-[hash].js',
-    chunkFilename: '[name]-[chunkhash].js',
-    publicPath: 'http://' + host + ':' + port + '/dist/'
-  },
-  module: {
-    loaders: [
-      { test: /\.jsx?$/, exclude: /node_modules/, loaders: ['babel?' + JSON.stringify(babelLoaderQuery)]},
-      { test: /\.json$/, loader: 'json-loader' },
-      { test: /\.woff(\?v=\d+\.\d+\.\d+)?$/, loader: "url?limit=10000&mimetype=application/font-woff" },
-      { test: /\.woff2(\?v=\d+\.\d+\.\d+)?$/, loader: "url?limit=10000&mimetype=application/font-woff" },
-      { test: /\.ttf(\?v=\d+\.\d+\.\d+)?$/, loader: "url?limit=10000&mimetype=application/octet-stream" },
-      { test: /\.eot(\?v=\d+\.\d+\.\d+)?$/, loader: "file" },
-      { test: /\.svg(\?v=\d+\.\d+\.\d+)?$/, loader: "url?limit=10000&mimetype=image/svg+xml" },
-      { test: webpackIsomorphicToolsPlugin.regular_expression('images'), loader: 'url-loader?limit=10240' }
-    ]
-  },
-  progress: true,
-  resolve: {
-    root: path.resolve('src'),
-    modulesDirectories: [
-      'node_modules'
-    ],
-    extensions: ['', '.json', '.js', '.jsx']
-  },
-  node: {
-    fs: "empty"
-  },
-  plugins: [
-    // hot reload
-    new webpack.HotModuleReplacementPlugin(),
-    new webpack.IgnorePlugin(/webpack-stats\.json$/),
-    new webpack.DefinePlugin({
-      __CLIENT__: true,
-      __SERVER__: false,
-      __DEVELOPMENT__: true,
-      __DEVTOOLS__: true  // <-------- DISABLE redux-devtools HERE
-    }),
-    webpackIsomorphicToolsPlugin.development()
-  ]
+	output: {
+		path: assetsPath,
+		filename: '[name]-[hash].js',
+		chunkFilename: '[name]-[chunkhash].js',
+		publicPath: 'http://' + host + ':' + port + '/dist/'
+	},
+	module: {
+		loaders: [
+			{ test: /\.(js|jsx)$/, exclude: /node_modules/, loaders: ['babel?' + JSON.stringify(babelLoaderQuery)]},
+			// { test: /\.(js|jsx)$/, exclude: /node_modules/, loaders: ['happypack/loader?id=babel']},
+			{ test: /\.json$/, loader: 'json-loader' }
+		]
+	},
+	progress: true,
+	resolve: {
+		root: path.resolve('src'),
+		modulesDirectories: [
+			'node_modules'
+		],
+		extensions: ['', '.json', '.js', '.jsx']
+	},
+	node: {
+		fs: "empty"
+	},
+	plugins: [
+		// new HappyPack({
+		// 	id: 'babel',
+		// 	loaders: ['babel?' + JSON.stringify(babelLoaderQuery)]
+		// }),
+		// hot reload
+		new webpack.HotModuleReplacementPlugin(),
+		new webpack.IgnorePlugin(/webpack-stats\.json$/),
+		new webpack.DefinePlugin({
+			__CLIENT__: true,
+			__SERVER__: false,
+			__DEVELOPMENT__: true,
+			__DEVTOOLS__: true  // <-------- DISABLE redux-devtools HERE
+		}),
+		webpackIsomorphicToolsPlugin.development()
+	]
 };

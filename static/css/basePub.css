@@ -1,128 +1,99 @@
-#pubContent #pub-wrapper{
-	padding: 0px 6em 50px 4em;
-	line-height: 1.58;
-	text-rendering: optimizeLegibility;
-	-webkit-font-smoothing: antialiased;
+#atom-reader {
+	max-width: 650px;
+	margin: 0 auto;
+	font-family: serif;
+	font-size: 1.2em;
+	line-height: 1.5em;
+	color: #333;
 }
+
+#atom-reader .headerBlock { /* This hides old markdown titles in case they're still there*/
+	display: none;
+}
+
+/* Undo the header style set in pubpub.css*/
+#atom-reader h1 {
+	font-size: 2em;
+	margin-top: 0.67em;
+	letter-spacing: 0px;
+}
+#atom-reader h2 {
+	font-size: 1.5em;
+	margin-top: 0.83em;
+}
+
+#atom-reader h1, #atom-reader h2, #atom-reader h3, #atom-reader h4, #atom-reader h5, #atom-reader h6 {
+	line-height:1em;
+	font-family: 'Yrsa', Georgia, serif;
+}
+
+#atom-reader.atom-reader-meta h1, #atom-reader.atom-reader-meta h2, #atom-reader.atom-reader-meta h3, #atom-reader.atom-reader-meta h4, #atom-reader.atom-reader-meta h5, #atom-reader.atom-reader-meta h6 {
+	font-family: 'Open Sans', Helvetica Neue, Arial, sans-serif;
+}
+
 @media screen and (min-resolution: 3dppx), screen and (max-width: 767px) {
-	#pubContent #pub-wrapper{
-		padding: 0px 1em 50px;
+	#atom-reader h1 {
+		font-size: 2em;
 	}
 }
 
-
-#pubBodyContent {
-	padding: 0px 0em;
+/* Set default paragraph margins on .p-block since we don't use <p> */
+#atom-reader .p-block {
+	margin: 1em 0em;
 }
 
-
-#pubContent .headerBlock {
-	border-bottom: 1px solid #ccc;
-	padding-bottom: 0.7em;
-	margin-bottom: 0.7em;
+#atom-reader .atom-reader-header h1 {
+	font-size: 2.5em;
+	margin-top: .75em;
+	margin-bottom: .25em;
+	font-family: 'Open Sans', Helvetica Neue, Arial, sans-serif;
+	color: #222; 
 }
 
-#pubContent .title{
-	text-align: left;
-	font-size: 3.2em;
-	padding: 0.7em 0px;
-	font-weight: 700;
-	line-height: 1.3em;
-	color: #222;
-	/*font-family: 'Lora';*/
-	font-family: 'Yrsa', Georgia, serif;
-	margin: 0;
+#atom-reader .atom-reader-header p {
+	margin: .5em 0em;
 }
 
-#pubContent .author {
-	display: inline-block;
-	color: #222;
-	font-size: 1.0em;
-	padding: 0px;
-	font-family: 'Lora';
-	text-decoration: none;
-	padding-right: 1em;
-	vertical-align: top;
-}
-#pubContent a.author:hover {
-	text-decoration: underline;
+
+#atom-reader a {
+	color: inherit;
 }
 
-/*#pubContent #pub-authors {
-	text-align: left;
-	color: #222;
-	font-size: 1.0em;
-	padding: 0px;
-	font-family: 'Lora';
-	text-transform: capitalize;;
-	font-weight: 700;
-}*/
-/*#pubContent .pub-author {
-	color: #555;
-}
-#pubContent .pub-author:hover {
-	color: #111;
-}*/
-#pubContent #pub-dates {
-	text-align: left;
-	padding: 0px;
-	color: #222;
-	font-family: 'Lora';
-}
-#pubContent .abstract {
-	text-align: left;
-	color: #222;
-	margin: 2em 0px;
-	font-family: 'Lora';
-	padding: 0px 0px;
-	font-style: italic;
-}
-#pubContent .authorsNote {
+#atom-reader .authorsNote {
 	text-align: center;
 	margin: 30px auto 0px auto;
 	background-color: #EAEAEA;
 	color: #666;
-	font-family: 'Lora';
 	padding: 10px 20px;
 	width: 80%;
 }
-#pubContent #pub-header-divider {
-	height: 1px;
-	width: 100%;
-	margin: 0 auto;
-	background-color: #DDD;
-}
-#pubContent #pub-references {
-	margin-top: 1.5em;
-	padding-top: 1.5em;
+
+#atom-reader #pub-references {
 	border-top: 1px solid #eee;
 }
-#pubContent .reference-content {
+#atom-reader .reference-content {
 	font-size: 0.9em;
 }
-#pubContent .reference-number {
+#atom-reader .reference {
+	margin: .5em;
+}
+#atom-reader .reference-number {
 	color: #222;
 	padding-right: 10px;
 	font-size: 1em;
 }
 
-#pubContent hr {
+#atom-reader hr {
 	background-color: #DDD;
 	height: 1px;
 	border: none;
 }
 
-#pubContent .p-block {
-	/*font-family: 'Lora';*/
-	font-family: 'Yrsa', Georgia, serif;
-	font-size: 1.2em;
-	padding: 0.5em 0em;
-	color: #333;
-}
-#pubContent .codeBlock {
+
+#atom-reader .codeBlock {
 	background-color: #f0f0f0;
 }
-#pubContent pre .codeBlock {
+#atom-reader pre .codeBlock {
 	margin: 0px 20px;
 	padding: 10px;
 	background-color: #f0f0f0;
@@ -132,69 +103,48 @@
 	overflow-x: scroll;
 
 }
-#pubContent blockquote {
+#atom-reader blockquote {
 	padding: 10px 20px;
 	margin: 0 0 20px;
 	font-size: 17.5px;
 	border-left: 5px solid #eee;
 }
-#pubContent ul, #pubContent ol {
-	/*font-family: 'Lora';*/
-	font-family: 'Yrsa', Georgia, serif;
+#atom-reader ul, #atom-reader ol {
 	padding: 0px 3em 0px 3em;
-	color: #333;
 }
-#pubContent span + li + span + li {
+#atom-reader span + li + span + li {
 	padding-top: 0.7em
 }
-#pubContent table {
+#atom-reader table {
 	border-spacing: 0px;
 	border-collapse: collapse;
 }
-#pubContent td {
+#atom-reader td {
 	border: 1px solid #ccc;
 	padding: 0.3em;
 }
-#pubContent th {
+#atom-reader th {
 	border: 1px solid #ccc;
 	padding: 0.3em;
 	background-color: #eee;
 	color: #111;
 }
-#pubContent h1, #pubContent h2, #pubContent h3, #pubContent h4, #pubContent h5, #pubContent h6 {
-	color: #666;
-	font-family: 'Clear Sans Light', Helvetica Neue, Arial, serif;
-}
-#pubContent h1 {
-	font-size: 2em;
-}
-#pubContent h2 {
-	font-size: 1.41421em;
-}
-#pubContent h3 {
-	font-size: 1.25992em;
-}
-#pubContent h4 {
-	font-size: 1.12246em;
-}
-#pubContent a {
-	color: inherit;
-}
+
 
 
 /*PLUGIN STYLING*/
 
-#pubContent .pub-plugin.pub-quote-wrapper {
+#atom-reader .pub-plugin.pub-quote-wrapper {
 	border-top: none;
 	border-bottom: none;
-	border-right`: none;
+	border-right: none;
 	border-left: #DDD solid 1px;
 	padding-left: 1em;
 	text-align: left;
 	font-style: italic;
 }
 
-#pubContent .pub-plugin.pub-quote-wrapper.pub-align-full {
+#atom-reader .pub-plugin.pub-quote-wrapper.pub-align-full {
 	border-top: #DDD solid 1px;
 	border-bottom: #DDD solid 1px;
 	border-left: none;
@@ -204,32 +154,9 @@
 	text-style: italic;
 	background-color: #F9F9F9;
 
-	width: 45vw !important;
-	margin-left: calc(-1 * (45vw - 100%) / 2) !important;
-	margin-top: 1em !important;
-	margin-bottom: 1em !important;
+	width: 100%
 }
 
-
-#pubContent .pub-plugin.pub-img-wrapper.pub-align-full {
-	/*width: 45vw !important;*/
-	/*margin-left: calc(-1 * (45vw - 100%) / 2) !important;*/
-	margin-top: 0.5em !important;
-	margin-bottom: 0.5em !important;
-}
-
-
-@media screen and (min-resolution: 3dppx), screen and (max-width: 767px) {
-	#pubContent .pub-plugin.pub-quote-wrapper.pub-align-full {
-		width: 100vw !important;
-		margin-left: calc(-1 * (100vw - 100%) / 2) !important;
-	}
-
-	#pubContent .pub-plugin.pub-img-wrapper.pub-align-full {
-		width: 90vw !important;
-		margin-left: calc(-1 * (90vw - 100%) / 2) !important;
-	}
-}
 
 .pub-sub-caption {
 	font-size: 0.8em;
@@ -239,11 +166,28 @@
 	line-height: 1.4;
 }
 
-#pubContent .pub-quote {
+#atom-reader .pub-quote {
 	padding: 2.5% 7.5%;
 }
 
 .pagebreak {
 	opacity: 0 !important;
 	page-break-before: always !important;
+}
+
+/*HIGHLIGHT STYLING*/
+
+.marking {
+	background-color: rgba(124, 235, 124, 0.7);
+}
+.tempHighlight {
+	background-color: rgba(200,200,200, 0.7);
+}
+.selection {
+}
+.selection-active {
+	background-color: rgba(78, 164, 61, 0.4);
+}
+.selection-editor.selection-active {
+	background-color: rgba(78, 61, 164, 0.6);
 }

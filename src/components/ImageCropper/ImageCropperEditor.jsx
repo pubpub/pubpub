@@ -44,7 +44,7 @@ const draggableEvents = {
 };
 const deviceEvents = isTouchDevice ? draggableEvents.mobile : draggableEvents.desktop;
 
-const ImageCropperEditor = React.createClass({
+export const ImageCropperEditor = React.createClass({
 	propTypes: {
 		scale: React.PropTypes.number,
 		image: React.PropTypes.object,

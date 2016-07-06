@@ -55,18 +55,18 @@ const SelectionPopup = React.createClass({
 		Marklib = require('marklib');
 		Rangy = require('rangy');
 		require('rangy/lib/rangy-textrange.js');
-		document.getElementById('pubBodyContent').addEventListener('mouseup', this.onMouseUp);
+		document.getElementById('pub-body').addEventListener('mouseup', this.onMouseUp);
 	},
 
 	componentWillUnmount() {
-		document.getElementById('pubBodyContent').removeEventListener('mouseup', this.onMouseUp);
+		document.getElementById('pub-body').removeEventListener('mouseup', this.onMouseUp);
 	},
 
 	onMouseUp: function(event) {
 		// We only trigger the selectionPopup for elements that have a data-hash'd ancestor.
 		let clickX;
 		let clickY;
-		const element = document.getElementsByClassName('pubScrollContainer')[0];
+		const element = document.getElementById('pub-body');
 		const offsetTop = element.parentNode.style.top ? parseInt(element.parentNode.style.top, 10) : 0;
 		if (event.pageX || event.pageY) {
 			clickX = event.pageX - element.getBoundingClientRect().left;

@@ -81,6 +81,7 @@ const Markdown = React.createClass({
 		case 'h5':
 		case 'h6':
 			props.id = children[0] && children[0].replace ? children[0].replace(/\s/g, '-').toLowerCase() : undefined;
+			props.className = props.className ? props.className + ' pub-body-header' : 'pub-body-header';
 			break;
 
 		case 'table':

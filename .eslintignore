@@ -1,5 +1,4 @@
 webpack/*
-karma.conf.js
 tests.webpack.js
 **/*.test.js
 src/utils/cssToRadium.js

@@ -19,6 +19,58 @@ import {getRecommendations, inpRecAction} from '../services/recommendations';
 import {checkCaptcha, checkSpam} from '../services/spam';
 
 
+export function getPubData(req, res) {
+	const {slug, meta, version} = req.query;
+	const userID = req.user ? req.user._id : undefined;
+	// Check permission type
+	// Load specific data
+	// const populationArray = [];
+	// const fieldObject = {'_id': 1, 'title': 1, 'slug': 1};
+
+	// if (!slug) {
+	// 	return res.status(404).json();
+	// } else if (meta === 'contributors') {
+	// 	populationArray.push({
+	// 		path: 'pubsFeatured',
+	// 		select: 'title abstract slug authors lastUpdated createDate discussions createDate lastUpdated',
+	// 		populate: [
+	// 			{
+	// 				path: 'authors',
+	// 				model: 'User',
+	// 				select: 'name firstName lastName username thumbnail',
+	// 			},
+	// 		],
+	// 	});
+	// 	fieldObject.contributors = 1;
+	// }
+
+	const populationArray = [
+		{
+			path: 'discussions',
+			model: 'Discussion',
+			populate: {
+				path: 'author',
+				model: 'User',
+				select: 'name firstName lastName username thumbnail',
+			},
+		},
+		{ path: 'authors history.authors', select: 'username name thumbnail firstName lastName', model: 'User' },
+	];
+	const fieldObject = {};
+
+	Pub.findOne({slug: slug}, fieldObject).populate(populationArray).exec()
+	.then(function(result) {
+		console.log(result);
+		return res.status(201).json(result);
+	})
+	.catch(function(error) {
+		console.log('error', error);
+		return res.status(500).json(error);
+	});
+
+}
+app.get('/getPubData', getPubData);
+
 export function getPub(req, res) {
 	const userID = req.user ? req.user._id : undefined;
 	const userGroups = req.user ? req.user.groups : [];

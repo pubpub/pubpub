@@ -2,7 +2,7 @@ import React, { PropTypes } from 'react';
 import {connect} from 'react-redux';
 import Radium from 'radium';
 import Helmet from 'react-helmet';
-import {GalleryCollection, GalleryPub, GalleryJournal, NotFound} from 'components';
+import {NotFound} from 'components';
 import {globalStyles} from 'utils/styleConstants';
 
 import {globalMessages} from 'utils/globalMessages';
@@ -28,21 +28,6 @@ const Explore = React.createClass({
 
 		const metaData = {};
 
-		let mode = '';
-		if (this.props.path.indexOf('collections') > -1) {
-			mode = 'collections';
-			metaData.title = 'Collections';
-
-		} else if (this.props.path.indexOf('pubs') > -1) {
-			mode = 'pubs';
-			metaData.title = 'Pubs';
-
-		} else if (this.props.path.indexOf('journals') > -1) {
-			mode = 'journals';
-			metaData.title = 'Journals';
-
-		}
-
 		// TODO: We may want to have some fetchData functions in the statics section. We would fetch collections and pubs when on pubpub.org to display in their respective galleries.
 		// Pubs and collections are already populated in journalData when we're in a journal - so this is the only place that it's an issue.
 		return (
@@ -51,48 +36,7 @@ const Explore = React.createClass({
 
 				<Helmet {...metaData} />
 
-				{(() => {
-					switch (mode) {
-					case 'collections':
-						/* This should only be available on journals */
-						return (!this.props.appData.get('baseSubdomain')
-							? <NotFound />
-							: <div>
-								<div style={styles.header}>
-									<FormattedMessage {...globalMessages.collections} />
-								</div>
-								<GalleryCollection collections={this.props.appData.getIn(['journalData', 'collections']).toJS()} />
-							</div>
-						);
-
-					case 'pubs':
-						const pubData = this.props.appData.get('baseSubdomain') ? this.props.appData.getIn(['journalData', 'pubsFeatured']).toJS() : this.props.appData.getIn(['journalData', 'allPubs']).toJS();
-						return (
-							<div>
-								<div style={styles.header}>
-									<FormattedMessage {...globalMessages.pubs} />
-								</div>
-								<GalleryPub pubs={pubData} reverseOrder={true}/>
-							</div>
-
-						);
-
-					case 'journals':
-						/* This should only be available on pubpub */
-						return (this.props.appData.get('baseSubdomain')
-							? <NotFound />
-							: <div>
-								<div style={styles.header}>
-									<FormattedMessage {...globalMessages.Journals} />
-								</div>
-								<GalleryJournal journals={this.props.appData.getIn(['journalData', 'allJournals']).toJS()} />
-							</div>
-						);
-
-					default:
-						return <NotFound />;
-					}
-				})()}
+				<h1>Explore</h1>
 
 			</div>
 		);

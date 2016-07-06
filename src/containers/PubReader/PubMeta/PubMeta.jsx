@@ -121,90 +121,74 @@ const PubMeta = React.createClass({
 				<div className="centerBar" style={[styles.centerBar]}>
 
 					<div style={[styles.centerContent, styles[this.props.readerData.get('status')]]}>
-						{pubData.history[0] && !pubData.history[0].markdown
-							? <div style={styles.metaTitle}><span style={styles.metaTitleType}>{pubData.history[0].title}</span></div>
-							: <div>
-								<div style={styles.metaTitle}>
-									{this.props.meta && globalMessages[this.props.meta]
-										? <span style={styles.metaTitleType}><FormattedMessage {...globalMessages[this.props.meta]} />:</span>
-										: null
-									}
-									<Link to={'/pub/' + this.props.slug + versionURL} key={'metaTitleLink'} style={globalStyles.link}><span style={styles.metaTitlePub}>{this.props.readerData.getIn(['pubData', 'title'])}</span></Link>
+						{(() => {
+							switch (this.props.meta) {
+							case 'history':
+								return (<PubMetaHistory
+										historyData={historyData}
+										slug={this.props.slug}/>
+									);
+							case 'journals':
+								return (<PubMetaJournals
+										featuredIn={featuredIn}
+										featuredInList={featuredInList}
+										submittedTo={submittedTo}
+										submittedToList={submittedToList}
+										handleSubmitToJournal={this.submitToJournal}
+										isAuthor={this.props.readerData.getIn(['pubData', 'isAuthor'])}/>
+									);
+							case 'source':
+								return (<PubMetaSource
+										historyObject={this.props.readerData.getIn(['pubData', 'history', versionIndex]).toJS()}/>
+									);
+							case 'historydiff':
+								return (<PubMetaHistoryDiff
+										diffObject={this.props.readerData.getIn(['pubData', 'history', versionIndex, 'diffObject']).toJS()}/>
+									);
+							case 'discussions':
+								return <Discussions metaID={this.props.metaID} />;
+								// return (<PubMetaDiscussions
+								// 	metaID={this.props.metaID}
+								// 	slug={this.props.slug}
+								// 	discussionsData={this.props.readerData.getIn(['pubData', 'discussions']).toJS()}
 
-								</div>
+								// 	addDiscussionHandler={this.addDiscussion}
+								// 	addDiscussionStatus={this.props.readerData.get('addDiscussionStatus')}
+								// 	newDiscussionData={this.props.readerData.get('newDiscussionData')}
+								// 	activeSaveID={this.props.readerData.get('activeSaveID')}
+								// 	userThumbnail={this.props.loginData.getIn(['userData', 'thumbnail'])}
+								// 	handleVoteSubmit={this.discussionVoteSubmit} />
+								// 	);
+							case 'invite':
+								return (
+									<PubMetaInvite
+										handleSubmitInvites={this.submitInvites}
+										inviteStatus={this.props.inviteStatus}
+										/>
+								);
+							case 'citations':
+								return (
+									<PubMetaCitations />
+								);
+							case 'analytics':
+								return (
+									<PubMetaAnalytics />
+								);
+							// case 'news':
+							// 	return (
+							// 		<PubMetaInTheNews />
+							// 	);
+							// case 'reviews':
+							// 	return (<PubMetaReviews />
+							// 		);
+							// case 'review':
+							// 	return (<PubMetaReview />
+							// 		);
 
-								{(() => {
-									switch (this.props.meta) {
-									case 'history':
-										return (<PubMetaHistory
-												historyData={historyData}
-												slug={this.props.slug}/>
-											);
-									case 'journals':
-										return (<PubMetaJournals
-												featuredIn={featuredIn}
-												featuredInList={featuredInList}
-												submittedTo={submittedTo}
-												submittedToList={submittedToList}
-												handleSubmitToJournal={this.submitToJournal}
-												isAuthor={this.props.readerData.getIn(['pubData', 'isAuthor'])}/>
-											);
-									case 'source':
-										return (<PubMetaSource
-												historyObject={this.props.readerData.getIn(['pubData', 'history', versionIndex]).toJS()}/>
-											);
-									case 'historydiff':
-										return (<PubMetaHistoryDiff
-												diffObject={this.props.readerData.getIn(['pubData', 'history', versionIndex, 'diffObject']) && this.props.readerData.getIn(['pubData', 'history', versionIndex, 'diffObject']).toJS && this.props.readerData.getIn(['pubData', 'history', versionIndex, 'diffObject']).toJS()}/>
-											);
-									case 'discussions':
-										return <Discussions metaID={this.props.metaID} />;
-										// return (<PubMetaDiscussions
-										// 	metaID={this.props.metaID}
-										// 	slug={this.props.slug}
-										// 	discussionsData={this.props.readerData.getIn(['pubData', 'discussions']).toJS()}
-
-										// 	addDiscussionHandler={this.addDiscussion}
-										// 	addDiscussionStatus={this.props.readerData.get('addDiscussionStatus')}
-										// 	newDiscussionData={this.props.readerData.get('newDiscussionData')}
-										// 	activeSaveID={this.props.readerData.get('activeSaveID')}
-										// 	userThumbnail={this.props.loginData.getIn(['userData', 'thumbnail'])}
-										// 	handleVoteSubmit={this.discussionVoteSubmit} />
-										// 	);
-									case 'invite':
-										return (
-											<PubMetaInvite
-												handleSubmitInvites={this.submitInvites}
-												inviteStatus={this.props.inviteStatus}
-												/>
-										);
-									case 'citations':
-										return (
-											<PubMetaCitations />
-										);
-									case 'analytics':
-										return (
-											<PubMetaAnalytics />
-										);
-									// case 'news':
-									// 	return (
-									// 		<PubMetaInTheNews />
-									// 	);
-									// case 'reviews':
-									// 	return (<PubMetaReviews />
-									// 		);
-									// case 'review':
-									// 	return (<PubMetaReview />
-									// 		);
-
-									default:
-										return null;
-									}
-								})()}
-							</div>
-						}
-
-
+							default:
+								return null;
+							}
+						})()}
 					</div>
 
 
@@ -222,28 +206,5 @@ styles = {
 	container: {
 
 	},
-
-	metaTitle: {
-		marginBottom: '25px',
-	},
-	metaTitleType: {
-		color: '#444',
-		paddingRight: 10,
-		fontSize: '35px',
-		textTransform: 'lowercase',
-	},
-	metaTitlePub: {
-		color: '#888',
-		fontSize: '24px',
-		':hover': {
-			color: '#000',
-		}
-	},
-	centerBar: {
-		backgroundColor: 'white',
-		boxShadow: '0px 2px 4px 0px rgba(0,0,0,0.4)',
-		minHeight: 'calc(100vh - ' + globalStyles.headerHeight + ' + 3px)',
-	},
-
 
 };

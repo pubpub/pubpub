@@ -2,7 +2,7 @@ const app = require('../api');
 const crypto = require('crypto');
 
 const awsDetails = {};
-if (process.env.NODE_ENV !== 'production') {
+if (process.env.NODE_ENV !== 'production' && !process.env.TESTING) {
 	awsDetails.accessKeyAws = require('../config').accessKeyAws;
 	awsDetails.secretKeyAws = require('../config').secretKeyAws;
 } else {
@@ -15,9 +15,9 @@ app.get('/uploadPolicy', function(req, res) {
 	const s3 = {
 		access_key: awsDetails.accessKeyAws,
 		secret_key: awsDetails.secretKeyAws,
-		bucket: 'pubpub-upload',
+		bucket: 'assets.pubpub.org',
 		acl: 'public-read',
-		https: 'false',
+		https: 'true',
 		error_message: '',
 		pad: function(padding) {
 			if ((padding + '').length === 1) {

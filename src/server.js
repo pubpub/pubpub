@@ -147,23 +147,16 @@ app.use((req, res) => {
 							<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 							<meta name="google-site-verification" content="jmmJFnkSOeIEuS54adOzGMwc0kwpsa8wQ-L4GyPpPDg" />
 							<meta name="referrer" content="always">
-							${fbPagesTag}
+							<meta property="fb:pages" content="228105957546675" />
+							<meta name="theme-color" content="#2C2A2B">
 							${head.title.toString()}
 							${head.meta.toString()}
 
 							<link rel=${rssRel} type="application/rss+xml" title="RSS" href="/data/rss.xml" />
-							<link rel="shortcut icon" href="/favicon.ico" />
-							<link href='https://fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic,900italic|Lora:400,400italic,700,700italic' rel='stylesheet' type='text/css' />
-
-							<link href='https://fonts.googleapis.com/css?family=Alegreya+Sans+SC|ABeeZee' rel='stylesheet' type='text/css'>
-							<link href='https://fonts.googleapis.com/css?family=Merriweather:400italic,700italic' rel='stylesheet' type='text/css'>
-							<style>
-								@font-face { font-family: Yrsa; font-weight: 400; src: url('https://s3.amazonaws.com/pubpub-statics/Yrsa-Regular.otf'); }
-								@font-face { font-family: Yrsa; font-weight: 700; src: url('https://s3.amazonaws.com/pubpub-statics/Yrsa-Bold.otf');}
-								@font-face { font-family: ClearSans; font-weight: 100; src: url('https://s3.amazonaws.com/pubpub-statics/ClearSans-Light.ttf');}
-								@font-face { font-family: ClearSans; font-weight: 400; src: url('https://s3.amazonaws.com/pubpub-statics/ClearSans-Regular.ttf');}
-								@font-face { font-family: ClearSans; font-weight: 700; src: url('https://s3.amazonaws.com/pubpub-statics/ClearSans-Bold.ttf');}
-							</style>
+							<link rel="shortcut icon" href="/favicon.ico?v=21cb1" />
+							
+							<link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+							<link href='https://assets.pubpub.org/_fonts/Yrsa.css' rel='stylesheet' type='text/css'>
 
 							<!-- We could dynamically load these in Editor.jsx
 							<!-- If we have to load more local css - we should bundle it all into one minified file and load it here. -->
@@ -171,9 +164,9 @@ app.use((req, res) => {
 							<link href='/css/print.css' rel='stylesheet' type='text/css' />
 							<link href='/css/highlightdefault.css' rel='stylesheet' type='text/css' />
 							<link href='/css/react-select.min.css' rel='stylesheet' type='text/css' />
-							<link href='/css/basePub.css' rel='stylesheet' type='text/css' />
-							<link href='/css/basePage.css' rel='stylesheet' type='text/css' />
 							<link href='/css/menu.css' rel='stylesheet' type='text/css' />
+							<link href='/css/pubpub.css' rel='stylesheet' type='text/css' />
+							<link href='/css/basePub.css' rel='stylesheet' type='text/css' />
 							<style id="dynamicStyle">${dynamicStyle}</style>
 
 							<link href='https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.9.0/addon/hint/show-hint.css' rel='stylesheet' type='text/css' />

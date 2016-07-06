@@ -12,7 +12,7 @@ const environment = {
 	},
 	production: {
 		isProduction: true,
-		FireBaseURL: process.env.FIREBASE_URL || 'https://pubpub.firebaseio.com/'
+		FireBaseURL: process.env.FIREBASE_URL || 'https://pubpub.firebaseio.com/' // BUG: this process.env is not accessible on the client. It just defaults to the the || case
 	}
 }[env];
 

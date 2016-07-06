@@ -20,7 +20,7 @@ const PubMetaHistory = React.createClass({
 	render: function() {
 		return (
 			<div style={[styles.container]}>
-
+				<h2>History</h2>
 					{(()=>{
 						const historyDivs = [];
 
@@ -46,8 +46,6 @@ export default Radium(PubMetaHistory);
 
 styles = {
 	container: {
-		overflow: 'hidden',
-		padding: 15,
 	},
 
 	hidden: {

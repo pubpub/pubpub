@@ -45,10 +45,10 @@ export const defaultState = Immutable.Map({
 function load(state) {
 	return state.merge({
 		status: 'loading',
-		profileData: {
-			pubs: [],
-			discussions: [],
-		},
+		// profileData: {
+		// 	pubs: [],
+		// 	discussions: [],
+		// },
 	});
 }
 

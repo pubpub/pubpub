@@ -352,12 +352,12 @@ const Discussions = React.createClass({
 						})
 					}
 
-					{(discussionsData.length === 0) ?
+					{/* (discussionsData.length === 0) ?
 						<div style={styles.emptyComments}>
 							<div><FormattedMessage id="discussion.blank1" defaultMessage="There are no comments here yet."/></div>
 							<div><FormattedMessage id="discussion.blank2" defaultMessage="Be the first to start the discussion!"/></div>
 						</div>
-					: null }
+					: null */}
 
 				</div>
 

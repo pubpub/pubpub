@@ -5,7 +5,7 @@ const ObjectId = Schema.Types.ObjectId;
 const Heroku = require('heroku-client');
 let heroku = undefined;
 
-if (process.env.NODE_ENV !== 'production') {
+if (process.env.NODE_ENV !== 'production' && !process.env.TESTING) {
 	const herokuApiKey = require('../config').herokuApiKey;
 	heroku = new Heroku({ token: herokuApiKey });
 } else {

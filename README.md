@@ -58,14 +58,13 @@ We welcome contributions to PubPub in the form of feedback, bug reports, feature
 [CONTRIBUTING.md](./CONTRIBUTING.md) documents contributing guidelines.
 
 # Testing
-Tests run using Mocha and Karma. All test files follow the pattern `filename.test.js`.
+Tests run using Mocha. All test files follow the pattern `filename.test.js`.
 
 To run tests:
 
 ```
 npm install
 npm run test        # test client and server code with mocha
-npm run test-karma  # test client code with karma (real browsers)
 ```
 
 [More on tests](/src/tests)

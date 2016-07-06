@@ -4,7 +4,7 @@ import Radium, {Style} from 'radium';
 import {LoaderIndeterminate} from 'components';
 import {baseStyles} from './utils/editorModalStyle';
 import {globalStyles} from 'utils/styleConstants';
-import cssConvert from 'utils/cssToRadium';
+// import cssConvert from 'utils/cssToRadium';
 
 let styles = {};
 
@@ -108,29 +108,29 @@ const EditorModalSettings = React.createClass({
 	},
 
 	saveCustomSettings: function() {
+		return;
+		// // this.setState({showAdvancedError: false});
+		// const cm = document.getElementById('codeMirrorJSX').childNodes[0].CodeMirror;
+		// // console.log(cm.getValue());
+		// // We should test before save
+		// cssConvert(cm.getValue());
 
-		// this.setState({showAdvancedError: false});
-		const cm = document.getElementById('codeMirrorJSX').childNodes[0].CodeMirror;
-		// console.log(cm.getValue());
-		// We should test before save
-		cssConvert(cm.getValue());
+		// const newSetting = {};
 
-		const newSetting = {};
+		// newSetting.pubStyle = {
+		// 	type: 'custom',
+		// 	googleFontURL: this.refs.googleFontURL.value,
+		// 	cssObjectString: cm.getValue(),
+		// };
 
-		newSetting.pubStyle = {
-			type: 'custom',
-			googleFontURL: this.refs.googleFontURL.value,
-			cssObjectString: cm.getValue(),
-		};
+		// this.props.toggleLeftPanelModeHandler();
+		// this.toggleShowAdvanced();
+		// // this.setState({
+		// // 	showAdvanced: false,
+		// // 	showAdvancedError: false,
+		// // });
 
-		this.props.toggleLeftPanelModeHandler();
-		this.toggleShowAdvanced();
-		// this.setState({
-		// 	showAdvanced: false,
-		// 	showAdvancedError: false,
-		// });
-
-		return this.props.saveUpdatedSettingsFirebase(newSetting);
+		// return this.props.saveUpdatedSettingsFirebase(newSetting);
 	},
 
 	render: function() {

@@ -139,7 +139,7 @@ const GroupSettings = React.createClass({
 				</div>
 
 				<div style={styles.saveSettings} key={'groupSettingsSaveButton'} onClick={this.saveSettings}>
-					<FormattedMessage {...globalMessages.save} />
+					<FormattedMessage {...globalMessages.Save} />
 				</div>
 
 				<div style={styles.loader}>

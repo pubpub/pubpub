@@ -1,7 +1,7 @@
 import React, {PropTypes} from 'react';
 import Radium from 'radium';
 import {navStyles} from 'utils/styleConstants';
-import {PreviewPub} from 'components';
+import {PreviewCard} from 'components';
 
 import {globalMessages} from 'utils/globalMessages';
 import {FormattedMessage} from 'react-intl';
@@ -45,10 +45,25 @@ const UserPubs = React.createClass({
 			}
 		};
 
+		const atoms = this.props.profileData.atoms;
 		return (
 			<div style={styles.container}>
 
-				{this.props.ownProfile === 'self'
+				{
+					atoms.map((atom, index)=>{
+						return (<PreviewCard 
+							key={'atomItem-' + index}
+							type={'atom'}
+							slug={atom.slug}
+							title={atom.title}
+							image={atom.image}
+							description={atom.description}
+							showEdit={this.props.ownProfile === 'self' ? true : false} />
+						);
+					})
+				}
+
+				{/* this.props.ownProfile === 'self'
 					? <ul style={[navStyles.navList, styles.subNav]}>
 						<li key="subNav0"style={[navStyles.navItem, navStyles.left, navStyles.navItemShow, styles.noLeftPadding, styles.inactiveNav, this.state.mode === 'published' && styles.activeNav]} onClick={this.setMode('published')}>
 							<FormattedMessage {...globalMessages.Published} /> ({profileData.pubs.published.length})
@@ -65,15 +80,15 @@ const UserPubs = React.createClass({
 						</li>
 					</ul>
 					: <ul style={[navStyles.navList, styles.subNav]}></ul>
-				}
+				*/}
 
 				{
 					profileData.pubs[this.state.mode].map((pub, index)=>{
-						return (<PreviewPub 
-							key={'pubItem-' + index}
-							pubData={pub}
-							canEdit={this.props.ownProfile === 'self' ? true : false} />
-						);
+						// return (<PreviewPub 
+						// 	key={'pubItem-' + index}
+						// 	pubData={pub}
+						// 	canEdit={this.props.ownProfile === 'self' ? true : false} />
+						// );
 					})
 				}
 

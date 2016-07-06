@@ -2,72 +2,86 @@ import React, { PropTypes } from 'react';
 import {StyleRoot} from 'radium';
 import Helmet from 'react-helmet';
 import {connect} from 'react-redux';
+import {pushState} from 'redux-router';
 import {loadAppAndLogin} from './actions';
-import AppBody from './AppBody';
-import {NotFound} from 'components';
-
+import {logout} from 'containers/Login/actions';
+import {createAtom} from 'containers/AtomEditor/actions';
 import {IntlProvider} from 'react-intl';
+import {safeGetInToJS} from 'utils/safeParse';
 
-const App = React.createClass({
+import AppLoadingBar from './AppLoadingBar';
+import AppHeader from './AppHeader';
+import AppFooter from './AppFooter';
+
+import analytics from 'utils/analytics';
+
+
+export const App = React.createClass({
 	propTypes: {
 		appData: PropTypes.object,
+		atomEditData: PropTypes.object,
 		loginData: PropTypes.object,
-		pubData: PropTypes.object,
 		path: PropTypes.string,
 		slug: PropTypes.string,
-		children: PropTypes.object.isRequired,
+		children: PropTypes.object,
 		dispatch: PropTypes.func
 	},
 
 	statics: {
 		fetchData: function(getState, dispatch) {
-			if (getState().app.get('baseSubdomain') === undefined) {
+			if (getState().app.get('loadAttempted') === false) {
 				return dispatch(loadAppAndLogin());
 			}
 			return ()=>{};
 		}
 	},
 
-	render: function() {
-		if (this.props.appData.get('baseSubdomain') === undefined) {
-			return (
-				<IntlProvider locale={'en'} messages={{}}>
-					<StyleRoot>
-						<NotFound />
-					</StyleRoot>
-				</IntlProvider>
-			);
+	componentDidMount() {
+		analytics.pageView(this.props.path, this.props.loginData.get('loggedIn'));
+	},
+
+	componentWillReceiveProps(nextProps) {
+		// Redirect to home if logged out
+		if (this.props.loginData.get('loggedIn') && !nextProps.loginData.get('loggedIn')) {
+			this.props.dispatch(pushState(null, '/'));
 		}
-		const journalURL = this.props.appData.getIn(['journalData', 'customDomain']) ? 'http://' + this.props.appData.getIn(['journalData', 'customDomain']) : 'http://' + this.props.appData.getIn(['journalData', 'subdomain']) + '.pubpub.org';
-		const currentBaseURL = this.props.appData.get('baseSubdomain') ? journalURL : 'http://www.pubpub.org';
-		const rootImage = this.props.appData.getIn(['journalData', 'journalLogoURL']) ? this.props.appData.getIn(['journalData', 'journalLogoURL']) : 'https://s3.amazonaws.com/pubpub-upload/pubpubDefaultTitle.png';
-		const metaData = {
+		if (!this.props.atomEditData.get('newAtomHash') && nextProps.atomEditData.get('newAtomHash')) {
+			this.props.dispatch(pushState(null, '/a/' + nextProps.atomEditData.get('newAtomHash') + '/edit'));
+		}
+	},
+
+	createDocument: function() {
+		this.props.dispatch(createAtom('markdown'));
+	},
+
+	logoutHandler: function() {
+		this.props.dispatch(logout());
+	},
+
+	render: function() {
+		const messages = safeGetInToJS(this.props.appData, ['languageObject']) || {}; // Messages includes all of the strings used on the site. Language support is implemented by sending a different messages object.
+		const hideFooter = this.props.path.substring(this.props.path.length - 6, this.props.path.length) === '/draft' || this.props.path.substring(this.props.path.length - 6, this.props.path.length) === '/login' || this.props.path.substring(this.props.path.length - 7, this.props.path.length) === '/signup'; // We want to hide the footer if we are in the editor or login. All other views show the footer.
+		const metaData = { // Metadata that will be used by Helmet to populate the <head> tag
 			meta: [
-				{name: 'description', content: 'PubPub is a platform for totally transparent publishing. Read, Write, Publish, Review.'},
 				{property: 'og:site_name', content: 'PubPub'},
-				{property: 'og:title', content: this.props.appData.get('baseSubdomain') ? this.props.appData.getIn(['journalData', 'journalName']) : 'PubPub'},
-				{property: 'og:description', content: 'PubPub is a platform for totally transparent publishing. Read, Write, Publish, Review.'},
-				{property: 'og:url', content: currentBaseURL + this.props.path},
+				{property: 'og:url', content: 'https://www.pubpub.org' + this.props.path},
 				{property: 'og:type', content: 'website'},
-				{property: 'og:image', content: rootImage},
 				{property: 'fb:app_id', content: '924988584221879'},
 			]
 		};
 
 		return (
 
-			<IntlProvider locale={'en'} messages={this.props.appData.get('languageObject').toJS()}>
+			<IntlProvider locale={'en'} messages={messages}>
 				<StyleRoot>
+					
 					<Helmet {...metaData} />
 
-					<AppBody
-						appData={this.props.appData}
-						loginData={this.props.loginData}
-						pubData={this.props.pubData}
-						path={this.props.path}
-						slug={this.props.slug}
-						children={this.props.children}
-						dispatch={this.props.dispatch} />
+					<AppLoadingBar color={'#BBBDC0'} show={this.props.appData.get('loading')} />
+					<AppHeader loginData={this.props.loginData} path={this.props.path} createDocument={this.createDocument} logoutHandler={this.logoutHandler}/>
+					<div className="content"> {this.props.children} </div>
+					<AppFooter hideFooter={hideFooter} />
+
 				</StyleRoot>
 			</IntlProvider>
 		);
@@ -79,7 +93,7 @@ export default connect( state => {
 	return {
 		appData: state.app,
 		loginData: state.login,
-		pubData: state.pub,
+		atomEditData: state.atomEdit,
 		path: state.router.location.pathname,
 		slug: state.router.params.slug,
 	};

@@ -31,7 +31,7 @@ const FileUploader = React.createClass({
 
   onFileSelect: function(evt) {
     const file = evt.target.files[0];
-    s3Upload(file, this.props.slug, this.onFileProgress, this.onFileFinish, 1);
+    s3Upload(file, this.onFileProgress, this.onFileFinish, 1);
 	},
 
   // Update state's progress value when new events received.
@@ -72,7 +72,7 @@ const FileUploader = React.createClass({
 
 
   onDrop: function(files) {
-    s3Upload(files[0], this.props.slug, this.onFileProgress, this.onFileFinish, 1);
+    s3Upload(files[0], this.onFileProgress, this.onFileFinish, 1);
 	},
 
 

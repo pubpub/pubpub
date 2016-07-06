@@ -87,7 +87,7 @@ const MediaLibrary = React.createClass({
 
 		// For each new file, begin their upload process
 		for (let fileCount = existingFiles; fileCount < existingFiles + files.length; fileCount++) {
-			s3Upload(tmpFiles[fileCount], this.props.slug, this.onFileProgress, this.onFileFinish, fileCount);
+			s3Upload(tmpFiles[fileCount], this.onFileProgress, this.onFileFinish, fileCount);
 		}
 
 		// Set state with newly added files

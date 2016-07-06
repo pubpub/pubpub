@@ -1,7 +1,7 @@
 import React, {PropTypes} from 'react';
 import Radium from 'radium';
 import {Autocomplete} from 'containers';
-import {GalleryCollection, LoaderIndeterminate, PreviewPub} from 'components';
+import {LoaderIndeterminate, PreviewPub} from 'components';
 import {globalStyles} from 'utils/styleConstants';
 // import { Link } from 'react-router';
 
@@ -221,7 +221,7 @@ const JournalCurate = React.createClass({
 					</div>
 						{
 							this.props.journalData.collections && this.props.journalData.collections.length
-								? <GalleryCollection collections={this.props.journalData.collections} />
+								? <div>Collection</div>
 								: <div style={globalStyles.emptyBlock}>
 									<FormattedMessage
 										id="journal.noCollections"
