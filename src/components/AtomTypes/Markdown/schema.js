@@ -1,6 +1,8 @@
 import {Schema, Block, Inline, Text, Attribute, MarkType} from 'prosemirror/dist/model';
 import {Doc, BlockQuote, OrderedList, BulletList, ListItem, HorizontalRule, Heading, CodeBlock, Paragraph, Image, HardBreak, EmMark, StrongMark, LinkMark, CodeMark} from 'prosemirror/dist/schema-basic';
-
+import React from "react";
+import ReactDOM from "react-dom";
+import EmbedWrapper from './EmbedWrapper';
 
 
 // // ;; A blockquote node type.
@@ -77,94 +79,49 @@ import {Doc, BlockQuote, OrderedList, BulletList, ListItem, HorizontalRule, Head
 // }
 // exports.CodeBlock = CodeBlock
 
-// // ;; A paragraph node type.
-// class Paragraph extends Block {
-//   get matchDOMTag() { return {"p": null} }
-//   toDOM() { return ["p", 0] }
-// }
-// exports.Paragraph = Paragraph
+// ;; An Emoji node type.
+class Emoji extends Inline {
+  get attrs() {
+    return {
+      content: new Attribute,
+      markup: new Attribute,
+    }
+  }
+  toDOM(node) { return ["span", node.attrs.content]; }
+}
 
-// // ;; An inline image node type. Has these attributes:
-// //
-// // - **`src`** (required): The URL of the image.
-// // - **`alt`**: The alt text.
-// // - **`title`**: The title of the image.
-// class Image extends Inline {
-//   get attrs() {
-//     return {
-//       src: new Attribute,
-//       alt: new Attribute({default: ""}),
-//       title: new Attribute({default: ""})
-//     }
-//   }
-//   get draggable() { return true }
-//   get matchDOMTag() {
-//     return {"img[src]": dom => ({
-//       src: dom.getAttribute("src"),
-//       title: dom.getAttribute("title"),
-//       alt: dom.getAttribute("alt")
-//     })}
-//   }
-//   toDOM(node) { return ["img", node.attrs] }
-// }
-// exports.Image = Image
+// ;; An inline embed node type. Has these attributes:
+//
+// - **`src`** (required): The slug of the pub.
+// - **`className`**: An optional className for styling.
+// - **`id`**: An option id for styling to linking.
+// - **`align`**: inline, left, right, or full
+// - **`size`**: CSS valid width
+class Embed extends Inline {
+  get attrs() {
+    return {
+      src: new Attribute,
+      className: new Attribute({default: ""}),
+      id: new Attribute({default: ""}),
+      align: new Attribute({default: "full"}),
+      size: new Attribute({default: "70%"}),
+    }
+  }
+  get draggable() { return true }
+  // get matchDOMTag() {
+  //   return {"img[src]": dom => ({
+  //     src: dom.getAttribute("src"),
+  //     title: dom.getAttribute("title"),
+  //     alt: dom.getAttribute("alt")
+  //   })}
+  // }
+  toDOM(node) { 
+    let dom = document.createElement("div");
+    ReactDOM.render(<EmbedWrapper />, dom);
+    return dom;
+  }
+}
 
-// // ;; A hard break node type.
-// class HardBreak extends Inline {
-//   get selectable() { return false }
-//   get isBR() { return true }
-//   get matchDOMTag() { return {"br": null} }
-//   toDOM() { return ["br"] }
-// }
-// exports.HardBreak = HardBreak
-
-// // ;; An emphasis mark type.
-// class EmMark extends MarkType {
-//   get matchDOMTag() { return {"i": null, "em": null} }
-//   get matchDOMStyle() {
-//     return {"font-style": value => value == "italic" && null}
-//   }
-//   toDOM() { return ["em"] }
-// }
-// exports.EmMark = EmMark
-
-// // ;; A strong mark type.
-// class StrongMark extends MarkType {
-//   get matchDOMTag() { return {"b": null, "strong": null} }
-//   get matchDOMStyle() {
-//     return {"font-weight": value => /^(bold(er)?|[5-9]\d{2,})$/.test(value) && null}
-//   }
-//   toDOM() { return ["strong"] }
-// }
-// exports.StrongMark = StrongMark
-
-// // ;; A link mark type. Has these attributes:
-// //
-// // - **`href`** (required): The link target.
-// // - **`title`**: The link's title.
-// class LinkMark extends MarkType {
-//   get attrs() {
-//     return {
-//       href: new Attribute,
-//       title: new Attribute({default: ""})
-//     }
-//   }
-//   get matchDOMTag() {
-//     return {"a[href]": dom => ({
-//       href: dom.getAttribute("href"), title: dom.getAttribute("title")
-//     })}
-//   }
-//   toDOM(node) { return ["a", node.attrs] }
-// }
-// exports.LinkMark = LinkMark
-
-// // ;; A code font mark type.
-// class CodeMark extends MarkType {
-//   get isCode() { return true }
-//   get matchDOMTag() { return {"code": null} }
-//   toDOM() { return ["code"] }
-// }
-// exports.CodeMark = CodeMark
 
 // :: Schema
 // A basic document schema.
@@ -183,7 +140,9 @@ export const schema = new Schema({
     list_item: {type: ListItem, content: "paragraph block*"},
 
     text: {type: Text, group: "inline"},
+    emoji: {type: Emoji, group: "inline"},
     image: {type: Image, group: "inline"},
+    embed: {type: Embed, group: "inline"},
     hard_break: {type: HardBreak, group: "inline"}
   },
 

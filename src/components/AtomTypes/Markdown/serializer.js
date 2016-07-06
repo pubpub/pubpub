@@ -44,9 +44,15 @@ export const defaultMarkdownSerializer = new MarkdownSerializer({
     state.closeBlock(node)
   },
 
+  emoji(state, node) {
+    state.write(":" + node.attrs.markup + ":")
+  },
   image(state, node) {
     state.write("![" + state.esc(node.attrs.alt || "") + "](" + state.esc(node.attrs.src) +
                 (node.attrs.title ? " " + state.quote(node.attrs.title) : "") + ")")
+  },
+  embed(state, node) {
+    state.write("@[" + state.esc(node.attrs.src || "") + "](" + state.esc(node.attrs.className) + ")")
   },
   hard_break(state) {
     state.write("\\\n")
