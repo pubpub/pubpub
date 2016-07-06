@@ -5,12 +5,17 @@ import Radium, {Style} from 'radium';
 import ReactFireMixin from 'reactfire';
 
 import MarkdownWidgets from 'components/Markdown/MarkdownWidgets/MarkdownWidgets';
-import {defaultMarkdownParser, defaultMarkdownSerializer} from 'prosemirror/dist/markdown';
-import FirepadUserList from 'containers/Editor/utils/editorFirepadUserlist';
-const {Subscription, PipelineSubscription, StoppableSubscription, DOMSubscription} = require("subscription")
-import {codeMirrorStyles, codeMirrorStyleClasses} from 'containers/Editor/utils/codeMirrorStyles';
 import {FireBaseURL} from 'config';
 import {Markdown} from 'components';
+import FirepadUserList from 'containers/Editor/utils/editorFirepadUserlist';
+import {codeMirrorStyles, codeMirrorStyleClasses} from 'containers/Editor/utils/codeMirrorStyles';
+
+// import {defaultMarkdownParser, defaultMarkdownSerializer} from 'prosemirror/dist/markdown';
+
+import {defaultMarkdownParser} from './parser';
+import {defaultMarkdownSerializer} from './serializer';
+import {schema} from './schema';
+const {Subscription} = require('subscription');
 
 
 let styles = {};
@@ -42,7 +47,7 @@ export const MarkdownEditor = React.createClass({
 
 	componentDidMount() {
 		prosemirror = require('prosemirror');
-		const schema = require('prosemirror/dist/schema-basic').schema;
+		// const schema = require('prosemirror/dist/schema-basic').schema;
 		pm = new prosemirror.ProseMirror({
 			place: document.getElementById('codemirror-wrapper'),
 			schema: schema,
@@ -51,9 +56,14 @@ export const MarkdownEditor = React.createClass({
 			}
 		});
 		pm.on.change.add((evt)=>{
-			console.log(evt);
+			const t0 = performance.now();
+			
 			const md = defaultMarkdownSerializer.serialize(pm.doc);
 			document.getElementById('markdown').value = md;
+
+			const t1 = performance.now();
+			console.log('Prose -> Markdown took ' + (t1 - t0) + ' milliseconds.');
+			
 		});
 
 		// Load Firebase and bind using ReactFireMixin. For assets, references, etc.
@@ -98,20 +108,10 @@ export const MarkdownEditor = React.createClass({
 		};
 	},
 	markdownChange: function(evt) {
-		console.time('someFunction');
 		const t0 = performance.now();
-		// document.getElementById('codemirror-wrapper').textContent = '';
 		pm.setDoc(defaultMarkdownParser.parse(evt.target.value));
-		// new prosemirror.ProseMirror({
-		// 	doc: ,
-		// 	place: document.getElementById('codemirror-wrapper'),
-		// 	on: {
-		// 		change: (event)=>{console.log(event);}
-		// 	}
-		// });
-		console.timeEnd('someFunction');
 		const t1 = performance.now();
-		console.log("Call to doSomething took " + (t1 - t0) + " milliseconds.")
+		console.log('Markdown -> Prose took ' + (t1 - t0) + ' milliseconds.');
 	},
 
 	render: function() {
@@ -119,10 +119,11 @@ export const MarkdownEditor = React.createClass({
 			<div style={styles.container}>
 				<Style rules={{
 					...codeMirrorStyles(),
-					...codeMirrorStyleClasses
+					...codeMirrorStyleClasses,
+					'.ProseMirror-content': {outline: 'none'},
 				}} />
 
-				<textarea id="markdown" onChange={this.markdownChange}></textarea>
+				<textarea id="markdown" onChange={this.markdownChange} style={styles.textarea}></textarea>
 				<div id={'active-collaborators'} style={styles.collaborators}></div>
 				<div id={'codemirror-wrapper'} style={[styles.block, styles.codeBlock]}></div>
 				{/* <div id={'atom-reader'} style={[styles.block, styles.previewBlock]}> 
@@ -155,4 +156,9 @@ styles = {
 	previewBlock: {
 		boxShadow: '0px 2px 2px #aaa',
 	},
+	textarea: {
+		width: '90%',
+		margin: '0px',
+		minHeight: '80vh',
+	}
 };
