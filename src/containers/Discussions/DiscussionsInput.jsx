@@ -9,6 +9,11 @@ import {globalMessages} from 'utils/globalMessages';
 import {injectIntl, FormattedMessage} from 'react-intl';
 import {Markdown} from 'components';
 
+import { Link } from 'react-router';
+
+import BioWindow from './BioWindow';
+import Portal from 'react-portal';
+
 let styles = {};
 
 import initCodeMirrorMode from 'containers/Editor/utils/editorCodeMirrorMode';
@@ -35,6 +40,7 @@ const PubDiscussionsInput = React.createClass({
 		addDiscussionStatus: PropTypes.string,
 		// newDiscussionData: PropTypes.object,
 		userThumbnail: PropTypes.string,
+        userName: PropTypes.string,
 		codeMirrorID: PropTypes.string,
 		parentID: PropTypes.string,
 		isReply: PropTypes.bool,
@@ -47,6 +53,7 @@ const PubDiscussionsInput = React.createClass({
 		toggleMediaLibrary: PropTypes.func,
 		requestAssetUpload: PropTypes.func,
 		userAssets: PropTypes.array,
+        // defaultBio: Proptypes.string,
 	},
 
 	getInitialState() {
@@ -57,6 +64,7 @@ const PubDiscussionsInput = React.createClass({
 			showPreview: false,
 			showPreviewText: false,
 			isPrivateChecked: false,
+            bio: 'Mechanical Engineering Student, UPR-M'                                 
 		};
 	},
 
@@ -137,6 +145,9 @@ const PubDiscussionsInput = React.createClass({
 		// newDiscussion.references = {};
 		newDiscussion.parent = this.props.parentID;
 		newDiscussion.private = this.props.parentIsPrivate || this.refs.isPrivate.checked;
+        
+        
+        
 		this.props.addDiscussionHandler(newDiscussion, this.props.saveID);
 	},
 
@@ -169,6 +180,16 @@ const PubDiscussionsInput = React.createClass({
 		};
 	},
 
+    modifyBio: function(){
+
+            
+           const newState = { bio:'hey hey hey'}; 
+               this.setState(newState);  
+
+     console.log('modifyBio function was ran');
+    
+},   
+
 	render: function() {
 		const formattingItems = [
 			{key: 'header1', string: <Formatting type={'header1'} />, function: this.insertFormatting('header1')	},
@@ -186,12 +207,19 @@ const PubDiscussionsInput = React.createClass({
 			{key: 'linebreak', string: <Formatting type={'linebreak'} />, function: this.insertFormatting('linebreak')	},
 		];
 		const menuItems = [
-			{ key: 'formatting', string: <FormattedMessage {...globalMessages.Formatting}/>, function: ()=>{}, children: formattingItems},
-			{ key: 'assets', string: <FormattedMessage {...globalMessages.assets}/>, function: this.props.toggleMediaLibrary(this.props.codeMirrorID)},
 			{ key: 'preview', string: <FormattedMessage {...globalMessages.Preview}/>, function: this.toggleLivePreview, isActive: this.state.showPreview, noSeparator: true  },
 		];
 
+        console.log(this.props.userName)
+
+
+        const popupSpan = <span>(edit)</span>
+
 		return (
+            
+            <div>
+              
+            
 			<div style={[styles.container, this.props.isReply && styles.replyContainer]}>
 				<Style rules={{
 					...codeMirrorStyles(undefined, '.inputCodeMirror'),
@@ -202,7 +230,7 @@ const PubDiscussionsInput = React.createClass({
 						fontFamily: 'Helvetica Neue,Helvetica,Arial,sans-serif',
 						padding: '0px 20px',
 						width: 'calc(100% - 40px)',
-						minHeight: '25px',
+						minHeight: (this.state.expanded) ?'100px' :'25px',
 						fontWeight: '300'
 					},
 					'.inputCodeMirror .CodeMirror-placeholder': {
@@ -219,44 +247,55 @@ const PubDiscussionsInput = React.createClass({
 					requestAssetUpload={null} // disables asset uploading for comments
 					cm={this.cm} />
 			: null }
+                
 
 				<div style={[styles.inputTopLine, styles.expanded(this.state.expanded, true)]}>
-					<div style={styles.thumbnail}>
-						{this.props.userThumbnail
-							? <img style={styles.thumbnailImage}src={this.props.userThumbnail} />
-							: null
-						}
+                    
+
+						<div style={styles.discussionAuthorImageWrapper}>
+								<img style={styles.discussionAuthorImage} src={this.props.userThumbnail} />
+						</div>
+                    
+                        <div style={styles.discussionDetailsLine}> 
+                            <span style={[styles.headerText, styles.authorName]}>{this.props.userName}
+                            </span> 
+                        </div>
+                    
+                        <div style={[styles.discussionDetailsLine,  styles.discussionDetailsLineBottom]}> 
+                            <span>{this.state.bio} </span> 
+                            
+                            <Portal closeOnEsc={true} openByClickOn={popupSpan}>
+                                <BioWindow />
+                            </Portal>
+                            
+                        </div>
+                     
+                       
 					</div>
-					<div style={styles.license} key={'discussionLicense'}>
-						<License text={'All discussions are licensed under a'} hover={true} />
-					</div>
+                    
 
 					{/* <div style={styles.topCheckbox} key={'newDiscussionAnonymous'} >
 						<label style={styles.checkboxLabel} htmlFor={'anonymousDiscussion'}>Anonymous</label>
 						<input style={styles.checkboxInput} name={'anonymousDiscussion'} id={'anonymousDiscussion'} type="checkbox" value={'anonymous'} ref={'anonymousDiscussion'}/>
 					</div>
+                
 					<div style={styles.topCheckbox} key={'newDiscussionPrivate'} >
 						<label style={styles.checkboxLabel} htmlFor={'privateDiscussion'}>Private</label>
 						<input style={styles.checkboxInput} name={'privateDiscussion'} id={'privateDiscussion'} type="checkbox" value={'private'} ref={'privateDiscussion'}/>
 					</div> */}
+                    
 				</div>
 
 				<div style={styles.inputBox(this.state.expanded)} onClick={this.onFocus}>
-					<div style={[styles.inputMenuWrapper, styles.expanded(this.state.expanded, true)]}>
+					{/* <div style={[styles.inputMenuWrapper, styles.expanded(this.state.expanded, true)]}>
 						<Menu items={menuItems} customClass={'discussionInputMenu'} height={'20px'} fontSize={'0.9em'} fontWeight={'400'}/>
-					</div>
+					</div> */}
 
 
 					<div id={this.props.codeMirrorID} className={'inputCodeMirror'} onBlur={this.onBlur} onFocus={this.onFocus}></div>
 
-				</div>
+				</div> 
 
-				{this.state.showPreview
-					? <div style={styles.livePreviewBox}>
-						<Markdown markdown={this.state.content} />
-					</div>
-					: null
-				}
 
 
 				{/* <div style={styles.loaderContainer}>
@@ -293,6 +332,7 @@ const PubDiscussionsInput = React.createClass({
 				</div>
 
 			</div>
+                
 		);
 	}
 });
@@ -331,12 +371,63 @@ styles = {
 		cursor: 'default',
 		marginLeft: '2.5%',
 	},
+    bioBox: {
+        backgroundColor: 'white',
+        fontSize: '0.8em',
+		fontWeight: '400',
+		userSelect: 'none',
+		cursor: 'default',
+		marginLeft: '2.5%',
+    }, 
 	lighterText: {
 		fontWeight: '300',
 	},
 	livePreviewToggle: {
 		textDecoration: 'underline',
 		cursor: 'pointer',
+	},
+
+
+//adding styles to the top line
+
+    authorName: {
+		/* borderBottom: '1px solid #bbb', */
+		fontWeight: 1000,
+	},
+	discussionHeader: {
+		height: 36,
+		width: '100%',
+	},
+	discussionAuthorImageWrapper: {
+		height: 30,
+		width: 30,
+		padding: 3,
+		float: 'left',
+	},
+	discussionAuthorImage: {
+		width: '100%',
+		height: '100%',
+		borderRadius: '2px',
+	},
+    headerText: {
+		color: '#555',
+		fontFamily: 'Lora',
+	},
+    discussionDetailsLine: {
+		height: 18,
+		lineHeight: '16px',
+		width: 'calc(100% - 36px - 36px - 5px)',
+		paddingLeft: 5,
+		color: '#333',
+		fontSize: '13px',
+		float: 'left',
+		whiteSpace: 'nowrap',
+		overflow: 'hidden',
+		textOverflow: 'ellipsis',
+	},
+    discussionDetailsLineBottom: {
+		lineHeight: '18px',
+		fontSize: '0.7em',
 	},
 	livePreviewBox: {
 		width: 'calc(100% - 26px)',
@@ -354,7 +445,7 @@ styles = {
 	},
 	inputTopLine: {
 		// backgroundColor: 'rgba(255,0,0,0.1)',
-		height: 22,
+		height: 36,
 	},
 	inputMenuWrapper: {
 		// borderBottom: '1px solid #ccc',
@@ -395,7 +486,7 @@ styles = {
 		height: '20px',
 		padding: '1px',
 		marginRight: '1px',
-		float: 'right',
+		float: 'left',
 	},
 	thumbnailImage: {
 		width: '100%',

@@ -5,6 +5,7 @@ import {globalStyles} from 'utils/styleConstants';
 // import {rightBarStyles} from 'containers/PubReader/rightBarStyles';
 import DiscussionsItem from './DiscussionsItem';
 import DiscussionsInput from './DiscussionsInput';
+import {SimpleSelect} from 'react-selectize';
 
 // import Portal from 'react-portal';
 import {MediaLibrary} from 'containers';
@@ -14,7 +15,6 @@ import {waitForUpload} from 'containers/Editor/actions';
 import {addDiscussion, discussionVoteSubmit, archiveDiscussion} from './actions';
 
 import {redditHot as hotScore} from 'decay';
-
 
 
 // import {globalMessages} from 'utils/globalMessages';
@@ -42,6 +42,8 @@ const Discussions = React.createClass({
 		return {
 			showMediaLibrary: false,
 			assetLibraryCodeMirrorID: undefined,
+            sortBy:'hotness',
+            sortedDiscussions:'empty'
 		};
 	},
 
@@ -128,6 +130,7 @@ const Discussions = React.createClass({
 		};
 
 	},
+        
 	closeMediaLibrary: function() {
 		this.setState({
 			showMediaLibrary: false,
@@ -138,6 +141,35 @@ const Discussions = React.createClass({
 	requestAssetUpload: function(assetType) {
 		return this.props.dispatch(waitForUpload(assetType));
 	},
+        
+        
+    dropdownChange: function(option){
+
+        if (option.value == 'hotness'){
+            const newState={
+                sortBy: 'hotness'
+            }
+
+            this.setState(newState)
+            
+         } else if (option.value == 'upvotes'){
+            const newState={
+                sortBy: 'upvotes'
+            }
+
+            this.setState(newState)
+            
+         } else if (option.value == 'replyAmount'){
+            const newState={
+                sortBy: 'replyAmount'
+            }
+
+            this.setState(newState)
+         }
+       
+
+    },
+        
 
 	render: function() {
 
@@ -149,10 +181,17 @@ const Discussions = React.createClass({
 		const activeSaveID = this.props.discussionsData.get('activeSaveID');
 		const isPubAuthor = this.props.pubData.getIn(['pubData', 'isAuthor']);
 		const isPublished = this.props.pubData.getIn(['pubData', 'isPublished']);
-
+        const isParent = true;
 		const userAssets = this.props.loginData.getIn(['userData', 'assets']) ? this.props.loginData.getIn(['userData', 'assets']).toJS() : [];
-
-		const sortedDiscussions = discussionsData.sort(function(aIndex, bIndex) {
+        const authors = this.props.authors.toJS();
+        
+       console.log('before entering the if statement for comment list sort');
+        
+        if(this.state.sortBy=='hotness'){
+            
+            console.log('it entered the if statement for hotness');
+            
+            this.state.sortedDiscussions = discussionsData.sort(function(aIndex, bIndex) {
 			const aScore = this.getHotness(aIndex);
 			const bScore = this.getHotness(bIndex);
 			if (aScore < bScore) {
@@ -162,13 +201,78 @@ const Discussions = React.createClass({
 			}
 			return 0;
 		}.bind(this));
-
+            
+            
+        } else if (this.state.sortBy=='upvotes'){
+        
+         console.log('it entered the else statement for upvotes');
+        
+        this.state.sortedDiscussions = discussionsData.sort(function(aIndex, bIndex){
+                      
+          const aUpvotes = aIndex.yays-aIndex.nays+1
+          const bUpvotes = bIndex.yays-bIndex.nays+1
+          
+          if (aUpvotes < bUpvotes) {
+				return 1;
+			} else if (aUpvotes > bUpvotes) {
+				return -1;
+			}
+			    return 0;
+           
+       }.bind(this));
+        } else if (this.state.sortBy=='replyAmount'){
+        
+         console.log('it entered the else statement for replies');
+            
+        this.state.sortedDiscussions = discussionsData.sort(function(aIndex, bIndex){
+                                  
+          const aReplies = aIndex.children.length
+          const bReplies = bIndex.children.length
+          
+          if (aReplies < bReplies) {
+				return 1;
+			} else if (aReplies > bReplies) {
+				return -1;
+			}
+			    return 0;
+           
+       });
+ }       
+        
+        
+        console.log(this.props.loginData.getIn(['userData']))
+        
 		return (
 			<div style={styles.container}>
 
 				<Style rules={{
 					'.pub-discussions-wrapper .p-block': {
 						padding: '0.5em 0em',
+					},
+                    '.sortSelect .react-selectize.default.root-node .react-selectize-control': {
+						borderBottom: '0px',
+						padding: '0px 52px 0px 0px'
+					},
+					'.sortSelect .react-selectize.default.root-node .react-selectize-control .react-selectize-placeholder': {
+						// padding: '8px 0px 8px 0px'
+						lineHeight: 'normal',
+					},
+					'.sortSelect .react-selectize.root-node .react-selectize-control .react-selectize-toggle-button-container': {
+						display: 'none',
+					},
+					'.sortSelect .react-selectize.root-node .react-selectize-control .react-selectize-reset-button-container': {
+						display: 'none',
+					},
+					'.sortSelect .react-selectize.root-node .react-selectize-control .react-selectize-search-field-and-selected-values .resizable-input': {
+						...globalStyles.h1,
+						padding: '0px',
+						margin: '0px 2px',
+					},
+					'.sortSelect .simple-select.react-selectize.root-node .simple-value': {
+						margin: '0px 2px',
+					},
+					'.sortSelect .react-selectize.dropdown-menu.default': {
+						fontSize: '0.6em',
 					}
 				}} />
 
@@ -183,6 +287,7 @@ const Discussions = React.createClass({
 						}
 					</div>
 				</div>
+                    
 
 				<div id="pub-discussions-wrapper" className="pub-discussions-wrapper" style={styles.sectionWrapper}> {/* The classname pub-discussions-wrapper is used by selectionPlugin*/}
 					{this.props.pubData.getIn(['pubData', 'referrer', 'name'])
@@ -196,6 +301,7 @@ const Discussions = React.createClass({
 							addDiscussionHandler={this.addDiscussion}
 							addDiscussionStatus={addDiscussionStatus}
 							userThumbnail={this.props.loginData.getIn(['userData', 'thumbnail'])}
+                            userName={this.props.loginData.getIn(['userData', 'name'])}
 							activeSaveID={activeSaveID}
 							saveID={'root'}
 							isCollaborator={this.props.pubData.getIn(['pubData', 'isCollaborator'])}
@@ -208,9 +314,19 @@ const Discussions = React.createClass({
 							requestAssetUpload={this.requestAssetUpload}
 							/>
 					}
-
+                
+                {/*default option??? editable??? */}
+                    
+                <div className="sortSelect">   
+                <SimpleSelect transitionEnter={true} transitionLeave={true} onValueChange={this.dropdownChange}>
+                    <option value = 'hotness' >Hottest Discussions</option>
+                    <option value = 'replyAmount'>Longest Discussions</option>
+                    <option value = 'upvotes'>Most Upvoted Discussions</option>
+                </SimpleSelect>
+                </div> 
+                
 					{
-						sortedDiscussions.map((discussion)=>{
+						this.state.sortedDiscussions.map((discussion)=>{
 							// console.log(discussion);
 							return (discussion
 								? <DiscussionsItem
@@ -218,6 +334,8 @@ const Discussions = React.createClass({
 									slug={this.props.slug}
 									discussionItem={discussion}
 									isPubAuthor={isPubAuthor}
+                                    isParent={isParent}
+                                    pubAuthors={authors}
 
 									isCollaborator={this.props.pubData.getIn(['pubData', 'isCollaborator'])}
 									activeSaveID={activeSaveID}
@@ -248,13 +366,15 @@ const Discussions = React.createClass({
 	}
 });
 
+//what is this for??? --> connects to the redux
+
 export default connect( state => {
 	return {
 		appData: state.app,
 		pubData: state.pub,
 		loginData: state.login,
 		discussionsData: state.discussions,
-
+        authors: state.pub.getIn(['pubData','authors']),
 		slug: state.router.params.slug,
 		pathname: state.router.location.pathname,
 		query: state.router.location.query,
@@ -267,12 +387,20 @@ styles = {
 			padding: '0px 10px',
 		},
 	},
+    sort:{
+        paddingBottom: '10px',
+        },
 	emptyComments: {
 		margin: '40% 6% 0px 3%',
 		fontSize: '1.2em',
 		textAlign: 'center',
 		height: '40vh',
 	},
+    sortButton: {
+        padding: '.45em .9em .6em .9em',
+        borderRadius: '.1rem',
+        color:'white',
+    },
 	emptyContainer: {
 		margin: '10px auto',
 		fontFamily: 'Courier',
