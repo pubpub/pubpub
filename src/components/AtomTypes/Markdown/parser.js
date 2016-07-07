@@ -2,10 +2,12 @@ import {MarkdownParser} from 'prosemirror/dist/markdown';
 import {schema} from './schema';
 import markdownit from "markdown-it";
 import emoji from 'markdown-it-emoji';
+import embed from './markdown-it-embed';
 
 export const defaultMarkdownParser = new MarkdownParser(schema, 
   markdownit({html: false})
-  .use(emoji), 
+  .use(emoji)
+  .use(embed),
   {
     blockquote: {block: "blockquote"},
     paragraph: {block: "paragraph"},
@@ -22,7 +24,7 @@ export const defaultMarkdownParser = new MarkdownParser(schema,
       alt: tok.children[0] && tok.children[0].content || null
     })},
     embed: {node: "embed", attrs: tok => ({
-      src: tok.attrGet("src"),
+      source: tok.attrGet("source"),
       className: tok.attrGet("className") || null,
     })},
     emoji: {node: "emoji", attrs: tok => ({

@@ -1,5 +1,6 @@
 /* global Firebase Firepad CodeMirror */
 import React, {PropTypes} from 'react';
+import ReactDOM from 'react-dom';
 import Radium, {Style} from 'radium';
 
 import ReactFireMixin from 'reactfire';
@@ -54,10 +55,11 @@ export const MarkdownEditor = React.createClass({
 			on: {
 				change: new Subscription,
 			}
+
 		});
 		pm.on.change.add((evt)=>{
 			const t0 = performance.now();
-			
+
 			const md = defaultMarkdownSerializer.serialize(pm.doc);
 			document.getElementById('markdown').value = md;
 
@@ -109,6 +111,12 @@ export const MarkdownEditor = React.createClass({
 	},
 	markdownChange: function(evt) {
 		const t0 = performance.now();
+
+		// const reacts = document.getElementsByClassName('killme');
+		// for (let i = reacts.length; i--;) {
+		// 	ReactDOM.unmountComponentAtNode(reacts[i].parentNode);
+		// }
+		// debugger;
 		pm.setDoc(defaultMarkdownParser.parse(evt.target.value));
 		const t1 = performance.now();
 		console.log('Markdown -> Prose took ' + (t1 - t0) + ' milliseconds.');

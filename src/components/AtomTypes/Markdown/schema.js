@@ -2,6 +2,7 @@ import {Schema, Block, Inline, Text, Attribute, MarkType} from 'prosemirror/dist
 import {Doc, BlockQuote, OrderedList, BulletList, ListItem, HorizontalRule, Heading, CodeBlock, Paragraph, Image, HardBreak, EmMark, StrongMark, LinkMark, CodeMark} from 'prosemirror/dist/schema-basic';
 import React from "react";
 import ReactDOM from "react-dom";
+import ReactDOMServer from "react-dom/server";
 import EmbedWrapper from './EmbedWrapper';
 
 
@@ -100,7 +101,7 @@ class Emoji extends Inline {
 class Embed extends Inline {
   get attrs() {
     return {
-      src: new Attribute,
+      source: new Attribute,
       className: new Attribute({default: ""}),
       id: new Attribute({default: ""}),
       align: new Attribute({default: "full"}),
@@ -116,9 +117,18 @@ class Embed extends Inline {
   //   })}
   // }
   toDOM(node) { 
+    // if (document.getElementsByClassName('killme').length) {
+    //   return document.getElementsByClassName('killme')[0];
+    // }
+
     let dom = document.createElement("div");
-    ReactDOM.render(<EmbedWrapper />, dom);
-    return dom;
+    ReactDOM.render(<EmbedWrapper source={node.attrs.source} className={node.attrs.className}/>, dom);
+    return dom.childNodes[0];
+
+    // const thing = ReactDOMServer.renderToStaticMarkup(<EmbedWrapper />);
+    // console.log(thing);
+    // return thing;
+    
   }
 }
 
