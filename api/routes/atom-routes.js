@@ -10,6 +10,8 @@ const encHex = require('crypto-js/enc-hex');
 
 const Firebase = require('firebase');
 
+const Request = require('request-promise');
+
 import {fireBaseURL, firebaseTokenGen, generateAuthToken} from '../services/firebase';
 
 export function createAtom(req, res) {
@@ -52,6 +54,22 @@ export function createAtom(req, res) {
 				parent: newAtom._id,
 				content: req.body.versionContent
 			});
+
+			if (type === 'jupyter') {
+				console.log(req.body.versionContent.url);
+				// @To-Do: https
+				Request.post('http://localhost:2001/convert', {form: { url: req.body.versionContent.url, fn: newVersion.content.url } })
+				.then( function(response) {
+					// response is the URL to the asset
+					console.log('Respo? ' + response);
+					console.log('URL' +newVersion.content.url);
+					// newVersion.content.url = response;
+					// console.log("New version " + newVersion.content.url);
+				})
+				.catch(function(err) {
+					console.log('Caught an err ' + err);
+				});
+			}
 			tasks.push(newVersion.save());
 		}
 
@@ -65,13 +83,13 @@ export function createAtom(req, res) {
 		return undefined;
 	})
 	.then(function() { // If type is markdown, authenticate firebase connection
-		if (type !== 'markdown') { return undefined; } 
+		if (type !== 'markdown') { return undefined; }
 
 		return ref.authWithCustomToken(generateAuthToken());
 	})
 	.then(function() { // If type is markdown, add author to firebase permissions
-		if (type !== 'markdown') { return undefined; } 
-		
+		if (type !== 'markdown') { return undefined; }
+
 		const newEditorData = {
 			collaborators: {},
 			settings: {styleDesktop: ''},

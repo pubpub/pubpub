@@ -165,7 +165,7 @@
     "redux": "^3.5.2",
     "redux-form": "^3.0.12",
     "redux-router": "1.0.0-beta5",
-    "request": "^2.65.0",
+    "request-promise": "^3.0.0",
     "rss": "^1.2.1",
     "sanitize-html": "^1.11.3",
     "scroll-behavior": "^0.3.0",
