@@ -36,7 +36,7 @@ module.exports = mongoose.model('Version', versionSchema);
 // Jupyter:
 // -----------
 // content: {
-// 	sourceUrl:
+// 	url:
 //	htmlUrl:
 // }
 // -----------

@@ -27,11 +27,11 @@ export const ImageViewer = React.createClass({
 			return (
 				<div>
 					<img src={scaledURL} alt={title} />
-					
+
 					{Object.keys(metadata).length > 0 &&
-						<h2>Metadata</h2>	
+						<h2>Metadata</h2>
 					}
-					
+
 					{Object.keys(metadata).map((key, index)=>{
 						return (
 							<div key={'metadata-' + index}>

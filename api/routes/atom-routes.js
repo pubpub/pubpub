@@ -38,6 +38,7 @@ export function createAtom(req, res) {
 		tags: [],
 	});
 
+	let versionID;
 	atom.save() // Save new atom data
 	.then(function(newAtom) { // Create new Links pointing between atom and author
 		const newAtomID = newAtom._id;
@@ -54,22 +55,6 @@ export function createAtom(req, res) {
 				parent: newAtom._id,
 				content: req.body.versionContent
 			});
-
-			if (type === 'jupyter') {
-				console.log(req.body.versionContent.url);
-				// @To-Do: https
-				Request.post('http://localhost:2001/convert', {form: { url: req.body.versionContent.url, fn: newVersion.content.url } })
-				.then( function(response) {
-					// response is the URL to the asset
-					console.log('Respo? ' + response);
-					console.log('URL' +newVersion.content.url);
-					// newVersion.content.url = response;
-					// console.log("New version " + newVersion.content.url);
-				})
-				.catch(function(err) {
-					console.log('Caught an err ' + err);
-				});
-			}
 			tasks.push(newVersion.save());
 		}
 
@@ -78,9 +63,19 @@ export function createAtom(req, res) {
 	.then(function(taskResults) { // If we created a version, make sure to add that version to parent
 		if (taskResults.length === 3) {
 			const versionData = taskResults[2];
+			versionID = versionData._id;
 			return Atom.update({ _id: versionData.parent }, { $addToSet: { versions: versionData._id} }).exec();
 		}
 		return undefined;
+	})
+	.then(function() {
+		if (type !== 'jupyter') { return undefined; }
+		return Request.post('http://localhost:2001/convert', {form: { url: req.body.versionContent.url } });
+	})
+	.then(function(response) {
+		if (type !== 'jupyter') { return undefined; }
+		return Version.update({ _id: versionID }, { $set: { 'content.htmlUrl': response} }).exec();
+		// newVersion.content.htmlUrl = response;
 	})
 	.then(function() { // If type is markdown, authenticate firebase connection
 		if (type !== 'markdown') { return undefined; }
@@ -125,7 +120,7 @@ export function getAtomData(req, res) {
 
 
 	Atom.findOne({slug: slug}).lean().exec()
-	.then(function(atomResult) { // Get most recent version	
+	.then(function(atomResult) { // Get most recent version
 
 		// Get the most recent version
 		// This query fires if no meta and no version are specified

@@ -115,6 +115,7 @@
     "history": "^1.17.0",
     "html-pdf": "^2.0.1",
     "http-proxy": "^1.13.2",
+    "iframe-resizer": "^3.5.5",
     "immutable": "^3.7.5",
     "intl": "^1.1.0",
     "invariant": "^2.2.1",
