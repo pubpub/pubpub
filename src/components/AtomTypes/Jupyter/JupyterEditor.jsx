@@ -90,10 +90,6 @@ export const JupyterEditor = React.createClass({
 	},
 
 	onIframeLoad: function() {
-		//const height = document.getElementById('jupyter').contentDocument.body.scrollHeight;
-		//let height = 150;
-		//console.log("HI " + height);
-//		this.setState({jupyterHeight: height});
 		console.log(iframeResizer);
 		console.log('hey3');
 		iframeResizer({log: true, heightCalculationMethod:'max'}, document.getElementsByTagName("iframe")[0]);
@@ -116,7 +112,8 @@ export const JupyterEditor = React.createClass({
 
 				</div>
 				<h3>Choose new file</h3>
-				<input id={'JupyterFile'} name={'Jupyter file'} type="file" accept="Jupyter/*" onChange={this.handleFileSelect} />
+				<input id={'jupyterFile'} name={'jupyter file'} type="file" accept=".ipynb" onChange={this.handleFileSelect} />
+
 			</div>
 		);
 	}
