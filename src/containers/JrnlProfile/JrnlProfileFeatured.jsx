@@ -31,7 +31,7 @@ export const JrnlProfileFeatured = React.createClass({
 					image={'http://res.cloudinary.com/pubpub/image/upload/c_limit,h_250,w_250/v1449761714/3eb7882_iavg9s.jpg'}
 					title={'Thariq Shihipar'}
 					description={'Intent on eating every bagel on earth until I burst.'} 
-					buttons = {[ { type: 'button', text: 'Feature', action: ()=>{} }]} />
+					footer={<div>Add tags to include in collections</div>}/>
 				
 			</div>
 		);
