@@ -10,9 +10,9 @@ export const EmbedWrapper = React.createClass({
 
 	componentDidMount() {
 		console.log('Mounting');
-		setInterval(function(){
-			console.log('bloop');
-		}, 500);
+		// setInterval(function(){
+		// 	console.log('bloop');
+		// }, 500);
 	},
 
 	componentWillUnmount() {
@@ -23,6 +23,8 @@ export const EmbedWrapper = React.createClass({
 		return (
 			<div className={'killme ' + this.props.className} style={styles.container}>
 				{this.props.source}
+				{/* <img src="http://cdn1-www.dogtime.com/assets/uploads/gallery/30-impossibly-cute-puppies/impossibly-cute-puppy-2.jpg"/> */}
+				<iframe width="420" height="315" src="https://www.youtube.com/embed/6i7ycxiog40" frameborder="0" allowfullscreen></iframe>
 			</div>
 		);
 	}
@@ -32,8 +34,9 @@ export default EmbedWrapper;
 
 styles = {
 	container: {
-		width: '50px',
-		height: '50px',
+		// width: '50px',
+		// height: '50px',
+		padding: '10px',
 		backgroundColor: 'red',
 		display: 'inline-block',
 	},
