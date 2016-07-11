@@ -10,6 +10,7 @@ import {codeMirrorStyles, codeMirrorStyleClasses} from 'containers/Editor/utils/
 import {FireBaseURL} from 'config';
 import {Markdown} from 'components';
 
+
 let styles = {};
 const cmOptions = {
 	lineNumbers: false,
@@ -36,6 +37,13 @@ export const MarkdownEditor = React.createClass({
 	},
 
 	componentDidMount() {
+		// const prosemirror = require('prosemirror');
+		// const schema = require('prosemirror/dist/schema-basic').schema;
+		// const editor = new prosemirror.ProseMirror({
+		// 	place: document.getElementById('codemirror-wrapper'),
+		// 	schema: schema
+		// });
+
 		// Load Firebase and bind using ReactFireMixin. For assets, references, etc.
 		const ref = new Firebase(FireBaseURL + this.props.atomEditData.getIn(['atomData', 'slug']) + '/editorData' );
 		const token = this.props.atomEditData.getIn(['atomData', 'token']);
@@ -65,11 +73,6 @@ export const MarkdownEditor = React.createClass({
 			FirepadUserList.fromDiv(firepadRef.child('users'), document.getElementById('active-collaborators'), username, name, image);
 
 			codeMirror.on('change', this.onEditorChange);
-			// codeMirror.on('mousedown', function(instance, evt) {
-			// 	// On right click. It was scrolling. Prevent that. Also can hijack for custom contextmenu?
-			// 	if (evt.which === 3) { evt.preventDefault(); }
-			// });
-			// addCodeMirrorKeys(codeMirror);
 		});
 	},
 

@@ -209,3 +209,21 @@ export function getAtomEdit(req, res) {
 
 }
 app.get('/getAtomEdit', getAtomEdit);
+
+export function submitAtomToJournal(req, res) {
+	const {atomID, journalID} = req.query;
+	const userID = req.user._id;
+	const now = new Date().getTime();
+	// Check permission 
+
+	Link.createLink('submitted', atomID, journalID, userID, now)
+	.then(function(newLink){
+		return res.status(201).json('Submitted');
+	})
+	.catch(function(error) {
+		console.log('error', error);
+		return res.status(500).json(error);
+	});
+
+}
+app.get('/submitAtomToJournal', submitAtomToJournal);

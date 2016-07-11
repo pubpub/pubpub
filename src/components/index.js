@@ -19,3 +19,4 @@ export PreviewCard from './PreviewCard/PreviewCard';
 export PubBody from './PubBody/PubBody';
 export Reference from './Reference/Reference';
 export SelectionPopup from './SelectionPopup/SelectionPopup';
+export SortableItem from './SortableItem/SortableItem';
