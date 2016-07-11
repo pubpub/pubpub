@@ -18,6 +18,8 @@ export const defaultState = Immutable.Map({
 	currentVersionData: {},
 	versionsData: {},
 	contributorData: {},
+	submittedData: {},
+	featuredData: {},
 	status: 'loading',
 	error: null
 });
@@ -41,6 +43,8 @@ function getAtomDataSuccess(state, result) {
 		currentVersionData: result.currentVersionData,
 		versionsData: result.versionsData,
 		contributorData: result.contributorData,
+		submittedData: result.submittedData,
+		featuredData: result.featuredData,
 		error: null
 	});
 }
@@ -52,6 +56,8 @@ function getAtomDataFail(state, error) {
 		currentVersionData: {},
 		versionsData: {},
 		contributorData: {},
+		submittedData: {},
+		featuredData: {},
 		error: error,
 	});
 }

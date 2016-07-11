@@ -3,6 +3,7 @@ const app = require('../api');
 const Atom = require('../models').Atom;
 const Link = require('../models').Link;
 const Version = require('../models').Version;
+const Journal = require('../models').Journal;
 const Promise = require('bluebird');
 
 const SHA1 = require('crypto-js/sha1');
@@ -141,10 +142,35 @@ export function getAtomData(req, res) {
 			}
 		});
 
+		const getSubmitted = new Promise(function(resolve) {
+			if (meta === 'journals') {
+				const query = Link.find({source: atomResult._id, type: 'submitted'}).populate({
+					path: 'destination',
+					model: Journal,
+					select: 'journalName slug description logo',
+				}).exec();
+				resolve(query);
+			} else {
+				resolve();
+			}
+		});
+
+		const getFeatured = new Promise(function(resolve) {
+			if (meta === 'journals') {
+				const query = Link.find({destination: atomResult._id, type: 'featured'}).exec();
+				resolve(query);
+			} else {
+				resolve();
+			}
+		});
+
 		const tasks = [
 			getRecentVersion,
 			getContributors,
-			getVersions
+			getVersions,
+			getSubmitted,
+			getFeatured,
+
 		];
 
 		return [atomResult, Promise.all(tasks)];
@@ -155,7 +181,9 @@ export function getAtomData(req, res) {
 			atomData: atomResult,
 			currentVersionData: taskData[0],
 			contributorData: taskData[1],
-			versionsData: taskData[2]
+			versionsData: taskData[2],
+			submittedData: taskData[3],
+			featuredData: taskData[4],
 		});
 	})
 	.catch(function(error) {
@@ -198,15 +226,17 @@ export function getAtomEdit(req, res) {
 app.get('/getAtomEdit', getAtomEdit);
 
 export function submitAtomToJournals(req, res) {
-	console.log(req.body)
-	return res.status(201).json('yup');
-	
-	const {atomID, journalIDs} = req.body;
+	const atomID = req.body.atomID;
+	const journalIDs = req.body.journalIDs || [];
 	const userID = req.user._id;
 	const now = new Date().getTime();
 	// Check permission 
 
-	Link.createLink('submitted', atomID, journalID, userID, now)
+	const tasks = journalIDs.map((id)=>{
+		return Link.createLink('submitted', atomID, id, userID, now)
+	});
+
+	Promise.all(tasks)
 	.then(function(newLink){
 		return res.status(201).json('Submitted');
 	})
@@ -216,4 +246,4 @@ export function submitAtomToJournals(req, res) {
 	});
 
 }
-app.get('/submitAtomToJournals', submitAtomToJournals);
+app.post('/submitAtomToJournals', submitAtomToJournals);

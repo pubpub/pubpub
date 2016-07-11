@@ -96,7 +96,7 @@ export const AtomReader = React.createClass({
 	},
 	handleJournalSubmit: function(journalIDs) {
 		const atomID = safeGetInToJS(this.props.atomData, ['atomData', '_id']);
-		return dispatch(submitAtomToJournals(atomID, journalIDs));
+		return this.props.dispatch(submitAtomToJournals(atomID, journalIDs));
 	},
 
 
