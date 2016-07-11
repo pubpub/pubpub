@@ -1,6 +1,7 @@
 const app = require('../api');
 const Jrnl = require('../models').Jrnl;
 const Link = require('../models').Link;
+const Atom = require('../models').Atom;
 
 export function createJrnl(req, res) {
 	if (!req.user) { return res.status(403).json('Not Logged In'); }
@@ -48,9 +49,38 @@ export function getJrnl(req, res) {
 	// Get jrnlData
 	// Get associated data (e.g. admins, featured, etc)
 	// Return
-	Jrnl.findOne({slug: req.query.slug}).exec()
-	.then(function(jrnlData) {
-		return res.status(201).json(jrnlData);
+	const {slug, mode} = req.query;
+
+	Jrnl.findOne({slug: slug}).lean().exec()
+	.then(function(jrnlResult) {
+
+		// Get the submitted atoms associated with the journal
+		// This query fires if mode is equal to 'submitted'
+		const getSubmitted = new Promise(function(resolve) {
+			if (mode === 'submitted') {
+				const query = Link.find({destination: jrnlResult._id, type: 'submitted'}).populate({
+					path: 'source',
+					model: Atom,
+					select: 'title slug description previewImage type',
+				}).exec();
+				resolve(query);
+			} else {
+				resolve();
+			}
+		});
+
+		const tasks = [
+			getSubmitted,
+		];
+
+		return [jrnlResult, Promise.all(tasks)];
+	})
+	.spread(function(jrnlResult, taskData) { // Send response
+		// What's spread? See here: http://stackoverflow.com/questions/18849312/what-is-the-best-way-to-pass-resolved-promise-values-down-to-a-final-then-chai
+		return res.status(201).json({
+			jrnlData: jrnlResult,
+			submittedData: taskData[0],
+		});
 	})
 	.catch(function(error) {
 		console.log('error', error);

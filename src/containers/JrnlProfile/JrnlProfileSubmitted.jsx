@@ -19,20 +19,35 @@ export const JrnlProfileSubmitted = React.createClass({
 
 	render: function() {
 		const jrnlData = safeGetInToJS(this.props.jrnlData, ['jrnlData']) || {};
+		const submittedData = safeGetInToJS(this.props.jrnlData, ['submittedData']) || {};
 		const metaData = {
-			title: 'Featured · ' + jrnlData.jrnlName,
+			title: 'Submitted · ' + jrnlData.jrnlName,
 		};
 
 		return (
 			<div>
 				<Helmet {...metaData} />				
 
-				<PreviewCard 
-					image={'http://res.cloudinary.com/pubpub/image/upload/c_limit,h_250,w_250/v1449761714/3eb7882_iavg9s.jpg'}
-					title={'Thariq Shihipar'}
-					description={'Intent on eating every bagel on earth until I burst.'} 
-					buttons = {[ { type: 'button', text: 'Feature', action: ()=>{} }]}
-					header = {<div>Submitted on DATE</div>}/>
+				{
+					submittedData.sort((a,b)=>{
+						// Sort so that most recent is first in array
+						if (a.createDate > b.createDate) { return -1; }
+						if (a.createDate < b.createDate) { return 1;}
+						return 0;
+					}).map((item, index)=>{
+						return (
+							<PreviewCard 
+								key={'submitted-' + index}
+								type={'atom'}
+								image={item.source.previewImage}
+								slug={item.source.slug}
+								title={item.source.title}
+								description={item.source.description} 
+								header={<div>Submitted on {item.createDate}</div>}
+								buttons = {[ { type: 'button', text: 'Feature', action: ()=>{} }]}/>
+						);
+					})
+				}
 				
 			</div>
 		);

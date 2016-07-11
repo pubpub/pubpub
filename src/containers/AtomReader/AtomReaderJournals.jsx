@@ -31,12 +31,12 @@ export const AtomReaderJournals = React.createClass({
 	},
 
 	loadOptions: function(input, callback) {
-		request.get('/api/autocompleteJournals?string=' + input).end((err, response)=>{
+		request.get('/api/autocompleteJrnls?string=' + input).end((err, response)=>{
 			const responseArray = response.body || [];
 			const options = responseArray.map((item)=>{
 				return {
-					value: item.subdomain,
-					label: item.journalName,
+					value: item.slug,
+					label: item.jrnlName,
 					id: item._id,
 				};
 			});
@@ -80,13 +80,13 @@ export const AtomReaderJournals = React.createClass({
 							if (a.createDate < b.createDate) { return 1;}
 							return 0;
 						}).map((item, index)=>{
-							return <div key={'submitted-' + index}>{item.createDate} to {item.destination.journalName}</div>;
+							return <div key={'submitted-' + index}>{item.createDate} to {item.destination && item.destination.jrnlName}</div>;
 						})
 					}
 
 				<h3>Featured by</h3>
 					{featuredData.map((item, index)=>{
-						return <div key={'featured-' + index}>{item.journalName}</div>;
+						return <div key={'featured-' + index}>{item.jrnlName}</div>;
 					})}
 
 

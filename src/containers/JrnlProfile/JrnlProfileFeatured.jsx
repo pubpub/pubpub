@@ -19,6 +19,7 @@ export const JrnlProfileFeatured = React.createClass({
 
 	render: function() {
 		const jrnlData = safeGetInToJS(this.props.jrnlData, ['jrnlData']) || {};
+		const featuredData = safeGetInToJS(this.props.jrnlData, ['featuredData']) || {};
 		const metaData = {
 			title: 'Featured · ' + jrnlData.jrnlName,
 		};
@@ -27,11 +28,24 @@ export const JrnlProfileFeatured = React.createClass({
 			<div>
 				<Helmet {...metaData} />				
 
-				<PreviewCard 
-					image={'http://res.cloudinary.com/pubpub/image/upload/c_limit,h_250,w_250/v1449761714/3eb7882_iavg9s.jpg'}
-					title={'Thariq Shihipar'}
-					description={'Intent on eating every bagel on earth until I burst.'} 
-					footer={<div>Add tags to include in collections</div>}/>
+				{
+					featuredData.sort((a,b)=>{
+						// Sort so that most recent is first in array
+						if (a.createDate > b.createDate) { return -1; }
+						if (a.createDate < b.createDate) { return 1;}
+						return 0;
+					}).map((item, index)=>{
+						return (
+							<PreviewCard 
+								key={'featured-' + index}
+								image={item.source.previewImage}
+								title={item.source.title}
+								description={item.source.description} 
+								header={<div>Featured on {item.createDate}</div>}/>
+						);
+					})
+				}
+				
 				
 			</div>
 		);

@@ -19,6 +19,7 @@ import {
 /*--------*/
 export const defaultState = Immutable.Map({
 	jrnlData: {},
+	submittedData: {},
 	loading: false,
 	error: null,
 
@@ -43,7 +44,8 @@ function getJrnlLoad(state) {
 
 function getJrnlSuccess(state, result) {
 	return state.merge({
-		jrnlData: result,
+		jrnlData: result.jrnlData,
+		submittedData: result.submittedData,
 		loading: false,
 		error: null,
 	});

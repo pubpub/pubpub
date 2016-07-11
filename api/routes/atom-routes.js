@@ -3,7 +3,7 @@ const app = require('../api');
 const Atom = require('../models').Atom;
 const Link = require('../models').Link;
 const Version = require('../models').Version;
-const Journal = require('../models').Journal;
+const Jrnl = require('../models').Jrnl;
 const Promise = require('bluebird');
 
 const SHA1 = require('crypto-js/sha1');
@@ -36,6 +36,9 @@ export function createAtom(req, res) {
 		versions: [],
 		tags: [],
 	});
+
+	// This should be made more intelligent to use images, video thumbnails, etc when possible - if the atom type is image, video, etc.
+	atom.previewImage = 'https://assets.pubpub.org/_site/pub.png';
 
 	atom.save() // Save new atom data
 	.then(function(newAtom) { // Create new Links pointing between atom and author
@@ -146,8 +149,8 @@ export function getAtomData(req, res) {
 			if (meta === 'journals') {
 				const query = Link.find({source: atomResult._id, type: 'submitted'}).populate({
 					path: 'destination',
-					model: Journal,
-					select: 'journalName slug description logo',
+					model: Jrnl,
+					select: 'jrnlName slug description logo',
 				}).exec();
 				resolve(query);
 			} else {
@@ -240,8 +243,8 @@ export function submitAtomToJournals(req, res) {
 	.then(function(newLinks) {
 		return Link.find({source: atomID, type: 'submitted'}).populate({
 				path: 'destination',
-				model: Journal,
-				select: 'journalName slug description logo',
+				model: Jrnl,
+				select: 'jrnlName slug description logo',
 			}).exec();
 		
 	})

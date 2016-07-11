@@ -54,7 +54,7 @@ export const PreviewCard = React.createClass({
 					
 					{/* Render text here on non-mobile (hacky - but it works for now) */}
 					<div style={[styles.tableCell, styles.noMobile]}>
-						<Link to={href} style={globalStyles.link}>
+						<Link to={href} style={globalStyles.link} className={'underlineOnHover'}>
 							<h3 style={styles.title}>{this.props.title}</h3>
 						</Link>
 						<p style={styles.description}>{this.props.description}</p>
