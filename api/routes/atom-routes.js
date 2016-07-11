@@ -197,8 +197,11 @@ export function getAtomEdit(req, res) {
 }
 app.get('/getAtomEdit', getAtomEdit);
 
-export function submitAtomToJournal(req, res) {
-	const {atomID, journalID} = req.query;
+export function submitAtomToJournals(req, res) {
+	console.log(req.body)
+	return res.status(201).json('yup');
+	
+	const {atomID, journalIDs} = req.body;
 	const userID = req.user._id;
 	const now = new Date().getTime();
 	// Check permission 
@@ -213,4 +216,4 @@ export function submitAtomToJournal(req, res) {
 	});
 
 }
-app.get('/submitAtomToJournal', submitAtomToJournal);
+app.get('/submitAtomToJournals', submitAtomToJournals);
