@@ -1,6 +1,7 @@
 import React, {PropTypes} from 'react';
 import Radium from 'radium';
 import Select from 'react-select';
+import request from 'superagent';
 
 export const AtomReaderJournals = React.createClass({
 	propTypes: {
@@ -13,23 +14,23 @@ export const AtomReaderJournals = React.createClass({
 		};
 	},
 
-	logChange: function(val) {
-	    console.log("Selected: " + val);
-	},
 	handleSelectChange (value) {
-		console.log('You\'ve selected:', value);
 		this.setState({ value });
+	},
+	loadOptions: function(input, callback) {
+		request.get('/api/autocompleteJournals?string=' + input).end((err, response)=>{
+			const responseArray = response.body || [];
+			const options = responseArray.map((item)=>{
+				return {
+					value: item.subdomain,
+					label: item.journalName,
+				};
+			});
+			callback(null, { options: options });
+		});
 	},
 
 	render: function() {
-		const options = [
-			{ value: 'one', label: 'One' },
-			{ value: 'two', label: 'Two' },
-			{ value: 'three', label: 'three' },
-			{ value: 'fou', label: 'fou' },
-			{ value: 'fish', label: 'fish' },
-			{ value: 'dish', label: 'dish' },
-		];
 
 		return (
 			<div>
@@ -39,10 +40,10 @@ export const AtomReaderJournals = React.createClass({
 
 				<h3>Submit to Journals</h3>
 
-				<Select
+				<Select.Async
 				    name="form-field-name"
 				    value={this.state.value}
-				    options={options}
+				    loadOptions={this.loadOptions}
 				    multi={true}
 				    placeholder={<span>Hey there - enter</span>}
 				    onChange={this.handleSelectChange}

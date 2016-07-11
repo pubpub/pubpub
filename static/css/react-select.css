@@ -172,6 +172,7 @@
 }
 .Select-clear-zone:hover {
   color: #D0021B;
+  color: #2C2A2B;
 }
 .Select-clear {
   display: inline-block;
@@ -333,6 +334,7 @@
   border-right: 1px solid rgba(0, 126, 255, 0.24);
   border-right: 1px solid #BBBDC0;
   padding: 1px 5px 3px;
+  padding: 2px 5px;
 }
 .Select--multi .Select-value-icon:hover,
 .Select--multi .Select-value-icon:focus {
