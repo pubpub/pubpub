@@ -237,8 +237,16 @@ export function submitAtomToJournals(req, res) {
 	});
 
 	Promise.all(tasks)
-	.then(function(newLink){
-		return res.status(201).json('Submitted');
+	.then(function(newLinks) {
+		return Link.find({source: atomID, type: 'submitted'}).populate({
+				path: 'destination',
+				model: Journal,
+				select: 'journalName slug description logo',
+			}).exec();
+		
+	})
+	.then(function(submittedLinks) {
+		return res.status(201).json(submittedLinks);
 	})
 	.catch(function(error) {
 		console.log('error', error);

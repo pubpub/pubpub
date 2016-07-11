@@ -17,6 +17,14 @@ export const AtomReaderJournals = React.createClass({
 			value: [],
 		};
 	},
+	
+	componentWillReceiveProps(nextProps) {
+		const currentSubmitted = safeGetInToJS(this.props.atomData, ['submittedData']) || {};
+		const nextSubmitted = safeGetInToJS(nextProps.atomData, ['submittedData']) || {};
+		if (currentSubmitted !== nextSubmitted) {
+			this.setState({value: []});
+		}
+	},
 
 	handleSelectChange (value) {
 		this.setState({ value });
@@ -65,9 +73,16 @@ export const AtomReaderJournals = React.createClass({
 				<div className={'button'} style={[styles.submitButton, (this.state.value && this.state.value.length) && styles.submitButtonActive]} onClick={this.submitToJournals}>Submit To Journals</div>
 
 				<h3>Submitted to</h3>
-					{submittedData.map((item, index)=>{
-						return <div key={'submitted-' + index}>{item.createDate} to {item.destination.journalName}</div>;
-					})}
+					{
+						submittedData.sort((a,b)=>{
+							// Sort so that most recent is first in array
+							if (a.createDate > b.createDate) { return -1; }
+							if (a.createDate < b.createDate) { return 1;}
+							return 0;
+						}).map((item, index)=>{
+							return <div key={'submitted-' + index}>{item.createDate} to {item.destination.journalName}</div>;
+						})
+					}
 
 				<h3>Featured by</h3>
 					{featuredData.map((item, index)=>{
