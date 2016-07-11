@@ -19,7 +19,7 @@ export const JrnlProfileSubmitted = React.createClass({
 
 	render: function() {
 		const jrnlData = safeGetInToJS(this.props.jrnlData, ['jrnlData']) || {};
-		const submittedData = safeGetInToJS(this.props.jrnlData, ['submittedData']) || {};
+		const submittedData = safeGetInToJS(this.props.jrnlData, ['submittedData']) || [];
 		const metaData = {
 			title: 'Submitted · ' + jrnlData.jrnlName,
 		};

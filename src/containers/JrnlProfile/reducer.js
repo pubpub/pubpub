@@ -19,7 +19,8 @@ import {
 /*--------*/
 export const defaultState = Immutable.Map({
 	jrnlData: {},
-	submittedData: {},
+	submittedData: [],
+	featuredData: [],
 	loading: false,
 	error: null,
 

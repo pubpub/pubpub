@@ -19,7 +19,7 @@ export const JrnlProfileFeatured = React.createClass({
 
 	render: function() {
 		const jrnlData = safeGetInToJS(this.props.jrnlData, ['jrnlData']) || {};
-		const featuredData = safeGetInToJS(this.props.jrnlData, ['featuredData']) || {};
+		const featuredData = safeGetInToJS(this.props.jrnlData, ['featuredData']) || [];
 		const metaData = {
 			title: 'Featured · ' + jrnlData.jrnlName,
 		};

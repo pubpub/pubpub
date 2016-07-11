@@ -236,16 +236,16 @@ export function submitAtomToJournals(req, res) {
 	// Check permission 
 
 	const tasks = journalIDs.map((id)=>{
-		return Link.createLink('submitted', atomID, id, userID, now)
+		return Link.createLink('submitted', atomID, id, userID, now);
 	});
 
 	Promise.all(tasks)
 	.then(function(newLinks) {
 		return Link.find({source: atomID, type: 'submitted'}).populate({
-				path: 'destination',
-				model: Jrnl,
-				select: 'jrnlName slug description logo',
-			}).exec();
+			path: 'destination',
+			model: Jrnl,
+			select: 'jrnlName slug description logo',
+		}).exec();
 		
 	})
 	.then(function(submittedLinks) {

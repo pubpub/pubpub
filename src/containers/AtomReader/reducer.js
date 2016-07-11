@@ -86,8 +86,6 @@ function submitAtomToJournalFail(state, error) {
 	});
 }	
 
-
-
 /*--------*/
 // Bind actions to specific reducing functions.
 /*--------*/
@@ -102,11 +100,11 @@ export default function readerReducer(state = defaultState, action) {
 		return getAtomDataFail(state, action.error);
 
 	case SUBMIT_ATOM_TO_JOURNAL_LOAD:
-		return submitAtomToJournalLoad(state)
+		return submitAtomToJournalLoad(state);
 	case SUBMIT_ATOM_TO_JOURNAL_SUCCESS:
-		return submitAtomToJournalSuccess(state, action.result)
+		return submitAtomToJournalSuccess(state, action.result);
 	case SUBMIT_ATOM_TO_JOURNAL_FAIL:
-		return submitAtomToJournalFail(state, action.error)
+		return submitAtomToJournalFail(state, action.error);
 	default:
 		return ensureImmutable(state);
 	}
