@@ -52,8 +52,8 @@ export const AtomReaderJournals = React.createClass({
 	},
 
 	render: function() {
-		const submittedData = safeGetInToJS(this.props.atomData, ['submittedData']) || {};
-		const featuredData = safeGetInToJS(this.props.atomData, ['featuredData']) || {};
+		const submittedData = safeGetInToJS(this.props.atomData, ['submittedData']) || [];
+		const featuredData = safeGetInToJS(this.props.atomData, ['featuredData']) || [];
 		return (
 			<div>
 				
