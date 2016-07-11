@@ -160,6 +160,7 @@
     "react-radio-group": "^2.2.0",
     "react-redux": "^4.4.5",
     "react-router": "1.0.3",
+    "react-select": "^1.0.0-beta13",
     "react-selectize": "^2.0.2",
     "react-textarea-autosize": "^4.0.1",
     "reactfire": "^0.7.0",

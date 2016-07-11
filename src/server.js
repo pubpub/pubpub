@@ -154,7 +154,7 @@ app.use((req, res) => {
 							<link href='/css/codemirror.css' rel='stylesheet' type='text/css' /> <!-- I went back to loaded this one because the async css load was causing flicker on Discussion Codemirror -->
 							<link href='/css/print.css' rel='stylesheet' type='text/css' />
 							<link href='/css/highlightdefault.css' rel='stylesheet' type='text/css' />
-							<link href='/css/react-select.min.css' rel='stylesheet' type='text/css' />
+							<link href='/css/react-select.css' rel='stylesheet' type='text/css' />
 							<link href='/css/menu.css' rel='stylesheet' type='text/css' />
 							<link href='/css/pubpub.css' rel='stylesheet' type='text/css' />
 							<link href='/css/basePub.css' rel='stylesheet' type='text/css' />
