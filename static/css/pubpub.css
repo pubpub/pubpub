@@ -42,7 +42,7 @@ body {
 }
 
 .horizontalNavHover:hover {
-	border-bottom: 2px solid #808284 !important;
+	border-bottom: 2px solid #2C2A2B !important;
 	padding: 10px 10px 8px 10px !important;
 }
 .verticalNavHover:hover {
@@ -73,6 +73,14 @@ body {
 }
 .slideChildOnHover:hover .slideChild {
 	transform: translate3d(0%,0,0);
+}
+.dragIcon:before {
+	content: '.';
+	display: inline-block;
+	color: #BBBDC0;
+	width: .6em;
+	padding: 0em .5em;
+	text-shadow: 0 -5px #BBBDC0, 0 -10px #BBBDC0, 5px 0 #BBBDC0, 5px -5px #BBBDC0, 5px -10px #BBBDC0;
 }
 
 /* Input Fields */

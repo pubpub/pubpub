@@ -96,3 +96,25 @@ export function updateJrnl(req, res) {
 }
 app.post('/updateJrnl', updateJrnl);
 
+export function featureAtom(req, res) {
+	const {atomID, journalID} = req.query;
+	const userID = req.user._id;
+	const now = new Date().getTime();
+	const inactiveNote = undefined;
+	// Check permission 
+
+	Link.createLink('featured', journalID, atomID, now, userID)
+	.then(function() {
+		return Link.setLinkInactive('submitted', atomID, journalID, now, userID, inactiveNote);
+	})
+	.then(function() {
+		return res.status(201).json('Featured');
+	})
+	.catch(function(error) {
+		console.log('error', error);
+		return res.status(500).json(error);
+	});
+
+}
+app.get('/featureAtom', featureAtom);
+

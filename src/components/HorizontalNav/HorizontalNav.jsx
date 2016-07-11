@@ -61,7 +61,7 @@ styles = {
 		cursor: 'pointer',
 	},
 	pubNavButtonActive: {
-		borderBottom: '2px solid #808284',
+		borderBottom: '2px solid #2C2A2B',
 		padding: '10px 10px 8px 10px',
 	},
 

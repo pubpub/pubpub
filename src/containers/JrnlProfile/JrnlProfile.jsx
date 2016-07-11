@@ -9,6 +9,9 @@ import JrnlProfileDetails from './JrnlProfileDetails';
 import JrnlProfileLayout from './JrnlProfileLayout';
 import JrnlProfileRecent from './JrnlProfileRecent';
 import JrnlProfileHeader from './JrnlProfileHeader';
+import JrnlProfileFeatured from './JrnlProfileFeatured';
+import JrnlProfileSubmitted from './JrnlProfileSubmitted';
+import JrnlProfileCollections from './JrnlProfileCollections';
 import {NavContentWrapper} from 'components';
 import {safeGetInToJS} from 'utils/safeParse';
 
@@ -64,8 +67,9 @@ export const JrnlProfile = React.createClass({
 		const adminNav = [
 			{ type: 'title', text: 'Admin'},
 			{ type: 'link', text: 'Details', link: '/' + this.props.slug + '/details', active: this.props.mode === 'details' },
-			{ type: 'link', text: 'Curate', link: '/' + this.props.slug + '/curate', active: this.props.mode === 'curate' },
 			{ type: 'link', text: 'Layout', link: '/' + this.props.slug + '/layout', active: this.props.mode === 'layout' },
+			{ type: 'link', text: 'Featured', link: '/' + this.props.slug + '/featured', active: this.props.mode === 'featured' },
+			{ type: 'link', text: 'Submitted', link: '/' + this.props.slug + '/submitted', active: this.props.mode === 'submitted' },
 			{ type: 'link', text: 'Collections', link: '/' + this.props.slug + '/collections', active: this.props.mode === 'collections' },
 			{ type: 'spacer' },
 			{ type: 'title', text: 'Public'},
@@ -80,25 +84,11 @@ export const JrnlProfile = React.createClass({
 			{ type: 'link', text: 'Category 2', link: '/' + this.props.slug + '/category2', active: this.props.mode === 'category2' },
 		];
 
-		// const customBackgroundStyle = {
-		// 	backgroundColor: jrnlData.headerColor || '#13A6EF',
-		// 	backgroundImage: 'url("' + jrnlData.headerImage + '")',
-		// };
-
 		return (
 			<div>
 
 				<Helmet {...metaData} />
 
-				{/* <div style={[styles.headerBackground, customBackgroundStyle]}>
-					<div style={styles.backgroundGrey}></div>
-					<div className={'section'}>
-						<div style={styles.headerTextWrapper}>
-							<h1>{jrnlData.jrnlName}</h1>
-							<p>{jrnlData.description}</p>
-						</div>
-					</div>
-				</div> */}
 				<JrnlProfileHeader 
 					jrnlName={this.state.jrnlName || jrnlData.jrnlName}
 					description={this.state.description || jrnlData.description}
@@ -123,6 +113,18 @@ export const JrnlProfile = React.createClass({
 						case 'layout':
 							return (
 								<JrnlProfileLayout jrnlData={this.props.jrnlData} handleUpdateJrnl={this.handleUpdateJrnl} handleHeaderUpdate={this.handleHeaderUpdate}/>
+							);
+						case 'featured':
+							return (
+								<JrnlProfileFeatured jrnlData={this.props.jrnlData}/>
+							);
+						case 'submitted':
+							return (
+								<JrnlProfileSubmitted jrnlData={this.props.jrnlData}/>
+							);
+						case 'collections':
+							return (
+								<JrnlProfileCollections jrnlData={this.props.jrnlData} handleUpdateJrnl={this.handleUpdateJrnl}/>
 							);
 						default:
 							return (
