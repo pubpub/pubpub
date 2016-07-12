@@ -15,6 +15,7 @@ export const JrnlProfileCollections = React.createClass({
 	propTypes: {
 		jrnlData: PropTypes.object,
 		handleUpdateJrnl: PropTypes.func,
+		handleCreateCollection: PropTypes.func,
 	},
 
 	getInitialState: function() {
@@ -41,10 +42,12 @@ export const JrnlProfileCollections = React.createClass({
 		evt.preventDefault();
 		if (!this.state.newCollection) { return; }
 
+		const newCollectionTitle = this.state.newCollection;
 		this.setState({
-			collections: [this.state.newCollection].concat(this.state.collections),
+			collections: [newCollectionTitle].concat(this.state.collections),
 			newCollection: ''
 		});
+		this.props.handleCreateCollection(newCollectionTitle);
 	},
 
 	render: function() {

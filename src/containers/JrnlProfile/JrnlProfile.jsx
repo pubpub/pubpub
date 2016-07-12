@@ -2,7 +2,7 @@ import React, { PropTypes } from 'react';
 import {connect} from 'react-redux';
 import Radium from 'radium';
 import Helmet from 'react-helmet';
-import {getJrnl, updateJrnl} from './actions';
+import {getJrnl, updateJrnl, createCollection} from './actions';
 // import {NotFound} from 'components';
 import JrnlProfileAbout from './JrnlProfileAbout';
 import JrnlProfileDetails from './JrnlProfileDetails';
@@ -18,8 +18,6 @@ import {safeGetInToJS} from 'utils/safeParse';
 // import {globalStyles} from 'utils/styleConstants';
 // import {globalMessages} from 'utils/globalMessages';
 // import {FormattedMessage} from 'react-intl';
-
-let styles;
 
 export const JrnlProfile = React.createClass({
 	propTypes: {
@@ -51,6 +49,11 @@ export const JrnlProfile = React.createClass({
 
 	handleHeaderUpdate: function(updateObject) {
 		this.setState(updateObject);
+	},
+
+	handleCreateCollection: function(newCollectionTitle) {
+		const jrnlID = safeGetInToJS(this.props.jrnlData, ['jrnlData', '_id']);
+		return this.props.dispatch(createCollection(jrnlID, newCollectionTitle));
 	},
 
 	render: function() {
@@ -124,7 +127,7 @@ export const JrnlProfile = React.createClass({
 							);
 						case 'collections':
 							return (
-								<JrnlProfileCollections jrnlData={this.props.jrnlData} handleUpdateJrnl={this.handleUpdateJrnl}/>
+								<JrnlProfileCollections jrnlData={this.props.jrnlData} handleUpdateJrnl={this.handleUpdateJrnl} handleCreateCollection={this.handleCreateCollection}/>
 							);
 						default:
 							return (
@@ -148,9 +151,5 @@ export default connect( state => {
 		mode: state.router.params.mode,
 	};
 })( Radium(JrnlProfile) );
-
-styles = {
-		
-};
 
 

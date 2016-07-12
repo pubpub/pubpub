@@ -26,7 +26,7 @@ export const AtomReaderJournals = React.createClass({
 		}
 	},
 
-	handleSelectChange (value) {
+	handleSelectChange: function(value) {
 		this.setState({ value });
 	},
 
@@ -74,10 +74,10 @@ export const AtomReaderJournals = React.createClass({
 
 				<h3>Submitted to</h3>
 					{
-						submittedData.sort((a,b)=>{
+						submittedData.sort((foo, bar)=>{
 							// Sort so that most recent is first in array
-							if (a.createDate > b.createDate) { return -1; }
-							if (a.createDate < b.createDate) { return 1;}
+							if (foo.createDate > bar.createDate) { return -1; }
+							if (foo.createDate < bar.createDate) { return 1; }
 							return 0;
 						}).map((item, index)=>{
 							return <div key={'submitted-' + index}>{item.createDate} to {item.destination && item.destination.jrnlName}</div>;

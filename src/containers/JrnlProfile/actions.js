@@ -14,6 +14,10 @@ export const UPDATE_JRNL_LOAD = 'jrnl/UPDATE_JRNL_LOAD';
 export const UPDATE_JRNL_SUCCESS = 'jrnl/UPDATE_JRNL_SUCCESS';
 export const UPDATE_JRNL_FAIL = 'jrnl/UPDATE_JRNL_FAIL';
 
+export const CREATE_COLLECTION_LOAD = 'jrnl/CREATE_COLLECTION_LOAD';
+export const CREATE_COLLECTION_SUCCESS = 'jrnl/CREATE_COLLECTION_SUCCESS';
+export const CREATE_COLLECTION_FAIL = 'jrnl/CREATE_COLLECTION_FAIL';
+
 /*--------*/
 // Define Action creators
 //
@@ -37,6 +41,16 @@ export function updateJrnl(slug, newJrnlData) {
 		promise: (client) => client.post('/updateJrnl', {data: {
 			slug: slug,
 			newJrnlData: newJrnlData
+		}})
+	};
+}
+
+export function createCollection(jrnlID, title) {
+	return {
+		types: [CREATE_COLLECTION_LOAD, CREATE_COLLECTION_SUCCESS, CREATE_COLLECTION_FAIL],
+		promise: (client) => client.post('/createTag', {data: {
+			jrnlID: jrnlID,
+			title: title
 		}})
 	};
 }
