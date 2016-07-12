@@ -28,12 +28,12 @@ export const JrnlProfileSubmitted = React.createClass({
 		this.cancelConfirm();
 	},
 
-	// featureAtom: function(id) {
-	// 	this.props.handleFeatureAtom(id);
-	// },
-	// rejectAtom: function(id) {
-	// 	this.props.handleRejectAtom(id);
-	// },
+	featureAtom: function(id) {
+		this.props.handleFeatureAtom(id);
+	},
+	rejectAtom: function(id) {
+		this.props.handleRejectAtom(id);
+	},
 
 	setConfirmFeature: function(id) {
 		this.setState({confirmFeature: id, confirmReject: null});
@@ -66,21 +66,21 @@ export const JrnlProfileSubmitted = React.createClass({
 						return 0;
 					}).map((item, index)=>{
 						let buttons = [ 
-							{ type: 'button', text: 'Feature', action: this.setConfirmFeature.bind(this, item._id) }, 
-							{ type: 'button', text: 'Reject', action: this.setConfirmReject.bind(this, item._id) }
+							{ type: 'button', text: 'Feature', action: this.setConfirmFeature.bind(this, item.source._id) }, 
+							{ type: 'button', text: 'Reject', action: this.setConfirmReject.bind(this, item.source._id) }
 						];
 
-						if (this.state.confirmFeature === item._id) {
+						if (this.state.confirmFeature === item.source._id) {
 							buttons = [ 
-								{ type: 'button', text: 'Cancel Feature', action: this.cancelConfirm.bind(this, item._id) },
-								{ type: 'button', text: 'Confirm Feature', action: this.props.handleFeatureAtom.bind(this, item._id) }
+								{ type: 'button', text: 'Cancel Feature', action: this.cancelConfirm.bind(this, item.source._id) },
+								{ type: 'button', text: 'Confirm Feature', action: this.featureAtom.bind(this, item.source._id) }
 							];
 						}
 
-						if (this.state.confirmReject === item._id) {
+						if (this.state.confirmReject === item.source._id) {
 							buttons = [ 
-								{ type: 'button', text: 'Confirm Reject', action: this.props.handleRejectAtom.bind(this, item._id) },
-								{ type: 'button', text: 'Cancel Reject', action: this.cancelConfirm.bind(this, item._id) }
+								{ type: 'button', text: 'Confirm Reject', action: this.rejectAtom.bind(this, item.source._id) },
+								{ type: 'button', text: 'Cancel Reject', action: this.cancelConfirm.bind(this, item.source._id) }
 							];
 						}
 
@@ -92,8 +92,8 @@ export const JrnlProfileSubmitted = React.createClass({
 								slug={item.source.slug}
 								title={item.source.title}
 								description={item.source.description} 
-								header={<div>Submitted on {item.createDate}</div>}
-								buttons = {buttons}/>
+								header={<div>Submitted on {item.createDate} | Inactive: {item.inactive ? 'true' : 'false'}</div>}
+								buttons = {item.inactive ? [] : buttons}/>
 						);
 					})
 				}

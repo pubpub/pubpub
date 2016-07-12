@@ -97,7 +97,8 @@ export const JrnlProfile = React.createClass({
 			{ type: 'title', text: 'Public'},
 		];
 
-		const collectionItems = jrnlData.collections.map((item, index)=> {
+		const collections = jrnlData.collections || [];
+		const collectionItems = collections.map((item, index)=> {
 			return { type: 'link', text: item.title, link: '/' + this.props.slug + '/' + item._id, active: this.props.mode === item._id };
 		});
 

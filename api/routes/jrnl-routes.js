@@ -69,8 +69,24 @@ export function getJrnl(req, res) {
 			}
 		});
 
+		// Get the featured atoms associated with the journal
+		// This query fires if mode is equal to 'featured'
+		const getFeatured = new Promise(function(resolve) {
+			if (mode === 'featured') {
+				const query = Link.find({source: jrnlResult._id, type: 'featured'}).populate({
+					path: 'destination',
+					model: Atom,
+					select: 'title slug description previewImage type',
+				}).exec();
+				resolve(query);
+			} else {
+				resolve();
+			}
+		});
+
 		const tasks = [
 			getSubmitted,
+			getFeatured,
 		];
 
 		return [jrnlResult, Promise.all(tasks)];
@@ -80,6 +96,7 @@ export function getJrnl(req, res) {
 		return res.status(201).json({
 			jrnlData: jrnlResult,
 			submittedData: taskData[0],
+			featuredData: taskData[1],
 		});
 	})
 	.catch(function(error) {
@@ -130,18 +147,19 @@ export function updateJrnl(req, res) {
 app.post('/updateJrnl', updateJrnl);
 
 export function featureAtom(req, res) {
-	const {atomID, journalID} = req.query;
+	const {atomID, jrnlID} = req.body;
 	const userID = req.user._id;
 	const now = new Date().getTime();
-	const inactiveNote = undefined;
+	const inactiveNote = 'featured';
 	// Check permission 
 
-	Link.createLink('featured', journalID, atomID, now, userID)
+	Link.createLink('featured', jrnlID, atomID, userID, now)
 	.then(function() {
-		return Link.setLinkInactive('submitted', atomID, journalID, now, userID, inactiveNote);
+		return Link.setLinkInactive('submitted', atomID, jrnlID, userID, now, inactiveNote);
 	})
-	.then(function() {
-		return res.status(201).json('Featured');
+	.then(function(updatedSubmissionLink) {
+		console.log(updatedSubmissionLink);
+		return res.status(201).json(updatedSubmissionLink);
 	})
 	.catch(function(error) {
 		console.log('error', error);
@@ -149,5 +167,25 @@ export function featureAtom(req, res) {
 	});
 
 }
-app.get('/featureAtom', featureAtom);
+app.post('/featureAtom', featureAtom);
+
+export function rejectAtom(req, res) {
+	const {atomID, jrnlID} = req.body;
+	const userID = req.user._id;
+	const now = new Date().getTime();
+	const inactiveNote = 'rejected';
+	// Check permission 
+
+	Link.setLinkInactive('submitted', atomID, jrnlID, userID, now, inactiveNote)
+	.then(function(updatedSubmissionLink) {
+		console.log(updatedSubmissionLink);
+		return res.status(201).json(updatedSubmissionLink);
+	})
+	.catch(function(error) {
+		console.log('error', error);
+		return res.status(500).json(error);
+	});
+
+}
+app.post('/rejectAtom', rejectAtom);
 

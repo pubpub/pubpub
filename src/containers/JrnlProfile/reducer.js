@@ -24,6 +24,14 @@ import {
 	DELETE_COLLECTION_LOAD, 
 	DELETE_COLLECTION_SUCCESS, 
 	DELETE_COLLECTION_FAIL,
+
+	FEATURE_ATOM_LOAD,
+	FEATURE_ATOM_SUCCESS,
+	FEATURE_ATOM_FAIL,
+	
+	REJECT_ATOM_LOAD,
+	REJECT_ATOM_SUCCESS,
+	REJECT_ATOM_FAIL,
 } from './actions';
 
 /*--------*/
@@ -59,6 +67,7 @@ function getJrnlSuccess(state, result) {
 	return state.merge({
 		jrnlData: result.jrnlData,
 		submittedData: result.submittedData,
+		featuredData: result.featuredData,
 		loading: false,
 		error: null,
 	});
@@ -120,6 +129,42 @@ function deleteCollectionSuccess(state, result) {
 	return state.setIn(['jrnlData', 'collections'], newCollections);
 }
 
+
+// Feature Atom Functions
+// ---------------------
+function featureAtomSuccess(state, result) {
+	const newSubmittedData = state.getIn(['submittedData']).map((item)=>{
+		if (item.get('_id') === result._id) { 
+			return item.merge({
+				inactive: result.inactive,
+				inactiveDate: result.inactiveDate,
+				inactiveBy: result.inactiveBy,
+				inactiveNote: result.inactiveNote,
+			}); 
+		}
+		return item;
+	});
+	return state.set('submittedData', newSubmittedData);
+}
+
+
+// Reject Atom Functions
+// ---------------------
+function rejectAtomSuccess(state, result) {
+	const newSubmittedData = state.getIn(['submittedData']).map((item)=>{
+		if (item.get('_id') === result._id) { 
+			return item.merge({
+				inactive: result.inactive,
+				inactiveDate: result.inactiveDate,
+				inactiveBy: result.inactiveBy,
+				inactiveNote: result.inactiveNote,
+			}); 
+		}
+		return item;
+	});
+	return state.set('submittedData', newSubmittedData);
+}
+
 /*--------*/
 // Bind actions to specific reducing functions.
 /*--------*/
@@ -158,6 +203,20 @@ export default function loginReducer(state = defaultState, action) {
 	case UPDATE_COLLECTION_SUCCESS:
 		return updateCollectionSuccess(state, action.result);
 	case UPDATE_COLLECTION_FAIL:
+		return state;
+
+	case FEATURE_ATOM_LOAD:
+		return state;
+	case FEATURE_ATOM_SUCCESS:
+		return featureAtomSuccess(state, action.result);
+	case FEATURE_ATOM_FAIL:
+		return state;
+
+	case REJECT_ATOM_LOAD:
+		return state;
+	case REJECT_ATOM_SUCCESS:
+		return rejectAtomSuccess(state, action.result);
+	case REJECT_ATOM_FAIL:
 		return state;
 
 	default:
