@@ -7,6 +7,10 @@ const tagSchema = new Schema({
 	jrnl: { type: ObjectId, ref: 'Jrnl'},
 	createDate: { type: Date },
 
+	inactive: { type: Boolean }, 
+	inactiveBy: { type: ObjectId, ref: 'User'},
+	inactiveDate: { type: Date },
+	inactiveNote: { type: String },
 });
 
 module.exports = mongoose.model('Tag', tagSchema);

@@ -2,7 +2,7 @@ import React, { PropTypes } from 'react';
 import {connect} from 'react-redux';
 import Radium from 'radium';
 import Helmet from 'react-helmet';
-import {getJrnl, updateJrnl, createCollection} from './actions';
+import {getJrnl, updateJrnl, createCollection, updateCollection, deleteCollection} from './actions';
 // import {NotFound} from 'components';
 import JrnlProfileAbout from './JrnlProfileAbout';
 import JrnlProfileDetails from './JrnlProfileDetails';
@@ -56,6 +56,15 @@ export const JrnlProfile = React.createClass({
 		return this.props.dispatch(createCollection(jrnlID, newCollectionTitle));
 	},
 
+	handleUpdateCollection: function(collectionID, collectionData) {
+		return this.props.dispatch(updateCollection(collectionID, collectionData));
+	},
+
+	handleDeleteCollection: function(collectionID) {
+		const jrnlID = safeGetInToJS(this.props.jrnlData, ['jrnlData', '_id']);
+		return this.props.dispatch(deleteCollection(jrnlID, collectionID));
+	},
+
 	render: function() {
 		const jrnlData = safeGetInToJS(this.props.jrnlData, ['jrnlData']) || {};
 
@@ -81,7 +90,7 @@ export const JrnlProfile = React.createClass({
 		const collectionItems = jrnlData.collections.map((item, index)=> {
 			return { type: 'link', text: item.title, link: '/' + this.props.slug + '/' + item._id, active: this.props.mode === item._id };
 		});
-		
+
 		const navItems = [
 			...adminNav,
 			{ type: 'link', text: 'About', link: '/' + this.props.slug + '/about', active: this.props.mode === 'about' },
@@ -130,7 +139,7 @@ export const JrnlProfile = React.createClass({
 							);
 						case 'collections':
 							return (
-								<JrnlProfileCollections jrnlData={this.props.jrnlData} handleUpdateJrnl={this.handleUpdateJrnl} handleCreateCollection={this.handleCreateCollection}/>
+								<JrnlProfileCollections jrnlData={this.props.jrnlData} handleUpdateJrnl={this.handleUpdateJrnl} handleCreateCollection={this.handleCreateCollection} handleUpdateCollection={this.handleUpdateCollection} handleDeleteCollection={this.handleDeleteCollection}/>
 							);
 						default:
 							return (

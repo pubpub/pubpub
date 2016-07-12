@@ -16,6 +16,14 @@ import {
 	CREATE_COLLECTION_LOAD, 
 	CREATE_COLLECTION_SUCCESS, 
 	CREATE_COLLECTION_FAIL,
+
+	UPDATE_COLLECTION_LOAD, 
+	UPDATE_COLLECTION_SUCCESS, 
+	UPDATE_COLLECTION_FAIL,
+
+	DELETE_COLLECTION_LOAD, 
+	DELETE_COLLECTION_SUCCESS, 
+	DELETE_COLLECTION_FAIL,
 } from './actions';
 
 /*--------*/
@@ -87,24 +95,30 @@ function updateJrnlFail(state, error) {
 
 // Create Collection Functions
 // ---------------------
-function createCollectionLoad(state) {
-	return state;
-}
-
 function createCollectionSuccess(state, result) {
-	console.log([result]);
-	console.log(state.getIn(['jrnlData', 'collections']).toJS());
-	console.log([result].concat(state.getIn(['jrnlData', 'collections']).toJS()));
 	const newCollections = [result].concat(state.getIn(['jrnlData', 'collections']).toJS());
-	// console.lg
 	return state.mergeIn(['jrnlData', 'collections'], newCollections);
 }
 
-function createCollectionFail(state, error) {
-	console.log('Error in createCollectionFail', error);
-	return state;
+// Update Collection Functions
+// ---------------------
+function updateCollectionSuccess(state, result) {
+	const newCollections = state.getIn(['jrnlData', 'collections']).map((item)=>{
+		if (item.get('_id') === result._id) { return ensureImmutable(result); }
+		return item;
+	});
+	return state.setIn(['jrnlData', 'collections'], newCollections);
 }
 
+
+// Delete Collection Functions
+// ---------------------
+function deleteCollectionSuccess(state, result) {
+	const newCollections = state.getIn(['jrnlData', 'collections']).filter((item)=>{
+		return item.get('_id') !== result;
+	});
+	return state.setIn(['jrnlData', 'collections'], newCollections);
+}
 
 /*--------*/
 // Bind actions to specific reducing functions.
@@ -126,11 +140,25 @@ export default function loginReducer(state = defaultState, action) {
 		return updateJrnlFail(state, action.error);
 
 	case CREATE_COLLECTION_LOAD:
-		return createCollectionLoad(state);
+		return state;
 	case CREATE_COLLECTION_SUCCESS:
 		return createCollectionSuccess(state, action.result);
 	case CREATE_COLLECTION_FAIL:
-		return createCollectionFail(state, action.error);
+		return state;
+
+	case DELETE_COLLECTION_LOAD:
+		return state;
+	case DELETE_COLLECTION_SUCCESS:
+		return deleteCollectionSuccess(state, action.result);
+	case DELETE_COLLECTION_FAIL:
+		return state;
+
+	case UPDATE_COLLECTION_LOAD:
+		return state;
+	case UPDATE_COLLECTION_SUCCESS:
+		return updateCollectionSuccess(state, action.result);
+	case UPDATE_COLLECTION_FAIL:
+		return state;
 
 	default:
 		return ensureImmutable(state);

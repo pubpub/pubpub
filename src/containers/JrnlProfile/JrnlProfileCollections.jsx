@@ -5,7 +5,7 @@ import {safeGetInToJS} from 'utils/safeParse';
 import Sortable from 'react-anything-sortable';
 import {SortableItem } from 'components';
 
-import {globalStyles} from 'utils/styleConstants';
+// import {globalStyles} from 'utils/styleConstants';
 // import {globalMessages} from 'utils/globalMessages';
 // import {FormattedMessage} from 'react-intl';
 
@@ -16,12 +16,16 @@ export const JrnlProfileCollections = React.createClass({
 		jrnlData: PropTypes.object,
 		handleUpdateJrnl: PropTypes.func,
 		handleCreateCollection: PropTypes.func,
+		handleUpdateCollection: PropTypes.func,
+		handleDeleteCollection: PropTypes.func,
 	},
 
 	getInitialState: function() {
 		return {
 			collections: [],
 			newCollection: '',
+			editID: null,
+			editTitle: '',
 		};
 	},
 
@@ -33,18 +37,19 @@ export const JrnlProfileCollections = React.createClass({
 	componentWillReceiveProps(nextProps) {
 		const currentCollections = safeGetInToJS(this.props.jrnlData, ['jrnlData', 'collections']) || [];
 		const nextCollections = safeGetInToJS(nextProps.jrnlData, ['jrnlData', 'collections']) || [];
-		if (currentCollections !== nextCollections) {
-			this.setState({
+		if (currentCollections.length !== nextCollections.length) {
+			this.setState({ 
 				collections: nextCollections,
-				newCollection: ''
+				newCollection: '',
 			});
 		}
+		this.disableEdit();
 	},
 
 	handleSort: function(sortedList) {
 		this.setState({collections: sortedList});
 		const newJrnlData = {
-			collections: sortedList.map((item)=>{return item._id})
+			collections: sortedList.map((item)=>{ return item._id; })
 		};
 		this.props.handleUpdateJrnl(newJrnlData);
 	},
@@ -58,6 +63,28 @@ export const JrnlProfileCollections = React.createClass({
 		if (!this.state.newCollection) { return; }
 
 		this.props.handleCreateCollection(this.state.newCollection);
+	},
+
+	enableEdit: function(id, title) {
+		this.setState({editID: id, editTitle: title});
+		setTimeout(()=>{
+			document.getElementById(id).focus();
+		}, 100);
+	},
+	disableEdit: function() {
+		this.setState({editID: null, editTitle: ''});
+	},
+	handleEditTitleChange: function(evt) {
+		this.setState({editTitle: evt.target.value});
+	},
+
+	editCollection: function(evt) {
+		evt.preventDefault();
+		this.props.handleUpdateCollection(this.state.editID, {title: this.state.editTitle});
+	},
+
+	deleteCollection: function(id) {
+		this.props.handleDeleteCollection(id);
 	},
 
 	render: function() {
@@ -83,9 +110,25 @@ export const JrnlProfileCollections = React.createClass({
 				<Sortable onSort={this.handleSort} dynamic={true}>
 					{this.state.collections.map((item, index)=>{
 						const collectionBlock = (
-							<div style={styles.collectionBlock}>
-								<span className={'dragIcon'}>{item.title}</span>
+							<div>
+								{/* Default form. Shown whenever edit mode is not set */}
+								<div style={[styles.collectionTable, this.state.editID === item._id && {display: 'none'}]}>
+									<div style={styles.collectionBlock}>
+										<span className={'dragIcon'}>{item.title}</span>
+									</div>	
+									<div className={'button'} style={styles.collectionButton} onClick={this.enableEdit.bind(this, item._id, item.title)}>Edit</div>
+									<div className={'button'} style={styles.collectionButton} onClick={this.deleteCollection.bind(this, item._id)}>Delete</div>
+								</div>
+								
+								{/* Edit form only shown when edit mode is properly set */}
+								<form style={[styles.collectionTable, this.state.editID !== item._id && {display: 'none'}]} onSubmit={this.editCollection}>
+									<input style={[styles.collectionBlock, styles.collectionBlockInput]} type={'text'} value={this.state.editTitle} onChange={this.handleEditTitleChange} id={item._id}/> 
+									<div className={'button'} style={styles.collectionButton} onClick={this.editCollection}>Save</div>
+									<div className={'button'} style={styles.collectionButton} onClick={this.disableEdit.bind(this, item._id)}>Cancel</div>
+								</form>
+								
 							</div>
+							
 						);
 						return (
 							<SortableItem 
@@ -105,11 +148,30 @@ export const JrnlProfileCollections = React.createClass({
 export default Radium(JrnlProfileCollections);
 
 styles = {
+	collectionTable: {
+		margin: '.5em 0em',
+		display: 'table',
+		width: '100%',
+	},
 	collectionBlock: {
 		position: 'relative',
 		border: '1px solid #BBBDC0',
 		padding: '.5em',
-		margin: '.5em 0em',
+		display: 'table-cell',
+	},
+	collectionBlockInput: {
+		width: 'calc(100% - 1em)',
+		margin: 0,
+		fontSize: '1em',
+		padding: 'calc(.5em + 2px)',
+	},
+	collectionButton: {
+		display: 'table-cell',
+		width: '1%',
+		borderColor: '#BBBDC0',
+		borderStyle: 'solid',
+		borderWidth: '1px 1px 1px 0px',
+		fontSize: '0.85em',
 	},
 	addCollectionForm: {
 		marginBottom: '1.2em',

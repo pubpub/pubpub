@@ -135,6 +135,7 @@ styles = {
 		cursor: 'pointer',
 		overflow: 'hidden',
 		textOverflow: 'ellipsis',
+		maxWidth: '150px',
 		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
 			padding: '.2em 1em',
 			fontSize: '1em',

@@ -65,3 +65,6 @@ module.exports = mongoose.model('Link', linkSchema);
 
 // JOURNAL -> PUB
 // featured
+
+// TAG -> PUB
+// tagged

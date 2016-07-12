@@ -18,6 +18,14 @@ export const CREATE_COLLECTION_LOAD = 'jrnl/CREATE_COLLECTION_LOAD';
 export const CREATE_COLLECTION_SUCCESS = 'jrnl/CREATE_COLLECTION_SUCCESS';
 export const CREATE_COLLECTION_FAIL = 'jrnl/CREATE_COLLECTION_FAIL';
 
+export const UPDATE_COLLECTION_LOAD = 'jrnl/UPDATE_COLLECTION_LOAD';
+export const UPDATE_COLLECTION_SUCCESS = 'jrnl/UPDATE_COLLECTION_SUCCESS';
+export const UPDATE_COLLECTION_FAIL = 'jrnl/UPDATE_COLLECTION_FAIL';
+
+export const DELETE_COLLECTION_LOAD = 'jrnl/DELETE_COLLECTION_LOAD';
+export const DELETE_COLLECTION_SUCCESS = 'jrnl/DELETE_COLLECTION_SUCCESS';
+export const DELETE_COLLECTION_FAIL = 'jrnl/DELETE_COLLECTION_FAIL';
+
 /*--------*/
 // Define Action creators
 //
@@ -51,6 +59,26 @@ export function createCollection(jrnlID, title) {
 		promise: (client) => client.post('/createTag', {data: {
 			jrnlID: jrnlID,
 			title: title
+		}})
+	};
+}
+
+export function updateCollection(tagID, tagData) {
+	return {
+		types: [UPDATE_COLLECTION_LOAD, UPDATE_COLLECTION_SUCCESS, UPDATE_COLLECTION_FAIL],
+		promise: (client) => client.post('/updateTag', {data: {
+			tagID: tagID,
+			tagData: tagData
+		}})
+	};
+}
+
+export function deleteCollection(jrnlID, tagID) {
+	return {
+		types: [DELETE_COLLECTION_LOAD, DELETE_COLLECTION_SUCCESS, DELETE_COLLECTION_FAIL],
+		promise: (client) => client.post('/deleteTag', {data: {
+			jrnlID: jrnlID,
+			tagID: tagID
 		}})
 	};
 }
