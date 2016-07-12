@@ -14,6 +14,7 @@ import ApiClient from './helpers/ApiClient';
 // import io from 'socket.io-client';
 import {Provider} from 'react-redux';
 import {reduxReactRouter, ReduxRouter} from 'redux-router';
+import match from 'react-router/lib/match';
 
 import getRoutes from './routes';
 import makeRouteHooksSafe from './helpers/makeRouteHooksSafe';
@@ -31,14 +32,17 @@ const scrollablehistory = useScroll(createHistory);
 const dest = document.getElementById('content');
 const store = createStore(reduxReactRouter, makeRouteHooksSafe(getRoutes), scrollablehistory, client, window.__INITIAL_STATE__);
 
+const routes = getRoutes(store, history);
 const component = (
 	<Provider store={store} key="provider">
-		<ReduxRouter routes={getRoutes(store, history)} />
+		<ReduxRouter routes={routes} />
 	</Provider>
 );
-
 const mainHTML = <Html component={component} />;
-ReactDOM.render(mainHTML, dest);
+
+match({history, routes, location}, (error, redirectLocation, renderProps) => {
+	ReactDOM.render(mainHTML, dest);
+});
 
 if (process.env.NODE_ENV !== 'production') {
 	window.React = React; // enable debugger
