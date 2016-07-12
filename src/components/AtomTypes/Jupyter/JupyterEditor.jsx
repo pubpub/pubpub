@@ -45,29 +45,11 @@ export const JupyterEditor = React.createClass({
 	componentDidMount() {
 		iframeResizer = require('iframe-resizer').iframeResizer;
 		this.setState({mounted: true})
-		// console.log(document.getElementsByTagName('iframe')[0]);
-		// if (document.getElementsByTagName('iframe')[0].children.length) {
-		// 	console.log('hey1');
-		// 		this.onIframeLoad();
-		// } else {
-		// 	console.log('hey2');
-		// 	document.getElementsByTagName('iframe')[0].addEventListener('load', this.onIframeLoad);
-		// }
-
-		// onLoad={this.onIframeLoad}
 	},
 
 	getSaveVersionContent: function() {
-		const cleanMetadata = {};
-		Object.keys(this.state.metadata).map((key, index)=>{
-			// Clear all the metadata entries that don't have a value
-			if (this.state.metadata[key].value) {
-				cleanMetadata[key] = this.state.metadata[key];
-			}
-		});
 		return {
 			url: this.state.url || safeGetInToJS(this.props.atomEditData, ['currentVersionData', 'content', 'url']),
-			metadata: cleanMetadata,
 		};
 	},
 
@@ -90,21 +72,16 @@ export const JupyterEditor = React.createClass({
 	},
 
 	onIframeLoad: function() {
-		console.log(iframeResizer);
-		console.log('hey3');
-		iframeResizer({log: true, heightCalculationMethod:'max'}, document.getElementsByTagName("iframe")[0]);
+		iframeResizer = require('iframe-resizer').iframeResizer;
+		iframeResizer({heightCalculationMethod: 'max'}, document.getElementsByTagName('iframe')[0]);
 	},
 
 	render: function() {
-		const title = safeGetInToJS(this.props.atomEditData, ['atomData', 'title']);
 		const JupyterSourceHtmlUrl = safeGetInToJS(this.props.atomEditData, ['currentVersionData', 'content', 'htmlUrl']);
-
 		return (
 			<div>
 				<h3>Preview</h3>
 
-
-				<a href={JupyterSourceHtmlUrl} alt={'Original Size: ' + title} target="_blank" className={'underlineOnHover'} style={styles.originalLink}>View Original</a>
 				<div style={styles.iframeOuter}>
 					{this.state.mounted &&
 						<iframe id={'jupyter'} ref="iframe" style={styles.iframe} src={JupyterSourceHtmlUrl} onLoad={this.onIframeLoad}></iframe>
