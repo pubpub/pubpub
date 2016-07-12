@@ -81,12 +81,37 @@ export function analytics(req, res) {
 		let totalUniqueViews = 0;
 		let totalReadTime = 0;
 
+		let dateViews = {};
+		let dateViewsArray = [];
+
 		//data from first report
 		gReports[0].forEach( function(report) {
 			totalViews += parseFloat(report.data.totals[0].values[0]);
 			totalUniqueViews += parseFloat(report.data.totals[0].values[1]);
 			totalReadTime += parseFloat(report.data.totals[0].values[2]);
+			report.data.rows.forEach( function(row) {
+				if(dateViews[row.dimensions[0]]) {
+					dateViews[row.dimensions[0]] += parseFloat(row.metrics[0].values[0]);
+				} else {
+					dateViews[row.dimensions[0]] = parseFloat(row.metrics[0].values[0]);
+				}
+			})
 		})
+		//Converts Object to easily plotted arrays
+		for (var key of Object.keys(dateViews)) {
+			let raw = key.toString()
+			let day = raw.substring(raw.length-2,raw.length)
+			let month = raw.substring(raw.length-4,raw.length-2)
+			let year = raw.substring(0,raw.length-4)
+			let date = new Date(year, month, day)
+			//Fills 0 view dates with values for graph
+			if(dateViewsArray.length >= 1){
+				while(date.getTime() - dateViewsArray[dateViewsArray.length-1][0] > 86400000){
+					dateViewsArray.push([dateViewsArray[dateViewsArray.length-1][0] + 86400000, 0]);
+				}
+			}
+			dateViewsArray.push([date.getTime(),dateViews[key]]);
+		}
 
 		let countryTotalViews = {};
 		let countryOrder = [];
@@ -98,25 +123,19 @@ export function analytics(req, res) {
 		//data from second report
 		gReports[1].forEach( function(report) {
 			report.data.rows.forEach( function(row) {
-				if(countryTotalViews[row.dimensions[0]]){
+				if(countryTotalViews[row.dimensions[0]]) {
 					countryTotalViews[row.dimensions[0]] += parseFloat(row.metrics[0].values[0]);
-				}
-				else
-				{
+				} else {
 					countryTotalViews[row.dimensions[0]] = parseFloat(row.metrics[0].values[0]);
 				}
-				if(continentTotalViews[row.dimensions[1]]){
+				if(continentTotalViews[row.dimensions[1]]) {
 					continentTotalViews[row.dimensions[1]] += parseFloat(row.metrics[0].values[0]);
-				}
-				else
-				{
+				} else {
 					continentTotalViews[row.dimensions[1]] = parseFloat(row.metrics[0].values[0]);
 				}
-				if(cityTotalViews[row.dimensions[2]]){
+				if(cityTotalViews[row.dimensions[2]]) {
 					cityTotalViews[row.dimensions[2]] += parseFloat(row.metrics[0].values[0]);
-				}
-				else
-				{
+				} else {
 					cityTotalViews[row.dimensions[2]] = parseFloat(row.metrics[0].values[0]);
 				}
 			})
@@ -144,7 +163,8 @@ export function analytics(req, res) {
 			totalReadTime: totalReadTime, //Session Duration in seconds.
 			averageReadTime: totalReadTime/totalViews,
 			//Data OverTime
-			//
+			dateViews: dateViews,
+			dateViewsArray: dateViewsArray,
 			//Data PerCountry
 			countryTotalViews: countryTotalViews,
 			countryOrder: countryOrder,
@@ -189,18 +209,18 @@ export function analytics(req, res) {
 	function queryData(gReports, nextPageTokens, initialQuery) { //json [[r1p1,r1p2], [r2p1]], string [token1, token2], boolean
 
 		//Sets a dummy gReq if the full response is already obtained
-		console.info(nextPageTokens)
+		//console.info(nextPageTokens)
 		let dummyReqCheck = [];
 		nextPageTokens.forEach( function(token) {
-			if(token == undefined && initialQuery == false){
+			if(token == undefined && initialQuery == false) {
 				dummyReqCheck.push(true);
-			}else{
+			} else {
 				dummyReqCheck.push(false);
 			}
 		});
 
 		//If they are all dummy requests, we are done requesting
-		if(arrayIsTrue(dummyReqCheck)){
+		if(arrayIsTrue(dummyReqCheck)) {
 			console.log('Finished Query')
 			return getResponse(gReports)
 		}
@@ -263,7 +283,7 @@ export function analytics(req, res) {
 		}
 
 		for (var index = 0; index < dummyReqCheck.length; index++){
-			if(dummyReqCheck[index]){
+			if(dummyReqCheck[index]) {
 				gReq.reportRequests[index] = {
 					viewId: viewId,
 					dateRanges: [{
@@ -284,18 +304,18 @@ export function analytics(req, res) {
 
 		//This is the query. This is where google response is recieved.
 		ganalytics.reports.batchGet(gRequest, function(err, gResponse){
-			if(err){
+			if(err) {
 				console.info(err);
 				return res.status(500).json(err);
 			}
 			//Update function inputs
 			for (var index = 0; index < gResponse.reports.length; index++){
-				if(!dummyReqCheck[index]){
+				if(!dummyReqCheck[index]) {
 					//Add response reports to gReports
 					gReports[index].push(gResponse.reports[index])
 					//Set next page tokens. Undefined if no further.
 					nextPageTokens[index] = gResponse.reports[index].nextPageToken
-				}else{
+				} else {
 					//Dummy page tokens should be undefined, but this is for safety
 					nextPageTokens[index] = undefined;
 				}

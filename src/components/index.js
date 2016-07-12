@@ -9,6 +9,15 @@ export GalleryPub from './GalleryPub/GalleryPub';
 export GalleryUser from './GalleryUser/GalleryUser';
 export ImageCropper from './ImageCropper/ImageCropper';
 export License from './License/License';
+
+export LineGraph from './LineGraph/LineGraph';
+export LineGraphLine from './LineGraph/LineGraphLine';
+export LineGraphDataCircles from './LineGraph/LineGraphDataCircles';
+export XYAxis from './LineGraph/XYAxis';
+export Axis from './LineGraph/Axis';
+
+export ReactGoogleCharts from './LineGraph/ReactGoogleCharts';
+
 export Loader from './Loader/Loader';
 export LoaderDeterminate from './LoaderDeterminate/LoaderDeterminate';
 export LoaderIndeterminate from './LoaderIndeterminate/LoaderIndeterminate';
