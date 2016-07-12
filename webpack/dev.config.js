@@ -66,7 +66,7 @@ reactTransform[1].transforms.push({
 });
 
 module.exports = {
-  devtool: 'eval',
+  devtool: 'inline-source-map',
   context: path.resolve(__dirname, '..'),
   entry: {
 			'main': [
@@ -99,10 +99,10 @@ module.exports = {
 		fs: "empty"
 	},
 	plugins: [
-		new HappyPack({
-			id: 'babel',
-			loaders: ['babel?' + JSON.stringify(babelLoaderQuery)]
-		}),
+		// new HappyPack({
+		// 	id: 'babel',
+		// 	loaders: ['babel?' + JSON.stringify(babelLoaderQuery)]
+		// }),
 		// hot reload
 		new webpack.HotModuleReplacementPlugin(),
 		new webpack.IgnorePlugin(/webpack-stats\.json$/),
