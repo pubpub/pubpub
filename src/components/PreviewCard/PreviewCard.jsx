@@ -114,6 +114,7 @@ styles = {
 		fontSize: '.8em',
 		marginBottom: '.5em',
 		minWidth: '5em', // Need min width so Follow -> Following doesn't cause resize
+		whiteSpace: 'nowrap',
 	},
 	table: {
 		display: 'table',

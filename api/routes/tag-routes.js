@@ -18,7 +18,7 @@ export function createTag(req, res) {
 
 	tag.save()
 	.then(function(newTag) {
-		if (!req.body.jrnlID) { return; }
+		if (!req.body.jrnlID) { return undefined; }
 		return [newTag, Jrnl.update({ _id: req.body.jrnlID }, { $push: { collections: {$each: [newTag._id], $position: 0}} }).exec()];
 	})
 	.spread(function(newTag, jrnlUpdateResult) { // Send response

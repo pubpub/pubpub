@@ -4,7 +4,7 @@ import Helmet from 'react-helmet';
 import {safeGetInToJS} from 'utils/safeParse';
 import {PreviewCard} from 'components';
 
-import {globalStyles} from 'utils/styleConstants';
+// import {globalStyles} from 'utils/styleConstants';
 // import {globalMessages} from 'utils/globalMessages';
 // import {FormattedMessage} from 'react-intl';
 
@@ -15,7 +15,31 @@ export const JrnlProfileSubmitted = React.createClass({
 		jrnlData: PropTypes.object,
 	},
 
-	
+	getInitialState: function() {
+		return {
+			confirmFeature: null,
+			confirmReject: null,
+		};
+	},
+
+	featureAtom: function(id) {
+		console.log('featuring ', id);
+	},
+	rejectAtom: function(id) {
+		console.log('rejecting ', id);
+	},
+
+	setConfirmFeature: function(id) {
+		this.setState({confirmFeature: id, confirmReject: null});
+	},
+
+	setConfirmReject: function(id) {
+		this.setState({confirmFeature: null, confirmReject: id});
+	},
+
+	cancelConfirm: function(id) {
+		this.setState({confirmFeature: null, confirmReject: null});
+	},
 
 	render: function() {
 		const jrnlData = safeGetInToJS(this.props.jrnlData, ['jrnlData']) || {};
@@ -29,12 +53,31 @@ export const JrnlProfileSubmitted = React.createClass({
 				<Helmet {...metaData} />				
 
 				{
-					submittedData.sort((a,b)=>{
+					submittedData.sort((foo, bar)=>{
 						// Sort so that most recent is first in array
-						if (a.createDate > b.createDate) { return -1; }
-						if (a.createDate < b.createDate) { return 1;}
+						if (foo.createDate > bar.createDate) { return -1; }
+						if (foo.createDate < bar.createDate) { return 1; }
 						return 0;
 					}).map((item, index)=>{
+						let buttons = [ 
+							{ type: 'button', text: 'Feature', action: this.setConfirmFeature.bind(this, item._id) }, 
+							{ type: 'button', text: 'Reject', action: this.setConfirmReject.bind(this, item._id) }
+						];
+
+						if (this.state.confirmFeature === item._id) {
+							buttons = [ 
+								{ type: 'button', text: 'Cancel Feature', action: this.cancelConfirm.bind(this, item._id) },
+								{ type: 'button', text: 'Confirm Feature', action: this.featureAtom.bind(this, item._id) }
+							];
+						}
+
+						if (this.state.confirmReject === item._id) {
+							buttons = [ 
+								{ type: 'button', text: 'Confirm Reject', action: this.rejectAtom.bind(this, item._id) },
+								{ type: 'button', text: 'Cancel Reject', action: this.cancelConfirm.bind(this, item._id) }
+							];
+						}
+
 						return (
 							<PreviewCard 
 								key={'submitted-' + index}
@@ -44,7 +87,7 @@ export const JrnlProfileSubmitted = React.createClass({
 								title={item.source.title}
 								description={item.source.description} 
 								header={<div>Submitted on {item.createDate}</div>}
-								buttons = {[ { type: 'button', text: 'Feature', action: ()=>{} }]}/>
+								buttons = {buttons}/>
 						);
 					})
 				}
