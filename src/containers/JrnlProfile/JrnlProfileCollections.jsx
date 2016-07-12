@@ -30,8 +30,23 @@ export const JrnlProfileCollections = React.createClass({
 		this.setState({ collections: jrnlData.collections || [] });
 	},
 
+	componentWillReceiveProps(nextProps) {
+		const currentCollections = safeGetInToJS(this.props.jrnlData, ['jrnlData', 'collections']) || [];
+		const nextCollections = safeGetInToJS(nextProps.jrnlData, ['jrnlData', 'collections']) || [];
+		if (currentCollections !== nextCollections) {
+			this.setState({
+				collections: nextCollections,
+				newCollection: ''
+			});
+		}
+	},
+
 	handleSort: function(sortedList) {
 		this.setState({collections: sortedList});
+		const newJrnlData = {
+			collections: sortedList.map((item)=>{return item._id})
+		};
+		this.props.handleUpdateJrnl(newJrnlData);
 	},
 
 	newCollectionChange: function(evt) {
@@ -42,12 +57,7 @@ export const JrnlProfileCollections = React.createClass({
 		evt.preventDefault();
 		if (!this.state.newCollection) { return; }
 
-		const newCollectionTitle = this.state.newCollection;
-		this.setState({
-			collections: [newCollectionTitle].concat(this.state.collections),
-			newCollection: ''
-		});
-		this.props.handleCreateCollection(newCollectionTitle);
+		this.props.handleCreateCollection(this.state.newCollection);
 	},
 
 	render: function() {
@@ -74,7 +84,7 @@ export const JrnlProfileCollections = React.createClass({
 					{this.state.collections.map((item, index)=>{
 						const collectionBlock = (
 							<div style={styles.collectionBlock}>
-								<span className={'dragIcon'}>{item}</span>
+								<span className={'dragIcon'}>{item.title}</span>
 							</div>
 						);
 						return (

@@ -12,6 +12,10 @@ import {
 	UPDATE_JRNL_LOAD,
 	UPDATE_JRNL_SUCCESS,
 	UPDATE_JRNL_FAIL,
+
+	CREATE_COLLECTION_LOAD, 
+	CREATE_COLLECTION_SUCCESS, 
+	CREATE_COLLECTION_FAIL,
 } from './actions';
 
 /*--------*/
@@ -81,6 +85,27 @@ function updateJrnlFail(state, error) {
 	});
 }
 
+// Create Collection Functions
+// ---------------------
+function createCollectionLoad(state) {
+	return state;
+}
+
+function createCollectionSuccess(state, result) {
+	console.log([result]);
+	console.log(state.getIn(['jrnlData', 'collections']).toJS());
+	console.log([result].concat(state.getIn(['jrnlData', 'collections']).toJS()));
+	const newCollections = [result].concat(state.getIn(['jrnlData', 'collections']).toJS());
+	// console.lg
+	return state.mergeIn(['jrnlData', 'collections'], newCollections);
+}
+
+function createCollectionFail(state, error) {
+	console.log('Error in createCollectionFail', error);
+	return state;
+}
+
+
 /*--------*/
 // Bind actions to specific reducing functions.
 /*--------*/
@@ -99,6 +124,13 @@ export default function loginReducer(state = defaultState, action) {
 		return updateJrnlSuccess(state, action.result);
 	case UPDATE_JRNL_FAIL:
 		return updateJrnlFail(state, action.error);
+
+	case CREATE_COLLECTION_LOAD:
+		return createCollectionLoad(state);
+	case CREATE_COLLECTION_SUCCESS:
+		return createCollectionSuccess(state, action.result);
+	case CREATE_COLLECTION_FAIL:
+		return createCollectionFail(state, action.error);
 
 	default:
 		return ensureImmutable(state);

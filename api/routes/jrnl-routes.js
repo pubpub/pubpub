@@ -51,7 +51,7 @@ export function getJrnl(req, res) {
 	// Return
 	const {slug, mode} = req.query;
 
-	Jrnl.findOne({slug: slug}).lean().exec()
+	Jrnl.findOne({slug: slug}).populate('collections').lean().exec()
 	.then(function(jrnlResult) {
 
 		// Get the submitted atoms associated with the journal
@@ -117,7 +117,10 @@ export function updateJrnl(req, res) {
 		return jrnl.save();
 	})
 	.then(function(savedResult) {
-		return res.status(201).json(savedResult);
+		return Jrnl.populate(savedResult, {path: 'collections'});
+	})
+	.then(function(populatedJrnl) {
+		return res.status(201).json(populatedJrnl);
 	})
 	.catch(function(error) {
 		console.log('error', error);

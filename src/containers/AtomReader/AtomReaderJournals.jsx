@@ -19,9 +19,9 @@ export const AtomReaderJournals = React.createClass({
 	},
 	
 	componentWillReceiveProps(nextProps) {
-		const currentSubmitted = safeGetInToJS(this.props.atomData, ['submittedData']) || {};
-		const nextSubmitted = safeGetInToJS(nextProps.atomData, ['submittedData']) || {};
-		if (currentSubmitted !== nextSubmitted) {
+		const currentSubmitted = safeGetInToJS(this.props.atomData, ['submittedData']) || [];
+		const nextSubmitted = safeGetInToJS(nextProps.atomData, ['submittedData']) || [];
+		if (currentSubmitted.length !== nextSubmitted.length) {
 			this.setState({value: []});
 		}
 	},

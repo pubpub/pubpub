@@ -78,13 +78,16 @@ export const JrnlProfile = React.createClass({
 			{ type: 'title', text: 'Public'},
 		];
 
+		const collectionItems = jrnlData.collections.map((item, index)=> {
+			return { type: 'link', text: item.title, link: '/' + this.props.slug + '/' + item._id, active: this.props.mode === item._id };
+		});
+		
 		const navItems = [
 			...adminNav,
 			{ type: 'link', text: 'About', link: '/' + this.props.slug + '/about', active: this.props.mode === 'about' },
 			{ type: 'link', text: 'Recent Activity', link: '/' + this.props.slug, active: !this.props.mode},
 			{ type: 'spacer' },
-			{ type: 'link', text: 'Category 1', link: '/' + this.props.slug + '/category1', active: this.props.mode === 'category1' },
-			{ type: 'link', text: 'Category 2', link: '/' + this.props.slug + '/category2', active: this.props.mode === 'category2' },
+			...collectionItems,
 		];
 
 		return (
