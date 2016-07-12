@@ -35,7 +35,10 @@ export const JrnlProfileFeatured = React.createClass({
 			const metadata = item.metadata || {};
 			const linkCollections = metadata.collections || [];
 			collectionStates[item._id] = linkCollections.map((tag)=>{
-				return {value: tag, label: collectionsObject[tag]}
+				return {value: tag, label: collectionsObject[tag]};
+			})
+			.filter((item)=> {
+				return item.label;
 			});
 		});
 		this.setState(collectionStates);
