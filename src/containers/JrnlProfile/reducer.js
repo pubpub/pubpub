@@ -12,6 +12,26 @@ import {
 	UPDATE_JRNL_LOAD,
 	UPDATE_JRNL_SUCCESS,
 	UPDATE_JRNL_FAIL,
+
+	CREATE_COLLECTION_LOAD, 
+	CREATE_COLLECTION_SUCCESS, 
+	CREATE_COLLECTION_FAIL,
+
+	UPDATE_COLLECTION_LOAD, 
+	UPDATE_COLLECTION_SUCCESS, 
+	UPDATE_COLLECTION_FAIL,
+
+	DELETE_COLLECTION_LOAD, 
+	DELETE_COLLECTION_SUCCESS, 
+	DELETE_COLLECTION_FAIL,
+
+	FEATURE_ATOM_LOAD,
+	FEATURE_ATOM_SUCCESS,
+	FEATURE_ATOM_FAIL,
+	
+	REJECT_ATOM_LOAD,
+	REJECT_ATOM_SUCCESS,
+	REJECT_ATOM_FAIL,
 } from './actions';
 
 /*--------*/
@@ -19,6 +39,8 @@ import {
 /*--------*/
 export const defaultState = Immutable.Map({
 	jrnlData: {},
+	submittedData: [],
+	featuredData: [],
 	loading: false,
 	error: null,
 
@@ -43,7 +65,9 @@ function getJrnlLoad(state) {
 
 function getJrnlSuccess(state, result) {
 	return state.merge({
-		jrnlData: result,
+		jrnlData: result.jrnlData,
+		submittedData: result.submittedData,
+		featuredData: result.featuredData,
 		loading: false,
 		error: null,
 	});
@@ -78,6 +102,69 @@ function updateJrnlFail(state, error) {
 	});
 }
 
+// Create Collection Functions
+// ---------------------
+function createCollectionSuccess(state, result) {
+	const newCollections = [result].concat(state.getIn(['jrnlData', 'collections']).toJS());
+	return state.mergeIn(['jrnlData', 'collections'], newCollections);
+}
+
+// Update Collection Functions
+// ---------------------
+function updateCollectionSuccess(state, result) {
+	const newCollections = state.getIn(['jrnlData', 'collections']).map((item)=>{
+		if (item.get('_id') === result._id) { return ensureImmutable(result); }
+		return item;
+	});
+	return state.setIn(['jrnlData', 'collections'], newCollections);
+}
+
+
+// Delete Collection Functions
+// ---------------------
+function deleteCollectionSuccess(state, result) {
+	const newCollections = state.getIn(['jrnlData', 'collections']).filter((item)=>{
+		return item.get('_id') !== result;
+	});
+	return state.setIn(['jrnlData', 'collections'], newCollections);
+}
+
+
+// Feature Atom Functions
+// ---------------------
+function featureAtomSuccess(state, result) {
+	const newSubmittedData = state.getIn(['submittedData']).map((item)=>{
+		if (item.get('_id') === result._id) { 
+			return item.merge({
+				inactive: result.inactive,
+				inactiveDate: result.inactiveDate,
+				inactiveBy: result.inactiveBy,
+				inactiveNote: result.inactiveNote,
+			}); 
+		}
+		return item;
+	});
+	return state.set('submittedData', newSubmittedData);
+}
+
+
+// Reject Atom Functions
+// ---------------------
+function rejectAtomSuccess(state, result) {
+	const newSubmittedData = state.getIn(['submittedData']).map((item)=>{
+		if (item.get('_id') === result._id) { 
+			return item.merge({
+				inactive: result.inactive,
+				inactiveDate: result.inactiveDate,
+				inactiveBy: result.inactiveBy,
+				inactiveNote: result.inactiveNote,
+			}); 
+		}
+		return item;
+	});
+	return state.set('submittedData', newSubmittedData);
+}
+
 /*--------*/
 // Bind actions to specific reducing functions.
 /*--------*/
@@ -96,6 +183,41 @@ export default function loginReducer(state = defaultState, action) {
 		return updateJrnlSuccess(state, action.result);
 	case UPDATE_JRNL_FAIL:
 		return updateJrnlFail(state, action.error);
+
+	case CREATE_COLLECTION_LOAD:
+		return state;
+	case CREATE_COLLECTION_SUCCESS:
+		return createCollectionSuccess(state, action.result);
+	case CREATE_COLLECTION_FAIL:
+		return state;
+
+	case DELETE_COLLECTION_LOAD:
+		return state;
+	case DELETE_COLLECTION_SUCCESS:
+		return deleteCollectionSuccess(state, action.result);
+	case DELETE_COLLECTION_FAIL:
+		return state;
+
+	case UPDATE_COLLECTION_LOAD:
+		return state;
+	case UPDATE_COLLECTION_SUCCESS:
+		return updateCollectionSuccess(state, action.result);
+	case UPDATE_COLLECTION_FAIL:
+		return state;
+
+	case FEATURE_ATOM_LOAD:
+		return state;
+	case FEATURE_ATOM_SUCCESS:
+		return featureAtomSuccess(state, action.result);
+	case FEATURE_ATOM_FAIL:
+		return state;
+
+	case REJECT_ATOM_LOAD:
+		return state;
+	case REJECT_ATOM_SUCCESS:
+		return rejectAtomSuccess(state, action.result);
+	case REJECT_ATOM_FAIL:
+		return state;
 
 	default:
 		return ensureImmutable(state);

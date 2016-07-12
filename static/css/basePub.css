@@ -7,6 +7,10 @@
 	color: #333;
 }
 
+#atom-reader.atom-reader-meta {
+	font-family: inherit;
+}
+
 #atom-reader .headerBlock { /* This hides old markdown titles in case they're still there*/
 	display: none;
 }

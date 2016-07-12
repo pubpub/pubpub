@@ -3,20 +3,20 @@ import {connect} from 'react-redux';
 import Radium, {Style} from 'radium';
 import Helmet from 'react-helmet';
 import { Link } from 'react-router';
-import {getAtomData} from './actions';
+import {getAtomData, submitAtomToJournals} from './actions';
 import {toggleVisibility, follow, unfollow} from 'containers/Login/actions';
 import {createHighlight} from 'containers/MediaLibrary/actions';
 import {safeGetInToJS} from 'utils/safeParse';
 
 import {HorizontalNav} from 'components';
-import {AtomReaderAnalytics} from './AtomReaderAnalytics';
-import {AtomReaderCite} from './AtomReaderCite';
-import {AtomReaderContributors} from './AtomReaderContributors';
-import {AtomReaderExport} from './AtomReaderExport';
-import {AtomReaderHeader} from './AtomReaderHeader';
-import {AtomReaderJournals} from './AtomReaderJournals';
-import {AtomReaderVersions} from './AtomReaderVersions';
-import {AtomViewerPane} from './AtomViewerPane';
+import AtomReaderAnalytics from './AtomReaderAnalytics';
+import AtomReaderCite from './AtomReaderCite';
+import AtomReaderContributors from './AtomReaderContributors';
+import AtomReaderExport from './AtomReaderExport';
+import AtomReaderHeader from './AtomReaderHeader';
+import AtomReaderJournals from './AtomReaderJournals';
+import AtomReaderVersions from './AtomReaderVersions';
+import AtomViewerPane from './AtomViewerPane';
 
 import {Discussions} from 'containers';
 
@@ -93,6 +93,10 @@ export const AtomReader = React.createClass({
 			});
 		}
 
+	},
+	handleJournalSubmit: function(journalIDs) {
+		const atomID = safeGetInToJS(this.props.atomData, ['atomData', '_id']);
+		return this.props.dispatch(submitAtomToJournals(atomID, journalIDs));
 	},
 
 
@@ -176,7 +180,7 @@ export const AtomReader = React.createClass({
 							case 'versions':
 								return <AtomReaderVersions atomData={this.props.atomData}/>;
 							case 'journals':
-								return <AtomReaderJournals atomData={this.props.atomData}/>;
+								return <AtomReaderJournals atomData={this.props.atomData} handleJournalSubmit={this.handleJournalSubmit}/>;
 							case 'analytics':
 								return <AtomReaderAnalytics atomData={this.props.atomData}/>;
 							case 'cite':

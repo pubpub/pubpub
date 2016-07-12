@@ -1,6 +1,7 @@
 const app = require('../api');
 const Jrnl = require('../models').Jrnl;
 const Link = require('../models').Link;
+const Atom = require('../models').Atom;
 
 export function createJrnl(req, res) {
 	if (!req.user) { return res.status(403).json('Not Logged In'); }
@@ -48,9 +49,55 @@ export function getJrnl(req, res) {
 	// Get jrnlData
 	// Get associated data (e.g. admins, featured, etc)
 	// Return
-	Jrnl.findOne({slug: req.query.slug}).exec()
-	.then(function(jrnlData) {
-		return res.status(201).json(jrnlData);
+	const {slug, mode} = req.query;
+
+	Jrnl.findOne({slug: slug}).populate('collections').lean().exec()
+	.then(function(jrnlResult) {
+
+		// Get the submitted atoms associated with the journal
+		// This query fires if mode is equal to 'submitted'
+		const getSubmitted = new Promise(function(resolve) {
+			if (mode === 'submitted') {
+				const query = Link.find({destination: jrnlResult._id, type: 'submitted'}).populate({
+					path: 'source',
+					model: Atom,
+					select: 'title slug description previewImage type',
+				}).exec();
+				resolve(query);
+			} else {
+				resolve();
+			}
+		});
+
+		// Get the featured atoms associated with the journal
+		// This query fires if mode is equal to 'featured'
+		const getFeatured = new Promise(function(resolve) {
+			if (mode === 'featured') {
+				const query = Link.find({source: jrnlResult._id, type: 'featured'}).populate({
+					path: 'destination',
+					model: Atom,
+					select: 'title slug description previewImage type',
+				}).exec();
+				resolve(query);
+			} else {
+				resolve();
+			}
+		});
+
+		const tasks = [
+			getSubmitted,
+			getFeatured,
+		];
+
+		return [jrnlResult, Promise.all(tasks)];
+	})
+	.spread(function(jrnlResult, taskData) { // Send response
+		// What's spread? See here: http://stackoverflow.com/questions/18849312/what-is-the-best-way-to-pass-resolved-promise-values-down-to-a-final-then-chai
+		return res.status(201).json({
+			jrnlData: jrnlResult,
+			submittedData: taskData[0],
+			featuredData: taskData[1],
+		});
 	})
 	.catch(function(error) {
 		console.log('error', error);
@@ -87,7 +134,10 @@ export function updateJrnl(req, res) {
 		return jrnl.save();
 	})
 	.then(function(savedResult) {
-		return res.status(201).json(savedResult);
+		return Jrnl.populate(savedResult, {path: 'collections'});
+	})
+	.then(function(populatedJrnl) {
+		return res.status(201).json(populatedJrnl);
 	})
 	.catch(function(error) {
 		console.log('error', error);
@@ -97,18 +147,19 @@ export function updateJrnl(req, res) {
 app.post('/updateJrnl', updateJrnl);
 
 export function featureAtom(req, res) {
-	const {atomID, journalID} = req.query;
+	const {atomID, jrnlID} = req.body;
 	const userID = req.user._id;
 	const now = new Date().getTime();
-	const inactiveNote = undefined;
+	const inactiveNote = 'featured';
 	// Check permission 
 
-	Link.createLink('featured', journalID, atomID, now, userID)
+	Link.createLink('featured', jrnlID, atomID, userID, now)
 	.then(function() {
-		return Link.setLinkInactive('submitted', atomID, journalID, now, userID, inactiveNote);
+		return Link.setLinkInactive('submitted', atomID, jrnlID, userID, now, inactiveNote);
 	})
-	.then(function() {
-		return res.status(201).json('Featured');
+	.then(function(updatedSubmissionLink) {
+		console.log(updatedSubmissionLink);
+		return res.status(201).json(updatedSubmissionLink);
 	})
 	.catch(function(error) {
 		console.log('error', error);
@@ -116,5 +167,25 @@ export function featureAtom(req, res) {
 	});
 
 }
-app.get('/featureAtom', featureAtom);
+app.post('/featureAtom', featureAtom);
+
+export function rejectAtom(req, res) {
+	const {atomID, jrnlID} = req.body;
+	const userID = req.user._id;
+	const now = new Date().getTime();
+	const inactiveNote = 'rejected';
+	// Check permission 
+
+	Link.setLinkInactive('submitted', atomID, jrnlID, userID, now, inactiveNote)
+	.then(function(updatedSubmissionLink) {
+		console.log(updatedSubmissionLink);
+		return res.status(201).json(updatedSubmissionLink);
+	})
+	.catch(function(error) {
+		console.log('error', error);
+		return res.status(500).json(error);
+	});
+
+}
+app.post('/rejectAtom', rejectAtom);
 

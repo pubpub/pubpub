@@ -4,7 +4,7 @@ import Helmet from 'react-helmet';
 import {safeGetInToJS} from 'utils/safeParse';
 import {PreviewCard} from 'components';
 
-import {globalStyles} from 'utils/styleConstants';
+// import {globalStyles} from 'utils/styleConstants';
 // import {globalMessages} from 'utils/globalMessages';
 // import {FormattedMessage} from 'react-intl';
 
@@ -13,26 +13,90 @@ let styles = {};
 export const JrnlProfileSubmitted = React.createClass({
 	propTypes: {
 		jrnlData: PropTypes.object,
+		handleFeatureAtom: PropTypes.func,
+		handleRejectAtom: PropTypes.func,
 	},
 
-	
+	getInitialState: function() {
+		return {
+			confirmFeature: null,
+			confirmReject: null,
+		};
+	},
+
+	componentWillReceiveProps(nextProps) {
+		this.cancelConfirm();
+	},
+
+	featureAtom: function(id) {
+		this.props.handleFeatureAtom(id);
+	},
+	rejectAtom: function(id) {
+		this.props.handleRejectAtom(id);
+	},
+
+	setConfirmFeature: function(id) {
+		this.setState({confirmFeature: id, confirmReject: null});
+	},
+
+	setConfirmReject: function(id) {
+		this.setState({confirmFeature: null, confirmReject: id});
+	},
+
+	cancelConfirm: function(id) {
+		this.setState({confirmFeature: null, confirmReject: null});
+	},
 
 	render: function() {
 		const jrnlData = safeGetInToJS(this.props.jrnlData, ['jrnlData']) || {};
+		const submittedData = safeGetInToJS(this.props.jrnlData, ['submittedData']) || [];
 		const metaData = {
-			title: 'Featured · ' + jrnlData.jrnlName,
+			title: 'Submitted · ' + jrnlData.jrnlName,
 		};
 
 		return (
 			<div>
 				<Helmet {...metaData} />				
 
-				<PreviewCard 
-					image={'http://res.cloudinary.com/pubpub/image/upload/c_limit,h_250,w_250/v1449761714/3eb7882_iavg9s.jpg'}
-					title={'Thariq Shihipar'}
-					description={'Intent on eating every bagel on earth until I burst.'} 
-					buttons = {[ { type: 'button', text: 'Feature', action: ()=>{} }]}
-					header = {<div>Submitted on DATE</div>}/>
+				{
+					submittedData.sort((foo, bar)=>{
+						// Sort so that most recent is first in array
+						if (foo.createDate > bar.createDate) { return -1; }
+						if (foo.createDate < bar.createDate) { return 1; }
+						return 0;
+					}).map((item, index)=>{
+						let buttons = [ 
+							{ type: 'button', text: 'Feature', action: this.setConfirmFeature.bind(this, item.source._id) }, 
+							{ type: 'button', text: 'Reject', action: this.setConfirmReject.bind(this, item.source._id) }
+						];
+
+						if (this.state.confirmFeature === item.source._id) {
+							buttons = [ 
+								{ type: 'button', text: 'Cancel Feature', action: this.cancelConfirm.bind(this, item.source._id) },
+								{ type: 'button', text: 'Confirm Feature', action: this.featureAtom.bind(this, item.source._id) }
+							];
+						}
+
+						if (this.state.confirmReject === item.source._id) {
+							buttons = [ 
+								{ type: 'button', text: 'Confirm Reject', action: this.rejectAtom.bind(this, item.source._id) },
+								{ type: 'button', text: 'Cancel Reject', action: this.cancelConfirm.bind(this, item.source._id) }
+							];
+						}
+
+						return (
+							<PreviewCard 
+								key={'submitted-' + index}
+								type={'atom'}
+								image={item.source.previewImage}
+								slug={item.source.slug}
+								title={item.source.title}
+								description={item.source.description} 
+								header={<div>Submitted on {item.createDate} | Inactive: {item.inactive ? 'true' : 'false'}</div>}
+								buttons = {item.inactive ? [] : buttons}/>
+						);
+					})
+				}
 				
 			</div>
 		);

@@ -3,6 +3,7 @@ const app = require('../api');
 const Atom = require('../models').Atom;
 const Link = require('../models').Link;
 const Version = require('../models').Version;
+const Jrnl = require('../models').Jrnl;
 const Promise = require('bluebird');
 
 const SHA1 = require('crypto-js/sha1');
@@ -39,6 +40,8 @@ export function createAtom(req, res) {
 	});
 
 	let versionID;
+	// This should be made more intelligent to use images, video thumbnails, etc when possible - if the atom type is image, video, etc.
+	atom.previewImage = 'https://assets.pubpub.org/_site/pub.png';
 	atom.save() // Save new atom data
 	.then(function(newAtom) { // Create new Links pointing between atom and author
 		const newAtomID = newAtom._id;
@@ -154,10 +157,35 @@ export function getAtomData(req, res) {
 			}
 		});
 
+		const getSubmitted = new Promise(function(resolve) {
+			if (meta === 'journals') {
+				const query = Link.find({source: atomResult._id, type: 'submitted'}).populate({
+					path: 'destination',
+					model: Jrnl,
+					select: 'jrnlName slug description logo',
+				}).exec();
+				resolve(query);
+			} else {
+				resolve();
+			}
+		});
+
+		const getFeatured = new Promise(function(resolve) {
+			if (meta === 'journals') {
+				const query = Link.find({destination: atomResult._id, type: 'featured'}).exec();
+				resolve(query);
+			} else {
+				resolve();
+			}
+		});
+
 		const tasks = [
 			getRecentVersion,
 			getContributors,
-			getVersions
+			getVersions,
+			getSubmitted,
+			getFeatured,
+
 		];
 
 		return [atomResult, Promise.all(tasks)];
@@ -168,7 +196,9 @@ export function getAtomData(req, res) {
 			atomData: atomResult,
 			currentVersionData: taskData[0],
 			contributorData: taskData[1],
-			versionsData: taskData[2]
+			versionsData: taskData[2],
+			submittedData: taskData[3],
+			featuredData: taskData[4],
 		});
 	})
 	.catch(function(error) {
@@ -210,15 +240,28 @@ export function getAtomEdit(req, res) {
 }
 app.get('/getAtomEdit', getAtomEdit);
 
-export function submitAtomToJournal(req, res) {
-	const {atomID, journalID} = req.query;
+export function submitAtomToJournals(req, res) {
+	const atomID = req.body.atomID;
+	const journalIDs = req.body.journalIDs || [];
 	const userID = req.user._id;
 	const now = new Date().getTime();
-	// Check permission 
+	// Check permission
 
-	Link.createLink('submitted', atomID, journalID, userID, now)
-	.then(function(newLink){
-		return res.status(201).json('Submitted');
+	const tasks = journalIDs.map((id)=>{
+		return Link.createLink('submitted', atomID, id, userID, now);
+	});
+
+	Promise.all(tasks)
+	.then(function(newLinks) {
+		return Link.find({source: atomID, type: 'submitted'}).populate({
+			path: 'destination',
+			model: Jrnl,
+			select: 'jrnlName slug description logo',
+		}).exec();
+
+	})
+	.then(function(submittedLinks) {
+		return res.status(201).json(submittedLinks);
 	})
 	.catch(function(error) {
 		console.log('error', error);
@@ -226,4 +269,4 @@ export function submitAtomToJournal(req, res) {
 	});
 
 }
-app.get('/submitAtomToJournal', submitAtomToJournal);
+app.post('/submitAtomToJournals', submitAtomToJournals);

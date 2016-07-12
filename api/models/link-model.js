@@ -1,7 +1,6 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const ObjectId = Schema.Types.ObjectId;
-const Promise = require('bluebird');
 
 const linkSchema = new Schema({
 	type: { type: String },
@@ -33,12 +32,15 @@ linkSchema.statics.createLink = function(type, source, destination, createBy, cr
 
 linkSchema.statics.setLinkInactive = function(type, source, destination, inactiveBy, inactiveDate, inactiveNote) {
 	// Beacuse upsert is false, this will not create a new document if no match is found.
-	return this.update({type: type, source: source, destination: destination }, { $set: { 
-		inactive: true, 
-		inactiveBy: inactiveBy, 
-		inactiveDate: inactiveDate || new Date().getTime(), 
-		inactiveNote: inactiveNote 
-	}}).exec();
+	return this.findOne({type: type, source: source, destination: destination }).exec()
+	.then(function(linkResult) {
+		linkResult.inactive = true;
+		linkResult.inactiveBy = inactiveBy;
+		linkResult.inactiveDate = inactiveDate || new Date().getTime();
+		linkResult.inactiveNote = inactiveNote;
+		return linkResult.save();
+	});
+	
 };
 
 module.exports = mongoose.model('Link', linkSchema);
@@ -66,3 +68,6 @@ module.exports = mongoose.model('Link', linkSchema);
 
 // JOURNAL -> PUB
 // featured
+
+// TAG -> PUB
+// tagged

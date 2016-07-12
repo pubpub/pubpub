@@ -2,7 +2,7 @@ import React, { PropTypes } from 'react';
 import {connect} from 'react-redux';
 import Radium from 'radium';
 import Helmet from 'react-helmet';
-import {getJrnl, updateJrnl} from './actions';
+import {getJrnl, updateJrnl, createCollection, updateCollection, deleteCollection, featureAtom, rejectAtom} from './actions';
 // import {NotFound} from 'components';
 import JrnlProfileAbout from './JrnlProfileAbout';
 import JrnlProfileDetails from './JrnlProfileDetails';
@@ -18,8 +18,6 @@ import {safeGetInToJS} from 'utils/safeParse';
 // import {globalStyles} from 'utils/styleConstants';
 // import {globalMessages} from 'utils/globalMessages';
 // import {FormattedMessage} from 'react-intl';
-
-let styles;
 
 export const JrnlProfile = React.createClass({
 	propTypes: {
@@ -53,6 +51,30 @@ export const JrnlProfile = React.createClass({
 		this.setState(updateObject);
 	},
 
+	handleCreateCollection: function(newCollectionTitle) {
+		const jrnlID = safeGetInToJS(this.props.jrnlData, ['jrnlData', '_id']);
+		return this.props.dispatch(createCollection(jrnlID, newCollectionTitle));
+	},
+
+	handleUpdateCollection: function(collectionID, collectionData) {
+		return this.props.dispatch(updateCollection(collectionID, collectionData));
+	},
+
+	handleDeleteCollection: function(collectionID) {
+		const jrnlID = safeGetInToJS(this.props.jrnlData, ['jrnlData', '_id']);
+		return this.props.dispatch(deleteCollection(jrnlID, collectionID));
+	},
+
+	handleFeatureAtom: function(atomID) {
+		const jrnlID = safeGetInToJS(this.props.jrnlData, ['jrnlData', '_id']);
+		return this.props.dispatch(featureAtom(jrnlID, atomID));
+	},
+
+	handleRejectAtom: function(atomID) {
+		const jrnlID = safeGetInToJS(this.props.jrnlData, ['jrnlData', '_id']);
+		return this.props.dispatch(rejectAtom(jrnlID, atomID));
+	},
+
 	render: function() {
 		const jrnlData = safeGetInToJS(this.props.jrnlData, ['jrnlData']) || {};
 
@@ -75,13 +97,17 @@ export const JrnlProfile = React.createClass({
 			{ type: 'title', text: 'Public'},
 		];
 
+		const collections = jrnlData.collections || [];
+		const collectionItems = collections.map((item, index)=> {
+			return { type: 'link', text: item.title, link: '/' + this.props.slug + '/' + item._id, active: this.props.mode === item._id };
+		});
+
 		const navItems = [
 			...adminNav,
 			{ type: 'link', text: 'About', link: '/' + this.props.slug + '/about', active: this.props.mode === 'about' },
 			{ type: 'link', text: 'Recent Activity', link: '/' + this.props.slug, active: !this.props.mode},
 			{ type: 'spacer' },
-			{ type: 'link', text: 'Category 1', link: '/' + this.props.slug + '/category1', active: this.props.mode === 'category1' },
-			{ type: 'link', text: 'Category 2', link: '/' + this.props.slug + '/category2', active: this.props.mode === 'category2' },
+			...collectionItems,
 		];
 
 		return (
@@ -104,31 +130,47 @@ export const JrnlProfile = React.createClass({
 						switch (this.props.mode) {
 						case 'about':
 							return (
-								<JrnlProfileAbout jrnlData={this.props.jrnlData}/>
+								<JrnlProfileAbout 
+									jrnlData={this.props.jrnlData}/>
 							);
 						case 'details':
 							return (
-								<JrnlProfileDetails jrnlData={this.props.jrnlData} handleUpdateJrnl={this.handleUpdateJrnl}/>
+								<JrnlProfileDetails
+									jrnlData={this.props.jrnlData}
+									handleUpdateJrnl={this.handleUpdateJrnl} />
 							);
 						case 'layout':
 							return (
-								<JrnlProfileLayout jrnlData={this.props.jrnlData} handleUpdateJrnl={this.handleUpdateJrnl} handleHeaderUpdate={this.handleHeaderUpdate}/>
+								<JrnlProfileLayout
+									jrnlData={this.props.jrnlData}
+									handleUpdateJrnl={this.handleUpdateJrnl}
+									handleHeaderUpdate={this.handleHeaderUpdate} />
 							);
 						case 'featured':
 							return (
-								<JrnlProfileFeatured jrnlData={this.props.jrnlData}/>
+								<JrnlProfileFeatured 
+									jrnlData={this.props.jrnlData} />
 							);
 						case 'submitted':
 							return (
-								<JrnlProfileSubmitted jrnlData={this.props.jrnlData}/>
+								<JrnlProfileSubmitted 
+									jrnlData={this.props.jrnlData} 
+									handleFeatureAtom={this.handleFeatureAtom} 
+									handleRejectAtom={this.handleRejectAtom} />
 							);
 						case 'collections':
 							return (
-								<JrnlProfileCollections jrnlData={this.props.jrnlData} handleUpdateJrnl={this.handleUpdateJrnl}/>
+								<JrnlProfileCollections 
+									jrnlData={this.props.jrnlData} 
+									handleUpdateJrnl={this.handleUpdateJrnl} 
+									handleCreateCollection={this.handleCreateCollection} 
+									handleUpdateCollection={this.handleUpdateCollection} 
+									handleDeleteCollection={this.handleDeleteCollection} />
 							);
 						default:
 							return (
-								<JrnlProfileRecent jrnlData={this.props.jrnlData} />
+								<JrnlProfileRecent 
+									jrnlData={this.props.jrnlData} />
 							);
 						}
 					})()}
@@ -148,9 +190,5 @@ export default connect( state => {
 		mode: state.router.params.mode,
 	};
 })( Radium(JrnlProfile) );
-
-styles = {
-		
-};
 
 

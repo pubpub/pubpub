@@ -8,6 +8,10 @@ import {
 	GET_ATOM_DATA_LOAD,
 	GET_ATOM_DATA_SUCCESS,
 	GET_ATOM_DATA_FAIL,
+
+	SUBMIT_ATOM_TO_JOURNAL_LOAD, 
+	SUBMIT_ATOM_TO_JOURNAL_SUCCESS, 
+	SUBMIT_ATOM_TO_JOURNAL_FAIL,
 } from './actions';
 
 /*--------*/
@@ -18,6 +22,8 @@ export const defaultState = Immutable.Map({
 	currentVersionData: {},
 	versionsData: {},
 	contributorData: {},
+	submittedData: [],
+	featuredData: [],
 	status: 'loading',
 	error: null
 });
@@ -41,6 +47,8 @@ function getAtomDataSuccess(state, result) {
 		currentVersionData: result.currentVersionData,
 		versionsData: result.versionsData,
 		contributorData: result.contributorData,
+		submittedData: result.submittedData,
+		featuredData: result.featuredData,
 		error: null
 	});
 }
@@ -52,10 +60,31 @@ function getAtomDataFail(state, error) {
 		currentVersionData: {},
 		versionsData: {},
 		contributorData: {},
+		submittedData: [],
+		featuredData: [],
 		error: error,
 	});
 }
 
+function submitAtomToJournalLoad(state) {
+	return state.merge({
+		status: 'loading',
+	});
+}
+
+function submitAtomToJournalSuccess(state, result) {
+	return state.merge({
+		status: 'loaded',
+		submittedData: result,
+	});
+}
+
+function submitAtomToJournalFail(state, error) {
+	return state.merge({
+		status: 'loaded',
+		error: error,
+	});
+}	
 
 /*--------*/
 // Bind actions to specific reducing functions.
@@ -70,6 +99,12 @@ export default function readerReducer(state = defaultState, action) {
 	case GET_ATOM_DATA_FAIL:
 		return getAtomDataFail(state, action.error);
 
+	case SUBMIT_ATOM_TO_JOURNAL_LOAD:
+		return submitAtomToJournalLoad(state);
+	case SUBMIT_ATOM_TO_JOURNAL_SUCCESS:
+		return submitAtomToJournalSuccess(state, action.result);
+	case SUBMIT_ATOM_TO_JOURNAL_FAIL:
+		return submitAtomToJournalFail(state, action.error);
 	default:
 		return ensureImmutable(state);
 	}

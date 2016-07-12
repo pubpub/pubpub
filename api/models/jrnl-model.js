@@ -20,7 +20,7 @@ const jrnlSchema = new Schema({
 	headerColor: { type: String }, 
 	headerImage: { type: String }, 
 
-	collections: [{ type: String }],
+	collections: [{ type: ObjectId, ref: 'Tag'}],
 
 	// language: { type: String }, // For search and sorting.	
 

@@ -14,6 +14,26 @@ export const UPDATE_JRNL_LOAD = 'jrnl/UPDATE_JRNL_LOAD';
 export const UPDATE_JRNL_SUCCESS = 'jrnl/UPDATE_JRNL_SUCCESS';
 export const UPDATE_JRNL_FAIL = 'jrnl/UPDATE_JRNL_FAIL';
 
+export const CREATE_COLLECTION_LOAD = 'jrnl/CREATE_COLLECTION_LOAD';
+export const CREATE_COLLECTION_SUCCESS = 'jrnl/CREATE_COLLECTION_SUCCESS';
+export const CREATE_COLLECTION_FAIL = 'jrnl/CREATE_COLLECTION_FAIL';
+
+export const UPDATE_COLLECTION_LOAD = 'jrnl/UPDATE_COLLECTION_LOAD';
+export const UPDATE_COLLECTION_SUCCESS = 'jrnl/UPDATE_COLLECTION_SUCCESS';
+export const UPDATE_COLLECTION_FAIL = 'jrnl/UPDATE_COLLECTION_FAIL';
+
+export const DELETE_COLLECTION_LOAD = 'jrnl/DELETE_COLLECTION_LOAD';
+export const DELETE_COLLECTION_SUCCESS = 'jrnl/DELETE_COLLECTION_SUCCESS';
+export const DELETE_COLLECTION_FAIL = 'jrnl/DELETE_COLLECTION_FAIL';
+
+export const FEATURE_ATOM_LOAD = 'jrnl/FEATURE_ATOM_LOAD';
+export const FEATURE_ATOM_SUCCESS = 'jrnl/FEATURE_ATOM_SUCCESS';
+export const FEATURE_ATOM_FAIL = 'jrnl/FEATURE_ATOM_FAIL';
+
+export const REJECT_ATOM_LOAD = 'jrnl/REJECT_ATOM_LOAD';
+export const REJECT_ATOM_SUCCESS = 'jrnl/REJECT_ATOM_SUCCESS';
+export const REJECT_ATOM_FAIL = 'jrnl/REJECT_ATOM_FAIL';
+
 /*--------*/
 // Define Action creators
 //
@@ -37,6 +57,56 @@ export function updateJrnl(slug, newJrnlData) {
 		promise: (client) => client.post('/updateJrnl', {data: {
 			slug: slug,
 			newJrnlData: newJrnlData
+		}})
+	};
+}
+
+export function createCollection(jrnlID, title) {
+	return {
+		types: [CREATE_COLLECTION_LOAD, CREATE_COLLECTION_SUCCESS, CREATE_COLLECTION_FAIL],
+		promise: (client) => client.post('/createTag', {data: {
+			jrnlID: jrnlID,
+			title: title
+		}})
+	};
+}
+
+export function updateCollection(tagID, tagData) {
+	return {
+		types: [UPDATE_COLLECTION_LOAD, UPDATE_COLLECTION_SUCCESS, UPDATE_COLLECTION_FAIL],
+		promise: (client) => client.post('/updateTag', {data: {
+			tagID: tagID,
+			tagData: tagData
+		}})
+	};
+}
+
+export function deleteCollection(jrnlID, tagID) {
+	return {
+		types: [DELETE_COLLECTION_LOAD, DELETE_COLLECTION_SUCCESS, DELETE_COLLECTION_FAIL],
+		promise: (client) => client.post('/deleteTag', {data: {
+			jrnlID: jrnlID,
+			tagID: tagID
+		}})
+	};
+}
+
+export function featureAtom(jrnlID, atomID) {
+	return {
+		types: [FEATURE_ATOM_LOAD, FEATURE_ATOM_SUCCESS, FEATURE_ATOM_FAIL],
+		promise: (client) => client.post('/featureAtom', {data: {
+			jrnlID: jrnlID,
+			atomID: atomID
+		}})
+	};
+}
+
+export function rejectAtom(jrnlID, atomID) {
+	return {
+		types: [REJECT_ATOM_LOAD, REJECT_ATOM_SUCCESS, REJECT_ATOM_FAIL],
+		promise: (client) => client.post('/rejectAtom', {data: {
+			jrnlID: jrnlID,
+			atomID: atomID
 		}})
 	};
 }
