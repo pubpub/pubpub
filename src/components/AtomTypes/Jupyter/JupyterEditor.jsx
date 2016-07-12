@@ -15,7 +15,6 @@ export const JupyterEditor = React.createClass({
 	getInitialState() {
 		return {
 			url: '',
-			metadata: {},
 			isUploading: false,
 			isLoading: true,
 			JupyterSourceHtmlUrl: '',
@@ -24,30 +23,13 @@ export const JupyterEditor = React.createClass({
 		};
 	},
 
-	componentWillMount() {
-		const metadata = safeGetInToJS(this.props.atomEditData, ['currentVersionData', 'content' ]) || {};
-		const defaultMetadata = {
-			location: {
-				title: 'Location',
-				value: ''
-			},
-			originData: {
-				title: 'Date of origin',
-				value: '',
-			},
-		};
-		this.setState({metadata: {
-			...defaultMetadata,
-			...metadata
-		}});
-	},
-
 	componentDidMount() {
 		iframeResizer = require('iframe-resizer').iframeResizer;
-		this.setState({mounted: true})
+		this.setState({mounted: true});
 	},
 
 	getSaveVersionContent: function() {
+		this.setState({isUploading: true});
 		return {
 			url: this.state.url || safeGetInToJS(this.props.atomEditData, ['currentVersionData', 'content', 'url']),
 		};
@@ -67,12 +49,10 @@ export const JupyterEditor = React.createClass({
 		});
 	},
 
-	metadataUpdate: function(newMetadata) {
-		this.setState({metadata: newMetadata});
-	},
-
 	onIframeLoad: function() {
 		iframeResizer = require('iframe-resizer').iframeResizer;
+		this.setState({isUploading: false});
+
 		iframeResizer({heightCalculationMethod: 'max'}, document.getElementsByTagName('iframe')[0]);
 	},
 
@@ -82,6 +62,9 @@ export const JupyterEditor = React.createClass({
 			<div>
 				<h3>Preview</h3>
 
+				<div style={styles.loaderWrapper}>
+					<Loader loading={this.state.isUploading} showCompletion={false}/>
+				</div>
 				<div style={styles.iframeOuter}>
 					{this.state.mounted &&
 						<iframe id={'jupyter'} ref="iframe" style={styles.iframe} src={JupyterSourceHtmlUrl} onLoad={this.onIframeLoad}></iframe>

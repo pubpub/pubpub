@@ -31,7 +31,7 @@ export function saveVersion(req, res) {
 
 	const checkAndSaveJupyter = new Promise(function(resolve) {
 		if (newVersion.type === 'jupyter') {
-			const query = Request.post('http://localhost:2001/convert', {form: { url: req.body.newVersion.content.url } });
+			const query = Request.post('http://jupyter-dd419b35.e87eb116.svc.dockerapp.io/convert', {form: { url: req.body.newVersion.content.url } });
 			resolve(query);
 		} else {
 			resolve();

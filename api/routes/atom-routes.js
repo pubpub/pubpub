@@ -70,7 +70,7 @@ export function createAtom(req, res) {
 	})
 	.then(function() {
 		if (type !== 'jupyter') { return undefined; }
-		return Request.post('http://localhost:2001/convert', {form: { url: req.body.versionContent.url } });
+		return Request.post('http://jupyter-dd419b35.e87eb116.svc.dockerapp.io/convert', {form: { url: req.body.versionContent.url } });
 	})
 	.then(function(response) {
 		if (type !== 'jupyter') { return undefined; }
