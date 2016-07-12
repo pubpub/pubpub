@@ -37,7 +37,6 @@ const ChartsLineGraph = React.createClass({
 	},
 
 	render: function() {
-		console.log(this.props)
 		if (!Chart) {
 			return <span>React-Google-Charts not functional.</span>
 		}
