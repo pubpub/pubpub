@@ -2,6 +2,7 @@ const app = require('../api');
 const Jrnl = require('../models').Jrnl;
 const Link = require('../models').Link;
 const Atom = require('../models').Atom;
+const Tag = require('../models').Tag;
 
 export function createJrnl(req, res) {
 	if (!req.user) { return res.status(403).json('Not Logged In'); }
@@ -84,19 +85,41 @@ export function getJrnl(req, res) {
 			}
 		});
 
+		// Get Collection content
+		const getCollectionData = new Promise(function(resolve) {
+			if (mode) {
+				const query = Link.find({source: jrnlResult._id, type: 'featured', 'metadata.collections': mode}).populate({
+					path: 'destination',
+					model: Atom,
+					select: 'title slug description previewImage type',
+				}).exec();
+				resolve(query);
+			} else {
+				const query = Link.find({source: jrnlResult._id, type: 'featured'}).populate({
+					path: 'destination',
+					model: Atom,
+					select: 'title slug description previewImage type',
+				}).exec();
+				resolve(query);
+			}
+		});
+
 		const tasks = [
 			getSubmitted,
 			getFeatured,
+			getCollectionData
 		];
 
 		return [jrnlResult, Promise.all(tasks)];
 	})
 	.spread(function(jrnlResult, taskData) { // Send response
 		// What's spread? See here: http://stackoverflow.com/questions/18849312/what-is-the-best-way-to-pass-resolved-promise-values-down-to-a-final-then-chai
+		// console.log(taskData[2]);
 		return res.status(201).json({
 			jrnlData: jrnlResult,
 			submittedData: taskData[0],
 			featuredData: taskData[1],
+			collectionData: taskData[2]
 		});
 	})
 	.catch(function(error) {
@@ -158,14 +181,12 @@ export function featureAtom(req, res) {
 		return Link.setLinkInactive('submitted', atomID, jrnlID, userID, now, inactiveNote);
 	})
 	.then(function(updatedSubmissionLink) {
-		console.log(updatedSubmissionLink);
 		return res.status(201).json(updatedSubmissionLink);
 	})
 	.catch(function(error) {
 		console.log('error', error);
 		return res.status(500).json(error);
 	});
-
 }
 app.post('/featureAtom', featureAtom);
 
@@ -178,14 +199,60 @@ export function rejectAtom(req, res) {
 
 	Link.setLinkInactive('submitted', atomID, jrnlID, userID, now, inactiveNote)
 	.then(function(updatedSubmissionLink) {
-		console.log(updatedSubmissionLink);
 		return res.status(201).json(updatedSubmissionLink);
 	})
 	.catch(function(error) {
 		console.log('error', error);
 		return res.status(500).json(error);
 	});
-
 }
 app.post('/rejectAtom', rejectAtom);
+
+export function collectionsChange(req, res) {
+	const {linkID, collectionIDs} = req.body;
+	
+	Link.update({_id: linkID, type: 'featured'}, {$set: {'metadata.collections': collectionIDs}})
+	.then(function(taskResults) {
+		return res.status(201).json('success');	
+	})
+	.catch(function(error) {
+		console.log('error', error);
+		return res.status(500).json(error);
+	});
+
+	// return res.status(201).json('success');
+
+	// const userID = req.user._id;
+	// const now = new Date().getTime();
+
+	// // Update all that are in list to have no invalidate date
+	// const tasks = collectionIDs.map((collectionID)=> {
+	// 	return Link.update({ type: 'tagged', destination: atomID, source: collectionID }, 
+	// 		{ $set: { 
+	// 			type: 'tagged',
+	// 			destination: atomID,
+	// 			source: collectionID,
+	// 			createBy: userID,
+	// 			createDate: now,
+	// 			inactive: false, 
+	// 			inactiveBy: null, 
+	// 			inactiveDate: null, 
+	// 			inactiveNote: ''
+	// 		}},
+	// 		{ upsert: true }
+	// 	);
+	// });
+	// tasks.push(Link.update({ type: 'tagged', destination: atomID, source: {$nin: collectionIDs} }, { $set: {  inactive: true, inactiveBy: userID, inactiveDate: now, inactiveNote: ''}}));
+
+	// Promise.all(tasks)
+	// .then(function(taskResults) {
+	// 	return res.status(201).json('success');	
+	// })
+	// .catch(function(error) {
+	// 	console.log('error', error);
+	// 	return res.status(500).json(error);
+	// });
+
+}
+app.post('/collectionsChange', collectionsChange);
 

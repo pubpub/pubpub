@@ -2,7 +2,7 @@ import React, { PropTypes } from 'react';
 import {connect} from 'react-redux';
 import Radium from 'radium';
 import Helmet from 'react-helmet';
-import {getJrnl, updateJrnl, createCollection, updateCollection, deleteCollection, featureAtom, rejectAtom} from './actions';
+import {getJrnl, updateJrnl, createCollection, updateCollection, deleteCollection, featureAtom, rejectAtom, collectionsChange} from './actions';
 // import {NotFound} from 'components';
 import JrnlProfileAbout from './JrnlProfileAbout';
 import JrnlProfileDetails from './JrnlProfileDetails';
@@ -28,7 +28,7 @@ export const JrnlProfile = React.createClass({
 	},
 
 	statics: {
-		fetchDataDeferred: function(getState, dispatch, location, routerParams) {
+		fetchData: function(getState, dispatch, location, routerParams) {
 			return dispatch(getJrnl(routerParams.slug, routerParams.mode));
 		}
 	},
@@ -73,6 +73,10 @@ export const JrnlProfile = React.createClass({
 	handleRejectAtom: function(atomID) {
 		const jrnlID = safeGetInToJS(this.props.jrnlData, ['jrnlData', '_id']);
 		return this.props.dispatch(rejectAtom(jrnlID, atomID));
+	},
+
+	handleCollectionsChange: function(linkID, collectionIDs) {
+		return this.props.dispatch(collectionsChange(linkID, collectionIDs))
 	},
 
 	render: function() {
@@ -149,7 +153,8 @@ export const JrnlProfile = React.createClass({
 						case 'featured':
 							return (
 								<JrnlProfileFeatured 
-									jrnlData={this.props.jrnlData} />
+									jrnlData={this.props.jrnlData} 
+									handleCollectionsChange={this.handleCollectionsChange}/>
 							);
 						case 'submitted':
 							return (

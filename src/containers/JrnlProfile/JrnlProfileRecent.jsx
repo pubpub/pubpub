@@ -1,5 +1,6 @@
 import React, {PropTypes} from 'react';
 import Radium from 'radium';
+import Helmet from 'react-helmet';
 import {safeGetInToJS} from 'utils/safeParse';
 import {PreviewCard} from 'components';
 
@@ -14,30 +15,34 @@ export const JrnlProfileRecent = React.createClass({
 		jrnlData: PropTypes.object,
 	},
 
-	
-
 	render: function() {
 		const jrnlData = safeGetInToJS(this.props.jrnlData, ['jrnlData']) || {};
+		const collectionData = safeGetInToJS(this.props.jrnlData, ['collectionData']) || [];
+		const metaData = {
+			title: jrnlData.jrnlName,
+		};
 
 		return (
 			<div>
+				<Helmet {...metaData} />				
+
+				{
+					collectionData.sort((foo, bar)=>{
+						// Sort so that most recent is first in array
+						if (foo.createDate > bar.createDate) { return -1; }
+						if (foo.createDate < bar.createDate) { return 1;}
+						return 0;
+					}).map((item, index)=>{
+						return (
+							<PreviewCard 
+								key={'featured-' + index}
+								image={item.destination.previewImage}
+								title={item.destination.title}
+								description={item.destination.description} />
+						);
+					})
+				}
 				
-				<PreviewCard 
-					image={'http://res.cloudinary.com/pubpub/image/upload/c_limit,h_250,w_250/v1449761714/3eb7882_iavg9s.jpg'}
-					title={'Thariq Shihipar'}
-					description={'Intent on eating every bagel on earth until I burst.'} />
-				<PreviewCard 
-					image={'http://res.cloudinary.com/pubpub/image/upload/c_limit,h_250,w_250/v1449761714/3eb7882_iavg9s.jpg'}
-					title={'Thariq Shihipar'}
-					description={'Intent on eating every bagel on earth until I burst.'} />
-				<PreviewCard 
-					image={'http://res.cloudinary.com/pubpub/image/upload/c_limit,h_250,w_250/v1449761714/3eb7882_iavg9s.jpg'}
-					title={'Thariq Shihipar'}
-					description={'Intent on eating every bagel on earth until I burst.'} />
-				<PreviewCard 
-					image={'http://res.cloudinary.com/pubpub/image/upload/c_limit,h_250,w_250/v1449761714/3eb7882_iavg9s.jpg'}
-					title={'Thariq Shihipar'}
-					description={'Intent on eating every bagel on earth until I burst.'} />
 				
 			</div>
 		);
