@@ -13,6 +13,8 @@ let styles = {};
 export const JrnlProfileSubmitted = React.createClass({
 	propTypes: {
 		jrnlData: PropTypes.object,
+		handleFeatureAtom: PropTypes.func,
+		handleRejectAtom: PropTypes.func,
 	},
 
 	getInitialState: function() {
@@ -22,12 +24,16 @@ export const JrnlProfileSubmitted = React.createClass({
 		};
 	},
 
-	featureAtom: function(id) {
-		console.log('featuring ', id);
+	componentWillReceiveProps(nextProps) {
+		this.cancelConfirm();
 	},
-	rejectAtom: function(id) {
-		console.log('rejecting ', id);
-	},
+
+	// featureAtom: function(id) {
+	// 	this.props.handleFeatureAtom(id);
+	// },
+	// rejectAtom: function(id) {
+	// 	this.props.handleRejectAtom(id);
+	// },
 
 	setConfirmFeature: function(id) {
 		this.setState({confirmFeature: id, confirmReject: null});
@@ -67,13 +73,13 @@ export const JrnlProfileSubmitted = React.createClass({
 						if (this.state.confirmFeature === item._id) {
 							buttons = [ 
 								{ type: 'button', text: 'Cancel Feature', action: this.cancelConfirm.bind(this, item._id) },
-								{ type: 'button', text: 'Confirm Feature', action: this.featureAtom.bind(this, item._id) }
+								{ type: 'button', text: 'Confirm Feature', action: this.props.handleFeatureAtom.bind(this, item._id) }
 							];
 						}
 
 						if (this.state.confirmReject === item._id) {
 							buttons = [ 
-								{ type: 'button', text: 'Confirm Reject', action: this.rejectAtom.bind(this, item._id) },
+								{ type: 'button', text: 'Confirm Reject', action: this.props.handleRejectAtom.bind(this, item._id) },
 								{ type: 'button', text: 'Cancel Reject', action: this.cancelConfirm.bind(this, item._id) }
 							];
 						}

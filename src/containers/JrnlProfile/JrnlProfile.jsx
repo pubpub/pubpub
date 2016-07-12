@@ -2,7 +2,7 @@ import React, { PropTypes } from 'react';
 import {connect} from 'react-redux';
 import Radium from 'radium';
 import Helmet from 'react-helmet';
-import {getJrnl, updateJrnl, createCollection, updateCollection, deleteCollection} from './actions';
+import {getJrnl, updateJrnl, createCollection, updateCollection, deleteCollection, featureAtom, rejectAtom} from './actions';
 // import {NotFound} from 'components';
 import JrnlProfileAbout from './JrnlProfileAbout';
 import JrnlProfileDetails from './JrnlProfileDetails';
@@ -65,6 +65,16 @@ export const JrnlProfile = React.createClass({
 		return this.props.dispatch(deleteCollection(jrnlID, collectionID));
 	},
 
+	handleFeatureAtom: function(atomID) {
+		const jrnlID = safeGetInToJS(this.props.jrnlData, ['jrnlData', '_id']);
+		return this.props.dispatch(featureAtom(jrnlID, atomID));
+	},
+
+	handleRejectAtom: function(atomID) {
+		const jrnlID = safeGetInToJS(this.props.jrnlData, ['jrnlData', '_id']);
+		return this.props.dispatch(rejectAtom(jrnlID, atomID));
+	},
+
 	render: function() {
 		const jrnlData = safeGetInToJS(this.props.jrnlData, ['jrnlData']) || {};
 
@@ -119,31 +129,47 @@ export const JrnlProfile = React.createClass({
 						switch (this.props.mode) {
 						case 'about':
 							return (
-								<JrnlProfileAbout jrnlData={this.props.jrnlData}/>
+								<JrnlProfileAbout 
+									jrnlData={this.props.jrnlData}/>
 							);
 						case 'details':
 							return (
-								<JrnlProfileDetails jrnlData={this.props.jrnlData} handleUpdateJrnl={this.handleUpdateJrnl}/>
+								<JrnlProfileDetails
+									jrnlData={this.props.jrnlData}
+									handleUpdateJrnl={this.handleUpdateJrnl} />
 							);
 						case 'layout':
 							return (
-								<JrnlProfileLayout jrnlData={this.props.jrnlData} handleUpdateJrnl={this.handleUpdateJrnl} handleHeaderUpdate={this.handleHeaderUpdate}/>
+								<JrnlProfileLayout
+									jrnlData={this.props.jrnlData}
+									handleUpdateJrnl={this.handleUpdateJrnl}
+									handleHeaderUpdate={this.handleHeaderUpdate} />
 							);
 						case 'featured':
 							return (
-								<JrnlProfileFeatured jrnlData={this.props.jrnlData}/>
+								<JrnlProfileFeatured 
+									jrnlData={this.props.jrnlData} />
 							);
 						case 'submitted':
 							return (
-								<JrnlProfileSubmitted jrnlData={this.props.jrnlData}/>
+								<JrnlProfileSubmitted 
+									jrnlData={this.props.jrnlData} 
+									handleFeatureAtom={this.handleFeatureAtom} 
+									handleRejectAtom={this.handleRejectAtom} />
 							);
 						case 'collections':
 							return (
-								<JrnlProfileCollections jrnlData={this.props.jrnlData} handleUpdateJrnl={this.handleUpdateJrnl} handleCreateCollection={this.handleCreateCollection} handleUpdateCollection={this.handleUpdateCollection} handleDeleteCollection={this.handleDeleteCollection}/>
+								<JrnlProfileCollections 
+									jrnlData={this.props.jrnlData} 
+									handleUpdateJrnl={this.handleUpdateJrnl} 
+									handleCreateCollection={this.handleCreateCollection} 
+									handleUpdateCollection={this.handleUpdateCollection} 
+									handleDeleteCollection={this.handleDeleteCollection} />
 							);
 						default:
 							return (
-								<JrnlProfileRecent jrnlData={this.props.jrnlData} />
+								<JrnlProfileRecent 
+									jrnlData={this.props.jrnlData} />
 							);
 						}
 					})()}

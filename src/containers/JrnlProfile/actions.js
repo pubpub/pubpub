@@ -26,6 +26,14 @@ export const DELETE_COLLECTION_LOAD = 'jrnl/DELETE_COLLECTION_LOAD';
 export const DELETE_COLLECTION_SUCCESS = 'jrnl/DELETE_COLLECTION_SUCCESS';
 export const DELETE_COLLECTION_FAIL = 'jrnl/DELETE_COLLECTION_FAIL';
 
+export const FEATURE_ATOM_LOAD = 'jrnl/FEATURE_ATOM_LOAD';
+export const FEATURE_ATOM_SUCCESS = 'jrnl/FEATURE_ATOM_SUCCESS';
+export const FEATURE_ATOM_FAIL = 'jrnl/FEATURE_ATOM_FAIL';
+
+export const REJECT_ATOM_LOAD = 'jrnl/REJECT_ATOM_LOAD';
+export const REJECT_ATOM_SUCCESS = 'jrnl/REJECT_ATOM_SUCCESS';
+export const REJECT_ATOM_FAIL = 'jrnl/REJECT_ATOM_FAIL';
+
 /*--------*/
 // Define Action creators
 //
@@ -79,6 +87,26 @@ export function deleteCollection(jrnlID, tagID) {
 		promise: (client) => client.post('/deleteTag', {data: {
 			jrnlID: jrnlID,
 			tagID: tagID
+		}})
+	};
+}
+
+export function featureAtom(jrnlID, atomID) {
+	return {
+		types: [FEATURE_ATOM_LOAD, FEATURE_ATOM_SUCCESS, FEATURE_ATOM_FAIL],
+		promise: (client) => client.post('/featureAtom', {data: {
+			jrnlID: jrnlID,
+			atomID: atomID
+		}})
+	};
+}
+
+export function rejectAtom(jrnlID, atomID) {
+	return {
+		types: [REJECT_ATOM_LOAD, REJECT_ATOM_SUCCESS, REJECT_ATOM_FAIL],
+		promise: (client) => client.post('/rejectAtom', {data: {
+			jrnlID: jrnlID,
+			atomID: atomID
 		}})
 	};
 }
