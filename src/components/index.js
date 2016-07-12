@@ -18,6 +18,8 @@ export Axis from './LineGraph/Axis';
 
 export ReactGoogleCharts from './LineGraph/ReactGoogleCharts';
 
+export GoogleCharts from './LineGraph/GoogleCharts';
+
 export Loader from './Loader/Loader';
 export LoaderDeterminate from './LoaderDeterminate/LoaderDeterminate';
 export LoaderIndeterminate from './LoaderIndeterminate/LoaderIndeterminate';

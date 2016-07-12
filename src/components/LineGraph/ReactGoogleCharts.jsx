@@ -11,7 +11,7 @@ import {globalStyles} from 'utils/styleConstants';
 let Chart;
 let styles = {};
 
-const ChartsLineGraph = React.createClass({
+const ReactGoogleCharts = React.createClass({
 	propTypes: {
 		options: PropTypes.object,
 		rows: PropTypes.array,
@@ -44,11 +44,11 @@ const ChartsLineGraph = React.createClass({
 		rows = {this.props.rows}
 		columns = {this.props.columns}
 		options = {this.props.options}
-		graph_id = {this.props.graph_id}
+		graph_id = {this.props.graph_id + '1'}
 		width = {this.props.width}
 		height = {this.props.height}
 		legend_toggle = {this.props.legend_toggle} />
 	}
 });
 
-export default Radium(ChartsLineGraph);
+export default Radium(ReactGoogleCharts);

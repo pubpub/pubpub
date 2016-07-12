@@ -13,6 +13,7 @@ import {FormattedMessage} from 'react-intl'; //Used for international language f
 
 import {LineGraph} from 'components';
 import {ReactGoogleCharts} from 'components';
+import {GoogleCharts} from 'components';
 
 
 let styles = {};
@@ -129,6 +130,11 @@ export const Analytics = React.createClass({
 
 					<label style={styles.label} htmlFor={'input'}>GCharts Views vs Time Graph</label>
 					<ReactGoogleCharts {...gChartProps} />
+
+					<br/>
+
+					<label style={styles.label} htmlFor={'input'}>GCharts Views vs Time Graph</label>
+					<GoogleCharts {...gChartProps} />
 
 					<br/>
 
