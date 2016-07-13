@@ -39,4 +39,4 @@ export default {
 		editor: VideoEditor,
 		viewer: VideoViewer
 	}
-}
+};

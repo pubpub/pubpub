@@ -13,15 +13,19 @@ export const AtomEditorPane = React.createClass({
 	render: function() {
 		const props = {
 			ref: 'editor',
-			atomEditData: this.props.atomEditData
+			atomEditData: this.props.atomEditData,
+			loginData: this.props.loginData
 		};
 
 		const type = safeGetInToJS(this.props.atomEditData, ['atomData', 'type']);
 		if (AtomTypes.hasOwnProperty(type)) {
-			return React.createElement(AtomTypes[type].editor, {...props, loginData: this.props.loginData});
-		} else {
-			return <div>Unknown Type</div>;
+			const Component = AtomTypes[type].editor;
+			return <Component {...props} />;
+			// return React.createElement(AtomTypes[type].editor, {...prop});
 		}
+		
+		return <div>Unknown Type</div>;
+
 		// switch (type) {
 		// case 'markdown':
 		// 	return <MarkdownEditor {...props} loginData={this.props.loginData} />;

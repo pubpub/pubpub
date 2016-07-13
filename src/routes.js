@@ -6,7 +6,9 @@ import {About, AboutJournals, AboutPubs, AboutReviews, NotFound} from 'component
 function loadComponent(component) {
 	if (__CLIENT__) return (location, cb) => component(module => cb(null, module.default || module));
 	else if (__SERVER__) return (location, cb) => cb(null, component.default || component);
-	else console.error('panic! at the disco');
+	
+	// If we didn't hit one of the above return statements, something strange has happened.
+	console.error('Uh oh. Something strange happened in src/routes.js');
 }
 
 export default () => {
