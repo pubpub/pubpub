@@ -30,4 +30,4 @@ styles = {
 		backgroundColor: 'red',
 		display: 'inline-block',
 	},
-}
+};
