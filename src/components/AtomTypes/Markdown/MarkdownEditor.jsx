@@ -19,7 +19,7 @@ export const MarkdownEditor = React.createClass({
 	componentDidMount() {
 		prosemirror = require('prosemirror');
 		pm = new prosemirror.ProseMirror({
-			place: document.getElementById('codemirror-wrapper'),
+			place: document.getElementById('prosemirror-wrapper'),
 			schema: schema,
 			on: {
 				change: new Subscription,
@@ -27,24 +27,21 @@ export const MarkdownEditor = React.createClass({
 
 		});
 		pm.on.change.add((evt)=>{
-			const t0 = performance.now();
-
+			// const t0 = performance.now();
 			const md = defaultMarkdownSerializer.serialize(pm.doc);
 			document.getElementById('markdown').value = md;
-
-			const t1 = performance.now();
-			console.log('Prose -> Markdown took ' + (t1 - t0) + ' milliseconds.');
+			// const t1 = performance.now();
+			// console.log('Prose -> Markdown took ' + (t1 - t0) + ' milliseconds.');
 			
 		});
 
 	},
 
 	markdownChange: function(evt) {
-		const t0 = performance.now();
-
+		// const t0 = performance.now();
 		pm.setDoc(defaultMarkdownParser.parse(evt.target.value));
-		const t1 = performance.now();
-		console.log('Markdown -> Prose took ' + (t1 - t0) + ' milliseconds.');
+		// const t1 = performance.now();
+		// console.log('Markdown -> Prose took ' + (t1 - t0) + ' milliseconds.');
 	},
 
 	getSaveVersionContent: function() {
@@ -61,7 +58,7 @@ export const MarkdownEditor = React.createClass({
 				}} />
 
 				<textarea id="markdown" onChange={this.markdownChange} style={styles.textarea}></textarea>
-				<div id={'codemirror-wrapper'} style={[styles.block, styles.codeBlock]}></div>
+				<div id={'prosemirror-wrapper'} style={[styles.block, styles.codeBlock]}></div>
 				
 			</div>
 		);
