@@ -9,28 +9,23 @@ export const VideoViewer = React.createClass({
 		atomData: PropTypes.object,
 		renderType: PropTypes.oneOf(['full', 'embed', 'static-full', 'static-embed'])
 	},
-	getInitialState() {
-		return {width: 600}
-	},
-	setVideoSize(container) {
-		if (container) this.setState({width: container.offsetWidth});
-	},
+
 	render: function() {
 
-		const title = safeGetInToJS(this.props.atomData, ['atomData', 'title']);
+		const atomData = safeGetInToJS(this.props.atomData, ['atomData']);
 		const videoSource = safeGetInToJS(this.props.atomData, ['currentVersionData', 'content', 'url']);
 		const metadata = safeGetInToJS(this.props.atomData, ['currentVersionData', 'content', 'metadata']) || {};
 		
 		switch (this.props.renderType) {
 		case 'embed':
 		case 'static-embed':
-			return <video src={videoSource} width={this.state.width} controls/>;
+			return <video key={'video-' + videoSource} src={videoSource} controls style={styles.video}/>;
 		case 'full':
 		case 'static-full':
 		default:
 			return (
-				<div ref={this.setVideoSize}>
-					<video src={videoSource} width={this.state.width} controls />
+				<div>
+					<video key={'video-' + videoSource} src={videoSource} controls style={styles.video}/>
 					
 					{Object.keys(metadata).length > 0 &&
 						<h2>Metadata</h2>	
@@ -52,9 +47,13 @@ export const VideoViewer = React.createClass({
 	}
 });
 
-export default Radium(VideoViewer)
+export default Radium(VideoViewer);
 
 styles = {
+	video: {
+		maxWidth: '650px',
+		width: '100%',
+	},
 	key: {
 		fontSize: '1.2em',
 	},

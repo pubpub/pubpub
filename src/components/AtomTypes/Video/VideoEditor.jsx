@@ -16,12 +16,9 @@ export const VideoEditor = React.createClass({
 			url: '',
 			metadata: {},
 			isUploading: false,
-			width: 600
 		};
 	},
-	setVideoSize(container) {
-		if (container)	this.setState({width: container.offsetWidth});
-	},
+
 	componentWillMount() {
 		const metadata = safeGetInToJS(this.props.atomEditData, ['currentVersionData', 'content', 'metadata']) || {};
 		const defaultMetadata = {
@@ -73,16 +70,17 @@ export const VideoEditor = React.createClass({
 	},
 
 	render: function() {
-		const title = safeGetInToJS(this.props.atomEditData, ['atomData', 'title']);
 		const videoSource = safeGetInToJS(this.props.atomEditData, ['currentVersionData', 'content', 'url']);
+		const videoURL = this.state.url || videoSource;
 		return (
-			<div ref={this.setVideoSize}>
+			<div>
 				<h3>Preview</h3>
-				<video src={videoSource} width={this.state.width} controls/>
+				<video key={'video-' + videoURL} src={videoURL} controls style={styles.video}/>
+
 				<div style={styles.loaderWrapper}>
 					<Loader loading={this.state.isUploading} showCompletion={true}/>
 				</div>
-				<a href={videoSource} target="_blank" className={'underlineOnHover'} style={styles.originalLink}>View Original</a>
+				<a href={videoURL} target="_blank" className={'underlineOnHover'} style={styles.originalLink}>View Original</a>
 
 				<h3>Choose new file</h3>
 				<input id={'videoFile'} name={'video file'} type="file" accept="video/*" onChange={this.handleFileSelect} />
@@ -95,9 +93,13 @@ export const VideoEditor = React.createClass({
 	}
 });
 
-export default Radium(VideoEditor)
+export default Radium(VideoEditor);
 
 styles = {
+	video: {
+		maxWidth: '650px',
+		width: '100%',
+	},
 	loaderWrapper: {
 		display: 'inline-block',
 	},
