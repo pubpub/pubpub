@@ -34,6 +34,10 @@ export const REJECT_ATOM_LOAD = 'jrnl/REJECT_ATOM_LOAD';
 export const REJECT_ATOM_SUCCESS = 'jrnl/REJECT_ATOM_SUCCESS';
 export const REJECT_ATOM_FAIL = 'jrnl/REJECT_ATOM_FAIL';
 
+export const COLLECTIONS_CHANGE_LOAD = 'jrnl/COLLECTIONS_CHANGE_LOAD';
+export const COLLECTIONS_CHANGE_SUCCESS = 'jrnl/COLLECTIONS_CHANGE_SUCCESS';
+export const COLLECTIONS_CHANGE_FAIL = 'jrnl/COLLECTIONS_CHANGE_FAIL';
+
 /*--------*/
 // Define Action creators
 //
@@ -107,6 +111,18 @@ export function rejectAtom(jrnlID, atomID) {
 		promise: (client) => client.post('/rejectAtom', {data: {
 			jrnlID: jrnlID,
 			atomID: atomID
+		}})
+	};
+}
+
+// These actions aren't acted upon in the reducer, we manage state locally, and send off changes to sync them, 
+// but they're not needed to update the local state
+export function collectionsChange(linkID, collectionIDs) {
+	return {
+		types: [COLLECTIONS_CHANGE_LOAD, COLLECTIONS_CHANGE_SUCCESS, COLLECTIONS_CHANGE_FAIL],
+		promise: (client) => client.post('/collectionsChange', {data: {
+			linkID: linkID,
+			collectionIDs: collectionIDs,
 		}})
 	};
 }

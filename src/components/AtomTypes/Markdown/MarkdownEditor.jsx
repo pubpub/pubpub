@@ -1,26 +1,14 @@
-/* global Firebase Firepad CodeMirror */
 import React, {PropTypes} from 'react';
 import Radium, {Style} from 'radium';
 
-import ReactFireMixin from 'reactfire';
+import {parser} from './parser';
+import {serializer} from './serializer';
+import {schema} from './schema';
+const {Subscription} = require('subscription');
 
-import MarkdownWidgets from 'components/Markdown/MarkdownWidgets/MarkdownWidgets';
-import FirepadUserList from 'containers/Editor/utils/editorFirepadUserlist';
-import {codeMirrorStyles, codeMirrorStyleClasses} from 'containers/Editor/utils/codeMirrorStyles';
-import {FireBaseURL} from 'config';
-import {Markdown} from 'components';
-
-
-let styles = {};
-const cmOptions = {
-	lineNumbers: false,
-	lineWrapping: true,
-	autofocus: true,
-	mode: 'spell-checker',
-	backdrop: 'pubpubmarkdown',
-	extraKeys: {'Ctrl-Space': 'autocomplete'},
-	dragDrop: false,
-};
+let styles;
+let pm;
+let prosemirror;
 
 export const MarkdownEditor = React.createClass({
 	propTypes: {
@@ -28,77 +16,54 @@ export const MarkdownEditor = React.createClass({
 		loginData: PropTypes.object,
 	},
 
-	mixins: [ReactFireMixin],
-
-	getInitialState() {
-		return {
-			markdown: '',
-		};
-	},
-
 	componentDidMount() {
-		// const prosemirror = require('prosemirror');
-		// const schema = require('prosemirror/dist/schema-basic').schema;
-		// const editor = new prosemirror.ProseMirror({
-		// 	place: document.getElementById('codemirror-wrapper'),
-		// 	schema: schema
-		// });
+		prosemirror = require('prosemirror');
+		const {exampleSetup, buildMenuItems} = require("prosemirror/dist/example-setup")
+		const {tooltipMenu, menuBar} = require("prosemirror/dist/menu")
+		pm = new prosemirror.ProseMirror({
+			place: document.getElementById('prosemirror-wrapper'),
+			schema: schema,
+			plugins: [exampleSetup.config({menuBar: false, tooltipMenu: false})],
+			on: {
+				change: new Subscription,
+			}
 
-		// Load Firebase and bind using ReactFireMixin. For assets, references, etc.
-		const ref = new Firebase(FireBaseURL + this.props.atomEditData.getIn(['atomData', 'slug']) + '/editorData' );
-		const token = this.props.atomEditData.getIn(['atomData', 'token']);
-		const username = this.props.loginData.getIn(['userData', 'username']);
-		const name = this.props.loginData.getIn(['userData', 'name']);
-		const image = this.props.loginData.getIn(['userData', 'image']);
-		ref.authWithCustomToken(token, (error, authData)=> {
-			if (error) { console.log('Authentication Failed!', error); return; } 
-
-			this.bindAsObject(ref, 'firepadData');
-			// Load Firebase ref that is used for firepad
-			const firepadRef = new Firebase(FireBaseURL + this.props.atomEditData.getIn(['atomData', 'slug']) + '/firepad');
-			// Load codemirror
-			const codeMirror = CodeMirror(document.getElementById('codemirror-wrapper'), cmOptions); 
-
-			// Initialize Firepad using codemirror and the ref defined above.
-			Firepad.fromCodeMirror(firepadRef, codeMirror, {userId: username, defaultText: '# Introduction'});
-
-			new Firebase(FireBaseURL + '.info/connected').on('value', (connectedSnap)=> {
-				if (connectedSnap.val() === true) { /* we're connected! */
-					this.setState({editorSaveStatus: 'saved'});
-				} else { /* we're disconnected! */
-					this.setState({editorSaveStatus: 'disconnected'});
-				}
-			});
-
-			FirepadUserList.fromDiv(firepadRef.child('users'), document.getElementById('active-collaborators'), username, name, image);
-
-			codeMirror.on('change', this.onEditorChange);
 		});
+		let menu = buildMenuItems(schema);
+		menuBar.config({float: true, content: menu.fullMenu}).attach(pm);
+
+		pm.on.change.add((evt)=>{
+			// const t0 = performance.now();
+			const md = serializer.serialize(pm.doc);
+			document.getElementById('markdown').value = md;
+			// const t1 = performance.now();
+			// console.log('Prose -> Markdown took ' + (t1 - t0) + ' milliseconds.');
+		});
+
 	},
 
-	onEditorChange: function(cm, change) {
-		this.setState({ markdown: cm.getValue() });
+	markdownChange: function(evt) {
+		// const t0 = performance.now();
+		pm.setDoc(parser.parse(evt.target.value));
+		// const t1 = performance.now();
+		// console.log('Markdown -> Prose took ' + (t1 - t0) + ' milliseconds.');
 	},
 
 	getSaveVersionContent: function() {
-		return {
-			markdown: this.state.markdown,
-		};
+		// return {
+		// 	markdown: this.state.markdown,
+		// };
 	},
 
 	render: function() {
 		return (
 			<div style={styles.container}>
 				<Style rules={{
-					...codeMirrorStyles(),
-					...codeMirrorStyleClasses
+					'.ProseMirror-content': {outline: 'none'},
 				}} />
 
-				<div id={'active-collaborators'} style={styles.collaborators}></div>
-				<div id={'codemirror-wrapper'} style={[styles.block, styles.codeBlock]}></div>
-				<div id={'atom-reader'} style={[styles.block, styles.previewBlock]}> 
-					<Markdown markdown={this.state.markdown}/>
-				</div>
+				<textarea id="markdown" onChange={this.markdownChange} style={styles.textarea}></textarea>
+				<div id={'prosemirror-wrapper'} style={[styles.block, styles.codeBlock]}></div>
 				
 			</div>
 		);
@@ -112,9 +77,6 @@ styles = {
 		display: 'table',
 		width: '100%',
 	},
-	collaborators: {
-		position: 'absolute',
-	},
 	block: {
 		display: 'table-cell',
 		verticalAlign: 'top',
@@ -126,4 +88,9 @@ styles = {
 	previewBlock: {
 		boxShadow: '0px 2px 2px #aaa',
 	},
+	textarea: {
+		width: '90%',
+		margin: '0px',
+		minHeight: '80vh',
+	}
 };

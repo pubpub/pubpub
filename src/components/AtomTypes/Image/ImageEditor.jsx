@@ -10,7 +10,7 @@ export const ImageEditor = React.createClass({
 	propTypes: {
 		atomEditData: PropTypes.object,
 	},
-	
+
 	getInitialState() {
 		return {
 			url: '',
@@ -87,7 +87,7 @@ export const ImageEditor = React.createClass({
 
 				<h3>Metadata</h3>
 				<CustomizableForm formData={this.state.metadata} onUpdate={this.metadataUpdate}/>
-				
+
 			</div>
 		);
 	}

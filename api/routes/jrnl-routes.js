@@ -2,6 +2,7 @@ const app = require('../api');
 const Jrnl = require('../models').Jrnl;
 const Link = require('../models').Link;
 const Atom = require('../models').Atom;
+const Tag = require('../models').Tag;
 
 export function createJrnl(req, res) {
 	if (!req.user) { return res.status(403).json('Not Logged In'); }
@@ -84,19 +85,44 @@ export function getJrnl(req, res) {
 			}
 		});
 
+		// Get atomsData content
+		// The atomsData will vary based on view, e.g. recent activity vs. collection
+		const getAtomsData = new Promise(function(resolve) {
+			if (mode) {
+				// If there is a mode, it could be a collection, try to grab atoms that are in that collection
+				const query = Link.find({source: jrnlResult._id, type: 'featured', 'metadata.collections': mode}).populate({
+					path: 'destination',
+					model: Atom,
+					select: 'title slug description previewImage type',
+				}).exec();
+				resolve(query);
+			} else {
+				// If there is no mode, it is just recent activity, grab them all.
+				const query = Link.find({source: jrnlResult._id, type: 'featured'}).populate({
+					path: 'destination',
+					model: Atom,
+					select: 'title slug description previewImage type',
+				}).exec();
+				resolve(query);
+			}
+		});
+
 		const tasks = [
 			getSubmitted,
 			getFeatured,
+			getAtomsData
 		];
 
 		return [jrnlResult, Promise.all(tasks)];
 	})
 	.spread(function(jrnlResult, taskData) { // Send response
 		// What's spread? See here: http://stackoverflow.com/questions/18849312/what-is-the-best-way-to-pass-resolved-promise-values-down-to-a-final-then-chai
+		// console.log(taskData[2]);
 		return res.status(201).json({
 			jrnlData: jrnlResult,
 			submittedData: taskData[0],
 			featuredData: taskData[1],
+			atomsData: taskData[2]
 		});
 	})
 	.catch(function(error) {
@@ -158,14 +184,12 @@ export function featureAtom(req, res) {
 		return Link.setLinkInactive('submitted', atomID, jrnlID, userID, now, inactiveNote);
 	})
 	.then(function(updatedSubmissionLink) {
-		console.log(updatedSubmissionLink);
 		return res.status(201).json(updatedSubmissionLink);
 	})
 	.catch(function(error) {
 		console.log('error', error);
 		return res.status(500).json(error);
 	});
-
 }
 app.post('/featureAtom', featureAtom);
 
@@ -178,14 +202,26 @@ export function rejectAtom(req, res) {
 
 	Link.setLinkInactive('submitted', atomID, jrnlID, userID, now, inactiveNote)
 	.then(function(updatedSubmissionLink) {
-		console.log(updatedSubmissionLink);
 		return res.status(201).json(updatedSubmissionLink);
 	})
 	.catch(function(error) {
 		console.log('error', error);
 		return res.status(500).json(error);
 	});
-
 }
 app.post('/rejectAtom', rejectAtom);
+
+export function collectionsChange(req, res) {
+	const {linkID, collectionIDs} = req.body;
+	
+	Link.update({_id: linkID, type: 'featured'}, {$set: {'metadata.collections': collectionIDs}})
+	.then(function(taskResults) {
+		return res.status(201).json('success');	
+	})
+	.catch(function(error) {
+		console.log('error', error);
+		return res.status(500).json(error);
+	});
+}
+app.post('/collectionsChange', collectionsChange);
 

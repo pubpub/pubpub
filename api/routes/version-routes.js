@@ -8,6 +8,8 @@ const Promise = require('bluebird');
 const SHA1 = require('crypto-js/sha1');
 const encHex = require('crypto-js/enc-hex');
 
+const Request = require('request-promise');
+
 
 export function saveVersion(req, res) {
 	if (!req.user) { return res.status(403).json('Not Logged In'); }
@@ -27,8 +29,21 @@ export function saveVersion(req, res) {
 		isPublished: newVersion.isPublished || false,
 	});
 
+	const checkAndSaveJupyter = new Promise(function(resolve) {
+		if (newVersion.type === 'jupyter') {
+			const query = Request.post('http://jupyter-dd419b35.e87eb116.svc.dockerapp.io/convert', {form: { url: req.body.newVersion.content.url } });
+			resolve(query);
+		} else {
+			resolve();
+		}
+	});
 
-	version.save() // Save new version data
+	checkAndSaveJupyter.then(function(response) {
+		if (newVersion.type === 'jupyter') {
+			version.content.htmlUrl = response;
+		}
+		return version.save();
+	})
 	.then(function(savedVersion) { // Add to atom versions array and return version
 		Atom.update({ _id: newVersion.parent }, { $addToSet: { versions: savedVersion._id} }, function(errUpdating, resultUpdate) {if (errUpdating) return console.log(errUpdating);});
 		return res.status(201).json(savedVersion);
