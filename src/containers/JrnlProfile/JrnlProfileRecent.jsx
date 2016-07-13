@@ -17,7 +17,7 @@ export const JrnlProfileRecent = React.createClass({
 
 	render: function() {
 		const jrnlData = safeGetInToJS(this.props.jrnlData, ['jrnlData']) || {};
-		const collectionData = safeGetInToJS(this.props.jrnlData, ['collectionData']) || [];
+		const atomsData = safeGetInToJS(this.props.jrnlData, ['atomsData']) || [];
 		const metaData = {
 			title: jrnlData.jrnlName,
 		};
@@ -27,7 +27,7 @@ export const JrnlProfileRecent = React.createClass({
 				<Helmet {...metaData} />				
 
 				{
-					collectionData.sort((foo, bar)=>{
+					atomsData.sort((foo, bar)=>{
 						// Sort so that most recent is first in array
 						if (foo.createDate > bar.createDate) { return -1; }
 						if (foo.createDate < bar.createDate) { return 1;}

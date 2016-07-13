@@ -41,7 +41,7 @@ export const defaultState = Immutable.Map({
 	jrnlData: {},
 	submittedData: [],
 	featuredData: [],
-	collectionData: [],
+	atomsData: [],
 	loading: false,
 	error: null,
 
@@ -69,7 +69,7 @@ function getJrnlSuccess(state, result) {
 		jrnlData: result.jrnlData,
 		submittedData: result.submittedData,
 		featuredData: result.featuredData,
-		collectionData: result.collectionData,
+		atomsData: result.atomsData,
 		loading: false,
 		error: null,
 	});

@@ -1,5 +1,5 @@
 import React, {PropTypes} from 'react';
-import Radium from 'radium';
+import Radium, {Style} from 'radium';
 import Helmet from 'react-helmet';
 import {safeGetInToJS} from 'utils/safeParse';
 import {PreviewCard} from 'components';
@@ -19,26 +19,36 @@ export const JrnlProfileFeatured = React.createClass({
 
 	getInitialState: function() {
 		return {
+			// State is used to store collectionData for each featured item
 		};
 	},
 
 	componentWillMount() {
+		// Create an object with key = collectionID and value = title of collection. 
+		// We will use this to 'lookup' collection titles by their ID
 		const collections = safeGetInToJS(this.props.jrnlData, ['jrnlData', 'collections']) || [];
 		const collectionsObject = {};
 		collections.map((item)=> {
 			collectionsObject[item._id] = item.title;
 		});
 
+		// Load all of the collection data for each link into the Component State.
+		// This state is used to control the Selectize component
 		const featuredData = safeGetInToJS(this.props.jrnlData, ['featuredData']) || [];
 		const collectionStates = {};
-		featuredData.map((item)=> {
-			const metadata = item.metadata || {};
+		featuredData.map((featureLink)=> {
+			const metadata = featureLink.metadata || {};
 			const linkCollections = metadata.collections || [];
-			collectionStates[item._id] = linkCollections.map((tag)=>{
+			collectionStates[featureLink._id] = linkCollections.map((tag)=>{
+				// Return an object that is structured to work with the 
+				// Selectize component
 				return {value: tag, label: collectionsObject[tag]};
 			})
-			.filter((item)=> {
-				return item.label;
+			.filter((tag)=> {
+				// Only return the tags that have a label.
+				// This prevents us from rendering empty collections which have been deleted
+				// but still remain in the collections metadata
+				return tag.label;
 			});
 		});
 		this.setState(collectionStates);
@@ -65,6 +75,10 @@ export const JrnlProfileFeatured = React.createClass({
 		return (
 			<div>
 				<Helmet {...metaData} />				
+				<Style rules={{
+					'.Select-control': { borderWidth: '0px', height: '34px'},
+					'.Select-placeholder': {lineHeight: '34px'},
+				}} />
 
 				{
 					featuredData.sort((foo, bar)=>{

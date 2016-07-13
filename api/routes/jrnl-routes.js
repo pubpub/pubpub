@@ -85,9 +85,11 @@ export function getJrnl(req, res) {
 			}
 		});
 
-		// Get Collection content
-		const getCollectionData = new Promise(function(resolve) {
+		// Get atomsData content
+		// The atomsData will vary based on view, e.g. recent activity vs. collection
+		const getAtomsData = new Promise(function(resolve) {
 			if (mode) {
+				// If there is a mode, it could be a collection, try to grab atoms that are in that collection
 				const query = Link.find({source: jrnlResult._id, type: 'featured', 'metadata.collections': mode}).populate({
 					path: 'destination',
 					model: Atom,
@@ -95,6 +97,7 @@ export function getJrnl(req, res) {
 				}).exec();
 				resolve(query);
 			} else {
+				// If there is no mode, it is just recent activity, grab them all.
 				const query = Link.find({source: jrnlResult._id, type: 'featured'}).populate({
 					path: 'destination',
 					model: Atom,
@@ -107,7 +110,7 @@ export function getJrnl(req, res) {
 		const tasks = [
 			getSubmitted,
 			getFeatured,
-			getCollectionData
+			getAtomsData
 		];
 
 		return [jrnlResult, Promise.all(tasks)];
@@ -119,7 +122,7 @@ export function getJrnl(req, res) {
 			jrnlData: jrnlResult,
 			submittedData: taskData[0],
 			featuredData: taskData[1],
-			collectionData: taskData[2]
+			atomsData: taskData[2]
 		});
 	})
 	.catch(function(error) {
@@ -219,40 +222,6 @@ export function collectionsChange(req, res) {
 		console.log('error', error);
 		return res.status(500).json(error);
 	});
-
-	// return res.status(201).json('success');
-
-	// const userID = req.user._id;
-	// const now = new Date().getTime();
-
-	// // Update all that are in list to have no invalidate date
-	// const tasks = collectionIDs.map((collectionID)=> {
-	// 	return Link.update({ type: 'tagged', destination: atomID, source: collectionID }, 
-	// 		{ $set: { 
-	// 			type: 'tagged',
-	// 			destination: atomID,
-	// 			source: collectionID,
-	// 			createBy: userID,
-	// 			createDate: now,
-	// 			inactive: false, 
-	// 			inactiveBy: null, 
-	// 			inactiveDate: null, 
-	// 			inactiveNote: ''
-	// 		}},
-	// 		{ upsert: true }
-	// 	);
-	// });
-	// tasks.push(Link.update({ type: 'tagged', destination: atomID, source: {$nin: collectionIDs} }, { $set: {  inactive: true, inactiveBy: userID, inactiveDate: now, inactiveNote: ''}}));
-
-	// Promise.all(tasks)
-	// .then(function(taskResults) {
-	// 	return res.status(201).json('success');	
-	// })
-	// .catch(function(error) {
-	// 	console.log('error', error);
-	// 	return res.status(500).json(error);
-	// });
-
 }
 app.post('/collectionsChange', collectionsChange);
 
