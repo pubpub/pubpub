@@ -23,6 +23,8 @@ try {
   console.error(err);
 }
 
+var container_regex = /.+\/containers\/[^\/]+\/((AtomReader)|(AtomEditor)|(Editor)|(EmailVerification)|(GroupCreate)|(GroupProfile)|(JournalCreate)|(JournalProfile)|(JrnlCreate)|(JrnlProfile)|(Login)|(PubCreate)|(PubReader)|(ResetPassword)|(SignUp)|(UserProfile)|(UserSettings))\.jsx?$/;
+var component_regex = /.+\/components\/[^\/]+\/((AboutJournals)|(AboutPubs)|(AboutReviews))\.jsx?$/;
 
 var babelrcObjectDevelopment = babelrcObject.env && babelrcObject.env.development || {};
 
@@ -67,10 +69,10 @@ module.exports = {
   devtool: 'inline-source-map',
   context: path.resolve(__dirname, '..'),
   entry: {
-	'main': [
-	  'webpack-hot-middleware/client?path=http://' + host + ':' + port + '/__webpack_hmr',
-	  './src/client.js'
-	]
+			'main': [
+					'webpack-hot-middleware/client?path=http://' + host + ':' + port + '/__webpack_hmr',
+					'./src/client.js'
+			]
   },
 	output: {
 		path: assetsPath,
@@ -80,8 +82,8 @@ module.exports = {
 	},
 	module: {
 		loaders: [
-			{ test: /\.(js|jsx)$/, exclude: /node_modules/, loaders: ['babel?' + JSON.stringify(babelLoaderQuery)]},
-			// { test: /\.(js|jsx)$/, exclude: /node_modules/, loaders: ['happypack/loader?id=babel']},
+			{ test: /\.(js|jsx)$/, exclude: [/node_modules/, component_regex, container_regex], loaders: ['babel?' + JSON.stringify(babelLoaderQuery)]},
+			{ test: /\.(js|jsx)$/, exclude: /node_modules/, include: [component_regex, container_regex], loaders: ['../helpers/bundleLoader', 'babel?' + JSON.stringify(babelLoaderQuery)]},
 			{ test: /\.json$/, loader: 'json-loader' }
 		]
 	},

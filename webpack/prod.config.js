@@ -14,6 +14,9 @@ var assetsPath = path.join(__dirname, relativeAssetsPath);
 var WebpackIsomorphicToolsPlugin = require('webpack-isomorphic-tools/plugin');
 var webpackIsomorphicToolsPlugin = new WebpackIsomorphicToolsPlugin(require('./webpack-isomorphic-tools'));
 
+var container_regex = /.+\/containers\/[^\/]+\/((AtomReader)|(AtomEditor)|(Editor)|(EmailVerification)|(GroupCreate)|(GroupProfile)|(JournalCreate)|(JournalProfile)|(JrnlCreate)|(JrnlProfile)|(Login)|(PubCreate)|(PubReader)|(ResetPassword)|(SignUp)|(UserProfile)|(UserSettings))\.jsx?$/;
+var component_regex = /.+\/components\/[^\/]+\/((AboutJournals)|(AboutPubs)|(AboutReviews))\.jsx?$/;
+
 module.exports = {
   devtool: 'source-map',
   context: path.resolve(__dirname, '..'),
@@ -30,7 +33,8 @@ module.exports = {
   },
   module: {
     loaders: [
-      { test: /\.jsx?$/, exclude: /node_modules/, loaders: [strip.loader('debug'), 'babel']},
+      { test: /\.jsx?$/, exclude: [/node_modules/, component_regex, container_regex], loaders: [strip.loader('debug'), 'babel']},		
+				 	{ test: /\.jsx?$/, exclude: /node_modules/, include: [component_regex, container_regex], loaders: ['../helpers/bundleLoader', strip.loader('debug'), 'babel']},
       { test: /\.json$/, loader: 'json-loader' },
       { test: /\.woff(\?v=\d+\.\d+\.\d+)?$/, loader: "url?limit=10000&mimetype=application/font-woff" },
       { test: /\.woff2(\?v=\d+\.\d+\.\d+)?$/, loader: "url?limit=10000&mimetype=application/font-woff" },
