@@ -43,9 +43,7 @@ export const AppLoadingBar = React.createClass({
 
 	show() {
 		let { percent } = this.state;
-
 		percent = this.calculatePercent(percent);
-
 		this.setState({
 			percent
 		});
@@ -58,7 +56,6 @@ export const AppLoadingBar = React.createClass({
 		});
 
 		setTimeout(() => {
-			console.log('in settimeout');
 			this.setState({
 				disappearDelayHide: false,
 				percent: 0
@@ -73,7 +70,7 @@ export const AppLoadingBar = React.createClass({
 		return {
 			...styles.bar,
 			background: color,
-			width: `${percent * 100}%`,
+			transform: `translate3d(calc(-100% + ${percent * 100}%), 0, 0)`,
 			display: disappearDelayHide || percent > 0 ? 'block' : 'none',
 			opacity: disappearDelayHide ? 0 : 1,
 		};
@@ -84,7 +81,7 @@ export const AppLoadingBar = React.createClass({
 		let currentPercent = percent || 0;
 		let random = 0;
 
-		if (currentPercent >= 0 && currentPercent < 0.25) {
+		if (currentPercent < 0.25) {
 			random = (Math.random() * (5 - 3 + 1) + 10) / 100;
 		} else if (currentPercent >= 0.25 && currentPercent < 0.65) {
 			random = (Math.random() * 3) / 100;
@@ -116,7 +113,7 @@ export default AppLoadingBar;
 styles = {
 	loading: {
 		pointerEvents: 'none',
-		transition: '400ms linear all'
+		// transition: '400ms linear all'
 	},
 	bar: {
 		position: 'fixed',
@@ -127,7 +124,7 @@ styles = {
 		width: '100%',
 		height: '2px',
 		borderRadius: '0 1px 1px 0',
-		transition: 'width 350ms, opacity 250ms linear 350ms',
+		transition: 'transform 350ms, opacity 250ms linear 350ms',
 	},
 	peg: {
 		position: 'absolute',
