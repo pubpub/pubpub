@@ -289,7 +289,7 @@ const Markdown = React.createClass({
 				plugins={[
 					abbr,
 					emoji,
-					footnotes,
+					// footnotes,
 					sub,
 					sup,
 					{plugin: mathIt, args: [MathOptions]},
