@@ -3,11 +3,12 @@
 /**
  * THIS IS THE ENTRY POINT FOR THE CLIENT, JUST LIKE server.js IS THE ENTRY POINT FOR THE SERVER.
  */
-import 'babel-polyfill'; 
+import 'babel-polyfill';
 import React from 'react';
 import ReactDOM from 'react-dom';
-import createHistory from 'history/lib/createBrowserHistory';
+import createBrowserHistory from 'history/lib/createBrowserHistory';
 import useScroll from 'scroll-behavior/lib/useStandardScroll';
+import { useRouterHistory } from 'react-router';
 
 import createStore from './createStore';
 import ApiClient from './helpers/ApiClient';
@@ -26,14 +27,16 @@ mixpanel.init('f85adcbd0f97f6101ebd440e931197b2');
 const client = new ApiClient();
 import Html from './helpers/Html';
 
-const scrollablehistory = useScroll(createHistory);
+const appHistory = useScroll(useRouterHistory(createBrowserHistory))();
+
+const newHistory = () => appHistory;
 
 const dest = document.getElementById('content');
-const store = createStore(reduxReactRouter, makeRouteHooksSafe(getRoutes), scrollablehistory, client, window.__INITIAL_STATE__);
+const store = createStore(reduxReactRouter, makeRouteHooksSafe(getRoutes), newHistory, client, window.__INITIAL_STATE__);
 
 const component = (
 	<Provider store={store} key="provider">
-		<ReduxRouter routes={getRoutes(store, history)} />
+		<ReduxRouter routes={getRoutes()} />
 	</Provider>
 );
 

@@ -5,6 +5,7 @@ import MarkdownMDReact from './MarkdownMDReact';
 import abbr from 'markdown-it-abbr';
 import emoji from 'markdown-it-emoji';
 import sub from 'markdown-it-sub';
+import footnotes from 'markdown-it-footnote';
 import sup from 'markdown-it-sup';
 import container from 'markdown-it-container';
 import mathIt from 'markdown-it-math';
@@ -183,6 +184,14 @@ const Markdown = React.createClass({
 		case 'references':
 			return <MarkdownReferences mode={this.props.mode} references={globals.sortedReferences}/>;
 
+		case 'footnote2':
+			return <div>FOOTNOTEv2</div>;
+
+		case 'footnote':
+			console.log('Got footnote!');
+			console.log(children);
+			return <div>FOOTNOTE: {children}</div>;
+
 		case 'footnotes':
 			return <MarkdownFootnotes mode={this.props.mode} footnotes={globals.footnotes}/>;
 
@@ -280,6 +289,7 @@ const Markdown = React.createClass({
 				plugins={[
 					abbr,
 					emoji,
+					// footnotes,
 					sub,
 					sup,
 					{plugin: mathIt, args: [MathOptions]},
