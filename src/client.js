@@ -43,7 +43,7 @@ const component = (
 );
 const mainHTML = <Html component={component} />;
 
-match({history, routes, location}, (error, redirectLocation, renderProps) => {
+match({routes, location}, (error, redirectLocation, renderProps) => {
 	ReactDOM.render(mainHTML, dest);
 });
 
