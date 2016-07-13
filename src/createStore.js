@@ -5,7 +5,7 @@ import transitionMiddleware from './middleware/transitionMiddleware';
 
 import {default as reducer} from './reducers';
 
-export default function createStore(reduxReactRouter, getRoutes, createHistory, client, data) {
+export default function createStore(reduxReactRouter, getRoutes, appHistory, client, data) {
 	const middleware = [createMiddleware(client), transitionMiddleware];
 
 	let finalCreateStore;
@@ -21,11 +21,10 @@ export default function createStore(reduxReactRouter, getRoutes, createHistory, 
 		finalCreateStore = applyMiddleware(...middleware)(_createStore);
 	}
 
-	finalCreateStore = reduxReactRouter({ getRoutes, createHistory })(finalCreateStore);
+	finalCreateStore = reduxReactRouter({ getRoutes, createHistory: appHistory })(finalCreateStore);
 
-	
+
 	const store = finalCreateStore(reducer, data);
-
 	if (__DEVELOPMENT__ && module.hot) {
 		module.hot.accept('./reducers', () => {
 			store.replaceReducer(reducer);
