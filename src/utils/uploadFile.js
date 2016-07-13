@@ -17,7 +17,6 @@ export function s3Upload(file, progressEvent, finishEvent, index) {
 		formData.append('Content-Type', fileType);
 		formData.append('success_action_status', '200');
 		formData.append('file', file);
-
 		const sendFile = new XMLHttpRequest();
 		sendFile.upload.addEventListener('progress', (evt)=>{
 			progressEvent(evt, index);

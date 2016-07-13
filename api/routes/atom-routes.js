@@ -11,6 +11,8 @@ const encHex = require('crypto-js/enc-hex');
 
 const Firebase = require('firebase');
 
+const Request = require('request-promise');
+
 import {fireBaseURL, firebaseTokenGen, generateAuthToken} from '../services/firebase';
 
 export function createAtom(req, res) {
@@ -37,9 +39,9 @@ export function createAtom(req, res) {
 		tags: [],
 	});
 
+	let versionID;
 	// This should be made more intelligent to use images, video thumbnails, etc when possible - if the atom type is image, video, etc.
 	atom.previewImage = 'https://assets.pubpub.org/_site/pub.png';
-
 	atom.save() // Save new atom data
 	.then(function(newAtom) { // Create new Links pointing between atom and author
 		const newAtomID = newAtom._id;
@@ -64,18 +66,28 @@ export function createAtom(req, res) {
 	.then(function(taskResults) { // If we created a version, make sure to add that version to parent
 		if (taskResults.length === 3) {
 			const versionData = taskResults[2];
+			versionID = versionData._id;
 			return Atom.update({ _id: versionData.parent }, { $addToSet: { versions: versionData._id} }).exec();
 		}
 		return undefined;
 	})
+	.then(function() {
+		if (type !== 'jupyter') { return undefined; }
+		return Request.post('http://jupyter-dd419b35.e87eb116.svc.dockerapp.io/convert', {form: { url: req.body.versionContent.url } });
+	})
+	.then(function(response) {
+		if (type !== 'jupyter') { return undefined; }
+		return Version.update({ _id: versionID }, { $set: { 'content.htmlUrl': response} }).exec();
+		// newVersion.content.htmlUrl = response;
+	})
 	.then(function() { // If type is markdown, authenticate firebase connection
-		if (type !== 'markdown') { return undefined; } 
+		if (type !== 'markdown') { return undefined; }
 
 		return ref.authWithCustomToken(generateAuthToken());
 	})
 	.then(function() { // If type is markdown, add author to firebase permissions
-		if (type !== 'markdown') { return undefined; } 
-		
+		if (type !== 'markdown') { return undefined; }
+
 		const newEditorData = {
 			collaborators: {},
 			settings: {styleDesktop: ''},
@@ -111,7 +123,7 @@ export function getAtomData(req, res) {
 
 
 	Atom.findOne({slug: slug}).lean().exec()
-	.then(function(atomResult) { // Get most recent version	
+	.then(function(atomResult) { // Get most recent version
 
 		// Get the most recent version
 		// This query fires if no meta and no version are specified
@@ -233,7 +245,7 @@ export function submitAtomToJournals(req, res) {
 	const journalIDs = req.body.journalIDs || [];
 	const userID = req.user._id;
 	const now = new Date().getTime();
-	// Check permission 
+	// Check permission
 
 	const tasks = journalIDs.map((id)=>{
 		return Link.createLink('submitted', atomID, id, userID, now);
@@ -246,7 +258,7 @@ export function submitAtomToJournals(req, res) {
 			model: Jrnl,
 			select: 'jrnlName slug description logo',
 		}).exec();
-		
+
 	})
 	.then(function(submittedLinks) {
 		return res.status(201).json(submittedLinks);
