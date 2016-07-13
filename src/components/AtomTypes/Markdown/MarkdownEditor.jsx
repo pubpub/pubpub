@@ -1,15 +1,15 @@
 /* global Firebase Firepad CodeMirror */
 import React, {PropTypes} from 'react';
-import ReactDOM from 'react-dom';
+// import ReactDOM from 'react-dom';
 import Radium, {Style} from 'radium';
 
-import ReactFireMixin from 'reactfire';
+// import ReactFireMixin from 'reactfire';
 
-import MarkdownWidgets from 'components/Markdown/MarkdownWidgets/MarkdownWidgets';
-import {FireBaseURL} from 'config';
-import {Markdown} from 'components';
-import FirepadUserList from 'containers/Editor/utils/editorFirepadUserlist';
-import {codeMirrorStyles, codeMirrorStyleClasses} from 'containers/Editor/utils/codeMirrorStyles';
+// import MarkdownWidgets from 'components/Markdown/MarkdownWidgets/MarkdownWidgets';
+// import {FireBaseURL} from 'config';
+// import {Markdown} from 'components';
+// import FirepadUserList from 'containers/Editor/utils/editorFirepadUserlist';
+// import {codeMirrorStyles, codeMirrorStyleClasses} from 'containers/Editor/utils/codeMirrorStyles';
 
 // import {defaultMarkdownParser, defaultMarkdownSerializer} from 'prosemirror/dist/markdown';
 
@@ -19,18 +19,19 @@ import {schema} from './schema';
 const {Subscription} = require('subscription');
 
 
-let styles = {};
-let prosemirror; 
+let styles;
 let pm;
-const cmOptions = {
-	lineNumbers: false,
-	lineWrapping: true,
-	autofocus: true,
-	mode: 'spell-checker',
-	backdrop: 'pubpubmarkdown',
-	extraKeys: {'Ctrl-Space': 'autocomplete'},
-	dragDrop: false,
-};
+let prosemirror;
+
+// const cmOptions = {
+// 	lineNumbers: false,
+// 	lineWrapping: true,
+// 	autofocus: true,
+// 	mode: 'spell-checker',
+// 	backdrop: 'pubpubmarkdown',
+// 	extraKeys: {'Ctrl-Space': 'autocomplete'},
+// 	dragDrop: false,
+// };
 
 export const MarkdownEditor = React.createClass({
 	propTypes: {
@@ -38,13 +39,13 @@ export const MarkdownEditor = React.createClass({
 		loginData: PropTypes.object,
 	},
 
-	mixins: [ReactFireMixin],
+	// mixins: [ReactFireMixin],
 
-	getInitialState() {
-		return {
-			markdown: '',
-		};
-	},
+	// getInitialState() {
+	// 	return {
+	// 		markdown: '',
+	// 	};
+	// },
 
 	componentDidMount() {
 		prosemirror = require('prosemirror');
@@ -100,14 +101,14 @@ export const MarkdownEditor = React.createClass({
 		// });
 	},
 
-	onEditorChange: function(cm, change) {
-		this.setState({ markdown: cm.getValue() });
-	},
+	// onEditorChange: function(cm, change) {
+	// 	this.setState({ markdown: cm.getValue() });
+	// },
 
 	getSaveVersionContent: function() {
-		return {
-			markdown: this.state.markdown,
-		};
+		// return {
+		// 	markdown: this.state.markdown,
+		// };
 	},
 	markdownChange: function(evt) {
 		const t0 = performance.now();
@@ -126,13 +127,13 @@ export const MarkdownEditor = React.createClass({
 		return (
 			<div style={styles.container}>
 				<Style rules={{
-					...codeMirrorStyles(),
-					...codeMirrorStyleClasses,
+					// ...codeMirrorStyles(),
+					// ...codeMirrorStyleClasses,
 					'.ProseMirror-content': {outline: 'none'},
 				}} />
 
 				<textarea id="markdown" onChange={this.markdownChange} style={styles.textarea}></textarea>
-				<div id={'active-collaborators'} style={styles.collaborators}></div>
+				{/* <div id={'active-collaborators'} style={styles.collaborators}></div> */}
 				<div id={'codemirror-wrapper'} style={[styles.block, styles.codeBlock]}></div>
 				{/* <div id={'atom-reader'} style={[styles.block, styles.previewBlock]}> 
 					<Markdown markdown={this.state.markdown}/>
