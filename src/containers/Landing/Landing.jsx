@@ -44,6 +44,10 @@ const Landing = React.createClass({
 			atomType = 'pdf'; break;
 		case 'ipynb':
 			atomType = 'jupyter'; break;
+		case 'mp4':
+		case 'ogg':
+		case 'webm':
+			atomType = 'video'; break;
 		default:
 			break;
 		}
