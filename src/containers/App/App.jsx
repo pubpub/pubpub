@@ -2,7 +2,7 @@ import React, { PropTypes } from 'react';
 import {StyleRoot} from 'radium';
 import Helmet from 'react-helmet';
 import {connect} from 'react-redux';
-import {pushState} from 'redux-router';
+import {push} from 'redux-router';
 import {loadAppAndLogin} from './actions';
 import {logout} from 'containers/Login/actions';
 import {createAtom} from 'containers/AtomEditor/actions';
@@ -43,10 +43,10 @@ export const App = React.createClass({
 	componentWillReceiveProps(nextProps) {
 		// Redirect to home if logged out
 		if (this.props.loginData.get('loggedIn') && !nextProps.loginData.get('loggedIn')) {
-			this.props.dispatch(pushState(null, '/'));
+			this.props.dispatch(push('/'));
 		}
 		if (!this.props.atomEditData.get('newAtomHash') && nextProps.atomEditData.get('newAtomHash')) {
-			this.props.dispatch(pushState(null, '/a/' + nextProps.atomEditData.get('newAtomHash') + '/edit'));
+			this.props.dispatch(push('/a/' + nextProps.atomEditData.get('newAtomHash') + '/edit'));
 		}
 	},
 

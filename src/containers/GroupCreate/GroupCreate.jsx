@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react';
 import {connect} from 'react-redux';
 import Radium from 'radium';
-import { pushState } from 'redux-router';
+import { push } from 'redux-router';
 import PureRenderMixin from 'react-addons-pure-render-mixin';
 import {LoaderIndeterminate} from 'components';
 import CreateGroupForm from './CreateGroupForm';
@@ -30,7 +30,7 @@ const GroupCreate = React.createClass({
 
 	componentWillReceiveProps: function(nextProps) {
 		if (nextProps.groupData.getIn(['createGroupData', 'groupSlug'])) {
-			this.props.dispatch(pushState(null, ('/group/' + nextProps.groupData.getIn(['createGroupData', 'groupSlug']))));
+			this.props.dispatch(push('/group/' + nextProps.groupData.getIn(['createGroupData', 'groupSlug'])));
 		}
 		this.setState({ errorMessage: nextProps.groupData.getIn(['createGroupData', 'error']) });
 	},

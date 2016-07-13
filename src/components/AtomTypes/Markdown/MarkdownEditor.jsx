@@ -96,6 +96,7 @@ styles = {
 		maxWidth: 'initial',
 		backgroundColor: 'white',
 		margin: '0 auto',
+		boxShadow: '0px 1px 3px 1px #BBBDC0',
 		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
 			width: 'calc(100%)',
 		},
