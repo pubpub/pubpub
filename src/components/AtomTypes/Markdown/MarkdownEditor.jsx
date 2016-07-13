@@ -21,7 +21,7 @@ export const MarkdownEditor = React.createClass({
 		const {exampleSetup, buildMenuItems} = require("prosemirror/dist/example-setup")
 		const {tooltipMenu, menuBar} = require("prosemirror/dist/menu")
 		pm = new prosemirror.ProseMirror({
-			place: document.getElementById('prosemirror-wrapper'),
+			place: document.getElementById('atom-reader'),
 			schema: schema,
 			plugins: [exampleSetup.config({menuBar: false, tooltipMenu: false})],
 			on: {
@@ -59,11 +59,11 @@ export const MarkdownEditor = React.createClass({
 		return (
 			<div style={styles.container}>
 				<Style rules={{
-					'.ProseMirror-content': {outline: 'none'},
+					'.ProseMirror-content': {outline: 'none', minHeight: '600px', padding: '0em 5em 1em 5em'},
 				}} />
 
 				<textarea id="markdown" onChange={this.markdownChange} style={styles.textarea}></textarea>
-				<div id={'prosemirror-wrapper'} style={[styles.block, styles.codeBlock]}></div>
+				<div id={'atom-reader'} style={styles.wsywigBlock}></div>
 				
 			</div>
 		);
@@ -74,23 +74,31 @@ export default Radium(MarkdownEditor);
 
 styles = {
 	container: {
-		display: 'table',
 		width: '100%',
-	},
-	block: {
-		display: 'table-cell',
-		verticalAlign: 'top',
-		width: '50%',
-	},
-	codeBlock: {
+		padding: '1em 2em',
+		left: '-2em',
 		backgroundColor: '#F3F3F4',
-	},
-	previewBlock: {
-		boxShadow: '0px 2px 2px #aaa',
+		minHeight: '100vh',
+		position: 'relative',
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+			padding: '1em 1em',
+			left: '-1em',
+		},
 	},
 	textarea: {
 		width: '90%',
 		margin: '0px',
 		minHeight: '80vh',
-	}
+		display: 'none',
+	},
+	wsywigBlock: {
+		width: 'calc(650px + 10em)',
+		maxWidth: 'initial',
+		backgroundColor: 'white',
+		margin: '0 auto',
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+			width: 'calc(100%)',
+		},
+	},
+	
 };
