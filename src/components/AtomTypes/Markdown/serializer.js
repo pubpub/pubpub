@@ -1,6 +1,6 @@
 import {MarkdownSerializer} from 'prosemirror/dist/markdown';
 
-export const defaultMarkdownSerializer = new MarkdownSerializer({
+export const serializer = new MarkdownSerializer({
 	blockquote(state, node) {
 		state.wrapBlock('> ', null, node, () => state.renderContent(node));
 	},

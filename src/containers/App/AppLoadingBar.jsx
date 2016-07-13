@@ -21,20 +21,17 @@ export const AppLoadingBar = React.createClass({
 
 	getInitialState() {
 		return {
-			size: 0,
 			disappearDelayHide: false, // when dispappear, first transition then display none
 			percent: 0,
-			appearDelayWidth: 0 // when appear, first display block then transition width
 		};
 	},
 
 	componentWillReceiveProps(nextProps) {
-
 		if (!this.props.show && nextProps.show) {
 			this.show();
 			interval = setInterval(this.show, 200);
 		} 
-		if (!nextProps.show) {
+		if (this.props.show && !nextProps.show) {
 			this.hide();
 			clearInterval(interval);
 		}
@@ -45,41 +42,23 @@ export const AppLoadingBar = React.createClass({
 	},
 
 	show() {
-		let { size, percent } = this.state;
+		let { percent } = this.state;
 
-		const appearDelayWidth = size === 0;
 		percent = this.calculatePercent(percent);
 
 		this.setState({
-			size: ++size,
-			appearDelayWidth,
 			percent
 		});
-
-		if (appearDelayWidth) {
-			setTimeout(() => {
-				this.setState({
-					appearDelayWidth: false
-				});
-			});
-		}
 	},
 
 	hide() {
-		let { size } = this.state;
-
-		if (--size < 0) {
-			this.setState({ size: 0 });
-			return;
-		}
-
 		this.setState({
-			size: 0,
 			disappearDelayHide: true,
 			percent: 1
 		});
 
 		setTimeout(() => {
+			console.log('in settimeout');
 			this.setState({
 				disappearDelayHide: false,
 				percent: 0
@@ -88,13 +67,13 @@ export const AppLoadingBar = React.createClass({
 	},
 
 	getBarStyle() {
-		const { disappearDelayHide, appearDelayWidth, percent } = this.state;
+		const { disappearDelayHide, percent } = this.state;
 		const { color } = this.props;
 
 		return {
 			...styles.bar,
 			background: color,
-			width: appearDelayWidth ? 0 : `${percent * 100}%`,
+			width: `${percent * 100}%`,
 			display: disappearDelayHide || percent > 0 ? 'block' : 'none',
 			opacity: disappearDelayHide ? 0 : 1,
 		};
