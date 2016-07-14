@@ -7,7 +7,8 @@ const app = require('../api');
 
 // Google API Key. Downloaded from Developer Console.
 // Key has an email attached which needs view access to the G Analytics
-import {googleAPIKey} from '../config';
+const clientEmail = process.env.NODE_ENV !== 'production' && !process.env.TESTING ? require('../config').googleAPIKey.client_email : process.env.GOOGLE_API_CLIENT_EMAIL;
+const privateKey = process.env.NODE_ENV !== 'production' && !process.env.TESTING ? require('../config').googleAPIKey.private_key : process.env.GOOGLE_API_PRIVATE_KEY;
 
 // from node install of googleapis
 import google from 'googleapis';
@@ -19,7 +20,7 @@ const viewId = 'ga:113911431';
 const oauth2Client = new google.auth.OAuth2();
 
 const jwtClient = new google.auth.JWT(
-	googleAPIKey.client_email, null, googleAPIKey.private_key,
+	clientEmail, null, privateKey,
 	['https://www.googleapis.com/auth/analytics.readonly'], null);
 
 let ganalytics = jwtClient.authorize(function(err, tokens) {
