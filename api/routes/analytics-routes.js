@@ -1,13 +1,13 @@
-//takes request with pub url and returns data from google
+// takes request with pub url and returns data from google
 const app = require('../api');
 
-//Google API required
-//Should look into global authorization for the Google API
-//requires node install of google apis
+// Google API required
+// Should look into global authorization for the Google API
+// requires node install of google apis
 
-//Google API Key. Downloaded from Developer Console.
-//Key has an email attached which needs view access to the G Analytics
-import key from 'PubPub Arch2 Femi1-6536cb1698a3.json'
+// Google API Key. Downloaded from Developer Console.
+// Key has an email attached which needs view access to the G Analytics
+import {googleAPIKey} from '../config';
 
 //from node install of googleapis
 import google from 'googleapis';
@@ -19,11 +19,11 @@ const viewId = 'ga:113911431';
 var oauth2Client = new google.auth.OAuth2();
 
 let jwtClient = new google.auth.JWT(
-	key.client_email, null, key.private_key,
+	googleAPIKey.client_email, null, googleAPIKey.private_key,
 	['https://www.googleapis.com/auth/analytics.readonly'], null);
 
-let ganalytics = jwtClient.authorize(function(err, tokens){
-	if(err){
+let ganalytics = jwtClient.authorize(function(err, tokens) {
+	if (err) {
 		console.info(err);
 		return err;
 	}
@@ -36,7 +36,7 @@ export function analytics(req, res) {
 
 	function arrayIsTrue(array) {
 		for (var value of array) {
-			if(!value){	return false; }
+			if (!value) { return false; }
 		}
 		return true;
 	}

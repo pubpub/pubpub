@@ -1,6 +1,6 @@
 import React from 'react';
 import {IndexRoute, Route} from 'react-router';
-import {App, Analytics, AtomReader, AtomEditor, Editor, EmailVerification, GroupCreate, Femi, GroupProfile, JournalCreate, JournalProfile, JrnlCreate, JrnlProfile, Landing, Login, PubCreate, PubReader, ResetPassword, SignUp, UserProfile, UserSettings} from 'containers';
+import {App, AtomReader, AtomEditor, Editor, EmailVerification, GroupCreate, GroupProfile, JournalCreate, JournalProfile, JrnlCreate, JrnlProfile, Landing, Login, PubCreate, PubReader, ResetPassword, SignUp, UserProfile, UserSettings} from 'containers';
 import {About, AboutJournals, AboutPubs, AboutReviews, NotFound} from 'components';
 
 function loadComponent(component) {
@@ -34,9 +34,6 @@ export default () => {
 			<Route path="/journals/create" getComponent={loadComponent(JournalCreate)}/>
 
 			<Route path="/jrnls/create" getComponent={loadComponent(JrnlCreate)}/>
-
-			<Route path="/femi" component={Femi}/>
-			<Route path="/analytics" component={Analytics}/>
 
 			<Route path="/group/:groupSlug" component={GroupProfile}/>
 			<Route path="/group/:groupSlug/:mode" component={GroupProfile}/>

@@ -4,13 +4,10 @@ import {reducer as formReducer} from 'redux-form';
 import { routerStateReducer } from 'redux-router';
 
 import app from './containers/App/reducer';
-<<<<<<< HEAD
 import atom from './containers/AtomReader/reducer';
 import atomEdit from './containers/AtomEditor/reducer';
-=======
 import femi from './containers/Femi/reducer';
 import analytics from './containers/Analytics/reducer';
->>>>>>> a8c186d6b9041c57f82c0423b3b0540b92311097
 import autocomplete from './containers/Autocomplete/reducer';
 import editor from './containers/Editor/reducer';
 import emailVerification from './containers/EmailVerification/reducer';
@@ -54,13 +51,10 @@ export default combineReducers({
 		},
 	}),
 	app,
-<<<<<<< HEAD
 	atom,
 	atomEdit,
-=======
 	femi,
 	analytics,
->>>>>>> a8c186d6b9041c57f82c0423b3b0540b92311097
 	autocomplete,
 	editor,
 	emailVerification,
