@@ -1,10 +1,12 @@
 import React, {PropTypes} from 'react';
 import Radium, {Style} from 'radium';
+import {safeGetInToJS} from 'utils/safeParse';
 
 import {parser} from './parser';
 import {serializer} from './serializer';
 import {schema} from './schema';
-const {Subscription} = require('subscription');
+import {Subscription} from 'subscription';
+import {Node} from 'prosemirror/dist/model';
 
 let styles;
 let pm;
@@ -17,19 +19,21 @@ export const MarkdownEditor = React.createClass({
 	},
 
 	componentDidMount() {
+		const markdown = safeGetInToJS(this.props.atomEditData, ['currentVersionData', 'content', 'markdown']);
 		prosemirror = require('prosemirror');
-		const {exampleSetup, buildMenuItems} = require("prosemirror/dist/example-setup")
-		const {tooltipMenu, menuBar} = require("prosemirror/dist/menu")
+		const {exampleSetup, buildMenuItems} = require('prosemirror/dist/example-setup');
+		const {tooltipMenu, menuBar} = require('prosemirror/dist/menu');
 		pm = new prosemirror.ProseMirror({
 			place: document.getElementById('atom-reader'),
 			schema: schema,
 			plugins: [exampleSetup.config({menuBar: false, tooltipMenu: false})],
+			doc: !!markdown ? Node.fromJSON(schema, markdown) : null,
 			on: {
 				change: new Subscription,
 			}
 
 		});
-		let menu = buildMenuItems(schema);
+		const menu = buildMenuItems(schema);
 		menuBar.config({float: true, content: menu.fullMenu}).attach(pm);
 
 		pm.on.change.add((evt)=>{
@@ -50,9 +54,10 @@ export const MarkdownEditor = React.createClass({
 	},
 
 	getSaveVersionContent: function() {
-		// return {
-		// 	markdown: this.state.markdown,
-		// };
+		return {
+			// markdown: serializer.serialize(pm.doc)
+			markdown: pm.doc.toJSON(),
+		};
 	},
 
 	render: function() {
@@ -97,6 +102,7 @@ styles = {
 		backgroundColor: 'white',
 		margin: '0 auto',
 		boxShadow: '0px 1px 3px 1px #BBBDC0',
+		minHeight: '600px',
 		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
 			width: 'calc(100%)',
 		},

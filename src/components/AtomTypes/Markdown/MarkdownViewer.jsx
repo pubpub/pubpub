@@ -2,6 +2,8 @@ import React, {PropTypes} from 'react';
 import Radium from 'radium';
 import {Markdown} from 'components';
 import {safeGetInToJS} from 'utils/safeParse';
+import {schema} from './schema';
+import {Node} from 'prosemirror/dist/model';
 
 let styles = {};
 
@@ -11,8 +13,17 @@ export const MarkdownViewer = React.createClass({
 		renderType: PropTypes.string, // full, embed, static-full, static-embed
 	},
 
-	render: function() {
+	componentDidMount() {
 		const markdown = safeGetInToJS(this.props.atomData, ['currentVersionData', 'content', 'markdown']);
+		const html = Node.fromJSON(schema, markdown).content.toDOM();
+		document.getElementById('body').appendChild(html);
+
+		// y = new node
+		// dom = require('testdom')('<html><body></body></html>');
+		// y.content.toDOM({document: dom})
+	},
+
+	render: function() {
 
 		switch (this.props.renderType) {
 		case 'embed':
@@ -21,7 +32,8 @@ export const MarkdownViewer = React.createClass({
 		case 'full':
 		case 'static-full':
 		default:
-			return <Markdown markdown={markdown} />;
+			// return <Markdown markdown={markdown} />;
+			return <div id="body"></div>;
 		}
 
 	}
