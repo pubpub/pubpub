@@ -9,9 +9,13 @@ export const EmbedWrapper = React.createClass({
 		className: PropTypes.string,
 	},
 
+	clicked: function() {
+		console.log('Clicked on ', this.props.source);
+	},
+	
 	render: function() {
 		return (
-			<div className={'pub-embed ' + this.props.className} style={styles.container}>
+			<div className={'pub-embed ' + this.props.className} style={styles.container} onClick={this.clicked}>
 				{this.props.source}				
 			</div>
 		);

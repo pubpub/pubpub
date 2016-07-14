@@ -66,6 +66,7 @@ export const MarkdownEditor = React.createClass({
 			<div style={styles.container}>
 				<Style rules={{
 					'.ProseMirror-content': {outline: 'none', minHeight: '600px', padding: '0em 5em 1em 5em'},
+					'.ProseMirror-selectednode': {outline: '2px solid #808284'}
 				}} />
 
 				<textarea id="markdown" onChange={this.markdownChange} style={styles.textarea}></textarea>
