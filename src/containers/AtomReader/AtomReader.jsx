@@ -163,7 +163,7 @@ export const AtomReader = React.createClass({
 						<div className={'button'} style={styles.button} onClick={()=>{}}>Follow</div>
 					</div> */}
 
-					<div id={'atom-reader'} className={(this.props.meta || safeGetInToJS(this.props.atomData, ['atomData', 'type']) ) && 'atom-reader-meta'}>
+					<div id={'atom-reader'} className={(this.props.meta || safeGetInToJS(this.props.atomData, ['atomData', 'type']) !== 'markdown' ) && 'atom-reader-meta'}>
 
 
 						<AtomReaderHeader
