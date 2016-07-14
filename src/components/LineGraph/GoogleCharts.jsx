@@ -46,7 +46,7 @@ const GoogleCharts = React.createClass({
 
 		var opt = this.props.options;
 
-		var chart = new google.visualization.LineChart(
+		var chart = new google.visualization[this.props.chartType](
 			document.getElementById(this.props.graph_id)
 		);
 
