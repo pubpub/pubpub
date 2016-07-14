@@ -9,7 +9,12 @@
 // });
 
 require('./routes/app-routes');
+<<<<<<< HEAD
 require('./routes/atom-routes');
+=======
+require('./routes/femi-routes');
+require('./routes/analytics-routes');
+>>>>>>> a8c186d6b9041c57f82c0423b3b0540b92311097
 require('./routes/asset-routes');
 require('./routes/autocomplete-routes');
 require('./routes/discussion-routes');

@@ -181,6 +181,8 @@ app.use((req, res) => {
 							<script src="/js/spellcheck.js"></script>
 							<script src="https://cdn.ravenjs.com/2.1.0/raven.min.js"></script>
 
+							<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+
 						</head>
 
 						<body style="width: 100%; margin: 0;">
