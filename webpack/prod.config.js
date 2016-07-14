@@ -75,7 +75,7 @@ module.exports = {
 		new webpack.IgnorePlugin(/\.\/dev/, /\/config$/),
 
 		// optimizations
-		// new webpack.optimize.DedupePlugin(),
+		// new webpack.optimize.DedupePlugin(), // This causes problems with async bundle loading and npm run build.
 		new webpack.optimize.OccurenceOrderPlugin(),
 		new webpack.optimize.UglifyJsPlugin({
 			compress: {

@@ -1,11 +1,9 @@
 import React, {PropTypes} from 'react';
 import Radium from 'radium';
-import {safeGetInToJS} from 'utils/safeParse';
+// import {safeGetInToJS} from 'utils/safeParse';
 import request from 'superagent';
 import Helmet from 'react-helmet';
 
-import {LineGraph} from 'components';
-import {ReactGoogleCharts} from 'components';
 import {GoogleCharts} from 'components';
 
 
@@ -21,7 +19,7 @@ export const AtomReaderAnalytics = React.createClass({
 		};
 	},
 	componentDidMount() {
-		const slug = safeGetInToJS(this.props.atomData, ['atomData', 'slug']);
+		// const slug = safeGetInToJS(this.props.atomData, ['atomData', 'slug']);
 		request.post('/api/analytics').send({
 			// 'input': slug,
 			'input': 'hello',
@@ -39,15 +37,15 @@ export const AtomReaderAnalytics = React.createClass({
 	// },
 
 	dataMax: function(data, ind) {
-		var newArray = [];
-		data.map(function(d){newArray.push(d[ind])})
-		return Math.max(newArray)
+		const newArray = [];
+		data.map(function(index) { newArray.push(index[ind]); });
+		return Math.max(newArray);
 	},
 
 	dataMin: function(data, ind) {
-		var newArray = [];
-		data.map(function(d){newArray.push(d[ind])})
-		return Math.min(newArray)
+		const newArray = [];
+		data.map(function(index) { newArray.push(index[ind]); });
+		return Math.min(newArray);
 	},
 
 	render: function() {
@@ -60,20 +58,11 @@ export const AtomReaderAnalytics = React.createClass({
 
 		const data = this.state.data;
 
-		const lineProps = isData && {
-			width: 360,
-			widthPadH: 40, //Padding values (high, low)
-			widthPadL: 40,
-			height: 160,
-			heightPadH: 20,
-			heightPadL: 20,
-			data: data.dateViewsArray
-		}
 		const gChartProps = isData && {
 			options: {
 				title: 'Views vs Time Comparison',
-				hAxis: {title: 'Time', minValue: this.dataMin(data.dateViewsArray,0), maxValue: this.dataMax(data.dateViewsArray,0)},
-				vAxis: {title: 'Views', minValue: this.dataMin(data.dateViewsArray,1), maxValue: this.dataMax(data.dateViewsArray,1)},
+				hAxis: {title: 'Time', minValue: this.dataMin(data.dateViewsArray, 0), maxValue: this.dataMax(data.dateViewsArray, 0)},
+				vAxis: {title: 'Views', minValue: this.dataMin(data.dateViewsArray, 1), maxValue: this.dataMax(data.dateViewsArray, 1)},
 				legend: 'none'},
 			rows: data.dateViewsArray,
 			columns: [
@@ -85,35 +74,13 @@ export const AtomReaderAnalytics = React.createClass({
 			width: '100%',
 			height: '400px',
 			legend_toggle: true
-		}
+		};
 		return (
 			<div className={'login-container'} style={styles.container}>
 				<Helmet {...metaData} />
 
 				<h1>Analytics</h1>
 
-				{/* <form onSubmit={this.handleAnalyticsSubmit}>
-					<div>
-						<label style={styles.label} htmlFor={'input'}>
-							Slug of Desired
-						</label>
-						<input ref={'input'} id={'input'} name={'input'} type="text" style={styles.input}/>
-					</div>
-
-					<select className={'button'} ref={'item'}>
-						<option value='pub'>Pub</option>
-						<option value='journal'>Journal</option>
-					</select>
-
-					<br/><br/>
-
-					<button className={'button'} onClick={this.handleAnalyticsSubmit}>
-						Submit
-					</button>
-
-				</form> */}
-
-				<br/>
 
 				{isData && <div>
 					<label style={styles.label} htmlFor={'data'}>
@@ -129,24 +96,14 @@ export const AtomReaderAnalytics = React.createClass({
 						Returning Readers: {data.totalReturnViews}
 					</label>
 					<label style={styles.input} htmlFor={'data'}>
-						Average Read Time: {Math.round(data.averageReadTime*100)/100}s
+						Average Read Time: {Math.round(data.averageReadTime * 100) / 100}s
 					</label>
 					<label style={styles.input} htmlFor={'data'}>
-						Total Read Time: {Math.round(data.totalReadTime/36)/100}hrs
+						Total Read Time: {Math.round(data.totalReadTime / 36) / 100}hrs
 					</label>
 
 					<br/>
 		
-					<label style={styles.label} htmlFor={'input'}>D3 Views vs Time Graph</label>
-					<LineGraph lineProps={lineProps} />
-
-					<br/>
-
-					<label style={styles.label} htmlFor={'input'}>GCharts Views vs Time Graph</label>
-					<ReactGoogleCharts {...gChartProps} />
-
-					<br/>
-
 					<label style={styles.label} htmlFor={'input'}>GCharts Views vs Time Graph</label>
 					<GoogleCharts {...gChartProps} />
 
@@ -156,10 +113,10 @@ export const AtomReaderAnalytics = React.createClass({
 						Countries by Views
 					</label>
 
-					{data.countryOrder.slice(0,5).map((item, index)=>{
+					{data.countryOrder.slice(0, 5).map((item, index)=>{
 						return (
 							<label style={styles.input} htmlFor={'data'}>
-								#{index+1}: {item}: {data.countryTotalViews[item]}
+								#{index + 1}: {item}: {data.countryTotalViews[item]}
 							</label>
 						);
 					})}
@@ -170,10 +127,10 @@ export const AtomReaderAnalytics = React.createClass({
 						Cities by Views
 					</label>
 
-					{data.cityOrder.slice(0,3).map((item, index)=>{
+					{data.cityOrder.slice(0, 3).map((item, index)=>{
 						return (
 							<label style={styles.input} htmlFor={'data'}>
-								#{index+1}: {item}: {data.cityTotalViews[item]}
+								#{index + 1}: {item}: {data.cityTotalViews[item]}
 							</label>
 						);
 					})}
@@ -184,10 +141,10 @@ export const AtomReaderAnalytics = React.createClass({
 						Continents by Views
 					</label>
 
-					{data.continentOrder.slice(0,3).map((item, index)=>{
+					{data.continentOrder.slice(0, 3).map((item, index)=>{
 						return (
 							<label style={styles.input} htmlFor={'data'}>
-								#{index+1}: {item}: {data.continentTotalViews[item]}
+								#{index + 1}: {item}: {data.continentTotalViews[item]}
 							</label>
 						);
 					})}

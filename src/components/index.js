@@ -5,6 +5,7 @@ export AboutReviews from './About/AboutReviews';
 export Button from './Button/Button';
 export CustomizableForm from './CustomizableForm/CustomizableForm';
 export Formatting from './Formatting/Formatting';
+export GoogleCharts from './GoogleCharts/GoogleCharts';
 export HorizontalNav from './HorizontalNav/HorizontalNav';
 export ImageCropper from './ImageCropper/ImageCropper';
 export License from './License/License';

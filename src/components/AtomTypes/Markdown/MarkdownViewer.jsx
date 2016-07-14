@@ -75,7 +75,7 @@ export const MarkdownViewer = React.createClass({
 
 	render: function() {
 		const markdown = safeGetInToJS(this.props.atomData, ['currentVersionData', 'content', 'markdown']);
-		const output = this.iterateChildren(markdown.content);
+		const output = this.iterateChildren(markdown && markdown.content);
 
 		switch (this.props.renderType) {
 		case 'embed':
