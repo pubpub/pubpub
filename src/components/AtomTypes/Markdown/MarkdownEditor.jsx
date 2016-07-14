@@ -37,6 +37,7 @@ export const MarkdownEditor = React.createClass({
 		menuBar.config({float: true, content: menu.fullMenu}).attach(pm);
 
 		pm.on.change.add((evt)=>{
+			console.log(pm.doc.toJSON());
 			// const t0 = performance.now();
 			const md = serializer.serialize(pm.doc);
 			document.getElementById('markdown').value = md;

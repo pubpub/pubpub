@@ -47,7 +47,7 @@ export const serializer = new MarkdownSerializer({
 		state.write('![' + state.esc(node.attrs.alt || '') + '](' + state.esc(node.attrs.src) + (node.attrs.title ? ' ' + state.quote(node.attrs.title) : '') + ')');
 	},
 	embed(state, node) {
-		state.write('[[source=\'' + node.attrs.source + '\' className=\'' + node.attrs.className + '\']]');
+		state.write('[[source=\"' + node.attrs.source + '\" className=\"' + node.attrs.className + '\"]]');
 	},
 	emoji(state, node) {
 		state.write(':' + node.attrs.markup + ':');

@@ -97,6 +97,8 @@ class Emoji extends Inline {
 // - **`id`**: An option id for styling to linking.
 // - **`align`**: inline, left, right, or full
 // - **`size`**: CSS valid width
+// - **`caption`**: String caption to place under the embed
+// - **`data`**: Cached version/atom data. This is not serialized into markdown, but is kept here for fast rendering
 class Embed extends Inline {
 	get attrs() {
 		return {
@@ -105,6 +107,8 @@ class Embed extends Inline {
 			id: new Attribute({default: ''}),
 			align: new Attribute({default: 'full'}),
 			size: new Attribute({default: '70%'}),
+			caption: new Attribute({default: ''}),
+			data: new Attribute({default: {}})
 		};
 	}
 	get draggable() { return true; }

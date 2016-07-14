@@ -12,9 +12,7 @@ export const EmbedWrapper = React.createClass({
 	render: function() {
 		return (
 			<div className={'pub-embed ' + this.props.className} style={styles.container}>
-				{this.props.source}
-				
-				
+				{this.props.source}				
 			</div>
 		);
 	}

@@ -180,7 +180,6 @@
 
 .pagebreak {
 	opacity: 0 !important;
-	page-break-before: always !important;
 }
 
 /*HIGHLIGHT STYLING*/

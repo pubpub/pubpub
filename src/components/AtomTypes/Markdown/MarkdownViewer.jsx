@@ -16,67 +16,58 @@ export const MarkdownViewer = React.createClass({
 
 	componentDidMount() {
 		// const markdown = safeGetInToJS(this.props.atomData, ['currentVersionData', 'content', 'markdown']);
-		// const html = Node.fromJSON(schema, markdown).content.toDOM();
-		// document.getElementById('body').appendChild(html);
-
-		// y = new node
-		// dom = require('testdom')('<html><body></body></html>');
-		// y.content.toDOM({document: dom})
-
-		const markdown = safeGetInToJS(this.props.atomData, ['currentVersionData', 'content', 'markdown']);
-
-		const t0 = performance.now();
-		const output = this.iterateChildren(markdown.content);
-		const t1 = performance.now();
-		console.log('JSON -> React took ' + (t1 - t0) + ' milliseconds.');
+		// const t0 = performance.now();
+		// const output = this.iterateChildren(markdown.content);
+		// const t1 = performance.now();
+		// console.log('JSON -> React took ' + (t1 - t0) + ' milliseconds.');
 	},
 
 	iterateChildren: function(item) {
 		if (!item) {return null;}
 
-		return item.map((node)=>{
+		return item.map((node, index)=>{
 			switch (node.type) {
 			case 'heading': 
-				return React.createElement('h' + node.attrs.level, {}, this.iterateChildren(node.content));
+				return React.createElement('h' + node.attrs.level, {key: index}, this.iterateChildren(node.content));
 				// return <h1>{this.iterateChildren(node.content)}</h1>;
 			case 'blockquote':
-				return <blockquote>{this.iterateChildren(node.content)}</blockquote>;
+				return <blockquote key={index}>{this.iterateChildren(node.content)}</blockquote>;
 			case 'ordered_list': 
-				return <ol start={node.attrs.order === 1 ? null : node.attrs.oder}>{this.iterateChildren(node.content)}</ol>;
+				return <ol start={node.attrs.order === 1 ? null : node.attrs.oder} key={index}>{this.iterateChildren(node.content)}</ol>;
 			case 'bullet_list':
-				return <ul>{this.iterateChildren(node.content)}</ul>;
+				return <ul key={index}>{this.iterateChildren(node.content)}</ul>;
 			case 'list_item':
-				return <li>{this.iterateChildren(node.content)}</li>;
+				return <li key={index}>{this.iterateChildren(node.content)}</li>;
 			case 'horizontal_rule':
-				return <hr/>;
+				return <hr key={index}/>;
 			case 'code_block':
-				return <pre><code>{this.iterateChildren(node.content)}</code></pre>;
+				return <pre key={index}><code>{this.iterateChildren(node.content)}</code></pre>;
 			case 'paragraph':
-				return <p>{this.iterateChildren(node.content)}</p>;
+				return <div className={'p-block'} key={index}>{this.iterateChildren(node.content)}</div>;
 			case 'image':
-				return <img {...node.attrs} />;
+				return <img {...node.attrs} key={index}/>;
 			case 'hard_break':
-				return <br/>;
+				return <br key={index}/>;
 			case 'text':
 				const marks = node.marks || [];
 				return marks.reduce((previous, current)=>{
 					switch (current._) {
 					case 'strong':
-						return <strong>{previous}</strong>;
+						return <strong key={index}>{previous}</strong>;
 					case 'em':
-						return <em>{previous}</em>;
+						return <em key={index}>{previous}</em>;
 					case 'code':
-						return <code>{previous}</code>;
+						return <code key={index}>{previous}</code>;
 					case 'link':
-						return <a href={current.href} title={current.title}>{previous}</a>;
+						return <a href={current.href} title={current.title} key={index}>{previous}</a>;
 					default: 
 						return previous;
 					}
 				}, node.text);
 			case 'embed':
-				return <EmbedWrapper source={node.attrs.source} className={node.attrs.className}/>;
+				return <EmbedWrapper source={node.attrs.source} className={node.attrs.className} key={index}/>;
 			default:
-				console.log(node);
+				console.log('Error with ', node);
 				// return <div>{node.type}: {this.iterateChildren(node.content)}</div>;
 			}
 		});
