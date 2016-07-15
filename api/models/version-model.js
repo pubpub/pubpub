@@ -20,6 +20,7 @@ module.exports = mongoose.model('Version', versionSchema);
 // Document:
 // -----------
 // content: {
+//  docJSON:
 // 	markdown:
 // 	style:
 // }

@@ -3,8 +3,19 @@ const {insertCSS} = require("prosemirror/dist/util/dom");
 const className = "ProseMirror-pubpub-setup-style"
 exports.className = className
 // const scope = "." + cls + " .ProseMirror-content"
+// ${scope} img { cursor: default; }
 
 insertCSS(`
+
+.ProseMirror-content {
+  outline: none;
+  min-height: 600px; 
+  padding: 0em 5em 1em 5em;
+}
+
+.ProseMirror-selectednode {
+  outline: 2px solid #808284;
+}
 
 .ProseMirror-menubar {
   color: #AAA;
@@ -55,5 +66,3 @@ insertCSS(`
 }
 
 `)
-
-// ${scope} img { cursor: default; }

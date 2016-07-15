@@ -1,5 +1,5 @@
 import React, {PropTypes} from 'react';
-import Radium, {Style} from 'radium';
+import Radium from 'radium';
 import {safeGetInToJS} from 'utils/safeParse';
 
 import {parser} from './parser';
@@ -10,7 +10,6 @@ import {Node} from 'prosemirror/dist/model';
 
 let styles;
 let pm;
-let prosemirror;
 
 export const MarkdownEditor = React.createClass({
 	propTypes: {
@@ -24,92 +23,68 @@ export const MarkdownEditor = React.createClass({
 	},
 
 	componentDidMount() {
-		window.toggleMedia = this.toggleMedia;
-
-		const markdown = safeGetInToJS(this.props.atomEditData, ['currentVersionData', 'content', 'markdown']);
-		prosemirror = require('prosemirror');
+		// window.toggleMedia = this.toggleMedia;
+		const docJSON = safeGetInToJS(this.props.atomEditData, ['currentVersionData', 'content', 'docJSON']);
+		const prosemirror = require('prosemirror');
 		const {pubpubSetup} = require('./pubpubSetup');
-		const {buildMenuItems} = require('./menu');
-		const {menuBar, MenuItem} = require('prosemirror/dist/menu');
 		
 		pm = new prosemirror.ProseMirror({
 			place: document.getElementById('atom-reader'),
 			schema: schema,
-			// plugins: [pubpubSetup(this, {cat: 'funky'})],
 			plugins: [pubpubSetup],
-			doc: !!markdown ? Node.fromJSON(schema, markdown) : null,
+			doc: !!docJSON ? Node.fromJSON(schema, docJSON) : null,
 			on: {
 				change: new Subscription,
 				doubleClickOn: new StoppableSubscription,
 			}
-
 		});
 
 		pm.on.change.add((evt)=>{
-			// const t0 = performance.now();
 			const md = serializer.serialize(pm.doc);
 			document.getElementById('markdown').value = md;
-			// const t1 = performance.now();
-			// console.log('Prose -> Markdown took ' + (t1 - t0) + ' milliseconds.');
 		});
 
 		pm.on.doubleClickOn.add((pos, node, nodePos)=>{
-			// const t0 = performance.now();
 			if (node.type.name === 'embed') {
-				function done(attrs) {
-			        pm.tr.setNodeType(nodePos, node.type, attrs).apply();
-			    }
+				const done = (attrs)=> { 
+					pm.tr.setNodeType(nodePos, node.type, attrs).apply(); 
+				};
 				window.toggleMedia(pm, done, node);
 				return true;
 			}
-			// console.log(arguments);
-			// const ppm = pm;
-
-			// debugger;
-			// pm.tr.setNodeType(nodePos, node.type, {source:"gnarly"}).apply();
-			// const t1 = performance.now();
-			// console.log('Prose -> Markdown took ' + (t1 - t0) + ' milliseconds.');
 		});
 
 
 	},
 
 	markdownChange: function(evt) {
-		// const t0 = performance.now();
 		pm.setDoc(parser.parse(evt.target.value));
-		// const t1 = performance.now();
-		// console.log('Markdown -> Prose took ' + (t1 - t0) + ' milliseconds.');
 	},
 
 	getSaveVersionContent: function() {
 		return {
-			// markdown: serializer.serialize(pm.doc)
-			markdown: pm.doc.toJSON(),
+			markdown: serializer.serialize(pm.doc),
+			docJSON: pm.doc.toJSON(),
 		};
 	},
 
-	toggleMedia: function(pm, callback, node) {
-		console.log(arguments);
-		this.setState({showMedia: !this.state.showMedia});
-		const cb = callback || function(eee){console.log('You shouldnt be seeing this ', eee);};
-		setTimeout(function(){
-			cb({source: "omg", className: "sickClass"});	
-		}, 1500);
+	// toggleMedia: function(pm, callback, node) {
+	// 	console.log(arguments);
+	// 	this.setState({showMedia: !this.state.showMedia});
+	// 	const cb = callback || function(eee){console.log('You shouldnt be seeing this ', eee);};
+	// 	setTimeout(function() {
+	// 		cb({source: "omg", className: "sickClass"});	
+	// 	}, 1500);
 		
-	},
+	// },
 
 	render: function() {
 		return (
 			<div style={styles.container}>
-				<Style rules={{
-					'.ProseMirror-content': {outline: 'none', minHeight: '600px', padding: '0em 5em 1em 5em'},
-					'.ProseMirror-selectednode': {outline: '2px solid #808284'}
-				}} />
-
+				
 				<textarea id="markdown" onChange={this.markdownChange} style={styles.textarea}></textarea>
 				<div id={'atom-reader'} style={styles.wsywigBlock}></div>
-
-				<div style={[styles.media, !this.state.showMedia && {opacity: 0, pointerEvents: 'none', transform: 'scale(0.9)'}]}>MEDIA</div>
+				{/* <div style={[styles.media, !this.state.showMedia && {opacity: 0, pointerEvents: 'none', transform: 'scale(0.9)'}]}>MEDIA</div> */}
 				
 			</div>
 		);
