@@ -1,9 +1,6 @@
 import React, {PropTypes} from 'react';
 import Radium from 'radium';
-import {Markdown} from 'components';
 import {safeGetInToJS} from 'utils/safeParse';
-import {schema} from './schema';
-import {Node} from 'prosemirror/dist/model';
 import EmbedWrapper from './EmbedWrapper';
 
 let styles = {};
@@ -14,14 +11,6 @@ export const MarkdownViewer = React.createClass({
 		renderType: PropTypes.string, // full, embed, static-full, static-embed
 	},
 
-	componentDidMount() {
-		// const markdown = safeGetInToJS(this.props.atomData, ['currentVersionData', 'content', 'markdown']);
-		// const t0 = performance.now();
-		// const output = this.iterateChildren(markdown.content);
-		// const t1 = performance.now();
-		// console.log('JSON -> React took ' + (t1 - t0) + ' milliseconds.');
-	},
-
 	iterateChildren: function(item) {
 		if (!item) {return null;}
 
@@ -29,7 +18,6 @@ export const MarkdownViewer = React.createClass({
 			switch (node.type) {
 			case 'heading': 
 				return React.createElement('h' + node.attrs.level, {key: index}, this.iterateChildren(node.content));
-				// return <h1>{this.iterateChildren(node.content)}</h1>;
 			case 'blockquote':
 				return <blockquote key={index}>{this.iterateChildren(node.content)}</blockquote>;
 			case 'ordered_list': 

@@ -21,23 +21,42 @@ export const MarkdownEditor = React.createClass({
 	componentDidMount() {
 		const markdown = safeGetInToJS(this.props.atomEditData, ['currentVersionData', 'content', 'markdown']);
 		prosemirror = require('prosemirror');
-		const {exampleSetup, buildMenuItems} = require('prosemirror/dist/example-setup');
-		const {tooltipMenu, menuBar} = require('prosemirror/dist/menu');
+		const {pubpubSetup} = require('./pubpubSetup');
+		const {buildMenuItems} = require('./menu');
+		const {menuBar, MenuItem} = require('prosemirror/dist/menu');
+		
 		pm = new prosemirror.ProseMirror({
 			place: document.getElementById('atom-reader'),
 			schema: schema,
-			plugins: [exampleSetup.config({menuBar: false, tooltipMenu: false})],
+			plugins: [pubpubSetup],
 			doc: !!markdown ? Node.fromJSON(schema, markdown) : null,
 			on: {
 				change: new Subscription,
 			}
 
 		});
-		const menu = buildMenuItems(schema);
-		menuBar.config({float: true, content: menu.fullMenu}).attach(pm);
+		// const addEmbed = new MenuItem({
+		//     title: "Add an embed",
+		//     run(pm) {
+		//       console.log('RUnning embed');
+		//     },
+		//     select(pm) {
+		//       return true;
+		//     },
+		//     onDeselect: 'disable',
+		//     label: "Embed"
+		//   });
+
+		// const menu = buildMenuItems(schema);
+		// console.log('exampleSetup', exampleSetup);
+		// console.log('menu', menu);
+		// console.log('menu.fullMenu', menu.fullMenu);
+		// menuBar.config({float: true, content: menu.fullMenu}).attach(pm);
+		// console.log([addEmbed])
+		// console.log([[addEmbed]])
+		// menuBar.config({float: true, content: [[addEmbed]]}).attach(pm);
 
 		pm.on.change.add((evt)=>{
-			console.log(pm.doc.toJSON());
 			// const t0 = performance.now();
 			const md = serializer.serialize(pm.doc);
 			document.getElementById('markdown').value = md;
