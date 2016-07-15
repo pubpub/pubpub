@@ -11,7 +11,7 @@ import {Node} from 'prosemirror/dist/model';
 let styles;
 let pm;
 
-export const MarkdownEditor = React.createClass({
+export const DocumentEditor = React.createClass({
 	propTypes: {
 		atomEditData: PropTypes.object,
 		loginData: PropTypes.object,
@@ -91,7 +91,7 @@ export const MarkdownEditor = React.createClass({
 	}
 });
 
-export default Radium(MarkdownEditor);
+export default Radium(DocumentEditor);
 
 styles = {
 	container: {

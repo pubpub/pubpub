@@ -1,8 +1,8 @@
 import ImageEditor from './Image/ImageEditor';
 import ImageViewer from './Image/ImageViewer';
 
-import MarkdownEditor from './Markdown/MarkdownEditor';
-import MarkdownViewer from './Markdown/MarkdownViewer';
+import DocumentEditor from './Document/DocumentEditor';
+import DocumentViewer from './Document/DocumentViewer';
 
 import JupyterEditor from './Jupyter/JupyterEditor';
 import JupyterViewer from './Jupyter/JupyterViewer';
@@ -15,9 +15,9 @@ export default {
 		editor: ImageEditor,
 		viewer: ImageViewer
 	},
-	markdown: {
-		editor: MarkdownEditor,
-		viewer: MarkdownViewer
+	document: {
+		editor: DocumentEditor,
+		viewer: DocumentViewer
 	},
 	jupyter: {
 		editor: JupyterEditor,

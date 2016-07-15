@@ -3,9 +3,7 @@ import Radium from 'radium';
 import {safeGetInToJS} from 'utils/safeParse';
 import EmbedWrapper from './EmbedWrapper';
 
-let styles = {};
-
-export const MarkdownViewer = React.createClass({
+export const DocumentViewer = React.createClass({
 	propTypes: {
 		atomData: PropTypes.object,
 		renderType: PropTypes.string, // full, embed, static-full, static-embed
@@ -56,7 +54,6 @@ export const MarkdownViewer = React.createClass({
 				return <EmbedWrapper source={node.attrs.source} className={node.attrs.className} key={index}/>;
 			default:
 				console.log('Error with ', node);
-				// return <div>{node.type}: {this.iterateChildren(node.content)}</div>;
 			}
 		});
 	},
@@ -68,20 +65,14 @@ export const MarkdownViewer = React.createClass({
 		switch (this.props.renderType) {
 		case 'embed':
 		case 'static-embed':
-			return <div>Check out this sweet markdown!</div>;
+			return <div>Check out this sweet document!</div>;
 		case 'full':
 		case 'static-full':
 		default:
-			// return <Markdown markdown={markdown} />;
-			// return <div id="body"></div>;
 			return <div>{output}</div>;
 		}
 
 	}
 });
 
-export default Radium(MarkdownViewer);
-
-styles = {
-
-};
+export default Radium(DocumentViewer);
