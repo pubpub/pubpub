@@ -24,6 +24,8 @@ function promptLinkAttrs(pm, callback) {
   }).open(callback)
 }
 
+
+
 // : (ProseMirror, (attrs: ?Object))
 // A function that will prompt for the attributes of an [image
 // node](#Image) (using `FieldPrompt`), and call a callback with the
@@ -178,7 +180,8 @@ function buildMenuItems(schema) {
       r.insertEmbed = insertItem(node, {
         title: "Insert Embed",
         icon: {text: 'embed'},
-        attrs: {source: 'fish', className: 'myclass'},
+        // attrs: {source: 'fish', className: 'myclass'},
+        attrs: (pm, c) => window.toggleMedia(pm, c, node)
       })
 
 

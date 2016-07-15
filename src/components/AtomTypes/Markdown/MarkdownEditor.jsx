@@ -5,7 +5,7 @@ import {safeGetInToJS} from 'utils/safeParse';
 import {parser} from './parser';
 import {serializer} from './serializer';
 import {schema} from './schema';
-import {Subscription} from 'subscription';
+import {Subscription, StoppableSubscription} from 'subscription';
 import {Node} from 'prosemirror/dist/model';
 
 let styles;
@@ -17,8 +17,15 @@ export const MarkdownEditor = React.createClass({
 		atomEditData: PropTypes.object,
 		loginData: PropTypes.object,
 	},
+	getInitialState() {
+		return {
+			showMedia: false,
+		};
+	},
 
 	componentDidMount() {
+		window.toggleMedia = this.toggleMedia;
+
 		const markdown = safeGetInToJS(this.props.atomEditData, ['currentVersionData', 'content', 'markdown']);
 		prosemirror = require('prosemirror');
 		const {pubpubSetup} = require('./pubpubSetup');
@@ -28,10 +35,12 @@ export const MarkdownEditor = React.createClass({
 		pm = new prosemirror.ProseMirror({
 			place: document.getElementById('atom-reader'),
 			schema: schema,
+			// plugins: [pubpubSetup(this, {cat: 'funky'})],
 			plugins: [pubpubSetup],
 			doc: !!markdown ? Node.fromJSON(schema, markdown) : null,
 			on: {
 				change: new Subscription,
+				doubleClickOn: new StoppableSubscription,
 			}
 
 		});
@@ -43,6 +52,25 @@ export const MarkdownEditor = React.createClass({
 			// const t1 = performance.now();
 			// console.log('Prose -> Markdown took ' + (t1 - t0) + ' milliseconds.');
 		});
+
+		pm.on.doubleClickOn.add((pos, node, nodePos)=>{
+			// const t0 = performance.now();
+			if (node.type.name === 'embed') {
+				function done(attrs) {
+			        pm.tr.setNodeType(nodePos, node.type, attrs).apply();
+			    }
+				window.toggleMedia(pm, done, node);
+				return true;
+			}
+			// console.log(arguments);
+			// const ppm = pm;
+
+			// debugger;
+			// pm.tr.setNodeType(nodePos, node.type, {source:"gnarly"}).apply();
+			// const t1 = performance.now();
+			// console.log('Prose -> Markdown took ' + (t1 - t0) + ' milliseconds.');
+		});
+
 
 	},
 
@@ -60,6 +88,16 @@ export const MarkdownEditor = React.createClass({
 		};
 	},
 
+	toggleMedia: function(pm, callback, node) {
+		console.log(arguments);
+		this.setState({showMedia: !this.state.showMedia});
+		const cb = callback || function(eee){console.log('You shouldnt be seeing this ', eee);};
+		setTimeout(function(){
+			cb({source: "omg", className: "sickClass"});	
+		}, 1500);
+		
+	},
+
 	render: function() {
 		return (
 			<div style={styles.container}>
@@ -70,6 +108,8 @@ export const MarkdownEditor = React.createClass({
 
 				<textarea id="markdown" onChange={this.markdownChange} style={styles.textarea}></textarea>
 				<div id={'atom-reader'} style={styles.wsywigBlock}></div>
+
+				<div style={[styles.media, !this.state.showMedia && {opacity: 0, pointerEvents: 'none', transform: 'scale(0.9)'}]}>MEDIA</div>
 				
 			</div>
 		);
@@ -106,6 +146,16 @@ styles = {
 		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
 			width: 'calc(100%)',
 		},
+	},
+	media: {
+		position: 'fixed',
+		width: 100,
+		height: 100,
+		backgroundColor: 'red',
+		top: '50px',
+		opacity: 1,
+		transform: 'scale(1.0)',
+		transition: '.1s linear opacity, .1s linear transform',
 	},
 	
 };

@@ -43,6 +43,7 @@ const {setBlockType} = require("prosemirror/dist/edit").commands;
 //   : Can be used to [adjust](#buildKeymap) the key bindings created.
 exports.pubpubSetup = new Plugin(class {
   constructor(pm, options) {
+    console.log(pm, options);
     pm.wrapper.classList.add(className)
     this.keymap = buildKeymap(pm.schema, options.mapKeys)
     pm.addKeymap(this.keymap)
@@ -50,12 +51,27 @@ exports.pubpubSetup = new Plugin(class {
     let rules = inputRules.ensure(pm)
     this.inputRules.forEach(rule => rules.addRule(rule))
 
+    // Block Cntrl-S from launching the Browser Save window
     document.getElementsByClassName('ProseMirror')[0].addEventListener("keydown", function(e) {
     if (e.keyCode == 83 && (navigator.platform.match("Mac") ? e.metaKey : e.ctrlKey)) {
         e.preventDefault();
         e.stopPropagation();
       }
     }, false);
+
+    // Listen for edit clicks
+    // document.getElementsByClassName('ProseMirror')[0].addEventListener("dblclick", function(e) {
+    //   console.log('got double');
+    //   console.log(pm);
+    //   const nnode = Node;
+    //   debugger;
+    // }, false);
+
+
+    // setNodeType(pos: number, type: ?NodeType, attrs: ?Object)
+
+
+
 
     let builtMenu
     this.barConf = options.menuBar
@@ -101,6 +117,7 @@ function buildInputRules(schema) {
     if (node instanceof BulletList) result.push(bulletListRule(node))
     if (node instanceof CodeBlock) result.push(codeBlockRule(node))
     if (node instanceof Heading) result.push(headingRule(node, 6))
+
     const x = new InputRule(/\[\[$/, "[", function (pm, match, pos) {
       console.log('yo guy');
       // const nodeType = Embed;
@@ -109,9 +126,10 @@ function buildInputRules(schema) {
       var start = pos - match[0].length;
       var attrs = getAttrs instanceof Function ? getAttrs(match) : getAttrs;
       var tr = pm.tr.delete(start, pos);
-      const y = pm.schema.nodes.embed.create({source:"cat"})
-      tr.insert(start, y);
-      tr.apply();
+      // const y = pm.schema.nodes.embed.create({source:"cat"})
+      // const y = pm.schema.nodes.embed.create((pm, c) => window.toggleMedia(pm, c, node))
+      // tr.insert(start, y);
+      // tr.apply();
       // var $pos = tr.doc.resolve(start),
       //     range = $pos.blockRange(),
       //     wrapping = range && findWrapping(range, nodeType, attrs);
@@ -127,15 +145,20 @@ function buildInputRules(schema) {
       // y = new nnode(new eembed(), {source:"cat"})
       // y = new nnode(eembed, {source:"cat"})
 
-      // function done(attrs) {
-      //   pm.tr.replaceSelection(new Embed().createAndFill(attrs, null)).apply()
-      // }
+      function done(attrs) {
+        const y = pm.schema.nodes.embed.create(attrs)
+        tr.insert(start, y);
+        tr.apply();
+      }
+      window.toggleMedia(pm, done, node);
+
 
 
       // console.log(Embed);
-      // // const options = {};
-      // // if (options.attrs instanceof Function) options.attrs(pm, done)
-      // // else done({source: "cat", className: "Fred"})
+      // const options = {};
+      // if (options.attrs instanceof Function) options.attrs(pm, done)
+      // else done({source: "empty", className: "empty"})
+
       // done({source: "cat", className: "Fred"});
 
       // setBlockType(Embed, {source: "cat", className: "Fred"})(pm, true)
