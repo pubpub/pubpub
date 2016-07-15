@@ -18,6 +18,7 @@ require('./routes/group-routes');
 require('./routes/journal-routes');
 require('./routes/jrnl-routes');
 require('./routes/login-routes');
+require('./routes/link-routes');
 require('./routes/pub-routes');
 require('./routes/signup-routes');
 require('./routes/user-routes');

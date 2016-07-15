@@ -15,7 +15,8 @@ export const DocumentViewer = React.createClass({
 		return item.map((node, index)=>{
 			switch (node.type) {
 			case 'heading': 
-				return React.createElement('h' + node.attrs.level, {key: index}, this.iterateChildren(node.content));
+				const id = node.content[0].text.replace(/\s/g, '-').toLowerCase();
+				return React.createElement('h' + node.attrs.level, {key: index, id: id}, this.iterateChildren(node.content));
 			case 'blockquote':
 				return <blockquote key={index}>{this.iterateChildren(node.content)}</blockquote>;
 			case 'ordered_list': 

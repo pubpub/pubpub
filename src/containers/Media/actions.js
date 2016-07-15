@@ -4,13 +4,9 @@
 // All action types are defined as constants. Do not manually pass action
 // types as strings in action creators
 /*--------*/
-export const CREATE_ASSET_LOAD = 'asset/CREATE_ASSET_LOAD';
-export const CREATE_ASSET_SUCCESS = 'asset/CREATE_ASSET_SUCCESS';
-export const CREATE_ASSET_FAIL = 'asset/CREATE_ASSET_FAIL';
-
-export const UPDATE_ASSET_LOAD = 'asset/UPDATE_ASSET_LOAD';
-export const UPDATE_ASSET_SUCCESS = 'asset/UPDATE_ASSET_SUCCESS';
-export const UPDATE_ASSET_FAIL = 'asset/UPDATE_ASSET_FAIL';
+export const GET_MEDIA_LOAD = 'asset/GET_MEDIA_LOAD';
+export const GET_MEDIA_SUCCESS = 'asset/GET_MEDIA_SUCCESS';
+export const GET_MEDIA_FAIL = 'asset/GET_MEDIA_FAIL';
 
 /*--------*/
 // Define Action creators
@@ -19,31 +15,11 @@ export const UPDATE_ASSET_FAIL = 'asset/UPDATE_ASSET_FAIL';
 // action objects (e.g. {type:example, payload:data} ) within dispatch()
 // function calls
 /*--------*/
-export function createAsset(assetObject) {
+export function getMedia(filterParams) {
 	return {
-		types: [CREATE_ASSET_LOAD, CREATE_ASSET_SUCCESS, CREATE_ASSET_FAIL],
-		promise: (client) => client.post('/assetCreate', {data: {
-			assetObject: assetObject
+		types: [GET_MEDIA_LOAD, GET_MEDIA_SUCCESS, GET_MEDIA_FAIL],
+		promise: (client) => client.get('/getMedia', {params: {
+			filterParams: filterParams
 		}})
-	};
-}
-
-export function updateAsset(assetObject) {
-
-	return {
-		types: [UPDATE_ASSET_LOAD, UPDATE_ASSET_SUCCESS, UPDATE_ASSET_FAIL],
-		promise: (client) => client.post('/assetUpdate', {data: {
-			assetObject: assetObject
-		}})
-	};
-}
-
-export function createHighlight(assetObject) {
-	return {
-		types: [CREATE_ASSET_LOAD, CREATE_ASSET_SUCCESS, CREATE_ASSET_FAIL],
-		promise: (client) => client.post('/assetCreate', {data: {
-			assetObject: assetObject
-		}}),
-		isHighlight: true,
 	};
 }

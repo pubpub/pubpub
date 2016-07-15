@@ -15,6 +15,8 @@ export const EmbedWrapper = React.createClass({
 
 	render: function() {
 		const data = this.props.data || {};
+		// Data is the version object with a populated parent field.
+		// The parent field is the atomData field
 		const atomData = ensureImmutable({ atomData: data.parent, currentVersionData: data });
 
 

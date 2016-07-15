@@ -17,6 +17,7 @@ import jrnlCreate from './containers/JrnlCreate/reducer';
 import jrnl from './containers/JrnlProfile/reducer';
 import landing from './containers/Landing/reducer';
 import login from './containers/Login/reducer';
+import media from './containers/Media/reducer';
 import signUp from './containers/SignUp/reducer';
 import user from './containers/UserProfile/reducer';
 import userSettings from './containers/UserSettings/reducer';
@@ -62,6 +63,7 @@ export default combineReducers({
 	jrnl,
 	landing,
 	login,
+	media,
 	signUp,
 	user,
 	userSettings,

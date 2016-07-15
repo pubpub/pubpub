@@ -1,13 +1,14 @@
 import React, { PropTypes } from 'react';
 import {connect} from 'react-redux';
 import Radium from 'radium';
+import {safeGetInToJS} from 'utils/safeParse';
 
 // import {globalStyles} from 'utils/styleConstants';
 // import {globalMessages} from 'utils/globalMessages';
 // import {FormattedMessage} from 'react-intl';
 // import Dropzone from 'react-dropzone';
 // import {s3Upload} from 'utils/uploadFile';
-// import {createAsset, updateAsset} from './actions';
+import {getMedia} from './actions';
 
 let styles;
 
@@ -25,6 +26,7 @@ export const Media = React.createClass({
 	},
 
 	componentDidMount() {
+		this.props.dispatch(getMedia());
 		window.toggleMedia = this.toggleMedia;
 	},
 
@@ -50,15 +52,18 @@ export const Media = React.createClass({
 				url: 'https://assets.pubpub.org/uiyvascj/1468617127681.gif',
 			}
 		};
+		this.saveItem(versionData);
+	},
 
+	saveItem: function(item) {
 		this.state.closeCallback({
-			source: versionData._id, 
+			source: item._id, 
 			className: 'embed',
-			id: versionData._id,
+			id: item._id,
 			align: 'full',
 			size: '100%',
 			caption: 'Caption here',
-			data: versionData,
+			data: item,
 		});
 		this.setState({
 			showMedia: false,
@@ -68,12 +73,16 @@ export const Media = React.createClass({
 
 	render: function() {
 
+		const mediaItems = safeGetInToJS(this.props.mediaData, ['mediaItems']) || [];
 		return (
 
 			<div style={[styles.container, !this.state.showMedia && {opacity: '0', pointerEvents: 'none'}]}>
 				<div style={styles.content}>
 					<p>Media</p>
 
+					{mediaItems.map((item, index)=> {
+						return <div key={'media-item-' + index} onClick={this.saveItem.bind(this, item)} style={styles.item}>{item.type}</div>;
+					})}
 					<div className={'button'} onClick={this.save}>Save</div>
 				</div>
 				
@@ -108,5 +117,14 @@ styles = {
 		width: '600px',
 		margin: '20vh auto 0 auto',
 		height: '300px',
+		overflow: 'hidden',
+		overflowY: 'scroll',
 	},
+	item: {
+		margin: '1em',
+		backgroundColor: '#F3F3F4',
+		cursor: 'pointer',
+		padding: '2em',
+		display: 'inline-block',
+	}
 };
