@@ -1,4 +1,5 @@
 import {StrongMark, EmMark, CodeMark, LinkMark, Image, BulletList, OrderedList, BlockQuote, Heading, Paragraph, CodeBlock, HorizontalRule} from 'prosemirror/dist/schema-basic';
+import {Embed} from './schema';
 import {toggleMarkItem, insertItem, wrapItem, wrapListItem, blockTypeItem, Dropdown, DropdownSubmenu, joinUpItem, liftItem, selectParentNodeItem, undoItem, redoItem, icons, MenuItem} from 'prosemirror/dist/menu';
 import {FieldPrompt, TextField} from 'prosemirror/dist/ui';
 
@@ -122,13 +123,13 @@ function buildMenuItems(schema) {
   for (let name in schema.marks) {
     let mark = schema.marks[name]
     if (mark instanceof StrongMark)
-      r.toggleStrong = toggleMarkItem(mark, {title: "Toggle strong style", label: 'TOOSTRONG'})
+      r.toggleStrong = toggleMarkItem(mark, {title: "Toggle strong style", icon: {text: 'bold'} })
     if (mark instanceof EmMark)
-      r.toggleEm = toggleMarkItem(mark, {title: "Toggle emphasis", icon: icons.em})
+      r.toggleEm = toggleMarkItem(mark, {title: "Toggle emphasis", icon: {text: 'italic'} })
     if (mark instanceof CodeMark)
-      r.toggleCode = toggleMarkItem(mark, {title: "Toggle code font", icon: icons.code})
+      r.toggleCode = toggleMarkItem(mark, {title: "Toggle code font", icon: {text: 'code'} })
     if (mark instanceof LinkMark)
-      r.toggleLink = toggleMarkItem(mark, {title: "Add or remove link", icon: icons.link, attrs: promptLinkAttrs})
+      r.toggleLink = toggleMarkItem(mark, {title: "Add or remove link", icon: {text: 'link'}, attrs: promptLinkAttrs})
   }
   for (let name in schema.nodes) {
     let node = schema.nodes[name]
@@ -175,6 +176,14 @@ function buildMenuItems(schema) {
         title: "Insert horizontal rule",
         label: "Horizontal rule"
       })
+    if (node instanceof Embed)
+      r.insertEmbed = insertItem(node, {
+        title: "Insert Embed",
+        icon: {text: 'embed'},
+        attrs: {source: 'fish', className: 'myclass'},
+      })
+
+
   }
 
   let cut = arr => arr.filter(x => x)
@@ -183,9 +192,9 @@ function buildMenuItems(schema) {
     r.makeHead1, r.makeHead2, r.makeHead3, r.makeHead4, r.makeHead5, r.makeHead6
   ]), {label: "Heading"})]), {label: "Type..."})
 
-  r.inlineMenu = [cut([r.toggleStrong, r.toggleEm, r.toggleCode, r.toggleLink]), [r.insertMenu]]
-  r.blockMenu = [cut([r.typeMenu, r.wrapBulletList, r.wrapOrderedList, r.wrapBlockQuote, joinUpItem,
-                      liftItem, selectParentNodeItem])]
+  r.inlineMenu = [cut([r.toggleStrong, r.toggleEm, r.toggleCode, r.toggleLink, r.insertEmbed]), [r.insertMenu]]
+  // r.blockMenu = [cut([r.typeMenu, r.wrapBulletList, r.wrapOrderedList, r.wrapBlockQuote, joinUpItem, liftItem, selectParentNodeItem])];
+  r.blockMenu = [cut([r.typeMenu, r.wrapBulletList, r.wrapOrderedList, r.wrapBlockQuote, joinUpItem, liftItem])];
   r.fullMenu = r.inlineMenu.concat(r.blockMenu).concat([[undoItem, redoItem]])
 
   return r

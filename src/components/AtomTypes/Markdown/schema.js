@@ -136,6 +136,8 @@ class Embed extends Inline {
   }
 }
 
+exports.Embed = Embed;
+
 
 // :: Schema
 // A basic document schema.

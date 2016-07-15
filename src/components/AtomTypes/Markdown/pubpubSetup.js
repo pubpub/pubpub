@@ -2,8 +2,11 @@ const {blockQuoteRule, orderedListRule, bulletListRule, codeBlockRule, headingRu
 const {BlockQuote, OrderedList, BulletList, CodeBlock, Heading} = require('prosemirror/dist/schema-basic');
 const {Plugin} = require('prosemirror/dist/edit');
 const {menuBar, MenuItem} = require('prosemirror/dist/menu');
+import {Embed} from './schema';
+// const {wrappingInputRule} = require('prosemirror/dist/inputrules/util');
+const {InputRule} = require('prosemirror/dist/inputrules');
 
-// const {className} = require("./style");
+const {className} = require("./style");
 const {buildMenuItems} = require("./menu");
 const {buildKeymap} = require("./keymap");
 
@@ -37,12 +40,19 @@ const {buildKeymap} = require("./keymap");
 //   : Can be used to [adjust](#buildKeymap) the key bindings created.
 exports.pubpubSetup = new Plugin(class {
   constructor(pm, options) {
-    // pm.wrapper.classList.add(className)
+    pm.wrapper.classList.add(className)
     this.keymap = buildKeymap(pm.schema, options.mapKeys)
     pm.addKeymap(this.keymap)
     this.inputRules = allInputRules.concat(buildInputRules(pm.schema))
     let rules = inputRules.ensure(pm)
     this.inputRules.forEach(rule => rules.addRule(rule))
+
+    document.getElementsByClassName('ProseMirror')[0].addEventListener("keydown", function(e) {
+    if (e.keyCode == 83 && (navigator.platform.match("Mac") ? e.metaKey : e.ctrlKey)) {
+        e.preventDefault();
+        e.stopPropagation();
+      }
+    }, false);
 
     let builtMenu
     this.barConf = options.menuBar
@@ -63,7 +73,7 @@ exports.pubpubSetup = new Plugin(class {
     if (this.tooltipConf) tooltipMenu.config(this.tooltipConf).attach(pm)
   }
   detach(pm) {
-    // pm.wrapper.classList.remove(className)
+    pm.wrapper.classList.remove(className)
     pm.removeKeymap(this.keymap)
     let rules = inputRules.ensure(pm)
     this.inputRules.forEach(rule => rules.removeRule(rule))
@@ -88,6 +98,25 @@ function buildInputRules(schema) {
     if (node instanceof BulletList) result.push(bulletListRule(node))
     if (node instanceof CodeBlock) result.push(codeBlockRule(node))
     if (node instanceof Heading) result.push(headingRule(node, 6))
+    const x = new InputRule(/\[\[$/, "[", function (pm, match, pos) {
+      console.log('yo guy');
+      const getAttrs = ()=>{};
+      const joinPredicate = null;
+      var start = pos - match[0].length;
+      var attrs = getAttrs instanceof Function ? getAttrs(match) : getAttrs;
+      var tr = pm.tr.delete(start, pos);
+      var $pos = tr.doc.resolve(start),
+          range = $pos.blockRange(),
+          wrapping = range && findWrapping(range, nodeType, attrs);
+      if (!wrapping) return;
+      tr.wrap(range, wrapping);
+      var before = tr.doc.resolve(start - 1).nodeBefore;
+      if (before && before.type == nodeType && joinable(tr.doc, start - 1) && (!joinPredicate || joinPredicate(match, before))) tr.join(start - 1);
+      tr.apply();
+    });
+
+    // result.push(wrappingInputRule(/\[\[$/, "[", Embed));
+    result.push(x);
   }
   return result
 }

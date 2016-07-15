@@ -35,26 +35,6 @@ export const MarkdownEditor = React.createClass({
 			}
 
 		});
-		// const addEmbed = new MenuItem({
-		//     title: "Add an embed",
-		//     run(pm) {
-		//       console.log('RUnning embed');
-		//     },
-		//     select(pm) {
-		//       return true;
-		//     },
-		//     onDeselect: 'disable',
-		//     label: "Embed"
-		//   });
-
-		// const menu = buildMenuItems(schema);
-		// console.log('exampleSetup', exampleSetup);
-		// console.log('menu', menu);
-		// console.log('menu.fullMenu', menu.fullMenu);
-		// menuBar.config({float: true, content: menu.fullMenu}).attach(pm);
-		// console.log([addEmbed])
-		// console.log([[addEmbed]])
-		// menuBar.config({float: true, content: [[addEmbed]]}).attach(pm);
 
 		pm.on.change.add((evt)=>{
 			// const t0 = performance.now();
