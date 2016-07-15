@@ -15,6 +15,13 @@ insertCSS(`
 .ProseMirror-icon {
   line-height: inherit;
   display: block;
+  height: 34px;
+  padding: 2px 15px;
+}
+
+.ProseMirror-icon svg {
+  position: relative;
+  top: 6px;
 }
 
 .ProseMirror-icon:hover {
@@ -23,10 +30,29 @@ insertCSS(`
 
 .ProseMirror-icon.ProseMirror-menu-active {
   background: transparent;
-  color: 'black';
+  color: black;
 }
 
+.ProseMirror-menu-dropdown:after {
+  content: none;
+}
 
+.ProseMirror-menu-dropdown {
+  display: block;
+  padding: 2px 15px;
+  height: 33px;
+}
+
+.ProseMirror-menu-dropdown-menu {
+  font-family: 'Open Sans';
+  font-size: 0.75em;
+}
+
+.ProseMirror-menuseparator {
+  margin: 0px 10px;
+  position: relative;
+  top: 5px;
+}
 
 `)
 

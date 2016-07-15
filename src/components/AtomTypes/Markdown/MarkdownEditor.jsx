@@ -98,8 +98,7 @@ styles = {
 		display: 'none',
 	},
 	wsywigBlock: {
-		width: 'calc(650px + 10em)',
-		maxWidth: 'initial',
+		maxWidth: 'calc(650px + 10em)',
 		backgroundColor: 'white',
 		margin: '0 auto',
 		boxShadow: '0px 1px 3px 1px #BBBDC0',

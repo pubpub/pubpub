@@ -53,8 +53,6 @@ function simpleItem(label, cmd) {
 
 
 // :: (Schema) → Object
-// Given a schema, look for default mark and node types in it and
-// return an object with relevant menu items relating to those marks:
 //
 // **`toggleStrong`**`: MenuItem`
 //   : A menu item to toggle the [strong mark](#StrongMark).
@@ -127,7 +125,7 @@ function buildMenuItems(schema) {
     if (mark instanceof EmMark)
       r.toggleEm = toggleMarkItem(mark, {title: "Toggle emphasis", icon: {text: 'italic'} })
     if (mark instanceof CodeMark)
-      r.toggleCode = toggleMarkItem(mark, {title: "Toggle code font", icon: {text: 'code'} })
+      r.toggleCode = toggleMarkItem(mark, {title: "Toggle code font", label: 'inline code' })
     if (mark instanceof LinkMark)
       r.toggleLink = toggleMarkItem(mark, {title: "Add or remove link", icon: {text: 'link'}, attrs: promptLinkAttrs})
   }
@@ -157,24 +155,24 @@ function buildMenuItems(schema) {
     if (node instanceof Paragraph)
       r.makeParagraph = blockTypeItem(node, {
         title: "Change to paragraph",
-        label: "Plain"
+        icon: {text: "Plain"},
       })
     if (node instanceof CodeBlock)
       r.makeCodeBlock = blockTypeItem(node, {
         title: "Change to code block",
-        label: "Code"
+        icon: {text: "code block"},
       })
     if (node instanceof Heading)
       for (let i = 1; i <= 10; i++)
         r["makeHead" + i] = blockTypeItem(node, {
           title: "Change to heading " + i,
-          label: "Level " + i,
+          icon: {text: "H" + i},
           attrs: {level: i}
         })
     if (node instanceof HorizontalRule)
       r.insertHorizontalRule = insertItem(node, {
         title: "Insert horizontal rule",
-        label: "Horizontal rule"
+        label: "horizontal rule"
       })
     if (node instanceof Embed)
       r.insertEmbed = insertItem(node, {
@@ -187,15 +185,15 @@ function buildMenuItems(schema) {
   }
 
   let cut = arr => arr.filter(x => x)
-  r.insertMenu = new Dropdown(cut([r.insertImage, r.insertHorizontalRule]), {label: "Insert"})
-  r.typeMenu = new Dropdown(cut([r.makeParagraph, r.makeCodeBlock, r.makeHead1 && new DropdownSubmenu(cut([
-    r.makeHead1, r.makeHead2, r.makeHead3, r.makeHead4, r.makeHead5, r.makeHead6
-  ]), {label: "Heading"})]), {label: "Type..."})
+  // r.insertMenu = new Dropdown(cut([r.insertImage, r.insertHorizontalRule]), {label: "Insert"})
+  r.insertMenu = new Dropdown(cut([r.toggleCode, r.insertHorizontalRule]), {label: "..."})
+  r.typeMenu = new Dropdown(cut([r.makeCodeBlock, r.makeHead3, r.makeHead4, r.makeHead5, r.makeHead6]), {label: "..."})
 
-  r.inlineMenu = [cut([r.toggleStrong, r.toggleEm, r.toggleCode, r.toggleLink, r.insertEmbed]), [r.insertMenu]]
+  r.inlineMenu = [cut([r.toggleStrong, r.toggleEm, r.toggleLink, r.insertMenu]), [r.insertEmbed]]
   // r.blockMenu = [cut([r.typeMenu, r.wrapBulletList, r.wrapOrderedList, r.wrapBlockQuote, joinUpItem, liftItem, selectParentNodeItem])];
-  r.blockMenu = [cut([r.typeMenu, r.wrapBulletList, r.wrapOrderedList, r.wrapBlockQuote, joinUpItem, liftItem])];
-  r.fullMenu = r.inlineMenu.concat(r.blockMenu).concat([[undoItem, redoItem]])
+  r.blockMenu = [cut([r.makeParagraph, r.makeHead1, r.makeHead2, r.wrapBulletList, r.wrapOrderedList, r.wrapBlockQuote, joinUpItem, liftItem, r.typeMenu])];
+  // r.fullMenu = r.inlineMenu.concat(r.blockMenu).concat([[undoItem, redoItem]])
+  r.fullMenu = r.inlineMenu.concat(r.blockMenu)
 
   return r
 }
