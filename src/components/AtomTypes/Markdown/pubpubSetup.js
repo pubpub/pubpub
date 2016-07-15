@@ -5,10 +5,13 @@ const {menuBar, MenuItem} = require('prosemirror/dist/menu');
 import {Embed} from './schema';
 // const {wrappingInputRule} = require('prosemirror/dist/inputrules/util');
 const {InputRule} = require('prosemirror/dist/inputrules');
+const {findWrapping, joinable} = require('prosemirror/dist/transform');
 
 const {className} = require("./style");
 const {buildMenuItems} = require("./menu");
 const {buildKeymap} = require("./keymap");
+import {Node} from 'prosemirror/dist/model';
+const {setBlockType} = require("prosemirror/dist/edit").commands;
 
 // !! This module exports helper functions for deriving a set of basic
 // menu items, input rules, or key bindings from a schema. These
@@ -100,19 +103,44 @@ function buildInputRules(schema) {
     if (node instanceof Heading) result.push(headingRule(node, 6))
     const x = new InputRule(/\[\[$/, "[", function (pm, match, pos) {
       console.log('yo guy');
+      // const nodeType = Embed;
       const getAttrs = ()=>{};
       const joinPredicate = null;
       var start = pos - match[0].length;
       var attrs = getAttrs instanceof Function ? getAttrs(match) : getAttrs;
       var tr = pm.tr.delete(start, pos);
-      var $pos = tr.doc.resolve(start),
-          range = $pos.blockRange(),
-          wrapping = range && findWrapping(range, nodeType, attrs);
-      if (!wrapping) return;
-      tr.wrap(range, wrapping);
-      var before = tr.doc.resolve(start - 1).nodeBefore;
-      if (before && before.type == nodeType && joinable(tr.doc, start - 1) && (!joinPredicate || joinPredicate(match, before))) tr.join(start - 1);
+      const y = pm.schema.nodes.embed.create({source:"cat"})
+      tr.insert(start, y);
       tr.apply();
+      // var $pos = tr.doc.resolve(start),
+      //     range = $pos.blockRange(),
+      //     wrapping = range && findWrapping(range, nodeType, attrs);
+      // if (!wrapping) return;
+      // tr.wrap(range, wrapping);
+      // var before = tr.doc.resolve(start - 1).nodeBefore;
+      // if (before && before.type == nodeType && joinable(tr.doc, start - 1) && (!joinPredicate || joinPredicate(match, before))) tr.join(start - 1);
+      // const nnode = Node;
+      // const eembed = Embed;
+      // debugger;
+      // var x = new Embed({source: "cat", className: "Fred"});
+      // console.log(x);
+      // y = new nnode(new eembed(), {source:"cat"})
+      // y = new nnode(eembed, {source:"cat"})
+
+      // function done(attrs) {
+      //   pm.tr.replaceSelection(new Embed().createAndFill(attrs, null)).apply()
+      // }
+
+
+      // console.log(Embed);
+      // // const options = {};
+      // // if (options.attrs instanceof Function) options.attrs(pm, done)
+      // // else done({source: "cat", className: "Fred"})
+      // done({source: "cat", className: "Fred"});
+
+      // setBlockType(Embed, {source: "cat", className: "Fred"})(pm, true)
+      // console.log(setBlockType(Embed, {source: "cat", className: "Fred"}))
+      // console.log(setBlockType(Embed, {source: "cat", className: "Fred"})(pm, true))
     });
 
     // result.push(wrappingInputRule(/\[\[$/, "[", Embed));

@@ -6,17 +6,10 @@ exports.className = className
 
 insertCSS(`
 
-/* Add space around the hr to make clicking it easier */
-
-/* ${scope} img {
-  cursor: default;
-}
-*/
-
 .ProseMirror-menubar {
   color: #AAA;
   font-family: 'Open Sans';
-  font-size: 0.85em;
+  font-size: 0.7em;
 }
 
 .ProseMirror-icon {
@@ -28,7 +21,7 @@ insertCSS(`
   color: #222;
 }
 
-.ProseMirror-icon .ProseMirror-menu-active {
+.ProseMirror-icon.ProseMirror-menu-active {
   background: transparent;
   color: 'black';
 }
@@ -36,3 +29,5 @@ insertCSS(`
 
 
 `)
+
+// ${scope} img { cursor: default; }
