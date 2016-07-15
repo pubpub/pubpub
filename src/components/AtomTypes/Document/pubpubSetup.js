@@ -43,7 +43,6 @@ const {setBlockType} = require("prosemirror/dist/edit").commands;
 //   : Can be used to [adjust](#buildKeymap) the key bindings created.
 exports.pubpubSetup = new Plugin(class {
   constructor(pm, options) {
-    console.log(pm, options);
     pm.wrapper.classList.add(className)
     this.keymap = buildKeymap(pm.schema, options.mapKeys)
     pm.addKeymap(this.keymap)
@@ -118,32 +117,12 @@ function buildInputRules(schema) {
     if (node instanceof CodeBlock) result.push(codeBlockRule(node))
     if (node instanceof Heading) result.push(headingRule(node, 6))
 
-    const x = new InputRule(/\[\[$/, "[", function (pm, match, pos) {
-      console.log('yo guy');
-      // const nodeType = Embed;
+    const embedRule = new InputRule(/\[\[$/, "[", function (pm, match, pos) {
       const getAttrs = ()=>{};
       const joinPredicate = null;
       var start = pos - match[0].length;
       var attrs = getAttrs instanceof Function ? getAttrs(match) : getAttrs;
       var tr = pm.tr.delete(start, pos);
-      // const y = pm.schema.nodes.embed.create({source:"cat"})
-      // const y = pm.schema.nodes.embed.create((pm, c) => window.toggleMedia(pm, c, node))
-      // tr.insert(start, y);
-      // tr.apply();
-      // var $pos = tr.doc.resolve(start),
-      //     range = $pos.blockRange(),
-      //     wrapping = range && findWrapping(range, nodeType, attrs);
-      // if (!wrapping) return;
-      // tr.wrap(range, wrapping);
-      // var before = tr.doc.resolve(start - 1).nodeBefore;
-      // if (before && before.type == nodeType && joinable(tr.doc, start - 1) && (!joinPredicate || joinPredicate(match, before))) tr.join(start - 1);
-      // const nnode = Node;
-      // const eembed = Embed;
-      // debugger;
-      // var x = new Embed({source: "cat", className: "Fred"});
-      // console.log(x);
-      // y = new nnode(new eembed(), {source:"cat"})
-      // y = new nnode(eembed, {source:"cat"})
 
       function done(attrs) {
         const y = pm.schema.nodes.embed.create(attrs)
@@ -152,23 +131,10 @@ function buildInputRules(schema) {
       }
       window.toggleMedia(pm, done, node);
 
-
-
-      // console.log(Embed);
-      // const options = {};
-      // if (options.attrs instanceof Function) options.attrs(pm, done)
-      // else done({source: "empty", className: "empty"})
-
-      // done({source: "cat", className: "Fred"});
-
-      // setBlockType(Embed, {source: "cat", className: "Fred"})(pm, true)
-      // console.log(setBlockType(Embed, {source: "cat", className: "Fred"}))
-      // console.log(setBlockType(Embed, {source: "cat", className: "Fred"})(pm, true))
     });
 
-    // result.push(wrappingInputRule(/\[\[$/, "[", Embed));
-    result.push(x);
+    result.push(embedRule);
   }
-  return result
+  return result;
 }
 // exports.buildInputRules = buildInputRules

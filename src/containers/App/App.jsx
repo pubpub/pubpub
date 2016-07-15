@@ -51,7 +51,7 @@ export const App = React.createClass({
 	},
 
 	createDocument: function() {
-		this.props.dispatch(createAtom('markdown'));
+		this.props.dispatch(createAtom('document'));
 	},
 
 	logoutHandler: function() {

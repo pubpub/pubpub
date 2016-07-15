@@ -51,7 +51,7 @@ export const DocumentViewer = React.createClass({
 					}
 				}, node.text);
 			case 'embed':
-				return <EmbedWrapper source={node.attrs.source} className={node.attrs.className} key={index}/>;
+				return <EmbedWrapper {...node.attrs} key={index}/>;
 			default:
 				console.log('Error with ', node);
 			}

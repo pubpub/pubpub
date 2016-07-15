@@ -148,7 +148,7 @@ export const AtomReader = React.createClass({
 				{/* Table of Contents Section */}
 				<div style={[styles.tocSection, !showTOC && {display: 'none'}]}>
 					{toc.map((object, index)=>{
-						return <a href={'#' + object.id} className={'underlineOnHover'} style={[styles.tocItem, styles.tocLevels[object.level - 1]]}>{object.title}</a>;
+						return <a key={'toc-' + index} href={'#' + object.id} className={'underlineOnHover'} style={[styles.tocItem, styles.tocLevels[object.level - 1]]}>{object.title}</a>;
 					})}
 				</div>
 
@@ -163,7 +163,7 @@ export const AtomReader = React.createClass({
 						<div className={'button'} style={styles.button} onClick={()=>{}}>Follow</div>
 					</div> */}
 
-					<div id={'atom-reader'} className={(this.props.meta || safeGetInToJS(this.props.atomData, ['atomData', 'type']) !== 'markdown' ) && 'atom-reader-meta'}>
+					<div id={'atom-reader'} className={(this.props.meta || safeGetInToJS(this.props.atomData, ['atomData', 'type']) !== 'document' ) && 'atom-reader-meta'}>
 
 
 						<AtomReaderHeader

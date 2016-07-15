@@ -15,6 +15,7 @@ export JrnlProfile from './JrnlProfile/JrnlProfile';
 export Landing from './Landing/Landing';
 export Login from './Login/Login';
 export MediaLibrary from './MediaLibrary/MediaLibrary';
+export Media from './Media/Media';
 export PubCreate from './PubCreate/PubCreate';
 export PubReader from './PubReader/PubReader';
 export ResetPassword from './ResetPassword/ResetPassword';

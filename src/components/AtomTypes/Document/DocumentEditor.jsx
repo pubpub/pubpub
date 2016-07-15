@@ -1,6 +1,7 @@
 import React, {PropTypes} from 'react';
 import Radium from 'radium';
 import {safeGetInToJS} from 'utils/safeParse';
+import {Media} from 'containers';
 
 import {parser} from './parser';
 import {serializer} from './serializer';
@@ -16,14 +17,8 @@ export const DocumentEditor = React.createClass({
 		atomEditData: PropTypes.object,
 		loginData: PropTypes.object,
 	},
-	getInitialState() {
-		return {
-			showMedia: false,
-		};
-	},
 
 	componentDidMount() {
-		// window.toggleMedia = this.toggleMedia;
 		const docJSON = safeGetInToJS(this.props.atomEditData, ['currentVersionData', 'content', 'docJSON']);
 		const prosemirror = require('prosemirror');
 		const {pubpubSetup} = require('./pubpubSetup');
@@ -68,23 +63,15 @@ export const DocumentEditor = React.createClass({
 		};
 	},
 
-	// toggleMedia: function(pm, callback, node) {
-	// 	console.log(arguments);
-	// 	this.setState({showMedia: !this.state.showMedia});
-	// 	const cb = callback || function(eee){console.log('You shouldnt be seeing this ', eee);};
-	// 	setTimeout(function() {
-	// 		cb({source: "omg", className: "sickClass"});	
-	// 	}, 1500);
-		
-	// },
-
 	render: function() {
 		return (
 			<div style={styles.container}>
 				
+				<Media/>
+
 				<textarea id="markdown" onChange={this.markdownChange} style={styles.textarea}></textarea>
 				<div id={'atom-reader'} style={styles.wsywigBlock}></div>
-				{/* <div style={[styles.media, !this.state.showMedia && {opacity: 0, pointerEvents: 'none', transform: 'scale(0.9)'}]}>MEDIA</div> */}
+
 				
 			</div>
 		);
@@ -121,16 +108,6 @@ styles = {
 		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
 			width: 'calc(100%)',
 		},
-	},
-	media: {
-		position: 'fixed',
-		width: 100,
-		height: 100,
-		backgroundColor: 'red',
-		top: '50px',
-		opacity: 1,
-		transform: 'scale(1.0)',
-		transition: '.1s linear opacity, .1s linear transform',
 	},
 	
 };

@@ -125,7 +125,7 @@ class Embed extends Inline {
 	// }
 
 	const dom = document.createElement('div');
-	ReactDOM.render(<EmbedWrapper source={node.attrs.source} className={node.attrs.className}/>, dom);
+	ReactDOM.render(<EmbedWrapper {...node.attrs}/>, dom);
 	return dom.childNodes[0];
 	// return dom;
 

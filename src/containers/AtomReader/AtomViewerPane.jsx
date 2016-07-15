@@ -6,11 +6,13 @@ import {safeGetInToJS} from 'utils/safeParse';
 export const AtomViewerPane = React.createClass({
 	propTypes: {
 		atomData: PropTypes.object,
+		renderType: PropTypes.string,
 	},
 
 	render: function() {
 		const props = {
 			atomData: this.props.atomData,
+			renderType: this.props.renderType || 'full',
 		};
 
 		const type = safeGetInToJS(this.props.atomData, ['atomData', 'type']);
