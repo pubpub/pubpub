@@ -143,7 +143,7 @@ export function updateJrnl(req, res) {
 		// Validate and clean submitted values
 		// Take (cleaned) new values if they exist, otherwise set to old value
 		const newData = req.body.newJrnlData;
-		jrnl.jrnlName = 'facebook' in newData ? newData.facebook : jrnl.facebook;
+		jrnl.jrnlName = 'jrnlName' in newData ? newData.jrnlName : jrnl.jrnlName;
 		jrnl.description = 'description' in newData ? newData.description && newData.description.substring(0, 140) : jrnl.description;
 		jrnl.about = 'about' in newData ? newData.about : jrnl.about;
 		jrnl.logo = 'logo' in newData ? newData.logo : jrnl.logo;

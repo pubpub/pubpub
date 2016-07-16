@@ -2,11 +2,10 @@ import React, { PropTypes } from 'react';
 import {connect} from 'react-redux';
 import Radium from 'radium';
 import Helmet from 'react-helmet';
-import { Link } from 'react-router';
-import { push } from 'redux-router';
-import {logout, follow, unfollow, toggleVisibility} from 'containers/Login/actions';
-import {getProfile, updateUser, userNavOut, userNavIn, setNotificationsRead} from './actions';
+import {safeGetInToJS} from 'utils/safeParse';
+import {getProfile} from './actions';
 import {NavContentWrapper} from 'components';
+
 import UserProfileDiscussions from './UserProfileDiscussions';
 import UserProfileSettings from './UserProfileSettings';
 import UserProfilePubs from './UserProfilePubs';
@@ -14,10 +13,8 @@ import UserProfileGroups from './UserProfileGroups';
 import UserProfileFollows from './UserProfileFollows';
 import UserProfileNotifications from './UserProfileNotifications';
 
-import {globalStyles, profileStyles, navStyles} from 'utils/styleConstants';
-
-import {globalMessages} from 'utils/globalMessages';
-import {FormattedMessage} from 'react-intl';
+// import {globalMessages} from 'utils/globalMessages';
+// import {FormattedMessage} from 'react-intl';
 
 let styles = {};
 
@@ -30,92 +27,19 @@ const Profile = React.createClass({
 		dispatch: PropTypes.func
 	},
 
-	getInitialState: function() {
-		return {
-			userImageFile: null,
-		};
-	},
-
 	statics: {
 		fetchData: function(getState, dispatch, location, routerParams) {
 			return dispatch(getProfile(routerParams.username));
 		}
 	},
 
-	// componentWillUnmount() {
-	// 	this.props.dispatch(userNavOut());
-	// },
-
-	ownProfile: function() {
-		return this.props.loginData.getIn(['userData', 'username']) === this.props.username ? 'self' : 'other';
-	},
-
-	submitLogout: function() {
-		this.props.dispatch(logout());
-		this.props.dispatch(push('/'));
-	},
-
-	settingsSave: function(settingsObject) {
-		// Send it off and save
-		// If user image is in the settingsObject, on the server, save to cloudinary, etc.
-		// console.log('settingsObject', settingsObject);
-		this.props.dispatch(updateUser(settingsObject));
-	},
-	onFileSelect: function(evt) {
-		if (evt.target.files.length) {
-			this.setState({userImageFile: evt.target.files[0]});
-		}
-	},
-	cancelImageUpload: function() {
-		this.setState({userImageFile: null});
-	},
-	userImageUploaded: function(url) {
-		this.setState({userImageFile: null});
-		this.settingsSave({image: url});
-	},
-	followUserToggle: function() {
-		if (!this.props.loginData.get('loggedIn')) {
-			return this.props.dispatch(toggleVisibility());
-		}
-
-		const analyticsData = {
-			type: 'pubs',
-			followedID: this.props.profileData.getIn(['profileData', '_id']),
-			username: this.props.profileData.getIn(['profileData', 'username']),
-			fullname: this.props.profileData.getIn(['profileData', 'fullname']),
-			image: this.props.profileData.getIn(['profileData', 'image']),
-			numFollowers: this.props.profileData.getIn(['profileData', 'followers']) ? this.props.profileData.getIn(['profileData', 'followers']).size : 0,
-		};
-
-		const isFollowing = this.props.loginData.getIn(['userData', 'following', 'users']) ? this.props.loginData.getIn(['userData', 'following', 'users']).indexOf(this.props.profileData.getIn(['profileData', '_id'])) > -1 : false;
-
-		if (isFollowing) {
-			this.props.dispatch( unfollow('users', this.props.profileData.getIn(['profileData', '_id']), analyticsData) );
-		} else {
-			this.props.dispatch( follow('users', this.props.profileData.getIn(['profileData', '_id']), analyticsData) );
-		}
-	},
-	setNotificationsRead: function() {
-		if (this.ownProfile() === 'self') {
-			this.props.dispatch(setNotificationsRead(this.props.profileData.getIn(['profileData', '_id'])));
-		}
-
-	},
-
 	render: function() {
-		const metaData = {};
-		if (this.props.profileData.getIn(['profileData', 'name'])) {
-			metaData.title = 'PubPub - ' + this.props.profileData.getIn(['profileData', 'name']);
-		} else {
-			metaData.title = 'PubPub - ' + this.props.username;
-		}
-
-		let profileData = {};
-		if (this.props.profileData.get('profileData').toJS) {
-			profileData = this.props.profileData.get('profileData').toJS();
-		}
-
-		const ownProfile = this.ownProfile();
+		const profileData = safeGetInToJS(this.props.profileData, ['profileData']) || {};
+		const ownProfile = safeGetInToJS(this.props.loginData, ['userData', 'username']) === this.props.username ? 'self' : 'other';
+		const metaData = {
+			title: (profileData.name || profileData.username) + ' · PubPub',
+		};
+		
 
 		const mobileNavButtons = [
 			{ type: 'button', mobile: true, text: 'Follow', action: this.followUserToggle },
