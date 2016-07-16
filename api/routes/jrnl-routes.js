@@ -143,20 +143,20 @@ export function updateJrnl(req, res) {
 		// Validate and clean submitted values
 		// Take (cleaned) new values if they exist, otherwise set to old value
 		const newData = req.body.newJrnlData;
-		jrnl.jrnlName = newData.jrnlName || jrnl.jrnlName;
-		jrnl.description = newData.description && newData.description.substring(0, 140) || jrnl.description;
-		jrnl.about = newData.about || jrnl.about;
-		jrnl.logo = newData.logo || jrnl.logo;
-		jrnl.icon = newData.icon || jrnl.icon;
-		jrnl.about = newData.about || jrnl.about;
-		jrnl.website = newData.website || jrnl.website;
-		jrnl.twitter = newData.twitter || jrnl.twitter;
-		jrnl.facebook = newData.facebook || jrnl.facebook;
-		jrnl.headerMode = newData.headerMode || jrnl.headerMode;
-		jrnl.headerAlign = newData.headerAlign || jrnl.headerAlign;
-		jrnl.headerColor = newData.headerColor || jrnl.headerColor;
-		jrnl.headerImage = newData.headerImage === null ? undefined : newData.headerImage || jrnl.headerImage;
-		jrnl.collections = newData.collections || jrnl.collections;
+		jrnl.jrnlName = 'facebook' in newData ? newData.facebook : jrnl.facebook;
+		jrnl.description = 'description' in newData ? newData.description && newData.description.substring(0, 140) : jrnl.description;
+		jrnl.about = 'about' in newData ? newData.about : jrnl.about;
+		jrnl.logo = 'logo' in newData ? newData.logo : jrnl.logo;
+		jrnl.icon = 'icon' in newData ? newData.icon : jrnl.icon;
+		jrnl.about = 'about' in newData ? newData.about : jrnl.about;
+		jrnl.website = 'website' in newData ? newData.website : jrnl.website;
+		jrnl.twitter = 'twitter' in newData ? newData.twitter : jrnl.twitter;
+		jrnl.facebook = 'facebook' in newData ? newData.facebook : jrnl.facebook;
+		jrnl.headerMode = 'headerMode' in newData ? newData.headerMode : jrnl.headerMode;
+		jrnl.headerAlign = 'headerAlign' in newData ? newData.headerAlign : jrnl.headerAlign;
+		jrnl.headerColor = 'headerColor' in newData ? newData.headerColor : jrnl.headerColor;
+		jrnl.headerImage = 'headerImage' in newData ? newData.headerImage : jrnl.headerImage;
+		jrnl.collections = 'collections' in newData ? newData.collections : jrnl.collections;
 		return jrnl.save();
 	})
 	.then(function(savedResult) {
