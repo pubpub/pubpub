@@ -45,7 +45,7 @@ export const JrnlProfileLayout = React.createClass({
 			headerColor: undefined,
 			headerMode: undefined,
 			headerAlign: undefined,
-			headerImage: null,
+			headerImage: undefined,
 		});
 	},
 

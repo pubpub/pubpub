@@ -6,6 +6,10 @@ exports.className = className;
 
 insertCSS(`
 
+.ProseMirror-menubar {
+  z-index: 2;
+}
+
 .ProseMirror-content {
   outline: none;
   min-height: 600px; 
