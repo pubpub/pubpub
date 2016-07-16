@@ -19,9 +19,9 @@ import {
 } from 'containers/SignUp/actions';
 
 import {
-	LOAD_PROFILE,
-	LOAD_PROFILE_SUCCESS,
-	LOAD_PROFILE_FAIL,
+	GET_USER_LOAD,
+	GET_USER_SUCCESS,
+	GET_USER_FAIL,
 } from 'containers/UserProfile/actions';
 
 import {
@@ -112,14 +112,14 @@ export default function reducer(state = defaultState, action) {
 		return loadAppFail(state, action.error);
 
 
-	case LOAD_PROFILE:
+	case GET_USER_LOAD:
 	case GET_ATOM_DATA_LOAD:
 	case CREATE_ATOM_LOAD:
 	case GET_ATOM_EDIT_LOAD:
 	case GET_JRNL_LOAD:
 		return setLoading(state);
-	case LOAD_PROFILE_SUCCESS:
-	case LOAD_PROFILE_FAIL:
+	case GET_USER_SUCCESS:
+	case GET_USER_FAIL:
 	case GET_ATOM_DATA_SUCCESS:
 	case GET_ATOM_DATA_FAIL:
 	case GET_ATOM_EDIT_SUCCESS:

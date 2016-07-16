@@ -25,6 +25,7 @@ const UserPubs = React.createClass({
 		return (
 			<div style={styles.container}>
 
+				<h3>Journals</h3>
 				{
 					atoms.map((atom, index)=>{
 						return (<PreviewCard 

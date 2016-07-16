@@ -22,11 +22,11 @@ const NotFound = React.createClass({
 
 				<Helmet {...metaData} />
 
-				<h1>
+				<h2>
 					<FormattedMessage id="notFound.pageDoesntExist" defaultMessage="Doh - That page does not seem to exist!"/>
-				</h1>
+				</h2>
 					
-				<img src={'http://res.cloudinary.com/pubpub/image/upload/v1448221655/pubSad_blirpk.png'} />
+				<img src={'https://assets.pubpub.org/_site/sadPub.png'} />
 			</div>
 			
 		);

@@ -3,15 +3,11 @@ import {connect} from 'react-redux';
 import Radium from 'radium';
 import Helmet from 'react-helmet';
 import {safeGetInToJS} from 'utils/safeParse';
-import {getProfile} from './actions';
+import {getUser} from './actions';
 import {NavContentWrapper} from 'components';
 
-import UserProfileDiscussions from './UserProfileDiscussions';
-import UserProfileSettings from './UserProfileSettings';
 import UserProfilePubs from './UserProfilePubs';
-import UserProfileGroups from './UserProfileGroups';
-import UserProfileFollows from './UserProfileFollows';
-import UserProfileNotifications from './UserProfileNotifications';
+import UserProfileJournals from './UserProfileJournals';
 
 // import {globalMessages} from 'utils/globalMessages';
 // import {FormattedMessage} from 'react-intl';
@@ -29,7 +25,7 @@ const Profile = React.createClass({
 
 	statics: {
 		fetchData: function(getState, dispatch, location, routerParams) {
-			return dispatch(getProfile(routerParams.username));
+			return dispatch(getUser(routerParams.username));
 		}
 	},
 
@@ -40,22 +36,25 @@ const Profile = React.createClass({
 			title: (profileData.name || profileData.username) + ' · PubPub',
 		};
 		
-
 		const mobileNavButtons = [
 			{ type: 'button', mobile: true, text: 'Follow', action: this.followUserToggle },
 			{ type: 'button', mobile: true, text: 'Menu', action: undefined },
 		];
 
+		const ownProfileItems = ownProfile
+		? [
+			{ type: 'spacer' },
+			{ type: 'link', text: 'Settings', link: '/settings'}
+		]
+		: [];
 		const navItems = [
-			{ type: 'link', text: 'Recent Activity', link: '/user/' + this.props.username, active: this.props.mode === undefined},
-			{ type: 'spacer' },
-			{ type: 'link', text: 'Pubs', link: '/user/' + this.props.username + '/pubs', active: this.props.mode === 'pubs' },
-			{ type: 'link', text: 'Groups', link: '/user/' + this.props.username + '/groups', active: this.props.mode === 'groups'},
+			{ type: 'link', text: 'Pubs', link: '/user/' + this.props.username, active: this.props.mode === undefined},
+			// { type: 'link', text: 'Groups', link: '/user/' + this.props.username + '/groups', active: this.props.mode === 'groups'},
 			{ type: 'link', text: 'Journals', link: '/user/' + this.props.username + '/journals', active: this.props.mode === 'journals'},
-			{ type: 'spacer' },
-			{ type: 'link', text: 'Settings', link: '/settings'},
+			...ownProfileItems,
 		];
 
+		
 		return (
 			<div>
 
@@ -75,36 +74,11 @@ const Profile = React.createClass({
 				<NavContentWrapper navItems={navItems} mobileNavButtons={mobileNavButtons}>
 					{(() => {
 						switch (this.props.mode) {
-						case 'discussions':
+						case 'journals':
 							return (
-								<UserProfileDiscussions
+								<UserProfileJournals
 									profileData={profileData}
 									ownProfile={ownProfile}/>
-							);
-						case 'follows':
-							return (
-								<UserProfileFollows
-									profileData={profileData}
-									ownProfile={ownProfile}/>
-							);
-						case 'groups':
-							return (
-								<UserProfileGroups
-									profileData={profileData}
-									ownProfile={ownProfile}/>
-							);
-						case 'pubs':
-							return (
-								<UserProfilePubs
-									profileData={profileData}
-									ownProfile={ownProfile} />
-							);
-						case 'notifications':
-							return (
-								<UserProfileNotifications
-									profileData={profileData}
-									ownProfile={ownProfile}
-									setNotificationsReadHandler={this.setNotificationsRead}/>
 							);
 						default:
 							return (
