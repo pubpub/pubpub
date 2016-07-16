@@ -4,7 +4,7 @@ import markdownit from 'markdown-it';
 import emoji from 'markdown-it-emoji';
 import embed from './markdown-it-embed';
 
-export const parser = new MarkdownParser(schema, 
+export const markdownParser = new MarkdownParser(schema, 
 	markdownit({html: false})
 	.use(emoji)
 	.use(embed),

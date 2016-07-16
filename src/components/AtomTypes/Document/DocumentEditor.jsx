@@ -3,9 +3,7 @@ import Radium from 'radium';
 import {safeGetInToJS} from 'utils/safeParse';
 import {Media} from 'containers';
 
-import {parser} from './parser';
-import {serializer} from './serializer';
-import {schema} from './schema';
+import {markdownParser, markdownSerializer, schema} from './proseEditor';
 import {Subscription, StoppableSubscription} from 'subscription';
 import {Node} from 'prosemirror/dist/model';
 
@@ -21,7 +19,7 @@ export const DocumentEditor = React.createClass({
 	componentDidMount() {
 		const docJSON = safeGetInToJS(this.props.atomEditData, ['currentVersionData', 'content', 'docJSON']);
 		const prosemirror = require('prosemirror');
-		const {pubpubSetup} = require('./pubpubSetup');
+		const {pubpubSetup} = require('./proseEditor/pubpubSetup');
 		
 		pm = new prosemirror.ProseMirror({
 			place: document.getElementById('atom-reader'),
@@ -35,7 +33,7 @@ export const DocumentEditor = React.createClass({
 		});
 
 		pm.on.change.add((evt)=>{
-			const md = serializer.serialize(pm.doc);
+			const md = markdownSerializer.serialize(pm.doc);
 			document.getElementById('markdown').value = md;
 		});
 
@@ -49,16 +47,15 @@ export const DocumentEditor = React.createClass({
 			}
 		});
 
-
 	},
 
 	markdownChange: function(evt) {
-		pm.setDoc(parser.parse(evt.target.value));
+		pm.setDoc(markdownParser.parse(evt.target.value));
 	},
 
 	getSaveVersionContent: function() {
 		return {
-			markdown: serializer.serialize(pm.doc),
+			markdown: markdownSerializer.serialize(pm.doc),
 			docJSON: pm.doc.toJSON(),
 		};
 	},

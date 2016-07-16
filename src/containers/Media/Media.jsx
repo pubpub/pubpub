@@ -83,7 +83,7 @@ export const Media = React.createClass({
 					{mediaItems.map((item, index)=> {
 						return <div key={'media-item-' + index} onClick={this.saveItem.bind(this, item)} style={styles.item}>{item.type}</div>;
 					})}
-					<div className={'button'} onClick={this.save}>Save</div>
+					<div className={'button'} onClick={this.save}>Example</div>
 				</div>
 				
 			</div>

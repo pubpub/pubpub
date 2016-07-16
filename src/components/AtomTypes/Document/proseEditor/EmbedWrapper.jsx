@@ -41,4 +41,3 @@ export const EmbedWrapper = React.createClass({
 });
 
 export default EmbedWrapper;
-
