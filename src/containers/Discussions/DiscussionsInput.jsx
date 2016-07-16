@@ -64,7 +64,7 @@ const PubDiscussionsInput = React.createClass({
 			showPreview: false,
 			showPreviewText: false,
 			isPrivateChecked: false,
-            bio: this.props.defaultBio, 
+            bio: this.props.defaultBio,
             popupIsOpen: false
 		};
 	},
@@ -147,9 +147,9 @@ const PubDiscussionsInput = React.createClass({
 		// newDiscussion.references = {};
 		newDiscussion.parent = this.props.parentID;
 		newDiscussion.private = this.props.parentIsPrivate || this.refs.isPrivate.checked;
-        
-        
-        
+
+
+
 		this.props.addDiscussionHandler(newDiscussion, this.props.saveID);
 	},
 
@@ -186,24 +186,24 @@ const PubDiscussionsInput = React.createClass({
 
         console.log(newBio)
         console.log('modifyBio function was ran');
-        this.setState({ bio:newBio});  
-    
-}, 
+        this.setState({ bio:newBio});
+
+},
 
     showPopup: function(){
 
          console.log('showPopup function was ran');
-        
+
         if(this.state.popupIsOpen){
-           const newState = { popupIsOpen:false}; 
-               this.setState(newState); 
+           const newState = { popupIsOpen:false};
+               this.setState(newState);
             }
         else{
-            const newState = { popupIsOpen:true}; 
-               this.setState(newState); 
+            const newState = { popupIsOpen:true};
+               this.setState(newState);
 }
-    
-},   
+
+},
 
 	render: function() {
 		const formattingItems = [
@@ -226,10 +226,10 @@ const PubDiscussionsInput = React.createClass({
 		];
 
 		return (
-            
+
             <div>
-              
-            
+
+
 			<div style={[styles.container, this.props.isReply && styles.replyContainer]}>
 				<Style rules={{
 					...codeMirrorStyles(undefined, '.inputCodeMirror'),
@@ -240,9 +240,9 @@ const PubDiscussionsInput = React.createClass({
 						fontFamily: 'Helvetica Neue,Helvetica,Arial,sans-serif',
 						padding: '0px 20px',
 						width: 'calc(100% - 40px)',
-						minHeight: (this.state.expanded) ?'100px' :'25px',
+						minHeight: '100px',
 						fontWeight: '300',
-                        transition: '0.1s min-height ease-in-out',                        
+                        transition: '0.1s min-height ease-in-out',
 					},
 					'.inputCodeMirror .CodeMirror-placeholder': {
 						color: '#aaa',
@@ -258,45 +258,45 @@ const PubDiscussionsInput = React.createClass({
 					requestAssetUpload={null} // disables asset uploading for comments
 					cm={this.cm} />
 			: null }
-                
+
 
 				<div style={[styles.inputTopLine, styles.expanded(this.state.expanded, true)]}>
-                    
+
 
 						<div style={styles.discussionAuthorImageWrapper}>
 								<img style={styles.discussionAuthorImage} src={this.props.userThumbnail} />
 						</div>
-                    
-                        <div style={styles.discussionDetailsLine}> 
+
+                        <div style={styles.discussionDetailsLine}>
                             <span style={[styles.headerText, styles.authorName]}>{this.props.userName}
-                            </span> 
+                            </span>
                         </div>
-                    
-                        <div style={[styles.discussionDetailsLine,  styles.discussionDetailsLineBottom]}> 
-                            <span style={styles.bio}>{this.state.bio} </span> 
-                            
+
+                        <div style={[styles.discussionDetailsLine,  styles.discussionDetailsLineBottom]}>
+                            <span style={styles.bio}>{this.state.bio} </span>
+
                             <span onClick={this.showPopup}>(edit)</span>
-                            
+
                             <Portal closeOnEsc={true} isOpened={this.state.popupIsOpen}>
                                 <BioWindow modifyBio={this.modifyBio} showPopup={this.showPopup}/>
                             </Portal>
-                            
+
                         </div>
-                     
-                       
+
+
 					</div>
-                    
+
 
 					{/* <div style={styles.topCheckbox} key={'newDiscussionAnonymous'} >
 						<label style={styles.checkboxLabel} htmlFor={'anonymousDiscussion'}>Anonymous</label>
 						<input style={styles.checkboxInput} name={'anonymousDiscussion'} id={'anonymousDiscussion'} type="checkbox" value={'anonymous'} ref={'anonymousDiscussion'}/>
 					</div>
-                
+
 					<div style={styles.topCheckbox} key={'newDiscussionPrivate'} >
 						<label style={styles.checkboxLabel} htmlFor={'privateDiscussion'}>Private</label>
 						<input style={styles.checkboxInput} name={'privateDiscussion'} id={'privateDiscussion'} type="checkbox" value={'private'} ref={'privateDiscussion'}/>
 					</div> */}
-                    
+
 				</div>
 
 				<div style={styles.inputBox(this.state.expanded)} onClick={this.onFocus}>
@@ -307,7 +307,7 @@ const PubDiscussionsInput = React.createClass({
 
 					<div id={this.props.codeMirrorID} className={'inputCodeMirror'} onBlur={this.onBlur} onFocus={this.onFocus}></div>
 
-				</div> 
+				</div>
 
 
 
@@ -345,7 +345,7 @@ const PubDiscussionsInput = React.createClass({
 				</div>
 
 			</div>
-                
+
 		);
 	}
 });
@@ -391,7 +391,7 @@ styles = {
 		userSelect: 'none',
 		cursor: 'default',
 		marginLeft: '2.5%',
-    }, 
+    },
 	lighterText: {
 		fontWeight: '300',
 	},
@@ -440,7 +440,7 @@ styles = {
 	},
     discussionDetailsLineBottom: {
 		lineHeight: '18px',
-		fontSize: '0.7em',      
+		fontSize: '0.7em',
 
 	},
 	livePreviewBox: {
@@ -479,7 +479,7 @@ styles = {
 	inputBox: function(expanded) {
 		return {
 			backgroundColor: '#fff',
-			minHeight: 25,
+			minHeight: 100,
 			padding: '10px 0px 10px 0px',
 			// boxShadow: '0 1px 3px 0 rgba(0,0,0,.2),0 1px 1px 0 rgba(0,0,0,.14),0 2px 1px -1px rgba(0,0,0,.12)',
 			boxShadow: '0px 0px 2px rgba(0,0,0,0.4)',
@@ -487,7 +487,7 @@ styles = {
 			width: 'calc(100% - 4px)',
 			borderRadius: '1px',
 			cursor: 'pointer',
-			border: (expanded) ? '1px solid rgb(225, 225, 225)' : '1px solid white',
+			border: '1px solid rgb(225, 225, 225)',
 		};
 	},
 	loaderContainer: {
