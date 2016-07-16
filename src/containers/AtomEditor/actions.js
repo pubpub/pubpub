@@ -50,6 +50,16 @@ export function getAtomEdit(slug) {
 	};
 }
 
+export function getAtomCollaborators(slug) {
+	return {
+		types: [GET_ATOM_EDIT_LOAD, GET_ATOM_EDIT_SUCCESS, GET_ATOM_EDIT_FAIL],
+		promise: (client) => client.get('/getAtomCollaborators', {params: {
+			'slug': slug,
+		}})
+	};
+}
+
+
 export function saveVersion(newVersion) {
 	return {
 		types: [SAVE_VERSION_LOAD, SAVE_VERSION_SUCCESS, SAVE_VERSION_FAIL],
@@ -77,5 +87,3 @@ export function publishVersion(versionID) {
 		}})
 	};
 }
-
-

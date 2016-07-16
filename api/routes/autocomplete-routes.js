@@ -39,7 +39,7 @@ export function autocompleteJrnls(req, res) {
 			sort: [{field: 'jrnlName', direction: 'asc'}],
 			limit: 10
 		});
-		
+
 		const output = [];
 		_.each(result.items, function(item) {
 			output.push(objects[item.id]);
@@ -51,6 +51,11 @@ export function autocompleteJrnls(req, res) {
 app.get('/autocompleteJrnls', autocompleteJrnls);
 
 export function autocompleteUsers(req, res) {
+
+	if (req.query.string.length <= 3) {
+		return res.status(201).json([]);
+	}
+
 	User.find({}, {'_id': 1, 'username': 1, 'image': 1, 'name': 1}).exec(function(err, users) {
 		const objects = users;
 		const sifter = new Sifter(objects);

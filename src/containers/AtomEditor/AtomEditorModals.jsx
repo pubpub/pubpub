@@ -3,6 +3,7 @@ import Radium from 'radium';
 import AtomEditorDetails from './AtomEditorDetails';
 import AtomEditorPublishing from './AtomEditorPublishing';
 import AtomEditorSaveVersion from './AtomEditorSaveVersion';
+import AtomEditorContributors from './AtomEditorContributors';
 
 let styles = {};
 
@@ -27,10 +28,10 @@ export const AtomEditorModals = React.createClass({
 
 	closeOnEscape: function(evt) {
 		let isEscape = false;
-		if ('key' in evt) { 
+		if ('key' in evt) {
 			isEscape = evt.key === 'Escape';
-		} else { 
-			isEscape = evt.keyCode === 27; 
+		} else {
+			isEscape = evt.keyCode === 27;
 		}
 
 		if (isEscape) {
@@ -51,6 +52,8 @@ export const AtomEditorModals = React.createClass({
 							return <AtomEditorDetails atomEditData={this.props.atomEditData} updateDetailsHandler={this.props.updateDetailsHandler} isLoading={this.props.isLoading} error={this.props.error}/>;
 						case 'publishing':
 							return <AtomEditorPublishing atomEditData={this.props.atomEditData} publishVersionHandler={this.props.publishVersionHandler} isLoading={this.props.isLoading} error={this.props.error}/>;
+						case 'contributors':
+							return <AtomEditorContributors atomEditData={this.props.atomEditData} publishVersionHandler={this.props.publishVersionHandler} isLoading={this.props.isLoading} error={this.props.error}/>;
 						default:
 							return null;
 						}
@@ -75,7 +78,7 @@ styles = {
 		opacity: 0,
 		pointerEvents: 'none',
 		transition: '.1s linear opacity',
-		
+
 	},
 	containerActive: {
 		opacity: 1,

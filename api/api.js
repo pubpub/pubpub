@@ -13,6 +13,7 @@ if (!process.env.TESTING) {
 
 // require('../server.babel'); // babel registration (runtime transpilation for node)
 
+
 import express from 'express';
 import session from 'express-session';
 import bodyParser from 'body-parser';
@@ -97,6 +98,6 @@ if (config.apiPort) {
 
 } else {
 	if (!process.env.TESTING) {
-		console.error('==>     ERROR: No PORT environment variable has been specified');	
+		console.error('==>     ERROR: No PORT environment variable has been specified');
 	}
 }

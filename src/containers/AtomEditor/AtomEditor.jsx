@@ -40,8 +40,8 @@ export const AtomEditor = React.createClass({
 		const previousLoading = safeGetInToJS(this.props.atomEditData, ['loading']);
 		const nextLoading = safeGetInToJS(nextProps.atomEditData, ['loading']);
 		const nextError = safeGetInToJS(nextProps.atomEditData, ['error']);
-		
-		if (previousLoading === true && nextLoading === false && !nextError && this.state.modalMode !== 'publishing') { 
+
+		if (previousLoading === true && nextLoading === false && !nextError && this.state.modalMode !== 'publishing') {
 			this.closeModal();
 		}
 
@@ -104,7 +104,7 @@ export const AtomEditor = React.createClass({
 			{text: 'View', link: '/a/' + this.props.slug},
 			{text: 'Edit', link: '/a/' + this.props.slug + '/draft', active: true},
 			{text: 'Details', rightAlign: true, action: this.openModal.bind(this, 'details')},
-			{text: 'Collaborators', rightAlign: true, action: this.openModal.bind(this, 'collaborators')},
+			{text: 'Contributors', rightAlign: true, action: this.openModal.bind(this, 'contributors')},
 			// {text: 'Styles', rightAlign: true, action: this.openModal.bind(this, 'styles')},
 			{text: 'Publishing', rightAlign: true, action: this.openModal.bind(this, 'publishing')},
 		];
@@ -129,9 +129,9 @@ export const AtomEditor = React.createClass({
 
 					<AtomEditorPane ref={'atomEditorPane'} atomEditData={this.props.atomEditData} loginData={this.props.loginData}/>
 
-					<AtomEditorModals 
+					<AtomEditorModals
 						atomEditData={this.props.atomEditData}
-						mode={this.state.modalMode} 
+						mode={this.state.modalMode}
 						closeModalHandler={this.closeModal}
 						handleVersionSave={this.saveVersionSubmit}
 						updateDetailsHandler={this.updateDetails}
