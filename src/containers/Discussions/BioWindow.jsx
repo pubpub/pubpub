@@ -8,19 +8,31 @@ import DiscussionsInput from './DiscussionsInput';
 const BioWindow = React.createClass({
 	propTypes: {
         modifyBio: PropTypes.func,
+        showPopup: PropTypes.func,
+    
 	},
 	getInitialState: function() {
-		return ({hidden: false});
+		return ({newBio:''});
 	},
 	componentDidMount: function() {
 	},
-    closeButton: function(){
-        console.log('entered the closeButton function')
-        console.log(this.props.closePortal)
-       
-        this.props.closePortal()
-    },
+    doneButton: function(){
+        
+        this.props.modifyBio(this.state.newBio)
+        this.props.showPopup()
+    }, 
     
+     handleChange: function(event) {
+        
+         const newState={newBio: event.target.value}
+            this.setState(newState)
+        
+    },
+    cancelButton: function(){
+       
+        this.props.showPopup()
+        
+    },
 	render: function() {
 
 		const dynamicPosition = {
@@ -33,11 +45,11 @@ const BioWindow = React.createClass({
          <div style={[styles.popoverStyle, dynamicPosition]}>
             <h2>Edit your Bio for this Pub</h2>
             <p>
-            <input type="text"></input>
+            <input type="text" onChange={this.handleChange}></input>
             </p>
             <p>
-            <button style={styles.buttonMedium} onClick={this.props.closePortal}>Cancel</button>
-            <button style={styles.buttonMedium} onClick={this.closeButton}>Done</button>
+            <button style={styles.buttonMedium} onClick={this.cancelButton}>Cancel</button>
+            <button style={styles.buttonMedium} onClick={this.doneButton}>Done</button>
             </p>
          </div>
 		);

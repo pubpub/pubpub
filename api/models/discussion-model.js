@@ -6,9 +6,12 @@ const ObjectId = Schema.Types.ObjectId;
 const discussionSchema = new Schema({
 	author: { type: ObjectId, ref: 'User' },
 	markdown: { type: String },
+	bio: { type: String },
+
 
 	history: [{
 		markdown: { type: String },
+        bio: { type: String },
 		datePosted: { type: Date },
 		version: { type: Number },
 	}],

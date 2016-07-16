@@ -53,11 +53,17 @@ const DiscussionsItem = React.createClass({
 	},
 
 	getInitialState() {
+        
+        //if markdown takes less height than threshold ... showCompleteText
+        
+        
+        
 		return {
 			replyActive: false,
 			showArchived: false,
             show: true, 
             showChilds: true,
+            showCompleteText:false
 		};
 	},
 
@@ -66,8 +72,15 @@ const DiscussionsItem = React.createClass({
 			this.setState({replyActive: false});
 		}
 	},
+    
+    componentDidMount() {
+		
+    //    const h = .refs.chart.innerText
+        
+      //  console.log(h)
+	},
 
-	toggleReplyActive: function() {
+    toggleReplyActive: function() {
 		this.setState({
 			replyActive: !this.state.replyActive,
 		});
@@ -82,8 +95,12 @@ const DiscussionsItem = React.createClass({
 			showArchived: !this.state.showArchived
 		});
 	},
+    showMore: function() {
+		this.setState({
+			showCompleteText: true
+		});
+	},
     
-    //when should I call .bind(this)
 
 	render: function() {
         
@@ -94,7 +111,7 @@ const DiscussionsItem = React.createClass({
         const commentAuthor = discussionItem.author.username;
         
     
-      //checking if the comment is a child and it was written by the author
+      //checking if the comment is a child and it was written by this pub author
         
         const isChildCommentByThisPubAuthor = (!this.props.isParent && !!(this.props.pubAuthors.find( (author) => {
             return (commentAuthor === author.username);
@@ -113,7 +130,8 @@ const DiscussionsItem = React.createClass({
             }
                 
     }
-            
+        
+        
 		return (
 			isArchived && !this.state.showArchived
 				? <div style={[styles.archivedContainer, globalStyles.ellipsis]} key={'archiveBlock-' + discussionItem._id} onClick={this.toggleShowArchived}>
@@ -140,15 +158,26 @@ const DiscussionsItem = React.createClass({
 								<img style={styles.discussionAuthorImage} src={discussionItem.author.thumbnail} />
 							</Link>
 						</div>
+                        
 						<div style={styles.discussionDetailsLine}>
+                            
 							<Link to={'/user/' + discussionItem.author.username} style={globalStyles.link}>
 								<span key={'discussionItemAuthorLink' + discussionItem._id} style={[styles.headerText, styles.authorName(isChildCommentByThisPubAuthor)]}>{discussionItem.author.name}</span>
 							</Link> 
-                            <span style={styles.dot}>●</span> {
-								(((new Date() - new Date(discussionItem.createDate)) / (1000 * 60 * 60 * 24)) < 7)
+                            
+                            <span style={styles.dot}>●</span> 
+                            {
+								(((new Date() - new Date(discussionItem.createDate)) / (1000 * 60 * 60 * 24)) < 7  )
 				            ? <Link to={'/pub/' + this.props.slug + '/discussions/' + discussionItem._id}><FormattedRelative value={discussionItem.createDate}/></Link>
 							: <Link to={'/pub/' + this.props.slug + '/discussions/' + discussionItem._id}><FormattedDate value={discussionItem.createDate || new Date()} day='numeric' month='short' year='numeric'/></Link>
 							}
+                        
+                        </div>
+
+                        <div style={[styles.discussionDetailsLine,  styles.discussionDetailsLineBottom]}>
+                            
+                            <span>{discussionItem.bio}</span> 
+                            
                         </div>
 						
 
@@ -205,7 +234,8 @@ const DiscussionsItem = React.createClass({
 						paddingType="right"> */}
                     
                     
-					<div style={styles.discussionBody}>
+					<div id="chart" ref="chart" style={styles.discussionBody}>
+                        
 
 						<div style={styles.discussionContent}>
 							<div style={[styles.privateBlock, discussionItem.private && {display: 'inline-block'}]}>
@@ -214,6 +244,9 @@ const DiscussionsItem = React.createClass({
 							</div>
 							{/* md.tree */}
 							<Markdown markdown={discussionItem.markdown} />
+                          
+                        <span style={styles.readMore} onClick={this.showMore}>Show More</span>
+                        </div>
                     
             <div style={[styles.discussionActionsLine, styles.discussionActionsLineBottom]}>
                
@@ -229,7 +262,6 @@ const DiscussionsItem = React.createClass({
                 <span style={[styles.detailLineItemSeparator, {display: 'inline-block'}]}>|</span> <span style={[styles.detailLineItem, {display: 'inline-block'}]} key={'replyButton-' + discussionItem._id} onClick={this.toggleReplyActive}>
 				<FormattedMessage id="discussion.reply" defaultMessage="Reply"/></span> 
             </div>               
-              </div>
         </div>
                 
                  <div>
@@ -377,6 +409,17 @@ styles = {
         display: show==true ?'inline-block' :'none'
         }
 	},
+    readMore: { 
+        position: 'absolute',
+        bottom: 0,
+        left: 0,
+        width: '100%', 
+        textAlign: 'center',
+        fontWeight: 900,
+        margin: 0, 
+        padding: '18px 0',
+        backgroundImage: 'linear-gradient(to bottom, #F3F3F4, transparent 98%)',
+},
 	archived: {
 		opacity: 0.7,
 	},
@@ -456,9 +499,10 @@ styles = {
 	},
 	discussionBody: {
 		width: '100%',
+        height: '',
 		position: 'relative',
 		borderBottom: '1px solid #ddd',
-		// overflow: 'hidden',
+        overflow: 'hidden',
 		wordWrap: 'break-word',
 	},
 	discussionVoting: {

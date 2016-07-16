@@ -53,7 +53,7 @@ const PubDiscussionsInput = React.createClass({
 		toggleMediaLibrary: PropTypes.func,
 		requestAssetUpload: PropTypes.func,
 		userAssets: PropTypes.array,
-        // defaultBio: Proptypes.string,
+        defaultBio: PropTypes.string,
 	},
 
 	getInitialState() {
@@ -64,7 +64,8 @@ const PubDiscussionsInput = React.createClass({
 			showPreview: false,
 			showPreviewText: false,
 			isPrivateChecked: false,
-            bio: 'Mechanical Engineering Student, UPR-M'                                 
+            bio: this.props.defaultBio, 
+            popupIsOpen: false
 		};
 	},
 
@@ -140,6 +141,7 @@ const PubDiscussionsInput = React.createClass({
 		// const cm = document.getElementsByClassName('CodeMirror')[0].CodeMirror;
 		const cm = document.getElementById(this.props.codeMirrorID).childNodes[0].CodeMirror;
 		newDiscussion.markdown = cm.getValue();
+        newDiscussion.bio = this.state.bio;
 		// newDiscussion.assets = {};
 		// newDiscussion.selections = {};
 		// newDiscussion.references = {};
@@ -180,13 +182,26 @@ const PubDiscussionsInput = React.createClass({
 		};
 	},
 
-    modifyBio: function(){
+    modifyBio: function(newBio){
 
-            
-           const newState = { bio:'hey hey hey'}; 
-               this.setState(newState);  
+        console.log(newBio)
+        console.log('modifyBio function was ran');
+        this.setState({ bio:newBio});  
+    
+}, 
 
-     console.log('modifyBio function was ran');
+    showPopup: function(){
+
+         console.log('showPopup function was ran');
+        
+        if(this.state.popupIsOpen){
+           const newState = { popupIsOpen:false}; 
+               this.setState(newState); 
+            }
+        else{
+            const newState = { popupIsOpen:true}; 
+               this.setState(newState); 
+}
     
 },   
 
@@ -210,11 +225,6 @@ const PubDiscussionsInput = React.createClass({
 			{ key: 'preview', string: <FormattedMessage {...globalMessages.Preview}/>, function: this.toggleLivePreview, isActive: this.state.showPreview, noSeparator: true  },
 		];
 
-        console.log(this.props.userName)
-
-
-        const popupSpan = <span>(edit)</span>
-
 		return (
             
             <div>
@@ -231,7 +241,8 @@ const PubDiscussionsInput = React.createClass({
 						padding: '0px 20px',
 						width: 'calc(100% - 40px)',
 						minHeight: (this.state.expanded) ?'100px' :'25px',
-						fontWeight: '300'
+						fontWeight: '300',
+                        transition: '0.1s min-height ease-in-out',                        
 					},
 					'.inputCodeMirror .CodeMirror-placeholder': {
 						color: '#aaa',
@@ -262,10 +273,12 @@ const PubDiscussionsInput = React.createClass({
                         </div>
                     
                         <div style={[styles.discussionDetailsLine,  styles.discussionDetailsLineBottom]}> 
-                            <span>{this.state.bio} </span> 
+                            <span style={styles.bio}>{this.state.bio} </span> 
                             
-                            <Portal closeOnEsc={true} openByClickOn={popupSpan}>
-                                <BioWindow />
+                            <span onClick={this.showPopup}>(edit)</span>
+                            
+                            <Portal closeOnEsc={true} isOpened={this.state.popupIsOpen}>
+                                <BioWindow modifyBio={this.modifyBio} showPopup={this.showPopup}/>
                             </Portal>
                             
                         </div>
@@ -427,7 +440,8 @@ styles = {
 	},
     discussionDetailsLineBottom: {
 		lineHeight: '18px',
-		fontSize: '0.7em',
+		fontSize: '0.7em',      
+
 	},
 	livePreviewBox: {
 		width: 'calc(100% - 26px)',

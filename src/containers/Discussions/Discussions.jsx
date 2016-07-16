@@ -14,8 +14,7 @@ import {toggleVisibility} from 'containers/Login/actions';
 import {waitForUpload} from 'containers/Editor/actions';
 import {addDiscussion, discussionVoteSubmit, archiveDiscussion} from './actions';
 
-import {redditHot as hotScore} from 'decay';
-
+import {wilsonScore} from 'decay';
 
 // import {globalMessages} from 'utils/globalMessages';
 import {FormattedMessage} from 'react-intl';
@@ -39,10 +38,18 @@ const Discussions = React.createClass({
 
 	},
 	getInitialState() {
+        const username = this.props.loginData.getIn(['userData', 'username'])
+        const authors = (this.props.authors) ? this.props.authors.toJS() : [];
+        
+        const isThisPubAuthor = (!!(authors.find( (author) => {
+            return (username === author.username);
+    })) );
+        
+        
 		return {
 			showMediaLibrary: false,
 			assetLibraryCodeMirrorID: undefined,
-            sortBy:'hotness',
+            sortBy:isThisPubAuthor ?'Newest Discussions' :'Best Discussions',
             sortedDiscussions:'empty'
 		};
 	},
@@ -112,10 +119,15 @@ const Discussions = React.createClass({
 	},
 
 	getHotness: function(discussion) {
+        
+        
+        const hotScore = wilsonScore();
+        
 		const yays = (discussion.yays) ? discussion.yays : 0;
 		const nays = (discussion.nays) ? discussion.nays : 0;
-		const timestamp = (discussion.postDate) ? new Date(discussion.postDate) : new Date(0);
-		return hotScore(yays, nays, timestamp);
+		const timestamp = (discussion.createDate) ? new Date(discussion.createDate) : new Date(0);
+        
+		return hotScore(yays, nays);
 	},
 
 	toggleMediaLibrary: function(codeMirrorID) {
@@ -145,33 +157,108 @@ const Discussions = React.createClass({
         
     dropdownChange: function(option){
 
-        if (option.value == 'hotness'){
+        if (option.value == 'Best Discussions'){
             const newState={
-                sortBy: 'hotness'
+                sortBy: 'Best Discussions'
             }
 
             this.setState(newState)
             
-         } else if (option.value == 'upvotes'){
+         } else if (option.value == 'Top Discussions'){
             const newState={
-                sortBy: 'upvotes'
+                sortBy: 'Top Discussions'
             }
 
             this.setState(newState)
             
-         } else if (option.value == 'replyAmount'){
+         } else if (option.value == 'Longest Discussions'){
             const newState={
-                sortBy: 'replyAmount'
+                sortBy: 'Longest Discussions'
             }
 
+            this.setState(newState)
+         } else if (option.value == 'Newest Discussions'){
+            const newState={
+                sortBy: 'Newest Discussions'
+            }
+
+            this.setState(newState)
+         } else if (option.value == 'Oldest Discussions'){
+            
+             const newState={
+                sortBy: 'Oldest Discussions'
+            }
+
+            this.setState(newState)
+         } else if (option.value == 'Filter - Replied By Author'){
+            
+             const newState={
+                sortBy: 'Filter - Replied By Author'
+            }
+             
+            this.setState(newState)
+         } else if (option.value == 'Filter - Links'){
+            
+             const newState={
+                sortBy: 'Filter - Links'
+            }
+             
+            this.setState(newState)
+         } else if (option.value == 'Filter - Replied'){
+            
+             const newState={
+                sortBy: 'Filter - Replied'
+            }
+             
             this.setState(newState)
          }
-       
 
+    },
+        
+    authorReplied: function(discussionItem){
+        
+        const authors = (this.props.authors) ? this.props.authors.toJS() : [];
+    
+    for (let i=0; i<discussionItem.children.length;i++){
+            
+        const hasChildCommentByThisPubAuthor = (!!(authors.find( (author) => {
+            return (discussionItem.children[i].author.username === author.username);
+                })) ); 
+        
+        if(hasChildCommentByThisPubAuthor){
+            return hasChildCommentByThisPubAuthor
+        }
+        
+        
+        }
+    
+},
+    
+    includedLink: function(discussionItem){
+        
+        console.log('entered the includedLink function')
+        
+        const hasLink = discussionItem.markdown.indexOf('http')
+        
+        if(hasLink>0){
+            return true
+        }
+        
+    },
+        
+    replied: function(discussionItem){
+        
+        console.log('entered the replied function')
+        
+        if(discussionItem.children.length>0){
+            return true
+        }
+        
     },
         
 
 	render: function() {
+
 
 		let discussionsData = this.props.discussionsData.get('discussions') && this.props.discussionsData.get('discussions').toJS ? this.props.discussionsData.get('discussions').toJS() : [];
 		discussionsData = this.props.metaID ? this.filterDiscussions(discussionsData) : discussionsData;
@@ -182,28 +269,48 @@ const Discussions = React.createClass({
 		const isPubAuthor = this.props.pubData.getIn(['pubData', 'isAuthor']);
 		const isPublished = this.props.pubData.getIn(['pubData', 'isPublished']);
         const isParent = true;
+        
 		const userAssets = this.props.loginData.getIn(['userData', 'assets']) ? this.props.loginData.getIn(['userData', 'assets']).toJS() : [];
-        const authors = this.props.authors.toJS();
+        const username = this.props.loginData.getIn(['userData', 'username']) ? this.props.loginData.getIn(['userData', 'username']) : [];
+        const authors = (this.props.authors) ? this.props.authors.toJS() : [];
+       // const defaultBio = this.props.loginData.getIn(['userData', 'bio']) ? this.props.loginData.getIn(['userData', 'bio']) : [];
+        const defaultBio = 'Researcher at Viral, Media Lab'
         
-       console.log('before entering the if statement for comment list sort');
+        console.log('username', username)
+        console.log('thisPubAuthors:', authors)
         
-        if(this.state.sortBy=='hotness'){
+        if(this.state.sortBy=='Best Discussions'){
             
             console.log('it entered the if statement for hotness');
             
             this.state.sortedDiscussions = discussionsData.sort(function(aIndex, bIndex) {
 			const aScore = this.getHotness(aIndex);
 			const bScore = this.getHotness(bIndex);
+                
 			if (aScore < bScore) {
-				return -1;
-			} else if (aScore > bScore) {
+                
 				return 1;
+                
+			} else if (aScore > bScore) {
+
+				return -1;
+                
+			} else if (aScore === bScore){
+               
+               if (new Date(aIndex.createDate) < new Date(bIndex.createDate)) {
+				return 1;
+			} else if (new Date(aIndex.createDate) > new Date(bIndex.createDate)) {
+				return -1;
 			}
-			return 0;
+               
+            }
+                
+			    return 0;
+                
 		}.bind(this));
             
             
-        } else if (this.state.sortBy=='upvotes'){
+        } else if (this.state.sortBy=='Top Discussions'){
         
          console.log('it entered the else statement for upvotes');
         
@@ -213,14 +320,16 @@ const Discussions = React.createClass({
           const bUpvotes = bIndex.yays-bIndex.nays+1
           
           if (aUpvotes < bUpvotes) {
+              
 				return 1;
 			} else if (aUpvotes > bUpvotes) {
+                
 				return -1;
 			}
 			    return 0;
            
        }.bind(this));
-        } else if (this.state.sortBy=='replyAmount'){
+        } else if (this.state.sortBy=='Longest Discussions'){
         
          console.log('it entered the else statement for replies');
             
@@ -237,10 +346,72 @@ const Discussions = React.createClass({
 			    return 0;
            
        });
- }       
+        } else if (this.state.sortBy=='Newest Discussions'){
+        
+         console.log('it entered the else statement for newest discussions');
+            
+        this.state.sortedDiscussions = discussionsData.sort(function(aIndex, bIndex){
+          
+          if (new Date(aIndex.createDate) < new Date(bIndex.createDate)) {
+				return 1;
+			} else if (new Date(aIndex.createDate) > new Date(bIndex.createDate)) {
+				return -1;
+			}
+			    return 0;
+           
+       });
+        }   else if (this.state.sortBy=='Oldest Discussions'){
+        
+         console.log('it entered the else statement for oldest discussions');
+            
+        this.state.sortedDiscussions = discussionsData.sort(function(aIndex, bIndex){
+          
+          if (new Date(aIndex.createDate) > new Date(bIndex.createDate)) {
+				return 1;
+			} else if (new Date(aIndex.createDate) < new Date(bIndex.createDate)) {
+				return -1;
+			}
+			    return 0;
+           
+       });
+        } else if (this.state.sortBy=='Filter - Replied By Author'){
+        
+         console.log('it entered the else statement for filter by author');
+            
+        this.state.sortedDiscussions = discussionsData.filter(this.authorReplied)
+        
+        } else if (this.state.sortBy=='Filter - Links'){
+        
+         console.log('it entered the else statement for filter by links');
+            
+        this.state.sortedDiscussions = discussionsData.filter(this.includedLink)
+        
+        } else if (this.state.sortBy=='Filter - Replied'){
+        
+         console.log('it entered the else statement for filter for replied discussions');
+            
+        this.state.sortedDiscussions = discussionsData.filter(this.replied)
+        
+        }
+        
+     var  options = [
+         {groupId: 'Sort By:',  label: 'Best Discussions', value: 'Best Discussions'},
+         {groupId: 'Sort By:', label: 'Top Discussions', value: 'Top Discussions'},
+         {groupId: 'Sort By:', label: 'Longest Discussions', value: 'Longest Discussions'},
+         {groupId: 'Sort By:', label: 'Newest Discussions', value: 'Newest Discussions'},
+         {groupId: 'Sort By:', label: 'Oldest Discussions', value: 'Oldest Discussions'}, 
+         {groupId: 'Filter By:', label: 'Filter - Replied By Author', value: 'Filter - Replied By Author'},
+         {groupId: 'Filter By:', label: 'Filter - Links', value: 'Filter - Links'},
+         {groupId: 'Filter By:', label: 'Filter - Replied', value: 'Filter - Replied'}
+        ];  
+        
+    let defaultRanking = options[0];
+        
+        if (this.state.sortBy == 'Newest Discussions'){
+            defaultRanking = options[3];  
+        }
         
         
-        console.log(this.props.loginData.getIn(['userData']))
         
 		return (
 			<div style={styles.container}>
@@ -251,26 +422,30 @@ const Discussions = React.createClass({
 					},
                     '.sortSelect .react-selectize.default.root-node .react-selectize-control': {
 						borderBottom: '0px',
-						padding: '0px 52px 0px 0px'
 					},
 					'.sortSelect .react-selectize.default.root-node .react-selectize-control .react-selectize-placeholder': {
-						// padding: '8px 0px 8px 0px'
+						padding: '8px 0px 8px 0px',
 						lineHeight: 'normal',
 					},
 					'.sortSelect .react-selectize.root-node .react-selectize-control .react-selectize-toggle-button-container': {
-						display: 'none',
+                        fontSize: '0.6em',
 					},
+                    '.sortSelect .react.selectize-dropdown-header': {
+                        position: 'relative',
+                        borderBottom: '1px solid #d0d0d0',
+                        background: '#f8f8f8',
+                        fontSize: '0.6em',
+                    },
 					'.sortSelect .react-selectize.root-node .react-selectize-control .react-selectize-reset-button-container': {
 						display: 'none',
 					},
 					'.sortSelect .react-selectize.root-node .react-selectize-control .react-selectize-search-field-and-selected-values .resizable-input': {
-						...globalStyles.h1,
 						padding: '0px',
 						margin: '0px 2px',
 					},
 					'.sortSelect .simple-select.react-selectize.root-node .simple-value': {
 						margin: '0px 2px',
-					},
+					},    
 					'.sortSelect .react-selectize.dropdown-menu.default': {
 						fontSize: '0.6em',
 					}
@@ -306,6 +481,7 @@ const Discussions = React.createClass({
 							saveID={'root'}
 							isCollaborator={this.props.pubData.getIn(['pubData', 'isCollaborator'])}
 							parentIsPrivate={false}
+                            defaultBio={defaultBio}
 							isReply={false}
 							codeMirrorID={'rootCommentInput'}
 							isPublished={isPublished}
@@ -318,12 +494,8 @@ const Discussions = React.createClass({
                 {/*default option??? editable??? */}
                     
                 <div className="sortSelect">   
-                <SimpleSelect transitionEnter={true} transitionLeave={true} onValueChange={this.dropdownChange}>
-                    <option value = 'hotness' >Hottest Discussions</option>
-                    <option value = 'replyAmount'>Longest Discussions</option>
-                    <option value = 'upvotes'>Most Upvoted Discussions</option>
-                </SimpleSelect>
-                </div> 
+                <SimpleSelect options={options} defaultValue={defaultRanking} transitionEnter={true} transitionLeave={true} onValueChange={this.dropdownChange}/>
+                </div>   
                 
 					{
 						this.state.sortedDiscussions.map((discussion)=>{

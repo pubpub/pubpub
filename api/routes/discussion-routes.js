@@ -16,6 +16,7 @@ export function addDiscussion(req, res) {
 	newDiscussion.markdown = req.body.discussionObject.markdown;
 	newDiscussion.history = [{
 		markdown: req.body.discussionObject.markdown,
+        bio: req.body.discussionObject.bio,
 		datePosted: currentDate,
 		version: req.body.discussionObject.version,
 	}];
@@ -26,6 +27,9 @@ export function addDiscussion(req, res) {
 	newDiscussion.pub = req.body.discussionObject.pub;
 	newDiscussion.version = req.body.discussionObject.version;
 	newDiscussion.sourceJournal = req.body.discussionObject.sourceJournal;
+    
+    newDiscussion.bio = req.body.discussionObject.bio;
+
 
 	newDiscussion.createDate = currentDate;
 	newDiscussion.lastUpdated = currentDate;
@@ -90,8 +94,11 @@ export function updateDiscussion(req, res) {
 	Discussion.findOne({ _id: req.body.updatedDiscussion._id }, function(err, discussion) {
 		const currentDate = new Date().getTime();
 		discussion.markdown = req.body.updatedDiscussion.markdown;
+        discussion.bio = req.body.updatedDiscussion.bio;
+
 		discussion.history.push({
 			markdown: req.body.updatedDiscussion.markdown,
+            bio: req.body.updatedDiscussion.bio,
 			datePosted: currentDate,
 			version: req.body.updatedDiscussion.version,
 		});

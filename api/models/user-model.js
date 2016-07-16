@@ -16,6 +16,9 @@ const userSchema = new Schema({
 	image: { type: String }, // User profile image
 	
 	bio: { type: String }, // Self assigned bio
+    commentBio: { type: String }, // Self assigned bio
+    commentBioVerified: {type: Boolean},
+    
 	github: { type: String }, // Github account
 	orcid: { type: String }, // orcid number
 	twitter: { type: String }, // twitter handle
