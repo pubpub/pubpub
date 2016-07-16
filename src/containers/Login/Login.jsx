@@ -1,12 +1,12 @@
 import React, {PropTypes} from 'react';
 import {connect} from 'react-redux';
-import {pushState} from 'redux-router';
+import {push} from 'redux-router';
+
 import Radium from 'radium';
 import Helmet from 'react-helmet';
 import {login} from './actions';
 import {Link} from 'react-router';
 import {Loader} from 'components';
-
 
 import {globalStyles} from 'utils/styleConstants';
 import {globalMessages} from 'utils/globalMessages';
@@ -31,8 +31,9 @@ export const Login = React.createClass({
 		const oldUsername = this.props.loginData && this.props.loginData.getIn(['userData', 'username']);
 		const newUsername = nextProps.loginData && nextProps.loginData.getIn(['userData', 'username']);
 		if (newUsername && oldUsername !== newUsername) {
+			// new username exists and is not the same as oldusername
 			const redirectRoute = this.props.query && this.props.query.redirect;
-			this.props.dispatch(pushState(null, (redirectRoute || '/')));
+			this.props.dispatch(push(redirectRoute || '/'));
 		}
 	},
 

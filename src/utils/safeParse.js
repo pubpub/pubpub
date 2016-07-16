@@ -11,3 +11,11 @@ export function safeGetInToJS(obj, props) {
 	}
 	return null;
 }
+
+
+export function safeToJS(val) {
+	if (Immutable.Iterable.isIterable(val) && val.toJS) {
+		return val.toJS();
+	}
+	return null;
+}

@@ -1,13 +1,13 @@
 import {expect} from 'chai';
 import {shallowRender} from 'tests/helpersClient';
-import {MarkdownViewer} from './MarkdownViewer.jsx'
+import {JrnlProfileFeatured} from './JrnlProfileFeatured.jsx'
 
 describe('Components', () => {
-	describe('MarkdownViewer.jsx', () => {
+	describe('JrnlProfileFeatured.jsx', () => {
 
 		it('should render with empty props', () => {
 			const props = {};
-			const {renderOutput, error} = shallowRender(MarkdownViewer, props) ;
+			const {renderOutput, error} = shallowRender(JrnlProfileFeatured, props) ;
 
 			expect(error).to.not.exist; // Did not render an error
 			expect(renderOutput).to.exist; // Successfully rendered

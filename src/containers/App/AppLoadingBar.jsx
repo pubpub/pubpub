@@ -21,20 +21,17 @@ export const AppLoadingBar = React.createClass({
 
 	getInitialState() {
 		return {
-			size: 0,
 			disappearDelayHide: false, // when dispappear, first transition then display none
 			percent: 0,
-			appearDelayWidth: 0 // when appear, first display block then transition width
 		};
 	},
 
 	componentWillReceiveProps(nextProps) {
-
 		if (!this.props.show && nextProps.show) {
 			this.show();
 			interval = setInterval(this.show, 200);
 		} 
-		if (!nextProps.show) {
+		if (this.props.show && !nextProps.show) {
 			this.hide();
 			clearInterval(interval);
 		}
@@ -45,36 +42,15 @@ export const AppLoadingBar = React.createClass({
 	},
 
 	show() {
-		let { size, percent } = this.state;
-
-		const appearDelayWidth = size === 0;
+		let { percent } = this.state;
 		percent = this.calculatePercent(percent);
-
 		this.setState({
-			size: ++size,
-			appearDelayWidth,
 			percent
 		});
-
-		if (appearDelayWidth) {
-			setTimeout(() => {
-				this.setState({
-					appearDelayWidth: false
-				});
-			});
-		}
 	},
 
 	hide() {
-		let { size } = this.state;
-
-		if (--size < 0) {
-			this.setState({ size: 0 });
-			return;
-		}
-
 		this.setState({
-			size: 0,
 			disappearDelayHide: true,
 			percent: 1
 		});
@@ -88,13 +64,13 @@ export const AppLoadingBar = React.createClass({
 	},
 
 	getBarStyle() {
-		const { disappearDelayHide, appearDelayWidth, percent } = this.state;
+		const { disappearDelayHide, percent } = this.state;
 		const { color } = this.props;
 
 		return {
 			...styles.bar,
 			background: color,
-			width: appearDelayWidth ? 0 : `${percent * 100}%`,
+			transform: `translate3d(calc(-100% + ${percent * 100}%), 0, 0)`,
 			display: disappearDelayHide || percent > 0 ? 'block' : 'none',
 			opacity: disappearDelayHide ? 0 : 1,
 		};
@@ -105,7 +81,7 @@ export const AppLoadingBar = React.createClass({
 		let currentPercent = percent || 0;
 		let random = 0;
 
-		if (currentPercent >= 0 && currentPercent < 0.25) {
+		if (currentPercent < 0.25) {
 			random = (Math.random() * (5 - 3 + 1) + 10) / 100;
 		} else if (currentPercent >= 0.25 && currentPercent < 0.65) {
 			random = (Math.random() * 3) / 100;
@@ -137,7 +113,7 @@ export default AppLoadingBar;
 styles = {
 	loading: {
 		pointerEvents: 'none',
-		transition: '400ms linear all'
+		// transition: '400ms linear all'
 	},
 	bar: {
 		position: 'fixed',
@@ -148,7 +124,7 @@ styles = {
 		width: '100%',
 		height: '2px',
 		borderRadius: '0 1px 1px 0',
-		transition: 'width 350ms, opacity 250ms linear 350ms',
+		transition: 'transform 350ms, opacity 250ms linear 350ms',
 	},
 	peg: {
 		position: 'absolute',

@@ -3,7 +3,7 @@ import {connect} from 'react-redux';
 import Radium from 'radium';
 import Helmet from 'react-helmet';
 import { Link } from 'react-router';
-import { pushState } from 'redux-router';
+import { push } from 'redux-router';
 import {logout, follow, unfollow, toggleVisibility} from 'containers/Login/actions';
 import {getProfile, updateUser, userNavOut, userNavIn, setNotificationsRead} from './actions';
 import {NavContentWrapper} from 'components';
@@ -52,7 +52,7 @@ const Profile = React.createClass({
 
 	submitLogout: function() {
 		this.props.dispatch(logout());
-		this.props.dispatch(pushState(null, ('/')));
+		this.props.dispatch(push('/'));
 	},
 
 	settingsSave: function(settingsObject) {

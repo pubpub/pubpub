@@ -8,6 +8,10 @@ export const GET_ATOM_DATA_LOAD = 'atom/GET_ATOM_DATA_LOAD';
 export const GET_ATOM_DATA_SUCCESS = 'atom/GET_ATOM_DATA_SUCCESS';
 export const GET_ATOM_DATA_FAIL = 'atom/GET_ATOM_DATA_FAIL';
 
+export const SUBMIT_ATOM_TO_JOURNAL_LOAD = 'atom/SUBMIT_ATOM_TO_JOURNAL_LOAD';
+export const SUBMIT_ATOM_TO_JOURNAL_SUCCESS = 'atom/SUBMIT_ATOM_TO_JOURNAL_SUCCESS';
+export const SUBMIT_ATOM_TO_JOURNAL_FAIL = 'atom/SUBMIT_ATOM_TO_JOURNAL_FAIL';
+
 /*--------*/
 // Define Action creators
 //
@@ -23,6 +27,16 @@ export function getAtomData(slug, meta, version) {
 			slug: slug,
 			meta: meta,
 			version: version,
+		}})
+	};
+}
+
+export function submitAtomToJournals(atomID, journalIDs) {
+	return {
+		types: [SUBMIT_ATOM_TO_JOURNAL_LOAD, SUBMIT_ATOM_TO_JOURNAL_SUCCESS, SUBMIT_ATOM_TO_JOURNAL_FAIL],
+		promise: (client) => client.post('/submitAtomToJournals', {data: {
+			atomID: atomID,
+			journalIDs: journalIDs,
 		}})
 	};
 }

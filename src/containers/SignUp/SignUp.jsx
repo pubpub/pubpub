@@ -1,6 +1,6 @@
 import React, {PropTypes} from 'react';
 import {connect} from 'react-redux';
-import {pushState} from 'redux-router';
+import {push} from 'redux-router';
 import Radium from 'radium';
 import {signup, signupDetails} from './actions';
 import SignUpForm from './SignUpForm';
@@ -34,9 +34,12 @@ export const SignUp = React.createClass({
 			// If the signup process is complete, redirect the path
 			// else update the stage query
 			if (nextStage === 'complete') { 
-				this.props.dispatch(pushState(null, (redirectRoute || '/')));	
+				this.props.dispatch(push(redirectRoute || '/'));	
 			} else {
-				this.props.dispatch(pushState(null, '/signup', {redirect: redirectRoute, stage: nextStage}));	
+				this.props.dispatch(push({
+					pathname: '/signup', 
+					query: {redirect: redirectRoute, stage: nextStage}
+				}));	
 			}
 		}
 	},

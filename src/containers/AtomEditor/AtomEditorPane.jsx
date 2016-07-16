@@ -1,6 +1,6 @@
 import React, {PropTypes} from 'react';
 import Radium from 'radium';
-import {MarkdownEditor, ImageEditor} from 'components/AtomTypes' ;
+import AtomTypes from 'components/AtomTypes';
 import {safeGetInToJS} from 'utils/safeParse';
 
 export const AtomEditorPane = React.createClass({
@@ -12,20 +12,20 @@ export const AtomEditorPane = React.createClass({
 	render: function() {
 		const props = {
 			ref: 'editor',
-			atomEditData: this.props.atomEditData
+			atomEditData: this.props.atomEditData,
+			loginData: this.props.loginData
 		};
 
 		const type = safeGetInToJS(this.props.atomEditData, ['atomData', 'type']);
-		switch (type) {
-		case 'markdown': 
-			return <MarkdownEditor {...props} loginData={this.props.loginData} />;
-		case 'image': 
-			return <ImageEditor {...props} />;
-		default: 
-			return <div>Unknown Type</div>;
+
+		if (AtomTypes.hasOwnProperty(type)) {
+			const Component = AtomTypes[type].editor;
+			return <Component {...props} />;
 		}
+
+		return <div>Unknown Type</div>;
+
 	}
 });
 
 export default Radium(AtomEditorPane);
-

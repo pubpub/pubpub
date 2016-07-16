@@ -3,12 +3,13 @@ import {connect} from 'react-redux';
 import Radium from 'radium';
 import Helmet from 'react-helmet';
 import {getAtomEdit, saveVersion} from './actions';
-import {safeGetInToJS} from 'utils/safeParse';
+import {safeGetInToJS, safeToJS} from 'utils/safeParse';
 
 import {HorizontalNav} from 'components';
 import AtomEditorHeader from './AtomEditorHeader';
 import AtomEditorPane from './AtomEditorPane';
 import AtomEditorModals from './AtomEditorModals';
+import AtomEditorContributors from './AtomEditorContributors';
 
 
 // import {globalStyles} from 'utils/styleConstants';
@@ -21,6 +22,13 @@ let styles = {};
 
 export const AtomEditor = React.createClass({
 	propTypes: {
+
+		mode: PropTypes.string,
+
+		//within AtomEditData
+		atomData: PropTypes.object,
+		contributorData: PropTypes.object,
+
 		atomEditData: PropTypes.object,
 		loginData: PropTypes.object,
 		slug: PropTypes.string,
@@ -47,7 +55,7 @@ export const AtomEditor = React.createClass({
 
 	saveVersionSubmit: function() {
 		const newVersionContent = this.refs.atomEditorPane.refs.editor.getSaveVersionContent();
-		const atomData = this.props.atomEditData.get('atomData').toJS();
+		const atomData = this.props.atomData.toJS();
 		const newVersion = {
 			type: atomData.type,
 			message: '',
@@ -59,6 +67,10 @@ export const AtomEditor = React.createClass({
 
 	openModal: function(mode) {
 		this.setState({modalMode: mode});
+	},
+
+	fetchModalData: function(mode) {
+			return dispatch(getPubEdit(routeParams.slug));
 	},
 
 	closeModal: function() {
@@ -74,12 +86,15 @@ export const AtomEditor = React.createClass({
 			{text: 'View', link: '/a/' + this.props.slug},
 			{text: 'Edit', link: '/a/' + this.props.slug + '/draft', active: true},
 			{text: 'Details', rightAlign: true, action: this.openModal.bind(this, 'details')},
-			{text: 'Collaborators', rightAlign: true, action: this.openModal.bind(this, 'collaborators')},
+			{text: 'Contributors', rightAlign: true, action: this.openModal.bind(this, 'contributors')},
 			{text: 'Styles', rightAlign: true, action: this.openModal.bind(this, 'styles')},
 			{text: 'Publishing', rightAlign: true, action: this.openModal.bind(this, 'publishing')},
 		];
 
 		const atomEditData = safeGetInToJS(this.props.atomEditData, ['atomData']) || {};
+		const contributorData = safeToJS(this.props.contributorData) || [];
+
+		// debugger;
 
 		return (
 			<div style={styles.container}>
@@ -97,7 +112,18 @@ export const AtomEditor = React.createClass({
 
 					<AtomEditorPane ref={'atomEditorPane'} atomEditData={this.props.atomEditData} loginData={this.props.loginData}/>
 
-					<AtomEditorModals mode={this.state.modalMode} closeModalHandler={this.closeModal}/>
+					<AtomEditorModals mode={this.state.modalMode} closeModalHandler={this.closeModal}>
+
+						{(()=>{
+							switch (this.state.modalMode) {
+							case 'contributors':
+								return <AtomEditorContributors contributorData={contributorData}/>;
+							default:
+								return <div>SPAM SPAM SPMA</div>;
+							}
+						})()}
+
+					</AtomEditorModals>/>
 
 				</div>
 
@@ -111,6 +137,8 @@ export const AtomEditor = React.createClass({
 export default connect( state => {
 	return {
 		atomEditData: state.atomEdit,
+		// atomData: state.atomEdit.get('atomData'),
+		contributorData: state.atomEdit.get('contributorData'),
 		loginData: state.login,
 		slug: state.router.params.slug,
 		query: state.router.location.query,

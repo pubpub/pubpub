@@ -52,7 +52,6 @@ module.exports = mongoose.model('Atom', atomSchema);
 // inactiveNote
 
 
-
 // Submit to journal is link. Source is pub, destination is journal
 // inactive without any pending feature means it's been denied.
 // Querying for journals means finding all links with {type:{submittedTo or featuredby}, source: atomID}

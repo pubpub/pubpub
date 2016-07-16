@@ -20,6 +20,7 @@ module.exports = mongoose.model('Version', versionSchema);
 // Document:
 // -----------
 // content: {
+//  docJSON:
 // 	markdown:
 // 	style:
 // }
@@ -30,5 +31,13 @@ module.exports = mongoose.model('Version', versionSchema);
 // content: {
 // 	url:
 // 	metadata:
+// }
+// -----------
+
+// Jupyter:
+// -----------
+// content: {
+// 	url:
+//	htmlUrl:
 // }
 // -----------

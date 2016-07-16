@@ -1,6 +1,6 @@
 import React, {PropTypes} from 'react';
 import {connect} from 'react-redux';
-import {pushState} from 'redux-router';
+import {push} from 'redux-router';
 import Radium from 'radium';
 import Helmet from 'react-helmet';
 import {createJrnl} from './actions';
@@ -34,7 +34,7 @@ export const JrnlCreate = React.createClass({
 		const newSlug = nextProps.jrnlCreateData && nextProps.jrnlCreateData.get('newJrnlSlug');
 		console.log(oldSlug, newSlug);
 		if (newSlug && oldSlug !== newSlug) {
-			this.props.dispatch(pushState(null, '/' + newSlug));
+			this.props.dispatch(push('/' + newSlug));
 		}
 	},
 

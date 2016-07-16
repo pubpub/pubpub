@@ -9,6 +9,10 @@ import {About} from 'components';
 import {s3Upload} from 'utils/uploadFile';
 import {createAtom} from 'containers/AtomEditor/actions';
 
+// import Select from 'react-select';
+// import request from 'superagent';
+// import {push} from 'redux-router';
+
 let styles = {};
 
 const Landing = React.createClass({
@@ -20,7 +24,7 @@ const Landing = React.createClass({
 
 	getInitialState() {
 		return {
-			
+			// value: undefined,
 		};
 	},
 
@@ -39,11 +43,16 @@ const Landing = React.createClass({
 		case 'png':
 		case 'jpeg':
 		case 'tiff':
+		case 'gif':
 			atomType = 'image'; break;
 		case 'pdf':
 			atomType = 'pdf'; break;
 		case 'ipynb':
 			atomType = 'jupyter'; break;
+		case 'mp4':
+		case 'ogg':
+		case 'webm':
+			atomType = 'video'; break;
 		default:
 			break;
 		}
@@ -53,6 +62,26 @@ const Landing = React.createClass({
 		};
 		this.props.dispatch(createAtom(atomType, versionContent));
 	},
+
+	// handleSelectChange: function(value) {
+	// 	console.log(value);
+	// 	this.setState({ value });
+	// 	// this.props.dispatch(push('/' + value.value));
+	// },
+
+	// loadOptions: function(input, callback) {
+	// 	request.get('/api/autocompleteJrnls?string=' + input).end((err, response)=>{
+	// 		const responseArray = response.body || [];
+	// 		const options = responseArray.map((item)=>{
+	// 			return {
+	// 				value: item.slug,
+	// 				label: item.jrnlName,
+	// 				id: item._id,
+	// 			};
+	// 		});
+	// 		callback(null, { options: options });
+	// 	});
+	// },
 
 	render: function() {
 		const metaData = {
@@ -70,13 +99,20 @@ const Landing = React.createClass({
 					<About />
 				}
 
-					
 				<div className={'lightest-bg'}>
 					<div className={'section'}>
 
 						<input type="file" accept="*" onChange={this.handleFileSelect} />
 
 						<h2>Recent Activity</h2>
+
+						{/* <Select.Async
+							name="form-field-name"
+							value={this.state.value}
+							loadOptions={this.loadOptions}
+							placeholder={<span>Search</span>}
+							multi={true}
+							onChange={this.handleSelectChange} /> */}
 
 						{/* If no activity, display - follow these suggested accounts*/}
 

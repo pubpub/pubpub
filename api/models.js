@@ -15,4 +15,5 @@ module.exports.Journal = require('./models/journal-model');
 module.exports.Jrnl = require('./models/jrnl-model');
 module.exports.Notification = require('./models/notification-model');
 module.exports.Pub = require('./models/pub-model');
+module.exports.Tag = require('./models/tag-model');
 module.exports.User = require('./models/user-model');

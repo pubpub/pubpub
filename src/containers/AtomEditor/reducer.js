@@ -60,6 +60,7 @@ function getAtomEditSuccess(state, result) {
 	return state.merge({
 		status: 'loaded',
 		atomData: result.atomData,
+		contributorData: result.contributorData,
 		currentVersionData: result.currentVersionData,
 		error: null
 	});

@@ -7,6 +7,10 @@
 	color: #333;
 }
 
+#atom-reader.atom-reader-meta {
+	font-family: inherit;
+}
+
 #atom-reader .headerBlock { /* This hides old markdown titles in case they're still there*/
 	display: none;
 }
@@ -170,9 +174,12 @@
 	padding: 2.5% 7.5%;
 }
 
+#atom-reader img {
+	max-width: 100%;
+}
+
 .pagebreak {
 	opacity: 0 !important;
-	page-break-before: always !important;
 }
 
 /*HIGHLIGHT STYLING*/
