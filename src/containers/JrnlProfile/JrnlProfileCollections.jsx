@@ -1,6 +1,7 @@
 import React, {PropTypes} from 'react';
 import Radium from 'radium';
 import Helmet from 'react-helmet';
+import { Link } from 'react-router';
 import {safeGetInToJS} from 'utils/safeParse';
 import Sortable from 'react-anything-sortable';
 import {SortableItem } from 'components';
@@ -18,6 +19,7 @@ export const JrnlProfileCollections = React.createClass({
 		handleCreateCollection: PropTypes.func,
 		handleUpdateCollection: PropTypes.func,
 		handleDeleteCollection: PropTypes.func,
+		slug: PropTypes.string,
 	},
 
 	getInitialState: function() {
@@ -100,7 +102,7 @@ export const JrnlProfileCollections = React.createClass({
 			<div>
 				<Helmet {...metaData} />				
 
-				<p>Collections let you order. Create some collections and order how you like.</p>
+				<p>Collections let you organize the pubs featured by this journal. Add pubs to collections on the <Link to={'/' + this.props.slug + '/featured'} style={{color: 'inherit'}}>Featured</Link> page.</p>
 
 				{/* Add Collection Field */}
 				<h3>New Collection</h3>

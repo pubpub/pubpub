@@ -3,6 +3,7 @@ import Radium from 'radium';
 import Helmet from 'react-helmet';
 import {safeGetInToJS} from 'utils/safeParse';
 import {PreviewCard} from 'components';
+import dateFormat from 'dateformat';
 
 // import {globalStyles} from 'utils/styleConstants';
 // import {globalMessages} from 'utils/globalMessages';
@@ -85,15 +86,22 @@ export const JrnlProfileSubmitted = React.createClass({
 						}
 
 						return (
-							<PreviewCard 
-								key={'submitted-' + index}
-								type={'atom'}
-								image={item.source.previewImage}
-								slug={item.source.slug}
-								title={item.source.title}
-								description={item.source.description} 
-								header={<div>Submitted on {item.createDate} | Inactive: {item.inactive ? 'true' : 'false'}</div>}
-								buttons = {item.inactive ? [] : buttons}/>
+							<div style={[item.inactive && styles.inactive]}>
+								<PreviewCard 
+									key={'submitted-' + index}
+									type={'atom'}
+									image={item.source.previewImage}
+									slug={item.source.slug}
+									title={item.source.title}
+									description={item.source.description} 
+									header={
+										<div>
+											<div>Submitted on {dateFormat(item.createDate, 'mmm dd, yyyy h:MM TT')}</div>
+											<div style={[!item.inactive && {display: 'none'}]}><span style={styles.inactiveNote}>{item.inactiveNote}</span> on {dateFormat(item.inactiveDate, 'mmm dd, yyyy h:MM TT')}</div>
+										</div>
+									}
+									buttons = {item.inactive ? [] : buttons}/>
+							</div>
 						);
 					})
 				}
@@ -106,5 +114,10 @@ export const JrnlProfileSubmitted = React.createClass({
 export default Radium(JrnlProfileSubmitted);
 
 styles = {
-	
+	inactive: {
+		opacity: '0.5',
+	},
+	inactiveNote: {
+		textTransform: 'capitalize',
+	},
 };

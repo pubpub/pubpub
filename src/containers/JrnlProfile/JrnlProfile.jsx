@@ -170,7 +170,8 @@ export const JrnlProfile = React.createClass({
 									handleUpdateJrnl={this.handleUpdateJrnl} 
 									handleCreateCollection={this.handleCreateCollection} 
 									handleUpdateCollection={this.handleUpdateCollection} 
-									handleDeleteCollection={this.handleDeleteCollection} />
+									handleDeleteCollection={this.handleDeleteCollection}
+									slug={this.props.slug} />
 							);
 						default:
 							return (
