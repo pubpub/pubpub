@@ -14,31 +14,7 @@ export const AtomEditorModals = React.createClass({
 			<div style={[styles.container, this.props.mode && styles.containerActive]}>
 				<div style={styles.splash} onClick={this.props.closeModalHandler}></div>
 				<div style={[styles.modalContent, this.props.mode && styles.modalContentActive]}>
-					<p>Content goes here</p>
-					<p>Content goes here</p>
-					<p>Content goes here</p>
-					<p>Content goes here</p>
-					<p>Content goes here</p>
-					<p>Content goes here</p>
-					<p>Content goes here</p>
-					<p>Content goes here</p>
-					<p>Content goes here</p>
-					<p>Content goes here</p>
-					<p>Content goes here</p>
-					<p>Content goes here</p>
-					<p>Content goes here</p>
-					<p>Content goes here</p>
-					<p>Content goes here</p>
-					<p>Content goes here</p>
-					<p>Content goes here</p>
-					<p>Content goes here</p>
-					<p>Content goes here</p>
-					<p>Content goes here</p>
-					<p>Content goes here</p>
-					<p>Content goes here</p>
-					<p>Content goes here</p>
-					<p>Content goes here</p>
-					<p>Content goes here</p>
+					{this.props.children}
 				</div>
 			</div>
 		);
@@ -59,7 +35,7 @@ styles = {
 		opacity: 0,
 		pointerEvents: 'none',
 		transition: '.1s linear opacity',
-		
+
 	},
 	containerActive: {
 		opacity: 1,

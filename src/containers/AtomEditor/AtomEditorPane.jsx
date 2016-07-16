@@ -17,13 +17,14 @@ export const AtomEditorPane = React.createClass({
 		};
 
 		const type = safeGetInToJS(this.props.atomEditData, ['atomData', 'type']);
+
 		if (AtomTypes.hasOwnProperty(type)) {
 			const Component = AtomTypes[type].editor;
 			return <Component {...props} />;
 		}
-		
+
 		return <div>Unknown Type</div>;
-		
+
 	}
 });
 

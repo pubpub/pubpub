@@ -4,6 +4,8 @@ const Atom = require('../models').Atom;
 const Link = require('../models').Link;
 const Version = require('../models').Version;
 const Jrnl = require('../models').Jrnl;
+const User = require('../models').User;
+
 const Promise = require('bluebird');
 
 const SHA1 = require('crypto-js/sha1');
@@ -115,6 +117,7 @@ export function createAtom(req, res) {
 }
 app.post('/createAtom', createAtom);
 
+
 export function getAtomData(req, res) {
 	const {slug, meta, version} = req.query;
 	// const userID = req.user ? req.user._id : undefined;
@@ -140,8 +143,12 @@ export function getAtomData(req, res) {
 		// This query fires if meta is equal to 'collaborators'
 		const getContributors = new Promise(function(resolve) {
 			if (meta === 'contributors') {
-				// const query = Link.find({destination: atomResult._id, type: {$in: ['isAuthor', 'isEditor', 'isReader']}}).exec();
-				const query = Link.find({destination: atomResult._id}).exec();
+				// const query = Link.find({destination: atomResult._id, type: {$in: ['editor', 'author', 'contributor']}}).exec();
+				const query = Link.find({destination: atomResult._id, type: {$in: ['editor', 'author', 'contributor']}}).populate({
+					path: 'source',
+					model: User,
+					select: 'name image email bio',
+				}).exec();
 				resolve(query);
 			} else {
 				resolve();
@@ -215,15 +222,37 @@ export function getAtomEdit(req, res) {
 	// const userID = req.user ? req.user._id : undefined;
 	// Check permission type
 
+	function getAtomLinks(destination, type) {
+		switch(type) {
+			case 'contributors':
+				return new Promise(function(resolve) {
+						const query = Link.find({destination: destination, type: {$in: ['editor', 'author', 'contributor']}}).populate({
+							path: 'source',
+							model: User,
+							select: 'name image email bio',
+						}).exec();
+						resolve(query);
+					});
+			default:
+				return new Promise((resolve) => resolve());
+		}
+	}
+
+
 	Atom.findOne({slug: slug}).lean().exec()
 	.then(function(atomResult) { // Get most recent version
 		const mostRecentVersionId = atomResult.versions[atomResult.versions.length - 1];
 		return [atomResult, Version.findOne({_id: mostRecentVersionId}).exec()];
 	})
-	.spread(function(atomResult, versionResult) { // Send response
+	.spread(function(atomResult, versionResult) {
+		const linkTasks = [getAtomLinks(atomResult._id, 'contributors')];
+		return [atomResult, versionResult, Promise.all(linkTasks)];
+	})
+	.spread(function(atomResult, versionResult, linkResult) { // Send response
 		const output = {
 			atomData: atomResult,
-			currentVersionData: versionResult
+			currentVersionData: versionResult,
+			contributorData: linkResult[0],
 		};
 
 		if (atomResult.type === 'markdown') { // If we're sending down Editor data for a markdown atom, include the firebase token so we can do collaborative editing
@@ -270,3 +299,36 @@ export function submitAtomToJournals(req, res) {
 
 }
 app.post('/submitAtomToJournals', submitAtomToJournals);
+
+
+
+export function updateAtomCollaborators(req, res) {
+	const atomID = req.body.atomID;
+	const journalIDs = req.body.journalIDs || [];
+	const userID = req.user._id;
+	const now = new Date().getTime();
+	// Check permission
+
+	const tasks = journalIDs.map((id)=>{
+		return Link.createLink('submitted', atomID, id, userID, now);
+	});
+
+	Promise.all(tasks)
+	.then(function(newLinks) {
+		return Link.find({source: atomID, type: 'submitted'}).populate({
+			path: 'destination',
+			model: Jrnl,
+			select: 'jrnlName slug description logo',
+		}).exec();
+
+	})
+	.then(function(submittedLinks) {
+		return res.status(201).json(submittedLinks);
+	})
+	.catch(function(error) {
+		console.log('error', error);
+		return res.status(500).json(error);
+	});
+
+}
+app.post('/updateAtomCollaborators', updateAtomCollaborators);

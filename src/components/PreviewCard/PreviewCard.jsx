@@ -30,7 +30,7 @@ export const PreviewCard = React.createClass({
 		switch (this.props.type) {
 		case 'atom':
 			href = '/a/' + this.props.slug; break;
-		default: 
+		default:
 			href = '/'; break;
 
 		}
@@ -42,7 +42,7 @@ export const PreviewCard = React.createClass({
 				<div style={[styles.header, !this.props.header && {display: 'none'}]}>
 					{this.props.header}
 				</div>
-				
+
 				<div style={styles.table}>
 
 					{/* Preview card image */}
@@ -51,7 +51,7 @@ export const PreviewCard = React.createClass({
 							<img style={styles.image} src={'https://jake.pubpub.org/unsafe/100x100/' + image} alt={this.props.title}/>
 						</Link>
 					</div>
-					
+
 					{/* Render text here on non-mobile (hacky - but it works for now) */}
 					<div style={[styles.tableCell, styles.noMobile]}>
 						<Link to={href} style={globalStyles.link} className={'underlineOnHover'}>
@@ -65,13 +65,14 @@ export const PreviewCard = React.createClass({
 						{/* <div className={'button'} style={[styles.button, this.props.showEdit && {display: 'none'}]}>Follow</div>
 						<Link to={href + '/edit'} className={'button'} style={[styles.button, !this.props.showEdit && {display: 'none'}]}>Edit</Link> */}
 						{buttons.map((item, index)=>{
-							if (item.link) {
+							if (React.isValidElement(item)) {
+								return item;
+							} else if (item.link) {
 								return <Link className={'button'} to={item.link} style={styles.button} key={'previewCard-button-' + index} >{item.text}</Link>;
-							}
-							if (item.action) {
+							} else if (item.action) {
 								return <div className={'button'} onClick={item.action} style={styles.button} key={'previewCard-button-' + index}>{item.text}</div>;
 							}
-						})}	
+						})}
 					</div>
 
 					{/* Render text here on mobile (hacky - but it works for now) */}
