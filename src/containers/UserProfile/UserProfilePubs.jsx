@@ -5,12 +5,10 @@ import {PreviewCard} from 'components';
 // import {globalMessages} from 'utils/globalMessages';
 // import {FormattedMessage} from 'react-intl';
 
-let styles = {};
-
-const UserPubs = React.createClass({
+export const UserPubs = React.createClass({
 	propTypes: {
 		profileData: PropTypes.object,
-		ownProfile: PropTypes.string,
+		ownProfile: PropTypes.bool,
 	},
 
 	getInitialState: function() {
@@ -23,21 +21,29 @@ const UserPubs = React.createClass({
 
 		const atoms = this.props.profileData.atoms;
 		return (
-			<div style={styles.container}>
+			<div>
 
 				{
-					atoms.map((atom, index)=>{
-						return (<PreviewCard 
-							key={'atomItem-' + index}
-							type={'atom'}
-							slug={atom.slug}
-							title={atom.title}
-							image={atom.image}
-							description={atom.description}
-							showEdit={this.props.ownProfile === 'self' ? true : false} />
+
+					atoms.sort((foo, bar)=>{
+						// Sort so that most recent is first in array
+						if (foo.createDate > bar.createDate) { return -1; }
+						if (foo.createDate < bar.createDate) { return 1;}
+						return 0;
+					}).map((item, index)=>{
+						return (
+							<PreviewCard 
+								key={'atomItem-' + index}
+								type={'atom'}
+								slug={item.slug}
+								title={item.title}
+								image={item.image}
+								description={item.description}
+								showEdit={this.props.ownProfile === 'self' ? true : false} />
 						);
 					})
 				}
+
 
 			</div>
 		);
@@ -45,7 +51,3 @@ const UserPubs = React.createClass({
 });
 
 export default Radium(UserPubs);
-
-styles = {
-	
-};

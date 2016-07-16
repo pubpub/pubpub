@@ -26,7 +26,11 @@ export const UserSettingsProfile = React.createClass({
 
 	componentWillMount() {
 		const userData = safeGetInToJS(this.props.loginData, ['userData']) || {};
-		this.setState({bio: userData.bio || ''});
+		const userImageURL = safeGetInToJS(this.props.loginData, ['image']) || {};
+		this.setState({
+			bio: userData.bio || '',
+			userImageURL: userImageURL,
+		});
 	},
 
 	saveSubmit: function(evt) {
@@ -89,7 +93,7 @@ export const UserSettingsProfile = React.createClass({
 						<label htmlFor={'userImage'}>
 							<FormattedMessage {...globalMessages.ProfileImage}/>
 						</label>
-						<img style={styles.userImage} src={this.state.userImageURL || 'https://jake.pubpub.org/unsafe/100x100/' + userData.image} />
+						<img style={styles.userImage} src={'https://jake.pubpub.org/unsafe/100x100/' + this.state.userImageURL} />
 						<input id={'userImage'} name={'user image'} type="file" accept="image/*" onChange={this.handleFileSelect} />
 						
 					</div>

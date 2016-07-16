@@ -4,11 +4,9 @@ import Helmet from 'react-helmet';
 import {safeGetInToJS} from 'utils/safeParse';
 import {PreviewCard} from 'components';
 
-import {globalStyles} from 'utils/styleConstants';
+// import {globalStyles} from 'utils/styleConstants';
 // import {globalMessages} from 'utils/globalMessages';
 // import {FormattedMessage} from 'react-intl';
-
-let styles = {};
 
 export const JrnlProfileRecent = React.createClass({
 	propTypes: {
@@ -50,7 +48,3 @@ export const JrnlProfileRecent = React.createClass({
 });
 
 export default Radium(JrnlProfileRecent);
-
-styles = {
-	
-};

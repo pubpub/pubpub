@@ -5,12 +5,10 @@ import {PreviewCard} from 'components';
 // import {globalMessages} from 'utils/globalMessages';
 // import {FormattedMessage} from 'react-intl';
 
-let styles = {};
-
-const UserPubs = React.createClass({
+export const UserPubs = React.createClass({
 	propTypes: {
 		profileData: PropTypes.object,
-		ownProfile: PropTypes.string,
+		ownProfile: PropTypes.bool,
 	},
 
 	getInitialState: function() {
@@ -46,7 +44,3 @@ const UserPubs = React.createClass({
 });
 
 export default Radium(UserPubs);
-
-styles = {
-	
-};

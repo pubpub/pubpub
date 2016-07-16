@@ -31,7 +31,7 @@ const Profile = React.createClass({
 
 	render: function() {
 		const profileData = safeGetInToJS(this.props.profileData, ['profileData']) || {};
-		const ownProfile = safeGetInToJS(this.props.loginData, ['userData', 'username']) === this.props.username ? 'self' : 'other';
+		const ownProfile = safeGetInToJS(this.props.loginData, ['userData', 'username']) === this.props.username ? true : false;
 		const metaData = {
 			title: (profileData.name || profileData.username) + ' · PubPub',
 		};

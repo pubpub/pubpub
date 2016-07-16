@@ -22,32 +22,9 @@ export const UserSettings = React.createClass({
 		dispatch: PropTypes.func
 	},
 
-	// getInitialState: function() {
-	// 	return {
-	// 		userImageFile: null,
-	// 	};
-	// },
-
 	saveSettings: function(settings) {
-		// Send it off and save
-		// If user image is in the settingsObject, on the server, save to cloudinary, etc.
-		// console.log('settingsObject', settingsObject);
-		console.log(settings);
 		this.props.dispatch(saveUserSettings(settings));
 	},
-	// onFileSelect: function(evt) {
-	// 	if (evt.target.files.length) {
-	// 		this.setState({userImageFile: evt.target.files[0]});
-	// 	}
-	// },
-	// cancelImageUpload: function() {
-	// 	this.setState({userImageFile: null});
-	// },
-	// userImageUploaded: function(url) {
-	// 	this.setState({userImageFile: null});
-	// 	this.settingsSave({image: url});
-	// },
-	
 
 	render: function() {
 		const userData = safeGetInToJS(this.props.loginData, ['userData']) || {};
