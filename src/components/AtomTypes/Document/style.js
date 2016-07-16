@@ -1,7 +1,6 @@
-const {insertCSS} = require("prosemirror/dist/util/dom");
-
-const className = "ProseMirror-pubpub-setup-style"
-exports.className = className
+const {insertCSS} = require('prosemirror/dist/util/dom');
+const className = 'ProseMirror-pubpub-setup-style';
+exports.className = className;
 // const scope = "." + cls + " .ProseMirror-content"
 // ${scope} img { cursor: default; }
 
@@ -65,4 +64,4 @@ insertCSS(`
   top: 5px;
 }
 
-`)
+`);

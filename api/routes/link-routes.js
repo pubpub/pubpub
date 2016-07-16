@@ -34,7 +34,7 @@ export function getMedia(req, res) {
 				}
 			});
 			return item;
-		});;
+		});
 		return res.status(201).json(mergedVersions);
 	})
 	.catch(function(error) {
