@@ -11,10 +11,7 @@ export const UserSettingsNotifications = React.createClass({
 
 		return (
 			<div>
-				Here is a bunch of details for my Notifications
-
-				<div className={'button'}>Save Notification Settings</div>
-				
+				<h3>Notifications and their settings coming soon</h3>
 			</div>
 		);
 	}

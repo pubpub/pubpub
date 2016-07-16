@@ -26,10 +26,9 @@ export const UserSettingsProfile = React.createClass({
 
 	componentWillMount() {
 		const userData = safeGetInToJS(this.props.loginData, ['userData']) || {};
-		const userImageURL = safeGetInToJS(this.props.loginData, ['image']) || {};
 		this.setState({
 			bio: userData.bio || '',
-			userImageURL: userImageURL,
+			userImageURL: userData.image,
 		});
 	},
 
@@ -93,7 +92,7 @@ export const UserSettingsProfile = React.createClass({
 						<label htmlFor={'userImage'}>
 							<FormattedMessage {...globalMessages.ProfileImage}/>
 						</label>
-						<img style={styles.userImage} src={'https://jake.pubpub.org/unsafe/100x100/' + this.state.userImageURL} />
+						<img style={styles.userImage} src={'https://jake.pubpub.org/unsafe/150x150/' + this.state.userImageURL} />
 						<input id={'userImage'} name={'user image'} type="file" accept="image/*" onChange={this.handleFileSelect} />
 						
 					</div>
@@ -190,6 +189,8 @@ styles = {
 		width: 'calc(100% - 20px - 4px)', // Calculations come from padding and border in pubpub.css
 	},
 	userImage: {
+		// We render a 150x150 image, which is larger than the 100px needed, because we already render 150px for the main profile image.
+		// By rendering this same size, the browser will use the cached version instead of making a second request.
 		width: '100px',
 	},
 	loaderContainer: {

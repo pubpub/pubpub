@@ -19,7 +19,6 @@ export const UserSettings = React.createClass({
 	propTypes: {
 		loginData: PropTypes.object,
 		userSettingsData: PropTypes.object,
-		username: PropTypes.string,
 		mode: PropTypes.string,
 		dispatch: PropTypes.func
 	},
@@ -45,7 +44,6 @@ export const UserSettings = React.createClass({
 			{ type: 'link', text: 'Notifications', link: '/settings/notifications', active: this.props.mode === 'notifications' },
 		];
 
-
 		return (
 			<div>
 
@@ -57,7 +55,7 @@ export const UserSettings = React.createClass({
 					</div>
 					<div style={styles.headerTextWrapper}>
 						<h1>User Settings</h1>
-						<Link style={globalStyles.link} to={'/user/' + this.props.username}><h1 style={styles.subH1}>{userData.name}</h1></Link>
+						<Link style={globalStyles.link} to={'/user/' + userData.username}><h1 style={styles.subH1}>{userData.name}</h1></Link>
 					</div>
 				</div>
 
@@ -100,7 +98,6 @@ export default connect( state => {
 	return {
 		loginData: state.login,
 		userSettingsData: state.userSettings,
-		username: state.router.params.username,
 		mode: state.router.params.mode,
 	};
 })( Radium(UserSettings) );
