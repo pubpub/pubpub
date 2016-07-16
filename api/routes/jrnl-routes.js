@@ -155,7 +155,7 @@ export function updateJrnl(req, res) {
 		jrnl.headerMode = newData.headerMode || jrnl.headerMode;
 		jrnl.headerAlign = newData.headerAlign || jrnl.headerAlign;
 		jrnl.headerColor = newData.headerColor || jrnl.headerColor;
-		jrnl.headerImage = newData.headerImage || jrnl.headerImage;
+		jrnl.headerImage = newData.headerImage === null ? undefined : newData.headerImage || jrnl.headerImage;
 		jrnl.collections = newData.collections || jrnl.collections;
 		return jrnl.save();
 	})

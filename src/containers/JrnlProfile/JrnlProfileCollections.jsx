@@ -120,7 +120,7 @@ export const JrnlProfileCollections = React.createClass({
 									<div style={styles.collectionBlock}>
 										<span className={'dragIcon'}>{item.title}</span>
 									</div>	
-									<div className={'button'} style={styles.collectionButton} onClick={this.enableEdit.bind(this, item._id, item.title)}>Edit</div>
+									<div className={'button'} style={styles.collectionButton} onClick={this.enableEdit.bind(this, item._id, item.title)}>Rename</div>
 									<div className={'button'} style={styles.collectionButton} onClick={this.deleteCollection.bind(this, item._id)}>Delete</div>
 								</div>
 								

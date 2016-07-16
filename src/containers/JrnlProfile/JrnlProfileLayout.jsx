@@ -26,7 +26,7 @@ export const JrnlProfileLayout = React.createClass({
 			headerColor: '',
 			headerMode: '',
 			headerAlign: '',
-			headerImage: undefined,
+			headerImage: null,
 		};
 	},
 
@@ -36,6 +36,7 @@ export const JrnlProfileLayout = React.createClass({
 			headerColor: jrnlData.headerColor || '#13A6EF',
 			headerMode: jrnlData.headerMode || 'title',
 			headerAlign: jrnlData.headerAlign || 'left',
+			headerImage: jrnlData.headerImage,
 		});
 	},
 	componentWillUnmount() {
@@ -44,7 +45,7 @@ export const JrnlProfileLayout = React.createClass({
 			headerColor: undefined,
 			headerMode: undefined,
 			headerAlign: undefined,
-			headerImage: undefined,
+			headerImage: null,
 		});
 	},
 
@@ -68,6 +69,10 @@ export const JrnlProfileLayout = React.createClass({
 	onHeaderImageFinish: function(evt, index, type, filename) {
 		this.setState({headerImage: 'https://assets.pubpub.org/' + filename});
 		this.props.handleHeaderUpdate({headerImage: 'https://assets.pubpub.org/' + filename});
+	},
+	clearHeaderImageFinish: function() {
+		this.setState({headerImage: null});
+		this.props.handleHeaderUpdate({headerImage: null});
 	},
 
 	handleColorChange: function(colorChange) {
@@ -162,10 +167,13 @@ export const JrnlProfileLayout = React.createClass({
 						<label htmlFor={'headerImage'}>
 							Background Image
 						</label>
-						{(this.state.headerImage || jrnlData.headerImage) &&
-							<img style={styles.image} src={'https://jake.pubpub.org/unsafe/fit-in/500x0/' + (this.state.headerImage || jrnlData.headerImage)} />
+						{this.state.headerImage &&
+							<img style={styles.image} src={'https://jake.pubpub.org/unsafe/fit-in/500x0/' + this.state.headerImage} />
 						}
 						<input id={'headerImage'} name={'background image'} type="file" accept="image/*" onChange={this.handleHeaderImageSelect} />
+						<div className={'light-color inputSubtext underlineOnHover'} onClick={this.clearHeaderImageFinish} style={[styles.clear, !this.state.headerImage && {display: 'none'}]}>
+							Clear
+						</div>
 						
 					</div>
 
@@ -216,5 +224,8 @@ styles = {
 	radioLabel: {
 		display: 'inline-block',
 		fontSize: '0.95em',
-	}
+	},
+	clear: {
+		cursor: 'pointer',
+	},
 };

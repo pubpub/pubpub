@@ -126,7 +126,7 @@ export const JrnlProfile = React.createClass({
 					headerColor={this.state.headerColor || jrnlData.headerColor} 
 					headerMode={this.state.headerMode || jrnlData.headerMode}
 					headerAlign={this.state.headerAlign || jrnlData.headerAlign}
-					headerImage={this.state.headerImage || jrnlData.headerImage} />
+					headerImage={this.props.mode === 'layout' ? this.state.headerImage : jrnlData.headerImage} />
 
 				<NavContentWrapper navItems={navItems} mobileNavButtons={mobileNavButtons}>
 
