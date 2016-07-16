@@ -1,11 +1,11 @@
 import React, {PropTypes} from 'react';
 import Radium from 'radium';
-import {PreviewCard} from 'components';
+// import {PreviewCard} from 'components';
 
 // import {globalMessages} from 'utils/globalMessages';
 // import {FormattedMessage} from 'react-intl';
 
-export const UserPubs = React.createClass({
+export const UserProfileJournals = React.createClass({
 	propTypes: {
 		profileData: PropTypes.object,
 		ownProfile: PropTypes.bool,
@@ -18,29 +18,16 @@ export const UserPubs = React.createClass({
 	},
 
 	render: function() {
-
-		const atoms = this.props.profileData.atoms;
+		const profileData = this.props.profileData || {};
+		
 		return (
-			<div style={styles.container}>
+			<div>
 
 				<h3>Journals</h3>
-				{
-					atoms.map((atom, index)=>{
-						return (<PreviewCard 
-							key={'atomItem-' + index}
-							type={'atom'}
-							slug={atom.slug}
-							title={atom.title}
-							image={atom.image}
-							description={atom.description}
-							showEdit={this.props.ownProfile === 'self' ? true : false} />
-						);
-					})
-				}
 
 			</div>
 		);
 	}
 });
 
-export default Radium(UserPubs);
+export default Radium(UserProfileJournals);

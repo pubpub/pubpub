@@ -14,7 +14,7 @@ import UserProfileJournals from './UserProfileJournals';
 
 let styles = {};
 
-const Profile = React.createClass({
+export const UserProfile = React.createClass({
 	propTypes: {
 		profileData: PropTypes.object,
 		loginData: PropTypes.object,
@@ -31,7 +31,7 @@ const Profile = React.createClass({
 
 	render: function() {
 		const profileData = safeGetInToJS(this.props.profileData, ['profileData']) || {};
-		const ownProfile = safeGetInToJS(this.props.loginData, ['userData', 'username']) === this.props.username ? true : false;
+		const ownProfile = safeGetInToJS(this.props.loginData, ['userData', 'username']) === this.props.username;
 		const metaData = {
 			title: (profileData.name || profileData.username) + ' · PubPub',
 		};
@@ -103,7 +103,7 @@ export default connect( state => {
 		username: state.router.params.username,
 		mode: state.router.params.mode,
 	};
-})( Radium(Profile) );
+})( Radium(UserProfile) );
 
 styles = {
 	headerImageWrapper: {

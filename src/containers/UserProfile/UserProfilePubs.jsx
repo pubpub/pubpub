@@ -5,7 +5,7 @@ import {PreviewCard} from 'components';
 // import {globalMessages} from 'utils/globalMessages';
 // import {FormattedMessage} from 'react-intl';
 
-export const UserPubs = React.createClass({
+export const UserProfilePubs = React.createClass({
 	propTypes: {
 		profileData: PropTypes.object,
 		ownProfile: PropTypes.bool,
@@ -18,17 +18,16 @@ export const UserPubs = React.createClass({
 	},
 
 	render: function() {
-
-		const atoms = this.props.profileData.atoms;
+		const profileData = this.props.profileData || {};
+		const atoms = profileData.atoms || [];
+		
 		return (
 			<div>
-
 				{
-
 					atoms.sort((foo, bar)=>{
 						// Sort so that most recent is first in array
-						if (foo.createDate > bar.createDate) { return -1; }
-						if (foo.createDate < bar.createDate) { return 1;}
+						if (foo.lastUpdated > bar.lastUpdated) { return -1; }
+						if (foo.lastUpdated < bar.lastUpdated) { return 1;}
 						return 0;
 					}).map((item, index)=>{
 						return (
@@ -50,4 +49,4 @@ export const UserPubs = React.createClass({
 	}
 });
 
-export default Radium(UserPubs);
+export default Radium(UserProfilePubs);

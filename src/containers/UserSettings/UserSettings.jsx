@@ -2,6 +2,7 @@ import React, { PropTypes } from 'react';
 import {connect} from 'react-redux';
 import Radium from 'radium';
 import Helmet from 'react-helmet';
+import {Link} from 'react-router';
 
 import {saveUserSettings} from './actions';
 
@@ -10,6 +11,7 @@ import UserSettingsProfile from './UserSettingsProfile';
 import UserSettingsAccount from './UserSettingsAccount';
 import UserSettingsNotifications from './UserSettingsNotifications';
 import {safeGetInToJS} from 'utils/safeParse';
+import {globalStyles} from 'utils/styleConstants';
 
 let styles = {};
 
@@ -55,7 +57,7 @@ export const UserSettings = React.createClass({
 					</div>
 					<div style={styles.headerTextWrapper}>
 						<h1>User Settings</h1>
-						<h1 style={styles.subH1}>{userData.name}</h1>
+						<Link style={globalStyles.link} to={'/user/' + this.props.username}><h1 style={styles.subH1}>{userData.name}</h1></Link>
 					</div>
 				</div>
 
