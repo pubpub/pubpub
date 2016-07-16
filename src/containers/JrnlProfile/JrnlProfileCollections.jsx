@@ -40,7 +40,7 @@ export const JrnlProfileCollections = React.createClass({
 		const currentCollections = safeGetInToJS(this.props.jrnlData, ['jrnlData', 'collections']) || [];
 		const nextCollections = safeGetInToJS(nextProps.jrnlData, ['jrnlData', 'collections']) || [];
 		const diff = currentCollections.filter((item, index)=> {
-			return item.title !== nextCollections[index].title;
+			return item && nextCollections[index] && (item.title !== nextCollections[index].title);
 		});
 		
 		if (currentCollections.length !== nextCollections.length || diff.length) {
