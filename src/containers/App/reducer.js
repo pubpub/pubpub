@@ -55,6 +55,7 @@ export const defaultState = Immutable.Map({
 	languageObject: {},
 
 	loading: false, // Used to animate the loading bar
+	notFound: false,
 });
 
 /*--------*/
@@ -83,8 +84,16 @@ function loadAppFail(state, error) {
 function setLoading(state) {
 	return state.set('loading', true);
 }
-function unsetLoading(state) {
-	return state.set('loading', false);
+
+function unsetLoading(state, action) {
+	return state.merge({
+		loading: false,
+		notFound: action.error === '404 Not Found',
+	});
+}
+
+function clearNotFound(state) {
+	return state.set('notFound', false);
 }
 
 /*--------*/
@@ -117,7 +126,9 @@ export default function reducer(state = defaultState, action) {
 	case GET_ATOM_EDIT_FAIL:
 	case GET_JRNL_SUCCESS:
 	case GET_JRNL_FAIL:
-		return unsetLoading(state);
+		return unsetLoading(state, action);
+	// case '@@reduxReactRouter/routerDidChange':
+	// 	return clearNotFound(state);
 
 	default:
 		return ensureImmutable(state);

@@ -6,6 +6,7 @@ import {push} from 'redux-router';
 import {loadAppAndLogin} from './actions';
 import {logout} from 'containers/Login/actions';
 import {createAtom} from 'containers/AtomEditor/actions';
+import {NotFound} from 'components';
 import {IntlProvider} from 'react-intl';
 import {safeGetInToJS} from 'utils/safeParse';
 
@@ -59,8 +60,9 @@ export const App = React.createClass({
 	},
 
 	render: function() {
+		const notFound = safeGetInToJS(this.props.appData, ['notFound']) || false;
 		const messages = safeGetInToJS(this.props.appData, ['languageObject']) || {}; // Messages includes all of the strings used on the site. Language support is implemented by sending a different messages object.
-		const hideFooter = this.props.path.substring(this.props.path.length - 6, this.props.path.length) === '/draft' || this.props.path.substring(this.props.path.length - 6, this.props.path.length) === '/login' || this.props.path.substring(this.props.path.length - 7, this.props.path.length) === '/signup'; // We want to hide the footer if we are in the editor or login. All other views show the footer.
+		const hideFooter = notFound || this.props.path.substring(this.props.path.length - 6, this.props.path.length) === '/draft' || this.props.path.substring(this.props.path.length - 6, this.props.path.length) === '/login' || this.props.path.substring(this.props.path.length - 7, this.props.path.length) === '/signup'; // We want to hide the footer if we are in the editor or login. All other views show the footer.
 		const metaData = { // Metadata that will be used by Helmet to populate the <head> tag
 			meta: [
 				{property: 'og:site_name', content: 'PubPub'},
@@ -76,10 +78,12 @@ export const App = React.createClass({
 				<StyleRoot>
 					
 					<Helmet {...metaData} />
-
 					<AppLoadingBar color={'#BBBDC0'} show={this.props.appData.get('loading')} />
 					<AppHeader loginData={this.props.loginData} path={this.props.path} createDocument={this.createDocument} logoutHandler={this.logoutHandler}/>
-					<div className="content"> {this.props.children} </div>
+
+					{notFound && <NotFound />}
+					{!notFound && <div className="content"> {this.props.children} </div>}
+					
 					<AppFooter hideFooter={hideFooter} />
 
 				</StyleRoot>

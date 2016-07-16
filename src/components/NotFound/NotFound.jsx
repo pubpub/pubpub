@@ -1,7 +1,6 @@
 import React from 'react';
 import Radium from 'radium';
 import Helmet from 'react-helmet';
-import {globalStyles} from 'utils/styleConstants';
 
 import {FormattedMessage} from 'react-intl';
 
@@ -11,7 +10,11 @@ const NotFound = React.createClass({
 
 	render: function() {
 		const metaData = {
-			title: 'PubPub - Not Found'
+			title: 'Not Found · PubPub ',
+			meta: [
+				{'name': 'robots', 'content': 'nofollow'},
+				{'name': 'robots', 'content': 'noindex'},
+			]
 		};
 
 		return (
@@ -19,9 +22,10 @@ const NotFound = React.createClass({
 
 				<Helmet {...metaData} />
 
-				<div style={styles.header}>
+				<h1>
 					<FormattedMessage id="notFound.pageDoesntExist" defaultMessage="Doh - That page does not seem to exist!"/>
-				</div>
+				</h1>
+					
 				<img src={'http://res.cloudinary.com/pubpub/image/upload/v1448221655/pubSad_blirpk.png'} />
 			</div>
 			
@@ -33,18 +37,7 @@ export default Radium(NotFound);
 
 styles = {
 	container: {
-		width: '100%',
-		height: 'calc(100% - ' + globalStyles.headerHeight + ')',
-		backgroundColor: 'white',
-		fontFamily: globalStyles.headerFont,
 		textAlign: 'center',
-		color: globalStyles.sideText,
-		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
-			height: 'calc(100% - ' + globalStyles.headerHeightMobile + ')',
-		}
+		padding: '5em 2em',
 	},
-	header: {
-		fontSize: 35,
-		padding: '40px 5px 60px 5px',
-	}
 };

@@ -54,7 +54,7 @@ export function getJrnl(req, res) {
 
 	Jrnl.findOne({slug: slug}).populate('collections').lean().exec()
 	.then(function(jrnlResult) {
-
+		if (!jrnlResult) { throw new Error('404 Not Found'); }
 		// Get the submitted atoms associated with the journal
 		// This query fires if mode is equal to 'submitted'
 		const getSubmitted = new Promise(function(resolve) {
@@ -126,6 +126,10 @@ export function getJrnl(req, res) {
 		});
 	})
 	.catch(function(error) {
+		if (error.message === '404 Not Found') {
+			console.log(error.message);
+			return res.status(404).json('404 Not Found');	
+		}
 		console.log('error', error);
 		return res.status(500).json(error);
 	});
