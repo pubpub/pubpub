@@ -100,8 +100,8 @@ function buildMenuItems(schema) {
 	});
 
 	items.insertEmbed = insertItem(schema.nodes.embed, {
-		title: 'Insert Embed',
-		icon: {text: 'embed'},
+		title: 'Insert Image, Video, Reference, etc',
+		icon: {text: 'insert'},
 		attrs: (pm, callback) => window.toggleMedia(pm, callback, schema.nodes.embed),
 	});
 
