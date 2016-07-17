@@ -30,6 +30,12 @@ export const UserProfilePubs = React.createClass({
 						if (foo.lastUpdated < bar.lastUpdated) { return 1;}
 						return 0;
 					}).map((item, index)=>{
+						// Need to check to make sure we don't put the 
+						// edit button on read-only pubs
+						const buttons = [ 
+							{ type: 'link', text: 'Edit', link: 'a/' + item.slug + '/edit' },
+						];
+
 						return (
 							<PreviewCard 
 								key={'atomItem-' + index}
@@ -38,7 +44,7 @@ export const UserProfilePubs = React.createClass({
 								title={item.title}
 								image={item.image}
 								description={item.description}
-								showEdit={this.props.ownProfile === 'self' ? true : false} />
+								buttons = {this.props.ownProfile ? buttons : []} />
 						);
 					})
 				}
