@@ -47,7 +47,7 @@ export const markdownParser = new MarkdownParser(schema,
 			title: tok.attrGet('title') || null
 		})},
 		code_inline: {mark: 'code'},
-		sub: {mark: 'code'},
-		sup: {mark: 'code'},
+		sub: {mark: 'sub'},
+		sup: {mark: 'sup'},
 	}
 );
