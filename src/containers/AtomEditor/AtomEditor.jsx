@@ -27,15 +27,20 @@ export const AtomEditor = React.createClass({
 		dispatch: PropTypes.func
 	},
 
-	getDefaultProps: function() {
-		return {
-			query: {},
-		};
-	},
-
 	statics: {
 		fetchData: function(getState, dispatch, location, routeParams) {
 			return dispatch(getAtomEdit(routeParams.slug));
+		}
+	},
+
+	componentWillReceiveProps(nextProps) {
+		// If we transition from loading to not loading, without error, close modal
+		const previousLoading = safeGetInToJS(this.props.atomEditData, ['loading']);
+		const nextLoading = safeGetInToJS(nextProps.atomEditData, ['loading']);
+		const nextError = safeGetInToJS(nextProps.atomEditData, ['error']);
+		
+		if (previousLoading === true && nextLoading === false && !nextError) { 
+			this.closeModal();
 		}
 	},
 
@@ -45,12 +50,16 @@ export const AtomEditor = React.createClass({
 		};
 	},
 
-	saveVersionSubmit: function() {
+	saveVersionClick: function() {
+		this.setState({modalMode: 'saveVersion'});
+	},
+
+	saveVersionSubmit: function(versionMessage) {
 		const newVersionContent = this.refs.atomEditorPane.refs.editor.getSaveVersionContent();
 		const atomData = this.props.atomEditData.get('atomData').toJS();
 		const newVersion = {
 			type: atomData.type,
-			message: '',
+			message: versionMessage,
 			parent: atomData._id,
 			content: newVersionContent
 		};
@@ -75,11 +84,13 @@ export const AtomEditor = React.createClass({
 			{text: 'Edit', link: '/a/' + this.props.slug + '/draft', active: true},
 			{text: 'Details', rightAlign: true, action: this.openModal.bind(this, 'details')},
 			{text: 'Collaborators', rightAlign: true, action: this.openModal.bind(this, 'collaborators')},
-			{text: 'Styles', rightAlign: true, action: this.openModal.bind(this, 'styles')},
+			// {text: 'Styles', rightAlign: true, action: this.openModal.bind(this, 'styles')},
 			{text: 'Publishing', rightAlign: true, action: this.openModal.bind(this, 'publishing')},
 		];
 
 		const atomEditData = safeGetInToJS(this.props.atomEditData, ['atomData']) || {};
+		const isLoading = safeGetInToJS(this.props.atomEditData, ['loading']);
+		// const errorMessage = safeGetInToJS(this.props.atomEditData, ['error']);
 
 		return (
 			<div style={styles.container}>
@@ -93,11 +104,15 @@ export const AtomEditor = React.createClass({
 
 					<AtomEditorHeader
 						title={atomEditData.title}
-						saveVersionHandler={this.saveVersionSubmit} />
+						saveVersionHandler={this.saveVersionClick} />
 
 					<AtomEditorPane ref={'atomEditorPane'} atomEditData={this.props.atomEditData} loginData={this.props.loginData}/>
 
-					<AtomEditorModals mode={this.state.modalMode} closeModalHandler={this.closeModal}/>
+					<AtomEditorModals 
+						mode={this.state.modalMode} 
+						closeModalHandler={this.closeModal}
+						handleVersionSave={this.saveVersionSubmit}
+						isLoading={isLoading} />
 
 				</div>
 
@@ -117,7 +132,6 @@ export default connect( state => {
 
 		meta: state.router.params.meta,
 		metaID: state.router.params.metaID,
-		inviteStatus: state.user.get('inviteStatus')
 	};
 })( Radium(AtomEditor) );
 

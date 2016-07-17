@@ -24,7 +24,7 @@ import {
 export const defaultState = Immutable.Map({
 	atomData: {},
 	currentVersionData: {},
-	status: 'loading',
+	loading: false,
 	error: null,
 	newAtomHash: undefined,
 });
@@ -52,13 +52,13 @@ function createAtomFail(state, error) {
 function getAtomEditLoad(state) {
 	return state.merge({
 		newAtomHash: undefined,
-		status: 'loading',
+		loading: true,
 	});
 }
 
 function getAtomEditSuccess(state, result) {
 	return state.merge({
-		status: 'loaded',
+		loading: false,
 		atomData: result.atomData,
 		currentVersionData: result.currentVersionData,
 		error: null
@@ -67,7 +67,7 @@ function getAtomEditSuccess(state, result) {
 
 function getAtomEditFail(state, error) {
 	return state.merge({
-		status: 'loaded',
+		loading: false,
 		atomData: {},
 		currentVersionData: {},
 		error: error,
@@ -75,14 +75,16 @@ function getAtomEditFail(state, error) {
 }
 
 function saveVersionLoad(state) {
-	return state;
+	return state.merge({
+		loading: true,
+	});
 }
 
 function saveVersionSuccess(state, result) {
 	const newAtomData = state.get('atomData').toJS();
 	newAtomData.versions.push(result);
 	return state.merge({
-		status: 'loaded',
+		loading: false,
 		atomData: newAtomData,
 		currentVersionData: result,
 		error: null
@@ -90,7 +92,10 @@ function saveVersionSuccess(state, result) {
 }
 
 function saveVersionFail(state, error) {
-	return state;
+	return state.merge({
+		loading: false,
+		error: error,
+	});
 }
 
 

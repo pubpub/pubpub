@@ -11,6 +11,9 @@ const versionSchema = new Schema({
 	createDate: { type: Date },
 
 	isPublished: { type: Boolean }, // True if this version is published
+	publishedBy: { type: ObjectId, ref: 'User'},
+	publishedDate: { type: Date },
+	
 	content: { type: Schema.Types.Mixed },
 
 });
