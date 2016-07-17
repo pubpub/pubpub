@@ -3,7 +3,7 @@ import Radium from 'radium';
 
 let styles = {};
 
-export const AtomEditorDetails = React.createClass({
+export const AtomEditorPublishing = React.createClass({
 	propTypes: {
 		isLoading: PropTypes.bool,
 	},
@@ -18,7 +18,7 @@ export const AtomEditorDetails = React.createClass({
 	}
 });
 
-export default Radium(AtomEditorDetails);
+export default Radium(AtomEditorPublishing);
 
 styles = {
 	input: {
