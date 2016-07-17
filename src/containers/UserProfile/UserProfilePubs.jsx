@@ -1,6 +1,7 @@
 import React, {PropTypes} from 'react';
 import Radium from 'radium';
 import {PreviewCard} from 'components';
+import dateFormat from 'dateformat';
 
 // import {globalMessages} from 'utils/globalMessages';
 // import {FormattedMessage} from 'react-intl';
@@ -44,6 +45,12 @@ export const UserProfilePubs = React.createClass({
 								title={item.title}
 								image={item.image}
 								description={item.description}
+								header={
+									<div>{item.isPublished ? 'Published' : 'Unpublished'}</div>
+								}
+								footer={
+									<div>{item.versions.length} Version{item.versions.length !== 1 && 's'} | Latest Version: {dateFormat(item.lastUpdated, 'mmm dd, yyyy')}</div>
+								}
 								buttons = {this.props.ownProfile ? buttons : []} />
 						);
 					})

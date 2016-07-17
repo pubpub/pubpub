@@ -40,7 +40,7 @@ export const UserSettings = React.createClass({
 		];
 		const navItems = [
 			{ type: 'link', text: 'Profile', link: '/settings', active: !this.props.mode},
-			{ type: 'link', text: 'Account', link: '/settings/account', active: this.props.mode === 'account'},
+			// { type: 'link', text: 'Account', link: '/settings/account', active: this.props.mode === 'account'},
 			{ type: 'link', text: 'Notifications', link: '/settings/notifications', active: this.props.mode === 'notifications' },
 		];
 
