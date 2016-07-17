@@ -5,9 +5,6 @@ const Version = require('../models').Version;
 
 const Promise = require('bluebird');
 
-const SHA1 = require('crypto-js/sha1');
-const encHex = require('crypto-js/enc-hex');
-
 const Request = require('request-promise');
 
 

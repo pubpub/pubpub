@@ -93,8 +93,8 @@ styles = {
 	textarea: {
 		width: '90%',
 		margin: '0px',
-		minHeight: '80vh',
-		display: 'none',
+		// minHeight: '80vh',
+		// display: 'none',
 	},
 	wsywigBlock: {
 		maxWidth: 'calc(650px + 10em)',

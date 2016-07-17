@@ -179,7 +179,14 @@
 }
 
 .pagebreak {
-	opacity: 0 !important;
+	/*opacity: 0 !important;*/
+	background: #F3F3F4;
+	text-align: center;
+	font-size: 0.75em;
+	line-height: 2em;
+	font-family: 'Open Sans', Helvetica Neue, Arial, sans-serif;
+	color: #808284;
+	border-radius: 2px;
 }
 
 /*HIGHLIGHT STYLING*/

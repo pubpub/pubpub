@@ -7,7 +7,6 @@ export function createTag(req, res) {
 	if (!req.user) { return res.status(403).json('Not Logged In'); }
 
 	const now = new Date().getTime();
-	const userID = req.user._id;
 
 	const tag = new Tag({
 		title: req.body.title,

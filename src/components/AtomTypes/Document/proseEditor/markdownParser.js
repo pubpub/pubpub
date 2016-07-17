@@ -3,10 +3,14 @@ import {schema} from './schema';
 import markdownit from 'markdown-it';
 import emoji from 'markdown-it-emoji';
 import embed from './markdown-it-embed';
+import pagebreak from './markdown-it-pagebreak';
+// import sub from 'markdown-it-sub';
+// import sup from 'markdown-it-sup';
 
 export const markdownParser = new MarkdownParser(schema, 
 	markdownit({html: false})
 	.use(emoji)
+	.use(pagebreak)
 	.use(embed),
 	{
 		blockquote: {block: 'blockquote'},
@@ -18,6 +22,7 @@ export const markdownParser = new MarkdownParser(schema,
 		code_block: {block: 'code_block'},
 		fence: {block: 'code_block'},
 		hr: {node: 'horizontal_rule'},
+		pagebreak: {node: 'page_break'},
 		image: {node: 'image', attrs: tok => ({
 			src: tok.attrGet('src'),
 			title: tok.attrGet('title') || null,

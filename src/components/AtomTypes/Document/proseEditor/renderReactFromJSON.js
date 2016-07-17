@@ -23,6 +23,8 @@ export const renderReactFromJSON = function(item) {
 			return <pre key={index}><code>{renderReactFromJSON(node.content)}</code></pre>;
 		case 'paragraph':
 			return <div className={'p-block'} key={index}>{renderReactFromJSON(node.content)}</div>;
+		case 'page_break':
+			return <div className={'pagebreak'} key={index}>pagebreak</div>;
 		case 'image':
 			return <img {...node.attrs} key={index}/>;
 		case 'hard_break':

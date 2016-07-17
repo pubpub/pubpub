@@ -84,6 +84,11 @@ function buildMenuItems(schema) {
 		label: 'horizontal rule',
 	});
 
+	items.insertPageBreak = insertItem(schema.nodes.page_break, {
+		title: 'Insert page break',
+		label: 'page break',
+	});
+
 	items.insertEmbed = insertItem(schema.nodes.embed, {
 		title: 'Insert Embed',
 		icon: {text: 'embed'},
@@ -91,7 +96,7 @@ function buildMenuItems(schema) {
 	});
 
 
-	items.insertMenu = new Dropdown([items.toggleCode, items.insertHorizontalRule], {label: '...'});
+	items.insertMenu = new Dropdown([items.toggleCode, items.insertHorizontalRule, items.insertPageBreak], {label: '...'});
 	items.typeMenu = new Dropdown([items.makeCodeBlock, items.makeHead3, items.makeHead4, items.makeHead5, items.makeHead6], {label: '...'});
 
 	items.inlineMenu = [[items.toggleStrong, items.toggleEm, items.toggleLink, items.insertMenu], [items.insertEmbed]];

@@ -24,6 +24,10 @@ export const markdownSerializer = new MarkdownSerializer({
 		state.write(node.attrs.markup || '---');
 		state.closeBlock(node);
 	},
+	page_break(state, node) {
+		state.write(node.attrs.markup || '{{pagebreak}}');
+		state.closeBlock(node);
+	},
 	bullet_list(state, node) {
 		state.renderList(node, '  ', () => (node.attrs.bullet || '*') + ' ');
 	},
