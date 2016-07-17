@@ -65,6 +65,8 @@ export const markdownSerializer = new MarkdownSerializer({
 }, {
 	em: {open: '*', close: '*', mixable: true},
 	strong: {open: '**', close: '**', mixable: true},
+	sub: {open: '~', close: '~', mixable: true},
+	sup: {open: '^', close: '^', mixable: true},
 	link: {
 		open: '[',
 		close(state, mark) {

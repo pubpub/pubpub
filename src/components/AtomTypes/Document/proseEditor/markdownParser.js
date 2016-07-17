@@ -4,12 +4,14 @@ import markdownit from 'markdown-it';
 import emoji from 'markdown-it-emoji';
 import embed from './markdown-it-embed';
 import pagebreak from './markdown-it-pagebreak';
-// import sub from 'markdown-it-sub';
-// import sup from 'markdown-it-sup';
+import sub from 'markdown-it-sub';
+import sup from 'markdown-it-sup';
 
 export const markdownParser = new MarkdownParser(schema, 
 	markdownit({html: false})
 	.use(emoji)
+	.use(sub)
+	.use(sup)
 	.use(pagebreak)
 	.use(embed),
 	{
@@ -44,6 +46,8 @@ export const markdownParser = new MarkdownParser(schema,
 			href: tok.attrGet('href'),
 			title: tok.attrGet('title') || null
 		})},
-		code_inline: {mark: 'code'}
+		code_inline: {mark: 'code'},
+		sub: {mark: 'code'},
+		sup: {mark: 'code'},
 	}
 );

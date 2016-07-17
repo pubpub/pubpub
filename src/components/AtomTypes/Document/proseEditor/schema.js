@@ -1,4 +1,4 @@
-import {Schema, Inline, Block, Text, Attribute} from 'prosemirror/dist/model';
+import {Schema, Inline, Block, Text, Attribute, MarkType} from 'prosemirror/dist/model';
 import {Doc, BlockQuote, OrderedList, BulletList, ListItem, HorizontalRule, Heading, CodeBlock, Paragraph, Image, HardBreak, EmMark, StrongMark, LinkMark, CodeMark} from 'prosemirror/dist/schema-basic';
 import React from 'react';
 import ReactDOM from 'react-dom';
@@ -17,10 +17,24 @@ class Emoji extends Inline {
 
 // A Pagebreak node Type
 class PageBreak extends Block {
-  toDOM() { return ['div', {class: 'pagebreak'}, 'pagebreak']; }
+	toDOM() { return ['div', {class: 'pagebreak'}, 'pagebreak']; }
 }
 
 exports.PageBreak = PageBreak;
+
+// A subscript mark
+class SubMark extends MarkType {
+	get matchDOMTag() { return {'sub': null}; }
+	toDOM() { return ['sub']; }
+}
+exports.SubMark = SubMark;
+
+// A superscript mark
+class SupMark extends MarkType {
+	get matchDOMTag() { return {'sup': null}; }
+	toDOM() { return ['sup']; }
+}
+exports.StrongMark = StrongMark;
 
 // ;; An inline embed node type. Has these attributes:
 //
@@ -78,6 +92,8 @@ export const schema = new Schema({
 		em: EmMark,
 		strong: StrongMark,
 		link: LinkMark,
-		code: CodeMark
+		code: CodeMark,
+		sub: SubMark,
+		sup: SupMark,
 	}
 });

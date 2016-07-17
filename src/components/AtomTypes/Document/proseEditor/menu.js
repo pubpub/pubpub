@@ -35,6 +35,16 @@ function buildMenuItems(schema) {
 		icon: {text: 'italic'},
 	});
 
+	items.toggleSub = toggleMarkItem(schema.marks.sub, {
+		title: 'Toggle subscript',
+		label: 'subscript',
+	});
+
+	items.toggleSup = toggleMarkItem(schema.marks.sup, {
+		title: 'Toggle superscript',
+		label: 'superscript',
+	});
+
 	items.toggleCode = toggleMarkItem(schema.marks.code, {
 		title: 'Toggle code font', 
 		label: 'inline code', 
@@ -96,7 +106,7 @@ function buildMenuItems(schema) {
 	});
 
 
-	items.insertMenu = new Dropdown([items.toggleCode, items.insertHorizontalRule, items.insertPageBreak], {label: '...'});
+	items.insertMenu = new Dropdown([items.toggleSub, items.toggleSup, items.toggleCode, items.insertHorizontalRule, items.insertPageBreak], {label: '...'});
 	items.typeMenu = new Dropdown([items.makeCodeBlock, items.makeHead3, items.makeHead4, items.makeHead5, items.makeHead6], {label: '...'});
 
 	items.inlineMenu = [[items.toggleStrong, items.toggleEm, items.toggleLink, items.insertMenu], [items.insertEmbed]];
