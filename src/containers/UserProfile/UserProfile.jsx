@@ -67,7 +67,11 @@ export const UserProfile = React.createClass({
 					<div style={styles.headerTextWrapper}>
 						<h1>{profileData.name}</h1>
 						<p>{profileData.bio}</p>
-						<p>{profileData.links}</p>
+						<a className={'underlineOnHover'} style={[styles.link, styles.firstLink, !profileData.website && styles.hide]} href={profileData.website}>{profileData.website}</a>
+						<a className={'underlineOnHover'} style={[styles.link, !profileData.twitter && styles.hide]} href={'https://twitter.com/' + profileData.twitter}>@{profileData.twitter}</a>
+						<a className={'underlineOnHover'} style={[styles.link, !profileData.github && styles.hide]} href={'https://github.com/' + profileData.github}>github.com/{profileData.github}</a>
+						<a className={'underlineOnHover'} style={[styles.link, !profileData.orcid && styles.hide]} href={'https://orcid.org/' + profileData.orcid}>orcid.com/{profileData.orcid}</a>
+						<a className={'underlineOnHover'} style={[styles.link, !profileData.googleScholar && styles.hide]} href={'https://scholar.google.com/citations?user=' + profileData.googleScholar}>Google Scholar</a>
 					</div>
 				</div>
 
@@ -123,5 +127,26 @@ styles = {
 			textAlign: 'center',
 			padding: '0em',
 		}
+	},
+	link: {
+		paddingLeft: '1em',
+		marginLeft: '1em',
+		borderLeft: '1px solid #BBBDC0',
+		textDecoration: 'none',
+		color: 'inherit',
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+			display: 'block',
+			paddingLeft: 'auto',
+			marginLeft: 'auto',
+			borderLeft: '0px solid #BBBDC0',
+		},
+	},
+	firstLink: {
+		borderLeft: '0px solid #BBBDC0',
+		paddingLeft: '0em',
+		marginLeft: '0em',
+	},
+	hide: {
+		display: 'none',
 	},
 };

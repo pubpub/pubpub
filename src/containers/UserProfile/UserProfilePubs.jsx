@@ -22,7 +22,7 @@ export const UserProfilePubs = React.createClass({
 		const atoms = profileData.atoms || [];
 		
 		return (
-			<div>
+			<div className={'firstChildNoTopMargin'}>
 				{
 					atoms.sort((foo, bar)=>{
 						// Sort so that most recent is first in array
