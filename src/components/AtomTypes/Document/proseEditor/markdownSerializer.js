@@ -51,7 +51,7 @@ export const markdownSerializer = new MarkdownSerializer({
 		state.write('![' + state.esc(node.attrs.alt || '') + '](' + state.esc(node.attrs.src) + (node.attrs.title ? ' ' + state.quote(node.attrs.title) : '') + ')');
 	},
 	embed(state, node) {
-		state.write('[[source=\"' + node.attrs.source + '\" className=\"' + node.attrs.className + '\"]]');
+		state.write('[[source=\"' + node.attrs.source + '\" id=\"' + node.attrs.id + '\" className=\"' + node.attrs.className + '\" align=\"' + node.attrs.align + '\" size=\"' + node.attrs.size + '\" caption=\"' + node.attrs.caption + '\" data=\"' + encodeURIComponent(JSON.stringify(node.attrs.data)) + '\"]]');
 	},
 	emoji(state, node) {
 		state.write(':' + node.attrs.markup + ':');

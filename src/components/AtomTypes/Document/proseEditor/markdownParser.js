@@ -33,6 +33,11 @@ export const markdownParser = new MarkdownParser(schema,
 		embed: {node: 'embed', attrs: tok => ({
 			source: tok.attrGet('source'),
 			className: tok.attrGet('className') || null,
+			id: tok.attrGet('id') || null,
+			align: tok.attrGet('align') || null,
+			size: tok.attrGet('size') || null,
+			caption: tok.attrGet('caption') || null,
+			data: JSON.parse(decodeURIComponent(tok.attrGet('data'))) || null,
 		})},
 		emoji: {node: 'emoji', attrs: tok => ({
 			content: tok.content,

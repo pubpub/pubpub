@@ -47,7 +47,7 @@ function embed(state, silent) {
 	while (result = regex.exec(token.content)) {
 		token.attrs.push([result[1], result[2]]);
 	}
-	console.log('tokenattrs', token.attrs);
+	// console.log('tokenattrs', token.attrs);
 	state.pos = state.posMax + 1;
 	state.posMax = max;
 	return true;

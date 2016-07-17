@@ -44,7 +44,7 @@ exports.StrongMark = StrongMark;
 // - **`align`**: inline, left, right, or full
 // - **`size`**: CSS valid width
 // - **`caption`**: String caption to place under the embed
-// - **`data`**: Cached version/atom data. This is not serialized into markdown, but is kept here for fast rendering
+// - **`data`**: Cached version/atom data. This is not serialized into markdown (in the long-term), but is kept here for fast rendering
 class Embed extends Inline {
 	get attrs() {
 		return {
