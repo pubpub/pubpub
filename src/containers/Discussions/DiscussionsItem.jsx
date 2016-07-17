@@ -15,7 +15,7 @@ import {FormattedMessage, FormattedDate, FormattedRelative} from 'react-intl';
 let styles = {};
 
 const DiscussionsItem = React.createClass({
-    
+
     //propTypes is essentially a dictionary where you define  what props this component needs
 	propTypes: {
 		slug: PropTypes.string,
@@ -23,7 +23,7 @@ const DiscussionsItem = React.createClass({
 		// instanceName: PropTypes.string,
 		isPubAuthor: PropTypes.bool,
         isParent: PropTypes.bool,
-        
+
 		isCollaborator: PropTypes.bool,
 		isPublished: PropTypes.bool,
 
@@ -40,7 +40,7 @@ const DiscussionsItem = React.createClass({
 		toggleMediaLibrary: PropTypes.func,
 		// noPermalink: PropTypes.bool,
 		// noReply: PropTypes.bool,
-        
+
 	},
 
 	getDefaultProps: function() {
@@ -53,15 +53,15 @@ const DiscussionsItem = React.createClass({
 	},
 
 	getInitialState() {
-        
+
         //if markdown takes less height than threshold ... showCompleteText
-        
-        
-        
+
+
+
 		return {
 			replyActive: false,
 			showArchived: false,
-            show: true, 
+            show: true,
             showChilds: true,
             showCompleteText:false
 		};
@@ -72,11 +72,11 @@ const DiscussionsItem = React.createClass({
 			this.setState({replyActive: false});
 		}
 	},
-    
+
     componentDidMount() {
-		
+
     //    const h = .refs.chart.innerText
-        
+
       //  console.log(h)
 	},
 
@@ -100,38 +100,38 @@ const DiscussionsItem = React.createClass({
 			showCompleteText: true
 		});
 	},
-    
+
 
 	render: function() {
-        
+
         let authorReplied = false;
 		const discussionItem = this.props.discussionItem;
 		const isArchived = discussionItem.archived;
-		const discussionPoints = discussionItem.points ? discussionItem.points : 0; // This is to fix a NaN problem with newly published comments/discussions 
+		const discussionPoints = discussionItem.points ? discussionItem.points : 0; // This is to fix a NaN problem with newly published comments/discussions
         const commentAuthor = discussionItem.author.username;
-        
-    
+
+
       //checking if the comment is a child and it was written by this pub author
-        
+
         const isChildCommentByThisPubAuthor = (!this.props.isParent && !!(this.props.pubAuthors.find( (author) => {
             return (commentAuthor === author.username);
         })) );
-        
+
      //checking if author replied to the comment
-    
+
         for (let i=0; i<discussionItem.children.length;i++){
-            
+
             const hasChildCommentByThisPubAuthor = (!!(this.props.pubAuthors.find( (author) => {
             return (discussionItem.children[i].author.username === author.username);
                 })) );
-            
+
             if (hasChildCommentByThisPubAuthor){
                 authorReplied=true;
             }
-                
+
     }
-        
-        
+
+
 		return (
 			isArchived && !this.state.showArchived
 				? <div style={[styles.archivedContainer, globalStyles.ellipsis]} key={'archiveBlock-' + discussionItem._id} onClick={this.toggleShowArchived}>
@@ -139,10 +139,10 @@ const DiscussionsItem = React.createClass({
 					<span style={{padding: '0px 20px'}}>Comment by {discussionItem.author.name}</span>
 					{(discussionPoints + 1) === 1 ? (discussionPoints + 1) + ' point' : (discussionPoints + 1) + ' points'}
 				</div>
-    
+
 				: this.state.show
-                ?<div className={'discussion-item'} style={[styles.container(this.state.show, isChildCommentByThisPubAuthor), isArchived && styles.archived]}> {/* The classname discussion-item is used by selectionPlugin*/}	
-    
+                ?<div className={'discussion-item'} style={[styles.container(this.state.show, isChildCommentByThisPubAuthor), isArchived && styles.archived]}> {/* The classname discussion-item is used by selectionPlugin*/}
+
                     <div style={[styles.discussionHeader]}>
 						<div style={styles.discussionVoting}>
 							<DiscussionsScore
@@ -158,28 +158,40 @@ const DiscussionsItem = React.createClass({
 								<img style={styles.discussionAuthorImage} src={discussionItem.author.thumbnail} />
 							</Link>
 						</div>
-                        
+
 						<div style={styles.discussionDetailsLine}>
-                            
+
 							<Link to={'/user/' + discussionItem.author.username} style={globalStyles.link}>
 								<span key={'discussionItemAuthorLink' + discussionItem._id} style={[styles.headerText, styles.authorName(isChildCommentByThisPubAuthor)]}>{discussionItem.author.name}</span>
-							</Link> 
-                            
-                            <span style={styles.dot}>●</span> 
+							</Link>
+
+                            <span style={styles.dot}>●</span>
+														<span style={styles.date}>
                             {
 								(((new Date() - new Date(discussionItem.createDate)) / (1000 * 60 * 60 * 24)) < 7  )
-				            ? <Link to={'/pub/' + this.props.slug + '/discussions/' + discussionItem._id}><FormattedRelative value={discussionItem.createDate}/></Link>
-							: <Link to={'/pub/' + this.props.slug + '/discussions/' + discussionItem._id}><FormattedDate value={discussionItem.createDate || new Date()} day='numeric' month='short' year='numeric'/></Link>
+				            ? <Link style={styles.date} to={'/pub/' + this.props.slug + '/discussions/' + discussionItem._id}><FormattedRelative value={discussionItem.createDate}/></Link>
+							: <Link style={styles.date} to={'/pub/' + this.props.slug + '/discussions/' + discussionItem._id}><FormattedDate value={discussionItem.createDate || new Date()} day='numeric' month='short' year='numeric'/></Link>
 							}
-                        
+							</span>
+
+							{(discussionItem.children.length === 0)
+							? <div style={[styles.detailLineItem, {display: 'inline-block'}]} onClick={this.collapseButtonClicked} >Hide Discussion (0 Childs)</div>
+							: <span style={[styles.detailLineItem, {display: 'inline-block'}]} onClick={this.collapseButtonClicked}>
+							{(discussionItem.children.length) === 1
+									?<div>Hide Discussion ({discussionItem.children.length} child)</div>
+									:  <div>Hide Discussion ({discussionItem.children.length} childs)</div>}
+								 {/* {(authorReplied) ?'Author Replied' :''} */} </span>
+							}
+
+
                         </div>
 
                         <div style={[styles.discussionDetailsLine,  styles.discussionDetailsLineBottom]}>
-                            
-                            <span>{discussionItem.bio}</span> 
-                            
+
+                            <span>{discussionItem.bio}</span>
+
                         </div>
-						
+
 
                         <div>
 					{/*	<div style={[styles.discussionDetailsLine,  styles.discussionDetailsLineBottom]}>
@@ -232,10 +244,10 @@ const DiscussionsItem = React.createClass({
 						minFont={14}
 						maxFont={18}
 						paddingType="right"> */}
-                    
-                    
+
+
 					<div id="chart" ref="chart" style={styles.discussionBody}>
-                        
+
 
 						<div style={styles.discussionContent}>
 							<div style={[styles.privateBlock, discussionItem.private && {display: 'inline-block'}]}>
@@ -244,29 +256,21 @@ const DiscussionsItem = React.createClass({
 							</div>
 							{/* md.tree */}
 							<Markdown markdown={discussionItem.markdown} />
-                          
-                        <span style={styles.readMore} onClick={this.showMore}>Show More</span>
+
+                        {/*<span style={styles.readMore} onClick={this.showMore}>Show More</span>*/}
                         </div>
-                    
+
             <div style={[styles.discussionActionsLine, styles.discussionActionsLineBottom]}>
-               
-                {(discussionItem.children.length === 0)
-                ? <div style={[styles.detailLineItem, {display: 'inline-block'}]} onClick={this.collapseButtonClicked} >Hide Discussion (0 Childs)</div>
-                : <span style={[styles.detailLineItem, {display: 'inline-block'}]} onClick={this.collapseButtonClicked}>
-                {(discussionItem.children.length) === 1 
-                    ?<div>Hide Discussion ({discussionItem.children.length} child)</div> 
-                    :  <div>Hide Discussion ({discussionItem.children.length} childs)</div>}
-                   {/* {(authorReplied) ?'Author Replied' :''} */} </span>
-                }
-                
-                <span style={[styles.detailLineItemSeparator, {display: 'inline-block'}]}>|</span> <span style={[styles.detailLineItem, {display: 'inline-block'}]} key={'replyButton-' + discussionItem._id} onClick={this.toggleReplyActive}>
-				<FormattedMessage id="discussion.reply" defaultMessage="Reply"/></span> 
-            </div>               
+
+                {/*<span style={[styles.detailLineItemSeparator, {display: 'inline-block'}]}>|</span> */}
+									<span style={[styles.detailLineItem, {display: 'inline-block'}]} key={'replyButton-' + discussionItem._id} onClick={this.toggleReplyActive}>
+				<FormattedMessage id="discussion.reply" defaultMessage="Reply"/></span>
+            </div>
         </div>
-                
+
                  <div>
-                                    
-                    { 
+
+                    {
                     (this.state.showChilds || !this.props.isParent)
 					?<div style={styles.discussionChildrenWrapper}>
 						{
@@ -292,8 +296,8 @@ const DiscussionsItem = React.createClass({
 							})
 						}</div>
                     :<div></div>
-                     }       
-                            
+                     }
+
                     </div>
 
 					{/* </ResizingText> */}
@@ -320,85 +324,85 @@ const DiscussionsItem = React.createClass({
 
 					{/* Children */}
                 {/*If Statement: if its a parent and showChilds is true or if it is not a parent*/}
-                       
+
             </div>
                     :<div>
 
 
-        <div style={[styles.discussionActionsLine, styles.discussionActionsLineBottom]}>  
+        <div style={[styles.discussionActionsLine, styles.discussionActionsLineBottom]}>
                 {(discussionItem.children.length === 0)
                 ? <div style={[styles.detailLineItem, {display: 'inline-block'}]} onClick={this.collapseButtonClicked} >Show Discussion (0 Childs)</div>
                 : <span style={[styles.detailLineItem, {display: 'inline-block'}]} onClick={this.collapseButtonClicked}>
-                {(discussionItem.children.length) === 1 
-                    ?<div>Show Discussion ({discussionItem.children.length} child)</div> 
+                {(discussionItem.children.length) === 1
+                    ?<div>Show Discussion ({discussionItem.children.length} child)</div>
                     :  <div>Show Discussion ({discussionItem.children.length} childs)</div>}
                    {/* {(authorReplied) ?'Author Replied' :''} */} </span>
                 }
-            </div>               
+            </div>
 
                     </div>
-            
+
 		);
 	},
-        
+
     collapseButtonClicked: function(){
-    
+
     console.log('toggle button was clicked');
 
         if(this.state.show == true){
-            
+
             console.log('if condition was accessed as true');
-           
+
            const newState = { show: false};
-               this.setState(newState); 
+               this.setState(newState);
             console.log('current state is collapsed');
         }
-        
+
         else{
-            
-           const newState = { show:true}; 
-               this.setState(newState);  
+
+           const newState = { show:true};
+               this.setState(newState);
             console.log('current state is expanded');
-            
+
         }
-    
-}, 
-    
+
+},
+
      childsButtonClicked: function(){
-    
+
     console.log('childs toggle button was clicked');
 
         if(this.state.showChilds == true){
-            
+
             console.log('if condition was accessed as true');
-           
+
            const newState = { showChilds: false};
-               this.setState(newState); 
+               this.setState(newState);
             console.log('current state of childs is collapsed');
         }
-        
+
         else{
-            
-           const newState = { showChilds:true}; 
-               this.setState(newState);  
+
+           const newState = { showChilds:true};
+               this.setState(newState);
             console.log('current state of childs is expanded');
-            
+
         }
-                           
+
      console.log('collapse button function was ran');
-    
-},   
-    
-    
+
+},
+
+
 });
 
 const ChildPubDiscussionItem = Radium(DiscussionsItem);
 export default Radium(DiscussionsItem);
 
 styles = {
-    
+
     //this is the style of the discussion item container
-    
+
 	container: function(show, isChildCommentByThisPubAuthor) {
         return {
 		width: '100%',
@@ -409,14 +413,14 @@ styles = {
         display: show==true ?'inline-block' :'none'
         }
 	},
-    readMore: { 
+    readMore: {
         position: 'absolute',
         bottom: 0,
         left: 0,
-        width: '100%', 
+        width: '100%',
         textAlign: 'center',
         fontWeight: 900,
-        margin: 0, 
+        margin: 0,
         padding: '18px 0',
         backgroundImage: 'linear-gradient(to bottom, #F3F3F4, transparent 98%)',
 },
@@ -565,6 +569,10 @@ styles = {
 		position: 'relative',
 		top: '-2px',
 		color: '#999',
+	},
+	date: {
+		color: '#222',
+		fontSize: '13px',
 	},
 	replyWrapper: {
 		width: 'calc(100% - 20px)',

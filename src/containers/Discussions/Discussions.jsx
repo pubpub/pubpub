@@ -256,6 +256,9 @@ const Discussions = React.createClass({
 
     },
 
+		countDiscussions: function(discussionsData) {
+			return discussionsData.length;
+		},
 
 	render: function() {
 
@@ -407,24 +410,28 @@ const Discussions = React.createClass({
         ];
 
     	const sortStyle = {
-				width: '40%',
+				width: '150px',
 				fontSize: '0.75em',
-				float: 'right',
-				display: 'inline-block'
+				display: 'inline-block',
+				backgroundColor: '#f3f3f4',
+				paddingLeft: '15px',
+				position: 'absolute',
+				right: '0px',
 			};
 
 			const sortLine = {
 				height: '1px',
-				width: '43%',
+				width: '70%',
 				display: 'inline-block',
-				backgroundColor: '#aaa',
+				backgroundColor: '#BBBDC0',
 				marginLeft: '2%',
 			};
 
 			const sortCommentsCount = {
 				display: 'inline-block',
-				fontSize: '0.7em',
+				fontSize: '0.75em',
 				verticalAlign: 'bottom',
+				color: '#222',
 				lineHeight: 1,
 			};
 
@@ -448,6 +455,8 @@ const Discussions = React.createClass({
 					'.sortSelect': {
 						width: '100%',
 						display: 'inline-block',
+						position: 'relative',
+						margin: '25px 0px 15px',
 					}
 				}} />
 
@@ -492,7 +501,7 @@ const Discussions = React.createClass({
 					}
 
                 <div className="sortSelect">
-								<div style={sortCommentsCount}>{sortedDiscussions.length} comments</div>
+								<div style={sortCommentsCount}>{this.countDiscussions(sortedDiscussions)} discussions</div>
 								<div style={sortLine}></div>
 								<div style={sortStyle}>
                 	<Select options={options} clearable={false} value={this.state.sortBy} onChange={this.dropdownChange}/>

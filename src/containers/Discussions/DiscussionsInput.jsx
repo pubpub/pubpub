@@ -225,6 +225,11 @@ const PubDiscussionsInput = React.createClass({
 			{ key: 'preview', string: <FormattedMessage {...globalMessages.Preview}/>, function: this.toggleLivePreview, isActive: this.state.showPreview, noSeparator: true  },
 		];
 
+		const submitStyle = {fontSize: '0.9em'};
+
+		const isExpanded = true;
+		// const isExpanded = this.state.expanded;
+
 		return (
 
             <div>
@@ -242,7 +247,7 @@ const PubDiscussionsInput = React.createClass({
 						width: 'calc(100% - 40px)',
 						minHeight: '100px',
 						fontWeight: '300',
-                        transition: '0.1s min-height ease-in-out',
+          	transition: '0.1s min-height ease-in-out',
 					},
 					'.inputCodeMirror .CodeMirror-placeholder': {
 						color: '#aaa',
@@ -260,7 +265,7 @@ const PubDiscussionsInput = React.createClass({
 			: null }
 
 
-				<div style={[styles.inputTopLine, styles.expanded(this.state.expanded, true)]}>
+				<div style={[styles.inputTopLine, styles.expanded(isExpanded, true)]}>
 
 
 						<div style={styles.discussionAuthorImageWrapper}>
@@ -299,7 +304,7 @@ const PubDiscussionsInput = React.createClass({
 
 				</div>
 
-				<div style={styles.inputBox(this.state.expanded)} onClick={this.onFocus}>
+				<div style={styles.inputBox(isExpanded)} onClick={this.onFocus}>
 					{/* <div style={[styles.inputMenuWrapper, styles.expanded(this.state.expanded, true)]}>
 						<Menu items={menuItems} customClass={'discussionInputMenu'} height={'20px'} fontSize={'0.9em'} fontWeight={'400'}/>
 					</div> */}
@@ -315,14 +320,32 @@ const PubDiscussionsInput = React.createClass({
 					{(this.props.addDiscussionStatus === 'loading' && this.props.activeSaveID === this.props.saveID ? <LoaderIndeterminate color="#444"/> : null)}
 				</div> */}
 
-				<div style={[styles.inputBottomLine, styles.expanded(this.state.expanded || this.props.isReply, false)]}>
+				<div style={[styles.inputBottomLine, styles.expanded(isExpanded || this.props.isReply, false)]}>
 
 					<div style={[styles.topCheckbox, this.props.isCollaborator && styles.topCheckboxVisible, this.props.parentIsPrivate && styles.topCheckboxLocked ]} key={'newDiscussionPrivate'} >
-						<label style={styles.checkboxLabel} htmlFor={'isPrivate-' + this.props.saveID} onBlur={this.onBlur} onFocus={this.onFocus}>Collaborators Only</label>
 						<input style={styles.checkboxInput} name={'isPrivate-' + this.props.saveID} id={'isPrivate-' + this.props.saveID} type="checkbox" value={'private'} onChange={this.togglePrivate} checked={this.state.isPrivateChecked} ref={'isPrivate'} onBlur={this.onBlur} onFocus={this.onFocus}/>
+						<span style={styles.checkboxLabel} htmlFor={'isPrivate-' + this.props.saveID} onBlur={this.onBlur} onFocus={this.onFocus}>Collaborators Only</span>
 					</div>
+
+					<div
+						style={{
+								float: 'right',
+								display: 'inline-block'
+							}}>
+
+							<div className={'button'} style={submitStyle} onClick={this.submitDiscussion}>Submit</div>
+					{/*
+					<Button
+						key={this.props.codeMirrorID + '-submitButton'}
+						label={'Submit'}
+						onClick={this.submitDiscussion}
+						isLoading={this.props.addDiscussionStatus === 'loading' && this.props.activeSaveID === this.props.saveID}
+						align={'right'} />
+						*/}
+					</div>
+
 					<div style={globalStyles.clearFix}></div>
-					<div style={styles.privacyMessage}>
+					<div style={[styles.privacyMessage, !this.props.isCollaborator && {display: 'none'}]}>
 						{!this.props.isPublished && !this.state.isPrivateChecked && !this.props.parentIsPrivate ? 'Your comment will be public when this pub is published!' : ''}
 						{!this.props.isPublished && !this.state.isPrivateChecked && !this.props.parentIsPrivate && this.props.isCollaborator ? <div>If you wish to keep it private, check 'Collaborators Only'</div> : ''}
 						{this.state.isPrivateChecked && !this.props.parentIsPrivate ? 'Your comment will be private forever, only visible to collaborators.' : ''}
@@ -333,12 +356,6 @@ const PubDiscussionsInput = React.createClass({
 					<span style={styles.livePreviewText}>Live Preview: <span style={styles.livePreviewToggle} onClick={this.toggleLivePreview}>{(this.state.showPreview) ? 'On' : 'Off'}</span> <span style={styles.lighterText}>(you can use <a target="_blank" href="https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet">markdown</a> for styling)</span></span>
 					: null
 					} */}
-					<Button
-						key={this.props.codeMirrorID + '-submitButton'}
-						label={'Submit'}
-						onClick={this.submitDiscussion}
-						isLoading={this.props.addDiscussionStatus === 'loading' && this.props.activeSaveID === this.props.saveID}
-						align={'right'} />
 					{/* <div style={styles.submitButton} key={'newDiscussionSubmit'} onClick={this.submitDiscussion}>
 						<FormattedMessage {...globalMessages.Submit}/>
 					</div> */}
@@ -515,7 +532,7 @@ styles = {
 		},
 	},
 	topCheckbox: {
-		float: 'right',
+		float: 'left',
 		userSelect: 'none',
 		color: globalStyles.sideText,
 		pointerEvents: 'none',
@@ -537,7 +554,7 @@ styles = {
 		pointerEvents: 'none'
 	},
 	checkboxLabel: {
-		fontSize: '15px',
+		fontSize: '0.75em',
 		margin: '0px 3px 0px 15px',
 		cursor: 'pointer',
 	},
@@ -545,10 +562,11 @@ styles = {
 		cursor: 'pointer',
 	},
 	privacyMessage: {
-		textAlign: 'right',
-		fontSize: '0.9em',
+		fontSize: '0.6em',
+		width: '40%',
 		color: '#E40303',
-		margin: '2px 0px',
+		position: 'relative',
+		top: '-1em',
 	},
 	submitButton: {
 		float: 'right',

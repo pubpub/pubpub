@@ -96,6 +96,7 @@ styles = {
 		display: 'inline-block',
 		fontFamily: 'Lato',
 		userSelect: 'none',
+		backgroundColor: 'white',
 		':hover': {
 			cursor: 'pointer',
 			backgroundColor: '#F3F3F3',
