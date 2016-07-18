@@ -32,14 +32,19 @@ const Landing = React.createClass({
 	
 	handleSourceChange: function(evt) {
 		const source = evt.target.value;
-		this.setState({source: source && isWebUri(source) ? source : false});
+		this.setState({source});
 	},
 	
 	handleSourceSubmit: function(evt) {
 		const source = this.state.source;
+		let atomType = undefined, props = {};
 		if (source && isWebUri(source)) {
-			this.props.dispatch(createAtom('iframe', {url: source}));
+			atomType = 'iframe';
+			props = {url: source};
+		} else {
+			// add more text atom types here
 		}
+		this.props.dispatch(createAtom(atomType, props));
 	},
 
 	handleFileSelect: function(evt) {
@@ -119,7 +124,7 @@ const Landing = React.createClass({
 						<input type="file" accept="*" onChange={this.handleFileSelect} />
 						<form>
 							<input type="text" onChange={this.handleSourceChange} />
-							<input type="button" value="Create IFrame" onClick={this.handleSourceSubmit} disabled={!this.state.source} />
+							<input type="button" value="Create Atom" onClick={this.handleSourceSubmit} />
 						</form>
 
 						<h2>Recent Activity</h2>
