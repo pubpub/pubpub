@@ -91,7 +91,7 @@ export const AtomEditorDetails = React.createClass({
 						<label htmlFor={'url'}>
 							URL
 						</label>
-						<div style={styles.prefixedInputWrapper}>
+						<div style={[styles.prefixedInputWrapper, atomData.isPublished && styles.disabledInput]}>
 							<div style={styles.prefix}>pubpub.org/pub/</div>
 							<input ref={'url'} id={'url'} name={'url'} type="text" style={[styles.input, styles.prefixedInput]} disabled={atomData.isPublished} value={this.state.slug} onChange={this.inputChange.bind(this, 'slug')}/>	
 						</div>
@@ -145,6 +145,10 @@ export default Radium(AtomEditorDetails);
 styles = {
 	input: {
 		width: 'calc(100% - 20px - 4px)',
+	},
+	disabledInput: {
+		opacity: 0.5,
+		pointerEvents: 'none',
 	},
 	textarea: {
 		height: '4em',
