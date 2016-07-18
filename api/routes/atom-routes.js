@@ -270,3 +270,30 @@ export function submitAtomToJournals(req, res) {
 
 }
 app.post('/submitAtomToJournals', submitAtomToJournals);
+
+export function updateAtomDetails(req, res) {
+	const atomID = req.body.atomID;
+	const userID = req.user ? req.user._id : undefined;
+	if (!userID) { return res.status(403).json('Not authorized to edit this user'); }
+	// Check permission
+
+	Atom.findById(atomID).exec()
+	.then(function(result) {
+		// Validate and clean submitted values
+		const newDetails = req.body.newDetails || {};
+		result.title = newDetails.title;
+		result.slug = result.isPublished ? result.slug : newDetails.slug;
+		result.description = newDetails.description;
+		result.previewImage = newDetails.previewImage;
+		return result.save();
+	})
+	.then(function(savedResult) {
+		return res.status(201).json(savedResult);
+	})
+	.catch(function(error) {
+		console.log('error', error);
+		return res.status(500).json(error);
+	});
+
+}
+app.post('/updateAtomDetails', updateAtomDetails);

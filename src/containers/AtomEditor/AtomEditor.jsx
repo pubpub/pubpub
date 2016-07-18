@@ -2,7 +2,7 @@ import React, { PropTypes } from 'react';
 import {connect} from 'react-redux';
 import Radium from 'radium';
 import Helmet from 'react-helmet';
-import {getAtomEdit, saveVersion} from './actions';
+import {getAtomEdit, saveVersion, updateAtomDetails} from './actions';
 import {safeGetInToJS} from 'utils/safeParse';
 
 import {HorizontalNav} from 'components';
@@ -66,6 +66,10 @@ export const AtomEditor = React.createClass({
 		this.props.dispatch(saveVersion(newVersion));
 	},
 
+	updateDetails: function(newDetails) {
+		this.props.dispatch(updateAtomDetails(newDetails));
+	},
+
 	openModal: function(mode) {
 		this.setState({modalMode: mode});
 	},
@@ -109,9 +113,11 @@ export const AtomEditor = React.createClass({
 					<AtomEditorPane ref={'atomEditorPane'} atomEditData={this.props.atomEditData} loginData={this.props.loginData}/>
 
 					<AtomEditorModals 
+						atomEditData={this.props.atomEditData}
 						mode={this.state.modalMode} 
 						closeModalHandler={this.closeModal}
 						handleVersionSave={this.saveVersionSubmit}
+						updateDetailsHandler={this.updateDetails}
 						isLoading={isLoading} />
 
 				</div>

@@ -1,15 +1,18 @@
 import React, {PropTypes} from 'react';
 import Radium from 'radium';
-import SaveVersion from './AtomEditorSaveVersion';
+import AtomEditorDetails from './AtomEditorDetails';
+import AtomEditorSaveVersion from './AtomEditorSaveVersion';
 
 let styles = {};
 
 export const AtomEditorModals = React.createClass({
 	propTypes: {
+		atomEditData: PropTypes.object,
 		mode: PropTypes.string,
 		isLoading: PropTypes.bool,
 		closeModalHandler: PropTypes.func,
 		handleVersionSave: PropTypes.func,
+		updateDetailsHandler: PropTypes.func,
 	},
 
 	render: function() {
@@ -20,7 +23,9 @@ export const AtomEditorModals = React.createClass({
 					{(()=>{
 						switch (this.props.mode) {
 						case 'saveVersion':
-							return <SaveVersion handleVersionSave={this.props.handleVersionSave} isLoading={this.props.isLoading}/>;
+							return <AtomEditorSaveVersion handleVersionSave={this.props.handleVersionSave} isLoading={this.props.isLoading}/>;
+						case 'details':
+							return <AtomEditorDetails atomEditData={this.props.atomEditData} updateDetailsHandler={this.props.updateDetailsHandler} isLoading={this.props.isLoading}/>;
 						default:
 							return null;
 						}

@@ -16,6 +16,10 @@ import {
 	SAVE_VERSION_LOAD,
 	SAVE_VERSION_SUCCESS,
 	SAVE_VERSION_FAIL,
+
+	UPDATE_ATOM_DETAILS_LOAD, 
+	UPDATE_ATOM_DETAILS_SUCCESS, 
+	UPDATE_ATOM_DETAILS_FAIL,
 } from './actions';
 
 /*--------*/
@@ -35,6 +39,9 @@ export const defaultState = Immutable.Map({
 // These functions take in an initial state and return a new
 // state. They are pure functions. We use Immutable to enforce this.
 /*--------*/
+
+/* Create Atom functions */
+/* ----------------------------- */
 function createAtomLoad(state) {
 	return state;
 }
@@ -49,6 +56,8 @@ function createAtomFail(state, error) {
 	return state;
 }
 
+/* Get Atom Edit functions */
+/* ----------------------------- */
 function getAtomEditLoad(state) {
 	return state.merge({
 		newAtomHash: undefined,
@@ -74,6 +83,8 @@ function getAtomEditFail(state, error) {
 	});
 }
 
+/* Save Version functions */
+/* ----------------------------- */
 function saveVersionLoad(state) {
 	return state.merge({
 		loading: true,
@@ -92,6 +103,29 @@ function saveVersionSuccess(state, result) {
 }
 
 function saveVersionFail(state, error) {
+	return state.merge({
+		loading: false,
+		error: error,
+	});
+}
+
+/* Update Atom Details functions */
+/* ----------------------------- */
+function updateAtomDetailsLoad(state) {
+	return state.merge({
+		loading: true,
+	});
+}
+
+function updateAtomDetailsSuccess(state, result) {
+	return state.merge({
+		loading: false,
+		atomData: result,
+		error: null
+	});
+}
+
+function updateAtomDetailsFail(state, error) {
 	return state.merge({
 		loading: false,
 		error: error,
@@ -125,6 +159,14 @@ export default function readerReducer(state = defaultState, action) {
 		return saveVersionSuccess(state, action.result);
 	case SAVE_VERSION_FAIL:
 		return saveVersionFail(state, action.error);
+	
+	case UPDATE_ATOM_DETAILS_LOAD:
+		return updateAtomDetailsLoad(state);
+	case UPDATE_ATOM_DETAILS_SUCCESS:
+		return updateAtomDetailsSuccess(state, action.result);
+	case UPDATE_ATOM_DETAILS_FAIL:
+		return updateAtomDetailsFail(state, action.error);
+
 	default:
 		return ensureImmutable(state);
 	}

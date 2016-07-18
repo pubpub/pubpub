@@ -16,6 +16,10 @@ export const SAVE_VERSION_LOAD = 'atomEdit/SAVE_VERSION_LOAD';
 export const SAVE_VERSION_SUCCESS = 'atomEdit/SAVE_VERSION_SUCCESS';
 export const SAVE_VERSION_FAIL = 'atomEdit/SAVE_VERSION_FAIL';
 
+export const UPDATE_ATOM_DETAILS_LOAD = 'atomEdit/UPDATE_ATOM_DETAILS_LOAD';
+export const UPDATE_ATOM_DETAILS_SUCCESS = 'atomEdit/UPDATE_ATOM_DETAILS_SUCCESS';
+export const UPDATE_ATOM_DETAILS_FAIL = 'atomEdit/UPDATE_ATOM_DETAILS_FAIL';
+
 /*--------*/
 // Define Action creators
 //
@@ -47,6 +51,16 @@ export function saveVersion(newVersion) {
 		types: [SAVE_VERSION_LOAD, SAVE_VERSION_SUCCESS, SAVE_VERSION_FAIL],
 		promise: (client) => client.post('/saveVersion', {data: {
 			'newVersion': newVersion,
+		}})
+	};
+}
+
+export function updateAtomDetails(atomID, newDetails) {
+	return {
+		types: [UPDATE_ATOM_DETAILS_LOAD, UPDATE_ATOM_DETAILS_SUCCESS, UPDATE_ATOM_DETAILS_FAIL],
+		promise: (client) => client.post('/updateAtomDetails', {data: {
+			atomID: atomID,
+			newDetails: newDetails,
 		}})
 	};
 }
