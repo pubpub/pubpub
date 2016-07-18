@@ -40,7 +40,7 @@ export const UserProfilePubs = React.createClass({
 						return (
 							<PreviewCard 
 								key={'atomItem-' + index}
-								type={item.type}
+								type={'atom'}
 								slug={item.slug}
 								title={item.title}
 								image={item.previewImage}
