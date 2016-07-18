@@ -150,10 +150,7 @@ function publishVersionSuccess(state, result) {
 		error: null
 	}).updateIn(['atomData', 'versions'], (versionsList)=> {
 		return versionsList.map((item)=>{
-			console.log('item', item);
-			console.log('result', result);
-			console.log('------');
-			if (item.get('_id') === result._id) { return result; }
+			if (item.get('_id') === result._id) { return ensureImmutable(result); }
 			return item;
 		});
 	});

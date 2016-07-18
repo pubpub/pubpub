@@ -21,9 +21,10 @@ export const AtomEditorPublishing = React.createClass({
 		return (
 			<div>
 				<h2>Publishing</h2>
-				<p>You can selectively publish any version of your pub.</p>
-				<p>Publishing will make your pub immediately availble to the public.</p>
-				<p>Publishing is permanent and cannot be undone (think of it like publishing a newspaper - once it's out, it's out).</p>
+				<p style={styles.explainer}>You can selectively publish any version of your pub.</p>
+				<p style={styles.explainer}>Publishing will make your pub immediately availble to the public.</p>
+				<p style={styles.explainer}>Publishing is <strong>permanent</strong> and cannot be undone (think of it like publishing a newspaper - once it's out, it's out).</p>
+				<p style={styles.explainer}>You may assign a DOI to any specific version. Doing so is permanent, and the DOI cannot be switched to a newer version.</p>
 				
 				<div>
 					{versionData.map((item, index)=> {
@@ -42,6 +43,10 @@ export const AtomEditorPublishing = React.createClass({
 export default Radium(AtomEditorPublishing);
 
 styles = {
+	explainer: {
+		margin: 0,
+		fontSize: '0.9em',
+	},
 	versionRow: {
 		margin: '1em 0em',
 		backgroundColor: '#F3F3F4',

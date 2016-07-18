@@ -61,9 +61,11 @@ export function setVersionPublished(req, res) {
 
 	Version.findById(versionID).exec()
 	.then(function(result) {
-		result.isPublished = true;
-		result.publishedBy = userID;
-		result.publishedDate = now;
+		if (!result.isPublished) {
+			result.isPublished = true;
+			result.publishedBy = userID;
+			result.publishedDate = now;	
+		}
 		return [result, result.save()];
 	})
 	.spread(function(result, savedResponse) {
