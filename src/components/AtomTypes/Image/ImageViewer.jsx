@@ -20,13 +20,13 @@ export const ImageViewer = React.createClass({
 		switch (this.props.renderType) {
 		case 'embed':
 		case 'static-embed':
-			return <img src={scaledURL} alt={title} />;
+			return <img src={scaledURL} alt={title} style={styles.image}/>;
 		case 'full':
 		case 'static-full':
 		default:
 			return (
 				<div>
-					<img src={scaledURL} alt={title} />
+					<img src={scaledURL} alt={title} style={styles.image}/>
 
 					{Object.keys(metadata).length > 0 &&
 						<h2>Metadata</h2>
@@ -57,4 +57,7 @@ styles = {
 	value: {
 		marginBottom: '1.25em',
 	},
+	image: {
+		maxWidth: '100%',
+	}
 };

@@ -2,6 +2,8 @@ import React, { PropTypes } from 'react';
 import {connect} from 'react-redux';
 import Radium from 'radium';
 import {safeGetInToJS} from 'utils/safeParse';
+import {ensureImmutable} from 'reducers';
+import {AtomViewerPane} from 'containers/AtomReader/AtomViewerPane';
 
 // import {globalStyles} from 'utils/styleConstants';
 // import {globalMessages} from 'utils/globalMessages';
@@ -50,7 +52,6 @@ export const Media = React.createClass({
 	},
 
 	toggleMedia: function(pm, callback, node) {
-		console.log(pm, callback, node);
 		this.setState({
 			showMedia: true,
 			closeCallback: callback,
@@ -67,7 +68,6 @@ export const Media = React.createClass({
 	},
 
 	inputChange: function(type, evt) {
-		console.log(evt, type);
 		if (type === 'caption') {
 			this.setState({nodeData: {...this.state.nodeData, caption: evt.target.value}});
 		} 
@@ -170,7 +170,6 @@ export const Media = React.createClass({
 								if (foo.lastUpdated < bar.lastUpdated) { return 1;}
 								return 0;
 							}).map((item, index)=> {
-								console.log(item);
 								return (
 									<div key={'media-item-' + index} onClick={this.setItem.bind(this, item)} style={styles.item}>
 										<div style={styles.itemPreview}>
@@ -199,63 +198,53 @@ export const Media = React.createClass({
 
 					{/* If we DO have a chosen atom */}
 					{nodeData.data &&
-						<div>
-							<div onClick={this.clearNodeData}>Clear</div>
-							<div style={styles.itemDetailTitle}>{nodeData.data.parent.title}</div>
-							<div style={styles.itemPreview}>
-								{nodeData.data.type === 'image' &&
-									<img src={'https://jake.pubpub.org/unsafe/fit-in/400x400/' + nodeData.data.content.url} alt={nodeData.data.parent.title} title={nodeData.data.parent.title}/>
-								}
+						<div style={styles.details}>
 
-								{nodeData.data.type === 'video' &&
-									<span>Video!</span>
-								}
+							<div style={styles.detailsPreview}>
+								<div style={styles.detailsClear} className={'underlineOnHover'} onClick={this.clearNodeData}>Clear</div>
+								<h3 style={styles.detailsTitle}>{nodeData.data.parent.title}</h3>
+								<AtomViewerPane atomData={ensureImmutable({ atomData: nodeData.data.parent, currentVersionData: nodeData.data })} renderType={'embed'}/>	
 								
-								{nodeData.data.type === 'document' &&
-									<div>{nodeData.data.parent && nodeData.data.parent.title}</div>
-								}
 							</div>
 
-							<div>
-								<form onSubmit={this.saveItem}>
-									<div>
-										<label style={styles.label} htmlFor={'caption'}>
-											Caption
-										</label>
-										<input ref={'caption'} id={'caption'} name={'caption'} type="text" style={styles.input} value={this.state.nodeData.caption} onChange={this.inputChange.bind(this, 'caption')}/>
+							
+							<form onSubmit={this.saveItem} style={styles.detailsForm}>
+								<div>
+									<label style={styles.label} htmlFor={'caption'}>
+										Caption
+									</label>
+									<textarea ref={'caption'} id={'caption'} name={'caption'} style={[styles.input, styles.textarea]} value={this.state.nodeData.caption} onChange={this.inputChange.bind(this, 'caption')}></textarea>
+								</div>
+
+								<div>
+									<label style={styles.label} htmlFor={'size'}>
+										Size
+									</label>
+									<input ref={'size'} id={'size'} name={'size'} type="text" style={styles.input} value={this.state.nodeData.size} onChange={this.inputChange.bind(this, 'size')}/>
+									<div className={'light-color inputSubtext'}>
+										e.g. 20%, 50%, 200px, 400px
 									</div>
+								</div>
 
-									<div>
-										<label style={styles.label} htmlFor={'size'}>
-											Size
-										</label>
-										<input ref={'size'} id={'size'} name={'size'} type="text" style={styles.input} value={this.state.nodeData.size} onChange={this.inputChange.bind(this, 'size')}/>
-										<div className={'inputSubtext'}>
-											e.g. 20%, 50%, 200px, 400px
-										</div>
-									</div>
+								<div>
+									<label style={styles.label} htmlFor={'className'}>
+										Class Name
+									</label>
+									<input ref={'className'} id={'className'} name={'className'} type="text" style={styles.input} value={this.state.nodeData.className} onChange={this.inputChange.bind(this, 'className')}/>
+								</div>
 
-									<div>
-										<label style={styles.label} htmlFor={'className'}>
-											Class Name
-										</label>
-										<input ref={'className'} id={'className'} name={'className'} type="text" style={styles.input} value={this.state.nodeData.className} onChange={this.inputChange.bind(this, 'className')}/>
-									</div>
+								<div>
+									<label style={styles.label} htmlFor={'align'}>
+										Align
+									</label>
+									<input ref={'align'} id={'align'} name={'align'} type="text" style={styles.input} value={this.state.nodeData.align} onChange={this.inputChange.bind(this, 'align')}/>
+								</div>
 
-									<div>
-										<label style={styles.label} htmlFor={'align'}>
-											Align
-										</label>
-										<input ref={'align'} id={'align'} name={'align'} type="text" style={styles.input} value={this.state.nodeData.align} onChange={this.inputChange.bind(this, 'align')}/>
-									</div>
+								<button className={'button'} onClick={this.saveItem}>
+									Save
+								</button>
 
-									<button className={'button'} onClick={this.saveItem}>
-										Save
-									</button>
-
-								</form>	
-
-							</div>
+							</form>	
 													
 							
 						</div>
@@ -329,6 +318,12 @@ styles = {
 		width: 'calc(100% - 20px - 4px)',
 		borderWidth: '0px 0px 2px 0px',
 	},
+	input: {
+		width: 'calc(100% - 20px - 4px)',
+	},
+	textarea: {
+		height: '4em',
+	},
 	item: {
 		margin: '1em 0em',
 		backgroundColor: '#F3F3F4',
@@ -350,5 +345,51 @@ styles = {
 		display: 'table-cell',
 		verticalAlign: 'middle',
 		padding: '1em',
-	}
+	},
+	details: {
+		display: 'table',
+		width: '100%',
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+			display: 'block',
+		},
+	},
+	detailsPreview: {
+		display: 'table-cell',
+		padding: '0em 2em',
+		verticalAlign: 'middle',
+		position: 'relative',
+		textAlign: 'center',
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+			display: 'block',
+		},
+	},
+	detailsForm: {
+		display: 'table-cell',
+		width: '50%',
+		padding: '2em 0em',
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+			display: 'block',
+			width: '100%',
+		},
+	},
+	detailsTitle: {
+		position: 'absolute',
+		left: 0,
+		top: '2em',
+		margin: 0,
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+			position: 'relative',
+			top: 0,
+		},
+	},
+	detailsClear: {
+		position: 'absolute',
+		left: 0,
+		bottom: '2em',
+		cursor: 'pointer',
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+			position: 'relative',
+			bottom: 0,
+		},
+	},
 };
