@@ -15,6 +15,26 @@ export const AtomEditorModals = React.createClass({
 		updateDetailsHandler: PropTypes.func,
 	},
 
+	componentDidMount() {
+		document.addEventListener('keydown', this.closeOnEscape);
+	},
+	componentWillUnmount() {
+		document.removeEventListener('keydown', this.closeOnEscape);
+	},
+
+	closeOnEscape: function(evt) {
+		let isEscape = false;
+		if ('key' in evt) { 
+			isEscape = evt.key === 'Escape';
+		} else { 
+			isEscape = evt.keyCode === 27; 
+		}
+
+		if (isEscape) {
+			this.props.closeModalHandler();
+		}
+	},
+
 	render: function() {
 		return (
 			<div style={[styles.container, this.props.mode && styles.containerActive]}>
@@ -67,9 +87,9 @@ styles = {
 	modalContent: {
 		position: 'fixed',
 		zIndex: 4,
-		padding: '1em',
-		width: 'calc(80vw - 2em)',
-		maxHeight: 'calc(70vh - 2em)',
+		padding: '2em',
+		width: 'calc(80vw - 4em)',
+		maxHeight: 'calc(70vh - 4em)',
 		top: '15vh',
 		left: '10vw',
 		backgroundColor: 'white',
@@ -84,6 +104,7 @@ styles = {
 			height: 'calc(98vh - 2em)',
 			top: '1vh',
 			left: '1vw',
+			padding: '1em',
 		},
 	},
 	modalContentActive: {

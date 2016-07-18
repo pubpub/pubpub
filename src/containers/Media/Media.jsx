@@ -4,6 +4,7 @@ import Radium from 'radium';
 import {safeGetInToJS} from 'utils/safeParse';
 import {ensureImmutable} from 'reducers';
 import {AtomViewerPane} from 'containers/AtomReader/AtomViewerPane';
+import fuzzy from 'fuzzy';
 
 // import {globalStyles} from 'utils/styleConstants';
 // import {globalMessages} from 'utils/globalMessages';
@@ -150,7 +151,9 @@ export const Media = React.createClass({
 	render: function() {
 
 		const mediaItems = safeGetInToJS(this.props.mediaData, ['mediaItems']) || [];
+		const filteredItems = fuzzy.filter(this.state.filter, mediaItems, {extract: (item)=>{ return item.type + ' ' + item.parent.title;} });
 		const nodeData = this.state.nodeData || {};
+	
 		return (
 
 			<div style={[styles.container, this.state.showMedia && styles.containerActive]}>
@@ -162,8 +165,8 @@ export const Media = React.createClass({
 						<div>
 							<input type="text" placeholder={'Filter'} value={this.state.filter} onChange={this.filterChange} style={styles.filterInput}/>
 
-							{mediaItems.filter((item)=> {
-								return item.parent.title.indexOf(this.state.filter) > -1 || item.type.indexOf(this.state.filter) > -1;
+							{filteredItems.map((item)=> {
+								return item.original;
 							}).sort((foo, bar)=>{
 								// Sort so that most recent is first in array
 								if (foo.lastUpdated > bar.lastUpdated) { return -1; }
@@ -292,9 +295,9 @@ styles = {
 	modalContent: {
 		position: 'fixed',
 		zIndex: 10001,
-		padding: '1em',
-		width: 'calc(80vw - 2em)',
-		maxHeight: 'calc(70vh - 2em)',
+		padding: '2em',
+		width: 'calc(80vw - 4em)',
+		maxHeight: 'calc(70vh - 4em)',
 		top: '15vh',
 		left: '10vw',
 		backgroundColor: 'white',
@@ -309,6 +312,7 @@ styles = {
 			height: 'calc(98vh - 2em)',
 			top: '1vh',
 			left: '1vw',
+			padding: '1em',
 		},
 	},
 	modalContentActive: {
@@ -355,7 +359,6 @@ styles = {
 	},
 	detailsPreview: {
 		display: 'table-cell',
-		padding: '0em 2em',
 		verticalAlign: 'middle',
 		position: 'relative',
 		textAlign: 'center',
