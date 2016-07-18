@@ -23,13 +23,30 @@ export const Media = React.createClass({
 			showMedia: false,
 			closeCallback: undefined,
 			filter: '',
-			nodeData: undefined,
+			nodeData: {},
 		};
 	},
 
 	componentDidMount() {
 		this.props.dispatch(getMedia());
 		window.toggleMedia = this.toggleMedia;
+		document.addEventListener('keydown', this.closeOnEscape);
+	},
+	componentWillUnmount() {
+		document.removeEventListener('keydown', this.closeOnEscape);
+	},
+
+	closeOnEscape: function(evt) {
+		let isEscape = false;
+		if ('key' in evt) { 
+			isEscape = evt.key === 'Escape';
+		} else { 
+			isEscape = evt.keyCode === 27; 
+		}
+
+		if (isEscape) {
+			this.close();
+		}
 	},
 
 	toggleMedia: function(pm, callback, node) {
@@ -37,16 +54,35 @@ export const Media = React.createClass({
 		this.setState({
 			showMedia: true,
 			closeCallback: callback,
-			nodeData: typeof node.attrs.source === 'string' ? node.attrs.data : undefined,
+			nodeData: typeof node.attrs.source === 'string' ? node.attrs : undefined,
 		});
 	},
 
 	clearNodeData: function() {
-		this.setState({nodeData: undefined});
+		this.setState({nodeData: {...this.state.nodeData, data: undefined}});
 	},
 
 	filterChange: function(evt) {
 		this.setState({filter: evt.target.value});
+	},
+
+	inputChange: function(type, evt) {
+		console.log(evt, type);
+		if (type === 'caption') {
+			this.setState({nodeData: {...this.state.nodeData, caption: evt.target.value}});
+		} 
+
+		if (type === 'size') {
+			this.setState({nodeData: {...this.state.nodeData, size: evt.target.value}});
+		} 
+
+		if (type === 'align') {
+			this.setState({nodeData: {...this.state.nodeData, align: evt.target.value}});
+		} 
+
+		if (type === 'className') {
+			this.setState({nodeData: {...this.state.nodeData, className: evt.target.value}});
+		} 
 	},
 
 	close: function() {
@@ -54,43 +90,54 @@ export const Media = React.createClass({
 			showMedia: false,
 			closeCallback: undefined,
 			filter: '',
+			nodeData: {},
 		}); 
 	},
 
-	save: function() {
-		const versionData = {
-			_id: '578951a86dcc445787b0ef5a',
-			type: 'image',
-			message: '',
-			parent: {
-				_id: '578951a86dcc445787b0ef57',
-				slug: '95e48c3441a46bf95481b60dbaeaba469b2d4d74',
-				title: 'New Pub: 1468617128060',
-				type: 'image',
-			},
-			content: {
-				url: 'https://assets.pubpub.org/uiyvascj/1468617127681.gif',
-			}
-		};
-		this.saveItem(versionData);
-	},
+	// save: function() {
+	// 	const versionData = {
+	// 		_id: '578951a86dcc445787b0ef5a',
+	// 		type: 'image',
+	// 		message: '',
+	// 		parent: {
+	// 			_id: '578951a86dcc445787b0ef57',
+	// 			slug: '95e48c3441a46bf95481b60dbaeaba469b2d4d74',
+	// 			title: 'New Pub: 1468617128060',
+	// 			type: 'image',
+	// 		},
+	// 		content: {
+	// 			url: 'https://assets.pubpub.org/uiyvascj/1468617127681.gif',
+	// 		}
+	// 	};
+	// 	this.saveItem(versionData);
+	// },
 
 	setItem: function(item) {
+		const nodeData = this.state.nodeData || {};
 		this.setState({
-			nodeData: item,
+			nodeData: {
+				source: item._id, 
+				className: nodeData.className || '',
+				id: item._id,
+				align: nodeData.align || 'left',
+				size: nodeData.size || '',
+				caption: nodeData.caption || '',
+				data: item,
+			},
 		});
 	},
 
-	saveItem: function() {
-		const item = this.state.nodeData;
+	saveItem: function(evt) {
+		evt.preventDefault();
+		const nodeData = this.state.nodeData;
 		this.state.closeCallback({
-			source: item._id, 
-			className: 'embed',
-			id: item._id,
-			align: 'full',
-			size: '100%',
-			caption: 'Caption here',
-			data: item,
+			source: nodeData.data._id, 
+			className: nodeData.className,
+			id: nodeData.data._id,
+			align: nodeData.align,
+			size: nodeData.size,
+			caption: nodeData.caption,
+			data: nodeData.data,
 		});
 		this.setState({
 			showMedia: false,
@@ -103,7 +150,7 @@ export const Media = React.createClass({
 	render: function() {
 
 		const mediaItems = safeGetInToJS(this.props.mediaData, ['mediaItems']) || [];
-		const nodeData = this.state.nodeData;
+		const nodeData = this.state.nodeData || {};
 		return (
 
 			<div style={[styles.container, this.state.showMedia && styles.containerActive]}>
@@ -111,7 +158,7 @@ export const Media = React.createClass({
 				<div style={[styles.modalContent, this.state.showMedia && styles.modalContentActive]}>
 					
 					{/* If we DON'T have a chosen atom */}
-					{!nodeData &&
+					{!nodeData.data &&
 						<div>
 							<input type="text" placeholder={'Filter'} value={this.state.filter} onChange={this.filterChange} style={styles.filterInput}/>
 
@@ -151,25 +198,65 @@ export const Media = React.createClass({
 					}
 
 					{/* If we DO have a chosen atom */}
-					{nodeData &&
+					{nodeData.data &&
 						<div>
 							<div onClick={this.clearNodeData}>Clear</div>
-							<div style={styles.itemDetailTitle}>{nodeData.parent.title}</div>
+							<div style={styles.itemDetailTitle}>{nodeData.data.parent.title}</div>
 							<div style={styles.itemPreview}>
-								{nodeData.type === 'image' &&
-									<img src={'https://jake.pubpub.org/unsafe/fit-in/400x400/' + nodeData.content.url} alt={nodeData.parent.title} title={nodeData.parent.title}/>
+								{nodeData.data.type === 'image' &&
+									<img src={'https://jake.pubpub.org/unsafe/fit-in/400x400/' + nodeData.data.content.url} alt={nodeData.data.parent.title} title={nodeData.data.parent.title}/>
 								}
 
-								{nodeData.type === 'video' &&
+								{nodeData.data.type === 'video' &&
 									<span>Video!</span>
 								}
 								
-								{nodeData.type === 'document' &&
-									<div>{nodeData.parent.title}</div>
+								{nodeData.data.type === 'document' &&
+									<div>{nodeData.data.parent && nodeData.data.parent.title}</div>
 								}
 							</div>
-							<div className={'button'} onClick={this.saveItem}>Save</div>
-							
+
+							<div>
+								<form onSubmit={this.saveItem}>
+									<div>
+										<label style={styles.label} htmlFor={'caption'}>
+											Caption
+										</label>
+										<input ref={'caption'} id={'caption'} name={'caption'} type="text" style={styles.input} value={this.state.nodeData.caption} onChange={this.inputChange.bind(this, 'caption')}/>
+									</div>
+
+									<div>
+										<label style={styles.label} htmlFor={'size'}>
+											Size
+										</label>
+										<input ref={'size'} id={'size'} name={'size'} type="text" style={styles.input} value={this.state.nodeData.size} onChange={this.inputChange.bind(this, 'size')}/>
+										<div className={'inputSubtext'}>
+											e.g. 20%, 50%, 200px, 400px
+										</div>
+									</div>
+
+									<div>
+										<label style={styles.label} htmlFor={'className'}>
+											Class Name
+										</label>
+										<input ref={'className'} id={'className'} name={'className'} type="text" style={styles.input} value={this.state.nodeData.className} onChange={this.inputChange.bind(this, 'className')}/>
+									</div>
+
+									<div>
+										<label style={styles.label} htmlFor={'align'}>
+											Align
+										</label>
+										<input ref={'align'} id={'align'} name={'align'} type="text" style={styles.input} value={this.state.nodeData.align} onChange={this.inputChange.bind(this, 'align')}/>
+									</div>
+
+									<button className={'button'} onClick={this.saveItem}>
+										Save
+									</button>
+
+								</form>	
+
+							</div>
+													
 							
 						</div>
 					}
