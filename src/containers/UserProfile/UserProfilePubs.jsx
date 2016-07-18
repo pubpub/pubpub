@@ -40,17 +40,13 @@ export const UserProfilePubs = React.createClass({
 						return (
 							<PreviewCard 
 								key={'atomItem-' + index}
-								type={'atom'}
+								type={item.type}
 								slug={item.slug}
 								title={item.title}
-								image={item.image}
+								image={item.previewImage}
 								description={item.description}
-								header={
-									<div>{item.isPublished ? 'Published' : 'Unpublished'}</div>
-								}
-								footer={
-									<div>{item.versions.length} Version{item.versions.length !== 1 && 's'} | Latest Version: {dateFormat(item.lastUpdated, 'mmm dd, yyyy')}</div>
-								}
+								header={ <div>{item.isPublished ? 'Published' : 'Unpublished'}</div> }
+								footer={ <div>{item.versions.length} Version{item.versions.length !== 1 && 's'} | Latest Version: {dateFormat(item.lastUpdated, 'mmm dd, yyyy')}</div> }
 								buttons = {this.props.ownProfile ? buttons : []} />
 						);
 					})

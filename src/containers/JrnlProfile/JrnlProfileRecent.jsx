@@ -34,8 +34,10 @@ export const JrnlProfileRecent = React.createClass({
 						return (
 							<PreviewCard 
 								key={'featured-' + index}
+								type={item.destination.type}
 								image={item.destination.previewImage}
 								title={item.destination.title}
+								slug={item.destination.slug}
 								description={item.destination.description} />
 						);
 					})

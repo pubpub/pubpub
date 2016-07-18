@@ -67,7 +67,8 @@ export const AtomEditor = React.createClass({
 	},
 
 	updateDetails: function(newDetails) {
-		this.props.dispatch(updateAtomDetails(newDetails));
+		const atomID = safeGetInToJS(this.props.atomEditData, ['atomData', '_id']);
+		this.props.dispatch(updateAtomDetails(atomID, newDetails));
 	},
 
 	openModal: function(mode) {

@@ -26,16 +26,9 @@ export const PreviewCard = React.createClass({
 			atom: 'https://assets.pubpub.org/_site/pub.png',
 		};
 		const image = this.props.image || defaultImages[this.props.type];
-		let href;
-		switch (this.props.type) {
-		case 'atom':
-			href = '/a/' + this.props.slug; break;
-		default: 
-			href = '/'; break;
-
-		}
-
+		const href = this.props.slug ? '/a/' + this.props.slug : '/';
 		const buttons = this.props.buttons || [];
+		
 		return (
 			<div style={styles.container}>
 				{/* Custom Header content, for notifcations, details etc */}

@@ -49,7 +49,7 @@ export const AtomEditorDetails = React.createClass({
 		} 
 
 		if (type === 'slug') {
-			this.setState({slug: evt.target.value});
+			this.setState({slug: evt.target.value.replace(/[^\w\s-]/gi, '').replace(/ /g, '-').toLowerCase()});
 		} 
 
 		if (type === 'description') {
@@ -101,7 +101,7 @@ export const AtomEditorDetails = React.createClass({
 						<label htmlFor={'image'}>
 							Preview Image
 						</label>
-						<img style={styles.image} src={this.state.imageURL} />
+						<img style={styles.image} src={this.state.previewImage} />
 						<input id={'image'} name={'preview image'} type="file" accept="image/*" onChange={this.handleFileSelect} />
 					</div>
 
@@ -178,8 +178,8 @@ styles = {
 		top: 15,
 	},
 	imageCropperWrapper: {
-		height: '100vh',
-		width: '100vw',
+		height: '100%',
+		width: '100%',
 		backgroundColor: 'rgba(255,255,255,0.75)',
 		position: 'fixed',
 		top: 0,

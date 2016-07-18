@@ -86,10 +86,9 @@ export const JrnlProfileSubmitted = React.createClass({
 						}
 
 						return (
-							<div style={[item.inactive && styles.inactive]}>
+							<div style={[item.inactive && styles.inactive]} key={'submitted-' + index}>
 								<PreviewCard 
-									key={'submitted-' + index}
-									type={'atom'}
+									type={item.source.type}
 									image={item.source.previewImage}
 									slug={item.source.slug}
 									title={item.source.title}

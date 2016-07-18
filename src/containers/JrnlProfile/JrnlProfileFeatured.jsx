@@ -96,9 +96,11 @@ export const JrnlProfileFeatured = React.createClass({
 							onChange={this.handleSelectChange.bind(this, item._id)} />);
 						return (
 							<PreviewCard 
+								type={item.destination.type}
 								key={'featured-' + index}
 								image={item.destination.previewImage}
 								title={item.destination.title}
+								slug={item.destination.slug}
 								description={item.destination.description} 
 								header={<div>Featured on {item.createDate}</div>}
 								footer={selection} />
