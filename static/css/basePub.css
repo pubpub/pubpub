@@ -9,6 +9,9 @@
 
 #atom-reader.atom-reader-meta {
 	font-family: inherit;
+    line-height: initial;
+    font-size: inherit;
+    color: inherit;
 }
 
 #atom-reader .headerBlock { /* This hides old markdown titles in case they're still there*/
@@ -176,6 +179,10 @@
 
 #atom-reader img {
 	max-width: 100%;
+}
+
+#atom-reader.atom-reader-meta img {
+	max-width: initial;
 }
 
 .pagebreak {

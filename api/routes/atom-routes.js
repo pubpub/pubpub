@@ -163,7 +163,7 @@ export function getAtomData(req, res) {
 				const query = Link.find({source: atomResult._id, type: 'submitted'}).populate({
 					path: 'destination',
 					model: Jrnl,
-					select: 'jrnlName slug description logo',
+					select: 'jrnlName slug description icon',
 				}).exec();
 				resolve(query);
 			} else {
@@ -173,7 +173,11 @@ export function getAtomData(req, res) {
 
 		const getFeatured = new Promise(function(resolve) {
 			if (meta === 'journals') {
-				const query = Link.find({destination: atomResult._id, type: 'featured'}).exec();
+				const query = Link.find({destination: atomResult._id, type: 'featured'}).populate({
+					path: 'source',
+					model: Jrnl,
+					select: 'jrnlName slug description icon',
+				}).exec();
 				resolve(query);
 			} else {
 				resolve();
@@ -257,7 +261,7 @@ export function submitAtomToJournals(req, res) {
 		return Link.find({source: atomID, type: 'submitted'}).populate({
 			path: 'destination',
 			model: Jrnl,
-			select: 'jrnlName slug description logo',
+			select: 'jrnlName slug description icon',
 		}).exec();
 
 	})
