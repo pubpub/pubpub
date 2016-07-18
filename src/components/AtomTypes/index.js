@@ -10,6 +10,9 @@ import JupyterViewer from './Jupyter/JupyterViewer';
 import VideoEditor from './Video/VideoEditor';
 import VideoViewer from './Video/VideoViewer';
 
+import IFrameEditor from './IFrame/IFrameEditor';
+import IFrameViewer from './IFrame/IFrameViewer';
+
 export default {
 	image: {
 		editor: ImageEditor,
@@ -26,5 +29,9 @@ export default {
 	video: {
 		editor: VideoEditor,
 		viewer: VideoViewer
+	},
+	iframe: {
+		editor: IFrameEditor,
+		viewer: IFrameViewer
 	}
 };

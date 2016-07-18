@@ -184,6 +184,7 @@
     "superagent": "^1.4.0",
     "underscore": "^1.8.3",
     "valid-email": "^0.0.2",
+    "valid-url": "^1.0.9",
     "warning": "^2.1.0",
     "webpack-isomorphic-tools": "^2.2.18"
   },
