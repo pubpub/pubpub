@@ -103,7 +103,7 @@ export const SignUpDetails = React.createClass({
 							<FormattedMessage {...globalMessages.Bio}/>
 						</label>
 						<textarea ref={'bio'} id={'bio'} name={'bio'} type="text" style={[styles.input, styles.bio]} onChange={this.bioUpdate} value={this.state.bio}></textarea>
-						<div className={'light-color inputSubtext'} to={'/resetpassword'}>
+						<div className={'light-color inputSubtext'}>
 							{this.state.bio.length} / 140
 						</div>
 					</div>
