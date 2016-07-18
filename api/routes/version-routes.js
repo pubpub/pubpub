@@ -73,7 +73,6 @@ export function setVersionPublished(req, res) {
 		return [result, updateAtom];
 	})
 	.spread(function(result, updatedAtom) {
-		console.log(result);
 		delete result.content;
 		return res.status(201).json(result);
 	})
