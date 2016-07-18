@@ -47,11 +47,15 @@ export function saveVersion(req, res) {
 	})
 	.spread(function(savedVersion, updatedAtomResult) {
 		if (newVersion.type !== 'document') { return [savedVersion, undefined]; }
+		return [savedVersion, Atom.findOne({ _id: newVersion.parent }).exec()];
+	})
+	.spread(function(savedVersion, atomData) {
+		if (newVersion.type !== 'document') { return [savedVersion, undefined]; }
 
 		// If it's a document, save PDF, XML, and Markdown
 		const tasks = [
 			generateMarkdownFile(savedVersion.content.markdown),
-			generatePDFFromJSON(savedVersion.content.docJSON),
+			generatePDFFromJSON(savedVersion.content.docJSON, atomData.title, savedVersion.createDate, 'Jane Doe and Marcus Aurilie'),
 			// generateXMLFromJSON(savedVersion.content.docJSON),
 		];
 		return [savedVersion, Promise.all(tasks)];

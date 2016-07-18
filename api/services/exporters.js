@@ -1,11 +1,14 @@
 const Promise = require('bluebird');
 const writeFile = Promise.promisify(require('fs').writeFile);
 const pdf = require('html-pdf');
-// import React from 'react';
-// import {StyleRoot} from 'radium';
-// import AtomReaderHeader from 'containers/AtomReader/AtomReaderHeader';
-// import {renderReactFromJSON} from 'components/AtomTypes/Document/proseEditor/renderReactFromJSON';
-import request from 'superagent';
+const fs = require('fs');
+import React from 'react';
+import ReactDOMServer from 'react-dom/server';
+import {StyleRoot} from 'radium';
+import AtomReaderHeader from 'containers/AtomReader/AtomReaderHeader';
+import {renderReactFromJSON} from 'components/AtomTypes/Document/proseEditor/renderReactFromJSON';
+
+
 
 export function generateMarkdownFile(markdown) {
 	let folderName = '';
@@ -28,43 +31,46 @@ export function generatePDFFromJSON(docJSON, title, versionDate, authors) {
 	for ( let charIndex = 0; charIndex < 8; charIndex++) { folderName += possible.charAt(Math.floor(Math.random() * possible.length)); }
 	const filename = '/tmp/' + folderName + new Date().getTime() + '.pdf';
 
-
-	// const reactDOM = (
-	// 	<StyleRoot radiumConfig={{userAgent: 'Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36'}}>
-	// 		<div id={'atom-reader'}>
-	// 			<AtomReaderHeader
-	// 				title={title}
-	// 				authors={'Jane Doe and Marcus Aurilie'}
-	// 				versionDate={versionDate} />
-
-	// 			{renderReactFromJSON(docJSON.content)}
-	// 		</div>
-
-	// 	</StyleRoot>
-	// );
 	
+	const css = fs.readFileSync(__dirname + '/../../static/css/basePub.css', 'utf8');
+	const pubHTML = ReactDOMServer.renderToStaticMarkup(
+		<StyleRoot radiumConfig={{userAgent: 'Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36'}}>
+				<div id={'atom-reader'}>
+					<AtomReaderHeader
+						title={title}
+						authors={authors}
+						versionDate={String(versionDate)} />
+
+					{renderReactFromJSON(docJSON.content)}
+				</div>	
+		</StyleRoot>
+	);
+
+	const html = `
+		<!doctype html>
+		<html lang="en-us">
+			<head>
+				<style> ${css} body{font-size:10px;}</style>
+			</head>
+
+			<body>
+				${pubHTML}
+			</body>
+		</html>
+	`;
 
 	const options = { 
 		format: 'A4',
-		border: {
-			top: '.5in',
-			bottom: '.5in',
-			left: '.5in',
-			right: '.5in',
-		}
+		border: '.5in',
 	};
 
 	const createPDF = new Promise(function(resolve, reject) {
-		request.get('http://localhost:3000/a/kitten').end(function(err, res) { 
-			console.log(res.res.text);
-			console.log(filename);
-			pdf.create(res.res.text, options).toFile(filename, function(err2, result) {
-				if (err2) { 
-					reject('Error Rendering PDF'); 
-				} else {
-					resolve(filename);
-				}
-			});
+		pdf.create(html, options).toFile(filename, function(err, result) {
+			if (err) { 
+				reject('Error Creating Promise'); 
+			} else {
+				resolve(filename);
+			}
 		});
 	});
 	
@@ -73,6 +79,6 @@ export function generatePDFFromJSON(docJSON, title, versionDate, authors) {
 		return filename;
 	})
 	.catch(function(error) {
-		console.log('Error creating PDF file: ', error);
+		console.log('Error creating markdown file: ', error);
 	});
 }
