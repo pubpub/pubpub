@@ -13,6 +13,9 @@ export const AtomReaderExport = React.createClass({
 				
 				<h2>Export</h2>
 				
+				<h3>Download Markdown</h3>
+				<h3>Download PDF</h3>
+				<h3>Download XML</h3>
 			</div>
 		);
 	}

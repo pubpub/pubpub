@@ -29,5 +29,3 @@ export function uploadLocalFile(filePath) {
 		console.log('Error uploading data: ', error);
 	});
 }
-
-// uploadLocalFile('/Users/travis/Workspace/acad_MediaLab/proj_pubpub_v1/api/services/emails.js');
