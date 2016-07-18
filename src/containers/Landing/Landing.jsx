@@ -8,6 +8,7 @@ import {About} from 'components';
 // import { Link } from 'react-router';
 import {s3Upload} from 'utils/uploadFile';
 import {createAtom} from 'containers/AtomEditor/actions';
+import {isWebUri} from 'valid-url';
 
 // import Select from 'react-select';
 // import request from 'superagent';
@@ -25,7 +26,20 @@ const Landing = React.createClass({
 	getInitialState() {
 		return {
 			// value: undefined,
+			source: false,
 		};
+	},
+	
+	handleSourceChange: function(evt) {
+		const source = evt.target.value;
+		this.setState({source: source && isWebUri(source) ? source : false});
+	},
+	
+	handleSourceSubmit: function(evt) {
+		const source = this.state.source;
+		if (source && isWebUri(source)) {
+			this.props.dispatch(createAtom('iframe', {url: source}));
+		}
 	},
 
 	handleFileSelect: function(evt) {
@@ -103,6 +117,10 @@ const Landing = React.createClass({
 					<div className={'section'}>
 
 						<input type="file" accept="*" onChange={this.handleFileSelect} />
+						<form>
+							<input type="text" onChange={this.handleSourceChange} />
+							<input type="button" value="Create IFrame" onClick={this.handleSourceSubmit} disabled={!this.state.source} />
+						</form>
 
 						<h2>Recent Activity</h2>
 
