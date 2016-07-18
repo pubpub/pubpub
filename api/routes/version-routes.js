@@ -76,10 +76,14 @@ export function saveVersion(req, res) {
 		savedVersion.content.markdownFile = 'https://assets.pubpub.org/' + taskResults[0];
 		savedVersion.content.PDFFile = 'https://assets.pubpub.org/' + taskResults[1];
 		// savedVersion.content.XMLFile = 'https://assets.pubpub.org/' + taskResults[2];
-		return savedVersion.save();
+		const updateVersion = Version.update({ _id: savedVersion._id }, { $set: {
+			'content.markdownFile': savedVersion.content.markdownFile,
+			'content.PDFFile': savedVersion.content.PDFFile,
+		}}).exec();
+		return [savedVersion, updateVersion];
 	})
-	.then(function(newSavedVersion) {
-		return res.status(201).json(newSavedVersion);
+	.spread(function(savedVersion, updateVersionSaveResult) {
+		return res.status(201).json(savedVersion);
 	})
 	.catch(function(error) {
 		console.log('error', error);

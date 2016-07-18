@@ -127,10 +127,10 @@ export function getAtomData(req, res) {
 		// Get the most recent version
 		// This query fires if no meta and no version are specified
 		const getVersion = new Promise(function(resolve) {
-			if (!meta && !version) {
+			if ((!meta || meta === 'export') && !version ) {
 				const mostRecentVersionId = atomResult.versions[atomResult.versions.length - 1];
 				resolve(Version.findOne({_id: mostRecentVersionId}).exec());
-			} else if (!meta && version) {
+			} else if ((!meta || meta === 'export') && version) {
 				resolve(Version.findOne({_id: version}).exec());
 			} else {
 				resolve();

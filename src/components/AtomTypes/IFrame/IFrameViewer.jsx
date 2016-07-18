@@ -4,7 +4,7 @@ import {safeGetInToJS} from 'utils/safeParse';
 
 let styles;
 
-export const IframeViewer = React.createClass({
+export const IFrameViewer = React.createClass({
 	propTypes: {
 		atomData: PropTypes.object,
 		renderType: PropTypes.string, // full, embed, static-full, static-embed
@@ -47,7 +47,7 @@ export const IframeViewer = React.createClass({
 	}
 });
 
-export default Radium(IframeViewer);
+export default Radium(IFrameViewer);
 
 styles = {
 	key: {

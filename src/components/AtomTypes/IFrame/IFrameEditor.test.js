@@ -7,7 +7,7 @@ describe('Components', () => {
 
 		it('should render with empty props', () => {
 			const props = {};
-			const {renderOutput, error} = shallowRender(ImFrameEditor, props) ;
+			const {renderOutput, error} = shallowRender(IFrameEditor, props) ;
 
 			expect(error).to.not.exist; // Did not render an error
 			expect(renderOutput).to.exist; // Successfully rendered
