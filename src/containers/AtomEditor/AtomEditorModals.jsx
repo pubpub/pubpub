@@ -10,6 +10,7 @@ export const AtomEditorModals = React.createClass({
 		atomEditData: PropTypes.object,
 		mode: PropTypes.string,
 		isLoading: PropTypes.bool,
+		error: PropTypes.object,
 		closeModalHandler: PropTypes.func,
 		handleVersionSave: PropTypes.func,
 		updateDetailsHandler: PropTypes.func,
@@ -45,7 +46,7 @@ export const AtomEditorModals = React.createClass({
 						case 'saveVersion':
 							return <AtomEditorSaveVersion handleVersionSave={this.props.handleVersionSave} isLoading={this.props.isLoading}/>;
 						case 'details':
-							return <AtomEditorDetails atomEditData={this.props.atomEditData} updateDetailsHandler={this.props.updateDetailsHandler} isLoading={this.props.isLoading}/>;
+							return <AtomEditorDetails atomEditData={this.props.atomEditData} updateDetailsHandler={this.props.updateDetailsHandler} isLoading={this.props.isLoading} error={this.props.error}/>;
 						default:
 							return null;
 						}

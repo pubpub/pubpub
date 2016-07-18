@@ -2,6 +2,7 @@ import React, {PropTypes} from 'react';
 import Radium from 'radium';
 import {safeGetInToJS} from 'utils/safeParse';
 import {Loader, ImageCropper} from 'components';
+import {globalStyles} from 'utils/styleConstants';
 
 let styles = {};
 
@@ -10,6 +11,7 @@ export const AtomEditorDetails = React.createClass({
 		atomEditData: PropTypes.object,
 		updateDetailsHandler: PropTypes.func,
 		isLoading: PropTypes.bool,
+		error: PropTypes.object,
 	},
 
 	getInitialState() {
@@ -74,6 +76,7 @@ export const AtomEditorDetails = React.createClass({
 
 	render: function() {
 		const atomData = safeGetInToJS(this.props.atomEditData, ['atomData']) || {};
+		const errorMessage = this.props.error && this.props.error.name === 'MongoError' ? 'URL already used' : null;
 		return (
 			<div>
 				<form onSubmit={this.updateDetails}>
@@ -120,7 +123,8 @@ export const AtomEditorDetails = React.createClass({
 						Save Details
 					</button>
 
-					<div style={styles.loaderContainer}><Loader loading={this.props.isLoading} showCompletion={true}/></div>
+					<div style={styles.loaderContainer}><Loader loading={this.props.isLoading} showCompletion={!this.props.error}/></div>
+					<div style={styles.errorMessage}>{errorMessage}</div>
 
 
 				</form>
@@ -176,6 +180,10 @@ styles = {
 		display: 'inline-block',
 		position: 'relative',
 		top: 15,
+	},
+	errorMessage: {
+		padding: '10px 0px',
+		color: globalStyles.errorRed,
 	},
 	imageCropperWrapper: {
 		height: '100%',

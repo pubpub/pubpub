@@ -1,6 +1,7 @@
 import React, { PropTypes } from 'react';
 import {connect} from 'react-redux';
 import Radium from 'radium';
+import {push} from 'redux-router';
 import Helmet from 'react-helmet';
 import {getAtomEdit, saveVersion, updateAtomDetails} from './actions';
 import {safeGetInToJS} from 'utils/safeParse';
@@ -41,6 +42,12 @@ export const AtomEditor = React.createClass({
 		
 		if (previousLoading === true && nextLoading === false && !nextError) { 
 			this.closeModal();
+		}
+
+		const oldSlug = safeGetInToJS(this.props.atomEditData, ['atomData', 'slug']);
+		const newSlug = safeGetInToJS(nextProps.atomEditData, ['atomData', 'slug']);
+		if (oldSlug !== newSlug) {
+			this.props.dispatch(push('/a/' + newSlug + '/edit'));
 		}
 	},
 
@@ -95,7 +102,7 @@ export const AtomEditor = React.createClass({
 
 		const atomEditData = safeGetInToJS(this.props.atomEditData, ['atomData']) || {};
 		const isLoading = safeGetInToJS(this.props.atomEditData, ['loading']);
-		// const errorMessage = safeGetInToJS(this.props.atomEditData, ['error']);
+		const error = safeGetInToJS(this.props.atomEditData, ['error']);
 
 		return (
 			<div style={styles.container}>
@@ -119,7 +126,8 @@ export const AtomEditor = React.createClass({
 						closeModalHandler={this.closeModal}
 						handleVersionSave={this.saveVersionSubmit}
 						updateDetailsHandler={this.updateDetails}
-						isLoading={isLoading} />
+						isLoading={isLoading}
+						error={error} />
 
 				</div>
 
