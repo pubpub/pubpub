@@ -62,7 +62,7 @@
 }
 
 
-#atom-reader a {
+#atom-reader:not(.atom-reader-meta) a {
 	color: inherit;
 }
 

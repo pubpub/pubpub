@@ -7,6 +7,7 @@ import {getAtomData, submitAtomToJournals} from './actions';
 import {toggleVisibility, follow, unfollow} from 'containers/Login/actions';
 import {createHighlight} from 'containers/MediaLibrary/actions';
 import {safeGetInToJS} from 'utils/safeParse';
+import dateFormat from 'dateformat';
 
 import {HorizontalNav} from 'components';
 import AtomReaderAnalytics from './AtomReaderAnalytics';
@@ -135,6 +136,7 @@ export const AtomReader = React.createClass({
 
 		const atomData = safeGetInToJS(this.props.atomData, ['atomData']) || {};
 		const currentVersionContent = safeGetInToJS(this.props.atomData, ['currentVersionData', 'content']) || {};
+		const currentVersionDate = safeGetInToJS(this.props.atomData, ['currentVersionData', 'createDate']);
 		const toc = generateTOC(currentVersionContent.markdown).full;
 		return (
 			<div style={styles.container}>
@@ -165,12 +167,12 @@ export const AtomReader = React.createClass({
 
 					<div id={'atom-reader'} className={(this.props.meta || safeGetInToJS(this.props.atomData, ['atomData', 'type']) !== 'document' ) && 'atom-reader-meta'}>
 
-
 						<AtomReaderHeader
 							title={atomData.title}
 							authors={'Jane Doe and Marcus Aurilie'}
-							version={25}
-							versionDate={'Sept 25, 2015'}
+							versionDate={currentVersionDate}
+							lastUpdated={atomData.lastUpdated}
+							slug={atomData.slug}
 							titleOnly={!!this.props.meta}/>
 
 						{(()=>{

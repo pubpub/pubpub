@@ -120,18 +120,18 @@ export function getAtomData(req, res) {
 	const {slug, meta, version} = req.query;
 	// const userID = req.user ? req.user._id : undefined;
 	// Check permission type
-	// Load specific data
-
 
 	Atom.findOne({slug: slug}).lean().exec()
 	.then(function(atomResult) { // Get most recent version
 
 		// Get the most recent version
 		// This query fires if no meta and no version are specified
-		const getRecentVersion = new Promise(function(resolve) {
+		const getVersion = new Promise(function(resolve) {
 			if (!meta && !version) {
 				const mostRecentVersionId = atomResult.versions[atomResult.versions.length - 1];
 				resolve(Version.findOne({_id: mostRecentVersionId}).exec());
+			} else if (!meta && version) {
+				resolve(Version.findOne({_id: version}).exec());
 			} else {
 				resolve();
 			}
@@ -151,7 +151,7 @@ export function getAtomData(req, res) {
 
 		const getVersions = new Promise(function(resolve) {
 			if (meta === 'versions') {
-				const query = Version.find({_id: {$in: atomResult.versions}}).sort({createDate: -1});
+				const query = Version.find({_id: {$in: atomResult.versions}}, {content: 0}).sort({createDate: -1});
 				resolve(query);
 			} else {
 				resolve();
@@ -185,7 +185,7 @@ export function getAtomData(req, res) {
 		});
 
 		const tasks = [
-			getRecentVersion,
+			getVersion,
 			getContributors,
 			getVersions,
 			getSubmitted,

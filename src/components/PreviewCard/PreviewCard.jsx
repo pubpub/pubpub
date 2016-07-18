@@ -24,6 +24,7 @@ export const PreviewCard = React.createClass({
 	render: function() {
 		const defaultImages = {
 			atom: 'https://assets.pubpub.org/_site/pub.png',
+			journal: 'https://assets.pubpub.org/_site/journal.png',
 		};
 		const image = this.props.image || defaultImages[this.props.type];
 		let href;

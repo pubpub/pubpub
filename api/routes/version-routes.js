@@ -42,7 +42,7 @@ export function saveVersion(req, res) {
 		return version.save();
 	})
 	.then(function(savedVersion) { // Add to atom versions array and return version
-		Atom.update({ _id: newVersion.parent }, { $addToSet: { versions: savedVersion._id} }, function(errUpdating, resultUpdate) {if (errUpdating) return console.log(errUpdating);});
+		Atom.update({ _id: newVersion.parent }, { $addToSet: { versions: savedVersion._id}, $set: {lastUpdated: now} }, function(errUpdating, resultUpdate) {if (errUpdating) return console.log(errUpdating);});
 		return res.status(201).json(savedVersion);
 	})
 	.catch(function(error) {
