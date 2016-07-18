@@ -123,6 +123,11 @@ export const AtomReader = React.createClass({
 		const showDiscussions = !this.props.meta && (this.state.showDiscussions && !this.state.showTOC || this.state.showDiscussions && this.state.lastCliked === 'discussions');
 		const showTOC = !this.props.meta && (this.state.showTOC && !this.state.showDiscussions || this.state.showTOC && this.state.lastCliked === 'toc');
 
+		const atomData = safeGetInToJS(this.props.atomData, ['atomData']) || {};
+		const currentVersionContent = safeGetInToJS(this.props.atomData, ['currentVersionData', 'content']) || {};
+		const currentVersionDate = safeGetInToJS(this.props.atomData, ['currentVersionData', 'createDate']);
+		const toc = generateTOC(currentVersionContent.markdown).full;
+
 		const navItems = [
 			{link: '/a/' + this.props.slug, text: 'View', active: !this.props.meta},
 			{link: '/a/' + this.props.slug + '/edit', text: 'Edit'},
@@ -134,10 +139,12 @@ export const AtomReader = React.createClass({
 			{link: '/a/' + this.props.slug + '/export', text: 'Export', rightAlign: true, active: this.props.meta === 'export'},
 		];
 
-		const atomData = safeGetInToJS(this.props.atomData, ['atomData']) || {};
-		const currentVersionContent = safeGetInToJS(this.props.atomData, ['currentVersionData', 'content']) || {};
-		const currentVersionDate = safeGetInToJS(this.props.atomData, ['currentVersionData', 'createDate']);
-		const toc = generateTOC(currentVersionContent.markdown).full;
+		// Remove Export option if the atom type is not a doc
+		// In the future, we may add export for datasets, images, etc. 
+		// But for now that's ill defined
+		if (atomData.type !== 'document') { navItems.pop(); }
+
+		
 		return (
 			<div style={styles.container}>
 

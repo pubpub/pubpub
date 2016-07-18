@@ -26,6 +26,9 @@ module.exports = mongoose.model('Version', versionSchema);
 //  docJSON:
 // 	markdown:
 // 	style:
+//  markdownFile: 
+//  PDFFile: 
+//  XMLFile:
 // }
 // -----------
 

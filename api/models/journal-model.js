@@ -2,15 +2,15 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const ObjectId = Schema.Types.ObjectId;
 
-const Heroku = require('heroku-client');
-let heroku = undefined;
+// const Heroku = require('heroku-client');
+// let heroku = undefined;
 
-if (process.env.NODE_ENV !== 'production' && !process.env.TESTING) {
-	const herokuApiKey = require('../config').herokuApiKey;
-	heroku = new Heroku({ token: herokuApiKey });
-} else {
-	heroku = new Heroku({ token: process.env.HEROKU_API_KEY });
-}
+// if (process.env.NODE_ENV !== 'production' && !process.env.TESTING) {
+// 	const herokuApiKey = require('../config').herokuApiKey;
+// 	heroku = new Heroku({ token: herokuApiKey });
+// } else {
+// 	heroku = new Heroku({ token: process.env.HEROKU_API_KEY });
+// }
 
 const journalSchema = new Schema({
 
@@ -72,15 +72,15 @@ journalSchema.statics.findByHost = function(host, callback) {
 	});
 };
 
-journalSchema.statics.updateHerokuDomains = function(oldDomain, newDomain) {
-	heroku.delete('/apps/pubpub/domains/' + oldDomain, function(err, app) {
-		if (err) {console.log(err);}
-		heroku.post('/apps/pubpub/domains', { hostname: newDomain }, function(errHerokuPost, appHerokuPost) {
-			if (errHerokuPost) {console.log(errHerokuPost);}
-			console.log('New domain succesfully added');
-		});
-	});
-};
+// journalSchema.statics.updateHerokuDomains = function(oldDomain, newDomain) {
+// 	heroku.delete('/apps/pubpub/domains/' + oldDomain, function(err, app) {
+// 		if (err) {console.log(err);}
+// 		heroku.post('/apps/pubpub/domains', { hostname: newDomain }, function(errHerokuPost, appHerokuPost) {
+// 			if (errHerokuPost) {console.log(errHerokuPost);}
+// 			console.log('New domain succesfully added');
+// 		});
+// 	});
+// };
 
 journalSchema.statics.populationObject = function(collectionsOnly, pubsOnly) {
 	const options = [
