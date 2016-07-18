@@ -21,7 +21,9 @@ export const Media = React.createClass({
 	getInitialState() {
 		return {
 			showMedia: false,
-			closeCallback: undefined
+			closeCallback: undefined,
+			filter: '',
+			nodeData: undefined,
 		};
 	},
 
@@ -31,10 +33,28 @@ export const Media = React.createClass({
 	},
 
 	toggleMedia: function(pm, callback, node) {
+		console.log(pm, callback, node);
 		this.setState({
 			showMedia: true,
 			closeCallback: callback,
+			nodeData: typeof node.attrs.source === 'string' ? node.attrs.data : undefined,
 		});
+	},
+
+	clearNodeData: function() {
+		this.setState({nodeData: undefined});
+	},
+
+	filterChange: function(evt) {
+		this.setState({filter: evt.target.value});
+	},
+
+	close: function() {
+		this.setState({
+			showMedia: false,
+			closeCallback: undefined,
+			filter: '',
+		}); 
 	},
 
 	save: function() {
@@ -55,7 +75,14 @@ export const Media = React.createClass({
 		this.saveItem(versionData);
 	},
 
-	saveItem: function(item) {
+	setItem: function(item) {
+		this.setState({
+			nodeData: item,
+		});
+	},
+
+	saveItem: function() {
+		const item = this.state.nodeData;
 		this.state.closeCallback({
 			source: item._id, 
 			className: 'embed',
@@ -67,25 +94,87 @@ export const Media = React.createClass({
 		});
 		this.setState({
 			showMedia: false,
-			closeCallback: undefined
+			closeCallback: undefined,
+			filter: '',
 		});
+
 	},
 
 	render: function() {
 
 		const mediaItems = safeGetInToJS(this.props.mediaData, ['mediaItems']) || [];
+		const nodeData = this.state.nodeData;
 		return (
 
-			<div style={[styles.container, !this.state.showMedia && {opacity: '0', pointerEvents: 'none'}]}>
-				<div style={styles.content}>
-					<p>Media</p>
+			<div style={[styles.container, this.state.showMedia && styles.containerActive]}>
+				<div style={styles.splash} onClick={this.close}></div>
+				<div style={[styles.modalContent, this.state.showMedia && styles.modalContentActive]}>
+					
+					{/* If we DON'T have a chosen atom */}
+					{!nodeData &&
+						<div>
+							<input type="text" placeholder={'Filter'} value={this.state.filter} onChange={this.filterChange} style={styles.filterInput}/>
 
-					{mediaItems.map((item, index)=> {
-						return <div key={'media-item-' + index} onClick={this.saveItem.bind(this, item)} style={styles.item}>{item.type}</div>;
-					})}
-					<div className={'button'} onClick={this.save}>Example</div>
+							{mediaItems.filter((item)=> {
+								return item.parent.title.indexOf(this.state.filter) > -1 || item.type.indexOf(this.state.filter) > -1;
+							}).sort((foo, bar)=>{
+								// Sort so that most recent is first in array
+								if (foo.lastUpdated > bar.lastUpdated) { return -1; }
+								if (foo.lastUpdated < bar.lastUpdated) { return 1;}
+								return 0;
+							}).map((item, index)=> {
+								console.log(item);
+								return (
+									<div key={'media-item-' + index} onClick={this.setItem.bind(this, item)} style={styles.item}>
+										<div style={styles.itemPreview}>
+											{item.type === 'image' &&
+												<img src={'https://jake.pubpub.org/unsafe/fit-in/100x50/' + item.content.url} alt={item.parent.title} title={item.parent.title}/>
+											}
+
+											{item.type === 'video' &&
+												<span>Video!</span>
+											}
+											
+											{item.type === 'document' &&
+												<div>{item.parent.title}</div>
+											}
+										</div>
+
+										<div style={styles.itemDetail}>
+											<div style={styles.itemDetailTitle}>{item.parent.title}</div>
+										</div>
+									</div>
+								);
+							})}
+
+						</div>
+					}
+
+					{/* If we DO have a chosen atom */}
+					{nodeData &&
+						<div>
+							<div onClick={this.clearNodeData}>Clear</div>
+							<div style={styles.itemDetailTitle}>{nodeData.parent.title}</div>
+							<div style={styles.itemPreview}>
+								{nodeData.type === 'image' &&
+									<img src={'https://jake.pubpub.org/unsafe/fit-in/400x400/' + nodeData.content.url} alt={nodeData.parent.title} title={nodeData.parent.title}/>
+								}
+
+								{nodeData.type === 'video' &&
+									<span>Video!</span>
+								}
+								
+								{nodeData.type === 'document' &&
+									<div>{nodeData.parent.title}</div>
+								}
+							</div>
+							<div className={'button'} onClick={this.saveItem}>Save</div>
+							
+							
+						</div>
+					}
+					
 				</div>
-				
 			</div>
 
 		);
@@ -102,29 +191,77 @@ export default connect( state => {
 styles = {
 	container: {
 		position: 'fixed',
-		width: '100vw',
-		height: '100vh',
 		top: 0,
 		left: 0,
-		backgroundColor: 'rgba(0,0,0,0.5)',
-		opacity: 1,
-		transform: 'scale(1.0)',
-		transition: '.1s linear opacity, .1s linear transform',
+		width: '100vw',
+		height: '100vh',
+		backgroundColor: 'rgba(0,0,0,0.6)',
 		zIndex: 999,
+		opacity: 0,
+		pointerEvents: 'none',
+		transition: '.1s linear opacity',
 	},
-	content: {
+	containerActive: {
+		opacity: 1,
+		pointerEvents: 'auto',
+	},
+	splash: {
+		position: 'fixed',
+		top: 0,
+		left: 0,
+		width: '100vw',
+		height: '100vh',
+		zIndex: 1000,
+	},
+	modalContent: {
+		position: 'fixed',
+		zIndex: 10001,
+		padding: '1em',
+		width: 'calc(80vw - 2em)',
+		maxHeight: 'calc(70vh - 2em)',
+		top: '15vh',
+		left: '10vw',
 		backgroundColor: 'white',
-		width: '600px',
-		margin: '20vh auto 0 auto',
-		height: '300px',
 		overflow: 'hidden',
 		overflowY: 'scroll',
+		boxShadow: '0px 0px 3px rgba(0,0,0,0.7)',
+		transform: 'scale(0.8)',
+		transition: '.1s ease-in-out transform',
+		borderRadius: '2px',
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+			width: 'calc(98vw - 2em)',
+			height: 'calc(98vh - 2em)',
+			top: '1vh',
+			left: '1vw',
+		},
+	},
+	modalContentActive: {
+		transform: 'scale(1.0)',
+	},
+	filterInput: {
+		width: 'calc(100% - 20px - 4px)',
+		borderWidth: '0px 0px 2px 0px',
 	},
 	item: {
-		margin: '1em',
+		margin: '1em 0em',
 		backgroundColor: '#F3F3F4',
 		cursor: 'pointer',
-		padding: '2em',
-		display: 'inline-block',
+		// display: 'inline-block',
+		width: '100%',
+		height: '50px',
+		overflow: 'hidden',
+		display: 'table',
+	},
+	itemPreview: {
+		width: '100px',
+		height: '50px',
+		marginRight: '1em',
+		display: 'table-cell',
+		verticalAlign: 'middle',
+	},
+	itemDetail: {
+		display: 'table-cell',
+		verticalAlign: 'middle',
+		padding: '1em',
 	}
 };
