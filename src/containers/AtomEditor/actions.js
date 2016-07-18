@@ -20,6 +20,10 @@ export const UPDATE_ATOM_DETAILS_LOAD = 'atomEdit/UPDATE_ATOM_DETAILS_LOAD';
 export const UPDATE_ATOM_DETAILS_SUCCESS = 'atomEdit/UPDATE_ATOM_DETAILS_SUCCESS';
 export const UPDATE_ATOM_DETAILS_FAIL = 'atomEdit/UPDATE_ATOM_DETAILS_FAIL';
 
+export const PUBLISH_VERSION_LOAD = 'atomEdit/PUBLISH_VERSION_LOAD';
+export const PUBLISH_VERSION_SUCCESS = 'atomEdit/PUBLISH_VERSION_SUCCESS';
+export const PUBLISH_VERSION_FAIL = 'atomEdit/PUBLISH_VERSION_FAIL';
+
 /*--------*/
 // Define Action creators
 //
@@ -61,6 +65,15 @@ export function updateAtomDetails(atomID, newDetails) {
 		promise: (client) => client.post('/updateAtomDetails', {data: {
 			atomID: atomID,
 			newDetails: newDetails,
+		}})
+	};
+}
+
+export function publishVersion(versionID) {
+	return {
+		types: [PUBLISH_VERSION_LOAD, PUBLISH_VERSION_SUCCESS, PUBLISH_VERSION_FAIL],
+		promise: (client) => client.post('/setVersionPublished', {data: {
+			versionID: versionID,
 		}})
 	};
 }

@@ -42,6 +42,7 @@ export function createAtom(req, res) {
 	let versionID;
 	// This should be made more intelligent to use images, video thumbnails, etc when possible - if the atom type is image, video, etc.
 	atom.previewImage = 'https://assets.pubpub.org/_site/pub.png';
+
 	atom.save() // Save new atom data
 	.then(function(newAtom) { // Create new Links pointing between atom and author
 		const newAtomID = newAtom._id;
@@ -215,7 +216,7 @@ export function getAtomEdit(req, res) {
 	// const userID = req.user ? req.user._id : undefined;
 	// Check permission type
 
-	Atom.findOne({slug: slug}).lean().exec()
+	Atom.findOne({slug: slug}).populate({path: 'versions', select: '-content'}).lean().exec()
 	.then(function(atomResult) { // Get most recent version
 		const mostRecentVersionId = atomResult.versions[atomResult.versions.length - 1];
 		return [atomResult, Version.findOne({_id: mostRecentVersionId}).exec()];

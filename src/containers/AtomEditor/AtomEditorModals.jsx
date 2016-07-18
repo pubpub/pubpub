@@ -1,6 +1,7 @@
 import React, {PropTypes} from 'react';
 import Radium from 'radium';
 import AtomEditorDetails from './AtomEditorDetails';
+import AtomEditorPublishing from './AtomEditorPublishing';
 import AtomEditorSaveVersion from './AtomEditorSaveVersion';
 
 let styles = {};
@@ -14,6 +15,7 @@ export const AtomEditorModals = React.createClass({
 		closeModalHandler: PropTypes.func,
 		handleVersionSave: PropTypes.func,
 		updateDetailsHandler: PropTypes.func,
+		publishVersionHandler: PropTypes.func,
 	},
 
 	componentDidMount() {
@@ -47,6 +49,8 @@ export const AtomEditorModals = React.createClass({
 							return <AtomEditorSaveVersion handleVersionSave={this.props.handleVersionSave} isLoading={this.props.isLoading}/>;
 						case 'details':
 							return <AtomEditorDetails atomEditData={this.props.atomEditData} updateDetailsHandler={this.props.updateDetailsHandler} isLoading={this.props.isLoading} error={this.props.error}/>;
+						case 'publishing':
+							return <AtomEditorPublishing atomEditData={this.props.atomEditData} publishVersionHandler={this.props.publishVersionHandler} isLoading={this.props.isLoading} error={this.props.error}/>;
 						default:
 							return null;
 						}

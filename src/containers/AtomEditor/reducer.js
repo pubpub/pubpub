@@ -20,6 +20,10 @@ import {
 	UPDATE_ATOM_DETAILS_LOAD, 
 	UPDATE_ATOM_DETAILS_SUCCESS, 
 	UPDATE_ATOM_DETAILS_FAIL,
+
+	PUBLISH_VERSION_LOAD, 
+	PUBLISH_VERSION_SUCCESS, 
+	PUBLISH_VERSION_FAIL,
 } from './actions';
 
 /*--------*/
@@ -132,6 +136,36 @@ function updateAtomDetailsFail(state, error) {
 	});
 }
 
+/* Publish Version functions */
+/* ----------------------------- */
+function publishVersionLoad(state) {
+	return state.merge({
+		loading: true,
+	});
+}
+
+function publishVersionSuccess(state, result) {
+	return state.merge({
+		loading: false,
+		error: null
+	}).updateIn(['atomData', 'versions'], (versionsList)=> {
+		return versionsList.map((item)=>{
+			console.log('item', item);
+			console.log('result', result);
+			console.log('------');
+			if (item.get('_id') === result._id) { return result; }
+			return item;
+		});
+	});
+}
+
+function publishVersionFail(state, error) {
+	return state.merge({
+		loading: false,
+		error: error,
+	});
+}
+
 
 /*--------*/
 // Bind actions to specific reducing functions.
@@ -166,6 +200,13 @@ export default function readerReducer(state = defaultState, action) {
 		return updateAtomDetailsSuccess(state, action.result);
 	case UPDATE_ATOM_DETAILS_FAIL:
 		return updateAtomDetailsFail(state, action.error);
+
+	case PUBLISH_VERSION_LOAD:
+		return publishVersionLoad(state);
+	case PUBLISH_VERSION_SUCCESS:
+		return publishVersionSuccess(state, action.result);
+	case PUBLISH_VERSION_FAIL:
+		return publishVersionFail(state, action.error);
 
 	default:
 		return ensureImmutable(state);

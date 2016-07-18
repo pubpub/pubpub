@@ -3,7 +3,7 @@ import {connect} from 'react-redux';
 import Radium from 'radium';
 import {push} from 'redux-router';
 import Helmet from 'react-helmet';
-import {getAtomEdit, saveVersion, updateAtomDetails} from './actions';
+import {getAtomEdit, saveVersion, updateAtomDetails, publishVersion} from './actions';
 import {safeGetInToJS} from 'utils/safeParse';
 
 import {HorizontalNav} from 'components';
@@ -36,11 +36,12 @@ export const AtomEditor = React.createClass({
 
 	componentWillReceiveProps(nextProps) {
 		// If we transition from loading to not loading, without error, close modal
+		// Don't do this if we're on the publishing modal though.
 		const previousLoading = safeGetInToJS(this.props.atomEditData, ['loading']);
 		const nextLoading = safeGetInToJS(nextProps.atomEditData, ['loading']);
 		const nextError = safeGetInToJS(nextProps.atomEditData, ['error']);
 		
-		if (previousLoading === true && nextLoading === false && !nextError) { 
+		if (previousLoading === true && nextLoading === false && !nextError && this.state.modalMode !== 'publishing') { 
 			this.closeModal();
 		}
 
@@ -76,6 +77,10 @@ export const AtomEditor = React.createClass({
 	updateDetails: function(newDetails) {
 		const atomID = safeGetInToJS(this.props.atomEditData, ['atomData', '_id']);
 		this.props.dispatch(updateAtomDetails(atomID, newDetails));
+	},
+
+	publishVersionHandler: function(versionID) {
+		this.props.dispatch(publishVersion(versionID));
 	},
 
 	openModal: function(mode) {
@@ -126,6 +131,7 @@ export const AtomEditor = React.createClass({
 						closeModalHandler={this.closeModal}
 						handleVersionSave={this.saveVersionSubmit}
 						updateDetailsHandler={this.updateDetails}
+						publishVersionHandler={this.publishVersionHandler}
 						isLoading={isLoading}
 						error={error} />
 

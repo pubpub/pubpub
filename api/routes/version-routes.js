@@ -51,3 +51,34 @@ export function saveVersion(req, res) {
 	});
 }
 app.post('/saveVersion', saveVersion);
+
+export function setVersionPublished(req, res) {
+	if (!req.user) { return res.status(403).json('Not Logged In'); }
+
+	const userID = req.user._id;
+	const now = new Date().getTime();
+	const versionID = req.body.versionID;
+
+	Version.findById(versionID).exec()
+	.then(function(result) {
+		result.isPublished = true;
+		result.publishedBy = userID;
+		result.publishedDate = now;
+		return [result, result.save()];
+	})
+	.spread(function(result, savedResponse) {
+		const updateAtom = Atom.update({ _id: result.parent }, { $set: { isPublished: true} }).exec();
+		return [result, updateAtom];
+	})
+	.spread(function(result, updatedAtom) {
+		console.log(result);
+		delete result.content;
+		return res.status(201).json(result);
+	})
+	.catch(function(error) {
+		console.log('error', error);
+		return res.status(500).json(error);
+	});
+
+}
+app.post('/setVersionPublished', setVersionPublished);
