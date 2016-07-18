@@ -127,6 +127,7 @@ export const AtomReader = React.createClass({
 		const currentVersionContent = safeGetInToJS(this.props.atomData, ['currentVersionData', 'content']) || {};
 		const currentVersionDate = safeGetInToJS(this.props.atomData, ['currentVersionData', 'createDate']);
 		const toc = generateTOC(currentVersionContent.markdown).full;
+		const versionQuery = this.props.query && this.props.query.version ? '?version=' + this.props.query.version : '';
 
 		const navItems = [
 			{link: '/a/' + this.props.slug, text: 'View', active: !this.props.meta},
@@ -135,8 +136,8 @@ export const AtomReader = React.createClass({
 			{link: '/a/' + this.props.slug + '/versions', text: 'Versions', rightAlign: true, active: this.props.meta === 'versions'},
 			{link: '/a/' + this.props.slug + '/journals', text: 'Journals', rightAlign: true, active: this.props.meta === 'journals'},
 			{link: '/a/' + this.props.slug + '/analytics', text: 'Analytics', rightAlign: true, active: this.props.meta === 'analytics'},
-			{link: '/a/' + this.props.slug + '/cite', text: 'Cite', rightAlign: true, active: this.props.meta === 'cite'},
-			{link: '/a/' + this.props.slug + '/export', text: 'Export', rightAlign: true, active: this.props.meta === 'export'},
+			{link: '/a/' + this.props.slug + '/cite' + versionQuery, text: 'Cite', rightAlign: true, active: this.props.meta === 'cite'},
+			{link: '/a/' + this.props.slug + '/export' + versionQuery, text: 'Export', rightAlign: true, active: this.props.meta === 'export'},
 		];
 
 		// Remove Export option if the atom type is not a doc
