@@ -4,8 +4,8 @@ import {App, AtomReader, AtomEditor, Editor, EmailVerification, GroupCreate, Gro
 import {About, AboutJournals, AboutPubs, AboutReviews, NotFound} from 'components';
 
 function loadComponent(component) {
-	if (__CLIENT__) return (location, cb) => component(module => cb(null, module.default || module));
-	else if (__SERVER__) return (location, cb) => cb(null, component.default || component);
+	if (__CLIENT__ && !__DEVELOPMENT__) return (location, cb) => component(module => cb(null, module.default || module));
+	else if (__SERVER__ || __DEVELOPMENT__) return (location, cb) => cb(null, component.default || component);
 	
 	// If we didn't hit one of the above return statements, something strange has happened.
 	console.error('Uh oh. Something strange happened in src/routes.js');
