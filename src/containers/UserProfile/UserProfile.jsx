@@ -148,5 +148,8 @@ styles = {
 	},
 	hide: {
 		display: 'none',
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+			display: 'none',
+		},
 	},
 };
