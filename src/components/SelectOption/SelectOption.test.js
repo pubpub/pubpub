@@ -1,13 +1,13 @@
 import {expect} from 'chai';
 import {shallowRender} from 'tests/helpersClient';
-import {IFrameEditor} from './IFrameEditor.jsx'
+import {SelectOption} from './SelectOption.jsx'
 
 describe('Components', () => {
-	describe('IFrameEditor.jsx', () => {
+	describe('SelectOption.jsx', () => {
 
 		it('should render with empty props', () => {
 			const props = {};
-			const {renderOutput, error} = shallowRender(IFrameEditor, props) ;
+			const {renderOutput, error} = shallowRender(SelectOption, props) ;
 
 			expect(error).to.not.exist; // Did not render an error
 			expect(renderOutput).to.exist; // Successfully rendered

@@ -21,20 +21,20 @@ export const JrnlProfileRecent = React.createClass({
 		};
 
 		return (
-			<div>
+			<div className={'firstChildNoTopMargin'}>
 				<Helmet {...metaData} />				
 
 				{
 					atomsData.sort((foo, bar)=>{
 						// Sort so that most recent is first in array
 						if (foo.createDate > bar.createDate) { return -1; }
-						if (foo.createDate < bar.createDate) { return 1;}
+						if (foo.createDate < bar.createDate) { return 1; }
 						return 0;
 					}).map((item, index)=>{
 						return (
 							<PreviewCard 
 								key={'featured-' + index}
-								type={item.destination.type}
+								type={'atom'}
 								image={item.destination.previewImage}
 								title={item.destination.title}
 								slug={item.destination.slug}

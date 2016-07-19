@@ -29,13 +29,19 @@ export default Radium(AtomEditorHeader);
 styles = {
 	container: {
 		display: 'table',
-
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+			display: 'block',
+		},
 	},
 	title: {
 		fontSize: '2em',
 		padding: '.25em 1em .25em 0em',
 		display: 'table-cell',
 		verticalAlign: 'top',
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+			display: 'block',
+			padding: '.5em 0em',
+		},
 	},
 	buttonWrapper: {
 		display: 'table-cell',
@@ -43,6 +49,11 @@ styles = {
 		paddingTop: '8px',
 		width: '1%',
 		whiteSpace: 'nowrap',
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+			display: 'block',
+			width: 'auto',
+			margin: '1em 0em',
+		},
 	},
 	button: {
 		fontSize: '.85em',

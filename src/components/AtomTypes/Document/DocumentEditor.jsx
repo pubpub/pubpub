@@ -16,6 +16,12 @@ export const DocumentEditor = React.createClass({
 		loginData: PropTypes.object,
 	},
 
+	getInitialState() {
+		return {
+			showMarkdown: false,
+		};
+	},
+
 	componentDidMount() {
 		const docJSON = safeGetInToJS(this.props.atomEditData, ['currentVersionData', 'content', 'docJSON']);
 		const prosemirror = require('prosemirror');
@@ -32,9 +38,10 @@ export const DocumentEditor = React.createClass({
 			}
 		});
 
+		this.proseChange();
+
 		pm.on.change.add((evt)=>{
-			const md = markdownSerializer.serialize(pm.doc);
-			document.getElementById('markdown').value = md;
+			this.proseChange();
 		});
 
 		pm.on.doubleClickOn.add((pos, node, nodePos)=>{
@@ -49,6 +56,11 @@ export const DocumentEditor = React.createClass({
 
 	},
 
+	proseChange: function() {
+		const md = markdownSerializer.serialize(pm.doc);
+		document.getElementById('markdown').value = md;
+	},
+
 	markdownChange: function(evt) {
 		pm.setDoc(markdownParser.parse(evt.target.value));
 	},
@@ -60,14 +72,20 @@ export const DocumentEditor = React.createClass({
 		};
 	},
 
+	toggleMarkdown: function() {
+		this.setState({showMarkdown: !this.state.showMarkdown});
+	},
+
 	render: function() {
 		return (
 			<div style={styles.container}>
 				
 				<Media/>
 
-				<textarea id="markdown" onChange={this.markdownChange} style={styles.textarea}></textarea>
-				<div id={'atom-reader'} style={styles.wsywigBlock}></div>
+				<div className={'opacity-on-hover'} style={styles.iconLeft} onClick={this.toggleMarkdown}></div>
+
+				<textarea id="markdown" onChange={this.markdownChange} style={[styles.textarea, this.state.showMarkdown && styles.textareaVisible]}></textarea>
+				<div id={'atom-reader'} style={[styles.wsywigBlock, this.state.showMarkdown && styles.wsywigWithMarkdown]}></div>
 
 				
 			</div>
@@ -90,11 +108,33 @@ styles = {
 			left: '-1em',
 		},
 	},
+	iconLeft: {
+		position: 'absolute',
+		width: '1.5em',
+		height: '100%',
+		cursor: 'pointer',
+		top: 0,
+		left: 0,
+		opacity: 0,
+		backgroundColor: '#BBBDC0',
+		borderRight: '1px solid #E4E4E4',
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+			display: 'none',
+		},
+	},
 	textarea: {
-		width: '90%',
 		margin: '0px',
 		minHeight: '80vh',
-		display: 'none',
+		opacity: '0',
+		position: 'absolute',
+		height: 'calc(100% - 2em)',
+		pointerEvents: 'none',
+		width: 'calc(50% - 4em)',
+		maxWidth: 'calc(650px + 10em)',
+	},
+	textareaVisible: {
+		opacity: '1',
+		pointerEvents: 'auto',
 	},
 	wsywigBlock: {
 		maxWidth: 'calc(650px + 10em)',
@@ -105,6 +145,13 @@ styles = {
 		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
 			width: 'calc(100%)',
 		},
+	},
+	wsywigWithMarkdown: {
+		position: 'relative',
+		left: 'calc(50% + 2em)',
+		width: 'calc(50% - 4em)',
+		margin: '0',
+
 	},
 	
 };

@@ -37,7 +37,8 @@ const Landing = React.createClass({
 	
 	handleSourceSubmit: function(evt) {
 		const source = this.state.source;
-		let atomType = undefined, props = {};
+		let atomType = undefined;
+		let props = {};
 		if (source && isWebUri(source)) {
 			atomType = 'iframe';
 			props = {url: source};

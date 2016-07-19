@@ -51,7 +51,7 @@ export function autocompleteJrnls(req, res) {
 app.get('/autocompleteJrnls', autocompleteJrnls);
 
 export function autocompleteUsers(req, res) {
-	User.find({}, {'_id': 1, 'username': 1, 'thumbnail': 1, 'name': 1}).exec(function(err, users) {
+	User.find({}, {'_id': 1, 'username': 1, 'image': 1, 'name': 1}).exec(function(err, users) {
 		const objects = users;
 		const sifter = new Sifter(objects);
 

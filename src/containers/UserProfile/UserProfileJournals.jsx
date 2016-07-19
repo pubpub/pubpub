@@ -1,6 +1,7 @@
 import React, {PropTypes} from 'react';
 import Radium from 'radium';
-// import {PreviewCard} from 'components';
+import {safeGetInToJS} from 'utils/safeParse';
+import {PreviewCard} from 'components';
 
 // import {globalMessages} from 'utils/globalMessages';
 // import {FormattedMessage} from 'react-intl';
@@ -18,12 +19,29 @@ export const UserProfileJournals = React.createClass({
 	},
 
 	render: function() {
-		const profileData = this.props.profileData || {};
+		const jrnlsData = safeGetInToJS(this.props.profileData, ['profileData', 'jrnls']) || [];
 		
 		return (
-			<div>
-
-				<h3>Journals</h3>
+			<div className={'firstChildNoTopMargin'}>
+				{
+					jrnlsData.sort((foo, bar)=>{
+						// Sort so that most recent is first in array
+						if (foo.createDate > bar.createDate) { return -1; }
+						if (foo.createDate < bar.createDate) { return 1; }
+						return 0;
+					}).map((item, index)=>{
+						if (!item.destination) { return null; }
+						return (
+							<PreviewCard 
+								key={'featured-' + index}
+								type={'journal'}
+								image={item.destination.icon}
+								title={item.destination.jrnlName}
+								slug={item.destination.slug}
+								description={item.destination.description} />
+						);
+					})
+				}
 
 			</div>
 		);

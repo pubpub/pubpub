@@ -3,6 +3,8 @@ import Radium from 'radium';
 import Select from 'react-select';
 import request from 'superagent';
 import {safeGetInToJS} from 'utils/safeParse';
+import dateFormat from 'dateformat';
+import {PreviewCard} from 'components';
 
 let styles;
 
@@ -57,7 +59,7 @@ export const AtomReaderJournals = React.createClass({
 		return (
 			<div>
 				
-				<h2>Journals</h2>
+				<h2 className={'normalWeight'}>Journals</h2>
 				Journals serve as curators. Pubs can be featured in multiple journals.
 
 				<h3>Add Submissions</h3>
@@ -80,15 +82,50 @@ export const AtomReaderJournals = React.createClass({
 							if (foo.createDate < bar.createDate) { return 1; }
 							return 0;
 						}).map((item, index)=>{
-							return <div key={'submitted-' + index}>{item.createDate} to {item.destination && item.destination.jrnlName}</div>;
+							return (
+								<div style={[item.inactive && styles.inactive]} key={'submitted-' + index}>
+									<PreviewCard 
+										type={'journal'}
+										image={item.destination.icon}
+										title={item.destination.jrnlName}
+										slug={item.destination.slug}
+										description={item.destination.description}
+										header={
+											<div>
+												<div>Submitted on {dateFormat(item.createDate, 'mmm dd, yyyy h:MM TT')}</div>
+												<div style={[!item.inactive && {display: 'none'}]}><span style={styles.inactiveNote}>{item.inactiveNote}</span> on {dateFormat(item.inactiveDate, 'mmm dd, yyyy h:MM TT')}</div>
+											</div>
+										} />
+								</div>
+								);
 						})
 					}
 
 				<h3>Featured by</h3>
-					{featuredData.map((item, index)=>{
-						return <div key={'featured-' + index}>{item.jrnlName}</div>;
-					})}
-
+					{
+						featuredData.sort((foo, bar)=>{
+							// Sort so that most recent is first in array
+							if (foo.createDate > bar.createDate) { return -1; }
+							if (foo.createDate < bar.createDate) { return 1; }
+							return 0;
+						}).map((item, index)=>{
+							return (
+								<div style={[item.inactive && styles.inactive]} key={'submitted-' + index}>
+									<PreviewCard 
+										type={'journal'}
+										image={item.source.icon}
+										title={item.source.jrnlName}
+										slug={item.source.slug}
+										description={item.source.description}
+										header={
+											<div>
+												<div>Featured on {dateFormat(item.createDate, 'mmm dd, yyyy h:MM TT')}</div>
+											</div>
+										} />
+								</div>
+								);
+						})
+					}
 
 			</div>
 		);
@@ -98,6 +135,12 @@ export const AtomReaderJournals = React.createClass({
 export default Radium(AtomReaderJournals);
 
 styles = {
+	inactive: {
+		opacity: '0.5',
+	},
+	inactiveNote: {
+		textTransform: 'capitalize',
+	},
 	submitButton: {
 		fontSize: '0.9em',
 		margin: '1em 0em',

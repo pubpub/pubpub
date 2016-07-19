@@ -1,5 +1,5 @@
 import app from '../api';
-import {User, Pub, Journal, Notification, Link, Atom} from '../models';
+import {User, Pub, Journal, Notification, Link, Atom, Jrnl} from '../models';
 
 // import {cloudinary} from '../services/cloudinary';
 import {sendInviteEmail} from '../services/emails';
@@ -63,6 +63,14 @@ export function getUser(req, res) {
 	})
 	.then(function(atomsResult) {
 		userData.atoms = atomsResult;
+		return Link.find({source: userData._id, type: 'admin', inactive: {$ne: true}}).populate({
+			path: 'destination',
+			model: Jrnl,
+			select: 'jrnlName slug icon description',
+		}).exec();
+	})
+	.then(function(jrnlsResult) {
+		userData.jrnls = jrnlsResult;
 		return res.status(201).json(userData);
 	})
 	.catch(function(error) {

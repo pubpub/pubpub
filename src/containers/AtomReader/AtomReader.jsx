@@ -7,6 +7,7 @@ import {getAtomData, submitAtomToJournals} from './actions';
 import {toggleVisibility, follow, unfollow} from 'containers/Login/actions';
 import {createHighlight} from 'containers/MediaLibrary/actions';
 import {safeGetInToJS} from 'utils/safeParse';
+import dateFormat from 'dateformat';
 
 import {HorizontalNav} from 'components';
 import AtomReaderAnalytics from './AtomReaderAnalytics';
@@ -33,6 +34,7 @@ let styles = {};
 export const AtomReader = React.createClass({
 	propTypes: {
 		atomData: PropTypes.object,
+		authorsData: PropTypes.object,
 		loginData: PropTypes.object,
 		slug: PropTypes.string,
 		query: PropTypes.object, // version: integer
@@ -122,6 +124,20 @@ export const AtomReader = React.createClass({
 		const showDiscussions = !this.props.meta && (this.state.showDiscussions && !this.state.showTOC || this.state.showDiscussions && this.state.lastCliked === 'discussions');
 		const showTOC = !this.props.meta && (this.state.showTOC && !this.state.showDiscussions || this.state.showTOC && this.state.lastCliked === 'toc');
 
+		const atomData = safeGetInToJS(this.props.atomData, ['atomData']) || {};
+		const currentVersionContent = safeGetInToJS(this.props.atomData, ['currentVersionData', 'content']) || {};
+		const currentVersionDate = safeGetInToJS(this.props.atomData, ['currentVersionData', 'createDate']);
+		const toc = generateTOC(currentVersionContent.markdown).full;
+		const versionQuery = this.props.query && this.props.query.version ? '?version=' + this.props.query.version : '';
+
+		const mobileNavButtons = [
+			{ type: 'link', mobile: true, text: 'Discussions', link: '/a/' + this.props.slug + '/discussions' },
+			{ type: 'button', mobile: true, text: 'Menu', action: undefined },
+		];
+		if (this.props.meta === 'discussions') {
+			mobileNavButtons[0] = { type: 'link', mobile: true, text: 'View', link: '/a/' + this.props.slug };
+		}
+
 		const navItems = [
 			{link: '/a/' + this.props.slug, text: 'View', active: !this.props.meta},
 			{link: '/a/' + this.props.slug + '/edit', text: 'Edit'},
@@ -129,13 +145,17 @@ export const AtomReader = React.createClass({
 			{link: '/a/' + this.props.slug + '/versions', text: 'Versions', rightAlign: true, active: this.props.meta === 'versions'},
 			{link: '/a/' + this.props.slug + '/journals', text: 'Journals', rightAlign: true, active: this.props.meta === 'journals'},
 			{link: '/a/' + this.props.slug + '/analytics', text: 'Analytics', rightAlign: true, active: this.props.meta === 'analytics'},
-			{link: '/a/' + this.props.slug + '/cite', text: 'Cite', rightAlign: true, active: this.props.meta === 'cite'},
-			{link: '/a/' + this.props.slug + '/export', text: 'Export', rightAlign: true, active: this.props.meta === 'export'},
+			{link: '/a/' + this.props.slug + '/cite' + versionQuery, text: 'Cite', rightAlign: true, active: this.props.meta === 'cite'},
+			{link: '/a/' + this.props.slug + '/export' + versionQuery, text: 'Export', rightAlign: true, active: this.props.meta === 'export'},
 		];
 
-		const atomData = safeGetInToJS(this.props.atomData, ['atomData']) || {};
-		const currentVersionContent = safeGetInToJS(this.props.atomData, ['currentVersionData', 'content']) || {};
-		const toc = generateTOC(currentVersionContent.markdown).full;
+		// Remove Export option if the atom type is not a doc
+		// In the future, we may add export for datasets, images, etc. 
+		// But for now that's ill defined
+		if (atomData.type !== 'document') { navItems.pop(); }
+
+		const authorsData = safeGetInToJS(this.props.atomData, ['authorsData']) || [];
+		
 		return (
 			<div style={styles.container}>
 
@@ -157,20 +177,22 @@ export const AtomReader = React.createClass({
 					<div className={'opacity-on-hover'} style={styles.iconLeft} onClick={this.toggleTOC}></div>
 					<div className={'opacity-on-hover'} style={styles.iconRight} onClick={this.toggleDiscussions}></div>
 
-					<HorizontalNav navItems={navItems} />
+					<HorizontalNav navItems={navItems} mobileNavButtons={mobileNavButtons}/>
 
 					{/* <div style={styles.buttonWrapper}>
 						<div className={'button'} style={styles.button} onClick={()=>{}}>Follow</div>
 					</div> */}
 
-					<div id={'atom-reader'} className={(this.props.meta || safeGetInToJS(this.props.atomData, ['atomData', 'type']) !== 'document' ) && 'atom-reader-meta'}>
-
+					<div id={!this.props.meta && safeGetInToJS(this.props.atomData, ['atomData', 'type']) === 'document' && 'atom-reader'} className={'atom-reader-meta'}>
 
 						<AtomReaderHeader
 							title={atomData.title}
-							authors={'Jane Doe and Marcus Aurilie'}
-							version={25}
-							versionDate={'Sept 25, 2015'}
+							authors={authorsData.map((item, index)=> {
+								return <Link to={'/user/' + item.source.username} key={'author-' + index} className={'author'}>{item.source.name}</Link>;
+							})}
+							versionDate={currentVersionDate}
+							lastUpdated={atomData.lastUpdated}
+							slug={atomData.slug}
 							titleOnly={!!this.props.meta}/>
 
 						{(()=>{
@@ -184,9 +206,11 @@ export const AtomReader = React.createClass({
 							case 'analytics':
 								return <AtomReaderAnalytics atomData={this.props.atomData}/>;
 							case 'cite':
-								return <AtomReaderCite atomData={this.props.atomData}/>;
+								return <AtomReaderCite atomData={this.props.atomData} authorsData={this.props.authorsData} versionQuery={versionQuery}/>;
 							case 'export':
 								return <AtomReaderExport atomData={this.props.atomData}/>;
+							case 'discussions':
+								return <Discussions/>;
 							default:
 								return <AtomViewerPane atomData={this.props.atomData} />;
 							}
@@ -320,6 +344,9 @@ styles = {
 	// pubNavButtonLast: {
 	// 	padding: '10px 0px 10px 10px',
 	// },
+	author: {
+		color: 'red',
+	},
 	pubBodyWrapper: {
 		maxWidth: '650px',
 		margin: '0 auto',

@@ -2,9 +2,10 @@ import React, { PropTypes } from 'react';
 import {connect} from 'react-redux';
 import Radium from 'radium';
 import Helmet from 'react-helmet';
-import {getJrnl, updateJrnl, createCollection, updateCollection, deleteCollection, featureAtom, rejectAtom, collectionsChange} from './actions';
+import {getJrnl, updateJrnl, createCollection, updateCollection, deleteCollection, featureAtom, rejectAtom, collectionsChange, addAdmin, deleteAdmin} from './actions';
 // import {NotFound} from 'components';
 import JrnlProfileAbout from './JrnlProfileAbout';
+import JrnlProfileAdmins from './JrnlProfileAdmins';
 import JrnlProfileDetails from './JrnlProfileDetails';
 import JrnlProfileLayout from './JrnlProfileLayout';
 import JrnlProfileRecent from './JrnlProfileRecent';
@@ -76,7 +77,17 @@ export const JrnlProfile = React.createClass({
 	},
 
 	handleCollectionsChange: function(linkID, collectionIDs) {
-		return this.props.dispatch(collectionsChange(linkID, collectionIDs))
+		return this.props.dispatch(collectionsChange(linkID, collectionIDs));
+	},
+
+	handleAddAdmin: function(adminID) {
+		const jrnlID = safeGetInToJS(this.props.jrnlData, ['jrnlData', '_id']);
+		return this.props.dispatch(addAdmin(jrnlID, adminID));
+	},
+
+	handleDeleteAdmin: function(adminID) {
+		const jrnlID = safeGetInToJS(this.props.jrnlData, ['jrnlData', '_id']);
+		return this.props.dispatch(deleteAdmin(jrnlID, adminID));
 	},
 
 	render: function() {
@@ -97,6 +108,7 @@ export const JrnlProfile = React.createClass({
 			{ type: 'link', text: 'Featured', link: '/' + this.props.slug + '/featured', active: this.props.mode === 'featured' },
 			{ type: 'link', text: 'Submitted', link: '/' + this.props.slug + '/submitted', active: this.props.mode === 'submitted' },
 			{ type: 'link', text: 'Collections', link: '/' + this.props.slug + '/collections', active: this.props.mode === 'collections' },
+			{ type: 'link', text: 'Admins', link: '/' + this.props.slug + '/admins', active: this.props.mode === 'admins' },
 			{ type: 'spacer' },
 			{ type: 'title', text: 'Public'},
 		];
@@ -172,6 +184,13 @@ export const JrnlProfile = React.createClass({
 									handleUpdateCollection={this.handleUpdateCollection} 
 									handleDeleteCollection={this.handleDeleteCollection}
 									slug={this.props.slug} />
+							);
+						case 'admins':
+							return (
+								<JrnlProfileAdmins
+									jrnlData={this.props.jrnlData} 
+									handleAddAdmin={this.handleAddAdmin}
+									handleDeleteAdmin={this.handleDeleteAdmin}/>
 							);
 						default:
 							return (

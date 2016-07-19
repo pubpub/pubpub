@@ -2,10 +2,10 @@ const app = require('../api');
 
 const Atom = require('../models').Atom;
 const Version = require('../models').Version;
-
 const Promise = require('bluebird');
-
 const Request = require('request-promise');
+import {uploadLocalFile} from '../services/aws';
+import {generateMarkdownFile, generatePDFFromJSON} from '../services/exporters';
 
 
 export function saveVersion(req, res) {
@@ -42,7 +42,47 @@ export function saveVersion(req, res) {
 		return version.save();
 	})
 	.then(function(savedVersion) { // Add to atom versions array and return version
-		Atom.update({ _id: newVersion.parent }, { $addToSet: { versions: savedVersion._id} }, function(errUpdating, resultUpdate) {if (errUpdating) return console.log(errUpdating);});
+		const updateAtom = Atom.update({ _id: newVersion.parent }, { $addToSet: { versions: savedVersion._id}, $set: {lastUpdated: now} }).exec();
+		return [savedVersion, updateAtom];
+	})
+	.spread(function(savedVersion, updatedAtomResult) {
+		if (newVersion.type !== 'document') { return [savedVersion, undefined]; }
+		return [savedVersion, Atom.findOne({ _id: newVersion.parent }).exec()];
+	})
+	.spread(function(savedVersion, atomData) {
+		if (newVersion.type !== 'document') { return [savedVersion, undefined]; }
+
+		// If it's a document, save PDF, XML, and Markdown
+		const tasks = [
+			generateMarkdownFile(savedVersion.content.markdown),
+			generatePDFFromJSON(savedVersion.content.docJSON, atomData.title, savedVersion.createDate, 'Jane Doe and Marcus Aurilie'),
+			// generateXMLFromJSON(savedVersion.content.docJSON),
+		];
+		return [savedVersion, Promise.all(tasks)];
+	})
+	.spread(function(savedVersion, taskResults) {
+		if (newVersion.type !== 'document') { return [savedVersion, undefined]; }
+
+		const tasks = [
+			uploadLocalFile(taskResults[0]),
+			uploadLocalFile(taskResults[1]),
+			// uploadLocalFile(taskResults[2]),
+		];
+		return [savedVersion, Promise.all(tasks)];
+	})
+	.spread(function(savedVersion, taskResults) {
+		if (newVersion.type !== 'document') { return [savedVersion, undefined]; }
+
+		savedVersion.content.markdownFile = 'https://assets.pubpub.org/' + taskResults[0];
+		savedVersion.content.PDFFile = 'https://assets.pubpub.org/' + taskResults[1];
+		// savedVersion.content.XMLFile = 'https://assets.pubpub.org/' + taskResults[2];
+		const updateVersion = Version.update({ _id: savedVersion._id }, { $set: {
+			'content.markdownFile': savedVersion.content.markdownFile,
+			'content.PDFFile': savedVersion.content.PDFFile,
+		}}).exec();
+		return [savedVersion, updateVersion];
+	})
+	.spread(function(savedVersion, updateVersionSaveResult) {
 		return res.status(201).json(savedVersion);
 	})
 	.catch(function(error) {

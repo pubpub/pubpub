@@ -32,6 +32,14 @@ import {
 	REJECT_ATOM_LOAD,
 	REJECT_ATOM_SUCCESS,
 	REJECT_ATOM_FAIL,
+
+	ADD_ADMIN_LOAD,
+	ADD_ADMIN_SUCCESS,
+	ADD_ADMIN_FAIL,
+
+	DELETE_ADMIN_LOAD,
+	DELETE_ADMIN_SUCCESS,
+	DELETE_ADMIN_FAIL,
 } from './actions';
 
 /*--------*/
@@ -42,6 +50,7 @@ export const defaultState = Immutable.Map({
 	submittedData: [],
 	featuredData: [],
 	atomsData: [],
+	adminsData: [],
 	loading: false,
 	error: null,
 
@@ -70,6 +79,7 @@ function getJrnlSuccess(state, result) {
 		submittedData: result.submittedData,
 		featuredData: result.featuredData,
 		atomsData: result.atomsData,
+		adminsData: result.adminsData,
 		loading: false,
 		error: null,
 	});
@@ -167,6 +177,26 @@ function rejectAtomSuccess(state, result) {
 	return state.set('submittedData', newSubmittedData);
 }
 
+// Add Admin Functions
+// ---------------------
+function addAdminSuccess(state, result) {
+	// Add the admin the the list
+	return state.merge({
+		adminsData: state.get('adminsData').push(ensureImmutable(result))
+	});
+}
+
+// Delete Admin Functions
+// ---------------------
+function deleteAdminSuccess(state, result) {
+	// Remove the admin the the list by ID
+	return state.merge({
+		adminsData: state.get('adminsData').filter((item)=> {
+			return item.get('_id') !== result._id;
+		})
+	});
+}
+
 /*--------*/
 // Bind actions to specific reducing functions.
 /*--------*/
@@ -219,6 +249,20 @@ export default function loginReducer(state = defaultState, action) {
 	case REJECT_ATOM_SUCCESS:
 		return rejectAtomSuccess(state, action.result);
 	case REJECT_ATOM_FAIL:
+		return state;
+
+	case ADD_ADMIN_LOAD:
+		return state;
+	case ADD_ADMIN_SUCCESS:
+		return addAdminSuccess(state, action.result);
+	case ADD_ADMIN_FAIL:
+		return state;
+
+	case DELETE_ADMIN_LOAD:
+		return state;
+	case DELETE_ADMIN_SUCCESS:
+		return deleteAdminSuccess(state, action.result);
+	case DELETE_ADMIN_FAIL:
 		return state;
 
 	default:

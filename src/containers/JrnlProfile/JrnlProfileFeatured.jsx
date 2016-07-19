@@ -73,7 +73,7 @@ export const JrnlProfileFeatured = React.createClass({
 		});
 
 		return (
-			<div>
+			<div className={'firstChildNoTopMargin'}>
 				<Helmet {...metaData} />				
 				<Style rules={{
 					'.Select-control': { borderWidth: '0px', height: '34px'},
@@ -84,7 +84,7 @@ export const JrnlProfileFeatured = React.createClass({
 					featuredData.sort((foo, bar)=>{
 						// Sort so that most recent is first in array
 						if (foo.createDate > bar.createDate) { return -1; }
-						if (foo.createDate < bar.createDate) { return 1;}
+						if (foo.createDate < bar.createDate) { return 1; }
 						return 0;
 					}).map((item, index)=>{
 						const selection = (<Select
@@ -96,7 +96,7 @@ export const JrnlProfileFeatured = React.createClass({
 							onChange={this.handleSelectChange.bind(this, item._id)} />);
 						return (
 							<PreviewCard 
-								type={item.destination.type}
+								type={'atom'}
 								key={'featured-' + index}
 								image={item.destination.previewImage}
 								title={item.destination.title}

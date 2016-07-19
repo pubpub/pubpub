@@ -41,10 +41,22 @@ body {
 	text-decoration: underline !important;
 }
 
+.normalWeight {
+	font-weight: normal;
+}
+
 .horizontalNavHover:hover {
 	border-bottom: 2px solid #2C2A2B !important;
 	padding: 10px 10px 8px 10px !important;
 }
+@media screen and (min-resolution: 3dppx), screen and (max-width: 767px) {
+	.horizontalNavHover:hover {
+		padding: .15em 2em .15em calc(.5em - 3px) !important;
+		border-left: 3px solid #2C2A2B !important;
+		border-bottom: 0px solid #2C2A2B !important;
+	}
+}
+
 .verticalNavHover:hover {
 	padding: .15em 2em .15em calc(.5em - 3px) !important;
 	border-left: 3px solid #2C2A2B !important;
@@ -83,7 +95,7 @@ body {
 	text-shadow: 0 -5px #BBBDC0, 0 -10px #BBBDC0, 5px 0 #BBBDC0, 5px -5px #BBBDC0, 5px -10px #BBBDC0;
 }
 
-.firstChildNoTopMargin > div:first-child{
+.firstChildNoTopMargin > div:first-of-type{
 	margin-top: 0em !important;
 }
 

@@ -26,15 +26,10 @@ export const EmbedWrapper = React.createClass({
 			width: this.props.size || 'auto',
 		};
 
-		const caption = {
-			fontSize: '0.85em',
-			padding: '.2em 0em .5em 0em',
-		};
-
 		return (
 			<div className={'pub-embed ' + this.props.className} id={this.props.id} style={style}>
 				<AtomViewerPane atomData={atomData} renderType={'embed'}/>	
-				<div style={caption}>{this.props.caption}</div>	
+				<div className={'caption'}>{this.props.caption}</div>	
 			</div>
 		);
 	}

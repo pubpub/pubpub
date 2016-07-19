@@ -32,8 +32,9 @@ linkSchema.statics.createLink = function(type, source, destination, createBy, cr
 
 linkSchema.statics.setLinkInactive = function(type, source, destination, inactiveBy, inactiveDate, inactiveNote) {
 	// Beacuse upsert is false, this will not create a new document if no match is found.
-	return this.findOne({type: type, source: source, destination: destination }).exec()
+	return this.findOne({type: type, source: source, destination: destination, inactive: {$ne: true} }).exec()
 	.then(function(linkResult) {
+		if (!linkResult) { return undefined; }
 		linkResult.inactive = true;
 		linkResult.inactiveBy = inactiveBy;
 		linkResult.inactiveDate = inactiveDate || new Date().getTime();
@@ -54,6 +55,9 @@ module.exports = mongoose.model('Link', linkSchema);
 // follower
 // editor
 // reader
+
+// USER -> JOURNAL
+// admin
 
 // PUB -> PUB
 // reply
