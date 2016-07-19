@@ -76,6 +76,7 @@ export const JrnlProfileAdmins = React.createClass({
 
 				<Select.Async
 					name="form-field-name"
+					autoload={false}
 					value={this.state.value}
 					loadOptions={this.loadOptions}
 					placeholder={<span>Add new admins</span>}

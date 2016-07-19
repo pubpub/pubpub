@@ -9,14 +9,15 @@ export const SelectValue = React.createClass({
 		value: PropTypes.object,
 	},
 	render() {
+		const value = this.props.value || {};
 		return (
-			<div className="Select-value" title={this.props.value.title}>
+			<div className="Select-value" title={value.title}>
 				<span className="Select-value-label">
-					{this.props.value && this.props.value.image &&
-						<img src={'https://jake.pubpub.org/unsafe/50x50/' + this.props.value.image} style={styles.image} />
+					{value && value.image &&
+						<img src={'https://jake.pubpub.org/unsafe/50x50/' + value.image} style={styles.image} />
 					}
 					
-					<span>{this.props.value.label}</span>
+					<span>{value.label}</span>
 				</span>
 			</div>
 		);
@@ -28,7 +29,7 @@ export default Radium(SelectValue);
 
 styles = {
 	image: {
-		padding: '.25em',
+		padding: '0.25em 1em .25em 0em',
 		height: '26px',
 		float: 'left',
 	},	

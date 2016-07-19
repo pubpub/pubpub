@@ -2,7 +2,7 @@ import React, {PropTypes} from 'react';
 import Radium from 'radium';
 let styles = {};
 
-export const Loader = React.createClass({
+export const SelectOption = React.createClass({
 	propTypes: {
 		children: PropTypes.node,
 		className: PropTypes.string,
@@ -26,22 +26,23 @@ export const Loader = React.createClass({
 		this.props.onFocus(this.props.option, event);
 	},
 	render() {
+		const option = this.props.option || {};
 		return (
-			<div className={this.props.className} onMouseDown={this.handleMouseDown} onMouseEnter={this.handleMouseEnter} onMouseMove={this.handleMouseMove} title={this.props.option.title}>
-				{this.props.option && this.props.option.image &&
-					<img src={'https://jake.pubpub.org/unsafe/50x50/' + this.props.option.image} style={styles.image} />
+			<div className={this.props.className} onMouseDown={this.handleMouseDown} onMouseEnter={this.handleMouseEnter} onMouseMove={this.handleMouseMove} title={option.title}>
+				{option && option.image &&
+					<img src={'https://jake.pubpub.org/unsafe/50x50/' + option.image} style={styles.image} />
 				}
-				<span>{this.props.option.label}</span>
+				<span>{option.label}</span>
 			</div>
 		);
 	}
 });
 
-export default Radium(Loader);
+export default Radium(SelectOption);
 
 styles = {
 	image: {
-		padding: '.25em',
+		padding: '0.25em 1em .25em 0em',
 		height: '26px',
 		float: 'left',
 	},	
