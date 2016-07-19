@@ -25,6 +25,7 @@ export const PreviewCard = React.createClass({
 		const defaultImages = {
 			atom: 'https://assets.pubpub.org/_site/pub.png',
 			journal: 'https://assets.pubpub.org/_site/journal.png',
+			user: 'https://assets.pubpub.org/_site/happyPub.png',
 		};
 		const image = this.props.image || defaultImages[this.props.type];
 		let href;
@@ -33,6 +34,8 @@ export const PreviewCard = React.createClass({
 			href = '/a/' + this.props.slug; break;
 		case 'journal':
 			href = '/' + this.props.slug; break;
+		case 'user':
+			href = '/user/' + this.props.slug; break;
 		default: 
 			href = '/'; break;
 

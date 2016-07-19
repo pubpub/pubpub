@@ -28,7 +28,7 @@ export const JrnlProfileRecent = React.createClass({
 					atomsData.sort((foo, bar)=>{
 						// Sort so that most recent is first in array
 						if (foo.createDate > bar.createDate) { return -1; }
-						if (foo.createDate < bar.createDate) { return 1;}
+						if (foo.createDate < bar.createDate) { return 1; }
 						return 0;
 					}).map((item, index)=>{
 						return (

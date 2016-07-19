@@ -28,7 +28,7 @@ export const UserProfilePubs = React.createClass({
 					atoms.sort((foo, bar)=>{
 						// Sort so that most recent is first in array
 						if (foo.lastUpdated > bar.lastUpdated) { return -1; }
-						if (foo.lastUpdated < bar.lastUpdated) { return 1;}
+						if (foo.lastUpdated < bar.lastUpdated) { return 1; }
 						return 0;
 					}).map((item, index)=>{
 						// Need to check to make sure we don't put the 

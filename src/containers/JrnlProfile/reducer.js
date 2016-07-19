@@ -181,14 +181,20 @@ function rejectAtomSuccess(state, result) {
 // ---------------------
 function addAdminSuccess(state, result) {
 	// Add the admin the the list
-	return state.set('submittedData', result);
+	return state.merge({
+		adminsData: state.get('adminsData').push(ensureImmutable(result))
+	});
 }
 
 // Delete Admin Functions
 // ---------------------
 function deleteAdminSuccess(state, result) {
 	// Remove the admin the the list by ID
-	return state.set('submittedData', result);
+	return state.merge({
+		adminsData: state.get('adminsData').filter((item)=> {
+			return item.get('_id') !== result._id;
+		})
+	});
 }
 
 /*--------*/

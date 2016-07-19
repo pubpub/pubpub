@@ -27,9 +27,11 @@ export const JrnlProfileAdmins = React.createClass({
 	},
 	
 	componentWillReceiveProps(nextProps) {
-		const currentSubmitted = safeGetInToJS(this.props.atomData, ['submittedData']) || [];
-		const nextSubmitted = safeGetInToJS(nextProps.atomData, ['submittedData']) || [];
-		if (currentSubmitted.length !== nextSubmitted.length) {
+		const currentAdmins = safeGetInToJS(this.props.jrnlData, ['adminsData']) || [];
+		const nextAdmins = safeGetInToJS(nextProps.jrnlData, ['adminsData']) || [];
+		console.log(currentAdmins);
+		console.log(nextAdmins);
+		if (currentAdmins.length !== nextAdmins.length) {
 			this.setState({value: {}});
 		}
 	},
@@ -60,12 +62,12 @@ export const JrnlProfileAdmins = React.createClass({
 
 	deleteAdmin: function(adminID) {
 		if (!adminID) { return undefined; }
-		this.props.handleAddAdmin(adminID);
+		this.props.handleDeleteAdmin(adminID);
 	},
 
 	render: function() {
 		const jrnlData = safeGetInToJS(this.props.jrnlData, ['jrnlData']) || {};
-		const submittedData = safeGetInToJS(this.props.jrnlData, ['submittedData']) || [];
+		const adminsData = safeGetInToJS(this.props.jrnlData, ['adminsData']) || [];
 		const metaData = {
 			title: 'Admins · ' + jrnlData.jrnlName,
 		};
@@ -87,6 +89,28 @@ export const JrnlProfileAdmins = React.createClass({
 				<div className={'button'} style={[styles.submitButton, (this.state.value && this.state.value.id) && styles.submitButtonActive]} onClick={this.addAdmin}>Add Admin</div>
 					
 				<h3>Admins</h3>
+				{
+					adminsData.sort((foo, bar)=>{
+						// Sort so that most recent is first in array
+						if (foo.createDate > bar.createDate) { return -1; }
+						if (foo.createDate < bar.createDate) { return 1; }
+						return 0;
+					}).map((item, index)=>{
+						const buttons = [ 
+							{ type: 'button', text: 'Delete Admin', action: this.deleteAdmin.bind(this, item.source._id) },
+						];
+						return (
+							<PreviewCard 
+								key={'featured-' + index}
+								type={'user'}
+								image={item.source.image}
+								title={item.source.name}
+								slug={item.source.username}
+								description={item.source.bio} 
+								buttons={buttons} />
+						);
+					})
+				}
 			</div>
 		);
 	}

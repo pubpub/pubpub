@@ -2,7 +2,8 @@ const app = require('../api');
 const Jrnl = require('../models').Jrnl;
 const Link = require('../models').Link;
 const Atom = require('../models').Atom;
-const Tag = require('../models').Tag;
+// const Tag = require('../models').Tag;
+const User = require('../models').User;
 
 export function createJrnl(req, res) {
 	if (!req.user) { return res.status(403).json('Not Logged In'); }
@@ -107,10 +108,26 @@ export function getJrnl(req, res) {
 			}
 		});
 
+		// Get the admins data associated with the journal
+		// This query fires if mode is equal to 'admins' or 'about'
+		const getAdmins = new Promise(function(resolve) {
+			if (mode === 'admins' || mode === 'about') {
+				const query = Link.find({destination: jrnlResult._id, type: 'admin', inactive: {$ne: true}}).populate({
+					path: 'source',
+					model: User,
+					select: 'name username bio image',
+				}).exec();
+				resolve(query);
+			} else {
+				resolve();
+			}
+		});
+
 		const tasks = [
 			getSubmitted,
 			getFeatured,
-			getAtomsData
+			getAtomsData,
+			getAdmins,
 		];
 
 		return [jrnlResult, Promise.all(tasks)];
@@ -122,7 +139,8 @@ export function getJrnl(req, res) {
 			jrnlData: jrnlResult,
 			submittedData: taskData[0],
 			featuredData: taskData[1],
-			atomsData: taskData[2]
+			atomsData: taskData[2],
+			adminsData: taskData[3]
 		});
 	})
 	.catch(function(error) {
@@ -235,17 +253,27 @@ export function addJrnlAdmin(req, res) {
 	const now = new Date().getTime();
 	// Check permission 
 
-	// Link.createLink('featured', jrnlID, atomID, userID, now)
-	// .then(function() {
-	// 	return Link.setLinkInactive('submitted', atomID, jrnlID, userID, now, inactiveNote);
-	// })
-	// .then(function(updatedSubmissionLink) {
-	// 	return res.status(201).json(updatedSubmissionLink);
-	// })
-	// .catch(function(error) {
-	// 	console.log('error', error);
-	// 	return res.status(500).json(error);
-	// });
+	Link.findOne({source: adminID, destination: jrnlID, type: 'admin', inactive: {$ne: true}}).exec()
+	.then(function(existingLink) {
+		if (existingLink) {			
+			throw new Error('Admin already exists');
+		}
+		return Link.createLink('admin', adminID, jrnlID, userID, now);
+	})
+	.then(function(newAdminLink) {
+		return Link.findOne({source: adminID, destination: jrnlID, type: 'admin', inactive: {$ne: true}}).populate({
+			path: 'source',
+			model: User,
+			select: 'name username bio image',
+		}).exec();
+	})
+	.then(function(populatedLink) {
+		return res.status(201).json(populatedLink);
+	})
+	.catch(function(error) {
+		console.log('error', error);
+		return res.status(500).json(error);
+	});
 }
 app.post('/addJrnlAdmin', addJrnlAdmin);
 
@@ -255,16 +283,13 @@ export function deleteJrnlAdmin(req, res) {
 	const now = new Date().getTime();
 	// Check permission 
 
-	// Link.createLink('featured', jrnlID, atomID, userID, now)
-	// .then(function() {
-	// 	return Link.setLinkInactive('submitted', atomID, jrnlID, userID, now, inactiveNote);
-	// })
-	// .then(function(updatedSubmissionLink) {
-	// 	return res.status(201).json(updatedSubmissionLink);
-	// })
-	// .catch(function(error) {
-	// 	console.log('error', error);
-	// 	return res.status(500).json(error);
-	// });
+	Link.setLinkInactive('admin', adminID, jrnlID, userID, now, 'deleted')
+	.then(function(deletedLink) {
+		return res.status(201).json(deletedLink);
+	})
+	.catch(function(error) {
+		console.log('error', error);
+		return res.status(500).json(error);
+	});
 }
 app.post('/deleteJrnlAdmin', deleteJrnlAdmin);

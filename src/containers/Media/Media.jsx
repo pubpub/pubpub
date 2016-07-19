@@ -170,7 +170,7 @@ export const Media = React.createClass({
 							}).sort((foo, bar)=>{
 								// Sort so that most recent is first in array
 								if (foo.lastUpdated > bar.lastUpdated) { return -1; }
-								if (foo.lastUpdated < bar.lastUpdated) { return 1;}
+								if (foo.lastUpdated < bar.lastUpdated) { return 1; }
 								return 0;
 							}).map((item, index)=> {
 								return (
