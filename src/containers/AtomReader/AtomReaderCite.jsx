@@ -34,22 +34,22 @@ export const AtomReaderCite = React.createClass({
 
 		return (
 			<div>
-				<div style={styles.typeTitle}>Bibtex</div>
+				<h2 className={'normalWeight'}>Bibtex</h2>
 				<div style={[styles.typeContent, styles.bibtexContent]}>
 					<Reference citationObject={referenceObject} mode={'bibtex'} />
 				</div>
 
-				<div style={styles.typeTitle}>APA</div>
+				<h2 className={'normalWeight'}>APA</h2>
 				<div style={styles.typeContent}>
 					<Reference citationObject={referenceObject} mode={'apa'} />
 				</div>
 
-				<div style={styles.typeTitle}>MLA</div>
+				<h2 className={'normalWeight'}>MLA</h2>
 				<div style={styles.typeContent}>
 					<Reference citationObject={referenceObject} mode={'mla'} />
 				</div>
 
-				<div style={styles.typeTitle}>Chicago</div>
+				<h2 className={'normalWeight'}>Chicago</h2>
 				<div style={styles.typeContent}>
 					<Reference citationObject={referenceObject} mode={'chicago'} />
 				</div>
@@ -62,10 +62,6 @@ export const AtomReaderCite = React.createClass({
 export default Radium(AtomReaderCite);
 
 styles = {
-	typeTitle: {
-		fontSize: '1.5em',
-		color: '#58585B',
-	},
 	typeContent: {
 		color: '#58585B',
 		margin: '1em 0em 2em 0em',

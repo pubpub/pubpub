@@ -59,7 +59,7 @@ export const AtomReaderJournals = React.createClass({
 		return (
 			<div>
 				
-				<h2>Journals</h2>
+				<h2 className={'normalWeight'}>Journals</h2>
 				Journals serve as curators. Pubs can be featured in multiple journals.
 
 				<h3>Add Submissions</h3>

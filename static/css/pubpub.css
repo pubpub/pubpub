@@ -41,6 +41,10 @@ body {
 	text-decoration: underline !important;
 }
 
+.normalWeight {
+	font-weight: normal;
+}
+
 .horizontalNavHover:hover {
 	border-bottom: 2px solid #2C2A2B !important;
 	padding: 10px 10px 8px 10px !important;

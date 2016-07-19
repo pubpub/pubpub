@@ -11,7 +11,7 @@ export const AtomReaderContributors = React.createClass({
 		return (
 			<div>
 				
-				<h2>Contributors</h2>
+				<h2 className={'normalWeight'}>Contributors</h2>
 				
 			</div>
 		);

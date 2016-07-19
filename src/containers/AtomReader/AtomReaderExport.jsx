@@ -17,7 +17,7 @@ export const AtomReaderExport = React.createClass({
 		return (
 			<div>
 				
-				<h2>Export</h2>
+				<h2 className={'normalWeight'}>Export</h2>
 					
 				<a href={pdfURL} style={globalStyles.link}><div className={'button'} style={styles.downloadButton}>Download PDF</div></a>
 				<a href={markdownURL} style={globalStyles.link}><div className={'button'} style={styles.downloadButton}>Download Markdown</div></a>

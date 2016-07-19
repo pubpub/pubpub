@@ -37,7 +37,7 @@ export const AtomReaderVersions = React.createClass({
 
 		return (
 			<div>
-				<h2>Versions</h2>
+				<h2 className={'normalWeight'}>Versions</h2>
 
 				<div>
 					{versionsData.sort((foo, bar)=>{

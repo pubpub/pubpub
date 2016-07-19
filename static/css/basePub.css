@@ -3,8 +3,9 @@
 	margin: 0 auto;
 }
 
+
 #atom-reader {
-	font-family: serif;
+	font-family: 'Yrsa', Georgia, serif;
 	font-size: 1.2em;
 	line-height: 1.5em;
 	color: #333;
@@ -23,33 +24,43 @@
 }
 
 #atom-reader h1, #atom-reader h2, #atom-reader h3, #atom-reader h4, #atom-reader h5, #atom-reader h6 {
-	line-height:1em;
-	font-family: 'Yrsa', Georgia, serif;
+	line-height: 1.5em;
+	font-family: 'Open Sans', Helvetica Neue, Arial, sans-serif;
 }
 
 /* Set default paragraph margins on .p-block since we don't use <p> */
 #atom-reader .p-block {
 	margin: 1em 0em;
+    font-size: 1.2em;
+    line-height: 1.5em;
 }
 
 /* Atom Reader Header Styles */
 /* ------------------------- */
-#atom-reader .atom-reader-header h1 {
-	font-size: 2.5em;
+.atom-reader-meta .atom-reader-header h1, #atom-reader .atom-reader-header h1 {
+	font-size: 2em;
 	margin-top: .75em;
-	margin-bottom: .25em;
-	font-family: 'Open Sans', Helvetica Neue, Arial, sans-serif;
+	margin-bottom: .5em;
 	color: #222; 
 }
 
 #atom-reader .atom-reader-header p {
-	margin: .5em 0em;
+	margin: .25em 0em;
+	font-size: 1em;
+	line-height: 1em;
+	color: #808284;
 }
 #atom-reader .atom-reader-header a {
 	text-decoration: none;
 }
 #atom-reader .atom-reader-header a:hover {
 	text-decoration: underline;
+}
+
+#atom-reader .atom-reader-header {
+	border-bottom: 1px solid #F3F3F4;
+	margin-bottom: 1em;
+	padding-bottom: 1em;
 }
 /* ------------------------- */
 
