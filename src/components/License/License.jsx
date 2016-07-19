@@ -54,6 +54,7 @@ styles = {
 		textAlign: 'center',
 		paddingTop: '30px',	
 		marginTop: '30px',
+		marginBottom: '30px',
 		borderTop: '1px solid #ddd',
 		fontSize: '0.85em',
 	},

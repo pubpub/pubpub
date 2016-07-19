@@ -139,13 +139,14 @@ app.use((req, res) => {
 							<meta name="google-site-verification" content="jmmJFnkSOeIEuS54adOzGMwc0kwpsa8wQ-L4GyPpPDg" />
 							<meta name="referrer" content="always">
 							<meta property="fb:pages" content="228105957546675" />
+							<meta name="theme-color" content="#2C2A2B">
 							${head.title.toString()}
 							${head.meta.toString()}
 
 							<link rel=${rssRel} type="application/rss+xml" title="RSS" href="/data/rss.xml" />
-							<link rel="shortcut icon" href="/favicon.ico" />
+							<link rel="shortcut icon" href="/favicon.ico?v=21cb1" />
 							
-							<link href='https://fonts.googleapis.com/css?family=Lora:400,400italic,700,700italic|Open+Sans:400,400italic,700,700italic' rel='stylesheet' type='text/css'>
+							<link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
 							<link href='https://assets.pubpub.org/_fonts/Yrsa.css' rel='stylesheet' type='text/css'>
 
 							<!-- We could dynamically load these in Editor.jsx
@@ -153,7 +154,7 @@ app.use((req, res) => {
 							<link href='/css/codemirror.css' rel='stylesheet' type='text/css' /> <!-- I went back to loaded this one because the async css load was causing flicker on Discussion Codemirror -->
 							<link href='/css/print.css' rel='stylesheet' type='text/css' />
 							<link href='/css/highlightdefault.css' rel='stylesheet' type='text/css' />
-							<link href='/css/react-select.min.css' rel='stylesheet' type='text/css' />
+							<link href='/css/react-select.css' rel='stylesheet' type='text/css' />
 							<link href='/css/menu.css' rel='stylesheet' type='text/css' />
 							<link href='/css/pubpub.css' rel='stylesheet' type='text/css' />
 							<link href='/css/basePub.css' rel='stylesheet' type='text/css' />

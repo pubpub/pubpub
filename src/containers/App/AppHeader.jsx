@@ -12,6 +12,7 @@ export const AppHeader = React.createClass({
 	propTypes: {
 		loginData: PropTypes.object,
 		path: PropTypes.string, 
+		createDocument: PropTypes.func,
 		logoutHandler: PropTypes.func,
 	},
 
@@ -86,17 +87,16 @@ export const AppHeader = React.createClass({
 				{/* Account Menu */}
 				{/* Use CSS to toggle display:none, to avoid flicker on mobile */}
 				<div className="header-menu lightest-bg darkest-color arrow-box" style={[styles.headerMenu, !this.state.accountMenuOpen && {display: 'none'}]}>
-					<div style={styles.menuName}>{name}</div>
+					<Link className={'menu-option'} to={'/user/' + username}>{name}</Link>
 
 					<div className={'menu-separator'} ></div>
 
-					<Link className={'menu-option'} to={'/pubs/create'}>New Pub</Link>
+					<div className={'menu-option'} onClick={this.props.createDocument}>New Document</div>
 					<Link className={'menu-option'} to={'/user/' + username + '/journals'}>My Journals</Link>
 					
 					<div className={'menu-separator'} ></div>
 
-					<Link className={'menu-option'} to={'/user/' + username}>Profile</Link>
-					<Link className={'menu-option'} to={'/user/' + username + '/settings'}>Settings</Link>
+					<Link className={'menu-option'} to={'/settings'}>Settings</Link>
 					<div className={'menu-option'} onClick={this.logout}>Logout</div>
 				</div>
 
@@ -128,6 +128,9 @@ styles = {
 	headerLogo: {
 		fontSize: '1.4em',
 		transform: 'translateY(2px)', // The logo looks like it is set a bit too high by default
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+			fontSize: '1em',
+		}
 	},
 	headerNavItem: {
 		fontSize: '0.9em',
@@ -163,6 +166,7 @@ styles = {
 		width: '100vw',
 		height: '100vh',
 		top: 0,
+		zIndex: 99999998,
 		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
 			display: 'none',
 		}
@@ -176,6 +180,7 @@ styles = {
 		right: 5,
 		top: 45,
 		padding: '.2em 0em',
+		zIndex: 99999999,
 		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
 			position: 'static',
 			width: 'auto',

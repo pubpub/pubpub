@@ -10,7 +10,6 @@ import InputFields from 'components/Markdown/MarkdownPluginFields';
 import MurmurHash from 'murmurhash';
 import Portal from 'react-portal';
 import {throttle, delay} from 'lodash';
-import {pubSizes} from 'utils/styleConstants';
 
 let styles = {};
 
@@ -347,7 +346,6 @@ styles = {
 				top: '60px',
 			},
 			'discussions': {
-				width: pubSizes.defaultRightWidth,
 				right: '0px',
 				backgroundColor: 'rgba(255,255,255,0.5)',
 				top: '30px',

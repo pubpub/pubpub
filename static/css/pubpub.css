@@ -20,6 +20,7 @@ lightest: #F3F3F4
 .light-color { color: #808284; }
 
 .lighter-bg { background-color: #BBBDC0; }
+.lighter-bg-hover:hover { background-color: #BBBDC0; }
 .lighter-color { color: #BBBDC0; }
 
 .lightest-bg { background-color: #F3F3F4; }
@@ -30,12 +31,76 @@ lightest: #F3F3F4
 /* Font Styles */
 .title-font { font-family: 'Yrsa', Georgia, serif; }
 .sans-font  { font-family: 'Open Sans', Helvetica Neue, Arial, sans-serif; }
-.serif-font { font-family: 'Lora', serif; }
+/*.serif-font { font-family: 'Palatino', serif; }*/
+.serif-font { font-family: serif; }
 
 body {
 	font-family: 'Open Sans', Helvetica Neue, Arial, sans-serif;
 }
+.underlineOnHover:hover {
+	text-decoration: underline !important;
+}
 
+.normalWeight {
+	font-weight: normal;
+}
+
+.horizontalNavHover:hover {
+	border-bottom: 2px solid #2C2A2B !important;
+	padding: 10px 10px 8px 10px !important;
+}
+@media screen and (min-resolution: 3dppx), screen and (max-width: 767px) {
+	.horizontalNavHover:hover {
+		padding: .15em 2em .15em calc(.5em - 3px) !important;
+		border-left: 3px solid #2C2A2B !important;
+		border-bottom: 0px solid #2C2A2B !important;
+	}
+}
+
+.verticalNavHover:hover {
+	padding: .15em 2em .15em calc(.5em - 3px) !important;
+	border-left: 3px solid #2C2A2B !important;
+}
+
+.opacity-on-hover:hover {
+	opacity: 1 !important;
+}
+
+.showChildOnHover .hoverChild {
+	/*display: none;*/
+	opacity: 0;
+	transition: .1s linear opacity;
+	pointer-events: none;
+}
+
+.showChildOnHover:hover .hoverChild {
+	/*display: block;*/
+	opacity: 1;
+	pointer-events: auto;
+}
+
+.slideChildOnHover .slideChild {
+	transform: translate3d(-100%,0,0);
+	transition: .1s ease-in-out transform;
+}
+.slideChildOnHover:hover .slideChild {
+	transform: translate3d(0%,0,0);
+}
+.dragIcon:before {
+	content: '.';
+	display: inline-block;
+	color: #BBBDC0;
+	width: .6em;
+	padding: 0em .5em;
+	text-shadow: 0 -5px #BBBDC0, 0 -10px #BBBDC0, 5px 0 #BBBDC0, 5px -5px #BBBDC0, 5px -10px #BBBDC0;
+}
+
+.firstChildNoTopMargin > div:first-of-type{
+	margin-top: 0em !important;
+}
+
+/* Input Fields */
+/* ------------ */
 label {
 	display: block;	
 	color: #58585B;
@@ -72,11 +137,39 @@ input[type="file"]:focus {
 	position: relative;
 	top: -1.7em;
 }
+/* ------------ */
 
-.underlineOnHover:hover {
-	text-decoration: underline !important;
+
+/* headers */
+/* ------------ */
+h1 {
+	font-size: 3.5em;
+	margin-top: 0em;
+	letter-spacing: -2px;
+	line-height: 1em;
 }
+h2 {
+	font-size: 2em;
+	margin-top: 0em;
+}
+.section {
+	padding: 3em 2em;
+	margin: 0 auto;
+	max-width: 1024px;
+}
+@media screen and (min-resolution: 3dppx), screen and (max-width: 767px) {
+	h1 {
+		font-size: 3em;
+	}
+	.section {
+		padding: 2em 1em;
+	}
+}
+/* ------------ */
 
+
+/* Account Menu */
+/* ------------ */
 .menu-option {
 	width: calc(100% - 3em);
 	text-decoration: none;
@@ -94,7 +187,13 @@ input[type="file"]:focus {
 	background-color: #BBBDC0;
 	margin: .2em 0em;
 }
+/* ------------ */
 
+
+
+
+/* Buttons */
+/* ------------ */
 .button {
 	display: inline-block;
 	border: solid 2px #58585B;
@@ -108,6 +207,7 @@ input[type="file"]:focus {
 	-moz-user-select: none;
 	-ms-user-select: none;   
 	user-select: none;
+	text-decoration: none;
 }
 
 .button:hover {
@@ -122,7 +222,11 @@ input[type="file"]:focus {
 	-ms-transform: translateY(1px);
     transform: translateY(1px);
 }
+/* ------------ */
 
+
+/* Arrow Box */
+/* ------------ */
 .arrow-box {
 	border: 1px solid #808284;
 }
@@ -148,3 +252,17 @@ input[type="file"]:focus {
 	border-width: 9px;
 	margin-right: 20px;
 }
+/* ------------ */
+
+
+/* Footer Links */
+/* ------------ */
+.footer a {
+	text-decoration: none;
+	color: inherit;
+}
+
+.footer a:hover {
+	text-decoration: underline;
+}
+/* ------------ */

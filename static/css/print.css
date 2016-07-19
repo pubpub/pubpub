@@ -2,8 +2,8 @@
 	display: none;
 }
 
-
-@media print {
+/* This was causing cutoff problems!*/
+/*@media print {
 
 	@page :first {
 	   margin-top: 0;
@@ -16,11 +16,11 @@
 	}
 
 }
+*/
 
-
-.pagebreak {
-	page-break-before: always !important;
-}
+/*.pagebreak {
+	page-break-after: always;
+}*/
 
 
 @media print{
@@ -34,6 +34,9 @@
 	}
 	.header-bar,.publishedMsg, .login-container, .leftBar, .rightBar, .footer, .pubModals, .editorModals, .editorBodyNav, .editorPreviewNav, #editor-text-wrapper, #editor-discussions-wrapper, #style-editor-wrapper, #editorTopNav, #editorBottomNav, .reader-left {
 		display: none !important;
+	}
+	.horizontal-nav, .footer {
+		display: none !important;	
 	}
 	.content {
 		margin-top: 0px !important;
@@ -61,7 +64,7 @@
 		color: #444;
 	}
 
-	/* print the URLs after a link */
+	 /*print the URLs after a link */
 	#pubContent a:not(.author):after{content:" (" attr(href) ") ";font-size:0.8em;font-weight:normal;}
 
 	#editor-live-preview-wrapper {
@@ -97,7 +100,7 @@
 
 	.pagebreak {
 		opacity: 0 !important;
-		page-break-after: always !important;
+		page-break-after: always;
 	}
 
 	table, figure, image, .reference, h1, h2, h3, h4, h5, h6 {

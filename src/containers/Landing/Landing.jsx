@@ -6,6 +6,13 @@ import Helmet from 'react-helmet';
 import {PreviewCard} from 'components';
 import {About} from 'components';
 // import { Link } from 'react-router';
+import {s3Upload} from 'utils/uploadFile';
+import {createAtom} from 'containers/AtomEditor/actions';
+import {isWebUri} from 'valid-url';
+
+// import Select from 'react-select';
+// import request from 'superagent';
+// import {push} from 'redux-router';
 
 let styles = {};
 
@@ -18,10 +25,83 @@ const Landing = React.createClass({
 
 	getInitialState() {
 		return {
-			
+			// value: undefined,
+			source: false,
 		};
 	},
+	
+	handleSourceChange: function(evt) {
+		const source = evt.target.value;
+		this.setState({source});
+	},
+	
+	handleSourceSubmit: function(evt) {
+		const source = this.state.source;
+		let atomType = undefined;
+		let props = {};
+		if (source && isWebUri(source)) {
+			atomType = 'iframe';
+			props = {url: source};
+		} else {
+			// add more text atom types here
+		}
+		this.props.dispatch(createAtom(atomType, props));
+	},
 
+	handleFileSelect: function(evt) {
+		if (evt.target.files.length) {
+			s3Upload(evt.target.files[0], ()=>{}, this.onFileFinish, 0);
+		}
+	},
+
+	onFileFinish: function(evt, index, type, filename) {
+
+		let atomType = undefined;
+		const extension = filename.split('.').pop();
+		switch (extension) {
+		case 'jpg':
+		case 'png':
+		case 'jpeg':
+		case 'tiff':
+		case 'gif':
+			atomType = 'image'; break;
+		case 'pdf':
+			atomType = 'pdf'; break;
+		case 'ipynb':
+			atomType = 'jupyter'; break;
+		case 'mp4':
+		case 'ogg':
+		case 'webm':
+			atomType = 'video'; break;
+		default:
+			break;
+		}
+		
+		const versionContent = {
+			url: 'https://assets.pubpub.org/' + filename
+		};
+		this.props.dispatch(createAtom(atomType, versionContent));
+	},
+
+	// handleSelectChange: function(value) {
+	// 	console.log(value);
+	// 	this.setState({ value });
+	// 	// this.props.dispatch(push('/' + value.value));
+	// },
+
+	// loadOptions: function(input, callback) {
+	// 	request.get('/api/autocompleteJrnls?string=' + input).end((err, response)=>{
+	// 		const responseArray = response.body || [];
+	// 		const options = responseArray.map((item)=>{
+	// 			return {
+	// 				value: item.slug,
+	// 				label: item.jrnlName,
+	// 				id: item._id,
+	// 			};
+	// 		});
+	// 		callback(null, { options: options });
+	// 	});
+	// },
 
 	render: function() {
 		const metaData = {
@@ -38,11 +118,25 @@ const Landing = React.createClass({
 				{!loggedIn &&
 					<About />
 				}
-				
 
-				<div className={'lightest-bg'} style={styles.sectionWrapper}>
-					<div style={styles.section}>
-						<h2 style={styles.sectionHeader}>Recent Activity</h2>
+				<div className={'lightest-bg'}>
+					<div className={'section'}>
+
+						<input type="file" accept="*" onChange={this.handleFileSelect} />
+						<form>
+							<input type="text" onChange={this.handleSourceChange} />
+							<input type="button" value="Create Atom" onClick={this.handleSourceSubmit} />
+						</form>
+
+						<h2>Recent Activity</h2>
+
+						{/* <Select.Async
+							name="form-field-name"
+							value={this.state.value}
+							loadOptions={this.loadOptions}
+							placeholder={<span>Search</span>}
+							multi={true}
+							onChange={this.handleSelectChange} /> */}
 
 						{/* If no activity, display - follow these suggested accounts*/}
 
@@ -83,21 +177,5 @@ export default connect( state => {
 })( Radium(Landing) );
 
 styles = {
-	container: {
 
-	},
-	sectionWrapper: {
-		padding: '3em 2em',
-		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
-			padding: '3em 1em',
-		}
-	},
-	section: {
-		maxWidth: '1024px',
-		margin: '0 auto',
-	},
-	sectionHeader: {
-		fontSize: '2.5em',
-		marginTop: '0em',
-	},
 };

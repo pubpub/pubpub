@@ -18,6 +18,31 @@ import {
 	SIGNUP_SUCCESS,
 } from 'containers/SignUp/actions';
 
+import {
+	GET_USER_LOAD,
+	GET_USER_SUCCESS,
+	GET_USER_FAIL,
+} from 'containers/UserProfile/actions';
+
+import {
+	GET_ATOM_DATA_LOAD,
+	GET_ATOM_DATA_SUCCESS,
+	GET_ATOM_DATA_FAIL,
+} from 'containers/AtomReader/actions';
+
+import {
+	CREATE_ATOM_LOAD,
+	GET_ATOM_EDIT_LOAD,
+	GET_ATOM_EDIT_SUCCESS,
+	GET_ATOM_EDIT_FAIL,
+} from 'containers/AtomEditor/actions';
+
+import {
+	GET_JRNL_LOAD,
+	GET_JRNL_SUCCESS,
+	GET_JRNL_FAIL,
+} from 'containers/JrnlProfile/actions';
+
 
 /*--------*/
 // Initialize Default State
@@ -28,6 +53,9 @@ export const defaultState = Immutable.Map({
 	
 	locale: 'en',
 	languageObject: {},
+
+	loading: false, // Used to animate the loading bar
+	notFound: false,
 });
 
 /*--------*/
@@ -53,6 +81,21 @@ function loadAppFail(state, error) {
 	});
 }
 
+function setLoading(state) {
+	return state.set('loading', true);
+}
+
+function unsetLoading(state, action) {
+	return state.merge({
+		loading: false,
+		notFound: action.error === '404 Not Found',
+	});
+}
+
+function clearNotFound(state) {
+	return state.set('notFound', false);
+}
+
 /*--------*/
 // Bind actions to specific reducing functions.
 /*--------*/
@@ -67,6 +110,26 @@ export default function reducer(state = defaultState, action) {
 		return loadAppSuccess(state, action.result.languageData);
 	case LOAD_APP_AND_LOGIN_FAIL:
 		return loadAppFail(state, action.error);
+
+
+	case GET_USER_LOAD:
+	case GET_ATOM_DATA_LOAD:
+	case CREATE_ATOM_LOAD:
+	case GET_ATOM_EDIT_LOAD:
+	case GET_JRNL_LOAD:
+		return setLoading(state);
+	case GET_USER_SUCCESS:
+	case GET_USER_FAIL:
+	case GET_ATOM_DATA_SUCCESS:
+	case GET_ATOM_DATA_FAIL:
+	case GET_ATOM_EDIT_SUCCESS:
+	case GET_ATOM_EDIT_FAIL:
+	case GET_JRNL_SUCCESS:
+	case GET_JRNL_FAIL:
+		return unsetLoading(state, action);
+	// case '@@reduxReactRouter/routerDidChange':
+	// 	return clearNotFound(state);
+
 	default:
 		return ensureImmutable(state);
 	}

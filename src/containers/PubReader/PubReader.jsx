@@ -2,27 +2,23 @@ import React, { PropTypes } from 'react';
 import {connect} from 'react-redux';
 import Radium, {Style} from 'radium';
 import Helmet from 'react-helmet';
-import PureRenderMixin from 'react-addons-pure-render-mixin';
 import { Link } from 'react-router';
-import {getPub, openPubModal, closePubModal, pubNavOut, pubNavIn, togglePubHighlights, getPubRecommendations} from './actions';
-import {getRandomSlug} from 'containers/App/actions';
+import {getPub, togglePubHighlights, getPubRecommendations} from './actions';
 import {toggleVisibility, follow, unfollow} from 'containers/Login/actions';
-import {closeMenu} from 'containers/App/actions';
 import {createHighlight} from 'containers/MediaLibrary/actions';
 
-
-import {PubBody, LoaderDeterminate} from 'components';
+import {PubBody, HorizontalNav} from 'components';
 
 import PubMeta from './PubMeta/PubMeta';
 import PubReaderLeftBar from './PubReaderLeftBar';
 import PubReaderNav from './PubReaderNav';
 import {Discussions} from 'containers';
 
-import {globalStyles, pubSizes} from 'utils/styleConstants';
+import {globalStyles} from 'utils/styleConstants';
+
+import {generateTOC} from 'utils/generateTOC';
 
 // import {globalMessages} from 'utils/globalMessages';
-import {generateTOC} from 'utils/generateTOC';
-import {createJournalURL} from 'utils/journalHelpers';
 
 import {FormattedMessage} from 'react-intl';
 
@@ -47,14 +43,9 @@ const PubReader = React.createClass({
 		};
 	},
 
-	mixins: [PureRenderMixin],
-
 	statics: {
 		fetchData: function(getState, dispatch, location, routeParams) {
-			if (getState().pub.getIn(['pubData', 'slug']) !== routeParams.slug) {
-				return dispatch(getPub(routeParams.slug, getState().app.getIn(['journalData', '_id']), location.query.referrer ));
-			}
-			return dispatch(pubNavIn());
+			return dispatch(getPub(routeParams.slug, getState().app.getIn(['journalData', '_id']), location.query.referrer ));
 		}
 	},
 
@@ -62,6 +53,9 @@ const PubReader = React.createClass({
 		return {
 			htmlTree: [],
 			TOC: [],
+			showTOC: false,
+			showDiscussions: true,
+			lastClicked: undefined,
 		};
 	},
 
@@ -82,12 +76,6 @@ const PubReader = React.createClass({
 		this.requestRecommendation();
 	},
 
-	requestRecommendation() {
-
-		const journalID = this.props.appData.getIn(['journalData', '_id']);
-		const pubID = this.props.readerData.getIn(['pubData', '_id']);
-		this.props.dispatch(getPubRecommendations(pubID, journalID));
-	},
 
 	componentWillReceiveProps(nextProps) {
 		const oldVersionIndex = this.props.query.version !== undefined ? this.props.query.version - 1 : this.props.readerData.getIn(['pubData', 'history']).size - 1;
@@ -115,23 +103,41 @@ const PubReader = React.createClass({
 
 	},
 
-	componentWillUnmount() {
-		this.closePubModal();
-		this.props.dispatch(pubNavOut());
+	toggleTOC: function() {
+		const showingTOC = this.state.showTOC && !this.state.showDiscussions || this.state.showTOC && this.state.lastCliked === 'toc';
+		if (showingTOC) {
+			this.setState({
+				showTOC: false,
+				lastCliked: 'toc'
+			});
+		} else {
+			this.setState({
+				showTOC: true,
+				lastCliked: 'toc'
+			});
+		}
+	},
+	toggleDiscussions: function() {
+		const showingDiscussions = this.state.showDiscussions && !this.state.showTOC || this.state.showDiscussions && this.state.lastCliked === 'discussions';
+		if (showingDiscussions) {
+			this.setState({
+				showDiscussions: false,
+				lastCliked: 'discussions'
+			});
+		} else {
+			this.setState({
+				showDiscussions: true,
+				lastCliked: 'discussions'
+			});
+		}
+		
 	},
 
-	openPubModal: function(modal) {
-		return ()=> {
-			this.props.dispatch(openPubModal(modal));
-		};
-	},
+	requestRecommendation() {
 
-	closePubModal: function() {
-		this.props.dispatch(closePubModal());
-	},
-
-	closeMenu: function() {
-		this.props.dispatch(closeMenu());
+		const journalID = this.props.appData.getIn(['journalData', '_id']);
+		const pubID = this.props.readerData.getIn(['pubData', '_id']);
+		this.props.dispatch(getPubRecommendations(pubID, journalID));
 	},
 
 	addSelection: function(newSelection) {
@@ -148,15 +154,6 @@ const PubReader = React.createClass({
 
 	toggleHighlights: function() {
 		this.props.dispatch(togglePubHighlights());
-	},
-
-	readRandomPub: function() {
-		const analyticsData = {
-			location: 'pub/' + this.props.slug,
-			journalID: this.props.appData.getIn(['journalData', '_id']),
-			journalName: this.props.appData.getIn(['journalData', 'journalName']),
-		};
-		this.props.dispatch(getRandomSlug(this.props.appData.getIn(['journalData', '_id']), analyticsData));
 	},
 
 	followPubToggle: function() {
@@ -219,163 +216,75 @@ const PubReader = React.createClass({
 			metaData.title = 'PubPub - ' + this.props.slug;
 		}
 
+		const showDiscussions = !this.props.meta && (this.state.showDiscussions && !this.state.showTOC || this.state.showDiscussions && this.state.lastCliked === 'discussions');
+		const showTOC = !this.props.meta && (this.state.showTOC && !this.state.showDiscussions || this.state.showTOC && this.state.lastCliked === 'toc');
 
-		const pubURL = createJournalURL({
-			customDomain: this.props.appData.getIn(['journalData', 'customDomain']),
-			subDomain: this.props.appData.getIn(['journalData', 'subdomain']),
-			slug: this.props.slug,
-		});
+		const navItems = [
+			{link: '/pub/' + this.props.slug, text: 'View', active: true},
+			{link: '/pub/' + this.props.slug + '/draft', text: 'Edit'},
+			{link: '/pub/' + this.props.slug + '/contributors', text: 'Contributors', rightAlign: true},
+			{link: '/pub/' + this.props.slug + '/source', text: 'Versions', rightAlign: true},
+			{link: '/pub/' + this.props.slug + '/journals', text: 'Journals', rightAlign: true},
+			{link: '/pub/' + this.props.slug + '/analytics', text: 'Analytics', rightAlign: true},
+			{link: '/pub/' + this.props.slug + '/cite', text: 'Cite', rightAlign: true},
+			{link: '/pub/' + this.props.slug + '/export', text: 'Export', rightAlign: true},
+		];
 
-
-		// console.log(this.state.htmlTree);
-		// console.log(pubData);
 		return (
 			<div style={styles.container}>
 
 				<Helmet {...metaData} />
 
 				<Style rules={{
-					'.pagebreak': { opacity: '0', }
+					'.pagebreak': { opacity: '0', },
 				}} />
-
-				<div className="reader-left" style={[styles.readerLeft, globalStyles[this.props.readerData.get('status')], pubData.markdown === undefined && {display: 'none'}]}>
-
-					<PubReaderLeftBar
-						slug={this.props.slug}
-						query={this.props.query}
-						meta={this.props.meta}
-						pubStatus={pubData.status}
-						readRandomPubHandler={this.readRandomPub}
-						randomSlug={this.props.appData.getIn(['journalData', 'randomSlug'])}
-						journalCount={pubData.featuredInList ? pubData.featuredInList.length : 0}
-						historyCount={pubData.history ? pubData.history.length : 0}
-						analyticsCount={pubData.views ? pubData.views : 0}
-						citationsCount={pubData.citations ? pubData.citations.length : 0}
-						newsCount={pubData.news ? pubData.news.length : 0}
-						isFollowing={this.props.loginData.getIn(['userData', 'following', 'pubs']) ? this.props.loginData.getIn(['userData', 'following', 'pubs']).indexOf(this.props.readerData.getIn(['pubData', '_id'])) > -1 : false}
-						handleFollow={this.followPubToggle}
-						isAuthor={pubData.isAuthor}/>
-
+				
+				{/* Table of Contents Section */}
+				<div style={[styles.tocSection, !showTOC && {display: 'none'}]}>
+					{this.state.TOC.map((object, index)=>{
+						return <a href={'#' + object.id} className={'underlineOnHover'} style={[styles.tocItem, styles.tocLevels[object.level - 1]]}>{object.title}</a>;
+					})}
 				</div>
 
-				<div className="reader-content" style={styles.readerContent}>
+				{/* Pub Section */}
+				<div style={styles.pubSection}>
+					<div className={'opacity-on-hover'} style={styles.iconLeft} onClick={this.toggleTOC}></div>
+					<div className={'opacity-on-hover'} style={styles.iconRight} onClick={this.toggleDiscussions}></div>
+
+					<HorizontalNav navItems={navItems} />
+
 					{this.props.meta
-						? <PubMeta
-							readerData={this.props.readerData}
-							loginData={this.props.loginData}
-							slug={this.props.slug}
-							meta={this.props.meta}
-							metaID={this.props.metaID}
-							inviteStatus={this.props.inviteStatus}
-							query={this.props.query}
-							dispatch={this.props.dispatch} />
-						: <div>
-							<div className="centerBar pubScrollContainer" style={[styles.centerBar]}>
-
-								<div style={styles.mobileOnly}>
-									<PubReaderNav
-										height={this.height}
-										openPubModalHandler={this.openPubModal}
-										status={pubData.history[0].markdown ? this.props.readerData.get('status') : 'loading'}
-										slug={this.props.slug}
-										isAuthor={pubData.isAuthor}
-										pubStatus={pubData.status}
-										isFollowing={this.props.loginData.getIn(['userData', 'following', 'pubs']) ? this.props.loginData.getIn(['userData', 'following', 'pubs']).indexOf(this.props.readerData.getIn(['pubData', '_id'])) > -1 : false}
-										handleFollow={this.followPubToggle}/>
-
-										<LoaderDeterminate value={this.props.readerData.get('status') === 'loading' ? 0 : 100}/>
-								</div>
-
-
-								{
-									this.props.query.version && this.props.query.version !== pubData.history.length.toString()
-										? <Link to={'/pub/' + this.props.slug} style={globalStyles.link}>
-											<div key={'versionNotification'} style={[styles.versionNotification, globalStyles[this.props.readerData.get('status')]]}>
-												<p>Reading Version {this.props.query.version}. Click to read the most recent version ({pubData.history.length}).</p>
-												{/* <p>This was a {pubData.history[versionIndex].status === 'Draft' ? 'Draft' : 'Peer-Review Ready'} version.</p> */}
-											</div>
-										</Link>
-										: null
-								}
-
-								{
-									!pubData.isPublished
-										? <div className="publishedMsg" key={'unpublishNotification'} style={[styles.unpublishedNotification, globalStyles[this.props.readerData.get('status')]]}>
-											<FormattedMessage id="pub.unpublishedNotification" defaultMessage="This pub is unpublished, and thus only accessible to collaborators."/>
-										</div>
-										: null
-								}
-
-								<PubBody
-									status={this.props.readerData.get('status')}
-									isPublished={pubData.isPublished}
-									isPage={pubData.isPage}
-									markdown={this.state.inputMD}
-									pubURL={pubURL}
-									addSelectionHandler={this.addSelection}
-									styleScoped={pubData.history[versionIndex].styleScoped}
-									showPubHighlights={this.props.readerData.get('showPubHighlights')}
-									isFeatured={(pubData.featuredInList && pubData.featuredInList.indexOf(this.props.appData.getIn(['journalData', '_id'])) > -1) || this.props.appData.get('baseSubdomain') === null || !pubData.isPublished}
-									errorView={pubData.pubErrorView}
-									minFont={14}
-									maxFont={21}/>
-
-
-								{/* <PubModals
-									slug={this.props.slug}
-									status={this.props.readerData.get('status')}
-									pubStatus={pubData.status}
-									openPubModalHandler={this.openPubModal}
-									closePubModalHandler={this.closePubModal}
-									closeMenuHandler={this.closeMenu}
-									activeModal={this.props.readerData.get('activeModal')}
-									isFeatured={(pubData.featuredInList && pubData.featuredInList.indexOf(this.props.appData.getIn(['journalData', '_id'])) > -1) || this.props.appData.get('baseSubdomain') === null}
-
-									// TOC Props
-									tocData={this.state.TOC}
-									// Cite Props
-									pubData={pubData.history[versionIndex]}
-									journalName={this.props.appData.get('baseSubdomain') ? this.props.appData.getIn(['journalData', 'journalName']) : ''}
-									// Status Data
-									featuredIn={pubData.featuredIn}
-									submittedTo={pubData.submittedTo}
-									// Reviews Data
-									reviewsData={pubData.reviews}
-
-									// Discussions Data
-									toggleHighlightsHandler={this.toggleHighlights}
-									showPubHighlights={this.props.readerData.get('showPubHighlights')}/> */}
-
-
-							</div>
-
-							<div className="rightBar" style={[styles.rightBar, globalStyles[this.props.readerData.get('status')], pubData.markdown === undefined && {display: 'none'}]}>
-
-								<div style={styles.rightHeaderButtonsWrapper}>
-									<Link style={globalStyles.link} to={'/pub/' + this.props.slug + '/journals'}>
-										<div style={[styles.buttonWrapper, !pubData.isAuthor && {opacity: '0', pointerEvents: 'none'}]} key={'topbutton1'}>Submit To Journal</div>
-									</Link>
-									<Link style={globalStyles.link} to={'/pub/' + this.props.slug + '/invite'}>
-										<div style={styles.buttonWrapper} key={'topbutton2'}>
-											<FormattedMessage id="pub.RequestReview" defaultMessage="Request Review"/>
-										</div>
-									</Link>
-									{/* <Link style={globalStyles.link} to={'/pub/' + this.props.slug + '/discussions'}>
-										<div style={styles.buttonWrapper} key={'topbutton3'}>
-											<FormattedMessage id="pub.Expand" defaultMessage="Expand"/>
-										</div>
-									</Link> */}
-									<div style={globalStyles.clearFix}></div>
-								</div>
-
-								<Discussions/>
-
-							</div>
-							<div style={globalStyles.clearFix}></div>
+						? <div style={styles.pubMetaWrapper}>
+							<h1 style={styles.noBottomMargin}>{pubData.title}</h1>
+							<PubMeta
+								readerData={this.props.readerData}
+								loginData={this.props.loginData}
+								slug={this.props.slug}
+								meta={this.props.meta}
+								metaID={this.props.metaID}
+								inviteStatus={this.props.inviteStatus}
+								query={this.props.query}
+								dispatch={this.props.dispatch} />
+						</div>
+						: <div style={styles.pubBodyWrapper}>
+							<PubBody
+								markdown={this.state.inputMD}
+								isPublished={pubData.isPublished}
+								addSelectionHandler={this.addSelection}
+								styleScoped={pubData.history[versionIndex].styleScoped}/>
 						</div>
 
 					}
+					
 				</div>
+
+				{/* Discussion Section */}
+				<div style={[styles.discussionSection, !showDiscussions && {display: 'none'}]}>
+					<Discussions/>	
+				</div>
+
+				{/* isFollowing={this.props.loginData.getIn(['userData', 'following', 'pubs']) ? this.props.loginData.getIn(['userData', 'following', 'pubs']).indexOf(this.props.readerData.getIn(['pubData', '_id'])) > -1 : false} */}
+				{/* this.props.query.version && this.props.query.version !== pubData.history.length.toString() */}
 
 
 			</div>
@@ -384,8 +293,7 @@ const PubReader = React.createClass({
 
 });
 
-// const rightBar = document.getElementsByClassname('rightBar')[0];
-// if (rightBar.scrollheight > rightBar.clientHeight)
+
 export default connect( state => {
 	return {
 		readerData: state.pub,
@@ -401,117 +309,151 @@ export default connect( state => {
 })( Radium(PubReader) );
 
 styles = {
-	container: {
-
+	tocSection: {
+		display: 'table-cell',
+		verticalAlign: 'top',
+		width: '300px',
+		backgroundColor: '#F3F3F4',
+		borderRight: '1px solid #E4E4E4',
+		fontSize: '0.9em',
 	},
-	rightHeaderButtonsWrapper: {
-		margin: '10px 0px',
-	},
-	buttonWrapper: {
-		float: 'left',
-		width: 'calc((100% / 2) - 4% - 2px)',
-		margin: '0px 2%',
-		padding: '2px 0px',
-		border: '1px solid #444',
-		borderRadius: '2px',
-		textAlign: 'center',
-		fontSize: '12px',
-		':active': {
-			transform: 'translateY(1px)',
-		},
-	},
-	readerLeft: {
-		padding: '10px 15px',
-		width: 'calc(150px - 20px)',
+	tocHover: {
+		width: '2em',
 		position: 'absolute',
-		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
-			display: 'none',
-		},
+		top: '0px',
+		bottom: '0px',
+		paddingTop: '15px',
+	},
+	tocIcon: {
+		position: 'relative',
+		width: '10px',
+		height: '2px',
+		marginBottom: '1px',
+		backgroundColor: '#BBBDC0',
+		borderRadius: '1px',
 	},
 
-	readerContent: {
-		marginLeft: '150px',
-		position: 'relative',
-		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
-			marginLeft: '0px',
-		}
-	},
-	centerBar: {
+	tocPopout: {
 		overflow: 'hidden',
-		backgroundColor: 'white',
-		width: '60%',
-		minHeight: 'calc(100vh - ' + globalStyles.headerHeight + ' + 3px)',
+		overflowY: 'scroll',
+		padding: '2em',
+	},
+	pubSection: {
+		display: 'table-cell',
+		verticalAlign: 'top',
+		padding: '0em 2em',
 		position: 'relative',
-		top: '-3px',
-		float: 'left',
-		boxShadow: '0px 2px 4px 0px rgba(0,0,0,0.4)',
-		zIndex: 2,
-		// Mobile
-		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
-			width: '100%',
-			height: 'auto',
-			position: 'relative',
-			float: 'none',
-			zIndex: 'auto',
-			top: 0,
-		},
-	},
-
-	rightBar: {
-		float: 'left',
-		width: '36%',
-		padding: '0px 2%',
-		position: 'relative',
-		// To make discussions only as long as the pub:
-		// position: 'absolute',
-		// right: 0,
-		// height: '100%',
-		// overflow: 'hidden',
-
-		// Mobile
-		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
-			display: 'none',
-		}
-	},
-
-	versionNotification: {
-		textAlign: 'center',
-		backgroundColor: globalStyles.sideBackground,
-		padding: '5px 20px',
-		margin: 5,
-		fontFamily: globalStyles.headerFont,
-		color: globalStyles.sideText,
-		userSelect: 'none',
-		':hover': {
-			color: globalStyles.sideHover,
-			cursor: 'pointer',
-		},
-		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
-			fontSize: '20px',
-		},
-
-	},
-
-	unpublishedNotification: {
-		textAlign: 'center',
-		backgroundColor: globalStyles.headerBackground,
-		padding: '5px 20px',
-		margin: 5,
-		fontFamily: globalStyles.headerFont,
-		color: globalStyles.headerText,
-		userSelect: 'none',
-		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
-			fontSize: '20px',
-		},
-	},
-	versionNotificationLink: {
-		textDecoration: 'none',
-	},
-	mobileOnly: {
-		display: 'none',
 		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
 			display: 'block',
+			padding: '0em 1em',
 		},
-	}
+	},
+	iconLeft: {
+		position: 'absolute',
+		width: '1.5em',
+		height: '100%',
+		cursor: 'pointer',
+		top: 0,
+		left: 0,
+		opacity: 0,
+		backgroundColor: '#F3F3F4',
+		borderRight: '1px solid #E4E4E4',
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+			display: 'none',
+		},
+	},
+	iconRight: {
+		position: 'absolute',
+		width: '1.5em',
+		height: '100%',
+		cursor: 'pointer',
+		top: 0,
+		right: 0,
+		opacity: 0,
+		backgroundColor: '#F3F3F4',
+		borderLeft: '1px solid #E4E4E4',
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+			display: 'none',
+		},
+	},
+	discussionSection: {
+		display: 'table-cell',
+		verticalAlign: 'top',
+		padding: '0em 2%',
+		width: '35%',
+		backgroundColor: '#F3F3F4',
+		borderLeft: '1px solid #E4E4E4',
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+			display: 'none',
+		},
+	},
+	// pubSectionNav: {
+	// 	borderBottom: '1px solid #F3F3F4',
+	// 	fontSize: '0.85em',
+	// 	color: '#808284',
+	// 	maxWidth: '1024px',
+	// 	margin: '0 auto',
+	// },
+	// pubNavVersion: {
+	// 	display: 'inline-block',
+	// 	padding: '10px 0px',
+	// },
+	// pubNavButtons: {
+	// 	float: 'right',
+	// },
+	// pubNavButton: {
+	// 	display: 'inline-block',
+	// 	padding: '10px',
+	// },
+	// pubNavButtonLast: {
+	// 	padding: '10px 0px 10px 10px',
+	// },
+	pubBodyWrapper: {
+		maxWidth: '650px',
+		margin: '0 auto',
+		padding: '0em 3em',
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+			maxWidth: 'auto',
+			padding: '0em 0em',
+		},
+	},
+	pubMetaWrapper: {
+		maxWidth: '1024px',
+		margin: '0 auto',
+		padding: '2em 3em',
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+			maxWidth: 'auto',
+			padding: '1em 0em',
+		},
+	},
+
+	container: {
+		display: 'table',
+		width: '100%',
+		tableLayout: 'fixed',
+		overflow: 'hidden',
+	},
+
+	tocItem: {
+		display: 'block',
+		textDecoration: 'none',
+		color: 'inherit',
+		paddingRight: '2em',
+		paddingTop: '1em',
+		paddingBottom: '1em',
+		paddingLeft: '2em',
+	},
+
+	tocLevels: [
+		{paddingLeft: '2em'},
+		{paddingLeft: '4em'},
+		{paddingLeft: '5em'},
+		{paddingLeft: '6em'},
+		{paddingLeft: '7em'},
+		{paddingLeft: '8em'},
+	],
+	noBottomMargin: {
+		marginBottom: '0px',
+	},
 
 };

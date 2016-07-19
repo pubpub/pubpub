@@ -20,11 +20,11 @@ export const About = React.createClass({
 
 				<Helmet {...metaData} />
 
-				<div className={'lightest-bg'} style={styles.sectionWrapper}>
-					<div style={[styles.section, styles.table]}>
+				<div className={'lightest-bg'}>
+					<div className={'section'}>
 
 						<div style={styles.headerText}>
-							<h1 style={[styles.headerTitle, styles.headerTextMax]}>Open, Continuous Publishing</h1>
+							<h1 style={styles.headerTextMax}>Open, Continuous Publishing</h1>
 							<p style={[styles.headerSubtitle, styles.headerTextMax]}>PubPub is a free and open tool for collaborative editing, instant publishing, continuous review, and grassroots journals.</p>
 							<Link style={globalStyles.link} to={'/signup'}><div className={'button'} style={styles.headerButton}>Sign Up</div></Link>
 						</div>
@@ -46,9 +46,9 @@ export const About = React.createClass({
 					</div>
 				</div>
 
-				<div style={styles.sectionWrapper}>
-					<div style={styles.section}>
-						<h2 style={styles.sectionHeader}>Made with PubPub</h2>
+				<div>
+					<div className={'section'} >
+						<h2>Made with PubPub</h2>
 						
 						<Link style={globalStyles.link} to={'/jods'}>
 						<div style={styles.madeWithBlock} className={'lightest-bg-hover'}>
@@ -94,9 +94,9 @@ export const About = React.createClass({
 					</div>
 				</div>
 
-				<div className={'lightest-bg'} style={styles.sectionWrapper}>
-					<div style={styles.section}>
-						<h2 style={[styles.sectionHeader, styles.noMargin]}>A full-stack publishing tool</h2>
+				<div className={'lightest-bg'}>
+					<div className={'section'} >
+						<h2 style={styles.noMargin}>A full-stack publishing tool</h2>
 
 						<div style={[styles.forWhoBlock, styles.forWhoBorderBottom]} id={'readers'}>
 							<div style={[styles.forWhoText, styles.forWhoLeft]}>
@@ -111,7 +111,7 @@ export const About = React.createClass({
 							<div style={[styles.forWhoText, styles.forWhoRight]}>
 								<h3 style={styles.noMargin}>For Authors</h3>
 								<p>Author-driven. Free and immediate publishing. Versioned Histories. A rich and collaborative open-source editor allows for evolving content and formats. Publishing is by the author and immediate. Publishing is versioned and we encourage publishing early and often to capture the full history of your work.</p>
-								<div className={'button'}>More on Pubs</div>
+								<Link to={'/pubs'} style={globalStyles.link}><div className={'button'}>More on Pubs</div></Link>
 							</div>
 							<img style={[styles.forWhoImage, styles.forWhoLeft]} src={'https://res.cloudinary.com/pubpub/image/upload/c_scale,w_415/v1451416401/editing_hires_svywu2.gif'} alt={'PubPub Authoring'}/>
 							<div style={globalStyles.clearFix}></div>
@@ -121,7 +121,7 @@ export const About = React.createClass({
 							<div style={[styles.forWhoText, styles.forWhoLeft]}>
 								<h3 style={styles.noMargin}>For Reviewers</h3>
 								<p>Review is distributed across many communities and done in the open. Rewarding constructive reviews and incentivizing progress rather than elitism opens the process to all that are capable.</p>
-								<div className={'button'}>More on Reviews</div>
+								<Link to={'/reviews'} style={globalStyles.link}><div className={'button'}>More on Reviews</div></Link>
 							</div>
 							<img style={[styles.forWhoImage, styles.forWhoRight]} src={'https://res.cloudinary.com/pubpub/image/upload/c_scale,w_415/v1451416396/discussion_hires_jhdoga.gif'} alt={'PubPub Reviews'}/>
 							<div style={globalStyles.clearFix}></div>
@@ -131,7 +131,7 @@ export const About = React.createClass({
 							<div style={[styles.forWhoText, styles.forWhoRight]}>
 								<h3 style={styles.noMargin}>For Journals</h3>
 								<p>Created by anyone for any community. Journals become tools for curating published content. Not gatekeepers of scientific progress. Journals serve as curators rather than gatekeepers. Pubs can be submitted to and featured in as many journals as is relevant. No more silos. Journals can be run for large or small audiences, by institutions or individuals. Everyone can be a journal.</p>
-								<div className={'button'}>More on Journals</div>
+								<Link to={'/user/testing_fish1'} style={globalStyles.link}><div className={'button'}>More on Journals</div></Link>
 							</div>
 							<img style={[styles.forWhoImage, styles.forWhoLeft]} src={'https://res.cloudinary.com/pubpub/image/upload/c_scale,w_415/v1451417712/outputjournal_qcdqyh.gif'} alt={'PubPub Journals'}/>
 							<div style={globalStyles.clearFix}></div>
@@ -140,11 +140,11 @@ export const About = React.createClass({
 					</div>
 				</div>
 
-				<div style={styles.sectionWrapper}>
-					<div style={styles.section}>
-						<h2 style={styles.sectionHeader}>Build the publishing world you want</h2>
+				<div>
+					<div className={'section'} >
+						<h2>Build the publishing world you want</h2>
 						<p style={styles.headerTextMax}>PubPub is an open-source tool built for and by the community that uses it. Join PubPub, contribute code, design, features. Keep up to date with where we’re heading.</p>
-						<a style={globalStyles.link} href={'https://github.com/pubpub/pubpub'} className={'button'}>View Code</a>
+						<a style={globalStyles.link} href={'https://github.com/pubpub/pubpub'}><div className={'button'}>View Code</div></a>
 					</div>
 				</div>
 

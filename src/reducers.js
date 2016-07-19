@@ -4,8 +4,8 @@ import {reducer as formReducer} from 'redux-form';
 import { routerStateReducer } from 'redux-router';
 
 import app from './containers/App/reducer';
-import femi from './containers/Femi/reducer';
-import analytics from './containers/Analytics/reducer';
+import atom from './containers/AtomReader/reducer';
+import atomEdit from './containers/AtomEditor/reducer';
 import autocomplete from './containers/Autocomplete/reducer';
 import editor from './containers/Editor/reducer';
 import emailVerification from './containers/EmailVerification/reducer';
@@ -13,10 +13,14 @@ import explore from './containers/Explore/reducer';
 import discussions from './containers/Discussions/reducer';
 import group from './containers/GroupProfile/reducer';
 import journal from './containers/JournalProfile/reducer';
+import jrnlCreate from './containers/JrnlCreate/reducer';
+import jrnl from './containers/JrnlProfile/reducer';
 import landing from './containers/Landing/reducer';
 import login from './containers/Login/reducer';
+import media from './containers/Media/reducer';
 import signUp from './containers/SignUp/reducer';
 import user from './containers/UserProfile/reducer';
+import userSettings from './containers/UserSettings/reducer';
 import pub from './containers/PubReader/reducer';
 import resetPassword from './containers/ResetPassword/reducer';
 
@@ -46,8 +50,8 @@ export default combineReducers({
 		},
 	}),
 	app,
-	femi,
-	analytics,
+	atom,
+	atomEdit,
 	autocomplete,
 	editor,
 	emailVerification,
@@ -55,10 +59,14 @@ export default combineReducers({
 	discussions,
 	group,
 	journal,
+	jrnlCreate,
+	jrnl,
 	landing,
 	login,
+	media,
 	signUp,
 	user,
+	userSettings,
 	pub,
 	resetPassword
 });

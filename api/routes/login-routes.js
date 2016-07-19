@@ -39,7 +39,7 @@ export function login(req, res) {
 
 	// Run all tasks and return app and login data
 	Promise.all(tasks).then(function(results) {
-		const languageObject = results[0];
+		const languageObject = JSON.parse(results[0]);
 		const notificationCount = results[1];
 
 		return res.status(201).json({

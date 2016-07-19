@@ -1,0 +1,18 @@
+import {expect} from 'chai';
+import {shallowRender} from 'tests/helpersClient';
+import {IFrameViewer} from './IFrameViewer.jsx'
+
+describe('Components', () => {
+	describe('IFrameViewer.jsx', () => {
+
+		it('should render with empty props', () => {
+			const props = {};
+			const {renderOutput, error} = shallowRender(IFrameViewer, props) ;
+
+			expect(error).to.not.exist; // Did not render an error
+			expect(renderOutput).to.exist; // Successfully rendered
+			
+		});
+
+	});
+});

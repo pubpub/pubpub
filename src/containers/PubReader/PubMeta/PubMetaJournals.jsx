@@ -91,6 +91,7 @@ const PubMetaJournals = React.createClass({
 
 		return (
 			<div style={styles.container}>
+				<h2>Journals</h2>
 
 				<div style={styles.sectionHeader}>
 					<FormattedMessage id="pub.journalSubmissions" defaultMessage="Journal Submissions"/>
@@ -164,7 +165,6 @@ export default injectIntl(Radium(PubMetaJournals));
 
 styles = {
 	container: {
-		padding: 15,
 	},
 	sectionHeader: {
 		fontSize: '25px',

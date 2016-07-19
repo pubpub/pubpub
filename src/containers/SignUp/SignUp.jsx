@@ -1,6 +1,6 @@
 import React, {PropTypes} from 'react';
 import {connect} from 'react-redux';
-import {pushState} from 'redux-router';
+import {push} from 'redux-router';
 import Radium from 'radium';
 import {signup, signupDetails} from './actions';
 import SignUpForm from './SignUpForm';
@@ -34,9 +34,12 @@ export const SignUp = React.createClass({
 			// If the signup process is complete, redirect the path
 			// else update the stage query
 			if (nextStage === 'complete') { 
-				this.props.dispatch(pushState(null, (redirectRoute || '/')));	
+				this.props.dispatch(push(redirectRoute || '/'));	
 			} else {
-				this.props.dispatch(pushState(null, '/signup', {redirect: redirectRoute, stage: nextStage}));	
+				this.props.dispatch(push({
+					pathname: '/signup', 
+					query: {redirect: redirectRoute, stage: nextStage}
+				}));	
 			}
 		}
 	},
@@ -46,12 +49,11 @@ export const SignUp = React.createClass({
 		const isLoading = this.props.signUpData && this.props.signUpData.get('loading');
 		const errorMessage = this.props.signUpData && this.props.signUpData.get('error');
 		const signUpMode = loggedIn && this.props.query && this.props.query.stage; // If not logged in, signUpMode is false, trigger <SignUpForm> to render, otherwise set mode to query
-		const userImage = this.props.loginData && this.props.loginData.getIn(['userData', 'image']);
 
 		const redirectRoute = this.props.query && this.props.query.redirect;
 
 		return (
-			<div className={'signup-container'} style={styles.container}>
+			<div className={'signup-container section'} style={styles.container}>
 
 				{/* Sign Up Form */}
 				{signUpMode !== 'details' && // Render if not details stage (this is default)
@@ -67,7 +69,7 @@ export const SignUp = React.createClass({
 						submitHandler={this.detailsSubmit} 
 						errorMessage={errorMessage}
 						isLoading={isLoading}
-						userImage={userImage} 
+						loginData={this.props.loginData} 
 						redirectRoute={redirectRoute}/>
 				}
 				
@@ -88,10 +90,8 @@ export default connect( state => {
 styles = {
 	container: {
 		width: '500px',
-		padding: '0px 15px',
-		margin: '0 auto',
 		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
-			width: 'calc(100% - 30px)',
+			width: 'auto',
 		}
 	}
 };

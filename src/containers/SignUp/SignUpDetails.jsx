@@ -3,7 +3,7 @@ import Radium from 'radium';
 import Helmet from 'react-helmet';
 import {Loader, ImageCropper} from 'components';
 import {Link} from 'react-router';
-
+import {safeGetInToJS} from 'utils/safeParse';
 
 import {globalStyles} from 'utils/styleConstants';
 import {globalMessages} from 'utils/globalMessages';
@@ -16,9 +16,14 @@ export const SignUpDetails = React.createClass({
 		submitHandler: PropTypes.func,
 		errorMessage: PropTypes.string,
 		isLoading: PropTypes.bool,
-		userImage: PropTypes.string,
+		loginData: PropTypes.object,
 		redirectRoute: PropTypes.string,
 
+	},
+
+	componentWillMount() {
+		const userData = safeGetInToJS(this.props.loginData, ['userData']) || {};
+		this.setState({bio: userData.bio || ''});
 	},
 
 	getInitialState: function() {
@@ -30,19 +35,19 @@ export const SignUpDetails = React.createClass({
 	},
 
 	bioUpdate: function() {
-		this.setState({bio: this.refs.detailsBio.value.substring(0, 140)});
+		this.setState({bio: this.refs.bio.value.substring(0, 140)});
 	},
 
 	detailsSubmit: function(evt) {
 		evt.preventDefault();
 		const detailsData = {
 			image: this.state.userImageURL,
-			bio: this.refs.detailsBio.value,
-			website: this.refs.detailsWebsite.value,
-			twitter: this.refs.detailsTwitter.value,
-			orcid: this.refs.detailsOrcid.value,
-			github: this.refs.detailsGithub.value,
-			googleScholar: this.refs.detailsGoogleScholar.value,
+			bio: this.refs.bio.value,
+			website: this.refs.website.value,
+			twitter: this.refs.twitter.value,
+			orcid: this.refs.orcid.value,
+			github: this.refs.github.value,
+			googleScholar: this.refs.googleScholar.value,
 		};
 		this.props.submitHandler(detailsData);	
 	},
@@ -67,12 +72,13 @@ export const SignUpDetails = React.createClass({
 		};
 		const isLoading = this.props.isLoading;
 		const errorMessage = this.props.errorMessage;
+		const userData = safeGetInToJS(this.props.loginData, ['userData']) || {};
 
 		return (
-			<div className={'signup-container'} style={styles.container}>
+			<div>
 				<Helmet {...metaData} />
 
-				<h1><FormattedMessage id="details.WelcomeToPubPub" defaultMessage="Welcome to PubPub!"/></h1>
+				<h1><FormattedMessage id="details.Welcome" defaultMessage="Welcome!"/></h1>
 				<p style={styles.subHeader}>
 					<FormattedMessage id="details.VerificationMessage" defaultMessage="We've sent you a verification email. Please click the link there to verify your account!"/>
 				</p>
@@ -84,68 +90,68 @@ export const SignUpDetails = React.createClass({
 				
 				<form onSubmit={this.detailsSubmit}>
 					<div>
-						<label style={styles.label} htmlFor={'userImage'}>
+						<label htmlFor={'userImage'}>
 							<FormattedMessage {...globalMessages.ProfileImage}/>
 						</label>
-						<img style={styles.userImage} src={this.state.userImageURL || this.props.userImage} />
+						<img style={styles.userImage} src={this.state.userImageURL || userData.image} />
 						<input id={'userImage'} name={'user image'} type="file" accept="image/*" onChange={this.handleFileSelect} />
 						
 					</div>
 
 					<div>
-						<label style={styles.label} htmlFor={'bio'}>
+						<label htmlFor={'bio'}>
 							<FormattedMessage {...globalMessages.Bio}/>
 						</label>
-						<textarea ref={'detailsBio'} id={'bio'} name={'bio'} type="text" style={[styles.input, styles.bio]} onChange={this.bioUpdate} value={this.state.bio}></textarea>
-						<div className={'light-color inputSubtext'} to={'/resetpassword'}>
+						<textarea ref={'bio'} id={'bio'} name={'bio'} type="text" style={[styles.input, styles.bio]} onChange={this.bioUpdate} value={this.state.bio}></textarea>
+						<div className={'light-color inputSubtext'}>
 							{this.state.bio.length} / 140
 						</div>
 					</div>
 
 					<div>
-						<label style={styles.label} htmlFor={'website'}>
+						<label htmlFor={'website'}>
 							<FormattedMessage {...globalMessages.Website}/>
 						</label>
-						<input ref={'detailsWebsite'} id={'website'} name={'website'} type="text" style={styles.input}/>
+						<input ref={'website'} id={'website'} name={'website'} type="text" style={styles.input} defaultValue={userData.website}/>
 					</div>
 
 					<div>
-						<label style={styles.label} htmlFor={'twitter'}>
+						<label htmlFor={'twitter'}>
 							Twitter
 						</label>
 						<div style={styles.prefixedInputWrapper}>
 							<div style={styles.prefix}>@</div>
-							<input ref={'detailsTwitter'} id={'twitter'} name={'twitter'} type="text" style={[styles.input, styles.prefixedInput]}/>	
+							<input ref={'twitter'} id={'twitter'} name={'twitter'} type="text" style={[styles.input, styles.prefixedInput]} defaultValue={userData.twitter}/>	
 						</div>
 					</div>
 
 					<div>
-						<label style={styles.label} htmlFor={'orcid'}>
+						<label htmlFor={'orcid'}>
 							ORCID
 						</label>
 						<div style={styles.prefixedInputWrapper}>
 							<div style={styles.prefix}>orcid.org/</div>
-							<input ref={'detailsOrcid'} id={'orcid'} name={'orcid'} type="text" style={[styles.input, styles.prefixedInput]}/>	
+							<input ref={'orcid'} id={'orcid'} name={'orcid'} type="text" style={[styles.input, styles.prefixedInput]} defaultValue={userData.orcid}/>	
 						</div>
 					</div>
 
 					<div>
-						<label style={styles.label} htmlFor={'github'}>
+						<label htmlFor={'github'}>
 							Github
 						</label>
 						<div style={styles.prefixedInputWrapper}>
 							<div style={styles.prefix}>github.com/</div>
-							<input ref={'detailsGithub'} id={'github'} name={'github'} type="text" style={[styles.input, styles.prefixedInput]}/>	
+							<input ref={'github'} id={'github'} name={'github'} type="text" style={[styles.input, styles.prefixedInput]} defaultValue={userData.github}/>	
 						</div>
 					</div>
 
 					<div>
-						<label style={styles.label} htmlFor={'googleScholar'}>
+						<label htmlFor={'googleScholar'}>
 							Google Scholar
 						</label>
 						<div style={styles.prefixedInputWrapper}>
 							<div style={styles.prefix}>scholar.google.com/citations?user=</div>
-							<input ref={'detailsGoogleScholar'} id={'googleScholar'} name={'google scholar'} type="text" style={[styles.input, styles.prefixedInput]}/>	
+							<input ref={'googleScholar'} id={'googleScholar'} name={'google scholar'} type="text" style={[styles.input, styles.prefixedInput]} defaultValue={userData.googleScholar}/>	
 						</div>
 					</div>
 
@@ -162,7 +168,7 @@ export const SignUpDetails = React.createClass({
 
 				<div style={[styles.imageCropperWrapper, this.state.userImageFile !== null && styles.imageCropperWrapperVisible]} >
 					<div style={styles.imageCropper}>
-						<ImageCropper height={150} width={150} image={this.state.userImageFile} onCancel={this.cancelImageUpload} onUpload={this.userImageUploaded}/>
+						<ImageCropper height={500} width={500} image={this.state.userImageFile} onCancel={this.cancelImageUpload} onUpload={this.userImageUploaded}/>
 					</div>
 				</div>
 				
