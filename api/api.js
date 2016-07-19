@@ -1,6 +1,8 @@
 /* eslint no-unused-vars: [2, { "varsIgnorePattern": "pretty|server" }] */
 
-require('./config.js');
+if (process.env.NODE_ENV !== 'production' && !process.env.TESTING) {
+	require('./config.js');
+}
 
 // Connect to Mongo database
 const mongoose = require('mongoose');

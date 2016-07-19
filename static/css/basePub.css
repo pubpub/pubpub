@@ -10,19 +10,13 @@
 	color: #333;
 }
 
-/*#atom-reader.atom-reader-meta {
-	font-family: inherit;
-    line-height: initial;
-    font-size: inherit;
-    color: inherit;
-}*/
-
 /* Undo the header style set in pubpub.css*/
 #atom-reader h1 {
 	font-size: 2em;
 	margin-top: 0.67em;
 	letter-spacing: 0px;
 }
+
 #atom-reader h2 {
 	font-size: 1.5em;
 	margin-top: 0.83em;
@@ -33,21 +27,13 @@
 	font-family: 'Yrsa', Georgia, serif;
 }
 
-/*#atom-reader.atom-reader-meta h1, #atom-reader.atom-reader-meta h2, #atom-reader.atom-reader-meta h3, #atom-reader.atom-reader-meta h4, #atom-reader.atom-reader-meta h5, #atom-reader.atom-reader-meta h6 {
-	font-family: 'Open Sans', Helvetica Neue, Arial, sans-serif;
-}*/
-
-@media screen and (min-resolution: 3dppx), screen and (max-width: 767px) {
-	#atom-reader h1 {
-		font-size: 2em;
-	}
-}
-
 /* Set default paragraph margins on .p-block since we don't use <p> */
 #atom-reader .p-block {
 	margin: 1em 0em;
 }
 
+/* Atom Reader Header Styles */
+/* ------------------------- */
 #atom-reader .atom-reader-header h1 {
 	font-size: 2.5em;
 	margin-top: .75em;
@@ -59,21 +45,18 @@
 #atom-reader .atom-reader-header p {
 	margin: .5em 0em;
 }
+#atom-reader .atom-reader-header a {
+	text-decoration: none;
+}
+#atom-reader .atom-reader-header a:hover {
+	text-decoration: underline;
+}
+/* ------------------------- */
 
 
 #atom-reader a {
 	color: inherit;
 }
-
-#atom-reader .authorsNote {
-	text-align: center;
-	margin: 30px auto 0px auto;
-	background-color: #EAEAEA;
-	color: #666;
-	padding: 10px 20px;
-	width: 80%;
-}
-
 #atom-reader #pub-references {
 	border-top: 1px solid #eee;
 }
@@ -95,17 +78,17 @@
 	border: none;
 }
 
-
-#atom-reader .codeBlock {
-	background-color: #f0f0f0;
+#atom-reader code {
+	background-color: #F3F3F4;
+	padding: 0em .25em;
 }
-#atom-reader pre .codeBlock {
-	margin: 0px 20px;
-	padding: 10px;
-	background-color: #f0f0f0;
+
+#atom-reader pre code {
+	margin: 0em 1em;
+	padding: 1em;
+	background-color: #F3F3F4;
 	display: block;
 	border-radius: 1px;
-	width: 88%;
 	overflow-x: scroll;
 
 }
@@ -139,53 +122,17 @@
 
 
 /*PLUGIN STYLING*/
-
-#atom-reader .pub-plugin.pub-quote-wrapper {
-	border-top: none;
-	border-bottom: none;
-	border-right: none;
-	border-left: #DDD solid 1px;
-	padding-left: 1em;
-	text-align: left;
-	font-style: italic;
-}
-
-#atom-reader .pub-plugin.pub-quote-wrapper.pub-align-full {
-	border-top: #DDD solid 1px;
-	border-bottom: #DDD solid 1px;
-	border-left: none;
-	border-right: none;
-	padding: 0px 1em;
-	text-align: left;
-	text-style: italic;
-	background-color: #F9F9F9;
-
-	width: 100%
-}
-
-
-.pub-sub-caption {
-	font-size: 0.8em;
-	color: #757575;
-	text-align: left;
-	white-space: normal;
+#atom-reader .caption {
+	color: #808284;
 	line-height: 1.4;
+	font-size: 0.85em,
+	padding: .2em 0em .5em 0em,
 }
-
-#atom-reader .pub-quote {
-	padding: 2.5% 7.5%;
-}
-
 #atom-reader img {
 	max-width: 100%;
 }
 
-/*#atom-reader.atom-reader-meta img {
-	max-width: initial;
-}*/
-
 .pagebreak {
-	/*opacity: 0 !important;*/
 	background: #F3F3F4;
 	text-align: center;
 	font-size: 0.75em;
@@ -196,7 +143,6 @@
 }
 
 /*HIGHLIGHT STYLING*/
-
 .marking {
 	background-color: rgba(124, 235, 124, 0.7);
 }
