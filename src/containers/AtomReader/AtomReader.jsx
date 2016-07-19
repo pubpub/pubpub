@@ -34,6 +34,7 @@ let styles = {};
 export const AtomReader = React.createClass({
 	propTypes: {
 		atomData: PropTypes.object,
+		authorsData: PropTypes.object,
 		loginData: PropTypes.object,
 		slug: PropTypes.string,
 		query: PropTypes.object, // version: integer
@@ -129,6 +130,14 @@ export const AtomReader = React.createClass({
 		const toc = generateTOC(currentVersionContent.markdown).full;
 		const versionQuery = this.props.query && this.props.query.version ? '?version=' + this.props.query.version : '';
 
+		const mobileNavButtons = [
+			{ type: 'link', mobile: true, text: 'Discussions', link: '/a/' + this.props.slug + '/discussions' },
+			{ type: 'button', mobile: true, text: 'Menu', action: undefined },
+		];
+		if (this.props.meta === 'discussions') {
+			mobileNavButtons[0] = { type: 'link', mobile: true, text: 'View', link: '/a/' + this.props.slug };
+		}
+
 		const navItems = [
 			{link: '/a/' + this.props.slug, text: 'View', active: !this.props.meta},
 			{link: '/a/' + this.props.slug + '/edit', text: 'Edit'},
@@ -145,6 +154,7 @@ export const AtomReader = React.createClass({
 		// But for now that's ill defined
 		if (atomData.type !== 'document') { navItems.pop(); }
 
+		const authorsData = safeGetInToJS(this.props.atomData, ['authorsData']) || [];
 		
 		return (
 			<div style={styles.container}>
@@ -167,7 +177,7 @@ export const AtomReader = React.createClass({
 					<div className={'opacity-on-hover'} style={styles.iconLeft} onClick={this.toggleTOC}></div>
 					<div className={'opacity-on-hover'} style={styles.iconRight} onClick={this.toggleDiscussions}></div>
 
-					<HorizontalNav navItems={navItems} />
+					<HorizontalNav navItems={navItems} mobileNavButtons={mobileNavButtons}/>
 
 					{/* <div style={styles.buttonWrapper}>
 						<div className={'button'} style={styles.button} onClick={()=>{}}>Follow</div>
@@ -177,7 +187,9 @@ export const AtomReader = React.createClass({
 
 						<AtomReaderHeader
 							title={atomData.title}
-							authors={'Jane Doe and Marcus Aurilie'}
+							authors={authorsData.map((item, index)=> {
+								return <Link to={'/user/' + item.source.username} key={'author-' + index} className={'author'}>{item.source.name}</Link>;
+							})}
 							versionDate={currentVersionDate}
 							lastUpdated={atomData.lastUpdated}
 							slug={atomData.slug}
@@ -194,9 +206,11 @@ export const AtomReader = React.createClass({
 							case 'analytics':
 								return <AtomReaderAnalytics atomData={this.props.atomData}/>;
 							case 'cite':
-								return <AtomReaderCite atomData={this.props.atomData}/>;
+								return <AtomReaderCite atomData={this.props.atomData} authorsData={this.props.authorsData} versionQuery={versionQuery}/>;
 							case 'export':
 								return <AtomReaderExport atomData={this.props.atomData}/>;
+							case 'discussions':
+								return <Discussions/>;
 							default:
 								return <AtomViewerPane atomData={this.props.atomData} />;
 							}
@@ -330,6 +344,9 @@ styles = {
 	// pubNavButtonLast: {
 	// 	padding: '10px 0px 10px 10px',
 	// },
+	author: {
+		color: 'red',
+	},
 	pubBodyWrapper: {
 		maxWidth: '650px',
 		margin: '0 auto',

@@ -4,6 +4,7 @@ const Atom = require('../models').Atom;
 const Link = require('../models').Link;
 const Version = require('../models').Version;
 const Jrnl = require('../models').Jrnl;
+const User = require('../models').User;
 const Promise = require('bluebird');
 
 const SHA1 = require('crypto-js/sha1');
@@ -124,13 +125,22 @@ export function getAtomData(req, res) {
 	Atom.findOne({slug: slug}).lean().exec()
 	.then(function(atomResult) { // Get most recent version
 
+		const getAuthors = new Promise(function(resolve) {
+			const query = Link.find({destination: atomResult._id, type: 'author'}).populate({
+				path: 'source',
+				model: User,
+				select: 'username name firstName lastName image ',
+			}).exec();
+			resolve(query);
+		});
+
 		// Get the most recent version
 		// This query fires if no meta and no version are specified
 		const getVersion = new Promise(function(resolve) {
-			if ((!meta || meta === 'export') && !version ) {
+			if ((!meta || meta === 'export' || meta === 'cite') && !version ) {
 				const mostRecentVersionId = atomResult.versions[atomResult.versions.length - 1];
 				resolve(Version.findOne({_id: mostRecentVersionId}).exec());
-			} else if ((!meta || meta === 'export') && version) {
+			} else if ((!meta || meta === 'export' || meta === 'cite') && version) {
 				resolve(Version.findOne({_id: version}).exec());
 			} else {
 				resolve();
@@ -185,6 +195,7 @@ export function getAtomData(req, res) {
 		});
 
 		const tasks = [
+			getAuthors,
 			getVersion,
 			getContributors,
 			getVersions,
@@ -199,11 +210,12 @@ export function getAtomData(req, res) {
 		// What's spread? See here: http://stackoverflow.com/questions/18849312/what-is-the-best-way-to-pass-resolved-promise-values-down-to-a-final-then-chai
 		return res.status(201).json({
 			atomData: atomResult,
-			currentVersionData: taskData[0],
-			contributorData: taskData[1],
-			versionsData: taskData[2],
-			submittedData: taskData[3],
-			featuredData: taskData[4],
+			authorsData: taskData[0],
+			currentVersionData: taskData[1],
+			contributorData: taskData[2],
+			versionsData: taskData[3],
+			submittedData: taskData[4],
+			featuredData: taskData[5],
 		});
 	})
 	.catch(function(error) {

@@ -95,6 +95,10 @@ export const AtomEditor = React.createClass({
 
 		const metaData = {};
 
+		const mobileNavButtons = [
+			{ type: 'link', mobile: true, text: 'View', link: '/a/' + this.props.slug },
+			{ type: 'button', mobile: true, text: 'Menu', action: undefined },
+		];
 
 		const navItems = [
 			{text: 'View', link: '/a/' + this.props.slug},
@@ -117,7 +121,7 @@ export const AtomEditor = React.createClass({
 
 				{/* Pub Section */}
 				<div style={styles.pubSection}>
-					<HorizontalNav navItems={navItems} />
+					<HorizontalNav navItems={navItems} mobileNavButtons={mobileNavButtons}/>
 
 					<AtomEditorHeader
 						title={atomEditData.title}

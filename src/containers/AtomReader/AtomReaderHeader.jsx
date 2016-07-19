@@ -9,7 +9,7 @@ let styles;
 export const AtomReaderHeader = React.createClass({
 	propTypes: {
 		title: PropTypes.string,
-		authors: PropTypes.string,
+		authors: PropTypes.array,
 		versionDate: PropTypes.string,
 		lastUpdated: PropTypes.string,
 		titleOnly: PropTypes.bool,

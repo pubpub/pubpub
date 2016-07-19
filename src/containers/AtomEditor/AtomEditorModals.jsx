@@ -106,8 +106,9 @@ styles = {
 		borderRadius: '2px',
 		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
 			width: 'calc(98vw - 2em)',
-			height: 'calc(98vh - 2em)',
-			top: '1vh',
+			height: 'calc(80vh - 2em)',
+			maxHeight: 'calc(80vh - 2em)',
+			top: '10vh',
 			left: '1vw',
 			padding: '1em',
 		},

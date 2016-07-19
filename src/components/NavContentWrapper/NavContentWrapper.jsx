@@ -21,6 +21,10 @@ export const NavContentWrapper = React.createClass({
 		this.setState({showMenu: !this.state.showMenu});
 	},
 
+	closeMenu: function() {
+		this.setState({showMenu: false});
+	},
+
 	render: function() {
 		const navItems = this.props.navItems || [];
 		const mobileNavButtons = this.props.mobileNavButtons || [];
@@ -33,7 +37,7 @@ export const NavContentWrapper = React.createClass({
 						{mobileNavButtons.slice(0, 2).map((option, index)=>{
 
 							if (option.type === 'link') {
-								return <Link key={'navItem-' + index} style={styles.contentNavLinkMobile} to={option.link} onClick={this.toggleMenu}>{option.text}</Link>;
+								return <Link key={'navItem-' + index} style={styles.contentNavLinkMobile} to={option.link} onClick={this.closeMenu}>{option.text}</Link>;
 							}
 							if (option.type === 'button') {
 								return <div key={'navItem-' + index} style={styles.contentNavLinkMobile} onClick={option.action || this.toggleMenu}>{option.text}</div>;
@@ -47,10 +51,10 @@ export const NavContentWrapper = React.createClass({
 						{navItems.map((option, index)=>{
 
 							if (option.type === 'link') {
-								return <Link key={'navItem-' + index} className={'verticalNavHover'} style={[styles.contentNavLink, option.active && styles.contentNavLinkActive]} to={option.link} onClick={this.toggleMenu}>{option.text}</Link>;
+								return <Link key={'navItem-' + index} className={'verticalNavHover'} style={[styles.contentNavLink, option.active && styles.contentNavLinkActive]} to={option.link} onClick={this.closeMenu}>{option.text}</Link>;
 							}
 							if (option.type === 'button') {
-								return <div key={'navItem-' + index} className={'verticalNavHover'} style={[styles.contentNavLink, option.active && styles.contentNavLinkActive]} onClick={option.action || this.toggleMenu}>{option.text}</div>;
+								return <div key={'navItem-' + index} className={'verticalNavHover'} style={[styles.contentNavLink, option.active && styles.contentNavLinkActive]} onClick={option.action || this.closeMenu}>{option.text}</div>;
 							}
 							if (option.type === 'spacer') {
 								return <div key={'navItem-' + index} style={styles.contentNavSpacer}></div>;

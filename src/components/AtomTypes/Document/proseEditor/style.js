@@ -15,6 +15,11 @@ insertCSS(`
   min-height: 600px; 
   padding: 0em 5em 1em 5em;
 }
+@media screen and (min-resolution: 3dppx), screen and (max-width: 767px) {
+  .ProseMirror-content {
+    padding: 0em 0.5em 1em 0.5em;
+  }
+}
 
 .ProseMirror-selectednode {
   outline: 2px solid #808284;
