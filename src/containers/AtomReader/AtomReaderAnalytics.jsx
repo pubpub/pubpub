@@ -79,7 +79,7 @@ export const AtomReaderAnalytics = React.createClass({
 			<div className={'login-container'} style={styles.container}>
 				<Helmet {...metaData} />
 
-				<h1>Analytics</h1>
+				<h2 className={'normalWeight'}>Analytics</h2>
 
 
 				{isData && <div>

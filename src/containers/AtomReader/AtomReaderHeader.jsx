@@ -38,6 +38,9 @@ export default Radium(AtomReaderHeader);
 
 styles = {
 	updateAvailableNote: {
-		fontWeight: 'bold',
+		color: 'white',
+		backgroundColor: '#2C2A2B',
+		textAlign: 'center',
+		padding: '.2em',
 	},
 };
