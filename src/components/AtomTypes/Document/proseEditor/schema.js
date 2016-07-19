@@ -54,6 +54,7 @@ class Embed extends Inline {
 			align: new Attribute({default: 'full'}),
 			size: new Attribute({default: '70%'}),
 			caption: new Attribute({default: ''}),
+			mode: new Attribute({default: 'embed'}), // mode = embed || cite
 			data: new Attribute({default: {}})
 		};
 	}

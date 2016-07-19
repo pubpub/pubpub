@@ -31,8 +31,6 @@ const jrnlSchema = new Schema({
 	inactiveBy: { type: ObjectId, ref: 'User'},
 	inactiveNote: { type: String },
 
-	tags: [{ type: String }],
-
 });
 
 module.exports = mongoose.model('Jrnl', jrnlSchema);

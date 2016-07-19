@@ -300,7 +300,7 @@ export function updateAtomDetails(req, res) {
 		const newDetails = req.body.newDetails || {};
 		result.title = newDetails.title;
 		result.slug = result.isPublished ? result.slug : newDetails.slug;
-		result.description = newDetails.description;
+		result.description = newDetails.description && newDetails.description.substring(0, 140);
 		result.previewImage = newDetails.previewImage;
 		return result.save();
 	})

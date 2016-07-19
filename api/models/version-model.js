@@ -4,7 +4,7 @@ const ObjectId = Schema.Types.ObjectId;
 
 const versionSchema = new Schema({
 	type: { type: String },
-	hash: { type: String },
+	// hash: { type: String },
 	message: { type: String },
 	parent: { type: ObjectId, ref: 'Atom'},
 	createdBy: { type: ObjectId, ref: 'User'},

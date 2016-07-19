@@ -17,7 +17,7 @@ export function saveVersion(req, res) {
 
 	const version = new Version({
 		type: newVersion.type,
-		hash: undefined,
+		// hash: undefined,
 		message: newVersion.message,
 		parent: newVersion.parent,
 		createdBy: userID,

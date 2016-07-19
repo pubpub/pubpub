@@ -134,7 +134,7 @@
     "markdown-it-sup": "^1.0.0",
     "marklib": "^0.7.2",
     "mixpanel-browser": "^2.7.2",
-    "mongodb": "^2.0.46",
+    "mongodb": "^2.2.4",
     "mongoose": "^4.1.12",
     "murmurhash": "^0.0.2",
     "newrelic": "^1.24.0",

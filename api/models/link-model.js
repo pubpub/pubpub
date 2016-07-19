@@ -11,6 +11,7 @@ const linkSchema = new Schema({
 	createDate: { type: Date },
 
 	metadata: { type: Schema.Types.Mixed },
+	// metadata.collections: Used for Journal featured collections 
 
 	inactive: { type: Boolean }, 
 	inactiveBy: { type: ObjectId, ref: 'User'},
@@ -51,6 +52,9 @@ module.exports = mongoose.model('Link', linkSchema);
 // -------
 // 
 // USER -> PUB
+// follower
+
+// USER -> PUB
 // author
 // follower
 // editor
@@ -58,6 +62,7 @@ module.exports = mongoose.model('Link', linkSchema);
 
 // USER -> JOURNAL
 // admin
+// follower
 
 // PUB -> PUB
 // reply
