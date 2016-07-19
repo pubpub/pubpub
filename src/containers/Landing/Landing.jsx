@@ -41,8 +41,10 @@ const Landing = React.createClass({
 		let props = {};
 		if (source && isWebUri(source)) {
 			atomType = 'iframe';
-			props = {url: source};
+			props = {source};
 		} else {
+			atomType = 'latex';
+			props = {text: source};
 			// add more text atom types here
 		}
 		this.props.dispatch(createAtom(atomType, props));
