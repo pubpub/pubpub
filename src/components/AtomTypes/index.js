@@ -13,6 +13,9 @@ import VideoViewer from './Video/VideoViewer';
 import IFrameEditor from './IFrame/IFrameEditor';
 import IFrameViewer from './IFrame/IFrameViewer';
 
+import LaTeXEditor from './LaTeX/LaTeXEditor';
+import LaTeXViewer from './LaTeX/LaTeXViewer';
+
 export default {
 	image: {
 		editor: ImageEditor,
@@ -33,5 +36,9 @@ export default {
 	iframe: {
 		editor: IFrameEditor,
 		viewer: IFrameViewer
+	},
+	latex: {
+		editor: LaTeXEditor,
+		viewer: LaTeXViewer
 	}
 };
