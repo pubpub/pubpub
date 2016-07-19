@@ -73,7 +73,7 @@ export const JrnlProfileFeatured = React.createClass({
 		});
 
 		return (
-			<div>
+			<div className={'firstChildNoTopMargin'}>
 				<Helmet {...metaData} />				
 				<Style rules={{
 					'.Select-control': { borderWidth: '0px', height: '34px'},

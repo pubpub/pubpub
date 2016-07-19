@@ -29,8 +29,6 @@ export const JrnlProfileAdmins = React.createClass({
 	componentWillReceiveProps(nextProps) {
 		const currentAdmins = safeGetInToJS(this.props.jrnlData, ['adminsData']) || [];
 		const nextAdmins = safeGetInToJS(nextProps.jrnlData, ['adminsData']) || [];
-		console.log(currentAdmins);
-		console.log(nextAdmins);
 		if (currentAdmins.length !== nextAdmins.length) {
 			this.setState({value: {}});
 		}

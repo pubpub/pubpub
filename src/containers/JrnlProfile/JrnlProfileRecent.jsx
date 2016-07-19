@@ -21,7 +21,7 @@ export const JrnlProfileRecent = React.createClass({
 		};
 
 		return (
-			<div>
+			<div className={'firstChildNoTopMargin'}>
 				<Helmet {...metaData} />				
 
 				{

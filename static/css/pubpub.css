@@ -95,7 +95,7 @@ body {
 	text-shadow: 0 -5px #BBBDC0, 0 -10px #BBBDC0, 5px 0 #BBBDC0, 5px -5px #BBBDC0, 5px -10px #BBBDC0;
 }
 
-.firstChildNoTopMargin > div:first-child{
+.firstChildNoTopMargin > div:first-of-type{
 	margin-top: 0em !important;
 }
 
