@@ -1,22 +1,21 @@
-#atom-reader {
+.atom-reader-meta {
 	max-width: 650px;
 	margin: 0 auto;
+}
+
+#atom-reader {
 	font-family: serif;
 	font-size: 1.2em;
 	line-height: 1.5em;
 	color: #333;
 }
 
-#atom-reader.atom-reader-meta {
+/*#atom-reader.atom-reader-meta {
 	font-family: inherit;
     line-height: initial;
     font-size: inherit;
     color: inherit;
-}
-
-#atom-reader .headerBlock { /* This hides old markdown titles in case they're still there*/
-	display: none;
-}
+}*/
 
 /* Undo the header style set in pubpub.css*/
 #atom-reader h1 {
@@ -34,9 +33,9 @@
 	font-family: 'Yrsa', Georgia, serif;
 }
 
-#atom-reader.atom-reader-meta h1, #atom-reader.atom-reader-meta h2, #atom-reader.atom-reader-meta h3, #atom-reader.atom-reader-meta h4, #atom-reader.atom-reader-meta h5, #atom-reader.atom-reader-meta h6 {
+/*#atom-reader.atom-reader-meta h1, #atom-reader.atom-reader-meta h2, #atom-reader.atom-reader-meta h3, #atom-reader.atom-reader-meta h4, #atom-reader.atom-reader-meta h5, #atom-reader.atom-reader-meta h6 {
 	font-family: 'Open Sans', Helvetica Neue, Arial, sans-serif;
-}
+}*/
 
 @media screen and (min-resolution: 3dppx), screen and (max-width: 767px) {
 	#atom-reader h1 {
@@ -62,7 +61,7 @@
 }
 
 
-#atom-reader:not(.atom-reader-meta) a {
+#atom-reader a {
 	color: inherit;
 }
 
@@ -181,9 +180,9 @@
 	max-width: 100%;
 }
 
-#atom-reader.atom-reader-meta img {
+/*#atom-reader.atom-reader-meta img {
 	max-width: initial;
-}
+}*/
 
 .pagebreak {
 	/*opacity: 0 !important;*/

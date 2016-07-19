@@ -13,8 +13,8 @@ export const AtomReaderCite = React.createClass({
 	},
 
 	render: function() {
-		const atomData = safeGetInToJS(this.props.atomData, ['atomData']);
-		const versionData = safeGetInToJS(this.props.atomData, ['currentVersionData']);
+		const atomData = safeGetInToJS(this.props.atomData, ['atomData']) || {};
+		const versionData = safeGetInToJS(this.props.atomData, ['currentVersionData']) || {};
 		const authorsData = safeGetInToJS(this.props.atomData, ['authorsData']) || [];
 
 		const author = authorsData.reduce((previousValue, currentValue, currentIndex, array)=>{
