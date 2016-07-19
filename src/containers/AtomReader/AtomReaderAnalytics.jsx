@@ -48,6 +48,29 @@ export const AtomReaderAnalytics = React.createClass({
 		return Math.min(newArray);
 	},
 
+	// Analytics display planning
+	// Words/ Comments/ Journals/ Pages. Pub info that sort of shows the size and effect of the pub.
+	// 		Possible inclusions: Percent views to comments/rating (pub interactivity).
+	// 		Showing these over time (small graph).
+	//		Following 
+	//		Pub Date (days online or whatever)
+	// Webpage info that has more to do with viewership and display than interactivity.
+	//		Views, Returning Views, Demographics (locations), Read time
+	//		Breakdown into cumulative, last month, last week
+	// Author info
+	//		Author views, words, comments, journal feats, pages, views, pretty much all the same data
+
+	// Display
+	// TITLE
+	// (	Views 	)(Read Time	)(Interactions		)(		Pub Date		)
+	// (New + Return)(Ave		)(Comments + Ratings)(#Versions + Rec Date	)
+	// 
+	// (#1 Country + Views	)(#1 City + Views	)
+	// (#2 + Views			)(#2 + Views		)
+	// (#3 + Views			)(#3 + Views		)
+	//
+	// (feat stuff)
+
 	render: function() {
 
 		const metaData = {
@@ -81,41 +104,42 @@ export const AtomReaderAnalytics = React.createClass({
 
 				<h2 className={'normalWeight'}>Analytics</h2>
 
+				{!isData && <div>Loading Analytics...</div>}
 
 				{isData && <div>
-					<label style={styles.label} htmlFor={'data'}>
+					<label htmlFor={'data'}>
 						Totals
 					</label>
-					<label style={styles.input} htmlFor={'data'}>
+					<label htmlFor={'data'}>
 						Total Views: {data.totalViews}
 					</label>
-					<label style={styles.input} htmlFor={'data'}>
+					<label htmlFor={'data'}>
 						Unique Views: {data.totalUniqueViews}
 					</label>
-					<label style={styles.input} htmlFor={'data'}>
+					<label htmlFor={'data'}>
 						Returning Readers: {data.totalReturnViews}
 					</label>
-					<label style={styles.input} htmlFor={'data'}>
+					<label htmlFor={'data'}>
 						Average Read Time: {Math.round(data.averageReadTime * 100) / 100}s
 					</label>
-					<label style={styles.input} htmlFor={'data'}>
+					<label htmlFor={'data'}>
 						Total Read Time: {Math.round(data.totalReadTime / 36) / 100}hrs
 					</label>
 
 					<br/>
 		
-					<label style={styles.label} htmlFor={'input'}>GCharts Views vs Time Graph</label>
+					<label htmlFor={'input'}>GCharts Views vs Time Graph</label>
 					<GoogleCharts {...gChartProps} />
 
 					<br/>
 
-					<label style={styles.label} htmlFor={'data'}>
+					<label htmlFor={'data'}>
 						Countries by Views
 					</label>
 
 					{data.countryOrder.slice(0, 5).map((item, index)=>{
 						return (
-							<label style={styles.input} htmlFor={'data'}>
+							<label htmlFor={'data'}>
 								#{index + 1}: {item}: {data.countryTotalViews[item]}
 							</label>
 						);
@@ -123,13 +147,13 @@ export const AtomReaderAnalytics = React.createClass({
 
 					<br/>
 
-					<label style={styles.label} htmlFor={'data'}>
+					<label htmlFor={'data'}>
 						Cities by Views
 					</label>
 
 					{data.cityOrder.slice(0, 3).map((item, index)=>{
 						return (
-							<label style={styles.input} htmlFor={'data'}>
+							<label htmlFor={'data'}>
 								#{index + 1}: {item}: {data.cityTotalViews[item]}
 							</label>
 						);
@@ -137,13 +161,13 @@ export const AtomReaderAnalytics = React.createClass({
 
 					<br/>
 
-					<label style={styles.label} htmlFor={'data'}>
+					<label htmlFor={'data'}>
 						Continents by Views
 					</label>
 
 					{data.continentOrder.slice(0, 3).map((item, index)=>{
 						return (
-							<label style={styles.input} htmlFor={'data'}>
+							<label htmlFor={'data'}>
 								#{index + 1}: {item}: {data.continentTotalViews[item]}
 							</label>
 						);
