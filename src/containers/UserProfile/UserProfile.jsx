@@ -81,7 +81,7 @@ export const UserProfile = React.createClass({
 						case 'journals':
 							return (
 								<UserProfileJournals
-									profileData={profileData}
+									profileData={this.props.profileData}
 									ownProfile={ownProfile}/>
 							);
 						default:
