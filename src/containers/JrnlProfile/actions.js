@@ -38,6 +38,14 @@ export const COLLECTIONS_CHANGE_LOAD = 'jrnl/COLLECTIONS_CHANGE_LOAD';
 export const COLLECTIONS_CHANGE_SUCCESS = 'jrnl/COLLECTIONS_CHANGE_SUCCESS';
 export const COLLECTIONS_CHANGE_FAIL = 'jrnl/COLLECTIONS_CHANGE_FAIL';
 
+export const ADD_ADMIN_LOAD = 'jrnl/ADD_ADMIN_LOAD';
+export const ADD_ADMIN_SUCCESS = 'jrnl/ADD_ADMIN_SUCCESS';
+export const ADD_ADMIN_FAIL = 'jrnl/ADD_ADMIN_FAIL';
+
+export const DELETE_ADMIN_LOAD = 'jrnl/DELETE_ADMIN_LOAD';
+export const DELETE_ADMIN_SUCCESS = 'jrnl/DELETE_ADMIN_SUCCESS';
+export const DELETE_ADMIN_FAIL = 'jrnl/DELETE_ADMIN_FAIL';
+
 /*--------*/
 // Define Action creators
 //
@@ -111,6 +119,26 @@ export function rejectAtom(jrnlID, atomID) {
 		promise: (client) => client.post('/rejectAtom', {data: {
 			jrnlID: jrnlID,
 			atomID: atomID
+		}})
+	};
+}
+
+export function addAdmin(jrnlID, adminID) {
+	return {
+		types: [ADD_ADMIN_LOAD, ADD_ADMIN_SUCCESS, ADD_ADMIN_FAIL],
+		promise: (client) => client.post('/addJrnlAdmin', {data: {
+			jrnlID: jrnlID,
+			adminID: adminID,
+		}})
+	};
+}
+
+export function deleteAdmin(jrnlID, adminID) {
+	return {
+		types: [DELETE_ADMIN_LOAD, DELETE_ADMIN_SUCCESS, DELETE_ADMIN_FAIL],
+		promise: (client) => client.post('/deleteJrnlAdmin', {data: {
+			jrnlID: jrnlID,
+			adminID: adminID,
 		}})
 	};
 }

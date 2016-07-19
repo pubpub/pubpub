@@ -229,3 +229,42 @@ export function collectionsChange(req, res) {
 }
 app.post('/collectionsChange', collectionsChange);
 
+export function addJrnlAdmin(req, res) {
+	const {adminID, jrnlID} = req.body;
+	const userID = req.user._id;
+	const now = new Date().getTime();
+	// Check permission 
+
+	// Link.createLink('featured', jrnlID, atomID, userID, now)
+	// .then(function() {
+	// 	return Link.setLinkInactive('submitted', atomID, jrnlID, userID, now, inactiveNote);
+	// })
+	// .then(function(updatedSubmissionLink) {
+	// 	return res.status(201).json(updatedSubmissionLink);
+	// })
+	// .catch(function(error) {
+	// 	console.log('error', error);
+	// 	return res.status(500).json(error);
+	// });
+}
+app.post('/addJrnlAdmin', addJrnlAdmin);
+
+export function deleteJrnlAdmin(req, res) {
+	const {adminID, jrnlID} = req.body;
+	const userID = req.user._id;
+	const now = new Date().getTime();
+	// Check permission 
+
+	// Link.createLink('featured', jrnlID, atomID, userID, now)
+	// .then(function() {
+	// 	return Link.setLinkInactive('submitted', atomID, jrnlID, userID, now, inactiveNote);
+	// })
+	// .then(function(updatedSubmissionLink) {
+	// 	return res.status(201).json(updatedSubmissionLink);
+	// })
+	// .catch(function(error) {
+	// 	console.log('error', error);
+	// 	return res.status(500).json(error);
+	// });
+}
+app.post('/deleteJrnlAdmin', deleteJrnlAdmin);
