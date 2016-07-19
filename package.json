@@ -121,6 +121,7 @@
     "immutable": "^3.7.5",
     "intl": "^1.1.0",
     "invariant": "^2.2.1",
+    "katex": "^0.6.0",
     "kerberos": "^0.0.21",
     "less": "^2.6.0",
     "lodash": "^4.12.0",
