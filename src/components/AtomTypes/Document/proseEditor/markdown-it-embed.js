@@ -44,19 +44,9 @@ function embed(state, silent) {
 	token.attrs = [];
 	const regex = /([a-zA-Z]+)="((?:[^"\\]|\\.)*)"/g;
 	let result;
-	
-	const tokenKeys = {};
 	while (result = regex.exec(token.content)) {
-		tokenKeys[result[1]] = result[2];
 		token.attrs.push([result[1], result[2]]);
 	}
-	if (!tokenKeys.source) {
-		console.log('~~~~~~~');
-		console.log(token);	
-		console.log('~~~~~~~');	
-	}
-	
-	// console.log('tokenattrs', token.attrs);
 	state.pos = state.posMax + 1;
 	state.posMax = max;
 	return true;

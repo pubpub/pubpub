@@ -25,7 +25,9 @@ export const UserProfilePubs = React.createClass({
 		return (
 			<div className={'firstChildNoTopMargin'}>
 				{
-					atoms.sort((foo, bar)=>{
+					atoms.filter((item)=>{
+						return item.type === 'document';
+					}).sort((foo, bar)=>{
 						// Sort so that most recent is first in array
 						if (foo.lastUpdated > bar.lastUpdated) { return -1; }
 						if (foo.lastUpdated < bar.lastUpdated) { return 1; }

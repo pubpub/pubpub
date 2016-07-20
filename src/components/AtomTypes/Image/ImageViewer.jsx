@@ -13,8 +13,8 @@ export const ImageViewer = React.createClass({
 	render: function() {
 
 		const title = safeGetInToJS(this.props.atomData, ['atomData', 'title']);
-		const imageSource = safeGetInToJS(this.props.atomData, ['currentVersionData', 'content', 'url']);
-		const scaledURL = 'https://jake.pubpub.org/unsafe/fit-in/650x0/' + imageSource; // To learn about jake.pubpub fit-in, see Thumbor docs: http://thumbor.readthedocs.io/en/latest/usage.html#fit-in
+		const imageSource = safeGetInToJS(this.props.atomData, ['currentVersionData', 'content', 'url']) || '';
+		const scaledURL = imageSource.indexOf('.gif') > -1 ? imageSource : 'https://jake.pubpub.org/unsafe/fit-in/650x0/' + imageSource; // To learn about jake.pubpub fit-in, see Thumbor docs: http://thumbor.readthedocs.io/en/latest/usage.html#fit-in
 		const metadata = safeGetInToJS(this.props.atomData, ['currentVersionData', 'content', 'metadata']) || {};
 
 		switch (this.props.renderType) {

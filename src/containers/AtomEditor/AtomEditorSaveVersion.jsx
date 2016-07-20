@@ -30,7 +30,7 @@ export const AtomEditorSaveVersion = React.createClass({
 			<div>
 				<h2>Save Version</h2>
 				<form onSubmit={this.onSave}>
-					
+					Save Versions to mark milestones in your document. Any individial version can be published.
 					<label htmlFor={'versionNote'}>
 						Version Note
 					</label>
