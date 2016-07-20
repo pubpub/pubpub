@@ -82,7 +82,7 @@ export const DocumentEditor = React.createClass({
 		collab.mod = {};
 		collab.pm = pm;
 		collab.currentPm = pm;
-		collab.doc = {id: '54'};
+		collab.doc = {id: '249'};
 		collab.waitingForDocument = true;
 		collab.schema = pubSchema;
 		collab.receiveDocument = this.receiveDocument;
@@ -205,7 +205,7 @@ receiveDocument: function(data) {
 
         this.collab.receiveDocumentValues(data.document, data.document_values);
 				console.log(data);
-				console.lg(this.collab);
+				console.log(this.collab);
 				this.update();
         // if (data.hasOwnProperty('user')) {
         //     this.collab.user = data.user
