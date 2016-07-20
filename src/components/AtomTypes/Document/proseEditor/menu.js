@@ -45,7 +45,7 @@ function buildMenuItems(schema) {
 		label: 'superscript',
 	});
 
-	items.toggleStrikeThrough = toggleMarkItem(schema.marks.s, {
+	items.toggleStrikeThrough = toggleMarkItem(schema.marks.strike, {
 		title: 'Toggle strikethrough',
 		label: 'strikethrough',
 	});

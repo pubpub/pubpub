@@ -104,6 +104,6 @@ export const schema = new Schema({
 		code: CodeMark,
 		sub: SubMark,
 		sup: SupMark,
-		s: StrikeThroughMark,
+		strike: StrikeThroughMark,
 	}
 });

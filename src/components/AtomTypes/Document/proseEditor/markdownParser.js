@@ -50,7 +50,7 @@ export const markdownParser = new MarkdownParser(schema,
 
 		em: {mark: 'em'},
 		strong: {mark: 'strong'},
-		s: {mark: 's'},
+		strike: {mark: 'strike'},
 		link: {mark: 'link', attrs: tok => ({
 			href: tok.attrGet('href'),
 			title: tok.attrGet('title') || null
