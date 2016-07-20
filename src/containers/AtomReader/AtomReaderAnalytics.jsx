@@ -63,13 +63,19 @@ export const AtomReaderAnalytics = React.createClass({
 	// Display
 	// TITLE
 	// (	Views 	)(Read Time	)(Interactions		)(		Pub Date		)
-	// (New + Return)(Ave		)(Comments + Ratings)(#Versions + Rec Date	)
+	// (New + Return)(Ave		)(Response#+ Ratings)(#Versions + Rec Date	)
 	// 
 	// (#1 Country + Views	)(#1 City + Views	)
 	// (#2 + Views			)(#2 + Views		)
 	// (#3 + Views			)(#3 + Views		)
 	//
-	// (feat stuff)
+	// (Journals Feat 	)(Words # 	)(Pages #	)
+	//
+	// (VIEW GRAPH HERE)
+	//
+	// (Views Month) (Views Week) (Views 24hrs) (Views 12hrs)
+	 
+	//Moves all calcs to backend. Outline needed
 
 	render: function() {
 
