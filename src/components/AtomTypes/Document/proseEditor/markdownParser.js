@@ -1,12 +1,12 @@
 import {MarkdownParser} from 'prosemirror/dist/markdown';
 import {schema} from './schema';
 import markdownit from 'markdown-it';
+// import markdownit from 'markdown-it-migrate'; // Used for Migration. Handles code_blocks and fences more gracefully
 import emoji from 'markdown-it-emoji';
 import embed from './markdown-it-embed';
 import pagebreak from './markdown-it-pagebreak';
 import sub from 'markdown-it-sub';
 import sup from 'markdown-it-sup';
-// import container from './markdown-it-container';
 
 export const markdownParser = new MarkdownParser(schema, 
 	markdownit({html: false})
@@ -16,7 +16,6 @@ export const markdownParser = new MarkdownParser(schema,
 	.use(sup)
 	.use(pagebreak)
 	.use(embed),
-	// .use(container),
 	{
 		blockquote: {block: 'blockquote'},
 		paragraph: {block: 'paragraph'},
