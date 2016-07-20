@@ -3,7 +3,7 @@ import {connect} from 'react-redux';
 import Radium from 'radium';
 import {push} from 'redux-router';
 import Helmet from 'react-helmet';
-import {getAtomEdit, saveVersion, updateAtomDetails, publishVersion} from './actions';
+import {getAtomEdit, saveVersion, updateAtomDetails, publishVersion, updateAtomContributors} from './actions';
 import {safeGetInToJS} from 'utils/safeParse';
 
 import {HorizontalNav} from 'components';
@@ -40,8 +40,8 @@ export const AtomEditor = React.createClass({
 		const previousLoading = safeGetInToJS(this.props.atomEditData, ['loading']);
 		const nextLoading = safeGetInToJS(nextProps.atomEditData, ['loading']);
 		const nextError = safeGetInToJS(nextProps.atomEditData, ['error']);
-		
-		if (previousLoading === true && nextLoading === false && !nextError && this.state.modalMode !== 'publishing') { 
+
+		if (previousLoading === true && nextLoading === false && !nextError && this.state.modalMode !== 'publishing' && this.state.modalMode !== 'contributors' ) {
 			this.closeModal();
 		}
 
@@ -77,6 +77,11 @@ export const AtomEditor = React.createClass({
 	updateDetails: function(newDetails) {
 		const atomID = safeGetInToJS(this.props.atomEditData, ['atomData', '_id']);
 		this.props.dispatch(updateAtomDetails(atomID, newDetails));
+	},
+
+	updateAtomContributors: function(contributorsUpdate) {
+		const atomID = safeGetInToJS(this.props.atomEditData, ['atomData', '_id']);
+		this.props.dispatch(updateAtomContributors(atomID, contributorsUpdate));
 	},
 
 	publishVersionHandler: function(versionID) {
@@ -129,12 +134,13 @@ export const AtomEditor = React.createClass({
 
 					<AtomEditorPane ref={'atomEditorPane'} atomEditData={this.props.atomEditData} loginData={this.props.loginData}/>
 
-					<AtomEditorModals 
+					<AtomEditorModals
 						atomEditData={this.props.atomEditData}
-						mode={this.state.modalMode} 
+						mode={this.state.modalMode}
 						closeModalHandler={this.closeModal}
 						handleVersionSave={this.saveVersionSubmit}
 						updateDetailsHandler={this.updateDetails}
+						updateAtomContributorsHandler={this.updateAtomContributors}
 						publishVersionHandler={this.publishVersionHandler}
 						isLoading={isLoading}
 						error={error} />

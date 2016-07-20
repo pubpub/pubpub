@@ -13,17 +13,26 @@ import {
 	GET_ATOM_EDIT_SUCCESS,
 	GET_ATOM_EDIT_FAIL,
 
+	GET_ATOM_CONTRIBUTORS_LOAD,
+	GET_ATOM_CONTRIBUTORS_SUCCESS,
+	GET_ATOM_CONTRIBUTORS_FAIL,
+
 	SAVE_VERSION_LOAD,
 	SAVE_VERSION_SUCCESS,
 	SAVE_VERSION_FAIL,
 
-	UPDATE_ATOM_DETAILS_LOAD, 
-	UPDATE_ATOM_DETAILS_SUCCESS, 
+	UPDATE_ATOM_DETAILS_LOAD,
+	UPDATE_ATOM_DETAILS_SUCCESS,
 	UPDATE_ATOM_DETAILS_FAIL,
 
-	PUBLISH_VERSION_LOAD, 
-	PUBLISH_VERSION_SUCCESS, 
+	PUBLISH_VERSION_LOAD,
+	PUBLISH_VERSION_SUCCESS,
 	PUBLISH_VERSION_FAIL,
+
+	UPDATE_ATOM_CONTRIBUTORS_LOAD,
+	UPDATE_ATOM_CONTRIBUTORS_SUCCESS,
+	UPDATE_ATOM_CONTRIBUTORS_FAIL,
+
 } from './actions';
 
 /*--------*/
@@ -73,6 +82,7 @@ function getAtomEditSuccess(state, result) {
 	return state.merge({
 		loading: false,
 		atomData: result.atomData,
+		contributorData: result.contributorData,
 		currentVersionData: result.currentVersionData,
 		error: null
 	});
@@ -86,6 +96,7 @@ function getAtomEditFail(state, error) {
 		error: error,
 	});
 }
+
 
 /* Save Version functions */
 /* ----------------------------- */
@@ -135,6 +146,30 @@ function updateAtomDetailsFail(state, error) {
 		error: error,
 	});
 }
+
+/* Update Atom Details functions */
+/* ----------------------------- */
+function updateAtomContributorsLoad(state) {
+	return state.merge({
+		loading: true,
+	});
+}
+
+function updateAtomContributorsSuccess(state, result) {
+	return state.merge({
+		loading: false,
+		contributorData: result.contributorData,
+		error: null
+	});
+}
+
+function updateAtomContributorsFail(state, error) {
+	return state.merge({
+		loading: false,
+		error: error,
+	});
+}
+
 
 /* Publish Version functions */
 /* ----------------------------- */
@@ -190,7 +225,7 @@ export default function readerReducer(state = defaultState, action) {
 		return saveVersionSuccess(state, action.result);
 	case SAVE_VERSION_FAIL:
 		return saveVersionFail(state, action.error);
-	
+
 	case UPDATE_ATOM_DETAILS_LOAD:
 		return updateAtomDetailsLoad(state);
 	case UPDATE_ATOM_DETAILS_SUCCESS:
@@ -204,6 +239,13 @@ export default function readerReducer(state = defaultState, action) {
 		return publishVersionSuccess(state, action.result);
 	case PUBLISH_VERSION_FAIL:
 		return publishVersionFail(state, action.error);
+
+	case UPDATE_ATOM_CONTRIBUTORS_LOAD:
+		return updateAtomContributorsLoad(state);
+	case UPDATE_ATOM_CONTRIBUTORS_SUCCESS:
+		return updateAtomContributorsSuccess(state, action.result);
+	case UPDATE_ATOM_CONTRIBUTORS_FAIL:
+		return updateAtomContributorsFail(state, action.error);
 
 	default:
 		return ensureImmutable(state);

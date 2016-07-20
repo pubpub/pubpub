@@ -12,6 +12,10 @@ export const GET_ATOM_EDIT_LOAD = 'atomEdit/GET_ATOM_EDIT_LOAD';
 export const GET_ATOM_EDIT_SUCCESS = 'atomEdit/GET_ATOM_EDIT_SUCCESS';
 export const GET_ATOM_EDIT_FAIL = 'atomEdit/GET_ATOM_EDIT_FAIL';
 
+export const GET_ATOM_CONTRIBUTORS_LOAD = 'atomEdit/GET_ATOM_CONTRIBUTORS_LOAD';
+export const GET_ATOM_CONTRIBUTORS_SUCCESS = 'atomEdit/GET_ATOM_CONTRIBUTORS_SUCCESS';
+export const GET_ATOM_CONTRIBUTORS_FAIL = 'atomEdit/GET_ATOM_CONTRIBUTORS_FAIL';
+
 export const SAVE_VERSION_LOAD = 'atomEdit/SAVE_VERSION_LOAD';
 export const SAVE_VERSION_SUCCESS = 'atomEdit/SAVE_VERSION_SUCCESS';
 export const SAVE_VERSION_FAIL = 'atomEdit/SAVE_VERSION_FAIL';
@@ -19,6 +23,10 @@ export const SAVE_VERSION_FAIL = 'atomEdit/SAVE_VERSION_FAIL';
 export const UPDATE_ATOM_DETAILS_LOAD = 'atomEdit/UPDATE_ATOM_DETAILS_LOAD';
 export const UPDATE_ATOM_DETAILS_SUCCESS = 'atomEdit/UPDATE_ATOM_DETAILS_SUCCESS';
 export const UPDATE_ATOM_DETAILS_FAIL = 'atomEdit/UPDATE_ATOM_DETAILS_FAIL';
+
+export const UPDATE_ATOM_CONTRIBUTORS_LOAD = 'atomEdit/UPDATE_ATOM_CONTRIBUTORS_LOAD';
+export const UPDATE_ATOM_CONTRIBUTORS_SUCCESS = 'atomEdit/UPDATE_ATOM_CONTRIBUTORS_SUCCESS';
+export const UPDATE_ATOM_CONTRIBUTORS_FAIL = 'atomEdit/UPDATE_ATOM_CONTRIBUTORS_FAIL';
 
 export const PUBLISH_VERSION_LOAD = 'atomEdit/PUBLISH_VERSION_LOAD';
 export const PUBLISH_VERSION_SUCCESS = 'atomEdit/PUBLISH_VERSION_SUCCESS';
@@ -50,6 +58,16 @@ export function getAtomEdit(slug) {
 	};
 }
 
+export function getAtomContributors(atomID) {
+	return {
+		types: [GET_ATOM_CONTRIBUTORS_LOAD, GET_ATOM_CONTRIBUTORS_SUCCESS, GET_ATOM_CONTRIBUTORS_FAIL],
+		promise: (client) => client.get('/getAtomContributors', {params: {
+			'atomID': atomID,
+		}})
+	};
+}
+
+
 export function saveVersion(newVersion) {
 	return {
 		types: [SAVE_VERSION_LOAD, SAVE_VERSION_SUCCESS, SAVE_VERSION_FAIL],
@@ -69,6 +87,18 @@ export function updateAtomDetails(atomID, newDetails) {
 	};
 }
 
+
+export function updateAtomContributors(atomID, contributorsUpdate) {
+	console.log('updating with contributors', atomID);
+	return {
+		types: [UPDATE_ATOM_CONTRIBUTORS_LOAD, UPDATE_ATOM_CONTRIBUTORS_SUCCESS, UPDATE_ATOM_CONTRIBUTORS_FAIL],
+		promise: (client) => client.post('/updateAtomContributors', {data: {
+			atomID: atomID,
+			updates: contributorsUpdate,
+		}})
+	};
+}
+
 export function publishVersion(versionID) {
 	return {
 		types: [PUBLISH_VERSION_LOAD, PUBLISH_VERSION_SUCCESS, PUBLISH_VERSION_FAIL],
@@ -77,5 +107,3 @@ export function publishVersion(versionID) {
 		}})
 	};
 }
-
-

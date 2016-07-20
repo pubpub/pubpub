@@ -5,6 +5,7 @@ const Link = require('../models').Link;
 const Version = require('../models').Version;
 const Jrnl = require('../models').Jrnl;
 const User = require('../models').User;
+
 const Promise = require('bluebird');
 
 const SHA1 = require('crypto-js/sha1');
@@ -15,6 +16,23 @@ const Firebase = require('firebase');
 const Request = require('request-promise');
 
 import {fireBaseURL, firebaseTokenGen, generateAuthToken} from '../services/firebase';
+
+
+function getAtomLinks(destination, type) {
+	switch(type) {
+		case 'contributors':
+			return new Promise(function(resolve) {
+					const query = Link.find({destination: destination, inactive: {$ne: true}, type: {$in: ['editor', 'author', 'contributor']}}).populate({
+						path: 'source',
+						model: User,
+						select: 'name image email bio',
+					}).exec();
+					resolve(query);
+				});
+		default:
+			return new Promise((resolve) => resolve());
+	}
+}
 
 export function createAtom(req, res) {
 	if (!req.user) {
@@ -117,6 +135,7 @@ export function createAtom(req, res) {
 }
 app.post('/createAtom', createAtom);
 
+
 export function getAtomData(req, res) {
 	const {slug, meta, version} = req.query;
 	// const userID = req.user ? req.user._id : undefined;
@@ -151,8 +170,12 @@ export function getAtomData(req, res) {
 		// This query fires if meta is equal to 'collaborators'
 		const getContributors = new Promise(function(resolve) {
 			if (meta === 'contributors') {
-				// const query = Link.find({destination: atomResult._id, type: {$in: ['isAuthor', 'isEditor', 'isReader']}}).exec();
-				const query = Link.find({destination: atomResult._id}).exec();
+				// const query = Link.find({destination: atomResult._id, type: {$in: ['editor', 'author', 'contributor']}}).exec();
+				const query = Link.find({destination: atomResult._id, type: {$in: ['editor', 'author', 'contributor']}}).populate({
+					path: 'source',
+					model: User,
+					select: 'name image email bio',
+				}).exec();
 				resolve(query);
 			} else {
 				resolve();
@@ -237,10 +260,15 @@ export function getAtomEdit(req, res) {
 		const mostRecentVersionId = atomResult.versions[atomResult.versions.length - 1];
 		return [atomResult, Version.findOne({_id: mostRecentVersionId}).exec()];
 	})
-	.spread(function(atomResult, versionResult) { // Send response
+	.spread(function(atomResult, versionResult) {
+		const linkTasks = [getAtomLinks(atomResult._id, 'contributors')];
+		return [atomResult, versionResult, Promise.all(linkTasks)];
+	})
+	.spread(function(atomResult, versionResult, linkResult) { // Send response
 		const output = {
 			atomData: atomResult,
-			currentVersionData: versionResult
+			currentVersionData: versionResult,
+			contributorData: linkResult[0],
 		};
 
 		if (atomResult.type === 'markdown') { // If we're sending down Editor data for a markdown atom, include the firebase token so we can do collaborative editing
@@ -253,7 +281,6 @@ export function getAtomEdit(req, res) {
 		console.log('error', error);
 		return res.status(500).json(error);
 	});
-
 }
 app.get('/getAtomEdit', getAtomEdit);
 
@@ -287,6 +314,104 @@ export function submitAtomToJournals(req, res) {
 
 }
 app.post('/submitAtomToJournals', submitAtomToJournals);
+
+
+export function updateAtomDetails(req, res) {
+	const atomID = req.body.atomID;
+	const userID = req.user ? req.user._id : undefined;
+	if (!userID) { return res.status(403).json('Not authorized to edit this user'); }
+	// Check permission
+
+	Atom.findById(atomID).exec()
+	.then(function(result) {
+		// Validate and clean submitted values
+		const newDetails = req.body.newDetails || {};
+		result.title = newDetails.title;
+		result.slug = result.isPublished ? result.slug : newDetails.slug;
+		result.description = newDetails.description && newDetails.description.substring(0, 140);
+		result.previewImage = newDetails.previewImage;
+		return result.save();
+	})
+	.then(function(savedResult) {
+		return res.status(201).json(savedResult);
+	})
+	.catch(function(error) {
+		console.log('error', error);
+		return res.status(500).json(error);
+	});
+
+}
+app.post('/updateAtomDetails', updateAtomDetails);
+
+
+
+export function getAtomContributors(req, res) {
+
+	const atomID = req.query.atomID;
+	// const userID = req.user ? req.user._id : undefined;
+	// Check permission type
+
+	getAtomLinks(atomID, 'contributors')
+	.then(function(contributorData) { // Get most recent version
+		const output = {
+			contributorData: contributorData
+		};
+		return res.status(201).json(output);
+	})
+	.catch(function(error) {
+		console.log('error', error);
+		return res.status(500).json(error);
+	});
+}
+app.get('/getAtomContributors', getAtomEdit);
+
+
+export function updateAtomContributors(req, res) {
+	const atomID = req.body.atomID;
+	const userID = req.user ? req.user._id : undefined;
+	if (!userID) { return res.status(403).json('Not authorized to edit this user'); }
+	const now = new Date().getTime();
+
+	const updates = req.body.updates || {};
+
+	// need to check perms
+	const tasks = updates.map((update)=>{
+
+		switch (update.type) {
+			case 'new':
+				return Link.createLink(update.toRole, update.userId, atomID,userID, now);
+			case 'modify':
+				return Promise.all([
+					Link.setLinkInactive(update.fromRole, update.userId, atomID, userID, now, ''),
+					Link.createLink(update.toRole, update.userId, atomID, userID, now)]);
+			case 'remove':
+				console.log('setting inactive!', update.fromRole)
+				return Link.setLinkInactive(update.fromRole, update.userId, atomID, userID, now, '');
+
+			default:
+				return null;
+		}
+	});
+
+
+		Promise.all(tasks)
+		.then(function(newLinks) {
+			return getAtomLinks(atomID, 'contributors');
+		})
+		.then(function(contributorData) { // Get most recent version
+			const output = {
+				contributorData: contributorData
+			};
+			return res.status(201).json(output);
+		})
+		.catch(function(error) {
+			console.log('error', error);
+			return res.status(500).json(error);
+		});
+
+}
+app.post('/updateAtomContributors', updateAtomContributors);
+
 
 export function updateAtomDetails(req, res) {
 	const atomID = req.body.atomID;

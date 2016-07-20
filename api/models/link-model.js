@@ -11,13 +11,13 @@ const linkSchema = new Schema({
 	createDate: { type: Date },
 
 	metadata: { type: Schema.Types.Mixed },
-	// metadata.collections: Used for Journal featured collections 
+	// metadata.collections: Used for Journal featured collections
 
-	inactive: { type: Boolean }, 
+	inactive: { type: Boolean },
 	inactiveBy: { type: ObjectId, ref: 'User'},
 	inactiveDate: { type: Date },
 	inactiveNote: { type: String },
-	
+
 });
 
 linkSchema.statics.createLink = function(type, source, destination, createBy, createDate) {
@@ -33,16 +33,21 @@ linkSchema.statics.createLink = function(type, source, destination, createBy, cr
 
 linkSchema.statics.setLinkInactive = function(type, source, destination, inactiveBy, inactiveDate, inactiveNote) {
 	// Beacuse upsert is false, this will not create a new document if no match is found.
+
 	return this.findOne({type: type, source: source, destination: destination, inactive: {$ne: true} }).exec()
 	.then(function(linkResult) {
-		if (!linkResult) { return undefined; }
+		if (!linkResult) {
+			console.log('Could not find link to inactivate!');
+			console.log(type, source, destination);
+			return undefined;
+		}
 		linkResult.inactive = true;
 		linkResult.inactiveBy = inactiveBy;
 		linkResult.inactiveDate = inactiveDate || new Date().getTime();
 		linkResult.inactiveNote = inactiveNote;
 		return linkResult.save();
 	});
-	
+
 };
 
 module.exports = mongoose.model('Link', linkSchema);
@@ -50,7 +55,7 @@ module.exports = mongoose.model('Link', linkSchema);
 // -------
 // Types
 // -------
-// 
+//
 // USER -> PUB
 // follower
 
