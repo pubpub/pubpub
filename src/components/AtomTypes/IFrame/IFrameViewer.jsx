@@ -2,7 +2,9 @@ import React, {PropTypes} from 'react';
 import Radium from 'radium';
 import {safeGetInToJS} from 'utils/safeParse';
 
-let styles;
+let styles = {};
+const defaultHeight = '300';
+const defaultWidth = '100%';
 
 export const IFrameViewer = React.createClass({
 	propTypes: {
@@ -10,54 +12,26 @@ export const IFrameViewer = React.createClass({
 		renderType: PropTypes.string, // full, embed, static-full, static-embed
 	},
 
-	render: function() {
+	render() {
 
 		const title = safeGetInToJS(this.props.atomData, ['atomData', 'title']);
-		const iframeSource = safeGetInToJS(this.props.atomData, ['currentVersionData', 'content', 'url']);
-		const metadata = safeGetInToJS(this.props.atomData, ['currentVersionData', 'content', 'metadata']) || {};
+		const source = safeGetInToJS(this.props.atomData, ['currentVersionData', 'content', 'source']) || '';
+		const height = safeGetInToJS(this.props.atomData, ['currentVersionData', 'content', 'height']) || defaultHeight;
+		const width = safeGetInToJS(this.props.atomData, ['currentVersionData', 'content', 'width']) || defaultWidth;
 
 		switch (this.props.renderType) {
 			case 'embed':
 			case 'static-embed':
-				return <iframe src={iframeSource} style={styles.iframe}></iframe>
 			case 'full':
 			case 'static-full':
 			default:
-				return (
-					<div>
-						<iframe src={iframeSource} style={styles.iframe}></iframe>
-
-						{Object.keys(metadata).length > 0 &&
-						<h2>Metadata</h2>
-						}
-
-						{Object.keys(metadata).map((key, index)=>{
-							return (
-								<div key={'metadata-' + index}>
-									<div style={styles.key}>{metadata[key].title}:</div>
-									<div style={styles.value}>{metadata[key].value}</div>
-								</div>
-							);
-						})}
-
-					</div>
-				);
+				return <iframe src={source} style={styles.iframe(height, width)}></iframe>;
 		}
-
 	}
 });
 
 export default Radium(IFrameViewer);
 
 styles = {
-	key: {
-		fontSize: '1.2em',
-	},
-	value: {
-		marginBottom: '1.25em',
-	},
-	iframe: {
-		width: '100%',
-		minHeight: '400px',
-	}
+	iframe: (height, width) => ({height, width})
 };
