@@ -3,7 +3,7 @@ import Radium from 'radium';
 import Select from 'react-select';
 import request from 'superagent';
 import {safeGetInToJS} from 'utils/safeParse';
-import {PreviewCard} from 'components';
+import {PreviewCard, SelectValue, SelectOption} from 'components';
 
 let styles;
 
@@ -17,13 +17,26 @@ export const AtomEditorContributors = React.createClass({
 
 	getInitialState: function() {
 		return {
-			value: [],
+			addUser: null,
+			addRole: 'author',
 		};
 	},
 
 	handleSelectChange: function(value) {
-		this.setState({ value });
+		console.log('got change');
+		console.log(value);
+		this.setState({ addUser: value });
 	},
+
+
+	handleRoleChange: function(value) {
+		console.log('got role');
+		console.log(value);
+		this.setState({ addRole: value });
+	},
+
+
+
 
 	loadOptions: function(input, callback) {
 		request.get('/api/autocompleteUsers?string=' + input).end((err, response)=>{
@@ -47,24 +60,25 @@ export const AtomEditorContributors = React.createClass({
 		this.props.handleJournalSubmit(journalIDs);
 	},
 
-	removeUser: function(user) {
-		console.log(user);
+	modifyUser: function(user, role){
+		const collaboratorAction = {type: 'modify', source: user, fromRole: role};
+		this.props.updateAtomContributorsHandler([collaboratorAction]);
+	},
+
+
+	removeUser: function(user, role) {
+		console.log('removing', user);
+		const collaboratorAction = {type: 'remove', userId: user._id, fromRole: role};
+		this.props.updateAtomContributorsHandler([collaboratorAction]);
+	},
+
+	submitUser: function() {
+		const collaboratorAction = {type: 'new', userId: this.state.addUser.id, toRole: this.state.addRole};
+		this.props.updateAtomContributorsHandler([collaboratorAction]);
 	},
 
 	render: function() {
 		const contributorData = safeGetInToJS(this.props.atomEditData, ['contributorData']) || [];
-
-/*
-image: PropTypes.string,
-title: PropTypes.string,
-description: PropTypes.string,
-slug: PropTypes.string,
-// onFollowHandler: PropTypes.func,
-// showEdit: PropTypes.bool,
-buttons: PropTypes.array,
-header: PropTypes.object,
-footer: PropTypes.object,
-*/
 
 	const authorOptions = [
 		{value: 'author', label: 'author'},
@@ -72,29 +86,36 @@ footer: PropTypes.object,
 		{value: 'contributor', label: 'contributor'},
 	];
 
+	console.log(contributorData);
 		return (
 			<div>
 				<h2>Contributors</h2>
-				{contributorData.map((user, index)=>{
+				{contributorData.map((link, index)=>{
 					const buttons = [
 						(<Select name="form-field-name" clearable={false} value="author" options={authorOptions} />),
-						{text: 'Remove', action: this.removeUser.bind(this, user)}
+						{text: 'Remove', action: this.removeUser.bind(this, link.source, link.type)}
 					];
-					return (<PreviewCard type="atom" buttons={buttons} image={user.source.image} title={user.source.name} description={user.source.bio} />);
+					return (<PreviewCard type="atom" buttons={buttons} image={link.source.image} title={link.source.name} description={link.source.bio} />);
 				})}
 
 				<h3>Add Users</h3>
 
 				<Select.Async
 					name="form-field-name"
-					value={this.state.value}
+					autoload={false}
+					value={this.state.addUser}
 					loadOptions={this.loadOptions}
-					multi={true}
-					optionRenderer={(option) => (<span><img style={{height: '1em'}} src={option.image}/>{option.value}</span>)}
+					multi={false}
 					placeholder={<span>Choose an author as a person to upload.</span>}
-					onChange={this.handleSelectChange} />
+					onChange={this.handleSelectChange}
+					optionComponent={SelectOption}
+					valueComponent={SelectValue}
+					 />
 
-				<Select name="form-field-name" clearable={false} value="author" options={authorOptions} />
+				 <Select name="form-field-name" ref="addRole" clearable={false} value={this.state.addRole} options={authorOptions} onChange={this.handleRoleChange} />
+
+				 <div className={'button'} onClick={this.submitUser}>Save</div>
+
 			</div>
 		);
 

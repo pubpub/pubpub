@@ -3,7 +3,7 @@ import {connect} from 'react-redux';
 import Radium from 'radium';
 import {push} from 'redux-router';
 import Helmet from 'react-helmet';
-import {getAtomEdit, saveVersion, updateAtomDetails, publishVersion} from './actions';
+import {getAtomEdit, saveVersion, updateAtomDetails, publishVersion, updateAtomContributors} from './actions';
 import {safeGetInToJS} from 'utils/safeParse';
 
 import {HorizontalNav} from 'components';
@@ -79,6 +79,11 @@ export const AtomEditor = React.createClass({
 		this.props.dispatch(updateAtomDetails(atomID, newDetails));
 	},
 
+	updateAtomContributors: function(contributorsUpdate) {
+		const atomID = safeGetInToJS(this.props.atomEditData, ['atomData', '_id']);
+		this.props.dispatch(updateAtomContributors(atomID, contributorsUpdate));
+	},
+
 	publishVersionHandler: function(versionID) {
 		this.props.dispatch(publishVersion(versionID));
 	},
@@ -135,6 +140,7 @@ export const AtomEditor = React.createClass({
 						closeModalHandler={this.closeModal}
 						handleVersionSave={this.saveVersionSubmit}
 						updateDetailsHandler={this.updateDetails}
+						updateAtomContributorsHandler={this.updateAtomContributors}
 						publishVersionHandler={this.publishVersionHandler}
 						isLoading={isLoading}
 						error={error} />

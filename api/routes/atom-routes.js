@@ -17,6 +17,23 @@ const Request = require('request-promise');
 
 import {fireBaseURL, firebaseTokenGen, generateAuthToken} from '../services/firebase';
 
+
+function getAtomLinks(destination, type) {
+	switch(type) {
+		case 'contributors':
+			return new Promise(function(resolve) {
+					const query = Link.find({destination: destination, inactive: {$ne: true}, type: {$in: ['editor', 'author', 'contributor']}}).populate({
+						path: 'source',
+						model: User,
+						select: 'name image email bio',
+					}).exec();
+					resolve(query);
+				});
+		default:
+			return new Promise((resolve) => resolve());
+	}
+}
+
 export function createAtom(req, res) {
 	if (!req.user) {
 		return res.status(403).json('Not Logged In');
@@ -238,23 +255,6 @@ export function getAtomEdit(req, res) {
 	// const userID = req.user ? req.user._id : undefined;
 	// Check permission type
 
-	function getAtomLinks(destination, type) {
-		switch(type) {
-			case 'contributors':
-				return new Promise(function(resolve) {
-						const query = Link.find({destination: destination, type: {$in: ['editor', 'author', 'contributor']}}).populate({
-							path: 'source',
-							model: User,
-							select: 'name image email bio',
-						}).exec();
-						resolve(query);
-					});
-			default:
-				return new Promise((resolve) => resolve());
-		}
-	}
-
-
 	Atom.findOne({slug: slug}).populate({path: 'versions', select: '-content'}).lean().exec()
 	.then(function(atomResult) { // Get most recent version
 		const mostRecentVersionId = atomResult.versions[atomResult.versions.length - 1];
@@ -281,7 +281,6 @@ export function getAtomEdit(req, res) {
 		console.log('error', error);
 		return res.status(500).json(error);
 	});
-
 }
 app.get('/getAtomEdit', getAtomEdit);
 
@@ -346,6 +345,74 @@ app.post('/updateAtomDetails', updateAtomDetails);
 
 
 
+export function getAtomContributors(req, res) {
+
+	const atomID = req.query.atomID;
+	// const userID = req.user ? req.user._id : undefined;
+	// Check permission type
+
+	getAtomLinks(atomID, 'contributors')
+	.then(function(contributorData) { // Get most recent version
+		const output = {
+			contributorData: contributorData
+		};
+		return res.status(201).json(output);
+	})
+	.catch(function(error) {
+		console.log('error', error);
+		return res.status(500).json(error);
+	});
+}
+app.get('/getAtomContributors', getAtomEdit);
+
+
+export function updateAtomContributors(req, res) {
+	const atomID = req.body.atomID;
+	const userID = req.user ? req.user._id : undefined;
+	if (!userID) { return res.status(403).json('Not authorized to edit this user'); }
+	const now = new Date().getTime();
+
+	const updates = req.body.updates || {};
+
+	// need to check perms
+	const tasks = updates.map((update)=>{
+
+		switch (update.type) {
+			case 'new':
+				return Link.createLink(update.toRole, update.userId, atomID,userID, now);
+			case 'modify':
+				return Promise.all([
+					Link.setLinkInactive(update.fromRole, update.userId, atomID, userID, now, ''),
+					Link.createLink(update.toRole, update.userId, atomID, userID, now)]);
+			case 'remove':
+				console.log('setting inactive!', update.fromRole)
+				return Link.setLinkInactive(update.fromRole, update.userId, atomID, userID, now, '');
+
+			default:
+				return null;
+		}
+	});
+
+
+		Promise.all(tasks)
+		.then(function(newLinks) {
+			return getAtomLinks(atomID, 'contributors');
+		})
+		.then(function(contributorData) { // Get most recent version
+			const output = {
+				contributorData: contributorData
+			};
+			return res.status(201).json(output);
+		})
+		.catch(function(error) {
+			console.log('error', error);
+			return res.status(500).json(error);
+		});
+
+}
+app.post('/updateAtomContributors', updateAtomContributors);
+
+
 export function updateAtomDetails(req, res) {
 	const atomID = req.body.atomID;
 	const userID = req.user ? req.user._id : undefined;
@@ -371,4 +438,4 @@ export function updateAtomDetails(req, res) {
 	});
 
 }
-app.post('/updateAtomContributors', updateAtomDetails);
+app.post('/updateAtomDetails', updateAtomDetails);

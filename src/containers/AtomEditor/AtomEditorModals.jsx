@@ -53,7 +53,7 @@ export const AtomEditorModals = React.createClass({
 						case 'publishing':
 							return <AtomEditorPublishing atomEditData={this.props.atomEditData} publishVersionHandler={this.props.publishVersionHandler} isLoading={this.props.isLoading} error={this.props.error}/>;
 						case 'contributors':
-							return <AtomEditorContributors atomEditData={this.props.atomEditData} publishVersionHandler={this.props.publishVersionHandler} isLoading={this.props.isLoading} error={this.props.error}/>;
+							return <AtomEditorContributors atomEditData={this.props.atomEditData} updateAtomContributorsHandler={this.props.updateAtomContributorsHandler} isLoading={this.props.isLoading} error={this.props.error}/>;
 						default:
 							return null;
 						}
