@@ -37,28 +37,29 @@
 
 /* Atom Reader Header Styles */
 /* ------------------------- */
-.atom-reader-meta .atom-reader-header h1, #atom-reader .atom-reader-header h1 {
+.atom-reader-meta .atom-reader-header h1 {
 	font-size: 2em;
 	margin-top: .75em;
 	margin-bottom: .5em;
 	color: #222; 
 }
 
-#atom-reader .atom-reader-header p {
+.atom-reader-header p {
 	margin: .25em 0em;
 	font-size: 1em;
 	line-height: 1em;
 	color: #808284;
 }
-#atom-reader .atom-reader-header a {
+.atom-reader-header a {
+	color: inherit;
 	text-decoration: none;
     padding-right: .5em;
 }
-#atom-reader .atom-reader-header a:hover {
+.atom-reader-header a:hover {
 	text-decoration: underline;
 }
 
-#atom-reader .atom-reader-header {
+.atom-reader-header {
 	border-bottom: 1px solid #F3F3F4;
 	margin-bottom: 1em;
 	padding-bottom: 1em;
