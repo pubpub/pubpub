@@ -23,20 +23,12 @@ export const AtomEditorContributors = React.createClass({
 	},
 
 	handleSelectChange: function(value) {
-		console.log('got change');
-		console.log(value);
 		this.setState({ addUser: value });
 	},
 
-
 	handleRoleChange: function(value) {
-		console.log('got role');
-		console.log(value);
 		this.setState({ addRole: value.value });
 	},
-
-
-
 
 	loadOptions: function(input, callback) {
 		request.get('/api/autocompleteUsers?string=' + input).end((err, response)=>{
@@ -84,7 +76,6 @@ export const AtomEditorContributors = React.createClass({
 		{value: 'contributor', label: 'contributor'},
 	];
 
-	console.log(contributorData);
 		return (
 			<div>
 				<h2>Contributors</h2>

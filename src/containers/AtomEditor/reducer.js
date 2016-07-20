@@ -156,7 +156,6 @@ function updateAtomContributorsLoad(state) {
 }
 
 function updateAtomContributorsSuccess(state, result) {
-	console.log('Updated success!', result);
 	return state.merge({
 		loading: false,
 		contributorData: result.contributorData,

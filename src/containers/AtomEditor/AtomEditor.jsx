@@ -41,7 +41,7 @@ export const AtomEditor = React.createClass({
 		const nextLoading = safeGetInToJS(nextProps.atomEditData, ['loading']);
 		const nextError = safeGetInToJS(nextProps.atomEditData, ['error']);
 
-		if (previousLoading === true && nextLoading === false && !nextError && this.state.modalMode !== 'publishing') {
+		if (previousLoading === true && nextLoading === false && !nextError && this.state.modalMode !== 'publishing' && this.state.modalMode !== 'contributors' ) {
 			this.closeModal();
 		}
 
