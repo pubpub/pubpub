@@ -32,7 +32,7 @@ export const SelectOption = React.createClass({
 				{option && option.image &&
 					<img src={'https://jake.pubpub.org/unsafe/50x50/' + option.image} style={styles.image} />
 				}
-				<span>{option.label}</span>
+				<span>{option.label}</span><span style={styles.userName}> ({option.slug})</span>
 			</div>
 		);
 	}
@@ -42,8 +42,12 @@ export default Radium(SelectOption);
 
 styles = {
 	image: {
-		padding: '0.25em 1em .25em 0em',
+		padding: '0em 1em 0em 0em',
 		height: '26px',
 		float: 'left',
 	},	
+	userName: {
+		color: '#808284',	
+	},
+	
 };

@@ -8,6 +8,7 @@ const atomSchema = new Schema({
 	description: { type: String },
 	previewImage: { type: String },
 	type: { type: String },
+	customAuthorString: { type: String },
 	
 	createDate: { type: Date },
 	lastUpdated: { type: Date },

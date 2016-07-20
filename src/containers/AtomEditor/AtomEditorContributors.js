@@ -13,11 +13,13 @@ import dateFormat from 'dateformat';
 
 let styles = {};
 
-export const JrnlProfileAdmins = React.createClass({
+export const AtomEditorContributors = React.createClass({
 	propTypes: {
-		jrnlData: PropTypes.object,
-		handleAddAdmin: PropTypes.func,
-		handleDeleteAdmin: PropTypes.func,
+		atomData: PropTypes.object,
+		contributorsData: PropTypes.object,
+		handleAddContributor:  PropTypes.func,
+		handleChangeContributor: PropTypes.func,
+		handleDeleteContributor: PropTypes.func,
 	},
 
 	getInitialState: function() {
@@ -27,9 +29,9 @@ export const JrnlProfileAdmins = React.createClass({
 	},
 	
 	componentWillReceiveProps(nextProps) {
-		const currentAdmins = safeGetInToJS(this.props.jrnlData, ['adminsData']) || [];
-		const nextAdmins = safeGetInToJS(nextProps.jrnlData, ['adminsData']) || [];
-		if (currentAdmins.length !== nextAdmins.length) {
+		const currentContributors = safeGetInToJS(this.props.contributorsData, []) || [];
+		const nextContributors = safeGetInToJS(nextProps.contributorsData, []) || [];
+		if (currentContributors.length !== nextContributors.length) {
 			this.setState({value: {}});
 		}
 	},
@@ -65,15 +67,11 @@ export const JrnlProfileAdmins = React.createClass({
 	},
 
 	render: function() {
-		const jrnlData = safeGetInToJS(this.props.jrnlData, ['jrnlData']) || {};
+		const atomData = safeGetInToJS(this.props.atomData, ['atomData']) || {};
 		const adminsData = safeGetInToJS(this.props.jrnlData, ['adminsData']) || [];
-		const metaData = {
-			title: 'Admins · ' + jrnlData.jrnlName,
-		};
 
 		return (
-			<div>
-				<Helmet {...metaData} />				
+			<div>			
 
 				<Select.Async
 					name="form-field-name"
@@ -115,7 +113,7 @@ export const JrnlProfileAdmins = React.createClass({
 	}
 });
 
-export default Radium(JrnlProfileAdmins);
+export default Radium(AtomEditorContributors);
 
 styles = {
 	submitButton: {

@@ -17,7 +17,7 @@ export const SelectValue = React.createClass({
 						<img src={'https://jake.pubpub.org/unsafe/50x50/' + value.image} style={styles.image} />
 					}
 					
-					<span>{value.label}</span>
+					<span>{value.label}</span><span style={styles.userName}> ({value.slug})</span>
 				</span>
 			</div>
 		);
@@ -33,4 +33,7 @@ styles = {
 		height: '26px',
 		float: 'left',
 	},	
+	userName: {
+		color: '#808284',	
+	},
 };

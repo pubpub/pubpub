@@ -3,6 +3,7 @@ import Radium from 'radium';
 import AtomEditorDetails from './AtomEditorDetails';
 import AtomEditorPublishing from './AtomEditorPublishing';
 import AtomEditorSaveVersion from './AtomEditorSaveVersion';
+import AtomEditorContributors from './AtomEditorContributors';
 
 let styles = {};
 
@@ -51,6 +52,8 @@ export const AtomEditorModals = React.createClass({
 							return <AtomEditorDetails atomEditData={this.props.atomEditData} updateDetailsHandler={this.props.updateDetailsHandler} isLoading={this.props.isLoading} error={this.props.error}/>;
 						case 'publishing':
 							return <AtomEditorPublishing atomEditData={this.props.atomEditData} publishVersionHandler={this.props.publishVersionHandler} isLoading={this.props.isLoading} error={this.props.error}/>;
+						case 'contributors':
+							return <AtomEditorContributors atomEditData={this.props.atomEditData} publishVersionHandler={this.props.publishVersionHandler} isLoading={this.props.isLoading} error={this.props.error}/>;
 						default:
 							return null;
 						}
