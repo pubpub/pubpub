@@ -32,7 +32,7 @@ export const AtomEditorContributors = React.createClass({
 	handleRoleChange: function(value) {
 		console.log('got role');
 		console.log(value);
-		this.setState({ addRole: value });
+		this.setState({ addRole: value.value });
 	},
 
 
@@ -60,14 +60,12 @@ export const AtomEditorContributors = React.createClass({
 		this.props.handleJournalSubmit(journalIDs);
 	},
 
-	modifyUser: function(user, role){
-		const collaboratorAction = {type: 'modify', source: user, fromRole: role};
+	modifyUser: function(user, oldRole, newRole){
+		const collaboratorAction = {type: 'modify', userId: user, fromRole: oldRole, toRole: newRole.value};
 		this.props.updateAtomContributorsHandler([collaboratorAction]);
 	},
 
-
 	removeUser: function(user, role) {
-		console.log('removing', user);
 		const collaboratorAction = {type: 'remove', userId: user._id, fromRole: role};
 		this.props.updateAtomContributorsHandler([collaboratorAction]);
 	},
@@ -92,7 +90,12 @@ export const AtomEditorContributors = React.createClass({
 				<h2>Contributors</h2>
 				{contributorData.map((link, index)=>{
 					const buttons = [
-						(<Select name="form-field-name" clearable={false} value="author" options={authorOptions} />),
+						(<Select
+						name="form-field-name"
+						onChange={this.modifyUser.bind(this, link.source, link.type)}
+						clearable={false}
+						value={link.type}
+						options={authorOptions} />),
 						{text: 'Remove', action: this.removeUser.bind(this, link.source, link.type)}
 					];
 					return (<PreviewCard type="atom" buttons={buttons} image={link.source.image} title={link.source.name} description={link.source.bio} />);
