@@ -52,6 +52,7 @@
 }
 #atom-reader .atom-reader-header a {
 	text-decoration: none;
+    padding-right: .5em;
 }
 #atom-reader .atom-reader-header a:hover {
 	text-decoration: underline;

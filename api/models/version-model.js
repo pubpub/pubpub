@@ -47,3 +47,18 @@ module.exports = mongoose.model('Version', versionSchema);
 //	htmlUrl:
 // }
 // -----------
+
+// Reference:
+// -----------
+// content: {
+//  title 
+//  url 
+//  author 
+//  journal 
+//  volume 
+//  number 
+//  pages 
+//  year 
+//  publisher 
+//  note 
+// -----------

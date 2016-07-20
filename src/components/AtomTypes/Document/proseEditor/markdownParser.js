@@ -9,6 +9,7 @@ import sup from 'markdown-it-sup';
 
 export const markdownParser = new MarkdownParser(schema, 
 	markdownit({html: false})
+	.disable([ 'table' ])
 	.use(emoji)
 	.use(sub)
 	.use(sup)
@@ -48,6 +49,7 @@ export const markdownParser = new MarkdownParser(schema,
 
 		em: {mark: 'em'},
 		strong: {mark: 'strong'},
+		s: {mark: 's'},
 		link: {mark: 'link', attrs: tok => ({
 			href: tok.attrGet('href'),
 			title: tok.attrGet('title') || null

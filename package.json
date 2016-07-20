@@ -16,6 +16,7 @@
     "start-prod-api": "node ./node_modules/better-npm-run start-prod-api",
     "build": "node ./node_modules/better-npm-run build",
     "postinstall": "node ./node_modules/better-npm-run build",
+    "migrate": "node ./node_modules/better-npm-run migrate",
     "lint": "eslint src api",
     "lint:watch": "node_modules/eslint-watch/bin/esw --watch --config .eslintrc src api",
     "start-dev": "node ./node_modules/better-npm-run start-dev",
@@ -29,6 +30,13 @@
     "coveralls": "./node_modules/coveralls/bin/coveralls.js < coverage/lcov.info"
   },
   "betterScripts": {
+     "migrate": {
+      "command": "node ./data/migration_16_07/runMigrations.js",
+      "env": {
+        "NODE_PATH": "./src",
+        "NODE_ENV": "production"
+      }
+    },
     "start-prod": {
       "command": "node ./bin/server.js",
       "env": {
