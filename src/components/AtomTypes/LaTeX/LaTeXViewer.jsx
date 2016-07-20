@@ -15,32 +15,30 @@ export const LaTeXViewer = React.createClass({
 	generateHTML(text) {
 		const inlineHTML = katex.renderToString(text, {displayMode: false, throwOnError: false});
 		const displayHTML = katex.renderToString(text, {displayMode: true, throwOnError: false});
-		return {inlineHTML, displayHTML}
+		return {inlineHTML, displayHTML};
 	},
 	
 	getData() {
-		const text = safeGetInToJS(this.props.atomData, ['currentVersionData', 'content', 'text']);
+		const text = safeGetInToJS(this.props.atomData, ['currentVersionData', 'content', 'text']) || '';
 		const inlineHTML = safeGetInToJS(this.props.atomData, ['currentVersionData', 'content', 'inlineHTML']);
 		const displayHTML = safeGetInToJS(this.props.atomData, ['currentVersionData', 'content', 'displayHTML']);
 		
 		if (inlineHTML && displayHTML) {
 			return {text, inlineHTML, displayHTML};
-		}
-		else	{
-			return {text, ...this.generateHTML(text)};
-		}
+		} 
+		return {text, ...this.generateHTML(text)};
 	},
 
 	render: function() {
 		const {displayHTML, inlineHTML} = this.getData();
 		switch (this.props.renderType) {
-			case 'embed':
-			case 'static-embed':
-				return <div dangerouslySetInnerHTML={{__html: displayHTML}}></div>
-			case 'full':
-			case 'static-full':
-			default:
-				return <div dangerouslySetInnerHTML={{__html: inlineHTML}}></div>
+		case 'embed':
+		case 'static-embed':
+			return <div dangerouslySetInnerHTML={{__html: displayHTML}}></div>;
+		case 'full':
+		case 'static-full':
+		default:
+			return <div dangerouslySetInnerHTML={{__html: inlineHTML}}></div>;
 		}
 	}
 });
