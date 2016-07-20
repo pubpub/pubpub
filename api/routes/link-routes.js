@@ -21,7 +21,9 @@ export function getMedia(req, res) {
 		model: Atom,
 	}).exec()
 	.then(function(linkResults) {
-		const versionIDs = linkResults.map((item)=> {
+		const versionIDs = linkResults.filter((item)=> {
+			return item.destination && item.destination.versions && item.destination.versions.length;
+		}).map((item)=> {
 			return item.destination.versions[item.destination.versions.length - 1];
 		});
 		return [linkResults, Version.find({_id: {$in: versionIDs}})];

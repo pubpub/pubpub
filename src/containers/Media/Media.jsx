@@ -169,6 +169,8 @@ export const Media = React.createClass({
 
 							{filteredItems.map((item)=> {
 								return item.original;
+							}).filter((item)=> {
+								return item.type === 'image' || item.type === 'video';
 							}).sort((foo, bar)=>{
 								// Sort so that most recent is first in array
 								if (foo.lastUpdated > bar.lastUpdated) { return -1; }

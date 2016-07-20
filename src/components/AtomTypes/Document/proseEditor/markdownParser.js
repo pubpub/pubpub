@@ -1,7 +1,7 @@
 import {MarkdownParser} from 'prosemirror/dist/markdown';
 import {schema} from './schema';
-import markdownit from 'markdown-it';
-// import markdownit from 'markdown-it-migrate'; // Used for Migration. Handles code_blocks and fences more gracefully
+// import markdownit from 'markdown-it';
+import markdownit from 'markdown-it-migrate'; // Used for Migration. Handles code_blocks and fences more gracefully
 import emoji from 'markdown-it-emoji';
 import embed from './markdown-it-embed';
 import pagebreak from './markdown-it-pagebreak';
@@ -51,6 +51,7 @@ export const markdownParser = new MarkdownParser(schema,
 		em: {mark: 'em'},
 		strong: {mark: 'strong'},
 		strike: {mark: 'strike'},
+		s: {mark: 'strike'}, // Used for Migration. Handles strikethroughs more gracefully
 		link: {mark: 'link', attrs: tok => ({
 			href: tok.attrGet('href'),
 			title: tok.attrGet('title') || null
