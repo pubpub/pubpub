@@ -104,7 +104,7 @@ export const AtomEditor = React.createClass({
 			{text: 'View', link: '/a/' + this.props.slug},
 			{text: 'Edit', link: '/a/' + this.props.slug + '/draft', active: true},
 			{text: 'Details', rightAlign: true, action: this.openModal.bind(this, 'details')},
-			{text: 'Collaborators', rightAlign: true, action: this.openModal.bind(this, 'collaborators')},
+			{text: 'Contributors', rightAlign: true, action: this.openModal.bind(this, 'contributors')},
 			// {text: 'Styles', rightAlign: true, action: this.openModal.bind(this, 'styles')},
 			{text: 'Publishing', rightAlign: true, action: this.openModal.bind(this, 'publishing')},
 		];
