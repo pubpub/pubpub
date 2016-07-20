@@ -157,8 +157,7 @@ export const DocumentEditor = React.createClass({
 		return objectHash.MD5(JSON.parse(JSON.stringify(doc.toJSON())), {unorderedArrays: true})
 	},
 	update: function() {
-			console.log('Updating editor')
-			let that = this
+						let that = this
 			this.collab.mod.collab.docChanges.cancelCurrentlyCheckingVersion()
 			this.collab.mod.collab.docChanges.unconfirmedSteps = {}
 			if (this.collab.mod.collab.docChanges.awaitingDiffResponse) {
@@ -203,10 +202,7 @@ export const DocumentEditor = React.createClass({
 
 receiveDocument: function(data) {
         let that = this
-
         this.collab.receiveDocumentValues(data.document, data.document_values);
-				console.log(data);
-				console.log(this.collab);
 				this.update();
         // if (data.hasOwnProperty('user')) {
         //     this.collab.user = data.user

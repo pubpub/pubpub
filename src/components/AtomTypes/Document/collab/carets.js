@@ -1,6 +1,5 @@
 export class ModCollabCarets {
     constructor(mod) {
-      // console.log('constructor(mod) - ModCollabCarets')
         mod.carets = this
         this.mod = mod
         this.caretPositions = {}
@@ -11,7 +10,7 @@ export class ModCollabCarets {
     }
 
     setup() {
-      // console.log('setup')
+       console.log('setup')
 
         // Add one elements to hold dynamic CSS info about carets
         let styleContainers = document.createElement('temp')
@@ -23,28 +22,28 @@ export class ModCollabCarets {
         // Add one container element to hold carets
         this.caretContainer = document.createElement('div')
         this.caretContainer.id = 'caret-markers'
-        document.getElementById('paper-editable').appendChild(this.caretContainer)
+        document.getElementById('document-contents').appendChild(this.caretContainer)
     }
 
     bindEvents() {
-      // console.log('bindEvents')
+       console.log('bindEvents')
 
         let that = this, pm = this.mod.editor.pm
         pm.updateScheduler([pm.on.change], () => {return that.updatePositionCSS()})
-        let fnPm = this.mod.editor.mod.footnotes.fnPm
-        fnPm.updateScheduler([fnPm.on.change], () => {return that.updatePositionCSS()})
+        // let fnPm = this.mod.editor.mod.footnotes.fnPm
+        // fnPm.updateScheduler([fnPm.on.change], () => {return that.updatePositionCSS()})
         // Limit sending of selection to once every 250 ms. This is also important to work correctly
         // with editing, which otherwise triggers three selection changes that result in an incorrect caret placement
         let sendSelection = _.debounce(function(){
             that.sendSelectionChange()
         }, 250)
         pm.on.selectionChange.add(sendSelection)
-        fnPm.on.selectionChange.add(sendSelection)
+        // fnPm.on.selectionChange.add(sendSelection)
     }
 
     // Create a new caret as the current user
     getCaretPosition() {
-    //  console.log('getCaretPosition')
+      console.log('getCaretPosition')
 
         return {
             id: this.mod.editor.user.id,
@@ -54,12 +53,13 @@ export class ModCollabCarets {
             head: _.isFinite(this.mod.editor.currentPm.selection.head) ?
                 this.mod.editor.currentPm.selection.head : this.mod.editor.currentPm.selection.to,
             // Whether the selection is in the footnote or the main editor
-            pm: this.mod.editor.currentPm === this.mod.editor.pm ? 'pm' : 'fnPm'
+            // pm: this.mod.editor.currentPm === this.mod.editor.pm ? 'pm' : 'fnPm'
+            pm: 'pm'
         }
     }
 
     sendSelectionChange() {
-      //console.log('sendSelectionChange')
+      console.log('sendSelectionChange')
 
         let that = this
         if (this.mod.editor.currentPm.mod.collab.unconfirmedMaps.length > 0) {
@@ -77,17 +77,18 @@ export class ModCollabCarets {
     }
 
     receiveSelectionChange(data) {
-      //console.log('receiveSelectionChange')
+      console.log('receiveSelectionChange')
 
         let that = this
         this.updateCaret(data.caret_position)
-        let pm = data.caret_position.pm === 'pm' ? this.mod.editor.pm : this.mod.editor.mod.footnotes.fnPm
+        // let pm = data.caret_position.pm === 'pm' ? this.mod.editor.pm : this.mod.editor.mod.footnotes.fnPm
+        let pm = this.mod.editor.pm ;
         pm.scheduleDOMUpdate(function(){return that.updatePositionCSS()})
     }
 
     // Update the position of a collaborator's caret
     updateCaret(caretPosition){
-      //console.log('updateCaret')
+      console.log('updateCaret')
 
         let participant = _.findWhere(this.mod.participants,{id:caretPosition.id})
         if (!participant) {
@@ -98,7 +99,9 @@ export class ModCollabCarets {
         let posFrom = caretPosition.from
         let posTo = caretPosition.to
         let posHead = caretPosition.head
-        let pm = caretPosition.pm === 'pm' ? this.mod.editor.pm : this.mod.editor.mod.footnotes.fnPm
+        // let pm = caretPosition.pm === 'pm' ? this.mod.editor.pm : this.mod.editor.mod.footnotes.fnPm
+        let pm = this.mod.editor.pm ;
+
         // Map the positions through all still unconfirmed changes
         pm.mod.collab.unconfirmedMaps.forEach(function(map){
             posFrom = map.map(posFrom)
@@ -160,6 +163,7 @@ export class ModCollabCarets {
     }
 
     updatePositionCSS() {
+      console.log("updatePositionCSS punk")
         // 1st write phase
         let that = this
 

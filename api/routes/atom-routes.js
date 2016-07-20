@@ -228,6 +228,7 @@ export function getAtomData(req, res) {
 app.get('/getAtomData', getAtomData);
 
 export function getAtomEdit(req, res) {
+	console.log("Getting atom edit")
 	const {slug} = req.query;
 	// const userID = req.user ? req.user._id : undefined;
 	// Check permission type
