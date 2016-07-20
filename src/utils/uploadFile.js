@@ -20,7 +20,8 @@ export function s3Upload(file, folderName, progressEvent, finishEvent, index) {
 		sendFile.upload.addEventListener('load', (evt)=>{
 			finishEvent(evt, index, file.type, filename, file.name);
 		}, false);
-		sendFile.open('POST', 'http://pubpub-upload.s3.amazonaws.com/', true);
+		// sendFile.open('POST', 'http://pubpub-upload.s3.amazonaws.com/', true);
+		sendFile.open('POST', 'https://s3.amazonaws.com/pubpub-upload', true);
 		sendFile.send(formData);
 	}
 
@@ -29,3 +30,4 @@ export function s3Upload(file, folderName, progressEvent, finishEvent, index) {
 	getPolicy.open('GET', '/api/uploadPolicy?contentType=' + file.type);
 	getPolicy.send();
 }
+
