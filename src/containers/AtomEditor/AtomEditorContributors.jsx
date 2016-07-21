@@ -31,8 +31,8 @@ export const AtomEditorContributors = React.createClass({
 	
 	componentWillMount() {
 		const typesObject = {};
-		
-		this.props.contributorsData.map((item)=> {
+		const contributorsData = this.props.contributorsData || [];
+		contributorsData.map((item)=> {
 			const roles = item.metadata ? item.metadata.roles : [];
 			typesObject[item._id] = {
 				type: item.type,
