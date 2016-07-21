@@ -35,7 +35,7 @@ export const AtomEditorContributors = React.createClass({
 			console.log('willmount', item);
 			typesObject[item._id] = {
 				type: item.type,
-				roles: []
+				roles: item.metadata.roles,
 			};
 		});
 		this.setState({contributorStates: typesObject});
@@ -84,6 +84,26 @@ export const AtomEditorContributors = React.createClass({
 				}
 			}
 		});
+		this.updateContributor(linkID);
+	},
+
+	handleRoleChange: function(linkID, roleList) {
+		this.setState({
+			contributorStates: {
+				...this.state.contributorStates,
+				[linkID]: {
+					type: this.state.contributorStates[linkID].type,
+					roles: roleList
+				}
+			}
+		});
+		this.updateContributor(linkID);
+	},
+
+	updateContributor: function(linkID) {
+		const type = this.state.contributorStates[linkID].type;
+		const roles = this.state.contributorStates[linkID].roles;
+		this.props.handleUpdateContributor(linkID, type, roles);
 	},
 
 	deleteAdmin: function(contributorID) {
@@ -94,6 +114,22 @@ export const AtomEditorContributors = React.createClass({
 	render: function() {
 		// const atomData = safeGetInToJS(this.props.atomData, ['atomData']) || {};
 		const contributorsData = this.props.contributorsData || [];
+		const roleOptions = [
+			{value: 'conceptualization', label: 'Conceptualization'},
+			{value: 'methodology', label: 'Methodology'},
+			{value: 'software', label: 'Software'},
+			{value: 'validation', label: 'Validation'},
+			{value: 'formalAnalysis', label: 'Formal Analysis'},
+			{value: 'investigation', label: 'Investigation'},
+			{value: 'resources', label: 'Resources'},
+			{value: 'dataCuration', label: 'Data Curation'},
+			{value: 'writingOriginalDraftPreparation', label: 'Writing – Original Draft Preparation'},
+			{value: 'writingReview&Editing', label: 'Writing – Review & Editing'},
+			{value: 'visualization', label: 'Visualization'},
+			{value: 'supervision', label: 'Supervision'},
+			{value: 'projectAdministration', label: 'Project Administration'},
+			{value: 'fundingAcquisition', label: 'Funding Acquisition'},
+		];
 
 		return (
 			<div style={styles.container}>			
@@ -128,7 +164,7 @@ export const AtomEditorContributors = React.createClass({
 								image={item.source.image}
 								title={item.source.name}
 								slug={item.source.username}
-								header={
+								description={
 									<RadioGroup name={'contributor type ' + item._id} selectedValue={this.state.contributorStates[item._id].type} onChange={this.handleTypeChange.bind(this, item._id)}>
 										<Radio value="contributor" id={'contributor-' + item._id} style={styles.radioInput}/> <label htmlFor={'contributor-' + item._id} style={styles.radioLabel}>Contributor</label>
 										<Radio value="reader" id={'reader-' + item._id} style={styles.radioInput}/> <label htmlFor={'reader-' + item._id} style={styles.radioLabel}>Reader</label>
@@ -139,6 +175,13 @@ export const AtomEditorContributors = React.createClass({
 								footer={
 									<div>
 										{item.metadata && item.metadata.roles}
+										<Select
+											name={'contributorRoles-' + item._id}
+											options={roleOptions}
+											value={this.state.contributorStates[item._id].roles}
+											multi={true}
+											placeholder={<span>Specify roles of this contributor</span>}
+											onChange={this.handleRoleChange.bind(this, item._id)} />
 									</div>
 								} 
 								buttons={buttons} />

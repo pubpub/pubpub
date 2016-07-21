@@ -11,7 +11,10 @@ export const PreviewCard = React.createClass({
 		type: PropTypes.string,
 		image: PropTypes.string,
 		title: PropTypes.string,
-		description: PropTypes.string,
+		description: PropTypes.oneOfType([
+			PropTypes.string,
+			PropTypes.object,
+		]),
 		slug: PropTypes.string,
 		// onFollowHandler: PropTypes.func,
 		// showEdit: PropTypes.bool,
@@ -63,7 +66,7 @@ export const PreviewCard = React.createClass({
 						<Link to={href} style={globalStyles.link} className={'underlineOnHover'}>
 							<h3 style={styles.title}>{this.props.title}</h3>
 						</Link>
-						<p style={styles.description}>{this.props.description}</p>
+						<div style={styles.description}>{this.props.description}</div>
 					</div>
 
 					{/* Option Buttons */}
@@ -85,7 +88,7 @@ export const PreviewCard = React.createClass({
 						<Link to={href} style={globalStyles.link}>
 							<h3 style={styles.title}>{this.props.title}</h3>
 						</Link>
-						<p style={styles.description}>{this.props.description}</p>
+						<div style={styles.description}>{this.props.description}</div>
 					</div>
 				</div>
 
