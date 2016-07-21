@@ -35,7 +35,7 @@ export const GoogleCharts = React.createClass({
 	},
 	drawCharts: function() {
 		if (!google.visualization) {
-			document.getElementById(this.props.graph_id).innerHTML = '<span>Googe Charts is Loading.</span>';
+			document.getElementById(this.props.graph_id).innerHTML = '<span>Googe Charts is Loading...</span>';
 			return undefined;
 		}
 		const dt = new google.visualization.DataTable({

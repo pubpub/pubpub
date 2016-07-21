@@ -79,18 +79,26 @@ export function analytics(req, res) {
 
 		// TOCLIENT Response
 
+		// Data from first report
 		let totalViews = 0;
 		let totalUniqueViews = 0;
 		let totalReadTime = 0;
 
+		let totalViewsYear = 0;
+		let totalViewsMonth = 0;
+		let totalViewsWeek = 0;
+		let totalViewsDay = 0;
+
 		const dateViews = {};
 		const dateViewsArray = [];
 
-		// data from first report
 		gReports[0].forEach( function(report) {
+			//Summing Totals
 			totalViews += parseFloat(report.data.totals[0].values[0]);
 			totalUniqueViews += parseFloat(report.data.totals[0].values[1]);
 			totalReadTime += parseFloat(report.data.totals[0].values[2]);
+
+			//Consolidating Dateviews
 			report.data.rows.forEach( function(row) {
 				if (dateViews[row.dimensions[0]]) {
 					dateViews[row.dimensions[0]] += parseFloat(row.metrics[0].values[0]);
@@ -99,8 +107,12 @@ export function analytics(req, res) {
 				}
 			});
 		});
+
+		let maxTime = 0;
+
 		// Converts Object to easily plotted arrays
 		for (const key of Object.keys(dateViews)) {
+			// 
 			const raw = key.toString();
 			const day = raw.substring(raw.length - 2, raw.length);
 			const month = raw.substring(raw.length - 4, raw.length - 2);
@@ -112,9 +124,26 @@ export function analytics(req, res) {
 					dateViewsArray.push([dateViewsArray[dateViewsArray.length - 1][0] + 86400000, 0]);
 				}
 			}
+			const difTime = new Date().getTime() - date.getTime();
+			if (difTime <= 86400000*365) {
+				totalViewsYear += dateViews[key];
+				if (difTime <= 86400000*28) {
+					totalViewsMonth += dateViews[key];
+					if (difTime <= 86400000*7) {
+						totalViewsWeek += dateViews[key];
+						if (difTime <= 86400000) {
+							totalViewsDay += dateViews[key];
+						}
+					}
+				}
+			}
+			if (difTime > maxTime) {
+				maxTime = difTime;
+			}
 			dateViewsArray.push([date.getTime(), dateViews[key]]);
 		}
 
+		// Data from second report
 		const countryTotalViews = {};
 		let countryOrder = [];
 		const continentTotalViews = {};
@@ -122,7 +151,6 @@ export function analytics(req, res) {
 		const cityTotalViews = {};
 		let cityOrder = [];
 
-		// data from second report
 		gReports[1].forEach( function(report) {
 			report.data.rows.forEach( function(row) {
 				if (countryTotalViews[row.dimensions[0]]) {
@@ -158,16 +186,29 @@ export function analytics(req, res) {
 		const response = {
 			// DevDebugReports
 			gReports: gReports,
+			
 			// Data Totals
 			totalViews: totalViews,
 			totalUniqueViews: totalUniqueViews,
 			totalReturnViews: totalViews - totalUniqueViews, // Returning Readers sounds nice.
 			totalReadTime: totalReadTime, // Session Duration in seconds.
 			averageReadTime: totalReadTime / totalViews,
+
+			totalViewsYear: totalViewsYear,
+			totalViewsMonth: totalViewsMonth,
+			totalViewsWeek: totalViewsWeek,
+			totalViewsDay: totalViewsDay,
+
+			totalViewsAveYear: Math.round(86400000*365*totalViews/maxTime),
+			totalViewsAveMonth: Math.round(86400000*28*totalViews/maxTime),
+			totalViewsAveWeek: Math.round(86400000*7*totalViews/maxTime),
+			totalViewsAveDay: Math.round(86400000*totalViews/maxTime),
+			
 			// Data OverTime
 			dateViews: dateViews,
 			dateViewsArray: dateViewsArray,
-			// Data PerCountry
+			
+			// Data PerLocation
 			countryTotalViews: countryTotalViews,
 			countryOrder: countryOrder,
 			continentTotalViews: continentTotalViews,
