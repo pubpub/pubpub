@@ -41,6 +41,7 @@ const HeaderNav = React.createClass({
 	render: function() {
 		const isLoggedIn = this.props.loginData.get('loggedIn');
 
+		const userImage = this.props.loginData.getIn(['userData', 'thumbnail']) ? this.props.loginData.getIn(['userData', 'thumbnail']).replace(/http:\/\/res.cloudinary/g, 'https://res.cloudinary') : '';
 		return (
 			<div styles={styles.right}>
 
@@ -68,7 +69,7 @@ const HeaderNav = React.createClass({
 					<Link to={'/user/' + this.props.loginData.getIn(['userData', 'username'])}>
 						<span key="headerLogin" style={[styles.loggedIn[isLoggedIn]]}>
 
-							<img style={styles.userImage} src={this.props.loginData.getIn(['userData', 'thumbnail']).replace(/http:\/\/res.cloudinary/g, 'https://res.cloudinary')} />
+							<img style={styles.userImage} src={userImage} />
 							{/* <div style={styles.userName}>{this.props.loginData.getIn(['userData', 'name'])}</div> */}
 							<div style={[styles.userName, this.headerTextColorStyle()]}>
 								<FormattedMessage {...globalMessages.account} />

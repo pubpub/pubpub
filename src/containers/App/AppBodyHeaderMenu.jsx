@@ -63,6 +63,9 @@ const HeaderMenu = React.createClass({
 		const isLoggedIn = this.props.loginData.get('loggedIn');
 		const isPub = this.props.path.indexOf('/pub') > -1 && this.props.path.indexOf('/draft') === -1;
 		const notificationCount = this.props.loginData.getIn(['userData', 'notificationCount']);
+
+		const userImage = this.props.loginData.getIn(['userData', 'thumbnail']) ? this.props.loginData.getIn(['userData', 'thumbnail']).replace(/http:\/\/res.cloudinary/g, 'https://res.cloudinary') : '';
+
 		return (
 			<div styles={styles.right}>
 
@@ -87,7 +90,7 @@ const HeaderMenu = React.createClass({
 									? <Link to={'/user/' + this.props.loginData.getIn(['userData', 'username'])}>
 										<li key="menuListItem1" style={[styles.menuItem, !this.props.isJournalAdmin && !notificationCount && styles.menuItemNoBottom]}>
 											<span key="headerLogin" style={[styles.loggedIn[isLoggedIn]]}>
-												<img style={styles.userImage} src={this.props.loginData.getIn(['userData', 'thumbnail']).replace(/http:\/\/res.cloudinary/g, 'https://res.cloudinary')} />
+												<img style={styles.userImage} src={userImage} />
 												{/* <div style={styles.userName}>{this.props.loginData.getIn(['userData', 'name'])}</div> */}
 												<div style={styles.userName}>
 													<FormattedMessage {...globalMessages.account} />
