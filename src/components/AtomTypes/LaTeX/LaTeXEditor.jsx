@@ -1,9 +1,10 @@
 import React, {PropTypes} from 'react';
-import Radium from 'radium';
+import Radium, {Style} from 'radium';
 import {safeGetInToJS} from 'utils/safeParse';
 import {Loader, CustomizableForm} from 'components';
 
 import katex from 'katex';
+import katexStyles from './katex.css.js';
 
 let styles = {};
 
@@ -48,6 +49,7 @@ export const LaTeXEditor = React.createClass({
 		return (
 			<div style={styles.container}>
 				<h3>Preview</h3>
+				<Style rules={ katexStyles } />
 				<div dangerouslySetInnerHTML={{__html: displayHTML}} style={styles.output}></div>
 				<textarea value={text} onChange={this.updateText} style={styles.input}/>
 			</div>
