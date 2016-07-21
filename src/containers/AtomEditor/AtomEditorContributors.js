@@ -6,6 +6,7 @@ import request from 'superagent';
 import {safeGetInToJS} from 'utils/safeParse';
 import {PreviewCard, SelectValue, SelectOption} from 'components';
 import dateFormat from 'dateformat';
+import {RadioGroup, Radio} from 'utils/ReactRadioGroup';
 
 // import {globalStyles} from 'utils/styleConstants';
 // import {globalMessages} from 'utils/globalMessages';
@@ -24,9 +25,22 @@ export const AtomEditorContributors = React.createClass({
 	getInitialState: function() {
 		return {
 			value: null,
+			contributorStates: {},
 		};
 	},
 	
+	componentWillMount() {
+		const typesObject = {};
+		this.props.contributorsData.map((item)=> {
+			console.log('willmount', item);
+			typesObject[item._id] = {
+				type: item.type,
+				roles: []
+			};
+		});
+		this.setState({contributorStates: typesObject});
+	},
+
 	componentWillReceiveProps(nextProps) {
 		const currentContributors = this.props.contributorsData || [];
 		const nextContributors = nextProps.contributorsData || [];
@@ -58,6 +72,18 @@ export const AtomEditorContributors = React.createClass({
 	addContributor: function() {
 		if (!this.state.value.id) { return undefined; }
 		this.props.handleAddContributor(this.state.value.id);
+	},
+
+	handleTypeChange: function(linkID, newType) {
+		this.setState({
+			contributorStates: {
+				...this.state.contributorStates,
+				[linkID]: {
+					type: newType,
+					roles: this.state.contributorStates[linkID].roles
+				}
+			}
+		});
 	},
 
 	deleteAdmin: function(contributorID) {
@@ -103,9 +129,12 @@ export const AtomEditorContributors = React.createClass({
 								title={item.source.name}
 								slug={item.source.username}
 								header={
-									<div>
-										{item.type}
-									</div>
+									<RadioGroup name={'contributor type ' + item._id} selectedValue={this.state.contributorStates[item._id].type} onChange={this.handleTypeChange.bind(this, item._id)}>
+										<Radio value="contributor" id={'contributor-' + item._id} style={styles.radioInput}/> <label htmlFor={'contributor-' + item._id} style={styles.radioLabel}>Contributor</label>
+										<Radio value="reader" id={'reader-' + item._id} style={styles.radioInput}/> <label htmlFor={'reader-' + item._id} style={styles.radioLabel}>Reader</label>
+										<Radio value="editor" id={'editor-' + item._id} style={styles.radioInput}/> <label htmlFor={'editor-' + item._id} style={styles.radioLabel}>Editor</label>
+										<Radio value="author" id={'author-' + item._id} style={styles.radioInput}/> <label htmlFor={'author-' + item._id} style={styles.radioLabel}>Author</label>
+									</RadioGroup>
 								} 
 								footer={
 									<div>
@@ -136,5 +165,13 @@ styles = {
 	submitButtonActive: {
 		pointerEvents: 'auto',
 		opacity: 1,
+	},
+	radioInput: {
+		margin: '0em',
+	},
+	radioLabel: {
+		display: 'inline-block',
+		fontSize: '0.95em',
+		margin: '0em 2em 0em 0em',
 	},
 };
