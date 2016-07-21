@@ -8,7 +8,7 @@ if (process.env.NODE_ENV !== 'production') {
 	const mongoURI = require('./config').mongoURI;
 	mongoose.connect(mongoURI);
 } else {
-	mongoose.connect(process.env.mongoURI);
+	mongoose.connect(process.env.MONGOURI);
 }
 
 require('../server.babel'); // babel registration (runtime transpilation for node)
