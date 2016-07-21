@@ -7,7 +7,7 @@ let styles = {};
 
 export const AtomEditorPublishing = React.createClass({
 	propTypes: {
-		atomEditData: PropTypes.object,
+		publishingData: PropTypes.array,
 		isLoading: PropTypes.bool,
 		publishVersionHandler: PropTypes.func,
 	},
@@ -17,7 +17,7 @@ export const AtomEditorPublishing = React.createClass({
 	},
 
 	render: function() {
-		const versionData = safeGetInToJS(this.props.atomEditData, ['atomData', 'versions']) || [];
+		const versionData = this.props.publishingData || [];
 		return (
 			<div>
 				<h2>Publishing</h2>

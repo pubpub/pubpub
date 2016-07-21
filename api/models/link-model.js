@@ -45,6 +45,21 @@ linkSchema.statics.setLinkInactive = function(type, source, destination, inactiv
 	
 };
 
+linkSchema.statics.setLinkInactiveById = function(id, inactiveBy, inactiveDate, inactiveNote) {
+	// Beacuse upsert is false, this will not create a new document if no match is found.
+	return this.findOne({_id: id, inactive: {$ne: true} }).exec()
+	.then(function(linkResult) {
+		console.log(linkResult);
+		if (!linkResult) { return undefined; }
+		linkResult.inactive = true;
+		linkResult.inactiveBy = inactiveBy;
+		linkResult.inactiveDate = inactiveDate || new Date().getTime();
+		linkResult.inactiveNote = inactiveNote;
+		return linkResult.save();
+	});
+	
+};
+
 module.exports = mongoose.model('Link', linkSchema);
 
 // -------
@@ -59,6 +74,7 @@ module.exports = mongoose.model('Link', linkSchema);
 // follower
 // editor
 // reader
+// contributor
 
 // USER -> JOURNAL
 // admin

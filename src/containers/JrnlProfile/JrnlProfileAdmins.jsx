@@ -22,7 +22,7 @@ export const JrnlProfileAdmins = React.createClass({
 
 	getInitialState: function() {
 		return {
-			value: {},
+			value: null,
 		};
 	},
 	

@@ -32,7 +32,7 @@ export const SelectOption = React.createClass({
 				{option && option.image &&
 					<img src={'https://jake.pubpub.org/unsafe/50x50/' + option.image} style={styles.image} />
 				}
-				<span>{option.label}</span><span style={styles.userName}> ({option.slug})</span>
+				<span>{option.label}</span><span style={[styles.userName, !option.slug && {display: 'none'}]}> ({option.slug})</span>
 			</div>
 		);
 	}

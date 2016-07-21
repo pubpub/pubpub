@@ -15,24 +15,23 @@ let styles = {};
 
 export const AtomEditorContributors = React.createClass({
 	propTypes: {
-		atomData: PropTypes.object,
-		contributorsData: PropTypes.object,
-		handleAddContributor:  PropTypes.func,
-		handleChangeContributor: PropTypes.func,
+		contributorsData: PropTypes.array,
+		handleAddContributor: PropTypes.func,
+		handleUpdateContributor: PropTypes.func,
 		handleDeleteContributor: PropTypes.func,
 	},
 
 	getInitialState: function() {
 		return {
-			value: {},
+			value: null,
 		};
 	},
 	
 	componentWillReceiveProps(nextProps) {
-		const currentContributors = safeGetInToJS(this.props.contributorsData, []) || [];
-		const nextContributors = safeGetInToJS(nextProps.contributorsData, []) || [];
+		const currentContributors = this.props.contributorsData || [];
+		const nextContributors = nextProps.contributorsData || [];
 		if (currentContributors.length !== nextContributors.length) {
-			this.setState({value: {}});
+			this.setState({value: null});
 		}
 	},
 
@@ -56,45 +55,45 @@ export const AtomEditorContributors = React.createClass({
 		});
 	},
 
-	addAdmin: function() {
+	addContributor: function() {
 		if (!this.state.value.id) { return undefined; }
-		this.props.handleAddAdmin(this.state.value.id);
+		this.props.handleAddContributor(this.state.value.id);
 	},
 
-	deleteAdmin: function(adminID) {
-		if (!adminID) { return undefined; }
-		this.props.handleDeleteAdmin(adminID);
+	deleteAdmin: function(contributorID) {
+		if (!contributorID) { return undefined; }
+		this.props.handleDeleteContributor(contributorID);
 	},
 
 	render: function() {
-		const atomData = safeGetInToJS(this.props.atomData, ['atomData']) || {};
-		const adminsData = safeGetInToJS(this.props.jrnlData, ['adminsData']) || [];
+		// const atomData = safeGetInToJS(this.props.atomData, ['atomData']) || {};
+		const contributorsData = this.props.contributorsData || [];
 
 		return (
-			<div>			
+			<div style={styles.container}>			
 
 				<Select.Async
 					name="form-field-name"
 					autoload={false}
 					value={this.state.value}
 					loadOptions={this.loadOptions}
-					placeholder={<span>Add new admins</span>}
+					placeholder={<span>Add new contributor</span>}
 					onChange={this.handleSelectChange} 
 					optionComponent={SelectOption}
 					valueComponent={SelectValue}/>
 
-				<div className={'button'} style={[styles.submitButton, (this.state.value && this.state.value.id) && styles.submitButtonActive]} onClick={this.addAdmin}>Add Admin</div>
+				<div className={'button'} style={[styles.submitButton, (this.state.value && this.state.value.id) && styles.submitButtonActive]} onClick={this.addContributor}>Add Contributor</div>
 					
-				<h3>Admins</h3>
+				<h3>Contributors</h3>
 				{
-					adminsData.sort((foo, bar)=>{
-						// Sort so that most recent is first in array
-						if (foo.createDate > bar.createDate) { return -1; }
-						if (foo.createDate < bar.createDate) { return 1; }
+					contributorsData.sort((foo, bar)=>{
+						// Sort so that alphabetical
+						if (foo.source.name > bar.source.name) { return 1; }
+						if (foo.source.name < bar.source.name) { return -1; }
 						return 0;
 					}).map((item, index)=>{
 						const buttons = [ 
-							{ type: 'button', text: 'Delete Admin', action: this.deleteAdmin.bind(this, item.source._id) },
+							{ type: 'button', text: 'Delete', action: this.deleteAdmin.bind(this, item._id) },
 						];
 						return (
 							<PreviewCard 
@@ -103,7 +102,16 @@ export const AtomEditorContributors = React.createClass({
 								image={item.source.image}
 								title={item.source.name}
 								slug={item.source.username}
-								description={item.source.bio} 
+								header={
+									<div>
+										{item.type}
+									</div>
+								} 
+								footer={
+									<div>
+										{item.metadata && item.metadata.roles}
+									</div>
+								} 
 								buttons={buttons} />
 						);
 					})
@@ -116,6 +124,9 @@ export const AtomEditorContributors = React.createClass({
 export default Radium(AtomEditorContributors);
 
 styles = {
+	container: {
+		minHeight: '400px',
+	},
 	submitButton: {
 		fontSize: '0.9em',
 		margin: '1em 0em',

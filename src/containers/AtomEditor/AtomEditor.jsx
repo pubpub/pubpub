@@ -3,7 +3,7 @@ import {connect} from 'react-redux';
 import Radium from 'radium';
 import {push} from 'redux-router';
 import Helmet from 'react-helmet';
-import {getAtomEdit, saveVersion, updateAtomDetails, publishVersion} from './actions';
+import {getAtomEdit, saveVersion, updateAtomDetails, publishVersion, getAtomEditModalData, addContributor, updateContributor, deleteContributor} from './actions';
 import {safeGetInToJS} from 'utils/safeParse';
 
 import {HorizontalNav} from 'components';
@@ -83,12 +83,30 @@ export const AtomEditor = React.createClass({
 		this.props.dispatch(publishVersion(versionID));
 	},
 
+	handleAddContributor: function(contributorID) {
+		const atomID = safeGetInToJS(this.props.atomEditData, ['atomData', '_id']);
+		this.props.dispatch(addContributor(atomID, contributorID));
+	},
+
+	handleUpdateContributor: function(linkID, linkType, linkRoles) {
+		this.props.dispatch(updateContributor(linkID, linkType, linkRoles));
+	},
+
+	handleDeleteContributor: function(linkID) {
+		this.props.dispatch(deleteContributor(linkID));
+	},
+
 	openModal: function(mode) {
 		this.setState({modalMode: mode});
 	},
 
 	closeModal: function() {
 		this.setState({modalMode: undefined});
+	},
+
+	getModalData: function(mode) {
+		const atomID = safeGetInToJS(this.props.atomEditData, ['atomData', '_id']);
+		this.props.dispatch(getAtomEditModalData(atomID, mode));
 	},
 
 	render: function() {
@@ -110,8 +128,12 @@ export const AtomEditor = React.createClass({
 		];
 
 		const atomEditData = safeGetInToJS(this.props.atomEditData, ['atomData']) || {};
+		const contributorsData = safeGetInToJS(this.props.atomEditData, ['contributorsData']) || [];
+		const publishingData = safeGetInToJS(this.props.atomEditData, ['publishingData']) || [];
 		const isLoading = safeGetInToJS(this.props.atomEditData, ['loading']);
 		const error = safeGetInToJS(this.props.atomEditData, ['error']);
+		const isModalLoading = safeGetInToJS(this.props.atomEditData, ['modalLoading']);
+		const modalError = safeGetInToJS(this.props.atomEditData, ['modalError']);
 
 		return (
 			<div style={styles.container}>
@@ -131,13 +153,21 @@ export const AtomEditor = React.createClass({
 
 					<AtomEditorModals 
 						atomEditData={this.props.atomEditData}
+						contributorsData={contributorsData}
+						publishingData={publishingData}
+						getModalData={this.getModalData}
 						mode={this.state.modalMode} 
 						closeModalHandler={this.closeModal}
 						handleVersionSave={this.saveVersionSubmit}
 						updateDetailsHandler={this.updateDetails}
 						publishVersionHandler={this.publishVersionHandler}
+						handleAddContributor={this.handleAddContributor}
+						handleUpdateContributor={this.handleUpdateContributor}
+						handleDeleteContributor={this.handleDeleteContributor}
 						isLoading={isLoading}
-						error={error} />
+						error={error}
+						isModalLoading={isModalLoading}
+						modalError={modalError} />
 
 				</div>
 
