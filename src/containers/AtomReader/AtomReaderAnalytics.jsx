@@ -4,7 +4,7 @@ import Radium from 'radium';
 import {safeGetInToJS} from 'utils/safeParse';
 import request from 'superagent';
 import Helmet from 'react-helmet';
-
+import {Loader} from 'components';
 import {GoogleCharts} from 'components';
 
 
@@ -114,7 +114,7 @@ export const AtomReaderAnalytics = React.createClass({
 
 				<h2 className={'normalWeight'}>Analytics</h2>
 
-				{!isData && <div style={styles.headWd100}>Loading Analytics...</div>}
+				{!isData && <div style={styles.headWd100}><div style={styles.loadingWrapper}><Loader loading={true} showCompletion={false}/></div></div>}
 
 				{isData && <div>
 
@@ -177,10 +177,10 @@ export const AtomReaderAnalytics = React.createClass({
 					{gData.countryOrder.slice(0, 5).map((item, index)=>{
 						return (
 							<div style={[styles.block, {width: 'calc(100% - 16px)', margin: '0px 0px 0px 0px', padding: '0px 0px 0px 0px'}]}>
-							<div style={[styles.block, {width: 'calc(55% - 36px)', margin: '0px 0px 0px 0px', padding: '0px 0px 0px 20%', 'text-align': 'left'}]}>
+							<div style={[styles.block, {width: 'calc(55% - 36px)', margin: '0px 0px 0px 0px', padding: '0px 0px 0px 20%', 'textAlign': 'left'}]}>
 								<div style={styles.listItem}>#{index+1}: {item}</div>
 							</div>
-							<div style={[styles.block, {width: 'calc(10% - 16px)', 'text-align': 'right'}]}>
+							<div style={[styles.block, {width: 'calc(10% - 16px)', 'textAlign': 'right'}]}>
 								<div style={styles.listItem}>{gData.countryTotalViews[item]}</div>
 							</div>
 							</div>
@@ -193,10 +193,10 @@ export const AtomReaderAnalytics = React.createClass({
 					{gData.cityOrder.slice(0, 5).map((item, index)=>{
 						return (
 							<div style={[styles.block, {width: 'calc(100% - 16px)', margin: '0px 0px 0px 0px', padding: '0px 0px 0px 0px'}]}>
-							<div style={[styles.block, {width: 'calc(55% - 36px)', margin: '0px 0px 0px 0px', padding: '0px 0px 0px 20%', 'text-align': 'left'}]}>
+							<div style={[styles.block, {width: 'calc(55% - 36px)', margin: '0px 0px 0px 0px', padding: '0px 0px 0px 20%', 'textAlign': 'left'}]}>
 								<div style={styles.listItem}>#{index+1}: {item}</div>
 							</div>
-							<div style={[styles.block, {width: 'calc(10% - 16px)', 'text-align': 'right'}]}>
+							<div style={[styles.block, {width: 'calc(10% - 16px)', 'textAlign': 'right'}]}>
 								<div style={styles.listItem}>{gData.cityTotalViews[item]}</div>
 							</div>
 							</div>
@@ -246,6 +246,10 @@ export const AtomReaderAnalytics = React.createClass({
 export default Radium(AtomReaderAnalytics);
 
 styles = {
+	loadingWrapper: {
+		margin: '0 auto',
+		width: '40px',
+	},
 	wideContainer: {
 		width: '100%',
 		overflow: 'hidden'
@@ -253,9 +257,9 @@ styles = {
 	graphTitle: {
 		width: '100%',
 		margin: '16px 0px -6px 0px',
-		'font-size': '24px',
-		'font-weight': 'bold',
-		'text-align': 'center',
+		'fontSize': '24px',
+		'fontWeight': 'bold',
+		'textAlign': 'center',
 	},
 	block: {
 		margin: '0px 4px 4px 4px',
@@ -265,53 +269,53 @@ styles = {
 	blockDispL: {
 		width: '100%',
 		float: 'left',
-		'font-size': '30px',
+		'fontSize': '30px',
 		'line-height': '34px',
-		'font-weight': 'bold',
-		'text-align': 'center',
+		'fontWeight': 'bold',
+		'textAlign': 'center',
 	},
 	blockUnderL: {
 		width: '100%',
 		float: 'left',
-		'font-size': '19px',
+		'fontSize': '19px',
 		'line-height': '18px',
-		'text-align': 'center',
+		'textAlign': 'center',
 		margin: '0px 0px 8px 0px',
 	},
 	blockDispM: {
 		width: '100%',
 		float: 'left',
-		'font-size': '25px',
+		'fontSize': '25px',
 		'line-height': '26px',
-		'font-weight': 'bold',
-		'text-align': 'center',
+		'fontWeight': 'bold',
+		'textAlign': 'center',
 	},
 	blockUnderM: {
 		width: '100%',
 		float: 'left',
-		'font-size': '16px',
+		'fontSize': '16px',
 		'line-height': '14px',
-		'text-align': 'center',
+		'textAlign': 'center',
 		margin: '0px 0px 8px 0px',
 	},
 	blockDispS: {
 		width: '100%',
 		float: 'left',
-		'font-size': '18px',
-		'font-weight': 'bold',
-		'text-align': 'center',
+		'fontSize': '18px',
+		'fontWeight': 'bold',
+		'textAlign': 'center',
 	},
 	blockUnderS: {
 		width: '100%',
 		float: 'left',
 		'line-height': '16px',
-		'text-align': 'center',
+		'textAlign': 'center',
 		margin: '0px 0px 4em 0px',
 	},
 	listItem: {
 		width: '100%',
 		float: 'left',
-		'font-size': '16px',
+		'fontSize': '16px',
 		'line-height': '14px',
 	},
 
@@ -328,43 +332,43 @@ styles = {
 	headWd100: {
 		width: '100%',
 		float: 'left',
-		'font-weight': 'bold',
-		'text-align': 'center',
+		'fontWeight': 'bold',
+		'textAlign': 'center',
 	},
 	headWd50: {
 		width: '50%',
 		float: 'left',
-		'font-weight': 'bold',
-		'text-align': 'center',
+		'fontWeight': 'bold',
+		'textAlign': 'center',
 	},
 	headWd25: {
 		width: '25%',
 		float: 'left',
-		'font-weight': 'bold',
-		'text-align': 'center',
+		'fontWeight': 'bold',
+		'textAlign': 'center',
 	},
 	dispWd100: {
 		width: '100%',
 		float: 'left',
 		'line-height': '16px',
-		'text-align': 'center',
+		'textAlign': 'center',
 	},
 	dispWd50: {
 		width: '50%',
 		float: 'left',
 		'line-height': '16px',
-		'text-align': 'center',
+		'textAlign': 'center',
 	},
 	dispWd25: {
 		width: '25%',
 		float: 'left',
 		'line-height': '16px',
-		'text-align': 'center',
+		'textAlign': 'center',
 	},
 	dispWd50L: {
 		width: '50%',
 		float: 'left',
 		'line-height': '16px',
-		'text-align': 'left',
+		'textAlign': 'left',
 	},
 };
