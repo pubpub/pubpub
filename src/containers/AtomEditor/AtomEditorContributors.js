@@ -31,11 +31,12 @@ export const AtomEditorContributors = React.createClass({
 	
 	componentWillMount() {
 		const typesObject = {};
+		
 		this.props.contributorsData.map((item)=> {
-			console.log('willmount', item);
+			const roles = item.metadata ? item.metadata.roles : [];
 			typesObject[item._id] = {
 				type: item.type,
-				roles: item.metadata.roles,
+				roles: roles,
 			};
 		});
 		this.setState({contributorStates: typesObject});
@@ -164,7 +165,7 @@ export const AtomEditorContributors = React.createClass({
 								image={item.source.image}
 								title={item.source.name}
 								slug={item.source.username}
-								description={
+								header={
 									<RadioGroup name={'contributor type ' + item._id} selectedValue={this.state.contributorStates[item._id].type} onChange={this.handleTypeChange.bind(this, item._id)}>
 										<Radio value="contributor" id={'contributor-' + item._id} style={styles.radioInput}/> <label htmlFor={'contributor-' + item._id} style={styles.radioLabel}>Contributor</label>
 										<Radio value="reader" id={'reader-' + item._id} style={styles.radioInput}/> <label htmlFor={'reader-' + item._id} style={styles.radioLabel}>Reader</label>
@@ -174,7 +175,6 @@ export const AtomEditorContributors = React.createClass({
 								} 
 								footer={
 									<div>
-										{item.metadata && item.metadata.roles}
 										<Select
 											name={'contributorRoles-' + item._id}
 											options={roleOptions}

@@ -417,7 +417,7 @@ app.post('/addContributor', addContributor);
 export function updateContributor(req, res) {
 	const {linkID, linkType, linkRoles} = req.body;
 	
-	Link.update({_id: linkID, type: 'featured'}, {$set: {type: linkType, 'metadata.roles': linkRoles}})
+	Link.update({_id: linkID}, {$set: {type: linkType, 'metadata.roles': linkRoles}})
 	.then(function(updateResult) {
 		return res.status(201).json('success');	
 	})

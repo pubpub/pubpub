@@ -11,10 +11,7 @@ export const PreviewCard = React.createClass({
 		type: PropTypes.string,
 		image: PropTypes.string,
 		title: PropTypes.string,
-		description: PropTypes.oneOfType([
-			PropTypes.string,
-			PropTypes.object,
-		]),
+		description: PropTypes.string,
 		slug: PropTypes.string,
 		// onFollowHandler: PropTypes.func,
 		// showEdit: PropTypes.bool,
