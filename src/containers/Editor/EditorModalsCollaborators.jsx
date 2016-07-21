@@ -208,7 +208,7 @@ const EditorModalCollaborators = React.createClass({
 							return (
 								<div key={'collaborator-' + index} style={styles.rowContainer}>
 
-									<div style={[styles.imageColumn, styles.columnHeader]}> <img style={styles.userImage} src={collaborator.thumbnail ? collaborator.thumbnail : '/thumbnails/group.png'} /> </div>
+									<div style={[styles.imageColumn, styles.columnHeader]}> <img style={styles.userImage} src={collaborator.thumbnail ? collaborator.thumbnail.replace(/http:\/\/res.cloudinary/g, 'https://res.cloudinary') : '/thumbnails/group.png'} /> </div>
 									<div style={[styles.nameColumn]}>{collaborator.name ? collaborator.name : collaborator.groupName}</div>
 									<div style={[styles.permissionsColumn]}>
 										<span key={'collaboratorPermissionsEdit-' + index} style={[styles.permission, collaborator.permission === 'edit' && styles.permissionActive]} onClick={this.setPermission('edit', collaborator.username ? collaborator.username : collaborator.groupSlug, collaborator.name ? collaborator.name : collaborator.groupName)}>

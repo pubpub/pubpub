@@ -53,7 +53,7 @@ const Plugin = React.createClass({
 			return (<span></span>);
 		}
 		// debugger;
-		const url = this.props.source.url;
+		const url = this.props.source.url ? this.props.source.url.replace(/http:\/\/res.cloudinary/g, 'https://res.cloudinary') : '';
 		const size = this.props.size;
 		const align = this.props.align ? this.props.align : 'full';
 		const caption = this.props.caption;

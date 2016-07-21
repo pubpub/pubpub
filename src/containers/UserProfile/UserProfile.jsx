@@ -188,7 +188,7 @@ const Profile = React.createClass({
 
 					<div style={[globalStyles.hiddenUntilLoad, globalStyles[this.props.profileData.get('status')]]}>
 						<div style={styles.userImageWrapper}>
-							<img style={styles.userImage} src={profileData.image} />
+							<img style={styles.userImage} src={profileData.image.replace(/http:\/\/res.cloudinary/g, 'https://res.cloudinary')} />
 							{/* <div key={'changeUserImageButton'} style={[styles.editImageButton, this.props.mode === 'settings' && styles.editImageButtonShow]} onClick={this.editImageClicked}>Change Image</div> */}
 							<div style={[styles.fileInputWrapper, this.props.mode === 'settings' && ownProfile === 'self' && styles.fileInputWrapperShow]} key={'changeUserImageButton'}>
 								<FormattedMessage id="user.changeImage" defaultMessage="Change Image"/>

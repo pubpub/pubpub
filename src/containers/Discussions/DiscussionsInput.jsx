@@ -223,7 +223,7 @@ const PubDiscussionsInput = React.createClass({
 				<div style={[styles.inputTopLine, styles.expanded(this.state.expanded, true)]}>
 					<div style={styles.thumbnail}>
 						{this.props.userThumbnail
-							? <img style={styles.thumbnailImage}src={this.props.userThumbnail} />
+							? <img style={styles.thumbnailImage}src={this.props.userThumbnail.replace(/http:\/\/res.cloudinary/g, 'https://res.cloudinary')} />
 							: null
 						}
 					</div>

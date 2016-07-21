@@ -109,7 +109,7 @@ const ReferenceEditor = React.createClass({
 									Thumbnail
 								</label>
 								<div style={styles.thumbnailWrapper}>
-									<img style={styles.thumbnail} src={assetData.thumbnail} />
+									<img style={styles.thumbnail} src={assetData.thumbnail.replace(/http:\/\/res.cloudinary/g, 'https://res.cloudinary')} />
 								</div>
 
 						<label style={styles.manualFormInputTitle} htmlFor={'label'}>

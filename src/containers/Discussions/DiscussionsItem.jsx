@@ -102,7 +102,7 @@ const DiscussionsItem = React.createClass({
 
 						<div style={styles.discussionAuthorImageWrapper}>
 							<Link to={'/user/' + discussionItem.author.username} style={globalStyles.link}>
-								<img style={styles.discussionAuthorImage} src={discussionItem.author.thumbnail} />
+								<img style={styles.discussionAuthorImage} src={discussionItem.author.thumbnail.replace(/http:\/\/res.cloudinary/g, 'https://res.cloudinary')} />
 							</Link>
 						</div>
 						<div style={styles.discussionDetailsLine}>

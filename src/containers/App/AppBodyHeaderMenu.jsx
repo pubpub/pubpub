@@ -87,7 +87,7 @@ const HeaderMenu = React.createClass({
 									? <Link to={'/user/' + this.props.loginData.getIn(['userData', 'username'])}>
 										<li key="menuListItem1" style={[styles.menuItem, !this.props.isJournalAdmin && !notificationCount && styles.menuItemNoBottom]}>
 											<span key="headerLogin" style={[styles.loggedIn[isLoggedIn]]}>
-												<img style={styles.userImage} src={this.props.loginData.getIn(['userData', 'thumbnail'])} />
+												<img style={styles.userImage} src={this.props.loginData.getIn(['userData', 'thumbnail']).replace(/http:\/\/res.cloudinary/g, 'https://res.cloudinary')} />
 												{/* <div style={styles.userName}>{this.props.loginData.getIn(['userData', 'name'])}</div> */}
 												<div style={styles.userName}>
 													<FormattedMessage {...globalMessages.account} />

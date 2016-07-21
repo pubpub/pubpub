@@ -26,7 +26,7 @@ const UserPreview = React.createClass({
 				<Link style={globalStyles.link} to={'/user/' + user.username}>
 
 					<div key={'userBlock-' + user._id} style={[styles.userBlock]}>
-						<img style={styles.image} src={user.thumbnail.replace(',h_50,w_50', ',h_100,w_100')} />
+						<img style={styles.image} src={user.thumbnail.replace(',h_50,w_50', ',h_100,w_100').replace(/http:\/\/res.cloudinary/g, 'https://res.cloudinary')} />
 						<div style={styles.name}>{user.name}</div>
 					</div>
 				</Link>

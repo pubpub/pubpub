@@ -38,7 +38,7 @@ const AssetRow = React.createClass({
 				{/* Thumbnail */}
 				<div style={styles.thumbnail}>
 					<div style={styles.inlineBlockHelper}></div>
-					<img style={styles.thumbnailImg} src={assetData.thumbnail} />
+					<img style={styles.thumbnailImg} src={assetData.thumbnail.replace(/http:\/\/res.cloudinary/g, 'https://res.cloudinary')} />
 				</div>
 
 				{/* label */}
