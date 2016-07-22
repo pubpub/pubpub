@@ -4,6 +4,7 @@ import {ModCollabDocChanges} from "./doc-changes"
 // import {ModCollabColors} from "./colors"
 export class ModCollab {
     constructor(editor) {
+      console.log("YEP " + editor.token)
         editor.mod.collab = this
         this.editor = editor
         this.participants = []

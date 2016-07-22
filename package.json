@@ -183,6 +183,7 @@
     "shallowequal": "^0.2.2",
     "sifter": "^0.4.5",
     "superagent": "^1.4.0",
+    "superagent-promise": "^1.1.0",
     "underscore": "^1.8.3",
     "valid-email": "^0.0.2",
     "valid-url": "^1.0.9",
