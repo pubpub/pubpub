@@ -18,6 +18,8 @@ import AtomReaderHeader from './AtomReaderHeader';
 import AtomReaderJournals from './AtomReaderJournals';
 import AtomReaderVersions from './AtomReaderVersions';
 import AtomViewerPane from './AtomViewerPane';
+import { StickyContainer as UnwrappedStickyContainer, Sticky } from 'react-sticky';
+const StickyContainer = Radium(UnwrappedStickyContainer);
 
 import {Discussions} from 'containers';
 
@@ -156,7 +158,7 @@ export const AtomReader = React.createClass({
 
 		const authorsData = safeGetInToJS(this.props.atomData, ['authorsData']) || [];
 		const authorList = atomData.customAuthorString ? [<Link to={'/a/' + this.props.slug + '/contributors'}>{atomData.customAuthorString}</Link>] : authorsData.map((item, index)=> {
-			return <Link to={'/user/' + item.source.username} key={'author-' + index} className={'author'}>{item.source.name}</Link>
+			return <Link to={'/user/' + item.source.username} key={'author-' + index} className={'author'}>{item.source.name}</Link>;
 		});
 
 		return (
@@ -169,11 +171,13 @@ export const AtomReader = React.createClass({
 				}} />
 
 				{/* Table of Contents Section */}
-				<div style={[styles.tocSection, !showTOC && {display: 'none'}]}>
-					{toc.map((object, index)=>{
-						return <a key={'toc-' + index} href={'#' + object.id} className={'underlineOnHover'} style={[styles.tocItem, styles.tocLevels[object.level - 1]]}>{object.title}</a>;
-					})}
-				</div>
+				<StickyContainer style={[styles.tocSection, !showTOC && {display: 'none'}]}>
+					<Sticky style={styles.tocContent}>	
+						{toc.map((object, index)=>{
+							return <a key={'toc-' + index} href={'#' + object.id} className={'underlineOnHover'} style={[styles.tocItem, styles.tocLevels[object.level - 1]]}>{object.title}</a>;
+						})}
+					</Sticky>
+				</StickyContainer>
 
 				{/* Pub Section */}
 				<div style={styles.pubSection}>
@@ -253,6 +257,12 @@ styles = {
 		backgroundColor: '#F3F3F4',
 		borderRight: '1px solid #E4E4E4',
 		fontSize: '0.9em',
+	},
+	tocContent: {
+		maxHeight: 'calc(100vh - 7em)',
+		overflow: 'hidden',
+		overflowY: 'scroll',
+		padding: '2em 0em 5em 0em',
 	},
 	tocHover: {
 		width: '2em',
