@@ -2,7 +2,7 @@ import React, {PropTypes} from 'react';
 import Radium from 'radium';
 import {safeGetInToJS} from 'utils/safeParse';
 import {Media} from 'containers';
-import * as objectHash from "object-hash/dist/object_hash"
+import * as objectHash from 'object-hash/dist/object_hash';
 
 import {markdownParser, markdownSerializer, schema} from './proseEditor';
 import {Subscription, StoppableSubscription} from 'subscription';
@@ -169,10 +169,10 @@ export const DocumentEditor = React.createClass({
 			this.collab.mod.collab.docChanges.enableDiffSending();
 		}
 		const pmDoc = modelToEditor(this.collab.doc, this.collab.schema);
-		//collabEditing.detach(this.pm)
+		// collabEditing.detach(this.pm)
 		this.collab.pm.setDoc(pmDoc);
 		that.collab.pm.mod.collab.version = this.collab.doc.version;
-		//collabEditing.config({version: this.doc.version}).attach(this.pm)
+		// collabEditing.config({version: this.doc.version}).attach(this.pm)
 		while (this.collab.docInfo.last_diffs.length > 0) {
 			const diff = this.collab.docInfo.last_diffs.shift();
 			this.collab.mod.collab.docChanges.applyDiff(diff);
@@ -197,16 +197,16 @@ export const DocumentEditor = React.createClass({
 
 	askForDocument: function() {
 		if (this.collab.waitingForDocument) {
-			return
+			return;
 		}
-		this.collab.waitingForDocument = true
+		this.collab.waitingForDocument = true;
 		this.collab.mod.serverCommunications.send({
 			type: 'get_document'
-		})
+		});
 	},
 
 	receiveDocument: function(data) {
-		let that = this
+		// const that = this;
 		this.collab.receiveDocumentValues(data.document, data.document_values);
 		this.update();
 		// if (data.hasOwnProperty('user')) {
@@ -253,7 +253,7 @@ export const DocumentEditor = React.createClass({
 
 	// Get updates to document and then send updates to the server
 	save: function(callback) {
-		let that = this;
+		const that = this;
 		this.getUpdates(function() {
 			that.sendDocumentUpdate(function() {
 				if (callback) {
@@ -265,7 +265,7 @@ export const DocumentEditor = React.createClass({
 
 	// Send changes to the document to the server
 	sendDocumentUpdate: function(callback) {
-		let documentData = {
+		const documentData = {
 			// title: this.doc.title,
 			// metadata: this.doc.metadata,
 			contents: this.collab.doc.contents,
