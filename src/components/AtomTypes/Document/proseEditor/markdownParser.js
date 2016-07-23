@@ -1,6 +1,7 @@
 import {MarkdownParser} from 'prosemirror/dist/markdown';
 import {schema} from './schema';
 import markdownit from 'markdown-it';
+// import markdownit from 'markdown-it-migrate'; // Used for Migration. Handles code_blocks and fences more gracefully
 import emoji from 'markdown-it-emoji';
 import embed from './markdown-it-embed';
 import pagebreak from './markdown-it-pagebreak';
@@ -9,6 +10,7 @@ import sup from 'markdown-it-sup';
 
 export const markdownParser = new MarkdownParser(schema, 
 	markdownit({html: false})
+	.disable([ 'table' ])
 	.use(emoji)
 	.use(sub)
 	.use(sup)
@@ -37,6 +39,7 @@ export const markdownParser = new MarkdownParser(schema,
 			align: tok.attrGet('align') || null,
 			size: tok.attrGet('size') || null,
 			caption: tok.attrGet('caption') || null,
+			mode: tok.attrGet('mode') || 'embed',
 			data: JSON.parse(decodeURIComponent(tok.attrGet('data'))) || null,
 		})},
 		emoji: {node: 'emoji', attrs: tok => ({
@@ -47,6 +50,8 @@ export const markdownParser = new MarkdownParser(schema,
 
 		em: {mark: 'em'},
 		strong: {mark: 'strong'},
+		strike: {mark: 'strike'},
+		// s: {mark: 'strike'}, // Used for Migration. Handles strikethroughs more gracefully
 		link: {mark: 'link', attrs: tok => ({
 			href: tok.attrGet('href'),
 			title: tok.attrGet('title') || null

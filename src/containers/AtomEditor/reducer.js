@@ -24,6 +24,23 @@ import {
 	PUBLISH_VERSION_LOAD,
 	PUBLISH_VERSION_SUCCESS,
 	PUBLISH_VERSION_FAIL,
+
+	GET_EDIT_MODAL_DATA_LOAD,
+	GET_EDIT_MODAL_DATA_SUCCESS,
+	GET_EDIT_MODAL_DATA_FAIL,
+
+	ADD_CONTRIBUTOR_LOAD,
+	ADD_CONTRIBUTOR_SUCCESS,
+	ADD_CONTRIBUTOR_FAIL,
+
+	UPDATE_CONTRIBUTOR_LOAD,
+	UPDATE_CONTRIBUTOR_SUCCESS,
+	UPDATE_CONTRIBUTOR_FAIL,
+
+	DELETE_CONTRIBUTOR_LOAD,
+	DELETE_CONTRIBUTOR_SUCCESS,
+	DELETE_CONTRIBUTOR_FAIL,
+
 } from './actions';
 
 /*--------*/
@@ -37,6 +54,11 @@ export const defaultState = Immutable.Map({
 	loading: false,
 	error: null,
 	newAtomHash: undefined,
+
+	contributorsData: [],
+	publishingData: [],
+	modalLoading: false,
+	modalError: null,
 });
 
 /*--------*/
@@ -167,6 +189,58 @@ function publishVersionFail(state, error) {
 	});
 }
 
+/* Get Modal Data functions */
+/* ----------------------------- */
+function getEditModalDataLoad(state) {
+	return state.merge({
+		modalLoading: true,
+	});
+}
+
+function getEditModalDataSuccess(state, result) {
+	return state.merge({
+		modalLoading: false,
+		modalError: null,
+		
+		contributorsData: result.contributorsData,
+		publishingData: result.publishingData,
+
+	}).mergeIn(['atomData'], result.detailsData);
+}
+
+function getEditModalDataFail(state, error) {
+	return state.merge({
+		modalLoading: false,
+		modalError: error,
+	});
+}
+
+/* Add Contributor functions */
+/* ----------------------------- */
+function addContributorSuccess(state, result) {
+	return state.merge({
+		contributorsData: state.get('contributorsData').push(ensureImmutable(result))
+	});
+}
+
+/* Update Contributor functions */
+/* ----------------------------- */
+function updateContributorSuccess(state, result) {
+	return state;
+}
+
+/* Delete Contributor functions */
+/* ----------------------------- */
+function deleteContributorSuccess(state, result) {
+	// Remove the admin the the list by ID
+	console.log('result is', result);
+	return state.merge({
+		contributorsData: state.get('contributorsData').filter((item)=> {
+			return item.get('_id') !== result._id;
+		})
+	});
+}
+
 
 /*--------*/
 // Bind actions to specific reducing functions.
@@ -208,6 +282,34 @@ export default function readerReducer(state = defaultState, action) {
 		return publishVersionSuccess(state, action.result);
 	case PUBLISH_VERSION_FAIL:
 		return publishVersionFail(state, action.error);
+
+	case GET_EDIT_MODAL_DATA_LOAD:
+		return getEditModalDataLoad(state);
+	case GET_EDIT_MODAL_DATA_SUCCESS:
+		return getEditModalDataSuccess(state, action.result);
+	case GET_EDIT_MODAL_DATA_FAIL:
+		return getEditModalDataFail(state, action.error);
+
+	case ADD_CONTRIBUTOR_LOAD:
+		return state;
+	case ADD_CONTRIBUTOR_SUCCESS:
+		return addContributorSuccess(state, action.result);
+	case ADD_CONTRIBUTOR_FAIL:
+		return state;
+
+	case UPDATE_CONTRIBUTOR_LOAD:
+		return state;
+	case UPDATE_CONTRIBUTOR_SUCCESS:
+		return updateContributorSuccess(state, action.result);
+	case UPDATE_CONTRIBUTOR_FAIL:
+		return state;
+
+	case DELETE_CONTRIBUTOR_LOAD:
+		return state;
+	case DELETE_CONTRIBUTOR_SUCCESS:
+		return deleteContributorSuccess(state, action.result);
+	case DELETE_CONTRIBUTOR_FAIL:
+		return state;
 
 	default:
 		return ensureImmutable(state);

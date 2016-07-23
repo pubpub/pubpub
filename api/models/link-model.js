@@ -11,6 +11,7 @@ const linkSchema = new Schema({
 	createDate: { type: Date },
 
 	metadata: { type: Schema.Types.Mixed },
+	// metadata.collections: Used for Journal featured collections 
 
 	inactive: { type: Boolean }, 
 	inactiveBy: { type: ObjectId, ref: 'User'},
@@ -44,6 +45,21 @@ linkSchema.statics.setLinkInactive = function(type, source, destination, inactiv
 	
 };
 
+linkSchema.statics.setLinkInactiveById = function(id, inactiveBy, inactiveDate, inactiveNote) {
+	// Beacuse upsert is false, this will not create a new document if no match is found.
+	return this.findOne({_id: id, inactive: {$ne: true} }).exec()
+	.then(function(linkResult) {
+		console.log(linkResult);
+		if (!linkResult) { return undefined; }
+		linkResult.inactive = true;
+		linkResult.inactiveBy = inactiveBy;
+		linkResult.inactiveDate = inactiveDate || new Date().getTime();
+		linkResult.inactiveNote = inactiveNote;
+		return linkResult.save();
+	});
+	
+};
+
 module.exports = mongoose.model('Link', linkSchema);
 
 // -------
@@ -51,13 +67,18 @@ module.exports = mongoose.model('Link', linkSchema);
 // -------
 // 
 // USER -> PUB
+// follower
+
+// USER -> PUB
 // author
 // follower
 // editor
 // reader
+// contributor
 
 // USER -> JOURNAL
 // admin
+// follower
 
 // PUB -> PUB
 // reply
@@ -72,3 +93,24 @@ module.exports = mongoose.model('Link', linkSchema);
 
 // JOURNAL -> PUB
 // featured
+
+
+
+
+
+// -------
+// Metadata
+// -------
+// reply
+// 		rootReply
+// 		yays
+// 		nays
+// 		
+// featured
+// 		collections
+// 
+// author, contributor, editor, reader
+// 		roles
+
+
+

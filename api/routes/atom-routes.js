@@ -125,6 +125,9 @@ export function getAtomData(req, res) {
 
 	Atom.findOne({slug: slug}).lean().exec()
 	.then(function(atomResult) { // Get most recent version
+		if (!atomResult) {
+			throw new Error('Atom does not exist');
+		}
 
 		const getAuthors = new Promise(function(resolve) {
 			const query = Link.find({destination: atomResult._id, type: 'author'}).populate({
@@ -152,8 +155,11 @@ export function getAtomData(req, res) {
 		// This query fires if meta is equal to 'collaborators'
 		const getContributors = new Promise(function(resolve) {
 			if (meta === 'contributors') {
-				// const query = Link.find({destination: atomResult._id, type: {$in: ['isAuthor', 'isEditor', 'isReader']}}).exec();
-				const query = Link.find({destination: atomResult._id}).exec();
+				const query = Link.find({destination: atomResult._id, type: {$in: ['author', 'editor', 'reader', 'contributor']}, inactive: {$ne: true}}).populate({
+					path: 'source',
+					model: User,
+					select: 'username name image bio',
+				}).exec();
 				resolve(query);
 			} else {
 				resolve();
@@ -213,7 +219,7 @@ export function getAtomData(req, res) {
 			atomData: atomResult,
 			authorsData: taskData[0],
 			currentVersionData: taskData[1],
-			contributorData: taskData[2],
+			contributorsData: taskData[2],
 			versionsData: taskData[3],
 			submittedData: taskData[4],
 			featuredData: taskData[5],
@@ -256,7 +262,7 @@ export function getAtomEdit(req, res) {
 	})
 	.then(function() {
 		console.log("Anyways")
-		return Atom.findOne({slug: slug}).populate({path: 'versions', select: '-content'}).lean().exec()
+		return Atom.findOne({slug: slug}).lean().exec()
 	})
 	.then(function(atomResult) { // Get most recent version
 		const mostRecentVersionId = atomResult.versions[atomResult.versions.length - 1];
@@ -283,6 +289,69 @@ export function getAtomEdit(req, res) {
 
 }
 app.get('/getAtomEdit', getAtomEdit);
+
+export function getAtomEditModalData(req, res) {
+	const {mode, atomID} = req.query;
+	// const userID = req.user ? req.user._id : undefined;
+	// Check permission type
+
+	// Get the contributors associated with the atom
+	// This query fires if meta is equal to 'contributors'
+	const getDetails = new Promise(function(resolve) {
+		if (mode === 'details') {
+			const query = Atom.findOne({_id: atomID});
+			resolve(query);
+		} else {
+			resolve();
+		}
+	});
+
+	// Get the contributors associated with the atom
+	// This query fires if meta is equal to 'contributors'
+	const getContributors = new Promise(function(resolve) {
+		if (mode === 'contributors') {
+			const query = Link.find({destination: atomID, type: {$in: ['author', 'editor', 'reader', 'contributor']}, inactive: {$ne: true}}).populate({
+				path: 'source',
+				model: User,
+				select: 'username name image bio',
+			}).exec();
+			resolve(query);
+		} else {
+			resolve();
+		}
+	});
+
+	const getVersions = new Promise(function(resolve) {
+		if (mode === 'publishing') {
+			const query = Version.find({parent: atomID}, {content: 0}).exec();
+			resolve(query);
+		} else {
+			resolve();
+		}
+	});
+
+
+	const tasks = [
+		getDetails,
+		getContributors,
+		getVersions,
+	];
+
+	Promise.all(tasks)
+	.then(function(taskResults) { // Get most recent version
+		return res.status(201).json({
+			detailsData: taskResults[0],
+			contributorsData: taskResults[1],
+			publishingData: taskResults[2],
+		});
+	})
+	.catch(function(error) {
+		console.log('error', error);
+		return res.status(500).json(error);
+	});
+
+}
+app.get('/getAtomEditModalData', getAtomEditModalData);
 
 export function submitAtomToJournals(req, res) {
 	const atomID = req.body.atomID;
@@ -327,8 +396,9 @@ export function updateAtomDetails(req, res) {
 		const newDetails = req.body.newDetails || {};
 		result.title = newDetails.title;
 		result.slug = result.isPublished ? result.slug : newDetails.slug;
-		result.description = newDetails.description;
+		result.description = newDetails.description && newDetails.description.substring(0, 140);
 		result.previewImage = newDetails.previewImage;
+		result.customAuthorString = newDetails.customAuthorString;
 		return result.save();
 	})
 	.then(function(savedResult) {
@@ -341,3 +411,69 @@ export function updateAtomDetails(req, res) {
 
 }
 app.post('/updateAtomDetails', updateAtomDetails);
+
+/* -------------------- */
+/* Contributor Routes   */
+/* -------------------- */
+
+
+export function addContributor(req, res) {
+	const {atomID, contributorID} = req.body;
+	const userID = req.user._id;
+	const now = new Date().getTime();
+	// Check permission
+
+	Link.findOne({source: contributorID, destination: atomID, inactive: {$ne: true}}).exec()
+	.then(function(existingLink) {
+		if (existingLink) {
+			throw new Error('Contributor already exists');
+		}
+		return Link.createLink('reader', contributorID, atomID, userID, now);
+	})
+	.then(function(newAdminLink) {
+		return Link.findOne({source: contributorID, destination: atomID, type: 'reader', inactive: {$ne: true}}).populate({
+			path: 'source',
+			model: User,
+			select: 'name username image',
+		}).exec();
+	})
+	.then(function(populatedLink) {
+		return res.status(201).json(populatedLink);
+	})
+	.catch(function(error) {
+		console.log('error', error);
+		return res.status(500).json(error);
+	});
+}
+app.post('/addContributor', addContributor);
+
+export function updateContributor(req, res) {
+	const {linkID, linkType, linkRoles} = req.body;
+
+	Link.update({_id: linkID}, {$set: {type: linkType, 'metadata.roles': linkRoles}})
+	.then(function(updateResult) {
+		return res.status(201).json('success');
+	})
+	.catch(function(error) {
+		console.log('error', error);
+		return res.status(500).json(error);
+	});
+}
+app.post('/updateContributor', updateContributor);
+
+export function deleteContributor(req, res) {
+	const {linkID} = req.body;
+	const userID = req.user._id;
+	const now = new Date().getTime();
+	// Check permission
+
+	Link.setLinkInactiveById(linkID, userID, now, 'deleted')
+	.then(function(deletedLink) {
+		return res.status(201).json(deletedLink);
+	})
+	.catch(function(error) {
+		console.log('error', error);
+		return res.status(500).json(error);
+	});
+}
+app.post('/deleteContributor', deleteContributor);

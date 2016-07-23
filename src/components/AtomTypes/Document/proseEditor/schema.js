@@ -36,6 +36,14 @@ class SupMark extends MarkType {
 }
 exports.StrongMark = StrongMark;
 
+
+// A strike through mark
+class StrikeThroughMark extends MarkType {
+	get matchDOMTag() { return {'s': null}; }
+	toDOM() { return ['s']; }
+}
+exports.StrikeThroughMark = StrikeThroughMark;
+
 // ;; An inline embed node type. Has these attributes:
 //
 // - **`src`** (required): The slug of the pub.
@@ -54,6 +62,7 @@ class Embed extends Inline {
 			align: new Attribute({default: 'full'}),
 			size: new Attribute({default: '70%'}),
 			caption: new Attribute({default: ''}),
+			mode: new Attribute({default: 'embed'}), // mode = embed || cite
 			data: new Attribute({default: {}})
 		};
 	}
@@ -105,5 +114,6 @@ export const schema = new Schema({
 		code: CodeMark,
 		sub: SubMark,
 		sup: SupMark,
+		strike: StrikeThroughMark,
 	}
 });

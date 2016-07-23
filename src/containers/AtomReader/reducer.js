@@ -19,10 +19,10 @@ import {
 /*--------*/
 export const defaultState = Immutable.Map({
 	atomData: {},
-	authorsData: {},
+	authorsData: [],
 	currentVersionData: {},
-	versionsData: {},
-	contributorData: {},
+	versionsData: [],
+	contributorsData: [],
 	submittedData: [],
 	featuredData: [],
 	status: 'loading',
@@ -48,7 +48,7 @@ function getAtomDataSuccess(state, result) {
 		authorsData: result.authorsData,
 		currentVersionData: result.currentVersionData,
 		versionsData: result.versionsData,
-		contributorData: result.contributorData,
+		contributorsData: result.contributorsData,
 		submittedData: result.submittedData,
 		featuredData: result.featuredData,
 		error: null
@@ -59,10 +59,10 @@ function getAtomDataFail(state, error) {
 	return state.merge({
 		status: 'loaded',
 		atomData: {},
-		authorsData: {},
+		authorsData: [],
 		currentVersionData: {},
-		versionsData: {},
-		contributorData: {},
+		versionsData: [],
+		contributorsData: [],
 		submittedData: [],
 		featuredData: [],
 		error: error,

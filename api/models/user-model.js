@@ -22,12 +22,11 @@ const userSchema = new Schema({
 	website: { type: String }, // website url
 	googleScholar: { type: String }, // googleScholar id
 
-	groups: [{ type: ObjectId, ref: 'Group' }], // Groups that the user belongs to
-
-	pubs: [ { type: ObjectId, ref: 'Pub' } ], // Pubs that the user has access to (due to collaborator status from within the editor)
-	discussions: [ { type: ObjectId, ref: 'Discussion' } ], // Discussions the user has posted
-	assets: [ { type: ObjectId, ref: 'Asset' } ], // Assets the user is an author on
-	adminJournals: [ { type: ObjectId, ref: 'Journal' } ], // Journals the user is an admin for
+	// groups: [{ type: ObjectId, ref: 'Group' }], // Groups that the user belongs to
+	// pubs: [ { type: ObjectId, ref: 'Pub' } ], // Pubs that the user has access to (due to collaborator status from within the editor)
+	// discussions: [ { type: ObjectId, ref: 'Discussion' } ], // Discussions the user has posted
+	// assets: [ { type: ObjectId, ref: 'Asset' } ], // Assets the user is an author on
+	// adminJournals: [ { type: ObjectId, ref: 'Journal' } ], // Journals the user is an admin for
 
 	yays: [ { type: ObjectId, ref: 'Discussion' } ], // Yays cast
 	nays: [ { type: ObjectId, ref: 'Discussion' } ], // Nays cast
@@ -42,20 +41,20 @@ const userSchema = new Schema({
 
 	registerDate: { type: Date },
 
-	settings: {
-		editorFont: { type: String },
-		editorFontSize: { type: String },
-		editorColor: { type: String },
-		editorScrollCursor: { type: String },
-	},
+	// settings: {
+	// 	editorFont: { type: String },
+	// 	editorFontSize: { type: String },
+	// 	editorColor: { type: String },
+	// 	editorScrollCursor: { type: String },
+	// },
 
-	following: {
-		pubs: [ { type: ObjectId, ref: 'Pub' } ],
-		users: [ { type: ObjectId, ref: 'User' } ],
-		journals: [ { type: ObjectId, ref: 'Journal' } ],
-	},
+	// following: {
+	// 	pubs: [ { type: ObjectId, ref: 'Pub' } ],
+	// 	users: [ { type: ObjectId, ref: 'User' } ],
+	// 	journals: [ { type: ObjectId, ref: 'Journal' } ],
+	// },
 
-	followers: [{ type: ObjectId, ref: 'User' }],
+	// followers: [{ type: ObjectId, ref: 'User' }],
 	sendNotificationDigest: { type: Boolean },
 });
 

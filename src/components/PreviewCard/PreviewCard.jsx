@@ -63,7 +63,7 @@ export const PreviewCard = React.createClass({
 						<Link to={href} style={globalStyles.link} className={'underlineOnHover'}>
 							<h3 style={styles.title}>{this.props.title}</h3>
 						</Link>
-						<p style={styles.description}>{this.props.description}</p>
+						<div style={styles.description}>{this.props.description}</div>
 					</div>
 
 					{/* Option Buttons */}
@@ -85,7 +85,7 @@ export const PreviewCard = React.createClass({
 						<Link to={href} style={globalStyles.link}>
 							<h3 style={styles.title}>{this.props.title}</h3>
 						</Link>
-						<p style={styles.description}>{this.props.description}</p>
+						<div style={styles.description}>{this.props.description}</div>
 					</div>
 				</div>
 

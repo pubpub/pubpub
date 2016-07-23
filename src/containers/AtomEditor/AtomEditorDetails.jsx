@@ -21,6 +21,7 @@ export const AtomEditorDetails = React.createClass({
 			slug: '',
 			description: '',
 			previewImage: '',
+			customAuthorString: '',
 		};
 	},
 
@@ -31,6 +32,7 @@ export const AtomEditorDetails = React.createClass({
 			slug: atomData.slug || '',
 			description: atomData.description || '',
 			previewImage: atomData.previewImage || '',
+			customAuthorString: atomData.customAuthorString || '',
 		});
 	},
 
@@ -41,6 +43,7 @@ export const AtomEditorDetails = React.createClass({
 			slug: this.state.slug,
 			description: this.state.description,
 			previewImage: this.state.previewImage,
+			customAuthorString: this.state.customAuthorString,
 		};
 		this.props.updateDetailsHandler(newDetails);
 	},
@@ -57,6 +60,11 @@ export const AtomEditorDetails = React.createClass({
 		if (type === 'description') {
 			this.setState({description: evt.target.value});
 		} 
+
+		if (type === 'customAuthorString') {
+			this.setState({customAuthorString: evt.target.value});
+			
+		}
 		
 	},
 
@@ -97,6 +105,16 @@ export const AtomEditorDetails = React.createClass({
 						</div>
 						<div className={'light-color inputSubtext'}>
 							Cannot be changed once published.
+						</div>
+					</div>
+
+					<div>
+						<label htmlFor={'customAuthorString'}>
+							Custom Author List
+						</label>
+						<input ref={'customAuthorString'} id={'customAuthorString'} name={'customAuthorString'} type="text" style={styles.input} value={this.state.customAuthorString} onChange={this.inputChange.bind(this, 'customAuthorString')}/>
+						<div className={'light-color inputSubtext'}>
+							This will replace the label that is auto-generated from Contributors settings.
 						</div>
 					</div>
 

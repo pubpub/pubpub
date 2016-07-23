@@ -10,7 +10,9 @@ export const EmbedWrapper = React.createClass({
 		align: PropTypes.string,
 		size: PropTypes.string,
 		caption: PropTypes.string,
+		mode: PropTypes.string, // 'embed' or 'cite'
 		data: PropTypes.object,
+		citeCount: PropTypes.number,
 	},
 
 	render: function() {
@@ -22,13 +24,12 @@ export const EmbedWrapper = React.createClass({
 
 		const style = {
 			display: 'inline-block',
-			textAlign: 'center',
 			width: this.props.size || 'auto',
 		};
 
 		return (
 			<div className={'pub-embed ' + this.props.className} id={this.props.id} style={style}>
-				<AtomViewerPane atomData={atomData} renderType={'embed'}/>	
+				<AtomViewerPane atomData={atomData} renderType={'embed'} citeCount={this.props.citeCount}/>	
 				<div className={'caption'}>{this.props.caption}</div>	
 			</div>
 		);

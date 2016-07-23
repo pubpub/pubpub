@@ -51,7 +51,7 @@ export const markdownSerializer = new MarkdownSerializer({
 		state.write('![' + state.esc(node.attrs.alt || '') + '](' + state.esc(node.attrs.src) + (node.attrs.title ? ' ' + state.quote(node.attrs.title) : '') + ')');
 	},
 	embed(state, node) {
-		state.write('[[source=\"' + node.attrs.source + '\" id=\"' + node.attrs.id + '\" className=\"' + node.attrs.className + '\" align=\"' + node.attrs.align + '\" size=\"' + node.attrs.size + '\" caption=\"' + node.attrs.caption + '\" data=\"' + encodeURIComponent(JSON.stringify(node.attrs.data)) + '\"]]');
+		state.write('[[source=\"' + node.attrs.source + '\" id=\"' + node.attrs.id + '\" className=\"' + node.attrs.className + '\" align=\"' + node.attrs.align + '\" size=\"' + node.attrs.size + '\" caption=\"' + node.attrs.caption + '\" mode=\"' + node.attrs.mode + '\" data=\"' + encodeURIComponent(JSON.stringify(node.attrs.data)) + '\"]]');
 	},
 	emoji(state, node) {
 		state.write(':' + node.attrs.markup + ':');
@@ -67,6 +67,7 @@ export const markdownSerializer = new MarkdownSerializer({
 	strong: {open: '**', close: '**', mixable: true},
 	sub: {open: '~', close: '~', mixable: true},
 	sup: {open: '^', close: '^', mixable: true},
+	strike: {open: '~~', close: '~~', mixable: true},
 	link: {
 		open: '[',
 		close(state, mark) {

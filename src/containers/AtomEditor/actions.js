@@ -24,6 +24,23 @@ export const PUBLISH_VERSION_LOAD = 'atomEdit/PUBLISH_VERSION_LOAD';
 export const PUBLISH_VERSION_SUCCESS = 'atomEdit/PUBLISH_VERSION_SUCCESS';
 export const PUBLISH_VERSION_FAIL = 'atomEdit/PUBLISH_VERSION_FAIL';
 
+export const GET_EDIT_MODAL_DATA_LOAD = 'atomEdit/GET_EDIT_MODAL_DATA_LOAD';
+export const GET_EDIT_MODAL_DATA_SUCCESS = 'atomEdit/GET_EDIT_MODAL_DATA_SUCCESS';
+export const GET_EDIT_MODAL_DATA_FAIL = 'atomEdit/GET_EDIT_MODAL_DATA_FAIL';
+
+export const ADD_CONTRIBUTOR_LOAD = 'atomEdit/ADD_CONTRIBUTOR_LOAD';
+export const ADD_CONTRIBUTOR_SUCCESS = 'atomEdit/ADD_CONTRIBUTOR_SUCCESS';
+export const ADD_CONTRIBUTOR_FAIL = 'atomEdit/ADD_CONTRIBUTOR_FAIL';
+
+export const UPDATE_CONTRIBUTOR_LOAD = 'atomEdit/UPDATE_CONTRIBUTOR_LOAD';
+export const UPDATE_CONTRIBUTOR_SUCCESS = 'atomEdit/UPDATE_CONTRIBUTOR_SUCCESS';
+export const UPDATE_CONTRIBUTOR_FAIL = 'atomEdit/UPDATE_CONTRIBUTOR_FAIL';
+
+export const DELETE_CONTRIBUTOR_LOAD = 'atomEdit/DELETE_CONTRIBUTOR_LOAD';
+export const DELETE_CONTRIBUTOR_SUCCESS = 'atomEdit/DELETE_CONTRIBUTOR_SUCCESS';
+export const DELETE_CONTRIBUTOR_FAIL = 'atomEdit/DELETE_CONTRIBUTOR_FAIL';
+
+
 /*--------*/
 // Define Action creators
 //
@@ -74,6 +91,46 @@ export function publishVersion(versionID) {
 		types: [PUBLISH_VERSION_LOAD, PUBLISH_VERSION_SUCCESS, PUBLISH_VERSION_FAIL],
 		promise: (client) => client.post('/setVersionPublished', {data: {
 			versionID: versionID,
+		}})
+	};
+}
+
+export function getAtomEditModalData(atomID, mode) {
+	return {
+		types: [GET_EDIT_MODAL_DATA_LOAD, GET_EDIT_MODAL_DATA_SUCCESS, GET_EDIT_MODAL_DATA_FAIL],
+		promise: (client) => client.get('/getAtomEditModalData', {params: {
+			atomID: atomID,
+			mode: mode,
+		}})
+	};
+}
+
+export function addContributor(atomID, contributorID) {
+	return {
+		types: [ADD_CONTRIBUTOR_LOAD, ADD_CONTRIBUTOR_SUCCESS, ADD_CONTRIBUTOR_FAIL],
+		promise: (client) => client.post('/addContributor', {data: {
+			atomID: atomID,
+			contributorID: contributorID,
+		}})
+	};
+}
+
+export function updateContributor(linkID, linkType, linkRoles) {
+	return {
+		types: [UPDATE_CONTRIBUTOR_LOAD, UPDATE_CONTRIBUTOR_SUCCESS, UPDATE_CONTRIBUTOR_FAIL],
+		promise: (client) => client.post('/updateContributor', {data: {
+			linkID: linkID,
+			linkType: linkType,
+			linkRoles: linkRoles,
+		}})
+	};
+}
+
+export function deleteContributor(linkID) {
+	return {
+		types: [DELETE_CONTRIBUTOR_LOAD, DELETE_CONTRIBUTOR_SUCCESS, DELETE_CONTRIBUTOR_FAIL],
+		promise: (client) => client.post('/deleteContributor', {data: {
+			linkID: linkID,
 		}})
 	};
 }

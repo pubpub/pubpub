@@ -180,8 +180,14 @@ app.use((req, res) => {
 							<script src="/js/typo.js"></script>
 							<script src="/js/spellcheck.js"></script>
 							<script src="https://cdn.ravenjs.com/2.1.0/raven.min.js"></script>
+							
+							<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.6.0/katex.min.css">
 
 							<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+							<script type="text/javascript" 
+								src="https://www.google.com/jsapi?autoload=
+								{'modules':[{'name':'visualization','version':'1','packages':['corechart'],'language':'en'}]}">
+							</script>
 
 						</head>
 

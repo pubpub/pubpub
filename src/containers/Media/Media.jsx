@@ -123,6 +123,7 @@ export const Media = React.createClass({
 				align: nodeData.align || 'left',
 				size: nodeData.size || '',
 				caption: nodeData.caption || '',
+				mode: nodeData.mode || 'embed',
 				data: item,
 			},
 		});
@@ -138,6 +139,7 @@ export const Media = React.createClass({
 			align: nodeData.align,
 			size: nodeData.size,
 			caption: nodeData.caption,
+			mode: nodeData.mode,
 			data: nodeData.data,
 		});
 		this.setState({
@@ -167,6 +169,8 @@ export const Media = React.createClass({
 
 							{filteredItems.map((item)=> {
 								return item.original;
+							}).filter((item)=> {
+								return item.type === 'image' || item.type === 'video';
 							}).sort((foo, bar)=>{
 								// Sort so that most recent is first in array
 								if (foo.lastUpdated > bar.lastUpdated) { return -1; }
@@ -234,6 +238,13 @@ export const Media = React.createClass({
 										Class Name
 									</label>
 									<input ref={'className'} id={'className'} name={'className'} type="text" style={styles.input} value={this.state.nodeData.className} onChange={this.inputChange.bind(this, 'className')}/>
+								</div>
+
+								<div>
+									<label style={styles.label} htmlFor={'mode'}>
+										Mode
+									</label>
+									<input ref={'mode'} id={'mode'} name={'mode'} type="text" style={styles.input} value={this.state.nodeData.mode} onChange={this.inputChange.bind(this, 'mode')}/>
 								</div>
 
 								<div>

@@ -7,15 +7,17 @@ export const AtomViewerPane = React.createClass({
 	propTypes: {
 		atomData: PropTypes.object,
 		renderType: PropTypes.string,
+		citeCount: PropTypes.number,
 	},
 
 	render: function() {
 		const props = {
 			atomData: this.props.atomData,
 			renderType: this.props.renderType || 'full',
+			citeCount: this.props.citeCount,
 		};
-
 		const type = safeGetInToJS(this.props.atomData, ['atomData', 'type']);
+
 		if (AtomTypes.hasOwnProperty(type)) {
 			const Component = AtomTypes[type].viewer;
 			return <Component {...props} />;

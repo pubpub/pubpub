@@ -8,6 +8,7 @@ const atomSchema = new Schema({
 	description: { type: String },
 	previewImage: { type: String },
 	type: { type: String },
+	customAuthorString: { type: String },
 	
 	createDate: { type: Date },
 	lastUpdated: { type: Date },
@@ -16,14 +17,12 @@ const atomSchema = new Schema({
 	// language: { type: String }, // For search and sorting.
 
 	versions: [{ type: ObjectId, ref: 'Version'}],
-	// links: [{ type: ObjectId, ref: 'Link'}],
 
 	inactive: { type: Boolean }, 
 	inactiveDate: { type: Date },
 	inactiveBy: { type: ObjectId, ref: 'User'},
 	inactiveNote: { type: String },
-
-	tags: [{ type: String }],
+	// tags: [{ type: String }],
 
 });
 
