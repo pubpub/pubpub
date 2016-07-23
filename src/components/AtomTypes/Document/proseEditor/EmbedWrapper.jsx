@@ -7,7 +7,7 @@ export const EmbedWrapper = React.createClass({
 		source: PropTypes.string,
 		className: PropTypes.string,
 		id: PropTypes.string,
-		align: PropTypes.string,
+		align: PropTypes.string, // inline or full or left or right
 		size: PropTypes.string,
 		caption: PropTypes.string,
 		mode: PropTypes.string, // 'embed' or 'cite'
