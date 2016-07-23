@@ -31,7 +31,7 @@ export const ImageViewer = React.createClass({
 			return (
 				<span className={'showChildOnHover'} style={styles.refWrapper}>
 					[{number}]
-					<div className={'hoverCh2ild'} style={styles.hoverBox}><Reference citationObject={referenceData}/></div>
+					<div className={'hoverChild'} style={styles.hoverBox}><Reference citationObject={referenceData}/></div>
 				</span>
 			);
 		}

@@ -124,6 +124,9 @@ export function getAtomData(req, res) {
 
 	Atom.findOne({slug: slug}).lean().exec()
 	.then(function(atomResult) { // Get most recent version
+		if (!atomResult) {
+			throw new Error('Atom does not exist');
+		}
 
 		const getAuthors = new Promise(function(resolve) {
 			const query = Link.find({destination: atomResult._id, type: 'author'}).populate({

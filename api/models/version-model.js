@@ -60,5 +60,6 @@ module.exports = mongoose.model('Version', versionSchema);
 //  pages 
 //  year 
 //  publisher 
+//  doi
 //  note 
 // -----------

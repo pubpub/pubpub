@@ -1,11 +1,13 @@
 import React from 'react';
 import EmbedWrapper from './EmbedWrapper';
 
-// const 
-export const renderReactFromJSON = function(item) {
+const citeCounts = {};
+let currentCiteCount = 1;
+
+export const renderReactFromJSON = function(item, isRoot) {
 	if (!item) {return null;}
 
-	return item.map((node, index)=>{
+	const content = item.map((node, index)=>{
 		switch (node.type) {
 		case 'heading': 
 			const id = node.content[0].text.replace(/\s/g, '-').toLowerCase();
@@ -53,10 +55,28 @@ export const renderReactFromJSON = function(item) {
 				}
 			}, node.text);
 		case 'embed':
-			// console.log(node.attrs.data);
-			return <EmbedWrapper {...node.attrs} key={index} citeCount={1}/>;
+			let citeCount;
+			if (node.attrs.data._id in citeCounts) {
+				citeCount = citeCounts[node.attrs.data._id];
+			} else if (node.attrs.mode === 'cite') {
+				console.log(node.attrs);
+				citeCount = currentCiteCount++;
+				citeCounts[node.attrs.data._id] = citeCount;
+			}
+			return <EmbedWrapper {...node.attrs} key={index} citeCount={citeCount}/>;
 		default:
 			console.log('Error with ', node);
 		}
 	});
+
+	if (isRoot) {
+		// return (
+		// 	<div>
+		// 		{content}
+		// 		<h1>References</h1>
+		// 	</div>
+		// );
+		return content;
+	}	
+	return content;
 };
