@@ -63,3 +63,18 @@ module.exports = mongoose.model('Version', versionSchema);
 //  doi
 //  note 
 // -----------
+
+// Highlight:
+// -----------
+// content: {
+// 	text:
+// 	context:
+//  ancestorHash: 
+// 	startContainerPath:
+// 	startOffset:
+//	endContainerPath:
+// 	endOffset:
+// 	sourcePub: 
+// 	sourceVersion
+// }
+// -----------
