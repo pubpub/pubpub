@@ -138,8 +138,8 @@
 #atom-reader .caption {
 	color: #808284;
 	line-height: 1.4;
-	font-size: 0.85em,
-	padding: .2em 0em .5em 0em,
+	font-size: 0.85em;
+	padding: .2em 0em .5em 0em;
 }
 #atom-reader img {
 	max-width: 100%;

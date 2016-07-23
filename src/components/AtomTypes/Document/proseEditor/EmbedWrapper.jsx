@@ -23,9 +23,23 @@ export const EmbedWrapper = React.createClass({
 
 
 		const style = {
-			display: 'inline-block',
 			width: this.props.size || 'auto',
 		};
+		if (this.props.align === 'inline') {
+			style.display = 'inline-block';
+			style.verticalAlign = 'top';
+		} else if (this.props.align === 'full') {
+			style.display = 'block';
+			style.margin = '0 auto';
+		} else if (this.props.align === 'left') {
+			style.display = 'block';
+			style.float = 'left';
+			style.paddingRight = '2em';
+		} else if (this.props.align === 'right') {
+			style.display = 'block';
+			style.float = 'right';
+			style.paddingLeft = '2em';
+		}
 
 		return (
 			<div className={'pub-embed ' + this.props.className} id={this.props.id} style={style}>
