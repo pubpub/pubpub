@@ -59,7 +59,6 @@ export const renderReactFromJSON = function(item, isRoot) {
 			if (node.attrs.data._id in citeCounts) {
 				citeCount = citeCounts[node.attrs.data._id];
 			} else if (node.attrs.mode === 'cite') {
-				console.log(node.attrs);
 				citeCount = currentCiteCount++;
 				citeCounts[node.attrs.data._id] = citeCount;
 			}
