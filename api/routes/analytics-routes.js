@@ -93,12 +93,12 @@ export function analytics(req, res) {
 		const dateViewsArray = [];
 
 		gReports[0].forEach( function(report) {
-			//Summing Totals
+			// Summing Totals
 			totalViews += parseFloat(report.data.totals[0].values[0]);
 			totalUniqueViews += parseFloat(report.data.totals[0].values[1]);
 			totalReadTime += parseFloat(report.data.totals[0].values[2]);
 
-			//Consolidating Dateviews
+			// Consolidating Dateviews
 			report.data.rows.forEach( function(row) {
 				if (dateViews[row.dimensions[0]]) {
 					dateViews[row.dimensions[0]] += parseFloat(row.metrics[0].values[0]);
@@ -125,11 +125,11 @@ export function analytics(req, res) {
 				}
 			}
 			const difTime = new Date().getTime() - date.getTime();
-			if (difTime <= 86400000*365) {
+			if (difTime <= 86400000 * 365) {
 				totalViewsYear += dateViews[key];
-				if (difTime <= 86400000*28) {
+				if (difTime <= 86400000 * 28) {
 					totalViewsMonth += dateViews[key];
-					if (difTime <= 86400000*7) {
+					if (difTime <= 86400000 * 7) {
 						totalViewsWeek += dateViews[key];
 						if (difTime <= 86400000) {
 							totalViewsDay += dateViews[key];
@@ -199,10 +199,10 @@ export function analytics(req, res) {
 			totalViewsWeek: totalViewsWeek,
 			totalViewsDay: totalViewsDay,
 
-			totalViewsAveYear: Math.round(86400000*365*totalViews/maxTime),
-			totalViewsAveMonth: Math.round(86400000*28*totalViews/maxTime),
-			totalViewsAveWeek: Math.round(86400000*7*totalViews/maxTime),
-			totalViewsAveDay: Math.round(86400000*totalViews/maxTime),
+			totalViewsAveYear: Math.round(86400000 * 365 * totalViews / maxTime),
+			totalViewsAveMonth: Math.round(86400000 * 28 * totalViews / maxTime),
+			totalViewsAveWeek: Math.round(86400000 * 7 * totalViews / maxTime),
+			totalViewsAveDay: Math.round(86400000 * totalViews / maxTime),
 			
 			// Data OverTime
 			dateViews: dateViews,

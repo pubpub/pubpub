@@ -5,7 +5,7 @@ import {Reference} from 'components';
 
 let styles;
 
-export const ImageViewer = React.createClass({
+export const ReferenceViewer = React.createClass({
 	propTypes: {
 		atomData: PropTypes.object,
 		renderType: PropTypes.string, // full, embed, static-full, static-embed
@@ -39,7 +39,7 @@ export const ImageViewer = React.createClass({
 	}
 });
 
-export default Radium(ImageViewer);
+export default Radium(ReferenceViewer);
 
 styles = {
 	refWrapper: {
