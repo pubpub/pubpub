@@ -240,25 +240,6 @@ export const Media = React.createClass({
 									</div>
 
 									<div style={[this.state.nodeData.mode === 'cite' && styles.disabledInput]}>
-										<label style={styles.label} htmlFor={'size'}>
-											Size
-										</label>
-										<input ref={'size'} id={'size'} name={'size'} type="text" style={styles.input} value={this.state.nodeData.size} onChange={this.inputChange.bind(this, 'size')}/>
-										<div className={'light-color inputSubtext'}>
-											e.g. 20%, 50%, 200px, 400px
-										</div>
-									</div>
-
-									<div style={{display: 'none'}}> {/* Hidden while we don't allow for custom CSS - no use for this field */}
-										<label style={styles.label} htmlFor={'className'}>
-											Class Name
-										</label>
-										<input ref={'className'} id={'className'} name={'className'} type="text" style={styles.input} value={this.state.nodeData.className} onChange={this.inputChange.bind(this, 'className')}/>
-									</div>
-
-									
-
-									<div style={[this.state.nodeData.mode === 'cite' && styles.disabledInput]}>
 										<label style={styles.label} htmlFor={'align'}>
 											Align
 										</label>
@@ -269,6 +250,24 @@ export const Media = React.createClass({
 											<Radio value="right" id={'right'} style={styles.radioInput}/> <label htmlFor={'right'} style={styles.radioLabel}>Right</label>
 										</RadioGroup>
 									</div>
+
+									<div style={{display: 'none'}}> {/* Hidden while we don't allow for custom CSS - no use for this field */}
+										<label style={styles.label} htmlFor={'className'}>
+											Class Name
+										</label>
+										<input ref={'className'} id={'className'} name={'className'} type="text" style={styles.input} value={this.state.nodeData.className} onChange={this.inputChange.bind(this, 'className')}/>
+									</div>
+
+									<div style={[this.state.nodeData.mode === 'cite' && styles.disabledInput]}>
+										<label style={styles.label} htmlFor={'size'}>
+											Size
+										</label>
+										<input ref={'size'} id={'size'} name={'size'} type="text" style={styles.input} value={this.state.nodeData.size} onChange={this.inputChange.bind(this, 'size')}/>
+										<div className={'light-color inputSubtext'}>
+											e.g. 20%, 50%, 200px, 400px
+										</div>
+									</div>
+
 
 									<button className={'button'} onClick={this.saveItem}>
 										Save

@@ -43,9 +43,24 @@ export const EmbedWrapper = React.createClass({
 		}
 
 		if (this.props.mode === 'cite') {
-			const number = this.props.citeCount || '?';
+			let number = this.props.citeCount || '?';
+
+			// if (!this.props.citeCount) {
+			// 	const sourceElems = document.getElementsByClassName('cite-wrapper');
+			// 	const elemIDs = {};
+			// 	for (let index = 0; index < sourceElems.length; index++) {
+			// 		const element = sourceElems[index];
+			// 		if (element.getAttribute('data-source') in elemIDs === false) {
+			// 			elemIDs[element.getAttribute('data-source')] = Object.keys(elemIDs).length + 1;
+			// 		}
+			// 	}
+			// 	number = elemIDs[this.props.source];
+			// 	console.log('number is, ', number);
+			// }
+
+			
 			return (
-				<span className={'showChildOnHover cite-wrapper'} >
+				<span className={'showChildOnHover cite-wrapper'} data-source={this.props.source}>
 					[{number}]
 					<div className={'hoverChild hover-box'}>
 						<AtomViewerPane atomData={atomData} renderType={'embed'}/>
