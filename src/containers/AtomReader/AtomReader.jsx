@@ -127,6 +127,7 @@ export const AtomReader = React.createClass({
 		const showTOC = !this.props.meta && (this.state.showTOC && !this.state.showDiscussions || this.state.showTOC && this.state.lastCliked === 'toc');
 
 		const atomData = safeGetInToJS(this.props.atomData, ['atomData']) || {};
+		const contributorsData = safeGetInToJS(this.props.atomData, ['contributorsData']) || [];
 		const currentVersionContent = safeGetInToJS(this.props.atomData, ['currentVersionData', 'content']) || {};
 		const currentVersionDate = safeGetInToJS(this.props.atomData, ['currentVersionData', 'createDate']);
 		const toc = generateTOC(currentVersionContent.markdown).full;
@@ -203,7 +204,7 @@ export const AtomReader = React.createClass({
 						{(()=>{
 							switch (this.props.meta) {
 							case 'contributors':
-								return <AtomReaderContributors atomData={this.props.atomData}/>;
+								return <AtomReaderContributors atomData={this.props.atomData} contributorsData={contributorsData}/>;
 							case 'versions':
 								return <AtomReaderVersions atomData={this.props.atomData}/>;
 							case 'journals':

@@ -151,8 +151,11 @@ export function getAtomData(req, res) {
 		// This query fires if meta is equal to 'collaborators'
 		const getContributors = new Promise(function(resolve) {
 			if (meta === 'contributors') {
-				// const query = Link.find({destination: atomResult._id, type: {$in: ['isAuthor', 'isEditor', 'isReader']}}).exec();
-				const query = Link.find({destination: atomResult._id}).exec();
+				const query = Link.find({destination: atomResult._id, type: {$in: ['author', 'editor', 'reader', 'contributor']}, inactive: {$ne: true}}).populate({
+					path: 'source',
+					model: User,
+					select: 'username name image bio',
+				}).exec();
 				resolve(query);
 			} else {
 				resolve();
@@ -212,7 +215,7 @@ export function getAtomData(req, res) {
 			atomData: atomResult,
 			authorsData: taskData[0],
 			currentVersionData: taskData[1],
-			contributorData: taskData[2],
+			contributorsData: taskData[2],
 			versionsData: taskData[3],
 			submittedData: taskData[4],
 			featuredData: taskData[5],

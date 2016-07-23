@@ -16,6 +16,9 @@ import IFrameViewer from './IFrame/IFrameViewer';
 import LaTeXEditor from './LaTeX/LaTeXEditor';
 import LaTeXViewer from './LaTeX/LaTeXViewer';
 
+import ReferenceEditor from './Reference/ReferenceEditor';
+import ReferenceViewer from './Reference/ReferenceViewer';
+
 export default {
 	image: {
 		editor: ImageEditor,
@@ -40,5 +43,9 @@ export default {
 	latex: {
 		editor: LaTeXEditor,
 		viewer: LaTeXViewer
+	},
+	reference: {
+		editor: ReferenceEditor,
+		viewer: ReferenceViewer
 	}
 };

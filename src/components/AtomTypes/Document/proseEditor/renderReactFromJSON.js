@@ -1,6 +1,7 @@
 import React from 'react';
 import EmbedWrapper from './EmbedWrapper';
 
+// const 
 export const renderReactFromJSON = function(item) {
 	if (!item) {return null;}
 
@@ -52,7 +53,8 @@ export const renderReactFromJSON = function(item) {
 				}
 			}, node.text);
 		case 'embed':
-			return <EmbedWrapper {...node.attrs} key={index}/>;
+			// console.log(node.attrs.data);
+			return <EmbedWrapper {...node.attrs} key={index} citeCount={1}/>;
 		default:
 			console.log('Error with ', node);
 		}
