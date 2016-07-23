@@ -19,6 +19,9 @@ import LaTeXViewer from './LaTeX/LaTeXViewer';
 import ReferenceEditor from './Reference/ReferenceEditor';
 import ReferenceViewer from './Reference/ReferenceViewer';
 
+import HighlightEditor from './Highlight/HighlightEditor';
+import HighlightViewer from './Highlight/HighlightViewer';
+
 export default {
 	image: {
 		editor: ImageEditor,
@@ -47,5 +50,9 @@ export default {
 	reference: {
 		editor: ReferenceEditor,
 		viewer: ReferenceViewer
+	},
+	highlight: {
+		editor: HighlightEditor,
+		viewer: HighlightViewer
 	}
 };

@@ -25,6 +25,7 @@ export const defaultState = Immutable.Map({
 	contributorsData: [],
 	submittedData: [],
 	featuredData: [],
+	discussionsData: [],
 	status: 'loading',
 	error: null
 });
@@ -51,6 +52,7 @@ function getAtomDataSuccess(state, result) {
 		contributorsData: result.contributorsData,
 		submittedData: result.submittedData,
 		featuredData: result.featuredData,
+		discussionsData: result.discussionsData,
 		error: null
 	});
 }
@@ -65,6 +67,7 @@ function getAtomDataFail(state, error) {
 		contributorsData: [],
 		submittedData: [],
 		featuredData: [],
+		discussionsData: [],
 		error: error,
 	});
 }
