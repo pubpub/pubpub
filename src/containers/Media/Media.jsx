@@ -79,7 +79,6 @@ export const Media = React.createClass({
 		} 
 
 		if (type === 'mode') {
-			console.log(evt);
 			this.setState({nodeData: {...this.state.nodeData, mode: evt}});
 		} 
 
@@ -225,13 +224,22 @@ export const Media = React.createClass({
 								
 								<form onSubmit={this.saveItem} style={styles.detailsForm}>
 									<div>
+										<label style={styles.label} htmlFor={'mode'}>
+											Mode
+										</label>
+										<RadioGroup name={'mode'} selectedValue={this.state.nodeData.mode} onChange={this.inputChange.bind(this, 'mode')}>
+											<Radio value="embed" id={'embed'} style={styles.radioInput}/> <label htmlFor={'embed'} style={styles.radioLabel}>Embed</label>
+											<Radio value="cite" id={'cite'} style={styles.radioInput}/> <label htmlFor={'cite'} style={styles.radioLabel}>Cite</label>
+										</RadioGroup>
+									</div>
+									<div style={[this.state.nodeData.mode === 'cite' && styles.disabledInput]}>
 										<label style={styles.label} htmlFor={'caption'}>
 											Caption
 										</label>
 										<textarea ref={'caption'} id={'caption'} name={'caption'} style={[styles.input, styles.textarea]} value={this.state.nodeData.caption} onChange={this.inputChange.bind(this, 'caption')}></textarea>
 									</div>
 
-									<div>
+									<div style={[this.state.nodeData.mode === 'cite' && styles.disabledInput]}>
 										<label style={styles.label} htmlFor={'size'}>
 											Size
 										</label>
@@ -248,17 +256,9 @@ export const Media = React.createClass({
 										<input ref={'className'} id={'className'} name={'className'} type="text" style={styles.input} value={this.state.nodeData.className} onChange={this.inputChange.bind(this, 'className')}/>
 									</div>
 
-									<div>
-										<label style={styles.label} htmlFor={'mode'}>
-											Mode
-										</label>
-										<RadioGroup name={'mode'} selectedValue={this.state.nodeData.mode} onChange={this.inputChange.bind(this, 'mode')}>
-											<Radio value="embed" id={'embed'} style={styles.radioInput}/> <label htmlFor={'embed'} style={styles.radioLabel}>Embed</label>
-											<Radio value="cite" id={'cite'} style={styles.radioInput}/> <label htmlFor={'cite'} style={styles.radioLabel}>Cite</label>
-										</RadioGroup>
-									</div>
+									
 
-									<div>
+									<div style={[this.state.nodeData.mode === 'cite' && styles.disabledInput]}>
 										<label style={styles.label} htmlFor={'align'}>
 											Align
 										</label>
@@ -421,5 +421,9 @@ styles = {
 		display: 'inline-block',
 		fontSize: '0.95em',
 		margin: '0em 2em 1em 0em',
+	},
+	disabledInput: {
+		opacity: 0.5,
+		pointerEvents: 'none',
 	},
 };

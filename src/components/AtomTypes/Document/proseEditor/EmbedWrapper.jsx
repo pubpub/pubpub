@@ -1,6 +1,7 @@
 import React, {PropTypes} from 'react';
 import {AtomViewerPane} from 'containers/AtomReader/AtomViewerPane';
 import {ensureImmutable} from 'reducers';
+import {safeGetInToJS} from 'utils/safeParse';
 
 export const EmbedWrapper = React.createClass({
 	propTypes: {
@@ -41,9 +42,22 @@ export const EmbedWrapper = React.createClass({
 			style.paddingLeft = '2em';
 		}
 
+		if (this.props.mode === 'cite') {
+			const number = this.props.citeCount || '?';
+			return (
+				<span className={'showChildOnHover cite-wrapper'} >
+					[{number}]
+					<div className={'hoverChild hover-box'}>
+						<AtomViewerPane atomData={atomData} renderType={'embed'}/>
+					</div>
+				</span>
+			);
+		}
+
+
 		return (
 			<div className={'pub-embed ' + this.props.className} id={this.props.id} style={style}>
-				<AtomViewerPane atomData={atomData} renderType={'embed'} citeCount={this.props.citeCount}/>	
+				<AtomViewerPane atomData={atomData} renderType={'embed'}/>	
 				<div className={'caption'}>{this.props.caption}</div>	
 			</div>
 		);
