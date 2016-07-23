@@ -33,6 +33,7 @@ export const defaultState = Immutable.Map({
 	atomData: {},
 	currentVersionData: {},
 	token: undefined,
+	collab: undefined,
 	loading: false,
 	error: null,
 	newAtomHash: undefined,
@@ -76,6 +77,7 @@ function getAtomEditSuccess(state, result) {
 		atomData: result.atomData,
 		currentVersionData: result.currentVersionData,
 		token: result.token,
+		collab: result.collab,
 		error: null
 	});
 }

@@ -15,7 +15,6 @@ const Firebase = require('firebase');
 const Request = require('request-promise');
 const request = require('superagent-promise')(require('superagent'), Promise);
 
-
 import {fireBaseURL, firebaseTokenGen, generateAuthToken} from '../services/firebase';
 
 export function createAtom(req, res) {
@@ -236,10 +235,10 @@ export function getAtomEdit(req, res) {
 	// Check permission type
 
 	let token = undefined;
+	let collab = false; // collab tells you if a connection was established to the collab server
 
-	
 	request
-	.post('localhost:8000/authenticate')
+	.post('localhost:8000/authenticate') //192.241.154.71
 	.send({
 		user: 'hassan',
 		slug: slug
@@ -248,14 +247,17 @@ export function getAtomEdit(req, res) {
 	.end(function(err, res) {
 		if (err) {
 			console.log('Error getting token from collab server');
+		} else {
+			token = res.text;
+			collab = true;
 		}
-		console.log(res.text)
-		token = res.text;
-		return undefined;
-	}).then(function() {
+	}).catch(function(err){
+		console.log("Caught bb")
+	})
+	.then(function() {
+		console.log("Anyways")
 		return Atom.findOne({slug: slug}).populate({path: 'versions', select: '-content'}).lean().exec()
 	})
-	//Atom.findOne({slug: slug}).populate({path: 'versions', select: '-content'}).lean().exec()
 	.then(function(atomResult) { // Get most recent version
 		const mostRecentVersionId = atomResult.versions[atomResult.versions.length - 1];
 		return [atomResult, Version.findOne({_id: mostRecentVersionId}).exec()];
@@ -264,7 +266,8 @@ export function getAtomEdit(req, res) {
 		const output = {
 			atomData: atomResult,
 			currentVersionData: versionResult,
-			token: token
+			token: token,
+			collab: collab
 		};
 
 		if (atomResult.type === 'markdown') { // If we're sending down Editor data for a markdown atom, include the firebase token so we can do collaborative editing

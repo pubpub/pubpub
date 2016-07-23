@@ -20,7 +20,8 @@ export const DocumentEditor = React.createClass({
 	propTypes: {
 		atomEditData: PropTypes.object,
 		loginData: PropTypes.object,
-		token: PropTypes.string
+		token: PropTypes.string,
+		collab: PropTypes.string,
 	},
 
 	getInitialState() {
@@ -228,7 +229,6 @@ export const DocumentEditor = React.createClass({
 		this.collab.docInfo = dataDocInfo;
 		this.collab.docInfo.changed = false;
 		this.collab.docInfo.titleChanged = false;
-		//
 		// let defaultSettings = [
 		//     ['papersize', 1117],
 		//     ['citationstyle', defaultCitationStyle],
@@ -307,8 +307,16 @@ export const DocumentEditor = React.createClass({
 	},
 
 	render: function() {
+		const collab = safeGetInToJS(this.props.atomEditData, ['collab']);
+
 		return (
 			<div style={styles.container}>
+				<div>
+					{(collab
+						? <div></div>
+						: <div>Connection to Collaboration Server Failed</div>
+					)}
+				</div>
 
 				<Media/>
 

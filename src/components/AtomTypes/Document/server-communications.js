@@ -22,7 +22,7 @@ export class ModServerCommunications {
     let websocketProtocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
 
     try {
-      const websocketServer = 'localhost:';
+      const websocketServer = 'localhost:'; //192.241.154.71:
       const websocketPort = '8000';
       this.ws = new window.WebSocket(`${websocketProtocol}//${websocketServer}${websocketPort}/ws/doc/${this.editor.doc.id}`);
       this.ws.onopen = function() {
