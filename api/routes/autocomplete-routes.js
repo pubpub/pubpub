@@ -4,30 +4,9 @@ const _ = require('underscore');
 
 const Pub = require('../models').Pub;
 const User = require('../models').User;
-const Journal = require('../models').Journal;
 const Jrnl = require('../models').Jrnl;
 const Group = require('../models').Group;
 
-export function autocompleteJournals(req, res) {
-	Journal.find({}, {'_id': 1, 'journalName': 1, 'subdomain': 1, 'customDomain': 1, 'design': 1}).exec(function(err, journals) {
-		const objects = journals;
-		const sifter = new Sifter(objects);
-
-		const result = sifter.search(req.query.string, {
-			fields: ['journalName', 'customDomain', 'subdomain'],
-			sort: [{field: 'journalName', direction: 'asc'}],
-			limit: 10
-		});
-
-		const output = [];
-		_.each(result.items, function(item) {
-			output.push(objects[item.id]);
-		});
-
-		return res.status(201).json(output);
-	});
-}
-app.get('/autocompleteJournals', autocompleteJournals);
 
 export function autocompleteJrnls(req, res) {
 	Jrnl.find({}, {'_id': 1, 'jrnlName': 1, 'slug': 1, 'logo': 1}).exec(function(err, journals) {
@@ -126,37 +105,6 @@ export function autocompletePubs(req, res) {
 }
 app.get('/autocompletePubs', autocompletePubs);
 
-export function autocompletePubsForJournal(req, res) {
-	// Similar to autocompletePubs, but infers which journal
-	Journal.findOne({ $or: [ {subdomain: req.query.host.split('.')[0]}, {customDomain: req.query.host}]})
-	.lean().exec(function(err, journal) {
-
-		const query = {history: {$not: {$size: 0}}, 'settings.isPrivate': {$ne: true}};
-		if (journal) {
-			query.featuredInList = journal._id;
-		}
-
-		// Pub.find(query, {'slug': 1, 'title': 1, 'abstract': 1, 'tags': 1, 'discussions': 1, 'lastUpdated': 1}).exec(function(err, pubs) {
-		Pub.find(query, {'slug': 1, 'title': 1, 'abstract': 1, 'createDate': 1, 'lastUpdated': 1}).exec(function(errPubFind, pubs) {
-			const objects = pubs;
-			// console.log(objects);
-			const sifter = new Sifter(objects);
-
-			const result = sifter.search(req.query.string, {
-				fields: ['slug', 'title'],
-				sort: [{field: 'title', direction: 'asc'}],
-				limit: 10
-			});
-
-			const output = [];
-			_.each(result.items, function(item) {
-				output.push(objects[item.id]);
-			});
-			return res.status(201).json(output);
-		});
-	});
-}
-app.get('/autocompletePubsForJournal', autocompletePubsForJournal);
 
 export function autocompletePubsAndUsers(req, res) {
 	let objects = [];

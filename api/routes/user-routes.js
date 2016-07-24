@@ -1,42 +1,5 @@
 import app from '../api';
-import {User, Pub, Journal, Notification, Link, Atom, Jrnl} from '../models';
-
-// import {cloudinary} from '../services/cloudinary';
-import {sendInviteEmail} from '../services/emails';
-
-// export function getUser(req, res) {
-// 	const userID = req.user ? req.user._id : undefined;
-// 	console.time('dbsave');
-// 	User.getUser(req.query.username, userID, (err, userData)=>{
-// 		console.log('----');
-// 		console.timeEnd('dbsave');
-// 		if (err) {
-// 			console.log(err);
-// 			return res.status(500).json(err);
-// 		}
-// 		console.time('dbsave');
-// 		Link.find({source: userData._id}).lean().exec()
-// 		.then(function(linksResult) { // Get most recent version
-// 			const atomIDs = linksResult.map((link)=>{
-// 				return link.destination;
-// 			});
-// 			return Atom.find({_id: {$in: atomIDs}}).lean().exec();
-// 		})
-// 		.then(function(atomsResult) { // Get most recent version
-// 			userData.atoms = atomsResult;
-// 			console.timeEnd('dbsave');
-// 			console.log('----');
-// 			return res.status(201).json(userData);
-// 		})
-// 		.catch(function(error) {
-// 			console.log('error', error);
-// 			return res.status(500).json(error);
-// 		});
-
-// 	});
-
-// }
-// app.get('/getUser', getUser);
+import {User, Pub, Notification, Link, Atom, Jrnl} from '../models';
 
 export function getUser(req, res) {
 	let userData = {};
@@ -173,7 +136,7 @@ export function follow(req, res) {
 
 	case 'journals':
 		User.update({ _id: userID }, { $addToSet: { 'following.journals': req.body.followedID} }, function(err, result) {if (err) return console.log(err);});
-		Journal.update({ _id: req.body.followedID }, { $addToSet: { followers: userID} }, function(err, result) {if (err) return console.log(err);});
+		// Journal.update({ _id: req.body.followedID }, { $addToSet: { followers: userID} }, function(err, result) {if (err) return console.log(err);});
 		return res.status(201).json(req.body);
 
 	default:
@@ -201,7 +164,7 @@ export function unfollow(req, res) {
 
 	case 'journals':
 		User.update({ _id: userID }, { $pull: { 'following.journals': req.body.followedID} }, function(err, result) {if (err) return console.log(err);});
-		Journal.update({ _id: req.body.followedID }, { $pull: { followers: userID} }, function(err, result) {if (err) return console.log(err);});
+		// Journal.update({ _id: req.body.followedID }, { $pull: { followers: userID} }, function(err, result) {if (err) return console.log(err);});
 		return res.status(201).json(req.body);
 
 	default:
@@ -210,45 +173,6 @@ export function unfollow(req, res) {
 }
 app.post('/unfollow', unfollow);
 
-export function inviteReviewers(req, res) {
-	const inviteData = req.body.inviteData;
-	const pubId = req.body.pubID;
-	Pub.getSimplePub(pubId, function(err, pub) {
-
-		if (err) {res.status(500); }
-		const senderName = req.user ? req.user.name : 'An anonymous user';
-		const pubName = pub.title;
-
-
-		Journal.findByHost(req.query.host, function(errJournalFind, journ) {
-
-			const journalName = journ ? journ.journalName : 'PubPub';
-			let journalURL = '';
-			if (journ) {
-				journalURL = journ.customDomain ? 'http://' + journ.customDomain : 'http://' + journ.subdomain + '.pubpub.org';
-			} else {
-				journalURL = 'http://www.pubpub.org';
-			}
-
-			const journalIntroduction = journ ? journalName + ' is a journal built on PubPub:' : 'PubPub is';
-
-			const pubURL = journalURL + '/pub/' + pub.slug;
-
-			for (const recipient of inviteData) {
-				const recipientEmail = recipient.email;
-
-				sendInviteEmail(senderName, pubName, pubURL, journalName, journalURL, journalIntroduction, recipientEmail, function(error, email) {
-					if (err) { console.log(error);	}
-					// console.log(email);
-				});
-			}
-			res.status(201).json({});
-		});
-
-	});
-
-}
-app.post('/inviteReviewers', inviteReviewers);
 
 export function setNotificationsRead(req, res) {
 	if (!req.user) {
