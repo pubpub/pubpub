@@ -95,7 +95,8 @@ export const AtomReaderAnalytics = React.createClass({
 				title: '',
 				hAxis: {title: '', minValue: this.dataMin(gData.dateViewsArray, 0), maxValue: this.dataMax(gData.dateViewsArray, 0), gridlines: {color: '#fff'}},
 				vAxis: {title: '', minValue: this.dataMin(convDateViewsArray, 1), maxValue: this.dataMax(convDateViewsArray, 1)},
-				legend: 'none'},
+				legend: 'none',
+			},
 			rows: convDateViewsArray,
 			columns: [
 				{'type': 'datetime', 'label': 'Time'},
@@ -105,7 +106,7 @@ export const AtomReaderAnalytics = React.createClass({
 			graph_id: 'LineChart',
 			width: '100%',
 			height: '300px',
-			legend_toggle: true
+			legend_toggle: true,
 		};
 
 		return (

@@ -119,7 +119,7 @@ app.post('/createAtom', createAtom);
 
 export function getAtomData(req, res) {
 	const {slug, meta, version} = req.query;
-	// const userID = req.user ? req.user._id : undefined;
+	const userID = req.user ? req.user._id : undefined;
 	// Check permission type
 
 	Atom.findOne({slug: slug}).lean().exec()
@@ -127,6 +127,11 @@ export function getAtomData(req, res) {
 		if (!atomResult) {
 			throw new Error('Atom does not exist');
 		}
+		const permissionLink = Link.findOne({source: userID, destination: atomResult._id, type: {$in: ['author', 'editor', 'reader']}, inactive: {$ne: true} });
+		return [atomResult, permissionLink];
+	})
+	.spread(function(atomResult, permissionLink) {
+		const permissionType = permissionLink && permissionLink.type;
 
 		const getAuthors = new Promise(function(resolve) {
 			const query = Link.find({destination: atomResult._id, type: 'author'}).populate({
@@ -261,10 +266,17 @@ export function getAtomData(req, res) {
 
 		];
 
-		return [atomResult, Promise.all(tasks)];
+		return [atomResult, Promise.all(tasks), permissionType];
 	})
-	.spread(function(atomResult, taskData) { // Send response
+	.spread(function(atomResult, taskData, permissionType) { // Send response
 		// What's spread? See here: http://stackoverflow.com/questions/18849312/what-is-the-best-way-to-pass-resolved-promise-values-down-to-a-final-then-chai
+
+		if (!atomResult.isPublished && permissionType !== 'author' && permissionType !== 'editor' && permissionType !== 'reader') {
+			throw new Error('Atom does not exist');
+		}
+
+		// Need to beef this out once people start publishing specific versions!
+
 		return res.status(201).json({
 			atomData: atomResult,
 			authorsData: taskData[0],
@@ -277,6 +289,11 @@ export function getAtomData(req, res) {
 		});
 	})
 	.catch(function(error) {
+		if (error.message === 'Atom does not exist') {
+			console.log(error.message);
+			return res.status(404).json('404 Not Found');	
+		}
+		
 		console.log('error', error);
 		return res.status(500).json(error);
 	});
@@ -287,27 +304,45 @@ app.get('/getAtomData', getAtomData);
 
 export function getAtomEdit(req, res) {
 	const {slug} = req.query;
-	// const userID = req.user ? req.user._id : undefined;
+	const userID = req.user ? req.user._id : undefined;
 	// Check permission type
 
 	Atom.findOne({slug: slug}).lean().exec()
 	.then(function(atomResult) { // Get most recent version
-		const mostRecentVersionId = atomResult.versions[atomResult.versions.length - 1];
-		return [atomResult, Version.findOne({_id: mostRecentVersionId}).exec()];
+		if (!atomResult) {
+			throw new Error('Atom does not exist');
+		}
+		const permissionLink = Link.findOne({source: userID, destination: atomResult._id, type: {$in: ['author', 'editor', 'reader']}, inactive: {$ne: true} });
+		return [atomResult, permissionLink];
 	})
-	.spread(function(atomResult, versionResult) { // Send response
+	.spread(function(atomResult, permissionLink) { // Get most recent version
+		const permissionType = permissionLink && permissionLink.type;
+
+		const mostRecentVersionId = atomResult.versions[atomResult.versions.length - 1];
+		return [atomResult, Version.findOne({_id: mostRecentVersionId}).exec(), permissionType];
+	})
+	.spread(function(atomResult, versionResult, permissionType) { // Send response
+		if (permissionType !== 'author' && permissionType !== 'editor' && permissionType !== 'reader') {
+			throw new Error('Atom does not exist');
+		}
+
 		const output = {
 			atomData: atomResult,
 			currentVersionData: versionResult
 		};
 
-		if (atomResult.type === 'markdown') { // If we're sending down Editor data for a markdown atom, include the firebase token so we can do collaborative editing
-			output.atomData.token = firebaseTokenGen(req.user.username, slug, false); // the false should be {isReader}
-		}
+		// if (atomResult.type === 'markdown') { // If we're sending down Editor data for a markdown atom, include the firebase token so we can do collaborative editing
+		// 	output.atomData.token = firebaseTokenGen(req.user.username, slug, false); // the false should be {isReader}
+		// }
 
 		return res.status(201).json(output);
 	})
 	.catch(function(error) {
+		if (error.message === 'Atom does not exist') {
+			console.log(error.message);
+			return res.status(404).json('404 Not Found');	
+		}
+
 		console.log('error', error);
 		return res.status(500).json(error);
 	});
