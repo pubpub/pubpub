@@ -48,7 +48,7 @@ export const AtomEditor = React.createClass({
 		const oldSlug = safeGetInToJS(this.props.atomEditData, ['atomData', 'slug']);
 		const newSlug = safeGetInToJS(nextProps.atomEditData, ['atomData', 'slug']);
 		if (oldSlug !== newSlug) {
-			this.props.dispatch(push('/a/' + newSlug + '/edit'));
+			this.props.dispatch(push('/pub/' + newSlug + '/edit'));
 		}
 	},
 
@@ -114,13 +114,13 @@ export const AtomEditor = React.createClass({
 		const metaData = {};
 
 		const mobileNavButtons = [
-			{ type: 'link', mobile: true, text: 'View', link: '/a/' + this.props.slug },
+			{ type: 'link', mobile: true, text: 'View', link: '/pub/' + this.props.slug },
 			{ type: 'button', mobile: true, text: 'Menu', action: undefined },
 		];
 
 		const navItems = [
-			{text: 'View', link: '/a/' + this.props.slug},
-			{text: 'Edit', link: '/a/' + this.props.slug + '/draft', active: true},
+			{text: 'View', link: '/pub/' + this.props.slug},
+			{text: 'Edit', link: '/pub/' + this.props.slug + '/draft', active: true},
 			{text: 'Details', rightAlign: true, action: this.openModal.bind(this, 'details')},
 			{text: 'Contributors', rightAlign: true, action: this.openModal.bind(this, 'contributors')},
 			// {text: 'Styles', rightAlign: true, action: this.openModal.bind(this, 'styles')},

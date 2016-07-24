@@ -97,7 +97,7 @@ export const AtomEditorContributors = React.createClass({
 				}
 			}
 		});
-		this.updateContributor(linkID);
+		this.updateContributor(linkID, newType, this.state.contributorStates[linkID].roles);
 	},
 
 	handleRoleChange: function(linkID, roleList) {
@@ -110,12 +110,10 @@ export const AtomEditorContributors = React.createClass({
 				}
 			}
 		});
-		this.updateContributor(linkID);
+		this.updateContributor(linkID, this.state.contributorStates[linkID].type, roleList);
 	},
 
-	updateContributor: function(linkID) {
-		const type = this.state.contributorStates[linkID].type;
-		const roles = this.state.contributorStates[linkID].roles;
+	updateContributor: function(linkID, type, roles) {
 		this.props.handleUpdateContributor(linkID, type, roles);
 	},
 

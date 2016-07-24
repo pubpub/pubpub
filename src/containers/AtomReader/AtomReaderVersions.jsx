@@ -54,7 +54,7 @@ export const AtomReaderVersions = React.createClass({
 									<div style={styles.versionMessage}>{item.message}</div>
 								</div>
 								<div style={styles.buttonWrapper}>
-									<Link style={globalStyles.link} to={'/a/' + slug + '?version=' + item._id} className={'button'} style={styles.button}>View this Version</Link>
+									<Link style={globalStyles.link} to={'/pub/' + slug + '?version=' + item._id} className={'button'} style={styles.button}>View this Version</Link>
 								</div>
 							</div>
 						);

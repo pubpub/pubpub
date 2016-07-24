@@ -22,9 +22,9 @@ export default () => {
 			{ /* Routes */ }
 			<Route path="/about" component={About}/>
 
-			<Route path="/a/:slug" getComponent={loadComponent(AtomReader)}/>
-			<Route path="/a/:slug/edit" getComponent={loadComponent(AtomEditor)}/>
-			<Route path="/a/:slug/:meta" getComponent={loadComponent(AtomReader)}/>
+			<Route path="/pub/:slug" getComponent={loadComponent(AtomReader)}/>
+			<Route path="/pub/:slug/edit" getComponent={loadComponent(AtomEditor)}/>
+			<Route path="/pub/:slug/:meta" getComponent={loadComponent(AtomReader)}/>
 
 			{/*
 			<Route path="/group/:groupSlug" getComponent={loadComponent(GroupProfile)}/>

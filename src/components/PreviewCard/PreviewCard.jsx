@@ -31,7 +31,7 @@ export const PreviewCard = React.createClass({
 		let href;
 		switch (this.props.type) {
 		case 'atom':
-			href = '/a/' + this.props.slug; break;
+			href = '/pub/' + this.props.slug; break;
 		case 'journal':
 			href = '/' + this.props.slug; break;
 		case 'user':

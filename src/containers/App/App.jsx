@@ -47,7 +47,7 @@ export const App = React.createClass({
 			this.props.dispatch(push('/'));
 		}
 		if (!this.props.atomEditData.get('newAtomHash') && nextProps.atomEditData.get('newAtomHash')) {
-			this.props.dispatch(push('/a/' + nextProps.atomEditData.get('newAtomHash') + '/edit'));
+			this.props.dispatch(push('/pub/' + nextProps.atomEditData.get('newAtomHash') + '/edit'));
 		}
 	},
 

@@ -134,22 +134,22 @@ export const AtomReader = React.createClass({
 		const versionQuery = this.props.query && this.props.query.version ? '?version=' + this.props.query.version : '';
 
 		const mobileNavButtons = [
-			{ type: 'link', mobile: true, text: 'Discussions', link: '/a/' + this.props.slug + '/discussions' },
+			{ type: 'link', mobile: true, text: 'Discussions', link: '/pub/' + this.props.slug + '/discussions' },
 			{ type: 'button', mobile: true, text: 'Menu', action: undefined },
 		];
 		if (this.props.meta === 'discussions') {
-			mobileNavButtons[0] = { type: 'link', mobile: true, text: 'View', link: '/a/' + this.props.slug };
+			mobileNavButtons[0] = { type: 'link', mobile: true, text: 'View', link: '/pub/' + this.props.slug };
 		}
 
 		const navItems = [
-			{link: '/a/' + this.props.slug, text: 'View', active: !this.props.meta},
-			{link: '/a/' + this.props.slug + '/edit', text: 'Edit'},
-			{link: '/a/' + this.props.slug + '/contributors', text: 'Contributors', rightAlign: true, active: this.props.meta === 'contributors'},
-			{link: '/a/' + this.props.slug + '/versions', text: 'Versions', rightAlign: true, active: this.props.meta === 'versions'},
-			{link: '/a/' + this.props.slug + '/journals', text: 'Journals', rightAlign: true, active: this.props.meta === 'journals'},
-			{link: '/a/' + this.props.slug + '/analytics', text: 'Analytics', rightAlign: true, active: this.props.meta === 'analytics'},
-			{link: '/a/' + this.props.slug + '/cite' + versionQuery, text: 'Cite', rightAlign: true, active: this.props.meta === 'cite'},
-			{link: '/a/' + this.props.slug + '/export' + versionQuery, text: 'Export', rightAlign: true, active: this.props.meta === 'export'},
+			{link: '/pub/' + this.props.slug, text: 'View', active: !this.props.meta},
+			{link: '/pub/' + this.props.slug + '/edit', text: 'Edit'},
+			{link: '/pub/' + this.props.slug + '/contributors', text: 'Contributors', rightAlign: true, active: this.props.meta === 'contributors'},
+			{link: '/pub/' + this.props.slug + '/versions', text: 'Versions', rightAlign: true, active: this.props.meta === 'versions'},
+			{link: '/pub/' + this.props.slug + '/journals', text: 'Journals', rightAlign: true, active: this.props.meta === 'journals'},
+			{link: '/pub/' + this.props.slug + '/analytics', text: 'Analytics', rightAlign: true, active: this.props.meta === 'analytics'},
+			{link: '/pub/' + this.props.slug + '/cite' + versionQuery, text: 'Cite', rightAlign: true, active: this.props.meta === 'cite'},
+			{link: '/pub/' + this.props.slug + '/export' + versionQuery, text: 'Export', rightAlign: true, active: this.props.meta === 'export'},
 		];
 
 		// Remove Export option if the atom type is not a doc
@@ -158,7 +158,7 @@ export const AtomReader = React.createClass({
 		if (atomData.type !== 'document') { navItems.pop(); }
 
 		const authorsData = safeGetInToJS(this.props.atomData, ['authorsData']) || [];
-		const authorList = atomData.customAuthorString ? [<Link to={'/a/' + this.props.slug + '/contributors'}>{atomData.customAuthorString}</Link>] : authorsData.map((item, index)=> {
+		const authorList = atomData.customAuthorString ? [<Link to={'/pub/' + this.props.slug + '/contributors'}>{atomData.customAuthorString}</Link>] : authorsData.map((item, index)=> {
 			return <Link to={'/user/' + item.source.username} key={'author-' + index} className={'author'}>{item.source.name}</Link>;
 		});
 

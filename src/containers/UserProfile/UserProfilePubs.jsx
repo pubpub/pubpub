@@ -36,7 +36,7 @@ export const UserProfilePubs = React.createClass({
 						// Need to check to make sure we don't put the 
 						// edit button on read-only pubs
 						const buttons = [ 
-							{ type: 'link', text: 'Edit', link: '/a/' + item.slug + '/edit' },
+							{ type: 'link', text: 'Edit', link: '/pub/' + item.slug + '/edit' },
 						];
 
 						return (

@@ -160,7 +160,7 @@ styles = {
 		width: '100%',
 		minHeight: '4em',
 		backgroundColor: 'white',
-		margin: '0 auto',
+		margin: '2em auto',
 		boxShadow: '0px 1px 3px 1px #BBBDC0',
 	},
 	discussionHeader: {
