@@ -5,7 +5,7 @@ import Helmet from 'react-helmet';
 import { Link } from 'react-router';
 import {getAtomData, submitAtomToJournals} from './actions';
 import {toggleVisibility, follow, unfollow} from 'containers/Login/actions';
-import {createHighlight} from 'containers/MediaLibrary/actions';
+// import {createHighlight} from 'containers/MediaLibrary/actions';
 import {safeGetInToJS} from 'utils/safeParse';
 import dateFormat from 'dateformat';
 

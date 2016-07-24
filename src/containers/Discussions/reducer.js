@@ -21,16 +21,6 @@ import {
 
 } from 'containers/Discussions/actions';
 
-import {
-    LOAD_PUB,
-    LOAD_PUB_SUCCESS,
-    LOAD_PUB_FAIL,
-} from 'containers/PubReader/actions';
-import {
-	LOAD_PUB_EDIT,
-	LOAD_PUB_EDIT_SUCCESS,
-	LOAD_PUB_EDIT_FAIL,
-} from 'containers/Editor/actions';
 
 /*--------*/
 // Initialize Default State
@@ -53,22 +43,22 @@ export const defaultState = Immutable.Map({
 // state. They are pure functions. We use Immutable to enforce this.
 /*--------*/
 
-function getPubLoad(state) {
-	return state.merge({
-		discussionsStatus: 'loading'
-	});
-}
-function getPubSuccess(state, result) {
-	return state.merge({
-		discussions: result.discussions,
-		discussionsStatus: 'loaded'
-	});
-}
-function getPubFail(state, result) {
-	return state.merge({
-		discussionsStatus: 'error'
-	});
-}
+// function getPubLoad(state) {
+// 	return state.merge({
+// 		discussionsStatus: 'loading'
+// 	});
+// }
+// function getPubSuccess(state, result) {
+// 	return state.merge({
+// 		discussions: result.discussions,
+// 		discussionsStatus: 'loaded'
+// 	});
+// }
+// function getPubFail(state, result) {
+// 	return state.merge({
+// 		discussionsStatus: 'error'
+// 	});
+// }
 
 function addDiscussionLoad(state, activeSaveID) {
 	return state.merge({
@@ -191,15 +181,15 @@ function archiveDiscussion(state, discussionID) {
 export default function readerReducer(state = defaultState, action) {
 
 	switch (action.type) {
-	case LOAD_PUB:
-	case LOAD_PUB_EDIT:
-		return getPubLoad(state);
-	case LOAD_PUB_SUCCESS:
-	case LOAD_PUB_EDIT_SUCCESS:
-		return getPubSuccess(state, action.result);
-	case LOAD_PUB_FAIL:
-	case LOAD_PUB_EDIT_FAIL:
-		return getPubFail(state, action.error);
+	// case LOAD_PUB:
+	// case LOAD_PUB_EDIT:
+	// 	return getPubLoad(state);
+	// case LOAD_PUB_SUCCESS:
+	// case LOAD_PUB_EDIT_SUCCESS:
+	// 	return getPubSuccess(state, action.result);
+	// case LOAD_PUB_FAIL:
+	// case LOAD_PUB_EDIT_FAIL:
+	// 	return getPubFail(state, action.error);
 	case ADD_DISCUSSION:
 		return addDiscussionLoad(state, action.activeSaveID);
 	case ADD_DISCUSSION_SUCCESS:

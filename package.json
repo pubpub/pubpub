@@ -184,7 +184,6 @@
     "react-textarea-autosize": "^4.0.1",
     "reactfire": "^0.7.0",
     "redux": "^3.5.2",
-    "redux-form": "^3.0.12",
     "redux-router": "2.0.0",
     "request-promise": "^3.0.0",
     "rss": "^1.2.1",

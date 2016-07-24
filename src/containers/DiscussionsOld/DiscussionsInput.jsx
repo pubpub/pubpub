@@ -2,7 +2,7 @@
 
 import React, {PropTypes} from 'react';
 import Radium, {Style} from 'radium';
-import {Button, Formatting, License, Menu} from 'components';
+import {Formatting, License} from 'components';
 import {globalStyles} from 'utils/styleConstants';
 
 import {globalMessages} from 'utils/globalMessages';

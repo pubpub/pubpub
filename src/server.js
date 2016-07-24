@@ -151,34 +151,14 @@ app.use((req, res) => {
 
 							<!-- We could dynamically load these in Editor.jsx
 							<!-- If we have to load more local css - we should bundle it all into one minified file and load it here. -->
-							<link href='/css/codemirror.css' rel='stylesheet' type='text/css' /> <!-- I went back to loaded this one because the async css load was causing flicker on Discussion Codemirror -->
+							
 							<link href='/css/print.css' rel='stylesheet' type='text/css' />
-							<link href='/css/highlightdefault.css' rel='stylesheet' type='text/css' />
 							<link href='/css/react-select.css' rel='stylesheet' type='text/css' />
-							<link href='/css/menu.css' rel='stylesheet' type='text/css' />
 							<link href='/css/pubpub.css' rel='stylesheet' type='text/css' />
 							<link href='/css/basePub.css' rel='stylesheet' type='text/css' />
 							<style id="dynamicStyle">${dynamicStyle}</style>
 
-							<link href='https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.9.0/addon/hint/show-hint.css' rel='stylesheet' type='text/css' />
-							<!-- We could dynamically load these in Editor.jsx
-							This would prevent us from forcing every user to load the libraries - given that many will not edit -->
-							<script src="https://cdn.firebase.com/js/client/2.2.4/firebase.js"></script>
-							<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.2.0/codemirror.min.js"></script>
-							<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.9.0/addon/display/placeholder.min.js"></script>
-							<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.9.0/addon/hint/show-hint.min.js"></script>
-							<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.9.0/addon/mode/simple.min.js"></script>
-							<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.9.0/addon/mode/multiplex.min.js"></script>
-							<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.4.0/addon/mode/overlay.min.js"></script>
-							<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.2.0/mode/markdown/markdown.min.js"></script>
-							<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.2.0/mode/css/css.min.js"></script>
-							<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.2.0/mode/javascript/javascript.min.js"></script>
-							<script src="https://cdn.firebase.com/libs/firepad/1.2.0/firepad.min.js"></script>
 							<script src="https://cdn.polyfill.io/v2/polyfill.min.js?features=Intl.~locale.en"></script>
-
-							<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.1.0/highlight.min.js"></script>
-							<script src="/js/typo.js"></script>
-							<script src="/js/spellcheck.js"></script>
 							<script src="https://cdn.ravenjs.com/2.1.0/raven.min.js"></script>
 
 							<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
