@@ -1,8 +1,9 @@
 import React, {PropTypes} from 'react';
-import Radium from 'radium';
+import Radium, {Style} from 'radium';
 import {safeGetInToJS} from 'utils/safeParse';
 
 import katex from 'katex';
+import katexStyles from './katex.css.js';
 
 let styles;
 
@@ -34,11 +35,17 @@ export const LaTeXViewer = React.createClass({
 		switch (this.props.renderType) {
 		case 'embed':
 		case 'static-embed':
-			return <div dangerouslySetInnerHTML={{__html: displayHTML}}></div>;
+			return <div>
+				<Style rules={ katexStyles } />
+				<div dangerouslySetInnerHTML={{__html: displayHTML}}></div>
+			</div>;
 		case 'full':
 		case 'static-full':
 		default:
-			return <div dangerouslySetInnerHTML={{__html: inlineHTML}}></div>;
+			return <div>
+				<Style rules={ katexStyles } />
+				<div dangerouslySetInnerHTML={{__html: inlineHTML}}></div>
+			</div>;
 		}
 	}
 });

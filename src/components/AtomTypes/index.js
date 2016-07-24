@@ -16,6 +16,9 @@ import IFrameViewer from './IFrame/IFrameViewer';
 import LaTeXEditor from './LaTeX/LaTeXEditor';
 import LaTeXViewer from './LaTeX/LaTeXViewer';
 
+import TableEditor from './Table/TableEditor';
+import TableViewer from './Table/TableViewer';
+
 import ReferenceEditor from './Reference/ReferenceEditor';
 import ReferenceViewer from './Reference/ReferenceViewer';
 
@@ -46,6 +49,10 @@ export default {
 	latex: {
 		editor: LaTeXEditor,
 		viewer: LaTeXViewer
+	},
+	table: {
+		editor: TableEditor,
+		viewer: TableViewer
 	},
 	reference: {
 		editor: ReferenceEditor,
