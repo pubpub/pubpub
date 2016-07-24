@@ -104,9 +104,14 @@ export const Discussions = React.createClass({
 					{discussionsData.map((discussion, index)=> {
 						const docJSON = discussion.versionData.content.docJSON;
 						const image = discussion.authorsData[0].source.image;
+						const name = discussion.authorsData[0].source.name;
+						const date = discussion.versionData.createDate;
+
 						return (
-							<div>
+							<div key={'discussion-' + index}>
 								<img src={image} />
+								<div>{name}</div>
+								{dateFormat(date, 'mmm dd, yyyy h:MM TT')}
 								{renderReactFromJSON(docJSON && docJSON.content)}
 							</div>
 						);
