@@ -22,9 +22,10 @@ export const defaultState = Immutable.Map({
 	authorsData: [],
 	currentVersionData: {},
 	versionsData: [],
-	contributorData: [],
+	contributorsData: [],
 	submittedData: [],
 	featuredData: [],
+	discussionsData: [],
 	status: 'loading',
 	error: null
 });
@@ -48,9 +49,10 @@ function getAtomDataSuccess(state, result) {
 		authorsData: result.authorsData,
 		currentVersionData: result.currentVersionData,
 		versionsData: result.versionsData,
-		contributorData: result.contributorData,
+		contributorsData: result.contributorsData,
 		submittedData: result.submittedData,
 		featuredData: result.featuredData,
+		discussionsData: result.discussionsData,
 		error: null
 	});
 }
@@ -62,9 +64,10 @@ function getAtomDataFail(state, error) {
 		authorsData: [],
 		currentVersionData: {},
 		versionsData: [],
-		contributorData: [],
+		contributorsData: [],
 		submittedData: [],
 		featuredData: [],
+		discussionsData: [],
 		error: error,
 	});
 }

@@ -93,3 +93,24 @@ module.exports = mongoose.model('Link', linkSchema);
 
 // JOURNAL -> PUB
 // featured
+
+
+
+
+
+// -------
+// Metadata
+// -------
+// reply
+// 		rootReply
+// 		yays
+// 		nays
+// 		
+// featured
+// 		collections
+// 
+// author, contributor, editor, reader
+// 		roles
+
+
+

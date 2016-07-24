@@ -19,7 +19,7 @@ export const DocumentViewer = React.createClass({
 		case 'full':
 		case 'static-full':
 		default:
-			return <div>{renderReactFromJSON(docJSON && docJSON.content)}</div>;
+			return <div>{renderReactFromJSON(docJSON && docJSON.content, true)}</div>;
 		}
 
 	}

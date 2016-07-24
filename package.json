@@ -180,6 +180,7 @@
     "react-router": "^2.5.2",
     "react-select": "^1.0.0-beta14",
     "react-selectize": "^2.0.2",
+    "react-sticky": "^5.0.4",
     "react-textarea-autosize": "^4.0.1",
     "reactfire": "^0.7.0",
     "redux": "^3.5.2",

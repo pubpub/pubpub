@@ -60,5 +60,21 @@ module.exports = mongoose.model('Version', versionSchema);
 //  pages 
 //  year 
 //  publisher 
+//  doi
 //  note 
+// -----------
+
+// Highlight:
+// -----------
+// content: {
+// 	text:
+// 	context:
+//  ancestorHash: 
+// 	startContainerPath:
+// 	startOffset:
+//	endContainerPath:
+// 	endOffset:
+// 	sourcePub: 
+// 	sourceVersion
+// }
 // -----------
