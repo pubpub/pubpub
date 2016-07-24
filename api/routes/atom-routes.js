@@ -244,7 +244,7 @@ export function getAtomEdit(req, res) {
 	let collab = false; // collab tells you if a connection was established to the collab server
 
 	request
-	.post('localhost:8000/authenticate') //192.241.154.71
+	.post(require('../config').collabServerURL + '/authenticate') // 192.241.154.71
 	.send({
 		user: 'hassan',
 		slug: slug

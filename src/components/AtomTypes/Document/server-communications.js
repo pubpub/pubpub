@@ -14,17 +14,19 @@ export class ModServerCommunications {
   }
 
   init() {
-    this.createWSConnection()
+    this.createWSConnection();
   }
 
   createWSConnection() {
     let that = this;
     let websocketProtocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
 
+    let wsServer = require('../../../../api/config').collabServerURL;
+
     try {
       const websocketServer = 'localhost:'; //192.241.154.71:
       const websocketPort = '8000';
-      this.ws = new window.WebSocket(`${websocketProtocol}//${websocketServer}${websocketPort}/ws/doc/${this.editor.doc.id}`);
+      this.ws = new window.WebSocket(`${websocketProtocol}//${wsServer}/ws/doc/${this.editor.doc.id}`);
       this.ws.onopen = function() {
         console.log('connection open');
         // jQuery('#unobtrusive_messages').html('')
