@@ -129,7 +129,7 @@ export const Discussions = React.createClass({
 										})}
 									</div>
 								</div>
-								<div style={styles.discussionContent}>
+								<div className={'atom-reply'} style={styles.discussionContent}>
 									{renderReactFromJSON(docJSON && docJSON.content)}
 								</div>
 								<div style={styles.discussionFooter}>

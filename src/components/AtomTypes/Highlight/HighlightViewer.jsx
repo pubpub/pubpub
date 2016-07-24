@@ -34,11 +34,13 @@ export default Radium(HighlightViewer);
 styles = {
 	selectionBlock: {
 		borderRadius: '1px',
-		padding: '10px 8px',
+		padding: '1em',
 		color: '#5B5B5B',
 		cursor: 'pointer',
-		margin: '5px 0px 15px 0px',
+		margin: '0.25em 0em 1em 0em',
 		fontStyle: 'italic',
-		fontSize: '0.9em',
+		fontSize: '0.85em',
+		boxShadow: '0 1px 3px 0 rgba(0,0,0,.2),0 1px 1px 0 rgba(0,0,0,.14),0 2px 1px -1px rgba(0,0,0,.12)',
+		backgroundColor: 'rgba(255,255,255,0.65)',
 	},
 };
