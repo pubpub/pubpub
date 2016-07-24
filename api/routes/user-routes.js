@@ -2,6 +2,7 @@ import app from '../api';
 import {User, Pub, Notification, Link, Atom, Journal} from '../models';
 
 export function getUser(req, res) {
+	const reqUsername = req.user ? req.user.username : undefined;
 	let userData = {};
 	User.findOne({username: req.query.username}).lean().exec()
 	.then(function(userResult) {
@@ -25,7 +26,9 @@ export function getUser(req, res) {
 		return Atom.find({_id: {$in: atomIDs}}).lean().exec();
 	})
 	.then(function(atomsResult) {
-		userData.atoms = atomsResult;
+		userData.atoms = atomsResult.filter((atom)=> {
+			return atom.isPublished || (userData.username === reqUsername);
+		});
 		return Link.find({source: userData._id, type: 'admin', inactive: {$ne: true}}).populate({
 			path: 'destination',
 			model: Journal,
