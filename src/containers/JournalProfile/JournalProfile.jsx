@@ -1,0 +1,219 @@
+import React, { PropTypes } from 'react';
+import {connect} from 'react-redux';
+import Radium from 'radium';
+import Helmet from 'react-helmet';
+import {getJournal, updateJournal, createCollection, updateCollection, deleteCollection, featureAtom, rejectAtom, collectionsChange, addAdmin, deleteAdmin} from './actions';
+// import {NotFound} from 'components';
+import JournalProfileAbout from './JournalProfileAbout';
+import JournalProfileAdmins from './JournalProfileAdmins';
+import JournalProfileDetails from './JournalProfileDetails';
+import JournalProfileLayout from './JournalProfileLayout';
+import JournalProfileRecent from './JournalProfileRecent';
+import JournalProfileHeader from './JournalProfileHeader';
+import JournalProfileFeatured from './JournalProfileFeatured';
+import JournalProfileSubmitted from './JournalProfileSubmitted';
+import JournalProfileCollections from './JournalProfileCollections';
+import {NavContentWrapper} from 'components';
+import {safeGetInToJS} from 'utils/safeParse';
+
+// import {globalStyles} from 'utils/styleConstants';
+// import {globalMessages} from 'utils/globalMessages';
+// import {FormattedMessage} from 'react-intl';
+
+export const JournalProfile = React.createClass({
+	propTypes: {
+		journalData: PropTypes.object,
+		slug: PropTypes.string,
+		mode: PropTypes.string,
+		dispatch: PropTypes.func
+	},
+
+	statics: {
+		fetchData: function(getState, dispatch, location, routerParams) {
+			return dispatch(getJournal(routerParams.slug, routerParams.mode));
+		}
+	},
+
+	getInitialState: function() {
+		return {
+			logo: undefined,
+			headerColor: '',
+			headerMode: '',
+			headerAlign: '',
+			headerImage: '',
+		};
+	},
+
+	handleUpdateJournal: function(newJournalData) {
+		this.props.dispatch(updateJournal(this.props.slug, newJournalData));
+	},
+
+	handleHeaderUpdate: function(updateObject) {
+		this.setState(updateObject);
+	},
+
+	handleCreateCollection: function(newCollectionTitle) {
+		const journalID = safeGetInToJS(this.props.journalData, ['journalData', '_id']);
+		return this.props.dispatch(createCollection(journalID, newCollectionTitle));
+	},
+
+	handleUpdateCollection: function(collectionID, collectionData) {
+		return this.props.dispatch(updateCollection(collectionID, collectionData));
+	},
+
+	handleDeleteCollection: function(collectionID) {
+		const journalID = safeGetInToJS(this.props.journalData, ['journalData', '_id']);
+		return this.props.dispatch(deleteCollection(journalID, collectionID));
+	},
+
+	handleFeatureAtom: function(atomID) {
+		const journalID = safeGetInToJS(this.props.journalData, ['journalData', '_id']);
+		return this.props.dispatch(featureAtom(journalID, atomID));
+	},
+
+	handleRejectAtom: function(atomID) {
+		const journalID = safeGetInToJS(this.props.journalData, ['journalData', '_id']);
+		return this.props.dispatch(rejectAtom(journalID, atomID));
+	},
+
+	handleCollectionsChange: function(linkID, collectionIDs) {
+		return this.props.dispatch(collectionsChange(linkID, collectionIDs));
+	},
+
+	handleAddAdmin: function(adminID) {
+		const journalID = safeGetInToJS(this.props.journalData, ['journalData', '_id']);
+		return this.props.dispatch(addAdmin(journalID, adminID));
+	},
+
+	handleDeleteAdmin: function(adminID) {
+		const journalID = safeGetInToJS(this.props.journalData, ['journalData', '_id']);
+		return this.props.dispatch(deleteAdmin(journalID, adminID));
+	},
+
+	render: function() {
+		const journalData = safeGetInToJS(this.props.journalData, ['journalData']) || {};
+
+		const metaData = {};
+		metaData.title = journalData.journalName + ' · PubPub';
+
+		const mobileNavButtons = [
+			{ type: 'link', mobile: true, text: 'About', link: '/' + this.props.slug + '/about' },
+			{ type: 'button', mobile: true, text: 'Menu', action: undefined },
+		];
+
+		const adminNav = [
+			{ type: 'title', text: 'Admin'},
+			{ type: 'link', text: 'Details', link: '/' + this.props.slug + '/details', active: this.props.mode === 'details' },
+			{ type: 'link', text: 'Layout', link: '/' + this.props.slug + '/layout', active: this.props.mode === 'layout' },
+			{ type: 'link', text: 'Featured', link: '/' + this.props.slug + '/featured', active: this.props.mode === 'featured' },
+			{ type: 'link', text: 'Submitted', link: '/' + this.props.slug + '/submitted', active: this.props.mode === 'submitted' },
+			{ type: 'link', text: 'Collections', link: '/' + this.props.slug + '/collections', active: this.props.mode === 'collections' },
+			{ type: 'link', text: 'Admins', link: '/' + this.props.slug + '/admins', active: this.props.mode === 'admins' },
+			{ type: 'spacer' },
+			{ type: 'title', text: 'Public'},
+		];
+
+		const collections = journalData.collections || [];
+		const collectionItems = collections.map((item, index)=> {
+			return { type: 'link', text: item.title, link: '/' + this.props.slug + '/' + item._id, active: this.props.mode === item._id };
+		});
+
+		const navItems = [
+			...adminNav,
+			{ type: 'link', text: 'About', link: '/' + this.props.slug + '/about', active: this.props.mode === 'about' },
+			{ type: 'link', text: 'Recent Activity', link: '/' + this.props.slug, active: !this.props.mode},
+			{ type: 'spacer' },
+			...collectionItems,
+		];
+
+		return (
+			<div>
+
+				<Helmet {...metaData} />
+
+				<JournalProfileHeader 
+					journalName={this.state.journalName || journalData.journalName}
+					description={this.state.description || journalData.description}
+					logo={this.state.logo || journalData.logo}
+					headerColor={this.state.headerColor || journalData.headerColor} 
+					headerMode={this.state.headerMode || journalData.headerMode}
+					headerAlign={this.state.headerAlign || journalData.headerAlign}
+					headerImage={this.state.headerImage === null ? undefined : this.state.headerImage || journalData.headerImage} />
+
+				<NavContentWrapper navItems={navItems} mobileNavButtons={mobileNavButtons}>
+
+					{(() => {
+						switch (this.props.mode) {
+						case 'about':
+							return (
+								<JournalProfileAbout 
+									journalData={this.props.journalData}/>
+							);
+						case 'details':
+							return (
+								<JournalProfileDetails
+									journalData={this.props.journalData}
+									handleUpdateJournal={this.handleUpdateJournal} />
+							);
+						case 'layout':
+							return (
+								<JournalProfileLayout
+									journalData={this.props.journalData}
+									handleUpdateJournal={this.handleUpdateJournal}
+									handleHeaderUpdate={this.handleHeaderUpdate} />
+							);
+						case 'featured':
+							return (
+								<JournalProfileFeatured 
+									journalData={this.props.journalData} 
+									handleCollectionsChange={this.handleCollectionsChange}/>
+							);
+						case 'submitted':
+							return (
+								<JournalProfileSubmitted 
+									journalData={this.props.journalData} 
+									handleFeatureAtom={this.handleFeatureAtom} 
+									handleRejectAtom={this.handleRejectAtom} />
+							);
+						case 'collections':
+							return (
+								<JournalProfileCollections 
+									journalData={this.props.journalData} 
+									handleUpdateJournal={this.handleUpdateJournal} 
+									handleCreateCollection={this.handleCreateCollection} 
+									handleUpdateCollection={this.handleUpdateCollection} 
+									handleDeleteCollection={this.handleDeleteCollection}
+									slug={this.props.slug} />
+							);
+						case 'admins':
+							return (
+								<JournalProfileAdmins
+									journalData={this.props.journalData} 
+									handleAddAdmin={this.handleAddAdmin}
+									handleDeleteAdmin={this.handleDeleteAdmin}/>
+							);
+						default:
+							return (
+								<JournalProfileRecent 
+									journalData={this.props.journalData} />
+							);
+						}
+					})()}
+
+				</NavContentWrapper>
+
+			</div>
+		);
+	}
+
+});
+
+export default connect( state => {
+	return {
+		journalData: state.journal,
+		slug: state.router.params.slug,
+		mode: state.router.params.mode,
+	};
+})( Radium(JournalProfile) );
+
+

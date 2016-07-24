@@ -7,8 +7,8 @@ import atom from './containers/AtomReader/reducer';
 import atomEdit from './containers/AtomEditor/reducer';
 import emailVerification from './containers/EmailVerification/reducer';
 import discussions from './containers/Discussions/reducer';
-import jrnlCreate from './containers/JrnlCreate/reducer';
-import jrnl from './containers/JrnlProfile/reducer';
+import journalCreate from './containers/JournalCreate/reducer';
+import journal from './containers/JournalProfile/reducer';
 import landing from './containers/Landing/reducer';
 import login from './containers/Login/reducer';
 import media from './containers/Media/reducer';
@@ -24,8 +24,8 @@ export default combineReducers({
 	atomEdit,
 	emailVerification,
 	discussions,
-	jrnlCreate,
-	jrnl,
+	journalCreate,
+	journal,
 	landing,
 	login,
 	media,

@@ -4,7 +4,7 @@ const ObjectId = Schema.Types.ObjectId;
 
 const tagSchema = new Schema({
 	title: { type: String },
-	jrnl: { type: ObjectId, ref: 'Jrnl'},
+	journal: { type: ObjectId, ref: 'Journal'},
 	createDate: { type: Date },
 
 	inactive: { type: Boolean }, 

@@ -14,7 +14,7 @@ const assetsPath = path.join(__dirname, relativeAssetsPath);
 const WebpackIsomorphicToolsPlugin = require('webpack-isomorphic-tools/plugin');
 const webpackIsomorphicToolsPlugin = new WebpackIsomorphicToolsPlugin(require('./webpack-isomorphic-tools'));
 
-const containerRegex = /.+\/containers\/[^\/]+\/((AtomReader)|(AtomEditor)|(Editor)|(EmailVerification)|(GroupCreate)|(GroupProfile)|(JournalCreate)|(JournalProfile)|(JrnlCreate)|(JrnlProfile)|(Login)|(PubCreate)|(PubReader)|(ResetPassword)|(SignUp)|(UserProfile)|(UserSettings))\.jsx?$/;
+const containerRegex = /.+\/containers\/[^\/]+\/((AtomReader)|(AtomEditor)|(Editor)|(EmailVerification)|(GroupCreate)|(GroupProfile)|(JournalCreate)|(JournalProfile)|(JournalCreate)|(JournalProfile)|(Login)|(PubCreate)|(PubReader)|(ResetPassword)|(SignUp)|(UserProfile)|(UserSettings))\.jsx?$/;
 const componentRegex = /.+\/components\/[^\/]+\/((AboutJournals)|(AboutPubs)|(AboutReviews))\.jsx?$/;
 
 module.exports = {

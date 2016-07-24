@@ -13,7 +13,7 @@ require('./routes/app-routes');
 require('./routes/atom-routes');
 require('./routes/autocomplete-routes');
 // require('./routes/group-routes');
-require('./routes/jrnl-routes');
+require('./routes/journal-routes');
 require('./routes/login-routes');
 require('./routes/link-routes');
 require('./routes/s3-upload-policy');

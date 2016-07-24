@@ -94,12 +94,12 @@ const Landing = React.createClass({
 	// },
 
 	// loadOptions: function(input, callback) {
-	// 	request.get('/api/autocompleteJrnls?string=' + input).end((err, response)=>{
+	// 	request.get('/api/autocompleteJournals?string=' + input).end((err, response)=>{
 	// 		const responseArray = response.body || [];
 	// 		const options = responseArray.map((item)=>{
 	// 			return {
 	// 				value: item.slug,
-	// 				label: item.jrnlName,
+	// 				label: item.journalName,
 	// 				id: item._id,
 	// 			};
 	// 		});

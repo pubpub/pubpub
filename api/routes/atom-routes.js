@@ -3,7 +3,7 @@ const app = require('../api');
 const Atom = require('../models').Atom;
 const Link = require('../models').Link;
 const Version = require('../models').Version;
-const Jrnl = require('../models').Jrnl;
+const Journal = require('../models').Journal;
 const User = require('../models').User;
 const Promise = require('bluebird');
 
@@ -178,8 +178,8 @@ export function getAtomData(req, res) {
 			if (meta === 'journals') {
 				const query = Link.find({source: atomResult._id, type: 'submitted'}).populate({
 					path: 'destination',
-					model: Jrnl,
-					select: 'jrnlName slug description icon',
+					model: Journal,
+					select: 'journalName slug description icon',
 				}).exec();
 				resolve(query);
 			} else {
@@ -191,8 +191,8 @@ export function getAtomData(req, res) {
 			if (meta === 'journals') {
 				const query = Link.find({destination: atomResult._id, type: 'featured'}).populate({
 					path: 'source',
-					model: Jrnl,
-					select: 'jrnlName slug description icon',
+					model: Journal,
+					select: 'journalName slug description icon',
 				}).exec();
 				resolve(query);
 			} else {
@@ -393,8 +393,8 @@ export function submitAtomToJournals(req, res) {
 	.then(function(newLinks) {
 		return Link.find({source: atomID, type: 'submitted'}).populate({
 			path: 'destination',
-			model: Jrnl,
-			select: 'jrnlName slug description icon',
+			model: Journal,
+			select: 'journalName slug description icon',
 		}).exec();
 
 	})

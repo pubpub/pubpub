@@ -3,7 +3,7 @@ const app = require('../api');
 const Atom = require('../models').Atom;
 const Link = require('../models').Link;
 const Version = require('../models').Version;
-const Jrnl = require('../models').Jrnl;
+const Journal = require('../models').Journal;
 const Promise = require('bluebird');
 
 export function getMedia(req, res) {

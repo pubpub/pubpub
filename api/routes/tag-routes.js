@@ -1,5 +1,5 @@
 const app = require('../api');
-const Jrnl = require('../models').Jrnl;
+const Journal = require('../models').Journal;
 const Link = require('../models').Link;
 const Tag = require('../models').Tag;
 
@@ -10,17 +10,17 @@ export function createTag(req, res) {
 
 	const tag = new Tag({
 		title: req.body.title,
-		jrnl: req.body.jrnlID,
+		journal: req.body.journalID,
 		createDate: now,
 	});
 
 
 	tag.save()
 	.then(function(newTag) {
-		if (!req.body.jrnlID) { return undefined; }
-		return [newTag, Jrnl.update({ _id: req.body.jrnlID }, { $push: { collections: {$each: [newTag._id], $position: 0}} }).exec()];
+		if (!req.body.journalID) { return undefined; }
+		return [newTag, Journal.update({ _id: req.body.journalID }, { $push: { collections: {$each: [newTag._id], $position: 0}} }).exec()];
 	})
-	.spread(function(newTag, jrnlUpdateResult) { // Send response
+	.spread(function(newTag, journalUpdateResult) { // Send response
 		return res.status(201).json(newTag);
 	})
 	.catch(function(error) {
@@ -68,8 +68,8 @@ export function deleteTag(req, res) {
 		return tag.save();
 	})
 	.then(function(savedResult) {
-		// Remove tag from Jrnl's Collections
-		return Jrnl.update({ _id: savedResult.jrnl }, { $pull: { collections: tagID} }).exec();
+		// Remove tag from Journal's Collections
+		return Journal.update({ _id: savedResult.journal }, { $pull: { collections: tagID} }).exec();
 	})
 	.then(function() {
 		// Set Links to be inactive that were using given tag

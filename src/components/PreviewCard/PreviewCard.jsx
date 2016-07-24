@@ -112,6 +112,7 @@ styles = {
 	},
 	image: {
 		width: '4em',
+		display: 'block',
 	},
 	button: {
 		display: 'block',

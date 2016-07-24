@@ -4,18 +4,18 @@ const _ = require('underscore');
 
 const Pub = require('../models').Pub;
 const User = require('../models').User;
-const Jrnl = require('../models').Jrnl;
+const Journal = require('../models').Journal;
 const Group = require('../models').Group;
 
 
-export function autocompleteJrnls(req, res) {
-	Jrnl.find({}, {'_id': 1, 'jrnlName': 1, 'slug': 1, 'logo': 1}).exec(function(err, journals) {
+export function autocompleteJournals(req, res) {
+	Journal.find({}, {'_id': 1, 'journalName': 1, 'slug': 1, 'logo': 1}).exec(function(err, journals) {
 		const objects = journals;
 		const sifter = new Sifter(objects);
 
 		const result = sifter.search(req.query.string, {
-			fields: ['jrnlName', 'slug'],
-			sort: [{field: 'jrnlName', direction: 'asc'}],
+			fields: ['journalName', 'slug'],
+			sort: [{field: 'journalName', direction: 'asc'}],
 			limit: 10
 		});
 		
@@ -27,7 +27,7 @@ export function autocompleteJrnls(req, res) {
 		return res.status(201).json(output);
 	});
 }
-app.get('/autocompleteJrnls', autocompleteJrnls);
+app.get('/autocompleteJournals', autocompleteJournals);
 
 export function autocompleteUsers(req, res) {
 	User.find({}, {'_id': 1, 'username': 1, 'image': 1, 'name': 1}).exec(function(err, users) {

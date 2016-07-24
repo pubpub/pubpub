@@ -1,5 +1,5 @@
 import app from '../api';
-import {User, Pub, Notification, Link, Atom, Jrnl} from '../models';
+import {User, Pub, Notification, Link, Atom, Journal} from '../models';
 
 export function getUser(req, res) {
 	let userData = {};
@@ -28,12 +28,12 @@ export function getUser(req, res) {
 		userData.atoms = atomsResult;
 		return Link.find({source: userData._id, type: 'admin', inactive: {$ne: true}}).populate({
 			path: 'destination',
-			model: Jrnl,
-			select: 'jrnlName slug icon description',
+			model: Journal,
+			select: 'journalName slug icon description',
 		}).exec();
 	})
-	.then(function(jrnlsResult) {
-		userData.jrnls = jrnlsResult;
+	.then(function(journalsResult) {
+		userData.journals = journalsResult;
 		return res.status(201).json(userData);
 	})
 	.catch(function(error) {

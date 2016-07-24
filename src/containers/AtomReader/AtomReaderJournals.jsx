@@ -33,12 +33,12 @@ export const AtomReaderJournals = React.createClass({
 	},
 
 	loadOptions: function(input, callback) {
-		request.get('/api/autocompleteJrnls?string=' + input).end((err, response)=>{
+		request.get('/api/autocompleteJournals?string=' + input).end((err, response)=>{
 			const responseArray = response.body || [];
 			const options = responseArray.map((item)=>{
 				return {
 					value: item.slug,
-					label: item.jrnlName,
+					label: item.journalName,
 					id: item._id,
 				};
 			});
@@ -87,7 +87,7 @@ export const AtomReaderJournals = React.createClass({
 									<PreviewCard 
 										type={'journal'}
 										image={item.destination.icon}
-										title={item.destination.jrnlName}
+										title={item.destination.journalName}
 										slug={item.destination.slug}
 										description={item.destination.description}
 										header={
@@ -114,7 +114,7 @@ export const AtomReaderJournals = React.createClass({
 									<PreviewCard 
 										type={'journal'}
 										image={item.source.icon}
-										title={item.source.jrnlName}
+										title={item.source.journalName}
 										slug={item.source.slug}
 										description={item.source.description}
 										header={

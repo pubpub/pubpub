@@ -1,51 +1,52 @@
 import React, {PropTypes} from 'react';
 import Radium from 'radium';
+import Helmet from 'react-helmet';
 import {safeGetInToJS} from 'utils/safeParse';
 import {PreviewCard} from 'components';
 
+// import {globalStyles} from 'utils/styleConstants';
 // import {globalMessages} from 'utils/globalMessages';
 // import {FormattedMessage} from 'react-intl';
 
-export const UserProfileJournals = React.createClass({
+export const JournalProfileRecent = React.createClass({
 	propTypes: {
-		profileData: PropTypes.object,
-		ownProfile: PropTypes.bool,
-	},
-
-	getInitialState: function() {
-		return {
-			
-		};
+		journalData: PropTypes.object,
 	},
 
 	render: function() {
-		const journalsData = safeGetInToJS(this.props.profileData, ['profileData', 'journals']) || [];
-		
+		const journalData = safeGetInToJS(this.props.journalData, ['journalData']) || {};
+		const atomsData = safeGetInToJS(this.props.journalData, ['atomsData']) || [];
+		const metaData = {
+			title: journalData.journalName,
+		};
+
 		return (
 			<div className={'firstChildNoTopMargin'}>
+				<Helmet {...metaData} />				
+
 				{
-					journalsData.sort((foo, bar)=>{
+					atomsData.sort((foo, bar)=>{
 						// Sort so that most recent is first in array
 						if (foo.createDate > bar.createDate) { return -1; }
 						if (foo.createDate < bar.createDate) { return 1; }
 						return 0;
 					}).map((item, index)=>{
-						if (!item.destination) { return null; }
 						return (
 							<PreviewCard 
 								key={'featured-' + index}
-								type={'journal'}
-								image={item.destination.icon}
-								title={item.destination.journalName}
+								type={'atom'}
+								image={item.destination.previewImage}
+								title={item.destination.title}
 								slug={item.destination.slug}
 								description={item.destination.description} />
 						);
 					})
 				}
-
+				
+				
 			</div>
 		);
 	}
 });
 
-export default Radium(UserProfileJournals);
+export default Radium(JournalProfileRecent);

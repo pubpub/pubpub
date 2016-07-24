@@ -38,10 +38,10 @@ import {
 } from 'containers/AtomEditor/actions';
 
 import {
-	GET_JRNL_LOAD,
-	GET_JRNL_SUCCESS,
-	GET_JRNL_FAIL,
-} from 'containers/JrnlProfile/actions';
+	GET_JOURNAL_LOAD,
+	GET_JOURNAL_SUCCESS,
+	GET_JOURNAL_FAIL,
+} from 'containers/JournalProfile/actions';
 
 
 /*--------*/
@@ -116,7 +116,7 @@ export default function reducer(state = defaultState, action) {
 	case GET_ATOM_DATA_LOAD:
 	case CREATE_ATOM_LOAD:
 	case GET_ATOM_EDIT_LOAD:
-	case GET_JRNL_LOAD:
+	case GET_JOURNAL_LOAD:
 		return setLoading(state);
 	case GET_USER_SUCCESS:
 	case GET_USER_FAIL:
@@ -124,8 +124,8 @@ export default function reducer(state = defaultState, action) {
 	case GET_ATOM_DATA_FAIL:
 	case GET_ATOM_EDIT_SUCCESS:
 	case GET_ATOM_EDIT_FAIL:
-	case GET_JRNL_SUCCESS:
-	case GET_JRNL_FAIL:
+	case GET_JOURNAL_SUCCESS:
+	case GET_JOURNAL_FAIL:
 		return unsetLoading(state, action);
 	// case '@@reduxReactRouter/routerDidChange':
 	// 	return clearNotFound(state);
