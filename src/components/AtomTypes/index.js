@@ -16,8 +16,14 @@ import IFrameViewer from './IFrame/IFrameViewer';
 import LaTeXEditor from './LaTeX/LaTeXEditor';
 import LaTeXViewer from './LaTeX/LaTeXViewer';
 
+import TableEditor from './Table/TableEditor';
+import TableViewer from './Table/TableViewer';
+
 import ReferenceEditor from './Reference/ReferenceEditor';
 import ReferenceViewer from './Reference/ReferenceViewer';
+
+import HighlightEditor from './Highlight/HighlightEditor';
+import HighlightViewer from './Highlight/HighlightViewer';
 
 export default {
 	image: {
@@ -44,8 +50,16 @@ export default {
 		editor: LaTeXEditor,
 		viewer: LaTeXViewer
 	},
+	table: {
+		editor: TableEditor,
+		viewer: TableViewer
+	},
 	reference: {
 		editor: ReferenceEditor,
 		viewer: ReferenceViewer
+	},
+	highlight: {
+		editor: HighlightEditor,
+		viewer: HighlightViewer
 	}
 };

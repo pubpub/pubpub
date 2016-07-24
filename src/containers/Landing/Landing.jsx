@@ -75,6 +75,8 @@ const Landing = React.createClass({
 		case 'ogg':
 		case 'webm':
 			atomType = 'video'; break;
+		case 'csv':
+		 atomType = 'table'; break;
 		default:
 			break;
 		}

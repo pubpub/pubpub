@@ -201,6 +201,121 @@ export function getAtomData(req, res) {
 			}
 		});
 
+		let getDiscussions = new Promise(function(resolve) {
+			resolve();
+		});
+
+		if (!meta || meta === 'discussions') {
+			getDiscussions = Link.find({'metaData.rootReply': atomResult._id, type: 'reply'}).populate({
+				path: 'source',
+				model: 'Atom',
+			}).exec()
+			.then(function(discussionLinks) {
+				const getDiscussionVersions = discussionLinks.map((discussionLink)=> {
+					const versionID = discussionLink.source.versions[discussionLink.source.versions.length - 1];
+					return Version.findOne({_id: versionID}).exec();
+				});
+				const getDiscussionAuthors = discussionLinks.map((discussionLink)=> {
+					const atomID = discussionLink.source._id;
+
+					return Link.find({destination: atomID, type: 'author'}).populate({
+						path: 'source',
+						model: User,
+						select: 'username name firstName lastName image ',
+					}).exec();
+				});
+				return [discussionLinks, Promise.all(getDiscussionVersions), Promise.all(getDiscussionAuthors)];
+			})
+			.spread(function(discussionLinks, discussionVersions, discussionAuthorLinks) {
+				const discussions = discussionLinks.map((discussion)=> {
+					const atomData = discussion.source;
+					let versionData = {};
+					discussionVersions.map((discussionVersion)=> {
+						if (String(discussionVersion.parent) === String(discussion.source._id)) {
+							versionData = discussionVersion;
+						}
+					});
+					const mergedAuthorLinks = [].concat.apply([], discussionAuthorLinks);
+					const authorsData = mergedAuthorLinks.filter((authorLink)=> {
+						return String(authorLink.destination) === String(discussion.source._id);
+					});
+
+					return {atomData, versionData, authorsData};
+				});
+				return discussions;
+			})
+			.catch(function(error) {
+				console.log('error', error);
+				return res.status(500).json(error);
+			});
+		}
+
+		// const getDiscussions = new Promise(function(resolve) {
+		// 	if (!meta || meta === 'discussions') {
+		// 		// Get all the ones that point
+		// 		// XXX THIS HAS TO CHANGE to metadata
+		// 		// Get all the discussion links that are relevant
+		// 		// Grab the version for all those relevant links
+		// 		// Grab the authors for all those relevant links
+		// 		// Return {atomData, versionData, authorData}
+		// 		const query = Link.find({'metaData.rootReply': atomResult._id, type: 'reply'}).populate({
+		// 			path: 'source',
+		// 			model: 'Atom',
+		// 			populate: [
+		// 				{
+		// 					path: 'authors',
+		// 					model: 'User',
+		// 					select: 'name username image',
+		// 				},
+		// 				{
+		// 					path: 'versions',
+		// 					model: 'Version',
+		// 				},
+		// 			],
+		// 		}).exec()
+		// 		.then(function(discussionLinks) {
+		// 			const getDiscussionVersions = discussionLinks.map((discussionLink)=> {
+		// 				const versionID = discussionLink.source.versions[discussionLink.source.versions.length - 1];
+		// 				return Version.findOne({_id: versionID}).exec();
+		// 			});
+		// 			const getDiscussionAuthors = discussionLinks.map((discussionLink)=> {
+		// 				const atomID = discussionLink.destination._id;
+
+		// 				return Link.find({destination: atomID, type: 'author'}).populate({
+		// 					path: 'source',
+		// 					model: User,
+		// 					select: 'username name firstName lastName image ',
+		// 				}).exec();
+		// 			});
+		// 			return [discussionLinks, getDiscussionVersions, getDiscussionAuthors];
+		// 		})
+		// 		.spread(function(discussionLinks, discussionVerions, discussionAuthorLinks) {
+		// 			const discussions = discussionLinks.map((discussion)=> {
+		// 				const atomData = discussion.source;
+		// 				let versionData = {};
+		// 				discussionVerions.map((discussionVersion)=> {
+		// 					if (discussionVersion.parent === discussion.source._id) {
+		// 						versionData = discussionVersion;
+		// 					}
+		// 				});
+		// 				const authorsData = discussionAuthorLinks.filter((authorLink)=> {
+		// 					return authorLink.destination === discussion.source._id;
+		// 				});
+
+		// 				return {atomData, versionData, authorsData};
+		// 			});
+		// 			return discussions;
+		// 		})
+		// 		.catch(function(error) {
+		// 			console.log('error', error);
+		// 			return res.status(500).json(error);
+		// 		});
+		// 		resolve(query);
+		// 	} else {
+		// 		resolve();
+		// 	}
+		// });
+
 		const tasks = [
 			getAuthors,
 			getVersion,
@@ -208,6 +323,7 @@ export function getAtomData(req, res) {
 			getVersions,
 			getSubmitted,
 			getFeatured,
+			getDiscussions,
 
 		];
 
@@ -223,6 +339,7 @@ export function getAtomData(req, res) {
 			versionsData: taskData[3],
 			submittedData: taskData[4],
 			featuredData: taskData[5],
+			discussionsData: taskData[6],
 		});
 	})
 	.catch(function(error) {
@@ -235,6 +352,7 @@ export function getAtomData(req, res) {
 app.get('/getAtomData', getAtomData);
 
 export function getAtomEdit(req, res) {
+
 	const {slug} = req.query;
 	// const userID = req.user ? req.user._id : undefined;
 	// Check permission type

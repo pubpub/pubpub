@@ -5,6 +5,7 @@ import {safeGetInToJS} from 'utils/safeParse';
 import {ensureImmutable} from 'reducers';
 import {AtomViewerPane} from 'containers/AtomReader/AtomViewerPane';
 import fuzzy from 'fuzzy';
+import {RadioGroup, Radio} from 'utils/ReactRadioGroup';
 
 // import {globalStyles} from 'utils/styleConstants';
 // import {globalMessages} from 'utils/globalMessages';
@@ -77,8 +78,12 @@ export const Media = React.createClass({
 			this.setState({nodeData: {...this.state.nodeData, size: evt.target.value}});
 		} 
 
+		if (type === 'mode') {
+			this.setState({nodeData: {...this.state.nodeData, mode: evt}});
+		} 
+
 		if (type === 'align') {
-			this.setState({nodeData: {...this.state.nodeData, align: evt.target.value}});
+			this.setState({nodeData: {...this.state.nodeData, align: evt}});
 		} 
 
 		if (type === 'className') {
@@ -120,7 +125,7 @@ export const Media = React.createClass({
 				source: item._id, 
 				className: nodeData.className || '',
 				id: item._id,
-				align: nodeData.align || 'left',
+				align: nodeData.align || 'full',
 				size: nodeData.size || '',
 				caption: nodeData.caption || '',
 				mode: nodeData.mode || 'embed',
@@ -205,60 +210,71 @@ export const Media = React.createClass({
 
 					{/* If we DO have a chosen atom */}
 					{nodeData.data &&
-						<div style={styles.details}>
+						<div>
+							<h3 style={styles.detailsTitle}>{nodeData.data.parent.title}</h3>
+							<div style={styles.detailsClear} className={'underlineOnHover'} onClick={this.clearNodeData}>Clear</div>
 
-							<div style={styles.detailsPreview}>
-								<div style={styles.detailsClear} className={'underlineOnHover'} onClick={this.clearNodeData}>Clear</div>
-								<h3 style={styles.detailsTitle}>{nodeData.data.parent.title}</h3>
-								<AtomViewerPane atomData={ensureImmutable({ atomData: nodeData.data.parent, currentVersionData: nodeData.data })} renderType={'embed'}/>	
+							<div style={styles.details}>
+								<div style={styles.detailsPreview}>
+									
+									<AtomViewerPane atomData={ensureImmutable({ atomData: nodeData.data.parent, currentVersionData: nodeData.data })} renderType={'embed'}/>	
+									
+								</div>
+
 								
-							</div>
-
-							
-							<form onSubmit={this.saveItem} style={styles.detailsForm}>
-								<div>
-									<label style={styles.label} htmlFor={'caption'}>
-										Caption
-									</label>
-									<textarea ref={'caption'} id={'caption'} name={'caption'} style={[styles.input, styles.textarea]} value={this.state.nodeData.caption} onChange={this.inputChange.bind(this, 'caption')}></textarea>
-								</div>
-
-								<div>
-									<label style={styles.label} htmlFor={'size'}>
-										Size
-									</label>
-									<input ref={'size'} id={'size'} name={'size'} type="text" style={styles.input} value={this.state.nodeData.size} onChange={this.inputChange.bind(this, 'size')}/>
-									<div className={'light-color inputSubtext'}>
-										e.g. 20%, 50%, 200px, 400px
+								<form onSubmit={this.saveItem} style={styles.detailsForm}>
+									<div>
+										<label style={styles.label} htmlFor={'mode'}>
+											Mode
+										</label>
+										<RadioGroup name={'mode'} selectedValue={this.state.nodeData.mode} onChange={this.inputChange.bind(this, 'mode')}>
+											<Radio value="embed" id={'embed'} style={styles.radioInput}/> <label htmlFor={'embed'} style={styles.radioLabel}>Embed</label>
+											<Radio value="cite" id={'cite'} style={styles.radioInput}/> <label htmlFor={'cite'} style={styles.radioLabel}>Cite</label>
+										</RadioGroup>
 									</div>
-								</div>
+									<div style={[this.state.nodeData.mode === 'cite' && styles.disabledInput]}>
+										<label style={styles.label} htmlFor={'caption'}>
+											Caption
+										</label>
+										<textarea ref={'caption'} id={'caption'} name={'caption'} style={[styles.input, styles.textarea]} value={this.state.nodeData.caption} onChange={this.inputChange.bind(this, 'caption')}></textarea>
+									</div>
 
-								<div>
-									<label style={styles.label} htmlFor={'className'}>
-										Class Name
-									</label>
-									<input ref={'className'} id={'className'} name={'className'} type="text" style={styles.input} value={this.state.nodeData.className} onChange={this.inputChange.bind(this, 'className')}/>
-								</div>
+									<div style={[this.state.nodeData.mode === 'cite' && styles.disabledInput]}>
+										<label style={styles.label} htmlFor={'align'}>
+											Align
+										</label>
+										<RadioGroup name={'align'} selectedValue={this.state.nodeData.align} onChange={this.inputChange.bind(this, 'align')}>
+											<Radio value="inline" id={'inline'} style={styles.radioInput}/> <label htmlFor={'inline'} style={styles.radioLabel}>Inline</label>
+											<Radio value="full" id={'full'} style={styles.radioInput}/> <label htmlFor={'full'} style={styles.radioLabel}>Full</label>
+											<Radio value="left" id={'left'} style={styles.radioInput}/> <label htmlFor={'left'} style={styles.radioLabel}>Left</label>
+											<Radio value="right" id={'right'} style={styles.radioInput}/> <label htmlFor={'right'} style={styles.radioLabel}>Right</label>
+										</RadioGroup>
+									</div>
 
-								<div>
-									<label style={styles.label} htmlFor={'mode'}>
-										Mode
-									</label>
-									<input ref={'mode'} id={'mode'} name={'mode'} type="text" style={styles.input} value={this.state.nodeData.mode} onChange={this.inputChange.bind(this, 'mode')}/>
-								</div>
+									<div style={{display: 'none'}}> {/* Hidden while we don't allow for custom CSS - no use for this field */}
+										<label style={styles.label} htmlFor={'className'}>
+											Class Name
+										</label>
+										<input ref={'className'} id={'className'} name={'className'} type="text" style={styles.input} value={this.state.nodeData.className} onChange={this.inputChange.bind(this, 'className')}/>
+									</div>
 
-								<div>
-									<label style={styles.label} htmlFor={'align'}>
-										Align
-									</label>
-									<input ref={'align'} id={'align'} name={'align'} type="text" style={styles.input} value={this.state.nodeData.align} onChange={this.inputChange.bind(this, 'align')}/>
-								</div>
+									<div style={[this.state.nodeData.mode === 'cite' && styles.disabledInput]}>
+										<label style={styles.label} htmlFor={'size'}>
+											Size
+										</label>
+										<input ref={'size'} id={'size'} name={'size'} type="text" style={styles.input} value={this.state.nodeData.size} onChange={this.inputChange.bind(this, 'size')}/>
+										<div className={'light-color inputSubtext'}>
+											e.g. 20%, 50%, 200px, 400px
+										</div>
+									</div>
 
-								<button className={'button'} onClick={this.saveItem}>
-									Save
-								</button>
 
-							</form>	
+									<button className={'button'} onClick={this.saveItem}>
+										Save
+									</button>
+
+								</form>	
+							</div>
 													
 							
 						</div>
@@ -306,10 +322,11 @@ styles = {
 	modalContent: {
 		position: 'fixed',
 		zIndex: 10001,
-		padding: '2em',
-		width: 'calc(80vw - 4em)',
-		maxHeight: 'calc(70vh - 4em)',
-		top: '15vh',
+		padding: '0em 1em',
+		width: 'calc(80vw - 2em)',
+		// maxHeight: 'calc(92vh - 4em)',
+		maxHeight: '92vh',
+		top: '4vh',
 		left: '10vw',
 		backgroundColor: 'white',
 		overflow: 'hidden',
@@ -373,37 +390,39 @@ styles = {
 		verticalAlign: 'middle',
 		position: 'relative',
 		textAlign: 'center',
+		padding: '1em',
 		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
 			display: 'block',
+			padding: '1em 0em',
 		},
 	},
 	detailsForm: {
 		display: 'table-cell',
 		width: '50%',
-		padding: '2em 0em',
+		padding: '2em 1em',
 		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
 			display: 'block',
 			width: '100%',
+			padding: '2em 0em',
 		},
 	},
 	detailsTitle: {
-		position: 'absolute',
 		left: 0,
-		top: '2em',
-		margin: 0,
-		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
-			position: 'relative',
-			top: 0,
-		},
 	},
 	detailsClear: {
-		position: 'absolute',
-		left: 0,
-		bottom: '2em',
+		marginTop: '-1.15em',
 		cursor: 'pointer',
-		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
-			position: 'relative',
-			bottom: 0,
-		},
+	},
+	radioInput: {
+		margin: '0em 0em 1em 0em',
+	},
+	radioLabel: {
+		display: 'inline-block',
+		fontSize: '0.95em',
+		margin: '0em 2em 1em 0em',
+	},
+	disabledInput: {
+		opacity: 0.5,
+		pointerEvents: 'none',
 	},
 };

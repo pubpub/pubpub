@@ -20,10 +20,10 @@ export const AtomReaderAnalytics = React.createClass({
 		};
 	},
 	componentDidMount() {
-		// const slug = safeGetInToJS(this.props.atomData, ['atomData', 'slug']);
+		const slug = safeGetInToJS(this.props.atomData, ['atomData', 'slug']);
 		request.post('/api/analytics').send({
-			// 'input': slug,
-			'input': 'hello',
+			'input': slug,
+			// 'input': 'hello',
 			'item': 'pub'
 		}).end((err, response)=>{
 			console.log(response);

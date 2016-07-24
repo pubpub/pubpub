@@ -46,7 +46,19 @@ export const AtomEditorContributors = React.createClass({
 		const currentContributors = this.props.contributorsData || [];
 		const nextContributors = nextProps.contributorsData || [];
 		if (currentContributors.length !== nextContributors.length) {
-			this.setState({value: null});
+			const typesObject = {};
+			const contributorsData = nextProps.contributorsData || [];
+			contributorsData.map((item)=> {
+				const roles = item.metadata ? item.metadata.roles : [];
+				typesObject[item._id] = {
+					type: item.type,
+					roles: roles,
+				};
+			});
+			this.setState({
+				contributorStates: typesObject,
+				value: null
+			});
 		}
 	},
 
