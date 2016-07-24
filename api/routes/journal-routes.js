@@ -52,14 +52,23 @@ export function getJournal(req, res) {
 	// Get associated data (e.g. admins, featured, etc)
 	// Return
 	const {slug, mode} = req.query;
+	const userID = req.user ? req.user._id : undefined;
 
 	Journal.findOne({slug: slug}).populate('collections').lean().exec()
 	.then(function(journalResult) {
 		if (!journalResult) { throw new Error('404 Not Found'); }
 		// Get the submitted atoms associated with the journal
 		// This query fires if mode is equal to 'submitted'
+
+		const adminLink = Link.findOne({source: userID, destination: journalResult._id, type: 'admin', inactive: {$ne: true} });
+		return [journalResult, adminLink];
+	})
+	.spread(function(journalResult, adminLink) {
+		const isAdmin = !!adminLink;
+		journalResult.isAdmin = isAdmin;
+
 		const getSubmitted = new Promise(function(resolve) {
-			if (mode === 'submitted') {
+			if (mode === 'submitted' && isAdmin) {
 				const query = Link.find({destination: journalResult._id, type: 'submitted'}).populate({
 					path: 'source',
 					model: Atom,

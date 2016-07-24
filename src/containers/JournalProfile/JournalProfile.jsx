@@ -101,7 +101,7 @@ export const JournalProfile = React.createClass({
 			{ type: 'button', mobile: true, text: 'Menu', action: undefined },
 		];
 
-		const adminNav = [
+		let adminNav = [
 			{ type: 'title', text: 'Admin'},
 			{ type: 'link', text: 'Details', link: '/' + this.props.slug + '/details', active: this.props.mode === 'details' },
 			{ type: 'link', text: 'Layout', link: '/' + this.props.slug + '/layout', active: this.props.mode === 'layout' },
@@ -112,6 +112,10 @@ export const JournalProfile = React.createClass({
 			{ type: 'spacer' },
 			{ type: 'title', text: 'Public'},
 		];
+
+		if (!journalData.isAdmin) {
+			adminNav = [];
+		}
 
 		const collections = journalData.collections || [];
 		const collectionItems = collections.map((item, index)=> {
