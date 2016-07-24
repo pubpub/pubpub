@@ -205,7 +205,7 @@ export function getAtomData(req, res) {
 		});
 
 		if (!meta || meta === 'discussions') {
-			getDiscussions = Link.find({'metaData.rootReply': atomResult._id, type: 'reply'}).populate({
+			getDiscussions = Link.find({'metadata.rootReply': atomResult._id, type: 'reply'}).populate({
 				path: 'source',
 				model: 'Atom',
 			}).exec()

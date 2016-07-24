@@ -5,9 +5,6 @@
 // types as strings in action creators
 /*--------*/
 
-export const GET_DISCUSSIONS_DATA_LOAD = 'discussions/GET_DISCUSSIONS_DATA_LOAD';
-export const GET_DISCUSSIONS_DATA_SUCCESS = 'discussions/GET_DISCUSSIONS_DATA_SUCCESS';
-export const GET_DISCUSSIONS_DATA_FAIL = 'discussions/GET_DISCUSSIONS_DATA_FAIL';
 
 // export const ADD_DISCUSSION = 'discussions/ADD_DISCUSSION';
 // export const ADD_DISCUSSION_SUCCESS = 'discussions/ADD_DISCUSSION_SUCCESS';
@@ -28,14 +25,7 @@ export const GET_DISCUSSIONS_DATA_FAIL = 'discussions/GET_DISCUSSIONS_DATA_FAIL'
 // action objects (e.g. {type:example, payload:data} ) within dispatch()
 // function calls
 /*--------*/
-export function getDiscussionsData(slug) {
-	return {
-		types: [GET_DISCUSSIONS_DATA_LOAD, GET_DISCUSSIONS_DATA_SUCCESS, GET_DISCUSSIONS_DATA_FAIL],
-		promise: (client) => client.post('/getDiscussionsData', {data: {
-			slug: slug
-		}})
-	};
-}
+
 
 // export function addDiscussion(discussionObject, activeSaveID) {
 // 	return {
