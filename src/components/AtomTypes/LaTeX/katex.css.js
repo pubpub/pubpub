@@ -635,4 +635,4 @@ export default {
 	'.katex .mtable .col-align-r>.vlist': {
 		textAlign: 'right'
 	}
-}
+};

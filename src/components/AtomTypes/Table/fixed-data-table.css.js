@@ -274,4 +274,4 @@ export default {
 	'.public_Scrollbar_main:hover .public_Scrollbar_face:after,.public_Scrollbar_mainActive .public_Scrollbar_face:after,.public_Scrollbar_faceActive:after': {
 		backgroundColor: '#7d7d7d'
 	}
-}
+};
