@@ -18,7 +18,7 @@ const containerRegex = /.+\/containers\/[^\/]+\/((AtomReader)|(AtomEditor)|(Edit
 const componentRegex = /.+\/components\/[^\/]+\/((AboutJournals)|(AboutPubs)|(AboutReviews))\.jsx?$/;
 
 module.exports = {
-	devtool: 'source-map',
+	devtool: 'cheap-module-source-map',
 	context: path.resolve(__dirname, '..'),
 	entry: {
 		'main': [
