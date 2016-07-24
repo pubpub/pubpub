@@ -6,6 +6,7 @@ import dateFormat from 'dateformat';
 
 import {Media} from 'containers';
 import {schema} from 'components/AtomTypes/Document/proseEditor';
+import {License} from 'components';
 import {renderReactFromJSON} from 'components/AtomTypes/Document/proseEditor';
 import {StoppableSubscription} from 'subscription';
 
@@ -117,6 +118,9 @@ export const Discussions = React.createClass({
 				<div style={styles.proseInput}>
 				
 					<Media/>
+					<div style={styles.license} key={'discussionLicense'}>
+						<License text={'All discussions are licensed under a'} hover={true} />
+					</div>
 					<div id={'reply-input'} style={styles.wsywigBlock}></div>
 					
 				</div>
@@ -145,6 +149,12 @@ export default connect( state => {
 
 styles = {
 	container: {
+	},
+	license: {
+		float: 'right',
+		lineHeight: '26px',
+		opacity: '0.4',
+		paddingRight: '4px',
 	},
 	wsywigBlock: {
 		width: '100%',
