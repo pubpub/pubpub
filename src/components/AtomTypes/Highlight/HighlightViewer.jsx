@@ -19,7 +19,6 @@ export const HighlightViewer = React.createClass({
 		case 'embed':
 		case 'static-embed':
 		default:
-			console.log(highlightData);
 			return (
 				<div style={styles.selectionBlock}>
 					{highlightData.text}

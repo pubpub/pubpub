@@ -10,6 +10,7 @@ import {renderReactFromJSON} from 'components/AtomTypes/Document/proseEditor';
 import {StoppableSubscription} from 'subscription';
 
 import {getDiscussionsData} from './actions';
+import DiscussionItem from './DiscussionItem';
 
 // import {globalMessages} from 'utils/globalMessages';
 // import {FormattedMessage} from 'react-intl';
@@ -88,9 +89,22 @@ export const Discussions = React.createClass({
 
 
 	render: function() {
-
 		const discussionsData = safeGetInToJS(this.props.atomData, ['discussionsData']) || [];
 		
+		const tempArray = discussionsData.map((item)=> {
+			return item;
+		});
+		tempArray.forEach(function(index) {
+			index.children = tempArray.filter((child)=> {
+				return (child.linkData.destination === index.atomData._id);
+			});
+			return index;
+		});
+		const topChildren = tempArray.filter((index)=> {
+			return index.linkData.destination === index.linkData.metadata.rootReply;
+		});
+		
+
 		return (
 			<div style={styles.container}>
 
@@ -100,57 +114,17 @@ export const Discussions = React.createClass({
 					}
 				}} />
 
-				<div>
-					{discussionsData.map((discussion, index)=> {
-						const docJSON = discussion.versionData.content.docJSON;
-						const date = discussion.versionData.createDate;
-
-						return (
-							<div key={'discussion-' + index}>
-								<div style={styles.discussionHeader}>
-									<div style={styles.headerVotes}>
-
-									<div className={'lighter-bg-hover'} style={[styles.headerVote]}>^</div>
-									<div className={'lighter-bg-hover'} style={[styles.headerVote, styles.headerDownVote]}>^</div>
-
-									</div>
-									<div style={styles.headerDetails}>
-										{discussion.authorsData.map((authorLink)=> {
-											return (
-												<div style={styles.headerAuthor}>
-													<div style={styles.authorImage}>
-														<img src={'https://jake.pubpub.org/unsafe/35x35/' + authorLink.source.image} />
-													</div>	
-													<div style={styles.authorDetails}>
-														<div>{authorLink.source.name}</div>
-													</div>
-												</div>
-											);
-										})}
-									</div>
-								</div>
-								<div className={'atom-reply'} style={styles.discussionContent}>
-									{renderReactFromJSON(docJSON && docJSON.content)}
-								</div>
-								<div style={styles.discussionFooter}>
-									<span className={'underlineOnHover'} style={styles.discussionFooterItem}>{dateFormat(date, 'mmm dd, yyyy h:MM TT')}</span>
-									<span className={'underlineOnHover'} style={styles.discussionFooterItem}>reply</span>
-									<span className={'underlineOnHover'} style={styles.discussionFooterItem}>flag</span>
-									<span className={'underlineOnHover'} style={styles.discussionFooterItem}>permalink</span>
-								</div>
-								
-							</div>
-						);
-					})}
-					
-				</div>
-
 				<div style={styles.proseInput}>
 				
 					<Media/>
-
 					<div id={'reply-input'} style={styles.wsywigBlock}></div>
 					
+				</div>
+
+				<div>
+					{topChildren.map((discussion, index)=> {
+						return <DiscussionItem discussionData={discussion} index={discussion.linkData._id} key={'discussion-' + index}/>;
+					})}
 				</div>
 
 			</div>
@@ -225,7 +199,7 @@ styles = {
 		verticalAlign: 'top',
 	},
 	discussionContent: {
-		padding: '1em 0em',
+		// padding: '1em 0em',
 	},
 	discussionFooter: {
 		borderBottom: '1px solid #BBBDC0',

@@ -106,11 +106,23 @@
 
 }
 #atom-reader blockquote {
-	padding: 10px 20px;
-	margin: 0 0 20px;
-	font-size: 17.5px;
-	border-left: 5px solid #eee;
+	padding: 0.01em 1em;
+	margin: 1em 0em;
+	font-size: 1.1em;
+	position: relative;
+	border-left: 4px solid #F3F3F4;
 }
+/*#atom-reader blockquote:before {
+	content: '';
+	position: absolute;
+	left: 0;
+	width: 4px;
+	height: 100%;
+	background: #F3F3F4;
+	border-radius: 2px / 4px;
+}*/
+
+
 #atom-reader ul, #atom-reader ol {
 	padding: 0px 3em 0px 3em;
 }
@@ -256,12 +268,24 @@
 	overflow-x: scroll;
 
 }
+
 .atom-reply blockquote {
-	padding: 10px 20px;
-	margin: 0 0 20px;
-	font-size: 17.5px;
-	border-left: 5px solid #eee;
+	padding: 0.01em 1em;
+	margin: 1em 0em;
+	font-size: 1.1em;
+	position: relative;
+	border-left: 4px solid #BBBDC0;
 }
+/*.atom-reply blockquote:before {
+	content: '';
+	position: absolute;
+	left: 0;
+	width: 4px;
+	height: 100%;
+	background: #BBBDC0;
+	border-radius: 2px / 4px;
+}*/
+
 .atom-reply ul, .atom-reply ol {
 	padding: 0px 3em 0px 3em;
 }

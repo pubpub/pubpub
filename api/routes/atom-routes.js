@@ -238,8 +238,9 @@ export function getAtomData(req, res) {
 					const authorsData = mergedAuthorLinks.filter((authorLink)=> {
 						return String(authorLink.destination) === String(discussion.source._id);
 					});
+					const linkData = discussion;
 
-					return {atomData, versionData, authorsData};
+					return {atomData, versionData, authorsData, linkData};
 				});
 				return discussions;
 			})
