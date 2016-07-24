@@ -1,5 +1,5 @@
 import React, {PropTypes} from 'react';
-import Radium from 'radium';
+import Radium, {Style} from 'radium';
 import {safeGetInToJS} from 'utils/safeParse';
 import {Media} from 'containers';
 import * as objectHash from 'object-hash/dist/object_hash';
@@ -210,6 +210,14 @@ export const DocumentEditor = React.createClass({
 		// const that = this;
 		this.collab.receiveDocumentValues(data.document, data.document_values);
 		this.update();
+		if (data.hasOwnProperty('user')) {
+			this.collab.user = data.user;
+		}
+
+		this.collab.mod.serverCommunications.send({
+			type: 'participant_update'
+		})
+
 		// if (data.hasOwnProperty('user')) {
 		//     this.collab.user = data.user
 		// } else {
@@ -310,7 +318,13 @@ export const DocumentEditor = React.createClass({
 		const collab = safeGetInToJS(this.props.atomEditData, ['collab']);
 
 		return (
+
 			<div style={styles.container}>
+
+				<Style rules={{
+					'.user-bg-1': { backgroundColor: 'rgba(255,0,0,0.3)'}
+				}} />
+
 				<div>
 					{(collab
 						? <div></div>

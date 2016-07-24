@@ -96,6 +96,7 @@ export class ModServerCommunications {
       this.editor.mod.collab.chat.newMessage(data);
       break;
       case 'connections':
+      console.log('got connections!');
       this.editor.mod.collab.updateParticipantList(data.participant_list);
       break;
       case 'welcome':
@@ -118,7 +119,7 @@ export class ModServerCommunications {
       //     this.editor.mod.collab.docChanges.checkDiffVersion()
       //     return
       // }
-      // this.editor.mod.collab.carets.receiveSelectionChange(data)
+      this.editor.mod.collab.carets.receiveSelectionChange(data)
       break;
       case 'diff':
       this.editor.mod.collab.docChanges.receiveFromCollaborators(data);

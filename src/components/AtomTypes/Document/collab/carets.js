@@ -22,7 +22,8 @@ export class ModCollabCarets {
 		// Add one container element to hold carets
 		this.caretContainer = document.createElement('div');
 		this.caretContainer.id = 'caret-markers';
-		document.getElementById('document-contents').appendChild(this.caretContainer);
+		const docContents = document.getElementById('document-contents');
+		document.body.appendChild(this.caretContainer);
 	}
 
 	bindEvents() {
@@ -45,6 +46,7 @@ export class ModCollabCarets {
 	// Create a new caret as the current user
 	getCaretPosition() {
 		console.log('getCaretPosition');
+		// debugger;
 
 		return {
 			id: this.mod.editor.user.id,
@@ -93,6 +95,7 @@ export class ModCollabCarets {
 
 		const participant = _.findWhere(this.mod.participants, {id: caretPosition.id});
 		if (!participant) {
+			console.log('could not find participant')
 			// participant (still unknown). Ignore.
 			return;
 		}
@@ -115,13 +118,15 @@ export class ModCollabCarets {
 
 		let range = false;
 
+		console.log(posFrom, posTo);
+
 		if (posFrom !== posTo) {
 			range = pm.markRange(
 				posFrom,
 				posTo,
 				{
 					removeWhenEmpty: true,
-					className: 'user-bg-' + colorId
+					className: 'user-bg-1'
 				}
 			);
 		}
@@ -177,7 +182,7 @@ export class ModCollabCarets {
 				// 2nd write phase
 				return function() {
 					// 2nd read phase
-					const positionCSS = '';
+					let positionCSS = '';
 					for (const sessionId in that.caretPositions) {
 						if (sessionId) {
 							const caretPosition = that.caretPositions[sessionId];
@@ -188,7 +193,7 @@ export class ModCollabCarets {
 							const left = coords.left - offsets.left;
 							positionCSS += `#caret-${sessionId} {top: ${top}px; left: ${left}px; height: ${height}px;}`;
 						}
-						
+
 					}
 					return function() {
 						// 3rd write phase
