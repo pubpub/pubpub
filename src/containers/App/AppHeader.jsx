@@ -135,7 +135,10 @@ styles = {
 	headerNavItem: {
 		fontSize: '0.9em',
 		float: 'right',
-		cursor: 'pointer'
+		cursor: 'pointer',
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+			fontSize: '0.6em',
+		}
 	},
 	userImage: {
 		height: 22,
