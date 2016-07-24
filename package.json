@@ -27,7 +27,7 @@
     "test-travis": "NODE_PATH=./src TESTING=true mocha $(find src api -name '*.test.js') --compilers js:babel-register --require ./src/tests/mochaEnvInit.js",
     "coverage": "sudo mongod | NODE_PATH=./src TESTING=true ./node_modules/istanbul/lib/cli.js cover -x *.test.js node_modules/mocha/bin/_mocha -- $(find src api -name '*.test.js') --compilers js:babel-register --require ./src/tests/mochaEnvInit.js",
     "coverage-travis": "NODE_PATH=./src TESTING=true ./node_modules/istanbul/lib/cli.js cover -x *.test.js node_modules/mocha/bin/_mocha -- $(find src api -name '*.test.js') --compilers js:babel-register --require ./src/tests/mochaEnvInit.js",
-    "coveralls": "./node_modules/coveralls/bin/coveralls.js < coverage/lcov.info"
+    "coveralls": "./node_modules/coveralls/bin/coveralls.js < ./coverage/lcov.info"
   },
   "betterScripts": {
     "migrate": {
