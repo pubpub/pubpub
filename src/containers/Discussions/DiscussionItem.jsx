@@ -30,11 +30,13 @@ export const DiscussionItem = React.createClass({
 
 	render: function() {
 		const discussion = this.props.discussionData || {};
+		const versionData = discussion.versionData || {};
+		const authorsData = discussion.authorsData || [];
 		const index = this.props.index;
 		const children = discussion.children || [];
 
-		const docJSON = discussion.versionData.content.docJSON;
-		const date = discussion.versionData.createDate;
+		const docJSON = versionData.content && versionData.content.docJSON;
+		const date = versionData.createDate;
 
 		return (
 			<div>
@@ -46,7 +48,7 @@ export const DiscussionItem = React.createClass({
 
 					</div>
 					<div style={styles.headerDetails}>
-						{discussion.authorsData.map((authorLink, authorIndex)=> {
+						{authorsData.map((authorLink, authorIndex)=> {
 							return (
 								<div key={'author-' + index + '-' + authorIndex} style={styles.headerAuthor}>
 									<div style={styles.authorImage}>

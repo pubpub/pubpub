@@ -11,7 +11,7 @@ export const HighlightViewer = React.createClass({
 
 	render: function() {
 
-		const highlightData = safeGetInToJS(this.props.atomData, ['currentVersionData', 'content']);
+		const highlightData = safeGetInToJS(this.props.atomData, ['currentVersionData', 'content']) || {};
 
 		switch (this.props.renderType) {
 		case 'full':
