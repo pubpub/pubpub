@@ -235,7 +235,6 @@ export function getAtomData(req, res) {
 app.get('/getAtomData', getAtomData);
 
 export function getAtomEdit(req, res) {
-	console.log("Getting atom edit");
 	const {slug} = req.query;
 	// const userID = req.user ? req.user._id : undefined;
 	// Check permission type
@@ -251,17 +250,14 @@ export function getAtomEdit(req, res) {
 	})
   .set('Accept', 'application/json')
 	.end(function(err, res) {
-		if (err) {
-			console.log('Error getting token from collab server');
-		} else {
+		if (!err) {
 			token = res.text;
 			collab = true;
 		}
-	}).catch(function(err){
-		console.log("Caught bb")
+	}).catch(function(err) {
+		console.log('error', err)
 	})
 	.then(function() {
-		console.log("Anyways")
 		return Atom.findOne({slug: slug}).lean().exec()
 	})
 	.then(function(atomResult) { // Get most recent version
