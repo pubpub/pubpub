@@ -18,15 +18,16 @@ export const AppFooter = React.createClass({
 					<div style={styles.footerColumn}>
 						<div style={styles.footerHeader}>PubPub</div>
 
-						<Link style={styles.footerItem} to={'/pub/about'}> <FormattedMessage id="footer.about" defaultMessage="About"/> </Link>
+						<Link style={styles.footerItem} to={'/about'}> <FormattedMessage id="footer.about" defaultMessage="About"/> </Link>
 						<a style={styles.footerItem} href={'https://github.com/pubpub/pubpub'}> <FormattedMessage id="footer.code" defaultMessage="Code"/> </a>
-						<Link style={styles.footerItem} to={'/pub/jobs'}> <FormattedMessage id="footer.jobs" defaultMessage="Jobs"/> </Link>
+						<a style={styles.footerItem} href={'https://github.com/pubpub/pubpub/issues'}> Feedback </a>
 					</div>
 
 					<div style={styles.footerColumn}>
 						<div style={styles.footerHeader}> <FormattedMessage {...globalMessages.Explore} /> </div>
 
 						<Link style={styles.footerItem} to={'/pubs'}> <FormattedMessage {...globalMessages.Pubs} /> </Link>
+						<Link style={styles.footerItem} to={'/reviews'}> Reviews </Link>
 						<Link style={styles.footerItem} to={'/journals'}> <FormattedMessage {...globalMessages.Journals} /> </Link>
 					</div>
 

@@ -12,10 +12,8 @@ export const PreviewCard = React.createClass({
 		image: PropTypes.string,
 		title: PropTypes.string,
 		description: PropTypes.string,
-		mobileDescription: PropTypes.string,
+		mobileDescription: PropTypes.string, // Added this, even though it's a bit hacky, to facilitate multiple items that require exclusive placement, since we render description in two places
 		slug: PropTypes.string,
-		// onFollowHandler: PropTypes.func,
-		// showEdit: PropTypes.bool,
 		buttons: PropTypes.array,
 		header: PropTypes.object,
 		footer: PropTypes.object,

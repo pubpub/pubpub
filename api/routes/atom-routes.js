@@ -277,6 +277,13 @@ export function getAtomData(req, res) {
 			throw new Error('Atom does not exist');
 		}
 
+		let discussionsData = taskData[6];
+		if (permissionType !== 'author' && permissionType !== 'editor' && permissionType !== 'reader') {
+			discussionsData = discussionsData.filter((discussion)=>{
+				return discussion.versionData.isPublished;
+			});
+		}
+
 		// Need to beef this out once people start publishing specific versions!
 
 		return res.status(201).json({
@@ -287,7 +294,7 @@ export function getAtomData(req, res) {
 			versionsData: taskData[3],
 			submittedData: taskData[4],
 			featuredData: taskData[5],
-			discussionsData: taskData[6],
+			discussionsData: discussionsData,
 		});
 	})
 	.catch(function(error) {
