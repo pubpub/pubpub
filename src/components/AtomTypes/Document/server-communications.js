@@ -24,8 +24,6 @@ export class ModServerCommunications {
     let wsServer = require('../../../../api/config').collabServerURL;
 
     try {
-      const websocketServer = 'localhost:'; //192.241.154.71:
-      const websocketPort = '8000';
       this.ws = new window.WebSocket(`${websocketProtocol}//${wsServer}/ws/doc/${this.editor.doc.id}`);
       this.ws.onopen = function() {
         console.log('connection open');
