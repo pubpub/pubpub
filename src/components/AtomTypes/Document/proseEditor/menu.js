@@ -115,8 +115,11 @@ function buildMenuItems(schema) {
 	items.typeMenu = new Dropdown([items.makeCodeBlock, items.makeHead3, items.makeHead4, items.makeHead5, items.makeHead6], {label: '...'});
 
 	items.inlineMenu = [[items.toggleStrong, items.toggleEm, items.toggleLink, items.insertMenu], [items.insertEmbed]];
-	items.blockMenu = [[items.makeParagraph, items.makeHead1, items.makeHead2, items.wrapBulletList, items.wrapOrderedList, items.wrapBlockQuote, joinUpItem, liftItem, items.typeMenu]];
+	items.blockMenu = [[items.makeParagraph, items.makeHead1, items.makeHead2, items.wrapBulletList, items.wrapOrderedList, items.wrapBlockQuote, joinUpItem, liftItem, items.makeCodeBlock, items.makeHead3, items.makeHead4, items.makeHead5, items.makeHead6]];
 	items.fullMenu = items.inlineMenu.concat(items.blockMenu);
+
+	items.blockDropdownMenu = [items.makeParagraph, items.makeHead1, items.makeHead2, new Dropdown([items.wrapBulletList, items.wrapOrderedList, items.wrapBlockQuote, joinUpItem, liftItem, items.makeCodeBlock, items.makeHead3, items.makeHead4, items.makeHead5, items.makeHead6], {label: '...'})];
+	items.minimalMenu = [[items.toggleStrong, items.toggleEm, items.toggleLink, items.insertMenu], [items.insertEmbed], items.blockDropdownMenu];
 
 	return items;
 }

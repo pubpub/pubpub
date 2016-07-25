@@ -41,30 +41,30 @@ export const Discussions = React.createClass({
 
 	},
 
-	// componentDidMount() {
-	// 	const prosemirror = require('prosemirror');
-	// 	const {pubpubSetup} = require('components/AtomTypes/Document/proseEditor/pubpubSetup');
+	componentDidMount() {
+		const prosemirror = require('prosemirror');
+		const {pubpubSetup} = require('components/AtomTypes/Document/proseEditor/pubpubSetup');
 		
-	// 	pm = new prosemirror.ProseMirror({
-	// 		place: document.getElementById('reply-input'),
-	// 		schema: schema,
-	// 		plugins: [pubpubSetup],
-	// 		doc: null,
-	// 		on: {
-	// 			doubleClickOn: new StoppableSubscription,
-	// 		}
-	// 	});
+		pm = new prosemirror.ProseMirror({
+			place: document.getElementById('reply-input'),
+			schema: schema,
+			plugins: [pubpubSetup.config({menuBar: false, tooltipMenu: true})],
+			doc: null,
+			on: {
+				doubleClickOn: new StoppableSubscription,
+			}
+		});
 
-	// 	pm.on.doubleClickOn.add((pos, node, nodePos)=>{
-	// 		if (node.type.name === 'embed') {
-	// 			const done = (attrs)=> { 
-	// 				pm.tr.setNodeType(nodePos, node.type, attrs).apply(); 
-	// 			};
-	// 			window.toggleMedia(pm, done, node);
-	// 			return true;
-	// 		}
-	// 	});
-	// },
+		pm.on.doubleClickOn.add((pos, node, nodePos)=>{
+			if (node.type.name === 'embed') {
+				const done = (attrs)=> { 
+					pm.tr.setNodeType(nodePos, node.type, attrs).apply(); 
+				};
+				window.toggleMedia(pm, done, node);
+				return true;
+			}
+		});
+	},
 
 	addDiscussion: function(discussionObject, activeSaveID) {
 		// if (!this.props.loginData.get('loggedIn')) {

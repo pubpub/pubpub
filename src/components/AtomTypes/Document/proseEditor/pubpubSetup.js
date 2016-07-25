@@ -3,7 +3,6 @@ const {Plugin} = require('prosemirror/dist/edit');
 const {menuBar, tooltipMenu} = require('prosemirror/dist/menu');
 const {InputRule} = require('prosemirror/dist/inputrules');
 
-const {className} = require('./style');
 const {buildMenuItems} = require('./menu');
 const {buildKeymap} = require('./keymap');
 
@@ -56,7 +55,8 @@ function buildInputRules(schema) {
 
 exports.pubpubSetup = new Plugin(class {
 	constructor(pm, options) {
-		pm.wrapper.classList.add(className);
+
+		
 		this.keymap = buildKeymap(pm.schema, options.mapKeys);
 		pm.addKeymap(this.keymap);
 		this.inputRules = allInputRules.concat(buildInputRules(pm.schema));
@@ -67,9 +67,12 @@ exports.pubpubSetup = new Plugin(class {
 		this.barConf = options.menuBar;
 		this.tooltipConf = options.tooltipMenu;
 
+		let className;
+
 		if (this.barConf === true) {
 			builtMenu = buildMenuItems(pm.schema);
 			this.barConf = {float: true, content: builtMenu.fullMenu};
+			className = require('./style').className;
 		}
 		if (this.barConf) menuBar.config(this.barConf).attach(pm);
 
@@ -77,11 +80,13 @@ exports.pubpubSetup = new Plugin(class {
 			if (!builtMenu) builtMenu = buildMenuItems(pm.schema);
 			this.tooltipConf = {
 				selectedBlockMenu: true,
-				inlineContent: builtMenu.inlineMenu,
-				blockContent: builtMenu.blockMenu
+				inlineContent: builtMenu.minimalMenu,
+				// blockContent: builtMenu.blockMenu
+				blockContent: []
 			};
 		}
 		if (this.tooltipConf) tooltipMenu.config(this.tooltipConf).attach(pm);
+		pm.wrapper.classList.add(className);
 	}
 	detach(pm) {
 		pm.wrapper.classList.remove(className);
