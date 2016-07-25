@@ -22,14 +22,14 @@ export const AboutJournals = React.createClass({
 					<div className={'section'}>
 
 						<h1>Reviews</h1>
-						<p style={[styles.headerSubtitle, styles.headerTextMax]}>PubPub is a free and open tool for collaborative editing, instant publishing, continuous review, and grassroots journals.</p>
+						<p style={[styles.headerSubtitle, styles.headerTextMax]}>Description of Reviews coming here.</p>
 
 					</div>
 				</div>
 
 				<div>
 					<div className={'section'}>
-						<h2>Made with PubPub</h2>
+						<h2>Features of Reviews</h2>
 						
 					</div>
 				</div>

@@ -22,7 +22,7 @@ export const AboutJournals = React.createClass({
 					<div className={'section'}>
 
 						<h1>Pubs</h1>
-						<p style={[styles.headerSubtitle, styles.headerTextMax]}>PubPub is a free and open tool for collaborative editing, instant publishing, continuous review, and grassroots journals.</p>
+						<p style={[styles.headerSubtitle, styles.headerTextMax]}>Description of Pubs coming here.</p>
 						<Link style={globalStyles.link} to={'/signup'}><div className={'button'} style={styles.headerButton}>Create Pub</div></Link>
 
 					</div>
@@ -30,7 +30,7 @@ export const AboutJournals = React.createClass({
 
 				<div>
 					<div className={'section'}>
-						<h2>Made with PubPub</h2>
+						<h2>Features of Pubs</h2>
 						
 					</div>
 				</div>
