@@ -59,6 +59,11 @@ export class ModServerCommunications {
     }, 50000)
   }
 
+  close() {
+    console.log("Closed ws")
+    this.ws.close();
+  }
+
   activateConnection() {
     // console.log('Activating connection');
     this.connected = true;

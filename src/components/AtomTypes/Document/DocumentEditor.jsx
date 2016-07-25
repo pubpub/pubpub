@@ -130,7 +130,11 @@ export const DocumentEditor = React.createClass({
 			}
 		});
 
-	},    // Collects updates of the document from ProseMirror and saves it under this.doc
+	},
+	componentWillUnmount: function() {
+		this.collab.mod.serverCommunications.close();
+	},
+	// Collects updates of the document from ProseMirror and saves it under this.doc
 	getUpdates: function(callback) {
 		const tmpDoc = editorToModel(this.collab.pm.mod.collab.versionDoc);
 		this.collab.doc.contents = tmpDoc.contents;
