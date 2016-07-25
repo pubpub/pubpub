@@ -26,7 +26,7 @@ export class ModServerCommunications {
     try {
       this.ws = new window.WebSocket(`${websocketProtocol}//${wsServer}/ws/doc/${this.editor.doc.id}`);
       this.ws.onopen = function() {
-        console.log('connection open');
+        // console.log('connection open');
         // jQuery('#unobtrusive_messages').html('')
       }
     } catch (err) {
@@ -44,7 +44,7 @@ export class ModServerCommunications {
       window.setTimeout(function() {
         that.createWSConnection()
       }, 2000);
-      console.log('attempting to reconnect');
+      // console.log('attempting to reconnect');
       if (that.editor.pm.mod.collab.hasSendableSteps()) {
         // jQuery('#unobtrusive_messages').html('<span class="warn">'+gettext('Warning! Not all your changes have been saved! You could suffer data loss. Attempting to reconnect...')+'</span>')
       } else {
@@ -60,7 +60,7 @@ export class ModServerCommunications {
   }
 
   activateConnection() {
-    console.log('Activating connection');
+    // console.log('Activating connection');
     this.connected = true;
     if (this.firstTimeConnection) {
       this.editor.waitingForDocument = false;
@@ -80,9 +80,9 @@ export class ModServerCommunications {
 
   /** Sends data to server or keeps it in a list if currently offline. */
   send(data) {
-    console.log("SENDING")
     data.token = this.editor.token;
     data.slug = this.editor.slug;
+    data.user = this.editor.user;
     if (this.connected) {
       this.ws.send(JSON.stringify(data))
     } else if (data.type !== 'diff') {

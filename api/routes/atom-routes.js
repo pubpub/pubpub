@@ -363,7 +363,7 @@ export function getAtomEdit(req, res) {
 	request
 	.post(require('../config').collabServerURL + '/authenticate') // 192.241.154.71
 	.send({
-		user: 'hassan',
+		user: req.user.username,
 		slug: slug,
 		collabEncryptSecret: require('../config').collabEncryptSecret
 	})
