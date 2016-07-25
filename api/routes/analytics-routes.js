@@ -23,7 +23,8 @@ const jwtClient = new google.auth.JWT(
 	clientEmail, null, privateKey,
 	['https://www.googleapis.com/auth/analytics.readonly'], null);
 
-let ganalytics = jwtClient.authorize(function(err, tokens) {
+let ganalytics;
+jwtClient.authorize(function(err, tokens) {
 	if (err) {
 		console.info(err);
 		return err;
@@ -31,7 +32,7 @@ let ganalytics = jwtClient.authorize(function(err, tokens) {
 	oauth2Client.setCredentials({access_token: tokens.access_token});
 	google.options({ auth: oauth2Client });
 	ganalytics = google.analyticsreporting('v4');
-	return ganalytics;
+	// return ganalytics;
 });
 
 export function analytics(req, res) {
@@ -360,6 +361,7 @@ export function analytics(req, res) {
 		};
 
 		// This is the query. This is where google response is recieved.
+		console.log(ganalytics);
 		ganalytics.reports.batchGet(gRequest, function(err, gResponse) {
 			if (err) {
 				console.info(err);
