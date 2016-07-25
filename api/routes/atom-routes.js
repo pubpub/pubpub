@@ -233,7 +233,7 @@ export function getAtomData(req, res) {
 					discussionVersions.map((discussionVersion)=> {
 						if (String(discussionVersion.parent) === String(discussion.source._id)) {
 							versionData = discussionVersion;
-						} 
+						}
 					});
 					const mergedAuthorLinks = [].concat.apply([], discussionAuthorLinks);
 					const authorsData = mergedAuthorLinks.filter((authorLink)=> {
@@ -252,7 +252,7 @@ export function getAtomData(req, res) {
 
 		// const getDiscussions = new Promise(function(resolve) {
 		// 	if (!meta || meta === 'discussions') {
-		// 		// Get all the ones that point 
+		// 		// Get all the ones that point
 		// 		// XXX THIS HAS TO CHANGE to metadata
 		// 		// Get all the discussion links that are relevant
 		// 		// Grab the version for all those relevant links
@@ -296,7 +296,7 @@ export function getAtomData(req, res) {
 		// 				discussionVerions.map((discussionVersion)=> {
 		// 					if (discussionVersion.parent === discussion.source._id) {
 		// 						versionData = discussionVersion;
-		// 					} 
+		// 					}
 		// 				});
 		// 				const authorsData = discussionAuthorLinks.filter((authorLink)=> {
 		// 					return authorLink.destination === discussion.source._id;
@@ -352,7 +352,7 @@ export function getAtomData(req, res) {
 app.get('/getAtomData', getAtomData);
 
 export function getAtomEdit(req, res) {
-	console.log('Getting atom edit');
+
 	const {slug} = req.query;
 	// const userID = req.user ? req.user._id : undefined;
 	// Check permission type
@@ -361,25 +361,23 @@ export function getAtomEdit(req, res) {
 	let collab = false; // collab tells you if a connection was established to the collab server
 
 	request
-	.post('localhost:8000/authenticate') // 192.241.154.71
+	.post(require('../config').collabServerURL + '/authenticate') // 192.241.154.71
 	.send({
-		user: 'hassan',
-		slug: slug
+		user: req.user.username,
+		slug: slug,
+		collabEncryptSecret: require('../config').collabEncryptSecret
 	})
   .set('Accept', 'application/json')
-	.end(function(err, response) {
-		if (err) {
-			console.log('Error getting token from collab server');
-		} else {
-			token = response.text;
+	.end(function(err, res) {
+		if (!err) {
+			token = res.text;
 			collab = true;
 		}
 	}).catch(function(err) {
-		console.log('Caught bb');
+		console.log('error', err)
 	})
 	.then(function() {
-		console.log('Anyways');
-		return Atom.findOne({slug: slug}).lean().exec();
+		return Atom.findOne({slug: slug}).lean().exec()
 	})
 	.then(function(atomResult) { // Get most recent version
 		const mostRecentVersionId = atomResult.versions[atomResult.versions.length - 1];

@@ -83,17 +83,23 @@ export const DocumentEditor = React.createClass({
 		collab.mod = {};
 		collab.pm = pm;
 		collab.currentPm = pm;
-		const atomID = safeGetInToJS(this.props.atomEditData, ['atomData', '_id']);
-		collab.doc = {id: atomID};
-		const slug = safeGetInToJS(this.props.atomEditData, ['atomData', 'slug']);
-		collab.slug = slug;
 		collab.waitingForDocument = true;
 		collab.schema = pubSchema;
 		collab.receiveDocument = this.receiveDocument;
 		collab.receiveDocumentValues = this.receiveDocumentValues;
 		collab.askForDocument = this.askForDocument;
 		collab.getHash = this.getHash;
+
+		// Collaboration Authentication information
+		const atomID = safeGetInToJS(this.props.atomEditData, ['atomData', '_id']);
+		collab.doc = {id: atomID};
+		const slug = safeGetInToJS(this.props.atomEditData, ['atomData', 'slug']);
+		collab.slug = slug;
+		const user = safeGetInToJS(this.props.loginData, ['userData', 'username']);
+		collab.user = user;
 		collab.token = token;
+
+
 
 		this.collab = collab;
 

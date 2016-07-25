@@ -15,10 +15,8 @@ export class ModCollabDocChanges {
   checkHash(version, hash) {
     if (version === this.mod.editor.pm.mod.collab.version) {
       if (hash === this.mod.editor.getHash()) {
-        console.log('Hash could be verified')
         return true;
       }
-      console.log('Hash could not be verified, requesting document.')
       this.disableDiffSending()
       this.mod.editor.askForDocument();
       return false
@@ -29,13 +27,11 @@ export class ModCollabDocChanges {
   }
 
   cancelCurrentlyCheckingVersion() {
-    console.log("cancelCurrentlyCheckingVersion")
     this.currentlyCheckingVersion = false
     window.clearTimeout(this.enableCheckDiffVersion)
   }
 
   checkDiffVersion() {
-    console.log("checkDiffVersion")
     let that = this
     if (this.currentlyCheckingVersion) {
       return
@@ -54,8 +50,6 @@ export class ModCollabDocChanges {
   }
 
   disableDiffSending() {
-    console.log("disableDiffSending")
-
     let that = this
     this.awaitingDiffResponse = true
     // If no answer has been received from the server within 2 seconds, check the version
@@ -67,15 +61,12 @@ export class ModCollabDocChanges {
   }
 
   enableDiffSending() {
-    console.log("enableDiffSending")
-
     window.clearTimeout(this.checkDiffVersionTimer)
     this.awaitingDiffResponse = false
     this.sendToCollaborators()
   }
 
   sendToCollaborators() {
-    console.log("sendToCollaborators")
     if (this.awaitingDiffResponse ||
       !this.mod.editor.pm.mod.collab.hasSendableSteps() ){
         // this.mod.editor.mod.comments.store.unsentEvents().length === 0) {
@@ -116,27 +107,21 @@ export class ModCollabDocChanges {
     }
 
     receiveFromCollaborators(data) {
-      console.log('receiveFromCollaborators')
-
       let that = this
       if (this.mod.editor.waitingForDocument) {
-        console.log('WAITING FOR DOC');
         // We are currently waiting for a complete editor update, so
         // don't deal with incoming diffs.
         return
       }
       let editorHash = this.mod.editor.getHash()
-      console.log('Incoming diff: version: '+data.diff_version+', hash: '+data.hash)
-      console.log('Editor: version: '+this.mod.editor.pm.mod.collab.version+', hash: '+editorHash)
       if (data.diff_version !== this.mod.editor.pm.mod.collab.version) {
-        console.warn('Something is not correct. The local and remote versions do not match.')
+
         this.checkDiffVersion()
         return
       } else {
-        console.log('version OK')
+
       }
       if (data.hash && data.hash !== editorHash) {
-        console.warn('Something is not correct. The local and remote hash values do not match.')
         return false
       }
       /*
@@ -169,10 +154,7 @@ export class ModCollabDocChanges {
 }
 
 confirmDiff(request_id) {
-  console.log('confirmDiff')
-
   let that = this
-  console.log('confirming steps')
   let sentSteps = this.unconfirmedSteps[request_id]["diffs"]
   this.mod.editor.pm.mod.collab.receive(sentSteps, sentSteps.map(function(step){
     return that.mod.editor.pm.mod.collab.clientID
@@ -191,15 +173,12 @@ confirmDiff(request_id) {
 }
 
 rejectDiff(request_id) {
-  console.log('rejectDiff')
   this.enableDiffSending()
   delete this.unconfirmedSteps[request_id]
   this.sendToCollaborators()
 }
 
 applyDiff(diff) {
-  console.log('applyDiff')
-
   this.receiving = true
   let steps = [diff].map(j => Step.fromJSON(pubSchema, j))
   let client_ids = [diff].map(j => j.client_id)
