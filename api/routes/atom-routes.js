@@ -180,7 +180,7 @@ export function getAtomData(req, res) {
 		});
 
 		const getSubmitted = new Promise(function(resolve) {
-			if (meta === 'journals' && (permissionType === 'author' || permissionType === 'editor' || permissionType === 'reader')) {
+			if (meta === 'journals' && permissionType === 'author') {
 				const query = Link.find({source: atomResult._id, type: 'submitted'}).populate({
 					path: 'destination',
 					model: Journal,
