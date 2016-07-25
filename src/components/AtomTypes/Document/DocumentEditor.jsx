@@ -96,7 +96,7 @@ export const DocumentEditor = React.createClass({
 		const slug = safeGetInToJS(this.props.atomEditData, ['atomData', 'slug']);
 		collab.slug = slug;
 		const user = safeGetInToJS(this.props.loginData, ['userData', 'username']);
-		collab.user = user;
+		collab.username = user;
 		collab.token = token;
 
 

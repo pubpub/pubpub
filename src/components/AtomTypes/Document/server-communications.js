@@ -22,9 +22,9 @@ export class ModServerCommunications {
     let websocketProtocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
 
     let wsServer = require('../../../../api/config').collabServerURL;
-    
+
     try {
-      this.ws = new window.WebSocket(`${websocketProtocol}//${wsServer}/ws/doc/${this.editor.doc.id}?user=${this.editor.user }&token=${this.editor.token}`);
+      this.ws = new window.WebSocket(`${websocketProtocol}//${wsServer}/ws/doc/${this.editor.doc.id}?user=${this.editor.username }&token=${this.editor.token}`);
       this.ws.onopen = function() {
         // console.log('connection open');
         // jQuery('#unobtrusive_messages').html('')
@@ -82,7 +82,7 @@ export class ModServerCommunications {
   send(data) {
     data.token = this.editor.token;
     data.slug = this.editor.slug;
-    data.user = this.editor.user;
+    data.user = this.editor.username;
     if (this.connected) {
       this.ws.send(JSON.stringify(data))
     } else if (data.type !== 'diff') {
