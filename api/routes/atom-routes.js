@@ -234,7 +234,9 @@ export function getAtomData(req, res) {
 				const discussions = discussionLinks.map((discussion)=> {
 					const atomData = discussion.source;
 					let versionData = {};
-					discussionVersions.map((discussionVersion)=> {
+					discussionVersions.filter((discussionVersion)=> {
+						return !!discussionVersion;
+					}).map((discussionVersion)=> {
 						if (String(discussionVersion.parent) === String(discussion.source._id)) {
 							versionData = discussionVersion;
 						} 

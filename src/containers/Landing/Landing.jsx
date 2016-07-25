@@ -119,9 +119,11 @@ const Landing = React.createClass({
 				<Helmet {...metaData} />
 
 				{/* If not loggedIn, display the About PubPub content*/}
-				{!loggedIn &&
+				{/* !loggedIn &&
 					<About />
-				}
+				*/}
+
+				<About />
 
 				<div className={'lightest-bg'}>
 					<div className={'section'}>
@@ -132,7 +134,7 @@ const Landing = React.createClass({
 							<input type="button" value="Create Atom" onClick={this.handleSourceSubmit} />
 						</form>
 
-						<h2>Recent Activity</h2>
+						
 
 						{/* <Select.Async
 							name="form-field-name"
@@ -142,7 +144,7 @@ const Landing = React.createClass({
 							multi={true}
 							onChange={this.handleSelectChange} /> */}
 
-						{/* If no activity, display - follow these suggested accounts*/}
+						{/* <h2>Recent Activity</h2>
 
 						<PreviewCard 
 							image={'http://res.cloudinary.com/pubpub/image/upload/c_limit,h_250,w_250/v1449761714/3eb7882_iavg9s.jpg'}
@@ -163,7 +165,7 @@ const Landing = React.createClass({
 						<PreviewCard 
 							image={'http://res.cloudinary.com/pubpub/image/upload/c_limit,h_250,w_250/v1449761714/3eb7882_iavg9s.jpg'}
 							title={'Thariq Shihipar'}
-							description={'Intent on eating every bagel on earth until I burst.'} />
+							description={'Intent on eating every bagel on earth until I burst.'} /> */}
 					</div>
 				</div>
 
