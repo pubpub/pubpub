@@ -366,12 +366,13 @@ export function analytics(req, res) {
 				return res.status(500).json(err);
 			}
 			// Update function inputs
-			for (let index = 0; index < gResponse.reports.length; index++) {
+			const reports = gResponse && gResponse.reports || [];
+			for (let index = 0; index < reports.length; index++) {
 				if (!dummyReqCheck[index]) {
 					// Add response reports to gReports
-					gReports[index].push(gResponse.reports[index]);
+					gReports[index].push(reports[index]);
 					// Set next page tokens. Undefined if no further.
-					nextPageTokens[index] = gResponse.reports[index].nextPageToken;
+					nextPageTokens[index] = reports[index].nextPageToken;
 				} else {
 					// Dummy page tokens should be undefined, but this is for safety
 					nextPageTokens[index] = undefined;
