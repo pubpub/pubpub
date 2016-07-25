@@ -130,6 +130,10 @@ export const JournalProfile = React.createClass({
 			...collectionItems,
 		];
 
+		let mode = this.props.mode;
+		if (!journalData.admin && (mode === 'details' || mode === 'layout' || mode === 'featured' || mode === 'submitted' || mode === 'collections' || mode === 'admins')) {
+			mode = null;
+		}
 		return (
 			<div>
 
@@ -147,7 +151,7 @@ export const JournalProfile = React.createClass({
 				<NavContentWrapper navItems={navItems} mobileNavButtons={mobileNavButtons}>
 
 					{(() => {
-						switch (this.props.mode) {
+						switch (mode) {
 						case 'about':
 							return (
 								<JournalProfileAbout 
