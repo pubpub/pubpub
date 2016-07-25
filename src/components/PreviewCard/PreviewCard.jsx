@@ -12,6 +12,7 @@ export const PreviewCard = React.createClass({
 		image: PropTypes.string,
 		title: PropTypes.string,
 		description: PropTypes.string,
+		mobileDescription: PropTypes.string,
 		slug: PropTypes.string,
 		// onFollowHandler: PropTypes.func,
 		// showEdit: PropTypes.bool,
@@ -85,7 +86,7 @@ export const PreviewCard = React.createClass({
 						<Link to={href} style={globalStyles.link}>
 							<h3 style={styles.title}>{this.props.title}</h3>
 						</Link>
-						<div style={styles.description}>{this.props.description}</div>
+						<div style={styles.description}>{this.props.mobileDescription || this.props.description}</div>
 					</div>
 				</div>
 

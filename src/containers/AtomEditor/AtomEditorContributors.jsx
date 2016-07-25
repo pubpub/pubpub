@@ -175,12 +175,20 @@ export const AtomEditorContributors = React.createClass({
 								image={item.source.image}
 								title={item.source.name}
 								slug={item.source.username}
-								header={
+								description={
 									<RadioGroup name={'contributor type ' + item._id} selectedValue={this.state.contributorStates[item._id].type} onChange={this.handleTypeChange.bind(this, item._id)}>
 										<Radio value="contributor" id={'contributor-' + item._id} style={styles.radioInput}/> <label htmlFor={'contributor-' + item._id} style={styles.radioLabel}>Contributor</label>
 										<Radio value="reader" id={'reader-' + item._id} style={styles.radioInput}/> <label htmlFor={'reader-' + item._id} style={styles.radioLabel}>Reader</label>
 										<Radio value="editor" id={'editor-' + item._id} style={styles.radioInput}/> <label htmlFor={'editor-' + item._id} style={styles.radioLabel}>Editor</label>
 										<Radio value="author" id={'author-' + item._id} style={styles.radioInput}/> <label htmlFor={'author-' + item._id} style={styles.radioLabel}>Author</label>
+									</RadioGroup>
+								} 
+								mobileDescription={
+									<RadioGroup name={'contributor type 2' + item._id} selectedValue={this.state.contributorStates[item._id].type} onChange={this.handleTypeChange.bind(this, item._id)}>
+										<Radio value="contributor" id={'contributor-' + item._id} style={styles.radioInput}/> <label htmlFor={'contributor-' + item._id} style={styles.radioLabel}>Contributor</label>
+										<Radio value="reader" id={'reader2-' + item._id} style={styles.radioInput}/> <label htmlFor={'reader2-' + item._id} style={styles.radioLabel}>Reader</label>
+										<Radio value="editor" id={'editor2-' + item._id} style={styles.radioInput}/> <label htmlFor={'editor2-' + item._id} style={styles.radioLabel}>Editor</label>
+										<Radio value="author" id={'author2-' + item._id} style={styles.radioInput}/> <label htmlFor={'author2-' + item._id} style={styles.radioLabel}>Author</label>
 									</RadioGroup>
 								} 
 								footer={

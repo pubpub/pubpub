@@ -54,6 +54,9 @@ export default Radium(AtomReaderContributors);
 styles = {
 	role: {
 		display: 'inline-block',
-		margin: '.25em 1em',
+		padding: '.25em .5em',
+		border: '1px solid #BBBDC0',
+		margin: '0em .5em 0em 0em',
+		fontSize: '0.85em',
 	},
 };
