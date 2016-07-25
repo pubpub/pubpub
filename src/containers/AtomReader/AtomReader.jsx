@@ -191,7 +191,7 @@ export const AtomReader = React.createClass({
 						<div className={'button'} style={styles.button} onClick={()=>{}}>Follow</div>
 					</div> */}
 
-					<div id={!this.props.meta && safeGetInToJS(this.props.atomData, ['atomData', 'type']) === 'document' && 'atom-reader'} className={'atom-reader-meta'}>
+					<div className={!this.props.meta && safeGetInToJS(this.props.atomData, ['atomData', 'type']) === 'document' ? ' atom-reader atom-reader-meta' : 'atom-reader-meta'}>
 
 						<AtomReaderHeader
 							title={atomData.title}

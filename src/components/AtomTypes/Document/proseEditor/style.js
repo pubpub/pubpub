@@ -6,6 +6,12 @@ exports.className = className;
 
 insertCSS(`
 
+.ProseMirror:after {
+  display: table;
+  clear: both;
+  content: "";
+}
+
 .ProseMirror-menubar {
   z-index: 2;
 }
@@ -15,9 +21,18 @@ insertCSS(`
   min-height: 600px; 
   padding: 0em 5em 1em 5em;
 }
+
+.ProseMirror-quick-style .ProseMirror-content{
+  padding: 1em;
+  min-height: 3em;
+}
+
 @media screen and (min-resolution: 3dppx), screen and (max-width: 767px) {
   .ProseMirror-content {
     padding: 0em 0.5em 1em 0.5em;
+  }
+  .ProseMirror-quick-style .ProseMirror-content {
+    padding: .5em;
   }
 }
 
@@ -36,6 +51,11 @@ insertCSS(`
   display: block;
   height: 34px;
   padding: 2px 15px;
+}
+
+.ProseMirror-quick-style .ProseMirror-icon {
+  height: auto;
+  padding: 0em .5em;
 }
 
 .ProseMirror-icon svg {
@@ -61,6 +81,10 @@ insertCSS(`
   padding: 2px 15px;
   height: 33px;
 }
+.ProseMirror-quick-style .ProseMirror-menu-dropdown {
+  padding: 0em .5em;
+  height: auto;
+}
 
 .ProseMirror-menu-dropdown-menu {
   font-family: 'Open Sans';
@@ -71,6 +95,16 @@ insertCSS(`
   margin: 0px 10px;
   position: relative;
   top: 5px;
+}
+
+.ProseMirror-quick-style .ProseMirror-menuseparator {
+  top: 0px;
+}
+
+.ProseMirror-quick-style .ProseMirror-tooltip {
+  height: 26px;
+  font-size: 0.8em;
+  line-height: 1.4em;
 }
 
 `);

@@ -3,6 +3,7 @@ import {connect} from 'react-redux';
 import Radium, {Style} from 'radium';
 import {safeGetInToJS} from 'utils/safeParse';
 import dateFormat from 'dateformat';
+import {globalStyles} from 'utils/styleConstants';
 
 import {Media} from 'containers';
 import {schema} from 'components/AtomTypes/Document/proseEditor';
@@ -121,7 +122,8 @@ export const Discussions = React.createClass({
 					<div style={styles.license} key={'discussionLicense'}>
 						<License text={'All discussions are licensed under a'} hover={true} />
 					</div>
-					<div id={'reply-input'} style={styles.wsywigBlock}></div>
+					<div id={'reply-input'} className={'atom-reader atom-reply ProseMirror-quick-style'} style={styles.wsywigBlock}></div>
+					
 					
 				</div>
 

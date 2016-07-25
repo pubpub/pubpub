@@ -131,7 +131,7 @@ export const JournalProfile = React.createClass({
 		];
 
 		let mode = this.props.mode;
-		if (!journalData.admin && (mode === 'details' || mode === 'layout' || mode === 'featured' || mode === 'submitted' || mode === 'collections' || mode === 'admins')) {
+		if (!journalData.isAdmin && (mode === 'details' || mode === 'layout' || mode === 'featured' || mode === 'submitted' || mode === 'collections' || mode === 'admins')) {
 			mode = null;
 		}
 		return (
