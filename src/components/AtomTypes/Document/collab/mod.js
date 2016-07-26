@@ -12,8 +12,8 @@ export class ModCollab {
 		this.sessionIds = [];
 		this.newColor = 0;
 		this.collaborativeMode = false;
-		this.collabChange = new ModCollabDocChanges(this);
-		this.collabCarets = new ModCollabCarets(this);
+		new ModCollabDocChanges(this);
+		new ModCollabCarets(this);
 		// ModCollabChat(this);
 		// ModCollabColors(this);
 	}

@@ -92,7 +92,7 @@ export class ModCollabDocChanges {
 			// }),
 			// comments: this.mod.editor.mod.comments.store.unsentEvents(),
 			// comment_version: this.mod.editor.mod.comments.store.version,
-			requestId: requestId,
+			request_id: requestId,
 			hash: this.mod.editor.getHash(),
 			token: this.mod.editor.token,
 		};
@@ -137,8 +137,8 @@ export class ModCollabDocChanges {
 			this.mod.editor.mod.footnotes.fnEditor.applyDiffs(data.footnote_diff)
 		  }
 	  */
-		if (data.reject_requestId) {
-			this.rejectDiff(data.reject_requestId);
+		if (data.reject_request_id) {
+			this.rejectDiff(data.reject_request_id);
 		}
 		if (!data.hash) {
 			// No hash means this must have been created server side.
