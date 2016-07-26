@@ -23,7 +23,6 @@ export const JupyterViewer = React.createClass({
 	onIframeLoad: function() {
 		iframeResizer = require('iframe-resizer').iframeResizer;
 		this.setState({isUploading: false});
-		console.log("HLO")
 		iframeResizer({heightCalculationMethod: 'max'}, document.getElementsByTagName('iframe')[0]);
 	},
 
