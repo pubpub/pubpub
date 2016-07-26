@@ -4,6 +4,7 @@ import {safeGetInToJS} from 'utils/safeParse';
 
 
 let styles;
+let iframeResizer;
 
 export const JupyterViewer = React.createClass({
 	propTypes: {
@@ -15,7 +16,16 @@ export const JupyterViewer = React.createClass({
 			jupyterHtml: ''
 		};
 	},
+	componentDidMount() {
+		iframeResizer = require('iframe-resizer').iframeResizer;
+	},
 
+	onIframeLoad: function() {
+		iframeResizer = require('iframe-resizer').iframeResizer;
+		this.setState({isUploading: false});
+		console.log("HLO")
+		iframeResizer({heightCalculationMethod: 'max'}, document.getElementsByTagName('iframe')[0]);
+	},
 
 	render: function() {
 		// const title = safeGetInToJS(this.props.atomData, ['atomData', 'title']);
@@ -24,7 +34,7 @@ export const JupyterViewer = React.createClass({
 
 		return (
 			<div>
-				<iframe style={styles.iframe} src={JupyterSourceHtmlUrl}></iframe>
+				<iframe id={'jupyter'} ref="iframe" style={styles.iframe} src={JupyterSourceHtmlUrl} onLoad={this.onIframeLoad}></iframe>
 			</div>
 		);
 	}
@@ -42,9 +52,7 @@ styles = {
 		marginBottom: '1.25em',
 	},
 	iframe: {
-		display: 'block',
 		border: 'none',
-		height: '100vh',
 		width: '93%',
 	}
 };
