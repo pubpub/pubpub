@@ -9,6 +9,8 @@ export const renderReactFromJSON = function(item, isRoot) {
 
 	const content = item.map((node, index)=>{
 		switch (node.type) {
+		case 'body': 
+			return renderReactFromJSON(node.content);
 		case 'heading': 
 			const id = node.content[0].text.replace(/\s/g, '-').toLowerCase();
 			return React.createElement('h' + node.attrs.level, {key: index, id: id}, renderReactFromJSON(node.content));

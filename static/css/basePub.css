@@ -116,8 +116,8 @@
 	display: block;
 	border-radius: 1px;
 	overflow-x: scroll;
-
 }
+
 .atom-reader blockquote {
 	padding: 0.01em 1em;
 	margin: 1em 0em;
@@ -134,6 +134,13 @@
 	background: #F3F3F4;
 	border-radius: 2px / 4px;
 }*/
+
+.atom-reader .jupyter-iframe {
+	outline: 1px solid #BBBDC0;
+}
+.atom-reply .jupyter-iframe {
+	outline: 1px solid #808284;
+}
 
 
 .atom-reader ul, .atom-reader ol {
