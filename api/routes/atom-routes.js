@@ -329,16 +329,16 @@ export function getAtomEdit(req, res) {
 		collabEncryptSecret: require('../config').collabEncryptSecret
 	})
   .set('Accept', 'application/json')
-	.end(function(err, res) {
+	.end(function(err, response) {
 		if (!err) {
-			token = res.text;
+			token = response.text;
 			collab = true;
 		}
 	}).catch(function(err) {
-		console.log('error', err)
+		console.log('error', err);
 	})
 	.then(function() {
-		return Atom.findOne({slug: slug}).lean().exec()
+		return Atom.findOne({slug: slug}).lean().exec();
 	})
 	.then(function(atomResult) { // Get most recent version
 		if (!atomResult) {

@@ -95,7 +95,7 @@ export class ModCollabCarets {
 
 		const participant = _.findWhere(this.mod.participants, {id: caretPosition.id});
 		if (!participant) {
-			console.log('could not find participant')
+			console.log('could not find participant');
 			// participant (still unknown). Ignore.
 			return;
 		}
