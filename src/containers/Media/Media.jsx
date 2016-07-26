@@ -6,6 +6,7 @@ import {ensureImmutable} from 'reducers';
 import {AtomViewerPane} from 'containers/AtomReader/AtomViewerPane';
 import fuzzy from 'fuzzy';
 import {RadioGroup, Radio} from 'utils/ReactRadioGroup';
+import {NavContentWrapper} from 'components';
 
 // import {globalStyles} from 'utils/styleConstants';
 // import {globalMessages} from 'utils/globalMessages';
@@ -28,6 +29,7 @@ export const Media = React.createClass({
 			closeCallback: undefined,
 			filter: '',
 			nodeData: {},
+			atomMode: 'image'
 		};
 	},
 
@@ -51,6 +53,12 @@ export const Media = React.createClass({
 		if (isEscape) {
 			this.close();
 		}
+	},
+
+	setAtomMode: function(mode) {
+		this.setState({
+			atomMode: mode
+		});
 	},
 
 	toggleMedia: function(pm, callback, node) {
@@ -158,8 +166,25 @@ export const Media = React.createClass({
 	render: function() {
 
 		const mediaItems = safeGetInToJS(this.props.mediaData, ['mediaItems']) || [];
-		const filteredItems = fuzzy.filter(this.state.filter, mediaItems, {extract: (item)=>{ return item.type + ' ' + item.parent.title;} });
+		const mediaItemsFilterForType = mediaItems.filter((item)=> {
+			return item.type === this.state.atomMode;
+		});
+		const filteredItems = fuzzy.filter(this.state.filter, mediaItemsFilterForType, {extract: (item)=>{ return item.type + ' ' + item.parent.title;} });
 		const nodeData = this.state.nodeData || {};
+
+		const mobileNavButtons = [
+			{ type: 'button', mobile: true, text: 'Pubs', action: this.followUserToggle },
+			{ type: 'button', mobile: true, text: 'Menu', action: undefined },
+		];
+
+		const navItems = [
+			{ type: 'button', text: 'Images', action: this.setAtomMode.bind(this, 'image'), active: this.state.atomMode === 'image'},
+			{ type: 'button', text: 'Videos', action: this.setAtomMode.bind(this, 'video'), active: this.state.atomMode === 'video'},
+			{ type: 'button', text: 'References', action: this.setAtomMode.bind(this, 'reference'), active: this.state.atomMode === 'reference'},
+			{ type: 'button', text: 'Jupyter', action: this.setAtomMode.bind(this, 'jupyter'), active: this.state.atomMode === 'jupyter'},
+			{ type: 'button', text: 'Documents', action: this.setAtomMode.bind(this, 'document'), active: this.state.atomMode === 'document'},
+		];
+
 	
 		return (
 
@@ -170,40 +195,40 @@ export const Media = React.createClass({
 					{/* If we DON'T have a chosen atom */}
 					{!nodeData.data &&
 						<div>
-							<input type="text" placeholder={'Filter'} value={this.state.filter} onChange={this.filterChange} style={styles.filterInput}/>
 
-							{filteredItems.map((item)=> {
-								return item.original;
-							}).filter((item)=> {
-								return item.type === 'image' || item.type === 'video';
-							}).sort((foo, bar)=>{
-								// Sort so that most recent is first in array
-								if (foo.lastUpdated > bar.lastUpdated) { return -1; }
-								if (foo.lastUpdated < bar.lastUpdated) { return 1; }
-								return 0;
-							}).map((item, index)=> {
-								return (
-									<div key={'media-item-' + index} onClick={this.setItem.bind(this, item)} style={styles.item}>
-										<div style={styles.itemPreview}>
-											{item.type === 'image' &&
-												<img src={'https://jake.pubpub.org/unsafe/fit-in/100x50/' + item.content.url} alt={item.parent.title} title={item.parent.title}/>
-											}
+							<NavContentWrapper navItems={navItems} mobileNavButtons={mobileNavButtons}>
+								<input type="text" placeholder={'Filter'} value={this.state.filter} onChange={this.filterChange} style={styles.filterInput}/>
+								{filteredItems.map((item)=> {
+									return item.original;
+								}).sort((foo, bar)=>{
+									// Sort so that most recent is first in array
+									if (foo.lastUpdated > bar.lastUpdated) { return -1; }
+									if (foo.lastUpdated < bar.lastUpdated) { return 1; }
+									return 0;
+								}).map((item, index)=> {
+									return (
+										<div key={'media-item-' + index} onClick={this.setItem.bind(this, item)} style={styles.item}>
+											<div style={styles.itemPreview}>
+												{item.type === 'image' &&
+													<img src={'https://jake.pubpub.org/unsafe/fit-in/100x50/' + item.content.url} alt={item.parent.title} title={item.parent.title}/>
+												}
 
-											{item.type === 'video' &&
-												<span>Video!</span>
-											}
-											
-											{item.type === 'document' &&
-												<div>{item.parent.title}</div>
-											}
+												{item.type === 'video' &&
+													<span>Video!</span>
+												}
+												
+												{item.type === 'document' &&
+													<div>{item.parent.title}</div>
+												}
+											</div>
+
+											<div style={styles.itemDetail}>
+												<div style={styles.itemDetailTitle}>{item.parent.title}</div>
+											</div>
 										</div>
-
-										<div style={styles.itemDetail}>
-											<div style={styles.itemDetailTitle}>{item.parent.title}</div>
-										</div>
-									</div>
-								);
-							})}
+									);
+								})}
+							</NavContentWrapper>
 
 						</div>
 					}
@@ -322,12 +347,13 @@ styles = {
 	modalContent: {
 		position: 'fixed',
 		zIndex: 10001,
-		padding: '0em 1em',
-		width: 'calc(80vw - 2em)',
+		padding: '1em 0em',
+		// width: 'calc(80vw - 2em)',
 		// maxHeight: 'calc(92vh - 4em)',
 		maxHeight: '92vh',
 		top: '4vh',
 		left: '10vw',
+		right: '10vw',
 		backgroundColor: 'white',
 		overflow: 'hidden',
 		overflowY: 'scroll',
@@ -336,10 +362,11 @@ styles = {
 		transition: '.1s ease-in-out transform',
 		borderRadius: '2px',
 		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
-			width: 'calc(98vw - 2em)',
+			// width: 'calc(98vw - 2em)',
 			height: 'calc(98vh - 2em)',
 			top: '1vh',
 			left: '1vw',
+			right: '1vw',
 			padding: '1em',
 		},
 	},
