@@ -26,6 +26,14 @@ export const Login = React.createClass({
 		this.props.dispatch(login(this.refs.email.value, this.refs.password.value));
 	},
 
+	componentWillMount(){
+		const newUsername = this.props.loginData && this.props.loginData.getIn(['userData', 'username']);
+		if (newUsername) {
+			// new username exists and is not the same as oldusername
+			const redirectRoute = this.props.query && this.props.query.redirect;
+			this.props.dispatch(push(redirectRoute || '/'));
+		}
+	},
 	componentWillReceiveProps(nextProps) {
 		// If there is a new username in loginData, login was a sucess, so redirect
 		const oldUsername = this.props.loginData && this.props.loginData.getIn(['userData', 'username']);
