@@ -23,6 +23,8 @@ npm run dev
 
 PubPub is built with react, redux, node, express, and mongoose. For great react/redux testing, we use [https://github.com/gaearon/redux-devtools](Redux devtools). We suggest installing the [https://chrome.google.com/webstore/detail/redux-devtools/lmhkpmbekcpmknklioeibfkpmmfibljd](chrome extension) for a less popup-y dev environment.
 
+For document collaboration to work the [https://github.com/pubpub/collab] (PubPub Collab) server needs to be running and the url and secret need to be added to `/api/config.js`.
+
 ## Building and Running Production Server
 
 ```
