@@ -10,11 +10,11 @@ const Promise = require('bluebird');
 const SHA1 = require('crypto-js/sha1');
 const encHex = require('crypto-js/enc-hex');
 
-const Firebase = require('firebase');
+// const Firebase = require('firebase');
 
 const Request = require('request-promise');
 
-import {fireBaseURL, firebaseTokenGen, generateAuthToken} from '../services/firebase';
+// import {fireBaseURL, firebaseTokenGen, generateAuthToken} from '../services/firebase';
 
 export function createAtom(req, res) {
 	if (!req.user) {
@@ -25,7 +25,7 @@ export function createAtom(req, res) {
 	const now = new Date().getTime();
 	const type = req.body.type || 'markdown';
 	const hash = SHA1(type + new Date().getTime() + req.user._id).toString(encHex);
-	const ref = new Firebase(fireBaseURL + hash + '/editorData' );
+	// const ref = new Firebase(fireBaseURL + hash + '/editorData' );
 
 	const atom = new Atom({
 		slug: hash,
@@ -82,31 +82,31 @@ export function createAtom(req, res) {
 		return Version.update({ _id: versionID }, { $set: { 'content.htmlUrl': response} }).exec();
 		// newVersion.content.htmlUrl = response;
 	})
-	.then(function() { // If type is markdown, authenticate firebase connection
-		if (type !== 'markdown') { return undefined; }
+	// .then(function() { // If type is markdown, authenticate firebase connection
+	// 	if (type !== 'markdown') { return undefined; }
 
-		return ref.authWithCustomToken(generateAuthToken());
-	})
-	.then(function() { // If type is markdown, add author to firebase permissions
-		if (type !== 'markdown') { return undefined; }
+	// 	return ref.authWithCustomToken(generateAuthToken());
+	// })
+	// .then(function() { // If type is markdown, add author to firebase permissions
+	// 	if (type !== 'markdown') { return undefined; }
 
-		const newEditorData = {
-			collaborators: {},
-			settings: {styleDesktop: ''},
-		};
-		newEditorData.collaborators[req.user.username] = {
-			_id: userID.toString(),
-			name: req.user.name,
-			firstName: req.user.firstName || '',
-			lastName: req.user.lastName || '',
-			username: req.user.username,
-			email: req.user.email,
-			image: req.user.image,
-			permission: 'edit',
-			admin: true,
-		};
-		return ref.set(newEditorData);
-	})
+	// 	const newEditorData = {
+	// 		collaborators: {},
+	// 		settings: {styleDesktop: ''},
+	// 	};
+	// 	newEditorData.collaborators[req.user.username] = {
+	// 		_id: userID.toString(),
+	// 		name: req.user.name,
+	// 		firstName: req.user.firstName || '',
+	// 		lastName: req.user.lastName || '',
+	// 		username: req.user.username,
+	// 		email: req.user.email,
+	// 		image: req.user.image,
+	// 		permission: 'edit',
+	// 		admin: true,
+	// 	};
+	// 	return ref.set(newEditorData);
+	// })
 	.then(function() { // Return hash of new atom
 		return res.status(201).json(hash);
 	})

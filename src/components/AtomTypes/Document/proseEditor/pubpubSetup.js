@@ -5,7 +5,7 @@ const {InputRule} = require('prosemirror/dist/inputrules');
 
 const {buildMenuItems} = require('./menu');
 const {buildKeymap} = require('./keymap');
-
+require('./style');
 
 // This module exports helper functions for deriving a set of pubpub-specific
 // menu items, input rules, or key bindings from a schema. These
@@ -55,8 +55,8 @@ function buildInputRules(schema) {
 
 exports.pubpubSetup = new Plugin(class {
 	constructor(pm, options) {
-
-		
+		// const className = options.className || 'ProseMirror-pubpub-editor-style';
+		// pm.wrapper.classList.add(className);
 		this.keymap = buildKeymap(pm.schema, options.mapKeys);
 		pm.addKeymap(this.keymap);
 		this.inputRules = allInputRules.concat(buildInputRules(pm.schema));
@@ -67,12 +67,9 @@ exports.pubpubSetup = new Plugin(class {
 		this.barConf = options.menuBar;
 		this.tooltipConf = options.tooltipMenu;
 
-		let className;
-
 		if (this.barConf === true) {
 			builtMenu = buildMenuItems(pm.schema);
 			this.barConf = {float: true, content: builtMenu.fullMenu};
-			className = require('./style').className;
 		}
 		if (this.barConf) menuBar.config(this.barConf).attach(pm);
 
@@ -86,10 +83,9 @@ exports.pubpubSetup = new Plugin(class {
 			};
 		}
 		if (this.tooltipConf) tooltipMenu.config(this.tooltipConf).attach(pm);
-		pm.wrapper.classList.add(className);
 	}
 	detach(pm) {
-		pm.wrapper.classList.remove(className);
+		// pm.wrapper.classList.remove(className);
 		pm.removeKeymap(this.keymap);
 		const rules = inputRules.ensure(pm);
 		this.inputRules.forEach(rule => rules.removeRule(rule));

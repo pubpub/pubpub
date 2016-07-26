@@ -16,7 +16,8 @@ export function getMedia(req, res) {
 	// Grab the most recent version from all those destination Atoms
 	// Query for all of the recent versions
 	// Merge the parent Atoms into the most recent versions and return those versions.
-	Link.find({source: userID, type: {$in: ['editor', 'reader', 'author']}}).populate({
+	
+	Link.find({source: userID, type: {$in: ['editor', 'author']}}).populate({
 		path: 'destination',
 		model: Atom,
 	}).exec()
@@ -27,14 +28,16 @@ export function getMedia(req, res) {
 			return item.destination.versions[item.destination.versions.length - 1];
 		});
 		return [linkResults, Version.find({_id: {$in: versionIDs}})];
+
 	})
 	.spread(function(linkResults, versionResults) {
+		const atomObject = {};
+		linkResults.map((link)=> {
+			atomObject[link.destination._id] = link.destination;
+		});
+
 		const mergedVersions = versionResults.map((item)=>{
-			linkResults.map((link)=> {
-				if (String(link.destination._id) === String(item.parent)) {
-					item.parent = link.destination;
-				}
-			});
+			item.parent = atomObject[item.parent];
 			return item;
 		});
 		return res.status(201).json(mergedVersions);
