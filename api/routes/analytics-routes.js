@@ -7,8 +7,8 @@ const app = require('../api');
 
 // Google API Key. Downloaded from Developer Console.
 // Key has an email attached which needs view access to the G Analytics
-const clientEmail = process.env.NODE_ENV !== 'production' && !process.env.TESTING ? require('../config').googleAPIKey.client_email : process.env.GOOGLE_API_CLIENT_EMAIL;
-const privateKey = process.env.NODE_ENV !== 'production' && !process.env.TESTING ? require('../config').googleAPIKey.private_key : process.env.GOOGLE_API_PRIVATE_KEY;
+const clientEmail = process.env.GOOGLE_API_CLIENT_EMAIL;
+const privateKey = process.env.GOOGLE_API_PRIVATE_KEY;
 
 // from node install of googleapis
 import google from 'googleapis';

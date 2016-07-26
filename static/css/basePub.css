@@ -23,6 +23,14 @@
 	margin-top: 0.83em;
 }
 
+.atom-reply h1 {
+	font-size: 1.5em;
+}
+
+.atom-reply h2 {
+	font-size: 1.25em;
+}
+
 .atom-reader h1, .atom-reader h2, .atom-reader h3, .atom-reader h4, .atom-reader h5, .atom-reader h6 {
 	font-family: 'Open Sans', Helvetica Neue, Arial, sans-serif;
 }
@@ -32,6 +40,12 @@
 	margin: 1em 0em;
     font-size: 1.2em;
     line-height: 1.5em;
+}
+
+.atom-reply p {
+	margin: .5em 0em;
+    font-size: 1em;
+    line-height: 1.2em;
 }
 
 /* Atom Reader Header Styles */

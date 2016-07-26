@@ -101,7 +101,10 @@ function updateJournalLoad(state) {
 
 function updateJournalSuccess(state, result) {
 	return state.merge({
-		journalData: result,
+		journalData: {
+			...result,
+			isAdmin: state.getIn(['journalData', 'isAdmin']),
+		},
 		saveLoading: false,
 		saveError: null,
 	});

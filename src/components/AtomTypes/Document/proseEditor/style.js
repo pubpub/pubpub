@@ -105,6 +105,9 @@ insertCSS(`
   height: 26px;
   font-size: 0.8em;
   line-height: 1.4em;
+  border-radius: 1px;
+  border: 1px solid #808284;
+  
 }
 
 `);
