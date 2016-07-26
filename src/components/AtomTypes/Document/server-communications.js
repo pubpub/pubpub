@@ -130,7 +130,7 @@ export class ModServerCommunications {
 		this.editor.mod.collab.docChanges.receiveFromCollaborators(data);
 		break;
 	case 'confirm_diff':
-		this.editor.mod.collab.docChanges.confirmDiff(data.request_id);
+		this.editor.mod.collab.docChanges.confirmDiff(data.requestId);
 		break;
 	case 'setting_change':
 		this.editor.mod.settings.set.setSetting(data.variable, data.value, false);

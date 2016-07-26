@@ -12,14 +12,14 @@ export class ModCollab {
 		this.sessionIds = [];
 		this.newColor = 0;
 		this.collaborativeMode = false;
-		ModCollabDocChanges(this);
+		this.collabChange = new ModCollabDocChanges(this);
+		this.collabCarets = new ModCollabCarets(this);
 		// ModCollabChat(this);
-		ModCollabCarets(this);
 		// ModCollabColors(this);
 	}
 
 	updateParticipantList(participants) {
-		const that = this;
+		// const that = this;
 
 		const allSessionIds = [];
 		this.participants = _.map(_.groupBy(participants,
