@@ -318,28 +318,11 @@ export function getAtomEdit(req, res) {
 	const userID = req.user ? req.user._id : undefined;
 	// Check permission type
 
-	let token = undefined;
-	let collab = false; // collab tells you if a connection was established to the collab server
+	// let token = undefined;
+	// let collab = false; // collab tells you if a connection was established to the collab server
 
-	request
-	.post(require('../config').collabServerURL + '/authenticate') // 192.241.154.71
-	.send({
-		user: req.user.username,
-		slug: slug,
-		collabEncryptSecret: require('../config').collabEncryptSecret
-	})
-  .set('Accept', 'application/json')
-	.end(function(err, res) {
-		if (!err) {
-			token = res.text;
-			collab = true;
-		}
-	}).catch(function(err) {
-		console.log('error', err)
-	})
-	.then(function() {
-		return Atom.findOne({slug: slug}).lean().exec()
-	})
+	let output = {};
+	Atom.findOne({slug: slug}).lean().exec()
 	.then(function(atomResult) { // Get most recent version
 		if (!atomResult) {
 			throw new Error('Atom does not exist');
@@ -358,25 +341,38 @@ export function getAtomEdit(req, res) {
 			throw new Error('Atom does not exist');
 		}
 
-		const output = {
+		output = {
 			atomData: atomResult,
 			currentVersionData: versionResult,
-			token: token,
-			collab: collab
 		};
-
 		// if (atomResult.type === 'markdown') { // If we're sending down Editor data for a markdown atom, include the firebase token so we can do collaborative editing
 		// 	output.atomData.token = firebaseTokenGen(req.user.username, slug, false); // the false should be {isReader}
 		// }
 
-		return res.status(201).json(output);
+		return request.post(require('../config').collabServerURL + '/authenticate')
+		.send({
+			user: req.user.username,
+			id: atomResult._id,
+			collabEncryptSecret: require('../config').collabEncryptSecret
+		})
+		.set('Accept', 'application/json')
+		.end(function(err, jsonResponse) {
+			 if (!err) {
+				 output.token = jsonResponse.text;
+				 output.collab = true;
+			 }
+			 return res.status(201).json(output);
+	 	})
+	 .catch(function(err) {
+		 console.log('error', err)
+	 });
+
 	})
 	.catch(function(error) {
 		if (error.message === 'Atom does not exist') {
 			console.log(error.message);
-			return res.status(404).json('404 Not Found');	
+			return res.status(404).json('404 Not Found');
 		}
-
 		console.log('error', error);
 		return res.status(500).json(error);
 	});
