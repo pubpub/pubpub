@@ -1,3 +1,5 @@
+/* eslint no-new: 0 */
+
 import {ModCollabDocChanges} from './doc-changes';
 // import {ModCollabChat} from './chat';
 import {ModCollabCarets} from './carets';
