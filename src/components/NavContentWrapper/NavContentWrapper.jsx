@@ -8,7 +8,7 @@ export const NavContentWrapper = React.createClass({
 	propTypes: {
 		navItems: PropTypes.array,
 		mobileNavButtons: PropTypes.array,
-		children: PropTypes.object
+		children: PropTypes.oneOfType([PropTypes.array, PropTypes.object])
 
 	},
 

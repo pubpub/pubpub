@@ -17,12 +17,12 @@ import {
 	SAVE_VERSION_SUCCESS,
 	SAVE_VERSION_FAIL,
 
-	UPDATE_ATOM_DETAILS_LOAD, 
-	UPDATE_ATOM_DETAILS_SUCCESS, 
+	UPDATE_ATOM_DETAILS_LOAD,
+	UPDATE_ATOM_DETAILS_SUCCESS,
 	UPDATE_ATOM_DETAILS_FAIL,
 
-	PUBLISH_VERSION_LOAD, 
-	PUBLISH_VERSION_SUCCESS, 
+	PUBLISH_VERSION_LOAD,
+	PUBLISH_VERSION_SUCCESS,
 	PUBLISH_VERSION_FAIL,
 
 	GET_EDIT_MODAL_DATA_LOAD,
@@ -49,6 +49,8 @@ import {
 export const defaultState = Immutable.Map({
 	atomData: {},
 	currentVersionData: {},
+	token: undefined,
+	collab: undefined,
 	loading: false,
 	error: null,
 	newAtomHash: undefined,
@@ -96,6 +98,8 @@ function getAtomEditSuccess(state, result) {
 		loading: false,
 		atomData: result.atomData,
 		currentVersionData: result.currentVersionData,
+		token: result.token,
+		collab: result.collab,
 		error: null
 	});
 }
@@ -264,7 +268,7 @@ export default function readerReducer(state = defaultState, action) {
 		return saveVersionSuccess(state, action.result);
 	case SAVE_VERSION_FAIL:
 		return saveVersionFail(state, action.error);
-	
+
 	case UPDATE_ATOM_DETAILS_LOAD:
 		return updateAtomDetailsLoad(state);
 	case UPDATE_ATOM_DETAILS_SUCCESS:

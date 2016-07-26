@@ -13,6 +13,7 @@ const encHex = require('crypto-js/enc-hex');
 // const Firebase = require('firebase');
 
 const Request = require('request-promise');
+const request = require('superagent-promise')(require('superagent'), Promise);
 
 // import {fireBaseURL, firebaseTokenGen, generateAuthToken} from '../services/firebase';
 
@@ -239,7 +240,7 @@ export function getAtomData(req, res) {
 					}).map((discussionVersion)=> {
 						if (String(discussionVersion.parent) === String(discussion.source._id)) {
 							versionData = discussionVersion;
-						} 
+						}
 					});
 					const mergedAuthorLinks = [].concat.apply([], discussionAuthorLinks);
 					const authorsData = mergedAuthorLinks.filter((authorLink)=> {
@@ -312,11 +313,33 @@ export function getAtomData(req, res) {
 app.get('/getAtomData', getAtomData);
 
 export function getAtomEdit(req, res) {
+
 	const {slug} = req.query;
 	const userID = req.user ? req.user._id : undefined;
 	// Check permission type
 
-	Atom.findOne({slug: slug}).lean().exec()
+	let token = undefined;
+	let collab = false; // collab tells you if a connection was established to the collab server
+
+	request
+	.post(require('../config').collabServerURL + '/authenticate') // 192.241.154.71
+	.send({
+		user: req.user.username,
+		slug: slug,
+		collabEncryptSecret: require('../config').collabEncryptSecret
+	})
+  .set('Accept', 'application/json')
+	.end(function(err, res) {
+		if (!err) {
+			token = res.text;
+			collab = true;
+		}
+	}).catch(function(err) {
+		console.log('error', err)
+	})
+	.then(function() {
+		return Atom.findOne({slug: slug}).lean().exec()
+	})
 	.then(function(atomResult) { // Get most recent version
 		if (!atomResult) {
 			throw new Error('Atom does not exist');
@@ -337,7 +360,9 @@ export function getAtomEdit(req, res) {
 
 		const output = {
 			atomData: atomResult,
-			currentVersionData: versionResult
+			currentVersionData: versionResult,
+			token: token,
+			collab: collab
 		};
 
 		// if (atomResult.type === 'markdown') { // If we're sending down Editor data for a markdown atom, include the firebase token so we can do collaborative editing
@@ -490,11 +515,11 @@ export function addContributor(req, res) {
 	const {atomID, contributorID} = req.body;
 	const userID = req.user._id;
 	const now = new Date().getTime();
-	// Check permission 
+	// Check permission
 
 	Link.findOne({source: contributorID, destination: atomID, inactive: {$ne: true}}).exec()
 	.then(function(existingLink) {
-		if (existingLink) {			
+		if (existingLink) {
 			throw new Error('Contributor already exists');
 		}
 		return Link.createLink('reader', contributorID, atomID, userID, now);
@@ -518,10 +543,10 @@ app.post('/addContributor', addContributor);
 
 export function updateContributor(req, res) {
 	const {linkID, linkType, linkRoles} = req.body;
-	
+
 	Link.update({_id: linkID}, {$set: {type: linkType, 'metadata.roles': linkRoles}})
 	.then(function(updateResult) {
-		return res.status(201).json('success');	
+		return res.status(201).json('success');
 	})
 	.catch(function(error) {
 		console.log('error', error);
@@ -534,7 +559,7 @@ export function deleteContributor(req, res) {
 	const {linkID} = req.body;
 	const userID = req.user._id;
 	const now = new Date().getTime();
-	// Check permission 
+	// Check permission
 
 	Link.setLinkInactiveById(linkID, userID, now, 'deleted')
 	.then(function(deletedLink) {
@@ -546,4 +571,3 @@ export function deleteContributor(req, res) {
 	});
 }
 app.post('/deleteContributor', deleteContributor);
-

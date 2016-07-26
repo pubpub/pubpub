@@ -67,7 +67,7 @@ class Embed extends Inline {
 		};
 	}
 	get draggable() { return true; }
-	toDOM(node) { 
+	toDOM(node) {
 		const dom = document.createElement('div');
 		ReactDOM.render(<EmbedWrapper {...node.attrs}/>, dom);
 		return dom.childNodes[0];
@@ -76,9 +76,19 @@ class Embed extends Inline {
 
 exports.Embed = Embed;
 
+class Body extends Block {
+    get matchDOMTag() {
+        return {"div[id='document-contents']": null}
+    }
+    toDOM(node) {
+        return ["div", {id: 'document-contents'}, 0]
+    }
+}
+
 export const schema = new Schema({
 	nodes: {
-		doc: {type: Doc, content: 'block+'},
+		doc: {type: Doc, content: 'body'},
+    body: {type: Body, content: "block+"},
 
 		paragraph: {type: Paragraph, content: 'inline<_>*', group: 'block'},
 		blockquote: {type: BlockQuote, content: 'block+', group: 'block'},
