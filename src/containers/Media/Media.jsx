@@ -8,12 +8,13 @@ import {AtomEditorPane} from 'containers/AtomEditor/AtomEditorPane';
 import fuzzy from 'fuzzy';
 import {RadioGroup, Radio} from 'utils/ReactRadioGroup';
 import {NavContentWrapper} from 'components';
+import Select from 'react-select';
 
 // import {globalStyles} from 'utils/styleConstants';
 // import {globalMessages} from 'utils/globalMessages';
 // import {FormattedMessage} from 'react-intl';
-// import Dropzone from 'react-dropzone';
-// import {s3Upload} from 'utils/uploadFile';
+import Dropzone from 'react-dropzone';
+import {s3Upload} from 'utils/uploadFile';
 import {getMedia} from './actions';
 
 let styles;
@@ -118,6 +119,67 @@ export const Media = React.createClass({
 		}); 
 	},
 
+	// On file drop (or on file select)
+	// Upload files automatically to s3
+	// On completion call function that hits the pubpub server to generate asset information
+	// Generated asset information is then sent to Firebase for syncing with other users
+	onDrop: function(files) {
+		// console.log(files);
+		// return;
+
+		// if (this.state.activeSection !== 'assets') {
+		// 	return;
+		// }
+
+		// // Add new files to existing set, so as to not overwrite existing uploads
+		// const existingFiles = this.state.files.length;
+		// const tmpFiles = this.state.files.concat(files);
+
+		// // For each new file, begin their upload process
+		// for (let fileCount = existingFiles; fileCount < existingFiles + files.length; fileCount++) {
+		// 	s3Upload(tmpFiles[fileCount], this.props.slug, this.onFileProgress, this.onFileFinish, fileCount);
+		// }
+
+		// // Set state with newly added files
+		// this.setState({files: tmpFiles});
+
+		if (files.length) {
+			s3Upload(evt.target.files[0], ()=>{}, this.onFileFinish, 0);
+		}
+
+	},
+
+	onFileFinish: function(evt, index, type, filename) {
+
+		let atomType = undefined;
+		const extension = filename.split('.').pop();
+		switch (extension) {
+		case 'jpg':
+		case 'png':
+		case 'jpeg':
+		case 'tiff':
+		case 'gif':
+			atomType = 'image'; break;
+		case 'pdf':
+			atomType = 'pdf'; break;
+		case 'ipynb':
+			atomType = 'jupyter'; break;
+		case 'mp4':
+		case 'ogg':
+		case 'webm':
+			atomType = 'video'; break;
+		case 'csv':
+			atomType = 'table'; break;
+		default:
+			break;
+		}
+		
+		const versionContent = {
+			url: 'https://assets.pubpub.org/' + filename
+		};
+		this.props.dispatch(createAtom(atomType, versionContent));
+	},
+
 	// save: function() {
 	// 	const versionData = {
 	// 		_id: '578951a86dcc445787b0ef5a',
@@ -173,6 +235,10 @@ export const Media = React.createClass({
 
 	},
 
+	handleSelectChange: function(item) {
+		console.log(item.value);
+	},
+
 	render: function() {
 
 		const mediaItems = safeGetInToJS(this.props.mediaData, ['mediaItems']) || [];
@@ -199,7 +265,14 @@ export const Media = React.createClass({
 			{ type: 'button', text: 'Documents', action: this.setAtomMode.bind(this, 'document'), active: this.state.atomMode === 'document'},
 		];
 
-	
+
+		const options = [
+			{value: 'image', label: 'image'},
+			{value: 'video', label: 'video'},
+			{value: 'equation', label: 'equation'},
+			{value: 'reference', label: 'reference'},
+			{value: 'jupyter', label: 'jupyter'},
+		];
 		return (
 
 			<div style={[styles.container, this.state.showMedia && styles.containerActive]}>
@@ -210,6 +283,25 @@ export const Media = React.createClass({
 					{/* If we DON'T have a chosen atom */}
 					{!nodeData.data &&
 						<div style={styles.mediaSelect}>
+
+							<div style={styles.mediaSelectHeader}>
+
+								<div style={styles.addNewDropdown}>
+									<Select
+										name={'new-atom-select'}
+										options={options}
+										value={null}
+										placeholder={<span>Add new </span>}
+										onChange={this.handleSelectChange} />	
+
+								</div>
+								
+
+								<Dropzone ref="dropzone" className={'button'} onDrop={this.onDrop} style={styles.dropzone} activeStyle={styles.dropzoneActive}>
+									Drag files to add
+								</Dropzone>
+
+							</div>
 
 							<NavContentWrapper navItems={navItems} mobileNavButtons={mobileNavButtons}>
 								<input type="text" placeholder={'Filter'} value={this.state.filter} onChange={this.filterChange} style={styles.filterInput}/>
@@ -408,6 +500,11 @@ styles = {
 	mediaSelect: {
 		padding: '1em 0em',
 	},
+	mediaSelectHeader: {
+		maxWidth: '1024px',
+		padding: '0em 2em 1em 2em',
+		margin: '0 auto',
+	},
 	mediaDetails: {
 		padding: '0em 2em',
 	},
@@ -489,5 +586,22 @@ styles = {
 	disabledInput: {
 		opacity: 0.5,
 		pointerEvents: 'none',
+	},
+	addNewDropdown: {
+		width: '250px',
+		display: 'inline-block',
+	},
+	dropzone: {
+		padding: '0em 2em',
+		margin: '0em 1em',
+		fontSize: '0.85em',
+		borderStyle: 'dashed',
+		height: '34px',
+		lineHeight: '34px',
+		verticalAlign: 'top',
+	},
+	dropzoneActive: {
+		backgroundColor: '#2C2A2B',
+		color: '#FEFEFE',
 	},
 };

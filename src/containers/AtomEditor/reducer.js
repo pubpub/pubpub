@@ -5,9 +5,9 @@ import {ensureImmutable} from 'reducers';
 // Load Actions
 /*--------*/
 import {
-	CREATE_ATOM_LOAD,
-	CREATE_ATOM_SUCCESS,
-	CREATE_ATOM_FAIL,
+	// CREATE_ATOM_LOAD,
+	// CREATE_ATOM_SUCCESS,
+	// CREATE_ATOM_FAIL,
 
 	GET_ATOM_EDIT_LOAD,
 	GET_ATOM_EDIT_SUCCESS,
@@ -70,25 +70,25 @@ export const defaultState = Immutable.Map({
 
 /* Create Atom functions */
 /* ----------------------------- */
-function createAtomLoad(state) {
-	return state;
-}
+// function createAtomLoad(state) {
+// 	return state;
+// }
 
-function createAtomSuccess(state, result) {
-	return state.merge({
-		newAtomHash: result,
-	});
-}
+// function createAtomSuccess(state, result) {
+// 	return state.merge({
+// 		newAtomHash: result,
+// 	});
+// }
 
-function createAtomFail(state, error) {
-	return state;
-}
+// function createAtomFail(state, error) {
+// 	return state;
+// }
 
 /* Get Atom Edit functions */
 /* ----------------------------- */
 function getAtomEditLoad(state) {
 	return state.merge({
-		newAtomHash: undefined,
+		// newAtomHash: undefined,
 		loading: true,
 	});
 }
@@ -248,12 +248,12 @@ function deleteContributorSuccess(state, result) {
 export default function readerReducer(state = defaultState, action) {
 
 	switch (action.type) {
-	case CREATE_ATOM_LOAD:
-		return createAtomLoad(state);
-	case CREATE_ATOM_SUCCESS:
-		return createAtomSuccess(state, action.result);
-	case CREATE_ATOM_FAIL:
-		return createAtomFail(state, action.error);
+	// case CREATE_ATOM_LOAD:
+	// 	return createAtomLoad(state);
+	// case CREATE_ATOM_SUCCESS:
+	// 	return createAtomSuccess(state, action.result);
+	// case CREATE_ATOM_FAIL:
+	// 	return createAtomFail(state, action.error);
 
 	case GET_ATOM_EDIT_LOAD:
 		return getAtomEditLoad(state);

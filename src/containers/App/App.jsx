@@ -5,7 +5,7 @@ import {connect} from 'react-redux';
 import {push} from 'redux-router';
 import {loadAppAndLogin} from './actions';
 import {logout} from 'containers/Login/actions';
-import {createAtom} from 'containers/AtomEditor/actions';
+import {createAtom} from 'containers/Media/actions';
 import {NotFound} from 'components';
 import {IntlProvider} from 'react-intl';
 import {safeGetInToJS} from 'utils/safeParse';
@@ -20,7 +20,7 @@ import analytics from 'utils/analytics';
 export const App = React.createClass({
 	propTypes: {
 		appData: PropTypes.object,
-		atomEditData: PropTypes.object,
+		mediaData: PropTypes.object,
 		loginData: PropTypes.object,
 		path: PropTypes.string,
 		slug: PropTypes.string,
@@ -46,8 +46,8 @@ export const App = React.createClass({
 		if (this.props.loginData.get('loggedIn') && !nextProps.loginData.get('loggedIn')) {
 			this.props.dispatch(push('/'));
 		}
-		if (!this.props.atomEditData.get('newAtomHash') && nextProps.atomEditData.get('newAtomHash')) {
-			this.props.dispatch(push('/pub/' + nextProps.atomEditData.get('newAtomHash') + '/edit'));
+		if (!this.props.mediaData.get('newAtomSlug') && nextProps.mediaData.get('newAtomSlug')) {
+			this.props.dispatch(push('/pub/' + nextProps.mediaData.get('newAtomSlug') + '/edit'));
 		}
 	},
 
@@ -98,7 +98,7 @@ export default connect( state => {
 	return {
 		appData: state.app,
 		loginData: state.login,
-		atomEditData: state.atomEdit,
+		mediaData: state.media,
 		path: state.router.location.pathname,
 		slug: state.router.params.slug,
 	};
