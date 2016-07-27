@@ -7,6 +7,7 @@ export const AtomEditorHeader = React.createClass({
 	propTypes: {
 		title: PropTypes.string,
 		saveVersionHandler: PropTypes.func,
+		openDetails: PropTypes.func,
 	},
 
 	render: function() {
@@ -14,7 +15,7 @@ export const AtomEditorHeader = React.createClass({
 		return (
 			<div className={'atom-editor-header'} style={styles.container}>
 				
-				<h1 style={styles.title}>{this.props.title}</h1>
+				<h1 style={styles.title} onClick={this.props.openDetails}>{this.props.title}</h1>
 				<div style={styles.buttonWrapper}>
 					<div className={'button'} style={styles.button} onClick={this.props.saveVersionHandler}>Save Version</div>
 				</div>
@@ -38,6 +39,7 @@ styles = {
 		padding: '.25em 1em .25em 0em',
 		display: 'table-cell',
 		verticalAlign: 'top',
+		cursor: 'pointer',
 		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
 			display: 'block',
 			padding: '.5em 0em',

@@ -1,9 +1,10 @@
 import React, { PropTypes } from 'react';
 import {connect} from 'react-redux';
-import Radium, {Style} from 'radium';
+import Radium from 'radium';
 import {safeGetInToJS} from 'utils/safeParse';
 import {ensureImmutable} from 'reducers';
 import {AtomViewerPane} from 'containers/AtomReader/AtomViewerPane';
+import {AtomEditorPane} from 'containers/AtomEditor/AtomEditorPane';
 import fuzzy from 'fuzzy';
 import {RadioGroup, Radio} from 'utils/ReactRadioGroup';
 import {NavContentWrapper} from 'components';
@@ -29,7 +30,8 @@ export const Media = React.createClass({
 			closeCallback: undefined,
 			filter: '',
 			nodeData: {},
-			atomMode: 'image'
+			atomMode: 'recent',
+			editNodeDataMode: false,
 		};
 	},
 
@@ -73,6 +75,13 @@ export const Media = React.createClass({
 		this.setState({nodeData: {...this.state.nodeData, data: undefined}});
 	},
 
+	editNodeData: function() {
+		this.setState({editNodeDataMode: true});
+	},
+	cancelEditNodeData: function() {
+		this.setState({editNodeDataMode: false});
+	},
+
 	filterChange: function(evt) {
 		this.setState({filter: evt.target.value});
 	},
@@ -105,6 +114,7 @@ export const Media = React.createClass({
 			closeCallback: undefined,
 			filter: '',
 			nodeData: {},
+			editNodeDataMode: false,
 		}); 
 	},
 
@@ -167,6 +177,7 @@ export const Media = React.createClass({
 
 		const mediaItems = safeGetInToJS(this.props.mediaData, ['mediaItems']) || [];
 		const mediaItemsFilterForType = mediaItems.filter((item)=> {
+			if (this.state.atomMode === 'all' || this.state.atomMode === 'recent') { return true; }
 			return item.type === this.state.atomMode;
 		});
 		const filteredItems = fuzzy.filter(this.state.filter, mediaItemsFilterForType, {extract: (item)=>{ return item.type + ' ' + item.parent.title;} });
@@ -178,6 +189,9 @@ export const Media = React.createClass({
 		];
 
 		const navItems = [
+			{ type: 'button', text: 'All', action: this.setAtomMode.bind(this, 'all'), active: this.state.atomMode === 'all'},
+			{ type: 'button', text: 'Recent', action: this.setAtomMode.bind(this, 'recent'), active: this.state.atomMode === 'recent'},
+			{ type: 'spacer'},
 			{ type: 'button', text: 'Images', action: this.setAtomMode.bind(this, 'image'), active: this.state.atomMode === 'image'},
 			{ type: 'button', text: 'Videos', action: this.setAtomMode.bind(this, 'video'), active: this.state.atomMode === 'video'},
 			{ type: 'button', text: 'References', action: this.setAtomMode.bind(this, 'reference'), active: this.state.atomMode === 'reference'},
@@ -189,9 +203,6 @@ export const Media = React.createClass({
 		return (
 
 			<div style={[styles.container, this.state.showMedia && styles.containerActive]}>
-				<Style rules={{
-					'.section': { padding: '3em 1em' },
-				}} />
 
 				<div style={styles.splash} onClick={this.close}></div>
 				<div style={[styles.modalContent, this.state.showMedia && styles.modalContentActive]}>
@@ -210,6 +221,9 @@ export const Media = React.createClass({
 									if (foo.lastUpdated < bar.lastUpdated) { return 1; }
 									return 0;
 								}).map((item, index)=> {
+									if (this.state.atomMode === 'recent' && index > 9) {
+										return null;
+									}
 									return (
 										<div key={'media-item-' + index} onClick={this.setItem.bind(this, item)} style={styles.item}>
 											<div style={styles.itemPreview}>
@@ -238,15 +252,16 @@ export const Media = React.createClass({
 					}
 
 					{/* If we DO have a chosen atom */}
-					{nodeData.data &&
+					{nodeData.data && !this.state.editNodeDataMode &&
 						<div style={styles.mediaDetails}>
 							<h3 style={styles.detailsTitle}>{nodeData.data.parent.title}</h3>
 							<div style={styles.detailsClear} className={'underlineOnHover'} onClick={this.clearNodeData}>Clear</div>
+							<div className={'underlineOnHover'} onClick={this.editNodeData}>Edit</div>
 
 							<div style={styles.details}>
 								<div style={styles.detailsPreview}>
 									
-									<AtomViewerPane atomData={ensureImmutable({ atomData: nodeData.data.parent, currentVersionData: nodeData.data })} renderType={'embed'}/>	
+									<AtomViewerPane atomData={ensureImmutable({ atomData: nodeData.data.parent, currentVersionData: nodeData.data })} renderType={'embed'}/>
 									
 								</div>
 
@@ -308,6 +323,20 @@ export const Media = React.createClass({
 							
 						</div>
 					}
+
+					{/* If we DO have a chosen atom  and are trying to edit it*/}
+					{nodeData.data && this.state.editNodeDataMode &&
+						<div style={styles.mediaDetails}>
+							<h3 style={styles.detailsTitle}>{nodeData.data.parent.title}</h3>
+							<div style={styles.detailsClear} className={'underlineOnHover'} onClick={this.cancelEditNodeData}>Cancel</div>
+
+							<div style={styles.details}>
+								<AtomEditorPane atomEditData={ensureImmutable({ atomData: nodeData.data.parent, currentVersionData: nodeData.data })} renderType={'embed'}/>
+							</div>
+													
+							
+						</div>
+					}
 					
 				</div>
 			</div>
@@ -355,8 +384,8 @@ styles = {
 		// maxHeight: 'calc(92vh - 4em)',
 		maxHeight: '92vh',
 		top: '4vh',
-		left: '10vw',
-		right: '10vw',
+		left: '5vw',
+		right: '5vw',
 		backgroundColor: 'white',
 		overflow: 'hidden',
 		overflowY: 'scroll',
@@ -380,7 +409,7 @@ styles = {
 		padding: '1em 0em',
 	},
 	mediaDetails: {
-		padding: '0em 1em',
+		padding: '0em 2em',
 	},
 	filterInput: {
 		width: 'calc(100% - 20px - 4px)',

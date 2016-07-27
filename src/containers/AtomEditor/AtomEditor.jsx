@@ -25,7 +25,7 @@ export const AtomEditor = React.createClass({
 		atomEditData: PropTypes.object,
 		loginData: PropTypes.object,
 		slug: PropTypes.string,
-		dispatch: PropTypes.func
+		dispatch: PropTypes.func,
 	},
 
 	statics: {
@@ -147,7 +147,8 @@ export const AtomEditor = React.createClass({
 
 					<AtomEditorHeader
 						title={atomEditData.title}
-						saveVersionHandler={this.saveVersionClick} />
+						saveVersionHandler={this.saveVersionClick} 
+						openDetails={this.openModal.bind(this, 'details')} />
 
 					<AtomEditorPane ref={'atomEditorPane'} atomEditData={this.props.atomEditData} loginData={this.props.loginData}/>
 
