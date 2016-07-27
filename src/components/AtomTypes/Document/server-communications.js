@@ -86,7 +86,7 @@ export class ModServerCommunications {
   /** Sends data to server or keeps it in a list if currently offline. */
   send(data) {
     data.token = this.editor.token;
-    data.id = this.editor.doc.id;
+    data.id = this.editor.doc_id;
     data.user = this.editor.username;
     if (this.connected) {
       this.ws.send(JSON.stringify(data))
