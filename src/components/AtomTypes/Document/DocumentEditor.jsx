@@ -2,7 +2,7 @@ import React, {PropTypes} from 'react';
 import Radium, {Style} from 'radium';
 import {safeGetInToJS} from 'utils/safeParse';
 import {Media} from 'containers';
-import {MD5} from 'object-hash/dist/object_hash';
+import {MD5} from 'object-hash';
 
 import {markdownParser, markdownSerializer, schema} from './proseEditor';
 import {Subscription, StoppableSubscription} from 'subscription';

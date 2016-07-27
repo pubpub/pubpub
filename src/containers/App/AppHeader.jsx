@@ -119,7 +119,7 @@ styles = {
 		padding: '0px 15px',
 		display: 'inline-block',
 		height: globalStyles.headerHeight,
-		lineHeight: 'calc(' + globalStyles.headerHeight + ' + 2px)',
+		lineHeight: '42px', // This should be a calc, but lineHeight doesn't accept calcs. calc(' + globalStyles.headerHeight + ' + 2px)',
 		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
 			height: globalStyles.headerHeightMobile,
 			lineHeight: globalStyles.headerHeightMobile,

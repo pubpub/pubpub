@@ -54,7 +54,14 @@ export const UserProfile = React.createClass({
 			...ownProfileItems,
 		];
 
-		
+		const links = [
+			{key: 'website', href: profileData.website, text: <span>{profileData.website}</span>},
+			{key: 'twitter', href: 'https://twitter.com/' + profileData.twitter, text: <span>@{profileData.twitter}</span>},
+			{key: 'github', href: 'https://github.com/' + profileData.github, text: <span>github.com/{profileData.github}</span>},
+			{key: 'orcid', href: 'https://orcid.org/' + profileData.orcid, text: <span>orcid.com/{profileData.orcid}</span>},
+			{key: 'googleScholar', href: 'https://scholar.google.com/citations?user=' + profileData.googleScholar, text: <span>Google Scholar</span>},
+		];
+
 		return (
 			<div>
 
@@ -67,11 +74,11 @@ export const UserProfile = React.createClass({
 					<div style={styles.headerTextWrapper}>
 						<h1>{profileData.name}</h1>
 						<p>{profileData.bio}</p>
-						<a className={'underlineOnHover'} style={[styles.link, styles.firstLink, !profileData.website && styles.hide]} href={profileData.website}>{profileData.website}</a>
-						<a className={'underlineOnHover'} style={[styles.link, !profileData.twitter && styles.hide]} href={'https://twitter.com/' + profileData.twitter}>@{profileData.twitter}</a>
-						<a className={'underlineOnHover'} style={[styles.link, !profileData.github && styles.hide]} href={'https://github.com/' + profileData.github}>github.com/{profileData.github}</a>
-						<a className={'underlineOnHover'} style={[styles.link, !profileData.orcid && styles.hide]} href={'https://orcid.org/' + profileData.orcid}>orcid.com/{profileData.orcid}</a>
-						<a className={'underlineOnHover'} style={[styles.link, !profileData.googleScholar && styles.hide]} href={'https://scholar.google.com/citations?user=' + profileData.googleScholar}>Google Scholar</a>
+						{links.filter((link)=> {
+							return !!profileData[link.key];
+						}).map((link, index)=> {
+							return <a className={'underlineOnHover'} style={[styles.link, index === 0 && styles.firstLink]} href={link.href}>{link.text}</a>;
+						})}
 					</div>
 				</div>
 

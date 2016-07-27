@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react';
 import {connect} from 'react-redux';
-import Radium from 'radium';
+import Radium, {Style} from 'radium';
 import {safeGetInToJS} from 'utils/safeParse';
 import {ensureImmutable} from 'reducers';
 import {AtomViewerPane} from 'containers/AtomReader/AtomViewerPane';
@@ -189,12 +189,16 @@ export const Media = React.createClass({
 		return (
 
 			<div style={[styles.container, this.state.showMedia && styles.containerActive]}>
+				<Style rules={{
+					'.section': { padding: '3em 1em' },
+				}} />
+
 				<div style={styles.splash} onClick={this.close}></div>
 				<div style={[styles.modalContent, this.state.showMedia && styles.modalContentActive]}>
 					
 					{/* If we DON'T have a chosen atom */}
 					{!nodeData.data &&
-						<div>
+						<div style={styles.mediaSelect}>
 
 							<NavContentWrapper navItems={navItems} mobileNavButtons={mobileNavButtons}>
 								<input type="text" placeholder={'Filter'} value={this.state.filter} onChange={this.filterChange} style={styles.filterInput}/>
@@ -235,7 +239,7 @@ export const Media = React.createClass({
 
 					{/* If we DO have a chosen atom */}
 					{nodeData.data &&
-						<div>
+						<div style={styles.mediaDetails}>
 							<h3 style={styles.detailsTitle}>{nodeData.data.parent.title}</h3>
 							<div style={styles.detailsClear} className={'underlineOnHover'} onClick={this.clearNodeData}>Clear</div>
 
@@ -347,7 +351,6 @@ styles = {
 	modalContent: {
 		position: 'fixed',
 		zIndex: 10001,
-		padding: '1em 0em',
 		// width: 'calc(80vw - 2em)',
 		// maxHeight: 'calc(92vh - 4em)',
 		maxHeight: '92vh',
@@ -372,6 +375,12 @@ styles = {
 	},
 	modalContentActive: {
 		transform: 'scale(1.0)',
+	},
+	mediaSelect: {
+		padding: '1em 0em',
+	},
+	mediaDetails: {
+		padding: '0em 1em',
 	},
 	filterInput: {
 		width: 'calc(100% - 20px - 4px)',

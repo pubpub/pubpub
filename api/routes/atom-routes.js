@@ -301,9 +301,9 @@ export function getAtomData(req, res) {
 	.catch(function(error) {
 		if (error.message === 'Atom does not exist') {
 			console.log(error.message);
-			return res.status(404).json('404 Not Found');	
+			return res.status(404).json('404 Not Found');
 		}
-		
+
 		console.log('error', error);
 		return res.status(500).json(error);
 	});
@@ -323,6 +323,7 @@ export function getAtomEdit(req, res) {
 
 	let output = {};
 	Atom.findOne({slug: slug}).lean().exec()
+
 	.then(function(atomResult) { // Get most recent version
 		if (!atomResult) {
 			throw new Error('Atom does not exist');

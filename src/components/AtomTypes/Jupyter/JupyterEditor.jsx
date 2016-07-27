@@ -58,6 +58,7 @@ export const JupyterEditor = React.createClass({
 
 	render: function() {
 		const JupyterSourceHtmlUrl = safeGetInToJS(this.props.atomEditData, ['currentVersionData', 'content', 'htmlUrl']);
+		const now = new Date().getTime();
 		return (
 			<div>
 				<h3>Preview</h3>
@@ -67,7 +68,7 @@ export const JupyterEditor = React.createClass({
 				</div>
 				<div style={styles.iframeOuter}>
 					{this.state.mounted &&
-						<iframe id={'jupyter'} ref="iframe" style={styles.iframe} src={JupyterSourceHtmlUrl} onLoad={this.onIframeLoad}></iframe>
+						<iframe id={'jupyter-' + now} className={'jupyter-iframe'} ref="iframe" style={styles.iframe} src={JupyterSourceHtmlUrl} onLoad={this.onIframeLoad}></iframe>
 					}
 
 				</div>
@@ -94,5 +95,7 @@ styles = {
 	iframe: {
 		border: 'none',
 		width: '93%',
+		display: 'block',
+		margin: '0 auto',
 	},
 };
