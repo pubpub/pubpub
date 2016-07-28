@@ -24,7 +24,7 @@ export function sendVerificationEmail(email, hash, callback) {
 	console.log('sending verification email to ', email);
 	const emailObject = new sendgrid.Email();
 	emailObject.addTo(email);
-	emailObject.subject = 'Welcome to PubPub!'; // We should have a journal here.
+	emailObject.subject = 'Verify your PubPub Account'; 
 	emailObject.from = from;
 	emailObject.fromname = fromname;
 	emailObject.text = 'Welcome to PubPub! Please click the following link to verify your email address: https://www.pubpub.org/verify/' + hash;

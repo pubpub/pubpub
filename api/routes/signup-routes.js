@@ -118,3 +118,15 @@ export function signupDetails(req, res) {
 	});
 }
 app.post('/signup-details', signupDetails);
+
+export function resendVerificationEmail(req, res) {
+	const user = req.user || undefined;
+	if (!user) { return res.status(403).json('Not authorized to edit this user'); }
+
+	
+	sendVerificationEmail(user.email, user.verificationHash, function(errSendRest, success) {
+		if (errSendRest) { console.log(errSendRest); }
+		return res.status(201).json('Verification Email Resent');
+	});
+}
+app.post('/resendVerificationEmail', resendVerificationEmail);

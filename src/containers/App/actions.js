@@ -4,9 +4,13 @@
 // All action types are defined as constants. Do not manually pass action
 // types as strings in action creators
 /*--------*/
-export const LOAD_APP_AND_LOGIN_LOAD = 'journal/LOAD_APP_AND_LOGIN_LOAD';
-export const LOAD_APP_AND_LOGIN_SUCCESS = 'journal/LOAD_APP_AND_LOGIN_SUCCESS';
-export const LOAD_APP_AND_LOGIN_FAIL = 'journal/LOAD_APP_AND_LOGIN_FAIL';
+export const LOAD_APP_AND_LOGIN_LOAD = 'app/LOAD_APP_AND_LOGIN_LOAD';
+export const LOAD_APP_AND_LOGIN_SUCCESS = 'app/LOAD_APP_AND_LOGIN_SUCCESS';
+export const LOAD_APP_AND_LOGIN_FAIL = 'app/LOAD_APP_AND_LOGIN_FAIL';
+
+export const RESEND_VERIFICATION_EMAIL_LOAD = 'app/RESEND_VERIFICATION_EMAIL_LOAD';
+export const RESEND_VERIFICATION_EMAIL_SUCCESS = 'app/RESEND_VERIFICATION_EMAIL_SUCCESS';
+export const RESEND_VERIFICATION_EMAIL_FAIL = 'app/RESEND_VERIFICATION_EMAIL_FAIL';
 
 /*--------*/
 // Define Action creators
@@ -19,5 +23,13 @@ export function loadAppAndLogin() {
 	return {
 		types: [LOAD_APP_AND_LOGIN_LOAD, LOAD_APP_AND_LOGIN_SUCCESS, LOAD_APP_AND_LOGIN_FAIL],
 		promise: (client) => client.get('/loadAppAndLogin', {})
+	};
+}
+
+export function resendVerificationEmail() {
+	// These actions are not caught by any reducing function. We assume the email is sent succesfully.
+	return {
+		types: [RESEND_VERIFICATION_EMAIL_LOAD, RESEND_VERIFICATION_EMAIL_SUCCESS, RESEND_VERIFICATION_EMAIL_FAIL],
+		promise: (client) => client.post('/resendVerificationEmail', {})
 	};
 }
