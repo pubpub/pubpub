@@ -148,6 +148,7 @@ export const Media = React.createClass({
 		}); 
 	},
 
+
 	// On file drop (or on file select)
 	// Upload files automatically to s3
 	// On completion call function that hits the pubpub server to generate asset information
@@ -198,6 +199,17 @@ export const Media = React.createClass({
 			uploadFiles: uploadFiles,
 		});
 
+	},
+
+	onSelect: function(evt) {
+		console.log(evt.target.files);
+		const selectedFiles = [];
+		for (let index = 0; index < evt.target.files.length; index++) {
+			selectedFiles.push(evt.target.files[index]);
+		}
+		console.log(selectedFiles);
+		this.onDrop(selectedFiles);
+		document.getElementById('media-file-select').value = "";
 	},
 
 	// Update state's progress value when new events received.
@@ -396,9 +408,11 @@ export const Media = React.createClass({
 								
 
 								<div className={'button'} style={styles.dropzoneBlock}>
-									Drag files to add
+									Click or Drag files to add
+									<input id={'media-file-select'} type={'file'} onChange={this.onSelect} multiple={true} style={styles.fileInput}/>	
 								</div>
 								
+
 
 							</div>
 
@@ -740,9 +754,22 @@ styles = {
 		height: '34px',
 		lineHeight: '34px',
 		verticalAlign: 'top',
+		position: 'relative',
+		overflow: 'hidden',
 		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
 			margin: '0em',
 		},
+	},
+	fileInput: {
+		marginBottom: '0em',
+		width: '100%',
+		position: 'absolute',
+		height: 'calc(100% + 20px)',
+		left: 0,
+		top: -20,
+		padding: 0,
+		cursor: 'pointer',
+		opacity: 0,
 	},
 	uploadBar: {
 		margin: '0em 2em 1em',
@@ -751,4 +778,5 @@ styles = {
 			margin: '0em 0em 1em',
 		},
 	},
+	
 };
