@@ -6,7 +6,6 @@ import {ModCollabCarets} from './carets';
 // import {ModCollabColors} from './colors';
 export class ModCollab {
 	constructor(editor) {
-		// console.log("YEP " + editor.token)
 		editor.mod.collab = this;
 		this.editor = editor;
 		this.participants = [];
@@ -22,6 +21,16 @@ export class ModCollab {
 
 	updateParticipantList(participants) {
 		// const that = this;
+		const user_divs = document.getElementsByClassName('menuitem-connected-user');
+		const menubar = document.getElementsByClassName('ProseMirror-menubar')[0];
+
+		for (let i = user_divs.length-1; i >=0; i--){
+			user_divs[i].parentNode.removeChild(user_divs[i]);
+		}
+
+		for (let i = 0; i < participants.length; i++){
+			menubar.innerHTML = menubar.innerHTML + '<span class="ProseMirror-menuitem menuitem-connected-user"><div class="ProseMirror-icon" title="' + participants[i].name +'"><span>'+ participants[i].name.substr(0,2)+ '</span></div></span>';
+		}
 
 		const allSessionIds = [];
 		this.participants = _.map(_.groupBy(participants,
