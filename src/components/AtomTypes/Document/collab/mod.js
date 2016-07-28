@@ -34,10 +34,7 @@ export class ModCollab {
 		}
 
 		for (let index = 0; index < participants.length; index++) {
-			let appendStr = '<span class="ProseMirror-menuitem title-connected-user" style="padding: 5px 5px 5px 0px;">';
-			appendStr += '<div class="ProseMirror-icon-connected-user" title="' + participants[index].name + '"><span>';
-			appendStr += '<img style="vertical-align: text-top;" src="https://jake.pubpub.org/unsafe/fit-in/25x25/' + participants[index].avatar_url + '">';
-			appendStr += '</span></div></span>';
+			const appendStr = '<img class="title-connected-user" style="display: block; padding: 0em 2px; display: inline-block;" title="' + participants[index].name + '" src="https://jake.pubpub.org/unsafe/fit-in/25x25/' + participants[index].avatar_url + '">';
 			menubar.innerHTML = menubar.innerHTML + appendStr;
 		}
 
@@ -67,7 +64,7 @@ export class ModCollab {
 		// } else if (participants.length === 1) {
 		// 	this.collaborativeMode = false;
 		// }
-		
+
 		// this.participants.forEach(function(participant) {
 		//     /* We assign a color to each user. This color stays even if the user
 		//     * disconnects or the participant list is being updated.
