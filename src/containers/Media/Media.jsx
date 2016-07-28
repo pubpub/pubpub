@@ -178,7 +178,6 @@ export const Media = React.createClass({
 			return 0;
 		});
 		const newUploadFiles = files.map((file)=> {
-			console.log(file);
 			return file.name;
 		});
 		const uploadRates = this.state.uploadRates.concat(newUploadRates);
@@ -202,14 +201,12 @@ export const Media = React.createClass({
 	},
 
 	onSelect: function(evt) {
-		console.log(evt.target.files);
 		const selectedFiles = [];
 		for (let index = 0; index < evt.target.files.length; index++) {
 			selectedFiles.push(evt.target.files[index]);
 		}
-		console.log(selectedFiles);
 		this.onDrop(selectedFiles);
-		document.getElementById('media-file-select').value = "";
+		document.getElementById('media-file-select').value = '';
 	},
 
 	// Update state's progress value when new events received.
