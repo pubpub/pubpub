@@ -412,9 +412,14 @@ export const Media = React.createClass({
 					{/* If we DO have a chosen atom */}
 					{nodeData.data && !this.state.editNodeDataMode &&
 						<div style={styles.mediaDetails}>
-							<h3 style={styles.detailsTitle}>{nodeData.data.parent.title}</h3>
-							<div style={styles.detailsClear} className={'underlineOnHover'} onClick={this.clearNodeData}>Clear</div>
-							<div className={'underlineOnHover'} onClick={this.editNodeData}>Edit</div>
+							<div style={styles.editModeHeader}>
+								<h3 style={styles.detailsTitle}>{nodeData.data.parent.title}</h3>
+								<div style={styles.detailsCancel} className={'underlineOnHover'} onClick={this.clearNodeData}>Clear</div>
+								<div style={styles.detailsButtonWrapper}>
+									<div className={'button'} style={styles.detailsButton} onClick={this.saveItem}>Save</div>
+								</div>
+							</div>
+							<div style={styles.detailsClear} className={'underlineOnHover'} onClick={this.editNodeData}>Edit</div>
 
 							<div style={styles.details}>
 								<div style={styles.detailsPreview}>
@@ -470,11 +475,6 @@ export const Media = React.createClass({
 										</div>
 									</div>
 
-
-									<button className={'button'} onClick={this.saveItem}>
-										Save
-									</button>
-
 								</form>	
 							</div>
 													
@@ -491,7 +491,6 @@ export const Media = React.createClass({
 								<div style={styles.detailsButtonWrapper}>
 									<div className={'button'} style={styles.detailsButton} onClick={this.saveVersionHandler}>Save Version</div>
 								</div>
-								
 							</div>
 							
 							
@@ -654,7 +653,7 @@ styles = {
 		display: 'table-cell',
 	},
 	detailsClear: {
-		marginTop: '-1.15em',
+		marginTop: '-1em',
 		cursor: 'pointer',
 	},
 	detailsCancel: {
