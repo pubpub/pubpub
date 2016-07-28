@@ -3,57 +3,16 @@ We use the DOM import for ProseMirror as the JSON we store in the database is re
 */
 import {node2Obj, obj2Node} from './jsonExporter';
 import {parseDOM} from 'prosemirror/dist/model/from_dom';
+import {renderReactFromJSON} from './proseEditor';
+import {Node} from 'prosemirror/dist/model';
 
 export const modelToEditor = function(doc, schema) {
-	// We start with a document of which we use the metadata and contents entries.
-	const editorNode = document.createElement('div');
-	const contentsNode = obj2Node(doc.contents);
-
-	/*
-	let editorNode = document.createElement('div'),
-	contentsNode = obj2Node(doc.contents),
-	subtitleNode = doc.metadata.subtitle ? obj2Node(doc.metadata.subtitle) : document.createElement('div'),
-	authorsNode = doc.metadata.authors ? obj2Node(doc.metadata.authors) : document.createElement('div'),
-	abstractNode = doc.metadata.abstract ? obj2Node(doc.metadata.abstract) : document.createElement('div'),
-	keywordsNode = doc.metadata.keywords ? obj2Node(doc.metadata.keywords) : document.createElement('div')
-
-	titleNode.id = 'document-title'
-	subtitleNode.id = 'metadata-subtitle'
-	authorsNode.id = 'metadata-authors'
-	abstractNode.id = 'metadata-abstract'
-	keywordsNode.id = 'metadata-keywords'
-	*/
-	contentsNode.id = 'document-contents';
-
-
-	editorNode.appendChild(contentsNode);
-
-	// In order to stick with the format used in Fidus Writer 1.1-2.0,
-	// we do a few smaller modifications to the node before it is saved.
-
-	const pmDoc = parseDOM(schema, editorNode, {
-		preserveWhitespace: true,
-	});
-
-	return pmDoc;
+  return Node.fromJSON(schema, doc.contents);
 };
 
 
 export const editorToModel = function(pmDoc) {
 	// In order to stick with the format used in Fidus Writer 1.1-2.0,
 	// we do a few smaller modifications to the node before it is saved.
-	const node = pmDoc.content.toDOM();
-	// We convert the node into a json object with two entries: metadata and contents
-	const doc = {
-		metadata: {},
-	};
-	/*
-	doc.metadata.title = node2Obj(node.querySelector('#document-title'))
-	doc.metadata.subtitle = node2Obj(node.querySelector('#metadata-subtitle'))
-	doc.metadata.authors = node2Obj(node.querySelector('#metadata-authors'))
-	doc.metadata.abstract = node2Obj(node.querySelector('#metadata-abstract'))
-	doc.metadata.keywords = node2Obj(node.querySelector('#metadata-keywords'))
-	*/
-	doc.contents = node2Obj(node.querySelector('#document-contents'));
-	return doc;
+  return pmDoc.toJSON();
 };
