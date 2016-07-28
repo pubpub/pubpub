@@ -26,6 +26,22 @@ export class ModCollabCarets {
 		document.body.appendChild(this.caretContainer);
 	}
 
+
+
+	debounce(func, wait, immediate) {
+		var timeout;
+		return function() {
+			var context = this, args = arguments;
+			clearTimeout(timeout);
+			timeout = setTimeout(function() {
+				timeout = null;
+				if (!immediate) func.apply(context, args);
+			}, wait);
+			if (immediate && !timeout) func.apply(context, args);
+		};
+	};
+
+
 	bindEvents() {
 		console.log('bindEvents');
 
@@ -36,7 +52,7 @@ export class ModCollabCarets {
 		// fnPm.updateScheduler([fnPm.on.change], () => {return that.updatePositionCSS()})
 		// Limit sending of selection to once every 250 ms. This is also important to work correctly
 		// with editing, which otherwise triggers three selection changes that result in an incorrect caret placement
-		const sendSelection = _.debounce(function() {
+		const sendSelection = this.debounce(function() {
 			that.sendSelectionChange();
 		}, 250);
 		pm.on.selectionChange.add(sendSelection);
@@ -53,7 +69,7 @@ export class ModCollabCarets {
 			sessionId: this.mod.editor.docInfo.session_id,
 			from: this.mod.editor.currentPm.selection.from,
 			to: this.mod.editor.currentPm.selection.to,
-			head: _.isFinite(this.mod.editor.currentPm.selection.head) ?
+			head: isFinite(this.mod.editor.currentPm.selection.head) ? // previously this was using underscore js isfinite
 				this.mod.editor.currentPm.selection.head : this.mod.editor.currentPm.selection.to,
 			// Whether the selection is in the footnote or the main editor
 			// pm: this.mod.editor.currentPm === this.mod.editor.pm ? 'pm' : 'fnPm'
@@ -89,11 +105,19 @@ export class ModCollabCarets {
 		pm.scheduleDOMUpdate(function() {return that.updatePositionCSS();});
 	}
 
+
 	// Update the position of a collaborator's caret
 	updateCaret(caretPosition) {
 		console.log('updateCaret');
 
-		const participant = _.findWhere(this.mod.participants, {id: caretPosition.id});
+		let participant;// = _.findWhere(this.mod.participants, {id: caretPosition.id});
+		//find the first participant with this id
+		for (let i = this.mod.participants.length-1; i >= 0; i--) {
+			if (this.mod.participants[i] && this.mod.participants[i].id === caretPosition.id) {
+				participant = this.mod.participants[i];
+			}
+		}
+
 		if (!participant) {
 			console.log('could not find participant');
 			// participant (still unknown). Ignore.
@@ -157,10 +181,10 @@ export class ModCollabCarets {
 	removeSelection(sessionId) {
 		if (sessionId in this.caretPositions) {
 			const caretPosition = this.caretPositions[sessionId];
-			if (_.isFinite(caretPosition.range.from)) {
+			if (isFinite(caretPosition.range.from)) {
 				caretPosition.pm.removeRange(caretPosition.range);
 			}
-			if (_.isFinite(caretPosition.headRange.from)) {
+			if (isFinite(caretPosition.headRange.from)) {
 				caretPosition.pm.removeRange(caretPosition.headRange);
 			}
 			caretPosition.headNode.parentNode.removeChild(caretPosition.headNode);

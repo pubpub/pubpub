@@ -6,7 +6,6 @@ import {ModCollabCarets} from './carets';
 // import {ModCollabColors} from './colors';
 export class ModCollab {
 	constructor(editor) {
-		// console.log("YEP " + editor.token)
 		editor.mod.collab = this;
 		this.editor = editor;
 		this.participants = [];
@@ -22,6 +21,20 @@ export class ModCollab {
 
 	updateParticipantList(participants) {
 		// const that = this;
+		const user_divs = document.getElementsByClassName('menuitem-connected-user');
+		const menubar = document.getElementsByClassName('ProseMirror-menubar')[0];
+
+		for (let i = user_divs.length-1; i >=0; i--){
+			user_divs[i].parentNode.removeChild(user_divs[i]);
+		}
+
+		for (let i = 0; i < participants.length; i++){
+			let appendStr = '<span class="ProseMirror-menuitem menuitem-connected-user" style="height:36px">';
+			appendStr += '<div class="ProseMirror-icon-connected-user" title="' + participants[i].name +'"><span>';
+			appendStr += '<img style="vertical-align: text-top;" src="https://jake.pubpub.org/unsafe/fit-in/25x25/'+ participants[i].avatar_url+ '">';
+			appendStr +='</span></div></span>';
+			menubar.innerHTML = menubar.innerHTML +  appendStr;
+		}
 
 		const allSessionIds = [];
 		this.participants = _.map(_.groupBy(participants,

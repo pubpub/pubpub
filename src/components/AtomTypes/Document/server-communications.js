@@ -24,7 +24,7 @@ export class ModServerCommunications {
 		const wsServer = require('../../../../api/config').collabServerURL;
 
 		try {
-			this.ws = new window.WebSocket(`${websocketProtocol}//${wsServer}/ws/doc/${this.editor.doc.id}?user=${this.editor.username }&token=${this.editor.token}`);
+			this.ws = new window.WebSocket(`${websocketProtocol}//${wsServer}/ws/doc/${this.editor.doc.id}?user=${this.editor.username }&token=${this.editor.token}&avatar_url=${this.editor.img}`);
 			this.ws.onopen = function() {
 				// console.log('connection open');
 				// jQuery('#unobtrusive_messages').html('')
@@ -32,7 +32,6 @@ export class ModServerCommunications {
 		} catch (err) {
 			console.log(err);
 		}
-
 
 		this.ws.onmessage = function(event) {
 			const data = JSON.parse(event.data);
@@ -140,6 +139,7 @@ export class ModServerCommunications {
 			break;
 		default:
 			break;
+
 		}
 	}
 }
