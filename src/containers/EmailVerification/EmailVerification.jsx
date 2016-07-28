@@ -35,7 +35,7 @@ export const EmailVerification = React.createClass({
 
 		return (
 
-			<div style={styles.container}>
+			<div className={'section'} style={styles.container}>
 
 				<Helmet {...metaData} />
 
@@ -61,8 +61,6 @@ export default connect( state => {
 
 styles = {
 	container: {
-		padding: '0px 15px',
-		margin: '0 auto 100px auto',
 		textAlign: 'center',
 	}
 };

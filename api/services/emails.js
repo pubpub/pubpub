@@ -1,4 +1,4 @@
-const sendgridKey = process.env.NODE_ENV !== 'production' && !process.env.TESTING ? require('../config').sendgridAPIKey : process.env.SENDGRID_API_KEY;
+const sendgridKey = process.env.SENDGRID_API_KEY;
 const sendgrid = require('sendgrid')(sendgridKey);
 
 const fromname = 'PubPub';
@@ -21,6 +21,7 @@ export function registrationEmail(email, callback) {
 }
 
 export function sendVerificationEmail(email, hash, callback) {
+	console.log('sending verification email to ', email);
 	const emailObject = new sendgrid.Email();
 	emailObject.addTo(email);
 	emailObject.subject = 'Welcome to PubPub!'; // We should have a journal here.

@@ -8,6 +8,9 @@ import {markdownParser, markdownSerializer, schema} from './proseEditor';
 import {Subscription, StoppableSubscription} from 'subscription';
 import {Node} from 'prosemirror/dist/model';
 
+import Dropzone from 'react-dropzone';
+import {s3Upload} from 'utils/uploadFile';
+
 import {schema as pubSchema} from './proseEditor/schema';
 
 let styles;
@@ -323,13 +326,23 @@ export const DocumentEditor = React.createClass({
 		this.setState({showMarkdown: !this.state.showMarkdown});
 	},
 
+	// onDrop: function(files) {
+	// 	console.log(pm, files);
+	// 	console.log(this.refs.mediaRef);
+	// 	console.log(this.refs.mediaRef.onDrop);
+	// 	// function done(attrs) {
+	// 	// 	const newNode = pm.schema.nodes.embed.create(attrs);
+	// 	// 	pm.tr.insert(start, newNode).apply();
+	// 	// }
+	// 	// window.toggleMedia(pm, done, schema.nodes.embed);
+	// },
+
 	render: function() {
 		const collab = safeGetInToJS(this.props.atomEditData, ['collab']);
 
 		return (
-
 			<div style={styles.container}>
-
+			{/* <Dropzone ref="dropzone" disableClick={true} onDrop={this.onDrop} style={{}} activeClassName={'dropzone-active'} > */}
 				<Style rules={{
 					'.user-bg-1': { backgroundColor: 'rgba(255,0,0,0.3)'}
 				}} />
@@ -341,15 +354,16 @@ export const DocumentEditor = React.createClass({
 					)}
 				</div>
 
-				<Media/>
+				<Media ref={'mediaRef'}/>
 
 				<div className={'opacity-on-hover'} style={styles.iconLeft} onClick={this.toggleMarkdown}></div>
 
 				<textarea id="markdown" onChange={this.markdownChange} style={[styles.textarea, this.state.showMarkdown && styles.textareaVisible]}></textarea>
 				<div id={'atom-reader'} className={'atom-reader'} style={[styles.wsywigBlock, this.state.showMarkdown && styles.wsywigWithMarkdown]}></div>
 
-
+			{/* </Dropzone> */}
 			</div>
+			
 		);
 	}
 });

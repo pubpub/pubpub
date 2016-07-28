@@ -23,6 +23,10 @@ export function createAtom(req, res) {
 		return res.status(403).json('Not Logged In');
 	}
 
+	if (!req.user.verifiedEmail) {
+		return res.status(403).json('Not Verified');
+	}
+
 	const userID = req.user._id;
 	const now = new Date().getTime();
 	const type = req.body.type || 'markdown';
@@ -452,6 +456,9 @@ export function getAtomEditModalData(req, res) {
 app.get('/getAtomEditModalData', getAtomEditModalData);
 
 export function submitAtomToJournals(req, res) {
+	if (!req.user.verifiedEmail) {
+		return res.status(403).json('Not Verified');
+	}
 	const atomID = req.body.atomID;
 	const journalIDs = req.body.journalIDs || [];
 	const userID = req.user._id;
@@ -483,6 +490,10 @@ export function submitAtomToJournals(req, res) {
 app.post('/submitAtomToJournals', submitAtomToJournals);
 
 export function updateAtomDetails(req, res) {
+	if (!req.user.verifiedEmail) {
+		return res.status(403).json('Not Verified');
+	}
+	
 	const atomID = req.body.atomID;
 	const userID = req.user ? req.user._id : undefined;
 	if (!userID) { return res.status(403).json('Not authorized to edit this user'); }
