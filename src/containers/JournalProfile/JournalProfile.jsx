@@ -132,7 +132,7 @@ export const JournalProfile = React.createClass({
 
 		let mode = this.props.mode;
 		if (!journalData.isAdmin && (mode === 'details' || mode === 'layout' || mode === 'featured' || mode === 'submitted' || mode === 'collections' || mode === 'admins')) {
-			mode = null;
+			mode = 'notFound';
 		}
 		return (
 			<div>
@@ -200,6 +200,9 @@ export const JournalProfile = React.createClass({
 									handleAddAdmin={this.handleAddAdmin}
 									handleDeleteAdmin={this.handleDeleteAdmin}/>
 							);
+						case 'notFound': 
+							return null;
+							
 						default:
 							return (
 								<JournalProfileRecent 

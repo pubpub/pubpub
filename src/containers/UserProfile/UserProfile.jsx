@@ -5,6 +5,7 @@ import Helmet from 'react-helmet';
 import {safeGetInToJS} from 'utils/safeParse';
 import {getUser, saveUserSettings} from './actions';
 import {NavContentWrapper} from 'components';
+import {NotFound} from 'components';
 
 import UserProfilePubs from './UserProfilePubs';
 import UserProfileJournals from './UserProfileJournals';
@@ -82,6 +83,11 @@ export const UserProfile = React.createClass({
 			{key: 'googleScholar', href: 'https://scholar.google.com/citations?user=' + profileData.googleScholar, text: <span>Google Scholar</span>},
 		];
 
+		let mode = this.props.mode;
+		if (!ownProfile && (mode === 'profile' || mode === 'notifications' || mode === 'account')) {
+			mode = 'notFound';
+		}
+
 		return (
 			<div>
 
@@ -104,7 +110,7 @@ export const UserProfile = React.createClass({
 
 				<NavContentWrapper navItems={navItems} mobileNavButtons={mobileNavButtons}>
 					{(() => {
-						switch (this.props.mode) {
+						switch (mode) {
 						case 'journals':
 							return (
 								<UserProfileJournals
@@ -132,6 +138,9 @@ export const UserProfile = React.createClass({
 									loginData={this.props.loginData}
 									saveSettingsHandler={this.saveSettings}/>
 							);
+						case 'notFound':
+							return null;
+							
 						default:
 							return (
 								<UserProfilePubs
