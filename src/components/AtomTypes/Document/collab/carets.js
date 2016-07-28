@@ -10,7 +10,7 @@ export class ModCollabCarets {
 	}
 
 	setup() {
-		console.log('setup');
+		// console.log('setup');
 
 		// Add one elements to hold dynamic CSS info about carets
 		const styleContainers = document.createElement('temp');
@@ -22,16 +22,15 @@ export class ModCollabCarets {
 		// Add one container element to hold carets
 		this.caretContainer = document.createElement('div');
 		this.caretContainer.id = 'caret-markers';
-		const docContents = document.getElementById('document-contents');
+		// const docContents = document.getElementById('document-contents');
 		document.body.appendChild(this.caretContainer);
 	}
 
-
-
 	debounce(func, wait, immediate) {
-		var timeout;
+		let timeout;
 		return function() {
-			var context = this, args = arguments;
+			const context = this;
+			const args = arguments;
 			clearTimeout(timeout);
 			timeout = setTimeout(function() {
 				timeout = null;
@@ -39,11 +38,11 @@ export class ModCollabCarets {
 			}, wait);
 			if (immediate && !timeout) func.apply(context, args);
 		};
-	};
+	}
 
 
 	bindEvents() {
-		console.log('bindEvents');
+		// console.log('bindEvents');
 
 		const that = this;
 		const pm = this.mod.editor.pm;
@@ -61,7 +60,7 @@ export class ModCollabCarets {
 
 	// Create a new caret as the current user
 	getCaretPosition() {
-		console.log('getCaretPosition');
+		// console.log('getCaretPosition');
 		// debugger;
 
 		return {
@@ -78,7 +77,7 @@ export class ModCollabCarets {
 	}
 
 	sendSelectionChange() {
-		console.log('sendSelectionChange');
+		// console.log('sendSelectionChange');
 
 		const that = this;
 		if (this.mod.editor.currentPm.mod.collab.unconfirmedMaps.length > 0) {
@@ -96,7 +95,7 @@ export class ModCollabCarets {
 	}
 
 	receiveSelectionChange(data) {
-		console.log('receiveSelectionChange');
+		// console.log('receiveSelectionChange');
 
 		const that = this;
 		this.updateCaret(data.caret_position);
@@ -108,18 +107,18 @@ export class ModCollabCarets {
 
 	// Update the position of a collaborator's caret
 	updateCaret(caretPosition) {
-		console.log('updateCaret');
+		// console.log('updateCaret');
 
 		let participant;// = _.findWhere(this.mod.participants, {id: caretPosition.id});
-		//find the first participant with this id
-		for (let i = this.mod.participants.length-1; i >= 0; i--) {
-			if (this.mod.participants[i] && this.mod.participants[i].id === caretPosition.id) {
-				participant = this.mod.participants[i];
+		// find the first participant with this id
+		for (let index = this.mod.participants.length - 1; index >= 0; index--) {
+			if (this.mod.participants[index] && this.mod.participants[index].id === caretPosition.id) {
+				participant = this.mod.participants[index];
 			}
 		}
 
 		if (!participant) {
-			console.log('could not find participant');
+			// console.log('could not find participant');
 			// participant (still unknown). Ignore.
 			return;
 		}
@@ -142,7 +141,7 @@ export class ModCollabCarets {
 
 		let range = false;
 
-		console.log(posFrom, posTo);
+		// console.log(posFrom, posTo);
 
 		if (posFrom !== posTo) {
 			range = pm.markRange(
@@ -193,7 +192,7 @@ export class ModCollabCarets {
 	}
 
 	updatePositionCSS() {
-		console.log('updatePositionCSS punk');
+		// console.log('updatePositionCSS punk');
 		// 1st write phase
 		const that = this;
 

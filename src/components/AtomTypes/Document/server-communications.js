@@ -59,7 +59,7 @@ export class ModServerCommunications {
 	}
 
 	close() {
-		console.log('Closed ws');
+		// console.log('Closed ws');
 		this.ws.close();
 	}
 
@@ -100,7 +100,7 @@ export class ModServerCommunications {
 			this.editor.mod.collab.chat.newMessage(data);
 			break;
 		case 'connections':
-			console.log('got connections!');
+			// console.log('got connections!');
 			this.editor.mod.collab.updateParticipantList(data.participant_list);
 			break;
 		case 'welcome':
