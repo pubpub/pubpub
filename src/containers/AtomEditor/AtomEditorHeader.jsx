@@ -53,6 +53,7 @@ styles = {
 		margin: '0',
 		padding: '0',
 		fontSize: '1em',
+		marginRight: '20px',
 	},
 	buttonWrapper: {
 		display: 'table-cell',
