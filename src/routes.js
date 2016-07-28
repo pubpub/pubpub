@@ -1,6 +1,6 @@
 import React from 'react';
 import {IndexRoute, Route} from 'react-router';
-import {App, AtomReader, AtomEditor, EmailVerification, JournalCreate, JournalProfile, Landing, Login, ResetPassword, SignUp, UserProfile, UserSettings} from 'containers';
+import {App, AtomReader, AtomEditor, EmailVerification, JournalCreate, JournalProfile, Landing, Login, ResetPassword, SignUp, UserProfile} from 'containers';
 import {About, AboutJournals, AboutPubs, AboutReviews, NotFound} from 'components';
 
 function loadComponent(component) {
@@ -45,8 +45,8 @@ export default () => {
 
 			<Route path="/reviews" getComponent={loadComponent(AboutReviews)}/>
 
-			<Route path="/settings" getComponent={loadComponent(UserSettings)}/> {/* /settings */}
-			<Route path="/settings/:mode" getComponent={loadComponent(UserSettings)}/> {/* /settings/password */}
+			{/* <Route path="/settings" getComponent={loadComponent(UserSettings)}/> */}
+			{/* <Route path="/settings/:mode" getComponent={loadComponent(UserSettings)}/> */}
 
 			<Route path="/user/:username" getComponent={loadComponent(UserProfile)}/> {/* /user/kate?filter=unpublished */}
 			<Route path="/user/:username/:mode" getComponent={loadComponent(UserProfile)}/> {/* /user/kate/discussions?page=4 or /user/kate/settings */}

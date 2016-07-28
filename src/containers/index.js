@@ -11,4 +11,3 @@ export Media from './Media/Media';
 export ResetPassword from './ResetPassword/ResetPassword';
 export SignUp from './SignUp/SignUp';
 export UserProfile from './UserProfile/UserProfile';
-export UserSettings from './UserSettings/UserSettings';

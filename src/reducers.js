@@ -14,7 +14,6 @@ import login from './containers/Login/reducer';
 import media from './containers/Media/reducer';
 import signUp from './containers/SignUp/reducer';
 import user from './containers/UserProfile/reducer';
-import userSettings from './containers/UserSettings/reducer';
 import resetPassword from './containers/ResetPassword/reducer';
 
 export default combineReducers({
@@ -31,7 +30,6 @@ export default combineReducers({
 	media,
 	signUp,
 	user,
-	userSettings,
 	resetPassword
 });
 
