@@ -63,6 +63,11 @@ export class ModCollabCarets {
 		// console.log('getCaretPosition');
 		// debugger;
 
+
+		if (!this.mod.editor.user) {
+			return {};
+		}
+
 		return {
 			id: this.mod.editor.user.id,
 			sessionId: this.mod.editor.docInfo.session_id,

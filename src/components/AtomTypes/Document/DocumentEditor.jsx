@@ -31,6 +31,7 @@ export const DocumentEditor = React.createClass({
 	getInitialState() {
 		return {
 			showMarkdown: false,
+			participants: [],
 		};
 	},
 
