@@ -99,6 +99,25 @@ body {
 	margin-top: 0em !important;
 }
 
+.showOnActive {
+	display: none;
+}
+.dropzone-active .showOnActive {
+	display: block;
+	position: fixed;
+	z-index: 999999;
+	width: 100vw;
+	height: 100vh;
+	top: 0;
+	left: 0;
+	background-color: rgba(0,0,0,0.5);
+	line-height: 100vh;
+	color: #BBBDC0;
+	font-size: 4em;
+	font-weight: bold;
+	text-align: center;
+}
+
 /* Input Fields */
 /* ------------ */
 label {

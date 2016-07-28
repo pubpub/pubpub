@@ -52,7 +52,7 @@ export const Media = React.createClass({
 			this.setState({atomMode: 'recent'});
 		}
 
-		if (!oldMediaData.newNodeData && newMediaData.newNodeData) {
+		if (this.state.editNodeDataMode && !oldMediaData.newNodeData && newMediaData.newNodeData) {
 			this.setState({
 				nodeData: {
 					align: 'full',
@@ -172,6 +172,14 @@ export const Media = React.createClass({
 
 		files.map((file)=> {
 			s3Upload(file, ()=>{}, this.onFileFinish, 0);
+		});
+
+		this.setState({
+			nodeData: {
+				...this.state.nodeData, 
+				data: undefined
+			},
+			atomMode: 'recent',
 		});
 
 	},
@@ -340,12 +348,12 @@ export const Media = React.createClass({
 			{value: 'jupyter', label: 'jupyter'},
 		];
 		return (
-
+			<Dropzone ref="dropzone" disableClick={true} onDrop={this.onDrop} style={{}} activeClassName={'dropzone-active'} >
 			<div style={[styles.container, this.state.showMedia && styles.containerActive]}>
-
 				<div style={styles.splash} onClick={this.close}></div>
+				
 				<div style={[styles.modalContent, this.state.showMedia && styles.modalContentActive]}>
-					
+				
 					{/* If we DON'T have a chosen atom */}
 					{!nodeData.data &&
 						<div style={styles.mediaSelect}>
@@ -363,9 +371,10 @@ export const Media = React.createClass({
 								</div>
 								
 
-								<Dropzone ref="dropzone" className={'button'} onDrop={this.onDrop} style={styles.dropzone} activeStyle={styles.dropzoneActive}>
+								<div className={'button'} style={styles.dropzoneBlock}>
 									Drag files to add
-								</Dropzone>
+								</div>
+								
 
 							</div>
 
@@ -419,7 +428,9 @@ export const Media = React.createClass({
 									<div className={'button'} style={styles.detailsButton} onClick={this.saveItem}>Save</div>
 								</div>
 							</div>
-							<div style={styles.detailsClear} className={'underlineOnHover'} onClick={this.editNodeData}>Edit</div>
+							{nodeData.data.type !== 'document' &&
+								<div style={styles.detailsClear} className={'underlineOnHover'} onClick={this.editNodeData}>Edit</div>
+							}
 
 							<div style={styles.details}>
 								<div style={styles.detailsPreview}>
@@ -502,10 +513,12 @@ export const Media = React.createClass({
 							
 						</div>
 					}
-					
 				</div>
+
 			</div>
 
+			<div className={'showOnActive'}>Drop files to add</div>
+			</Dropzone>
 		);
 	}
 
@@ -686,7 +699,7 @@ styles = {
 		width: '250px',
 		display: 'inline-block',
 	},
-	dropzone: {
+	dropzoneBlock: {
 		padding: '0em 2em',
 		margin: '0em 1em',
 		fontSize: '0.85em',
@@ -694,9 +707,5 @@ styles = {
 		height: '34px',
 		lineHeight: '34px',
 		verticalAlign: 'top',
-	},
-	dropzoneActive: {
-		backgroundColor: '#2C2A2B',
-		color: '#FEFEFE',
 	},
 };
