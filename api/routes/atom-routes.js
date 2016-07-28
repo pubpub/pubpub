@@ -1,4 +1,5 @@
 const app = require('../api');
+const ObjectID = require('mongodb').ObjectID;
 
 const Atom = require('../models').Atom;
 const Link = require('../models').Link;
@@ -25,12 +26,14 @@ export function createAtom(req, res) {
 	const userID = req.user._id;
 	const now = new Date().getTime();
 	const type = req.body.type || 'markdown';
-	const hash = SHA1(type + new Date().getTime() + req.user._id).toString(encHex);
+	// const hash = SHA1(type + new Date().getTime() + req.user._id).toString(encHex);
+	const newAtomID = new ObjectID();
 	// const ref = new Firebase(fireBaseURL + hash + '/editorData' );
 
 	const atom = new Atom({
-		slug: hash,
-		title: 'New Pub: ' + new Date().getTime(),
+		_id: newAtomID,
+		slug: newAtomID,
+		title: req.body.title || 'New Pub: ' + new Date().getTime(),
 		type: type,
 
 		createDate: now,
@@ -47,9 +50,7 @@ export function createAtom(req, res) {
 
 	atom.save() // Save new atom data
 	.then(function(newAtom) { // Create new Links pointing between atom and author
-		const newAtomID = newAtom._id;
 		const tasks = [
-			Link.createLink('editor', userID, newAtomID, userID, now),
 			Link.createLink('author', userID, newAtomID, userID, now),
 		];
 
@@ -67,8 +68,9 @@ export function createAtom(req, res) {
 		return Promise.all(tasks);
 	})
 	.then(function(taskResults) { // If we created a version, make sure to add that version to parent
-		if (taskResults.length === 3) {
-			const versionData = taskResults[2];
+
+		if (taskResults.length === 2) {
+			const versionData = taskResults[1];
 			versionID = versionData._id;
 			return Atom.update({ _id: versionData.parent }, { $addToSet: { versions: versionData._id} }).exec();
 		}
@@ -108,8 +110,13 @@ export function createAtom(req, res) {
 	// 	};
 	// 	return ref.set(newEditorData);
 	// })
-	.then(function() { // Return hash of new atom
-		return res.status(201).json(hash);
+	.then(function() {
+		return Version.findOne({_id: versionID});
+	})
+	.then(function(newVersion) { // Return hash of new atom
+		const versionData = newVersion || {};
+		versionData.parent = atom;
+		return res.status(201).json(versionData);
 	})
 	.catch(function(error) {
 		console.log('error', error);

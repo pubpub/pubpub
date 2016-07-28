@@ -64,7 +64,8 @@ function createAtomLoad(state) {
 
 function createAtomSuccess(state, result) {
 	return state.merge({
-		newAtomSlug: result,
+		newAtomSlug: result.parent._id,
+		mediaItems: state.get('mediaItems').push(result)
 	});
 }
 

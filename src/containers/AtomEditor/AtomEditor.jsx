@@ -192,35 +192,6 @@ export default connect( state => {
 })( Radium(AtomEditor) );
 
 styles = {
-	tocSection: {
-		display: 'table-cell',
-		verticalAlign: 'top',
-		width: '300px',
-		backgroundColor: '#F3F3F4',
-		borderRight: '1px solid #E4E4E4',
-		fontSize: '0.9em',
-	},
-	tocHover: {
-		width: '2em',
-		position: 'absolute',
-		top: '0px',
-		bottom: '0px',
-		paddingTop: '15px',
-	},
-	tocIcon: {
-		position: 'relative',
-		width: '10px',
-		height: '2px',
-		marginBottom: '1px',
-		backgroundColor: '#BBBDC0',
-		borderRadius: '1px',
-	},
-
-	tocPopout: {
-		overflow: 'hidden',
-		overflowY: 'scroll',
-		padding: '2em',
-	},
 	pubSection: {
 		display: 'table-cell',
 		verticalAlign: 'top',
@@ -231,92 +202,12 @@ styles = {
 			padding: '0em 1em',
 		},
 	},
-	iconLeft: {
-		position: 'absolute',
-		width: '1.5em',
-		height: '100%',
-		cursor: 'pointer',
-		top: 0,
-		left: 0,
-		opacity: 0,
-		backgroundColor: '#F3F3F4',
-		borderRight: '1px solid #E4E4E4',
-		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
-			display: 'none',
-		},
-	},
-	iconRight: {
-		position: 'absolute',
-		width: '1.5em',
-		height: '100%',
-		cursor: 'pointer',
-		top: 0,
-		right: 0,
-		opacity: 0,
-		backgroundColor: '#F3F3F4',
-		borderLeft: '1px solid #E4E4E4',
-		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
-			display: 'none',
-		},
-	},
-	discussionSection: {
-		display: 'table-cell',
-		verticalAlign: 'top',
-		padding: '0em 2%',
-		width: '35%',
-		backgroundColor: '#F3F3F4',
-		borderLeft: '1px solid #E4E4E4',
-		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
-			display: 'none',
-		},
-	},
-	pubBodyWrapper: {
-		maxWidth: '650px',
-		margin: '0 auto',
-		padding: '0em 3em',
-		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
-			maxWidth: 'auto',
-			padding: '0em 0em',
-		},
-	},
-	pubMetaWrapper: {
-		maxWidth: '1024px',
-		margin: '0 auto',
-		padding: '2em 3em',
-		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
-			maxWidth: 'auto',
-			padding: '1em 0em',
-		},
-	},
-
 	container: {
 		display: 'table',
 		width: '100%',
 		tableLayout: 'fixed',
 		overflow: 'hidden',
 		minHeight: '100vh',
-	},
-
-	tocItem: {
-		display: 'block',
-		textDecoration: 'none',
-		color: 'inherit',
-		paddingRight: '2em',
-		paddingTop: '1em',
-		paddingBottom: '1em',
-		paddingLeft: '2em',
-	},
-
-	tocLevels: [
-		{paddingLeft: '2em'},
-		{paddingLeft: '4em'},
-		{paddingLeft: '5em'},
-		{paddingLeft: '6em'},
-		{paddingLeft: '7em'},
-		{paddingLeft: '8em'},
-	],
-	noBottomMargin: {
-		marginBottom: '0px',
 	},
 
 };

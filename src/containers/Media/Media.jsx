@@ -15,7 +15,7 @@ import Select from 'react-select';
 // import {FormattedMessage} from 'react-intl';
 import Dropzone from 'react-dropzone';
 import {s3Upload} from 'utils/uploadFile';
-import {getMedia} from './actions';
+import {getMedia, createAtom} from './actions';
 
 let styles;
 
@@ -43,6 +43,14 @@ export const Media = React.createClass({
 	},
 	componentWillUnmount() {
 		document.removeEventListener('keydown', this.closeOnEscape);
+	},
+
+	componentWillReceiveProps(nextProps) {
+		const oldItems = this.props.mediaData.get('mediaItems');
+		const nextItems = nextProps.mediaData.get('mediaItems');
+		if (oldItems.size < nextItems.size) {
+			this.setState({atomMode: 'recent'});
+		}
 	},
 
 	closeOnEscape: function(evt) {
@@ -80,7 +88,14 @@ export const Media = React.createClass({
 		this.setState({editNodeDataMode: true});
 	},
 	cancelEditNodeData: function() {
-		this.setState({editNodeDataMode: false});
+		let nodeData = this.state.nodeData;
+		if (!this.state.nodeData.data.content) {
+			nodeData = {};
+		}
+		this.setState({
+			editNodeDataMode: false,
+			nodeData: nodeData,
+		});
 	},
 
 	filterChange: function(evt) {
@@ -143,13 +158,13 @@ export const Media = React.createClass({
 		// // Set state with newly added files
 		// this.setState({files: tmpFiles});
 
-		if (files.length) {
-			s3Upload(evt.target.files[0], ()=>{}, this.onFileFinish, 0);
-		}
+		files.map((file)=> {
+			s3Upload(file, ()=>{}, this.onFileFinish, 0);
+		});
 
 	},
 
-	onFileFinish: function(evt, index, type, filename) {
+	onFileFinish: function(evt, index, type, filename, title) {
 
 		let atomType = undefined;
 		const extension = filename.split('.').pop();
@@ -177,7 +192,27 @@ export const Media = React.createClass({
 		const versionContent = {
 			url: 'https://assets.pubpub.org/' + filename
 		};
-		this.props.dispatch(createAtom(atomType, versionContent));
+		this.props.dispatch(createAtom(atomType, versionContent, title));
+	},
+
+	saveVersionHandler: function(versionMessage) {
+		const newVersionContent = this.refs.atomEditorPane.refs.editor.getSaveVersionContent();
+
+		const atomData = this.state.nodeData.data.parent._id;
+		if (atomData) {
+			const newVersion = {
+				type: atomData.type,
+				message: versionMessage,
+				parent: atomData._id,
+				content: newVersionContent
+			};
+			console.log(newVersion);
+			// this.props.dispatch(saveVersion(newVersion));
+		} else {
+			const atomType = this.state.nodeData.data.type;
+			console.log('Create a new atom with version stuff!');
+			// this.props.dispatch(createAtom(atomType, newVersionContent));
+		}
 	},
 
 	// save: function() {
@@ -236,7 +271,21 @@ export const Media = React.createClass({
 	},
 
 	handleSelectChange: function(item) {
-		console.log(item.value);
+		const newThing = {
+			nodeData: {
+				data: {
+					type: item.value,
+					parent: {
+						title: 'New ' + item.value,
+						type: item.value,
+					}
+				}
+			},
+			editNodeDataMode: true,
+		};
+		console.log(newThing);
+		this.setState(newThing);
+		// console.log(item.value);
 	},
 
 	render: function() {
@@ -269,7 +318,7 @@ export const Media = React.createClass({
 		const options = [
 			{value: 'image', label: 'image'},
 			{value: 'video', label: 'video'},
-			{value: 'equation', label: 'equation'},
+			{value: 'latex', label: 'equation'},
 			{value: 'reference', label: 'reference'},
 			{value: 'jupyter', label: 'jupyter'},
 		];
@@ -309,15 +358,15 @@ export const Media = React.createClass({
 									return item.original;
 								}).sort((foo, bar)=>{
 									// Sort so that most recent is first in array
-									if (foo.lastUpdated > bar.lastUpdated) { return -1; }
-									if (foo.lastUpdated < bar.lastUpdated) { return 1; }
+									if (foo.parent.lastUpdated > bar.parent.lastUpdated) { return -1; }
+									if (foo.parent.lastUpdated < bar.parent.lastUpdated) { return 1; }
 									return 0;
 								}).map((item, index)=> {
 									if (this.state.atomMode === 'recent' && index > 9) {
 										return null;
 									}
 									return (
-										<div key={'media-item-' + index} onClick={this.setItem.bind(this, item)} style={styles.item}>
+										<div key={'media-item-' + item._id} onClick={this.setItem.bind(this, item)} style={styles.item}>
 											<div style={styles.itemPreview}>
 												{item.type === 'image' &&
 													<img src={'https://jake.pubpub.org/unsafe/fit-in/100x50/' + item.content.url} alt={item.parent.title} title={item.parent.title}/>
@@ -421,9 +470,10 @@ export const Media = React.createClass({
 						<div style={styles.mediaDetails}>
 							<h3 style={styles.detailsTitle}>{nodeData.data.parent.title}</h3>
 							<div style={styles.detailsClear} className={'underlineOnHover'} onClick={this.cancelEditNodeData}>Cancel</div>
+							<div className={'button'} style={styles.button} onClick={this.saveVersionHandler}>Save Version</div>
 
 							<div style={styles.details}>
-								<AtomEditorPane atomEditData={ensureImmutable({ atomData: nodeData.data.parent, currentVersionData: nodeData.data })} renderType={'embed'}/>
+								<AtomEditorPane ref={'atomEditorPane'} atomEditData={ensureImmutable({ atomData: nodeData.data.parent, currentVersionData: nodeData.data })}/>
 							</div>
 													
 							

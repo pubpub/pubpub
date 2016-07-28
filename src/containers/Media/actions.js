@@ -28,12 +28,13 @@ export function getMedia(filterParams) {
 	};
 }
 
-export function createAtom(type, versionContent) {
+export function createAtom(type, versionContent, title) {
 	return {
 		types: [CREATE_ATOM_LOAD, CREATE_ATOM_SUCCESS, CREATE_ATOM_FAIL],
 		promise: (client) => client.post('/createAtom', {data: {
 			type: type,
-			versionContent: versionContent
+			versionContent: versionContent,
+			title: title,
 		}})
 	};
 }
