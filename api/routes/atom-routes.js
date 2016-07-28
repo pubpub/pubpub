@@ -361,11 +361,11 @@ export function getAtomEdit(req, res) {
 		// 	output.atomData.token = firebaseTokenGen(req.user.username, slug, false); // the false should be {isReader}
 		// }
 
-		return request.post(require('../config').collabServerURL + '/authenticate')
+		return request.post(process.env.COLLAB_SERVER_URL + '/authenticate')
 		.send({
 			user: req.user.username,
 			id: atomResult._id,
-			collabEncryptSecret: require('../config').collabEncryptSecret
+			collabEncryptSecret: process.env.COLLAB_ENCRYPT_SECRET
 		})
 		.set('Accept', 'application/json')
 		.end(function(err, jsonResponse) {

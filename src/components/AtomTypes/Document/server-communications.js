@@ -1,6 +1,8 @@
 /* Sets up communicating with server (retrieving document,
 saving, collaboration, etc.).
 */
+import {collabServerUrl} from 'config';
+
 export class ModServerCommunications {
 	constructor(editor) {
 		editor.mod.serverCommunications = this;
@@ -21,7 +23,7 @@ export class ModServerCommunications {
 		const that = this;
 		const websocketProtocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
 
-		const wsServer = require('../../../../api/config').collabServerURL;
+		const wsServer = collabServerUrl;
 
 		try {
 			this.ws = new window.WebSocket(`${websocketProtocol}//${wsServer}/ws/doc/${this.editor.doc.id}?user=${this.editor.username }&token=${this.editor.token}&avatar_url=${this.editor.img}`);
