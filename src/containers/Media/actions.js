@@ -4,13 +4,17 @@
 // All action types are defined as constants. Do not manually pass action
 // types as strings in action creators
 /*--------*/
-export const GET_MEDIA_LOAD = 'asset/GET_MEDIA_LOAD';
-export const GET_MEDIA_SUCCESS = 'asset/GET_MEDIA_SUCCESS';
-export const GET_MEDIA_FAIL = 'asset/GET_MEDIA_FAIL';
+export const GET_MEDIA_LOAD = 'media/GET_MEDIA_LOAD';
+export const GET_MEDIA_SUCCESS = 'media/GET_MEDIA_SUCCESS';
+export const GET_MEDIA_FAIL = 'media/GET_MEDIA_FAIL';
 
-export const CREATE_ATOM_LOAD = 'atomEdit/CREATE_ATOM_LOAD';
-export const CREATE_ATOM_SUCCESS = 'atomEdit/CREATE_ATOM_SUCCESS';
-export const CREATE_ATOM_FAIL = 'atomEdit/CREATE_ATOM_FAIL';
+export const CREATE_ATOM_LOAD = 'media/CREATE_ATOM_LOAD';
+export const CREATE_ATOM_SUCCESS = 'media/CREATE_ATOM_SUCCESS';
+export const CREATE_ATOM_FAIL = 'media/CREATE_ATOM_FAIL';
+
+export const SAVE_VERSION_LOAD = 'media/SAVE_VERSION_LOAD';
+export const SAVE_VERSION_SUCCESS = 'media/SAVE_VERSION_SUCCESS';
+export const SAVE_VERSION_FAIL = 'media/SAVE_VERSION_FAIL';
 
 /*--------*/
 // Define Action creators
@@ -35,6 +39,15 @@ export function createAtom(type, versionContent, title) {
 			type: type,
 			versionContent: versionContent,
 			title: title,
+		}})
+	};
+}
+
+export function saveVersion(newVersion) {
+	return {
+		types: [SAVE_VERSION_LOAD, SAVE_VERSION_SUCCESS, SAVE_VERSION_FAIL],
+		promise: (client) => client.post('/saveVersion', {data: {
+			'newVersion': newVersion,
 		}})
 	};
 }

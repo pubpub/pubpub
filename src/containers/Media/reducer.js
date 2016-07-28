@@ -12,6 +12,10 @@ import {
 	CREATE_ATOM_LOAD,
 	CREATE_ATOM_SUCCESS,
 	CREATE_ATOM_FAIL,
+
+	SAVE_VERSION_LOAD,
+	SAVE_VERSION_SUCCESS,
+	SAVE_VERSION_FAIL,
 } from './actions';
 
 import {
@@ -27,6 +31,7 @@ export const defaultState = Immutable.Map({
 	error: undefined,
 
 	newAtomSlug: undefined,
+	newNodeData: undefined, 
 });
 
 /*--------*/
@@ -59,13 +64,16 @@ function getMediaFailed(state, error) {
 }
 
 function createAtomLoad(state) {
-	return state;
+	return state.merge({
+		newNodeData: undefined,
+	});
 }
 
 function createAtomSuccess(state, result) {
 	return state.merge({
 		newAtomSlug: result.parent._id,
-		mediaItems: state.get('mediaItems').push(result)
+		mediaItems: state.get('mediaItems').push(result),
+		newNodeData: result,
 	});
 }
 
@@ -76,6 +84,37 @@ function createAtomFail(state, error) {
 function getAtomEditLoad(state) {
 	return state.merge({
 		newAtomSlug: undefined,
+	});
+}
+
+/* Save Version functions */
+/* ----------------------------- */
+function saveVersionLoad(state) {
+	return state.merge({
+		versionLoading: true,
+		newNodeData: undefined,
+	});
+}
+
+function saveVersionSuccess(state, result) {
+	const newVersion = result;
+	const newItems = state.get('mediaItems').map((item)=>{
+		if (item.getIn(['parent', '_id']) === result.parent) {
+			newVersion.parent = item.get('parent');
+			return ensureImmutable(newVersion);
+		}
+		return item;
+	});
+	return state.merge({
+		mediaItems: newItems,
+		newNodeData: newVersion,
+	});
+}
+
+function saveVersionFail(state, error) {
+	return state.merge({
+		versionLoading: false,
+		versionError: error,
 	});
 }
 
@@ -101,6 +140,13 @@ export default function reducer(state = defaultState, action) {
 
 	case GET_ATOM_EDIT_LOAD:
 		return getAtomEditLoad(state);
+
+	case SAVE_VERSION_LOAD:
+		return saveVersionLoad(state);
+	case SAVE_VERSION_SUCCESS:
+		return saveVersionSuccess(state, action.result);
+	case SAVE_VERSION_FAIL:
+		return saveVersionFail(state, action.error);
 
 	default:
 		return ensureImmutable(state);

@@ -72,7 +72,7 @@ export const ImageEditor = React.createClass({
 	render: function() {
 		const title = safeGetInToJS(this.props.atomEditData, ['atomData', 'title']);
 		const imageSource = safeGetInToJS(this.props.atomEditData, ['currentVersionData', 'content', 'url']) || '';
-		const scaledURL = imageSource.indexOf('.gif') > -1 ? imageSource : 'https://jake.pubpub.org/unsafe/fit-in/650x0/' + imageSource; // To learn about jake.pubpub fit-in, see Thumbor docs: http://thumbor.readthedocs.io/en/latest/usage.html#fit-in
+		const scaledURL = imageSource.indexOf('.gif') > -1 ? (this.state.url || imageSource) : 'https://jake.pubpub.org/unsafe/fit-in/650x0/' + (this.state.url || imageSource); // To learn about jake.pubpub fit-in, see Thumbor docs: http://thumbor.readthedocs.io/en/latest/usage.html#fit-in
 
 		return (
 			<div>

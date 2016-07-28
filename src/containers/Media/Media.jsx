@@ -15,7 +15,7 @@ import Select from 'react-select';
 // import {FormattedMessage} from 'react-intl';
 import Dropzone from 'react-dropzone';
 import {s3Upload} from 'utils/uploadFile';
-import {getMedia, createAtom} from './actions';
+import {getMedia, createAtom, saveVersion} from './actions';
 
 let styles;
 
@@ -46,10 +46,22 @@ export const Media = React.createClass({
 	},
 
 	componentWillReceiveProps(nextProps) {
-		const oldItems = this.props.mediaData.get('mediaItems');
-		const nextItems = nextProps.mediaData.get('mediaItems');
-		if (oldItems.size < nextItems.size) {
+		const oldMediaData = safeGetInToJS(this.props.mediaData, []);
+		const newMediaData = safeGetInToJS(nextProps.mediaData, []);
+		if (oldMediaData.mediaItems.length < newMediaData.mediaItems.length) {
 			this.setState({atomMode: 'recent'});
+		}
+
+		if (!oldMediaData.newNodeData && newMediaData.newNodeData) {
+			this.setState({
+				nodeData: {
+					align: 'full',
+					mode: newMediaData.newNodeData.type === 'reference' ? 'cite' : 'embed',
+					...this.state.nodeData,
+					data: newMediaData.newNodeData
+				},
+				editNodeDataMode: false,
+			});
 		}
 	},
 
@@ -81,7 +93,7 @@ export const Media = React.createClass({
 	},
 
 	clearNodeData: function() {
-		this.setState({nodeData: {...this.state.nodeData, data: undefined}});
+		this.setState({nodeData: {...this.state.nodeData, data: undefined}}); // Is this right? Do we want nodeData to just be an empty object?
 	},
 
 	editNodeData: function() {
@@ -198,20 +210,24 @@ export const Media = React.createClass({
 	saveVersionHandler: function(versionMessage) {
 		const newVersionContent = this.refs.atomEditorPane.refs.editor.getSaveVersionContent();
 
-		const atomData = this.state.nodeData.data.parent._id;
-		if (atomData) {
+		const atomData = this.state.nodeData.data.parent;
+		console.log(this.state.nodeData.data);
+		if (atomData._id) {
 			const newVersion = {
 				type: atomData.type,
-				message: versionMessage,
+				// message: versionMessage,
+				message: '',
 				parent: atomData._id,
 				content: newVersionContent
 			};
+			console.log('Save a version with version stuff!');
 			console.log(newVersion);
-			// this.props.dispatch(saveVersion(newVersion));
+			this.props.dispatch(saveVersion(newVersion));
 		} else {
 			const atomType = this.state.nodeData.data.type;
 			console.log('Create a new atom with version stuff!');
-			// this.props.dispatch(createAtom(atomType, newVersionContent));
+			console.log(newVersionContent);
+			this.props.dispatch(createAtom(atomType, newVersionContent));
 		}
 	},
 
@@ -235,6 +251,7 @@ export const Media = React.createClass({
 
 	setItem: function(item) {
 		const nodeData = this.state.nodeData || {};
+		console.log(item);
 		this.setState({
 			nodeData: {
 				source: item._id, 
@@ -468,9 +485,16 @@ export const Media = React.createClass({
 					{/* If we DO have a chosen atom  and are trying to edit it*/}
 					{nodeData.data && this.state.editNodeDataMode &&
 						<div style={styles.mediaDetails}>
-							<h3 style={styles.detailsTitle}>{nodeData.data.parent.title}</h3>
-							<div style={styles.detailsClear} className={'underlineOnHover'} onClick={this.cancelEditNodeData}>Cancel</div>
-							<div className={'button'} style={styles.button} onClick={this.saveVersionHandler}>Save Version</div>
+							<div style={styles.editModeHeader}>
+								<h3 style={styles.detailsTitle}>{nodeData.data.parent.title}</h3>
+								<div style={styles.detailsCancel} className={'underlineOnHover'} onClick={this.cancelEditNodeData}>Cancel</div>
+								<div style={styles.detailsButtonWrapper}>
+									<div className={'button'} style={styles.detailsButton} onClick={this.saveVersionHandler}>Save Version</div>
+								</div>
+								
+							</div>
+							
+							
 
 							<div style={styles.details}>
 								<AtomEditorPane ref={'atomEditorPane'} atomEditData={ensureImmutable({ atomData: nodeData.data.parent, currentVersionData: nodeData.data })}/>
@@ -495,6 +519,13 @@ export default connect( state => {
 })( Radium(Media) );
 
 styles = {
+	editModeHeader: {
+		display: 'table',
+		padding: '.5em 0em',
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+			display: 'block',
+		},
+	},
 	container: {
 		position: 'fixed',
 		top: 0,
@@ -620,10 +651,25 @@ styles = {
 	},
 	detailsTitle: {
 		left: 0,
+		display: 'table-cell',
 	},
 	detailsClear: {
 		marginTop: '-1.15em',
 		cursor: 'pointer',
+	},
+	detailsCancel: {
+		cursor: 'pointer',
+		display: 'table-cell',
+		width: '1%',
+		padding: '0em 1em',
+	},
+	detailsButtonWrapper: {
+		display: 'table-cell',
+		width: '1%',
+	},
+	detailsButton: {
+		padding: '0em 1em',
+		whiteSpace: 'nowrap',
 	},
 	radioInput: {
 		margin: '0em 0em 1em 0em',
