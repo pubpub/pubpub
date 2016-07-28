@@ -46,9 +46,7 @@ export const App = React.createClass({
 		if (this.props.loginData.get('loggedIn') && !nextProps.loginData.get('loggedIn')) {
 			this.props.dispatch(push('/'));
 		}
-		console.log(nextProps.path);
 		if (nextProps.path === '/' && !this.props.mediaData.get('newAtomSlug') && nextProps.mediaData.get('newAtomSlug')) {
-			console.log('yea this one');
 			this.props.dispatch(push('/pub/' + nextProps.mediaData.get('newAtomSlug') + '/edit'));
 		}
 	},

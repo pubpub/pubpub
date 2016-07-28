@@ -412,8 +412,6 @@ export const Media = React.createClass({
 									<input id={'media-file-select'} type={'file'} onChange={this.onSelect} multiple={true} style={styles.fileInput}/>	
 								</div>
 								
-
-
 							</div>
 
 							{this.state.uploadFiles.map((uploadFile, index)=> {
@@ -646,7 +644,7 @@ styles = {
 		margin: '0 auto',
 	},
 	mediaDetails: {
-		padding: '0em 2em',
+		padding: '1em 2em',
 	},
 	filterInput: {
 		width: 'calc(100% - 20px - 4px)',
@@ -713,7 +711,7 @@ styles = {
 		display: 'table-cell',
 	},
 	detailsClear: {
-		marginTop: '-1em',
+		display: 'inline-block',
 		cursor: 'pointer',
 	},
 	detailsCancel: {
