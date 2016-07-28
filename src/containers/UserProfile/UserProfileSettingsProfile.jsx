@@ -9,7 +9,7 @@ import {globalStyles} from 'utils/styleConstants';
 
 let styles = {};
 
-export const UserSettingsProfile = React.createClass({
+export const UserProfileSettingsProfile = React.createClass({
 	propTypes: {
 		settingsData: PropTypes.object,
 		loginData: PropTypes.object,
@@ -184,7 +184,7 @@ export const UserSettingsProfile = React.createClass({
 	}
 });
 
-export default Radium(UserSettingsProfile);
+export default Radium(UserProfileSettingsProfile);
 
 styles = {
 	form: {

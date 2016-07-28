@@ -1,7 +1,7 @@
 import React, {PropTypes} from 'react';
 import Radium from 'radium';
 
-export const UserSettingsNotifications = React.createClass({
+export const UserProfileSettingsNotifications = React.createClass({
 	propTypes: {
 		settingsData: PropTypes.object,
 		saveSettingsHandler: PropTypes.func,
@@ -17,4 +17,4 @@ export const UserSettingsNotifications = React.createClass({
 	}
 });
 
-export default Radium(UserSettingsNotifications);
+export default Radium(UserProfileSettingsNotifications);

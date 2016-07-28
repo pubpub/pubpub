@@ -21,39 +21,39 @@ export class ModCollab {
 
 	updateParticipantList(participants) {
 		// const that = this;
-		const title_user_divs = document.getElementsByClassName('title-connected-user');
+		const titleUserDivs = document.getElementsByClassName('title-connected-user');
 		const menubar = document.getElementsByClassName('editor-participants')[0];
 
-		if(!menubar){
-			console.log("No menu bar"); // This error should not happen, this is a hack to stop it
+		if (!menubar) {
+			console.log('No menu bar'); // This error should not happen, this is a hack to stop it
 			return;
 		}
 
-		for (let i = title_user_divs.length-1; i >=0; i--){
-			title_user_divs[i].parentNode.removeChild(title_user_divs[i]);
+		for (let index = titleUserDivs.length - 1; index >= 0; index--) {
+			titleUserDivs[index].parentNode.removeChild(titleUserDivs[index]);
 		}
 
-		for (let i = 0; i < participants.length; i++){
+		for (let index = 0; index < participants.length; index++) {
 			let appendStr = '<span class="ProseMirror-menuitem title-connected-user" style="padding: 5px 5px 5px 0px;">';
-			appendStr += '<div class="ProseMirror-icon-connected-user" title="' + participants[i].name +'"><span>';
-			appendStr += '<img style="vertical-align: text-top;" src="https://jake.pubpub.org/unsafe/fit-in/25x25/'+ participants[i].avatar_url+ '">';
-			appendStr +='</span></div></span>';
+			appendStr += '<div class="ProseMirror-icon-connected-user" title="' + participants[index].name + '"><span>';
+			appendStr += '<img style="vertical-align: text-top;" src="https://jake.pubpub.org/unsafe/fit-in/25x25/' + participants[index].avatar_url + '">';
+			appendStr += '</span></div></span>';
 			menubar.innerHTML = menubar.innerHTML + appendStr;
 		}
 
-		const allSessionIds = [];
-		this.participants = _.map(_.groupBy(participants,
-			'id'), function(entries) {
-			const sessionIds = [];
-			// Collect all Session IDs.
-			entries.forEach(function(entry) {
-				sessionIds.push(entry.session_id);
-				allSessionIds.push(entry.session_id);
-				delete entry.session_id;
-			});
-			entries[0].sessionIds = sessionIds;
-			return entries[0];
-		});
+		// const allSessionIds = [];
+		// this.participants = _.map(_.groupBy(participants,
+		// 	'id'), function(entries) {
+		// 	const sessionIds = [];
+		// 	// Collect all Session IDs.
+		// 	entries.forEach(function(entry) {
+		// 		sessionIds.push(entry.session_id);
+		// 		allSessionIds.push(entry.session_id);
+		// 		delete entry.session_id;
+		// 	});
+		// 	entries[0].sessionIds = sessionIds;
+		// 	return entries[0];
+		// });
 		// Check if each of the old session IDs is still present in last update.
 		// If not, remove the corresponding marked range, if any.
 		// this.sessionIds.forEach(function(sessionId) {
@@ -61,12 +61,13 @@ export class ModCollab {
 		//         that.carets.removeSelection(sessionId)
 		//     }
 		// })
-		this.sessionIds = allSessionIds;
-		if (participants.length > 1) {
-			this.collaborativeMode = true;
-		} else if (participants.length === 1) {
-			this.collaborativeMode = false;
-		}
+		// this.sessionIds = allSessionIds;
+		// if (participants.length > 1) {
+		// 	this.collaborativeMode = true;
+		// } else if (participants.length === 1) {
+		// 	this.collaborativeMode = false;
+		// }
+		
 		// this.participants.forEach(function(participant) {
 		//     /* We assign a color to each user. This color stays even if the user
 		//     * disconnects or the participant list is being updated.

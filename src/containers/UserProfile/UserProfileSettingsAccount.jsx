@@ -1,7 +1,7 @@
 import React, {PropTypes} from 'react';
 import Radium from 'radium';
 
-export const UserSettingsAccount = React.createClass({
+export const UserProfileSettingsAccount = React.createClass({
 	propTypes: {
 		settingsData: PropTypes.object,
 		saveSettingsHandler: PropTypes.func,
@@ -20,4 +20,4 @@ export const UserSettingsAccount = React.createClass({
 	}
 });
 
-export default Radium(UserSettingsAccount);
+export default Radium(UserProfileSettingsAccount);

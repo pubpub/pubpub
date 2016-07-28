@@ -51,6 +51,7 @@ export default Radium(AppVerified);
 styles = {
 	container: {
 		position: 'fixed',
+		zIndex: 3,
 		top: 0,
 		left: 0,
 		right: 0,
