@@ -7,7 +7,7 @@ import {AtomViewerPane} from 'containers/AtomReader/AtomViewerPane';
 import {AtomEditorPane} from 'containers/AtomEditor/AtomEditorPane';
 import fuzzy from 'fuzzy';
 import {RadioGroup, Radio} from 'utils/ReactRadioGroup';
-import {NavContentWrapper} from 'components';
+import {LoaderDeterminate, NavContentWrapper} from 'components';
 import Select from 'react-select';
 
 // import {globalStyles} from 'utils/styleConstants';
@@ -33,6 +33,8 @@ export const Media = React.createClass({
 			nodeData: {},
 			atomMode: 'recent',
 			editNodeDataMode: false,
+			uploadRates: [],
+			uploadFiles: [],
 		};
 	},
 
@@ -170,8 +172,20 @@ export const Media = React.createClass({
 		// // Set state with newly added files
 		// this.setState({files: tmpFiles});
 
-		files.map((file)=> {
-			s3Upload(file, ()=>{}, this.onFileFinish, 0);
+		const startingFileIndex = this.state.uploadRates.length;
+		const newUploadRates = files.map((file)=> {
+			return 0;
+		});
+		const newUploadFiles = files.map((file)=> {
+			console.log(file);
+			return file.name;
+		});
+		const uploadRates = this.state.uploadRates.concat(newUploadRates);
+		const uploadFiles = this.state.uploadFiles.concat(newUploadFiles);
+
+
+		files.map((file, index)=> {
+			s3Upload(file, this.onFileProgress, this.onFileFinish, startingFileIndex + index);
 		});
 
 		this.setState({
@@ -180,8 +194,18 @@ export const Media = React.createClass({
 				data: undefined
 			},
 			atomMode: 'recent',
+			uploadRates: uploadRates,
+			uploadFiles: uploadFiles,
 		});
 
+	},
+
+	// Update state's progress value when new events received.
+	onFileProgress: function(evt, index) {
+		const percentage = evt.loaded / evt.total;
+		const tempUploadRates = this.state.uploadRates;
+		tempUploadRates[index] = percentage;
+		this.setState({uploadRates: tempUploadRates});
 	},
 
 	onFileFinish: function(evt, index, type, filename, title) {
@@ -377,6 +401,15 @@ export const Media = React.createClass({
 								
 
 							</div>
+
+							{this.state.uploadFiles.map((uploadFile, index)=> {
+								return (
+									<div key={'uploadFile-' + index} style={[styles.uploadBar, this.state.uploadRates[index] === 1 && {display: 'none'}]}>
+										{uploadFile}
+										<LoaderDeterminate value={this.state.uploadRates[index] * 100} />
+									</div>
+								);
+							})}
 
 							<NavContentWrapper navItems={navItems} mobileNavButtons={mobileNavButtons}>
 								<input type="text" placeholder={'Filter'} value={this.state.filter} onChange={this.filterChange} style={styles.filterInput}/>
@@ -707,5 +740,15 @@ styles = {
 		height: '34px',
 		lineHeight: '34px',
 		verticalAlign: 'top',
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+			margin: '0em',
+		},
+	},
+	uploadBar: {
+		margin: '0em 2em 1em',
+		overflow: 'hidden',
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+			margin: '0em 0em 1em',
+		},
 	},
 };

@@ -6,9 +6,9 @@ let styles = {};
 const initStyle = {
 	transform: 'translateX(-100%)',
 	width: '100%',
-	height: '1px',
-	backgroundColor: '#CCC',
-	transition: '.2s linear transform',
+	height: '4px',
+	backgroundColor: '#363736',
+	transition: '.2s ease-out transform',
 };
 
 const animateOff = {
