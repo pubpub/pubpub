@@ -25,6 +25,10 @@ import {
 	SAVE_SETTINGS_SUCCESS,
 } from 'containers/UserSettings/actions';
 
+import {
+	EMAIL_VERIFICATION_SUCCESS,
+} from 'containers/EmailVerification/actions';
+
 /*--------*/
 // Initialize Default State
 /*--------*/
@@ -78,6 +82,10 @@ function signUpDetailsSuccess(state, result) {
 	return state.mergeIn(['userData'], result);
 }
 
+function verificationSuccess(state) {
+	return state.mergeIn(['userData', 'verifiedEmail'], true);
+}
+
 /*--------*/
 // Bind actions to specific reducing functions.
 /*--------*/
@@ -99,6 +107,9 @@ export default function reducer(state = defaultState, action) {
 	case SIGNUP_DETAILS_SUCCESS:
 	case SAVE_SETTINGS_SUCCESS: 
 		return signUpDetailsSuccess(state, action.result);
+
+	case EMAIL_VERIFICATION_SUCCESS:
+		return verificationSuccess(state);
 
 	default:
 		return ensureImmutable(state);

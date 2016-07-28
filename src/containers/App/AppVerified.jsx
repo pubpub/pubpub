@@ -58,6 +58,7 @@ styles = {
 		height: globalStyles.headerHeight,
 		lineHeight: globalStyles.headerHeight,
 		fontSize: '0.85em',
+		pointerEvents: 'none',
 		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
 			borderTop: '1px solid #58585B',
 			height: globalStyles.headerHeightMobile,
@@ -67,6 +68,7 @@ styles = {
 	},
 	content: {
 		display: 'inline-block',
+		pointerEvents: 'auto',
 		backgroundColor: '#2C2A2B',
 		// backgroundColor: '#2c0070',
 		color: 'white',
