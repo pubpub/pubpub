@@ -6,7 +6,8 @@ import update from 'react-addons-update';
 import {Table, Cell, Column} from 'fixed-data-table-2';
 import tableStyles from './fixed-data-table.css';
 
-import Papa from 'papaparse';
+import parse from 'csv-parse';
+import request from 'superagent';
 
 let styles = {};
 
@@ -27,19 +28,24 @@ export const TableViewer = React.createClass({
 	},
 
 	componentWillMount() {
-		const url = safeGetInToJS(this.props.atomEditData, ['currentVersionData', 'content', 'url']) || '';
-		const header = safeGetInToJS(this.props.atomEditData, ['currentVersionData', 'content', 'header']) || false;
-		const height = safeGetInToJS(this.props.atomEditData, ['currentVersionData', 'content', 'height']) || 400;
+		const url = safeGetInToJS(this.props.atomData, ['currentVersionData', 'content', 'url']) || '';
+		const header = safeGetInToJS(this.props.atomData, ['currentVersionData', 'content', 'header']) || false;
+		const height = safeGetInToJS(this.props.atomData, ['currentVersionData', 'content', 'height']) || 400;
 		this.setState({url, header, height});
 	},
 
 	loadCSV() {
 		const url = this.state.url;
-		Papa.parse(url, {
-			download: true,
-			header: false,
-			step: row => this.setState(update(this.state, {rows: {$push: row.data}}))
-		});
+		if (url) {
+			// const req = request.get(url, {withCredentials: false});
+			const req = request.get(url);
+			const config = {
+				relax_column_count: true,
+				trim: true
+			};
+			req.end((err, res) => parse(res.text, config, (err, rows) => this.setState({rows})));
+			// req.pipe(parser).on('data', row => this.setState(update(this.state, {rows: {$push: [row]}})));
+		}
 	},
 
 	componentDidMount() {
