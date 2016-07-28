@@ -112,6 +112,7 @@
     "compression": "1.6.2",
     "connect-mongo": "^1.1.0",
     "crypto-js": "^3.1.5",
+    "csv-parse": "^1.1.7",
     "dateformat": "^1.0.12",
     "decay": "^1.0.10",
     "diff": "^2.2.1",
