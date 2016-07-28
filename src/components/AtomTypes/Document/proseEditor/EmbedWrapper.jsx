@@ -32,6 +32,7 @@ export const EmbedWrapper = React.createClass({
 		} else if (this.props.align === 'full') {
 			style.display = 'block';
 			style.margin = '0 auto';
+			style.textAlign = 'center';
 		} else if (this.props.align === 'left') {
 			style.display = 'block';
 			style.float = 'left';

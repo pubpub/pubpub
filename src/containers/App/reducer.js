@@ -86,6 +86,7 @@ function setLoading(state) {
 }
 
 function unsetLoading(state, action) {
+	// This doesn't function well for routes that don't have a fetchdata function. THe 404 simply remains
 	return state.merge({
 		loading: false,
 		notFound: action.error === '404 Not Found',
