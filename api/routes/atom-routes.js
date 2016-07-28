@@ -370,10 +370,10 @@ export function getAtomEdit(req, res) {
 				 output.collab = true;
 			 }
 			 return res.status(201).json(output);
-	 	})
-	 .catch(function(err) {
-		 console.log('error', err)
-	 });
+		})
+		.catch(function(err) {
+			 console.log('error', err);
+		});
 
 	})
 	.catch(function(error) {
