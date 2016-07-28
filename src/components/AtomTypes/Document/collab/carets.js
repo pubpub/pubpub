@@ -110,10 +110,12 @@ export class ModCollabCarets {
 		// console.log('updateCaret');
 
 		let participant;// = _.findWhere(this.mod.participants, {id: caretPosition.id});
+		let participantIndex;
 		// find the first participant with this id
 		for (let index = this.mod.participants.length - 1; index >= 0; index--) {
 			if (this.mod.participants[index] && this.mod.participants[index].id === caretPosition.id) {
 				participant = this.mod.participants[index];
+				participantIndex = index;
 			}
 		}
 
@@ -149,7 +151,7 @@ export class ModCollabCarets {
 				posTo,
 				{
 					removeWhenEmpty: true,
-					className: 'user-bg-1'
+					className: `user-bg-${participantIndex}`
 				}
 			);
 		}
