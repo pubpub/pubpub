@@ -9,6 +9,10 @@ import {
 	GET_USER_SUCCESS,
 	GET_USER_FAIL,
 
+	SAVE_SETTINGS_LOAD,
+	SAVE_SETTINGS_SUCCESS,
+	SAVE_SETTINGS_FAIL,
+
 } from './actions';
 
 /*--------*/
@@ -48,6 +52,24 @@ function getUserFail(state, error) {
 	});
 }
 
+function saveSettingsLoad(state) {
+	return state.set('loading', true);
+}
+
+function saveSettingsSuccess(state, result) {
+
+	return state.merge({
+		loading: false,
+		error: undefined,
+	});
+}
+
+function saveSettingsFail(state, error) {
+	return state.merge({
+		loading: false,
+		error: error,
+	});
+}
 
 /*--------*/
 // Bind actions to specific reducing functions.
@@ -61,6 +83,13 @@ export default function reducer(state = defaultState, action) {
 		return getUserSuccess(state, action.result);
 	case GET_USER_FAIL:
 		return getUserFail(state, action.error);
+
+	case SAVE_SETTINGS_LOAD:
+		return saveSettingsLoad(state);
+	case SAVE_SETTINGS_SUCCESS:
+		return saveSettingsSuccess(state, action.result);
+	case SAVE_SETTINGS_FAIL:
+		return saveSettingsFail(state, action.error);
 
 	default:
 		return ensureImmutable(state);

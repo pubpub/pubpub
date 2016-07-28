@@ -15,12 +15,11 @@ export const AtomEditorHeader = React.createClass({
 		return (
 			<div className={'atom-editor-header'} style={styles.container}>
 				
-				<div className={'atom-editor-header-title-wrapper'}style={styles.titleWrapper}>
-					<h1 style={styles.title} onClick={this.props.openDetails}>{this.props.title}</h1>
-				</div>
+				<h1 style={styles.title} onClick={this.props.openDetails}>{this.props.title}</h1>
 				
 				<div style={styles.buttonWrapper}>
 					<div className={'button'} style={styles.button} onClick={this.props.saveVersionHandler}>Save Version</div>
+					<div className={'editor-participants'}></div>
 				</div>
 				
 			</div>
@@ -37,7 +36,7 @@ styles = {
 			display: 'block',
 		},
 	},
-	titleWrapper: {
+	title: {
 		fontSize: '2em',
 		padding: '.25em 1em .25em 0em',
 		display: 'table-cell',
@@ -47,13 +46,6 @@ styles = {
 			display: 'block',
 			padding: '.5em 0em',
 		},
-	},
-	title: {
-		display: 'inline-block',
-		margin: '0',
-		padding: '0',
-		fontSize: '1em',
-		marginRight: '20px',
 	},
 	buttonWrapper: {
 		display: 'table-cell',

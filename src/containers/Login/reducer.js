@@ -23,7 +23,7 @@ import {
 
 import {
 	SAVE_SETTINGS_SUCCESS,
-} from 'containers/UserSettings/actions';
+} from 'containers/UserProfile/actions';
 
 import {
 	EMAIL_VERIFICATION_SUCCESS,

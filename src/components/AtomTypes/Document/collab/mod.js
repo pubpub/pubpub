@@ -22,7 +22,7 @@ export class ModCollab {
 	updateParticipantList(participants) {
 		// const that = this;
 		const title_user_divs = document.getElementsByClassName('title-connected-user');
-		const menubar = document.getElementsByClassName('atom-editor-header-title-wrapper')[0];
+		const menubar = document.getElementsByClassName('editor-participants')[0];
 
 		if(!menubar){
 			console.log("No menu bar"); // This error should not happen, this is a hack to stop it
@@ -34,11 +34,11 @@ export class ModCollab {
 		}
 
 		for (let i = 0; i < participants.length; i++){
-			let appendStr = '<span class="ProseMirror-menuitem title-connected-user" style="height:36px; margin-left:3px">';
+			let appendStr = '<span class="ProseMirror-menuitem title-connected-user" style="padding: 5px 5px 5px 0px;">';
 			appendStr += '<div class="ProseMirror-icon-connected-user" title="' + participants[i].name +'"><span>';
 			appendStr += '<img style="vertical-align: text-top;" src="https://jake.pubpub.org/unsafe/fit-in/25x25/'+ participants[i].avatar_url+ '">';
 			appendStr +='</span></div></span>';
-			menubar.innerHTML = menubar.innerHTML +  appendStr;
+			menubar.innerHTML = menubar.innerHTML + appendStr;
 		}
 
 		const allSessionIds = [];

@@ -3,11 +3,15 @@ import {connect} from 'react-redux';
 import Radium from 'radium';
 import Helmet from 'react-helmet';
 import {safeGetInToJS} from 'utils/safeParse';
-import {getUser} from './actions';
+import {getUser, saveUserSettings} from './actions';
 import {NavContentWrapper} from 'components';
 
 import UserProfilePubs from './UserProfilePubs';
 import UserProfileJournals from './UserProfileJournals';
+
+import UserProfileSettingsProfile from './UserProfileSettingsProfile';
+import UserProfileSettingsAccount from './UserProfileSettingsAccount';
+import UserProfileSettingsNotifications from './UserProfileSettingsNotifications';
 
 // import {globalMessages} from 'utils/globalMessages';
 // import {FormattedMessage} from 'react-intl';
@@ -29,9 +33,21 @@ export const UserProfile = React.createClass({
 		}
 	},
 
+	saveSettings: function(settings) {
+		this.props.dispatch(saveUserSettings(settings));
+	},
+
 	render: function() {
-		const profileData = safeGetInToJS(this.props.profileData, ['profileData']) || {};
+		let profileData = safeGetInToJS(this.props.profileData, ['profileData']) || {};
+		const loginUserData = safeGetInToJS(this.props.loginData, ['userData']) || {};
 		const ownProfile = safeGetInToJS(this.props.loginData, ['userData', 'username']) === this.props.username;
+
+		if (ownProfile) {
+			profileData = {
+				...profileData,
+				...loginUserData,
+			};
+		}
 		const metaData = {
 			title: (profileData.name || profileData.username) + ' · PubPub',
 		};
@@ -44,7 +60,10 @@ export const UserProfile = React.createClass({
 		const ownProfileItems = ownProfile
 		? [
 			{ type: 'spacer' },
-			{ type: 'link', text: 'Settings', link: '/settings'}
+			{ type: 'title', text: 'Settings'},
+			{ type: 'link', text: 'Profile', link: '/user/' + this.props.username + '/profile', active: this.props.mode === 'profile'},
+			// { type: 'link', text: 'Account', link: '/user/' + this.props.username + '/account', active: this.props.mode === 'account'},
+			{ type: 'link', text: 'Notifications', link: '/user/' + this.props.username + '/notifications', active: this.props.mode === 'notifications' },
 		]
 		: [];
 		const navItems = [
@@ -78,7 +97,7 @@ export const UserProfile = React.createClass({
 						{links.filter((link)=> {
 							return !!profileData[link.key];
 						}).map((link, index)=> {
-							return <a className={'underlineOnHover'} style={[styles.link, index === 0 && styles.firstLink]} href={link.href}>{link.text}</a>;
+							return <a key={'link-' + index} className={'underlineOnHover'} style={[styles.link, index === 0 && styles.firstLink]} href={link.href}>{link.text}</a>;
 						})}
 					</div>
 				</div>
@@ -91,6 +110,27 @@ export const UserProfile = React.createClass({
 								<UserProfileJournals
 									profileData={this.props.profileData}
 									ownProfile={ownProfile}/>
+							);
+						case 'account':
+							return (
+								<UserProfileSettingsAccount
+									settingsData={this.props.profileData}
+									loginData={this.props.loginData}
+									saveSettingsHandler={this.saveSettings}/>
+							);
+						case 'notifications':
+							return (
+								<UserProfileSettingsNotifications
+									settingsData={this.props.profileData}
+									loginData={this.props.loginData}
+									saveSettingsHandler={this.saveSettings}/>
+							);
+						case 'profile':
+							return (
+								<UserProfileSettingsProfile
+									settingsData={this.props.profileData}
+									loginData={this.props.loginData}
+									saveSettingsHandler={this.saveSettings}/>
 							);
 						default:
 							return (
