@@ -23,6 +23,7 @@ export function login(req, res) {
 			locale: req.user.locale,
 			verifiedEmail: req.user.verifiedEmail,
 			bio: req.user.bio,
+			publicEmail: req.user.publicEmail,
 			website: req.user.website,
 			github: req.user.github,
 			orcid: req.user.orcid,

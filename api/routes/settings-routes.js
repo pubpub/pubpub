@@ -15,6 +15,7 @@ export function saveUserSettings(req, res) {
 		result.lastName = newSettings.lastName;
 		result.name = result.firstName + ' ' + result.lastName;
 		result.image = newSettings.image;
+		result.publicEmail = newSettings.publicEmail;
 		result.bio = newSettings.bio && newSettings.bio.substring(0, 140);
 		result.website = newSettings.website;
 		result.twitter = newSettings.twitter;
@@ -30,6 +31,7 @@ export function saveUserSettings(req, res) {
 			name: savedResult.name,
 			image: savedResult.image,
 			bio: savedResult.bio,
+			publicEmail: savedResult.publicEmail,
 			website: savedResult.website,
 			twitter: savedResult.twitter,
 			orcid: savedResult.orcid,

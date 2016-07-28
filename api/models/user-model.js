@@ -13,6 +13,7 @@ const userSchema = new Schema({
 	image: { type: String }, // User profile image
 	
 	bio: { type: String }, // Self assigned bio
+	publicEmail: { type: String }, // Publicly listed email
 	github: { type: String }, // Github account
 	orcid: { type: String }, // orcid number
 	twitter: { type: String }, // twitter handle
@@ -21,8 +22,6 @@ const userSchema = new Schema({
 
 	yays: [ { type: ObjectId, ref: 'Discussion' } ], // Yays cast
 	nays: [ { type: ObjectId, ref: 'Discussion' } ], // Nays cast
-
-	emailPublic: { type: Boolean }, // Display email publicly?
 
 	verificationHash: { type: String },
 	verifiedEmail: { type: Boolean },

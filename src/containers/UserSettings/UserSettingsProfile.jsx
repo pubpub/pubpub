@@ -39,6 +39,7 @@ export const UserSettingsProfile = React.createClass({
 			lastName: this.refs.lastName.value,
 			image: this.state.userImageURL,
 			bio: this.refs.bio.value,
+			publicEmail: this.refs.publicEmail.value,
 			website: this.refs.website.value,
 			twitter: this.refs.twitter.value,
 			orcid: this.refs.orcid.value,
@@ -105,6 +106,13 @@ export const UserSettingsProfile = React.createClass({
 						<div className={'light-color inputSubtext'}>
 							{this.state.bio.length} / 140
 						</div>
+					</div>
+
+					<div>
+						<label htmlFor={'publicEmail'}>
+							Public Email
+						</label>
+						<input ref={'publicEmail'} id={'publicEmail'} name={'publicEmail'} type="text" style={styles.input} defaultValue={userData.publicEmail}/>
 					</div>
 
 					<div>

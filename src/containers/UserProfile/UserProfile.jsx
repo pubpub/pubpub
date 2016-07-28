@@ -55,6 +55,7 @@ export const UserProfile = React.createClass({
 		];
 
 		const links = [
+			{key: 'publicEmail', href: 'mailto:' + profileData.publicEmail, text: <span>{profileData.publicEmail}</span>},
 			{key: 'website', href: profileData.website, text: <span>{profileData.website}</span>},
 			{key: 'twitter', href: 'https://twitter.com/' + profileData.twitter, text: <span>@{profileData.twitter}</span>},
 			{key: 'github', href: 'https://github.com/' + profileData.github, text: <span>github.com/{profileData.github}</span>},

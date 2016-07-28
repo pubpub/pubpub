@@ -96,6 +96,7 @@ export function signupDetails(req, res) {
 		result.bio = req.body.bio && req.body.bio.substring(0, 140);
 		result.website = req.body.website;
 		result.twitter = req.body.twitter;
+		result.publicEmail = req.body.publicEmail;
 		result.orcid = req.body.orcid;
 		result.github = req.body.github;
 		result.googleScholar = req.body.googleScholar;
@@ -107,6 +108,7 @@ export function signupDetails(req, res) {
 			bio: savedResult.bio,
 			website: savedResult.website,
 			twitter: savedResult.twitter,
+			publicEmail: savedResult.publicEmail,
 			orcid: savedResult.orcid,
 			github: savedResult.github,
 			googleScholar: savedResult.googleScholar,

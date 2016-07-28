@@ -44,6 +44,7 @@ export const SignUpDetails = React.createClass({
 			image: this.state.userImageURL,
 			bio: this.refs.bio.value,
 			website: this.refs.website.value,
+			publicEmail: this.refs.publicEmail.value,
 			twitter: this.refs.twitter.value,
 			orcid: this.refs.orcid.value,
 			github: this.refs.github.value,
@@ -106,6 +107,13 @@ export const SignUpDetails = React.createClass({
 						<div className={'light-color inputSubtext'}>
 							{this.state.bio.length} / 140
 						</div>
+					</div>
+
+					<div>
+						<label htmlFor={'publicEmail'}>
+							Public Email
+						</label>
+						<input ref={'publicEmail'} id={'publicEmail'} name={'publicEmail'} type="text" style={styles.input} defaultValue={userData.publicEmail}/>
 					</div>
 
 					<div>
