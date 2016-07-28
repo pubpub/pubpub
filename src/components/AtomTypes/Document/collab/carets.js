@@ -111,10 +111,10 @@ export class ModCollabCarets {
 		console.log('updateCaret');
 
 		let participant;// = _.findWhere(this.mod.participants, {id: caretPosition.id});
-		for (let i = 0; i = this.mod.participants.length; i++){
-			if (this.mod.participants[i].id === caretPosition.id){
+		//find the first participant with this id
+		for (let i = this.mod.participants.length-1; i >= 0; i--) {
+			if (this.mod.participants[i] && this.mod.participants[i].id === caretPosition.id) {
 				participant = this.mod.participants[i];
-				break;
 			}
 		}
 
