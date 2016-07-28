@@ -87,7 +87,7 @@ class Body extends Block {
 
 export const schema = new Schema({
 	nodes: {
-		doc: {type: Doc, content: 'body'},
+		doc: {type: Doc, content: 'block+'},
 		body: {type: Body, content: 'block+'},
 
 		paragraph: {type: Paragraph, content: 'inline<_>*', group: 'block'},
