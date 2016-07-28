@@ -95,13 +95,15 @@ export const DocumentEditor = React.createClass({
 
 		// Collaboration Authentication information
 		const atomID = safeGetInToJS(this.props.atomEditData, ['atomData', '_id']);
-		collab.doc = {id: atomID};
+		collab.doc_id = atomID;
 		const user = safeGetInToJS(this.props.loginData, ['userData', 'username']);
 		collab.username = user;
-		collab.doc_id = atomID;
 		collab.token = token;
+		const img = safeGetInToJS(this.props.loginData, ['userData', 'image']);
+		collab.img = img;
 
 
+		collab.doc = {id: atomID};
 
 		this.collab = collab;
 
