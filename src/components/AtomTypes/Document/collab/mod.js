@@ -29,7 +29,11 @@ export class ModCollab {
 		}
 
 		for (let i = 0; i < participants.length; i++){
-			menubar.innerHTML = menubar.innerHTML + '<span class="ProseMirror-menuitem menuitem-connected-user"><div class="ProseMirror-icon" title="' + participants[i].name +'"><span>'+ participants[i].name.substr(0,2)+ '</span></div></span>';
+			let appendStr = '<span class="ProseMirror-menuitem menuitem-connected-user" style="height:36px">';
+			appendStr += '<div class="ProseMirror-icon-connected-user" title="' + participants[i].name +'"><span>';
+			appendStr += '<img style="vertical-align: text-top;" src="https://jake.pubpub.org/unsafe/fit-in/25x25/'+ participants[i].avatar_url+ '">';
+			appendStr +='</span></div></span>';
+			menubar.innerHTML = menubar.innerHTML +  appendStr;
 		}
 
 		const allSessionIds = [];
