@@ -10,7 +10,7 @@ let styles;
 
 export const AppVerified = React.createClass({
 	propTypes: {
-		isNotVerified: PropTypes.bool,
+		isVerified: PropTypes.bool,
 		handleResendEmail: PropTypes.func,
 	},
 
@@ -30,7 +30,7 @@ export const AppVerified = React.createClass({
 	},
 
 	render: function() {
-		if (!this.props.isNotVerified) { return null; }
+		if (this.props.isVerified) { return null; }
 		return (
 			<div style={styles.container}>
 				<div style={styles.content}>

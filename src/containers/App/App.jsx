@@ -86,7 +86,7 @@ export const App = React.createClass({
 					<Helmet {...metaData} />
 					<AppLoadingBar color={'#BBBDC0'} show={this.props.appData.get('loading')} />
 					<AppHeader loginData={this.props.loginData} path={this.props.path} createDocument={this.createDocument} logoutHandler={this.logoutHandler}/>
-					<AppVerified isNotVerified={notVerified} handleResendEmail={this.handleResendEmail}/>
+					<AppVerified isVerified={!notVerified} handleResendEmail={this.handleResendEmail}/>
 
 					{notFound && <NotFound />}
 					{!notFound && <div className="content"> {this.props.children} </div>}
