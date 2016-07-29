@@ -25,6 +25,9 @@ import ReferenceViewer from './Reference/ReferenceViewer';
 import HighlightEditor from './Highlight/HighlightEditor';
 import HighlightViewer from './Highlight/HighlightViewer';
 
+import PDFEditor from './PDF/PDFEditor';
+import PDFViewer from './PDF/PDFViewer';
+
 export default {
 	image: {
 		editor: ImageEditor,
@@ -61,5 +64,9 @@ export default {
 	highlight: {
 		editor: HighlightEditor,
 		viewer: HighlightViewer
+	},
+	pdf: {
+		editor: PDFEditor,
+		viewer: PDFViewer
 	}
 };

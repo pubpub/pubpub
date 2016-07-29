@@ -76,7 +76,7 @@ const Landing = React.createClass({
 		case 'webm':
 			atomType = 'video'; break;
 		case 'csv':
-		 atomType = 'table'; break;
+			atomType = 'table'; break;
 		default:
 			break;
 		}

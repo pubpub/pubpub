@@ -48,6 +48,13 @@ module.exports = mongoose.model('Version', versionSchema);
 // }
 // -----------
 
+// PDF:
+// -----------
+// content: {
+// 	url:
+// }
+// -----------
+
 // Reference:
 // -----------
 // content: {

@@ -155,6 +155,7 @@
     "passport": "^0.3.0",
     "passport-local": "^1.0.0",
     "passport-local-mongoose": "^4.0.0",
+    "pdfjs": "^1.0.0-alpha.1",
     "piping": "^0.3.2",
     "postcss": "^5.0.12",
     "pretty-error": "^2.0.0",
