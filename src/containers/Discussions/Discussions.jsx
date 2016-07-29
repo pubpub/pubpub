@@ -143,15 +143,17 @@ export const Discussions = React.createClass({
 					}
 				}} />
 
-
-				<div>
-					<div className={'showChildOnHover'} style={styles.replyToWrapper}>
-						Replying to comment by {replyToData.authorsData[0].source.name}
-						<div className={'hoverChild'} style={styles.replyToPreview}>
-							<DiscussionItem discussionData={replyToData} index={'current-reply'}/>
+				{replyToData && 
+					<div>
+						<div className={'showChildOnHover'} style={styles.replyToWrapper}>
+							Replying to comment by {replyToData.authorsData[0].source.name}
+							<div className={'hoverChild'} style={styles.replyToPreview}>
+								<DiscussionItem discussionData={replyToData} index={'current-reply'}/>
+							</div>
 						</div>
 					</div>
-				</div>
+				}
+				
 
 				<div style={styles.proseInput}>
 				
