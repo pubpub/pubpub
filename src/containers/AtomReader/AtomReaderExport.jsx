@@ -26,6 +26,7 @@ export const AtomReaderExport = React.createClass({
 		const versionID = safeGetInToJS(this.props.atomData, ['currentVersionData', '_id']);
 		request.get('/api/generatePDF?versionID=' + versionID)
 		.end((err, response)=>{
+			if (err) {return undefined;} 
 			window.location = response.body;
 			this.setState({
 				renderingPDF: false,
@@ -39,6 +40,7 @@ export const AtomReaderExport = React.createClass({
 		const versionID = safeGetInToJS(this.props.atomData, ['currentVersionData', '_id']);
 		request.get('/api/generateMarkdown?versionID=' + versionID)
 		.end((err, response)=>{
+			if (err) {return undefined;} 
 			window.location = response.body;
 			this.setState({
 				renderingMarkdown: false,

@@ -35,7 +35,7 @@ export function generatePDFFromJSON(docJSON, title, versionDate, authors) {
 	const css = fs.readFileSync(__dirname + '/../../static/css/basePub.css', 'utf8');
 	const pubHTML = ReactDOMServer.renderToStaticMarkup(
 		<StyleRoot radiumConfig={{userAgent: 'Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36'}}>
-				<div id={'atom-reader'}>
+				<div id={'atom-reader atom-reader-meta'}>
 					<AtomReaderHeader
 						title={title}
 						authors={authors}

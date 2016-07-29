@@ -2,9 +2,12 @@ const app = require('../api');
 
 const Atom = require('../models').Atom;
 const Version = require('../models').Version;
+const User = require('../models').User;
+const Link = require('../models').Link;
 const Promise = require('bluebird');
 const Request = require('request-promise');
 import {uploadLocalFile} from '../services/aws';
+import React from 'react';
 import {generateMarkdownFile, generatePDFFromJSON} from '../services/exporters';
 
 
@@ -85,8 +88,19 @@ export function generatePDF(req, res) {
 
 	Version.findOne({_id: versionID}).populate('parent').exec()
 	.then(function(version) {
+		const findAuthors = Link.find({destination: version.parent._id, type: 'author'}).populate({
+			path: 'source',
+			model: User,
+			select: 'username name firstName lastName image ',
+		}).lean().exec();
+		return [version, findAuthors];
+	})
+	.spread(function(version, authorsData) {
 		if (!version) { throw new Error('Version does not exist'); }
-		return generatePDFFromJSON(version.content.docJSON, version.parent.title, version.createDate, 'Jane Doe and Marcus Aurilie');
+		const authorList = version.parent.customAuthorString ? [<a>{version.parent.customAuthorString}</a>] : authorsData.map((item, index)=> {
+			return <a key={'author-' + index} className={'author'}>{item.source.name}</a>;
+		});
+		return generatePDFFromJSON(version.content.docJSON, version.parent.title, version.createDate, authorList);
 	})
 	.then(function(pdfFile) {
 		return uploadLocalFile(pdfFile);
@@ -99,7 +113,7 @@ export function generatePDF(req, res) {
 		return res.status(201).json(pdfFileURL);
 	})
 	.catch(function(error) {
-		console.log('Error generating Markdown file. ', error);
+		console.log('Error generating PDF file. ', error);
 		return res.status(500).json(error);
 	});
 }
