@@ -22,6 +22,7 @@ export class ModServerCommunications {
 	createWSConnection() {
 		const that = this;
 		const websocketProtocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+		// const websocketProtocol = 'wss:';
 
 		const wsServer = collabServerUrl;
 

@@ -8,10 +8,12 @@ const environment = {
 	development: {
 		isProduction: false,
 		collabServerUrl: 'james.pubpub.org',
+		// collabServerUrl: 'localhost:8000',
 	},
 	production: {
 		isProduction: true,
 		collabServerUrl: 'james.pubpub.org',
+		// collabServerUrl: 'localhost:8000',
 	}
 }[env];
 

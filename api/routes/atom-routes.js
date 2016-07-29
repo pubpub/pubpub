@@ -361,7 +361,7 @@ export function getAtomEdit(req, res) {
 		// 	output.atomData.token = firebaseTokenGen(req.user.username, slug, false); // the false should be {isReader}
 		// }
 
-		return request.post(process.env.COLLAB_SERVER_URL + '/authenticate')
+		return request.post('https://' + process.env.COLLAB_SERVER_URL + '/authenticate')
 		.send({
 			user: req.user.username,
 			id: atomResult._id,
