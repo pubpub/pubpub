@@ -33,12 +33,31 @@ export const Discussions = React.createClass({
 
 	getInitialState() {
 		return {
+			replyToID: undefined,
+			rootReply: undefined,
 		};
 	},
 
+	componentWillMount() {
+		const atomData = safeGetInToJS(this.props.atomData, ['atomData']) || [];
+		const discussionsData = safeGetInToJS(this.props.atomData, ['discussionsData']) || [];
+		const rootReply = discussionsData.length ? discussionsData[0].linkData.metadata.rootReply : atomData._id;
+
+		this.setState({
+			replyToID: atomData._id,
+			rootReply: rootReply,
+		});
+	},
 
 	componentWillReceiveProps(nextProps) {
+		const atomData = safeGetInToJS(nextProps.atomData, ['atomData']) || [];
+		const discussionsData = safeGetInToJS(nextProps.atomData, ['discussionsData']) || [];
+		const rootReply = discussionsData.length ? discussionsData[0].linkData.metadata.rootReply : atomData._id;
 
+		this.setState({
+			replyToID: atomData._id,
+			rootReply: rootReply,
+		});
 	},
 
 	componentDidMount() {
@@ -88,12 +107,21 @@ export const Discussions = React.createClass({
 	// 	this.props.dispatch(archiveDiscussion(objectID));
 	// },
 
+	setReplyTo: function(replyToID) {
+		// rootReplyID is set in componentDidMount
+		this.setState({replyToID: replyToID});
+	},
+
 
 	render: function() {
 		const atomData = safeGetInToJS(this.props.atomData, ['atomData']) || [];
 		const discussionsData = safeGetInToJS(this.props.atomData, ['discussionsData']) || [];
 		
+		let replyToData;
 		const tempArray = discussionsData.map((item)=> {
+			if (item.atomData._id === this.state.replyToID) {
+				replyToData = {...item};
+			}
 			return item;
 		});
 		tempArray.forEach(function(index) {
@@ -115,6 +143,16 @@ export const Discussions = React.createClass({
 					}
 				}} />
 
+
+				<div>
+					<div className={'showChildOnHover'} style={styles.replyToWrapper}>
+						Replying to comment by {replyToData.authorsData[0].source.name}
+						<div className={'hoverChild'} style={styles.replyToPreview}>
+							<DiscussionItem discussionData={replyToData} index={'current-reply'}/>
+						</div>
+					</div>
+				</div>
+
 				<div style={styles.proseInput}>
 				
 					<Media/>
@@ -128,7 +166,7 @@ export const Discussions = React.createClass({
 
 				<div>
 					{topChildren.map((discussion, index)=> {
-						return <DiscussionItem discussionData={discussion} index={discussion.linkData._id} key={'discussion-' + index}/>;
+						return <DiscussionItem discussionData={discussion} setReplyTo={this.setReplyTo} index={discussion.linkData._id} key={'discussion-' + index}/>;
 					})}
 				</div>
 
@@ -222,6 +260,17 @@ styles = {
 		fontSize: '0.75em',
 		cursor: 'pointer',
 		color: '#58585B',
+	},
+	replyToWrapper: {
+		position: 'relative',
+		margin: '1em 0em -1em 0em',
+	},
+	replyToPreview: {
+		position: 'absolute',
+		backgroundColor: 'white',
+		padding: '1em',
+		boxShadow: '0px 1px 3px #58585B',
+		zIndex: '5',
 	},
 
 };

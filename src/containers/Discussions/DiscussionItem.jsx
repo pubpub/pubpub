@@ -13,6 +13,7 @@ let styles = {};
 export const DiscussionItem = React.createClass({
 	propTypes: {
 		discussionData: PropTypes.object,
+		setReplyTo: PropTypes.func,
 		index: PropTypes.string,
 	},
 
@@ -22,7 +23,7 @@ export const DiscussionItem = React.createClass({
 	},
 
 	setReply: function() {
-		console.log('replying');
+		this.props.setReplyTo(this.props.discussionData.atomData._id);
 	},
 
 	setFlag: function() {
@@ -69,13 +70,13 @@ export const DiscussionItem = React.createClass({
 				<div style={styles.discussionFooter}>
 					<Link style={globalStyles.link} to={'/pub/' + versionData.parent}><span className={'underlineOnHover'} style={styles.discussionFooterItem}>{dateFormat(date, 'mmm dd, yyyy h:MM TT')}</span></Link>
 					<span className={'underlineOnHover'} style={styles.discussionFooterItem} onClick={this.setReply}>reply</span>
-					<span className={'underlineOnHover'} style={styles.discussionFooterItem} onClick={this.setFlag}>flag</span>
+					{/* <span className={'underlineOnHover'} style={styles.discussionFooterItem} onClick={this.setFlag}>flag</span> */}
 					<Link style={globalStyles.link} to={'/pub/' + versionData.parent}><span className={'underlineOnHover'} style={styles.discussionFooterItem}>permalink</span></Link>
 				</div>
 
 				<div style={styles.children}>
 					{children.map((child, childIndex)=> {
-						return <WrappedDiscussionItem discussionData={child} index={child.linkData._id} key={child.linkData._id}/>;
+						return <WrappedDiscussionItem discussionData={child} setReplyTo={this.props.setReplyTo} index={child.linkData._id} key={child.linkData._id}/>;
 					})}
 				</div>
 				

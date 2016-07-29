@@ -158,7 +158,7 @@ export const AtomReader = React.createClass({
 		if (atomData.type !== 'document') { navItems.pop(); }
 
 		const authorsData = safeGetInToJS(this.props.atomData, ['authorsData']) || [];
-		const authorList = atomData.customAuthorString ? [<Link to={'/pub/' + this.props.slug + '/contributors'}>{atomData.customAuthorString}</Link>] : authorsData.map((item, index)=> {
+		const authorList = atomData.customAuthorString ? [<Link to={'/pub/' + this.props.slug + '/contributors'} key={'author-0'}>{atomData.customAuthorString}</Link>] : authorsData.map((item, index)=> {
 			return <Link to={'/user/' + item.source.username} key={'author-' + index} className={'author'}>{item.source.name}</Link>;
 		});
 
