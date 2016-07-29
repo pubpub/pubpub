@@ -3,6 +3,7 @@ import Radium from 'radium';
 import {safeGetInToJS} from 'utils/safeParse';
 import {globalStyles} from 'utils/styleConstants';
 import {Loader} from 'components';
+import request from 'superagent';
 
 let styles;
 
@@ -11,21 +12,64 @@ export const AtomReaderExport = React.createClass({
 		atomData: PropTypes.object,
 	},
 
+	getInitialState() {
+		return {
+			renderingPDF: false,
+			renderingMarkdown: false,
+			pdfURL: undefined,
+			markdownURL: undefined,
+		};
+	},
+
+	generatePDF: function() {
+		this.setState({renderingPDF: true});
+		const versionID = safeGetInToJS(this.props.atomData, ['currentVersionData', '_id']);
+		request.get('/api/generatePDF?versionID=' + versionID)
+		.end((err, response)=>{
+			window.location = response.body;
+			this.setState({
+				renderingPDF: false,
+				pdfURL: response.body,
+			});
+		});
+	},
+
+	generateMarkdown: function() {
+		this.setState({renderingMarkdown: true});
+		const versionID = safeGetInToJS(this.props.atomData, ['currentVersionData', '_id']);
+		request.get('/api/generateMarkdown?versionID=' + versionID)
+		.end((err, response)=>{
+			window.location = response.body;
+			this.setState({
+				renderingMarkdown: false,
+				markdownURL: response.body,
+			});
+		});
+	},
+
 	render: function() {
-		const markdownURL = safeGetInToJS(this.props.atomData, ['currentVersionData', 'content', 'markdownFile']);
-		const pdfURL = safeGetInToJS(this.props.atomData, ['currentVersionData', 'content', 'PDFFile']);
+		const pdfURL = safeGetInToJS(this.props.atomData, ['currentVersionData', 'content', 'PDFFile']) || this.state.pdfURL;
+		const markdownURL = safeGetInToJS(this.props.atomData, ['currentVersionData', 'content', 'markdownFile']) || this.state.markdownURL;
 
 		return (
 			<div>
 				
 				<h2 className={'normalWeight'}>Export</h2>
 
-				<a href={pdfURL} style={globalStyles.link}><div className={'button'} style={[styles.downloadButton, !pdfURL && styles.downloadDisabled]}>Download PDF</div></a>
-				<a href={markdownURL} style={globalStyles.link}><div className={'button'} style={[styles.downloadButton, !markdownURL && styles.downloadDisabled]}>Download Markdown</div></a>
+				{!!pdfURL 
+					? <a href={pdfURL} style={globalStyles.link}><div className={'button'} style={styles.downloadButton}>Download PDF</div></a>
+					: <a onClick={this.generatePDF} style={[this.state.renderingPDF && styles.downloadDisabled]}><div className={'button'} style={styles.downloadButton}>Download PDF</div></a>
+				}
+
+				{!!markdownURL 
+					? <a href={markdownURL} style={globalStyles.link}><div className={'button'} style={styles.downloadButton}>Download Markdown</div></a>
+					: <a onClick={this.generateMarkdown} style={[this.state.renderingMarkdown && styles.downloadDisabled]}><div className={'button'} style={styles.downloadButton}>Download Markdown</div></a>
+				}
+				
 				{/* <h3>Download XML</h3> */}
 
-				{(!pdfURL || !markdownURL) &&
-					<div>Generating files... <Loader loading={true}/></div>
+				{(this.state.renderingPDF || this.state.renderingMarkdown) &&
+					<div>Generating file... <Loader loading={true}/></div>
 				}
 			</div>
 		);

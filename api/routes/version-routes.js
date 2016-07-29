@@ -119,7 +119,7 @@ export function generateMarkdown(req, res) {
 		return [markdownFileURL, Version.update({ _id: versionID }, { $set: { 'content.markdownFile': markdownFileURL }}).exec()];
 	})
 	.spread(function(markdownFileURL, updateResult) {
-		return res.status(201).redirect(markdownFileURL);
+		return res.status(201).json(markdownFileURL);
 	})
 	.catch(function(error) {
 		console.log('Error generating Markdown file. ', error);
@@ -145,7 +145,7 @@ export function generatePDF(req, res) {
 		return [pdfFileURL, Version.update({ _id: versionID }, { $set: { 'content.PDFFile': pdfFileURL }}).exec()];
 	})
 	.spread(function(pdfFileURL, updateResult) {
-		return res.status(201).redirect(pdfFileURL);
+		return res.status(201).json(pdfFileURL);
 	})
 	.catch(function(error) {
 		console.log('Error generating Markdown file. ', error);
