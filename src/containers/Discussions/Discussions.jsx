@@ -90,6 +90,7 @@ export const Discussions = React.createClass({
 
 
 	render: function() {
+		const atomData = safeGetInToJS(this.props.atomData, ['atomData']) || [];
 		const discussionsData = safeGetInToJS(this.props.atomData, ['discussionsData']) || [];
 		
 		const tempArray = discussionsData.map((item)=> {
@@ -102,9 +103,8 @@ export const Discussions = React.createClass({
 			return index;
 		});
 		const topChildren = tempArray.filter((index)=> {
-			return index.linkData.destination === index.linkData.metadata.rootReply;
+			return index.linkData.destination === atomData._id;	
 		});
-		
 
 		return (
 			<div style={styles.container}>

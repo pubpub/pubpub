@@ -222,10 +222,15 @@ export function getAtomData(req, res) {
 		});
 
 		if (!meta || meta === 'discussions') {
-			getDiscussions = Link.find({'metadata.rootReply': atomResult._id, type: 'reply'}).populate({
-				path: 'source',
-				model: 'Atom',
-			}).exec()
+			// See if the current atom is a reply to anything else
+			getDiscussions = Link.findOne({type: 'reply', source: atomResult._id}).exec()
+			.then(function(replyToLink) {
+				const rootID = replyToLink ? replyToLink.metadata.rootReply : atomResult._id;
+				return Link.find({'metadata.rootReply': rootID, type: 'reply'}).populate({
+					path: 'source',
+					model: 'Atom',
+				}).exec();
+			})
 			.then(function(discussionLinks) {
 				const getDiscussionVersions = discussionLinks.map((discussionLink)=> {
 					const versionID = discussionLink.source.versions[discussionLink.source.versions.length - 1];

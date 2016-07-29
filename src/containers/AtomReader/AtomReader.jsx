@@ -125,7 +125,8 @@ export const AtomReader = React.createClass({
 		const metaData = {};
 		const showDiscussions = !this.props.meta && (this.state.showDiscussions && !this.state.showTOC || this.state.showDiscussions && this.state.lastCliked === 'discussions');
 		const showTOC = !this.props.meta && (this.state.showTOC && !this.state.showDiscussions || this.state.showTOC && this.state.lastCliked === 'toc');
-
+		const discussionsData = safeGetInToJS(this.props.atomData, ['discussionsData']) || [];
+		
 		const atomData = safeGetInToJS(this.props.atomData, ['atomData']) || {};
 		const contributorsData = safeGetInToJS(this.props.atomData, ['contributorsData']) || [];
 		const currentVersionContent = safeGetInToJS(this.props.atomData, ['currentVersionData', 'content']) || {};

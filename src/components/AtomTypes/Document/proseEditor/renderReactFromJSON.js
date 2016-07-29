@@ -80,7 +80,7 @@ export const renderReactFromJSON = function(item, isRoot) {
 		return (
 			<div>
 				{content}
-				{Object.keys(citeCounts).length && 
+				{!!Object.keys(citeCounts).length && 
 					<h1 className={'references-header'}>References</h1>
 				}
 				{Object.keys(citeCounts).sort((foo, bar)=>{

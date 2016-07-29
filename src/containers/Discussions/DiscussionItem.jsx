@@ -1,21 +1,14 @@
 import React, {PropTypes} from 'react';
-import {connect} from 'react-redux';
-import Radium, {Style} from 'radium';
-import {safeGetInToJS} from 'utils/safeParse';
+import Radium from 'radium';
+// import {safeGetInToJS} from 'utils/safeParse';
 import dateFormat from 'dateformat';
-
-import {Media} from 'containers';
-import {schema} from 'components/AtomTypes/Document/proseEditor';
+import { Link } from 'react-router';
 import {renderReactFromJSON} from 'components/AtomTypes/Document/proseEditor';
-import {StoppableSubscription} from 'subscription';
-
-import {getDiscussionsData} from './actions';
-
+import {globalStyles} from 'utils/styleConstants';
 // import {globalMessages} from 'utils/globalMessages';
 // import {FormattedMessage} from 'react-intl';
 
 let styles = {};
-let pm;
 
 export const DiscussionItem = React.createClass({
 	propTypes: {
@@ -69,12 +62,12 @@ export const DiscussionItem = React.createClass({
 					<span className={'underlineOnHover'} style={styles.discussionFooterItem}>{dateFormat(date, 'mmm dd, yyyy h:MM TT')}</span>
 					<span className={'underlineOnHover'} style={styles.discussionFooterItem}>reply</span>
 					<span className={'underlineOnHover'} style={styles.discussionFooterItem}>flag</span>
-					<span className={'underlineOnHover'} style={styles.discussionFooterItem}>permalink</span>
+					<Link style={globalStyles.link} to={'/pub/' + versionData.parent}><span className={'underlineOnHover'} style={styles.discussionFooterItem}>permalink</span></Link>
 				</div>
 
 				<div style={styles.children}>
 					{children.map((child, childIndex)=> {
-						return <WrappedDiscussionItem discussionData={child} index={child.linkData._id} key={child.linkData._id}/>
+						return <WrappedDiscussionItem discussionData={child} index={child.linkData._id} key={child.linkData._id}/>;
 					})}
 				</div>
 				
