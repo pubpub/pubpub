@@ -79,6 +79,12 @@ body {
 	pointer-events: auto;
 }
 
+@media print {
+	.hoverChild {
+		opacity: 0 !important;
+	}
+}
+
 .slideChildOnHover .slideChild {
 	transform: translate3d(-100%,0,0);
 	transition: .1s ease-in-out transform;
