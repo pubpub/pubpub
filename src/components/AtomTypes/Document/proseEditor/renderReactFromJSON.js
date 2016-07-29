@@ -1,11 +1,18 @@
 import React from 'react';
 import EmbedWrapper from './EmbedWrapper';
 
-const citeCounts = {};
+let citeCounts = {};
+let citeObjects = {};
 let currentCiteCount = 1;
 
 export const renderReactFromJSON = function(item, isRoot) {
 	if (!item) {return null;}
+
+	if (isRoot) {
+		citeCounts = {};
+		citeObjects = {};
+		currentCiteCount = 1;
+	}
 
 	const content = item.map((node, index)=>{
 		switch (node.type) {
@@ -61,6 +68,7 @@ export const renderReactFromJSON = function(item, isRoot) {
 			} else if (node.attrs.mode === 'cite') {
 				citeCount = currentCiteCount++;
 				citeCounts[node.attrs.data._id] = citeCount;
+				citeObjects[node.attrs.data._id] = node.attrs.data;
 			}
 			return <EmbedWrapper {...node.attrs} key={index} citeCount={citeCount}/>;
 		default:
@@ -69,13 +77,26 @@ export const renderReactFromJSON = function(item, isRoot) {
 	});
 
 	if (isRoot) {
-		// return (
-		// 	<div>
-		// 		{content}
-		// 		<h1>References</h1>
-		// 	</div>
-		// );
-		return content;
+		return (
+			<div>
+				{content}
+				{Object.keys(citeCounts).length && 
+					<h1 className={'references-header'}>References</h1>
+				}
+				{Object.keys(citeCounts).sort((foo, bar)=>{
+					if (citeCounts[foo] > citeCounts[bar]) { return 1; }
+					if (citeCounts[foo] < citeCounts[bar]) { return -1; }
+					return 0;
+				}).map((countID, index)=>{
+					return (
+						<div key={'reference-list-item-' + index}>
+							<span className={'reference-number'}>[{index + 1}]</span>
+							<EmbedWrapper data={citeObjects[countID]} align={'inline'}/>
+						</div>
+					);
+				})}
+			</div>
+		);
 	}	
 	return content;
 };

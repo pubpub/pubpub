@@ -84,6 +84,7 @@
 .atom-reader a {
 	color: inherit;
 }
+
 .atom-reader #pub-references {
 	border-top: 1px solid #eee;
 }
@@ -94,9 +95,13 @@
 	margin: .5em;
 }
 .atom-reader .reference-number {
-	color: #222;
-	padding-right: 10px;
-	font-size: 1em;
+	color: #808284;
+	padding-right: 1em;
+	font-size: 0.9em;
+}
+.atom-reply .references-header {
+	font-size: 1.2em;
+	letter-spacing: -1px;
 }
 
 .atom-reader hr {

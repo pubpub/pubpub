@@ -42,7 +42,7 @@ export function generatePDFFromJSON(docJSON, title, versionDate, authors) {
 						authors={authors}
 						versionDate={String(versionDate)} />
 
-					{renderReactFromJSON(docJSON.content)}
+					{renderReactFromJSON(docJSON.content, true)}
 				</div>	
 		</StyleRoot>
 	);

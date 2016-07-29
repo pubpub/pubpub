@@ -8,7 +8,6 @@ import {globalStyles} from 'utils/styleConstants';
 import {Media} from 'containers';
 import {schema} from 'components/AtomTypes/Document/proseEditor';
 import {License} from 'components';
-import {renderReactFromJSON} from 'components/AtomTypes/Document/proseEditor';
 import {StoppableSubscription} from 'subscription';
 
 import {getDiscussionsData} from './actions';

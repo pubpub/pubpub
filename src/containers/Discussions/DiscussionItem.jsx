@@ -63,7 +63,7 @@ export const DiscussionItem = React.createClass({
 					</div>
 				</div>
 				<div className={'atom-reply'} style={styles.discussionContent}>
-					{renderReactFromJSON(docJSON && docJSON.content)}
+					{renderReactFromJSON(docJSON && docJSON.content, true)}
 				</div>
 				<div style={styles.discussionFooter}>
 					<span className={'underlineOnHover'} style={styles.discussionFooterItem}>{dateFormat(date, 'mmm dd, yyyy h:MM TT')}</span>

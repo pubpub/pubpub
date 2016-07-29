@@ -70,6 +70,7 @@ const Reference = React.createClass({
   title={` + citation.title + `},
   author={` + citation.author + `},
   year={` + citation.year + `},
+  note={` + citation.note + `},
   publisher={PubPub},` + journalString + `
 }`;
 			break;

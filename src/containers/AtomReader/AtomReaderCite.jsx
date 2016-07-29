@@ -27,8 +27,9 @@ export const AtomReaderCite = React.createClass({
 			title: atomData.title,
 			author: author,
 			url: 'https://www.pubpub.org/pub/' + atomData.slug + this.props.versionQuery,
-			volume: versionData._id,
-			year: new Date(versionData.createDate).getFullYear(),
+			note: 'version: ' + versionData._id,
+			year: String(new Date(versionData.createDate).getFullYear()),
+			// journal: if viewed from journal, place here
 			publisher: 'PubPub',
 		};
 
