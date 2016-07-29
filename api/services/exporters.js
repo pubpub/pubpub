@@ -50,6 +50,8 @@ export function generatePDFFromJSON(docJSON, title, versionDate, authors) {
 		<!doctype html>
 		<html lang="en-us">
 			<head>
+				<link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+				<link href='https://assets.pubpub.org/_fonts/Yrsa.css' rel='stylesheet' type='text/css'>
 				<style> ${css} body{font-size:10px;}</style>
 			</head>
 

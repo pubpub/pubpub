@@ -53,36 +53,46 @@ export function saveVersion(req, res) {
 		if (newVersion.type !== 'document') { return [savedVersion, undefined]; }
 
 		// If it's a document, save PDF, XML, and Markdown
+		// Execute these promises outside of the main flow. These complete on the fly, even though we return to the original request.
 		const tasks = [
 			generateMarkdownFile(savedVersion.content.markdown),
 			generatePDFFromJSON(savedVersion.content.docJSON, atomData.title, savedVersion.createDate, 'Jane Doe and Marcus Aurilie'),
 			// generateXMLFromJSON(savedVersion.content.docJSON),
 		];
-		return [savedVersion, Promise.all(tasks)];
-	})
-	.spread(function(savedVersion, taskResults) {
-		if (newVersion.type !== 'document') { return [savedVersion, undefined]; }
+		Promise.all(tasks)
+		.then(function(taskResults) {
+			if (newVersion.type !== 'document') { return [savedVersion, undefined]; }
 
-		const tasks = [
-			uploadLocalFile(taskResults[0]),
-			uploadLocalFile(taskResults[1]),
-			// uploadLocalFile(taskResults[2]),
-		];
-		return [savedVersion, Promise.all(tasks)];
-	})
-	.spread(function(savedVersion, taskResults) {
-		if (newVersion.type !== 'document') { return [savedVersion, undefined]; }
+			const uploadTasks = [
+				uploadLocalFile(taskResults[0]),
+				uploadLocalFile(taskResults[1]),
+				// uploadLocalFile(taskResults[2]),
+			];
+			return Promise.all(uploadTasks);
+		})
+		.then(function(taskResults) {
+			savedVersion.content.markdownFile = 'https://assets.pubpub.org/' + taskResults[0];
+			savedVersion.content.PDFFile = 'https://assets.pubpub.org/' + taskResults[1];
+			// savedVersion.content.XMLFile = 'https://assets.pubpub.org/' + taskResults[2];
+			const updateVersion = Version.update({ _id: savedVersion._id }, { $set: {
+				'content.markdownFile': savedVersion.content.markdownFile,
+				'content.PDFFile': savedVersion.content.PDFFile,
+			}}).exec();
+			return updateVersion;
+		})
+		.then(function(updateResult) {
+			// console.log('successfully created files');
+			return undefined;
+		})
+		.catch(function(error) {
+			console.log('Error generate version files', error);
+			return res.status(500).json(error);
+		});
 
-		savedVersion.content.markdownFile = 'https://assets.pubpub.org/' + taskResults[0];
-		savedVersion.content.PDFFile = 'https://assets.pubpub.org/' + taskResults[1];
-		// savedVersion.content.XMLFile = 'https://assets.pubpub.org/' + taskResults[2];
-		const updateVersion = Version.update({ _id: savedVersion._id }, { $set: {
-			'content.markdownFile': savedVersion.content.markdownFile,
-			'content.PDFFile': savedVersion.content.PDFFile,
-		}}).exec();
-		return [savedVersion, updateVersion];
+
+		return savedVersion;
 	})
-	.spread(function(savedVersion, updateVersionSaveResult) {
+	.then(function(savedVersion) {
 		return res.status(201).json(savedVersion);
 	})
 	.catch(function(error) {
