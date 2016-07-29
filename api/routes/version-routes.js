@@ -52,42 +52,42 @@ export function saveVersion(req, res) {
 	.spread(function(savedVersion, atomData) {
 		if (newVersion.type !== 'document') { return [savedVersion, undefined]; }
 
-		// If it's a document, save PDF, XML, and Markdown
-		// Execute these promises outside of the main flow. These complete on the fly, even though we return to the original request.
-		const tasks = [
-			generateMarkdownFile(savedVersion.content.markdown),
-			generatePDFFromJSON(savedVersion.content.docJSON, atomData.title, savedVersion.createDate, 'Jane Doe and Marcus Aurilie'),
-			// generateXMLFromJSON(savedVersion.content.docJSON),
-		];
-		Promise.all(tasks)
-		.then(function(taskResults) {
-			if (newVersion.type !== 'document') { return [savedVersion, undefined]; }
+		// // If it's a document, save PDF, XML, and Markdown
+		// // Execute these promises outside of the main flow. These complete on the fly, even though we return to the original request.
+		// const tasks = [
+		// 	generateMarkdownFile(savedVersion.content.markdown),
+		// 	generatePDFFromJSON(savedVersion.content.docJSON, atomData.title, savedVersion.createDate, 'Jane Doe and Marcus Aurilie'),
+		// 	// generateXMLFromJSON(savedVersion.content.docJSON),
+		// ];
+		// Promise.all(tasks)
+		// .then(function(taskResults) {
+		// 	if (newVersion.type !== 'document') { return [savedVersion, undefined]; }
 
-			const uploadTasks = [
-				uploadLocalFile(taskResults[0]),
-				uploadLocalFile(taskResults[1]),
-				// uploadLocalFile(taskResults[2]),
-			];
-			return Promise.all(uploadTasks);
-		})
-		.then(function(taskResults) {
-			savedVersion.content.markdownFile = 'https://assets.pubpub.org/' + taskResults[0];
-			savedVersion.content.PDFFile = 'https://assets.pubpub.org/' + taskResults[1];
-			// savedVersion.content.XMLFile = 'https://assets.pubpub.org/' + taskResults[2];
-			const updateVersion = Version.update({ _id: savedVersion._id }, { $set: {
-				'content.markdownFile': savedVersion.content.markdownFile,
-				'content.PDFFile': savedVersion.content.PDFFile,
-			}}).exec();
-			return updateVersion;
-		})
-		.then(function(updateResult) {
-			// console.log('successfully created files');
-			return undefined;
-		})
-		.catch(function(error) {
-			console.log('Error generate version files', error);
-			return res.status(500).json(error);
-		});
+		// 	const uploadTasks = [
+		// 		uploadLocalFile(taskResults[0]),
+		// 		uploadLocalFile(taskResults[1]),
+		// 		// uploadLocalFile(taskResults[2]),
+		// 	];
+		// 	return Promise.all(uploadTasks);
+		// })
+		// .then(function(taskResults) {
+		// 	savedVersion.content.markdownFile = 'https://assets.pubpub.org/' + taskResults[0];
+		// 	savedVersion.content.PDFFile = 'https://assets.pubpub.org/' + taskResults[1];
+		// 	// savedVersion.content.XMLFile = 'https://assets.pubpub.org/' + taskResults[2];
+		// 	const updateVersion = Version.update({ _id: savedVersion._id }, { $set: {
+		// 		'content.markdownFile': savedVersion.content.markdownFile,
+		// 		'content.PDFFile': savedVersion.content.PDFFile,
+		// 	}}).exec();
+		// 	return updateVersion;
+		// })
+		// .then(function(updateResult) {
+		// 	// console.log('successfully created files');
+		// 	return undefined;
+		// })
+		// .catch(function(error) {
+		// 	console.log('Error generate version files', error);
+		// 	return res.status(500).json(error);
+		// });
 
 
 		return savedVersion;
@@ -101,6 +101,59 @@ export function saveVersion(req, res) {
 	});
 }
 app.post('/saveVersion', saveVersion);
+
+export function generateMarkdown(req, res) {
+
+	const versionID = req.query.versionID;
+
+	Version.findOne({_id: versionID}).exec()
+	.then(function(version) {
+		if (!version) { throw new Error('Version does not exist'); }
+		return generateMarkdownFile(version.content.markdown);
+	})
+	.then(function(markdownFile) {
+		return uploadLocalFile(markdownFile);
+	})
+	.then(function(fileURL) {
+		const markdownFileURL = 'https://assets.pubpub.org/' + fileURL;
+		return [markdownFileURL, Version.update({ _id: versionID }, { $set: { 'content.markdownFile': markdownFileURL }}).exec()];
+	})
+	.spread(function(markdownFileURL, updateResult) {
+		return res.status(201).redirect(markdownFileURL);
+	})
+	.catch(function(error) {
+		console.log('Error generating Markdown file. ', error);
+		return res.status(500).json(error);
+	});
+}
+app.get('/generateMarkdown', generateMarkdown);
+
+export function generatePDF(req, res) {
+
+	const versionID = req.query.versionID;
+
+	Version.findOne({_id: versionID}).populate('parent').exec()
+	.then(function(version) {
+		if (!version) { throw new Error('Version does not exist'); }
+		return generatePDFFromJSON(version.content.docJSON, version.parent.title, version.createDate, 'Jane Doe and Marcus Aurilie');
+	})
+	.then(function(pdfFile) {
+		return uploadLocalFile(pdfFile);
+	})
+	.then(function(fileURL) {
+		const pdfFileURL = 'https://assets.pubpub.org/' + fileURL;
+		return [pdfFileURL, Version.update({ _id: versionID }, { $set: { 'content.PDFFile': pdfFileURL }}).exec()];
+	})
+	.spread(function(pdfFileURL, updateResult) {
+		return res.status(201).redirect(pdfFileURL);
+	})
+	.catch(function(error) {
+		console.log('Error generating Markdown file. ', error);
+		return res.status(500).json(error);
+	});
+}
+app.get('/generatePDF', generatePDF);
+
 
 export function setVersionPublished(req, res) {
 	if (!req.user) { return res.status(403).json('Not Logged In'); }

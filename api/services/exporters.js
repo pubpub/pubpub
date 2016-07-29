@@ -81,6 +81,6 @@ export function generatePDFFromJSON(docJSON, title, versionDate, authors) {
 		return filename;
 	})
 	.catch(function(error) {
-		console.log('Error creating markdown file: ', error);
+		console.log('Error creating PDF file: ', error);
 	});
 }
