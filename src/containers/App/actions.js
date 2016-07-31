@@ -12,6 +12,8 @@ export const RESEND_VERIFICATION_EMAIL_LOAD = 'app/RESEND_VERIFICATION_EMAIL_LOA
 export const RESEND_VERIFICATION_EMAIL_SUCCESS = 'app/RESEND_VERIFICATION_EMAIL_SUCCESS';
 export const RESEND_VERIFICATION_EMAIL_FAIL = 'app/RESEND_VERIFICATION_EMAIL_FAIL';
 
+export const UNSET_NOT_FOUND = 'app/UNSET_NOT_FOUND';
+
 /*--------*/
 // Define Action creators
 //
@@ -31,5 +33,11 @@ export function resendVerificationEmail() {
 	return {
 		types: [RESEND_VERIFICATION_EMAIL_LOAD, RESEND_VERIFICATION_EMAIL_SUCCESS, RESEND_VERIFICATION_EMAIL_FAIL],
 		promise: (client) => client.post('/resendVerificationEmail', {})
+	};
+}
+
+export function unsetNotFound() {
+	return {
+		type: UNSET_NOT_FOUND
 	};
 }

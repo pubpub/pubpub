@@ -8,6 +8,7 @@ import {
 	LOAD_APP_AND_LOGIN_LOAD,
 	LOAD_APP_AND_LOGIN_SUCCESS,
 	LOAD_APP_AND_LOGIN_FAIL,
+	UNSET_NOT_FOUND
 } from './actions';
 
 import {
@@ -93,8 +94,8 @@ function unsetLoading(state, action) {
 	});
 }
 
-function clearNotFound(state) {
-	return state.set('notFound', false);
+function unsetNotFound(state) {
+	return state.set('notFound', false);	
 }
 
 /*--------*/
@@ -128,8 +129,10 @@ export default function reducer(state = defaultState, action) {
 	case GET_JOURNAL_SUCCESS:
 	case GET_JOURNAL_FAIL:
 		return unsetLoading(state, action);
+
 	// case '@@reduxReactRouter/routerDidChange':
-	// 	return clearNotFound(state);
+	case UNSET_NOT_FOUND:
+		return unsetNotFound(state);
 
 	default:
 		return ensureImmutable(state);

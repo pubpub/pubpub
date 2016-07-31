@@ -3,7 +3,7 @@ import {StyleRoot} from 'radium';
 import Helmet from 'react-helmet';
 import {connect} from 'react-redux';
 import {push} from 'redux-router';
-import {loadAppAndLogin, resendVerificationEmail} from './actions';
+import {loadAppAndLogin, resendVerificationEmail, unsetNotFound} from './actions';
 import {logout} from 'containers/Login/actions';
 import {createAtom} from 'containers/Media/actions';
 import {NotFound} from 'components';
@@ -49,6 +49,11 @@ export const App = React.createClass({
 		}
 		if (nextProps.path === '/' && !this.props.mediaData.get('newAtomSlug') && nextProps.mediaData.get('newAtomSlug')) {
 			this.props.dispatch(push('/pub/' + nextProps.mediaData.get('newAtomSlug') + '/edit'));
+		}
+
+		// For routes that won't have an async load, and thus won't unset a 404 page, fire an unset action
+		if (this.props.appData.get('notFound') && (nextProps.path === '/login' || nextProps.path === '/' || nextProps.path === '/about' || nextProps.path === '/signup')) {
+			this.props.dispatch(unsetNotFound());
 		}
 	},
 
