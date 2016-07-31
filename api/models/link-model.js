@@ -10,8 +10,15 @@ const linkSchema = new Schema({
 	createBy: { type: ObjectId, ref: 'User'},
 	createDate: { type: Date },
 
-	metadata: { type: Schema.Types.Mixed },
+	// metadata: { type: Schema.Types.Mixed },
 	// metadata.collections: Used for Journal featured collections 
+	metadata: {
+		collections: [{ type: ObjectId, ref: 'Tag'}],
+		rootReply: { type: ObjectId, ref: 'Atom'},
+		yays: [{ type: ObjectId, ref: 'User'}],
+		nays: [{ type: ObjectId, ref: 'User'}],
+		roles: [{ type: Schema.Types.Mixed }],
+	},
 
 	inactive: { type: Boolean }, 
 	inactiveBy: { type: ObjectId, ref: 'User'},

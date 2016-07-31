@@ -134,7 +134,7 @@ export function createReplyDocument(req, res) {
 		const tasks = [
 			Link.createLink('author', userID, newAtomID, userID, now),
 			Link.createLink('reply', newAtomID, replyTo, userID, now, {rootReply: rootReply}),
-		];
+		];		
 
 		// If there is version data, create the version!
 		if (req.body.versionContent) {

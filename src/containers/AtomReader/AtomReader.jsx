@@ -132,6 +132,7 @@ export const AtomReader = React.createClass({
 		const currentVersionDate = safeGetInToJS(this.props.atomData, ['currentVersionData', 'createDate']);
 		const toc = generateTOC(currentVersionContent.markdown).full;
 		const versionQuery = this.props.query && this.props.query.version ? '?version=' + this.props.query.version : '';
+		const permissionType = safeGetInToJS(this.props.atomData, ['atomData', 'permissionType']) || [];
 
 		const mobileNavButtons = [
 			{ type: 'link', mobile: true, text: 'Discussions', link: '/pub/' + this.props.slug + '/discussions' },
@@ -141,9 +142,15 @@ export const AtomReader = React.createClass({
 			mobileNavButtons[0] = { type: 'link', mobile: true, text: 'View', link: '/pub/' + this.props.slug };
 		}
 
-		const navItems = [
+
+		const leftNav = [
 			{link: '/pub/' + this.props.slug, text: 'View', active: !this.props.meta},
-			{link: '/pub/' + this.props.slug + '/edit', text: 'Edit'},
+		];
+		if (permissionType === 'author' || permissionType === 'editor') {
+			leftNav.push({link: '/pub/' + this.props.slug + '/edit', text: 'Edit'});
+		}
+		const navItems = [
+			...leftNav,
 			{link: '/pub/' + this.props.slug + '/contributors', text: 'Contributors', rightAlign: true, active: this.props.meta === 'contributors'},
 			{link: '/pub/' + this.props.slug + '/versions', text: 'Versions', rightAlign: true, active: this.props.meta === 'versions'},
 			{link: '/pub/' + this.props.slug + '/journals', text: 'Journals', rightAlign: true, active: this.props.meta === 'journals'},
