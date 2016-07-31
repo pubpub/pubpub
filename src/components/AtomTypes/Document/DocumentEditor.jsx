@@ -319,7 +319,7 @@ export const DocumentEditor = React.createClass({
 
 	getSaveVersionContent: function() {
 		return {
-			// markdown: markdownSerializer.serialize(pm.doc),
+			markdown: markdownSerializer.serialize(pm.doc),
 			docJSON: pm.doc.toJSON(),
 		};
 	},

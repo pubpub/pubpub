@@ -11,12 +11,8 @@ const Promise = require('bluebird');
 const SHA1 = require('crypto-js/sha1');
 const encHex = require('crypto-js/enc-hex');
 
-// const Firebase = require('firebase');
-
 const Request = require('request-promise');
 const request = require('superagent-promise')(require('superagent'), Promise);
-
-// import {fireBaseURL, firebaseTokenGen, generateAuthToken} from '../services/firebase';
 
 export function createAtom(req, res) {
 	if (!req.user) {
@@ -32,7 +28,6 @@ export function createAtom(req, res) {
 	const type = req.body.type || 'markdown';
 	// const hash = SHA1(type + new Date().getTime() + req.user._id).toString(encHex);
 	const newAtomID = new ObjectID();
-	// const ref = new Firebase(fireBaseURL + hash + '/editorData' );
 
 	const atom = new Atom({
 		_id: newAtomID,
@@ -89,31 +84,6 @@ export function createAtom(req, res) {
 		return Version.update({ _id: versionID }, { $set: { 'content.htmlUrl': response} }).exec();
 		// newVersion.content.htmlUrl = response;
 	})
-	// .then(function() { // If type is markdown, authenticate firebase connection
-	// 	if (type !== 'markdown') { return undefined; }
-
-	// 	return ref.authWithCustomToken(generateAuthToken());
-	// })
-	// .then(function() { // If type is markdown, add author to firebase permissions
-	// 	if (type !== 'markdown') { return undefined; }
-
-	// 	const newEditorData = {
-	// 		collaborators: {},
-	// 		settings: {styleDesktop: ''},
-	// 	};
-	// 	newEditorData.collaborators[req.user.username] = {
-	// 		_id: userID.toString(),
-	// 		name: req.user.name,
-	// 		firstName: req.user.firstName || '',
-	// 		lastName: req.user.lastName || '',
-	// 		username: req.user.username,
-	// 		email: req.user.email,
-	// 		image: req.user.image,
-	// 		permission: 'edit',
-	// 		admin: true,
-	// 	};
-	// 	return ref.set(newEditorData);
-	// })
 	.then(function() {
 		return Version.findOne({_id: versionID});
 	})
@@ -128,6 +98,98 @@ export function createAtom(req, res) {
 	});
 }
 app.post('/createAtom', createAtom);
+
+export function createReplyDocument(req, res) {
+	if (!req.user) { return res.status(403).json('Not Logged In'); }
+	if (!req.user.verifiedEmail) { return res.status(403).json('Not Verified'); }
+
+	const userID = req.user._id;
+	const now = new Date().getTime();
+	const type = req.body.type || 'document';
+	const newAtomID = new ObjectID();
+	const replyTo = req.body.replyTo;
+	const rootReply = req.body.rootReply;
+
+	const atom = new Atom({
+		_id: newAtomID,
+		slug: newAtomID,
+		title: req.body.title || 'Reply: ' + new Date().getTime(),
+		type: type,
+
+		createDate: now,
+		lastUpdated: now,
+		isPublished: false,
+
+		versions: [],
+		tags: [],
+	});
+
+	let versionID;
+	let versionData;
+	// This should be made more intelligent to use images, video thumbnails, etc when possible - if the atom type is image, video, etc.
+	atom.previewImage = 'https://assets.pubpub.org/_site/pub.png';
+
+	atom.save() // Save new atom data
+	.then(function(newAtom) { // Create new Links pointing between atom and author
+		const tasks = [
+			Link.createLink('author', userID, newAtomID, userID, now),
+			Link.createLink('reply', newAtomID, replyTo, userID, now, {rootReply: rootReply}),
+		];
+
+		// If there is version data, create the version!
+		if (req.body.versionContent) {
+			const newVersion = new Version({
+				type: newAtom.type,
+				message: '',
+				parent: newAtom._id,
+				content: req.body.versionContent
+			});
+			tasks.push(newVersion.save());
+		}
+
+		return Promise.all(tasks);
+	})
+	.then(function(taskResults) { // If we created a version, make sure to add that version to parent
+		if (taskResults.length === 3) {
+			versionData = taskResults[2];
+			versionID = versionData._id;
+			return Atom.update({ _id: versionData.parent }, { $addToSet: { versions: versionData._id} }).exec();
+		}
+		return undefined;
+	})
+	.then(function() {
+		const findReplyLink = Link.findOne({type: 'reply', source: newAtomID}).populate({
+			path: 'source',
+			model: 'Atom',
+		}).exec();
+
+		const findAuthorLink = Link.find({destination: newAtomID, type: 'author'}).populate({
+			path: 'source',
+			model: User,
+			select: 'username name firstName lastName image ',
+		}).exec();
+
+		return Promise.all([findReplyLink, findAuthorLink]);
+
+	})	
+	.spread(function(replyLinkData, authorLinkData) {
+		return {
+			atomData: atom, 
+			versionData: versionData, 
+			authorsData: authorLinkData, 
+			linkData: replyLinkData
+		};
+	})
+	.then(function(discussionData) {
+		return res.status(201).json(discussionData);
+	})
+	.catch(function(error) {
+		console.log('error', error);
+		return res.status(500).json(error);
+	});
+}
+app.post('/createReplyDocument', createReplyDocument);
+
 
 export function getAtomData(req, res) {
 	const {slug, meta, version} = req.query;

@@ -14,6 +14,11 @@ import {
 	SUBMIT_ATOM_TO_JOURNAL_FAIL,
 } from './actions';
 
+import {
+	CREATE_REPLY_DOCUMENT_SUCCESS,
+
+} from 'containers/Discussions/actions';
+
 /*--------*/
 // Initialize Default State
 /*--------*/
@@ -92,6 +97,16 @@ function submitAtomToJournalFail(state, error) {
 	});
 }	
 
+function createReplyDocumentSuccess(state, result) {
+	const newDiscussion = {
+		...result,
+		isNewReply: true,
+	};
+	return state.merge({
+		discussionsData: state.get('discussionsData').push(newDiscussion),
+	});
+}
+
 /*--------*/
 // Bind actions to specific reducing functions.
 /*--------*/
@@ -111,6 +126,10 @@ export default function readerReducer(state = defaultState, action) {
 		return submitAtomToJournalSuccess(state, action.result);
 	case SUBMIT_ATOM_TO_JOURNAL_FAIL:
 		return submitAtomToJournalFail(state, action.error);
+
+	case CREATE_REPLY_DOCUMENT_SUCCESS:
+		return createReplyDocumentSuccess(state, action.result); 
+
 	default:
 		return ensureImmutable(state);
 	}

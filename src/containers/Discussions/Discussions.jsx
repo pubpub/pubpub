@@ -6,11 +6,11 @@ import dateFormat from 'dateformat';
 import {globalStyles} from 'utils/styleConstants';
 
 import {Media} from 'containers';
-import {schema} from 'components/AtomTypes/Document/proseEditor';
+import {markdownParser, markdownSerializer, schema} from 'components/AtomTypes/Document/proseEditor';
 import {License} from 'components';
 import {StoppableSubscription} from 'subscription';
-
-import {getDiscussionsData} from './actions';
+// import {createAtom} from 'containers/Media/actions';
+import {createReplyDocument} from './actions';
 import DiscussionItem from './DiscussionItem';
 
 // import {globalMessages} from 'utils/globalMessages';
@@ -112,6 +112,18 @@ export const Discussions = React.createClass({
 		this.setState({replyToID: replyToID});
 	},
 
+	publishReply: function() {
+
+		const atomType = 'document';
+		const versionContent = {
+			docJSON: pm.doc.toJSON(),	
+			markdown: markdownSerializer.serialize(pm.doc),
+		};
+		
+		this.props.dispatch(createReplyDocument(atomType, versionContent, 'Reply', this.state.replyToID, this.state.rootReply));
+		pm.setDoc(markdownParser.parse(''));
+	},
+
 
 	render: function() {
 		const atomData = safeGetInToJS(this.props.atomData, ['atomData']) || [];
@@ -141,27 +153,26 @@ export const Discussions = React.createClass({
 					'.pub-discussions-wrapper .p-block': {
 						padding: '0.5em 0em',
 					}
-				}} />
+				}} />				
 
-				{replyToData && 
-					<div>
+				<div style={styles.proseInput}>
+				
+					<Media/>
+
+					{replyToData && 
 						<div className={'showChildOnHover'} style={styles.replyToWrapper}>
 							Replying to comment by {replyToData.authorsData[0].source.name}
 							<div className={'hoverChild'} style={styles.replyToPreview}>
 								<DiscussionItem discussionData={replyToData} index={'current-reply'}/>
 							</div>
 						</div>
-					</div>
-				}
-				
+					}
 
-				<div style={styles.proseInput}>
-				
-					<Media/>
 					<div style={styles.license} key={'discussionLicense'}>
 						<License text={'All discussions are licensed under a'} hover={true} />
 					</div>
 					<div id={'reply-input'} className={'atom-reader atom-reply ProseMirror-quick-style'} style={styles.wsywigBlock}></div>
+					<div className={'button'} onClick={this.publishReply}>Publish Reply</div>
 					
 					
 				</div>
@@ -265,7 +276,7 @@ styles = {
 	},
 	replyToWrapper: {
 		position: 'relative',
-		margin: '1em 0em -1em 0em',
+		// margin: '1em 0em -1em 0em',
 	},
 	replyToPreview: {
 		position: 'absolute',

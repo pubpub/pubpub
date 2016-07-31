@@ -20,13 +20,14 @@ const linkSchema = new Schema({
 	
 });
 
-linkSchema.statics.createLink = function(type, source, destination, createBy, createDate) {
+linkSchema.statics.createLink = function(type, source, destination, createBy, createDate, metadata) {
 	const newLink = new this({
 		type: type,
 		source: source,
 		destination: destination,
 		createBy: createBy,
 		createDate: createDate || new Date().getTime(),
+		metadata: metadata || {}
 	});
 	return newLink.save();
 };
