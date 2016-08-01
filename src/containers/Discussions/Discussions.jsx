@@ -5,6 +5,9 @@ import {safeGetInToJS} from 'utils/safeParse';
 import dateFormat from 'dateformat';
 import {globalStyles} from 'utils/styleConstants';
 
+import { StickyContainer as UnwrappedStickyContainer, Sticky } from 'react-sticky';
+const StickyContainer = Radium(UnwrappedStickyContainer);
+
 import {Media} from 'containers';
 import {markdownParser, markdownSerializer, schema} from 'components/AtomTypes/Document/proseEditor';
 import {License} from 'components';
@@ -160,11 +163,11 @@ export const Discussions = React.createClass({
 					}
 				}} />				
 
-				<div style={styles.proseInput}>
+				<div>
 				
 					<Media/>
 
-					<div style={styles.replyWrapper}>
+					<Sticky style={styles.replyWrapper}>	
 						<div style={[styles.replyHeader, !replyToData && {display: 'none'}]}>
 								<div className={'showChildOnHover'} style={styles.replyToWrapper}>
 									Reply to: {replyToData && replyToData.authorsData[0].source.name}
@@ -188,8 +191,8 @@ export const Discussions = React.createClass({
 							</div>
 							<div className={'button'} style={styles.replyButton} onClick={this.publishReply}>Publish Reply</div>
 						</div>
+					</Sticky>
 
-					</div>
 					
 				</div>
 
@@ -218,9 +221,10 @@ export default connect( state => {
 styles = {
 	replyWrapper: {
 		// backgroundColor: 'blue',
-		margin: '1em 0em 2em',
+		margin: '0em 0em 2em',
 		boxShadow: '0px 1px 3px 1px #BBBDC0',
 		backgroundColor: 'white',
+		zIndex: 2,
 	},
 	replyHeader: {
 		// backgroundColor: 'red',
@@ -246,6 +250,9 @@ styles = {
 	},
 	replyBody: {
 		// backgroundColor: 'green',
+		maxHeight: '70vh',
+		overflow: 'hidden',
+		overflowY: 'scroll',
 	},
 	replyFooter: {
 		display: 'table',
@@ -270,6 +277,7 @@ styles = {
 	},
 
 	container: {
+		paddingTop: '1em',
 	},
 	// license: {
 	// 	float: 'right',

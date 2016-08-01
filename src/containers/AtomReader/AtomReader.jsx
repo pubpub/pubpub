@@ -223,7 +223,7 @@ export const AtomReader = React.createClass({
 							case 'export':
 								return <AtomReaderExport atomData={this.props.atomData}/>;
 							case 'discussions':
-								return <Discussions/>;
+								return <StickyContainer><Discussions/></StickyContainer>;
 							default:
 								return <AtomViewerPane atomData={this.props.atomData} />;
 							}
@@ -235,9 +235,11 @@ export const AtomReader = React.createClass({
 				</div>
 
 				{/* Discussion Section */}
-				<div style={[styles.discussionSection, !showDiscussions && {display: 'none'}]}>
-					<Discussions/>
-				</div>
+				<StickyContainer style={[styles.discussionSection, !showDiscussions && {display: 'none'}]}>
+					{!this.props.meta &&
+							<Discussions/>
+					}
+				</StickyContainer>
 
 
 			</div>
