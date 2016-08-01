@@ -28,6 +28,9 @@ import HighlightViewer from './Highlight/HighlightViewer';
 import PDFEditor from './PDF/PDFEditor';
 import PDFViewer from './PDF/PDFViewer';
 
+import CodePenEditor from './CodePen/CodePenEditor';
+import CodePenViewer from './CodePen/CodePenViewer';
+
 export default {
 	image: {
 		editor: ImageEditor,
@@ -68,5 +71,9 @@ export default {
 	pdf: {
 		editor: PDFEditor,
 		viewer: PDFViewer
+	},
+	codepen: {
+		editor: CodePenEditor,
+		viewer: CodePenViewer
 	}
 };

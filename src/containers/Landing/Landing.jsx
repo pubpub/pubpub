@@ -16,6 +16,8 @@ import request from 'superagent';
 
 let styles = {};
 
+const codePenRegex = /https?:\/\/codepen\.io\/[^\/]+\/pen\/[^\/]+$/;
+
 const Landing = React.createClass({
 	propTypes: {
 		landingData: PropTypes.object,
@@ -39,7 +41,10 @@ const Landing = React.createClass({
 		const source = this.state.source;
 		let atomType = undefined;
 		let props = {};
-		if (source && isWebUri(source)) {
+		if (source && source.match(codePenRegex)) {
+			atomType = 'codepen';
+			props = {source};
+		} else	if (source && isWebUri(source)) {
 			atomType = 'iframe';
 			props = {source};
 		} else {
