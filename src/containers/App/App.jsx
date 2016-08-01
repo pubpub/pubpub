@@ -68,6 +68,10 @@ export const App = React.createClass({
 		this.props.dispatch(resendVerificationEmail());
 	},
 
+	goToURL: function(url) {
+		this.props.dispatch(push(url));
+	},
+
 	render: function() {
 		const isLoggedIn = safeGetInToJS(this.props.loginData, ['loggedIn']);
 		const notVerified = isLoggedIn && !safeGetInToJS(this.props.loginData, ['userData', 'verifiedEmail']) && this.props.path.substring(0, 7) !== '/signup';
@@ -90,7 +94,7 @@ export const App = React.createClass({
 					
 					<Helmet {...metaData} />
 					<AppLoadingBar color={'#BBBDC0'} show={this.props.appData.get('loading')} />
-					<AppHeader loginData={this.props.loginData} path={this.props.path} createDocument={this.createDocument} logoutHandler={this.logoutHandler}/>
+					<AppHeader loginData={this.props.loginData} path={this.props.path} createDocument={this.createDocument} logoutHandler={this.logoutHandler} goToURL={this.goToURL}/>
 					<AppVerified isVerified={!notVerified} handleResendEmail={this.handleResendEmail}/>
 
 					{notFound && <NotFound />}

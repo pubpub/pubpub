@@ -3,6 +3,7 @@ const Sifter = require('sifter');
 const _ = require('underscore');
 
 const Pub = require('../models').Pub;
+const Atom = require('../models').Atom;
 const User = require('../models').User;
 const Journal = require('../models').Journal;
 const Group = require('../models').Group;
@@ -178,3 +179,45 @@ export function autocompleteReferences(req, res) {
 	return res.status(201).json(['cat', 'dog', 'fish']);
 }
 app.get('/autocompleteReferences', autocompleteReferences);
+
+
+export function autocompletePubsAndUsersAndJournals(req, res) {
+	let objects = [];
+
+	User.find({}, {'_id': 1, 'username': 1, 'image': 1, 'name': 1}).lean().exec()
+	.then(function(users) {
+		if (users) {
+			objects = objects.concat(users);
+		}
+		return Atom.find({versions: {$not: {$size: 0}}, isPublished: true}, {'_id': 0, 'slug': 1, 'title': 1, 'createDate': 1, 'lastUpdated': 1}).lean().exec();
+	})
+	.then(function(atoms) {
+		if (atoms) {
+			objects = objects.concat(atoms);
+		}
+		return Journal.find({}, {'_id': 1, 'journalName': 1, 'slug': 1, 'logo': 1}).lean().exec();
+	})
+	.then(function(journals) {
+		if (journals) {
+			objects = objects.concat(journals);
+		}
+		const sifter = new Sifter(objects);
+		const result = sifter.search(req.query.string, {
+			fields: ['journalName', 'username', 'name', 'slug', 'title'],
+			sort: [{field: 'username', direction: 'asc'}, {field: 'title', direction: 'asc'}, {field: 'journalName', direction: 'asc'}],
+			limit: 10,
+			conjunction: 'and',
+		});
+
+		const output = [];
+		_.each(result.items, function(item) {
+			output.push(objects[item.id]);
+		});
+		return res.status(201).json(output);
+	})
+	.catch(function(err) {
+		console.log('Error in autocomplete', err);
+		return res.status(500).json([]);
+	});
+}
+app.get('/autocompletePubsAndUsersAndJournals', autocompletePubsAndUsersAndJournals);

@@ -10,8 +10,8 @@ import {s3Upload} from 'utils/uploadFile';
 import {createAtom} from 'containers/Media/actions';
 import {isWebUri} from 'valid-url';
 
-// import Select from 'react-select';
-// import request from 'superagent';
+import Select from 'react-select';
+import request from 'superagent';
 // import {push} from 'redux-router';
 
 let styles = {};
@@ -25,7 +25,7 @@ const Landing = React.createClass({
 
 	getInitialState() {
 		return {
-			// value: undefined,
+			value: undefined,
 			source: false,
 		};
 	},
@@ -87,25 +87,29 @@ const Landing = React.createClass({
 		this.props.dispatch(createAtom(atomType, versionContent));
 	},
 
-	// handleSelectChange: function(value) {
-	// 	console.log(value);
-	// 	this.setState({ value });
-	// 	// this.props.dispatch(push('/' + value.value));
-	// },
+	handleSelectChange: function(value) {
+		console.log(value);
+		this.setState({ value });
+		// this.props.dispatch(push('/' + value.value));
+	},
 
-	// loadOptions: function(input, callback) {
-	// 	request.get('/api/autocompleteJournals?string=' + input).end((err, response)=>{
-	// 		const responseArray = response.body || [];
-	// 		const options = responseArray.map((item)=>{
-	// 			return {
-	// 				value: item.slug,
-	// 				label: item.journalName,
-	// 				id: item._id,
-	// 			};
-	// 		});
-	// 		callback(null, { options: options });
-	// 	});
-	// },
+	loadOptions: function(input, callback) {
+		if (!input || input.length < 3) {
+			callback(null, { options: [] });
+			return undefined;
+		}
+		request.get('/api/autocompletePubsAndUsersAndJournals?string=' + input).end((err, response)=>{
+			const responseArray = response.body || [];
+			const options = responseArray.map((item)=>{
+				return {
+					value: item.slug || item.username,
+					label: item.journalName || item.name || item.title,
+					id: item._id,
+				};
+			});
+			callback(null, { options: options });
+		});
+	},
 
 	render: function() {
 		const metaData = {
@@ -136,13 +140,12 @@ const Landing = React.createClass({
 
 						
 
-						{/* <Select.Async
+						<Select.Async
 							name="form-field-name"
 							value={this.state.value}
 							loadOptions={this.loadOptions}
 							placeholder={<span>Search</span>}
-							multi={true}
-							onChange={this.handleSelectChange} /> */}
+							onChange={this.handleSelectChange} />
 
 						{/* <h2>Recent Activity</h2>
 

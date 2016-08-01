@@ -1,10 +1,13 @@
 import React, {PropTypes} from 'react';
-import Radium from 'radium';
+import Radium, {Style} from 'radium';
 import { Link } from 'react-router';
 import {globalStyles} from 'utils/styleConstants';
 
 import {globalMessages} from 'utils/globalMessages';
 import {FormattedMessage} from 'react-intl';
+
+import Select from 'react-select';
+import request from 'superagent';
 
 let styles = {};
 
@@ -14,11 +17,13 @@ export const AppHeader = React.createClass({
 		path: PropTypes.string, 
 		createDocument: PropTypes.func,
 		logoutHandler: PropTypes.func,
+		goToURL: PropTypes.func,
 	},
 
 	getInitialState() {
 		return {
-			accountMenuOpen: false
+			accountMenuOpen: false,
+			value: undefined,
 		};
 	},
 
@@ -38,6 +43,32 @@ export const AppHeader = React.createClass({
 		this.props.logoutHandler();
 	},
 
+	handleSelectChange: function(item) {
+		// console.log(item);
+		// this.setState({ value: item });
+		this.props.goToURL(item.url);
+	},
+
+	loadOptions: function(input, callback) {
+		if (!input || input.length < 3) {
+			callback(null, { options: [] });
+			return undefined;
+		}
+		request.get('/api/autocompletePubsAndUsersAndJournals?string=' + input).end((err, response)=>{
+			const responseArray = response.body || [];
+			const options = responseArray.map((item)=>{
+
+				return {
+					value: item.slug || item.username,
+					label: item.journalName || item.name || item.title,
+					id: item._id,
+					url: '/' + ((item.journalName && item.slug) || (item.username && ('user/' + item.username)) || (item.title && ('pub/' + item.slug)))
+				};
+			});
+			callback(null, { options: options });
+		});
+	},
+
 	render: function() {
 		const isLoggedIn = this.props.loginData && this.props.loginData.get('loggedIn');
 		const name = this.props.loginData && this.props.loginData.getIn(['userData', 'name']);
@@ -46,6 +77,37 @@ export const AppHeader = React.createClass({
 
 		return (
 			<div className="header-bar darkest-bg lightest-color" style={styles.headerBar}>
+
+				<Style rules={{
+					'.is-open > .Select-control, .Select-control': {
+						backgroundColor: 'transparent',
+						borderColor: '#58585B',
+						borderWidth: '0px 0px 1px 0px',
+						color: '#F3F3F4',
+						height: '27px',
+					},
+					'.is-open > .Select-control input, .Select-control input': {
+						color: '#F3F3F4',
+					},
+					'.Select-input': {
+						height: '26px',
+					},
+					'.Select--single > .Select-control .Select-value, .has-value.Select--single > .Select-control .Select-value .Select-value-label, .has-value.is-pseudo-focused.Select--single > .Select-control .Select-value .Select-value-label': {
+						color: '#F3F3F4',
+					},
+					'.Select-arrow-zone': {
+						display: 'none',
+					},
+					'.Select-placeholder, .Select--single > .Select-control .Select-value, .Select-input': {
+						paddingLeft: '2px',
+					},
+					'.Select-clear-zone': {
+						paddingTop: '6px',
+					},
+					'.Select-clear-zone:hover': {
+						color: '#F3F3F4',
+					},
+				}} />
 
 				{/* PubPub Logo */}
 				<Link to={'/'} style={globalStyles.link}>
@@ -63,12 +125,22 @@ export const AppHeader = React.createClass({
 					</Link>
 				}
 
+
 				{/* Account Button */}
 				{isLoggedIn && // Render if logged in
 					<div style={[styles.headerButton, styles.headerNavItem]} onClick={this.toggleAccountMenu}>
 						<img style={styles.userImage} src={'https://jake.pubpub.org/unsafe/50x50/' + this.props.loginData.getIn(['userData', 'image'])} />
 					</div>
 				}
+
+				<div style={[styles.headerSearch]}>
+					<Select.Async
+						name="form-field-name"
+						value={this.state.value}
+						loadOptions={this.loadOptions}
+						placeholder={<span>Search</span>}
+						onChange={this.handleSelectChange} />
+				</div>
 
 				{/* Notication Count Button */}
 				{isLoggedIn && !!this.props.loginData.getIn(['userData', 'notificationCount']) && // Render if logged in and has notification count
@@ -139,6 +211,15 @@ styles = {
 		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
 			fontSize: '0.6em',
 		}
+	},
+	headerSearch: {
+		float: 'right',
+		width: '200px',
+		fontSize: '0.9em',
+		marginTop: '4px',
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+			display: 'none',
+		},
 	},
 	userImage: {
 		height: 22,
