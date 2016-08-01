@@ -147,7 +147,8 @@ export const AtomEditorContributors = React.createClass({
 
 				<Select.Async
 					name="form-field-name"
-					autoload={false}
+					// autoload={false}
+					minimumInput={3}
 					value={this.state.value}
 					loadOptions={this.loadOptions}
 					placeholder={<span>Add new contributor</span>}

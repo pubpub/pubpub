@@ -50,10 +50,10 @@ export const AppHeader = React.createClass({
 	},
 
 	loadOptions: function(input, callback) {
-		if (!input || input.length < 3) {
-			callback(null, { options: [] });
-			return undefined;
-		}
+		// if (!input || input.length < 3) {
+		// 	callback(null, { options: [] });
+		// 	return undefined;
+		// }
 		request.get('/api/autocompletePubsAndUsersAndJournals?string=' + input).end((err, response)=>{
 			const responseArray = response.body || [];
 			const options = responseArray.map((item)=>{
@@ -136,6 +136,7 @@ export const AppHeader = React.createClass({
 				<div style={[styles.headerSearch]} className={'header-search'}>
 					<Select.Async
 						name="form-field-name"
+						minimumInput={3}
 						value={this.state.value}
 						loadOptions={this.loadOptions}
 						placeholder={<span>Search</span>}

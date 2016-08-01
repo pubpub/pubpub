@@ -80,6 +80,7 @@ const NotFound = React.createClass({
 				<div style={styles.search}>
 					<Select.Async
 						name="form-field-name"
+						minimumInput={3}
 						value={this.state.value}
 						loadOptions={this.loadOptions}
 						placeholder={<span>Search PubPub</span>}

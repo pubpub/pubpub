@@ -77,6 +77,7 @@ export const JournalProfileAdmins = React.createClass({
 
 				<Select.Async
 					name="form-field-name"
+					minimumInput={3}
 					autoload={false}
 					value={this.state.value}
 					loadOptions={this.loadOptions}
