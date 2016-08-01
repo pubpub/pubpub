@@ -113,11 +113,17 @@ export const Discussions = React.createClass({
 	setReplyTo: function(replyToID) {
 		// rootReplyID is set in componentDidMount
 		this.setState({replyToID: replyToID});
+		setTimeout(()=> {
+			this.setState({});
+		}, 1);
 	},
 
 	clearReplyTo: function(replyToID) {
 		// rootReplyID is set in componentDidMount
 		this.setState({replyToID: undefined});
+		setTimeout(()=> {
+			this.setState({});
+		}, 1);
 	},
 
 	publishReply: function() {
@@ -167,7 +173,7 @@ export const Discussions = React.createClass({
 				
 					<Media/>
 
-					<Sticky style={styles.replyWrapper}>	
+					<Sticky style={styles.replyWrapper} isActive={!!replyToData}>	
 						<div style={[styles.replyHeader, !replyToData && {display: 'none'}]}>
 								<div className={'showChildOnHover'} style={styles.replyToWrapper}>
 									Reply to: {replyToData && replyToData.authorsData[0].source.name}

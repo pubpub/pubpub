@@ -237,7 +237,7 @@ export const AtomReader = React.createClass({
 				{/* Discussion Section */}
 				<StickyContainer style={[styles.discussionSection, !showDiscussions && {display: 'none'}]}>
 					{!this.props.meta &&
-							<Discussions/>
+						<Discussions/>
 					}
 				</StickyContainer>
 
