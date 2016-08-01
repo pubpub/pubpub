@@ -23,7 +23,7 @@ insertCSS(`
 }
 
 .ProseMirror-quick-style .ProseMirror-content{
-  padding: 1em;
+  padding: .5em 1em;
   min-height: 3em;
 }
 
