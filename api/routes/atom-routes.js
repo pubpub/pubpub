@@ -196,7 +196,7 @@ export function getAtomData(req, res) {
 	const userID = req.user ? req.user._id : undefined;
 	// Check permission type
 
-	Atom.findOne({slug: slug}).lean().exec()
+	Atom.findOne({slug: slug.toLowerCase()}).lean().exec()
 	.then(function(atomResult) { // Get most recent version
 		if (!atomResult) {
 			throw new Error('Atom does not exist');
@@ -400,7 +400,7 @@ export function getAtomEdit(req, res) {
 	// let collab = false; // collab tells you if a connection was established to the collab server
 
 	let output = {};
-	Atom.findOne({slug: slug}).lean().exec()
+	Atom.findOne({slug: slug.toLowerCase()}).lean().exec()
 
 	.then(function(atomResult) { // Get most recent version
 		if (!atomResult) {
@@ -571,7 +571,7 @@ export function updateAtomDetails(req, res) {
 		// Validate and clean submitted values
 		const newDetails = req.body.newDetails || {};
 		result.title = newDetails.title;
-		result.slug = result.isPublished ? result.slug : newDetails.slug;
+		result.slug = result.isPublished ? result.slug : newDetails.slug.toLowerCase();
 		result.description = newDetails.description && newDetails.description.substring(0, 140);
 		result.previewImage = newDetails.previewImage;
 		result.customAuthorString = newDetails.customAuthorString;
