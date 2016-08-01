@@ -112,6 +112,11 @@ export const Discussions = React.createClass({
 		this.setState({replyToID: replyToID});
 	},
 
+	clearReplyTo: function(replyToID) {
+		// rootReplyID is set in componentDidMount
+		this.setState({replyToID: undefined});
+	},
+
 	publishReply: function() {
 
 		const atomType = 'document';
@@ -159,21 +164,32 @@ export const Discussions = React.createClass({
 				
 					<Media/>
 
-					{replyToData && 
-						<div className={'showChildOnHover'} style={styles.replyToWrapper}>
-							Replying to comment by {replyToData.authorsData[0].source.name}
-							<div className={'hoverChild'} style={styles.replyToPreview}>
-								<DiscussionItem discussionData={replyToData} index={'current-reply'}/>
-							</div>
+					<div style={styles.replyWrapper}>
+						<div style={[styles.replyHeader, !replyToData && {display: 'none'}]}>
+								<div className={'showChildOnHover'} style={styles.replyToWrapper}>
+									Reply to: {replyToData && replyToData.authorsData[0].source.name}
+									<div className={'hoverChild'} style={styles.replyToPreview}>
+										<DiscussionItem discussionData={replyToData} index={'current-reply'} isPreview={true}/>
+									</div>
+								</div>
+							<div className={'button'} style={styles.replyButton} onClick={this.clearReplyTo}>Clear</div>
 						</div>
-					}
 
-					<div style={styles.license} key={'discussionLicense'}>
-						<License text={'All discussions are licensed under a'} hover={true} />
+						<div style={styles.replyBody}>
+							<div id={'reply-input'} className={'atom-reader atom-reply ProseMirror-quick-style'} style={styles.wsywigBlock}></div>
+						</div>
+
+						<div style={styles.replyFooter}>
+							<div style={styles.replyUserImageWrapper}>
+								<img style={styles.replyUserImage} src={'https://jake.pubpub.org/unsafe/50x50/' + this.props.loginData.getIn(['userData', 'image'])} />
+							</div>
+							<div style={styles.replyLicense} key={'discussionLicense'}>
+								<License text={'All discussions are licensed under a'} hover={true} />
+							</div>
+							<div className={'button'} style={styles.replyButton} onClick={this.publishReply}>Publish Reply</div>
+						</div>
+
 					</div>
-					<div id={'reply-input'} className={'atom-reader atom-reply ProseMirror-quick-style'} style={styles.wsywigBlock}></div>
-					<div className={'button'} onClick={this.publishReply}>Publish Reply</div>
-					
 					
 				</div>
 
@@ -200,84 +216,137 @@ export default connect( state => {
 })( Radium(Discussions) );
 
 styles = {
+	replyWrapper: {
+		// backgroundColor: 'blue',
+		margin: '1em 0em 2em',
+		boxShadow: '0px 1px 3px 1px #BBBDC0',
+		backgroundColor: 'white',
+	},
+	replyHeader: {
+		// backgroundColor: 'red',
+		display: 'table',
+		fontSize: '0.85em',
+		borderBottom: '1px solid #BBBDC0',
+		color: '#808284',
+	},
+	replyToWrapper: {
+		display: 'table-cell',
+		position: 'relative',
+		verticalAlign: 'middle',
+		padding: '.5em',
+	},
+	replyButton: {
+		display: 'table-cell',
+		width: '1%',
+		whiteSpace: 'nowrap',
+		verticalAlign: 'middle',
+		padding: '0em 1em',
+		borderWidth: '0px 0px 0px 1px',
+		borderColor: '#BBBDC0',
+	},
+	replyBody: {
+		// backgroundColor: 'green',
+	},
+	replyFooter: {
+		display: 'table',
+		borderTop: '1px solid #BBBDC0',
+		fontSize: '0.85em',
+	},
+	replyUserImageWrapper: {
+		display: 'table-cell',
+		width: '1%',
+		padding: '0.25em .5em',
+		// backgroundColor: 'magenta',
+		verticalAlign: 'middle',
+	},
+	replyUserImage: {
+		width: '25px',
+		display: 'block',
+	},
+	replyLicense: {
+		display: 'table-cell',
+		// backgroundColor: 'grey',
+		verticalAlign: 'middle',
+	},
+
 	container: {
 	},
-	license: {
-		float: 'right',
-		lineHeight: '26px',
-		opacity: '0.4',
-		paddingRight: '4px',
-	},
+	// license: {
+	// 	float: 'right',
+	// 	lineHeight: '26px',
+	// 	opacity: '0.4',
+	// 	paddingRight: '4px',
+	// },
 	wsywigBlock: {
 		width: '100%',
 		minHeight: '4em',
-		backgroundColor: 'white',
-		margin: '2em auto',
-		boxShadow: '0px 1px 3px 1px #BBBDC0',
+		// backgroundColor: 'white',
+		// margin: '2em auto',
+		// boxShadow: '0px 1px 3px 1px #BBBDC0',
 	},
-	discussionHeader: {
-		display: 'table',
-		position: 'relative',
-		left: '-.4em',
-		width: 'calc(100% + .4em)'
-	},
-	headerVotes: {
-		display: 'table-cell',
-		width: '1%',
-		textAlign: 'center',
-		verticalAlign: 'top',
-	},
-	headerVote: {
-		padding: '0em .2em',
-		height: '.6em',
-		fontFamily: 'Courier',
-		fontSize: '2em',
-		lineHeight: '1.1em',
-		cursor: 'pointer',
-		color: '#808284',
-		overflow: 'hidden',
-	},
-	headerDownVote: {
-		transform: 'rotate(180deg)',
-	},
-	headerDetails: {
-		display: 'table-cell',
-		verticalAlign: 'top',
-		fontSize: '0.85em',
-		color: '#58585B',
-	},
-	headerAuthor: {
-		display: 'table',
+	// discussionHeader: {
+	// 	display: 'table',
+	// 	position: 'relative',
+	// 	left: '-.4em',
+	// 	width: 'calc(100% + .4em)'
+	// },
+	// headerVotes: {
+	// 	display: 'table-cell',
+	// 	width: '1%',
+	// 	textAlign: 'center',
+	// 	verticalAlign: 'top',
+	// },
+	// headerVote: {
+	// 	padding: '0em .2em',
+	// 	height: '.6em',
+	// 	fontFamily: 'Courier',
+	// 	fontSize: '2em',
+	// 	lineHeight: '1.1em',
+	// 	cursor: 'pointer',
+	// 	color: '#808284',
+	// 	overflow: 'hidden',
+	// },
+	// headerDownVote: {
+	// 	transform: 'rotate(180deg)',
+	// },
+	// headerDetails: {
+	// 	display: 'table-cell',
+	// 	verticalAlign: 'top',
+	// 	fontSize: '0.85em',
+	// 	color: '#58585B',
+	// },
+	// headerAuthor: {
+	// 	display: 'table',
 
-	},
-	authorImage: {
-		display: 'table-cell',
-		width: '1%',
-		padding: '0em .5em 0em 0em',
-		verticalAlign: 'top',
-	},
-	authorDetails: {
-		display: 'table-cell',
-		verticalAlign: 'top',
-	},
-	discussionContent: {
-		// padding: '1em 0em',
-	},
-	discussionFooter: {
-		borderBottom: '1px solid #BBBDC0',
-		marginBottom: '1em',
-		paddingBottom: '1em',
-	},
-	discussionFooterItem: {
-		padding: '0em 1em 0em 0em',
-		fontSize: '0.75em',
-		cursor: 'pointer',
-		color: '#58585B',
-	},
-	replyToWrapper: {
-		position: 'relative',
-		// margin: '1em 0em -1em 0em',
-	},
+	// },
+	// authorImage: {
+	// 	display: 'table-cell',
+	// 	width: '1%',
+	// 	padding: '0em .5em 0em 0em',
+	// 	verticalAlign: 'top',
+	// },
+	// authorDetails: {
+	// 	display: 'table-cell',
+	// 	verticalAlign: 'top',
+	// },
+	// discussionContent: {
+	// 	// padding: '1em 0em',
+	// },
+	// discussionFooter: {
+	// 	borderBottom: '1px solid #BBBDC0',
+	// 	marginBottom: '1em',
+	// 	paddingBottom: '1em',
+	// },
+	// discussionFooterItem: {
+	// 	padding: '0em 1em 0em 0em',
+	// 	fontSize: '0.75em',
+	// 	cursor: 'pointer',
+	// 	color: '#58585B',
+	// },
+	// replyToWrapper: {
+	// 	position: 'relative',
+	// 	// margin: '1em 0em -1em 0em',
+	// },
 	replyToPreview: {
 		position: 'absolute',
 		backgroundColor: 'white',

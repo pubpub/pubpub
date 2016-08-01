@@ -16,7 +16,7 @@ export const PreviewCard = React.createClass({
 		slug: PropTypes.string,
 		buttons: PropTypes.array,
 		header: PropTypes.object,
-		footer: PropTypes.object,
+		footer: PropTypes.oneOfType([PropTypes.array, PropTypes.object]),
 	},
 
 

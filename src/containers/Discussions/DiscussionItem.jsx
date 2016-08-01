@@ -15,6 +15,7 @@ export const DiscussionItem = React.createClass({
 		discussionData: PropTypes.object,
 		setReplyTo: PropTypes.func,
 		index: PropTypes.string,
+		isPreview: PropTypes.bool,
 	},
 
 	getInitialState() {
@@ -67,7 +68,7 @@ export const DiscussionItem = React.createClass({
 				<div className={'atom-reply'} style={styles.discussionContent}>
 					{renderReactFromJSON(docJSON && docJSON.content, true)}
 				</div>
-				<div style={styles.discussionFooter}>
+				<div style={[styles.discussionFooter, this.props.isPreview && {display: 'none'}]}>
 					<Link style={globalStyles.link} to={'/pub/' + versionData.parent}><span className={'underlineOnHover'} style={styles.discussionFooterItem}>{dateFormat(date, 'mmm dd, yyyy h:MM TT')}</span></Link>
 					<span className={'underlineOnHover'} style={styles.discussionFooterItem} onClick={this.setReply}>reply</span>
 					{/* <span className={'underlineOnHover'} style={styles.discussionFooterItem} onClick={this.setFlag}>flag</span> */}
@@ -93,13 +94,13 @@ styles = {
 		paddingLeft: '1em',
 		borderLeft: '1px solid #E0E0E0',
 	},
-	wsywigBlock: {
-		width: '100%',
-		minHeight: '4em',
-		backgroundColor: 'white',
-		margin: '0 auto',
-		boxShadow: '0px 1px 3px 1px #BBBDC0',
-	},
+	// wsywigBlock: {
+	// 	width: '100%',
+	// 	minHeight: '4em',
+	// 	backgroundColor: 'white',
+	// 	margin: '0 auto',
+	// 	boxShadow: '0px 1px 3px 1px #BBBDC0',
+	// },
 	discussionHeader: {
 		display: 'table',
 		position: 'relative',
