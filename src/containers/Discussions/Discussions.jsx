@@ -1,6 +1,7 @@
 import React, {PropTypes} from 'react';
 import {connect} from 'react-redux';
 import Radium, {Style} from 'radium';
+import { Link } from 'react-router';
 import {safeGetInToJS} from 'utils/safeParse';
 import dateFormat from 'dateformat';
 import {globalStyles} from 'utils/styleConstants';
@@ -67,8 +68,10 @@ export const Discussions = React.createClass({
 		const prosemirror = require('prosemirror');
 		const {pubpubSetup} = require('components/AtomTypes/Document/proseEditor/pubpubSetup');
 		
+		const place = document.getElementById('reply-input');
+		if (!place) { return undefined; }
 		pm = new prosemirror.ProseMirror({
-			place: document.getElementById('reply-input'),
+			place: place,
 			schema: schema,
 			plugins: [pubpubSetup.config({menuBar: false, tooltipMenu: true})],
 			doc: null,
@@ -142,7 +145,9 @@ export const Discussions = React.createClass({
 	render: function() {
 		const atomData = safeGetInToJS(this.props.atomData, ['atomData']) || [];
 		const discussionsData = safeGetInToJS(this.props.atomData, ['discussionsData']) || [];
-		
+		const loggedIn = this.props.loginData && this.props.loginData.get('loggedIn');
+		const loginQuery = this.props.pathname && this.props.pathname !== '/' ? '?redirect=' + this.props.pathname : ''; // Query appended to login route. Used to redirect to a given page after succesful login.
+
 		let replyToData;
 		const tempArray = discussionsData.map((item)=> {
 			if (item.atomData._id === this.state.replyToID) {
@@ -169,38 +174,49 @@ export const Discussions = React.createClass({
 					}
 				}} />				
 
-				<div>
+				{loggedIn && 
+					<div>
 				
-					<Media/>
+						<Media/>
 
-					<Sticky style={styles.replyWrapper} isActive={!!replyToData}>	
-						<div style={[styles.replyHeader, !replyToData && {display: 'none'}]}>
-								<div className={'showChildOnHover'} style={styles.replyToWrapper}>
-									Reply to: {replyToData && replyToData.authorsData[0].source.name}
-									<div className={'hoverChild'} style={styles.replyToPreview}>
-										<DiscussionItem discussionData={replyToData} index={'current-reply'} isPreview={true}/>
+						<Sticky style={styles.replyWrapper} isActive={!!replyToData}>	
+							<div style={[styles.replyHeader, !replyToData && {display: 'none'}]}>
+									<div className={'showChildOnHover'} style={styles.replyToWrapper}>
+										Reply to: {replyToData && replyToData.authorsData[0].source.name}
+										<div className={'hoverChild'} style={styles.replyToPreview}>
+											<DiscussionItem discussionData={replyToData} index={'current-reply'} isPreview={true}/>
+										</div>
 									</div>
+								<div className={'button'} style={styles.replyButton} onClick={this.clearReplyTo}>Clear</div>
+							</div>
+
+							<div style={styles.replyBody}>
+								<div id={'reply-input'} className={'atom-reader atom-reply ProseMirror-quick-style'} style={styles.wsywigBlock}></div>
+							</div>
+
+							<div style={styles.replyFooter}>
+								<div style={styles.replyUserImageWrapper}>
+									<img style={styles.replyUserImage} src={'https://jake.pubpub.org/unsafe/50x50/' + this.props.loginData.getIn(['userData', 'image'])} />
 								</div>
-							<div className={'button'} style={styles.replyButton} onClick={this.clearReplyTo}>Clear</div>
-						</div>
-
-						<div style={styles.replyBody}>
-							<div id={'reply-input'} className={'atom-reader atom-reply ProseMirror-quick-style'} style={styles.wsywigBlock}></div>
-						</div>
-
-						<div style={styles.replyFooter}>
-							<div style={styles.replyUserImageWrapper}>
-								<img style={styles.replyUserImage} src={'https://jake.pubpub.org/unsafe/50x50/' + this.props.loginData.getIn(['userData', 'image'])} />
+								<div style={styles.replyLicense} key={'discussionLicense'}>
+									<License text={'All discussions are licensed under a'} hover={true} />
+								</div>
+								<div className={'button'} style={styles.replyButton} onClick={this.publishReply}>Publish Reply</div>
 							</div>
-							<div style={styles.replyLicense} key={'discussionLicense'}>
-								<License text={'All discussions are licensed under a'} hover={true} />
-							</div>
-							<div className={'button'} style={styles.replyButton} onClick={this.publishReply}>Publish Reply</div>
-						</div>
+						</Sticky>
+
+						
+					</div>
+				}
+
+				{!loggedIn &&
+					<Sticky style={styles.replyWrapper} isActive={!!replyToData}>	
+						<Link to={'/login' + loginQuery} style={globalStyles.link}>
+							<div style={styles.loginMessage}>Login to post discussion</div>
+						</Link>
 					</Sticky>
-
-					
-				</div>
+				}
+				
 
 				<div>
 					{topChildren.map((discussion, index)=> {
@@ -281,7 +297,11 @@ styles = {
 		// backgroundColor: 'grey',
 		verticalAlign: 'middle',
 	},
-
+	loginMessage: {
+		textAlign: 'center',
+		color: '#808284',
+		padding: '1em 0em',
+	},
 	container: {
 		paddingTop: '1em',
 	},
