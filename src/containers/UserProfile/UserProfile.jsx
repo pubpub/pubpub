@@ -51,6 +51,21 @@ export const UserProfile = React.createClass({
 		}
 		const metaData = {
 			title: (profileData.name || profileData.username) + ' · PubPub',
+			meta: [
+				{property: 'og:title', content: (profileData.name || profileData.username)},
+				{property: 'og:type', content: 'article'},
+				{property: 'og:description', content: profileData.bio},
+				{property: 'og:url', content: 'https://www.pubpub.org/user/' + profileData.username},
+				{property: 'og:image', content: profileData.image},
+				{property: 'og:image:url', content: profileData.image},
+				{property: 'og:image:width', content: '500'},
+				{name: 'twitter:card', content: 'summary'},
+				{name: 'twitter:site', content: '@pubpub'},
+				{name: 'twitter:title', content: (profileData.name || profileData.username)},
+				{name: 'twitter:description', content: profileData.bio || (profileData.name || profileData.username)},
+				{name: 'twitter:image', content: profileData.image},
+				{name: 'twitter:image:alt', content: 'Image of ' + (profileData.name || profileData.username)}
+			]
 		};
 		
 		const mobileNavButtons = [

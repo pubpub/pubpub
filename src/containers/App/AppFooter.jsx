@@ -1,6 +1,7 @@
 import React, {PropTypes} from 'react';
 import Radium from 'radium';
-import { Link } from 'react-router';
+import { Link as UnwrappedLink } from 'react-router';
+const Link = Radium(UnwrappedLink);
 import {globalMessages} from 'utils/globalMessages';
 import {FormattedMessage} from 'react-intl';
 
@@ -80,5 +81,8 @@ styles = {
 	footerItem: {
 		display: 'block',
 		whiteSpace: 'nowrap',
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+			padding: '0.25em 0em',
+		}
 	},
 };

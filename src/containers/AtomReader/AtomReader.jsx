@@ -127,11 +127,34 @@ export const AtomReader = React.createClass({
 		// const versionIndex = this.props.query.version !== undefined && this.props.query.version > 0 && this.props.query.version <= (this.props.pubData.getIn(['pubData', 'history']).size - 1)
 		// 	? this.props.query.version - 1
 		// 	: this.props.pubData.getIn(['pubData', 'history']).size - 1;
-		const metaData = {};
+		const atomData = safeGetInToJS(this.props.atomData, ['atomData']) || {};
+
+		const metaData = {
+			title: atomData.title,
+			meta: [
+				{property: 'og:title', content: atomData.title},
+				{property: 'og:type', content: 'article'},
+				{property: 'og:description', content: atomData.description},
+				{property: 'og:url', content: 'https://www.pubpub.org/pub/' + atomData.slug},
+				{property: 'og:image', content: atomData.previewImage},
+				{property: 'og:image:url', content: atomData.previewImage},
+				{property: 'og:image:width', content: '500'},
+				{property: 'article:published_time', content: atomData.lastUpdated || atomData.createDate},
+				{property: 'article:modified_time', content: atomData.lastUpdated},
+				{name: 'twitter:card', content: 'summary'},
+				{name: 'twitter:site', content: '@pubpub'},
+				{name: 'twitter:title', content: atomData.title},
+				{name: 'twitter:description', content: atomData.description || atomData.title},
+				{name: 'twitter:image', content: atomData.previewImage},
+				{name: 'twitter:image:alt', content: 'Preview image for ' + atomData.title}
+			]
+		};
+
+
 		const showDiscussions = !this.props.meta && (this.state.showDiscussions && !this.state.showTOC || this.state.showDiscussions && this.state.lastCliked === 'discussions');
 		const showTOC = !this.props.meta && (this.state.showTOC && !this.state.showDiscussions || this.state.showTOC && this.state.lastCliked === 'toc');
 
-		const atomData = safeGetInToJS(this.props.atomData, ['atomData']) || {};
+		
 		const contributorsData = safeGetInToJS(this.props.atomData, ['contributorsData']) || [];
 		const currentVersionContent = safeGetInToJS(this.props.atomData, ['currentVersionData', 'content']) || {};
 		const currentVersionDate = safeGetInToJS(this.props.atomData, ['currentVersionData', 'createDate']);
