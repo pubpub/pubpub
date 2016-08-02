@@ -34,12 +34,13 @@ export const EmbedViewer = React.createClass({
 		} else if (source) {
 			const provider = match(source);
 			if (provider)	{
-				this.setState({source, provider: provider.name}, e => this.loadEmbed(source, provider.api));
+				this.setState({source, provider: provider.name}, e => this.loadEmbed(source, provider));
 			}
 		}
 	},
 
-	loadEmbed(source, api) {
+	loadEmbed(source, provider) {
+		const {api} = provider;
 		const url = __DEVELOPMENT__ ? ('http://crossorigin.me/' + api) : api;
 		request.get(url).query({url: source, format: 'json'}).end((err, res) => {
 			if (err) {

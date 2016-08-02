@@ -18,6 +18,7 @@ export const EmbedEditor = React.createClass({
 		return {
 			valid: false,
 			source: '',
+			value: '',
 			html: '',
 			metaData: {},
 			provider: ''
@@ -35,16 +36,17 @@ export const EmbedEditor = React.createClass({
 		const html = safeGetInToJS(this.props.atomEditData, ['currentVersionData', 'content', 'html']) || '';
 		const metaData = safeGetInToJS(this.props.atomEditData, ['currentVersionData', 'content', 'metaData']) || '';
 		if (html) {
-			this.setState({source, provider, html, metaData});
+			this.setState({source, value: source, provider, html, metaData});
 		} else if (source) {
 			const provider = match(source);
 			if (provider)	{
-				this.setState({source, provider: provider.name}, e => this.loadEmbed(source, provider.api));
+				this.setState({source, value: source, provider: provider.name}, e => this.loadEmbed(source, provider));
 			}
 		}
 	},
 	
-	loadEmbed(source, api) {
+	loadEmbed(source, provider) {
+		const {api} = provider;
 		const url = __DEVELOPMENT__ ? ('http://crossorigin.me/' + api) : api;
 		request.get(url).query({url: source, format: 'json'}).end((err, res) => {
 			if (err) {
@@ -57,20 +59,23 @@ export const EmbedEditor = React.createClass({
 	},
 	
 	handleSourceChange(evt) {
-		const source = evt.target.value;
-		const provider = match(source);
-		if (provider && source !== this.state.source) {
-			this.setState({source, provider: provider.name}, e => this.loadEmbed(source, provider.api));
+		const value = evt.target.value;
+		const provider = match(value);
+		if (provider && value !== this.state.source) {
+			this.setState({source: value, value, provider: provider.name}, e => this.loadEmbed(value, provider));
+		} else {
+			this.setState({value});
 		}
 	},
 	
 	render() {
-		const {source, html} = this.state;
+		const {source, html, value} = this.state;
 		return <div>
 			<label htmlFor='source' style={styles.label}>
 				Source:
-				<input id='source' name='source' type='text' value={source} style={styles.source} onChange={this.handleSourceChange}/>
+				<input id='source' name='source' type='text' value={value} style={styles.source} onChange={this.handleSourceChange}/>
 			</label>
+			<div>{source}</div>
 			<h3>Preview</h3>
 			<div dangerouslySetInnerHTML={{__html: html}}></div>
 		</div>;
