@@ -78,7 +78,7 @@ export const Login = React.createClass({
 						</Link>
 					</div>
 
-					<button className={'button'} onClick={this.handleLoginSubmit}>
+					<button name={'login'} className={'button'} onClick={this.handleLoginSubmit}>
 						<FormattedMessage {...globalMessages.Login}/>
 					</button>
 
