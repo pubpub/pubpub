@@ -6,7 +6,7 @@ import request from 'superagent';
 import Helmet from 'react-helmet';
 import {Loader} from 'components';
 import {GoogleCharts} from 'components';
-
+import dateFormat from 'dateformat';
 
 let styles = {};
 
@@ -85,6 +85,8 @@ export const AtomReaderAnalytics = React.createClass({
 		if (isData) {
 			gData.dateViewsArray.forEach( function(item) {
 				convDateViewsArray.push([new Date(item[0]), item[1]]);
+				// convDateViewsArray.push([dateFormat(item[0], 'mmm dd, yyyy'), item[1]]);
+				
 			});
 		}
 
@@ -134,43 +136,46 @@ export const AtomReaderAnalytics = React.createClass({
 						<div style={styles.blockUnderL}>Average Read Time</div>
 					</div></div>
 
-					<div style={styles.wideContainer}><div style={styles.graphTitle}>Views vs. Time</div>
+					<div style={styles.wideContainer}><div style={styles.graphTitle}>Views over Time</div>
 					<GoogleCharts {...gChartProps} /></div>
 
 					<br/>
 
-					<div style={styles.wideContainer}><div style={[styles.block, styles.block25]}>
-						<div style={styles.blockDispS}>{gData.totalViewsYear}</div>
-						<div style={styles.blockUnderS}>Views Past Year</div>
+					<div style={styles.wideContainer}>
+						<div style={[styles.block, styles.block25]}>
+							<div style={styles.blockDispS}>{gData.totalViewsYear}</div>
+							<div style={styles.blockUnderS}>Views Past Year</div>
+						</div>
+						<div style={[styles.block, styles.block25]}>
+							<div style={styles.blockDispS}>{gData.totalViewsMonth}</div>
+							<div style={styles.blockUnderS}>Views Past Month</div>
+						</div>
+						<div style={[styles.block, styles.block25]}>
+							<div style={styles.blockDispS}>{gData.totalViewsWeek}</div>
+							<div style={styles.blockUnderS}>Views Past Week</div>
+						</div>
+						<div style={[styles.block, styles.block25]}>
+							<div style={styles.blockDispS}>{gData.totalViewsDay}</div>
+							<div style={styles.blockUnderS}>Views Past Day</div>
+						</div>
+						
+						{/* <div style={[styles.block, styles.block25]}>
+								<div style={styles.blockDispS}>{gData.totalViewsAveYear}</div>
+								<div style={styles.blockUnderS}>Views Ave. Year</div>
+							</div>
+							<div style={[styles.block, styles.block25]}>
+								<div style={styles.blockDispS}>{gData.totalViewsAveMonth}</div>
+								<div style={styles.blockUnderS}>Views Ave. Month</div>
+							</div>
+							<div style={[styles.block, styles.block25]}>
+								<div style={styles.blockDispS}>{gData.totalViewsAveWeek}</div>
+								<div style={styles.blockUnderS}>Views Ave. Week</div>
+							</div>
+							<div style={[styles.block, styles.block25]}>
+								<div style={styles.blockDispS}>{gData.totalViewsAveDay}</div>
+								<div style={styles.blockUnderS}>Views Ave. Day</div>
+							</div> */}
 					</div>
-					<div style={[styles.block, styles.block25]}>
-						<div style={styles.blockDispS}>{gData.totalViewsMonth}</div>
-						<div style={styles.blockUnderS}>Views Past Month</div>
-					</div>
-					<div style={[styles.block, styles.block25]}>
-						<div style={styles.blockDispS}>{gData.totalViewsWeek}</div>
-						<div style={styles.blockUnderS}>Views Past Week</div>
-					</div>
-					<div style={[styles.block, styles.block25]}>
-						<div style={styles.blockDispS}>{gData.totalViewsDay}</div>
-						<div style={styles.blockUnderS}>Views Past Day</div>
-					</div>
-					<div style={[styles.block, styles.block25]}>
-						<div style={styles.blockDispS}>{gData.totalViewsAveYear}</div>
-						<div style={styles.blockUnderS}>Views Ave. Year</div>
-					</div>
-					<div style={[styles.block, styles.block25]}>
-						<div style={styles.blockDispS}>{gData.totalViewsAveMonth}</div>
-						<div style={styles.blockUnderS}>Views Ave. Month</div>
-					</div>
-					<div style={[styles.block, styles.block25]}>
-						<div style={styles.blockDispS}>{gData.totalViewsAveWeek}</div>
-						<div style={styles.blockUnderS}>Views Ave. Week</div>
-					</div>
-					<div style={[styles.block, styles.block25]}>
-						<div style={styles.blockDispS}>{gData.totalViewsAveDay}</div>
-						<div style={styles.blockUnderS}>Views Ave. Day</div>
-					</div></div>
 					
 					<br/>
 
@@ -208,34 +213,38 @@ export const AtomReaderAnalytics = React.createClass({
 
 					<br/>
 
-					<div style={styles.wideContainer}><div style={[styles.block, styles.block25]}>
-						<div style={styles.blockDispM}>89</div>
-						<div style={styles.blockUnderM}>Interactions</div>
-					</div>
-					<div style={[styles.block, styles.block25]}>
-						<div style={styles.blockDispM}>13</div>
-						<div style={styles.blockUnderM}>Responses</div>
-					</div>
-					<div style={[styles.block, styles.block25]}>
-						<div style={styles.blockDispM}>76</div>
-						<div style={styles.blockUnderM}>Ratings</div>
-					</div>
-					<div style={[styles.block, styles.block25]}>
-						<div style={styles.blockDispM}>2</div>
-						<div style={styles.blockUnderM}>Journal Features</div>
-					</div>
-					<div style={[styles.block, {width: 'calc(33% - 16px)'}]}>
-						<div style={styles.blockDispM}>{Math.round(100 * 89 / gData.totalUniqueViews)}%</div>
-						<div style={styles.blockUnderM}>Interactivity</div>
-					</div>
-					<div style={[styles.block, {width: 'calc(33% - 16px)'}]}>
-						<div style={styles.blockDispM}>{gData.totalUniqueViews}</div>
-						<div style={styles.blockUnderM}>Unique Views</div>
-					</div>
-					<div style={[styles.block, {width: 'calc(33% - 16px)'}]}>
-						<div style={styles.blockDispM}>{gData.totalReturnViews}</div>
-						<div style={styles.blockUnderM}>Returning Readers</div>
-					</div></div>
+					{/* <div style={styles.wideContainer}>
+					
+						<div style={[styles.block, styles.block25]}>
+							<div style={styles.blockDispM}>89</div>
+							<div style={styles.blockUnderM}>Interactions</div>
+						</div>
+						<div style={[styles.block, styles.block25]}>
+							<div style={styles.blockDispM}>13</div>
+							<div style={styles.blockUnderM}>Responses</div>
+						</div>
+						<div style={[styles.block, styles.block25]}>
+							<div style={styles.blockDispM}>76</div>
+							<div style={styles.blockUnderM}>Ratings</div>
+						</div>
+						<div style={[styles.block, styles.block25]}>
+							<div style={styles.blockDispM}>2</div>
+							<div style={styles.blockUnderM}>Journal Features</div>
+						</div>
+						<div style={[styles.block, {width: 'calc(33% - 16px)'}]}>
+							<div style={styles.blockDispM}>{Math.round(100 * 89 / gData.totalUniqueViews)}%</div>
+							<div style={styles.blockUnderM}>Interactivity</div>
+						</div>
+						<div style={[styles.block, {width: 'calc(33% - 16px)'}]}>
+							<div style={styles.blockDispM}>{gData.totalUniqueViews}</div>
+							<div style={styles.blockUnderM}>Unique Views</div>
+						</div>
+						<div style={[styles.block, {width: 'calc(33% - 16px)'}]}>
+							<div style={styles.blockDispM}>{gData.totalReturnViews}</div>
+							<div style={styles.blockUnderM}>Returning Readers</div>
+						</div>
+
+					</div> */}
 
 					<br/>
 
