@@ -160,12 +160,12 @@ export const AppHeader = React.createClass({
 				{/* Account Menu */}
 				{/* Use CSS to toggle display:none, to avoid flicker on mobile */}
 				<div className="header-menu lightest-bg darkest-color arrow-box" style={[styles.headerMenu, !this.state.accountMenuOpen && {display: 'none'}]}>
-					<Link className={'menu-option'} to={'/user/' + username}>{name}</Link>
+					<Link className={'menu-option'} to={'/user/' + username}>{name} <div style={styles.subMenuLabel}>View Profile</div></Link>
 
 					<div className={'menu-separator'} ></div>
 
 					<div className={'menu-option'} onClick={this.props.createDocument}>New Document</div>
-					<Link className={'menu-option'} to={'/user/' + username + '/journals'}>My Journals</Link>
+					{/* <Link className={'menu-option'} to={'/user/' + username + '/journals'}>My Journals</Link> */}
 					
 					<div className={'menu-separator'} ></div>
 
@@ -276,5 +276,8 @@ styles = {
 	},
 	menuName: {
 		padding: '.2em 2em .2em 1em',
-	}
+	},
+	subMenuLabel: {
+		fontSize: '0.75em',
+	},
 };
