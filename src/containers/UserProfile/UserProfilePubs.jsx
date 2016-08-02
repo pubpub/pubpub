@@ -48,7 +48,7 @@ export const UserProfilePubs = React.createClass({
 								image={item.previewImage}
 								description={item.description}
 								header={ <div>{item.isPublished ? 'Published' : 'Unpublished'}</div> }
-								footer={ <div>{item.versions.length} Version{item.versions.length !== 1 && 's'} | Latest Version: {dateFormat(item.lastUpdated, 'mmm dd, yyyy')}</div> }
+								footer={ <div>{item.versions.length} Version{item.versions.length !== 1 && 's'} | {item.lastUpdated ? 'Latest Version: ' + dateFormat(item.lastUpdated, 'mmm dd, yyyy') : 'Created: ' + dateFormat(item.createDate, 'mmm dd, yyyy')}</div> }
 								buttons = {this.props.ownProfile ? buttons : []} />
 						);
 					})

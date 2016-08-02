@@ -69,6 +69,7 @@ export const AtomReaderJournals = React.createClass({
 
 						<Select.Async
 							name="form-field-name"
+							minimumInput={1}
 							value={this.state.value}
 							loadOptions={this.loadOptions}
 							multi={true}

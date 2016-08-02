@@ -4,6 +4,7 @@ import Helmet from 'react-helmet';
 import {safeGetInToJS} from 'utils/safeParse';
 import {PreviewCard} from 'components';
 import Select from 'react-select';
+import dateFormat from 'dateformat';
 
 // import {globalStyles} from 'utils/styleConstants';
 // import {globalMessages} from 'utils/globalMessages';
@@ -102,7 +103,7 @@ export const JournalProfileFeatured = React.createClass({
 								title={item.destination.title}
 								slug={item.destination.slug}
 								description={item.destination.description} 
-								header={<div>Featured on {item.createDate}</div>}
+								header={<div>Featured on {dateFormat(item.createDate, 'mmm dd, yyyy h:MM TT')}</div>}
 								footer={selection} />
 						);
 					})

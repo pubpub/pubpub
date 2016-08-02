@@ -20,6 +20,7 @@ import AtomReaderVersions from './AtomReaderVersions';
 import AtomViewerPane from './AtomViewerPane';
 import { StickyContainer as UnwrappedStickyContainer, Sticky } from 'react-sticky';
 const StickyContainer = Radium(UnwrappedStickyContainer);
+import smoothScroll from 'smoothscroll';
 
 import {Discussions} from 'containers';
 
@@ -115,7 +116,11 @@ export const AtomReader = React.createClass({
 
 	// 	this.props.dispatch(createHighlight(newHighLight));
 	// },
-
+	handleScroll: function(id) {
+		const destination = document.getElementById(id);
+		if (!destination) { return undefined; }
+		smoothScroll(destination);
+	},
 
 	render: function() {
 		// const pubData = this.props.pubData.get('pubData').toJS();
@@ -182,7 +187,7 @@ export const AtomReader = React.createClass({
 				<StickyContainer style={[styles.tocSection, !showTOC && {display: 'none'}]}>
 					<Sticky style={styles.tocContent}>	
 						{toc.map((object, index)=>{
-							return <a key={'toc-' + index} href={'#' + object.id} className={'underlineOnHover'} style={[styles.tocItem, styles.tocLevels[object.level - 1]]}>{object.title}</a>;
+							return <div key={'toc-' + index} className={'underlineOnHover'} style={[styles.tocItem, styles.tocLevels[object.level - 1]]} onClick={this.handleScroll.bind(this, object.id)}>{object.title}</div>;
 						})}
 					</Sticky>
 				</StickyContainer>
@@ -237,7 +242,7 @@ export const AtomReader = React.createClass({
 				{/* Discussion Section */}
 				<StickyContainer style={[styles.discussionSection, !showDiscussions && {display: 'none'}]}>
 					{!this.props.meta &&
-							<Discussions/>
+						<Discussions/>
 					}
 				</StickyContainer>
 
@@ -403,6 +408,7 @@ styles = {
 		paddingTop: '1em',
 		paddingBottom: '1em',
 		paddingLeft: '2em',
+		cursor: 'pointer',
 	},
 
 	tocLevels: [

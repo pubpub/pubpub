@@ -145,12 +145,12 @@ const Landing = React.createClass({
 
 						
 
-						<Select.Async
+						{/* <Select.Async
 							name="form-field-name"
 							value={this.state.value}
 							loadOptions={this.loadOptions}
 							placeholder={<span>Search</span>}
-							onChange={this.handleSelectChange} />
+							onChange={this.handleSelectChange} /> */}
 
 						{/* <h2>Recent Activity</h2>
 

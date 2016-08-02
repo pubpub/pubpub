@@ -4,6 +4,7 @@ const Link = require('../models').Link;
 const Atom = require('../models').Atom;
 // const Tag = require('../models').Tag;
 const User = require('../models').User;
+const mongoose = require('mongoose');
 
 export function createJournal(req, res) {
 	if (!req.user) { return res.status(403).json('Not Logged In'); }
@@ -98,7 +99,7 @@ export function getJournal(req, res) {
 		// Get atomsData content
 		// The atomsData will vary based on view, e.g. recent activity vs. collection
 		const getAtomsData = new Promise(function(resolve) {
-			if (mode) {
+			if (mode && mongoose.Types.ObjectId.isValid(mode)) {
 				// If there is a mode, it could be a collection, try to grab atoms that are in that collection
 				const query = Link.find({source: journalResult._id, type: 'featured', 'metadata.collections': mode}).populate({
 					path: 'destination',

@@ -1,5 +1,5 @@
 import React, {PropTypes} from 'react';
-import Radium from 'radium';
+import Radium, {Style} from 'radium';
 import Helmet from 'react-helmet';
 import Select from 'react-select';
 import request from 'superagent';
@@ -144,10 +144,16 @@ export const AtomEditorContributors = React.createClass({
 
 		return (
 			<div style={styles.container}>			
+				
+				<Style rules={{
+					'.contributor-role-input .Select-control': { borderWidth: '0px', height: '34px'},
+					'.contributor-role-input .Select-placeholder': {lineHeight: '34px'},
+				}} />
 
 				<Select.Async
 					name="form-field-name"
-					autoload={false}
+					// autoload={false}
+					minimumInput={3}
 					value={this.state.value}
 					loadOptions={this.loadOptions}
 					placeholder={<span>Add new contributor</span>}
@@ -192,7 +198,7 @@ export const AtomEditorContributors = React.createClass({
 									</RadioGroup>
 								} 
 								footer={
-									<div>
+									<div className={'contributor-role-input'}>
 										<Select
 											name={'contributorRoles-' + item._id}
 											options={roleOptions}

@@ -50,10 +50,10 @@ export const AppHeader = React.createClass({
 	},
 
 	loadOptions: function(input, callback) {
-		if (!input || input.length < 3) {
-			callback(null, { options: [] });
-			return undefined;
-		}
+		// if (!input || input.length < 3) {
+		// 	callback(null, { options: [] });
+		// 	return undefined;
+		// }
 		request.get('/api/autocompletePubsAndUsersAndJournals?string=' + input).end((err, response)=>{
 			const responseArray = response.body || [];
 			const options = responseArray.map((item)=>{
@@ -79,32 +79,32 @@ export const AppHeader = React.createClass({
 			<div className="header-bar darkest-bg lightest-color" style={styles.headerBar}>
 
 				<Style rules={{
-					'.is-open > .Select-control, .Select-control': {
+					'.header-search .is-open > .Select-control, .header-search .Select-control': {
 						backgroundColor: 'transparent',
 						borderColor: '#58585B',
 						borderWidth: '0px 0px 1px 0px',
 						color: '#F3F3F4',
 						height: '27px',
 					},
-					'.is-open > .Select-control input, .Select-control input': {
+					'.header-search .is-open > .Select-control input, .header-search .Select-control input': {
 						color: '#F3F3F4',
 					},
-					'.Select-input': {
+					'.header-search .Select-input': {
 						height: '26px',
 					},
-					'.Select--single > .Select-control .Select-value, .has-value.Select--single > .Select-control .Select-value .Select-value-label, .has-value.is-pseudo-focused.Select--single > .Select-control .Select-value .Select-value-label': {
+					'.header-search .Select--single > .Select-control .Select-value, .header-search .has-value.Select--single > .Select-control .Select-value .Select-value-label, .header-search .has-value.is-pseudo-focused.Select--single > .Select-control .Select-value .Select-value-label': {
 						color: '#F3F3F4',
 					},
-					'.Select-arrow-zone': {
+					'.header-search .Select-arrow-zone': {
 						display: 'none',
 					},
-					'.Select-placeholder, .Select--single > .Select-control .Select-value, .Select-input': {
+					'.header-search .Select-placeholder, .header-search .Select--single > .Select-control .Select-value, .header-search .Select-input': {
 						paddingLeft: '2px',
 					},
-					'.Select-clear-zone': {
+					'.header-search .Select-clear-zone': {
 						paddingTop: '6px',
 					},
-					'.Select-clear-zone:hover': {
+					'.header-search .Select-clear-zone:hover': {
 						color: '#F3F3F4',
 					},
 				}} />
@@ -133,9 +133,10 @@ export const AppHeader = React.createClass({
 					</div>
 				}
 
-				<div style={[styles.headerSearch]}>
+				<div style={[styles.headerSearch]} className={'header-search'}>
 					<Select.Async
 						name="form-field-name"
+						minimumInput={3}
 						value={this.state.value}
 						loadOptions={this.loadOptions}
 						placeholder={<span>Search</span>}

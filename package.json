@@ -197,6 +197,7 @@
     "serve-static": "^1.10.2",
     "shallowequal": "^0.2.2",
     "sifter": "^0.4.5",
+    "smoothscroll": "^0.2.2",
     "superagent": "^1.4.0",
     "superagent-promise": "^1.1.0",
     "underscore": "^1.8.3",
