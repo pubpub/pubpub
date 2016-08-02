@@ -1,5 +1,4 @@
 const app = require('../api');
-const passport = require('passport');
 
 const User = require('../models').User;
 

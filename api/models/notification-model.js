@@ -100,7 +100,7 @@ notificationSchema.statics.createNotification = function(type, sourceHost, sende
 	});
 
 	notification.save(function(errSaveNotification, notificationSaved) {
-		if (errSaveNotification) { console.log(err); }
+		if (errSaveNotification) { console.log(errSaveNotification); }
 		// console.log(notification);
 		return;
 	});

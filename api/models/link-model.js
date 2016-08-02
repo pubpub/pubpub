@@ -102,10 +102,6 @@ module.exports = mongoose.model('Link', linkSchema);
 // JOURNAL -> PUB
 // featured
 
-
-
-
-
 // -------
 // Metadata
 // -------
@@ -119,6 +115,3 @@ module.exports = mongoose.model('Link', linkSchema);
 // 
 // author, contributor, editor, reader
 // 		roles
-
-
-
