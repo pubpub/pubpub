@@ -433,20 +433,11 @@ export const Media = React.createClass({
 									if (this.state.atomMode === 'recent' && index > 9) {
 										return null;
 									}
+									const previewImage = item.parent.previewImage.indexOf('.gif') > -1 ? item.parent.previewImage : 'https://jake.pubpub.org/unsafe/fit-in/50x50/' + item.parent.previewImage;
 									return (
 										<div key={'media-item-' + item._id} onClick={this.setItem.bind(this, item)} style={styles.item}>
 											<div style={styles.itemPreview}>
-												{item.type === 'image' &&
-													<img src={'https://jake.pubpub.org/unsafe/fit-in/100x50/' + item.content.url} alt={item.parent.title} title={item.parent.title}/>
-												}
-
-												{item.type === 'video' &&
-													<span>Video!</span>
-												}
-												
-												{item.type === 'document' &&
-													<div>{item.parent.title}</div>
-												}
+												<img style={styles.itemPreviewImage} src={previewImage} alt={item.parent.title} title={item.parent.title}/>
 											</div>
 
 											<div style={styles.itemDetail}>
@@ -664,11 +655,15 @@ styles = {
 		display: 'table',
 	},
 	itemPreview: {
-		width: '100px',
+		width: '1%',
 		height: '50px',
 		marginRight: '1em',
 		display: 'table-cell',
 		verticalAlign: 'middle',
+	},
+	itemPreviewImage: {
+		maxWidth: '50px',
+		maxHeight: '50px',
 	},
 	itemDetail: {
 		display: 'table-cell',
