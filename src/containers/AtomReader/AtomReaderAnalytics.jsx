@@ -26,8 +26,7 @@ export const AtomReaderAnalytics = React.createClass({
 			// 'input': 'hello',
 			'item': 'pub'
 		}).end((err, response)=>{
-			console.log(response);
-			console.log(response.body);
+			// console.log(response.body);
 			this.setState({data: response.body});
 		});
 	},
