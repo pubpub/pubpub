@@ -78,9 +78,7 @@ export const AtomReaderAnalytics = React.createClass({
 
 	render: function() {
 
-		const metaData = {
-			title: 'PubPub Analytics',
-		};
+		
 		const isData = Object.keys(this.state.data).length !== 0;
 		const gData = this.state.data;
 		const atomData = safeGetInToJS(this.props.atomData, ['atomData']) || {};
@@ -90,6 +88,11 @@ export const AtomReaderAnalytics = React.createClass({
 				convDateViewsArray.push([new Date(item[0]), item[1]])
 			})
 		}
+
+		const metaData = {
+			title: 'Analytics · ' + atomData.title,
+		};
+
 		const gChartProps = isData && {
 			options: {
 				title: '',
@@ -177,13 +180,13 @@ export const AtomReaderAnalytics = React.createClass({
 					</div>
 					{gData.countryOrder.slice(0, 5).map((item, index)=>{
 						return (
-							<div style={[styles.block, {width: 'calc(100% - 16px)', margin: '0px 0px 0px 0px', padding: '0px 0px 0px 0px'}]}>
-							<div style={[styles.block, {width: 'calc(55% - 36px)', margin: '0px 0px 0px 0px', padding: '0px 0px 0px 20%', 'textAlign': 'left'}]}>
-								<div style={styles.listItem}>#{index+1}: {item}</div>
-							</div>
-							<div style={[styles.block, {width: 'calc(10% - 16px)', 'textAlign': 'right'}]}>
-								<div style={styles.listItem}>{gData.countryTotalViews[item]}</div>
-							</div>
+							<div style={[styles.block, {width: 'calc(100% - 16px)', margin: '0px 0px 0px 0px', padding: '0px 0px 0px 0px'}]} key={'country-' + index}>
+								<div style={[styles.block, {width: 'calc(55% - 36px)', margin: '0px 0px 0px 0px', padding: '0px 0px 0px 20%', 'textAlign': 'left'}]}>
+									<div style={styles.listItem}>#{index+1}: {item}</div>
+								</div>
+								<div style={[styles.block, {width: 'calc(10% - 16px)', 'textAlign': 'right'}]}>
+									<div style={styles.listItem}>{gData.countryTotalViews[item]}</div>
+								</div>
 							</div>
 						);
 					})}</div>
@@ -193,13 +196,13 @@ export const AtomReaderAnalytics = React.createClass({
 					</div>
 					{gData.cityOrder.slice(0, 5).map((item, index)=>{
 						return (
-							<div style={[styles.block, {width: 'calc(100% - 16px)', margin: '0px 0px 0px 0px', padding: '0px 0px 0px 0px'}]}>
-							<div style={[styles.block, {width: 'calc(55% - 36px)', margin: '0px 0px 0px 0px', padding: '0px 0px 0px 20%', 'textAlign': 'left'}]}>
-								<div style={styles.listItem}>#{index+1}: {item}</div>
-							</div>
-							<div style={[styles.block, {width: 'calc(10% - 16px)', 'textAlign': 'right'}]}>
-								<div style={styles.listItem}>{gData.cityTotalViews[item]}</div>
-							</div>
+							<div style={[styles.block, {width: 'calc(100% - 16px)', margin: '0px 0px 0px 0px', padding: '0px 0px 0px 0px'}]} key={'city-' + index}>
+								<div style={[styles.block, {width: 'calc(55% - 36px)', margin: '0px 0px 0px 0px', padding: '0px 0px 0px 20%', 'textAlign': 'left'}]}>
+									<div style={styles.listItem}>#{index+1}: {item}</div>
+								</div>
+								<div style={[styles.block, {width: 'calc(10% - 16px)', 'textAlign': 'right'}]}>
+									<div style={styles.listItem}>{gData.cityTotalViews[item]}</div>
+								</div>
 							</div>
 						);
 					})}</div>
@@ -271,7 +274,7 @@ styles = {
 		width: '100%',
 		float: 'left',
 		'fontSize': '30px',
-		'line-height': '34px',
+		'lineHeight': '34px',
 		'fontWeight': 'bold',
 		'textAlign': 'center',
 	},
@@ -279,7 +282,7 @@ styles = {
 		width: '100%',
 		float: 'left',
 		'fontSize': '19px',
-		'line-height': '18px',
+		'lineHeight': '18px',
 		'textAlign': 'center',
 		margin: '0px 0px 8px 0px',
 	},
@@ -287,7 +290,7 @@ styles = {
 		width: '100%',
 		float: 'left',
 		'fontSize': '25px',
-		'line-height': '26px',
+		'lineHeight': '26px',
 		'fontWeight': 'bold',
 		'textAlign': 'center',
 	},
@@ -295,7 +298,7 @@ styles = {
 		width: '100%',
 		float: 'left',
 		'fontSize': '16px',
-		'line-height': '14px',
+		'lineHeight': '14px',
 		'textAlign': 'center',
 		margin: '0px 0px 8px 0px',
 	},
@@ -309,7 +312,7 @@ styles = {
 	blockUnderS: {
 		width: '100%',
 		float: 'left',
-		'line-height': '16px',
+		'lineHeight': '16px',
 		'textAlign': 'center',
 		margin: '0px 0px 4em 0px',
 	},
@@ -317,7 +320,7 @@ styles = {
 		width: '100%',
 		float: 'left',
 		'fontSize': '16px',
-		'line-height': '14px',
+		'lineHeight': '14px',
 	},
 
 
@@ -351,25 +354,25 @@ styles = {
 	dispWd100: {
 		width: '100%',
 		float: 'left',
-		'line-height': '16px',
+		'lineHeight': '16px',
 		'textAlign': 'center',
 	},
 	dispWd50: {
 		width: '50%',
 		float: 'left',
-		'line-height': '16px',
+		'lineHeight': '16px',
 		'textAlign': 'center',
 	},
 	dispWd25: {
 		width: '25%',
 		float: 'left',
-		'line-height': '16px',
+		'lineHeight': '16px',
 		'textAlign': 'center',
 	},
 	dispWd50L: {
 		width: '50%',
 		float: 'left',
-		'line-height': '16px',
+		'lineHeight': '16px',
 		'textAlign': 'left',
 	},
 };
