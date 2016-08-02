@@ -119,7 +119,7 @@ const Landing = React.createClass({
 		const metaData = {
 			title: 'PubPub',
 		};
-		const loggedIn = this.props.loginData && this.props.loginData.get('loggedIn');
+		// const loggedIn = this.props.loginData && this.props.loginData.get('loggedIn');
 
 		return (
 			<div style={styles.container}>
@@ -133,8 +133,8 @@ const Landing = React.createClass({
 
 				<About />
 
-				<div className={'lightest-bg'}>
-					<div className={'section'}>
+				{/* <div className={'lightest-bg'}>
+					<div className={'section'}> */}
 
 						{/* <input type="file" accept="*" onChange={this.handleFileSelect} />
 						<form>
@@ -172,8 +172,8 @@ const Landing = React.createClass({
 							image={'http://res.cloudinary.com/pubpub/image/upload/c_limit,h_250,w_250/v1449761714/3eb7882_iavg9s.jpg'}
 							title={'Thariq Shihipar'}
 							description={'Intent on eating every bagel on earth until I burst.'} /> */}
-					</div>
-				</div>
+				{/*  	</div>
+				</div> */}
 
 			</div>
 		);
