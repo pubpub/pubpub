@@ -135,13 +135,16 @@ export const AtomReader = React.createClass({
 				{property: 'og:title', content: atomData.title},
 				{property: 'og:type', content: 'article'},
 				{property: 'og:description', content: atomData.description},
+				{property: 'og:url', content: 'https://www.pubpub.org/pub/' + atomData.slug},
 				{property: 'og:image', content: atomData.previewImage},
+				{property: 'og:image:url', content: atomData.previewImage},
+				{property: 'og:image:width', content: '500'},
 				{property: 'article:published_time', content: atomData.lastUpdated || atomData.createDate},
 				{property: 'article:modified_time', content: atomData.lastUpdated},
-				{name: 'twitter:card', content: 'summary_large_image'},
+				{name: 'twitter:card', content: 'summary'},
 				{name: 'twitter:site', content: '@pubpub'},
 				{name: 'twitter:title', content: atomData.title},
-				{name: 'twitter:description', content: atomData.description},
+				{name: 'twitter:description', content: atomData.description || atomData.title},
 				{name: 'twitter:image', content: atomData.previewImage}
 			]
 		};
