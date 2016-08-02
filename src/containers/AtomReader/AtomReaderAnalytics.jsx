@@ -139,35 +139,35 @@ export const AtomReaderAnalytics = React.createClass({
 
 					<br/>
 
-					<div style={styles.wideContainer}><div style={[styles.block, {width: 'calc(25% - 16px)'}]}>
+					<div style={styles.wideContainer}><div style={[styles.block, styles.block25]}>
 						<div style={styles.blockDispS}>{gData.totalViewsYear}</div>
 						<div style={styles.blockUnderS}>Views Past Year</div>
 					</div>
-					<div style={[styles.block, {width: 'calc(25% - 16px)'}]}>
+					<div style={[styles.block, styles.block25]}>
 						<div style={styles.blockDispS}>{gData.totalViewsMonth}</div>
 						<div style={styles.blockUnderS}>Views Past Month</div>
 					</div>
-					<div style={[styles.block, {width: 'calc(25% - 16px)'}]}>
+					<div style={[styles.block, styles.block25]}>
 						<div style={styles.blockDispS}>{gData.totalViewsWeek}</div>
 						<div style={styles.blockUnderS}>Views Past Week</div>
 					</div>
-					<div style={[styles.block, {width: 'calc(25% - 16px)'}]}>
+					<div style={[styles.block, styles.block25]}>
 						<div style={styles.blockDispS}>{gData.totalViewsDay}</div>
 						<div style={styles.blockUnderS}>Views Past Day</div>
 					</div>
-					<div style={[styles.block, {width: 'calc(25% - 16px)'}]}>
+					<div style={[styles.block, styles.block25]}>
 						<div style={styles.blockDispS}>{gData.totalViewsAveYear}</div>
 						<div style={styles.blockUnderS}>Views Ave. Year</div>
 					</div>
-					<div style={[styles.block, {width: 'calc(25% - 16px)'}]}>
+					<div style={[styles.block, styles.block25]}>
 						<div style={styles.blockDispS}>{gData.totalViewsAveMonth}</div>
 						<div style={styles.blockUnderS}>Views Ave. Month</div>
 					</div>
-					<div style={[styles.block, {width: 'calc(25% - 16px)'}]}>
+					<div style={[styles.block, styles.block25]}>
 						<div style={styles.blockDispS}>{gData.totalViewsAveWeek}</div>
 						<div style={styles.blockUnderS}>Views Ave. Week</div>
 					</div>
-					<div style={[styles.block, {width: 'calc(25% - 16px)'}]}>
+					<div style={[styles.block, styles.block25]}>
 						<div style={styles.blockDispS}>{gData.totalViewsAveDay}</div>
 						<div style={styles.blockUnderS}>Views Ave. Day</div>
 					</div></div>
@@ -208,19 +208,19 @@ export const AtomReaderAnalytics = React.createClass({
 
 					<br/>
 
-					<div style={styles.wideContainer}><div style={[styles.block, {width: 'calc(25% - 16px)'}]}>
+					<div style={styles.wideContainer}><div style={[styles.block, styles.block25]}>
 						<div style={styles.blockDispM}>89</div>
 						<div style={styles.blockUnderM}>Interactions</div>
 					</div>
-					<div style={[styles.block, {width: 'calc(25% - 16px)'}]}>
+					<div style={[styles.block, styles.block25]}>
 						<div style={styles.blockDispM}>13</div>
 						<div style={styles.blockUnderM}>Responses</div>
 					</div>
-					<div style={[styles.block, {width: 'calc(25% - 16px)'}]}>
+					<div style={[styles.block, styles.block25]}>
 						<div style={styles.blockDispM}>76</div>
 						<div style={styles.blockUnderM}>Ratings</div>
 					</div>
-					<div style={[styles.block, {width: 'calc(25% - 16px)'}]}>
+					<div style={[styles.block, styles.block25]}>
 						<div style={styles.blockDispM}>2</div>
 						<div style={styles.blockUnderM}>Journal Features</div>
 					</div>
@@ -268,6 +268,10 @@ styles = {
 		margin: '0px 4px 4px 4px',
 		padding: '4px 4px 4px 4px',
 		float: 'left',
+	},
+	block25: {
+		width: 'calc(25% - 16px)',
+
 	},
 	blockDispL: {
 		width: '100%',
