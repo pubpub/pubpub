@@ -15,12 +15,9 @@ export function parsePluginString(pluginStr) {
 	.replace(/\r/g, '\\r')
 	.replace(/\t/g, '\\t')
 	.replace(/\f/g, '\\f')
-	.replace(/\\U/g, '\\f')
 	.replace(/\\*#/g, '#')
 	// .replace(/\\*l/g, '#')
 	.replace(/\\*&/g, '&')
-	.replace(/\\+{/g, '')
-	.replace(/\\+}/g, '')
 	.replace(/\\*%/g, '%');
 
 	// .replace(/\\*([^u\\])/g, function(match, p1) { return p1;});
@@ -31,7 +28,6 @@ export function parsePluginString(pluginStr) {
 		propDict = {};
 		console.log('Could not parse JSON!');
 		console.log(err);
-		console.log(str);
 		console.log(replacedStr);
 	}
 

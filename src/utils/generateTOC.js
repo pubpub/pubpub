@@ -13,7 +13,7 @@ export function generateTOC(markdown) {
 	while (match = myRegEx.exec(markdown)) {
 		const level = match[3].trim().length;
 		const output = {
-			id: match[4].replace(/\s/g, '-').toLowerCase(),
+			id: match[4].trim().replace(/[^A-Za-z0-9 ]/g, '').replace(/\s/g, '-').toLowerCase(),
 			title: match[4],
 			level: level
 		};

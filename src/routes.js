@@ -1,7 +1,15 @@
 import React from 'react';
 import {IndexRoute, Route} from 'react-router';
-import {App, Collection, Editor, Explore, GroupCreate, GroupProfile, JournalCreate, JournalProfile, Landing, PubCreate, PubReader, ResetPassword, SubdomainTest, UserProfile} from 'containers';
-import {NotFound} from 'components';
+import {App, AtomReader, AtomEditor, EmailVerification, JournalCreate, JournalProfile, Landing, Login, ResetPassword, SignUp, UserProfile} from 'containers';
+import {About, AboutJournals, AboutPubs, AboutReviews, NotFound} from 'components';
+
+function loadComponent(component) {
+	if (__CLIENT__ && !__DEVELOPMENT__) return (location, cb) => component(module => cb(null, module.default || module));
+	else if (__SERVER__ || __DEVELOPMENT__) return (location, cb) => cb(null, component.default || component);
+	
+	// If we didn't hit one of the above return statements, something strange has happened.
+	console.error('Uh oh. Something strange happened in src/routes.js');
+}
 
 export default () => {
 
@@ -12,38 +20,43 @@ export default () => {
 			<IndexRoute component={Landing}/>
 
 			{ /* Routes */ }
-			<Route path="/collection/:slug" component={Collection}/>
-			<Route path="/collection/:slug/:mode" component={Collection}/>
-			<Route path="/collections" component={Explore}/>
+			<Route path="/about" component={About}/>
 
-			<Route path="/explore" component={Explore}/>
+			<Route path="/pub/:slug" getComponent={loadComponent(AtomReader)}/>
+			<Route path="/pub/:slug/edit" getComponent={loadComponent(AtomEditor)}/>
+			<Route path="/pub/:slug/:meta" getComponent={loadComponent(AtomReader)}/>
 
-			<Route path="/group/:groupSlug" component={GroupProfile}/>
-			<Route path="/group/:groupSlug/:mode" component={GroupProfile}/>
+			{/*
+			<Route path="/group/:groupSlug" getComponent={loadComponent(GroupProfile)}/>
+			<Route path="/group/:groupSlug/:mode" getComponent={loadComponent(GroupProfile)}/>
+			<Route path="/groups/create" getComponent={loadComponent(GroupCreate)}/>
+			*/}
 
-			<Route path="/groups/create" component={GroupCreate}/>
+			<Route path="/journals" getComponent={loadComponent(AboutJournals)}/>
 
-			<Route path="/journal/:subdomain" component={JournalProfile}/>
-			<Route path="/journal/:subdomain/:mode" component={JournalProfile}/>
+			<Route path="/journals/create" getComponent={loadComponent(JournalCreate)}/>
 
-			<Route path="/journals" component={Explore}/>
-			<Route path="/journals/create" component={JournalCreate}/>
+			<Route path="/login" getComponent={loadComponent(Login)}/>
 
-			<Route path="/pub/:slug" component={PubReader}/>
-			<Route path="/pub/:slug/draft" component={Editor}/>
-			<Route path="/pub/:slug/:meta" component={PubReader}/>
-			<Route path="/pub/:slug/:meta/:metaID" component={PubReader}/> // Used for discussions
+			<Route path="/pubs" getComponent={loadComponent(AboutPubs)}/>
 
-			<Route path="/pubs" component={Explore}/>
-			<Route path="/pubs/create" component={PubCreate}/>
+			<Route path="/resetpassword" getComponent={loadComponent(ResetPassword)}/>
+			<Route path="/resetpassword/:hash/:username" getComponent={loadComponent(ResetPassword)}/>
 
-			<Route path="/resetpassword" component={ResetPassword}/>
-			<Route path="/resetpassword/:hash/:username" component={ResetPassword}/>
+			<Route path="/reviews" getComponent={loadComponent(AboutReviews)}/>
 
-			<Route path="/subdomain" component={SubdomainTest}/>
+			{/* <Route path="/settings" getComponent={loadComponent(UserSettings)}/> */}
+			{/* <Route path="/settings/:mode" getComponent={loadComponent(UserSettings)}/> */}
 
-			<Route path="/user/:username" component={UserProfile}/>
-			<Route path="/user/:username/:mode" component={UserProfile}/>
+			<Route path="/user/:username" getComponent={loadComponent(UserProfile)}/> {/* /user/kate?filter=unpublished */}
+			<Route path="/user/:username/:mode" getComponent={loadComponent(UserProfile)}/> {/* /user/kate/discussions?page=4 or /user/kate/settings */}
+			
+			<Route path="/signup" getComponent={loadComponent(SignUp)}/>
+
+			<Route path="/verify/:hash" getComponent={loadComponent(EmailVerification)}/>
+
+			<Route path="/:slug" getComponent={loadComponent(JournalProfile)}/> {/* /jods or /jods?collection=fall2015 */}
+			<Route path="/:slug/:mode" getComponent={loadComponent(JournalProfile)}/> {/* /jods/about or /jods/settings */}
 
 			{ /* Catch all route */ }
 			<Route path="*" component={NotFound} status={404} />

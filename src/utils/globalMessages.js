@@ -5,6 +5,30 @@ export const globalMessages = defineMessages({
 		id: 'global.login',
 		defaultMessage: 'Login',
 	},
+	Login: {
+		id: 'global.Login',
+		defaultMessage: 'Login',
+	},
+	SignUp: {
+		id: 'global.SignUp',
+		defaultMessage: 'Sign Up',
+	},
+	Skipthisstep: {
+		id: 'global.Skipthisstep',
+		defaultMessage: 'Skip this step',
+	},
+	ProfileImage: {
+		id: 'global.ProfileImage',
+		defaultMessage: 'Profile Image',
+	},
+	Bio: {
+		id: 'global.Bio',
+		defaultMessage: 'Bio',
+	},
+	Website: {
+		id: 'global.Website',
+		defaultMessage: 'Website',
+	},
 	register: {
 		id: 'global.register',
 		defaultMessage: 'Register',
@@ -137,8 +161,8 @@ export const globalMessages = defineMessages({
 		id: 'global.aboutPubPub',
 		defaultMessage: 'About PubPub',
 	},
-	contact: {
-		id: 'global.contact',
+	Contact: {
+		id: 'global.Contact',
 		defaultMessage: 'Contact',
 	},
 	add: {
@@ -149,12 +173,12 @@ export const globalMessages = defineMessages({
 		id: 'global.noResults',
 		defaultMessage: 'No Results',
 	},
-	save: {
-		id: 'global.save',
+	Save: {
+		id: 'global.Save',
 		defaultMessage: 'Save',
 	},
-	cancel: {
-		id: 'global.cancel',
+	Cancel: {
+		id: 'global.Cancel',
 		defaultMessage: 'Cancel',
 	},
 	remove: {
@@ -163,6 +187,10 @@ export const globalMessages = defineMessages({
 	},
 	pubs: {
 		id: 'global.pubs',
+		defaultMessage: 'Pubs',
+	},
+	Pubs: {
+		id: 'global.Pubs',
 		defaultMessage: 'Pubs',
 	},
 	score: {

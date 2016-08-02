@@ -3,21 +3,23 @@ const Sifter = require('sifter');
 const _ = require('underscore');
 
 const Pub = require('../models').Pub;
+const Atom = require('../models').Atom;
 const User = require('../models').User;
 const Journal = require('../models').Journal;
 const Group = require('../models').Group;
 
+
 export function autocompleteJournals(req, res) {
-	Journal.find({}, {'_id': 1, 'journalName': 1, 'subdomain': 1, 'customDomain': 1, 'design': 1}).exec(function(err, journals) {
+	Journal.find({}, {'_id': 1, 'journalName': 1, 'slug': 1, 'logo': 1}).exec(function(err, journals) {
 		const objects = journals;
 		const sifter = new Sifter(objects);
 
 		const result = sifter.search(req.query.string, {
-			fields: ['journalName', 'customDomain', 'subdomain'],
+			fields: ['journalName', 'slug'],
 			sort: [{field: 'journalName', direction: 'asc'}],
 			limit: 10
 		});
-
+		
 		const output = [];
 		_.each(result.items, function(item) {
 			output.push(objects[item.id]);
@@ -29,7 +31,7 @@ export function autocompleteJournals(req, res) {
 app.get('/autocompleteJournals', autocompleteJournals);
 
 export function autocompleteUsers(req, res) {
-	User.find({}, {'_id': 1, 'username': 1, 'thumbnail': 1, 'name': 1}).exec(function(err, users) {
+	User.find({}, {'_id': 1, 'username': 1, 'image': 1, 'name': 1}).exec(function(err, users) {
 		const objects = users;
 		const sifter = new Sifter(objects);
 
@@ -104,37 +106,6 @@ export function autocompletePubs(req, res) {
 }
 app.get('/autocompletePubs', autocompletePubs);
 
-export function autocompletePubsForJournal(req, res) {
-	// Similar to autocompletePubs, but infers which journal
-	Journal.findOne({ $or: [ {subdomain: req.query.host.split('.')[0]}, {customDomain: req.query.host}]})
-	.lean().exec(function(err, journal) {
-
-		const query = {history: {$not: {$size: 0}}, 'settings.isPrivate': {$ne: true}};
-		if (journal) {
-			query.featuredInList = journal._id;
-		}
-
-		// Pub.find(query, {'slug': 1, 'title': 1, 'abstract': 1, 'tags': 1, 'discussions': 1, 'lastUpdated': 1}).exec(function(err, pubs) {
-		Pub.find(query, {'slug': 1, 'title': 1, 'abstract': 1, 'createDate': 1, 'lastUpdated': 1}).exec(function(errPubFind, pubs) {
-			const objects = pubs;
-			// console.log(objects);
-			const sifter = new Sifter(objects);
-
-			const result = sifter.search(req.query.string, {
-				fields: ['slug', 'title'],
-				sort: [{field: 'title', direction: 'asc'}],
-				limit: 10
-			});
-
-			const output = [];
-			_.each(result.items, function(item) {
-				output.push(objects[item.id]);
-			});
-			return res.status(201).json(output);
-		});
-	});
-}
-app.get('/autocompletePubsForJournal', autocompletePubsForJournal);
 
 export function autocompletePubsAndUsers(req, res) {
 	let objects = [];
@@ -208,3 +179,45 @@ export function autocompleteReferences(req, res) {
 	return res.status(201).json(['cat', 'dog', 'fish']);
 }
 app.get('/autocompleteReferences', autocompleteReferences);
+
+
+export function autocompletePubsAndUsersAndJournals(req, res) {
+	let objects = [];
+
+	User.find({}, {'_id': 1, 'username': 1, 'image': 1, 'name': 1}).lean().exec()
+	.then(function(users) {
+		if (users) {
+			objects = objects.concat(users);
+		}
+		return Atom.find({versions: {$not: {$size: 0}}, isPublished: true}, {'_id': 0, 'slug': 1, 'title': 1, 'createDate': 1, 'lastUpdated': 1}).lean().exec();
+	})
+	.then(function(atoms) {
+		if (atoms) {
+			objects = objects.concat(atoms);
+		}
+		return Journal.find({}, {'_id': 1, 'journalName': 1, 'slug': 1, 'logo': 1}).lean().exec();
+	})
+	.then(function(journals) {
+		if (journals) {
+			objects = objects.concat(journals);
+		}
+		const sifter = new Sifter(objects);
+		const result = sifter.search(req.query.string, {
+			fields: ['journalName', 'username', 'name', 'slug', 'title'],
+			sort: [{field: 'username', direction: 'asc'}, {field: 'title', direction: 'asc'}, {field: 'journalName', direction: 'asc'}],
+			limit: 10,
+			conjunction: 'and',
+		});
+
+		const output = [];
+		_.each(result.items, function(item) {
+			output.push(objects[item.id]);
+		});
+		return res.status(201).json(output);
+	})
+	.catch(function(err) {
+		console.log('Error in autocomplete', err);
+		return res.status(500).json([]);
+	});
+}
+app.get('/autocompletePubsAndUsersAndJournals', autocompletePubsAndUsersAndJournals);

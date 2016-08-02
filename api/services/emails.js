@@ -1,8 +1,8 @@
-const sendgridKey = process.env.NODE_ENV !== 'production' ? require('../config').sendgridAPIKey : process.env.SENDGRID_API_KEY;
+const sendgridKey = process.env.SENDGRID_API_KEY;
 const sendgrid = require('sendgrid')(sendgridKey);
 
 const fromname = 'PubPub';
-const from = 'pubpub@media.mit.edu';
+const from = 'team@pubpub.org';
 
 
 export function registrationEmail(email, callback) {
@@ -13,6 +13,22 @@ export function registrationEmail(email, callback) {
 	emailObject.fromname = fromname;
 	emailObject.text = 'Welcome to PubPub!';
 	emailObject.html = '<h1>Welcome!</h1><p></p>';
+
+	emailObject.addFilter('templates', 'enable', 1);
+	emailObject.addFilter('templates', 'template_id', 'caad4e63-a636-4c81-9cc2-7d65e581a876');
+
+	sendgrid.send(emailObject, callback);
+}
+
+export function sendVerificationEmail(email, hash, callback) {
+	console.log('sending verification email to ', email);
+	const emailObject = new sendgrid.Email();
+	emailObject.addTo(email);
+	emailObject.subject = 'Verify your PubPub Account'; 
+	emailObject.from = from;
+	emailObject.fromname = fromname;
+	emailObject.text = 'Welcome to PubPub! Please click the following link to verify your email address: https://www.pubpub.org/verify/' + hash;
+	emailObject.html = '<h1>Welcome!</h1><p>Please click the following link to verify your email address:</p><p><a href="https://www.pubpub.org/verify/' + hash + '">https://www.pubpub.org/verify/' + hash + '</a></p>';
 
 	emailObject.addFilter('templates', 'enable', 1);
 	emailObject.addFilter('templates', 'template_id', 'caad4e63-a636-4c81-9cc2-7d65e581a876');

@@ -1,1 +1,0 @@
-# Submitting to a Journal

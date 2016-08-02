@@ -2,8 +2,8 @@
 	display: none;
 }
 
-
-@media print {
+/* This was causing cutoff problems!*/
+/*@media print {
 
 	@page :first {
 	   margin-top: 0;
@@ -16,11 +16,11 @@
 	}
 
 }
+*/
 
-
-.pagebreak {
-	page-break-before: always !important;
-}
+/*.pagebreak {
+	page-break-after: always;
+}*/
 
 
 @media print{
@@ -35,6 +35,9 @@
 	.header-bar,.publishedMsg, .login-container, .leftBar, .rightBar, .footer, .pubModals, .editorModals, .editorBodyNav, .editorPreviewNav, #editor-text-wrapper, #editor-discussions-wrapper, #style-editor-wrapper, #editorTopNav, #editorBottomNav, .reader-left {
 		display: none !important;
 	}
+	.horizontal-nav, .footer {
+		display: none !important;	
+	}
 	.content {
 		margin-top: 0px !important;
 	}
@@ -43,10 +46,6 @@
 	}
 	.editor-container {
 		height: auto !important;
-	}
-
-	iframe {
-		display: none;
 	}
 
 	.p-block {
@@ -65,7 +64,7 @@
 		color: #444;
 	}
 
-	/* print the URLs after a link */
+	 /*print the URLs after a link */
 	#pubContent a:not(.author):after{content:" (" attr(href) ") ";font-size:0.8em;font-weight:normal;}
 
 	#editor-live-preview-wrapper {
@@ -99,19 +98,9 @@
 		page-break-inside: avoid !important;
 	}
 
-	#pubContent blockquote, blockquote {
-		padding: 10px 20px;
-		margin: 0 0 20px;
-		font-size: 1em;
-		border-left: 5px solid #eee;
-	}
-	#pubContent h1, #pubContent h2, #pubContent h3, #pubContent h4, #pubContent h5, #pubContent h6 {
-		color: #222;
-	}
-
 	.pagebreak {
 		opacity: 0 !important;
-		page-break-before: always !important;
+		page-break-after: always;
 	}
 
 	table, figure, image, .reference, h1, h2, h3, h4, h5, h6 {

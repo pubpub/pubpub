@@ -5,20 +5,13 @@ import {ensureImmutable} from 'reducers';
 // Load Actions
 /*--------*/
 import {
-	LOAD_PROFILE,
-	LOAD_PROFILE_SUCCESS,
-	LOAD_PROFILE_FAIL,
+	GET_USER_LOAD,
+	GET_USER_SUCCESS,
+	GET_USER_FAIL,
 
-	UPDATE_USER,
-	UPDATE_USER_SUCCESS,
-	UPDATE_USER_FAIL,
-
-	USER_NAV_OUT,
-	USER_NAV_IN,
-
-	INVITE_USER,
-	INVITE_USER_SUCCESS,
-	INVITE_USER_FAIL,
+	SAVE_SETTINGS_LOAD,
+	SAVE_SETTINGS_SUCCESS,
+	SAVE_SETTINGS_FAIL,
 
 } from './actions';
 
@@ -26,12 +19,8 @@ import {
 // Initialize Default State
 /*--------*/
 export const defaultState = Immutable.Map({
-	profileData: {
-		pubs: [],
-		discussions: [],
-	},
-	status: 'loading',
-	settingsStatus: 'saved',
+	profileData: {},
+	loading: false,
 	error: null
 });
 
@@ -42,120 +31,65 @@ export const defaultState = Immutable.Map({
 // state. They are pure functions. We use Immutable to enforce this.
 /*--------*/
 
-function load(state) {
+function getUserLoad(state) {
 	return state.merge({
-		status: 'loading',
-		profileData: {
-			pubs: [],
-			discussions: [],
-		},
+		loading: true,
 	});
 }
 
-function loadSuccess(state, result) {
-	const outputState = {
-		status: 'loaded',
+function getUserSuccess(state, result) {
+	return state.merge({
 		profileData: result,
+		loading: false,
 		error: null
-	};
-
-	if (result === 'User Not Found') {
-		outputState.profileData = { ...defaultState.get('profileData'),
-			name: 'User Not Found',
-			image: 'http://res.cloudinary.com/pubpub/image/upload/v1448221655/pubSad_blirpk.png'
-		};
-	}
-
-	return state.merge(outputState);
+	});
 }
 
-function loadFail(state, error) {
-	console.log('in loadFail');
-
-	const outputState = {
-		status: 'loaded',
-		profileData: { ...defaultState.get('profileData'),
-			name: 'Error Loading User',
-			image: 'http://res.cloudinary.com/pubpub/image/upload/v1448221655/pubSad_blirpk.png'
-		},
+function getUserFail(state, error) {
+	return state.merge({
+		loading: false,
 		error: error
-	};
-
-	return state.merge(outputState);
-}
-
-function updateUser(state) {
-	return state.set('settingsStatus', 'saving');
-}
-
-function updateUserSuccess(state, result) {
-
-	return state.merge({
-		settingsStatus: 'saved',
-		profileData: { ...state.get('profileData').toJS(), ...result},
 	});
 }
 
-function updateUserFail(state, error) {
-
-	return state.set('settingsStatus', 'error');
+function saveSettingsLoad(state) {
+	return state.set('loading', true);
 }
 
-function userNavOut(state) {
-	// return state.merge({
-	// 	status: 'loading',
-	// });
-	return defaultState;
-}
+function saveSettingsSuccess(state, result) {
 
-function userNavIn(state) {
 	return state.merge({
-		status: 'loaded',
+		loading: false,
+		error: undefined,
 	});
 }
 
-
-function inviteUser(state, type, err) {
-	let result;
-	switch (type) {
-	case INVITE_USER: result = 'loading'; break;
-	case INVITE_USER_SUCCESS: result = 'success'; break;
-	case INVITE_USER_FAIL: result = 'error'; break;
-	default: result = 'init';
-	}
-	return state.set('inviteStatus', result);
+function saveSettingsFail(state, error) {
+	return state.merge({
+		loading: false,
+		error: error,
+	});
 }
-
 
 /*--------*/
 // Bind actions to specific reducing functions.
 /*--------*/
-export default function profileReducer(state = defaultState, action) {
+export default function reducer(state = defaultState, action) {
 
 	switch (action.type) {
-	case LOAD_PROFILE:
-		return load(state);
-	case LOAD_PROFILE_SUCCESS:
-		return loadSuccess(state, action.result);
-	case LOAD_PROFILE_FAIL:
-		return loadFail(state, action.error);
+	case GET_USER_LOAD:
+		return getUserLoad(state);
+	case GET_USER_SUCCESS:
+		return getUserSuccess(state, action.result);
+	case GET_USER_FAIL:
+		return getUserFail(state, action.error);
 
-	case UPDATE_USER:
-		return updateUser(state);
-	case UPDATE_USER_SUCCESS:
-		return updateUserSuccess(state, action.result);
-	case UPDATE_USER_FAIL:
-		return updateUserFail(state, action.error);
-
-	case USER_NAV_OUT:
-		return userNavOut(state);
-	case USER_NAV_IN:
-		return userNavIn(state);
-
-	case INVITE_USER:
-	case INVITE_USER_SUCCESS:
-	case INVITE_USER_FAIL:
-		return inviteUser(state, action.type, action.error);
+	case SAVE_SETTINGS_LOAD:
+		return saveSettingsLoad(state);
+	case SAVE_SETTINGS_SUCCESS:
+		return saveSettingsSuccess(state, action.result);
+	case SAVE_SETTINGS_FAIL:
+		return saveSettingsFail(state, action.error);
 
 	default:
 		return ensureImmutable(state);

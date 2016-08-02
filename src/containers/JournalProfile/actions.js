@@ -6,31 +6,45 @@
 // All action types are defined as constants. Do not manually pass action
 // types as strings in action creators
 /*--------*/
-export const CREATE_JOURNAL_LOAD = 'journal/CREATE_JOURNAL_LOAD';
-export const CREATE_JOURNAL_SUCCESS = 'journal/CREATE_JOURNAL_LOAD_SUCCESS';
-export const CREATE_JOURNAL_FAIL = 'journal/CREATE_JOURNAL_LOAD_FAIL';
+export const GET_JOURNAL_LOAD = 'journal/GET_JOURNAL_LOAD';
+export const GET_JOURNAL_SUCCESS = 'journal/GET_JOURNAL_SUCCESS';
+export const GET_JOURNAL_FAIL = 'journal/GET_JOURNAL_FAIL';
 
-export const LOAD_JOURNAL = 'journal/LOAD_JOURNAL';
-export const LOAD_JOURNAL_SUCCESS = 'journal/LOAD_JOURNAL_SUCCESS';
-export const LOAD_JOURNAL_FAIL = 'journal/LOAD_JOURNAL_FAIL';
+export const UPDATE_JOURNAL_LOAD = 'journal/UPDATE_JOURNAL_LOAD';
+export const UPDATE_JOURNAL_SUCCESS = 'journal/UPDATE_JOURNAL_SUCCESS';
+export const UPDATE_JOURNAL_FAIL = 'journal/UPDATE_JOURNAL_FAIL';
 
-export const SAVE_JOURNAL = 'journal/SAVE_JOURNAL';
-export const SAVE_JOURNAL_SUCCESS = 'journal/SAVE_JOURNAL_SUCCESS';
-export const SAVE_JOURNAL_FAIL = 'journal/SAVE_JOURNAL_FAIL';
-
-export const CREATE_COLLECTION = 'journal/CREATE_COLLECTION';
+export const CREATE_COLLECTION_LOAD = 'journal/CREATE_COLLECTION_LOAD';
 export const CREATE_COLLECTION_SUCCESS = 'journal/CREATE_COLLECTION_SUCCESS';
 export const CREATE_COLLECTION_FAIL = 'journal/CREATE_COLLECTION_FAIL';
 
-export const SAVE_COLLECTION = 'journal/SAVE_COLLECTION';
-export const SAVE_COLLECTION_SUCCESS = 'journal/SAVE_COLLECTION_SUCCESS';
-export const SAVE_COLLECTION_FAIL = 'journal/SAVE_COLLECTION_FAIL';
+export const UPDATE_COLLECTION_LOAD = 'journal/UPDATE_COLLECTION_LOAD';
+export const UPDATE_COLLECTION_SUCCESS = 'journal/UPDATE_COLLECTION_SUCCESS';
+export const UPDATE_COLLECTION_FAIL = 'journal/UPDATE_COLLECTION_FAIL';
 
-export const SUBMIT_PUB_TO_JOURNAL = 'journal/SUBMIT_PUB_TO_JOURNAL';
-export const SUBMIT_PUB_TO_JOURNAL_SUCCESS = 'journal/SUBMIT_PUB_TO_JOURNAL_SUCCESS';
-export const SUBMIT_PUB_TO_JOURNAL_FAIL = 'journal/SUBMIT_PUB_TO_JOURNAL_FAIL';
+export const DELETE_COLLECTION_LOAD = 'journal/DELETE_COLLECTION_LOAD';
+export const DELETE_COLLECTION_SUCCESS = 'journal/DELETE_COLLECTION_SUCCESS';
+export const DELETE_COLLECTION_FAIL = 'journal/DELETE_COLLECTION_FAIL';
 
-export const CLEAR_COLLECTION_REDIRECT = 'journal/CLEAR_COLLECTION_REDIRECT';
+export const FEATURE_ATOM_LOAD = 'journal/FEATURE_ATOM_LOAD';
+export const FEATURE_ATOM_SUCCESS = 'journal/FEATURE_ATOM_SUCCESS';
+export const FEATURE_ATOM_FAIL = 'journal/FEATURE_ATOM_FAIL';
+
+export const REJECT_ATOM_LOAD = 'journal/REJECT_ATOM_LOAD';
+export const REJECT_ATOM_SUCCESS = 'journal/REJECT_ATOM_SUCCESS';
+export const REJECT_ATOM_FAIL = 'journal/REJECT_ATOM_FAIL';
+
+export const COLLECTIONS_CHANGE_LOAD = 'journal/COLLECTIONS_CHANGE_LOAD';
+export const COLLECTIONS_CHANGE_SUCCESS = 'journal/COLLECTIONS_CHANGE_SUCCESS';
+export const COLLECTIONS_CHANGE_FAIL = 'journal/COLLECTIONS_CHANGE_FAIL';
+
+export const ADD_ADMIN_LOAD = 'journal/ADD_ADMIN_LOAD';
+export const ADD_ADMIN_SUCCESS = 'journal/ADD_ADMIN_SUCCESS';
+export const ADD_ADMIN_FAIL = 'journal/ADD_ADMIN_FAIL';
+
+export const DELETE_ADMIN_LOAD = 'journal/DELETE_ADMIN_LOAD';
+export const DELETE_ADMIN_SUCCESS = 'journal/DELETE_ADMIN_SUCCESS';
+export const DELETE_ADMIN_FAIL = 'journal/DELETE_ADMIN_FAIL';
 
 /*--------*/
 // Define Action creators
@@ -39,56 +53,104 @@ export const CLEAR_COLLECTION_REDIRECT = 'journal/CLEAR_COLLECTION_REDIRECT';
 // action objects (e.g. {type:example, payload:data} ) within dispatch()
 // function calls
 /*--------*/
-
-export function create(journalName, subdomain) {
+export function getJournal(slug, mode) {
 	return {
-		types: [CREATE_JOURNAL_LOAD, CREATE_JOURNAL_SUCCESS, CREATE_JOURNAL_FAIL],
-		promise: (client) => client.post('/createJournal', {data: {
-			'journalName': journalName,
-			'subdomain': subdomain
+		types: [GET_JOURNAL_LOAD, GET_JOURNAL_SUCCESS, GET_JOURNAL_FAIL],
+		promise: (client) => client.get('/getJournal', {params: {
+			slug: slug,
+			mode: mode
 		}})
 	};
 }
 
-export function getJournal(subdomain) {
+export function updateJournal(slug, newJournalData) {
 	return {
-		types: [LOAD_JOURNAL, LOAD_JOURNAL_SUCCESS, LOAD_JOURNAL_FAIL],
-		promise: (client) => client.get('/getJournal', {params: {subdomain: subdomain}})
+		types: [UPDATE_JOURNAL_LOAD, UPDATE_JOURNAL_SUCCESS, UPDATE_JOURNAL_FAIL],
+		promise: (client) => client.post('/updateJournal', {data: {
+			slug: slug,
+			newJournalData: newJournalData
+		}})
 	};
 }
 
-export function saveJournal(subdomain, newObject) {
+export function createCollection(journalID, title) {
 	return {
-		types: [SAVE_JOURNAL, SAVE_JOURNAL_SUCCESS, SAVE_JOURNAL_FAIL],
-		promise: (client) => client.post('/saveJournal', {data: {subdomain: subdomain, newObject: newObject}})
+		types: [CREATE_COLLECTION_LOAD, CREATE_COLLECTION_SUCCESS, CREATE_COLLECTION_FAIL],
+		promise: (client) => client.post('/createTag', {data: {
+			journalID: journalID,
+			title: title
+		}})
 	};
 }
 
-export function createCollection(subdomain, newCollectionObject) {
+export function updateCollection(tagID, tagData) {
 	return {
-		types: [CREATE_COLLECTION, CREATE_COLLECTION_SUCCESS, CREATE_COLLECTION_FAIL],
-		promise: (client) => client.post('/createCollection', {data: {subdomain: subdomain, newCollectionObject: newCollectionObject}}),
-		newCollectionSlug: newCollectionObject.slug,
+		types: [UPDATE_COLLECTION_LOAD, UPDATE_COLLECTION_SUCCESS, UPDATE_COLLECTION_FAIL],
+		promise: (client) => client.post('/updateTag', {data: {
+			tagID: tagID,
+			tagData: tagData
+		}})
 	};
 }
 
-export function saveCollection(subdomain, slug, newCollectionObject) {
+export function deleteCollection(journalID, tagID) {
 	return {
-		types: [SAVE_COLLECTION, SAVE_COLLECTION_SUCCESS, SAVE_COLLECTION_FAIL],
-		promise: (client) => client.post('/saveCollection', {data: {subdomain: subdomain, slug: slug, newCollectionObject: newCollectionObject}}),
+		types: [DELETE_COLLECTION_LOAD, DELETE_COLLECTION_SUCCESS, DELETE_COLLECTION_FAIL],
+		promise: (client) => client.post('/deleteTag', {data: {
+			journalID: journalID,
+			tagID: tagID
+		}})
 	};
 }
 
-export function submitPubToJournal(pubID, journalData) {
+export function featureAtom(journalID, atomID) {
 	return {
-		types: [SUBMIT_PUB_TO_JOURNAL, SUBMIT_PUB_TO_JOURNAL_SUCCESS, SUBMIT_PUB_TO_JOURNAL_FAIL],
-		promise: (client) => client.post('/submitPubToJournal', {data: {pubID: pubID, journalID: journalData._id}}),
-		journalData: journalData,
+		types: [FEATURE_ATOM_LOAD, FEATURE_ATOM_SUCCESS, FEATURE_ATOM_FAIL],
+		promise: (client) => client.post('/featureAtom', {data: {
+			journalID: journalID,
+			atomID: atomID
+		}})
 	};
 }
 
-export function clearCollectionRedirect() {
+export function rejectAtom(journalID, atomID) {
 	return {
-		type: CLEAR_COLLECTION_REDIRECT,
+		types: [REJECT_ATOM_LOAD, REJECT_ATOM_SUCCESS, REJECT_ATOM_FAIL],
+		promise: (client) => client.post('/rejectAtom', {data: {
+			journalID: journalID,
+			atomID: atomID
+		}})
+	};
+}
+
+export function addAdmin(journalID, adminID) {
+	return {
+		types: [ADD_ADMIN_LOAD, ADD_ADMIN_SUCCESS, ADD_ADMIN_FAIL],
+		promise: (client) => client.post('/addJournalAdmin', {data: {
+			journalID: journalID,
+			adminID: adminID,
+		}})
+	};
+}
+
+export function deleteAdmin(journalID, adminID) {
+	return {
+		types: [DELETE_ADMIN_LOAD, DELETE_ADMIN_SUCCESS, DELETE_ADMIN_FAIL],
+		promise: (client) => client.post('/deleteJournalAdmin', {data: {
+			journalID: journalID,
+			adminID: adminID,
+		}})
+	};
+}
+
+// These actions aren't acted upon in the reducer, we manage state locally, and send off changes to sync them, 
+// but they're not needed to update the local state
+export function collectionsChange(linkID, collectionIDs) {
+	return {
+		types: [COLLECTIONS_CHANGE_LOAD, COLLECTIONS_CHANGE_SUCCESS, COLLECTIONS_CHANGE_FAIL],
+		promise: (client) => client.post('/collectionsChange', {data: {
+			linkID: linkID,
+			collectionIDs: collectionIDs,
+		}})
 	};
 }

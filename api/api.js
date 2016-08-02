@@ -1,17 +1,17 @@
 /* eslint no-unused-vars: [2, { "varsIgnorePattern": "pretty|server" }] */
 
-// Connect to Mongo database
-const mongoose = require('mongoose');
-mongoose.Promise = global.Promise;
-
-if (process.env.NODE_ENV !== 'production') {
-	const mongoURI = require('./config').mongoURI;
-	mongoose.connect(mongoURI);
-} else {
-	mongoose.connect(process.env.mongoURI);
+if (process.env.NODE_ENV !== 'production' && !process.env.TESTING) {
+	require('./config.js');
 }
 
-require('../server.babel'); // babel registration (runtime transpilation for node)
+// Connect to Mongo database
+const mongoose = require('mongoose');
+mongoose.Promise = require('bluebird');
+if (!process.env.TESTING) {
+	mongoose.connect(process.env.MONGO_URI);
+}
+
+// require('../server.babel'); // babel registration (runtime transpilation for node)
 
 import express from 'express';
 import session from 'express-session';
@@ -96,5 +96,7 @@ if (config.apiPort) {
 
 
 } else {
-	console.error('==>     ERROR: No PORT environment variable has been specified');
+	if (!process.env.TESTING) {
+		console.error('==>     ERROR: No PORT environment variable has been specified');	
+	}
 }
