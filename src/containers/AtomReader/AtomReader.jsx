@@ -130,7 +130,7 @@ export const AtomReader = React.createClass({
 		const atomData = safeGetInToJS(this.props.atomData, ['atomData']) || {};
 
 		const metaData = {
-			title: atomData.title,
+			title: atomData.title + ' · PubPub',
 			meta: [
 				{property: 'og:title', content: atomData.title},
 				{property: 'og:type', content: 'article'},

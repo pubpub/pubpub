@@ -8,8 +8,8 @@ const Journal = require('../models').Journal;
 const User = require('../models').User;
 const Promise = require('bluebird');
 
-const SHA1 = require('crypto-js/sha1');
-const encHex = require('crypto-js/enc-hex');
+// const SHA1 = require('crypto-js/sha1');
+// const encHex = require('crypto-js/enc-hex');
 
 const Request = require('request-promise');
 const request = require('superagent-promise')(require('superagent'), Promise);
@@ -124,7 +124,7 @@ export function createReplyDocument(req, res) {
 		tags: [],
 	});
 
-	let versionID;
+	// let versionID;
 	let versionData;
 	// This should be made more intelligent to use images, video thumbnails, etc when possible - if the atom type is image, video, etc.
 	atom.previewImage = 'https://assets.pubpub.org/_site/pub.png';
@@ -152,7 +152,7 @@ export function createReplyDocument(req, res) {
 	.then(function(taskResults) { // If we created a version, make sure to add that version to parent
 		if (taskResults.length === 3) {
 			versionData = taskResults[2];
-			versionID = versionData._id;
+			// versionID = versionData._id;
 			return Atom.update({ _id: versionData.parent }, { $addToSet: { versions: versionData._id} }).exec();
 		}
 		return undefined;

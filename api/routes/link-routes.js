@@ -3,11 +3,10 @@ const app = require('../api');
 const Atom = require('../models').Atom;
 const Link = require('../models').Link;
 const Version = require('../models').Version;
-const Journal = require('../models').Journal;
-const Promise = require('bluebird');
+// const Promise = require('bluebird');
 
 export function getMedia(req, res) {
-	const {filterParams} = req.query;
+	// const {filterParams} = req.query;
 	const userID = req.user ? req.user._id : undefined;
 	// Check permission type
 

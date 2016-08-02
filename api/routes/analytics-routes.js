@@ -19,14 +19,12 @@ const viewId = 'ga:113911431';
 // GA authentication\authorization
 const oauth2Client = new google.auth.OAuth2();
 
-const jwtClient = new google.auth.JWT(
-	clientEmail, null, privateKey,
-	['https://www.googleapis.com/auth/analytics.readonly'], null);
+const jwtClient = new google.auth.JWT(clientEmail, null, privateKey, ['https://www.googleapis.com/auth/analytics.readonly'], null);
 
 let ganalytics;
 jwtClient.authorize(function(err, tokens) {
 	if (err) {
-		console.info(err);
+		console.info('Ganalytics JWT error ', err);
 		return err;
 	}
 	oauth2Client.setCredentials({access_token: tokens.access_token});
@@ -265,7 +263,7 @@ export function analytics(req, res) {
 
 		// If they are all dummy requests, we are done requesting
 		if (arrayIsTrue(dummyReqCheck)) {
-			console.log('Finished Query');
+			// console.log('Finished Query');
 			return getResponse(gReports);
 		}
 
@@ -361,10 +359,9 @@ export function analytics(req, res) {
 		};
 
 		// This is the query. This is where google response is recieved.
-		console.log(ganalytics);
 		ganalytics.reports.batchGet(gRequest, function(err, gResponse) {
 			if (err) {
-				console.info(err);
+				console.info('Error getting reports: ', err);
 				return res.status(500).json(err);
 			}
 			// Update function inputs

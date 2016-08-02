@@ -25,7 +25,7 @@ export const mongoURI = '<YOUR-URI-HERE>'; // Can point to an external mongo hos
 export const sendgridAPIKey = '<YOUR-KEY-HERE>'; // Sendgrid used to send transactional emails
 
 // URL for pubpub-collab server (https://github.com/pubpub/collab)
-export const collabServerURL =  '<COLLAB-SERVER-URL>';
+export const collabServerURL = '<COLLAB-SERVER-URL>';
 
 // secret shared by pubpub and collaboration server, this key needs to be the same on the collab server
 export const collabEncryptSecret = '<16 or 24 byte password>';
