@@ -84,8 +84,8 @@ export const AtomReaderAnalytics = React.createClass({
 		const convDateViewsArray = [];
 		if (isData) {
 			gData.dateViewsArray.forEach( function(item) {
-				convDateViewsArray.push([new Date(item[0]), item[1]])
-			})
+				convDateViewsArray.push([new Date(item[0]), item[1]]);
+			});
 		}
 
 		const metaData = {
@@ -181,7 +181,7 @@ export const AtomReaderAnalytics = React.createClass({
 						return (
 							<div style={[styles.block, {width: 'calc(100% - 16px)', margin: '0px 0px 0px 0px', padding: '0px 0px 0px 0px'}]} key={'country-' + index}>
 								<div style={[styles.block, {width: 'calc(55% - 36px)', margin: '0px 0px 0px 0px', padding: '0px 0px 0px 20%', 'textAlign': 'left'}]}>
-									<div style={styles.listItem}>#{index+1}: {item}</div>
+									<div style={styles.listItem}>#{index + 1}: {item}</div>
 								</div>
 								<div style={[styles.block, {width: 'calc(10% - 16px)', 'textAlign': 'right'}]}>
 									<div style={styles.listItem}>{gData.countryTotalViews[item]}</div>
@@ -197,7 +197,7 @@ export const AtomReaderAnalytics = React.createClass({
 						return (
 							<div style={[styles.block, {width: 'calc(100% - 16px)', margin: '0px 0px 0px 0px', padding: '0px 0px 0px 0px'}]} key={'city-' + index}>
 								<div style={[styles.block, {width: 'calc(55% - 36px)', margin: '0px 0px 0px 0px', padding: '0px 0px 0px 20%', 'textAlign': 'left'}]}>
-									<div style={styles.listItem}>#{index+1}: {item}</div>
+									<div style={styles.listItem}>#{index + 1}: {item}</div>
 								</div>
 								<div style={[styles.block, {width: 'calc(10% - 16px)', 'textAlign': 'right'}]}>
 									<div style={styles.listItem}>{gData.cityTotalViews[item]}</div>
@@ -321,16 +321,6 @@ styles = {
 		'fontSize': '16px',
 		'lineHeight': '14px',
 	},
-
-
-
-
-
-
-
-
-
-
 
 	headWd100: {
 		width: '100%',
