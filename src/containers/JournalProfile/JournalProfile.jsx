@@ -93,8 +93,24 @@ export const JournalProfile = React.createClass({
 	render: function() {
 		const journalData = safeGetInToJS(this.props.journalData, ['journalData']) || {};
 
-		const metaData = {};
-		metaData.title = journalData.journalName + ' · PubPub';
+		const metaData = {
+			title: journalData.journalName + ' · PubPub',
+			meta: [
+				{property: 'og:title', content: (journalData.journalName || journalData.slug)},
+				{property: 'og:type', content: 'article'},
+				{property: 'og:description', content: journalData.description},
+				{property: 'og:url', content: 'https://www.pubpub.org/' + journalData.slug},
+				{property: 'og:image', content: journalData.icon},
+				{property: 'og:image:url', content: journalData.icon},
+				{property: 'og:image:width', content: '500'},
+				{name: 'twitter:card', content: 'summary'},
+				{name: 'twitter:site', content: '@pubpub'},
+				{name: 'twitter:title', content: (journalData.journalName || journalData.slug)},
+				{name: 'twitter:description', content: journalData.description || journalData.about || journalData.journalName || journalData.slug},
+				{name: 'twitter:image', content: journalData.icon},
+				{name: 'twitter:image:alt', content: 'Image for ' + (journalData.journalName || journalData.slug)}
+			]
+		};
 
 		const mobileNavButtons = [
 			{ type: 'link', mobile: true, text: 'About', link: '/' + this.props.slug + '/about' },

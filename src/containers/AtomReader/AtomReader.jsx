@@ -145,7 +145,8 @@ export const AtomReader = React.createClass({
 				{name: 'twitter:site', content: '@pubpub'},
 				{name: 'twitter:title', content: atomData.title},
 				{name: 'twitter:description', content: atomData.description || atomData.title},
-				{name: 'twitter:image', content: atomData.previewImage}
+				{name: 'twitter:image', content: atomData.previewImage},
+				{name: 'twitter:image:alt', content: 'Preview image for ' + atomData.title}
 			]
 		};
 
