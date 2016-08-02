@@ -72,7 +72,7 @@ export default {
 		editor: PDFEditor,
 		viewer: PDFViewer
 	},
-	codepen: {
+	embed: {
 		editor: EmbedEditor,
 		viewer: EmbedViewer
 	}

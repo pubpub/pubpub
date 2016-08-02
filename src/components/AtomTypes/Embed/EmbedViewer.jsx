@@ -4,6 +4,8 @@ import {safeGetInToJS} from 'utils/safeParse';
 
 import request from 'superagent';
 
+import {match} from './oEmbed';
+
 let styles;
 
 export const EmbedViewer = React.createClass({
@@ -14,35 +16,37 @@ export const EmbedViewer = React.createClass({
 
 	getInitialState() {
 		return {
+			valid: false,
 			source: '',
 			html: '',
-			title: '',
-			author_name: '',
-			author_url: ''
+			metaData: {},
+			provider: ''
 		};
 	},
 
 	componentDidMount() {
 		const source = safeGetInToJS(this.props.atomData, ['currentVersionData', 'content', 'source']) || '';
+		const provider = safeGetInToJS(this.props.atomData, ['currentVersionData', 'content', 'provider']) || '';
 		const html = safeGetInToJS(this.props.atomData, ['currentVersionData', 'content', 'html']) || '';
-		const title = safeGetInToJS(this.props.atomData, ['currentVersionData', 'content', 'title']) || '';
-		const author_name = safeGetInToJS(this.props.atomData, ['currentVersionData', 'content', 'author_name']) || '';
-		const author_url = safeGetInToJS(this.props.atomData, ['currentVersionData', 'content', 'author_url']) || '';
+		const metaData = safeGetInToJS(this.props.atomData, ['currentVersionData', 'content', 'metaData']) || '';
 		if (html) {
-			this.setState({source, html, title, author_name, author_url});
+			this.setState({source, provider, html, metaData});
 		} else if (source) {
-			this.setState({source}, e => this.loadCodePen(source));
+			const provider = match(source);
+			if (provider)	{
+				this.setState({source, provider: provider.name}, e => this.loadEmbed(source, provider.api));
+			}
 		}
 	},
 
-	loadCodePen(source) {
-		const url = __DEVELOPMENT__ ? 'http://crossorigin.me/http://codepen.io/api/oembed' : 'http://codepen.io/api/oembed';
+	loadEmbed(source, api) {
+		const url = __DEVELOPMENT__ ? ('http://crossorigin.me/' + api) : api;
 		request.get(url).query({url: source, format: 'json'}).end((err, res) => {
 			if (err) {
 				console.error(err);
-			} else {
-				const {html, title, author_name, author_url} = res.body;
-				this.setState({html, title, author_name, author_url});
+			}	else {
+				const {html, ...metaData} = res.body;
+				this.setState({html, metaData});
 			}
 		});
 	},
@@ -55,7 +59,7 @@ export const EmbedViewer = React.createClass({
 		case 'full':
 		case 'static-full':
 			default:
-			// consider adding fields for title, author, and author url here
+			// consider adding metadata fields here?
 			return <div>
 				<div dangerouslySetInnerHTML={{__html: this.state.html}}></div>
 			</div>;

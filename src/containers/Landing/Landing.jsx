@@ -13,10 +13,9 @@ import {isWebUri} from 'valid-url';
 import Select from 'react-select';
 import request from 'superagent';
 // import {push} from 'redux-router';
+import {match} from '../../components/AtomTypes/Embed/oEmbed';
 
 let styles = {};
-
-const codePenRegex = /https?:\/\/codepen\.io\/[^\/]+\/pen\/[^\/]+$/;
 
 const Landing = React.createClass({
 	propTypes: {
@@ -41,8 +40,8 @@ const Landing = React.createClass({
 		const source = this.state.source;
 		let atomType = undefined;
 		let props = {};
-		if (source && source.match(codePenRegex)) {
-			atomType = 'codepen';
+		if (source && match(source)) {
+			atomType = 'embed';
 			props = {source};
 		} else	if (source && isWebUri(source)) {
 			atomType = 'iframe';

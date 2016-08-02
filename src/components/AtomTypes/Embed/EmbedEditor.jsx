@@ -4,7 +4,7 @@ import {safeGetInToJS} from 'utils/safeParse';
 import {s3Upload} from 'utils/uploadFile';
 import {Loader, CustomizableForm} from 'components';
 
-import {isWebUri} from 'valid-url';
+import {match} from './oEmbed';
 import request from 'superagent';
 
 let styles = {};
@@ -19,61 +19,58 @@ export const EmbedEditor = React.createClass({
 			valid: false,
 			source: '',
 			html: '',
-			title: '', 
-			author_name: '', 
-			author_url: ''
+			metaData: {},
+			provider: ''
 		};
 	},
 	
-	getSaveVersionContent: function() {
-		const {source, html, title, author_name, author_url} = this.state;
-		return {source, html, title, author_name, author_url};
+	getSaveVersionContent() {
+		const {source, html, provider, metaData} = this.state;
+		return {source, html, provider, metaData};
 	},
 	
 	componentDidMount() {
 		const source = safeGetInToJS(this.props.atomEditData, ['currentVersionData', 'content', 'source']) || '';
+		const provider = safeGetInToJS(this.props.atomEditData, ['currentVersionData', 'content', 'provider']) || '';
 		const html = safeGetInToJS(this.props.atomEditData, ['currentVersionData', 'content', 'html']) || '';
-		const title = safeGetInToJS(this.props.atomEditData, ['currentVersionData', 'content', 'title']) || '';
-		const author_name = safeGetInToJS(this.props.atomEditData, ['currentVersionData', 'content', 'author_name']) || '';
-		const author_url = safeGetInToJS(this.props.atomEditData, ['currentVersionData', 'content', 'author_url']) || '';
+		const metaData = safeGetInToJS(this.props.atomEditData, ['currentVersionData', 'content', 'metaData']) || '';
 		if (html) {
-			this.setState({source, html, title, author_name, author_url});
+			this.setState({source, provider, html, metaData});
 		} else if (source) {
-			this.setState({source}, e => this.loadCodePen(source));
+			const provider = match(source);
+			if (provider)	{
+				this.setState({source, provider: provider.name}, e => this.loadEmbed(source, provider.api));
+			}
 		}
 	},
 	
-	
-	loadCodePen(source) {
-		const url = __DEVELOPMENT__ ? 'http://crossorigin.me/http://codepen.io/api/oembed' : 'http://codepen.io/api/oembed';
+	loadEmbed(source, api) {
+		const url = __DEVELOPMENT__ ? ('http://crossorigin.me/' + api) : api;
 		request.get(url).query({url: source, format: 'json'}).end((err, res) => {
 			if (err) {
 				console.error(err);
 			}	else {
-				const {html, title, author_name, author_url} = res.body;
-				this.setState({html, title, author_name, author_url});
+				const {html, ...metaData} = res.body;
+				this.setState({html, metaData});
 			}
 		});
 	},
 	
 	handleSourceChange(evt) {
 		const source = evt.target.value;
-		const valid = isWebUri(source) && source !== this.state.source;
-		this.setState({source, valid});
+		const provider = match(source);
+		if (provider && source !== this.state.source) {
+			this.setState({source, provider: provider.name}, e => this.loadEmbed(source, provider.api));
+		}
 	},
 	
-	updateSource(evt) {
-		this.loadCodePen(this.state.source);
-	},
-
 	render() {
-		const {source, valid, html} = this.state;
+		const {source, html} = this.state;
 		return <div>
 			<label htmlFor='source' style={styles.label}>
 				Source:
 				<input id='source' name='source' type='text' value={source} style={styles.source} onChange={this.handleSourceChange}/>
 			</label>
-			<button id="update" style={styles.update} onClick={this.updateSource} disabled={!valid}>Update</button>
 			<h3>Preview</h3>
 			<div dangerouslySetInnerHTML={{__html: html}}></div>
 		</div>;
