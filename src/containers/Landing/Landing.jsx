@@ -3,14 +3,14 @@ import {connect} from 'react-redux';
 import Radium from 'radium';
 import Helmet from 'react-helmet';
 // import {globalStyles} from 'utils/styleConstants';
-import {PreviewCard} from 'components';
+// import {PreviewCard} from 'components';
 import {About} from 'components';
 // import { Link } from 'react-router';
 import {s3Upload} from 'utils/uploadFile';
 import {createAtom} from 'containers/Media/actions';
 import {isWebUri} from 'valid-url';
 
-import Select from 'react-select';
+// import Select from 'react-select';
 import request from 'superagent';
 // import {push} from 'redux-router';
 import {match} from '../../components/AtomTypes/Embed/oEmbed';
@@ -136,13 +136,12 @@ const Landing = React.createClass({
 				<div className={'lightest-bg'}>
 					<div className={'section'}>
 
-						<input type="file" accept="*" onChange={this.handleFileSelect} />
+						{/* <input type="file" accept="*" onChange={this.handleFileSelect} />
 						<form>
 							<input type="text" onChange={this.handleSourceChange} />
 							<input type="button" value="Create Atom" onClick={this.handleSourceSubmit} />
-						</form>
+						</form> */}
 
-						
 
 						{/* <Select.Async
 							name="form-field-name"
