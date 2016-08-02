@@ -5,7 +5,8 @@ const Version = require('../models').Version;
 const User = require('../models').User;
 const Link = require('../models').Link;
 const Promise = require('bluebird');
-const Request = require('request-promise');
+// const Request = require('request-promise');
+const request = require('superagent-promise')(require('superagent'), Promise);
 import {uploadLocalFile} from '../services/aws';
 import React from 'react';
 import {generateMarkdownFile, generatePDFFromJSON} from '../services/exporters';
@@ -31,7 +32,8 @@ export function saveVersion(req, res) {
 
 	const checkAndSaveJupyter = new Promise(function(resolve) {
 		if (newVersion.type === 'jupyter') {
-			const query = Request.post('http://jupyter-dd419b35.e87eb116.svc.dockerapp.io/convert', {form: { url: req.body.newVersion.content.url } });
+			// const query = Request.post('http://jupyter-dd419b35.e87eb116.svc.dockerapp.io/convert', {form: { url: req.body.newVersion.content.url } });
+			const query = request.post('http://jupyter-dd419b35.e87eb116.svc.dockerapp.io/convert').send({form: { url: req.body.versionContent.url } });
 			resolve(query);
 		} else {
 			resolve();
