@@ -28,8 +28,8 @@ import HighlightViewer from './Highlight/HighlightViewer';
 import PDFEditor from './PDF/PDFEditor';
 import PDFViewer from './PDF/PDFViewer';
 
-import CodePenEditor from './CodePen/CodePenEditor';
-import CodePenViewer from './CodePen/CodePenViewer';
+import EmbedEditor from './Embed/EmbedEditor';
+import EmbedViewer from './Embed/EmbedViewer';
 
 export default {
 	image: {
@@ -73,7 +73,7 @@ export default {
 		viewer: PDFViewer
 	},
 	codepen: {
-		editor: CodePenEditor,
-		viewer: CodePenViewer
+		editor: EmbedEditor,
+		viewer: EmbedViewer
 	}
 };

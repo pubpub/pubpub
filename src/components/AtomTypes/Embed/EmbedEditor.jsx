@@ -9,7 +9,7 @@ import request from 'superagent';
 
 let styles = {};
 
-export const CodePenEditor = React.createClass({
+export const EmbedEditor = React.createClass({
 	propTypes: {
 		atomEditData: PropTypes.object,
 	},
@@ -80,7 +80,7 @@ export const CodePenEditor = React.createClass({
 	}
 });
 
-export default Radium(CodePenEditor);
+export default Radium(EmbedEditor);
 
 styles = {
 	source: {},

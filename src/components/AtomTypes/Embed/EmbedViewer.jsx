@@ -6,7 +6,7 @@ import request from 'superagent';
 
 let styles;
 
-export const CodePenViewer = React.createClass({
+export const EmbedViewer = React.createClass({
 	propTypes: {
 		atomData: PropTypes.object,
 		renderType: PropTypes.string, // full, embed, static-full, static-embed
@@ -63,7 +63,7 @@ export const CodePenViewer = React.createClass({
 	}
 });
 
-export default Radium(CodePenViewer);
+export default Radium(EmbedViewer);
 
 styles = {
 
