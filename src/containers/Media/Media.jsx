@@ -379,6 +379,7 @@ export const Media = React.createClass({
 			{value: 'latex', label: 'equation'},
 			{value: 'reference', label: 'reference'},
 			{value: 'jupyter', label: 'jupyter'},
+			{value: 'iframe', label: 'iframe'},
 		];
 		return (
 			<Dropzone ref="dropzone" disableClick={true} onDrop={this.onDrop} style={{}} activeClassName={'dropzone-active'} >
