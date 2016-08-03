@@ -34,7 +34,7 @@ let Rangy = undefined;
 
 let styles = {};
 
-const SelectionPopup = React.createClass({
+export const SelectionPopup = React.createClass({
 	propTypes: {
 		addSelectionHandler: PropTypes.func,
 	},

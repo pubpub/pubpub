@@ -17,7 +17,7 @@ import {match} from '../../components/AtomTypes/Embed/oEmbed';
 
 let styles = {};
 
-const Landing = React.createClass({
+export const Landing = React.createClass({
 	propTypes: {
 		landingData: PropTypes.object,
 		loginData: PropTypes.object,
@@ -30,12 +30,12 @@ const Landing = React.createClass({
 			source: false,
 		};
 	},
-	
+
 	handleSourceChange: function(evt) {
 		const source = evt.target.value;
 		this.setState({source});
 	},
-	
+
 	handleSourceSubmit: function(evt) {
 		const source = this.state.source;
 		let atomType = undefined;
@@ -84,7 +84,7 @@ const Landing = React.createClass({
 		default:
 			break;
 		}
-		
+
 		const versionContent = {
 			url: 'https://assets.pubpub.org/' + filename
 		};
@@ -152,23 +152,23 @@ const Landing = React.createClass({
 
 						{/* <h2>Recent Activity</h2>
 
-						<PreviewCard 
+						<PreviewCard
 							image={'http://res.cloudinary.com/pubpub/image/upload/c_limit,h_250,w_250/v1449761714/3eb7882_iavg9s.jpg'}
 							title={'Thariq Shihipar'}
 							description={'Intent on eating every bagel on earth until I burst.'} />
-						<PreviewCard 
+						<PreviewCard
 							image={'http://res.cloudinary.com/pubpub/image/upload/c_limit,h_250,w_250/v1449761714/3eb7882_iavg9s.jpg'}
 							title={'Thariq Shihipar'}
 							description={'Intent on eating every bagel on earth until I burst.'} />
-						<PreviewCard 
+						<PreviewCard
 							image={'http://res.cloudinary.com/pubpub/image/upload/c_limit,h_250,w_250/v1449761714/3eb7882_iavg9s.jpg'}
 							title={'Thariq Shihipar'}
 							description={'Intent on eating every bagel on earth until I burst.'} />
-						<PreviewCard 
+						<PreviewCard
 							image={'http://res.cloudinary.com/pubpub/image/upload/c_limit,h_250,w_250/v1449761714/3eb7882_iavg9s.jpg'}
 							title={'Thariq Shihipar'}
 							description={'Intent on eating every bagel on earth until I burst.'} />
-						<PreviewCard 
+						<PreviewCard
 							image={'http://res.cloudinary.com/pubpub/image/upload/c_limit,h_250,w_250/v1449761714/3eb7882_iavg9s.jpg'}
 							title={'Thariq Shihipar'}
 							description={'Intent on eating every bagel on earth until I burst.'} /> */}
