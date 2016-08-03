@@ -18,21 +18,27 @@ export const AboutJournals = React.createClass({
 			{
 				slug: 'jods',
 				journalName: 'Journal of Design and Science',
-				icon: 'https://assets.pubpub.org/_site/journal.png',
+				icon: 'https://jake.pubpub.org/unsafe/75x75/https://assets.pubpub.org/_site/jodsIcon.png',
 				description: ''
 			},
 			{
-				slug: 'jods',
-				journalName: 'Journal of Design and Science',
-				icon: 'https://assets.pubpub.org/_site/journal.png',
+				slug: 'resci',
+				journalName: 'Responsive Science',
+				icon: 'https://jake.pubpub.org/unsafe/75x75/https://assets.pubpub.org/_site/resciIcon.png',
 				description: ''
 			},
 			{
-				slug: 'jods',
-				journalName: 'Journal of Design and Science',
-				icon: 'https://assets.pubpub.org/_site/journal.png',
+				slug: 'constitucioncdmx',
+				journalName: 'Constitucion CDMX',
+				icon: 'https://jake.pubpub.org/unsafe/75x75/https://assets.pubpub.org/_site/cdmxIcon.png',
 				description: ''
-			}
+			},
+			{
+				slug: 'tjoe',
+				journalName: 'The Journal of Open Engineering',
+				icon: 'https://jake.pubpub.org/unsafe/75x75/https://assets.pubpub.org/_site/tjoeIcon.png',
+				description: ''
+			},
 		];
 
 		return (
@@ -81,7 +87,7 @@ export const AboutJournals = React.createClass({
 
 						{featuredContent.map((item, index)=>{
 							return (
-								<div style={[item.inactive && styles.inactive]} key={'submitted-' + index}>
+								<div style={{}}>
 									<PreviewCard 
 										type={'journal'}
 										image={item.icon}
