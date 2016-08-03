@@ -32,6 +32,7 @@ export const defaultState = Immutable.Map({
 
 	newAtomSlug: undefined,
 	newNodeData: undefined, 
+	redirect: false,
 });
 
 /*--------*/
@@ -69,11 +70,12 @@ function createAtomLoad(state) {
 	});
 }
 
-function createAtomSuccess(state, result) {
+function createAtomSuccess(state, result, redirect) {
 	return state.merge({
 		newAtomSlug: result.parent._id,
 		mediaItems: state.get('mediaItems').push(result),
 		newNodeData: result,
+		redirect: redirect || false,
 	});
 }
 
@@ -134,7 +136,7 @@ export default function reducer(state = defaultState, action) {
 	case CREATE_ATOM_LOAD:
 		return createAtomLoad(state);
 	case CREATE_ATOM_SUCCESS:
-		return createAtomSuccess(state, action.result);
+		return createAtomSuccess(state, action.result, action.redirect);
 	case CREATE_ATOM_FAIL:
 		return createAtomFail(state, action.error);
 

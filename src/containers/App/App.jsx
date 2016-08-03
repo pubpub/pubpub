@@ -47,7 +47,7 @@ export const App = React.createClass({
 		if (this.props.loginData.get('loggedIn') && !nextProps.loginData.get('loggedIn')) {
 			this.props.dispatch(push('/'));
 		}
-		if (!this.props.mediaData.get('newAtomSlug') && nextProps.mediaData.get('newAtomSlug')) {
+		if (nextProps.mediaData.get('redirect') && !this.props.mediaData.get('newAtomSlug') && nextProps.mediaData.get('newAtomSlug')) {
 			if (this.props.path.substring(0, 4) === '/pub') {
 				window.location.href = '/pub/' + nextProps.mediaData.get('newAtomSlug') + '/edit';
 			} else {
@@ -61,7 +61,7 @@ export const App = React.createClass({
 	},
 
 	createDocument: function() {
-		this.props.dispatch(createAtom('document'));
+		this.props.dispatch(createAtom('document', null, null, true));
 	},
 
 	logoutHandler: function() {
