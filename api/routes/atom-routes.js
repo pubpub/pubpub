@@ -231,7 +231,7 @@ export function getAtomData(req, res) {
 			} else if ((!meta || meta === 'export' || meta === 'cite') && version) {
 				let versionID = version;
 				if (!isNaN(version) && version < 10000) {
-					versionID = atomResult.versions[version];
+					versionID = atomResult.versions[version]; // Note, this is going to provide unexpected behavior if there are unpublished versions in between published versions, and query occurs by index rather than _id.
 				}
 				resolve(Version.findOne({_id: versionID}).exec());
 			} else {
@@ -366,6 +366,11 @@ export function getAtomData(req, res) {
 			throw new Error('Atom does not exist');
 		}
 
+		const currentVersionData = taskData[1];
+		if (!currentVersionData.isPublished && permissionType !== 'author' && permissionType !== 'editor' && permissionType !== 'reader') {
+			throw new Error('Atom does not exist');
+		}
+
 		let discussionsData = taskData[6] || [];
 		if (permissionType !== 'author' && permissionType !== 'editor' && permissionType !== 'reader') {
 			discussionsData = discussionsData.filter((discussion)=>{
@@ -378,7 +383,7 @@ export function getAtomData(req, res) {
 		return res.status(201).json({
 			atomData: atomResult,
 			authorsData: taskData[0],
-			currentVersionData: taskData[1],
+			currentVersionData: currentVersionData,
 			contributorsData: taskData[2],
 			versionsData: taskData[3],
 			submittedData: taskData[4],
