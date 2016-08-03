@@ -120,7 +120,7 @@ export const AtomEditor = React.createClass({
 
 		const navItems = [
 			{text: 'View', link: '/pub/' + this.props.slug},
-			{text: 'Edit', link: '/pub/' + this.props.slug + '/draft', active: true},
+			{text: 'Edit', link: '/pub/' + this.props.slug + '/edit', active: true},
 			{text: 'Details', rightAlign: true, action: this.openModal.bind(this, 'details')},
 			{text: 'Contributors', rightAlign: true, action: this.openModal.bind(this, 'contributors')},
 			// {text: 'Styles', rightAlign: true, action: this.openModal.bind(this, 'styles')},
