@@ -1,6 +1,6 @@
 import {expect} from 'chai';
 import {shallowRender} from 'tests/helpersClient';
-import AboutPubs from './AboutPubs.jsx'
+import {AboutPubs} from './AboutPubs.jsx'
 
 describe('Components', () => {
 	describe('AboutPubs.jsx', () => {
