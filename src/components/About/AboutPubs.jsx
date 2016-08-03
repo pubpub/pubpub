@@ -1,7 +1,7 @@
 import React from 'react';
 import Radium from 'radium';
-import {globalStyles} from 'utils/styleConstants';
-import { Link } from 'react-router';
+// import {globalStyles} from 'utils/styleConstants';
+// import { Link } from 'react-router';
 import Helmet from 'react-helmet';
 
 import {styles} from './aboutStyles';
@@ -27,7 +27,6 @@ export const AboutPubs = React.createClass({
 							obscure their own development, and capture only shallow snapshots of their context.
 							Pubs are a modern type of document designed for everyone and built in the 21st century. 
 						</p>
-						<Link style={globalStyles.link} to={'/signup'}><div className={'button'} style={styles.headerButton}>Sign Up</div></Link>
 					</div>
 				</div>
 
