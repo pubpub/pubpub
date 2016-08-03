@@ -20,7 +20,7 @@ export const AboutPubs = React.createClass({
 
 				<div className={'lightest-bg'}>
 					<div className={'section'}>
-						
+
 						<h1>Pubs</h1>
 						<p style={[styles.headerSubtitle, styles.headerTextMax]}>PubPub is a network of digitally native publications called Pubs. </p>
 						<p>
@@ -28,6 +28,7 @@ export const AboutPubs = React.createClass({
 							obscure their own development, and capture only shallow snapshots of their context.
 							Pubs are a modern type of document designed for everyone and built in the 21st century. 
 						</p>
+						
 					</div>
 				</div>
 
@@ -51,7 +52,7 @@ export const AboutPubs = React.createClass({
 						</p>
 					</div>
 				</div>
-				
+
 				<div>
 					<div className={'section'}>
 						<h2>Idea-oriented Documents</h2>
@@ -63,6 +64,7 @@ export const AboutPubs = React.createClass({
 					</div>
 				</div>
 	
+				
 			</div>
 		);
 	}
