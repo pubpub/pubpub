@@ -32,6 +32,7 @@ export default Radium(HighlightViewer);
 
 styles = {
 	selectionBlock: {
+		textAlign: 'left',
 		borderRadius: '1px',
 		padding: '1em',
 		color: '#5B5B5B',
