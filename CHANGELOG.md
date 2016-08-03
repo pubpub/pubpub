@@ -15,6 +15,8 @@ See [http://keepachangelog.com/](http://keepachangelog.com/) for best practices.
 
 ## [Unreleased]
 ### Added
+- Bug fixes for handling bad version requests when reading Pubs
+- Bug fixes for Login error message and empty password submission
 
 ## [v2.0.0] - 2015-08-03
 ### Added
