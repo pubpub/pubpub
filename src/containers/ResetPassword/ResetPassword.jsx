@@ -92,7 +92,7 @@ export const ResetPassword = React.createClass({
 											</div>
 
 											<button name={'login'} className={'button'} onClick={this.resetPasswordSubmit}>Set New Password</button>
-											<div style={styles.loaderContainer}><Loader loading={this.props.resetData.get('loading')} showCompletion={false}/></div>
+											<div style={styles.loaderContainer}><Loader loading={loading} showCompletion={false}/></div>
 										</form>
 									);
 								default:
@@ -124,7 +124,7 @@ export const ResetPassword = React.createClass({
 											</div>
 
 											<button name={'login'} className={'button'} onClick={this.resetRequestSubmit}>Reset Password</button>
-											<div style={styles.loaderContainer}><Loader loading={this.props.resetData.get('loading')} showCompletion={false}/></div>
+											<div style={styles.loaderContainer}><Loader loading={loading} showCompletion={false}/></div>
 										</form>
 										{requestSuccess === 'error'
 											? <div style={styles.error}>No user with that email</div>
