@@ -29,14 +29,16 @@ export const JournalProfileHeader = React.createClass({
 						{(this.props.headerMode === 'logo' || this.props.headerMode === 'both') &&
 							<img src={this.props.logo} />
 						}
-						
+
 						{(this.props.headerMode !== 'logo') &&
 							<h1>{this.props.journalName}</h1>
 						}
+						<a href={this.followUserToggle}><div className={'button'} style={styles.followButton}>Follow</div></a>
 
 						{(this.props.headerMode !== 'logo') &&
 							<p>{this.props.description}</p>
 						}
+
 					</div>
 				</div>
 			</div>
@@ -72,5 +74,10 @@ styles = {
 	headerTextWrapper: {
 		position: 'relative',
 		zIndex: 2,
+	},
+	followButton: {
+		padding: '0em 0.2em ',
+		lineHeight: '1.4em',
+		fontFamily: '"Yrsa", Georgia, serif',
 	},
 };

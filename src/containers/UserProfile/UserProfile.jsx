@@ -113,14 +113,20 @@ export const UserProfile = React.createClass({
 						<img src={'https://jake.pubpub.org/unsafe/150x150/' + profileData.image} />
 					</div>
 					<div style={styles.headerTextWrapper}>
-						<h1>{profileData.name}</h1>
+						<h1 style={styles.header }>{profileData.name}</h1>
+						<a href={this.followUserToggle}><div className={'button'} style={styles.followButton}>Follow</div></a>
 						<p>{profileData.bio}</p>
+
+
+
 						{links.filter((link)=> {
 							return !!profileData[link.key];
 						}).map((link, index)=> {
 							return <a key={'link-' + index} className={'underlineOnHover'} style={[styles.link, index === 0 && styles.firstLink]} href={link.href}>{link.text}</a>;
 						})}
 					</div>
+
+
 				</div>
 
 				<NavContentWrapper navItems={navItems} mobileNavButtons={mobileNavButtons}>
@@ -182,6 +188,9 @@ export default connect( state => {
 })( Radium(UserProfile) );
 
 styles = {
+	header: {
+		marginBottom: '10px',
+	},
 	headerImageWrapper: {
 		textAlign: 'center',
 		display: 'table-cell',
@@ -223,5 +232,12 @@ styles = {
 		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
 			display: 'none',
 		},
+	},
+	followButton: {
+		padding: '0em 0.2em ',
+		lineHeight: '1.4em',
+		fontFamily: '"Yrsa", Georgia, serif',
+		fontSize: '16px',
+
 	},
 };
