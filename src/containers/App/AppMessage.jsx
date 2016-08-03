@@ -1,7 +1,7 @@
 import React from 'react';
 import Radium from 'radium';
 // import { Link } from 'react-router';
-import {globalStyles} from 'utils/styleConstants';
+// import {globalStyles} from 'utils/styleConstants';
 
 // import {globalMessages} from 'utils/globalMessages';
 // import {FormattedMessage} from 'react-intl';
