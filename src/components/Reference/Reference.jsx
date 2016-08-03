@@ -3,7 +3,7 @@ import Radium from 'radium';
 
 let styles = {};
 
-const Reference = React.createClass({
+export const Reference = React.createClass({
 	propTypes: {
 		citationObject: PropTypes.object,
 		mode: PropTypes.string,
@@ -16,7 +16,7 @@ const Reference = React.createClass({
 		};
 	},
 
-	
+
 	render: function() {
 		const citation = this.props.citationObject;
 		const citationStrings = {};
@@ -117,7 +117,7 @@ const Reference = React.createClass({
 				<span style={styles.italic}>{citationStrings.journal}</span>
 				{citationStrings.volume}
 				{citationStrings.publisher}
-				
+
 				{citationStrings.number}
 				{citationStrings.pages}
 				<a href={citation.url} style={{textDecoration: 'none', color: 'inherit'}}>{citationStrings.url}</a>
@@ -131,7 +131,7 @@ const Reference = React.createClass({
 		default:
 			return null;
 		}
-		
+
 	}
 });
 

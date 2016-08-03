@@ -9,12 +9,14 @@ import {globalStyles} from 'utils/styleConstants';
 
 import {LoaderIndeterminate, NotFound} from 'components';
 
+import {safeGetInToJS} from 'utils/safeParse';
+
 // import {globalMessages} from 'utils/globalMessages';
 // import {FormattedMessage} from 'react-intl';
 
 let styles = {};
 
-const ResetPassword = React.createClass({
+export const ResetPassword = React.createClass({
 	propTypes: {
 		resetData: PropTypes.object,
 		hash: PropTypes.string,
@@ -46,6 +48,9 @@ const ResetPassword = React.createClass({
 	},
 
 	render: function() {
+		const resetSuccess = safeGetInToJS(this.props.resetData, ['resetSuccess']);
+		const requestSuccess = safeGetInToJS(this.props.resetData, ['requestSuccess']);
+		const loading = safeGetInToJS(this.props.resetData, ['loading']);
 
 		const metaData = {
 			title: 'Password Reset',
@@ -54,10 +59,10 @@ const ResetPassword = React.createClass({
 		return (
 
 			<div style={styles.container}>
-
+				
 				<Helmet {...metaData} />
 
-				{this.props.hash && this.props.resetData.get('resetSuccess') === 'invalid'
+				{this.props.hash && resetSuccess === 'invalid'
 					? null
 					: <div style={styles.header}>Password Reset</div>
 				}
@@ -65,7 +70,7 @@ const ResetPassword = React.createClass({
 				<div style={styles.content}>
 
 					<div style={styles.loaderWrapper}>
-						{this.props.resetData.get('loading')
+						{loading
 							? <LoaderIndeterminate color={globalStyles.sideText}/>
 							: null
 						}
@@ -74,7 +79,7 @@ const ResetPassword = React.createClass({
 					{this.props.hash
 						? <div>
 							{(()=>{
-								switch (this.props.resetData.get('resetSuccess')) {
+								switch (resetSuccess) {
 								case 'success':
 									return (
 										<div>
@@ -98,7 +103,7 @@ const ResetPassword = React.createClass({
 						</div>
 						: <div>
 							{(()=>{
-								switch (this.props.resetData.get('requestSuccess')) {
+								switch (requestSuccess) {
 								case 'success':
 									return (
 										<div>
@@ -114,7 +119,7 @@ const ResetPassword = React.createClass({
 											<input style={styles.input} type="email" ref={'requestResetEmail'} placeholder={'email'}/>
 											<div style={styles.submitButton} key={'resetRequestButton'} onClick={this.resetRequestSubmit}>Reset</div>
 										</form>
-										{this.props.resetData.get('requestSuccess') === 'error'
+										{requestSuccess === 'error'
 											? <div style={styles.error}>No user with that email</div>
 											: null
 										}

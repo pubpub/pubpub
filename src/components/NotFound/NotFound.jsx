@@ -13,11 +13,17 @@ import {FormattedMessage} from 'react-intl';
 
 let styles = {};
 
-const NotFound = React.createClass({
+export const NotFound = React.createClass({
 	propTypes: {
 		loginData: PropTypes.object,
 		pathname: PropTypes.string,
 		dispatch: PropTypes.func,
+	},
+
+	getInitialState() {
+		return {
+			value: undefined,
+		};
 	},
 
 	handleSelectChange: function(item) {
@@ -66,11 +72,11 @@ const NotFound = React.createClass({
 				<h2>
 					<FormattedMessage id="notFound.pageDoesntExist" defaultMessage="Doh - That page does not seem to exist!"/>
 				</h2>
-					
+
 				<img src={'https://assets.pubpub.org/_site/sadPub.png'} />
 
 				<div style={styles.helperContent}>
-					{!loggedIn && 
+					{!loggedIn &&
 						<Link to={'/login' + loginQuery} style={globalStyles.link}>
 							Perhaps you need to Login to access this page. Click to Login
 						</Link>
@@ -86,11 +92,11 @@ const NotFound = React.createClass({
 						placeholder={<span>Search PubPub</span>}
 						onChange={this.handleSelectChange} />
 				</div>
-				
 
-				
+
+
 			</div>
-			
+
 		);
 	}
 });
