@@ -37,7 +37,7 @@ export class ModServerCommunications {
 				// jQuery('#unobtrusive_messages').html('')
 			};
 
-			this.ws.onerror = function(e) {
+			this.ws.onerror = function(err) {
 				console.log('error with socket');
 				console.log(arguments);
 				// console.log('connection open');
