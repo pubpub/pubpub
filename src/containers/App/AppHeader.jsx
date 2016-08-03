@@ -144,13 +144,13 @@ export const AppHeader = React.createClass({
 				</div>
 
 				{/* Notication Count Button */}
-				{isLoggedIn && !!this.props.loginData.getIn(['userData', 'notificationCount']) && // Render if logged in and has notification count
+				{/* isLoggedIn && !!this.props.loginData.getIn(['userData', 'notificationCount']) && // Render if logged in and has notification count
 					<Link to={'/user/' + username + '/notifications'}>
 						<div className={'lightest-bg darkest-color'} style={styles.notificationBlock}>
 							{this.props.loginData.getIn(['userData', 'notificationCount'])}
 						</div>
 					</Link>
-				}
+				*/}
 				
 				{/* Account Menu Splash*/}
 				{this.state.accountMenuOpen && // Render if the account menu is set open
