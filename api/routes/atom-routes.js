@@ -27,10 +27,13 @@ export function createAtom(req, res) {
 	// const hash = SHA1(type + new Date().getTime() + req.user._id).toString(encHex);
 	const newAtomID = new ObjectID();
 
+	const today = new Date();
+	const dateString = (today + '').substring(4, 15);
+
 	const atom = new Atom({
 		_id: newAtomID,
 		slug: newAtomID,
-		title: req.body.title || 'New Pub: ' + new Date().getTime(),
+		title: req.body.title || 'New Pub: ' + dateString,
 		type: type,
 
 		createDate: now,
