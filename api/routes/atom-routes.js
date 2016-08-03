@@ -10,8 +10,6 @@ const Promise = require('bluebird');
 
 // const SHA1 = require('crypto-js/sha1');
 // const encHex = require('crypto-js/enc-hex');
-
-const Request = require('request-promise');
 const request = require('superagent-promise')(require('superagent'), Promise);
 
 export function createAtom(req, res) {
@@ -77,7 +75,8 @@ export function createAtom(req, res) {
 	})
 	.then(function() {
 		if (type !== 'jupyter') { return undefined; }
-		return Request.post('http://jupyter-dd419b35.e87eb116.svc.dockerapp.io/convert', {form: { url: req.body.versionContent.url } });
+		// return Request.post('http://jupyter-dd419b35.e87eb116.svc.dockerapp.io/convert', { });
+		return request.post('http://jupyter-dd419b35.e87eb116.svc.dockerapp.io/convert').send({form: { url: req.body.versionContent.url } });
 	})
 	.then(function(response) {
 		if (type !== 'jupyter') { return undefined; }
@@ -424,9 +423,6 @@ export function getAtomEdit(req, res) {
 			atomData: atomResult,
 			currentVersionData: versionResult,
 		};
-		// if (atomResult.type === 'markdown') { // If we're sending down Editor data for a markdown atom, include the firebase token so we can do collaborative editing
-		// 	output.atomData.token = firebaseTokenGen(req.user.username, slug, false); // the false should be {isReader}
-		// }
 
 		return request.post('https://' + process.env.COLLAB_SERVER_URL + '/authenticate')
 		.send({

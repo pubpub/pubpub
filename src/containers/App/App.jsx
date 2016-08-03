@@ -47,10 +47,13 @@ export const App = React.createClass({
 		if (this.props.loginData.get('loggedIn') && !nextProps.loginData.get('loggedIn')) {
 			this.props.dispatch(push('/'));
 		}
-		if (nextProps.path === '/' && !this.props.mediaData.get('newAtomSlug') && nextProps.mediaData.get('newAtomSlug')) {
-			this.props.dispatch(push('/pub/' + nextProps.mediaData.get('newAtomSlug') + '/edit'));
+		if (!this.props.mediaData.get('newAtomSlug') && nextProps.mediaData.get('newAtomSlug')) {
+			if (this.props.path.substring(0, 4) === '/pub') {
+				window.location.href = '/pub/' + nextProps.mediaData.get('newAtomSlug') + '/edit';
+			} else {
+				this.props.dispatch(push('/pub/' + nextProps.mediaData.get('newAtomSlug') + '/edit'));		
+			}
 		}
-
 		// For routes that won't have an async load, and thus won't unset a 404 page, fire an unset action
 		if (this.props.appData.get('notFound') && (nextProps.path === '/login' || nextProps.path === '/' || nextProps.path === '/about' || nextProps.path === '/signup')) {
 			this.props.dispatch(unsetNotFound());

@@ -12,9 +12,6 @@ Keep config.js private to your development team.
 export const accessKeyAws = '<YOUR-ACCESS-KEY-HERE>'; // S3 used for file storage
 export const secretKeyAws = '<YOUR-SECRET-KEY-HERE>';
 
-// Firebase Credentials
-export const firebaseSecret = '<YOUR-SECRET-HERE>'; // Firebase used for synchronizing collaborative editing
-
 // Heroku Credentials
 export const herokuApiKey = '<YOUR-KEY-HERE>'; // Heroku used to host and serve the project
 

@@ -3,14 +3,14 @@ import {connect} from 'react-redux';
 import Radium from 'radium';
 import Helmet from 'react-helmet';
 // import {globalStyles} from 'utils/styleConstants';
-import {PreviewCard} from 'components';
+// import {PreviewCard} from 'components';
 import {About} from 'components';
 // import { Link } from 'react-router';
 import {s3Upload} from 'utils/uploadFile';
 import {createAtom} from 'containers/Media/actions';
 import {isWebUri} from 'valid-url';
 
-import Select from 'react-select';
+// import Select from 'react-select';
 import request from 'superagent';
 // import {push} from 'redux-router';
 import {match} from '../../components/AtomTypes/Embed/oEmbed';
@@ -119,7 +119,7 @@ const Landing = React.createClass({
 		const metaData = {
 			title: 'PubPub',
 		};
-		const loggedIn = this.props.loginData && this.props.loginData.get('loggedIn');
+		// const loggedIn = this.props.loginData && this.props.loginData.get('loggedIn');
 
 		return (
 			<div style={styles.container}>
@@ -133,16 +133,15 @@ const Landing = React.createClass({
 
 				<About />
 
-				<div className={'lightest-bg'}>
-					<div className={'section'}>
+				{/* <div className={'lightest-bg'}>
+					<div className={'section'}> */}
 
-						<input type="file" accept="*" onChange={this.handleFileSelect} />
+						{/* <input type="file" accept="*" onChange={this.handleFileSelect} />
 						<form>
 							<input type="text" onChange={this.handleSourceChange} />
 							<input type="button" value="Create Atom" onClick={this.handleSourceSubmit} />
-						</form>
+						</form> */}
 
-						
 
 						{/* <Select.Async
 							name="form-field-name"
@@ -173,8 +172,8 @@ const Landing = React.createClass({
 							image={'http://res.cloudinary.com/pubpub/image/upload/c_limit,h_250,w_250/v1449761714/3eb7882_iavg9s.jpg'}
 							title={'Thariq Shihipar'}
 							description={'Intent on eating every bagel on earth until I burst.'} /> */}
-					</div>
-				</div>
+				{/*  	</div>
+				</div> */}
 
 			</div>
 		);
