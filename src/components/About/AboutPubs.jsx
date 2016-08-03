@@ -21,6 +21,7 @@ export const AboutPubs = React.createClass({
 				<div className={'lightest-bg'}>
 					<div className={'section'}>
 						<h1>Pubs</h1>
+						
 						<p style={[styles.headerSubtitle, styles.headerTextMax]}>PubPub is a network of digitally native publications called Pubs. </p>
 						<p>
 							Publishing shouldn't be a lossy compression, but static PDFs are tedious to compile, 
