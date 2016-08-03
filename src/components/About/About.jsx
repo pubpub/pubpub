@@ -128,7 +128,7 @@ export const About = React.createClass({
 							<div style={[styles.forWhoText, styles.forWhoLeft]}>
 								<h3 style={styles.noMargin}>For Reviewers</h3>
 								<p>Review is distributed across many communities and done in the open. Rewarding constructive reviews and incentivizing progress rather than elitism opens the process to all that are capable.</p>
-								<Link to={'/reviews'} style={globalStyles.link}><div className={'button'}>More on Reviews</div></Link>
+								{/* <Link to={'/reviews'} style={globalStyles.link}><div className={'button'}>More on Reviews</div></Link> */}
 							</div>
 							<img style={[styles.forWhoImage, styles.forWhoRight]} src={'https://res.cloudinary.com/pubpub/image/upload/c_scale,w_415/v1451416396/discussion_hires_jhdoga.gif'} alt={'PubPub Reviews'}/>
 							<div style={globalStyles.clearFix}></div>
@@ -138,7 +138,7 @@ export const About = React.createClass({
 							<div style={[styles.forWhoText, styles.forWhoRight]}>
 								<h3 style={styles.noMargin}>For Journals</h3>
 								<p>Created by anyone for any community. Journals become tools for curating published content. Not gatekeepers of scientific progress. Journals serve as curators rather than gatekeepers. Pubs can be submitted to and featured in as many journals as is relevant. No more silos. Journals can be run for large or small audiences, by institutions or individuals. Everyone can be a journal.</p>
-								<Link to={'/journals'} style={globalStyles.link}><div className={'button'} style={styles.marginRight}>View Journals</div></Link>
+								<Link to={'/journals'} style={globalStyles.link}><div className={'button'} style={styles.marginRight}>More on Journals</div></Link>
 								<Link to={'/journals/create'} style={globalStyles.link}><div className={'button'}>Create Journal</div></Link>
 
 							</div>
