@@ -3,7 +3,7 @@ import Radium, {Style} from 'radium';
 import {safeGetInToJS} from 'utils/safeParse';
 import {Media} from 'containers';
 import {MD5} from 'object-hash';
-import ColorHash from 'color-hash';
+import chash from 'color-hash';
 
 import {markdownParser, markdownSerializer, schema} from './proseEditor';
 import {Subscription, StoppableSubscription} from 'subscription';
@@ -13,6 +13,8 @@ import Dropzone from 'react-dropzone';
 import {s3Upload} from 'utils/uploadFile';
 
 import {schema as pubSchema} from './proseEditor/schema';
+
+const ColorHash = new chash();
 
 let styles;
 let pm;
@@ -94,6 +96,7 @@ export const DocumentEditor = React.createClass({
 		collab.receiveDocumentValues = this.receiveDocumentValues;
 		collab.askForDocument = this.askForDocument;
 		collab.getHash = this.getHash;
+		collab.updateParticipants = this.updateParticipants;
 
 		// Collaboration Authentication information
 		const atomID = safeGetInToJS(this.props.atomEditData, ['atomData', '_id']);
@@ -356,7 +359,7 @@ export const DocumentEditor = React.createClass({
 		this.state.participants.map((participant, index) => {
 			const color = ColorHash.rgb(participant.name);
 			const colorStr = `rgba(${color[0]},${color[1]},${color[2]},0.3)`;
-			colorMap[`.user-bg-${index}`] = colorStr;
+			colorMap[`.user-bg-${index}`] = {backgroundColor: colorStr};
 		});
 
 		return (
