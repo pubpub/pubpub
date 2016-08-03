@@ -66,6 +66,9 @@ export const DiscussionItem = React.createClass({
 					</div>
 				</div>
 				<div className={'atom-reply'} style={styles.discussionContent}>
+					{!versionData.isPublished &&
+						<div style={styles.privateDiscussion}>Private Discussion</div>
+					}
 					{renderReactFromJSON(docJSON && docJSON.content, true)}
 				</div>
 				<div style={[styles.discussionFooter, this.props.isPreview && {display: 'none'}]}>
@@ -160,5 +163,12 @@ styles = {
 		cursor: 'pointer',
 		color: '#58585B',
 	},
+	privateDiscussion: {
+		backgroundColor: '#363736',
+		color: '#F3F3F4',
+		textAlign: 'center',
+		borderRadius: '1px',
+		fontSize: '0.85em',
+	}
 
 };

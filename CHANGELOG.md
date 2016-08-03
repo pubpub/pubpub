@@ -16,7 +16,7 @@ See [http://keepachangelog.com/](http://keepachangelog.com/) for best practices.
 ## [Unreleased]
 ### Added
 
-## [2.0.0] - 2015-08-03
+## [v2.0.0] - 2015-08-03
 ### Added
 - Major overhaul of entire platform architecture and UI
 - Landing page redesign. Making way for a more feed-based view.
@@ -35,14 +35,14 @@ See [http://keepachangelog.com/](http://keepachangelog.com/) for best practices.
 - Cleaner test architecture and scaffolding.
 - Email verification required to create pubs, journals, etc.
 
-## [1.1.0] - 2015-07-21
+## [v1.1.0] - 2015-07-21
 ### Added 
 - Bug fixes for Journal sorting
 - Adding Captcha to reduce spam
 - Scaffolding for Guide created
 
 
-## [1.0.0] - 2015-04-06
+## [v1.0.0] - 2015-04-06
 ### Added
 - Entire site is a sane single body page now. No more custom overflow: scroll divs.
 - Editor header format updated.
@@ -60,5 +60,5 @@ See [http://keepachangelog.com/](http://keepachangelog.com/) for best practices.
 
 [Unreleased]: https://github.com/pubpub/pubpub/compare/v2.0.0...HEAD
 [2.0.0]: https://github.com/pubpub/pubpub/compare/v1.1.0...v2.0.0
-[1.1.0]: https://github.com/pubpub/pubpub/compare/v0.2.0...v1.0.0
+[1.1.0]: https://github.com/pubpub/pubpub/compare/v0.2.0...v1.1.0
 [1.0.0]: https://github.com/pubpub/pubpub/commit/12136801c7f5f5dc8225077653ed713f348f2673
