@@ -56,8 +56,7 @@ export const NotFound = React.createClass({
 		const metaData = {
 			title: 'Not Found · PubPub ',
 			meta: [
-				{'name': 'robots', 'content': 'nofollow'},
-				{'name': 'robots', 'content': 'noindex'},
+				{'name': 'robots', 'content': 'noindex, nofollow'},
 			]
 		};
 
