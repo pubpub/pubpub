@@ -63,13 +63,13 @@ function loginSuccess(state, loginData) {
 }
 
 function loginFailed(state, error) {
-	let errorMessage = '';
-	switch (error.toString()) {
-	case 'Error: Unauthorized':
-		errorMessage = 'Invalid Username or Password'; break;
-	default: 
-		errorMessage = 'Email already used'; break;
-	}
+	const errorMessage = 'Invalid Username or Password';
+	// switch (error.toString()) {
+	// case 'Error: Unauthorized':
+	// 	errorMessage = 'Invalid Username or Password'; break;
+	// default: 
+	// 	errorMessage =  break;
+	// }
 
 	return state.merge({loading: false, error: errorMessage});
 }
