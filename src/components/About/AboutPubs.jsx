@@ -27,11 +27,6 @@ export const AboutPubs = React.createClass({
 						<p>Pubs can be documents, datasets, images, videos, Jupyter notebooks, interactive visualizations, etc.
 							If it can be rendered on the web, it can be a Pub. Allowing it to be published, versioned, cited, and shared.</p>
 						<p>The goal PubPub is to allow research and scientific exploration to be documented in full fidelity. Publishing should not be a lossy snapshot, but rather a rich and ongoing conversation.</p>
-						{/* <p>
-							Publishing shouldn't be a lossy compression, but static PDFs are tedious to compile, 
-							obscure their own development, and capture only shallow snapshots of their context.
-							Pubs are a modern type of document designed for everyone and built in the 21st century. 
-						</p> */}
 
 					</div>
 				</div>
@@ -62,7 +57,7 @@ export const AboutPubs = React.createClass({
 						<p>If there are features, pub types, or data that enables you to better perform research, we strongly encourage you to submit a feature request, contribute code to PubPub, or fork the project and build it to your own specifications.</p>
 					</div>
 				</div>
-
+	
 				
 			</div>
 		);
