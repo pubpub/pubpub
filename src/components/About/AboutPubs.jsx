@@ -3,6 +3,7 @@ import Radium from 'radium';
 import {globalStyles} from 'utils/styleConstants';
 // import { Link } from 'react-router';
 import Helmet from 'react-helmet';
+import {PreviewCard} from 'components';
 
 import {styles as aboutStyles} from './aboutStyles';
 let styles = {};
@@ -13,6 +14,27 @@ export const AboutPubs = React.createClass({
 		const metaData = {
 			title: 'Pubs · PubPub',
 		};
+
+		const featuredContent = [
+			{
+				slug: 'jods',
+				title: 'Journal of Design and Science',
+				previewImage: 'https://assets.pubpub.org/_site/pub.png',
+				description: ''
+			},
+			{
+				slug: 'jods',
+				title: 'Journal of Design and Science',
+				previewImage: 'https://assets.pubpub.org/_site/pub.png',
+				description: ''
+			},
+			{
+				slug: 'jods',
+				title: 'Journal of Design and Science',
+				previewImage: 'https://assets.pubpub.org/_site/pub.png',
+				description: ''
+			}
+		];
 
 		return (
 			<div style={styles.container}>
@@ -68,6 +90,26 @@ export const AboutPubs = React.createClass({
 						</div>
 						<img style={[styles.aboutPubImage, styles.aboutPubLeft]} src={'https://assets.pubpub.org/_site/github.png'} alt={'PubPub on GitHub'}/>
 						<div style={globalStyles.clearFix}></div>
+					</div>
+				</div>
+				
+				<div className={'lightest-bg'}>
+					<div className={'section'}>
+						<h2>Featured Pubs</h2>
+
+						{featuredContent.map((item, index)=>{
+							return (
+								<div style={[item.inactive && styles.inactive]} key={'submitted-' + index}>
+									<PreviewCard 
+										type={'pub'}
+										image={item.previewImage}
+										title={item.title}
+										slug={item.slug}
+										description={item.description} />
+								</div>
+							);
+						})}
+
 					</div>
 				</div>
 				
