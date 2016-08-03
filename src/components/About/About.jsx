@@ -127,7 +127,7 @@ export const About = React.createClass({
 						<div style={[styles.forWhoBlock, styles.forWhoBorderBottom]} id={'reviewers'}>
 							<div style={[styles.forWhoText, styles.forWhoLeft]}>
 								<h3 style={styles.noMargin}>For Reviewers</h3>
-								<p>Review is distributed across many communities and done in the open. Rewarding constructive reviews and incentivizing progress rather than elitism opens the process to all that are capable.</p>
+								<p>Review is distributed across many communities and done in the open. Rewarding constructive reviews and incentivizing progress opens the process to all that are capable.</p>
 								{/* <Link to={'/reviews'} style={globalStyles.link}><div className={'button'}>More on Reviews</div></Link> */}
 							</div>
 							<img style={[styles.forWhoImage, styles.forWhoRight]} src={'https://res.cloudinary.com/pubpub/image/upload/c_scale,w_415/v1451416396/discussion_hires_jhdoga.gif'} alt={'PubPub Reviews'}/>
