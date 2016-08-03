@@ -27,7 +27,7 @@ export const JournalProfileHeader = React.createClass({
 				<div className={'section'}>
 					<div style={styles.headerTextWrapper}>
 						{(this.props.headerMode === 'logo' || this.props.headerMode === 'both') &&
-							<img src={this.props.logo} />
+							<img style={styles.logoImage} src={this.props.logo} />
 						}
 						
 						{(this.props.headerMode !== 'logo') &&
@@ -72,5 +72,8 @@ styles = {
 	headerTextWrapper: {
 		position: 'relative',
 		zIndex: 2,
+	},
+	logoImage: {
+		maxWidth: '100%',
 	},
 };
