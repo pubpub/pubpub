@@ -229,7 +229,11 @@ export function getAtomData(req, res) {
 				const mostRecentVersionId = atomResult.versions[atomResult.versions.length - 1];
 				resolve(Version.findOne({_id: mostRecentVersionId}).exec());
 			} else if ((!meta || meta === 'export' || meta === 'cite') && version) {
-				resolve(Version.findOne({_id: version}).exec());
+				let versionID = version;
+				if (!isNaN(version) && version < 10000) {
+					versionID = atomResult.versions[version];
+				}
+				resolve(Version.findOne({_id: versionID}).exec());
 			} else {
 				resolve();
 			}
