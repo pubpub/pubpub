@@ -3,12 +3,19 @@ import Radium from 'radium';
 import {globalStyles} from 'utils/styleConstants';
 import { Link } from 'react-router';
 import Helmet from 'react-helmet';
+import smoothScroll from 'smoothscroll';
 
 import {styles as aboutStyles} from './aboutStyles';
 
 let styles = {};
 
 export const About = React.createClass({
+
+	scroll: function(id) {
+		const destination = document.getElementById(id);
+		if (!destination) { return undefined; }
+		smoothScroll(destination);
+	},
 
 	render: function() {
 		const metaData = {
@@ -30,16 +37,16 @@ export const About = React.createClass({
 						</div>
 
 						<div style={styles.headerButtons}>
-							<a href={'#readers'} className={'underlineOnHover'} style={styles.buttonTitle}>For Readers</a>
+							<div onClick={this.scroll.bind(this, 'readers')} className={'underlineOnHover'} style={styles.buttonTitle}>For Readers</div>
 							<p style={styles.buttonText}>All is free to read and share</p>
 
-							<a href={'#authors'} className={'underlineOnHover'} style={styles.buttonTitle}>For Authors</a>
+							<div onClick={this.scroll.bind(this, 'authors')} className={'underlineOnHover'} style={styles.buttonTitle}>For Authors</div>
 							<p style={styles.buttonText}>Free, immediate publishing</p>
 							
-							<a href={'#reviewers'} className={'underlineOnHover'} style={styles.buttonTitle}>For Reviewers</a>
+							<div onClick={this.scroll.bind(this, 'reviewers')} className={'underlineOnHover'} style={styles.buttonTitle}>For Reviewers</div>
 							<p style={styles.buttonText}>Be rewarded for your work</p>
 							
-							<a href={'#journals'} className={'underlineOnHover'} style={styles.buttonTitle}>For Journals</a>
+							<div onClick={this.scroll.bind(this, 'journals')} className={'underlineOnHover'} style={styles.buttonTitle}>For Journals</div>
 							<p style={styles.buttonText}>Curate for your community</p>
 						</div>
 
@@ -180,6 +187,7 @@ styles = {
 		fontSize: '1.1em',
 		fontWeight: 'bold',
 		whiteSpace: 'nowrap',
+		cursor: 'pointer',
 	},
 	buttonText: {
 		marginTop: 0,
