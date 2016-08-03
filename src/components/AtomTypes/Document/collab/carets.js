@@ -125,7 +125,7 @@ export class ModCollabCarets {
 		}
 
 		if (!participant) {
-			// console.log('could not find participant');
+			console.log('could not find participant');
 			// participant (still unknown). Ignore.
 			return;
 		}

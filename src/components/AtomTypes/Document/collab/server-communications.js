@@ -118,7 +118,8 @@ export class ModServerCommunications {
 			break;
 		case 'connections':
 			// console.log('got connections!');
-			this.editor.mod.collab.updateParticipantList(data.participant_list);
+			// this.editor.mod.collab.updateParticipantList(data.participant_list);
+			this.editor.updateParticipants(data.participant_list);
 			break;
 		case 'welcome':
 			this.activateConnection();
