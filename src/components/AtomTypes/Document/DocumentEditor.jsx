@@ -230,7 +230,7 @@ export const DocumentEditor = React.createClass({
 
 		this.collab.mod.serverCommunications.send({
 			type: 'participant_update'
-		})
+		});
 
 		// if (data.hasOwnProperty('user')) {
 		//     this.collab.user = data.user
@@ -309,12 +309,12 @@ export const DocumentEditor = React.createClass({
 	},
 
 	proseChange: function() {
-		// const md = markdownSerializer.serialize(pm.doc);
-		// document.getElementById('markdown').value = md;
+		const md = markdownSerializer.serialize(pm.doc);
+		document.getElementById('markdown').value = md;
 	},
 
 	markdownChange: function(evt) {
-		// pm.setDoc(markdownParser.parse(evt.target.value));
+		pm.setDoc(markdownParser.parse(evt.target.value));
 	},
 
 	getSaveVersionContent: function() {

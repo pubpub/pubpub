@@ -7,7 +7,7 @@ import {checkHash, resetPassword, submitResetRequest} from './actions';
 import {toggleVisibility} from 'containers/Login/actions';
 import {globalStyles} from 'utils/styleConstants';
 
-import {LoaderIndeterminate, NotFound} from 'components';
+import {Loader, NotFound} from 'components';
 
 import {safeGetInToJS} from 'utils/safeParse';
 
@@ -58,23 +58,15 @@ export const ResetPassword = React.createClass({
 
 		return (
 
-			<div style={styles.container}>
-				
+			<div style={styles.container} className={'section'}>
+
 				<Helmet {...metaData} />
 
 				{this.props.hash && resetSuccess === 'invalid'
 					? null
-					: <div style={styles.header}>Password Reset</div>
+					: <h1>Password Reset</h1>
 				}
-
 				<div style={styles.content}>
-
-					<div style={styles.loaderWrapper}>
-						{loading
-							? <LoaderIndeterminate color={globalStyles.sideText}/>
-							: null
-						}
-					</div>
 
 					{this.props.hash
 						? <div>
@@ -92,8 +84,15 @@ export const ResetPassword = React.createClass({
 								case 'valid':
 									return (
 										<form onSubmit={this.resetPasswordSubmit}>
-											<input style={styles.input} type="password" ref={'resetPassword'} placeholder={'new password'}/>
-											<div style={styles.submitButton} key={'passwordResetButton'} onClick={this.resetPasswordSubmit}>Set New Password</div>
+											<div>
+												<label style={styles.label} htmlFor={'newPassword'}>
+													New Password
+												</label>
+												<input ref={'newPassword'} id={'newPassword'} name={'New Password'} type="password" style={styles.input}/>
+											</div>
+
+											<button name={'login'} className={'button'} onClick={this.resetPasswordSubmit}>Set New Password</button>
+											<div style={styles.loaderContainer}><Loader loading={this.props.resetData.get('loading')} showCompletion={false}/></div>
 										</form>
 									);
 								default:
@@ -107,17 +106,25 @@ export const ResetPassword = React.createClass({
 								case 'success':
 									return (
 										<div>
-											<div style={styles.detail}>Password Reset Request Submitted.</div>
-											<div style={styles.detail}>Check your email.</div>
+											<p style={styles.detail}>Password Reset Request Submitted.</p>
+											<p style={styles.detail}>Check your email.</p>
 										</div>
 									);
 								default:
 									return (<div>
-										<div style={styles.detail}>Please enter the email address of your PubPub account.</div>
-										<div style={styles.detail}>Reset instructions will be sent to this email.</div>
+										<p style={styles.detail}>Please enter the email address of your PubPub account.</p>
+										<p style={styles.detail}>Reset instructions will be sent to this email.</p>
+
 										<form onSubmit={this.resetRequestSubmit}>
-											<input style={styles.input} type="email" ref={'requestResetEmail'} placeholder={'email'}/>
-											<div style={styles.submitButton} key={'resetRequestButton'} onClick={this.resetRequestSubmit}>Reset</div>
+											<div>
+												<label style={styles.label} htmlFor={'email'}>
+													Email
+												</label>
+												<input ref={'email'} id={'email'} name={'email'} type="text" style={styles.input}/>
+											</div>
+
+											<button name={'login'} className={'button'} onClick={this.resetRequestSubmit}>Reset Password</button>
+											<div style={styles.loaderContainer}><Loader loading={this.props.resetData.get('loading')} showCompletion={false}/></div>
 										</form>
 										{requestSuccess === 'error'
 											? <div style={styles.error}>No user with that email</div>
@@ -146,24 +153,24 @@ export default connect( state => {
 
 styles = {
 	container: {
-		fontFamily: globalStyles.headerFont,
-		position: 'relative',
+		// fontFamily: globalStyles.headerFont,
+		// position: 'relative',
 		maxWidth: 800,
-		margin: '0 auto',
-		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
-			width: 'calc(100% - 40px)',
-			padding: '0px 20px',
-			maxWidth: '100%',
-		},
+		// margin: '0 auto',
+		// '@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+		// 	width: 'calc(100% - 40px)',
+		// 	padding: '0px 20px',
+		// 	maxWidth: '100%',
+		// },
 	},
-	header: {
-		color: globalStyles.sideText,
-		padding: '20px 0px',
-		fontSize: '50px',
-	},
-	content: {
-		padding: '0px 20px',
-	},
+	// header: {
+	// 	color: globalStyles.sideText,
+	// 	padding: '20px 0px',
+	// 	fontSize: '50px',
+	// },
+	// content: {
+	// 	padding: '0px 20px',
+	// },
 	loaderWrapper: {
 		position: 'absolute',
 		top: '15px',
@@ -173,34 +180,12 @@ styles = {
 		fontSize: '18px',
 	},
 	input: {
-		display: 'block',
-		margin: '15px 0px',
-		borderWidth: '0px 0px 1px 0px',
-		borderColor: '#aaa',
-		backgroundColor: 'transparent',
-		fontSize: '25px',
-		width: '60%',
-		color: '#555',
-		':focus': {
-			borderWidth: '0px 0px 1px 0px',
-			borderColor: 'black',
-			outline: 'none',
-		},
-		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
-			width: '100%',
-		},
+		width: 'calc(100% - 20px - 4px)', // Calculations come from padding and border in pubpub.css
 	},
-	submitButton: {
-		fontSize: 30,
-		padding: '0px 20px',
-		float: 'right',
-		marginBottom: 20,
-		fontFamily: globalStyles.headerFont,
-		cursor: 'pointer',
-		color: '#555',
-		':hover': {
-			color: 'black',
-		}
+	loaderContainer: {
+		display: 'inline-block',
+		position: 'relative',
+		top: 15,
 	},
 	loginButton: {
 		width: '250px',
