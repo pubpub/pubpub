@@ -9,7 +9,7 @@ import {toggleVisibility, follow, unfollow} from 'containers/Login/actions';
 import {safeGetInToJS} from 'utils/safeParse';
 import dateFormat from 'dateformat';
 
-import {HorizontalNav} from 'components';
+import {HorizontalNav, License} from 'components';
 import AtomReaderAnalytics from './AtomReaderAnalytics';
 import AtomReaderCite from './AtomReaderCite';
 import AtomReaderContributors from './AtomReaderContributors';
@@ -253,7 +253,14 @@ export const AtomReader = React.createClass({
 							case 'discussions':
 								return <StickyContainer><Discussions/></StickyContainer>;
 							default:
-								return <AtomViewerPane atomData={this.props.atomData} />;
+								return (
+									<div>
+										<AtomViewerPane atomData={this.props.atomData} />
+										{atomData.isPublished &&
+											<License />
+										}
+									</div>
+								);
 							}
 						})()}
 					</div>
@@ -326,7 +333,7 @@ styles = {
 	pubSection: {
 		display: 'table-cell',
 		verticalAlign: 'top',
-		padding: '0em 2em',
+		padding: '0em 4em',
 		position: 'relative',
 		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
 			display: 'block',
@@ -364,7 +371,7 @@ styles = {
 	discussionSection: {
 		display: 'table-cell',
 		verticalAlign: 'top',
-		padding: '0em 2%',
+		padding: '0em 3%',
 		width: '35%',
 		backgroundColor: '#F3F3F4',
 		borderLeft: '1px solid #E4E4E4',
