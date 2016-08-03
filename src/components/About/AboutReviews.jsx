@@ -6,7 +6,7 @@ import Helmet from 'react-helmet';
 
 import {styles} from './aboutStyles';
 
-export const AboutJournals = React.createClass({
+export const AboutReviews = React.createClass({
 
 	render: function() {
 		const metaData = {
@@ -41,4 +41,4 @@ export const AboutJournals = React.createClass({
 });
 
 
-export default Radium(AboutJournals);
+export default Radium(AboutReviews);

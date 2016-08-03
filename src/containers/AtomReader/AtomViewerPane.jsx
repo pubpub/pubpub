@@ -19,6 +19,7 @@ export const AtomViewerPane = React.createClass({
 		if (AtomTypes.hasOwnProperty(type)) {
 			const Component = AtomTypes[type].viewer;
 			return <Component {...props} />;
+			
 		}
 		return <div>Unknown Type</div>;
 	

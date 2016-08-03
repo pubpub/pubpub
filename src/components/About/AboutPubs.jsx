@@ -54,6 +54,27 @@ export const AboutPubs = React.createClass({
 
 				<div>
 					<div className={'section'}>
+						<h2>Collaborative Evolution</h2>
+						<p>
+							Pubs feature real-time collaborative editing, rich inline discussions, and a transparent review process.
+							Versioned history encourages a mindset of incremental development rather than opaque publication.
+						</p>
+					</div>
+				</div>
+
+				<div className={'lightest-bg'}>
+					<div className={'section'}>
+						<h2>Dynamic Media</h2>
+						<p>
+							It's the 21st century.
+							Pubs emphasize interactive visualization, direct manipulation, and live execution.
+							Everything is open source and designed to be extensible.
+						</p>
+					</div>
+				</div>
+
+				<div>
+					<div className={'section'}>
 						<h2>Idea-oriented Documents</h2>
 						<p>
 							Ideas don't come out of a vacuum.
@@ -62,7 +83,7 @@ export const AboutPubs = React.createClass({
 						</p>
 					</div>
 				</div>
-
+	
 			</div>
 		);
 	}
