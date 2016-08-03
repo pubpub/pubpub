@@ -371,6 +371,10 @@ export function getAtomData(req, res) {
 			throw new Error('Atom does not exist');
 		}
 
+		if ((!meta || meta === 'export' || meta === 'cite') && !currentVersionData) {
+			throw new Error('Atom does not exist');	
+		}
+
 		let discussionsData = taskData[6] || [];
 		if (permissionType !== 'author' && permissionType !== 'editor' && permissionType !== 'reader') {
 			discussionsData = discussionsData.filter((discussion)=>{
