@@ -41,4 +41,5 @@ Note that this is slightly different than schema for editors.
 #### Render Type
 The render type will be one of `'full'`, `'embed'`, `'static-full'`, or '`static-embed'`.
 The viewer doesn't have to do anything with the render type, but should respect the context when possible.
+Generally, `embed` and `static-embed` should render with minimal framing and directly expose the content, while `full` and `static-full` can be more liberal with metadata.
 
