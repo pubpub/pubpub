@@ -13,6 +13,7 @@ export class ModServerCommunications {
 		this.connected = false;
 		/* Whether the connection is established for the first time. */
 		this.firstTimeConnection = true;
+		this.retryTimeout = null;
 	}
 
 	init() {
@@ -26,12 +27,23 @@ export class ModServerCommunications {
 
 		const wsServer = collabServerUrl;
 
+		const randomInt = Math.round(Math.random() * 100000);
 		try {
-			this.ws = new window.WebSocket(`${websocketProtocol}//${wsServer}/ws/doc/${this.editor.doc.id}?user=${this.editor.username }&token=${this.editor.token}&avatar_url=${this.editor.img}`);
+			this.ws = new window.WebSocket(`${websocketProtocol}//${wsServer}/ws/doc/${this.editor.doc.id}?user=${this.editor.username }&token=${this.editor.token}&avatar_url=${this.editor.img}&random=${randomInt}`);
+			console.log('opening with', `${websocketProtocol}//${wsServer}/ws/doc/${this.editor.doc.id}?user=${this.editor.username }&token=${this.editor.token}&avatar_url=${this.editor.img}&random=${randomInt}`);
 			this.ws.onopen = function() {
+				// console.log('Opened socket!');
 				// console.log('connection open');
 				// jQuery('#unobtrusive_messages').html('')
 			};
+
+			this.ws.onerror = function(e) {
+				console.log('error with socket');
+				console.log(arguments);
+				// console.log('connection open');
+				// jQuery('#unobtrusive_messages').html('')
+			};
+
 		} catch (err) {
 			console.log(err);
 		}
@@ -43,7 +55,7 @@ export class ModServerCommunications {
 		this.ws.onclose = function(event) {
 			that.connected = false;
 			window.clearInterval(that.wsPinger);
-			window.setTimeout(function() {
+			this.retryTimeout = window.setTimeout(function() {
 				that.createWSConnection();
 			}, 2000);
 				// console.log('attempting to reconnect');
@@ -63,6 +75,8 @@ export class ModServerCommunications {
 
 	close() {
 		// console.log('Closed ws');
+		console.log('trying to close ws');
+		window.clearTimeout(this.retryTimeout);
 		this.ws.close();
 	}
 

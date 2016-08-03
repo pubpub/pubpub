@@ -39,8 +39,8 @@ export const DocumentEditor = React.createClass({
 		const prosemirror = require('prosemirror');
 		const {pubpubSetup} = require('./proseEditor/pubpubSetup');
 
-		const {ModServerCommunications} = require('./server-communications');
-		const nodeConvert = require('./node-convert');
+		const {ModServerCommunications} = require('./collab/server-communications');
+		const nodeConvert = require('./collab/node-convert');
 		editorToModel = nodeConvert.editorToModel;
 		modelToEditor = nodeConvert.modelToEditor;
 
@@ -313,6 +313,7 @@ export const DocumentEditor = React.createClass({
 
 	updateParticipants: function(participants) {
 		this.collab.mod.collab.updateParticipantList(participants);
+		// console.log('Got participants', participants);
 		this.setState({participants});
 	},
 
