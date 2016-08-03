@@ -17,7 +17,7 @@ export function getUser(req, res) {
 		delete userData.followers;
 		delete userData.sendNotificationDigest;
 		delete userData.email;
-		return Link.find({source: userData._id}).lean().exec();
+		return Link.find({source: userData._id, type: {$in: ['author', 'editor', 'reader']}}).lean().exec();
 	})
 	.then(function(linksResult) {
 		const atomIDs = linksResult.map((link)=>{

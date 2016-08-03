@@ -28,7 +28,7 @@ export const AppFooter = React.createClass({
 						<div style={styles.footerHeader}> <FormattedMessage {...globalMessages.Explore} /> </div>
 
 						<Link style={styles.footerItem} to={'/pubs'}> <FormattedMessage {...globalMessages.Pubs} /> </Link>
-						<Link style={styles.footerItem} to={'/reviews'}> Reviews </Link>
+						{/* <Link style={styles.footerItem} to={'/reviews'}> Reviews </Link> */}
 						<Link style={styles.footerItem} to={'/journals'}> <FormattedMessage {...globalMessages.Journals} /> </Link>
 					</div>
 
