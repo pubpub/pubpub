@@ -66,7 +66,7 @@ export const Reference = React.createClass({
 			const journalString = citation.journal ? `
   journal={` + citation.journal + `},` : '';
 
-			bibtexString = `@article{` + citation.title.replace(/[^A-Za-z0-9]/g, '').substring(0, 12) + citation.year + `,
+			bibtexString = `@article{` + citation.title && citation.title.replace(/[^A-Za-z0-9]/g, '').substring(0, 12) + citation.year + `,
   title={` + citation.title + `},
   author={` + citation.author + `},
   year={` + citation.year + `},
@@ -83,7 +83,7 @@ export const Reference = React.createClass({
 		switch (this.props.mode) {
 		case 'mla':
 			return (<span>
-				{citationStrings.author.replace(/\.\./g, '.')}
+				{citationStrings.author && citationStrings.author.replace(/\.\./g, '.')}
 				{citationStrings.title}
 				<span style={styles.italic}>{citationStrings.journal}</span>
 				{citationStrings.volume}
@@ -97,7 +97,7 @@ export const Reference = React.createClass({
 
 		case 'chicago':
 			return (<span>
-				{citationStrings.author.replace(/\.\./g, '.')}
+				{citationStrings.author && citationStrings.author.replace(/\.\./g, '.')}
 				{citationStrings.title}
 				<span style={styles.italic}>{citationStrings.journal}</span>
 				{citationStrings.volume}
@@ -111,7 +111,7 @@ export const Reference = React.createClass({
 
 		case 'apa':
 			return (<span>
-				{citationStrings.author.replace(/\.\./g, '.')}
+				{citationStrings.author && citationStrings.author.replace(/\.\./g, '.')}
 				{citationStrings.year}
 				{citationStrings.title}
 				<span style={styles.italic}>{citationStrings.journal}</span>

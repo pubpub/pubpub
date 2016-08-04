@@ -20,7 +20,7 @@ export const AtomReaderFollowers = React.createClass({
 		return (
 			<div>
 				<Helmet {...metaData} />
-				<h2 className={'normalWeight'}>Analytics</h2>
+				<h2 className={'normalWeight'}>Followers</h2>
 
 				{
 					followersData.sort((foo, bar)=>{
