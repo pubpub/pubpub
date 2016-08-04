@@ -31,10 +31,10 @@ export const FollowButton = React.createClass({
 
 	toggleFollow: function() {
 		if (this.state.isFollowing) {
-			// this.props.dispatch(unfollow(this.props.type, this.props.id));
+			this.props.dispatch(unfollow(this.props.type, this.props.id));
 			this.setState({isFollowing: false});
 		} else {
-			// this.props.dispatch(follow(this.props.type, this.props.id));
+			this.props.dispatch(follow(this.props.type, this.props.id));
 			this.setState({isFollowing: true});
 		}
 	},

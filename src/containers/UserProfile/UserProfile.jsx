@@ -116,7 +116,7 @@ export const UserProfile = React.createClass({
 					<div style={styles.headerTextWrapper}>
 						<h1>{profileData.name}</h1>
 						<p>{profileData.bio}</p>
-						<FollowButton isFollowing={true}/>
+						<FollowButton id={profileData._id} type={'followsUser'} isFollowing={profileData.isFollowing}/>
 
 						{links.filter((link)=> {
 							return !!profileData[link.key];

@@ -5,8 +5,8 @@
 // types as strings in action creators
 /*--------*/
 export const FOLLOW_LOAD = 'followButton/FOLLOW_LOAD';
-export const FOLLOW_SUCCESS = 'followButton/FOLLOW_LOAD_SUCCESS';
-export const FOLLOW_FAIL = 'followButton/FOLLOW_LOAD_FAIL';
+export const FOLLOW_SUCCESS = 'followButton/FOLLOW_SUCCESS';
+export const FOLLOW_FAIL = 'followButton/FOLLOW_FAIL';
 
 export const UNFOLLOW_LOAD = 'followButton/UNFOLLOW_LOAD';
 export const UNFOLLOW_SUCCESS = 'followButton/UNFOLLOW_SUCCESS';
@@ -19,22 +19,22 @@ export const UNFOLLOW_FAIL = 'followButton/UNFOLLOW_FAIL';
 // action objects (e.g. {type:example, payload:data} ) within dispatch()
 // function calls
 /*--------*/
-export function follow(type, id) {
+export function follow(type, followID) {
 	return {
 		types: [FOLLOW_LOAD, FOLLOW_SUCCESS, FOLLOW_FAIL],
 		promise: (client) => client.post('/follow', {data: {
 			type: type,
-			id: id,
+			followID: followID,
 		}})
 	};
 }
 
-export function unfollow(type, id) {
+export function unfollow(type, followID) {
 	return {
 		types: [UNFOLLOW_LOAD, UNFOLLOW_SUCCESS, UNFOLLOW_FAIL],
 		promise: (client) => client.post('/unfollow', {data: {
 			type: type,
-			id: id,
+			followID: followID,
 		}})
 	};
 }

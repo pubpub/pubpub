@@ -203,10 +203,16 @@ export function getAtomData(req, res) {
 		if (!atomResult) {
 			throw new Error('Atom does not exist');
 		}
-		const permissionLink = Link.findOne({source: userID, destination: atomResult._id, type: {$in: ['author', 'editor', 'reader']}, inactive: {$ne: true} });
-		return [atomResult, permissionLink];
+		const permissionLink = Link.findOne({source: userID, destination: atomResult._id, type: {$in: ['author', 'editor', 'reader']}, inactive: {$ne: true} }).exec();
+		const findFollowingLink = Link.findOne({source: userID, destination: atomResult._id, type: 'followsAtom', inactive: {$ne: true}}).exec();
+		return [atomResult, permissionLink, findFollowingLink];
 	})
-	.spread(function(atomResult, permissionLink) {
+	.spread(function(atomResult, permissionLink, followingLink) {
+		if (followingLink) {
+			console.log('Were in followingLInk');
+			atomResult.isFollowing = true;
+		}
+
 		// const permissionType = permissionLink && permissionLink.type;
 		let permissionType = permissionLink && permissionLink.type;
 		if (String(userID) === '568abdd9332c142a0095117f') {
