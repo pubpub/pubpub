@@ -71,7 +71,7 @@ export function getUser(req, res) {
 			const query = Link.find({source: userData._id, type: 'followsJournal', inactive: {$ne: true}}).populate({
 				path: 'destination',
 				model: Journal,
-				select: 'journalName icon slug',
+				select: 'journalName icon slug description',
 			}).exec();
 			resolve(query);
 		});
@@ -80,7 +80,7 @@ export function getUser(req, res) {
 			const query = Link.find({source: userData._id, type: 'followsAtom', inactive: {$ne: true}}).populate({
 				path: 'destination',
 				model: Atom,
-				select: 'title previewImage slug',
+				select: 'title previewImage slug description',
 			}).exec();
 			resolve(query);
 		});
@@ -94,7 +94,6 @@ export function getUser(req, res) {
 
 	}).then(function(taskData) {
 		userData.following = taskData[0].concat(taskData[1]).concat(taskData[2]);
-		console.log(userData.following + " <--");
 		return res.status(201).json(userData);
 	})
 	.catch(function(error) {
