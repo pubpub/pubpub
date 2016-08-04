@@ -6,6 +6,7 @@ import {safeGetInToJS} from 'utils/safeParse';
 import {getUser, saveUserSettings} from './actions';
 import {NavContentWrapper} from 'components';
 import {NotFound} from 'components';
+import {FollowButton} from 'containers';
 
 import UserProfilePubs from './UserProfilePubs';
 import UserProfileJournals from './UserProfileJournals';
@@ -113,11 +114,9 @@ export const UserProfile = React.createClass({
 						<img src={'https://jake.pubpub.org/unsafe/150x150/' + profileData.image} />
 					</div>
 					<div style={styles.headerTextWrapper}>
-						<h1 style={styles.header }>{profileData.name}</h1>
-						<a href={this.followUserToggle}><div className={'button'} style={styles.followButton}>Follow</div></a>
+						<h1>{profileData.name}</h1>
 						<p>{profileData.bio}</p>
-
-
+						<FollowButton isFollowing={true}/>
 
 						{links.filter((link)=> {
 							return !!profileData[link.key];
@@ -189,7 +188,6 @@ export default connect( state => {
 
 styles = {
 	header: {
-		marginBottom: '10px',
 	},
 	headerImageWrapper: {
 		textAlign: 'center',
@@ -232,12 +230,5 @@ styles = {
 		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
 			display: 'none',
 		},
-	},
-	followButton: {
-		padding: '0em 0.2em ',
-		lineHeight: '1.4em',
-		fontFamily: '"Yrsa", Georgia, serif',
-		fontSize: '16px',
-
 	},
 };

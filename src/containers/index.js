@@ -3,6 +3,7 @@ export AtomEditor from './AtomEditor/AtomEditor';
 export AtomReader from './AtomReader/AtomReader';
 export Discussions from './Discussions/Discussions';
 export EmailVerification from './EmailVerification/EmailVerification';
+export FollowButton from './FollowButton/FollowButton';
 export JournalCreate from './JournalCreate/JournalCreate';
 export JournalProfile from './JournalProfile/JournalProfile';
 export Landing from './Landing/Landing';

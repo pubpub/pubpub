@@ -6,6 +6,7 @@ import app from './containers/App/reducer';
 import atom from './containers/AtomReader/reducer';
 import atomEdit from './containers/AtomEditor/reducer';
 import emailVerification from './containers/EmailVerification/reducer';
+import followButton from './containers/FollowButton/reducer';
 import discussions from './containers/Discussions/reducer';
 import journalCreate from './containers/JournalCreate/reducer';
 import journal from './containers/JournalProfile/reducer';
@@ -22,6 +23,7 @@ export default combineReducers({
 	atom,
 	atomEdit,
 	emailVerification,
+	followButton,
 	discussions,
 	journalCreate,
 	journal,
