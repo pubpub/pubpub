@@ -209,7 +209,6 @@ export function getAtomData(req, res) {
 	})
 	.spread(function(atomResult, permissionLink, followingLink) {
 		if (followingLink) {
-			console.log('Were in followingLInk');
 			atomResult.isFollowing = true;
 		}
 
