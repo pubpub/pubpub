@@ -83,7 +83,7 @@ export const AboutPubs = React.createClass({
 							<p>Versioned history encourages a mindset of incremental development rather than opaque publication.</p>
 							<p>Documents are a special type of Pub that allow for real-time collaborative editing and embedding of other pubs (images, videos, data, etc).</p>
 						</div>
-						<img style={[styles.aboutPubImage, styles.aboutPubLeft]} src={'https://assets.pubpub.org/_site/jods.gif'} alt={'PubPub features rich discusison'}/>
+						<img style={[styles.aboutPubImage, styles.aboutPubLeft]} src={'https://assets.pubpub.org/_site/thread.png'} alt={'PubPub features rich discussion'}/>
 						<div style={globalStyles.clearFix}></div>
 					</div>
 				</div>
@@ -97,7 +97,7 @@ export const AboutPubs = React.createClass({
 							<p>PubPub encourages the documentation of research results as they happen so that they can be embedded, cited, or referenced when it comes time to publish your findings.</p>
 							<p>A powerful transclusion model makes it easy to trace context and attribution.</p>
 						</div>
-						<img style={[styles.aboutPubImage, styles.aboutPubRight]} src={'https://assets.pubpub.org/_site/pub.gif'} alt={'PubPub Journals'}/>
+						<img style={[styles.aboutPubImage, styles.aboutPubRight]} src={'https://assets.pubpub.org/_site/pub.gif'} alt={'PubPub versions and citations'}/>
 						<div style={globalStyles.clearFix}></div>
 					</div>
 				</div>
