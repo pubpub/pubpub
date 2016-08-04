@@ -18,7 +18,8 @@ See [http://keepachangelog.com/](http://keepachangelog.com/) for best practices.
 
 
 ## [v2.1.0] - 2015-08-04
-- Following functionality and lists
+- Following functionality and lists. 
+	- Now you can follow Users, Pubs, and Journals
 - Bug fixes for handling bad version requests when reading Pubs
 - Bug fixes for Login error message and empty password submission
 
