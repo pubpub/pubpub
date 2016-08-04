@@ -15,6 +15,8 @@ See [http://keepachangelog.com/](http://keepachangelog.com/) for best practices.
 
 ## [Unreleased]
 ### Added
+- Bug fixes for handling bad version requests when reading Pubs
+- Bug fixes for Login error message and empty password submission
 
 ## [v2.0.0] - 2015-08-03
 ### Added
@@ -59,6 +61,6 @@ See [http://keepachangelog.com/](http://keepachangelog.com/) for best practices.
 
 
 [Unreleased]: https://github.com/pubpub/pubpub/compare/v2.0.0...HEAD
-[2.0.0]: https://github.com/pubpub/pubpub/compare/v1.1.0...v2.0.0
-[1.1.0]: https://github.com/pubpub/pubpub/compare/v0.2.0...v1.1.0
-[1.0.0]: https://github.com/pubpub/pubpub/commit/12136801c7f5f5dc8225077653ed713f348f2673
+[v2.0.0]: https://github.com/pubpub/pubpub/compare/v1.1.0...v2.0.0
+[v1.1.0]: https://github.com/pubpub/pubpub/compare/v0.2.0...v1.1.0
+[v1.0.0]: https://github.com/pubpub/pubpub/commit/12136801c7f5f5dc8225077653ed713f348f2673

@@ -88,7 +88,7 @@ export const ResetPassword = React.createClass({
 												<label style={styles.label} htmlFor={'newPassword'}>
 													New Password
 												</label>
-												<input ref={'newPassword'} id={'newPassword'} name={'New Password'} type="password" style={styles.input}/>
+												<input ref={'resetPassword'} id={'newPassword'} name={'New Password'} type="password" style={styles.input}/>
 											</div>
 
 											<button name={'login'} className={'button'} onClick={this.resetPasswordSubmit}>Set New Password</button>
@@ -120,7 +120,7 @@ export const ResetPassword = React.createClass({
 												<label style={styles.label} htmlFor={'email'}>
 													Email
 												</label>
-												<input ref={'email'} id={'email'} name={'email'} type="text" style={styles.input}/>
+												<input ref={'requestResetEmail'} id={'email'} name={'email'} type="text" style={styles.input}/>
 											</div>
 
 											<button name={'login'} className={'button'} onClick={this.resetRequestSubmit}>Reset Password</button>

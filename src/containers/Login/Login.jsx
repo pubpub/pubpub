@@ -23,10 +23,11 @@ export const Login = React.createClass({
 
 	handleLoginSubmit: function(evt) {
 		evt.preventDefault();
-		this.props.dispatch(login(this.refs.email.value, this.refs.password.value));
+		const email = this.refs.email.value || '';
+		this.props.dispatch(login(email.toLowerCase(), this.refs.password.value));
 	},
 
-	componentWillMount(){
+	componentWillMount() {
 		const newUsername = this.props.loginData && this.props.loginData.getIn(['userData', 'username']);
 		if (newUsername) {
 			// new username exists and is not the same as oldusername

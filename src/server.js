@@ -163,6 +163,16 @@ app.use((req, res) => {
 								src="https://www.google.com/jsapi?autoload=
 								{'modules':[{'name':'visualization','version':'1','packages':['corechart'],'language':'en'}]}">
 							</script>
+							<script type="text/javascript">
+								(function() {
+									var s = document.createElement("script");
+									s.type = "text/javascript";
+									s.async = true;
+									s.src = '//api.usersnap.com/load/' + '8881dff9-5f2f-4fb2-ab78-2c8be1c70c5c.js';
+									var x = document.getElementsByTagName('script')[0];
+									x.parentNode.insertBefore(s, x);
+								})();
+							</script>
 
 						</head>
 

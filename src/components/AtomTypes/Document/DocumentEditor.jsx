@@ -3,6 +3,7 @@ import Radium, {Style} from 'radium';
 import {safeGetInToJS} from 'utils/safeParse';
 import {Media} from 'containers';
 import {MD5} from 'object-hash';
+import chash from 'color-hash';
 
 import {markdownParser, markdownSerializer, schema} from './proseEditor';
 import {Subscription, StoppableSubscription} from 'subscription';
@@ -12,6 +13,8 @@ import Dropzone from 'react-dropzone';
 import {s3Upload} from 'utils/uploadFile';
 
 import {schema as pubSchema} from './proseEditor/schema';
+
+const ColorHash = new chash();
 
 let styles;
 let pm;
@@ -30,6 +33,7 @@ export const DocumentEditor = React.createClass({
 	getInitialState() {
 		return {
 			showMarkdown: false,
+			participants: [],
 		};
 	},
 
@@ -37,8 +41,8 @@ export const DocumentEditor = React.createClass({
 		const prosemirror = require('prosemirror');
 		const {pubpubSetup} = require('./proseEditor/pubpubSetup');
 
-		const {ModServerCommunications} = require('./server-communications');
-		const nodeConvert = require('./node-convert');
+		const {ModServerCommunications} = require('./collab/server-communications');
+		const nodeConvert = require('./collab/node-convert');
 		editorToModel = nodeConvert.editorToModel;
 		modelToEditor = nodeConvert.modelToEditor;
 
@@ -92,6 +96,7 @@ export const DocumentEditor = React.createClass({
 		collab.receiveDocumentValues = this.receiveDocumentValues;
 		collab.askForDocument = this.askForDocument;
 		collab.getHash = this.getHash;
+		collab.updateParticipants = this.updateParticipants;
 
 		// Collaboration Authentication information
 		const atomID = safeGetInToJS(this.props.atomEditData, ['atomData', '_id']);
@@ -137,6 +142,7 @@ export const DocumentEditor = React.createClass({
 	},
 	componentWillUnmount: function() {
 		this.collab.mod.serverCommunications.close();
+		window.clearInterval(this.sendDocumentTimer);
 	},
 	// Collects updates of the document from ProseMirror and saves it under this.doc
 	getUpdates: function(callback) {
@@ -308,6 +314,12 @@ export const DocumentEditor = React.createClass({
 		return true;
 	},
 
+	updateParticipants: function(participants) {
+		this.collab.mod.collab.updateParticipantList(participants);
+		// console.log('Got participants', participants);
+		this.setState({participants});
+	},
+
 	proseChange: function() {
 		const md = markdownSerializer.serialize(pm.doc);
 		document.getElementById('markdown').value = md;
@@ -342,12 +354,18 @@ export const DocumentEditor = React.createClass({
 	render: function() {
 		const collab = safeGetInToJS(this.props.atomEditData, ['collab']);
 
+
+		const colorMap = {};
+		this.state.participants.map((participant, index) => {
+			const color = ColorHash.rgb(participant.name);
+			const colorStr = `rgba(${color[0]},${color[1]},${color[2]},0.3)`;
+			colorMap[`.user-bg-${index}`] = {backgroundColor: colorStr};
+		});
+
 		return (
 			<div style={styles.container}>
 			{/* <Dropzone ref="dropzone" disableClick={true} onDrop={this.onDrop} style={{}} activeClassName={'dropzone-active'} > */}
-				<Style rules={{
-					'.user-bg-1': { backgroundColor: 'rgba(255,0,0,0.3)'}
-				}} />
+				<Style rules={colorMap} />
 
 				<div>
 					{(collab
@@ -365,7 +383,7 @@ export const DocumentEditor = React.createClass({
 
 			{/* </Dropzone> */}
 			</div>
-			
+
 		);
 	}
 });
