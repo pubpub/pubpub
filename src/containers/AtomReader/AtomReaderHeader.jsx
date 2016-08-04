@@ -26,8 +26,8 @@ export const AtomReaderHeader = React.createClass({
 		return (
 			<div className={'atom-reader-header'}>
 
+				<FollowButton id={this.props.atomID} type={'followsAtom'} isFollowing={this.props.isFollowing} buttonStyle={styles.followButtonStyle}/>
 				<h1 className={'atom-header-title'}>{this.props.title}</h1>
-				<FollowButton id={this.props.atomID} type={'followsAtom'} isFollowing={this.props.isFollowing}/>
 
 				<p className={'atom-header-p'} style={hideStyle}>{this.props.authors}</p>
 				<p className={'atom-header-p'} style={hideStyle}>{dateFormat(this.props.versionDate, 'mmmm dd, yyyy')}</p>
@@ -47,5 +47,17 @@ styles = {
 		backgroundColor: '#2C2A2B',
 		textAlign: 'center',
 		padding: '.2em',
+	},
+	followButtonStyle: {
+		float: 'right',
+		fontFamily: '"Open Sans", Helvetica Neue, Arial, sans-serif',
+		fontSize: '.7em',
+		lineHeight: '1.5em',
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+			display: 'block',
+			float: 'none',
+			maxWidth: '80%',
+			margin: '2em auto 0em',
+		}
 	},
 };

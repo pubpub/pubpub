@@ -120,12 +120,13 @@ export const UserProfile = React.createClass({
 						<img src={'https://jake.pubpub.org/unsafe/150x150/' + profileData.image} />
 					</div>
 					<div style={styles.headerTextWrapper}>
-						<h1>{profileData.name}</h1>
-						<p>{profileData.bio}</p>
+						
 						{!ownProfile &&
-							<FollowButton id={profileData._id} type={'followsUser'} isFollowing={profileData.isFollowing} />
+							<FollowButton id={profileData._id} type={'followsUser'} isFollowing={profileData.isFollowing} buttonStyle={styles.followButtonStyle}/>
 						}
 
+						<h1>{profileData.name}</h1>
+						<p>{profileData.bio}</p>
 
 						{links.filter((link)=> {
 							return !!profileData[link.key];
@@ -206,7 +207,14 @@ export default connect( state => {
 })( Radium(UserProfile) );
 
 styles = {
-	header: {
+	followButtonStyle: {
+		float: 'right',
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+			display: 'block',
+			float: 'none',
+			maxWidth: '80%',
+			margin: '1em auto',
+		}
 	},
 	headerImageWrapper: {
 		textAlign: 'center',
@@ -220,6 +228,7 @@ styles = {
 		padding: '0em 1em',
 		display: 'table-cell',
 		verticalAlign: 'top',
+		width: '100%',
 		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
 			display: 'block',
 			textAlign: 'center',

@@ -27,7 +27,8 @@ export const JournalProfileHeader = React.createClass({
 		return (
 			<div style={[styles.headerBackground, customBackgroundStyle]}>
 				<div style={styles.backgroundGrey}></div>
-				<div className={'section'}>
+				<div className={'section'} style={{position: 'relative'}}>
+					<FollowButton id={this.props.journalID} type={'followsJournal'} isFollowing={this.props.isFollowing} buttonStyle={styles.followButtonStyle}/>
 					<div style={styles.headerTextWrapper}>
 						{(this.props.headerMode === 'logo' || this.props.headerMode === 'both') &&
 							<img style={styles.logoImage} src={this.props.logo} />
@@ -36,8 +37,6 @@ export const JournalProfileHeader = React.createClass({
 						{(this.props.headerMode !== 'logo') &&
 							<h1>{this.props.journalName}</h1>
 						}
-
-						<FollowButton id={this.props.journalID} type={'followsJournal'} isFollowing={this.props.isFollowing}/>
 
 						{(this.props.headerMode !== 'logo') &&
 							<p>{this.props.description}</p>
@@ -81,5 +80,25 @@ styles = {
 	},
 	logoImage: {
 		maxWidth: '100%',
+	},
+	followButtonStyle: {
+		position: 'absolute',
+		top: 0,
+		right: 0,
+		zIndex: 1,
+		backgroundColor: 'transparent',
+		color: 'white',
+		borderColor: 'white',
+		':hover': {
+			backgroundColor: '#2C2A2B',
+			borderColor: '#2C2A2B',
+		},
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+			top: 'auto',
+			bottom: 0,
+			display: 'block',
+			left: '10%',
+			right: '10%',
+		}
 	},
 };

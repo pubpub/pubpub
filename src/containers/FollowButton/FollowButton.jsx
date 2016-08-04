@@ -16,6 +16,7 @@ export const FollowButton = React.createClass({
 		id: PropTypes.string,
 		type: PropTypes.string,
 		isFollowing: PropTypes.bool,
+		buttonStyle: PropTypes.object,
 		dispatch: PropTypes.func
 	},
 
@@ -41,7 +42,7 @@ export const FollowButton = React.createClass({
 
 	render: function() {
 		return (
-			<div className={'button'} style={styles.followButton} onClick={this.toggleFollow}>
+			<div className={'button'} style={[styles.followButton, this.props.buttonStyle]} onClick={this.toggleFollow}>
 				{this.state.isFollowing
 					? 'Following'
 					: 'Follow'
@@ -55,13 +56,13 @@ export const FollowButton = React.createClass({
 export default connect( state => {
 	return {
 		followButtonData: state.followButton,
+		loginData: state.login,
 	};
 })( Radium(FollowButton) );
 
 styles = {
 	followButton: {
-		padding: '0em 0.2em ',
-		lineHeight: '1.4em',
-		fontSize: '16px',
+		padding: '0em 1em ',
+		fontSize: '0.85em',
 	},
 };

@@ -143,7 +143,7 @@ export const JournalProfile = React.createClass({
 			...adminNav,
 			{ type: 'link', text: 'About', link: '/' + this.props.slug + '/about', active: this.props.mode === 'about' },
 			{ type: 'link', text: 'Recent Activity', link: '/' + this.props.slug, active: !this.props.mode},
-			{ type: 'link', text: 'Followers', link: '/' + this.props.slug +'/followers', active: this.props.mode =='followers'},
+			{ type: 'link', text: 'Followers', link: '/' + this.props.slug + '/followers', active: this.props.mode === 'followers'},
 
 			{ type: 'spacer' },
 			...collectionItems,

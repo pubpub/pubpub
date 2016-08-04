@@ -218,6 +218,8 @@ styles = {
 		width: '200px',
 		fontSize: '0.9em',
 		marginTop: '4px',
+		zIndex: 999,
+		position: 'relative',
 		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
 			display: 'none',
 		},
