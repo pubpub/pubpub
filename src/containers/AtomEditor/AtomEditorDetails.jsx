@@ -58,7 +58,8 @@ export const AtomEditorDetails = React.createClass({
 		} 
 
 		if (type === 'description') {
-			this.setState({description: evt.target.value});
+			const value = evt.target.value || '';
+			this.setState({description: value.substring(0, 140)});
 		} 
 
 		if (type === 'customAuthorString') {
