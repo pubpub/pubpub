@@ -14,6 +14,7 @@ import AppLoadingBar from './AppLoadingBar';
 import AppHeader from './AppHeader';
 import AppFooter from './AppFooter';
 import AppVerified from './AppVerified';
+import AppMessage from './AppMessage';
 
 import analytics from 'utils/analytics';
 
@@ -47,11 +48,11 @@ export const App = React.createClass({
 		if (this.props.loginData.get('loggedIn') && !nextProps.loginData.get('loggedIn')) {
 			this.props.dispatch(push('/'));
 		}
-		if (!this.props.mediaData.get('newAtomSlug') && nextProps.mediaData.get('newAtomSlug')) {
+		if (nextProps.mediaData.get('redirect') && !this.props.mediaData.get('newAtomSlug') && nextProps.mediaData.get('newAtomSlug')) {
 			if (this.props.path.substring(0, 4) === '/pub') {
 				window.location.href = '/pub/' + nextProps.mediaData.get('newAtomSlug') + '/edit';
 			} else {
-				this.props.dispatch(push('/pub/' + nextProps.mediaData.get('newAtomSlug') + '/edit'));		
+				this.props.dispatch(push('/pub/' + nextProps.mediaData.get('newAtomSlug') + '/edit'));
 			}
 		}
 		// For routes that won't have an async load, and thus won't unset a 404 page, fire an unset action
@@ -61,7 +62,7 @@ export const App = React.createClass({
 	},
 
 	createDocument: function() {
-		this.props.dispatch(createAtom('document'));
+		this.props.dispatch(createAtom('document', null, null, true));
 	},
 
 	logoutHandler: function() {
@@ -94,15 +95,15 @@ export const App = React.createClass({
 
 			<IntlProvider locale={'en'} messages={messages}>
 				<StyleRoot>
-					
+
 					<Helmet {...metaData} />
 					<AppLoadingBar color={'#BBBDC0'} show={this.props.appData.get('loading')} />
 					<AppHeader loginData={this.props.loginData} path={this.props.path} createDocument={this.createDocument} logoutHandler={this.logoutHandler} goToURL={this.goToURL}/>
 					<AppVerified isVerified={!notVerified} handleResendEmail={this.handleResendEmail}/>
-
+					<AppMessage/>
 					{notFound && <NotFound />}
 					{!notFound && <div className="content"> {this.props.children} </div>}
-					
+
 					<AppFooter hideFooter={hideFooter} />
 
 				</StyleRoot>

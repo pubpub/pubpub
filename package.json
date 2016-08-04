@@ -109,6 +109,7 @@
     "body-parser": "1.15.1",
     "camelcase": "^3.0.0",
     "classnames": "^2.2.3",
+    "color-hash": "^1.0.3",
     "compression": "1.6.2",
     "connect-mongo": "^1.1.0",
     "crypto-js": "^3.1.5",

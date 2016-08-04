@@ -291,3 +291,15 @@ h2 {
 	text-decoration: underline;
 }
 /* ------------ */
+
+/* Feedback Widget Style */
+/* --------------------- */
+.contrast {
+	background-image: none !important;
+    padding: 0em 1em !important;
+    background-color: #2C2A2B !important;
+    color: #F3F3F4;
+    font-family: 'Open Sans' !important;
+}
+    
+

@@ -24,7 +24,7 @@ export function s3Upload(file, progressEvent, finishEvent, index) {
 		sendFile.upload.addEventListener('load', (evt)=>{
 			finishEvent(evt, index, file.type, filename, file.name);
 		}, false);
-		sendFile.open('POST', 'https://s3.amazonaws.com/assets.pubpub.org', true);
+		sendFile.open('POST', 'https://s3-external-1.amazonaws.com/assets.pubpub.org', true);
 		sendFile.send(formData);
 	}
 

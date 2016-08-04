@@ -64,7 +64,7 @@ export function login(email, password) {
 	return {
 		types: [LOGIN_LOAD, LOGIN_SUCCESS, LOGIN_FAIL],
 		promise: (client) => client.post('/login', {data: {
-			'email': email.toLowerCase(),
+			'email': email,
 			'password': SHA3(password).toString(encHex)
 		}})
 	};

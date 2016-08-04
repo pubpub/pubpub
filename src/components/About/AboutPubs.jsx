@@ -16,23 +16,44 @@ export const AboutPubs = React.createClass({
 
 		const featuredContent = [
 			{
-				slug: 'jods',
-				title: 'Journal of Design and Science',
-				previewImage: 'https://assets.pubpub.org/_site/pub.png',
-				description: ''
+				slug: 'designandscience',
+				title: 'Design and Science',
+				previewImage: 'https://jake.pubpub.org/unsafe/100x100/https://assets.pubpub.org/ezmruszq/1470268609181.jpg',
+				description: 'Can design advance science, and can science advance design?'
 			},
 			{
-				slug: 'jods',
-				title: 'Journal of Design and Science',
-				previewImage: 'https://assets.pubpub.org/_site/pub.png',
-				description: ''
+				slug: 'direct-radio-introspection',
+				title: 'Against the Law: Countering Lawful Abuses of Digital Surveillance',
+				previewImage: 'https://assets.pubpub.org/ggyuwams/1470270014688.jpg',
+				description: 'Front-line journalists are high-value targets, and their enemies will spare no expense to silence them. Unfortunately, journalists can be betrayed by their own tools.'
 			},
 			{
-				slug: 'jods',
-				title: 'Journal of Design and Science',
-				previewImage: 'https://assets.pubpub.org/_site/pub.png',
-				description: ''
-			}
+				slug: 'design-as-participation',
+				title: 'Design as Participation',
+				previewImage: 'https://jake.pubpub.org/unsafe/100x100/https://assets.pubpub.org/kqrdhoxs/1470268781373.jpg',
+				description: 'A consideration of design as a form of participation in complex adaptive systems.'
+			},
+			
+			
+			{
+				slug: 'enlightenment-to-entanglement',
+				title: 'The Enlightenment is Dead, Long Live the Entanglement',
+				previewImage: 'https://jake.pubpub.org/unsafe/100x100/https://assets.pubpub.org/luiwqids/1470268727436.jpg',
+				description: 'We humans are changing. We have become so intertwined with what we have created that we are no longer separate from it.'
+			},
+			{
+				slug: 'cannibalism_by_a_barred_owl',
+				title: 'Cannibalism by a Barred Owl',
+				previewImage: 'https://assets.pubpub.org/sqjisolp/1470270304869.jpg',
+				description: 'Front-line journalists are high-value targets, and their enemies will spare no expense to silence them. Unfortunately, journalists can be betrayed by their own tools.'
+			},
+			{
+				slug: 'ageofentanglement',
+				title: 'Age of Entanglement',
+				previewImage: 'https://jake.pubpub.org/unsafe/100x100/https://assets.pubpub.org/ekdigesq/1470269089657.jpg',
+				description: 'An inaugural essay for the Journal of Design and Science (JoDS)'
+			},
+
 		];
 
 		return (
@@ -88,7 +109,7 @@ export const AboutPubs = React.createClass({
 							return (
 								<div style={[item.inactive && styles.inactive]} key={'submitted-' + index}>
 									<PreviewCard 
-										type={'pub'}
+										type={'atom'}
 										image={item.previewImage}
 										title={item.title}
 										slug={item.slug}
