@@ -73,7 +73,7 @@ export const AppHeader = React.createClass({
 		const isLoggedIn = this.props.loginData && this.props.loginData.get('loggedIn');
 		const name = this.props.loginData && this.props.loginData.getIn(['userData', 'name']);
 		const username = this.props.loginData && this.props.loginData.getIn(['userData', 'username']);
-		const loginQuery = this.props.path && this.props.path !== '/' ? '?redirect=' + this.props.path : ''; // Query appended to login route. Used to redirect to a given page after succesful login.
+		const loginQuery = this.props.path && this.props.path !== '/' && this.props.path.substring(0, 14) !== '/resetpassword' ? '?redirect=' + this.props.path : ''; // Query appended to login route. Used to redirect to a given page after succesful login.
 
 		return (
 			<div className="header-bar darkest-bg lightest-color" style={styles.headerBar}>
