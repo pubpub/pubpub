@@ -110,8 +110,15 @@ export const AtomEditor = React.createClass({
 	},
 
 	render: function() {
+		const atomEditData = safeGetInToJS(this.props.atomEditData, ['atomData']) || {};
 
-		const metaData = {};
+		const metaData = {
+			title: 'Editing ' + atomEditData.title + ' · PubPub',
+			meta: [
+				{'name': 'robots', 'content': 'noindex'},
+				{'name': 'robots', 'content': 'nofollow'},
+			]
+		};
 
 		const mobileNavButtons = [
 			{ type: 'link', mobile: true, text: 'View', link: '/pub/' + this.props.slug },
@@ -127,7 +134,7 @@ export const AtomEditor = React.createClass({
 			{text: 'Publishing', rightAlign: true, action: this.openModal.bind(this, 'publishing')},
 		];
 
-		const atomEditData = safeGetInToJS(this.props.atomEditData, ['atomData']) || {};
+		
 		const contributorsData = safeGetInToJS(this.props.atomEditData, ['contributorsData']) || [];
 		const publishingData = safeGetInToJS(this.props.atomEditData, ['publishingData']) || [];
 		const isLoading = safeGetInToJS(this.props.atomEditData, ['loading']);

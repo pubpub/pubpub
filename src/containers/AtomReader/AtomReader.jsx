@@ -234,7 +234,9 @@ export const AtomReader = React.createClass({
 							versionDate={currentVersionDate}
 							lastUpdated={atomData.lastUpdated}
 							slug={atomData.slug}
-							titleOnly={!!this.props.meta}/>
+							titleOnly={!!this.props.meta}
+							atomID={atomData._id}
+							isFollowing={atomData.isFollowing} />
 
 						{(()=>{
 							switch (this.props.meta) {

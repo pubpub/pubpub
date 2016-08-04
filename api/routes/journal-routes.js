@@ -61,10 +61,15 @@ export function getJournal(req, res) {
 		// Get the submitted atoms associated with the journal
 		// This query fires if mode is equal to 'submitted'
 
-		const adminLink = Link.findOne({source: userID, destination: journalResult._id, type: 'admin', inactive: {$ne: true} });
-		return [journalResult, adminLink];
+		const adminLink = Link.findOne({source: userID, destination: journalResult._id, type: 'admin', inactive: {$ne: true} }).exec();
+		const findFollowingLink = Link.findOne({source: userID, destination: journalResult._id, type: 'followsJournal', inactive: {$ne: true}}).exec();
+		return [journalResult, adminLink, findFollowingLink];
 	})
-	.spread(function(journalResult, adminLink) {
+	.spread(function(journalResult, adminLink, followingLink) {
+		if (followingLink) {
+			journalResult.isFollowing = true;
+		}
+
 		const isAdmin = !!adminLink || String(userID) === '568abdd9332c142a0095117f';
 		journalResult.isAdmin = isAdmin;
 

@@ -157,6 +157,8 @@ export const JournalProfile = React.createClass({
 
 				<JournalProfileHeader 
 					journalName={this.state.journalName || journalData.journalName}
+					journalID={journalData._id}
+					isFollowing={journalData.isFollowing}
 					description={this.state.description || journalData.description}
 					logo={this.state.logo || journalData.logo}
 					headerColor={this.state.headerColor || journalData.headerColor} 

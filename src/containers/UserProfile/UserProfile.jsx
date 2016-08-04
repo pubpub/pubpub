@@ -6,6 +6,7 @@ import {safeGetInToJS} from 'utils/safeParse';
 import {getUser, saveUserSettings} from './actions';
 import {NavContentWrapper} from 'components';
 import {NotFound} from 'components';
+import {FollowButton} from 'containers';
 
 import UserProfilePubs from './UserProfilePubs';
 import UserProfileJournals from './UserProfileJournals';
@@ -115,12 +116,16 @@ export const UserProfile = React.createClass({
 					<div style={styles.headerTextWrapper}>
 						<h1>{profileData.name}</h1>
 						<p>{profileData.bio}</p>
+						<FollowButton id={profileData._id} type={'followsUser'} isFollowing={profileData.isFollowing}/>
+
 						{links.filter((link)=> {
 							return !!profileData[link.key];
 						}).map((link, index)=> {
 							return <a key={'link-' + index} className={'underlineOnHover'} style={[styles.link, index === 0 && styles.firstLink]} href={link.href}>{link.text}</a>;
 						})}
 					</div>
+
+
 				</div>
 
 				<NavContentWrapper navItems={navItems} mobileNavButtons={mobileNavButtons}>
@@ -182,6 +187,8 @@ export default connect( state => {
 })( Radium(UserProfile) );
 
 styles = {
+	header: {
+	},
 	headerImageWrapper: {
 		textAlign: 'center',
 		display: 'table-cell',

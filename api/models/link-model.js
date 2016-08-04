@@ -74,19 +74,20 @@ module.exports = mongoose.model('Link', linkSchema);
 // Types
 // -------
 // 
-// USER -> PUB
-// follower
+// USER -> USER
+// followsUser
 
 // USER -> PUB
 // author
-// follower
+// followsAtom
 // editor
 // reader
 // contributor
 
 // USER -> JOURNAL
 // admin
-// follower
+// followsJournal
+
 
 // PUB -> PUB
 // reply
