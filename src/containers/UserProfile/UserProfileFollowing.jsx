@@ -19,8 +19,6 @@ export const UserProfileFollowing = React.createClass({
 
     return (
       <div className={'firstChildNoTopMargin'}>
-        <h3>Following</h3>
-        {console.log("> + " + JSON.stringify(followingData))}
         {
           followingData.sort((foo, bar)=>{
             // Sort so that most recent is first in array
