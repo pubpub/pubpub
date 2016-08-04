@@ -17,6 +17,8 @@ import AtomReaderExport from './AtomReaderExport';
 import AtomReaderHeader from './AtomReaderHeader';
 import AtomReaderJournals from './AtomReaderJournals';
 import AtomReaderVersions from './AtomReaderVersions';
+import AtomReaderFollowers from './AtomReaderFollowers';
+
 import AtomViewerPane from './AtomViewerPane';
 import { StickyContainer as UnwrappedStickyContainer, Sticky } from 'react-sticky';
 const StickyContainer = Radium(UnwrappedStickyContainer);
@@ -184,11 +186,12 @@ export const AtomReader = React.createClass({
 			{link: '/pub/' + this.props.slug + '/journals', text: 'Journals', rightAlign: true, active: this.props.meta === 'journals'},
 			// {link: '/pub/' + this.props.slug + '/analytics', text: 'Analytics', rightAlign: true, active: this.props.meta === 'analytics'},
 			{link: '/pub/' + this.props.slug + '/cite' + versionQuery, text: 'Cite', rightAlign: true, active: this.props.meta === 'cite'},
+			{link: '/pub/' + this.props.slug + '/followers', text: 'Followers', rightAlign: true, active: this.props.meta === 'followers'},
 			{link: '/pub/' + this.props.slug + '/export' + versionQuery, text: 'Export', rightAlign: true, active: this.props.meta === 'export'},
 		];
 
 		// Remove Export option if the atom type is not a doc
-		// In the future, we may add export for datasets, images, etc. 
+		// In the future, we may add export for datasets, images, etc.
 		// But for now that's ill defined
 		if (atomData.type !== 'document') { navItems.pop(); }
 
@@ -254,6 +257,8 @@ export const AtomReader = React.createClass({
 								return <AtomReaderExport atomData={this.props.atomData}/>;
 							case 'discussions':
 								return <StickyContainer><Discussions/></StickyContainer>;
+							case 'followers':
+								return <AtomReaderFollowers atomData={this.props.atomData}/>;
 							default:
 								return (
 									<div>

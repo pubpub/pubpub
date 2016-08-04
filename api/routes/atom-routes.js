@@ -295,6 +295,15 @@ export function getAtomData(req, res) {
 			}
 		});
 
+		const getFollowers = new Promise(function(resolve) {
+			const query = Link.find({destination: atomResult._id, type: 'followsAtom', inactive: {$ne: true}}).populate({
+				path: 'source',
+				model: User,
+				select: 'username name bio image',
+			}).exec();
+			resolve(query);
+		});
+
 		let getDiscussions = new Promise(function(resolve) {
 			resolve();
 		});
@@ -360,6 +369,7 @@ export function getAtomData(req, res) {
 			getSubmitted,
 			getFeatured,
 			getDiscussions,
+			getFollowers,
 
 		];
 
@@ -399,6 +409,7 @@ export function getAtomData(req, res) {
 			submittedData: taskData[4],
 			featuredData: taskData[5],
 			discussionsData: discussionsData,
+			followersData: taskData[7],
 		});
 	})
 	.catch(function(error) {
