@@ -1,5 +1,5 @@
 import app from '../api';
-import {User, Pub, Notification, Link, Atom, Journal} from '../models';
+import {User, Notification, Link, Atom, Journal} from '../models';
 
 export function getUser(req, res) {
 	const reqUsername = req.user ? req.user.username : undefined;

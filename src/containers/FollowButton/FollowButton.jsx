@@ -40,15 +40,15 @@ export const FollowButton = React.createClass({
 	},
 
 	render: function() {
-
-		return (
-			<div className={'button'} style={styles.followButton} onClick={this.toggleFollow}>
-				{this.state.isFollowing
-					? 'Following'
-					: 'Follow'
-				}
-			</div>
-		);
+		return null;
+		// return (
+		// 	<div className={'button'} style={styles.followButton} onClick={this.toggleFollow}>
+		// 		{this.state.isFollowing
+		// 			? 'Following'
+		// 			: 'Follow'
+		// 		}
+		// 	</div>
+		// );
 	}
 
 });
