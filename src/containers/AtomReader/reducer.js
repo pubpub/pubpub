@@ -58,6 +58,7 @@ function getAtomDataSuccess(state, result) {
 		submittedData: result.submittedData,
 		featuredData: result.featuredData,
 		discussionsData: result.discussionsData,
+		followersData: result.followersData,
 		error: null
 	});
 }
@@ -73,6 +74,7 @@ function getAtomDataFail(state, error) {
 		submittedData: [],
 		featuredData: [],
 		discussionsData: [],
+		followersData: [],
 		error: error,
 	});
 }

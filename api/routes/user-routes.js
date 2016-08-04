@@ -49,6 +49,14 @@ export function getUser(req, res) {
 	})
 	.then(function(journalsResult) {
 		userData.journals = journalsResult;
+
+		return Link.find({destination: userData._id, type: 'followsUser', inactive: {$ne: true}}).populate({
+			path: 'source',
+			model: User,
+			select: 'username name bio image',
+		}).exec();
+	}).then(function(followersResult) {
+		userData.followers = followersResult;
 		return res.status(201).json(userData);
 	})
 	.catch(function(error) {

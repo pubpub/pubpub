@@ -13,22 +13,22 @@ import {
 	UPDATE_JOURNAL_SUCCESS,
 	UPDATE_JOURNAL_FAIL,
 
-	CREATE_COLLECTION_LOAD, 
-	CREATE_COLLECTION_SUCCESS, 
+	CREATE_COLLECTION_LOAD,
+	CREATE_COLLECTION_SUCCESS,
 	CREATE_COLLECTION_FAIL,
 
-	UPDATE_COLLECTION_LOAD, 
-	UPDATE_COLLECTION_SUCCESS, 
+	UPDATE_COLLECTION_LOAD,
+	UPDATE_COLLECTION_SUCCESS,
 	UPDATE_COLLECTION_FAIL,
 
-	DELETE_COLLECTION_LOAD, 
-	DELETE_COLLECTION_SUCCESS, 
+	DELETE_COLLECTION_LOAD,
+	DELETE_COLLECTION_SUCCESS,
 	DELETE_COLLECTION_FAIL,
 
 	FEATURE_ATOM_LOAD,
 	FEATURE_ATOM_SUCCESS,
 	FEATURE_ATOM_FAIL,
-	
+
 	REJECT_ATOM_LOAD,
 	REJECT_ATOM_SUCCESS,
 	REJECT_ATOM_FAIL,
@@ -51,6 +51,7 @@ export const defaultState = Immutable.Map({
 	featuredData: [],
 	atomsData: [],
 	adminsData: [],
+	followersData: [],
 	loading: false,
 	error: null,
 
@@ -80,6 +81,7 @@ function getJournalSuccess(state, result) {
 		featuredData: result.featuredData,
 		atomsData: result.atomsData,
 		adminsData: result.adminsData,
+		followersData: result.followersData,
 		loading: false,
 		error: null,
 	});
@@ -149,13 +151,13 @@ function deleteCollectionSuccess(state, result) {
 // ---------------------
 function featureAtomSuccess(state, result) {
 	const newSubmittedData = state.getIn(['submittedData']).map((item)=>{
-		if (item.get('_id') === result._id) { 
+		if (item.get('_id') === result._id) {
 			return item.merge({
 				inactive: result.inactive,
 				inactiveDate: result.inactiveDate,
 				inactiveBy: result.inactiveBy,
 				inactiveNote: result.inactiveNote,
-			}); 
+			});
 		}
 		return item;
 	});
@@ -167,13 +169,13 @@ function featureAtomSuccess(state, result) {
 // ---------------------
 function rejectAtomSuccess(state, result) {
 	const newSubmittedData = state.getIn(['submittedData']).map((item)=>{
-		if (item.get('_id') === result._id) { 
+		if (item.get('_id') === result._id) {
 			return item.merge({
 				inactive: result.inactive,
 				inactiveDate: result.inactiveDate,
 				inactiveBy: result.inactiveBy,
 				inactiveNote: result.inactiveNote,
-			}); 
+			});
 		}
 		return item;
 	});

@@ -13,6 +13,7 @@ import JournalProfileHeader from './JournalProfileHeader';
 import JournalProfileFeatured from './JournalProfileFeatured';
 import JournalProfileSubmitted from './JournalProfileSubmitted';
 import JournalProfileCollections from './JournalProfileCollections';
+import JournalProfileFollowers from './JournalProfileFollowers';
 import {NavContentWrapper} from 'components';
 import {safeGetInToJS} from 'utils/safeParse';
 
@@ -142,6 +143,8 @@ export const JournalProfile = React.createClass({
 			...adminNav,
 			{ type: 'link', text: 'About', link: '/' + this.props.slug + '/about', active: this.props.mode === 'about' },
 			{ type: 'link', text: 'Recent Activity', link: '/' + this.props.slug, active: !this.props.mode},
+			{ type: 'link', text: 'Followers', link: '/' + this.props.slug +'/followers', active: this.props.mode =='followers'},
+
 			{ type: 'spacer' },
 			...collectionItems,
 		];
@@ -155,13 +158,13 @@ export const JournalProfile = React.createClass({
 
 				<Helmet {...metaData} />
 
-				<JournalProfileHeader 
+				<JournalProfileHeader
 					journalName={this.state.journalName || journalData.journalName}
 					journalID={journalData._id}
 					isFollowing={journalData.isFollowing}
 					description={this.state.description || journalData.description}
 					logo={this.state.logo || journalData.logo}
-					headerColor={this.state.headerColor || journalData.headerColor} 
+					headerColor={this.state.headerColor || journalData.headerColor}
 					headerMode={this.state.headerMode || journalData.headerMode}
 					headerAlign={this.state.headerAlign || journalData.headerAlign}
 					headerImage={this.state.headerImage === null ? undefined : this.state.headerImage || journalData.headerImage} />
@@ -172,7 +175,12 @@ export const JournalProfile = React.createClass({
 						switch (mode) {
 						case 'about':
 							return (
-								<JournalProfileAbout 
+								<JournalProfileAbout
+									journalData={this.props.journalData}/>
+							);
+						case 'followers':
+							return (
+								<JournalProfileFollowers
 									journalData={this.props.journalData}/>
 							);
 						case 'details':
@@ -190,40 +198,40 @@ export const JournalProfile = React.createClass({
 							);
 						case 'featured':
 							return (
-								<JournalProfileFeatured 
-									journalData={this.props.journalData} 
+								<JournalProfileFeatured
+									journalData={this.props.journalData}
 									handleCollectionsChange={this.handleCollectionsChange}/>
 							);
 						case 'submitted':
 							return (
-								<JournalProfileSubmitted 
-									journalData={this.props.journalData} 
-									handleFeatureAtom={this.handleFeatureAtom} 
+								<JournalProfileSubmitted
+									journalData={this.props.journalData}
+									handleFeatureAtom={this.handleFeatureAtom}
 									handleRejectAtom={this.handleRejectAtom} />
 							);
 						case 'collections':
 							return (
-								<JournalProfileCollections 
-									journalData={this.props.journalData} 
-									handleUpdateJournal={this.handleUpdateJournal} 
-									handleCreateCollection={this.handleCreateCollection} 
-									handleUpdateCollection={this.handleUpdateCollection} 
+								<JournalProfileCollections
+									journalData={this.props.journalData}
+									handleUpdateJournal={this.handleUpdateJournal}
+									handleCreateCollection={this.handleCreateCollection}
+									handleUpdateCollection={this.handleUpdateCollection}
 									handleDeleteCollection={this.handleDeleteCollection}
 									slug={this.props.slug} />
 							);
 						case 'admins':
 							return (
 								<JournalProfileAdmins
-									journalData={this.props.journalData} 
+									journalData={this.props.journalData}
 									handleAddAdmin={this.handleAddAdmin}
 									handleDeleteAdmin={this.handleDeleteAdmin}/>
 							);
-						case 'notFound': 
+						case 'notFound':
 							return null;
-							
+
 						default:
 							return (
-								<JournalProfileRecent 
+								<JournalProfileRecent
 									journalData={this.props.journalData} />
 							);
 						}
@@ -244,5 +252,3 @@ export default connect( state => {
 		mode: state.router.params.mode,
 	};
 })( Radium(JournalProfile) );
-
-

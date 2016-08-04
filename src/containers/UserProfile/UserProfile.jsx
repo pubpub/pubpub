@@ -10,6 +10,8 @@ import {FollowButton} from 'containers';
 
 import UserProfilePubs from './UserProfilePubs';
 import UserProfileJournals from './UserProfileJournals';
+import UserProfileFollowers from './UserProfileFollowers';
+
 
 import UserProfileSettingsProfile from './UserProfileSettingsProfile';
 import UserProfileSettingsAccount from './UserProfileSettingsAccount';
@@ -87,6 +89,7 @@ export const UserProfile = React.createClass({
 			{ type: 'link', text: 'Pubs', link: '/user/' + this.props.username, active: this.props.mode === undefined},
 			// { type: 'link', text: 'Groups', link: '/user/' + this.props.username + '/groups', active: this.props.mode === 'groups'},
 			{ type: 'link', text: 'Journals', link: '/user/' + this.props.username + '/journals', active: this.props.mode === 'journals'},
+			{ type: 'link', text: 'Followers', link: '/user/' + this.props.username + '/followers', active: this.props.mode === 'followers'},
 			...ownProfileItems,
 		];
 
@@ -158,9 +161,14 @@ export const UserProfile = React.createClass({
 									loginData={this.props.loginData}
 									saveSettingsHandler={this.saveSettings}/>
 							);
+						case 'followers':
+							return (
+								<UserProfileFollowers
+									profileData={this.props.profileData}/>
+							);
 						case 'notFound':
 							return null;
-							
+
 						default:
 							return (
 								<UserProfilePubs
