@@ -57,7 +57,6 @@ export function getUser(req, res) {
 		}).exec();
 	}).then(function(followersResult) {
 		userData.followers = followersResult;
-		console.log("Followers:> " + followersResult);
 		return res.status(201).json(userData);
 	})
 	.catch(function(error) {
