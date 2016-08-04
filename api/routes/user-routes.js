@@ -8,6 +8,9 @@ export function getUser(req, res) {
 	let userData = {};
 	User.findOne({username: req.query.username}).lean().exec()
 	.then(function(userResult) {
+		if (!userResult) {
+			throw new Error('User does not exist');
+		}
 		userData = userResult;
 		delete userData.firstName;
 		delete userData.lastName;
@@ -58,6 +61,10 @@ export function getUser(req, res) {
 		return res.status(201).json(userData);
 	})
 	.catch(function(error) {
+		if (error.message === 'User does not exist') {
+			console.log(error.message);
+			return res.status(404).json('404 Not Found');
+		}
 		console.log('error', error);
 		return res.status(500).json(error);
 	});
