@@ -75,14 +75,12 @@ styles = {
 		position: 'relative',
 		zIndex: 2,
 	},
-<<<<<<< HEAD
 	followButton: {
 		padding: '0em 0.2em ',
 		lineHeight: '1.4em',
 		fontFamily: '"Yrsa", Georgia, serif',
-=======
+	},
 	logoImage: {
 		maxWidth: '100%',
->>>>>>> upstream/master
 	},
 };
