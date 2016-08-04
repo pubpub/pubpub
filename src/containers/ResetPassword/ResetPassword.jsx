@@ -2,10 +2,10 @@ import React, { PropTypes } from 'react';
 import {connect} from 'react-redux';
 import Radium from 'radium';
 import Helmet from 'react-helmet';
+import { Link } from 'react-router';
 
 import {checkHash, resetPassword, submitResetRequest} from './actions';
-import {toggleVisibility} from 'containers/Login/actions';
-import {globalStyles} from 'utils/styleConstants';
+// import {globalStyles} from 'utils/styleConstants';
 
 import {Loader, NotFound} from 'components';
 
@@ -43,10 +43,6 @@ export const ResetPassword = React.createClass({
 		this.props.dispatch(resetPassword(this.props.hash, this.props.username, this.refs.resetPassword.value));
 	},
 
-	toggleLogin: function() {
-		this.props.dispatch(toggleVisibility());
-	},
-
 	render: function() {
 		const resetSuccess = safeGetInToJS(this.props.resetData, ['resetSuccess']);
 		const requestSuccess = safeGetInToJS(this.props.resetData, ['requestSuccess']);
@@ -76,7 +72,7 @@ export const ResetPassword = React.createClass({
 									return (
 										<div>
 											<div style={styles.detail}>Password Reset successful!</div>
-											<div style={styles.loginButton} key={'resetLoginButton'} onClick={this.toggleLogin}>Click to Login</div>
+											<Link to={'/login'} className={'button'} style={styles.loginButton} key={'resetLoginButton'}>Click to Login</Link>
 										</div>
 									);
 								case 'invalid':
@@ -110,27 +106,29 @@ export const ResetPassword = React.createClass({
 											<p style={styles.detail}>Check your email.</p>
 										</div>
 									);
-								default:
-									return (<div>
-										<p style={styles.detail}>Please enter the email address of your PubPub account.</p>
-										<p style={styles.detail}>Reset instructions will be sent to this email.</p>
+								default: 
+									return (
+										<div>
+											<p style={styles.detail}>Please enter the email address of your PubPub account.</p>
+											<p style={styles.detail}>Reset instructions will be sent to this email.</p>
 
-										<form onSubmit={this.resetRequestSubmit}>
-											<div>
-												<label style={styles.label} htmlFor={'email'}>
-													Email
-												</label>
-												<input ref={'requestResetEmail'} id={'email'} name={'email'} type="text" style={styles.input}/>
-											</div>
+											<form onSubmit={this.resetRequestSubmit}>
+												<div>
+													<label style={styles.label} htmlFor={'email'}>
+														Email
+													</label>
+													<input ref={'requestResetEmail'} id={'email'} name={'email'} type="text" style={styles.input}/>
+												</div>
 
-											<button name={'login'} className={'button'} onClick={this.resetRequestSubmit}>Reset Password</button>
-											<div style={styles.loaderContainer}><Loader loading={loading} showCompletion={false}/></div>
-										</form>
-										{requestSuccess === 'error'
-											? <div style={styles.error}>No user with that email</div>
-											: null
-										}
-									</div>);
+												<button name={'login'} className={'button'} onClick={this.resetRequestSubmit}>Reset Password</button>
+												<div style={styles.loaderContainer}><Loader loading={loading} showCompletion={false}/></div>
+											</form>
+											{requestSuccess === 'error'
+												? <div style={styles.error}>No user with that email</div>
+												: null
+											}
+										</div>
+									);
 								}
 							})()}
 						</div>
@@ -188,18 +186,7 @@ styles = {
 		top: 15,
 	},
 	loginButton: {
-		width: '250px',
-		fontSize: '20px',
-		textAlign: 'center',
-		margin: '20px auto',
-		border: '1px solid #ccc',
-		cursor: 'pointer',
-		borderRadius: '1px',
-		padding: '15px 0px',
-		color: '#555',
-		':hover': {
-			color: '#000',
-		},
+		margin: '1em 0em',
 	},
 	error: {
 		color: 'red',
