@@ -53,10 +53,48 @@ export function getUser(req, res) {
 		return Link.find({destination: userData._id, type: 'followsUser', inactive: {$ne: true}}).populate({
 			path: 'source',
 			model: User,
-			select: 'username name bio image',
+			select: 'username name bio image slug',
 		}).exec();
 	}).then(function(followersResult) {
 		userData.followers = followersResult;
+
+		const getFollowedUsers = new Promise(function(resolve) {
+			const query = Link.find({source: userData._id, type: 'followsUser', inactive: {$ne: true}}).populate({
+				path: 'destination',
+				model: User,
+				select: 'username name bio image slug',
+			}).exec();
+			resolve(query);
+		});
+
+		const getFollowedJournals = new Promise(function(resolve) {
+			const query = Link.find({source: userData._id, type: 'followsJournal', inactive: {$ne: true}}).populate({
+				path: 'destination',
+				model: Journal,
+				select: 'journalName icon slug',
+			}).exec();
+			resolve(query);
+		});
+
+		const getFollowedAtoms = new Promise(function(resolve) {
+			const query = Link.find({source: userData._id, type: 'followsAtom', inactive: {$ne: true}}).populate({
+				path: 'destination',
+				model: Atom,
+				select: 'title previewImage slug',
+			}).exec();
+			resolve(query);
+		});
+
+		const tasks = [
+			getFollowedAtoms,
+			getFollowedJournals,
+			getFollowedUsers
+		];
+		return Promise.all(tasks);
+
+	}).then(function(taskData) {
+		userData.following = taskData[0].concat(taskData[1]).concat(taskData[2]);
+		console.log(userData.following + " <--");
 		return res.status(201).json(userData);
 	})
 	.catch(function(error) {

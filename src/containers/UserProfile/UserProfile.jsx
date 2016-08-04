@@ -11,6 +11,7 @@ import {FollowButton} from 'containers';
 import UserProfilePubs from './UserProfilePubs';
 import UserProfileJournals from './UserProfileJournals';
 import UserProfileFollowers from './UserProfileFollowers';
+import UserProfileFollowing from './UserProfileFollowing';
 
 
 import UserProfileSettingsProfile from './UserProfileSettingsProfile';
@@ -90,6 +91,8 @@ export const UserProfile = React.createClass({
 			// { type: 'link', text: 'Groups', link: '/user/' + this.props.username + '/groups', active: this.props.mode === 'groups'},
 			{ type: 'link', text: 'Journals', link: '/user/' + this.props.username + '/journals', active: this.props.mode === 'journals'},
 			{ type: 'link', text: 'Followers', link: '/user/' + this.props.username + '/followers', active: this.props.mode === 'followers'},
+			{ type: 'link', text: 'Following', link: '/user/' + this.props.username + '/following', active: this.props.mode === 'following'},
+
 			...ownProfileItems,
 		];
 
@@ -119,7 +122,10 @@ export const UserProfile = React.createClass({
 					<div style={styles.headerTextWrapper}>
 						<h1>{profileData.name}</h1>
 						<p>{profileData.bio}</p>
-						<FollowButton id={profileData._id} type={'followsUser'} isFollowing={profileData.isFollowing}/>
+						{!ownProfile &&
+							<FollowButton id={profileData._id} type={'followsUser'} isFollowing={profileData.isFollowing} />
+						}
+
 
 						{links.filter((link)=> {
 							return !!profileData[link.key];
@@ -164,6 +170,11 @@ export const UserProfile = React.createClass({
 						case 'followers':
 							return (
 								<UserProfileFollowers
+									profileData={this.props.profileData}/>
+							);
+						case 'following':
+							return (
+								<UserProfileFollowing
 									profileData={this.props.profileData}/>
 							);
 						case 'notFound':
