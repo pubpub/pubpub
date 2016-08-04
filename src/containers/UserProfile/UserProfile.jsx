@@ -120,12 +120,14 @@ export const UserProfile = React.createClass({
 						<img src={'https://jake.pubpub.org/unsafe/150x150/' + profileData.image} />
 					</div>
 					<div style={styles.headerTextWrapper}>
+
+						<h1 style={styles.showOnMobile}>{profileData.name}</h1> {/* Duplicate header for cleaner Follow button rendering */}
 						
 						{!ownProfile &&
 							<FollowButton id={profileData._id} type={'followsUser'} isFollowing={profileData.isFollowing} buttonStyle={styles.followButtonStyle}/>
 						}
 
-						<h1>{profileData.name}</h1>
+						<h1 style={styles.hideOnMobile}>{profileData.name}</h1> {/* Duplicate header for cleaner Follow button rendering */}
 						<p>{profileData.bio}</p>
 
 						{links.filter((link)=> {
@@ -255,6 +257,17 @@ styles = {
 	},
 	hide: {
 		display: 'none',
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+			display: 'none',
+		},
+	},
+	showOnMobile: {
+		display: 'none',
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+			display: 'block',
+		},
+	},
+	hideOnMobile: {
 		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
 			display: 'none',
 		},
