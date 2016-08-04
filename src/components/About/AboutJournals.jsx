@@ -67,7 +67,6 @@ export const AboutJournals = React.createClass({
 							<img style={[styles.forWhoImage, styles.forWhoLeft]} src={'https://res.cloudinary.com/pubpub/image/upload/c_scale,w_415/v1451417712/outputjournal_qcdqyh.gif'} alt={'PubPub Journals'}/>
 							<div style={globalStyles.clearFix}></div>
 						</div>
-
 					</div>
 				</div>
 

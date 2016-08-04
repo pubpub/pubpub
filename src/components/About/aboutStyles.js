@@ -43,4 +43,8 @@ export const styles = {
 			float: 'none',
 		}
 	},
+	noMargin: {
+		marginTop: 0,
+		marginBottom: 0,
+	},
 };

@@ -219,9 +219,5 @@ styles = {
 		width: '100%',
 		padding: '.5em',
 	},
-	noMargin: {
-		marginTop: 0,
-		marginBottom: 0,
-	},
 
 };

@@ -5,8 +5,7 @@ import {globalStyles} from 'utils/styleConstants';
 import Helmet from 'react-helmet';
 import {PreviewCard} from 'components';
 
-import {styles as aboutStyles} from './aboutStyles';
-let styles = {};
+import {styles} from './aboutStyles';
 
 export const AboutPubs = React.createClass({
 
@@ -75,42 +74,49 @@ export const AboutPubs = React.createClass({
 					</div>
 				</div>
 
+
 				<div>
 					<div className={'section'}>
-						<h2 style={styles.noMargin}>Collaborative Evolution</h2>
-						<div style={[styles.aboutPubText, styles.aboutPubRight]}>
-							<p>Pubs feature rich inline discussions and a transparent review process.</p>
-							<p>Versioned history encourages a mindset of incremental development rather than opaque publication.</p>
-							<p>Documents are a special type of Pub that allow for real-time collaborative editing and embedding of other pubs (images, videos, data, etc).</p>
+						<div style={[styles.forWhoBlock]}>
+							<div style={[styles.forWhoText, styles.forWhoRight]}>
+								<h2 style={styles.noMargin}>Collaborative Evolution</h2>
+								<p>Pubs feature rich inline discussions and a transparent review process.</p>
+								<p>Versioned history encourages a mindset of incremental development rather than opaque publication.</p>
+								<p>Documents are a special type of Pub that allow for real-time collaborative editing and embedding of other pubs (images, videos, data, etc).</p>
+							</div>
+							<img style={[styles.forWhoImage, styles.forWhoLeft]} src={'https://assets.pubpub.org/_site/thread.png'} alt={'PubPub features rich discussion'}/>
+							<div style={globalStyles.clearFix}></div>
 						</div>
-						<img style={[styles.aboutPubImage, styles.aboutPubLeft]} src={'https://assets.pubpub.org/_site/thread.png'} alt={'PubPub features rich discussion'}/>
-						<div style={globalStyles.clearFix}></div>
 					</div>
 				</div>
 
 				<div className={'lightest-bg'}>
 					<div className={'section'}>
-						<h2 style={styles.noMargin}>Process over Impact</h2>
-						<div style={[styles.aboutPubText, styles.aboutPubLeft]}>
-							<p>Ideas don't come out of a vacuum. They exist in a network of other ideas, findings, and beliefs.</p>
-							<p>Some of these ideas go on to win Nobel prizes, but all of these ideas contribute to the culture and progress of science. Therefore, we believe it is critical to reward the process of good science and research, rather than the outcome or impact.</p>
-							<p>PubPub encourages the documentation of research results as they happen so that they can be embedded, cited, or referenced when it comes time to publish your findings.</p>
-							<p>A powerful transclusion model makes it easy to trace context and attribution.</p>
+						<div style={[styles.forWhoBlock]}>
+							<div style={[styles.forWhoText, styles.forWhoLeft]}>
+								<h2 style={styles.noMargin}>Process over Impact</h2>
+								<p>Ideas don't come from a vacuum. They exist in a network of other ideas, findings, and beliefs.Some of these ideas go on to win Nobel prizes, but all of these ideas contribute to the culture and progress of science.</p>
+								<p>We believe it is critical to reward the process of good science and research, rather than the outcome or impact.</p>
+								<p>PubPub encourages the documentation of research results as they happen so that they can be embedded, cited, or referenced when it comes time to publish your findings.</p>
+								<p>A powerful transclusion model makes it easy to trace context and attribution.</p>
+							</div>
+							<img style={[styles.forWhoImage, styles.forWhoRight]} src={'https://assets.pubpub.org/_site/pub.gif'} alt={'PubPub versions and citations'}/>
+							<div style={globalStyles.clearFix}></div>
 						</div>
-						<img style={[styles.aboutPubImage, styles.aboutPubRight]} src={'https://assets.pubpub.org/_site/pub.gif'} alt={'PubPub versions and citations'}/>
-						<div style={globalStyles.clearFix}></div>
 					</div>
 				</div>
 
 				<div>
 					<div className={'section'}>
-						<h2 style={styles.noMargin}>For Researchers, By Researchers</h2>
-						<div style={[styles.aboutPubText, styles.aboutPubRight]}>
-							<p>PubPub is <a href="https://github.com/pubpub/pubpub">open-source</a> and dedicated to serving as a public utility for scientific communication.</p>
-							<p>If there are features, pub types, or data that enables you to better perform research, we strongly encourage you to <a href="https://github.com/pubpub/pubpub/issues/new">submit a feature request</a>, <a href="https://github.com/pubpub/pubpub/blob/master/CONTRIBUTING.md">contribute code to PubPub</a>, or fork the project and build it to your own specifications.</p>
+						<div style={[styles.forWhoBlock]}>
+							<div style={[styles.forWhoText, styles.forWhoRight]}>
+								<h2 style={styles.noMargin}>For Researchers, By Researchers</h2>
+								<p>PubPub is <a style={{color: 'inherit'}} href="https://github.com/pubpub/pubpub">open-source</a> and dedicated to serving as a public utility for scientific communication.</p>
+								<p>If there are features, pub types, or data that enables you to better perform research, we strongly encourage you to <a style={{color: 'inherit'}} href="https://github.com/pubpub/pubpub/issues/new">submit a feature request</a>, <a style={{color: 'inherit'}} href="https://github.com/pubpub/pubpub/blob/master/CONTRIBUTING.md">contribute code to PubPub</a>, or fork the project and build it to your own specifications.</p>
+							</div>
+							<img style={[styles.forWhoImage, styles.forWhoLeft]} src={'https://assets.pubpub.org/_site/github.png'} alt={'PubPub on GitHub'}/>
+							<div style={globalStyles.clearFix}></div>
 						</div>
-						<img style={[styles.aboutPubImage, styles.aboutPubLeft]} src={'https://assets.pubpub.org/_site/github.png'} alt={'PubPub on GitHub'}/>
-						<div style={globalStyles.clearFix}></div>
 					</div>
 				</div>
 				
@@ -139,43 +145,5 @@ export const AboutPubs = React.createClass({
 	}
 
 });
-
-styles = {
-	...aboutStyles,
-	noMargin: {
-		margin: 0
-	},
-	aboutPubText: {
-		width: '50%',
-		verticalAlign: 'top',
-		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
-			width: '100%',
-		}
-	},
-	aboutPubImage: {
-		width: 'calc(50% - 50px)',
-		boxShadow: '0px 0px 5px #808284',
-		marginTop: '20px',
-		marginBottom: 0,
-		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
-			width: '100%',
-			margin: '2em 0em',
-		}
-	},
-	aboutPubLeft: {
-		marginLeft: 0,
-		float: 'left',
-		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
-			float: 'none',
-		}
-	},
-	aboutPubRight: {
-		marginRight: 0,
-		float: 'right',
-		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
-			float: 'none',
-		}
-	},
-};
 
 export default Radium(AboutPubs);
