@@ -15,6 +15,10 @@ See [http://keepachangelog.com/](http://keepachangelog.com/) for best practices.
 
 ## [Unreleased]
 ### Added
+
+
+## [v2.1.0] - 2015-08-04
+- Following functionality and lists
 - Bug fixes for handling bad version requests when reading Pubs
 - Bug fixes for Login error message and empty password submission
 
@@ -60,7 +64,8 @@ See [http://keepachangelog.com/](http://keepachangelog.com/) for best practices.
 - Custom language fields enabled on backend for journals. Allowing default language strings to be overwritten per-journal.
 
 
-[Unreleased]: https://github.com/pubpub/pubpub/compare/v2.0.0...HEAD
+[Unreleased]: https://github.com/pubpub/pubpub/compare/v2.1.0...HEAD
+[v2.1.0]: https://github.com/pubpub/pubpub/compare/v2.0.0...v2.1.0
 [v2.0.0]: https://github.com/pubpub/pubpub/compare/v1.1.0...v2.0.0
 [v1.1.0]: https://github.com/pubpub/pubpub/compare/v0.2.0...v1.1.0
 [v1.0.0]: https://github.com/pubpub/pubpub/commit/12136801c7f5f5dc8225077653ed713f348f2673
