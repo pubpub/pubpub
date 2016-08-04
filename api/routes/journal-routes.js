@@ -138,11 +138,21 @@ export function getJournal(req, res) {
 			}
 		});
 
+		const getFollowers = new Promise(function(resolve) {
+			const query = Link.find({destination: journalResult._id, type: 'followsJournal', inactive: {$ne: true}}).populate({
+				path: 'source',
+				model: User,
+				select: 'username name bio image',
+			}).exec();
+			resolve(query);
+		});
+
 		const tasks = [
 			getSubmitted,
 			getFeatured,
 			getAtomsData,
 			getAdmins,
+			getFollowers,
 		];
 
 		return [journalResult, Promise.all(tasks)];
@@ -155,13 +165,14 @@ export function getJournal(req, res) {
 			submittedData: taskData[0],
 			featuredData: taskData[1],
 			atomsData: taskData[2],
-			adminsData: taskData[3]
+			adminsData: taskData[3],
+			followersData: taskData[4],
 		});
 	})
 	.catch(function(error) {
 		if (error.message === '404 Not Found') {
 			console.log(error.message);
-			return res.status(404).json('404 Not Found');	
+			return res.status(404).json('404 Not Found');
 		}
 		console.log('error', error);
 		return res.status(500).json(error);
