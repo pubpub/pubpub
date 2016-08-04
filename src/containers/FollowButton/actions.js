@@ -1,3 +1,5 @@
+import analytics from 'utils/analytics';
+
 /*--------*/
 // Define Action types
 //
@@ -20,6 +22,7 @@ export const UNFOLLOW_FAIL = 'followButton/UNFOLLOW_FAIL';
 // function calls
 /*--------*/
 export function follow(type, followID) {
+	analytics.sendEvent('Follow: ' + type, {followID: followID});
 	return {
 		types: [FOLLOW_LOAD, FOLLOW_SUCCESS, FOLLOW_FAIL],
 		promise: (client) => client.post('/follow', {data: {
@@ -30,6 +33,7 @@ export function follow(type, followID) {
 }
 
 export function unfollow(type, followID) {
+	analytics.sendEvent('Unfollow: ' + type, {followID: followID});
 	return {
 		types: [UNFOLLOW_LOAD, UNFOLLOW_SUCCESS, UNFOLLOW_FAIL],
 		promise: (client) => client.post('/unfollow', {data: {
