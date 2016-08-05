@@ -27,12 +27,14 @@ export const AtomReaderContributors = React.createClass({
 					}).map((item, index)=>{
 						const roles = item.metadata && item.metadata.roles || [];
 						return (
-							<PreviewCard 
+							<PreviewCard
 								key={'contributor-' + index}
 								type={'user'}
 								image={item.source.image}
 								title={item.source.name}
 								slug={item.source.username}
+								description= {<span style={{textTransform: 'capitalize' }}
+> {item.type}</span>}
 								footer={roles.length && roles.map((role, roleIndex)=> {
 									return (
 										<div key={'role-' + index + '-' + roleIndex} style={styles.role}>
