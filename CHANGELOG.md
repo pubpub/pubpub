@@ -15,7 +15,8 @@ See [http://keepachangelog.com/](http://keepachangelog.com/) for best practices.
 
 ## [Unreleased]
 ### Added
-
+- Multiple bug fixes for layout mistakes
+- Contributor permissiosn displayed in Contributor View page
 
 ## [v2.1.0] - 2015-08-04
 - Following functionality and lists. 

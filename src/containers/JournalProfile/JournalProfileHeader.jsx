@@ -1,12 +1,15 @@
 import React, {PropTypes} from 'react';
 import Radium from 'radium';
 import {FollowButton} from 'containers';
+import {globalStyles} from 'utils/styleConstants';
+import { Link } from 'react-router';
 
 let styles = {};
 
 export const JournalProfileHeader = React.createClass({
 	propTypes: {
 		journalName: PropTypes.string,
+		journalSlug: PropTypes.string,
 		journalID: PropTypes.string,
 		isFollowing: PropTypes.bool,
 		description: PropTypes.string,
@@ -31,11 +34,11 @@ export const JournalProfileHeader = React.createClass({
 					<FollowButton id={this.props.journalID} type={'followsJournal'} isFollowing={this.props.isFollowing} buttonStyle={styles.followButtonStyle}/>
 					<div style={styles.headerTextWrapper}>
 						{(this.props.headerMode === 'logo' || this.props.headerMode === 'both') &&
-							<img style={styles.logoImage} src={this.props.logo} />
+							<Link to={'/' + this.props.journalSlug} style={globalStyles.link}><img style={styles.logoImage} src={this.props.logo} /></Link>
 						}
 
 						{(this.props.headerMode !== 'logo') &&
-							<h1>{this.props.journalName}</h1>
+							<Link to={'/' + this.props.journalSlug} style={globalStyles.link}><h1>{this.props.journalName}</h1></Link>
 						}
 
 						{(this.props.headerMode !== 'logo') &&
