@@ -14,6 +14,7 @@ import {isWebUri} from 'valid-url';
 import request from 'superagent';
 // import {push} from 'redux-router';
 import {match} from '../../components/AtomTypes/Embed/oEmbed';
+import Dropzone from 'react-dropzone';
 
 let styles = {};
 
@@ -60,6 +61,10 @@ export const Landing = React.createClass({
 		}
 	},
 
+	onDrop: function(files) {
+		s3Upload(files[0], ()=>{}, this.onFileFinish, 0);
+	},
+
 	onFileFinish: function(evt, index, type, filename) {
 
 		let atomType = undefined;
@@ -88,7 +93,7 @@ export const Landing = React.createClass({
 		const versionContent = {
 			url: 'https://assets.pubpub.org/' + filename
 		};
-		this.props.dispatch(createAtom(atomType, versionContent));
+		this.props.dispatch(createAtom(atomType, versionContent, null, true));
 	},
 
 	handleSelectChange: function(value) {
@@ -134,8 +139,18 @@ export const Landing = React.createClass({
 				<About />
 
 				{/* <div className={'lightest-bg'}>
-					<div className={'section'}> */}
-
+					<div className={'section'}>
+						<Dropzone ref="dropzone" disableClick={true} onDrop={this.onDrop} style={{}} activeClassName={'dropzone-active'} >
+							<div className={'button'} style={styles.dropzoneBlock}>
+								Click or Drag files to add
+								<input id={'media-file-select'} type={'file'} onChange={this.handleFileSelect} multiple={true} style={styles.fileInput}/>	
+							</div>
+							<div className={'showOnActive'}>Drop files to add</div>
+						</Dropzone>
+						
+					</div>
+				</div> */}
+				
 						{/* <input type="file" accept="*" onChange={this.handleFileSelect} />
 						<form>
 							<input type="text" onChange={this.handleSourceChange} />
@@ -189,5 +204,29 @@ export default connect( state => {
 })( Radium(Landing) );
 
 styles = {
-
+	dropzoneBlock: {
+		padding: '0em 2em',
+		margin: '0em 1em',
+		fontSize: '0.85em',
+		borderStyle: 'dashed',
+		height: '34px',
+		lineHeight: '34px',
+		verticalAlign: 'top',
+		position: 'relative',
+		overflow: 'hidden',
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+			margin: '0em',
+		},
+	},
+	fileInput: {
+		marginBottom: '0em',
+		width: '100%',
+		position: 'absolute',
+		height: 'calc(100% + 20px)',
+		left: 0,
+		top: -20,
+		padding: 0,
+		cursor: 'pointer',
+		opacity: 0,
+	},
 };
