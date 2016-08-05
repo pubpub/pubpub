@@ -73,13 +73,17 @@ export const UserProfilePubs = React.createClass({
 
 
 						if (this.state.filters.length) {
+							let keep = false;
 							for (let ii = 0; ii < this.state.filters.length; ii++) {
-								if (this.state.filters[ii].value === 'published' && !item.isPublished) {
-									return;
+								if (this.state.filters[ii].value === 'published' && item.isPublished) {
+									keep = true;
 								}
-								if (this.state.filters[ii].value === 'unpublished' && item.isPublished) {
-									return;
+								if (this.state.filters[ii].value === 'unpublished' && !item.isPublished) {
+									keep = true;
 								}
+							}
+							if (!keep){
+								return;
 							}
 						}
 
