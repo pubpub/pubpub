@@ -6,7 +6,6 @@ import Select from 'react-select';
 
 // import {globalMessages} from 'utils/globalMessages';
 // import {FormattedMessage} from 'react-intl';
-let styles = {};
 
 export const UserProfilePubs = React.createClass({
 	propTypes: {
@@ -65,14 +64,27 @@ export const UserProfilePubs = React.createClass({
 						if (foo.lastUpdated < bar.lastUpdated) { return 1; }
 						return 0;
 					}).map((item, index)=>{
-						// Need to check to make sure we don't put the 
+
+						// Need to check to make sure we don't put the
 						// edit button on read-only pubs
-						const buttons = [ 
+						const buttons = [
 							{ type: 'link', text: 'Edit', link: '/pub/' + item.slug + '/edit' },
 						];
 
+
+						if (this.state.filters.length) {
+							for (let ii = 0; ii < this.state.filters.length; ii++) {
+								if (this.state.filters[ii].value === 'published' && !item.isPublished) {
+									return;
+								}
+								if (this.state.filters[ii].value === 'unpublished' && item.isPublished) {
+									return;
+								}
+							}
+						}
+
 						return (
-							<PreviewCard 
+							<PreviewCard
 								key={'atomItem-' + index}
 								type={'atom'}
 								slug={item.slug}
