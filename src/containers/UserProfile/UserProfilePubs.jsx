@@ -11,7 +11,7 @@ export const UserProfilePubs = React.createClass({
 	propTypes: {
 		profileData: PropTypes.object,
 		ownProfile: PropTypes.bool,
-		filters: PropTypes.string
+		filters: PropTypes.array
 	},
 
 	getInitialState: function() {
