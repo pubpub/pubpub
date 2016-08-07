@@ -40,7 +40,8 @@ export function generatePDFFromJSON(docJSON, title, versionDate, authors) {
 					<AtomReaderHeader
 						title={title}
 						authors={authors}
-						versionDate={String(versionDate)} />
+						versionDate={String(versionDate)} 
+						printMode={true} />
 
 					{renderReactFromJSON(docJSON.content, true)}
 				</div>	

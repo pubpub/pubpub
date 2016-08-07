@@ -18,6 +18,7 @@ export const AtomReaderHeader = React.createClass({
 
 		atomID: PropTypes.string,
 		isFollowing: PropTypes.bool,
+		printMode: PropTypes.bool,
 	},
 
 	render: function() {
@@ -26,7 +27,10 @@ export const AtomReaderHeader = React.createClass({
 		return (
 			<div className={'atom-reader-header'}>
 
-				<FollowButton id={this.props.atomID} type={'followsAtom'} isFollowing={this.props.isFollowing} buttonStyle={styles.followButtonStyle}/>
+				{!this.props.printMode &&
+					<FollowButton id={this.props.atomID} type={'followsAtom'} isFollowing={this.props.isFollowing} buttonStyle={styles.followButtonStyle}/>
+				}
+				
 				<h1 className={'atom-header-title'}>{this.props.title}</h1>
 
 				<p className={'atom-header-p'} style={hideStyle}>{this.props.authors}</p>
