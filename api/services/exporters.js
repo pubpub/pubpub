@@ -71,7 +71,7 @@ export function generatePDFFromJSON(docJSON, title, versionDate, authors) {
 	const createPDF = new Promise(function(resolve, reject) {
 		pdf.create(html, options).toFile(filename, function(err, result) {
 			if (err) { 
-				reject('Error Creating Promise'); 
+				reject('Error Creating Promise', err); 
 			} else {
 				resolve(filename);
 			}
