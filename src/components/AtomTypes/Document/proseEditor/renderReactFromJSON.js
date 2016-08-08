@@ -18,7 +18,7 @@ export const renderReactFromJSON = function(item, isRoot) {
 		switch (node.type) {
 		case 'heading': 
 			if (!node.content) { return null; }
-			const id = node.content[0].text.trim().replace(/[^A-Za-z0-9 ]/g, '').replace(/\s/g, '-').toLowerCase();
+			const id = node.content[0] && node.content[0].text && node.content[0].text.trim().replace(/[^A-Za-z0-9 ]/g, '').replace(/\s/g, '-').toLowerCase();
 			return React.createElement('h' + node.attrs.level, {key: index, id: id}, renderReactFromJSON(node.content));
 		case 'blockquote':
 			return <blockquote key={index}>{renderReactFromJSON(node.content)}</blockquote>;
