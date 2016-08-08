@@ -69,10 +69,10 @@ export const Media = React.createClass({
 
 	closeOnEscape: function(evt) {
 		let isEscape = false;
-		if ('key' in evt) { 
+		if ('key' in evt) {
 			isEscape = evt.key === 'Escape';
-		} else { 
-			isEscape = evt.keyCode === 27; 
+		} else {
+			isEscape = evt.keyCode === 27;
 		}
 
 		if (isEscape) {
@@ -119,23 +119,23 @@ export const Media = React.createClass({
 	inputChange: function(type, evt) {
 		if (type === 'caption') {
 			this.setState({nodeData: {...this.state.nodeData, caption: evt.target.value}});
-		} 
+		}
 
 		if (type === 'size') {
 			this.setState({nodeData: {...this.state.nodeData, size: evt.target.value}});
-		} 
+		}
 
 		if (type === 'mode') {
 			this.setState({nodeData: {...this.state.nodeData, mode: evt}});
-		} 
+		}
 
 		if (type === 'align') {
 			this.setState({nodeData: {...this.state.nodeData, align: evt}});
-		} 
+		}
 
 		if (type === 'className') {
 			this.setState({nodeData: {...this.state.nodeData, className: evt.target.value}});
-		} 
+		}
 	},
 
 	close: function() {
@@ -145,7 +145,7 @@ export const Media = React.createClass({
 			filter: '',
 			nodeData: {},
 			editNodeDataMode: false,
-		}); 
+		});
 	},
 
 
@@ -190,7 +190,7 @@ export const Media = React.createClass({
 
 		this.setState({
 			nodeData: {
-				...this.state.nodeData, 
+				...this.state.nodeData,
 				data: undefined
 			},
 			atomMode: 'recent',
@@ -241,7 +241,7 @@ export const Media = React.createClass({
 		default:
 			break;
 		}
-		
+
 		const versionContent = {
 			url: 'https://assets.pubpub.org/' + filename
 		};
@@ -268,7 +268,11 @@ export const Media = React.createClass({
 			const atomType = this.state.nodeData.data.type;
 			console.log('Create a new atom with version stuff!');
 			console.log(newVersionContent);
-			this.props.dispatch(createAtom(atomType, newVersionContent));
+			let title = null;
+			if (atomType === 'reference') {
+				title = newVersionContent.title;
+			}
+			this.props.dispatch(createAtom(atomType, newVersionContent, title));
 		}
 	},
 
@@ -295,7 +299,7 @@ export const Media = React.createClass({
 		console.log(item);
 		this.setState({
 			nodeData: {
-				source: item._id, 
+				source: item._id,
 				className: nodeData.className || '',
 				id: item._id,
 				align: nodeData.align || 'full',
@@ -311,7 +315,7 @@ export const Media = React.createClass({
 		evt.preventDefault();
 		const nodeData = this.state.nodeData;
 		this.state.closeCallback({
-			source: nodeData.data._id, 
+			source: nodeData.data._id,
 			className: nodeData.className,
 			id: nodeData.data._id,
 			align: nodeData.align,
@@ -385,9 +389,9 @@ export const Media = React.createClass({
 			<Dropzone ref="dropzone" disableClick={true} onDrop={this.onDrop} style={{}} activeClassName={'dropzone-active'} >
 			<div style={[styles.container, this.state.showMedia && styles.containerActive]}>
 				<div style={styles.splash} onClick={this.close}></div>
-				
+
 				<div style={[styles.modalContent, this.state.showMedia && styles.modalContentActive]}>
-				
+
 					{/* If we DON'T have a chosen atom */}
 					{!nodeData.data &&
 						<div style={styles.mediaSelect}>
@@ -400,16 +404,16 @@ export const Media = React.createClass({
 										options={options}
 										value={null}
 										placeholder={<span>Add new </span>}
-										onChange={this.handleSelectChange} />	
+										onChange={this.handleSelectChange} />
 
 								</div>
-								
+
 
 								<div className={'button'} style={styles.dropzoneBlock}>
 									Click or Drag files to add
-									<input id={'media-file-select'} type={'file'} onChange={this.onSelect} multiple={true} style={styles.fileInput}/>	
+									<input id={'media-file-select'} type={'file'} onChange={this.onSelect} multiple={true} style={styles.fileInput}/>
 								</div>
-								
+
 							</div>
 
 							{this.state.uploadFiles.map((uploadFile, index)=> {
@@ -468,12 +472,12 @@ export const Media = React.createClass({
 
 							<div style={styles.details}>
 								<div style={styles.detailsPreview}>
-									
+
 									<AtomViewerPane atomData={ensureImmutable({ atomData: nodeData.data.parent, currentVersionData: nodeData.data })} renderType={'embed'}/>
-									
+
 								</div>
 
-								
+
 								<form onSubmit={this.saveItem} style={styles.detailsForm}>
 									<div>
 										<label style={styles.label} htmlFor={'mode'}>
@@ -520,10 +524,10 @@ export const Media = React.createClass({
 										</div>
 									</div>
 
-								</form>	
+								</form>
 							</div>
-													
-							
+
+
 						</div>
 					}
 
@@ -537,14 +541,14 @@ export const Media = React.createClass({
 									<div className={'button'} style={styles.detailsButton} onClick={this.saveVersionHandler}>Save Version</div>
 								</div>
 							</div>
-							
-							
+
+
 
 							<div style={styles.details}>
 								<AtomEditorPane ref={'atomEditorPane'} atomEditData={ensureImmutable({ atomData: nodeData.data.parent, currentVersionData: nodeData.data })}/>
 							</div>
-													
-							
+
+
 						</div>
 					}
 				</div>
@@ -769,5 +773,5 @@ styles = {
 			margin: '0em 0em 1em',
 		},
 	},
-	
+
 };
