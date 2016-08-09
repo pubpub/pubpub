@@ -392,13 +392,13 @@ export const DocumentEditor = React.createClass({
 			{/* <Dropzone ref="dropzone" disableClick={true} onDrop={this.onDrop} style={{}} activeClassName={'dropzone-active'} > */}
 				<Style rules={colorMap} />
 
-				<span>
+				<div>
 					<div style={{backgroundColor: color, width:'10px', height: '10px',borderRadius: '50%',}}></div>
 					{(this.state.error
 						? <span>Error: {this.state.error}</span>
 					: <span></span>
 					)}
-				</span>
+				</div>
 
 				<Media ref={'mediaRef'}/>
 
