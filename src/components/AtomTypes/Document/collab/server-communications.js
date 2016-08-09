@@ -26,9 +26,8 @@ export class ModServerCommunications {
 
 		const wsServer = collabServerUrl;
 		let websocketProtocol;
-		if (wsServer.indexOf("localhost") != -1){
-			console.log("localgost 2")
-		 	websocketProtocol = 'ws:';
+		if (wsServer.indexOf('localhost') !== -1) {
+			websocketProtocol = 'ws:';
 		} else {
 			websocketProtocol = 'wss:';
 		}

@@ -465,11 +465,10 @@ export function getAtomEdit(req, res) {
 
 		let authUrl;
 
-		if (process.env.COLLAB_SERVER_URL.indexOf("localhost") != -1){
+		if (process.env.COLLAB_SERVER_URL.indexOf('localhost') !== -1) {
 			authUrl = 'http://' + process.env.COLLAB_SERVER_URL + '/authenticate';
 		} else {
 			authUrl = 'https://' + process.env.COLLAB_SERVER_URL + '/authenticate';
-
 		}
 
 		return request.post(authUrl)
