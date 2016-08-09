@@ -38,6 +38,8 @@ export class ModServerCommunications {
 			this.ws = new window.WebSocket(`${websocketProtocol}//${wsServer}/ws/doc/${this.editor.doc.id}?user=${this.editor.username }&token=${this.editor.token}&avatar_url=${this.editor.img}&random=${randomInt}`);
 			console.log('opening with', `${websocketProtocol}//${wsServer}/ws/doc/${this.editor.doc.id}?user=${this.editor.username }&token=${this.editor.token}&avatar_url=${this.editor.img}&random=${randomInt}`);
 			this.ws.onopen = function() {
+				that.editor.setLoadingState(false)
+
 				// console.log('Opened socket!');
 				// console.log('connection open');
 				// jQuery('#unobtrusive_messages').html('')
@@ -75,6 +77,7 @@ export class ModServerCommunications {
 
 		};
 		this.wsPinger = window.setInterval(function() {
+			console.log("pinging websocket")
 			that.send({
 				'type': 'ping'
 			});

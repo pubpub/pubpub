@@ -35,6 +35,7 @@ export const DocumentEditor = React.createClass({
 			showMarkdown: false,
 			participants: [],
 			error: '',
+			loading: true,
 		};
 	},
 
@@ -104,6 +105,12 @@ export const DocumentEditor = React.createClass({
 			that.setState({error: error});
 		};
 
+		collab.setLoadingState = function(loading) {
+			that.setState({loading: loading});
+
+		};
+
+
 		// Collaboration Authentication information
 		const atomID = safeGetInToJS(this.props.atomEditData, ['atomData', '_id']);
 		collab.doc_id = atomID;
@@ -143,7 +150,11 @@ export const DocumentEditor = React.createClass({
 				return true;
 			}
 		});
+		const _collab = safeGetInToJS(this.props.atomEditData, ['collab']);
 
+		if (!_collab) {
+			this.setState({error: 'Disconnected. Your changes are not being saved.'})
+		}
 	},
 	componentWillUnmount: function() {
 		this.collab.mod.serverCommunications.close();
@@ -359,10 +370,6 @@ export const DocumentEditor = React.createClass({
 	render: function() {
 		const collab = safeGetInToJS(this.props.atomEditData, ['collab']);
 
-		if (!collab){
-			this.setState({error: 'Disconnected. Your changes are not being saved.'})
-		}
-
 		const colorMap = {};
 		this.state.participants.map((participant, index) => {
 			const color = ColorHash.rgb(participant.name);
@@ -370,17 +377,28 @@ export const DocumentEditor = React.createClass({
 			colorMap[`.user-bg-${index}`] = {backgroundColor: colorStr};
 		});
 
+		let color;
+
+		if (this.state.error) {
+			color = 'red';
+		} else if (this.state.loading) {
+			color = 'yellow';
+		} else {
+			color = 'green';
+		}
+
 		return (
 			<div style={styles.container}>
 			{/* <Dropzone ref="dropzone" disableClick={true} onDrop={this.onDrop} style={{}} activeClassName={'dropzone-active'} > */}
 				<Style rules={colorMap} />
 
-				<div>
+				<span>
+					<div style={{backgroundColor: color, width:'10px', height: '10px',borderRadius: '50%',}}></div>
 					{(this.state.error
-						? <div>Error: {this.state.error}</div>
-					: <div></div>
+						? <span>Error: {this.state.error}</span>
+					: <span></span>
 					)}
-				</div>
+				</span>
 
 				<Media ref={'mediaRef'}/>
 
