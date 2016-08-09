@@ -463,7 +463,16 @@ export function getAtomEdit(req, res) {
 			currentVersionData: versionResult,
 		};
 
-		return request.post('https://' + process.env.COLLAB_SERVER_URL + '/authenticate')
+		let authUrl;
+
+		if (process.env.COLLAB_SERVER_URL.indexOf("localhost") != -1){
+			authUrl = 'http://' + process.env.COLLAB_SERVER_URL + '/authenticate';
+		} else {
+			authUrl = 'https://' + process.env.COLLAB_SERVER_URL + '/authenticate';
+
+		}
+
+		return request.post(authUrl)
 		.send({
 			user: req.user.username,
 			id: atomResult._id,

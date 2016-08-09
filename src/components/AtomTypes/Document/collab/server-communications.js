@@ -23,9 +23,16 @@ export class ModServerCommunications {
 	createWSConnection() {
 		const that = this;
 		// const websocketProtocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-		const websocketProtocol = 'wss:';
 
 		const wsServer = collabServerUrl;
+		let websocketProtocol;
+		if (wsServer.indexOf("localhost") != -1){
+			console.log("localgost 2")
+		 	websocketProtocol = 'ws:';
+		} else {
+			websocketProtocol = 'wss:';
+		}
+
 
 		const randomInt = Math.round(Math.random() * 100000);
 		try {
