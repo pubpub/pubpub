@@ -42,9 +42,8 @@ export class ModServerCommunications {
 				// console.log('connection open');
 				// jQuery('#unobtrusive_messages').html('')
 			};
-
 			this.ws.onerror = function(err) {
-				console.log('error with socket');
+				// console.log('error with socket ' );
 				console.log(arguments);
 				// console.log('connection open');
 				// jQuery('#unobtrusive_messages').html('')
@@ -59,12 +58,15 @@ export class ModServerCommunications {
 			that.receive(data);
 		};
 		this.ws.onclose = function(event) {
+
+			that.editor.setErrorState('Disconnected. Your changes are not being saved.')
+
 			that.connected = false;
 			window.clearInterval(that.wsPinger);
 			this.retryTimeout = window.setTimeout(function() {
 				that.createWSConnection();
 			}, 2000);
-				// console.log('attempting to reconnect');
+			console.log('attempting to reconnect');
 			if (that.editor.pm.mod.collab.hasSendableSteps()) {
 				// jQuery('#unobtrusive_messages').html('<span class="warn">'+gettext('Warning! Not all your changes have been saved! You could suffer data loss. Attempting to reconnect...')+'</span>')
 			} else {

@@ -34,6 +34,7 @@ export const DocumentEditor = React.createClass({
 		return {
 			showMarkdown: false,
 			participants: [],
+			error: '',
 		};
 	},
 
@@ -48,6 +49,8 @@ export const DocumentEditor = React.createClass({
 
 		const {ModCollab} = require('./collab/mod');
 		const {collabEditing} = require('prosemirror/dist/collab');
+
+		const that = this;
 
 		pm = new prosemirror.ProseMirror({
 			place: document.getElementById('atom-reader'),
@@ -97,6 +100,9 @@ export const DocumentEditor = React.createClass({
 		collab.askForDocument = this.askForDocument;
 		collab.getHash = this.getHash;
 		collab.updateParticipants = this.updateParticipants;
+		collab.setErrorState = function(error) {
+			that.setState({error: error});
+		};
 
 		// Collaboration Authentication information
 		const atomID = safeGetInToJS(this.props.atomEditData, ['atomData', '_id']);
@@ -115,7 +121,6 @@ export const DocumentEditor = React.createClass({
 		new ModServerCommunications(collab);
 		new ModCollab(collab);
 
-		const that = this;
 
 		pm.on.change.add(function() {
 			that.collab.docInfo.changed = true;
@@ -354,6 +359,9 @@ export const DocumentEditor = React.createClass({
 	render: function() {
 		const collab = safeGetInToJS(this.props.atomEditData, ['collab']);
 
+		if (!collab){
+			this.setState({error: 'Disconnected. Your changes are not being saved.'})
+		}
 
 		const colorMap = {};
 		this.state.participants.map((participant, index) => {
@@ -368,9 +376,9 @@ export const DocumentEditor = React.createClass({
 				<Style rules={colorMap} />
 
 				<div>
-					{(collab
-						? <div></div>
-						: <div>Connection to Collaboration Server Failed</div>
+					{(this.state.error
+						? <div>Error: {this.state.error}</div>
+					: <div></div>
 					)}
 				</div>
 
