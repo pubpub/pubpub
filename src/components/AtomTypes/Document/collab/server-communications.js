@@ -32,7 +32,7 @@ export class ModServerCommunications {
 			this.ws = new window.WebSocket(`${websocketProtocol}//${wsServer}/ws/doc/${this.editor.doc.id}?user=${this.editor.username }&token=${this.editor.token}&avatar_url=${this.editor.img}&random=${randomInt}`);
 			console.log('opening with', `${websocketProtocol}//${wsServer}/ws/doc/${this.editor.doc.id}?user=${this.editor.username }&token=${this.editor.token}&avatar_url=${this.editor.img}&random=${randomInt}`);
 			this.ws.onopen = function() {
-				// console.log('Opened socket!');
+				console.log('Opened Connection');
 				// console.log('connection open');
 				// jQuery('#unobtrusive_messages').html('')
 			};
@@ -53,6 +53,7 @@ export class ModServerCommunications {
 			that.receive(data);
 		};
 		this.ws.onclose = function(event) {
+			console.log('Closed connection');
 			that.connected = false;
 			window.clearInterval(that.wsPinger);
 			this.retryTimeout = window.setTimeout(function() {
@@ -77,6 +78,7 @@ export class ModServerCommunications {
 		// console.log('Closed ws');
 		console.log('trying to close ws');
 		window.clearTimeout(this.retryTimeout);
+		window.clearTimeout(this.wsPinger);
 		this.ws.close();
 	}
 
@@ -112,6 +114,7 @@ export class ModServerCommunications {
 	}
 
 	receive(data) {
+		// console.log(data);
 		switch (data.type) {
 		case 'chat':
 			this.editor.mod.collab.chat.newMessage(data);
