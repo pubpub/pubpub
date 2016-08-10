@@ -265,5 +265,6 @@
   "EditorComments": "Editor Comments",
   "discussionPlaceholder": "Add discussion or feedback",
   "People": "People",
-  "discussionReplyPlaceholder": "Add your reply"
+  "discussionReplyPlaceholder": "Add your reply",
+  "atom" : "Atom"
 }
