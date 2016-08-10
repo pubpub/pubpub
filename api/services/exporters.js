@@ -66,6 +66,7 @@ export function generatePDFFromJSON(docJSON, title, versionDate, authors) {
 	const options = { 
 		format: 'A4',
 		border: '.5in',
+		type: 'pdf', 
 	};
 
 	const createPDF = new Promise(function(resolve, reject) {
