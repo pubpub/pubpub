@@ -50,7 +50,12 @@ export const HorizontalNav = React.createClass({
 
 					{/* Need some indicator to show if this version is public or not */}
 					{leftNavItems.map((item, index)=>{
-						return <Link to={item.link} style={[styles.pubNavButton, item.active && styles.pubNavButtonActive]} key={'leftNav-' + index} className={'horizontalNavHover'}>{item.text}</Link>;
+						if (item.link) {
+							return <Link to={item.link} style={[styles.pubNavButton, item.active && styles.pubNavButtonActive]} key={'leftNav-' + index} className={'horizontalNavHover'}>{item.text}</Link>;
+						}
+						if (item.action) {
+							return <div onClick={item.action} style={[styles.pubNavButton, item.active && styles.pubNavButtonActive]} key={'leftNav-' + index} className={'horizontalNavHover'}>{item.text}</div>;
+						}
 					})}
 					
 					<div style={styles.pubNavButtonsRight}>
@@ -75,7 +80,8 @@ export default Radium(HorizontalNav);
 
 styles = {
 	pubSectionNav: {
-		borderBottom: '1px solid #F3F3F4',
+		// borderBottom: '1px solid #F3F3F4',
+		borderBottom: '1px solid #BBBDC0',
 		fontSize: '0.85em',
 		color: '#808284',
 		margin: '0 auto',

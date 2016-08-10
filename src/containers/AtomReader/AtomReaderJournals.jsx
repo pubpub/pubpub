@@ -94,7 +94,7 @@ export const AtomReaderJournals = React.createClass({
 											title={item.destination.journalName}
 											slug={item.destination.slug}
 											description={item.destination.description}
-											header={
+											footer={
 												<div>
 													<div>Submitted on {dateFormat(item.createDate, 'mmm dd, yyyy h:MM TT')}</div>
 													<div style={[!item.inactive && {display: 'none'}]}><span style={styles.inactiveNote}>{item.inactiveNote}</span> on {dateFormat(item.inactiveDate, 'mmm dd, yyyy h:MM TT')}</div>
@@ -124,7 +124,7 @@ export const AtomReaderJournals = React.createClass({
 									title={item.source.journalName}
 									slug={item.source.slug}
 									description={item.source.description}
-									header={
+									footer={
 										<div>
 											<div>Featured on {dateFormat(item.createDate, 'mmm dd, yyyy h:MM TT')}</div>
 										</div>

@@ -68,6 +68,7 @@ export const AtomReader = React.createClass({
 			showTOC: false,
 			showDiscussions: true,
 			lastClicked: undefined,
+			rightBarMode: 'discussions',
 		};
 	},
 
@@ -106,6 +107,9 @@ export const AtomReader = React.createClass({
 		return this.props.dispatch(submitAtomToJournals(atomID, journalIDs));
 	},
 
+	setRightBarMode: function(mode) {
+		this.setState({rightBarMode: mode});
+	},
 
 	// addSelection: function(newSelection) {
 	// 	newSelection.sourcePub = this.props.pubData.getIn(['pubData', '_id']);
@@ -180,14 +184,22 @@ export const AtomReader = React.createClass({
 			leftNav.push({link: '/pub/' + this.props.slug + '/edit', text: 'Edit'});
 		}
 		const navItems = [
-			...leftNav,
-			{link: '/pub/' + this.props.slug + '/contributors', text: 'Contributors', rightAlign: true, active: this.props.meta === 'contributors'},
-			{link: '/pub/' + this.props.slug + '/versions', text: 'Versions', rightAlign: true, active: this.props.meta === 'versions'},
-			{link: '/pub/' + this.props.slug + '/journals', text: 'Journals', rightAlign: true, active: this.props.meta === 'journals'},
-			// {link: '/pub/' + this.props.slug + '/analytics', text: 'Analytics', rightAlign: true, active: this.props.meta === 'analytics'},
-			{link: '/pub/' + this.props.slug + '/cite' + versionQuery, text: 'Cite', rightAlign: true, active: this.props.meta === 'cite'},
-			{link: '/pub/' + this.props.slug + '/followers', text: 'Followers', rightAlign: true, active: this.props.meta === 'followers'},
-			{link: '/pub/' + this.props.slug + '/export' + versionQuery, text: 'Export', rightAlign: true, active: this.props.meta === 'export'},
+			// ...leftNav,
+			{text: 'Contents', action: this.setRightBarMode.bind(this, 'contents'), active: this.state.rightBarMode === 'contents'},
+			{text: 'Discussions', action: this.setRightBarMode.bind(this, 'discussions'), active: this.state.rightBarMode === 'discussions'},
+			{text: 'Contributors', action: this.setRightBarMode.bind(this, 'contributors'), active: this.state.rightBarMode === 'contributors'},
+			{text: 'Versions', action: this.setRightBarMode.bind(this, 'versions'), active: this.state.rightBarMode === 'versions'},
+			{text: 'Journals', action: this.setRightBarMode.bind(this, 'journals'), active: this.state.rightBarMode === 'journals'},
+			{text: 'Analytics', action: this.setRightBarMode.bind(this, 'analytics'), active: this.state.rightBarMode === 'analytics'},
+
+			// {link: '/pub/' + this.props.slug, text: 'Contents', active: !this.props.meta},
+			// {link: '/pub/' + this.props.slug + '/contributors', text: 'Contributors', active: this.props.meta === 'contributors'},
+			// {link: '/pub/' + this.props.slug + '/versions', text: 'Versions', active: this.props.meta === 'versions'},
+			// {link: '/pub/' + this.props.slug + '/journals', text: 'Journals', active: this.props.meta === 'journals'},
+			// {link: '/pub/' + this.props.slug + '/analytics', text: 'Analytics', active: this.props.meta === 'analytics'},
+			// {link: '/pub/' + this.props.slug + '/cite' + versionQuery, text: 'Cite', active: this.props.meta === 'cite'},
+			// {link: '/pub/' + this.props.slug + '/followers', text: 'Followers', active: this.props.meta === 'followers'},
+			// {link: '/pub/' + this.props.slug + '/export' + versionQuery, text: 'Export', active: this.props.meta === 'export'},
 		];
 
 		// Remove Export option if the atom type is not a doc
@@ -200,6 +212,92 @@ export const AtomReader = React.createClass({
 			return <Link to={'/user/' + item.source.username} key={'author-' + index} className={'author'}>{item.source.name}</Link>;
 		});
 
+		// return (
+		// 	<div style={styles.container}>
+
+		// 		<Helmet {...metaData} />
+
+		// 		<Style rules={{
+		// 			'.pagebreak': { opacity: '0', },
+		// 		}} />
+
+		// 		{/* Table of Contents Section */}
+		// 		<StickyContainer style={[styles.tocSection, !showTOC && {display: 'none'}]}>
+		// 			<Sticky style={styles.tocContent}>	
+		// 				{toc.map((object, index)=>{
+		// 					return <div key={'toc-' + index} className={'underlineOnHover'} style={[styles.tocItem, styles.tocLevels[object.level - 1]]} onClick={this.handleScroll.bind(this, object.id)}>{object.title}</div>;
+		// 				})}
+		// 			</Sticky>
+		// 		</StickyContainer>
+
+		// 		{/* Pub Section */}
+		// 		<div style={styles.pubSection}>
+		// 			<div className={'opacity-on-hover'} style={styles.iconLeft} onClick={this.toggleTOC}></div>
+		// 			<div className={'opacity-on-hover'} style={styles.iconRight} onClick={this.toggleDiscussions}></div>
+
+		// 			<HorizontalNav navItems={navItems} mobileNavButtons={mobileNavButtons}/>
+
+		// 			{/* <div style={styles.buttonWrapper}>
+		// 				<div className={'button'} style={styles.button} onClick={()=>{}}>Follow</div>
+		// 			</div> */}
+
+		// 			<div className={!this.props.meta && safeGetInToJS(this.props.atomData, ['atomData', 'type']) === 'document' ? 'atom-reader atom-reader-meta' : 'atom-reader-meta'}>
+
+		// 				<AtomReaderHeader
+		// 					title={atomData.title}
+		// 					authors={authorList}
+		// 					versionDate={currentVersionDate}
+		// 					lastUpdated={atomData.lastUpdated}
+		// 					slug={atomData.slug}
+		// 					titleOnly={!!this.props.meta}
+		// 					atomID={atomData._id}
+		// 					isFollowing={atomData.isFollowing} />
+
+		// 				{(()=>{
+		// 					switch (this.props.meta) {
+		// 					case 'contributors':
+		// 						return <AtomReaderContributors atomData={this.props.atomData} contributorsData={contributorsData}/>;
+		// 					case 'versions':
+		// 						return <AtomReaderVersions atomData={this.props.atomData}/>;
+		// 					case 'journals':
+		// 						return <AtomReaderJournals atomData={this.props.atomData} handleJournalSubmit={this.handleJournalSubmit}/>;
+		// 					case 'analytics':
+		// 						return <AtomReaderAnalytics atomData={this.props.atomData}/>;
+		// 					case 'cite':
+		// 						return <AtomReaderCite atomData={this.props.atomData} authorsData={this.props.authorsData} versionQuery={versionQuery}/>;
+		// 					case 'export':
+		// 						return <AtomReaderExport atomData={this.props.atomData}/>;
+		// 					case 'discussions':
+		// 						return <StickyContainer><Discussions/></StickyContainer>;
+		// 					case 'followers':
+		// 						return <AtomReaderFollowers atomData={this.props.atomData}/>;
+		// 					default:
+		// 						return (
+		// 							<div>
+		// 								<AtomViewerPane atomData={this.props.atomData} />
+		// 								{atomData.isPublished &&
+		// 									<License />
+		// 								}
+		// 							</div>
+		// 						);
+		// 					}
+		// 				})()}
+		// 			</div>
+
+		// 			{/* License will go here */}
+
+		// 		</div>
+
+		// 		{/* Discussion Section */}
+		// 		<StickyContainer style={[styles.discussionSection, !showDiscussions && {display: 'none'}]}>
+		// 			{!this.props.meta &&
+		// 				<Discussions/>
+		// 			}
+		// 		</StickyContainer>
+
+
+		// 	</div>
+		// );
 		return (
 			<div style={styles.container}>
 
@@ -209,25 +307,9 @@ export const AtomReader = React.createClass({
 					'.pagebreak': { opacity: '0', },
 				}} />
 
-				{/* Table of Contents Section */}
-				<StickyContainer style={[styles.tocSection, !showTOC && {display: 'none'}]}>
-					<Sticky style={styles.tocContent}>	
-						{toc.map((object, index)=>{
-							return <div key={'toc-' + index} className={'underlineOnHover'} style={[styles.tocItem, styles.tocLevels[object.level - 1]]} onClick={this.handleScroll.bind(this, object.id)}>{object.title}</div>;
-						})}
-					</Sticky>
-				</StickyContainer>
-
 				{/* Pub Section */}
-				<div style={styles.pubSection}>
-					<div className={'opacity-on-hover'} style={styles.iconLeft} onClick={this.toggleTOC}></div>
+				<div style={[styles.pubSection, !showDiscussions && styles.pubSectionFull]}>
 					<div className={'opacity-on-hover'} style={styles.iconRight} onClick={this.toggleDiscussions}></div>
-
-					<HorizontalNav navItems={navItems} mobileNavButtons={mobileNavButtons}/>
-
-					{/* <div style={styles.buttonWrapper}>
-						<div className={'button'} style={styles.button} onClick={()=>{}}>Follow</div>
-					</div> */}
 
 					<div className={!this.props.meta && safeGetInToJS(this.props.atomData, ['atomData', 'type']) === 'document' ? 'atom-reader atom-reader-meta' : 'atom-reader-meta'}>
 
@@ -240,36 +322,14 @@ export const AtomReader = React.createClass({
 							titleOnly={!!this.props.meta}
 							atomID={atomData._id}
 							isFollowing={atomData.isFollowing} />
+						
+						<AtomViewerPane atomData={this.props.atomData} />
+						
+						{atomData.isPublished &&
+							<License />
+						}
 
-						{(()=>{
-							switch (this.props.meta) {
-							case 'contributors':
-								return <AtomReaderContributors atomData={this.props.atomData} contributorsData={contributorsData}/>;
-							case 'versions':
-								return <AtomReaderVersions atomData={this.props.atomData}/>;
-							case 'journals':
-								return <AtomReaderJournals atomData={this.props.atomData} handleJournalSubmit={this.handleJournalSubmit}/>;
-							case 'analytics':
-								return <AtomReaderAnalytics atomData={this.props.atomData}/>;
-							case 'cite':
-								return <AtomReaderCite atomData={this.props.atomData} authorsData={this.props.authorsData} versionQuery={versionQuery}/>;
-							case 'export':
-								return <AtomReaderExport atomData={this.props.atomData}/>;
-							case 'discussions':
-								return <StickyContainer><Discussions/></StickyContainer>;
-							case 'followers':
-								return <AtomReaderFollowers atomData={this.props.atomData}/>;
-							default:
-								return (
-									<div>
-										<AtomViewerPane atomData={this.props.atomData} />
-										{atomData.isPublished &&
-											<License />
-										}
-									</div>
-								);
-							}
-						})()}
+						
 					</div>
 
 					{/* License will go here */}
@@ -277,10 +337,40 @@ export const AtomReader = React.createClass({
 				</div>
 
 				{/* Discussion Section */}
-				<StickyContainer style={[styles.discussionSection, !showDiscussions && {display: 'none'}]}>
-					{!this.props.meta &&
-						<Discussions/>
-					}
+				<StickyContainer style={[styles.discussionSection, !showDiscussions && styles.hideDiscussion]}>
+					<Sticky>
+						<HorizontalNav navItems={navItems} mobileNavButtons={mobileNavButtons}/>
+						
+						<div className={'contenty'} style={styles.contenty}>
+							{(()=>{
+								switch (this.state.rightBarMode) {
+								case 'contributors':
+									return <AtomReaderContributors atomData={this.props.atomData} contributorsData={contributorsData}/>;
+								case 'versions':
+									return <AtomReaderVersions atomData={this.props.atomData}/>;
+								case 'journals':
+									return <AtomReaderJournals atomData={this.props.atomData} handleJournalSubmit={this.handleJournalSubmit}/>;
+								case 'analytics':
+									return <AtomReaderAnalytics atomData={this.props.atomData}/>;
+								case 'cite':
+									return <AtomReaderCite atomData={this.props.atomData} authorsData={this.props.authorsData} versionQuery={versionQuery}/>;
+								case 'export':
+									return <AtomReaderExport atomData={this.props.atomData}/>;
+								case 'discussions':
+									return <StickyContainer><Discussions/></StickyContainer>;
+								case 'followers':
+									return <AtomReaderFollowers atomData={this.props.atomData}/>;
+								case 'contents':
+									return toc.map((object, index)=>{
+										return <div key={'toc-' + index} className={'underlineOnHover'} style={[styles.tocItem, styles.tocLevels[object.level - 1]]} onClick={this.handleScroll.bind(this, object.id)}>{object.title}</div>;
+									});
+								default:
+									return <Discussions/>;
+								}
+							})()}
+						</div>
+						
+					</Sticky>
 				</StickyContainer>
 
 
@@ -302,50 +392,20 @@ export default connect( state => {
 })( Radium(AtomReader) );
 
 styles = {
-	tocSection: {
-		display: 'table-cell',
-		verticalAlign: 'top',
-		width: '300px',
-		backgroundColor: '#F3F3F4',
-		borderRight: '1px solid #E4E4E4',
-		fontSize: '0.9em',
-	},
-	tocContent: {
-		maxHeight: 'calc(100vh - 7em)',
-		overflow: 'hidden',
-		overflowY: 'scroll',
-		padding: '2em 0em 5em 0em',
-	},
-	tocHover: {
-		width: '2em',
-		position: 'absolute',
-		top: '0px',
-		bottom: '0px',
-		paddingTop: '15px',
-	},
-	tocIcon: {
-		position: 'relative',
-		width: '10px',
-		height: '2px',
-		marginBottom: '1px',
-		backgroundColor: '#BBBDC0',
-		borderRadius: '1px',
-	},
-
-	tocPopout: {
-		overflow: 'hidden',
-		overflowY: 'scroll',
-		padding: '2em',
-	},
+	
 	pubSection: {
-		display: 'table-cell',
 		verticalAlign: 'top',
 		padding: '0em 4em',
 		position: 'relative',
+		marginRight: '35vw',
 		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
 			display: 'block',
 			padding: '0em 1em',
+			marginRight: '0vw',
 		},
+	},
+	pubSectionFull: {
+		marginRight: '0vw',
 	},
 	iconLeft: {
 		position: 'absolute',
@@ -376,40 +436,34 @@ styles = {
 		},
 	},
 	discussionSection: {
-		display: 'table-cell',
 		verticalAlign: 'top',
-		padding: '0em 3%',
-		width: '35%',
+		padding: '0em 0em',
+		width: '35vw',
+		height: '100%',
 		backgroundColor: '#F3F3F4',
 		borderLeft: '1px solid #E4E4E4',
+		position: 'absolute',
+		right: 0,
+		top: 0,
+		transition: '.15s ease-in-out transform',
 		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
 			display: 'none',
 		},
 	},
-	// pubSectionNav: {
-	// 	borderBottom: '1px solid #F3F3F4',
-	// 	fontSize: '0.85em',
-	// 	color: '#808284',
-	// 	maxWidth: '1024px',
-	// 	margin: '0 auto',
-	// },
-	// pubNavVersion: {
-	// 	display: 'inline-block',
-	// 	padding: '10px 0px',
-	// },
-	// pubNavButtons: {
-	// 	float: 'right',
-	// },
-	// pubNavButton: {
-	// 	display: 'inline-block',
-	// 	padding: '10px',
-	// },
-	// pubNavButtonLast: {
-	// 	padding: '10px 0px 10px 10px',
-	// },
-	author: {
-		color: 'red',
+	hideDiscussion: {
+		transform: 'translate3d(100%, 0, 0)'
 	},
+
+	contenty: {
+		// backgroundColor: 'green',
+		height: 'calc(100vh - 40px)',
+		width: 'calc(100% - 4em)',
+		overflow: 'hidden',
+		overflowY: 'scroll',
+		padding: '0em 2em 1em',
+	},
+
+	
 	pubBodyWrapper: {
 		maxWidth: '650px',
 		margin: '0 auto',
@@ -430,13 +484,25 @@ styles = {
 	},
 
 	container: {
-		display: 'table',
 		width: '100%',
-		tableLayout: 'fixed',
 		overflow: 'hidden',
 		minHeight: '100vh',
+		position: 'relative',
 	},
 
+	
+	noBottomMargin: {
+		marginBottom: '0px',
+	},
+	buttonWrapper: {
+		float: 'right',
+		position: 'relative',
+		top: '8px',
+	},
+	button: {
+		fontSize: '.85em',
+		padding: '.25em 1.5em',
+	},
 	tocItem: {
 		display: 'block',
 		textDecoration: 'none',
@@ -456,17 +522,5 @@ styles = {
 		{paddingLeft: '7em'},
 		{paddingLeft: '8em'},
 	],
-	noBottomMargin: {
-		marginBottom: '0px',
-	},
-	buttonWrapper: {
-		float: 'right',
-		position: 'relative',
-		top: '8px',
-	},
-	button: {
-		fontSize: '.85em',
-		padding: '.25em 1.5em',
-	},
 
 };

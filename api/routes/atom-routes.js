@@ -247,7 +247,7 @@ export function getAtomData(req, res) {
 		// Get the collaborators associated with the atom
 		// This query fires if meta is equal to 'collaborators'
 		const getContributors = new Promise(function(resolve) {
-			if (meta === 'contributors') {
+			if (true || meta === 'contributors') {
 				const query = Link.find({destination: atomResult._id, type: {$in: ['author', 'editor', 'reader', 'contributor']}, inactive: {$ne: true}}).populate({
 					path: 'source',
 					model: User,
@@ -260,7 +260,7 @@ export function getAtomData(req, res) {
 		});
 
 		const getVersions = new Promise(function(resolve) {
-			if (meta === 'versions') {
+			if (true || meta === 'versions') {
 				const query = Version.find({_id: {$in: atomResult.versions}}, {content: 0}).sort({createDate: -1});
 				resolve(query);
 			} else {
@@ -269,7 +269,7 @@ export function getAtomData(req, res) {
 		});
 
 		const getSubmitted = new Promise(function(resolve) {
-			if (meta === 'journals' && permissionType === 'author') {
+			if (true || meta === 'journals' && permissionType === 'author') {
 				const query = Link.find({source: atomResult._id, type: 'submitted'}).populate({
 					path: 'destination',
 					model: Journal,
@@ -282,7 +282,7 @@ export function getAtomData(req, res) {
 		});
 
 		const getFeatured = new Promise(function(resolve) {
-			if (meta === 'journals') {
+			if (true || meta === 'journals') {
 				const query = Link.find({destination: atomResult._id, type: 'featured'}).populate({
 					path: 'source',
 					model: Journal,
