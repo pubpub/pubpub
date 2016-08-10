@@ -72,7 +72,7 @@ export const About = React.createClass({
 							<img style={styles.madeWithImage} src={'https://jake.pubpub.org/unsafe/75x75/https://assets.pubpub.org/_site/cdmxIcon.png'} alt={'Constitucion CDMX'} />
 							<div style={styles.madeWithTextWrapper}>
 								<h3 style={styles.noMargin}>Constitucion CDMX</h3>
-								<div style={styles.noMargin}>Laboratoria CDMX, Government Mexico City</div>
+								<div style={styles.noMargin}>Laboratorio CDMX, Government Mexico City</div>
 							</div>
 							
 						</div>
