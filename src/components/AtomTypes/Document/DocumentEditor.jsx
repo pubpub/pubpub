@@ -162,10 +162,10 @@ export const DocumentEditor = React.createClass({
 		const that = this;
 		// Set Auto-save to send the document every two minutes, if it has changed.
 		this.sendDocumentTimer = window.setInterval(function() {
-			if (that.docInfo && that.docInfo.changed) {
+			if (that.collab.docInfo && that.collab.docInfo.changed) {
 				that.save();
 			}
-		}, 120000);
+		},60000);
 	},
 
 
@@ -282,8 +282,10 @@ export const DocumentEditor = React.createClass({
 	// Get updates to document and then send updates to the server
 	save: function(callback) {
 		const that = this;
+		console.log('Started save');
 		this.getUpdates(function() {
 			that.sendDocumentUpdate(function() {
+				console.log('Finished save');
 				if (callback) {
 					callback();
 				}
@@ -297,11 +299,11 @@ export const DocumentEditor = React.createClass({
 			// title: this.doc.title,
 			// metadata: this.doc.metadata,
 			contents: this.collab.doc.contents,
-			// version: this.doc.version,
+			version: this.collab.doc.version,
 			hash: this.collab.doc.hash
 		};
 
-		this.mod.serverCommunications.send({
+		this.collab.mod.serverCommunications.send({
 			type: 'update_document',
 			document: documentData
 		});
