@@ -14,8 +14,43 @@ export const HorizontalNav = React.createClass({
 	getInitialState() {
 		return {
 			showMenu: false,
+			itemsToShow: 4,
 		};
 	},
+
+	componentDidMount: function() {
+		window.addEventListener('resize', this.handleResize);
+		setTimeout(()=>{
+			this.handleResize();
+		}, 100);
+		
+	},
+
+	componentWillUnmount: function() {
+		window.removeEventListener('resize', this.handleResize);
+	},
+
+	handleResize: function() {
+		const navWidth = document.getElementsByClassName('horizontal-nav')[0].offsetWidth;
+		const moreWidth = document.getElementsByClassName('more-button').length && document.getElementsByClassName('more-button')[0].offsetWidth;
+		const navItems = document.getElementsByClassName('ghostButton');
+
+		let setItemsToShow = false;
+		for (let index = 0; index < navItems.length; index++) {
+			const itemEndWidth = navItems[index].offsetWidth + navItems[index].offsetLeft;
+			const allowedWidth = index === navItems.length - 1 ? navWidth : navWidth - moreWidth; // Don't count the 'More' button when calculating for last item.
+			if (itemEndWidth > allowedWidth) {
+				this.setState({itemsToShow: index});
+				setItemsToShow = true;
+				break;
+			}
+		}
+
+		if (!setItemsToShow) { 
+			this.setState({itemsToShow: 100});
+		}	
+	},
+
 	toggleMenu: function() {
 		this.setState({showMenu: !this.state.showMenu});
 	},
@@ -26,10 +61,10 @@ export const HorizontalNav = React.createClass({
 
 	render: function() {
 		const navItems = this.props.navItems || [];
-		const leftNavItems = navItems.filter((item)=>{ return item.rightAlign !== true; });
-		const rightNavItems = navItems.filter((item)=>{ return item.rightAlign === true; });
-		const mobileNavButtons = this.props.mobileNavButtons || [];
+		const visibleNavItems = navItems.slice(0, this.state.itemsToShow);
+		const collapsedNavItems = navItems.slice(this.state.itemsToShow, navItems.length);
 
+		const mobileNavButtons = this.props.mobileNavButtons || [];
 		return (
 			<div className={'horizontal-nav'} style={styles.pubSectionNav}>
 				<div style={styles.contentNavMobileButtons}>
@@ -46,10 +81,10 @@ export const HorizontalNav = React.createClass({
 					<div style={styles.contentNavMobileButtonSeparator}></div>
 				</div>
 
-				<div style={[styles.contentNavItems, !this.state.showMenu && styles.hideOnMobile]}>
 
+				<div className={'horizontal-nav-items'} style={[styles.contentNavItems, !this.state.showMenu && styles.hideOnMobile]}>
 					{/* Need some indicator to show if this version is public or not */}
-					{leftNavItems.map((item, index)=>{
+					{visibleNavItems.map((item, index)=>{
 						if (item.link) {
 							return <Link to={item.link} style={[styles.pubNavButton, item.active && styles.pubNavButtonActive]} key={'leftNav-' + index} className={'horizontalNavHover'}>{item.text}</Link>;
 						}
@@ -57,18 +92,38 @@ export const HorizontalNav = React.createClass({
 							return <div onClick={item.action} style={[styles.pubNavButton, item.active && styles.pubNavButtonActive]} key={'leftNav-' + index} className={'horizontalNavHover'}>{item.text}</div>;
 						}
 					})}
+
+					{!!collapsedNavItems.length &&
+						<div className={'showChildOnHover more-button'} style={[styles.pubNavButton]}>
+							More
+							<div className={'hoverChild arrow-box'} style={styles.collapsedItems}>
+								{collapsedNavItems.map((item, index)=>{
+									if (item.link) {
+										return <Link to={item.link} style={[styles.pubNavButtonCollapsed, item.active && styles.pubNavButtonActive]} key={'collapsed-' + index} className={'underlineOnHover'}>{item.text}</Link>;
+									}
+									if (item.action) {
+										return <div onClick={item.action} style={[styles.pubNavButtonCollapsed, item.active && styles.pubNavButtonActive]} key={'collapsed-' + index} className={'underlineOnHover'}>{item.text}</div>;
+									}
+								})}
+							</div>
+
+						</div>
+					}
 					
-					<div style={styles.pubNavButtonsRight}>
-						{rightNavItems.map((item, index)=>{
-							if (item.link) {
-								return <Link to={item.link} style={[styles.pubNavButton, item.active && styles.pubNavButtonActive]} key={'rightNav-' + index} className={'horizontalNavHover'}>{item.text}</Link>;
-							}
-							if (item.action) {
-								return <div onClick={item.action} style={[styles.pubNavButton, item.active && styles.pubNavButtonActive]} key={'rightNav-' + index} className={'horizontalNavHover'}>{item.text}</div>;
-							}
-							
-						})}	
-					</div>
+					
+				</div>
+
+				<div className={'horizontal-nav-items'} style={[styles.ghostButtons, !this.state.showMenu && styles.hideOnMobile]}>
+					{/* Need some indicator to show if this version is public or not */}
+					{navItems.map((item, index)=>{
+						if (item.link) {
+							return <Link to={item.link} style={[styles.pubNavButton, item.active && styles.pubNavButtonActive]} key={'ghost-' + index} className={'ghostButton'}>{item.text}</Link>;
+						}
+						if (item.action) {
+							return <div onClick={item.action} style={[styles.pubNavButton, item.active && styles.pubNavButtonActive]} key={'ghost-' + index} className={'ghostButton'}>{item.text}</div>;
+						}
+					})}
+					
 				</div>
 				
 			</div>
@@ -83,8 +138,10 @@ styles = {
 		// borderBottom: '1px solid #F3F3F4',
 		borderBottom: '1px solid #BBBDC0',
 		fontSize: '0.85em',
-		color: '#808284',
+		color: '#363736',
 		margin: '0 auto',
+		whiteSpace: 'nowrap',
+		position: 'relative',
 		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
 			width: 'calc(100% + 2em)',
 			position: 'relative',
@@ -93,6 +150,11 @@ styles = {
 			color: 'inherit',
 		}
 		
+	},
+	ghostButtons: {
+		position: 'absolute',
+		opacity: '0',
+		pointerEvents: 'none',
 	},
 	pubNavButtonsRight: {
 		float: 'right',
@@ -107,19 +169,34 @@ styles = {
 		textDecoration: 'none',
 		userSelect: 'none',
 		cursor: 'pointer',
+		position: 'relative',
 		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
 			padding: '.2em 1em',
 			fontSize: '1em',
 			display: 'block',
 		}
 	},
+	pubNavButtonCollapsed: {
+		display: 'block',
+	},
+	collapsedItems: {
+		position: 'absolute',
+		right: '0',
+		backgroundColor: '#F3F3F4',
+		zIndex: '10',
+		border: '1px solid #BBBDC0',
+		padding: '1em 1em 1em 2em',
+		textAlign: 'right',
+		top: '95%',
+
+	},
 	pubNavButtonActive: {
-		borderBottom: '2px solid #2C2A2B',
+		borderBottom: '2px solid #58585B',
 		padding: '10px 10px 8px 10px',
 		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
 			padding: '.15em 2em .15em calc(.5em - 3px)',
-			borderLeft: '3px solid #2C2A2B',
-			borderBottom: '0px solid #2C2A2B',
+			borderLeft: '3px solid #58585B',
+			borderBottom: '0px solid #58585B',
 		}
 	},
 	contentNavItems: {

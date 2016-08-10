@@ -191,6 +191,9 @@ export const AtomReader = React.createClass({
 			{text: 'Versions', action: this.setRightBarMode.bind(this, 'versions'), active: this.state.rightBarMode === 'versions'},
 			{text: 'Journals', action: this.setRightBarMode.bind(this, 'journals'), active: this.state.rightBarMode === 'journals'},
 			{text: 'Analytics', action: this.setRightBarMode.bind(this, 'analytics'), active: this.state.rightBarMode === 'analytics'},
+			{text: 'Export', action: this.setRightBarMode.bind(this, 'export'), active: this.state.rightBarMode === 'export'},
+			{text: 'Cite', action: this.setRightBarMode.bind(this, 'cite'), active: this.state.rightBarMode === 'cite'},
+			{text: 'Followers', action: this.setRightBarMode.bind(this, 'followers'), active: this.state.rightBarMode === 'followers'},
 
 			// {link: '/pub/' + this.props.slug, text: 'Contents', active: !this.props.meta},
 			// {link: '/pub/' + this.props.slug + '/contributors', text: 'Contributors', active: this.props.meta === 'contributors'},
