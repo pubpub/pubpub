@@ -31,6 +31,9 @@ import PDFViewer from './PDF/PDFViewer';
 import EmbedEditor from './Embed/EmbedEditor';
 import EmbedViewer from './Embed/EmbedViewer';
 
+import CodeEditor from './Code/CodeEditor';
+import CodeViewer from './Code/CodeViewer';
+
 export default {
 	image: {
 		editor: ImageEditor,
@@ -75,5 +78,9 @@ export default {
 	embed: {
 		editor: EmbedEditor,
 		viewer: EmbedViewer
+	},
+	code: {
+		editor: CodeEditor,
+		viewer: CodeViewer
 	}
 };
