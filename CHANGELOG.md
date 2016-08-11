@@ -17,6 +17,7 @@ See [http://keepachangelog.com/](http://keepachangelog.com/) for best practices.
 ### Added
 - Multiple bug fixes for layout mistakes
 - Contributor permissiosn displayed in Contributor View page
+- Strikethrough render bug fixed View mode
 
 ## [v2.1.0] - 2015-08-04
 - Following functionality and lists. 
