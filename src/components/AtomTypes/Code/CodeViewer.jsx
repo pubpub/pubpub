@@ -44,11 +44,9 @@ export const CodeViewer = React.createClass({
 		
 		const options = {
 			mode, theme,
-			autoCloseBrackets: true,
-			autoMatchParens: true,
-			matchBrackets: true,
 			viewportMargin: Infinity,
-			readOnly: true
+			readOnly: true,
+			cursorBlinkRate: -1,
 		};
 		
 		switch (this.props.renderType) {
@@ -59,7 +57,7 @@ export const CodeViewer = React.createClass({
 			default:
 				return <div style={styles.code}>
 					<Style rules={{...CodeMirrorStyles, ...Themes}} />
-					<CodeMirror value={code} options={options}/>
+					<CodeMirror value={code} options={options} />
 				</div>
 		}
 	}
@@ -69,9 +67,9 @@ export default Radium(CodeViewer);
 
 styles = {
 	code: {
-		border: '2px solid #BBBDC0',
 		textAlign: 'left',
 		lineHeight: '1.2',
-		fontSize: 16
+		fontSize: 16,
+		minHeight: 100
 	},
 };

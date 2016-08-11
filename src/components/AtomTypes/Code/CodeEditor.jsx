@@ -240,7 +240,8 @@ styles = {
 		border: '2px solid #BBBDC0',
 		textAlign: 'left',
 		lineHeight: '1.2',
-		fontSize: 16
+		fontSize: 16,
+		marginBottom: 32
 	},
 	settings: {
 		zIndex: 1000
