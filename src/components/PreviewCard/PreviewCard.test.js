@@ -7,11 +7,19 @@ describe('Components', () => {
 
 		it('should render with empty props', () => {
 			const props = {};
+<<<<<<< Updated upstream
 			const {renderOutput, error} = shallowRender(PreviewCard, props);
 
 			expect(error).to.not.exist; // Did not render an error
 			expect(renderOutput).to.exist; // Successfully rendered
 
+=======
+			const {renderOutput, error} = shallowRender(PreviewCard, props) ;
+
+			expect(error).to.not.exist; // Did not render an error
+			expect(renderOutput).to.exist; // Successfully rendered
+			
+>>>>>>> Stashed changes
 		});
 
 	});

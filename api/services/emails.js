@@ -1,4 +1,8 @@
+<<<<<<< Updated upstream
 const sendgridKey = process.env.SENDGRID_API_KEY;
+=======
+const sendgridKey = process.env.NODE_ENV !== 'production' && !process.env.TESTING ? require('../config').sendgridAPIKey : process.env.SENDGRID_API_KEY;
+>>>>>>> Stashed changes
 const sendgrid = require('sendgrid')(sendgridKey);
 
 const fromname = 'PubPub';
@@ -21,10 +25,16 @@ export function registrationEmail(email, callback) {
 }
 
 export function sendVerificationEmail(email, hash, callback) {
+<<<<<<< Updated upstream
 	console.log('sending verification email to ', email);
 	const emailObject = new sendgrid.Email();
 	emailObject.addTo(email);
 	emailObject.subject = 'Verify your PubPub Account'; 
+=======
+	const emailObject = new sendgrid.Email();
+	emailObject.addTo(email);
+	emailObject.subject = 'Welcome to PubPub!'; // We should have a journal here.
+>>>>>>> Stashed changes
 	emailObject.from = from;
 	emailObject.fromname = fromname;
 	emailObject.text = 'Welcome to PubPub! Please click the following link to verify your email address: https://www.pubpub.org/verify/' + hash;

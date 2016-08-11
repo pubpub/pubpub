@@ -1,6 +1,7 @@
 import React from 'react';
 import Radium from 'radium';
 import {globalStyles} from 'utils/styleConstants';
+<<<<<<< Updated upstream
 // import { Link } from 'react-router';
 import Helmet from 'react-helmet';
 import {PreviewCard} from 'components';
@@ -10,10 +11,21 @@ import {styles} from './aboutStyles';
 export const AboutPubs = React.createClass({
 
 	render() {
+=======
+import { Link } from 'react-router';
+import Helmet from 'react-helmet';
+
+import {styles} from './aboutStyles';
+
+export const AboutJournals = React.createClass({
+
+	render: function() {
+>>>>>>> Stashed changes
 		const metaData = {
 			title: 'Pubs · PubPub',
 		};
 
+<<<<<<< Updated upstream
 		const featuredContent = [
 			{
 				slug: 'designandscience',
@@ -56,11 +68,14 @@ export const AboutPubs = React.createClass({
 
 		];
 
+=======
+>>>>>>> Stashed changes
 		return (
 			<div style={styles.container}>
 
 				<Helmet {...metaData} />
 
+<<<<<<< Updated upstream
 				<div className={'lightest-bg'}>
 					<div className={'section'}>
 
@@ -137,6 +152,22 @@ export const AboutPubs = React.createClass({
 							);
 						})}
 
+=======
+				<div className={'lightest-bg'} style={styles.sectionWrapper}>
+					<div style={styles.section}>
+
+						<h1 style={[styles.headerTitle, styles.headerTextMax]}>Pubs</h1>
+						<p style={[styles.headerSubtitle, styles.headerTextMax]}>PubPub is a free and open tool for collaborative editing, instant publishing, continuous review, and grassroots journals.</p>
+						<Link style={globalStyles.link} to={'/signup'}><div className={'button'} style={styles.headerButton}>Create Pub</div></Link>
+
+					</div>
+				</div>
+
+				<div style={styles.sectionWrapper}>
+					<div style={styles.section}>
+						<h2 style={styles.sectionHeader}>Made with PubPub</h2>
+						
+>>>>>>> Stashed changes
 					</div>
 				</div>
 				
@@ -146,4 +177,9 @@ export const AboutPubs = React.createClass({
 
 });
 
+<<<<<<< Updated upstream
 export default Radium(AboutPubs);
+=======
+
+export default Radium(AboutJournals);
+>>>>>>> Stashed changes

@@ -58,10 +58,17 @@ export const SignUpForm = React.createClass({
 	signUpSubmit: function(evt) {
 		evt.preventDefault();
 		const signUpData = {
+<<<<<<< Updated upstream
 			firstName: this.refs.firstName.value,
 			lastName: this.refs.lastName.value,
 			email: this.refs.email.value,
 			password: this.refs.password.value
+=======
+			firstName: this.refs.signupFirstName.value,
+			lastName: this.refs.signupLastName.value,
+			email: this.refs.signupEmail.value,
+			password: this.refs.signupPassword.value
+>>>>>>> Stashed changes
 		};
 		const {isValid, validationError} = this.validate(signUpData);
 		this.setState({validationError: validationError});
@@ -81,27 +88,42 @@ export const SignUpForm = React.createClass({
 		const errorMessage = serverErrors[this.props.errorMessage] || this.state.validationError;
 
 		return (
+<<<<<<< Updated upstream
 			<div>
+=======
+			<div className={'signup-container'} style={styles.container}>
+>>>>>>> Stashed changes
 				<Helmet {...metaData} />
 
 				<h1><FormattedMessage {...globalMessages.SignUp}/></h1>
 				<p style={styles.subHeader}>
 					<FormattedMessage id="signup.Signupto" defaultMessage="Sign up to publish documents and follow content!"/>
 				</p>
+<<<<<<< Updated upstream
 				
+=======
+>>>>>>> Stashed changes
 				<form onSubmit={this.signUpSubmit}>
 					<div>
 						<label style={styles.label} htmlFor={'firstName'}>
 							<FormattedMessage id="signup.FirstName" defaultMessage="First Name"/>
 						</label>
+<<<<<<< Updated upstream
 						<input ref={'firstName'} id={'firstName'} name={'first name'} type="text" style={styles.input}/>
+=======
+						<input ref={'signupFirstName'} id={'firstName'} name={'first name'} type="text" style={styles.input}/>
+>>>>>>> Stashed changes
 					</div>
 
 					<div>
 						<label style={styles.label} htmlFor={'lastName'}>
 							<FormattedMessage id="signup.LastName" defaultMessage="Last Name"/>
 						</label>
+<<<<<<< Updated upstream
 						<input ref={'lastName'} id={'lastName'} name={'last name'} type="text" style={styles.input}/>
+=======
+						<input ref={'signupLastName'} id={'lastName'} name={'last name'} type="text" style={styles.input}/>
+>>>>>>> Stashed changes
 					</div>
 
 
@@ -109,14 +131,22 @@ export const SignUpForm = React.createClass({
 						<label style={styles.label} htmlFor={'email'}>
 							<FormattedMessage {...globalMessages.Email} />
 						</label>
+<<<<<<< Updated upstream
 						<input ref={'email'} id={'email'} name={'email'} type="text" style={styles.input}/>
+=======
+						<input ref={'signupEmail'} id={'email'} name={'email'} type="text" style={styles.input}/>
+>>>>>>> Stashed changes
 					</div>
 
 					<div>
 						<label style={styles.label} htmlFor={'password'}>
 							<FormattedMessage {...globalMessages.Password} />
 						</label>
+<<<<<<< Updated upstream
 						<input ref={'password'} id={'password'} name={'password'} type="password" style={styles.input}/>
+=======
+						<input ref={'signupPassword'} id={'password'} name={'password'} type="password" style={styles.input}/>
+>>>>>>> Stashed changes
 						<div className={'light-color inputSubtext'} to={'/resetpassword'}>
 							<FormattedMessage id="signup.PasswordLength" defaultMessage="Must be at least 8 characters"/>
 						</div>
@@ -133,7 +163,11 @@ export const SignUpForm = React.createClass({
 				</form>
 				
 				<Link style={styles.registerLink} to={'/login'}>
+<<<<<<< Updated upstream
 					<FormattedMessage id="signup.alreadyHaveAccount" defaultMessage="Already have an account? Click to Login!"/>
+=======
+					<FormattedMessage id="signup.alreadyHaveAccount" defaultMessage="Already have a PubPub? Click to Login!"/>
+>>>>>>> Stashed changes
 				</Link>
 				
 			</div>

@@ -8,7 +8,10 @@ import {
 	LOAD_APP_AND_LOGIN_LOAD,
 	LOAD_APP_AND_LOGIN_SUCCESS,
 	LOAD_APP_AND_LOGIN_FAIL,
+<<<<<<< Updated upstream
 	UNSET_NOT_FOUND
+=======
+>>>>>>> Stashed changes
 } from './actions';
 
 import {
@@ -19,6 +22,7 @@ import {
 	SIGNUP_SUCCESS,
 } from 'containers/SignUp/actions';
 
+<<<<<<< Updated upstream
 import {
 	GET_USER_LOAD,
 	GET_USER_SUCCESS,
@@ -43,6 +47,8 @@ import {
 	GET_JOURNAL_SUCCESS,
 	GET_JOURNAL_FAIL,
 } from 'containers/JournalProfile/actions';
+=======
+>>>>>>> Stashed changes
 
 
 /*--------*/
@@ -54,9 +60,12 @@ export const defaultState = Immutable.Map({
 	
 	locale: 'en',
 	languageObject: {},
+<<<<<<< Updated upstream
 
 	loading: false, // Used to animate the loading bar
 	notFound: false,
+=======
+>>>>>>> Stashed changes
 });
 
 /*--------*/
@@ -82,6 +91,7 @@ function loadAppFail(state, error) {
 	});
 }
 
+<<<<<<< Updated upstream
 function setLoading(state) {
 	return state.set('loading', true);
 }
@@ -98,6 +108,8 @@ function unsetNotFound(state) {
 	return state.set('notFound', false);	
 }
 
+=======
+>>>>>>> Stashed changes
 /*--------*/
 // Bind actions to specific reducing functions.
 /*--------*/
@@ -112,6 +124,7 @@ export default function reducer(state = defaultState, action) {
 		return loadAppSuccess(state, action.result.languageData);
 	case LOAD_APP_AND_LOGIN_FAIL:
 		return loadAppFail(state, action.error);
+<<<<<<< Updated upstream
 
 
 	case GET_USER_LOAD:
@@ -134,6 +147,8 @@ export default function reducer(state = defaultState, action) {
 	case UNSET_NOT_FOUND:
 		return unsetNotFound(state);
 
+=======
+>>>>>>> Stashed changes
 	default:
 		return ensureImmutable(state);
 	}
