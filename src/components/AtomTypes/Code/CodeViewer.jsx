@@ -8,27 +8,7 @@ import DraculaTheme from './dracula.css';
 import EclipseTheme from './eclipse.css';
 import MaterialTheme from './material.css';
 
-const Themes = {...MonokaiTheme, ...DraculaTheme, ...EclipseTheme, ...MaterialTheme};
-
-import CodeMirror from 'react-codemirror';
-if (typeof window !== 'undefined') {
-	// TODO: bundle these
-	require('codemirror/mode/css/css');
-	require('codemirror/mode/go/go');
-	require('codemirror/mode/haskell/haskell');
-	require('codemirror/mode/htmlmixed/htmlmixed');
-	require('codemirror/mode/javascript/javascript');
-	require('codemirror/mode/julia/julia');
-	require('codemirror/mode/mathematica/mathematica');
-	require('codemirror/mode/python/python');
-	require('codemirror/mode/r/r');
-	require('codemirror/mode/rust/rust');
-	require('codemirror/mode/scheme/scheme');
-	require('codemirror/mode/xml/xml');
-	
-	require('codemirror/addon/edit/matchbrackets');
-	require('codemirror/addon/edit/closebrackets');
-}
+const Styles = {...CodeMirrorStyles, ...MonokaiTheme, ...DraculaTheme, ...EclipseTheme, ...MaterialTheme};
 
 let styles = {};
 
@@ -39,15 +19,16 @@ export const CodeViewer = React.createClass({
 	},
 	render() {
 		const code = safeGetInToJS(this.props.atomData, ['currentVersionData', 'content', 'code']) || '';
-		const mode = safeGetInToJS(this.props.atomData, ['currentVersionData', 'content', 'mode']) || 'default';
+		// const mode = safeGetInToJS(this.props.atomData, ['currentVersionData', 'content', 'mode']) || 'default';
 		const theme = safeGetInToJS(this.props.atomData, ['currentVersionData', 'content', 'theme']) || 'default';
+		const html = safeGetInToJS(this.props.atomData, ['currentVersionData', 'content', 'html']) || '';
 		
-		const options = {
-			mode, theme,
-			viewportMargin: Infinity,
-			readOnly: true,
-			cursorBlinkRate: -1,
-		};
+		// const options = {
+		// 	mode, theme,
+		// 	viewportMargin: Infinity,
+		// 	readOnly: true,
+		// 	cursorBlinkRate: -1,
+		// };
 		
 		switch (this.props.renderType) {
 			case 'embed':
@@ -56,13 +37,14 @@ export const CodeViewer = React.createClass({
 			case 'static-full':
 			default:
 				return <div style={styles.code}>
-					<Style rules={{...CodeMirrorStyles, ...Themes}} />
-					<CodeMirror value={code} options={options} />
+					<Style rules={Styles} />
+					<div className={`CodeMirror cm-s-${theme}`} dangerouslySetInnerHTML={{__html: html || code}}></div>
 				</div>
 		}
 	}
 });
-
+// <div className="CodeMirror" dangerouslySetInnerHTML={{__html: html}}></div>	
+// <CodeMirror value={code} options={options} ref={reactCodeMirror => reactCodeMirror.getCodeMirror().refresh()} />
 export default Radium(CodeViewer);
 
 styles = {

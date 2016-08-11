@@ -5,23 +5,27 @@ import {Loader, CustomizableForm} from 'components';
 import Select from 'react-select';
 import request from 'superagent';
 
+import CodeMirror from 'react-codemirror';
 import CodeMirrorStyles from './codemirror.css';
 import MonokaiTheme from './monokai.css';
 import DraculaTheme from './dracula.css';
 import EclipseTheme from './eclipse.css';
 import MaterialTheme from './material.css';
 
-const Themes = {...MonokaiTheme, ...DraculaTheme, ...EclipseTheme, ...MaterialTheme};
+const Styles = {...CodeMirrorStyles, ...MonokaiTheme, ...DraculaTheme, ...EclipseTheme, ...MaterialTheme};
 
-import CodeMirror from 'react-codemirror';
 
-if (typeof window !== 'undefined') {
+if (typeof window !== 'undefined' || false) {
+	// TODO: bundle these
+	// require('codemirror/lib/codemirror');
+
 	require('codemirror/mode/css/css');
 	require('codemirror/mode/go/go');
 	require('codemirror/mode/haskell/haskell');
 	require('codemirror/mode/htmlmixed/htmlmixed');
 	require('codemirror/mode/javascript/javascript');
 	require('codemirror/mode/julia/julia');
+	require('codemirror/mode/mathematica/mathematica');
 	require('codemirror/mode/python/python');
 	require('codemirror/mode/r/r');
 	require('codemirror/mode/rust/rust');
@@ -36,6 +40,7 @@ if (typeof window !== 'undefined') {
 }
 
 let styles = {};
+let element = false;
 
 const extensions = {
 	scm: 'scheme',
@@ -115,8 +120,9 @@ export const CodeEditor = React.createClass({
 	},
 	
 	getSaveVersionContent() {
+		const html = element ? element.getCodeMirror().getWrapperElement().innerHTML : false;
 		const {code, theme, mode} = this.state;
-		return {code, theme, mode};
+		return {code, theme, mode, html};
 	},
 
 	handleFileSelect: function(evt) {
@@ -219,10 +225,10 @@ export const CodeEditor = React.createClass({
 				</label>
 			</div>
 			
-			<Style rules={{...CodeMirrorStyles, ...Themes, ...SelectTheme}} />
+			<Style rules={{...Styles, ...SelectTheme}} />
 			
 			<div style={styles.code}>
-				<CodeMirror value={code} onChange={this.updateCode} options={options}/>
+				<CodeMirror value={code} onChange={this.updateCode} options={options} ref={cm => element = cm}/>
 			</div>
 			
 		</div>;
