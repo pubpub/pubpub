@@ -15,7 +15,13 @@ export const HorizontalNav = React.createClass({
 		return {
 			showMenu: false,
 			itemsToShow: 4,
+			randomKey: undefined,
 		};
+	},
+
+	componentWillMount: function() {
+		// Generate randomKey for the case when there are multiple HorizontalNav components. We want the document.getElements to be properly specific
+		this.setState({randomKey: Math.random()});
 	},
 
 	componentDidMount: function() {
@@ -31,9 +37,9 @@ export const HorizontalNav = React.createClass({
 	},
 
 	handleResize: function() {
-		const navWidth = document.getElementsByClassName('horizontal-nav')[0].offsetWidth;
+		const navWidth = document.getElementsByClassName('horizontal-nav ' + this.state.randomKey)[0].offsetWidth;
 		const moreWidth = document.getElementsByClassName('more-button').length && document.getElementsByClassName('more-button')[0].offsetWidth;
-		const navItems = document.getElementsByClassName('ghostButton');
+		const navItems = document.getElementsByClassName('ghostButton ' + this.state.randomKey);
 
 		let setItemsToShow = false;
 		for (let index = 0; index < navItems.length; index++) {
@@ -66,7 +72,7 @@ export const HorizontalNav = React.createClass({
 
 		const mobileNavButtons = this.props.mobileNavButtons || [];
 		return (
-			<div className={'horizontal-nav'} style={styles.pubSectionNav}>
+			<div className={'horizontal-nav ' + this.state.randomKey} style={styles.pubSectionNav}>
 				<div style={styles.contentNavMobileButtons}>
 					{mobileNavButtons.slice(0, 2).map((option, index)=>{
 
@@ -117,10 +123,10 @@ export const HorizontalNav = React.createClass({
 					{/* Need some indicator to show if this version is public or not */}
 					{navItems.map((item, index)=>{
 						if (item.link) {
-							return <Link to={item.link} style={[styles.pubNavButton, item.active && styles.pubNavButtonActive]} key={'ghost-' + index} className={'ghostButton'}>{item.text}</Link>;
+							return <Link to={item.link} style={[styles.pubNavButton, item.active && styles.pubNavButtonActive]} key={'ghost-' + index} className={'ghostButton ' + this.state.randomKey}>{item.text}</Link>;
 						}
 						if (item.action) {
-							return <div onClick={item.action} style={[styles.pubNavButton, item.active && styles.pubNavButtonActive]} key={'ghost-' + index} className={'ghostButton'}>{item.text}</div>;
+							return <div onClick={item.action} style={[styles.pubNavButton, item.active && styles.pubNavButtonActive]} key={'ghost-' + index} className={'ghostButton ' + this.state.randomKey}>{item.text}</div>;
 						}
 					})}
 					
