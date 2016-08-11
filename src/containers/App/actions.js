@@ -1,20 +1,18 @@
-import analytics from 'utils/analytics';
 /*--------*/
 // Define Action types
 //
 // All action types are defined as constants. Do not manually pass action
 // types as strings in action creators
 /*--------*/
-export const LOAD_APP_AND_LOGIN_LOAD = 'journal/LOAD_APP_AND_LOGIN_LOAD';
-export const LOAD_APP_AND_LOGIN_SUCCESS = 'journal/LOAD_APP_AND_LOGIN_SUCCESS';
-export const LOAD_APP_AND_LOGIN_FAIL = 'journal/LOAD_APP_AND_LOGIN_FAIL';
+export const LOAD_APP_AND_LOGIN_LOAD = 'app/LOAD_APP_AND_LOGIN_LOAD';
+export const LOAD_APP_AND_LOGIN_SUCCESS = 'app/LOAD_APP_AND_LOGIN_SUCCESS';
+export const LOAD_APP_AND_LOGIN_FAIL = 'app/LOAD_APP_AND_LOGIN_FAIL';
 
-export const OPEN_MENU = 'nav/OPEN_MENU';
-export const CLOSE_MENU = 'nav/CLOSE_MENU';
+export const RESEND_VERIFICATION_EMAIL_LOAD = 'app/RESEND_VERIFICATION_EMAIL_LOAD';
+export const RESEND_VERIFICATION_EMAIL_SUCCESS = 'app/RESEND_VERIFICATION_EMAIL_SUCCESS';
+export const RESEND_VERIFICATION_EMAIL_FAIL = 'app/RESEND_VERIFICATION_EMAIL_FAIL';
 
-export const GET_RANDOM_SLUG_LOAD = 'journal/GET_RANDOM_SLUG_LOAD';
-export const GET_RANDOM_SLUG_SUCCESS = 'journal/GET_RANDOM_SLUG_SUCCESS';
-export const GET_RANDOM_SLUG_FAIL = 'journal/GET_RANDOM_SLUG_FAIL';
+export const UNSET_NOT_FOUND = 'app/UNSET_NOT_FOUND';
 
 /*--------*/
 // Define Action creators
@@ -30,22 +28,16 @@ export function loadAppAndLogin() {
 	};
 }
 
-export function openMenu() {
+export function resendVerificationEmail() {
+	// These actions are not caught by any reducing function. We assume the email is sent succesfully.
 	return {
-		type: OPEN_MENU,
+		types: [RESEND_VERIFICATION_EMAIL_LOAD, RESEND_VERIFICATION_EMAIL_SUCCESS, RESEND_VERIFICATION_EMAIL_FAIL],
+		promise: (client) => client.post('/resendVerificationEmail', {})
 	};
 }
 
-export function closeMenu() {
+export function unsetNotFound() {
 	return {
-		type: CLOSE_MENU,
-	};
-}
-
-export function getRandomSlug(journalID, analyticsData) {
-	analytics.sendEvent('Random Pub', analyticsData);
-	return {
-		types: [GET_RANDOM_SLUG_LOAD, GET_RANDOM_SLUG_SUCCESS, GET_RANDOM_SLUG_FAIL],
-		promise: (client) => client.get('/getRandomSlug', {params: {journalID: journalID}})
+		type: UNSET_NOT_FOUND
 	};
 }

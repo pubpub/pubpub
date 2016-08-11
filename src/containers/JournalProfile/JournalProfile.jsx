@@ -1,184 +1,244 @@
 import React, { PropTypes } from 'react';
 import {connect} from 'react-redux';
-import { Link } from 'react-router';
-import { pushState } from 'redux-router';
 import Radium from 'radium';
 import Helmet from 'react-helmet';
-import {getJournal, saveJournal, createCollection, clearCollectionRedirect} from './actions';
-import {follow, unfollow, toggleVisibility} from 'containers/Login/actions';
-import {LoaderDeterminate, NotFound} from 'components';
-import JournalDesign from './JournalDesign';
-import JournalCurate from './JournalCurate';
-import JournalMain from './JournalMain';
-import JournalSettings from './JournalSettings';
+import {getJournal, updateJournal, createCollection, updateCollection, deleteCollection, featureAtom, rejectAtom, collectionsChange, addAdmin, deleteAdmin} from './actions';
+// import {NotFound} from 'components';
+import JournalProfileAbout from './JournalProfileAbout';
+import JournalProfileAdmins from './JournalProfileAdmins';
+import JournalProfileDetails from './JournalProfileDetails';
+import JournalProfileLayout from './JournalProfileLayout';
+import JournalProfileRecent from './JournalProfileRecent';
+import JournalProfileHeader from './JournalProfileHeader';
+import JournalProfileFeatured from './JournalProfileFeatured';
+import JournalProfileSubmitted from './JournalProfileSubmitted';
+import JournalProfileCollections from './JournalProfileCollections';
+import JournalProfileFollowers from './JournalProfileFollowers';
+import {NavContentWrapper} from 'components';
+import {safeGetInToJS} from 'utils/safeParse';
 
-import {globalStyles, profileStyles, navStyles} from 'utils/styleConstants';
+// import {globalStyles} from 'utils/styleConstants';
+// import {globalMessages} from 'utils/globalMessages';
+// import {FormattedMessage} from 'react-intl';
 
-import {globalMessages} from 'utils/globalMessages';
-import {FormattedMessage} from 'react-intl';
-
-let styles = {};
-
-const JournalAdmin = React.createClass({
+export const JournalProfile = React.createClass({
 	propTypes: {
 		journalData: PropTypes.object,
-		appData: PropTypes.object,
-		loginData: PropTypes.object,
-		subdomain: PropTypes.string,
+		slug: PropTypes.string,
 		mode: PropTypes.string,
 		dispatch: PropTypes.func
 	},
 
 	statics: {
-		fetchDataDeferred: function(getState, dispatch, location, routerParams) {
-			// If there is a baseSubdomain, that means we're on a journal. If baseSubdomain is null, that means we're on pubpub.
-			// Only fetch if we're on pubpub - otherwise, the journalData we display is the data for that journal.
-			// Elsewhere, we render default pubpub styling by checking for null baseSubdomain (or maybe it's sourced from the backend, with null kept as subdomain field)
-			if (getState().journal.getIn(['journalData', 'subdomain']) !== routerParams.subdomain) {
-				return dispatch(getJournal(routerParams.subdomain));
-			}
-			return ()=>{};
+		fetchData: function(getState, dispatch, location, routerParams) {
+			return dispatch(getJournal(routerParams.slug, routerParams.mode));
 		}
 	},
 
-	componentWillReceiveProps(nextProps) {
-		if (nextProps.journalData.get('createCollectionStatus') === 'created') {
-			this.props.dispatch(pushState(null, ('/collection/' + nextProps.journalData.get('createCollectionSlug') + '/edit')));
-			this.props.dispatch(clearCollectionRedirect());
-		}
-	},
-
-	journalSave: function(newObject) {
-		this.props.dispatch(saveJournal(this.props.subdomain, newObject));
-	},
-
-	createCollection: function(newCollectionObject) {
-		this.props.dispatch(createCollection(this.props.subdomain, newCollectionObject));
-	},
-
-	followJournalToggle: function() {
-		if (!this.props.loginData.get('loggedIn')) {
-			return this.props.dispatch(toggleVisibility());
-		}
-
-		const analyticsData = {
-			type: 'pubs',
-			followedID: this.props.journalData.getIn(['journalData', '_id']),
-			journalName: this.props.journalData.getIn(['journalData', 'journalName']),
-			subdomain: this.props.journalData.getIn(['journalData', 'subdomain']),
-			customDomain: this.props.journalData.getIn(['journalData', 'customDomain']),
-			numPubsFeatured: this.props.journalData.getIn(['journalData', 'pubsFeatured']) ? this.props.journalData.getIn(['journalData', 'pubsFeatured']).size : 0,
-			numPubsSubmitted: this.props.journalData.getIn(['journalData', 'pubsSubmitted']) ? this.props.journalData.getIn(['journalData', 'pubsSubmitted']).size : 0,
-			numFollowers: this.props.journalData.getIn(['journalData', 'followers']) ? this.props.journalData.getIn(['journalData', 'followers']).size : 0,
-			numAdmins: this.props.journalData.getIn(['journalData', 'admins']) ? this.props.journalData.getIn(['journalData', 'admins']).size : 0,
+	getInitialState: function() {
+		return {
+			logo: undefined,
+			headerColor: '',
+			headerMode: '',
+			headerAlign: '',
+			headerImage: '',
 		};
+	},
 
-		const isFollowing = this.props.loginData.getIn(['userData', 'following', 'journals']) ? this.props.loginData.getIn(['userData', 'following', 'journals']).indexOf(this.props.journalData.getIn(['journalData', '_id'])) > -1 : false;
+	handleUpdateJournal: function(newJournalData) {
+		this.props.dispatch(updateJournal(this.props.slug, newJournalData));
+	},
 
-		if (isFollowing) {
-			this.props.dispatch( unfollow('journals', this.props.journalData.getIn(['journalData', '_id']), analyticsData) );
-		} else {
-			this.props.dispatch( follow('journals', this.props.journalData.getIn(['journalData', '_id']), analyticsData) );
-		}
+	handleHeaderUpdate: function(updateObject) {
+		this.setState(updateObject);
+	},
+
+	handleCreateCollection: function(newCollectionTitle) {
+		const journalID = safeGetInToJS(this.props.journalData, ['journalData', '_id']);
+		return this.props.dispatch(createCollection(journalID, newCollectionTitle));
+	},
+
+	handleUpdateCollection: function(collectionID, collectionData) {
+		return this.props.dispatch(updateCollection(collectionID, collectionData));
+	},
+
+	handleDeleteCollection: function(collectionID) {
+		const journalID = safeGetInToJS(this.props.journalData, ['journalData', '_id']);
+		return this.props.dispatch(deleteCollection(journalID, collectionID));
+	},
+
+	handleFeatureAtom: function(atomID) {
+		const journalID = safeGetInToJS(this.props.journalData, ['journalData', '_id']);
+		return this.props.dispatch(featureAtom(journalID, atomID));
+	},
+
+	handleRejectAtom: function(atomID) {
+		const journalID = safeGetInToJS(this.props.journalData, ['journalData', '_id']);
+		return this.props.dispatch(rejectAtom(journalID, atomID));
+	},
+
+	handleCollectionsChange: function(linkID, collectionIDs) {
+		return this.props.dispatch(collectionsChange(linkID, collectionIDs));
+	},
+
+	handleAddAdmin: function(adminID) {
+		const journalID = safeGetInToJS(this.props.journalData, ['journalData', '_id']);
+		return this.props.dispatch(addAdmin(journalID, adminID));
+	},
+
+	handleDeleteAdmin: function(adminID) {
+		const journalID = safeGetInToJS(this.props.journalData, ['journalData', '_id']);
+		return this.props.dispatch(deleteAdmin(journalID, adminID));
 	},
 
 	render: function() {
-		const metaData = {};
-		metaData.title = 'Journal';
+		const journalData = safeGetInToJS(this.props.journalData, ['journalData']) || {};
+
+		const metaData = {
+			title: journalData.journalName + ' · PubPub',
+			meta: [
+				{property: 'og:title', content: (journalData.journalName || journalData.slug)},
+				{property: 'og:type', content: 'article'},
+				{property: 'og:description', content: journalData.description},
+				{property: 'og:url', content: 'https://www.pubpub.org/' + journalData.slug},
+				{property: 'og:image', content: journalData.icon},
+				{property: 'og:image:url', content: journalData.icon},
+				{property: 'og:image:width', content: '500'},
+				{name: 'twitter:card', content: 'summary'},
+				{name: 'twitter:site', content: '@pubpub'},
+				{name: 'twitter:title', content: (journalData.journalName || journalData.slug)},
+				{name: 'twitter:description', content: journalData.description || journalData.about || journalData.journalName || journalData.slug},
+				{name: 'twitter:image', content: journalData.icon},
+				{name: 'twitter:image:alt', content: 'Image for ' + (journalData.journalName || journalData.slug)}
+			]
+		};
+
+		const mobileNavButtons = [
+			{ type: 'link', mobile: true, text: 'About', link: '/' + this.props.slug + '/about' },
+			{ type: 'button', mobile: true, text: 'Menu', action: undefined },
+		];
+
+		let adminNav = [
+			{ type: 'title', text: 'Admin'},
+			{ type: 'link', text: 'Details', link: '/' + this.props.slug + '/details', active: this.props.mode === 'details' },
+			{ type: 'link', text: 'Layout', link: '/' + this.props.slug + '/layout', active: this.props.mode === 'layout' },
+			{ type: 'link', text: 'Featured', link: '/' + this.props.slug + '/featured', active: this.props.mode === 'featured' },
+			{ type: 'link', text: 'Submitted', link: '/' + this.props.slug + '/submitted', active: this.props.mode === 'submitted' },
+			{ type: 'link', text: 'Collections', link: '/' + this.props.slug + '/collections', active: this.props.mode === 'collections' },
+			{ type: 'link', text: 'Admins', link: '/' + this.props.slug + '/admins', active: this.props.mode === 'admins' },
+			{ type: 'spacer' },
+			{ type: 'title', text: 'Public'},
+		];
+
+		if (!journalData.isAdmin) {
+			adminNav = [];
+		}
+
+		const collections = journalData.collections || [];
+		const collectionItems = collections.map((item, index)=> {
+			return { type: 'link', text: item.title, link: '/' + this.props.slug + '/' + item._id, active: this.props.mode === item._id };
+		});
+
+		const navItems = [
+			...adminNav,
+			{ type: 'link', text: 'About', link: '/' + this.props.slug + '/about', active: this.props.mode === 'about' },
+			{ type: 'link', text: 'Recent Activity', link: '/' + this.props.slug, active: !this.props.mode},
+			{ type: 'link', text: 'Followers', link: '/' + this.props.slug + '/followers', active: this.props.mode === 'followers'},
+
+			{ type: 'spacer' },
+			...collectionItems,
+		];
+
+		let mode = this.props.mode;
+		if (!journalData.isAdmin && (mode === 'details' || mode === 'layout' || mode === 'featured' || mode === 'submitted' || mode === 'collections' || mode === 'admins')) {
+			mode = 'notFound';
+		}
 		return (
-			<div style={profileStyles.profilePage}>
+			<div>
 
 				<Helmet {...metaData} />
 
-				{
-					(this.props.subdomain !== this.props.appData.get('baseSubdomain') && this.props.appData.get('baseSubdomain') !== null) || (this.props.mode && !this.props.journalData.getIn(['journalData', 'isAdmin']))
-						? <NotFound />
-						: <div style={profileStyles.profileWrapper}>
+				<JournalProfileHeader
+					journalName={this.state.journalName || journalData.journalName}
+					journalSlug={journalData.slug}
+					journalID={journalData._id}
+					isFollowing={journalData.isFollowing}
+					description={this.state.description || journalData.description}
+					logo={this.state.logo || journalData.logo}
+					headerColor={this.state.headerColor || journalData.headerColor}
+					headerMode={this.state.headerMode || journalData.headerMode}
+					headerAlign={this.state.headerAlign || journalData.headerAlign}
+					headerImage={this.state.headerImage === null ? undefined : this.state.headerImage || journalData.headerImage} />
 
-							<div style={[globalStyles.hiddenUntilLoad, globalStyles[this.props.journalData.get('status')]]}>
-								<ul style={navStyles.navList}>
-									<Link to={'/journal/' + this.props.subdomain + '/settings'} style={globalStyles.link}><li key="journalNav0" style={[navStyles.navItem, this.props.journalData.getIn(['journalData', 'isAdmin']) && navStyles.navItemShow]}>
-										<FormattedMessage {...globalMessages.settings} />
-									</li></Link>
-									<li style={[navStyles.navSeparator, this.props.journalData.getIn(['journalData', 'isAdmin']) && navStyles.navItemShow]}></li>
+				<NavContentWrapper navItems={navItems} mobileNavButtons={mobileNavButtons}>
 
-									<Link to={'/journal/' + this.props.subdomain + '/design'} style={globalStyles.link}><li key="journalNav1" style={[navStyles.navItem, this.props.journalData.getIn(['journalData', 'isAdmin']) && navStyles.navItemShow]}>
-										<FormattedMessage {...globalMessages.design} />
-									</li></Link>
-									<li style={[navStyles.navSeparator, this.props.journalData.getIn(['journalData', 'isAdmin']) && navStyles.navItemShow]}></li>
+					{(() => {
+						switch (mode) {
+						case 'about':
+							return (
+								<JournalProfileAbout
+									journalData={this.props.journalData}/>
+							);
+						case 'followers':
+							return (
+								<JournalProfileFollowers
+									journalData={this.props.journalData}/>
+							);
+						case 'details':
+							return (
+								<JournalProfileDetails
+									journalData={this.props.journalData}
+									handleUpdateJournal={this.handleUpdateJournal} />
+							);
+						case 'layout':
+							return (
+								<JournalProfileLayout
+									journalData={this.props.journalData}
+									handleUpdateJournal={this.handleUpdateJournal}
+									handleHeaderUpdate={this.handleHeaderUpdate} />
+							);
+						case 'featured':
+							return (
+								<JournalProfileFeatured
+									journalData={this.props.journalData}
+									handleCollectionsChange={this.handleCollectionsChange}/>
+							);
+						case 'submitted':
+							return (
+								<JournalProfileSubmitted
+									journalData={this.props.journalData}
+									handleFeatureAtom={this.handleFeatureAtom}
+									handleRejectAtom={this.handleRejectAtom} />
+							);
+						case 'collections':
+							return (
+								<JournalProfileCollections
+									journalData={this.props.journalData}
+									handleUpdateJournal={this.handleUpdateJournal}
+									handleCreateCollection={this.handleCreateCollection}
+									handleUpdateCollection={this.handleUpdateCollection}
+									handleDeleteCollection={this.handleDeleteCollection}
+									slug={this.props.slug} />
+							);
+						case 'admins':
+							return (
+								<JournalProfileAdmins
+									journalData={this.props.journalData}
+									handleAddAdmin={this.handleAddAdmin}
+									handleDeleteAdmin={this.handleDeleteAdmin}/>
+							);
+						case 'notFound':
+							return null;
 
-									<Link to={'/journal/' + this.props.subdomain + '/curate'} style={globalStyles.link}><li key="journalNav2" style={[navStyles.navItem, this.props.journalData.getIn(['journalData', 'isAdmin']) && navStyles.navItemShow]}>
-										<FormattedMessage {...globalMessages.curate} />
-									</li></Link>
-									<li style={[navStyles.navSeparator, this.props.journalData.getIn(['journalData', 'isAdmin']) && navStyles.navItemShow, navStyles.noMobile]}></li>
+						default:
+							return (
+								<JournalProfileRecent
+									journalData={this.props.journalData} />
+							);
+						}
+					})()}
 
-									<li key="journalNav3" style={[navStyles.navItem, !this.props.journalData.getIn(['journalData', 'isAdmin']) && navStyles.navItemShow]} onClick={this.followJournalToggle}>
-										{this.props.loginData.getIn(['userData', 'following', 'journals']) && this.props.loginData.getIn(['userData', 'following', 'journals']).indexOf(this.props.journalData.getIn(['journalData', '_id'])) > -1
-											? <FormattedMessage {...globalMessages.following} />
-											: <FormattedMessage {...globalMessages.follow} />
-										}
-									</li>
-									<li style={[navStyles.navSeparator, !this.props.journalData.getIn(['journalData', 'isAdmin']) && navStyles.navItemShow]}></li>
-								</ul>
-							</div>
-
-							<LoaderDeterminate value={this.props.journalData.get('status') === 'loading' ? 0 : 100}/>
-
-							<div style={[globalStyles.hiddenUntilLoad, globalStyles[this.props.journalData.get('status')], styles.contentWrapper]}>
-
-								<div>
-									<Link to={'/journal/' + this.props.subdomain} style={globalStyles.link}>
-										<span style={styles.headerJournalName} key={'headerJournalName'}>{this.props.journalData.getIn(['journalData', 'journalName'])}</span>
-									</Link>
-									{this.props.mode
-										? <span style={styles.headerMode}>: <FormattedMessage {...globalMessages[this.props.mode]} /></span>
-										: null
-
-									}
-								</div>
-								<div style={styles.journalProfileContent}>
-									{(() => {
-										switch (this.props.mode) {
-										case 'curate':
-											return (
-												<JournalCurate
-													journalData={this.props.journalData.get('journalData').toJS()}
-													journalSaving={this.props.journalData.get('journalSaving')}
-													journalSaveHandler={this.journalSave}
-													createCollectionHandler={this.createCollection}
-													createCollectionStatus={this.props.journalData.get('createCollectionStatus')}/>
-											);
-										case 'design':
-											return (
-												<JournalDesign
-													designObject={this.props.journalData.getIn(['journalData', 'design']) ? this.props.journalData.getIn(['journalData', 'design']).toJS() : {}}
-													journalSaving={this.props.journalData.get( 'journalSaving')}
-													journalSaveHandler={this.journalSave}
-													journalData={this.props.journalData}
-													query={this.props.query} />
-											);
-										case 'settings':
-											return (
-												<JournalSettings
-													journalData={this.props.journalData.get('journalData').toJS()}
-													journalSaving={this.props.journalData.get( 'journalSaving')}
-													journalSaveHandler={this.journalSave}/>
-											);
-
-										default:
-											return (
-												<JournalMain
-													journalData={this.props.journalData.get('journalData').toJS()}/>
-											);
-										}
-									})()}
-								</div>
-
-
-							</div>
-
-						</div>
-				}
+				</NavContentWrapper>
 
 			</div>
 		);
@@ -188,53 +248,8 @@ const JournalAdmin = React.createClass({
 
 export default connect( state => {
 	return {
-		loginData: state.login,
 		journalData: state.journal,
-		appData: state.app,
-		subdomain: state.router.params.subdomain,
+		slug: state.router.params.slug,
 		mode: state.router.params.mode,
-		query: state.router.location.query,
 	};
-})( Radium(JournalAdmin) );
-
-styles = {
-	contentWrapper: {
-		margin: globalStyles.headerHeight,
-	},
-	headerJournalName: {
-		color: globalStyles.sideText,
-		fontSize: 35,
-		':hover': {
-			color: 'black',
-		},
-	},
-	headerMode: {
-		color: '#888',
-		fontSize: 25,
-	},
-	journalProfileContent: {
-		marginLeft: 10,
-	},
-
-};
-
-// const output = [
-// 	block: {
-// 		render: function(){return <Block text={text}/>}
-// 		text: undefined,
-// 		link: undefined,
-// 		style: {},
-// 	},
-// 	image: {
-// 		render: function(){return <Block text={text}/>}
-// 		image: undefined,
-// 		link: undefined,
-// 		style: {},
-// 	},
-// 	search: {
-// 		render: function(){return <Block text={text}/>}
-// 		text: undefined,
-// 		style: {},
-// 	},
-
-// ];
+})( Radium(JournalProfile) );

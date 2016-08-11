@@ -1,36 +1,32 @@
 import React, {PropTypes} from 'react';
 import {connect} from 'react-redux';
 import Radium, {Style} from 'radium';
+import { Link } from 'react-router';
+import {safeGetInToJS} from 'utils/safeParse';
+import dateFormat from 'dateformat';
 import {globalStyles} from 'utils/styleConstants';
-// import {rightBarStyles} from 'containers/PubReader/rightBarStyles';
-import DiscussionsItem from './DiscussionsItem';
-import DiscussionsInput from './DiscussionsInput';
 
-// import Portal from 'react-portal';
-import {MediaLibrary} from 'containers';
+import { StickyContainer as UnwrappedStickyContainer, Sticky } from 'react-sticky';
+const StickyContainer = Radium(UnwrappedStickyContainer);
 
-import {toggleVisibility} from 'containers/Login/actions';
-import {waitForUpload} from 'containers/Editor/actions';
-import {addDiscussion, discussionVoteSubmit, archiveDiscussion} from './actions';
-
-import {redditHot as hotScore} from 'decay';
-
-
+import {Media} from 'containers';
+import {markdownParser, markdownSerializer, schema} from 'components/AtomTypes/Document/proseEditor';
+import {License} from 'components';
+import {StoppableSubscription} from 'subscription';
+// import {createAtom} from 'containers/Media/actions';
+import {createReplyDocument} from './actions';
+import DiscussionItem from './DiscussionItem';
 
 // import {globalMessages} from 'utils/globalMessages';
-import {FormattedMessage} from 'react-intl';
+// import {FormattedMessage} from 'react-intl';
 
 let styles = {};
-const Discussions = React.createClass({
+let pm;
+
+export const Discussions = React.createClass({
 	propTypes: {
-		metaID: PropTypes.string,
-
-		discussionsData: PropTypes.object,
-		pubData: PropTypes.object,
-		// editorData: PropTypes.object,
+		atomData: PropTypes.object,
 		loginData: PropTypes.object,
-		appData: PropTypes.object,
-
 		slug: PropTypes.string,
 		pathname: PropTypes.string,
 		query: PropTypes.object,
@@ -38,130 +34,136 @@ const Discussions = React.createClass({
 		dispatch: PropTypes.func,
 
 	},
+
 	getInitialState() {
 		return {
-			showMediaLibrary: false,
-			assetLibraryCodeMirrorID: undefined,
+			replyToID: undefined,
+			rootReply: undefined,
 		};
 	},
 
-	componentWillReceiveProps(nextProps) {
-		const hasHighlight = (this.props.loginData.get('addedHighlight') === undefined && nextProps.loginData.get('addedHighlight'));
+	componentWillMount() {
+		const atomData = safeGetInToJS(this.props.atomData, ['atomData']) || [];
+		const discussionsData = safeGetInToJS(this.props.atomData, ['discussionsData']) || [];
+		const rootReply = discussionsData.length ? discussionsData[0].linkData.metadata.rootReply : atomData._id;
 
-		if (this.props.loginData.get('addedHighlight') === undefined && nextProps.loginData.get('addedHighlight')) {
-			const assetObject = nextProps.loginData.get('addedHighlight').toJS();
-
-			const cmInstances = document.querySelectorAll('.CodeMirror');
-			for (const instance of cmInstances) {
-				const cm = instance.CodeMirror;
-				const currentSelection = cm.getCursor();
-				const inlineObject = {pluginType: 'highlight', source: {...assetObject.assetData, ...{_id: assetObject._id} }};
-				cm.replaceRange('[[' + JSON.stringify(inlineObject) + ']] ', {line: currentSelection.line, ch: currentSelection.ch});
-			}
-		}
-	},
-
-	addDiscussion: function(discussionObject, activeSaveID) {
-		if (!this.props.loginData.get('loggedIn')) {
-			return this.props.dispatch(toggleVisibility());
-		}
-
-		if (!discussionObject.markdown) { return null; }
-
-		const pathname = this.props.pathname;
-		if (pathname.substring(pathname.length - 6, pathname.length) === '/draft') {
-			// We are commenting from the draft, so mark it so.
-			discussionObject.version = 0;
-		} else {
-			discussionObject.version = this.props.query.version !== undefined && this.props.query.version > 0 && this.props.query.version < (this.props.pubData.getIn(['pubData', 'history']).size - 1) ? this.props.query.version : this.props.pubData.getIn(['pubData', 'history']).size;
-		}
-		discussionObject.pub = this.props.pubData.getIn(['pubData', '_id']);
-		discussionObject.sourceJournal = this.props.appData.getIn(['journalData', '_id']);
-		this.props.dispatch(addDiscussion(discussionObject, activeSaveID));
-	},
-
-	discussionVoteSubmit: function(type, discussionID, userYay, userNay) {
-		if (!this.props.loginData.get('loggedIn')) {
-			return this.props.dispatch(toggleVisibility());
-		}
-		this.props.dispatch(discussionVoteSubmit(type, discussionID, userYay, userNay));
-	},
-
-	filterDiscussions: function(discussionsData) {
-		function findDiscussionRoot(discussions, searchID) {
-			for (let index = 0; index < discussions.length; index++) {
-				if (discussions[index]._id === searchID) {
-					return discussions[index];
-				} else if (discussions[index].children && discussions[index].children.length) {
-					const foundChild = findDiscussionRoot(discussions[index].children, searchID);
-					if (foundChild) {
-						return foundChild;
-					}
-				}
-			}
-		}
-
-		const output = [findDiscussionRoot(discussionsData, this.props.metaID)];
-		return output;
-	},
-
-	archiveDiscussion: function(objectID) {
-		this.props.dispatch(archiveDiscussion(objectID));
-	},
-
-	getHotness: function(discussion) {
-		const yays = (discussion.yays) ? discussion.yays : 0;
-		const nays = (discussion.nays) ? discussion.nays : 0;
-		const timestamp = (discussion.postDate) ? new Date(discussion.postDate) : new Date(0);
-		return hotScore(yays, nays, timestamp);
-	},
-
-	toggleMediaLibrary: function(codeMirrorID) {
-		return ()=>{
-			if (!this.props.loginData.get('loggedIn')) {
-				return this.props.dispatch(toggleVisibility());
-			}
-			this.setState({
-				showMediaLibrary: !this.state.showMediaLibrary,
-				assetLibraryCodeMirrorID: codeMirrorID
-			});
-		};
-
-	},
-	closeMediaLibrary: function() {
 		this.setState({
-			showMediaLibrary: false,
-			assetLibraryCodeMirrorID: undefined,
+			replyToID: atomData._id,
+			rootReply: rootReply,
 		});
 	},
 
-	requestAssetUpload: function(assetType) {
-		return this.props.dispatch(waitForUpload(assetType));
+	componentWillReceiveProps(nextProps) {
+		const atomData = safeGetInToJS(nextProps.atomData, ['atomData']) || [];
+		const discussionsData = safeGetInToJS(nextProps.atomData, ['discussionsData']) || [];
+		const rootReply = discussionsData.length ? discussionsData[0].linkData.metadata.rootReply : atomData._id;
+
+		this.setState({
+			replyToID: atomData._id,
+			rootReply: rootReply,
+		});
 	},
 
-	render: function() {
-
-		let discussionsData = this.props.discussionsData.get('discussions') && this.props.discussionsData.get('discussions').toJS ? this.props.discussionsData.get('discussions').toJS() : [];
-		discussionsData = this.props.metaID ? this.filterDiscussions(discussionsData) : discussionsData;
-
-		const addDiscussionStatus = this.props.discussionsData.get('addDiscussionStatus');
-		// const newDiscussionData = this.props.discussionsData.get('newDiscussionData');
-		const activeSaveID = this.props.discussionsData.get('activeSaveID');
-		const isPubAuthor = this.props.pubData.getIn(['pubData', 'isAuthor']);
-		const isPublished = this.props.pubData.getIn(['pubData', 'isPublished']);
-
-		const userAssets = this.props.loginData.getIn(['userData', 'assets']) ? this.props.loginData.getIn(['userData', 'assets']).toJS() : [];
-
-		const sortedDiscussions = discussionsData.sort(function(aIndex, bIndex) {
-			const aScore = this.getHotness(aIndex);
-			const bScore = this.getHotness(bIndex);
-			if (aScore < bScore) {
-				return -1;
-			} else if (aScore > bScore) {
-				return 1;
+	componentDidMount() {
+		const prosemirror = require('prosemirror');
+		const {pubpubSetup} = require('components/AtomTypes/Document/proseEditor/pubpubSetup');
+		
+		const place = document.getElementById('reply-input');
+		if (!place) { return undefined; }
+		pm = new prosemirror.ProseMirror({
+			place: place,
+			schema: schema,
+			plugins: [pubpubSetup.config({menuBar: false, tooltipMenu: true})],
+			doc: null,
+			on: {
+				doubleClickOn: new StoppableSubscription,
 			}
-			return 0;
-		}.bind(this));
+		});
+
+		pm.on.doubleClickOn.add((pos, node, nodePos)=>{
+			if (node.type.name === 'embed') {
+				const done = (attrs)=> { 
+					pm.tr.setNodeType(nodePos, node.type, attrs).apply(); 
+				};
+				window.toggleMedia(pm, done, node);
+				return true;
+			}
+		});
+	},
+
+	addDiscussion: function(discussionObject, activeSaveID) {
+		// if (!this.props.loginData.get('loggedIn')) {
+		// 	return this.props.dispatch(toggleVisibility());
+		// }
+
+		// if (!discussionObject.markdown) { return null; }
+
+		// this.props.dispatch(addDiscussion(discussionObject, activeSaveID));
+	},
+
+	// discussionVoteSubmit: function(type, discussionID, userYay, userNay) {
+	// 	if (!this.props.loginData.get('loggedIn')) {
+	// 		return this.props.dispatch(toggleVisibility());
+	// 	}
+	// 	this.props.dispatch(discussionVoteSubmit(type, discussionID, userYay, userNay));
+	// },
+
+
+	// archiveDiscussion: function(objectID) {
+	// 	this.props.dispatch(archiveDiscussion(objectID));
+	// },
+
+	setReplyTo: function(replyToID) {
+		// rootReplyID is set in componentDidMount
+		this.setState({replyToID: replyToID});
+		setTimeout(()=> {
+			this.setState({});
+		}, 1);
+	},
+
+	clearReplyTo: function(replyToID) {
+		// rootReplyID is set in componentDidMount
+		this.setState({replyToID: undefined});
+		setTimeout(()=> {
+			this.setState({});
+		}, 1);
+	},
+
+	publishReply: function() {
+
+		const atomType = 'document';
+		const versionContent = {
+			docJSON: pm.doc.toJSON(),	
+			markdown: markdownSerializer.serialize(pm.doc),
+		};
+		
+		this.props.dispatch(createReplyDocument(atomType, versionContent, 'Reply', this.state.replyToID, this.state.rootReply));
+		pm.setDoc(markdownParser.parse(''));
+	},
+
+
+	render: function() {
+		const atomData = safeGetInToJS(this.props.atomData, ['atomData']) || [];
+		const discussionsData = safeGetInToJS(this.props.atomData, ['discussionsData']) || [];
+		const loggedIn = this.props.loginData && this.props.loginData.get('loggedIn');
+		const loginQuery = this.props.pathname && this.props.pathname !== '/' ? '?redirect=' + this.props.pathname : ''; // Query appended to login route. Used to redirect to a given page after succesful login.
+
+		let replyToData;
+		const tempArray = discussionsData.map((item)=> {
+			if (item.atomData._id === this.state.replyToID) {
+				replyToData = {...item};
+			}
+			return item;
+		});
+		tempArray.forEach(function(index) {
+			index.children = tempArray.filter((child)=> {
+				return (child.linkData.destination === index.atomData._id);
+			});
+			return index;
+		});
+		const topChildren = tempArray.filter((index)=> {
+			return index.linkData.destination === atomData._id;	
+		});
 
 		return (
 			<div style={styles.container}>
@@ -170,77 +172,56 @@ const Discussions = React.createClass({
 					'.pub-discussions-wrapper .p-block': {
 						padding: '0.5em 0em',
 					}
-				}} />
+				}} />				
+
+				{loggedIn && 
+					<div>
+				
+						<Media/>
+
+						<Sticky style={styles.replyWrapper} isActive={!!replyToData}>	
+							<div style={[styles.replyHeader, !replyToData && {display: 'none'}]}>
+									<div className={'showChildOnHover'} style={styles.replyToWrapper}>
+										Reply to: {replyToData && replyToData.authorsData[0].source.name}
+										<div className={'hoverChild'} style={styles.replyToPreview}>
+											<DiscussionItem discussionData={replyToData} index={'current-reply'} isPreview={true}/>
+										</div>
+									</div>
+								<div className={'button'} style={styles.replyButton} onClick={this.clearReplyTo}>Clear</div>
+							</div>
+
+							<div style={styles.replyBody}>
+								<div id={'reply-input'} className={'atom-reader atom-reply ProseMirror-quick-style'} style={styles.wsywigBlock}></div>
+							</div>
+
+							<div style={styles.replyFooter}>
+								<div style={styles.replyUserImageWrapper}>
+									<img style={styles.replyUserImage} src={'https://jake.pubpub.org/unsafe/50x50/' + this.props.loginData.getIn(['userData', 'image'])} />
+								</div>
+								<div style={styles.replyLicense} key={'discussionLicense'}>
+									<License text={'All discussions are licensed under a'} hover={true} />
+								</div>
+								<div className={'button'} style={styles.replyButton} onClick={this.publishReply}>Publish Reply</div>
+							</div>
+						</Sticky>
+
+						
+					</div>
+				}
+
+				{!loggedIn &&
+					<Sticky style={styles.replyWrapper} isActive={!!replyToData}>	
+						<Link to={'/login' + loginQuery} style={globalStyles.link}>
+							<div style={styles.loginMessage}>Login to post discussion</div>
+						</Link>
+					</Sticky>
+				}
+				
 
 				<div>
-					<div className="modal-splash" onClick={this.closeMediaLibrary} style={[styles.modalSplash, this.state.showMediaLibrary && styles.modalSplashActive]}></div>
-					<div style={[styles.assetLibraryWrapper, this.state.showMediaLibrary && styles.assetLibraryWrapperActive]}>
-						{this.state.showMediaLibrary
-							? <MediaLibrary
-								closeLibrary={this.closeMediaLibrary}
-								codeMirrorInstance={document.getElementById(this.state.assetLibraryCodeMirrorID).childNodes[0].CodeMirror} />
-							: null
-						}
-					</div>
-				</div>
-
-				<div id="pub-discussions-wrapper" className="pub-discussions-wrapper" style={styles.sectionWrapper}> {/* The classname pub-discussions-wrapper is used by selectionPlugin*/}
-					{this.props.pubData.getIn(['pubData', 'referrer', 'name'])
-						? <div>{this.props.pubData.getIn(['pubData', 'referrer', 'name'])} invites you to comment!</div>
-						: null
-					}
-
-					{this.props.metaID
-						? null
-						: <DiscussionsInput
-							addDiscussionHandler={this.addDiscussion}
-							addDiscussionStatus={addDiscussionStatus}
-							userThumbnail={this.props.loginData.getIn(['userData', 'thumbnail'])}
-							activeSaveID={activeSaveID}
-							saveID={'root'}
-							isCollaborator={this.props.pubData.getIn(['pubData', 'isCollaborator'])}
-							parentIsPrivate={false}
-							isReply={false}
-							codeMirrorID={'rootCommentInput'}
-							isPublished={isPublished}
-							userAssets={userAssets}
-							toggleMediaLibrary={this.toggleMediaLibrary}
-							requestAssetUpload={this.requestAssetUpload}
-							/>
-					}
-
-					{
-						sortedDiscussions.map((discussion)=>{
-							// console.log(discussion);
-							return (discussion
-								? <DiscussionsItem
-									key={discussion._id}
-									slug={this.props.slug}
-									discussionItem={discussion}
-									isPubAuthor={isPubAuthor}
-
-									isCollaborator={this.props.pubData.getIn(['pubData', 'isCollaborator'])}
-									activeSaveID={activeSaveID}
-									addDiscussionHandler={this.addDiscussion}
-									addDiscussionStatus={addDiscussionStatus}
-									userThumbnail={this.props.loginData.getIn(['userData', 'thumbnail'])}
-									handleVoteSubmit={this.discussionVoteSubmit}
-									handleArchive={this.archiveDiscussion}
-									isPublished={isPublished}
-									toggleMediaLibrary={this.toggleMediaLibrary}/>
-
-								: <div style={styles.emptyContainer}>No Discussions Found</div>
-							);
-						})
-					}
-
-					{(discussionsData.length === 0) ?
-						<div style={styles.emptyComments}>
-							<div><FormattedMessage id="discussion.blank1" defaultMessage="There are no comments here yet."/></div>
-							<div><FormattedMessage id="discussion.blank2" defaultMessage="Be the first to start the discussion!"/></div>
-						</div>
-					: null }
-
+					{topChildren.map((discussion, index)=> {
+						return <DiscussionItem discussionData={discussion} setReplyTo={this.setReplyTo} index={discussion.linkData._id} key={'discussion-' + index}/>;
+					})}
 				</div>
 
 			</div>
@@ -250,11 +231,9 @@ const Discussions = React.createClass({
 
 export default connect( state => {
 	return {
-		appData: state.app,
-		pubData: state.pub,
-		loginData: state.login,
+		atomData: state.atom,
 		discussionsData: state.discussions,
-
+		loginData: state.login,
 		slug: state.router.params.slug,
 		pathname: state.router.location.pathname,
 		query: state.router.location.query,
@@ -262,55 +241,152 @@ export default connect( state => {
 })( Radium(Discussions) );
 
 styles = {
+	replyWrapper: {
+		// backgroundColor: 'blue',
+		margin: '0em 0em 2em',
+		boxShadow: '0px 1px 3px 1px #BBBDC0',
+		backgroundColor: 'white',
+		zIndex: 2,
+	},
+	replyHeader: {
+		// backgroundColor: 'red',
+		display: 'table',
+		fontSize: '0.85em',
+		borderBottom: '1px solid #BBBDC0',
+		color: '#808284',
+	},
+	replyToWrapper: {
+		display: 'table-cell',
+		position: 'relative',
+		verticalAlign: 'middle',
+		padding: '.5em',
+	},
+	replyButton: {
+		display: 'table-cell',
+		width: '1%',
+		whiteSpace: 'nowrap',
+		verticalAlign: 'middle',
+		padding: '0em 1em',
+		borderWidth: '0px 0px 0px 1px',
+		borderColor: '#BBBDC0',
+	},
+	replyBody: {
+		// backgroundColor: 'green',
+		maxHeight: '70vh',
+		overflow: 'hidden',
+		overflowY: 'scroll',
+	},
+	replyFooter: {
+		display: 'table',
+		borderTop: '1px solid #BBBDC0',
+		fontSize: '0.85em',
+	},
+	replyUserImageWrapper: {
+		display: 'table-cell',
+		width: '1%',
+		padding: '0.25em .5em',
+		// backgroundColor: 'magenta',
+		verticalAlign: 'middle',
+	},
+	replyUserImage: {
+		width: '25px',
+		display: 'block',
+	},
+	replyLicense: {
+		display: 'table-cell',
+		// backgroundColor: 'grey',
+		verticalAlign: 'middle',
+	},
+	loginMessage: {
+		textAlign: 'center',
+		color: '#808284',
+		padding: '1em 0em',
+	},
 	container: {
-		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
-			padding: '0px 10px',
-		},
+		paddingTop: '1em',
 	},
-	emptyComments: {
-		margin: '40% 6% 0px 3%',
-		fontSize: '1.2em',
-		textAlign: 'center',
-		height: '40vh',
+	// license: {
+	// 	float: 'right',
+	// 	lineHeight: '26px',
+	// 	opacity: '0.4',
+	// 	paddingRight: '4px',
+	// },
+	wsywigBlock: {
+		width: '100%',
+		minHeight: '4em',
+		// backgroundColor: 'white',
+		// margin: '2em auto',
+		// boxShadow: '0px 1px 3px 1px #BBBDC0',
 	},
-	emptyContainer: {
-		margin: '10px auto',
-		fontFamily: 'Courier',
-		textAlign: 'center',
-	},
-	sectionWrapper: {
-		transition: '.5s ease-in-out transform',
-		margin: '10px 0px 30px 0px',
-	},
-	modalSplash: {
-		opacity: 0,
-		pointerEvents: 'none',
-		width: '100vw',
-		height: '100vh',
-		position: 'fixed',
-		top: 0,
-		left: 0,
-		backgroundColor: 'rgba(255,255,255,0.7)',
-		transition: '.1s linear opacity',
-		zIndex: 100,
-	},
-	modalSplashActive: {
-		opacity: 1,
-		pointerEvents: 'auto',
-	},
-	assetLibraryWrapper: {
-		...globalStyles.largeModal,
-		zIndex: 150,
-		fontFamily: 'Lato',
+	// discussionHeader: {
+	// 	display: 'table',
+	// 	position: 'relative',
+	// 	left: '-.4em',
+	// 	width: 'calc(100% + .4em)'
+	// },
+	// headerVotes: {
+	// 	display: 'table-cell',
+	// 	width: '1%',
+	// 	textAlign: 'center',
+	// 	verticalAlign: 'top',
+	// },
+	// headerVote: {
+	// 	padding: '0em .2em',
+	// 	height: '.6em',
+	// 	fontFamily: 'Courier',
+	// 	fontSize: '2em',
+	// 	lineHeight: '1.1em',
+	// 	cursor: 'pointer',
+	// 	color: '#808284',
+	// 	overflow: 'hidden',
+	// },
+	// headerDownVote: {
+	// 	transform: 'rotate(180deg)',
+	// },
+	// headerDetails: {
+	// 	display: 'table-cell',
+	// 	verticalAlign: 'top',
+	// 	fontSize: '0.85em',
+	// 	color: '#58585B',
+	// },
+	// headerAuthor: {
+	// 	display: 'table',
 
-		opacity: 0,
-		pointerEvents: 'none',
-		transform: 'scale(0.9)',
-		transition: '.1s linear opacity, .1s linear transform',
+	// },
+	// authorImage: {
+	// 	display: 'table-cell',
+	// 	width: '1%',
+	// 	padding: '0em .5em 0em 0em',
+	// 	verticalAlign: 'top',
+	// },
+	// authorDetails: {
+	// 	display: 'table-cell',
+	// 	verticalAlign: 'top',
+	// },
+	// discussionContent: {
+	// 	// padding: '1em 0em',
+	// },
+	// discussionFooter: {
+	// 	borderBottom: '1px solid #BBBDC0',
+	// 	marginBottom: '1em',
+	// 	paddingBottom: '1em',
+	// },
+	// discussionFooterItem: {
+	// 	padding: '0em 1em 0em 0em',
+	// 	fontSize: '0.75em',
+	// 	cursor: 'pointer',
+	// 	color: '#58585B',
+	// },
+	// replyToWrapper: {
+	// 	position: 'relative',
+	// 	// margin: '1em 0em -1em 0em',
+	// },
+	replyToPreview: {
+		position: 'absolute',
+		backgroundColor: 'white',
+		padding: '1em',
+		boxShadow: '0px 1px 3px #58585B',
+		zIndex: '5',
 	},
-	assetLibraryWrapperActive: {
-		opacity: 1,
-		pointerEvents: 'auto',
-		transform: 'scale(1.0)',
-	},
+
 };

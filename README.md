@@ -23,6 +23,8 @@ npm run dev
 
 PubPub is built with react, redux, node, express, and mongoose. For great react/redux testing, we use [https://github.com/gaearon/redux-devtools](Redux devtools). We suggest installing the [https://chrome.google.com/webstore/detail/redux-devtools/lmhkpmbekcpmknklioeibfkpmmfibljd](chrome extension) for a less popup-y dev environment.
 
+For document collaboration to work the [https://github.com/pubpub/collab] (PubPub Collab) server needs to be running and the url and secret need to be added to `/api/config.js`.
+
 ## Building and Running Production Server
 
 ```
@@ -58,14 +60,13 @@ We welcome contributions to PubPub in the form of feedback, bug reports, feature
 [CONTRIBUTING.md](./CONTRIBUTING.md) documents contributing guidelines.
 
 # Testing
-Tests run using Mocha and Karma. All test files follow the pattern `filename.test.js`.
+Tests run using Mocha. All test files follow the pattern `filename.test.js`.
 
 To run tests:
 
 ```
 npm install
 npm run test        # test client and server code with mocha
-npm run test-karma  # test client code with karma (real browsers)
 ```
 
 [More on tests](/src/tests)

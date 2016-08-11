@@ -1,21 +1,108 @@
 import app from '../api';
-import {User, Pub, Journal, Notification} from '../models';
-
-// import {cloudinary} from '../services/cloudinary';
-import {sendInviteEmail} from '../services/emails';
+import {User, Notification, Link, Atom, Journal} from '../models';
 
 export function getUser(req, res) {
+	const reqUsername = req.user ? req.user.username : undefined;
 	const userID = req.user ? req.user._id : undefined;
 
-	User.getUser(req.query.username, userID, (err, userData)=>{
-
-		if (err) {
-			console.log(err);
-			return res.status(500).json(err);
+	let userData = {};
+	User.findOne({username: req.query.username}).lean().exec()
+	.then(function(userResult) {
+		if (!userResult) {
+			throw new Error('User does not exist');
 		}
+		userData = userResult;
+		delete userData.firstName;
+		delete userData.lastName;
+		delete userData.yays;
+		delete userData.nays;
+		delete userData.settings;
+		delete userData.registerDate;
+		delete userData.following;
+		delete userData.followers;
+		delete userData.sendNotificationDigest;
+		delete userData.email;
+		return Link.find({source: userData._id, type: {$in: ['author', 'editor', 'reader']}}).lean().exec();
+	})
+	.then(function(linksResult) {
+		const atomIDs = linksResult.map((link)=>{
+			return link.destination;
+		});
+		return Atom.find({_id: {$in: atomIDs}}).lean().exec();
+	})
+	.then(function(atomsResult) {
+		const findFollowingLink = Link.findOne({source: userID, destination: userData._id, type: 'followsUser', inactive: {$ne: true}}).exec();
+		return [atomsResult, findFollowingLink];
+	})
+	.spread(function(atomsResult, followingLink) {
+		if (followingLink) {
+			userData.isFollowing = true;
+		}
+		userData.atoms = atomsResult.filter((atom)=> {
+			return atom.isPublished || (userData.username === reqUsername);
+		});
+		return Link.find({source: userData._id, type: 'admin', inactive: {$ne: true}}).populate({
+			path: 'destination',
+			model: Journal,
+			select: 'journalName slug icon description',
+		}).exec();
+	})
+	.then(function(journalsResult) {
+		userData.journals = journalsResult;
 
+		return Link.find({destination: userData._id, type: 'followsUser', inactive: {$ne: true}}).populate({
+			path: 'source',
+			model: User,
+			select: 'username name bio image slug',
+		}).exec();
+	}).then(function(followersResult) {
+		userData.followers = followersResult;
+
+		const getFollowedUsers = new Promise(function(resolve) {
+			const query = Link.find({source: userData._id, type: 'followsUser', inactive: {$ne: true}}).populate({
+				path: 'destination',
+				model: User,
+				select: 'username name bio image slug',
+			}).exec();
+			resolve(query);
+		});
+
+		const getFollowedJournals = new Promise(function(resolve) {
+			const query = Link.find({source: userData._id, type: 'followsJournal', inactive: {$ne: true}}).populate({
+				path: 'destination',
+				model: Journal,
+				select: 'journalName icon slug description',
+			}).exec();
+			resolve(query);
+		});
+
+		const getFollowedAtoms = new Promise(function(resolve) {
+			const query = Link.find({source: userData._id, type: 'followsAtom', inactive: {$ne: true}}).populate({
+				path: 'destination',
+				model: Atom,
+				select: 'title previewImage slug description',
+			}).exec();
+			resolve(query);
+		});
+
+		const tasks = [
+			getFollowedAtoms,
+			getFollowedJournals,
+			getFollowedUsers
+		];
+		return Promise.all(tasks);
+
+	}).then(function(taskData) {
+		userData.following = taskData[0].concat(taskData[1]).concat(taskData[2]);
 		return res.status(201).json(userData);
-
+	})
+	.catch(function(error) {
+		if (error.message === 'User does not exist') {
+			console.log(error.message);
+			return res.status(404).json('404 Not Found');
+		}
+		console.log('error', error);
+		return res.status(500).json(error);
 	});
 
 }
@@ -91,35 +178,24 @@ export function follow(req, res) {
 	if (!req.user) { return res.status(403).json('Not authorized for this action'); }
 
 	const userID = req.user._id;
+	const type = req.body.type;
+	const followID = req.body.followID;
+	const now = new Date().getTime();
 
-	switch (req.body.type) {
-	case 'pubs':
-		User.update({ _id: userID }, { $addToSet: { 'following.pubs': req.body.followedID} }, function(err, result) {if (err) return console.log(err);});
-		Pub.update({ _id: req.body.followedID }, { $addToSet: { followers: userID} }, function(err, result) {if (err) return console.log(err);});
-		Pub.findOne({_id: req.body.followedID}, {authors: 1}).lean().exec(function(err, pub) {
-			if (pub) {
-				pub.authors.map((author)=>{
-					Notification.createNotification('follows/followedPub', req.body.host, userID, author, pub._id);
-				});
-			}
-		});
-		return res.status(201).json(req.body);
-
-	case 'users':
-		User.update({ _id: userID }, { $addToSet: { 'following.users': req.body.followedID} }, function(err, result) {if (err) return console.log(err);});
-		User.update({ _id: req.body.followedID }, { $addToSet: { followers: userID} }, function(err, result) {if (err) return console.log(err);});
-		Notification.createNotification('follows/followedYou', req.body.host, userID, req.body.followedID);
-		return res.status(201).json(req.body);
-
-	case 'journals':
-		User.update({ _id: userID }, { $addToSet: { 'following.journals': req.body.followedID} }, function(err, result) {if (err) return console.log(err);});
-		Journal.update({ _id: req.body.followedID }, { $addToSet: { followers: userID} }, function(err, result) {if (err) return console.log(err);});
-		return res.status(201).json(req.body);
-
-	default:
-		return res.status(500).json('Invalid type');
-	}
-
+	Link.findOne({source: userID, destination: followID, type: type, inactive: {$ne: true}}).exec()
+	.then(function(existingLink) {
+		if (existingLink) {			
+			throw new Error('Following Link already exists');
+		}
+		return Link.createLink(type, userID, followID, userID, now);
+	})
+	.then(function(createdLink) {
+		return res.status(201).json(createdLink);
+	})
+	.catch(function(error) {
+		console.log('Error Creating Follow link', error);
+		return res.status(500).json(error);
+	});
 }
 app.post('/follow', follow);
 
@@ -127,68 +203,26 @@ export function unfollow(req, res) {
 	if (!req.user) { return res.status(403).json('Not authorized for this action'); }
 
 	const userID = req.user._id;
+	const type = req.body.type;
+	const followID = req.body.followID;
+	const now = new Date().getTime();
 
-	switch (req.body.type) {
-	case 'pubs':
-		User.update({ _id: userID }, { $pull: { 'following.pubs': req.body.followedID} }, function(err, result) {if (err) return console.log(err);});
-		Pub.update({ _id: req.body.followedID }, { $pull: { followers: userID} }, function(err, result) {if (err) return console.log(err);});
-		return res.status(201).json(req.body);
-
-	case 'users':
-		User.update({ _id: userID }, { $pull: { 'following.users': req.body.followedID} }, function(err, result) {if (err) return console.log(err);});
-		User.update({ _id: req.body.followedID }, { $pull: { followers: userID} }, function(err, result) {if (err) return console.log(err);});
-		return res.status(201).json(req.body);
-
-	case 'journals':
-		User.update({ _id: userID }, { $pull: { 'following.journals': req.body.followedID} }, function(err, result) {if (err) return console.log(err);});
-		Journal.update({ _id: req.body.followedID }, { $pull: { followers: userID} }, function(err, result) {if (err) return console.log(err);});
-		return res.status(201).json(req.body);
-
-	default:
-		return res.status(500).json('Invalid type');
-	}
+	Link.findOne({source: userID, destination: followID, type: type, inactive: {$ne: true}}).exec()
+	.then(function(existingLink) {
+		if (!existingLink) {			
+			throw new Error('No Following Link exists');
+		}
+		return Link.setLinkInactive(type, userID, followID, userID, now, 'unfollowed');
+	})
+	.then(function(updatedLink) {
+		return res.status(201).json(updatedLink);
+	})
+	.catch(function(error) {
+		console.log('Error Creating Follow link', error);
+		return res.status(500).json(error);
+	});
 }
 app.post('/unfollow', unfollow);
-
-export function inviteReviewers(req, res) {
-	const inviteData = req.body.inviteData;
-	const pubId = req.body.pubID;
-	Pub.getSimplePub(pubId, function(err, pub) {
-
-		if (err) {res.status(500); }
-		const senderName = req.user ? req.user.name : 'An anonymous user';
-		const pubName = pub.title;
-
-
-		Journal.findByHost(req.query.host, function(errJournalFind, journ) {
-
-			const journalName = journ ? journ.journalName : 'PubPub';
-			let journalURL = '';
-			if (journ) {
-				journalURL = journ.customDomain ? 'http://' + journ.customDomain : 'http://' + journ.subdomain + '.pubpub.org';
-			} else {
-				journalURL = 'http://www.pubpub.org';
-			}
-
-			const journalIntroduction = journ ? journalName + ' is a journal built on PubPub:' : 'PubPub is';
-
-			const pubURL = journalURL + '/pub/' + pub.slug;
-
-			for (const recipient of inviteData) {
-				const recipientEmail = recipient.email;
-
-				sendInviteEmail(senderName, pubName, pubURL, journalName, journalURL, journalIntroduction, recipientEmail, function(error, email) {
-					if (err) { console.log(error);	}
-					// console.log(email);
-				});
-			}
-			res.status(201).json({});
-		});
-
-	});
-
-}
-app.post('/inviteReviewers', inviteReviewers);
 
 export function setNotificationsRead(req, res) {
 	if (!req.user) {

@@ -5,65 +5,58 @@ import {ensureImmutable} from 'reducers';
 // Load Actions
 /*--------*/
 import {
-	CREATE_JOURNAL_LOAD,
-	CREATE_JOURNAL_SUCCESS,
-	CREATE_JOURNAL_FAIL,
+	GET_JOURNAL_LOAD,
+	GET_JOURNAL_SUCCESS,
+	GET_JOURNAL_FAIL,
 
-	LOAD_JOURNAL,
-	LOAD_JOURNAL_SUCCESS,
-	LOAD_JOURNAL_FAIL,
+	UPDATE_JOURNAL_LOAD,
+	UPDATE_JOURNAL_SUCCESS,
+	UPDATE_JOURNAL_FAIL,
 
-	SAVE_JOURNAL,
-	SAVE_JOURNAL_SUCCESS,
-	SAVE_JOURNAL_FAIL,
-
-	CREATE_COLLECTION,
+	CREATE_COLLECTION_LOAD,
 	CREATE_COLLECTION_SUCCESS,
 	CREATE_COLLECTION_FAIL,
 
-	SAVE_COLLECTION,
-	SAVE_COLLECTION_SUCCESS,
-	SAVE_COLLECTION_FAIL,
+	UPDATE_COLLECTION_LOAD,
+	UPDATE_COLLECTION_SUCCESS,
+	UPDATE_COLLECTION_FAIL,
 
-	SUBMIT_PUB_TO_JOURNAL,
-	SUBMIT_PUB_TO_JOURNAL_SUCCESS,
-	SUBMIT_PUB_TO_JOURNAL_FAIL,
+	DELETE_COLLECTION_LOAD,
+	DELETE_COLLECTION_SUCCESS,
+	DELETE_COLLECTION_FAIL,
 
-	CLEAR_COLLECTION_REDIRECT,
+	FEATURE_ATOM_LOAD,
+	FEATURE_ATOM_SUCCESS,
+	FEATURE_ATOM_FAIL,
 
+	REJECT_ATOM_LOAD,
+	REJECT_ATOM_SUCCESS,
+	REJECT_ATOM_FAIL,
+
+	ADD_ADMIN_LOAD,
+	ADD_ADMIN_SUCCESS,
+	ADD_ADMIN_FAIL,
+
+	DELETE_ADMIN_LOAD,
+	DELETE_ADMIN_SUCCESS,
+	DELETE_ADMIN_FAIL,
 } from './actions';
-
-import {
-	LOAD_APP_AND_LOGIN_SUCCESS,
-} from 'containers/App/actions';
-
-import {
-	LOGIN_LOAD_SUCCESS,
-	LOGOUT_LOAD_SUCCESS,
-} from 'containers/Login/actions';
 
 /*--------*/
 // Initialize Default State
 /*--------*/
 export const defaultState = Immutable.Map({
-	createJournalData: {
-		journalCreated: false,
-		status: 'loaded',
-		error: null,
-		subdomain: null,
-	},
-	journalData: {
-		collections: [],
-	},
-	status: 'loading',
+	journalData: {},
+	submittedData: [],
+	featuredData: [],
+	atomsData: [],
+	adminsData: [],
+	followersData: [],
+	loading: false,
 	error: null,
-	// baseSubdomain: undefined, // Will be null if on pubpub and defined if on a journal
-	journalSaving: false,
-	journalSavingError: null,
-	createCollectionStatus: null,
-	createCollectionSlug: null,
-	saveCollectionStatus: null,
-	randomSlug: null,
+
+	saveLoading: false,
+	saveError: null,
 
 });
 
@@ -74,218 +67,209 @@ export const defaultState = Immutable.Map({
 // state. They are pure functions. We use Immutable to enforce this.
 /*--------*/
 
-function createJournalLoad(state) {
-	return state.mergeIn(['createJournalData'], {
-		status: 'loading',
+
+// Get Journal Functions
+// ---------------------
+function getJournalLoad(state) {
+	return state.set('loading', true);
+}
+
+function getJournalSuccess(state, result) {
+	return state.merge({
+		journalData: result.journalData,
+		submittedData: result.submittedData,
+		featuredData: result.featuredData,
+		atomsData: result.atomsData,
+		adminsData: result.adminsData,
+		followersData: result.followersData,
+		loading: false,
 		error: null,
-		subdomain: null,
 	});
 }
 
-function createJournalSuccess(state, result) {
-
-	return state.mergeIn(['createJournalData'], {
-		status: 'loaded',
-		error: null,
-		journalCreated: true,
-		subdomain: result,
-	});
-}
-
-function createJournalFail(state, error) {
-	return state.mergeIn(['createJournalData'], {
-		status: 'loaded',
+function getJournalFail(state, error) {
+	return state.merge({
+		loading: false,
 		error: error,
 	});
 }
 
-function clearCollectionRedirect(state) {
-	return state.merge({
-		createCollectionStatus: null,
-		createCollectionSlug: null,
-	});
+
+// Update Journal Functions
+// ---------------------
+function updateJournalLoad(state) {
+	return state.set('saveLoading', true);
 }
 
-function saveJournal(state) {
-	return state.set('journalSaving', true);
-}
-
-function saveJournalSuccess(state, journalData) {
-	return state.merge({
-		journalSaving: false,
-		journalSavingError: null,
-		journalData
-	});
-}
-
-function saveJournalFail(state, error) {
-	return state.merge({
-		journalSaving: false,
-		journalSavingError: error,
-	});
-}
-
-function createCollection(state) {
-	return state.set('createCollectionStatus', 'creating');
-}
-
-function createCollectionSuccess(state, result, newSlug) {
-	return state.merge({
-		createCollectionStatus: 'created',
-		createCollectionSlug: newSlug,
-		journalData: {
-			...state.get('journalData').toJS(),
-			collections: result,
-		},
-	});
-}
-
-function createCollectionFail(state, error) {
-	console.log('createCollection Failed: ', error);
-	return state.set('createCollectionStatus', 'failed');
-}
-
-function saveCollection(state) {
-	return state.set('saveCollectionStatus', 'saving');
-}
-
-function saveCollectionSuccess(state, result) {
-	return state.merge({
-		saveCollectionStatus: 'saved',
-		journalData: {
-			...state.get('journalData').toJS(),
-			collections: result,
-		},
-	});
-}
-
-function saveCollectionFail(state, error) {
-	console.log('createCollection Failed: ', error);
-	return state.set('saveCollectionStatus', 'saved');
-}
-
-function submitPubToJournal(state) {
-	return state;
-}
-
-function submitPubToJournalSuccess(state, result) {
-	if (result._id !== state.getIn(['journalData', '_id'])) {
-		return state;
-	}
-
-	return state.merge({
-		journalData: result
-	});
-}
-
-function submitPubToJournalFail(state, error) {
-	console.log('submitPubToJournalFail Failed: ', error);
-	return state;
-}
-
-function loadJournal(state) {
-	return state.set('status', 'loading');
-}
-
-function loadJournalSuccess(state, journalData) {
-	return state.merge({
-		status: 'loaded',
-		error: null,
-		journalData
-	});
-}
-
-function loadJournalFail(state, error) {
-	return state.merge({
-		status: 'loaded',
-		error: error,
-	});
-}
-
-function loadAppSuccess(state, journalData) {
-	// console.log('in success', journalData);
-	return state.merge({
-		status: 'loaded',
-		error: null,
-		journalData
-	});
-}
-
-function loginLoad(state, result) {
+function updateJournalSuccess(state, result) {
 	return state.merge({
 		journalData: {
-			...state.get('journalData').toJS(),
-			isAdmin: result.isAdminToJournal,
+			...result,
+			isAdmin: state.getIn(['journalData', 'isAdmin']),
 		},
+		saveLoading: false,
+		saveError: null,
 	});
 }
 
-function logoutLoad(state) {
+function updateJournalFail(state, error) {
 	return state.merge({
-		journalData: {
-			...state.get('journalData').toJS(),
-			isAdmin: false,
-		},
+		saveLoading: false,
+		saveError: error,
 	});
 }
+
+// Create Collection Functions
+// ---------------------
+function createCollectionSuccess(state, result) {
+	const newCollections = [result].concat(state.getIn(['journalData', 'collections']).toJS());
+	return state.mergeIn(['journalData', 'collections'], newCollections);
+}
+
+// Update Collection Functions
+// ---------------------
+function updateCollectionSuccess(state, result) {
+	const newCollections = state.getIn(['journalData', 'collections']).map((item)=>{
+		if (item.get('_id') === result._id) { return ensureImmutable(result); }
+		return item;
+	});
+	return state.setIn(['journalData', 'collections'], newCollections);
+}
+
+
+// Delete Collection Functions
+// ---------------------
+function deleteCollectionSuccess(state, result) {
+	const newCollections = state.getIn(['journalData', 'collections']).filter((item)=>{
+		return item.get('_id') !== result;
+	});
+	return state.setIn(['journalData', 'collections'], newCollections);
+}
+
+
+// Feature Atom Functions
+// ---------------------
+function featureAtomSuccess(state, result) {
+	const newSubmittedData = state.getIn(['submittedData']).map((item)=>{
+		if (item.get('_id') === result._id) {
+			return item.merge({
+				inactive: result.inactive,
+				inactiveDate: result.inactiveDate,
+				inactiveBy: result.inactiveBy,
+				inactiveNote: result.inactiveNote,
+			});
+		}
+		return item;
+	});
+	return state.set('submittedData', newSubmittedData);
+}
+
+
+// Reject Atom Functions
+// ---------------------
+function rejectAtomSuccess(state, result) {
+	const newSubmittedData = state.getIn(['submittedData']).map((item)=>{
+		if (item.get('_id') === result._id) {
+			return item.merge({
+				inactive: result.inactive,
+				inactiveDate: result.inactiveDate,
+				inactiveBy: result.inactiveBy,
+				inactiveNote: result.inactiveNote,
+			});
+		}
+		return item;
+	});
+	return state.set('submittedData', newSubmittedData);
+}
+
+// Add Admin Functions
+// ---------------------
+function addAdminSuccess(state, result) {
+	// Add the admin the the list
+	return state.merge({
+		adminsData: state.get('adminsData').push(ensureImmutable(result))
+	});
+}
+
+// Delete Admin Functions
+// ---------------------
+function deleteAdminSuccess(state, result) {
+	// Remove the admin the the list by ID
+	return state.merge({
+		adminsData: state.get('adminsData').filter((item)=> {
+			return item.get('_id') !== result._id;
+		})
+	});
+}
+
 /*--------*/
 // Bind actions to specific reducing functions.
 /*--------*/
 export default function loginReducer(state = defaultState, action) {
 	switch (action.type) {
+	case GET_JOURNAL_LOAD:
+		return getJournalLoad(state);
+	case GET_JOURNAL_SUCCESS:
+		return getJournalSuccess(state, action.result);
+	case GET_JOURNAL_FAIL:
+		return getJournalFail(state, action.error);
 
-	case CREATE_JOURNAL_LOAD:
-		return createJournalLoad(state);
-	case CREATE_JOURNAL_SUCCESS:
-		return createJournalSuccess(state, action.result);
-	case CREATE_JOURNAL_FAIL:
-		return createJournalFail(state, action.error);
+	case UPDATE_JOURNAL_LOAD:
+		return updateJournalLoad(state);
+	case UPDATE_JOURNAL_SUCCESS:
+		return updateJournalSuccess(state, action.result);
+	case UPDATE_JOURNAL_FAIL:
+		return updateJournalFail(state, action.error);
 
-	case LOAD_JOURNAL:
-		return loadJournal(state);
-	case LOAD_JOURNAL_SUCCESS:
-		return loadJournalSuccess(state, action.result);
-	case LOAD_JOURNAL_FAIL:
-		return loadJournalFail(state, action.error);
-
-	case SAVE_JOURNAL:
-		return saveJournal(state);
-	case SAVE_JOURNAL_SUCCESS:
-		return saveJournalSuccess(state, action.result);
-	case SAVE_JOURNAL_FAIL:
-		return saveJournalFail(state, action.error);
-
-	case CREATE_COLLECTION:
-		return createCollection(state);
+	case CREATE_COLLECTION_LOAD:
+		return state;
 	case CREATE_COLLECTION_SUCCESS:
-		return createCollectionSuccess(state, action.result, action.newCollectionSlug);
+		return createCollectionSuccess(state, action.result);
 	case CREATE_COLLECTION_FAIL:
-		return createCollectionFail(state, action.error);
+		return state;
 
-	case SAVE_COLLECTION:
-		return saveCollection(state);
-	case SAVE_COLLECTION_SUCCESS:
-		return saveCollectionSuccess(state, action.result);
-	case SAVE_COLLECTION_FAIL:
-		return saveCollectionFail(state, action.error);
+	case DELETE_COLLECTION_LOAD:
+		return state;
+	case DELETE_COLLECTION_SUCCESS:
+		return deleteCollectionSuccess(state, action.result);
+	case DELETE_COLLECTION_FAIL:
+		return state;
 
-	case SUBMIT_PUB_TO_JOURNAL:
-		return submitPubToJournal(state);
-	case SUBMIT_PUB_TO_JOURNAL_SUCCESS:
-		return submitPubToJournalSuccess(state, action.result);
-	case SUBMIT_PUB_TO_JOURNAL_FAIL:
-		return submitPubToJournalFail(state, action.error);
+	case UPDATE_COLLECTION_LOAD:
+		return state;
+	case UPDATE_COLLECTION_SUCCESS:
+		return updateCollectionSuccess(state, action.result);
+	case UPDATE_COLLECTION_FAIL:
+		return state;
 
-	case CLEAR_COLLECTION_REDIRECT:
-		return clearCollectionRedirect(state);
+	case FEATURE_ATOM_LOAD:
+		return state;
+	case FEATURE_ATOM_SUCCESS:
+		return featureAtomSuccess(state, action.result);
+	case FEATURE_ATOM_FAIL:
+		return state;
 
-	case LOAD_APP_AND_LOGIN_SUCCESS:
-		return loadAppSuccess(state, action.result.journalData);
+	case REJECT_ATOM_LOAD:
+		return state;
+	case REJECT_ATOM_SUCCESS:
+		return rejectAtomSuccess(state, action.result);
+	case REJECT_ATOM_FAIL:
+		return state;
 
-	case LOGIN_LOAD_SUCCESS:
-		return loginLoad(state, action.result);
-	case LOGOUT_LOAD_SUCCESS:
-		return logoutLoad(state);
+	case ADD_ADMIN_LOAD:
+		return state;
+	case ADD_ADMIN_SUCCESS:
+		return addAdminSuccess(state, action.result);
+	case ADD_ADMIN_FAIL:
+		return state;
+
+	case DELETE_ADMIN_LOAD:
+		return state;
+	case DELETE_ADMIN_SUCCESS:
+		return deleteAdminSuccess(state, action.result);
+	case DELETE_ADMIN_FAIL:
+		return state;
+
 	default:
 		return ensureImmutable(state);
 	}

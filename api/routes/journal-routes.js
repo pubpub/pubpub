@@ -1,314 +1,321 @@
 const app = require('../api');
-const _ = require('underscore');
 const Journal = require('../models').Journal;
+const Link = require('../models').Link;
+const Atom = require('../models').Atom;
+// const Tag = require('../models').Tag;
 const User = require('../models').User;
-const Pub = require('../models').Pub;
-// import {cloudinary} from '../services/cloudinary';
-const Firebase = require('firebase');
-import {fireBaseURL, generateAuthToken} from '../services/firebase';
-import {featurePub} from '../services/recommendations';
+const mongoose = require('mongoose');
 
 export function createJournal(req, res) {
-	if (!req.user) {
-		return res.status(500).json('Not logged in');
-	}
+	if (!req.user) { return res.status(403).json('Not Logged In'); }
 
-	Journal.isUnique(req.body.subdomain, (err, result)=>{
-		if (!result) { return res.status(500).json('Subdomain is not Unique!'); }
+	const newJournalData = req.body.newJournalData || {};
+	const now = new Date().getTime();
+	const userID = req.user._id;
 
-		const journal = new Journal({
-			journalName: req.body.journalName,
-			subdomain: req.body.subdomain,
-			createDate: new Date().getTime(),
-			admins: [req.user._id],
-			collections: [],
-			pubsFeatured: [],
-			pubsSubmitted: [],
-			design: {
-				headerBackground: '#373737',
-				headerText: '#E0E0E0',
-				headerHover: '#FFF',
-				landingHeaderBackground: '#FFF',
-				landingHeaderText: '#373737',
-				landingHeaderHover: '#000',
-			},
-		});
-
-		journal.save(function(errSavingJournal, savedJournal) {
-			if (err) { return res.status(500).json(err); }
-			User.update({ _id: req.user._id }, { $addToSet: { adminJournals: savedJournal._id} }, function(adminAddErr, addAdminResult) {if (adminAddErr) return res.status(500).json('Failed to add as admin'); });
-
-			const journalLandingSlug = savedJournal.subdomain + '-landingpage'; // Guaranteed unique because we don't allow pubs to be created ending with 'landingpage' and subdomain is unique
-			const journalLandingTitle = savedJournal.journalName;
-			Pub.createPub(journalLandingSlug, journalLandingTitle, savedJournal._id, true, function(createErr, savedPub) {
-
-				const ref = new Firebase(fireBaseURL + journalLandingSlug + '/editorData' );
-				ref.authWithCustomToken(generateAuthToken(), ()=>{
-					const newEditorData = {
-						collaborators: {},
-						settings: {styleDesktop: ''},
-					};
-					newEditorData.collaborators[savedJournal.subdomain] = {
-						_id: savedJournal._id.toString(),
-						name: savedJournal.journalName + ' Admins',
-						firstName: savedJournal.journalName || '',
-						lastName: 'Admins',
-						thumbnail: '/thumbnails/group.png',
-						permission: 'edit',
-						admin: true,
-					};
-					ref.set(newEditorData);
-
-					savedJournal.landingPage = savedPub._id;
-					savedJournal.save(function(errSavingLanding, savedJournalWithPub) {
-						return res.status(201).json(savedJournalWithPub.subdomain);
-					});
-
-				});
-			});
+	const journal = new Journal({
+		journalName: newJournalData.journalName,
+		slug: newJournalData.slug.replace(/[^\w\s-]/gi, '').replace(/ /g, '-').toLowerCase(),
+		description: newJournalData.description && newJournalData.description.substring(0, 140),
+		icon: newJournalData.icon || 'https://assets.pubpub.org/_site/journal.png',
+		createDate: now,
+	});
 
 
-		});
+	Journal.findOne({slug: newJournalData.slug}).exec()
+	.then(function(existingJournal) {
+		// If the slug has already been used, return with error
+		// else, save the new Journal
+		if (existingJournal) {
+			throw new Error('Slug Already Exists');
+		}
+		return journal.save();
+	})
+	.then(function(newJournal) {
+		// Add the creator as an admin to the journal
+		const newJournalID = newJournal._id;
+		return Link.createLink('admin', userID, newJournalID, userID, now);
+	})
+	.then(function() {
+		// Return the slug of the new Journal
+		return res.status(201).json(newJournalData.slug);
+	})
+	.catch(function(error) {
+		console.log('error', error);
+		return res.status(500).json(error);
 	});
 }
 app.post('/createJournal', createJournal);
 
 export function getJournal(req, res) {
-	Journal.findOne({subdomain: req.query.subdomain})
-	.populate(Journal.populationObject())
-	.lean().exec(function(err, result) {
-		if (err) { return res.status(500).json(err); }
+	// Determine if admin or not
+	// Get journalData
+	// Get associated data (e.g. admins, featured, etc)
+	// Return
+	const {slug, mode} = req.query;
+	const userID = req.user ? req.user._id : undefined;
 
-		let isAdmin = false;
-		const userID = req.user ? req.user._id : undefined;
-		const adminsLength = result ? result.admins.length : 0;
-		for (let index = adminsLength; index--; ) {
-			if (String(result.admins[index]._id) === String(userID)) {
-				isAdmin = true;
-			}
+	Journal.findOne({slug: slug}).populate('collections').lean().exec()
+	.then(function(journalResult) {
+		if (!journalResult) { throw new Error('404 Not Found'); }
+		// Get the submitted atoms associated with the journal
+		// This query fires if mode is equal to 'submitted'
+
+		const adminLink = Link.findOne({source: userID, destination: journalResult._id, type: 'admin', inactive: {$ne: true} }).exec();
+		const findFollowingLink = Link.findOne({source: userID, destination: journalResult._id, type: 'followsJournal', inactive: {$ne: true}}).exec();
+		return [journalResult, adminLink, findFollowingLink];
+	})
+	.spread(function(journalResult, adminLink, followingLink) {
+		if (followingLink) {
+			journalResult.isFollowing = true;
 		}
 
-		return res.status(201).json({
-			...result,
-			isAdmin: isAdmin,
+		const isAdmin = !!adminLink || String(userID) === '568abdd9332c142a0095117f';
+		journalResult.isAdmin = isAdmin;
+
+		const getSubmitted = new Promise(function(resolve) {
+			if (mode === 'submitted' && isAdmin) {
+				const query = Link.find({destination: journalResult._id, type: 'submitted'}).populate({
+					path: 'source',
+					model: Atom,
+					select: 'title slug description previewImage type',
+				}).exec();
+				resolve(query);
+			} else {
+				resolve();
+			}
 		});
+
+		// Get the featured atoms associated with the journal
+		// This query fires if mode is equal to 'featured'
+		const getFeatured = new Promise(function(resolve) {
+			if (mode === 'featured') {
+				const query = Link.find({source: journalResult._id, type: 'featured'}).populate({
+					path: 'destination',
+					model: Atom,
+					select: 'title slug description previewImage type',
+				}).exec();
+				resolve(query);
+			} else {
+				resolve();
+			}
+		});
+
+		// Get atomsData content
+		// The atomsData will vary based on view, e.g. recent activity vs. collection
+		const getAtomsData = new Promise(function(resolve) {
+			if (mode && mongoose.Types.ObjectId.isValid(mode)) {
+				// If there is a mode, it could be a collection, try to grab atoms that are in that collection
+				const query = Link.find({source: journalResult._id, type: 'featured', 'metadata.collections': mode}).populate({
+					path: 'destination',
+					model: Atom,
+					select: 'title slug description previewImage type',
+				}).exec();
+				resolve(query);
+			} else {
+				// If there is no mode, it is just recent activity, grab them all.
+				const query = Link.find({source: journalResult._id, type: 'featured'}).populate({
+					path: 'destination',
+					model: Atom,
+					select: 'title slug description previewImage type',
+				}).exec();
+				resolve(query);
+			}
+		});
+
+		// Get the admins data associated with the journal
+		// This query fires if mode is equal to 'admins' or 'about'
+		const getAdmins = new Promise(function(resolve) {
+			if (mode === 'admins' || mode === 'about') {
+				const query = Link.find({destination: journalResult._id, type: 'admin', inactive: {$ne: true}}).populate({
+					path: 'source',
+					model: User,
+					select: 'name username bio image',
+				}).exec();
+				resolve(query);
+			} else {
+				resolve();
+			}
+		});
+
+		const getFollowers = new Promise(function(resolve) {
+			const query = Link.find({destination: journalResult._id, type: 'followsJournal', inactive: {$ne: true}}).populate({
+				path: 'source',
+				model: User,
+				select: 'username name bio image',
+			}).exec();
+			resolve(query);
+		});
+
+		const tasks = [
+			getSubmitted,
+			getFeatured,
+			getAtomsData,
+			getAdmins,
+			getFollowers,
+		];
+
+		return [journalResult, Promise.all(tasks)];
+	})
+	.spread(function(journalResult, taskData) { // Send response
+		// What's spread? See here: http://stackoverflow.com/questions/18849312/what-is-the-best-way-to-pass-resolved-promise-values-down-to-a-final-then-chai
+		// console.log(taskData[2]);
+		return res.status(201).json({
+			journalData: journalResult,
+			submittedData: taskData[0],
+			featuredData: taskData[1],
+			atomsData: taskData[2],
+			adminsData: taskData[3],
+			followersData: taskData[4],
+		});
+	})
+	.catch(function(error) {
+		if (error.message === '404 Not Found') {
+			console.log(error.message);
+			return res.status(404).json('404 Not Found');
+		}
+		console.log('error', error);
+		return res.status(500).json(error);
 	});
+
 }
 app.get('/getJournal', getJournal);
 
-export function saveJournal(req, res) {
-	Journal.findOne({subdomain: req.body.subdomain}).exec(function(err, journal) {
-		// console.log('in server save journal');
-		// console.log('req.body', req.body);
-		// console.log('journal', journal);
+export function updateJournal(req, res) {
+	const userID = req.user ? req.user._id : undefined;
+	if (!userID) { return res.status(403).json('Not authorized to edit this user'); }
+	// Check that the user is an admin
 
-		if (err) { return res.status(500).json(err); }
-
-		if (!req.user || String(journal.admins).indexOf(String(req.user._id)) === -1) {
-			return res.status(403).json('Not authorized to administrate this Journal.');
-		}
-
-		if ('customDomain' in req.body.newObject && req.body.newObject.customDomain !== journal.customDomain) {
-			// console.log('we got a new custom domain!');
-			Journal.updateHerokuDomains(journal.customDomain, req.body.newObject.customDomain);
-
-		}
-
-		if ('pubsFeatured' in req.body.newObject) {
-			// If there are new pubs to be featured, we have to update the pub with a new feature entry
-			// We don't have to update any submit entries, as you can't do that from the journal curate page
-			const newFeatured = req.body.newObject.pubsFeatured;
-			const oldFeatured = journal.pubsFeatured.map((pubID)=>{return String(pubID);});
-			const pubsToUpdateFeature = _.difference(newFeatured, oldFeatured);
-			for (let index = pubsToUpdateFeature.length; index--;) {
-				Pub.addJournalFeatured(pubsToUpdateFeature[index], journal._id, req.user._id);
-				featurePub(journal._id, pubsToUpdateFeature[index], null);
-			}
-		}
-
-		if ('admins' in req.body.newObject) {
-			// If there are admins to be updated, we need to appropriately add this journal's _id
-			// to the user's profile, and remove for removed admins
-			const newAdminStrings = req.body.newObject.admins.length ? req.body.newObject.admins.toString().split(',') : [];
-			const oldAdminStrings = journal.admins.length ? journal.admins.toString().split(',') : [];
-
-			journal.admins.map((adminID)=>{
-				// If it was in the old, but is not in the new, pull it
-				if (newAdminStrings.indexOf(adminID.toString()) === -1) {
-					User.update({ _id: adminID }, { $pull: { adminJournals: journal._id} }, function(adminAddErr, addAdminResult) {if (adminAddErr) return res.status(500).json('Failed to add as admin'); });
-				}
-			});
-
-			req.body.newObject.admins.map((adminID)=>{
-				// If it is in the new, but was not in the old, add it
-				if (oldAdminStrings.indexOf(adminID.toString()) === -1) {
-					User.update({ _id: adminID }, { $addToSet: { adminJournals: journal._id} }, function(adminAddErr, addAdminResult) {if (adminAddErr) return res.status(500).json('Failed to add as admin'); });
-				}
-			});
-
-		}
-
-		for (const key in req.body.newObject) {
-			if (req.body.newObject.hasOwnProperty(key)) {
-				journal[key] = req.body.newObject[key];
-			}
-		}
-
-		journal.save(function(errSave, result) {
-			if (errSave) { return res.status(500).json(errSave); }
-
-			Journal.populate(result, Journal.populationObject(), function(errPopulate, populatedJournal) {
-				return res.status(201).json({
-					...populatedJournal.toObject(),
-					isAdmin: true,
-				});
-			});
-
-
-		});
+	Journal.findOne({slug: req.body.slug}).exec()
+	.then(function(journal) {
+		// Validate and clean submitted values
+		// Take (cleaned) new values if they exist, otherwise set to old value
+		const newData = req.body.newJournalData;
+		journal.journalName = 'journalName' in newData ? newData.journalName : journal.journalName;
+		journal.description = 'description' in newData ? newData.description && newData.description.substring(0, 140) : journal.description;
+		journal.about = 'about' in newData ? newData.about : journal.about;
+		journal.logo = 'logo' in newData ? newData.logo : journal.logo;
+		journal.icon = 'icon' in newData ? newData.icon : journal.icon;
+		journal.about = 'about' in newData ? newData.about : journal.about;
+		journal.website = 'website' in newData ? newData.website : journal.website;
+		journal.twitter = 'twitter' in newData ? newData.twitter : journal.twitter;
+		journal.facebook = 'facebook' in newData ? newData.facebook : journal.facebook;
+		journal.headerMode = 'headerMode' in newData ? newData.headerMode : journal.headerMode;
+		journal.headerAlign = 'headerAlign' in newData ? newData.headerAlign : journal.headerAlign;
+		journal.headerColor = 'headerColor' in newData ? newData.headerColor : journal.headerColor;
+		journal.headerImage = 'headerImage' in newData ? newData.headerImage : journal.headerImage;
+		journal.collections = 'collections' in newData ? newData.collections : journal.collections;
+		return journal.save();
+	})
+	.then(function(savedResult) {
+		return Journal.populate(savedResult, {path: 'collections'});
+	})
+	.then(function(populatedJournal) {
+		return res.status(201).json(populatedJournal);
+	})
+	.catch(function(error) {
+		console.log('error', error);
+		return res.status(500).json(error);
 	});
 }
-app.post('/saveJournal', saveJournal);
+app.post('/updateJournal', updateJournal);
 
-export function submitPubToJournal(req, res) {
-	Journal.findOne({_id: req.body.journalID}).exec(function(err, journal) {
-		if (err) { return res.status(500).json(err); }
+export function featureAtom(req, res) {
+	const {atomID, journalID} = req.body;
+	const userID = req.user._id;
+	const now = new Date().getTime();
+	const inactiveNote = 'featured';
+	// Check permission 
 
-		if (!journal) { return res.status(500).json(err); }
-
-		if ( !req.user ) {
-			return res.status(403).json('Not authorized to administrate this Journal.');
-		}
-
-		if (String(journal.pubsSubmitted).indexOf(req.body.pubID) === -1 && String(journal.pubsFeatured).indexOf(req.body.pubID) === -1) {
-
-			Pub.addJournalSubmitted(req.body.pubID, req.body.journalID, req.user._id);
-
-			if (journal.autoFeature) {
-				journal.pubsFeatured.push(req.body.pubID);
-				Pub.addJournalFeatured(req.body.pubID, req.body.journalID, null);
-			} else {
-				journal.pubsSubmitted.push(req.body.pubID);
-			}
-
-
-		}
-
-		journal.save(function(errSave, result) {
-			if (errSave) { return res.status(500).json(errSave); }
-
-			Journal.populate(result, Journal.populationObject(), function(errPopulate, populatedJournal) {
-				return res.status(201).json({
-					...populatedJournal.toObject(),
-					isAdmin: true,
-				});
-			});
-
-
-		});
+	Link.createLink('featured', journalID, atomID, userID, now)
+	.then(function() {
+		return Link.setLinkInactive('submitted', atomID, journalID, userID, now, inactiveNote);
+	})
+	.then(function(updatedSubmissionLink) {
+		return res.status(201).json(updatedSubmissionLink);
+	})
+	.catch(function(error) {
+		console.log('error', error);
+		return res.status(500).json(error);
 	});
 }
-app.post('/submitPubToJournal', submitPubToJournal);
+app.post('/featureAtom', featureAtom);
 
-export function createCollection(req, res) {
-	// return res.status(201).json(['cat','dog']);
-	Journal.findOne({subdomain: req.body.subdomain}).exec(function(err, journal) {
-		const defaultHeaderImages = [
-			'https://res.cloudinary.com/pubpub/image/upload/v1451320792/coll4_ivgyzj.jpg',
-			'https://res.cloudinary.com/pubpub/image/upload/v1451320792/coll5_nwapxj.jpg',
-			'https://res.cloudinary.com/pubpub/image/upload/v1451320792/coll6_kqgzbq.jpg',
-			'https://res.cloudinary.com/pubpub/image/upload/v1451320792/coll7_mrq4q9.jpg',
-		];
+export function rejectAtom(req, res) {
+	const {atomID, journalID} = req.body;
+	const userID = req.user._id;
+	const now = new Date().getTime();
+	const inactiveNote = 'rejected';
+	// Check permission 
 
-		const newCollection = {
-			title: req.body.newCollectionObject.title,
-			slug: req.body.newCollectionObject.slug,
-			description: '',
-			pubs: [],
-			headerImage: defaultHeaderImages[Math.floor(Math.random() * defaultHeaderImages.length)],
-		};
-		journal.collections.push(newCollection);
-
-		journal.save(function(errSave, savedJournal) {
-			if (errSave) { return res.status(500).json(errSave); }
-
-			Journal.populate(savedJournal, Journal.populationObject(true), function(errPopulate, populatedJournal) {
-				if (errPopulate) { return res.status(500).json(errPopulate); }
-
-				return res.status(201).json(populatedJournal.collections);
-			});
-
-		});
+	Link.setLinkInactive('submitted', atomID, journalID, userID, now, inactiveNote)
+	.then(function(updatedSubmissionLink) {
+		return res.status(201).json(updatedSubmissionLink);
+	})
+	.catch(function(error) {
+		console.log('error', error);
+		return res.status(500).json(error);
 	});
 }
-app.post('/createCollection', createCollection);
+app.post('/rejectAtom', rejectAtom);
 
-export function saveCollection(req, res) {
-	Journal.findOne({subdomain: req.body.subdomain}).exec(function(err, journal) {
-		const collections = journal ? journal.collections : [];
+export function collectionsChange(req, res) {
+	const {linkID, collectionIDs} = req.body;
+	
+	Link.update({_id: linkID, type: 'featured'}, {$set: {'metadata.collections': collectionIDs}})
+	.then(function(taskResults) {
+		return res.status(201).json('success');	
+	})
+	.catch(function(error) {
+		console.log('error', error);
+		return res.status(500).json(error);
+	});
+}
+app.post('/collectionsChange', collectionsChange);
 
-		function updateAndSave(cloudinaryURL) {
-			for (let index = collections.length; index--;) {
-				if (collections[index].slug === req.body.slug) {
-					if (cloudinaryURL) {
-						journal.collections[index].headerImage = cloudinaryURL;
-					}
-					for (const key in req.body.newCollectionObject) {
-						if (req.body.newCollectionObject.hasOwnProperty(key)) {
-							journal.collections[index][key] = req.body.newCollectionObject[key];
-						}
-					}
-					break;
-				}
-			}
-			journal.save(function(errJournalSave, savedJournal) {
-				if (errJournalSave) { return res.status(500).json(errJournalSave); }
+export function addJournalAdmin(req, res) {
+	const {adminID, journalID} = req.body;
+	const userID = req.user._id;
+	const now = new Date().getTime();
+	// Check permission 
 
-				Journal.populate(savedJournal, Journal.populationObject(true), function(errJournPopulate, populatedJournal) {
-					if (errJournPopulate) { return res.status(500).json(errJournPopulate); }
-
-					return res.status(201).json(populatedJournal.collections);
-				});
-
-			});
+	Link.findOne({source: adminID, destination: journalID, type: 'admin', inactive: {$ne: true}}).exec()
+	.then(function(existingLink) {
+		if (existingLink) {			
+			throw new Error('Admin already exists');
 		}
-
-		if (req.body.newCollectionObject.headerImageURL) {
-			// cloudinary.uploader.upload(req.body.newCollectionObject.headerImageURL, function(cloudinaryResponse) {
-				// const cloudinaryURL = cloudinaryResponse.url;
-			updateAndSave(req.body.newCollectionObject.headerImageURL);
-
-			// });
-		} else {
-			updateAndSave();
-		}
-
+		return Link.createLink('admin', adminID, journalID, userID, now);
+	})
+	.then(function(newAdminLink) {
+		return Link.findOne({source: adminID, destination: journalID, type: 'admin', inactive: {$ne: true}}).populate({
+			path: 'source',
+			model: User,
+			select: 'name username bio image',
+		}).exec();
+	})
+	.then(function(populatedLink) {
+		return res.status(201).json(populatedLink);
+	})
+	.catch(function(error) {
+		console.log('error', error);
+		return res.status(500).json(error);
 	});
 }
-app.post('/saveCollection', saveCollection);
+app.post('/addJournalAdmin', addJournalAdmin);
 
-export function getJournalPubs(req, res) {
-	const host = req.headers.host.split(':')[0];
-	Journal.findOne({ $or: [ {subdomain: host.split('.')[0]}, {customDomain: host}]})
-	.populate(Journal.populationObject(false, true))
-	.lean().exec(function(err, journal) {
-		if (err) {console.log(err); return res.status(500).json(err);}
-		if (!journal) {return res.status(201).json([]);}
-		return res.status(201).json(journal.pubsFeatured);
+export function deleteJournalAdmin(req, res) {
+	const {adminID, journalID} = req.body;
+	const userID = req.user._id;
+	const now = new Date().getTime();
+	// Check permission 
+
+	Link.setLinkInactive('admin', adminID, journalID, userID, now, 'deleted')
+	.then(function(deletedLink) {
+		return res.status(201).json(deletedLink);
+	})
+	.catch(function(error) {
+		console.log('error', error);
+		return res.status(500).json(error);
 	});
 }
-app.get('/getJournalPubs', getJournalPubs);
-
-export function getJournalCollections(req, res) {
-	const host = req.headers.host.split(':')[0];
-	Journal.findOne({ $or: [ {subdomain: host.split('.')[0]}, {customDomain: host}]})
-	.populate(Journal.populationObject(true, false))
-	.lean().exec(function(err, journal) {
-		if (err || !journal) {
-			console.log(err);
-			return res.status(201).json();
-		}
-		return res.status(201).json(journal.collections);
-	});
-}
-app.get('/getJournalCollections', getJournalCollections);
+app.post('/deleteJournalAdmin', deleteJournalAdmin);

@@ -1,84 +1,142 @@
-import React, { PropTypes } from 'react';
+import React, {PropTypes} from 'react';
 import {connect} from 'react-redux';
+import {push} from 'redux-router';
 import Radium from 'radium';
-import PureRenderMixin from 'react-addons-pure-render-mixin';
-import {LoaderIndeterminate} from 'components';
-import CreateJournalForm from './CreateJournalForm';
-import {create} from 'containers/JournalProfile/actions';
-import {toggleVisibility} from 'containers/Login/actions';
-import {globalStyles} from 'utils/styleConstants';
+import Helmet from 'react-helmet';
+import {createJournal} from './actions';
+import {Loader, ImageCropper} from 'components';
 
+
+import {globalStyles} from 'utils/styleConstants';
+import {globalMessages} from 'utils/globalMessages';
 import {FormattedMessage} from 'react-intl';
 
 let styles = {};
 
-const Login = React.createClass({
+export const JournalCreate = React.createClass({
 	propTypes: {
-		journalData: PropTypes.object,
-		loginData: PropTypes.object,
+		journalCreateData: PropTypes.object,
 		dispatch: PropTypes.func,
 	},
 
-	mixins: [PureRenderMixin],
-
-	getInitialState() {
+	getInitialState: function() {
 		return {
-			errorMessage: null,
+			iconFile: null,
+			iconURL: 'https://assets.pubpub.org/_site/journal.png',
+			slug: '',
+			description: '',
 		};
 	},
 
-	componentWillReceiveProps: function(nextProps) {
-		if (nextProps.journalData.getIn(['createJournalData', 'subdomain'])) {
-			window.location = 'http://' + nextProps.journalData.getIn(['createJournalData', 'subdomain']) + '.' + window.location.host.replace('www.', '') + '/journal/' + nextProps.journalData.getIn(['createJournalData', 'subdomain']);
+	componentWillReceiveProps(nextProps) {
+		// If there is a new slug in createJournal, creation was a sucess, so redirect
+		const oldSlug = this.props.journalCreateData && this.props.journalCreateData.get('newJournalSlug');
+		const newSlug = nextProps.journalCreateData && nextProps.journalCreateData.get('newJournalSlug');
+		console.log(oldSlug, newSlug);
+		if (newSlug && oldSlug !== newSlug) {
+			this.props.dispatch(push('/' + newSlug));
 		}
-		this.setState({ errorMessage: nextProps.journalData.getIn(['createJournalData', 'error']) });
 	},
 
-	handleCreateSubmit: function(formValues) {
-		if (!this.props.loginData.get('loggedIn')) {
-			this.props.dispatch(toggleVisibility());
-		} else {
-			if (!formValues.journalName) {
-				this.setState({errorMessage: 'noName'});
-			} else if (!formValues.subdomain) {
-				this.setState({errorMessage: 'noSubdomain'});
-			} else {
-				this.props.dispatch(create(formValues.journalName, formValues.subdomain));
-			}
+	slugUpdate: function() {
+		this.setState({slug: this.refs.slug.value.replace(/[^\w\s-]/gi, '').replace(/ /g, '-').toLowerCase()});
+	},
 
+	descriptionUpdate: function() {
+		this.setState({description: this.refs.description.value.substring(0, 140)});
+	},
+
+	handleFileSelect: function(evt) {
+		if (evt.target.files.length) {
+			this.setState({iconFile: evt.target.files[0]});
 		}
+	},
 
+	cancelImageUpload: function() {
+		this.setState({iconFile: null});
+	},
+
+	imageUploaded: function(url) {
+		this.setState({iconFile: null, iconURL: url});
+	},
+
+	handleJournalCreate: function(evt) {
+		evt.preventDefault();
+		const newJournalData = {
+			journalName: this.refs.journalName.value,
+			slug: this.state.slug,
+			description: this.state.description,
+			icon: this.state.iconURL,
+		};
+		this.props.dispatch(createJournal(newJournalData));
 	},
 
 	render: function() {
+		const metaData = {
+			title: 'Create Journal · PubPub',
+		};
+		const isLoading = this.props.journalCreateData && this.props.journalCreateData.get('loading');
+		const errorMessage = this.props.journalCreateData && this.props.journalCreateData.get('error');
+
 		return (
-			<div style={styles.container}>
-				<div style={styles.loader}>
-					{this.props.journalData.getIn(['createJournalData', 'status']) === 'loading'
-						? <LoaderIndeterminate color={globalStyles.sideText}/>
-						: null
-					}
-				</div>
+			<div className={'section'} style={styles.container}>
+				<Helmet {...metaData} />
 
-				<div style={styles.header}>
-					<FormattedMessage id="journal.createJournal" defaultMessage="Create Journal"/>
-				</div>
-				<CreateJournalForm onSubmit={this.handleCreateSubmit} />
-				<div style={[styles.error, !this.state.errorMessage && styles.hidden]}>
-					{(()=>{
-						switch (this.state.errorMessage) {
-						case 'Subdomain is not Unique!':
-							return <FormattedMessage id="journal.subdomainUsed" defaultMessage="Subdomain is already used"/>;
-						case 'noName':
-							return <FormattedMessage id="journal.journalNameRequired" defaultMessage="A journal name is required"/>;
-						case 'noSubdomain':
-							return <FormattedMessage id="journal.subdomainRequired" defaultMessage="A subdomain is required"/>;
-						default:
-							return this.state.errorMessage;
-						}
-					})()}
-				</div>
+				<h1>Create Journal</h1>
 
+				<form onSubmit={this.handleJournalCreate}>
+					<div>
+						<label style={styles.label} htmlFor={'journalName'}>
+							Journal Name
+						</label>
+						<input ref={'journalName'} id={'journalName'} name={'Journal Name'} type="text" style={styles.input}/>
+					</div>
+
+					<div>
+						<label htmlFor={'slug'}>
+							Journal URL
+						</label>
+						<div style={styles.prefixedInputWrapper}>
+							<div style={styles.prefix}>pubpub.org/</div>
+							<input ref={'slug'} id={'slug'} name={'journal URL'} type="text" style={[styles.input, styles.prefixedInput]} value={this.state.slug} onChange={this.slugUpdate}/>	
+						</div>
+					</div>
+
+					<div>
+						<label htmlFor={'description'}>
+							Description
+						</label>
+						<textarea ref={'description'} id={'description'} name={'description'} type="text" style={[styles.input, styles.description]} onChange={this.descriptionUpdate} value={this.state.description}></textarea>
+						<div className={'light-color inputSubtext'}>
+							{this.state.description.length} / 140
+						</div>
+					</div>
+
+					<div>
+						<label htmlFor={'icon'}>
+							Journal Icon
+						</label>
+						<img style={styles.image} src={this.state.iconURL} />
+						<input id={'icon'} name={'icon image'} type="file" accept="image/*" onChange={this.handleFileSelect} />
+						
+					</div>
+
+					<button className={'button'} onClick={this.handleJournalCreate}>
+						Create Journal
+					</button>
+
+					<div style={styles.loaderContainer}><Loader loading={isLoading} showCompletion={!errorMessage}/></div>
+
+					<div style={styles.errorMessage}>{errorMessage}</div>
+
+				</form>
+
+				<div style={[styles.imageCropperWrapper, this.state.iconFile !== null && styles.imageCropperWrapperVisible]} >
+					<div style={styles.imageCropper}>
+						<ImageCropper height={500} width={500} image={this.state.iconFile} onCancel={this.cancelImageUpload} onUpload={this.imageUploaded}/>
+					</div>
+				</div>
+				
 			</div>
 		);
 	}
@@ -87,38 +145,86 @@ const Login = React.createClass({
 
 export default connect( state => {
 	return {
-		journalData: state.journal,
-		loginData: state.login,
+		journalCreateData: state.journalCreate,
 	};
-})( Radium(Login) );
+})( Radium(JournalCreate) );
 
 styles = {
 	container: {
-		fontFamily: globalStyles.headerFont,
+		width: '500px',
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+			width: 'auto',
+		}
+	},
+	input: {
+		width: 'calc(100% - 20px - 4px)', // Calculations come from padding and border in pubpub.css
+	},
+	loaderContainer: {
+		display: 'inline-block',
 		position: 'relative',
-		maxWidth: 800,
-		margin: '0 auto',
+		top: 15,
 	},
-	header: {
-		color: globalStyles.sideText,
-		padding: 20,
-		fontSize: '2em',
-		margin: '.66em 0'
+	errorMessage: {
+		padding: '10px 0px',
+		color: globalStyles.errorRed,
 	},
-	loader: {
-		position: 'absolute',
-		top: 10,
+	image: {
+		width: '100px',
+	},
+	description: {
+		height: '4em',
+	},
+	prefixedInputWrapper: {
+		display: 'table',
 		width: '100%',
+		marginBottom: '1.2em',
 	},
-	error: {
-		color: 'red',
-		padding: '0px 30px',
-		position: 'relative',
-		top: '-50px',
-		fontSize: '20px',
-		marginRight: 200,
+	prefix: {
+		display: 'table-cell',
+		backgroundColor: '#F3F3F4',
+		verticalAlign: 'middle',
+		textAlign: 'center',
+		padding: '4px 10px',
+		borderWidth: '2px 0px 2px 2px',
+		borderStyle: 'solid',
+		borderColor: '#BBBDC0',
+		borderRadius: '1px 0px 0px 1px',
+		width: '1%',
+		fontSize: '0.9em',
+		whiteSpace: 'nowrap',
 	},
-	hidden: {
-		display: 'none',
+	prefixedInput: {
+		display: 'table-cell',
+		marginBottom: 0,
+		borderRadius: '0px 1px 1px 0px',
+	},
+	imageCropperWrapper: {
+		height: '100vh',
+		width: '100vw',
+		backgroundColor: 'rgba(255,255,255,0.75)',
+		position: 'fixed',
+		top: 0,
+		left: 0,
+		opacity: 0,
+		pointerEvents: 'none',
+		transition: '.1s linear opacity',
+		display: 'flex',
+		justifyContent: 'center',
+	},
+	imageCropperWrapperVisible: {
+		opacity: 1,
+		pointerEvents: 'auto',
+	},
+	imageCropper: {
+		height: '270px',
+		width: '450px',
+		alignSelf: 'center',
+		backgroundColor: 'white',
+		boxShadow: '0px 0px 10px #808284',
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+			width: '100%',
+			height: 'auto',
+			left: 0,
+		},
 	},
 };

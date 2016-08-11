@@ -35,7 +35,7 @@ export const License = React.createClass({
 		return (
 			<div style={[styles.container, this.props.hover && styles.hoverContainer]} onMouseEnter={this.hoverOn} onMouseLeave={this.hoverOff}>
 				<a rel="license" href="http://creativecommons.org/licenses/by/4.0/" target="_blank">
-					<img alt="Creative Commons License" style={{borderWidth: 0}} src="https://i.creativecommons.org/l/by/4.0/80x15.png" />
+					<img alt="Creative Commons License" style={[{borderWidth: 0, display: 'inline-block' }, this.props.hover && styles.hoverImg]} src="https://i.creativecommons.org/l/by/4.0/80x15.png" />
 				</a>
 				<div style={[this.props.hover && styles.hoverOff, this.props.hover && this.state.hover && styles.hoverOn]}>
 					{this.props.text} <a style={styles.link} rel="license" href="http://creativecommons.org/licenses/by/4.0/" target="_blank">Creative Commons Attribution 4.0 International License</a>.
@@ -54,18 +54,24 @@ styles = {
 		textAlign: 'center',
 		paddingTop: '30px',	
 		marginTop: '30px',
+		marginBottom: '30px',
 		borderTop: '1px solid #ddd',
 		fontSize: '0.85em',
 	},
 	hoverContainer: {
 		position: 'relative',
 		marginTop: '0px',
+		marginBottom: '0px',
 		paddingTop: '0px',
 		borderTop: '0px solid white',
-		display: 'inline-block',
+		// display: 'inline-block',
 	},
 	link: {
 		color: 'inherit',
+	},
+	hoverImg: {
+		opacity: '0.5',
+		display: 'block',
 	},
 	hoverOff: {
 		display: 'none',

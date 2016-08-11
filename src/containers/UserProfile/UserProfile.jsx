@@ -2,26 +2,28 @@ import React, { PropTypes } from 'react';
 import {connect} from 'react-redux';
 import Radium from 'radium';
 import Helmet from 'react-helmet';
-import { Link } from 'react-router';
-import { pushState } from 'redux-router';
-import {logout, follow, unfollow, toggleVisibility} from 'containers/Login/actions';
-import {getProfile, updateUser, userNavOut, userNavIn, setNotificationsRead} from './actions';
-import {ImageCropper, LoaderDeterminate} from 'components';
-import UserProfileDiscussions from './UserProfileDiscussions';
-import UserProfileSettings from './UserProfileSettings';
+import {safeGetInToJS} from 'utils/safeParse';
+import {getUser, saveUserSettings} from './actions';
+import {NavContentWrapper} from 'components';
+import {NotFound} from 'components';
+import {FollowButton} from 'containers';
+
 import UserProfilePubs from './UserProfilePubs';
-import UserProfileGroups from './UserProfileGroups';
-import UserProfileFollows from './UserProfileFollows';
-import UserProfileNotifications from './UserProfileNotifications';
+import UserProfileJournals from './UserProfileJournals';
+import UserProfileFollowers from './UserProfileFollowers';
+import UserProfileFollowing from './UserProfileFollowing';
 
-import {globalStyles, profileStyles, navStyles} from 'utils/styleConstants';
 
-import {globalMessages} from 'utils/globalMessages';
-import {FormattedMessage} from 'react-intl';
+import UserProfileSettingsProfile from './UserProfileSettingsProfile';
+import UserProfileSettingsAccount from './UserProfileSettingsAccount';
+import UserProfileSettingsNotifications from './UserProfileSettingsNotifications';
+
+// import {globalMessages} from 'utils/globalMessages';
+// import {FormattedMessage} from 'react-intl';
 
 let styles = {};
 
-const Profile = React.createClass({
+export const UserProfile = React.createClass({
 	propTypes: {
 		profileData: PropTypes.object,
 		loginData: PropTypes.object,
@@ -30,298 +32,166 @@ const Profile = React.createClass({
 		dispatch: PropTypes.func
 	},
 
-	getInitialState: function() {
-		return {
-			userImageFile: null,
-		};
-	},
-
 	statics: {
-		fetchDataDeferred: function(getState, dispatch, location, routerParams) {
-			if (getState().user.getIn(['profileData', 'username']) !== routerParams.username) {
-				return dispatch(getProfile(routerParams.username));
-			}
-			return dispatch(userNavIn());
+		fetchData: function(getState, dispatch, location, routerParams) {
+			return dispatch(getUser(routerParams.username));
 		}
 	},
 
-	componentWillUnmount() {
-		this.props.dispatch(userNavOut());
-	},
-
-	ownProfile: function() {
-		return this.props.loginData.getIn(['userData', 'username']) === this.props.username ? 'self' : 'other';
-	},
-
-	submitLogout: function() {
-		this.props.dispatch(logout());
-		this.props.dispatch(pushState(null, ('/')));
-	},
-
-	settingsSave: function(settingsObject) {
-		// Send it off and save
-		// If user image is in the settingsObject, on the server, save to cloudinary, etc.
-		// console.log('settingsObject', settingsObject);
-		this.props.dispatch(updateUser(settingsObject));
-	},
-	onFileSelect: function(evt) {
-		if (evt.target.files.length) {
-			this.setState({userImageFile: evt.target.files[0]});
-		}
-	},
-	cancelImageUpload: function() {
-		this.setState({userImageFile: null});
-	},
-	userImageUploaded: function(url) {
-		this.setState({userImageFile: null});
-		this.settingsSave({image: url});
-	},
-	followUserToggle: function() {
-		if (!this.props.loginData.get('loggedIn')) {
-			return this.props.dispatch(toggleVisibility());
-		}
-
-		const analyticsData = {
-			type: 'pubs',
-			followedID: this.props.profileData.getIn(['profileData', '_id']),
-			username: this.props.profileData.getIn(['profileData', 'username']),
-			fullname: this.props.profileData.getIn(['profileData', 'fullname']),
-			image: this.props.profileData.getIn(['profileData', 'image']),
-			numFollowers: this.props.profileData.getIn(['profileData', 'followers']) ? this.props.profileData.getIn(['profileData', 'followers']).size : 0,
-		};
-
-		const isFollowing = this.props.loginData.getIn(['userData', 'following', 'users']) ? this.props.loginData.getIn(['userData', 'following', 'users']).indexOf(this.props.profileData.getIn(['profileData', '_id'])) > -1 : false;
-
-		if (isFollowing) {
-			this.props.dispatch( unfollow('users', this.props.profileData.getIn(['profileData', '_id']), analyticsData) );
-		} else {
-			this.props.dispatch( follow('users', this.props.profileData.getIn(['profileData', '_id']), analyticsData) );
-		}
-	},
-	setNotificationsRead: function() {
-		if (this.ownProfile() === 'self') {
-			this.props.dispatch(setNotificationsRead(this.props.profileData.getIn(['profileData', '_id'])));
-		}
-
+	saveSettings: function(settings) {
+		this.props.dispatch(saveUserSettings(settings));
 	},
 
 	render: function() {
-		const metaData = {};
-		if (this.props.profileData.getIn(['profileData', 'name'])) {
-			metaData.title = 'PubPub - ' + this.props.profileData.getIn(['profileData', 'name']);
-		} else {
-			metaData.title = 'PubPub - ' + this.props.username;
+		let profileData = safeGetInToJS(this.props.profileData, ['profileData']) || {};
+		const loginUserData = safeGetInToJS(this.props.loginData, ['userData']) || {};
+		const ownProfile = safeGetInToJS(this.props.loginData, ['userData', 'username']) === this.props.username;
+
+		if (ownProfile) {
+			profileData = {
+				...profileData,
+				...loginUserData,
+			};
+		}
+		const metaData = {
+			title: (profileData.name || profileData.username) + ' · PubPub',
+			meta: [
+				{property: 'og:title', content: (profileData.name || profileData.username)},
+				{property: 'og:type', content: 'article'},
+				{property: 'og:description', content: profileData.bio},
+				{property: 'og:url', content: 'https://www.pubpub.org/user/' + profileData.username},
+				{property: 'og:image', content: profileData.image},
+				{property: 'og:image:url', content: profileData.image},
+				{property: 'og:image:width', content: '500'},
+				{name: 'twitter:card', content: 'summary'},
+				{name: 'twitter:site', content: '@pubpub'},
+				{name: 'twitter:title', content: (profileData.name || profileData.username)},
+				{name: 'twitter:description', content: profileData.bio || (profileData.name || profileData.username)},
+				{name: 'twitter:image', content: profileData.image},
+				{name: 'twitter:image:alt', content: 'Image of ' + (profileData.name || profileData.username)}
+			]
+		};
+		
+		const mobileNavButtons = [
+			{ type: 'button', mobile: true, text: 'Follow', action: this.followUserToggle },
+			{ type: 'button', mobile: true, text: 'Menu', action: undefined },
+		];
+
+		const ownProfileItems = ownProfile
+		? [
+			{ type: 'spacer' },
+			{ type: 'title', text: 'Settings'},
+			{ type: 'link', text: 'Profile', link: '/user/' + this.props.username + '/profile', active: this.props.mode === 'profile'},
+			// { type: 'link', text: 'Account', link: '/user/' + this.props.username + '/account', active: this.props.mode === 'account'},
+			{ type: 'link', text: 'Notifications', link: '/user/' + this.props.username + '/notifications', active: this.props.mode === 'notifications' },
+		]
+		: [];
+		const navItems = [
+			{ type: 'link', text: 'Pubs', link: '/user/' + this.props.username, active: this.props.mode === undefined},
+			// { type: 'link', text: 'Groups', link: '/user/' + this.props.username + '/groups', active: this.props.mode === 'groups'},
+			{ type: 'link', text: 'Journals', link: '/user/' + this.props.username + '/journals', active: this.props.mode === 'journals'},
+			{ type: 'link', text: 'Followers', link: '/user/' + this.props.username + '/followers', active: this.props.mode === 'followers'},
+			{ type: 'link', text: 'Following', link: '/user/' + this.props.username + '/following', active: this.props.mode === 'following'},
+
+			...ownProfileItems,
+		];
+
+		const links = [
+			{key: 'publicEmail', href: 'mailto:' + profileData.publicEmail, text: <span>{profileData.publicEmail}</span>},
+			{key: 'website', href: profileData.website, text: <span>{profileData.website}</span>},
+			{key: 'twitter', href: 'https://twitter.com/' + profileData.twitter, text: <span>@{profileData.twitter}</span>},
+			{key: 'github', href: 'https://github.com/' + profileData.github, text: <span>github.com/{profileData.github}</span>},
+			{key: 'orcid', href: 'https://orcid.org/' + profileData.orcid, text: <span>orcid.com/{profileData.orcid}</span>},
+			{key: 'googleScholar', href: 'https://scholar.google.com/citations?user=' + profileData.googleScholar, text: <span>Google Scholar</span>},
+		];
+
+		let mode = this.props.mode;
+		if (!ownProfile && (mode === 'profile' || mode === 'notifications' || mode === 'account')) {
+			mode = 'notFound';
 		}
 
-		let profileData = {};
-		if (this.props.profileData.get('profileData').toJS) {
-			profileData = this.props.profileData.get('profileData').toJS();
-		}
-
-		const ownProfile = this.ownProfile();
 		return (
-			<div style={profileStyles.profilePage}>
+			<div>
 
 				<Helmet {...metaData} />
 
-				<div style={profileStyles.profileWrapper}>
-					<div style={[globalStyles.hiddenUntilLoad, globalStyles[this.props.profileData.get('status')]]}>
-						<ul style={navStyles.navList}>
-
-							{ /* ************** */ }
-							{ /* Left Align Nav */ }
-							{ /* ************** */ }
-							{/* <Link to={'/user/' + this.props.username + '/pubs'} style={globalStyles.link}>
-							<li key="profileNavLeft0"style={[navStyles.navItem, navStyles.left, navStyles.navItemShow, navStyles.noMobile]}>
-								<FormattedMessage {...globalMessages.pubs} />
-							</li>
-							</Link>
-							<li style={[navStyles.navSeparator, navStyles.left, navStyles.navItemShow, navStyles.noMobile]}></li>
-
-							<Link to={'/user/' + this.props.username + '/discussions'} style={globalStyles.link}>
-							<li key="profileNavLeft1"style={[navStyles.navItem, navStyles.left, navStyles.navItemShow, navStyles.noMobile]}>
-								<FormattedMessage {...globalMessages.discussions} />
-							</li>
-							</Link>
-							<li style={[navStyles.navSeparator, navStyles.left, navStyles.navItemShow, navStyles.noMobile]}></li>
-
-
-							<Link to={'/user/' + this.props.username + '/groups'} style={globalStyles.link}>
-							<li key="profileNavLeft2"style={[navStyles.navItem, navStyles.left, ownProfile === 'self' && navStyles.navItemShow, navStyles.noMobile]}>
-								<FormattedMessage {...globalMessages.groups} />
-							</li>
-							</Link>
-							<li style={[navStyles.navSeparator, navStyles.left, ownProfile === 'self' && navStyles.navItemShow, navStyles.noMobile]}></li>
-
-							<Link to={'/user/' + this.props.username + '/follows'} style={globalStyles.link}>
-							<li key="profileNavLeft3"style={[navStyles.navItem, navStyles.left, navStyles.navItemShow, navStyles.noMobile]}>
-								<FormattedMessage {...globalMessages.follows} />
-							</li>
-							</Link>
-							<li style={[navStyles.navSeparator, navStyles.left, navStyles.navItemShow, navStyles.noMobile]}></li> */}
-
-							{ /* *************** */ }
-							{ /* Right Align Nav */ }
-							{ /* *************** */ }
-							<li key="profileNav0"style={[navStyles.navItem, ownProfile === 'self' && navStyles.navItemShow]} onClick={this.submitLogout}>
-								<FormattedMessage {...globalMessages.Logout} />
-							</li>
-							<li style={[navStyles.navSeparator, ownProfile === 'self' && navStyles.navItemShow]}></li>
-
-							<Link to={'/user/' + this.props.username + '/settings'} style={globalStyles.link}><li key="profileNav1"style={[navStyles.navItem, ownProfile === 'self' && navStyles.navItemShow]}>
-								<FormattedMessage {...globalMessages.settings} />
-							</li></Link>
-							<li style={[navStyles.navSeparator, ownProfile === 'self' && navStyles.navItemShow]}></li>
-
-							<li key="profileNav2"style={[navStyles.navItem, ownProfile === 'other' && navStyles.navItemShow]} onClick={this.followUserToggle}>
-								{this.props.loginData.getIn(['userData', 'following', 'users']) && this.props.loginData.getIn(['userData', 'following', 'users']).indexOf(this.props.profileData.getIn(['profileData', '_id'])) > -1
-									? <FormattedMessage {...globalMessages.following} />
-									: <FormattedMessage {...globalMessages.follow} />
-								}
-							</li>
-							<li style={[navStyles.navSeparator, ownProfile === 'other' && styles.navItemShow]}></li>
-
-						</ul>
+				<div className={'profile-header section'}>
+					<div style={styles.headerImageWrapper}>
+						<img src={'https://jake.pubpub.org/unsafe/150x150/' + profileData.image} />
 					</div>
+					<div style={styles.headerTextWrapper}>
 
-					<LoaderDeterminate value={this.props.profileData.get('status') === 'loading' ? 0 : 100}/>
+						<h1 style={styles.showOnMobile}>{profileData.name}</h1> {/* Duplicate header for cleaner Follow button rendering */}
+						
+						{!ownProfile &&
+							<FollowButton id={profileData._id} type={'followsUser'} isFollowing={profileData.isFollowing} buttonStyle={styles.followButtonStyle}/>
+						}
 
-					<div style={[globalStyles.hiddenUntilLoad, globalStyles[this.props.profileData.get('status')]]}>
-						<div style={styles.userImageWrapper}>
-							<img style={styles.userImage} src={profileData.image} />
-							{/* <div key={'changeUserImageButton'} style={[styles.editImageButton, this.props.mode === 'settings' && styles.editImageButtonShow]} onClick={this.editImageClicked}>Change Image</div> */}
-							<div style={[styles.fileInputWrapper, this.props.mode === 'settings' && ownProfile === 'self' && styles.fileInputWrapperShow]} key={'changeUserImageButton'}>
-								<FormattedMessage id="user.changeImage" defaultMessage="Change Image"/>
-								<input style={styles.hiddenFileInput} type="file" accept="image/*" onChange={this.onFileSelect} />
-							</div>
-						</div>
+						<h1 style={styles.hideOnMobile}>{profileData.name}</h1> {/* Duplicate header for cleaner Follow button rendering */}
+						<p>{profileData.bio}</p>
 
-						{/* Content Wrapper is the right-hand side of the profile page.
-							Everything except the image really */}
-						<div style={[styles.contentWrapper, globalStyles[this.props.profileData.get('status')]]}>
-
-							{/* User Details */}
-							<div style={styles.profileNameWrapper}>
-								<Link to={'/user/' + this.props.username} style={globalStyles.link}>
-									<span style={styles.profileName} key={'userProfileName'}>{profileData.name}</span>
-								</Link>
-								{this.props.mode
-									? null // <span style={styles.headerMode}>{': '}<FormattedMessage {...globalMessages[this.props.mode]} /></span>
-									: null
-								}
-							</div>
-
-							<p style={styles.profileDetail}>{profileData.title}</p>
-							{/* <p style={styles.profileDetail}>Verfied with Twitter</p> */}
-							<p style={styles.profileDetail}>{profileData.bio}</p>
-
-							<ul style={[navStyles.navList, styles.subNav]}>
-								<Link to={'/user/' + this.props.username + '/pubs'} style={globalStyles.link}>
-								<li key="profileNavLeft0"style={[navStyles.navItem, navStyles.left, navStyles.navItemShow, styles.noLeftPadding, styles.inactiveNav, (!this.props.mode || this.props.mode === 'pubs') && styles.activeNav]}>
-									<FormattedMessage {...globalMessages.pubs} />
-								</li>
-								</Link>
-								<li style={[navStyles.navSeparator, navStyles.left, navStyles.navItemShow, navStyles.noMobile]}></li>
-
-								<Link to={'/user/' + this.props.username + '/discussions'} style={globalStyles.link}>
-								<li key="profileNavLeft1"style={[navStyles.navItem, navStyles.left, navStyles.navItemShow, styles.inactiveNav, this.props.mode === 'discussions' && styles.activeNav]}>
-									<FormattedMessage {...globalMessages.discussions} />
-								</li>
-								</Link>
-								<li style={[navStyles.navSeparator, navStyles.left, navStyles.navItemShow, navStyles.noMobile]}></li>
-
-
-								<Link to={'/user/' + this.props.username + '/groups'} style={globalStyles.link}>
-								<li key="profileNavLeft2"style={[navStyles.navItem, navStyles.left, ownProfile === 'self' && navStyles.navItemShow, styles.inactiveNav, this.props.mode === 'groups' && styles.activeNav]}>
-									<FormattedMessage {...globalMessages.groups} />
-								</li>
-								</Link>
-								<li style={[navStyles.navSeparator, navStyles.left, ownProfile === 'self' && navStyles.navItemShow, navStyles.noMobile]}></li>
-
-								<Link to={'/user/' + this.props.username + '/follows'} style={globalStyles.link}>
-								<li key="profileNavLeft3"style={[navStyles.navItem, navStyles.left, navStyles.navItemShow, styles.inactiveNav, this.props.mode === 'follows' && styles.activeNav]}>
-									<FormattedMessage {...globalMessages.follows} />
-								</li>
-								</Link>
-								<li style={[navStyles.navSeparator, navStyles.left, navStyles.navItemShow, navStyles.noMobile]}></li>
-
-								<Link to={'/user/' + this.props.username + '/notifications'} style={globalStyles.link}>
-								<li key="profileNavLeft4"style={[navStyles.navItem, navStyles.left, ownProfile === 'self' && navStyles.navItemShow, styles.inactiveNav, this.props.mode === 'notifications' && styles.activeNav]}>
-									<FormattedMessage {...globalMessages.notifications} />
-								</li>
-								</Link>
-								{/* <li style={[navStyles.navSeparator, navStyles.left, ownProfile === 'self' && navStyles.navItemShow, navStyles.noMobile]}></li> */}
-
-								<li style={globalStyles.clearFix}></li>
-							</ul>
-
-							{(() => {
-								switch (this.props.mode) {
-								case 'discussions':
-									return (
-										<UserProfileDiscussions
-											profileData={profileData}
-											ownProfile={ownProfile}/>
-									);
-								case 'follows':
-									return (
-										<UserProfileFollows
-											profileData={profileData}
-											ownProfile={ownProfile}/>
-									);
-								case 'groups':
-									return (
-										<UserProfileGroups
-											profileData={profileData}
-											ownProfile={ownProfile}/>
-									);
-								case 'pubs':
-									return (
-										<UserProfilePubs
-											profileData={profileData}
-											ownProfile={ownProfile} />
-									);
-								case 'notifications':
-									return (
-										<UserProfileNotifications
-											profileData={profileData}
-											ownProfile={ownProfile}
-											setNotificationsReadHandler={this.setNotificationsRead}/>
-									);
-								case 'settings':
-									return (
-										<UserProfileSettings
-											profileData={profileData}
-											ownProfile={ownProfile}
-											saveStatus={this.props.profileData.get('settingsStatus')}
-											handleSettingsSave={this.settingsSave}/>
-									);
-								default:
-									return (
-										<UserProfilePubs
-											profileData={profileData}
-											ownProfile={ownProfile} />
-									);
-									// return (
-									// 	<UserMain
-									// 		profileData={profileData}
-									// 		ownProfile={ownProfile}
-									// 		username={this.props.username}/>
-									// );
-								}
-							})()}
-
-						</div>
+						{links.filter((link)=> {
+							return !!profileData[link.key];
+						}).map((link, index)=> {
+							return <a key={'link-' + index} className={'underlineOnHover'} style={[styles.link, index === 0 && styles.firstLink]} href={link.href}>{link.text}</a>;
+						})}
 					</div>
 
 
-					<div style={[styles.imageCropperWrapper, this.state.userImageFile !== null && styles.imageCropperWrapperVisible]} >
-						<div style={styles.imageCropperContainer}>
-							<ImageCropper height={150} width={150} image={this.state.userImageFile} onCancel={this.cancelImageUpload} onUpload={this.userImageUploaded}/>
-						</div>
-
-					</div>
 				</div>
+
+				<NavContentWrapper navItems={navItems} mobileNavButtons={mobileNavButtons}>
+					{(() => {
+						switch (mode) {
+						case 'journals':
+							return (
+								<UserProfileJournals
+									profileData={this.props.profileData}
+									ownProfile={ownProfile}/>
+							);
+						case 'account':
+							return (
+								<UserProfileSettingsAccount
+									settingsData={this.props.profileData}
+									loginData={this.props.loginData}
+									saveSettingsHandler={this.saveSettings}/>
+							);
+						case 'notifications':
+							return (
+								<UserProfileSettingsNotifications
+									settingsData={this.props.profileData}
+									loginData={this.props.loginData}
+									saveSettingsHandler={this.saveSettings}/>
+							);
+						case 'profile':
+							return (
+								<UserProfileSettingsProfile
+									settingsData={this.props.profileData}
+									loginData={this.props.loginData}
+									saveSettingsHandler={this.saveSettings}/>
+							);
+						case 'followers':
+							return (
+								<UserProfileFollowers
+									profileData={this.props.profileData}/>
+							);
+						case 'following':
+							return (
+								<UserProfileFollowing
+									profileData={this.props.profileData}/>
+							);
+						case 'notFound':
+							return null;
+
+						default:
+							return (
+								<UserProfilePubs
+									profileData={profileData}
+									ownProfile={ownProfile} />
+							);
+						}
+					})()}
+				</NavContentWrapper>
 
 			</div>
 		);
@@ -336,162 +206,70 @@ export default connect( state => {
 		username: state.router.params.username,
 		mode: state.router.params.mode,
 	};
-})( Radium(Profile) );
+})( Radium(UserProfile) );
 
 styles = {
-	profileDetail: {
-		margin: '4px 0px',
+	followButtonStyle: {
+		float: 'right',
 		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
-			textAlign: 'center',
-			fontSize: '20px',
-		},
-	},
-	subNav: {
-		margin: '35px 0px 0px 0px',
-		fontSize: '20px',
-		// borderBottom: '1px solid #CCC',
-		border: '1px solid #EEE',
-		backgroundColor: '#f3f4f5',
-		minWidth: '569px',
-		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
-			height: 'auto',
-			borderTop: '1px solid #CCC',
-		},
-	},
-	noLeftPadding: {
-		padding: '0px 20px 0px 2px',
-	},
-	inactiveNav: {
-		color: '#bbb',
-		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
-			width: 'calc(100% / 3)',
-			height: 60,
-			margin: '20px 0px',
-		},
-	},
-	activeNav: {
-		color: '#333',
-	},
-	userImageWrapper: {
-		margin: 30,
-		width: 150,
-		height: 150,
-		border: '1px solid rgba(0,0,0,0.1)',
-		borderRadius: '1px',
-		float: 'left',
-		// backgroundColor: 'rgba(190,250,89,0.4)',
-		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+			display: 'block',
 			float: 'none',
-			margin: '30px auto',
-		},
-	},
-	userImage: {
-		width: '100%',
-		height: '100%',
-
-	},
-	editImageButton: {
-		width: '100%',
-		textAlign: 'center',
-		display: 'none',
-		userSelect: 'none',
-		cursor: 'pointer',
-		':hover': {
-			color: 'black',
+			maxWidth: '80%',
+			margin: '1em auto',
 		}
 	},
-	editImageButtonShow: {
-		display: 'block',
-	},
-	contentWrapper: {
-		float: 'left',
-		width: 'calc(100% - 242px)',
-		// backgroundColor: 'rgba(255,190,89,0.4)',
-		margin: '30px 30px 60px 0px',
+	headerImageWrapper: {
+		textAlign: 'center',
+		display: 'table-cell',
+		verticalAlign: 'top',
 		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
-			float: 'none',
-			width: 'calc(100% - 30px)',
-			padding: '0px 15px',
-		},
+			display: 'block',
+		}
 	},
-	profileNameWrapper: {
+	headerTextWrapper: {
+		padding: '0em 1em',
+		display: 'table-cell',
+		verticalAlign: 'top',
+		width: '100%',
 		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+			display: 'block',
 			textAlign: 'center',
-		},
+			padding: '0em',
+		}
 	},
-	profileName: {
-		margin: 0,
-		fontSize: '40px',
-		':hover': {
-			color: 'black',
-		},
+	link: {
+		paddingLeft: '1em',
+		marginLeft: '1em',
+		borderLeft: '1px solid #BBBDC0',
+		textDecoration: 'none',
+		color: 'inherit',
 		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
-			fontSize: '50px',
+			display: 'block',
+			paddingLeft: 'auto',
+			marginLeft: 'auto',
+			borderLeft: '0px solid #BBBDC0',
 		},
-
 	},
-	headerMode: {
-		color: '#888',
-		fontSize: 30,
+	firstLink: {
+		borderLeft: '0px solid #BBBDC0',
+		paddingLeft: '0em',
+		marginLeft: '0em',
 	},
-	fileInputWrapper: {
-		width: '100%',
-		textAlign: 'center',
+	hide: {
 		display: 'none',
-		userSelect: 'none',
-		position: 'relative',
-		':hover': {
-			color: 'black',
-		}
-	},
-	fileInputWrapperShow: {
-		display: 'block'
-	},
-	hiddenFileInput: {
-		height: '100%',
-		width: '100%',
-		position: 'absolute',
-		outline: 'none',
-		opacity: 0,
-		left: 0,
-		top: 0,
-		cursor: 'pointer',
-	},
-	imageCropperWrapper: {
-		height: 'calc(100vh - ' + globalStyles.headerHeight + ')',
-		width: '100vw',
-		backgroundColor: 'rgba(255,255,255,0.8)',
-		position: 'fixed',
-		top: globalStyles.headerHeight,
-		left: 0,
-		opacity: 0,
-		pointerEvents: 'none',
-		transition: '.1s linear opacity',
 		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
-			width: '100%',
-			height: 'auto',
-			minHeight: 'calc(100vh - ' + globalStyles.headerHeightMobile + ')',
-			top: globalStyles.headerHeightMobile,
-			left: 0,
+			display: 'none',
 		},
 	},
-	imageCropperContainer: {
-		width: 400,
-		height: 300,
-		backgroundColor: 'white',
-		margin: '0 auto',
-		position: 'relative',
-		top: '50%',
-		transform: 'translateY(-50%)',
+	showOnMobile: {
+		display: 'none',
 		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
-			height: 'auto',
-			width: '100%',
-			top: 0,
-			transform: 'translateY(0%)',
-		}
+			display: 'block',
+		},
 	},
-	imageCropperWrapperVisible: {
-		opacity: 1,
-		pointerEvents: 'auto',
+	hideOnMobile: {
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+			display: 'none',
+		},
 	},
 };

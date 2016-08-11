@@ -12,9 +12,6 @@ Keep config.js private to your development team.
 export const accessKeyAws = '<YOUR-ACCESS-KEY-HERE>'; // S3 used for file storage
 export const secretKeyAws = '<YOUR-SECRET-KEY-HERE>';
 
-// Firebase Credentials
-export const firebaseSecret = '<YOUR-SECRET-HERE>'; // Firebase used for synchronizing collaborative editing
-
 // Heroku Credentials
 export const herokuApiKey = '<YOUR-KEY-HERE>'; // Heroku used to host and serve the project
 
@@ -23,4 +20,9 @@ export const mongoURI = '<YOUR-URI-HERE>'; // Can point to an external mongo hos
 
 // Sendgrid Credentials
 export const sendgridAPIKey = '<YOUR-KEY-HERE>'; // Sendgrid used to send transactional emails
-export const captchaKey = '<YOUR-KEY-HERE>';
+
+// URL for pubpub-collab server (https://github.com/pubpub/collab)
+export const collabServerURL = '<COLLAB-SERVER-URL>';
+
+// secret shared by pubpub and collaboration server, this key needs to be the same on the collab server
+export const collabEncryptSecret = '<16 or 24 byte password>';

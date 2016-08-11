@@ -3,7 +3,7 @@ import Radium from 'radium';
 
 let styles = {};
 
-const Reference = React.createClass({
+export const Reference = React.createClass({
 	propTypes: {
 		citationObject: PropTypes.object,
 		mode: PropTypes.string,
@@ -16,7 +16,7 @@ const Reference = React.createClass({
 		};
 	},
 
-	
+
 	render: function() {
 		const citation = this.props.citationObject;
 		const citationStrings = {};
@@ -66,10 +66,11 @@ const Reference = React.createClass({
 			const journalString = citation.journal ? `
   journal={` + citation.journal + `},` : '';
 
-			bibtexString = `@article{` + citation.title.replace(/[^A-Za-z0-9]/g, '').substring(0, 12) + citation.year + `,
+			bibtexString = `@article{` + citation.title && citation.title.replace(/[^A-Za-z0-9]/g, '').substring(0, 12) + citation.year + `,
   title={` + citation.title + `},
   author={` + citation.author + `},
   year={` + citation.year + `},
+  note={` + citation.note + `},
   publisher={PubPub},` + journalString + `
 }`;
 			break;
@@ -82,7 +83,7 @@ const Reference = React.createClass({
 		switch (this.props.mode) {
 		case 'mla':
 			return (<span>
-				{citationStrings.author.replace(/\.\./g, '.')}
+				{citationStrings.author && citationStrings.author.replace(/\.\./g, '.')}
 				{citationStrings.title}
 				<span style={styles.italic}>{citationStrings.journal}</span>
 				{citationStrings.volume}
@@ -96,7 +97,7 @@ const Reference = React.createClass({
 
 		case 'chicago':
 			return (<span>
-				{citationStrings.author.replace(/\.\./g, '.')}
+				{citationStrings.author && citationStrings.author.replace(/\.\./g, '.')}
 				{citationStrings.title}
 				<span style={styles.italic}>{citationStrings.journal}</span>
 				{citationStrings.volume}
@@ -110,13 +111,13 @@ const Reference = React.createClass({
 
 		case 'apa':
 			return (<span>
-				{citationStrings.author.replace(/\.\./g, '.')}
+				{citationStrings.author && citationStrings.author.replace(/\.\./g, '.')}
 				{citationStrings.year}
 				{citationStrings.title}
 				<span style={styles.italic}>{citationStrings.journal}</span>
 				{citationStrings.volume}
 				{citationStrings.publisher}
-				
+
 				{citationStrings.number}
 				{citationStrings.pages}
 				<a href={citation.url} style={{textDecoration: 'none', color: 'inherit'}}>{citationStrings.url}</a>
@@ -130,7 +131,7 @@ const Reference = React.createClass({
 		default:
 			return null;
 		}
-		
+
 	}
 });
 

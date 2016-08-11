@@ -2,19 +2,21 @@ import React, { PropTypes } from 'react';
 import {connect} from 'react-redux';
 import Radium from 'radium';
 import Helmet from 'react-helmet';
+import { Link } from 'react-router';
 
 import {checkHash, resetPassword, submitResetRequest} from './actions';
-import {toggleVisibility} from 'containers/Login/actions';
-import {globalStyles} from 'utils/styleConstants';
+// import {globalStyles} from 'utils/styleConstants';
 
-import {LoaderIndeterminate, NotFound} from 'components';
+import {Loader, NotFound} from 'components';
+
+import {safeGetInToJS} from 'utils/safeParse';
 
 // import {globalMessages} from 'utils/globalMessages';
 // import {FormattedMessage} from 'react-intl';
 
 let styles = {};
 
-const ResetPassword = React.createClass({
+export const ResetPassword = React.createClass({
 	propTypes: {
 		resetData: PropTypes.object,
 		hash: PropTypes.string,
@@ -41,11 +43,10 @@ const ResetPassword = React.createClass({
 		this.props.dispatch(resetPassword(this.props.hash, this.props.username, this.refs.resetPassword.value));
 	},
 
-	toggleLogin: function() {
-		this.props.dispatch(toggleVisibility());
-	},
-
 	render: function() {
+		const resetSuccess = safeGetInToJS(this.props.resetData, ['resetSuccess']);
+		const requestSuccess = safeGetInToJS(this.props.resetData, ['requestSuccess']);
+		const loading = safeGetInToJS(this.props.resetData, ['loading']);
 
 		const metaData = {
 			title: 'Password Reset',
@@ -53,33 +54,25 @@ const ResetPassword = React.createClass({
 
 		return (
 
-			<div style={styles.container}>
+			<div style={styles.container} className={'section'}>
 
 				<Helmet {...metaData} />
 
-				{this.props.hash && this.props.resetData.get('resetSuccess') === 'invalid'
+				{this.props.hash && resetSuccess === 'invalid'
 					? null
-					: <div style={styles.header}>Password Reset</div>
+					: <h1>Password Reset</h1>
 				}
-
 				<div style={styles.content}>
-
-					<div style={styles.loaderWrapper}>
-						{this.props.resetData.get('loading')
-							? <LoaderIndeterminate color={globalStyles.sideText}/>
-							: null
-						}
-					</div>
 
 					{this.props.hash
 						? <div>
 							{(()=>{
-								switch (this.props.resetData.get('resetSuccess')) {
+								switch (resetSuccess) {
 								case 'success':
 									return (
 										<div>
 											<div style={styles.detail}>Password Reset successful!</div>
-											<div style={styles.loginButton} key={'resetLoginButton'} onClick={this.toggleLogin}>Click to Login</div>
+											<Link to={'/login'} className={'button'} style={styles.loginButton} key={'resetLoginButton'}>Click to Login</Link>
 										</div>
 									);
 								case 'invalid':
@@ -87,8 +80,15 @@ const ResetPassword = React.createClass({
 								case 'valid':
 									return (
 										<form onSubmit={this.resetPasswordSubmit}>
-											<input style={styles.input} type="password" ref={'resetPassword'} placeholder={'new password'}/>
-											<div style={styles.submitButton} key={'passwordResetButton'} onClick={this.resetPasswordSubmit}>Set New Password</div>
+											<div>
+												<label style={styles.label} htmlFor={'newPassword'}>
+													New Password
+												</label>
+												<input ref={'resetPassword'} id={'newPassword'} name={'New Password'} type="password" style={styles.input}/>
+											</div>
+
+											<button name={'login'} className={'button'} onClick={this.resetPasswordSubmit}>Set New Password</button>
+											<div style={styles.loaderContainer}><Loader loading={loading} showCompletion={false}/></div>
 										</form>
 									);
 								default:
@@ -98,27 +98,37 @@ const ResetPassword = React.createClass({
 						</div>
 						: <div>
 							{(()=>{
-								switch (this.props.resetData.get('requestSuccess')) {
+								switch (requestSuccess) {
 								case 'success':
 									return (
 										<div>
-											<div style={styles.detail}>Password Reset Request Submitted.</div>
-											<div style={styles.detail}>Check your email.</div>
+											<p style={styles.detail}>Password Reset Request Submitted.</p>
+											<p style={styles.detail}>Check your email.</p>
 										</div>
 									);
-								default:
-									return (<div>
-										<div style={styles.detail}>Please enter the email address of your PubPub account.</div>
-										<div style={styles.detail}>Reset instructions will be sent to this email.</div>
-										<form onSubmit={this.resetRequestSubmit}>
-											<input style={styles.input} type="email" ref={'requestResetEmail'} placeholder={'email'}/>
-											<div style={styles.submitButton} key={'resetRequestButton'} onClick={this.resetRequestSubmit}>Reset</div>
-										</form>
-										{this.props.resetData.get('requestSuccess') === 'error'
-											? <div style={styles.error}>No user with that email</div>
-											: null
-										}
-									</div>);
+								default: 
+									return (
+										<div>
+											<p style={styles.detail}>Please enter the email address of your PubPub account.</p>
+											<p style={styles.detail}>Reset instructions will be sent to this email.</p>
+
+											<form onSubmit={this.resetRequestSubmit}>
+												<div>
+													<label style={styles.label} htmlFor={'email'}>
+														Email
+													</label>
+													<input ref={'requestResetEmail'} id={'email'} name={'email'} type="text" style={styles.input}/>
+												</div>
+
+												<button name={'login'} className={'button'} onClick={this.resetRequestSubmit}>Reset Password</button>
+												<div style={styles.loaderContainer}><Loader loading={loading} showCompletion={false}/></div>
+											</form>
+											{requestSuccess === 'error'
+												? <div style={styles.error}>No user with that email</div>
+												: null
+											}
+										</div>
+									);
 								}
 							})()}
 						</div>
@@ -141,24 +151,24 @@ export default connect( state => {
 
 styles = {
 	container: {
-		fontFamily: globalStyles.headerFont,
-		position: 'relative',
+		// fontFamily: globalStyles.headerFont,
+		// position: 'relative',
 		maxWidth: 800,
-		margin: '0 auto',
-		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
-			width: 'calc(100% - 40px)',
-			padding: '0px 20px',
-			maxWidth: '100%',
-		},
+		// margin: '0 auto',
+		// '@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+		// 	width: 'calc(100% - 40px)',
+		// 	padding: '0px 20px',
+		// 	maxWidth: '100%',
+		// },
 	},
-	header: {
-		color: globalStyles.sideText,
-		padding: '20px 0px',
-		fontSize: '50px',
-	},
-	content: {
-		padding: '0px 20px',
-	},
+	// header: {
+	// 	color: globalStyles.sideText,
+	// 	padding: '20px 0px',
+	// 	fontSize: '50px',
+	// },
+	// content: {
+	// 	padding: '0px 20px',
+	// },
 	loaderWrapper: {
 		position: 'absolute',
 		top: '15px',
@@ -168,48 +178,15 @@ styles = {
 		fontSize: '18px',
 	},
 	input: {
-		display: 'block',
-		margin: '15px 0px',
-		borderWidth: '0px 0px 1px 0px',
-		borderColor: '#aaa',
-		backgroundColor: 'transparent',
-		fontSize: '25px',
-		width: '60%',
-		color: '#555',
-		':focus': {
-			borderWidth: '0px 0px 1px 0px',
-			borderColor: 'black',
-			outline: 'none',
-		},
-		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
-			width: '100%',
-		},
+		width: 'calc(100% - 20px - 4px)', // Calculations come from padding and border in pubpub.css
 	},
-	submitButton: {
-		fontSize: 30,
-		padding: '0px 20px',
-		float: 'right',
-		marginBottom: 20,
-		fontFamily: globalStyles.headerFont,
-		cursor: 'pointer',
-		color: '#555',
-		':hover': {
-			color: 'black',
-		}
+	loaderContainer: {
+		display: 'inline-block',
+		position: 'relative',
+		top: 15,
 	},
 	loginButton: {
-		width: '250px',
-		fontSize: '20px',
-		textAlign: 'center',
-		margin: '20px auto',
-		border: '1px solid #ccc',
-		cursor: 'pointer',
-		borderRadius: '1px',
-		padding: '15px 0px',
-		color: '#555',
-		':hover': {
-			color: '#000',
-		},
+		margin: '1em 0em',
 	},
 	error: {
 		color: 'red',

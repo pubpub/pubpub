@@ -6,16 +6,16 @@ let styles = {};
 const initStyle = {
 	transform: 'translateX(-100%)',
 	width: '100%',
-	height: '1px',
-	backgroundColor: '#CCC',
-	transition: '.2s linear transform',
+	height: '4px',
+	backgroundColor: '#363736',
+	transition: '.2s ease-out transform',
 };
 
 const animateOff = {
 	transition: '.0s linear transform',
 };
 
-const LoaderDeterminate = React.createClass({
+export const LoaderDeterminate = React.createClass({
 	propTypes: {
 		value: PropTypes.number // 0-100
 	},
@@ -40,7 +40,7 @@ const LoaderDeterminate = React.createClass({
 
 		return (
 			<div className="loading-bar" style={[initStyle, isNaN(percentage) === false && styles(percentage), !this.state.animate && animateOff]}>
-				
+
 			</div>
 		);
 	}
