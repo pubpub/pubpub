@@ -374,6 +374,7 @@ export const Media = React.createClass({
 			{ type: 'button', text: 'References', action: this.setAtomMode.bind(this, 'reference'), active: this.state.atomMode === 'reference'},
 			{ type: 'button', text: 'Jupyter', action: this.setAtomMode.bind(this, 'jupyter'), active: this.state.atomMode === 'jupyter'},
 			{ type: 'button', text: 'Documents', action: this.setAtomMode.bind(this, 'document'), active: this.state.atomMode === 'document'},
+			{ type: 'button', text: 'Code', action: this.setAtomMode.bind(this, 'code'), active: this.state.atomMode === 'code'},
 		];
 
 
@@ -384,6 +385,7 @@ export const Media = React.createClass({
 			{value: 'reference', label: 'reference'},
 			{value: 'jupyter', label: 'jupyter'},
 			{value: 'iframe', label: 'iframe'},
+			{value: 'code', label: 'code'},
 		];
 		return (
 			<Dropzone ref="dropzone" disableClick={true} onDrop={this.onDrop} style={{}} activeClassName={'dropzone-active'} >
