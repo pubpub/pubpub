@@ -1,8 +1,12 @@
 import React, {PropTypes} from 'react';
 import Radium from 'radium';
+<<<<<<< Updated upstream
 import {Link as UnwrappedLink} from 'react-router';
 const Link = Radium(UnwrappedLink);
 
+=======
+import {Link} from 'react-router';
+>>>>>>> Stashed changes
 import {globalStyles} from 'utils/styleConstants';
 let styles = {};
 
@@ -12,15 +16,22 @@ export const PreviewCard = React.createClass({
 		image: PropTypes.string,
 		title: PropTypes.string,
 		description: PropTypes.string,
+<<<<<<< Updated upstream
 		mobileDescription: PropTypes.string, // Added this, even though it's a bit hacky, to facilitate multiple items that require exclusive placement, since we render description in two places
 		slug: PropTypes.string,
 		buttons: PropTypes.array,
 		header: PropTypes.object,
 		footer: PropTypes.oneOfType([PropTypes.array, PropTypes.object]),
+=======
+		slug: PropTypes.string,
+		onFollowHandler: PropTypes.func,
+		showEdit: PropTypes.bool,
+>>>>>>> Stashed changes
 	},
 
 
 	render: function() {
+<<<<<<< Updated upstream
 		const defaultImages = {
 			atom: 'https://assets.pubpub.org/_site/pub.png',
 			journal: 'https://assets.pubpub.org/_site/journal.png',
@@ -91,6 +102,39 @@ export const PreviewCard = React.createClass({
 				{/* Custom Footer content, for notifcations, details etc */}
 				<div style={[styles.footer, !this.props.footer && {display: 'none'}]}>
 					{this.props.footer}
+=======
+		const href = '/';
+		return (
+			<div style={styles.container}>
+				
+				{/* Preview card image */}
+				<div style={[styles.tableCell, styles.edges]}>
+					<Link to={href} style={globalStyles.link}>
+						<img style={styles.image} src={this.props.image} alt={this.props.title}/>
+					</Link>
+				</div>
+				
+				{/* Render text here on non-mobile (hacky - but it works for now) */}
+				<div style={[styles.tableCell, styles.noMobile]}>
+					<Link to={href} style={globalStyles.link}>
+						<h3 style={styles.title}>{this.props.title}</h3>
+					</Link>
+					<p style={styles.description}>{this.props.description}</p>
+				</div>
+
+				{/* Option Buttons */}
+				<div style={[styles.tableCell, styles.edges]}>
+					<div className={'button'} style={[styles.button, styles.follow]}>Follow</div>
+					<div className={'button'} style={[styles.button]}>Edit</div>
+				</div>
+
+				{/* Render text here on mobile (hacky - but it works for now) */}
+				<div style={[styles.tableCell, styles.yesMobile]}>
+					<Link to={href} style={globalStyles.link}>
+						<h3 style={styles.title}>{this.props.title}</h3>
+					</Link>
+					<p style={styles.description}>{this.props.description}</p>
+>>>>>>> Stashed changes
 				</div>
 
 
@@ -103,6 +147,7 @@ export default Radium(PreviewCard);
 
 styles = {
 	container: {
+<<<<<<< Updated upstream
 		width: '100%',
 		border: '1px solid #BBBDC0',
 		borderRadius: '1px',
@@ -112,6 +157,20 @@ styles = {
 	image: {
 		width: '4em',
 		display: 'block',
+=======
+		width: 'calc(100% - 2em)',
+		border: '1px solid #BBBDC0',
+		borderRadius: '1px',
+		display: 'table',
+		margin: '1em',
+		backgroundColor: 'white',
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+			display: 'block',
+		}
+	},
+	image: {
+		width: '4em',
+>>>>>>> Stashed changes
 	},
 	button: {
 		display: 'block',
@@ -119,6 +178,7 @@ styles = {
 		padding: '.1em 2em',
 		fontSize: '.8em',
 		marginBottom: '.5em',
+<<<<<<< Updated upstream
 		minWidth: '5em', // Need min width so Follow -> Following doesn't cause resize
 		whiteSpace: 'nowrap',
 	},
@@ -128,6 +188,11 @@ styles = {
 		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
 			display: 'block',
 		}
+=======
+	},
+	follow: {
+		minWidth: '5em', // Need min width so Follow -> Following doesn't cause resize
+>>>>>>> Stashed changes
 	},
 	tableCell: {
 		display: 'table-cell',
@@ -155,6 +220,7 @@ styles = {
 			display: 'block',
 		}
 	},
+<<<<<<< Updated upstream
 	header: {
 		fontSize: '0.9em',
 		margin: '0em .5em .25em .5em',
@@ -167,4 +233,6 @@ styles = {
 		padding: '.5em 0em',
 		borderTop: '1px solid #F3F3F4',
 	},
+=======
+>>>>>>> Stashed changes
 };

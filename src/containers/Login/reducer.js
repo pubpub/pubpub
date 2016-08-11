@@ -15,6 +15,7 @@ import {
 import {
 	LOAD_APP_AND_LOGIN_SUCCESS,
 } from 'containers/App/actions';
+<<<<<<< Updated upstream
 
 import {
 	SIGNUP_SUCCESS,
@@ -29,6 +30,14 @@ import {
 	EMAIL_VERIFICATION_SUCCESS,
 } from 'containers/EmailVerification/actions';
 
+=======
+
+import {
+	SIGNUP_SUCCESS,
+	SIGNUP_DETAILS_SUCCESS,
+} from 'containers/SignUp/actions';
+
+>>>>>>> Stashed changes
 /*--------*/
 // Initialize Default State
 /*--------*/
@@ -63,6 +72,7 @@ function loginSuccess(state, loginData) {
 }
 
 function loginFailed(state, error) {
+<<<<<<< Updated upstream
 	const errorMessage = 'Invalid Username or Password';
 	// switch (error.toString()) {
 	// case 'Error: Unauthorized':
@@ -70,6 +80,15 @@ function loginFailed(state, error) {
 	// default: 
 	// 	errorMessage =  break;
 	// }
+=======
+	let errorMessage = '';
+	switch (error.toString()) {
+	case 'Error: Unauthorized':
+		errorMessage = 'Invalid Username or Password'; break;
+	default: 
+		errorMessage = 'Email already used'; break;
+	}
+>>>>>>> Stashed changes
 
 	return state.merge({loading: false, error: errorMessage});
 }
@@ -80,10 +99,13 @@ function loggedOut(state) {
 
 function signUpDetailsSuccess(state, result) {
 	return state.mergeIn(['userData'], result);
+<<<<<<< Updated upstream
 }
 
 function verificationSuccess(state) {
 	return state.mergeIn(['userData', 'verifiedEmail'], true);
+=======
+>>>>>>> Stashed changes
 }
 
 /*--------*/
@@ -103,6 +125,7 @@ export default function reducer(state = defaultState, action) {
 
 	case LOGOUT_SUCCESS:
 		return loggedOut(state);
+<<<<<<< Updated upstream
 
 	case SIGNUP_DETAILS_SUCCESS:
 	case SAVE_SETTINGS_SUCCESS: 
@@ -110,6 +133,11 @@ export default function reducer(state = defaultState, action) {
 
 	case EMAIL_VERIFICATION_SUCCESS:
 		return verificationSuccess(state);
+=======
+
+	case SIGNUP_DETAILS_SUCCESS: 
+		return signUpDetailsSuccess(state, action.result);
+>>>>>>> Stashed changes
 
 	default:
 		return ensureImmutable(state);

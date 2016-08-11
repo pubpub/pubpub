@@ -3,6 +3,7 @@ import {connect} from 'react-redux';
 import Radium from 'radium';
 import Helmet from 'react-helmet';
 // import {globalStyles} from 'utils/styleConstants';
+<<<<<<< Updated upstream
 // import {PreviewCard} from 'components';
 import {About} from 'components';
 // import { Link } from 'react-router';
@@ -15,6 +16,11 @@ import request from 'superagent';
 // import {push} from 'redux-router';
 import {match} from '../../components/AtomTypes/Embed/oEmbed';
 import Dropzone from 'react-dropzone';
+=======
+import {PreviewCard} from 'components';
+import {About} from 'components';
+// import { Link } from 'react-router';
+>>>>>>> Stashed changes
 
 let styles = {};
 
@@ -27,6 +33,7 @@ export const Landing = React.createClass({
 
 	getInitialState() {
 		return {
+<<<<<<< Updated upstream
 			value: undefined,
 			source: false,
 		};
@@ -119,12 +126,22 @@ export const Landing = React.createClass({
 			callback(null, { options: options });
 		});
 	},
+=======
+			
+		};
+	},
+
+>>>>>>> Stashed changes
 
 	render: function() {
 		const metaData = {
 			title: 'PubPub',
 		};
+<<<<<<< Updated upstream
 		// const loggedIn = this.props.loginData && this.props.loginData.get('loggedIn');
+=======
+		const loggedIn = this.props.loginData && this.props.loginData.get('loggedIn');
+>>>>>>> Stashed changes
 
 		return (
 			<div style={styles.container}>
@@ -132,6 +149,7 @@ export const Landing = React.createClass({
 				<Helmet {...metaData} />
 
 				{/* If not loggedIn, display the About PubPub content*/}
+<<<<<<< Updated upstream
 				{/* !loggedIn &&
 					<About />
 				*/}
@@ -189,6 +207,41 @@ export const Landing = React.createClass({
 							description={'Intent on eating every bagel on earth until I burst.'} /> */}
 				{/*  	</div>
 				</div> */}
+=======
+				{!loggedIn &&
+					<About />
+				}
+				
+
+				<div className={'lightest-bg'} style={styles.sectionWrapper}>
+					<div style={styles.section}>
+						<h2 style={styles.sectionHeader}>Recent Activity</h2>
+
+						{/* If no activity, display - follow these suggested accounts*/}
+
+						<PreviewCard 
+							image={'http://res.cloudinary.com/pubpub/image/upload/c_limit,h_250,w_250/v1449761714/3eb7882_iavg9s.jpg'}
+							title={'Thariq Shihipar'}
+							description={'Intent on eating every bagel on earth until I burst.'} />
+						<PreviewCard 
+							image={'http://res.cloudinary.com/pubpub/image/upload/c_limit,h_250,w_250/v1449761714/3eb7882_iavg9s.jpg'}
+							title={'Thariq Shihipar'}
+							description={'Intent on eating every bagel on earth until I burst.'} />
+						<PreviewCard 
+							image={'http://res.cloudinary.com/pubpub/image/upload/c_limit,h_250,w_250/v1449761714/3eb7882_iavg9s.jpg'}
+							title={'Thariq Shihipar'}
+							description={'Intent on eating every bagel on earth until I burst.'} />
+						<PreviewCard 
+							image={'http://res.cloudinary.com/pubpub/image/upload/c_limit,h_250,w_250/v1449761714/3eb7882_iavg9s.jpg'}
+							title={'Thariq Shihipar'}
+							description={'Intent on eating every bagel on earth until I burst.'} />
+						<PreviewCard 
+							image={'http://res.cloudinary.com/pubpub/image/upload/c_limit,h_250,w_250/v1449761714/3eb7882_iavg9s.jpg'}
+							title={'Thariq Shihipar'}
+							description={'Intent on eating every bagel on earth until I burst.'} />
+					</div>
+				</div>
+>>>>>>> Stashed changes
 
 			</div>
 		);
@@ -204,6 +257,7 @@ export default connect( state => {
 })( Radium(Landing) );
 
 styles = {
+<<<<<<< Updated upstream
 	dropzoneBlock: {
 		padding: '0em 2em',
 		margin: '0em 1em',
@@ -228,5 +282,23 @@ styles = {
 		padding: 0,
 		cursor: 'pointer',
 		opacity: 0,
+=======
+	container: {
+
+	},
+	sectionWrapper: {
+		padding: '3em 2em',
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+			padding: '3em 1em',
+		}
+	},
+	section: {
+		maxWidth: '1024px',
+		margin: '0 auto',
+	},
+	sectionHeader: {
+		fontSize: '2.5em',
+		marginTop: '0em',
+>>>>>>> Stashed changes
 	},
 };

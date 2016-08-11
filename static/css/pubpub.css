@@ -20,7 +20,10 @@ lightest: #F3F3F4
 .light-color { color: #808284; }
 
 .lighter-bg { background-color: #BBBDC0; }
+<<<<<<< Updated upstream
 .lighter-bg-hover:hover { background-color: #BBBDC0; }
+=======
+>>>>>>> Stashed changes
 .lighter-color { color: #BBBDC0; }
 
 .lightest-bg { background-color: #F3F3F4; }
@@ -31,12 +34,17 @@ lightest: #F3F3F4
 /* Font Styles */
 .title-font { font-family: 'Yrsa', Georgia, serif; }
 .sans-font  { font-family: 'Open Sans', Helvetica Neue, Arial, sans-serif; }
+<<<<<<< Updated upstream
 /*.serif-font { font-family: 'Palatino', serif; }*/
 .serif-font { font-family: serif; }
+=======
+.serif-font { font-family: 'Lora', serif; }
+>>>>>>> Stashed changes
 
 body {
 	font-family: 'Open Sans', Helvetica Neue, Arial, sans-serif;
 }
+<<<<<<< Updated upstream
 .underlineOnHover:hover {
 	text-decoration: underline !important;
 }
@@ -126,6 +134,9 @@ body {
 
 /* Input Fields */
 /* ------------ */
+=======
+
+>>>>>>> Stashed changes
 label {
 	display: block;	
 	color: #58585B;
@@ -160,6 +171,7 @@ input[type="file"]:focus {
 	font-size: 0.8em;
 	text-decoration: none;
 	position: relative;
+<<<<<<< Updated upstream
 	top: -1.4em;
 }
 /* ------------ */
@@ -195,6 +207,15 @@ h2 {
 
 /* Account Menu */
 /* ------------ */
+=======
+	top: -1.7em;
+}
+
+.underlineOnHover:hover {
+	text-decoration: underline !important;
+}
+
+>>>>>>> Stashed changes
 .menu-option {
 	width: calc(100% - 3em);
 	text-decoration: none;
@@ -212,6 +233,7 @@ h2 {
 	background-color: #BBBDC0;
 	margin: .2em 0em;
 }
+<<<<<<< Updated upstream
 /* ------------ */
 
 
@@ -219,6 +241,9 @@ h2 {
 
 /* Buttons */
 /* ------------ */
+=======
+
+>>>>>>> Stashed changes
 .button {
 	display: inline-block;
 	border: solid 2px #58585B;
@@ -232,7 +257,10 @@ h2 {
 	-moz-user-select: none;
 	-ms-user-select: none;   
 	user-select: none;
+<<<<<<< Updated upstream
 	text-decoration: none;
+=======
+>>>>>>> Stashed changes
 }
 
 .button:hover {
@@ -247,11 +275,15 @@ h2 {
 	-ms-transform: translateY(1px);
     transform: translateY(1px);
 }
+<<<<<<< Updated upstream
 /* ------------ */
 
 
 /* Arrow Box */
 /* ------------ */
+=======
+
+>>>>>>> Stashed changes
 .arrow-box {
 	border: 1px solid #808284;
 }
@@ -277,6 +309,7 @@ h2 {
 	border-width: 9px;
 	margin-right: 20px;
 }
+<<<<<<< Updated upstream
 /* ------------ */
 
 
@@ -303,3 +336,5 @@ h2 {
 }
     
 
+=======
+>>>>>>> Stashed changes

@@ -35,7 +35,11 @@ export const EmailVerification = React.createClass({
 
 		return (
 
+<<<<<<< Updated upstream
 			<div className={'section'} style={styles.container}>
+=======
+			<div style={styles.container}>
+>>>>>>> Stashed changes
 
 				<Helmet {...metaData} />
 
@@ -61,6 +65,11 @@ export default connect( state => {
 
 styles = {
 	container: {
+<<<<<<< Updated upstream
+=======
+		padding: '0px 15px',
+		margin: '0 auto 100px auto',
+>>>>>>> Stashed changes
 		textAlign: 'center',
 	}
 };

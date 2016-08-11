@@ -1,6 +1,7 @@
 require('babel-polyfill');
 
 // Webpack config for development
+<<<<<<< Updated upstream
 const fs = require('fs');
 const path = require('path');
 const webpack = require('webpack');
@@ -8,6 +9,15 @@ const HappyPack = require('happypack');
 const assetsPath = path.resolve(__dirname, '../static/dist');
 const host = (process.env.HOST || 'localhost');
 const port = parseInt(process.env.PORT, 10) + 1 || 3001;
+=======
+var fs = require('fs');
+var path = require('path');
+var webpack = require('webpack');
+// var HappyPack = require('happypack');
+var assetsPath = path.resolve(__dirname, '../static/dist');
+var host = (process.env.HOST || 'localhost');
+var port = parseInt(process.env.PORT) + 1 || 3001;
+>>>>>>> Stashed changes
 
 // https://github.com/halt-hammerzeit/webpack-isomorphic-tools
 const WebpackIsomorphicToolsPlugin = require('webpack-isomorphic-tools/plugin');
@@ -37,19 +47,32 @@ delete babelLoaderQuery.env;
 
 // make sure react-transform is enabled
 babelLoaderQuery.plugins = babelLoaderQuery.plugins || [];
+<<<<<<< Updated upstream
 let reactTransform = null;
 for (let index = 0; index < babelLoaderQuery.plugins.length; ++index) {
 	const plugin = babelLoaderQuery.plugins[index];
 	if (Array.isArray(plugin) && plugin[0] === 'react-transform') {
 		reactTransform = plugin;
 	}
+=======
+var reactTransform = null;
+for (var i = 0; i < babelLoaderQuery.plugins.length; ++i) {
+  var plugin = babelLoaderQuery.plugins[i];
+  if (Array.isArray(plugin) && plugin[0] === 'react-transform') {
+	reactTransform = plugin;
+  }
+>>>>>>> Stashed changes
 }
 
 if (!reactTransform) {
 	reactTransform = ['react-transform', {transforms: []}];
 	babelLoaderQuery.plugins.push(reactTransform);
 }
+<<<<<<< Updated upstream
 babelLoaderQuery.cacheDirectory = true;
+=======
+// babelLoaderQuery.cacheDirectory = true;
+>>>>>>> Stashed changes
 
 if (!reactTransform[1] || !reactTransform[1].transforms) {
 	reactTransform[1] = Object.assign({}, reactTransform[1], {transforms: []});
@@ -63,6 +86,7 @@ reactTransform[1].transforms.push({
 });
 
 module.exports = {
+<<<<<<< Updated upstream
 	cache: true,
 	devtool: 'cheap-module-eval-source-map',
 	context: path.resolve(__dirname, '..'),
@@ -72,6 +96,16 @@ module.exports = {
 			'./src/client.js'
 		]
 	},
+=======
+  devtool: 'inline-source-map',
+  context: path.resolve(__dirname, '..'),
+  entry: {
+	'main': [
+	  'webpack-hot-middleware/client?path=http://' + host + ':' + port + '/__webpack_hmr',
+	  './src/client.js'
+	]
+  },
+>>>>>>> Stashed changes
 	output: {
 		path: assetsPath,
 		filename: '[name]-[hash].js',
@@ -80,8 +114,13 @@ module.exports = {
 	},
 	module: {
 		loaders: [
+<<<<<<< Updated upstream
 			// { test: /\.jsx?$/, exclude: /node_modules/, loader: 'babel?' + JSON.stringify(babelLoaderQuery)},
 			{ test: /\.jsx?$/, exclude: /node_modules/, loader: 'happypack/loader?id=babel'},
+=======
+			{ test: /\.(js|jsx)$/, exclude: /node_modules/, loaders: ['babel?' + JSON.stringify(babelLoaderQuery)]},
+			// { test: /\.(js|jsx)$/, exclude: /node_modules/, loaders: ['happypack/loader?id=babel']},
+>>>>>>> Stashed changes
 			{ test: /\.json$/, loader: 'json-loader' }
 		]
 	},
@@ -94,6 +133,7 @@ module.exports = {
 		extensions: ['', '.json', '.js', '.jsx']
 	},
 	node: {
+<<<<<<< Updated upstream
 		fs: 'empty'
 	},
 	plugins: [
@@ -101,6 +141,15 @@ module.exports = {
 			id: 'babel',
 			loaders: ['babel?' + JSON.stringify(babelLoaderQuery)]
 		}),
+=======
+		fs: "empty"
+	},
+	plugins: [
+		// new HappyPack({
+		// 	id: 'babel',
+		// 	loaders: ['babel?' + JSON.stringify(babelLoaderQuery)]
+		// }),
+>>>>>>> Stashed changes
 		// hot reload
 		new webpack.HotModuleReplacementPlugin(),
 		new webpack.IgnorePlugin(/webpack-stats\.json$/),
@@ -112,4 +161,8 @@ module.exports = {
 		}),
 		webpackIsomorphicToolsPlugin.development()
 	]
+<<<<<<< Updated upstream
 };
+=======
+};
+>>>>>>> Stashed changes

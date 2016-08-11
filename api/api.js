@@ -6,11 +6,36 @@ if (process.env.NODE_ENV !== 'production' && !process.env.TESTING) {
 
 // Connect to Mongo database
 const mongoose = require('mongoose');
+<<<<<<< Updated upstream
 mongoose.Promise = require('bluebird');
 if (!process.env.TESTING) {
 	mongoose.connect(process.env.MONGO_URI);
 }
 
+=======
+<<<<<<< HEAD
+mongoose.Promise = global.Promise;
+
+if (process.env.NODE_ENV !== 'production') {
+	const mongoURI = require('./config').mongoURI;
+	mongoose.connect(mongoURI);
+} else {
+	mongoose.connect(process.env.mongoURI);
+=======
+mongoose.Promise = require('bluebird');
+if (!process.env.TESTING) {
+	if (process.env.NODE_ENV !== 'production') {
+		const mongoURI = require('./config').mongoURI;
+		mongoose.connect(mongoURI);
+	} else {
+		mongoose.connect(process.env.mongoURI);
+	}
+	
+>>>>>>> origin/architecture2
+}
+
+
+>>>>>>> Stashed changes
 // require('../server.babel'); // babel registration (runtime transpilation for node)
 
 import express from 'express';

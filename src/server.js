@@ -141,16 +141,28 @@ app.use((req, res) => {
 							${head.meta.toString()}
 
 							<link rel=${rssRel} type="application/rss+xml" title="RSS" href="/data/rss.xml" />
+<<<<<<< Updated upstream
 							<link rel="shortcut icon" href="/favicon.ico?v=21cb1" />
 							
 							<link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+=======
+							<link rel="shortcut icon" href="/favicon.ico" />
+							
+							<link href='https://fonts.googleapis.com/css?family=Lora:400,400italic,700,700italic|Open+Sans:400,400italic,700,700italic' rel='stylesheet' type='text/css'>
+>>>>>>> Stashed changes
 							<link href='https://assets.pubpub.org/_fonts/Yrsa.css' rel='stylesheet' type='text/css'>
 
 							<!-- We could dynamically load these in Editor.jsx
 							<!-- If we have to load more local css - we should bundle it all into one minified file and load it here. -->
 							
 							<link href='/css/print.css' rel='stylesheet' type='text/css' />
+<<<<<<< Updated upstream
 							<link href='/css/react-select.css' rel='stylesheet' type='text/css' />
+=======
+							<link href='/css/highlightdefault.css' rel='stylesheet' type='text/css' />
+							<link href='/css/react-select.min.css' rel='stylesheet' type='text/css' />
+							<link href='/css/menu.css' rel='stylesheet' type='text/css' />
+>>>>>>> Stashed changes
 							<link href='/css/pubpub.css' rel='stylesheet' type='text/css' />
 							<link href='/css/basePub.css' rel='stylesheet' type='text/css' />
 							<style id="dynamicStyle">${dynamicStyle}</style>

@@ -3,7 +3,10 @@ import Radium from 'radium';
 import {globalStyles} from 'utils/styleConstants';
 import { Link } from 'react-router';
 import Helmet from 'react-helmet';
+<<<<<<< Updated upstream
 import smoothScroll from 'smoothscroll';
+=======
+>>>>>>> Stashed changes
 
 import {styles as aboutStyles} from './aboutStyles';
 
@@ -11,12 +14,15 @@ let styles = {};
 
 export const About = React.createClass({
 
+<<<<<<< Updated upstream
 	scroll: function(id) {
 		const destination = document.getElementById(id);
 		if (!destination) { return undefined; }
 		smoothScroll(destination);
 	},
 
+=======
+>>>>>>> Stashed changes
 	render: function() {
 		const metaData = {
 			title: 'PubPub',
@@ -27,16 +33,25 @@ export const About = React.createClass({
 
 				<Helmet {...metaData} />
 
+<<<<<<< Updated upstream
 				<div className={'lightest-bg'}>
 					<div className={'section'}>
 
 						<div style={styles.headerText}>
 							<h1 style={styles.headerTextMax}>Open, Continuous Publishing</h1>
+=======
+				<div className={'lightest-bg'} style={styles.sectionWrapper}>
+					<div style={[styles.section, styles.table]}>
+
+						<div style={styles.headerText}>
+							<h1 style={[styles.headerTitle, styles.headerTextMax]}>Open, Continuous Publishing</h1>
+>>>>>>> Stashed changes
 							<p style={[styles.headerSubtitle, styles.headerTextMax]}>PubPub is a free and open tool for collaborative editing, instant publishing, continuous review, and grassroots journals.</p>
 							<Link style={globalStyles.link} to={'/signup'}><div className={'button'} style={styles.headerButton}>Sign Up</div></Link>
 						</div>
 
 						<div style={styles.headerButtons}>
+<<<<<<< Updated upstream
 							<div onClick={this.scroll.bind(this, 'readers')} className={'underlineOnHover'} style={styles.buttonTitle}>For Readers</div>
 							<p style={styles.buttonText}>All is free to read and share</p>
 
@@ -47,15 +62,33 @@ export const About = React.createClass({
 							<p style={styles.buttonText}>Be rewarded for your work</p>
 							
 							<div onClick={this.scroll.bind(this, 'journals')} className={'underlineOnHover'} style={styles.buttonTitle}>For Journals</div>
+=======
+							<a href={'#readers'} className={'underlineOnHover'} style={styles.buttonTitle}>For Readers</a>
+							<p style={styles.buttonText}>All is free to read and share</p>
+
+							<a href={'#authors'} className={'underlineOnHover'} style={styles.buttonTitle}>For Authors</a>
+							<p style={styles.buttonText}>Free, immediate publishing</p>
+							
+							<a href={'#reviewers'} className={'underlineOnHover'} style={styles.buttonTitle}>For Reviewers</a>
+							<p style={styles.buttonText}>Be rewarded for your work</p>
+							
+							<a href={'#journals'} className={'underlineOnHover'} style={styles.buttonTitle}>For Journals</a>
+>>>>>>> Stashed changes
 							<p style={styles.buttonText}>Curate for your community</p>
 						</div>
 
 					</div>
 				</div>
 
+<<<<<<< Updated upstream
 				<div>
 					<div className={'section'} >
 						<h2>Made with PubPub</h2>
+=======
+				<div style={styles.sectionWrapper}>
+					<div style={styles.section}>
+						<h2 style={styles.sectionHeader}>Made with PubPub</h2>
+>>>>>>> Stashed changes
 						
 						<Link style={globalStyles.link} to={'/jods'}>
 						<div style={styles.madeWithBlock} className={'lightest-bg-hover'}>
@@ -72,7 +105,11 @@ export const About = React.createClass({
 							<img style={styles.madeWithImage} src={'https://jake.pubpub.org/unsafe/75x75/https://assets.pubpub.org/_site/cdmxIcon.png'} alt={'Constitucion CDMX'} />
 							<div style={styles.madeWithTextWrapper}>
 								<h3 style={styles.noMargin}>Constitucion CDMX</h3>
+<<<<<<< Updated upstream
 								<div style={styles.noMargin}>Laboratorio CDMX, Government Mexico City</div>
+=======
+								<div style={styles.noMargin}>Laboratoria CDMX, Government Mexico City</div>
+>>>>>>> Stashed changes
 							</div>
 							
 						</div>
@@ -101,9 +138,15 @@ export const About = React.createClass({
 					</div>
 				</div>
 
+<<<<<<< Updated upstream
 				<div className={'lightest-bg'}>
 					<div className={'section'} >
 						<h2 style={styles.noMargin}>A full-stack publishing tool</h2>
+=======
+				<div className={'lightest-bg'} style={styles.sectionWrapper}>
+					<div style={styles.section}>
+						<h2 style={[styles.sectionHeader, styles.noMargin]}>A full-stack publishing tool</h2>
+>>>>>>> Stashed changes
 
 						<div style={[styles.forWhoBlock, styles.forWhoBorderBottom]} id={'readers'}>
 							<div style={[styles.forWhoText, styles.forWhoLeft]}>
@@ -117,8 +160,13 @@ export const About = React.createClass({
 						<div style={[styles.forWhoBlock, styles.forWhoBorderBottom]} id={'authors'}>
 							<div style={[styles.forWhoText, styles.forWhoRight]}>
 								<h3 style={styles.noMargin}>For Authors</h3>
+<<<<<<< Updated upstream
 								<p>Author-driven free and immediate publishing. PubPub provides versioned histories and uses a rich and collaborative open-source editor that allows for evolving content and formats. PubPub encourages publishing early and often to capture the full history of your work.</p>
 								<Link to={'/pubs'} style={globalStyles.link}><div className={'button'}>More on Pubs</div></Link>
+=======
+								<p>Author-driven. Free and immediate publishing. Versioned Histories. A rich and collaborative open-source editor allows for evolving content and formats. Publishing is by the author and immediate. Publishing is versioned and we encourage publishing early and often to capture the full history of your work.</p>
+								<div className={'button'}>More on Pubs</div>
+>>>>>>> Stashed changes
 							</div>
 							<img style={[styles.forWhoImage, styles.forWhoLeft]} src={'https://res.cloudinary.com/pubpub/image/upload/c_scale,w_415/v1451416401/editing_hires_svywu2.gif'} alt={'PubPub Authoring'}/>
 							<div style={globalStyles.clearFix}></div>
@@ -127,8 +175,13 @@ export const About = React.createClass({
 						<div style={[styles.forWhoBlock, styles.forWhoBorderBottom]} id={'reviewers'}>
 							<div style={[styles.forWhoText, styles.forWhoLeft]}>
 								<h3 style={styles.noMargin}>For Reviewers</h3>
+<<<<<<< Updated upstream
 								<p>Review is distributed across many communities and done in the open. Rewarding constructive reviews and incentivizing progress opens the process to all that are capable.</p>
 								{/* <Link to={'/reviews'} style={globalStyles.link}><div className={'button'}>More on Reviews</div></Link> */}
+=======
+								<p>Review is distributed across many communities and done in the open. Rewarding constructive reviews and incentivizing progress rather than elitism opens the process to all that are capable.</p>
+								<div className={'button'}>More on Reviews</div>
+>>>>>>> Stashed changes
 							</div>
 							<img style={[styles.forWhoImage, styles.forWhoRight]} src={'https://res.cloudinary.com/pubpub/image/upload/c_scale,w_415/v1451416396/discussion_hires_jhdoga.gif'} alt={'PubPub Reviews'}/>
 							<div style={globalStyles.clearFix}></div>
@@ -137,10 +190,15 @@ export const About = React.createClass({
 						<div style={styles.forWhoBlock} id={'journals'}>
 							<div style={[styles.forWhoText, styles.forWhoRight]}>
 								<h3 style={styles.noMargin}>For Journals</h3>
+<<<<<<< Updated upstream
 								<p>Created by anyone for any community. Journals become tools for curating published content, not gatekeepers of scientific progress. Pubs can be submitted to and featured in as many journals as relevant. Journals can be run for large or small audiences, by institutions or individuals.</p>
 								<Link to={'/journals'} style={globalStyles.link}><div className={'button'} style={styles.marginRight}>More on Journals</div></Link>
 								<Link to={'/journals/create'} style={globalStyles.link}><div className={'button'}>Create Journal</div></Link>
 
+=======
+								<p>Created by anyone for any community. Journals become tools for curating published content. Not gatekeepers of scientific progress. Journals serve as curators rather than gatekeepers. Pubs can be submitted to and featured in as many journals as is relevant. No more silos. Journals can be run for large or small audiences, by institutions or individuals. Everyone can be a journal.</p>
+								<div className={'button'}>More on Journals</div>
+>>>>>>> Stashed changes
 							</div>
 							<img style={[styles.forWhoImage, styles.forWhoLeft]} src={'https://res.cloudinary.com/pubpub/image/upload/c_scale,w_415/v1451417712/outputjournal_qcdqyh.gif'} alt={'PubPub Journals'}/>
 							<div style={globalStyles.clearFix}></div>
@@ -149,11 +207,19 @@ export const About = React.createClass({
 					</div>
 				</div>
 
+<<<<<<< Updated upstream
 				<div>
 					<div className={'section'} >
 						<h2>Build the publishing world you want</h2>
 						<p style={styles.headerTextMax}>PubPub is an open-source tool built for and by the community that uses it. Join PubPub, contribute code, design, features. Keep up to date with where we’re heading.</p>
 						<a style={globalStyles.link} href={'https://github.com/pubpub/pubpub'}><div className={'button'}>View Code</div></a>
+=======
+				<div style={styles.sectionWrapper}>
+					<div style={styles.section}>
+						<h2 style={styles.sectionHeader}>Build the publishing world you want</h2>
+						<p style={styles.headerTextMax}>PubPub is an open-source tool built for and by the community that uses it. Join PubPub, contribute code, design, features. Keep up to date with where we’re heading.</p>
+						<a style={globalStyles.link} href={'https://github.com/pubpub/pubpub'} className={'button'}>View Code</a>
+>>>>>>> Stashed changes
 					</div>
 				</div>
 
@@ -183,16 +249,22 @@ styles = {
 			display: 'none',
 		}
 	},
+<<<<<<< Updated upstream
 	marginRight: {
 		marginRight: '1em',
 	},
+=======
+>>>>>>> Stashed changes
 
 	buttonTitle: {
 		...globalStyles.link,
 		fontSize: '1.1em',
 		fontWeight: 'bold',
 		whiteSpace: 'nowrap',
+<<<<<<< Updated upstream
 		cursor: 'pointer',
+=======
+>>>>>>> Stashed changes
 	},
 	buttonText: {
 		marginTop: 0,
@@ -219,5 +291,46 @@ styles = {
 		width: '100%',
 		padding: '.5em',
 	},
+<<<<<<< Updated upstream
+=======
+	noMargin: {
+		marginTop: 0,
+		marginBottom: 0,
+	},
+	forWhoBlock: {
+		padding: '4em 0em',
+	},
+	forWhoBorderBottom: {
+		borderBottom: '1px solid #BBBDC0',
+	},
+	forWhoText: {
+		width: '50%',
+		verticalAlign: 'top',
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+			width: '100%',
+		}
+	},
+	forWhoImage: {
+		width: 'calc(50% - 100px)',
+		boxShadow: '0px 0px 5px #808284',
+		margin: '0px 50px',
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+			width: '100%',
+			margin: '2em 0em',
+		}
+	},
+	forWhoLeft: {
+		float: 'left',
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+			float: 'none',
+		}
+	},
+	forWhoRight: {
+		float: 'right',
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+			float: 'none',
+		}
+	},
+>>>>>>> Stashed changes
 
 };

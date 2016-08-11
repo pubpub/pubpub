@@ -2,6 +2,19 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const ObjectId = Schema.Types.ObjectId;
 
+<<<<<<< Updated upstream
+=======
+const Heroku = require('heroku-client');
+let heroku = undefined;
+
+if (process.env.NODE_ENV !== 'production' && !process.env.TESTING) {
+	const herokuApiKey = require('../config').herokuApiKey;
+	heroku = new Heroku({ token: herokuApiKey });
+} else {
+	heroku = new Heroku({ token: process.env.HEROKU_API_KEY });
+}
+
+>>>>>>> Stashed changes
 const journalSchema = new Schema({
 
 	journalName: { type: String },
