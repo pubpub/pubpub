@@ -13,15 +13,33 @@ const userSchema = new Schema({
 	image: { type: String }, // User profile image
 	
 	bio: { type: String }, // Self assigned bio
+<<<<<<< Updated upstream
 	publicEmail: { type: String }, // Publicly listed email
 	github: { type: String }, // Github account
 	orcid: { type: String }, // orcid number
 	twitter: { type: String }, // twitter handle
 	website: { type: String }, // website url
 	googleScholar: { type: String }, // googleScholar id
+=======
+	github: { type: String }, // Github account
+	orcid: { type: String }, // orcid number
+	twitter: { type: String }, // twitter hadnle
+	website: { type: String }, // website url
+	googleScholar: { type: String }, // googleScholar id
+
+	groups: [{ type: ObjectId, ref: 'Group' }], // Groups that the user belongs to
+
+	pubs: [ { type: ObjectId, ref: 'Pub' } ], // Pubs that the user has access to (due to collaborator status from within the editor)
+	discussions: [ { type: ObjectId, ref: 'Discussion' } ], // Discussions the user has posted
+	assets: [ { type: ObjectId, ref: 'Asset' } ], // Assets the user is an author on
+	adminJournals: [ { type: ObjectId, ref: 'Journal' } ], // Journals the user is an admin for
+>>>>>>> Stashed changes
 
 	yays: [ { type: ObjectId, ref: 'Discussion' } ], // Yays cast
 	nays: [ { type: ObjectId, ref: 'Discussion' } ], // Nays cast
+
+	verificationHash: { type: String },
+	verifiedEmail: { type: Boolean },
 
 	verificationHash: { type: String },
 	verifiedEmail: { type: Boolean },

@@ -1,6 +1,10 @@
 import {expect} from 'chai';
 import {shallowRender} from 'tests/helpersClient';
+<<<<<<< Updated upstream
 import {AboutPubs} from './AboutPubs.jsx'
+=======
+import AboutPubs from './AboutPubs.jsx'
+>>>>>>> Stashed changes
 
 describe('Components', () => {
 	describe('AboutPubs.jsx', () => {

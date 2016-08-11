@@ -26,7 +26,11 @@ export function signup(req, res) {
 			name: fullName,
 			registerDate: new Date(Date.now()),
 			sendNotificationDigest: true,
+<<<<<<< Updated upstream
 			image: 'https://assets.pubpub.org/_site/happyPub.png',
+=======
+			image: 'https://assets.pubpub.org/happyPub.png',
+>>>>>>> Stashed changes
 			verificationHash: verificationHash,
 			verifiedEmail: false,
 		});
@@ -92,6 +96,7 @@ export function signupDetails(req, res) {
 
 	User.findById(userID).exec()
 	.then(function(result) {
+<<<<<<< Updated upstream
 		result.image = req.body.image;
 		result.bio = req.body.bio && req.body.bio.substring(0, 140);
 		result.website = req.body.website;
@@ -100,6 +105,15 @@ export function signupDetails(req, res) {
 		result.orcid = req.body.orcid;
 		result.github = req.body.github;
 		result.googleScholar = req.body.googleScholar;
+=======
+		result.image = req.body.image || result.image;
+		result.bio = req.body.bio && req.body.bio.substring(0, 140) || result.bio;
+		result.website = req.body.website || result.website;
+		result.twitter = req.body.twitter || result.twitter;
+		result.orcid = req.body.orcid || result.orcid;
+		result.github = req.body.github || result.github;
+		result.googleScholar = req.body.googleScholar || result.googleScholar;
+>>>>>>> Stashed changes
 		return result.save();
 	})
 	.then(function(savedResult) {
@@ -108,7 +122,10 @@ export function signupDetails(req, res) {
 			bio: savedResult.bio,
 			website: savedResult.website,
 			twitter: savedResult.twitter,
+<<<<<<< Updated upstream
 			publicEmail: savedResult.publicEmail,
+=======
+>>>>>>> Stashed changes
 			orcid: savedResult.orcid,
 			github: savedResult.github,
 			googleScholar: savedResult.googleScholar,
@@ -120,6 +137,7 @@ export function signupDetails(req, res) {
 	});
 }
 app.post('/signup-details', signupDetails);
+<<<<<<< Updated upstream
 
 export function resendVerificationEmail(req, res) {
 	const user = req.user || undefined;
@@ -132,3 +150,5 @@ export function resendVerificationEmail(req, res) {
 	});
 }
 app.post('/resendVerificationEmail', resendVerificationEmail);
+=======
+>>>>>>> Stashed changes

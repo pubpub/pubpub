@@ -3,7 +3,10 @@ import Radium from 'radium';
 import {globalStyles} from 'utils/styleConstants';
 import { Link } from 'react-router';
 import Helmet from 'react-helmet';
+<<<<<<< Updated upstream
 import {PreviewCard} from 'components';
+=======
+>>>>>>> Stashed changes
 
 import {styles} from './aboutStyles';
 
@@ -14,6 +17,7 @@ export const AboutJournals = React.createClass({
 			title: 'Journals · PubPub',
 		};
 
+<<<<<<< Updated upstream
 		const featuredContent = [
 			{
 				slug: 'jods',
@@ -41,21 +45,33 @@ export const AboutJournals = React.createClass({
 			},
 		];
 
+=======
+>>>>>>> Stashed changes
 		return (
 			<div style={styles.container}>
 
 				<Helmet {...metaData} />
 
+<<<<<<< Updated upstream
 				<div className={'lightest-bg'}>
 					<div className={'section'}>
 
 						<h1>Journals</h1>
 						<p style={[styles.headerSubtitle, styles.headerTextMax]}>Tools for curation and community organization.</p>
 						<Link style={globalStyles.link} to={'/journals/create'}><div className={'button'} style={styles.headerButton}>Create Journal</div></Link>
+=======
+				<div className={'lightest-bg'} style={styles.sectionWrapper}>
+					<div style={styles.section}>
+
+						<h1 style={[styles.headerTitle, styles.headerTextMax]}>Journals</h1>
+						<p style={[styles.headerSubtitle, styles.headerTextMax]}>PubPub is a free and open tool for collaborative editing, instant publishing, continuous review, and grassroots journals.</p>
+						<Link style={globalStyles.link} to={'/signup'}><div className={'button'} style={styles.headerButton}>Create Journal</div></Link>
+>>>>>>> Stashed changes
 
 					</div>
 				</div>
 
+<<<<<<< Updated upstream
 				<div>
 					<div className={'section'}>
 						<div style={[styles.forWhoBlock]} id={'authors'}>
@@ -97,6 +113,12 @@ export const AboutJournals = React.createClass({
 							);
 						})}
 
+=======
+				<div style={styles.sectionWrapper}>
+					<div style={styles.section}>
+						<h2 style={styles.sectionHeader}>Made with PubPub</h2>
+						
+>>>>>>> Stashed changes
 					</div>
 				</div>
 				

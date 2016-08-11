@@ -6,20 +6,29 @@
   "notFound.pageDoesntExist": "Doh - That page does not seem to exist!",
   "preview.discussionOn": "Discussion on",
   "pub.addToComment": "Add to Comment",
+<<<<<<< Updated upstream
   "nav.userNotifications": "Notifications ({count})",
   "footer.about": "About",
   "footer.code": "Code",
+=======
+  "footer.about": "About",
+  "footer.code": "Code",
+  "footer.jobs": "Jobs",
+>>>>>>> Stashed changes
   "footer.Email": "Email",
   "footer.MailingList": "Mailing List",
   "footer.Terms": "Terms",
   "footer.TermsOfService": "Terms Of Service",
   "footer.PrivacyPolicy": "Privacy Policy",
+<<<<<<< Updated upstream
   "collections.addPubsToCollection": "Add Pubs to Collection",
   "collections.collectionTitle": "Collection Title",
   "collections.description": "Description",
   "collections.headerImage": "Header Image",
   "collections.noPubsAddedToCollection": "No Pubs Added to Collection",
   "collections.noPubsAdded": "No Pubs Added",
+=======
+>>>>>>> Stashed changes
   "discussion.blank1": "There are no comments here yet.",
   "discussion.blank2": "Be the first to start the discussion!",
   "discussion.permalink": "Permalink",
@@ -90,6 +99,7 @@
   "journal.addNewAdmin": "Add new admin",
   "journal.customDomain": "Custom Domain",
   "journal.autoFeature": "Automatically Feature Pubs on Submission",
+<<<<<<< Updated upstream
   "signup.FirstName": "First Name",
   "signup.LastName": "Last Name",
   "login.ForgotPassword": "Forgot Password?",
@@ -97,6 +107,10 @@
   "login.firstName": "First Name",
   "login.lastName": "Last Name",
   "login.chooseNew": "choose new image",
+=======
+  "login.ForgotPassword": "Forgot Password?",
+  "login.newToPubPub": "New to PubPub? Click to Sign Up!",
+>>>>>>> Stashed changes
   "asset.mustBeLogged": "Must be Logged In",
   "asset.dragToAdd": "Drag files to this window to quickly add",
   "pub.pubWillLiveAt": "Pub will live at",
@@ -118,14 +132,21 @@
   "pub.RequestReview": "Request Review",
   "pub.readPub": "Read Pub",
   "pub.editPub": "Edit Pub",
+<<<<<<< Updated upstream
   "signup.PasswordLength": "Must be at least 8 characters",
   "signup.alreadyHaveAccount": "Already have an account? Click to Login!",
   "details.Welcome": "Welcome!",
+=======
+  "details.WelcomeToPubPub": "Welcome to PubPub!",
+>>>>>>> Stashed changes
   "details.VerificationMessage": "We've sent you a verification email. Please click the link there to verify your account!",
   "details.AboutYou": "About You",
   "details.AddDetailsTo": "Add details to identify yourself to the community and to be rewarded for your contributions!",
   "details.SaveDetails": "Save Details",
+<<<<<<< Updated upstream
   "follow.FinishSignUp": "Finish Sign Up",
+=======
+>>>>>>> Stashed changes
   "signup.FirstNamerequired": "First Name required",
   "signup.LastNamerequired": "Last Name required",
   "signup.Emailrequired": "Email required",
@@ -133,6 +154,13 @@
   "signup.Passwordtooshort": "Password too short",
   "signup.Emailalreadyused": "Email already used",
   "signup.Signupto": "Sign up to publish documents and follow content!",
+<<<<<<< Updated upstream
+=======
+  "signup.FirstName": "First Name",
+  "signup.LastName": "Last Name",
+  "signup.PasswordLength": "Must be at least 8 characters",
+  "signup.alreadyHaveAccount": "Already have a PubPub? Click to Login!",
+>>>>>>> Stashed changes
   "user.changeImage": "Change Image",
   "user.noDiscussions": "No Discussions Yet",
   "user.noGroups": "No Groups Yet",

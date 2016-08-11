@@ -226,6 +226,7 @@ export default function loginReducer(state = defaultState, action) {
 	case CREATE_COLLECTION_SUCCESS:
 		return createCollectionSuccess(state, action.result);
 	case CREATE_COLLECTION_FAIL:
+<<<<<<< Updated upstream
 		return state;
 
 	case DELETE_COLLECTION_LOAD:
@@ -270,6 +271,34 @@ export default function loginReducer(state = defaultState, action) {
 	case DELETE_ADMIN_FAIL:
 		return state;
 
+=======
+		return createCollectionFail(state, action.error);
+
+	case SAVE_COLLECTION:
+		return saveCollection(state);
+	case SAVE_COLLECTION_SUCCESS:
+		return saveCollectionSuccess(state, action.result);
+	case SAVE_COLLECTION_FAIL:
+		return saveCollectionFail(state, action.error);
+
+	case SUBMIT_PUB_TO_JOURNAL:
+		return submitPubToJournal(state);
+	case SUBMIT_PUB_TO_JOURNAL_SUCCESS:
+		return submitPubToJournalSuccess(state, action.result);
+	case SUBMIT_PUB_TO_JOURNAL_FAIL:
+		return submitPubToJournalFail(state, action.error);
+
+	case CLEAR_COLLECTION_REDIRECT:
+		return clearCollectionRedirect(state);
+
+	case LOAD_APP_AND_LOGIN_SUCCESS:
+		return loadAppSuccess(state, action.result.journalData);
+
+	// case LOGIN_LOAD_SUCCESS:
+		// return loginLoad(state, action.result);
+	// case LOGOUT_LOAD_SUCCESS:
+		// return logoutLoad(state);
+>>>>>>> Stashed changes
 	default:
 		return ensureImmutable(state);
 	}

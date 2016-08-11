@@ -3,7 +3,11 @@ import Radium from 'radium';
 import Helmet from 'react-helmet';
 import {Loader, ImageCropper} from 'components';
 import {Link} from 'react-router';
+<<<<<<< Updated upstream
 import {safeGetInToJS} from 'utils/safeParse';
+=======
+
+>>>>>>> Stashed changes
 
 import {globalStyles} from 'utils/styleConstants';
 import {globalMessages} from 'utils/globalMessages';
@@ -16,16 +20,23 @@ export const SignUpDetails = React.createClass({
 		submitHandler: PropTypes.func,
 		errorMessage: PropTypes.string,
 		isLoading: PropTypes.bool,
+<<<<<<< Updated upstream
 		loginData: PropTypes.object,
+=======
+		userImage: PropTypes.string,
+>>>>>>> Stashed changes
 		redirectRoute: PropTypes.string,
 
 	},
 
+<<<<<<< Updated upstream
 	componentWillMount() {
 		const userData = safeGetInToJS(this.props.loginData, ['userData']) || {};
 		this.setState({bio: userData.bio || ''});
 	},
 
+=======
+>>>>>>> Stashed changes
 	getInitialState: function() {
 		return {
 			userImageFile: null,
@@ -35,13 +46,18 @@ export const SignUpDetails = React.createClass({
 	},
 
 	bioUpdate: function() {
+<<<<<<< Updated upstream
 		this.setState({bio: this.refs.bio.value.substring(0, 140)});
+=======
+		this.setState({bio: this.refs.detailsBio.value.substring(0, 140)});
+>>>>>>> Stashed changes
 	},
 
 	detailsSubmit: function(evt) {
 		evt.preventDefault();
 		const detailsData = {
 			image: this.state.userImageURL,
+<<<<<<< Updated upstream
 			bio: this.refs.bio.value,
 			website: this.refs.website.value,
 			publicEmail: this.refs.publicEmail.value,
@@ -49,6 +65,14 @@ export const SignUpDetails = React.createClass({
 			orcid: this.refs.orcid.value,
 			github: this.refs.github.value,
 			googleScholar: this.refs.googleScholar.value,
+=======
+			bio: this.refs.detailsBio.value,
+			website: this.refs.detailsWebsite.value,
+			twitter: this.refs.detailsTwitter.value,
+			orcid: this.refs.detailsOrcid.value,
+			github: this.refs.detailsGithub.value,
+			googleScholar: this.refs.detailsGoogleScholar.value,
+>>>>>>> Stashed changes
 		};
 		this.props.submitHandler(detailsData);	
 	},
@@ -73,6 +97,7 @@ export const SignUpDetails = React.createClass({
 		};
 		const isLoading = this.props.isLoading;
 		const errorMessage = this.props.errorMessage;
+<<<<<<< Updated upstream
 		const userData = safeGetInToJS(this.props.loginData, ['userData']) || {};
 
 		return (
@@ -80,6 +105,14 @@ export const SignUpDetails = React.createClass({
 				<Helmet {...metaData} />
 
 				<h1><FormattedMessage id="details.Welcome" defaultMessage="Welcome!"/></h1>
+=======
+
+		return (
+			<div className={'signup-container'} style={styles.container}>
+				<Helmet {...metaData} />
+
+				<h1><FormattedMessage id="details.WelcomeToPubPub" defaultMessage="Welcome to PubPub!"/></h1>
+>>>>>>> Stashed changes
 				<p style={styles.subHeader}>
 					<FormattedMessage id="details.VerificationMessage" defaultMessage="We've sent you a verification email. Please click the link there to verify your account!"/>
 				</p>
@@ -91,25 +124,41 @@ export const SignUpDetails = React.createClass({
 				
 				<form onSubmit={this.detailsSubmit}>
 					<div>
+<<<<<<< Updated upstream
 						<label htmlFor={'userImage'}>
 							<FormattedMessage {...globalMessages.ProfileImage}/>
 						</label>
 						<img style={styles.userImage} src={this.state.userImageURL || userData.image} />
+=======
+						<label style={styles.label} htmlFor={'userImage'}>
+							<FormattedMessage {...globalMessages.ProfileImage}/>
+						</label>
+						<img style={styles.userImage} src={this.state.userImageURL || this.props.userImage} />
+>>>>>>> Stashed changes
 						<input id={'userImage'} name={'user image'} type="file" accept="image/*" onChange={this.handleFileSelect} />
 						
 					</div>
 
 					<div>
+<<<<<<< Updated upstream
 						<label htmlFor={'bio'}>
 							<FormattedMessage {...globalMessages.Bio}/>
 						</label>
 						<textarea ref={'bio'} id={'bio'} name={'bio'} type="text" style={[styles.input, styles.bio]} onChange={this.bioUpdate} value={this.state.bio}></textarea>
 						<div className={'light-color inputSubtext'}>
+=======
+						<label style={styles.label} htmlFor={'bio'}>
+							<FormattedMessage {...globalMessages.Bio}/>
+						</label>
+						<textarea ref={'detailsBio'} id={'bio'} name={'bio'} type="text" style={[styles.input, styles.bio]} onChange={this.bioUpdate} value={this.state.bio}></textarea>
+						<div className={'light-color inputSubtext'} to={'/resetpassword'}>
+>>>>>>> Stashed changes
 							{this.state.bio.length} / 140
 						</div>
 					</div>
 
 					<div>
+<<<<<<< Updated upstream
 						<label htmlFor={'publicEmail'}>
 							Public Email
 						</label>
@@ -125,41 +174,79 @@ export const SignUpDetails = React.createClass({
 
 					<div>
 						<label htmlFor={'twitter'}>
+=======
+						<label style={styles.label} htmlFor={'website'}>
+							<FormattedMessage {...globalMessages.Website}/>
+						</label>
+						<input ref={'detailsWebsite'} id={'website'} name={'website'} type="text" style={styles.input}/>
+					</div>
+
+					<div>
+						<label style={styles.label} htmlFor={'twitter'}>
+>>>>>>> Stashed changes
 							Twitter
 						</label>
 						<div style={styles.prefixedInputWrapper}>
 							<div style={styles.prefix}>@</div>
+<<<<<<< Updated upstream
 							<input ref={'twitter'} id={'twitter'} name={'twitter'} type="text" style={[styles.input, styles.prefixedInput]} defaultValue={userData.twitter}/>	
+=======
+							<input ref={'detailsTwitter'} id={'twitter'} name={'twitter'} type="text" style={[styles.input, styles.prefixedInput]}/>	
+>>>>>>> Stashed changes
 						</div>
 					</div>
 
 					<div>
+<<<<<<< Updated upstream
 						<label htmlFor={'orcid'}>
+=======
+						<label style={styles.label} htmlFor={'orcid'}>
+>>>>>>> Stashed changes
 							ORCID
 						</label>
 						<div style={styles.prefixedInputWrapper}>
 							<div style={styles.prefix}>orcid.org/</div>
+<<<<<<< Updated upstream
 							<input ref={'orcid'} id={'orcid'} name={'orcid'} type="text" style={[styles.input, styles.prefixedInput]} defaultValue={userData.orcid}/>	
+=======
+							<input ref={'detailsOrcid'} id={'orcid'} name={'orcid'} type="text" style={[styles.input, styles.prefixedInput]}/>	
+>>>>>>> Stashed changes
 						</div>
 					</div>
 
 					<div>
+<<<<<<< Updated upstream
 						<label htmlFor={'github'}>
+=======
+						<label style={styles.label} htmlFor={'github'}>
+>>>>>>> Stashed changes
 							Github
 						</label>
 						<div style={styles.prefixedInputWrapper}>
 							<div style={styles.prefix}>github.com/</div>
+<<<<<<< Updated upstream
 							<input ref={'github'} id={'github'} name={'github'} type="text" style={[styles.input, styles.prefixedInput]} defaultValue={userData.github}/>	
+=======
+							<input ref={'detailsGithub'} id={'github'} name={'github'} type="text" style={[styles.input, styles.prefixedInput]}/>	
+>>>>>>> Stashed changes
 						</div>
 					</div>
 
 					<div>
+<<<<<<< Updated upstream
 						<label htmlFor={'googleScholar'}>
+=======
+						<label style={styles.label} htmlFor={'googleScholar'}>
+>>>>>>> Stashed changes
 							Google Scholar
 						</label>
 						<div style={styles.prefixedInputWrapper}>
 							<div style={styles.prefix}>scholar.google.com/citations?user=</div>
+<<<<<<< Updated upstream
 							<input ref={'googleScholar'} id={'googleScholar'} name={'google scholar'} type="text" style={[styles.input, styles.prefixedInput]} defaultValue={userData.googleScholar}/>	
+=======
+							<input ref={'detailsGoogleScholar'} id={'googleScholar'} name={'google scholar'} type="text" style={[styles.input, styles.prefixedInput]}/>	
+>>>>>>> Stashed changes
 						</div>
 					</div>
 
@@ -176,7 +263,11 @@ export const SignUpDetails = React.createClass({
 
 				<div style={[styles.imageCropperWrapper, this.state.userImageFile !== null && styles.imageCropperWrapperVisible]} >
 					<div style={styles.imageCropper}>
+<<<<<<< Updated upstream
 						<ImageCropper height={500} width={500} image={this.state.userImageFile} onCancel={this.cancelImageUpload} onUpload={this.userImageUploaded}/>
+=======
+						<ImageCropper height={150} width={150} image={this.state.userImageFile} onCancel={this.cancelImageUpload} onUpload={this.userImageUploaded}/>
+>>>>>>> Stashed changes
 					</div>
 				</div>
 				

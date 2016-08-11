@@ -1,10 +1,21 @@
 const app = require('../api');
 const crypto = require('crypto');
 
+<<<<<<< Updated upstream
 const awsDetails = {
 	accessKeyAws: process.env.AWS_ACCESS_KEY_ID,
 	secretKeyAws: process.env.AWS_SECRET_ACCESS_KEY,
 };
+=======
+const awsDetails = {};
+if (process.env.NODE_ENV !== 'production' && !process.env.TESTING) {
+	awsDetails.accessKeyAws = require('../config').accessKeyAws;
+	awsDetails.secretKeyAws = require('../config').secretKeyAws;
+} else {
+	awsDetails.accessKeyAws = process.env.accessKeyAws;
+	awsDetails.secretKeyAws = process.env.secretKeyAws;
+}
+>>>>>>> Stashed changes
 
 app.get('/uploadPolicy', function(req, res) {
 	// if(req.user){

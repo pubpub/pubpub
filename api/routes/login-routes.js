@@ -23,7 +23,10 @@ export function login(req, res) {
 			locale: req.user.locale,
 			verifiedEmail: req.user.verifiedEmail,
 			bio: req.user.bio,
+<<<<<<< Updated upstream
 			publicEmail: req.user.publicEmail,
+=======
+>>>>>>> Stashed changes
 			website: req.user.website,
 			github: req.user.github,
 			orcid: req.user.orcid,
@@ -40,7 +43,11 @@ export function login(req, res) {
 
 	// Run all tasks and return app and login data
 	Promise.all(tasks).then(function(results) {
+<<<<<<< Updated upstream
 		const languageObject = JSON.parse(results[0]);
+=======
+		const languageObject = results[0];
+>>>>>>> Stashed changes
 		const notificationCount = results[1];
 
 		return res.status(201).json({
@@ -70,6 +77,81 @@ export function logout(req, res) {
 }
 app.get('/logout', logout);
 
+<<<<<<< Updated upstream
+=======
+// When a user registers
+// export function register(req, res) {
+// 	if ((req.body.firstname === 'undefined' && req.body.lastname === 'undefined') || req.body.email.indexOf('@yopmail.com') > -1) { // Spammers inputting 'undefined undefined' are posting lots of pubs
+// 		console.log('Blocked register of spam');
+// 		return res.status(500).json();
+// 	}
+
+// 	User.generateUniqueUsername(req.body.fullname, function(newUsername) {
+
+// 		// Upload to cloudinary so we can have a thumbnail and CDN action.
+// 		// cloudinary.uploader.upload(req.body.image, function(cloudinaryResponse) {
+// 			// if (!cloudinaryResponse.url) {
+// 			// 	console.log('cloudinaryResponse in login-routes did not have url. Here is the response:');
+// 			// 	console.log(cloudinaryResponse);
+// 			// }
+// 		const newUser = new User({
+// 			email: req.body.email,
+// 			username: newUsername,
+// 			image: req.body.image,
+// 			thumbnail: req.body.image,
+// 			firstName: req.body.firstName,
+// 			lastName: req.body.lastName,
+// 			name: req.body.fullname,
+// 			registerDate: new Date(Date.now()),
+// 			sendNotificationDigest: true,
+// 		});
+
+// 		User.register(newUser, req.body.password, function(err, account) {
+// 			if (err) {
+// 				console.log(err);
+// 				return res.status(500).json(err);
+// 			}
+
+// 			passport.authenticate('local')(req, res, function() {
+
+// 				return res.status(201).json({
+// 					firstName: account.firstName,
+// 					lastName: account.lastName,
+// 					name: account.name,
+// 					username: account.username,
+// 					image: account.image,
+// 					thumbnail: account.thumbnail,
+// 					settings: account.settings
+// 				});
+
+// 			});
+
+// 		});
+// 		// });
+
+// 	});
+// }
+// app.post('/register', register);
+
+// export function testLogin(req, res) {
+// 	// This is used to test if we provide an iFrame with the code to access the login cookie.
+// 	// We check to make sure the referring domain is within our set of journals. If it is, we share the login cookie, otherwise we send back an empty page
+// 	// Malicious users embedding the same iFrame in evil.com will get an empty response - and no login cookie.
+// 	if (req.get('referrer')) {
+// 		const referDomain = req.get('referrer').split('://')[1].replace('/', '');
+// 		Journal.findOne({ $or: [ {subdomain: referDomain.split('.')[0]}, {customDomain: referDomain}]}, {'_id': 1}).lean().exec(function(err, journal) {
+// 			if (journal || referDomain === 'pubpub.media.mit.edu') {
+// 				return res.status(201).type('.html').send('<div><script type="text/javascript">var loginCookie = null; try {loginCookie = "connect.sid="+document.cookie.split("connect.sid=")[1].split(";")[0]+";";}catch(err){console.log(err);} parent.postMessage(loginCookie, "' + req.get('referrer') + '");</script></div>');
+// 			}
+// 			return res.status(201).type('.html').send('');
+// 		});
+// 	} else {
+// 		return res.status(201).type('.html').send('');
+// 	}
+
+// }
+// app.get('/testLogin', testLogin);
+>>>>>>> Stashed changes
 
 export function requestReset(req, res) {
 	User.findOne({email: req.body.email}).exec(function(err, user) {
