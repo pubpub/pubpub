@@ -378,7 +378,7 @@ export const DocumentEditor = React.createClass({
 
 				<Media ref={'mediaRef'}/>
 
-				<div className={'opacity-on-hover'} style={styles.iconLeft} onClick={this.toggleMarkdown}></div>
+				{/* <div className={'opacity-on-hover'} style={styles.iconLeft} onClick={this.toggleMarkdown}></div> */}
 
 				<textarea id="markdown" onChange={this.markdownChange} style={[styles.textarea, this.state.showMarkdown && styles.textareaVisible]}></textarea>
 				<div id={'atom-reader'} className={'atom-reader'} style={[styles.wsywigBlock, this.state.showMarkdown && styles.wsywigWithMarkdown]}></div>
