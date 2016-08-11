@@ -323,8 +323,8 @@ export const DocumentEditor = React.createClass({
 	},
 
 	proseChange: function() {
-		const md = markdownSerializer.serialize(pm.doc);
-		document.getElementById('markdown').value = md;
+		// const md = markdownSerializer.serialize(pm.doc);
+		// document.getElementById('markdown').value = md;
 	},
 
 	markdownChange: function(evt) {

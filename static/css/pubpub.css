@@ -46,14 +46,14 @@ body {
 }
 
 .horizontalNavHover:hover {
-	border-bottom: 2px solid #2C2A2B !important;
+	border-bottom: 2px solid #58585B !important;
 	padding: 10px 10px 8px 10px !important;
 }
 @media screen and (min-resolution: 3dppx), screen and (max-width: 767px) {
 	.horizontalNavHover:hover {
 		padding: .15em 2em .15em calc(.5em - 3px) !important;
-		border-left: 3px solid #2C2A2B !important;
-		border-bottom: 0px solid #2C2A2B !important;
+		border-left: 3px solid #58585B !important;
+		border-bottom: 0px solid #58585B !important;
 	}
 }
 

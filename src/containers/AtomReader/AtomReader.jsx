@@ -183,6 +183,7 @@ export const AtomReader = React.createClass({
 		if (permissionType === 'author' || permissionType === 'editor') {
 			leftNav.push({link: '/pub/' + this.props.slug + '/edit', text: 'Edit'});
 		}
+		const showEdit = (permissionType === 'author' || permissionType === 'editor');
 		const navItems = [
 			// ...leftNav,
 			{text: 'Contents', action: this.setRightBarMode.bind(this, 'contents'), active: this.state.rightBarMode === 'contents'},
@@ -312,10 +313,13 @@ export const AtomReader = React.createClass({
 
 				{/* Pub Section */}
 				<div style={[styles.pubSection, !showDiscussions && styles.pubSectionFull]}>
-					<div className={'opacity-on-hover'} style={styles.iconRight} onClick={this.toggleDiscussions}></div>
-
+					{!!showEdit && 
+						<div style={styles.readerNavBar}>
+							<HorizontalNav navItems={leftNav} mobileNavButtons={mobileNavButtons}/>
+						</div>
+					}
+					
 					<div className={!this.props.meta && safeGetInToJS(this.props.atomData, ['atomData', 'type']) === 'document' ? 'atom-reader atom-reader-meta' : 'atom-reader-meta'}>
-
 						<AtomReaderHeader
 							title={atomData.title}
 							authors={authorList}
@@ -342,6 +346,9 @@ export const AtomReader = React.createClass({
 				{/* Discussion Section */}
 				<StickyContainer style={[styles.discussionSection, !showDiscussions && styles.hideDiscussion]}>
 					<Sticky>
+						<div className={'lightest-bg-hover lighter-border-hover'} onClick={this.toggleDiscussions} style={styles.closeButton}>
+							<span style={styles.closeText}>...</span>
+						</div>
 						<HorizontalNav navItems={navItems} mobileNavButtons={mobileNavButtons}/>
 						
 						<div className={'contenty'} style={styles.contenty}>
@@ -407,6 +414,11 @@ styles = {
 			marginRight: '0vw',
 		},
 	},
+	readerNavBar: {
+		width: 'calc(100% + 8em)',
+		left: '-4em',
+		position: 'relative',
+	},
 	pubSectionFull: {
 		marginRight: '0vw',
 	},
@@ -452,6 +464,25 @@ styles = {
 		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
 			display: 'none',
 		},
+	},
+	closeButton: {
+		position: 'absolute',
+		
+		height: '100vh',
+		top: '0',
+		textAlign: 'center',
+		cursor: 'pointer',
+		width: '2em',
+		left: 'calc(-2em - 1px)',
+		color: '#58585B',
+	},
+	closeText: {
+		transform: 'rotate(90deg)',
+		height: '1em',
+		lineHeight: '.4em',
+		display: 'block',
+		position: 'relative',
+		top: '50%',
 	},
 	hideDiscussion: {
 		transform: 'translate3d(100%, 0, 0)'
