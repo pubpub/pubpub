@@ -208,11 +208,15 @@ export const AtomEditor = React.createClass({
 					</div>
 				</StickyContainer>
 
-				<StickyContainer style={[styles.discussionSection, !this.state.showRightPanel && styles.hideDiscussion]}>
+
+				{/* Right Panel Section */}
+				<StickyContainer style={[styles.rightPanel, !this.state.showRightPanel && styles.hideRightPanel]}>
+
 					<Sticky>
-						<div className={'lightest-bg-hover lighter-border-hover'} onClick={this.toggleRightPanel} style={styles.closeButton}>
-							<span style={styles.closeText}>...</span>
+						<div className={'darker-color-hover'} onClick={this.toggleRightPanel} style={styles.toggleRightPanelButton}>
+							<span style={styles.toggleRightPanelText}>...</span>
 						</div>
+
 						<HorizontalNav navItems={rightPanelNavItems} mobileNavButtons={mobileNavButtons}/>
 						
 						<div style={styles.rightPanelContent}>
@@ -318,7 +322,7 @@ styles = {
 		left: '-4em',
 		position: 'relative',
 	},
-	discussionSection: {
+	rightPanel: {
 		verticalAlign: 'top',
 		padding: '0em 0em',
 		width: '35vw',
@@ -328,32 +332,40 @@ styles = {
 		position: 'absolute',
 		right: 0,
 		top: 0,
-		transition: '.15s ease-in-out transform',
+		// transition: '.15s ease-in-out transform',
+		transition: '.15s ease-in-out right',
 		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
 			display: 'none',
 		},
 	},
-	closeButton: {
+	toggleRightPanelButton: {
 		position: 'absolute',
-		
-		height: '100vh',
-		top: '0',
-		textAlign: 'center',
+		// height: '2em',
+		padding: '.5em 0em',
+		width: '1em',
+		top: '50px',
+		left: '-1em',
+		backgroundColor: '#F3F3F4',
+		borderWidth: '1px 0px 1px 1px',
+		borderStyle: 'solid',
+		borderColor: '#E4E4E4',
+		borderRadius: '3px',
+
+		color: '#BBBDC0',
 		cursor: 'pointer',
-		width: '2em',
-		left: 'calc(-2em - 1px)',
-		color: '#58585B',
+		textAlign: 'center',
+
 	},
-	closeText: {
-		transform: 'rotate(90deg)',
-		height: '1em',
-		lineHeight: '.4em',
+	toggleRightPanelText: {
 		display: 'block',
-		position: 'relative',
-		top: '50%',
+		pointerEvents: 'none',
+		transform: 'translate3d(2px, -2px, 0px) rotate(90deg)',
+		fontFamily: 'Courier',
+		fontSize: '0.75em',
 	},
-	hideDiscussion: {
-		transform: 'translate3d(100%, 0, 0)'
+	hideRightPanel: {
+		// transform: 'translate3d(100%, 0, 0)'
+		right: '-35vw', // It's not optimal to animate on right, but because this element is part of a fixed component, transforms do not act as expected
 	},
 
 	rightPanelContent: {
