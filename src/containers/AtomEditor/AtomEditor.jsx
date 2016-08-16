@@ -70,6 +70,7 @@ export const AtomEditor = React.createClass({
 	getInitialState() {
 		return {
 			modalMode: undefined,
+			showDiscussions: true,
 		};
 	},
 
@@ -163,7 +164,6 @@ export const AtomEditor = React.createClass({
 		const leftNav = [
 			{text: 'View', link: '/pub/' + this.props.slug},
 			{text: 'Edit', link: '/pub/' + this.props.slug + '/edit', active: true},
-			{text: <div id={'headerPlaceholder'}></div>, action: ()=>{}},
 		];
 		const navItems = [
 			// {text: 'View', link: '/pub/' + this.props.slug},
@@ -183,6 +183,11 @@ export const AtomEditor = React.createClass({
 		const modalError = safeGetInToJS(this.props.atomEditData, ['modalError']);
 
 		const showDiscussions = this.state.showDiscussions;
+		const authorsData = safeGetInToJS(this.props.atomEditData, ['authorsData']) || [{source: {name: 'Johnny'}}, {source: {name: 'Frank'}}];
+		const authorList = atomEditData.customAuthorString ? [atomEditData.customAuthorString] : authorsData.map((item, index)=> {
+			return <a key={'author-' + index} className={'author'}>{item.source.name}</a>;
+		});
+
 		console.log('rendering');
 		return (
 			<div style={styles.container}>
@@ -192,43 +197,48 @@ export const AtomEditor = React.createClass({
 
 				{/* Pub Section */}
 				<StickyContainer>
-				<div style={styles.pubSection}>
+				<div style={[styles.pubSection, !showDiscussions && styles.pubSectionFull]}>
 
 					<div style={styles.readerNavBar}>
 						
 						
-						<Sticky>
+						<Sticky style={styles.headerBar}>
 							<HorizontalNav navItems={leftNav} mobileNavButtons={mobileNavButtons}/>
+							<div id={'headerPlaceholder'} style={styles.headerMenu}></div>
+							<div style={styles.headerStatus} className={'editor-participants'}>Saved</div>
 							{/* <div id={'menu-placeholder'}></div> */}
 						</Sticky>
 						
 					</div>
 
-					<AtomEditorHeader
-						title={atomEditData.title}
-						saveVersionHandler={this.saveVersionClick} 
-						openDetails={this.openModal.bind(this, 'details')} />
+					<div className={safeGetInToJS(this.props.atomEditData, ['atomData', 'type']) === 'document' ? 'atom-reader atom-reader-meta' : 'atom-reader-meta'}>
+						<AtomEditorHeader
+							title={atomEditData.title}
+							authors={authorList}
+							saveVersionHandler={this.saveVersionClick} 
+							openDetails={this.openModal.bind(this, 'details')} />
 
-					<AtomEditorPane ref={'atomEditorPane'} atomEditData={this.props.atomEditData} loginData={this.props.loginData}/>
+						<AtomEditorPane ref={'atomEditorPane'} atomEditData={this.props.atomEditData} loginData={this.props.loginData}/>
 
-					<AtomEditorModals 
-						atomEditData={this.props.atomEditData}
-						contributorsData={contributorsData}
-						publishingData={publishingData}
-						getModalData={this.getModalData}
-						mode={this.state.modalMode} 
-						closeModalHandler={this.closeModal}
-						handleVersionSave={this.saveVersionSubmit}
-						updateDetailsHandler={this.updateDetails}
-						publishVersionHandler={this.publishVersionHandler}
-						handleAddContributor={this.handleAddContributor}
-						handleUpdateContributor={this.handleUpdateContributor}
-						handleDeleteContributor={this.handleDeleteContributor}
-						isLoading={isLoading}
-						error={error}
-						isModalLoading={isModalLoading}
-						modalError={modalError} />
+						<AtomEditorModals 
+							atomEditData={this.props.atomEditData}
+							contributorsData={contributorsData}
+							publishingData={publishingData}
+							getModalData={this.getModalData}
+							mode={this.state.modalMode} 
+							closeModalHandler={this.closeModal}
+							handleVersionSave={this.saveVersionSubmit}
+							updateDetailsHandler={this.updateDetails}
+							publishVersionHandler={this.publishVersionHandler}
+							handleAddContributor={this.handleAddContributor}
+							handleUpdateContributor={this.handleUpdateContributor}
+							handleDeleteContributor={this.handleDeleteContributor}
+							isLoading={isLoading}
+							error={error}
+							isModalLoading={isModalLoading}
+							modalError={modalError} />
 
+					</div>
 				</div>
 				</StickyContainer>
 
@@ -295,13 +305,13 @@ styles = {
 			marginRight: '0vw',
 		},
 	},
-	readerNavBar: {
-		width: 'calc(100% + 8em)',
-		left: '-4em',
-		position: 'relative',
-	},
 	pubSectionFull: {
 		marginRight: '0vw',
+	},
+	readerNavBar: {
+		width: 'calc(100% + 8em - 1px)',
+		left: '-4em',
+		position: 'relative',
 	},
 	discussionSection: {
 		verticalAlign: 'top',
@@ -348,6 +358,22 @@ styles = {
 		overflow: 'hidden',
 		overflowY: 'scroll',
 		padding: '0em 2em 1em',
+	},
+	headerBar: {
+		position: 'relative',
+		backgroundColor: 'white',
+		zIndex: 1,
+	},
+	headerMenu: {
+		position: 'absolute',
+		right: 0,
+		top: 0,
+	},
+	headerStatus: {
+		position: 'absolute',
+		left: 0,
+		top: 40,
+		opacity: 0.5,
 	},
 
 };

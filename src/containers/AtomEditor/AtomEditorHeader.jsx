@@ -6,6 +6,7 @@ let styles = {};
 export const AtomEditorHeader = React.createClass({
 	propTypes: {
 		title: PropTypes.string,
+		authors: PropTypes.array,
 		saveVersionHandler: PropTypes.func,
 		openDetails: PropTypes.func,
 	},
@@ -13,12 +14,13 @@ export const AtomEditorHeader = React.createClass({
 	render: function() {
 
 		return (
-			<div className={'atom-editor-header'} style={styles.container}>
-				<h1 style={styles.title}>
-					<span onClick={this.props.openDetails} style={styles.titleText}>{this.props.title}</span> 
-					<div className={'editor-participants'} style={styles.editorParticipants}></div>
-				</h1>
+			<div className={'atom-reader-header'} style={styles.container} onClick={this.props.openDetails}>
+				{/* <h1 style={styles.title}>
+					<span style={styles.titleText}>{this.props.title}</span>
+				</h1> */}
 				
+				<h1 className={'atom-header-title'}>{this.props.title}</h1>
+				<p className={'atom-header-p'}>{this.props.authors}</p>
 				{/* <div style={styles.buttonWrapper}>
 					<div className={'button'} style={styles.button} onClick={this.props.saveVersionHandler}>Save Version</div>
 				</div> */}
@@ -31,7 +33,7 @@ export const AtomEditorHeader = React.createClass({
 export default Radium(AtomEditorHeader);
 
 styles = {
-	container: {
+	/*container: {
 		display: 'table',
 		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
 			display: 'block',
@@ -70,5 +72,5 @@ styles = {
 	button: {
 		fontSize: '.85em',
 		padding: '.25em 1.5em',
-	},
+	},*/
 };

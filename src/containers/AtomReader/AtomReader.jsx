@@ -415,7 +415,7 @@ styles = {
 		},
 	},
 	readerNavBar: {
-		width: 'calc(100% + 8em)',
+		width: 'calc(100% + 8em - 1px)',
 		left: '-4em',
 		position: 'relative',
 	},
