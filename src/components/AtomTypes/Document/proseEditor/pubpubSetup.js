@@ -69,7 +69,7 @@ exports.pubpubSetup = new Plugin(class {
 
 		if (this.barConf === true) {
 			builtMenu = buildMenuItems(pm.schema);
-			this.barConf = {float: true, content: builtMenu.fullMenu};
+			this.barConf = {float: false, content: builtMenu.fullMenu};
 		}
 		if (this.barConf) menuBar.config(this.barConf).attach(pm);
 

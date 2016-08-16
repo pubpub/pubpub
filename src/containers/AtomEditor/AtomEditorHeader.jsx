@@ -14,15 +14,14 @@ export const AtomEditorHeader = React.createClass({
 
 		return (
 			<div className={'atom-editor-header'} style={styles.container}>
-				
 				<h1 style={styles.title}>
 					<span onClick={this.props.openDetails} style={styles.titleText}>{this.props.title}</span> 
 					<div className={'editor-participants'} style={styles.editorParticipants}></div>
 				</h1>
 				
-				<div style={styles.buttonWrapper}>
+				{/* <div style={styles.buttonWrapper}>
 					<div className={'button'} style={styles.button} onClick={this.props.saveVersionHandler}>Save Version</div>
-				</div>
+				</div> */}
 				
 			</div>
 		);

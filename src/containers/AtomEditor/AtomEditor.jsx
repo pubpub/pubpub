@@ -11,6 +11,9 @@ import AtomEditorHeader from './AtomEditorHeader';
 import AtomEditorPane from './AtomEditorPane';
 import AtomEditorModals from './AtomEditorModals';
 
+import { StickyContainer as UnwrappedStickyContainer, Sticky } from 'react-sticky';
+const StickyContainer = Radium(UnwrappedStickyContainer);
+import smoothScroll from 'smoothscroll';
 
 // import {globalStyles} from 'utils/styleConstants';
 // import {generateTOC} from 'utils/generateTOC';
@@ -33,6 +36,18 @@ export const AtomEditor = React.createClass({
 			return dispatch(getAtomEdit(routeParams.slug));
 		}
 	},
+
+	componentDidMount() {
+	// 	this.moveMenu();
+	},
+
+	// moveMenu: function() {
+	// 	if (typeof(document) !== 'undefined') {
+	// 		const menuBar = document.getElementsByClassName('ProseMirror-menubar')[0];
+	// 		const menuBarPlaceholder = document.getElementById('menu-placeholder');
+	// 		menuBarPlaceholder.appendChild(menuBar);
+	// 	}
+	// },
 
 	componentWillReceiveProps(nextProps) {
 		// If we transition from loading to not loading, without error, close modal
@@ -109,7 +124,11 @@ export const AtomEditor = React.createClass({
 		this.props.dispatch(getAtomEditModalData(atomID, mode));
 	},
 
+	toggleDiscussions: function() {
+		this.setState({cat: Math.random()});
+	},
 	render: function() {
+		
 		const atomEditData = safeGetInToJS(this.props.atomEditData, ['atomData']) || {};
 
 		const metaData = {
@@ -125,9 +144,13 @@ export const AtomEditor = React.createClass({
 			{ type: 'button', mobile: true, text: 'Menu', action: undefined },
 		];
 
-		const navItems = [
+		const leftNav = [
 			{text: 'View', link: '/pub/' + this.props.slug},
 			{text: 'Edit', link: '/pub/' + this.props.slug + '/edit', active: true},
+		];
+		const navItems = [
+			// {text: 'View', link: '/pub/' + this.props.slug},
+			// {text: 'Edit', link: '/pub/' + this.props.slug + '/edit', active: true},
 			{text: 'Details', rightAlign: true, action: this.openModal.bind(this, 'details')},
 			{text: 'Contributors', rightAlign: true, action: this.openModal.bind(this, 'contributors')},
 			// {text: 'Styles', rightAlign: true, action: this.openModal.bind(this, 'styles')},
@@ -142,6 +165,8 @@ export const AtomEditor = React.createClass({
 		const isModalLoading = safeGetInToJS(this.props.atomEditData, ['modalLoading']);
 		const modalError = safeGetInToJS(this.props.atomEditData, ['modalError']);
 
+		const showDiscussions = true;
+
 		return (
 			<div style={styles.container}>
 
@@ -149,8 +174,17 @@ export const AtomEditor = React.createClass({
 
 
 				{/* Pub Section */}
+				<StickyContainer>
 				<div style={styles.pubSection}>
-					<HorizontalNav navItems={navItems} mobileNavButtons={mobileNavButtons}/>
+
+					<div style={styles.readerNavBar}>
+						<HorizontalNav navItems={leftNav} mobileNavButtons={mobileNavButtons}/>
+						
+						<Sticky>
+							<div id={'menu-placeholder'}></div>	
+						</Sticky>
+						
+					</div>
 
 					<AtomEditorHeader
 						title={atomEditData.title}
@@ -178,6 +212,21 @@ export const AtomEditor = React.createClass({
 						modalError={modalError} />
 
 				</div>
+				</StickyContainer>
+
+				<StickyContainer style={[styles.discussionSection, !showDiscussions && styles.hideDiscussion]}>
+					<Sticky>
+						<div className={'lightest-bg-hover lighter-border-hover'} onClick={this.toggleDiscussions} style={styles.closeButton}>
+							<span style={styles.closeText}>...</span>
+						</div>
+						<HorizontalNav navItems={navItems} mobileNavButtons={mobileNavButtons}/>
+						
+						<div className={'contenty'} style={styles.contenty}>
+							BLURGGGG
+						</div>
+						
+					</Sticky>
+				</StickyContainer>
 
 			</div>
 		);
@@ -199,22 +248,88 @@ export default connect( state => {
 })( Radium(AtomEditor) );
 
 styles = {
-	pubSection: {
-		display: 'table-cell',
-		verticalAlign: 'top',
-		padding: '0em 2em',
+	// pubSection: {
+	// 	display: 'table-cell',
+	// 	verticalAlign: 'top',
+	// 	padding: '0em 2em',
+	// 	position: 'relative',
+	// 	'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+	// 		display: 'block',
+	// 		padding: '0em 1em',
+	// 	},
+	// },
+	container: {
+		// display: 'table',
+		width: '100%',
+		// tableLayout: 'fixed',
+		overflow: 'hidden',
+		minHeight: '100vh',
 		position: 'relative',
+	},
+	pubSection: {
+		verticalAlign: 'top',
+		padding: '0em 4em',
+		position: 'relative',
+		marginRight: '35vw',
 		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
 			display: 'block',
 			padding: '0em 1em',
+			marginRight: '0vw',
 		},
 	},
-	container: {
-		display: 'table',
-		width: '100%',
-		tableLayout: 'fixed',
+	readerNavBar: {
+		width: 'calc(100% + 8em)',
+		left: '-4em',
+		position: 'relative',
+	},
+	pubSectionFull: {
+		marginRight: '0vw',
+	},
+	discussionSection: {
+		verticalAlign: 'top',
+		padding: '0em 0em',
+		width: '35vw',
+		height: '100%',
+		backgroundColor: '#F3F3F4',
+		borderLeft: '1px solid #E4E4E4',
+		position: 'absolute',
+		right: 0,
+		top: 0,
+		transition: '.15s ease-in-out transform',
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+			display: 'none',
+		},
+	},
+	closeButton: {
+		position: 'absolute',
+		
+		height: '100vh',
+		top: '0',
+		textAlign: 'center',
+		cursor: 'pointer',
+		width: '2em',
+		left: 'calc(-2em - 1px)',
+		color: '#58585B',
+	},
+	closeText: {
+		transform: 'rotate(90deg)',
+		height: '1em',
+		lineHeight: '.4em',
+		display: 'block',
+		position: 'relative',
+		top: '50%',
+	},
+	hideDiscussion: {
+		transform: 'translate3d(100%, 0, 0)'
+	},
+
+	contenty: {
+		// backgroundColor: 'green',
+		height: 'calc(100vh - 40px)',
+		width: 'calc(100% - 4em)',
 		overflow: 'hidden',
-		minHeight: '100vh',
+		overflowY: 'scroll',
+		padding: '0em 2em 1em',
 	},
 
 };
