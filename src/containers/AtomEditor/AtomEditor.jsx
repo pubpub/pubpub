@@ -11,6 +11,13 @@ import AtomEditorHeader from './AtomEditorHeader';
 import AtomEditorPane from './AtomEditorPane';
 import AtomEditorModals from './AtomEditorModals';
 
+import AtomEditorDetails from './AtomEditorDetails';
+import AtomEditorPublishing from './AtomEditorPublishing';
+import AtomEditorSaveVersion from './AtomEditorSaveVersion';
+import AtomEditorContributors from './AtomEditorContributors';
+
+import {Loader} from 'components';
+
 import { StickyContainer as UnwrappedStickyContainer, Sticky } from 'react-sticky';
 const StickyContainer = Radium(UnwrappedStickyContainer);
 import smoothScroll from 'smoothscroll';
@@ -37,28 +44,16 @@ export const AtomEditor = React.createClass({
 		}
 	},
 
-	componentDidMount() {
-	// 	this.moveMenu();
-	},
-
-	// moveMenu: function() {
-	// 	if (typeof(document) !== 'undefined') {
-	// 		const menuBar = document.getElementsByClassName('ProseMirror-menubar')[0];
-	// 		const menuBarPlaceholder = document.getElementById('menu-placeholder');
-	// 		menuBarPlaceholder.appendChild(menuBar);
-	// 	}
-	// },
-
 	componentWillReceiveProps(nextProps) {
 		// If we transition from loading to not loading, without error, close modal
 		// Don't do this if we're on the publishing modal though.
-		const previousLoading = safeGetInToJS(this.props.atomEditData, ['loading']);
-		const nextLoading = safeGetInToJS(nextProps.atomEditData, ['loading']);
-		const nextError = safeGetInToJS(nextProps.atomEditData, ['error']);
-		
-		if (previousLoading === true && nextLoading === false && !nextError && this.state.modalMode !== 'publishing') { 
-			this.closeModal();
-		}
+
+		// const previousLoading = safeGetInToJS(this.props.atomEditData, ['loading']);
+		// const nextLoading = safeGetInToJS(nextProps.atomEditData, ['loading']);
+		// const nextError = safeGetInToJS(nextProps.atomEditData, ['error']);
+		// // if (previousLoading === true && nextLoading === false && !nextError && this.state.modalMode !== 'publishing') { 
+		// // 	this.closeModal();
+		// // }
 
 		const oldSlug = safeGetInToJS(this.props.atomEditData, ['atomData', 'slug']);
 		const newSlug = safeGetInToJS(nextProps.atomEditData, ['atomData', 'slug']);
@@ -69,14 +64,25 @@ export const AtomEditor = React.createClass({
 
 	getInitialState() {
 		return {
-			modalMode: undefined,
-			showDiscussions: true,
+			showRightPanel: true,
+			rightPanelMode: 'discussions',
 		};
 	},
 
-	saveVersionClick: function() {
-		this.setState({modalMode: 'saveVersion'});
+	toggleRightPanel: function() {
+		this.setState({showRightPanel: !this.state.showRightPanel});
 	},
+
+	setRightPanelMode: function(mode) {
+		this.setState({rightPanelMode: mode});
+		if (mode === 'details' || mode === 'contributors' || mode === 'publishing' ) {
+			this.getModalData(mode);	
+		}
+	},
+
+	// saveVersionClick: function() {
+	// 	this.setState({modalMode: 'saveVersion'});
+	// },
 
 	saveVersionSubmit: function(versionMessage) {
 		const newVersionContent = this.refs.atomEditorPane.refs.editor.getSaveVersionContent();
@@ -112,36 +118,17 @@ export const AtomEditor = React.createClass({
 		this.props.dispatch(deleteContributor(linkID));
 	},
 
-	openModal: function(mode) {
-		this.setState({modalMode: mode});
-	},
+	// openModal: function(mode) {
+	// 	this.setState({modalMode: mode});
+	// },
 
-	closeModal: function() {
-		this.setState({modalMode: undefined});
-	},
+	// closeModal: function() {
+	// 	this.setState({modalMode: undefined});
+	// },
 
 	getModalData: function(mode) {
 		const atomID = safeGetInToJS(this.props.atomEditData, ['atomData', '_id']);
 		this.props.dispatch(getAtomEditModalData(atomID, mode));
-	},
-
-
-	toggleDiscussions: function() {
-		console.log('yooo');
-		this.setState({showDiscussions: !this.state.showDiscussions});
-		// const showingDiscussions = this.state.showDiscussions && !this.state.showTOC || this.state.showDiscussions && this.state.lastCliked === 'discussions';
-		// if (showingDiscussions) {
-		// 	this.setState({
-		// 		showDiscussions: false,
-		// 		lastCliked: 'discussions'
-		// 	});
-		// } else {
-		// 	this.setState({
-		// 		showDiscussions: true,
-		// 		lastCliked: 'discussions'
-		// 	});
-		// }
-
 	},
 
 	render: function() {
@@ -161,17 +148,19 @@ export const AtomEditor = React.createClass({
 			{ type: 'button', mobile: true, text: 'Menu', action: undefined },
 		];
 
-		const leftNav = [
+		const atomNavItems = [
 			{text: 'View', link: '/pub/' + this.props.slug},
 			{text: 'Edit', link: '/pub/' + this.props.slug + '/edit', active: true},
 		];
-		const navItems = [
-			// {text: 'View', link: '/pub/' + this.props.slug},
-			// {text: 'Edit', link: '/pub/' + this.props.slug + '/edit', active: true},
-			{text: 'Details', rightAlign: true, action: this.openModal.bind(this, 'details')},
-			{text: 'Contributors', rightAlign: true, action: this.openModal.bind(this, 'contributors')},
-			// {text: 'Styles', rightAlign: true, action: this.openModal.bind(this, 'styles')},
-			{text: 'Publishing', rightAlign: true, action: this.openModal.bind(this, 'publishing')},
+
+		const rightPanelNavItems = [
+			{text: 'Details', action: this.setRightPanelMode.bind(this, 'details'), active: this.state.rightPanelMode === 'details'},
+			{text: 'Contributors', action: this.setRightPanelMode.bind(this, 'contributors'), active: this.state.rightPanelMode === 'contributors'},
+			{text: 'Publishing', action: this.setRightPanelMode.bind(this, 'publishing'), active: this.state.rightPanelMode === 'publishing'},
+
+			// {text: 'Details', rightAlign: true, action: this.openModal.bind(this, 'details')},
+			// {text: 'Contributors', rightAlign: true, action: this.openModal.bind(this, 'contributors')},
+			// {text: 'Publishing', rightAlign: true, action: this.openModal.bind(this, 'publishing')},
 		];
 
 		
@@ -182,9 +171,8 @@ export const AtomEditor = React.createClass({
 		const isModalLoading = safeGetInToJS(this.props.atomEditData, ['modalLoading']);
 		const modalError = safeGetInToJS(this.props.atomEditData, ['modalError']);
 
-		const showDiscussions = this.state.showDiscussions;
 		const authorsData = safeGetInToJS(this.props.atomEditData, ['authorsData']) || [];
-		const authorList = atomEditData.customAuthorString ? [atomEditData.customAuthorString] : authorsData.map((item, index)=> {
+		const authorList = atomEditData.customAuthorString ? [<a className={'author'}>{atomEditData.customAuthorString}</a>] : authorsData.map((item, index)=> {
 			return <a key={'author-' + index} className={'author'}>{item.source.name}</a>;
 		});
 
@@ -193,63 +181,82 @@ export const AtomEditor = React.createClass({
 
 				<Helmet {...metaData} />
 
-
 				{/* Pub Section */}
 				<StickyContainer>
-				<div style={[styles.pubSection, !showDiscussions && styles.pubSectionFull]}>
+					<div style={[styles.pubSection, !this.state.showRightPanel && styles.pubSectionFull]}>
 
-					<div style={styles.readerNavBar}>
-						
-						
-						<Sticky style={styles.headerBar}>
-							<HorizontalNav navItems={leftNav} mobileNavButtons={mobileNavButtons}/>
-							<div style={styles.headerMenu} id={'headerPlaceholder'}></div>
-							<div style={styles.headerStatus} className={'editor-participants opacity-on-hover'}></div>
-						</Sticky>
-						
+						<div style={styles.atomNavBar}>
+							
+							<Sticky style={styles.headerBar}>
+								<HorizontalNav navItems={atomNavItems} mobileNavButtons={mobileNavButtons}/>
+								<div style={styles.headerMenu} id={'headerPlaceholder'}></div>
+								<div style={styles.headerStatus} className={'editor-participants opacity-on-hover'}></div>
+							</Sticky>
+							
+						</div>
+
+						<div className={safeGetInToJS(this.props.atomEditData, ['atomData', 'type']) === 'document' ? 'atom-reader atom-reader-meta' : 'atom-reader-meta'}>
+							<AtomEditorHeader
+								title={atomEditData.title}
+								authors={authorList}
+								saveVersionHandler={this.saveVersionClick} 
+								openDetails={this.setRightPanelMode.bind(this, 'details')} />
+
+							<AtomEditorPane ref={'atomEditorPane'} atomEditData={this.props.atomEditData} loginData={this.props.loginData}/>
+
+						</div>
 					</div>
-
-					<div className={safeGetInToJS(this.props.atomEditData, ['atomData', 'type']) === 'document' ? 'atom-reader atom-reader-meta' : 'atom-reader-meta'}>
-						<AtomEditorHeader
-							title={atomEditData.title}
-							authors={authorList}
-							saveVersionHandler={this.saveVersionClick} 
-							openDetails={this.openModal.bind(this, 'details')} />
-
-						<AtomEditorPane ref={'atomEditorPane'} atomEditData={this.props.atomEditData} loginData={this.props.loginData}/>
-
-						<AtomEditorModals 
-							atomEditData={this.props.atomEditData}
-							contributorsData={contributorsData}
-							publishingData={publishingData}
-							getModalData={this.getModalData}
-							mode={this.state.modalMode} 
-							closeModalHandler={this.closeModal}
-							handleVersionSave={this.saveVersionSubmit}
-							updateDetailsHandler={this.updateDetails}
-							publishVersionHandler={this.publishVersionHandler}
-							handleAddContributor={this.handleAddContributor}
-							handleUpdateContributor={this.handleUpdateContributor}
-							handleDeleteContributor={this.handleDeleteContributor}
-							isLoading={isLoading}
-							error={error}
-							isModalLoading={isModalLoading}
-							modalError={modalError} />
-
-					</div>
-				</div>
 				</StickyContainer>
 
-				<StickyContainer style={[styles.discussionSection, !showDiscussions && styles.hideDiscussion]}>
+				<StickyContainer style={[styles.discussionSection, !this.state.showRightPanel && styles.hideDiscussion]}>
 					<Sticky>
-						<div className={'lightest-bg-hover lighter-border-hover'} onClick={this.toggleDiscussions} style={styles.closeButton}>
+						<div className={'lightest-bg-hover lighter-border-hover'} onClick={this.toggleRightPanel} style={styles.closeButton}>
 							<span style={styles.closeText}>...</span>
 						</div>
-						<HorizontalNav navItems={navItems} mobileNavButtons={mobileNavButtons}/>
+						<HorizontalNav navItems={rightPanelNavItems} mobileNavButtons={mobileNavButtons}/>
 						
-						<div className={'contenty'} style={styles.contenty}>
-							BLURGGGG
+						<div style={styles.rightPanelContent}>
+							{(()=>{
+								switch (this.state.rightPanelMode) {
+								case 'saveVersion':
+									return <AtomEditorSaveVersion handleVersionSave={this.saveVersionSubmit} isLoading={isLoading}/>;
+								case 'details':
+									return <AtomEditorDetails atomEditData={this.props.atomEditData} updateDetailsHandler={this.updateDetails} isLoading={isLoading} error={error}/>;
+								case 'publishing':
+									return <AtomEditorPublishing publishingData={publishingData} publishVersionHandler={this.publishVersionHandler} isLoading={isLoading} error={error}/>;
+								case 'contributors':
+									return (
+										<AtomEditorContributors 
+											contributorsData={contributorsData} 
+											handleAddContributor={this.handleAddContributor}
+											handleUpdateContributor={this.handleUpdateContributor}
+											handleDeleteContributor={this.handleDeleteContributor}
+											isLoading={isLoading} 
+											error={error}/>
+									);
+								default:
+									return <div style={styles.loadingWrapper}><Loader loading={isModalLoading} showCompletion={false}/></div>;
+								}
+							})()}
 						</div>
+
+						{/* <AtomEditorModals 
+								atomEditData={this.props.atomEditData}
+								contributorsData={contributorsData}
+								publishingData={publishingData}
+								getModalData={this.getModalData}
+								mode={this.state.modalMode} 
+								closeModalHandler={this.closeModal}
+								handleVersionSave={this.saveVersionSubmit}
+								updateDetailsHandler={this.updateDetails}
+								publishVersionHandler={this.publishVersionHandler}
+								handleAddContributor={this.handleAddContributor}
+								handleUpdateContributor={this.handleUpdateContributor}
+								handleDeleteContributor={this.handleDeleteContributor}
+								isLoading={isLoading}
+								error={error}
+								isModalLoading={isModalLoading}
+								modalError={modalError} /> */}
 						
 					</Sticky>
 				</StickyContainer>
@@ -306,7 +313,7 @@ styles = {
 	pubSectionFull: {
 		marginRight: '0vw',
 	},
-	readerNavBar: {
+	atomNavBar: {
 		width: 'calc(100% + 8em - 1px)',
 		left: '-4em',
 		position: 'relative',
@@ -349,7 +356,7 @@ styles = {
 		transform: 'translate3d(100%, 0, 0)'
 	},
 
-	contenty: {
+	rightPanelContent: {
 		// backgroundColor: 'green',
 		height: 'calc(100vh - 40px)',
 		width: 'calc(100% - 4em)',
