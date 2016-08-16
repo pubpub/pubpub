@@ -183,12 +183,11 @@ export const AtomEditor = React.createClass({
 		const modalError = safeGetInToJS(this.props.atomEditData, ['modalError']);
 
 		const showDiscussions = this.state.showDiscussions;
-		const authorsData = safeGetInToJS(this.props.atomEditData, ['authorsData']) || [{source: {name: 'Johnny'}}, {source: {name: 'Frank'}}];
+		const authorsData = safeGetInToJS(this.props.atomEditData, ['authorsData']) || [];
 		const authorList = atomEditData.customAuthorString ? [atomEditData.customAuthorString] : authorsData.map((item, index)=> {
 			return <a key={'author-' + index} className={'author'}>{item.source.name}</a>;
 		});
 
-		console.log('rendering');
 		return (
 			<div style={styles.container}>
 
@@ -204,9 +203,8 @@ export const AtomEditor = React.createClass({
 						
 						<Sticky style={styles.headerBar}>
 							<HorizontalNav navItems={leftNav} mobileNavButtons={mobileNavButtons}/>
-							<div id={'headerPlaceholder'} style={styles.headerMenu}></div>
-							<div style={styles.headerStatus} className={'editor-participants'}>Saved</div>
-							{/* <div id={'menu-placeholder'}></div> */}
+							<div style={styles.headerMenu} id={'headerPlaceholder'}></div>
+							<div style={styles.headerStatus} className={'editor-participants opacity-on-hover'}></div>
 						</Sticky>
 						
 					</div>
@@ -368,12 +366,19 @@ styles = {
 		position: 'absolute',
 		right: 0,
 		top: 0,
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+			position: 'static',
+		},
 	},
 	headerStatus: {
 		position: 'absolute',
 		left: 0,
-		top: 40,
-		opacity: 0.5,
+		top: 44,
+		opacity: 0.75,
+		transition: '.1s linear opacity',
+	},
+	'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+		position: 'static',
 	},
 
 };

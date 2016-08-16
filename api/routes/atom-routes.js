@@ -444,16 +444,27 @@ export function getAtomEdit(req, res) {
 		const permissionLink = Link.findOne({source: userID, destination: atomResult._id, type: {$in: ['author', 'editor', 'reader']}, inactive: {$ne: true} });
 		return [atomResult, permissionLink];
 	})
-	.spread(function(atomResult, permissionLink) { // Get most recent version
+	.spread(function(atomResult, permissionLink) { // Get authors
+		const getAuthors = new Promise(function(resolve) {
+			const query = Link.find({destination: atomResult._id, type: 'author'}).populate({
+				path: 'source',
+				model: User,
+				select: 'username name firstName lastName image ',
+			}).exec();
+			resolve(query);
+		});
+		return [atomResult, permissionLink, getAuthors];
+	})
+	.spread(function(atomResult, permissionLink, authors) { // Get most recent version
 		let permissionType = permissionLink && permissionLink.type;
 		if (String(userID) === '568abdd9332c142a0095117f') {
 			permissionType = 'author';
 		}
 
 		const mostRecentVersionId = atomResult.versions[atomResult.versions.length - 1];
-		return [atomResult, Version.findOne({_id: mostRecentVersionId}).exec(), permissionType];
+		return [atomResult, Version.findOne({_id: mostRecentVersionId}).exec(), permissionType, authors];
 	})
-	.spread(function(atomResult, versionResult, permissionType) { // Send response
+	.spread(function(atomResult, versionResult, permissionType, authors) { // Send response
 		if (permissionType !== 'author' && permissionType !== 'editor' && permissionType !== 'reader') {
 			throw new Error('Atom does not exist');
 		}
@@ -461,6 +472,7 @@ export function getAtomEdit(req, res) {
 		output = {
 			atomData: atomResult,
 			currentVersionData: versionResult,
+			authorsData: authors,
 		};
 
 		let authUrl;

@@ -19,8 +19,8 @@ export const AtomEditorHeader = React.createClass({
 					<span style={styles.titleText}>{this.props.title}</span>
 				</h1> */}
 				
-				<h1 className={'atom-header-title'}>{this.props.title}</h1>
-				<p className={'atom-header-p'}>{this.props.authors}</p>
+				<h1 className={'atom-header-title underlineOnHover'} style={styles.pointer}>{this.props.title}</h1>
+				<p className={'atom-header-p'} style={styles.pointer}>{this.props.authors}</p>
 				{/* <div style={styles.buttonWrapper}>
 					<div className={'button'} style={styles.button} onClick={this.props.saveVersionHandler}>Save Version</div>
 				</div> */}
@@ -33,6 +33,9 @@ export const AtomEditorHeader = React.createClass({
 export default Radium(AtomEditorHeader);
 
 styles = {
+	pointer: {
+		cursor: 'pointer',
+	},
 	/*container: {
 		display: 'table',
 		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {

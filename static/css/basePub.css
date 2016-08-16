@@ -37,7 +37,7 @@
 }
 
 /* Set default paragraph margins on .p-block since we don't use <p> */
-.atom-reader .p-block {
+.atom-reader .p-block, .atom-reader p{
 	margin: 1em 0em;
     font-size: 1.2em;
     line-height: 1.5em;

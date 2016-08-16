@@ -49,6 +49,7 @@ import {
 export const defaultState = Immutable.Map({
 	atomData: {},
 	currentVersionData: {},
+	authorsData: [],
 	token: undefined,
 	collab: undefined,
 	loading: false,
@@ -98,6 +99,7 @@ function getAtomEditSuccess(state, result) {
 		loading: false,
 		atomData: result.atomData,
 		currentVersionData: result.currentVersionData,
+		authorsData: result.authorsData,
 		token: result.token,
 		collab: result.collab,
 		error: null
@@ -109,6 +111,7 @@ function getAtomEditFail(state, error) {
 		loading: false,
 		atomData: {},
 		currentVersionData: {},
+		authorsData: [],
 		error: error,
 	});
 }
