@@ -124,9 +124,25 @@ export const AtomEditor = React.createClass({
 		this.props.dispatch(getAtomEditModalData(atomID, mode));
 	},
 
+
 	toggleDiscussions: function() {
-		this.setState({cat: Math.random()});
+		console.log('yooo');
+		this.setState({showDiscussions: !this.state.showDiscussions});
+		// const showingDiscussions = this.state.showDiscussions && !this.state.showTOC || this.state.showDiscussions && this.state.lastCliked === 'discussions';
+		// if (showingDiscussions) {
+		// 	this.setState({
+		// 		showDiscussions: false,
+		// 		lastCliked: 'discussions'
+		// 	});
+		// } else {
+		// 	this.setState({
+		// 		showDiscussions: true,
+		// 		lastCliked: 'discussions'
+		// 	});
+		// }
+
 	},
+
 	render: function() {
 		
 		const atomEditData = safeGetInToJS(this.props.atomEditData, ['atomData']) || {};
@@ -147,6 +163,7 @@ export const AtomEditor = React.createClass({
 		const leftNav = [
 			{text: 'View', link: '/pub/' + this.props.slug},
 			{text: 'Edit', link: '/pub/' + this.props.slug + '/edit', active: true},
+			{text: <div id={'headerPlaceholder'}></div>, action: ()=>{}},
 		];
 		const navItems = [
 			// {text: 'View', link: '/pub/' + this.props.slug},
@@ -165,8 +182,8 @@ export const AtomEditor = React.createClass({
 		const isModalLoading = safeGetInToJS(this.props.atomEditData, ['modalLoading']);
 		const modalError = safeGetInToJS(this.props.atomEditData, ['modalError']);
 
-		const showDiscussions = true;
-
+		const showDiscussions = this.state.showDiscussions;
+		console.log('rendering');
 		return (
 			<div style={styles.container}>
 
@@ -178,10 +195,11 @@ export const AtomEditor = React.createClass({
 				<div style={styles.pubSection}>
 
 					<div style={styles.readerNavBar}>
-						<HorizontalNav navItems={leftNav} mobileNavButtons={mobileNavButtons}/>
+						
 						
 						<Sticky>
-							<div id={'menu-placeholder'}></div>	
+							<HorizontalNav navItems={leftNav} mobileNavButtons={mobileNavButtons}/>
+							{/* <div id={'menu-placeholder'}></div> */}
 						</Sticky>
 						
 					</div>

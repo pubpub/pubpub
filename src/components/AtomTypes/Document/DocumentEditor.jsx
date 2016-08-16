@@ -21,7 +21,7 @@ let pm;
 
 let editorToModel;
 let modelToEditor;
-
+let menuBar;
 export const DocumentEditor = React.createClass({
 	propTypes: {
 		atomEditData: PropTypes.object,
@@ -139,17 +139,17 @@ export const DocumentEditor = React.createClass({
 				return true;
 			}
 		});
-		// this.moveMenu();
+		this.moveMenu();
 
 	},
 
-	// moveMenu: function() {
-	// 	if (typeof(document) !== 'undefined') {
-	// 		const menuBar = document.getElementsByClassName('atom-editor-header')[0];
-	// 		const menuBarPlaceholder = document.getElementById('headerPlaceholder');
-	// 		menuBarPlaceholder.appendChild(m3enuBar);
-	// 	}
-	// },
+	moveMenu: function() {
+		if (typeof(document) !== 'undefined') {
+			menuBar = document.getElementsByClassName('ProseMirror-menubar')[0];
+			const menuBarPlaceholder = document.getElementById('headerPlaceholder');
+			menuBarPlaceholder.appendChild(menuBar);
+		}
+	},
 
 	componentWillUnmount: function() {
 		this.collab.mod.serverCommunications.close();
@@ -365,6 +365,7 @@ export const DocumentEditor = React.createClass({
 	// },
 
 	render: function() {
+		console.log('rendering documentedit ', menuBar);
 		const collab = safeGetInToJS(this.props.atomEditData, ['collab']);
 
 
@@ -392,9 +393,7 @@ export const DocumentEditor = React.createClass({
 				{/* <div className={'opacity-on-hover'} style={styles.iconLeft} onClick={this.toggleMarkdown}></div> */}
 
 				<textarea id="markdown" onChange={this.markdownChange} style={[styles.textarea, this.state.showMarkdown && styles.textareaVisible]}></textarea>
-				<div id={'atom-reader'} className={'atom-reader'} style={[styles.wsywigBlock, this.state.showMarkdown && styles.wsywigWithMarkdown]}>
-					<div id={'headerPlaceholder'}></div>
-				</div>
+				<div id={'atom-reader'} className={'atom-reader'} style={[styles.wsywigBlock, this.state.showMarkdown && styles.wsywigWithMarkdown]}></div>
 
 			{/* </Dropzone> */}
 			</div>
