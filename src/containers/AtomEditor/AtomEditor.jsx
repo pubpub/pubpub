@@ -65,7 +65,7 @@ export const AtomEditor = React.createClass({
 	getInitialState() {
 		return {
 			showRightPanel: true,
-			rightPanelMode: 'discussions',
+			rightPanelMode: 'details',
 		};
 	},
 
@@ -223,9 +223,9 @@ export const AtomEditor = React.createClass({
 				<StickyContainer style={[styles.rightPanel, !this.state.showRightPanel && styles.hideRightPanel]}>
 
 					<Sticky>
-						<div className={'darker-color-hover'} onClick={this.toggleRightPanel} style={styles.toggleRightPanelButton}>
+						{/* <div className={'darker-color-hover'} onClick={this.toggleRightPanel} style={styles.toggleRightPanelButton}>
 							<span style={styles.toggleRightPanelText}>...</span>
-						</div>
+						</div> */}
 
 						<HorizontalNav navItems={rightPanelNavItems} mobileNavButtons={mobileNavButtons}/>
 						

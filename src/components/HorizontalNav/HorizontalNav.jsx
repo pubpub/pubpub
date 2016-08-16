@@ -105,10 +105,10 @@ export const HorizontalNav = React.createClass({
 							<div className={'hoverChild arrow-box'} style={styles.collapsedItems}>
 								{collapsedNavItems.map((item, index)=>{
 									if (item.link) {
-										return <Link to={item.link} style={[styles.pubNavButtonCollapsed, item.active && styles.pubNavButtonActive]} key={'collapsed-' + index} className={'underlineOnHover'}>{item.text}</Link>;
+										return <Link to={item.link} style={[styles.pubNavButtonCollapsed, item.active && styles.pubNavButtonActive]} key={'collapsed-' + index} className={'verticalNavHover'}>{item.text}</Link>;
 									}
 									if (item.action) {
-										return <div onClick={item.action} style={[styles.pubNavButtonCollapsed, item.active && styles.pubNavButtonActive]} key={'collapsed-' + index} className={'underlineOnHover'}>{item.text}</div>;
+										return <div onClick={item.action} style={[styles.pubNavButtonCollapsed, item.active && styles.pubNavButtonActive]} key={'collapsed-' + index} className={'verticalNavHover'}>{item.text}</div>;
 									}
 								})}
 							</div>
@@ -184,6 +184,7 @@ styles = {
 	},
 	pubNavButtonCollapsed: {
 		display: 'block',
+		padding: '.15em 2em .15em .5em',
 	},
 	collapsedItems: {
 		position: 'absolute',
@@ -191,19 +192,22 @@ styles = {
 		backgroundColor: '#F3F3F4',
 		zIndex: '10',
 		border: '1px solid #BBBDC0',
-		padding: '1em 1em 1em 2em',
-		textAlign: 'right',
+		padding: '1em 1.5em 1em 1em',
 		top: '95%',
+		boxShadow: '0px 1px 3px #BBBDC0',
 
 	},
 	pubNavButtonActive: {
-		borderBottom: '2px solid #58585B',
-		padding: '10px 10px 8px 10px',
-		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
-			padding: '.15em 2em .15em calc(.5em - 3px)',
-			borderLeft: '3px solid #58585B',
-			borderBottom: '0px solid #58585B',
-		}
+		// borderBottom: '2px solid #58585B',
+		// padding: '10px 10px 8px 10px',
+		// '@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+		// 	padding: '.15em 2em .15em calc(.5em - 3px)',
+		// 	borderLeft: '3px solid #58585B',
+		// 	borderBottom: '0px solid #58585B',
+		// }
+		
+		padding: '.15em 2em .15em calc(.5em - 3px)',
+		borderLeft: '3px solid #2C2A2B',
 	},
 	contentNavItems: {
 		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
