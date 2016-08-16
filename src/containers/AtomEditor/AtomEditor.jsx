@@ -71,6 +71,10 @@ export const AtomEditor = React.createClass({
 
 	toggleRightPanel: function() {
 		this.setState({showRightPanel: !this.state.showRightPanel});
+		setTimeout(()=> {
+			window.scrollBy(0, 1);
+			window.scrollBy(0, -1);
+		}, 250);
 	},
 
 	setRightPanelMode: function(mode) {
@@ -172,8 +176,8 @@ export const AtomEditor = React.createClass({
 		const modalError = safeGetInToJS(this.props.atomEditData, ['modalError']);
 
 		const authorsData = safeGetInToJS(this.props.atomEditData, ['authorsData']) || [];
-		const authorList = atomEditData.customAuthorString ? [<a className={'author'}>{atomEditData.customAuthorString}</a>] : authorsData.map((item, index)=> {
-			return <a key={'author-' + index} className={'author'}>{item.source.name}</a>;
+		const authorList = atomEditData.customAuthorString ? [<a className={'author'} key={'customAuthorString'}>{atomEditData.customAuthorString}</a>] : authorsData.map((item, index)=> {
+			return <a key={'atomAuthor-' + index} className={'author'}>{item.source.name}</a>;
 		});
 
 		return (
@@ -184,6 +188,12 @@ export const AtomEditor = React.createClass({
 				{/* Pub Section */}
 				<StickyContainer>
 					<div style={[styles.pubSection, !this.state.showRightPanel && styles.pubSectionFull]}>
+
+						<Sticky stickyStyle={this.state.showRightPanel ? {width: 'calc(65vw - 4em)'} : {width: 'calc(100vw - 4em)'}} style={{zIndex: 1}}>
+							<div className={'darker-color-hover'} onClick={this.toggleRightPanel} style={[styles.toggleRightPanelButton, !this.state.showRightPanel && styles.toggleRightPanelWide]}>
+								<span style={[styles.toggleRightPanelText, !this.state.showRightPanel && styles.toggleRightPanelTextWide]}>...</span>
+							</div>
+						</Sticky>
 
 						<div style={styles.atomNavBar}>
 							
@@ -332,8 +342,7 @@ styles = {
 		position: 'absolute',
 		right: 0,
 		top: 0,
-		// transition: '.15s ease-in-out transform',
-		transition: '.15s ease-in-out right',
+		transition: '.15s ease-in-out transform',
 		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
 			display: 'none',
 		},
@@ -344,7 +353,7 @@ styles = {
 		padding: '.5em 0em',
 		width: '1em',
 		top: '50px',
-		left: '-1em',
+		right: '0',
 		backgroundColor: '#F3F3F4',
 		borderWidth: '1px 0px 1px 1px',
 		borderStyle: 'solid',
@@ -354,7 +363,11 @@ styles = {
 		color: '#BBBDC0',
 		cursor: 'pointer',
 		textAlign: 'center',
+		zIndex: 1
 
+	},
+	toggleRightPanelWide: {
+		width: '1.5em',
 	},
 	toggleRightPanelText: {
 		display: 'block',
@@ -363,9 +376,11 @@ styles = {
 		fontFamily: 'Courier',
 		fontSize: '0.75em',
 	},
+	toggleRightPanelTextWide: {
+		transform: 'translate3d(3px, 0px, 0px) rotate(90deg)',
+	},
 	hideRightPanel: {
-		// transform: 'translate3d(100%, 0, 0)'
-		right: '-35vw', // It's not optimal to animate on right, but because this element is part of a fixed component, transforms do not act as expected
+		transform: 'translate3d(100%, 0, 0)'
 	},
 
 	rightPanelContent: {
