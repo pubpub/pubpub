@@ -58,5 +58,4 @@ userSchema.statics.generateUniqueUsername = function(fullname, callback) {
 	findUniqueName(username, 0);
 };
 
-
 module.exports = mongoose.model('User', userSchema);

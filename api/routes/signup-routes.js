@@ -41,6 +41,7 @@ export function signup(req, res) {
 			passport.authenticate('local')(req, res, function() {
 
 				const loginData = {
+					email: account.email,
 					firstName: account.firstName,
 					lastName: account.lastName,
 					name: account.name,

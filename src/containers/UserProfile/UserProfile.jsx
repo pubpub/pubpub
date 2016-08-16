@@ -3,7 +3,7 @@ import {connect} from 'react-redux';
 import Radium from 'radium';
 import Helmet from 'react-helmet';
 import {safeGetInToJS} from 'utils/safeParse';
-import {getUser, saveUserSettings} from './actions';
+import {getUser, saveUserSettings, changePassword} from './actions';
 import {NavContentWrapper} from 'components';
 import {NotFound} from 'components';
 import {FollowButton} from 'containers';
@@ -40,6 +40,10 @@ export const UserProfile = React.createClass({
 
 	saveSettings: function(settings) {
 		this.props.dispatch(saveUserSettings(settings));
+	},
+
+	changePass: function(settings) {
+		this.props.dispatch(changePassword(settings, this.props.loginData.get('userData').get('email')));
 	},
 
 	render: function() {
@@ -82,7 +86,7 @@ export const UserProfile = React.createClass({
 			{ type: 'spacer' },
 			{ type: 'title', text: 'Settings'},
 			{ type: 'link', text: 'Profile', link: '/user/' + this.props.username + '/profile', active: this.props.mode === 'profile'},
-			// { type: 'link', text: 'Account', link: '/user/' + this.props.username + '/account', active: this.props.mode === 'account'},
+			{ type: 'link', text: 'Account', link: '/user/' + this.props.username + '/account', active: this.props.mode === 'account'},
 			{ type: 'link', text: 'Notifications', link: '/user/' + this.props.username + '/notifications', active: this.props.mode === 'notifications' },
 		]
 		: [];
@@ -154,7 +158,8 @@ export const UserProfile = React.createClass({
 								<UserProfileSettingsAccount
 									settingsData={this.props.profileData}
 									loginData={this.props.loginData}
-									saveSettingsHandler={this.saveSettings}/>
+									saveSettingsHandler={this.saveSettings}
+									changePasswordHandler={this.changePass}/>
 							);
 						case 'notifications':
 							return (

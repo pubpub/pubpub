@@ -12,6 +12,7 @@ export function login(req, res) {
 	const loginData = req.user
 		? {
 			_id: req.user._id,
+			email: req.user.email,
 			name: req.user.name,
 			firstName: req.user.firstName,
 			lastName: req.user.lastName,
@@ -129,3 +130,30 @@ export function passwordReset(req, res) {
 	});
 }
 app.post('/passwordReset', passwordReset);
+
+export function changePassword(req, res) {
+	// Add handle wrong password
+	// Done in reducer but no reaction to 401 error
+	const userID = req.user ? req.user._id : undefined;
+	if (!userID) { return res.status(403).json('Not authorized to edit this user'); }
+
+	if (req.body.newPassword != req.body.conPassword) {
+		return res.status(403).json('New Passwords do not match');
+	}
+
+	// No backend password validation
+
+	// Call User method to change password
+	User.findOne({email: req.user.email}).exec(function(err, user) {
+
+		if (!user) {
+			return res.status(403).json('Server Error: User Not Found');
+		}
+
+		user.setPassword(req.body.newPassword, function(){
+			user.save();
+           	return res.status(201).json('Password Change Successful');
+		})
+	});
+}
+app.post('/changePassword', passport.authenticate('local'), changePassword);
