@@ -15,9 +15,6 @@ export const AtomEditorHeader = React.createClass({
 
 		return (
 			<div className={'atom-reader-header'} style={styles.container} onClick={this.props.openDetails}>
-				{/* <h1 style={styles.title}>
-					<span style={styles.titleText}>{this.props.title}</span>
-				</h1> */}
 				
 				<h1 className={'atom-header-title underlineOnHover'} style={styles.pointer}>{this.props.title}</h1>
 				<p className={'atom-header-p'} style={styles.pointer}>{this.props.authors}</p>

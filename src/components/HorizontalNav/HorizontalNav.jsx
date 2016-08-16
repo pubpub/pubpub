@@ -105,10 +105,10 @@ export const HorizontalNav = React.createClass({
 							<div className={'hoverChild arrow-box'} style={styles.collapsedItems}>
 								{collapsedNavItems.map((item, index)=>{
 									if (item.link) {
-										return <Link to={item.link} style={[styles.pubNavButtonCollapsed, item.active && styles.pubNavButtonActive]} key={'collapsed-' + index} className={'verticalNavHover'}>{item.text}</Link>;
+										return <Link to={item.link} style={[styles.pubNavButtonCollapsed, item.active && styles.pubNavButtonCollapsedActive]} key={'collapsed-' + index} className={'verticalNavHover'}>{item.text}</Link>;
 									}
 									if (item.action) {
-										return <div onClick={item.action} style={[styles.pubNavButtonCollapsed, item.active && styles.pubNavButtonActive]} key={'collapsed-' + index} className={'verticalNavHover'}>{item.text}</div>;
+										return <div onClick={item.action} style={[styles.pubNavButtonCollapsed, item.active && styles.pubNavButtonCollapsedActive]} key={'collapsed-' + index} className={'verticalNavHover'}>{item.text}</div>;
 									}
 								})}
 							</div>
@@ -198,17 +198,20 @@ styles = {
 
 	},
 	pubNavButtonActive: {
-		// borderBottom: '2px solid #58585B',
-		// padding: '10px 10px 8px 10px',
-		// '@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
-		// 	padding: '.15em 2em .15em calc(.5em - 3px)',
-		// 	borderLeft: '3px solid #58585B',
-		// 	borderBottom: '0px solid #58585B',
-		// }
-		
+		borderBottom: '2px solid #58585B',
+		padding: '10px 10px 8px 10px',
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+			padding: '.15em 2em .15em calc(.5em - 3px)',
+			borderLeft: '3px solid #58585B',
+			borderBottom: '0px solid #58585B',
+		}
+	},
+
+	pubNavButtonCollapsedActive: {
 		padding: '.15em 2em .15em calc(.5em - 3px)',
 		borderLeft: '3px solid #2C2A2B',
 	},
+	
 	contentNavItems: {
 		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
 			boxShadow: 'inset 0px -4px 6px -4px #BBBDC0',

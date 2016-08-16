@@ -15,6 +15,7 @@ lightest: #F3F3F4
 .darker-color-hover:hover { color: #363736 !important; }
 
 .dark-bg { background-color: #58585B; }
+.dark-bg-hover:hover { background-color: #58585B; }
 .dark-color { color: #58585B; }
 
 .light-bg { background-color: #808284; }

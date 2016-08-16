@@ -189,11 +189,16 @@ export const AtomEditor = React.createClass({
 				<StickyContainer>
 					<div style={[styles.pubSection, !this.state.showRightPanel && styles.pubSectionFull]}>
 
-						<Sticky stickyStyle={this.state.showRightPanel ? {width: 'calc(65vw - 4em)'} : {width: 'calc(100vw - 4em)'}} style={{zIndex: 1}}>
-							<div className={'darker-color-hover'} onClick={this.toggleRightPanel} style={[styles.toggleRightPanelButton, !this.state.showRightPanel && styles.toggleRightPanelWide]}>
-								<span style={[styles.toggleRightPanelText, !this.state.showRightPanel && styles.toggleRightPanelTextWide]}>...</span>
-							</div>
-						</Sticky>
+						{/* Toggle Right Panel Button */}
+						<div className={'opacity-on-hover'} style={styles.toggleRightPanelButton} onClick={this.toggleRightPanel}>
+							<div style={styles.toggleRightPanelLine}></div>
+							{this.state.showRightPanel &&
+								<div style={styles.toggleRightHide}>Hide<br/>Panel</div>
+							}
+							{!this.state.showRightPanel &&
+								<div style={styles.toggleRightShow}>Show<br/>Panel</div>
+							}
+						</div>
 
 						<div style={styles.atomNavBar}>
 							
@@ -349,36 +354,38 @@ styles = {
 	},
 	toggleRightPanelButton: {
 		position: 'absolute',
-		// height: '2em',
-		padding: '.5em 0em',
-		width: '1em',
-		top: '50px',
-		right: '0',
-		backgroundColor: '#F3F3F4',
-		borderWidth: '1px 0px 1px 1px',
-		borderStyle: 'solid',
-		borderColor: '#E4E4E4',
-		borderRadius: '3px',
-
-		color: '#BBBDC0',
+		height: '100%',
+		width: '4em',
+		right: '-1em',
+		top: '39px',
 		cursor: 'pointer',
-		textAlign: 'center',
-		zIndex: 1
+		opacity: 0,
+		transition: '.2s linear opacity .1s',
+		zIndex: 1,
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+			display: 'none',
+		},
+	},
+	toggleRightPanelLine: {
+		width: '1px',
+		height: '100%',
+		backgroundColor: '#2C2A2B',
+		margin: '0em 1em 0em auto',
+		
+	},
+	toggleRightHide: {
+		position: 'fixed',
+		top: '50%',
+		right: 'calc(35vw + 5px)',
+		textAlign: 'right',
+	},
+	toggleRightShow: {
+		position: 'fixed',
+		top: '50%',
+		right: 'calc(0vw + 5px)',
+		textAlign: 'right',
+	},
 
-	},
-	toggleRightPanelWide: {
-		width: '1.5em',
-	},
-	toggleRightPanelText: {
-		display: 'block',
-		pointerEvents: 'none',
-		transform: 'translate3d(2px, -2px, 0px) rotate(90deg)',
-		fontFamily: 'Courier',
-		fontSize: '0.75em',
-	},
-	toggleRightPanelTextWide: {
-		transform: 'translate3d(3px, 0px, 0px) rotate(90deg)',
-	},
 	hideRightPanel: {
 		transform: 'translate3d(100%, 0, 0)'
 	},
