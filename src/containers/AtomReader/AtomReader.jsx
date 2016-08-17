@@ -419,7 +419,6 @@ styles = {
 		position: 'relative',
 	},
 
-	
 	// noBottomMargin: {
 	// 	marginBottom: '0px',
 	// },
@@ -436,20 +435,17 @@ styles = {
 		display: 'block',
 		textDecoration: 'none',
 		color: 'inherit',
-		paddingRight: '2em',
-		paddingTop: '1em',
-		paddingBottom: '1em',
-		paddingLeft: '2em',
+		padding: '1em 0em 0em 0em',
 		cursor: 'pointer',
 	},
 
 	tocLevels: [
+		{paddingLeft: '0em'},
 		{paddingLeft: '2em'},
+		{paddingLeft: '3em'},
 		{paddingLeft: '4em'},
 		{paddingLeft: '5em'},
 		{paddingLeft: '6em'},
-		{paddingLeft: '7em'},
-		{paddingLeft: '8em'},
 	],
 
 };
