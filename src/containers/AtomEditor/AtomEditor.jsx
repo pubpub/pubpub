@@ -362,6 +362,7 @@ styles = {
 		opacity: 0,
 		transition: '.2s linear opacity .1s',
 		zIndex: 1,
+		borderLeft: '1px dashed #808284',
 		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
 			display: 'none',
 		},
@@ -369,7 +370,8 @@ styles = {
 	toggleRightPanelLine: {
 		width: '1px',
 		height: '100%',
-		backgroundColor: '#2C2A2B',
+		// backgroundColor: '#2C2A2B',
+		borderLeft: '1px dashed #808284',
 		margin: '0em 1em 0em auto',
 		
 	},
