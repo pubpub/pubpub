@@ -14,6 +14,7 @@ insertCSS(`
 
 .ProseMirror-menubar {
   z-index: 2;
+  background-color: transparent;
 }
 
 .ProseMirror-content {
