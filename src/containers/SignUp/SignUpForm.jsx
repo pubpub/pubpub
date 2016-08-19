@@ -92,14 +92,14 @@ export const SignUpForm = React.createClass({
 				<form onSubmit={this.signUpSubmit}>
 					<div>
 						<label style={styles.label} htmlFor={'firstName'}>
-							<FormattedMessage id="signup.FirstName" defaultMessage="First Name"/>
+							<FormattedMessage {...globalMessages.FirstName}/>
 						</label>
 						<input ref={'firstName'} id={'firstName'} name={'first name'} type="text" style={styles.input}/>
 					</div>
 
 					<div>
 						<label style={styles.label} htmlFor={'lastName'}>
-							<FormattedMessage id="signup.LastName" defaultMessage="Last Name"/>
+							<FormattedMessage {...globalMessages.LastName}/>
 						</label>
 						<input ref={'lastName'} id={'lastName'} name={'last name'} type="text" style={styles.input}/>
 					</div>

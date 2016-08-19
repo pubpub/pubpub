@@ -77,14 +77,14 @@ export const UserProfileSettingsProfile = React.createClass({
 				<form onSubmit={this.saveSubmit} style={styles.form}>
 					<div>
 						<label htmlFor={'firstName'}>
-							<FormattedMessage id="signup.FirstName" defaultMessage="First Name"/>
+							<FormattedMessage {...globalMessages.FirstName}/>
 						</label>
 						<input ref={'firstName'} id={'firstName'} name={'first name'} type="text" style={styles.input} defaultValue={userData.firstName}/>
 					</div>
 
 					<div>
 						<label htmlFor={'lastName'}>
-							<FormattedMessage id="signup.LastName" defaultMessage="Last Name"/>
+							<FormattedMessage {...globalMessages.LastName}/>
 						</label>
 						<input ref={'lastName'} id={'lastName'} name={'last name'} type="text" style={styles.input} defaultValue={userData.lastName}/>
 					</div>
