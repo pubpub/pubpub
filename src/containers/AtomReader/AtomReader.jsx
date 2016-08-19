@@ -129,6 +129,9 @@ export const AtomReader = React.createClass({
 		// const versionIndex = this.props.query.version !== undefined && this.props.query.version > 0 && this.props.query.version <= (this.props.pubData.getIn(['pubData', 'history']).size - 1)
 		// 	? this.props.query.version - 1
 		// 	: this.props.pubData.getIn(['pubData', 'history']).size - 1;
+		const isEmbed = this.props.query && this.props.query.embed;
+		const linkTarget = isEmbed ? '_parent' : '_self';
+
 		const atomData = safeGetInToJS(this.props.atomData, ['atomData']) || {};
 
 		const metaData = {
@@ -196,8 +199,8 @@ export const AtomReader = React.createClass({
 		if (atomData.type !== 'document') { navItems.pop(); }
 
 		const authorsData = safeGetInToJS(this.props.atomData, ['authorsData']) || [];
-		const authorList = atomData.customAuthorString ? [<Link to={'/pub/' + this.props.slug + '/contributors'} key={'author-0'}>{atomData.customAuthorString}</Link>] : authorsData.map((item, index)=> {
-			return <Link to={'/user/' + item.source.username} key={'author-' + index} className={'author'}>{item.source.name}</Link>;
+		const authorList = atomData.customAuthorString ? [<Link target={linkTarget} to={'/pub/' + this.props.slug + '/contributors'} key={'author-0'}>{atomData.customAuthorString}</Link>] : authorsData.map((item, index)=> {
+			return <Link target={linkTarget} to={'/user/' + item.source.username} key={'author-' + index} className={'author'}>{item.source.name}</Link>;
 		});
 
 		return (
@@ -223,7 +226,10 @@ export const AtomReader = React.createClass({
 					<div className={'opacity-on-hover'} style={styles.iconLeft} onClick={this.toggleTOC}></div>
 					<div className={'opacity-on-hover'} style={styles.iconRight} onClick={this.toggleDiscussions}></div>
 
-					<HorizontalNav navItems={navItems} mobileNavButtons={mobileNavButtons}/>
+					{!isEmbed &&
+						<HorizontalNav navItems={navItems} mobileNavButtons={mobileNavButtons}/>
+					}
+					
 
 					{/* <div style={styles.buttonWrapper}>
 						<div className={'button'} style={styles.button} onClick={()=>{}}>Follow</div>
