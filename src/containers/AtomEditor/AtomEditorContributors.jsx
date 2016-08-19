@@ -71,13 +71,14 @@ export const AtomEditorContributors = React.createClass({
 			const responseArray = response.body || [];
 			const options = responseArray.map((item)=>{
 				return {
-					value: item.slug,
+					value: item.username,
 					label: item.name,
 					slug: item.username,
 					image: item.image,
 					id: item._id,
 				};
 			});
+			console.log(options);
 			callback(null, { options: options });
 		});
 	},
@@ -157,6 +158,16 @@ export const AtomEditorContributors = React.createClass({
 					value={this.state.value}
 					loadOptions={this.loadOptions}
 					placeholder={<span>Add new contributor</span>}
+					filterOptions={(options)=>{
+						return options.filter((option)=>{
+							for (let index = 0; index < contributorsData.length; index++) {
+								if (contributorsData[index].source.username === option.slug) {
+									return false;
+								}
+							}
+							return true;
+						});
+					}}
 					onChange={this.handleSelectChange} 
 					optionComponent={SelectOption}
 					valueComponent={SelectValue}/>
