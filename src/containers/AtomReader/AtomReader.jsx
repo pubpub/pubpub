@@ -130,6 +130,7 @@ export const AtomReader = React.createClass({
 		// 	? this.props.query.version - 1
 		// 	: this.props.pubData.getIn(['pubData', 'history']).size - 1;
 		const isEmbed = this.props.query && this.props.query.embed;
+		const hideRightPanel = this.props.query && this.props.query.hideRightPanel;
 		const linkTarget = isEmbed ? '_parent' : '_self';
 
 		const atomData = safeGetInToJS(this.props.atomData, ['atomData']) || {};
@@ -156,7 +157,7 @@ export const AtomReader = React.createClass({
 		};
 
 
-		const showDiscussions = !this.props.meta && (this.state.showDiscussions && !this.state.showTOC || this.state.showDiscussions && this.state.lastCliked === 'discussions');
+		const showDiscussions = !hideRightPanel && !this.props.meta && (this.state.showDiscussions && !this.state.showTOC || this.state.showDiscussions && this.state.lastCliked === 'discussions');
 		const showTOC = !this.props.meta && (this.state.showTOC && !this.state.showDiscussions || this.state.showTOC && this.state.lastCliked === 'toc');
 
 		
