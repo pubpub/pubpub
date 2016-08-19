@@ -4,7 +4,7 @@ import Radium from 'radium';
 import {globalStyles} from 'utils/styleConstants';
 
 // import {globalMessages} from 'utils/globalMessages';
-// import {FormattedMessage} from 'react-intl';
+import {FormattedMessage} from 'react-intl';
 
 let styles;
 
@@ -37,7 +37,7 @@ export const AppVerified = React.createClass({
 					Account Unverified. 
 					{this.state.emailResent
 						? <span style={styles.emailResent}>Verification email resent!</span>
-						: <span className={'underlineOnHover'} style={styles.emailLink} onClick={this.resendEmail}>Resend verification email</span>
+						: <span className={'underlineOnHover'} style={styles.emailLink} onClick={this.resendEmail}><FormattedMessage id="appVerified.ResendVerificationEmail" defaultMessage="Resend Verification Email"/></span>
 					}
 				</div>
 			</div>
