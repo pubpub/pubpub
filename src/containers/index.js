@@ -1,4 +1,5 @@
 export App from './App/App';
+export Atom from './Atom/Atom';
 export AtomEditor from './AtomEditor/AtomEditor';
 export AtomReader from './AtomReader/AtomReader';
 export Discussions from './Discussions/Discussions';

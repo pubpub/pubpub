@@ -14,7 +14,7 @@ export const HorizontalNav = React.createClass({
 	getInitialState() {
 		return {
 			showMenu: false,
-			itemsToShow: 4,
+			itemsToShow: 6,
 			randomKey: undefined,
 		};
 	},

@@ -37,12 +37,10 @@ let styles = {};
 export const AtomReader = React.createClass({
 	propTypes: {
 		atomData: PropTypes.object,
-		authorsData: PropTypes.object,
 		loginData: PropTypes.object,
 		slug: PropTypes.string,
 		query: PropTypes.object, // version: integer
 		meta: PropTypes.string,
-		metaID: PropTypes.string,
 		inviteStatus: PropTypes.string,
 		dispatch: PropTypes.func
 	},
@@ -55,7 +53,7 @@ export const AtomReader = React.createClass({
 
 	statics: {
 		fetchData: function(getState, dispatch, location, routeParams) {
-			return dispatch(getAtomData(routeParams.slug, routeParams.meta, location.query.version ));
+			return dispatch(getAtomData(routeParams.slug, routeParams.meta, location.query.version));
 			// return dispatch(getAtomData(routeParams.slug, location.query.referrer, getState().router.params.meta, location.query.version));
 		}
 	},
@@ -65,6 +63,23 @@ export const AtomReader = React.createClass({
 			showRightPanel: true,
 			rightPanelMode: 'discussions',
 		};
+	},
+
+	componentWillMount() {
+		// If we load into the Editor, set the default rightPanelMode to 'details'
+		if (this.props.meta === 'edit')	{
+			this.setState({rightPanelMode: 'details'});
+		}
+	},
+	componentWillReceiveProps(nextProps) {
+		// If we transition from view to edit, set rightPanel to 'details'
+		if (this.props.meta !== 'edit' && nextProps.meta === 'edit') {
+			this.setState({rightPanelMode: 'details'});
+		}
+		// If we transition from edit to view, set rightPanel to 'discussions'
+		if (this.props.meta === 'edit' && nextProps.meta !== 'edit') {
+			this.setState({rightPanelMode: 'discussions'});
+		}
 	},
 
 	toggleRightPanel: function() {
@@ -104,8 +119,19 @@ export const AtomReader = React.createClass({
 
 	render: function() {
 		const atomData = safeGetInToJS(this.props.atomData, ['atomData']) || {};
+		const isEditor = this.props.meta === 'edit';
 
-		const metaData = {
+		// The editor must not be indexed by search engines, so add a noindex.
+		// The reader must provide metadata for popular embed tags and proper SEO performance.
+		const metaData = isEditor 
+		? {
+			title: 'Editing ' + atomData.title + ' · PubPub',
+			meta: [
+				{'name': 'robots', 'content': 'noindex'},
+				{'name': 'robots', 'content': 'nofollow'},
+			]
+		}
+		: {
 			title: atomData.title + ' · PubPub',
 			meta: [
 				{property: 'og:title', content: atomData.title},
@@ -145,37 +171,30 @@ export const AtomReader = React.createClass({
 		/* Nav Items that show above the main content */
 		/* These are only shown if the user has edit rights */
 		const atomNavItems = [
-			{link: '/pub/' + this.props.slug, text: 'View', active: true},
-			{link: '/pub/' + this.props.slug + '/edit', text: 'Edit'}
+			{link: '/atom/' + this.props.slug, text: 'View', active: !isEditor},
+			
 		];
 
-		const showAtomNav = (permissionType === 'author' || permissionType === 'editor');
+
+		if (permissionType === 'author' || permissionType === 'editor') {
+			atomNavItems.push({link: '/atom/' + this.props.slug + '/edit', text: 'Edit', active: isEditor});
+		} else {
+			atomNavItems.push({link: '/atom/' + this.props.slug + '/edit', text: 'Suggest Edits', active: isEditor});
+		}
 
 		const rightPanelNavItems = [
+			{text: 'Details', action: this.setRightPanelMode.bind(this, 'details'), active: this.state.rightPanelMode === 'details'},
 			{text: 'Contents', action: this.setRightPanelMode.bind(this, 'contents'), active: this.state.rightPanelMode === 'contents'},
 			{text: 'Discussions', action: this.setRightPanelMode.bind(this, 'discussions'), active: this.state.rightPanelMode === 'discussions'},
 			{text: 'Contributors', action: this.setRightPanelMode.bind(this, 'contributors'), active: this.state.rightPanelMode === 'contributors'},
-			{text: 'Versions', action: this.setRightPanelMode.bind(this, 'versions'), active: this.state.rightPanelMode === 'versions'},
 			{text: 'Journals', action: this.setRightPanelMode.bind(this, 'journals'), active: this.state.rightPanelMode === 'journals'},
-			// {text: 'Analytics', action: this.setRightPanelMode.bind(this, 'analytics'), active: this.state.rightPanelMode === 'analytics'},
-			// {text: 'Cite', action: this.setRightPanelMode.bind(this, 'cite'), active: this.state.rightPanelMode === 'cite'},
-			// {text: 'Followers', action: this.setRightPanelMode.bind(this, 'followers'), active: this.state.rightPanelMode === 'followers'},
-			{text: 'Meta', action: this.setRightPanelMode.bind(this, 'export'), active: this.state.rightPanelMode === 'export'},
-
-			// {link: '/pub/' + this.props.slug, text: 'Contents', active: !this.props.meta},
-			// {link: '/pub/' + this.props.slug + '/contributors', text: 'Contributors', active: this.props.meta === 'contributors'},
-			// {link: '/pub/' + this.props.slug + '/versions', text: 'Versions', active: this.props.meta === 'versions'},
-			// {link: '/pub/' + this.props.slug + '/journals', text: 'Journals', active: this.props.meta === 'journals'},
-			// {link: '/pub/' + this.props.slug + '/analytics', text: 'Analytics', active: this.props.meta === 'analytics'},
-			// {link: '/pub/' + this.props.slug + '/cite' + versionQuery, text: 'Cite', active: this.props.meta === 'cite'},
-			// {link: '/pub/' + this.props.slug + '/followers', text: 'Followers', active: this.props.meta === 'followers'},
-			// {link: '/pub/' + this.props.slug + '/export' + versionQuery, text: 'Export', active: this.props.meta === 'export'},
+			{text: 'Meta', action: this.setRightPanelMode.bind(this, 'meta'), active: this.state.rightPanelMode === 'meta'},
 		];
 
-		// Remove Export option if the atom type is not a doc
-		// In the future, we may add export for datasets, images, etc.
-		// But for now that's ill defined
-		if (atomData.type !== 'document') { rightPanelNavItems.pop(); }
+		// Remove 'Details' option if the user is not the author
+		if (permissionType !== 'author') {
+			rightPanelNavItems.shift();
+		}
 
 		const authorsData = safeGetInToJS(this.props.atomData, ['authorsData']) || [];
 		const authorList = atomData.customAuthorString ? [<Link to={'/pub/' + this.props.slug + '/contributors'} key={'author-0'}>{atomData.customAuthorString}</Link>] : authorsData.map((item, index)=> {
@@ -198,11 +217,9 @@ export const AtomReader = React.createClass({
 							<span style={[styles.toggleRightPanelText, !this.state.showRightPanel && styles.toggleRightPanelTextWide]}>...</span>
 						</div> */}
 
-					{!!showAtomNav && 
-						<div style={styles.atomNavBar}>
-							<HorizontalNav navItems={atomNavItems} mobileNavButtons={mobileNavButtons}/>
-						</div>
-					}
+					<div style={styles.atomNavBar}>
+						<HorizontalNav navItems={atomNavItems} mobileNavButtons={mobileNavButtons}/>
+					</div>
 
 					{/* Toggle Right Panel Button */}
 					<div className={'opacity-on-hover'} style={styles.toggleRightPanelButton} onClick={this.toggleRightPanel}>
@@ -257,7 +274,7 @@ export const AtomReader = React.createClass({
 								case 'analytics':
 									return <AtomReaderAnalytics atomData={this.props.atomData}/>;
 								case 'cite':
-									return <AtomReaderCite atomData={this.props.atomData} authorsData={this.props.authorsData} versionQuery={versionQuery}/>;
+									return <AtomReaderCite atomData={this.props.atomData} authorsData={authorsData} versionQuery={versionQuery}/>;
 								case 'export':
 									return <AtomReaderExport atomData={this.props.atomData}/>;
 								case 'discussions':
