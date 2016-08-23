@@ -301,7 +301,7 @@ export const AtomReader = React.createClass({
 
 							{/*<FollowButton id={atomData._id} type={'followsAtom'} isFollowing={this.props.isFollowing} buttonStyle={styles.followButtonStyle}/>*/}
 							
-							<div className={'showChildOnHover'} style={{position: 'relative', padding: '0em 1em', backgroundColor: '#F3F3F4', display: 'inline-block', margin: '1em 0em 0em -1em', fontFamily: 'Open Sans', fontSize: '0.75em', textTransform: 'capitalize'}}>{atomData.type}
+							{/*<div className={'showChildOnHover'} style={{position: 'relative', padding: '0em 1em', backgroundColor: '#F3F3F4', display: 'inline-block', margin: '1em 0em 0em -1em', fontFamily: 'Open Sans', fontSize: '0.75em', textTransform: 'capitalize'}}>{atomData.type}
 								<div className={'hoverChild'} style={{position: 'absolute'}}>
 									{versionsData.sort((foo, bar)=>{
 										// Sort so that most recent is first in array
@@ -323,29 +323,47 @@ export const AtomReader = React.createClass({
 										);
 									})}
 								</div>
-							</div>
+							</div>*/}
+
+							<h1 className={'atom-header-title'}>{atomData.title}</h1>
+							<p className={'atom-header-p'}>{authorList}</p>
+							<p className={'atom-header-p'}>{dateFormat(currentVersionDate, 'mmmm dd, yyyy')}</p>
+							
 							{!isEditor &&
 								<div>
-									<div className={'button'} style={{marginRight: '.5em', padding: '0em 1em', lineHeight: '1.25em', fontSize: '0.75em', fontFamily: 'Open Sans'}}>Version 13</div>
-									<div className={'button'} style={{marginRight: '.5em', padding: '0em 1em', lineHeight: '1.25em', fontSize: '0.75em', fontFamily: 'Open Sans'}}>Cite</div>
-									<div className={'button'} style={{marginRight: '.5em', padding: '0em 1em', lineHeight: '1.25em', fontSize: '0.75em', fontFamily: 'Open Sans'}}>Follow</div>
+									<div className={'button pubbutton light-button arrow-down showChildOnHover'} style={styles.headerAction}>Versions
+										<div className={'hoverChild'} style={{position: 'absolute'}}>
+											{versionsData.sort((foo, bar)=>{
+												// Sort so that most recent is first in array
+												if (foo.createDate > bar.createDate) { return -1; }
+												if (foo.createDate < bar.createDate) { return 1; }
+												return 0;
+											}).map((item, index)=> {
+												return <div>Version: {item.createDate}</div>;
+											})}
+										</div>
+									</div>
+									<div className={'button pubbutton light-button arrow-down showChildOnHover'} style={styles.headerAction}>Download
+										<div className={'hoverChild'} style={{position: 'absolute'}}>
+											<div>PDF</div>
+											<div>XML</div>
+											<div>JSON</div>
+										</div>
+									</div>
+									<div className={'button pubbutton light-button'} style={styles.headerAction}>Cite</div>
+									<div className={'button pubbutton light-button'} style={styles.headerAction}>Follow</div>
 
 								</div>
 							}
 
 							{isEditor &&
 								<div>
-									<div className={'button'} style={{marginRight: '.5em', padding: '0em 1em', lineHeight: '1.25em', fontSize: '0.75em', fontFamily: 'Open Sans'}}>Save Private Version</div>
-									<div className={'button'} style={{marginRight: '.5em', padding: '0em 1em', lineHeight: '1.25em', fontSize: '0.75em', fontFamily: 'Open Sans'}}>Publish Version</div>
-									<div className={'button'} style={{marginRight: '.5em', padding: '0em .25em', lineHeight: '1.25em', fontSize: '0.75em', fontFamily: 'Open Sans', opacity: '.5', borderRadius: '50px'}}>?</div>
+									<div className={'button pubbutton light-button'} style={styles.headerAction}>Save Version</div>
+									{/* <div className={'button pubbutton'} style={{marginRight: '.5em', padding: '0em 1em', lineHeight: '1.25em', fontSize: '0.75em', fontFamily: 'Open Sans'}}>Save Version</div> */}
+									{/* <div className={'button pubbutton'} style={{marginRight: '.5em', padding: '0em 1em', lineHeight: '1.25em', fontSize: '0.75em', fontFamily: 'Open Sans'}}>Publish Version</div>
+										<div className={'button pubbutton'} style={{marginRight: '.5em', padding: '0em .25em', lineHeight: '1.25em', fontSize: '0.75em', fontFamily: 'Open Sans', opacity: '.5', borderRadius: '50px'}}>?</div> */}
 								</div>
 							}
-
-							<h1 className={'atom-header-title'}>{atomData.title}</h1>
-
-							<p className={'atom-header-p'}>{authorList}</p>
-							<p className={'atom-header-p'}>{dateFormat(currentVersionDate, 'mmmm dd, yyyy')}</p>
-							
 
 							{/* this.props.versionDate !== this.props.lastUpdated &&
 								<Link to={'/pub/' + this.props.slug} style={globalStyles.link}><p className={'atom-header-p'} style={[hideStyle, styles.updateAvailableNote]}>Newer Version Available: {dateFormat(this.props.lastUpdated, 'mmmm dd, yyyy')}</p></Link>
@@ -470,6 +488,14 @@ styles = {
 
 	pubSectionFull: {
 		marginRight: '0vw',
+	},
+	headerAction: {
+		marginRight: '.5em', 
+		padding: '0em 1em', 
+		lineHeight: '1.25em', 
+		fontSize: '0.75em', 
+		fontFamily: 'Open Sans',
+		position: 'relative',
 	},
 	iconRight: {
 		position: 'absolute',

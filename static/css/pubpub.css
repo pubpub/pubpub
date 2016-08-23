@@ -249,8 +249,23 @@ h2 {
 	-ms-transform: translateY(1px);
     transform: translateY(1px);
 }
+
+.light-button {
+	color: #808284;
+	border-color: #BBBDC0;
+}
+
 /* ------------ */
 
+.arrow-down:after {
+	content: '^';
+	font-family: Courier;
+	padding-right: .5em;
+	line-height: 0.5em;
+	transform: translateY(-25%) rotate(180deg);
+	display: inline-block;
+	font-size: 1.2em;
+}
 
 /* Arrow Box */
 /* ------------ */
