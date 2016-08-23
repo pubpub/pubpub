@@ -24,10 +24,8 @@ let modelToEditor;
 let menuBar;
 export const DocumentEditor = React.createClass({
 	propTypes: {
-		atomEditData: PropTypes.object,
+		atomData: PropTypes.object,
 		loginData: PropTypes.object,
-		token: PropTypes.string,
-		collab: PropTypes.string,
 	},
 
 	getInitialState() {
@@ -63,7 +61,7 @@ export const DocumentEditor = React.createClass({
 			}
 			*/
 		});
-		const token = safeGetInToJS(this.props.atomEditData, ['token']);
+		const token = safeGetInToJS(this.props.atomData, ['token']);
 		pm.mod = {};
 		pm.mod.collab = collabEditing.get(pm);
 		// Ignore setDoc
@@ -100,7 +98,7 @@ export const DocumentEditor = React.createClass({
 		collab.updateParticipants = this.updateParticipants;
 
 		// Collaboration Authentication information
-		const atomID = safeGetInToJS(this.props.atomEditData, ['atomData', '_id']);
+		const atomID = safeGetInToJS(this.props.atomData, ['atomData', '_id']);
 		collab.doc_id = atomID;
 		const user = safeGetInToJS(this.props.loginData, ['userData', 'username']);
 		collab.username = user;
@@ -150,10 +148,21 @@ export const DocumentEditor = React.createClass({
 			menuBarPlaceholder.appendChild(menuBar);
 		}
 	},
+	removeMenu: function() {
+		if (typeof(document) !== 'undefined') {
+			const menuBarPlaceholder = document.getElementById('headerPlaceholder');
+			menuBarPlaceholder.innerHTML = '';
+
+			const participantsPlaceholder = document.getElementById('editor-participants');
+			participantsPlaceholder.innerHTML = '';
+			
+		}
+	},
 
 	componentWillUnmount: function() {
 		this.collab.mod.serverCommunications.close();
 		window.clearInterval(this.sendDocumentTimer);
+		this.removeMenu();
 	},
 	// Collects updates of the document from ProseMirror and saves it under this.doc
 	getUpdates: function(callback) {
@@ -176,7 +185,7 @@ export const DocumentEditor = React.createClass({
 			if (that.collab.docInfo && that.collab.docInfo.changed) {
 				that.save();
 			}
-		},60000);
+		}, 60000);
 	},
 
 
@@ -328,9 +337,12 @@ export const DocumentEditor = React.createClass({
 	},
 
 	updateParticipants: function(participants) {
-		this.collab.mod.collab.updateParticipantList(participants);
 		// console.log('Got participants', participants);
-		this.setState({participants});
+		if (!this._calledComponentWillUnmount) {
+			this.collab.mod.collab.updateParticipantList(participants);
+			this.setState({participants});	
+		}
+		
 	},
 
 	proseChange: function() {
@@ -365,7 +377,7 @@ export const DocumentEditor = React.createClass({
 	// },
 
 	render: function() {
-		const collab = safeGetInToJS(this.props.atomEditData, ['collab']);
+		const collab = safeGetInToJS(this.props.atomData, ['collab']);
 
 
 		const colorMap = {};

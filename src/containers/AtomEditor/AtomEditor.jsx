@@ -419,9 +419,9 @@ styles = {
 		top: 44,
 		opacity: 0.75,
 		transition: '.1s linear opacity',
-	},
-	'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
-		position: 'static',
-	},
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+			position: 'static',
+		},
+	}
 
 };

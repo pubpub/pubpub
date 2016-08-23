@@ -218,22 +218,19 @@ export function getAtomData(req, res) {
 			permissionType = 'author';
 		}
 
-		const getAuthors = new Promise(function(resolve) {
-			const query = Link.find({destination: atomResult._id, type: 'author'}).populate({
-				path: 'source',
-				model: User,
-				select: 'username name firstName lastName image ',
-			}).exec();
-			resolve(query);
-		});
+		const getAuthors = Link.find({destination: atomResult._id, type: 'author'}).populate({
+			path: 'source',
+			model: User,
+			select: 'username name firstName lastName image ',
+		}).exec();
 
 		// Get the most recent version
 		// This query fires if no meta and no version are specified
 		const getVersion = new Promise(function(resolve) {
-			if ((!meta || meta === 'export' || meta === 'cite') && !version ) {
+			if (!meta && !version) {
 				const mostRecentVersionId = atomResult.versions[atomResult.versions.length - 1];
 				resolve(Version.findOne({_id: mostRecentVersionId}).exec());
-			} else if ((!meta || meta === 'export' || meta === 'cite') && version) {
+			} else if (version) {
 				let versionID = version;
 				if (!isNaN(version) && version < 10000) {
 					versionID = atomResult.versions[version - 1]; // Note, this is going to provide unexpected behavior if there are unpublished versions in between published versions, and query occurs by index rather than _id.
@@ -246,30 +243,16 @@ export function getAtomData(req, res) {
 
 		// Get the collaborators associated with the atom
 		// This query fires if meta is equal to 'collaborators'
-		const getContributors = new Promise(function(resolve) {
-			if (true || meta === 'contributors') {
-				const query = Link.find({destination: atomResult._id, type: {$in: ['author', 'editor', 'reader', 'contributor']}, inactive: {$ne: true}}).populate({
-					path: 'source',
-					model: User,
-					select: 'username name image bio',
-				}).exec();
-				resolve(query);
-			} else {
-				resolve();
-			}
-		});
+		const getContributors = Link.find({destination: atomResult._id, type: {$in: ['author', 'editor', 'reader', 'contributor']}, inactive: {$ne: true}}).populate({
+			path: 'source',
+			model: User,
+			select: 'username name image bio',
+		}).exec();
 
-		const getVersions = new Promise(function(resolve) {
-			if (true || meta === 'versions') {
-				const query = Version.find({_id: {$in: atomResult.versions}}, {content: 0}).sort({createDate: -1});
-				resolve(query);
-			} else {
-				resolve();
-			}
-		});
+		const getVersions = Version.find({_id: {$in: atomResult.versions}}, {content: 0}).sort({createDate: -1});
 
 		const getSubmitted = new Promise(function(resolve) {
-			if (true || meta === 'journals' && permissionType === 'author') {
+			if (permissionType === 'author') {
 				const query = Link.find({source: atomResult._id, type: 'submitted'}).populate({
 					path: 'destination',
 					model: Journal,
@@ -281,35 +264,20 @@ export function getAtomData(req, res) {
 			}
 		});
 
-		const getFeatured = new Promise(function(resolve) {
-			if (true || meta === 'journals') {
-				const query = Link.find({destination: atomResult._id, type: 'featured'}).populate({
-					path: 'source',
-					model: Journal,
-					select: 'journalName slug description icon',
-				}).exec();
-				resolve(query);
-			} else {
-				resolve();
-			}
-		});
+		const getFeatured = Link.find({destination: atomResult._id, type: 'featured'}).populate({
+			path: 'source',
+			model: Journal,
+			select: 'journalName slug description icon',
+		}).exec();
 
-		const getFollowers = new Promise(function(resolve) {
-			const query = Link.find({destination: atomResult._id, type: 'followsAtom', inactive: {$ne: true}}).populate({
-				path: 'source',
-				model: User,
-				select: 'username name bio image',
-			}).exec();
-			resolve(query);
-		});
 
-		let getDiscussions = new Promise(function(resolve) {
-			resolve();
-		});
+		const getFollowers = Link.find({destination: atomResult._id, type: 'followsAtom', inactive: {$ne: true}}).populate({
+			path: 'source',
+			model: User,
+			select: 'username name bio image',
+		}).exec();
 
-		if (!meta || meta === 'discussions') {
-			// See if the current atom is a reply to anything else
-			getDiscussions = Link.findOne({type: 'reply', source: atomResult._id}).exec()
+		const getDiscussions = Link.findOne({type: 'reply', source: atomResult._id}).exec()
 			.then(function(replyToLink) {
 				const rootID = replyToLink ? replyToLink.metadata.rootReply : atomResult._id;
 				return Link.find({'metadata.rootReply': rootID, type: 'reply'}).populate({
@@ -358,7 +326,26 @@ export function getAtomData(req, res) {
 				console.log('error', error);
 				return res.status(500).json(error);
 			});
-		}
+
+		const getEditToken = new Promise(function(resolve) {
+			if (meta === 'edit') {
+				const authUrl = process.env.COLLAB_SERVER_URL.indexOf('localhost') !== -1 
+					? 'http://' + process.env.COLLAB_SERVER_URL + '/authenticate'
+					: 'https://' + process.env.COLLAB_SERVER_URL + '/authenticate';
+
+				const query = request.post(authUrl)
+				.send({
+					user: req.user.username,
+					id: atomResult._id,
+					collabEncryptSecret: process.env.COLLAB_ENCRYPT_SECRET
+				})
+				.set('Accept', 'application/json');
+
+				resolve(query);
+			} else {
+				resolve();
+			}
+		});
 
 		const tasks = [
 			getAuthors,
@@ -369,14 +356,13 @@ export function getAtomData(req, res) {
 			getFeatured,
 			getDiscussions,
 			getFollowers,
-
+			getEditToken,
 		];
 
 		return [atomResult, Promise.all(tasks), permissionType];
 	})
 	.spread(function(atomResult, taskData, permissionType) { // Send response
 		// What's spread? See here: http://stackoverflow.com/questions/18849312/what-is-the-best-way-to-pass-resolved-promise-values-down-to-a-final-then-chai
-
 		if (!atomResult.isPublished && permissionType !== 'author' && permissionType !== 'editor' && permissionType !== 'reader') {
 			throw new Error('Atom does not exist');
 		}
@@ -386,7 +372,7 @@ export function getAtomData(req, res) {
 			throw new Error('Atom does not exist');
 		}
 
-		if ((!meta || meta === 'export' || meta === 'cite') && !currentVersionData) {
+		if (!meta && !currentVersionData) {
 			throw new Error('Atom does not exist');	
 		}
 
@@ -396,6 +382,7 @@ export function getAtomData(req, res) {
 				return discussion.versionData.isPublished;
 			});
 		}
+		const token = taskData[8] && taskData[8].text;
 
 		// Need to beef this out once people start publishing specific versions!
 		atomResult.permissionType = permissionType;
@@ -409,6 +396,8 @@ export function getAtomData(req, res) {
 			featuredData: taskData[5],
 			discussionsData: discussionsData,
 			followersData: taskData[7],
+			token: token,
+			collab: !!token,
 		});
 	})
 	.catch(function(error) {

@@ -1,13 +1,13 @@
 import {expect} from 'chai';
 import {shallowRender} from 'tests/helpersClient';
-import {AtomReaderHeader} from './AtomReaderHeader.jsx'
+import {AtomDetails} from './AtomDetails.jsx'
 
 describe('Components', () => {
-	describe('AtomReaderHeader.jsx', () => {
+	describe('AtomDetails.jsx', () => {
 
 		it('should render with empty props', () => {
 			const props = {};
-			const {renderOutput, error} = shallowRender(AtomReaderHeader, props) ;
+			const {renderOutput, error} = shallowRender(AtomDetails, props) ;
 
 			expect(error).to.not.exist; // Did not render an error
 			expect(renderOutput).to.exist; // Successfully rendered

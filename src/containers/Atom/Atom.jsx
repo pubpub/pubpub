@@ -2,35 +2,40 @@ import React, { PropTypes } from 'react';
 import {connect} from 'react-redux';
 import Radium, {Style} from 'radium';
 import Helmet from 'react-helmet';
+import {push} from 'redux-router';
 import { Link } from 'react-router';
-import {getAtomData, submitAtomToJournals} from './actions';
+import {getAtomData, submitAtomToJournals, saveVersion, updateAtomDetails, publishVersion, addContributor, updateContributor, deleteContributor} from './actions';
 // import {follow, unfollow} from 'containers/Login/actions';
 // import {createHighlight} from 'containers/MediaLibrary/actions';
 import {safeGetInToJS} from 'utils/safeParse';
 // import dateFormat from 'dateformat';
 
 import {HorizontalNav, License} from 'components';
-import AtomReaderAnalytics from './AtomReaderAnalytics';
-import AtomReaderCite from './AtomReaderCite';
-import AtomReaderContributors from './AtomReaderContributors';
-import AtomReaderExport from './AtomReaderExport';
-import AtomReaderHeader from './AtomReaderHeader';
-import AtomReaderJournals from './AtomReaderJournals';
-import AtomReaderVersions from './AtomReaderVersions';
-import AtomReaderFollowers from './AtomReaderFollowers';
+import AtomContributors from './AtomContributors';
+import AtomHeader from './AtomHeader';
+import AtomDetails from './AtomDetails';
+import AtomContents from './AtomContents';
+import AtomMeta from './AtomContents';
+import AtomJournals from './AtomJournals';
+// import AtomReaderAnalytics from './AtomReaderAnalytics';
+// import AtomReaderFollowers from './AtomReaderFollowers';
 
 import AtomViewerPane from './AtomViewerPane';
+import AtomEditorPane from './AtomEditorPane';
+
 import { StickyContainer as UnwrappedStickyContainer, Sticky } from 'react-sticky';
 const StickyContainer = Radium(UnwrappedStickyContainer);
 import smoothScroll from 'smoothscroll';
 
 import {Discussions} from 'containers';
+import {FollowButton} from 'containers';
+import dateFormat from 'dateformat';
 
 import {globalStyles} from 'utils/styleConstants';
 import {generateTOC} from 'utils/generateTOC';
 
 // import {globalMessages} from 'utils/globalMessages';
-import {FormattedMessage} from 'react-intl';
+// import {FormattedMessage} from 'react-intl';
 
 let styles = {};
 
@@ -54,7 +59,6 @@ export const AtomReader = React.createClass({
 	statics: {
 		fetchData: function(getState, dispatch, location, routeParams) {
 			return dispatch(getAtomData(routeParams.slug, routeParams.meta, location.query.version));
-			// return dispatch(getAtomData(routeParams.slug, location.query.referrer, getState().router.params.meta, location.query.version));
 		}
 	},
 
@@ -80,11 +84,21 @@ export const AtomReader = React.createClass({
 		if (this.props.meta === 'edit' && nextProps.meta !== 'edit') {
 			this.setState({rightPanelMode: 'discussions'});
 		}
+
+		// If we create a new document, transition properly
+
+
+		const oldSlug = safeGetInToJS(this.props.atomData, ['atomData', 'slug']);
+		const newSlug = safeGetInToJS(nextProps.atomData, ['atomData', 'slug']);
+		if (this.props.meta === nextProps.meta && oldSlug !== newSlug) {
+			this.props.dispatch(push('/pub/' + newSlug + '/edit'));
+		}
 	},
 
 	toggleRightPanel: function() {
 		this.setState({showRightPanel: !this.state.showRightPanel});
 		setTimeout(()=> {
+			// A scroll event is necessary to refresh the Sticky container properly
 			window.scrollBy(0, 1);
 			window.scrollBy(0, -1);
 		}, 250);
@@ -98,6 +112,42 @@ export const AtomReader = React.createClass({
 		const atomID = safeGetInToJS(this.props.atomData, ['atomData', '_id']);
 		return this.props.dispatch(submitAtomToJournals(atomID, journalIDs));
 	},
+
+	saveVersionSubmit: function(versionMessage) {
+		const newVersionContent = this.refs.atomEditorPane.refs.editor.getSaveVersionContent();
+		const atomData = this.props.atomData.get('atomData').toJS();
+		const newVersion = {
+			type: atomData.type,
+			message: versionMessage,
+			parent: atomData._id,
+			content: newVersionContent
+		};
+		this.props.dispatch(saveVersion(newVersion));
+	},
+
+	updateDetails: function(newDetails) {
+		const atomID = safeGetInToJS(this.props.atomData, ['atomData', '_id']);
+		this.props.dispatch(updateAtomDetails(atomID, newDetails));
+	},
+
+	publishVersionHandler: function(versionID) {
+		this.props.dispatch(publishVersion(versionID));
+	},
+
+	handleAddContributor: function(contributorID) {
+		const atomID = safeGetInToJS(this.props.atomData, ['atomData', '_id']);
+		this.props.dispatch(addContributor(atomID, contributorID));
+	},
+
+	handleUpdateContributor: function(linkID, linkType, linkRoles) {
+		this.props.dispatch(updateContributor(linkID, linkType, linkRoles));
+	},
+
+	handleDeleteContributor: function(linkID) {
+		this.props.dispatch(deleteContributor(linkID));
+	},
+
+
 
 	// addSelection: function(newSelection) {
 	// 	newSelection.sourcePub = this.props.pubData.getIn(['pubData', '_id']);
@@ -158,6 +208,7 @@ export const AtomReader = React.createClass({
 		const toc = generateTOC(currentVersionContent.markdown).full;
 		const versionQuery = this.props.query && this.props.query.version ? '?version=' + this.props.query.version : '';
 		const permissionType = safeGetInToJS(this.props.atomData, ['atomData', 'permissionType']) || [];
+		const versionsData = safeGetInToJS(this.props.atomData, ['versionsData']) || [];
 
 		const mobileNavButtons = [
 			{ type: 'link', mobile: true, text: 'Discussions', link: '/pub/' + this.props.slug + '/discussions' },
@@ -211,14 +262,17 @@ export const AtomReader = React.createClass({
 				}} />
 
 				{/* Pub Section */}
+				<StickyContainer>
 				<div style={[styles.pubSection, !this.state.showRightPanel && styles.pubSectionFull]}>
 
-						{/* <div className={'darker-color-hover'} onClick={this.toggleRightPanel} style={[styles.toggleRightPanelButton, !this.state.showRightPanel && styles.toggleRightPanelWide]}>
-							<span style={[styles.toggleRightPanelText, !this.state.showRightPanel && styles.toggleRightPanelTextWide]}>...</span>
-						</div> */}
-
 					<div style={styles.atomNavBar}>
-						<HorizontalNav navItems={atomNavItems} mobileNavButtons={mobileNavButtons}/>
+							
+						<Sticky style={styles.headerBar} isActive={isEditor}>
+							<HorizontalNav navItems={atomNavItems} mobileNavButtons={mobileNavButtons}/>
+							<div style={styles.headerMenu} id={'headerPlaceholder'}></div>
+							<div style={styles.headerStatus} id={'editor-participants'} className={'editor-participants opacity-on-hover'}></div>
+						</Sticky>
+						
 					</div>
 
 					{/* Toggle Right Panel Button */}
@@ -232,8 +286,8 @@ export const AtomReader = React.createClass({
 						}
 					</div>
 					
-					<div className={!this.props.meta && safeGetInToJS(this.props.atomData, ['atomData', 'type']) === 'document' ? 'atom-reader atom-reader-meta' : 'atom-reader-meta'}>
-						<AtomReaderHeader
+					<div className={safeGetInToJS(this.props.atomData, ['atomData', 'type']) === 'document' ? 'atom-reader atom-reader-meta' : 'atom-reader-meta'}>
+						{/* <AtomHeader
 							title={atomData.title}
 							authors={authorList}
 							versionDate={currentVersionDate}
@@ -241,9 +295,70 @@ export const AtomReader = React.createClass({
 							slug={atomData.slug}
 							titleOnly={!!this.props.meta}
 							atomID={atomData._id}
-							isFollowing={atomData.isFollowing} />
+							isFollowing={atomData.isFollowing} /> */}
 						
-						<AtomViewerPane atomData={this.props.atomData} />
+						<div className={'atom-reader-header'}>
+
+							{/*<FollowButton id={atomData._id} type={'followsAtom'} isFollowing={this.props.isFollowing} buttonStyle={styles.followButtonStyle}/>*/}
+							
+							<div className={'showChildOnHover'} style={{position: 'relative', padding: '0em 1em', backgroundColor: '#F3F3F4', display: 'inline-block', margin: '1em 0em 0em -1em', fontFamily: 'Open Sans', fontSize: '0.75em', textTransform: 'capitalize'}}>{atomData.type}
+								<div className={'hoverChild'} style={{position: 'absolute'}}>
+									{versionsData.sort((foo, bar)=>{
+										// Sort so that most recent is first in array
+										if (foo.createDate > bar.createDate) { return -1; }
+										if (foo.createDate < bar.createDate) { return 1; }
+										return 0;
+									}).map((item, index)=> {
+										return (
+											<div key={'version-' + index} style={styles.versionRow}>
+												
+												<div style={styles.detailWrapper}>
+													<h3 style={styles.versionDate}>{dateFormat(item.createDate, 'mmm dd, yyyy h:MM TT')}</h3>
+													<div style={styles.versionMessage}>{item.message}</div>
+												</div>
+												<div style={styles.buttonWrapper}>
+													<Link style={globalStyles.link} to={'/pub/' + this.props.slug + '?version=' + item._id} className={'button'} style={styles.button}>View this Version</Link>
+												</div>
+											</div>
+										);
+									})}
+								</div>
+							</div>
+							{!isEditor &&
+								<div>
+									<div className={'button'} style={{marginRight: '.5em', padding: '0em 1em', lineHeight: '1.25em', fontSize: '0.75em', fontFamily: 'Open Sans'}}>Version 13</div>
+									<div className={'button'} style={{marginRight: '.5em', padding: '0em 1em', lineHeight: '1.25em', fontSize: '0.75em', fontFamily: 'Open Sans'}}>Cite</div>
+									<div className={'button'} style={{marginRight: '.5em', padding: '0em 1em', lineHeight: '1.25em', fontSize: '0.75em', fontFamily: 'Open Sans'}}>Follow</div>
+
+								</div>
+							}
+
+							{isEditor &&
+								<div>
+									<div className={'button'} style={{marginRight: '.5em', padding: '0em 1em', lineHeight: '1.25em', fontSize: '0.75em', fontFamily: 'Open Sans'}}>Save Private Version</div>
+									<div className={'button'} style={{marginRight: '.5em', padding: '0em 1em', lineHeight: '1.25em', fontSize: '0.75em', fontFamily: 'Open Sans'}}>Publish Version</div>
+									<div className={'button'} style={{marginRight: '.5em', padding: '0em .25em', lineHeight: '1.25em', fontSize: '0.75em', fontFamily: 'Open Sans', opacity: '.5', borderRadius: '50px'}}>?</div>
+								</div>
+							}
+
+							<h1 className={'atom-header-title'}>{atomData.title}</h1>
+
+							<p className={'atom-header-p'}>{authorList}</p>
+							<p className={'atom-header-p'}>{dateFormat(currentVersionDate, 'mmmm dd, yyyy')}</p>
+							
+
+							{/* this.props.versionDate !== this.props.lastUpdated &&
+								<Link to={'/pub/' + this.props.slug} style={globalStyles.link}><p className={'atom-header-p'} style={[hideStyle, styles.updateAvailableNote]}>Newer Version Available: {dateFormat(this.props.lastUpdated, 'mmmm dd, yyyy')}</p></Link>
+							*/}
+						</div>
+
+						{!isEditor && 
+							<AtomViewerPane atomData={this.props.atomData} />
+						}
+						{isEditor &&
+							<AtomEditorPane ref={'atomEditorPane'} atomData={this.props.atomData} loginData={this.props.loginData}/>
+						}
+						
 						
 						{atomData.isPublished &&
 							<License />
@@ -253,6 +368,7 @@ export const AtomReader = React.createClass({
 					</div>
 
 				</div>
+				</StickyContainer>
 
 				{/* Right Panel Section */}
 				<StickyContainer style={[styles.rightPanel, !this.state.showRightPanel && styles.hideRightPanel]}>
@@ -266,32 +382,44 @@ export const AtomReader = React.createClass({
 							{(()=>{
 								switch (this.state.rightPanelMode) {
 								case 'contributors':
-									return <AtomReaderContributors atomData={this.props.atomData} contributorsData={contributorsData}/>;
-								case 'versions':
-									return <AtomReaderVersions atomData={this.props.atomData}/>;
+									return <AtomContributors 
+											atomData={this.props.atomData}
+											contributorsData={contributorsData} 
+											handleAddContributor={this.handleAddContributor}
+											handleUpdateContributor={this.handleUpdateContributor}
+											handleDeleteContributor={this.handleDeleteContributor}
+											isLoading={true} 
+											error={false} />;
+								// case 'versions':
+								// 	return <AtomVersions atomData={this.props.atomData}/>;
 								case 'journals':
-									return <AtomReaderJournals atomData={this.props.atomData} handleJournalSubmit={this.handleJournalSubmit}/>;
-								case 'analytics':
-									return <AtomReaderAnalytics atomData={this.props.atomData}/>;
-								case 'cite':
-									return <AtomReaderCite atomData={this.props.atomData} authorsData={authorsData} versionQuery={versionQuery}/>;
-								case 'export':
-									return <AtomReaderExport atomData={this.props.atomData}/>;
+									return <AtomJournals atomData={this.props.atomData} handleJournalSubmit={this.handleJournalSubmit}/>;
+								case 'meta':
+									return <AtomMeta atomData={this.props.atomData}/>;
+								case 'details':
+									return <AtomDetails atomData={this.props.atomData} updateDetailsHandler={this.updateDetails} isLoading={true} error={false}/>;
+								// case 'analytics':
+								// 	return <AtomReaderAnalytics atomData={this.props.atomData}/>;
+								// case 'cite':
+								// 	return <AtomReaderCite atomData={this.props.atomData} authorsData={authorsData} versionQuery={versionQuery}/>;
+								// case 'export':
+								// 	return <AtomReaderExport atomData={this.props.atomData}/>;
 								case 'discussions':
 									return <StickyContainer><Discussions/></StickyContainer>;
-								case 'followers':
-									return <AtomReaderFollowers atomData={this.props.atomData}/>;
+								// case 'followers':
+								// 	return <AtomReaderFollowers atomData={this.props.atomData}/>;
 								case 'contents':
-									return (
-										<div>
-											<HorizontalNav navItems={[{text: 'Sections', action: this.setRightPanelMode.bind(this, 'contents'), active: this.state.rightPanelMode === 'contents'},
-												{text: 'References', action: this.setRightPanelMode.bind(this, 'discussions'), active: this.state.rightPanelMode === 'discussions'},
-												{text: 'Assets', action: this.setRightPanelMode.bind(this, 'contributors'), active: this.state.rightPanelMode === 'contributors'}]} mobileNavButtons={mobileNavButtons}/>
-												{toc.map((object, index)=>{
-													return <div key={'toc-' + index} className={'underlineOnHover'} style={[styles.tocItem, styles.tocLevels[object.level - 1]]} onClick={this.handleScroll.bind(this, object.id)}>{object.title}</div>;
-												})}
-										</div>
-									);
+									return <AtomContents atomData={this.props.atomData}/>;
+									// return (
+									// 	<div>
+									// 		<HorizontalNav navItems={[{text: 'Sections', action: this.setRightPanelMode.bind(this, 'contents'), active: this.state.rightPanelMode === 'contents'},
+									// 			{text: 'References', action: this.setRightPanelMode.bind(this, 'discussions'), active: this.state.rightPanelMode === 'discussions'},
+									// 			{text: 'Assets', action: this.setRightPanelMode.bind(this, 'contributors'), active: this.state.rightPanelMode === 'contributors'}]} mobileNavButtons={mobileNavButtons}/>
+									// 			{toc.map((object, index)=>{
+									// 				return <div key={'toc-' + index} className={'underlineOnHover'} style={[styles.tocItem, styles.tocLevels[object.level - 1]]} onClick={this.handleScroll.bind(this, object.id)}>{object.title}</div>;
+									// 			})}
+									// 	</div>
+									// );
 
 									
 								default:
@@ -339,6 +467,7 @@ styles = {
 		left: '-4em',
 		position: 'relative',
 	},
+
 	pubSectionFull: {
 		marginRight: '0vw',
 	},
@@ -473,5 +602,28 @@ styles = {
 		{paddingLeft: '5em'},
 		{paddingLeft: '6em'},
 	],
+	headerBar: {
+		position: 'relative',
+		backgroundColor: 'white',
+		zIndex: 1,
+	},
+	headerMenu: {
+		position: 'absolute',
+		right: 0,
+		top: 0,
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+			position: 'static',
+		},
+	},
+	headerStatus: {
+		position: 'absolute',
+		left: 0,
+		top: 44,
+		opacity: 0.75,
+		transition: '.1s linear opacity',
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+			position: 'static',
+		},
+	}
 
 };

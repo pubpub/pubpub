@@ -8,7 +8,7 @@ import {PreviewCard} from 'components';
 
 let styles;
 
-export const AtomReaderJournals = React.createClass({
+export const AtomJournals = React.createClass({
 	propTypes: {
 		atomData: PropTypes.object,
 		handleJournalSubmit: PropTypes.func,
@@ -139,7 +139,7 @@ export const AtomReaderJournals = React.createClass({
 	}
 });
 
-export default Radium(AtomReaderJournals);
+export default Radium(AtomJournals);
 
 styles = {
 	inactive: {
