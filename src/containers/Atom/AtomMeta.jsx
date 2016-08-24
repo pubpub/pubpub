@@ -7,7 +7,7 @@ import {GoogleCharts} from 'components';
 
 let styles;
 
-export const AtomHeader = React.createClass({
+export const AtomMeta = React.createClass({
 	propTypes: {
 		atomData: PropTypes.object,
 	},
@@ -247,7 +247,7 @@ export const AtomHeader = React.createClass({
 	}
 });
 
-export default Radium(AtomHeader);
+export default Radium(AtomMeta);
 
 styles = {
 	loadingWrapper: {
