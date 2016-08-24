@@ -39,23 +39,23 @@ export const AtomCiteButton = React.createClass({
 
 		return (
 			<div className={'light-button arrow-down-button'} style={this.props.buttonStyle}>Cite
-				<div className={'hoverChild arrow-down-child'}>
-					<h2 className={'normalWeight'}>Bibtex</h2>
+				<div className={'hoverChild arrow-down-child'} style={styles.citeContent}>
+					<h3 className={'normalWeight'}>Bibtex</h3>
 					<div style={[styles.typeContent, styles.bibtexContent]}>
 						<Reference citationObject={referenceObject} mode={'bibtex'} />
 					</div>
 
-					<h2 className={'normalWeight'}>APA</h2>
+					<h3 className={'normalWeight'}>APA</h3>
 					<div style={styles.typeContent}>
 						<Reference citationObject={referenceObject} mode={'apa'} />
 					</div>
 
-					<h2 className={'normalWeight'}>MLA</h2>
+					<h3 className={'normalWeight'}>MLA</h3>
 					<div style={styles.typeContent}>
 						<Reference citationObject={referenceObject} mode={'mla'} />
 					</div>
 
-					<h2 className={'normalWeight'}>Chicago</h2>
+					<h3 className={'normalWeight'}>Chicago</h3>
 					<div style={styles.typeContent}>
 						<Reference citationObject={referenceObject} mode={'chicago'} />
 					</div>
@@ -69,6 +69,11 @@ export const AtomCiteButton = React.createClass({
 export default Radium(AtomCiteButton);
 
 styles = {
+	citeContent: {
+		padding: '1em',
+		userSelect: 'initial',
+		width: '400px',
+	},
 	typeContent: {
 		color: '#58585B',
 		margin: '1em 0em 2em 0em',
@@ -77,6 +82,7 @@ styles = {
 		fontFamily: 'Courier',
 		boxShadow: '0px 0px 0px 1px #ddd',
 		borderRadius: '1px',
+		wordBreak: 'break-all',
 	},
 	bibtexContent: {
 		whiteSpace: 'pre-wrap',
