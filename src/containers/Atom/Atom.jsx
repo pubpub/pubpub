@@ -266,6 +266,11 @@ export const AtomReader = React.createClass({
 			{text: 'Meta', action: this.setRightPanelMode.bind(this, 'meta'), active: this.state.rightPanelMode === 'meta'},
 		];
 
+		// Remove 'Contents' option if atom is not a 'document' type
+		if (safeGetInToJS(this.props.atomData, ['atomData', 'type']) !== 'document') {
+			rightPanelNavItems.splice(1, 1);
+		}
+
 		// Remove 'Details' option if the user is not the author
 		if (permissionType !== 'author') {
 			rightPanelNavItems.shift();
@@ -406,30 +411,11 @@ export const AtomReader = React.createClass({
 								case 'meta':
 									return <AtomMeta atomData={this.props.atomData}/>;
 								case 'details':
-									return <AtomDetails atomData={this.props.atomData} updateDetailsHandler={this.updateDetails} isLoading={isLoading} error={error}/>;
-								// case 'analytics':
-								// 	return <AtomReaderAnalytics atomData={this.props.atomData}/>;
-								// case 'cite':
-								// 	return <AtomReaderCite atomData={this.props.atomData} authorsData={authorsData} versionQuery={versionQuery}/>;
-								// case 'export':
-								// 	return <AtomReaderExport atomData={this.props.atomData}/>;
+									return <AtomDetails atomData={this.props.atomData} updateDetailsHandler={this.updateDetails} isLoading={isLoading} error={error}/>;;
 								case 'discussions':
 									return <StickyContainer><Discussions/></StickyContainer>;
-								// case 'followers':
-								// 	return <AtomReaderFollowers atomData={this.props.atomData}/>;
 								case 'contents':
 									return <AtomContents atomData={this.props.atomData} tocData={toc}/>;
-									// return (
-									// 	<div>
-									// 		<HorizontalNav navItems={[{text: 'Sections', action: this.setRightPanelMode.bind(this, 'contents'), active: this.state.rightPanelMode === 'contents'},
-									// 			{text: 'References', action: this.setRightPanelMode.bind(this, 'discussions'), active: this.state.rightPanelMode === 'discussions'},
-									// 			{text: 'Assets', action: this.setRightPanelMode.bind(this, 'contributors'), active: this.state.rightPanelMode === 'contributors'}]} mobileNavButtons={mobileNavButtons}/>
-									// 			{toc.map((object, index)=>{
-									// 				return <div key={'toc-' + index} className={'underlineOnHover'} style={[styles.tocItem, styles.tocLevels[object.level - 1]]} onClick={this.handleScroll.bind(this, object.id)}>{object.title}</div>;
-									// 			})}
-									// 	</div>
-									// );
-
 									
 								default:
 									return <Discussions/>;
@@ -478,6 +464,7 @@ styles = {
 		width: '100vw',
 		height: '100vh',
 		position: 'fixed',
+		top: 0,
 		zIndex: 2,
 	},
 	saveVersionSplash: {
@@ -487,6 +474,7 @@ styles = {
 		backgroundColor: 'rgba(0,0,0,0.35)',
 	},
 	saveVersionContent: {
+		padding: '1em',
 		maxWidth: '800px',
 		margin: '30vh auto 0',
 		backgroundColor: '#FFF',

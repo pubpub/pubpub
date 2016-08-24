@@ -58,7 +58,7 @@ export const AtomJournals = React.createClass({
 		const featuredData = safeGetInToJS(this.props.atomData, ['featuredData']) || [];
 		const permissionType = safeGetInToJS(this.props.atomData, ['atomData', 'permissionType']) || [];
 		return (
-			<div>
+			<div style={styles.container}>
 				
 				Journals serve as curators. Pubs can be featured in multiple journals.
 
@@ -141,6 +141,9 @@ export const AtomJournals = React.createClass({
 export default Radium(AtomJournals);
 
 styles = {
+	container: {
+		marginTop: '1em',
+	},
 	inactive: {
 		opacity: '0.5',
 	},
