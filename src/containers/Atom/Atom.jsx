@@ -14,6 +14,7 @@ import {HorizontalNav, License, Loader} from 'components';
 import AtomContributors from './AtomContributors';
 // import AtomHeader from './AtomHeader';
 import AtomExportButton from './AtomExportButton';
+import AtomVersionsButton from './AtomVersionsButton';
 import AtomDetails from './AtomDetails';
 import AtomContents from './AtomContents';
 import AtomMeta from './AtomMeta';
@@ -342,39 +343,16 @@ export const AtomReader = React.createClass({
 
 							{!isEditor &&
 								<div>
-
-									<div className={'light-button arrow-down-button'} style={styles.headerAction}>Versions
-										<div className={'hoverChild arrow-down-child'}>
-											{versionsData.sort((foo, bar)=>{
-												// Sort so that most recent is first in array
-												if (foo.createDate > bar.createDate) { return -1; }
-												if (foo.createDate < bar.createDate) { return 1; }
-												return 0;
-											}).map((item, index)=> {
-												return (
-													<div className={'testing'} key={'version-' + index} style={styles.versionItem}>
-														<Link to={'/pub/' + this.props.slug + '?version=' + item._id} className={'underlineOnHover'} style={styles.versionDate}>{dateFormat(item.createDate, 'mmm dd, yyyy h:MM TT')}</Link>
-														<div style={styles.versionMessage}>{item.message}</div>
-													</div>
-												);
-											})}
-										</div>
-									</div>
-
-
+									<AtomVersionsButton versionsData={versionsData} slug={this.props.slug} buttonStyle={styles.headerAction} />
 									<AtomExportButton atomData={this.props.atomData} buttonStyle={styles.headerAction} />
 									<div className={'button light-button'} style={styles.headerAction}>Cite</div>
 									<FollowButton id={atomData._id} type={'followsAtom'} isFollowing={atomData.isFollowing} buttonClasses={'light-button'} buttonStyle={styles.headerAction}/>
-
 								</div>
 							}
 
 							{isEditor &&
 								<div>
 									<div className={'button light-button'} style={styles.headerAction} onClick={this.saveVersionClick}>Save Version</div>
-									{/* <div className={'button'} style={{marginRight: '.5em', padding: '0em 1em', lineHeight: '1.25em', fontSize: '0.75em', fontFamily: 'Open Sans'}}>Save Version</div> */}
-									{/* <div className={'button'} style={{marginRight: '.5em', padding: '0em 1em', lineHeight: '1.25em', fontSize: '0.75em', fontFamily: 'Open Sans'}}>Publish Version</div>
-										<div className={'button'} style={{marginRight: '.5em', padding: '0em .25em', lineHeight: '1.25em', fontSize: '0.75em', fontFamily: 'Open Sans', opacity: '.5', borderRadius: '50px'}}>?</div> */}
 								</div>
 							}
 
@@ -384,18 +362,16 @@ export const AtomReader = React.createClass({
 						</div>
 
 						{!isEditor && 
-							<AtomViewerPane atomData={this.props.atomData} />
+							<div>
+								<AtomViewerPane atomData={this.props.atomData} />
+								{ atomData.isPublished && <License /> }	
+							</div>
 						}
+
 						{isEditor &&
 							<AtomEditorPane ref={'atomEditorPane'} atomData={this.props.atomData} loginData={this.props.loginData}/>
 						}
-						
-						
-						{atomData.isPublished &&
-							<License />
-						}
-
-						
+										
 					</div>
 
 				</div>
@@ -674,17 +650,17 @@ styles = {
 	input: {
 		width: 'calc(100% - 20px - 4px)',
 	},
-	versionItem: {
-		whiteSpace: 'nowrap',
-		margin: '.5em 1em',
-		borderBottom: '1px solid #bbbdc0',
-		padding: '.5em 0em',
-	},
-	versionDate: {
-		color: 'inherit',
-		textDecoration: 'none',
-		fontSize: '1.1em',
-	},
+	// versionItem: {
+	// 	whiteSpace: 'nowrap',
+	// 	margin: '.5em 1em',
+	// 	borderBottom: '1px solid #bbbdc0',
+	// 	padding: '.5em 0em',
+	// },
+	// versionDate: {
+	// 	color: 'inherit',
+	// 	textDecoration: 'none',
+	// 	fontSize: '1.1em',
+	// },
 
 
 };
