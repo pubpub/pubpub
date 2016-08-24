@@ -179,7 +179,7 @@ function updateAtomDetailsLoad(state) {
 function updateAtomDetailsSuccess(state, result) {
 	return state.merge({
 		loading: false,
-		atomData: result,
+		atomData: state.get('atomData').merge(result),
 		error: null
 	});
 }

@@ -14,6 +14,7 @@ import {HorizontalNav, License, Loader} from 'components';
 import AtomContributors from './AtomContributors';
 // import AtomHeader from './AtomHeader';
 import AtomExportButton from './AtomExportButton';
+import AtomCiteButton from './AtomCiteButton';
 import AtomVersionsButton from './AtomVersionsButton';
 import AtomDetails from './AtomDetails';
 import AtomContents from './AtomContents';
@@ -345,7 +346,7 @@ export const AtomReader = React.createClass({
 								<div>
 									<AtomVersionsButton versionsData={versionsData} slug={this.props.slug} buttonStyle={styles.headerAction} />
 									<AtomExportButton atomData={this.props.atomData} buttonStyle={styles.headerAction} />
-									<div className={'button light-button'} style={styles.headerAction}>Cite</div>
+									<AtomCiteButton atomData={this.props.atomData} authorsData={authorsData} customAuthorString={atomData.customAuthorString} versionQuery={versionQuery} buttonStyle={styles.headerAction}/>
 									<FollowButton id={atomData._id} type={'followsAtom'} isFollowing={atomData.isFollowing} buttonClasses={'light-button'} buttonStyle={styles.headerAction}/>
 								</div>
 							}
@@ -371,7 +372,7 @@ export const AtomReader = React.createClass({
 						{isEditor &&
 							<AtomEditorPane ref={'atomEditorPane'} atomData={this.props.atomData} loginData={this.props.loginData}/>
 						}
-										
+
 					</div>
 
 				</div>
