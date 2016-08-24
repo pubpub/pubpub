@@ -35,7 +35,7 @@ import {generateTOC} from 'utils/generateTOC';
 let styles = {};
 let interval;
 
-export const AtomReader = React.createClass({
+export const Atom = React.createClass({
 	propTypes: {
 		atomData: PropTypes.object,
 		loginData: PropTypes.object,
@@ -87,7 +87,7 @@ export const AtomReader = React.createClass({
 		const oldVersionsData = safeGetInToJS(this.props.atomData, ['versionsData']) || [];
 		const newVersionsData = safeGetInToJS(nextProps.atomData, ['versionsData']) || [];
 		if (newVersionsData.length === oldVersionsData.length + 1) {
-			this.props.dispatch(push('/atom/' + this.props.slug));
+			this.props.dispatch(push('/pub/' + this.props.slug));
 		}
 
 		// If we create a new document, transition properly
@@ -104,6 +104,10 @@ export const AtomReader = React.createClass({
 		// Let's see if this functionality stays useful, and if so we can pass down a function call that will fire everytime document is edited.
 		if (this.props.meta === 'edit' && safeGetInToJS(this.props.atomData, ['atomData', 'type']) === 'document') {
 			interval = setInterval(()=>{
+				if (!this.refs.atomEditorPane) {
+					window.clearInterval(interval);
+				}
+
 				const newVersionContent = this.refs.atomEditorPane.refs.editor.getSaveVersionContent();
 				if (this.state.currentDocMarkdown !== newVersionContent.markdown) {
 					this.setState({currentDocMarkdown: newVersionContent.markdown});
@@ -231,7 +235,7 @@ export const AtomReader = React.createClass({
 		const toc = generateTOC(this.state.currentDocMarkdown || markdown).full;
 
 		const versionQuery = this.props.query && this.props.query.version ? '?version=' + this.props.query.version : '';
-		const permissionType = safeGetInToJS(this.props.atomData, ['atomData', 'permissionType']) || [];
+		const permissionType = safeGetInToJS(this.props.atomData, ['atomData', 'permissionType']) || '';
 		const versionsData = safeGetInToJS(this.props.atomData, ['versionsData']) || [];
 
 		const isLoading = safeGetInToJS(this.props.atomData, ['loading']);
@@ -249,15 +253,15 @@ export const AtomReader = React.createClass({
 		/* Nav Items that show above the main content */
 		/* These are only shown if the user has edit rights */
 		const atomNavItems = [
-			{link: '/atom/' + this.props.slug, text: 'View', active: !isEditor},
+			{link: '/pub/' + this.props.slug, text: 'View', active: !isEditor},
 			
 		];
 
 
 		if (permissionType === 'author' || permissionType === 'editor') {
-			atomNavItems.push({link: '/atom/' + this.props.slug + '/edit', text: 'Edit', active: isEditor});
+			atomNavItems.push({link: '/pub/' + this.props.slug + '/edit', text: 'Edit', active: isEditor});
 		} else {
-			atomNavItems.push({link: '/atom/' + this.props.slug + '/edit', text: 'Suggest Edits', active: isEditor});
+			atomNavItems.push({link: '/pub/' + this.props.slug + '/edit', text: 'Suggest Edits', active: isEditor});
 		}
 
 		const rightPanelNavItems = [
@@ -416,7 +420,7 @@ export default connect( state => {
 		meta: state.router.params.meta,
 		query: state.router.location.query,
 	};
-})( Radium(AtomReader) );
+})( Radium(Atom) );
 
 styles = {
 	// exportType: {

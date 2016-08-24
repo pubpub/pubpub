@@ -1,6 +1,6 @@
 import React from 'react';
 import {IndexRoute, Route} from 'react-router';
-import {App, Atom, AtomReader, AtomEditor, EmailVerification, JournalCreate, JournalProfile, Landing, Login, ResetPassword, SignUp, UserProfile} from 'containers';
+import {App, Atom, EmailVerification, JournalCreate, JournalProfile, Landing, Login, ResetPassword, SignUp, UserProfile} from 'containers';
 import {About, AboutJournals, AboutPubs, AboutReviews, NotFound} from 'components';
 
 function loadComponent(component) {
@@ -22,12 +22,8 @@ export default () => {
 			{ /* Routes */ }
 			<Route path="/about" component={About}/>
 
-			<Route path="/atom/:slug" getComponent={loadComponent(Atom)}/>
-			<Route path="/atom/:slug/:meta" getComponent={loadComponent(Atom)}/>
-
-			<Route path="/pub/:slug" getComponent={loadComponent(AtomReader)}/>
-			<Route path="/pub/:slug/edit" getComponent={loadComponent(AtomEditor)}/>
-			<Route path="/pub/:slug/:meta" getComponent={loadComponent(AtomReader)}/>
+			<Route path="/pub/:slug" getComponent={loadComponent(Atom)}/>
+			<Route path="/pub/:slug/:meta" getComponent={loadComponent(Atom)}/>
 
 			{/*
 			<Route path="/group/:groupSlug" getComponent={loadComponent(GroupProfile)}/>

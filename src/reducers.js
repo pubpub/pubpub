@@ -4,7 +4,6 @@ import { routerStateReducer } from 'redux-router';
 
 import app from './containers/App/reducer';
 import atom from './containers/Atom/reducer';
-import atomEdit from './containers/AtomEditor/reducer';
 import emailVerification from './containers/EmailVerification/reducer';
 import followButton from './containers/FollowButton/reducer';
 import discussions from './containers/Discussions/reducer';
@@ -21,7 +20,6 @@ export default combineReducers({
 	router: routerStateReducer,
 	app,
 	atom,
-	atomEdit,
 	emailVerification,
 	followButton,
 	discussions,

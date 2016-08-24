@@ -8,7 +8,7 @@ let styles;
 export const AtomCiteButton = React.createClass({
 	propTypes: {
 		atomData: PropTypes.object,
-		authorsData: PropTypes.object,
+		authorsData: PropTypes.array,
 		customAuthorString: PropTypes.string,
 		versionQuery: PropTypes.string,
 		buttonStyle: PropTypes.object,

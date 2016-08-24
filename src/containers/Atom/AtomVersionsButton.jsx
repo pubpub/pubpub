@@ -7,8 +7,8 @@ let styles;
 
 export const AtomVersionsButton = React.createClass({
 	propTypes: {
-		versionsData: PropTypes.object,
-		slug: PropTypes.object,
+		versionsData: PropTypes.array,
+		slug: PropTypes.string,
 		buttonStyle: PropTypes.object,
 		
 	},

@@ -3,7 +3,6 @@ import Radium, {Style} from 'radium';
 import Select from 'react-select';
 import request from 'superagent';
 import {PreviewCard, SelectValue, SelectOption} from 'components';
-import dateFormat from 'dateformat';
 import {RadioGroup, Radio} from 'utils/ReactRadioGroup';
 
 let styles;

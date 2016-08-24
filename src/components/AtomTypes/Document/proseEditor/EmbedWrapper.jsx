@@ -1,5 +1,5 @@
 import React, {PropTypes} from 'react';
-import {AtomViewerPane} from 'containers/AtomReader/AtomViewerPane';
+import {AtomViewerPane} from 'containers/Atom/AtomViewerPane';
 import {ensureImmutable} from 'reducers';
 import {safeGetInToJS} from 'utils/safeParse';
 
