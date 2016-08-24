@@ -8,7 +8,7 @@ let styles = {};
 
 export const AtomDetails = React.createClass({
 	propTypes: {
-		atomEditData: PropTypes.object,
+		atomData: PropTypes.object,
 		updateDetailsHandler: PropTypes.func,
 		isLoading: PropTypes.bool,
 		error: PropTypes.object,
@@ -26,7 +26,7 @@ export const AtomDetails = React.createClass({
 	},
 
 	componentWillMount() {
-		const atomData = safeGetInToJS(this.props.atomEditData, ['atomData']) || {};
+		const atomData = safeGetInToJS(this.props.atomData, ['atomData']) || {};
 		this.setState({
 			title: atomData.title || '',
 			slug: atomData.slug || '',
@@ -84,10 +84,10 @@ export const AtomDetails = React.createClass({
 	},
 
 	render: function() {
-		const atomData = safeGetInToJS(this.props.atomEditData, ['atomData']) || {};
+		const atomData = safeGetInToJS(this.props.atomData, ['atomData']) || {};
 		const errorMessage = this.props.error && this.props.error.name === 'MongoError' ? 'URL already used' : null;
 		return (
-			<div>
+			<div style={styles.container}>
 				<form onSubmit={this.updateDetails}>
 					<div>
 						<label htmlFor={'title'}>
@@ -162,6 +162,9 @@ export const AtomDetails = React.createClass({
 export default Radium(AtomDetails);
 
 styles = {
+	container: {
+		marginTop: '1em',
+	},
 	input: {
 		width: 'calc(100% - 20px - 4px)',
 	},

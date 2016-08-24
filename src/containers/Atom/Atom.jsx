@@ -15,7 +15,7 @@ import AtomContributors from './AtomContributors';
 import AtomHeader from './AtomHeader';
 import AtomDetails from './AtomDetails';
 import AtomContents from './AtomContents';
-import AtomMeta from './AtomContents';
+import AtomMeta from './AtomMeta';
 import AtomJournals from './AtomJournals';
 // import AtomReaderAnalytics from './AtomReaderAnalytics';
 // import AtomReaderFollowers from './AtomReaderFollowers';
@@ -25,7 +25,7 @@ import AtomEditorPane from './AtomEditorPane';
 
 import { StickyContainer as UnwrappedStickyContainer, Sticky } from 'react-sticky';
 const StickyContainer = Radium(UnwrappedStickyContainer);
-import smoothScroll from 'smoothscroll';
+// import smoothScroll from 'smoothscroll';
 
 import {Discussions} from 'containers';
 import {FollowButton} from 'containers';
@@ -46,7 +46,6 @@ export const AtomReader = React.createClass({
 		slug: PropTypes.string,
 		query: PropTypes.object, // version: integer
 		meta: PropTypes.string,
-		inviteStatus: PropTypes.string,
 		dispatch: PropTypes.func
 	},
 
@@ -161,11 +160,11 @@ export const AtomReader = React.createClass({
 	// 	this.props.dispatch(createHighlight(newHighLight));
 	// },
 
-	handleScroll: function(id) {
-		const destination = document.getElementById(id);
-		if (!destination) { return undefined; }
-		smoothScroll(destination);
-	},
+	// handleScroll: function(id) {
+	// 	const destination = document.getElementById(id);
+	// 	if (!destination) { return undefined; }
+	// 	smoothScroll(destination);
+	// },
 
 	render: function() {
 		const atomData = safeGetInToJS(this.props.atomData, ['atomData']) || {};
@@ -205,10 +204,16 @@ export const AtomReader = React.createClass({
 		const contributorsData = safeGetInToJS(this.props.atomData, ['contributorsData']) || [];
 		const currentVersionContent = safeGetInToJS(this.props.atomData, ['currentVersionData', 'content']) || {};
 		const currentVersionDate = safeGetInToJS(this.props.atomData, ['currentVersionData', 'createDate']);
-		const toc = generateTOC(currentVersionContent.markdown).full;
+		
+		const markdown = isEditor ? '# Test \n ## Test 2 \n woah' : currentVersionContent.markdown;
+		const toc = generateTOC(markdown).full;
+
 		const versionQuery = this.props.query && this.props.query.version ? '?version=' + this.props.query.version : '';
 		const permissionType = safeGetInToJS(this.props.atomData, ['atomData', 'permissionType']) || [];
 		const versionsData = safeGetInToJS(this.props.atomData, ['versionsData']) || [];
+
+		const isLoading = safeGetInToJS(this.props.atomData, ['loading']);
+		const error = safeGetInToJS(this.props.atomData, ['error']);
 
 		const mobileNavButtons = [
 			{ type: 'link', mobile: true, text: 'Discussions', link: '/pub/' + this.props.slug + '/discussions' },
@@ -343,7 +348,7 @@ export const AtomReader = React.createClass({
 											})}
 										</div>
 									</div>
-									<div className={'button pubbutton light-button arrow-down showChildOnHover'} style={styles.headerAction}>Download
+									<div className={'button pubbutton light-button arrow-down showChildOnHover'} style={styles.headerAction}>Export
 										<div className={'hoverChild'} style={{position: 'absolute'}}>
 											<div>PDF</div>
 											<div>XML</div>
@@ -406,8 +411,9 @@ export const AtomReader = React.createClass({
 											handleAddContributor={this.handleAddContributor}
 											handleUpdateContributor={this.handleUpdateContributor}
 											handleDeleteContributor={this.handleDeleteContributor}
-											isLoading={true} 
-											error={false} />;
+											isLoading={isLoading} 
+											error={error} 
+											permissionType={permissionType}/>;
 								// case 'versions':
 								// 	return <AtomVersions atomData={this.props.atomData}/>;
 								case 'journals':
@@ -415,7 +421,7 @@ export const AtomReader = React.createClass({
 								case 'meta':
 									return <AtomMeta atomData={this.props.atomData}/>;
 								case 'details':
-									return <AtomDetails atomData={this.props.atomData} updateDetailsHandler={this.updateDetails} isLoading={true} error={false}/>;
+									return <AtomDetails atomData={this.props.atomData} updateDetailsHandler={this.updateDetails} isLoading={isLoading} error={error}/>;
 								// case 'analytics':
 								// 	return <AtomReaderAnalytics atomData={this.props.atomData}/>;
 								// case 'cite':
@@ -427,7 +433,7 @@ export const AtomReader = React.createClass({
 								// case 'followers':
 								// 	return <AtomReaderFollowers atomData={this.props.atomData}/>;
 								case 'contents':
-									return <AtomContents atomData={this.props.atomData}/>;
+									return <AtomContents atomData={this.props.atomData} tocData={toc}/>;
 									// return (
 									// 	<div>
 									// 		<HorizontalNav navItems={[{text: 'Sections', action: this.setRightPanelMode.bind(this, 'contents'), active: this.state.rightPanelMode === 'contents'},
@@ -612,22 +618,7 @@ styles = {
 		fontSize: '.85em',
 		padding: '.25em 1.5em',
 	},
-	tocItem: {
-		display: 'block',
-		textDecoration: 'none',
-		color: 'inherit',
-		padding: '1em 0em 0em 0em',
-		cursor: 'pointer',
-	},
-
-	tocLevels: [
-		{paddingLeft: '0em'},
-		{paddingLeft: '2em'},
-		{paddingLeft: '3em'},
-		{paddingLeft: '4em'},
-		{paddingLeft: '5em'},
-		{paddingLeft: '6em'},
-	],
+	
 	headerBar: {
 		position: 'relative',
 		backgroundColor: 'white',

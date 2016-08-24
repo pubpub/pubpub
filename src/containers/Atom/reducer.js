@@ -55,12 +55,11 @@ export const defaultState = Immutable.Map({
 	submittedData: [],
 	featuredData: [],
 	discussionsData: [],
-	status: 'loading',
+	loading: true,
 	error: null,
 
 	token: undefined,
 	collab: undefined,
-	loading: false,
 	newAtomHash: undefined,
 
 	// modalLoading: false,
@@ -75,13 +74,13 @@ export const defaultState = Immutable.Map({
 /*--------*/
 function getAtomDataLoad(state) {
 	return state.merge({
-		status: 'loading',
+		loading: true,
 	});
 }
 
 function getAtomDataSuccess(state, result) {
 	return state.merge({
-		status: 'loaded',
+		loading: false,
 		atomData: result.atomData,
 		authorsData: result.authorsData,
 		currentVersionData: result.currentVersionData,
@@ -99,7 +98,7 @@ function getAtomDataSuccess(state, result) {
 
 function getAtomDataFail(state, error) {
 	return state.merge({
-		status: 'loaded',
+		loading: false,
 		atomData: {},
 		authorsData: [],
 		currentVersionData: {},
@@ -115,20 +114,20 @@ function getAtomDataFail(state, error) {
 
 function submitAtomToJournalLoad(state) {
 	return state.merge({
-		status: 'loading',
+		loading: true,
 	});
 }
 
 function submitAtomToJournalSuccess(state, result) {
 	return state.merge({
-		status: 'loaded',
+		loading: false,
 		submittedData: result,
 	});
 }
 
 function submitAtomToJournalFail(state, error) {
 	return state.merge({
-		status: 'loaded',
+		loading: false,
 		error: error,
 	});
 }	
