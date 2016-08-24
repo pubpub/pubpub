@@ -12,7 +12,8 @@ import {safeGetInToJS} from 'utils/safeParse';
 
 import {HorizontalNav, License, Loader} from 'components';
 import AtomContributors from './AtomContributors';
-import AtomHeader from './AtomHeader';
+// import AtomHeader from './AtomHeader';
+import AtomExportButton from './AtomExportButton';
 import AtomDetails from './AtomDetails';
 import AtomContents from './AtomContents';
 import AtomMeta from './AtomMeta';
@@ -87,8 +88,6 @@ export const AtomReader = React.createClass({
 		}
 
 		// If we create a new document, transition properly
-
-
 		const oldSlug = safeGetInToJS(this.props.atomData, ['atomData', 'slug']);
 		const newSlug = safeGetInToJS(nextProps.atomData, ['atomData', 'slug']);
 		if (this.props.meta === nextProps.meta && oldSlug !== newSlug) {
@@ -284,9 +283,9 @@ export const AtomReader = React.createClass({
 					'.pagebreak': { opacity: '0', },
 				}} />
 
-				{/* Pub Section */}
 
-				{this.state.showSaveVersion && 
+				{/* Save Version Modal. Editor Only. */}				
+				{isEditor && this.state.showSaveVersion && 
 					<div style={styles.saveVersion}>
 						<div style={styles.saveVersionSplash} onClick={this.saveVersionClose}></div>
 						<div style={styles.saveVersionContent}>
@@ -310,76 +309,41 @@ export const AtomReader = React.createClass({
 						</div>
 					</div>
 				}
+
+				{/* Pub Section */}
 				<StickyContainer>
 				<div style={[styles.pubSection, !this.state.showRightPanel && styles.pubSectionFull]}>
 
+					{/* Top Nav. Is sticky in the Editor */}
 					<div style={styles.atomNavBar}>
-							
 						<Sticky style={styles.headerBar} isActive={isEditor}>
 							<HorizontalNav navItems={atomNavItems} mobileNavButtons={mobileNavButtons}/>
 							<div style={styles.headerMenu} id={'headerPlaceholder'}></div>
 							<div style={styles.headerStatus} id={'editor-participants'} className={'editor-participants opacity-on-hover'}></div>
 						</Sticky>
-						
 					</div>
 
 					{/* Toggle Right Panel Button */}
 					<div className={'opacity-on-hover'} style={styles.toggleRightPanelButton} onClick={this.toggleRightPanel}>
 						<div style={styles.toggleRightPanelLine}></div>
-						{this.state.showRightPanel &&
-							<div style={styles.toggleRightHide}>Hide<br/>Panel</div>
-						}
-						{!this.state.showRightPanel &&
-							<div style={styles.toggleRightShow}>Show<br/>Panel</div>
-						}
+						{this.state.showRightPanel && <div style={styles.toggleRightHide}>Hide<br/>Panel</div>}
+						{!this.state.showRightPanel && <div style={styles.toggleRightShow}>Show<br/>Panel</div>}
 					</div>
 					
+					{/* Pub Header and Body */}
 					<div className={safeGetInToJS(this.props.atomData, ['atomData', 'type']) === 'document' ? 'atom-reader atom-reader-meta' : 'atom-reader-meta'}>
-						{/* <AtomHeader
-							title={atomData.title}
-							authors={authorList}
-							versionDate={currentVersionDate}
-							lastUpdated={atomData.lastUpdated}
-							slug={atomData.slug}
-							titleOnly={!!this.props.meta}
-							atomID={atomData._id}
-							isFollowing={atomData.isFollowing} /> */}
 						
+						{/* Pub Header */}
 						<div className={'atom-reader-header'}>
-
-							{/*<FollowButton id={atomData._id} type={'followsAtom'} isFollowing={this.props.isFollowing} buttonStyle={styles.followButtonStyle}/>*/}
-							
-							{/*<div className={'showChildOnHover'} style={{position: 'relative', padding: '0em 1em', backgroundColor: '#F3F3F4', display: 'inline-block', margin: '1em 0em 0em -1em', fontFamily: 'Open Sans', fontSize: '0.75em', textTransform: 'capitalize'}}>{atomData.type}
-								<div className={'hoverChild'} style={{position: 'absolute'}}>
-									{versionsData.sort((foo, bar)=>{
-										// Sort so that most recent is first in array
-										if (foo.createDate > bar.createDate) { return -1; }
-										if (foo.createDate < bar.createDate) { return 1; }
-										return 0;
-									}).map((item, index)=> {
-										return (
-											<div key={'version-' + index} style={styles.versionRow}>
-												
-												<div style={styles.detailWrapper}>
-													<h3 style={styles.versionDate}>{dateFormat(item.createDate, 'mmm dd, yyyy h:MM TT')}</h3>
-													<div style={styles.versionMessage}>{item.message}</div>
-												</div>
-												<div style={styles.buttonWrapper}>
-													<Link style={globalStyles.link} to={'/pub/' + this.props.slug + '?version=' + item._id} className={'button'} style={styles.button}>View this Version</Link>
-												</div>
-											</div>
-										);
-									})}
-								</div>
-							</div>*/}
-
 							<h1 className={'atom-header-title'}>{atomData.title}</h1>
 							<p className={'atom-header-p'}>{authorList}</p>
 							<p className={'atom-header-p'}>{dateFormat(currentVersionDate, 'mmmm dd, yyyy')}</p>
 							
+
 							{!isEditor &&
 								<div>
-									<div className={'pubbutton light-button arrow-down-button'} style={styles.headerAction}>Versions
+
+									<div className={'light-button arrow-down-button'} style={styles.headerAction}>Versions
 										<div className={'hoverChild arrow-down-child'}>
 											{versionsData.sort((foo, bar)=>{
 												// Sort so that most recent is first in array
@@ -396,25 +360,21 @@ export const AtomReader = React.createClass({
 											})}
 										</div>
 									</div>
-									<div className={'pubbutton light-button arrow-down-button'} style={styles.headerAction}>Export
-										<div className={'hoverChild arrow-down-child'}>
-											<div className={'underlineOnHover'} style={styles.exportType}>PDF</div>
-											<div className={'underlineOnHover'} style={styles.exportType}>XML</div>
-											<div className={'underlineOnHover'} style={styles.exportType}>JSON</div>
-										</div>
-									</div>
-									<div className={'button pubbutton light-button'} style={styles.headerAction}>Cite</div>
-									<div className={'button pubbutton light-button'} style={styles.headerAction}>Follow</div>
+
+
+									<AtomExportButton atomData={this.props.atomData} buttonStyle={styles.headerAction} />
+									<div className={'button light-button'} style={styles.headerAction}>Cite</div>
+									<FollowButton id={atomData._id} type={'followsAtom'} isFollowing={atomData.isFollowing} buttonClasses={'light-button'} buttonStyle={styles.headerAction}/>
 
 								</div>
 							}
 
 							{isEditor &&
 								<div>
-									<div className={'button pubbutton light-button'} style={styles.headerAction} onClick={this.saveVersionClick}>Save Version</div>
-									{/* <div className={'button pubbutton'} style={{marginRight: '.5em', padding: '0em 1em', lineHeight: '1.25em', fontSize: '0.75em', fontFamily: 'Open Sans'}}>Save Version</div> */}
-									{/* <div className={'button pubbutton'} style={{marginRight: '.5em', padding: '0em 1em', lineHeight: '1.25em', fontSize: '0.75em', fontFamily: 'Open Sans'}}>Publish Version</div>
-										<div className={'button pubbutton'} style={{marginRight: '.5em', padding: '0em .25em', lineHeight: '1.25em', fontSize: '0.75em', fontFamily: 'Open Sans', opacity: '.5', borderRadius: '50px'}}>?</div> */}
+									<div className={'button light-button'} style={styles.headerAction} onClick={this.saveVersionClick}>Save Version</div>
+									{/* <div className={'button'} style={{marginRight: '.5em', padding: '0em 1em', lineHeight: '1.25em', fontSize: '0.75em', fontFamily: 'Open Sans'}}>Save Version</div> */}
+									{/* <div className={'button'} style={{marginRight: '.5em', padding: '0em 1em', lineHeight: '1.25em', fontSize: '0.75em', fontFamily: 'Open Sans'}}>Publish Version</div>
+										<div className={'button'} style={{marginRight: '.5em', padding: '0em .25em', lineHeight: '1.25em', fontSize: '0.75em', fontFamily: 'Open Sans', opacity: '.5', borderRadius: '50px'}}>?</div> */}
 								</div>
 							}
 
@@ -522,10 +482,10 @@ export default connect( state => {
 })( Radium(AtomReader) );
 
 styles = {
-	exportType: {
-		margin: '.5em 1em',
-		cursor: 'pointer',
-	},
+	// exportType: {
+	// 	margin: '.5em 1em',
+	// 	cursor: 'pointer',
+	// },
 	pubSection: {
 		verticalAlign: 'top',
 		padding: '0em 4em',
