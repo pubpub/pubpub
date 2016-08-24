@@ -2,7 +2,7 @@ import React, {PropTypes} from 'react';
 import Radium from 'radium';
 import {safeGetInToJS} from 'utils/safeParse';
 import request from 'superagent';
-import {Loader} from 'components';
+import {Loader, PreviewCard} from 'components';
 import {GoogleCharts} from 'components';
 
 let styles;
@@ -223,7 +223,7 @@ export const AtomHeader = React.createClass({
 
 				</div>}
 
-				<h2>Followers</h2>
+				<h2>Followers ({followersData.length})</h2>
 				{
 				followersData.sort((foo, bar)=>{
 					// Sort so that most recent is first in array

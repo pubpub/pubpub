@@ -60,7 +60,6 @@ export const AtomJournals = React.createClass({
 		return (
 			<div>
 				
-				<h2 className={'normalWeight'}>Journals</h2>
 				Journals serve as curators. Pubs can be featured in multiple journals.
 
 				{permissionType === 'author' &&

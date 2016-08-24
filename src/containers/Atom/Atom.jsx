@@ -10,7 +10,7 @@ import {getAtomData, submitAtomToJournals, saveVersion, updateAtomDetails, publi
 import {safeGetInToJS} from 'utils/safeParse';
 // import dateFormat from 'dateformat';
 
-import {HorizontalNav, License} from 'components';
+import {HorizontalNav, License, Loader} from 'components';
 import AtomContributors from './AtomContributors';
 import AtomHeader from './AtomHeader';
 import AtomDetails from './AtomDetails';
@@ -65,6 +65,8 @@ export const AtomReader = React.createClass({
 		return {
 			showRightPanel: true,
 			rightPanelMode: 'discussions',
+			showSaveVersion: false,
+			saveVersionMessage: '',
 		};
 	},
 
@@ -110,6 +112,22 @@ export const AtomReader = React.createClass({
 	handleJournalSubmit: function(journalIDs) {
 		const atomID = safeGetInToJS(this.props.atomData, ['atomData', '_id']);
 		return this.props.dispatch(submitAtomToJournals(atomID, journalIDs));
+	},
+
+	saveVersionClick: function() {
+		this.setState({showSaveVersion: true});
+	},
+	saveVersionClose: function() {
+		this.setState({showSaveVersion: false});
+	},
+
+	onMessageChange: function(evt) {
+		this.setState({saveVersionMessage: evt.target.value});
+	},
+
+	onSave: function(evt) {
+		evt.preventDefault();
+		this.saveVersionSubmit(this.state.saveVersionMessage);
 	},
 
 	saveVersionSubmit: function(versionMessage) {
@@ -267,6 +285,31 @@ export const AtomReader = React.createClass({
 				}} />
 
 				{/* Pub Section */}
+
+				{this.state.showSaveVersion && 
+					<div style={styles.saveVersion}>
+						<div style={styles.saveVersionSplash} onClick={this.saveVersionClose}></div>
+						<div style={styles.saveVersionContent}>
+							<h2>Save Version</h2>
+							<form onSubmit={this.onSave}>
+								Save Versions to mark milestones in your document. Any individial version can be published.
+								<label htmlFor={'versionNote'}>
+									Version Note
+								</label>
+								<input type="text" id={'versionNote'} name={'version note'} value={this.state.saveVersionMessage} onChange={this.onMessageChange} style={styles.input}/>
+								<div className={'light-color inputSubtext'}>
+									Describe changes or updates.
+								</div>
+
+								<button className={'button'} onClick={this.onSave}>
+									Save Version
+								</button>
+								<div style={styles.loaderContainer}><Loader loading={isLoading} showCompletion={true}/></div>
+
+							</form>
+						</div>
+					</div>
+				}
 				<StickyContainer>
 				<div style={[styles.pubSection, !this.state.showRightPanel && styles.pubSectionFull]}>
 
@@ -336,23 +379,28 @@ export const AtomReader = React.createClass({
 							
 							{!isEditor &&
 								<div>
-									<div className={'button pubbutton light-button arrow-down showChildOnHover'} style={styles.headerAction}>Versions
-										<div className={'hoverChild'} style={{position: 'absolute'}}>
+									<div className={'pubbutton light-button arrow-down-button'} style={styles.headerAction}>Versions
+										<div className={'hoverChild arrow-down-child'}>
 											{versionsData.sort((foo, bar)=>{
 												// Sort so that most recent is first in array
 												if (foo.createDate > bar.createDate) { return -1; }
 												if (foo.createDate < bar.createDate) { return 1; }
 												return 0;
 											}).map((item, index)=> {
-												return <div>Version: {item.createDate}</div>;
+												return (
+													<div className={'testing'} key={'version-' + index} style={styles.versionItem}>
+														<Link to={'/pub/' + this.props.slug + '?version=' + item._id} className={'underlineOnHover'} style={styles.versionDate}>{dateFormat(item.createDate, 'mmm dd, yyyy h:MM TT')}</Link>
+														<div style={styles.versionMessage}>{item.message}</div>
+													</div>
+												);
 											})}
 										</div>
 									</div>
-									<div className={'button pubbutton light-button arrow-down showChildOnHover'} style={styles.headerAction}>Export
-										<div className={'hoverChild'} style={{position: 'absolute'}}>
-											<div>PDF</div>
-											<div>XML</div>
-											<div>JSON</div>
+									<div className={'pubbutton light-button arrow-down-button'} style={styles.headerAction}>Export
+										<div className={'hoverChild arrow-down-child'}>
+											<div className={'underlineOnHover'} style={styles.exportType}>PDF</div>
+											<div className={'underlineOnHover'} style={styles.exportType}>XML</div>
+											<div className={'underlineOnHover'} style={styles.exportType}>JSON</div>
 										</div>
 									</div>
 									<div className={'button pubbutton light-button'} style={styles.headerAction}>Cite</div>
@@ -363,7 +411,7 @@ export const AtomReader = React.createClass({
 
 							{isEditor &&
 								<div>
-									<div className={'button pubbutton light-button'} style={styles.headerAction}>Save Version</div>
+									<div className={'button pubbutton light-button'} style={styles.headerAction} onClick={this.saveVersionClick}>Save Version</div>
 									{/* <div className={'button pubbutton'} style={{marginRight: '.5em', padding: '0em 1em', lineHeight: '1.25em', fontSize: '0.75em', fontFamily: 'Open Sans'}}>Save Version</div> */}
 									{/* <div className={'button pubbutton'} style={{marginRight: '.5em', padding: '0em 1em', lineHeight: '1.25em', fontSize: '0.75em', fontFamily: 'Open Sans'}}>Publish Version</div>
 										<div className={'button pubbutton'} style={{marginRight: '.5em', padding: '0em .25em', lineHeight: '1.25em', fontSize: '0.75em', fontFamily: 'Open Sans', opacity: '.5', borderRadius: '50px'}}>?</div> */}
@@ -474,7 +522,10 @@ export default connect( state => {
 })( Radium(AtomReader) );
 
 styles = {
-	
+	exportType: {
+		margin: '.5em 1em',
+		cursor: 'pointer',
+	},
 	pubSection: {
 		verticalAlign: 'top',
 		padding: '0em 4em',
@@ -485,6 +536,24 @@ styles = {
 			padding: '0em 1em',
 			marginRight: '0vw',
 		},
+	},
+	saveVersion: {
+		width: '100vw',
+		height: '100vh',
+		position: 'fixed',
+		zIndex: 2,
+	},
+	saveVersionSplash: {
+		width: '100%',
+		height: '100%',
+		position: 'absolute',
+		backgroundColor: 'rgba(0,0,0,0.35)',
+	},
+	saveVersionContent: {
+		maxWidth: '800px',
+		margin: '30vh auto 0',
+		backgroundColor: '#FFF',
+		position: 'relative'
 	},
 	atomNavBar: {
 		width: 'calc(100% + 8em - 1px)',
@@ -641,6 +710,21 @@ styles = {
 		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
 			position: 'static',
 		},
-	}
+	},
+	input: {
+		width: 'calc(100% - 20px - 4px)',
+	},
+	versionItem: {
+		whiteSpace: 'nowrap',
+		margin: '.5em 1em',
+		borderBottom: '1px solid #bbbdc0',
+		padding: '.5em 0em',
+	},
+	versionDate: {
+		color: 'inherit',
+		textDecoration: 'none',
+		fontSize: '1.1em',
+	},
+
 
 };
