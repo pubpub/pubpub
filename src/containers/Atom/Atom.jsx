@@ -4,15 +4,17 @@ import Radium, {Style} from 'radium';
 import Helmet from 'react-helmet';
 import {push} from 'redux-router';
 import { Link } from 'react-router';
+import dateFormat from 'dateformat';
+import { StickyContainer as UnwrappedStickyContainer, Sticky } from 'react-sticky';
+const StickyContainer = Radium(UnwrappedStickyContainer);
+
 import {getAtomData, submitAtomToJournals, saveVersion, updateAtomDetails, publishVersion, addContributor, updateContributor, deleteContributor} from './actions';
 // import {follow, unfollow} from 'containers/Login/actions';
 // import {createHighlight} from 'containers/MediaLibrary/actions';
-import {safeGetInToJS} from 'utils/safeParse';
-// import dateFormat from 'dateformat';
 
+import {Discussions, FollowButton} from 'containers';
 import {HorizontalNav, License, Loader} from 'components';
 import AtomContributors from './AtomContributors';
-// import AtomHeader from './AtomHeader';
 import AtomExportButton from './AtomExportButton';
 import AtomCiteButton from './AtomCiteButton';
 import AtomVersionsButton from './AtomVersionsButton';
@@ -20,21 +22,11 @@ import AtomDetails from './AtomDetails';
 import AtomContents from './AtomContents';
 import AtomMeta from './AtomMeta';
 import AtomJournals from './AtomJournals';
-// import AtomReaderAnalytics from './AtomReaderAnalytics';
-// import AtomReaderFollowers from './AtomReaderFollowers';
-
 import AtomViewerPane from './AtomViewerPane';
 import AtomEditorPane from './AtomEditorPane';
+import AtomSaveVersionButton from './AtomSaveVersionButton';
 
-import { StickyContainer as UnwrappedStickyContainer, Sticky } from 'react-sticky';
-const StickyContainer = Radium(UnwrappedStickyContainer);
-// import smoothScroll from 'smoothscroll';
-
-import {Discussions} from 'containers';
-import {FollowButton} from 'containers';
-import dateFormat from 'dateformat';
-
-import {globalStyles} from 'utils/styleConstants';
+import {safeGetInToJS} from 'utils/safeParse';
 import {generateTOC} from 'utils/generateTOC';
 
 // import {globalMessages} from 'utils/globalMessages';
@@ -47,7 +39,7 @@ export const AtomReader = React.createClass({
 		atomData: PropTypes.object,
 		loginData: PropTypes.object,
 		slug: PropTypes.string,
-		query: PropTypes.object, // version: integer
+		query: PropTypes.object, // version: hash
 		meta: PropTypes.string,
 		dispatch: PropTypes.func
 	},
@@ -87,6 +79,13 @@ export const AtomReader = React.createClass({
 		// If we transition from edit to view, set rightPanel to 'discussions'
 		if (this.props.meta === 'edit' && nextProps.meta !== 'edit') {
 			this.setState({rightPanelMode: 'discussions'});
+		}
+
+		// If there is a new version, redirect
+		const oldVersionsData = safeGetInToJS(this.props.atomData, ['versionsData']) || [];
+		const newVersionsData = safeGetInToJS(nextProps.atomData, ['versionsData']) || [];
+		if (newVersionsData.length === oldVersionsData.length + 1) {
+			this.props.dispatch(push('/atom/' + this.props.slug));
 		}
 
 		// If we create a new document, transition properly
@@ -358,7 +357,8 @@ export const AtomReader = React.createClass({
 
 							{isEditor &&
 								<div>
-									<div className={'button light-button'} style={styles.headerAction} onClick={this.saveVersionClick}>Save Version</div>
+									<AtomSaveVersionButton isLoading={isLoading} error={error} handleVersionSave={this.saveVersionSubmit} buttonStyle={styles.headerAction}/>
+									{/*<div className={'button light-button'} style={styles.headerAction} onClick={this.saveVersionClick}>Save Version</div>*/}
 								</div>
 							}
 
@@ -386,16 +386,14 @@ export const AtomReader = React.createClass({
 				{/* Right Panel Section */}
 				<StickyContainer style={[styles.rightPanel, !this.state.showRightPanel && styles.hideRightPanel]}>
 					<Sticky stickyStyle={this.state.showRightPanel ? {} : {left: '0px'}}>
-						{/* <div className={'darker-color-hover'} onClick={this.toggleRightPanel} style={styles.toggleRightPanelButton}>
-							<span style={styles.toggleRightPanelText}>...</span>
-						</div> */}
 						<HorizontalNav navItems={rightPanelNavItems} mobileNavButtons={mobileNavButtons}/>
 						
 						<div style={styles.rightPanelContent}>
 							{(()=>{
 								switch (this.state.rightPanelMode) {
 								case 'contributors':
-									return <AtomContributors 
+									return (
+										<AtomContributors 
 											atomData={this.props.atomData}
 											contributorsData={contributorsData} 
 											handleAddContributor={this.handleAddContributor}
@@ -403,9 +401,8 @@ export const AtomReader = React.createClass({
 											handleDeleteContributor={this.handleDeleteContributor}
 											isLoading={isLoading} 
 											error={error} 
-											permissionType={permissionType}/>;
-								// case 'versions':
-								// 	return <AtomVersions atomData={this.props.atomData}/>;
+											permissionType={permissionType}/>
+									);
 								case 'journals':
 									return <AtomJournals atomData={this.props.atomData} handleJournalSubmit={this.handleJournalSubmit}/>;
 								case 'meta':

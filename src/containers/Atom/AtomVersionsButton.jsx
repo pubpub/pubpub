@@ -26,7 +26,7 @@ export const AtomVersionsButton = React.createClass({
 						return 0;
 					}).map((item, index)=> {
 						return (
-							<div className={'testing'} key={'version-' + index} style={styles.versionItem}>
+							<div className={'testing'} key={'version-' + index} style={[styles.versionItem, index === versionsData.length - 1 && styles.versionItemLast]}>
 								<Link to={'/pub/' + this.props.slug + '?version=' + item._id} className={'underlineOnHover'} style={styles.versionDate}>{dateFormat(item.createDate, 'mmm dd, yyyy h:MM TT')}</Link>
 								<div style={styles.versionMessage}>{item.message}</div>
 							</div>
@@ -46,6 +46,9 @@ styles = {
 		margin: '.5em 1em',
 		borderBottom: '1px solid #bbbdc0',
 		padding: '.5em 0em',
+	},
+	versionItemLast: {
+		borderBottom: '0px solid black',
 	},
 	versionDate: {
 		color: 'inherit',

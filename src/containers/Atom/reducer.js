@@ -151,11 +151,13 @@ function saveVersionLoad(state) {
 }
 
 function saveVersionSuccess(state, result) {
-	const newAtomData = state.get('atomData').toJS();
-	newAtomData.versions.push(result);
+	const newVersionsData = state.get('versionsData').toJS();
+	newVersionsData.push(result);
+	const atomData = state.get('atomData');
 	return state.merge({
 		loading: false,
-		atomData: newAtomData,
+		versionsData: newVersionsData,
+		atomData: atomData.mergeIn(['versions'], atomData.get('versions').push(result._id)),
 		currentVersionData: result,
 		error: null
 	});
