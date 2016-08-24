@@ -66,7 +66,7 @@ export const Reference = React.createClass({
 			const journalString = citation.journal ? `
   journal={` + citation.journal + `},` : '';
 
-			bibtexString = `@article{` + citation.title && citation.title.replace(/[^A-Za-z0-9]/g, '').substring(0, 12) + citation.year + `,
+			bibtexString = `@article{` + (citation.title && citation.title.replace(/[^A-Za-z0-9]/g, '').substring(0, 12)) + citation.year + `,
   title={` + citation.title + `},
   author={` + citation.author + `},
   year={` + citation.year + `},
