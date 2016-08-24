@@ -13,7 +13,7 @@ import {getAtomData, submitAtomToJournals, saveVersion, updateAtomDetails, publi
 // import {createHighlight} from 'containers/MediaLibrary/actions';
 
 import {Discussions, FollowButton} from 'containers';
-import {HorizontalNav, License, Loader} from 'components';
+import {HorizontalNav, License} from 'components';
 import AtomContributors from './AtomContributors';
 import AtomExportButton from './AtomExportButton';
 import AtomCiteButton from './AtomCiteButton';
@@ -33,6 +33,7 @@ import {generateTOC} from 'utils/generateTOC';
 // import {FormattedMessage} from 'react-intl';
 
 let styles = {};
+let interval;
 
 export const AtomReader = React.createClass({
 	propTypes: {
@@ -61,7 +62,8 @@ export const AtomReader = React.createClass({
 			showRightPanel: true,
 			rightPanelMode: 'discussions',
 			showSaveVersion: false,
-			saveVersionMessage: '',
+
+			currentDocMarkdown: '',
 		};
 	},
 
@@ -96,6 +98,24 @@ export const AtomReader = React.createClass({
 		}
 	},
 
+	componentDidMount() {
+		// Set an poll to grab TOC and asset data if we're in the document editor
+		// A poll is pretty ugly, but it is a bit quicker at the moment than passing a function all the way down into documentEditor. 
+		// Let's see if this functionality stays useful, and if so we can pass down a function call that will fire everytime document is edited.
+		if (this.props.meta === 'edit' && safeGetInToJS(this.props.atomData, ['atomData', 'type']) === 'document') {
+			interval = setInterval(()=>{
+				const newVersionContent = this.refs.atomEditorPane.refs.editor.getSaveVersionContent();
+				if (this.state.currentDocMarkdown !== newVersionContent.markdown) {
+					this.setState({currentDocMarkdown: newVersionContent.markdown});
+				}
+			}, 1000);
+		}
+	},
+
+	componentWillUnmount() {
+		window.clearInterval(interval);
+	},
+
 	toggleRightPanel: function() {
 		this.setState({showRightPanel: !this.state.showRightPanel});
 		setTimeout(()=> {
@@ -112,22 +132,6 @@ export const AtomReader = React.createClass({
 	handleJournalSubmit: function(journalIDs) {
 		const atomID = safeGetInToJS(this.props.atomData, ['atomData', '_id']);
 		return this.props.dispatch(submitAtomToJournals(atomID, journalIDs));
-	},
-
-	saveVersionClick: function() {
-		this.setState({showSaveVersion: true});
-	},
-	saveVersionClose: function() {
-		this.setState({showSaveVersion: false});
-	},
-
-	onMessageChange: function(evt) {
-		this.setState({saveVersionMessage: evt.target.value});
-	},
-
-	onSave: function(evt) {
-		evt.preventDefault();
-		this.saveVersionSubmit(this.state.saveVersionMessage);
 	},
 
 	saveVersionSubmit: function(versionMessage) {
@@ -223,8 +227,8 @@ export const AtomReader = React.createClass({
 		const currentVersionContent = safeGetInToJS(this.props.atomData, ['currentVersionData', 'content']) || {};
 		const currentVersionDate = safeGetInToJS(this.props.atomData, ['currentVersionData', 'createDate']);
 		
-		const markdown = isEditor ? '# Test \n ## Test 2 \n woah' : currentVersionContent.markdown;
-		const toc = generateTOC(markdown).full;
+		const markdown = currentVersionContent.markdown;
+		const toc = generateTOC(this.state.currentDocMarkdown || markdown).full;
 
 		const versionQuery = this.props.query && this.props.query.version ? '?version=' + this.props.query.version : '';
 		const permissionType = safeGetInToJS(this.props.atomData, ['atomData', 'permissionType']) || [];
@@ -288,33 +292,6 @@ export const AtomReader = React.createClass({
 				<Style rules={{
 					'.pagebreak': { opacity: '0', },
 				}} />
-
-
-				{/* Save Version Modal. Editor Only. */}				
-				{isEditor && this.state.showSaveVersion && 
-					<div style={styles.saveVersion}>
-						<div style={styles.saveVersionSplash} onClick={this.saveVersionClose}></div>
-						<div style={styles.saveVersionContent}>
-							<h2>Save Version</h2>
-							<form onSubmit={this.onSave}>
-								Save Versions to mark milestones in your document. Any individial version can be published.
-								<label htmlFor={'versionNote'}>
-									Version Note
-								</label>
-								<input type="text" id={'versionNote'} name={'version note'} value={this.state.saveVersionMessage} onChange={this.onMessageChange} style={styles.input}/>
-								<div className={'light-color inputSubtext'}>
-									Describe changes or updates.
-								</div>
-
-								<button className={'button'} onClick={this.onSave}>
-									Save Version
-								</button>
-								<div style={styles.loaderContainer}><Loader loading={isLoading} showCompletion={true}/></div>
-
-							</form>
-						</div>
-					</div>
-				}
 
 				{/* Pub Section */}
 				<StickyContainer>

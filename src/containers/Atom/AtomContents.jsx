@@ -6,14 +6,23 @@ import smoothScroll from 'smoothscroll';
 
 let styles;
 
-export const AtomHeader = React.createClass({
+export const AtomContents = React.createClass({
 	propTypes: {
 		atomData: PropTypes.object,
 		tocData: PropTypes.array,
 	},
 
-	handleScroll: function(id) {
-		const destination = document.getElementById(id);
+	handleScroll: function(id, level) {
+		let destination = document.getElementById(id);
+		if (!destination) { 
+			const headers = document.getElementsByTagName('h' + level);
+			for (let index = 0; index < headers.length; index++) {
+				const testID = headers[index].textContent.trim().replace(/[^A-Za-z0-9 ]/g, '').replace(/\s/g, '-').toLowerCase();
+				if (testID === id) {
+					destination = headers[index];
+				}
+			}
+		}
 		if (!destination) { return undefined; }
 		smoothScroll(destination);
 	},
@@ -24,21 +33,23 @@ export const AtomHeader = React.createClass({
 		return (
 			<div>
 				{toc.map((object, index)=>{
-					return <div key={'toc-' + index} className={'underlineOnHover'} style={[styles.tocItem, styles.tocLevels[object.level - 1]]} onClick={this.handleScroll.bind(this, object.id)}>{object.title}</div>;
+					return <div key={'toc-' + index} className={'underlineOnHover'} style={[styles.tocItem, styles.tocLevels[object.level - 1]]} onClick={this.handleScroll.bind(this, object.id, object.level)}>{object.title}</div>;
 				})}	
 			</div>
 		);
 	}
 });
 
-export default Radium(AtomHeader);
+export default Radium(AtomContents);
 
 styles = {
 	tocItem: {
 		display: 'block',
 		textDecoration: 'none',
 		color: 'inherit',
-		padding: '1em 0em 0em 0em',
+		paddingTop: '1em',
+		paddingRight: '0em',
+		paddingBottom: '0em',
 		cursor: 'pointer',
 	},
 
