@@ -23,6 +23,8 @@ See [http://keepachangelog.com/](http://keepachangelog.com/) for best practices.
 - Bugfix to filter already-added contributors from the search results
 - Enable embed mode on Atom which provides simple reader
 - Fix bug that would show private version messages to non-contributors
+- Fix bug that led to 404 pages when the most recent version was private
+- Enable publishing from the saveVersion panel
 
 ## [v2.1.0] - 2015-08-04
 - Following functionality and lists. 
