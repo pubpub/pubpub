@@ -420,13 +420,13 @@ styles = {
 		// width: '100%',
 		// padding: '1em 2em',
 		// left: '-2em',
-		backgroundColor: '#F3F3F4',
-		minHeight: '100vh',
+		// backgroundColor: '#F3F3F4',
+		// minHeight: '100vh',
 		// position: 'relative',
-		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
-			padding: '1em 1em',
-			left: '-1em',
-		},
+		// '@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+		// 	padding: '1em 1em',
+		// 	left: '-1em',
+		// },
 	},
 	iconLeft: {
 		position: 'absolute',
