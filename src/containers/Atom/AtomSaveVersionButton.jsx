@@ -62,7 +62,7 @@ export const AtomSaveVersionButton = React.createClass({
 						
 
 						<button className={'button'} onClick={this.onSave}>
-							Save Version
+							Save Version {this.state.isPublished && 'and Publish'}
 						</button>
 						<div style={styles.loaderContainer}><Loader loading={this.props.isLoading} showCompletion={true}/></div>
 

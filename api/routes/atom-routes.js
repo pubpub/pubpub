@@ -200,7 +200,6 @@ export function getAtomData(req, res) {
 
 	Atom.findOne({slug: slug.toLowerCase()}).lean().exec()
 	.then(function(atomResult) { // Get most recent version
-		console.log('atomResult', atomResult);
 		if (!atomResult) {
 			throw new Error('Atom does not exist');
 		}
@@ -229,8 +228,9 @@ export function getAtomData(req, res) {
 		// This query fires if no meta and no version are specified
 		const getVersion = new Promise(function(resolve) {
 			if (!meta && !version) {
-				const mostRecentVersionId = atomResult.versions[atomResult.versions.length - 1];
-				resolve(Version.findOne({_id: mostRecentVersionId}).exec());
+				// const mostRecentVersionId = atomResult.versions[atomResult.versions.length - 1];
+				const query = permissionType !== 'author' && permissionType !== 'editor' && permissionType !== 'reader' ? {isPublished: true, parent: atomResult._id} : {parent: atomResult._id};
+				resolve(Version.findOne({$query: query, $orderby: {createDate: -1}}).exec());
 			} else if (version) {
 				let versionID = version;
 				if (!isNaN(version) && version < 10000) {

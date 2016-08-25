@@ -238,7 +238,6 @@ function updateContributorSuccess(state, result) {
 /* ----------------------------- */
 function deleteContributorSuccess(state, result) {
 	// Remove the admin the the list by ID
-	console.log('result is', result);
 	return state.merge({
 		contributorsData: state.get('contributorsData').filter((item)=> {
 			return item.get('_id') !== result._id;
