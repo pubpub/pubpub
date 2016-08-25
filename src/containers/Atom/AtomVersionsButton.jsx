@@ -24,7 +24,13 @@ export const AtomVersionsButton = React.createClass({
 		return (
 			<div className={'light-button arrow-down-button'} style={this.props.buttonStyle}>Versions
 				<div className={'hoverChild arrow-down-child'}>
-					{versionsData.sort((foo, bar)=>{
+					{versionsData.filter((item)=>{
+						const permissionType = this.props.permissionType;
+						if (permissionType !== 'author' && permissionType !== 'editor' && permissionType !== 'reader') {
+							return item.isPublished;
+						}
+						return true;
+					}).sort((foo, bar)=>{
 						// Sort so that most recent is first in array
 						if (foo.createDate > bar.createDate) { return -1; }
 						if (foo.createDate < bar.createDate) { return 1; }

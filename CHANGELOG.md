@@ -22,6 +22,7 @@ See [http://keepachangelog.com/](http://keepachangelog.com/) for best practices.
 - Bibtex cutoff bug fix
 - Bugfix to filter already-added contributors from the search results
 - Enable embed mode on Atom which provides simple reader
+- Fix bug that would show private version messages to non-contributors
 
 ## [v2.1.0] - 2015-08-04
 - Following functionality and lists. 

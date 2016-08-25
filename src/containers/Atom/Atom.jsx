@@ -106,6 +106,7 @@ export const Atom = React.createClass({
 			interval = setInterval(()=>{
 				if (!this.refs.atomEditorPane) {
 					window.clearInterval(interval);
+					return;
 				}
 
 				const newVersionContent = this.refs.atomEditorPane.refs.editor.getSaveVersionContent();
@@ -138,14 +139,15 @@ export const Atom = React.createClass({
 		return this.props.dispatch(submitAtomToJournals(atomID, journalIDs));
 	},
 
-	saveVersionSubmit: function(versionMessage) {
+	saveVersionSubmit: function(versionMessage, isPublished) {
 		const newVersionContent = this.refs.atomEditorPane.refs.editor.getSaveVersionContent();
 		const atomData = this.props.atomData.get('atomData').toJS();
 		const newVersion = {
 			type: atomData.type,
 			message: versionMessage,
 			parent: atomData._id,
-			content: newVersionContent
+			content: newVersionContent,
+			isPublished: isPublished
 		};
 		this.props.dispatch(saveVersion(newVersion));
 	},

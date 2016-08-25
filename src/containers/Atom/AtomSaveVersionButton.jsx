@@ -15,6 +15,7 @@ export const AtomSaveVersionButton = React.createClass({
 	getInitialState() {
 		return {
 			message: '',
+			isPublished: false,
 		};
 	},
 	
@@ -27,10 +28,13 @@ export const AtomSaveVersionButton = React.createClass({
 	onMessageChange: function(evt) {
 		this.setState({message: evt.target.value});
 	},
+	onPublishedChange: function(evt) {
+		this.setState({isPublished: evt.target.checked});
+	},
 
 	onSave: function(evt) {
 		evt.preventDefault();
-		this.props.handleVersionSave(this.state.message);
+		this.props.handleVersionSave(this.state.message, this.state.isPublished);
 	},
 
 	// TODO: Route to /atom/doc when save version is finished. ANd clear our the message
@@ -48,6 +52,14 @@ export const AtomSaveVersionButton = React.createClass({
 						<div className={'light-color inputSubtext'} to={'/resetpassword'}>
 							Describe changes or updates.
 						</div>
+
+						<div>
+							<label htmlFor={'isPublished'}>
+								Publish
+							</label>
+							<input type="checkbox" id={'isPublished'} value={this.state.isPublished} onChange={this.onPublishedChange} />	
+						</div>
+						
 
 						<button className={'button'} onClick={this.onSave}>
 							Save Version
