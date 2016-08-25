@@ -241,6 +241,10 @@ export const Atom = React.createClass({
 		const isLoading = safeGetInToJS(this.props.atomData, ['loading']);
 		const error = safeGetInToJS(this.props.atomData, ['error']);
 
+		const isEmbed = this.props.query && this.props.query.embed;
+		const hideRightPanel = this.props.query && this.props.query.hideRightPanel;
+		const linkTarget = isEmbed ? '_parent' : '_self';
+
 		const mobileNavButtons = [
 			{ type: 'link', mobile: true, text: 'Discussions', link: '/pub/' + this.props.slug + '/discussions' },
 			{ type: 'button', mobile: true, text: 'Menu', action: undefined },
@@ -284,8 +288,8 @@ export const Atom = React.createClass({
 		}
 
 		const authorsData = safeGetInToJS(this.props.atomData, ['authorsData']) || [];
-		const authorList = atomData.customAuthorString ? [<Link to={'/pub/' + this.props.slug + '/contributors'} key={'author-0'}>{atomData.customAuthorString}</Link>] : authorsData.map((item, index)=> {
-			return <Link to={'/user/' + item.source.username} key={'author-' + index} className={'author'}>{item.source.name}</Link>;
+		const authorList = atomData.customAuthorString ? [<Link target={linkTarget} to={'/pub/' + this.props.slug + '/contributors'} key={'author-0'}>{atomData.customAuthorString}</Link>] : authorsData.map((item, index)=> {
+			return <Link target={linkTarget} to={'/user/' + item.source.username} key={'author-' + index} className={'author'}>{item.source.name}</Link>;
 		});
 
 		return (
@@ -304,7 +308,9 @@ export const Atom = React.createClass({
 					{/* Top Nav. Is sticky in the Editor */}
 					<div style={styles.atomNavBar}>
 						<Sticky style={styles.headerBar} isActive={isEditor}>
-							<HorizontalNav navItems={atomNavItems} mobileNavButtons={mobileNavButtons}/>
+							{!isEmbed &&
+								<HorizontalNav navItems={atomNavItems} mobileNavButtons={mobileNavButtons}/>
+							}
 							<div style={styles.headerMenu} id={'headerPlaceholder'}></div>
 							<div style={styles.headerStatus} id={'editor-participants'} className={'editor-participants opacity-on-hover'}></div>
 						</Sticky>
@@ -365,7 +371,7 @@ export const Atom = React.createClass({
 				</StickyContainer>
 
 				{/* Right Panel Section */}
-				<StickyContainer style={[styles.rightPanel, !this.state.showRightPanel && styles.hideRightPanel]}>
+				<StickyContainer style={[styles.rightPanel, (!this.state.showRightPanel || hideRightPanel) && styles.hideRightPanel]}>
 					<Sticky stickyStyle={this.state.showRightPanel ? {} : {left: '0px'}}>
 						<HorizontalNav navItems={rightPanelNavItems} mobileNavButtons={mobileNavButtons}/>
 						
