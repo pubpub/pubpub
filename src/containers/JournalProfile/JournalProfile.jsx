@@ -19,7 +19,7 @@ import {safeGetInToJS} from 'utils/safeParse';
 
 // import {globalStyles} from 'utils/styleConstants';
 // import {globalMessages} from 'utils/globalMessages';
-// import {FormattedMessage} from 'react-intl';
+import {FormattedMessage} from 'react-intl';
 
 export const JournalProfile = React.createClass({
 	propTypes: {

@@ -44,9 +44,6 @@ export default () => {
 
 			<Route path="/reviews" getComponent={loadComponent(AboutReviews)}/>
 
-			{/* <Route path="/settings" getComponent={loadComponent(UserSettings)}/> */}
-			{/* <Route path="/settings/:mode" getComponent={loadComponent(UserSettings)}/> */}
-
 			<Route path="/user/:username" getComponent={loadComponent(UserProfile)}/> {/* /user/kate?filter=unpublished */}
 			<Route path="/user/:username/:mode" getComponent={loadComponent(UserProfile)}/> {/* /user/kate/discussions?page=4 or /user/kate/settings */}
 			

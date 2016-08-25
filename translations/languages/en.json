@@ -26,8 +26,6 @@
   "signup.Signupto": "Sign up to publish documents and follow content!",
   "signup.PasswordLength": "Must be at least 8 characters",
   "signup.alreadyHaveAccount": "Already have an account? Click to Login!",
-  "signup.FirstName": "First Name",
-  "signup.LastName": "Last Name",
   "global.login": "Login",
   "global.Login": "Login",
   "global.SignUp": "Sign Up",

@@ -93,8 +93,6 @@ export const NotFound = React.createClass({
 						onChange={this.handleSelectChange} />
 				</div>
 
-
-
 			</div>
 
 		);
