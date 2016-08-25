@@ -55,6 +55,7 @@ export const renderReactFromJSON = function(item, isRoot) {
 				case 'sup':
 					return <sup key={index}>{previous}</sup>;
 				case 's':
+				case 'strike':
 					return <s key={index}>{previous}</s>;
 				case 'link':
 					return <a href={current.href} title={current.title} key={index}>{previous}</a>;

@@ -16,6 +16,7 @@ export const DiscussionItem = React.createClass({
 		setReplyTo: PropTypes.func,
 		index: PropTypes.string,
 		isPreview: PropTypes.bool,
+		linkTarget: PropTypes.string,
 	},
 
 	getInitialState() {
@@ -55,10 +56,10 @@ export const DiscussionItem = React.createClass({
 							return (
 								<div key={'author-' + index + '-' + authorIndex} style={styles.headerAuthor}>
 									<div style={styles.authorImage}>
-										<Link style={globalStyles.link} to={'/user/' + authorLink.source.username}><img src={'https://jake.pubpub.org/unsafe/35x35/' + authorLink.source.image} /></Link>
+										<Link target={this.props.linkTarget} style={globalStyles.link} to={'/user/' + authorLink.source.username}><img src={'https://jake.pubpub.org/unsafe/35x35/' + authorLink.source.image} /></Link>
 									</div>	
 									<div style={styles.authorDetails}>
-										<Link style={globalStyles.link} to={'/user/' + authorLink.source.username}>{authorLink.source.name}</Link>
+										<Link target={this.props.linkTarget} style={globalStyles.link} to={'/user/' + authorLink.source.username}>{authorLink.source.name}</Link>
 									</div>
 								</div>
 							);
@@ -72,15 +73,15 @@ export const DiscussionItem = React.createClass({
 					{renderReactFromJSON(docJSON && docJSON.content, true)}
 				</div>
 				<div style={[styles.discussionFooter, this.props.isPreview && {display: 'none'}]}>
-					<Link style={globalStyles.link} to={'/pub/' + versionData.parent}><span className={'underlineOnHover'} style={styles.discussionFooterItem}>{dateFormat(date, 'mmm dd, yyyy h:MM TT')}</span></Link>
+					<Link target={this.props.linkTarget} style={globalStyles.link} to={'/pub/' + versionData.parent}><span className={'underlineOnHover'} style={styles.discussionFooterItem}>{dateFormat(date, 'mmm dd, yyyy h:MM TT')}</span></Link>
 					<span className={'underlineOnHover'} style={styles.discussionFooterItem} onClick={this.setReply}>reply</span>
 					{/* <span className={'underlineOnHover'} style={styles.discussionFooterItem} onClick={this.setFlag}>flag</span> */}
-					<Link style={globalStyles.link} to={'/pub/' + versionData.parent}><span className={'underlineOnHover'} style={styles.discussionFooterItem}>permalink</span></Link>
+					<Link target={this.props.linkTarget} style={globalStyles.link} to={'/pub/' + versionData.parent}><span className={'underlineOnHover'} style={styles.discussionFooterItem}>permalink</span></Link>
 				</div>
 
 				<div style={styles.children}>
 					{children.map((child, childIndex)=> {
-						return <WrappedDiscussionItem discussionData={child} setReplyTo={this.props.setReplyTo} index={child.linkData._id} key={child.linkData._id}/>;
+						return <WrappedDiscussionItem linkTarget={this.props.linkTarget} discussionData={child} setReplyTo={this.props.setReplyTo} index={child.linkData._id} key={child.linkData._id}/>;
 					})}
 				</div>
 				

@@ -34,6 +34,7 @@ export function generatePDFFromJSON(docJSON, title, versionDate, authors) {
 	
 	const basePubCSS = fs.readFileSync(__dirname + '/../../static/css/basePub.css', 'utf8');
 	const pubpubCSS = fs.readFileSync(__dirname + '/../../static/css/pubpub.css', 'utf8');
+	const printCSS = fs.readFileSync(__dirname + '/../../static/css/print.css', 'utf8');
 	const pubHTML = ReactDOMServer.renderToStaticMarkup(
 		<StyleRoot radiumConfig={{userAgent: 'Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36'}}>
 				<div className={'atom-reader atom-reader-meta'}>
@@ -54,7 +55,7 @@ export function generatePDFFromJSON(docJSON, title, versionDate, authors) {
 			<head>
 				<link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
 				<link href='https://assets.pubpub.org/_fonts/Yrsa.css' rel='stylesheet' type='text/css'>
-				<style> ${pubpubCSS} ${basePubCSS} body{font-size:10px;}</style>
+				<style> ${pubpubCSS} ${basePubCSS} ${printCSS} body{font-size:10px;}</style>
 			</head>
 
 			<body>

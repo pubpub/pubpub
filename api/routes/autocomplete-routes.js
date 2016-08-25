@@ -31,21 +31,22 @@ export function autocompleteJournals(req, res) {
 app.get('/autocompleteJournals', autocompleteJournals);
 
 export function autocompleteUsers(req, res) {
-	User.find({}, {'_id': 1, 'username': 1, 'image': 1, 'name': 1}).exec(function(err, users) {
+	User.find({}, {'_id': 1, 'username': 1, 'image': 1, 'name': 1, email: 1}).lean().exec(function(err, users) {
 		const objects = users;
 		const sifter = new Sifter(objects);
 
 		const result = sifter.search(req.query.string, {
-			fields: ['username', 'name'],
+			fields: ['username', 'name', 'email'],
 			sort: [{field: 'username', direction: 'asc'}],
 			limit: 10
 		});
 
 		const output = [];
 		_.each(result.items, function(item) {
-			output.push(objects[item.id]);
+			const newObject = objects[item.id];
+			delete newObject.email;
+			output.push(newObject);
 		});
-
 		return res.status(201).json(output);
 	});
 }

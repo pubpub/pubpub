@@ -143,6 +143,9 @@ export const Discussions = React.createClass({
 
 
 	render: function() {
+		const isEmbed = this.props.query && this.props.query.embed;
+		const linkTarget = isEmbed ? '_parent' : '_self';
+
 		const atomData = safeGetInToJS(this.props.atomData, ['atomData']) || [];
 		const discussionsData = safeGetInToJS(this.props.atomData, ['discussionsData']) || [];
 		const loggedIn = this.props.loginData && this.props.loginData.get('loggedIn');
@@ -184,7 +187,7 @@ export const Discussions = React.createClass({
 									<div className={'showChildOnHover'} style={styles.replyToWrapper}>
 										Reply to: {replyToData && replyToData.authorsData[0].source.name}
 										<div className={'hoverChild'} style={styles.replyToPreview}>
-											<DiscussionItem discussionData={replyToData} index={'current-reply'} isPreview={true}/>
+											<DiscussionItem linkTarget={linkTarget} discussionData={replyToData} index={'current-reply'} isPreview={true}/>
 										</div>
 									</div>
 								<div className={'button'} style={styles.replyButton} onClick={this.clearReplyTo}>Clear</div>
@@ -211,7 +214,7 @@ export const Discussions = React.createClass({
 
 				{!loggedIn &&
 					<Sticky style={styles.replyWrapper} isActive={!!replyToData}>	
-						<Link to={'/login' + loginQuery} style={globalStyles.link}>
+						<Link target={linkTarget} to={'/login' + loginQuery} style={globalStyles.link}>
 							<div style={styles.loginMessage}>Login to post discussion</div>
 						</Link>
 					</Sticky>
@@ -220,7 +223,7 @@ export const Discussions = React.createClass({
 
 				<div>
 					{topChildren.map((discussion, index)=> {
-						return <DiscussionItem discussionData={discussion} setReplyTo={this.setReplyTo} index={discussion.linkData._id} key={'discussion-' + index}/>;
+						return <DiscussionItem linkTarget={linkTarget} discussionData={discussion} setReplyTo={this.setReplyTo} index={discussion.linkData._id} key={'discussion-' + index}/>;
 					})}
 				</div>
 

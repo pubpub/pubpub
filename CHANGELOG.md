@@ -17,6 +17,7 @@ See [http://keepachangelog.com/](http://keepachangelog.com/) for best practices.
 ### Added
 - Multiple bug fixes for layout mistakes
 - Contributor permissiosn displayed in Contributor View page
+- Strikethrough render bug fixed View mode
 - Custom Author string in citation bug fix
 - Bibtex cutoff bug fix
 - Bugfix to filter already-added contributors from the search results

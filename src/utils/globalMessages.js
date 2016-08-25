@@ -21,6 +21,14 @@ export const globalMessages = defineMessages({
 		id: 'global.ProfileImage',
 		defaultMessage: 'Profile Image',
 	},
+	FirstName: {
+		id: 'global.FirstName',
+		defaultMessage: 'First Name',
+	},
+	LastName: {
+		id: 'global.LastName',
+		defaultMessage: 'Last Name',
+	},
 	Bio: {
 		id: 'global.Bio',
 		defaultMessage: 'Bio',
