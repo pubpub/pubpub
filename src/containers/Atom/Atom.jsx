@@ -102,8 +102,8 @@ export const Atom = React.createClass({
 		// Set an poll to grab TOC and asset data if we're in the document editor
 		// A poll is pretty ugly, but it is a bit quicker at the moment than passing a function all the way down into documentEditor. 
 		// Let's see if this functionality stays useful, and if so we can pass down a function call that will fire everytime document is edited.
-		if (this.props.meta === 'edit' && safeGetInToJS(this.props.atomData, ['atomData', 'type']) === 'document') {
-			interval = setInterval(()=>{
+		interval = setInterval(()=>{
+			if (this.props.meta === 'edit' && safeGetInToJS(this.props.atomData, ['atomData', 'type']) === 'document') {
 				if (!this.refs.atomEditorPane) {
 					window.clearInterval(interval);
 					return;
@@ -113,8 +113,9 @@ export const Atom = React.createClass({
 				if (this.state.currentDocMarkdown !== newVersionContent.markdown) {
 					this.setState({currentDocMarkdown: newVersionContent.markdown});
 				}
-			}, 1000);
-		}
+			}
+		}, 1000);
+		
 	},
 
 	componentWillUnmount() {
