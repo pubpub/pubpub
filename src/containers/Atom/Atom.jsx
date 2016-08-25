@@ -335,7 +335,7 @@ export const Atom = React.createClass({
 
 							{!isEditor &&
 								<div>
-									<AtomVersionsButton versionsData={versionsData} slug={this.props.slug} buttonStyle={styles.headerAction} />
+									<AtomVersionsButton versionsData={versionsData} permissionType={permissionType} handlePublishVersion={this.publishVersionHandler} slug={this.props.slug} buttonStyle={styles.headerAction} />
 									<AtomExportButton atomData={this.props.atomData} buttonStyle={styles.headerAction} />
 									<AtomCiteButton atomData={this.props.atomData} authorsData={authorsData} customAuthorString={atomData.customAuthorString} versionQuery={versionQuery} buttonStyle={styles.headerAction}/>
 									<FollowButton id={atomData._id} type={'followsAtom'} isFollowing={atomData.isFollowing} buttonClasses={'light-button'} buttonStyle={styles.headerAction}/>

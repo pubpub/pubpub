@@ -205,7 +205,7 @@ function publishVersionSuccess(state, result) {
 	return state.merge({
 		loading: false,
 		error: null
-	}).updateIn(['publishingData'], (versionsList)=> {
+	}).updateIn(['versionsData'], (versionsList)=> {
 		return versionsList.map((item)=>{
 			if (item.get('_id') === result._id) { return ensureImmutable(result); }
 			return item;

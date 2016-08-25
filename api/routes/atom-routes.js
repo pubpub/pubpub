@@ -200,6 +200,7 @@ export function getAtomData(req, res) {
 
 	Atom.findOne({slug: slug.toLowerCase()}).lean().exec()
 	.then(function(atomResult) { // Get most recent version
+		console.log('atomResult', atomResult);
 		if (!atomResult) {
 			throw new Error('Atom does not exist');
 		}
