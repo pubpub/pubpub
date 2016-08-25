@@ -18,7 +18,9 @@ See [http://keepachangelog.com/](http://keepachangelog.com/) for best practices.
 - Multiple bug fixes for layout mistakes
 - Contributor permissiosn displayed in Contributor View page
 - Custom Author string in citation bug fix
-- Bibtx cutoff bug fix
+- Bibtex cutoff bug fix
+- Bugfix to filter already-added contributors from the search results
+- Enable embed mode on Atom which provides simple reader
 
 ## [v2.1.0] - 2015-08-04
 - Following functionality and lists. 

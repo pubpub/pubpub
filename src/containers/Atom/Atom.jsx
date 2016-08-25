@@ -345,7 +345,6 @@ export const Atom = React.createClass({
 							{isEditor &&
 								<div>
 									<AtomSaveVersionButton isLoading={isLoading} error={error} handleVersionSave={this.saveVersionSubmit} buttonStyle={styles.headerAction}/>
-									{/*<div className={'button light-button'} style={styles.headerAction} onClick={this.saveVersionClick}>Save Version</div>*/}
 								</div>
 							}
 
