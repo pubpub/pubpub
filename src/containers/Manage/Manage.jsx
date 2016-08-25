@@ -19,7 +19,7 @@ import {getMedia, createAtom, saveVersion} from './actions';
 
 let styles;
 
-export const Media = React.createClass({
+export const Manage = React.createClass({
 	propTypes: {
 		mediaData: PropTypes.object,
 		dispatch: PropTypes.func,
@@ -387,172 +387,167 @@ export const Media = React.createClass({
 		];
 		return (
 			<Dropzone ref="dropzone" disableClick={true} onDrop={this.onDrop} style={{}} activeClassName={'dropzone-active'} >
-			<div style={[styles.container, this.state.showMedia && styles.containerActive]}>
-				<div style={styles.splash} onClick={this.close}></div>
+			<div>
 
-				<div style={[styles.modalContent, this.state.showMedia && styles.modalContentActive]}>
+				{/* If we DON'T have a chosen atom */}
+				{!nodeData.data &&
+					<div style={styles.mediaSelect}>
 
-					{/* If we DON'T have a chosen atom */}
-					{!nodeData.data &&
-						<div style={styles.mediaSelect}>
+						<div style={styles.mediaSelectHeader}>
 
-							<div style={styles.mediaSelectHeader}>
-
-								<div style={styles.addNewDropdown}>
-									<Select
-										name={'new-atom-select'}
-										options={options}
-										value={null}
-										placeholder={<span>Add new </span>}
-										onChange={this.handleSelectChange} />
-
-								</div>
-
-
-								<div className={'button'} style={styles.dropzoneBlock}>
-									Click or Drag files to add
-									<input id={'media-file-select'} type={'file'} onChange={this.onSelect} multiple={true} style={styles.fileInput}/>
-								</div>
+							<div style={styles.addNewDropdown}>
+								<Select
+									name={'new-atom-select'}
+									options={options}
+									value={null}
+									placeholder={<span>Add new </span>}
+									onChange={this.handleSelectChange} />
 
 							</div>
 
-							{this.state.uploadFiles.map((uploadFile, index)=> {
+
+							<div className={'button'} style={styles.dropzoneBlock}>
+								Click or Drag files to add
+								<input id={'media-file-select'} type={'file'} onChange={this.onSelect} multiple={true} style={styles.fileInput}/>
+							</div>
+
+						</div>
+
+						{this.state.uploadFiles.map((uploadFile, index)=> {
+							return (
+								<div key={'uploadFile-' + index} style={[styles.uploadBar, this.state.uploadRates[index] === 1 && {display: 'none'}]}>
+									{uploadFile}
+									<LoaderDeterminate value={this.state.uploadRates[index] * 100} />
+								</div>
+							);
+						})}
+
+						<NavContentWrapper navItems={navItems} mobileNavButtons={mobileNavButtons}>
+							<input type="text" placeholder={'Filter'} value={this.state.filter} onChange={this.filterChange} style={styles.filterInput}/>
+							{filteredItems.map((item)=> {
+								return item.original;
+							}).sort((foo, bar)=>{
+								// Sort so that most recent is first in array
+								if (foo.parent.lastUpdated > bar.parent.lastUpdated) { return -1; }
+								if (foo.parent.lastUpdated < bar.parent.lastUpdated) { return 1; }
+								return 0;
+							}).map((item, index)=> {
+								if (this.state.atomMode === 'recent' && index > 9) {
+									return null;
+								}
+								const previewImage = item.parent.previewImage.indexOf('.gif') > -1 ? item.parent.previewImage : 'https://jake.pubpub.org/unsafe/fit-in/50x50/' + item.parent.previewImage;
 								return (
-									<div key={'uploadFile-' + index} style={[styles.uploadBar, this.state.uploadRates[index] === 1 && {display: 'none'}]}>
-										{uploadFile}
-										<LoaderDeterminate value={this.state.uploadRates[index] * 100} />
+									<div key={'media-item-' + item._id} onClick={this.setItem.bind(this, item)} style={styles.item}>
+										<div style={styles.itemPreview}>
+											<img style={styles.itemPreviewImage} src={previewImage} alt={item.parent.title} title={item.parent.title}/>
+										</div>
+
+										<div style={styles.itemDetail}>
+											<div style={styles.itemDetailTitle}>{item.parent.title}</div>
+										</div>
 									</div>
 								);
 							})}
+						</NavContentWrapper>
 
-							<NavContentWrapper navItems={navItems} mobileNavButtons={mobileNavButtons}>
-								<input type="text" placeholder={'Filter'} value={this.state.filter} onChange={this.filterChange} style={styles.filterInput}/>
-								{filteredItems.map((item)=> {
-									return item.original;
-								}).sort((foo, bar)=>{
-									// Sort so that most recent is first in array
-									if (foo.parent.lastUpdated > bar.parent.lastUpdated) { return -1; }
-									if (foo.parent.lastUpdated < bar.parent.lastUpdated) { return 1; }
-									return 0;
-								}).map((item, index)=> {
-									if (this.state.atomMode === 'recent' && index > 9) {
-										return null;
-									}
-									const previewImage = item.parent.previewImage.indexOf('.gif') > -1 ? item.parent.previewImage : 'https://jake.pubpub.org/unsafe/fit-in/50x50/' + item.parent.previewImage;
-									return (
-										<div key={'media-item-' + item._id} onClick={this.setItem.bind(this, item)} style={styles.item}>
-											<div style={styles.itemPreview}>
-												<img style={styles.itemPreviewImage} src={previewImage} alt={item.parent.title} title={item.parent.title}/>
-											</div>
+					</div>
+				}
 
-											<div style={styles.itemDetail}>
-												<div style={styles.itemDetailTitle}>{item.parent.title}</div>
-											</div>
-										</div>
-									);
-								})}
-							</NavContentWrapper>
-
-						</div>
-					}
-
-					{/* If we DO have a chosen atom */}
-					{nodeData.data && !this.state.editNodeDataMode &&
-						<div style={styles.mediaDetails}>
-							<div style={styles.editModeHeader}>
-								<h3 style={styles.detailsTitle}>{nodeData.data.parent.title}</h3>
-								<div style={styles.detailsCancel} className={'underlineOnHover'} onClick={this.clearNodeData}>Clear</div>
-								<div style={styles.detailsButtonWrapper}>
-									<div className={'button'} style={styles.detailsButton} onClick={this.saveItem}>Save</div>
-								</div>
+				{/* If we DO have a chosen atom */}
+				{nodeData.data && !this.state.editNodeDataMode &&
+					<div style={styles.mediaDetails}>
+						<div style={styles.editModeHeader}>
+							<h3 style={styles.detailsTitle}>{nodeData.data.parent.title}</h3>
+							<div style={styles.detailsCancel} className={'underlineOnHover'} onClick={this.clearNodeData}>Clear</div>
+							<div style={styles.detailsButtonWrapper}>
+								<div className={'button'} style={styles.detailsButton} onClick={this.saveItem}>Save</div>
 							</div>
-							{nodeData.data.type !== 'document' &&
-								<div style={styles.detailsClear} className={'underlineOnHover'} onClick={this.editNodeData}>Edit</div>
-							}
+						</div>
+						{nodeData.data.type !== 'document' &&
+							<div style={styles.detailsClear} className={'underlineOnHover'} onClick={this.editNodeData}>Edit</div>
+						}
 
-							<div style={styles.details}>
-								<div style={styles.detailsPreview}>
+						<div style={styles.details}>
+							<div style={styles.detailsPreview}>
 
-									<AtomViewerPane atomData={ensureImmutable({ atomData: nodeData.data.parent, currentVersionData: nodeData.data })} renderType={'embed'}/>
+								<AtomViewerPane atomData={ensureImmutable({ atomData: nodeData.data.parent, currentVersionData: nodeData.data })} renderType={'embed'}/>
 
+							</div>
+
+
+							<form onSubmit={this.saveItem} style={styles.detailsForm}>
+								<div>
+									<label style={styles.label} htmlFor={'mode'}>
+										Mode
+									</label>
+									<RadioGroup name={'mode'} selectedValue={this.state.nodeData.mode} onChange={this.inputChange.bind(this, 'mode')}>
+										<Radio value="embed" id={'embed'} style={styles.radioInput}/> <label htmlFor={'embed'} style={styles.radioLabel}>Embed</label>
+										<Radio value="cite" id={'cite'} style={styles.radioInput}/> <label htmlFor={'cite'} style={styles.radioLabel}>Cite</label>
+									</RadioGroup>
+								</div>
+								<div style={[this.state.nodeData.mode === 'cite' && styles.disabledInput]}>
+									<label style={styles.label} htmlFor={'caption'}>
+										Caption
+									</label>
+									<textarea ref={'caption'} id={'caption'} name={'caption'} style={[styles.input, styles.textarea]} value={this.state.nodeData.caption} onChange={this.inputChange.bind(this, 'caption')}></textarea>
 								</div>
 
-
-								<form onSubmit={this.saveItem} style={styles.detailsForm}>
-									<div>
-										<label style={styles.label} htmlFor={'mode'}>
-											Mode
-										</label>
-										<RadioGroup name={'mode'} selectedValue={this.state.nodeData.mode} onChange={this.inputChange.bind(this, 'mode')}>
-											<Radio value="embed" id={'embed'} style={styles.radioInput}/> <label htmlFor={'embed'} style={styles.radioLabel}>Embed</label>
-											<Radio value="cite" id={'cite'} style={styles.radioInput}/> <label htmlFor={'cite'} style={styles.radioLabel}>Cite</label>
-										</RadioGroup>
-									</div>
-									<div style={[this.state.nodeData.mode === 'cite' && styles.disabledInput]}>
-										<label style={styles.label} htmlFor={'caption'}>
-											Caption
-										</label>
-										<textarea ref={'caption'} id={'caption'} name={'caption'} style={[styles.input, styles.textarea]} value={this.state.nodeData.caption} onChange={this.inputChange.bind(this, 'caption')}></textarea>
-									</div>
-
-									<div style={[this.state.nodeData.mode === 'cite' && styles.disabledInput]}>
-										<label style={styles.label} htmlFor={'align'}>
-											Align
-										</label>
-										<RadioGroup name={'align'} selectedValue={this.state.nodeData.align} onChange={this.inputChange.bind(this, 'align')}>
-											<Radio value="inline" id={'inline'} style={styles.radioInput}/> <label htmlFor={'inline'} style={styles.radioLabel}>Inline</label>
-											<Radio value="full" id={'full'} style={styles.radioInput}/> <label htmlFor={'full'} style={styles.radioLabel}>Full</label>
-											<Radio value="left" id={'left'} style={styles.radioInput}/> <label htmlFor={'left'} style={styles.radioLabel}>Left</label>
-											<Radio value="right" id={'right'} style={styles.radioInput}/> <label htmlFor={'right'} style={styles.radioLabel}>Right</label>
-										</RadioGroup>
-									</div>
-
-									<div style={{display: 'none'}}> {/* Hidden while we don't allow for custom CSS - no use for this field */}
-										<label style={styles.label} htmlFor={'className'}>
-											Class Name
-										</label>
-										<input ref={'className'} id={'className'} name={'className'} type="text" style={styles.input} value={this.state.nodeData.className} onChange={this.inputChange.bind(this, 'className')}/>
-									</div>
-
-									<div style={[this.state.nodeData.mode === 'cite' && styles.disabledInput]}>
-										<label style={styles.label} htmlFor={'size'}>
-											Size
-										</label>
-										<input ref={'size'} id={'size'} name={'size'} type="text" style={styles.input} value={this.state.nodeData.size} onChange={this.inputChange.bind(this, 'size')}/>
-										<div className={'light-color inputSubtext'}>
-											e.g. 20%, 50%, 200px, 400px
-										</div>
-									</div>
-
-								</form>
-							</div>
-
-
-						</div>
-					}
-
-					{/* If we DO have a chosen atom  and are trying to edit it*/}
-					{nodeData.data && this.state.editNodeDataMode &&
-						<div style={styles.mediaDetails}>
-							<div style={styles.editModeHeader}>
-								<h3 style={styles.detailsTitle}>{nodeData.data.parent.title}</h3>
-								<div style={styles.detailsCancel} className={'underlineOnHover'} onClick={this.cancelEditNodeData}>Cancel</div>
-								<div style={styles.detailsButtonWrapper}>
-									<div className={'button'} style={styles.detailsButton} onClick={this.saveVersionHandler}>Save Version</div>
+								<div style={[this.state.nodeData.mode === 'cite' && styles.disabledInput]}>
+									<label style={styles.label} htmlFor={'align'}>
+										Align
+									</label>
+									<RadioGroup name={'align'} selectedValue={this.state.nodeData.align} onChange={this.inputChange.bind(this, 'align')}>
+										<Radio value="inline" id={'inline'} style={styles.radioInput}/> <label htmlFor={'inline'} style={styles.radioLabel}>Inline</label>
+										<Radio value="full" id={'full'} style={styles.radioInput}/> <label htmlFor={'full'} style={styles.radioLabel}>Full</label>
+										<Radio value="left" id={'left'} style={styles.radioInput}/> <label htmlFor={'left'} style={styles.radioLabel}>Left</label>
+										<Radio value="right" id={'right'} style={styles.radioInput}/> <label htmlFor={'right'} style={styles.radioLabel}>Right</label>
+									</RadioGroup>
 								</div>
-							</div>
 
+								<div style={{display: 'none'}}> {/* Hidden while we don't allow for custom CSS - no use for this field */}
+									<label style={styles.label} htmlFor={'className'}>
+										Class Name
+									</label>
+									<input ref={'className'} id={'className'} name={'className'} type="text" style={styles.input} value={this.state.nodeData.className} onChange={this.inputChange.bind(this, 'className')}/>
+								</div>
 
+								<div style={[this.state.nodeData.mode === 'cite' && styles.disabledInput]}>
+									<label style={styles.label} htmlFor={'size'}>
+										Size
+									</label>
+									<input ref={'size'} id={'size'} name={'size'} type="text" style={styles.input} value={this.state.nodeData.size} onChange={this.inputChange.bind(this, 'size')}/>
+									<div className={'light-color inputSubtext'}>
+										e.g. 20%, 50%, 200px, 400px
+									</div>
+								</div>
 
-							<div style={styles.details}>
-								<AtomEditorPane ref={'atomEditorPane'} atomData={ensureImmutable({ atomData: nodeData.data.parent, currentVersionData: nodeData.data })}/>
-							</div>
-
-
+							</form>
 						</div>
-					}
-				</div>
 
+
+					</div>
+				}
+
+				{/* If we DO have a chosen atom  and are trying to edit it*/}
+				{nodeData.data && this.state.editNodeDataMode &&
+					<div style={styles.mediaDetails}>
+						<div style={styles.editModeHeader}>
+							<h3 style={styles.detailsTitle}>{nodeData.data.parent.title}</h3>
+							<div style={styles.detailsCancel} className={'underlineOnHover'} onClick={this.cancelEditNodeData}>Cancel</div>
+							<div style={styles.detailsButtonWrapper}>
+								<div className={'button'} style={styles.detailsButton} onClick={this.saveVersionHandler}>Save Version</div>
+							</div>
+						</div>
+
+
+
+						<div style={styles.details}>
+							<AtomEditorPane ref={'atomEditorPane'} atomData={ensureImmutable({ atomData: nodeData.data.parent, currentVersionData: nodeData.data })}/>
+						</div>
+
+
+					</div>
+				}
 			</div>
 
 			<div className={'showOnActive'}>Drop files to add</div>
@@ -566,7 +561,7 @@ export default connect( state => {
 	return {
 		mediaData: state.media,
 	};
-})( Radium(Media) );
+})( Radium(Manage) );
 
 styles = {
 	editModeHeader: {
@@ -577,16 +572,16 @@ styles = {
 		},
 	},
 	container: {
-		position: 'fixed',
-		top: 0,
-		left: 0,
-		width: '100vw',
-		height: '100vh',
-		backgroundColor: 'rgba(0,0,0,0.6)',
-		zIndex: 999,
-		opacity: 0,
-		pointerEvents: 'none',
-		transition: '.1s linear opacity',
+		// position: 'fixed',
+		// top: 0,
+		// left: 0,
+		// width: '100vw',
+		// height: '100vh',
+		// backgroundColor: 'rgba(0,0,0,0.6)',
+		// zIndex: 999,
+		// opacity: 0,
+		// pointerEvents: 'none',
+		// transition: '.1s linear opacity',
 	},
 	containerActive: {
 		opacity: 1,

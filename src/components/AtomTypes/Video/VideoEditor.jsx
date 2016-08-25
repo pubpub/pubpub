@@ -8,7 +8,7 @@ let styles = {};
 
 export const VideoEditor = React.createClass({
 	propTypes: {
-		atomEditData: PropTypes.object
+		atomData: PropTypes.object
 	},
 	
 	getInitialState() {
@@ -20,7 +20,7 @@ export const VideoEditor = React.createClass({
 	},
 
 	componentWillMount() {
-		const metadata = safeGetInToJS(this.props.atomEditData, ['currentVersionData', 'content', 'metadata']) || {};
+		const metadata = safeGetInToJS(this.props.atomData, ['currentVersionData', 'content', 'metadata']) || {};
 		const defaultMetadata = {
 			location: {
 				title: 'Location',
@@ -46,7 +46,7 @@ export const VideoEditor = React.createClass({
 			}
 		});
 		return {
-			url: this.state.url || safeGetInToJS(this.props.atomEditData, ['currentVersionData', 'content', 'url']),
+			url: this.state.url || safeGetInToJS(this.props.atomData, ['currentVersionData', 'content', 'url']),
 			metadata: cleanMetadata,
 		};
 	},
@@ -70,7 +70,7 @@ export const VideoEditor = React.createClass({
 	},
 
 	render: function() {
-		const videoSource = safeGetInToJS(this.props.atomEditData, ['currentVersionData', 'content', 'url']);
+		const videoSource = safeGetInToJS(this.props.atomData, ['currentVersionData', 'content', 'url']);
 		const videoURL = this.state.url || videoSource;
 		return (
 			<div>

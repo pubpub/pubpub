@@ -9,7 +9,7 @@ let styles = {};
 
 export const LaTeXEditor = React.createClass({
 	propTypes: {
-		atomEditData: PropTypes.object,
+		atomData: PropTypes.object,
 	},
 
 	getInitialState() {
@@ -21,7 +21,7 @@ export const LaTeXEditor = React.createClass({
 	},
 
 	componentWillMount() {
-		const text = safeGetInToJS(this.props.atomEditData, ['currentVersionData', 'content', 'text']) || '';
+		const text = safeGetInToJS(this.props.atomData, ['currentVersionData', 'content', 'text']) || '';
 		const html = this.generateHTML(text);
 		this.setState({text, ...html});
 	},

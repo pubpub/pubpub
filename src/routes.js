@@ -1,6 +1,6 @@
 import React from 'react';
 import {IndexRoute, Route} from 'react-router';
-import {App, Atom, EmailVerification, JournalCreate, JournalProfile, Landing, Login, ResetPassword, SignUp, UserProfile} from 'containers';
+import {App, Atom, EmailVerification, JournalCreate, JournalProfile, Landing, Login, Manage, ResetPassword, SignUp, UserProfile} from 'containers';
 import {About, AboutJournals, AboutPubs, AboutReviews, NotFound} from 'components';
 
 function loadComponent(component) {
@@ -43,6 +43,8 @@ export default () => {
 			<Route path="/resetpassword/:hash/:username" getComponent={loadComponent(ResetPassword)}/>
 
 			<Route path="/reviews" getComponent={loadComponent(AboutReviews)}/>
+
+			<Route path="/manage" getComponent={loadComponent(Manage)}/>
 
 			<Route path="/user/:username" getComponent={loadComponent(UserProfile)}/> {/* /user/kate?filter=unpublished */}
 			<Route path="/user/:username/:mode" getComponent={loadComponent(UserProfile)}/> {/* /user/kate/discussions?page=4 or /user/kate/settings */}

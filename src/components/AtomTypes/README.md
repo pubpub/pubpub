@@ -23,12 +23,12 @@ There's no such thing as *editing* an atom, only publishing a new version of one
 
 #### Data
 An editor doesn't need to display anything, but it's usually a good idea to render a preview of the current version (and a preview of the updated data).
-Editors receive an `atomEditData` object in its props, which includes the contents of the atom's entire history.
-The current version's data lives at `this.props.atomEditData.currentVersionData.content`.
+Editors receive an `atomData` object in its props, which includes the contents of the atom's entire history.
+The current version's data lives at `this.props.atomData.currentVersionData.content`.
 
 #### Save Version Content
 Editors must define a `this.getSaveVersionContent()` function, which must return an object that will be bound to the newest version of that atom.
-Usually the new object should have the same keys as the `atomEditData.currentVersionData.content` that it received, but this isn't required.
+Usually the new object should have the same keys as the `atomData.currentVersionData.content` that it received, but this isn't required.
 
 ## Viewers
 

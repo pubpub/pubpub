@@ -5,7 +5,7 @@ let styles = {};
 
 export const HighlightEditor = React.createClass({
 	propTypes: {
-		atomEditData: PropTypes.object,
+		atomData: PropTypes.object,
 	},
 
 

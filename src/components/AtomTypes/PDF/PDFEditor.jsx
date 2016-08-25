@@ -8,7 +8,7 @@ let styles = {};
 
 export const PDFEditor = React.createClass({
 	propTypes: {
-		atomEditData: PropTypes.object,
+		atomData: PropTypes.object,
 	},
 
 	getInitialState() {
@@ -21,7 +21,7 @@ export const PDFEditor = React.createClass({
 
 	getSaveVersionContent: function() {
 		return {
-			url: this.state.url || safeGetInToJS(this.props.atomEditData, ['currentVersionData', 'content', 'url']),
+			url: this.state.url || safeGetInToJS(this.props.atomData, ['currentVersionData', 'content', 'url']),
 		};
 	},
 
@@ -40,8 +40,8 @@ export const PDFEditor = React.createClass({
 	},
 
 	render: function() {
-		const title = safeGetInToJS(this.props.atomEditData, ['atomData', 'title']);
-		const url = safeGetInToJS(this.props.atomEditData, ['currentVersionData', 'content', 'url']) || '';
+		const title = safeGetInToJS(this.props.atomData, ['atomData', 'title']);
+		const url = safeGetInToJS(this.props.atomData, ['currentVersionData', 'content', 'url']) || '';
 
 		return (
 			<div>
