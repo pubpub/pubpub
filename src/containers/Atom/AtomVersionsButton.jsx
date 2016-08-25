@@ -23,7 +23,7 @@ export const AtomVersionsButton = React.createClass({
 
 		return (
 			<div className={'light-button arrow-down-button'} style={this.props.buttonStyle}>Versions
-				<div className={'hoverChild arrow-down-child'}>
+				<div className={'hoverChild arrow-down-child'} style={styles.content}>
 					{versionsData.filter((item)=>{
 						const permissionType = this.props.permissionType;
 						if (permissionType !== 'author' && permissionType !== 'editor' && permissionType !== 'reader') {
@@ -38,16 +38,19 @@ export const AtomVersionsButton = React.createClass({
 					}).map((item, index)=> {
 						return (
 							<div className={'testing'} key={'version-' + index} style={[styles.versionItem, index === versionsData.length - 1 && styles.versionItemLast]}>
-								<Link to={'/pub/' + this.props.slug + '?version=' + item._id} className={'underlineOnHover'} style={styles.versionDate}>{dateFormat(item.createDate, 'mmm dd, yyyy h:MM TT')}</Link>
-								<div style={styles.versionMessage}>{item.message}</div>
-								
-								{!item.isPublished && this.props.permissionType === 'author' &&
-									<div className={'button'} onClick={this.onPublish.bind(this, item._id)}>Publish Version</div>
+
+								{!item.isPublished && (this.props.permissionType === 'author' || this.props.permissionType === 'editor' || this.props.permissionType === 'reader') &&
+									<div>
+										<div style={styles.statusLabel}>Private</div>
+										<div className={'button'} onClick={this.onPublish.bind(this, item._id)} style={styles.publishButton}>Publish Version</div>	
+									</div>
 								}
 
-								{item.isPublished &&
-									<div>Published</div>
+								{item.isPublished && (this.props.permissionType === 'author' || this.props.permissionType === 'editor' || this.props.permissionType === 'reader') &&
+									<div style={styles.statusLabel}>Published</div>
 								}
+								<Link to={'/pub/' + this.props.slug + '?version=' + item._id} className={'underlineOnHover'} style={styles.versionDate}>{dateFormat(item.createDate, 'mmm dd, yyyy h:MM TT')}</Link>
+								<div style={styles.versionMessage}>{item.message}</div>
 
 								
 							</div>
@@ -62,11 +65,17 @@ export const AtomVersionsButton = React.createClass({
 export default Radium(AtomVersionsButton);
 
 styles = {
+	content: {
+		minWidth: '400px',
+		userSelect: 'initial',
+	},
 	versionItem: {
 		whiteSpace: 'nowrap',
-		margin: '.5em 1em',
+		margin: '1em 1em',
 		borderBottom: '1px solid #bbbdc0',
-		padding: '.5em 0em',
+		padding: '1em 0em',
+		position: 'relative',
+		minHeight: '3.5em',
 	},
 	versionItemLast: {
 		borderBottom: '0px solid black',
@@ -75,5 +84,25 @@ styles = {
 		color: 'inherit',
 		textDecoration: 'none',
 		fontSize: '1.1em',
+	},
+	versionMessage: {
+		padding: '.5em 0em',
+	},
+	publishButton: {
+		padding: '0em .5em',
+		fontSize: '.85em',
+		position: 'absolute',
+		bottom: 'calc(1em / .85)',
+		right: 0,
+	},
+	statusLabel: {
+		display: 'inline-block',
+		padding: '0em .5em',
+		backgroundColor: '#BBBDC0',
+		color: 'white',
+		fontSize: '.85em',
+		position: 'absolute',
+		top: 'calc(1em / .85)',
+		right: 0,
 	},
 };
