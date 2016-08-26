@@ -35,12 +35,15 @@ export const PDFViewer = React.createClass({
 
 const renderPage = (page) => {
 	const options = {
-		scale: 1.2
+		scale: 1
 	};
-	const canvasContainer = document.getElementById('holder');
 	const viewport = page.getViewport(options.scale);
+
+	const canvasContainer = document.getElementById('holder');
 	const canvas = document.createElement('canvas');
+	canvas.style.width = '100%';
 	const ctx = canvas.getContext('2d');
+
 	const renderContext = {
 		canvasContext: ctx,
 		viewport: viewport

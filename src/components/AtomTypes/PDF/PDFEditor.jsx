@@ -73,12 +73,17 @@ export const PDFEditor = React.createClass({
 });
 const renderPage = (page) => {
 	const options = {
-		scale: 1.2
+		scale: 1
 	};
-	const canvasContainer = document.getElementById('holder');
 	const viewport = page.getViewport(options.scale);
+
+	const canvasContainer = document.getElementById('holder');
 	const canvas = document.createElement('canvas');
+	canvas.style.width = '100%';
+	canvas.style.maxWidth = '650px';
+
 	const ctx = canvas.getContext('2d');
+
 	const renderContext = {
 		canvasContext: ctx,
 		viewport: viewport
@@ -87,6 +92,7 @@ const renderPage = (page) => {
 	canvas.height = viewport.height;
 	canvas.width = viewport.width;
 	canvasContainer.appendChild(canvas);
+
 
 	page.render(renderContext);
 };
