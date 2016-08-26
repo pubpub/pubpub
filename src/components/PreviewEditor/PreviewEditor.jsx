@@ -19,6 +19,7 @@ export const PreviewEditor = React.createClass({
 		footer: PropTypes.oneOfType([PropTypes.array, PropTypes.object]),
 		onSaveVersion: PropTypes.func,
 		onSaveAtom: PropTypes.func,
+
 	},
 
 	getInitialState() {
@@ -38,6 +39,12 @@ export const PreviewEditor = React.createClass({
 	setEditorMode: function(mode) {
 		this.setState({editorMode: mode});
 	},
+
+	// TODO
+	// Save version button
+	// Save details button
+	// Get Details functions and data into editor on request
+	// get contributors functions and data into editor on request
 
 	render: function() {
 		const atomData = this.props.atomData;
@@ -59,6 +66,7 @@ export const PreviewEditor = React.createClass({
 			{action: this.setEditorMode.bind(this, 'content'), text: 'Content', active: this.state.editorMode === 'content'},
 			{action: this.setEditorMode.bind(this, 'details'), text: 'Details', active: this.state.editorMode === 'details'},
 			{action: this.setEditorMode.bind(this, 'contributors'), text: 'Contributors', active: this.state.editorMode === 'contributors'},
+			{link: '/pub/' + atomData.slug + '/edit', text: 'Go To Full Editor', active: false},
 		];
 
 		return (
@@ -94,15 +102,23 @@ export const PreviewEditor = React.createClass({
 								return <div className={'button'} onClick={item.action} style={styles.button} key={'previewEditor-button-' + index}>{item.text}</div>;
 							}
 						})}	
-						
+
 						{atomData.type === 'document' &&
-							<Link to={'/pub/' + atomData.slug + '/edit'} style={globalStyles.link}>
-								<div className={'button'} style={styles.button}>Edit</div>
-							</Link>
+							<div>
+								<Link to={'/pub/' + atomData.slug + '/edit'} style={globalStyles.link}>
+									<div className={'button'} style={styles.button}>Edit</div>
+								</Link>
+								<div className={'button'} onClick={this.openEditor} style={styles.button}>Delete</div>
+							</div>
+							
 						}
 
 						{atomData.type !== 'document' && !this.state.editorOpen && 
-							<div className={'button'} onClick={this.openEditor} style={styles.button}>Edit</div>
+							<div>
+								<div className={'button'} onClick={this.openEditor} style={styles.button}>Edit</div>
+								<div className={'button'} onClick={this.openEditor} style={styles.button}>Delete</div>	
+							</div>
+							
 						}
 
 						{this.state.editorOpen &&
@@ -165,7 +181,7 @@ styles = {
 	container: {
 		border: '1px solid #BBBDC0',
 		borderRadius: '1px',
-		margin: '1em 1em',
+		margin: '1em 0em',
 		backgroundColor: 'white',
 	},
 	image: {

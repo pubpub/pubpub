@@ -471,7 +471,7 @@ export const Manage = React.createClass({
 								// Test uploading to make sure it works
 								// Add bibtex back into reference editor
 								<PreviewEditor 
-									key={'atomItem-' + index}
+									key={'atomItem-' + item._id}
 									atomData={item.parent}
 									versionData={item}
 									
@@ -698,6 +698,7 @@ styles = {
 	addNewDropdown: {
 		// width: '250px',
 		display: 'inline-block',
+		minWidth: '150px',
 	},
 	dropzoneBlock: {
 		padding: '0em 2em',
