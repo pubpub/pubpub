@@ -4,6 +4,9 @@ import {safeGetInToJS} from 'utils/safeParse';
 import {s3Upload} from 'utils/uploadFile';
 import {Loader} from 'components';
 
+import PDFJS from 'pdfjs-dist/build/pdf.combined';
+
+
 let styles = {};
 
 export const PDFEditor = React.createClass({
@@ -39,6 +42,13 @@ export const PDFEditor = React.createClass({
 		});
 	},
 
+	componentDidMount: function() {
+		const url = safeGetInToJS(this.props.atomEditData, ['currentVersionData', 'content', 'url']) || '';
+
+		PDFJS.disableWorker = true;
+		PDFJS.getDocument(url).then(renderPages);
+	},
+
 	render: function() {
 		const title = safeGetInToJS(this.props.atomEditData, ['atomData', 'title']);
 		const url = safeGetInToJS(this.props.atomEditData, ['currentVersionData', 'content', 'url']) || '';
@@ -47,7 +57,7 @@ export const PDFEditor = React.createClass({
 			<div>
 				<h3>Preview</h3>
 
-				<iframe src={url} style={{height: 'calc(100vh - 80px)', width: '650px'}}></iframe>
+				<div id="holder"></div>
 
 				<div style={styles.loaderWrapper}>
 					<Loader loading={this.state.isUploading} showCompletion={true}/>
@@ -61,6 +71,32 @@ export const PDFEditor = React.createClass({
 		);
 	}
 });
+const renderPage = (page) => {
+	const options = {
+		scale: 1.2
+	};
+	const canvasContainer = document.getElementById('holder');
+	const viewport = page.getViewport(options.scale);
+	const canvas = document.createElement('canvas');
+	const ctx = canvas.getContext('2d');
+	const renderContext = {
+		canvasContext: ctx,
+		viewport: viewport
+	};
+
+	canvas.height = viewport.height;
+	canvas.width = viewport.width;
+	canvasContainer.appendChild(canvas);
+
+	page.render(renderContext);
+};
+
+const renderPages = (pdfDoc) => {
+	console.log('renderPages');
+	for (let num = 1; num <= pdfDoc.numPages; num++) {
+		pdfDoc.getPage(num).then(renderPage);
+	}
+};
 
 export default Radium(PDFEditor);
 
