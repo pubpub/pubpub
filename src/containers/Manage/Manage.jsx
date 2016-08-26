@@ -339,7 +339,11 @@ export const Manage = React.createClass({
 	render: function() {
 
 		const mediaItems = safeGetInToJS(this.props.mediaData, ['mediaItems']) || [];
-		
+		const allTypes = mediaItems.map((item)=> {
+			return item.type;
+		});
+		const allUniqueTypes = [...new Set(allTypes)];
+
 		const typeFilters = this.state.filter.match(/type:([a-zA-Z]*)/gi) || [];
 		const typesFiltered = typeFilters.map((type)=> {
 			return type.replace('type:', '');
@@ -433,10 +437,14 @@ export const Manage = React.createClass({
 
 						<div className={'light-button arrow-down-button'} style={{position: 'relative'}}>Filter
 							<div className={'hoverChild arrow-down-child'}>
-								<div onClick={this.setFilter.bind(this, 'type:reference')}>References</div>
-								<div onClick={this.setFilter.bind(this, 'type:video')}>Videos</div>
-								<div onClick={this.setFilter.bind(this, 'type:image')}>Image</div>
-
+								{allUniqueTypes.sort((foo, bar)=>{
+									// Sort so that alphabetical
+									if (foo > bar) { return 1; }
+									if (foo < bar) { return -1; }
+									return 0;
+								}).map((item)=> {
+									return <div key={'filter-type-' + item} onClick={this.setFilter.bind(this, ('type:' + item))} style={{textTransform: 'capitalize'}}>{item}</div>;
+								})}
 							</div>
 						</div>
 						<input type="text" placeholder={'Filter'} value={this.state.filter} onChange={this.filterChange} style={styles.filterInput}/>
