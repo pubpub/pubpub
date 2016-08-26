@@ -9,6 +9,7 @@ import fuzzy from 'fuzzy';
 import {RadioGroup, Radio} from 'utils/ReactRadioGroup';
 import {LoaderDeterminate, NavContentWrapper} from 'components';
 import Select from 'react-select';
+import {PreviewEditor} from 'components';
 
 // import {globalStyles} from 'utils/styleConstants';
 // import {globalMessages} from 'utils/globalMessages';
@@ -440,7 +441,7 @@ export const Manage = React.createClass({
 						</div>
 						<input type="text" placeholder={'Filter'} value={this.state.filter} onChange={this.filterChange} style={styles.filterInput}/>
 
-						{filteredItems.map((item)=> {
+						{filteredItems.splice(0, 20).map((item)=> {
 							return item.original;
 						}).sort((foo, bar)=>{
 							// Sort so that most recent is first in array
@@ -451,10 +452,25 @@ export const Manage = React.createClass({
 							if (this.state.atomMode === 'recent' && index > 9) {
 								return null;
 							}
-							const previewImage = item.parent.previewImage.indexOf('.gif') > -1 ? item.parent.previewImage : 'https://jake.pubpub.org/unsafe/fit-in/50x50/' + item.parent.previewImage;
+							// const previewImage = item.parent.previewImage.indexOf('.gif') > -1 ? item.parent.previewImage : 'https://jake.pubpub.org/unsafe/fit-in/50x50/' + item.parent.previewImage;
+							const buttons = [ 
+								{ type: 'link', text: 'Custom Button', link: '/pub/' + item.slug + '/edit' },
+							];
+
 							return (
-								<div key={'media-item-' + item._id} style={styles.item}>
-								{/*<div key={'media-item-' + item._id} onClick={this.setItem.bind(this, item)} style={styles.item}>*/}
+								// TODO
+								// Make an 'editorPreviewCard' component?
+								// Test uploading to make sure it works
+								// Add bibtex back into reference editor
+								<PreviewEditor 
+									key={'atomItem-' + index}
+									atomData={item.parent}
+									versionData={item}
+									
+									footer={ <div> <input type="checkbox" /> Show on profile</div> }
+									buttons = {buttons} />
+
+								/*<div key={'media-item-' + item._id} style={styles.item}>
 									<div style={styles.itemPreview}>
 										<img style={styles.itemPreviewImage} src={previewImage} alt={item.parent.title} title={item.parent.title}/>
 									</div>
@@ -462,7 +478,7 @@ export const Manage = React.createClass({
 									<div style={styles.itemDetail}>
 										<div style={styles.itemDetailTitle}>{item.parent.title}</div>
 									</div>
-								</div>
+								</div>*/
 							);
 						})}
 

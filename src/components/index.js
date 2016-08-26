@@ -12,6 +12,7 @@ export LoaderDeterminate from './LoaderDeterminate/LoaderDeterminate';
 export NavContentWrapper from './NavContentWrapper/NavContentWrapper';
 export NotFound from './NotFound/NotFound';
 export PreviewCard from './PreviewCard/PreviewCard';
+export PreviewEditor from './PreviewEditor/PreviewEditor';
 export Reference from './Reference/Reference';
 export SelectionPopup from './SelectionPopup/SelectionPopup';
 export SelectValue from './SelectValue/SelectValue';
