@@ -17,22 +17,25 @@ import Dropzone from 'react-dropzone';
 import {s3Upload} from 'utils/uploadFile';
 import {getMedia, createAtom, saveVersion} from './actions';
 
+import atomTypes from 'components/AtomTypes';
+
 let styles;
 
 export const Manage = React.createClass({
 	propTypes: {
 		mediaData: PropTypes.object,
+		// Functions that allow callbacks on saveVersion or Insert
 		dispatch: PropTypes.func,
 	},
 
 	getInitialState() {
 		return {
-			showMedia: false,
-			closeCallback: undefined,
 			filter: '',
-			nodeData: {},
-			atomMode: 'recent',
-			editNodeDataMode: false,
+			createNewType: 'document',
+
+			// nodeData: {},
+			// atomMode: 'recent',
+			// editNodeDataMode: false,
 			uploadRates: [],
 			uploadFiles: [],
 		};
@@ -40,113 +43,86 @@ export const Manage = React.createClass({
 
 	componentDidMount() {
 		this.props.dispatch(getMedia());
-		window.toggleMedia = this.toggleMedia;
-		document.addEventListener('keydown', this.closeOnEscape);
-	},
-	componentWillUnmount() {
-		document.removeEventListener('keydown', this.closeOnEscape);
 	},
 
 	componentWillReceiveProps(nextProps) {
-		const oldMediaData = safeGetInToJS(this.props.mediaData, []);
-		const newMediaData = safeGetInToJS(nextProps.mediaData, []);
-		if (oldMediaData.mediaItems.length < newMediaData.mediaItems.length) {
-			this.setState({atomMode: 'recent'});
-		}
+		// const oldMediaData = safeGetInToJS(this.props.mediaData, []);
+		// const newMediaData = safeGetInToJS(nextProps.mediaData, []);
+		// if (oldMediaData.mediaItems.length < newMediaData.mediaItems.length) {
+		// 	this.setState({atomMode: 'recent'});
+		// }
 
-		if (this.state.editNodeDataMode && !oldMediaData.newNodeData && newMediaData.newNodeData) {
-			this.setState({
-				nodeData: {
-					align: 'full',
-					mode: newMediaData.newNodeData.type === 'reference' ? 'cite' : 'embed',
-					...this.state.nodeData,
-					data: newMediaData.newNodeData
-				},
-				editNodeDataMode: false,
-			});
-		}
+		// if (this.state.editNodeDataMode && !oldMediaData.newNodeData && newMediaData.newNodeData) {
+		// 	this.setState({
+		// 		nodeData: {
+		// 			align: 'full',
+		// 			mode: newMediaData.newNodeData.type === 'reference' ? 'cite' : 'embed',
+		// 			...this.state.nodeData,
+		// 			data: newMediaData.newNodeData
+		// 		},
+		// 		editNodeDataMode: false,
+		// 	});
+		// }
 	},
 
-	closeOnEscape: function(evt) {
-		let isEscape = false;
-		if ('key' in evt) {
-			isEscape = evt.key === 'Escape';
-		} else {
-			isEscape = evt.keyCode === 27;
-		}
+	// setAtomMode: function(mode) {
+	// 	this.setState({atomMode: mode});
+	// },
 
-		if (isEscape) {
-			this.close();
-		}
-	},
+	// clearNodeData: function() {
+	// 	this.setState({nodeData: {...this.state.nodeData, data: undefined}}); // Is this right? Do we want nodeData to just be an empty object?
+	// },
 
-	setAtomMode: function(mode) {
-		this.setState({
-			atomMode: mode
-		});
-	},
+	// editNodeData: function() {
+	// 	this.setState({editNodeDataMode: true});
+	// },
 
-	toggleMedia: function(pm, callback, node) {
-		this.setState({
-			showMedia: true,
-			closeCallback: callback,
-			nodeData: typeof node.attrs.source === 'string' ? node.attrs : undefined,
-		});
-	},
-
-	clearNodeData: function() {
-		this.setState({nodeData: {...this.state.nodeData, data: undefined}}); // Is this right? Do we want nodeData to just be an empty object?
-	},
-
-	editNodeData: function() {
-		this.setState({editNodeDataMode: true});
-	},
-	cancelEditNodeData: function() {
-		let nodeData = this.state.nodeData;
-		if (!this.state.nodeData.data.content) {
-			nodeData = {};
-		}
-		this.setState({
-			editNodeDataMode: false,
-			nodeData: nodeData,
-		});
-	},
+	// cancelEditNodeData: function() {
+	// 	let nodeData = this.state.nodeData;
+	// 	if (!this.state.nodeData.data.content) {
+	// 		nodeData = {};
+	// 	}
+	// 	this.setState({
+	// 		editNodeDataMode: false,
+	// 		nodeData: nodeData,
+	// 	});
+	// },
 
 	filterChange: function(evt) {
 		this.setState({filter: evt.target.value});
 	},
 
-	inputChange: function(type, evt) {
-		if (type === 'caption') {
-			this.setState({nodeData: {...this.state.nodeData, caption: evt.target.value}});
-		}
+	// inputChange: function(type, evt) {
+	// 	if (type === 'caption') {
+	// 		this.setState({nodeData: {...this.state.nodeData, caption: evt.target.value}});
+	// 	}
 
-		if (type === 'size') {
-			this.setState({nodeData: {...this.state.nodeData, size: evt.target.value}});
-		}
+	// 	if (type === 'size') {
+	// 		this.setState({nodeData: {...this.state.nodeData, size: evt.target.value}});
+	// 	}
 
-		if (type === 'mode') {
-			this.setState({nodeData: {...this.state.nodeData, mode: evt}});
-		}
+	// 	if (type === 'mode') {
+	// 		this.setState({nodeData: {...this.state.nodeData, mode: evt}});
+	// 	}
 
-		if (type === 'align') {
-			this.setState({nodeData: {...this.state.nodeData, align: evt}});
-		}
+	// 	if (type === 'align') {
+	// 		this.setState({nodeData: {...this.state.nodeData, align: evt}});
+	// 	}
 
-		if (type === 'className') {
-			this.setState({nodeData: {...this.state.nodeData, className: evt.target.value}});
-		}
-	},
+	// 	if (type === 'className') {
+	// 		this.setState({nodeData: {...this.state.nodeData, className: evt.target.value}});
+	// 	}
+	// },
 
-	close: function() {
-		this.setState({
-			showMedia: false,
-			closeCallback: undefined,
-			filter: '',
-			nodeData: {},
-			editNodeDataMode: false,
-		});
-	},
+	// close: function() {
+	// 	this.setState({
+	// 		showMedia: false,
+	// 		closeCallback: undefined,
+	// 		filter: '',
+	// 		nodeData: {},
+	// 		editNodeDataMode: false,
+	// 	});
+	// },
 
 
 	// On file drop (or on file select)
@@ -189,11 +165,11 @@ export const Manage = React.createClass({
 		});
 
 		this.setState({
-			nodeData: {
-				...this.state.nodeData,
-				data: undefined
-			},
-			atomMode: 'recent',
+			// nodeData: {
+			// 	...this.state.nodeData,
+			// 	data: undefined
+			// },
+			// atomMode: 'recent',
 			uploadRates: uploadRates,
 			uploadFiles: uploadFiles,
 		});
@@ -294,242 +270,207 @@ export const Manage = React.createClass({
 	// 	this.saveItem(versionData);
 	// },
 
-	setItem: function(item) {
-		const nodeData = this.state.nodeData || {};
-		console.log(item);
-		this.setState({
-			nodeData: {
-				source: item._id,
-				className: nodeData.className || '',
-				id: item._id,
-				align: nodeData.align || 'full',
-				size: nodeData.size || '',
-				caption: nodeData.caption || '',
-				mode: nodeData.mode || 'embed',
-				data: item,
-			},
-		});
+	// setItem: function(item) {
+	// 	const nodeData = this.state.nodeData || {};
+	// 	console.log(item);
+	// 	this.setState({
+	// 		nodeData: {
+	// 			source: item._id,
+	// 			className: nodeData.className || '',
+	// 			id: item._id,
+	// 			align: nodeData.align || 'full',
+	// 			size: nodeData.size || '',
+	// 			caption: nodeData.caption || '',
+	// 			mode: nodeData.mode || 'embed',
+	// 			data: item,
+	// 		},
+	// 	});
+	// },
+
+	// saveItem: function(evt) {
+	// 	evt.preventDefault();
+	// 	const nodeData = this.state.nodeData;
+	// 	this.state.closeCallback({
+	// 		source: nodeData.data._id,
+	// 		className: nodeData.className,
+	// 		id: nodeData.data._id,
+	// 		align: nodeData.align,
+	// 		size: nodeData.size,
+	// 		caption: nodeData.caption,
+	// 		mode: nodeData.mode,
+	// 		data: nodeData.data,
+	// 	});
+	// 	this.setState({
+	// 		showMedia: false,
+	// 		closeCallback: undefined,
+	// 		filter: '',
+	// 	});
+
+	// },
+
+	handleCreateNewChange: function(item) {
+		this.setState({createNewType: item});
+	// 	const newThing = {
+	// 		nodeData: {
+	// 			data: {
+	// 				type: item.value,
+	// 				parent: {
+	// 					title: 'New ' + item.value,
+	// 					type: item.value,
+	// 				}
+	// 			}
+	// 		},
+	// 		editNodeDataMode: true,
+	// 	};
+	// 	console.log(newThing);
+	// 	this.setState(newThing);
+	// 	// console.log(item.value);
 	},
 
-	saveItem: function(evt) {
-		evt.preventDefault();
-		const nodeData = this.state.nodeData;
-		this.state.closeCallback({
-			source: nodeData.data._id,
-			className: nodeData.className,
-			id: nodeData.data._id,
-			align: nodeData.align,
-			size: nodeData.size,
-			caption: nodeData.caption,
-			mode: nodeData.mode,
-			data: nodeData.data,
-		});
-		this.setState({
-			showMedia: false,
-			closeCallback: undefined,
-			filter: '',
-		});
-
+	createNew: function() {
+		console.log(this.state.createNewType);
 	},
 
-	handleSelectChange: function(item) {
-		const newThing = {
-			nodeData: {
-				data: {
-					type: item.value,
-					parent: {
-						title: 'New ' + item.value,
-						type: item.value,
-					}
-				}
-			},
-			editNodeDataMode: true,
-		};
-		console.log(newThing);
-		this.setState(newThing);
-		// console.log(item.value);
+	setFilter: function(string) {
+		this.setState({filter: string});
 	},
 
 	render: function() {
 
 		const mediaItems = safeGetInToJS(this.props.mediaData, ['mediaItems']) || [];
-		const mediaItemsFilterForType = mediaItems.filter((item)=> {
-			if (this.state.atomMode === 'all' || this.state.atomMode === 'recent') { return true; }
-			return item.type === this.state.atomMode;
+		
+		const typeFilters = this.state.filter.match(/type:([a-zA-Z]*)/gi) || [];
+		const typesFiltered = typeFilters.map((type)=> {
+			return type.replace('type:', '');
+		}).filter((item)=> {
+			return !!item;
 		});
-		const filteredItems = fuzzy.filter(this.state.filter, mediaItemsFilterForType, {extract: (item)=>{ return item.type + ' ' + item.parent.title;} });
-		const nodeData = this.state.nodeData || {};
+		
+		console.log(typesFiltered);
+		// Populate type filters with filter types, check to see for each item if type is in that array
 
-		const mobileNavButtons = [
-			{ type: 'button', mobile: true, text: 'Pubs', action: this.followUserToggle },
-			{ type: 'button', mobile: true, text: 'Menu', action: undefined },
-		];
+		const mediaItemsFilterForType = mediaItems.filter((item)=> {
+			if (typesFiltered.length === 0) {
+				return true;
+			}
+			// return true;
+			// if (this.state.atomMode === 'all' || this.state.atomMode === 'recent') { return true; }
+			return typesFiltered.includes(item.type);
+		});
 
-		const navItems = [
-			{ type: 'button', text: 'All', action: this.setAtomMode.bind(this, 'all'), active: this.state.atomMode === 'all'},
-			{ type: 'button', text: 'Recent', action: this.setAtomMode.bind(this, 'recent'), active: this.state.atomMode === 'recent'},
-			{ type: 'spacer'},
-			{ type: 'button', text: 'Images', action: this.setAtomMode.bind(this, 'image'), active: this.state.atomMode === 'image'},
-			{ type: 'button', text: 'Videos', action: this.setAtomMode.bind(this, 'video'), active: this.state.atomMode === 'video'},
-			{ type: 'button', text: 'References', action: this.setAtomMode.bind(this, 'reference'), active: this.state.atomMode === 'reference'},
-			{ type: 'button', text: 'Jupyter', action: this.setAtomMode.bind(this, 'jupyter'), active: this.state.atomMode === 'jupyter'},
-			{ type: 'button', text: 'Documents', action: this.setAtomMode.bind(this, 'document'), active: this.state.atomMode === 'document'},
-		];
+		const filteredItems = fuzzy.filter(this.state.filter.replace(/type:([a-zA-Z]*)/gi, ''), mediaItemsFilterForType, {extract: (item)=>{ return item.type + ' ' + item.parent.title;} });
+		// const nodeData = this.state.nodeData || {};
+
+		// const mobileNavButtons = [
+		// 	{ type: 'button', mobile: true, text: 'Pubs', action: this.followUserToggle },
+		// 	{ type: 'button', mobile: true, text: 'Menu', action: undefined },
+		// ];
+
+		// const navItems = [
+		// 	{ type: 'button', text: 'All', action: this.setAtomMode.bind(this, 'all'), active: this.state.atomMode === 'all'},
+		// 	{ type: 'button', text: 'Recent', action: this.setAtomMode.bind(this, 'recent'), active: this.state.atomMode === 'recent'},
+		// 	{ type: 'spacer'},
+		// 	{ type: 'button', text: 'Images', action: this.setAtomMode.bind(this, 'image'), active: this.state.atomMode === 'image'},
+		// 	{ type: 'button', text: 'Videos', action: this.setAtomMode.bind(this, 'video'), active: this.state.atomMode === 'video'},
+		// 	{ type: 'button', text: 'References', action: this.setAtomMode.bind(this, 'reference'), active: this.state.atomMode === 'reference'},
+		// 	{ type: 'button', text: 'Jupyter', action: this.setAtomMode.bind(this, 'jupyter'), active: this.state.atomMode === 'jupyter'},
+		// 	{ type: 'button', text: 'Documents', action: this.setAtomMode.bind(this, 'document'), active: this.state.atomMode === 'document'},
+		// ];
 
 
-		const options = [
-			{value: 'image', label: 'image'},
-			{value: 'video', label: 'video'},
-			{value: 'latex', label: 'equation'},
-			{value: 'reference', label: 'reference'},
-			{value: 'jupyter', label: 'jupyter'},
-			{value: 'iframe', label: 'iframe'},
-		];
+		const options = Object.keys(atomTypes).sort((foo, bar)=>{
+			// Sort so that alphabetical
+			if (foo > bar) { return 1; }
+			if (foo < bar) { return -1; }
+			return 0;
+		});
+
 		return (
+			<div style={{backgroundColor: '#999', padding: '3em'}}>
 			<Dropzone ref="dropzone" disableClick={true} onDrop={this.onDrop} style={{}} activeClassName={'dropzone-active'} >
-			<div>
+			<div style={{backgroundColor: 'white'}}>
 
-				{/* If we DON'T have a chosen atom */}
-				{!nodeData.data &&
-					<div style={styles.mediaSelect}>
+				<div style={styles.mediaSelect}>
 
-						<div style={styles.mediaSelectHeader}>
+					<div style={styles.mediaSelectHeader}>
 
-							<div style={styles.addNewDropdown}>
-								<Select
-									name={'new-atom-select'}
-									options={options}
-									value={null}
-									placeholder={<span>Add new </span>}
-									onChange={this.handleSelectChange} />
-
+						<div style={styles.addNewDropdown}>
+							<div className={'light-button arrow-down-button'} style={{position: 'relative'}}><span style={{textTransform: 'capitalize'}}>{this.state.createNewType}</span>
+								<div className={'hoverChild arrow-down-child'}>
+									{options.map((option)=>{
+										return <div key={'setType-' + option} onClick={this.handleCreateNewChange.bind(this, option)} style={{textTransform: 'capitalize'}}>{option}</div>;
+									})}
+								</div>
 							</div>
 
+							{/*<Select
+								name={'new-atom-select'}
+								options={options}
+								value={this.state.createNewType}
+								placeholder={<span>Add new</span>}
+								onChange={this.handleSelectChange} 
+								clearable={false} />*/}
+						</div>
+						<div className={'button'} onClick={this.createNew} style={{padding: 'calc(.3em + 1px) 1em', verticalAlign: 'top', left: '-2px'}}>Create New</div>
 
-							<div className={'button'} style={styles.dropzoneBlock}>
-								Click or Drag files to add
-								<input id={'media-file-select'} type={'file'} onChange={this.onSelect} multiple={true} style={styles.fileInput}/>
-							</div>
 
+						<div className={'button'} style={styles.dropzoneBlock}>
+							Click or Drag files to add
+							<input id={'media-file-select'} type={'file'} onChange={this.onSelect} multiple={true} style={styles.fileInput}/>
 						</div>
 
-						{this.state.uploadFiles.map((uploadFile, index)=> {
+					</div>
+
+					{this.state.uploadFiles.map((uploadFile, index)=> {
+						return (
+							<div key={'uploadFile-' + index} style={[styles.uploadBar, this.state.uploadRates[index] === 1 && {display: 'none'}]}>
+								{uploadFile}
+								<LoaderDeterminate value={this.state.uploadRates[index] * 100} />
+							</div>
+						);
+					})}
+
+						<div className={'light-button arrow-down-button'} style={{position: 'relative'}}>Filter
+							<div className={'hoverChild arrow-down-child'}>
+								<div onClick={this.setFilter.bind(this, 'type:reference')}>References</div>
+								<div onClick={this.setFilter.bind(this, 'type:video')}>Videos</div>
+								<div onClick={this.setFilter.bind(this, 'type:image')}>Image</div>
+
+							</div>
+						</div>
+						<input type="text" placeholder={'Filter'} value={this.state.filter} onChange={this.filterChange} style={styles.filterInput}/>
+
+						{filteredItems.map((item)=> {
+							return item.original;
+						}).sort((foo, bar)=>{
+							// Sort so that most recent is first in array
+							if (foo.parent.lastUpdated > bar.parent.lastUpdated) { return -1; }
+							if (foo.parent.lastUpdated < bar.parent.lastUpdated) { return 1; }
+							return 0;
+						}).map((item, index)=> {
+							if (this.state.atomMode === 'recent' && index > 9) {
+								return null;
+							}
+							const previewImage = item.parent.previewImage.indexOf('.gif') > -1 ? item.parent.previewImage : 'https://jake.pubpub.org/unsafe/fit-in/50x50/' + item.parent.previewImage;
 							return (
-								<div key={'uploadFile-' + index} style={[styles.uploadBar, this.state.uploadRates[index] === 1 && {display: 'none'}]}>
-									{uploadFile}
-									<LoaderDeterminate value={this.state.uploadRates[index] * 100} />
+								<div key={'media-item-' + item._id} style={styles.item}>
+								{/*<div key={'media-item-' + item._id} onClick={this.setItem.bind(this, item)} style={styles.item}>*/}
+									<div style={styles.itemPreview}>
+										<img style={styles.itemPreviewImage} src={previewImage} alt={item.parent.title} title={item.parent.title}/>
+									</div>
+
+									<div style={styles.itemDetail}>
+										<div style={styles.itemDetailTitle}>{item.parent.title}</div>
+									</div>
 								</div>
 							);
 						})}
 
-						<NavContentWrapper navItems={navItems} mobileNavButtons={mobileNavButtons}>
-							<input type="text" placeholder={'Filter'} value={this.state.filter} onChange={this.filterChange} style={styles.filterInput}/>
-							{filteredItems.map((item)=> {
-								return item.original;
-							}).sort((foo, bar)=>{
-								// Sort so that most recent is first in array
-								if (foo.parent.lastUpdated > bar.parent.lastUpdated) { return -1; }
-								if (foo.parent.lastUpdated < bar.parent.lastUpdated) { return 1; }
-								return 0;
-							}).map((item, index)=> {
-								if (this.state.atomMode === 'recent' && index > 9) {
-									return null;
-								}
-								const previewImage = item.parent.previewImage.indexOf('.gif') > -1 ? item.parent.previewImage : 'https://jake.pubpub.org/unsafe/fit-in/50x50/' + item.parent.previewImage;
-								return (
-									<div key={'media-item-' + item._id} onClick={this.setItem.bind(this, item)} style={styles.item}>
-										<div style={styles.itemPreview}>
-											<img style={styles.itemPreviewImage} src={previewImage} alt={item.parent.title} title={item.parent.title}/>
-										</div>
+				</div>
 
-										<div style={styles.itemDetail}>
-											<div style={styles.itemDetailTitle}>{item.parent.title}</div>
-										</div>
-									</div>
-								);
-							})}
-						</NavContentWrapper>
-
-					</div>
-				}
-
-				{/* If we DO have a chosen atom */}
-				{nodeData.data && !this.state.editNodeDataMode &&
-					<div style={styles.mediaDetails}>
-						<div style={styles.editModeHeader}>
-							<h3 style={styles.detailsTitle}>{nodeData.data.parent.title}</h3>
-							<div style={styles.detailsCancel} className={'underlineOnHover'} onClick={this.clearNodeData}>Clear</div>
-							<div style={styles.detailsButtonWrapper}>
-								<div className={'button'} style={styles.detailsButton} onClick={this.saveItem}>Save</div>
-							</div>
-						</div>
-						{nodeData.data.type !== 'document' &&
-							<div style={styles.detailsClear} className={'underlineOnHover'} onClick={this.editNodeData}>Edit</div>
-						}
-
-						<div style={styles.details}>
-							<div style={styles.detailsPreview}>
-
-								<AtomViewerPane atomData={ensureImmutable({ atomData: nodeData.data.parent, currentVersionData: nodeData.data })} renderType={'embed'}/>
-
-							</div>
-
-
-							<form onSubmit={this.saveItem} style={styles.detailsForm}>
-								<div>
-									<label style={styles.label} htmlFor={'mode'}>
-										Mode
-									</label>
-									<RadioGroup name={'mode'} selectedValue={this.state.nodeData.mode} onChange={this.inputChange.bind(this, 'mode')}>
-										<Radio value="embed" id={'embed'} style={styles.radioInput}/> <label htmlFor={'embed'} style={styles.radioLabel}>Embed</label>
-										<Radio value="cite" id={'cite'} style={styles.radioInput}/> <label htmlFor={'cite'} style={styles.radioLabel}>Cite</label>
-									</RadioGroup>
-								</div>
-								<div style={[this.state.nodeData.mode === 'cite' && styles.disabledInput]}>
-									<label style={styles.label} htmlFor={'caption'}>
-										Caption
-									</label>
-									<textarea ref={'caption'} id={'caption'} name={'caption'} style={[styles.input, styles.textarea]} value={this.state.nodeData.caption} onChange={this.inputChange.bind(this, 'caption')}></textarea>
-								</div>
-
-								<div style={[this.state.nodeData.mode === 'cite' && styles.disabledInput]}>
-									<label style={styles.label} htmlFor={'align'}>
-										Align
-									</label>
-									<RadioGroup name={'align'} selectedValue={this.state.nodeData.align} onChange={this.inputChange.bind(this, 'align')}>
-										<Radio value="inline" id={'inline'} style={styles.radioInput}/> <label htmlFor={'inline'} style={styles.radioLabel}>Inline</label>
-										<Radio value="full" id={'full'} style={styles.radioInput}/> <label htmlFor={'full'} style={styles.radioLabel}>Full</label>
-										<Radio value="left" id={'left'} style={styles.radioInput}/> <label htmlFor={'left'} style={styles.radioLabel}>Left</label>
-										<Radio value="right" id={'right'} style={styles.radioInput}/> <label htmlFor={'right'} style={styles.radioLabel}>Right</label>
-									</RadioGroup>
-								</div>
-
-								<div style={{display: 'none'}}> {/* Hidden while we don't allow for custom CSS - no use for this field */}
-									<label style={styles.label} htmlFor={'className'}>
-										Class Name
-									</label>
-									<input ref={'className'} id={'className'} name={'className'} type="text" style={styles.input} value={this.state.nodeData.className} onChange={this.inputChange.bind(this, 'className')}/>
-								</div>
-
-								<div style={[this.state.nodeData.mode === 'cite' && styles.disabledInput]}>
-									<label style={styles.label} htmlFor={'size'}>
-										Size
-									</label>
-									<input ref={'size'} id={'size'} name={'size'} type="text" style={styles.input} value={this.state.nodeData.size} onChange={this.inputChange.bind(this, 'size')}/>
-									<div className={'light-color inputSubtext'}>
-										e.g. 20%, 50%, 200px, 400px
-									</div>
-								</div>
-
-							</form>
-						</div>
-
-
-					</div>
-				}
 
 				{/* If we DO have a chosen atom  and are trying to edit it*/}
-				{nodeData.data && this.state.editNodeDataMode &&
+				{/* nodeData.data && this.state.editNodeDataMode &&
 					<div style={styles.mediaDetails}>
 						<div style={styles.editModeHeader}>
 							<h3 style={styles.detailsTitle}>{nodeData.data.parent.title}</h3>
@@ -539,19 +480,18 @@ export const Manage = React.createClass({
 							</div>
 						</div>
 
-
-
 						<div style={styles.details}>
 							<AtomEditorPane ref={'atomEditorPane'} atomData={ensureImmutable({ atomData: nodeData.data.parent, currentVersionData: nodeData.data })}/>
 						</div>
 
 
 					</div>
-				}
+				*/}
 			</div>
 
 			<div className={'showOnActive'}>Drop files to add</div>
 			</Dropzone>
+			</div>
 		);
 	}
 
@@ -624,19 +564,18 @@ styles = {
 		transform: 'scale(1.0)',
 	},
 	mediaSelect: {
-		padding: '1em 0em',
+		// padding: '1em 0em',
 	},
 	mediaSelectHeader: {
-		maxWidth: '1024px',
-		padding: '0em 2em 1em 2em',
-		margin: '0 auto',
+		padding: '1em 0em',
 	},
 	mediaDetails: {
 		padding: '1em 2em',
 	},
 	filterInput: {
-		width: 'calc(100% - 20px - 4px)',
-		borderWidth: '0px 0px 2px 0px',
+		display: 'inline-block',
+		// width: 'calc(100% - 20px - 4px)',
+		// borderWidth: '0px 0px 2px 0px',
 	},
 	input: {
 		width: 'calc(100% - 20px - 4px)',
@@ -733,7 +672,7 @@ styles = {
 		pointerEvents: 'none',
 	},
 	addNewDropdown: {
-		width: '250px',
+		// width: '250px',
 		display: 'inline-block',
 	},
 	dropzoneBlock: {
