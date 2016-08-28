@@ -184,7 +184,7 @@ export const AtomContributors = React.createClass({
 								];
 								return (
 									<PreviewCard 
-										key={'featured-' + index}
+										key={'contributor-' + item._id}
 										type={'user'}
 										image={item.source.image}
 										title={item.source.name}
@@ -235,7 +235,7 @@ export const AtomContributors = React.createClass({
 								const roles = item.metadata && item.metadata.roles || [];
 								return (
 									<PreviewCard
-										key={'contributor-' + index}
+										key={'contributor-' + item._id}
 										type={'user'}
 										image={item.source.image}
 										title={item.source.name}

@@ -12,6 +12,7 @@ import journal from './containers/JournalProfile/reducer';
 import landing from './containers/Landing/reducer';
 import login from './containers/Login/reducer';
 import media from './containers/Media/reducer';
+import manage from './containers/Manage/reducer';
 import signUp from './containers/SignUp/reducer';
 import user from './containers/UserProfile/reducer';
 import resetPassword from './containers/ResetPassword/reducer';
@@ -28,6 +29,7 @@ export default combineReducers({
 	landing,
 	login,
 	media,
+	manage,
 	signUp,
 	user,
 	resetPassword

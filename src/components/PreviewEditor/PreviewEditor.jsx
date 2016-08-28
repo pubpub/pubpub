@@ -55,6 +55,10 @@ export const PreviewEditor = React.createClass({
 		this.setState({editorMode: mode});
 	},
 
+	addContributor: function(contributorID) {
+		this.props.handleAddContributor(this.props.atomData._id, contributorID);
+	},
+
 	// TODO
 	// Save version button
 	// Save details button
@@ -156,9 +160,9 @@ export const PreviewEditor = React.createClass({
 									<AtomContributors 
 										atomData={ensureImmutable({ atomData: this.props.atomData})}
 										contributorsData={this.props.contributorsData} 
-										handleAddContributor={this.handleAddContributor}
-										handleUpdateContributor={this.handleUpdateContributor}
-										handleDeleteContributor={this.handleDeleteContributor}
+										handleAddContributor={this.addContributor}
+										handleUpdateContributor={this.props.handleUpdateContributor}
+										handleDeleteContributor={this.props.handleDeleteContributor}
 										isLoading={this.props.contributorsLoading} 
 										error={this.props.contributorsError} 
 										permissionType={this.props.permissionType}/>

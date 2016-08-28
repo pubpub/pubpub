@@ -17,6 +17,7 @@ import {PreviewEditor} from 'components';
 import Dropzone from 'react-dropzone';
 import {s3Upload} from 'utils/uploadFile';
 import {getMedia, createAtom, saveVersion} from './actions';
+import {addContributor, updateContributor, deleteContributor} from 'containers/Atom/actions';
 
 import atomTypes from 'components/AtomTypes';
 
@@ -336,6 +337,18 @@ export const Manage = React.createClass({
 		this.setState({filter: string});
 	},
 
+	handleAddContributor: function(atomID, contributorID) {
+		this.props.dispatch(addContributor(atomID, contributorID));
+	},
+
+	handleUpdateContributor: function(linkID, linkType, linkRoles) {
+		this.props.dispatch(updateContributor(linkID, linkType, linkRoles));
+	},
+
+	handleDeleteContributor: function(linkID) {
+		this.props.dispatch(deleteContributor(linkID));
+	},
+
 	render: function() {
 
 		const mediaItems = safeGetInToJS(this.props.mediaData, ['mediaItems']) || [];
@@ -389,7 +402,7 @@ export const Manage = React.createClass({
 			if (foo < bar) { return -1; }
 			return 0;
 		});
-
+		console.log('rerendering manage');
 		return (
 			<div style={{backgroundColor: '#999', padding: '3em'}}>
 			<Dropzone ref="dropzone" disableClick={true} onDrop={this.onDrop} style={{}} activeClassName={'dropzone-active'} >
@@ -477,11 +490,19 @@ export const Manage = React.createClass({
 									contributorsData={item.contributors}
 									footer={ <div> <input type="checkbox" /> Show on profile</div> }
 									buttons = {buttons} 
+
+									onSaveVersion={this.onSaveVersion}
+									onSaveAtom={this.onSaveAtom}
+									updateDetailsHandler={this.updateDetailsHandler}
+									handleAddContributor={this.handleAddContributor}
+									handleUpdateContributor={this.handleUpdateContributor}
+									handleDeleteContributor={this.handleDeleteContributor}
+
 									contributorsLoading={false}
 									detailsLoading={false}
 									contributorsError={false}
 									detailsError={false}
-									permissionType={'author'}/>
+									permissionType={item.permissionType}/>
 
 								/*<div key={'media-item-' + item._id} style={styles.item}>
 									<div style={styles.itemPreview}>
@@ -528,7 +549,7 @@ export const Manage = React.createClass({
 
 export default connect( state => {
 	return {
-		mediaData: state.media,
+		mediaData: state.manage,
 	};
 })( Radium(Manage) );
 

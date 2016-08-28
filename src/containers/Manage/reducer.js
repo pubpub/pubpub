@@ -20,6 +20,18 @@ import {
 
 import {
 	GET_ATOM_DATA_LOAD,
+
+	ADD_CONTRIBUTOR_LOAD,
+	ADD_CONTRIBUTOR_SUCCESS,
+	ADD_CONTRIBUTOR_FAIL,
+
+	UPDATE_CONTRIBUTOR_LOAD,
+	UPDATE_CONTRIBUTOR_SUCCESS,
+	UPDATE_CONTRIBUTOR_FAIL,
+
+	DELETE_CONTRIBUTOR_LOAD,
+	DELETE_CONTRIBUTOR_SUCCESS,
+	DELETE_CONTRIBUTOR_FAIL,
 } from 'containers/Atom/actions';
 
 /*--------*/
@@ -120,6 +132,52 @@ function saveVersionFail(state, error) {
 	});
 }
 
+/* Add Contributor functions */
+/* ----------------------------- */
+function addContributorSuccess(state, result) {
+	return state.merge({
+		mediaItems: state.get('mediaItems').map((item)=>{
+			if (item.getIn(['parent', '_id']) === result.destination) {
+				return item.merge({
+					contributors: item.get('contributors').push(ensureImmutable(result))
+				});	
+			}
+			return item;
+		})
+	});
+}
+
+/* Update Contributor functions */
+/* ----------------------------- */
+function updateContributorSuccess(state, result) {
+	return state;
+}
+
+/* Delete Contributor functions */
+/* ----------------------------- */
+function deleteContributorSuccess(state, result) {
+	return state.merge({
+		mediaItems: state.get('mediaItems').map((item)=>{
+			if (item.getIn(['parent', '_id']) === result.destination) {
+				return item.merge({
+					contributors: item.get('contributors').filter((contributor)=> {
+						return contributor.get('_id') !== result._id;
+					})
+				});	
+			}
+			return item;
+		})
+	});
+
+	// Remove the admin the the list by ID
+	// return state.merge({
+	// 	contributorsData: state.get('contributorsData').filter((item)=> {
+	// 		return item.get('_id') !== result._id;
+	// 	})
+	// });
+}
+
+
 /*--------*/
 // Bind actions to specific reducing functions.
 /*--------*/
@@ -149,6 +207,27 @@ export default function reducer(state = defaultState, action) {
 		return saveVersionSuccess(state, action.result);
 	case SAVE_VERSION_FAIL:
 		return saveVersionFail(state, action.error);
+
+	case ADD_CONTRIBUTOR_LOAD:
+		return state;
+	case ADD_CONTRIBUTOR_SUCCESS:
+		return addContributorSuccess(state, action.result);
+	case ADD_CONTRIBUTOR_FAIL:
+		return state;
+
+	case UPDATE_CONTRIBUTOR_LOAD:
+		return state;
+	case UPDATE_CONTRIBUTOR_SUCCESS:
+		return updateContributorSuccess(state, action.result);
+	case UPDATE_CONTRIBUTOR_FAIL:
+		return state;
+
+	case DELETE_CONTRIBUTOR_LOAD:
+		return state;
+	case DELETE_CONTRIBUTOR_SUCCESS:
+		return deleteContributorSuccess(state, action.result);
+	case DELETE_CONTRIBUTOR_FAIL:
+		return state;
 
 	default:
 		return ensureImmutable(state);

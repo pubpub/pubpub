@@ -62,11 +62,11 @@ export function getMedia(req, res) {
 		const mergedVersions = versionResults.map((item)=>{
 			item.contributors = contributorsObject[item.parent];
 			item.parent = atomObject[item.parent];
-			console.log(item.contributors);
 			item.permissionType = item.contributors.reduce((previousValue, contributor)=> {
 				if (contributor.source && String(contributor.source._id) === String(userID)) {
 					return contributor.type;
 				}
+				return previousValue;
 			}, undefined);
 			return item;
 		});
