@@ -59,6 +59,10 @@ export const PreviewEditor = React.createClass({
 		this.props.handleAddContributor(this.props.atomData._id, contributorID);
 	},
 
+	updateDetails: function(newDetails) {
+		this.props.updateDetailsHandler(this.props.atomData._id, newDetails);
+	},
+
 	// TODO
 	// Save version button
 	// Save details button

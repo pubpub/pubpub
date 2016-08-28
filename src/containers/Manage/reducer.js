@@ -21,6 +21,10 @@ import {
 import {
 	GET_ATOM_DATA_LOAD,
 
+	UPDATE_ATOM_DETAILS_LOAD,
+	UPDATE_ATOM_DETAILS_SUCCESS,
+	UPDATE_ATOM_DETAILS_FAIL,
+
 	ADD_CONTRIBUTOR_LOAD,
 	ADD_CONTRIBUTOR_SUCCESS,
 	ADD_CONTRIBUTOR_FAIL,
@@ -168,13 +172,51 @@ function deleteContributorSuccess(state, result) {
 			return item;
 		})
 	});
+}
 
-	// Remove the admin the the list by ID
-	// return state.merge({
-	// 	contributorsData: state.get('contributorsData').filter((item)=> {
-	// 		return item.get('_id') !== result._id;
-	// 	})
-	// });
+/* Update Atom Details functions */
+/* ----------------------------- */
+function updateAtomDetailsLoad(state, atomID) {
+	return state.merge({
+		mediaItems: state.get('mediaItems').map((item)=>{
+			if (item.getIn(['parent', '_id']) === atomID) {
+				return item.merge({
+					detailsLoading: true,
+					detailsError: undefined
+				});	
+			}
+			return item;
+		}),
+	});
+}
+
+function updateAtomDetailsSuccess(state, result, atomID) {
+	return state.merge({
+		mediaItems: state.get('mediaItems').map((item)=>{
+			if (item.getIn(['parent', '_id']) === atomID) {
+				return item.merge({
+					parent: result,
+					detailsLoading: false,
+					detailsError: undefined
+				});	
+			}
+			return item;
+		}),
+	});
+}
+
+function updateAtomDetailsFail(state, error, atomID) {
+	return state.merge({
+		mediaItems: state.get('mediaItems').map((item)=>{
+			if (item.getIn(['parent', '_id']) === atomID) {
+				return item.merge({
+					detailsLoading: false,
+					detailsError: error
+				});	
+			}
+			return item;
+		}),
+	});
 }
 
 
@@ -228,6 +270,13 @@ export default function reducer(state = defaultState, action) {
 		return deleteContributorSuccess(state, action.result);
 	case DELETE_CONTRIBUTOR_FAIL:
 		return state;
+
+	case UPDATE_ATOM_DETAILS_LOAD:
+		return updateAtomDetailsLoad(state, action.atomID);
+	case UPDATE_ATOM_DETAILS_SUCCESS:
+		return updateAtomDetailsSuccess(state, action.result, action.atomID);
+	case UPDATE_ATOM_DETAILS_FAIL:
+		return updateAtomDetailsFail(state, action.error, action.atomID);
 
 	default:
 		return ensureImmutable(state);

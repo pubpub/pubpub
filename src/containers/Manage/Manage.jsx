@@ -17,7 +17,7 @@ import {PreviewEditor} from 'components';
 import Dropzone from 'react-dropzone';
 import {s3Upload} from 'utils/uploadFile';
 import {getMedia, createAtom, saveVersion} from './actions';
-import {addContributor, updateContributor, deleteContributor} from 'containers/Atom/actions';
+import {updateAtomDetails, addContributor, updateContributor, deleteContributor} from 'containers/Atom/actions';
 
 import atomTypes from 'components/AtomTypes';
 
@@ -349,6 +349,10 @@ export const Manage = React.createClass({
 		this.props.dispatch(deleteContributor(linkID));
 	},
 
+	updateDetails: function(atomID, newDetails) {
+		this.props.dispatch(updateAtomDetails(atomID, newDetails));
+	},
+
 	render: function() {
 
 		const mediaItems = safeGetInToJS(this.props.mediaData, ['mediaItems']) || [];
@@ -402,7 +406,6 @@ export const Manage = React.createClass({
 			if (foo < bar) { return -1; }
 			return 0;
 		});
-		console.log('rerendering manage');
 		return (
 			<div style={{backgroundColor: '#999', padding: '3em'}}>
 			<Dropzone ref="dropzone" disableClick={true} onDrop={this.onDrop} style={{}} activeClassName={'dropzone-active'} >
@@ -493,15 +496,13 @@ export const Manage = React.createClass({
 
 									onSaveVersion={this.onSaveVersion}
 									onSaveAtom={this.onSaveAtom}
-									updateDetailsHandler={this.updateDetailsHandler}
+									updateDetailsHandler={this.updateDetails}
 									handleAddContributor={this.handleAddContributor}
 									handleUpdateContributor={this.handleUpdateContributor}
 									handleDeleteContributor={this.handleDeleteContributor}
 
-									contributorsLoading={false}
-									detailsLoading={false}
-									contributorsError={false}
-									detailsError={false}
+									detailsLoading={item.detailsLoading}
+									detailsError={!!item.detailsError}
 									permissionType={item.permissionType}/>
 
 								/*<div key={'media-item-' + item._id} style={styles.item}>

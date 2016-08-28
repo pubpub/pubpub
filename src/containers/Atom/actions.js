@@ -80,7 +80,8 @@ export function updateAtomDetails(atomID, newDetails) {
 		promise: (client) => client.post('/updateAtomDetails', {data: {
 			atomID: atomID,
 			newDetails: newDetails,
-		}})
+		}}),
+		atomID: atomID,
 	};
 }
 
