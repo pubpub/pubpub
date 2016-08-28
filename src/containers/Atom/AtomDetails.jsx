@@ -11,7 +11,7 @@ export const AtomDetails = React.createClass({
 		atomData: PropTypes.object,
 		updateDetailsHandler: PropTypes.func,
 		isLoading: PropTypes.bool,
-		error: PropTypes.object,
+		error: PropTypes.bool,
 	},
 
 	getInitialState() {

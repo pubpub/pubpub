@@ -11,8 +11,8 @@ export const PreviewCard = React.createClass({
 		type: PropTypes.string,
 		image: PropTypes.string,
 		title: PropTypes.string,
-		description: PropTypes.string,
-		mobileDescription: PropTypes.string, // Added this, even though it's a bit hacky, to facilitate multiple items that require exclusive placement, since we render description in two places
+		description: React.PropTypes.oneOf([PropTypes.string, PropTypes.object]),
+		mobileDescription: React.PropTypes.oneOf([PropTypes.string, PropTypes.object]), // Added this, even though it's a bit hacky, to facilitate multiple items that require exclusive placement, since we render description in two places
 		slug: PropTypes.string,
 		buttons: PropTypes.array,
 		header: PropTypes.object,

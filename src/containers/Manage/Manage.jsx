@@ -474,9 +474,14 @@ export const Manage = React.createClass({
 									key={'atomItem-' + item._id}
 									atomData={item.parent}
 									versionData={item}
-									
+									contributorsData={item.contributors}
 									footer={ <div> <input type="checkbox" /> Show on profile</div> }
-									buttons = {buttons} />
+									buttons = {buttons} 
+									contributorsLoading={false}
+									detailsLoading={false}
+									contributorsError={false}
+									detailsError={false}
+									permissionType={'author'}/>
 
 								/*<div key={'media-item-' + item._id} style={styles.item}>
 									<div style={styles.itemPreview}>

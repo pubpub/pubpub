@@ -3,7 +3,9 @@ import Radium from 'radium';
 import {Link as UnwrappedLink} from 'react-router';
 const Link = Radium(UnwrappedLink);
 import {HorizontalNav} from 'components';
-import {AtomEditorPane} from 'containers/Atom/AtomEditorPane';
+import AtomEditorPane from 'containers/Atom/AtomEditorPane';
+import AtomDetails from 'containers/Atom/AtomDetails';
+import AtomContributors from 'containers/Atom/AtomContributors';
 import {ensureImmutable} from 'reducers';
 
 import {globalStyles} from 'utils/styleConstants';
@@ -13,12 +15,25 @@ export const PreviewEditor = React.createClass({
 	propTypes: {
 		atomData: PropTypes.object,
 		versionData: PropTypes.object,
+		contributorsData: PropTypes.array,
+		permissionType: PropTypes.string,
 		
 		buttons: PropTypes.array,
 		header: PropTypes.object,
 		footer: PropTypes.oneOfType([PropTypes.array, PropTypes.object]),
+
 		onSaveVersion: PropTypes.func,
 		onSaveAtom: PropTypes.func,
+		updateDetailsHandler: PropTypes.func,
+		handleAddContributor: PropTypes.func,
+		handleUpdateContributor: PropTypes.func,
+		handleDeleteContributor: PropTypes.func,
+
+
+		contributorsLoading: PropTypes.bool,
+		detailsLoading: PropTypes.bool,
+		contributorsError: PropTypes.bool,
+		detailsError: PropTypes.bool,
 
 	},
 
@@ -137,21 +152,19 @@ export const PreviewEditor = React.createClass({
 						{(()=>{
 							switch (this.state.editorMode) {
 							case 'contributors':
-								// return (
-								// 	<AtomContributors 
-								// 		atomData={this.props.atomData}
-								// 		contributorsData={contributorsData} 
-								// 		handleAddContributor={this.handleAddContributor}
-								// 		handleUpdateContributor={this.handleUpdateContributor}
-								// 		handleDeleteContributor={this.handleDeleteContributor}
-								// 		isLoading={isLoading} 
-								// 		error={error} 
-								// 		permissionType={permissionType}/>
-								// );
-								return 'contributors';
+								return (
+									<AtomContributors 
+										atomData={ensureImmutable({ atomData: this.props.atomData})}
+										contributorsData={this.props.contributorsData} 
+										handleAddContributor={this.handleAddContributor}
+										handleUpdateContributor={this.handleUpdateContributor}
+										handleDeleteContributor={this.handleDeleteContributor}
+										isLoading={this.props.contributorsLoading} 
+										error={this.props.contributorsError} 
+										permissionType={this.props.permissionType}/>
+								);
 							case 'details':
-								// return <AtomDetails atomData={this.props.atomData} updateDetailsHandler={this.updateDetails} isLoading={isLoading} error={error}/>;
-								return 'details';
+								return <AtomDetails atomData={ensureImmutable({ atomData: this.props.atomData})} updateDetailsHandler={this.updateDetails} isLoading={this.props.detailsLoading} error={this.props.detailsError}/>;
 							case 'content':
 								return <AtomEditorPane ref={'atomEditorPane'} atomData={ensureImmutable({ atomData: this.props.atomData, currentVersionData: this.props.versionData })}/>;
 								
