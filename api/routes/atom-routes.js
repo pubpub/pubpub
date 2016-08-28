@@ -608,13 +608,25 @@ export function updateAtomDetails(req, res) {
 	
 	const atomID = req.body.atomID;
 	const userID = req.user ? req.user._id : undefined;
+	const newDetails = req.body.newDetails || {};
 	if (!userID) { return res.status(403).json('Not authorized to edit this user'); }
 	// Check permission
 
 	Atom.findById(atomID).exec()
 	.then(function(result) {
+		if (!result) { throw new Error('Atom does not exist'); }
+		
+		if (result.slug !== newDetails.slug) {
+			return [result, Atom.findOne({slug: newDetails.slug}).lean()];
+		}
+		return [result, undefined];
+	})
+	.spread(function(result, existingAtom) {
+		// TODO: This needs to properly generate an error notification on the frontend. Both in 
+		// PreviewEditor and Atom
+		if (existingAtom) { throw new Error('Atom already exists'); }
+
 		// Validate and clean submitted values
-		const newDetails = req.body.newDetails || {};
 		result.title = newDetails.title;
 		result.slug = result.isPublished ? result.slug : newDetails.slug.toLowerCase();
 		result.description = newDetails.description && newDetails.description.substring(0, 140);

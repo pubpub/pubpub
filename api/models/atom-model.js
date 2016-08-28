@@ -3,7 +3,7 @@ const Schema = mongoose.Schema;
 const ObjectId = Schema.Types.ObjectId;
 
 const atomSchema = new Schema({
-	slug: { type: String, required: true, index: { unique: true } },
+	slug: { type: String, required: true, unique: true, index: { unique: true } },
 	title: { type: String },
 	description: { type: String },
 	previewImage: { type: String },

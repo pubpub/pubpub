@@ -129,7 +129,7 @@ export const PreviewEditor = React.createClass({
 						{atomData.type === 'document' &&
 							<div>
 								<Link to={'/pub/' + atomData.slug + '/edit'} style={globalStyles.link}>
-									<div className={'button'} style={styles.button}>Edit</div>
+									<div className={'button'} style={styles.button}>Go to Full Editor</div>
 								</Link>
 								<div className={'button'} onClick={this.openEditor} style={styles.button}>Delete</div>
 							</div>

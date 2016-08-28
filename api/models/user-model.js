@@ -5,7 +5,7 @@ const ObjectId = Schema.Types.ObjectId;
 const passportLocalMongoose = require('passport-local-mongoose');
 
 const userSchema = new Schema({
-	email: { type: String, required: true, index: { unique: true } },
+	email: { type: String, required: true, unique: true, index: { unique: true } },
 	username: { type: String, required: true, index: { unique: true } },
 	firstName: { type: String }, // Need to collect first/last for DOI assignment
 	lastName: { type: String }, // Need to collect first/last for DOI assignment
