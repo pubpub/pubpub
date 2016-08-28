@@ -87,11 +87,23 @@ export function createAtom(req, res) {
 		// newVersion.content.htmlUrl = response;
 	})
 	.then(function() {
-		return Version.findOne({_id: versionID});
+		const getVersion = Version.findOne({_id: versionID}).lean().exec();
+		const getContributors = Link.find({destination: newAtomID, type: {$in: ['author', 'editor', 'reader', 'contributor']}, inactive: {$ne: true}}).populate({
+			path: 'source',
+			model: User,
+			select: 'username name image bio',
+		}).exec();
+		return Promise.all([getVersion, getContributors]);
 	})
-	.then(function(newVersion) { // Return hash of new atom
+	.then(function(promiseTasks) { // Return hash of new atom
+		const newVersion = promiseTasks[0];
+		const contributors = promiseTasks[1];
+
 		const versionData = newVersion || {};
 		versionData.parent = atom;
+		versionData.contributors = contributors;
+		versionData.permissionType = 'author';
+
 		return res.status(201).json(versionData);
 	})
 	.catch(function(error) {

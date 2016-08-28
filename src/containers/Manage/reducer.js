@@ -88,10 +88,7 @@ function createAtomLoad(state) {
 
 function createAtomSuccess(state, result, redirect) {
 	return state.merge({
-		newAtomSlug: result.parent._id,
-		mediaItems: state.get('mediaItems').push(result),
-		newNodeData: result,
-		redirect: redirect || false,
+		mediaItems: state.get('mediaItems').push(ensureImmutable(result))
 	});
 }
 

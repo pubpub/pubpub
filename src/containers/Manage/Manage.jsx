@@ -2,13 +2,8 @@ import React, { PropTypes } from 'react';
 import {connect} from 'react-redux';
 import Radium from 'radium';
 import {safeGetInToJS} from 'utils/safeParse';
-import {ensureImmutable} from 'reducers';
-import {AtomViewerPane} from 'containers/Atom/AtomViewerPane';
-import {AtomEditorPane} from 'containers/Atom/AtomEditorPane';
 import fuzzy from 'fuzzy';
-import {RadioGroup, Radio} from 'utils/ReactRadioGroup';
-import {LoaderDeterminate, NavContentWrapper} from 'components';
-import Select from 'react-select';
+import {LoaderDeterminate} from 'components';
 import {PreviewEditor} from 'components';
 
 // import {globalStyles} from 'utils/styleConstants';
@@ -34,10 +29,6 @@ export const Manage = React.createClass({
 		return {
 			filter: '',
 			createNewType: 'document',
-
-			// nodeData: {},
-			// atomMode: 'recent',
-			// editNodeDataMode: false,
 			uploadRates: [],
 			uploadFiles: [],
 		};
@@ -47,109 +38,15 @@ export const Manage = React.createClass({
 		this.props.dispatch(getMedia());
 	},
 
-	componentWillReceiveProps(nextProps) {
-		// const oldMediaData = safeGetInToJS(this.props.mediaData, []);
-		// const newMediaData = safeGetInToJS(nextProps.mediaData, []);
-		// if (oldMediaData.mediaItems.length < newMediaData.mediaItems.length) {
-		// 	this.setState({atomMode: 'recent'});
-		// }
-
-		// if (this.state.editNodeDataMode && !oldMediaData.newNodeData && newMediaData.newNodeData) {
-		// 	this.setState({
-		// 		nodeData: {
-		// 			align: 'full',
-		// 			mode: newMediaData.newNodeData.type === 'reference' ? 'cite' : 'embed',
-		// 			...this.state.nodeData,
-		// 			data: newMediaData.newNodeData
-		// 		},
-		// 		editNodeDataMode: false,
-		// 	});
-		// }
-	},
-
-	// setAtomMode: function(mode) {
-	// 	this.setState({atomMode: mode});
-	// },
-
-	// clearNodeData: function() {
-	// 	this.setState({nodeData: {...this.state.nodeData, data: undefined}}); // Is this right? Do we want nodeData to just be an empty object?
-	// },
-
-	// editNodeData: function() {
-	// 	this.setState({editNodeDataMode: true});
-	// },
-
-	// cancelEditNodeData: function() {
-	// 	let nodeData = this.state.nodeData;
-	// 	if (!this.state.nodeData.data.content) {
-	// 		nodeData = {};
-	// 	}
-	// 	this.setState({
-	// 		editNodeDataMode: false,
-	// 		nodeData: nodeData,
-	// 	});
-	// },
-
 	filterChange: function(evt) {
 		this.setState({filter: evt.target.value});
 	},
-
-	// inputChange: function(type, evt) {
-	// 	if (type === 'caption') {
-	// 		this.setState({nodeData: {...this.state.nodeData, caption: evt.target.value}});
-	// 	}
-
-	// 	if (type === 'size') {
-	// 		this.setState({nodeData: {...this.state.nodeData, size: evt.target.value}});
-	// 	}
-
-	// 	if (type === 'mode') {
-	// 		this.setState({nodeData: {...this.state.nodeData, mode: evt}});
-	// 	}
-
-	// 	if (type === 'align') {
-	// 		this.setState({nodeData: {...this.state.nodeData, align: evt}});
-	// 	}
-
-	// 	if (type === 'className') {
-	// 		this.setState({nodeData: {...this.state.nodeData, className: evt.target.value}});
-	// 	}
-	// },
-
-	// close: function() {
-	// 	this.setState({
-	// 		showMedia: false,
-	// 		closeCallback: undefined,
-	// 		filter: '',
-	// 		nodeData: {},
-	// 		editNodeDataMode: false,
-	// 	});
-	// },
-
 
 	// On file drop (or on file select)
 	// Upload files automatically to s3
 	// On completion call function that hits the pubpub server to generate asset information
 	// Generated asset information is then sent to Firebase for syncing with other users
 	onDrop: function(files) {
-		// console.log(files);
-		// return;
-
-		// if (this.state.activeSection !== 'assets') {
-		// 	return;
-		// }
-
-		// // Add new files to existing set, so as to not overwrite existing uploads
-		// const existingFiles = this.state.files.length;
-		// const tmpFiles = this.state.files.concat(files);
-
-		// // For each new file, begin their upload process
-		// for (let fileCount = existingFiles; fileCount < existingFiles + files.length; fileCount++) {
-		// 	s3Upload(tmpFiles[fileCount], this.props.slug, this.onFileProgress, this.onFileFinish, fileCount);
-		// }
-
-		// // Set state with newly added files
-		// this.setState({files: tmpFiles});
 
 		const startingFileIndex = this.state.uploadRates.length;
 		const newUploadRates = files.map((file)=> {
@@ -167,11 +64,6 @@ export const Manage = React.createClass({
 		});
 
 		this.setState({
-			// nodeData: {
-			// 	...this.state.nodeData,
-			// 	data: undefined
-			// },
-			// atomMode: 'recent',
 			uploadRates: uploadRates,
 			uploadFiles: uploadFiles,
 		});
@@ -254,79 +146,8 @@ export const Manage = React.createClass({
 		}
 	},
 
-	// save: function() {
-	// 	const versionData = {
-	// 		_id: '578951a86dcc445787b0ef5a',
-	// 		type: 'image',
-	// 		message: '',
-	// 		parent: {
-	// 			_id: '578951a86dcc445787b0ef57',
-	// 			slug: '95e48c3441a46bf95481b60dbaeaba469b2d4d74',
-	// 			title: 'New Pub: 1468617128060',
-	// 			type: 'image',
-	// 		},
-	// 		content: {
-	// 			url: 'https://assets.pubpub.org/uiyvascj/1468617127681.gif',
-	// 		}
-	// 	};
-	// 	this.saveItem(versionData);
-	// },
-
-	// setItem: function(item) {
-	// 	const nodeData = this.state.nodeData || {};
-	// 	console.log(item);
-	// 	this.setState({
-	// 		nodeData: {
-	// 			source: item._id,
-	// 			className: nodeData.className || '',
-	// 			id: item._id,
-	// 			align: nodeData.align || 'full',
-	// 			size: nodeData.size || '',
-	// 			caption: nodeData.caption || '',
-	// 			mode: nodeData.mode || 'embed',
-	// 			data: item,
-	// 		},
-	// 	});
-	// },
-
-	// saveItem: function(evt) {
-	// 	evt.preventDefault();
-	// 	const nodeData = this.state.nodeData;
-	// 	this.state.closeCallback({
-	// 		source: nodeData.data._id,
-	// 		className: nodeData.className,
-	// 		id: nodeData.data._id,
-	// 		align: nodeData.align,
-	// 		size: nodeData.size,
-	// 		caption: nodeData.caption,
-	// 		mode: nodeData.mode,
-	// 		data: nodeData.data,
-	// 	});
-	// 	this.setState({
-	// 		showMedia: false,
-	// 		closeCallback: undefined,
-	// 		filter: '',
-	// 	});
-
-	// },
-
 	handleCreateNewChange: function(item) {
 		this.setState({createNewType: item});
-	// 	const newThing = {
-	// 		nodeData: {
-	// 			data: {
-	// 				type: item.value,
-	// 				parent: {
-	// 					title: 'New ' + item.value,
-	// 					type: item.value,
-	// 				}
-	// 			}
-	// 		},
-	// 		editNodeDataMode: true,
-	// 	};
-	// 	console.log(newThing);
-	// 	this.setState(newThing);
-	// 	// console.log(item.value);
 	},
 
 	createNew: function() {
@@ -368,37 +189,12 @@ export const Manage = React.createClass({
 			return !!item;
 		});
 		
-		console.log(typesFiltered);
-		// Populate type filters with filter types, check to see for each item if type is in that array
-
 		const mediaItemsFilterForType = mediaItems.filter((item)=> {
-			if (typesFiltered.length === 0) {
-				return true;
-			}
-			// return true;
-			// if (this.state.atomMode === 'all' || this.state.atomMode === 'recent') { return true; }
+			if (typesFiltered.length === 0) { return true; }
 			return typesFiltered.includes(item.type);
 		});
 
 		const filteredItems = fuzzy.filter(this.state.filter.replace(/type:([a-zA-Z]*)/gi, ''), mediaItemsFilterForType, {extract: (item)=>{ return item.type + ' ' + item.parent.title;} });
-		// const nodeData = this.state.nodeData || {};
-
-		// const mobileNavButtons = [
-		// 	{ type: 'button', mobile: true, text: 'Pubs', action: this.followUserToggle },
-		// 	{ type: 'button', mobile: true, text: 'Menu', action: undefined },
-		// ];
-
-		// const navItems = [
-		// 	{ type: 'button', text: 'All', action: this.setAtomMode.bind(this, 'all'), active: this.state.atomMode === 'all'},
-		// 	{ type: 'button', text: 'Recent', action: this.setAtomMode.bind(this, 'recent'), active: this.state.atomMode === 'recent'},
-		// 	{ type: 'spacer'},
-		// 	{ type: 'button', text: 'Images', action: this.setAtomMode.bind(this, 'image'), active: this.state.atomMode === 'image'},
-		// 	{ type: 'button', text: 'Videos', action: this.setAtomMode.bind(this, 'video'), active: this.state.atomMode === 'video'},
-		// 	{ type: 'button', text: 'References', action: this.setAtomMode.bind(this, 'reference'), active: this.state.atomMode === 'reference'},
-		// 	{ type: 'button', text: 'Jupyter', action: this.setAtomMode.bind(this, 'jupyter'), active: this.state.atomMode === 'jupyter'},
-		// 	{ type: 'button', text: 'Documents', action: this.setAtomMode.bind(this, 'document'), active: this.state.atomMode === 'document'},
-		// ];
-
 
 		const options = Object.keys(atomTypes).sort((foo, bar)=>{
 			// Sort so that alphabetical
@@ -423,14 +219,6 @@ export const Manage = React.createClass({
 									})}
 								</div>
 							</div>
-
-							{/*<Select
-								name={'new-atom-select'}
-								options={options}
-								value={this.state.createNewType}
-								placeholder={<span>Add new</span>}
-								onChange={this.handleSelectChange} 
-								clearable={false} />*/}
 						</div>
 						<div className={'button'} onClick={this.createNew} style={{padding: 'calc(.3em + 1px) 1em', verticalAlign: 'top', left: '-2px'}}>Create New</div>
 
@@ -465,26 +253,28 @@ export const Manage = React.createClass({
 						</div>
 						<input type="text" placeholder={'Filter'} value={this.state.filter} onChange={this.filterChange} style={styles.filterInput}/>
 
-						{filteredItems.splice(0, 20).map((item)=> {
+						{filteredItems.map((item)=> {
 							return item.original;
 						}).sort((foo, bar)=>{
 							// Sort so that most recent is first in array
 							if (foo.parent.lastUpdated > bar.parent.lastUpdated) { return -1; }
 							if (foo.parent.lastUpdated < bar.parent.lastUpdated) { return 1; }
 							return 0;
-						}).map((item, index)=> {
+						}).splice(0, 20).map((item, index)=> {
 							if (this.state.atomMode === 'recent' && index > 9) {
 								return null;
 							}
-							// const previewImage = item.parent.previewImage.indexOf('.gif') > -1 ? item.parent.previewImage : 'https://jake.pubpub.org/unsafe/fit-in/50x50/' + item.parent.previewImage;
 							const buttons = [ 
-								{ type: 'link', text: 'Custom Button', link: '/pub/' + item.slug + '/edit' },
+								// { type: 'link', text: 'Custom Button', link: '/pub/' + item.slug + '/edit' },
 							];
 
 							return (
 								// TODO
-								// Make an 'editorPreviewCard' component?
 								// Test uploading to make sure it works
+								// On create new, create atom with empty content, set default mode to edit, clear filter
+								// on upload, upload new atom, stick onto pile (need to get contributors data) - can probably just infer contributor data
+								// 
+
 								// Add bibtex back into reference editor
 								<PreviewEditor 
 									key={'atomItem-' + item._id}
@@ -505,39 +295,11 @@ export const Manage = React.createClass({
 									detailsError={!!item.detailsError}
 									permissionType={item.permissionType}/>
 
-								/*<div key={'media-item-' + item._id} style={styles.item}>
-									<div style={styles.itemPreview}>
-										<img style={styles.itemPreviewImage} src={previewImage} alt={item.parent.title} title={item.parent.title}/>
-									</div>
-
-									<div style={styles.itemDetail}>
-										<div style={styles.itemDetailTitle}>{item.parent.title}</div>
-									</div>
-								</div>*/
 							);
 						})}
 
 				</div>
 
-
-				{/* If we DO have a chosen atom  and are trying to edit it*/}
-				{/* nodeData.data && this.state.editNodeDataMode &&
-					<div style={styles.mediaDetails}>
-						<div style={styles.editModeHeader}>
-							<h3 style={styles.detailsTitle}>{nodeData.data.parent.title}</h3>
-							<div style={styles.detailsCancel} className={'underlineOnHover'} onClick={this.cancelEditNodeData}>Cancel</div>
-							<div style={styles.detailsButtonWrapper}>
-								<div className={'button'} style={styles.detailsButton} onClick={this.saveVersionHandler}>Save Version</div>
-							</div>
-						</div>
-
-						<div style={styles.details}>
-							<AtomEditorPane ref={'atomEditorPane'} atomData={ensureImmutable({ atomData: nodeData.data.parent, currentVersionData: nodeData.data })}/>
-						</div>
-
-
-					</div>
-				*/}
 			</div>
 
 			<div className={'showOnActive'}>Drop files to add</div>

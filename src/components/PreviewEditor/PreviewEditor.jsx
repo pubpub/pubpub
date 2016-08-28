@@ -63,11 +63,6 @@ export const PreviewEditor = React.createClass({
 		this.props.updateDetailsHandler(this.props.atomData._id, newDetails);
 	},
 
-	// TODO
-	// Save version button
-	// Save details button
-	// Get Details functions and data into editor on request
-	// get contributors functions and data into editor on request
 
 	render: function() {
 		const atomData = this.props.atomData;
