@@ -79,9 +79,9 @@ export const PreviewEditor = React.createClass({
 
 
 	render: function() {
-		const atomData = this.props.atomData;
+		const atomData = this.props.atomData || {};
 		// console.log(atomData);
-		const previewImage = atomData.previewImage.indexOf('.gif') > -1 ? atomData.previewImage : 'https://jake.pubpub.org/unsafe/fit-in/50x50/' + atomData.previewImage;
+		const previewImage = atomData.previewImage && atomData.previewImage.indexOf('.gif') > -1 ? atomData.previewImage : 'https://jake.pubpub.org/unsafe/fit-in/50x50/' + atomData.previewImage;
 		const image = previewImage || 'https://assets.pubpub.org/_site/pub.png';
 		const href = '/pub/' + atomData.slug;
 
