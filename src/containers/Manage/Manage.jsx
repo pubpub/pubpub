@@ -135,7 +135,8 @@ export const Manage = React.createClass({
 	createNew: function() {
 		console.log('Creating: ', this.state.createNewType);
 		// If document, redirect
-		this.props.dispatch(createAtom(this.state.createNewType, undefined, ('New ' + this.state.createNewType), undefined, true));
+		const defaultOpen = this.state.createNewType !== 'document';
+		this.props.dispatch(createAtom(this.state.createNewType, undefined, ('New ' + this.state.createNewType), undefined, defaultOpen));
 		this.setState({filter: ''});
 	},
 
@@ -192,93 +193,95 @@ export const Manage = React.createClass({
 			<Dropzone ref="dropzone" disableClick={true} onDrop={this.onDrop} style={{}} activeClassName={'dropzone-active'} >
 			<div>
 
-				<div>
+				{/* Document Add/Create Section */}
+				<div style={styles.mediaSelectHeader}>
 
-					<div style={styles.mediaSelectHeader}>
-
-						<div className={'light-button arrow-down-button'} style={styles.addNewDropdown}>
-							<span style={styles.capitalize}>{this.state.createNewType}</span>
-							<div className={'hoverChild arrow-down-child'}>
-								{options.map((option)=>{
-									return <div key={'setType-' + option} onClick={this.handleCreateNewChange.bind(this, option)} style={styles.dropdownOption} className={'underlineOnHover'}>{option}</div>;
-								})}
-							</div>
-						</div>
-						<div className={'button'} onClick={this.createNew} style={styles.createNewButton}>Create New</div>
-
-
-						<div className={'button'} style={styles.dropzoneBlock}>
-							Click or Drag files to add
-							<input id={'media-file-select'} type={'file'} onChange={this.onSelect} multiple={true} style={styles.fileInput}/>
-						</div>
-
-					</div>
-
-					{this.state.uploadFiles.map((uploadFile, index)=> {
-						return (
-							<div key={'uploadFile-' + index} style={[styles.uploadBar, this.state.uploadRates[index] === 1 && {display: 'none'}]}>
-								{uploadFile}
-								<LoaderDeterminate value={this.state.uploadRates[index] * 100} />
-							</div>
-						);
-					})}
-
-					<div className={'light-button arrow-down-button'}>Filter
+					<div className={'light-button arrow-down-button'} style={styles.addNewDropdown}>
+						<span style={styles.capitalize}>{this.state.createNewType}</span>
 						<div className={'hoverChild arrow-down-child'}>
-							{allUniqueTypes.sort((foo, bar)=>{
-								// Sort so that alphabetical
-								if (foo > bar) { return 1; }
-								if (foo < bar) { return -1; }
-								return 0;
-							}).map((item)=> {
-								return <div key={'filter-type-' + item} onClick={this.setFilter.bind(this, ('type:' + item))} style={styles.option}>{item}</div>;
+							{options.map((option)=>{
+								return <div key={'setType-' + option} onClick={this.handleCreateNewChange.bind(this, option)} style={styles.dropdownOption} className={'underlineOnHover'}>{option}</div>;
 							})}
 						</div>
 					</div>
-					<input type="text" value={this.state.filter} onChange={this.filterChange} style={styles.filterInput}/>
+					<div className={'button'} onClick={this.createNew} style={styles.createNewButton}>Create New</div>
 
-					{filteredItems.map((item)=> {
-						return item.original;
-					}).sort((foo, bar)=>{
-						// Sort so that most recent is first in array
-						if (foo.parent.lastUpdated > bar.parent.lastUpdated) { return -1; }
-						if (foo.parent.lastUpdated < bar.parent.lastUpdated) { return 1; }
-						return 0;
-					}).splice(0, 20).map((item, index)=> {
-						if (this.state.atomMode === 'recent' && index > 9) {
-							return null;
-						}
-						const buttons = [ 
-						// 	{ type: 'link', text: 'Save Version', link: '/pub/' + item.slug + '/edit' },
-						];
 
-						return (
-							<PreviewEditor 
-								key={'atomItem-' + item.parent._id}
-								atomData={item.parent}
-								versionData={item}
-								contributorsData={item.contributors}
-								footer={ <div> <input type="checkbox" /> Show on profile</div> }
-								buttons = {buttons} 
-
-								onSaveVersion={this.onSaveVersion}
-								onSaveAtom={this.onSaveAtom}
-								updateDetailsHandler={this.updateDetails}
-								handleAddContributor={this.handleAddContributor}
-								handleUpdateContributor={this.handleUpdateContributor}
-								handleDeleteContributor={this.handleDeleteContributor}
-								saveVersionHandler={this.saveVersionHandler}
-
-								detailsLoading={item.detailsLoading}
-								detailsError={!!item.detailsError}
-								permissionType={item.permissionType}
-
-								defaultOpen={item.defaultOpen}/>
-
-						);
-					})}
+					<div className={'button'} style={styles.dropzoneBlock}>
+						Click or Drag files to add
+						<input id={'media-file-select'} type={'file'} onChange={this.onSelect} multiple={true} style={styles.fileInput}/>
+					</div>
 
 				</div>
+
+				{this.state.uploadFiles.map((uploadFile, index)=> {
+					return (
+						<div key={'uploadFile-' + index} style={[styles.uploadBar, this.state.uploadRates[index] === 1 && {display: 'none'}]}>
+							{uploadFile}
+							<LoaderDeterminate value={this.state.uploadRates[index] * 100} />
+						</div>
+					);
+				})}
+
+
+				{/* Filter Section */}
+				<div className={'light-button arrow-down-button'} style={styles.filterDropdown}>Filter
+					<div className={'hoverChild arrow-down-child'}>
+						{allUniqueTypes.sort((foo, bar)=>{
+							// Sort so that alphabetical
+							if (foo > bar) { return 1; }
+							if (foo < bar) { return -1; }
+							return 0;
+						}).map((item)=> {
+							return <div key={'filter-type-' + item} onClick={this.setFilter.bind(this, ('type:' + item))} style={styles.dropdownOption} className={'underlineOnHover'}>{item}</div>;
+						})}
+					</div>
+				</div>
+				<input type="text" placeholder={'Type to filter'} value={this.state.filter} onChange={this.filterChange} style={styles.filterInput}/>
+
+
+				{/* Items List */}
+				{filteredItems.map((item)=> {
+					return item.original;
+				}).sort((foo, bar)=>{
+					// Sort so that most recent is first in array
+					if (foo.parent.lastUpdated > bar.parent.lastUpdated) { return -1; }
+					if (foo.parent.lastUpdated < bar.parent.lastUpdated) { return 1; }
+					return 0;
+				}).splice(0, 20).map((item, index)=> {
+					if (this.state.atomMode === 'recent' && index > 9) {
+						return null;
+					}
+					const buttons = [ 
+					// 	{ type: 'link', text: 'Save Version', link: '/pub/' + item.slug + '/edit' },
+					];
+
+					return (
+						<PreviewEditor 
+							key={'atomItem-' + item.parent._id}
+							atomData={item.parent}
+							versionData={item}
+							contributorsData={item.contributors}
+							footer={ <div> <input type="checkbox" /> Show on profile</div> }
+							buttons = {buttons} 
+
+							onSaveVersion={this.onSaveVersion}
+							onSaveAtom={this.onSaveAtom}
+							updateDetailsHandler={this.updateDetails}
+							handleAddContributor={this.handleAddContributor}
+							handleUpdateContributor={this.handleUpdateContributor}
+							handleDeleteContributor={this.handleDeleteContributor}
+							saveVersionHandler={this.saveVersionHandler}
+
+							detailsLoading={item.detailsLoading}
+							detailsError={!!item.detailsError}
+							permissionType={item.permissionType}
+
+							defaultOpen={item.defaultOpen}/>
+
+					);
+				})}
+
 
 			</div>
 
@@ -299,6 +302,8 @@ export default connect( state => {
 styles = {
 	addNewDropdown: {
 		display: 'inline-block',
+		textAlign: 'left',
+		minWidth: 'calc(15% - 3.6em - 4px)',
 		// minWidth: '150px',
 	},
 	capitalize: {
@@ -314,10 +319,18 @@ styles = {
 		verticalAlign: 'top', 
 		left: '-2px'
 	},
+	filterDropdown: {
+		width: 'calc(15% - 3.6em - 4px)',
+		textAlign: 'left',
+	},
 	filterInput: {
 		display: 'inline-block',
 		margin: 0,
 		position: 'relative',
+		left: '-2px',
+		fontSize: '1em',
+		padding: '7px 0.5em',
+		width: 'calc(85% - 1em - 4px)',
 	},
 
 	editModeHeader: {

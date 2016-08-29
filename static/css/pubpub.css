@@ -281,6 +281,9 @@ h2 {
 	transform: translateY(-25%) rotate(180deg);
 	display: inline-block;
 	font-size: 1.2em;
+	position: absolute;
+	right: .5em;
+	top: calc(50% - .25em);
 }
 
 .arrow-down-child {
