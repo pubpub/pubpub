@@ -29,6 +29,7 @@ export const PreviewEditor = React.createClass({
 		handleUpdateContributor: PropTypes.func,
 		handleDeleteContributor: PropTypes.func,
 		saveVersionHandler: PropTypes.func,
+		deleteAtomHandler: PropTypes.func,
 
 
 		contributorsLoading: PropTypes.bool,
@@ -44,6 +45,7 @@ export const PreviewEditor = React.createClass({
 		return {
 			editorOpen: false,
 			editorMode: 'content',
+			confirmDelete: false,
 		};
 	},
 
@@ -77,6 +79,13 @@ export const PreviewEditor = React.createClass({
 		this.props.saveVersionHandler(newVersionContent, versionMessage, atomData);
 	},
 
+	toggleConfirmDelete: function() {
+		this.setState({confirmDelete: !this.state.confirmDelete});
+	},
+
+	deleteAtom: function() {
+		this.props.deleteAtomHandler(this.props.atomData._id);
+	},
 
 	render: function() {
 		const atomData = this.props.atomData || {};
@@ -117,7 +126,7 @@ export const PreviewEditor = React.createClass({
 						</Link>
 					</div>
 					
-					<div style={[styles.tableCell, styles.noMobile]}>
+					<div style={styles.tableCell}>
 						<Link to={href} style={globalStyles.link}>
 							<h3 style={styles.title} className={'underlineOnHover'}>{atomData.title}</h3>
 						</Link>
@@ -140,7 +149,6 @@ export const PreviewEditor = React.createClass({
 								<Link to={'/pub/' + atomData.slug + '/edit'} style={globalStyles.link}>
 									<div className={'button'} style={styles.button}>Go to Full Editor</div>
 								</Link>
-								<div className={'button'} onClick={this.openEditor} style={styles.button}>Delete</div>
 							</div>
 							
 						}
@@ -148,7 +156,21 @@ export const PreviewEditor = React.createClass({
 						{atomData.type !== 'document' && !this.state.editorOpen && 
 							<div>
 								<div className={'button'} onClick={this.openEditor} style={styles.button}>Edit</div>
-								<div className={'button'} onClick={this.openEditor} style={styles.button}>Delete</div>	
+							</div>
+							
+						}
+
+						{!this.state.editorOpen && !this.state.confirmDelete &&
+							<div>
+								<div className={'button'} onClick={this.toggleConfirmDelete} style={styles.button}>Delete</div>
+							</div>
+							
+						}
+
+						{!this.state.editorOpen && this.state.confirmDelete &&
+							<div>
+								<div className={'button'} onClick={this.toggleConfirmDelete} style={styles.button}>Cancel Delete</div>
+								<div className={'button'} onClick={this.deleteAtom} style={styles.button}>Confirm Delete</div>
 							</div>
 							
 						}
@@ -254,17 +276,6 @@ styles = {
 	description: {
 		fontSize: '.9em',
 		margin: '.5em 0em',
-	},
-	noMobile: {
-		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
-			display: 'none',
-		}
-	},
-	yesMobile: {
-		display: 'none',
-		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
-			display: 'block',
-		}
 	},
 	header: {
 		fontSize: '0.9em',

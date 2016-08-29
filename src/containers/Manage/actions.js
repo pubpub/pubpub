@@ -16,6 +16,10 @@ export const SAVE_VERSION_LOAD = 'media/SAVE_VERSION_LOAD';
 export const SAVE_VERSION_SUCCESS = 'media/SAVE_VERSION_SUCCESS';
 export const SAVE_VERSION_FAIL = 'media/SAVE_VERSION_FAIL';
 
+export const DELETE_ATOM_LOAD = 'media/DELETE_ATOM_LOAD';
+export const DELETE_ATOM_SUCCESS = 'media/DELETE_ATOM_SUCCESS';
+export const DELETE_ATOM_FAIL = 'media/DELETE_ATOM_FAIL';
+
 /*--------*/
 // Define Action creators
 //
@@ -50,6 +54,15 @@ export function saveVersion(newVersion) {
 		types: [SAVE_VERSION_LOAD, SAVE_VERSION_SUCCESS, SAVE_VERSION_FAIL],
 		promise: (client) => client.post('/saveVersion', {data: {
 			'newVersion': newVersion,
+		}})
+	};
+}
+
+export function deleteAtom(atomID) {
+	return {
+		types: [DELETE_ATOM_LOAD, DELETE_ATOM_SUCCESS, DELETE_ATOM_FAIL],
+		promise: (client) => client.del('/deleteAtom', {data: {
+			'atomID': atomID,
 		}})
 	};
 }

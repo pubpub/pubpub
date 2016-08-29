@@ -657,6 +657,33 @@ export function updateAtomDetails(req, res) {
 }
 app.post('/updateAtomDetails', updateAtomDetails);
 
+export function deleteAtom(req, res) {
+	const userID = req.user ? req.user._id : undefined;
+	if (!userID) { return res.status(403).json('Not authorized to edit this user'); }
+	// Check permission
+	
+	const atomID = req.body.atomID;
+	Atom.findById(atomID).exec()
+	.then(function(result) {
+		if (!result) { throw new Error('Atom does not exist'); }
+		
+		result.inactive = true;
+		result.inactiveBy = userID;
+		result.inactiveDate = new Date().getTime();
+		result.inactiveNote = 'Deleted';
+		return result.save();
+	})
+	.then(function(savedResult) {
+		return res.status(201).json(atomID);
+	})
+	.catch(function(error) {
+		console.log('error', error);
+		return res.status(500).json(error);
+	});
+
+}
+app.delete('/deleteAtom', deleteAtom);
+
 /* -------------------- */
 /* Contributor Routes   */
 /* -------------------- */

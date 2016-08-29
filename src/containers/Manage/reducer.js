@@ -16,6 +16,10 @@ import {
 	SAVE_VERSION_LOAD,
 	SAVE_VERSION_SUCCESS,
 	SAVE_VERSION_FAIL,
+
+	DELETE_ATOM_LOAD, 
+	DELETE_ATOM_SUCCESS, 
+	DELETE_ATOM_FAIL,
 } from './actions';
 
 import {
@@ -222,6 +226,16 @@ function updateAtomDetailsFail(state, error, atomID) {
 	});
 }
 
+/* Delete Atom functions */
+/* ----------------------------- */
+function deleteAtomSuccess(state, atomID) {
+	return state.merge({
+		mediaItems: state.get('mediaItems').filter((item)=>{
+			return item.getIn(['parent', '_id']) !== atomID;
+		}),
+	});
+}
+
 
 /*--------*/
 // Bind actions to specific reducing functions.
@@ -280,6 +294,13 @@ export default function reducer(state = defaultState, action) {
 		return updateAtomDetailsSuccess(state, action.result, action.atomID);
 	case UPDATE_ATOM_DETAILS_FAIL:
 		return updateAtomDetailsFail(state, action.error, action.atomID);
+
+	case DELETE_ATOM_LOAD:
+		return state;
+	case DELETE_ATOM_SUCCESS:
+		return deleteAtomSuccess(state, action.result);
+	case DELETE_ATOM_FAIL:
+		return state;
 
 	default:
 		return ensureImmutable(state);

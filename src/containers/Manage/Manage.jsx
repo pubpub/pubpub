@@ -11,7 +11,7 @@ import {PreviewEditor} from 'components';
 // import {FormattedMessage} from 'react-intl';
 import Dropzone from 'react-dropzone';
 import {s3Upload} from 'utils/uploadFile';
-import {getMedia, createAtom, saveVersion} from './actions';
+import {getMedia, createAtom, saveVersion, deleteAtom} from './actions';
 import {updateAtomDetails, addContributor, updateContributor, deleteContributor} from 'containers/Atom/actions';
 
 import atomTypes from 'components/AtomTypes';
@@ -160,6 +160,11 @@ export const Manage = React.createClass({
 		this.props.dispatch(updateAtomDetails(atomID, newDetails));
 	},
 
+	deleteAtomHandler: function(atomID) {
+		// console.log('Deleting atomID ', atomID);
+		this.props.dispatch(deleteAtom(atomID));
+	},
+
 	render: function() {
 
 		const mediaItems = safeGetInToJS(this.props.mediaData, ['mediaItems']) || [];
@@ -253,7 +258,7 @@ export const Manage = React.createClass({
 						return null;
 					}
 					const buttons = [ 
-					// 	{ type: 'link', text: 'Save Version', link: '/pub/' + item.slug + '/edit' },
+						// { type: 'action', text: 'Delete', action: this.deleteAtom.bind(this, item.parent._id) },
 					];
 
 					return (
@@ -272,6 +277,7 @@ export const Manage = React.createClass({
 							handleUpdateContributor={this.handleUpdateContributor}
 							handleDeleteContributor={this.handleDeleteContributor}
 							saveVersionHandler={this.saveVersionHandler}
+							deleteAtomHandler={this.deleteAtomHandler} 
 
 							detailsLoading={item.detailsLoading}
 							detailsError={!!item.detailsError}
@@ -300,6 +306,9 @@ export default connect( state => {
 })( Radium(Manage) );
 
 styles = {
+	mediaSelectHeader: {
+		padding: '1em 0em',
+	},
 	addNewDropdown: {
 		display: 'inline-block',
 		textAlign: 'left',
@@ -332,168 +341,6 @@ styles = {
 		padding: '7px 0.5em',
 		width: 'calc(85% - 1em - 4px)',
 	},
-
-	editModeHeader: {
-		display: 'table',
-		padding: '.5em 0em',
-		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
-			display: 'block',
-		},
-	},
-	container: {
-		// position: 'fixed',
-		// top: 0,
-		// left: 0,
-		// width: '100vw',
-		// height: '100vh',
-		// backgroundColor: 'rgba(0,0,0,0.6)',
-		// zIndex: 999,
-		// opacity: 0,
-		// pointerEvents: 'none',
-		// transition: '.1s linear opacity',
-	},
-	containerActive: {
-		opacity: 1,
-		pointerEvents: 'auto',
-	},
-	splash: {
-		position: 'fixed',
-		top: 0,
-		left: 0,
-		width: '100vw',
-		height: '100vh',
-		zIndex: 1000,
-	},
-	modalContent: {
-		position: 'fixed',
-		zIndex: 10001,
-		// width: 'calc(80vw - 2em)',
-		// maxHeight: 'calc(92vh - 4em)',
-		maxHeight: '92vh',
-		top: '4vh',
-		left: '5vw',
-		right: '5vw',
-		backgroundColor: 'white',
-		overflow: 'hidden',
-		overflowY: 'scroll',
-		boxShadow: '0px 0px 3px rgba(0,0,0,0.7)',
-		transform: 'scale(0.8)',
-		transition: '.1s ease-in-out transform',
-		borderRadius: '2px',
-		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
-			// width: 'calc(98vw - 2em)',
-			height: 'calc(98vh - 2em)',
-			top: '1vh',
-			left: '1vw',
-			right: '1vw',
-			padding: '1em',
-		},
-	},
-	modalContentActive: {
-		transform: 'scale(1.0)',
-	},
-	mediaSelectHeader: {
-		padding: '1em 0em',
-	},
-	mediaDetails: {
-		padding: '1em 2em',
-	},
-	
-	input: {
-		width: 'calc(100% - 20px - 4px)',
-	},
-	textarea: {
-		height: '4em',
-	},
-	item: {
-		margin: '1em 0em',
-		backgroundColor: '#F3F3F4',
-		cursor: 'pointer',
-		// display: 'inline-block',
-		width: '100%',
-		height: '50px',
-		overflow: 'hidden',
-		display: 'table',
-	},
-	itemPreview: {
-		width: '1%',
-		height: '50px',
-		marginRight: '1em',
-		display: 'table-cell',
-		verticalAlign: 'middle',
-	},
-	itemPreviewImage: {
-		maxWidth: '50px',
-		maxHeight: '50px',
-	},
-	itemDetail: {
-		display: 'table-cell',
-		verticalAlign: 'middle',
-		padding: '1em',
-	},
-	details: {
-		display: 'table',
-		width: '100%',
-		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
-			display: 'block',
-		},
-	},
-	detailsPreview: {
-		display: 'table-cell',
-		verticalAlign: 'middle',
-		position: 'relative',
-		textAlign: 'center',
-		padding: '1em',
-		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
-			display: 'block',
-			padding: '1em 0em',
-		},
-	},
-	detailsForm: {
-		display: 'table-cell',
-		width: '50%',
-		padding: '2em 1em',
-		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
-			display: 'block',
-			width: '100%',
-			padding: '2em 0em',
-		},
-	},
-	detailsTitle: {
-		left: 0,
-		display: 'table-cell',
-	},
-	detailsClear: {
-		display: 'inline-block',
-		cursor: 'pointer',
-	},
-	detailsCancel: {
-		cursor: 'pointer',
-		display: 'table-cell',
-		width: '1%',
-		padding: '0em 1em',
-	},
-	detailsButtonWrapper: {
-		display: 'table-cell',
-		width: '1%',
-	},
-	detailsButton: {
-		padding: '0em 1em',
-		whiteSpace: 'nowrap',
-	},
-	radioInput: {
-		margin: '0em 0em 1em 0em',
-	},
-	radioLabel: {
-		display: 'inline-block',
-		fontSize: '0.95em',
-		margin: '0em 2em 1em 0em',
-	},
-	disabledInput: {
-		opacity: 0.5,
-		pointerEvents: 'none',
-	},
-	
 	dropzoneBlock: {
 		padding: '0em 2em',
 		margin: '0em 1em',

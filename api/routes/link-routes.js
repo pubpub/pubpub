@@ -95,7 +95,12 @@ export function getMedia(req, res) {
 			};
 		});
 
-		return res.status(201).json(mergedVersions.concat(emptyVersions));
+		const allItems = mergedVersions.concat(emptyVersions);
+		const allItemsWithoutDeleted = allItems.filter((item)=>{
+			return !item.parent.inactive;
+		});
+
+		return res.status(201).json(allItemsWithoutDeleted);
 	})
 	.catch(function(error) {
 		console.log('error', error);
