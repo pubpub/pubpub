@@ -237,6 +237,10 @@ h2 {
 	text-decoration: none;
 }
 
+.arrow-down-button {
+	position: relative;
+}
+
 .button:hover, .arrow-down-button:hover {
 	border: solid 2px #2C2A2B;
 	background-color: #2C2A2B;

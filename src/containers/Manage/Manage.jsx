@@ -21,7 +21,6 @@ let styles;
 export const Manage = React.createClass({
 	propTypes: {
 		mediaData: PropTypes.object,
-		// Functions that allow callbacks on saveVersion or Insert
 		dispatch: PropTypes.func,
 	},
 
@@ -189,24 +188,23 @@ export const Manage = React.createClass({
 			return 0;
 		});
 		return (
-			<div style={{backgroundColor: '#999', padding: '3em'}}>
+			<div style={{padding: '3em'}}>
 			<Dropzone ref="dropzone" disableClick={true} onDrop={this.onDrop} style={{}} activeClassName={'dropzone-active'} >
-			<div style={{backgroundColor: 'white'}}>
+			<div>
 
-				<div style={styles.mediaSelect}>
+				<div>
 
 					<div style={styles.mediaSelectHeader}>
 
-						<div style={styles.addNewDropdown}>
-							<div className={'light-button arrow-down-button'} style={{position: 'relative', minWidth: '150px',}}><span style={{textTransform: 'capitalize'}}>{this.state.createNewType}</span>
-								<div className={'hoverChild arrow-down-child'}>
-									{options.map((option)=>{
-										return <div key={'setType-' + option} onClick={this.handleCreateNewChange.bind(this, option)} style={{textTransform: 'capitalize'}}>{option}</div>;
-									})}
-								</div>
+						<div className={'light-button arrow-down-button'} style={styles.addNewDropdown}>
+							<span style={styles.capitalize}>{this.state.createNewType}</span>
+							<div className={'hoverChild arrow-down-child'}>
+								{options.map((option)=>{
+									return <div key={'setType-' + option} onClick={this.handleCreateNewChange.bind(this, option)} style={styles.dropdownOption} className={'underlineOnHover'}>{option}</div>;
+								})}
 							</div>
 						</div>
-						<div className={'button'} onClick={this.createNew} style={{padding: 'calc(.3em + 1px) 1em', verticalAlign: 'top', left: '-2px'}}>Create New</div>
+						<div className={'button'} onClick={this.createNew} style={styles.createNewButton}>Create New</div>
 
 
 						<div className={'button'} style={styles.dropzoneBlock}>
@@ -225,61 +223,60 @@ export const Manage = React.createClass({
 						);
 					})}
 
-						<div className={'light-button arrow-down-button'} style={{position: 'relative'}}>Filter
-							<div className={'hoverChild arrow-down-child'}>
-								{allUniqueTypes.sort((foo, bar)=>{
-									// Sort so that alphabetical
-									if (foo > bar) { return 1; }
-									if (foo < bar) { return -1; }
-									return 0;
-								}).map((item)=> {
-									return <div key={'filter-type-' + item} onClick={this.setFilter.bind(this, ('type:' + item))} style={{textTransform: 'capitalize'}}>{item}</div>;
-								})}
-							</div>
+					<div className={'light-button arrow-down-button'}>Filter
+						<div className={'hoverChild arrow-down-child'}>
+							{allUniqueTypes.sort((foo, bar)=>{
+								// Sort so that alphabetical
+								if (foo > bar) { return 1; }
+								if (foo < bar) { return -1; }
+								return 0;
+							}).map((item)=> {
+								return <div key={'filter-type-' + item} onClick={this.setFilter.bind(this, ('type:' + item))} style={styles.option}>{item}</div>;
+							})}
 						</div>
-						<input type="text" placeholder={'Filter'} value={this.state.filter} onChange={this.filterChange} style={styles.filterInput}/>
+					</div>
+					<input type="text" value={this.state.filter} onChange={this.filterChange} style={styles.filterInput}/>
 
-						{filteredItems.map((item)=> {
-							return item.original;
-						}).sort((foo, bar)=>{
-							// Sort so that most recent is first in array
-							if (foo.parent.lastUpdated > bar.parent.lastUpdated) { return -1; }
-							if (foo.parent.lastUpdated < bar.parent.lastUpdated) { return 1; }
-							return 0;
-						}).splice(0, 20).map((item, index)=> {
-							if (this.state.atomMode === 'recent' && index > 9) {
-								return null;
-							}
-							const buttons = [ 
-							// 	{ type: 'link', text: 'Save Version', link: '/pub/' + item.slug + '/edit' },
-							];
+					{filteredItems.map((item)=> {
+						return item.original;
+					}).sort((foo, bar)=>{
+						// Sort so that most recent is first in array
+						if (foo.parent.lastUpdated > bar.parent.lastUpdated) { return -1; }
+						if (foo.parent.lastUpdated < bar.parent.lastUpdated) { return 1; }
+						return 0;
+					}).splice(0, 20).map((item, index)=> {
+						if (this.state.atomMode === 'recent' && index > 9) {
+							return null;
+						}
+						const buttons = [ 
+						// 	{ type: 'link', text: 'Save Version', link: '/pub/' + item.slug + '/edit' },
+						];
 
-							return (
-								// Add bibtex back into reference editor
-								<PreviewEditor 
-									key={'atomItem-' + item.parent._id}
-									atomData={item.parent}
-									versionData={item}
-									contributorsData={item.contributors}
-									footer={ <div> <input type="checkbox" /> Show on profile</div> }
-									buttons = {buttons} 
+						return (
+							<PreviewEditor 
+								key={'atomItem-' + item.parent._id}
+								atomData={item.parent}
+								versionData={item}
+								contributorsData={item.contributors}
+								footer={ <div> <input type="checkbox" /> Show on profile</div> }
+								buttons = {buttons} 
 
-									onSaveVersion={this.onSaveVersion}
-									onSaveAtom={this.onSaveAtom}
-									updateDetailsHandler={this.updateDetails}
-									handleAddContributor={this.handleAddContributor}
-									handleUpdateContributor={this.handleUpdateContributor}
-									handleDeleteContributor={this.handleDeleteContributor}
-									saveVersionHandler={this.saveVersionHandler}
+								onSaveVersion={this.onSaveVersion}
+								onSaveAtom={this.onSaveAtom}
+								updateDetailsHandler={this.updateDetails}
+								handleAddContributor={this.handleAddContributor}
+								handleUpdateContributor={this.handleUpdateContributor}
+								handleDeleteContributor={this.handleDeleteContributor}
+								saveVersionHandler={this.saveVersionHandler}
 
-									detailsLoading={item.detailsLoading}
-									detailsError={!!item.detailsError}
-									permissionType={item.permissionType}
+								detailsLoading={item.detailsLoading}
+								detailsError={!!item.detailsError}
+								permissionType={item.permissionType}
 
-									defaultOpen={item.defaultOpen}/>
+								defaultOpen={item.defaultOpen}/>
 
-							);
-						})}
+						);
+					})}
 
 				</div>
 
@@ -300,6 +297,29 @@ export default connect( state => {
 })( Radium(Manage) );
 
 styles = {
+	addNewDropdown: {
+		display: 'inline-block',
+		// minWidth: '150px',
+	},
+	capitalize: {
+		textTransform: 'capitalize',
+	},
+	dropdownOption: {
+		textTransform: 'capitalize',
+		padding: '.25em .5em',
+		cursor: 'pointer',
+	},
+	createNewButton: {
+		position: 'relative',
+		verticalAlign: 'top', 
+		left: '-2px'
+	},
+	filterInput: {
+		display: 'inline-block',
+		margin: 0,
+		position: 'relative',
+	},
+
 	editModeHeader: {
 		display: 'table',
 		padding: '.5em 0em',
@@ -359,20 +379,13 @@ styles = {
 	modalContentActive: {
 		transform: 'scale(1.0)',
 	},
-	mediaSelect: {
-		// padding: '1em 0em',
-	},
 	mediaSelectHeader: {
 		padding: '1em 0em',
 	},
 	mediaDetails: {
 		padding: '1em 2em',
 	},
-	filterInput: {
-		display: 'inline-block',
-		// width: 'calc(100% - 20px - 4px)',
-		// borderWidth: '0px 0px 2px 0px',
-	},
+	
 	input: {
 		width: 'calc(100% - 20px - 4px)',
 	},
@@ -467,11 +480,7 @@ styles = {
 		opacity: 0.5,
 		pointerEvents: 'none',
 	},
-	addNewDropdown: {
-		// width: '250px',
-		display: 'inline-block',
-		// minWidth: '150px',
-	},
+	
 	dropzoneBlock: {
 		padding: '0em 2em',
 		margin: '0em 1em',
