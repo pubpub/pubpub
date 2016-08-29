@@ -58,7 +58,7 @@ export const renderReactFromJSON = function(item, isRoot) {
 				case 'strike':
 					return <s key={index}>{previous}</s>;
 				case 'link':
-					return <a href={current.href} title={current.title} key={index}>{previous}</a>;
+					return <a href={current.href} title={current.title} key={index} target={'_top'}>{previous}</a>;
 				default: 
 					return previous;
 				}
