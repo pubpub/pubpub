@@ -1,6 +1,8 @@
 import React, {PropTypes} from 'react';
 import Radium from 'radium';
 import {safeGetInToJS} from 'utils/safeParse';
+import {globalMessages} from 'utils/globalMessages';
+import {FormattedMessage} from 'react-intl';
 
 let styles;
 
@@ -29,7 +31,9 @@ export const ImageViewer = React.createClass({
 					<img src={scaledURL} alt={title} style={styles.image}/>
 
 					{Object.keys(metadata).length > 0 &&
-						<h2>Metadata</h2>
+						<h2>
+							<FormattedMessage {...globalMessages.Metadata}/>
+						</h2>
 					}
 
 					{Object.keys(metadata).map((key, index)=>{

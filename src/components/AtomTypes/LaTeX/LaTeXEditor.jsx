@@ -2,6 +2,9 @@ import React, {PropTypes} from 'react';
 import Radium, {Style} from 'radium';
 import {safeGetInToJS} from 'utils/safeParse';
 
+import {globalMessages} from 'utils/globalMessages';
+import {FormattedMessage} from 'react-intl';
+
 import katex from 'katex';
 import katexStyles from './katex.css.js';
 
@@ -30,13 +33,13 @@ export const LaTeXEditor = React.createClass({
 		const {text, inlineHTML, displayHTML} = this.state;
 		return {text, inlineHTML, displayHTML};
 	},
-	
+
 	generateHTML(text) {
 		const inlineHTML = katex.renderToString(text, {displayMode: false, throwOnError: false});
 		const displayHTML = katex.renderToString(text, {displayMode: true, throwOnError: false});
 		return {inlineHTML, displayHTML};
 	},
-	
+
 	updateText: function(evt) {
 		const text = evt.target.value;
 		const html = this.generateHTML(text);
@@ -47,7 +50,9 @@ export const LaTeXEditor = React.createClass({
 		const {text, inlineHTML, displayHTML} = this.state;
 		return (
 			<div style={styles.container}>
-				<h3>Preview</h3>
+				<h3>
+					<FormattedMessage {...globalMessages.Preview}/>
+				</h3>
 				<Style rules={ katexStyles } />
 				<div dangerouslySetInnerHTML={{__html: displayHTML}} style={styles.output}></div>
 				<textarea value={text} onChange={this.updateText} style={styles.input}/>

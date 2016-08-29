@@ -3,6 +3,8 @@ import Radium from 'radium';
 import {safeGetInToJS} from 'utils/safeParse';
 import {s3Upload} from 'utils/uploadFile';
 import {Loader, CustomizableForm} from 'components';
+import {globalMessages} from 'utils/globalMessages';
+import {FormattedMessage} from 'react-intl';
 
 let styles = {};
 
@@ -10,7 +12,7 @@ export const VideoEditor = React.createClass({
 	propTypes: {
 		atomData: PropTypes.object
 	},
-	
+
 	getInitialState() {
 		return {
 			url: '',
@@ -74,7 +76,9 @@ export const VideoEditor = React.createClass({
 		const videoURL = this.state.url || videoSource;
 		return (
 			<div>
-				<h3>Preview</h3>
+				<h3>
+					<FormattedMessage {...globalMessages.Preview}/>
+				</h3>
 				<video key={'video-' + videoURL} src={videoURL} controls style={styles.video}/>
 
 				<div style={styles.loaderWrapper}>
@@ -82,12 +86,16 @@ export const VideoEditor = React.createClass({
 				</div>
 				<a href={videoURL} target="_blank" className={'underlineOnHover'} style={styles.originalLink}>View Original</a>
 
-				<h3>Choose new file</h3>
+				<h3>
+					<FormattedMessage {...globalMessages.ChooseNewFile}/>
+				</h3>
 				<input id={'videoFile'} name={'video file'} type="file" accept="video/*" onChange={this.handleFileSelect} />
 
-				<h3>Metadata</h3>
+				<h3>
+					<FormattedMessage {...globalMessages.Metadata}/>
+				</h3>
 				<CustomizableForm formData={this.state.metadata} onUpdate={this.metadataUpdate}/>
-				
+
 			</div>
 		);
 	}

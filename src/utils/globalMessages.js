@@ -245,9 +245,13 @@ export const globalMessages = defineMessages({
 		id: 'global.ChooseNewFile',
 		defaultMessage: 'Choose New File',
 	},
+	UploadANewFile: {
+		id: 'global.UploadANewFile',
+		defaultMessage: 'Upload A New File',	
+	},
 	Metadata: {
 		id: 'global.Metadata',
-		defaultMessage: 'Metadata',		
+		defaultMessage: 'Metadata',
 	},
 	assets: {
 		id: 'global.assets',
