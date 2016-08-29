@@ -109,8 +109,12 @@ export const globalMessages = defineMessages({
 		id: 'global.tableOfContents',
 		defaultMessage: 'Table of Contents',
 	},
-	discussions: {
-		id: 'global.discussions',
+	Contents: {
+		id: 'global.Contents',
+		defaultMessage: 'Contents',
+	},
+	Discussions: {
+		id: 'global.Discussions',
 		defaultMessage: 'Discussions',
 	},
 	discussion: {
@@ -165,8 +169,8 @@ export const globalMessages = defineMessages({
 		id: 'global.Width',
 		defaultMessage: 'Width',
 	},
-	cite: {
-		id: 'global.cite',
+	Cite: {
+		id: 'global.Cite',
 		defaultMessage: 'Cite',
 	},
 	aboutPubPub: {
@@ -261,6 +265,10 @@ export const globalMessages = defineMessages({
 		id: 'global.Metadata',
 		defaultMessage: 'Metadata',
 	},
+	Meta: {
+		id: 'global.Meta',
+		defaultMessage: 'Meta',
+	},
 	assets: {
 		id: 'global.assets',
 		defaultMessage: 'Assets',
@@ -337,9 +345,17 @@ export const globalMessages = defineMessages({
 		id: 'global.publish',
 		defaultMessage: 'Publish',
 	},
-	edit: {
-		id: 'global.edit',
+	Edit: {
+		id: 'global.Edit',
 		defaultMessage: 'Edit',
+	},
+	SuggestEdits: {
+		id: 'global.SuggestEdits',
+		defaultMessage: 'Suggest Edits',
+	},
+	Details: {
+		id: 'global.Details',
+		defaultMessage: 'Details',
 	},
 	read: {
 		id: 'global.read',
@@ -536,7 +552,7 @@ export const globalMessages = defineMessages({
 	},
 	GotIt: {
 		id: 'GotIt',
-		defaultMessage: 'Got It'		
+		defaultMessage: 'Got It'
 	},
 	CloseEditor: {
 		id: 'CloseEditor',

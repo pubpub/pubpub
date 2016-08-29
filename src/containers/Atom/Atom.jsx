@@ -29,8 +29,8 @@ import AtomSaveVersionButton from './AtomSaveVersionButton';
 import {safeGetInToJS} from 'utils/safeParse';
 import {generateTOC} from 'utils/generateTOC';
 
-// import {globalMessages} from 'utils/globalMessages';
-// import {FormattedMessage} from 'react-intl';
+import {globalMessages} from 'utils/globalMessages';
+import {FormattedMessage} from 'react-intl';
 
 let styles = {};
 let interval;
@@ -100,7 +100,7 @@ export const Atom = React.createClass({
 
 	componentDidMount() {
 		// Set an poll to grab TOC and asset data if we're in the document editor
-		// A poll is pretty ugly, but it is a bit quicker at the moment than passing a function all the way down into documentEditor. 
+		// A poll is pretty ugly, but it is a bit quicker at the moment than passing a function all the way down into documentEditor.
 		// Let's see if this functionality stays useful, and if so we can pass down a function call that will fire everytime document is edited.
 		interval = setInterval(()=>{
 			if (this.props.meta === 'edit' && safeGetInToJS(this.props.atomData, ['atomData', 'type']) === 'document') {
@@ -115,7 +115,7 @@ export const Atom = React.createClass({
 				}
 			}
 		}, 1000);
-		
+
 	},
 
 	componentWillUnmount() {
@@ -201,7 +201,7 @@ export const Atom = React.createClass({
 
 		// The editor must not be indexed by search engines, so add a noindex.
 		// The reader must provide metadata for popular embed tags and proper SEO performance.
-		const metaData = isEditor 
+		const metaData = isEditor
 		? {
 			title: 'Editing ' + atomData.title + ' · PubPub',
 			meta: [
@@ -229,11 +229,11 @@ export const Atom = React.createClass({
 				{name: 'twitter:image:alt', content: 'Preview image for ' + atomData.title}
 			]
 		};
-		
+
 		const contributorsData = safeGetInToJS(this.props.atomData, ['contributorsData']) || [];
 		const currentVersionContent = safeGetInToJS(this.props.atomData, ['currentVersionData', 'content']) || {};
 		const currentVersionDate = safeGetInToJS(this.props.atomData, ['currentVersionData', 'createDate']);
-		
+
 		const markdown = currentVersionContent.markdown;
 		const toc = generateTOC(this.state.currentDocMarkdown || markdown).full;
 
@@ -261,23 +261,23 @@ export const Atom = React.createClass({
 		/* These are only shown if the user has edit rights */
 		const atomNavItems = [
 			{link: '/pub/' + this.props.slug, text: 'View', active: !isEditor},
-			
+
 		];
 
 
 		if (permissionType === 'author' || permissionType === 'editor') {
-			atomNavItems.push({link: '/pub/' + this.props.slug + '/edit', text: 'Edit', active: isEditor});
+			atomNavItems.push({link: '/pub/' + this.props.slug + '/edit', text: <FormattedMessage {...globalMessages.Edit}/>, active: isEditor});
 		} else {
-			atomNavItems.push({link: '/pub/' + this.props.slug + '/edit', text: 'Suggest Edits', active: isEditor});
+			atomNavItems.push({link: '/pub/' + this.props.slug + '/edit', text: <FormattedMessage {...globalMessages.SuggestEdits}/>, active: isEditor});
 		}
 
 		const rightPanelNavItems = [
-			{text: 'Details', action: this.setRightPanelMode.bind(this, 'details'), active: this.state.rightPanelMode === 'details'},
-			{text: 'Contents', action: this.setRightPanelMode.bind(this, 'contents'), active: this.state.rightPanelMode === 'contents'},
-			{text: 'Discussions', action: this.setRightPanelMode.bind(this, 'discussions'), active: this.state.rightPanelMode === 'discussions'},
-			{text: 'Contributors', action: this.setRightPanelMode.bind(this, 'contributors'), active: this.state.rightPanelMode === 'contributors'},
-			{text: 'Journals', action: this.setRightPanelMode.bind(this, 'journals'), active: this.state.rightPanelMode === 'journals'},
-			{text: 'Meta', action: this.setRightPanelMode.bind(this, 'meta'), active: this.state.rightPanelMode === 'meta'},
+			{text: <FormattedMessage {...globalMessages.Details}/>, action: this.setRightPanelMode.bind(this, 'details'), active: this.state.rightPanelMode === 'details'},
+			{text: <FormattedMessage {...globalMessages.Contents}/>, action: this.setRightPanelMode.bind(this, 'contents'), active: this.state.rightPanelMode === 'contents'},
+			{text: <FormattedMessage {...globalMessages.Discussions}/>, action: this.setRightPanelMode.bind(this, 'discussions'), active: this.state.rightPanelMode === 'discussions'},
+			{text: <FormattedMessage {...globalMessages.Contributors}/>, action: this.setRightPanelMode.bind(this, 'contributors'), active: this.state.rightPanelMode === 'contributors'},
+			{text: <FormattedMessage {...globalMessages.Journals}/>, action: this.setRightPanelMode.bind(this, 'journals'), active: this.state.rightPanelMode === 'journals'},
+			{text: <FormattedMessage {...globalMessages.Meta}/>, action: this.setRightPanelMode.bind(this, 'meta'), active: this.state.rightPanelMode === 'meta'},
 		];
 
 		// Remove 'Contents' option if atom is not a 'document' type
@@ -325,16 +325,16 @@ export const Atom = React.createClass({
 						{this.state.showRightPanel && <div style={styles.toggleRightHide}>Hide<br/>Panel</div>}
 						{!this.state.showRightPanel && <div style={styles.toggleRightShow}>Show<br/>Panel</div>}
 					</div>
-					
+
 					{/* Pub Header and Body */}
 					<div className={safeGetInToJS(this.props.atomData, ['atomData', 'type']) === 'document' ? 'atom-reader atom-reader-meta' : 'atom-reader-meta'}>
-						
+
 						{/* Pub Header */}
 						<div className={'atom-reader-header'}>
 							<h1 className={'atom-header-title'}>{atomData.title}</h1>
 							<p className={'atom-header-p'}>{authorList}</p>
 							<p className={'atom-header-p'}>{dateFormat(currentVersionDate, 'mmmm dd, yyyy')}</p>
-							
+
 
 							{!isEditor &&
 								<div>
@@ -356,10 +356,10 @@ export const Atom = React.createClass({
 							*/}
 						</div>
 
-						{!isEditor && 
+						{!isEditor &&
 							<div>
 								<AtomViewerPane atomData={this.props.atomData} />
-								{ atomData.isPublished && <License /> }	
+								{ atomData.isPublished && <License /> }
 							</div>
 						}
 
@@ -376,20 +376,20 @@ export const Atom = React.createClass({
 				<StickyContainer style={[styles.rightPanel, (!this.state.showRightPanel || hideRightPanel) && styles.hideRightPanel]}>
 					<Sticky stickyStyle={this.state.showRightPanel ? {} : {left: '0px'}}>
 						<HorizontalNav navItems={rightPanelNavItems} mobileNavButtons={mobileNavButtons}/>
-						
+
 						<div style={styles.rightPanelContent}>
 							{(()=>{
 								switch (this.state.rightPanelMode) {
 								case 'contributors':
 									return (
-										<AtomContributors 
+										<AtomContributors
 											atomData={this.props.atomData}
-											contributorsData={contributorsData} 
+											contributorsData={contributorsData}
 											handleAddContributor={this.handleAddContributor}
 											handleUpdateContributor={this.handleUpdateContributor}
 											handleDeleteContributor={this.handleDeleteContributor}
-											isLoading={isLoading} 
-											error={error} 
+											isLoading={isLoading}
+											error={error}
 											permissionType={permissionType}/>
 									);
 								case 'journals':
@@ -402,13 +402,13 @@ export const Atom = React.createClass({
 									return <StickyContainer><Discussions/></StickyContainer>;
 								case 'contents':
 									return <AtomContents atomData={this.props.atomData} tocData={toc}/>;
-									
+
 								default:
 									return <Discussions/>;
 								}
 							})()}
 						</div>
-						
+
 					</Sticky>
 				</StickyContainer>
 
@@ -476,10 +476,10 @@ styles = {
 		marginRight: '0vw',
 	},
 	headerAction: {
-		marginRight: '.5em', 
-		padding: '0em 1em', 
-		lineHeight: '1.25em', 
-		fontSize: '0.75em', 
+		marginRight: '.5em',
+		padding: '0em 1em',
+		lineHeight: '1.25em',
+		fontSize: '0.75em',
 		fontFamily: 'Open Sans',
 		position: 'relative',
 	},
@@ -533,7 +533,7 @@ styles = {
 		// backgroundColor: '#2C2A2B',
 		borderLeft: '1px dashed #808284',
 		margin: '0em 1em 0em auto',
-		
+
 	},
 	toggleRightHide: {
 		position: 'fixed',
@@ -559,7 +559,7 @@ styles = {
 		overflowY: 'scroll',
 		padding: '0em 2em 1em',
 	},
-	
+
 	// pubBodyWrapper: {
 	// 	maxWidth: '650px',
 	// 	margin: '0 auto',
@@ -598,7 +598,7 @@ styles = {
 		fontSize: '.85em',
 		padding: '.25em 1.5em',
 	},
-	
+
 	headerBar: {
 		position: 'relative',
 		backgroundColor: 'white',
