@@ -241,6 +241,14 @@ export const globalMessages = defineMessages({
 		id: 'global.clickOrDrag',
 		defaultMessage: 'Click to choose or drag files',
 	},
+	ChooseNewFile: {
+		id: 'global.ChooseNewFile',
+		defaultMessage: 'Choose New File',
+	},
+	Metadata: {
+		id: 'global.Metadata',
+		defaultMessage: 'Metadata',		
+	},
 	assets: {
 		id: 'global.assets',
 		defaultMessage: 'Assets',
@@ -285,9 +293,13 @@ export const globalMessages = defineMessages({
 		id: 'global.Preview',
 		defaultMessage: 'Preview',
 	},
+	ViewOriginal: {
+		id: 'global.ViewOriginal',
+		defaultMessage: 'View Original',
+	},
 	ViewSource: {
 		id: 'global.ViewSource',
-		defaultMessage: 'View Source',		
+		defaultMessage: 'View Source',
 	},
 	emailAddress: {
 		id: 'global.emailAddress',
