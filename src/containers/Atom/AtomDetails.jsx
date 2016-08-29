@@ -51,22 +51,22 @@ export const AtomDetails = React.createClass({
 	inputChange: function(type, evt) {
 		if (type === 'title') {
 			this.setState({title: evt.target.value});
-		} 
+		}
 
 		if (type === 'slug') {
 			this.setState({slug: evt.target.value.replace(/[^\w\s-]/gi, '').replace(/ /g, '-').toLowerCase()});
-		} 
+		}
 
 		if (type === 'description') {
 			const value = evt.target.value || '';
 			this.setState({description: value.substring(0, 140)});
-		} 
+		}
 
 		if (type === 'customAuthorString') {
 			this.setState({customAuthorString: evt.target.value});
-			
+
 		}
-		
+
 	},
 
 	handleFileSelect: function(evt) {
@@ -91,7 +91,7 @@ export const AtomDetails = React.createClass({
 				<form onSubmit={this.updateDetails}>
 					<div>
 						<label htmlFor={'title'}>
-							Title
+							<FormattedMessage {...globalMessages.Title}/>
 						</label>
 						<input ref={'title'} id={'title'} name={'title'} type="text" style={styles.input} value={this.state.title} onChange={this.inputChange.bind(this, 'title')}/>
 					</div>
@@ -102,7 +102,7 @@ export const AtomDetails = React.createClass({
 						</label>
 						<div style={[styles.prefixedInputWrapper, atomData.isPublished && styles.disabledInput]}>
 							<div style={styles.prefix}>pubpub.org/pub/</div>
-							<input ref={'url'} id={'url'} name={'url'} type="text" style={[styles.input, styles.prefixedInput]} disabled={atomData.isPublished} value={this.state.slug} onChange={this.inputChange.bind(this, 'slug')}/>	
+							<input ref={'url'} id={'url'} name={'url'} type="text" style={[styles.input, styles.prefixedInput]} disabled={atomData.isPublished} value={this.state.slug} onChange={this.inputChange.bind(this, 'slug')}/>
 						</div>
 						<div className={'light-color inputSubtext'}>
 							Cannot be changed once published.
@@ -153,7 +153,7 @@ export const AtomDetails = React.createClass({
 						<ImageCropper height={500} width={500} image={this.state.imageFile} onCancel={this.cancelImageUpload} onUpload={this.imageUploaded}/>
 					</div>
 				</div>
-				
+
 			</div>
 		);
 	}

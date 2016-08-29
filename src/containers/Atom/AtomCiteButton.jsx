@@ -2,6 +2,9 @@ import React, {PropTypes} from 'react';
 import Radium from 'radium';
 import {Reference} from 'components';
 import {safeGetInToJS} from 'utils/safeParse';
+import {FormattedMessage} from 'react-intl';
+import {globalMessages} from 'utils/globalMessages';
+
 
 let styles;
 

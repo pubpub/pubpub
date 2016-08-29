@@ -322,8 +322,16 @@ export const Atom = React.createClass({
 					{/* Toggle Right Panel Button */}
 					<div className={'opacity-on-hover'} style={styles.toggleRightPanelButton} onClick={this.toggleRightPanel}>
 						<div style={styles.toggleRightPanelLine}></div>
-						{this.state.showRightPanel && <div style={styles.toggleRightHide}>Hide<br/>Panel</div>}
-						{!this.state.showRightPanel && <div style={styles.toggleRightShow}>Show<br/>Panel</div>}
+						{this.state.showRightPanel && <div style={styles.toggleRightHide}>
+						<FormattedMessage {...globalMessages.Hide}/>
+						<br/>
+						<FormattedMessage {...globalMessages.Panel}/>
+						</div>}
+						{!this.state.showRightPanel && <div style={styles.toggleRightShow}>
+						<FormattedMessage {...globalMessages.Show}/>
+						<br/>
+						<FormattedMessage {...globalMessages.Panel}/>
+						</div>}
 					</div>
 
 					{/* Pub Header and Body */}
@@ -397,7 +405,7 @@ export const Atom = React.createClass({
 								case 'meta':
 									return <AtomMeta atomData={this.props.atomData}/>;
 								case 'details':
-									return <AtomDetails atomData={this.props.atomData} updateDetailsHandler={this.updateDetails} isLoading={isLoading} error={error}/>;;
+									return <AtomDetails atomData={this.props.atomData} updateDetailsHandler={this.updateDetails} isLoading={isLoading} error={error}/>;
 								case 'discussions':
 									return <StickyContainer><Discussions/></StickyContainer>;
 								case 'contents':

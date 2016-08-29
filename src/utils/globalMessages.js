@@ -269,6 +269,34 @@ export const globalMessages = defineMessages({
 		id: 'global.Meta',
 		defaultMessage: 'Meta',
 	},
+	Hide: {
+		id: 'global.Hide',
+		defaultMessage: 'Hide',
+	},
+	Reader: {
+		id: 'global.Reader',
+		defaultMessage: 'Reader',
+	},
+	Contributor: {
+		id: 'global.Contributor',
+		defaultMessage: 'Contributor',
+	},
+	Contributors: {
+		id: 'global.Contributors',
+		defaultMessage: 'Contributors',
+	},
+	AddContributor: {
+		id: 'global.AddContributor',
+		defaultMessage: 'Add Contributor',
+	},
+	Panel: {
+		id: 'global.Panel',
+		defaultMessage: 'Panel',
+	},
+	Show: {
+		id: 'global.Show',
+		defaultMessage: 'Show',
+	},
 	assets: {
 		id: 'global.assets',
 		defaultMessage: 'Assets',
@@ -382,8 +410,8 @@ export const globalMessages = defineMessages({
 		id: 'global.url',
 		defaultMessage: 'url',
 	},
-	author: {
-		id: 'global.author',
+	Author: {
+		id: 'global.Author',
 		defaultMessage: 'author',
 	},
 	journal: {
@@ -521,6 +549,10 @@ export const globalMessages = defineMessages({
 	off: {
 		id: 'global.off',
 		defaultMessage: 'Off',
+	},
+	Editor: {
+		id: 'global.Editor',
+		defaultMessage: 'Editor',
 	},
 	editorCommentsText0: {
 		id: 'editorCommentsText0',
