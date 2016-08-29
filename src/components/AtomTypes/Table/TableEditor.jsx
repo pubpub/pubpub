@@ -13,7 +13,7 @@ let styles = {};
 
 export const TableEditor = React.createClass({
 	propTypes: {
-		atomEditData: PropTypes.object,
+		atomData: PropTypes.object,
 	},
 
 	getInitialState() {
@@ -28,9 +28,9 @@ export const TableEditor = React.createClass({
 	},
 
 	componentWillMount() {
-		const url = safeGetInToJS(this.props.atomEditData, ['currentVersionData', 'content', 'url']) || '';
-		const header = safeGetInToJS(this.props.atomEditData, ['currentVersionData', 'content', 'header']) || false;
-		const height = safeGetInToJS(this.props.atomEditData, ['currentVersionData', 'content', 'height']) || 400;
+		const url = safeGetInToJS(this.props.atomData, ['currentVersionData', 'content', 'url']) || '';
+		const header = safeGetInToJS(this.props.atomData, ['currentVersionData', 'content', 'header']) || false;
+		const height = safeGetInToJS(this.props.atomData, ['currentVersionData', 'content', 'height']) || 400;
 		this.setState({url, header, height});
 	},
 	

@@ -11,7 +11,7 @@ let styles = {};
 
 export const EmbedEditor = React.createClass({
 	propTypes: {
-		atomEditData: PropTypes.object,
+		atomData: PropTypes.object,
 	},
 	
 	getInitialState() {
@@ -31,10 +31,10 @@ export const EmbedEditor = React.createClass({
 	},
 	
 	componentDidMount() {
-		const source = safeGetInToJS(this.props.atomEditData, ['currentVersionData', 'content', 'source']) || '';
-		const provider = safeGetInToJS(this.props.atomEditData, ['currentVersionData', 'content', 'provider']) || '';
-		const html = safeGetInToJS(this.props.atomEditData, ['currentVersionData', 'content', 'html']) || '';
-		const metaData = safeGetInToJS(this.props.atomEditData, ['currentVersionData', 'content', 'metaData']) || '';
+		const source = safeGetInToJS(this.props.atomData, ['currentVersionData', 'content', 'source']) || '';
+		const provider = safeGetInToJS(this.props.atomData, ['currentVersionData', 'content', 'provider']) || '';
+		const html = safeGetInToJS(this.props.atomData, ['currentVersionData', 'content', 'html']) || '';
+		const metaData = safeGetInToJS(this.props.atomData, ['currentVersionData', 'content', 'metaData']) || '';
 		if (html) {
 			this.setState({source, value: source, provider, html, metaData});
 		} else if (source) {

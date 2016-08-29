@@ -21,13 +21,11 @@ let pm;
 
 let editorToModel;
 let modelToEditor;
-
+let menuBar;
 export const DocumentEditor = React.createClass({
 	propTypes: {
-		atomEditData: PropTypes.object,
+		atomData: PropTypes.object,
 		loginData: PropTypes.object,
-		token: PropTypes.string,
-		collab: PropTypes.string,
 	},
 
 	getInitialState() {
@@ -36,6 +34,7 @@ export const DocumentEditor = React.createClass({
 			participants: [],
 		};
 	},
+
 
 	componentDidMount() {
 		const prosemirror = require('prosemirror');
@@ -62,7 +61,7 @@ export const DocumentEditor = React.createClass({
 			}
 			*/
 		});
-		const token = safeGetInToJS(this.props.atomEditData, ['token']);
+		const token = safeGetInToJS(this.props.atomData, ['token']);
 		pm.mod = {};
 		pm.mod.collab = collabEditing.get(pm);
 		// Ignore setDoc
@@ -99,7 +98,7 @@ export const DocumentEditor = React.createClass({
 		collab.updateParticipants = this.updateParticipants;
 
 		// Collaboration Authentication information
-		const atomID = safeGetInToJS(this.props.atomEditData, ['atomData', '_id']);
+		const atomID = safeGetInToJS(this.props.atomData, ['atomData', '_id']);
 		collab.doc_id = atomID;
 		const user = safeGetInToJS(this.props.loginData, ['userData', 'username']);
 		collab.username = user;
@@ -138,11 +137,32 @@ export const DocumentEditor = React.createClass({
 				return true;
 			}
 		});
+		this.moveMenu();
 
 	},
+
+	moveMenu: function() {
+		if (typeof(document) !== 'undefined') {
+			menuBar = document.getElementsByClassName('ProseMirror-menubar')[0];
+			const menuBarPlaceholder = document.getElementById('headerPlaceholder');
+			menuBarPlaceholder.appendChild(menuBar);
+		}
+	},
+	removeMenu: function() {
+		if (typeof(document) !== 'undefined') {
+			const menuBarPlaceholder = document.getElementById('headerPlaceholder');
+			menuBarPlaceholder.innerHTML = '';
+
+			const participantsPlaceholder = document.getElementById('editor-participants');
+			participantsPlaceholder.innerHTML = '';
+			
+		}
+	},
+
 	componentWillUnmount: function() {
 		this.collab.mod.serverCommunications.close();
 		window.clearInterval(this.sendDocumentTimer);
+		this.removeMenu();
 	},
 	// Collects updates of the document from ProseMirror and saves it under this.doc
 	getUpdates: function(callback) {
@@ -165,7 +185,7 @@ export const DocumentEditor = React.createClass({
 			if (that.collab.docInfo && that.collab.docInfo.changed) {
 				that.save();
 			}
-		},60000);
+		}, 60000);
 	},
 
 
@@ -317,9 +337,12 @@ export const DocumentEditor = React.createClass({
 	},
 
 	updateParticipants: function(participants) {
-		this.collab.mod.collab.updateParticipantList(participants);
 		// console.log('Got participants', participants);
-		this.setState({participants});
+		if (!this._calledComponentWillUnmount) {
+			this.collab.mod.collab.updateParticipantList(participants);
+			this.setState({participants});	
+		}
+		
 	},
 
 	proseChange: function() {
@@ -354,7 +377,7 @@ export const DocumentEditor = React.createClass({
 	// },
 
 	render: function() {
-		const collab = safeGetInToJS(this.props.atomEditData, ['collab']);
+		const collab = safeGetInToJS(this.props.atomData, ['collab']);
 
 
 		const colorMap = {};
@@ -381,7 +404,7 @@ export const DocumentEditor = React.createClass({
 				{/* <div className={'opacity-on-hover'} style={styles.iconLeft} onClick={this.toggleMarkdown}></div> */}
 
 				<textarea id="markdown" onChange={this.markdownChange} style={[styles.textarea, this.state.showMarkdown && styles.textareaVisible]}></textarea>
-				<div id={'atom-reader'} className={'atom-reader'} style={[styles.wsywigBlock, this.state.showMarkdown && styles.wsywigWithMarkdown]}></div>
+				<div id={'atom-reader'} style={[styles.wsywigBlock, this.state.showMarkdown && styles.wsywigWithMarkdown]}></div>
 
 			{/* </Dropzone> */}
 			</div>
@@ -394,16 +417,16 @@ export default Radium(DocumentEditor);
 
 styles = {
 	container: {
-		width: '100%',
-		padding: '1em 2em',
-		left: '-2em',
-		backgroundColor: '#F3F3F4',
-		minHeight: '100vh',
-		position: 'relative',
-		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
-			padding: '1em 1em',
-			left: '-1em',
-		},
+		// width: '100%',
+		// padding: '1em 2em',
+		// left: '-2em',
+		// backgroundColor: '#F3F3F4',
+		// minHeight: '100vh',
+		// position: 'relative',
+		// '@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+		// 	padding: '1em 1em',
+		// 	left: '-1em',
+		// },
 	},
 	iconLeft: {
 		position: 'absolute',
@@ -434,10 +457,10 @@ styles = {
 		pointerEvents: 'auto',
 	},
 	wsywigBlock: {
-		maxWidth: 'calc(650px + 10em)',
+		// maxWidth: 'calc(650px + 10em)',
 		backgroundColor: 'white',
 		margin: '0 auto',
-		boxShadow: '0px 1px 3px 1px #BBBDC0',
+		// boxShadow: '0px 1px 3px 1px #BBBDC0',
 		minHeight: '600px',
 		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
 			width: 'calc(100%)',

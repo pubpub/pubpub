@@ -49,7 +49,7 @@ if (!reactTransform) {
 	reactTransform = ['react-transform', {transforms: []}];
 	babelLoaderQuery.plugins.push(reactTransform);
 }
-babelLoaderQuery.cacheDirectory = true;
+// babelLoaderQuery.cacheDirectory = './.babelCache';
 
 if (!reactTransform[1] || !reactTransform[1].transforms) {
 	reactTransform[1] = Object.assign({}, reactTransform[1], {transforms: []});
@@ -99,7 +99,8 @@ module.exports = {
 	plugins: [
 		new HappyPack({
 			id: 'babel',
-			loaders: ['babel?' + JSON.stringify(babelLoaderQuery)]
+			loaders: ['babel?' + JSON.stringify(babelLoaderQuery)],
+			threads: 4
 		}),
 		// hot reload
 		new webpack.HotModuleReplacementPlugin(),

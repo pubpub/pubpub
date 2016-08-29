@@ -19,8 +19,8 @@ import {
 } from './actions';
 
 import {
-	GET_ATOM_EDIT_LOAD,
-} from 'containers/AtomEditor/actions';
+	GET_ATOM_DATA_LOAD,
+} from 'containers/Atom/actions';
 
 /*--------*/
 // Initialize Default State
@@ -83,7 +83,7 @@ function createAtomFail(state, error) {
 	return state;
 }
 
-function getAtomEditLoad(state) {
+function getAtomDataLoad(state) {
 	return state.merge({
 		newAtomSlug: undefined,
 	});
@@ -140,8 +140,8 @@ export default function reducer(state = defaultState, action) {
 	case CREATE_ATOM_FAIL:
 		return createAtomFail(state, action.error);
 
-	case GET_ATOM_EDIT_LOAD:
-		return getAtomEditLoad(state);
+	case GET_ATOM_DATA_LOAD:
+		return getAtomDataLoad(state);
 
 	case SAVE_VERSION_LOAD:
 		return saveVersionLoad(state);

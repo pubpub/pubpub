@@ -8,7 +8,7 @@ let styles = {};
 
 export const ImageEditor = React.createClass({
 	propTypes: {
-		atomEditData: PropTypes.object,
+		atomData: PropTypes.object,
 	},
 
 	getInitialState() {
@@ -20,7 +20,7 @@ export const ImageEditor = React.createClass({
 	},
 
 	componentWillMount() {
-		const metadata = safeGetInToJS(this.props.atomEditData, ['currentVersionData', 'content', 'metadata']) || {};
+		const metadata = safeGetInToJS(this.props.atomData, ['currentVersionData', 'content', 'metadata']) || {};
 		const defaultMetadata = {
 			location: {
 				title: 'Location',
@@ -46,7 +46,7 @@ export const ImageEditor = React.createClass({
 			}
 		});
 		return {
-			url: this.state.url || safeGetInToJS(this.props.atomEditData, ['currentVersionData', 'content', 'url']),
+			url: this.state.url || safeGetInToJS(this.props.atomData, ['currentVersionData', 'content', 'url']),
 			metadata: cleanMetadata,
 		};
 	},
@@ -70,8 +70,8 @@ export const ImageEditor = React.createClass({
 	},
 
 	render: function() {
-		const title = safeGetInToJS(this.props.atomEditData, ['atomData', 'title']);
-		const imageSource = safeGetInToJS(this.props.atomEditData, ['currentVersionData', 'content', 'url']) || '';
+		const title = safeGetInToJS(this.props.atomData, ['atomData', 'title']);
+		const imageSource = safeGetInToJS(this.props.atomData, ['currentVersionData', 'content', 'url']) || '';
 		const scaledURL = imageSource.indexOf('.gif') > -1 ? (this.state.url || imageSource) : 'https://jake.pubpub.org/unsafe/fit-in/650x0/' + (this.state.url || imageSource); // To learn about jake.pubpub fit-in, see Thumbor docs: http://thumbor.readthedocs.io/en/latest/usage.html#fit-in
 
 		return (

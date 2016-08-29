@@ -9,7 +9,7 @@ let iframeResizer;
 
 export const JupyterEditor = React.createClass({
 	propTypes: {
-		atomEditData: PropTypes.object,
+		atomData: PropTypes.object,
 	},
 
 	getInitialState() {
@@ -31,7 +31,7 @@ export const JupyterEditor = React.createClass({
 	getSaveVersionContent: function() {
 		this.setState({isUploading: true});
 		return {
-			url: this.state.url || safeGetInToJS(this.props.atomEditData, ['currentVersionData', 'content', 'url']),
+			url: this.state.url || safeGetInToJS(this.props.atomData, ['currentVersionData', 'content', 'url']),
 		};
 	},
 
@@ -57,7 +57,7 @@ export const JupyterEditor = React.createClass({
 	},
 
 	render: function() {
-		const JupyterSourceHtmlUrl = safeGetInToJS(this.props.atomEditData, ['currentVersionData', 'content', 'htmlUrl']);
+		const JupyterSourceHtmlUrl = safeGetInToJS(this.props.atomData, ['currentVersionData', 'content', 'htmlUrl']);
 		const now = new Date().getTime();
 		return (
 			<div>

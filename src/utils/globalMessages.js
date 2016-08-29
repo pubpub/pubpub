@@ -1,10 +1,6 @@
 import {defineMessages} from 'react-intl';
 
 export const globalMessages = defineMessages({
-	login: {
-		id: 'global.login',
-		defaultMessage: 'Login',
-	},
 	Login: {
 		id: 'global.Login',
 		defaultMessage: 'Login',
@@ -498,4 +494,8 @@ export const globalMessages = defineMessages({
 		id: 'discussionReplyPlaceholder',
 		defaultMessage: 'Add your reply'
 	},
+	CreateJournal: {
+		id: 'CreateJournal',
+		defaultMessage: 'Create Journal'
+	}
 });

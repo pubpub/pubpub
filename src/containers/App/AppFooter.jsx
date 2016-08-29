@@ -21,7 +21,7 @@ export const AppFooter = React.createClass({
 
 						<Link style={styles.footerItem} to={'/about'}> <FormattedMessage id="footer.about" defaultMessage="About"/> </Link>
 						<a style={styles.footerItem} href={'https://github.com/pubpub/pubpub'}> <FormattedMessage id="footer.code" defaultMessage="Code"/> </a>
-						<a style={styles.footerItem} href={'https://github.com/pubpub/pubpub/issues'}> <div style={styles.footerHeader}> <FormattedMessage id="footer.Feedback" defaultMessage="Feedback"/> </div> </a>
+						<a style={styles.footerItem} href={'https://github.com/pubpub/pubpub/issues'}> <FormattedMessage id="footer.Feedback" defaultMessage="Feedback"/> </a>
 					</div>
 
 					<div style={styles.footerColumn}>

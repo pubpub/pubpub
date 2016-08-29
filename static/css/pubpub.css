@@ -12,8 +12,10 @@ lightest: #F3F3F4
 
 .darker-bg { background-color: #363736; }
 .darker-color { color: #363736; }
+.darker-color-hover:hover { color: #363736 !important; }
 
 .dark-bg { background-color: #58585B; }
+.dark-bg-hover:hover { background-color: #58585B; }
 .dark-color { color: #58585B; }
 
 .light-bg { background-color: #808284; }
@@ -46,14 +48,14 @@ body {
 }
 
 .horizontalNavHover:hover {
-	border-bottom: 2px solid #2C2A2B !important;
+	border-bottom: 2px solid #58585B !important;
 	padding: 10px 10px 8px 10px !important;
 }
 @media screen and (min-resolution: 3dppx), screen and (max-width: 767px) {
 	.horizontalNavHover:hover {
 		padding: .15em 2em .15em calc(.5em - 3px) !important;
-		border-left: 3px solid #2C2A2B !important;
-		border-bottom: 0px solid #2C2A2B !important;
+		border-left: 3px solid #58585B !important;
+		border-bottom: 0px solid #58585B !important;
 	}
 }
 
@@ -219,7 +221,7 @@ h2 {
 
 /* Buttons */
 /* ------------ */
-.button {
+.button, .arrow-down-button {
 	display: inline-block;
 	border: solid 2px #58585B;
 	color: #58585B;
@@ -235,10 +237,12 @@ h2 {
 	text-decoration: none;
 }
 
-.button:hover {
+.button:hover, .arrow-down-button:hover {
 	border: solid 2px #2C2A2B;
 	background-color: #2C2A2B;
 	color: #FEFEFE;
+}
+.button:hover {
 	cursor: pointer;
 }
 
@@ -247,7 +251,49 @@ h2 {
 	-ms-transform: translateY(1px);
     transform: translateY(1px);
 }
+
+.light-button {
+	color: #808284;
+	border-color: #BBBDC0;
+}
+
+.arrow-down-button .hoverChild {
+	opacity: 0;
+	transition: .1s linear opacity;
+	pointer-events: none;
+}
+
+.arrow-down-button:hover .hoverChild {
+	opacity: 1;
+	pointer-events: auto;
+	z-index: 1;
+}
+
+.arrow-down-button:after {
+	content: '^';
+	font-family: Courier;
+	padding-right: .5em;
+	line-height: 0.5em;
+	transform: translateY(-25%) rotate(180deg);
+	display: inline-block;
+	font-size: 1.2em;
+}
+
+.arrow-down-child {
+	position: absolute;
+	left: -2px;
+	top: calc(100% + 2px);
+	min-width: calc(100% + 2px);
+	border: 1px solid #2C2A2B;
+	color: #2C2A2B;
+	background-color: #F3F3F4;
+	text-align: left;
+}
+
 /* ------------ */
+
+
+
 
 
 /* Arrow Box */

@@ -14,12 +14,13 @@ insertCSS(`
 
 .ProseMirror-menubar {
   z-index: 2;
+  background-color: transparent;
 }
 
 .ProseMirror-content {
   outline: none;
   min-height: 600px; 
-  padding: 0em 5em 1em 5em;
+  padding: 0em 0em 1em 0em;
 }
 
 .ProseMirror-quick-style .ProseMirror-content{
@@ -43,14 +44,18 @@ insertCSS(`
 .ProseMirror-menubar {
   color: #AAA;
   font-family: 'Open Sans';
-  font-size: 0.7em;
+  font-size: 0.85em;
+  border: 0px solid black;
+  height: 39px;
+  padding: 0px 6px;
 }
 
 .ProseMirror-icon {
   line-height: inherit;
   display: block;
-  height: 34px;
-  padding: 2px 15px;
+  height: 39px;
+  line-height: 30px;
+  padding: 0px 10px;
 }
 
 .ProseMirror-quick-style .ProseMirror-icon {
@@ -88,7 +93,8 @@ insertCSS(`
 
 .ProseMirror-menu-dropdown-menu {
   font-family: 'Open Sans';
-  font-size: 0.75em;
+  font-size: 0.6em;
+  margin-top: -4px;
 }
 
 .ProseMirror-menuseparator {

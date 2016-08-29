@@ -7,6 +7,9 @@ import {PreviewCard} from 'components';
 
 import {styles} from './aboutStyles';
 
+import {globalMessages} from 'utils/globalMessages';
+import {FormattedMessage} from 'react-intl';
+
 export const AboutPubs = React.createClass({
 
 	render() {
@@ -33,8 +36,8 @@ export const AboutPubs = React.createClass({
 				previewImage: 'https://jake.pubpub.org/unsafe/100x100/https://assets.pubpub.org/kqrdhoxs/1470268781373.jpg',
 				description: 'A consideration of design as a form of participation in complex adaptive systems.'
 			},
-			
-			
+
+
 			{
 				slug: 'enlightenment-to-entanglement',
 				title: 'The Enlightenment is Dead, Long Live the Entanglement',
@@ -65,24 +68,35 @@ export const AboutPubs = React.createClass({
 					<div className={'section'}>
 
 						<h1>Pubs</h1>
-						<p style={[styles.headerSubtitle, styles.headerTextMax]}>PubPub is a network of digitally native publications called Pubs. </p>
-
-						<p>Pubs can be documents, datasets, images, videos, Jupyter notebooks, interactive visualizations, etc.
-							If it can be rendered on the web, it can be a Pub. Allowing it to be published, versioned, cited, and shared.</p>
-						<p>The goal PubPub is to allow research and scientific exploration to be documented in full fidelity. Publishing should not be a lossy snapshot, but rather a rich and ongoing conversation.</p>
-
+						<p style={[styles.headerSubtitle, styles.headerTextMax]}>
+							<FormattedMessage id="about.PubsP1" defaultMessage="PubPub is a network of digitally native publications called Pubs."/>
+						</p>
+						<p>
+							<FormattedMessage id="about.PubsP2" defaultMessage="If it can be rendered on the web, it can be a Pub. Allowing it to be published, versioned, cited, and shared."/>
+						</p>
+						<p>
+							<FormattedMessage id="about.PubsP3" defaultMessage="The goal PubPub is to allow research and scientific exploration to be documented in full fidelity. Publishing should not be a lossy snapshot, but rather a rich and ongoing conversation."/>
+						</p>
 					</div>
 				</div>
-
 
 				<div>
 					<div className={'section'}>
 						<div style={[styles.forWhoBlock]}>
 							<div style={[styles.forWhoText, styles.forWhoRight]}>
-								<h2 style={styles.noMargin}>Collaborative Evolution</h2>
-								<p>Pubs feature rich inline discussions and a transparent review process.</p>
-								<p>Versioned history encourages a mindset of incremental development rather than opaque publication.</p>
-								<p>Documents are a special type of Pub that allow for real-time collaborative editing and embedding of other pubs (images, videos, data, etc).</p>
+								<h2 style={styles.noMargin}>
+									<FormattedMessage id="about.CollaborativeEvolutionH" defaultMessage="Collaborative Evolution"/>
+								</h2>
+								<p>
+									<FormattedMessage id="about.CollaborativeEvolutionP1" defaultMessage="Pubs feature rich inline discussions and a transparent review process."/>
+
+								</p>
+								<p>
+									<FormattedMessage id="about.CollaborativeEvolutionP2" defaultMessage="Versioned history encourages a mindset of incremental development rather than opaque publication."/>
+								</p>
+								<p>
+									<FormattedMessage id="about.CollaborativeEvolutionP3" defaultMessage="Documents are a special type of Pub that allow for real-time collaborative editing and embedding of other pubs (images, videos, data, etc)."/>
+								</p>
 							</div>
 							<img style={[styles.forWhoImage, styles.forWhoLeft]} src={'https://assets.pubpub.org/_site/thread.png'} alt={'PubPub features rich discussion'}/>
 							<div style={globalStyles.clearFix}></div>
@@ -94,11 +108,24 @@ export const AboutPubs = React.createClass({
 					<div className={'section'}>
 						<div style={[styles.forWhoBlock]}>
 							<div style={[styles.forWhoText, styles.forWhoLeft]}>
-								<h2 style={styles.noMargin}>Process over Impact</h2>
-								<p>Ideas don't come from a vacuum. They exist in a network of other ideas, findings, and beliefs.Some of these ideas go on to win Nobel prizes, but all of these ideas contribute to the culture and progress of science.</p>
-								<p>We believe it is critical to reward the process of good science and research, rather than the outcome or impact.</p>
-								<p>PubPub encourages the documentation of research results as they happen so that they can be embedded, cited, or referenced when it comes time to publish your findings.</p>
-								<p>A powerful transclusion model makes it easy to trace context and attribution.</p>
+								<h2 style={styles.noMargin}>
+									<FormattedMessage id="about.ProcessOverImpactH" defaultMessage="Process over Impact"/>
+
+								</h2>
+								<p>
+									<FormattedMessage id="about.ProcessOverImpactP1" defaultMessage="Ideas don't come from a vacuum. They exist in a network of other ideas, findings, and beliefs.Some of these ideas go on to win Nobel prizes, but all of these ideas contribute to the culture and progress of science."/>
+
+								</p>
+								<p>
+									<FormattedMessage id="about.ProcessOverImpactP2" defaultMessage="We believe it is critical to reward the process of good science and research, rather than the outcome or impact."/>
+
+								</p>
+								<p>
+									<FormattedMessage id="about.ProcessOverImpactP3" defaultMessage="PubPub encourages the documentation of research results as they happen so that they can be embedded, cited, or referenced when it comes time to publish your findings."/>
+								</p>
+								<p>
+									<FormattedMessage id="about.ProcessOverImpactP4" defaultMessage="A powerful transclusion model makes it easy to trace context and attribution."/>
+								</p>
 							</div>
 							<img style={[styles.forWhoImage, styles.forWhoRight]} src={'https://assets.pubpub.org/_site/pub.gif'} alt={'PubPub versions and citations'}/>
 							<div style={globalStyles.clearFix}></div>
@@ -110,24 +137,42 @@ export const AboutPubs = React.createClass({
 					<div className={'section'}>
 						<div style={[styles.forWhoBlock]}>
 							<div style={[styles.forWhoText, styles.forWhoRight]}>
-								<h2 style={styles.noMargin}>For Researchers, By Researchers</h2>
-								<p>PubPub is <a style={{color: 'inherit'}} href="https://github.com/pubpub/pubpub">open-source</a> and dedicated to serving as a public utility for scientific communication.</p>
-								<p>If there are features, pub types, or data that enables you to better perform research, we strongly encourage you to <a style={{color: 'inherit'}} href="https://github.com/pubpub/pubpub/issues/new">submit a feature request</a>, <a style={{color: 'inherit'}} href="https://github.com/pubpub/pubpub/blob/master/CONTRIBUTING.md">contribute code to PubPub</a>, or fork the project and build it to your own specifications.</p>
+								<h2 style={styles.noMargin}>
+									<FormattedMessage id="about.ForResearchersH" defaultMessage="For Researchers, By Researchers"/>
+
+								</h2>
+								<p>
+									<FormattedMessage
+											id="about.ForResearchersP1"
+											defaultMessage={`PubPub is {opensource} and dedicated to serving as a public utility for scientific communication.`}
+											values={{opensource: <a style={{color: 'inherit'}} href="https://github.com/pubpub/pubpub">open-source</a>}}
+									/>
+								</p>
+								<p>
+									<FormattedMessage
+											id="about.ForResearchersP2"
+											defaultMessage={`If there are features, pub types, or data that enables you to better perform research, we strongly encourage you to {pr}, {code}, or fork the project and build it to your own specifications.`}
+											values={{pr: <a style={{color: 'inherit'}} href="https://github.com/pubpub/pubpub/issues/new">submit a feature request</a>, code: <a style={{color: 'inherit'}} href="https://github.com/pubpub/pubpub/blob/master/CONTRIBUTING.md">contribute code to PubPub</a>}}
+									/>
+
+							</p>
 							</div>
 							<img style={[styles.forWhoImage, styles.forWhoLeft]} src={'https://assets.pubpub.org/_site/github.png'} alt={'PubPub on GitHub'}/>
 							<div style={globalStyles.clearFix}></div>
 						</div>
 					</div>
 				</div>
-				
+
 				<div className={'lightest-bg'}>
 					<div className={'section'}>
-						<h2>Featured Pubs</h2>
+						<h2>
+							<FormattedMessage id="about.FeaturedPubsH" defaultMessage="Featured Pubs"/>
+						</h2>
 
 						{featuredContent.map((item, index)=>{
 							return (
 								<div style={[item.inactive && styles.inactive]} key={'submitted-' + index}>
-									<PreviewCard 
+									<PreviewCard
 										type={'atom'}
 										image={item.previewImage}
 										title={item.title}
@@ -139,7 +184,7 @@ export const AboutPubs = React.createClass({
 
 					</div>
 				</div>
-				
+
 			</div>
 		);
 	}

@@ -9,7 +9,7 @@ const defaultWidth = '100%';
 
 export const IFrameEditor = React.createClass({
 	propTypes: {
-		atomEditData: PropTypes.object,
+		atomData: PropTypes.object,
 	},
 
 	getInitialState() {
@@ -21,9 +21,9 @@ export const IFrameEditor = React.createClass({
 	},
 
 	componentWillMount() {
-		const height = safeGetInToJS(this.props.atomEditData, ['currentVersionData', 'content', 'height']) || defaultHeight;
-		const width = safeGetInToJS(this.props.atomEditData, ['currentVersionData', 'content', 'width']) || defaultWidth;
-		const source = safeGetInToJS(this.props.atomEditData, ['currentVersionData', 'content', 'source']) || '';
+		const height = safeGetInToJS(this.props.atomData, ['currentVersionData', 'content', 'height']) || defaultHeight;
+		const width = safeGetInToJS(this.props.atomData, ['currentVersionData', 'content', 'width']) || defaultWidth;
+		const source = safeGetInToJS(this.props.atomData, ['currentVersionData', 'content', 'source']) || '';
 		this.setState({source, width, height});
 	},
 	getSaveVersionContent() {
