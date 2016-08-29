@@ -193,9 +193,9 @@ export const globalMessages = defineMessages({
 		id: 'global.Cancel',
 		defaultMessage: 'Cancel',
 	},
-	remove: {
-		id: 'global.remove',
-		defaultMessage: 'remove',
+	Remove: {
+		id: 'global.Remove',
+		defaultMessage: 'Remove',
 	},
 	pubs: {
 		id: 'global.pubs',
@@ -217,6 +217,10 @@ export const globalMessages = defineMessages({
 		id: 'global.subdomain',
 		defaultMessage: 'Subdomain',
 	},
+	AddField: {
+		id: 'global.AddField',
+		defaultMessage: 'Add Field',
+	},
 	create: {
 		id: 'global.create',
 		defaultMessage: 'Create',
@@ -224,6 +228,10 @@ export const globalMessages = defineMessages({
 	Title: {
 		id: 'global.Title',
 		defaultMessage: 'Title',
+	},
+	More: {
+		id: 'global.More',
+		defaultMessage: 'More',		
 	},
 	GroupName: {
 		id: 'global.GroupName',
@@ -247,7 +255,7 @@ export const globalMessages = defineMessages({
 	},
 	UploadANewFile: {
 		id: 'global.UploadANewFile',
-		defaultMessage: 'Upload A New File',	
+		defaultMessage: 'Upload A New File',
 	},
 	Metadata: {
 		id: 'global.Metadata',

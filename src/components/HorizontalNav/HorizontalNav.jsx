@@ -2,6 +2,8 @@ import React, {PropTypes} from 'react';
 import Radium from 'radium';
 import { Link as UnwrappedLink } from 'react-router';
 const Link = Radium(UnwrappedLink);
+import {globalMessages} from 'utils/globalMessages';
+import {FormattedMessage} from 'react-intl';
 
 let styles = {};
 
@@ -29,7 +31,7 @@ export const HorizontalNav = React.createClass({
 		setTimeout(()=>{
 			this.handleResize();
 		}, 100);
-		
+
 	},
 
 	componentWillUnmount: function() {
@@ -52,9 +54,9 @@ export const HorizontalNav = React.createClass({
 			}
 		}
 
-		if (!setItemsToShow) { 
+		if (!setItemsToShow) {
 			this.setState({itemsToShow: 100});
-		}	
+		}
 	},
 
 	toggleMenu: function() {
@@ -101,7 +103,7 @@ export const HorizontalNav = React.createClass({
 
 					{!!collapsedNavItems.length &&
 						<div className={'showChildOnHover more-button'} style={[styles.pubNavButton]}>
-							More
+							<FormattedMessage {...globalMessages.More}/>
 							<div className={'hoverChild arrow-box'} style={styles.collapsedItems}>
 								{collapsedNavItems.map((item, index)=>{
 									if (item.link) {
@@ -115,8 +117,8 @@ export const HorizontalNav = React.createClass({
 
 						</div>
 					}
-					
-					
+
+
 				</div>
 
 				<div className={'horizontal-nav-items'} style={[styles.ghostButtons, !this.state.showMenu && styles.hideOnMobile]}>
@@ -129,9 +131,9 @@ export const HorizontalNav = React.createClass({
 							return <div onClick={item.action} style={[styles.pubNavButton, item.active && styles.pubNavButtonActive]} key={'ghost-' + index} className={'ghostButton ' + this.state.randomKey}>{item.text}</div>;
 						}
 					})}
-					
+
 				</div>
-				
+
 			</div>
 		);
 	}
@@ -155,7 +157,7 @@ styles = {
 			fontSize: '1em',
 			color: 'inherit',
 		}
-		
+
 	},
 	ghostButtons: {
 		position: 'absolute',
@@ -211,7 +213,7 @@ styles = {
 		padding: '.15em 2em .15em calc(.5em - 3px)',
 		borderLeft: '3px solid #2C2A2B',
 	},
-	
+
 	contentNavItems: {
 		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
 			boxShadow: 'inset 0px -4px 6px -4px #BBBDC0',
