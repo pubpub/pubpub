@@ -116,6 +116,7 @@ export const Manage = React.createClass({
 			url: 'https://assets.pubpub.org/' + filename
 		};
 		this.props.dispatch(createAtom(atomType, versionContent, title));
+		this.setState({filter: ''});
 	},
 
 	saveVersionHandler: function(newVersionContent, versionMessage, atomData) {
@@ -136,6 +137,7 @@ export const Manage = React.createClass({
 		console.log('Creating: ', this.state.createNewType);
 		// If document, redirect
 		this.props.dispatch(createAtom(this.state.createNewType, undefined, ('New ' + this.state.createNewType)));
+		this.setState({filter: ''});
 	},
 
 	setFilter: function(string) {
@@ -253,10 +255,6 @@ export const Manage = React.createClass({
 							];
 
 							return (
-								// TODO
-								// Default open, enable save version, clear filter
-								
-
 								// Add bibtex back into reference editor
 								<PreviewEditor 
 									key={'atomItem-' + (item._id || item.parent._id)}
