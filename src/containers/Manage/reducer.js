@@ -120,6 +120,8 @@ function saveVersionSuccess(state, result) {
 	const newItems = state.get('mediaItems').map((item)=>{
 		if (item.getIn(['parent', '_id']) === result.parent) {
 			newVersion.parent = item.get('parent');
+			newVersion.permissionType = item.get('parent');
+			newVersion.contributors = item.get('contributors');
 			return ensureImmutable(newVersion);
 		}
 		return item;

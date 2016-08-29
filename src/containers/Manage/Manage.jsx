@@ -257,7 +257,7 @@ export const Manage = React.createClass({
 							return (
 								// Add bibtex back into reference editor
 								<PreviewEditor 
-									key={'atomItem-' + (item._id || item.parent._id)}
+									key={'atomItem-' + item.parent._id}
 									atomData={item.parent}
 									versionData={item}
 									contributorsData={item.contributors}

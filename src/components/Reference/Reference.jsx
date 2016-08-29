@@ -35,6 +35,7 @@ export const Reference = React.createClass({
 			citationStrings.pages = citation.pages ? citation.pages + '. ' : '';
 			citationStrings.url = citation.url ? '[' + citation.url + '] ' : '';
 			citationStrings.note = citation.note ? citation.note : '';
+			citationStrings.doi = citation.doi ? citation.doi : '';
 			break;
 
 		case 'chicago':
@@ -48,6 +49,7 @@ export const Reference = React.createClass({
 			citationStrings.pages = citation.pages ? citation.pages + '. ' : '';
 			citationStrings.url = citation.url ? '[' + citation.url + '] ' : '';
 			citationStrings.note = citation.note ? citation.note : '';
+			citationStrings.doi = citation.doi ? citation.doi : '';
 			break;
 
 		case 'apa':
@@ -61,16 +63,19 @@ export const Reference = React.createClass({
 			citationStrings.pages = citation.pages ? citation.pages + '. ' : '';
 			citationStrings.url = citation.url ? '[' + citation.url + '] ' : '';
 			citationStrings.note = citation.note ? citation.note : '';
+			citationStrings.doi = citation.doi ? ' ' + citation.doi : '';
 			break;
 		case 'bibtex':
 			const journalString = citation.journal ? `
   journal={` + citation.journal + `},` : '';
+  			const doiString = citation.doi ? `
+  doi={` + citation.doi + `},` : '';
 
 			bibtexString = `@article{` + (citation.title && citation.title.replace(/[^A-Za-z0-9]/g, '').substring(0, 12)) + citation.year + `,
   title={` + citation.title + `},
   author={` + citation.author + `},
   year={` + citation.year + `},
-  note={` + citation.note + `},
+  note={` + citation.note + `},` + doiString + `
   publisher={PubPub},` + journalString + `
 }`;
 			break;
@@ -93,6 +98,7 @@ export const Reference = React.createClass({
 				{citationStrings.pages}
 				<a href={citation.url} style={{textDecoration: 'none', color: 'inherit'}}>{citationStrings.url}</a>
 				{citationStrings.note}
+				{citationStrings.doi}
 			</span>);
 
 		case 'chicago':
@@ -107,6 +113,7 @@ export const Reference = React.createClass({
 				{citationStrings.pages}
 				<a href={citation.url} style={{textDecoration: 'none', color: 'inherit'}}>{citationStrings.url}</a>
 				{citationStrings.note}
+				{citationStrings.doi}
 			</span>);
 
 		case 'apa':
@@ -122,6 +129,7 @@ export const Reference = React.createClass({
 				{citationStrings.pages}
 				<a href={citation.url} style={{textDecoration: 'none', color: 'inherit'}}>{citationStrings.url}</a>
 				{citationStrings.note}
+				{citationStrings.doi}
 			</span>);
 		case 'bibtex':
 			return (<span>

@@ -101,10 +101,10 @@ function saveVersionLoad(state) {
 function saveVersionSuccess(state, result) {
 	const newVersion = result;
 	const newItems = state.get('mediaItems').map((item)=>{
-		if (item.getIn(['parent', '_id']) === result.parent) {
-			newVersion.parent = item.get('parent');
-			return ensureImmutable(newVersion);
-		}
+		// if (item.getIn(['parent', '_id']) === result.parent) {
+		// 	newVersion.parent = item.get('parent');
+		// 	return ensureImmutable(newVersion);
+		// }
 		return item;
 	});
 	return state.merge({

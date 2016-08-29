@@ -77,12 +77,12 @@ export function createAtom(req, res) {
 		return undefined;
 	})
 	.then(function() {
-		if (type !== 'jupyter') { return undefined; }
+		if (type !== 'jupyter' || !req.body.versionContent) { return undefined; }
 		// return Request.post('http://jupyter-dd419b35.e87eb116.svc.dockerapp.io/convert', { });
 		return request.post('http://jupyter-dd419b35.e87eb116.svc.dockerapp.io/convert').send({form: { url: req.body.versionContent.url } });
 	})
 	.then(function(response) {
-		if (type !== 'jupyter') { return undefined; }
+		if (type !== 'jupyter' || !req.body.versionContent) { return undefined; }
 		return Version.update({ _id: versionID }, { $set: { 'content.htmlUrl': response} }).exec();
 		// newVersion.content.htmlUrl = response;
 	})
