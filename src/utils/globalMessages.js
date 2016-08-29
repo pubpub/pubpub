@@ -534,6 +534,10 @@ export const globalMessages = defineMessages({
 		id: 'CreateJournal',
 		defaultMessage: 'Create Journal'
 	},
+	GotIt: {
+		id: 'GotIt',
+		defaultMessage: 'Got It'		
+	},
 	CloseEditor: {
 		id: 'CloseEditor',
 		defaultMessage: 'Close Editor'

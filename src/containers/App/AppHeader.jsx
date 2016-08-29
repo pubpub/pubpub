@@ -169,7 +169,9 @@ export const AppHeader = React.createClass({
 
 					<div className={'menu-separator'} ></div>
 
-					<Link className={'menu-option'} to={'/user/' + username + '/profile'}>Settings</Link>
+					<Link className={'menu-option'} to={'/user/' + username + '/profile'}>
+						<FormattedMessage {...globalMessages.Settings} />
+					</Link>
 					<div className={'menu-option'} onClick={this.logout}>Logout</div>
 				</div>
 
