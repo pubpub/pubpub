@@ -10,6 +10,7 @@ import request from 'superagent';
 import Helmet from 'react-helmet';
 
 import {FormattedMessage} from 'react-intl';
+import {globalMessages} from 'utils/globalMessages';
 
 let styles = {};
 
@@ -78,7 +79,7 @@ export const NotFound = React.createClass({
 				<div style={styles.helperContent}>
 					{!loggedIn &&
 						<Link to={'/login' + loginQuery} style={globalStyles.link}>
-							Perhaps you need to Login to access this page. Click to Login
+							<FormattedMessage id="notFound.PerhapsLogin" defaultMessage="Perhaps you need to Login to access this page. Click to Login"/>
 						</Link>
 					}
 				</div>
