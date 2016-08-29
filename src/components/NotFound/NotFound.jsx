@@ -93,7 +93,6 @@ export const NotFound = React.createClass({
 						placeholder={<span>Search PubPub</span>}
 						onChange={this.handleSelectChange} />
 				</div>
-
 			</div>
 
 		);

@@ -231,7 +231,7 @@ export const globalMessages = defineMessages({
 	},
 	More: {
 		id: 'global.More',
-		defaultMessage: 'More',		
+		defaultMessage: 'More',
 	},
 	GroupName: {
 		id: 'global.GroupName',
@@ -289,9 +289,9 @@ export const globalMessages = defineMessages({
 		id: 'global.date',
 		defaultMessage: 'date',
 	},
-	delete: {
-		id: 'global.delete',
-		defaultMessage: 'delete',
+	Delete: {
+		id: 'global.Delete',
+		defaultMessage: 'Delete',
 	},
 	collaborators: {
 		id: 'global.collaborators',
@@ -533,5 +533,9 @@ export const globalMessages = defineMessages({
 	CreateJournal: {
 		id: 'CreateJournal',
 		defaultMessage: 'Create Journal'
-	}
+	},
+	CloseEditor: {
+		id: 'CloseEditor',
+		defaultMessage: 'Close Editor'
+	},
 });
