@@ -341,7 +341,7 @@ export const Atom = React.createClass({
 									<AtomVersionsButton versionsData={versionsData} permissionType={permissionType} handlePublishVersion={this.publishVersionHandler} slug={this.props.slug} buttonStyle={styles.headerAction} />
 									<AtomExportButton atomData={this.props.atomData} buttonStyle={styles.headerAction} />
 									<AtomCiteButton atomData={this.props.atomData} authorsData={authorsData} customAuthorString={atomData.customAuthorString} versionQuery={versionQuery} buttonStyle={styles.headerAction}/>
-									<FollowButton id={atomData._id} type={'followsAtom'} isFollowing={atomData.isFollowing} buttonClasses={'light-button'} buttonStyle={styles.headerAction}/>
+									<FollowButton id={atomData._id} type={'followsAtom'} isFollowing={atomData.isFollowing} buttonClasses={'light-button'} buttonStyle={{...styles.headerAction, ...styles.headerActionPlainPadding}}/>
 								</div>
 							}
 
@@ -477,11 +477,14 @@ styles = {
 	},
 	headerAction: {
 		marginRight: '.5em', 
-		padding: '0em 1em', 
+		padding: '0em 1.5em 0em 1em', 
 		lineHeight: '1.25em', 
 		fontSize: '0.75em', 
 		fontFamily: 'Open Sans',
 		position: 'relative',
+	},
+	headerActionPlainPadding: {
+		padding: '0em 1em',
 	},
 	iconRight: {
 		position: 'absolute',
