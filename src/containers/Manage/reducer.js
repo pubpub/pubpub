@@ -87,8 +87,12 @@ function createAtomLoad(state) {
 }
 
 function createAtomSuccess(state, result, redirect) {
+	const newItem = {
+		...result,
+		defaultOpen: true,
+	};
 	return state.merge({
-		mediaItems: state.get('mediaItems').push(ensureImmutable(result))
+		mediaItems: state.get('mediaItems').push(ensureImmutable(newItem))
 	});
 }
 

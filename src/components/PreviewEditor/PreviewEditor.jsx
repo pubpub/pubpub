@@ -35,6 +35,8 @@ export const PreviewEditor = React.createClass({
 		contributorsError: PropTypes.bool,
 		detailsError: PropTypes.bool,
 
+		defaultOpen: PropTypes.bool,
+
 	},
 
 	getInitialState() {
@@ -42,6 +44,10 @@ export const PreviewEditor = React.createClass({
 			editorOpen: false,
 			editorMode: 'content',
 		};
+	},
+
+	componentWillMount() {
+		this.setState({editorOpen: this.props.defaultOpen});
 	},
 
 	openEditor: function(index) {

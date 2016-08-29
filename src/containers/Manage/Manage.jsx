@@ -151,7 +151,9 @@ export const Manage = React.createClass({
 	},
 
 	createNew: function() {
-		console.log(this.state.createNewType);
+		console.log('Creating: ', this.state.createNewType);
+		// If document, redirect
+		this.props.dispatch(createAtom(this.state.createNewType, undefined, ('New ' + this.state.createNewType)));
 	},
 
 	setFilter: function(string) {
@@ -212,7 +214,7 @@ export const Manage = React.createClass({
 					<div style={styles.mediaSelectHeader}>
 
 						<div style={styles.addNewDropdown}>
-							<div className={'light-button arrow-down-button'} style={{position: 'relative'}}><span style={{textTransform: 'capitalize'}}>{this.state.createNewType}</span>
+							<div className={'light-button arrow-down-button'} style={{position: 'relative', minWidth: '150px',}}><span style={{textTransform: 'capitalize'}}>{this.state.createNewType}</span>
 								<div className={'hoverChild arrow-down-child'}>
 									{options.map((option)=>{
 										return <div key={'setType-' + option} onClick={this.handleCreateNewChange.bind(this, option)} style={{textTransform: 'capitalize'}}>{option}</div>;
@@ -270,14 +272,12 @@ export const Manage = React.createClass({
 
 							return (
 								// TODO
-								// Test uploading to make sure it works
-								// On create new, create atom with empty content, set default mode to edit, clear filter
-								// on upload, upload new atom, stick onto pile (need to get contributors data) - can probably just infer contributor data
-								// 
+								// Default open, enable save version, clear filter
+								
 
 								// Add bibtex back into reference editor
 								<PreviewEditor 
-									key={'atomItem-' + item._id}
+									key={'atomItem-' + (item._id || item.parent._id)}
 									atomData={item.parent}
 									versionData={item}
 									contributorsData={item.contributors}
@@ -293,7 +293,9 @@ export const Manage = React.createClass({
 
 									detailsLoading={item.detailsLoading}
 									detailsError={!!item.detailsError}
-									permissionType={item.permissionType}/>
+									permissionType={item.permissionType}
+
+									defaultOpen={item.defaultOpen}/>
 
 							);
 						})}
@@ -487,7 +489,7 @@ styles = {
 	addNewDropdown: {
 		// width: '250px',
 		display: 'inline-block',
-		minWidth: '150px',
+		// minWidth: '150px',
 	},
 	dropzoneBlock: {
 		padding: '0em 2em',

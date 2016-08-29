@@ -34,8 +34,15 @@ export function getMedia(req, res) {
 		const atomIDs = linkResults.map((link)=> {
 			return link.destination._id;
 		});
+		const emptyAtomsIDs = linkResults.filter((item)=> {
+			return item.destination && !(item.destination.versions && item.destination.versions.length);
+		}).map((link)=> {
+			return link.destination._id;
+		});
 
-		const getContributors = Link.find({destination: {$in: atomIDs}, type: {$in: ['author', 'editor', 'reader', 'contributor']}, inactive: {$ne: true}}).populate({
+		const allAtomIDs = atomIDs.concat(emptyAtomsIDs);
+
+		const getContributors = Link.find({destination: {$in: allAtomIDs}, type: {$in: ['author', 'editor', 'reader', 'contributor']}, inactive: {$ne: true}}).populate({
 			path: 'source',
 			model: User,
 			select: 'username name image bio',
@@ -70,7 +77,25 @@ export function getMedia(req, res) {
 			}, undefined);
 			return item;
 		});
-		return res.status(201).json(mergedVersions);
+
+		const emptyVersions = linkResults.filter((item)=> {
+			return item.destination && !(item.destination.versions && item.destination.versions.length);
+		}).map((link)=> {
+			return {
+				createDate: link.destination.createDate,
+				type: link.destination.type,
+				contributors: contributorsObject[link.destination._id],
+				parent: atomObject[link.destination._id],
+				permissionType: contributorsObject[link.destination._id].reduce((previousValue, contributor)=> {
+					if (contributor.source && String(contributor.source._id) === String(userID)) {
+						return contributor.type;
+					}
+					return previousValue;
+				}, undefined),
+			};
+		});
+
+		return res.status(201).json(mergedVersions.concat(emptyVersions));
 	})
 	.catch(function(error) {
 		console.log('error', error);
