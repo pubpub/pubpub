@@ -28,6 +28,7 @@ export const PreviewEditor = React.createClass({
 		handleAddContributor: PropTypes.func,
 		handleUpdateContributor: PropTypes.func,
 		handleDeleteContributor: PropTypes.func,
+		saveVersionHandler: PropTypes.func,
 
 
 		contributorsLoading: PropTypes.bool,
@@ -67,6 +68,13 @@ export const PreviewEditor = React.createClass({
 
 	updateDetails: function(newDetails) {
 		this.props.updateDetailsHandler(this.props.atomData._id, newDetails);
+	},
+
+	saveVersion: function() {
+		const newVersionContent = this.refs.atomEditorPane.refs.editor.getSaveVersionContent();
+		const versionMessage = 'New version from quick editor';
+		const atomData = this.props.atomData;
+		this.props.saveVersionHandler(newVersionContent, versionMessage, atomData);
 	},
 
 
@@ -148,6 +156,11 @@ export const PreviewEditor = React.createClass({
 						{this.state.editorOpen &&
 							<div>
 								<div className={'button'} onClick={this.closeEditor} style={styles.button}>Close Editor</div>
+							</div>
+						}
+						{this.state.editorOpen && this.state.editorMode === 'content' &&
+							<div>
+								<div className={'button'} onClick={this.saveVersion} style={styles.button}>Save Version</div>
 							</div>
 						}
 

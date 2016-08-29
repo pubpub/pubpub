@@ -118,32 +118,14 @@ export const Manage = React.createClass({
 		this.props.dispatch(createAtom(atomType, versionContent, title));
 	},
 
-	saveVersionHandler: function(versionMessage) {
-		const newVersionContent = this.refs.atomEditorPane.refs.editor.getSaveVersionContent();
-
-		const atomData = this.state.nodeData.data.parent;
-		console.log(this.state.nodeData.data);
-		if (atomData._id) {
-			const newVersion = {
-				type: atomData.type,
-				// message: versionMessage,
-				message: '',
-				parent: atomData._id,
-				content: newVersionContent
-			};
-			console.log('Save a version with version stuff!');
-			console.log(newVersion);
-			this.props.dispatch(saveVersion(newVersion));
-		} else {
-			const atomType = this.state.nodeData.data.type;
-			console.log('Create a new atom with version stuff!');
-			console.log(newVersionContent);
-			let title = null;
-			if (atomType === 'reference') {
-				title = newVersionContent.title;
-			}
-			this.props.dispatch(createAtom(atomType, newVersionContent, title));
-		}
+	saveVersionHandler: function(newVersionContent, versionMessage, atomData) {
+		const newVersion = {
+			type: atomData.type,
+			message: versionMessage,
+			parent: atomData._id,
+			content: newVersionContent
+		};
+		this.props.dispatch(saveVersion(newVersion));
 	},
 
 	handleCreateNewChange: function(item) {
@@ -267,7 +249,7 @@ export const Manage = React.createClass({
 								return null;
 							}
 							const buttons = [ 
-								// { type: 'link', text: 'Custom Button', link: '/pub/' + item.slug + '/edit' },
+							// 	{ type: 'link', text: 'Save Version', link: '/pub/' + item.slug + '/edit' },
 							];
 
 							return (
@@ -290,6 +272,7 @@ export const Manage = React.createClass({
 									handleAddContributor={this.handleAddContributor}
 									handleUpdateContributor={this.handleUpdateContributor}
 									handleDeleteContributor={this.handleDeleteContributor}
+									saveVersionHandler={this.saveVersionHandler}
 
 									detailsLoading={item.detailsLoading}
 									detailsError={!!item.detailsError}
