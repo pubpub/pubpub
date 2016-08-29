@@ -312,7 +312,7 @@ export function getAtomData(req, res) {
 
 		if (!meta || meta === 'discussions') {
 			// See if the current atom is a reply to anything else
-			getDiscussions = Link.findOne({type: 'reply', source: atomResult._id}).exec()
+			getDiscussions = Link.findOne({type: 'reply', source: atomResult._id, inactive: {$ne: true}}).exec()
 			.then(function(replyToLink) {
 				const rootID = replyToLink ? replyToLink.metadata.rootReply : atomResult._id;
 				return Link.find({'metadata.rootReply': rootID, type: 'reply'}).populate({
