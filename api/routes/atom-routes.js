@@ -293,7 +293,7 @@ export function getAtomData(req, res) {
 		const getDiscussions = Link.findOne({type: 'reply', source: atomResult._id}).exec()
 			.then(function(replyToLink) {
 				const rootID = replyToLink ? replyToLink.metadata.rootReply : atomResult._id;
-				return Link.find({'metadata.rootReply': rootID, type: 'reply'}).populate({
+				return Link.find({'metadata.rootReply': rootID, type: 'reply', inactive: {$ne: true}}).populate({
 					path: 'source',
 					model: 'Atom',
 				}).exec();
