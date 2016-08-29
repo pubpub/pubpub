@@ -10,7 +10,7 @@ import {styles as aboutStyles} from './aboutStyles';
 let styles = {};
 
 import {globalMessages} from 'utils/globalMessages';
-import {FormattedMessage} from 'react-intl';
+import {FormattedMessage, defineMessages} from 'react-intl';
 
 export const About = React.createClass({
 
@@ -24,6 +24,26 @@ export const About = React.createClass({
 		const metaData = {
 			title: 'PubPub',
 		};
+
+
+		const messages = defineMessages({
+			ForReaders: {
+				id: 'about.ForReaders',
+				defaultMessage: 'For Readers.'
+			},
+			ForAuthors: {
+				id: 'about.ForReaders',
+				defaultMessage: 'For Readers.'
+			},
+			ForReviewers: {
+				id: 'about.ForReviewers',
+				defaultMessage: 'For Reviewers.'
+			},
+			ForJournals: {
+				id: 'about.ForJournals',
+				defaultMessage: 'For Journals.'
+			},
+		});
 
 		return (
 			<div style={styles.container}>
@@ -47,29 +67,28 @@ export const About = React.createClass({
 
 						<div style={styles.headerButtons}>
 							<div onClick={this.scroll.bind(this, 'readers')} className={'underlineOnHover'} style={styles.buttonTitle}>
-								<FormattedMessage id="about.ForReaders" defaultMessage="For Readers."/>
+								<FormattedMessage {...messages.ForReaders}/>
 							</div>
 							<p style={styles.buttonText}>
 								<FormattedMessage id="about.PDescription2" defaultMessage="All is free to read and share"/>
 							</p>
 
 							<div onClick={this.scroll.bind(this, 'authors')} className={'underlineOnHover'} style={styles.buttonTitle}>
-								<FormattedMessage id="about.ForAuthors" defaultMessage="For Authors"/>
+								<FormattedMessage {...messages.ForAuthors}/>
 							</div>
 							<p style={styles.buttonText}>
 								<FormattedMessage id="about.FreeImmediate" defaultMessage="Free, immediate publishing"/>
 							</p>
 
 							<div onClick={this.scroll.bind(this, 'reviewers')} className={'underlineOnHover'} style={styles.buttonTitle}>
-								<FormattedMessage id="about.ForReviewers" defaultMessage="For Reviewers"/>
+								<FormattedMessage {...messages.ForReviewers}/>
 							</div>
 							<p style={styles.buttonText}>
 								<FormattedMessage id="about.BeRewarded" defaultMessage="Be rewarded for your work"/>
 							</p>
 
 							<div onClick={this.scroll.bind(this, 'journals')} className={'underlineOnHover'} style={styles.buttonTitle}>
-								<FormattedMessage id="about.ForJournals" defaultMessage="For Journals"/>
-
+								<FormattedMessage {...messages.ForJournals}/>
 							</div>
 							<p style={styles.buttonText}>
 								<FormattedMessage id="about.Curate" defaultMessage="Curate for your community"/>
@@ -141,7 +160,7 @@ export const About = React.createClass({
 						<div style={[styles.forWhoBlock, styles.forWhoBorderBottom]} id={'readers'}>
 							<div style={[styles.forWhoText, styles.forWhoLeft]}>
 								<h3 style={styles.noMargin}>
-									<FormattedMessage id="about.ForReadersH" defaultMessage="For Readers"/>
+									<FormattedMessage {...messages.ForReaders}/>
 								</h3>
 								<p>
 									<FormattedMessage id="about.ForReadersP" defaultMessage="A rich and collaborative open-source editor allows for evolving content and formats. Publishing is by the author and immediate. Publishing is versioned and we encourage publishing early and often to capture the full history of your work."/>
@@ -154,7 +173,7 @@ export const About = React.createClass({
 						<div style={[styles.forWhoBlock, styles.forWhoBorderBottom]} id={'authors'}>
 							<div style={[styles.forWhoText, styles.forWhoRight]}>
 								<h3 style={styles.noMargin}>
-									<FormattedMessage id="about.ForAuthorsH" defaultMessage="For Authors"/>
+									<FormattedMessage {...messages.ForAuthors}/>
 								</h3>
 								<p>
 									<FormattedMessage id="about.ForAuthorsP" defaultMessage="	Author-driven free and immediate publishing. PubPub provides versioned histories and uses a rich and collaborative open-source editor that allows for evolving content and formats. PubPub encourages publishing early and often to capture the full history of your work."/>
@@ -172,7 +191,7 @@ export const About = React.createClass({
 						<div style={[styles.forWhoBlock, styles.forWhoBorderBottom]} id={'reviewers'}>
 							<div style={[styles.forWhoText, styles.forWhoLeft]}>
 								<h3 style={styles.noMargin}>
-									<FormattedMessage id="about.ForReviewersH" defaultMessage="For Reviewers"/>
+									<FormattedMessage {...messages.ForReviewers}/>
 								</h3>
 								<p>
 									<FormattedMessage id="about.ForReviewersP" defaultMessage="Review is distributed across many communities and done in the open. Rewarding constructive reviews and incentivizing progress opens the process to all that are capable."/>
@@ -187,7 +206,7 @@ export const About = React.createClass({
 						<div style={styles.forWhoBlock} id={'journals'}>
 							<div style={[styles.forWhoText, styles.forWhoRight]}>
 								<h3 style={styles.noMargin}>
-									<FormattedMessage id="about.ForJournalsH" defaultMessage="For Journals"/>
+									<FormattedMessage {...messages.ForJournals}/>
 								</h3>
 								<p>
 									<FormattedMessage id="about.ForJournalsP" defaultMessage="Created by anyone for any community. Journals become tools for curating published content, not gatekeepers of scientific progress. Pubs can be submitted to and featured in as many journals as relevant. Journals can be run for large or small audiences, by institutions or individuals."/>
