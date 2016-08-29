@@ -153,9 +153,17 @@ export const globalMessages = defineMessages({
 		id: 'global.inthenews',
 		defaultMessage: 'In The News',
 	},
-	source: {
-		id: 'global.source',
+	Source: {
+		id: 'global.Source',
 		defaultMessage: 'Source',
+	},
+	Height: {
+		id: 'global.Height',
+		defaultMessage: 'Height',
+	},
+	Width: {
+		id: 'global.Width',
+		defaultMessage: 'Width',
 	},
 	cite: {
 		id: 'global.cite',
@@ -276,6 +284,10 @@ export const globalMessages = defineMessages({
 	Preview: {
 		id: 'global.Preview',
 		defaultMessage: 'Preview',
+	},
+	ViewSource: {
+		id: 'global.ViewSource',
+		defaultMessage: 'View Source',		
 	},
 	emailAddress: {
 		id: 'global.emailAddress',
