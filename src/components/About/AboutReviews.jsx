@@ -28,24 +28,27 @@ export const AboutReviews = React.createClass({
 							<FormattedMessage {...globalMessages.Reviews}/>
 						</h1>
 						<p style={[styles.headerSubtitle, styles.headerTextMax]}>
-							<FormattedMessage id="about.Reviews" defaultMessage="Reviews in PubPub are open, iterative, and contributory."/>
 						</p>
 
-						<p>When reviewing science, it can often be hard to understand the methods, analysis, and results if operating purely on the author's description of these things. For this reason, PubPub is designed to give reviewers access to the data, code, and raw results of research in a way that makes it actionably reviewable. </p>
-
-
+						<p>
+							<FormattedMessage id="about.ReviewsP2" defaultMessage="When reviewing science, it can often be hard to understand the methods, analysis, and results if operating purely on the author's description of these things. For this reason, PubPub is designed to give reviewers access to the data, code, and raw results of research in a way that makes it actionably reviewable."/>
+						</p>
 					</div>
 				</div>
 
 				<div>
 					<div className={'section'}>
-						<h2>Contributory Review</h2>
-						<p>Allow reviewers to clone, edit, and publish embedded content, data, code.</p>
-						<p>Reviews are open, show the productivity of your reviews.</p>
-
+						<h2>
+							<FormattedMessage id="about.ContributoryReviewH" defaultMessage="Contributory Review."/>
+						</h2>
+						<p>
+							<FormattedMessage id="about.ContributoryReviewP1" defaultMessage="Allow reviewers to clone, edit, and publish embedded content, data, code."/>
+						</p>
+						<p>
+							<FormattedMessage id="about.ContributoryReviewP2" defaultMessage="Reviews are open, show the productivity of your reviews."/>
+						</p>
 					</div>
 				</div>
-
 			</div>
 		);
 	}
