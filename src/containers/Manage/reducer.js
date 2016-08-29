@@ -86,10 +86,10 @@ function createAtomLoad(state) {
 	});
 }
 
-function createAtomSuccess(state, result, redirect) {
+function createAtomSuccess(state, result, redirect, defaultOpen) {
 	const newItem = {
 		...result,
-		defaultOpen: true,
+		defaultOpen: defaultOpen,
 	};
 	return state.merge({
 		mediaItems: state.get('mediaItems').push(ensureImmutable(newItem))
@@ -237,7 +237,7 @@ export default function reducer(state = defaultState, action) {
 	case CREATE_ATOM_LOAD:
 		return createAtomLoad(state);
 	case CREATE_ATOM_SUCCESS:
-		return createAtomSuccess(state, action.result, action.redirect);
+		return createAtomSuccess(state, action.result, action.redirect, action.defaultOpen);
 	case CREATE_ATOM_FAIL:
 		return createAtomFail(state, action.error);
 

@@ -32,10 +32,11 @@ export function getMedia(filterParams) {
 	};
 }
 
-export function createAtom(type, versionContent, title, redirect) {
+export function createAtom(type, versionContent, title, redirect, defaultOpen) {
 	return {
 		types: [CREATE_ATOM_LOAD, CREATE_ATOM_SUCCESS, CREATE_ATOM_FAIL],
 		redirect: redirect,
+		defaultOpen: defaultOpen,
 		promise: (client) => client.post('/createAtom', {data: {
 			type: type,
 			versionContent: versionContent,

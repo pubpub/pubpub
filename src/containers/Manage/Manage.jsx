@@ -136,7 +136,7 @@ export const Manage = React.createClass({
 	createNew: function() {
 		console.log('Creating: ', this.state.createNewType);
 		// If document, redirect
-		this.props.dispatch(createAtom(this.state.createNewType, undefined, ('New ' + this.state.createNewType)));
+		this.props.dispatch(createAtom(this.state.createNewType, undefined, ('New ' + this.state.createNewType), undefined, true));
 		this.setState({filter: ''});
 	},
 
