@@ -14,7 +14,7 @@ let styles = {};
 export const AppHeader = React.createClass({
 	propTypes: {
 		loginData: PropTypes.object,
-		path: PropTypes.string, 
+		path: PropTypes.string,
 		createDocument: PropTypes.func,
 		logoutHandler: PropTypes.func,
 		goToURL: PropTypes.func,
@@ -120,7 +120,7 @@ export const AppHeader = React.createClass({
 				{!isLoggedIn && // Render if not logged in
 					<Link to={'/login' + loginQuery} style={globalStyles.link}>
 						<div style={[styles.headerButton, styles.headerNavItem]}>
-							<FormattedMessage {...globalMessages.login} />
+							<FormattedMessage {...globalMessages.Login} />
 						</div>
 					</Link>
 				}
@@ -151,7 +151,7 @@ export const AppHeader = React.createClass({
 						</div>
 					</Link>
 				*/}
-				
+
 				{/* Account Menu Splash*/}
 				{this.state.accountMenuOpen && // Render if the account menu is set open
 					<div className={'header-menu-splash'} style={styles.headerMenuSplash} onClick={this.toggleAccountMenu}></div>
@@ -166,7 +166,7 @@ export const AppHeader = React.createClass({
 
 					<div className={'menu-option'} onClick={this.props.createDocument}>New Document</div>
 					{/* <Link className={'menu-option'} to={'/user/' + username + '/journals'}>My Journals</Link> */}
-					
+
 					<div className={'menu-separator'} ></div>
 
 					<Link className={'menu-option'} to={'/user/' + username + '/profile'}>Settings</Link>
@@ -174,7 +174,7 @@ export const AppHeader = React.createClass({
 				</div>
 
 			</div>
-			
+
 		);
 	}
 });
