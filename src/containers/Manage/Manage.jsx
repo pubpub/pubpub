@@ -133,8 +133,6 @@ export const Manage = React.createClass({
 	},
 
 	createNew: function() {
-		console.log('Creating: ', this.state.createNewType);
-		// If document, redirect
 		const defaultOpen = this.state.createNewType !== 'document';
 		this.props.dispatch(createAtom(this.state.createNewType, undefined, ('New ' + this.state.createNewType), undefined, defaultOpen));
 		this.setState({filter: ''});
@@ -161,7 +159,6 @@ export const Manage = React.createClass({
 	},
 
 	deleteAtomHandler: function(atomID) {
-		// console.log('Deleting atomID ', atomID);
 		this.props.dispatch(deleteAtom(atomID));
 	},
 
@@ -258,6 +255,7 @@ export const Manage = React.createClass({
 						return null;
 					}
 					const buttons = [ 
+						// Put custom buttons here
 						// { type: 'action', text: 'Delete', action: this.deleteAtom.bind(this, item.parent._id) },
 					];
 
