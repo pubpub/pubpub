@@ -129,6 +129,26 @@ export const globalMessages = defineMessages({
 		id: 'global.PublicDiscussion',
 		defaultMessage: 'Public Discussion',
 	},
+	Public: {
+		id: 'global.Public',
+		defaultMessage: 'Public',
+	},
+	NewCollection: {
+		id: 'global.NewCollection',
+		defaultMessage: 'New Collection',
+	},
+	AddCollection: {
+		id: 'global.AddCollection',
+		defaultMessage: 'Add Collection',
+	},
+	DeleteAdmin: {
+		id: 'global.DeleteAdmin',
+		defaultMessage: 'Delete Admin',
+	},
+	RecentActivity: {
+		id: 'global.RecentActivity',
+		defaultMessage: 'Recent Activity',
+	},
 	Reviews: {
 		id: 'global.Reviews',
 		defaultMessage: 'Reviews',
@@ -208,6 +228,10 @@ export const globalMessages = defineMessages({
 	Cancel: {
 		id: 'global.Cancel',
 		defaultMessage: 'Cancel',
+	},
+	Rename: {
+		id: 'global.Rename',
+		defaultMessage: 'Rename',		
 	},
 	Remove: {
 		id: 'global.Remove',
@@ -325,6 +349,10 @@ export const globalMessages = defineMessages({
 		id: 'global.FeaturedOn',
 		defaultMessage: 'Featured On',
 	},
+	Featured: {
+		id: 'global.Featured',
+		defaultMessage: 'Featured',
+	},
 	Settings: {
 		id: 'global.Settings',
 		defaultMessage: 'Settings',
@@ -404,6 +432,10 @@ export const globalMessages = defineMessages({
 	Details: {
 		id: 'global.Details',
 		defaultMessage: 'Details',
+	},
+	Layout: {
+		id: 'global.Layout',
+		defaultMessage: 'Layout',
 	},
 	read: {
 		id: 'global.read',
@@ -486,12 +518,12 @@ export const globalMessages = defineMessages({
 		id: 'global.Submit',
 		defaultMessage: 'Submit',
 	},
-	collections: {
-		id: 'global.collections',
+	Collections: {
+		id: 'global.Collections',
 		defaultMessage: 'Collections',
 	},
-	admins: {
-		id: 'global.admins',
+	Admins: {
+		id: 'global.Admins',
 		defaultMessage: 'Admins',
 	},
 	Admin: {
@@ -533,6 +565,10 @@ export const globalMessages = defineMessages({
 	SubmittedTo: {
 		id: 'global.SubmittedTo',
 		defaultMessage: 'Submitted To',
+	},
+	Submitted: {
+		id: 'global.Submitted',
+		defaultMessage: 'Submitted',
 	},
 	UnknownType: {
 		id: 'global.UnknownType',
