@@ -544,7 +544,7 @@ export const globalMessages = defineMessages({
 	},
 	Private: {
 		id: 'global.Private',
-		defaultMessage: 'Private',		
+		defaultMessage: 'Private',
 	},
 	readOnly: {
 		id: 'global.readOnly',
@@ -609,6 +609,22 @@ export const globalMessages = defineMessages({
 	discussionReplyPlaceholder: {
 		id: 'discussionReplyPlaceholder',
 		defaultMessage: 'Add your reply'
+	},
+	Reply: {
+		id: 'Reply',
+		defaultMessage: 'Reply'
+	},
+	ReplyTo: {
+		id: 'ReplyTo',
+		defaultMessage: 'Reply to'
+	},
+	Clear: {
+		id: 'Clear',
+		defaultMessage: 'Clear'		
+	},
+	Permalink: {
+		id: 'Permalink',
+		defaultMessage: 'Permalink'
 	},
 	CreateJournal: {
 		id: 'CreateJournal',

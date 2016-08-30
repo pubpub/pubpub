@@ -5,8 +5,8 @@ import dateFormat from 'dateformat';
 import { Link } from 'react-router';
 import {renderReactFromJSON} from 'components/AtomTypes/Document/proseEditor';
 import {globalStyles} from 'utils/styleConstants';
-// import {globalMessages} from 'utils/globalMessages';
-// import {FormattedMessage} from 'react-intl';
+import {globalMessages} from 'utils/globalMessages';
+import {FormattedMessage} from 'react-intl';
 
 let styles = {};
 
@@ -47,9 +47,8 @@ export const DiscussionItem = React.createClass({
 				<div style={styles.discussionHeader}>
 					<div style={styles.headerVotes}>
 
-					<div className={'lighter-bg-hover'} style={[styles.headerVote]}>^</div>
-					<div className={'lighter-bg-hover'} style={[styles.headerVote, styles.headerDownVote]}>^</div>
-
+						<div className={'lighter-bg-hover'} style={[styles.headerVote]}>^</div>
+						<div className={'lighter-bg-hover'} style={[styles.headerVote, styles.headerDownVote]}>^</div>
 					</div>
 					<div style={styles.headerDetails}>
 						{authorsData.map((authorLink, authorIndex)=> {
@@ -57,7 +56,7 @@ export const DiscussionItem = React.createClass({
 								<div key={'author-' + index + '-' + authorIndex} style={styles.headerAuthor}>
 									<div style={styles.authorImage}>
 										<Link target={this.props.linkTarget} style={globalStyles.link} to={'/user/' + authorLink.source.username}><img src={'https://jake.pubpub.org/unsafe/35x35/' + authorLink.source.image} /></Link>
-									</div>	
+									</div>
 									<div style={styles.authorDetails}>
 										<Link target={this.props.linkTarget} style={globalStyles.link} to={'/user/' + authorLink.source.username}>{authorLink.source.name}</Link>
 									</div>
@@ -68,15 +67,21 @@ export const DiscussionItem = React.createClass({
 				</div>
 				<div className={'atom-reply'} style={styles.discussionContent}>
 					{!versionData.isPublished &&
-						<div style={styles.privateDiscussion}>Private Discussion</div>
+						<div style={styles.privateDiscussion}>
+							<FormattedMessage id="discussionItem.PrivateDiscussion" defaultMessage="Private Discussion"/>						
+						</div>
 					}
 					{renderReactFromJSON(docJSON && docJSON.content, true)}
 				</div>
 				<div style={[styles.discussionFooter, this.props.isPreview && {display: 'none'}]}>
 					<Link target={this.props.linkTarget} style={globalStyles.link} to={'/pub/' + versionData.parent}><span className={'underlineOnHover'} style={styles.discussionFooterItem}>{dateFormat(date, 'mmm dd, yyyy h:MM TT')}</span></Link>
-					<span className={'underlineOnHover'} style={styles.discussionFooterItem} onClick={this.setReply}>reply</span>
+					<span className={'underlineOnHover'} style={styles.discussionFooterItem} onClick={this.setReply}>
+						<FormattedMessage {...globalMessages.Reply}/>
+					</span>
 					{/* <span className={'underlineOnHover'} style={styles.discussionFooterItem} onClick={this.setFlag}>flag</span> */}
-					<Link target={this.props.linkTarget} style={globalStyles.link} to={'/pub/' + versionData.parent}><span className={'underlineOnHover'} style={styles.discussionFooterItem}>permalink</span></Link>
+					<Link target={this.props.linkTarget} style={globalStyles.link} to={'/pub/' + versionData.parent}><span className={'underlineOnHover'} style={styles.discussionFooterItem}>
+						<FormattedMessage {...globalMessages.Permalink}/>
+					</span></Link>
 				</div>
 
 				<div style={styles.children}>
@@ -84,7 +89,7 @@ export const DiscussionItem = React.createClass({
 						return <WrappedDiscussionItem linkTarget={this.props.linkTarget} discussionData={child} setReplyTo={this.props.setReplyTo} index={child.linkData._id} key={child.linkData._id}/>;
 					})}
 				</div>
-				
+
 			</div>
 		);
 	}
