@@ -13,6 +13,10 @@ export const globalMessages = defineMessages({
 		id: 'global.Skipthisstep',
 		defaultMessage: 'Skip this step',
 	},
+	SaveVersion: {
+		id: 'global.SaveVersion',
+		defaultMessage: 'Save Version',
+	},
 	ProfileImage: {
 		id: 'global.ProfileImage',
 		defaultMessage: 'Profile Image',
@@ -315,7 +319,7 @@ export const globalMessages = defineMessages({
 	},
 	FeaturedOn: {
 		id: 'global.FeaturedOn',
-		defaultMessage: 'Featured On',		
+		defaultMessage: 'Featured On',
 	},
 	Settings: {
 		id: 'global.Settings',
