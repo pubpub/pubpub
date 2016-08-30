@@ -205,10 +205,6 @@ export const globalMessages = defineMessages({
 		id: 'global.Remove',
 		defaultMessage: 'Remove',
 	},
-	pubs: {
-		id: 'global.pubs',
-		defaultMessage: 'Pubs',
-	},
 	Pubs: {
 		id: 'global.Pubs',
 		defaultMessage: 'Pubs',
@@ -510,6 +506,18 @@ export const globalMessages = defineMessages({
 		id: 'global.Markdown',
 		defaultMessage: 'Markdown',
 	},
+	AddSubmissions: {
+		id: 'global.AddSubmissions',
+		defaultMessage: 'Add Submissions',
+	},
+	SubmittedTo: {
+		id: 'global.SubmittedTo',
+		defaultMessage: 'Submitted To',
+	},
+	UnknownType: {
+		id: 'global.UnknownType',
+		defaultMessage: 'Unknown Type',
+	},
 	print: {
 		id: 'global.print',
 		defaultMessage: 'Print',
@@ -550,8 +558,8 @@ export const globalMessages = defineMessages({
 		id: 'global.Highlights',
 		defaultMessage: 'Highlights',
 	},
-	on: {
-		id: 'global.on',
+	On: {
+		id: 'global.On',
 		defaultMessage: 'On',
 	},
 	off: {
@@ -589,6 +597,10 @@ export const globalMessages = defineMessages({
 	CreateJournal: {
 		id: 'CreateJournal',
 		defaultMessage: 'Create Journal'
+	},
+	SubmitToJournals: {
+		id: 'SubmitToJournals',
+		defaultMessage: 'Submit To Journals'
 	},
 	GotIt: {
 		id: 'GotIt',

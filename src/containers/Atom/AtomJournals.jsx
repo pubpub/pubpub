@@ -5,6 +5,8 @@ import request from 'superagent';
 import {safeGetInToJS} from 'utils/safeParse';
 import dateFormat from 'dateformat';
 import {PreviewCard} from 'components';
+import {globalMessages} from 'utils/globalMessages';
+import {FormattedMessage} from 'react-intl';
 
 let styles;
 
@@ -19,7 +21,7 @@ export const AtomJournals = React.createClass({
 			value: [],
 		};
 	},
-	
+
 	componentWillReceiveProps(nextProps) {
 		const currentSubmitted = safeGetInToJS(this.props.atomData, ['submittedData']) || [];
 		const nextSubmitted = safeGetInToJS(nextProps.atomData, ['submittedData']) || [];
@@ -59,12 +61,13 @@ export const AtomJournals = React.createClass({
 		const permissionType = safeGetInToJS(this.props.atomData, ['atomData', 'permissionType']) || [];
 		return (
 			<div style={styles.container}>
-				
-				Journals serve as curators. Pubs can be featured in multiple journals.
+				<FormattedMessage id="about.JournalsPurpose" defaultMessage="Journals serve as curators. Pubs can be featured in multiple journals."/>
 
 				{permissionType === 'author' &&
 					<div>
-						<h3>Add Submissions</h3>
+						<h3>
+							<FormattedMessage {...globalMessages.AddSubmissions}/>
+						</h3>
 
 						<Select.Async
 							name="form-field-name"
@@ -72,12 +75,17 @@ export const AtomJournals = React.createClass({
 							value={this.state.value}
 							loadOptions={this.loadOptions}
 							multi={true}
-							placeholder={<span>Choose one or more journals for submission</span>}
+							placeholder={<span>
+								<FormattedMessage id="about.JournalsChoose" defaultMessage="Choose one or more journals for submission."/>
+							</span>}
 							onChange={this.handleSelectChange} />
 
-						<div className={'button'} style={[styles.submitButton, (this.state.value && this.state.value.length) && styles.submitButtonActive]} onClick={this.submitToJournals}>Submit To Journals</div>
-
-						<h3>Submitted to</h3>
+						<div className={'button'} style={[styles.submitButton, (this.state.value && this.state.value.length) && styles.submitButtonActive]} onClick={this.submitToJournals}>
+							<FormattedMessage {...globalMessages.SubmitToJournals}/>
+						</div>
+						<h3>
+							<FormattedMessage {...globalMessages.SubmittedTo}/>
+						</h3>
 						{
 							submittedData.sort((foo, bar)=>{
 								// Sort so that most recent is first in array
@@ -87,7 +95,7 @@ export const AtomJournals = React.createClass({
 							}).map((item, index)=>{
 								return (
 									<div style={[item.inactive && styles.inactive]} key={'submitted-' + index}>
-										<PreviewCard 
+										<PreviewCard
 											type={'journal'}
 											image={item.destination.icon}
 											title={item.destination.journalName}
@@ -96,7 +104,9 @@ export const AtomJournals = React.createClass({
 											footer={
 												<div>
 													<div>Submitted on {dateFormat(item.createDate, 'mmm dd, yyyy h:MM TT')}</div>
-													<div style={[!item.inactive && {display: 'none'}]}><span style={styles.inactiveNote}>{item.inactiveNote}</span> on {dateFormat(item.inactiveDate, 'mmm dd, yyyy h:MM TT')}</div>
+													<div style={[!item.inactive && {display: 'none'}]}><span style={styles.inactiveNote}>{item.inactiveNote}</span>
+													<FormattedMessage {...globalMessages.On}/>
+													 {dateFormat(item.inactiveDate, 'mmm dd, yyyy h:MM TT')}</div>
 												</div>
 											} />
 									</div>
@@ -117,7 +127,7 @@ export const AtomJournals = React.createClass({
 					}).map((item, index)=>{
 						return (
 							<div style={[item.inactive && styles.inactive]} key={'submitted-' + index}>
-								<PreviewCard 
+								<PreviewCard
 									type={'journal'}
 									image={item.source.icon}
 									title={item.source.journalName}

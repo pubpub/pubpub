@@ -4,6 +4,8 @@ import {safeGetInToJS} from 'utils/safeParse';
 import request from 'superagent';
 import {Loader, PreviewCard} from 'components';
 import {GoogleCharts} from 'components';
+import {globalMessages} from 'utils/globalMessages';
+import {FormattedMessage} from 'react-intl';
 
 let styles;
 
@@ -38,7 +40,7 @@ export const AtomMeta = React.createClass({
 					analyticsLoading: false,
 				});
 			}
-			
+
 		});
 	},
 
@@ -64,7 +66,7 @@ export const AtomMeta = React.createClass({
 			gData.dateViewsArray.forEach( function(item) {
 				convDateViewsArray.push([new Date(item[0]), item[1]]);
 				// convDateViewsArray.push([dateFormat(item[0], 'mmm dd, yyyy'), item[1]]);
-				
+
 			});
 		}
 
@@ -98,15 +100,21 @@ export const AtomMeta = React.createClass({
 
 					<div style={styles.wideContainer}><div style={[styles.block, {width: 'calc(33% - 16px)'}]}>
 						<div style={styles.blockDispL}>{gData.totalViews}</div>
-						<div style={styles.blockUnderL}>Total Views</div>
+						<div style={styles.blockUnderL}>
+							<FormattedMessage id="about.TotalViews" defaultMessage="Total Views"/>
+						</div>
 					</div>
 					<div style={[styles.block, {width: 'calc(33% - 16px)'}]}>
 						<div style={styles.blockDispL}>{Math.round(gData.totalReadTime / 36) / 100}hrs</div>
-						<div style={styles.blockUnderL}>Total Read Time</div>
+						<div style={styles.blockUnderL}>
+							<FormattedMessage id="about.TotalReadTime" defaultMessage="Total Read Time"/>
+						</div>
 					</div>
 					<div style={[styles.block, {width: 'calc(33% - 16px)'}]}>
 						<div style={styles.blockDispL}>{Math.round(gData.averageReadTime * 100) / 100}s</div>
-						<div style={styles.blockUnderL}>Average Read Time</div>
+						<div style={styles.blockUnderL}>
+							<FormattedMessage id="about.AverageReadTime" defaultMessage="Average Read Time"/>
+						</div>
 					</div></div>
 
 					<div style={styles.wideContainer}><div style={styles.graphTitle}>Views over Time</div>
@@ -131,7 +139,7 @@ export const AtomMeta = React.createClass({
 							<div style={styles.blockDispS}>{gData.totalViewsDay}</div>
 							<div style={styles.blockUnderS}>Views Past Day</div>
 						</div>
-						
+
 						{/* <div style={[styles.block, styles.block25]}>
 								<div style={styles.blockDispS}>{gData.totalViewsAveYear}</div>
 								<div style={styles.blockUnderS}>Views Ave. Year</div>
@@ -149,7 +157,7 @@ export const AtomMeta = React.createClass({
 								<div style={styles.blockUnderS}>Views Ave. Day</div>
 							</div> */}
 					</div>
-					
+
 					<br/>
 
 					<div style={styles.wideContainer}><div style={[styles.block, {width: 'calc(100% - 16px)'}]}>
@@ -187,7 +195,7 @@ export const AtomMeta = React.createClass({
 					<br/>
 
 					{/* <div style={styles.wideContainer}>
-					
+
 						<div style={[styles.block, styles.block25]}>
 							<div style={styles.blockDispM}>89</div>
 							<div style={styles.blockUnderM}>Interactions</div>
