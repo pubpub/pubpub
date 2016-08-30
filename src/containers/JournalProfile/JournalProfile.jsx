@@ -18,7 +18,7 @@ import {NavContentWrapper} from 'components';
 import {safeGetInToJS} from 'utils/safeParse';
 
 // import {globalStyles} from 'utils/styleConstants';
-// import {globalMessages} from 'utils/globalMessages';
+import {globalMessages} from 'utils/globalMessages';
 import {FormattedMessage} from 'react-intl';
 
 export const JournalProfile = React.createClass({
@@ -114,12 +114,12 @@ export const JournalProfile = React.createClass({
 		};
 
 		const mobileNavButtons = [
-			{ type: 'link', mobile: true, text: 'About', link: '/' + this.props.slug + '/about' },
-			{ type: 'button', mobile: true, text: 'Menu', action: undefined },
+			{ type: 'link', mobile: true, text: <FormattedMessage {...globalMessages.About}/>, link: '/' + this.props.slug + '/about' },
+			{ type: 'button', mobile: true, text: <FormattedMessage {...globalMessages.Menu}/>, action: undefined },
 		];
 
 		let adminNav = [
-			{ type: 'title', text: 'Admin'},
+			{ type: 'title', text: <FormattedMessage {...globalMessages.Admin}/>},
 			{ type: 'link', text: 'Details', link: '/' + this.props.slug + '/details', active: this.props.mode === 'details' },
 			{ type: 'link', text: 'Layout', link: '/' + this.props.slug + '/layout', active: this.props.mode === 'layout' },
 			{ type: 'link', text: 'Featured', link: '/' + this.props.slug + '/featured', active: this.props.mode === 'featured' },

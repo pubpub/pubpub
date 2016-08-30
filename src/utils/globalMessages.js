@@ -77,8 +77,8 @@ export const globalMessages = defineMessages({
 		id: 'global.FAQ',
 		defaultMessage: 'FAQ',
 	},
-	menu: {
-		id: 'global.menu',
+	Menu: {
+		id: 'global.Menu',
 		defaultMessage: 'Menu',
 	},
 	close: {
@@ -180,6 +180,10 @@ export const globalMessages = defineMessages({
 	aboutPubPub: {
 		id: 'global.aboutPubPub',
 		defaultMessage: 'About PubPub',
+	},
+	About: {
+		id: 'global.About',
+		defaultMessage: 'About',
 	},
 	Contact: {
 		id: 'global.Contact',
@@ -490,6 +494,10 @@ export const globalMessages = defineMessages({
 		id: 'global.admins',
 		defaultMessage: 'Admins',
 	},
+	Admin: {
+		id: 'global.Admin',
+		defaultMessage: 'Admin',
+	},
 	Email: {
 		id: 'global.Email',
 		defaultMessage: 'Email',
@@ -587,63 +595,63 @@ export const globalMessages = defineMessages({
 		defaultMessage: 'Editor',
 	},
 	editorCommentsText0: {
-		id: 'editorCommentsText0',
+		id: 'global.editorCommentsText0',
 		defaultMessage: 'You are commenting on a draft version of this Pub.'
 	},
 	editorCommentsText1: {
-		id: 'editorCommentsText1',
+		id: 'global.editorCommentsText1',
 		defaultMessage: 'This section can only be used by collaborators and is private. It is never published or made public.'
 	},
 	EditorComments: {
-		id: 'EditorComments',
+		id: 'global.EditorComments',
 		defaultMessage: 'Editor Comments'
 	},
 	discussionPlaceholder: {
-		id: 'discussionPlaceholder',
+		id: 'global.discussionPlaceholder',
 		defaultMessage: 'Add discussion or feedback'
 	},
 	People: {
-		id: 'People',
+		id: 'global.People',
 		defaultMessage: 'People'
 	},
 	discussionReplyPlaceholder: {
-		id: 'discussionReplyPlaceholder',
+		id: 'global.discussionReplyPlaceholder',
 		defaultMessage: 'Add your reply'
 	},
 	Reply: {
-		id: 'Reply',
+		id: 'global.Reply',
 		defaultMessage: 'Reply'
 	},
 	ReplyTo: {
-		id: 'ReplyTo',
+		id: 'global.ReplyTo',
 		defaultMessage: 'Reply to'
 	},
 	Clear: {
-		id: 'Clear',
+		id: 'global.Clear',
 		defaultMessage: 'Clear'
 	},
 	Permalink: {
-		id: 'Permalink',
+		id: 'global.Permalink',
 		defaultMessage: 'Permalink'
 	},
 	CreateJournal: {
-		id: 'CreateJournal',
+		id: 'global.CreateJournal',
 		defaultMessage: 'Create Journal'
 	},
 	SubmitToJournals: {
-		id: 'SubmitToJournals',
+		id: 'global.SubmitToJournals',
 		defaultMessage: 'Submit To Journals'
 	},
 	GotIt: {
-		id: 'GotIt',
+		id: 'global.GotIt',
 		defaultMessage: 'Got It'
 	},
 	CloseEditor: {
-		id: 'CloseEditor',
+		id: 'global.CloseEditor',
 		defaultMessage: 'Close Editor'
 	},
 	Export: {
-		id: 'Export',
+		id: 'global.Export',
 		defaultMessage: 'Export'
 	},
 });

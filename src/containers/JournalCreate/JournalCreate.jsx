@@ -9,7 +9,7 @@ import {Loader, ImageCropper} from 'components';
 
 import {globalStyles} from 'utils/styleConstants';
 import {globalMessages} from 'utils/globalMessages';
-import {FormattedMessage, defineMessages} from 'react-intl';
+import {FormattedMessage} from 'react-intl';
 
 let styles = {};
 
@@ -76,12 +76,7 @@ export const JournalCreate = React.createClass({
 		const metaData = {
 			title: 'Create Journal · PubPub',
 		};
-		const messages = defineMessages({
-			CreateJournal: {
-				id: 'journalCreate.CreateJournal',
-				defaultMessage: 'Create Journal.'
-			},
-		});
+
 		const isLoading = this.props.journalCreateData && this.props.journalCreateData.get('loading');
 		const errorMessage = this.props.journalCreateData && this.props.journalCreateData.get('error');
 
@@ -90,7 +85,7 @@ export const JournalCreate = React.createClass({
 				<Helmet {...metaData} />
 
 				<h1>
-					<FormattedMessage {...messages.CreateJournal}/>
+					<FormattedMessage {...globalMessages.CreateJournal}/>
 				</h1>
 
 				<form onSubmit={this.handleJournalCreate}>
@@ -132,7 +127,7 @@ export const JournalCreate = React.createClass({
 					</div>
 
 					<button className={'button'} onClick={this.handleJournalCreate}>
-						<FormattedMessage {...messages.CreateJournal}/>
+						<FormattedMessage {...globalMessages.CreateJournal}/>
 					</button>
 
 					<div style={styles.loaderContainer}><Loader loading={isLoading} showCompletion={!errorMessage}/></div>
