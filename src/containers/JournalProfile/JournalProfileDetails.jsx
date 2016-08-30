@@ -148,7 +148,12 @@ export const JournalProfileDetails = React.createClass({
 						</label>
 						<textarea ref={'about'} id={'about'} name={'about'} type="text" style={[styles.input, styles.description]} onChange={this.aboutUpdate} value={this.state.about}></textarea>
 						<div className={'light-color inputSubtext'}>
-							<FormattedMessage id="JournalProfileDetails.Description2" defaultMessage="Use to describe longer details, peer-review process, featuring standards, etc. This text will appear at pubpub.org/{journalData.slug}/about."/>
+							<FormattedMessage
+									id="JournalProfileDetails.Description2"
+									defaultMessage={`Use to describe longer details, peer-review process, featuring standards, etc. This text will appear at pubpub.org/{slug}/about.`}
+									values={{slug: journalData.slug}}
+							/>
+
 						</div>
 					</div>
 
