@@ -309,8 +309,8 @@ export const globalMessages = defineMessages({
 		id: 'global.filename',
 		defaultMessage: 'filename',
 	},
-	settings: {
-		id: 'global.settings',
+	Settings: {
+		id: 'global.Settings',
 		defaultMessage: 'Settings',
 	},
 	by: {
