@@ -4,7 +4,8 @@ import {safeGetInToJS} from 'utils/safeParse';
 import {globalStyles} from 'utils/styleConstants';
 import {Loader} from 'components';
 import request from 'superagent';
-
+import {globalMessages} from 'utils/globalMessages';
+import {FormattedMessage} from 'react-intl';
 
 let styles;
 
@@ -12,7 +13,7 @@ export const AtomExportButton = React.createClass({
 	propTypes: {
 		atomData: PropTypes.object,
 		buttonStyle: PropTypes.object,
-		
+
 	},
 
 	getInitialState() {
@@ -29,7 +30,7 @@ export const AtomExportButton = React.createClass({
 		const versionID = safeGetInToJS(this.props.atomData, ['currentVersionData', '_id']);
 		request.get('/api/generatePDF?versionID=' + versionID)
 		.end((err, response)=>{
-			if (err) {return undefined;} 
+			if (err) {return undefined;}
 			window.location = response.body;
 			this.setState({
 				renderingPDF: false,
@@ -43,7 +44,7 @@ export const AtomExportButton = React.createClass({
 		const versionID = safeGetInToJS(this.props.atomData, ['currentVersionData', '_id']);
 		request.get('/api/generateMarkdown?versionID=' + versionID)
 		.end((err, response)=>{
-			if (err) {return undefined;} 
+			if (err) {return undefined;}
 			window.location = response.body;
 			this.setState({
 				renderingMarkdown: false,
@@ -57,9 +58,11 @@ export const AtomExportButton = React.createClass({
 		const markdownURL = safeGetInToJS(this.props.atomData, ['currentVersionData', 'content', 'markdownFile']) || this.state.markdownURL;
 
 		return (
-			<div className={'light-button arrow-down-button'} style={this.props.buttonStyle}>Export
+			<div className={'light-button arrow-down-button'} style={this.props.buttonStyle}>
+				<FormattedMessage {...globalMessages.Export}/>
+
 				<div className={'hoverChild arrow-down-child'}>
-					{!!pdfURL 
+					{!!pdfURL
 						? <a href={pdfURL} style={styles.link}><div className={'underlineOnHover'} style={styles.exportType}>PDF</div></a>
 						: <a onClick={this.generatePDF} style={[styles.link, this.state.renderingPDF && styles.downloadDisabled]}>
 							<div className={'underlineOnHover'} style={styles.exportType}>
@@ -68,11 +71,14 @@ export const AtomExportButton = React.createClass({
 						</a>
 					}
 
-					{!!markdownURL 
-						? <a href={markdownURL} style={styles.link}><div className={'underlineOnHover'} style={styles.exportType}>Markdown</div></a>
+					{!!markdownURL
+						? <a href={markdownURL} style={styles.link}><div className={'underlineOnHover'} style={styles.exportType}>
+							<FormattedMessage {...globalMessages.Markdown}/>
+
+						</div></a>
 						: <a onClick={this.generateMarkdown} style={[styles.link, this.state.renderingMarkdown && styles.downloadDisabled]}>
 							<div className={'underlineOnHover'} style={styles.exportType}>
-								Markdown
+								<FormattedMessage {...globalMessages.Markdown}/>
 							</div>
 						</a>
 					}

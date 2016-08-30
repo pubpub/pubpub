@@ -193,6 +193,10 @@ export const globalMessages = defineMessages({
 		id: 'global.Save',
 		defaultMessage: 'Save',
 	},
+	SaveDetails: {
+		id: 'global.SaveDetails',
+		defaultMessage: 'Save Details',
+	},
 	Cancel: {
 		id: 'global.Cancel',
 		defaultMessage: 'Cancel',
@@ -340,6 +344,10 @@ export const globalMessages = defineMessages({
 	Preview: {
 		id: 'global.Preview',
 		defaultMessage: 'Preview',
+	},
+	PreviewImage: {
+		id: 'global.PreviewImage',
+		defaultMessage: 'PreviewImage',
 	},
 	ViewOriginal: {
 		id: 'global.ViewOriginal',
@@ -498,9 +506,9 @@ export const globalMessages = defineMessages({
 		id: 'global.authorsNote',
 		defaultMessage: 'authors note',
 	},
-	markdown: {
-		id: 'global.markdown',
-		defaultMessage: 'markdown',
+	Markdown: {
+		id: 'global.Markdown',
+		defaultMessage: 'Markdown',
 	},
 	print: {
 		id: 'global.print',
@@ -589,5 +597,9 @@ export const globalMessages = defineMessages({
 	CloseEditor: {
 		id: 'CloseEditor',
 		defaultMessage: 'Close Editor'
+	},
+	Export: {
+		id: 'Export',
+		defaultMessage: 'Export'
 	},
 });
