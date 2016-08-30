@@ -3,6 +3,9 @@ import Radium from 'radium';
 import AtomTypes from 'components/AtomTypes';
 import {safeGetInToJS} from 'utils/safeParse';
 
+import {globalMessages} from 'utils/globalMessages';
+import {FormattedMessage} from 'react-intl';
+
 export const AtomViewerPane = React.createClass({
 	propTypes: {
 		atomData: PropTypes.object,
@@ -19,10 +22,14 @@ export const AtomViewerPane = React.createClass({
 		if (AtomTypes.hasOwnProperty(type)) {
 			const Component = AtomTypes[type].viewer;
 			return <Component {...props} />;
-			
+
 		}
-		return <div>Unknown Type</div>;
-	
+		return (
+			<div>
+				<FormattedMessage {...globalMessages.UnknownType}/>
+			</div>
+		);
+
 	}
 });
 

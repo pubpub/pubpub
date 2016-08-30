@@ -542,6 +542,10 @@ export const globalMessages = defineMessages({
 		id: 'global.Unpublished',
 		defaultMessage: 'Unpublished',
 	},
+	Private: {
+		id: 'global.Private',
+		defaultMessage: 'Private',		
+	},
 	readOnly: {
 		id: 'global.readOnly',
 		defaultMessage: 'Read-Only',

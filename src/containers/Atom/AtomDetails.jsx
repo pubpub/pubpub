@@ -107,13 +107,13 @@ export const AtomDetails = React.createClass({
 							<input ref={'url'} id={'url'} name={'url'} type="text" style={[styles.input, styles.prefixedInput]} disabled={atomData.isPublished} value={this.state.slug} onChange={this.inputChange.bind(this, 'slug')}/>
 						</div>
 						<div className={'light-color inputSubtext'}>
-							Cannot be changed once published.
+							<FormattedMessage id="aboutDetails.CannotBeChanged" defaultMessage="Cannot be changed once published."/>
 						</div>
 					</div>
 
 					<div>
 						<label htmlFor={'customAuthorString'}>
-							Custom Author List
+							<FormattedMessage id="aboutDetails.CustomAuthorList" defaultMessage="Custom Author List"/>
 						</label>
 						<input ref={'customAuthorString'} id={'customAuthorString'} name={'customAuthorString'} type="text" style={styles.input} value={this.state.customAuthorString} onChange={this.inputChange.bind(this, 'customAuthorString')}/>
 						<div className={'light-color inputSubtext'}>

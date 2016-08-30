@@ -63,34 +63,35 @@ export const AtomSaveVersionButton = React.createClass({
 
 
 						<label htmlFor={'versionNote'}>
-							Version Note
+							<FormattedMessage id="aboutSaveVersionButton.VersionNote" defaultMessage="Version Note"/>
 						</label>
 						<input type="text" id={'versionNote'} name={'version note'} value={this.state.message} onChange={this.onMessageChange} style={styles.input}/>
 						<div className={'light-color inputSubtext'}>
-							Describe changes or updates.
+							<FormattedMessage id="aboutSaveVersionButton.DescribeChanges" defaultMessage="Describe changes or updates."/>
 						</div>
 
 						<div>
 							<input type="checkbox" id={'isPublished'} value={this.state.isPublished} onChange={this.onPublishedChange} style={styles.checkbox}/>
 							<label htmlFor={'isPublished'} style={styles.publishLabel}>
-								Publish on Save
+
+								<FormattedMessage id="aboutSaveVersionButton.PublishOnSave" defaultMessage="Publish on Save"/>
 							</label>
 							<div className={'light-color inputSubtext'}>
-								Publishing with permanently make this version publicly available.
+								<FormattedMessage id="aboutSaveVersionButton.PublishingDescription" defaultMessage="Publishing will permanently make this version publicly available."/>
 							</div>
 
 						</div>
 
 
 						<button className={'button'} onClick={this.onSave} style={styles.saveVersionButton}>
-							Save Version {this.state.isPublished && 'and Publish'}
+							<FormattedMessage {...globalMessages.SaveVersion}/>  {this.state.isPublished && <FormattedMessage id="aboutSaveVersionButton.AndPublish" defaultMessage="and Publish"/>}
 						</button>
 						<div style={styles.loaderContainer}><Loader loading={this.props.isLoading} showCompletion={true}/></div>
 						{this.state.noNote &&
-							<div style={styles.errorMessage}>Version Note required</div>
+							<div style={styles.errorMessage}>
+								<FormattedMessage id="aboutSaveVersionButton.VersionNoteRequired" defaultMessage="Version Note required"/>
+							</div>
 						}
-
-
 					</form>
 				</div>
 			</div>
