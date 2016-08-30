@@ -9,7 +9,7 @@ import {Loader, ImageCropper} from 'components';
 
 import {globalStyles} from 'utils/styleConstants';
 import {globalMessages} from 'utils/globalMessages';
-import {FormattedMessage} from 'react-intl';
+import {FormattedMessage, defineMessages} from 'react-intl';
 
 let styles = {};
 
@@ -71,10 +71,17 @@ export const JournalCreate = React.createClass({
 		this.props.dispatch(createJournal(newJournalData));
 	},
 
+
 	render: function() {
 		const metaData = {
 			title: 'Create Journal · PubPub',
 		};
+		const messages = defineMessages({
+			CreateJournal: {
+				id: 'journalCreate.CreateJournal',
+				defaultMessage: 'Create Journal.'
+			},
+		});
 		const isLoading = this.props.journalCreateData && this.props.journalCreateData.get('loading');
 		const errorMessage = this.props.journalCreateData && this.props.journalCreateData.get('error');
 
@@ -82,29 +89,32 @@ export const JournalCreate = React.createClass({
 			<div className={'section'} style={styles.container}>
 				<Helmet {...metaData} />
 
-				<h1>Create Journal</h1>
+				<h1>
+					<FormattedMessage {...messages.CreateJournal}/>
+				</h1>
 
 				<form onSubmit={this.handleJournalCreate}>
 					<div>
 						<label style={styles.label} htmlFor={'journalName'}>
-							Journal Name
+							<FormattedMessage id="journalCreate.JournalName" defaultMessage="Journal Name"/>
 						</label>
 						<input ref={'journalName'} id={'journalName'} name={'Journal Name'} type="text" style={styles.input}/>
 					</div>
 
 					<div>
 						<label htmlFor={'slug'}>
-							Journal URL
+
+							<FormattedMessage id="journalCreate.JournalURL" defaultMessage="Journal URL"/>
 						</label>
 						<div style={styles.prefixedInputWrapper}>
 							<div style={styles.prefix}>pubpub.org/</div>
-							<input ref={'slug'} id={'slug'} name={'journal URL'} type="text" style={[styles.input, styles.prefixedInput]} value={this.state.slug} onChange={this.slugUpdate}/>	
+							<input ref={'slug'} id={'slug'} name={'journal URL'} type="text" style={[styles.input, styles.prefixedInput]} value={this.state.slug} onChange={this.slugUpdate}/>
 						</div>
 					</div>
 
 					<div>
 						<label htmlFor={'description'}>
-							Description
+							<FormattedMessage {...globalMessages.Description}/>
 						</label>
 						<textarea ref={'description'} id={'description'} name={'description'} type="text" style={[styles.input, styles.description]} onChange={this.descriptionUpdate} value={this.state.description}></textarea>
 						<div className={'light-color inputSubtext'}>
@@ -114,15 +124,15 @@ export const JournalCreate = React.createClass({
 
 					<div>
 						<label htmlFor={'icon'}>
-							Journal Icon
+							<FormattedMessage id="journalCreate.JournalIcon" defaultMessage="Journal Icon"/>
 						</label>
 						<img style={styles.image} src={this.state.iconURL} />
 						<input id={'icon'} name={'icon image'} type="file" accept="image/*" onChange={this.handleFileSelect} />
-						
+
 					</div>
 
 					<button className={'button'} onClick={this.handleJournalCreate}>
-						Create Journal
+						<FormattedMessage {...messages.CreateJournal}/>
 					</button>
 
 					<div style={styles.loaderContainer}><Loader loading={isLoading} showCompletion={!errorMessage}/></div>
@@ -136,7 +146,7 @@ export const JournalCreate = React.createClass({
 						<ImageCropper height={500} width={500} image={this.state.iconFile} onCancel={this.cancelImageUpload} onUpload={this.imageUploaded}/>
 					</div>
 				</div>
-				
+
 			</div>
 		);
 	}

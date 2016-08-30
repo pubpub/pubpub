@@ -6,8 +6,8 @@ import { Link } from 'react-router';
 import {follow, unfollow} from './actions';
 // import {globalStyles} from 'utils/styleConstants';
 
-// import {globalMessages} from 'utils/globalMessages';
-// import {FormattedMessage} from 'react-intl';
+import {globalMessages} from 'utils/globalMessages';
+import {FormattedMessage} from 'react-intl';
 
 let styles = {};
 
@@ -55,11 +55,11 @@ export const FollowButton = React.createClass({
 		return (
 			<div className={'button showChildOnHover ' + this.props.buttonClasses} style={[styles.followButton, this.props.buttonStyle]} onClick={this.toggleFollow}>
 				{!loggedIn &&
-					<Link to={'/login' + loginQuery} className={'hoverChild'} style={styles.loginMessage}>Login</Link>
+					<Link to={'/login' + loginQuery} className={'hoverChild'} style={styles.loginMessage}><FormattedMessage {...globalMessages.Login}/></Link>
 				}
 				{this.state.isFollowing
-					? 'Following'
-					: 'Follow'
+					? <FormattedMessage {...globalMessages.Following}/>
+					: <FormattedMessage {...globalMessages.Follow}/>
 				}
 			</div>
 		);

@@ -85,16 +85,16 @@ export const globalMessages = defineMessages({
 		id: 'global.close',
 		defaultMessage: 'Close',
 	},
-	follow: {
-		id: 'global.follow',
+	Follow: {
+		id: 'global.Follow',
 		defaultMessage: 'Follow',
 	},
-	following: {
-		id: 'global.following',
+	Following: {
+		id: 'global.Following',
 		defaultMessage: 'Following',
 	},
-	follows: {
-		id: 'global.follows',
+	Follows: {
+		id: 'global.Follows',
 		defaultMessage: 'Follows',
 	},
 	design: {
@@ -620,7 +620,7 @@ export const globalMessages = defineMessages({
 	},
 	Clear: {
 		id: 'Clear',
-		defaultMessage: 'Clear'		
+		defaultMessage: 'Clear'
 	},
 	Permalink: {
 		id: 'Permalink',
