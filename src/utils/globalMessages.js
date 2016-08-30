@@ -13,6 +13,10 @@ export const globalMessages = defineMessages({
 		id: 'global.Skipthisstep',
 		defaultMessage: 'Skip this step',
 	},
+	DropFilesToAdd: {
+		id: 'global.DropFilesToAdd',
+		defaultMessage: 'Drop Files To Add',		
+	},
 	SaveVersion: {
 		id: 'global.SaveVersion',
 		defaultMessage: 'Save Version',
@@ -149,6 +153,18 @@ export const globalMessages = defineMessages({
 		id: 'global.RecentActivity',
 		defaultMessage: 'Recent Activity',
 	},
+	Recent: {
+		id: 'global.Recent',
+		defaultMessage: 'Recent',
+	},
+	Images: {
+		id: 'global.Images',
+		defaultMessage: 'Images',
+	},
+	Videos: {
+		id: 'global.Videos',
+		defaultMessage: 'Videos',
+	},
 	Reviews: {
 		id: 'global.Reviews',
 		defaultMessage: 'Reviews',
@@ -257,6 +273,10 @@ export const globalMessages = defineMessages({
 		id: 'global.JournalLogo',
 		defaultMessage: 'Journal Logo',
 	},
+	All: {
+		id: 'global.All',
+		defaultMessage: 'All',
+	},
 	Logo: {
 		id: 'global.Logo',
 		defaultMessage: 'Logo',
@@ -268,6 +288,26 @@ export const globalMessages = defineMessages({
 	HeaderAlign: {
 		id: 'global.HeaderAlign',
 		defaultMessage: 'Header Align',
+	},
+	Inline: {
+		id: 'global.Inline',
+		defaultMessage: 'Inline',
+	},
+	Full: {
+		id: 'global.Full',
+		defaultMessage: 'Full',
+	},
+	ClassName: {
+		id: 'global.ClassName',
+		defaultMessage: 'Class Name',
+	},
+	Size: {
+		id: 'global.Size',
+		defaultMessage: 'Size',
+	},
+	Align: {
+		id: 'global.Align',
+		defaultMessage: 'Align',
 	},
 	HeaderMode: {
 		id: 'global.HeaderMode',
@@ -445,9 +485,13 @@ export const globalMessages = defineMessages({
 		id: 'global.ReadyForPeerReview',
 		defaultMessage: 'Ready For Peer Review',
 	},
-	references: {
-		id: 'global.references',
+	References: {
+		id: 'global.References',
 		defaultMessage: 'References',
+	},
+	Documents: {
+		id: 'global.Documents',
+		defaultMessage: 'Documents',
 	},
 	publish: {
 		id: 'global.publish',
@@ -456,6 +500,18 @@ export const globalMessages = defineMessages({
 	Edit: {
 		id: 'global.Edit',
 		defaultMessage: 'Edit',
+	},
+	Mode: {
+		id: 'global.Mode',
+		defaultMessage: 'Mode',
+	},
+	Embed: {
+		id: 'global.Embed',
+		defaultMessage: 'Embed',
+	},
+	Caption: {
+		id: 'global.Caption',
+		defaultMessage: 'Caption',
 	},
 	SuggestEdits: {
 		id: 'global.SuggestEdits',
@@ -654,6 +710,14 @@ export const globalMessages = defineMessages({
 		id: 'global.Highlights',
 		defaultMessage: 'Highlights',
 	},
+	CreateNew: {
+		id: 'global.CreateNew',
+		defaultMessage: 'Create New',
+	},
+	CustomButton: {
+		id: 'global.CustomButton',
+		defaultMessage: 'Custom Button',
+	},
 	On: {
 		id: 'global.On',
 		defaultMessage: 'On',
@@ -710,6 +774,10 @@ export const globalMessages = defineMessages({
 		id: 'global.Left',
 		defaultMessage: 'Left'
 	},
+	Right: {
+		id: 'global.Right',
+		defaultMessage: 'Right'
+	},
 	SaveLayout: {
 		id: 'global.SaveLayout',
 		defaultMessage: 'Save Layout'
@@ -753,5 +821,9 @@ export const globalMessages = defineMessages({
 	CancelReject: {
 		id: 'global.CancelReject',
 		defaultMessage: 'Cancel Reject'
+	},
+	ClickOrDragFilesToAdd: {
+		id: 'global.ClickOrDragFilesToAdd',
+		defaultMessage: 'Click Or Drag Files to Add'
 	},
 });

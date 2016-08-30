@@ -12,8 +12,8 @@ import Select from 'react-select';
 import {PreviewEditor} from 'components';
 
 // import {globalStyles} from 'utils/styleConstants';
-// import {globalMessages} from 'utils/globalMessages';
-// import {FormattedMessage} from 'react-intl';
+import {globalMessages} from 'utils/globalMessages';
+import {FormattedMessage} from 'react-intl';
 import Dropzone from 'react-dropzone';
 import {s3Upload} from 'utils/uploadFile';
 import {getMedia, createAtom, saveVersion} from './actions';
@@ -367,7 +367,7 @@ export const Manage = React.createClass({
 		}).filter((item)=> {
 			return !!item;
 		});
-		
+
 		console.log(typesFiltered);
 		// Populate type filters with filter types, check to see for each item if type is in that array
 
@@ -429,14 +429,14 @@ export const Manage = React.createClass({
 								options={options}
 								value={this.state.createNewType}
 								placeholder={<span>Add new</span>}
-								onChange={this.handleSelectChange} 
+								onChange={this.handleSelectChange}
 								clearable={false} />*/}
 						</div>
-						<div className={'button'} onClick={this.createNew} style={{padding: 'calc(.3em + 1px) 1em', verticalAlign: 'top', left: '-2px'}}>Create New</div>
+						<div className={'button'} onClick={this.createNew} style={{padding: 'calc(.3em + 1px) 1em', verticalAlign: 'top', left: '-2px'}}><FormattedMessage {...globalMessages.CreateNew}/></div>
 
 
 						<div className={'button'} style={styles.dropzoneBlock}>
-							Click or Drag files to add
+							<FormattedMessage {...globalMessages.ClickOrDragFilesToAdd}/>
 							<input id={'media-file-select'} type={'file'} onChange={this.onSelect} multiple={true} style={styles.fileInput}/>
 						</div>
 
@@ -477,8 +477,8 @@ export const Manage = React.createClass({
 								return null;
 							}
 							// const previewImage = item.parent.previewImage.indexOf('.gif') > -1 ? item.parent.previewImage : 'https://jake.pubpub.org/unsafe/fit-in/50x50/' + item.parent.previewImage;
-							const buttons = [ 
-								{ type: 'link', text: 'Custom Button', link: '/pub/' + item.slug + '/edit' },
+							const buttons = [
+								{ type: 'link', text: {...globalMessages.CustomButton}, link: '/pub/' + item.slug + '/edit' },
 							];
 
 							return (
@@ -486,13 +486,13 @@ export const Manage = React.createClass({
 								// Make an 'editorPreviewCard' component?
 								// Test uploading to make sure it works
 								// Add bibtex back into reference editor
-								<PreviewEditor 
+								<PreviewEditor
 									key={'atomItem-' + item._id}
 									atomData={item.parent}
 									versionData={item}
 									contributorsData={item.contributors}
-									footer={ <div> <input type="checkbox" /> Show on profile</div> }
-									buttons = {buttons} 
+									footer={ <div> <input type="checkbox" /><FormattedMessage id="manage.ShowOnProfile" defaultMessage="Show on profile"/></div> }
+									buttons = {buttons}
 
 									onSaveVersion={this.onSaveVersion}
 									onSaveAtom={this.onSaveAtom}
@@ -540,7 +540,8 @@ export const Manage = React.createClass({
 				*/}
 			</div>
 
-			<div className={'showOnActive'}>Drop files to add</div>
+			<div className={'showOnActive'}>
+				<FormattedMessage id="manage.DropFilesToAdd" defaultMessage="Drop files to add"/></div>
 			</Dropzone>
 			</div>
 		);
