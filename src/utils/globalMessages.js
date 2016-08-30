@@ -309,6 +309,14 @@ export const globalMessages = defineMessages({
 		id: 'global.filename',
 		defaultMessage: 'filename',
 	},
+	FeaturedBy: {
+		id: 'global.FeaturedBy',
+		defaultMessage: 'Featured By',
+	},
+	FeaturedOn: {
+		id: 'global.FeaturedOn',
+		defaultMessage: 'Featured On',		
+	},
 	Settings: {
 		id: 'global.Settings',
 		defaultMessage: 'Settings',

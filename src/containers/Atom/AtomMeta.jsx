@@ -101,23 +101,25 @@ export const AtomMeta = React.createClass({
 					<div style={styles.wideContainer}><div style={[styles.block, {width: 'calc(33% - 16px)'}]}>
 						<div style={styles.blockDispL}>{gData.totalViews}</div>
 						<div style={styles.blockUnderL}>
-							<FormattedMessage id="about.TotalViews" defaultMessage="Total Views"/>
+							<FormattedMessage id="aboutMeta.TotalViews" defaultMessage="Total Views"/>
 						</div>
 					</div>
 					<div style={[styles.block, {width: 'calc(33% - 16px)'}]}>
 						<div style={styles.blockDispL}>{Math.round(gData.totalReadTime / 36) / 100}hrs</div>
 						<div style={styles.blockUnderL}>
-							<FormattedMessage id="about.TotalReadTime" defaultMessage="Total Read Time"/>
+							<FormattedMessage id="aboutMeta.TotalReadTime" defaultMessage="Total Read Time"/>
 						</div>
 					</div>
 					<div style={[styles.block, {width: 'calc(33% - 16px)'}]}>
 						<div style={styles.blockDispL}>{Math.round(gData.averageReadTime * 100) / 100}s</div>
 						<div style={styles.blockUnderL}>
-							<FormattedMessage id="about.AverageReadTime" defaultMessage="Average Read Time"/>
+							<FormattedMessage id="aboutMeta.AverageReadTime" defaultMessage="Average Read Time"/>
 						</div>
 					</div></div>
 
-					<div style={styles.wideContainer}><div style={styles.graphTitle}>Views over Time</div>
+					<div style={styles.wideContainer}><div style={styles.graphTitle}>
+						<FormattedMessage id="aboutMeta.ViewsOverTime" defaultMessage="Views Over Time"/>
+					</div>
 					<GoogleCharts {...gChartProps} /></div>
 
 					<br/>
@@ -125,19 +127,27 @@ export const AtomMeta = React.createClass({
 					<div style={styles.wideContainer}>
 						<div style={[styles.block, styles.block25]}>
 							<div style={styles.blockDispS}>{gData.totalViewsYear}</div>
-							<div style={styles.blockUnderS}>Views Past Year</div>
+							<div style={styles.blockUnderS}>
+								<FormattedMessage id="aboutMeta.ViewsPastYear" defaultMessage="Views Past Year"/>
+							</div>
 						</div>
 						<div style={[styles.block, styles.block25]}>
 							<div style={styles.blockDispS}>{gData.totalViewsMonth}</div>
-							<div style={styles.blockUnderS}>Views Past Month</div>
+							<div style={styles.blockUnderS}>
+								<FormattedMessage id="aboutMeta.ViewsPastMonth" defaultMessage="Views Past Month"/>
+							</div>
 						</div>
 						<div style={[styles.block, styles.block25]}>
 							<div style={styles.blockDispS}>{gData.totalViewsWeek}</div>
-							<div style={styles.blockUnderS}>Views Past Week</div>
+							<div style={styles.blockUnderS}>
+								<FormattedMessage id="aboutMeta.ViewsPastWeek" defaultMessage="Views Past Week"/>
+							</div>
 						</div>
 						<div style={[styles.block, styles.block25]}>
 							<div style={styles.blockDispS}>{gData.totalViewsDay}</div>
-							<div style={styles.blockUnderS}>Views Past Day</div>
+							<div style={styles.blockUnderS}>
+								<FormattedMessage id="aboutMeta.ViewsPastDay" defaultMessage="Views Past day"/>
+							</div>
 						</div>
 
 						{/* <div style={[styles.block, styles.block25]}>
@@ -161,7 +171,9 @@ export const AtomMeta = React.createClass({
 					<br/>
 
 					<div style={styles.wideContainer}><div style={[styles.block, {width: 'calc(100% - 16px)'}]}>
-						<div style={styles.blockDispL}>Countries by Views</div>
+						<div style={styles.blockDispL}>
+							<FormattedMessage id="aboutMeta.CountriesByViews" defaultMessage="Countries by Views"/>
+						</div>
 					</div>
 					{gData.countryOrder.slice(0, 5).map((item, index)=>{
 						return (
@@ -177,7 +189,9 @@ export const AtomMeta = React.createClass({
 					})}</div>
 
 					<div style={styles.wideContainer}><div style={[styles.block, {width: 'calc(100% - 16px)'}]}>
-						<div style={styles.blockDispL}>Cities by Views</div>
+						<div style={styles.blockDispL}>
+							<FormattedMessage id="aboutMeta.CitiesByViews" defaultMessage="Cities by Views"/>
+						</div>
 					</div>
 					{gData.cityOrder.slice(0, 5).map((item, index)=>{
 						return (

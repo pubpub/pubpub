@@ -117,7 +117,9 @@ export const AtomJournals = React.createClass({
 					</div>
 				}
 
-				<h3>Featured by</h3>
+				<h3>
+					<FormattedMessage {...globalMessages.FeaturedBy}/>
+				</h3>
 				{
 					featuredData.sort((foo, bar)=>{
 						// Sort so that most recent is first in array
@@ -135,7 +137,9 @@ export const AtomJournals = React.createClass({
 									description={item.source.description}
 									footer={
 										<div>
-											<div>Featured on {dateFormat(item.createDate, 'mmm dd, yyyy h:MM TT')}</div>
+											<div>
+												<FormattedMessage {...globalMessages.FeaturedOn}/>				
+												{dateFormat(item.createDate, 'mmm dd, yyyy h:MM TT')}</div>
 										</div>
 									} />
 							</div>
