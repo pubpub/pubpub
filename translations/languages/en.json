@@ -103,6 +103,7 @@
   "journalCreate.JournalURL": "Journal URL",
   "journalCreate.JournalIcon": "Journal Icon",
   "journalProfileAdmins.AddNewAdmins": "Add New Admins",
+  "JournalProfileCollections.Description": "Collections let you organize the pubs featured by this journal. Add pubs to collections on the {featured} page.",
   "login.ForgotPassword": "Forgot Password?",
   "login.newToPubPub": "New to PubPub? Click to Sign Up!",
   "details.Welcome": "Welcome!",
