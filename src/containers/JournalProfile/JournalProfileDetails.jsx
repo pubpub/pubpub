@@ -74,7 +74,7 @@ export const JournalProfileDetails = React.createClass({
 		const journalData = safeGetInToJS(this.props.journalData, ['journalData']) || {};
 
 		const metaData = {
-			title: 'Details · ' + journalData.journalName,
+			title: <FormattedMessage {...globalMessages.Details}/> + ' · ' + journalData.journalName,
 		};
 		const isLoading = this.props.journalData && this.props.journalData.get('saveLoading');
 		const errorMessage = this.props.journalData && this.props.journalData.get('saveError');
@@ -87,7 +87,7 @@ export const JournalProfileDetails = React.createClass({
 				<form onSubmit={this.saveDetails} style={styles.form}>
 					<div>
 						<label style={styles.label} htmlFor={'journalName'}>
-							Journal Name
+							<FormattedMessage {...globalMessages.JournalName}/>
 						</label>
 						<input ref={'journalName'} id={'journalName'} name={'Journal Name'} type="text" style={styles.input} defaultValue={journalData.journalName}/>
 					</div>
@@ -95,7 +95,7 @@ export const JournalProfileDetails = React.createClass({
 
 					<div>
 						<label htmlFor={'description'}>
-							Description
+							<FormattedMessage {...globalMessages.Description}/>
 						</label>
 						<textarea ref={'description'} id={'description'} name={'description'} type="text" style={[styles.input, styles.description]} onChange={this.descriptionUpdate} value={this.state.description}></textarea>
 						<div className={'light-color inputSubtext'}>
@@ -105,14 +105,14 @@ export const JournalProfileDetails = React.createClass({
 
 					<div>
 						<label htmlFor={'icon'}>
-							Journal Icon
+							<FormattedMessage {...globalMessages.JournalIcon}/>
 						</label>
 						<img style={styles.image} src={this.state.iconURL} />
 						<input id={'icon'} name={'icon image'} type="file" accept="image/*" onChange={this.handleFileSelect} />
 						<div className={'light-color inputSubtext'}>
-							Used as the Journal's preview image in search results and throughout the site.
+							<FormattedMessage id="JournalProfileDetails.Description" defaultMessage="Used as the Journal's preview image in search results and throughout the site."/>
 						</div>
-						
+
 					</div>
 
 					<div>
@@ -128,7 +128,7 @@ export const JournalProfileDetails = React.createClass({
 						</label>
 						<div style={styles.prefixedInputWrapper}>
 							<div style={styles.prefix}>@</div>
-							<input ref={'twitter'} id={'twitter'} name={'twitter'} type="text" style={[styles.input, styles.prefixedInput]} defaultValue={journalData.twitter}/>	
+							<input ref={'twitter'} id={'twitter'} name={'twitter'} type="text" style={[styles.input, styles.prefixedInput]} defaultValue={journalData.twitter}/>
 						</div>
 					</div>
 
@@ -138,22 +138,22 @@ export const JournalProfileDetails = React.createClass({
 						</label>
 						<div style={styles.prefixedInputWrapper}>
 							<div style={styles.prefix}>facebook.com/</div>
-							<input ref={'facebook'} id={'facebook'} name={'facebook'} type="text" style={[styles.input, styles.prefixedInput]} defaultValue={journalData.facebook}/>	
+							<input ref={'facebook'} id={'facebook'} name={'facebook'} type="text" style={[styles.input, styles.prefixedInput]} defaultValue={journalData.facebook}/>
 						</div>
 					</div>
 
 					<div>
 						<label htmlFor={'about'}>
-							About
+							<FormattedMessage {...globalMessages.About}/>
 						</label>
 						<textarea ref={'about'} id={'about'} name={'about'} type="text" style={[styles.input, styles.description]} onChange={this.aboutUpdate} value={this.state.about}></textarea>
 						<div className={'light-color inputSubtext'}>
-							Use to describe longer details, peer-review process, featuring standards, etc. This text will appear at pubpub.org/{journalData.slug}/about.
+							<FormattedMessage id="JournalProfileDetails.Description2" defaultMessage="Use to describe longer details, peer-review process, featuring standards, etc. This text will appear at pubpub.org/{journalData.slug}/about."/>
 						</div>
 					</div>
 
 					<button className={'button'} onClick={this.saveDetails}>
-						Save Details
+						<FormattedMessage {...globalMessages.SaveDetails}/>
 					</button>
 
 					<div style={styles.loaderContainer}><Loader loading={isLoading} showCompletion={!errorMessage}/></div>
@@ -167,7 +167,7 @@ export const JournalProfileDetails = React.createClass({
 						<ImageCropper height={500} width={500} image={this.state.iconFile} onCancel={this.cancelImageUpload} onUpload={this.imageUploaded}/>
 					</div>
 				</div>
-				
+
 			</div>
 		);
 	}

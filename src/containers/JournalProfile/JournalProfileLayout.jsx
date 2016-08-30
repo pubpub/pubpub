@@ -8,8 +8,8 @@ import {RadioGroup, Radio} from 'utils/ReactRadioGroup';
 import {ChromePicker} from 'react-color';
 
 import {globalStyles} from 'utils/styleConstants';
-// import {globalMessages} from 'utils/globalMessages';
-// import {FormattedMessage} from 'react-intl';
+import {globalMessages} from 'utils/globalMessages';
+import {FormattedMessage} from 'react-intl';
 
 let styles = {};
 
@@ -105,7 +105,7 @@ export const JournalProfileLayout = React.createClass({
 		const journalData = safeGetInToJS(this.props.journalData, ['journalData']) || {};
 
 		const metaData = {
-			title: 'Layout · ' + journalData.journalName,
+			title: <FormattedMessage {...globalMessages.Layout}/> + ' · ' + journalData.journalName,
 		};
 		const isLoading = this.props.journalData && this.props.journalData.get('saveLoading');
 		const errorMessage = this.props.journalData && this.props.journalData.get('saveError');
@@ -120,66 +120,66 @@ export const JournalProfileLayout = React.createClass({
 				}} />
 
 				<form onSubmit={this.saveLayout} style={styles.form}>
-					
+
 					<div>
 						<label htmlFor={'logo'}>
-							Journal Logo
+							<FormattedMessage {...globalMessages.JournalLogo}/>
 						</label>
 						{(this.state.logo || journalData.logo) &&
 							<img style={styles.image} src={'https://jake.pubpub.org/unsafe/fit-in/500x75/' + (this.state.logo || journalData.logo)} />
 						}
 						<input id={'logo'} name={'logo image'} type="file" accept="image/*" onChange={this.handleLogoSelect} />
-						
+
 					</div>
 
 					<div>
 						<label htmlFor={'headerMode'}>
-							Header Mode
+							<FormattedMessage {...globalMessages.HeaderMode}/>
 						</label>
 						<RadioGroup name="header mode" selectedValue={this.state.headerMode} onChange={this.handleHeaderModeChange}>
-							<Radio value="title" id={'headerMode1'} style={styles.radioInput}/> <label htmlFor={'headerMode1'} style={styles.radioLabel}>Title</label> <br/>
-							<Radio value="logo" id={'headerMode2'} style={styles.radioInput}/> <label htmlFor={'headerMode2'} style={styles.radioLabel}>Logo</label> <br/>
-							<Radio value="both" id={'headerMode3'} style={styles.radioInput}/> <label htmlFor={'headerMode3'} style={styles.radioLabel}>Both</label> <br/>
+							<Radio value="title" id={'headerMode1'} style={styles.radioInput}/> <label htmlFor={'headerMode1'} style={styles.radioLabel}><FormattedMessage {...globalMessages.Title}/></label> <br/>
+							<Radio value="logo" id={'headerMode2'} style={styles.radioInput}/> <label htmlFor={'headerMode2'} style={styles.radioLabel}><FormattedMessage {...globalMessages.Logo}/></label> <br/>
+							<Radio value="both" id={'headerMode3'} style={styles.radioInput}/> <label htmlFor={'headerMode3'} style={styles.radioLabel}><FormattedMessage {...globalMessages.Both}/></label> <br/>
 						</RadioGroup>
 					</div>
 
 					<div>
 						<label htmlFor={'headerAlign'}>
-							Header Align
+							<FormattedMessage {...globalMessages.HeaderAlign}/>
 						</label>
 						<RadioGroup name="header align" selectedValue={this.state.headerAlign} onChange={this.handleHeaderAlignChange}>
-							<Radio value="left" id={'headerAlign1'} style={styles.radioInput}/> <label htmlFor={'headerAlign1'} style={styles.radioLabel}>Left</label> <br/>
-							<Radio value="center" id={'headerAlign2'} style={styles.radioInput}/> <label htmlFor={'headerAlign2'} style={styles.radioLabel}>Center</label> <br/>
+							<Radio value="left" id={'headerAlign1'} style={styles.radioInput}/> <label htmlFor={'headerAlign1'} style={styles.radioLabel}><FormattedMessage {...globalMessages.Left}/></label> <br/>
+							<Radio value="center" id={'headerAlign2'} style={styles.radioInput}/> <label htmlFor={'headerAlign2'} style={styles.radioLabel}><FormattedMessage {...globalMessages.Center}/></label> <br/>
 						</RadioGroup>
 					</div>
 
 					<div>
 						<label htmlFor={'headerAlign'}>
-							Background Color
+							<FormattedMessage {...globalMessages.BackgroundColor}/>
 						</label>
 						<div className={'colorPicker'}>
 							<ChromePicker color={this.state.headerColor} disableAlpha={true} onChange={this.handleColorChange}/>
 						</div>
-						
+
 					</div>
 
 					<div>
 						<label htmlFor={'headerImage'}>
-							Background Image
+							<FormattedMessage {...globalMessages.BackgroundImage}/>
 						</label>
 						{this.state.headerImage &&
 							<img style={styles.image} src={'https://jake.pubpub.org/unsafe/fit-in/500x0/' + this.state.headerImage} />
 						}
 						<input id={'headerImage'} name={'background image'} type="file" accept="image/*" onChange={this.handleHeaderImageSelect} />
 						<div className={'light-color inputSubtext underlineOnHover'} onClick={this.clearHeaderImageFinish} style={[styles.clear, !this.state.headerImage && {display: 'none'}]}>
-							Clear
+							<FormattedMessage {...globalMessages.Clear}/>
 						</div>
-						
+
 					</div>
 
 
 					<button className={'button'} onClick={this.saveLayout}>
-						Save Layout
+						<FormattedMessage {...globalMessages.SaveLayout}/>
 					</button>
 
 					<div style={styles.loaderContainer}><Loader loading={isLoading} showCompletion={!errorMessage}/></div>
@@ -187,7 +187,7 @@ export const JournalProfileLayout = React.createClass({
 					<div style={styles.errorMessage}>{errorMessage}</div>
 
 				</form>
-				
+
 			</div>
 		);
 	}

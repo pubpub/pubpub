@@ -6,8 +6,8 @@ import {PreviewCard} from 'components';
 import dateFormat from 'dateformat';
 
 // import {globalStyles} from 'utils/styleConstants';
-// import {globalMessages} from 'utils/globalMessages';
-// import {FormattedMessage} from 'react-intl';
+import {globalMessages} from 'utils/globalMessages';
+import {FormattedMessage} from 'react-intl';
 
 let styles = {};
 
@@ -52,12 +52,12 @@ export const JournalProfileSubmitted = React.createClass({
 		const journalData = safeGetInToJS(this.props.journalData, ['journalData']) || {};
 		const submittedData = safeGetInToJS(this.props.journalData, ['submittedData']) || [];
 		const metaData = {
-			title: 'Submitted · ' + journalData.journalName,
+			title: <FormattedMessage {...globalMessages.Submitted}/> + ' · ' + journalData.journalName,
 		};
 
 		return (
 			<div>
-				<Helmet {...metaData} />				
+				<Helmet {...metaData} />
 
 				{
 					submittedData.sort((foo, bar)=>{
@@ -66,37 +66,37 @@ export const JournalProfileSubmitted = React.createClass({
 						if (foo.createDate < bar.createDate) { return 1; }
 						return 0;
 					}).map((item, index)=>{
-						let buttons = [ 
-							{ type: 'button', text: 'Feature', action: this.setConfirmFeature.bind(this, item.source._id) }, 
+						let buttons = [
+							{ type: 'button', text: 'Feature', action: this.setConfirmFeature.bind(this, item.source._id) },
 							{ type: 'button', text: 'Reject', action: this.setConfirmReject.bind(this, item.source._id) }
 						];
 
 						if (this.state.confirmFeature === item.source._id) {
-							buttons = [ 
-								{ type: 'button', text: 'Cancel Feature', action: this.cancelConfirm.bind(this, item.source._id) },
-								{ type: 'button', text: 'Confirm Feature', action: this.featureAtom.bind(this, item.source._id) }
+							buttons = [
+								{ type: 'button', text: <FormattedMessage {...globalMessages.CancelFeature}/>, action: this.cancelConfirm.bind(this, item.source._id) },
+								{ type: 'button', text: <FormattedMessage {...globalMessages.ConfirmFeature}/>, action: this.featureAtom.bind(this, item.source._id) }
 							];
 						}
 
 						if (this.state.confirmReject === item.source._id) {
-							buttons = [ 
-								{ type: 'button', text: 'Confirm Reject', action: this.rejectAtom.bind(this, item.source._id) },
-								{ type: 'button', text: 'Cancel Reject', action: this.cancelConfirm.bind(this, item.source._id) }
+							buttons = [
+								{ type: 'button', text: <FormattedMessage {...globalMessages.ConfirmReject}/>, action: this.rejectAtom.bind(this, item.source._id) },
+								{ type: 'button', text: <FormattedMessage {...globalMessages.CancelReject}/>, action: this.cancelConfirm.bind(this, item.source._id) }
 							];
 						}
 
 						return (
 							<div style={[item.inactive && styles.inactive]} key={'submitted-' + index} className={index === 0 && 'firstChildNoTopMargin'}>
-								<PreviewCard 
+								<PreviewCard
 									type={'atom'}
 									image={item.source.previewImage}
 									slug={item.source.slug}
 									title={item.source.title}
-									description={item.source.description} 
+									description={item.source.description}
 									header={
 										<div>
-											<div>Submitted on {dateFormat(item.createDate, 'mmm dd, yyyy h:MM TT')}</div>
-											<div style={[!item.inactive && {display: 'none'}]}><span style={styles.inactiveNote}>{item.inactiveNote}</span> on {dateFormat(item.inactiveDate, 'mmm dd, yyyy h:MM TT')}</div>
+											<div><FormattedMessage {...globalMessages.SubmittedOn}/> {dateFormat(item.createDate, 'mmm dd, yyyy h:MM TT')}</div>
+											<div style={[!item.inactive && {display: 'none'}]}><span style={styles.inactiveNote}>{item.inactiveNote}</span> <FormattedMessage {...globalMessages.On}/> {dateFormat(item.inactiveDate, 'mmm dd, yyyy h:MM TT')}</div>
 										</div>
 									}
 									buttons = {item.inactive ? [] : buttons}/>
@@ -104,7 +104,7 @@ export const JournalProfileSubmitted = React.createClass({
 						);
 					})
 				}
-				
+
 			</div>
 		);
 	}

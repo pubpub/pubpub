@@ -231,7 +231,7 @@ export const globalMessages = defineMessages({
 	},
 	Rename: {
 		id: 'global.Rename',
-		defaultMessage: 'Rename',		
+		defaultMessage: 'Rename',
 	},
 	Remove: {
 		id: 'global.Remove',
@@ -245,13 +245,45 @@ export const globalMessages = defineMessages({
 		id: 'global.score',
 		defaultMessage: 'Score',
 	},
-	journalName: {
-		id: 'global.journalName',
+	JournalName: {
+		id: 'global.JournalName',
 		defaultMessage: 'Journal Name',
+	},
+	JournalIcon: {
+		id: 'global.JournalIcon',
+		defaultMessage: 'Journal Icon',
+	},
+	JournalLogo: {
+		id: 'global.JournalLogo',
+		defaultMessage: 'Journal Logo',
+	},
+	Logo: {
+		id: 'global.Logo',
+		defaultMessage: 'Logo',
+	},
+	Both: {
+		id: 'global.Both',
+		defaultMessage: 'Both',
+	},
+	HeaderAlign: {
+		id: 'global.HeaderAlign',
+		defaultMessage: 'Header Align',
+	},
+	HeaderMode: {
+		id: 'global.HeaderMode',
+		defaultMessage: 'Header Mode',
 	},
 	subdomain: {
 		id: 'global.subdomain',
 		defaultMessage: 'Subdomain',
+	},
+	BackgroundColor: {
+		id: 'global.BackgroundColor',
+		defaultMessage: 'Background Color',
+	},
+	BackgroundImage: {
+		id: 'global.BackgroundImage',
+		defaultMessage: 'Background Image',
 	},
 	AddField: {
 		id: 'global.AddField',
@@ -566,6 +598,10 @@ export const globalMessages = defineMessages({
 		id: 'global.SubmittedTo',
 		defaultMessage: 'Submitted To',
 	},
+	SubmittedOn: {
+		id: 'global.SubmittedOn',
+		defaultMessage: 'Submitted On',
+	},
 	Submitted: {
 		id: 'global.Submitted',
 		defaultMessage: 'Submitted',
@@ -666,6 +702,18 @@ export const globalMessages = defineMessages({
 		id: 'global.Clear',
 		defaultMessage: 'Clear'
 	},
+	Center: {
+		id: 'global.Center',
+		defaultMessage: 'Center'
+	},
+	Left: {
+		id: 'global.Left',
+		defaultMessage: 'Left'
+	},
+	SaveLayout: {
+		id: 'global.SaveLayout',
+		defaultMessage: 'Save Layout'
+	},
 	Permalink: {
 		id: 'global.Permalink',
 		defaultMessage: 'Permalink'
@@ -689,5 +737,21 @@ export const globalMessages = defineMessages({
 	Export: {
 		id: 'global.Export',
 		defaultMessage: 'Export'
+	},
+	CancelFeature: {
+		id: 'global.CancelFeature',
+		defaultMessage: 'Cancel Feature'
+	},
+	ConfirmFeature: {
+		id: 'global.ConfirmFeature',
+		defaultMessage: 'Confirm Feature'
+	},
+	ConfirmReject: {
+		id: 'global.ConfirmReject',
+		defaultMessage: 'Confirm Reject'
+	},
+	CancelReject: {
+		id: 'global.CancelReject',
+		defaultMessage: 'Cancel Reject'
 	},
 });
