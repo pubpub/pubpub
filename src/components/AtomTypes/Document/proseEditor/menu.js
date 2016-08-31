@@ -1,6 +1,9 @@
 import {toggleMarkItem, insertItem, wrapItem, wrapListItem, blockTypeItem, Dropdown, joinUpItem, liftItem, icons} from 'prosemirror/dist/menu';
 import {FieldPrompt, TextField} from 'prosemirror/dist/ui';
 
+import {globalMessages} from 'utils/globalMessages';
+import {FormattedMessage} from 'react-intl';
+
 // : (ProseMirror, (attrs: ?Object))
 // A function that will prompt for the attributes of a [link
 // mark](#LinkMark) (using `FieldPrompt`), and call a callback with
@@ -26,7 +29,7 @@ function buildMenuItems(schema) {
 	const items = {};
 
 	items.toggleStrong = toggleMarkItem(schema.marks.strong, {
-		title: 'Toggle strong style', 
+		title: 'Toggle strong style',
 		icon: {text: 'bold'},
 	});
 
@@ -51,13 +54,13 @@ function buildMenuItems(schema) {
 	});
 
 	items.toggleCode = toggleMarkItem(schema.marks.code, {
-		title: 'Toggle code font', 
-		label: 'inline code', 
+		title: 'Toggle code font',
+		label: 'inline code',
 	});
 
 	items.toggleLink = toggleMarkItem(schema.marks.link, {
 		title: 'Add or remove link',
-		icon: {text: 'link'}, 
+		icon: {text: 'link'},
 		attrs: promptLinkAttrs,
 	});
 

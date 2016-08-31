@@ -14,7 +14,7 @@ let styles = {};
 export const AppHeader = React.createClass({
 	propTypes: {
 		loginData: PropTypes.object,
-		path: PropTypes.string, 
+		path: PropTypes.string,
 		createDocument: PropTypes.func,
 		logoutHandler: PropTypes.func,
 		goToURL: PropTypes.func,
@@ -120,7 +120,7 @@ export const AppHeader = React.createClass({
 				{!isLoggedIn && // Render if not logged in
 					<Link to={'/login' + loginQuery} style={globalStyles.link}>
 						<div style={[styles.headerButton, styles.headerNavItem]}>
-							<FormattedMessage {...globalMessages.login} />
+							<FormattedMessage {...globalMessages.Login} />
 						</div>
 					</Link>
 				}
@@ -139,7 +139,8 @@ export const AppHeader = React.createClass({
 						minimumInput={3}
 						value={this.state.value}
 						loadOptions={this.loadOptions}
-						placeholder={<span>Search</span>}
+						placeholder={<span><FormattedMessage {...globalMessages.Search}/></span>}
+						searchPromptText={<FormattedMessage {...globalMessages.TypeToSearch}/>}
 						onChange={this.handleSelectChange} />
 				</div>
 
@@ -151,7 +152,7 @@ export const AppHeader = React.createClass({
 						</div>
 					</Link>
 				*/}
-				
+
 				{/* Account Menu Splash*/}
 				{this.state.accountMenuOpen && // Render if the account menu is set open
 					<div className={'header-menu-splash'} style={styles.headerMenuSplash} onClick={this.toggleAccountMenu}></div>
@@ -160,21 +161,23 @@ export const AppHeader = React.createClass({
 				{/* Account Menu */}
 				{/* Use CSS to toggle display:none, to avoid flicker on mobile */}
 				<div className="header-menu lightest-bg darkest-color arrow-box" style={[styles.headerMenu, !this.state.accountMenuOpen && {display: 'none'}]}>
-					<Link className={'menu-option'} to={'/user/' + username}>{name} <div style={styles.subMenuLabel}>View Profile</div></Link>
+					<Link className={'menu-option'} to={'/user/' + username}>{name} <div style={styles.subMenuLabel}><FormattedMessage {...globalMessages.ViewProfile}/></div></Link>
 
 					<div className={'menu-separator'} ></div>
 
-					<div className={'menu-option'} onClick={this.props.createDocument}>New Document</div>
+					<div className={'menu-option'} onClick={this.props.createDocument}><FormattedMessage {...globalMessages.NewDocument}/></div>
 					{/* <Link className={'menu-option'} to={'/user/' + username + '/journals'}>My Journals</Link> */}
-					
+
 					<div className={'menu-separator'} ></div>
 
-					<Link className={'menu-option'} to={'/user/' + username + '/profile'}>Settings</Link>
-					<div className={'menu-option'} onClick={this.logout}>Logout</div>
+					<Link className={'menu-option'} to={'/user/' + username + '/profile'}>
+						<FormattedMessage {...globalMessages.Settings} />
+					</Link>
+					<div className={'menu-option'} onClick={this.logout}><FormattedMessage {...globalMessages.Logout}/></div>
 				</div>
 
 			</div>
-			
+
 		);
 	}
 });

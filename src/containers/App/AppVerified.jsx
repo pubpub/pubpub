@@ -21,7 +21,7 @@ export const AppVerified = React.createClass({
 	},
 
 	componentWillReceiveProps(nextProps) {
-		
+
 	},
 
 	resendEmail: function() {
@@ -34,14 +34,16 @@ export const AppVerified = React.createClass({
 		return (
 			<div style={styles.container}>
 				<div style={styles.content}>
-					Account Unverified. 
+					<FormattedMessage id="app.AccountUnverified" defaultMessage="Account Unverified"/>
 					{this.state.emailResent
-						? <span style={styles.emailResent}>Verification email resent!</span>
+						? <span style={styles.emailResent}>
+						<FormattedMessage id="app.VerificationResent" defaultMessage="Verification email resent!"/>
+						</span>
 						: <span className={'underlineOnHover'} style={styles.emailLink} onClick={this.resendEmail}><FormattedMessage id="appVerified.ResendVerificationEmail" defaultMessage="Resend Verification Email"/></span>
 					}
 				</div>
 			</div>
-			
+
 		);
 	}
 });
@@ -89,6 +91,6 @@ styles = {
 		padding: '0em 0em 0em 1em'
 	},
 	emailResent: {
-		padding: '0em 0em 0em 1em'	
+		padding: '0em 0em 0em 1em'
 	},
 };

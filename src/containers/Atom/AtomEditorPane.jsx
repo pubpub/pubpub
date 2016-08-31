@@ -2,6 +2,9 @@ import React, {PropTypes} from 'react';
 import Radium from 'radium';
 import AtomTypes from 'components/AtomTypes';
 import {safeGetInToJS} from 'utils/safeParse';
+import {FormattedMessage} from 'react-intl';
+import {globalMessages} from 'utils/globalMessages';
+
 
 export const AtomEditorPane = React.createClass({
 	propTypes: {
@@ -21,9 +24,13 @@ export const AtomEditorPane = React.createClass({
 			const Component = AtomTypes[type].editor;
 			return <Component {...props} />;
 		}
-		
-		return <div>Unknown Type</div>;
-		
+
+		return (
+			<div>
+				<FormattedMessage {...globalMessages.UnknownType}/>
+			</div>
+		);
+
 	}
 });
 

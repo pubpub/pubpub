@@ -3,6 +3,8 @@ import Radium from 'radium';
 import {safeGetInToJS} from 'utils/safeParse';
 import {Loader, ImageCropper} from 'components';
 import {globalStyles} from 'utils/styleConstants';
+import {FormattedMessage} from 'react-intl';
+import {globalMessages} from 'utils/globalMessages';
 
 let styles = {};
 
@@ -51,22 +53,22 @@ export const AtomDetails = React.createClass({
 	inputChange: function(type, evt) {
 		if (type === 'title') {
 			this.setState({title: evt.target.value});
-		} 
+		}
 
 		if (type === 'slug') {
 			this.setState({slug: evt.target.value.replace(/[^\w\s-]/gi, '').replace(/ /g, '-').toLowerCase()});
-		} 
+		}
 
 		if (type === 'description') {
 			const value = evt.target.value || '';
 			this.setState({description: value.substring(0, 140)});
-		} 
+		}
 
 		if (type === 'customAuthorString') {
 			this.setState({customAuthorString: evt.target.value});
-			
+
 		}
-		
+
 	},
 
 	handleFileSelect: function(evt) {
@@ -91,7 +93,7 @@ export const AtomDetails = React.createClass({
 				<form onSubmit={this.updateDetails}>
 					<div>
 						<label htmlFor={'title'}>
-							Title
+							<FormattedMessage {...globalMessages.Title}/>
 						</label>
 						<input ref={'title'} id={'title'} name={'title'} type="text" style={styles.input} value={this.state.title} onChange={this.inputChange.bind(this, 'title')}/>
 					</div>
@@ -102,26 +104,26 @@ export const AtomDetails = React.createClass({
 						</label>
 						<div style={[styles.prefixedInputWrapper, atomData.isPublished && styles.disabledInput]}>
 							<div style={styles.prefix}>pubpub.org/pub/</div>
-							<input ref={'url'} id={'url'} name={'url'} type="text" style={[styles.input, styles.prefixedInput]} disabled={atomData.isPublished} value={this.state.slug} onChange={this.inputChange.bind(this, 'slug')}/>	
+							<input ref={'url'} id={'url'} name={'url'} type="text" style={[styles.input, styles.prefixedInput]} disabled={atomData.isPublished} value={this.state.slug} onChange={this.inputChange.bind(this, 'slug')}/>
 						</div>
 						<div className={'light-color inputSubtext'}>
-							Cannot be changed once published.
+							<FormattedMessage id="aboutDetails.CannotBeChanged" defaultMessage="Cannot be changed once published."/>
 						</div>
 					</div>
 
 					<div>
 						<label htmlFor={'customAuthorString'}>
-							Custom Author List
+							<FormattedMessage id="aboutDetails.CustomAuthorList" defaultMessage="Custom Author List"/>
 						</label>
 						<input ref={'customAuthorString'} id={'customAuthorString'} name={'customAuthorString'} type="text" style={styles.input} value={this.state.customAuthorString} onChange={this.inputChange.bind(this, 'customAuthorString')}/>
 						<div className={'light-color inputSubtext'}>
-							This will replace the label that is auto-generated from Contributors settings.
+							<FormattedMessage id="atom.ContributorLabel" defaultMessage="This will replace the label that is auto-generated from Contributors settings."/>
 						</div>
 					</div>
 
 					<div>
 						<label htmlFor={'image'}>
-							Preview Image
+							<FormattedMessage {...globalMessages.PreviewImage}/>
 						</label>
 						<img style={styles.image} src={this.state.previewImage} />
 						<input id={'image'} name={'preview image'} type="file" accept="image/*" onChange={this.handleFileSelect} />
@@ -130,7 +132,7 @@ export const AtomDetails = React.createClass({
 
 					<div>
 						<label htmlFor={'description'}>
-							Description
+							<FormattedMessage {...globalMessages.Description}/>
 						</label>
 						<textarea ref={'description'} id={'description'} name={'description'} type="text" style={[styles.input, styles.textarea]} value={this.state.description} onChange={this.inputChange.bind(this, 'description')}></textarea>
 						<div className={'light-color inputSubtext'}>
@@ -139,7 +141,7 @@ export const AtomDetails = React.createClass({
 					</div>
 
 					<button className={'button'} onClick={this.updateDetails}>
-						Save Details
+						<FormattedMessage {...globalMessages.SaveDetails}/>
 					</button>
 
 					<div style={styles.loaderContainer}><Loader loading={this.props.isLoading} showCompletion={!this.props.error}/></div>
@@ -153,7 +155,7 @@ export const AtomDetails = React.createClass({
 						<ImageCropper height={500} width={500} image={this.state.imageFile} onCancel={this.cancelImageUpload} onUpload={this.imageUploaded}/>
 					</div>
 				</div>
-				
+
 			</div>
 		);
 	}

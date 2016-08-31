@@ -88,11 +88,11 @@ export const Login = React.createClass({
 					<div style={styles.errorMessage}>{errorMessage}</div>
 
 				</form>
-				
+
 				<Link style={styles.registerLink} to={'/signup' + redirectQuery}>
 					<FormattedMessage id="login.newToPubPub" defaultMessage="New to PubPub? Click to Sign Up!"/>
 				</Link>
-				
+
 			</div>
 		);
 	}

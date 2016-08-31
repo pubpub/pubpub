@@ -73,7 +73,7 @@ export const UserProfileSettingsProfile = React.createClass({
 
 		return (
 			<div>
-				
+
 				<form onSubmit={this.saveSubmit} style={styles.form}>
 					<div>
 						<label htmlFor={'firstName'}>
@@ -95,7 +95,7 @@ export const UserProfileSettingsProfile = React.createClass({
 						</label>
 						<img style={styles.userImage} src={'https://jake.pubpub.org/unsafe/150x150/' + this.state.userImageURL} />
 						<input id={'userImage'} name={'user image'} type="file" accept="image/*" onChange={this.handleFileSelect} />
-						
+
 					</div>
 
 					<div>
@@ -110,7 +110,7 @@ export const UserProfileSettingsProfile = React.createClass({
 
 					<div>
 						<label htmlFor={'publicEmail'}>
-							Public Email
+							<FormattedMessage {...globalMessages.PublicEmail}/>
 						</label>
 						<input ref={'publicEmail'} id={'publicEmail'} name={'publicEmail'} type="text" style={styles.input} defaultValue={userData.publicEmail}/>
 					</div>
@@ -128,7 +128,7 @@ export const UserProfileSettingsProfile = React.createClass({
 						</label>
 						<div style={styles.prefixedInputWrapper}>
 							<div style={styles.prefix}>@</div>
-							<input ref={'twitter'} id={'twitter'} name={'twitter'} type="text" style={[styles.input, styles.prefixedInput]} defaultValue={userData.twitter}/>	
+							<input ref={'twitter'} id={'twitter'} name={'twitter'} type="text" style={[styles.input, styles.prefixedInput]} defaultValue={userData.twitter}/>
 						</div>
 					</div>
 
@@ -138,7 +138,7 @@ export const UserProfileSettingsProfile = React.createClass({
 						</label>
 						<div style={styles.prefixedInputWrapper}>
 							<div style={styles.prefix}>orcid.org/</div>
-							<input ref={'orcid'} id={'orcid'} name={'orcid'} type="text" style={[styles.input, styles.prefixedInput]} defaultValue={userData.orcid}/>	
+							<input ref={'orcid'} id={'orcid'} name={'orcid'} type="text" style={[styles.input, styles.prefixedInput]} defaultValue={userData.orcid}/>
 						</div>
 					</div>
 
@@ -148,7 +148,7 @@ export const UserProfileSettingsProfile = React.createClass({
 						</label>
 						<div style={styles.prefixedInputWrapper}>
 							<div style={styles.prefix}>github.com/</div>
-							<input ref={'github'} id={'github'} name={'github'} type="text" style={[styles.input, styles.prefixedInput]} defaultValue={userData.github}/>	
+							<input ref={'github'} id={'github'} name={'github'} type="text" style={[styles.input, styles.prefixedInput]} defaultValue={userData.github}/>
 						</div>
 					</div>
 
@@ -158,13 +158,13 @@ export const UserProfileSettingsProfile = React.createClass({
 						</label>
 						<div style={styles.prefixedInputWrapper}>
 							<div style={styles.prefix}>scholar.google.com/citations?user=</div>
-							<input ref={'googleScholar'} id={'googleScholar'} name={'google scholar'} type="text" style={[styles.input, styles.prefixedInput]} defaultValue={userData.googleScholar}/>	
+							<input ref={'googleScholar'} id={'googleScholar'} name={'google scholar'} type="text" style={[styles.input, styles.prefixedInput]} defaultValue={userData.googleScholar}/>
 						</div>
 					</div>
 
 
 					<button className={'button'} onClick={this.saveSubmit}>
-						Save Profile
+						<FormattedMessage {...globalMessages.SaveProfile}/>
 					</button>
 
 					<div style={styles.loaderContainer}><Loader loading={isLoading} showCompletion={!errorMessage}/></div>
@@ -178,7 +178,7 @@ export const UserProfileSettingsProfile = React.createClass({
 						<ImageCropper height={500} width={500} image={this.state.userImageFile} onCancel={this.cancelImageUpload} onUpload={this.userImageUploaded}/>
 					</div>
 				</div>
-				
+
 			</div>
 		);
 	}

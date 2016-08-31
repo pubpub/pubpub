@@ -7,8 +7,8 @@ import Sortable from 'react-anything-sortable';
 import {SortableItem } from 'components';
 
 // import {globalStyles} from 'utils/styleConstants';
-// import {globalMessages} from 'utils/globalMessages';
-// import {FormattedMessage} from 'react-intl';
+import {globalMessages} from 'utils/globalMessages';
+import {FormattedMessage} from 'react-intl';
 
 let styles = {};
 
@@ -42,9 +42,9 @@ export const JournalProfileCollections = React.createClass({
 		const diff = currentCollections.filter((item, index)=> {
 			return item && nextCollections[index] && (item.title !== nextCollections[index].title);
 		});
-		
+
 		if (currentCollections.length !== nextCollections.length || diff.length) {
-			this.setState({ 
+			this.setState({
 				collections: nextCollections,
 				newCollection: '',
 			});
@@ -100,19 +100,24 @@ export const JournalProfileCollections = React.createClass({
 		};
 		return (
 			<div>
-				<Helmet {...metaData} />				
+				<Helmet {...metaData} />
 
-				<p>Collections let you organize the pubs featured by this journal. Add pubs to collections on the <Link to={'/' + this.props.slug + '/featured'} style={{color: 'inherit'}}>Featured</Link> page.</p>
+				<p>
+					<FormattedMessage
+							id="JournalProfileCollections.Description"
+							defaultMessage={`Collections let you organize the pubs featured by this journal. Add pubs to collections on the {featured} page.`}
+							values={{featured: <Link to={'/' + this.props.slug + '/featured'} style={{color: 'inherit'}}>Featured</Link>}}/>
+					 </p>
 
 				{/* Add Collection Field */}
-				<h3>New Collection</h3>
+				<h3><FormattedMessage {...globalMessages.NewCollection}/></h3>
 				<form onSubmit={this.addCollection} style={styles.addCollectionForm}>
-					<input type="text" style={[styles.input, styles.addCollectionInput]} value={this.state.newCollection} onChange={this.newCollectionChange}/> 
-					<div className={'button'} onClick={this.addCollection} style={styles.addCollectionButton}>Add Collection</div>
+					<input type="text" style={[styles.input, styles.addCollectionInput]} value={this.state.newCollection} onChange={this.newCollectionChange}/>
+					<div className={'button'} onClick={this.addCollection} style={styles.addCollectionButton}><FormattedMessage {...globalMessages.AddCollection}/></div>
 				</form>
-				
+
 				{/* Sortable Collections */}
-				<h3>Collections</h3>
+				<h3><FormattedMessage {...globalMessages.Collections}/></h3>
 				<Sortable onSort={this.handleSort} dynamic={true}>
 					{this.state.collections.map((item, index)=>{
 						const collectionBlock = (
@@ -121,31 +126,31 @@ export const JournalProfileCollections = React.createClass({
 								<div style={[styles.collectionTable, this.state.editID === item._id && {display: 'none'}]}>
 									<div style={styles.collectionBlock}>
 										<span className={'dragIcon'}>{item.title}</span>
-									</div>	
-									<div className={'button'} style={styles.collectionButton} onClick={this.enableEdit.bind(this, item._id, item.title)}>Rename</div>
-									<div className={'button'} style={styles.collectionButton} onClick={this.deleteCollection.bind(this, item._id)}>Delete</div>
+									</div>
+									<div className={'button'} style={styles.collectionButton} onClick={this.enableEdit.bind(this, item._id, item.title)}><FormattedMessage {...globalMessages.Rename}/></div>
+									<div className={'button'} style={styles.collectionButton} onClick={this.deleteCollection.bind(this, item._id)}><FormattedMessage {...globalMessages.Delete}/></div>
 								</div>
-								
+
 								{/* Edit form only shown when edit mode is properly set */}
 								<form style={[styles.collectionTable, this.state.editID !== item._id && {display: 'none'}]} onSubmit={this.editCollection}>
-									<input style={[styles.collectionBlock, styles.collectionBlockInput]} type={'text'} value={this.state.editTitle} onChange={this.handleEditTitleChange} id={item._id}/> 
+									<input style={[styles.collectionBlock, styles.collectionBlockInput]} type={'text'} value={this.state.editTitle} onChange={this.handleEditTitleChange} id={item._id}/>
 									<div className={'button'} style={styles.collectionButton} onClick={this.editCollection}>Save</div>
-									<div className={'button'} style={styles.collectionButton} onClick={this.disableEdit.bind(this, item._id)}>Cancel</div>
+									<div className={'button'} style={styles.collectionButton} onClick={this.disableEdit.bind(this, item._id)}><FormattedMessage {...globalMessages.Cancel}/></div>
 								</form>
-								
+
 							</div>
-							
+
 						);
 						return (
-							<SortableItem 
-								key={'sortable-' + index} 
-								sortData={item} 
+							<SortableItem
+								key={'sortable-' + index}
+								sortData={item}
 								content={collectionBlock} />
 						);
 					})}
 				</Sortable>
-				 
-				
+
+
 			</div>
 		);
 	}

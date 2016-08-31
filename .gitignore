@@ -16,3 +16,4 @@ npm-debug.log
 .DS_Store
 translations/messages
 api/config.js
+.atomignore

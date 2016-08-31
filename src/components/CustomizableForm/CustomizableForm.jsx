@@ -1,5 +1,7 @@
 import React, {PropTypes} from 'react';
 import Radium from 'radium';
+import {globalMessages} from 'utils/globalMessages';
+import {FormattedMessage} from 'react-intl';
 
 let styles;
 
@@ -21,7 +23,7 @@ export const CustomizableForm = React.createClass({
 		const newFormData = {
 			...this.props.formData,
 			[key]: {
-				title: this.props.formData[key].title, 
+				title: this.props.formData[key].title,
 				value: evt.target.value
 			}
 		};
@@ -41,9 +43,9 @@ export const CustomizableForm = React.createClass({
 
 		const newFormData = {
 			...this.props.formData,
-			[key]: { 
-				title: title,  
-				value: undefined 
+			[key]: {
+				title: title,
+				value: undefined
 			}
 		};
 		this.props.onUpdate(newFormData);
@@ -54,12 +56,12 @@ export const CustomizableForm = React.createClass({
 		const newFormData = this.props.formData;
 		delete newFormData[key];
 		this.props.onUpdate(newFormData);
-	},	
+	},
 
 	render: function() {
 		return (
 			<div style={styles.container}>
-				
+
 				{Object.keys(this.props.formData || {}).map((key, index)=>{
 					return (
 						<div key={key + '-input'}>
@@ -67,16 +69,20 @@ export const CustomizableForm = React.createClass({
 								{this.props.formData[key].title}
 							</label>
 							<input id={key} name={this.props.formData[key].title} type="text" style={styles.input} value={this.props.formData[key].value || ''} onChange={this.onChange}/>
-							<div className={'underlineOnHover'} onClick={this.removeField.bind(this, key)} style={styles.removeButton}>Remove</div>
+							<div className={'underlineOnHover'} onClick={this.removeField.bind(this, key)} style={styles.removeButton}>
+								<FormattedMessage {...globalMessages.Remove}/>
+							</div>
 						</div>
 					);
 				})}
 
 				<form onSubmit={this.addField} style={styles.addFieldForm}>
-					<input type="text" style={[styles.input, styles.addFieldInput]} value={this.state.addField} onChange={this.addFieldChange}/> 
-					<div className={'button'} onClick={this.addField} style={styles.addFieldButton}>Add Field</div>
+					<input type="text" style={[styles.input, styles.addFieldInput]} value={this.state.addField} onChange={this.addFieldChange}/>
+					<div className={'button'} onClick={this.addField} style={styles.addFieldButton}>
+						<FormattedMessage {...globalMessages.AddField}/>
+					</div>
 				</form>
-				
+
 			</div>
 		);
 	}

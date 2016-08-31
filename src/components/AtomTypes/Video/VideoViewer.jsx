@@ -1,6 +1,8 @@
 import React, {PropTypes} from 'react';
 import Radium from 'radium';
 import {safeGetInToJS} from 'utils/safeParse';
+import {globalMessages} from 'utils/globalMessages';
+import {FormattedMessage} from 'react-intl';
 
 let styles;
 
@@ -15,7 +17,7 @@ export const VideoViewer = React.createClass({
 		const atomData = safeGetInToJS(this.props.atomData, ['atomData']);
 		const videoSource = safeGetInToJS(this.props.atomData, ['currentVersionData', 'content', 'url']);
 		const metadata = safeGetInToJS(this.props.atomData, ['currentVersionData', 'content', 'metadata']) || {};
-		
+
 		switch (this.props.renderType) {
 		case 'embed':
 		case 'static-embed':
@@ -26,11 +28,13 @@ export const VideoViewer = React.createClass({
 			return (
 				<div>
 					<video key={'video-' + videoSource} src={videoSource} controls style={styles.video}/>
-					
+
 					{Object.keys(metadata).length > 0 &&
-						<h2>Metadata</h2>	
+						<h2>
+							<FormattedMessage {...globalMessages.Metadata}/>
+						</h2>
 					}
-					
+
 					{Object.keys(metadata).map((key, index)=>{
 						return (
 							<div key={'metadata-' + index}>

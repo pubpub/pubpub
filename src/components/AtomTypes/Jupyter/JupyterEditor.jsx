@@ -3,6 +3,10 @@ import Radium from 'radium';
 import {safeGetInToJS} from 'utils/safeParse';
 import {s3Upload} from 'utils/uploadFile';
 import {Loader} from 'components';
+
+import {globalMessages} from 'utils/globalMessages';
+import {FormattedMessage} from 'react-intl';
+
 let styles = {};
 
 let iframeResizer;
@@ -61,7 +65,9 @@ export const JupyterEditor = React.createClass({
 		const now = new Date().getTime();
 		return (
 			<div>
-				<h3>Preview</h3>
+				<h3>
+					<FormattedMessage {...globalMessages.Preview}/>
+				</h3>
 
 				<div style={styles.loaderWrapper}>
 					<Loader loading={this.state.isUploading} showCompletion={false}/>
@@ -72,7 +78,9 @@ export const JupyterEditor = React.createClass({
 					}
 
 				</div>
-				<h3>Choose new file</h3>
+				<h3>
+					<FormattedMessage {...globalMessages.ChooseNewFile}/>
+				</h3>
 				<input id={'jupyterFile'} name={'jupyter file'} type="file" accept=".ipynb" onChange={this.handleFileSelect} />
 
 			</div>

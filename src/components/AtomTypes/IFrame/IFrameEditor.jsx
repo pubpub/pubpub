@@ -2,6 +2,8 @@ import React, {PropTypes} from 'react';
 import Radium from 'radium';
 import {safeGetInToJS} from 'utils/safeParse';
 import {Loader, CustomizableForm} from 'components';
+import {globalMessages} from 'utils/globalMessages';
+import {FormattedMessage} from 'react-intl';
 
 let styles = {};
 const defaultHeight = '300';
@@ -38,20 +40,30 @@ export const IFrameEditor = React.createClass({
 		return (
 			<div>
 				<div>
-					<h3>Source</h3>
+					<h3>
+						<FormattedMessage {...globalMessages.Source}/>
+					</h3>
 					<input type="text" value={source} onChange={this.updateData('source')}/>
 				</div>
 				<div>
-					<h3>Height</h3>
+					<h3>
+						<FormattedMessage {...globalMessages.Height}/>
+					</h3>
 					<input type="text" value={height} onChange={this.updateData('height')}/>
 				</div>
 				<div>
-					<h3>Width</h3>
+					<h3>
+						<FormattedMessage {...globalMessages.Width}/>
+					</h3>
 					<input type="text" value={width} onChange={this.updateData('width')}/>
 				</div>
-				<h3>Preview</h3>
+				<h3>
+					<FormattedMessage {...globalMessages.Preview}/>
+				</h3>
 				<iframe src={source} style={styles.iframe(height, width)}></iframe>
-				<a href={source} alt={'View Source'} target="_blank" className={'underlineOnHover'} style={styles.sourceLink}>View Source</a>
+				<a href={source} alt={'View Source'} target="_blank" className={'underlineOnHover'} style={styles.sourceLink}>
+					<FormattedMessage {...globalMessages.ViewSource}/>
+				</a>
 			</div>
 		);
 	}
