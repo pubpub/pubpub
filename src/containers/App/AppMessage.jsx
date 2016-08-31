@@ -16,7 +16,7 @@ export const AppMessage = React.createClass({
 
 	render: function() {
 		if (typeof window === 'undefined' || typeof window.localStorage === 'undefined' || window.localStorage.migrationMsg === 'true') {
-			return null;
+			return <div style={{display: 'none'}}></div>;
 		}
 		return (
 			<div style={styles.container}>
