@@ -322,16 +322,20 @@ export const Atom = React.createClass({
 					{/* Toggle Right Panel Button */}
 					<div className={'opacity-on-hover'} style={styles.toggleRightPanelButton} onClick={this.toggleRightPanel}>
 						<div style={styles.toggleRightPanelLine}></div>
-						{this.state.showRightPanel && <div style={styles.toggleRightHide}>
-						<FormattedMessage {...globalMessages.Hide}/>
-						<br/>
-						<FormattedMessage {...globalMessages.Panel}/>
-						</div>}
-						{!this.state.showRightPanel && <div style={styles.toggleRightShow}>
-						<FormattedMessage {...globalMessages.Show}/>
-						<br/>
-						<FormattedMessage {...globalMessages.Panel}/>
-						</div>}
+						{this.state.showRightPanel && 
+							<div style={styles.toggleRightHide}>
+								<FormattedMessage {...globalMessages.Hide}/>
+								<br/>
+								<FormattedMessage {...globalMessages.Panel}/>
+							</div>
+						}
+						{!this.state.showRightPanel && 
+							<div style={styles.toggleRightShow}>
+								<FormattedMessage {...globalMessages.Show}/>
+								<br/>
+								<FormattedMessage {...globalMessages.Panel}/>
+							</div>
+						}
 					</div>
 
 					{/* Pub Header and Body */}
