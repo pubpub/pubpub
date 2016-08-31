@@ -18,7 +18,7 @@ import {NavContentWrapper} from 'components';
 import {safeGetInToJS} from 'utils/safeParse';
 
 // import {globalStyles} from 'utils/styleConstants';
-// import {globalMessages} from 'utils/globalMessages';
+import {globalMessages} from 'utils/globalMessages';
 import {FormattedMessage} from 'react-intl';
 
 export const JournalProfile = React.createClass({
@@ -114,20 +114,20 @@ export const JournalProfile = React.createClass({
 		};
 
 		const mobileNavButtons = [
-			{ type: 'link', mobile: true, text: 'About', link: '/' + this.props.slug + '/about' },
-			{ type: 'button', mobile: true, text: 'Menu', action: undefined },
+			{ type: 'link', mobile: true, text: <FormattedMessage {...globalMessages.About}/>, link: '/' + this.props.slug + '/about' },
+			{ type: 'button', mobile: true, text: <FormattedMessage {...globalMessages.Menu}/>, action: undefined },
 		];
 
 		let adminNav = [
-			{ type: 'title', text: 'Admin'},
-			{ type: 'link', text: 'Details', link: '/' + this.props.slug + '/details', active: this.props.mode === 'details' },
-			{ type: 'link', text: 'Layout', link: '/' + this.props.slug + '/layout', active: this.props.mode === 'layout' },
-			{ type: 'link', text: 'Featured', link: '/' + this.props.slug + '/featured', active: this.props.mode === 'featured' },
-			{ type: 'link', text: 'Submitted', link: '/' + this.props.slug + '/submitted', active: this.props.mode === 'submitted' },
-			{ type: 'link', text: 'Collections', link: '/' + this.props.slug + '/collections', active: this.props.mode === 'collections' },
-			{ type: 'link', text: 'Admins', link: '/' + this.props.slug + '/admins', active: this.props.mode === 'admins' },
+			{ type: 'title', text: <FormattedMessage {...globalMessages.Admin}/>},
+			{ type: 'link', text: <FormattedMessage {...globalMessages.Details}/>, link: '/' + this.props.slug + '/details', active: this.props.mode === 'details' },
+			{ type: 'link', text: <FormattedMessage {...globalMessages.Details}/>, link: '/' + this.props.slug + '/layout', active: this.props.mode === 'layout' },
+			{ type: 'link', text: <FormattedMessage {...globalMessages.Featured}/>, link: '/' + this.props.slug + '/featured', active: this.props.mode === 'featured' },
+			{ type: 'link', text: <FormattedMessage {...globalMessages.Submitted}/>, link: '/' + this.props.slug + '/submitted', active: this.props.mode === 'submitted' },
+			{ type: 'link', text: <FormattedMessage {...globalMessages.Collections}/>, link: '/' + this.props.slug + '/collections', active: this.props.mode === 'collections' },
+			{ type: 'link', text: <FormattedMessage {...globalMessages.Admins}/>, link: '/' + this.props.slug + '/admins', active: this.props.mode === 'admins' },
 			{ type: 'spacer' },
-			{ type: 'title', text: 'Public'},
+			{ type: 'title', text: <FormattedMessage {...globalMessages.Public}/>},
 		];
 
 		if (!journalData.isAdmin) {
@@ -141,9 +141,9 @@ export const JournalProfile = React.createClass({
 
 		const navItems = [
 			...adminNav,
-			{ type: 'link', text: 'About', link: '/' + this.props.slug + '/about', active: this.props.mode === 'about' },
-			{ type: 'link', text: 'Recent Activity', link: '/' + this.props.slug, active: !this.props.mode},
-			{ type: 'link', text: 'Followers', link: '/' + this.props.slug + '/followers', active: this.props.mode === 'followers'},
+			{ type: 'link', text: <FormattedMessage {...globalMessages.About}/>, link: '/' + this.props.slug + '/about', active: this.props.mode === 'about' },
+			{ type: 'link', text: <FormattedMessage {...globalMessages.RecentActivity}/>, link: '/' + this.props.slug, active: !this.props.mode},
+			{ type: 'link', text: <FormattedMessage {...globalMessages.Followers}/>, link: '/' + this.props.slug + '/followers', active: this.props.mode === 'followers'},
 
 			{ type: 'spacer' },
 			...collectionItems,

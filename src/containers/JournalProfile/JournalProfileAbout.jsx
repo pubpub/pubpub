@@ -4,8 +4,8 @@ import {safeGetInToJS} from 'utils/safeParse';
 import {PreviewCard} from 'components';
 
 // import {globalStyles} from 'utils/styleConstants';
-// import {globalMessages} from 'utils/globalMessages';
-// import {FormattedMessage} from 'react-intl';
+import {globalMessages} from 'utils/globalMessages';
+import {FormattedMessage} from 'react-intl';
 
 let styles = {};
 
@@ -23,12 +23,12 @@ export const JournalProfileAbout = React.createClass({
 				<a className={'underlineOnHover'} style={[styles.link, styles.firstLink, !journalData.website && styles.hide]} href={journalData.website}>{journalData.website}</a>
 				<a className={'underlineOnHover'} style={[styles.link, !journalData.twitter && styles.hide]} href={'https://twitter.com/' + journalData.twitter}>@{journalData.twitter}</a>
 				<a className={'underlineOnHover'} style={[styles.link, !journalData.facebook && styles.hide]} href={'https://facebook.com/' + journalData.facebook}>facebook.com/{journalData.facebook}</a>
-				
-				<h3 style={[!journalData.about && styles.hide]}>About</h3>
+
+				<h3 style={[!journalData.about && styles.hide]}><FormattedMessage {...globalMessages.About}/></h3>
 				{journalData.about}
 
 
-				<h3>Admins</h3>
+				<h3><FormattedMessage {...globalMessages.Admins}/></h3>
 				{
 					adminsData.sort((foo, bar)=>{
 						// Sort so that most recent is first in array
@@ -37,7 +37,7 @@ export const JournalProfileAbout = React.createClass({
 						return 0;
 					}).map((item, index)=>{
 						return (
-							<PreviewCard 
+							<PreviewCard
 								key={'featured-' + index}
 								type={'user'}
 								image={item.source.image}
@@ -47,7 +47,7 @@ export const JournalProfileAbout = React.createClass({
 						);
 					})
 				}
-				
+
 			</div>
 		);
 	}

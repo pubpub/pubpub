@@ -45,8 +45,8 @@ export const JupyterViewer = React.createClass({
 		// const title = safeGetInToJS(this.props.atomData, ['atomData', 'title']);
 		// const JupyterSource = safeGetInToJS(this.props.atomData, ['currentVersionData', 'content', 'url']);
 		const JupyterSourceHtmlUrl = safeGetInToJS(this.props.atomData, ['currentVersionData', 'content', 'htmlUrl']);
-		
-		
+
+
 		return (
 			<div>
 				<iframe id={this.state.iframeID} className={'jupyter-iframe'} ref="iframe" style={styles.iframe} src={JupyterSourceHtmlUrl} onLoad={this.onIframeLoad}></iframe>

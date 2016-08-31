@@ -3,8 +3,8 @@ import Radium from 'radium';
 // import { Link } from 'react-router';
 // import {globalStyles} from 'utils/styleConstants';
 
-// import {globalMessages} from 'utils/globalMessages';
-// import {FormattedMessage} from 'react-intl';
+import {globalMessages} from 'utils/globalMessages';
+import {FormattedMessage} from 'react-intl';
 
 let styles;
 
@@ -21,9 +21,23 @@ export const AppMessage = React.createClass({
 		return (
 			<div style={styles.container}>
 				<div style={styles.content}>
-					<div>We've made some <a style={styles.emailLink} href={'https://github.com/pubpub/pubpub/blob/master/CHANGELOG.md'} target={'_blank'}>big changes</a> to PubPub!</div>
-					<div>See something you like? Or a bug perhaps? <a style={styles.emailLink} href="mailto:pubpub@media.mit.edu" target="_top">Please let us know!</a></div>
-					<div onClick={this.onGotIt} className={'button'} style={styles.button}>Got it!</div>
+					<div>
+						<FormattedMessage
+								id="app.content1"
+								defaultMessage={`We've made some {changelog} to PubPub!`}
+								values={{changelog: <a style={styles.emailLink} href={'https://github.com/pubpub/pubpub/blob/master/CHANGELOG.md'} target={'_blank'}>big changes</a>}}
+						/>
+					</div>
+					<div>
+						<FormattedMessage
+								id="app.content2"
+								defaultMessage={`See something you like? Or a bug perhaps? {emailLink}`}
+								values={{emailLink: <a style={styles.emailLink} href="mailto:pubpub@media.mit.edu" target="_top">Please let us know!</a>}}
+						/>
+					</div>
+					<div onClick={this.onGotIt} className={'button'} style={styles.button}>
+						<FormattedMessage {...globalMessages.GotIt}/>
+					</div>
 				</div>
 			</div>
 

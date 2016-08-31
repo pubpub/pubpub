@@ -1,6 +1,9 @@
 import React, {PropTypes} from 'react';
 import Radium from 'radium';
 
+import {globalMessages} from 'utils/globalMessages';
+import {FormattedMessage} from 'react-intl';
+
 export const UserProfileSettingsNotifications = React.createClass({
 	propTypes: {
 		settingsData: PropTypes.object,
@@ -11,7 +14,7 @@ export const UserProfileSettingsNotifications = React.createClass({
 
 		return (
 			<div>
-				<h3>Notifications and their settings coming soon</h3>
+				<h3><FormattedMessage id="UserProfileSettingsNotifications.ComingSoon" defaultMessage="Notifications and their settings coming soon"/></h3>
 			</div>
 		);
 	}

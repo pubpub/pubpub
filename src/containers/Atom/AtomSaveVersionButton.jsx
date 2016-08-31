@@ -3,6 +3,9 @@ import Radium from 'radium';
 import {Loader} from 'components';
 import {globalStyles} from 'utils/styleConstants';
 
+import {globalMessages} from 'utils/globalMessages';
+import {FormattedMessage} from 'react-intl';
+
 let styles;
 
 export const AtomSaveVersionButton = React.createClass({
@@ -12,7 +15,7 @@ export const AtomSaveVersionButton = React.createClass({
 		error: PropTypes.string,
 		buttonStyle: PropTypes.object,
 	},
-	
+
 	getInitialState() {
 		return {
 			message: '',
@@ -20,7 +23,7 @@ export const AtomSaveVersionButton = React.createClass({
 			noNote: false,
 		};
 	},
-	
+
 	componentWillReceiveProps(nextProps) {
 		if (this.props.isLoading && !nextProps.isLoading) {
 			this.setState({message: ''});
@@ -47,44 +50,48 @@ export const AtomSaveVersionButton = React.createClass({
 	// TODO: Route to /atom/doc when save version is finished. ANd clear our the message
 	render: function() {
 		return (
-			<div className={'light-button arrow-down-button'} style={this.props.buttonStyle}>Save Version
+			<div className={'light-button arrow-down-button'} style={this.props.buttonStyle}><FormattedMessage {...globalMessages.SaveVersion}/>
 				<div className={'hoverChild arrow-down-child'} style={styles.content}>
-					<h2>Save Version</h2>
+					<h2>
+						<FormattedMessage {...globalMessages.SaveVersion}/>
+					</h2>
 					<form onSubmit={this.onSave}>
 						<div style={styles.text}>
-							Save Versions to mark milestones in your document. Any individial version can be published.
+							<FormattedMessage id="aboutSaveVersionButton.FormDescription" defaultMessage="Save Versions to mark milestones in your document. Any individial version can be published."/>
+
 						</div>
-						
+
 
 						<label htmlFor={'versionNote'}>
-							Version Note
+							<FormattedMessage id="aboutSaveVersionButton.VersionNote" defaultMessage="Version Note"/>
 						</label>
 						<input type="text" id={'versionNote'} name={'version note'} value={this.state.message} onChange={this.onMessageChange} style={styles.input}/>
 						<div className={'light-color inputSubtext'}>
-							Describe changes or updates.
+							<FormattedMessage id="aboutSaveVersionButton.DescribeChanges" defaultMessage="Describe changes or updates."/>
 						</div>
 
 						<div>
-							<input type="checkbox" id={'isPublished'} value={this.state.isPublished} onChange={this.onPublishedChange} style={styles.checkbox}/>	
+							<input type="checkbox" id={'isPublished'} value={this.state.isPublished} onChange={this.onPublishedChange} style={styles.checkbox}/>
 							<label htmlFor={'isPublished'} style={styles.publishLabel}>
-								Publish on Save
+
+								<FormattedMessage id="aboutSaveVersionButton.PublishOnSave" defaultMessage="Publish on Save"/>
 							</label>
 							<div className={'light-color inputSubtext'}>
-								Publishing with permanently make this version publicly available.
+								<FormattedMessage id="aboutSaveVersionButton.PublishingDescription" defaultMessage="Publishing will permanently make this version publicly available."/>
 							</div>
-							
+
 						</div>
-						
+
 
 						<button className={'button'} onClick={this.onSave} style={styles.saveVersionButton}>
-							Save Version {this.state.isPublished && 'and Publish'}
+							<FormattedMessage {...globalMessages.SaveVersion}/>  {this.state.isPublished && <FormattedMessage id="aboutSaveVersionButton.AndPublish" defaultMessage="and Publish"/>}
 						</button>
 						<div style={styles.loaderContainer}><Loader loading={this.props.isLoading} showCompletion={true}/></div>
 						{this.state.noNote &&
-							<div style={styles.errorMessage}>Version Note required</div>
+							<div style={styles.errorMessage}>
+								<FormattedMessage id="aboutSaveVersionButton.VersionNoteRequired" defaultMessage="Version Note required"/>
+							</div>
 						}
-						
-
 					</form>
 				</div>
 			</div>

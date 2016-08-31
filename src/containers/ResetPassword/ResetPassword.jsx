@@ -11,8 +11,8 @@ import {Loader, NotFound} from 'components';
 
 import {safeGetInToJS} from 'utils/safeParse';
 
-// import {globalMessages} from 'utils/globalMessages';
-// import {FormattedMessage} from 'react-intl';
+import {globalMessages} from 'utils/globalMessages';
+import {FormattedMessage} from 'react-intl';
 
 let styles = {};
 
@@ -60,7 +60,7 @@ export const ResetPassword = React.createClass({
 
 				{this.props.hash && resetSuccess === 'invalid'
 					? null
-					: <h1>Password Reset</h1>
+					: <h1><FormattedMessage {...globalMessages.PasswordReset}/></h1>
 				}
 				<div style={styles.content}>
 
@@ -71,8 +71,12 @@ export const ResetPassword = React.createClass({
 								case 'success':
 									return (
 										<div>
-											<div style={styles.detail}>Password Reset successful!</div>
-											<Link to={'/login'} className={'button'} style={styles.loginButton} key={'resetLoginButton'}>Click to Login</Link>
+											<div style={styles.detail}>
+												<FormattedMessage id="resetPassword.Success" defaultMessage="Password Reset successful!"/>
+											</div>
+											<Link to={'/login'} className={'button'} style={styles.loginButton} key={'resetLoginButton'}>
+												<FormattedMessage id="resetPassword.ClickToLogin" defaultMessage="Click to Login"/>
+											</Link>
 										</div>
 									);
 								case 'invalid':
@@ -82,12 +86,14 @@ export const ResetPassword = React.createClass({
 										<form onSubmit={this.resetPasswordSubmit}>
 											<div>
 												<label style={styles.label} htmlFor={'newPassword'}>
-													New Password
+													<FormattedMessage id="resetPassword.NewPassword" defaultMessage="New Password"/>
 												</label>
 												<input ref={'resetPassword'} id={'newPassword'} name={'New Password'} type="password" style={styles.input}/>
 											</div>
 
-											<button name={'login'} className={'button'} onClick={this.resetPasswordSubmit}>Set New Password</button>
+											<button name={'login'} className={'button'} onClick={this.resetPasswordSubmit}>
+												<FormattedMessage id="resetPassword.SetNewPassword" defaultMessage="Set New Password"/>
+											</button>
 											<div style={styles.loaderContainer}><Loader loading={loading} showCompletion={false}/></div>
 										</form>
 									);
@@ -102,29 +108,39 @@ export const ResetPassword = React.createClass({
 								case 'success':
 									return (
 										<div>
-											<p style={styles.detail}>Password Reset Request Submitted.</p>
-											<p style={styles.detail}>Check your email.</p>
+											<p style={styles.detail}>
+												<FormattedMessage id="resetPassword.PasswordResetRequestSubmitted" defaultMessage="Password Reset Request Submitted."/>
+												</p>
+											<p style={styles.detail}>
+												<FormattedMessage id="resetPassword.CheckEmail" defaultMessage="Check your email."/>
+											</p>
 										</div>
 									);
-								default: 
+								default:
 									return (
 										<div>
-											<p style={styles.detail}>Please enter the email address of your PubPub account.</p>
-											<p style={styles.detail}>Reset instructions will be sent to this email.</p>
+											<p style={styles.detail}>
+												<FormattedMessage id="resetPassword.PleaseEnterEmail" defaultMessage="Please enter the email address of your PubPub account."/>
+											</p>
+											<p style={styles.detail}>
+												<FormattedMessage id="resetPassword.ResetInstructionsEmail" defaultMessage="Reset instructions will be sent to this email."/>
+											</p>
 
 											<form onSubmit={this.resetRequestSubmit}>
 												<div>
 													<label style={styles.label} htmlFor={'email'}>
-														Email
+														<FormattedMessage {...globalMessages.Email}/>
 													</label>
 													<input ref={'requestResetEmail'} id={'email'} name={'email'} type="text" style={styles.input}/>
 												</div>
 
-												<button name={'login'} className={'button'} onClick={this.resetRequestSubmit}>Reset Password</button>
+												<button name={'login'} className={'button'} onClick={this.resetRequestSubmit}><FormattedMessage {...globalMessages.ResetPassword}/></button>
 												<div style={styles.loaderContainer}><Loader loading={loading} showCompletion={false}/></div>
 											</form>
 											{requestSuccess === 'error'
-												? <div style={styles.error}>No user with that email</div>
+												? <div style={styles.error}>
+														<FormattedMessage id="resetPassword.NoUser" defaultMessage="No user with that email"/>
+													</div>
 												: null
 											}
 										</div>

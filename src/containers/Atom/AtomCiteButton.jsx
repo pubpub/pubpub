@@ -2,6 +2,9 @@ import React, {PropTypes} from 'react';
 import Radium from 'radium';
 import {Reference} from 'components';
 import {safeGetInToJS} from 'utils/safeParse';
+import {FormattedMessage} from 'react-intl';
+import {globalMessages} from 'utils/globalMessages';
+
 
 let styles;
 
@@ -12,7 +15,7 @@ export const AtomCiteButton = React.createClass({
 		customAuthorString: PropTypes.string,
 		versionQuery: PropTypes.string,
 		buttonStyle: PropTypes.object,
-		
+
 	},
 
 	render: function() {
@@ -38,7 +41,8 @@ export const AtomCiteButton = React.createClass({
 
 
 		return (
-			<div className={'light-button arrow-down-button'} style={this.props.buttonStyle}>Cite
+			<div className={'light-button arrow-down-button'} style={this.props.buttonStyle}>
+				<FormattedMessage {...globalMessages.Cite}/>
 				<div className={'hoverChild arrow-down-child'} style={styles.citeContent}>
 					<h3 className={'normalWeight'}>Bibtex</h3>
 					<div style={[styles.typeContent, styles.bibtexContent]}>

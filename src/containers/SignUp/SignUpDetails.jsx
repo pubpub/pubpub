@@ -50,7 +50,7 @@ export const SignUpDetails = React.createClass({
 			github: this.refs.github.value,
 			googleScholar: this.refs.googleScholar.value,
 		};
-		this.props.submitHandler(detailsData);	
+		this.props.submitHandler(detailsData);
 	},
 
 	handleFileSelect: function(evt) {
@@ -88,7 +88,7 @@ export const SignUpDetails = React.createClass({
 				<p style={styles.subHeader}>
 					<FormattedMessage id="details.AddDetailsTo" defaultMessage="Add details to identify yourself to the community and to be rewarded for your contributions!"/>
 				</p>
-				
+
 				<form onSubmit={this.detailsSubmit}>
 					<div>
 						<label htmlFor={'userImage'}>
@@ -96,7 +96,7 @@ export const SignUpDetails = React.createClass({
 						</label>
 						<img style={styles.userImage} src={this.state.userImageURL || userData.image} />
 						<input id={'userImage'} name={'user image'} type="file" accept="image/*" onChange={this.handleFileSelect} />
-						
+
 					</div>
 
 					<div>
@@ -111,7 +111,7 @@ export const SignUpDetails = React.createClass({
 
 					<div>
 						<label htmlFor={'publicEmail'}>
-							Public Email
+							<FormattedMessage {...globalMessages.PublicEmail}/>
 						</label>
 						<input ref={'publicEmail'} id={'publicEmail'} name={'publicEmail'} type="text" style={styles.input} defaultValue={userData.publicEmail}/>
 					</div>
@@ -129,7 +129,7 @@ export const SignUpDetails = React.createClass({
 						</label>
 						<div style={styles.prefixedInputWrapper}>
 							<div style={styles.prefix}>@</div>
-							<input ref={'twitter'} id={'twitter'} name={'twitter'} type="text" style={[styles.input, styles.prefixedInput]} defaultValue={userData.twitter}/>	
+							<input ref={'twitter'} id={'twitter'} name={'twitter'} type="text" style={[styles.input, styles.prefixedInput]} defaultValue={userData.twitter}/>
 						</div>
 					</div>
 
@@ -139,7 +139,7 @@ export const SignUpDetails = React.createClass({
 						</label>
 						<div style={styles.prefixedInputWrapper}>
 							<div style={styles.prefix}>orcid.org/</div>
-							<input ref={'orcid'} id={'orcid'} name={'orcid'} type="text" style={[styles.input, styles.prefixedInput]} defaultValue={userData.orcid}/>	
+							<input ref={'orcid'} id={'orcid'} name={'orcid'} type="text" style={[styles.input, styles.prefixedInput]} defaultValue={userData.orcid}/>
 						</div>
 					</div>
 
@@ -149,7 +149,7 @@ export const SignUpDetails = React.createClass({
 						</label>
 						<div style={styles.prefixedInputWrapper}>
 							<div style={styles.prefix}>github.com/</div>
-							<input ref={'github'} id={'github'} name={'github'} type="text" style={[styles.input, styles.prefixedInput]} defaultValue={userData.github}/>	
+							<input ref={'github'} id={'github'} name={'github'} type="text" style={[styles.input, styles.prefixedInput]} defaultValue={userData.github}/>
 						</div>
 					</div>
 
@@ -159,7 +159,7 @@ export const SignUpDetails = React.createClass({
 						</label>
 						<div style={styles.prefixedInputWrapper}>
 							<div style={styles.prefix}>scholar.google.com/citations?user=</div>
-							<input ref={'googleScholar'} id={'googleScholar'} name={'google scholar'} type="text" style={[styles.input, styles.prefixedInput]} defaultValue={userData.googleScholar}/>	
+							<input ref={'googleScholar'} id={'googleScholar'} name={'google scholar'} type="text" style={[styles.input, styles.prefixedInput]} defaultValue={userData.googleScholar}/>
 						</div>
 					</div>
 
@@ -179,7 +179,7 @@ export const SignUpDetails = React.createClass({
 						<ImageCropper height={500} width={500} image={this.state.userImageFile} onCancel={this.cancelImageUpload} onUpload={this.userImageUploaded}/>
 					</div>
 				</div>
-				
+
 			</div>
 		);
 	}
@@ -189,7 +189,7 @@ export const SignUpDetails = React.createClass({
 export default Radium(SignUpDetails);
 
 styles = {
-	subHeader: {  
+	subHeader: {
 		margin: '-20px 0px 20px 0px',
 		fontSize: '0.9em',
 	},

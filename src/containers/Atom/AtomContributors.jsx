@@ -5,6 +5,9 @@ import request from 'superagent';
 import {PreviewCard, SelectValue, SelectOption} from 'components';
 import {RadioGroup, Radio} from 'utils/ReactRadioGroup';
 
+import {FormattedMessage} from 'react-intl';
+import {globalMessages} from 'utils/globalMessages';
+
 let styles;
 
 export const AtomContributors = React.createClass({
@@ -25,7 +28,7 @@ export const AtomContributors = React.createClass({
 			contributorStates: {},
 		};
 	},
-	
+
 	componentWillMount() {
 		const typesObject = {};
 		const contributorsData = this.props.contributorsData || [];
@@ -141,8 +144,8 @@ export const AtomContributors = React.createClass({
 		return (
 			<div >
 				{this.props.permissionType === 'author' &&
-					<div style={styles.container}>			
-								
+					<div style={styles.container}>
+
 						<Style rules={{
 							'.contributor-role-input .Select-control': { borderWidth: '0px', height: '34px'},
 							'.contributor-role-input .Select-placeholder': {lineHeight: '34px'},
@@ -154,7 +157,7 @@ export const AtomContributors = React.createClass({
 							minimumInput={3}
 							value={this.state.value}
 							loadOptions={this.loadOptions}
-							placeholder={<span>Add new contributor</span>}
+							placeholder={<span><FormattedMessage id="atomContributors.AddNew" defaultMessage="Add new contributor"/></span>}
 							filterOptions={(options)=>{
 								return options.filter((option)=>{
 									for (let index = 0; index < contributorsData.length; index++) {
@@ -165,13 +168,17 @@ export const AtomContributors = React.createClass({
 									return true;
 								});
 							}}
-							onChange={this.handleSelectChange} 
+							onChange={this.handleSelectChange}
 							optionComponent={SelectOption}
 							valueComponent={SelectValue}/>
 
-						<div className={'button'} style={[styles.submitButton, (this.state.value && this.state.value.id) && styles.submitButtonActive]} onClick={this.addContributor}>Add Contributor</div>
-							
-						<h3>Contributors</h3>
+						<div className={'button'} style={[styles.submitButton, (this.state.value && this.state.value.id) && styles.submitButtonActive]} onClick={this.addContributor}>
+							<FormattedMessage {...globalMessages.AddContributor}/>
+						</div>
+
+						<h3>
+							<FormattedMessage {...globalMessages.Contributors}/>
+						</h3>
 						{
 							contributorsData.sort((foo, bar)=>{
 								// Sort so that alphabetical
@@ -179,11 +186,11 @@ export const AtomContributors = React.createClass({
 								if (foo.source.name < bar.source.name) { return -1; }
 								return 0;
 							}).map((item, index)=>{
-								const buttons = [ 
-									{ type: 'button', text: 'Delete', action: this.deleteAdmin.bind(this, item._id) },
+								const buttons = [
+									{ type: 'button', text: <FormattedMessage {...globalMessages.Delete}/>, action: this.deleteAdmin.bind(this, item._id) },
 								];
 								return (
-									<PreviewCard 
+									<PreviewCard
 										key={'contributor-' + item._id}
 										type={'user'}
 										image={item.source.image}
@@ -191,20 +198,36 @@ export const AtomContributors = React.createClass({
 										slug={item.source.username}
 										description={
 											<RadioGroup name={'contributor type ' + item._id} selectedValue={this.state.contributorStates[item._id].type} onChange={this.handleTypeChange.bind(this, item._id)}>
-												<Radio value="contributor" id={'contributor-' + item._id} style={styles.radioInput}/> <label htmlFor={'contributor-' + item._id} style={styles.radioLabel}>Contributor</label>
-												<Radio value="reader" id={'reader-' + item._id} style={styles.radioInput}/> <label htmlFor={'reader-' + item._id} style={styles.radioLabel}>Reader</label>
-												<Radio value="editor" id={'editor-' + item._id} style={styles.radioInput}/> <label htmlFor={'editor-' + item._id} style={styles.radioLabel}>Editor</label>
-												<Radio value="author" id={'author-' + item._id} style={styles.radioInput}/> <label htmlFor={'author-' + item._id} style={styles.radioLabel}>Author</label>
+												<Radio value="contributor" id={'contributor-' + item._id} style={styles.radioInput}/> <label htmlFor={'contributor-' + item._id} style={styles.radioLabel}>
+													<FormattedMessage {...globalMessages.Contributor}/>
+												</label>
+												<Radio value="reader" id={'reader-' + item._id} style={styles.radioInput}/> <label htmlFor={'reader-' + item._id} style={styles.radioLabel}>
+													<FormattedMessage {...globalMessages.Reader}/>
+												</label>
+												<Radio value="editor" id={'editor-' + item._id} style={styles.radioInput}/> <label htmlFor={'editor-' + item._id} style={styles.radioLabel}>
+													<FormattedMessage {...globalMessages.Editor}/>
+												</label>
+												<Radio value="author" id={'author-' + item._id} style={styles.radioInput}/> <label htmlFor={'author-' + item._id} style={styles.radioLabel}>
+													<FormattedMessage {...globalMessages.Author}/>
+												</label>
 											</RadioGroup>
-										} 
+										}
 										mobileDescription={
 											<RadioGroup name={'contributor type 2' + item._id} selectedValue={this.state.contributorStates[item._id].type} onChange={this.handleTypeChange.bind(this, item._id)}>
-												<Radio value="contributor" id={'contributor-' + item._id} style={styles.radioInput}/> <label htmlFor={'contributor-' + item._id} style={styles.radioLabel}>Contributor</label>
-												<Radio value="reader" id={'reader2-' + item._id} style={styles.radioInput}/> <label htmlFor={'reader2-' + item._id} style={styles.radioLabel}>Reader</label>
-												<Radio value="editor" id={'editor2-' + item._id} style={styles.radioInput}/> <label htmlFor={'editor2-' + item._id} style={styles.radioLabel}>Editor</label>
-												<Radio value="author" id={'author2-' + item._id} style={styles.radioInput}/> <label htmlFor={'author2-' + item._id} style={styles.radioLabel}>Author</label>
+												<Radio value="contributor" id={'contributor-' + item._id} style={styles.radioInput}/> <label htmlFor={'contributor-' + item._id} style={styles.radioLabel}>
+													<FormattedMessage {...globalMessages.Contributor}/>
+											</label>
+												<Radio value="reader" id={'reader2-' + item._id} style={styles.radioInput}/> <label htmlFor={'reader2-' + item._id} style={styles.radioLabel}>
+													<FormattedMessage {...globalMessages.Reader}/>
+												</label>
+												<Radio value="editor" id={'editor2-' + item._id} style={styles.radioInput}/> <label htmlFor={'editor2-' + item._id} style={styles.radioLabel}>
+													<FormattedMessage {...globalMessages.Editor}/>
+												</label>
+												<Radio value="author" id={'author2-' + item._id} style={styles.radioInput}/> <label htmlFor={'author2-' + item._id} style={styles.radioLabel}>
+													<FormattedMessage {...globalMessages.Author}/>
+												</label>
 											</RadioGroup>
-										} 
+										}
 										footer={
 											<div className={'contributor-role-input'}>
 												<Select
@@ -212,10 +235,10 @@ export const AtomContributors = React.createClass({
 													options={roleOptions}
 													value={this.state.contributorStates[item._id].roles}
 													multi={true}
-													placeholder={<span>Specify roles of this contributor</span>}
+													placeholder={<span><FormattedMessage id="atomContributors.SpecifyRoles" defaultMessage="Specify roles of this contributor"/></span>}
 													onChange={this.handleRoleChange.bind(this, item._id)} />
 											</div>
-										} 
+										}
 										buttons={buttons} />
 								);
 							})
@@ -251,10 +274,10 @@ export const AtomContributors = React.createClass({
 								);
 							})
 						}
-						
+
 					</div>
 				}
-				
+
 
 			</div>
 		);

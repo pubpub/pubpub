@@ -1,5 +1,7 @@
 import React, {PropTypes} from 'react';
 import Radium from 'radium';
+import {globalMessages} from 'utils/globalMessages';
+import {FormattedMessage} from 'react-intl';
 
 export const UserProfileSettingsAccount = React.createClass({
 	propTypes: {
@@ -11,10 +13,10 @@ export const UserProfileSettingsAccount = React.createClass({
 
 		return (
 			<div>
-				Here is a bunch of details for my Account
+				<FormattedMessage id="userProfileSettings.HereIsABunch" defaultMessage="Here is a bunch of details for my Account"/>
 
-				<div className={'button'}>Save Account Settings</div>
-				
+				<div className={'button'}><FormattedMessage id="userProfileSettings.Save" defaultMessage="Save Account Settings"/></div>
+
 			</div>
 		);
 	}

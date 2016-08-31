@@ -14,6 +14,9 @@ import {s3Upload} from 'utils/uploadFile';
 
 import {schema as pubSchema} from './proseEditor/schema';
 
+import {globalMessages} from 'utils/globalMessages';
+import {FormattedMessage} from 'react-intl';
+
 const ColorHash = new chash();
 
 let styles;
@@ -155,7 +158,7 @@ export const DocumentEditor = React.createClass({
 
 			const participantsPlaceholder = document.getElementById('editor-participants');
 			participantsPlaceholder.innerHTML = '';
-			
+
 		}
 	},
 
@@ -340,9 +343,9 @@ export const DocumentEditor = React.createClass({
 		// console.log('Got participants', participants);
 		if (!this._calledComponentWillUnmount) {
 			this.collab.mod.collab.updateParticipantList(participants);
-			this.setState({participants});	
+			this.setState({participants});
 		}
-		
+
 	},
 
 	proseChange: function() {
@@ -395,7 +398,9 @@ export const DocumentEditor = React.createClass({
 				<div>
 					{(collab
 						? <div></div>
-						: <div>Connection to Collaboration Server Failed</div>
+						: <div>
+								<FormattedMessage id="about.CollabConnectionFail" defaultMessage="Connection to Collaboration Server Failed."/>
+							</div>
 					)}
 				</div>
 

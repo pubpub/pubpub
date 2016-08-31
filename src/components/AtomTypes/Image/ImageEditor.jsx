@@ -4,6 +4,9 @@ import {safeGetInToJS} from 'utils/safeParse';
 import {s3Upload} from 'utils/uploadFile';
 import {Loader, CustomizableForm} from 'components';
 
+import {globalMessages} from 'utils/globalMessages';
+import {FormattedMessage} from 'react-intl';
+
 let styles = {};
 
 export const ImageEditor = React.createClass({
@@ -76,17 +79,25 @@ export const ImageEditor = React.createClass({
 
 		return (
 			<div>
-				<h3>Preview</h3>
+				<h3>
+					<FormattedMessage {...globalMessages.Preview}/>
+				</h3>
 				<img src={scaledURL} alt={title} style={styles.image}/>
 				<div style={styles.loaderWrapper}>
 					<Loader loading={this.state.isUploading} showCompletion={true}/>
 				</div>
-				<a href={imageSource} alt={'Original Size: ' + title} target="_blank" className={'underlineOnHover'} style={styles.originalLink}>View Original</a>
+				<a href={imageSource} alt={'Original Size: ' + title} target="_blank" className={'underlineOnHover'} style={styles.originalLink}>
+					<FormattedMessage {...globalMessages.ViewOriginal}/>
+				</a>
 
-				<h3>Choose new file</h3>
+				<h3>
+					<FormattedMessage {...globalMessages.ChooseNewFile}/>
+				</h3>
 				<input id={'imageFile'} name={'image file'} type="file" accept="image/*" onChange={this.handleFileSelect} />
 
-				<h3>Metadata</h3>
+				<h3>
+					<FormattedMessage {...globalMessages.Metadata}/>
+				</h3>
 				<CustomizableForm formData={this.state.metadata} onUpdate={this.metadataUpdate}/>
 
 			</div>

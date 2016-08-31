@@ -1,10 +1,6 @@
 import {defineMessages} from 'react-intl';
 
 export const globalMessages = defineMessages({
-	login: {
-		id: 'global.login',
-		defaultMessage: 'Login',
-	},
 	Login: {
 		id: 'global.Login',
 		defaultMessage: 'Login',
@@ -16,6 +12,34 @@ export const globalMessages = defineMessages({
 	Skipthisstep: {
 		id: 'global.Skipthisstep',
 		defaultMessage: 'Skip this step',
+	},
+	TypeToSearch: {
+		id: 'global.TypeToSearch',
+		defaultMessage: 'Type To Search',
+	},
+	DropFilesToAdd: {
+		id: 'global.DropFilesToAdd',
+		defaultMessage: 'Drop Files To Add',
+	},
+	Created: {
+		id: 'global.Created',
+		defaultMessage: 'Created',
+	},
+	Version: {
+		id: 'global.Version',
+		defaultMessage: 'Version',
+	},
+	Versions: {
+		id: 'global.Versions',
+		defaultMessage: 'Versions',
+	},
+	SaveVersion: {
+		id: 'global.SaveVersion',
+		defaultMessage: 'Save Version',
+	},
+	LatestVersion: {
+		id: 'global.LatestVersion',
+		defaultMessage: 'Latest Version',
 	},
 	ProfileImage: {
 		id: 'global.ProfileImage',
@@ -45,8 +69,8 @@ export const globalMessages = defineMessages({
 		id: 'global.groups',
 		defaultMessage: 'Groups',
 	},
-	notifications: {
-		id: 'global.notifications',
+	Notifications: {
+		id: 'global.Notifications',
 		defaultMessage: 'Notifications',
 	},
 	Logout: {
@@ -77,25 +101,29 @@ export const globalMessages = defineMessages({
 		id: 'global.FAQ',
 		defaultMessage: 'FAQ',
 	},
-	menu: {
-		id: 'global.menu',
+	Menu: {
+		id: 'global.Menu',
 		defaultMessage: 'Menu',
 	},
 	close: {
 		id: 'global.close',
 		defaultMessage: 'Close',
 	},
-	follow: {
-		id: 'global.follow',
+	Follow: {
+		id: 'global.Follow',
 		defaultMessage: 'Follow',
 	},
-	following: {
-		id: 'global.following',
+	Following: {
+		id: 'global.Following',
 		defaultMessage: 'Following',
 	},
-	follows: {
-		id: 'global.follows',
+	Follows: {
+		id: 'global.Follows',
 		defaultMessage: 'Follows',
+	},
+	Followers: {
+		id: 'global.Followers',
+		defaultMessage: 'Followers',
 	},
 	design: {
 		id: 'global.Design',
@@ -113,8 +141,12 @@ export const globalMessages = defineMessages({
 		id: 'global.tableOfContents',
 		defaultMessage: 'Table of Contents',
 	},
-	discussions: {
-		id: 'global.discussions',
+	Contents: {
+		id: 'global.Contents',
+		defaultMessage: 'Contents',
+	},
+	Discussions: {
+		id: 'global.Discussions',
 		defaultMessage: 'Discussions',
 	},
 	discussion: {
@@ -125,8 +157,44 @@ export const globalMessages = defineMessages({
 		id: 'global.PublicDiscussion',
 		defaultMessage: 'Public Discussion',
 	},
-	reviews: {
-		id: 'global.reviews',
+	PublicEmail: {
+		id: 'global.PublicEmail',
+		defaultMessage: 'Public Email',
+	},
+	Public: {
+		id: 'global.Public',
+		defaultMessage: 'Public',
+	},
+	NewCollection: {
+		id: 'global.NewCollection',
+		defaultMessage: 'New Collection',
+	},
+	AddCollection: {
+		id: 'global.AddCollection',
+		defaultMessage: 'Add Collection',
+	},
+	DeleteAdmin: {
+		id: 'global.DeleteAdmin',
+		defaultMessage: 'Delete Admin',
+	},
+	RecentActivity: {
+		id: 'global.RecentActivity',
+		defaultMessage: 'Recent Activity',
+	},
+	Recent: {
+		id: 'global.Recent',
+		defaultMessage: 'Recent',
+	},
+	Images: {
+		id: 'global.Images',
+		defaultMessage: 'Images',
+	},
+	Videos: {
+		id: 'global.Videos',
+		defaultMessage: 'Videos',
+	},
+	Reviews: {
+		id: 'global.Reviews',
 		defaultMessage: 'Reviews',
 	},
 	experts: {
@@ -141,8 +209,8 @@ export const globalMessages = defineMessages({
 		id: 'global.historydiff',
 		defaultMessage: 'history diff',
 	},
-	analytics: {
-		id: 'global.analytics',
+	Analytics: {
+		id: 'global.Analytics',
 		defaultMessage: 'Analytics',
 	},
 	news: {
@@ -157,17 +225,29 @@ export const globalMessages = defineMessages({
 		id: 'global.inthenews',
 		defaultMessage: 'In The News',
 	},
-	source: {
-		id: 'global.source',
+	Source: {
+		id: 'global.Source',
 		defaultMessage: 'Source',
 	},
-	cite: {
-		id: 'global.cite',
+	Height: {
+		id: 'global.Height',
+		defaultMessage: 'Height',
+	},
+	Width: {
+		id: 'global.Width',
+		defaultMessage: 'Width',
+	},
+	Cite: {
+		id: 'global.Cite',
 		defaultMessage: 'Cite',
 	},
 	aboutPubPub: {
 		id: 'global.aboutPubPub',
 		defaultMessage: 'About PubPub',
+	},
+	About: {
+		id: 'global.About',
+		defaultMessage: 'About',
 	},
 	Contact: {
 		id: 'global.Contact',
@@ -181,21 +261,45 @@ export const globalMessages = defineMessages({
 		id: 'global.noResults',
 		defaultMessage: 'No Results',
 	},
+	Search: {
+		id: 'global.Search',
+		defaultMessage: 'Search',
+	},
 	Save: {
 		id: 'global.Save',
 		defaultMessage: 'Save',
+	},
+	SaveDetails: {
+		id: 'global.SaveDetails',
+		defaultMessage: 'Save Details',
+	},
+	SaveLayout: {
+		id: 'global.SaveLayout',
+		defaultMessage: 'Save Layout'
+	},
+	SaveProfile: {
+		id: 'global.SaveProfile',
+		defaultMessage: 'Save Profile'
+	},
+	ViewProfile: {
+		id: 'global.ViewProfile',
+		defaultMessage: 'View Profile'
+	},
+	Profile: {
+		id: 'global.Profile',
+		defaultMessage: 'Profile'
 	},
 	Cancel: {
 		id: 'global.Cancel',
 		defaultMessage: 'Cancel',
 	},
-	remove: {
-		id: 'global.remove',
-		defaultMessage: 'remove',
+	Rename: {
+		id: 'global.Rename',
+		defaultMessage: 'Rename',
 	},
-	pubs: {
-		id: 'global.pubs',
-		defaultMessage: 'Pubs',
+	Remove: {
+		id: 'global.Remove',
+		defaultMessage: 'Remove',
 	},
 	Pubs: {
 		id: 'global.Pubs',
@@ -205,13 +309,73 @@ export const globalMessages = defineMessages({
 		id: 'global.score',
 		defaultMessage: 'Score',
 	},
-	journalName: {
-		id: 'global.journalName',
+	JournalName: {
+		id: 'global.JournalName',
 		defaultMessage: 'Journal Name',
+	},
+	JournalIcon: {
+		id: 'global.JournalIcon',
+		defaultMessage: 'Journal Icon',
+	},
+	JournalLogo: {
+		id: 'global.JournalLogo',
+		defaultMessage: 'Journal Logo',
+	},
+	All: {
+		id: 'global.All',
+		defaultMessage: 'All',
+	},
+	Logo: {
+		id: 'global.Logo',
+		defaultMessage: 'Logo',
+	},
+	Both: {
+		id: 'global.Both',
+		defaultMessage: 'Both',
+	},
+	HeaderAlign: {
+		id: 'global.HeaderAlign',
+		defaultMessage: 'Header Align',
+	},
+	Inline: {
+		id: 'global.Inline',
+		defaultMessage: 'Inline',
+	},
+	Full: {
+		id: 'global.Full',
+		defaultMessage: 'Full',
+	},
+	ClassName: {
+		id: 'global.ClassName',
+		defaultMessage: 'Class Name',
+	},
+	Size: {
+		id: 'global.Size',
+		defaultMessage: 'Size',
+	},
+	Align: {
+		id: 'global.Align',
+		defaultMessage: 'Align',
+	},
+	HeaderMode: {
+		id: 'global.HeaderMode',
+		defaultMessage: 'Header Mode',
 	},
 	subdomain: {
 		id: 'global.subdomain',
 		defaultMessage: 'Subdomain',
+	},
+	BackgroundColor: {
+		id: 'global.BackgroundColor',
+		defaultMessage: 'Background Color',
+	},
+	BackgroundImage: {
+		id: 'global.BackgroundImage',
+		defaultMessage: 'Background Image',
+	},
+	AddField: {
+		id: 'global.AddField',
+		defaultMessage: 'Add Field',
 	},
 	create: {
 		id: 'global.create',
@@ -220,6 +384,10 @@ export const globalMessages = defineMessages({
 	Title: {
 		id: 'global.Title',
 		defaultMessage: 'Title',
+	},
+	More: {
+		id: 'global.More',
+		defaultMessage: 'More',
 	},
 	GroupName: {
 		id: 'global.GroupName',
@@ -237,6 +405,50 @@ export const globalMessages = defineMessages({
 		id: 'global.clickOrDrag',
 		defaultMessage: 'Click to choose or drag files',
 	},
+	ChooseNewFile: {
+		id: 'global.ChooseNewFile',
+		defaultMessage: 'Choose New File',
+	},
+	UploadANewFile: {
+		id: 'global.UploadANewFile',
+		defaultMessage: 'Upload A New File',
+	},
+	Metadata: {
+		id: 'global.Metadata',
+		defaultMessage: 'Metadata',
+	},
+	Meta: {
+		id: 'global.Meta',
+		defaultMessage: 'Meta',
+	},
+	Hide: {
+		id: 'global.Hide',
+		defaultMessage: 'Hide',
+	},
+	Reader: {
+		id: 'global.Reader',
+		defaultMessage: 'Reader',
+	},
+	Contributor: {
+		id: 'global.Contributor',
+		defaultMessage: 'Contributor',
+	},
+	Contributors: {
+		id: 'global.Contributors',
+		defaultMessage: 'Contributors',
+	},
+	AddContributor: {
+		id: 'global.AddContributor',
+		defaultMessage: 'Add Contributor',
+	},
+	Panel: {
+		id: 'global.Panel',
+		defaultMessage: 'Panel',
+	},
+	Show: {
+		id: 'global.Show',
+		defaultMessage: 'Show',
+	},
 	assets: {
 		id: 'global.assets',
 		defaultMessage: 'Assets',
@@ -249,8 +461,20 @@ export const globalMessages = defineMessages({
 		id: 'global.filename',
 		defaultMessage: 'filename',
 	},
-	settings: {
-		id: 'global.settings',
+	FeaturedBy: {
+		id: 'global.FeaturedBy',
+		defaultMessage: 'Featured By',
+	},
+	FeaturedOn: {
+		id: 'global.FeaturedOn',
+		defaultMessage: 'Featured On',
+	},
+	Featured: {
+		id: 'global.Featured',
+		defaultMessage: 'Featured',
+	},
+	Settings: {
+		id: 'global.Settings',
 		defaultMessage: 'Settings',
 	},
 	by: {
@@ -265,9 +489,17 @@ export const globalMessages = defineMessages({
 		id: 'global.date',
 		defaultMessage: 'date',
 	},
-	delete: {
-		id: 'global.delete',
-		defaultMessage: 'delete',
+	Delete: {
+		id: 'global.Delete',
+		defaultMessage: 'Delete',
+	},
+	CancelDelete: {
+		id: 'global.CancelDelete',
+		defaultMessage: 'Cancel Delete',
+	},
+	ConfirmDelete: {
+		id: 'global.ConfirmDelete',
+		defaultMessage: 'Confirm Delete',
 	},
 	collaborators: {
 		id: 'global.collaborators',
@@ -280,6 +512,22 @@ export const globalMessages = defineMessages({
 	Preview: {
 		id: 'global.Preview',
 		defaultMessage: 'Preview',
+	},
+	View: {
+		id: 'global.View',
+		defaultMessage: 'View',
+	},
+	PreviewImage: {
+		id: 'global.PreviewImage',
+		defaultMessage: 'PreviewImage',
+	},
+	ViewOriginal: {
+		id: 'global.ViewOriginal',
+		defaultMessage: 'View Original',
+	},
+	ViewSource: {
+		id: 'global.ViewSource',
+		defaultMessage: 'View Source',
 	},
 	emailAddress: {
 		id: 'global.emailAddress',
@@ -297,17 +545,49 @@ export const globalMessages = defineMessages({
 		id: 'global.ReadyForPeerReview',
 		defaultMessage: 'Ready For Peer Review',
 	},
-	references: {
-		id: 'global.references',
+	References: {
+		id: 'global.References',
 		defaultMessage: 'References',
+	},
+	Documents: {
+		id: 'global.Documents',
+		defaultMessage: 'Documents',
+	},
+	NewDocument: {
+		id: 'global.NewDocument',
+		defaultMessage: 'New Document',
 	},
 	publish: {
 		id: 'global.publish',
 		defaultMessage: 'Publish',
 	},
-	edit: {
-		id: 'global.edit',
+	Edit: {
+		id: 'global.Edit',
 		defaultMessage: 'Edit',
+	},
+	Mode: {
+		id: 'global.Mode',
+		defaultMessage: 'Mode',
+	},
+	Embed: {
+		id: 'global.Embed',
+		defaultMessage: 'Embed',
+	},
+	Caption: {
+		id: 'global.Caption',
+		defaultMessage: 'Caption',
+	},
+	SuggestEdits: {
+		id: 'global.SuggestEdits',
+		defaultMessage: 'Suggest Edits',
+	},
+	Details: {
+		id: 'global.Details',
+		defaultMessage: 'Details',
+	},
+	Layout: {
+		id: 'global.Layout',
+		defaultMessage: 'Layout',
 	},
 	read: {
 		id: 'global.read',
@@ -334,8 +614,8 @@ export const globalMessages = defineMessages({
 		id: 'global.url',
 		defaultMessage: 'url',
 	},
-	author: {
-		id: 'global.author',
+	Author: {
+		id: 'global.Author',
 		defaultMessage: 'author',
 	},
 	journal: {
@@ -345,10 +625,6 @@ export const globalMessages = defineMessages({
 	invite: {
 		id: 'global.invite',
 		defaultMessage: 'invite',
-	},
-	journals: {
-		id: 'global.journals',
-		defaultMessage: 'journals',
 	},
 	Journals: {
 		id: 'global.Journals',
@@ -390,13 +666,17 @@ export const globalMessages = defineMessages({
 		id: 'global.Submit',
 		defaultMessage: 'Submit',
 	},
-	collections: {
-		id: 'global.collections',
+	Collections: {
+		id: 'global.Collections',
 		defaultMessage: 'Collections',
 	},
-	admins: {
-		id: 'global.admins',
+	Admins: {
+		id: 'global.Admins',
 		defaultMessage: 'Admins',
+	},
+	Admin: {
+		id: 'global.Admin',
+		defaultMessage: 'Admin',
 	},
 	Email: {
 		id: 'global.Email',
@@ -405,6 +685,10 @@ export const globalMessages = defineMessages({
 	Password: {
 		id: 'global.Password',
 		defaultMessage: 'Password',
+	},
+	PasswordReset: {
+		id: 'global.PasswordReset',
+		defaultMessage: 'Password Reset',
 	},
 	Explore: {
 		id: 'global.Explore',
@@ -422,9 +706,29 @@ export const globalMessages = defineMessages({
 		id: 'global.authorsNote',
 		defaultMessage: 'authors note',
 	},
-	markdown: {
-		id: 'global.markdown',
-		defaultMessage: 'markdown',
+	Markdown: {
+		id: 'global.Markdown',
+		defaultMessage: 'Markdown',
+	},
+	AddSubmissions: {
+		id: 'global.AddSubmissions',
+		defaultMessage: 'Add Submissions',
+	},
+	SubmittedTo: {
+		id: 'global.SubmittedTo',
+		defaultMessage: 'Submitted To',
+	},
+	SubmittedOn: {
+		id: 'global.SubmittedOn',
+		defaultMessage: 'Submitted On',
+	},
+	Submitted: {
+		id: 'global.Submitted',
+		defaultMessage: 'Submitted',
+	},
+	UnknownType: {
+		id: 'global.UnknownType',
+		defaultMessage: 'Unknown Type',
 	},
 	print: {
 		id: 'global.print',
@@ -437,6 +741,10 @@ export const globalMessages = defineMessages({
 	Unpublished: {
 		id: 'global.Unpublished',
 		defaultMessage: 'Unpublished',
+	},
+	Private: {
+		id: 'global.Private',
+		defaultMessage: 'Private',
 	},
 	readOnly: {
 		id: 'global.readOnly',
@@ -466,36 +774,116 @@ export const globalMessages = defineMessages({
 		id: 'global.Highlights',
 		defaultMessage: 'Highlights',
 	},
-	on: {
-		id: 'global.on',
+	CreateNew: {
+		id: 'global.CreateNew',
+		defaultMessage: 'Create New',
+	},
+	CustomButton: {
+		id: 'global.CustomButton',
+		defaultMessage: 'Custom Button',
+	},
+	On: {
+		id: 'global.On',
 		defaultMessage: 'On',
 	},
 	off: {
 		id: 'global.off',
 		defaultMessage: 'Off',
 	},
+	Editor: {
+		id: 'global.Editor',
+		defaultMessage: 'Editor',
+	},
 	editorCommentsText0: {
-		id: 'editorCommentsText0',
+		id: 'global.editorCommentsText0',
 		defaultMessage: 'You are commenting on a draft version of this Pub.'
 	},
 	editorCommentsText1: {
-		id: 'editorCommentsText1',
+		id: 'global.editorCommentsText1',
 		defaultMessage: 'This section can only be used by collaborators and is private. It is never published or made public.'
 	},
 	EditorComments: {
-		id: 'EditorComments',
+		id: 'global.EditorComments',
 		defaultMessage: 'Editor Comments'
 	},
 	discussionPlaceholder: {
-		id: 'discussionPlaceholder',
+		id: 'global.discussionPlaceholder',
 		defaultMessage: 'Add discussion or feedback'
 	},
 	People: {
-		id: 'People',
+		id: 'global.People',
 		defaultMessage: 'People'
 	},
 	discussionReplyPlaceholder: {
-		id: 'discussionReplyPlaceholder',
+		id: 'global.discussionReplyPlaceholder',
 		defaultMessage: 'Add your reply'
+	},
+	Reply: {
+		id: 'global.Reply',
+		defaultMessage: 'Reply'
+	},
+	ReplyTo: {
+		id: 'global.ReplyTo',
+		defaultMessage: 'Reply to'
+	},
+	Clear: {
+		id: 'global.Clear',
+		defaultMessage: 'Clear'
+	},
+	Center: {
+		id: 'global.Center',
+		defaultMessage: 'Center'
+	},
+	Left: {
+		id: 'global.Left',
+		defaultMessage: 'Left'
+	},
+	Right: {
+		id: 'global.Right',
+		defaultMessage: 'Right'
+	},
+	Permalink: {
+		id: 'global.Permalink',
+		defaultMessage: 'Permalink'
+	},
+	CreateJournal: {
+		id: 'global.CreateJournal',
+		defaultMessage: 'Create Journal'
+	},
+	SubmitToJournals: {
+		id: 'global.SubmitToJournals',
+		defaultMessage: 'Submit To Journals'
+	},
+	GotIt: {
+		id: 'global.GotIt',
+		defaultMessage: 'Got It'
+	},
+	CloseEditor: {
+		id: 'global.CloseEditor',
+		defaultMessage: 'Close Editor'
+	},
+	Export: {
+		id: 'global.Export',
+		defaultMessage: 'Export'
+	},
+	CancelFeature: {
+		id: 'global.CancelFeature',
+		defaultMessage: 'Cancel Feature'
+	},
+	ConfirmFeature: {
+		id: 'global.ConfirmFeature',
+		defaultMessage: 'Confirm Feature'
+	},
+	ConfirmReject: {
+		id: 'global.ConfirmReject',
+		defaultMessage: 'Confirm Reject'
+	},
+	CancelReject: {
+		id: 'global.CancelReject',
+		defaultMessage: 'Cancel Reject'
+	},
+	ClickOrDragFilesToAdd: {
+		id: 'global.ClickOrDragFilesToAdd',
+		defaultMessage: 'Click Or Drag Files to Add'
 	},
 });

@@ -3,6 +3,9 @@ import Radium from 'radium';
 import { Link } from 'react-router';
 import dateFormat from 'dateformat';
 
+import {globalMessages} from 'utils/globalMessages';
+import {FormattedMessage} from 'react-intl';
+
 let styles;
 
 export const AtomVersionsButton = React.createClass({
@@ -54,8 +57,12 @@ export const AtomVersionsButton = React.createClass({
 						return (
 							<div className={'testing'} key={'version-' + index} style={[styles.versionItem, index === versionsData.length - 1 && styles.versionItemLast]}>
 
-								{!item.isPublished && showPublishStatus && <div style={styles.statusLabel}>Private</div> }
-								{item.isPublished && showPublishStatus && <div style={styles.statusLabel}>Published</div> }
+								{!item.isPublished && showPublishStatus && <div style={styles.statusLabel}>
+									<FormattedMessage {...globalMessages.Private}/>
+								</div> }
+								{item.isPublished && showPublishStatus && <div style={styles.statusLabel}>
+									<FormattedMessage {...globalMessages.Published}/>
+								</div> }
 
 								<Link to={'/pub/' + this.props.slug + '?version=' + item._id} className={'underlineOnHover'} style={styles.versionDate}>{dateFormat(item.createDate, 'mmm dd, yyyy h:MM TT')}</Link>
 								<div style={styles.versionMessage}>{item.message}</div>
@@ -65,17 +72,23 @@ export const AtomVersionsButton = React.createClass({
 									<div style={styles.publishButtonWrapper}>
 										{this.state.confirmPublishIndex === index &&
 											<div>
-												<div className={'button'} onClick={this.onPublish.bind(this, item._id)} style={styles.publishButton}>Confirm Publish</div>	
-												<div className={'button'} onClick={this.clearPublishIndex} style={styles.publishButton}>Cancel Publish</div>	
+												<div className={'button'} onClick={this.onPublish.bind(this, item._id)} style={styles.publishButton}>
+													<FormattedMessage id="atomVersionButton.ConfirmPublish" defaultMessage="Confirm Publish"/>
+											</div>
+												<div className={'button'} onClick={this.clearPublishIndex} style={styles.publishButton}>
+													<FormattedMessage id="atomVersionButton.CancelPublish" defaultMessage="Cancel Publish"/>
+												</div>
 											</div>
 										}
 
 										{this.state.confirmPublishIndex !== index &&
-											<div className={'button'} onClick={this.setPublishIndex.bind(this, index)} style={styles.publishButton}>Publish Version</div>	
+											<div className={'button'} onClick={this.setPublishIndex.bind(this, index)} style={styles.publishButton}>
+												<FormattedMessage id="atomVersionButton.Publish Version" defaultMessage="Publish Version"/>
+											</div>
 										}
 									</div>
 								}
-								
+
 							</div>
 						);
 					})}

@@ -8,6 +8,9 @@ import AtomDetails from 'containers/Atom/AtomDetails';
 import AtomContributors from 'containers/Atom/AtomContributors';
 import {ensureImmutable} from 'reducers';
 
+import {FormattedMessage} from 'react-intl';
+import {globalMessages} from 'utils/globalMessages';
+
 import {globalStyles} from 'utils/styleConstants';
 let styles = {};
 
@@ -17,7 +20,7 @@ export const PreviewEditor = React.createClass({
 		versionData: PropTypes.object,
 		contributorsData: PropTypes.array,
 		permissionType: PropTypes.string,
-		
+
 		buttons: PropTypes.array,
 		header: PropTypes.object,
 		footer: PropTypes.oneOfType([PropTypes.array, PropTypes.object]),
@@ -97,7 +100,7 @@ export const PreviewEditor = React.createClass({
 		// let buttons = [{ type: 'action', text: 'Edit', action: this.setEditIndex }];
 		// buttons = buttons.concat(this.props.buttons);
 		const buttons = this.props.buttons || [];
-		
+
 		const mobileNavButtons = [
 			{ type: 'link', mobile: true, text: 'Discussions', link: '/pub/' },
 			{ type: 'button', mobile: true, text: 'Menu', action: undefined },
@@ -116,7 +119,7 @@ export const PreviewEditor = React.createClass({
 				<div style={[styles.header, !this.props.header && {display: 'none'}]}>
 					{this.props.header}
 				</div>
-				
+
 				<div style={styles.table}>
 
 					{/* Preview card image */}
@@ -142,7 +145,7 @@ export const PreviewEditor = React.createClass({
 							if (item.action) {
 								return <div className={'button'} onClick={item.action} style={styles.button} key={'previewEditor-button-' + index}>{item.text}</div>;
 							}
-						})}	
+						})}
 
 						{atomData.type === 'document' &&
 							<div>
@@ -150,34 +153,45 @@ export const PreviewEditor = React.createClass({
 									<div className={'button'} style={styles.button}>Go to Full Editor</div>
 								</Link>
 							</div>
-							
+
 						}
 
-						{atomData.type !== 'document' && !this.state.editorOpen && 
+						{atomData.type !== 'document' && !this.state.editorOpen &&
 							<div>
-								<div className={'button'} onClick={this.openEditor} style={styles.button}>Edit</div>
+								<div className={'button'} onClick={this.openEditor} style={styles.button}>
+									<FormattedMessage {...globalMessages.Edit}/>
+								</div>
 							</div>
 							
 						}
 
 						{!this.state.editorOpen && !this.state.confirmDelete &&
 							<div>
-								<div className={'button'} onClick={this.toggleConfirmDelete} style={styles.button}>Delete</div>
+								<div className={'button'} onClick={this.toggleConfirmDelete} style={styles.button}>
+									<FormattedMessage {...globalMessages.Delete}/>
+								</div>
+
 							</div>
 							
 						}
 
 						{!this.state.editorOpen && this.state.confirmDelete &&
 							<div>
-								<div className={'button'} onClick={this.toggleConfirmDelete} style={styles.button}>Cancel Delete</div>
-								<div className={'button'} onClick={this.deleteAtom} style={styles.button}>Confirm Delete</div>
+								<div className={'button'} onClick={this.toggleConfirmDelete} style={styles.button}>
+									<FormattedMessage {...globalMessages.CancelDelete}/>
+								</div>
+								<div className={'button'} onClick={this.deleteAtom} style={styles.button}>
+									<FormattedMessage {...globalMessages.ConfirmDelete}/>
+								</div>
 							</div>
-							
+
 						}
 
 						{this.state.editorOpen &&
 							<div>
-								<div className={'button'} onClick={this.closeEditor} style={styles.button}>Close Editor</div>
+								<div className={'button'} onClick={this.closeEditor} style={styles.button}>
+									<FormattedMessage {...globalMessages.CloseEditor}/>
+								</div>
 							</div>
 						}
 						{this.state.editorOpen && this.state.editorMode === 'content' &&
@@ -197,29 +211,29 @@ export const PreviewEditor = React.createClass({
 							switch (this.state.editorMode) {
 							case 'contributors':
 								return (
-									<AtomContributors 
+									<AtomContributors
 										atomData={ensureImmutable({ atomData: this.props.atomData})}
-										contributorsData={this.props.contributorsData} 
+										contributorsData={this.props.contributorsData}
 										handleAddContributor={this.addContributor}
 										handleUpdateContributor={this.props.handleUpdateContributor}
 										handleDeleteContributor={this.props.handleDeleteContributor}
-										isLoading={this.props.contributorsLoading} 
-										error={this.props.contributorsError} 
+										isLoading={this.props.contributorsLoading}
+										error={this.props.contributorsError}
 										permissionType={this.props.permissionType}/>
 								);
 							case 'details':
 								return <AtomDetails atomData={ensureImmutable({ atomData: this.props.atomData})} updateDetailsHandler={this.updateDetails} isLoading={this.props.detailsLoading} error={this.props.detailsError}/>;
 							case 'content':
 								return <AtomEditorPane ref={'atomEditorPane'} atomData={ensureImmutable({ atomData: this.props.atomData, currentVersionData: this.props.versionData })}/>;
-								
+
 							default:
 								return null;
 							}
 						})()}
-						
+
 					</div>
 				}
-				
+
 
 				{/* Custom Footer content, for notifcations, details etc */}
 				<div style={[styles.footer, !this.props.footer && {display: 'none'}]}>

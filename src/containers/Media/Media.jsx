@@ -11,8 +11,8 @@ import {LoaderDeterminate, NavContentWrapper} from 'components';
 import Select from 'react-select';
 
 // import {globalStyles} from 'utils/styleConstants';
-// import {globalMessages} from 'utils/globalMessages';
-// import {FormattedMessage} from 'react-intl';
+import {globalMessages} from 'utils/globalMessages';
+import {FormattedMessage} from 'react-intl';
 import Dropzone from 'react-dropzone';
 import {s3Upload} from 'utils/uploadFile';
 import {getMedia, createAtom, saveVersion} from './actions';
@@ -366,14 +366,14 @@ export const Media = React.createClass({
 		];
 
 		const navItems = [
-			{ type: 'button', text: 'All', action: this.setAtomMode.bind(this, 'all'), active: this.state.atomMode === 'all'},
-			{ type: 'button', text: 'Recent', action: this.setAtomMode.bind(this, 'recent'), active: this.state.atomMode === 'recent'},
+			{ type: 'button', text: <FormattedMessage {...globalMessages.All}/>, action: this.setAtomMode.bind(this, 'all'), active: this.state.atomMode === 'all'},
+			{ type: 'button', text: <FormattedMessage {...globalMessages.Recent}/>, action: this.setAtomMode.bind(this, 'recent'), active: this.state.atomMode === 'recent'},
 			{ type: 'spacer'},
-			{ type: 'button', text: 'Images', action: this.setAtomMode.bind(this, 'image'), active: this.state.atomMode === 'image'},
-			{ type: 'button', text: 'Videos', action: this.setAtomMode.bind(this, 'video'), active: this.state.atomMode === 'video'},
-			{ type: 'button', text: 'References', action: this.setAtomMode.bind(this, 'reference'), active: this.state.atomMode === 'reference'},
+			{ type: 'button', text: <FormattedMessage {...globalMessages.Images}/>, action: this.setAtomMode.bind(this, 'image'), active: this.state.atomMode === 'image'},
+			{ type: 'button', text: <FormattedMessage {...globalMessages.Videos}/>, action: this.setAtomMode.bind(this, 'video'), active: this.state.atomMode === 'video'},
+			{ type: 'button', text: <FormattedMessage {...globalMessages.References}/>, action: this.setAtomMode.bind(this, 'reference'), active: this.state.atomMode === 'reference'},
 			{ type: 'button', text: 'Jupyter', action: this.setAtomMode.bind(this, 'jupyter'), active: this.state.atomMode === 'jupyter'},
-			{ type: 'button', text: 'Documents', action: this.setAtomMode.bind(this, 'document'), active: this.state.atomMode === 'document'},
+			{ type: 'button', text: <FormattedMessage {...globalMessages.Documents}/>, action: this.setAtomMode.bind(this, 'document'), active: this.state.atomMode === 'document'},
 		];
 
 
@@ -410,7 +410,7 @@ export const Media = React.createClass({
 
 
 								<div className={'button'} style={styles.dropzoneBlock}>
-									Click or Drag files to add
+									<FormattedMessage {...globalMessages.ClickOrDragFilesToAdd}/>
 									<input id={'media-file-select'} type={'file'} onChange={this.onSelect} multiple={true} style={styles.fileInput}/>
 								</div>
 
@@ -463,11 +463,11 @@ export const Media = React.createClass({
 								<h3 style={styles.detailsTitle}>{nodeData.data.parent.title}</h3>
 								<div style={styles.detailsCancel} className={'underlineOnHover'} onClick={this.clearNodeData}>Clear</div>
 								<div style={styles.detailsButtonWrapper}>
-									<div className={'button'} style={styles.detailsButton} onClick={this.saveItem}>Save</div>
+									<div className={'button'} style={styles.detailsButton} onClick={this.saveItem}><FormattedMessage {...globalMessages.Save}/></div>
 								</div>
 							</div>
 							{nodeData.data.type !== 'document' &&
-								<div style={styles.detailsClear} className={'underlineOnHover'} onClick={this.editNodeData}>Edit</div>
+								<div style={styles.detailsClear} className={'underlineOnHover'} onClick={this.editNodeData}><FormattedMessage {...globalMessages.Edit}/></div>
 							}
 
 							<div style={styles.details}>
@@ -481,42 +481,42 @@ export const Media = React.createClass({
 								<form onSubmit={this.saveItem} style={styles.detailsForm}>
 									<div>
 										<label style={styles.label} htmlFor={'mode'}>
-											Mode
+											<FormattedMessage {...globalMessages.Mode}/>
 										</label>
 										<RadioGroup name={'mode'} selectedValue={this.state.nodeData.mode} onChange={this.inputChange.bind(this, 'mode')}>
-											<Radio value="embed" id={'embed'} style={styles.radioInput}/> <label htmlFor={'embed'} style={styles.radioLabel}>Embed</label>
-											<Radio value="cite" id={'cite'} style={styles.radioInput}/> <label htmlFor={'cite'} style={styles.radioLabel}>Cite</label>
+											<Radio value="embed" id={'embed'} style={styles.radioInput}/> <label htmlFor={'embed'} style={styles.radioLabel}><FormattedMessage {...globalMessages.Embed}/></label>
+											<Radio value="cite" id={'cite'} style={styles.radioInput}/> <label htmlFor={'cite'} style={styles.radioLabel}><FormattedMessage {...globalMessages.Cite}/></label>
 										</RadioGroup>
 									</div>
 									<div style={[this.state.nodeData.mode === 'cite' && styles.disabledInput]}>
 										<label style={styles.label} htmlFor={'caption'}>
-											Caption
+											<FormattedMessage {...globalMessages.Caption}/>
 										</label>
 										<textarea ref={'caption'} id={'caption'} name={'caption'} style={[styles.input, styles.textarea]} value={this.state.nodeData.caption} onChange={this.inputChange.bind(this, 'caption')}></textarea>
 									</div>
 
 									<div style={[this.state.nodeData.mode === 'cite' && styles.disabledInput]}>
 										<label style={styles.label} htmlFor={'align'}>
-											Align
+											<FormattedMessage {...globalMessages.Align}/>
 										</label>
 										<RadioGroup name={'align'} selectedValue={this.state.nodeData.align} onChange={this.inputChange.bind(this, 'align')}>
-											<Radio value="inline" id={'inline'} style={styles.radioInput}/> <label htmlFor={'inline'} style={styles.radioLabel}>Inline</label>
-											<Radio value="full" id={'full'} style={styles.radioInput}/> <label htmlFor={'full'} style={styles.radioLabel}>Full</label>
-											<Radio value="left" id={'left'} style={styles.radioInput}/> <label htmlFor={'left'} style={styles.radioLabel}>Left</label>
-											<Radio value="right" id={'right'} style={styles.radioInput}/> <label htmlFor={'right'} style={styles.radioLabel}>Right</label>
+											<Radio value="inline" id={'inline'} style={styles.radioInput}/> <label htmlFor={'inline'} style={styles.radioLabel}><FormattedMessage {...globalMessages.Inline}/></label>
+											<Radio value="full" id={'full'} style={styles.radioInput}/> <label htmlFor={'full'} style={styles.radioLabel}><FormattedMessage {...globalMessages.Full}/></label>
+											<Radio value="left" id={'left'} style={styles.radioInput}/> <label htmlFor={'left'} style={styles.radioLabel}><FormattedMessage {...globalMessages.Left}/></label>
+											<Radio value="right" id={'right'} style={styles.radioInput}/> <label htmlFor={'right'} style={styles.radioLabel}><FormattedMessage {...globalMessages.Right}/></label>
 										</RadioGroup>
 									</div>
 
 									<div style={{display: 'none'}}> {/* Hidden while we don't allow for custom CSS - no use for this field */}
 										<label style={styles.label} htmlFor={'className'}>
-											Class Name
+											<FormattedMessage {...globalMessages.ClassName}/>
 										</label>
 										<input ref={'className'} id={'className'} name={'className'} type="text" style={styles.input} value={this.state.nodeData.className} onChange={this.inputChange.bind(this, 'className')}/>
 									</div>
 
 									<div style={[this.state.nodeData.mode === 'cite' && styles.disabledInput]}>
 										<label style={styles.label} htmlFor={'size'}>
-											Size
+											<FormattedMessage {...globalMessages.Size}/>
 										</label>
 										<input ref={'size'} id={'size'} name={'size'} type="text" style={styles.input} value={this.state.nodeData.size} onChange={this.inputChange.bind(this, 'size')}/>
 										<div className={'light-color inputSubtext'}>
@@ -536,9 +536,9 @@ export const Media = React.createClass({
 						<div style={styles.mediaDetails}>
 							<div style={styles.editModeHeader}>
 								<h3 style={styles.detailsTitle}>{nodeData.data.parent.title}</h3>
-								<div style={styles.detailsCancel} className={'underlineOnHover'} onClick={this.cancelEditNodeData}>Cancel</div>
+								<div style={styles.detailsCancel} className={'underlineOnHover'} onClick={this.cancelEditNodeData}><FormattedMessage {...globalMessages.Cancel}/></div>
 								<div style={styles.detailsButtonWrapper}>
-									<div className={'button'} style={styles.detailsButton} onClick={this.saveVersionHandler}>Save Version</div>
+									<div className={'button'} style={styles.detailsButton} onClick={this.saveVersionHandler}><FormattedMessage {...globalMessages.SaveVersion}/></div>
 								</div>
 							</div>
 
@@ -555,7 +555,7 @@ export const Media = React.createClass({
 
 			</div>
 
-			<div className={'showOnActive'}>Drop files to add</div>
+			<div className={'showOnActive'}><FormattedMessage {...globalMessages.DropFilesToAdd}/></div>
 			</Dropzone>
 		);
 	}

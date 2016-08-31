@@ -6,6 +6,9 @@ import update from 'react-addons-update';
 import {Table, Cell, Column} from 'fixed-data-table-2';
 import tableStyles from './fixed-data-table.css';
 
+import {globalMessages} from 'utils/globalMessages';
+import {FormattedMessage} from 'react-intl';
+
 import parse from 'csv-parse';
 import request from 'superagent';
 
@@ -33,7 +36,7 @@ export const TableEditor = React.createClass({
 		const height = safeGetInToJS(this.props.atomData, ['currentVersionData', 'content', 'height']) || 400;
 		this.setState({url, header, height});
 	},
-	
+
 	loadCSV() {
 		const url = this.state.url;
 		if (url) {
@@ -47,7 +50,7 @@ export const TableEditor = React.createClass({
 			// req.pipe(parser).on('data', row => this.setState(update(this.state, {rows: {$push: [row]}})));
 		}
 	},
-	
+
 	componentDidMount() {
 		this.loadCSV();
 	},
@@ -68,23 +71,23 @@ export const TableEditor = React.createClass({
 		const url = 'https://assets.pubpub.org/' + filename;
 		this.setState({url, isUploading: false, rows: []}, this.loadCSV);
 	},
-	
+
 	handleHeaderChange(evt) {
 		const header = evt.target.checked;
 		this.setState({header});
 	},
-	
+
 	handleHeightChange(evt) {
 		const height = +evt.target.value;
 		this.setState({height});
 	},
-	
+
 	setWidth(container) {
 		if (container && container.offsetWidth)	{
 			this.setState({width: container.offsetWidth});
 		}
 	},
-	
+
 	render() {
 		const {height, width, header, rows} = this.state;
 		const offset = header ? 1 : 0;
@@ -97,23 +100,25 @@ export const TableEditor = React.createClass({
 		};
 		return <div style={styles.container} ref={this.setWidth}>
 			<label htmlFor="header" style={styles.label}>
-				Header Row:
+				<FormattedMessage id="tableEditor.HeaderRow" defaultMessage="Header Row"/>:
 				<input id='header' name='header' type='checkbox' value={header} style={styles.header}
 											onChange={this.handleHeaderChange}/>
 			</label>
 			<label htmlFor="height" style={styles.label}>
-				Height:
+				<FormattedMessage {...globalMessages.Height}/>:
 				<input id='height' name='height' type="number"
 											min={100} step={100} max={1000} value={height} style={styles.height}
 											onChange={this.handleHeightChange}/>
 			</label>
 			<label htmlFor="csvFile" style={styles.label}>
-				Upload a new file
+				<FormattedMessage {...globalMessages.UploadANewFile}/>
 				<input id='csvFile' name='csv file' type="file" accept="text/csv" style={styles.file}
 											onChange={this.handleFileSelect} />
 			</label>
-			<h3>Preview</h3>
-			
+			<h3>
+				<FormattedMessage {...globalMessages.Preview}/>
+			</h3>
+
 			<Style rules={tableStyles} />
 
 			<Table rowsCount={rowsCount} {...dimensions}>
@@ -124,7 +129,7 @@ export const TableEditor = React.createClass({
 					return <Column {...props} />;
 				})}
 			</Table>
-			
+
 		</div>;
 	}
 });

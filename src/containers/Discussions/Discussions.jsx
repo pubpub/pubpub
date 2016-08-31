@@ -17,8 +17,8 @@ import {StoppableSubscription} from 'subscription';
 import {createReplyDocument} from './actions';
 import DiscussionItem from './DiscussionItem';
 
-// import {globalMessages} from 'utils/globalMessages';
-// import {FormattedMessage} from 'react-intl';
+import {globalMessages} from 'utils/globalMessages';
+import {FormattedMessage} from 'react-intl';
 
 let styles = {};
 let pm;
@@ -67,7 +67,7 @@ export const Discussions = React.createClass({
 	componentDidMount() {
 		const prosemirror = require('prosemirror');
 		const {pubpubSetup} = require('components/AtomTypes/Document/proseEditor/pubpubSetup');
-		
+
 		const place = document.getElementById('reply-input');
 		if (!place) { return undefined; }
 		pm = new prosemirror.ProseMirror({
@@ -82,8 +82,8 @@ export const Discussions = React.createClass({
 
 		pm.on.doubleClickOn.add((pos, node, nodePos)=>{
 			if (node.type.name === 'embed') {
-				const done = (attrs)=> { 
-					pm.tr.setNodeType(nodePos, node.type, attrs).apply(); 
+				const done = (attrs)=> {
+					pm.tr.setNodeType(nodePos, node.type, attrs).apply();
 				};
 				window.toggleMedia(pm, done, node);
 				return true;
@@ -133,10 +133,10 @@ export const Discussions = React.createClass({
 
 		const atomType = 'document';
 		const versionContent = {
-			docJSON: pm.doc.toJSON(),	
+			docJSON: pm.doc.toJSON(),
 			markdown: markdownSerializer.serialize(pm.doc),
 		};
-		
+
 		this.props.dispatch(createReplyDocument(atomType, versionContent, 'Reply', this.state.replyToID, this.state.rootReply));
 		pm.setDoc(markdownParser.parse(''));
 	},
@@ -165,7 +165,7 @@ export const Discussions = React.createClass({
 			return index;
 		});
 		const topChildren = tempArray.filter((index)=> {
-			return index.linkData.destination === atomData._id;	
+			return index.linkData.destination === atomData._id;
 		});
 
 		return (
@@ -175,22 +175,22 @@ export const Discussions = React.createClass({
 					'.pub-discussions-wrapper .p-block': {
 						padding: '0.5em 0em',
 					}
-				}} />				
+				}} />
 
-				{loggedIn && 
+				{loggedIn &&
 					<div>
-				
+
 						<Media/>
 
-						<Sticky style={styles.replyWrapper} isActive={!!replyToData}>	
+						<Sticky style={styles.replyWrapper} isActive={!!replyToData}>
 							<div style={[styles.replyHeader, !replyToData && {display: 'none'}]}>
 									<div className={'showChildOnHover'} style={styles.replyToWrapper}>
-										Reply to: {replyToData && replyToData.authorsData[0].source.name}
+										<FormattedMessage {...globalMessages.ReplyTo}/>: {replyToData && replyToData.authorsData[0].source.name}
 										<div className={'hoverChild'} style={styles.replyToPreview}>
 											<DiscussionItem linkTarget={linkTarget} discussionData={replyToData} index={'current-reply'} isPreview={true}/>
 										</div>
 									</div>
-								<div className={'button'} style={styles.replyButton} onClick={this.clearReplyTo}>Clear</div>
+								<div className={'button'} style={styles.replyButton} onClick={this.clearReplyTo}><FormattedMessage {...globalMessages.Clear}/></div>
 							</div>
 
 							<div style={styles.replyBody}>
@@ -204,22 +204,24 @@ export const Discussions = React.createClass({
 								<div style={styles.replyLicense} key={'discussionLicense'}>
 									<License text={'All discussions are licensed under a'} hover={true} />
 								</div>
-								<div className={'button'} style={styles.replyButton} onClick={this.publishReply}>Publish Reply</div>
+								<div className={'button'} style={styles.replyButton} onClick={this.publishReply}>
+									<FormattedMessage id="discussion.PublishReply" defaultMessage="Publish Reply"/>
+								</div>
 							</div>
 						</Sticky>
 
-						
+
 					</div>
 				}
 
 				{!loggedIn &&
-					<Sticky style={styles.replyWrapper} isActive={!!replyToData}>	
+					<Sticky style={styles.replyWrapper} isActive={!!replyToData}>
 						<Link target={linkTarget} to={'/login' + loginQuery} style={globalStyles.link}>
-							<div style={styles.loginMessage}>Login to post discussion</div>
+							<div style={styles.loginMessage}><FormattedMessage id="discussion.LoginToPost" defaultMessage="Login to post discussion"/></div>
 						</Link>
 					</Sticky>
 				}
-				
+
 
 				<div>
 					{topChildren.map((discussion, index)=> {
