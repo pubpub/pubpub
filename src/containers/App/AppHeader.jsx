@@ -140,6 +140,7 @@ export const AppHeader = React.createClass({
 						value={this.state.value}
 						loadOptions={this.loadOptions}
 						placeholder={<span><FormattedMessage {...globalMessages.Search}/></span>}
+						searchPromptText={<FormattedMessage {...globalMessages.TypeToSearch}/>}
 						onChange={this.handleSelectChange} />
 				</div>
 

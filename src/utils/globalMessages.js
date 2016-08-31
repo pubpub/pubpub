@@ -13,6 +13,10 @@ export const globalMessages = defineMessages({
 		id: 'global.Skipthisstep',
 		defaultMessage: 'Skip this step',
 	},
+	TypeToSearch: {
+		id: 'global.TypeToSearch',
+		defaultMessage: 'Type To Search',
+	},
 	DropFilesToAdd: {
 		id: 'global.DropFilesToAdd',
 		defaultMessage: 'Drop Files To Add',
