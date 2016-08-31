@@ -157,7 +157,7 @@ export const AtomContributors = React.createClass({
 							minimumInput={3}
 							value={this.state.value}
 							loadOptions={this.loadOptions}
-							placeholder={<span>Add new contributor</span>}
+							placeholder={<span><FormattedMessage id="atomContributors.AddNew" defaultMessage="Add new contributor"/></span>}
 							filterOptions={(options)=>{
 								return options.filter((option)=>{
 									for (let index = 0; index < contributorsData.length; index++) {
@@ -235,7 +235,7 @@ export const AtomContributors = React.createClass({
 													options={roleOptions}
 													value={this.state.contributorStates[item._id].roles}
 													multi={true}
-													placeholder={<span>Specify roles of this contributor</span>}
+													placeholder={<span><FormattedMessage id="atomContributors.SpecifyRoles" defaultMessage="Specify roles of this contributor"/></span>}
 													onChange={this.handleRoleChange.bind(this, item._id)} />
 											</div>
 										}

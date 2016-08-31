@@ -90,7 +90,7 @@ export const NotFound = React.createClass({
 						minimumInput={3}
 						value={this.state.value}
 						loadOptions={this.loadOptions}
-						placeholder={<span>Search PubPub</span>}
+						placeholder={<span><FormattedMessage {...globalMessages.Search}/> PubPub</span>}
 						onChange={this.handleSelectChange} />
 				</div>
 			</div>

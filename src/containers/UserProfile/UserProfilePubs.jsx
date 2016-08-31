@@ -47,9 +47,9 @@ export const UserProfilePubs = React.createClass({
 								title={item.title}
 								image={item.previewImage}
 								description={item.description}
-								header={ <div>{item.isPublished ? 'Published' : 'Unpublished'}</div> }
-								footer={ <div>{item.versions.length} <FormattedMessage {...globalMessages.Version}/>{item.versions.length !== 1 && 's'} | {item.lastUpdated ? <FormattedMessage {...globalMessages.LatestVersion}/> + ' ' + dateFormat(item.lastUpdated, 'mmm dd, yyyy') : <FormattedMessage {...globalMessages.Created}/> + ' ' + dateFormat(item.createDate, 'mmm dd, yyyy')}</div> }
-								buttons = {this.props.ownProfile ? buttons : []} />
+								header={ <div>{item.isPublished ? <FormattedMessage {...globalMessages.Published}/> : <FormattedMessage {...globalMessages.Unpublished}/>}</div> }
+								footer={ <div>{item.versions.length} <FormattedMessage {...globalMessages.Versions}/> | {item.lastUpdated ? <span><FormattedMessage {...globalMessages.LatestVersion}/><span> </span> {dateFormat(item.lastUpdated, 'mmm dd, yyyy')}</span> : <span><FormattedMessage {...globalMessages.Created}/><span> </span> {dateFormat(item.createDate, 'mmm dd, yyyy')}</span>}</div>}
+								buttons= {this.props.ownProfile ? buttons : []} />
 						);
 					})
 				}

@@ -25,6 +25,10 @@ export const globalMessages = defineMessages({
 		id: 'global.Version',
 		defaultMessage: 'Version',
 	},
+	Versions: {
+		id: 'global.Versions',
+		defaultMessage: 'Versions',
+	},
 	SaveVersion: {
 		id: 'global.SaveVersion',
 		defaultMessage: 'Save Version',
@@ -61,8 +65,8 @@ export const globalMessages = defineMessages({
 		id: 'global.groups',
 		defaultMessage: 'Groups',
 	},
-	notifications: {
-		id: 'global.notifications',
+	Notifications: {
+		id: 'global.Notifications',
 		defaultMessage: 'Notifications',
 	},
 	Logout: {
@@ -112,6 +116,10 @@ export const globalMessages = defineMessages({
 	Follows: {
 		id: 'global.Follows',
 		defaultMessage: 'Follows',
+	},
+	Followers: {
+		id: 'global.Followers',
+		defaultMessage: 'Followers',
 	},
 	design: {
 		id: 'global.Design',
@@ -197,8 +205,8 @@ export const globalMessages = defineMessages({
 		id: 'global.historydiff',
 		defaultMessage: 'history diff',
 	},
-	analytics: {
-		id: 'global.analytics',
+	Analytics: {
+		id: 'global.Analytics',
 		defaultMessage: 'Analytics',
 	},
 	news: {
@@ -249,6 +257,10 @@ export const globalMessages = defineMessages({
 		id: 'global.noResults',
 		defaultMessage: 'No Results',
 	},
+	Search: {
+		id: 'global.Search',
+		defaultMessage: 'Search',
+	},
 	Save: {
 		id: 'global.Save',
 		defaultMessage: 'Save',
@@ -264,6 +276,14 @@ export const globalMessages = defineMessages({
 	SaveProfile: {
 		id: 'global.SaveProfile',
 		defaultMessage: 'Save Profile'
+	},
+	ViewProfile: {
+		id: 'global.ViewProfile',
+		defaultMessage: 'View Profile'
+	},
+	Profile: {
+		id: 'global.Profile',
+		defaultMessage: 'Profile'
 	},
 	Cancel: {
 		id: 'global.Cancel',
@@ -481,6 +501,10 @@ export const globalMessages = defineMessages({
 		id: 'global.Preview',
 		defaultMessage: 'Preview',
 	},
+	View: {
+		id: 'global.View',
+		defaultMessage: 'View',
+	},
 	PreviewImage: {
 		id: 'global.PreviewImage',
 		defaultMessage: 'PreviewImage',
@@ -516,6 +540,10 @@ export const globalMessages = defineMessages({
 	Documents: {
 		id: 'global.Documents',
 		defaultMessage: 'Documents',
+	},
+	NewDocument: {
+		id: 'global.NewDocument',
+		defaultMessage: 'New Document',
 	},
 	publish: {
 		id: 'global.publish',
@@ -585,10 +613,6 @@ export const globalMessages = defineMessages({
 	invite: {
 		id: 'global.invite',
 		defaultMessage: 'invite',
-	},
-	journals: {
-		id: 'global.journals',
-		defaultMessage: 'journals',
 	},
 	Journals: {
 		id: 'global.Journals',

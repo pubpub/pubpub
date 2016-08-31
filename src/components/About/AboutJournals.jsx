@@ -102,7 +102,7 @@ export const AboutJournals = React.createClass({
 						<a style={globalStyles.link}>
 							<div className={'button'} style={styles.headerButton}>
 								<FormattedMessage id="about.APIDocumentation" defaultMessage="API documentation"/>
-								<div style={{fontSize: '0.75em'}}>(coming very soon)</div>
+								<div style={{fontSize: '0.75em'}}>							<FormattedMessage id="about.ComingVerySoon" defaultMessage="(Coming very soon)"/></div>
 							</div>
 						</a>
 					</div>

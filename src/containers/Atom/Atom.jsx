@@ -249,18 +249,18 @@ export const Atom = React.createClass({
 		const linkTarget = isEmbed ? '_parent' : '_self';
 
 		const mobileNavButtons = [
-			{ type: 'link', mobile: true, text: 'Discussions', link: '/pub/' + this.props.slug + '/discussions' },
-			{ type: 'button', mobile: true, text: 'Menu', action: undefined },
+			{ type: 'link', mobile: true, text: <FormattedMessage {...globalMessages.Discussions}/>, link: '/pub/' + this.props.slug + '/discussions' },
+			{ type: 'button', mobile: true, text: <FormattedMessage {...globalMessages.Menu}/>, action: undefined },
 		];
 
 		if (this.props.meta === 'discussions') {
-			mobileNavButtons[0] = { type: 'link', mobile: true, text: 'View', link: '/pub/' + this.props.slug };
+			mobileNavButtons[0] = { type: 'link', mobile: true, text: <FormattedMessage {...globalMessages.View}/>, link: '/pub/' + this.props.slug };
 		}
 
 		/* Nav Items that show above the main content */
 		/* These are only shown if the user has edit rights */
 		const atomNavItems = [
-			{link: '/pub/' + this.props.slug, text: 'View', active: !isEditor},
+			{link: '/pub/' + this.props.slug, text: <FormattedMessage {...globalMessages.View}/>, active: !isEditor},
 
 		];
 

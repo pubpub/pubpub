@@ -50,7 +50,7 @@ export const AtomSaveVersionButton = React.createClass({
 	// TODO: Route to /atom/doc when save version is finished. ANd clear our the message
 	render: function() {
 		return (
-			<div className={'light-button arrow-down-button'} style={this.props.buttonStyle}>Save Version
+			<div className={'light-button arrow-down-button'} style={this.props.buttonStyle}><FormattedMessage {...globalMessages.SaveVersion}/>
 				<div className={'hoverChild arrow-down-child'} style={styles.content}>
 					<h2>
 						<FormattedMessage {...globalMessages.SaveVersion}/>

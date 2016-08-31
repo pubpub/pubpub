@@ -25,7 +25,7 @@ export const JournalProfileFeatured = React.createClass({
 	},
 
 	componentWillMount() {
-		// Create an object with key = collectionID and value = title of collection. 
+		// Create an object with key = collectionID and value = title of collection.
 		// We will use this to 'lookup' collection titles by their ID
 		const collections = safeGetInToJS(this.props.journalData, ['journalData', 'collections']) || [];
 		const collectionsObject = {};
@@ -41,7 +41,7 @@ export const JournalProfileFeatured = React.createClass({
 			const metadata = featureLink.metadata || {};
 			const linkCollections = metadata.collections || [];
 			collectionStates[featureLink._id] = linkCollections.map((tag)=>{
-				// Return an object that is structured to work with the 
+				// Return an object that is structured to work with the
 				// Selectize component
 				return {value: tag, label: collectionsObject[tag]};
 			})
@@ -67,15 +67,15 @@ export const JournalProfileFeatured = React.createClass({
 		const metaData = {
 			title: 'Featured · ' + journalData.journalName,
 		};
-		
+
 		const collections = journalData.collections || [];
-		const options = collections.map((item)=> { 
+		const options = collections.map((item)=> {
 			return {value: item._id, label: item.title};
 		});
 
 		return (
 			<div className={'firstChildNoTopMargin'}>
-				<Helmet {...metaData} />				
+				<Helmet {...metaData} />
 				<Style rules={{
 					'.Select-control': { borderWidth: '0px', height: '34px'},
 					'.Select-placeholder': {lineHeight: '34px'},
@@ -93,23 +93,23 @@ export const JournalProfileFeatured = React.createClass({
 							options={options}
 							value={this.state[item._id]}
 							multi={true}
-							placeholder={<span>Add to collections</span>}
+							placeholder={<span><FormattedMessage id="JournalProfileFeatured.AddToCollections" defaultMessage="Add to collections"/></span>}
 							onChange={this.handleSelectChange.bind(this, item._id)} />);
 						return (
-							<PreviewCard 
+							<PreviewCard
 								type={'atom'}
 								key={'featured-' + index}
 								image={item.destination.previewImage}
 								title={item.destination.title}
 								slug={item.destination.slug}
-								description={item.destination.description} 
+								description={item.destination.description}
 								header={<div>Featured on {dateFormat(item.createDate, 'mmm dd, yyyy h:MM TT')}</div>}
 								footer={selection} />
 						);
 					})
 				}
-				
-				
+
+
 			</div>
 		);
 	}
@@ -118,5 +118,5 @@ export const JournalProfileFeatured = React.createClass({
 export default Radium(JournalProfileFeatured);
 
 styles = {
-	
+
 };

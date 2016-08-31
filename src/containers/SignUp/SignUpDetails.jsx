@@ -111,7 +111,7 @@ export const SignUpDetails = React.createClass({
 
 					<div>
 						<label htmlFor={'publicEmail'}>
-							<FormattedMessage id="details.PublicEmail" defaultMessage="Public Email"/>
+							<FormattedMessage {...globalMessages.PublicEmail}/>
 						</label>
 						<input ref={'publicEmail'} id={'publicEmail'} name={'publicEmail'} type="text" style={styles.input} defaultValue={userData.publicEmail}/>
 					</div>
