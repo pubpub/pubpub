@@ -671,6 +671,7 @@ export function deleteAtom(req, res) {
 		result.inactiveBy = userID;
 		result.inactiveDate = new Date().getTime();
 		result.inactiveNote = 'Deleted';
+		result.slug = result._id;
 		return result.save();
 	})
 	.then(function(savedResult) {
