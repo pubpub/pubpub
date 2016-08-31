@@ -18,8 +18,8 @@ import UserProfileSettingsProfile from './UserProfileSettingsProfile';
 import UserProfileSettingsAccount from './UserProfileSettingsAccount';
 import UserProfileSettingsNotifications from './UserProfileSettingsNotifications';
 
-// import {globalMessages} from 'utils/globalMessages';
-// import {FormattedMessage} from 'react-intl';
+import {globalMessages} from 'utils/globalMessages';
+import {FormattedMessage} from 'react-intl';
 
 let styles = {};
 
@@ -71,27 +71,27 @@ export const UserProfile = React.createClass({
 				{name: 'twitter:image:alt', content: 'Image of ' + (profileData.name || profileData.username)}
 			]
 		};
-		
+
 		const mobileNavButtons = [
-			{ type: 'button', mobile: true, text: 'Follow', action: this.followUserToggle },
-			{ type: 'button', mobile: true, text: 'Menu', action: undefined },
+			{ type: 'button', mobile: true, text: <FormattedMessage {...globalMessages.Follow}/>, action: this.followUserToggle },
+			{ type: 'button', mobile: true, text: <FormattedMessage {...globalMessages.Menu}/>, action: undefined },
 		];
 
 		const ownProfileItems = ownProfile
 		? [
 			{ type: 'spacer' },
-			{ type: 'title', text: 'Settings'},
-			{ type: 'link', text: 'Profile', link: '/user/' + this.props.username + '/profile', active: this.props.mode === 'profile'},
+			{ type: 'title', text: <FormattedMessage {...globalMessages.Settings}/>},
+			{ type: 'link', text: <FormattedMessage {...globalMessages.Profile}/>, link: '/user/' + this.props.username + '/profile', active: this.props.mode === 'profile'},
 			// { type: 'link', text: 'Account', link: '/user/' + this.props.username + '/account', active: this.props.mode === 'account'},
-			{ type: 'link', text: 'Notifications', link: '/user/' + this.props.username + '/notifications', active: this.props.mode === 'notifications' },
+			{ type: 'link', text: <FormattedMessage {...globalMessages.Notifications}/>, link: '/user/' + this.props.username + '/notifications', active: this.props.mode === 'notifications' },
 		]
 		: [];
 		const navItems = [
 			{ type: 'link', text: 'Pubs', link: '/user/' + this.props.username, active: this.props.mode === undefined},
 			// { type: 'link', text: 'Groups', link: '/user/' + this.props.username + '/groups', active: this.props.mode === 'groups'},
-			{ type: 'link', text: 'Journals', link: '/user/' + this.props.username + '/journals', active: this.props.mode === 'journals'},
-			{ type: 'link', text: 'Followers', link: '/user/' + this.props.username + '/followers', active: this.props.mode === 'followers'},
-			{ type: 'link', text: 'Following', link: '/user/' + this.props.username + '/following', active: this.props.mode === 'following'},
+			{ type: 'link', text: <FormattedMessage {...globalMessages.Journals}/>, link: '/user/' + this.props.username + '/journals', active: this.props.mode === 'journals'},
+			{ type: 'link', text: <FormattedMessage {...globalMessages.Followers}/>, link: '/user/' + this.props.username + '/followers', active: this.props.mode === 'followers'},
+			{ type: 'link', text: <FormattedMessage {...globalMessages.Following}/>, link: '/user/' + this.props.username + '/following', active: this.props.mode === 'following'},
 
 			...ownProfileItems,
 		];
@@ -122,7 +122,7 @@ export const UserProfile = React.createClass({
 					<div style={styles.headerTextWrapper}>
 
 						<h1 style={styles.showOnMobile}>{profileData.name}</h1> {/* Duplicate header for cleaner Follow button rendering */}
-						
+
 						{!ownProfile &&
 							<FollowButton id={profileData._id} type={'followsUser'} isFollowing={profileData.isFollowing} buttonStyle={styles.followButtonStyle}/>
 						}

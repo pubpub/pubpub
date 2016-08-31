@@ -17,9 +17,21 @@ export const globalMessages = defineMessages({
 		id: 'global.DropFilesToAdd',
 		defaultMessage: 'Drop Files To Add',
 	},
+	Created: {
+		id: 'global.Created',
+		defaultMessage: 'Created',
+	},
+	Version: {
+		id: 'global.Version',
+		defaultMessage: 'Version',
+	},
 	SaveVersion: {
 		id: 'global.SaveVersion',
 		defaultMessage: 'Save Version',
+	},
+	LatestVersion: {
+		id: 'global.LatestVersion',
+		defaultMessage: 'Latest Version',
 	},
 	ProfileImage: {
 		id: 'global.ProfileImage',
@@ -133,6 +145,10 @@ export const globalMessages = defineMessages({
 		id: 'global.PublicDiscussion',
 		defaultMessage: 'Public Discussion',
 	},
+	PublicEmail: {
+		id: 'global.PublicEmail',
+		defaultMessage: 'Public Email',
+	},
 	Public: {
 		id: 'global.Public',
 		defaultMessage: 'Public',
@@ -240,6 +256,14 @@ export const globalMessages = defineMessages({
 	SaveDetails: {
 		id: 'global.SaveDetails',
 		defaultMessage: 'Save Details',
+	},
+	SaveLayout: {
+		id: 'global.SaveLayout',
+		defaultMessage: 'Save Layout'
+	},
+	SaveProfile: {
+		id: 'global.SaveProfile',
+		defaultMessage: 'Save Profile'
 	},
 	Cancel: {
 		id: 'global.Cancel',
@@ -781,10 +805,6 @@ export const globalMessages = defineMessages({
 	Right: {
 		id: 'global.Right',
 		defaultMessage: 'Right'
-	},
-	SaveLayout: {
-		id: 'global.SaveLayout',
-		defaultMessage: 'Save Layout'
 	},
 	Permalink: {
 		id: 'global.Permalink',

@@ -3,8 +3,8 @@ import Radium from 'radium';
 import {PreviewCard} from 'components';
 import dateFormat from 'dateformat';
 
-// import {globalMessages} from 'utils/globalMessages';
-// import {FormattedMessage} from 'react-intl';
+import {globalMessages} from 'utils/globalMessages';
+import {FormattedMessage} from 'react-intl';
 
 export const UserProfilePubs = React.createClass({
 	propTypes: {
@@ -14,14 +14,14 @@ export const UserProfilePubs = React.createClass({
 
 	getInitialState: function() {
 		return {
-			
+
 		};
 	},
 
 	render: function() {
 		const profileData = this.props.profileData || {};
 		const atoms = profileData.atoms || [];
-		
+
 		return (
 			<div className={'firstChildNoTopMargin'}>
 				{
@@ -33,14 +33,14 @@ export const UserProfilePubs = React.createClass({
 						if (foo.lastUpdated < bar.lastUpdated) { return 1; }
 						return 0;
 					}).map((item, index)=>{
-						// Need to check to make sure we don't put the 
+						// Need to check to make sure we don't put the
 						// edit button on read-only pubs
-						const buttons = [ 
-							{ type: 'link', text: 'Edit', link: '/pub/' + item.slug + '/edit' },
+						const buttons = [
+							{ type: 'link', text: <FormattedMessage {...globalMessages.Edit}/>, link: '/pub/' + item.slug + '/edit' },
 						];
 
 						return (
-							<PreviewCard 
+							<PreviewCard
 								key={'atomItem-' + index}
 								type={'atom'}
 								slug={item.slug}
@@ -48,7 +48,7 @@ export const UserProfilePubs = React.createClass({
 								image={item.previewImage}
 								description={item.description}
 								header={ <div>{item.isPublished ? 'Published' : 'Unpublished'}</div> }
-								footer={ <div>{item.versions.length} Version{item.versions.length !== 1 && 's'} | {item.lastUpdated ? 'Latest Version: ' + dateFormat(item.lastUpdated, 'mmm dd, yyyy') : 'Created: ' + dateFormat(item.createDate, 'mmm dd, yyyy')}</div> }
+								footer={ <div>{item.versions.length} <FormattedMessage {...globalMessages.Version}/>{item.versions.length !== 1 && 's'} | {item.lastUpdated ? <FormattedMessage {...globalMessages.LatestVersion}/> + ' ' + dateFormat(item.lastUpdated, 'mmm dd, yyyy') : <FormattedMessage {...globalMessages.Created}/> + ' ' + dateFormat(item.createDate, 'mmm dd, yyyy')}</div> }
 								buttons = {this.props.ownProfile ? buttons : []} />
 						);
 					})
