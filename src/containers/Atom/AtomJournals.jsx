@@ -103,7 +103,7 @@ export const AtomJournals = React.createClass({
 											description={item.destination.description}
 											footer={
 												<div>
-													<div>Submitted on {dateFormat(item.createDate, 'mmm dd, yyyy h:MM TT')}</div>
+													<div><FormattedMessage {...globalMessages.SubmittedOn}/> {dateFormat(item.createDate, 'mmm dd, yyyy h:MM TT')}</div>
 													<div style={[!item.inactive && {display: 'none'}]}><span style={styles.inactiveNote}>{item.inactiveNote}</span>
 													<FormattedMessage {...globalMessages.On}/>
 													 {dateFormat(item.inactiveDate, 'mmm dd, yyyy h:MM TT')}</div>
@@ -138,7 +138,7 @@ export const AtomJournals = React.createClass({
 									footer={
 										<div>
 											<div>
-												<FormattedMessage {...globalMessages.FeaturedOn}/>				
+												<FormattedMessage {...globalMessages.FeaturedOn}/>
 												{dateFormat(item.createDate, 'mmm dd, yyyy h:MM TT')}</div>
 										</div>
 									} />
