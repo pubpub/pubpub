@@ -33,6 +33,7 @@ export const PreviewEditor = React.createClass({
 		handleDeleteContributor: PropTypes.func,
 		saveVersionHandler: PropTypes.func,
 		deleteAtomHandler: PropTypes.func,
+		setItemHandler: PropTypes.func,
 
 
 		contributorsLoading: PropTypes.bool,
@@ -147,6 +148,15 @@ export const PreviewEditor = React.createClass({
 							}
 						})}
 
+						{!this.state.editorOpen && this.props.setItemHandler &&
+							<div>
+								<div className={'button'} onClick={()=>{this.props.setItemHandler(this.props.versionData)}} style={styles.button}>
+									<FormattedMessage id="previewEditor.SetToInsert" defaultMessage="Set To Insert"/>
+								</div>
+							</div>
+							
+						}
+
 						{atomData.type === 'document' &&
 							<div>
 								<Link to={'/pub/' + atomData.slug + '/edit'} style={globalStyles.link}>
@@ -165,14 +175,13 @@ export const PreviewEditor = React.createClass({
 							
 						}
 
-						{!this.state.editorOpen && !this.state.confirmDelete &&
+						{!this.state.editorOpen && !this.state.confirmDelete && !this.props.setItemHandler &&
 							<div>
 								<div className={'button'} onClick={this.toggleConfirmDelete} style={styles.button}>
 									<FormattedMessage {...globalMessages.Delete}/>
 								</div>
 
 							</div>
-							
 						}
 
 						{!this.state.editorOpen && this.state.confirmDelete &&
@@ -258,6 +267,7 @@ styles = {
 	image: {
 		width: '2.5em',
 		display: 'block',
+		maxWidth: 'initial',
 	},
 	button: {
 		display: 'block',

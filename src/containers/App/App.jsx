@@ -5,7 +5,7 @@ import {connect} from 'react-redux';
 import {push} from 'redux-router';
 import {loadAppAndLogin, resendVerificationEmail, unsetNotFound} from './actions';
 import {logout} from 'containers/Login/actions';
-import {createAtom} from 'containers/Media/actions';
+import {createAtom} from 'containers/Manage/actions';
 import {NotFound} from 'components';
 import {IntlProvider} from 'react-intl';
 import {safeGetInToJS} from 'utils/safeParse';

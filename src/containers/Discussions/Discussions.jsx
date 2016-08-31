@@ -9,9 +9,8 @@ import {globalStyles} from 'utils/styleConstants';
 import { StickyContainer as UnwrappedStickyContainer, Sticky } from 'react-sticky';
 const StickyContainer = Radium(UnwrappedStickyContainer);
 
-import {Media} from 'containers';
 import {markdownParser, markdownSerializer, schema} from 'components/AtomTypes/Document/proseEditor';
-import {License} from 'components';
+import {License, Media} from 'components';
 import {StoppableSubscription} from 'subscription';
 // import {createAtom} from 'containers/Media/actions';
 import {createReplyDocument} from './actions';

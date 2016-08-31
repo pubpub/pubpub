@@ -21,6 +21,7 @@ let styles;
 export const Manage = React.createClass({
 	propTypes: {
 		mediaData: PropTypes.object,
+		setItemHandler: PropTypes.func,
 		dispatch: PropTypes.func,
 	},
 
@@ -256,7 +257,7 @@ export const Manage = React.createClass({
 					}
 					const buttons = [
 						// Put custom buttons here
-						// { type: 'action', text: 'Delete', action: this.deleteAtom.bind(this, item.parent._id) },
+						// { type: 'action', text: 'Set To Insert', action: this.props.setItemHandler.bind(this, item) },
 					];
 
 					return (
@@ -265,7 +266,7 @@ export const Manage = React.createClass({
 							atomData={item.parent}
 							versionData={item}
 							contributorsData={item.contributors}
-							footer={ <div> <input type="checkbox" /><FormattedMessage {...globalMessages.ShowOnProfile}/></div> }
+							footer={!this.props.setItemHandler && <div> <input type="checkbox" /><FormattedMessage {...globalMessages.ShowOnProfile}/></div> }
 							buttons = {buttons}
 
 							onSaveVersion={this.onSaveVersion}
@@ -276,6 +277,7 @@ export const Manage = React.createClass({
 							handleDeleteContributor={this.handleDeleteContributor}
 							saveVersionHandler={this.saveVersionHandler}
 							deleteAtomHandler={this.deleteAtomHandler}
+							setItemHandler={this.props.setItemHandler}
 
 							detailsLoading={item.detailsLoading}
 							detailsError={!!item.detailsError}

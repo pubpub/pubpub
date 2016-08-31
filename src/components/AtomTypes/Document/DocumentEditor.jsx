@@ -1,7 +1,7 @@
 import React, {PropTypes} from 'react';
 import Radium, {Style} from 'radium';
 import {safeGetInToJS} from 'utils/safeParse';
-import {Media} from 'containers';
+import {Media} from 'components';
 import {MD5} from 'object-hash';
 import chash from 'color-hash';
 
