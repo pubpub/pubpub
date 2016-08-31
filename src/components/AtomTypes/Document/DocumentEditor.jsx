@@ -34,6 +34,8 @@ export const DocumentEditor = React.createClass({
 		return {
 			showMarkdown: false,
 			participants: [],
+			error: '',
+			loading: true,
 		};
 	},
 
@@ -48,6 +50,8 @@ export const DocumentEditor = React.createClass({
 
 		const {ModCollab} = require('./collab/mod');
 		const {collabEditing} = require('prosemirror/dist/collab');
+
+		const that = this;
 
 		pm = new prosemirror.ProseMirror({
 			place: document.getElementById('atom-reader'),
@@ -97,6 +101,15 @@ export const DocumentEditor = React.createClass({
 		collab.askForDocument = this.askForDocument;
 		collab.getHash = this.getHash;
 		collab.updateParticipants = this.updateParticipants;
+		collab.setErrorState = function(error) {
+			that.setState({error: error});
+		};
+
+		collab.setLoadingState = function(loading) {
+			that.setState({loading: loading});
+
+		};
+
 
 		// Collaboration Authentication information
 		const atomID = safeGetInToJS(this.props.atomEditData, ['atomData', '_id']);
@@ -115,7 +128,6 @@ export const DocumentEditor = React.createClass({
 		new ModServerCommunications(collab);
 		new ModCollab(collab);
 
-		const that = this;
 
 		pm.on.change.add(function() {
 			that.collab.docInfo.changed = true;
@@ -138,7 +150,11 @@ export const DocumentEditor = React.createClass({
 				return true;
 			}
 		});
+		const _collab = safeGetInToJS(this.props.atomEditData, ['collab']);
 
+		if (!_collab) {
+			this.setState({error: 'Disconnected. Your changes are not being saved.'})
+		}
 	},
 	componentWillUnmount: function() {
 		this.collab.mod.serverCommunications.close();
@@ -162,10 +178,10 @@ export const DocumentEditor = React.createClass({
 		const that = this;
 		// Set Auto-save to send the document every two minutes, if it has changed.
 		this.sendDocumentTimer = window.setInterval(function() {
-			if (that.collab.docInfo && that.collab.docInfo.changed) {
+			if (that.docInfo && that.docInfo.changed) {
 				that.save();
 			}
-		},60000);
+		}, 120000);
 	},
 
 
@@ -282,10 +298,8 @@ export const DocumentEditor = React.createClass({
 	// Get updates to document and then send updates to the server
 	save: function(callback) {
 		const that = this;
-		console.log('Started save');
 		this.getUpdates(function() {
 			that.sendDocumentUpdate(function() {
-				console.log('Finished save');
 				if (callback) {
 					callback();
 				}
@@ -299,11 +313,11 @@ export const DocumentEditor = React.createClass({
 			// title: this.doc.title,
 			// metadata: this.doc.metadata,
 			contents: this.collab.doc.contents,
-			version: this.collab.doc.version,
+			// version: this.doc.version,
 			hash: this.collab.doc.hash
 		};
 
-		this.collab.mod.serverCommunications.send({
+		this.mod.serverCommunications.send({
 			type: 'update_document',
 			document: documentData
 		});
@@ -356,7 +370,6 @@ export const DocumentEditor = React.createClass({
 	render: function() {
 		const collab = safeGetInToJS(this.props.atomEditData, ['collab']);
 
-
 		const colorMap = {};
 		this.state.participants.map((participant, index) => {
 			const color = ColorHash.rgb(participant.name);
@@ -364,15 +377,26 @@ export const DocumentEditor = React.createClass({
 			colorMap[`.user-bg-${index}`] = {backgroundColor: colorStr};
 		});
 
+		let color;
+
+		if (this.state.error) {
+			color = 'red';
+		} else if (this.state.loading) {
+			color = 'yellow';
+		} else {
+			color = 'green';
+		}
+
 		return (
 			<div style={styles.container}>
 			{/* <Dropzone ref="dropzone" disableClick={true} onDrop={this.onDrop} style={{}} activeClassName={'dropzone-active'} > */}
 				<Style rules={colorMap} />
 
 				<div>
-					{(collab
-						? <div></div>
-						: <div>Connection to Collaboration Server Failed</div>
+					<div style={{backgroundColor: color, width:'10px', height: '10px',borderRadius: '50%',}}></div>
+					{(this.state.error
+						? <span>Error: {this.state.error}</span>
+					: <span></span>
 					)}
 				</div>
 

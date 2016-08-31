@@ -38,13 +38,13 @@ export class ModServerCommunications {
 			this.ws = new window.WebSocket(`${websocketProtocol}//${wsServer}/ws/doc/${this.editor.doc.id}?user=${this.editor.username }&token=${this.editor.token}&avatar_url=${this.editor.img}&random=${randomInt}`);
 			console.log('opening with', `${websocketProtocol}//${wsServer}/ws/doc/${this.editor.doc.id}?user=${this.editor.username }&token=${this.editor.token}&avatar_url=${this.editor.img}&random=${randomInt}`);
 			this.ws.onopen = function() {
+				that.editor.setLoadingState(false)
 				console.log('Opened Connection');
 				// console.log('connection open');
 				// jQuery('#unobtrusive_messages').html('')
 			};
-
 			this.ws.onerror = function(err) {
-				console.log('error with socket');
+				// console.log('error with socket ' );
 				console.log(arguments);
 				// console.log('connection open');
 				// jQuery('#unobtrusive_messages').html('')
@@ -59,13 +59,16 @@ export class ModServerCommunications {
 			that.receive(data);
 		};
 		this.ws.onclose = function(event) {
+
+			that.editor.setErrorState('Disconnected. Your changes are not being saved.')
+
 			console.log('Closed connection');
 			that.connected = false;
 			window.clearInterval(that.wsPinger);
 			this.retryTimeout = window.setTimeout(function() {
 				that.createWSConnection();
 			}, 2000);
-				// console.log('attempting to reconnect');
+			console.log('attempting to reconnect');
 			if (that.editor.pm.mod.collab.hasSendableSteps()) {
 				// jQuery('#unobtrusive_messages').html('<span class="warn">'+gettext('Warning! Not all your changes have been saved! You could suffer data loss. Attempting to reconnect...')+'</span>')
 			} else {
@@ -74,6 +77,7 @@ export class ModServerCommunications {
 
 		};
 		this.wsPinger = window.setInterval(function() {
+			console.log("pinging websocket")
 			that.send({
 				'type': 'ping'
 			});
