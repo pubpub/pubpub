@@ -17,7 +17,7 @@ export const JournalProfileSubmitted = React.createClass({
 		const journalData = safeGetInToJS(this.props.journalData, ['journalData']) || {};
 		const followersData = safeGetInToJS(this.props.journalData, ['followersData']) || [];
 		const metaData = {
-			title: <FormattedMessage {...globalMessages.Followers}/> + ' · ' + journalData.journalName,
+			title: 'Followers' + ' · ' + journalData.journalName,
 		};
 
 		return (

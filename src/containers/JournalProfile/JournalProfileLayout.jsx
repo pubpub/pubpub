@@ -105,7 +105,7 @@ export const JournalProfileLayout = React.createClass({
 		const journalData = safeGetInToJS(this.props.journalData, ['journalData']) || {};
 
 		const metaData = {
-			title: <FormattedMessage {...globalMessages.Layout}/> + ' · ' + journalData.journalName,
+			title: 'Layout' + ' · ' + journalData.journalName,
 		};
 		const isLoading = this.props.journalData && this.props.journalData.get('saveLoading');
 		const errorMessage = this.props.journalData && this.props.journalData.get('saveError');
