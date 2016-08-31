@@ -124,7 +124,7 @@ export default connect( state => {
 	return {
 		appData: state.app,
 		loginData: state.login,
-		mediaData: state.media,
+		mediaData: state.manage,
 		path: state.router.location.pathname,
 		query: state.router.location.query,
 		slug: state.router.params.slug,

@@ -634,6 +634,10 @@ export const globalMessages = defineMessages({
 		id: 'global.Journals',
 		defaultMessage: 'Journals',
 	},
+	Assets: {
+		id: 'global.Assets',
+		defaultMessage: 'Assets',
+	},
 	volume: {
 		id: 'global.volume',
 		defaultMessage: 'volume',

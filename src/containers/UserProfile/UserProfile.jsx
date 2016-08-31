@@ -6,7 +6,7 @@ import {safeGetInToJS} from 'utils/safeParse';
 import {getUser, saveUserSettings} from './actions';
 import {NavContentWrapper} from 'components';
 import {NotFound} from 'components';
-import {FollowButton} from 'containers';
+import {FollowButton, Manage} from 'containers';
 
 import UserProfilePubs from './UserProfilePubs';
 import UserProfileJournals from './UserProfileJournals';
@@ -89,6 +89,7 @@ export const UserProfile = React.createClass({
 		const navItems = [
 			{ type: 'link', text: 'Pubs', link: '/user/' + this.props.username, active: this.props.mode === undefined},
 			// { type: 'link', text: 'Groups', link: '/user/' + this.props.username + '/groups', active: this.props.mode === 'groups'},
+			{ type: 'link', text: <FormattedMessage {...globalMessages.Assets}/>, link: '/user/' + this.props.username + '/assets', active: this.props.mode === 'assets'},
 			{ type: 'link', text: <FormattedMessage {...globalMessages.Journals}/>, link: '/user/' + this.props.username + '/journals', active: this.props.mode === 'journals'},
 			{ type: 'link', text: <FormattedMessage {...globalMessages.Followers}/>, link: '/user/' + this.props.username + '/followers', active: this.props.mode === 'followers'},
 			{ type: 'link', text: <FormattedMessage {...globalMessages.Following}/>, link: '/user/' + this.props.username + '/following', active: this.props.mode === 'following'},
@@ -143,6 +144,8 @@ export const UserProfile = React.createClass({
 				<NavContentWrapper navItems={navItems} mobileNavButtons={mobileNavButtons}>
 					{(() => {
 						switch (mode) {
+						case 'assets':
+							return <Manage ownProfile={ownProfile}/>;
 						case 'journals':
 							return (
 								<UserProfileJournals

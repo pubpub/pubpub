@@ -192,7 +192,6 @@ export const Manage = React.createClass({
 			return 0;
 		});
 		return (
-			<div style={{padding: '3em'}}>
 			<Dropzone ref="dropzone" disableClick={true} onDrop={this.onDrop} style={{}} activeClassName={'dropzone-active'} >
 			<div>
 
@@ -293,7 +292,6 @@ export const Manage = React.createClass({
 
 			<div className={'showOnActive'}><FormattedMessage {...globalMessages.DropFilesToAdd}/></div>
 			</Dropzone>
-			</div>
 		);
 	}
 
@@ -307,7 +305,7 @@ export default connect( state => {
 
 styles = {
 	mediaSelectHeader: {
-		padding: '1em 0em',
+		padding: '0em 0em 1em 0em',
 	},
 	addNewDropdown: {
 		display: 'inline-block',
