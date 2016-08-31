@@ -107,8 +107,6 @@ export const JournalProfileCollections = React.createClass({
 							id="JournalProfileCollections.Description"
 							defaultMessage={`Collections let you organize the pubs featured by this journal. Add pubs to collections on the {featured} page.`}
 							values={{featured: <Link to={'/' + this.props.slug + '/featured'} style={{color: 'inherit'}}>Featured</Link>}}/>
-
-
 					 </p>
 
 				{/* Add Collection Field */}

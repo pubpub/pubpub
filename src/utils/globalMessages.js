@@ -15,7 +15,7 @@ export const globalMessages = defineMessages({
 	},
 	DropFilesToAdd: {
 		id: 'global.DropFilesToAdd',
-		defaultMessage: 'Drop Files To Add',		
+		defaultMessage: 'Drop Files To Add',
 	},
 	SaveVersion: {
 		id: 'global.SaveVersion',
@@ -625,6 +625,10 @@ export const globalMessages = defineMessages({
 	Password: {
 		id: 'global.Password',
 		defaultMessage: 'Password',
+	},
+	PasswordReset: {
+		id: 'global.PasswordReset',
+		defaultMessage: 'Password Reset',
 	},
 	Explore: {
 		id: 'global.Explore',
