@@ -48,26 +48,6 @@ export const Media = React.createClass({
 		document.removeEventListener('keydown', this.closeOnEscape);
 	},
 
-	componentWillReceiveProps(nextProps) {
-		// const oldMediaData = safeGetInToJS(this.props.mediaData, []);
-		// const newMediaData = safeGetInToJS(nextProps.mediaData, []);
-		// if (oldMediaData.mediaItems.length < newMediaData.mediaItems.length) {
-		// 	this.setState({atomMode: 'recent'});
-		// }
-
-		// if (this.state.editNodeDataMode && !oldMediaData.newNodeData && newMediaData.newNodeData) {
-		// 	this.setState({
-		// 		nodeData: {
-		// 			align: 'full',
-		// 			mode: newMediaData.newNodeData.type === 'reference' ? 'cite' : 'embed',
-		// 			...this.state.nodeData,
-		// 			data: newMediaData.newNodeData
-		// 		},
-		// 		editNodeDataMode: false,
-		// 	});
-		// }
-	},
-
 	closeOnEscape: function(evt) {
 		let isEscape = false;
 		if ('key' in evt) {
@@ -80,12 +60,6 @@ export const Media = React.createClass({
 			this.close();
 		}
 	},
-
-	// setAtomMode: function(mode) {
-	// 	this.setState({
-	// 		atomMode: mode
-	// 	});
-	// },
 
 	toggleMedia: function(pm, callback, node) {
 		this.setState({
@@ -113,9 +87,6 @@ export const Media = React.createClass({
 		});
 	},
 
-	// filterChange: function(evt) {
-	// 	this.setState({filter: evt.target.value});
-	// },
 
 	inputChange: function(type, evt) {
 		if (type === 'caption') {
@@ -148,152 +119,6 @@ export const Media = React.createClass({
 			editNodeDataMode: false,
 		});
 	},
-
-
-	// On file drop (or on file select)
-	// Upload files automatically to s3
-	// On completion call function that hits the pubpub server to generate asset information
-	// Generated asset information is then sent to Firebase for syncing with other users
-	// onDrop: function(files) {
-	// 	// console.log(files);
-	// 	// return;
-
-	// 	// if (this.state.activeSection !== 'assets') {
-	// 	// 	return;
-	// 	// }
-
-	// 	// // Add new files to existing set, so as to not overwrite existing uploads
-	// 	// const existingFiles = this.state.files.length;
-	// 	// const tmpFiles = this.state.files.concat(files);
-
-	// 	// // For each new file, begin their upload process
-	// 	// for (let fileCount = existingFiles; fileCount < existingFiles + files.length; fileCount++) {
-	// 	// 	s3Upload(tmpFiles[fileCount], this.props.slug, this.onFileProgress, this.onFileFinish, fileCount);
-	// 	// }
-
-	// 	// // Set state with newly added files
-	// 	// this.setState({files: tmpFiles});
-
-	// 	const startingFileIndex = this.state.uploadRates.length;
-	// 	const newUploadRates = files.map((file)=> {
-	// 		return 0;
-	// 	});
-	// 	const newUploadFiles = files.map((file)=> {
-	// 		return file.name;
-	// 	});
-	// 	const uploadRates = this.state.uploadRates.concat(newUploadRates);
-	// 	const uploadFiles = this.state.uploadFiles.concat(newUploadFiles);
-
-
-	// 	files.map((file, index)=> {
-	// 		s3Upload(file, this.onFileProgress, this.onFileFinish, startingFileIndex + index);
-	// 	});
-
-	// 	this.setState({
-	// 		nodeData: {
-	// 			...this.state.nodeData,
-	// 			data: undefined
-	// 		},
-	// 		atomMode: 'recent',
-	// 		uploadRates: uploadRates,
-	// 		uploadFiles: uploadFiles,
-	// 	});
-
-	// },
-
-	// onSelect: function(evt) {
-	// 	const selectedFiles = [];
-	// 	for (let index = 0; index < evt.target.files.length; index++) {
-	// 		selectedFiles.push(evt.target.files[index]);
-	// 	}
-	// 	this.onDrop(selectedFiles);
-	// 	document.getElementById('media-file-select').value = '';
-	// },
-
-	// // Update state's progress value when new events received.
-	// onFileProgress: function(evt, index) {
-	// 	const percentage = evt.loaded / evt.total;
-	// 	const tempUploadRates = this.state.uploadRates;
-	// 	tempUploadRates[index] = percentage;
-	// 	this.setState({uploadRates: tempUploadRates});
-	// },
-
-	// onFileFinish: function(evt, index, type, filename, title) {
-
-	// 	let atomType = undefined;
-	// 	const extension = filename.split('.').pop();
-	// 	switch (extension) {
-	// 	case 'jpg':
-	// 	case 'png':
-	// 	case 'jpeg':
-	// 	case 'tiff':
-	// 	case 'gif':
-	// 		atomType = 'image'; break;
-	// 	case 'pdf':
-	// 		atomType = 'pdf'; break;
-	// 	case 'ipynb':
-	// 		atomType = 'jupyter'; break;
-	// 	case 'mp4':
-	// 	case 'ogg':
-	// 	case 'webm':
-	// 		atomType = 'video'; break;
-	// 	case 'csv':
-	// 		atomType = 'table'; break;
-	// 	default:
-	// 		break;
-	// 	}
-
-	// 	const versionContent = {
-	// 		url: 'https://assets.pubpub.org/' + filename
-	// 	};
-	// 	this.props.dispatch(createAtom(atomType, versionContent, title));
-	// },
-
-	// saveVersionHandler: function(versionMessage) {
-	// 	const newVersionContent = this.refs.atomEditorPane.refs.editor.getSaveVersionContent();
-
-	// 	const atomData = this.state.nodeData.data.parent;
-	// 	console.log(this.state.nodeData.data);
-	// 	if (atomData._id) {
-	// 		const newVersion = {
-	// 			type: atomData.type,
-	// 			// message: versionMessage,
-	// 			message: '',
-	// 			parent: atomData._id,
-	// 			content: newVersionContent
-	// 		};
-	// 		console.log('Save a version with version stuff!');
-	// 		console.log(newVersion);
-	// 		this.props.dispatch(saveVersion(newVersion));
-	// 	} else {
-	// 		const atomType = this.state.nodeData.data.type;
-	// 		console.log('Create a new atom with version stuff!');
-	// 		console.log(newVersionContent);
-	// 		let title = null;
-	// 		if (atomType === 'reference') {
-	// 			title = newVersionContent.title;
-	// 		}
-	// 		this.props.dispatch(createAtom(atomType, newVersionContent, title));
-	// 	}
-	// },
-
-	// save: function() {
-	// 	const versionData = {
-	// 		_id: '578951a86dcc445787b0ef5a',
-	// 		type: 'image',
-	// 		message: '',
-	// 		parent: {
-	// 			_id: '578951a86dcc445787b0ef57',
-	// 			slug: '95e48c3441a46bf95481b60dbaeaba469b2d4d74',
-	// 			title: 'New Pub: 1468617128060',
-	// 			type: 'image',
-	// 		},
-	// 		content: {
-	// 			url: 'https://assets.pubpub.org/uiyvascj/1468617127681.gif',
-	// 		}
-	// 	};
-	// 	this.saveItem(versionData);
-	// },
 
 	setItem: function(item) {
 		const nodeData = this.state.nodeData || {};
@@ -333,59 +158,10 @@ export const Media = React.createClass({
 
 	},
 
-	// handleSelectChange: function(item) {
-	// 	const newThing = {
-	// 		nodeData: {
-	// 			data: {
-	// 				type: item.value,
-	// 				parent: {
-	// 					title: 'New ' + item.value,
-	// 					type: item.value,
-	// 				}
-	// 			}
-	// 		},
-	// 		editNodeDataMode: true,
-	// 	};
-	// 	console.log(newThing);
-	// 	this.setState(newThing);
-	// 	// console.log(item.value);
-	// },
 
 	render: function() {
-
-		// const mediaItems = safeGetInToJS(this.props.mediaData, ['mediaItems']) || [];
-		// const mediaItemsFilterForType = mediaItems.filter((item)=> {
-		// 	if (this.state.atomMode === 'all' || this.state.atomMode === 'recent') { return true; }
-		// 	return item.type === this.state.atomMode;
-		// });
-		// const filteredItems = fuzzy.filter(this.state.filter, mediaItemsFilterForType, {extract: (item)=>{ return item.type + ' ' + item.parent.title;} });
 		const nodeData = this.state.nodeData || {};
 
-		// const mobileNavButtons = [
-		// 	{ type: 'button', mobile: true, text: 'Pubs', action: this.followUserToggle },
-		// 	{ type: 'button', mobile: true, text: 'Menu', action: undefined },
-		// ];
-
-		// const navItems = [
-		// 	{ type: 'button', text: <FormattedMessage {...globalMessages.All}/>, action: this.setAtomMode.bind(this, 'all'), active: this.state.atomMode === 'all'},
-		// 	{ type: 'button', text: <FormattedMessage {...globalMessages.Recent}/>, action: this.setAtomMode.bind(this, 'recent'), active: this.state.atomMode === 'recent'},
-		// 	{ type: 'spacer'},
-		// 	{ type: 'button', text: <FormattedMessage {...globalMessages.Images}/>, action: this.setAtomMode.bind(this, 'image'), active: this.state.atomMode === 'image'},
-		// 	{ type: 'button', text: <FormattedMessage {...globalMessages.Videos}/>, action: this.setAtomMode.bind(this, 'video'), active: this.state.atomMode === 'video'},
-		// 	{ type: 'button', text: <FormattedMessage {...globalMessages.References}/>, action: this.setAtomMode.bind(this, 'reference'), active: this.state.atomMode === 'reference'},
-		// 	{ type: 'button', text: 'Jupyter', action: this.setAtomMode.bind(this, 'jupyter'), active: this.state.atomMode === 'jupyter'},
-		// 	{ type: 'button', text: <FormattedMessage {...globalMessages.Documents}/>, action: this.setAtomMode.bind(this, 'document'), active: this.state.atomMode === 'document'},
-		// ];
-
-
-		// const options = [
-		// 	{value: 'image', label: 'image'},
-		// 	{value: 'video', label: 'video'},
-		// 	{value: 'latex', label: 'equation'},
-		// 	{value: 'reference', label: 'reference'},
-		// 	{value: 'jupyter', label: 'jupyter'},
-		// 	{value: 'iframe', label: 'iframe'},
-		// ];
 		return (
 			<div style={[styles.container, this.state.showMedia && styles.containerActive]}>
 				<div style={styles.splash} onClick={this.close}></div>
@@ -472,6 +248,24 @@ export const Media = React.createClass({
 						</div>
 					}
 
+					{/* If we DO have a chosen atom  and are trying to edit it*/}
+					{nodeData.data && this.state.editNodeDataMode &&
+						<div style={styles.mediaDetails}>
+							<div style={styles.editModeHeader}>
+								<h3 style={styles.detailsTitle}>{nodeData.data.parent.title}</h3>
+								<div style={styles.detailsCancel} className={'underlineOnHover'} onClick={this.cancelEditNodeData}><FormattedMessage {...globalMessages.Cancel}/></div>
+							</div>
+
+
+
+							{/* <div style={styles.details}>
+								<AtomEditorPane ref={'atomEditorPane'} atomData={ensureImmutable({ atomData: nodeData.data.parent, currentVersionData: nodeData.data })}/>
+							</div> */}
+
+
+						</div>
+					}
+
 				</div>
 
 			</div>
@@ -480,12 +274,6 @@ export const Media = React.createClass({
 	}
 
 });
-
-// export default connect( state => {
-// 	return {
-// 		mediaData: state.media,
-// 	};
-// })( Radium(Media) );
 
 export default Radium(Media);
 
@@ -664,41 +452,7 @@ styles = {
 		opacity: 0.5,
 		pointerEvents: 'none',
 	},
-	addNewDropdown: {
-		width: '250px',
-		display: 'inline-block',
-	},
-	dropzoneBlock: {
-		padding: '0em 2em',
-		margin: '0em 1em',
-		fontSize: '0.85em',
-		borderStyle: 'dashed',
-		height: '34px',
-		lineHeight: '34px',
-		verticalAlign: 'top',
-		position: 'relative',
-		overflow: 'hidden',
-		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
-			margin: '0em',
-		},
-	},
-	fileInput: {
-		marginBottom: '0em',
-		width: '100%',
-		position: 'absolute',
-		height: 'calc(100% + 20px)',
-		left: 0,
-		top: -20,
-		padding: 0,
-		cursor: 'pointer',
-		opacity: 0,
-	},
-	uploadBar: {
-		margin: '0em 2em 1em',
-		overflow: 'hidden',
-		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
-			margin: '0em 0em 1em',
-		},
-	},
+
+	
 
 };
