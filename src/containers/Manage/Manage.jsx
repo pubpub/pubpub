@@ -7,8 +7,8 @@ import {LoaderDeterminate} from 'components';
 import {PreviewEditor} from 'components';
 
 // import {globalStyles} from 'utils/styleConstants';
-// import {globalMessages} from 'utils/globalMessages';
-// import {FormattedMessage} from 'react-intl';
+import {globalMessages} from 'utils/globalMessages';
+import {FormattedMessage} from 'react-intl';
 import Dropzone from 'react-dropzone';
 import {s3Upload} from 'utils/uploadFile';
 import {getMedia, createAtom, saveVersion, deleteAtom} from './actions';
@@ -176,7 +176,7 @@ export const Manage = React.createClass({
 		}).filter((item)=> {
 			return !!item;
 		});
-		
+
 		const mediaItemsFilterForType = mediaItems.filter((item)=> {
 			if (typesFiltered.length === 0) { return true; }
 			return typesFiltered.includes(item.type);
@@ -206,11 +206,11 @@ export const Manage = React.createClass({
 							})}
 						</div>
 					</div>
-					<div className={'button'} onClick={this.createNew} style={styles.createNewButton}>Create New</div>
+					<div className={'button'} onClick={this.createNew} style={styles.createNewButton}><FormattedMessage {...globalMessages.CreateNew}/></div>
 
 
 					<div className={'button'} style={styles.dropzoneBlock}>
-						Click or Drag files to add
+						<FormattedMessage id="manage.YourCommunityP1" defaultMessage="Click or Drag files to add"/>
 						<input id={'media-file-select'} type={'file'} onChange={this.onSelect} multiple={true} style={styles.fileInput}/>
 					</div>
 
@@ -254,19 +254,19 @@ export const Manage = React.createClass({
 					if (this.state.atomMode === 'recent' && index > 9) {
 						return null;
 					}
-					const buttons = [ 
+					const buttons = [
 						// Put custom buttons here
 						// { type: 'action', text: 'Delete', action: this.deleteAtom.bind(this, item.parent._id) },
 					];
 
 					return (
-						<PreviewEditor 
+						<PreviewEditor
 							key={'atomItem-' + item.parent._id}
 							atomData={item.parent}
 							versionData={item}
 							contributorsData={item.contributors}
-							footer={ <div> <input type="checkbox" /> Show on profile</div> }
-							buttons = {buttons} 
+							footer={ <div> <input type="checkbox" /><FormattedMessage {...globalMessages.ShowOnProfile}/></div> }
+							buttons = {buttons}
 
 							onSaveVersion={this.onSaveVersion}
 							onSaveAtom={this.onSaveAtom}
@@ -275,7 +275,7 @@ export const Manage = React.createClass({
 							handleUpdateContributor={this.handleUpdateContributor}
 							handleDeleteContributor={this.handleDeleteContributor}
 							saveVersionHandler={this.saveVersionHandler}
-							deleteAtomHandler={this.deleteAtomHandler} 
+							deleteAtomHandler={this.deleteAtomHandler}
 
 							detailsLoading={item.detailsLoading}
 							detailsError={!!item.detailsError}
@@ -289,7 +289,7 @@ export const Manage = React.createClass({
 
 			</div>
 
-			<div className={'showOnActive'}>Drop files to add</div>
+			<div className={'showOnActive'}><FormattedMessage {...globalMessages.DropFilesToAdd}/></div>
 			</Dropzone>
 			</div>
 		);
@@ -323,7 +323,7 @@ styles = {
 	},
 	createNewButton: {
 		position: 'relative',
-		verticalAlign: 'top', 
+		verticalAlign: 'top',
 		left: '-2px'
 	},
 	filterDropdown: {
