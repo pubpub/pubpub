@@ -8,13 +8,11 @@ import {PreviewCard} from 'components';
 import {styles} from './aboutStyles';
 
 import {globalMessages} from 'utils/globalMessages';
-import {FormattedMessage, formatMessage} from 'react-intl';
+import {FormattedMessage} from 'react-intl';
 
 export const AboutPubs = React.createClass({
 
 	render() {
-		console.log(formatMessage(globalMessages.Reviews));
-
 		const metaData = {
 			title: 'Pubs · PubPub',
 		};
