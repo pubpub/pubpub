@@ -234,6 +234,7 @@ export const Atom = React.createClass({
 		const currentVersionContent = safeGetInToJS(this.props.atomData, ['currentVersionData', 'content']) || {};
 		const currentVersionDate = safeGetInToJS(this.props.atomData, ['currentVersionData', 'createDate']);
 
+
 		const markdown = currentVersionContent.markdown;
 		const toc = generateTOC(this.state.currentDocMarkdown || markdown).full;
 
@@ -295,6 +296,13 @@ export const Atom = React.createClass({
 			return <Link target={linkTarget} to={'/user/' + item.source.username} key={'author-' + index} className={'author'}>{item.source.name}</Link>;
 		});
 
+		let newestVersionDate = currentVersionDate;
+		for (let index = 0; index < versionsData.length; index++){
+			if (newestVersionDate < versionsData[index].createDate){
+				newestVersionDate =  versionsData[index].createDate;
+			}
+		}
+
 		return (
 			<div style={styles.container}>
 
@@ -322,14 +330,14 @@ export const Atom = React.createClass({
 					{/* Toggle Right Panel Button */}
 					<div className={'opacity-on-hover'} style={styles.toggleRightPanelButton} onClick={this.toggleRightPanel}>
 						<div style={styles.toggleRightPanelLine}></div>
-						{this.state.showRightPanel && 
+						{this.state.showRightPanel &&
 							<div style={styles.toggleRightHide}>
 								<FormattedMessage {...globalMessages.Hide}/>
 								<br/>
 								<FormattedMessage {...globalMessages.Panel}/>
 							</div>
 						}
-						{!this.state.showRightPanel && 
+						{!this.state.showRightPanel &&
 							<div style={styles.toggleRightShow}>
 								<FormattedMessage {...globalMessages.Show}/>
 								<br/>
@@ -355,6 +363,19 @@ export const Atom = React.createClass({
 									<AtomCiteButton atomData={this.props.atomData} authorsData={authorsData} customAuthorString={atomData.customAuthorString} versionQuery={versionQuery} buttonStyle={styles.headerAction}/>
 									<FollowButton id={atomData._id} type={'followsAtom'} isFollowing={atomData.isFollowing} buttonClasses={'light-button'} buttonStyle={{...styles.headerAction, ...styles.headerActionPlainPadding}}/>
 								</div>
+							}
+
+							{!isEditor && (newestVersionDate !== currentVersionDate) &&
+								<Link to={'/pub/' + this.props.slug}>
+									<div style={styles.notNewestVersion}>
+										<FormattedMessage
+												id="atom.NewerVersionCreated"
+												defaultMessage={`Newer version created on {newerData}.`}
+												values={{newerData: dateFormat(newestVersionDate, 'mmmm dd, yyyy')}}
+										/>
+								</div>
+							</Link>
+
 							}
 
 							{isEditor &&
@@ -488,10 +509,10 @@ styles = {
 		marginRight: '0vw',
 	},
 	headerAction: {
-		marginRight: '.5em', 
-		padding: '0em 1.5em 0em 1em', 
-		lineHeight: '1.25em', 
-		fontSize: '0.75em', 
+		marginRight: '.5em',
+		padding: '0em 1.5em 0em 1em',
+		lineHeight: '1.25em',
+		fontSize: '0.75em',
 		fontFamily: 'Open Sans',
 		position: 'relative',
 	},
@@ -640,6 +661,17 @@ styles = {
 	input: {
 		width: 'calc(100% - 20px - 4px)',
 	},
+	notNewestVersion: {
+		backgroundColor: '#363736',
+		color: '#F3F3F4',
+		textAlign: 'center',
+		borderRadius: '1px',
+		fontSize: '0.7em',
+		fontFamily:  '"Open Sans", Helvetica Neue, Arial, sans-serif',
+		marginTop: '10px',
+		display: 'inline-block',
+		padding: '0em .5em',
+	}
 	// versionItem: {
 	// 	whiteSpace: 'nowrap',
 	// 	margin: '.5em 1em',
