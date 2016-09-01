@@ -234,6 +234,7 @@ export const Atom = React.createClass({
 		const currentVersionContent = safeGetInToJS(this.props.atomData, ['currentVersionData', 'content']) || {};
 		const currentVersionDate = safeGetInToJS(this.props.atomData, ['currentVersionData', 'createDate']);
 
+
 		const markdown = currentVersionContent.markdown;
 		const toc = generateTOC(this.state.currentDocMarkdown || markdown).full;
 
@@ -295,6 +296,13 @@ export const Atom = React.createClass({
 			return <Link target={linkTarget} to={'/user/' + item.source.username} key={'author-' + index} className={'author'}>{item.source.name}</Link>;
 		});
 
+		let newestVersionDate = currentVersionDate;
+		for (let i = 0; i < versionsData.length; i++){
+			if (newestVersionDate < versionsData[i].createDate){
+				newestVersionDate =  versionsData[i].createDate;
+			}
+		}
+
 		return (
 			<div style={styles.container}>
 
@@ -354,6 +362,18 @@ export const Atom = React.createClass({
 									<AtomExportButton atomData={this.props.atomData} buttonStyle={styles.headerAction} />
 									<AtomCiteButton atomData={this.props.atomData} authorsData={authorsData} customAuthorString={atomData.customAuthorString} versionQuery={versionQuery} buttonStyle={styles.headerAction}/>
 									<FollowButton id={atomData._id} type={'followsAtom'} isFollowing={atomData.isFollowing} buttonClasses={'light-button'} buttonStyle={{...styles.headerAction, ...styles.headerActionPlainPadding}}/>
+								</div>
+							}
+
+							{!isEditor && (newestVersionDate !== currentVersionDate) &&
+								<div style={styles.notNewestVersion}>
+									<Link to={'/pub/' + this.props.slug}>
+										<FormattedMessage
+												id="atom.NewerVersionCreated"
+												defaultMessage={`Newer version created on {newerData}.`}
+												values={{newerData: dateFormat(newestVersionDate, 'mmmm dd, yyyy')}}
+										/>
+									</Link>
 								</div>
 							}
 
@@ -640,6 +660,17 @@ styles = {
 	input: {
 		width: 'calc(100% - 20px - 4px)',
 	},
+	notNewestVersion: {
+		backgroundColor: '#363736',
+		color: '#F3F3F4',
+		textAlign: 'center',
+		borderRadius: '1px',
+		fontSize: '0.7em',
+		fontFamily:  '"Open Sans", Helvetica Neue, Arial, sans-serif',
+		marginTop: '10px',
+		display: 'inline-block',
+		padding: '0em .5em',
+	}
 	// versionItem: {
 	// 	whiteSpace: 'nowrap',
 	// 	margin: '.5em 1em',
