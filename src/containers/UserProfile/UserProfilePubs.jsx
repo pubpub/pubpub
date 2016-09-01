@@ -9,6 +9,7 @@ import {FormattedMessage} from 'react-intl';
 export const UserProfilePubs = React.createClass({
 	propTypes: {
 		profileData: PropTypes.object,
+		featuredAtoms: PropTypes.array,
 		ownProfile: PropTypes.bool,
 	},
 
@@ -21,12 +22,14 @@ export const UserProfilePubs = React.createClass({
 	render: function() {
 		const profileData = this.props.profileData || {};
 		const atoms = profileData.atoms || [];
+		const featuredAtoms = profileData.featuredAtoms || [];
 
 		return (
 			<div className={'firstChildNoTopMargin'}>
 				{
 					atoms.filter((item)=>{
-						return item.type === 'document' && item.title.indexOf('Reply:') === -1;
+						// return item.type === 'document' && item.title.indexOf('Reply:') === -1;
+						return featuredAtoms.includes(item._id);
 					}).sort((foo, bar)=>{
 						// Sort so that most recent is first in array
 						if (foo.lastUpdated > bar.lastUpdated) { return -1; }

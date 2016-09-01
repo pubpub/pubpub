@@ -12,6 +12,7 @@ import {FormattedMessage} from 'react-intl';
 import Dropzone from 'react-dropzone';
 import {s3Upload} from 'utils/uploadFile';
 import {getMedia, createAtom, saveVersion, deleteAtom} from './actions';
+import {saveUserSettings} from 'containers/UserProfile/actions';
 import {updateAtomDetails, addContributor, updateContributor, deleteContributor} from 'containers/Atom/actions';
 
 import atomTypes from 'components/AtomTypes';
@@ -21,6 +22,7 @@ let styles;
 export const Manage = React.createClass({
 	propTypes: {
 		mediaData: PropTypes.object,
+		loginData: PropTypes.object,
 		setItemHandler: PropTypes.func,
 		dispatch: PropTypes.func,
 	},
@@ -31,7 +33,13 @@ export const Manage = React.createClass({
 			createNewType: 'document',
 			uploadRates: [],
 			uploadFiles: [],
+			featuredAtoms: [],
 		};
+	},
+
+	componentWillMount() {
+		const featuredAtoms = safeGetInToJS(this.props.loginData, ['userData', 'featuredAtoms']) || [];
+		this.setState({featuredAtoms: featuredAtoms});
 	},
 
 	componentDidMount() {
@@ -163,6 +171,22 @@ export const Manage = React.createClass({
 		this.props.dispatch(deleteAtom(atomID));
 	},
 
+	toggleFeatureOnProfile: function(atomID) {
+		const featuredAtoms = this.state.featuredAtoms;
+		const atomIDIndex = featuredAtoms.indexOf(atomID);
+		if (atomIDIndex > -1) {
+			featuredAtoms.splice(atomIDIndex, 1);
+			this.setState({featuredAtoms: featuredAtoms});
+		} else {
+			featuredAtoms.push(atomID);
+			this.setState({featuredAtoms: featuredAtoms});
+		}
+
+		const userSettings = safeGetInToJS(this.props.loginData, ['userData']);
+		userSettings.featuredAtoms = featuredAtoms;
+		this.props.dispatch(saveUserSettings(userSettings));
+	},
+
 	render: function() {
 
 		const mediaItems = safeGetInToJS(this.props.mediaData, ['mediaItems']) || [];
@@ -265,7 +289,7 @@ export const Manage = React.createClass({
 							atomData={item.parent}
 							versionData={item}
 							contributorsData={item.contributors}
-							footer={!this.props.setItemHandler && <div> <input type="checkbox" /><FormattedMessage {...globalMessages.ShowOnProfile}/></div> }
+							footer={(!this.props.setItemHandler && item.parent.isPublished) && <div> <input type="checkbox" checked={this.state.featuredAtoms.includes(item.parent._id)} onChange={this.toggleFeatureOnProfile.bind(this, item.parent._id)}/><FormattedMessage {...globalMessages.FeatureOnProfile}/></div> }
 							buttons = {buttons}
 
 							onSaveVersion={this.onSaveVersion}
@@ -300,6 +324,7 @@ export const Manage = React.createClass({
 export default connect( state => {
 	return {
 		mediaData: state.manage,
+		loginData: state.login,
 	};
 })( Radium(Manage) );
 

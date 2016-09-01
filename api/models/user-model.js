@@ -23,6 +23,8 @@ const userSchema = new Schema({
 	yays: [ { type: ObjectId, ref: 'Discussion' } ], // Yays cast
 	nays: [ { type: ObjectId, ref: 'Discussion' } ], // Nays cast
 
+	featuredAtoms: [ { type: ObjectId, ref: 'Atom' } ],
+
 	verificationHash: { type: String },
 	verifiedEmail: { type: Boolean },
 
