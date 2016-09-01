@@ -297,9 +297,9 @@ export const Atom = React.createClass({
 		});
 
 		let newestVersionDate = currentVersionDate;
-		for (let i = 0; i < versionsData.length; i++){
-			if (newestVersionDate < versionsData[i].createDate){
-				newestVersionDate =  versionsData[i].createDate;
+		for (let index = 0; index < versionsData.length; index++){
+			if (newestVersionDate < versionsData[index].createDate){
+				newestVersionDate =  versionsData[index].createDate;
 			}
 		}
 
@@ -330,14 +330,14 @@ export const Atom = React.createClass({
 					{/* Toggle Right Panel Button */}
 					<div className={'opacity-on-hover'} style={styles.toggleRightPanelButton} onClick={this.toggleRightPanel}>
 						<div style={styles.toggleRightPanelLine}></div>
-						{this.state.showRightPanel && 
+						{this.state.showRightPanel &&
 							<div style={styles.toggleRightHide}>
 								<FormattedMessage {...globalMessages.Hide}/>
 								<br/>
 								<FormattedMessage {...globalMessages.Panel}/>
 							</div>
 						}
-						{!this.state.showRightPanel && 
+						{!this.state.showRightPanel &&
 							<div style={styles.toggleRightShow}>
 								<FormattedMessage {...globalMessages.Show}/>
 								<br/>
@@ -509,10 +509,10 @@ styles = {
 		marginRight: '0vw',
 	},
 	headerAction: {
-		marginRight: '.5em', 
-		padding: '0em 1.5em 0em 1em', 
-		lineHeight: '1.25em', 
-		fontSize: '0.75em', 
+		marginRight: '.5em',
+		padding: '0em 1.5em 0em 1em',
+		lineHeight: '1.25em',
+		fontSize: '0.75em',
 		fontFamily: 'Open Sans',
 		position: 'relative',
 	},
