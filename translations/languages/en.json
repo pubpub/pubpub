@@ -137,6 +137,7 @@
   "signup.Signupto": "Sign up to publish documents and follow content!",
   "signup.PasswordLength": "Must be at least 8 characters",
   "signup.alreadyHaveAccount": "Already have an account? Click to Login!",
+  "UserProfilePubs.LatestVersion": "Latest Version {date}.",
   "userProfileSettings.HereIsABunch": "Here is a bunch of details for my Account",
   "userProfileSettings.Save": "Save Account Settings",
   "UserProfileSettingsNotifications.ComingSoon": "Notifications and their settings coming soon",
