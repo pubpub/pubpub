@@ -29,6 +29,7 @@ export function login(req, res) {
 			orcid: req.user.orcid,
 			twitter: req.user.twitter,
 			googleScholar: req.user.googleScholar,
+			featuredAtoms: req.user.featuredAtoms,
 		}
 		: {};
 	const locale = loginData.locale || 'en';

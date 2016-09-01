@@ -235,6 +235,7 @@ export const Atom = React.createClass({
 		const currentVersionContent = safeGetInToJS(this.props.atomData, ['currentVersionData', 'content']) || {};
 		const currentVersionDate = safeGetInToJS(this.props.atomData, ['currentVersionData', 'createDate']);
 
+
 		const markdown = currentVersionContent.markdown;
 		const toc = generateTOC(this.state.currentDocMarkdown || markdown).full;
 
@@ -298,6 +299,13 @@ export const Atom = React.createClass({
 		const authorList = atomData.customAuthorString ? [<Link target={linkTarget} to={'/pub/' + this.props.slug + '/contributors'} key={'author-0'}>{atomData.customAuthorString}</Link>] : authorsData.map((item, index)=> {
 			return <Link target={linkTarget} to={'/user/' + item.source.username} key={'author-' + index} className={'author'}>{item.source.name}</Link>;
 		});
+
+		let newestVersionDate = currentVersionDate;
+		for (let index = 0; index < versionsData.length; index++){
+			if (newestVersionDate < versionsData[index].createDate){
+				newestVersionDate =  versionsData[index].createDate;
+			}
+		}
 
 		return (
 			<div style={styles.container}>
@@ -373,12 +381,25 @@ export const Atom = React.createClass({
 										<AtomSaveVersionButton isLoading={isLoading} error={error} handleVersionSave={this.saveVersionSubmit} buttonStyle={styles.headerAction}/>
 									</div>
 								}
+							{!isEditor && (newestVersionDate !== currentVersionDate) &&
+								<Link to={'/pub/' + this.props.slug}>
+									<div style={styles.notNewestVersion}>
+										<FormattedMessage
+												id="atom.NewerVersionCreated"
+												defaultMessage={`Newer version created on {newerData}.`}
+												values={{newerData: dateFormat(newestVersionDate, 'mmmm dd, yyyy')}}
+										/>
+								</div>
+							</Link>
 
-								{/* this.props.versionDate !== this.props.lastUpdated &&
-									<Link to={'/pub/' + this.props.slug} style={globalStyles.link}><p className={'atom-header-p'} style={[hideStyle, styles.updateAvailableNote]}>Newer Version Available: {dateFormat(this.props.lastUpdated, 'mmmm dd, yyyy')}</p></Link>
-								*/}
-							</div>
+							}
 
+							{isEditor &&
+								<div>
+									<AtomSaveVersionButton isLoading={isLoading} error={error} handleVersionSave={this.saveVersionSubmit} buttonStyle={styles.headerAction}/>
+								</div>
+							}
+						</div>
 						}
 
 						{!isEditor &&
@@ -663,6 +684,17 @@ styles = {
 	input: {
 		width: 'calc(100% - 20px - 4px)',
 	},
+	notNewestVersion: {
+		backgroundColor: '#363736',
+		color: '#F3F3F4',
+		textAlign: 'center',
+		borderRadius: '1px',
+		fontSize: '0.7em',
+		fontFamily:  '"Open Sans", Helvetica Neue, Arial, sans-serif',
+		marginTop: '10px',
+		display: 'inline-block',
+		padding: '0em .5em',
+	}
 	// versionItem: {
 	// 	whiteSpace: 'nowrap',
 	// 	margin: '.5em 1em',

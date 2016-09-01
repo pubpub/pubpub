@@ -21,6 +21,7 @@ export function saveUserSettings(req, res) {
 		result.orcid = newSettings.orcid;
 		result.github = newSettings.github;
 		result.googleScholar = newSettings.googleScholar;
+		result.featuredAtoms = newSettings.featuredAtoms;
 		return result.save();
 	})
 	.then(function(savedResult) {
@@ -36,6 +37,7 @@ export function saveUserSettings(req, res) {
 			orcid: savedResult.orcid,
 			github: savedResult.github,
 			googleScholar: savedResult.googleScholar,
+			featuredAtoms: savedResult.featuredAtoms,
 		});
 	})
 	.catch(function(error) {

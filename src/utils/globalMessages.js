@@ -17,9 +17,9 @@ export const globalMessages = defineMessages({
 		id: 'global.TypeToSearch',
 		defaultMessage: 'Type To Search',
 	},
-	ShowOnProfile: {
-		id: 'global.ShowOnProfile',
-		defaultMessage: 'Show on profile',		
+	FeatureOnProfile: {
+		id: 'global.FeatureOnProfile',
+		defaultMessage: 'Feature on profile',		
 	},
 	DropFilesToAdd: {
 		id: 'global.DropFilesToAdd',

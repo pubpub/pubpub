@@ -87,15 +87,20 @@ export const UserProfile = React.createClass({
 		]
 		: [];
 		const navItems = [
-			{ type: 'link', text: 'Pubs', link: '/user/' + this.props.username, active: this.props.mode === undefined},
+			{ type: 'link', text: 'Featured', link: '/user/' + this.props.username, active: this.props.mode === undefined},
 			// { type: 'link', text: 'Groups', link: '/user/' + this.props.username + '/groups', active: this.props.mode === 'groups'},
-			{ type: 'link', text: <FormattedMessage {...globalMessages.Assets}/>, link: '/user/' + this.props.username + '/assets', active: this.props.mode === 'assets'},
+			{ type: 'link', text: <FormattedMessage {...globalMessages.Pubs}/>, link: '/user/' + this.props.username + '/pubs', active: this.props.mode === 'pubs'},
 			{ type: 'link', text: <FormattedMessage {...globalMessages.Journals}/>, link: '/user/' + this.props.username + '/journals', active: this.props.mode === 'journals'},
 			{ type: 'link', text: <FormattedMessage {...globalMessages.Followers}/>, link: '/user/' + this.props.username + '/followers', active: this.props.mode === 'followers'},
 			{ type: 'link', text: <FormattedMessage {...globalMessages.Following}/>, link: '/user/' + this.props.username + '/following', active: this.props.mode === 'following'},
 
 			...ownProfileItems,
 		];
+
+		if (!ownProfile) {
+			navItems.splice(1, 1);
+		}
+		
 
 		const links = [
 			{key: 'publicEmail', href: 'mailto:' + profileData.publicEmail, text: <span>{profileData.publicEmail}</span>},
@@ -144,7 +149,7 @@ export const UserProfile = React.createClass({
 				<NavContentWrapper navItems={navItems} mobileNavButtons={mobileNavButtons}>
 					{(() => {
 						switch (mode) {
-						case 'assets':
+						case 'pubs':
 							return <Manage ownProfile={ownProfile}/>;
 						case 'journals':
 							return (
