@@ -9,8 +9,8 @@ import {
 	GET_ATOM_DATA_SUCCESS,
 	GET_ATOM_DATA_FAIL,
 
-	SUBMIT_ATOM_TO_JOURNAL_LOAD, 
-	SUBMIT_ATOM_TO_JOURNAL_SUCCESS, 
+	SUBMIT_ATOM_TO_JOURNAL_LOAD,
+	SUBMIT_ATOM_TO_JOURNAL_SUCCESS,
 	SUBMIT_ATOM_TO_JOURNAL_FAIL,
 
 	SAVE_VERSION_LOAD,
@@ -99,7 +99,7 @@ function getAtomDataSuccess(state, result) {
 function getAtomDataFail(state, error) {
 	return state.merge({
 		loading: false,
-		// atomData: {},
+		atomData: { permissionType: error.permissionType},
 		// authorsData: [],
 		// currentVersionData: {},
 		// versionsData: [],
@@ -130,7 +130,7 @@ function submitAtomToJournalFail(state, error) {
 		loading: false,
 		error: error,
 	});
-}	
+}
 
 function createReplyDocumentSuccess(state, result) {
 	const newDiscussion = {
@@ -266,7 +266,7 @@ export default function readerReducer(state = defaultState, action) {
 		return submitAtomToJournalFail(state, action.error);
 
 	case CREATE_REPLY_DOCUMENT_SUCCESS:
-		return createReplyDocumentSuccess(state, action.result); 
+		return createReplyDocumentSuccess(state, action.result);
 
 	case SAVE_VERSION_LOAD:
 		return saveVersionLoad(state);
