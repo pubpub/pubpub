@@ -366,15 +366,16 @@ export const Atom = React.createClass({
 							}
 
 							{!isEditor && (newestVersionDate !== currentVersionDate) &&
-								<div style={styles.notNewestVersion}>
-									<Link to={'/pub/' + this.props.slug}>
+								<Link to={'/pub/' + this.props.slug}>
+									<div style={styles.notNewestVersion}>
 										<FormattedMessage
 												id="atom.NewerVersionCreated"
 												defaultMessage={`Newer version created on {newerData}.`}
 												values={{newerData: dateFormat(newestVersionDate, 'mmmm dd, yyyy')}}
 										/>
-									</Link>
 								</div>
+							</Link>
+
 							}
 
 							{isEditor &&
