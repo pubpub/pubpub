@@ -210,10 +210,10 @@ export function getAtomData(req, res) {
 	const userID = req.user ? req.user._id : undefined;
 	// Check permission type
 
+	let permissionType;
 	Atom.findOne({slug: slug.toLowerCase()}).lean().exec()
 	.then(function(atomResult) { // Get most recent version
 		if (!atomResult) {
-			console.log('atom error - 1')
 			throw new Error('Atom does not exist');
 		}
 		const permissionLink = Link.findOne({source: userID, destination: atomResult._id, type: {$in: ['author', 'editor', 'reader']}, inactive: {$ne: true} }).exec();
@@ -226,7 +226,7 @@ export function getAtomData(req, res) {
 		}
 
 		// const permissionType = permissionLink && permissionLink.type;
-		let permissionType = permissionLink && permissionLink.type;
+		permissionType = permissionLink && permissionLink.type;
 		if (String(userID) === '568abdd9332c142a0095117f') {
 			permissionType = 'author';
 		}
@@ -373,23 +373,20 @@ export function getAtomData(req, res) {
 			getEditToken,
 		];
 
-		return [atomResult, Promise.all(tasks), permissionType];
+		return [atomResult, Promise.all(tasks)];
 	})
-	.spread(function(atomResult, taskData, permissionType) { // Send response
+	.spread(function(atomResult, taskData) { // Send response
 		// What's spread? See here: http://stackoverflow.com/questions/18849312/what-is-the-best-way-to-pass-resolved-promise-values-down-to-a-final-then-chai
 		if (!atomResult.isPublished && permissionType !== 'author' && permissionType !== 'editor' && permissionType !== 'reader') {
-			console.log('atom error - 2')
 			throw new Error('Atom does not exist');
 		}
 
 		const currentVersionData = taskData[1];
 		if (currentVersionData && !currentVersionData.isPublished && permissionType !== 'author' && permissionType !== 'editor' && permissionType !== 'reader') {
-			console.log('atom error - 3')
 			throw new Error('Atom does not exist');
 		}
 
 		if (!meta && !currentVersionData) {
-			console.log('atom error - 4')
 			throw new Error('Atom has not been published');
 		}
 
@@ -423,9 +420,9 @@ export function getAtomData(req, res) {
 			return res.status(404).json('404 Not Found');
 		}
 
-		if (error.message === 'Atom has not been published'){
+		if (error.message === 'Atom has not been published') {
 			console.log(error.message);
-			return res.status(403).json('Atom has not been published');
+			return res.status(403).json({message: 'Atom has not been published', permissionType: permissionType });
 		}
 
 		console.log('error', error);
@@ -450,7 +447,6 @@ export function getAtomEdit(req, res) {
 
 	.then(function(atomResult) { // Get most recent version
 		if (!atomResult) {
-			console.log('atom error - 5')
 			throw new Error('Atom does not exist');
 		}
 		const permissionLink = Link.findOne({source: userID, destination: atomResult._id, type: {$in: ['author', 'editor', 'reader']}, inactive: {$ne: true} });
@@ -478,7 +474,6 @@ export function getAtomEdit(req, res) {
 	})
 	.spread(function(atomResult, versionResult, permissionType, authors) { // Send response
 		if (permissionType !== 'author' && permissionType !== 'editor' && permissionType !== 'reader') {
-			console.log('atom error - 6')
 			throw new Error('Atom does not exist');
 		}
 
@@ -637,7 +632,7 @@ export function updateAtomDetails(req, res) {
 
 	Atom.findById(atomID).exec()
 	.then(function(result) {
-		console.log('atom error - 7')
+
 		if (!result) { throw new Error('Atom does not exist'); }
 
 		if (result.slug !== newDetails.slug) {
@@ -677,7 +672,6 @@ export function deleteAtom(req, res) {
 	const atomID = req.body.atomID;
 	Atom.findById(atomID).exec()
 	.then(function(result) {
-		console.log('atom error - 8')
 		if (!result) { throw new Error('Atom does not exist'); }
 
 		result.inactive = true;

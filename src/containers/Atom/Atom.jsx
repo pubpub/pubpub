@@ -239,13 +239,15 @@ export const Atom = React.createClass({
 		const toc = generateTOC(this.state.currentDocMarkdown || markdown).full;
 
 		const versionQuery = this.props.query && this.props.query.version ? '?version=' + this.props.query.version : '';
-		const permissionType = safeGetInToJS(this.props.atomData, ['atomData', 'permissionType']) || '';
+		let permissionType = safeGetInToJS(this.props.atomData, ['atomData', 'permissionType']) || '';
 		const versionsData = safeGetInToJS(this.props.atomData, ['versionsData']) || [];
 
 		const isLoading = safeGetInToJS(this.props.atomData, ['loading']);
-		const error = safeGetInToJS(this.props.atomData, ['error']);
+		const error = safeGetInToJS(this.props.atomData, ['error', 'message']);
+		if (error) {
+			permissionType = safeGetInToJS(this.props.atomData, ['error', 'permissionType']);
+		}
 
-		console.log("Yep got error " + error)
 		const isEmbed = this.props.query && this.props.query.embed;
 		const hideRightPanel = this.props.query && this.props.query.hideRightPanel;
 		const linkTarget = isEmbed ? '_parent' : '_self';
