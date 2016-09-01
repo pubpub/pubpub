@@ -373,11 +373,6 @@ export const Atom = React.createClass({
 									</div>
 								}
 
-								{isEditor &&
-									<div>
-										<AtomSaveVersionButton isLoading={isLoading} error={error} handleVersionSave={this.saveVersionSubmit} buttonStyle={styles.headerAction}/>
-									</div>
-								}
 							{!isEditor && (newestVersionDate !== currentVersionDate) &&
 								<Link to={'/pub/' + this.props.slug}>
 									<div style={styles.notNewestVersion}>
