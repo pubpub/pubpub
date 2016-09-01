@@ -71,6 +71,7 @@
   "app.AccountUnverified": "Account Unverified",
   "app.VerificationResent": "Verification email resent!",
   "appVerified.ResendVerificationEmail": "Resend Verification Email",
+  "atom.NewerVersionCreated": "Newer version created on {newerData}.",
   "atomContributors.AddNew": "Add new contributor",
   "atomContributors.SpecifyRoles": "Specify roles of this contributor",
   "aboutDetails.CannotBeChanged": "Cannot be changed once published.",

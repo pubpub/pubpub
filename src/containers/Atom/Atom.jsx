@@ -83,23 +83,19 @@ export const Atom = React.createClass({
 			this.setState({rightPanelMode: 'discussions'});
 		}
 
-		const error = safeGetInToJS(this.props.atomData, ['error']);
-
-		alert("What the hell")
 		// If there is a new version, redirect
-		if (!error){
-			const oldVersionsData = safeGetInToJS(this.props.atomData, ['versionsData']) || [];
-			const newVersionsData = safeGetInToJS(nextProps.atomData, ['versionsData']) || [];
-			if (newVersionsData.length === oldVersionsData.length + 1) {
-				this.props.dispatch(push('/pub/' + this.props.slug));
-			}
+		// if (!error){
+		const oldVersionsData = safeGetInToJS(this.props.atomData, ['versionsData']) || [];
+		const newVersionsData = safeGetInToJS(nextProps.atomData, ['versionsData']) || [];
+		if (newVersionsData.length === oldVersionsData.length + 1) {
+			this.props.dispatch(push('/pub/' + this.props.slug));
+		}
 
-			// If we create a new document, transition properly
-			const oldSlug = safeGetInToJS(this.props.atomData, ['atomData', 'slug']);
-			const newSlug = safeGetInToJS(nextProps.atomData, ['atomData', 'slug']);
-			if (this.props.meta === nextProps.meta && oldSlug !== newSlug) {
-				this.props.dispatch(push('/pub/' + newSlug + '/edit'));
-			}
+		// If we create a new document, transition properly
+		const oldSlug = safeGetInToJS(this.props.atomData, ['atomData', 'slug']);
+		const newSlug = safeGetInToJS(nextProps.atomData, ['atomData', 'slug']);
+		if (newSlug !== undefined && this.props.meta === nextProps.meta && oldSlug !== newSlug) {
+			this.props.dispatch(push('/pub/' + newSlug + '/edit'));
 		}
 	},
 
