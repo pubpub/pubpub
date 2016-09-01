@@ -148,7 +148,7 @@ export function createReplyDocument(req, res) {
 		const tasks = [
 			Link.createLink('author', userID, newAtomID, userID, now),
 			Link.createLink('reply', newAtomID, replyTo, userID, now, {rootReply: rootReply}),
-		];		
+		];
 
 		// If there is version data, create the version!
 		if (req.body.versionContent) {
@@ -185,12 +185,12 @@ export function createReplyDocument(req, res) {
 
 		return Promise.all([findReplyLink, findAuthorLink]);
 
-	})	
+	})
 	.spread(function(replyLinkData, authorLinkData) {
 		return {
-			atomData: atom, 
-			versionData: versionData, 
-			authorsData: authorLinkData, 
+			atomData: atom,
+			versionData: versionData,
+			authorsData: authorLinkData,
 			linkData: replyLinkData
 		};
 	})
@@ -210,6 +210,7 @@ export function getAtomData(req, res) {
 	const userID = req.user ? req.user._id : undefined;
 	// Check permission type
 
+	let permissionType;
 	Atom.findOne({slug: slug.toLowerCase()}).lean().exec()
 	.then(function(atomResult) { // Get most recent version
 		if (!atomResult) {
@@ -225,7 +226,7 @@ export function getAtomData(req, res) {
 		}
 
 		// const permissionType = permissionLink && permissionLink.type;
-		let permissionType = permissionLink && permissionLink.type;
+		permissionType = permissionLink && permissionLink.type;
 		if (String(userID) === '568abdd9332c142a0095117f') {
 			permissionType = 'author';
 		}
@@ -342,7 +343,7 @@ export function getAtomData(req, res) {
 
 		const getEditToken = new Promise(function(resolve) {
 			if (meta === 'edit') {
-				const authUrl = process.env.COLLAB_SERVER_URL.indexOf('localhost') !== -1 
+				const authUrl = process.env.COLLAB_SERVER_URL.indexOf('localhost') !== -1
 					? 'http://' + process.env.COLLAB_SERVER_URL + '/authenticate'
 					: 'https://' + process.env.COLLAB_SERVER_URL + '/authenticate';
 
@@ -372,9 +373,9 @@ export function getAtomData(req, res) {
 			getEditToken,
 		];
 
-		return [atomResult, Promise.all(tasks), permissionType];
+		return [atomResult, Promise.all(tasks)];
 	})
-	.spread(function(atomResult, taskData, permissionType) { // Send response
+	.spread(function(atomResult, taskData) { // Send response
 		// What's spread? See here: http://stackoverflow.com/questions/18849312/what-is-the-best-way-to-pass-resolved-promise-values-down-to-a-final-then-chai
 		if (!atomResult.isPublished && permissionType !== 'author' && permissionType !== 'editor' && permissionType !== 'reader') {
 			throw new Error('Atom does not exist');
@@ -386,7 +387,7 @@ export function getAtomData(req, res) {
 		}
 
 		if (!meta && !currentVersionData) {
-			throw new Error('Atom does not exist');	
+			throw new Error('Atom has not been published');
 		}
 
 		let discussionsData = taskData[6] || [];
@@ -417,6 +418,11 @@ export function getAtomData(req, res) {
 		if (error.message === 'Atom does not exist') {
 			console.log(error.message);
 			return res.status(404).json('404 Not Found');
+		}
+
+		if (error.message === 'Atom has not been published') {
+			console.log(error.message);
+			return res.status(403).json({message: 'Atom has not been published', permissionType: permissionType });
 		}
 
 		console.log('error', error);
@@ -617,7 +623,7 @@ export function updateAtomDetails(req, res) {
 	if (!req.user.verifiedEmail) {
 		return res.status(403).json('Not Verified');
 	}
-	
+
 	const atomID = req.body.atomID;
 	const userID = req.user ? req.user._id : undefined;
 	const newDetails = req.body.newDetails || {};
@@ -626,15 +632,16 @@ export function updateAtomDetails(req, res) {
 
 	Atom.findById(atomID).exec()
 	.then(function(result) {
+
 		if (!result) { throw new Error('Atom does not exist'); }
-		
+
 		if (result.slug !== newDetails.slug) {
 			return [result, Atom.findOne({slug: newDetails.slug}).lean()];
 		}
 		return [result, undefined];
 	})
 	.spread(function(result, existingAtom) {
-		// TODO: This needs to properly generate an error notification on the frontend. Both in 
+		// TODO: This needs to properly generate an error notification on the frontend. Both in
 		// PreviewEditor and Atom
 		if (existingAtom) { throw new Error('Atom already exists'); }
 
@@ -661,12 +668,12 @@ export function deleteAtom(req, res) {
 	const userID = req.user ? req.user._id : undefined;
 	if (!userID) { return res.status(403).json('Not authorized to edit this user'); }
 	// Check permission
-	
+
 	const atomID = req.body.atomID;
 	Atom.findById(atomID).exec()
 	.then(function(result) {
 		if (!result) { throw new Error('Atom does not exist'); }
-		
+
 		result.inactive = true;
 		result.inactiveBy = userID;
 		result.inactiveDate = new Date().getTime();

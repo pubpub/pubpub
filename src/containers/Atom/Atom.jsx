@@ -84,6 +84,7 @@ export const Atom = React.createClass({
 		}
 
 		// If there is a new version, redirect
+		// if (!error){
 		const oldVersionsData = safeGetInToJS(this.props.atomData, ['versionsData']) || [];
 		const newVersionsData = safeGetInToJS(nextProps.atomData, ['versionsData']) || [];
 		if (newVersionsData.length === oldVersionsData.length + 1) {
@@ -93,7 +94,7 @@ export const Atom = React.createClass({
 		// If we create a new document, transition properly
 		const oldSlug = safeGetInToJS(this.props.atomData, ['atomData', 'slug']);
 		const newSlug = safeGetInToJS(nextProps.atomData, ['atomData', 'slug']);
-		if (this.props.meta === nextProps.meta && oldSlug !== newSlug) {
+		if (newSlug !== undefined && this.props.meta === nextProps.meta && oldSlug !== newSlug) {
 			this.props.dispatch(push('/pub/' + newSlug + '/edit'));
 		}
 	},
@@ -239,11 +240,14 @@ export const Atom = React.createClass({
 		const toc = generateTOC(this.state.currentDocMarkdown || markdown).full;
 
 		const versionQuery = this.props.query && this.props.query.version ? '?version=' + this.props.query.version : '';
-		const permissionType = safeGetInToJS(this.props.atomData, ['atomData', 'permissionType']) || '';
+		let permissionType = safeGetInToJS(this.props.atomData, ['atomData', 'permissionType']) || '';
 		const versionsData = safeGetInToJS(this.props.atomData, ['versionsData']) || [];
 
 		const isLoading = safeGetInToJS(this.props.atomData, ['loading']);
-		const error = safeGetInToJS(this.props.atomData, ['error']);
+		const error = safeGetInToJS(this.props.atomData, ['error', 'message']);
+		if (error) {
+			permissionType = safeGetInToJS(this.props.atomData, ['error', 'permissionType']);
+		}
 
 		const isEmbed = this.props.query && this.props.query.embed;
 		const hideRightPanel = this.props.query && this.props.query.hideRightPanel;
@@ -348,23 +352,35 @@ export const Atom = React.createClass({
 
 					{/* Pub Header and Body */}
 					<div className={safeGetInToJS(this.props.atomData, ['atomData', 'type']) === 'document' ? 'atom-reader atom-reader-meta' : 'atom-reader-meta'}>
+					{ error &&
+						<span>
 
-						{/* Pub Header */}
-						<div className={'atom-reader-header'}>
-							<h1 className={'atom-header-title'}>{atomData.title}</h1>
-							<p className={'atom-header-p'}>{authorList}</p>
-							<p className={'atom-header-p'}>{dateFormat(currentVersionDate, 'mmmm dd, yyyy')}</p>
+						<div style={styles.errorMsg}>{error}</div>
+						</span>
+					}
+					{/* Pub Header */}
+					{ !error &&
+
+							<div className={'atom-reader-header'}>
+								<h1 className={'atom-header-title'}>{atomData.title}</h1>
+								<p className={'atom-header-p'}>{authorList}</p>
+								<p className={'atom-header-p'}>{dateFormat(currentVersionDate, 'mmmm dd, yyyy')}</p>
 
 
-							{!isEditor &&
-								<div>
-									<AtomVersionsButton versionsData={versionsData} permissionType={permissionType} handlePublishVersion={this.publishVersionHandler} slug={this.props.slug} buttonStyle={styles.headerAction} />
-									<AtomExportButton atomData={this.props.atomData} buttonStyle={styles.headerAction} />
-									<AtomCiteButton atomData={this.props.atomData} authorsData={authorsData} customAuthorString={atomData.customAuthorString} versionQuery={versionQuery} buttonStyle={styles.headerAction}/>
-									<FollowButton id={atomData._id} type={'followsAtom'} isFollowing={atomData.isFollowing} buttonClasses={'light-button'} buttonStyle={{...styles.headerAction, ...styles.headerActionPlainPadding}}/>
-								</div>
-							}
+								{!isEditor &&
+									<div>
+										<AtomVersionsButton versionsData={versionsData} permissionType={permissionType} handlePublishVersion={this.publishVersionHandler} slug={this.props.slug} buttonStyle={styles.headerAction} />
+										<AtomExportButton atomData={this.props.atomData} buttonStyle={styles.headerAction} />
+										<AtomCiteButton atomData={this.props.atomData} authorsData={authorsData} customAuthorString={atomData.customAuthorString} versionQuery={versionQuery} buttonStyle={styles.headerAction}/>
+										<FollowButton id={atomData._id} type={'followsAtom'} isFollowing={atomData.isFollowing} buttonClasses={'light-button'} buttonStyle={{...styles.headerAction, ...styles.headerActionPlainPadding}}/>
+									</div>
+								}
 
+								{isEditor &&
+									<div>
+										<AtomSaveVersionButton isLoading={isLoading} error={error} handleVersionSave={this.saveVersionSubmit} buttonStyle={styles.headerAction}/>
+									</div>
+								}
 							{!isEditor && (newestVersionDate !== currentVersionDate) &&
 								<Link to={'/pub/' + this.props.slug}>
 									<div style={styles.notNewestVersion}>
@@ -383,17 +399,18 @@ export const Atom = React.createClass({
 									<AtomSaveVersionButton isLoading={isLoading} error={error} handleVersionSave={this.saveVersionSubmit} buttonStyle={styles.headerAction}/>
 								</div>
 							}
-
-							{/* this.props.versionDate !== this.props.lastUpdated &&
-								<Link to={'/pub/' + this.props.slug} style={globalStyles.link}><p className={'atom-header-p'} style={[hideStyle, styles.updateAvailableNote]}>Newer Version Available: {dateFormat(this.props.lastUpdated, 'mmmm dd, yyyy')}</p></Link>
-							*/}
 						</div>
+						}
 
 						{!isEditor &&
-							<div>
-								<AtomViewerPane atomData={this.props.atomData} />
-								{ atomData.isPublished && <License /> }
-							</div>
+							<span>
+								{ !error &&
+									<div>
+										<AtomViewerPane atomData={this.props.atomData} />
+										{ atomData.isPublished && <License /> }
+									</div>
+								}
+							</span>
 						}
 
 						{isEditor &&
@@ -407,42 +424,45 @@ export const Atom = React.createClass({
 
 				{/* Right Panel Section */}
 				<StickyContainer style={[styles.rightPanel, (!this.state.showRightPanel || hideRightPanel) && styles.hideRightPanel]}>
+					{!error &&
+
 					<Sticky stickyStyle={this.state.showRightPanel ? {} : {left: '0px'}}>
 						<HorizontalNav navItems={rightPanelNavItems} mobileNavButtons={mobileNavButtons}/>
+							<div style={styles.rightPanelContent}>
+								{(()=>{
+									switch (this.state.rightPanelMode) {
+									case 'contributors':
+										return (
+											<AtomContributors
+												atomData={this.props.atomData}
+												contributorsData={contributorsData}
+												handleAddContributor={this.handleAddContributor}
+												handleUpdateContributor={this.handleUpdateContributor}
+												handleDeleteContributor={this.handleDeleteContributor}
+												isLoading={isLoading}
+												error={error}
+												permissionType={permissionType}/>
+										);
+									case 'journals':
+										return <AtomJournals atomData={this.props.atomData} handleJournalSubmit={this.handleJournalSubmit}/>;
+									case 'meta':
+										return <AtomMeta atomData={this.props.atomData}/>;
+									case 'details':
+										return <AtomDetails atomData={this.props.atomData} updateDetailsHandler={this.updateDetails} isLoading={isLoading} error={error}/>;
+									case 'discussions':
+										return <StickyContainer><Discussions/></StickyContainer>;
+									case 'contents':
+										return <AtomContents atomData={this.props.atomData} tocData={toc}/>;
 
-						<div style={styles.rightPanelContent}>
-							{(()=>{
-								switch (this.state.rightPanelMode) {
-								case 'contributors':
-									return (
-										<AtomContributors
-											atomData={this.props.atomData}
-											contributorsData={contributorsData}
-											handleAddContributor={this.handleAddContributor}
-											handleUpdateContributor={this.handleUpdateContributor}
-											handleDeleteContributor={this.handleDeleteContributor}
-											isLoading={isLoading}
-											error={error}
-											permissionType={permissionType}/>
-									);
-								case 'journals':
-									return <AtomJournals atomData={this.props.atomData} handleJournalSubmit={this.handleJournalSubmit}/>;
-								case 'meta':
-									return <AtomMeta atomData={this.props.atomData}/>;
-								case 'details':
-									return <AtomDetails atomData={this.props.atomData} updateDetailsHandler={this.updateDetails} isLoading={isLoading} error={error}/>;
-								case 'discussions':
-									return <StickyContainer><Discussions/></StickyContainer>;
-								case 'contents':
-									return <AtomContents atomData={this.props.atomData} tocData={toc}/>;
-
-								default:
-									return <Discussions/>;
-								}
-							})()}
-						</div>
+									default:
+										return <Discussions/>;
+									}
+								})()}
+							</div>
 
 					</Sticky>
+				}
+
 				</StickyContainer>
 
 
@@ -647,6 +667,9 @@ styles = {
 		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
 			position: 'static',
 		},
+	},
+	errorMsg: {
+		padding: '10px'
 	},
 	headerStatus: {
 		position: 'absolute',

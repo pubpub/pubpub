@@ -99,15 +99,15 @@ function getAtomDataSuccess(state, result) {
 function getAtomDataFail(state, error) {
 	return state.merge({
 		loading: false,
-		atomData: {},
-		authorsData: [],
-		currentVersionData: {},
-		versionsData: [],
-		contributorsData: [],
-		submittedData: [],
-		featuredData: [],
-		discussionsData: [],
-		followersData: [],
+		// atomData: {},
+		// authorsData: [],
+		// currentVersionData: {},
+		// versionsData: [],
+		// contributorsData: [],
+		// submittedData: [],
+		// featuredData: [],
+		// discussionsData: [],
+		// followersData: [],
 		error: error,
 	});
 }
