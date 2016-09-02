@@ -147,8 +147,10 @@ export const DocumentEditor = React.createClass({
 			const currentFrom = currentSelection.$from.pos;
 			const currentSelectedNode = currentSelection.node;
 			if (currentSelectedNode && currentSelectedNode.type.name === 'embed') {
+				const coords = pm.coordsAtPos(currentFrom);
+				coords.bottom = coords.bottom + window.scrollY - 40;
 				this.setState({
-					embedLayoutCoords: pm.coordsAtPos(currentFrom),
+					embedLayoutCoords: coords,
 					embedAttrs: currentSelectedNode.attrs,
 				});
 			} else {
@@ -195,7 +197,11 @@ export const DocumentEditor = React.createClass({
 			// }
 		// });
 		this.moveMenu();
-
+		// console.log('onscroll', window.onscroll);
+		// window.onscroll = function(evt) {  
+		// 	// called when the window is scrolled.  
+		// 	console.log(evt);
+		// };
 	},
 
 	// randomSize: function() {
@@ -522,7 +528,7 @@ styles = {
 		// },
 	},
 	embedLayoutEditor: {
-		position: 'fixed',
+		position: 'absolute',
 		backgroundColor: 'white',
 		border: '2px solid #808284',
 		boxShadow: '0px 2px 4px #58585B',
