@@ -63,7 +63,8 @@ class Embed extends Inline {
 			size: new Attribute({default: ''}),
 			caption: new Attribute({default: ''}),
 			mode: new Attribute({default: 'embed'}), // mode = embed || cite
-			data: new Attribute({default: {}})
+			data: new Attribute({default: {}}),
+			selected: new Attribute({default: false}),
 		};
 	}
 	get draggable() { return true; }

@@ -1,7 +1,7 @@
 import React, {PropTypes} from 'react';
 import {AtomViewerPane} from 'containers/Atom/AtomViewerPane';
 import {ensureImmutable} from 'reducers';
-import {safeGetInToJS} from 'utils/safeParse';
+// import {safeGetInToJS} from 'utils/safeParse';
 
 export const EmbedWrapper = React.createClass({
 	propTypes: {
@@ -14,6 +14,7 @@ export const EmbedWrapper = React.createClass({
 		mode: PropTypes.string, // 'embed' or 'cite'
 		data: PropTypes.object,
 		citeCount: PropTypes.number,
+
 	},
 
 	render: function() {
@@ -27,7 +28,7 @@ export const EmbedWrapper = React.createClass({
 			width: this.props.size || 'auto',
 		};
 		if (this.props.align === 'inline') {
-			style.display = 'inline';
+			style.display = 'inline-block';
 			style.verticalAlign = 'top';
 		} else if (this.props.align === 'full') {
 			style.display = 'block';
@@ -44,7 +45,7 @@ export const EmbedWrapper = React.createClass({
 		}
 
 		if (this.props.mode === 'cite') {
-			let number = this.props.citeCount || '?';
+			const number = this.props.citeCount || '?';
 
 			// if (!this.props.citeCount) {
 			// 	const sourceElems = document.getElementsByClassName('cite-wrapper');

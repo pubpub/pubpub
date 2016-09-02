@@ -25,6 +25,7 @@ let pm;
 let editorToModel;
 let modelToEditor;
 let menuBar;
+// let currentNodeSelected;
 export const DocumentEditor = React.createClass({
 	propTypes: {
 		atomData: PropTypes.object,
@@ -132,6 +133,7 @@ export const DocumentEditor = React.createClass({
 		});
 
 		pm.on.doubleClickOn.add((pos, node, nodePos)=>{
+			console.log('nodePos', nodePos);
 			if (node.type.name === 'embed') {
 				const done = (attrs)=> {
 					pm.tr.setNodeType(nodePos, node.type, attrs).apply();
@@ -140,8 +142,82 @@ export const DocumentEditor = React.createClass({
 				return true;
 			}
 		});
+		pm.on.selectionChange.add(()=>{
+			const currentSelection = pm.selection;
+			const currentFrom = currentSelection.$from.pos;
+			const currentSelectedNode = currentSelection.node;
+			if (currentSelectedNode && currentSelectedNode.type.name === 'embed') {
+				this.setState({
+					embedLayoutCoords: pm.coordsAtPos(currentFrom),
+					embedAttrs: currentSelectedNode.attrs,
+				});
+			} else {
+				this.setState({
+					embedLayoutCoords: undefined,
+					embedAttrs: undefined,
+				});
+			}
+				
+		});
+		// pm.on.selectionChange.add(()=>{
+			// console.log(pm.selection);
+			// console.log(pm.selection && pm.selection.$from.pos, currentNodeSelected && currentNodeSelected.$from.pos);
+			// if (pm.selection && currentNodeSelected && pm.selection.$from.pos === currentNodeSelected.$from.pos) {
+			// 	return;
+			// }
+			// // console.log('currentNodeSelected', currentNodeSelected);
+
+			// // console.log('Hey look at me!');
+			// // console.log(pos, node, nodePos);
+			// console.log('currentNodeSelected', currentNodeSelected);
+			// if (currentNodeSelected) {
+			// 	console.log('in the first if');
+			// 	const nodePos = currentNodeSelected.$from.pos;
+			// 	const nodeType = currentNodeSelected.node.type;
+			// 	const nodeAttrs = currentNodeSelected.node.attrs; 
+			// 	currentNodeSelected = undefined;
+			// 	pm.tr.setNodeType(nodePos, nodeType, {...nodeAttrs, selected: false}).apply();	
+				
+			// }
+
+			// if (pm.selection.node && pm.selection.node.type.name === 'embed') {
+			// 	console.log('in the second if');
+			// 	currentNodeSelected = pm.selection;
+			// 	pm.tr.setNodeType(currentNodeSelected.$from.pos, currentNodeSelected.node.type, {...currentNodeSelected.node.attrs, selected: true}).apply();
+			// }
+			// 	currentSelectedNodePos = pm.
+			// // 	// const done = (attrs)=> {
+
+				
+			// // 	// };
+			// // 	// window.toggleMedia(pm, done, node);
+			// // 	// return true;
+			// }
+		// });
 		this.moveMenu();
 
+	},
+
+	// randomSize: function() {
+	// 	const currentSelection = pm.selection;
+	// 	const currentFrom = currentSelection.$from.pos;
+	// 	const currentSelectedNode = currentSelection.node;
+	// 	pm.tr.setNodeType(currentFrom, currentSelectedNode.type, {...currentSelectedNode.attrs, size: String(Math.random() * 400)}).apply();
+	// },
+
+	setEmbedAttribute: function(key, value, evt) {
+		const currentSelection = pm.selection;
+		const currentFrom = currentSelection.$from.pos;
+		const currentSelectedNode = currentSelection.node;
+		if (evt) { evt.stopPropagation(); }
+		pm.tr.setNodeType(currentFrom, currentSelectedNode.type, {...currentSelectedNode.attrs, [key]: value}).apply();
+	},
+
+	sizeChange: function(evt) {
+		this.setEmbedAttribute('size', evt.target.value);
+	},
+	captionChange: function(evt) {
+		this.setEmbedAttribute('caption', evt.target.value);
 	},
 
 	moveMenu: function() {
@@ -411,6 +487,18 @@ export const DocumentEditor = React.createClass({
 				<textarea id="markdown" onChange={this.markdownChange} style={[styles.textarea, this.state.showMarkdown && styles.textareaVisible]}></textarea>
 				<div id={'atom-reader'} style={[styles.wsywigBlock, this.state.showMarkdown && styles.wsywigWithMarkdown]}></div>
 
+				{this.state.embedLayoutCoords &&
+					<div style={[styles.embedLayoutEditor, {left: this.state.embedLayoutCoords.left - 2, top: this.state.embedLayoutCoords.bottom}]}>
+						<div onClick={this.setEmbedAttribute.bind(this, 'align', 'inline')} style={[this.state.embedAttrs.align === 'inline' && styles.activeAlign]}>Inline</div>
+						<div onClick={this.setEmbedAttribute.bind(this, 'align', 'full')} style={[this.state.embedAttrs.align === 'full' && styles.activeAlign]}>Full</div>
+						<div onClick={this.setEmbedAttribute.bind(this, 'align', 'left')} style={[this.state.embedAttrs.align === 'left' && styles.activeAlign]}>Left</div>
+						<div onClick={this.setEmbedAttribute.bind(this, 'align', 'right')} style={[this.state.embedAttrs.align === 'right' && styles.activeAlign]}>Right</div>
+						<input type="text" onChange={this.sizeChange} defaultValue={this.state.embedAttrs.size}/>
+						<textarea type="text" onChange={this.captionChange} defaultValue={this.state.embedAttrs.caption}></textarea>
+						
+					</div>
+				}
+				
 			{/* </Dropzone> */}
 			</div>
 
@@ -432,6 +520,15 @@ styles = {
 		// 	padding: '1em 1em',
 		// 	left: '-1em',
 		// },
+	},
+	embedLayoutEditor: {
+		position: 'fixed',
+		backgroundColor: 'white',
+		border: '2px solid #808284',
+		boxShadow: '0px 2px 4px #58585B',
+	},
+	activeAlign: {
+		color: 'red',
 	},
 	iconLeft: {
 		position: 'absolute',

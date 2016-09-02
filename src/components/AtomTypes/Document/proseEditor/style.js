@@ -103,6 +103,12 @@ insertCSS(`
   top: 5px;
 }
 
+.ProseMirror-tooltip, .ProseMirror-tooltip-pointer {
+  transition: none;
+  -webkit-transition: none;
+  -moz-transition: none;
+}
+
 .ProseMirror-quick-style .ProseMirror-menuseparator {
   top: 0px;
 }
@@ -113,7 +119,6 @@ insertCSS(`
   line-height: 1.4em;
   border-radius: 1px;
   border: 1px solid #808284;
-  
 }
 
 `);
