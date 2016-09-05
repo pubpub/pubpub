@@ -1,7 +1,8 @@
-import {Schema, Inline, Block, Text, Attribute, MarkType} from 'prosemirror/dist/model';
-import {Doc, BlockQuote, OrderedList, BulletList, ListItem, HorizontalRule, Heading, CodeBlock, Paragraph, Image, HardBreak, EmMark, StrongMark, LinkMark, CodeMark} from 'prosemirror/dist/schema-basic';
 import React from 'react';
 import ReactDOM from 'react-dom';
+import {Schema, Inline, Block, Text, Attribute, MarkType} from 'prosemirror/dist/model';
+import {Doc, BlockQuote, OrderedList, BulletList, ListItem, HorizontalRule, Heading, CodeBlock, Paragraph, Image, HardBreak, EmMark, StrongMark, LinkMark, CodeMark} from 'prosemirror/dist/schema-basic';
+
 import EmbedWrapper from './EmbedWrapper';
 
 // An Emoji node type.
@@ -54,6 +55,11 @@ exports.StrikeThroughMark = StrikeThroughMark;
 // - **`caption`**: String caption to place under the embed
 // - **`data`**: Cached version/atom data. This is not serialized into markdown (in the long-term), but is kept here for fast rendering
 class Embed extends Inline {
+  constructor(type, schema) {
+    console.log('MADE EMBED');
+    console.log(arguments);
+    super(type, schema);
+  }
 	get attrs() {
 		return {
 			source: new Attribute,
@@ -68,10 +74,27 @@ class Embed extends Inline {
 		};
 	}
 	get draggable() { return true; }
+
+  get matchDOMTag() {
+    return {"div.embed": dom => ({
+      dataTest: 'TEST',
+      source: dom.getAttribute('datasource'),
+      data: JSON.parse(dom.getAttribute('data-data')),
+    })}
+  }
+
 	toDOM(node) {
+    console.log('Node is', node);
+    if (node.attrs.dataTest) {
+      console.log('GOT DATA TEST', node.dataTest);
+    }
 		const dom = document.createElement('div');
+    dom.className = 'embed';
+    dom.setAttribute('data-source', node.attrs.source);
+    dom.setAttribute('data-data', JSON.stringify(node.attrs.data));
+
 		ReactDOM.render(<EmbedWrapper {...node.attrs}/>, dom);
-		return dom.childNodes[0];
+		return dom;
 	}
 }
 
@@ -80,7 +103,7 @@ exports.Embed = Embed;
 export const schema = new Schema({
 	nodes: {
 		doc: {type: Doc, content: 'block+'},
-		
+
 		paragraph: {type: Paragraph, content: 'inline<_>*', group: 'block'},
 		blockquote: {type: BlockQuote, content: 'block+', group: 'block'},
 		ordered_list: {type: OrderedList, content: 'list_item+', group: 'block'},

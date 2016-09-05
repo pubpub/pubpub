@@ -16,11 +16,21 @@ export const EmbedWrapper = React.createClass({
 		citeCount: PropTypes.number,
 
 	},
+	componentDidMount: function() {
+		console.log('Mounted atom!');
+	},
+
+	componentWillUnmount: function() {
+		console.log('unmounted atom!');
+	},
 
 	render: function() {
 		const data = this.props.data || {};
 		// Data is the version object with a populated parent field.
 		// The parent field is the atomData field
+
+		console.log('Rendering an atom!');
+
 		const atomData = ensureImmutable({ atomData: data.parent, currentVersionData: data });
 
 
@@ -60,7 +70,7 @@ export const EmbedWrapper = React.createClass({
 			// 	console.log('number is, ', number);
 			// }
 
-			
+
 			return (
 				<span className={'showChildOnHover cite-wrapper'} data-source={this.props.source}>
 					[{number}]
@@ -71,11 +81,10 @@ export const EmbedWrapper = React.createClass({
 			);
 		}
 
-
 		return (
 			<div className={'pub-embed ' + this.props.className} id={this.props.id} style={style}>
-				<AtomViewerPane atomData={atomData} renderType={'embed'}/>	
-				<div className={'caption'}>{this.props.caption}</div>	
+				<AtomViewerPane atomData={atomData} renderType={'embed'}/>
+				<div className={'caption'}>{this.props.caption}</div>
 			</div>
 		);
 	}
