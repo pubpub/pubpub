@@ -59,11 +59,6 @@ exports.StrikeThroughMark = StrikeThroughMark;
 let domHashes = {};
 
 class Embed extends Inline {
-  constructor(type, schema) {
-    console.log('MADE EMBED');
-    console.log(arguments);
-    super(type, schema);
-  }
 	get attrs() {
 		return {
 			source: new Attribute,
@@ -98,13 +93,10 @@ class Embed extends Inline {
   }
 
 	toDOM(node) {
-    // console.log('Node is', node);
 		const domParent = document.createElement('span');
 
 		ReactDOM.render(<EmbedWrapper {...node.attrs}/>, domParent);
-
     const dom = domParent.childNodes[0];
-
     dom.className += ' embed';
     const nodeHash = murmur.v3(JSON.stringify(node.attrs));
     dom.setAttribute('data-nodeHash', nodeHash);

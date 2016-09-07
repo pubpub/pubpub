@@ -160,66 +160,8 @@ export const DocumentEditor = React.createClass({
 			}
 
 		});
-		// pm.on.selectionChange.add(()=>{
-			// console.log(pm.selection);
-			// console.log(pm.selection && pm.selection.$from.pos, currentNodeSelected && currentNodeSelected.$from.pos);
-			// if (pm.selection && currentNodeSelected && pm.selection.$from.pos === currentNodeSelected.$from.pos) {
-			// 	return;
-			// }
-			// // console.log('currentNodeSelected', currentNodeSelected);
 
-			// // console.log('Hey look at me!');
-			// // console.log(pos, node, nodePos);
-			// console.log('currentNodeSelected', currentNodeSelected);
-			// if (currentNodeSelected) {
-			// 	console.log('in the first if');
-			// 	const nodePos = currentNodeSelected.$from.pos;
-			// 	const nodeType = currentNodeSelected.node.type;
-			// 	const nodeAttrs = currentNodeSelected.node.attrs;
-			// 	currentNodeSelected = undefined;
-			// 	pm.tr.setNodeType(nodePos, nodeType, {...nodeAttrs, selected: false}).apply();
-
-			// }
-
-			// if (pm.selection.node && pm.selection.node.type.name === 'embed') {
-			// 	console.log('in the second if');
-			// 	currentNodeSelected = pm.selection;
-			// 	pm.tr.setNodeType(currentNodeSelected.$from.pos, currentNodeSelected.node.type, {...currentNodeSelected.node.attrs, selected: true}).apply();
-			// }
-			// 	currentSelectedNodePos = pm.
-			// // 	// const done = (attrs)=> {
-
-
-			// // 	// };
-			// // 	// window.toggleMedia(pm, done, node);
-			// // 	// return true;
-			// }
-		// });
-		/*
-
-		pm.on.transformPasted.add(function(a){
-		  console.log('Got paste v2!');
-			console.log(a);
-		  return a;
-		});
-		*/
-
-		pm.on.transformPastedHTML.add(function(a){
-			// debugger;
-			const htmlNode = document.createElement( 'div' );
-			htmlNode.innerHTML = a;
-			const el = htmlNode.querySelectorAll('.embed');
-			for (const element of el) {
-				while (element.firstChild) {
-				  element.removeChild(element.firstChild);
-				}
-			}
-			const removeElements = htmlNode.querySelectorAll('.hoverChild');
-			for (const element of removeElements) {
-				element.remove();
-			}
-		  return htmlNode.innerHTML;
-		});
+		pm.on.transformPastedHTML.add(this.transformHTML);
 
 
 		this.moveMenu();
@@ -230,12 +172,21 @@ export const DocumentEditor = React.createClass({
 		// };
 	},
 
-	// randomSize: function() {
-	// 	const currentSelection = pm.selection;
-	// 	const currentFrom = currentSelection.$from.pos;
-	// 	const currentSelectedNode = currentSelection.node;
-	// 	pm.tr.setNodeType(currentFrom, currentSelectedNode.type, {...currentSelectedNode.attrs, size: String(Math.random() * 400)}).apply();
-	// },
+	transformHTML: function(htmlText) {
+		const htmlNode = document.createElement( 'div' );
+		htmlNode.innerHTML = htmlText;
+		const el = htmlNode.querySelectorAll('.embed');
+		for (const element of el) {
+			while (element.firstChild) {
+				element.removeChild(element.firstChild);
+			}
+		}
+		const removeElements = htmlNode.querySelectorAll('.hoverChild');
+		for (const element of removeElements) {
+			element.remove();
+		}
+		return htmlNode.innerHTML;
+	},
 
 	setEmbedAttribute: function(key, value, evt) {
 		const currentSelection = pm.selection;
