@@ -1,21 +1,18 @@
-import React, {PropTypes} from 'react';
+import chash from 'color-hash';
+import Dropzone from 'react-dropzone';
 import Radium, {Style} from 'radium';
-import {safeGetInToJS} from 'utils/safeParse';
+import React, {PropTypes} from 'react';
 import {Media} from 'components';
 import {MD5} from 'object-hash';
-import chash from 'color-hash';
-
-import {markdownParser, markdownSerializer, schema} from './proseEditor';
-import {Subscription, StoppableSubscription} from 'subscription';
 import {Node} from 'prosemirror/dist/model';
-
-import Dropzone from 'react-dropzone';
+import {FormattedMessage} from 'react-intl';
+import {Subscription, StoppableSubscription} from 'subscription';
+import {globalMessages} from 'utils/globalMessages';
+import {safeGetInToJS} from 'utils/safeParse';
 import {s3Upload} from 'utils/uploadFile';
 
+import {markdownParser, markdownSerializer, schema} from './proseEditor';
 import {schema as pubSchema} from './proseEditor/schema';
-
-import {globalMessages} from 'utils/globalMessages';
-import {FormattedMessage} from 'react-intl';
 
 const ColorHash = new chash();
 
@@ -120,6 +117,7 @@ export const DocumentEditor = React.createClass({
 
 		const that = this;
 
+
 		pm.on.change.add(function() {
 			that.collab.docInfo.changed = true;
 		});
@@ -142,6 +140,7 @@ export const DocumentEditor = React.createClass({
 				return true;
 			}
 		});
+
 		pm.on.selectionChange.add(()=>{
 			const currentSelection = pm.selection;
 			const currentFrom = currentSelection.$from.pos;
@@ -159,7 +158,7 @@ export const DocumentEditor = React.createClass({
 					embedAttrs: undefined,
 				});
 			}
-				
+
 		});
 		// pm.on.selectionChange.add(()=>{
 			// console.log(pm.selection);
@@ -176,10 +175,10 @@ export const DocumentEditor = React.createClass({
 			// 	console.log('in the first if');
 			// 	const nodePos = currentNodeSelected.$from.pos;
 			// 	const nodeType = currentNodeSelected.node.type;
-			// 	const nodeAttrs = currentNodeSelected.node.attrs; 
+			// 	const nodeAttrs = currentNodeSelected.node.attrs;
 			// 	currentNodeSelected = undefined;
-			// 	pm.tr.setNodeType(nodePos, nodeType, {...nodeAttrs, selected: false}).apply();	
-				
+			// 	pm.tr.setNodeType(nodePos, nodeType, {...nodeAttrs, selected: false}).apply();
+
 			// }
 
 			// if (pm.selection.node && pm.selection.node.type.name === 'embed') {
@@ -190,16 +189,43 @@ export const DocumentEditor = React.createClass({
 			// 	currentSelectedNodePos = pm.
 			// // 	// const done = (attrs)=> {
 
-				
+
 			// // 	// };
 			// // 	// window.toggleMedia(pm, done, node);
 			// // 	// return true;
 			// }
 		// });
+		/*
+
+		pm.on.transformPasted.add(function(a){
+		  console.log('Got paste v2!');
+			console.log(a);
+		  return a;
+		});
+		*/
+
+		pm.on.transformPastedHTML.add(function(a){
+			// debugger;
+			const htmlNode = document.createElement( 'div' );
+			htmlNode.innerHTML = a;
+			const el = htmlNode.querySelectorAll('.embed');
+			for (const element of el) {
+				while (element.firstChild) {
+				  element.removeChild(element.firstChild);
+				}
+			}
+			const removeElements = htmlNode.querySelectorAll('.hoverChild');
+			for (const element of removeElements) {
+				element.remove();
+			}
+		  return htmlNode.innerHTML;
+		});
+
+
 		this.moveMenu();
 		// console.log('onscroll', window.onscroll);
-		// window.onscroll = function(evt) {  
-		// 	// called when the window is scrolled.  
+		// window.onscroll = function(evt) {
+		// 	// called when the window is scrolled.
 		// 	console.log(evt);
 		// };
 	},
@@ -501,10 +527,10 @@ export const DocumentEditor = React.createClass({
 						<div onClick={this.setEmbedAttribute.bind(this, 'align', 'right')} style={[this.state.embedAttrs.align === 'right' && styles.activeAlign]}>Right</div>
 						<input type="text" onChange={this.sizeChange} defaultValue={this.state.embedAttrs.size}/>
 						<textarea type="text" onChange={this.captionChange} defaultValue={this.state.embedAttrs.caption}></textarea>
-						
+
 					</div>
 				}
-				
+
 			{/* </Dropzone> */}
 			</div>
 

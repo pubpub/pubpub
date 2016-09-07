@@ -73,12 +73,16 @@ body {
 	opacity: 0;
 	transition: .1s linear opacity;
 	pointer-events: none;
+	user-select: none;
+	-webkit-user-select: none;
 }
 
 .showChildOnHover:hover .hoverChild {
 	/*display: block;*/
 	opacity: 1;
 	pointer-events: auto;
+	user-select: text;
+	-webkit-user-select: text;
 }
 
 @media print {
@@ -129,12 +133,12 @@ body {
 /* Input Fields */
 /* ------------ */
 label {
-	display: block;	
+	display: block;
 	color: #58585B;
 }
 
 input[type="text"], input[type="password"], textarea {
-	display: block;	
+	display: block;
 	padding: 5px 10px;
 	border: 2px solid #BBBDC0;
 	border-radius: 1px;
@@ -232,7 +236,7 @@ h2 {
 	text-align: center;
 	-webkit-user-select: none;
 	-moz-user-select: none;
-	-ms-user-select: none;   
+	-ms-user-select: none;
 	user-select: none;
 	text-decoration: none;
 }
@@ -354,5 +358,3 @@ h2 {
     color: #F3F3F4;
     font-family: 'Open Sans' !important;
 }
-    
-

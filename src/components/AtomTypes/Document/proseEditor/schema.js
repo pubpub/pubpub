@@ -1,3 +1,4 @@
+import murmur from 'murmurhash';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import {Schema, Inline, Block, Text, Attribute, MarkType} from 'prosemirror/dist/model';
@@ -54,6 +55,9 @@ exports.StrikeThroughMark = StrikeThroughMark;
 // - **`size`**: CSS valid width
 // - **`caption`**: String caption to place under the embed
 // - **`data`**: Cached version/atom data. This is not serialized into markdown (in the long-term), but is kept here for fast rendering
+
+let domHashes = {};
+
 class Embed extends Inline {
   constructor(type, schema) {
     console.log('MADE EMBED');
@@ -76,25 +80,42 @@ class Embed extends Inline {
 	get draggable() { return true; }
 
   get matchDOMTag() {
-    return {"div.embed": dom => ({
-      dataTest: 'TEST',
-      source: dom.getAttribute('datasource'),
-      data: JSON.parse(dom.getAttribute('data-data')),
-    })}
+    return {".embed": dom => {
+      const domHash = dom.getAttribute('data-nodeHash');
+      const nodeAttrs = domHashes[domHash];
+      return {
+        source: nodeAttrs.source,
+        data: nodeAttrs.data,
+        align: nodeAttrs.align,
+        size: nodeAttrs.size,
+        caption: nodeAttrs.caption,
+        mode: nodeAttrs.mode,
+        className: nodeAttrs.className,
+        children: null,
+        childNodes: null,
+      };
+    }}
   }
 
 	toDOM(node) {
-    console.log('Node is', node);
-    if (node.attrs.dataTest) {
-      console.log('GOT DATA TEST', node.dataTest);
-    }
-		const dom = document.createElement('div');
-    dom.className = 'embed';
-    dom.setAttribute('data-source', node.attrs.source);
-    dom.setAttribute('data-data', JSON.stringify(node.attrs.data));
+    // console.log('Node is', node);
+		const domParent = document.createElement('span');
 
-		ReactDOM.render(<EmbedWrapper {...node.attrs}/>, dom);
-		return dom;
+		ReactDOM.render(<EmbedWrapper {...node.attrs}/>, domParent);
+
+    const dom = domParent.childNodes[0];
+
+    dom.className += ' embed';
+    const nodeHash = murmur.v3(JSON.stringify(node.attrs));
+    dom.setAttribute('data-nodeHash', nodeHash);
+    domHashes[nodeHash] = node.attrs;
+
+    dom.addEventListener('DOMNodeRemovedFromDocument', function(e) {
+      ReactDOM.unmountComponentAtNode(domParent);
+      delete domHashes[nodeHash];
+    });
+
+		return domParent;
 	}
 }
 
