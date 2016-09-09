@@ -7,8 +7,8 @@ import Select from 'react-select';
 import dateFormat from 'dateformat';
 
 // import {globalStyles} from 'utils/styleConstants';
-// import {globalMessages} from 'utils/globalMessages';
-// import {FormattedMessage} from 'react-intl';
+import {globalMessages} from 'utils/globalMessages';
+import {FormattedMessage} from 'react-intl';
 
 let styles = {};
 
