@@ -8,6 +8,7 @@ lightest: #F3F3F4
 */
 
 .darkest-bg { background-color: #2C2A2B; }
+.darkest-bg-hover:hover { background-color: #2C2A2B !important; }
 .darkest-color { color: #2C2A2B; }
 
 .darker-bg { background-color: #363736; }
@@ -41,6 +42,13 @@ body {
 }
 .underlineOnHover:hover {
 	text-decoration: underline !important;
+}
+
+.borderOnHover {
+	border: 1px solid transparent;
+}
+.borderOnHover:hover {
+	border: 1px solid #808284;
 }
 
 .normalWeight {

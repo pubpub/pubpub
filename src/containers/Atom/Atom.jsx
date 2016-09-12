@@ -18,7 +18,10 @@ import AtomContributors from './AtomContributors';
 import AtomTitle from './AtomTitle';
 import AtomExportButton from './AtomExportButton';
 import AtomCiteButton from './AtomCiteButton';
+import AtomFollowers from './AtomFollowers';
+import AtomAnalytics from './AtomAnalytics';
 import AtomVersionsButton from './AtomVersionsButton';
+import AtomVersions from './AtomVersions';
 import AtomDetails from './AtomDetails';
 import AtomContents from './AtomContents';
 import AtomMeta from './AtomMeta';
@@ -70,6 +73,8 @@ export const Atom = React.createClass({
 			showContributors: false,
 			showVersions: false,
 			showJournals: false,
+			showFollowers: false,
+			showViews: false,
 		};
 	},
 
@@ -206,6 +211,19 @@ export const Atom = React.createClass({
 		this.setState({[type]: !this.state[type]});
 	},
 
+	toggleHeaderFollowers: function() {
+		this.setState({
+			showFollowers: !this.state.showFollowers,
+			showViews: false,
+		});
+	},
+	toggleHeaderViews: function() {
+		this.setState({
+			showViews: !this.state.showViews,
+			showFollowers: false,
+		});
+	},
+
 	render: function() {
 		const atomData = safeGetInToJS(this.props.atomData, ['atomData']) || {};
 		const isEditor = this.props.meta === 'edit';
@@ -242,9 +260,10 @@ export const Atom = React.createClass({
 		};
 
 		const contributorsData = safeGetInToJS(this.props.atomData, ['contributorsData']) || [];
+		const featuredData = safeGetInToJS(this.props.atomData, ['featuredData']) || [];
 		const currentVersionContent = safeGetInToJS(this.props.atomData, ['currentVersionData', 'content']) || {};
 		const currentVersionDate = safeGetInToJS(this.props.atomData, ['currentVersionData', 'createDate']);
-
+		const followersData = safeGetInToJS(this.props.atomData, ['followersData']) || [];
 
 		const markdown = currentVersionContent.markdown;
 		const toc = generateTOC(this.state.currentDocMarkdown || markdown).full;
@@ -304,7 +323,7 @@ export const Atom = React.createClass({
 
 		const authorsData = safeGetInToJS(this.props.atomData, ['authorsData']) || [];
 		const authorList = atomData.customAuthorString ? [<Link target={linkTarget} to={'/pub/' + this.props.slug + '/contributors'} key={'author-0'}>{atomData.customAuthorString}</Link>] : authorsData.map((item, index)=> {
-			return <Link target={linkTarget} to={'/user/' + item.source.username} key={'author-' + index} className={'author'}>{item.source.name}</Link>;
+			return <Link target={linkTarget} to={'/user/' + item.source.username} key={'author-' + index} className={'author underlineOnHover'}>{item.source.name}</Link>;
 		});
 
 		let newestVersionDate = currentVersionDate;
@@ -401,8 +420,29 @@ export const Atom = React.createClass({
 								</div> 
 								{this.state.showVersions &&
 									<div style={styles.headerExpansionWrapper}>
-										Versions!
+										<AtomVersions 
+											versionsData={versionsData} 
+											permissionType={permissionType} 
+											handlePublishVersion={this.publishVersionHandler} 
+											slug={this.props.slug} 
+											buttonStyle={styles.headerAction} />
+									</div>
+								}
 
+								<div>
+									{featuredData.map((featured)=> {
+										const journal = featured.source;
+										return (<Link to={'/' + journal.slug} className={'darkest-bg-hover'} style={{backgroundColor: journal.headerColor, marginRight: '.5em', fontSize: '0.85em'}}>
+											<span style={{backgroundColor: 'rgba(0,0,0,0.15)', color: '#FFF', padding: '0em .5em'}}>{journal.journalName}</span>
+										</Link>);
+									})}
+									<span className={'underlineOnHover'} style={[styles.headerSubDetail, this.state.showJournals && styles.headerSubDetailActive]} onClick={this.toggleHeaderStates.bind(this, 'showJournals')}>{this.state.showJournals ? 'Hide Journals' : 'Manage Journals'}</span> 
+								</div>
+								{this.state.showJournals &&
+									<div style={styles.headerExpansionWrapper}>
+										<AtomJournals 
+											atomData={this.props.atomData} 
+											handleJournalSubmit={this.handleJournalSubmit}/>
 									</div>
 								}
 
@@ -410,11 +450,25 @@ export const Atom = React.createClass({
 
 
 								{!isEditor &&
-									<div>
-										<AtomVersionsButton versionsData={versionsData} permissionType={permissionType} handlePublishVersion={this.publishVersionHandler} slug={this.props.slug} buttonStyle={styles.headerAction} />
+									<div style={{margin: '1.5em 0em 0.5em'}}>
+										{/* <AtomVersionsButton versionsData={versionsData} permissionType={permissionType} handlePublishVersion={this.publishVersionHandler} slug={this.props.slug} buttonStyle={styles.headerAction} /> */}
 										<AtomExportButton atomData={this.props.atomData} buttonStyle={styles.headerAction} />
 										<AtomCiteButton atomData={this.props.atomData} authorsData={authorsData} customAuthorString={atomData.customAuthorString} versionQuery={versionQuery} buttonStyle={styles.headerAction}/>
 										<FollowButton id={atomData._id} type={'followsAtom'} isFollowing={atomData.isFollowing} buttonClasses={'light-button'} buttonStyle={{...styles.headerAction, ...styles.headerActionPlainPadding}}/>
+										<span style={styles.headerMeta} className={'underlineOnHover'} onClick={this.toggleHeaderFollowers}>{this.state.showFollowers ? 'Hide Followers' : followersData.length + ' Followers'}</span>
+										<span style={styles.headerMeta} className={'underlineOnHover'} onClick={this.toggleHeaderViews}>{this.state.showViews ? 'Hide Views' : '129 Views'}</span>
+									</div>
+								}
+
+								{this.state.showFollowers &&
+									<div style={styles.headerExpansionWrapper}>
+										<AtomFollowers atomData={this.props.atomData} />
+									</div>
+								}
+
+								{this.state.showViews &&
+									<div style={styles.headerExpansionWrapper}>
+										<AtomAnalytics atomData={this.props.atomData}/>
 									</div>
 								}
 
@@ -522,29 +576,33 @@ styles = {
 	headerTitle: {
 		fontSize: '2.5em',
 		marginTop: '.75em',
-		marginBottom: '.15em',
+		marginBottom: '.5em',
 		color: '#222',
 	},
 	headerDetail: {
-		margin: '.5em 0em',
+		margin: '.25em 0em',
 	},
 	headerSubDetail: {
-		padding: '0em .25em',
+		padding: '0em 1em',
 		color: '#808284',
 		fontFamily: '"Open Sans", Helvetica Neue, Arial, sans-serif',
 		cursor: 'pointer',
-		display: 'inline-block',
 		userSelect: 'none',
-		fontSize: '0.9em',
+		fontSize: '0.85em',
 		lineHeight: '1.25em',
 	},
 	headerSubDetailTitle: {
-		fontSize: '0.36em',  // = 0.9em / 2.5
+		fontSize: '0.34em',  // = 0.9em / 2.5
 		letterSpacing: '0px',
 		fontWeight: 'normal',
 	},
 	headerSubDetailActive: {
 		// backgroundColor: '#F3F3F4',
+	},
+	headerMeta: {
+		fontSize: '0.85em',
+		padding: '0em 1em 0em .5em',
+		cursor: 'pointer',
 	},
 
 	headerExpansionWrapper: {
@@ -757,8 +815,8 @@ styles = {
 		color: '#F3F3F4',
 		textAlign: 'center',
 		borderRadius: '1px',
-		fontSize: '0.7em',
-		fontFamily:  '"Open Sans", Helvetica Neue, Arial, sans-serif',
+		// fontSize: '0.7em',
+		fontFamily: '"Open Sans", Helvetica Neue, Arial, sans-serif',
 		marginTop: '10px',
 		display: 'inline-block',
 		padding: '0em .5em',

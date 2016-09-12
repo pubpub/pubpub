@@ -82,11 +82,11 @@ div.atom-header-detail {
 .atom-header a {
 	color: inherit;
 	text-decoration: none;
-    padding-right: .5em;
+    /*padding-right: .5em;*/
 }
-.atom-header a:hover {
+/*.atom-header a:hover {
 	text-decoration: underline;
-}
+}*/
 
 .atom-header {
 	border-bottom: 1px solid #F3F3F4;

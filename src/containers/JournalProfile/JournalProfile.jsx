@@ -121,7 +121,7 @@ export const JournalProfile = React.createClass({
 		let adminNav = [
 			{ type: 'title', text: <FormattedMessage {...globalMessages.Admin}/>},
 			{ type: 'link', text: <FormattedMessage {...globalMessages.Details}/>, link: '/' + this.props.slug + '/details', active: this.props.mode === 'details' },
-			{ type: 'link', text: <FormattedMessage {...globalMessages.Details}/>, link: '/' + this.props.slug + '/layout', active: this.props.mode === 'layout' },
+			{ type: 'link', text: <FormattedMessage {...globalMessages.Layout}/>, link: '/' + this.props.slug + '/layout', active: this.props.mode === 'layout' },
 			{ type: 'link', text: <FormattedMessage {...globalMessages.Featured}/>, link: '/' + this.props.slug + '/featured', active: this.props.mode === 'featured' },
 			{ type: 'link', text: <FormattedMessage {...globalMessages.Submitted}/>, link: '/' + this.props.slug + '/submitted', active: this.props.mode === 'submitted' },
 			{ type: 'link', text: <FormattedMessage {...globalMessages.Collections}/>, link: '/' + this.props.slug + '/collections', active: this.props.mode === 'collections' },
