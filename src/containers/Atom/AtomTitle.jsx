@@ -8,7 +8,7 @@ import {globalMessages} from 'utils/globalMessages';
 
 let styles = {};
 
-export const AtomDetails = React.createClass({
+export const AtomTitle = React.createClass({
 	propTypes: {
 		atomData: PropTypes.object,
 		updateDetailsHandler: PropTypes.func,
@@ -24,6 +24,7 @@ export const AtomDetails = React.createClass({
 			description: '',
 			previewImage: '',
 			customAuthorString: '',
+			detailsExpanded: false,
 		};
 	},
 
@@ -84,88 +85,102 @@ export const AtomDetails = React.createClass({
 	imageUploaded: function(url) {
 		this.setState({imageFile: null, previewImage: url});
 	},
+	toggleDetails: function() {
+		this.setState({detailsExpanded: !this.state.detailsExpanded});
+	},
 
 	render: function() {
 		const atomData = safeGetInToJS(this.props.atomData, ['atomData']) || {};
 		const errorMessage = this.props.error && this.props.error.name === 'MongoError' ? 'URL already used' : null;
 		return (
 			<div style={styles.container}>
-				<form onSubmit={this.updateDetails}>
-					<div>
-						<label htmlFor={'title'}>
-							<FormattedMessage {...globalMessages.Title}/>
-						</label>
-						<input ref={'title'} id={'title'} name={'title'} type="text" style={styles.input} value={this.state.title} onChange={this.inputChange.bind(this, 'title')}/>
-					</div>
+				<h1 className={'atom-header-title'}>{atomData.title}</h1>
+				<div className={'underlineOnHover atom-header-sub-detail'} onClick={this.toggleDetails}>Edit Details</div>
+				{this.state.detailsExpanded &&
+					<div style={styles.expandSection}>
+						<form onSubmit={this.updateDetails}>
+							<div>
+								<label htmlFor={'title'}>
+									<FormattedMessage {...globalMessages.Title}/>
+								</label>
+								<input ref={'title'} id={'title'} name={'title'} type="text" style={styles.input} value={this.state.title} onChange={this.inputChange.bind(this, 'title')}/>
+							</div>
 
-					<div>
-						<label htmlFor={'url'}>
-							URL
-						</label>
-						<div style={[styles.prefixedInputWrapper, atomData.isPublished && styles.disabledInput]}>
-							<div style={styles.prefix}>pubpub.org/pub/</div>
-							<input ref={'url'} id={'url'} name={'url'} type="text" style={[styles.input, styles.prefixedInput]} disabled={atomData.isPublished} value={this.state.slug} onChange={this.inputChange.bind(this, 'slug')}/>
-						</div>
-						<div className={'light-color inputSubtext'}>
-							<FormattedMessage id="aboutDetails.CannotBeChanged" defaultMessage="Cannot be changed once published."/>
-						</div>
-					</div>
+							<div>
+								<label htmlFor={'url'}>
+									URL
+								</label>
+								<div style={[styles.prefixedInputWrapper, atomData.isPublished && styles.disabledInput]}>
+									<div style={styles.prefix}>pubpub.org/pub/</div>
+									<input ref={'url'} id={'url'} name={'url'} type="text" style={[styles.input, styles.prefixedInput]} disabled={atomData.isPublished} value={this.state.slug} onChange={this.inputChange.bind(this, 'slug')}/>
+								</div>
+								<div className={'light-color inputSubtext'}>
+									<FormattedMessage id="aboutDetails.CannotBeChanged2" defaultMessage="Cannot be changed once published."/>
+								</div>
+							</div>
 
-					<div>
-						<label htmlFor={'customAuthorString'}>
-							<FormattedMessage id="aboutDetails.CustomAuthorList" defaultMessage="Custom Author List"/>
-						</label>
-						<input ref={'customAuthorString'} id={'customAuthorString'} name={'customAuthorString'} type="text" style={styles.input} value={this.state.customAuthorString} onChange={this.inputChange.bind(this, 'customAuthorString')}/>
-						<div className={'light-color inputSubtext'}>
-							<FormattedMessage id="atom.ContributorLabel" defaultMessage="This will replace the label that is auto-generated from Contributors settings."/>
-						</div>
-					</div>
+							<div>
+								<label htmlFor={'customAuthorString'}>
+									<FormattedMessage id="aboutDetails.CustomAuthorList2" defaultMessage="Custom Author List"/>
+								</label>
+								<input ref={'customAuthorString'} id={'customAuthorString'} name={'customAuthorString'} type="text" style={styles.input} value={this.state.customAuthorString} onChange={this.inputChange.bind(this, 'customAuthorString')}/>
+								<div className={'light-color inputSubtext'}>
+									<FormattedMessage id="atom.ContributorLabel2" defaultMessage="This will replace the label that is auto-generated from Contributors settings."/>
+								</div>
+							</div>
 
-					<div>
-						<label htmlFor={'image'}>
-							<FormattedMessage {...globalMessages.PreviewImage}/>
-						</label>
-						<img style={styles.image} src={this.state.previewImage} />
-						<input id={'image'} name={'preview image'} type="file" accept="image/*" onChange={this.handleFileSelect} />
-					</div>
-
-
-					<div>
-						<label htmlFor={'description'}>
-							<FormattedMessage {...globalMessages.Description}/>
-						</label>
-						<textarea ref={'description'} id={'description'} name={'description'} type="text" style={[styles.input, styles.textarea]} value={this.state.description} onChange={this.inputChange.bind(this, 'description')}></textarea>
-						<div className={'light-color inputSubtext'}>
-							{this.state.description.length} / 140
-						</div>
-					</div>
-
-					<button className={'button'} onClick={this.updateDetails}>
-						<FormattedMessage {...globalMessages.SaveDetails}/>
-					</button>
-
-					<div style={styles.loaderContainer}><Loader loading={this.props.isLoading} showCompletion={!this.props.error}/></div>
-					<div style={styles.errorMessage}>{errorMessage}</div>
+							<div>
+								<label htmlFor={'image'}>
+									<FormattedMessage {...globalMessages.PreviewImage}/>
+								</label>
+								<img style={styles.image} src={this.state.previewImage} />
+								<input id={'image'} name={'preview image'} type="file" accept="image/*" onChange={this.handleFileSelect} />
+							</div>
 
 
-				</form>
+							<div>
+								<label htmlFor={'description'}>
+									<FormattedMessage {...globalMessages.Description}/>
+								</label>
+								<textarea ref={'description'} id={'description'} name={'description'} type="text" style={[styles.input, styles.textarea]} value={this.state.description} onChange={this.inputChange.bind(this, 'description')}></textarea>
+								<div className={'light-color inputSubtext'}>
+									{this.state.description.length} / 140
+								</div>
+							</div>
 
-				<div style={[styles.imageCropperWrapper, this.state.imageFile !== null && styles.imageCropperWrapperVisible]} >
-					<div style={styles.imageCropper}>
-						<ImageCropper height={500} width={500} image={this.state.imageFile} onCancel={this.cancelImageUpload} onUpload={this.imageUploaded}/>
-					</div>
-				</div>
+							<button className={'button'} onClick={this.updateDetails}>
+								<FormattedMessage {...globalMessages.SaveDetails}/>
+							</button>
+
+							<div style={styles.loaderContainer}><Loader loading={this.props.isLoading} showCompletion={!this.props.error}/></div>
+							<div style={styles.errorMessage}>{errorMessage}</div>
+
+
+						</form>
+
+						<div style={[styles.imageCropperWrapper, this.state.imageFile !== null && styles.imageCropperWrapperVisible]} >
+							<div style={styles.imageCropper}>
+								<ImageCropper height={500} width={500} image={this.state.imageFile} onCancel={this.cancelImageUpload} onUpload={this.imageUploaded}/>
+							</div>
+						</div>	
+
+					</div>	
+				}
 
 			</div>
 		);
 	}
 });
 
-export default Radium(AtomDetails);
+export default Radium(AtomTitle);
 
 styles = {
 	container: {
 		// marginTop: '1em',
+	},
+	expandSection: {
+		padding: '1em',
+		backgroundColor: '#F3F3F4',
 	},
 	input: {
 		width: 'calc(100% - 20px - 4px)',

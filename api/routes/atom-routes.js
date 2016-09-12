@@ -270,7 +270,7 @@ export function getAtomData(req, res) {
 				const query = Link.find({source: atomResult._id, type: 'submitted'}).populate({
 					path: 'destination',
 					model: Journal,
-					select: 'journalName slug description icon',
+					select: 'journalName slug description icon headerColor',
 				}).exec();
 				resolve(query);
 			} else {
@@ -281,7 +281,7 @@ export function getAtomData(req, res) {
 		const getFeatured = Link.find({destination: atomResult._id, type: 'featured'}).populate({
 			path: 'source',
 			model: Journal,
-			select: 'journalName slug description icon',
+			select: 'journalName slug description icon headerColor',
 		}).exec();
 
 
@@ -604,7 +604,7 @@ export function submitAtomToJournals(req, res) {
 		return Link.find({source: atomID, type: 'submitted'}).populate({
 			path: 'destination',
 			model: Journal,
-			select: 'journalName slug description icon',
+			select: 'journalName slug description icon headerColor',
 		}).exec();
 
 	})

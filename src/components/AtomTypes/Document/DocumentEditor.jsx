@@ -50,7 +50,7 @@ export const DocumentEditor = React.createClass({
 		const {collabEditing} = require('prosemirror/dist/collab');
 
 		pm = new prosemirror.ProseMirror({
-			place: document.getElementById('atom-reader'),
+			place: document.getElementById('atom-body-editor'),
 			schema: schema,
 			plugins: [pubpubSetup, collabEditing.config({version: 0})],
 			// doc: !!docJSON ? Node.fromJSON(schema, docJSON) : null,
@@ -468,7 +468,7 @@ export const DocumentEditor = React.createClass({
 				{/* <div className={'opacity-on-hover'} style={styles.iconLeft} onClick={this.toggleMarkdown}></div> */}
 
 				<textarea id="markdown" onChange={this.markdownChange} style={[styles.textarea, this.state.showMarkdown && styles.textareaVisible]}></textarea>
-				<div id={'atom-reader'} style={[styles.wsywigBlock, this.state.showMarkdown && styles.wsywigWithMarkdown]}></div>
+				<div id={'atom-body-editor'} className={'document-body'} style={[styles.wsywigBlock, this.state.showMarkdown && styles.wsywigWithMarkdown]}></div>
 
 				{this.state.embedLayoutCoords &&
 					<div style={[styles.embedLayoutEditor, {left: this.state.embedLayoutCoords.left - 2, top: this.state.embedLayoutCoords.bottom}]}>
