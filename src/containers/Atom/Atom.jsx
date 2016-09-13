@@ -14,18 +14,15 @@ import {getAtomData, submitAtomToJournals, saveVersion, updateAtomDetails, publi
 import {Discussions, FollowButton} from 'containers';
 import {HorizontalNav, License} from 'components';
 import AtomContributors from './AtomContributors';
-import AtomTitle from './AtomTitle';
 import AtomHeaderDetail from './AtomHeaderDetail';
 import AtomHeaderDetailsMulti from './AtomHeaderDetailsMulti';
 import AtomExportButton from './AtomExportButton';
 import AtomCiteButton from './AtomCiteButton';
 import AtomFollowers from './AtomFollowers';
 import AtomAnalytics from './AtomAnalytics';
-import AtomVersionsButton from './AtomVersionsButton';
 import AtomVersions from './AtomVersions';
 import AtomDetails from './AtomDetails';
 import AtomContents from './AtomContents';
-import AtomMeta from './AtomMeta';
 import AtomJournals from './AtomJournals';
 import AtomViewerPane from './AtomViewerPane';
 import AtomEditorPane from './AtomEditorPane';
@@ -70,13 +67,6 @@ export const Atom = React.createClass({
 			showSaveVersion: false,
 
 			currentDocMarkdown: '',
-
-			showDetails: false,
-			showContributors: false,
-			showVersions: false,
-			showJournals: false,
-			showFollowers: false,
-			showViews: false,
 		};
 	},
 
@@ -189,8 +179,6 @@ export const Atom = React.createClass({
 		this.props.dispatch(deleteContributor(linkID));
 	},
 
-
-
 	// addSelection: function(newSelection) {
 	// 	newSelection.sourcePub = this.props.pubData.getIn(['pubData', '_id']);
 	// 	newSelection.sourceVersion = this.props.query.version !== undefined && this.props.query.version > 0 && this.props.query.version < (this.props.pubData.getIn(['pubData', 'history']).size - 1) ? this.props.query.version : this.props.pubData.getIn(['pubData', 'history']).size;
@@ -208,23 +196,6 @@ export const Atom = React.createClass({
 	// 	if (!destination) { return undefined; }
 	// 	smoothScroll(destination);
 	// },
-
-	toggleHeaderStates: function(type) {
-		this.setState({[type]: !this.state[type]});
-	},
-
-	toggleHeaderFollowers: function() {
-		this.setState({
-			showFollowers: !this.state.showFollowers,
-			showViews: false,
-		});
-	},
-	toggleHeaderViews: function() {
-		this.setState({
-			showViews: !this.state.showViews,
-			showFollowers: false,
-		});
-	},
 
 	render: function() {
 		const atomData = safeGetInToJS(this.props.atomData, ['atomData']) || {};
@@ -453,73 +424,6 @@ export const Atom = React.createClass({
 										} 
 										canEdit={permissionType === 'author' || permissionType === 'editor'} />
 								</div>
-								
-
-
-								{/* <h1 style={styles.headerTitle}>{atomData.title}<span className={'underlineOnHover'} style={[styles.headerSubDetail, styles.headerSubDetailTitle, this.state.showDetails && styles.headerSubDetailActive]} onClick={this.toggleHeaderStates.bind(this, 'showDetails')}>{this.state.showDetails ? 'Hide Metadata' : 'Edit Metadata'}</span></h1>
-								
-								{this.state.showDetails &&
-									<div style={styles.headerExpansionWrapper}>
-										<AtomDetails 
-											atomData={this.props.atomData} 
-											updateDetailsHandler={this.updateDetails} 
-											isLoading={isLoading} 
-											error={error}/>
-									</div>
-								}*/ }
-
-								{/* <div style={styles.headerDetail}>
-									{authorList}
-									<span className={'underlineOnHover'} style={[styles.headerSubDetail, this.state.showContributors && styles.headerSubDetailActive]} onClick={this.toggleHeaderStates.bind(this, 'showContributors')}>{this.state.showContributors ? 'Hide Contributors' : contributorsData.length + ' Contributor' + (contributorsData.length !== 1 ? 's' : '') + ' - Edit Contributors'}</span>
-								</div> 
-								{this.state.showContributors &&
-									<div style={styles.headerExpansionWrapper}>
-										<AtomContributors
-											atomData={this.props.atomData}
-											contributorsData={contributorsData}
-											handleAddContributor={this.handleAddContributor}
-											handleUpdateContributor={this.handleUpdateContributor}
-											handleDeleteContributor={this.handleDeleteContributor}
-											isLoading={isLoading}
-											error={error}
-											permissionType={permissionType}/>
-
-									</div>
-								} */}
-
-								{/* <div style={styles.headerDetail}>
-									{dateFormat(currentVersionDate, 'mmmm dd, yyyy')}
-									<span className={'underlineOnHover'} style={[styles.headerSubDetail, this.state.showVersions && styles.headerSubDetailActive]} onClick={this.toggleHeaderStates.bind(this, 'showVersions')}>{this.state.showVersions ? 'Hide Versions' : versionsData.length + ' Version' + (versionsData.length !== 1 ? 's' : '') + ' - Manage Versions'}</span>
-								</div> 
-								{this.state.showVersions &&
-									<div style={styles.headerExpansionWrapper}>
-										<AtomVersions 
-											versionsData={versionsData} 
-											permissionType={permissionType} 
-											handlePublishVersion={this.publishVersionHandler} 
-											slug={this.props.slug} 
-											buttonStyle={styles.headerAction} />
-									</div>
-								} */}
-
-								{/* <div>
-									{featuredData.map((featured)=> {
-										const journal = featured.source;
-										return (<Link to={'/' + journal.slug} className={'darkest-bg-hover'} style={{textDecoration: 'none', backgroundColor: journal.headerColor, marginRight: '.5em', fontSize: '0.85em', display: 'inline-block'}}>
-											<span style={{backgroundColor: 'rgba(0,0,0,0.15)', color: '#FFF', padding: '0em .5em'}}>{journal.journalName}</span>
-										</Link>);
-									})}
-									<span className={'underlineOnHover'} style={[styles.headerSubDetail, this.state.showJournals && styles.headerSubDetailActive]} onClick={this.toggleHeaderStates.bind(this, 'showJournals')}>{this.state.showJournals ? 'Hide Journals' : 'Manage Journals'}</span> 
-								</div>
-								{this.state.showJournals &&
-									<div style={styles.headerExpansionWrapper}>
-										<AtomJournals 
-											atomData={this.props.atomData} 
-											handleJournalSubmit={this.handleJournalSubmit}/>
-									</div>
-								} */}
-
-
 
 								{isEditor &&
 									<div style={{margin: '1.5em 0em 0.5em'}}>
@@ -541,22 +445,8 @@ export const Atom = React.createClass({
 												<AtomAnalytics atomData={this.props.atomData}/>
 											]}
 											canEdit={permissionType === 'author' || permissionType === 'editor'} />
-										{/* <span style={styles.headerMeta} className={'underlineOnHover'} onClick={this.toggleHeaderFollowers}>{this.state.showFollowers ? 'Hide Followers' : followersData.length + ' Followers'}</span>
-											<span style={styles.headerMeta} className={'underlineOnHover'} onClick={this.toggleHeaderViews}>{this.state.showViews ? 'Hide Views' : '129 Views'}</span> */}
 									</div>
 								}
-
-								{/* {this.state.showFollowers &&
-									<div style={styles.headerExpansionWrapper}>
-										<AtomFollowers atomData={this.props.atomData} />
-									</div>
-								}
-
-								{this.state.showViews &&
-									<div style={styles.headerExpansionWrapper}>
-										<AtomAnalytics atomData={this.props.atomData}/>
-									</div>
-								} */}
 
 								{!isEditor && (newestVersionDate !== currentVersionDate) &&
 									<Link to={'/pub/' + this.props.slug}>
@@ -564,13 +454,10 @@ export const Atom = React.createClass({
 											<FormattedMessage
 													id="atom.NewerVersionCreated"
 													defaultMessage={`Newer version created on {newerData}.`}
-													values={{newerData: dateFormat(newestVersionDate, 'mmmm dd, yyyy')}}
-											/>
-									</div>
-								</Link>
-
+													values={{newerData: dateFormat(newestVersionDate, 'mmmm dd, yyyy')}} />
+										</div>
+									</Link>
 								}
-
 
 							</div>
 						}
@@ -590,7 +477,6 @@ export const Atom = React.createClass({
 					{/* -------------------- */}
 
 				</StickyContainer>
-
 
 
 				{/* Right Panel Section */}
@@ -649,45 +535,11 @@ styles = {
 		display: 'inline-block',
 		fontWeight: 'bold',
 	},
-	headerDetail: {
-		margin: '.25em 0em',
-	},
 	journalSection: {
 		marginTop: '1em',
 		display: 'none',
 	},
-	// headerSubDetail: {
-	// 	padding: '0em 1em',
-	// 	color: '#808284',
-	// 	fontFamily: '"Open Sans", Helvetica Neue, Arial, sans-serif',
-	// 	cursor: 'pointer',
-	// 	userSelect: 'none',
-	// 	fontSize: '0.85em',
-	// 	lineHeight: '1.25em',
-	// },
-	// headerSubDetailTitle: {
-	// 	fontSize: '0.34em',  // = 0.9em / 2.5
-	// 	letterSpacing: '0px',
-	// 	fontWeight: 'normal',
-	// },
-	// headerSubDetailActive: {
-	// 	// backgroundColor: '#F3F3F4',
-	// },
-	headerMeta: {
-		fontSize: '0.85em',
-		padding: '0em 1em 0em .5em',
-		cursor: 'pointer',
-	},
 
-	// headerExpansionWrapper: {
-	// 	padding: '1em 2em',
-	// 	margin: '.5em 0em',
-	// 	backgroundColor: '#F3F3F4',
-	// },
-	// exportType: {
-	// 	margin: '.5em 1em',
-	// 	cursor: 'pointer',
-	// },
 	pubSection: {
 		verticalAlign: 'top',
 		padding: '0em 4em',
@@ -699,26 +551,7 @@ styles = {
 			marginRight: '0vw',
 		},
 	},
-	saveVersion: {
-		width: '100vw',
-		height: '100vh',
-		position: 'fixed',
-		top: 0,
-		zIndex: 2,
-	},
-	saveVersionSplash: {
-		width: '100%',
-		height: '100%',
-		position: 'absolute',
-		backgroundColor: 'rgba(0,0,0,0.35)',
-	},
-	saveVersionContent: {
-		padding: '1em',
-		maxWidth: '800px',
-		margin: '30vh auto 0',
-		backgroundColor: '#FFF',
-		position: 'relative'
-	},
+
 	atomNavBar: {
 		width: 'calc(100% + 8em - 1px)',
 		left: '-4em',
@@ -738,20 +571,6 @@ styles = {
 	},
 	headerActionPlainPadding: {
 		padding: '0em 1em',
-	},
-	iconRight: {
-		position: 'absolute',
-		width: '1.5em',
-		height: '100%',
-		cursor: 'pointer',
-		top: 0,
-		right: 0,
-		opacity: 0,
-		backgroundColor: '#F3F3F4',
-		borderLeft: '1px solid #E4E4E4',
-		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
-			display: 'none',
-		},
 	},
 	rightPanel: {
 		verticalAlign: 'top',
@@ -816,25 +635,6 @@ styles = {
 		padding: '0em 2em 1em',
 	},
 
-	// pubBodyWrapper: {
-	// 	maxWidth: '650px',
-	// 	margin: '0 auto',
-	// 	padding: '0em 3em',
-	// 	'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
-	// 		maxWidth: 'auto',
-	// 		padding: '0em 0em',
-	// 	},
-	// },
-	// pubMetaWrapper: {
-	// 	maxWidth: '1024px',
-	// 	margin: '0 auto',
-	// 	padding: '2em 3em',
-	// 	'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
-	// 		maxWidth: 'auto',
-	// 		padding: '1em 0em',
-	// 	},
-	// },
-
 	container: {
 		width: '100%',
 		overflow: 'hidden',
@@ -842,18 +642,6 @@ styles = {
 		position: 'relative',
 	},
 
-	// noBottomMargin: {
-	// 	marginBottom: '0px',
-	// },
-	// buttonWrapper: {
-	// 	float: 'right',
-	// 	position: 'relative',
-	// 	top: '8px',
-	// },
-	button: {
-		fontSize: '.85em',
-		padding: '.25em 1.5em',
-	},
 
 	headerBar: {
 		position: 'relative',
@@ -881,9 +669,6 @@ styles = {
 			position: 'static',
 		},
 	},
-	input: {
-		width: 'calc(100% - 20px - 4px)',
-	},
 	notNewestVersion: {
 		backgroundColor: '#363736',
 		color: '#F3F3F4',
@@ -894,18 +679,6 @@ styles = {
 		marginTop: '10px',
 		display: 'inline-block',
 		padding: '0em .5em',
-	}
-	// versionItem: {
-	// 	whiteSpace: 'nowrap',
-	// 	margin: '.5em 1em',
-	// 	borderBottom: '1px solid #bbbdc0',
-	// 	padding: '.5em 0em',
-	// },
-	// versionDate: {
-	// 	color: 'inherit',
-	// 	textDecoration: 'none',
-	// 	fontSize: '1.1em',
-	// },
-
+	},
 
 };
