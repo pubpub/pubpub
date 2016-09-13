@@ -2,9 +2,6 @@ import {MenuItem, toggleMarkItem, insertItem, wrapItem, wrapListItem, blockTypeI
 import {FieldPrompt, TextField} from 'prosemirror/dist/ui';
 // import {elt} from 'prosemirror/dist/util/dom';
 
-import {globalMessages} from 'utils/globalMessages';
-import {FormattedMessage} from 'react-intl';
-
 // : (ProseMirror, (attrs: ?Object))
 // A function that will prompt for the attributes of a [link
 // mark](#LinkMark) (using `FieldPrompt`), and call a callback with
@@ -225,8 +222,6 @@ function buildMenuItems(schema) {
 				const selection = pm.selection;
 				pm.tr.setNodeType(selection.$from.pos, selection.node.type, {...selection.node.attrs, [attrsKey]: value}).apply();
 			};
-			
-
 
 			// const label = elt('div', null, this.spec.cat);
 			const input = document.createElement('input');
