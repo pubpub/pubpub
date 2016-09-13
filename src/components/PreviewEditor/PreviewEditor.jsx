@@ -23,7 +23,7 @@ export const PreviewEditor = React.createClass({
 
 		buttons: PropTypes.array,
 		header: PropTypes.object,
-		footer: PropTypes.oneOfType([PropTypes.array, PropTypes.object]),
+		footer: PropTypes.node,
 
 		onSaveVersion: PropTypes.func,
 		onSaveAtom: PropTypes.func,

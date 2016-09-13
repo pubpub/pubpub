@@ -11,7 +11,7 @@ export const AtomHeaderDetail = React.createClass({
 		editMessage: PropTypes.object,
 		activeMessage: PropTypes.object,
 		child: PropTypes.object,
-		isEditor: PropTypes.bool,
+		canEdit: PropTypes.bool,
 	},
 
 	getInitialState() {
@@ -21,10 +21,7 @@ export const AtomHeaderDetail = React.createClass({
 	},
 
 	toggleShow: function() {
-		if (this.props.isEditor) {
-			this.setState({showChild: !this.state.showChild});	
-		}
-		
+		this.setState({showChild: !this.state.showChild});	
 	},
 
 	render: function() {
@@ -34,10 +31,10 @@ export const AtomHeaderDetail = React.createClass({
 				{!this.state.showChild
 					? <span className={'underlineOnHover'} onClick={this.toggleShow} style={styles.detail}>
 						{this.props.defaultMessage}
-						{this.props.defaultMessage && this.props.editMessage && this.props.isEditor && 
+						{this.props.defaultMessage && this.props.editMessage && this.props.canEdit && 
 							<span> - </span>
 						}
-						{this.props.isEditor && this.props.editMessage}
+						{this.props.canEdit && this.props.editMessage}
 					</span>
 					: <span className={'underlineOnHover'} onClick={this.toggleShow} style={styles.detail}>
 						{this.props.activeMessage}

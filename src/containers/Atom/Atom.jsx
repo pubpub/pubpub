@@ -16,6 +16,7 @@ import {HorizontalNav, License} from 'components';
 import AtomContributors from './AtomContributors';
 import AtomTitle from './AtomTitle';
 import AtomHeaderDetail from './AtomHeaderDetail';
+import AtomHeaderDetailsMulti from './AtomHeaderDetailsMulti';
 import AtomExportButton from './AtomExportButton';
 import AtomCiteButton from './AtomCiteButton';
 import AtomFollowers from './AtomFollowers';
@@ -393,7 +394,7 @@ export const Atom = React.createClass({
 											isLoading={isLoading} 
 											error={error}/>
 									} 
-									isEditor={permissionType === 'author' || permissionType === 'editor'} />
+									canEdit={permissionType === 'author' || permissionType === 'editor'} />
 
 								{/* Atom Contributors */}
 								{/* ----------------- */}
@@ -413,7 +414,7 @@ export const Atom = React.createClass({
 											error={error}
 											permissionType={permissionType}/>
 									} 
-									isEditor={permissionType === 'author' || permissionType === 'editor'} />
+									canEdit={permissionType === 'author' || permissionType === 'editor'} />
 
 								{/* Atom Date and Versions */}
 								{/* ---------------------- */}
@@ -430,7 +431,7 @@ export const Atom = React.createClass({
 											slug={this.props.slug} 
 											buttonStyle={styles.headerAction} />
 									} 
-									isEditor={permissionType === 'author' || permissionType === 'editor'} />
+									canEdit={permissionType === 'author' || permissionType === 'editor'} />
 
 								{/* Atom Journals */}
 								{/* ------------- */}
@@ -450,7 +451,7 @@ export const Atom = React.createClass({
 												atomData={this.props.atomData} 
 												handleJournalSubmit={this.handleJournalSubmit}/>
 										} 
-										isEditor={permissionType === 'author' || permissionType === 'editor'} />
+										canEdit={permissionType === 'author' || permissionType === 'editor'} />
 								</div>
 								
 
@@ -520,6 +521,11 @@ export const Atom = React.createClass({
 
 
 
+								{isEditor &&
+									<div style={{margin: '1.5em 0em 0.5em'}}>
+										<AtomSaveVersionButton isLoading={isLoading} error={error} handleVersionSave={this.saveVersionSubmit} buttonStyle={styles.headerAction}/>
+									</div>
+								}
 
 								{!isEditor &&
 									<div style={{margin: '1.5em 0em 0.5em'}}>
@@ -527,12 +533,20 @@ export const Atom = React.createClass({
 										<AtomExportButton atomData={this.props.atomData} buttonStyle={styles.headerAction} />
 										<AtomCiteButton atomData={this.props.atomData} authorsData={authorsData} customAuthorString={atomData.customAuthorString} versionQuery={versionQuery} buttonStyle={styles.headerAction}/>
 										<FollowButton id={atomData._id} type={'followsAtom'} isFollowing={atomData.isFollowing} buttonClasses={'light-button'} buttonStyle={{...styles.headerAction, ...styles.headerActionPlainPadding}}/>
-										<span style={styles.headerMeta} className={'underlineOnHover'} onClick={this.toggleHeaderFollowers}>{this.state.showFollowers ? 'Hide Followers' : followersData.length + ' Followers'}</span>
-										<span style={styles.headerMeta} className={'underlineOnHover'} onClick={this.toggleHeaderViews}>{this.state.showViews ? 'Hide Views' : '129 Views'}</span>
+										<AtomHeaderDetailsMulti
+											labels={[followersData.length + ' Followers', 'Analytics']}
+											activeMessages={['Hide Followers', 'Hide Analytics']}
+											views={[
+												<AtomFollowers atomData={this.props.atomData} />,
+												<AtomAnalytics atomData={this.props.atomData}/>
+											]}
+											canEdit={permissionType === 'author' || permissionType === 'editor'} />
+										{/* <span style={styles.headerMeta} className={'underlineOnHover'} onClick={this.toggleHeaderFollowers}>{this.state.showFollowers ? 'Hide Followers' : followersData.length + ' Followers'}</span>
+											<span style={styles.headerMeta} className={'underlineOnHover'} onClick={this.toggleHeaderViews}>{this.state.showViews ? 'Hide Views' : '129 Views'}</span> */}
 									</div>
 								}
 
-								{this.state.showFollowers &&
+								{/* {this.state.showFollowers &&
 									<div style={styles.headerExpansionWrapper}>
 										<AtomFollowers atomData={this.props.atomData} />
 									</div>
@@ -542,7 +556,7 @@ export const Atom = React.createClass({
 									<div style={styles.headerExpansionWrapper}>
 										<AtomAnalytics atomData={this.props.atomData}/>
 									</div>
-								}
+								} */}
 
 								{!isEditor && (newestVersionDate !== currentVersionDate) &&
 									<Link to={'/pub/' + this.props.slug}>
@@ -557,9 +571,7 @@ export const Atom = React.createClass({
 
 								}
 
-								{isEditor &&
-									<AtomSaveVersionButton isLoading={isLoading} error={error} handleVersionSave={this.saveVersionSubmit} buttonStyle={styles.headerAction}/>
-								}
+
 							</div>
 						}
 
