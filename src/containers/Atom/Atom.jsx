@@ -35,6 +35,7 @@ import {generateTOC} from 'utils/generateTOC';
 
 import {globalMessages} from 'utils/globalMessages';
 import {FormattedMessage} from 'react-intl';
+import {globalStyles} from 'utils/styleConstants';
 
 let styles = {};
 let interval;
@@ -322,8 +323,8 @@ export const Atom = React.createClass({
 		// }
 
 		const authorsData = safeGetInToJS(this.props.atomData, ['authorsData']) || [];
-		const authorList = atomData.customAuthorString ? [<Link target={linkTarget} to={'/pub/' + this.props.slug + '/contributors'} key={'author-0'}>{atomData.customAuthorString}</Link>] : authorsData.map((item, index)=> {
-			return <Link target={linkTarget} to={'/user/' + item.source.username} key={'author-' + index} className={'author underlineOnHover'}>{item.source.name}</Link>;
+		const authorList = atomData.customAuthorString ? [<Link target={linkTarget} style={globalStyles.link} to={'/pub/' + this.props.slug + '/contributors'} key={'author-0'}>{atomData.customAuthorString}</Link>] : authorsData.map((item, index)=> {
+			return <Link target={linkTarget} style={globalStyles.link} to={'/user/' + item.source.username} key={'author-' + index} className={'author underlineOnHover'}>{item.source.name}</Link>;
 		});
 
 		let newestVersionDate = currentVersionDate;
@@ -373,7 +374,6 @@ export const Atom = React.createClass({
 					</div>
 
 					{/* Atom Header and Body */}
-					{/* <div className={safeGetInToJS(this.props.atomData, ['atomData', 'type']) === 'document' ? 'atom-reader atom-reader-meta' : 'atom-reader-meta'}> */}
 					<div style={styles.atomWrapper}>
 						{ error &&
 							<div style={styles.errorMsg}>{error}</div>
@@ -382,7 +382,7 @@ export const Atom = React.createClass({
 						{/* Atom Header */}
 						{ !error &&
 
-							<div className={'atom-header'}>
+							<div style={styles.atomHeader}>
 								<h1 style={styles.headerTitle}>{atomData.title}<span className={'underlineOnHover'} style={[styles.headerSubDetail, styles.headerSubDetailTitle, this.state.showDetails && styles.headerSubDetailActive]} onClick={this.toggleHeaderStates.bind(this, 'showDetails')}>{this.state.showDetails ? 'Hide Metadata' : 'Edit Metadata'}</span></h1>
 								
 								{this.state.showDetails &&
@@ -432,7 +432,7 @@ export const Atom = React.createClass({
 								<div>
 									{featuredData.map((featured)=> {
 										const journal = featured.source;
-										return (<Link to={'/' + journal.slug} className={'darkest-bg-hover'} style={{backgroundColor: journal.headerColor, marginRight: '.5em', fontSize: '0.85em'}}>
+										return (<Link to={'/' + journal.slug} className={'darkest-bg-hover'} style={{textDecoration: 'none', backgroundColor: journal.headerColor, marginRight: '.5em', fontSize: '0.85em', display: 'inline-block'}}>
 											<span style={{backgroundColor: 'rgba(0,0,0,0.15)', color: '#FFF', padding: '0em .5em'}}>{journal.journalName}</span>
 										</Link>);
 									})}
@@ -514,9 +514,13 @@ export const Atom = React.createClass({
 					<Sticky stickyStyle={this.state.showRightPanel ? {} : {left: '0px'}}>
 						<HorizontalNav navItems={rightPanelNavItems} mobileNavButtons={mobileNavButtons}/>
 							<div style={styles.rightPanelContent}>
+								{this.state.rightPanelMode === 'contents'
+									? <AtomContents atomData={this.props.atomData} tocData={toc}/>
+									: <Discussions/>
+								}
 								{(()=>{
 									switch (this.state.rightPanelMode) {
-									case 'contributors':
+									/*case 'contributors':
 										return (
 											<AtomContributors
 												atomData={this.props.atomData}
@@ -533,12 +537,10 @@ export const Atom = React.createClass({
 									case 'meta':
 										return <AtomMeta atomData={this.props.atomData}/>;
 									case 'details':
-										return <AtomDetails atomData={this.props.atomData} updateDetailsHandler={this.updateDetails} isLoading={isLoading} error={error}/>;
-									case 'discussions':
-										return <StickyContainer><Discussions/></StickyContainer>;
+										return <AtomDetails atomData={this.props.atomData} updateDetailsHandler={this.updateDetails} isLoading={isLoading} error={error}/>;*/
 									case 'contents':
 										return <AtomContents atomData={this.props.atomData} tocData={toc}/>;
-
+									case 'discussions':
 									default:
 										return <Discussions/>;
 									}
@@ -546,7 +548,7 @@ export const Atom = React.createClass({
 							</div>
 
 					</Sticky>
-				}
+					}
 
 				</StickyContainer>
 
@@ -572,6 +574,11 @@ styles = {
 	atomWrapper: {
 		maxWidth: '650px',
 		margin: '0em auto 2em',
+	},
+	atomHeader: {
+		borderBottom: '1px solid #F3F3F4',
+		marginBottom: '1em',
+		paddingBottom: '1em',
 	},
 	headerTitle: {
 		fontSize: '2.5em',
@@ -606,7 +613,7 @@ styles = {
 	},
 
 	headerExpansionWrapper: {
-		padding: '1em',
+		padding: '1em 2em',
 		margin: '.5em 0em',
 		backgroundColor: '#F3F3F4',
 	},

@@ -54,7 +54,7 @@ export const AtomVersions = React.createClass({
 					return 0;
 				}).map((item, index)=> {
 					return (
-						<div className={'testing'} key={'version-' + index} style={[styles.versionItem, index === versionsData.length - 1 && styles.versionItemLast]}>
+						<div key={'version-' + index} style={[styles.versionItem, index === versionsData.length - 1 && styles.versionItemLast]}>
 
 							{!item.isPublished && showPublishStatus && <div style={styles.statusLabel}>
 								<FormattedMessage {...globalMessages.Private}/>
@@ -104,7 +104,7 @@ styles = {
 		userSelect: 'initial',
 	},
 	versionItem: {
-		whiteSpace: 'nowrap',
+		// whiteSpace: 'nowrap',
 		margin: '0.5em 0em',
 		borderBottom: '1px solid #bbbdc0',
 		padding: '0.5em 0em',

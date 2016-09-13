@@ -6,8 +6,8 @@ import {safeGetInToJS} from 'utils/safeParse';
 import dateFormat from 'dateformat';
 import {globalStyles} from 'utils/styleConstants';
 
-import { StickyContainer as UnwrappedStickyContainer, Sticky } from 'react-sticky';
-const StickyContainer = Radium(UnwrappedStickyContainer);
+// import { StickyContainer as UnwrappedStickyContainer, Sticky } from 'react-sticky';
+// const StickyContainer = Radium(UnwrappedStickyContainer);
 
 import {markdownParser, markdownSerializer, schema} from 'components/AtomTypes/Document/proseEditor';
 import {License, Media} from 'components';
@@ -181,44 +181,45 @@ export const Discussions = React.createClass({
 
 						<Media/>
 
-						<Sticky style={styles.replyWrapper} isActive={!!replyToData}>
-							<div style={[styles.replyHeader, !replyToData && {display: 'none'}]}>
-									<div className={'showChildOnHover'} style={styles.replyToWrapper}>
-										<FormattedMessage {...globalMessages.ReplyTo}/>: {replyToData && replyToData.authorsData[0].source.name}
-										<div className={'hoverChild'} style={styles.replyToPreview}>
-											<DiscussionItem linkTarget={linkTarget} discussionData={replyToData} index={'current-reply'} isPreview={true}/>
-										</div>
+						{/* <Sticky style={styles.replyWrapper} isActive={!!replyToData}> */}
+
+						<div style={[styles.replyHeader, !replyToData && {display: 'none'}]}>
+								<div className={'showChildOnHover'} style={styles.replyToWrapper}>
+									<FormattedMessage {...globalMessages.ReplyTo}/>: {replyToData && replyToData.authorsData[0].source.name}
+									<div className={'hoverChild'} style={styles.replyToPreview}>
+										<DiscussionItem linkTarget={linkTarget} discussionData={replyToData} index={'current-reply'} isPreview={true}/>
 									</div>
-								<div className={'button'} style={styles.replyButton} onClick={this.clearReplyTo}><FormattedMessage {...globalMessages.Clear}/></div>
-							</div>
+								</div>
+							<div className={'button'} style={styles.replyButton} onClick={this.clearReplyTo}><FormattedMessage {...globalMessages.Clear}/></div>
+						</div>
 
-							<div style={styles.replyBody}>
-								<div id={'reply-input'} className={'atom-reader atom-reply ProseMirror-quick-style'} style={styles.wsywigBlock}></div>
-							</div>
+						<div style={styles.replyBody}>
+							<div id={'reply-input'} className={'atom-reader atom-reply ProseMirror-quick-style'} style={styles.wsywigBlock}></div>
+						</div>
 
-							<div style={styles.replyFooter}>
-								<div style={styles.replyUserImageWrapper}>
-									<img style={styles.replyUserImage} src={'https://jake.pubpub.org/unsafe/50x50/' + this.props.loginData.getIn(['userData', 'image'])} />
-								</div>
-								<div style={styles.replyLicense} key={'discussionLicense'}>
-									<License text={'All discussions are licensed under a'} hover={true} />
-								</div>
-								<div className={'button'} style={styles.replyButton} onClick={this.publishReply}>
-									<FormattedMessage id="discussion.PublishReply" defaultMessage="Publish Reply"/>
-								</div>
+						<div style={styles.replyFooter}>
+							<div style={styles.replyUserImageWrapper}>
+								<img style={styles.replyUserImage} src={'https://jake.pubpub.org/unsafe/50x50/' + this.props.loginData.getIn(['userData', 'image'])} />
 							</div>
-						</Sticky>
+							<div style={styles.replyLicense} key={'discussionLicense'}>
+								<License text={'All discussions are licensed under a'} hover={true} />
+							</div>
+							<div className={'button'} style={styles.replyButton} onClick={this.publishReply}>
+								<FormattedMessage id="discussion.PublishReply" defaultMessage="Publish Reply"/>
+							</div>
+						</div>
+						{/* </Sticky> */}
 
 
 					</div>
 				}
 
 				{!loggedIn &&
-					<Sticky style={styles.replyWrapper} isActive={!!replyToData}>
-						<Link target={linkTarget} to={'/login' + loginQuery} style={globalStyles.link}>
-							<div style={styles.loginMessage}><FormattedMessage id="discussion.LoginToPost" defaultMessage="Login to post discussion"/></div>
-						</Link>
-					</Sticky>
+					/* <Sticky style={styles.replyWrapper} isActive={!!replyToData}> */
+					<Link target={linkTarget} to={'/login' + loginQuery} style={globalStyles.link}>
+						<div style={styles.loginMessage}><FormattedMessage id="discussion.LoginToPost" defaultMessage="Login to post discussion"/></div>
+					</Link>
+					/* </Sticky> */
 				}
 
 

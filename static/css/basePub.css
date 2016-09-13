@@ -66,33 +66,33 @@
  	user-select: none;
 }*/
 
-div.atom-header-detail {
+/*div.atom-header-detail {
 	margin: .25em 0em;
 	font-size: 1em;
 	line-height: 1em;
 	color: #58585B;
 }
-
+*/
 /*.atom-reader-header p {
 	margin: .25em 0em;
 	font-size: 1em;
 	line-height: 1em;
 	color: #808284;
 }*/
-.atom-header a {
-	color: inherit;
-	text-decoration: none;
+/*.atom-header a {*/
+	/*color: inherit;*/
+	/*text-decoration: none;*/
     /*padding-right: .5em;*/
-}
+/*}*/
 /*.atom-header a:hover {
 	text-decoration: underline;
 }*/
 
-.atom-header {
+/*.atom-header {
 	border-bottom: 1px solid #F3F3F4;
 	margin-bottom: 1em;
 	padding-bottom: 1em;
-}
+}*/
 /* ------------------------- */
 
 
