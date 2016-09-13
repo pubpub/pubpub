@@ -9,13 +9,13 @@ import { StickyContainer as UnwrappedStickyContainer, Sticky } from 'react-stick
 const StickyContainer = Radium(UnwrappedStickyContainer);
 
 import {getAtomData, submitAtomToJournals, saveVersion, updateAtomDetails, publishVersion, addContributor, updateContributor, deleteContributor} from './actions';
-// import {follow, unfollow} from 'containers/Login/actions';
 // import {createHighlight} from 'containers/MediaLibrary/actions';
 
 import {Discussions, FollowButton} from 'containers';
 import {HorizontalNav, License} from 'components';
 import AtomContributors from './AtomContributors';
 import AtomTitle from './AtomTitle';
+import AtomHeaderDetail from './AtomHeaderDetail';
 import AtomExportButton from './AtomExportButton';
 import AtomCiteButton from './AtomCiteButton';
 import AtomFollowers from './AtomFollowers';
@@ -262,16 +262,19 @@ export const Atom = React.createClass({
 
 		const contributorsData = safeGetInToJS(this.props.atomData, ['contributorsData']) || [];
 		const featuredData = safeGetInToJS(this.props.atomData, ['featuredData']) || [];
+		const followersData = safeGetInToJS(this.props.atomData, ['followersData']) || [];
+		const versionsData = safeGetInToJS(this.props.atomData, ['versionsData']) || [];
+
 		const currentVersionContent = safeGetInToJS(this.props.atomData, ['currentVersionData', 'content']) || {};
 		const currentVersionDate = safeGetInToJS(this.props.atomData, ['currentVersionData', 'createDate']);
-		const followersData = safeGetInToJS(this.props.atomData, ['followersData']) || [];
+		
 
 		const markdown = currentVersionContent.markdown;
 		const toc = generateTOC(this.state.currentDocMarkdown || markdown).full;
 
 		const versionQuery = this.props.query && this.props.query.version ? '?version=' + this.props.query.version : '';
 		const permissionType = safeGetInToJS(this.props.atomData, ['atomData', 'permissionType']) || '';
-		const versionsData = safeGetInToJS(this.props.atomData, ['versionsData']) || [];
+		
 
 		const isLoading = safeGetInToJS(this.props.atomData, ['loading']);
 		const error = safeGetInToJS(this.props.atomData, ['error', 'message']);
@@ -293,9 +296,7 @@ export const Atom = React.createClass({
 		/* These are only shown if the user has edit rights */
 		const atomNavItems = [
 			{link: '/pub/' + this.props.slug, text: <FormattedMessage {...globalMessages.View}/>, active: !isEditor},
-
 		];
-
 
 		if (permissionType === 'author' || permissionType === 'editor') {
 			atomNavItems.push({link: '/pub/' + this.props.slug + '/edit', text: <FormattedMessage {...globalMessages.Edit}/>, active: isEditor});
@@ -304,12 +305,8 @@ export const Atom = React.createClass({
 		}
 
 		const rightPanelNavItems = [
-			// {text: <FormattedMessage {...globalMessages.Details}/>, action: this.setRightPanelMode.bind(this, 'details'), active: this.state.rightPanelMode === 'details'},
 			{text: <FormattedMessage {...globalMessages.Contents}/>, action: this.setRightPanelMode.bind(this, 'contents'), active: this.state.rightPanelMode === 'contents'},
 			{text: <FormattedMessage {...globalMessages.Discussions}/>, action: this.setRightPanelMode.bind(this, 'discussions'), active: this.state.rightPanelMode === 'discussions'},
-			// {text: <FormattedMessage {...globalMessages.Contributors}/>, action: this.setRightPanelMode.bind(this, 'contributors'), active: this.state.rightPanelMode === 'contributors'},
-			// {text: <FormattedMessage {...globalMessages.Journals}/>, action: this.setRightPanelMode.bind(this, 'journals'), active: this.state.rightPanelMode === 'journals'},
-			// {text: <FormattedMessage {...globalMessages.Meta}/>, action: this.setRightPanelMode.bind(this, 'meta'), active: this.state.rightPanelMode === 'meta'},
 		];
 
 		// Remove 'Contents' option if atom is not a 'document' type
@@ -317,20 +314,15 @@ export const Atom = React.createClass({
 			rightPanelNavItems.splice(0, 1);
 		}
 
-		// Remove 'Details' option if the user is not the author
-		// if (permissionType !== 'author') {
-		// 	rightPanelNavItems.shift();
-		// }
-
 		const authorsData = safeGetInToJS(this.props.atomData, ['authorsData']) || [];
 		const authorList = atomData.customAuthorString ? [<Link target={linkTarget} style={globalStyles.link} to={'/pub/' + this.props.slug + '/contributors'} key={'author-0'}>{atomData.customAuthorString}</Link>] : authorsData.map((item, index)=> {
 			return <Link target={linkTarget} style={globalStyles.link} to={'/user/' + item.source.username} key={'author-' + index} className={'author underlineOnHover'}>{item.source.name}</Link>;
 		});
 
 		let newestVersionDate = currentVersionDate;
-		for (let index = 0; index < versionsData.length; index++){
-			if (newestVersionDate < versionsData[index].createDate){
-				newestVersionDate =  versionsData[index].createDate;
+		for (let index = 0; index < versionsData.length; index++) {
+			if (newestVersionDate < versionsData[index].createDate) {
+				newestVersionDate = versionsData[index].createDate;
 			}
 		}
 
@@ -339,15 +331,13 @@ export const Atom = React.createClass({
 
 				<Helmet {...metaData} />
 
-				<Style rules={{
-					'.pagebreak': { opacity: '0', },
-				}} />
+				<Style rules={{'.pagebreak': { opacity: '0', } }} />
 
 				{/* Pub Section */}
-				<StickyContainer>
-				<div style={[styles.pubSection, !this.state.showRightPanel && styles.pubSectionFull]}>
+				<StickyContainer style={[styles.pubSection, !this.state.showRightPanel && styles.pubSectionFull]}>
 
 					{/* Top Nav. Is sticky in the Editor */}
+					{/* -------------------------------- */}
 					<div style={styles.atomNavBar}>
 						<Sticky style={styles.headerBar} isActive={isEditor}>
 							{!isEmbed &&
@@ -357,8 +347,11 @@ export const Atom = React.createClass({
 							<div style={styles.headerStatus} id={'editor-participants'} className={'editor-participants opacity-on-hover'}></div>
 						</Sticky>
 					</div>
+					{/* -------------------------------- */}
+
 
 					{/* Toggle Right Panel Button */}
+					{/* ------------------------- */}
 					<div className={'opacity-on-hover'} style={styles.toggleRightPanelButton} onClick={this.toggleRightPanel}>
 						<div style={styles.toggleRightPanelLine}></div>
 						{this.state.showRightPanel &&
@@ -372,8 +365,10 @@ export const Atom = React.createClass({
 							</div>
 						}
 					</div>
+					{/* ------------------------- */}
 
 					{/* Atom Header and Body */}
+					{/* -------------------- */}
 					<div style={styles.atomWrapper}>
 						{ error &&
 							<div style={styles.errorMsg}>{error}</div>
@@ -383,7 +378,84 @@ export const Atom = React.createClass({
 						{ !error &&
 
 							<div style={styles.atomHeader}>
-								<h1 style={styles.headerTitle}>{atomData.title}<span className={'underlineOnHover'} style={[styles.headerSubDetail, styles.headerSubDetailTitle, this.state.showDetails && styles.headerSubDetailActive]} onClick={this.toggleHeaderStates.bind(this, 'showDetails')}>{this.state.showDetails ? 'Hide Metadata' : 'Edit Metadata'}</span></h1>
+
+								{/* Atom Title */}
+								{/* ---------- */}
+								<AtomHeaderDetail 
+									label={<span style={styles.headerTitle}>{atomData.title}</span>}
+									defaultMessage={null}
+									editMessage={<span>Edit Metadata</span>}
+									activeMessage={<span>Hide Metadata</span>} 
+									child={
+										<AtomDetails 
+											atomData={this.props.atomData} 
+											updateDetailsHandler={this.updateDetails} 
+											isLoading={isLoading} 
+											error={error}/>
+									} 
+									isEditor={permissionType === 'author' || permissionType === 'editor'} />
+
+								{/* Atom Contributors */}
+								{/* ----------------- */}
+								<AtomHeaderDetail 
+									label={authorList}
+									defaultMessage={<span>{contributorsData.length + ' Contributor' + (contributorsData.length !== 1 ? 's' : '')}</span>}
+									editMessage={<span>Edit Contributors</span>}
+									activeMessage={<span>Hide Contributors</span>} 
+									child={
+										<AtomContributors
+											atomData={this.props.atomData}
+											contributorsData={contributorsData}
+											handleAddContributor={this.handleAddContributor}
+											handleUpdateContributor={this.handleUpdateContributor}
+											handleDeleteContributor={this.handleDeleteContributor}
+											isLoading={isLoading}
+											error={error}
+											permissionType={permissionType}/>
+									} 
+									isEditor={permissionType === 'author' || permissionType === 'editor'} />
+
+								{/* Atom Date and Versions */}
+								{/* ---------------------- */}
+								<AtomHeaderDetail 
+									label={dateFormat(currentVersionDate, 'mmmm dd, yyyy')}
+									defaultMessage={<span>{versionsData.length + ' Version' + (versionsData.length !== 1 ? 's' : '')}</span>}
+									editMessage={<span>Manage Versions</span>}
+									activeMessage={<span>Hide Versions</span>} 
+									child={
+										<AtomVersions 
+											versionsData={versionsData} 
+											permissionType={permissionType} 
+											handlePublishVersion={this.publishVersionHandler} 
+											slug={this.props.slug} 
+											buttonStyle={styles.headerAction} />
+									} 
+									isEditor={permissionType === 'author' || permissionType === 'editor'} />
+
+								{/* Atom Journals */}
+								{/* ------------- */}
+								<div style={[styles.journalSection, (featuredData.length || permissionType === 'author' || permissionType === 'editor') && {display: 'block'}]}>
+									<AtomHeaderDetail 
+										label={featuredData.map((featured)=> {
+											const journal = featured.source;
+											return (<Link key={'journal-tab-' + journal.slug} to={'/' + journal.slug} className={'darkest-bg-hover'} style={{textDecoration: 'none', backgroundColor: journal.headerColor, marginRight: '.5em', fontSize: '0.85em', display: 'inline-block'}}>
+												<span style={{backgroundColor: 'rgba(0,0,0,0.15)', color: '#FFF', padding: '0em .5em'}}>{journal.journalName}</span>
+											</Link>);
+										})}
+										defaultMessage={featuredData.length === 0 && (permissionType === 'author' || permissionType === 'editor') ? <span>Not Featured in any Journals</span> : null}
+										editMessage={<span>Manage Journals</span>}
+										activeMessage={<span>Hide Journals</span>} 
+										child={
+											<AtomJournals 
+												atomData={this.props.atomData} 
+												handleJournalSubmit={this.handleJournalSubmit}/>
+										} 
+										isEditor={permissionType === 'author' || permissionType === 'editor'} />
+								</div>
+								
+
+
+								{/* <h1 style={styles.headerTitle}>{atomData.title}<span className={'underlineOnHover'} style={[styles.headerSubDetail, styles.headerSubDetailTitle, this.state.showDetails && styles.headerSubDetailActive]} onClick={this.toggleHeaderStates.bind(this, 'showDetails')}>{this.state.showDetails ? 'Hide Metadata' : 'Edit Metadata'}</span></h1>
 								
 								{this.state.showDetails &&
 									<div style={styles.headerExpansionWrapper}>
@@ -393,9 +465,9 @@ export const Atom = React.createClass({
 											isLoading={isLoading} 
 											error={error}/>
 									</div>
-								}
+								}*/ }
 
-								<div style={styles.headerDetail}>
+								{/* <div style={styles.headerDetail}>
 									{authorList}
 									<span className={'underlineOnHover'} style={[styles.headerSubDetail, this.state.showContributors && styles.headerSubDetailActive]} onClick={this.toggleHeaderStates.bind(this, 'showContributors')}>{this.state.showContributors ? 'Hide Contributors' : contributorsData.length + ' Contributor' + (contributorsData.length !== 1 ? 's' : '') + ' - Edit Contributors'}</span>
 								</div> 
@@ -412,9 +484,9 @@ export const Atom = React.createClass({
 											permissionType={permissionType}/>
 
 									</div>
-								}
+								} */}
 
-								<div style={styles.headerDetail}>
+								{/* <div style={styles.headerDetail}>
 									{dateFormat(currentVersionDate, 'mmmm dd, yyyy')}
 									<span className={'underlineOnHover'} style={[styles.headerSubDetail, this.state.showVersions && styles.headerSubDetailActive]} onClick={this.toggleHeaderStates.bind(this, 'showVersions')}>{this.state.showVersions ? 'Hide Versions' : versionsData.length + ' Version' + (versionsData.length !== 1 ? 's' : '') + ' - Manage Versions'}</span>
 								</div> 
@@ -427,9 +499,9 @@ export const Atom = React.createClass({
 											slug={this.props.slug} 
 											buttonStyle={styles.headerAction} />
 									</div>
-								}
+								} */}
 
-								<div>
+								{/* <div>
 									{featuredData.map((featured)=> {
 										const journal = featured.source;
 										return (<Link to={'/' + journal.slug} className={'darkest-bg-hover'} style={{textDecoration: 'none', backgroundColor: journal.headerColor, marginRight: '.5em', fontSize: '0.85em', display: 'inline-block'}}>
@@ -444,7 +516,7 @@ export const Atom = React.createClass({
 											atomData={this.props.atomData} 
 											handleJournalSubmit={this.handleJournalSubmit}/>
 									</div>
-								}
+								} */}
 
 
 
@@ -503,54 +575,29 @@ export const Atom = React.createClass({
 						}
 
 					</div>
+					{/* -------------------- */}
 
-				</div>
 				</StickyContainer>
 
+
+
 				{/* Right Panel Section */}
+				{/* ------------------- */}
 				<StickyContainer style={[styles.rightPanel, (!this.state.showRightPanel || hideRightPanel) && styles.hideRightPanel]}>
 					{!error &&
 
-					<Sticky stickyStyle={this.state.showRightPanel ? {} : {left: '0px'}}>
-						<HorizontalNav navItems={rightPanelNavItems} mobileNavButtons={mobileNavButtons}/>
+						<Sticky stickyStyle={this.state.showRightPanel ? {} : {left: '0px'}}>
+							<HorizontalNav navItems={rightPanelNavItems} mobileNavButtons={mobileNavButtons}/>
 							<div style={styles.rightPanelContent}>
 								{this.state.rightPanelMode === 'contents'
 									? <AtomContents atomData={this.props.atomData} tocData={toc}/>
 									: <Discussions/>
 								}
-								{(()=>{
-									switch (this.state.rightPanelMode) {
-									/*case 'contributors':
-										return (
-											<AtomContributors
-												atomData={this.props.atomData}
-												contributorsData={contributorsData}
-												handleAddContributor={this.handleAddContributor}
-												handleUpdateContributor={this.handleUpdateContributor}
-												handleDeleteContributor={this.handleDeleteContributor}
-												isLoading={isLoading}
-												error={error}
-												permissionType={permissionType}/>
-										);
-									case 'journals':
-										return <AtomJournals atomData={this.props.atomData} handleJournalSubmit={this.handleJournalSubmit}/>;
-									case 'meta':
-										return <AtomMeta atomData={this.props.atomData}/>;
-									case 'details':
-										return <AtomDetails atomData={this.props.atomData} updateDetailsHandler={this.updateDetails} isLoading={isLoading} error={error}/>;*/
-									case 'contents':
-										return <AtomContents atomData={this.props.atomData} tocData={toc}/>;
-									case 'discussions':
-									default:
-										return <Discussions/>;
-									}
-								})()}
 							</div>
-
-					</Sticky>
+						</Sticky>
 					}
-
 				</StickyContainer>
+				{/* ------------------- */}
 
 
 			</div>
@@ -585,38 +632,46 @@ styles = {
 		marginTop: '.75em',
 		marginBottom: '.5em',
 		color: '#222',
+		letterSpacing: '-2px',
+		lineHeight: '1em',
+		display: 'inline-block',
+		fontWeight: 'bold',
 	},
 	headerDetail: {
 		margin: '.25em 0em',
 	},
-	headerSubDetail: {
-		padding: '0em 1em',
-		color: '#808284',
-		fontFamily: '"Open Sans", Helvetica Neue, Arial, sans-serif',
-		cursor: 'pointer',
-		userSelect: 'none',
-		fontSize: '0.85em',
-		lineHeight: '1.25em',
+	journalSection: {
+		marginTop: '1em',
+		display: 'none',
 	},
-	headerSubDetailTitle: {
-		fontSize: '0.34em',  // = 0.9em / 2.5
-		letterSpacing: '0px',
-		fontWeight: 'normal',
-	},
-	headerSubDetailActive: {
-		// backgroundColor: '#F3F3F4',
-	},
+	// headerSubDetail: {
+	// 	padding: '0em 1em',
+	// 	color: '#808284',
+	// 	fontFamily: '"Open Sans", Helvetica Neue, Arial, sans-serif',
+	// 	cursor: 'pointer',
+	// 	userSelect: 'none',
+	// 	fontSize: '0.85em',
+	// 	lineHeight: '1.25em',
+	// },
+	// headerSubDetailTitle: {
+	// 	fontSize: '0.34em',  // = 0.9em / 2.5
+	// 	letterSpacing: '0px',
+	// 	fontWeight: 'normal',
+	// },
+	// headerSubDetailActive: {
+	// 	// backgroundColor: '#F3F3F4',
+	// },
 	headerMeta: {
 		fontSize: '0.85em',
 		padding: '0em 1em 0em .5em',
 		cursor: 'pointer',
 	},
 
-	headerExpansionWrapper: {
-		padding: '1em 2em',
-		margin: '.5em 0em',
-		backgroundColor: '#F3F3F4',
-	},
+	// headerExpansionWrapper: {
+	// 	padding: '1em 2em',
+	// 	margin: '.5em 0em',
+	// 	backgroundColor: '#F3F3F4',
+	// },
 	// exportType: {
 	// 	margin: '.5em 1em',
 	// 	cursor: 'pointer',
