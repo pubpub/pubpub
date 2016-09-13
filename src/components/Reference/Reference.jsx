@@ -7,7 +7,7 @@ export const Reference = React.createClass({
 	propTypes: {
 		citationObject: PropTypes.object,
 		mode: PropTypes.string,
-		showNote: PropTypes.boolean,
+		showNote: PropTypes.bool,
 	},
 
 	getDefaultProps: function() {
