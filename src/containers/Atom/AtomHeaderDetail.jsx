@@ -1,6 +1,5 @@
 import React, {PropTypes} from 'react';
 import Radium from 'radium';
-import {globalStyles} from 'utils/styleConstants';
 
 let styles = {};
 
@@ -12,6 +11,7 @@ export const AtomHeaderDetail = React.createClass({
 		activeMessage: PropTypes.object,
 		child: PropTypes.object,
 		canEdit: PropTypes.bool,
+		style: PropTypes.object,
 	},
 
 	getInitialState() {
@@ -26,7 +26,7 @@ export const AtomHeaderDetail = React.createClass({
 
 	render: function() {
 		return (
-			<div>
+			<div style={this.props.style}>
 				{this.props.label}
 				{!this.state.showChild
 					? <span className={'underlineOnHover'} onClick={this.toggleShow} style={styles.detail}>

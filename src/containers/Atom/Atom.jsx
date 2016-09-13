@@ -365,7 +365,8 @@ export const Atom = React.createClass({
 											isLoading={isLoading} 
 											error={error}/>
 									} 
-									canEdit={permissionType === 'author' || permissionType === 'editor'} />
+									canEdit={permissionType === 'author' || permissionType === 'editor'} 
+									style={styles.headerWrapper}/>
 
 								{/* Atom Contributors */}
 								{/* ----------------- */}
@@ -408,13 +409,16 @@ export const Atom = React.createClass({
 								{/* ------------- */}
 								<div style={[styles.journalSection, (featuredData.length || permissionType === 'author' || permissionType === 'editor') && {display: 'block'}]}>
 									<AtomHeaderDetail 
-										label={featuredData.map((featured)=> {
-											const journal = featured.source;
-											return (<Link key={'journal-tab-' + journal.slug} to={'/' + journal.slug} className={'darkest-bg-hover'} style={{textDecoration: 'none', backgroundColor: journal.headerColor, marginRight: '.5em', fontSize: '0.85em', display: 'inline-block'}}>
-												<span style={{backgroundColor: 'rgba(0,0,0,0.15)', color: '#FFF', padding: '0em .5em'}}>{journal.journalName}</span>
-											</Link>);
-										})}
-										defaultMessage={featuredData.length === 0 && (permissionType === 'author' || permissionType === 'editor') ? <FormattedMessage id={'atom.NotFeaturedInJournals'} defaultMessage={'Not Featured in any Journals'} /> : null}
+										label={featuredData.length
+											? featuredData.map((featured)=> {
+												const journal = featured.source;
+												return (<Link key={'journal-tab-' + journal.slug} to={'/' + journal.slug} className={'darkest-bg-hover'} style={{textDecoration: 'none', backgroundColor: journal.headerColor, marginRight: '.5em', fontSize: '0.85em', display: 'inline-block'}}>
+													<span style={{backgroundColor: 'rgba(0,0,0,0.15)', color: '#FFF', padding: '0em .5em'}}>{journal.journalName}</span>
+												</Link>);
+											})
+											: <FormattedMessage id={'atom.NotFeaturedInJournals'} defaultMessage={'Not Featured in any Journals'} />
+										}
+										defaultMessage={null}
 										editMessage={<FormattedMessage id={'atom.ManageJournals'} defaultMessage={'Manage Journals'} />}
 										activeMessage={<FormattedMessage id={'atom.HideJournals'} defaultMessage={'Hide Journals'} />} 
 										child={
@@ -533,14 +537,18 @@ styles = {
 		marginBottom: '1em',
 		paddingBottom: '1em',
 	},
+	headerWrapper: {
+		marginTop: '2em',
+		marginBottom: '1em',
+	},
 	headerTitle: {
 		fontSize: '2.5em',
-		marginTop: '.75em',
-		marginBottom: '.5em',
+		// marginTop: '.75em',
+		// marginBottom: '.5em',
 		color: '#222',
 		letterSpacing: '-2px',
 		lineHeight: '1em',
-		display: 'inline-block',
+		// display: 'inline-block',
 		fontWeight: 'bold',
 	},
 	journalSection: {
