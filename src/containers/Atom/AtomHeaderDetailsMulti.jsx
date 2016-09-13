@@ -1,6 +1,5 @@
 import React, {PropTypes} from 'react';
 import Radium from 'radium';
-import {globalStyles} from 'utils/styleConstants';
 
 let styles = {};
 
@@ -35,7 +34,7 @@ export const AtomHeaderDetailsMulti = React.createClass({
 				{labels.map((label, index)=>{
 					const message = index === this.state.showView ? activeMessages[index] : labels[index];
 					return (
-						<span style={styles.label} className={'underlineOnHover'} onClick={this.toggleShow.bind(this, index)}>
+						<span key={'multi-option-' + index} style={styles.label} className={'underlineOnHover'} onClick={this.toggleShow.bind(this, index)}>
 							{message}
 						</span>
 					);

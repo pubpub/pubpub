@@ -356,8 +356,8 @@ export const Atom = React.createClass({
 								<AtomHeaderDetail 
 									label={<span style={styles.headerTitle}>{atomData.title}</span>}
 									defaultMessage={null}
-									editMessage={<span>Edit Metadata</span>}
-									activeMessage={<span>Hide Metadata</span>} 
+									editMessage={<FormattedMessage id={'atom.EditMetadata'} defaultMessage={'Edit Metadata'} />}
+									activeMessage={<FormattedMessage id={'atom.HideMetadata'} defaultMessage={'Hide Metadata'} />} 
 									child={
 										<AtomDetails 
 											atomData={this.props.atomData} 
@@ -371,9 +371,9 @@ export const Atom = React.createClass({
 								{/* ----------------- */}
 								<AtomHeaderDetail 
 									label={authorList}
-									defaultMessage={<span>{contributorsData.length + ' Contributor' + (contributorsData.length !== 1 ? 's' : '')}</span>}
-									editMessage={<span>Edit Contributors</span>}
-									activeMessage={<span>Hide Contributors</span>} 
+									defaultMessage={<FormattedMessage id="atom.NContributors" defaultMessage={`{contributorCount} {contributorCount, plural, one {Contributor} other {Contributors} }`} values={{contributorCount: contributorsData.length}} />}
+									editMessage={<FormattedMessage id={'atom.EditContributors'} defaultMessage={'Edit Contributors'} />}
+									activeMessage={<FormattedMessage id={'atom.HideContributors'} defaultMessage={'Hide Contributors'} />} 
 									child={
 										<AtomContributors
 											atomData={this.props.atomData}
@@ -391,9 +391,9 @@ export const Atom = React.createClass({
 								{/* ---------------------- */}
 								<AtomHeaderDetail 
 									label={dateFormat(currentVersionDate, 'mmmm dd, yyyy')}
-									defaultMessage={<span>{versionsData.length + ' Version' + (versionsData.length !== 1 ? 's' : '')}</span>}
-									editMessage={<span>Manage Versions</span>}
-									activeMessage={<span>Hide Versions</span>} 
+									defaultMessage={<FormattedMessage id="atom.NVersions" defaultMessage={`{versionCount} {versionCount, plural, one {Version} other {Versions} }`} values={{versionCount: versionsData.length}} />}
+									editMessage={<FormattedMessage id={'atom.ManageVersions'} defaultMessage={'Manage Versions'} />}
+									activeMessage={<FormattedMessage id={'atom.HideVersions'} defaultMessage={'Hide Versions'} />} 
 									child={
 										<AtomVersions 
 											versionsData={versionsData} 
@@ -414,9 +414,9 @@ export const Atom = React.createClass({
 												<span style={{backgroundColor: 'rgba(0,0,0,0.15)', color: '#FFF', padding: '0em .5em'}}>{journal.journalName}</span>
 											</Link>);
 										})}
-										defaultMessage={featuredData.length === 0 && (permissionType === 'author' || permissionType === 'editor') ? <span>Not Featured in any Journals</span> : null}
-										editMessage={<span>Manage Journals</span>}
-										activeMessage={<span>Hide Journals</span>} 
+										defaultMessage={featuredData.length === 0 && (permissionType === 'author' || permissionType === 'editor') ? <FormattedMessage id={'atom.NotFeaturedInJournals'} defaultMessage={'Not Featured in any Journals'} /> : null}
+										editMessage={<FormattedMessage id={'atom.ManageJournals'} defaultMessage={'Manage Journals'} />}
+										activeMessage={<FormattedMessage id={'atom.HideJournals'} defaultMessage={'Hide Journals'} />} 
 										child={
 											<AtomJournals 
 												atomData={this.props.atomData} 
@@ -438,13 +438,21 @@ export const Atom = React.createClass({
 										<AtomCiteButton atomData={this.props.atomData} authorsData={authorsData} customAuthorString={atomData.customAuthorString} versionQuery={versionQuery} buttonStyle={styles.headerAction}/>
 										<FollowButton id={atomData._id} type={'followsAtom'} isFollowing={atomData.isFollowing} buttonClasses={'light-button'} buttonStyle={{...styles.headerAction, ...styles.headerActionPlainPadding}}/>
 										<AtomHeaderDetailsMulti
-											labels={[followersData.length + ' Followers', 'Analytics']}
-											activeMessages={['Hide Followers', 'Hide Analytics']}
+											labels={[
+												<FormattedMessage id="atom.NFollowers" defaultMessage={`{followerCount} Followers`} values={{followerCount: followersData.length}} />, 
+												<FormattedMessage {...globalMessages.Analytics} />
+											]}
+											activeMessages={[
+												<FormattedMessage id={'atom.HideFollowers'} defaultMessage={'Hide Followers'} />, 
+												<FormattedMessage id={'atom.HideAnalytics'} defaultMessage={'Hide Analytics'} />
+											]}
 											views={[
 												<AtomFollowers atomData={this.props.atomData} />,
 												<AtomAnalytics atomData={this.props.atomData}/>
 											]}
 											canEdit={permissionType === 'author' || permissionType === 'editor'} />
+
+											
 									</div>
 								}
 
