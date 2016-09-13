@@ -1,21 +1,22 @@
-import React, {PropTypes} from 'react';
-import Radium from 'radium';
 import AtomTypes from 'components/AtomTypes';
-import {safeGetInToJS} from 'utils/safeParse';
-
-import {globalMessages} from 'utils/globalMessages';
+import Radium from 'radium';
+import React, {PropTypes} from 'react';
 import {FormattedMessage} from 'react-intl';
+import {globalMessages} from 'utils/globalMessages';
+import {safeGetInToJS} from 'utils/safeParse';
 
 export const AtomViewerPane = React.createClass({
 	propTypes: {
 		atomData: PropTypes.object,
 		renderType: PropTypes.string,
+		context: PropTypes.oneOf(['reference-list', 'document', 'library']),
 	},
 
 	render: function() {
 		const props = {
 			atomData: this.props.atomData,
 			renderType: this.props.renderType || 'full',
+			context: this.props.context,
 		};
 		const type = safeGetInToJS(this.props.atomData, ['atomData', 'type']);
 

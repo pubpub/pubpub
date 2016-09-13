@@ -1,5 +1,5 @@
-import React, {PropTypes} from 'react';
 import Radium from 'radium';
+import React, {PropTypes} from 'react';
 
 let styles = {};
 
@@ -7,12 +7,14 @@ export const Reference = React.createClass({
 	propTypes: {
 		citationObject: PropTypes.object,
 		mode: PropTypes.string,
+		showNote: PropTypes.boolean,
 	},
 
 	getDefaultProps: function() {
 		return {
 			citationObject: {},
-			mode: 'mla'
+			mode: 'mla',
+			showNote: true,
 		};
 	},
 
@@ -21,6 +23,10 @@ export const Reference = React.createClass({
 		const citation = this.props.citationObject;
 		const citationStrings = {};
 		let bibtexString = null;
+
+		if (this.props.showNote === false) {
+			citation.note = null;
+		}
 		// console.log(citation);
 		// Switch over string construction statements, based on mode.
 		switch (this.props.mode) {

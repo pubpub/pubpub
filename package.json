@@ -121,6 +121,7 @@
     "express-session": "^1.11.3",
     "fixed-data-table-2": "^0.7.1",
     "fuzzy": "^0.1.1",
+    "google-scholar-link": "^1.0.1",
     "googleapis": "^8.2.0",
     "happypack": "^2.1.1",
     "history": "^2.0.0",
