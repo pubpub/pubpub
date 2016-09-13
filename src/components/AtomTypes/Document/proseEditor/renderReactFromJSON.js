@@ -1,4 +1,5 @@
 import React from 'react';
+
 import EmbedWrapper from './EmbedWrapper';
 
 let citeCounts = {};
@@ -16,13 +17,13 @@ export const renderReactFromJSON = function(item, isRoot) {
 
 	const content = item.map((node, index)=>{
 		switch (node.type) {
-		case 'heading': 
+		case 'heading':
 			if (!node.content) { return null; }
 			const id = node.content[0] && node.content[0].text && node.content[0].text.trim().replace(/[^A-Za-z0-9 ]/g, '').replace(/\s/g, '-').toLowerCase();
 			return React.createElement('h' + node.attrs.level, {key: index, id: id}, renderReactFromJSON(node.content));
 		case 'blockquote':
 			return <blockquote key={index}>{renderReactFromJSON(node.content)}</blockquote>;
-		case 'ordered_list': 
+		case 'ordered_list':
 			return <ol start={node.attrs.order === 1 ? null : node.attrs.oder} key={index}>{renderReactFromJSON(node.content)}</ol>;
 		case 'bullet_list':
 			return <ul key={index}>{renderReactFromJSON(node.content)}</ul>;
@@ -59,7 +60,7 @@ export const renderReactFromJSON = function(item, isRoot) {
 					return <s key={index}>{previous}</s>;
 				case 'link':
 					return <a href={current.href} title={current.title} key={index}>{previous}</a>;
-				default: 
+				default:
 					return previous;
 				}
 			}, node.text);
@@ -82,7 +83,7 @@ export const renderReactFromJSON = function(item, isRoot) {
 		return (
 			<div>
 				{content}
-				{!!Object.keys(citeCounts).length && 
+				{!!Object.keys(citeCounts).length &&
 					<h1 className={'references-header'}>References</h1>
 				}
 				{Object.keys(citeCounts).sort((foo, bar)=>{
@@ -93,12 +94,12 @@ export const renderReactFromJSON = function(item, isRoot) {
 					return (
 						<div key={'reference-list-item-' + index}>
 							<span className={'reference-number'}>[{index + 1}]</span>
-							<EmbedWrapper data={citeObjects[countID]} align={'inline'}/>
+							<EmbedWrapper data={citeObjects[countID]} align={'inline-word'} context={'reference-list'}/>
 						</div>
 					);
 				})}
 			</div>
 		);
-	}	
+	}
 	return content;
 };

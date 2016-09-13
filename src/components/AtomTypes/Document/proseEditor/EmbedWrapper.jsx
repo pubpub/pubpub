@@ -8,13 +8,18 @@ export const EmbedWrapper = React.createClass({
 		source: PropTypes.string,
 		className: PropTypes.string,
 		id: PropTypes.string,
-		align: PropTypes.string, // inline or full or left or right
+		align: PropTypes.oneOf(['inline', 'full', 'left', 'right']),
 		size: PropTypes.string,
 		caption: PropTypes.string,
-		mode: PropTypes.string, // 'embed' or 'cite'
+		mode: PropTypes.oneOf(['embed', 'cite']),
 		data: PropTypes.object,
 		citeCount: PropTypes.number,
-
+		context: PropTypes.oneOf(['reference-list', 'document', 'library']), //where the embed is being used
+	},
+	getDefaultProps: function() {
+		return {
+			context: 'document',
+		};
 	},
 	componentDidMount: function() {
 		// console.log('Mounted atom!');
@@ -50,6 +55,8 @@ export const EmbedWrapper = React.createClass({
 			style.display = 'block';
 			style.float = 'right';
 			style.paddingLeft = '2em';
+		} else if (this.props.align === 'inline-word') {
+			style.display = 'inline';
 		}
 
 		if (this.props.mode === 'cite') {
@@ -69,11 +76,40 @@ export const EmbedWrapper = React.createClass({
 			// }
 
 
+			const styleButton = {
+				padding: '0em 0em',
+				height: '0.75em',
+				width: '0.75em',
+				position: 'relative',
+				top: '-0.15em',
+				verticalAlign: 'middle',
+				display: 'inline-block',
+				cursor: 'pointer',
+				// border: 'none'
+			};
+
+			const hoverStyle = {
+				minWidth: '275px',
+				padding: '1em',
+				fontSize: '0.85em'
+			};
+
+			const numberStyle = {
+				display: 'inline-block',
+				height: '100%',
+				verticalAlign: 'top',
+				position: 'relative',
+				top: '-0.45em',
+				fontSize: '0.85em',
+			};
+
 			return (
-				<span className={'showChildOnHover cite-wrapper'} data-source={this.props.source}>
-					[{number}]
-					<div className={'hoverChild hover-box'}>
-						<AtomViewerPane atomData={atomData} renderType={'embed'}/>
+				<span className={'light-button arrow-down-button cite-wrapper no-arrow'} style={styleButton} data-source={this.props.source}>
+					<span style={numberStyle}>
+						{number}
+					</span>
+					<div className={'hoverChild arrow-down-child'} style={hoverStyle}>
+						<AtomViewerPane atomData={atomData} renderType={'embed'} context={this.props.context}/>
 					</div>
 				</span>
 			);
@@ -81,7 +117,7 @@ export const EmbedWrapper = React.createClass({
 
 		return (
 			<div className={'pub-embed ' + this.props.className} id={this.props.id} style={style}>
-				<AtomViewerPane atomData={atomData} renderType={'embed'}/>
+				<AtomViewerPane atomData={atomData} renderType={'embed'} context={this.props.context}/>
 				<div className={'caption'}>{this.props.caption}</div>
 			</div>
 		);

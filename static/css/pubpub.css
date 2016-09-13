@@ -256,7 +256,7 @@ h2 {
 .button:hover, .arrow-down-button:hover {
 	border: solid 2px #2C2A2B;
 	background-color: #2C2A2B;
-	color: #FEFEFE;
+	color: #FEFEFE !important;
 }
 .button:hover {
 	cursor: pointer;
@@ -296,6 +296,10 @@ h2 {
 	position: absolute;
 	right: .5em;
 	top: calc(50% - .25em);
+}
+
+.arrow-down-button.no-arrow:after {
+	content: none !important;
 }
 
 .arrow-down-child {
