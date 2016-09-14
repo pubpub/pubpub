@@ -20,6 +20,8 @@ const userSchema = new Schema({
 	website: { type: String }, // website url
 	googleScholar: { type: String }, // googleScholar id
 
+	accessToken: { type: String}, // access token for the PubPub API
+
 	yays: [ { type: ObjectId, ref: 'Discussion' } ], // Yays cast
 	nays: [ { type: ObjectId, ref: 'Discussion' } ], // Nays cast
 

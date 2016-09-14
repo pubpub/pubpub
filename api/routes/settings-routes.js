@@ -2,6 +2,9 @@ const app = require('../api');
 
 const User = require('../models').User;
 
+const Promise = require('bluebird');
+const randomBytes = Promise.promisify(require("crypto").randomBytes);
+
 export function saveUserSettings(req, res) {
 	const userID = req.user ? req.user._id : undefined;
 	if (!userID) { return res.status(403).json('Not authorized to edit this user'); }
@@ -46,3 +49,22 @@ export function saveUserSettings(req, res) {
 	});
 }
 app.post('/saveUserSettings', saveUserSettings);
+
+// Generate an access token and store it with user
+export function generateToken(req, res) {
+	randomBytes(48)
+	.then(function(bytes) {
+		return bytes.toString('hex');
+
+	})
+	.then(function(token) {
+		return [User.findOne({_id: req.user._id}).exec(), token];
+	})
+	.spread(function(user, token) {
+		user.accessToken = token;
+		user.save();
+		return res.status(201).json({accessToken: token});
+	});
+}
+
+app.get('/generateToken', generateToken);

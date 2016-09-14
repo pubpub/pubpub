@@ -17,6 +17,7 @@ import UserProfileFollowing from './UserProfileFollowing';
 import UserProfileSettingsProfile from './UserProfileSettingsProfile';
 import UserProfileSettingsAccount from './UserProfileSettingsAccount';
 import UserProfileSettingsNotifications from './UserProfileSettingsNotifications';
+import UserProfileSettingsAccessTokens from './UserProfileSettingsAccessTokens';
 
 import {globalMessages} from 'utils/globalMessages';
 import {FormattedMessage} from 'react-intl';
@@ -84,6 +85,8 @@ export const UserProfile = React.createClass({
 			{ type: 'link', text: <FormattedMessage {...globalMessages.Profile}/>, link: '/user/' + this.props.username + '/profile', active: this.props.mode === 'profile'},
 			// { type: 'link', text: 'Account', link: '/user/' + this.props.username + '/account', active: this.props.mode === 'account'},
 			{ type: 'link', text: <FormattedMessage {...globalMessages.Notifications}/>, link: '/user/' + this.props.username + '/notifications', active: this.props.mode === 'notifications' },
+			{ type: 'link', text: 'Access Token', link: '/user/' + this.props.username + '/tokens', active: this.props.mode === 'tokens' },
+
 		]
 		: [];
 		const navItems = [
@@ -112,7 +115,7 @@ export const UserProfile = React.createClass({
 		];
 
 		let mode = this.props.mode;
-		if (!ownProfile && (mode === 'profile' || mode === 'notifications' || mode === 'account')) {
+		if (!ownProfile && (mode === 'profile' || mode === 'notifications' || mode === 'account' || mode === 'tokens')) {
 			mode = 'notFound';
 		}
 
@@ -170,6 +173,13 @@ export const UserProfile = React.createClass({
 									settingsData={this.props.profileData}
 									loginData={this.props.loginData}
 									saveSettingsHandler={this.saveSettings}/>
+							);
+						case 'tokens':
+							return (
+								<UserProfileSettingsAccessTokens
+									settingsData={this.props.profileData}
+									loginData={this.props.loginData}
+									dispatch= {this.props.dispatch}/>
 							);
 						case 'profile':
 							return (

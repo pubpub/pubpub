@@ -13,6 +13,10 @@ import {
 	SAVE_SETTINGS_SUCCESS,
 	SAVE_SETTINGS_FAIL,
 
+	GENERATE_TOKEN_LOAD,
+	GENERATE_TOKEN_SUCCESS,
+	GENERATE_TOKEN_FAIL,
+
 } from './actions';
 
 /*--------*/
@@ -71,6 +75,24 @@ function saveSettingsFail(state, error) {
 	});
 }
 
+function generateTokenLoad(state) {
+	return state;
+}
+
+function generateTokenSuccess(state, result) {
+	return state.merge({
+		loading: false,
+		error: undefined,
+		token: result.accessToken
+	});
+}
+
+function generateTokenFail(state, error) {
+	return state.merge({
+		loading: false,
+		error: error,
+	});}
+
 /*--------*/
 // Bind actions to specific reducing functions.
 /*--------*/
@@ -90,6 +112,13 @@ export default function reducer(state = defaultState, action) {
 		return saveSettingsSuccess(state, action.result);
 	case SAVE_SETTINGS_FAIL:
 		return saveSettingsFail(state, action.error);
+
+	case GENERATE_TOKEN_LOAD:
+		return generateTokenLoad(state);
+	case GENERATE_TOKEN_SUCCESS:
+		return generateTokenSuccess(state, action.result);
+	case GENERATE_TOKEN_FAIL:
+		return generateTokenFail(state, action.error);
 
 	default:
 		return ensureImmutable(state);
