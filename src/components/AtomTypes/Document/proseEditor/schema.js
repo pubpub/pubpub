@@ -1,7 +1,9 @@
-import {Schema, Inline, Block, Text, Attribute, MarkType} from 'prosemirror/dist/model';
-import {Doc, BlockQuote, OrderedList, BulletList, ListItem, HorizontalRule, Heading, CodeBlock, Paragraph, Image, HardBreak, EmMark, StrongMark, LinkMark, CodeMark} from 'prosemirror/dist/schema-basic';
+import murmur from 'murmurhash';
 import React from 'react';
 import ReactDOM from 'react-dom';
+import {Schema, Inline, Block, Text, Attribute, MarkType} from 'prosemirror/dist/model';
+import {Doc, BlockQuote, OrderedList, BulletList, ListItem, HorizontalRule, Heading, CodeBlock, Paragraph, Image, HardBreak, EmMark, StrongMark, LinkMark, CodeMark} from 'prosemirror/dist/schema-basic';
+
 import EmbedWrapper from './EmbedWrapper';
 
 // An Emoji node type.
@@ -53,6 +55,9 @@ exports.StrikeThroughMark = StrikeThroughMark;
 // - **`size`**: CSS valid width
 // - **`caption`**: String caption to place under the embed
 // - **`data`**: Cached version/atom data. This is not serialized into markdown (in the long-term), but is kept here for fast rendering
+
+const domHashes = {};
+
 class Embed extends Inline {
 	get attrs() {
 		return {
@@ -63,14 +68,46 @@ class Embed extends Inline {
 			size: new Attribute({default: ''}),
 			caption: new Attribute({default: ''}),
 			mode: new Attribute({default: 'embed'}), // mode = embed || cite
-			data: new Attribute({default: {}})
+			data: new Attribute({default: {}}),
+			selected: new Attribute({default: false}),
 		};
 	}
 	get draggable() { return true; }
+
+	get matchDOMTag() {
+		return {'.embed': dom => {
+			const domHash = dom.getAttribute('data-nodeHash');
+			const nodeAttrs = domHashes[domHash];
+			return {
+				source: nodeAttrs.source,
+				data: nodeAttrs.data,
+				align: nodeAttrs.align,
+				size: nodeAttrs.size,
+				caption: nodeAttrs.caption,
+				mode: nodeAttrs.mode,
+				className: nodeAttrs.className,
+				children: null,
+				childNodes: null,
+			};
+		}};
+	}
+
 	toDOM(node) {
-		const dom = document.createElement('div');
-		ReactDOM.render(<EmbedWrapper {...node.attrs}/>, dom);
-		return dom.childNodes[0];
+		const domParent = document.createElement('span');
+
+		ReactDOM.render(<EmbedWrapper {...node.attrs}/>, domParent);
+		const dom = domParent.childNodes[0];
+		dom.className += ' embed';
+		const nodeHash = murmur.v3(JSON.stringify(node.attrs));
+		dom.setAttribute('data-nodeHash', nodeHash);
+		domHashes[nodeHash] = node.attrs;
+
+		dom.addEventListener('DOMNodeRemovedFromDocument', function(evt) {
+			ReactDOM.unmountComponentAtNode(domParent);
+			delete domHashes[nodeHash];
+		});
+
+		return domParent;
 	}
 }
 
@@ -79,7 +116,7 @@ exports.Embed = Embed;
 export const schema = new Schema({
 	nodes: {
 		doc: {type: Doc, content: 'block+'},
-		
+
 		paragraph: {type: Paragraph, content: 'inline<_>*', group: 'block'},
 		blockquote: {type: BlockQuote, content: 'block+', group: 'block'},
 		ordered_list: {type: OrderedList, content: 'list_item+', group: 'block'},

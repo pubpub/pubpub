@@ -5,8 +5,8 @@ import {safeGetInToJS} from 'utils/safeParse';
 import {PreviewCard} from 'components';
 
 // import {globalStyles} from 'utils/styleConstants';
-// import {globalMessages} from 'utils/globalMessages';
-// import {FormattedMessage} from 'react-intl';
+import {globalMessages} from 'utils/globalMessages';
+import {FormattedMessage} from 'react-intl';
 
 export const JournalProfileSubmitted = React.createClass({
 	propTypes: {
@@ -17,12 +17,12 @@ export const JournalProfileSubmitted = React.createClass({
 		const journalData = safeGetInToJS(this.props.journalData, ['journalData']) || {};
 		const followersData = safeGetInToJS(this.props.journalData, ['followersData']) || [];
 		const metaData = {
-			title: 'Followers · ' + journalData.journalName,
+			title: 'Followers' + ' · ' + journalData.journalName,
 		};
 
 		return (
 			<div className={'firstChildNoTopMargin'}>
-				<Helmet {...metaData} />	
+				<Helmet {...metaData} />
 
 				{
 					followersData.sort((foo, bar)=>{

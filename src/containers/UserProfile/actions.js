@@ -12,6 +12,10 @@ export const SAVE_SETTINGS_LOAD = 'user/SAVE_SETTINGS_LOAD';
 export const SAVE_SETTINGS_SUCCESS = 'user/SAVE_SETTINGS_SUCCESS';
 export const SAVE_SETTINGS_FAIL = 'user/SAVE_SETTINGS_FAIL';
 
+export const GENERATE_TOKEN_LOAD = 'user/GENERATE_TOKEN_LOAD';
+export const GENERATE_TOKEN_SUCCESS = 'user/GENERATE_TOKEN_SUCCESS';
+export const GENERATE_TOKEN_FAIL = 'user/GENERATE_TOKEN_FAIL';
+
 /*--------*/
 // Define Action creators
 //
@@ -30,5 +34,12 @@ export function saveUserSettings(settings) {
 	return {
 		types: [SAVE_SETTINGS_LOAD, SAVE_SETTINGS_SUCCESS, SAVE_SETTINGS_FAIL],
 		promise: (client) => client.post('/saveUserSettings', {data: {settings: settings}})
+	};
+}
+
+export function generateToken() {
+	return {
+		types: [GENERATE_TOKEN_LOAD, GENERATE_TOKEN_SUCCESS, GENERATE_TOKEN_FAIL],
+		promise: (client) => client.get('/generateToken')
 	};
 }

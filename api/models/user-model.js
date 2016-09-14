@@ -5,7 +5,7 @@ const ObjectId = Schema.Types.ObjectId;
 const passportLocalMongoose = require('passport-local-mongoose');
 
 const userSchema = new Schema({
-	email: { type: String, required: true, index: { unique: true } },
+	email: { type: String, required: true, unique: true, index: { unique: true } },
 	username: { type: String, required: true, index: { unique: true } },
 	firstName: { type: String }, // Need to collect first/last for DOI assignment
 	lastName: { type: String }, // Need to collect first/last for DOI assignment
@@ -20,8 +20,12 @@ const userSchema = new Schema({
 	website: { type: String }, // website url
 	googleScholar: { type: String }, // googleScholar id
 
+	accessToken: { type: String}, // access token for the PubPub API
+
 	yays: [ { type: ObjectId, ref: 'Discussion' } ], // Yays cast
 	nays: [ { type: ObjectId, ref: 'Discussion' } ], // Nays cast
+
+	featuredAtoms: [ { type: ObjectId, ref: 'Atom' } ],
 
 	verificationHash: { type: String },
 	verifiedEmail: { type: Boolean },

@@ -30,7 +30,7 @@ export const Loader = React.createClass({
 		return (
 			<div style={styles.container}>
 				
-				<div style={[styles.spinner, !this.props.loading && {display: 'none'}]}></div>
+				<div style={[styles.spinner, (!this.props.loading || this.state.showDone) && {display: 'none'}]}></div>
 				
 				<div style={[styles.done, this.state.showDone && styles.showDone]}>
 					✓

@@ -3,9 +3,12 @@ import Radium from 'radium';
 
 let styles = {};
 
+import {globalMessages} from 'utils/globalMessages';
+import {FormattedMessage} from 'react-intl';
+
 export const HighlightEditor = React.createClass({
 	propTypes: {
-		atomEditData: PropTypes.object,
+		atomData: PropTypes.object,
 	},
 
 
@@ -17,9 +20,7 @@ export const HighlightEditor = React.createClass({
 	render: function() {
 		return (
 			<div style={styles.container}>
-				
-				Highlight Editor
-
+				<FormattedMessage id="about.HighlightEditor" defaultMessage="Highlight Editor"/>
 			</div>
 		);
 	}
@@ -28,5 +29,5 @@ export const HighlightEditor = React.createClass({
 export default Radium(HighlightEditor);
 
 styles = {
-	
+
 };

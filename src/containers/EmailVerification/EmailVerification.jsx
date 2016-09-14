@@ -6,8 +6,8 @@ import Helmet from 'react-helmet';
 import {checkEmailVerification} from './actions';
 // import {globalStyles} from 'utils/styleConstants';
 
-// import {globalMessages} from 'utils/globalMessages';
-// import {FormattedMessage} from 'react-intl';
+import {globalMessages} from 'utils/globalMessages';
+import {FormattedMessage} from 'react-intl';
 
 let styles = {};
 
@@ -40,11 +40,15 @@ export const EmailVerification = React.createClass({
 				<Helmet {...metaData} />
 
 				{isValidated &&
-					<h1>Email Verification Successful!</h1>
+					<h1>
+						<FormattedMessage id="emailVerification.Success" defaultMessage="Email Verification Successful!"/>
+					</h1>
 				}
 
 				{!isValidated &&
-					<h1>Email Verification Unsuccessful</h1>		
+					<h1>
+						<FormattedMessage id="emailVerification.Unsuccess" defaultMessage="Email Verification Unsuccessful!"/>
+					</h1>
 				}
 
 			</div>

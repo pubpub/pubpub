@@ -8,8 +8,8 @@ import {PreviewCard, SelectValue, SelectOption} from 'components';
 import dateFormat from 'dateformat';
 
 // import {globalStyles} from 'utils/styleConstants';
-// import {globalMessages} from 'utils/globalMessages';
-// import {FormattedMessage} from 'react-intl';
+import {globalMessages} from 'utils/globalMessages';
+import {FormattedMessage} from 'react-intl';
 
 let styles = {};
 
@@ -25,7 +25,7 @@ export const JournalProfileAdmins = React.createClass({
 			value: null,
 		};
 	},
-	
+
 	componentWillReceiveProps(nextProps) {
 		const currentAdmins = safeGetInToJS(this.props.journalData, ['adminsData']) || [];
 		const nextAdmins = safeGetInToJS(nextProps.journalData, ['adminsData']) || [];
@@ -73,7 +73,7 @@ export const JournalProfileAdmins = React.createClass({
 
 		return (
 			<div>
-				<Helmet {...metaData} />				
+				<Helmet {...metaData} />
 
 				<Select.Async
 					name="form-field-name"
@@ -81,14 +81,14 @@ export const JournalProfileAdmins = React.createClass({
 					autoload={false}
 					value={this.state.value}
 					loadOptions={this.loadOptions}
-					placeholder={<span>Add new admins</span>}
-					onChange={this.handleSelectChange} 
+					placeholder={<span><FormattedMessage id="journalProfileAdmins.AddNewAdmins" defaultMessage="Add New Admins"/></span>}
+					onChange={this.handleSelectChange}
 					optionComponent={SelectOption}
 					valueComponent={SelectValue}/>
 
 				<div className={'button'} style={[styles.submitButton, (this.state.value && this.state.value.id) && styles.submitButtonActive]} onClick={this.addAdmin}>Add Admin</div>
-					
-				<h3>Admins</h3>
+
+				<h3><FormattedMessage {...globalMessages.Admins}/></h3>
 				{
 					adminsData.sort((foo, bar)=>{
 						// Sort so that most recent is first in array
@@ -96,17 +96,17 @@ export const JournalProfileAdmins = React.createClass({
 						if (foo.createDate < bar.createDate) { return 1; }
 						return 0;
 					}).map((item, index)=>{
-						const buttons = [ 
-							{ type: 'button', text: 'Delete Admin', action: this.deleteAdmin.bind(this, item.source._id) },
+						const buttons = [
+							{ type: 'button', text: <FormattedMessage {...globalMessages.DeleteAdmin}/>, action: this.deleteAdmin.bind(this, item.source._id) },
 						];
 						return (
-							<PreviewCard 
+							<PreviewCard
 								key={'featured-' + index}
 								type={'user'}
 								image={item.source.image}
 								title={item.source.name}
 								slug={item.source.username}
-								description={item.source.bio} 
+								description={item.source.bio}
 								buttons={buttons} />
 						);
 					})

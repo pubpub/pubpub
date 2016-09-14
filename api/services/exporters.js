@@ -5,7 +5,7 @@ const fs = require('fs');
 import React from 'react';
 import ReactDOMServer from 'react-dom/server';
 import {StyleRoot} from 'radium';
-import AtomReaderHeader from 'containers/AtomReader/AtomReaderHeader';
+import dateFormat from 'dateformat';
 import {renderReactFromJSON} from 'components/AtomTypes/Document/proseEditor/renderReactFromJSON';
 
 
@@ -38,11 +38,11 @@ export function generatePDFFromJSON(docJSON, title, versionDate, authors) {
 	const pubHTML = ReactDOMServer.renderToStaticMarkup(
 		<StyleRoot radiumConfig={{userAgent: 'Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36'}}>
 				<div className={'atom-reader atom-reader-meta'}>
-					<AtomReaderHeader
-						title={title}
-						authors={authors}
-						versionDate={String(versionDate)} 
-						printMode={true} />
+					<div className={'atom-reader-header'}>
+						<h1 className={'atom-header-title'}>{title}</h1>
+						<p className={'atom-header-p'}>{authors}</p>
+						<p className={'atom-header-p'}>{dateFormat(versionDate, 'mmmm dd, yyyy')}</p>
+					</div>
 
 					{renderReactFromJSON(docJSON.content, true)}
 				</div>	

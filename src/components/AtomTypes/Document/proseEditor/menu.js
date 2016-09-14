@@ -1,5 +1,6 @@
-import {toggleMarkItem, insertItem, wrapItem, wrapListItem, blockTypeItem, Dropdown, joinUpItem, liftItem, icons} from 'prosemirror/dist/menu';
+import {MenuItem, toggleMarkItem, insertItem, wrapItem, wrapListItem, blockTypeItem, Dropdown, joinUpItem, liftItem, icons} from 'prosemirror/dist/menu';
 import {FieldPrompt, TextField} from 'prosemirror/dist/ui';
+// import {elt} from 'prosemirror/dist/util/dom';
 
 // : (ProseMirror, (attrs: ?Object))
 // A function that will prompt for the attributes of a [link
@@ -26,7 +27,7 @@ function buildMenuItems(schema) {
 	const items = {};
 
 	items.toggleStrong = toggleMarkItem(schema.marks.strong, {
-		title: 'Toggle strong style', 
+		title: 'Toggle strong style',
 		icon: {text: 'bold'},
 	});
 
@@ -51,13 +52,13 @@ function buildMenuItems(schema) {
 	});
 
 	items.toggleCode = toggleMarkItem(schema.marks.code, {
-		title: 'Toggle code font', 
-		label: 'inline code', 
+		title: 'Toggle code font',
+		label: 'inline code',
 	});
 
 	items.toggleLink = toggleMarkItem(schema.marks.link, {
 		title: 'Add or remove link',
-		icon: {text: 'link'}, 
+		icon: {text: 'link'},
 		attrs: promptLinkAttrs,
 	});
 
@@ -110,6 +111,141 @@ function buildMenuItems(schema) {
 		attrs: (pm, callback) => window.toggleMedia(pm, callback, schema.nodes.embed),
 	});
 
+	const embedSelectTest = function(pm) {
+		const {node} = pm.selection; 
+		return node && node.type.name === 'embed';
+	};
+
+	items.setAlignInline = new MenuItem({
+		run(pm) { 
+			const selection = pm.selection;
+			pm.tr.setNodeType(selection.$from.pos, selection.node.type, {...selection.node.attrs, align: 'inline'}).apply();
+		},
+		select: embedSelectTest,
+		active(pm) {
+			const {node} = pm.selection;
+			return node && node.attrs.align === 'inline';
+		},
+		title: 'Set inline',
+		icon: {text: 'inline'},
+	});
+	items.setAlignFull = new MenuItem({
+		run(pm) { 
+			const selection = pm.selection;
+			pm.tr.setNodeType(selection.$from.pos, selection.node.type, {...selection.node.attrs, align: 'full'}).apply();
+		},
+		select: embedSelectTest,
+		active(pm) {
+			const {node} = pm.selection;
+			return node && node.attrs.align === 'full';
+		},
+		title: 'Set full',
+		icon: {text: 'full'},
+	});
+	items.setAlignLeft = new MenuItem({
+		run(pm) { 
+			const selection = pm.selection;
+			pm.tr.setNodeType(selection.$from.pos, selection.node.type, {...selection.node.attrs, align: 'left'}).apply();
+		},
+		select: embedSelectTest,
+		active(pm) {
+			const {node} = pm.selection;
+			return node && node.attrs.align === 'left';
+		},
+		title: 'Set left',
+		icon: {text: 'left'},
+	});
+	items.setAlignRight = new MenuItem({
+		run(pm) { 
+			const selection = pm.selection;
+			pm.tr.setNodeType(selection.$from.pos, selection.node.type, {...selection.node.attrs, align: 'right'}).apply();
+		},
+		select: embedSelectTest,
+		active(pm) {
+			const {node} = pm.selection;
+			return node && node.attrs.align === 'right';
+		},
+		title: 'Set right',
+		icon: {text: 'right'},
+	});
+
+	// items.setAlignLeft = new MenuItem({
+	// 	run(pm) { 
+	// 		const selection = pm.selection;
+	// 		pm.tr.setNodeType(selection.$from.pos, selection.node.type, {...selection.node.attrs, align: 'full'}).apply();
+	// 	},
+	// 	select: embedSelectTest,
+	// 	active(pm) {
+	// 		const {node} = pm.selection;
+	// 		console.log(node);
+	// 		return node && node.attrs.align === 'full';
+	// 	},
+	// 	title: 'Set full',
+	// 	icon: {text: 'full'},
+	// 	render(pm) {
+	// 		return elt('h3', null, 'Son of a ' + pm.selection.node.attrs.size);
+	// 	},
+	// });
+	
+
+	// items.setAlignLeft = new MenuItem({
+	// 	run(pm) { 
+	// 		const selection = pm.selection;
+	// 		pm.tr.setNodeType(selection.$from.pos, selection.node.type, {...selection.node.attrs, align: 'left'}).apply();
+	// 	},
+	// 	select: embedSelectTest,
+	// 	active(pm) {
+	// 		const {node} = pm.selection;
+	// 		console.log(node);
+	// 		return node && node.attrs.align === 'full';
+	// 	},
+	// 	title: 'Set full',
+	// 	icon: {text: 'full'},
+	// });
+
+
+	class MenuSize {
+		// :: (MenuItemSpec)
+		constructor(spec) {
+			// :: MenuItemSpec
+			// The spec used to create the menu item.
+			this.spec = spec;
+		}
+
+		// :: (ProseMirror) → DOMNode
+		// Renders the icon according to its [display
+		// spec](#MenuItemSpec.display), and adds an event handler which
+		// executes the command when the representation is clicked.
+		render(pm) {
+			const updateAttr = function(value) {
+				const attrsKey = this.spec.attrsKey;
+				const selection = pm.selection;
+				pm.tr.setNodeType(selection.$from.pos, selection.node.type, {...selection.node.attrs, [attrsKey]: value}).apply();
+			};
+
+			// const label = elt('div', null, this.spec.cat);
+			const input = document.createElement('input');
+			input.type = 'text';
+			input.placeholder = 'Type here';
+			input.addEventListener('input', function(event) {
+				updateAttr(event.target.value);
+			}, false);
+			const dom = document.createElement('div');
+			dom.appendChild(input);
+			input.addEventListener('mousedown', event => {
+				event.preventDefault(); 
+				event.stopPropagation();
+				input.focus();
+			});
+			return input;
+			// return elt('h3', null, label, label);
+			// return <h3><em>Son</em> of a {this.spec.cat}</h3>;
+		}
+	}
+
+	items.setSize = new MenuSize({
+		attrsKey: 'size',
+	});
 
 	items.insertMenu = new Dropdown([items.toggleSub, items.toggleSup, items.toggleStrikeThrough, items.toggleCode, items.insertHorizontalRule, items.insertPageBreak], {label: '...'});
 	items.typeMenu = new Dropdown([items.makeCodeBlock, items.makeHead3, items.makeHead4, items.makeHead5, items.makeHead6], {label: '...'});
@@ -120,6 +256,7 @@ function buildMenuItems(schema) {
 
 	items.blockDropdownMenu = [items.makeParagraph, items.makeHead1, items.makeHead2, new Dropdown([items.wrapBulletList, items.wrapOrderedList, items.wrapBlockQuote, joinUpItem, liftItem, items.makeCodeBlock, items.makeHead3, items.makeHead4, items.makeHead5, items.makeHead6], {label: '...'})];
 	items.minimalMenu = [[items.toggleStrong, items.toggleEm, items.toggleLink, items.insertMenu], [items.insertEmbed], items.blockDropdownMenu];
+	items.embedMenu = [[items.setAlignInline, items.setAlignFull, items.setAlignLeft, items.setAlignRight, items.setSize]];
 
 	return items;
 }

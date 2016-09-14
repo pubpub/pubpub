@@ -4,11 +4,14 @@ import {safeGetInToJS} from 'utils/safeParse';
 import {s3Upload} from 'utils/uploadFile';
 import {Loader} from 'components';
 
+import {globalMessages} from 'utils/globalMessages';
+import {FormattedMessage} from 'react-intl';
+
 let styles = {};
 
 export const PDFEditor = React.createClass({
 	propTypes: {
-		atomEditData: PropTypes.object,
+		atomData: PropTypes.object,
 	},
 
 	getInitialState() {
@@ -21,7 +24,7 @@ export const PDFEditor = React.createClass({
 
 	getSaveVersionContent: function() {
 		return {
-			url: this.state.url || safeGetInToJS(this.props.atomEditData, ['currentVersionData', 'content', 'url']),
+			url: this.state.url || safeGetInToJS(this.props.atomData, ['currentVersionData', 'content', 'url']),
 		};
 	},
 
@@ -40,12 +43,14 @@ export const PDFEditor = React.createClass({
 	},
 
 	render: function() {
-		const title = safeGetInToJS(this.props.atomEditData, ['atomData', 'title']);
-		const url = safeGetInToJS(this.props.atomEditData, ['currentVersionData', 'content', 'url']) || '';
+		const title = safeGetInToJS(this.props.atomData, ['atomData', 'title']);
+		const url = safeGetInToJS(this.props.atomData, ['currentVersionData', 'content', 'url']) || '';
 
 		return (
 			<div>
-				<h3>Preview</h3>
+				<h3>
+					<FormattedMessage {...globalMessages.Preview}/>
+				</h3>
 
 				<iframe src={url} style={{height: 'calc(100vh - 80px)', width: '650px'}}></iframe>
 
@@ -54,7 +59,9 @@ export const PDFEditor = React.createClass({
 				</div>
 				<a href={url} alt={'Original Size: ' + title} target="_blank" className={'underlineOnHover'} style={styles.originalLink}>View File</a>
 
-				<h3>Choose new file</h3>
+				<h3>
+					<FormattedMessage {...globalMessages.ChooseNewFile}/>				
+				</h3>
 				<input id={'pdfFile'} name={'pdf file'} type="file" accept="pdf/*" onChange={this.handleFileSelect} />
 
 			</div>

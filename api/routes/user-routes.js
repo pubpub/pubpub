@@ -22,6 +22,9 @@ export function getUser(req, res) {
 		delete userData.followers;
 		delete userData.sendNotificationDigest;
 		delete userData.email;
+		if (userData._id !== req.user._id) {
+			delete userData.accesToken;
+		}
 		return Link.find({source: userData._id, type: {$in: ['author', 'editor', 'reader']}}).lean().exec();
 	})
 	.then(function(linksResult) {

@@ -64,22 +64,24 @@ exports.pubpubSetup = new Plugin(class {
 		this.inputRules.forEach(rule => rules.addRule(rule));
 
 		let builtMenu;
-		this.barConf = options.menuBar;
+		this.barConf = options.menuBar || true;
 		this.tooltipConf = options.tooltipMenu;
 
 		if (this.barConf === true) {
 			builtMenu = buildMenuItems(pm.schema);
-			this.barConf = {float: true, content: builtMenu.fullMenu};
+			this.barConf = {float: false, content: builtMenu.fullMenu};
 		}
 		if (this.barConf) menuBar.config(this.barConf).attach(pm);
 
 		if (this.tooltipConf === true) {
 			if (!builtMenu) builtMenu = buildMenuItems(pm.schema);
 			this.tooltipConf = {
+				showLinks: true,
 				selectedBlockMenu: true,
-				inlineContent: builtMenu.minimalMenu,
-				// blockContent: builtMenu.blockMenu
-				blockContent: []
+				inlineContent: builtMenu.embedMenu,
+				// blockContent: builtMenu.embedMenu,
+				blockContent: [],
+				position: 'below',
 			};
 		}
 		if (this.tooltipConf) tooltipMenu.config(this.tooltipConf).attach(pm);

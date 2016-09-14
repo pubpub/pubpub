@@ -4,11 +4,14 @@ import {safeGetInToJS} from 'utils/safeParse';
 import {s3Upload} from 'utils/uploadFile';
 import {Loader, CustomizableForm} from 'components';
 
+import {globalMessages} from 'utils/globalMessages';
+import {FormattedMessage} from 'react-intl';
+
 let styles = {};
 
 export const ImageEditor = React.createClass({
 	propTypes: {
-		atomEditData: PropTypes.object,
+		atomData: PropTypes.object,
 	},
 
 	getInitialState() {
@@ -20,7 +23,7 @@ export const ImageEditor = React.createClass({
 	},
 
 	componentWillMount() {
-		const metadata = safeGetInToJS(this.props.atomEditData, ['currentVersionData', 'content', 'metadata']) || {};
+		const metadata = safeGetInToJS(this.props.atomData, ['currentVersionData', 'content', 'metadata']) || {};
 		const defaultMetadata = {
 			location: {
 				title: 'Location',
@@ -46,7 +49,7 @@ export const ImageEditor = React.createClass({
 			}
 		});
 		return {
-			url: this.state.url || safeGetInToJS(this.props.atomEditData, ['currentVersionData', 'content', 'url']),
+			url: this.state.url || safeGetInToJS(this.props.atomData, ['currentVersionData', 'content', 'url']),
 			metadata: cleanMetadata,
 		};
 	},
@@ -70,23 +73,31 @@ export const ImageEditor = React.createClass({
 	},
 
 	render: function() {
-		const title = safeGetInToJS(this.props.atomEditData, ['atomData', 'title']);
-		const imageSource = safeGetInToJS(this.props.atomEditData, ['currentVersionData', 'content', 'url']) || '';
+		const title = safeGetInToJS(this.props.atomData, ['atomData', 'title']);
+		const imageSource = safeGetInToJS(this.props.atomData, ['currentVersionData', 'content', 'url']) || '';
 		const scaledURL = imageSource.indexOf('.gif') > -1 ? (this.state.url || imageSource) : 'https://jake.pubpub.org/unsafe/fit-in/650x0/' + (this.state.url || imageSource); // To learn about jake.pubpub fit-in, see Thumbor docs: http://thumbor.readthedocs.io/en/latest/usage.html#fit-in
 
 		return (
 			<div>
-				<h3>Preview</h3>
+				<h3>
+					<FormattedMessage {...globalMessages.Preview}/>
+				</h3>
 				<img src={scaledURL} alt={title} style={styles.image}/>
 				<div style={styles.loaderWrapper}>
 					<Loader loading={this.state.isUploading} showCompletion={true}/>
 				</div>
-				<a href={imageSource} alt={'Original Size: ' + title} target="_blank" className={'underlineOnHover'} style={styles.originalLink}>View Original</a>
+				<a href={imageSource} alt={'Original Size: ' + title} target="_blank" className={'underlineOnHover'} style={styles.originalLink}>
+					<FormattedMessage {...globalMessages.ViewOriginal}/>
+				</a>
 
-				<h3>Choose new file</h3>
+				<h3>
+					<FormattedMessage {...globalMessages.ChooseNewFile}/>
+				</h3>
 				<input id={'imageFile'} name={'image file'} type="file" accept="image/*" onChange={this.handleFileSelect} />
 
-				<h3>Metadata</h3>
+				<h3>
+					<FormattedMessage {...globalMessages.Metadata}/>
+				</h3>
 				<CustomizableForm formData={this.state.metadata} onUpdate={this.metadataUpdate}/>
 
 			</div>

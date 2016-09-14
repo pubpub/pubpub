@@ -1,5 +1,5 @@
-import React, {PropTypes} from 'react';
 import Radium from 'radium';
+import React, {PropTypes} from 'react';
 
 let styles = {};
 
@@ -7,12 +7,14 @@ export const Reference = React.createClass({
 	propTypes: {
 		citationObject: PropTypes.object,
 		mode: PropTypes.string,
+		showNote: PropTypes.bool,
 	},
 
 	getDefaultProps: function() {
 		return {
 			citationObject: {},
-			mode: 'mla'
+			mode: 'mla',
+			showNote: true,
 		};
 	},
 
@@ -21,6 +23,10 @@ export const Reference = React.createClass({
 		const citation = this.props.citationObject;
 		const citationStrings = {};
 		let bibtexString = null;
+
+		if (this.props.showNote === false) {
+			citation.note = null;
+		}
 		// console.log(citation);
 		// Switch over string construction statements, based on mode.
 		switch (this.props.mode) {
@@ -35,6 +41,7 @@ export const Reference = React.createClass({
 			citationStrings.pages = citation.pages ? citation.pages + '. ' : '';
 			citationStrings.url = citation.url ? '[' + citation.url + '] ' : '';
 			citationStrings.note = citation.note ? citation.note : '';
+			citationStrings.doi = citation.doi ? citation.doi : '';
 			break;
 
 		case 'chicago':
@@ -48,6 +55,7 @@ export const Reference = React.createClass({
 			citationStrings.pages = citation.pages ? citation.pages + '. ' : '';
 			citationStrings.url = citation.url ? '[' + citation.url + '] ' : '';
 			citationStrings.note = citation.note ? citation.note : '';
+			citationStrings.doi = citation.doi ? citation.doi : '';
 			break;
 
 		case 'apa':
@@ -61,16 +69,19 @@ export const Reference = React.createClass({
 			citationStrings.pages = citation.pages ? citation.pages + '. ' : '';
 			citationStrings.url = citation.url ? '[' + citation.url + '] ' : '';
 			citationStrings.note = citation.note ? citation.note : '';
+			citationStrings.doi = citation.doi ? ' ' + citation.doi : '';
 			break;
 		case 'bibtex':
 			const journalString = citation.journal ? `
   journal={` + citation.journal + `},` : '';
+  			const doiString = citation.doi ? `
+  doi={` + citation.doi + `},` : '';
 
-			bibtexString = `@article{` + citation.title && citation.title.replace(/[^A-Za-z0-9]/g, '').substring(0, 12) + citation.year + `,
+			bibtexString = `@article{` + (citation.title && citation.title.replace(/[^A-Za-z0-9]/g, '').substring(0, 12)) + citation.year + `,
   title={` + citation.title + `},
   author={` + citation.author + `},
   year={` + citation.year + `},
-  note={` + citation.note + `},
+  note={` + citation.note + `},` + doiString + `
   publisher={PubPub},` + journalString + `
 }`;
 			break;
@@ -93,6 +104,7 @@ export const Reference = React.createClass({
 				{citationStrings.pages}
 				<a href={citation.url} style={{textDecoration: 'none', color: 'inherit'}}>{citationStrings.url}</a>
 				{citationStrings.note}
+				{citationStrings.doi}
 			</span>);
 
 		case 'chicago':
@@ -107,6 +119,7 @@ export const Reference = React.createClass({
 				{citationStrings.pages}
 				<a href={citation.url} style={{textDecoration: 'none', color: 'inherit'}}>{citationStrings.url}</a>
 				{citationStrings.note}
+				{citationStrings.doi}
 			</span>);
 
 		case 'apa':
@@ -122,6 +135,7 @@ export const Reference = React.createClass({
 				{citationStrings.pages}
 				<a href={citation.url} style={{textDecoration: 'none', color: 'inherit'}}>{citationStrings.url}</a>
 				{citationStrings.note}
+				{citationStrings.doi}
 			</span>);
 		case 'bibtex':
 			return (<span>

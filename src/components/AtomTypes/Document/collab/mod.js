@@ -37,7 +37,7 @@ export class ModCollab {
 		}
 
 		for (let index = 0; index < participants.length; index++) {
-			const appendStr = '<img class="title-connected-user" style="display: block; padding: 0em 2px; display: inline-block;" title="' + participants[index].name + '" src="https://jake.pubpub.org/unsafe/fit-in/25x25/' + participants[index].avatar_url + '">';
+			const appendStr = '<div><img class="title-connected-user" style="display: inline-block; padding: 2px 2px;" title="' + participants[index].name + '" src="https://jake.pubpub.org/unsafe/fit-in/25x25/' + participants[index].avatar_url + '"></div>';
 			menubar.innerHTML = menubar.innerHTML + appendStr;
 		}
 

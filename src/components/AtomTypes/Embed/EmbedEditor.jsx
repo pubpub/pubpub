@@ -7,13 +7,16 @@ import {Loader, CustomizableForm} from 'components';
 import {match} from './oEmbed';
 import request from 'superagent';
 
+import {globalMessages} from 'utils/globalMessages';
+import {FormattedMessage} from 'react-intl';
+
 let styles = {};
 
 export const EmbedEditor = React.createClass({
 	propTypes: {
-		atomEditData: PropTypes.object,
+		atomData: PropTypes.object,
 	},
-	
+
 	getInitialState() {
 		return {
 			valid: false,
@@ -24,17 +27,17 @@ export const EmbedEditor = React.createClass({
 			provider: ''
 		};
 	},
-	
+
 	getSaveVersionContent() {
 		const {source, html, provider, metaData} = this.state;
 		return {source, html, provider, metaData};
 	},
-	
+
 	componentDidMount() {
-		const source = safeGetInToJS(this.props.atomEditData, ['currentVersionData', 'content', 'source']) || '';
-		const provider = safeGetInToJS(this.props.atomEditData, ['currentVersionData', 'content', 'provider']) || '';
-		const html = safeGetInToJS(this.props.atomEditData, ['currentVersionData', 'content', 'html']) || '';
-		const metaData = safeGetInToJS(this.props.atomEditData, ['currentVersionData', 'content', 'metaData']) || '';
+		const source = safeGetInToJS(this.props.atomData, ['currentVersionData', 'content', 'source']) || '';
+		const provider = safeGetInToJS(this.props.atomData, ['currentVersionData', 'content', 'provider']) || '';
+		const html = safeGetInToJS(this.props.atomData, ['currentVersionData', 'content', 'html']) || '';
+		const metaData = safeGetInToJS(this.props.atomData, ['currentVersionData', 'content', 'metaData']) || '';
 		if (html) {
 			this.setState({source, value: source, provider, html, metaData});
 		} else if (source) {
@@ -44,7 +47,7 @@ export const EmbedEditor = React.createClass({
 			}
 		}
 	},
-	
+
 	loadEmbed(source, provider) {
 		const {api} = provider;
 		const url = __DEVELOPMENT__ ? ('http://crossorigin.me/' + api) : api;
@@ -57,7 +60,7 @@ export const EmbedEditor = React.createClass({
 			}
 		});
 	},
-	
+
 	handleSourceChange(evt) {
 		const value = evt.target.value;
 		const provider = match(value);
@@ -67,18 +70,20 @@ export const EmbedEditor = React.createClass({
 			this.setState({value});
 		}
 	},
-	
+
 	render() {
 		const {source, html, value} = this.state;
-		return <div>
-			<label htmlFor='source' style={styles.label}>
-				Source:
-				<input id='source' name='source' type='text' value={value} style={styles.source} onChange={this.handleSourceChange}/>
+		return (<div>
+			<label htmlFor="source" style={styles.label}>
+				<FormattedMessage {...globalMessages.Source}/>
+				<input id="source" name="source" type="text" value={value} style={styles.source} onChange={this.handleSourceChange}/>
 			</label>
 			<div>{source}</div>
-			<h3>Preview</h3>
+			<h3>
+				<FormattedMessage {...globalMessages.Preview}/>
+			</h3>
 			<div dangerouslySetInnerHTML={{__html: html}}></div>
-		</div>;
+		</div>);
 	}
 });
 

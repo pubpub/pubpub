@@ -1,33 +1,7 @@
 import React, {PropTypes} from 'react';
 import Radium from 'radium';
 import {globalStyles} from 'utils/styleConstants';
-
 import {FormattedMessage} from 'react-intl';
-
-// import {isDescendantOfHash, getAncestorText} from './selectionFunctions';
-
-function getAncestorText(child) {
-	let node = child;
-	while (node !== null) {
-		if (node.className === 'p-block') {
-			return node.innerText;
-		}
-		node = node.parentNode;
-	}
-	return null;
-}
-
-
-function isDescendantOfHash(child) {
-	let node = child;
-	while (node !== null) {
-		if (node.dataset && node.dataset.hash) {
-			return true;
-		}
-		node = node.parentNode;
-	}
-	return false;
-}
 
 let Marklib = undefined;
 let Rangy = undefined;
@@ -55,18 +29,40 @@ export const SelectionPopup = React.createClass({
 		Marklib = require('marklib');
 		Rangy = require('rangy');
 		require('rangy/lib/rangy-textrange.js');
-		document.getElementById('pub-body').addEventListener('mouseup', this.onMouseUp);
+		document.getElementById('atom-viewer').addEventListener('mouseup', this.onMouseUp);
 	},
 
 	componentWillUnmount() {
-		document.getElementById('pub-body').removeEventListener('mouseup', this.onMouseUp);
+		document.getElementById('atom-viewer').removeEventListener('mouseup', this.onMouseUp);
+	},
+
+	isDescendantOfHash: function(child) {
+		let node = child;
+		while (node !== null) {
+			if (node.dataset && node.dataset.hash) {
+				return true;
+			}
+			node = node.parentNode;
+		}
+		return false;
+	},
+
+	getAncestorText: function(child) {
+		let node = child;
+		while (node !== null) {
+			if (node.className === 'p-block') {
+				return node.innerText;
+			}
+			node = node.parentNode;
+		}
+		return null;
 	},
 
 	onMouseUp: function(event) {
 		// We only trigger the selectionPopup for elements that have a data-hash'd ancestor.
 		let clickX;
 		let clickY;
-		const element = document.getElementById('pub-body');
+		const element = document.getElementById('atom-viewer');
 		const offsetTop = element.parentNode.style.top ? parseInt(element.parentNode.style.top, 10) : 0;
 		if (event.pageX || event.pageY) {
 			clickX = event.pageX - element.getBoundingClientRect().left;
@@ -87,10 +83,10 @@ export const SelectionPopup = React.createClass({
 		// console.log(range);
 		// console.log(range.commonAncestorContainer);
 
-		if (!selection.isCollapsed && isDescendantOfHash(range.commonAncestorContainer)) {
+		if (!selection.isCollapsed && this.isDescendantOfHash(range.commonAncestorContainer)) {
 
 			Rangy.getSelection().expand('word');
-			const ancestorText = getAncestorText(range.commonAncestorContainer);
+			const ancestorText = this.getAncestorText(range.commonAncestorContainer);
 			// console.log(ancestorText);
 			this.setState({
 				popupVisible: true,

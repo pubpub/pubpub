@@ -8,7 +8,7 @@ let styles = {};
 
 export const ReferenceEditor = React.createClass({
 	propTypes: {
-		atomEditData: PropTypes.object,
+		atomData: PropTypes.object,
 	},
 
 	getInitialState() {
@@ -31,7 +31,7 @@ export const ReferenceEditor = React.createClass({
 	},
 
 	componentWillMount() {
-		const referenceData = safeGetInToJS(this.props.atomEditData, ['currentVersionData', 'content']) || {};
+		const referenceData = safeGetInToJS(this.props.atomData, ['currentVersionData', 'content']) || {};
 		this.setState({
 			referenceData: {
 				...this.state.referenceData,
@@ -54,7 +54,7 @@ export const ReferenceEditor = React.createClass({
 	},
 
 	render: function() {
-		// const title = safeGetInToJS(this.props.atomEditData, ['atomData', 'title']);
+		// const title = safeGetInToJS(this.props.atomData, ['atomData', 'title']);
 		return (
 			<div style={styles.container}>
 				

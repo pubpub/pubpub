@@ -6,8 +6,8 @@ import { Link } from 'react-router';
 import {follow, unfollow} from './actions';
 // import {globalStyles} from 'utils/styleConstants';
 
-// import {globalMessages} from 'utils/globalMessages';
-// import {FormattedMessage} from 'react-intl';
+import {globalMessages} from 'utils/globalMessages';
+import {FormattedMessage} from 'react-intl';
 
 let styles = {};
 
@@ -20,6 +20,7 @@ export const FollowButton = React.createClass({
 		type: PropTypes.string,
 		isFollowing: PropTypes.bool,
 		buttonStyle: PropTypes.object,
+		buttonClasses: PropTypes.string,
 		dispatch: PropTypes.func
 
 	},
@@ -52,13 +53,13 @@ export const FollowButton = React.createClass({
 		const loggedIn = this.props.loginData && this.props.loginData.get('loggedIn');
 		const loginQuery = this.props.path && this.props.path !== '/' ? '?redirect=' + this.props.path : ''; // Query appended to login route. Used to redirect to a given page after succesful login.
 		return (
-			<div className={'button showChildOnHover'} style={[styles.followButton, this.props.buttonStyle]} onClick={this.toggleFollow}>
+			<div className={'button showChildOnHover ' + this.props.buttonClasses} style={[styles.followButton, this.props.buttonStyle]} onClick={this.toggleFollow}>
 				{!loggedIn &&
-					<Link to={'/login' + loginQuery} className={'hoverChild'} style={styles.loginMessage}>Login</Link>
+					<Link to={'/login' + loginQuery} className={'hoverChild'} style={styles.loginMessage}><FormattedMessage {...globalMessages.Login}/></Link>
 				}
 				{this.state.isFollowing
-					? 'Following'
-					: 'Follow'
+					? <FormattedMessage {...globalMessages.Following}/>
+					: <FormattedMessage {...globalMessages.Follow}/>
 				}
 			</div>
 		);

@@ -5,7 +5,7 @@ import {connect} from 'react-redux';
 import {push} from 'redux-router';
 import {loadAppAndLogin, resendVerificationEmail, unsetNotFound} from './actions';
 import {logout} from 'containers/Login/actions';
-import {createAtom} from 'containers/Media/actions';
+import {createAtom} from 'containers/Manage/actions';
 import {NotFound} from 'components';
 import {IntlProvider} from 'react-intl';
 import {safeGetInToJS} from 'utils/safeParse';
@@ -82,6 +82,7 @@ export const App = React.createClass({
 		const notVerified = isLoggedIn && !safeGetInToJS(this.props.loginData, ['userData', 'verifiedEmail']) && this.props.path.substring(0, 7) !== '/signup';
 		const notFound = safeGetInToJS(this.props.appData, ['notFound']) || !isLoggedIn && this.props.path.substring(this.props.path.length - 9, this.props.path.length) === '/settings' || false;
 		const messages = safeGetInToJS(this.props.appData, ['languageObject']) || {}; // Messages includes all of the strings used on the site. Language support is implemented by sending a different messages object.
+		const locale = safeGetInToJS(this.props.appData, ['locale']) || 'en'; // Messages includes all of the strings used on the site. Language support is implemented by sending a different messages object.
 		const hideFooter = notFound || this.props.path.substring(this.props.path.length - 6, this.props.path.length) === '/draft' || this.props.path.substring(this.props.path.length - 6, this.props.path.length) === '/login' || this.props.path.substring(this.props.path.length - 7, this.props.path.length) === '/signup' || this.props.path.substring(0, 7) === '/verify'; // We want to hide the footer if we are in the editor or login. All other views show the footer.
 		const isEmbed = this.props.query && this.props.query.embed;
 		const metaData = { // Metadata that will be used by Helmet to populate the <head> tag
@@ -95,7 +96,7 @@ export const App = React.createClass({
 
 		return (
 
-			<IntlProvider locale={'en'} messages={messages}>
+			<IntlProvider locale={locale} messages={messages}>
 				<StyleRoot>
 
 					<Helmet {...metaData} />
@@ -104,7 +105,7 @@ export const App = React.createClass({
 					{!isEmbed &&
 						<AppHeader loginData={this.props.loginData} path={this.props.path} createDocument={this.createDocument} logoutHandler={this.logoutHandler} goToURL={this.goToURL}/>
 					}
-					
+
 
 					<AppVerified isVerified={!notVerified} handleResendEmail={this.handleResendEmail}/>
 					<AppMessage/>
@@ -124,7 +125,7 @@ export default connect( state => {
 	return {
 		appData: state.app,
 		loginData: state.login,
-		mediaData: state.media,
+		mediaData: state.manage,
 		path: state.router.location.pathname,
 		query: state.router.location.query,
 		slug: state.router.params.slug,

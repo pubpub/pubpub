@@ -7,7 +7,7 @@ import Helmet from 'react-helmet';
 import {About} from 'components';
 // import { Link } from 'react-router';
 import {s3Upload} from 'utils/uploadFile';
-import {createAtom} from 'containers/Media/actions';
+import {createAtom} from 'containers/Manage/actions';
 import {isWebUri} from 'valid-url';
 
 // import Select from 'react-select';

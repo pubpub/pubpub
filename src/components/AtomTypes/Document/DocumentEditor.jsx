@@ -1,17 +1,17 @@
-import React, {PropTypes} from 'react';
-import Radium, {Style} from 'radium';
-import {safeGetInToJS} from 'utils/safeParse';
-import {Media} from 'containers';
-import {MD5} from 'object-hash';
 import chash from 'color-hash';
-
-import {markdownParser, markdownSerializer, schema} from './proseEditor';
-import {Subscription, StoppableSubscription} from 'subscription';
-import {Node} from 'prosemirror/dist/model';
-
 import Dropzone from 'react-dropzone';
+import Radium, {Style} from 'radium';
+import React, {PropTypes} from 'react';
+import {Media} from 'components';
+import {MD5} from 'object-hash';
+import {Node} from 'prosemirror/dist/model';
+import {FormattedMessage} from 'react-intl';
+import {Subscription, StoppableSubscription} from 'subscription';
+import {globalMessages} from 'utils/globalMessages';
+import {safeGetInToJS} from 'utils/safeParse';
 import {s3Upload} from 'utils/uploadFile';
 
+import {markdownParser, markdownSerializer, schema} from './proseEditor';
 import {schema as pubSchema} from './proseEditor/schema';
 
 const ColorHash = new chash();
@@ -21,13 +21,12 @@ let pm;
 
 let editorToModel;
 let modelToEditor;
-
+let menuBar;
+// let currentNodeSelected;
 export const DocumentEditor = React.createClass({
 	propTypes: {
-		atomEditData: PropTypes.object,
+		atomData: PropTypes.object,
 		loginData: PropTypes.object,
-		token: PropTypes.string,
-		collab: PropTypes.string,
 	},
 
 	getInitialState() {
@@ -36,6 +35,7 @@ export const DocumentEditor = React.createClass({
 			participants: [],
 		};
 	},
+
 
 	componentDidMount() {
 		const prosemirror = require('prosemirror');
@@ -50,7 +50,7 @@ export const DocumentEditor = React.createClass({
 		const {collabEditing} = require('prosemirror/dist/collab');
 
 		pm = new prosemirror.ProseMirror({
-			place: document.getElementById('atom-reader'),
+			place: document.getElementById('atom-body-editor'),
 			schema: schema,
 			plugins: [pubpubSetup, collabEditing.config({version: 0})],
 			// doc: !!docJSON ? Node.fromJSON(schema, docJSON) : null,
@@ -62,7 +62,7 @@ export const DocumentEditor = React.createClass({
 			}
 			*/
 		});
-		const token = safeGetInToJS(this.props.atomEditData, ['token']);
+		const token = safeGetInToJS(this.props.atomData, ['token']);
 		pm.mod = {};
 		pm.mod.collab = collabEditing.get(pm);
 		// Ignore setDoc
@@ -99,7 +99,7 @@ export const DocumentEditor = React.createClass({
 		collab.updateParticipants = this.updateParticipants;
 
 		// Collaboration Authentication information
-		const atomID = safeGetInToJS(this.props.atomEditData, ['atomData', '_id']);
+		const atomID = safeGetInToJS(this.props.atomData, ['atomData', '_id']);
 		collab.doc_id = atomID;
 		const user = safeGetInToJS(this.props.loginData, ['userData', 'username']);
 		collab.username = user;
@@ -117,6 +117,7 @@ export const DocumentEditor = React.createClass({
 
 		const that = this;
 
+
 		pm.on.change.add(function() {
 			that.collab.docInfo.changed = true;
 		});
@@ -130,6 +131,7 @@ export const DocumentEditor = React.createClass({
 		});
 
 		pm.on.doubleClickOn.add((pos, node, nodePos)=>{
+			console.log('nodePos', nodePos);
 			if (node.type.name === 'embed') {
 				const done = (attrs)=> {
 					pm.tr.setNodeType(nodePos, node.type, attrs).apply();
@@ -139,10 +141,90 @@ export const DocumentEditor = React.createClass({
 			}
 		});
 
+		pm.on.selectionChange.add(()=>{
+			const currentSelection = pm.selection;
+			const currentFrom = currentSelection.$from.pos;
+			const currentSelectedNode = currentSelection.node;
+			if (currentSelectedNode && currentSelectedNode.type.name === 'embed') {
+				const coords = pm.coordsAtPos(currentFrom);
+				coords.bottom = coords.bottom + window.scrollY - 40;
+				this.setState({
+					embedLayoutCoords: coords,
+					embedAttrs: currentSelectedNode.attrs,
+				});
+			} else {
+				this.setState({
+					embedLayoutCoords: undefined,
+					embedAttrs: undefined,
+				});
+			}
+
+		});
+
+		pm.on.transformPastedHTML.add(this.transformHTML);
+
+
+		this.moveMenu();
+		// console.log('onscroll', window.onscroll);
+		// window.onscroll = function(evt) {
+		// 	// called when the window is scrolled.
+		// 	console.log(evt);
+		// };
 	},
+
+	transformHTML: function(htmlText) {
+		const htmlNode = document.createElement( 'div' );
+		htmlNode.innerHTML = htmlText;
+		const el = htmlNode.querySelectorAll('.embed');
+		for (const element of el) {
+			while (element.firstChild) {
+				element.removeChild(element.firstChild);
+			}
+		}
+		const removeElements = htmlNode.querySelectorAll('.hoverChild');
+		for (const element of removeElements) {
+			element.remove();
+		}
+		return htmlNode.innerHTML;
+	},
+
+	setEmbedAttribute: function(key, value, evt) {
+		const currentSelection = pm.selection;
+		const currentFrom = currentSelection.$from.pos;
+		const currentSelectedNode = currentSelection.node;
+		if (evt) { evt.stopPropagation(); }
+		pm.tr.setNodeType(currentFrom, currentSelectedNode.type, {...currentSelectedNode.attrs, [key]: value}).apply();
+	},
+
+	sizeChange: function(evt) {
+		this.setEmbedAttribute('size', evt.target.value);
+	},
+	captionChange: function(evt) {
+		this.setEmbedAttribute('caption', evt.target.value);
+	},
+
+	moveMenu: function() {
+		if (typeof(document) !== 'undefined') {
+			menuBar = document.getElementsByClassName('ProseMirror-menubar')[0];
+			const menuBarPlaceholder = document.getElementById('headerPlaceholder');
+			menuBarPlaceholder.appendChild(menuBar);
+		}
+	},
+	removeMenu: function() {
+		if (typeof(document) !== 'undefined') {
+			const menuBarPlaceholder = document.getElementById('headerPlaceholder');
+			menuBarPlaceholder.innerHTML = '';
+
+			const participantsPlaceholder = document.getElementById('editor-participants');
+			participantsPlaceholder.innerHTML = '';
+
+		}
+	},
+
 	componentWillUnmount: function() {
 		this.collab.mod.serverCommunications.close();
 		window.clearInterval(this.sendDocumentTimer);
+		this.removeMenu();
 	},
 	// Collects updates of the document from ProseMirror and saves it under this.doc
 	getUpdates: function(callback) {
@@ -165,7 +247,7 @@ export const DocumentEditor = React.createClass({
 			if (that.collab.docInfo && that.collab.docInfo.changed) {
 				that.save();
 			}
-		},60000);
+		}, 60000);
 	},
 
 
@@ -317,9 +399,12 @@ export const DocumentEditor = React.createClass({
 	},
 
 	updateParticipants: function(participants) {
-		this.collab.mod.collab.updateParticipantList(participants);
 		// console.log('Got participants', participants);
-		this.setState({participants});
+		if (!this._calledComponentWillUnmount) {
+			this.collab.mod.collab.updateParticipantList(participants);
+			this.setState({participants});
+		}
+
 	},
 
 	proseChange: function() {
@@ -354,7 +439,7 @@ export const DocumentEditor = React.createClass({
 	// },
 
 	render: function() {
-		const collab = safeGetInToJS(this.props.atomEditData, ['collab']);
+		const collab = safeGetInToJS(this.props.atomData, ['collab']);
 
 
 		const colorMap = {};
@@ -372,7 +457,9 @@ export const DocumentEditor = React.createClass({
 				<div>
 					{(collab
 						? <div></div>
-						: <div>Connection to Collaboration Server Failed</div>
+						: <div>
+								<FormattedMessage id="about.CollabConnectionFail" defaultMessage="Connection to Collaboration Server Failed."/>
+							</div>
 					)}
 				</div>
 
@@ -381,7 +468,19 @@ export const DocumentEditor = React.createClass({
 				{/* <div className={'opacity-on-hover'} style={styles.iconLeft} onClick={this.toggleMarkdown}></div> */}
 
 				<textarea id="markdown" onChange={this.markdownChange} style={[styles.textarea, this.state.showMarkdown && styles.textareaVisible]}></textarea>
-				<div id={'atom-reader'} className={'atom-reader'} style={[styles.wsywigBlock, this.state.showMarkdown && styles.wsywigWithMarkdown]}></div>
+				<div id={'atom-body-editor'} className={'document-body'} style={[styles.wsywigBlock, this.state.showMarkdown && styles.wsywigWithMarkdown]}></div>
+
+				{this.state.embedLayoutCoords &&
+					<div style={[styles.embedLayoutEditor, {left: this.state.embedLayoutCoords.left - 2, top: this.state.embedLayoutCoords.bottom}]}>
+						<div onClick={this.setEmbedAttribute.bind(this, 'align', 'inline')} style={[this.state.embedAttrs.align === 'inline' && styles.activeAlign]}>Inline</div>
+						<div onClick={this.setEmbedAttribute.bind(this, 'align', 'full')} style={[this.state.embedAttrs.align === 'full' && styles.activeAlign]}>Full</div>
+						<div onClick={this.setEmbedAttribute.bind(this, 'align', 'left')} style={[this.state.embedAttrs.align === 'left' && styles.activeAlign]}>Left</div>
+						<div onClick={this.setEmbedAttribute.bind(this, 'align', 'right')} style={[this.state.embedAttrs.align === 'right' && styles.activeAlign]}>Right</div>
+						<input type="text" onChange={this.sizeChange} defaultValue={this.state.embedAttrs.size}/>
+						<textarea type="text" onChange={this.captionChange} defaultValue={this.state.embedAttrs.caption}></textarea>
+
+					</div>
+				}
 
 			{/* </Dropzone> */}
 			</div>
@@ -394,16 +493,25 @@ export default Radium(DocumentEditor);
 
 styles = {
 	container: {
-		width: '100%',
-		padding: '1em 2em',
-		left: '-2em',
-		backgroundColor: '#F3F3F4',
-		minHeight: '100vh',
-		position: 'relative',
-		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
-			padding: '1em 1em',
-			left: '-1em',
-		},
+		// width: '100%',
+		// padding: '1em 2em',
+		// left: '-2em',
+		// backgroundColor: '#F3F3F4',
+		// minHeight: '100vh',
+		// position: 'relative',
+		// '@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+		// 	padding: '1em 1em',
+		// 	left: '-1em',
+		// },
+	},
+	embedLayoutEditor: {
+		position: 'absolute',
+		backgroundColor: 'white',
+		border: '2px solid #808284',
+		boxShadow: '0px 2px 4px #58585B',
+	},
+	activeAlign: {
+		color: 'red',
 	},
 	iconLeft: {
 		position: 'absolute',
@@ -434,10 +542,10 @@ styles = {
 		pointerEvents: 'auto',
 	},
 	wsywigBlock: {
-		maxWidth: 'calc(650px + 10em)',
+		// maxWidth: 'calc(650px + 10em)',
 		backgroundColor: 'white',
 		margin: '0 auto',
-		boxShadow: '0px 1px 3px 1px #BBBDC0',
+		// boxShadow: '0px 1px 3px 1px #BBBDC0',
 		minHeight: '600px',
 		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
 			width: 'calc(100%)',

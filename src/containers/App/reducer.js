@@ -29,14 +29,11 @@ import {
 	GET_ATOM_DATA_LOAD,
 	GET_ATOM_DATA_SUCCESS,
 	GET_ATOM_DATA_FAIL,
-} from 'containers/AtomReader/actions';
+} from 'containers/Atom/actions';
 
-import {
-	CREATE_ATOM_LOAD,
-	GET_ATOM_EDIT_LOAD,
-	GET_ATOM_EDIT_SUCCESS,
-	GET_ATOM_EDIT_FAIL,
-} from 'containers/AtomEditor/actions';
+// import {
+// 	CREATE_ATOM_LOAD,
+// } from 'containers/Media/actions';
 
 import {
 	GET_JOURNAL_LOAD,
@@ -116,16 +113,13 @@ export default function reducer(state = defaultState, action) {
 
 	case GET_USER_LOAD:
 	case GET_ATOM_DATA_LOAD:
-	case CREATE_ATOM_LOAD:
-	case GET_ATOM_EDIT_LOAD:
+	// case CREATE_ATOM_LOAD:
 	case GET_JOURNAL_LOAD:
 		return setLoading(state);
 	case GET_USER_SUCCESS:
 	case GET_USER_FAIL:
 	case GET_ATOM_DATA_SUCCESS:
 	case GET_ATOM_DATA_FAIL:
-	case GET_ATOM_EDIT_SUCCESS:
-	case GET_ATOM_EDIT_FAIL:
 	case GET_JOURNAL_SUCCESS:
 	case GET_JOURNAL_FAIL:
 		return unsetLoading(state, action);

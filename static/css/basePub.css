@@ -1,10 +1,10 @@
-.atom-reader-meta {
+/*.atom-reader-meta {
 	max-width: 650px;
 	margin: 0em auto 2em;
-}
+}*/
 
 
-.atom-reader {
+.document-body {
 	font-family: 'Yrsa', Georgia, serif;
 	font-size: 1.2em;
 	line-height: 1.5em;
@@ -12,14 +12,14 @@
 }
 
 /* Undo the header style set in pubpub.css*/
-.atom-reader h1 {
+.document-body h1 {
 	font-size: 2em;
 	margin-top: 0.67em;
 	letter-spacing: 0px;
 	line-height: 1em;
 }
 
-.atom-reader h2 {
+.document-body h2 {
 	font-size: 1.5em;
 	margin-top: 0.83em;
 }
@@ -32,12 +32,12 @@
 	font-size: 1.25em;
 }
 
-.atom-reader h1, .atom-reader h2, .atom-reader h3, .atom-reader h4, .atom-reader h5, .atom-reader h6 {
+.document-body h1, .document-body h2, .document-body h3, .document-body h4, .document-body h5, .document-body h6 {
 	font-family: 'Open Sans', Helvetica Neue, Arial, sans-serif;
 }
 
 /* Set default paragraph margins on .p-block since we don't use <p> */
-.atom-reader .p-block {
+.document-body .p-block, .document-body p{
 	margin: 1em 0em;
     font-size: 1.2em;
     line-height: 1.5em;
@@ -51,50 +51,65 @@
 
 /* Atom Reader Header Styles */
 /* ------------------------- */
-.atom-reader-meta .atom-reader-header h1 {
-	font-size: 2em;
+/*h1.atom-header-title {
+	font-size: 2.5em;
 	margin-top: .75em;
 	margin-bottom: .5em;
 	color: #222; 
-}
+}*/
+/*div.atom-header-sub-detail {
+	padding: 0em .5em;
+	color: #808284;
+	font-family: 'Open Sans', Helvetica Neue, Arial, sans-serif;
+	cursor: pointer;
+	display: inline-block;
+ 	user-select: none;
+}*/
 
-.atom-reader-header p {
+/*div.atom-header-detail {
+	margin: .25em 0em;
+	font-size: 1em;
+	line-height: 1em;
+	color: #58585B;
+}
+*/
+/*.atom-reader-header p {
 	margin: .25em 0em;
 	font-size: 1em;
 	line-height: 1em;
 	color: #808284;
-}
-.atom-reader-header a {
-	color: inherit;
-	text-decoration: none;
-    padding-right: .5em;
-}
-.atom-reader-header a:hover {
+}*/
+/*.atom-header a {*/
+	/*color: inherit;*/
+	/*text-decoration: none;*/
+    /*padding-right: .5em;*/
+/*}*/
+/*.atom-header a:hover {
 	text-decoration: underline;
-}
+}*/
 
-.atom-reader-header {
+/*.atom-header {
 	border-bottom: 1px solid #F3F3F4;
 	margin-bottom: 1em;
 	padding-bottom: 1em;
-}
+}*/
 /* ------------------------- */
 
 
-.atom-reader a {
+.document-body a {
 	color: inherit;
 }
 
-.atom-reader #pub-references {
+.document-body #pub-references {
 	border-top: 1px solid #eee;
 }
-.atom-reader .reference-content {
+.document-body .reference-content {
 	font-size: 0.9em;
 }
-.atom-reader .reference {
+.document-body .reference {
 	margin: .5em;
 }
-.atom-reader .reference-number {
+.document-body .reference-number {
 	color: #808284;
 	padding-right: 1em;
 	font-size: 0.9em;
@@ -104,18 +119,18 @@
 	letter-spacing: -1px;
 }
 
-.atom-reader hr {
+.document-body hr {
 	background-color: #DDD;
 	height: 1px;
 	border: none;
 }
 
-.atom-reader code {
+.document-body code {
 	background-color: #F3F3F4;
 	padding: 0em .25em;
 }
 
-.atom-reader pre code {
+.document-body pre code {
 	margin: 0em 1em;
 	padding: 1em;
 	background-color: #F3F3F4;
@@ -124,14 +139,14 @@
 	overflow-x: scroll;
 }
 
-.atom-reader blockquote {
+.document-body blockquote {
 	padding: 0.01em 1em;
 	margin: 1em 0em;
 	font-size: 1.1em;
 	position: relative;
 	border-left: 4px solid #F3F3F4;
 }
-/*.atom-reader blockquote:before {
+/*.document-body blockquote:before {
 	content: '';
 	position: absolute;
 	left: 0;
@@ -141,7 +156,7 @@
 	border-radius: 2px / 4px;
 }*/
 
-.atom-reader .jupyter-iframe {
+.document-body .jupyter-iframe {
 	outline: 1px solid #BBBDC0;
 }
 .atom-reply .jupyter-iframe {
@@ -149,21 +164,21 @@
 }
 
 
-.atom-reader ul, .atom-reader ol {
+.document-body ul, .document-body ol {
 	padding: 0px 3em 0px 3em;
 }
-.atom-reader span + li + span + li {
+.document-body span + li + span + li {
 	padding-top: 0.7em
 }
-.atom-reader table {
+.document-body table {
 	border-spacing: 0px;
 	border-collapse: collapse;
 }
-.atom-reader td {
+.document-body td {
 	border: 1px solid #ccc;
 	padding: 0.3em;
 }
-.atom-reader th {
+.document-body th {
 	border: 1px solid #ccc;
 	padding: 0.3em;
 	background-color: #eee;
@@ -171,10 +186,10 @@
 }
 
 
-.atom-reader .cite-wrapper {
+.document-body .cite-wrapper {
 	position: relative;
 }
-.atom-reader .hover-box {
+.document-body .hover-box {
 	border: 1px solid #BBBDC0;
 	width: 350px;
 	background-color: white;
@@ -189,13 +204,13 @@
 }
 
 /*PLUGIN STYLING*/
-.atom-reader .caption {
+.document-body .caption {
 	color: #808284;
 	line-height: 1.4;
 	font-size: 0.85em;
 	padding: .2em 0em .5em 0em;
 }
-.atom-reader img {
+.document-body img {
 	max-width: 100%;
 }
 

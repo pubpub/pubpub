@@ -15,11 +15,11 @@ export const DocumentViewer = React.createClass({
 		switch (this.props.renderType) {
 		case 'embed':
 		case 'static-embed':
-			return <div>Check out this sweet document!</div>;
+			return <div>Embedded document!</div>;
 		case 'full':
 		case 'static-full':
 		default:
-			return <div>{renderReactFromJSON(docJSON && docJSON.content, true)}</div>;
+			return <div className={'document-body'}>{renderReactFromJSON(docJSON && docJSON.content, true)}</div>;
 		}
 
 	}
