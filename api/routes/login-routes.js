@@ -8,7 +8,8 @@ const readFile = Promise.promisify(require('fs').readFile);
 import {sendResetEmail} from '../services/emails';
 
 export function login(req, res) {
-	// Load the app language data and login the user if a login cookie exists
+	console.log( req.headers["accept-language"] );
+		// Load the app language data and login the user if a login cookie exists
 	const loginData = req.user
 		? {
 			_id: req.user._id,
