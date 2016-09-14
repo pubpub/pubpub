@@ -5,10 +5,25 @@ const User = require('../models').User;
 const Notification = require('../models').Notification;
 const Promise = require('bluebird');
 const readFile = Promise.promisify(require('fs').readFile);
+const languageParser = require('accept-language-parser');
+const acceptedLanguages = ['en', 'es'];
+
 import {sendResetEmail} from '../services/emails';
 
 export function login(req, res) {
-	console.log( req.headers["accept-language"] );
+	let locale = 'en';
+	let userLanguages = languageParser.parse(req.headers["accept-language"]).map(function (a) {
+		return a.code;
+	});
+
+	// Get the language code for the first laguage that we share with
+	for (let index = 0; index < userLanguages.length; index++) {
+		if (acceptedLanguages.indexOf(userLanguages[index]) !== -1) {
+			locale = userLanguages[index];
+			break;
+		}
+	}
+
 		// Load the app language data and login the user if a login cookie exists
 	const loginData = req.user
 		? {
@@ -21,7 +36,7 @@ export function login(req, res) {
 			settings: req.user.settings,
 			following: req.user.following,
 			assets: req.user.assets,
-			locale: req.user.locale,
+			locale: locale,
 			verifiedEmail: req.user.verifiedEmail,
 			bio: req.user.bio,
 			publicEmail: req.user.publicEmail,
@@ -33,8 +48,8 @@ export function login(req, res) {
 			featuredAtoms: req.user.featuredAtoms,
 		}
 		: {};
-	const locale = loginData.locale || 'en';
-	
+	// const locale = loginData.locale || 'en';
+
 	const tasks = [
 		readFile(__dirname + '/../../translations/languages/' + locale + '.json', 'utf8'), // Load the language data
 		Notification.find({recipient: loginData._id, read: false}).count().exec() // Query for the notifcation count

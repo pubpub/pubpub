@@ -91,6 +91,7 @@
     }
   },
   "dependencies": {
+    "accept-language-parser": "^1.2.0",
     "aws-sdk": "^2.4.11",
     "babel-core": "^6.3.26",
     "babel-loader": "^6.2.1",
