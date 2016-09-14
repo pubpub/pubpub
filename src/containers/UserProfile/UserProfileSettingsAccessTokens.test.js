@@ -1,6 +1,6 @@
 import {expect} from 'chai';
 import {shallowRender} from 'tests/helpersClient';
-import {UserProfileSettingsAccount} from './UserProfileSettingsAccessTokens.jsx'
+import {UserProfileSettingsAccessTokens} from './UserProfileSettingsAccessTokens.jsx'
 
 describe('Components', () => {
 	describe('UserProfileSettingsAccessTokens.jsx', () => {

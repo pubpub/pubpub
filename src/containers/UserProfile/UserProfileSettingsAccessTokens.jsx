@@ -7,7 +7,7 @@ import {generateToken} from './actions';
 import {safeGetInToJS} from 'utils/safeParse';
 
 
-export const UserProfileAccessTokens = React.createClass({
+export const UserProfileSettingsAccessTokens = React.createClass({
 	propTypes: {
 		settingsData: PropTypes.object,
 		saveSettingsHandler: PropTypes.func,
@@ -35,4 +35,4 @@ export const UserProfileAccessTokens = React.createClass({
 	}
 });
 
-export default Radium(UserProfileAccessTokens);
+export default Radium(UserProfileSettingsAccessTokens);

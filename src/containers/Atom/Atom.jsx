@@ -477,6 +477,10 @@ export const Atom = React.createClass({
 
 							</div>
 						}
+						
+						{isEditor &&
+							<AtomEditorPane ref={'atomEditorPane'} atomData={this.props.atomData} loginData={this.props.loginData}/>
+						}
 
 						{!isEditor && !error &&
 							<div id="atom-viewer">
@@ -485,11 +489,7 @@ export const Atom = React.createClass({
 							</div>
 						}
 
-						{isEditor &&
-							<AtomEditorPane ref={'atomEditorPane'} atomData={this.props.atomData} loginData={this.props.loginData}/>
-						}
-
-						{atomData.type === 'document' &&
+						{!isEditor && !error && atomData.type === 'document' &&
 							<SelectionPopup addSelectionHandler={this.addSelection} />
 						}
 

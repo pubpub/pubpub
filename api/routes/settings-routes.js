@@ -3,7 +3,7 @@ const app = require('../api');
 const User = require('../models').User;
 
 const Promise = require('bluebird');
-const randomBytes = Promise.promisify(require("crypto").randomBytes);
+const randomBytes = Promise.promisify(require('crypto').randomBytes);
 
 export function saveUserSettings(req, res) {
 	const userID = req.user ? req.user._id : undefined;
