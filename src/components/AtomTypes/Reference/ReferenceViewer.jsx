@@ -63,11 +63,12 @@ export const ReferenceViewer = React.createClass({
 					</span>
 					: null }
 
+					{/* Needs to be internationalized */}
 					{(referenceData.url) ? <a href={referenceData.url} style={styles.button} className={'button light-button'} target="_blank">
-					<FormattedMessage id="reference.viewLink" defaultMessage="View Link"/> </a> : null }
+					View Link</a> : null }
 
 					{(referenceData.title) ? <a href={scholarLink} style={styles.button} className={'button light-button'} target="_blank">
-					<FormattedMessage id="reference.viewScholarLink" defaultMessage="Google Scholar"/> </a> : null }
+					Google Scholar </a> : null }
 
 				</div>
 			);
