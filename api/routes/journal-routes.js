@@ -78,7 +78,7 @@ export function getJournal(req, res) {
 				const query = Link.find({destination: journalResult._id, type: 'submitted'}).populate({
 					path: 'source',
 					model: Atom,
-					select: 'title slug description previewImage type',
+					select: 'title slug description previewImage type isPublished',
 				}).exec();
 				resolve(query);
 			} else {
@@ -89,11 +89,11 @@ export function getJournal(req, res) {
 		// Get the featured atoms associated with the journal
 		// This query fires if mode is equal to 'featured'
 		const getFeatured = new Promise(function(resolve) {
-			if (mode === 'featured') {
+			if (mode === 'featured' && isAdmin) {
 				const query = Link.find({source: journalResult._id, type: 'featured'}).populate({
 					path: 'destination',
 					model: Atom,
-					select: 'title slug description previewImage type',
+					select: 'title slug description previewImage type isPublished',
 				}).exec();
 				resolve(query);
 			} else {
@@ -109,7 +109,7 @@ export function getJournal(req, res) {
 				const query = Link.find({source: journalResult._id, type: 'featured', 'metadata.collections': mode}).populate({
 					path: 'destination',
 					model: Atom,
-					select: 'title slug description previewImage type',
+					select: 'title slug description previewImage type isPublished',
 				}).exec();
 				resolve(query);
 			} else {
@@ -117,7 +117,7 @@ export function getJournal(req, res) {
 				const query = Link.find({source: journalResult._id, type: 'featured'}).populate({
 					path: 'destination',
 					model: Atom,
-					select: 'title slug description previewImage type',
+					select: 'title slug description previewImage type isPublished',
 				}).exec();
 				resolve(query);
 			}
@@ -160,11 +160,18 @@ export function getJournal(req, res) {
 	.spread(function(journalResult, taskData) { // Send response
 		// What's spread? See here: http://stackoverflow.com/questions/18849312/what-is-the-best-way-to-pass-resolved-promise-values-down-to-a-final-then-chai
 		// console.log(taskData[2]);
+
+		// Remove unpublished items if not admin
+		const filteredAtomsData = taskData[2].filter((item)=>{
+			if (journalResult.isAdmin) { return true; }
+			return item.destination.isPublished;
+		});
+
 		return res.status(201).json({
 			journalData: journalResult,
 			submittedData: taskData[0],
 			featuredData: taskData[1],
-			atomsData: taskData[2],
+			atomsData: filteredAtomsData,
 			adminsData: taskData[3],
 			followersData: taskData[4],
 		});
