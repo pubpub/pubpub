@@ -132,7 +132,7 @@ export function createReplyDocument(req, res) {
 
 		createDate: now,
 		lastUpdated: now,
-		isPublished: false,
+		isPublished: true,
 
 		versions: [],
 		tags: [],
@@ -156,6 +156,11 @@ export function createReplyDocument(req, res) {
 				type: newAtom.type,
 				message: '',
 				parent: newAtom._id,
+				isPublished: true,
+				publishedBy: userID,
+				publishedDate: now,
+				createDate: now, 
+				createdBy: userID,
 				content: req.body.versionContent
 			});
 			tasks.push(newVersion.save());
