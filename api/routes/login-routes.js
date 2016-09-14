@@ -1,11 +1,13 @@
 const app = require('../api');
 const passport = require('passport');
+const cookie = require('cookie');
+const languageParser = require('accept-language-parser');
 
 const User = require('../models').User;
 const Notification = require('../models').Notification;
 const Promise = require('bluebird');
 const readFile = Promise.promisify(require('fs').readFile);
-const languageParser = require('accept-language-parser');
+
 const acceptedLanguages = ['en', 'es', 'fr'];
 
 import {sendResetEmail} from '../services/emails';
@@ -15,6 +17,7 @@ export function login(req, res) {
 	let userLanguages = languageParser.parse(req.headers["accept-language"]).map(function (a) {
 		return a.code;
 	});
+	const cookieLocale = cookie.parse(req.get('cookie')).lang;
 
 	// Get the language code for the first laguage that we share with
 	for (let index = 0; index < userLanguages.length; index++) {
@@ -22,6 +25,11 @@ export function login(req, res) {
 			locale = userLanguages[index];
 			break;
 		}
+	}
+
+	// if user explicitly set language, use that
+	if (cookieLocale) {
+		locale = cookieLocale;
 	}
 
 		// Load the app language data and login the user if a login cookie exists
