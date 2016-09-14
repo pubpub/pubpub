@@ -16,7 +16,7 @@ export const ReferenceViewer = React.createClass({
 
 	render: function() {
 
-		const referenceData = safeGetInToJS(this.props.atomData, ['currentVersionData', 'content']);
+		const referenceData = safeGetInToJS(this.props.atomData, ['currentVersionData', 'content']) || {};
 		let scholarLink;
 
 		if (this.props.context === 'reference-list') {
