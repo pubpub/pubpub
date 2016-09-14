@@ -12,6 +12,13 @@ export const AppFooter = React.createClass({
 		hideFooter: PropTypes.bool
 	},
 
+	switchLanguage: function(lang) {
+		document.cookie = 'lang=' + lang;
+		this.forceUpdate();
+		window.location.reload();
+	},
+
+
 	render: function() {
 		return (
 			<div className="footer darkest-bg lighter-color" style={[styles.footer, this.props.hideFooter && {display: 'none'}]}>
@@ -42,9 +49,15 @@ export const AppFooter = React.createClass({
 
 					<div style={styles.footerColumn}>
 						<div style={styles.footerHeader}> <FormattedMessage id="footer.Terms" defaultMessage="Terms"/> </div>
-						
+
 						<Link style={styles.footerItem} to={'/pub/tos'}> <FormattedMessage id="footer.TermsOfService" defaultMessage="Terms Of Service"/> </Link>
 						<Link style={styles.footerItem} to={'/pub/privacy'}> <FormattedMessage id="footer.PrivacyPolicy" defaultMessage="Privacy Policy"/> </Link>
+					</div>
+					<div style={styles.footerColumn}>
+						<div style={styles.footerHeader}> <FormattedMessage id="footer.Languages" defaultMessage="Languages"/> </div>
+
+						<Link to ={'#'}><div style={styles.footerItem} onClick={this.switchLanguage.bind(this, 'en')}>English</div></Link>
+						<Link to ={'#'}><div style={styles.footerItem} onClick={this.switchLanguage.bind(this, 'es')}>Español</div></Link>
 					</div>
 				</div>
 

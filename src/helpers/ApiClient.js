@@ -34,6 +34,9 @@ class ApiClient_ {
 							if (req.get('cookie')) {
 								request.set('cookie', req.get('cookie'));
 							}
+							if (req.get('accept-language')) {
+								request.set('accept-language', req.get('accept-language'));
+							}
 						}
 						if (options && options.data) {
 							request.send(options.data);
