@@ -56,8 +56,8 @@ export const AppFooter = React.createClass({
 					<div style={styles.footerColumn}>
 						<div style={styles.footerHeader}> <FormattedMessage id="footer.Languages" defaultMessage="Languages"/> </div>
 
-						<Link to ={'#'}><div style={styles.footerItem} onClick={this.switchLanguage.bind(this, 'en')}>English</div></Link>
-						<Link to ={'#'}><div style={styles.footerItem} onClick={this.switchLanguage.bind(this, 'es')}>Español</div></Link>
+						<a style={styles.footerItem} onClick={this.switchLanguage.bind(this, 'en')}>English</a>
+						<a style={styles.footerItem} onClick={this.switchLanguage.bind(this, 'es')}>Español</a>
 					</div>
 				</div>
 
@@ -93,6 +93,7 @@ styles = {
 	},
 	footerItem: {
 		display: 'block',
+		cursor: 'pointer',
 		whiteSpace: 'nowrap',
 		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
 			padding: '0.25em 0em',
