@@ -12,7 +12,7 @@ import {getAtomData, submitAtomToJournals, saveVersion, updateAtomDetails, publi
 // import {createHighlight} from 'containers/MediaLibrary/actions';
 
 import {Discussions, FollowButton} from 'containers';
-import {HorizontalNav, License} from 'components';
+import {HorizontalNav, License, SelectionPopup} from 'components';
 import AtomContributors from './AtomContributors';
 import AtomHeaderDetail from './AtomHeaderDetail';
 import AtomHeaderDetailsMulti from './AtomHeaderDetailsMulti';
@@ -196,6 +196,10 @@ export const Atom = React.createClass({
 	// 	if (!destination) { return undefined; }
 	// 	smoothScroll(destination);
 	// },
+
+	addSelection: function(newSelection) {
+		console.log(newSelection);
+	},
 
 	render: function() {
 		const atomData = safeGetInToJS(this.props.atomData, ['atomData']) || {};
@@ -475,7 +479,7 @@ export const Atom = React.createClass({
 						}
 
 						{!isEditor && !error &&
-							<div>
+							<div id="atom-viewer">
 								<AtomViewerPane atomData={this.props.atomData} />
 								{ atomData.isPublished && <License /> }
 							</div>
@@ -483,6 +487,10 @@ export const Atom = React.createClass({
 
 						{isEditor &&
 							<AtomEditorPane ref={'atomEditorPane'} atomData={this.props.atomData} loginData={this.props.loginData}/>
+						}
+
+						{atomData.type === 'document' &&
+							<SelectionPopup addSelectionHandler={this.addSelection} />
 						}
 
 					</div>
