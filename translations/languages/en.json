@@ -99,7 +99,7 @@
   "atomAnalytics.ViewsPastWeek": "Views Past Week",
   "atomAnalytics.ViewsPastDay": "Views Past day",
   "atomAnalytics.CountriesByViews": "Countries by Views",
-  "atomAnalytics\n\t\t\t\t\t\t\t\t.CitiesByViews": "Cities by Views",
+  "atomAnalytics.CitiesByViews": "Cities by Views",
   "atomContributors.AddNew": "Add new contributor",
   "atomContributors.SpecifyRoles": "Specify roles of this contributor",
   "aboutDetails.CannotBeChanged": "Cannot be changed once published.",

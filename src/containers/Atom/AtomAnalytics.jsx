@@ -189,8 +189,7 @@ export const AtomAnalytics = React.createClass({
 
 					<div style={styles.wideContainer}><div style={[styles.block, {width: 'calc(100% - 16px)'}]}>
 						<div style={styles.blockDispL}>
-							<FormattedMessage id="atomAnalytics
-								.CitiesByViews" defaultMessage="Cities by Views"/>
+							<FormattedMessage id="atomAnalytics.CitiesByViews" defaultMessage="Cities by Views"/>
 						</div>
 					</div>
 					{gData.cityOrder.slice(0, 5).map((item, index)=>{
