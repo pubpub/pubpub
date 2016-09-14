@@ -73,17 +73,26 @@ export const Atom = React.createClass({
 	componentWillMount() {
 		// If we load into the Editor, set the default rightPanelMode to 'details'
 		if (this.props.meta === 'edit')	{
-			this.setState({rightPanelMode: 'details'});
+			this.setState({
+				showRightPanel: false,
+				rightPanelMode: 'contents'
+			});
 		}
 	},
 	componentWillReceiveProps(nextProps) {
 		// If we transition from view to edit, set rightPanel to 'details'
 		if (this.props.meta !== 'edit' && nextProps.meta === 'edit') {
-			this.setState({rightPanelMode: 'details'});
+			this.setState({
+				showRightPanel: false,
+				rightPanelMode: 'contents',
+			});
 		}
 		// If we transition from edit to view, set rightPanel to 'discussions'
 		if (this.props.meta === 'edit' && nextProps.meta !== 'edit') {
-			this.setState({rightPanelMode: 'discussions'});
+			this.setState({
+				showRightPanel: true,
+				rightPanelMode: 'discussions'
+			});
 		}
 
 		// If there is a new version, redirect
@@ -198,6 +207,13 @@ export const Atom = React.createClass({
 	// },
 
 	addSelection: function(newSelection) {
+		// const atomType = 'document';
+		// const versionContent = {
+		// 	docJSON: pm.doc.toJSON(),
+		// 	markdown: markdownSerializer.serialize(pm.doc),
+		// };
+
+		// this.props.dispatch(createReplyDocument(atomType, versionContent, 'Reply', this.state.replyToID, this.state.rootReply));
 		console.log(newSelection);
 	},
 
@@ -272,13 +288,14 @@ export const Atom = React.createClass({
 		/* These are only shown if the user has edit rights */
 		const atomNavItems = [
 			{link: '/pub/' + this.props.slug, text: <FormattedMessage {...globalMessages.View}/>, active: !isEditor},
+			{link: '/pub/' + this.props.slug + '/edit', text: <FormattedMessage {...globalMessages.Edit}/>, active: isEditor}
 		];
 
-		if (permissionType === 'author' || permissionType === 'editor') {
-			atomNavItems.push({link: '/pub/' + this.props.slug + '/edit', text: <FormattedMessage {...globalMessages.Edit}/>, active: isEditor});
-		} else {
-			atomNavItems.push({link: '/pub/' + this.props.slug + '/edit', text: <FormattedMessage {...globalMessages.SuggestEdits}/>, active: isEditor});
-		}
+		// if (permissionType === 'author' || permissionType === 'editor') {
+		// 	atomNavItems.push({link: '/pub/' + this.props.slug + '/edit', text: <FormattedMessage {...globalMessages.Edit}/>, active: isEditor});
+		// } else {
+		// 	atomNavItems.push({link: '/pub/' + this.props.slug + '/edit', text: <FormattedMessage {...globalMessages.SuggestEdits}/>, active: isEditor});
+		// }
 
 		const rightPanelNavItems = [
 			{text: <FormattedMessage {...globalMessages.Contents}/>, action: this.setRightPanelMode.bind(this, 'contents'), active: this.state.rightPanelMode === 'contents'},
@@ -316,7 +333,7 @@ export const Atom = React.createClass({
 					{/* -------------------------------- */}
 					<div style={styles.atomNavBar}>
 						<Sticky style={styles.headerBar} isActive={isEditor}>
-							{!isEmbed &&
+							{!isEmbed && (permissionType === 'author' || permissionType === 'editor') && 
 								<HorizontalNav navItems={atomNavItems} mobileNavButtons={mobileNavButtons}/>
 							}
 							<div style={styles.headerMenu} id={'headerPlaceholder'}></div>

@@ -2,11 +2,13 @@ import React, {PropTypes} from 'react';
 import Radium from 'radium';
 import {globalStyles} from 'utils/styleConstants';
 import {FormattedMessage} from 'react-intl';
+import {markdownParser, markdownSerializer, schema} from 'components/AtomTypes/Document/proseEditor';
 
 let Marklib = undefined;
 let Rangy = undefined;
 
 let styles = {};
+let pm;
 
 export const SelectionPopup = React.createClass({
 	propTypes: {
@@ -22,6 +24,8 @@ export const SelectionPopup = React.createClass({
 			popupVisible: false,
 			xLoc: 0,
 			yLoc: 0,
+			popupEditor: false,
+			highlightObject: undefined,
 		};
 	},
 
@@ -30,7 +34,21 @@ export const SelectionPopup = React.createClass({
 		Rangy = require('rangy');
 		require('rangy/lib/rangy-textrange.js');
 		document.getElementById('atom-viewer').addEventListener('mouseup', this.onMouseUp);
+		
+		const prosemirror = require('prosemirror');
+		const {pubpubSetup} = require('components/AtomTypes/Document/proseEditor/pubpubSetup');
+
+		const place = document.getElementById('highlight-reply');
+		if (!place) { return undefined; }
+		pm = new prosemirror.ProseMirror({
+			place: place,
+			schema: schema,
+			plugins: [pubpubSetup.config({menuBar: false, tooltipMenu: false})],
+			doc: null,
+		});
+
 	},
+
 
 	componentWillUnmount() {
 		document.getElementById('atom-viewer').removeEventListener('mouseup', this.onMouseUp);
@@ -83,7 +101,7 @@ export const SelectionPopup = React.createClass({
 		// console.log(range);
 		// console.log(range.commonAncestorContainer);
 
-		if (!selection.isCollapsed && this.isDescendantOfHash(range.commonAncestorContainer)) {
+		if (!selection.isCollapsed && this.isDescendantOfHash(range.commonAncestorContainer) && !this.state.popupEditor) {
 
 			Rangy.getSelection().expand('word');
 			const ancestorText = this.getAncestorText(range.commonAncestorContainer);
@@ -101,7 +119,7 @@ export const SelectionPopup = React.createClass({
 
 		} else {
 			this.setState({
-				popupVisible: false,
+				popupVisible: this.state.popupEditor || false,
 			});
 		}
 
@@ -131,7 +149,7 @@ export const SelectionPopup = React.createClass({
 		return newPath;
 	},
 
-	onHighlightSave: function() {
+	enableEditor: function() {
 		const renderer = new Marklib.Rendering(document, {className: 'tempHighlight'}, document);
 		const result = renderer.renderWithRange(this.state.range);
 
@@ -149,7 +167,38 @@ export const SelectionPopup = React.createClass({
 			endOffset: result.endOffset
 		};
 
-		this.props.addSelectionHandler(highlightObject);
+		this.setState({
+			popupEditor: true,
+			highlightObject: highlightObject,
+		});
+	},
+	disableEditor: function() {
+		this.setState({
+			popupEditor: false,
+			popupVisible: false,
+			highlightObject: undefined,
+		});
+	},
+
+	onHighlightSave: function() {
+		// const renderer = new Marklib.Rendering(document, {className: 'tempHighlight'}, document);
+		// const result = renderer.renderWithRange(this.state.range);
+
+		// // Note - these containers will fail if identical paragraphs or list-items exist (they'll have an identical hash).
+		// const newStartContainer = this.replacePathWithHash(result.startContainerPath);
+		// const newEndContainer = this.replacePathWithHash(result.endContainerPath);
+
+		// const highlightObject = {
+		// 	text: this.state.selectionText,
+		// 	context: this.state.ancestorText,
+
+		// 	startContainerPath: newStartContainer,
+		// 	endContainerPath: newEndContainer,
+		// 	startOffset: result.startOffset,
+		// 	endOffset: result.endOffset
+		// };
+
+		this.props.addSelectionHandler(this.state.highlightObject);
 
 	},
 
@@ -166,9 +215,21 @@ export const SelectionPopup = React.createClass({
 			<div id="plugin-popup" className="plugin-popup" style={[styles.pluginPopup, this.getPluginPopupLoc(), this.state.popupVisible && styles.pluginPopupVisible]}>
 				<div style={styles.pluginPopupArrow}></div>
 				<div style={styles.pluginContent}>
-					<div key={'addToComment Button'} style={styles.button} onClick={this.onHighlightSave}>
-						<FormattedMessage id="pub.addToComment" defaultMessage="Add to Comment"/>
-					</div>
+					{!this.state.popupEditor &&
+						<div key={'addToComment Button'} style={styles.button} onClick={this.enableEditor}>
+							<FormattedMessage id="pub.addToComment" defaultMessage="Add to Comment"/>
+						</div>
+					}
+					
+
+					{this.state.popupEditor &&
+						<div>
+							<div id="highlight-reply"></div>
+							<div key={'addToComment Button1'} style={styles.button} onClick={this.disableEditor}>Cancel</div>
+							<div key={'addToComment Button2'} style={styles.button} onClick={this.togglePopupEditor}>Save</div>
+
+						</div>
+					}
 				</div>
 			</div>
 		);

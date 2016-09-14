@@ -72,7 +72,7 @@ export const Discussions = React.createClass({
 		pm = new prosemirror.ProseMirror({
 			place: place,
 			schema: schema,
-			plugins: [pubpubSetup.config({menuBar: false, tooltipMenu: true})],
+			plugins: [pubpubSetup.config({menuBar: false, tooltipMenu: false})],
 			doc: null,
 			on: {
 				doubleClickOn: new StoppableSubscription,

@@ -17,6 +17,7 @@
     "build": "node ./node_modules/better-npm-run build",
     "postinstall": "node ./node_modules/better-npm-run build",
     "migrate": "node ./node_modules/better-npm-run migrate",
+    "migrateMexico": "node ./node_modules/better-npm-run migrateMexico",
     "lint": "eslint src api",
     "lint:watch": "node_modules/eslint-watch/bin/esw --watch --config .eslintrc src api",
     "start-dev": "node ./node_modules/better-npm-run start-dev",
@@ -32,6 +33,13 @@
   "betterScripts": {
     "migrate": {
       "command": "node ./data/migration_16_07/runMigrations.js",
+      "env": {
+        "NODE_PATH": "./src",
+        "NODE_ENV": "production"
+      }
+    },
+    "migrateMexico": {
+      "command": "node ./data/migrateMexico/runMexicoImport.js",
       "env": {
         "NODE_PATH": "./src",
         "NODE_ENV": "production"

@@ -64,7 +64,7 @@ exports.pubpubSetup = new Plugin(class {
 		this.inputRules.forEach(rule => rules.addRule(rule));
 
 		let builtMenu;
-		this.barConf = options.menuBar || true;
+		this.barConf = options.menuBar;
 		this.tooltipConf = options.tooltipMenu;
 
 		if (this.barConf === true) {
