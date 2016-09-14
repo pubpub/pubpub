@@ -1,6 +1,6 @@
 import React, {PropTypes} from 'react';
 import Radium from 'radium';
-import {globalMessages} from 'utils/globalMessages';
+// import {globalMessages} from 'utils/globalMessages';
 import {FormattedMessage} from 'react-intl';
 
 import {generateToken} from './actions';
@@ -16,9 +16,10 @@ export const UserProfileAccessTokens = React.createClass({
 
 	},
 
-  generateToken: function(evt) {
-    this.props.dispatch(generateToken());
-  },
+	generateToken: function(evt) {
+		this.props.dispatch(generateToken());
+	},
+	
 	render: function() {
 		// const token = safeGetInToJS(this.props.settingsData, ['profileData', 'accessToken'])
 		const token = safeGetInToJS(this.props.settingsData, ['token']) ? safeGetInToJS(this.props.settingsData, ['token']) : safeGetInToJS(this.props.settingsData, ['profileData', 'accessToken']);
@@ -26,9 +27,9 @@ export const UserProfileAccessTokens = React.createClass({
 			<div>
 				<h3><FormattedMessage id="UserProfileSettingsNotifications.accessTokens" defaultMessage="Accces Tokens allow you to authenticate to the API over Basic Authentication."/></h3>
 				<p>{token}</p>
-        <button className={'button'} onClick={this.generateToken}>
-          Generate New Token
-        </button>
+				<button className={'button'} onClick={this.generateToken}>
+				  Generate New Token
+				</button>
 			</div>
 		);
 	}

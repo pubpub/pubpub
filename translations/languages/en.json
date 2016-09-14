@@ -155,7 +155,6 @@
   "signup.Signupto": "Sign up to publish documents and follow content!",
   "signup.PasswordLength": "Must be at least 8 characters",
   "signup.alreadyHaveAccount": "Already have an account? Click to Login!",
-  "UserProfilePubs.LatestVersion": "Latest Version {date}.",
   "UserProfileSettingsNotifications.accessTokens": "Accces Tokens allow you to authenticate to the API over Basic Authentication.",
   "userProfileSettings.HereIsABunch": "Here is a bunch of details for my Account",
   "userProfileSettings.Save": "Save Account Settings",

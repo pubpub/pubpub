@@ -85,7 +85,7 @@ export const UserProfile = React.createClass({
 			{ type: 'link', text: <FormattedMessage {...globalMessages.Profile}/>, link: '/user/' + this.props.username + '/profile', active: this.props.mode === 'profile'},
 			// { type: 'link', text: 'Account', link: '/user/' + this.props.username + '/account', active: this.props.mode === 'account'},
 			{ type: 'link', text: <FormattedMessage {...globalMessages.Notifications}/>, link: '/user/' + this.props.username + '/notifications', active: this.props.mode === 'notifications' },
-			{ type: 'link', text: 'Access Token', link: '/user/' + this.props.username + '/tokens', active: this.props.mode === 'tokens' },
+			// { type: 'link', text: 'Access Token', link: '/user/' + this.props.username + '/tokens', active: this.props.mode === 'tokens' },
 
 		]
 		: [];
