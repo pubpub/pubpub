@@ -6,7 +6,7 @@ const Notification = require('../models').Notification;
 const Promise = require('bluebird');
 const readFile = Promise.promisify(require('fs').readFile);
 const languageParser = require('accept-language-parser');
-const acceptedLanguages = ['en', 'es'];
+const acceptedLanguages = ['en', 'es', 'fr'];
 
 import {sendResetEmail} from '../services/emails';
 
