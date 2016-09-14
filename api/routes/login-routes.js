@@ -14,10 +14,12 @@ import {sendResetEmail} from '../services/emails';
 
 export function login(req, res) {
 	let locale = 'en';
-	let userLanguages = languageParser.parse(req.headers["accept-language"]).map(function (a) {
-		return a.code;
+	const languageHeaders = req.headers ? req.headers['accept-language'] : '';
+	const userLanguages = languageParser.parse(languageHeaders).map(function(language) {
+		return language.code;
 	});
-	const cookieLocale = cookie.parse(req.get('cookie')).lang;
+	const cookieHeaders = req.get ? req.get('cookie') : '';
+	const cookieLocale = cookie.parse(cookieHeaders).lang;
 
 	// Get the language code for the first laguage that we share with
 	for (let index = 0; index < userLanguages.length; index++) {
