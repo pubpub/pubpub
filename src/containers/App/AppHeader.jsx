@@ -167,6 +167,7 @@ export const AppHeader = React.createClass({
 
 					{/* <div className={'menu-option'} onClick={this.props.createDocument}><FormattedMessage {...globalMessages.NewDocument}/></div> */}
 					{/* <Link className={'menu-option'} to={'/user/' + username + '/journals'}>My Journals</Link> */}
+					<Link className={'menu-option'} to={'/user/' + username + '/pubs'}><FormattedMessage {...globalMessages.CreateNew}/></Link>
 
 					<div className={'menu-separator'} ></div>
 

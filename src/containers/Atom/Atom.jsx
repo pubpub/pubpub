@@ -694,7 +694,7 @@ styles = {
 	container: {
 		width: '100%',
 		overflow: 'hidden',
-		minHeight: '100vh',
+		// minHeight: '100vh',
 		position: 'relative',
 	},
 
