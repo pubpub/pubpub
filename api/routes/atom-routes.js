@@ -343,7 +343,8 @@ export function getAtomData(req, res) {
 			select: 'username name image bio',
 		}).exec();
 
-		const getVersions = Version.find({_id: {$in: atomResult.versions}}, {content: 0}).sort({createDate: -1});
+		const versionQuery = permissionType !== 'author' && permissionType !== 'editor' && permissionType !== 'reader' ? {isPublished: true, _id: {$in: atomResult.versions}} : {_id: {$in: atomResult.versions}};
+		const getVersions = Version.find(versionQuery, {content: 0}).sort({createDate: -1});
 
 		const getSubmitted = new Promise(function(resolve) {
 			if (permissionType === 'author') {
