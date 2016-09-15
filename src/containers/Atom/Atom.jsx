@@ -528,7 +528,7 @@ export const Atom = React.createClass({
 							</div>
 						}
 
-						{!isEditor && !error && isDiscussions && atomData.type === 'document' &&
+						{!isEditor && !error && !isDiscussions && atomData.type === 'document' &&
 							<SelectionPopup addSelectionHandler={this.addSelection} />
 						}
 
