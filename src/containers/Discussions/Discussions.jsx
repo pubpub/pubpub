@@ -196,13 +196,7 @@ export const Discussions = React.createClass({
 						{/* <Media/> */}
 
 						{/* <Sticky style={styles.replyWrapper} isActive={!!replyToData}> */}
-						<div style={styles.replyWrapper}>
-							{this.state.discussionEmpty && 
-								<div style={{position: 'absolute', padding: '1em', color: '#BBBDC0', lineHeight: '1.2em'}}>
-									<FormattedMessage id="discussion.placeholder" defaultMessage="Discuss this work. Comments and Reviews encouraged."/>
-								</div>
-							}
-							
+						<div style={styles.replyWrapper}>							
 							
 							<div style={[styles.replyHeader, !replyToData && {display: 'none'}]}>
 									<div className={'showChildOnHover'} style={styles.replyToWrapper}>
@@ -215,6 +209,11 @@ export const Discussions = React.createClass({
 							</div>
 
 							<div style={styles.replyBody}>
+								{this.state.discussionEmpty && 
+									<div style={{position: 'absolute', padding: '1em', color: '#BBBDC0', lineHeight: '1.2em', pointerEvents: 'none'}}>
+										<FormattedMessage id="discussion.placeholder" defaultMessage="Discuss this work. Comments and Reviews encouraged."/>
+									</div>
+								}
 								<div id={'reply-input'} className={'atom-reader atom-reply ProseMirror-quick-style'} style={styles.wsywigBlock}></div>
 							</div>
 
@@ -305,6 +304,7 @@ styles = {
 		maxHeight: '70vh',
 		overflow: 'hidden',
 		overflowY: 'scroll',
+		position: 'relative',
 	},
 	replyFooter: {
 		display: 'table',
