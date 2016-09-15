@@ -170,7 +170,10 @@ export const Media = React.createClass({
 
 					{/* If we DON'T have a chosen atom */}
 					{!nodeData.data &&
-						<Manage setItemHandler={this.setItem}/>
+						<div style={{padding: '2em'}}>
+							<Manage setItemHandler={this.setItem}/>	
+						</div>
+						
 					}
 
 					{/* If we DO have a chosen atom */}
