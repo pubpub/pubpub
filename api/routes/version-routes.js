@@ -28,6 +28,8 @@ export function saveVersion(req, res) {
 		createDate: now,
 		content: newVersion.content || {},
 		isPublished: newVersion.isPublished || false,
+		publishedBy: userID,
+		publishedDate: now,
 	});
 
 	const checkAndSaveJupyter = new Promise(function(resolve) {
@@ -47,10 +49,12 @@ export function saveVersion(req, res) {
 		return version.save();
 	})
 	.then(function(savedVersion) { // Add to atom versions array and return version
-		const updateAtom = Atom.update({ _id: newVersion.parent }, { $addToSet: { versions: savedVersion._id}, $set: {lastUpdated: now} }).exec();
+		const setIsPublished = newVersion.isPublished ? {isPublished: true} : {};
+		const updateAtom = Atom.update({ _id: newVersion.parent }, { $addToSet: { versions: savedVersion._id}, $set: {lastUpdated: now, ...setIsPublished} }).exec();
 		return [savedVersion, updateAtom];
 	})
 	.spread(function(savedVersion, updatedAtomResult) {
+
 		return res.status(201).json(savedVersion);
 	})
 	.catch(function(error) {
