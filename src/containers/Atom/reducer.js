@@ -138,7 +138,7 @@ function createReplyDocumentSuccess(state, result) {
 		isNewReply: true,
 	};
 	return state.merge({
-		discussionsData: state.get('discussionsData').push(newDiscussion),
+		discussionsData: state.get('discussionsData').unshift(newDiscussion),
 	});
 }
 

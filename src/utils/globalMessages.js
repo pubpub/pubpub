@@ -13,6 +13,10 @@ export const globalMessages = defineMessages({
 		id: 'global.Skipthisstep',
 		defaultMessage: 'Skip this step',
 	},
+	PublishReply: {
+		id: 'global.PublishReply',
+		defaultMessage: 'Publish Reply',
+	},
 	TypeToSearch: {
 		id: 'global.TypeToSearch',
 		defaultMessage: 'Type To Search',

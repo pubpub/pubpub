@@ -9,6 +9,7 @@ import { StickyContainer as UnwrappedStickyContainer, Sticky } from 'react-stick
 const StickyContainer = Radium(UnwrappedStickyContainer);
 
 import {getAtomData, submitAtomToJournals, saveVersion, updateAtomDetails, publishVersion, addContributor, updateContributor, deleteContributor} from './actions';
+import {createReplyDocument} from 'containers/Discussions/actions';
 // import {createHighlight} from 'containers/MediaLibrary/actions';
 
 import {Discussions, FollowButton} from 'containers';
@@ -206,15 +207,17 @@ export const Atom = React.createClass({
 	// 	smoothScroll(destination);
 	// },
 
-	addSelection: function(newSelection) {
-		// const atomType = 'document';
-		// const versionContent = {
-		// 	docJSON: pm.doc.toJSON(),
-		// 	markdown: markdownSerializer.serialize(pm.doc),
-		// };
+	addSelection: function(versionContent, highlightObject) {
 
-		// this.props.dispatch(createReplyDocument(atomType, versionContent, 'Reply', this.state.replyToID, this.state.rootReply));
-		console.log(newSelection);
+		highlightObject.sourcePub = safeGetInToJS(this.props.atomData, ['atomData', '_id']);
+		highlightObject.sourceVersion = safeGetInToJS(this.props.atomData, ['currentVersionData', '_id']);
+		// console.log(versionContent, highlightObject);
+		const atomType = 'document';
+		const atomData = safeGetInToJS(this.props.atomData, ['atomData']) || [];
+		const discussionsData = safeGetInToJS(this.props.atomData, ['discussionsData']) || [];
+		const rootReply = discussionsData.length ? discussionsData[0].linkData.metadata.rootReply : atomData._id;
+		const replyToID = atomData._id;
+		this.props.dispatch(createReplyDocument(atomType, versionContent, 'Reply', replyToID, rootReply, highlightObject));
 	},
 
 	render: function() {
@@ -556,6 +559,7 @@ styles = {
 		maxWidth: '650px',
 		margin: '0em auto',
 		backgroundColor: 'white',
+		position: 'relative',
 	},
 	atomWrapperFull: {
 		padding: '0em 2em',

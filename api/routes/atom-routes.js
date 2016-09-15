@@ -143,12 +143,84 @@ export function createReplyDocument(req, res) {
 	// This should be made more intelligent to use images, video thumbnails, etc when possible - if the atom type is image, video, etc.
 	atom.previewImage = 'https://assets.pubpub.org/_site/pub.png';
 
+	// Check if highlight
+	// create new highlight
+	// create new atom
+	// edit version JSON and markdown
+	// create new version
+	const versionContent = req.body.versionContent || {};
 	atom.save() // Save new atom data
 	.then(function(newAtom) { // Create new Links pointing between atom and author
 		const tasks = [
 			Link.createLink('author', userID, newAtomID, userID, now),
 			Link.createLink('reply', newAtomID, replyTo, userID, now, {rootReply: rootReply}),
 		];
+
+
+		// If there is highlight data, create the highlight!
+		if (req.body.highlightObject) {
+			const newHighlightID = new ObjectID();
+			const newHighlightVersionID = new ObjectID();
+			const newHighlight = new Atom({
+				_id: newHighlightID,
+				type: 'highlight',
+				slug: String(newHighlightID),
+				title: 'Highlight: ' + now,
+				previewImage: 'https://assets.pubpub.org/_site/pub.png',
+				createDate: now,
+				lastUpdated: now,
+				isPublished: true,
+				versions: [newHighlightVersionID],
+				tags: [],
+			});
+			tasks.push(newHighlight.save());
+
+			
+			const highlightObject = req.body.highlightObject || {};
+			const newHighlightVersion = new Version({
+				_id: newHighlightVersionID,
+				type: 'highlight',
+				message: '',
+				parent: newHighlightID,
+				content: {
+					text: highlightObject.text,
+					context: highlightObject.context,
+					startContainerPath: highlightObject.startContainerPath,
+					startOffset: highlightObject.startOffset,
+					endContainerPath: highlightObject.endContainerPath,
+					endOffset: highlightObject.endOffset,
+					sourcePub: highlightObject.sourcePub,
+					sourceVersion: highlightObject.sourceVersion,
+				}
+			});
+			tasks.push(newHighlightVersion.save());
+
+			// If we're here, we need to update the versionContent to include the highlight at the top
+			const hightlightJSONObject = {
+				type: 'embed',
+				attrs: {
+					mode: 'embed',
+					caption: '',
+					size: '',
+					align: 'full',
+					id: String(newHighlightID),
+					className: '',
+					source: String(newHighlightID),
+					data: {
+						_id: String(newHighlightID),
+						type: 'highlight',
+						message: '',
+						parent: newHighlight,
+						content: newHighlightVersion.content
+					}
+				}
+			};
+			versionContent.docJSON.content.unshift(hightlightJSONObject);
+			const highlightMarkdown = '[[source=\"' + hightlightJSONObject.attrs.source + '\" id=\"' + hightlightJSONObject.attrs.id + '\" className=\"' + hightlightJSONObject.attrs.className + '\" align=\"' + hightlightJSONObject.attrs.align + '\" size=\"' + hightlightJSONObject.attrs.size + '\" caption=\"' + hightlightJSONObject.attrs.caption + '\" mode=\"' + hightlightJSONObject.attrs.mode + '\" data=\"' + encodeURIComponent(JSON.stringify(hightlightJSONObject.attrs.data)) + '\"]]';
+			versionContent.markdown = highlightMarkdown + '\n' + versionContent.markdown;
+
+		}
+
 
 		// If there is version data, create the version!
 		if (req.body.versionContent) {
@@ -161,7 +233,7 @@ export function createReplyDocument(req, res) {
 				publishedDate: now,
 				createDate: now, 
 				createdBy: userID,
-				content: req.body.versionContent
+				content: versionContent
 			});
 			tasks.push(newVersion.save());
 		}
@@ -171,7 +243,10 @@ export function createReplyDocument(req, res) {
 	.then(function(taskResults) { // If we created a version, make sure to add that version to parent
 		if (taskResults.length === 3) {
 			versionData = taskResults[2];
-			// versionID = versionData._id;
+			return Atom.update({ _id: versionData.parent }, { $addToSet: { versions: versionData._id} }).exec();
+		}
+		if (taskResults.length === 5) {
+			versionData = taskResults[4];
 			return Atom.update({ _id: versionData.parent }, { $addToSet: { versions: versionData._id} }).exec();
 		}
 		return undefined;

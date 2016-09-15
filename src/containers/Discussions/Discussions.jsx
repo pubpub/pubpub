@@ -147,7 +147,10 @@ export const Discussions = React.createClass({
 
 	proseChange: function() {
 		const markdown = markdownSerializer.serialize(pm.doc);
-		this.setState({discussionEmpty: !markdown});
+		if (this.state.discussionEmpty !== !markdown) {
+			this.setState({discussionEmpty: !markdown});	
+		}
+		
 	},
 
 
@@ -223,7 +226,7 @@ export const Discussions = React.createClass({
 									<License text={'All discussions are licensed under a'} hover={true} />
 								</div>
 								<div className={'button'} style={styles.replyButton} onClick={this.publishReply}>
-									<FormattedMessage id="discussion.PublishReply" defaultMessage="Publish Reply"/>
+									<FormattedMessage {...globalMessages.PublishReply}/>
 								</div>
 							</div>
 						</div>

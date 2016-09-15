@@ -15,7 +15,7 @@ export const CREATE_REPLY_DOCUMENT_FAIL = 'discussions/CREATE_REPLY_DOCUMENT_FAI
 // action objects (e.g. {type:example, payload:data} ) within dispatch()
 // function calls
 /*--------*/
-export function createReplyDocument(type, versionContent, title, replyTo, rootReply) {
+export function createReplyDocument(type, versionContent, title, replyTo, rootReply, highlightObject) {
 	return {
 		types: [CREATE_REPLY_DOCUMENT_LOAD, CREATE_REPLY_DOCUMENT_SUCCESS, CREATE_REPLY_DOCUMENT_FAIL],
 		promise: (client) => client.post('/createReplyDocument', {data: {
@@ -24,6 +24,7 @@ export function createReplyDocument(type, versionContent, title, replyTo, rootRe
 			title: title,
 			replyTo: replyTo,
 			rootReply: rootReply,
+			highlightObject: highlightObject,
 		}})
 	};
 }

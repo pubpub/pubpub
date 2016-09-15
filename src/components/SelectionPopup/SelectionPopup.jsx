@@ -85,10 +85,10 @@ export const SelectionPopup = React.createClass({
 		const offsetTop = element.parentNode.style.top ? parseInt(element.parentNode.style.top, 10) : 0;
 		if (event.pageX || event.pageY) {
 			clickX = event.pageX - element.getBoundingClientRect().left;
-			clickY = event.pageY + element.scrollTop - offsetTop;
+			clickY = event.pageY + element.scrollTop - offsetTop - 39;
 		} else {
 			clickX = event.clientX + document.body.scrollLeft + document.documentElement.scrollLeft - element.getBoundingClientRect().left;
-			clickY = event.clientY + document.body.scrollTop + document.documentElement.scrollTop + element.scrollTop - offsetTop;
+			clickY = event.clientY + document.body.scrollTop + document.documentElement.scrollTop + element.scrollTop - offsetTop - 39;
 		}
 
 		const selection = Rangy.getSelection();
@@ -172,6 +172,7 @@ export const SelectionPopup = React.createClass({
 			popupEditor: true,
 			highlightObject: highlightObject,
 		});
+		pm.focus();
 	},
 	disableEditor: function() {
 		this.setState({
@@ -179,6 +180,9 @@ export const SelectionPopup = React.createClass({
 			popupVisible: false,
 			highlightObject: undefined,
 		});
+		this.clearTempHighlights();
+		this.clearTempHighlights();
+		pm.setDoc(markdownParser.parse(''));
 	},
 
 	onHighlightSave: function() {
@@ -199,8 +203,28 @@ export const SelectionPopup = React.createClass({
 		// 	endOffset: result.endOffset
 		// };
 
-		this.props.addSelectionHandler(this.state.highlightObject);
+		const versionContent = {
+			docJSON: pm.doc.toJSON(),
+			markdown: markdownSerializer.serialize(pm.doc),
+		};
 
+		this.props.addSelectionHandler(versionContent, this.state.highlightObject);
+		this.setState({
+			popupEditor: false,
+			popupVisible: false,
+			highlightObject: undefined,
+		});
+		
+		this.clearTempHighlights();
+		this.clearTempHighlights();
+		pm.setDoc(markdownParser.parse(''));
+	},
+
+	clearTempHighlights: function() {
+		const tempHighlights = document.getElementsByClassName('tempHighlight');
+		for (let index = 0; index < tempHighlights.length; index++) {
+			tempHighlights[index].className = '';
+		}
 	},
 
 	getPluginPopupLoc: function() {
@@ -228,8 +252,8 @@ export const SelectionPopup = React.createClass({
 
 					<div style={[{width: '300px'}, !this.state.popupEditor && {opacity: '0', pointerEvents: 'none', position: 'absolute'}]}>
 						<div id="highlight-reply" style={styles.inputWrapper}></div>
-						<div key={'addToComment Button1'} style={styles.button} onClick={this.disableEditor}> <FormattedMessage {...globalMessages.Cancel}/> </div>
-						<div key={'addToComment Button2'} style={styles.button} onClick={this.togglePopupEditor}> <FormattedMessage {...globalMessages.Save}/> </div>
+						<div className={'button'} style={styles.editorButton} onClick={this.disableEditor}> <FormattedMessage {...globalMessages.Cancel}/> </div>
+						<div className={'button'} style={styles.editorButton} onClick={this.onHighlightSave}> <FormattedMessage {...globalMessages.PublishReply}/> </div>
 					</div>
 
 				</div>
@@ -295,6 +319,11 @@ styles = {
 			color: '#222',
 			cursor: 'pointer',
 		},
+	},
+	editorButton: {
+		marginRight: '1em',
+		padding: '.25em 1em',
+		fontSize: '.85em',
 	},
 	clearfix: {
 		display: 'table',
