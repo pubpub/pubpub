@@ -1,5 +1,5 @@
-import React, {PropTypes} from 'react';
 import AtomViewerPane from 'containers/Atom/AtomViewerPane';
+import React, {PropTypes} from 'react';
 import {ensureImmutable} from 'reducers';
 // import {safeGetInToJS} from 'utils/safeParse';
 
@@ -8,7 +8,7 @@ export const EmbedWrapper = React.createClass({
 		source: PropTypes.string,
 		className: PropTypes.string,
 		id: PropTypes.string,
-		align: PropTypes.oneOf(['inline', 'full', 'left', 'right']),
+		align: PropTypes.oneOf(['inline', 'full', 'left', 'right', 'inline-word']),
 		size: PropTypes.string,
 		caption: PropTypes.string,
 		mode: PropTypes.oneOf(['embed', 'cite']),
