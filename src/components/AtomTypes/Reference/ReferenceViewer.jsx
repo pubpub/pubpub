@@ -25,7 +25,8 @@ export const ReferenceViewer = React.createClass({
 
 		if (referenceData.title) {
 			// Generates a google scholar link based on the title & author
-			scholarLink = scholar(referenceData.title, {language: 'en', author: referenceData.author || ''});
+			// scholarLink = scholar(referenceData.title, {language: 'en', author: referenceData.author || ''});
+			scholarLink = scholar(referenceData.title, {language: 'en'});
 		}
 
 		const referenceKeys = Object.values(referenceData).reduce((count, reference) => {
