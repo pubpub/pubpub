@@ -24,7 +24,7 @@ export const AtomCiteButton = React.createClass({
 		const authorsData = safeGetInToJS(this.props.atomData, ['authorsData']) || [];
 
 		const author = this.props.customAuthorString || authorsData.reduce((previousValue, currentValue, currentIndex, array)=>{
-			const currentAuthor = currentValue.source;
+			const currentAuthor = currentValue.source || {};
 			const authorString = array.length === currentIndex + 1 ? currentAuthor.name : currentAuthor.name + ', ';
 			return previousValue + authorString;
 		}, '');
