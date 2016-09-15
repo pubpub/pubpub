@@ -225,6 +225,7 @@ styles = {
 		transition: '.1s linear opacity',
 		display: 'flex',
 		justifyContent: 'center',
+		zIndex: 1,
 	},
 	imageCropperWrapperVisible: {
 		opacity: 1,
