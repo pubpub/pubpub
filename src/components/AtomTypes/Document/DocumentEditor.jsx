@@ -131,7 +131,6 @@ export const DocumentEditor = React.createClass({
 		});
 
 		pm.on.doubleClickOn.add((pos, node, nodePos)=>{
-			console.log('nodePos', nodePos);
 			if (node.type.name === 'embed') {
 				const done = (attrs)=> {
 					pm.tr.setNodeType(nodePos, node.type, attrs).apply();
@@ -141,25 +140,25 @@ export const DocumentEditor = React.createClass({
 			}
 		});
 
-		pm.on.selectionChange.add(()=>{
-			const currentSelection = pm.selection;
-			const currentFrom = currentSelection.$from.pos;
-			const currentSelectedNode = currentSelection.node;
-			if (currentSelectedNode && currentSelectedNode.type.name === 'embed') {
-				const coords = pm.coordsAtPos(currentFrom);
-				coords.bottom = coords.bottom + window.scrollY - 40;
-				this.setState({
-					embedLayoutCoords: coords,
-					embedAttrs: currentSelectedNode.attrs,
-				});
-			} else {
-				this.setState({
-					embedLayoutCoords: undefined,
-					embedAttrs: undefined,
-				});
-			}
+		// pm.on.selectionChange.add(()=>{
+		// 	const currentSelection = pm.selection;
+		// 	const currentFrom = currentSelection.$from.pos;
+		// 	const currentSelectedNode = currentSelection.node;
+		// 	if (currentSelectedNode && currentSelectedNode.type.name === 'embed') {
+		// 		const coords = pm.coordsAtPos(currentFrom);
+		// 		coords.bottom = coords.bottom + window.scrollY - 40;
+		// 		this.setState({
+		// 			embedLayoutCoords: coords,
+		// 			embedAttrs: currentSelectedNode.attrs,
+		// 		});
+		// 	} else {
+		// 		this.setState({
+		// 			embedLayoutCoords: undefined,
+		// 			embedAttrs: undefined,
+		// 		});
+		// 	}
 
-		});
+		// });
 
 		pm.on.transformPastedHTML.add(this.transformHTML);
 
@@ -364,10 +363,10 @@ export const DocumentEditor = React.createClass({
 	// Get updates to document and then send updates to the server
 	save: function(callback) {
 		const that = this;
-		console.log('Started save');
+		// console.log('Started save');
 		this.getUpdates(function() {
 			that.sendDocumentUpdate(function() {
-				console.log('Finished save');
+				// console.log('Finished save');
 				if (callback) {
 					callback();
 				}

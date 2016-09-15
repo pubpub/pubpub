@@ -59,7 +59,7 @@
   "notFound.pageDoesntExist": "Doh - That page does not seem to exist!",
   "notFound.PerhapsLogin": "Perhaps you need to Login to access this page. Click to Login",
   "previewEditor.SetToInsert": "Set To Insert",
-  "pub.addToComment": "Add to Comment",
+  "pub.AddComment": "Add Comment",
   "footer.about": "About",
   "footer.code": "Code",
   "footer.Feedback": "Feedback",

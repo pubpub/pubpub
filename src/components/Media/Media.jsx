@@ -122,7 +122,7 @@ export const Media = React.createClass({
 
 	setItem: function(item) {
 		const nodeData = this.state.nodeData || {};
-		console.log(item);
+		// console.log(item);
 		this.setState({
 			nodeData: {
 				source: item._id,

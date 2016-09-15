@@ -328,7 +328,7 @@ export const Atom = React.createClass({
 
 				{/* Pub Section */}
 				<StickyContainer style={[styles.pubSection, !this.state.showRightPanel && styles.pubSectionFull]}>
-
+				
 					{/* Top Nav. Is sticky in the Editor */}
 					{/* -------------------------------- */}
 					<div style={styles.atomNavBar}>
@@ -362,7 +362,7 @@ export const Atom = React.createClass({
 
 					{/* Atom Header and Body */}
 					{/* -------------------- */}
-					<div style={styles.atomWrapper}>
+					<div style={[styles.atomWrapper, !this.state.showRightPanel && styles.atomWrapperFull]}>
 						{ error &&
 							<div style={styles.errorMsg}>{error}</div>
 						}
@@ -512,7 +512,6 @@ export const Atom = React.createClass({
 
 					</div>
 					{/* -------------------- */}
-
 				</StickyContainer>
 
 
@@ -555,7 +554,16 @@ export default connect( state => {
 styles = {
 	atomWrapper: {
 		maxWidth: '650px',
-		margin: '0em auto 2em',
+		margin: '0em auto',
+		backgroundColor: 'white',
+	},
+	atomWrapperFull: {
+		padding: '0em 2em',
+		boxShadow: '0px 0px 2px #808284',
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+			padding: '0em',
+			boxShadow: '0px 0px 0px #808284',
+		},
 	},
 	atomHeader: {
 		borderBottom: '1px solid #F3F3F4',
@@ -563,8 +571,8 @@ styles = {
 		paddingBottom: '1em',
 	},
 	headerWrapper: {
-		marginTop: '2em',
-		marginBottom: '1em',
+		paddingTop: '2em',
+		paddingBottom: '1em',
 	},
 	headerTitle: {
 		fontSize: '2.5em',
@@ -583,9 +591,11 @@ styles = {
 
 	pubSection: {
 		verticalAlign: 'top',
-		padding: '0em 4em',
+		padding: '0em 4em 2em',
 		position: 'relative',
 		marginRight: '35vw',
+		backgroundColor: 'white',
+		transition: '.1s linear backgroundColor',
 		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
 			display: 'block',
 			padding: '0em 1em',
@@ -601,6 +611,7 @@ styles = {
 
 	pubSectionFull: {
 		marginRight: '0vw',
+		backgroundColor: '#F3F3F4',
 	},
 	headerAction: {
 		marginRight: '.5em',

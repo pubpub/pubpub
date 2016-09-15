@@ -1,6 +1,7 @@
 import React, {PropTypes} from 'react';
-import Radium from 'radium';
+import Radium, {Style} from 'radium';
 import {globalStyles} from 'utils/styleConstants';
+import {globalMessages} from 'utils/globalMessages';
 import {FormattedMessage} from 'react-intl';
 import {markdownParser, markdownSerializer, schema} from 'components/AtomTypes/Document/proseEditor';
 
@@ -213,23 +214,24 @@ export const SelectionPopup = React.createClass({
 
 		return (
 			<div id="plugin-popup" className="plugin-popup" style={[styles.pluginPopup, this.getPluginPopupLoc(), this.state.popupVisible && styles.pluginPopupVisible]}>
+
+				<Style rules={{'.plugin-popup .ProseMirror-content': { minHeight: '50px', border: '1px solid #ddd', padding: '0em .5em'} }} />
+
 				<div style={styles.pluginPopupArrow}></div>
 				<div style={styles.pluginContent}>
 					{!this.state.popupEditor &&
 						<div key={'addToComment Button'} style={styles.button} onClick={this.enableEditor}>
-							<FormattedMessage id="pub.addToComment" defaultMessage="Add to Comment"/>
+							<FormattedMessage id="pub.AddComment" defaultMessage="Add Comment"/>
 						</div>
 					}
 					
 
-					{this.state.popupEditor &&
-						<div>
-							<div id="highlight-reply"></div>
-							<div key={'addToComment Button1'} style={styles.button} onClick={this.disableEditor}>Cancel</div>
-							<div key={'addToComment Button2'} style={styles.button} onClick={this.togglePopupEditor}>Save</div>
+					<div style={[{width: '300px'}, !this.state.popupEditor && {opacity: '0', pointerEvents: 'none', position: 'absolute'}]}>
+						<div id="highlight-reply" style={styles.inputWrapper}></div>
+						<div key={'addToComment Button1'} style={styles.button} onClick={this.disableEditor}> <FormattedMessage {...globalMessages.Cancel}/> </div>
+						<div key={'addToComment Button2'} style={styles.button} onClick={this.togglePopupEditor}> <FormattedMessage {...globalMessages.Save}/> </div>
+					</div>
 
-						</div>
-					}
 				</div>
 			</div>
 		);
@@ -240,6 +242,9 @@ export const SelectionPopup = React.createClass({
 export default Radium(SelectionPopup);
 
 styles = {
+	inputWrapper: {
+		margin: '.5em 0em',
+	},
 	pluginPopup: {
 		// width: 350,
 		// minHeight: 200,
