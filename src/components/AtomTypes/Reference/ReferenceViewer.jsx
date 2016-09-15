@@ -2,7 +2,7 @@ import scholar from 'google-scholar-link';
 import Radium from 'radium';
 import React, {PropTypes} from 'react';
 import {Reference} from 'components';
-import {FormattedMessage} from 'react-intl';
+// import {FormattedMessage} from 'react-intl';
 import {safeGetInToJS} from 'utils/safeParse';
 
 let styles = {};
@@ -80,8 +80,8 @@ export const ReferenceViewer = React.createClass({
 styles = {
 	referenceHeader: {
 		marginBottom: '-0.2em',
-    fontFamily: 'Courier',
-    fontSize: '0.8em',
+		fontFamily: 'Courier',
+		fontSize: '0.8em',
 	},
 	header: {
 		marginBottom: '0.5em',
