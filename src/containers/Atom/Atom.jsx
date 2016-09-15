@@ -311,8 +311,8 @@ export const Atom = React.createClass({
 		}
 
 		const authorsData = safeGetInToJS(this.props.atomData, ['authorsData']) || [];
-		const authorList = atomData.customAuthorString ? [<Link target={linkTarget} style={globalStyles.link} to={'/pub/' + this.props.slug + '/contributors'} key={'author-0'}>{atomData.customAuthorString}</Link>] : authorsData.map((item, index)=> {
-			return <Link target={linkTarget} style={globalStyles.link} to={'/user/' + item.source.username} key={'author-' + index} className={'author underlineOnHover'}>{item.source.name}</Link>;
+		const authorList = atomData.customAuthorString ? [<Link target={linkTarget} style={globalStyles.link} to={'/pub/' + this.props.slug + '/contributors'} key={'author-0'}>{atomData.customAuthorString} </Link>] : authorsData.map((item, index)=> {
+			return <Link target={linkTarget} style={globalStyles.link} to={'/user/' + item.source.username} key={'author-' + index} className={'author underlineOnHover'}>{item.source.name} </Link>;
 		});
 
 		let newestVersionDate = currentVersionDate;

@@ -99,8 +99,8 @@ export function generatePDF(req, res) {
 	})
 	.spread(function(version, authorsData) {
 		if (!version) { throw new Error('Version does not exist'); }
-		const authorList = version.parent.customAuthorString ? [<a>{version.parent.customAuthorString}</a>] : authorsData.map((item, index)=> {
-			return <a key={'author-' + index} className={'author'}>{item.source.name}</a>;
+		const authorList = version.parent.customAuthorString ? [<a>{version.parent.customAuthorString} </a>] : authorsData.map((item, index)=> {
+			return <a key={'author-' + index} className={'author'}>{item.source.name} </a>;
 		});
 		return generatePDFFromJSON(version.content.docJSON, version.parent.title, version.createDate, authorList);
 	})
