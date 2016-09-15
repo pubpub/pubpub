@@ -114,7 +114,7 @@ export const App = React.createClass({
 
 
 					<AppVerified isVerified={!notVerified} handleResendEmail={this.handleResendEmail}/>
-					<AppMessage/>
+					{/* <AppMessage/> */}
 					{notFound && <NotFound />}
 					{!notFound && <div className="content"> {this.props.children} </div>}
 
