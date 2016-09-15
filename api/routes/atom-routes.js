@@ -482,7 +482,9 @@ export function getAtomData(req, res) {
 		atomResult.permissionType = permissionType;
 		return res.status(201).json({
 			atomData: atomResult,
-			authorsData: taskData[0],
+			authorsData: taskData[0].filter((item)=>{
+				return !!item.source;
+			}),
 			currentVersionData: currentVersionData,
 			contributorsData: taskData[2].filter((item)=>{
 				return !!item.source;
