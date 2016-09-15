@@ -29,19 +29,19 @@ export const About = React.createClass({
 		const messages = defineMessages({
 			ForReaders: {
 				id: 'about.ForReaders',
-				defaultMessage: 'For Readers.'
+				defaultMessage: 'For Readers'
 			},
 			ForAuthors: {
 				id: 'about.ForReaders',
-				defaultMessage: 'For Readers.'
+				defaultMessage: 'For Authors'
 			},
 			ForReviewers: {
 				id: 'about.ForReviewers',
-				defaultMessage: 'For Reviewers.'
+				defaultMessage: 'For Reviewers'
 			},
 			ForJournals: {
 				id: 'about.ForJournals',
-				defaultMessage: 'For Journals.'
+				defaultMessage: 'For Journals'
 			},
 		});
 
