@@ -1,23 +1,24 @@
-import React, {PropTypes} from 'react';
-import {connect} from 'react-redux';
-import Radium, {Style} from 'radium';
-import { Link } from 'react-router';
-import {safeGetInToJS} from 'utils/safeParse';
 import dateFormat from 'dateformat';
+import Radium, {Style} from 'radium';
+import React, {PropTypes} from 'react';
+import {License, Media} from 'components';
+import {markdownParser, markdownSerializer, schema} from 'components/AtomTypes/Document/proseEditor';
+import {FormattedMessage} from 'react-intl';
+import {connect} from 'react-redux';
+import { Link } from 'react-router';
+import {StoppableSubscription} from 'subscription';
+import {globalMessages} from 'utils/globalMessages';
+import {safeGetInToJS} from 'utils/safeParse';
 import {globalStyles} from 'utils/styleConstants';
+
+import DiscussionItem from './DiscussionItem';
+import {createReplyDocument} from './actions';
 
 // import { StickyContainer as UnwrappedStickyContainer, Sticky } from 'react-sticky';
 // const StickyContainer = Radium(UnwrappedStickyContainer);
 
-import {markdownParser, markdownSerializer, schema} from 'components/AtomTypes/Document/proseEditor';
-import {License, Media} from 'components';
-import {StoppableSubscription} from 'subscription';
 // import {createAtom} from 'containers/Media/actions';
-import {createReplyDocument} from './actions';
-import DiscussionItem from './DiscussionItem';
 
-import {globalMessages} from 'utils/globalMessages';
-import {FormattedMessage} from 'react-intl';
 
 let styles = {};
 let pm;
@@ -148,9 +149,9 @@ export const Discussions = React.createClass({
 	proseChange: function() {
 		const markdown = markdownSerializer.serialize(pm.doc);
 		if (this.state.discussionEmpty !== !markdown) {
-			this.setState({discussionEmpty: !markdown});	
+			this.setState({discussionEmpty: !markdown});
 		}
-		
+
 	},
 
 
@@ -186,6 +187,10 @@ export const Discussions = React.createClass({
 				<Style rules={{
 					'.pub-discussions-wrapper .p-block': {
 						padding: '0.5em 0em',
+						fontFamily: 'Helvetica Neue,Helvetica,Arial,sans-serif',
+						lineHeight: '1.58',
+						fontSize: '0.95em',
+						fontWeight: '300',
 					}
 				}} />
 
@@ -197,7 +202,6 @@ export const Discussions = React.createClass({
 
 						{/* <Sticky style={styles.replyWrapper} isActive={!!replyToData}> */}
 						<div style={styles.replyWrapper}>							
-							
 							<div style={[styles.replyHeader, !replyToData && {display: 'none'}]}>
 									<div className={'showChildOnHover'} style={styles.replyToWrapper}>
 										<FormattedMessage {...globalMessages.ReplyTo}/>: {replyToData && replyToData.authorsData[0].source.name}
@@ -209,7 +213,7 @@ export const Discussions = React.createClass({
 							</div>
 
 							<div style={styles.replyBody}>
-								{this.state.discussionEmpty && 
+								{this.state.discussionEmpty &&
 									<div style={{position: 'absolute', padding: '1em', color: '#BBBDC0', lineHeight: '1.2em', pointerEvents: 'none'}}>
 										<FormattedMessage id="discussion.placeholder" defaultMessage="Discuss this work. Comments and Reviews encouraged."/>
 									</div>
@@ -246,7 +250,7 @@ export const Discussions = React.createClass({
 				}
 
 
-				<div>
+				<div className={'pub-discussions-wrapper'}>
 					{topChildren.map((discussion, index)=> {
 						return <DiscussionItem linkTarget={linkTarget} discussionData={discussion} setReplyTo={this.setReplyTo} index={discussion.linkData._id} key={'discussion-' + index}/>;
 					})}
