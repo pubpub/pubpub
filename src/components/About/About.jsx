@@ -32,7 +32,7 @@ export const About = React.createClass({
 				defaultMessage: 'For Readers'
 			},
 			ForAuthors: {
-				id: 'about.ForReaders',
+				id: 'about.ForAuthors',
 				defaultMessage: 'For Authors'
 			},
 			ForReviewers: {
