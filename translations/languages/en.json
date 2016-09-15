@@ -118,6 +118,7 @@
   "atomVersions.CancelPublish": "Cancel Publish",
   "atomVersions.Publish Version": "Publish Version",
   "discussionItem.PrivateDiscussion": "Private Discussion",
+  "discussion.placeholder": "Discuss this work. Comments and Reviews encouraged.",
   "discussion.PublishReply": "Publish Reply",
   "discussion.LoginToPost": "Login to post discussion",
   "emailVerification.Success": "Email Verification Successful!",

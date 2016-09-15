@@ -38,6 +38,7 @@ export const Discussions = React.createClass({
 		return {
 			replyToID: undefined,
 			rootReply: undefined,
+			discussionEmpty: true,
 		};
 	},
 
@@ -77,6 +78,10 @@ export const Discussions = React.createClass({
 			on: {
 				doubleClickOn: new StoppableSubscription,
 			}
+		});
+
+		pm.on.change.add((evt)=>{
+			this.proseChange();
 		});
 
 		pm.on.doubleClickOn.add((pos, node, nodePos)=>{
@@ -140,6 +145,11 @@ export const Discussions = React.createClass({
 		pm.setDoc(markdownParser.parse(''));
 	},
 
+	proseChange: function() {
+		const markdown = markdownSerializer.serialize(pm.doc);
+		this.setState({discussionEmpty: !markdown});
+	},
+
 
 	render: function() {
 		const isEmbed = this.props.query && this.props.query.embed;
@@ -184,6 +194,13 @@ export const Discussions = React.createClass({
 
 						{/* <Sticky style={styles.replyWrapper} isActive={!!replyToData}> */}
 						<div style={styles.replyWrapper}>
+							{this.state.discussionEmpty && 
+								<div style={{position: 'absolute', padding: '1em', color: '#BBBDC0', lineHeight: '1.2em'}}>
+									<FormattedMessage id="discussion.placeholder" defaultMessage="Discuss this work. Comments and Reviews encouraged."/>
+								</div>
+							}
+							
+							
 							<div style={[styles.replyHeader, !replyToData && {display: 'none'}]}>
 									<div className={'showChildOnHover'} style={styles.replyToWrapper}>
 										<FormattedMessage {...globalMessages.ReplyTo}/>: {replyToData && replyToData.authorsData[0].source.name}
@@ -256,6 +273,7 @@ styles = {
 		boxShadow: '0px 1px 3px 1px #BBBDC0',
 		backgroundColor: 'white',
 		zIndex: 2,
+		position: 'relative',
 	},
 	replyHeader: {
 		// backgroundColor: 'red',
