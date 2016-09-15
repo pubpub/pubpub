@@ -179,7 +179,8 @@ export const Discussions = React.createClass({
 				{loggedIn &&
 					<div>
 
-						<Media/>
+						{/* Disabled for the moment to avoid conflicting loads */}
+						{/* <Media/> */}
 
 						{/* <Sticky style={styles.replyWrapper} isActive={!!replyToData}> */}
 						<div style={styles.replyWrapper}>

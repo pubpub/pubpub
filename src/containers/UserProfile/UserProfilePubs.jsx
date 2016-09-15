@@ -29,7 +29,7 @@ export const UserProfilePubs = React.createClass({
 				{
 					atoms.filter((item)=>{
 						// return item.type === 'document' && item.title.indexOf('Reply:') === -1;
-						return featuredAtoms.includes(item._id);
+						return featuredAtoms.includes(item._id) || (item.type === 'document' && item.title.indexOf('Reply:') === -1);
 					}).sort((foo, bar)=>{
 						// Sort so that most recent is first in array
 						if (foo.lastUpdated > bar.lastUpdated) { return -1; }
