@@ -87,7 +87,9 @@ export const AtomJournals = React.createClass({
 							<FormattedMessage {...globalMessages.SubmittedTo}/>
 						</h3>
 						{
-							submittedData.sort((foo, bar)=>{
+							submittedData.filter((item)=>{
+								return !!item.destination;
+							}).sort((foo, bar)=>{
 								// Sort so that most recent is first in array
 								if (foo.createDate > bar.createDate) { return -1; }
 								if (foo.createDate < bar.createDate) { return 1; }
