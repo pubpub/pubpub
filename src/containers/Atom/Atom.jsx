@@ -468,7 +468,7 @@ export const Atom = React.createClass({
 										<AtomHeaderDetailsMulti
 											labels={[
 												<FormattedMessage id="atom.NFollowers" defaultMessage={`{followerCount, number} {followerCount, plural, one {Follower} other {Followers} }`} values={{followerCount: followersData.length}} />,
-												<FormattedMessage {...globalMessages.Analytics} />
+												// <FormattedMessage {...globalMessages.Analytics} />
 											]}
 											activeMessages={[
 												<FormattedMessage id={'atom.HideFollowers'} defaultMessage={'Hide Followers'} />, 

@@ -36,7 +36,7 @@ export const renderReactFromJSON = function(item, isRoot) {
 			return <pre key={index}><code>{renderReactFromJSON(node.content)}</code></pre>;
 		case 'paragraph':
 			// console.log((node.content));
-			const hashProp = node.content[0].type === 'text' ? {['data-hash']: murmurhash.v3(node.content[0].text)} : 0;
+			const hashProp = node.content && node.content[0].type === 'text' ? {['data-hash']: murmurhash.v3(node.content[0].text)} : 0;
 			return <div className={'p-block'} key={index} {...hashProp}>{renderReactFromJSON(node.content)}</div>;
 		case 'page_break':
 			return <div className={'pagebreak'} key={index}>pagebreak</div>;
