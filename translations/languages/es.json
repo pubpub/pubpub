@@ -75,7 +75,7 @@
   "appVerified.ResendVerificationEmail": "Reenviar correo electrónico de verificación",
   "atom.EditMetadata": "Editar Metadatos",
   "atom.HideMetadata": "Esconder Metadatos",
-  "atom.NContributors": "{contributorCount, number} {contributorCount, plural, one {Contribuyente} other {Contribuyentes}}",
+  "atom.NContributors": "{contributorCount, number} {contributorCount, plural, one {Colaborador} other {Colaboradores}}",
   "atom.EditContributors": "Editar colaboradores",
   "atom.HideContributors": "Esconder Colaboradores",
   "atom.NVersions": "{versionCount, number} {versionCount, plural, one {Versión} other {Versiones}}",
