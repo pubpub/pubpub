@@ -44,6 +44,8 @@ export const renderReactFromJSON = function(item, isRoot) {
 			return <img {...node.attrs} key={index}/>;
 		case 'hard_break':
 			return <br key={index}/>;
+		case 'emoji':
+			return node.attrs.content;
 		case 'text':
 			const marks = node.marks || [];
 			return marks.reduce((previous, current)=>{

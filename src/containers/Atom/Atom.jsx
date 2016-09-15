@@ -79,6 +79,13 @@ export const Atom = React.createClass({
 				rightPanelMode: 'contents'
 			});
 		}
+
+		if (this.props.meta === 'discussions')	{
+			this.setState({
+				showRightPanel: false,
+				rightPanelMode: 'contents'
+			});
+		}
 	},
 	componentWillReceiveProps(nextProps) {
 		// If we transition from view to edit, set rightPanel to 'details'
@@ -92,6 +99,13 @@ export const Atom = React.createClass({
 		if (this.props.meta === 'edit' && nextProps.meta !== 'edit') {
 			this.setState({
 				showRightPanel: true,
+				rightPanelMode: 'discussions'
+			});
+		}
+
+		if (this.props.meta === 'discussions' && nextProps.meta !== 'discussions') {
+			this.setState({
+				showRightPanel: false,
 				rightPanelMode: 'discussions'
 			});
 		}
@@ -223,6 +237,7 @@ export const Atom = React.createClass({
 	render: function() {
 		const atomData = safeGetInToJS(this.props.atomData, ['atomData']) || {};
 		const isEditor = this.props.meta === 'edit';
+		const isDiscussions = this.props.meta === 'discussions';
 
 		// The editor must not be indexed by search engines, so add a noindex.
 		// The reader must provide metadata for popular embed tags and proper SEO performance.
@@ -330,7 +345,7 @@ export const Atom = React.createClass({
 				<Style rules={{'.pagebreak': { opacity: '0', } }} />
 
 				{/* Pub Section */}
-				<StickyContainer style={[styles.pubSection, !this.state.showRightPanel && styles.pubSectionFull]}>
+				<StickyContainer style={[styles.pubSection, !this.state.showRightPanel && styles.pubSectionFull, !this.state.showRightPanel && isEditor && styles.pubSectionFullEditor]}>
 				
 					{/* Top Nav. Is sticky in the Editor */}
 					{/* -------------------------------- */}
@@ -348,7 +363,7 @@ export const Atom = React.createClass({
 
 					{/* Toggle Right Panel Button */}
 					{/* ------------------------- */}
-					<div className={'opacity-on-hover'} style={styles.toggleRightPanelButton} onClick={this.toggleRightPanel}>
+					<div className={'opacity-on-hover'} style={[styles.toggleRightPanelButton, isDiscussions && {display: 'none'}]} onClick={this.toggleRightPanel}>
 						<div style={styles.toggleRightPanelLine}></div>
 						{this.state.showRightPanel &&
 							<div style={styles.toggleRightHide}>
@@ -365,7 +380,7 @@ export const Atom = React.createClass({
 
 					{/* Atom Header and Body */}
 					{/* -------------------- */}
-					<div style={[styles.atomWrapper, !this.state.showRightPanel && styles.atomWrapperFull]}>
+					<div style={[styles.atomWrapper, !this.state.showRightPanel && styles.atomWrapperFull, , !this.state.showRightPanel && isEditor && styles.atomWrapperFullEditor]}>
 						{ error &&
 							<div style={styles.errorMsg}>{error}</div>
 						}
@@ -502,14 +517,18 @@ export const Atom = React.createClass({
 							<AtomEditorPane ref={'atomEditorPane'} atomData={this.props.atomData} loginData={this.props.loginData}/>
 						}
 
-						{!isEditor && !error &&
+						{isDiscussions && 
+							<Discussions/>
+						}
+
+						{!isEditor && !error && !isDiscussions &&
 							<div id="atom-viewer">
 								<AtomViewerPane atomData={this.props.atomData} />
 								{ atomData.isPublished && <License /> }
 							</div>
 						}
 
-						{!isEditor && !error && atomData.type === 'document' &&
+						{!isEditor && !error && isDiscussions && atomData.type === 'document' &&
 							<SelectionPopup addSelectionHandler={this.addSelection} />
 						}
 
@@ -563,9 +582,13 @@ styles = {
 	},
 	atomWrapperFull: {
 		padding: '0em 2em',
-		boxShadow: '0px 0px 2px #808284',
 		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
 			padding: '0em',
+		},
+	},
+	atomWrapperFullEditor: {
+		boxShadow: '0px 0px 2px #808284',
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
 			boxShadow: '0px 0px 0px #808284',
 		},
 	},
@@ -615,6 +638,8 @@ styles = {
 
 	pubSectionFull: {
 		marginRight: '0vw',
+	},
+	pubSectionFullEditor: {
 		backgroundColor: '#F3F3F4',
 	},
 	headerAction: {
