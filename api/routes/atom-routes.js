@@ -484,7 +484,9 @@ export function getAtomData(req, res) {
 			atomData: atomResult,
 			authorsData: taskData[0],
 			currentVersionData: currentVersionData,
-			contributorsData: taskData[2],
+			contributorsData: taskData[2].filter((item)=>{
+				return !!item.source;
+			}),
 			versionsData: taskData[3],
 			submittedData: taskData[4],
 			featuredData: taskData[5],
@@ -653,7 +655,9 @@ export function getAtomEditModalData(req, res) {
 	.then(function(taskResults) { // Get most recent version
 		return res.status(201).json({
 			detailsData: taskResults[0],
-			contributorsData: taskResults[1],
+			contributorsData: taskResults[1].filter((item)=>{
+				return !!item.source;
+			}),
 			publishingData: taskResults[2],
 		});
 	})
