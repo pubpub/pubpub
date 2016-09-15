@@ -31,7 +31,7 @@ export const AtomContents = React.createClass({
 		const toc = this.props.tocData || [];
 
 		return (
-			<div>
+			<div style={styles.container}>
 				{toc.map((object, index)=>{
 					return <div key={'toc-' + index} className={'underlineOnHover'} style={[styles.tocItem, styles.tocLevels[object.level - 1]]} onClick={this.handleScroll.bind(this, object.id, object.level)}>{object.title}</div>;
 				})}	
@@ -43,6 +43,9 @@ export const AtomContents = React.createClass({
 export default Radium(AtomContents);
 
 styles = {
+	container: {
+		paddingBottom: '1em',
+	},
 	tocItem: {
 		display: 'block',
 		textDecoration: 'none',
