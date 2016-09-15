@@ -47,10 +47,12 @@ export const Discussions = React.createClass({
 		const atomData = safeGetInToJS(this.props.atomData, ['atomData']) || [];
 		const discussionsData = safeGetInToJS(this.props.atomData, ['discussionsData']) || [];
 		const rootReply = discussionsData.length ? discussionsData[0].linkData.metadata.rootReply : atomData._id;
+		const defaultReply = atomData._id !== rootReply ? atomData._id : undefined;
 
 		this.setState({
 			replyToID: atomData._id,
 			rootReply: rootReply,
+			defaultReply: defaultReply,
 		});
 	},
 
@@ -58,10 +60,12 @@ export const Discussions = React.createClass({
 		const atomData = safeGetInToJS(nextProps.atomData, ['atomData']) || [];
 		const discussionsData = safeGetInToJS(nextProps.atomData, ['discussionsData']) || [];
 		const rootReply = discussionsData.length ? discussionsData[0].linkData.metadata.rootReply : atomData._id;
+		const defaultReply = atomData._id !== rootReply ? atomData._id : undefined;
 
 		this.setState({
 			replyToID: atomData._id,
 			rootReply: rootReply,
+			defaultReply: defaultReply,
 		});
 	},
 
@@ -121,17 +125,17 @@ export const Discussions = React.createClass({
 	setReplyTo: function(replyToID) {
 		// rootReplyID is set in componentDidMount
 		this.setState({replyToID: replyToID});
-		setTimeout(()=> {
-			this.setState({});
-		}, 1);
+		const inputDiv = document.getElementById('reply-wrapper');
+		const destination = document.getElementById('input-placeholder-' + replyToID);
+		destination.appendChild(inputDiv); 
 	},
 
-	clearReplyTo: function(replyToID) {
+	clearReplyTo: function() {
 		// rootReplyID is set in componentDidMount
-		this.setState({replyToID: undefined});
-		setTimeout(()=> {
-			this.setState({});
-		}, 1);
+		this.setState({replyToID: this.state.defaultReply || this.state.rootReply});
+		const inputDiv = document.getElementById('reply-wrapper');
+		const destination = document.getElementById('reply-wrapper-wrapper');
+		destination.appendChild(inputDiv); 
 	},
 
 	publishReply: function() {
@@ -144,6 +148,7 @@ export const Discussions = React.createClass({
 
 		this.props.dispatch(createReplyDocument(atomType, versionContent, 'Reply', this.state.replyToID, this.state.rootReply));
 		pm.setDoc(markdownParser.parse(''));
+		this.clearReplyTo();
 	},
 
 	proseChange: function() {
@@ -153,7 +158,6 @@ export const Discussions = React.createClass({
 		}
 
 	},
-
 
 	render: function() {
 		const isEmbed = this.props.query && this.props.query.embed;
@@ -195,21 +199,21 @@ export const Discussions = React.createClass({
 				}} />
 
 				{loggedIn &&
-					<div>
+					<div id={'reply-wrapper-wrapper'}>
 
 						{/* Disabled for the moment to avoid conflicting loads */}
 						{/* <Media/> */}
 
 						{/* <Sticky style={styles.replyWrapper} isActive={!!replyToData}> */}
-						<div style={styles.replyWrapper}>							
-							<div style={[styles.replyHeader, !replyToData && {display: 'none'}]}>
+						<div style={styles.replyWrapper} id={'reply-wrapper'}>							
+							<div style={[styles.replyHeader, !replyToData && {display: 'none'}, this.state.replyToID === this.state.defaultReply && {display: 'none'}]}>
 									<div className={'showChildOnHover'} style={styles.replyToWrapper}>
 										<FormattedMessage {...globalMessages.ReplyTo}/>: {replyToData && replyToData.authorsData[0].source.name}
-										<div className={'hoverChild'} style={styles.replyToPreview}>
+										{/* <div className={'hoverChild'} style={styles.replyToPreview}>
 											<DiscussionItem linkTarget={linkTarget} discussionData={replyToData} index={'current-reply'} isPreview={true}/>
-										</div>
+										</div> */}
 									</div>
-								<div className={'button'} style={styles.replyButton} onClick={this.clearReplyTo}><FormattedMessage {...globalMessages.Clear}/></div>
+								<div className={'button'} style={styles.replyButton} onClick={this.clearReplyTo}><FormattedMessage {...globalMessages.Cancel}/></div>
 							</div>
 
 							<div style={styles.replyBody}>
@@ -283,6 +287,7 @@ styles = {
 	},
 	replyHeader: {
 		// backgroundColor: 'red',
+		marginTop: '1em',
 		display: 'table',
 		fontSize: '0.85em',
 		borderBottom: '1px solid #BBBDC0',

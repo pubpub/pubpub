@@ -34,6 +34,7 @@ export const DiscussionItem = React.createClass({
 
 	render: function() {
 		const discussion = this.props.discussionData || {};
+		const atomData = discussion.atomData || {};
 		const versionData = discussion.versionData || {};
 		const authorsData = discussion.authorsData || [];
 		const index = this.props.index;
@@ -82,6 +83,9 @@ export const DiscussionItem = React.createClass({
 					<Link target={this.props.linkTarget} style={globalStyles.link} to={'/pub/' + versionData.parent}><span className={'underlineOnHover'} style={styles.discussionFooterItem}>
 						<FormattedMessage {...globalMessages.Permalink}/>
 					</span></Link>
+
+					<div id={'input-placeholder-' + atomData._id}></div>
+
 				</div>
 
 				<div style={styles.children}>
