@@ -34,7 +34,7 @@ export const StatusTray = React.createClass({
 			backgroundColor: 'white',
 			padding: '0px',
 			border: '2px solid black',
-			color: 'black !important',
+			color: 'black',
 			lineHeight: '16px',
 			position: 'relative',
 			top: '-4px',
