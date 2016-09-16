@@ -55,7 +55,7 @@
 	font-size: 2.5em;
 	margin-top: .75em;
 	margin-bottom: .5em;
-	color: #222; 
+	color: #222;
 }*/
 /*div.atom-header-sub-detail {
 	padding: 0em .5em;
@@ -240,3 +240,67 @@
 	background-color: rgba(78, 61, 164, 0.6);
 }
 
+
+.connection-loader {
+  display: inline-block;
+  width: 15px;
+  height: 15px;
+  position: relative;
+	border-width: 2px;
+	border-style: solid;
+  /* border: 2px solid #Fff; */
+  top: 50%;
+  animation: connection-loader 2s infinite ease;
+}
+
+.connection-loader-inner {
+  vertical-align: top;
+  display: inline-block;
+  width: 100%;
+  background-color: #fff;
+  animation: connection-loader-inner 2s infinite ease-in;
+}
+
+@keyframes connection-loader {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  25% {
+    transform: rotate(180deg);
+  }
+
+  50% {
+    transform: rotate(180deg);
+  }
+
+  75% {
+    transform: rotate(360deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes connection-loader-inner {
+  0% {
+    height: 0%;
+  }
+
+  25% {
+    height: 0%;
+  }
+
+  50% {
+    height: 100%;
+  }
+
+  75% {
+    height: 100%;
+  }
+
+  100% {
+    height: 0%;
+  }
+}
