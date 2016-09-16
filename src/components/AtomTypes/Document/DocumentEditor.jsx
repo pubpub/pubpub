@@ -33,6 +33,8 @@ export const DocumentEditor = React.createClass({
 		return {
 			showMarkdown: false,
 			participants: [],
+			error: '',
+			loading: true,
 		};
 	},
 
@@ -49,6 +51,8 @@ export const DocumentEditor = React.createClass({
 		const {ModCollab} = require('./collab/mod');
 		const {collabEditing} = require('prosemirror/dist/collab');
 
+		const that = this;
+
 		pm = new prosemirror.ProseMirror({
 			place: document.getElementById('atom-body-editor'),
 			schema: schema,
@@ -62,7 +66,11 @@ export const DocumentEditor = React.createClass({
 			}
 			*/
 		});
+
+		this.pm = pm;
 		const token = safeGetInToJS(this.props.atomData, ['token']);
+		const tokenValid = safeGetInToJS(this.props.atomData, ['tokenValid']);
+
 		pm.mod = {};
 		pm.mod.collab = collabEditing.get(pm);
 		// Ignore setDoc
@@ -97,6 +105,18 @@ export const DocumentEditor = React.createClass({
 		collab.askForDocument = this.askForDocument;
 		collab.getHash = this.getHash;
 		collab.updateParticipants = this.updateParticipants;
+		collab.setErrorState = function(error) {
+			that.setState({error: error});
+		};
+
+		collab.setLoadingState = function(loading) {
+			that.setState({loading: loading});
+		};
+
+		collab.setParticipants = function(participants) {
+			that.setState({participants: participants});
+		};
+
 
 		// Collaboration Authentication information
 		const atomID = safeGetInToJS(this.props.atomData, ['atomData', '_id']);
@@ -114,8 +134,6 @@ export const DocumentEditor = React.createClass({
 
 		new ModServerCommunications(collab);
 		new ModCollab(collab);
-
-		const that = this;
 
 
 		pm.on.change.add(function() {
@@ -362,8 +380,8 @@ export const DocumentEditor = React.createClass({
 
 	// Get updates to document and then send updates to the server
 	save: function(callback) {
-		const that = this;
 		// console.log('Started save');
+		const that = this;
 		this.getUpdates(function() {
 			that.sendDocumentUpdate(function() {
 				// console.log('Finished save');
@@ -438,8 +456,6 @@ export const DocumentEditor = React.createClass({
 	// },
 
 	render: function() {
-		const collab = safeGetInToJS(this.props.atomData, ['collab']);
-
 
 		const colorMap = {};
 		this.state.participants.map((participant, index) => {
@@ -448,19 +464,61 @@ export const DocumentEditor = React.createClass({
 			colorMap[`.user-bg-${index}`] = {backgroundColor: colorStr};
 		});
 
+		let statusColor = 'red';
+		let loadingColor = 'white';
+		let loadingBorder = 'black';
+
+		const loading = this.state.loading;
+
+		const statusIcons = {
+			position: 'absolute',
+			top: '-30px',
+			left: '30px',
+			zIndex: 10000,
+		};
+
+		const statusLoaded = {
+			width: '20px',
+			height: '20px',
+			borderRadius: '2px',
+			display: 'inline-block',
+			backgroundColor: 'green',
+			padding: '0px',
+			border: 'none',
+		};
+
+		const statusBox = {
+			padding: '15px',
+			width: '250px',
+		};
+
 		return (
+
+			<div>
+
+			<div style={statusIcons}>
+				<div style={{display: 'inline-block'}}>
+					{(loading) ?
+						<span style={{backgroundColor: loadingColor, borderColor: loadingBorder}} className="connection-loader">
+							<span className="connection-loader-inner"/>
+							</span>
+					: <span className={'arrow-down-button no-arrow'} style={statusLoaded}>
+						<div className={'hoverChild arrow-down-child'} style={statusBox}>
+							<div>
+							<div><strong>Connection:</strong> Online.</div>
+							<div className={'light-color subtext'}>Your changes will be live synced to all collaborators.</div>
+							</div>
+						</div>
+					</span>}
+				</div>
+				{this.state.participants.map((participant) => {
+					return (<div style={{display: 'inline-block', margin: '0px 10px'}}> <img src={'https://jake.pubpub.org/unsafe/fit-in/20x20/' + participant.avatar_url}></img> </div>);
+				})}
+			</div>
+
 			<div style={styles.container}>
 			{/* <Dropzone ref="dropzone" disableClick={true} onDrop={this.onDrop} style={{}} activeClassName={'dropzone-active'} > */}
 				<Style rules={colorMap} />
-
-				<div>
-					{(collab
-						? <div></div>
-						: <div>
-								<FormattedMessage id="about.CollabConnectionFail" defaultMessage="Connection to Collaboration Server Failed."/>
-							</div>
-					)}
-				</div>
 
 				<Media ref={'mediaRef'}/>
 
@@ -482,6 +540,8 @@ export const DocumentEditor = React.createClass({
 				}
 
 			{/* </Dropzone> */}
+			</div>
+
 			</div>
 
 		);

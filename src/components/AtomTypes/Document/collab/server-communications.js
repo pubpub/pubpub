@@ -1,6 +1,7 @@
 /* Sets up communicating with server (retrieving document,
 saving, collaboration, etc.).
 */
+
 import {collabServerUrl} from 'config';
 
 export class ModServerCommunications {
@@ -39,6 +40,7 @@ export class ModServerCommunications {
 			console.log('opening with', `${websocketProtocol}//${wsServer}/ws/doc/${this.editor.doc.id}?user=${this.editor.username }&token=${this.editor.token}&avatar_url=${this.editor.img}&random=${randomInt}`);
 			this.ws.onopen = function() {
 				console.log('Opened Connection');
+				that.editor.setLoadingState(false);
 				// console.log('connection open');
 				// jQuery('#unobtrusive_messages').html('')
 			};
@@ -62,6 +64,7 @@ export class ModServerCommunications {
 			console.log('Closed connection');
 			that.connected = false;
 			window.clearInterval(that.wsPinger);
+			that.editor.setErrorState('Disconnected. Your changes are not being saved.');
 			this.retryTimeout = window.setTimeout(function() {
 				that.createWSConnection();
 			}, 2000);

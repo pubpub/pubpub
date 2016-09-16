@@ -175,7 +175,7 @@ export function createReplyDocument(req, res) {
 			});
 			tasks.push(newHighlight.save());
 
-			
+
 			const highlightObject = req.body.highlightObject || {};
 			const newHighlightVersion = new Version({
 				_id: newHighlightVersionID,
@@ -231,7 +231,7 @@ export function createReplyDocument(req, res) {
 				isPublished: true,
 				publishedBy: userID,
 				publishedDate: now,
-				createDate: now, 
+				createDate: now,
 				createdBy: userID,
 				content: versionContent
 			});
@@ -585,7 +585,7 @@ export function getAtomEdit(req, res) {
 		.end(function(err, jsonResponse) {
 			 if (!err) {
 				 output.token = jsonResponse.text;
-				 output.collab = true;
+				 output.tokenValid = true;
 			 }
 			 return res.status(201).json(output);
 		})

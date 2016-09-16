@@ -1,9 +1,10 @@
 import Immutable from 'immutable';
+import {
+	CREATE_REPLY_DOCUMENT_SUCCESS,
+
+} from 'containers/Discussions/actions';
 import {ensureImmutable} from 'reducers';
 
-/*--------*/
-// Load Actions
-/*--------*/
 import {
 	GET_ATOM_DATA_LOAD,
 	GET_ATOM_DATA_SUCCESS,
@@ -38,10 +39,10 @@ import {
 	DELETE_CONTRIBUTOR_FAIL,
 } from './actions';
 
-import {
-	CREATE_REPLY_DOCUMENT_SUCCESS,
+/*--------*/
+// Load Actions
+/*--------*/
 
-} from 'containers/Discussions/actions';
 
 /*--------*/
 // Initialize Default State
@@ -59,7 +60,7 @@ export const defaultState = Immutable.Map({
 	error: null,
 
 	token: undefined,
-	collab: undefined,
+	tokenValid: undefined,
 	newAtomHash: undefined,
 
 	// modalLoading: false,
@@ -91,7 +92,7 @@ function getAtomDataSuccess(state, result) {
 		discussionsData: result.discussionsData,
 		followersData: result.followersData,
 		token: result.token,
-		collab: result.collab,
+		tokenValid: result.tokenValid,
 		error: null
 	});
 }
