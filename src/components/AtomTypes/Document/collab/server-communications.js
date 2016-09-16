@@ -15,6 +15,11 @@ export class ModServerCommunications {
 		/* Whether the connection is established for the first time. */
 		this.firstTimeConnection = true;
 		this.retryTimeout = null;
+
+		this.stats = {
+			lastMessage: null,
+			lastConnection: null,
+		};
 	}
 
 	init() {
@@ -64,7 +69,7 @@ export class ModServerCommunications {
 			console.log('Closed connection');
 			that.connected = false;
 			window.clearInterval(that.wsPinger);
-			that.editor.setErrorState('Disconnected. Your changes are not being saved.');
+			that.editor.setErrorState('disconnect');
 			this.retryTimeout = window.setTimeout(function() {
 				that.createWSConnection();
 			}, 2000);

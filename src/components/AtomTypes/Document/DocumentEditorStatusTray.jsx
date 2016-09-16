@@ -7,7 +7,7 @@ import {renderReactFromJSON} from './proseEditor';
 export const StatusTray = React.createClass({
 	propTypes: {
 		loading: PropTypes.boolean,
-		error: PropTypes.string,
+		error: PropTypes.oneOf(['disconnect', 'timeout', 'unknown']),
 		participants: PropTypes.array, // full, embed, static-full, static-embed
 	},
 
@@ -69,7 +69,16 @@ export const StatusTray = React.createClass({
 						<div className={'hoverChild arrow-down-child'} style={statusBox}>
 							<div>
 								<div><strong>Connection:</strong> Disconnected.</div>
-								<div className={'light-color subtext'}>{error}</div>
+								<div className={'light-color subtext'}>
+									{(() => {
+						        switch (error) {
+						          case "disconnect": return "Cannot reach the server, there may be a problem with your internet connection. ";
+						          case "timeout": return  "Cannot reach the server, there may be a problem with your internet connection. Changes are not being synced.";
+						          case "unknown":  return  "Unknown error, please contact us.";
+						          default:return "Unknown error, please contact us.";
+						        }
+						      })()}
+								</div>
 							</div>
 						</div>
 					</span>

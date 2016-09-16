@@ -19,9 +19,7 @@ const ColorHash = new chash();
 
 let styles;
 let pm;
-
-let editorToModel;
-let modelToEditor;
+ 
 let menuBar;
 // let currentNodeSelected;
 export const DocumentEditor = React.createClass({
@@ -46,8 +44,8 @@ export const DocumentEditor = React.createClass({
 
 		const {ModServerCommunications} = require('./collab/server-communications');
 		const nodeConvert = require('./collab/node-convert');
-		editorToModel = nodeConvert.editorToModel;
-		modelToEditor = nodeConvert.modelToEditor;
+		this.editorToModel = nodeConvert.editorToModel;
+		this.modelToEditor = nodeConvert.modelToEditor;
 
 		const {ModCollab} = require('./collab/mod');
 		const {collabEditing} = require('prosemirror/dist/collab');
@@ -246,7 +244,7 @@ export const DocumentEditor = React.createClass({
 	},
 	// Collects updates of the document from ProseMirror and saves it under this.doc
 	getUpdates: function(callback) {
-		const tmpDoc = editorToModel(this.collab.pm.mod.collab.versionDoc);
+		const tmpDoc = this.editorToModel(this.collab.pm.mod.collab.versionDoc);
 		this.collab.doc.contents = tmpDoc.contents;
 		// this.doc.metadata = tmpDoc.metadata
 		// this.doc.title = this.pm.mod.collab.versionDoc.firstChild.textContent
@@ -289,7 +287,7 @@ export const DocumentEditor = React.createClass({
 		if (this.collab.mod.collab.docChanges.awaitingDiffResponse) {
 			this.collab.mod.collab.docChanges.enableDiffSending();
 		}
-		const pmDoc = modelToEditor(this.collab.doc, this.collab.schema);
+		const pmDoc = this.modelToEditor(this.collab.doc, this.collab.schema);
 		// collabEditing.detach(this.pm)
 		this.collab.pm.setDoc(pmDoc);
 		that.collab.pm.mod.collab.version = this.collab.doc.version;
