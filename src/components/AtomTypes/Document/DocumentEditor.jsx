@@ -11,6 +11,7 @@ import {globalMessages} from 'utils/globalMessages';
 import {safeGetInToJS} from 'utils/safeParse';
 import {s3Upload} from 'utils/uploadFile';
 
+import StatusTray from './DocumentEditorStatusTray';
 import {markdownParser, markdownSerializer, schema} from './proseEditor';
 import {schema as pubSchema} from './proseEditor/schema';
 
@@ -430,13 +431,13 @@ export const DocumentEditor = React.createClass({
 	},
 
 	markdownChange: function(evt) {
-		pm.setDoc(markdownParser.parse(evt.target.value));
+		this.pm.setDoc(markdownParser.parse(evt.target.value));
 	},
 
 	getSaveVersionContent: function() {
 		return {
-			markdown: markdownSerializer.serialize(pm.doc),
-			docJSON: pm.doc.toJSON(),
+			markdown: markdownSerializer.serialize(this.pm.doc),
+			docJSON: this.pm.doc.toJSON(),
 		};
 	},
 
@@ -464,57 +465,11 @@ export const DocumentEditor = React.createClass({
 			colorMap[`.user-bg-${index}`] = {backgroundColor: colorStr};
 		});
 
-		let statusColor = 'red';
-		let loadingColor = 'white';
-		let loadingBorder = 'black';
-
-		const loading = this.state.loading;
-
-		const statusIcons = {
-			position: 'absolute',
-			top: '-30px',
-			left: '30px',
-			zIndex: 10000,
-		};
-
-		const statusLoaded = {
-			width: '20px',
-			height: '20px',
-			borderRadius: '2px',
-			display: 'inline-block',
-			backgroundColor: 'green',
-			padding: '0px',
-			border: 'none',
-		};
-
-		const statusBox = {
-			padding: '15px',
-			width: '250px',
-		};
-
 		return (
 
 			<div>
 
-			<div style={statusIcons}>
-				<div style={{display: 'inline-block'}}>
-					{(loading) ?
-						<span style={{backgroundColor: loadingColor, borderColor: loadingBorder}} className="connection-loader">
-							<span className="connection-loader-inner"/>
-							</span>
-					: <span className={'arrow-down-button no-arrow'} style={statusLoaded}>
-						<div className={'hoverChild arrow-down-child'} style={statusBox}>
-							<div>
-							<div><strong>Connection:</strong> Online.</div>
-							<div className={'light-color subtext'}>Your changes will be live synced to all collaborators.</div>
-							</div>
-						</div>
-					</span>}
-				</div>
-				{this.state.participants.map((participant) => {
-					return (<div style={{display: 'inline-block', margin: '0px 10px'}}> <img src={'https://jake.pubpub.org/unsafe/fit-in/20x20/' + participant.avatar_url}></img> </div>);
-				})}
-			</div>
+			<StatusTray participants={this.state.participants} loading={this.state.loading} error={this.state.error} />
 
 			<div style={styles.container}>
 			{/* <Dropzone ref="dropzone" disableClick={true} onDrop={this.onDrop} style={{}} activeClassName={'dropzone-active'} > */}
