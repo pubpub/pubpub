@@ -260,7 +260,7 @@ h2 {
 .button:hover, .arrow-down-button:hover {
 	border: solid 2px #2C2A2B;
 	background-color: #2C2A2B;
-	color: #FEFEFE !important;
+	color: #FEFEFE;
 }
 .button:hover {
 	cursor: pointer;
