@@ -19,7 +19,7 @@ const ColorHash = new chash();
 
 let styles;
 let pm;
- 
+
 let menuBar;
 // let currentNodeSelected;
 export const DocumentEditor = React.createClass({
@@ -32,8 +32,8 @@ export const DocumentEditor = React.createClass({
 		return {
 			showMarkdown: false,
 			participants: [],
-			error: '',
-			loading: true,
+			statusMsg: '',
+			status: 'loading',
 		};
 	},
 
@@ -104,12 +104,9 @@ export const DocumentEditor = React.createClass({
 		collab.askForDocument = this.askForDocument;
 		collab.getHash = this.getHash;
 		collab.updateParticipants = this.updateParticipants;
-		collab.setErrorState = function(error) {
-			that.setState({error: error});
-		};
 
-		collab.setLoadingState = function(loading) {
-			that.setState({loading: loading});
+		collab.setConnectionStatus = function(status, statusMsg) {
+			that.setState({status, statusMsg});
 		};
 
 		collab.setParticipants = function(participants) {
@@ -467,7 +464,7 @@ export const DocumentEditor = React.createClass({
 
 			<div>
 
-			<StatusTray participants={this.state.participants} loading={this.state.loading} error={this.state.error} />
+			<StatusTray participants={this.state.participants} statusMsg={this.state.statusMsg} status={this.state.status} />
 
 			<div style={styles.container}>
 			{/* <Dropzone ref="dropzone" disableClick={true} onDrop={this.onDrop} style={{}} activeClassName={'dropzone-active'} > */}
