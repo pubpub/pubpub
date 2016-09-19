@@ -6,18 +6,20 @@ import {renderReactFromJSON} from './proseEditor';
 
 export const StatusTray = React.createClass({
 	propTypes: {
-		loading: PropTypes.boolean,
-		error: PropTypes.oneOf(['disconnect', 'timeout', 'unknown']),
+		status: PropTypes.oneOf(['loading','connected', 'reconnecting', 'disconnected', 'timeout', 'unknown']),
+		statusMsg: PropTypes.string,
 		participants: PropTypes.array, // full, embed, static-full, static-embed
 	},
 
 	render: function() {
 
-		const {participants, loading, error} = this.props;
+		const {participants, status} = this.props;
 
-		let statusColor = 'red';
-		let loadingColor = 'white';
-		let loadingBorder = 'black';
+		const loading = (status === 'loading' || status === 'reconnecting');
+		const error = (status === 'reconnecting' || status === 'disconnected' || status === 'timeout');
+
+		let loadingColor = '#F3F3F4';
+		let loadingBorder = (!error) ? 'black' : 'red';
 
 		const statusIcons = {
 			position: 'absolute',
@@ -71,8 +73,8 @@ export const StatusTray = React.createClass({
 								<div><strong>Connection:</strong> Disconnected.</div>
 								<div className={'light-color subtext'}>
 									{(() => {
-						        switch (error) {
-						          case "disconnect": return "Cannot reach the server, there may be a problem with your internet connection. ";
+						        switch (status) {
+						          case "disconnected": return "Cannot reach the server, there may be a problem with your internet connection. ";
 						          case "timeout": return  "Cannot reach the server, there may be a problem with your internet connection. Changes are not being synced.";
 						          case "unknown":  return  "Unknown error, please contact us.";
 						          default:return "Unknown error, please contact us.";
@@ -85,9 +87,12 @@ export const StatusTray = React.createClass({
 					}
 				</span>}
 			</div>
-			{participants.map((participant) => {
-				return (<div style={{display: 'inline-block', margin: '0px 10px'}}> <img src={'https://jake.pubpub.org/unsafe/fit-in/20x20/' + participant.avatar_url}></img> </div>);
-			})}
+
+			{(!loading && !error) ?
+				participants.map((participant) => {
+					return (<div key={participant.name} style={{display: 'inline-block', margin: '0px 10px'}}> <img src={'https://jake.pubpub.org/unsafe/fit-in/20x20/' + participant.avatar_url}></img> </div>);
+				})
+			: null }
 		</div>);
 
 	}
