@@ -12,6 +12,7 @@ export class ModServerCommunications {
 		Messages will be sent when returning back online. */
 		this.messagesToSend = [];
 		this.connected = false;
+		this.offline = true;
 		/* Whether the connection is established for the first time. */
 		this.firstTimeConnection = true;
 		this.retryTimeout = null;
@@ -21,6 +22,19 @@ export class ModServerCommunications {
 			lastMessage: null,
 			lastConnection: null,
 		};
+
+		window.addEventListener('online', this.goOnline);
+		window.addEventListener('offline', this.goOffline);
+	}
+
+	goOffline = () => {
+		this.online = true;
+		this.updateConnectionStatus();
+	}
+
+	goOnline = () => {
+		this.offline = false;
+		this.updateConnectionStatus();
 	}
 
 	init() {
@@ -121,11 +135,13 @@ export class ModServerCommunications {
 		data.token = this.editor.token;
 		data.id = this.editor.doc_id;
 		data.user = this.editor.username;
-		if (this.connected) {
+		if (this.connected && this.online) {
 			try {
+				console.log('sending: ', data.type);
 				this.ws.send(JSON.stringify(data));
 			} catch (err) {
 				console.log('Error sending');
+				console.log(err);
 				this.updateConnectionStatus();
 				// that.updateConnectionStatus();
 			}
@@ -137,8 +153,10 @@ export class ModServerCommunications {
 
 	updateConnectionStatus = () => {
 		const now = new Date();
-		console.log('updating status', this.connected);
-		if (this.connected) {
+		console.log('updating status', this.connected, this.online);
+		if (this.connected && !this.online || (!this.connected && this.online)) {
+			this.editor.setConnectionStatus('reconnecting');
+		} else if (this.connected && this.online)  {
 			if (this.statusInterval) {
 				clearTimeout(this.statusInterval);
 			}
@@ -161,6 +179,7 @@ export class ModServerCommunications {
 
 	receive(data) {
 		// console.log(data);
+		console.log('receieved: ', data.type);
 		switch (data.type) {
 		case 'chat':
 			this.editor.mod.collab.chat.newMessage(data);
