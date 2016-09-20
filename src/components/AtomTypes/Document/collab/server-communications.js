@@ -12,7 +12,7 @@ export class ModServerCommunications {
 		Messages will be sent when returning back online. */
 		this.messagesToSend = [];
 		this.connected = false;
-		this.offline = true;
+		this.online = true;
 		/* Whether the connection is established for the first time. */
 		this.firstTimeConnection = true;
 		this.retryTimeout = null;
@@ -28,13 +28,15 @@ export class ModServerCommunications {
 	}
 
 	goOffline = () => {
-		this.online = true;
+		this.online = false;
 		this.updateConnectionStatus();
+		this.close();
 	}
 
 	goOnline = () => {
-		this.offline = false;
+		this.online = true;
 		this.updateConnectionStatus();
+		this.createWSConnection();
 	}
 
 	init() {
@@ -119,7 +121,11 @@ export class ModServerCommunications {
 			this.editor.askForDocument();
 		} else {
 			// this.editor.mod.footnotes.fnEditor.renderAllFootnotes()
-			this.editor.mod.collab.docChanges.checkDiffVersion();
+			const docChanges = this.editor.mod.collab.docChanges;
+			const unconfirmed = docChanges.checkUnconfirmedSteps();
+			const toSend = this.messagesToSend.length;
+			console.log('Reactivated with ', unconfirmed, ' unconfirmed steps & ', toSend, 'steps to be sent');
+			docChanges.checkDiffVersion();
 			this.send({
 				type: 'participant_update'
 			});
