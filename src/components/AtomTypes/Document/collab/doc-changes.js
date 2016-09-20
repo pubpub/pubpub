@@ -1,5 +1,7 @@
 import {Step} from 'prosemirror/dist/transform';
+
 import {schema as pubSchema} from '../proseEditor/schema';
+
 export class ModCollabDocChanges {
 	constructor(mod) {
 		mod.docChanges = this;
@@ -28,6 +30,10 @@ export class ModCollabDocChanges {
 	cancelCurrentlyCheckingVersion() {
 		this.currentlyCheckingVersion = false;
 		window.clearTimeout(this.enableCheckDiffVersion);
+	}
+
+	checkUnconfirmedSteps = () => {
+		return Object.keys(this.unconfirmedSteps).length;
 	}
 
 	checkDiffVersion() {
@@ -166,7 +172,14 @@ export class ModCollabDocChanges {
 		// let sentComments = this.unconfirmedSteps[requestId]["comments"]
 		// this.mod.editor.mod.comments.store.eventsSent(sentComments)
 
-		delete this.unconfirmedSteps[requestId];
+		if (this.unconfirmedSteps[requestId]) {
+			console.log('deleted diff with ', this.checkUnconfirmedSteps(), ' left');
+			delete this.unconfirmedSteps[requestId];
+		} else {
+			console.log(requestId);
+			console.log(this.unconfirmedSteps);
+		}
+
 		this.enableDiffSending();
 	}
 
