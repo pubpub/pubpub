@@ -143,10 +143,10 @@ export class ModServerCommunications {
 		data.user = this.editor.username;
 		if (this.connected && this.online) {
 			try {
-				console.log('sending: ', data.type);
+				// console.log('sending: ', data.type);
 				this.ws.send(JSON.stringify(data));
 			} catch (err) {
-				console.log('Error sending');
+				console.log('Error sending socket');
 				console.log(err);
 				this.updateConnectionStatus();
 				// that.updateConnectionStatus();
@@ -159,7 +159,7 @@ export class ModServerCommunications {
 
 	updateConnectionStatus = () => {
 		const now = new Date();
-		console.log('updating status', this.connected, this.online);
+		// console.log('updating status', this.connected, this.online);
 		if (this.connected && !this.online || (!this.connected && this.online)) {
 			this.editor.setConnectionStatus('reconnecting');
 		} else if (this.connected && this.online)  {
@@ -184,8 +184,7 @@ export class ModServerCommunications {
 	}
 
 	receive(data) {
-		// console.log(data);
-		console.log('receieved: ', data.type);
+		// console.log('receieved: ', data.type);
 		switch (data.type) {
 		case 'chat':
 			this.editor.mod.collab.chat.newMessage(data);
