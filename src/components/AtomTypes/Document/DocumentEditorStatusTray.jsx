@@ -2,6 +2,12 @@ import ElementPortal from 'react-element-portal';
 import Radium from 'radium';
 import React, {PropTypes} from 'react';
 
+const pulseKeyframes = Radium.keyframes({
+  '0%': {opacity: '0', transform: 'translateX(-10px)'},
+  '100%': {opacity: '1', transform: 'translateX(0px)'},
+}, 'pulse');
+
+
 export const StatusTray = React.createClass({
 	propTypes: {
 		status: PropTypes.oneOf(['loading', 'connected', 'reconnecting', 'disconnected', 'timeout', 'unknown']),
@@ -92,7 +98,7 @@ export const StatusTray = React.createClass({
 
 			{(!loading && !error) ?
 				participants.map((participant) => {
-					return (<div key={participant.name} style={{display: 'inline-block', margin: '0px 10px'}}> <img src={'https://jake.pubpub.org/unsafe/fit-in/20x20/' + participant.avatar_url}></img> </div>);
+					return (<div key={participant.name} style={{display: 'inline-block', margin: '0px 10px', animation: 'x 1s ease', animationName: pulseKeyframes}}> <img src={'https://jake.pubpub.org/unsafe/fit-in/20x20/' + participant.avatar_url}></img> </div>);
 				})
 			: null }
 		</div>
