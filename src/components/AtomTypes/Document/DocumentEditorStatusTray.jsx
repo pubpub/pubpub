@@ -1,12 +1,10 @@
+import ElementPortal from 'react-element-portal';
 import Radium from 'radium';
 import React, {PropTypes} from 'react';
-import {safeGetInToJS} from 'utils/safeParse';
-
-import {renderReactFromJSON} from './proseEditor';
 
 export const StatusTray = React.createClass({
 	propTypes: {
-		status: PropTypes.oneOf(['loading','connected', 'reconnecting', 'disconnected', 'timeout', 'unknown']),
+		status: PropTypes.oneOf(['loading', 'connected', 'reconnecting', 'disconnected', 'timeout', 'unknown']),
 		statusMsg: PropTypes.string,
 		participants: PropTypes.array, // full, embed, static-full, static-embed
 	},
@@ -48,7 +46,11 @@ export const StatusTray = React.createClass({
 			width: '250px',
 		};
 
-		return (<div style={statusIcons}>
+		return (
+
+			<ElementPortal id="editor-participants">
+
+			<div>
 			<div style={{display: 'inline-block'}}>
 				{(loading) ?
 					<span style={{backgroundColor: loadingColor, borderColor: loadingBorder}} className="connection-loader">
@@ -93,7 +95,9 @@ export const StatusTray = React.createClass({
 					return (<div key={participant.name} style={{display: 'inline-block', margin: '0px 10px'}}> <img src={'https://jake.pubpub.org/unsafe/fit-in/20x20/' + participant.avatar_url}></img> </div>);
 				})
 			: null }
-		</div>);
+		</div>
+	</ElementPortal>
+	);
 
 	}
 });
