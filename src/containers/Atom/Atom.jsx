@@ -749,14 +749,17 @@ styles = {
 		left: 'calc(32.5vw - 300px)',
 		top: '10px',
 		opacity: 0.75,
+		display: 'none',
 		transition: '.1s linear opacity',
 		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
 			position: 'absolute',
 			left: '100px',
 			top: '20px',
+			display: 'block'
 		},
 	},
 	headerFull: {
+		display: 'block',
 		left: 'calc(50vw - 300px)',
 	},
 	notNewestVersion: {
