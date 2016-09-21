@@ -23,7 +23,8 @@ export const StatusTray = React.createClass({
 		const error = (status === 'reconnecting' || status === 'disconnected' || status === 'timeout');
 
 		let loadingColor = '#F3F3F4';
-		let loadingBorder = (!error) ? 'black' : 'red';
+		// let loadingBorder = '(!error) ? 'black' : 'red'';
+		const loadingBorder = 'black';
 
 		const statusIcons = {
 			position: 'absolute',
