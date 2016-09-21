@@ -222,6 +222,20 @@ export const Atom = React.createClass({
 		this.props.dispatch(createReplyDocument(atomType, versionContent, 'Reply', replyToID, rootReply, highlightObject));
 	},
 
+	mobileToggleDiscussions: function() {
+		this.setState({
+			showRightPanel: (this.state.rightPanelMode !== 'discussions' || !this.state.showRightPanel),
+			rightPanelMode: 'discussions'
+		});
+	},
+
+	mobileToggleContents: function() {
+		this.setState({
+			showRightPanel: (this.state.rightPanelMode !== 'contents' || !this.state.showRightPanel),
+			rightPanelMode: 'contents'
+		});
+	},
+
 	render: function() {
 		const atomData = safeGetInToJS(this.props.atomData, ['atomData']) || {};
 		const isEditor = this.props.meta === 'edit';
@@ -281,8 +295,8 @@ export const Atom = React.createClass({
 		const linkTarget = isEmbed ? '_parent' : '_self';
 
 		const mobileNavButtons = [
-			null,
-			{ type: 'link', mobile: true, text: <FormattedMessage {...globalMessages.Discussions}/>, link: '/pub/' + this.props.slug + '/discussions' },
+			(isEditor) ? null : { type: 'button', mobile: true, text: <FormattedMessage {...globalMessages.Contents}/>, action: this.mobileToggleContents },
+			{ type: 'button', mobile: true, text: <FormattedMessage {...globalMessages.Discussions}/>, action: this.mobileToggleDiscussions },
 		// 	{ type: 'button', mobile: true, text: <FormattedMessage {...globalMessages.Menu}/>, action: undefined },
 		];
 
@@ -643,7 +657,8 @@ styles = {
 		top: 0,
 		transition: '.15s ease-in-out transform',
 		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
-			display: 'none',
+			display: 'block',
+			width: '100vw',
 		},
 	},
 	toggleRightPanelButton: {
@@ -692,6 +707,9 @@ styles = {
 		overflow: 'hidden',
 		overflowY: 'scroll',
 		padding: '0em 2em 1em',
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+			padding: '3em 2em 1em',
+		},
 	},
 
 	container: {
