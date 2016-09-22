@@ -334,6 +334,7 @@
   "global.Email": "Email",
   "global.Password": "Password",
   "global.PasswordReset": "Password Reset",
+  "global.ResetPassword": "Reset Password",
   "global.Explore": "Explore",
   "global.draftVersion": "Draft Version",
   "global.abstract": "abstract",

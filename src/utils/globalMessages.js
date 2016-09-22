@@ -702,6 +702,10 @@ export const globalMessages = defineMessages({
 		id: 'global.PasswordReset',
 		defaultMessage: 'Password Reset',
 	},
+	ResetPassword: {
+		id: 'global.ResetPassword',
+		defaultMessage: 'Reset Password',
+	},
 	Explore: {
 		id: 'global.Explore',
 		defaultMessage: 'Explore',
