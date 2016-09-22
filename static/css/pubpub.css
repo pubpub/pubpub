@@ -374,3 +374,9 @@ h2 {
     color: #F3F3F4;
     font-family: 'Open Sans' !important;
 }
+
+@media screen and (min-resolution: 3dppx), screen and (max-width: 767px) {
+	#us_report_button {
+		display: none;
+	}
+};
