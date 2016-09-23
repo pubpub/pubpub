@@ -1,40 +1,42 @@
-import React, { PropTypes } from 'react';
-import {connect} from 'react-redux';
-import Radium, {Style} from 'radium';
-import Helmet from 'react-helmet';
-import {push} from 'redux-router';
-import { Link } from 'react-router';
 import dateFormat from 'dateformat';
-import { StickyContainer as UnwrappedStickyContainer, Sticky } from 'react-sticky';
-const StickyContainer = Radium(UnwrappedStickyContainer);
-
-import {getAtomData, submitAtomToJournals, saveVersion, updateAtomDetails, publishVersion, addContributor, updateContributor, deleteContributor} from './actions';
-import {createReplyDocument} from 'containers/Discussions/actions';
-// import {createHighlight} from 'containers/MediaLibrary/actions';
-
-import {Discussions, FollowButton} from 'containers';
+import Helmet from 'react-helmet';
+import Radium, {Style} from 'radium';
+import React, { PropTypes } from 'react';
 import {HorizontalNav, License, SelectionPopup} from 'components';
+import {Discussions, FollowButton} from 'containers';
+import {createReplyDocument} from 'containers/Discussions/actions';
+import {FormattedMessage} from 'react-intl';
+import {connect} from 'react-redux';
+import { Link } from 'react-router';
+import { StickyContainer as UnwrappedStickyContainer, Sticky } from 'react-sticky';
+import {push} from 'redux-router';
+import {generateTOC} from 'utils/generateTOC';
+import {globalMessages} from 'utils/globalMessages';
+import {safeGetInToJS} from 'utils/safeParse';
+import {globalStyles} from 'utils/styleConstants';
+
+import AtomAnalytics from './AtomAnalytics';
+import AtomCiteButton from './AtomCiteButton';
+import AtomContents from './AtomContents';
 import AtomContributors from './AtomContributors';
+import AtomDetails from './AtomDetails';
+import AtomEditorPane from './AtomEditorPane';
+import AtomExportButton from './AtomExportButton';
+import AtomFollowers from './AtomFollowers';
 import AtomHeaderDetail from './AtomHeaderDetail';
 import AtomHeaderDetailsMulti from './AtomHeaderDetailsMulti';
-import AtomExportButton from './AtomExportButton';
-import AtomCiteButton from './AtomCiteButton';
-import AtomFollowers from './AtomFollowers';
-import AtomAnalytics from './AtomAnalytics';
-import AtomVersions from './AtomVersions';
-import AtomDetails from './AtomDetails';
-import AtomContents from './AtomContents';
 import AtomJournals from './AtomJournals';
-import AtomViewerPane from './AtomViewerPane';
-import AtomEditorPane from './AtomEditorPane';
 import AtomSaveVersionButton from './AtomSaveVersionButton';
+import AtomVersions from './AtomVersions';
+import AtomViewerPane from './AtomViewerPane';
+import {getAtomData, submitAtomToJournals, saveVersion, updateAtomDetails, publishVersion, addContributor, updateContributor, deleteContributor} from './actions';
 
-import {safeGetInToJS} from 'utils/safeParse';
-import {generateTOC} from 'utils/generateTOC';
+const StickyContainer = Radium(UnwrappedStickyContainer);
 
-import {globalMessages} from 'utils/globalMessages';
-import {FormattedMessage} from 'react-intl';
-import {globalStyles} from 'utils/styleConstants';
+// import {createHighlight} from 'containers/MediaLibrary/actions';
+
+
+
 
 let styles = {};
 let interval;
@@ -234,6 +236,20 @@ export const Atom = React.createClass({
 		this.props.dispatch(createReplyDocument(atomType, versionContent, 'Reply', replyToID, rootReply, highlightObject));
 	},
 
+	mobileToggleDiscussions: function() {
+		this.setState({
+			showRightPanel: (this.state.rightPanelMode !== 'discussions' || !this.state.showRightPanel),
+			rightPanelMode: 'discussions'
+		});
+	},
+
+	mobileToggleContents: function() {
+		this.setState({
+			showRightPanel: (this.state.rightPanelMode !== 'contents' || !this.state.showRightPanel),
+			rightPanelMode: 'contents'
+		});
+	},
+
 	render: function() {
 		const atomData = safeGetInToJS(this.props.atomData, ['atomData']) || {};
 		const isEditor = this.props.meta === 'edit';
@@ -277,14 +293,14 @@ export const Atom = React.createClass({
 
 		const currentVersionContent = safeGetInToJS(this.props.atomData, ['currentVersionData', 'content']) || {};
 		const currentVersionDate = safeGetInToJS(this.props.atomData, ['currentVersionData', 'createDate']);
-		
+
 
 		const markdown = currentVersionContent.markdown;
 		const toc = generateTOC(this.state.currentDocMarkdown || markdown).full;
 
 		const versionQuery = this.props.query && this.props.query.version ? '?version=' + this.props.query.version : '';
 		const permissionType = safeGetInToJS(this.props.atomData, ['atomData', 'permissionType']) || '';
-		
+
 
 		const isLoading = safeGetInToJS(this.props.atomData, ['loading']);
 		const error = safeGetInToJS(this.props.atomData, ['error', 'message']);
@@ -294,8 +310,9 @@ export const Atom = React.createClass({
 		const linkTarget = isEmbed ? '_parent' : '_self';
 
 		const mobileNavButtons = [
-			{ type: 'link', mobile: true, text: <FormattedMessage {...globalMessages.Discussions}/>, link: '/pub/' + this.props.slug + '/discussions' },
-			{ type: 'button', mobile: true, text: <FormattedMessage {...globalMessages.Menu}/>, action: undefined },
+			(isEditor) ? null : { type: 'button', mobile: true, text: <FormattedMessage {...globalMessages.Contents}/>, action: this.mobileToggleContents },
+			{ type: 'button', mobile: true, text: <FormattedMessage {...globalMessages.Discussions}/>, action: this.mobileToggleDiscussions },
+		// 	{ type: 'button', mobile: true, text: <FormattedMessage {...globalMessages.Menu}/>, action: undefined },
 		];
 
 		if (this.props.meta === 'discussions') {
@@ -346,16 +363,15 @@ export const Atom = React.createClass({
 
 				{/* Pub Section */}
 				<StickyContainer style={[styles.pubSection, !this.state.showRightPanel && styles.pubSectionFull, !this.state.showRightPanel && isEditor && styles.pubSectionFullEditor]}>
-				
 					{/* Top Nav. Is sticky in the Editor */}
 					{/* -------------------------------- */}
 					<div style={styles.atomNavBar}>
 						<Sticky style={styles.headerBar} isActive={isEditor}>
-							{!isEmbed && (permissionType === 'author' || permissionType === 'editor') && 
+							{!isEmbed && (permissionType === 'author' || permissionType === 'editor') &&
 								<HorizontalNav navItems={atomNavItems} mobileNavButtons={mobileNavButtons}/>
 							}
 							<div style={styles.headerMenu} id={'headerPlaceholder'}></div>
-							<div style={styles.headerStatus} id={'editor-participants'} className={'editor-participants opacity-on-hover'}></div>
+							<div style={[styles.headerStatus, !this.state.showRightPanel && styles.headerFull]} id={'editor-participants'} className={'editor-participants opacity-on-hover'}></div>
 						</Sticky>
 					</div>
 					{/* -------------------------------- */}
@@ -392,28 +408,28 @@ export const Atom = React.createClass({
 
 								{/* Atom Title */}
 								{/* ---------- */}
-								<AtomHeaderDetail 
+								<AtomHeaderDetail
 									label={<span style={styles.headerTitle}>{atomData.title}</span>}
 									defaultMessage={null}
 									editMessage={<FormattedMessage id={'atom.EditMetadata'} defaultMessage={'Edit Metadata'} />}
-									activeMessage={<FormattedMessage id={'atom.HideMetadata'} defaultMessage={'Hide Metadata'} />} 
+									activeMessage={<FormattedMessage id={'atom.HideMetadata'} defaultMessage={'Hide Metadata'} />}
 									child={
-										<AtomDetails 
-											atomData={this.props.atomData} 
-											updateDetailsHandler={this.updateDetails} 
-											isLoading={isLoading} 
+										<AtomDetails
+											atomData={this.props.atomData}
+											updateDetailsHandler={this.updateDetails}
+											isLoading={isLoading}
 											error={error}/>
-									} 
-									canEdit={permissionType === 'author' || permissionType === 'editor'} 
+									}
+									canEdit={permissionType === 'author' || permissionType === 'editor'}
 									style={styles.headerWrapper}/>
 
 								{/* Atom Contributors */}
 								{/* ----------------- */}
-								<AtomHeaderDetail 
+								<AtomHeaderDetail
 									label={authorList}
 									defaultMessage={<FormattedMessage id="atom.NContributors" defaultMessage={`{contributorCount, number} {contributorCount, plural, one {Contributor} other {Contributors} }`} values={{contributorCount: contributorsData.length}} />}
 									editMessage={<FormattedMessage id={'atom.EditContributors'} defaultMessage={'Edit Contributors'} />}
-									activeMessage={<FormattedMessage id={'atom.HideContributors'} defaultMessage={'Hide Contributors'} />} 
+									activeMessage={<FormattedMessage id={'atom.HideContributors'} defaultMessage={'Hide Contributors'} />}
 									child={
 										<AtomContributors
 											atomData={this.props.atomData}
@@ -424,30 +440,30 @@ export const Atom = React.createClass({
 											isLoading={isLoading}
 											error={error}
 											permissionType={permissionType}/>
-									} 
+									}
 									canEdit={permissionType === 'author' || permissionType === 'editor'} />
 
 								{/* Atom Date and Versions */}
 								{/* ---------------------- */}
-								<AtomHeaderDetail 
+								<AtomHeaderDetail
 									label={dateFormat(currentVersionDate, 'mmmm dd, yyyy')}
 									defaultMessage={<FormattedMessage id="atom.NVersions" defaultMessage={`{versionCount, number} {versionCount, plural, one {Version} other {Versions} }`} values={{versionCount: versionsData.length}} />}
 									editMessage={<FormattedMessage id={'atom.ManageVersions'} defaultMessage={'Manage Versions'} />}
-									activeMessage={<FormattedMessage id={'atom.HideVersions'} defaultMessage={'Hide Versions'} />} 
+									activeMessage={<FormattedMessage id={'atom.HideVersions'} defaultMessage={'Hide Versions'} />}
 									child={
-										<AtomVersions 
-											versionsData={versionsData} 
-											permissionType={permissionType} 
-											handlePublishVersion={this.publishVersionHandler} 
-											slug={this.props.slug} 
+										<AtomVersions
+											versionsData={versionsData}
+											permissionType={permissionType}
+											handlePublishVersion={this.publishVersionHandler}
+											slug={this.props.slug}
 											buttonStyle={styles.headerAction} />
-									} 
+									}
 									canEdit={permissionType === 'author' || permissionType === 'editor'} />
 
 								{/* Atom Journals */}
 								{/* ------------- */}
 								<div style={[styles.journalSection, (featuredData.length || permissionType === 'author' || permissionType === 'editor') && {display: 'block'}]}>
-									<AtomHeaderDetail 
+									<AtomHeaderDetail
 										label={featuredData.length
 											? featuredData.map((featured)=> {
 												const journal = featured.source;
@@ -459,12 +475,12 @@ export const Atom = React.createClass({
 										}
 										defaultMessage={null}
 										editMessage={<FormattedMessage id={'atom.ManageJournals'} defaultMessage={'Manage Journals'} />}
-										activeMessage={<FormattedMessage id={'atom.HideJournals'} defaultMessage={'Hide Journals'} />} 
+										activeMessage={<FormattedMessage id={'atom.HideJournals'} defaultMessage={'Hide Journals'} />}
 										child={
-											<AtomJournals 
-												atomData={this.props.atomData} 
+											<AtomJournals
+												atomData={this.props.atomData}
 												handleJournalSubmit={this.handleJournalSubmit}/>
-										} 
+										}
 										canEdit={permissionType === 'author' || permissionType === 'editor'} />
 								</div>
 
@@ -486,7 +502,7 @@ export const Atom = React.createClass({
 												// <FormattedMessage {...globalMessages.Analytics} />
 											]}
 											activeMessages={[
-												<FormattedMessage id={'atom.HideFollowers'} defaultMessage={'Hide Followers'} />, 
+												<FormattedMessage id={'atom.HideFollowers'} defaultMessage={'Hide Followers'} />,
 												<FormattedMessage id={'atom.HideAnalytics'} defaultMessage={'Hide Analytics'} />
 											]}
 											views={[
@@ -495,7 +511,7 @@ export const Atom = React.createClass({
 											]}
 											canEdit={permissionType === 'author' || permissionType === 'editor'} />
 
-											
+
 									</div>
 								}
 
@@ -512,12 +528,12 @@ export const Atom = React.createClass({
 
 							</div>
 						}
-						
+
 						{isEditor &&
 							<AtomEditorPane ref={'atomEditorPane'} atomData={this.props.atomData} loginData={this.props.loginData}/>
 						}
 
-						{isDiscussions && 
+						{isDiscussions &&
 							<Discussions/>
 						}
 
@@ -528,7 +544,7 @@ export const Atom = React.createClass({
 							</div>
 						}
 
-						{!isEditor && !error && !isDiscussions && atomData.type === 'document' &&
+						{!isEditor && !error && isDiscussions && atomData.type === 'document' &&
 							<SelectionPopup addSelectionHandler={this.addSelection} />
 						}
 
@@ -665,7 +681,8 @@ styles = {
 		top: 0,
 		transition: '.15s ease-in-out transform',
 		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
-			display: 'none',
+			display: 'block',
+			width: '100vw',
 		},
 	},
 	toggleRightPanelButton: {
@@ -714,6 +731,9 @@ styles = {
 		overflow: 'hidden',
 		overflowY: 'scroll',
 		padding: '0em 2em 1em',
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+			padding: '3em 2em 1em',
+		},
 	},
 
 	container: {
@@ -742,13 +762,21 @@ styles = {
 	},
 	headerStatus: {
 		position: 'absolute',
-		left: 0,
-		top: 44,
+		left: 'calc(32.5vw - 300px)',
+		top: '10px',
 		opacity: 0.75,
+		display: 'none',
 		transition: '.1s linear opacity',
 		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
-			position: 'static',
+			position: 'absolute',
+			left: '100px',
+			top: '20px',
+			display: 'block'
 		},
+	},
+	headerFull: {
+		display: 'block',
+		left: 'calc(50vw - 300px)',
 	},
 	notNewestVersion: {
 		backgroundColor: '#363736',

@@ -11,6 +11,7 @@ import {globalMessages} from 'utils/globalMessages';
 import {safeGetInToJS} from 'utils/safeParse';
 import {s3Upload} from 'utils/uploadFile';
 
+import StatusTray from './DocumentEditorStatusTray';
 import {markdownParser, markdownSerializer, schema} from './proseEditor';
 import {schema as pubSchema} from './proseEditor/schema';
 
@@ -19,8 +20,6 @@ const ColorHash = new chash();
 let styles;
 let pm;
 
-let editorToModel;
-let modelToEditor;
 let menuBar;
 // let currentNodeSelected;
 export const DocumentEditor = React.createClass({
@@ -33,6 +32,8 @@ export const DocumentEditor = React.createClass({
 		return {
 			showMarkdown: false,
 			participants: [],
+			statusMsg: '',
+			status: 'loading',
 		};
 	},
 
@@ -43,11 +44,13 @@ export const DocumentEditor = React.createClass({
 
 		const {ModServerCommunications} = require('./collab/server-communications');
 		const nodeConvert = require('./collab/node-convert');
-		editorToModel = nodeConvert.editorToModel;
-		modelToEditor = nodeConvert.modelToEditor;
+		this.editorToModel = nodeConvert.editorToModel;
+		this.modelToEditor = nodeConvert.modelToEditor;
 
 		const {ModCollab} = require('./collab/mod');
 		const {collabEditing} = require('prosemirror/dist/collab');
+
+		const that = this;
 
 		pm = new prosemirror.ProseMirror({
 			place: document.getElementById('atom-body-editor'),
@@ -62,7 +65,11 @@ export const DocumentEditor = React.createClass({
 			}
 			*/
 		});
+
+		this.pm = pm;
 		const token = safeGetInToJS(this.props.atomData, ['token']);
+		const tokenValid = safeGetInToJS(this.props.atomData, ['tokenValid']);
+
 		pm.mod = {};
 		pm.mod.collab = collabEditing.get(pm);
 		// Ignore setDoc
@@ -98,6 +105,15 @@ export const DocumentEditor = React.createClass({
 		collab.getHash = this.getHash;
 		collab.updateParticipants = this.updateParticipants;
 
+		collab.setConnectionStatus = function(status, statusMsg) {
+			that.setState({status, statusMsg});
+		};
+
+		collab.setParticipants = function(participants) {
+			that.setState({participants: participants});
+		};
+
+
 		// Collaboration Authentication information
 		const atomID = safeGetInToJS(this.props.atomData, ['atomData', '_id']);
 		collab.doc_id = atomID;
@@ -114,8 +130,6 @@ export const DocumentEditor = React.createClass({
 
 		new ModServerCommunications(collab);
 		new ModCollab(collab);
-
-		const that = this;
 
 
 		pm.on.change.add(function() {
@@ -227,7 +241,7 @@ export const DocumentEditor = React.createClass({
 	},
 	// Collects updates of the document from ProseMirror and saves it under this.doc
 	getUpdates: function(callback) {
-		const tmpDoc = editorToModel(this.collab.pm.mod.collab.versionDoc);
+		const tmpDoc = this.editorToModel(this.collab.pm.mod.collab.versionDoc);
 		this.collab.doc.contents = tmpDoc.contents;
 		// this.doc.metadata = tmpDoc.metadata
 		// this.doc.title = this.pm.mod.collab.versionDoc.firstChild.textContent
@@ -270,7 +284,7 @@ export const DocumentEditor = React.createClass({
 		if (this.collab.mod.collab.docChanges.awaitingDiffResponse) {
 			this.collab.mod.collab.docChanges.enableDiffSending();
 		}
-		const pmDoc = modelToEditor(this.collab.doc, this.collab.schema);
+		const pmDoc = this.modelToEditor(this.collab.doc, this.collab.schema);
 		// collabEditing.detach(this.pm)
 		this.collab.pm.setDoc(pmDoc);
 		that.collab.pm.mod.collab.version = this.collab.doc.version;
@@ -362,8 +376,8 @@ export const DocumentEditor = React.createClass({
 
 	// Get updates to document and then send updates to the server
 	save: function(callback) {
-		const that = this;
 		// console.log('Started save');
+		const that = this;
 		this.getUpdates(function() {
 			that.sendDocumentUpdate(function() {
 				// console.log('Finished save');
@@ -412,13 +426,13 @@ export const DocumentEditor = React.createClass({
 	},
 
 	markdownChange: function(evt) {
-		pm.setDoc(markdownParser.parse(evt.target.value));
+		this.pm.setDoc(markdownParser.parse(evt.target.value));
 	},
 
 	getSaveVersionContent: function() {
 		return {
-			markdown: markdownSerializer.serialize(pm.doc),
-			docJSON: pm.doc.toJSON(),
+			markdown: markdownSerializer.serialize(this.pm.doc),
+			docJSON: this.pm.doc.toJSON(),
 		};
 	},
 
@@ -438,8 +452,6 @@ export const DocumentEditor = React.createClass({
 	// },
 
 	render: function() {
-		const collab = safeGetInToJS(this.props.atomData, ['collab']);
-
 
 		const colorMap = {};
 		this.state.participants.map((participant, index) => {
@@ -449,18 +461,14 @@ export const DocumentEditor = React.createClass({
 		});
 
 		return (
+
+			<div>
+
+			<StatusTray participants={this.state.participants} statusMsg={this.state.statusMsg} status={this.state.status} />
+
 			<div style={styles.container}>
 			{/* <Dropzone ref="dropzone" disableClick={true} onDrop={this.onDrop} style={{}} activeClassName={'dropzone-active'} > */}
 				<Style rules={colorMap} />
-
-				<div>
-					{(collab
-						? <div></div>
-						: <div>
-								<FormattedMessage id="about.CollabConnectionFail" defaultMessage="Connection to Collaboration Server Failed."/>
-							</div>
-					)}
-				</div>
 
 				<Media ref={'mediaRef'}/>
 
@@ -482,6 +490,8 @@ export const DocumentEditor = React.createClass({
 				}
 
 			{/* </Dropzone> */}
+			</div>
+
 			</div>
 
 		);

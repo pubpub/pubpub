@@ -176,6 +176,10 @@ input[type="file"]:focus {
 	position: relative;
 	top: -1.4em;
 }
+
+.subtext {
+	font-size: 0.8em;
+}
 /* ------------ */
 
 
@@ -256,7 +260,7 @@ h2 {
 .button:hover, .arrow-down-button:hover {
 	border: solid 2px #2C2A2B;
 	background-color: #2C2A2B;
-	color: #FEFEFE !important;
+	color: #FEFEFE;
 }
 .button:hover {
 	cursor: pointer;
@@ -370,3 +374,9 @@ h2 {
     color: #F3F3F4;
     font-family: 'Open Sans' !important;
 }
+
+@media screen and (min-resolution: 3dppx), screen and (max-width: 767px) {
+	#us_report_button {
+		display: none;
+	}
+};

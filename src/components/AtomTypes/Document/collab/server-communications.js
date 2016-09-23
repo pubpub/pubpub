@@ -1,6 +1,7 @@
 /* Sets up communicating with server (retrieving document,
 saving, collaboration, etc.).
 */
+
 import {collabServerUrl} from 'config';
 
 export class ModServerCommunications {
@@ -11,9 +12,31 @@ export class ModServerCommunications {
 		Messages will be sent when returning back online. */
 		this.messagesToSend = [];
 		this.connected = false;
+		this.online = true;
 		/* Whether the connection is established for the first time. */
 		this.firstTimeConnection = true;
 		this.retryTimeout = null;
+		this.statusInterval = null;
+
+		this.stats = {
+			lastMessage: null,
+			lastConnection: null,
+		};
+
+		window.addEventListener('online', this.goOnline);
+		window.addEventListener('offline', this.goOffline);
+	}
+
+	goOffline = () => {
+		this.online = false;
+		this.updateConnectionStatus();
+		this.close();
+	}
+
+	goOnline = () => {
+		this.online = true;
+		this.updateConnectionStatus();
+		this.createWSConnection();
 	}
 
 	init() {
@@ -36,18 +59,16 @@ export class ModServerCommunications {
 		const randomInt = Math.round(Math.random() * 100000);
 		try {
 			this.ws = new window.WebSocket(`${websocketProtocol}//${wsServer}/ws/doc/${this.editor.doc.id}?user=${this.editor.username }&token=${this.editor.token}&avatar_url=${this.editor.img}&random=${randomInt}`);
-			console.log('opening with', `${websocketProtocol}//${wsServer}/ws/doc/${this.editor.doc.id}?user=${this.editor.username }&token=${this.editor.token}&avatar_url=${this.editor.img}&random=${randomInt}`);
+			// console.log('opening with', `${websocketProtocol}//${wsServer}/ws/doc/${this.editor.doc.id}?user=${this.editor.username }&token=${this.editor.token}&avatar_url=${this.editor.img}&random=${randomInt}`);
+			console.log('Opening connection');
 			this.ws.onopen = function() {
 				console.log('Opened Connection');
-				// console.log('connection open');
-				// jQuery('#unobtrusive_messages').html('')
+				that.editor.setConnectionStatus('loading');
 			};
 
 			this.ws.onerror = function(err) {
 				console.log('error with socket');
 				console.log(arguments);
-				// console.log('connection open');
-				// jQuery('#unobtrusive_messages').html('')
 			};
 
 		} catch (err) {
@@ -56,12 +77,15 @@ export class ModServerCommunications {
 
 		this.ws.onmessage = function(event) {
 			const data = JSON.parse(event.data);
+			that.stats.lastMessage = new Date();
 			that.receive(data);
 		};
 		this.ws.onclose = function(event) {
 			console.log('Closed connection');
 			that.connected = false;
 			window.clearInterval(that.wsPinger);
+			that.updateConnectionStatus();
+
 			this.retryTimeout = window.setTimeout(function() {
 				that.createWSConnection();
 			}, 2000);
@@ -77,7 +101,7 @@ export class ModServerCommunications {
 			that.send({
 				'type': 'ping'
 			});
-		}, 50000);
+		}, 30000);
 	}
 
 	close() {
@@ -91,12 +115,17 @@ export class ModServerCommunications {
 	activateConnection() {
 		// console.log('Activating connection');
 		this.connected = true;
+		this.updateConnectionStatus();
 		if (this.firstTimeConnection) {
 			this.editor.waitingForDocument = false;
 			this.editor.askForDocument();
 		} else {
 			// this.editor.mod.footnotes.fnEditor.renderAllFootnotes()
-			this.editor.mod.collab.docChanges.checkDiffVersion();
+			const docChanges = this.editor.mod.collab.docChanges;
+			const unconfirmed = docChanges.checkUnconfirmedSteps();
+			const toSend = this.messagesToSend.length;
+			console.log('Reactivated with ', unconfirmed, ' unconfirmed steps & ', toSend, 'steps to be sent');
+			docChanges.checkDiffVersion();
 			this.send({
 				type: 'participant_update'
 			});
@@ -112,15 +141,50 @@ export class ModServerCommunications {
 		data.token = this.editor.token;
 		data.id = this.editor.doc_id;
 		data.user = this.editor.username;
-		if (this.connected) {
-			this.ws.send(JSON.stringify(data));
+		if (this.connected && this.online) {
+			try {
+				// console.log('sending: ', data.type);
+				this.ws.send(JSON.stringify(data));
+			} catch (err) {
+				console.log('Error sending socket');
+				console.log(err);
+				this.updateConnectionStatus();
+				// that.updateConnectionStatus();
+			}
+
 		} else if (data.type !== 'diff') {
 			this.messagesToSend.push(data);
 		}
 	}
 
+	updateConnectionStatus = () => {
+		const now = new Date();
+		// console.log('updating status', this.connected, this.online);
+		if (this.connected && !this.online || (!this.connected && this.online)) {
+			this.editor.setConnectionStatus('reconnecting');
+		} else if (this.connected && this.online)  {
+			if (this.statusInterval) {
+				clearTimeout(this.statusInterval);
+			}
+			// this.editor.setLoadingState(false);
+			this.editor.setConnectionStatus('connected');
+		} else if (now - this.stats.lastMessage <= (30 * 1000)) {
+			// this.editor.setErrorState('disconnect');
+			this.editor.setConnectionStatus('reconnecting');
+			if (!this.statusInterval) {
+				this.statusInterval = window.setInterval(this.updateConnectionStatus.bind(this), 1000);
+			}
+		} else {
+			this.editor.setConnectionStatus('disconnected');
+			if (this.statusInterval) {
+				clearTimeout(this.statusInterval);
+			}
+			// this.editor.setErrorState('timeout');
+		}
+	}
+
 	receive(data) {
-		// console.log(data);
+		// console.log('receieved: ', data.type);
 		switch (data.type) {
 		case 'chat':
 			this.editor.mod.collab.chat.newMessage(data);

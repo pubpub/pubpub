@@ -1,9 +1,9 @@
-import React, {PropTypes} from 'react';
 import Radium from 'radium';
-import { Link as UnwrappedLink } from 'react-router';
-const Link = Radium(UnwrappedLink);
-import {globalMessages} from 'utils/globalMessages';
+import React, {PropTypes} from 'react';
 import {FormattedMessage} from 'react-intl';
+import { Link as UnwrappedLink } from 'react-router';
+import {globalMessages} from 'utils/globalMessages';
+const Link = Radium(UnwrappedLink);
 
 let styles = {};
 
@@ -78,10 +78,11 @@ export const HorizontalNav = React.createClass({
 				<div style={styles.contentNavMobileButtons}>
 					{mobileNavButtons.slice(0, 2).map((option, index)=>{
 
-						if (option.type === 'link') {
+						if (option === null) {
+							return <div style={styles.contentNavLinkMobile}>&nbsp;</div>;
+						} else if (option.type === 'link') {
 							return <Link key={'navItem-' + index} style={styles.contentNavLinkMobile} to={option.link} onClick={this.closeMenu}>{option.text}</Link>;
-						}
-						if (option.type === 'button') {
+						} else if (option.type === 'button') {
 							return <div key={'navItem-' + index} style={styles.contentNavLinkMobile} onClick={option.action || this.toggleMenu}>{option.text}</div>;
 						}
 

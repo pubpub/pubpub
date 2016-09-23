@@ -1,11 +1,13 @@
 /* eslint no-new: 0 */
 
-import {ModCollabDocChanges} from './doc-changes';
-// import {ModCollabChat} from './chat';
-import {ModCollabCarets} from './carets';
-// import {ModCollabColors} from './colors';
 import groupBy from 'lodash/groupBy';
 import mapObject from 'lodash/map';
+
+import {ModCollabCarets} from './carets';
+import {ModCollabDocChanges} from './doc-changes';
+
+// import {ModCollabChat} from './chat';
+// import {ModCollabColors} from './colors';
 
 export class ModCollab {
 	constructor(editor) {
@@ -24,6 +26,8 @@ export class ModCollab {
 
 	updateParticipantList(participants) {
 		// const that = this;
+
+		this.editor.setParticipants(participants);
 		const titleUserDivs = document.getElementsByClassName('title-connected-user');
 		const menubar = document.getElementsByClassName('editor-participants')[0];
 
@@ -36,10 +40,12 @@ export class ModCollab {
 			titleUserDivs[index].parentNode.removeChild(titleUserDivs[index]);
 		}
 
+		/*
 		for (let index = 0; index < participants.length; index++) {
 			const appendStr = '<div><img class="title-connected-user" style="display: inline-block; padding: 2px 2px;" title="' + participants[index].name + '" src="https://jake.pubpub.org/unsafe/fit-in/25x25/' + participants[index].avatar_url + '"></div>';
 			menubar.innerHTML = menubar.innerHTML + appendStr;
 		}
+		*/
 
 		const allSessionIds = [];
 		const that = this;
