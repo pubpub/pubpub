@@ -55,6 +55,7 @@ export const defaultState = Immutable.Map({
 	contributorsData: [],
 	submittedData: [],
 	featuredData: [],
+	replyParentData: {},
 	discussionsData: [],
 	loading: true,
 	error: null,
@@ -91,6 +92,7 @@ function getAtomDataSuccess(state, result) {
 		featuredData: result.featuredData,
 		discussionsData: result.discussionsData,
 		followersData: result.followersData,
+		replyParentData: result.replyParentData,
 		token: result.token,
 		tokenValid: result.tokenValid,
 		error: null

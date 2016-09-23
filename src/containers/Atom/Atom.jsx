@@ -123,9 +123,9 @@ export const Atom = React.createClass({
 		// If we create a new document, transition properly
 		const oldSlug = safeGetInToJS(this.props.atomData, ['atomData', 'slug']);
 		const newSlug = safeGetInToJS(nextProps.atomData, ['atomData', 'slug']);
-		if (newSlug !== undefined && this.props.meta === nextProps.meta && oldSlug !== newSlug) {
-			this.props.dispatch(push('/pub/' + newSlug + '/edit'));
-		}
+		// if (newSlug !== undefined && this.props.meta === nextProps.meta && oldSlug !== newSlug) {
+		// 	this.props.dispatch(push('/pub/' + newSlug + '/edit'));
+		// }
 	},
 
 	componentDidMount() {
@@ -289,6 +289,7 @@ export const Atom = React.createClass({
 		const contributorsData = safeGetInToJS(this.props.atomData, ['contributorsData']) || [];
 		const featuredData = safeGetInToJS(this.props.atomData, ['featuredData']) || [];
 		const followersData = safeGetInToJS(this.props.atomData, ['followersData']) || [];
+		const replyParentData = safeGetInToJS(this.props.atomData, ['replyParentData']) || {};
 		const versionsData = safeGetInToJS(this.props.atomData, ['versionsData']) || [];
 
 		const currentVersionContent = safeGetInToJS(this.props.atomData, ['currentVersionData', 'content']) || {};
@@ -396,7 +397,7 @@ export const Atom = React.createClass({
 
 					{/* Atom Header and Body */}
 					{/* -------------------- */}
-					<div style={[styles.atomWrapper, !this.state.showRightPanel && styles.atomWrapperFull, , !this.state.showRightPanel && isEditor && styles.atomWrapperFullEditor]}>
+					<div style={[styles.atomWrapper, !this.state.showRightPanel && styles.atomWrapperFull, !this.state.showRightPanel && isEditor && styles.atomWrapperFullEditor]}>
 						{ error &&
 							<div style={styles.errorMsg}>{error}</div>
 						}
@@ -422,6 +423,12 @@ export const Atom = React.createClass({
 									}
 									canEdit={permissionType === 'author' || permissionType === 'editor'}
 									style={styles.headerWrapper}/>
+
+								{/* Reply Parent Link */}
+								{/* ----------------- */}
+								{replyParentData.destination && 
+									<Link to={'/pub/' + replyParentData.destination.slug} style={styles.replyParentLink} className={'underlineOnHover'}>Reply To: {replyParentData.destination.title}</Link>
+								}
 
 								{/* Atom Contributors */}
 								{/* ----------------- */}
@@ -788,6 +795,13 @@ styles = {
 		marginTop: '10px',
 		display: 'inline-block',
 		padding: '0em .5em',
+	},
+	replyParentLink: {
+		paddingBottom: '1em',
+		fontSize: '.85em',
+		color: '#808284',
+		textDecoration: 'none',
+		display: 'block',
 	},
 
 };
