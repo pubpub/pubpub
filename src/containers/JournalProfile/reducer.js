@@ -152,7 +152,7 @@ function deleteCollectionSuccess(state, result) {
 function featureAtomSuccess(state, result) {
 	const newSubmittedData = state.getIn(['submittedData']).map((item)=>{
 		const submittedLink = result.submittedLink;
-		if (item.get('_id') === submittedLink.sub_id) {
+		if (item.get('_id') === submittedLink._id) {
 			return item.merge({
 				inactive: submittedLink.inactive,
 				inactiveDate: submittedLink.inactiveDate,
