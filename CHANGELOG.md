@@ -25,6 +25,9 @@ See [http://keepachangelog.com/](http://keepachangelog.com/) for best practices.
 - Fix bug that would show private version messages to non-contributors
 - Fix bug that led to 404 pages when the most recent version was private
 - Enable publishing from the saveVersion panel
+- Add replyTo link below title for atoms that are replies
+- Status bar indicator in editor. 
+
 
 ## [v2.1.0] - 2015-08-04
 - Following functionality and lists. 

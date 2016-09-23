@@ -311,13 +311,15 @@ export const Atom = React.createClass({
 		const linkTarget = isEmbed ? '_parent' : '_self';
 
 		const mobileNavButtons = [
-			(isEditor) ? null : { type: 'button', mobile: true, text: <FormattedMessage {...globalMessages.Contents}/>, action: this.mobileToggleContents },
-			{ type: 'button', mobile: true, text: <FormattedMessage {...globalMessages.Discussions}/>, action: this.mobileToggleDiscussions },
+			// (isEditor) ? null : { type: 'button', mobile: true, text: <FormattedMessage {...globalMessages.Contents}/>, action: this.mobileToggleContents },
+			null,
+			// { type: 'button', mobile: true, text: <FormattedMessage {...globalMessages.Discussions}/>, action: this.mobileToggleDiscussions },
+			{ type: 'link', mobile: true, text: <FormattedMessage {...globalMessages.Discussions}/>, link: '/pub/' + this.props.slug + '/discussions'},
 		// 	{ type: 'button', mobile: true, text: <FormattedMessage {...globalMessages.Menu}/>, action: undefined },
 		];
 
 		if (this.props.meta === 'discussions') {
-			mobileNavButtons[0] = { type: 'link', mobile: true, text: <FormattedMessage {...globalMessages.View}/>, link: '/pub/' + this.props.slug };
+			mobileNavButtons[1] = { type: 'link', mobile: true, text: <FormattedMessage {...globalMessages.View}/>, link: '/pub/' + this.props.slug };
 		}
 
 		/* Nav Items that show above the main content */
@@ -551,7 +553,7 @@ export const Atom = React.createClass({
 							</div>
 						}
 
-						{!isEditor && !error && isDiscussions && atomData.type === 'document' &&
+						{!isEditor && !error && isDiscussions && atomData.type === 'document' && this.props.meta !== 'discussions' &&
 							<SelectionPopup addSelectionHandler={this.addSelection} />
 						}
 
@@ -688,8 +690,9 @@ styles = {
 		top: 0,
 		transition: '.15s ease-in-out transform',
 		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
-			display: 'block',
-			width: '100vw',
+			// display: 'block',
+			// width: '100vw',
+			display: 'none'
 		},
 	},
 	toggleRightPanelButton: {
