@@ -29,6 +29,11 @@ export const EmbedWrapper = React.createClass({
 		// console.log('unmounted atom!');
 	},
 
+	setCiteCount: function(citeCount) {
+		console.log('set cite count!', citeCount);
+		this.setState({citeCount});
+	},
+
 	render: function() {
 		const data = this.props.data || {};
 		// Data is the version object with a populated parent field.
@@ -60,7 +65,7 @@ export const EmbedWrapper = React.createClass({
 		}
 
 		if (this.props.mode === 'cite') {
-			const number = this.props.citeCount || '?';
+			const number = this.state.citeCount || this.props.citeCount || '?';
 
 			// if (!this.props.citeCount) {
 			// 	const sourceElems = document.getElementsByClassName('cite-wrapper');

@@ -1,10 +1,7 @@
-import murmur from 'murmurhash';
-import React from 'react';
-import ReactDOM from 'react-dom';
 import {Schema, Inline, Block, Text, Attribute, MarkType} from 'prosemirror/dist/model';
 import {Doc, BlockQuote, OrderedList, BulletList, ListItem, HorizontalRule, Heading, CodeBlock, Paragraph, Image, HardBreak, EmMark, StrongMark, LinkMark, CodeMark} from 'prosemirror/dist/schema-basic';
 
-import EmbedWrapper from './EmbedWrapper';
+import ElementSchema from './elementSchema';
 
 // An Emoji node type.
 class Emoji extends Inline {
@@ -70,6 +67,7 @@ class Embed extends Inline {
 			mode: new Attribute({default: 'embed'}), // mode = embed || cite
 			data: new Attribute({default: {}}),
 			selected: new Attribute({default: false}),
+      reactElement: new Attribute({default: null}),
 		};
 	}
 	get draggable() { return true; }
@@ -77,7 +75,7 @@ class Embed extends Inline {
 	get matchDOMTag() {
 		return {'.embed': dom => {
 			const domHash = dom.getAttribute('data-nodeHash');
-			const nodeAttrs = domHashes[domHash];
+			const nodeAttrs = ElementSchema.findNodeByHash(domHash);
 			return {
 				source: nodeAttrs.source,
 				data: nodeAttrs.data,
@@ -88,26 +86,13 @@ class Embed extends Inline {
 				className: nodeAttrs.className,
 				children: null,
 				childNodes: null,
+        reactElement: null,
 			};
 		}};
 	}
 
 	toDOM(node) {
-		const domParent = document.createElement('span');
-
-		ReactDOM.render(<EmbedWrapper {...node.attrs}/>, domParent);
-		const dom = domParent.childNodes[0];
-		dom.className += ' embed';
-		const nodeHash = murmur.v3(JSON.stringify(node.attrs));
-		dom.setAttribute('data-nodeHash', nodeHash);
-		domHashes[nodeHash] = node.attrs;
-
-		dom.addEventListener('DOMNodeRemovedFromDocument', function(evt) {
-			ReactDOM.unmountComponentAtNode(domParent);
-			delete domHashes[nodeHash];
-		});
-
-		return domParent;
+		return ElementSchema.creatElementAtNode(node);
 	}
 }
 

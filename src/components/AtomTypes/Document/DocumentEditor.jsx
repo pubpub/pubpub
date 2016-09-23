@@ -11,6 +11,7 @@ import {globalMessages} from 'utils/globalMessages';
 import {safeGetInToJS} from 'utils/safeParse';
 import {s3Upload} from 'utils/uploadFile';
 
+import ElementSchema from './proseEditor/elementSchema';
 import StatusTray from './DocumentEditorStatusTray';
 import {markdownParser, markdownSerializer, schema} from './proseEditor';
 import {schema as pubSchema} from './proseEditor/schema';
@@ -154,28 +155,8 @@ export const DocumentEditor = React.createClass({
 			}
 		});
 
-		// pm.on.selectionChange.add(()=>{
-		// 	const currentSelection = pm.selection;
-		// 	const currentFrom = currentSelection.$from.pos;
-		// 	const currentSelectedNode = currentSelection.node;
-		// 	if (currentSelectedNode && currentSelectedNode.type.name === 'embed') {
-		// 		const coords = pm.coordsAtPos(currentFrom);
-		// 		coords.bottom = coords.bottom + window.scrollY - 40;
-		// 		this.setState({
-		// 			embedLayoutCoords: coords,
-		// 			embedAttrs: currentSelectedNode.attrs,
-		// 		});
-		// 	} else {
-		// 		this.setState({
-		// 			embedLayoutCoords: undefined,
-		// 			embedAttrs: undefined,
-		// 		});
-		// 	}
-
-		// });
-
 		pm.on.transformPastedHTML.add(this.transformHTML);
-
+		ElementSchema.initiateProseMirror(pm);
 
 		this.moveMenu();
 		// console.log('onscroll', window.onscroll);
