@@ -32,6 +32,7 @@ export const JournalProfileSubmitted = React.createClass({
 	featureAtom: function(id) {
 		this.props.handleFeatureAtom(id);
 	},
+	
 	rejectAtom: function(id) {
 		this.props.handleRejectAtom(id);
 	},

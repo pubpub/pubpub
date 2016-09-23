@@ -128,6 +128,8 @@
   "JournalProfileCollections.Description": "Collections let you organize the pubs featured by this journal. Add pubs to collections on the {featured} page.",
   "JournalProfileDetails.Description": "Used as the Journal's preview image in search results and throughout the site.",
   "JournalProfileDetails.Description2": "Use to describe longer details, peer-review process, featuring standards, etc. This text will appear at pubpub.org/{slug}/about.",
+  "journalProfileFeatured.SearchForPubToFeature": "Search for Pub to Feature",
+  "journalProfileFeatured.FeaturePub": "Feature Pub",
   "JournalProfileFeatured.AddToCollections": "Add to collections",
   "login.ForgotPassword": "Forgot Password?",
   "login.newToPubPub": "New to PubPub? Click to Sign Up!",

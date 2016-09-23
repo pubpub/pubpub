@@ -52,6 +52,32 @@ export function autocompleteUsers(req, res) {
 }
 app.get('/autocompleteUsers', autocompleteUsers);
 
+export function autocompleteAtoms(req, res) {
+	Atom.find({versions: {$not: {$size: 0}}, isPublished: true}, {'_id': 1, 'slug': 1, 'title': 1, 'previewImage': 1, 'createDate': 1, 'lastUpdated': 1}).lean().exec()
+	.then(function(atoms) {
+		const objects = atoms;
+
+		const sifter = new Sifter(objects);
+		const result = sifter.search(req.query.string, {
+			fields: ['slug', 'title', '_id'],
+			sort: [{field: 'title', direction: 'asc'}],
+			limit: 10,
+			conjunction: 'and',
+		});
+
+		const output = [];
+		_.each(result.items, function(item) {
+			output.push(objects[item.id]);
+		});
+		return res.status(201).json(output);
+	})
+	.catch(function(err) {
+		console.log('Error in autocomplete', err);
+		return res.status(500).json([]);
+	});
+}
+app.get('/autocompleteAtoms', autocompleteAtoms);
+
 // export function autocompletePubsAll(req, res) {
 // 	const query = {history: {$not: {$size: 0}}, 'settings.isPrivate': {$ne: true}};
 

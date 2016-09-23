@@ -76,12 +76,12 @@ function getJournalLoad(state) {
 
 function getJournalSuccess(state, result) {
 	return state.merge({
-		journalData: result.journalData,
-		submittedData: result.submittedData,
-		featuredData: result.featuredData,
-		atomsData: result.atomsData,
-		adminsData: result.adminsData,
-		followersData: result.followersData,
+		journalData: result.journalData || {},
+		submittedData: result.submittedData || [],
+		featuredData: result.featuredData || [],
+		atomsData: result.atomsData || [],
+		adminsData: result.adminsData || [],
+		followersData: result.followersData || [],
 		loading: false,
 		error: null,
 	});
@@ -151,17 +151,23 @@ function deleteCollectionSuccess(state, result) {
 // ---------------------
 function featureAtomSuccess(state, result) {
 	const newSubmittedData = state.getIn(['submittedData']).map((item)=>{
-		if (item.get('_id') === result._id) {
+		const submittedLink = result.submittedLink;
+		if (item.get('_id') === submittedLink.sub_id) {
 			return item.merge({
-				inactive: result.inactive,
-				inactiveDate: result.inactiveDate,
-				inactiveBy: result.inactiveBy,
-				inactiveNote: result.inactiveNote,
+				inactive: submittedLink.inactive,
+				inactiveDate: submittedLink.inactiveDate,
+				inactiveBy: submittedLink.inactiveBy,
+				inactiveNote: submittedLink.inactiveNote,
 			});
 		}
 		return item;
 	});
-	return state.set('submittedData', newSubmittedData);
+	const newFeaturedData = state.getIn(['featuredData']).push(result.featuredLink);
+	
+	return state.merge({
+		submittedData: newSubmittedData,
+		featuredData: newFeaturedData
+	});
 }
 
 
