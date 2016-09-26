@@ -194,7 +194,7 @@ export const DocumentEditor = React.createClass({
 		const currentFrom = currentSelection.$from.pos;
 		const currentSelectedNode = currentSelection.node;
 		if (evt) { evt.stopPropagation(); }
-		pm.tr.setNodeType(currentFrom, currentSelectedNode.type, {...currentSelectedNode.attrs, [key]: value}).apply();
+		pm.tr.setNodeType(currentFrom, currentSelectedNode.type, {...currentSelectedNode, [key]: value}).apply();
 	},
 
 	sizeChange: function(evt) {
@@ -466,7 +466,7 @@ export const DocumentEditor = React.createClass({
 				<div id={'atom-body-editor'} className={'document-body'} style={[styles.wsywigBlock, this.state.showMarkdown && styles.wsywigWithMarkdown]}></div>
 
 				{this.state.embedLayoutCoords &&
-					<div style={[styles.embedLayoutEditor, {left: this.state.embedLayoutCoords.left - 2, top: this.state.embedLayoutCoords.bottom}]}>
+					<div style={[styles.embedLayoutEditor, {left: `calc(${this.state.embedLayoutCoords.left}px - 25vw)`, top: this.state.embedLayoutCoords.bottom}]}>
 						<div onClick={this.setEmbedAttribute.bind(this, 'align', 'inline')} style={[this.state.embedAttrs.align === 'inline' && styles.activeAlign]}>Inline</div>
 						<div onClick={this.setEmbedAttribute.bind(this, 'align', 'full')} style={[this.state.embedAttrs.align === 'full' && styles.activeAlign]}>Full</div>
 						<div onClick={this.setEmbedAttribute.bind(this, 'align', 'left')} style={[this.state.embedAttrs.align === 'left' && styles.activeAlign]}>Left</div>

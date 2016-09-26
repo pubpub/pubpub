@@ -43,12 +43,15 @@ class ElementSchema {
 			if (currentSelectedNode && currentSelectedNode.type.name === 'embed') {
 				const nodeId = currentSelectedNode.attrs.nodeId;
 				const foundNode = this.elementStore[nodeId];
+				let size = {width: 0, height: 0};
 				if (foundNode) {
-					console.log('Got size', foundNode.element.getSize());
+					size = foundNode.element.getSize();
 				}
 
 				const coords = pm.coordsAtPos(currentFrom);
 				coords.bottom = coords.bottom + window.scrollY - 40;
+				coords.left = coords.left;
+				console.log(size);
 				this.updateMenu({
 					embedLayoutCoords: coords,
 					embedAttrs: currentSelectedNode.attrs,
