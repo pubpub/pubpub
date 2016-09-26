@@ -1,6 +1,8 @@
 import AtomViewerPane from 'containers/Atom/AtomViewerPane';
+import ReactDOM from 'react-dom';
 import React, {PropTypes} from 'react';
 import {ensureImmutable} from 'reducers';
+
 // import {safeGetInToJS} from 'utils/safeParse';
 
 export const EmbedWrapper = React.createClass({
@@ -15,6 +17,8 @@ export const EmbedWrapper = React.createClass({
 		data: PropTypes.object,
 		citeCount: PropTypes.number,
 		context: PropTypes.oneOf(['reference-list', 'document', 'library']), //where the embed is being used
+		updateParams: PropTypes.number,
+		editing: PropTypes.bool,
 	},
 	getDefaultProps: function() {
 		return {
@@ -27,6 +31,13 @@ export const EmbedWrapper = React.createClass({
 
 	componentWillUnmount: function() {
 		// console.log('unmounted atom!');
+	},
+
+	getSize: function() {
+		return {
+			width: ReactDOM.findDOMNode(this).offsetWidth,
+			height: ReactDOM.findDOMNode(this).offsetHeight
+		};
 	},
 
 	setCiteCount: function(citeCount) {
@@ -66,20 +77,6 @@ export const EmbedWrapper = React.createClass({
 
 		if (this.props.mode === 'cite') {
 			const number = this.state.citeCount || this.props.citeCount || '?';
-
-			// if (!this.props.citeCount) {
-			// 	const sourceElems = document.getElementsByClassName('cite-wrapper');
-			// 	const elemIDs = {};
-			// 	for (let index = 0; index < sourceElems.length; index++) {
-			// 		const element = sourceElems[index];
-			// 		if (element.getAttribute('data-source') in elemIDs === false) {
-			// 			elemIDs[element.getAttribute('data-source')] = Object.keys(elemIDs).length + 1;
-			// 		}
-			// 	}
-			// 	number = elemIDs[this.props.source];
-			// 	console.log('number is, ', number);
-			// }
-
 
 			const styleButton = {
 				padding: '0em 0em',
@@ -121,7 +118,7 @@ export const EmbedWrapper = React.createClass({
 		}
 
 		return (
-			<div className={'pub-embed ' + this.props.className} id={this.props.id} style={style}>
+			<div ref="embedroot" className={'pub-embed ' + this.props.className} id={this.props.id} style={style}>
 				<AtomViewerPane atomData={atomData} renderType={'embed'} context={this.props.context}/>
 				<div className={'caption'}>{this.props.caption}</div>
 			</div>

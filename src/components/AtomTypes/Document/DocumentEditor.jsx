@@ -156,7 +156,7 @@ export const DocumentEditor = React.createClass({
 		});
 
 		pm.on.transformPastedHTML.add(this.transformHTML);
-		ElementSchema.initiateProseMirror(pm);
+		ElementSchema.initiateProseMirror(pm, this.updateEmbedEditor);
 
 		this.moveMenu();
 		// console.log('onscroll', window.onscroll);
@@ -180,6 +180,13 @@ export const DocumentEditor = React.createClass({
 			element.remove();
 		}
 		return htmlNode.innerHTML;
+	},
+
+	updateEmbedEditor: function({embedLayoutCoords, embedAttrs}) {
+		this.setState({
+			embedLayoutCoords,
+			embedAttrs,
+		});
 	},
 
 	setEmbedAttribute: function(key, value, evt) {

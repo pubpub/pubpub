@@ -53,29 +53,30 @@ exports.StrikeThroughMark = StrikeThroughMark;
 // - **`caption`**: String caption to place under the embed
 // - **`data`**: Cached version/atom data. This is not serialized into markdown (in the long-term), but is kept here for fast rendering
 
-const domHashes = {};
-
 class Embed extends Inline {
 	get attrs() {
 		return {
 			source: new Attribute,
 			className: new Attribute({default: ''}),
 			id: new Attribute({default: ''}),
+      nodeId: new Attribute({default: null}),
 			align: new Attribute({default: 'full'}),
 			size: new Attribute({default: ''}),
 			caption: new Attribute({default: ''}),
 			mode: new Attribute({default: 'embed'}), // mode = embed || cite
 			data: new Attribute({default: {}}),
 			selected: new Attribute({default: false}),
-      reactElement: new Attribute({default: null}),
+      figureName: new Attribute({default: {}}),
 		};
 	}
 	get draggable() { return true; }
 
+
+  // What if this doesnt exist?
 	get matchDOMTag() {
 		return {'.embed': dom => {
-			const domHash = dom.getAttribute('data-nodeHash');
-			const nodeAttrs = ElementSchema.findNodeByHash(domHash);
+			const nodeId = dom.getAttribute('data-nodeId');
+			const nodeAttrs = ElementSchema.findNodeById(nodeId);
 			return {
 				source: nodeAttrs.source,
 				data: nodeAttrs.data,
@@ -84,19 +85,47 @@ class Embed extends Inline {
 				caption: nodeAttrs.caption,
 				mode: nodeAttrs.mode,
 				className: nodeAttrs.className,
+        figureName: nodeAttrs.figureName,
+        nodeId: nodeAttrs.nodeId,
 				children: null,
 				childNodes: null,
-        reactElement: null,
 			};
 		}};
 	}
 
 	toDOM(node) {
-		return ElementSchema.creatElementAtNode(node);
+		return ElementSchema.createElementAtNode(node);
 	}
 }
 
 exports.Embed = Embed;
+
+
+class Pointer extends Inline {
+	get attrs() {
+		return {
+			figureName: new Attribute({default: ''}),
+		};
+	}
+	get draggable() { return true; }
+
+	get matchDOMTag() {
+		return {'.pointer': dom => {
+			const figureName = dom.getAttribute('data-figureName');
+
+			return {
+				figureName: figureName,
+			};
+		}};
+	}
+
+	toDOM(node) {
+		return ElementSchema.createPointerAtNode(node);
+	}
+}
+
+exports.Pointer = Pointer;
+
 
 export const schema = new Schema({
 	nodes: {
@@ -117,6 +146,7 @@ export const schema = new Schema({
 		emoji: {type: Emoji, group: 'inline'},
 		image: {type: Image, group: 'inline'},
 		embed: {type: Embed, group: 'inline'},
+		pointer: {type: Pointer, group: 'inline'},
 		hard_break: {type: HardBreak, group: 'inline'}
 	},
 	marks: {
