@@ -9,9 +9,9 @@ import {FormattedMessage} from 'react-intl';
 import {Subscription, StoppableSubscription} from 'subscription';
 import {globalMessages} from 'utils/globalMessages';
 import {safeGetInToJS} from 'utils/safeParse';
-import {s3Upload} from 'utils/uploadFile';
 
 import ElementSchema from './proseEditor/elementSchema';
+import EmbedEditor from './proseEditor/EmbedEditor';
 import StatusTray from './DocumentEditorStatusTray';
 import {markdownParser, markdownSerializer, schema} from './proseEditor';
 import {schema as pubSchema} from './proseEditor/schema';
@@ -465,15 +465,10 @@ export const DocumentEditor = React.createClass({
 				<textarea id="markdown" onChange={this.markdownChange} style={[styles.textarea, this.state.showMarkdown && styles.textareaVisible]}></textarea>
 				<div id={'atom-body-editor'} className={'document-body'} style={[styles.wsywigBlock, this.state.showMarkdown && styles.wsywigWithMarkdown]}></div>
 
+
 				{this.state.embedLayoutCoords &&
 					<div style={[styles.embedLayoutEditor, {left: `calc(${this.state.embedLayoutCoords.left}px - 25vw)`, top: this.state.embedLayoutCoords.bottom}]}>
-						<div onClick={this.setEmbedAttribute.bind(this, 'align', 'inline')} style={[this.state.embedAttrs.align === 'inline' && styles.activeAlign]}>Inline</div>
-						<div onClick={this.setEmbedAttribute.bind(this, 'align', 'full')} style={[this.state.embedAttrs.align === 'full' && styles.activeAlign]}>Full</div>
-						<div onClick={this.setEmbedAttribute.bind(this, 'align', 'left')} style={[this.state.embedAttrs.align === 'left' && styles.activeAlign]}>Left</div>
-						<div onClick={this.setEmbedAttribute.bind(this, 'align', 'right')} style={[this.state.embedAttrs.align === 'right' && styles.activeAlign]}>Right</div>
-						<input type="text" onChange={this.sizeChange} defaultValue={this.state.embedAttrs.size}/>
-						<textarea type="text" onChange={this.captionChange} defaultValue={this.state.embedAttrs.caption}></textarea>
-
+						<EmbedEditor embedLayoutCoords={this.state.embedLayoutCoords} embedAttrs={this.state.embedAttrs} updateCallback={this.setEmbedAttribute}/>
 					</div>
 				}
 
