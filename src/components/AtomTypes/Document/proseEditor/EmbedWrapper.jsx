@@ -34,9 +34,18 @@ export const EmbedWrapper = React.createClass({
 	},
 
 	getSize: function() {
+		const elem = ReactDOM.findDOMNode(this);
+		const elemStyle = window.getComputedStyle(elem);
+		const rect = elem.getBoundingClientRect();
 		return {
-			width: ReactDOM.findDOMNode(this).offsetWidth,
-			height: ReactDOM.findDOMNode(this).offsetHeight
+			width: elem.clientWidth,
+			height: ReactDOM.findDOMNode(this).offsetHeight,
+			left: rect.left,
+			top: ReactDOM.findDOMNode(this).offsetTop,
+			marginLeft: elemStyle.marginLeft,
+			rectLeft: rect.left,
+			styleHeight: parseInt(elemStyle.getPropertyValue('height'), 0),
+			innerWidth: elem.innerWidth,
 		};
 	},
 
@@ -121,6 +130,7 @@ export const EmbedWrapper = React.createClass({
 			<div ref="embedroot" className={'pub-embed ' + this.props.className} id={this.props.id} style={style}>
 				<AtomViewerPane atomData={atomData} renderType={'embed'} context={this.props.context}/>
 				<div className={'caption'}>{this.props.caption}</div>
+				{(this.props.editing) ? <div>EDITING NOW</div> : null }
 			</div>
 		);
 	}

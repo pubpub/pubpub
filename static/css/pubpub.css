@@ -311,6 +311,9 @@ h2 {
 	left: -2px;
 	top: calc(100% + 2px);
 	min-width: calc(100% + 2px);
+}
+
+.arrow-down-child, .contrastbox {
 	border: 1px solid #2C2A2B;
 	color: #2C2A2B;
 	background-color: #F3F3F4;

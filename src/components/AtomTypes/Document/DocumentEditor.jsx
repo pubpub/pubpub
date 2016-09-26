@@ -156,7 +156,7 @@ export const DocumentEditor = React.createClass({
 		});
 
 		pm.on.transformPastedHTML.add(this.transformHTML);
-		ElementSchema.initiateProseMirror(pm, this.updateEmbedEditor);
+		ElementSchema.initiateProseMirror(pm, this.updateEmbedEditor, this.setEmbedAttribute);
 
 		this.moveMenu();
 		// console.log('onscroll', window.onscroll);
@@ -190,11 +190,11 @@ export const DocumentEditor = React.createClass({
 	},
 
 	setEmbedAttribute: function(key, value, evt) {
-		const currentSelection = pm.selection;
+		const currentSelection = this.pm.selection;
 		const currentFrom = currentSelection.$from.pos;
 		const currentSelectedNode = currentSelection.node;
 		if (evt) { evt.stopPropagation(); }
-		pm.tr.setNodeType(currentFrom, currentSelectedNode.type, {...currentSelectedNode, [key]: value}).apply();
+		this.pm.tr.setNodeType(currentFrom, currentSelectedNode.type, {...currentSelectedNode.attrs, [key]: value}).apply();
 	},
 
 	sizeChange: function(evt) {
@@ -467,8 +467,8 @@ export const DocumentEditor = React.createClass({
 
 
 				{this.state.embedLayoutCoords &&
-					<div style={[styles.embedLayoutEditor, {left: `calc(${this.state.embedLayoutCoords.left}px - 25vw)`, top: this.state.embedLayoutCoords.bottom}]}>
-						<EmbedEditor embedLayoutCoords={this.state.embedLayoutCoords} embedAttrs={this.state.embedAttrs} updateCallback={this.setEmbedAttribute}/>
+					<div style={[styles.embedLayoutEditor, {left: this.state.embedLayoutCoords.left, top: this.state.embedLayoutCoords.bottom}]}>
+						<EmbedEditor embedLayoutCoords={this.state.embedLayoutCoords} embedAttrs={this.state.embedAttrs} saveCallback={this.setEmbedAttribute}/>
 					</div>
 				}
 

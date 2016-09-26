@@ -18,19 +18,48 @@ export const EmbedEditor = React.createClass({
 		const {participants, status} = this.props;
 
 		return (
-      <div>
-        <div onClick={this.setEmbedAttribute.bind(this, 'align', 'inline')} style={[this.props.embedAttrs.align === 'inline' && styles.activeAlign]}>Inline</div>
-        <div onClick={this.setEmbedAttribute.bind(this, 'align', 'full')} style={[this.props.embedAttrs.align === 'full' && styles.activeAlign]}>Full</div>
-        <div onClick={this.setEmbedAttribute.bind(this, 'align', 'left')} style={[this.props.embedAttrs.align === 'left' && styles.activeAlign]}>Left</div>
-        <div onClick={this.setEmbedAttribute.bind(this, 'align', 'right')} style={[this.props.embedAttrs.align === 'right' && styles.activeAlign]}>Right</div>
-        <input type="text" onChange={this.sizeChange} defaultValue={this.props.embedAttrs.size}/>
-        <textarea type="text" onChange={this.captionChange} defaultValue={this.props.embedAttrs.caption}></textarea>
+      <div className={'contrastbox'} style={styles.box}>
+
+        <label htmlFor={'test'}>
+          Alignment
+        </label>
+
+        <div style={styles.alignDiv} name={'test'}>
+          <div onClick={this.setEmbedAttribute.bind(this, 'align', 'inline')} style={[styles.alignOption, this.props.embedAttrs.align === 'inline' && styles.activeAlign]}>Inline</div>
+          <div onClick={this.setEmbedAttribute.bind(this, 'align', 'full')} style={[styles.alignOption, this.props.embedAttrs.align === 'full' && styles.activeAlign]}>Full</div>
+          <div onClick={this.setEmbedAttribute.bind(this, 'align', 'left')} style={[styles.alignOption, this.props.embedAttrs.align === 'left' && styles.activeAlign]}>Left</div>
+          <div onClick={this.setEmbedAttribute.bind(this, 'align', 'right')} style={[styles.alignOption, this.props.embedAttrs.align === 'right' && styles.activeAlign]}>Right</div>
+        </div>
+
+        <label htmlFor={'sizeNote'}>
+          Size
+        </label>
+        <input type="text" id={'sizeNote'} name={'size'}/>
+
+        <label htmlFor={'captionNote'}>
+          Caption
+        </label>
+        <input type="text" id={'captionNote'} name={'caption'}/>
+
       </div>
 	  );
 
 	}
 });
 
-const styles = {};
+const styles = {
+  box: {
+    padding: '0.6em 1.2em',
+    fontSize: '0.8em'
+  },
+  alignDiv: {
+    paddingBottom: '0.5em',
+  },
+  alignOption: {
+    display: 'inline-block',
+    paddingRight: '0.8em',
+    cursor: 'pointer',
+  }
+};
 
 export default Radium(EmbedEditor);

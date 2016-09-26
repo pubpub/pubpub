@@ -8,6 +8,7 @@ import Pointer from './Pointer';
 class ElementSchema {
 	constructor() {
 		this.elementStore = {};
+		this.editingElem = null;
 	}
 	reInit() {
 		this.elementStore = {};
@@ -17,9 +18,10 @@ class ElementSchema {
 		return Math.floor(Math.random() * 10000000);
 	}
 
-	initiateProseMirror = (pm, updateMenuCallback) => {
+	initiateProseMirror = (pm, updateMenuCallback, setEmbedAttribute) => {
 		this.pm = pm;
 		this.updateMenu = updateMenuCallback;
+		this.setEmbedAttribute = setEmbedAttribute;
 
 		pm.on.selectionChange.add(()=>{
 			const currentSelection = pm.selection;
@@ -49,15 +51,18 @@ class ElementSchema {
 				}
 
 				const coords = pm.coordsAtPos(currentFrom);
-				coords.bottom = coords.bottom + window.scrollY - 40;
-				coords.left = coords.left;
 				console.log(size);
+				console.log(coords);
+				coords.bottom = coords.bottom + window.scrollY;
+				coords.left = size.left - size.width;
+				this.editingElem = nodeId;
 				this.updateMenu({
 					embedLayoutCoords: coords,
 					embedAttrs: currentSelectedNode.attrs,
 				});
 
 			} else {
+				this.editingElem = null;
 				this.updateMenu({
 					embedLayoutCoords: undefined,
 					embedAttrs: undefined,
@@ -111,18 +116,30 @@ class ElementSchema {
 
 	createElementAtNode = (node) => {
 
+		const nodeId = node.attrs.nodeId;
+
+		/*
+		if (this.elementStore[nodeId] && this.elementStore[nodeId].dom) {
+			 console.log('returning old node!');
+			 return this.elementStore[nodeId].dom;
+		}
+		*/
+
 		const domParent = document.createElement('span');
 
-		const reactElement = ReactDOM.render(<EmbedWrapper {...node.attrs}/>, domParent);
+		const editing = (this.editingElem === nodeId);
+
+		const reactElement = ReactDOM.render(<EmbedWrapper setEmbedAttribute={this.setEmbedAttribute} editing={editing} {...node.attrs}/>, domParent);
 		const dom = domParent.childNodes[0];
 		dom.className += ' embed';
-		const nodeId = node.attrs.nodeId;
+
 		dom.setAttribute('data-nodeId', nodeId);
-		this.elementStore[nodeId] = {node: node, element: reactElement};
+		this.elementStore[nodeId] = {node: node, element: reactElement, dom: domParent, active: true};
 
 		dom.addEventListener('DOMNodeRemovedFromDocument', (evt) => {
 			ReactDOM.unmountComponentAtNode(domParent);
 			delete this.elementStore[nodeId];
+			// this.elementStore[nodeId].active = false;
 		});
 
 		// this.sortNodes();
