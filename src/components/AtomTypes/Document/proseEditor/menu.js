@@ -108,16 +108,23 @@ function buildMenuItems(schema) {
 	items.insertEmbed = insertItem(schema.nodes.embed, {
 		title: 'Insert Image, Video, Reference, etc',
 		icon: {text: 'insert'},
-		attrs: (pm, callback) => window.toggleMedia(pm, callback, schema.nodes.embed),
+		attrs: (pm, callback) =>{
+			const idGenerationCallback = (nodeAttrs) => {
+				const randomId = Math.floor(Math.random()*10000000);
+				nodeAttrs.nodeId = randomId;
+				callback(nodeAttrs);
+			};
+			window.toggleMedia(pm, callback, schema.nodes.embed)
+		},
 	});
 
 	const embedSelectTest = function(pm) {
-		const {node} = pm.selection; 
+		const {node} = pm.selection;
 		return node && node.type.name === 'embed';
 	};
 
 	items.setAlignInline = new MenuItem({
-		run(pm) { 
+		run(pm) {
 			const selection = pm.selection;
 			pm.tr.setNodeType(selection.$from.pos, selection.node.type, {...selection.node.attrs, align: 'inline'}).apply();
 		},
@@ -130,7 +137,7 @@ function buildMenuItems(schema) {
 		icon: {text: 'inline'},
 	});
 	items.setAlignFull = new MenuItem({
-		run(pm) { 
+		run(pm) {
 			const selection = pm.selection;
 			pm.tr.setNodeType(selection.$from.pos, selection.node.type, {...selection.node.attrs, align: 'full'}).apply();
 		},
@@ -143,7 +150,7 @@ function buildMenuItems(schema) {
 		icon: {text: 'full'},
 	});
 	items.setAlignLeft = new MenuItem({
-		run(pm) { 
+		run(pm) {
 			const selection = pm.selection;
 			pm.tr.setNodeType(selection.$from.pos, selection.node.type, {...selection.node.attrs, align: 'left'}).apply();
 		},
@@ -156,7 +163,7 @@ function buildMenuItems(schema) {
 		icon: {text: 'left'},
 	});
 	items.setAlignRight = new MenuItem({
-		run(pm) { 
+		run(pm) {
 			const selection = pm.selection;
 			pm.tr.setNodeType(selection.$from.pos, selection.node.type, {...selection.node.attrs, align: 'right'}).apply();
 		},
@@ -170,7 +177,7 @@ function buildMenuItems(schema) {
 	});
 
 	// items.setAlignLeft = new MenuItem({
-	// 	run(pm) { 
+	// 	run(pm) {
 	// 		const selection = pm.selection;
 	// 		pm.tr.setNodeType(selection.$from.pos, selection.node.type, {...selection.node.attrs, align: 'full'}).apply();
 	// 	},
@@ -186,10 +193,10 @@ function buildMenuItems(schema) {
 	// 		return elt('h3', null, 'Son of a ' + pm.selection.node.attrs.size);
 	// 	},
 	// });
-	
+
 
 	// items.setAlignLeft = new MenuItem({
-	// 	run(pm) { 
+	// 	run(pm) {
 	// 		const selection = pm.selection;
 	// 		pm.tr.setNodeType(selection.$from.pos, selection.node.type, {...selection.node.attrs, align: 'left'}).apply();
 	// 	},
@@ -233,7 +240,7 @@ function buildMenuItems(schema) {
 			const dom = document.createElement('div');
 			dom.appendChild(input);
 			input.addEventListener('mousedown', event => {
-				event.preventDefault(); 
+				event.preventDefault();
 				event.stopPropagation();
 				input.focus();
 			});
