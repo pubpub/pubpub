@@ -1,7 +1,8 @@
-import React from 'react';
 import murmurhash from 'murmurhash';
+import React from 'react';
 
 import EmbedWrapper from './EmbedWrapper';
+import Pointer from './Pointer';
 
 let citeCounts = {};
 let citeObjects = {};
@@ -65,7 +66,7 @@ export const renderReactFromJSON = function(item, isRoot) {
 					return <s key={index}>{previous}</s>;
 				case 'link':
 					return <a href={current.href} title={current.title} key={index} target={'_top'}>{previous}</a>;
-				default: 
+				default:
 					return previous;
 				}
 			}, node.text);
@@ -79,6 +80,8 @@ export const renderReactFromJSON = function(item, isRoot) {
 				citeObjects[node.attrs.data._id] = node.attrs.data;
 			}
 			return <EmbedWrapper {...node.attrs} key={index} citeCount={citeCount}/>;
+		case 'pointer':
+			return <Pointer {...node.attrs} />;
 		default:
 			console.log('Error with ', node);
 		}
