@@ -34,14 +34,14 @@ export const EmbedWrapper = React.createClass({
 	},
 
 	getSize: function() {
-		const elem = ReactDOM.findDOMNode(this);
+		const elem = ReactDOM.findDOMNode(this.refs.menupointer);
 		const elemStyle = window.getComputedStyle(elem);
 		const rect = elem.getBoundingClientRect();
 		return {
 			width: elem.clientWidth,
-			height: ReactDOM.findDOMNode(this).offsetHeight,
-			left: rect.left,
-			top: ReactDOM.findDOMNode(this).offsetTop,
+			height: ReactDOM.findDOMNode(this.refs.menupointer).offsetHeight,
+			left: elem.offsetLeft,
+			top: elem.offsetTop,
 			marginLeft: elemStyle.marginLeft,
 			rectLeft: rect.left,
 			styleHeight: parseInt(elemStyle.getPropertyValue('height'), 0),
@@ -128,9 +128,10 @@ export const EmbedWrapper = React.createClass({
 
 		return (
 			<div ref="embedroot" className={'pub-embed ' + this.props.className} id={this.props.id} style={style}>
-				<AtomViewerPane atomData={atomData} renderType={'embed'} context={this.props.context}/>
-				<div className={'caption'}>{this.props.caption}</div>
-				{(this.props.editing) ? <div>EDITING NOW</div> : null }
+				<AtomViewerPane atomData={atomData} renderType={'embed'} context={this.props.context}>
+					<span ref="menupointer"></span>
+					<span style={{textAlign: 'left'}}>{this.props.caption}</span>
+				</AtomViewerPane>
 			</div>
 		);
 	}

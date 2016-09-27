@@ -53,8 +53,8 @@ class ElementSchema {
 				const coords = pm.coordsAtPos(currentFrom);
 				console.log(size);
 				console.log(coords);
-				coords.bottom = coords.bottom + window.scrollY;
-				coords.left = size.left - size.width;
+				coords.bottom = size.top;
+				coords.left = size.left;
 				this.editingElem = nodeId;
 				this.updateMenu({
 					embedLayoutCoords: coords,

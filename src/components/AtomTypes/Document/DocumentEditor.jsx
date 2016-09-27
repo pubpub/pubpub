@@ -463,14 +463,17 @@ export const DocumentEditor = React.createClass({
 				{/* <div className={'opacity-on-hover'} style={styles.iconLeft} onClick={this.toggleMarkdown}></div> */}
 
 				<textarea id="markdown" onChange={this.markdownChange} style={[styles.textarea, this.state.showMarkdown && styles.textareaVisible]}></textarea>
-				<div id={'atom-body-editor'} className={'document-body'} style={[styles.wsywigBlock, this.state.showMarkdown && styles.wsywigWithMarkdown]}></div>
+				<div id={'atom-body-editor'} className={'document-body'} style={[styles.wsywigBlock, this.state.showMarkdown && styles.wsywigWithMarkdown]}>
+
+					{this.state.embedLayoutCoords &&
+						<div style={[styles.embedLayoutEditor, {left: this.state.embedLayoutCoords.left, top: this.state.embedLayoutCoords.bottom}]}>
+							<EmbedEditor embedLayoutCoords={this.state.embedLayoutCoords} embedAttrs={this.state.embedAttrs} saveCallback={this.setEmbedAttribute}/>
+						</div>
+					}
+
+				</div>
 
 
-				{this.state.embedLayoutCoords &&
-					<div style={[styles.embedLayoutEditor, {left: this.state.embedLayoutCoords.left, top: this.state.embedLayoutCoords.bottom}]}>
-						<EmbedEditor embedLayoutCoords={this.state.embedLayoutCoords} embedAttrs={this.state.embedAttrs} saveCallback={this.setEmbedAttribute}/>
-					</div>
-				}
 
 			{/* </Dropzone> */}
 			</div>
@@ -501,6 +504,7 @@ styles = {
 		backgroundColor: 'white',
 		border: '2px solid #808284',
 		boxShadow: '0px 2px 4px #58585B',
+		zIndex: '10000',
 	},
 	activeAlign: {
 		color: 'red',
@@ -537,6 +541,7 @@ styles = {
 		// maxWidth: 'calc(650px + 10em)',
 		backgroundColor: 'white',
 		margin: '0 auto',
+		position: 'relative',
 		// boxShadow: '0px 1px 3px 1px #BBBDC0',
 		minHeight: '600px',
 		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {

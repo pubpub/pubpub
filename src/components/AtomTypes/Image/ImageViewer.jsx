@@ -1,8 +1,8 @@
-import React, {PropTypes} from 'react';
 import Radium from 'radium';
-import {safeGetInToJS} from 'utils/safeParse';
-import {globalMessages} from 'utils/globalMessages';
+import React, {PropTypes} from 'react';
 import {FormattedMessage} from 'react-intl';
+import {globalMessages} from 'utils/globalMessages';
+import {safeGetInToJS} from 'utils/safeParse';
 
 let styles;
 
@@ -22,7 +22,10 @@ export const ImageViewer = React.createClass({
 		switch (this.props.renderType) {
 		case 'embed':
 		case 'static-embed':
-			return <img src={scaledURL} alt={title} style={styles.image}/>;
+			return (<figure style={styles.figure}>
+				<img style={styles.img} src={scaledURL} alt={title} style={styles.image}/>
+				<figcaption style={styles.img}>{this.props.children}</figcaption>
+			</figure>);
 		case 'full':
 		case 'static-full':
 		default:
@@ -55,6 +58,12 @@ export const ImageViewer = React.createClass({
 export default Radium(ImageViewer);
 
 styles = {
+	figure: {
+		display: 'table',
+	},
+	img: {
+		display: 'table-row',
+	},
 	key: {
 		fontSize: '1.2em',
 	},
