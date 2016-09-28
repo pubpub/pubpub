@@ -118,7 +118,10 @@ export const EmbedWrapper = React.createClass({
 		return (
 			<div className={'pub-embed ' + this.props.className} id={this.props.id} style={style}>
 				<AtomViewerPane atomData={atomData} renderType={'embed'} context={this.props.context}/>
-				<div className={'caption'}>{this.props.caption}</div>
+				{!!this.props.caption &&
+					<div className={'caption'}>{this.props.caption}</div>
+				}
+				
 			</div>
 		);
 	}
