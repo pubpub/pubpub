@@ -33,15 +33,17 @@ export function createReplyDocument(type, versionContent, title, replyTo, rootRe
 	};
 }
 
-export function setYayNay(type, linkID, userID) {
+export function setYayNay(type, linkID, remove, userID) {
 	return {
 		types: [SET_YAY_NAY_LOAD, SET_YAY_NAY_SUCCESS, SET_YAY_NAY_FAIL],
 		promise: (client) => client.post('/setYayNay', {data: {
 			type: type,
 			linkID: linkID,
+			remove: remove,
 		}}),
 		voteType: type,
 		linkID: linkID,
+		remove: remove,
 		userID: userID,
 	};
 }

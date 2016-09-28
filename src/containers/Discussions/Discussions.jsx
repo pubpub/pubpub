@@ -111,13 +111,13 @@ export const Discussions = React.createClass({
 		// this.props.dispatch(addDiscussion(discussionObject, activeSaveID));
 	},
 
-	discussionVoteSubmit: function(type, linkID) {
+	discussionVoteSubmit: function(type, linkID, remove) {
 		if (!this.props.loginData.get('loggedIn')) {
 			const atomData = safeGetInToJS(this.props.atomData, ['atomData']) || {};
 			return this.props.dispatch(push('/login?redirect=/pub/' + atomData.slug));
 		}
 		const userID = this.props.loginData.getIn(['userData', '_id']);
-		this.props.dispatch(setYayNay(type, linkID, userID));
+		this.props.dispatch(setYayNay(type, linkID, remove, userID));
 	},
 
 

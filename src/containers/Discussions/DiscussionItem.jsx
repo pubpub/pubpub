@@ -37,7 +37,10 @@ export const DiscussionItem = React.createClass({
 	vote: function(type) {
 		const discussion = this.props.discussionData || {};
 		const linkData = discussion.linkData || {};
-		this.props.handleVoteSubmit(type, linkData._id);
+		const hasYayd = discussion.linkData ? discussion.linkData.metadata.yays.indexOf(this.props.userID) !== -1 : false;
+		const hasNayd = discussion.linkData ? discussion.linkData.metadata.nays.indexOf(this.props.userID) !== -1 : false;
+		const remove = (hasYayd && type === 'yay') || (hasNayd && type === 'nay');
+		this.props.handleVoteSubmit(type, linkData._id, remove);
 	},
 
 	render: function() {
