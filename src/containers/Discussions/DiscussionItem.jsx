@@ -13,10 +13,12 @@ let styles = {};
 export const DiscussionItem = React.createClass({
 	propTypes: {
 		discussionData: PropTypes.object,
+		userID: PropTypes.string,
 		setReplyTo: PropTypes.func,
 		index: PropTypes.string,
 		isPreview: PropTypes.bool,
 		linkTarget: PropTypes.string,
+		handleVoteSubmit: PropTypes.func,
 	},
 
 	getInitialState() {
@@ -32,6 +34,12 @@ export const DiscussionItem = React.createClass({
 		console.log('flagging');
 	},
 
+	vote: function(type) {
+		const discussion = this.props.discussionData || {};
+		const linkData = discussion.linkData || {};
+		this.props.handleVoteSubmit(type, linkData._id);
+	},
+
 	render: function() {
 		const discussion = this.props.discussionData || {};
 		const atomData = discussion.atomData || {};
@@ -43,13 +51,15 @@ export const DiscussionItem = React.createClass({
 		const docJSON = versionData.content && versionData.content.docJSON;
 		const date = versionData.createDate;
 
+		const hasYayd = discussion.linkData.metadata.yays.indexOf(this.props.userID) !== -1;
+		const hasNayd = discussion.linkData.metadata.nays.indexOf(this.props.userID) !== -1;
+
 		return (
 			<div>
 				<div style={styles.discussionHeader}>
 					<div style={styles.headerVotes}>
-
-						<div className={'lighter-bg-hover'} style={[styles.headerVote]}>^</div>
-						<div className={'lighter-bg-hover'} style={[styles.headerVote, styles.headerDownVote]}>^</div>
+						<div className={'lighter-bg-hover'} style={[styles.headerVote, hasYayd && styles.voteActive]} onClick={this.vote.bind(this, 'yay')}>^</div>
+						<div className={'lighter-bg-hover'} style={[styles.headerVote, styles.headerDownVote, hasNayd && styles.voteActive]} onClick={this.vote.bind(this, 'nay')}>^</div>
 					</div>
 					<div style={styles.headerDetails}>
 						{authorsData.map((authorLink, authorIndex)=> {
@@ -90,7 +100,7 @@ export const DiscussionItem = React.createClass({
 
 				<div style={styles.children}>
 					{children.map((child, childIndex)=> {
-						return <WrappedDiscussionItem linkTarget={this.props.linkTarget} discussionData={child} setReplyTo={this.props.setReplyTo} index={child.linkData._id} key={child.linkData._id}/>;
+						return <WrappedDiscussionItem linkTarget={this.props.linkTarget} discussionData={child} userID={this.props.userID} setReplyTo={this.props.setReplyTo} index={child.linkData._id} key={child.linkData._id} handleVoteSubmit={this.props.handleVoteSubmit}/>;
 					})}
 				</div>
 
@@ -135,6 +145,9 @@ styles = {
 		cursor: 'pointer',
 		color: '#808284',
 		overflow: 'hidden',
+	},
+	voteActive: {
+		color: 'black',
 	},
 	headerDownVote: {
 		transform: 'rotate(180deg)',

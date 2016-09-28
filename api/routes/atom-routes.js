@@ -852,3 +852,29 @@ export function deleteContributor(req, res) {
 	});
 }
 app.post('/deleteContributor', deleteContributor);
+
+export function setYayNay(req, res) {
+	const {linkID, type} = req.body;
+	const userID = req.user._id;
+	const tasks = type === 'yay'
+		? [
+			Link.update({_id: linkID, type: 'reply'}, {$addToSet: {'metadata.yays': userID}}),
+			Link.update({_id: linkID, type: 'reply'}, {$pull: {'metadata.nays': userID}})
+		]
+		: [
+			Link.update({_id: linkID, type: 'reply'}, {$pull: {'metadata.yays': userID}}),
+			Link.update({_id: linkID, type: 'reply'}, {$addToSet: {'metadata.nays': userID}})
+		];
+	
+	Promise.all(tasks)
+	.then(function(updateResult) {
+		return res.status(201).json('success');
+	})
+	.catch(function(error) {
+		console.log('error', error);
+		return res.status(500).json(error);
+	});
+
+	
+}
+app.post('/setYayNay', setYayNay);

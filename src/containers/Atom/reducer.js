@@ -39,6 +39,12 @@ import {
 	DELETE_CONTRIBUTOR_FAIL,
 } from './actions';
 
+import {
+	SET_YAY_NAY_LOAD,
+	SET_YAY_NAY_SUCCESS,
+	SET_YAY_NAY_FAIL,
+} from 'containers/Discussions/actions';
+
 /*--------*/
 // Load Actions
 /*--------*/
@@ -248,6 +254,45 @@ function deleteContributorSuccess(state, result) {
 	});
 }
 
+/* SetYayNay functions */
+/* ----------------------------- */
+function setYayNay(state, type, linkID, userID) {
+	const discussionsData = state.get('discussionsData').toJS();
+	const replyData = discussionsData.filter((reply)=> {
+		return reply.linkData._id === linkID;
+	});
+	const yays = replyData[0].linkData.metadata.yays;
+	const nays = replyData[0].linkData.metadata.nays;
+	const yaysIndex = yays.indexOf(userID);
+	const naysIndex = nays.indexOf(userID);
+
+	if (type === 'yay' && yaysIndex === -1) {
+		yays.push(userID);
+	}
+	if (type === 'nay' && naysIndex === -1) {
+		nays.push(userID);
+	}
+	if (type === 'nay' && yaysIndex !== -1) {
+		yays.splice(yaysIndex, 1);
+	}
+	if (type === 'yay' && naysIndex !== -1) {
+		nays.splice(naysIndex, 1);
+	}
+
+	const newDiscussionsData = discussionsData.map((reply)=> {
+		if (reply.linkData._id === linkID) {
+			reply.linkData.metadata.yays = yays;
+			reply.linkData.metadata.nays = nays;
+		}
+		return reply;
+	});
+
+	return state.merge({
+		discussionsData: ensureImmutable(newDiscussionsData)
+	});
+}
+
+
 /*--------*/
 // Bind actions to specific reducing functions.
 /*--------*/
@@ -311,6 +356,13 @@ export default function readerReducer(state = defaultState, action) {
 	case DELETE_CONTRIBUTOR_SUCCESS:
 		return deleteContributorSuccess(state, action.result);
 	case DELETE_CONTRIBUTOR_FAIL:
+		return state;
+
+	case SET_YAY_NAY_LOAD:
+		return setYayNay(state, action.voteType, action.linkID, action.userID);
+	case SET_YAY_NAY_SUCCESS:
+		return state;
+	case SET_YAY_NAY_FAIL:
 		return state;
 
 	default:

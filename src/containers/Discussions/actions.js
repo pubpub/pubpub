@@ -8,6 +8,10 @@ export const CREATE_REPLY_DOCUMENT_LOAD = 'discussions/CREATE_REPLY_DOCUMENT_LOA
 export const CREATE_REPLY_DOCUMENT_SUCCESS = 'discussions/CREATE_REPLY_DOCUMENT_SUCCESS';
 export const CREATE_REPLY_DOCUMENT_FAIL = 'discussions/CREATE_REPLY_DOCUMENT_FAIL';
 
+export const SET_YAY_NAY_LOAD = 'discussions/SET_YAY_NAY_LOAD';
+export const SET_YAY_NAY_SUCCESS = 'discussions/SET_YAY_NAY_SUCCESS';
+export const SET_YAY_NAY_FAIL = 'discussions/SET_YAY_NAY_FAIL';
+
 /*--------*/
 // Define Action creators
 //
@@ -26,5 +30,18 @@ export function createReplyDocument(type, versionContent, title, replyTo, rootRe
 			rootReply: rootReply,
 			highlightObject: highlightObject,
 		}})
+	};
+}
+
+export function setYayNay(type, linkID, userID) {
+	return {
+		types: [SET_YAY_NAY_LOAD, SET_YAY_NAY_SUCCESS, SET_YAY_NAY_FAIL],
+		promise: (client) => client.post('/setYayNay', {data: {
+			type: type,
+			linkID: linkID,
+		}}),
+		voteType: type,
+		linkID: linkID,
+		userID: userID,
 	};
 }

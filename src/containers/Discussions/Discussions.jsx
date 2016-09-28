@@ -6,13 +6,14 @@ import {markdownParser, markdownSerializer, schema} from 'components/AtomTypes/D
 import {FormattedMessage} from 'react-intl';
 import {connect} from 'react-redux';
 import { Link } from 'react-router';
+import {push} from 'redux-router';
 import {StoppableSubscription} from 'subscription';
 import {globalMessages} from 'utils/globalMessages';
 import {safeGetInToJS} from 'utils/safeParse';
 import {globalStyles} from 'utils/styleConstants';
 
 import DiscussionItem from './DiscussionItem';
-import {createReplyDocument} from './actions';
+import {createReplyDocument, setYayNay} from './actions';
 
 // import { StickyContainer as UnwrappedStickyContainer, Sticky } from 'react-sticky';
 // const StickyContainer = Radium(UnwrappedStickyContainer);
@@ -110,12 +111,14 @@ export const Discussions = React.createClass({
 		// this.props.dispatch(addDiscussion(discussionObject, activeSaveID));
 	},
 
-	// discussionVoteSubmit: function(type, discussionID, userYay, userNay) {
-	// 	if (!this.props.loginData.get('loggedIn')) {
-	// 		return this.props.dispatch(toggleVisibility());
-	// 	}
-	// 	this.props.dispatch(discussionVoteSubmit(type, discussionID, userYay, userNay));
-	// },
+	discussionVoteSubmit: function(type, linkID) {
+		if (!this.props.loginData.get('loggedIn')) {
+			const atomData = safeGetInToJS(this.props.atomData, ['atomData']) || {};
+			return this.props.dispatch(push('/login?redirect=/pub/' + atomData.slug));
+		}
+		const userID = this.props.loginData.getIn(['userData', '_id']);
+		this.props.dispatch(setYayNay(type, linkID, userID));
+	},
 
 
 	// archiveDiscussion: function(objectID) {
@@ -163,10 +166,11 @@ export const Discussions = React.createClass({
 		const isEmbed = this.props.query && this.props.query.embed;
 		const linkTarget = isEmbed ? '_parent' : '_self';
 
-		const atomData = safeGetInToJS(this.props.atomData, ['atomData']) || [];
+		const atomData = safeGetInToJS(this.props.atomData, ['atomData']) || {};
 		const discussionsData = safeGetInToJS(this.props.atomData, ['discussionsData']) || [];
 		const loggedIn = this.props.loginData && this.props.loginData.get('loggedIn');
 		const loginQuery = this.props.pathname && this.props.pathname !== '/' ? '?redirect=' + this.props.pathname : ''; // Query appended to login route. Used to redirect to a given page after succesful login.
+		const userID = safeGetInToJS(this.props.loginData, ['userData', '_id']) || '';
 
 		let replyToData;
 		const tempArray = discussionsData.map((item)=> {
@@ -256,7 +260,7 @@ export const Discussions = React.createClass({
 
 				<div className={'pub-discussions-wrapper'}>
 					{topChildren.map((discussion, index)=> {
-						return <DiscussionItem linkTarget={linkTarget} discussionData={discussion} setReplyTo={this.setReplyTo} index={discussion.linkData._id} key={'discussion-' + index}/>;
+						return <DiscussionItem linkTarget={linkTarget} discussionData={discussion} userID={userID} setReplyTo={this.setReplyTo} index={discussion.linkData._id} key={'discussion-' + index} handleVoteSubmit={this.discussionVoteSubmit}/>;
 					})}
 				</div>
 
