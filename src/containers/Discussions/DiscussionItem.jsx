@@ -99,7 +99,13 @@ export const DiscussionItem = React.createClass({
 				</div>
 
 				<div style={styles.children}>
-					{children.map((child, childIndex)=> {
+					{children.sort((foo, bar)=> {
+						const fooScore = foo.linkData.metadata.yays.length - foo.linkData.metadata.nays.length;
+						const barScore = bar.linkData.metadata.yays.length - bar.linkData.metadata.nays.length;
+						if (fooScore > barScore) { return -1; }
+						if (fooScore < barScore) { return 1; }
+						return 0;
+					}).map((child, childIndex)=> {
 						return <WrappedDiscussionItem linkTarget={this.props.linkTarget} discussionData={child} userID={this.props.userID} setReplyTo={this.props.setReplyTo} index={child.linkData._id} key={child.linkData._id} handleVoteSubmit={this.props.handleVoteSubmit}/>;
 					})}
 				</div>
