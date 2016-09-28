@@ -1,7 +1,7 @@
 export default {
 	'.katex-display': {
 		display: 'block',
-		margin: '1em 0',
+		// margin: '1em 0',
 		textAlign: 'center'
 	},
 	'.katex-display>.katex': {

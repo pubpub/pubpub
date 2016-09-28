@@ -42,7 +42,7 @@ export const EmbedWrapper = React.createClass({
 		};
 		if (this.props.align === 'inline') {
 			style.display = 'inline-block';
-			style.verticalAlign = 'top';
+			// style.verticalAlign = 'top';
 		} else if (this.props.align === 'full') {
 			style.display = 'block';
 			style.margin = '0 auto';
