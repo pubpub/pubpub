@@ -51,8 +51,8 @@ export const DiscussionItem = React.createClass({
 		const docJSON = versionData.content && versionData.content.docJSON;
 		const date = versionData.createDate;
 
-		const hasYayd = discussion.linkData.metadata.yays.indexOf(this.props.userID) !== -1;
-		const hasNayd = discussion.linkData.metadata.nays.indexOf(this.props.userID) !== -1;
+		const hasYayd = discussion.linkData ? discussion.linkData.metadata.yays.indexOf(this.props.userID) !== -1 : false;
+		const hasNayd = discussion.linkData ? discussion.linkData.metadata.nays.indexOf(this.props.userID) !== -1 : false;
 
 		return (
 			<div>

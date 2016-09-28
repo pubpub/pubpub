@@ -162,7 +162,7 @@ export class ModServerCommunications {
 		// console.log('updating status', this.connected, this.online);
 		if (this.connected && !this.online || (!this.connected && this.online)) {
 			this.editor.setConnectionStatus('reconnecting');
-		} else if (this.connected && this.online)  {
+		} else if (this.connected && this.online) {
 			if (this.statusInterval) {
 				clearTimeout(this.statusInterval);
 			}
