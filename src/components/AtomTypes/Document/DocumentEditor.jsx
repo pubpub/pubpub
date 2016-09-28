@@ -502,8 +502,8 @@ styles = {
 	embedLayoutEditor: {
 		position: 'absolute',
 		backgroundColor: 'white',
-		border: '2px solid #808284',
-		boxShadow: '0px 2px 4px #58585B',
+		// border: '2px solid #808284',
+		// boxShadow: '0px 2px 4px #58585B',
 		zIndex: '10000',
 	},
 	activeAlign: {

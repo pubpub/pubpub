@@ -28,11 +28,21 @@ class ElementSchema {
 			const currentSelectedNode = currentSelection.node;
 
 			if (!currentSelectedNode || currentSelectedNode.type.name !== 'embed') {
+
+				if (this.editingElem) {
+					this.elementStore[this.editingElem].element.setSelected(false);
+					this.editingElem = null;
+					this.updateMenu({
+						embedLayoutCoords: undefined,
+						embedAttrs: undefined,
+						embedWidth: undefined,
+					});
+				}
+
 				return;
 			}
 			const currentFrom = currentSelection.$from.pos;
 
-			console.log(currentSelectedNode);
 			if (!currentSelectedNode.attrs.nodeId) {
 				console.log('Creating node id')
 				const nodeId = this.generateNodeId();
@@ -41,33 +51,31 @@ class ElementSchema {
 			}
 
 
-
 			if (currentSelectedNode && currentSelectedNode.type.name === 'embed') {
 				const nodeId = currentSelectedNode.attrs.nodeId;
 				const foundNode = this.elementStore[nodeId];
-				let size = {width: 0, height: 0};
+				foundNode.element.setSelected(true);
+				let size = {width: 0, height: 0, left: 0, top: 0};
 				if (foundNode) {
 					size = foundNode.element.getSize();
+				} else {
+					console.log('Could not find node');
 				}
 
 				const coords = pm.coordsAtPos(currentFrom);
-				console.log(size);
-				console.log(coords);
 				coords.bottom = size.top;
 				coords.left = size.left;
+				console.log(size);
+
 				this.editingElem = nodeId;
 				this.updateMenu({
 					embedLayoutCoords: coords,
 					embedAttrs: currentSelectedNode.attrs,
+					embedWidth: size.width,
 				});
 
-			} else {
-				this.editingElem = null;
-				this.updateMenu({
-					embedLayoutCoords: undefined,
-					embedAttrs: undefined,
-				});
 			}
+
 		});
 
 	}
@@ -129,27 +137,23 @@ class ElementSchema {
 
 		const editing = (this.editingElem === nodeId);
 
-		const reactElement = ReactDOM.render(<EmbedWrapper setEmbedAttribute={this.setEmbedAttribute} editing={editing} {...node.attrs}/>, domParent);
+		const reactElement = ReactDOM.render(<EmbedWrapper editing={editing} {...node.attrs}/>, domParent);
 		const dom = domParent.childNodes[0];
 		dom.className += ' embed';
 
 		dom.setAttribute('data-nodeId', nodeId);
-		this.elementStore[nodeId] = {node: node, element: reactElement, dom: domParent, active: true};
+		this.elementStore[nodeId] = {node: node, element: reactElement, active: true};
 
 		dom.addEventListener('DOMNodeRemovedFromDocument', (evt) => {
 			ReactDOM.unmountComponentAtNode(domParent);
-			delete this.elementStore[nodeId];
-			// this.elementStore[nodeId].active = false;
+			// delete this.elementStore[nodeId];
+			// timeout and wait for deletion
+			this.elementStore[nodeId].active = false;
 		});
 
 		// this.sortNodes();
 
 		return domParent;
-
-
-	}
-
-	getNodesAt = () => {
 
 	}
 
@@ -168,10 +172,6 @@ class ElementSchema {
 		});
 
 		return domParent;
-	}
-
-	generateId = () => {
-
 	}
 
 

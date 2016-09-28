@@ -114,7 +114,7 @@ function buildMenuItems(schema) {
 				nodeAttrs.nodeId = randomId;
 				callback(nodeAttrs);
 			};
-			window.toggleMedia(pm, callback, schema.nodes.embed)
+			window.toggleMedia(pm, idGenerationCallback, schema.nodes.embed)
 		},
 	});
 

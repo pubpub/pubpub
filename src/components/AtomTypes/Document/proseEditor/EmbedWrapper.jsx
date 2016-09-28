@@ -16,9 +16,14 @@ export const EmbedWrapper = React.createClass({
 		mode: PropTypes.oneOf(['embed', 'cite']),
 		data: PropTypes.object,
 		citeCount: PropTypes.number,
-		context: PropTypes.oneOf(['reference-list', 'document', 'library']), //where the embed is being used
+		context: PropTypes.oneOf(['reference-list', 'document', 'library']), // where the embed is being used
 		updateParams: PropTypes.number,
 		editing: PropTypes.bool,
+	},
+	getInitialState: function() {
+		return {
+			selected: false,
+		};
 	},
 	getDefaultProps: function() {
 		return {
@@ -35,17 +40,10 @@ export const EmbedWrapper = React.createClass({
 
 	getSize: function() {
 		const elem = ReactDOM.findDOMNode(this.refs.menupointer);
-		const elemStyle = window.getComputedStyle(elem);
-		const rect = elem.getBoundingClientRect();
 		return {
 			width: elem.clientWidth,
-			height: ReactDOM.findDOMNode(this.refs.menupointer).offsetHeight,
 			left: elem.offsetLeft,
 			top: elem.offsetTop,
-			marginLeft: elemStyle.marginLeft,
-			rectLeft: rect.left,
-			styleHeight: parseInt(elemStyle.getPropertyValue('height'), 0),
-			innerWidth: elem.innerWidth,
 		};
 	},
 
@@ -53,6 +51,12 @@ export const EmbedWrapper = React.createClass({
 		console.log('set cite count!', citeCount);
 		this.setState({citeCount});
 	},
+
+	setSelected: function(selected) {
+		this.setState({selected});
+	},
+
+
 
 	render: function() {
 		const data = this.props.data || {};
@@ -63,7 +67,7 @@ export const EmbedWrapper = React.createClass({
 
 
 		const style = {
-			width: this.props.size || 'auto',
+			// width: this.props.size || 'auto',
 		};
 		if (this.props.align === 'inline') {
 			style.display = 'inline-block';
@@ -75,11 +79,11 @@ export const EmbedWrapper = React.createClass({
 		} else if (this.props.align === 'left') {
 			style.display = 'block';
 			style.float = 'left';
-			style.paddingRight = '2em';
+			style.paddingRight = '1em';
 		} else if (this.props.align === 'right') {
 			style.display = 'block';
 			style.float = 'right';
-			style.paddingLeft = '2em';
+			style.paddingLeft = '1em';
 		} else if (this.props.align === 'inline-word') {
 			style.display = 'inline';
 		}
@@ -128,8 +132,8 @@ export const EmbedWrapper = React.createClass({
 
 		return (
 			<div ref="embedroot" className={'pub-embed ' + this.props.className} id={this.props.id} style={style}>
-				<AtomViewerPane atomData={atomData} renderType={'embed'} context={this.props.context}>
-					<span ref="menupointer"></span>
+				<AtomViewerPane selected={this.state.selected} atomData={atomData} renderType={'embed'} context={this.props.context}>
+					<span style={{width: '100%', display: 'inline-block'}} ref="menupointer"></span>
 					<span style={{textAlign: 'left'}}>{this.props.caption}</span>
 				</AtomViewerPane>
 			</div>

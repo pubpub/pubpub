@@ -10,6 +10,7 @@ export const AtomViewerPane = React.createClass({
 		atomData: PropTypes.object,
 		renderType: PropTypes.string,
 		context: PropTypes.oneOf(['reference-list', 'document', 'library']),
+		selected: PropTypes.bool,
 	},
 
 	render: function() {
@@ -17,6 +18,7 @@ export const AtomViewerPane = React.createClass({
 			atomData: this.props.atomData,
 			renderType: this.props.renderType || 'full',
 			context: this.props.context,
+			selected: this.props.selected,
 		};
 		const type = safeGetInToJS(this.props.atomData, ['atomData', 'type']);
 

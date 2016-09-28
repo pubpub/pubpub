@@ -10,6 +10,7 @@ export const ImageViewer = React.createClass({
 	propTypes: {
 		atomData: PropTypes.object,
 		renderType: PropTypes.string, // full, embed, static-full, static-embed
+		selected: PropTypes.bool,
 	},
 
 	render: function() {
@@ -19,11 +20,13 @@ export const ImageViewer = React.createClass({
 		const scaledURL = imageSource.indexOf('.gif') > -1 ? imageSource : 'https://jake.pubpub.org/unsafe/fit-in/650x0/' + imageSource; // To learn about jake.pubpub fit-in, see Thumbor docs: http://thumbor.readthedocs.io/en/latest/usage.html#fit-in
 		const metadata = safeGetInToJS(this.props.atomData, ['currentVersionData', 'content', 'metadata']) || {};
 
+		const {selected} = this.props;
+
 		switch (this.props.renderType) {
 		case 'embed':
 		case 'static-embed':
-			return (<figure style={styles.figure}>
-				<img style={styles.img} src={scaledURL} alt={title} style={styles.image}/>
+			return (<figure style={styles.figure({selected})}>
+				<img style={styles.img} src={scaledURL} alt={title} style={styles.img({selected})}/>
 				<figcaption style={styles.img}>{this.props.children}</figcaption>
 			</figure>);
 		case 'full':
@@ -58,11 +61,17 @@ export const ImageViewer = React.createClass({
 export default Radium(ImageViewer);
 
 styles = {
-	figure: {
-		display: 'table',
+	figure: function({selected}) {
+		return {
+			display: 'table',
+		};
 	},
-	img: {
-		display: 'table-row',
+	img: function({selected}) {
+		return {
+			display: 'table-row',
+			outline: (selected) ? '3px solid #2C2A2B' : '3px solid transparent',
+			transition: 'outline-color 0.15s ease-in',
+		};
 	},
 	key: {
 		fontSize: '1.2em',

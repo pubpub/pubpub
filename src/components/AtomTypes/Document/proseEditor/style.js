@@ -19,7 +19,7 @@ insertCSS(`
 
 .ProseMirror-content {
   outline: none;
-  min-height: 600px; 
+  min-height: 600px;
   padding: 0em 0em 1em 0em;
 }
 
@@ -38,7 +38,7 @@ insertCSS(`
 }
 
 .ProseMirror-selectednode {
-  outline: 2px solid #808284;
+  outline: none;
 }
 
 .ProseMirror-menubar {
