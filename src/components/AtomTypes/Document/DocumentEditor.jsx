@@ -145,6 +145,7 @@ export const DocumentEditor = React.createClass({
 			this.proseChange();
 		});
 
+		/*
 		pm.on.doubleClickOn.add((pos, node, nodePos)=>{
 			if (node.type.name === 'embed') {
 				const done = (attrs)=> {
@@ -154,6 +155,7 @@ export const DocumentEditor = React.createClass({
 				return true;
 			}
 		});
+		*/
 
 		pm.on.transformPastedHTML.add(this.transformHTML);
 		ElementSchema.initiateProseMirror(pm, this.updateEmbedEditor, this.setEmbedAttribute);
@@ -414,12 +416,13 @@ export const DocumentEditor = React.createClass({
 	},
 
 	markdownChange: function(evt) {
-		this.pm.setDoc(markdownParser.parse(evt.target.value));
+		// this.pm.setDoc(markdownParser.parse(evt.target.value));
 	},
 
 	getSaveVersionContent: function() {
 		return {
-			markdown: markdownSerializer.serialize(this.pm.doc),
+			// markdown: markdownSerializer.serialize(this.pm.doc),
+			markdown: '',
 			docJSON: this.pm.doc.toJSON(),
 		};
 	},

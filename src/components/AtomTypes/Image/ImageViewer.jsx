@@ -1,9 +1,9 @@
 import Radium from 'radium';
+import Resizable from 'react-resizable-box';
 import React, {PropTypes} from 'react';
 import {FormattedMessage} from 'react-intl';
 import {globalMessages} from 'utils/globalMessages';
 import {safeGetInToJS} from 'utils/safeParse';
-
 let styles;
 
 export const ImageViewer = React.createClass({
@@ -26,7 +26,18 @@ export const ImageViewer = React.createClass({
 		case 'embed':
 		case 'static-embed':
 			return (<figure style={styles.figure({selected})}>
-				<img style={styles.img} src={scaledURL} alt={title} style={styles.img({selected})}/>
+
+				<Resizable
+				  customClass="item"
+				  width={320}
+				  height={200}
+				  minWidth={160}
+				  minHeight={160}
+				  maxWidth={480}
+				  maxHeight={480}
+				>
+					<img style={styles.img} src={scaledURL} alt={title} style={styles.img({selected})}/>
+				</Resizable>
 				<figcaption style={styles.img}>{this.props.children}</figcaption>
 			</figure>);
 		case 'full':
@@ -64,6 +75,9 @@ styles = {
 	figure: function({selected}) {
 		return {
 			display: 'table',
+			// userSelect: 'none',
+			width: 'auto',
+			margin: 'auto',
 		};
 	},
 	img: function({selected}) {

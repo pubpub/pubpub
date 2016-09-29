@@ -27,7 +27,7 @@ class ElementSchema {
 			const currentSelection = pm.selection;
 			const currentSelectedNode = currentSelection.node;
 
-			if (!currentSelectedNode || currentSelectedNode.type.name !== 'embed') {
+			if (!currentSelectedNode || currentSelectedNode.type.name !== 'block_embed') {
 
 				if (this.editingElem) {
 					this.elementStore[this.editingElem].element.setSelected(false);
@@ -51,7 +51,7 @@ class ElementSchema {
 			}
 
 
-			if (currentSelectedNode && currentSelectedNode.type.name === 'embed') {
+			if (currentSelectedNode && currentSelectedNode.type.name === 'block_embed') {
 				const nodeId = currentSelectedNode.attrs.nodeId;
 				const foundNode = this.elementStore[nodeId];
 				foundNode.element.setSelected(true);

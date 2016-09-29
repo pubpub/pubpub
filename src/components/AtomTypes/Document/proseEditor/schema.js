@@ -127,6 +127,55 @@ class Pointer extends Inline {
 exports.Pointer = Pointer;
 
 
+class BlockEmbed extends Block {
+	get attrs() {
+		return {
+			source: new Attribute,
+			className: new Attribute({default: ''}),
+			id: new Attribute({default: ''}),
+      nodeId: new Attribute({default: null}),
+			align: new Attribute({default: 'full'}),
+			size: new Attribute({default: ''}),
+			caption: new Attribute({default: ''}),
+			mode: new Attribute({default: 'embed'}), // mode = embed || cite
+			data: new Attribute({default: {}}),
+			selected: new Attribute({default: false}),
+      figureName: new Attribute({default: {}}),
+		};
+	}
+	get draggable() { return true; }
+
+
+  // What if this doesnt exist?
+	get matchDOMTag() {
+		return {'.embed': dom => {
+			const nodeId = dom.getAttribute('data-nodeId');
+			const nodeAttrs = ElementSchema.findNodeById(nodeId);
+			return {
+				source: nodeAttrs.source,
+				data: nodeAttrs.data,
+				align: nodeAttrs.align,
+				size: nodeAttrs.size,
+				caption: nodeAttrs.caption,
+				mode: nodeAttrs.mode,
+				className: nodeAttrs.className,
+        figureName: nodeAttrs.figureName,
+        nodeId: nodeAttrs.nodeId,
+				children: null,
+				childNodes: null,
+			};
+		}};
+	}
+
+	toDOM(node) {
+		return ElementSchema.createElementAtNode(node);
+	}
+}
+
+exports.BlockEmbed = BlockEmbed;
+
+
+
 export const schema = new Schema({
 	nodes: {
 		doc: {type: Doc, content: 'block+'},
@@ -139,6 +188,7 @@ export const schema = new Schema({
 		page_break: {type: PageBreak, group: 'block'},
 		heading: {type: Heading, content: 'inline<_>*', group: 'block'},
 		code_block: {type: CodeBlock, content: 'text*', group: 'block'},
+		block_embed: {type: BlockEmbed, group: 'block'},
 
 		list_item: {type: ListItem, content: 'paragraph block*'},
 

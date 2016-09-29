@@ -67,7 +67,7 @@ export const EmbedWrapper = React.createClass({
 
 
 		const style = {
-			// width: this.props.size || 'auto',
+			width: this.props.size || 'auto',
 		};
 		if (this.props.align === 'inline') {
 			style.display = 'inline-block';
@@ -76,6 +76,7 @@ export const EmbedWrapper = React.createClass({
 			style.display = 'block';
 			style.margin = '0 auto';
 			style.textAlign = 'center';
+			style.width = '100%';
 		} else if (this.props.align === 'left') {
 			style.display = 'block';
 			style.float = 'left';
@@ -133,7 +134,7 @@ export const EmbedWrapper = React.createClass({
 		return (
 			<div ref="embedroot" className={'pub-embed ' + this.props.className} id={this.props.id} style={style}>
 				<AtomViewerPane selected={this.state.selected} atomData={atomData} renderType={'embed'} context={this.props.context}>
-					<span style={{width: '100%', display: 'inline-block'}} ref="menupointer"></span>
+					<span style={{width: '100%', display: 'inline-block'}} ref="menupointer">menu</span>
 					<span style={{textAlign: 'left'}}>{this.props.caption}</span>
 				</AtomViewerPane>
 			</div>

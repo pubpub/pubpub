@@ -105,6 +105,22 @@ function buildMenuItems(schema) {
 		label: 'page break',
 	});
 
+
+	items.insertEmbed = insertItem(schema.nodes.block_embed, {
+		title: 'Insert Image, Video, Reference, etc',
+		icon: {text: 'insert'},
+		attrs: (pm, callback) =>{
+			const idGenerationCallback = (nodeAttrs) => {
+				const randomId = Math.floor(Math.random()*10000000);
+				nodeAttrs.nodeId = randomId;
+				callback(nodeAttrs);
+			};
+			window.toggleMedia(pm, idGenerationCallback, schema.nodes.block_embed)
+		},
+	});
+
+	/*
+
 	items.insertEmbed = insertItem(schema.nodes.embed, {
 		title: 'Insert Image, Video, Reference, etc',
 		icon: {text: 'insert'},
@@ -117,6 +133,8 @@ function buildMenuItems(schema) {
 			window.toggleMedia(pm, idGenerationCallback, schema.nodes.embed)
 		},
 	});
+
+	*/
 
 	const embedSelectTest = function(pm) {
 		const {node} = pm.selection;
