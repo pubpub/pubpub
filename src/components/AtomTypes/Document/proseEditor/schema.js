@@ -148,7 +148,7 @@ class BlockEmbed extends Block {
 
   // What if this doesnt exist?
 	get matchDOMTag() {
-		return {'.embed': dom => {
+		return {'.block-embed': dom => {
 			const nodeId = dom.getAttribute('data-nodeId');
 			const nodeAttrs = ElementSchema.findNodeById(nodeId);
 			return {
@@ -168,7 +168,7 @@ class BlockEmbed extends Block {
 	}
 
 	toDOM(node) {
-		return ElementSchema.createElementAtNode(node);
+		return ElementSchema.createElementAtNode(node, true);
 	}
 }
 

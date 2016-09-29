@@ -191,12 +191,23 @@ export const DocumentEditor = React.createClass({
 		});
 	},
 
+
+	// only use block or embed elements
 	setEmbedAttribute: function(key, value, evt) {
 		const currentSelection = this.pm.selection;
 		const currentFrom = currentSelection.$from.pos;
 		const currentSelectedNode = currentSelection.node;
 		if (evt) { evt.stopPropagation(); }
-		this.pm.tr.setNodeType(currentFrom, currentSelectedNode.type, {...currentSelectedNode.attrs, [key]: value}).apply();
+		let nodeType = currentSelectedNode.type;
+		const schema = currentSelectedNode.type.schema;
+		if (key === 'align') {
+			if (value === 'inline') {
+				nodeType = schema.nodes.embed;
+			} else {
+				nodeType = schema.nodes.block_embed;
+			}
+		}
+		this.pm.tr.setNodeType(currentFrom, nodeType, {...currentSelectedNode.attrs, [key]: value}).apply();
 	},
 
 	sizeChange: function(evt) {

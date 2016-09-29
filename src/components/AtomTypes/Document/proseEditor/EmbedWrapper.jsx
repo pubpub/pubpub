@@ -3,6 +3,8 @@ import ReactDOM from 'react-dom';
 import React, {PropTypes} from 'react';
 import {ensureImmutable} from 'reducers';
 
+import ElementSchema from './elementSchema';
+
 // import {safeGetInToJS} from 'utils/safeParse';
 
 export const EmbedWrapper = React.createClass({
@@ -18,7 +20,7 @@ export const EmbedWrapper = React.createClass({
 		citeCount: PropTypes.number,
 		context: PropTypes.oneOf(['reference-list', 'document', 'library']), // where the embed is being used
 		updateParams: PropTypes.number,
-		editing: PropTypes.bool,
+		nodeId: PropTypes.number,
 	},
 	getInitialState: function() {
 		return {
@@ -31,7 +33,11 @@ export const EmbedWrapper = React.createClass({
 		};
 	},
 	componentDidMount: function() {
-		// console.log('Mounted atom!');
+		console.log('mounted wrapper', this.props.nodeId);
+		const checkCallback = () => {
+			ElementSchema.checkAndRender(this.props.nodeId);
+		};
+		window.setTimeout(checkCallback, 0);
 	},
 
 	componentWillUnmount: function() {
