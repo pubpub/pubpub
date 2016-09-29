@@ -1,4 +1,4 @@
-import murmur from 'murmurhash';
+import throttle from 'lodash/throttle';
 import React from 'react';
 import ReactDOM from 'react-dom';
 
@@ -46,7 +46,6 @@ class ElementSchema {
 			const currentFrom = currentSelection.$from.pos;
 
 			if (!currentSelectedNode.attrs.nodeId) {
-				console.log('Creating node id')
 				const nodeId = this.generateNodeId();
 				pm.tr.setNodeType(currentFrom, currentSelectedNode.type, {...currentSelectedNode.attrs, ['nodeId']: nodeId}).apply();
 				return;
@@ -62,7 +61,6 @@ class ElementSchema {
 
 	checkAndRender(nodeId) {
 		if (this.editingElem === nodeId) {
-			console.log('Updating position!!');
 			this.updateNodePosition(this.elementStore[nodeId].node);
 		}
 	}
@@ -143,6 +141,23 @@ class ElementSchema {
 		return null;
 	}
 
+	onRemoveNode = (nodeId, domElement, evt) => {
+
+		if (this.elementStore[nodeId].replaced === true) {
+			console.log('got replaced node!', this.elementStore[nodeId].active);
+			ReactDOM.unmountComponentAtNode(domElement);
+			this.elementStore[nodeId].replaced = false;
+			return;
+		}
+
+		if (this.elementStore[nodeId].active === false) {
+			return;
+		}
+		console.log('node removed!', nodeId, this.elementStore[nodeId].replaced);
+		this.elementStore[nodeId].active = false;
+		ReactDOM.unmountComponentAtNode(domElement);
+	}
+
 	createElementAtNode = (node, block = false) => {
 
 		const nodeId = node.attrs.nodeId;
@@ -150,10 +165,19 @@ class ElementSchema {
 
 		const localCount = absoluteCount;
 		absoluteCount++;
+		let replaced = false;
 
-		if (this.elementStore[nodeId] && this.elementStore[nodeId].active === true ) {
+		if (this.elementStore[nodeId] && this.elementStore[nodeId].active === true) {
 			// this.elementStore[nodeId].active = true;
 			console.log('trying to replace an active node');
+			// this.elementStore[nodeId].replaced = true;
+			replaced = true;
+			// this.elementStore[nodeId].active = false;
+			/*
+			const oldDomNode = this.elementStore[nodeId].dom;
+			oldDomNode.removeEventListener('DOMNodeRemoved', this.elementStore[nodeId].listener);
+			ReactDOM.unmountComponentAtNode(oldDomNode);
+			*/
 			// this.elementStore[nodeId].replaced = true;
 			// return this.elementStore[nodeId].dom;
 		}
@@ -167,21 +191,14 @@ class ElementSchema {
 		dom.className += (block) ? 'block-embed' : ' embed';
 
 		dom.setAttribute('data-nodeId', nodeId);
-		this.elementStore[nodeId] = {node: node, element: reactElement, active: true, dom: domParent};
+		const listenerFunc = throttle(this.onRemoveNode.bind(this, nodeId, domParent), 250);
+		this.elementStore[nodeId] = {node: node, element: reactElement, active: true, dom: domParent, listener: listenerFunc, replaced: replaced};
 
-		domParent.addEventListener('DOMNodeRemoved', (evt) => {
-			if (this.elementStore[nodeId].active === false) {
-				return;
-			}
-			console.log('node removed!', nodeId);
- 			this.elementStore[nodeId].active = false;
-			ReactDOM.unmountComponentAtNode(domParent);
-			// delete this.elementStore[nodeId];
-			// timeout and wait for deletion
-		});
+		console.log('creating event listener');
+		domParent.addEventListener('DOMNodeRemoved', listenerFunc);
 
 		domParent.addEventListener('DOMNodeInserted', (evt) => {
-			console.log('reinserted', absoluteCount);
+			// console.log('reinserted', absoluteCount);
 		});
 
 		domParent.addEventListener('DOMNodeRemovedFromDocument', (evt) => {
