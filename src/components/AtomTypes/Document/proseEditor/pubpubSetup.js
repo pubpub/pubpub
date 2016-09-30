@@ -1,7 +1,7 @@
-const {blockQuoteRule, orderedListRule, bulletListRule, codeBlockRule, headingRule, inputRules, allInputRules} = require('prosemirror/dist/inputrules');
-const {Plugin} = require('prosemirror/dist/edit');
-const {menuBar, tooltipMenu} = require('prosemirror/dist/menu');
-const {InputRule} = require('prosemirror/dist/inputrules');
+const {blockQuoteRule, orderedListRule, bulletListRule, codeBlockRule, headingRule, inputRules, allInputRules} = require('prosemirror-inputrules');
+const {Plugin} = require('prosemirror-state');
+const {menuBar, tooltipMenu} = require('prosemirror-menu');
+const {InputRule} = require('prosemirror-inputrules');
 
 const {buildMenuItems} = require('./menu');
 const {buildKeymap} = require('./keymap');
@@ -22,7 +22,7 @@ require('./style');
 // code blocks, and heading.
 function buildInputRules(schema) {
 	const result = [];
-	
+
 	result.push(blockQuoteRule(schema.nodes.blockquote));
 	result.push(orderedListRule(schema.nodes.ordered_list));
 	result.push(bulletListRule(schema.nodes.bullet_list));
@@ -41,7 +41,7 @@ function buildInputRules(schema) {
 	});
 
 	result.push(embedRule);
-	
+
 	// Block Cntrl-S from launching the Browser Save window
 	document.getElementsByClassName('ProseMirror')[0].addEventListener('keydown', function(evt) {
 		if (evt.keyCode === 83 && (navigator.platform.match('Mac') ? evt.metaKey : evt.ctrlKey)) {

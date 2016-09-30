@@ -1,4 +1,4 @@
-import {Step} from 'prosemirror/dist/transform';
+import {Step} from 'prosemirror-transform';
 
 import {schema as pubSchema} from '../proseEditor/schema';
 

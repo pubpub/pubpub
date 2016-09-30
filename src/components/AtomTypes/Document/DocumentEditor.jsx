@@ -4,7 +4,7 @@ import Radium, {Style} from 'radium';
 import React, {PropTypes} from 'react';
 import {Media} from 'components';
 import {MD5} from 'object-hash';
-import {Node} from 'prosemirror/dist/model';
+import {Node} from 'prosemirror-model';
 import {FormattedMessage} from 'react-intl';
 import {Subscription, StoppableSubscription} from 'subscription';
 import {globalMessages} from 'utils/globalMessages';
@@ -42,6 +42,11 @@ export const DocumentEditor = React.createClass({
 	componentDidMount() {
 		const prosemirror = require('prosemirror');
 		const {pubpubSetup} = require('./proseEditor/pubpubSetup');
+		const {EditorState} = require('prosemirror-state');
+
+
+		EditorState.create({doc: DOMParser.fromSchema(demoSchema).parse(document.querySelector("#content")),
+		                                plugins: [exampleSetup({schema: demoSchema})]})
 
 		const {ModServerCommunications} = require('./collab/server-communications');
 		const nodeConvert = require('./collab/node-convert');
@@ -49,7 +54,7 @@ export const DocumentEditor = React.createClass({
 		this.modelToEditor = nodeConvert.modelToEditor;
 
 		const {ModCollab} = require('./collab/mod');
-		const {collabEditing} = require('prosemirror/dist/collab');
+		const {collabEditing} = require('prosemirror-collab');
 
 		const that = this;
 

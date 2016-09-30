@@ -1,11 +1,11 @@
-import {MenuItem, toggleMarkItem, insertItem, wrapItem, wrapListItem, blockTypeItem, Dropdown, joinUpItem, liftItem, icons} from 'prosemirror/dist/menu';
-import {FieldPrompt, TextField} from 'prosemirror/dist/ui';
+import {MenuItem, toggleMarkItem, insertItem, wrapItem, wrapListItem, blockTypeItem, Dropdown, joinUpItem, liftItem, icons} from 'prosemirror-menu';
 // import {elt} from 'prosemirror/dist/util/dom';
 
 // : (ProseMirror, (attrs: ?Object))
 // A function that will prompt for the attributes of a [link
 // mark](#LinkMark) (using `FieldPrompt`), and call a callback with
 // the result.
+/*
 function promptLinkAttrs(pm, callback) {
 	new FieldPrompt(pm, 'Create a link', {
 		href: new TextField({
@@ -22,6 +22,7 @@ function promptLinkAttrs(pm, callback) {
 		title: new TextField({label: 'Title'})
 	}).open(callback);
 }
+*/
 
 function buildMenuItems(schema) {
 	const items = {};
@@ -56,11 +57,13 @@ function buildMenuItems(schema) {
 		label: 'inline code',
 	});
 
+/*
 	items.toggleLink = toggleMarkItem(schema.marks.link, {
 		title: 'Add or remove link',
 		icon: {text: 'link'},
 		attrs: promptLinkAttrs,
 	});
+*/
 
 	items.wrapBulletList = wrapListItem(schema.nodes.bullet_list, {
 		title: 'Wrap in bullet list',
@@ -111,7 +114,7 @@ function buildMenuItems(schema) {
 		icon: {text: 'insert'},
 		attrs: (pm, callback) =>{
 			const idGenerationCallback = (nodeAttrs) => {
-				const randomId = Math.floor(Math.random()*10000000);
+				const randomId = Math.floor(Math.random() * 10000000);
 				nodeAttrs.nodeId = randomId;
 				callback(nodeAttrs);
 			};

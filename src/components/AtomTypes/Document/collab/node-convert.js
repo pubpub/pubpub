@@ -1,7 +1,8 @@
 /* To convert to and from how the document is stored in the database to how ProseMirror expects it.
 We use the DOM import for ProseMirror as the JSON we store in the database is really jsonized HTML.
 */
-import {Node} from 'prosemirror/dist/model';
+
+import {Node} from 'prosemirror-model';
 
 export const modelToEditor = function(doc, schema) {
 	return Node.fromJSON(schema, doc.contents);

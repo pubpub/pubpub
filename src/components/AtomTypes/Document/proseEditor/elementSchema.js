@@ -1,4 +1,4 @@
-import throttle from 'lodash/throttle';
+import once from 'lodash/once';
 import React from 'react';
 import ReactDOM from 'react-dom';
 
@@ -191,7 +191,7 @@ class ElementSchema {
 		dom.className += (block) ? 'block-embed' : ' embed';
 
 		dom.setAttribute('data-nodeId', nodeId);
-		const listenerFunc = throttle(this.onRemoveNode.bind(this, nodeId, domParent), 250);
+		const listenerFunc = once(this.onRemoveNode.bind(this, nodeId, domParent));
 		this.elementStore[nodeId] = {node: node, element: reactElement, active: true, dom: domParent, listener: listenerFunc, replaced: replaced};
 
 		console.log('creating event listener');

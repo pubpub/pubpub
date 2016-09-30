@@ -1,5 +1,6 @@
-import {Schema, Inline, Block, Text, Attribute, MarkType} from 'prosemirror/dist/model';
-import {Doc, BlockQuote, OrderedList, BulletList, ListItem, HorizontalRule, Heading, CodeBlock, Paragraph, Image, HardBreak, EmMark, StrongMark, LinkMark, CodeMark} from 'prosemirror/dist/schema-basic';
+import {Schema, Inline, Block, Text, Attribute, MarkType} from 'prosemirror-model';
+import {Doc, BlockQuote, HorizontalRule, Heading, CodeBlock, Paragraph, Image, HardBreak, EmMark, StrongMark, LinkMark, CodeMark} from 'prosemirror-schema-basic';
+import {OrderedList, BulletList, ListItem} from 'prosemirror-schema-list';
 
 import ElementSchema from './elementSchema';
 
