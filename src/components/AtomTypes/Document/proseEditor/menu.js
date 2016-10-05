@@ -1,115 +1,5 @@
-import {MenuItem, toggleMarkItem, insertItem, wrapItem, wrapListItem, blockTypeItem, Dropdown, joinUpItem, liftItem, icons} from 'prosemirror-menu';
-// import {elt} from 'prosemirror/dist/util/dom';
-
-// : (ProseMirror, (attrs: ?Object))
-// A function that will prompt for the attributes of a [link
-// mark](#LinkMark) (using `FieldPrompt`), and call a callback with
-// the result.
 /*
-function promptLinkAttrs(pm, callback) {
-	new FieldPrompt(pm, 'Create a link', {
-		href: new TextField({
-			label: 'Link target',
-			required: true,
-			clean: (val) => {
-				let newVal = val;
-				if (!/^https?:\/\//i.test(newVal)) {
-					newVal = 'http://' + newVal;
-				}
-				return newVal;
-			}
-		}),
-		title: new TextField({label: 'Title'})
-	}).open(callback);
-}
-*/
-
-function buildMenuItems(schema) {
-	const items = {};
-
-	items.toggleStrong = toggleMarkItem(schema.marks.strong, {
-		title: 'Toggle strong style',
-		icon: {text: 'bold'},
-	});
-
-	items.toggleEm = toggleMarkItem(schema.marks.em, {
-		title: 'Toggle emphasis',
-		icon: {text: 'italic'},
-	});
-
-	items.toggleSub = toggleMarkItem(schema.marks.sub, {
-		title: 'Toggle subscript',
-		label: 'subscript',
-	});
-
-	items.toggleSup = toggleMarkItem(schema.marks.sup, {
-		title: 'Toggle superscript',
-		label: 'superscript',
-	});
-
-	items.toggleStrikeThrough = toggleMarkItem(schema.marks.strike, {
-		title: 'Toggle strikethrough',
-		label: 'strikethrough',
-	});
-
-	items.toggleCode = toggleMarkItem(schema.marks.code, {
-		title: 'Toggle code font',
-		label: 'inline code',
-	});
-
-/*
-	items.toggleLink = toggleMarkItem(schema.marks.link, {
-		title: 'Add or remove link',
-		icon: {text: 'link'},
-		attrs: promptLinkAttrs,
-	});
-*/
-
-	items.wrapBulletList = wrapListItem(schema.nodes.bullet_list, {
-		title: 'Wrap in bullet list',
-		icon: icons.bulletList,
-	});
-
-	items.wrapOrderedList = wrapListItem(schema.nodes.ordered_list, {
-		title: 'Wrap in ordered list',
-		icon: icons.orderedList,
-	});
-
-	items.wrapBlockQuote = wrapItem(schema.nodes.blockquote, {
-		title: 'Wrap in block quote',
-		icon: icons.blockquote,
-	});
-
-	items.makeParagraph = blockTypeItem(schema.nodes.paragraph, {
-		title: 'Change to paragraph',
-		icon: {text: 'Plain'},
-	});
-
-	items.makeCodeBlock = blockTypeItem(schema.nodes.code_block, {
-		title: 'Change to code block',
-		icon: {text: 'code block'},
-	});
-
-	for (let index = 1; index <= 10; index++) {
-		items['makeHead' + index] = blockTypeItem(schema.nodes.heading, {
-			title: 'Change to heading ' + index,
-			icon: {text: 'H' + index},
-			attrs: {level: index},
-		});
-	}
-
-	items.insertHorizontalRule = insertItem(schema.nodes.horizontal_rule, {
-		title: 'Insert horizontal rule',
-		label: 'horizontal rule',
-	});
-
-	items.insertPageBreak = insertItem(schema.nodes.page_break, {
-		title: 'Insert page break',
-		label: 'page break',
-	});
-
-
-	items.insertEmbed = insertItem(schema.nodes.block_embed, {
+items.insertEmbed = insertItem(schema.nodes.block_embed, {
 		title: 'Insert Image, Video, Reference, etc',
 		icon: {text: 'insert'},
 		attrs: (pm, callback) =>{
@@ -122,7 +12,7 @@ function buildMenuItems(schema) {
 		},
 	});
 
-	/*
+=
 
 	items.insertEmbed = insertItem(schema.nodes.embed, {
 		title: 'Insert Image, Video, Reference, etc',
@@ -137,155 +27,291 @@ function buildMenuItems(schema) {
 		},
 	});
 
-	*/
 
 	const embedSelectTest = function(pm) {
 		const {node} = pm.selection;
 		return node && node.type.name === 'embed';
 	};
+*/
 
-	items.setAlignInline = new MenuItem({
-		run(pm) {
-			const selection = pm.selection;
-			pm.tr.setNodeType(selection.$from.pos, selection.node.type, {...selection.node.attrs, align: 'inline'}).apply();
-		},
-		select: embedSelectTest,
-		active(pm) {
-			const {node} = pm.selection;
-			return node && node.attrs.align === 'inline';
-		},
-		title: 'Set inline',
-		icon: {text: 'inline'},
-	});
-	items.setAlignFull = new MenuItem({
-		run(pm) {
-			const selection = pm.selection;
-			pm.tr.setNodeType(selection.$from.pos, selection.node.type, {...selection.node.attrs, align: 'full'}).apply();
-		},
-		select: embedSelectTest,
-		active(pm) {
-			const {node} = pm.selection;
-			return node && node.attrs.align === 'full';
-		},
-		title: 'Set full',
-		icon: {text: 'full'},
-	});
-	items.setAlignLeft = new MenuItem({
-		run(pm) {
-			const selection = pm.selection;
-			pm.tr.setNodeType(selection.$from.pos, selection.node.type, {...selection.node.attrs, align: 'left'}).apply();
-		},
-		select: embedSelectTest,
-		active(pm) {
-			const {node} = pm.selection;
-			return node && node.attrs.align === 'left';
-		},
-		title: 'Set left',
-		icon: {text: 'left'},
-	});
-	items.setAlignRight = new MenuItem({
-		run(pm) {
-			const selection = pm.selection;
-			pm.tr.setNodeType(selection.$from.pos, selection.node.type, {...selection.node.attrs, align: 'right'}).apply();
-		},
-		select: embedSelectTest,
-		active(pm) {
-			const {node} = pm.selection;
-			return node && node.attrs.align === 'right';
-		},
-		title: 'Set right',
-		icon: {text: 'right'},
-	});
+const {wrapItem, blockTypeItem, Dropdown, DropdownSubmenu, joinUpItem, liftItem,
+       selectParentNodeItem, undoItem, redoItem, icons, MenuItem} = require("prosemirror-menu")
+const {createTable, addColumnBefore, addColumnAfter,
+       removeColumn, addRowBefore, addRowAfter, removeRow} = require("prosemirror-schema-table")
+const {toggleMark} = require("prosemirror-commands")
+const {wrapInList} = require("prosemirror-schema-list")
+const {TextField, openPrompt} = require("./prompt")
 
-	// items.setAlignLeft = new MenuItem({
-	// 	run(pm) {
-	// 		const selection = pm.selection;
-	// 		pm.tr.setNodeType(selection.$from.pos, selection.node.type, {...selection.node.attrs, align: 'full'}).apply();
-	// 	},
-	// 	select: embedSelectTest,
-	// 	active(pm) {
-	// 		const {node} = pm.selection;
-	// 		console.log(node);
-	// 		return node && node.attrs.align === 'full';
-	// 	},
-	// 	title: 'Set full',
-	// 	icon: {text: 'full'},
-	// 	render(pm) {
-	// 		return elt('h3', null, 'Son of a ' + pm.selection.node.attrs.size);
-	// 	},
-	// });
+// Helpers to create specific types of items
 
-
-	// items.setAlignLeft = new MenuItem({
-	// 	run(pm) {
-	// 		const selection = pm.selection;
-	// 		pm.tr.setNodeType(selection.$from.pos, selection.node.type, {...selection.node.attrs, align: 'left'}).apply();
-	// 	},
-	// 	select: embedSelectTest,
-	// 	active(pm) {
-	// 		const {node} = pm.selection;
-	// 		console.log(node);
-	// 		return node && node.attrs.align === 'full';
-	// 	},
-	// 	title: 'Set full',
-	// 	icon: {text: 'full'},
-	// });
-
-
-	class MenuSize {
-		// :: (MenuItemSpec)
-		constructor(spec) {
-			// :: MenuItemSpec
-			// The spec used to create the menu item.
-			this.spec = spec;
-		}
-
-		// :: (ProseMirror) → DOMNode
-		// Renders the icon according to its [display
-		// spec](#MenuItemSpec.display), and adds an event handler which
-		// executes the command when the representation is clicked.
-		render(pm) {
-			const updateAttr = function(value) {
-				const attrsKey = this.spec.attrsKey;
-				const selection = pm.selection;
-				pm.tr.setNodeType(selection.$from.pos, selection.node.type, {...selection.node.attrs, [attrsKey]: value}).apply();
-			};
-
-			// const label = elt('div', null, this.spec.cat);
-			const input = document.createElement('input');
-			input.type = 'text';
-			input.placeholder = 'Type here';
-			input.addEventListener('input', function(event) {
-				updateAttr(event.target.value);
-			}, false);
-			const dom = document.createElement('div');
-			dom.appendChild(input);
-			input.addEventListener('mousedown', event => {
-				event.preventDefault();
-				event.stopPropagation();
-				input.focus();
-			});
-			return input;
-			// return elt('h3', null, label, label);
-			// return <h3><em>Son</em> of a {this.spec.cat}</h3>;
-		}
-	}
-
-	items.setSize = new MenuSize({
-		attrsKey: 'size',
-	});
-
-	items.insertMenu = new Dropdown([items.toggleSub, items.toggleSup, items.toggleStrikeThrough, items.toggleCode, items.insertHorizontalRule, items.insertPageBreak], {label: '...'});
-	items.typeMenu = new Dropdown([items.makeCodeBlock, items.makeHead3, items.makeHead4, items.makeHead5, items.makeHead6], {label: '...'});
-
-	items.inlineMenu = [[items.toggleStrong, items.toggleEm, items.toggleLink, items.insertMenu], [items.insertEmbed]];
-	items.blockMenu = [[items.makeParagraph, items.makeHead1, items.makeHead2, items.wrapBulletList, items.wrapOrderedList, items.wrapBlockQuote, joinUpItem, liftItem, items.typeMenu]];
-	items.fullMenu = items.inlineMenu.concat(items.blockMenu);
-
-	items.blockDropdownMenu = [items.makeParagraph, items.makeHead1, items.makeHead2, new Dropdown([items.wrapBulletList, items.wrapOrderedList, items.wrapBlockQuote, joinUpItem, liftItem, items.makeCodeBlock, items.makeHead3, items.makeHead4, items.makeHead5, items.makeHead6], {label: '...'})];
-	items.minimalMenu = [[items.toggleStrong, items.toggleEm, items.toggleLink, items.insertMenu], [items.insertEmbed], items.blockDropdownMenu];
-	items.embedMenu = [[items.setAlignInline, items.setAlignFull, items.setAlignLeft, items.setAlignRight, items.setSize]];
-
-	return items;
+function canInsert(state, nodeType, attrs) {
+  let $from = state.selection.$from
+  for (let d = $from.depth; d >= 0; d--) {
+    let index = $from.index(d)
+    if ($from.node(d).canReplaceWith(index, index, nodeType, attrs)) return true
+  }
+  return false
 }
-exports.buildMenuItems = buildMenuItems;
+
+function insertImageItem(nodeType) {
+  return new MenuItem({
+    title: "Insert image",
+    label: "Image",
+    select(state) { return canInsert(state, nodeType) },
+    run(state, _, view) {
+      let {node, from, to} = state.selection, attrs = nodeType && node && node.type == nodeType && node.attrs
+      openPrompt({
+        title: "Insert image",
+        fields: {
+          src: new TextField({label: "Location", required: true, value: attrs && attrs.src}),
+          title: new TextField({label: "Title", value: attrs && attrs.title}),
+          alt: new TextField({label: "Description",
+                              value: attrs ? attrs.title : state.doc.textBetween(from, to, " ")})
+        },
+        // FIXME this (and similar uses) won't have the current state
+        // when it runs, leading to problems in, for example, a
+        // collaborative setup
+        callback(attrs) {
+          view.props.onAction(view.state.tr.replaceSelection(nodeType.createAndFill(attrs)).action())
+        }
+      })
+    }
+  })
+}
+
+function positiveInteger(value) {
+  if (!/^[1-9]\d*$/.test(value)) return "Should be a positive integer"
+}
+
+function insertTableItem(tableType) {
+  return new MenuItem({
+    title: "Insert a table",
+    run(_, _a, view) {
+      openPrompt({
+        title: "Insert table",
+        fields: {
+          rows: new TextField({label: "Rows", validate: positiveInteger}),
+          cols: new TextField({label: "Columns", validate: positiveInteger})
+        },
+        callback({rows, cols}) {
+          view.props.onAction(view.state.tr.replaceSelection(createTable(tableType, +rows, +cols)).scrollAction())
+        }
+      })
+    },
+    select(state) {
+      let $from = state.selection.$from
+      for (let d = $from.depth; d >= 0; d--) {
+        let index = $from.index(d)
+        if ($from.node(d).canReplaceWith(index, index, tableType)) return true
+      }
+      return false
+    },
+    label: "Table"
+  })
+}
+
+function cmdItem(cmd, options) {
+  let passedOptions = {
+    label: options.title,
+    run: cmd,
+    select(state) { return cmd(state) }
+  }
+  for (let prop in options) passedOptions[prop] = options[prop]
+  return new MenuItem(passedOptions)
+}
+
+function markActive(state, type) {
+  let {from, to, empty} = state.selection
+  if (empty) return type.isInSet(state.storedMarks || state.doc.marksAt(from))
+  else return state.doc.rangeHasMark(from, to, type)
+}
+
+function markItem(markType, options) {
+  let passedOptions = {
+    active(state) { return markActive(state, markType) }
+  }
+  for (let prop in options) passedOptions[prop] = options[prop]
+  return cmdItem(toggleMark(markType), passedOptions)
+}
+
+function linkItem(markType) {
+  return markItem(markType, {
+    title: "Add or remove link",
+    icon: icons.link,
+    run(state, onAction, view) {
+      if (markActive(state, markType)) {
+        toggleMark(markType)(state, onAction)
+        return true
+      }
+      openPrompt({
+        title: "Create a link",
+        fields: {
+          href: new TextField({
+            label: "Link target",
+            required: true,
+            clean: (val) => {
+              if (!/^https?:\/\//i.test(val))
+                val = 'http://' + val
+              return val
+            }
+          }),
+          title: new TextField({label: "Title"})
+        },
+        callback(attrs) {
+          toggleMark(markType, attrs)(view.state, view.props.onAction)
+        }
+      })
+    }
+  })
+}
+
+function wrapListItem(nodeType, options) {
+  return cmdItem(wrapInList(nodeType, options.attrs), options)
+}
+
+// :: (Schema) → Object
+// Given a schema, look for default mark and node types in it and
+// return an object with relevant menu items relating to those marks:
+//
+// **`toggleStrong`**`: MenuItem`
+//   : A menu item to toggle the [strong mark](#schema-basic.StrongMark).
+//
+// **`toggleEm`**`: MenuItem`
+//   : A menu item to toggle the [emphasis mark](#schema-basic.EmMark).
+//
+// **`toggleCode`**`: MenuItem`
+//   : A menu item to toggle the [code font mark](#schema-basic.CodeMark).
+//
+// **`toggleLink`**`: MenuItem`
+//   : A menu item to toggle the [link mark](#schema-basic.LinkMark).
+//
+// **`insertImage`**`: MenuItem`
+//   : A menu item to insert an [image](#schema-basic.Image).
+//
+// **`wrapBulletList`**`: MenuItem`
+//   : A menu item to wrap the selection in a [bullet list](#schema-list.BulletList).
+//
+// **`wrapOrderedList`**`: MenuItem`
+//   : A menu item to wrap the selection in an [ordered list](#schema-list.OrderedList).
+//
+// **`wrapBlockQuote`**`: MenuItem`
+//   : A menu item to wrap the selection in a [block quote](#schema-basic.BlockQuote).
+//
+// **`makeParagraph`**`: MenuItem`
+//   : A menu item to set the current textblock to be a normal
+//     [paragraph](#schema-basic.Paragraph).
+//
+// **`makeCodeBlock`**`: MenuItem`
+//   : A menu item to set the current textblock to be a
+//     [code block](#schema-basic.CodeBlock).
+//
+// **`insertTable`**`: MenuItem`
+//   : An item to insert a [table](#schema-table).
+//
+// **`addRowBefore`**, **`addRowAfter`**, **`removeRow`**, **`addColumnBefore`**, **`addColumnAfter`**, **`removeColumn`**`: MenuItem`
+//   : Table-manipulation items.
+//
+// **`makeHead[N]`**`: MenuItem`
+//   : Where _N_ is 1 to 6. Menu items to set the current textblock to
+//     be a [heading](#schema-basic.Heading) of level _N_.
+//
+// **`insertHorizontalRule`**`: MenuItem`
+//   : A menu item to insert a horizontal rule.
+//
+// The return value also contains some prefabricated menu elements and
+// menus, that you can use instead of composing your own menu from
+// scratch:
+//
+// **`insertMenu`**`: Dropdown`
+//   : A dropdown containing the `insertImage` and
+//     `insertHorizontalRule` items.
+//
+// **`typeMenu`**`: Dropdown`
+//   : A dropdown containing the items for making the current
+//     textblock a paragraph, code block, or heading.
+//
+// **`fullMenu`**`: [[MenuElement]]`
+//   : An array of arrays of menu elements for use as the full menu
+//     for, for example the [menu bar](#menu.MenuBarEditorView).
+function buildMenuItems(schema) {
+  let r = {}, type
+  if (type = schema.marks.strong)
+    r.toggleStrong = markItem(type, {title: "Toggle strong style", icon: icons.strong})
+  if (type = schema.marks.em)
+    r.toggleEm = markItem(type, {title: "Toggle emphasis", icon: icons.em})
+  if (type = schema.marks.code)
+    r.toggleCode = markItem(type, {title: "Toggle code font", icon: icons.code})
+  if (type = schema.marks.link)
+    r.toggleLink = linkItem(type)
+
+  if (type = schema.nodes.image)
+    r.insertImage = insertImageItem(type)
+  if (type = schema.nodes.bullet_list)
+    r.wrapBulletList = wrapListItem(type, {
+      title: "Wrap in bullet list",
+      icon: icons.bulletList
+    })
+  if (type = schema.nodes.ordered_list)
+    r.wrapOrderedList = wrapListItem(type, {
+      title: "Wrap in ordered list",
+      icon: icons.orderedList
+    })
+  if (type = schema.nodes.blockquote)
+    r.wrapBlockQuote = wrapItem(type, {
+      title: "Wrap in block quote",
+      icon: icons.blockquote
+    })
+  if (type = schema.nodes.paragraph)
+    r.makeParagraph = blockTypeItem(type, {
+      title: "Change to paragraph",
+      label: "Plain"
+    })
+  if (type = schema.nodes.code_block)
+    r.makeCodeBlock = blockTypeItem(type, {
+      title: "Change to code block",
+      label: "Code"
+    })
+  if (type = schema.nodes.heading)
+    for (let i = 1; i <= 10; i++)
+      r["makeHead" + i] = blockTypeItem(type, {
+        title: "Change to heading " + i,
+        label: "Level " + i,
+        attrs: {level: i}
+      })
+  if (type = schema.nodes.horizontal_rule) {
+    let hr = type
+    r.insertHorizontalRule = new MenuItem({
+      title: "Insert horizontal rule",
+      label: "Horizontal rule",
+      select(state) { return canInsert(state, hr) },
+      run(state, onAction) { onAction(state.tr.replaceSelection(hr.create()).action()) }
+    })
+  }
+  if (type = schema.nodes.table)
+    r.insertTable = insertTableItem(type)
+  if (type = schema.nodes.table_row) {
+    r.addRowBefore = cmdItem(addRowBefore, {title: "Add row before"})
+    r.addRowAfter = cmdItem(addRowAfter, {title: "Add row after"})
+    r.removeRow = cmdItem(removeRow, {title: "Remove row"})
+    r.addColumnBefore = cmdItem(addColumnBefore, {title: "Add column before"})
+    r.addColumnAfter = cmdItem(addColumnAfter, {title: "Add column after"})
+    r.removeColumn = cmdItem(removeColumn, {title: "Remove column"})
+  }
+
+  let cut = arr => arr.filter(x => x)
+  r.insertMenu = new Dropdown(cut([r.insertImage, r.insertHorizontalRule, r.insertTable]), {label: "Insert"})
+  r.typeMenu = new Dropdown(cut([r.makeParagraph, r.makeCodeBlock, r.makeHead1 && new DropdownSubmenu(cut([
+    r.makeHead1, r.makeHead2, r.makeHead3, r.makeHead4, r.makeHead5, r.makeHead6
+  ]), {label: "Heading"})]), {label: "Type..."})
+  let tableItems = cut([r.addRowBefore, r.addRowAfter, r.removeRow, r.addColumnBefore, r.addColumnAfter, r.removeColumn])
+  if (tableItems.length)
+    r.tableMenu = new Dropdown(tableItems, {label: "Table"})
+
+  r.inlineMenu = [cut([r.toggleStrong, r.toggleEm, r.toggleCode, r.toggleLink]), [r.insertMenu]]
+  r.blockMenu = [cut([r.typeMenu, r.tableMenu, r.wrapBulletList, r.wrapOrderedList, r.wrapBlockQuote, joinUpItem,
+                      liftItem, selectParentNodeItem])]
+  r.fullMenu = r.inlineMenu.concat(r.blockMenu).concat([[undoItem, redoItem]])
+
+  return r
+}
+exports.buildMenuItems = buildMenuItems

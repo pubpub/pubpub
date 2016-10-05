@@ -354,8 +354,6 @@ h2 {
 	margin-right: 20px;
 }
 /* ------------ */
-
-
 /* Footer Links */
 /* ------------ */
 .footer a {
@@ -367,7 +365,6 @@ h2 {
 	text-decoration: underline;
 }
 /* ------------ */
-
 /* Feedback Widget Style */
 /* --------------------- */
 .contrast {
@@ -383,3 +380,506 @@ h2 {
 		display: none;
 	}
 };
+
+
+/* ------------ */
+/* Editor */
+/* ------------ */
+
+
+/* ProseMirror CSS */
+
+
+.ProseMirror {
+  position: relative;
+}
+
+.ProseMirror-content {
+  white-space: pre-wrap;
+}
+
+.ProseMirror-drop-target {
+  position: absolute;
+  width: 1px;
+  background: #666;
+  pointer-events: none;
+}
+
+.ProseMirror-content ul, .ProseMirror-content ol {
+  padding-left: 30px;
+  cursor: default;
+}
+
+.ProseMirror-content blockquote {
+  padding-left: 1em;
+  border-left: 3px solid #eee;
+  margin-left: 0; margin-right: 0;
+}
+
+.ProseMirror-content pre {
+  white-space: pre-wrap;
+}
+
+.ProseMirror-content li {
+  position: relative;
+  pointer-events: none; /* Don't do weird stuff with marker clicks */
+}
+.ProseMirror-content li > * {
+  pointer-events: auto;
+}
+
+.ProseMirror-nodeselection *::selection { background: transparent; }
+.ProseMirror-nodeselection *::-moz-selection { background: transparent; }
+
+.ProseMirror-selectednode {
+  outline: 2px solid #8cf;
+}
+
+/* Make sure li selections wrap around markers */
+
+li.ProseMirror-selectednode {
+  outline: none;
+}
+
+li.ProseMirror-selectednode:after {
+  content: "";
+  position: absolute;
+  left: -32px;
+  right: -2px; top: -2px; bottom: -2px;
+  border: 2px solid #8cf;
+  pointer-events: none;
+}
+
+
+.ProseMirror-icon {
+  display: inline-block;
+  line-height: .8;
+  vertical-align: -2px; /* Compensate for padding */
+  padding: 2px 8px;
+  cursor: pointer;
+}
+
+.ProseMirror-icon svg {
+  fill: currentColor;
+  height: 1em;
+}
+
+.ProseMirror-icon span {
+  vertical-align: text-top;
+}
+
+.ProseMirror-textblock-dropdown {
+  min-width: 3em;
+}
+
+.ProseMirror-menu {
+  margin: 0 -4px;
+  line-height: 1;
+}
+
+.ProseMirror-tooltip .ProseMirror-menu {
+  width: -webkit-fit-content;
+  width: fit-content;
+  white-space: pre;
+}
+
+.ProseMirror-menuitem {
+  margin-right: 3px;
+  display: inline-block;
+}
+
+.ProseMirror-menuseparator {
+  border-right: 1px solid #ddd;
+  margin-right: 3px;
+}
+
+.ProseMirror-menu-dropdown, .ProseMirror-menu-dropdown-menu {
+  font-size: 90%;
+  white-space: nowrap;
+}
+
+.ProseMirror-menu-dropdown {
+  padding: 1px 14px 1px 4px;
+  display: inline-block;
+  vertical-align: 1px;
+  position: relative;
+  cursor: pointer;
+}
+
+.ProseMirror-menu-dropdown:after {
+  content: "";
+  border-left: 4px solid transparent;
+  border-right: 4px solid transparent;
+  border-top: 4px solid currentColor;
+  opacity: .6;
+  position: absolute;
+  right: 2px;
+  top: calc(50% - 2px);
+}
+
+.ProseMirror-menu-dropdown-menu, .ProseMirror-menu-submenu {
+  position: absolute;
+  background: white;
+  color: #666;
+  border: 1px solid #aaa;
+  padding: 2px;
+}
+
+.ProseMirror-menu-dropdown-menu {
+  z-index: 15;
+  min-width: 6em;
+}
+
+.ProseMirror-menu-dropdown-item {
+  cursor: pointer;
+  padding: 2px 8px 2px 4px;
+}
+
+.ProseMirror-menu-dropdown-item:hover {
+  background: #f2f2f2;
+}
+
+.ProseMirror-menu-submenu-wrap {
+  position: relative;
+  margin-right: -4px;
+}
+
+.ProseMirror-menu-submenu-label:after {
+  content: "";
+  border-top: 4px solid transparent;
+  border-bottom: 4px solid transparent;
+  border-left: 4px solid currentColor;
+  opacity: .6;
+  position: absolute;
+  right: 4px;
+  top: calc(50% - 4px);
+}
+
+.ProseMirror-menu-submenu {
+  display: none;
+  min-width: 4em;
+  left: 100%;
+  top: -3px;
+}
+
+.ProseMirror-menu-active {
+  background: #eee;
+  border-radius: 4px;
+}
+
+.ProseMirror-menu-active {
+  background: #eee;
+  border-radius: 4px;
+}
+
+.ProseMirror-menu-disabled {
+  opacity: .3;
+}
+
+.ProseMirror-menu-submenu-wrap:hover .ProseMirror-menu-submenu, .ProseMirror-menu-submenu-wrap-active .ProseMirror-menu-submenu {
+  display: block;
+}
+
+.ProseMirror-menubar {
+  border-top-left-radius: inherit;
+  border-top-right-radius: inherit;
+  position: relative;
+  min-height: 1em;
+  color: #666;
+  padding: 1px 6px;
+  top: 0; left: 0; right: 0;
+  border-bottom: 1px solid silver;
+  background: white;
+  z-index: 10;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  overflow: visible;
+}
+
+.ProseMirror-prompt {
+  background: white;
+  padding: 2px 6px 2px 15px;
+  border: 1px solid silver;
+  position: absolute;
+  border-radius: 3px;
+  z-index: 11;
+}
+
+.ProseMirror-prompt h5 {
+  margin: 0;
+  font-weight: normal;
+  font-size: 100%;
+  color: #444;
+}
+
+.ProseMirror-prompt input[type="text"],
+.ProseMirror-prompt textarea {
+  background: #eee;
+  border: none;
+  outline: none;
+}
+
+.ProseMirror-prompt input[type="text"] {
+  padding: 0 4px;
+}
+
+.ProseMirror-prompt-close {
+  position: absolute;
+  left: 2px; top: 1px;
+  color: #666;
+  border: none; background: transparent; padding: 0;
+}
+
+.ProseMirror-prompt-close:after {
+  content: "✕";
+  font-size: 12px;
+}
+
+.ProseMirror-invalid {
+  background: #ffc;
+  border: 1px solid #cc7;
+  border-radius: 4px;
+  padding: 5px 10px;
+  position: absolute;
+  min-width: 10em;
+}
+
+.ProseMirror-prompt-buttons {
+  margin-top: 5px;
+  display: none;
+}
+
+
+
+.ProseMirror-tooltip {
+  position: absolute;
+  display: none;
+  box-sizing: border-box;
+  -moz-box-sizing: border- box;
+  overflow: hidden;
+
+  -webkit-transition: width 0.4s ease-out, height 0.4s ease-out, left 0.4s ease-out, top 0.4s ease-out, opacity 0.2s;
+  -moz-transition: width 0.4s ease-out, height 0.4s ease-out, left 0.4s ease-out, top 0.4s ease-out, opacity 0.2s;
+  transition: width 0.4s ease-out, height 0.4s ease-out, left 0.4s ease-out, top 0.4s ease-out, opacity 0.2s;
+  opacity: 0;
+
+  border-radius: 5px;
+  padding: 3px 7px;
+  margin: 0;
+  background: white;
+  border: 1px solid #777;
+  color: #555;
+
+  z-index: 11;
+}
+
+.ProseMirror-tooltip-pointer {
+  position: absolute;
+  display: none;
+  width: 0; height: 0;
+
+  -webkit-transition: left 0.4s ease-out, top 0.4s ease-out, opacity 0.2s;
+  -moz-transition: left 0.4s ease-out, top 0.4s ease-out, opacity 0.2s;
+  transition: left 0.4s ease-out, top 0.4s ease-out, opacity 0.2s;
+  opacity: 0;
+
+  z-index: 12;
+}
+
+.ProseMirror-tooltip-pointer:after {
+  content: "";
+  position: absolute;
+  display: block;
+}
+
+.ProseMirror-tooltip-pointer-above {
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-top: 6px solid #777;
+}
+
+.ProseMirror-tooltip-pointer-above:after {
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-top: 6px solid white;
+  left: -6px; top: -7px;
+}
+
+.ProseMirror-tooltip-pointer-below {
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-bottom: 6px solid #777;
+}
+
+.ProseMirror-tooltip-pointer-below:after {
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-bottom: 6px solid white;
+  left: -6px; top: 1px;
+}
+
+.ProseMirror-tooltip-pointer-right {
+  border-top: 6px solid transparent;
+  border-bottom: 6px solid transparent;
+  border-right: 6px solid #777;
+}
+
+.ProseMirror-tooltip-pointer-right:after {
+  border-top: 6px solid transparent;
+  border-bottom: 6px solid transparent;
+  border-right: 6px solid white;
+  left: 1px; top: -6px;
+}
+
+.ProseMirror-tooltip-pointer-left {
+  border-top: 6px solid transparent;
+  border-bottom: 6px solid transparent;
+  border-left: 6px solid #777;
+}
+
+.ProseMirror-tooltip-pointer-left:after {
+  border-top: 6px solid transparent;
+  border-bottom: 6px solid transparent;
+  border-left: 6px solid white;
+  left: -7px; top: -6px;
+}
+
+.ProseMirror-tooltip input[type="text"],
+.ProseMirror-tooltip textarea {
+  background: #eee;
+  border: none;
+  outline: none;
+}
+
+.ProseMirror-tooltip input[type="text"] {
+  padding: 0 4px;
+}
+
+
+
+.ProseMirror-tooltipmenu-linktext a {
+  color: #444;
+  text-decoration: none;
+  padding: 0 5px;
+}
+
+.ProseMirror-tooltipmenu-linktext a:hover {
+  text-decoration: underline;
+}
+
+
+
+.ProseMirror:after {
+  display: table;
+  clear: both;
+  content: "";
+}
+
+.ProseMirror-menubar {
+  z-index: 2;
+  background-color: transparent;
+}
+
+.ProseMirror-content {
+  outline: none;
+  min-height: 600px;
+  padding: 0em 0em 1em 0em;
+}
+
+.ProseMirror-quick-style .ProseMirror-content{
+  padding: .5em 1em;
+  min-height: 3em;
+}
+
+@media screen and (min-resolution: 3dppx), screen and (max-width: 767px) {
+  .ProseMirror-content {
+    padding: 0em 0.5em 1em 0.5em;
+  }
+  .ProseMirror-quick-style .ProseMirror-content {
+    padding: .5em;
+  }
+}
+
+.ProseMirror-selectednode {
+  outline: 2px solid #808284;
+}
+
+.ProseMirror-menubar {
+  color: #AAA;
+  font-family: 'Open Sans';
+  font-size: 0.85em;
+  border: 0px solid black;
+  height: 39px;
+  padding: 0px 6px;
+}
+
+.ProseMirror-icon {
+  line-height: inherit;
+  display: block;
+  height: 39px;
+  line-height: 30px;
+  padding: 0px 10px;
+}
+
+.ProseMirror-quick-style .ProseMirror-icon {
+  height: auto;
+  padding: 0em .5em;
+}
+
+.ProseMirror-icon svg {
+  position: relative;
+  top: 6px;
+}
+
+.ProseMirror-icon:hover {
+  color: #222;
+}
+
+.ProseMirror-icon.ProseMirror-menu-active {
+  background: transparent;
+  color: black;
+}
+
+.ProseMirror-menu-dropdown:after {
+  content: none;
+}
+
+.ProseMirror-menu-dropdown {
+  display: block;
+  padding: 2px 15px;
+  height: 33px;
+}
+.ProseMirror-quick-style .ProseMirror-menu-dropdown {
+  padding: 0em .5em;
+  height: auto;
+}
+
+.ProseMirror-menu-dropdown-menu {
+  font-family: 'Open Sans';
+  font-size: 0.6em;
+  margin-top: -4px;
+}
+
+.ProseMirror-menuseparator {
+  margin: 0px 10px;
+  position: relative;
+  top: 5px;
+}
+
+.ProseMirror-tooltip, .ProseMirror-tooltip-pointer {
+  transition: none;
+  -webkit-transition: none;
+  -moz-transition: none;
+}
+
+.ProseMirror-quick-style .ProseMirror-menuseparator {
+  top: 0px;
+}
+
+.ProseMirror-quick-style .ProseMirror-tooltip {
+  height: 26px;
+  font-size: 0.8em;
+  line-height: 1.4em;
+  border-radius: 1px;
+  border: 1px solid #808284;
+}

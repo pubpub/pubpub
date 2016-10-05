@@ -1,3 +1,5 @@
+import {sendableSteps, getVersion} from 'prosemirror-collab';
+import {receiveAction} from 'prosemirror-collab';
 import {Step} from 'prosemirror-transform';
 
 import {schema as pubSchema} from '../proseEditor/schema';
@@ -15,7 +17,7 @@ export class ModCollabDocChanges {
 	}
 
 	checkHash(version, hash) {
-		if (version === this.mod.editor.pm.mod.collab.version) {
+		if (version === getVersion(this.mod.editor.pm)) {
 			if (hash === this.mod.editor.getHash()) {
 				return true;
 			}
@@ -50,7 +52,7 @@ export class ModCollabDocChanges {
 		}
 		this.mod.editor.mod.serverCommunications.send({
 			type: 'check_diff_version',
-			diff_version: this.mod.editor.pm.mod.collab.version
+			diff_version: getVersion(this.mod.editor.pm)
 		});
 	}
 
@@ -73,19 +75,18 @@ export class ModCollabDocChanges {
 
 	sendToCollaborators() {
 		if (this.awaitingDiffResponse ||
-			!this.mod.editor.pm.mod.collab.hasSendableSteps() ) {
+			!sendableSteps(this.mod.editor.pm)) {
 			// this.mod.editor.mod.comments.store.unsentEvents().length === 0) {
 			// We are waiting for the confirmation of previous steps, so don't
 			// send anything now, or there is nothing to send.
 			return;
 		}
 
-		const toSend = this.mod.editor.pm.mod.collab.sendableSteps();
-		// const fnToSend = this.mod.editor.mod.footnotes.fnPm.mod.collab.sendableSteps()
+		const toSend = sendableSteps(this.mod.editor.pm);
 		const requestId = this.confirmStepsRequestCounter++;
 		const aPackage = {
 			type: 'diff',
-			diff_version: this.mod.editor.pm.mod.collab.version,
+			diff_version: getVersion(this.mod.editor.pm),
 			diff: toSend.steps.map(sIndex => {
 				const step = sIndex.toJSON();
 				step.client_id = this.mod.editor.pm.mod.collab.clientID;
@@ -119,7 +120,7 @@ export class ModCollabDocChanges {
 			return undefined;
 		}
 		const editorHash = this.mod.editor.getHash();
-		if (data.diff_version !== this.mod.editor.pm.mod.collab.version) {
+		if (data.diff_version !== getVersion(this.mod.editor.pm)) {
 
 			this.checkDiffVersion();
 			return undefined;
@@ -160,9 +161,19 @@ export class ModCollabDocChanges {
 	confirmDiff(requestId) {
 		const that = this;
 		const sentSteps = this.unconfirmedSteps[requestId].diffs;
-		this.mod.editor.pm.mod.collab.receive(sentSteps, sentSteps.map(function(step) {
+		/*
+		this.mod.editor.pm.mod.collab.receiveAction(sentSteps, sentSteps.map(function(step) {
 			return that.mod.editor.pm.mod.collab.clientID;
 		}));
+		*/
+
+		const clientIds = sentSteps.map(function(step) {
+			return that.mod.editor.pm.mod.collab.clientID;
+		});
+
+		console.log('Confirm diff');
+
+		receiveAction(this.mod.editor.getState(), sentSteps, clientIds);
 
 		// let sentFnSteps = this.unconfirmedSteps[requestId]["footnote_diffs"]
 		// this.mod.editor.mod.footnotes.fnPm.mod.collab.receive(sentFnSteps, sentFnSteps.map(function(step){
@@ -191,9 +202,15 @@ export class ModCollabDocChanges {
 
 	applyDiff(diff) {
 		this.receiving = true;
+		console.log('RECEIVING DIFF');
+		console.log(diff);
 		const steps = [diff].map(jIndex => Step.fromJSON(pubSchema, jIndex));
 		const clientIds = [diff].map(jIndex => jIndex.client_id);
-		this.mod.editor.pm.mod.collab.receive(steps, clientIds);
+		console.log(steps, clientIds);
+		// this.mod.editor.pm.mod.collab.receiveAction(steps, clientIds);
+		const state = this.mod.editor.getState();
+		console.log(state);
+		receiveAction(state, steps, clientIds);
 		this.receiving = false;
 	}
 

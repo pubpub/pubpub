@@ -13,8 +13,9 @@ import {safeGetInToJS} from 'utils/safeParse';
 import ElementSchema from './proseEditor/elementSchema';
 import EmbedEditor from './proseEditor/EmbedEditor';
 import StatusTray from './DocumentEditorStatusTray';
-import {markdownParser, markdownSerializer, schema} from './proseEditor';
 import {schema as pubSchema} from './proseEditor/schema';
+
+// import {markdownParser, markdownSerializer, schema} from './proseEditor';
 
 const ColorHash = new chash();
 
@@ -40,48 +41,22 @@ export const DocumentEditor = React.createClass({
 
 
 	componentDidMount() {
-		const prosemirror = require('prosemirror');
-		const {pubpubSetup} = require('./proseEditor/pubpubSetup');
-		const {EditorState} = require('prosemirror-state');
-
-
-		EditorState.create({doc: DOMParser.fromSchema(demoSchema).parse(document.querySelector("#content")),
-		                                plugins: [exampleSetup({schema: demoSchema})]})
+		// return;
 
 		const {ModServerCommunications} = require('./collab/server-communications');
-		const nodeConvert = require('./collab/node-convert');
-		this.editorToModel = nodeConvert.editorToModel;
-		this.modelToEditor = nodeConvert.modelToEditor;
-
 		const {ModCollab} = require('./collab/mod');
-		const {collabEditing} = require('prosemirror-collab');
 
-		const that = this;
 
-		pm = new prosemirror.ProseMirror({
-			place: document.getElementById('atom-body-editor'),
-			schema: schema,
-			plugins: [pubpubSetup, collabEditing.config({version: 0})],
-			// doc: !!docJSON ? Node.fromJSON(schema, docJSON) : null,
-			// doc: null,
-			/*
-			on: {
-			change: new Subscription,
-			doubleClickOn: new StoppableSubscription,
-			}
-			*/
-		});
-
-		this.pm = pm;
 		const token = safeGetInToJS(this.props.atomData, ['token']);
 		const tokenValid = safeGetInToJS(this.props.atomData, ['tokenValid']);
 
-		pm.mod = {};
-		pm.mod.collab = collabEditing.get(pm);
+		const that = this;
+
 		// Ignore setDoc
-		pm.on.beforeSetDoc.remove(pm.mod.collab.onSetDoc);
-		pm.mod.collab.onSetDoc = function() {};
+		// pm.on.beforeSetDoc.remove(pm.mod.collab.onSetDoc);
+	  // pm.mod.collab.onSetDoc = function() {};
 		// Trigger reset on setDoc
+		/*
 		pm.mod.collab.afterSetDoc = function() {
 			// Reset all collab values and set document version
 			const collab = pm.mod.collab;
@@ -89,7 +64,8 @@ export const DocumentEditor = React.createClass({
 			collab.unconfirmedSteps = [];
 			collab.unconfirmedMaps = [];
 		};
-		pm.on.setDoc.add(pm.mod.collab.afterSetDoc);
+		*/
+		// pm.on.setDoc.add(pm.mod.collab.afterSetDoc);
 
 		const collab = {};
 		collab.docInfo = {
@@ -101,8 +77,6 @@ export const DocumentEditor = React.createClass({
 			changed: false,
 		};
 		collab.mod = {};
-		collab.pm = pm;
-		collab.currentPm = pm;
 		collab.waitingForDocument = true;
 		collab.schema = pubSchema;
 		collab.receiveDocument = this.receiveDocument;
@@ -110,6 +84,10 @@ export const DocumentEditor = React.createClass({
 		collab.askForDocument = this.askForDocument;
 		collab.getHash = this.getHash;
 		collab.updateParticipants = this.updateParticipants;
+
+		collab.getState = () => {
+			return this.pm;
+		};
 
 		collab.setConnectionStatus = function(status, statusMsg) {
 			that.setState({status, statusMsg});
@@ -138,17 +116,21 @@ export const DocumentEditor = React.createClass({
 		new ModCollab(collab);
 
 
+		/*
 		pm.on.change.add(function() {
 			that.collab.docInfo.changed = true;
 		});
+		*/
 		this.collab.mod.serverCommunications.init();
 		this.setSaveTimers();
 
-		this.proseChange();
+		// this.proseChange();
 
+		/*
 		pm.on.change.add((evt)=>{
 			this.proseChange();
 		});
+		*/
 
 		/*
 		pm.on.doubleClickOn.add((pos, node, nodePos)=>{
@@ -162,15 +144,11 @@ export const DocumentEditor = React.createClass({
 		});
 		*/
 
-		pm.on.transformPastedHTML.add(this.transformHTML);
-		ElementSchema.initiateProseMirror(pm, this.updateEmbedEditor, this.setEmbedAttribute);
+		// pm.on.transformPastedHTML.add(this.transformHTML);
+
+		// ElementSchema.initiateProseMirror(pm, this.updateEmbedEditor, this.setEmbedAttribute);
 
 		this.moveMenu();
-		// console.log('onscroll', window.onscroll);
-		// window.onscroll = function(evt) {
-		// 	// called when the window is scrolled.
-		// 	console.log(evt);
-		// };
 	},
 
 	transformHTML: function(htmlText) {
@@ -283,27 +261,126 @@ export const DocumentEditor = React.createClass({
 		// })
 		return MD5(JSON.parse(JSON.stringify(doc.toJSON())), {unorderedArrays: true});
 	},
+
+	setDoc: function(jsonDoc) {
+		this.pm.updateState({})
+	},
+
+	//
+	// Update - Update document and use a JSON
+	//
 	update: function() {
+
 		const that = this;
+		console.log('GOT UPDATE!');
+
+		const {pubpubSetup, buildMenuItems} = require('./proseEditor/pubpubSetup');
+		const {EditorState} = require('prosemirror-state');
+		const {MenuBarEditorView, MenuItem} = require('prosemirror-menu');
+
+		const nodeConvert = require('./collab/node-convert');
+		this.editorToModel = nodeConvert.editorToModel;
+		this.modelToEditor = nodeConvert.modelToEditor;
+
+		const collabEditing = require('prosemirror-collab').collab;
+		const {DOMParser} = require("prosemirror-model");
+
+
+		this.pubpubSetup = pubpubSetup;
+		this.collabEditing = collabEditing;
+		this.EditorState = EditorState;
+
+		let menu = buildMenuItems(pubSchema);
+		// TO-DO: USE UNIQUE ID FOR USER AND VERSION NUMBER
+		// USE DEFAULT schema
+
+		const migrateSchema = (node) => {
+			if (node.content) {
+				for (const subNode of node.content) {
+					migrateSchema(subNode);
+				}
+			}
+			if (node.marks) {
+				node.marks = node.marks.map((mark) => {
+					return {
+						type: mark._,
+						/*
+						attrs: {
+
+						}
+						*/
+					}
+				});
+			}
+		};
+
+		migrateSchema(this.collab.doc.contents);
+		console.log(this.collab.doc.contents);
+
+
+		pm = EditorState.create({
+			doc: pubSchema.nodeFromJSON(this.collab.doc.contents),
+			plugins: [pubpubSetup({schema: pubSchema}), collabEditing({version: 0})],
+		});
+
+		const view = new MenuBarEditorView(document.getElementById('atom-body-editor'), {
+		  state: pm,
+		  onAction: (action) => {
+				console.log('Got Action', action);
+				view.updateState(view.editor.state.applyAction(action))
+			},
+		  menuContent: menu.fullMenu,
+			spellcheck: true,
+		});
+
+		this.pm = pm;
+		this.view = view;
+		this.collab.pm = pm;
+		this.collab.currentPm = pm;
+
+		console.log(this.collab.mod);
+
+
+
 		this.collab.mod.collab.docChanges.cancelCurrentlyCheckingVersion();
 		this.collab.mod.collab.docChanges.unconfirmedSteps = {};
 		if (this.collab.mod.collab.docChanges.awaitingDiffResponse) {
 			this.collab.mod.collab.docChanges.enableDiffSending();
 		}
-		const pmDoc = this.modelToEditor(this.collab.doc, this.collab.schema);
+		// const pmDoc = this.modelToEditor(this.collab.doc, this.collab.schema);
 		// collabEditing.detach(this.pm)
-		this.collab.pm.setDoc(pmDoc);
-		that.collab.pm.mod.collab.version = this.collab.doc.version;
+		// this.collab.pm.setDoc(pmDoc);
+		// pubSchema.nodeFromJSON(data.doc.contents),x
+
+
+		// that.collab.pm.mod.collab.version = this.collab.doc.version;
 		// collabEditing.config({version: this.doc.version}).attach(this.pm)
-		while (this.collab.docInfo.last_diffs.length > 0) {
-			const diff = this.collab.docInfo.last_diffs.shift();
-			this.collab.mod.collab.docChanges.applyDiff(diff);
-		}
-		this.collab.doc.hash = this.getHash();
+
+		const applyDiffsNow = () => {
+			while (this.collab.docInfo.last_diffs.length > 0) {
+				const diff = this.collab.docInfo.last_diffs.shift();
+				try {
+						this.collab.mod.collab.docChanges.applyDiff(diff);
+				} catch(err) {
+					console.log('Could not apply diff');
+				}
+			}
+		};
+
+		window.setTimeout(applyDiffsNow, 5000);
+
+		// this.collab.doc.hash = this.getHash();
 		// this.collab.mod.comments.store.setVersion(this.doc.comment_version)
+
+
+		// TO MIGRATE
+		/*
 		this.collab.pm.mod.collab.mustSend.add(function() {
 			that.collab.mod.collab.docChanges.sendToCollaborators();
-		}, 0); // priority : 0 so that other things cna be scheduled before this.
+		}, 0);
+		*/
+
+		// priority : 0 so that other things cna be scheduled before this.
 		// this.collab.pm.mod.collab.receivedTransform.add((transform, options) => {that.onTransform(transform, false)})
 		// this.collab.mod.footnotes.fnEditor.renderAllFootnotes()
 		// _.each(this.collab.doc.comments, function(comment) {
@@ -439,7 +516,7 @@ export const DocumentEditor = React.createClass({
 		return {
 			// markdown: markdownSerializer.serialize(this.pm.doc),
 			markdown: '',
-			docJSON: this.pm.doc.toJSON(),
+			docJSON: this.pm.toJSON(),
 		};
 	},
 

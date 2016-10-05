@@ -1,18 +1,18 @@
-import {Schema, Inline, Block, Text, Attribute, MarkType} from 'prosemirror-model';
-import {Doc, BlockQuote, HorizontalRule, Heading, CodeBlock, Paragraph, Image, HardBreak, EmMark, StrongMark, LinkMark, CodeMark} from 'prosemirror-schema-basic';
-import {OrderedList, BulletList, ListItem} from 'prosemirror-schema-list';
+import {Schema, Node, Fragment, Mark, NodeType, MarkType, DOMParser, DOMSerializer} from 'prosemirror-model';
+import {schema as basicSchema} from 'prosemirror-schema-basic';
+import {addListNodes, OrderedList, BulletList, ListItem} from 'prosemirror-schema-list';
 
 import ElementSchema from './elementSchema';
 
-// An Emoji node type.
+/*
 class Emoji extends Inline {
-  get attrs() {
+	get attrs() {
 	return {
 		content: new Attribute,
 		markup: new Attribute,
 	};
-  }
-  toDOM(node) { return ['span', node.attrs.content]; }
+	}
+	toDOM(node) { return ['span', node.attrs.content]; }
 }
 
 // A Pagebreak node Type
@@ -43,6 +43,7 @@ class StrikeThroughMark extends MarkType {
 	toDOM() { return ['s']; }
 }
 exports.StrikeThroughMark = StrikeThroughMark;
+*/
 
 // ;; An inline embed node type. Has these attributes:
 //
@@ -54,26 +55,103 @@ exports.StrikeThroughMark = StrikeThroughMark;
 // - **`caption`**: String caption to place under the embed
 // - **`data`**: Cached version/atom data. This is not serialized into markdown (in the long-term), but is kept here for fast rendering
 
+const SubMark = {
+    parseDOM: [{tag: "sub"}],
+    toDOM() { return ["sub"] }
+};
+
+const SupMark = {
+    parseDOM: [{tag: "sup"}],
+    toDOM() { return ["sup"] }
+};
+
+const StrikeThroughMark = {
+    parseDOM: [{tag: "s"}],
+    toDOM() { return ["s"] }
+};
+
+
+const PageBreak = {
+    group: "block",
+    toDOM(node) { return ['div', {class: 'pagebreak'}, 'pagebreak']; }
+};
+
+
+const Embed = {
+	attrs: {
+		source: {default: ''},
+		className: {default: ''},
+		id: {default: ''},
+		nodeId: {default: null},
+		align: {default: 'full'},
+		size: {default: ''},
+		caption: {default: ''},
+		mode: {default: 'embed'},
+		data: {default: {}},
+		selected: {default: false},
+		figureName: {default: ''},
+	},
+	toDOM: function(node) {
+		return ElementSchema.createElementAtNode(node);
+	},
+	parseDOM: [{
+		tag: 'div.embed',
+		getAttrs: dom => {
+			const nodeId = dom.getAttribute('data-nodeId');
+			const nodeAttrs = ElementSchema.findNodeById(nodeId);
+			return {
+				source: nodeAttrs.source,
+				data: nodeAttrs.data,
+				align: nodeAttrs.align,
+				size: nodeAttrs.size,
+				caption: nodeAttrs.caption,
+				mode: nodeAttrs.mode,
+				className: nodeAttrs.className,
+				figureName: nodeAttrs.figureName,
+				nodeId: nodeAttrs.nodeId,
+				children: null,
+				childNodes: null,
+			};
+		}
+	}],
+	inline: true,
+	group: 'inline'
+};
+
+const schemaNodes = basicSchema.nodeSpec.addBefore('image', 'embed', Embed).addBefore('horizontal_rule', 'page_break', PageBreak);
+
+export const schema = new Schema({
+	nodes: addListNodes(schemaNodes, "paragraph block*", "block"),
+	marks: basicSchema.markSpec.addBefore('code', 'sub', SubMark).addBefore('code', 'sup', SupMark).addBefore('code', 'strike', StrikeThroughMark)
+});
+
+const EmbedType = schema.nodes.embed;
+
+exports.Embed = EmbedType;
+
+
+/*
+
 class Embed extends Inline {
 	get attrs() {
 		return {
 			source: new Attribute,
 			className: new Attribute({default: ''}),
 			id: new Attribute({default: ''}),
-      nodeId: new Attribute({default: null}),
+			nodeId: new Attribute({default: null}),
 			align: new Attribute({default: 'full'}),
 			size: new Attribute({default: ''}),
 			caption: new Attribute({default: ''}),
 			mode: new Attribute({default: 'embed'}), // mode = embed || cite
 			data: new Attribute({default: {}}),
 			selected: new Attribute({default: false}),
-      figureName: new Attribute({default: {}}),
+			figureName: new Attribute({default: {}}),
 		};
 	}
 	get draggable() { return true; }
 
 
-  // What if this doesnt exist?
+	// What if this doesnt exist?
 	get matchDOMTag() {
 		return {'.embed': dom => {
 			const nodeId = dom.getAttribute('data-nodeId');
@@ -86,8 +164,8 @@ class Embed extends Inline {
 				caption: nodeAttrs.caption,
 				mode: nodeAttrs.mode,
 				className: nodeAttrs.className,
-        figureName: nodeAttrs.figureName,
-        nodeId: nodeAttrs.nodeId,
+				figureName: nodeAttrs.figureName,
+				nodeId: nodeAttrs.nodeId,
 				children: null,
 				childNodes: null,
 			};
@@ -99,9 +177,9 @@ class Embed extends Inline {
 	}
 }
 
-exports.Embed = Embed;
+*/
 
-
+/*
 class Pointer extends Inline {
 	get attrs() {
 		return {
@@ -134,20 +212,20 @@ class BlockEmbed extends Block {
 			source: new Attribute,
 			className: new Attribute({default: ''}),
 			id: new Attribute({default: ''}),
-      nodeId: new Attribute({default: null}),
+			nodeId: new Attribute({default: null}),
 			align: new Attribute({default: 'full'}),
 			size: new Attribute({default: ''}),
 			caption: new Attribute({default: ''}),
 			mode: new Attribute({default: 'embed'}), // mode = embed || cite
 			data: new Attribute({default: {}}),
 			selected: new Attribute({default: false}),
-      figureName: new Attribute({default: {}}),
+			figureName: new Attribute({default: {}}),
 		};
 	}
 	get draggable() { return true; }
 
 
-  // What if this doesnt exist?
+	// What if this doesnt exist?
 	get matchDOMTag() {
 		return {'.block-embed': dom => {
 			const nodeId = dom.getAttribute('data-nodeId');
@@ -160,8 +238,8 @@ class BlockEmbed extends Block {
 				caption: nodeAttrs.caption,
 				mode: nodeAttrs.mode,
 				className: nodeAttrs.className,
-        figureName: nodeAttrs.figureName,
-        nodeId: nodeAttrs.nodeId,
+				figureName: nodeAttrs.figureName,
+				nodeId: nodeAttrs.nodeId,
 				children: null,
 				childNodes: null,
 			};
@@ -175,8 +253,9 @@ class BlockEmbed extends Block {
 
 exports.BlockEmbed = BlockEmbed;
 
+*/
 
-
+/*
 export const schema = new Schema({
 	nodes: {
 		doc: {type: Doc, content: 'block+'},
@@ -210,3 +289,4 @@ export const schema = new Schema({
 		strike: StrikeThroughMark,
 	}
 });
+*/

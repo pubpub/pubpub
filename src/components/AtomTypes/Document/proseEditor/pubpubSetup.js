@@ -1,34 +1,4 @@
-const {blockQuoteRule, orderedListRule, bulletListRule, codeBlockRule, headingRule, inputRules, allInputRules} = require('prosemirror-inputrules');
-const {Plugin} = require('prosemirror-state');
-const {menuBar, tooltipMenu} = require('prosemirror-menu');
-const {InputRule} = require('prosemirror-inputrules');
-
-const {buildMenuItems} = require('./menu');
-const {buildKeymap} = require('./keymap');
-require('./style');
-
-// This module exports helper functions for deriving a set of pubpub-specific
-// menu items, input rules, or key bindings from a schema. These
-// values need to know about the schema for two reasons—they need
-// access to specific instances of node and mark types, and they need
-// to know which of the node and mark types that they know about are
-// actually present in the schema.
-//
-// The `pubpubSetup` plugin ties these together into a plugin that
-// will automatically enable this basic functionality in an editor.
-
-// :: (Schema) → [InputRule]
-// A set of input rules for creating the basic block quotes, lists,
-// code blocks, and heading.
-function buildInputRules(schema) {
-	const result = [];
-
-	result.push(blockQuoteRule(schema.nodes.blockquote));
-	result.push(orderedListRule(schema.nodes.ordered_list));
-	result.push(bulletListRule(schema.nodes.bullet_list));
-	result.push(codeBlockRule(schema.nodes.code_block));
-	result.push(headingRule(schema.nodes.heading, 6));
-
+/*
 	const embedRule = new InputRule(/\[\[$/, '[', function(pm, match, pos) {
 		const start = pos - match[0].length;
 		pm.tr.delete(start, pos).apply();
@@ -50,52 +20,76 @@ function buildInputRules(schema) {
 		}
 	}, false);
 
-	return result;
+*/
+
+
+const {blockQuoteRule, orderedListRule, bulletListRule, codeBlockRule, headingRule,
+       inputRules, allInputRules} = require("prosemirror-inputrules")
+const {keymap} = require("prosemirror-keymap")
+const {history} = require("prosemirror-history")
+const {baseKeymap} = require("prosemirror-commands")
+const {Plugin} = require("prosemirror-state")
+
+const {buildMenuItems} = require("./menu")
+exports.buildMenuItems = buildMenuItems
+const {buildKeymap} = require("./keymap")
+exports.buildKeymap = buildKeymap
+
+// !! This module exports helper functions for deriving a set of basic
+// menu items, input rules, or key bindings from a schema. These
+// values need to know about the schema for two reasons—they need
+// access to specific instances of node and mark types, and they need
+// to know which of the node and mark types that they know about are
+// actually present in the schema.
+//
+// The `exampleSetup` plugin ties these together into a plugin that
+// will automatically enable this basic functionality in an editor.
+
+// :: (Object) → Plugin
+// A convenience plugin that bundles together a simple menu with basic
+// key bindings, input rules, and styling for the example schema.
+// Probably only useful for quickly setting up a passable
+// editor—you'll need more control over your settings in most
+// real-world situations.
+//
+//   options::- The following options are recognized:
+//
+//     schema:: Schema
+//     The schema to generate key bindings and menu items for.
+//
+//     mapKeys:: ?Object
+//     Can be used to [adjust](#example-setup.buildKeymap) the key bindings created.
+function pubpubSetup(options) {
+  let deps = [
+    inputRules({rules: allInputRules.concat(buildInputRules(options.schema))}),
+    keymap(buildKeymap(options.schema, options.mapKeys)),
+    keymap(baseKeymap)
+  ]
+  if (options.history !== false) deps.push(history)
+
+  return new Plugin({
+    props: {
+      class: () => "PubPub-editor-style",
+      menuContent: buildMenuItems(options.schema).fullMenu,
+      floatingMenu: true
+    },
+
+    dependencies: deps
+  })
+}
+exports.pubpubSetup = pubpubSetup
+
+// :: (Schema) → [InputRule]
+// A set of input rules for creating the basic block quotes, lists,
+// code blocks, and heading.
+function buildInputRules(schema) {
+  let result = [], type
+  if (type = schema.nodes.blockquote) result.push(blockQuoteRule(type))
+  if (type = schema.nodes.ordered_list) result.push(orderedListRule(type))
+  if (type = schema.nodes.bullet_list) result.push(bulletListRule(type))
+  if (type = schema.nodes.code_block) result.push(codeBlockRule(type))
+  if (type = schema.nodes.heading) result.push(headingRule(type, 6))
+  return result
 }
 
-exports.pubpubSetup = new Plugin(class {
-	constructor(pm, options) {
-		// const className = options.className || 'ProseMirror-pubpub-editor-style';
-		// pm.wrapper.classList.add(className);
-		this.keymap = buildKeymap(pm.schema, options.mapKeys);
-		pm.addKeymap(this.keymap);
-		this.inputRules = allInputRules.concat(buildInputRules(pm.schema));
-		const rules = inputRules.ensure(pm);
-		this.inputRules.forEach(rule => rules.addRule(rule));
-
-		let builtMenu;
-		this.barConf = options.menuBar;
-		this.tooltipConf = options.tooltipMenu;
-
-		if (this.barConf === true) {
-			builtMenu = buildMenuItems(pm.schema);
-			this.barConf = {float: false, content: builtMenu.fullMenu};
-		}
-		if (this.barConf) menuBar.config(this.barConf).attach(pm);
-
-		if (this.tooltipConf === true) {
-			if (!builtMenu) builtMenu = buildMenuItems(pm.schema);
-			this.tooltipConf = {
-				showLinks: true,
-				selectedBlockMenu: true,
-				inlineContent: builtMenu.embedMenu,
-				// blockContent: builtMenu.embedMenu,
-				blockContent: [],
-				position: 'below',
-			};
-		}
-		if (this.tooltipConf) tooltipMenu.config(this.tooltipConf).attach(pm);
-	}
-	detach(pm) {
-		// pm.wrapper.classList.remove(className);
-		pm.removeKeymap(this.keymap);
-		const rules = inputRules.ensure(pm);
-		this.inputRules.forEach(rule => rules.removeRule(rule));
-		if (this.barConf) menuBar.detach(pm);
-		if (this.tooltipConf) tooltipMenu.detach(pm);
-	}
-}, {
-	menuBar: true,
-	tooltipMenu: false,
-	mapKeys: null
-});
+exports.buildInputRules = buildInputRules;
