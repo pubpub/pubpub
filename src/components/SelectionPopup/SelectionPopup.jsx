@@ -235,7 +235,6 @@ export const SelectionPopup = React.createClass({
 	},
 
 	render: function() {
-
 		return (
 			<div id="plugin-popup" className="plugin-popup" style={[styles.pluginPopup, this.getPluginPopupLoc(), this.state.popupVisible && styles.pluginPopupVisible]}>
 
