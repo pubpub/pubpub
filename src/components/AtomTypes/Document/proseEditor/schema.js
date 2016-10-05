@@ -118,7 +118,50 @@ const Embed = {
 	group: 'inline'
 };
 
-const schemaNodes = basicSchema.nodeSpec.addBefore('image', 'embed', Embed).addBefore('horizontal_rule', 'page_break', PageBreak);
+const BlockEmbed = {
+	attrs: {
+		source: {default: ''},
+		className: {default: ''},
+		id: {default: ''},
+		nodeId: {default: null},
+		align: {default: 'full'},
+		size: {default: ''},
+		caption: {default: ''},
+		mode: {default: 'embed'},
+		data: {default: {}},
+		selected: {default: false},
+		figureName: {default: ''},
+	},
+	toDOM: function(node) {
+		return ElementSchema.createElementAtNode(node, true);
+	},
+	parseDOM: [{
+		tag: 'div.block-embed',
+		getAttrs: dom => {
+			const nodeId = dom.getAttribute('data-nodeId');
+			const nodeAttrs = ElementSchema.findNodeById(nodeId);
+			return {
+				source: nodeAttrs.source,
+				data: nodeAttrs.data,
+				align: nodeAttrs.align,
+				size: nodeAttrs.size,
+				caption: nodeAttrs.caption,
+				mode: nodeAttrs.mode,
+				className: nodeAttrs.className,
+				figureName: nodeAttrs.figureName,
+				nodeId: nodeAttrs.nodeId,
+				children: null,
+				childNodes: null,
+			};
+		}
+	}],
+	inline: false,
+	group: 'block'
+};
+
+const schemaNodes = basicSchema.nodeSpec.addBefore('image', 'embed', Embed).addBefore('image', 'block_embed', BlockEmbed).addBefore('horizontal_rule', 'page_break', PageBreak);
+
+console.log(schemaNodes);
 
 export const schema = new Schema({
 	nodes: addListNodes(schemaNodes, "paragraph block*", "block"),

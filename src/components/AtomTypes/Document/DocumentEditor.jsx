@@ -356,18 +356,8 @@ export const DocumentEditor = React.createClass({
 		// that.collab.pm.mod.collab.version = this.collab.doc.version;
 		// collabEditing.config({version: this.doc.version}).attach(this.pm)
 
-		const applyDiffsNow = () => {
-			while (this.collab.docInfo.last_diffs.length > 0) {
-				const diff = this.collab.docInfo.last_diffs.shift();
-				try {
-						this.collab.mod.collab.docChanges.applyDiff(diff);
-				} catch(err) {
-					console.log('Could not apply diff');
-				}
-			}
-		};
-
-		window.setTimeout(applyDiffsNow, 5000);
+		const appliedAction = this.collab.mod.collab.docChanges.applyAllDiffs(this.collab.docInfo.last_diffs);
+		view.updateState(view.editor.state.applyAction(appliedAction));
 
 		// this.collab.doc.hash = this.getHash();
 		// this.collab.mod.comments.store.setVersion(this.doc.comment_version)

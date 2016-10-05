@@ -202,16 +202,35 @@ export class ModCollabDocChanges {
 
 	applyDiff(diff) {
 		this.receiving = true;
-		console.log('RECEIVING DIFF');
-		console.log(diff);
 		const steps = [diff].map(jIndex => Step.fromJSON(pubSchema, jIndex));
 		const clientIds = [diff].map(jIndex => jIndex.client_id);
+		console.log('RECEIVING DIFF');
+		console.log(diff);
 		console.log(steps, clientIds);
 		// this.mod.editor.pm.mod.collab.receiveAction(steps, clientIds);
 		const state = this.mod.editor.getState();
-		console.log(state);
 		receiveAction(state, steps, clientIds);
 		this.receiving = false;
+	}
+
+	applyAllDiffs(diffs) {
+		let action = null;
+		try {
+			this.receiving = true;
+			const newDiffs = diffs.slice(0,10);
+			const steps = newDiffs.map(jIndex => Step.fromJSON(pubSchema, jIndex));
+			const clientIds = newDiffs.map(jIndex => jIndex.client_id);
+			console.log('RECEIVING DIFFS');
+			console.log(steps, clientIds);
+			// this.mod.editor.pm.mod.collab.receiveAction(steps, clientIds);
+			const state = this.mod.editor.getState();
+			action = receiveAction(state, steps, clientIds);
+			this.receiving = false;
+		} catch (err) {
+			console.log(err);
+		}
+		return action;
+
 	}
 
 
