@@ -35,7 +35,7 @@ export const Reference = React.createClass({
 			citationStrings.author = citation.author ? citation.author + '. ' : '';
 			citationStrings.journal = citation.journal ? citation.journal + '. ' : '';
 			citationStrings.publisher = citation.publisher ? citation.publisher + ', ' : '';
-			citationStrings.year = citation.year ? '(' + citation.year + '): ' : '';
+			citationStrings.year = citation.year ? '(' + citation.year + '). ' : '';
 			citationStrings.volume = citation.volume ? 'Vol. ' + citation.volume + '. ' : '';
 			citationStrings.number = citation.number ? 'Num. ' + citation.number + '. ' : '';
 			citationStrings.pages = citation.pages ? citation.pages + '. ' : '';
@@ -49,7 +49,7 @@ export const Reference = React.createClass({
 			citationStrings.author = citation.author ? citation.author + '. ' : '';
 			citationStrings.journal = citation.journal ? citation.journal + '. ' : '';
 			citationStrings.publisher = citation.publisher ? citation.publisher + ', ' : '';
-			citationStrings.year = citation.year ? '(' + citation.year + '): ' : '';
+			citationStrings.year = citation.year ? '(' + citation.year + '). ' : '';
 			citationStrings.volume = citation.volume ? 'Vol. ' + citation.volume + '. ' : '';
 			citationStrings.number = citation.number ? 'Num. ' + citation.number + '. ' : '';
 			citationStrings.pages = citation.pages ? citation.pages + '. ' : '';
@@ -104,7 +104,7 @@ export const Reference = React.createClass({
 				{citationStrings.pages}
 				<a href={citation.url} style={{textDecoration: 'none', color: 'inherit'}}>{citationStrings.url}</a>
 				{citationStrings.note}
-				{citationStrings.doi}
+				<a href={citationStrings.doi ? 'https://doi.org/' + citationStrings.doi : ''}>{citationStrings.doi ? 'DOI ' + citationStrings.doi : ''}</a>
 			</span>);
 
 		case 'chicago':
@@ -119,7 +119,7 @@ export const Reference = React.createClass({
 				{citationStrings.pages}
 				<a href={citation.url} style={{textDecoration: 'none', color: 'inherit'}}>{citationStrings.url}</a>
 				{citationStrings.note}
-				{citationStrings.doi}
+				<a href={citationStrings.doi ? 'https://doi.org/' + citationStrings.doi : ''}>{citationStrings.doi ? 'DOI ' + citationStrings.doi : ''}</a>
 			</span>);
 
 		case 'apa':
@@ -135,7 +135,7 @@ export const Reference = React.createClass({
 				{citationStrings.pages}
 				<a href={citation.url} style={{textDecoration: 'none', color: 'inherit'}}>{citationStrings.url}</a>
 				{citationStrings.note}
-				{citationStrings.doi}
+				<a href={citationStrings.doi ? 'https://doi.org/' + citationStrings.doi : ''}>{citationStrings.doi ? 'DOI ' + citationStrings.doi : ''}</a>
 			</span>);
 		case 'bibtex':
 			return (<span>
