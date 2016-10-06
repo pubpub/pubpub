@@ -65,7 +65,7 @@ export const ReferenceViewer = React.createClass({
 					: null }
 
 					{/* Needs to be internationalized */}
-					{(referenceData.url) ? <a href={referenceData.url} style={styles.button} className={'button light-button'} target="_blank">
+					{(referenceData.url) ? <a href={referenceData.url.substring(0, 4) === 'http' ? referenceData.url : 'http://' + referenceData.url} style={styles.button} className={'button light-button'} target="_blank">
 					View Link</a> : null }
 
 					{(referenceData.title) ? <a href={scholarLink} style={styles.button} className={'button light-button'} target="_blank">

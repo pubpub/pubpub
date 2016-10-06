@@ -102,7 +102,7 @@ export const Reference = React.createClass({
 				{citationStrings.year}
 				{citationStrings.number}
 				{citationStrings.pages}
-				<a href={citation.url} style={{textDecoration: 'none', color: 'inherit'}}>{citationStrings.url}</a>
+				<a href={citation.url.substring(0, 4) === 'http' ? citation.url : 'http://' + citation.url} style={{textDecoration: 'none', color: 'inherit'}}>{citationStrings.url}</a>
 				{citationStrings.note}
 				<a href={citationStrings.doi ? 'https://doi.org/' + citationStrings.doi : ''}>{citationStrings.doi ? 'DOI ' + citationStrings.doi : ''}</a>
 			</span>);
@@ -117,7 +117,7 @@ export const Reference = React.createClass({
 				{citationStrings.year}
 				{citationStrings.number}
 				{citationStrings.pages}
-				<a href={citation.url} style={{textDecoration: 'none', color: 'inherit'}}>{citationStrings.url}</a>
+				<a href={citation.url.substring(0, 4) === 'http' ? citation.url : 'http://' + citation.url} style={{textDecoration: 'none', color: 'inherit'}}>{citationStrings.url}</a>
 				{citationStrings.note}
 				<a href={citationStrings.doi ? 'https://doi.org/' + citationStrings.doi : ''}>{citationStrings.doi ? 'DOI ' + citationStrings.doi : ''}</a>
 			</span>);
@@ -133,7 +133,7 @@ export const Reference = React.createClass({
 
 				{citationStrings.number}
 				{citationStrings.pages}
-				<a href={citation.url} style={{textDecoration: 'none', color: 'inherit'}}>{citationStrings.url}</a>
+				<a href={citation.url.substring(0, 4) === 'http' ? citation.url : 'http://' + citation.url} style={{textDecoration: 'none', color: 'inherit'}}>{citationStrings.url}</a>
 				{citationStrings.note}
 				<a href={citationStrings.doi ? 'https://doi.org/' + citationStrings.doi : ''}>{citationStrings.doi ? 'DOI ' + citationStrings.doi : ''}</a>
 			</span>);
