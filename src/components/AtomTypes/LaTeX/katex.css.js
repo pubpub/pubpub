@@ -616,7 +616,8 @@ export default {
 	},
 	'.katex .accent .accent-body.accent-vec>span': {
 		position: 'relative',
-		left: '.326em'
+		// left: '.326em' // This left was causing the vector to show over the wrong portion
+		left: '-.25em',
 	},
 	'.katex .mtable .vertical-separator': {
 		display: 'inline-block',
