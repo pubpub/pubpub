@@ -89,9 +89,7 @@ export const DocumentEditor = React.createClass({
 			return this.pm;
 		};
 
-		collab.setConnectionStatus = function(status, statusMsg) {
-			that.setState({status, statusMsg});
-		};
+		collab.setConnectionStatus = this.setConnectionStatus;
 
 		collab.setParticipants = function(participants) {
 			that.setState({participants: participants});
@@ -146,9 +144,13 @@ export const DocumentEditor = React.createClass({
 
 		// pm.on.transformPastedHTML.add(this.transformHTML);
 
-		// ElementSchema.initiateProseMirror(pm, this.updateEmbedEditor, this.setEmbedAttribute);
+		//
 
 		this.moveMenu();
+	},
+
+	setConnectionStatus: function(status, statusMsg) {
+		this.setState({status, statusMsg});
 	},
 
 	transformHTML: function(htmlText) {
@@ -272,7 +274,6 @@ export const DocumentEditor = React.createClass({
 	update: function() {
 
 		const that = this;
-		console.log('GOT UPDATE!');
 
 		const {pubpubSetup, buildMenuItems} = require('./proseEditor/pubpubSetup');
 		const {EditorState} = require('prosemirror-state');
@@ -326,7 +327,6 @@ export const DocumentEditor = React.createClass({
 		const view = new MenuBarEditorView(document.getElementById('atom-body-editor'), {
 		  state: pm,
 		  onAction: (action) => {
-				console.log('Got Action', action);
 				view.updateState(view.editor.state.applyAction(action))
 			},
 		  menuContent: menu.fullMenu,
@@ -338,27 +338,22 @@ export const DocumentEditor = React.createClass({
 		this.collab.pm = pm;
 		this.collab.currentPm = pm;
 
-		console.log(this.collab.mod);
-
-
-
 		this.collab.mod.collab.docChanges.cancelCurrentlyCheckingVersion();
 		this.collab.mod.collab.docChanges.unconfirmedSteps = {};
 		if (this.collab.mod.collab.docChanges.awaitingDiffResponse) {
 			this.collab.mod.collab.docChanges.enableDiffSending();
 		}
-		// const pmDoc = this.modelToEditor(this.collab.doc, this.collab.schema);
-		// collabEditing.detach(this.pm)
-		// this.collab.pm.setDoc(pmDoc);
-		// pubSchema.nodeFromJSON(data.doc.contents),x
-
 
 		// that.collab.pm.mod.collab.version = this.collab.doc.version;
-		// collabEditing.config({version: this.doc.version}).attach(this.pm)
 
 		const appliedAction = this.collab.mod.collab.docChanges.applyAllDiffs(this.collab.docInfo.last_diffs);
-		view.updateState(view.editor.state.applyAction(appliedAction));
+		if (appliedAction) {
+				view.updateState(view.editor.state.applyAction(appliedAction));
+		} else {
+				this.collab.mod.serverCommunications.disconnect();
+		}
 
+		// TO MIGRATE
 		// this.collab.doc.hash = this.getHash();
 		// this.collab.mod.comments.store.setVersion(this.doc.comment_version)
 
@@ -420,31 +415,10 @@ export const DocumentEditor = React.createClass({
 	},
 
 	receiveDocumentValues: function(dataDoc, dataDocInfo) {
-		// let that = this;
 		this.collab.doc = dataDoc;
 		this.collab.docInfo = dataDocInfo;
 		this.collab.docInfo.changed = false;
 		this.collab.docInfo.titleChanged = false;
-		// let defaultSettings = [
-		//     ['papersize', 1117],
-		//     ['citationstyle', defaultCitationStyle],
-		//     ['documentstyle', defaultDocumentStyle]
-		// ]
-		//
-
-		// defaultSettings.forEach(function(variable) {
-		//     if (that.collab.doc.settings[variable[0]] === undefined) {
-		//         that.collab.doc.settings[variable[0]] = variable[1]
-		//     }
-		// })
-
-		//
-		// if (this.collab.docInfo.is_new) {
-		//     // If the document is new, change the url. Then forget that the document is new.
-		//     window.history.replaceState("", "", "/document/" + this.doc.id +
-		//         "/");
-		//     delete this.collab.docInfo.is_new
-		// }
 	},
 
 	// Get updates to document and then send updates to the server

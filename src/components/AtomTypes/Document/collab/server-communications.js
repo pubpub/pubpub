@@ -14,6 +14,7 @@ export class ModServerCommunications {
 		this.messagesToSend = [];
 		this.connected = false;
 		this.online = true;
+		this.broken = false;
 		/* Whether the connection is established for the first time. */
 		this.firstTimeConnection = true;
 		this.retryTimeout = null;
@@ -82,6 +83,9 @@ export class ModServerCommunications {
 			that.receive(data);
 		};
 		this.ws.onclose = function(event) {
+			if (that.broken) {
+				return;
+			}
 			console.log('Closed connection');
 			that.connected = false;
 			window.clearInterval(that.wsPinger);
@@ -111,6 +115,15 @@ export class ModServerCommunications {
 		this.ws.close();
 	}
 
+	disconnect() {
+		this.connected = false;
+		this.broken = true;
+		window.clearTimeout(this.retryTimeout);
+		window.clearTimeout(this.wsPinger);
+		this.editor.setConnectionStatus('disconnected');
+		this.ws.close();
+	}
+
 	activateConnection() {
 		// console.log('Activating connection');
 		this.connected = true;
@@ -137,6 +150,9 @@ export class ModServerCommunications {
 
 	/** Sends data to server or keeps it in a list if currently offline. */
 	send(data) {
+		if (this.broken === true) {
+			return;
+		}
 		data.token = this.editor.token;
 		data.id = this.editor.doc_id;
 		data.user = this.editor.username;
@@ -182,7 +198,7 @@ export class ModServerCommunications {
 		}
 	}
 
-	receive(data) {
+	receive = (data) => {
 		// console.log('receieved: ', data.type);
 		switch (data.type) {
 		case 'chat':
