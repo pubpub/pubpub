@@ -14,7 +14,7 @@ export function generateTOC(markdown) {
 		const level = match[3].trim().length;
 		const output = {
 			id: match[4].trim().replace(/[^A-Za-z0-9 ]/g, '').replace(/\s/g, '-').toLowerCase(),
-			title: match[4].replace(/[*_~^]/g, ''),
+			title: match[4].replace(/[*_~^\\]/g, ''),
 			level: level
 		};
 
