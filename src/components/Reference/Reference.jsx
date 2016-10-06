@@ -21,6 +21,7 @@ export const Reference = React.createClass({
 
 	render: function() {
 		const citation = this.props.citationObject;
+		citation.url = citation.url || '';
 		const citationStrings = {};
 		let bibtexString = null;
 
