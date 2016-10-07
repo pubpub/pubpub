@@ -86,14 +86,14 @@ export class ModCollabDocChanges {
 
 		console.log('trying to send steps!');
 
-		const toSend = sendableSteps(this.mod.editor.pm);
+		const toSend = sendableSteps(this.mod.editor.getState());
 		const requestId = this.confirmStepsRequestCounter++;
 		const aPackage = {
 			type: 'diff',
 			diff_version: getVersion(this.mod.editor.pm),
 			diff: toSend.steps.map(sIndex => {
 				const step = sIndex.toJSON();
-				step.client_id = this.mod.editor.pm.mod.collab.clientID;
+				step.client_id = this.mod.editor.getId();
 				return step;
 			}),
 			// footnote_diff: fnToSend.steps.map(s => {

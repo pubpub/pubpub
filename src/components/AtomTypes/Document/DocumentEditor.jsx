@@ -85,6 +85,7 @@ export const DocumentEditor = React.createClass({
 		collab.getHash = this.getHash;
 		collab.updateParticipants = this.updateParticipants;
 		collab.applyAction = this.applyAction;
+		collab.getId = this.getId();
 
 		collab.getState = () => {
 			return this.pm;
@@ -274,6 +275,11 @@ export const DocumentEditor = React.createClass({
 		this.view.updateState(this.view.editor.state.applyAction(action));
 	},
 
+	getId: function() {
+		const userId = parseInt(safeGetInToJS(this.props.loginData, ['userData', '_id']), 16);
+		return String(userId).substring(0, 10);
+	},
+
 	update: function() {
 
 		const that = this;
@@ -293,6 +299,9 @@ export const DocumentEditor = React.createClass({
 		this.pubpubSetup = pubpubSetup;
 		this.collabEditing = collabEditing;
 		this.EditorState = EditorState;
+
+		const userId = safeGetInToJS(this.props.loginData, ['userData', '_id']);
+		console.log('USER ID', this.getId());
 
 		let menu = buildMenuItems(pubSchema);
 		// TO-DO: USE UNIQUE ID FOR USER AND VERSION NUMBER
@@ -331,8 +340,10 @@ export const DocumentEditor = React.createClass({
 		const view = new MenuBarEditorView(document.getElementById('atom-body-editor'), {
 		  state: pm,
 		  onAction: (action) => {
+				const newState = view.editor.state.applyAction(action);
 				that.collab.mod.collab.docChanges.sendToCollaborators();
-				view.updateState(view.editor.state.applyAction(action));
+				this.pm = newState;
+				view.updateState(newState);
 			},
 		  menuContent: menu.fullMenu,
 			spellcheck: true,

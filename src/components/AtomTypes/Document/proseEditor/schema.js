@@ -161,8 +161,6 @@ const BlockEmbed = {
 
 const schemaNodes = basicSchema.nodeSpec.addBefore('image', 'embed', Embed).addBefore('image', 'block_embed', BlockEmbed).addBefore('horizontal_rule', 'page_break', PageBreak);
 
-console.log(schemaNodes);
-
 export const schema = new Schema({
 	nodes: addListNodes(schemaNodes, "paragraph block*", "block"),
 	marks: basicSchema.markSpec.addBefore('code', 'sub', SubMark).addBefore('code', 'sup', SupMark).addBefore('code', 'strike', StrikeThroughMark)
