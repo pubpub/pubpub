@@ -1,4 +1,5 @@
 import chash from 'color-hash';
+import murmurhash from 'murmurhash';
 import Dropzone from 'react-dropzone';
 import Radium, {Style} from 'radium';
 import React, {PropTypes} from 'react';
@@ -85,7 +86,7 @@ export const DocumentEditor = React.createClass({
 		collab.getHash = this.getHash;
 		collab.updateParticipants = this.updateParticipants;
 		collab.applyAction = this.applyAction;
-		collab.getId = this.getId();
+		collab.getId = this.getId;
 
 		collab.getState = () => {
 			return this.pm;
@@ -229,6 +230,8 @@ export const DocumentEditor = React.createClass({
 	},
 	// Collects updates of the document from ProseMirror and saves it under this.doc
 	getUpdates: function(callback) {
+		this.collab.doc.hash = this.getHash();
+		return;
 		const tmpDoc = this.editorToModel(this.collab.pm.mod.collab.versionDoc);
 		this.collab.doc.contents = tmpDoc.contents;
 		// this.doc.metadata = tmpDoc.metadata
@@ -253,7 +256,8 @@ export const DocumentEditor = React.createClass({
 
 
 	getHash: function() {
-		const doc = this.collab.pm.mod.collab.versionDoc.copy();
+		// const doc = this.collab.pm.mod.collab.versionDoc.copy();
+		const doc = this.pm.doc;
 		// We need to convert the footnotes from HTML to PM nodes and from that
 		// to JavaScript objects, to ensure that the attribute order of everything
 		// within the footnote will be the same in all browsers, so that the
@@ -272,12 +276,14 @@ export const DocumentEditor = React.createClass({
 	//
 
 	applyAction: function(action) {
-		this.view.updateState(this.view.editor.state.applyAction(action));
+		const newState = this.view.editor.state.applyAction(action);
+		this.pm = newState;
+		this.view.updateState(newState);
 	},
 
 	getId: function() {
-		const userId = parseInt(safeGetInToJS(this.props.loginData, ['userData', '_id']), 16);
-		return String(userId).substring(0, 10);
+		const userId = safeGetInToJS(this.props.loginData, ['userData', '_id']);
+		return murmurhash.v3(userId);
 	},
 
 	update: function() {
@@ -300,10 +306,9 @@ export const DocumentEditor = React.createClass({
 		this.collabEditing = collabEditing;
 		this.EditorState = EditorState;
 
-		const userId = safeGetInToJS(this.props.loginData, ['userData', '_id']);
-		console.log('USER ID', this.getId());
+		const userId = this.getId();
 
-		let menu = buildMenuItems(pubSchema);
+		const menu = buildMenuItems(pubSchema);
 		// TO-DO: USE UNIQUE ID FOR USER AND VERSION NUMBER
 		// USE DEFAULT schema
 
@@ -334,15 +339,16 @@ export const DocumentEditor = React.createClass({
 
 		pm = EditorState.create({
 			doc: pubSchema.nodeFromJSON(this.collab.doc.contents),
-			plugins: [pubpubSetup({schema: pubSchema}), collabEditing({version: 0})],
+			plugins: [pubpubSetup({schema: pubSchema}), collabEditing({version: this.collab.doc.version, clientID: userId})],
 		});
 
 		const view = new MenuBarEditorView(document.getElementById('atom-body-editor'), {
 		  state: pm,
 		  onAction: (action) => {
+				console.log(action);
 				const newState = view.editor.state.applyAction(action);
-				that.collab.mod.collab.docChanges.sendToCollaborators();
 				this.pm = newState;
+				that.collab.mod.collab.docChanges.sendToCollaborators();
 				view.updateState(newState);
 			},
 		  menuContent: menu.fullMenu,
@@ -364,7 +370,7 @@ export const DocumentEditor = React.createClass({
 
 		const appliedAction = this.collab.mod.collab.docChanges.applyAllDiffs(this.collab.docInfo.last_diffs);
 		if (appliedAction) {
-				view.updateState(view.editor.state.applyAction(appliedAction));
+				this.applyAction(appliedAction);
 		} else {
 				// indicates that the DOM is broken and cannot be repaired
 				this.collab.mod.serverCommunications.disconnect();

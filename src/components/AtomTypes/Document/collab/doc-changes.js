@@ -17,7 +17,7 @@ export class ModCollabDocChanges {
 	}
 
 	checkHash(version, hash) {
-		if (version === getVersion(this.mod.editor.pm)) {
+		if (version === getVersion(this.mod.editor.getState())) {
 			if (hash === this.mod.editor.getHash()) {
 				return true;
 			}
@@ -52,7 +52,7 @@ export class ModCollabDocChanges {
 		}
 		this.mod.editor.mod.serverCommunications.send({
 			type: 'check_diff_version',
-			diff_version: getVersion(this.mod.editor.pm)
+			diff_version: getVersion(this.mod.editor.getState())
 		});
 	}
 
@@ -76,21 +76,17 @@ export class ModCollabDocChanges {
 	sendToCollaborators = () => {
 		if (this.awaitingDiffResponse ||
 			!sendableSteps(this.mod.editor.getState())) {
-				console.log('nothing to send', this.awaitingDiffResponse);
-				console.log(sendableSteps(this.mod.editor.getState()));
 			// this.mod.editor.mod.comments.store.unsentEvents().length === 0) {
 			// We are waiting for the confirmation of previous steps, so don't
 			// send anything now, or there is nothing to send.
 			return;
 		}
 
-		console.log('trying to send steps!');
-
 		const toSend = sendableSteps(this.mod.editor.getState());
 		const requestId = this.confirmStepsRequestCounter++;
 		const aPackage = {
 			type: 'diff',
-			diff_version: getVersion(this.mod.editor.pm),
+			diff_version: getVersion(this.mod.editor.getState()),
 			diff: toSend.steps.map(sIndex => {
 				const step = sIndex.toJSON();
 				step.client_id = this.mod.editor.getId();
@@ -124,7 +120,8 @@ export class ModCollabDocChanges {
 			return undefined;
 		}
 		const editorHash = this.mod.editor.getHash();
-		if (data.diff_version !== getVersion(this.mod.editor.pm)) {
+		console.log('Recieved data version', data.diff_version);
+		if (data.diff_version !== getVersion(this.mod.editor.getState())) {
 
 			this.checkDiffVersion();
 			return undefined;
@@ -133,49 +130,43 @@ export class ModCollabDocChanges {
 		if (data.hash && data.hash !== editorHash) {
 			return false;
 		}
-		/*
-		if (data.comments && data.comments.length) {
-			this.mod.editor.updateComments(data.comments, data.comments_version)
-		}
-		*/
 		if (data.diff && data.diff.length) {
 			data.diff.forEach(function(diff) {
 				that.applyDiff(diff);
 			});
 		}
-		/*
-		if (data.footnote_diff && data.footnote_diff.length) {
-			this.mod.editor.mod.footnotes.fnEditor.applyDiffs(data.footnote_diff)
-		  }
-	  */
 		if (data.reject_request_id) {
+			console.log('Rejected this diff');
 			this.rejectDiff(data.reject_request_id);
 		}
 		if (!data.hash) {
 			// No hash means this must have been created server side.
 			this.cancelCurrentlyCheckingVersion();
 			this.enableDiffSending();
-			// Because the uypdate came directly from the sevrer, we may
-			// also have lost some collab updates to the footnote table.
-			// Re-render the footnote table if needed.
-			// this.mod.editor.mod.footnotes.fnEditor.renderAllFootnotes()
+
 		}
 	}
 
-	confirmDiff(requestId) {
+	confirmDiff = (requestId) => {
 		const that = this;
-		const sentSteps = this.unconfirmedSteps[requestId].diffs;
+		const diffs = this.unconfirmedSteps[requestId].diffs;
 		/*
 		this.mod.editor.pm.mod.collab.receiveAction(sentSteps, sentSteps.map(function(step) {
 			return that.mod.editor.pm.mod.collab.clientID;
 		}));
 		*/
 
-		const clientIds = sentSteps.map(function(step) {
-			return that.mod.editor.pm.mod.collab.clientID;
+		const clientIds = diffs.map(function(step) {
+			return that.mod.editor.getId();
 		});
 
-		const action = receiveAction(this.mod.editor.getState(), sentSteps, clientIds);
+		console.log('The diffs are', diffs);
+
+		const action = receiveAction(this.mod.editor.getState(), diffs, clientIds);
+		action.requestDone = true;
+		if (!action) {
+			console.log('Could not apply diff!');
+		}
 		this.mod.editor.applyAction(action);
 
 		// let sentFnSteps = this.unconfirmedSteps[requestId]["footnote_diffs"]
@@ -187,9 +178,9 @@ export class ModCollabDocChanges {
 		// this.mod.editor.mod.comments.store.eventsSent(sentComments)
 
 		if (this.unconfirmedSteps[requestId]) {
-			console.log('deleted diff with ', this.checkUnconfirmedSteps(), ' left');
 			delete this.unconfirmedSteps[requestId];
 		} else {
+			console.log('Could not enable diff');
 			console.log(requestId);
 			console.log(this.unconfirmedSteps);
 		}
@@ -203,11 +194,10 @@ export class ModCollabDocChanges {
 		this.sendToCollaborators();
 	}
 
-	applyDiff(diff) {
+	applyDiff = (diff) => {
 		this.receiving = true;
 		const steps = [diff].map(jIndex => Step.fromJSON(pubSchema, jIndex));
 		const clientIds = [diff].map(jIndex => jIndex.client_id);
-		// this.mod.editor.pm.mod.collab.receiveAction(steps, clientIds);
 		const state = this.mod.editor.getState();
 		const action = receiveAction(state, steps, clientIds);
 		this.mod.editor.applyAction(action);
@@ -220,7 +210,6 @@ export class ModCollabDocChanges {
 			this.receiving = true;
 			const steps = diffs.map(jIndex => Step.fromJSON(pubSchema, jIndex));
 			const clientIds = diffs.map(jIndex => jIndex.client_id);
-			// this.mod.editor.pm.mod.collab.receiveAction(steps, clientIds);
 			const state = this.mod.editor.getState();
 			action = receiveAction(state, steps, clientIds);
 			this.receiving = false;
