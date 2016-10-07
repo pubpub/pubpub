@@ -73,14 +73,18 @@ export class ModCollabDocChanges {
 		this.sendToCollaborators();
 	}
 
-	sendToCollaborators() {
+	sendToCollaborators = () => {
 		if (this.awaitingDiffResponse ||
-			!sendableSteps(this.mod.editor.pm)) {
+			!sendableSteps(this.mod.editor.getState())) {
+				console.log('nothing to send', this.awaitingDiffResponse);
+				console.log(sendableSteps(this.mod.editor.getState()));
 			// this.mod.editor.mod.comments.store.unsentEvents().length === 0) {
 			// We are waiting for the confirmation of previous steps, so don't
 			// send anything now, or there is nothing to send.
 			return;
 		}
+
+		console.log('trying to send steps!');
 
 		const toSend = sendableSteps(this.mod.editor.pm);
 		const requestId = this.confirmStepsRequestCounter++;
@@ -171,9 +175,8 @@ export class ModCollabDocChanges {
 			return that.mod.editor.pm.mod.collab.clientID;
 		});
 
-		console.log('Confirm diff');
-
-		receiveAction(this.mod.editor.getState(), sentSteps, clientIds);
+		const action = receiveAction(this.mod.editor.getState(), sentSteps, clientIds);
+		this.mod.editor.applyAction(action);
 
 		// let sentFnSteps = this.unconfirmedSteps[requestId]["footnote_diffs"]
 		// this.mod.editor.mod.footnotes.fnPm.mod.collab.receive(sentFnSteps, sentFnSteps.map(function(step){
@@ -206,7 +209,8 @@ export class ModCollabDocChanges {
 		const clientIds = [diff].map(jIndex => jIndex.client_id);
 		// this.mod.editor.pm.mod.collab.receiveAction(steps, clientIds);
 		const state = this.mod.editor.getState();
-		receiveAction(state, steps, clientIds);
+		const action = receiveAction(state, steps, clientIds);
+		this.mod.editor.applyAction(action);
 		this.receiving = false;
 	}
 

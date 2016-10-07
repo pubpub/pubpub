@@ -84,6 +84,7 @@ export const DocumentEditor = React.createClass({
 		collab.askForDocument = this.askForDocument;
 		collab.getHash = this.getHash;
 		collab.updateParticipants = this.updateParticipants;
+		collab.applyAction = this.applyAction;
 
 		collab.getState = () => {
 			return this.pm;
@@ -146,7 +147,7 @@ export const DocumentEditor = React.createClass({
 
 		//
 
-		this.moveMenu();
+		// this.moveMenu();
 	},
 
 	setConnectionStatus: function(status, statusMsg) {
@@ -264,13 +265,15 @@ export const DocumentEditor = React.createClass({
 		return MD5(JSON.parse(JSON.stringify(doc.toJSON())), {unorderedArrays: true});
 	},
 
-	setDoc: function(jsonDoc) {
-		this.pm.updateState({})
-	},
 
 	//
 	// Update - Update document and use a JSON
 	//
+
+	applyAction: function(action) {
+		this.view.updateState(this.view.editor.state.applyAction(action));
+	},
+
 	update: function() {
 
 		const that = this;
@@ -303,6 +306,9 @@ export const DocumentEditor = React.createClass({
 			}
 			if (node.marks) {
 				node.marks = node.marks.map((mark) => {
+					if (!mark._) {
+						return mark;
+					}
 					return {
 						type: mark._,
 						/*
@@ -316,8 +322,6 @@ export const DocumentEditor = React.createClass({
 		};
 
 		migrateSchema(this.collab.doc.contents);
-		console.log(this.collab.doc.contents);
-
 
 		pm = EditorState.create({
 			doc: pubSchema.nodeFromJSON(this.collab.doc.contents),
@@ -327,7 +331,8 @@ export const DocumentEditor = React.createClass({
 		const view = new MenuBarEditorView(document.getElementById('atom-body-editor'), {
 		  state: pm,
 		  onAction: (action) => {
-				view.updateState(view.editor.state.applyAction(action))
+				that.collab.mod.collab.docChanges.sendToCollaborators();
+				view.updateState(view.editor.state.applyAction(action));
 			},
 		  menuContent: menu.fullMenu,
 			spellcheck: true,
@@ -350,8 +355,11 @@ export const DocumentEditor = React.createClass({
 		if (appliedAction) {
 				view.updateState(view.editor.state.applyAction(appliedAction));
 		} else {
+				// indicates that the DOM is broken and cannot be repaired
 				this.collab.mod.serverCommunications.disconnect();
 		}
+
+		ElementSchema.initiateProseMirror(pm, this.updateEmbedEditor, this.setEmbedAttribute);
 
 		// TO MIGRATE
 		// this.collab.doc.hash = this.getHash();
@@ -401,17 +409,6 @@ export const DocumentEditor = React.createClass({
 			type: 'participant_update'
 		});
 
-		// if (data.hasOwnProperty('user')) {
-		//     this.collab.user = data.user
-		// } else {
-		//     this.collab.user = this.doc.owner
-		// }
-		// this.getImageDB(this.doc.owner.id, function(){
-		//     that.update()
-		//     that.mod.serverCommunications.send({
-		//         type: 'participant_update'
-		//     })
-		// })
 	},
 
 	receiveDocumentValues: function(dataDoc, dataDocInfo) {

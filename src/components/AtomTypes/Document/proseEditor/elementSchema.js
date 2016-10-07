@@ -25,6 +25,8 @@ class ElementSchema {
 		this.updateMenu = updateMenuCallback;
 		this.setEmbedAttribute = setEmbedAttribute;
 
+		/*
+
 		pm.on.selectionChange.add(()=>{
 			const currentSelection = pm.selection;
 			const currentSelectedNode = currentSelection.node;
@@ -56,8 +58,9 @@ class ElementSchema {
 			}
 
 		});
-
+		*/
 	}
+
 
 	checkAndRender(nodeId) {
 		if (this.editingElem === nodeId) {
