@@ -197,15 +197,62 @@ export class ModCollabDocChanges {
 
 	applyAllDiffs(diffs) {
 		let action = null;
+		this.receiving = true;
+
+		for (const diff of diffs) {
+			try {
+				const steps = [diff].map(jIndex => Step.fromJSON(pubSchema, jIndex));
+				const clientIds = [diff].map(jIndex => jIndex.client_id);
+				action = this.receiveAction(steps, clientIds);
+				this.mod.editor.applyAction(action);
+			} catch (err) {
+				console.log('ERROR: ', err);
+				console.log(diff);
+			}
+
+		}
+		this.receiving = false;
+		return action;
+
+	}
+
+	applyAllDiffs(diffs) {
+		let action = null;
+		this.receiving = true;
+
 		try {
-			this.receiving = true;
 			const steps = diffs.map(jIndex => Step.fromJSON(pubSchema, jIndex));
 			const clientIds = diffs.map(jIndex => jIndex.client_id);
 			action = this.receiveAction(steps, clientIds);
-			this.receiving = false;
+			this.mod.editor.applyAction(action);
 		} catch (err) {
-			console.log(err);
+			console.log('ERROR: ', err);
+			console.log(diff);
 		}
+
+		this.receiving = false;
+		return action;
+
+	}
+
+
+	applyAllDiffsSequential(diffs) {
+		let action = null;
+		this.receiving = true;
+
+		for (const diff of diffs) {
+			try {
+				const steps = [diff].map(jIndex => Step.fromJSON(pubSchema, jIndex));
+				const clientIds = [diff].map(jIndex => jIndex.client_id);
+				action = this.receiveAction(steps, clientIds);
+				this.mod.editor.applyAction(action);
+			} catch (err) {
+				console.log('ERROR: ', err);
+				console.log(diff);
+			}
+
+		}
+		this.receiving = false;
 		return action;
 
 	}

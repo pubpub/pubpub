@@ -33,7 +33,6 @@ export const EmbedWrapper = React.createClass({
 		};
 	},
 	componentDidMount: function() {
-		console.log('mounted wrapper', this.props.nodeId);
 		const checkCallback = () => {
 			ElementSchema.checkAndRender(this.props.nodeId);
 		};

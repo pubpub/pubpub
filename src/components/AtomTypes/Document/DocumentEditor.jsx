@@ -14,7 +14,7 @@ import {safeGetInToJS} from 'utils/safeParse';
 import ElementSchema from './proseEditor/elementSchema';
 import EmbedEditor from './proseEditor/EmbedEditor';
 import StatusTray from './DocumentEditorStatusTray';
-import {schema as pubSchema} from './proseEditor/schema';
+import {schema as pubSchema, migrateMarks, migrateDiffs} from './proseEditor/schema';
 
 // import {markdownParser, markdownSerializer, schema} from './proseEditor';
 
@@ -278,7 +278,6 @@ export const DocumentEditor = React.createClass({
 	applyAction: function(action) {
 		const newState = this.view.editor.state.applyAction(action);
 		this.pm = newState;
-		console.log(newState.doc.toJSON());
 		this.view.updateState(newState);
 	},
 
@@ -313,30 +312,7 @@ export const DocumentEditor = React.createClass({
 		// TO-DO: USE UNIQUE ID FOR USER AND VERSION NUMBER
 		// USE DEFAULT schema
 
-		const migrateSchema = (node) => {
-			if (node.content) {
-				for (const subNode of node.content) {
-					migrateSchema(subNode);
-				}
-			}
-			if (node.marks) {
-				node.marks = node.marks.map((mark) => {
-					if (!mark._) {
-						return mark;
-					}
-					return {
-						type: mark._,
-						/*
-						attrs: {
-
-						}
-						*/
-					}
-				});
-			}
-		};
-
-		migrateSchema(this.collab.doc.contents);
+		migrateMarks(this.collab.doc.contents);
 
 		pm = EditorState.create({
 			doc: pubSchema.nodeFromJSON(this.collab.doc.contents),
@@ -368,11 +344,10 @@ export const DocumentEditor = React.createClass({
 
 		// that.collab.pm.mod.collab.version = this.collab.doc.version;
 
-		console.log(this.collab.docInfo.last_diffs);
-
+		migrateDiffs(this.collab.docInfo.last_diffs);
 		const appliedAction = this.collab.mod.collab.docChanges.applyAllDiffs(this.collab.docInfo.last_diffs);
 		if (appliedAction) {
-				this.applyAction(appliedAction);
+				// this.applyAction(appliedAction);
 		} else {
 				// indicates that the DOM is broken and cannot be repaired
 				this.collab.mod.serverCommunications.disconnect();
@@ -496,7 +471,8 @@ export const DocumentEditor = React.createClass({
 		return {
 			// markdown: markdownSerializer.serialize(this.pm.doc),
 			markdown: '',
-			docJSON: this.pm.toJSON(),
+			docJSON: '',
+			// docJSON: this.getState().toJSON(),
 		};
 	},
 

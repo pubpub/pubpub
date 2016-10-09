@@ -171,6 +171,43 @@ const EmbedType = schema.nodes.embed;
 exports.Embed = EmbedType;
 
 
+const migrateMarks = (node) => {
+	if (node.content) {
+		for (const subNode of node.content) {
+			migrateMarks(subNode);
+		}
+	}
+	if (node.marks) {
+		node.marks = node.marks.map((mark) => {
+			if (!mark._) {
+				return mark;
+			}
+			return {
+				type: mark._,
+				/*
+				attrs: {
+
+				}
+				*/
+			}
+		});
+	}
+	if (node.slice) {
+		migrateMarks(node.slice);
+	}
+};
+
+exports.migrateMarks = migrateMarks;
+
+
+const migrateDiffs = (diffs) => {
+	for (const diff of diffs) {
+		migrateMarks(diff);
+	}
+};
+
+exports.migrateDiffs = migrateDiffs;
+
 /*
 
 class Embed extends Inline {
