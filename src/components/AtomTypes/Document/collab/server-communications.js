@@ -199,7 +199,7 @@ export class ModServerCommunications {
 	}
 
 	receive = (data) => {
-		console.log(data);
+		// console.log(data);
 		// console.log('receieved: ', data.type);
 		switch (data.type) {
 		case 'chat':

@@ -120,7 +120,6 @@ export class ModCollabDocChanges {
 			return undefined;
 		}
 		const editorHash = this.mod.editor.getHash();
-		console.log('Recieved data version', data.diff_version);
 		if (data.diff_version !== getVersion(this.mod.editor.getState())) {
 
 			this.checkDiffVersion();
@@ -150,19 +149,12 @@ export class ModCollabDocChanges {
 	confirmDiff = (requestId) => {
 		const that = this;
 		const diffs = this.unconfirmedSteps[requestId].diffs;
-		/*
-		this.mod.editor.pm.mod.collab.receiveAction(sentSteps, sentSteps.map(function(step) {
-			return that.mod.editor.pm.mod.collab.clientID;
-		}));
-		*/
 
 		const clientIds = diffs.map(function(step) {
 			return that.mod.editor.getId();
 		});
 
-		console.log('The diffs are', diffs);
-
-		const action = receiveAction(this.mod.editor.getState(), diffs, clientIds);
+		const action = this.receiveAction(diffs, clientIds, true);
 		action.requestDone = true;
 		if (!action) {
 			console.log('Could not apply diff!');
@@ -198,8 +190,7 @@ export class ModCollabDocChanges {
 		this.receiving = true;
 		const steps = [diff].map(jIndex => Step.fromJSON(pubSchema, jIndex));
 		const clientIds = [diff].map(jIndex => jIndex.client_id);
-		const state = this.mod.editor.getState();
-		const action = receiveAction(state, steps, clientIds);
+		const action = this.receiveAction(steps, clientIds);
 		this.mod.editor.applyAction(action);
 		this.receiving = false;
 	}
@@ -210,8 +201,7 @@ export class ModCollabDocChanges {
 			this.receiving = true;
 			const steps = diffs.map(jIndex => Step.fromJSON(pubSchema, jIndex));
 			const clientIds = diffs.map(jIndex => jIndex.client_id);
-			const state = this.mod.editor.getState();
-			action = receiveAction(state, steps, clientIds);
+			action = this.receiveAction(steps, clientIds);
 			this.receiving = false;
 		} catch (err) {
 			console.log(err);
@@ -219,6 +209,28 @@ export class ModCollabDocChanges {
 		return action;
 
 	}
+
+	receiveAction = (steps, clientIDs, ours = false) => {
+
+		const state = this.mod.editor.getState();
+		const userID = this.mod.editor.getId();
+		let modifiedClientIDs;
+
+		if (!ours) {
+			modifiedClientIDs = clientIDs.map(clientID =>  {
+				if (clientID === userID) {
+					return 'self';
+				} else {
+					return clientID;
+				}
+			});
+		} else {
+			modifiedClientIDs = clientIDs;
+		}
+
+		return receiveAction(state, steps, modifiedClientIDs);
+	}
+
 
 
 }

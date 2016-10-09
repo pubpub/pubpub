@@ -278,12 +278,13 @@ export const DocumentEditor = React.createClass({
 	applyAction: function(action) {
 		const newState = this.view.editor.state.applyAction(action);
 		this.pm = newState;
+		console.log(newState.doc.toJSON());
 		this.view.updateState(newState);
 	},
 
+
 	getId: function() {
-		const userId = safeGetInToJS(this.props.loginData, ['userData', '_id']);
-		return murmurhash.v3(userId);
+		return safeGetInToJS(this.props.loginData, ['userData', '_id']);
 	},
 
 	update: function() {
@@ -345,11 +346,10 @@ export const DocumentEditor = React.createClass({
 		const view = new MenuBarEditorView(document.getElementById('atom-body-editor'), {
 		  state: pm,
 		  onAction: (action) => {
-				console.log(action);
 				const newState = view.editor.state.applyAction(action);
 				this.pm = newState;
-				that.collab.mod.collab.docChanges.sendToCollaborators();
 				view.updateState(newState);
+				that.collab.mod.collab.docChanges.sendToCollaborators();
 			},
 		  menuContent: menu.fullMenu,
 			spellcheck: true,
@@ -367,6 +367,8 @@ export const DocumentEditor = React.createClass({
 		}
 
 		// that.collab.pm.mod.collab.version = this.collab.doc.version;
+
+		console.log(this.collab.docInfo.last_diffs);
 
 		const appliedAction = this.collab.mod.collab.docChanges.applyAllDiffs(this.collab.docInfo.last_diffs);
 		if (appliedAction) {
