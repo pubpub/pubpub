@@ -63,7 +63,7 @@ class ElementSchema {
 
 
 	checkAndRender(nodeId) {
-		if (this.editingElem === nodeId) {
+		if (nodeId && this.editingElem === nodeId) {
 			this.updateNodePosition(this.elementStore[nodeId].node);
 		}
 	}
@@ -147,7 +147,6 @@ class ElementSchema {
 	onRemoveNode = (nodeId, domElement, evt) => {
 
 		if (this.elementStore[nodeId].replaced === true) {
-			console.log('got replaced node!', this.elementStore[nodeId].active);
 			ReactDOM.unmountComponentAtNode(domElement);
 			this.elementStore[nodeId].replaced = false;
 			return;
@@ -156,7 +155,6 @@ class ElementSchema {
 		if (this.elementStore[nodeId].active === false) {
 			return;
 		}
-		console.log('node removed!', nodeId, this.elementStore[nodeId].replaced);
 		this.elementStore[nodeId].active = false;
 		ReactDOM.unmountComponentAtNode(domElement);
 	}
@@ -172,7 +170,6 @@ class ElementSchema {
 
 		if (this.elementStore[nodeId] && this.elementStore[nodeId].active === true) {
 			// this.elementStore[nodeId].active = true;
-			console.log('trying to replace an active node');
 			// this.elementStore[nodeId].replaced = true;
 			replaced = true;
 			// this.elementStore[nodeId].active = false;
@@ -197,7 +194,6 @@ class ElementSchema {
 		const listenerFunc = once(this.onRemoveNode.bind(this, nodeId, domParent));
 		this.elementStore[nodeId] = {node: node, element: reactElement, active: true, dom: domParent, listener: listenerFunc, replaced: replaced};
 
-		console.log('creating event listener');
 		domParent.addEventListener('DOMNodeRemoved', listenerFunc);
 
 		domParent.addEventListener('DOMNodeInserted', (evt) => {
