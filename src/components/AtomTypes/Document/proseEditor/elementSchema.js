@@ -20,45 +20,41 @@ class ElementSchema {
 		return Math.floor(Math.random() * 10000000);
 	}
 
-	initiateProseMirror = (pm, updateMenuCallback, setEmbedAttribute) => {
-		this.pm = pm;
+	initiateProseMirror = ({changeNode, updateMenuCallback, setEmbedAttribute}) => {
 		this.updateMenu = updateMenuCallback;
 		this.setEmbedAttribute = setEmbedAttribute;
+		this.changeNode = changeNode;
+	}
 
-		/*
+	onNodeSelect = (state, selection) => {
+		const currentSelection = selection;
+		const currentSelectedNode = currentSelection.node;
 
-		pm.on.selectionChange.add(()=>{
-			const currentSelection = pm.selection;
-			const currentSelectedNode = currentSelection.node;
+		if (!currentSelectedNode || currentSelectedNode.type.name.indexOf('embed') === -1) {
 
-			if (!currentSelectedNode || currentSelectedNode.type.name.indexOf('embed') === -1) {
-
-				if (this.editingElem && this.elementStore[this.editingElem] && this.elementStore[this.editingElem].active === true) {
-					this.elementStore[this.editingElem].element.setSelected(false);
-					this.editingElem = null;
-					this.updateMenu({
-						embedLayoutCoords: undefined,
-						embedAttrs: undefined,
-						embedWidth: undefined,
-					});
-				}
-
-				return;
-			}
-			const currentFrom = currentSelection.$from.pos;
-
-			if (!currentSelectedNode.attrs.nodeId) {
-				const nodeId = this.generateNodeId();
-				pm.tr.setNodeType(currentFrom, currentSelectedNode.type, {...currentSelectedNode.attrs, ['nodeId']: nodeId}).apply();
-				return;
+			if (this.editingElem && this.elementStore[this.editingElem] && this.elementStore[this.editingElem].active === true) {
+				this.elementStore[this.editingElem].element.setSelected(false);
+				this.editingElem = null;
+				this.updateMenu({
+					embedLayoutCoords: undefined,
+					embedAttrs: undefined,
+					embedWidth: undefined,
+				});
 			}
 
-			if (currentSelectedNode && currentSelectedNode.type.name.indexOf('embed') !== -1) {
-				this.updateNodePosition(currentSelectedNode);
-			}
+			return;
+		}
+		const currentFrom = currentSelection.$from.pos;
 
-		});
-		*/
+		if (!currentSelectedNode.attrs.nodeId) {
+			const nodeId = this.generateNodeId();
+			this.changeNode(currentFrom, currentSelectedNode.type, {...currentSelectedNode.attrs, ['nodeId']: nodeId});
+			return;
+		}
+
+		if (currentSelectedNode && currentSelectedNode.type.name.indexOf('embed') !== -1) {
+			this.updateNodePosition(currentSelectedNode);
+		}
 	}
 
 

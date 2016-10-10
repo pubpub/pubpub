@@ -281,6 +281,16 @@ export const DocumentEditor = React.createClass({
 		this.view.updateState(newState);
 	},
 
+	changeNode: function(currentFrom, nodeType, nodeAttrs) {
+		const state = this.pm;
+		const transform = state.tr.setNodeType(currentFrom, nodeType, nodeAttrs);
+		const steps = transform.steps;
+		let doc = state.doc;
+		for (const step of steps) {
+			doc = step.apply(doc);
+		}
+	},
+
 
 	getId: function() {
 		return safeGetInToJS(this.props.loginData, ['userData', '_id']);
@@ -326,6 +336,9 @@ export const DocumentEditor = React.createClass({
 				this.pm = newState;
 				view.updateState(newState);
 				that.collab.mod.collab.docChanges.sendToCollaborators();
+				if (action.type === "selection" && action.selection.node) {
+					ElementSchema.onNodeSelect(newState, action.selection);
+				}
 			},
 		  menuContent: menu.fullMenu,
 			spellcheck: true,
@@ -353,7 +366,11 @@ export const DocumentEditor = React.createClass({
 				this.collab.mod.serverCommunications.disconnect();
 		}
 
-		ElementSchema.initiateProseMirror(pm, this.updateEmbedEditor, this.setEmbedAttribute);
+		ElementSchema.initiateProseMirror({
+			changeNode: this.changeNode,
+			updateMenuCallback: this.updateEmbedEdito,
+			setEmbedAttribute: this.setEmbedAttribute,
+		});
 
 		// TO MIGRATE
 		// this.collab.doc.hash = this.getHash();
