@@ -279,16 +279,14 @@ export const DocumentEditor = React.createClass({
 		const newState = this.view.editor.state.applyAction(action);
 		this.pm = newState;
 		this.view.updateState(newState);
+		// console.log('Action: ', action);
 	},
 
 	changeNode: function(currentFrom, nodeType, nodeAttrs) {
 		const state = this.pm;
 		const transform = state.tr.setNodeType(currentFrom, nodeType, nodeAttrs);
-		const steps = transform.steps;
-		let doc = state.doc;
-		for (const step of steps) {
-			doc = step.apply(doc);
-		}
+		const action = transform.action();
+		this.applyAction(action);
 	},
 
 

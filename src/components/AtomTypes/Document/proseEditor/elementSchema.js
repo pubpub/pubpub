@@ -46,6 +46,7 @@ class ElementSchema {
 		}
 		const currentFrom = currentSelection.$from.pos;
 
+		console.log(currentSelectedNode.attrs);
 		if (!currentSelectedNode.attrs.nodeId) {
 			const nodeId = this.generateNodeId();
 			this.changeNode(currentFrom, currentSelectedNode.type, {...currentSelectedNode.attrs, ['nodeId']: nodeId});
