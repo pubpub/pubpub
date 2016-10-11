@@ -24,8 +24,9 @@ export const EmbedEditor = React.createClass({
     this.props.saveCallback(key, value, evt);
   },
 
-  changeCaption: function() {
-
+  changeCaption: function(evt) {
+		const cap = this.refs.caption.value;
+		this.props.saveCallback('caption', cap, evt);
   },
 	render: function() {
 
@@ -53,7 +54,7 @@ export const EmbedEditor = React.createClass({
         <label htmlFor={'captionNote'}>
           Caption
         </label>
-        <input onChange={this} type="text" id={'captionNote'} name={'caption'}/>
+        <input ref="caption" onChange={this.changeCaption} type="text" id={'captionNote'} name={'caption'}/>
 
       </div>
 	  );
