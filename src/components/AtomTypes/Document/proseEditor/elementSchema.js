@@ -153,25 +153,25 @@ class ElementSchema {
 
 		const nodeId = node.attrs.nodeId;
 
-		let domParent = document.createElement('span');
+		const domParent = document.createElement('span');
+		let domChild;
 
 		if (this.elementStore[nodeId]) {
-			domParent = this.elementStore[nodeId].dom;
+		 	domChild = this.elementStore[nodeId].dom;
+			domChild.parentNode.removeChild(domChild);
 		} else {
-			domParent = document.createElement('span');
+			domChild = document.createElement('span');
 		}
 
-
-
-		const editing = (this.editingElem === nodeId);
-
-		const reactElement = ReactDOM.render(<EmbedWrapper {...node.attrs}/>, domParent);
-		const dom = domParent.childNodes[0];
+		const reactElement = ReactDOM.render(<EmbedWrapper {...node.attrs}/>, domChild);
+		const dom = domChild.childNodes[0];
 		dom.className += (block) ? 'block-embed' : ' embed';
+
+		domParent.appendChild(domChild);
 
 		dom.setAttribute('data-nodeId', nodeId);
 		const listenerFunc = once(this.onRemoveNode.bind(this, nodeId, domParent));
-		this.elementStore[nodeId] = {node: node, element: reactElement, active: true, dom: domParent, listener: listenerFunc};
+		this.elementStore[nodeId] = {node: node, element: reactElement, active: true, dom: domChild, listener: listenerFunc};
 
 		domParent.addEventListener('DOMNodeRemoved', listenerFunc);
 
