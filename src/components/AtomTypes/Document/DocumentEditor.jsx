@@ -195,7 +195,7 @@ export const DocumentEditor = React.createClass({
 				nodeType = schema.nodes.block_embed;
 			}
 		}
-		this.pm.tr.setNodeType(currentFrom, nodeType, {...currentSelectedNode.attrs, [key]: value}).apply();
+		this.changeNode(currentFrom, nodeType, {...currentSelectedNode.attrs, [key]: value});
 	},
 
 	sizeChange: function(evt) {
@@ -366,7 +366,7 @@ export const DocumentEditor = React.createClass({
 
 		ElementSchema.initiateProseMirror({
 			changeNode: this.changeNode,
-			updateMenuCallback: this.updateEmbedEdito,
+			updateMenuCallback: this.updateEmbedEditor,
 			setEmbedAttribute: this.setEmbedAttribute,
 		});
 
