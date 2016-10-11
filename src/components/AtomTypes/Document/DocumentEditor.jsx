@@ -334,7 +334,7 @@ export const DocumentEditor = React.createClass({
 				this.pm = newState;
 				view.updateState(newState);
 				that.collab.mod.collab.docChanges.sendToCollaborators();
-				if (action.type === "selection" && action.selection.node) {
+				if (action.type === "selection") {
 					ElementSchema.onNodeSelect(newState, action.selection);
 				}
 			},

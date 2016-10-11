@@ -33,14 +33,19 @@ export const EmbedWrapper = React.createClass({
 		};
 	},
 	componentDidMount: function() {
+		console.log('remounting!', this.props.nodeId);
 		const checkCallback = () => {
 			ElementSchema.checkAndRender(this.props.nodeId);
 		};
 		window.setTimeout(checkCallback, 0);
 	},
 
+	componentWillUpdate: function() {
+		console.log('trying to update instead!!');
+	},
+
 	componentWillUnmount: function() {
-		// console.log('unmounted atom!');
+		console.log('unmounted atom!');
 	},
 
 	getSize: function() {

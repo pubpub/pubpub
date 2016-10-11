@@ -30,7 +30,9 @@ class ElementSchema {
 		const currentSelection = selection;
 		const currentSelectedNode = currentSelection.node;
 
-		if (!currentSelectedNode || currentSelectedNode.type.name.indexOf('embed') === -1) {
+		console.log('selection', selection);
+
+		if (!currentSelectedNode || !currentSelectedNode || currentSelectedNode.type.name.indexOf('embed') === -1) {
 
 			if (this.editingElem && this.elementStore[this.editingElem] && this.elementStore[this.editingElem].active === true) {
 				this.elementStore[this.editingElem].element.setSelected(false);
@@ -142,17 +144,8 @@ class ElementSchema {
 	}
 
 	onRemoveNode = (nodeId, domElement, evt) => {
-
-		if (this.elementStore[nodeId].replaced === true) {
-			ReactDOM.unmountComponentAtNode(domElement);
-			this.elementStore[nodeId].replaced = false;
-			return;
-		}
-
-		if (this.elementStore[nodeId].active === false) {
-			return;
-		}
-		this.elementStore[nodeId].active = false;
+		// console.log('trying to underender!');
+		return;
 		ReactDOM.unmountComponentAtNode(domElement);
 	}
 
@@ -160,26 +153,15 @@ class ElementSchema {
 
 		const nodeId = node.attrs.nodeId;
 
+		let domParent = document.createElement('span');
 
-		const localCount = absoluteCount;
-		absoluteCount++;
-		let replaced = false;
-
-		if (this.elementStore[nodeId] && this.elementStore[nodeId].active === true) {
-			// this.elementStore[nodeId].active = true;
-			// this.elementStore[nodeId].replaced = true;
-			replaced = true;
-			// this.elementStore[nodeId].active = false;
-			/*
-			const oldDomNode = this.elementStore[nodeId].dom;
-			oldDomNode.removeEventListener('DOMNodeRemoved', this.elementStore[nodeId].listener);
-			ReactDOM.unmountComponentAtNode(oldDomNode);
-			*/
-			// this.elementStore[nodeId].replaced = true;
-			// return this.elementStore[nodeId].dom;
+		if (this.elementStore[nodeId]) {
+			domParent = this.elementStore[nodeId].dom;
+		} else {
+			domParent = document.createElement('span');
 		}
 
-		const domParent = document.createElement('span');
+
 
 		const editing = (this.editingElem === nodeId);
 
@@ -189,7 +171,7 @@ class ElementSchema {
 
 		dom.setAttribute('data-nodeId', nodeId);
 		const listenerFunc = once(this.onRemoveNode.bind(this, nodeId, domParent));
-		this.elementStore[nodeId] = {node: node, element: reactElement, active: true, dom: domParent, listener: listenerFunc, replaced: replaced};
+		this.elementStore[nodeId] = {node: node, element: reactElement, active: true, dom: domParent, listener: listenerFunc};
 
 		domParent.addEventListener('DOMNodeRemoved', listenerFunc);
 
@@ -198,10 +180,13 @@ class ElementSchema {
 		});
 
 		domParent.addEventListener('DOMNodeRemovedFromDocument', (evt) => {
-			// this.elementStore[nodeId].active = false;
-			// ReactDOM.unmountComponentAtNode(domParent);
-			// console.log('unrenderingg');
-			// delete this.elementStore[nodeId];
+
+			/*
+			this.elementStore[nodeId].active = false;
+			ReactDOM.unmountComponentAtNode(domParent);
+			console.log('unrenderingg');
+			delete this.elementStore[nodeId];
+			*/
 			// timeout and wait for deletion
 
 		});
