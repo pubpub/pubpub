@@ -25,6 +25,8 @@ import mixpanel from 'mixpanel-browser';
 ga.initialize('UA-61723493-3');
 mixpanel.init('f85adcbd0f97f6101ebd440e931197b2');
 
+require('iframe-resizer').iframeResizerContentWindow;
+
 const client = new ApiClient();
 import Html from './helpers/Html';
 
