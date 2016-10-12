@@ -16,7 +16,7 @@ export const EmbedEditor = React.createClass({
 	propTypes: {
 		status: PropTypes.oneOf(['loading', 'connected', 'reconnecting', 'disconnected', 'timeout', 'unknown']),
 		embedAttrs: PropTypes.object,
-    saveCallback: PropTypes.func,
+    updateParams: PropTypes.func,
   },
 
 	getInitialState: function() {
@@ -26,15 +26,23 @@ export const EmbedEditor = React.createClass({
   setEmbedAttribute: function(key, value, evt) {
 		const obj = {};
 		obj[key] = value;
-		this.props.saveCallback(obj);
+		this.props.updateParams(obj);
     // this.props.saveCallback(key, value, evt);
   },
 
   changeCaption: function(evt) {
 		const cap = this.refs.caption.value;
-		this.props.saveCallback({caption: cap});
+		this.props.updateParams({caption: cap});
 		this.setState({caption: cap});
   },
+
+	preventClick: function(evt) {
+		console.log('got click', evt);
+		// evt.preventDefault();
+		evt.stopPropagation();
+		this.refs.caption.focus();
+	},
+
 	render: function() {
 
 		const {participants, status} = this.props;
@@ -61,7 +69,7 @@ export const EmbedEditor = React.createClass({
         <label htmlFor={'captionNote'}>
           Caption
         </label>
-        <input ref="caption" value={this.state.caption || this.props.embedAttrs.caption} onChange={this.changeCaption} type="text" id={'captionNote'} name={'caption'}/>
+        <input onClick={this.preventClick} ref="caption" value={this.state.caption || this.props.embedAttrs.caption} onChange={this.changeCaption} type="text" id={'captionNote'} name={'caption'}/>
 
       </div>
 	  );

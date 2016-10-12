@@ -68,6 +68,7 @@ export const EmbedWrapper = React.createClass({
 	},
 
 	updateParams: function(newAttrs) {
+		console.log('calling here', this.props);
 		this.props.updateParams(this.props.nodeId, newAttrs);
 	},
 
@@ -150,7 +151,7 @@ export const EmbedWrapper = React.createClass({
 					<span style={{width: '100%', display: 'inline-block'}} ref="menupointer">menu</span>
 					<span style={{textAlign: 'left', width: '100%', display: 'inline-block'}}>{this.props.caption}</span>
 				</AtomViewerPane>
-				{(this.state.selected) ? <div style={{position: 'absolute', zIndex: 10000, pointerEvents: 'all'}}><EmbedEditor embedAttrs={this.props} saveCallback={this.setEmbedAttribute}/></div> : null }
+				{(this.state.selected) ? <div style={{zIndex: 10000, pointerEvents: 'all', position: 'absolute'}}><EmbedEditor embedAttrs={this.props} updateParams={this.updateParams}/></div> : null }
 
 			</div>
 		);

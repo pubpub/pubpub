@@ -289,6 +289,10 @@ export const DocumentEditor = React.createClass({
 		this.applyAction(action);
 	},
 
+	getState: function() {
+		return this.pm;
+	},
+
 
 	getId: function() {
 		return safeGetInToJS(this.props.loginData, ['userData', '_id']);
@@ -330,7 +334,7 @@ export const DocumentEditor = React.createClass({
 		const view = new MenuBarEditorView(document.getElementById('atom-body-editor'), {
 		  state: pm,
 		  onAction: (action) => {
-				console.log(action);
+				// console.log(action);
 				const newState = view.editor.state.applyAction(action);
 				this.pm = newState;
 				view.updateState(newState);
@@ -338,6 +342,12 @@ export const DocumentEditor = React.createClass({
 				if (action.type === "selection") {
 					ElementSchema.onNodeSelect(newState, action.selection);
 				}
+			},
+			handleClickOn: (view, pos, node, nodePos, evt) => {
+				if (ElementSchema.checkNodeEditing(node)) {
+					return true;
+				}
+				return false;
 			},
 			onUnmountDOM: (view, node) => {
 				console.log('unmountinggg', node);

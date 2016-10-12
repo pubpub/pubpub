@@ -25,13 +25,26 @@ class ElementSchema {
 		this.getState = getState;
 	}
 
+	checkNodeEditing = (node) => {
+		if (node && node.attrs && node.attrs.nodeId === this.editingElem) {
+			return true;
+		}
+		return false;
+	}
+
+	checkNodeSelect = (selection) => {
+		const currentSelectedNode = selection.node;
+		if (currentSelectedNode && currentSelectedNode.attrs && currentSelectedNode.attrs.nodeId === this.editingElem) {
+			return true;
+		}
+		return false;
+	}
+
 	onNodeSelect = (state, selection) => {
 		const currentSelection = selection;
 		const currentSelectedNode = currentSelection.node;
 
-		console.log('selection', selection);
-
-		if (!currentSelectedNode || !currentSelectedNode || currentSelectedNode.type.name.indexOf('embed') === -1) {
+		if (!currentSelectedNode || currentSelectedNode.type.name.indexOf('embed') === -1) {
 
 			if (this.editingElem && this.elementStore[this.editingElem] && this.elementStore[this.editingElem].active === true) {
 				this.elementStore[this.editingElem].element.setSelected(false);
@@ -164,7 +177,7 @@ class ElementSchema {
 		return;
 	}
 	findNodeById = (domHash) => {
-		const element = elementStore[domHash];
+		const element = this.elementStore[domHash];
 		if (element && element.node) {
 			return element.node.attrs;
 		}
