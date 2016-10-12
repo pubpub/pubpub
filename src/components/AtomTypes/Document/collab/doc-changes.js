@@ -195,28 +195,7 @@ export class ModCollabDocChanges {
 		this.receiving = false;
 	}
 
-	applyAllDiffs(diffs) {
-		let action = null;
-		this.receiving = true;
-
-		for (const diff of diffs) {
-			try {
-				const steps = [diff].map(jIndex => Step.fromJSON(pubSchema, jIndex));
-				const clientIds = [diff].map(jIndex => jIndex.client_id);
-				action = this.receiveAction(steps, clientIds);
-				this.mod.editor.applyAction(action);
-			} catch (err) {
-				console.log('ERROR: ', err);
-				console.log(diff);
-			}
-
-		}
-		this.receiving = false;
-		return action;
-
-	}
-
-	applyAllDiffs(diffs) {
+	applyAllDiffs = (diffs) => {
 		let action = null;
 		this.receiving = true;
 
@@ -227,7 +206,6 @@ export class ModCollabDocChanges {
 			this.mod.editor.applyAction(action);
 		} catch (err) {
 			console.log('ERROR: ', err);
-			console.log(diff);
 		}
 
 		this.receiving = false;
@@ -264,7 +242,7 @@ export class ModCollabDocChanges {
 		let modifiedClientIDs;
 
 		if (!ours) {
-			modifiedClientIDs = clientIDs.map(clientID =>  {
+			modifiedClientIDs = clientIDs.map(clientID => {
 				if (clientID === userID) {
 					return 'self';
 				} else {

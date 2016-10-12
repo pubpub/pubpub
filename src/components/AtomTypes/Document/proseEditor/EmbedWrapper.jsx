@@ -4,6 +4,7 @@ import React, {PropTypes} from 'react';
 import {ensureImmutable} from 'reducers';
 
 import ElementSchema from './elementSchema';
+import EmbedEditor from './EmbedEditor';
 
 // import {safeGetInToJS} from 'utils/safeParse';
 
@@ -19,7 +20,7 @@ export const EmbedWrapper = React.createClass({
 		data: PropTypes.object,
 		citeCount: PropTypes.number,
 		context: PropTypes.oneOf(['reference-list', 'document', 'library']), // where the embed is being used
-		updateParams: PropTypes.number,
+		updateParams: PropTypes.func,
 		nodeId: PropTypes.number,
 	},
 	getInitialState: function() {
@@ -33,15 +34,15 @@ export const EmbedWrapper = React.createClass({
 		};
 	},
 	componentDidMount: function() {
-		console.log('remounting!', this.props.nodeId);
+		/*
 		const checkCallback = () => {
 			ElementSchema.checkAndRender(this.props.nodeId);
 		};
 		window.setTimeout(checkCallback, 0);
+		*/
 	},
 
-	componentWillUpdate: function() {
-		console.log('trying to update instead!!');
+	componentWillUpdate: function(nextProps, nextState) {
 	},
 
 	componentWillUnmount: function() {
@@ -66,7 +67,9 @@ export const EmbedWrapper = React.createClass({
 		this.setState({selected});
 	},
 
-
+	updateParams: function(newAttrs) {
+		this.props.updateParams(this.props.nodeId, newAttrs);
+	},
 
 	render: function() {
 		const data = this.props.data || {};
@@ -145,8 +148,10 @@ export const EmbedWrapper = React.createClass({
 			<div ref="embedroot" className={'pub-embed ' + this.props.className} id={this.props.id} style={style}>
 				<AtomViewerPane selected={this.state.selected} atomData={atomData} renderType={'embed'} context={this.props.context}>
 					<span style={{width: '100%', display: 'inline-block'}} ref="menupointer">menu</span>
-					<span style={{textAlign: 'left'}}>{this.props.caption}</span>
+					<span style={{textAlign: 'left', width: '100%', display: 'inline-block'}}>{this.props.caption}</span>
 				</AtomViewerPane>
+				{(this.state.selected) ? <div style={{position: 'absolute', zIndex: 10000, pointerEvents: 'all'}}><EmbedEditor embedAttrs={this.props} saveCallback={this.setEmbedAttribute}/></div> : null }
+
 			</div>
 		);
 	}

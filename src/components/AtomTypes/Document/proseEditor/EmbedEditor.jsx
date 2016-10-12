@@ -15,18 +15,25 @@ const popupKeyframes = Radium.keyframes({
 export const EmbedEditor = React.createClass({
 	propTypes: {
 		status: PropTypes.oneOf(['loading', 'connected', 'reconnecting', 'disconnected', 'timeout', 'unknown']),
-		coordinates: PropTypes.string,
 		embedAttrs: PropTypes.object,
     saveCallback: PropTypes.func,
   },
 
+	getInitialState: function() {
+		return {caption: null};
+	},
+
   setEmbedAttribute: function(key, value, evt) {
-    this.props.saveCallback(key, value, evt);
+		const obj = {};
+		obj[key] = value;
+		this.props.saveCallback(obj);
+    // this.props.saveCallback(key, value, evt);
   },
 
   changeCaption: function(evt) {
 		const cap = this.refs.caption.value;
-		this.props.saveCallback('caption', cap, evt);
+		this.props.saveCallback({caption: cap});
+		this.setState({caption: cap});
   },
 	render: function() {
 
@@ -54,7 +61,7 @@ export const EmbedEditor = React.createClass({
         <label htmlFor={'captionNote'}>
           Caption
         </label>
-        <input ref="caption" onChange={this.changeCaption} type="text" id={'captionNote'} name={'caption'}/>
+        <input ref="caption" value={this.state.caption || this.props.embedAttrs.caption} onChange={this.changeCaption} type="text" id={'captionNote'} name={'caption'}/>
 
       </div>
 	  );
@@ -69,8 +76,8 @@ const styles = {
   box: {
     padding: '0.6em 1.2em',
     fontSize: '0.8em',
-		animation: 'x 180ms forwards linear',
-		animationName: popupKeyframes,
+		// animation: 'x 180ms forwards linear',
+		// animationName: popupKeyframes,
   },
   alignDiv: {
     paddingBottom: '0.5em',
@@ -82,4 +89,4 @@ const styles = {
   }
 };
 
-export default Radium(EmbedEditor);
+export default EmbedEditor;

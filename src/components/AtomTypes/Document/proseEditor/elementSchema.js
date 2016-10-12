@@ -5,8 +5,6 @@ import ReactDOM from 'react-dom';
 import EmbedWrapper from './EmbedWrapper';
 import Pointer from './Pointer';
 
-let absoluteCount = 0;
-
 class ElementSchema {
 	constructor() {
 		this.elementStore = {};
@@ -20,10 +18,11 @@ class ElementSchema {
 		return Math.floor(Math.random() * 10000000);
 	}
 
-	initiateProseMirror = ({changeNode, updateMenuCallback, setEmbedAttribute}) => {
+	initiateProseMirror = ({changeNode, updateMenuCallback, setEmbedAttribute, getState}) => {
 		this.updateMenu = updateMenuCallback;
 		this.setEmbedAttribute = setEmbedAttribute;
 		this.changeNode = changeNode;
+		this.getState = getState;
 	}
 
 	onNodeSelect = (state, selection) => {
@@ -48,10 +47,14 @@ class ElementSchema {
 		}
 		const currentFrom = currentSelection.$from.pos;
 
-		console.log(currentSelectedNode.attrs);
 		if (!currentSelectedNode.attrs.nodeId) {
 			const nodeId = this.generateNodeId();
 			this.changeNode(currentFrom, currentSelectedNode.type, {...currentSelectedNode.attrs, ['nodeId']: nodeId});
+			return;
+		}
+
+		if (currentSelectedNode.attrs.nodeId === this.editingElem) {
+			console.log('selected same node');
 			return;
 		}
 
@@ -72,6 +75,10 @@ class ElementSchema {
 
 		const nodeId = currentSelectedNode.attrs.nodeId;
 		const foundNode = this.elementStore[nodeId];
+		this.editingElem = nodeId;
+		foundNode.element.setSelected(true);
+
+		return;
 
 		if (foundNode.active === false) {
 			this.updateMenu({
@@ -102,6 +109,34 @@ class ElementSchema {
 			embedWidth: size.width,
 		});
 
+	}
+
+	updateNodeParams = (nodeId, newAttrs) => {
+
+		const currentSelection = this.getState().selection;
+		const currentFrom = currentSelection.$from.pos;
+		const currentSelectedNode = currentSelection.node;
+
+		const oldNodeAttrs = currentSelectedNode.attrs;
+
+		if (oldNodeAttrs.nodeId !== nodeId) {
+			console.log('Trying to update a node that isnt selected');
+			return;
+		}
+
+		let nodeType = currentSelectedNode.type;
+		const schema = currentSelectedNode.type.schema;
+		/*
+		if (key === 'align') {
+			if (value === 'inline') {
+				nodeType = schema.nodes.embed;
+			} else {
+				nodeType = schema.nodes.block_embed;
+			}
+		}
+		*/
+
+		this.changeNode(currentFrom, currentSelectedNode.type, {...oldNodeAttrs, ...newAttrs});
 	}
 
 
@@ -149,6 +184,14 @@ class ElementSchema {
 		ReactDOM.unmountComponentAtNode(domElement);
 	}
 
+	unmountNode = (node) => {
+		const nodeId = node.attrs.nodeId;
+		if (nodeId && this.elementStore[nodeId]) {
+			const domElement = this.elementStore[nodeId].dom;
+			ReactDOM.unmountComponentAtNode(domElement);
+		}
+	}
+
 	createElementAtNode = (node, block = false) => {
 
 		const nodeId = node.attrs.nodeId;
@@ -156,24 +199,24 @@ class ElementSchema {
 		const domParent = document.createElement('span');
 		let domChild;
 
-		if (this.elementStore[nodeId]) {
+		if (nodeId && this.elementStore[nodeId]) {
 		 	domChild = this.elementStore[nodeId].dom;
 			domChild.parentNode.removeChild(domChild);
 		} else {
 			domChild = document.createElement('span');
 		}
 
-		const reactElement = ReactDOM.render(<EmbedWrapper {...node.attrs}/>, domChild);
+		const reactElement = ReactDOM.render(<EmbedWrapper updateParams={this.updateNodeParams} {...node.attrs}/>, domChild);
 		const dom = domChild.childNodes[0];
 		dom.className += (block) ? 'block-embed' : ' embed';
 
 		domParent.appendChild(domChild);
 
 		dom.setAttribute('data-nodeId', nodeId);
-		const listenerFunc = once(this.onRemoveNode.bind(this, nodeId, domParent));
-		this.elementStore[nodeId] = {node: node, element: reactElement, active: true, dom: domChild, listener: listenerFunc};
+		// const listenerFunc = once(this.onRemoveNode.bind(this, nodeId, domParent));
+		this.elementStore[nodeId] = {node: node, element: reactElement, active: true, dom: domChild};
 
-		domParent.addEventListener('DOMNodeRemoved', listenerFunc);
+		// domParent.addEventListener('DOMNodeRemoved', listenerFunc);
 
 		domParent.addEventListener('DOMNodeInserted', (evt) => {
 			// console.log('reinserted', absoluteCount);

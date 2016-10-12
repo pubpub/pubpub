@@ -330,6 +330,7 @@ export const DocumentEditor = React.createClass({
 		const view = new MenuBarEditorView(document.getElementById('atom-body-editor'), {
 		  state: pm,
 		  onAction: (action) => {
+				console.log(action);
 				const newState = view.editor.state.applyAction(action);
 				this.pm = newState;
 				view.updateState(newState);
@@ -337,6 +338,14 @@ export const DocumentEditor = React.createClass({
 				if (action.type === "selection") {
 					ElementSchema.onNodeSelect(newState, action.selection);
 				}
+			},
+			onUnmountDOM: (view, node) => {
+				console.log('unmountinggg', node);
+				return;
+				if (node.type && node.type.name === 'embed' || node.type.name === 'block_embed') {
+					ElementSchema.unmountNode(node);
+				}
+
 			},
 		  menuContent: menu.fullMenu,
 			spellcheck: true,
@@ -368,6 +377,7 @@ export const DocumentEditor = React.createClass({
 			changeNode: this.changeNode,
 			updateMenuCallback: this.updateEmbedEditor,
 			setEmbedAttribute: this.setEmbedAttribute,
+			getState: this.getState,
 		});
 
 		// TO MIGRATE
@@ -532,11 +542,11 @@ export const DocumentEditor = React.createClass({
 				<textarea id="markdown" onChange={this.markdownChange} style={[styles.textarea, this.state.showMarkdown && styles.textareaVisible]}></textarea>
 				<div id={'atom-body-editor'} className={'document-body'} style={[styles.wsywigBlock, this.state.showMarkdown && styles.wsywigWithMarkdown]}>
 
-					{this.state.embedLayoutCoords &&
+					{/*this.state.embedLayoutCoords &&
 						<div style={[styles.embedLayoutEditor, {left: this.state.embedLayoutCoords.left, top: this.state.embedLayoutCoords.bottom}]}>
 							<EmbedEditor embedLayoutCoords={this.state.embedLayoutCoords} embedAttrs={this.state.embedAttrs} saveCallback={this.setEmbedAttribute}/>
 						</div>
-					}
+					*/}
 
 				</div>
 

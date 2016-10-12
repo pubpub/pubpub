@@ -115,7 +115,10 @@ const Embed = {
 		}
 	}],
 	inline: true,
-	group: 'inline'
+	group: 'inline',
+	draggable: false,
+	isTextblock: true,
+	locked: true,
 };
 
 const BlockEmbed = {
@@ -156,7 +159,10 @@ const BlockEmbed = {
 		}
 	}],
 	inline: false,
-	group: 'block'
+	group: 'block',
+	draggable: false,
+	isTextblock: true,
+	locked: true,
 };
 
 const schemaNodes = basicSchema.nodeSpec.addBefore('image', 'embed', Embed).addBefore('image', 'block_embed', BlockEmbed).addBefore('horizontal_rule', 'page_break', PageBreak);
