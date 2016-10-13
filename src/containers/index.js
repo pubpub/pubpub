@@ -2,6 +2,7 @@ export App from './App/App';
 export Atom from './Atom/Atom';
 export Discussions from './Discussions/Discussions';
 export EmailVerification from './EmailVerification/EmailVerification';
+export Embed from './Embed/Embed';
 export FollowButton from './FollowButton/FollowButton';
 export JournalCreate from './JournalCreate/JournalCreate';
 export JournalProfile from './JournalProfile/JournalProfile';
