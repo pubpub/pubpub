@@ -15,21 +15,21 @@ import {globalMessages} from 'utils/globalMessages';
 import {safeGetInToJS} from 'utils/safeParse';
 import {globalStyles} from 'utils/styleConstants';
 
-import AtomAnalytics from 'containers/atom/AtomAnalytics';
-import AtomCiteButton from 'containers/atom/AtomCiteButton';
-import AtomContents from 'containers/atom/AtomContents';
-import AtomContributors from 'containers/atom/AtomContributors';
-import AtomDetails from 'containers/atom/AtomDetails';
-import AtomEditorPane from 'containers/atom/AtomEditorPane';
-import AtomExportButton from 'containers/atom/AtomExportButton';
-import AtomFollowers from 'containers/atom/AtomFollowers';
-import AtomHeaderDetail from 'containers/atom/AtomHeaderDetail';
-import AtomHeaderDetailsMulti from 'containers/atom/AtomHeaderDetailsMulti';
-import AtomJournals from 'containers/atom/AtomJournals';
-import AtomSaveVersionButton from 'containers/atom/AtomSaveVersionButton';
-import AtomVersions from 'containers/atom/AtomVersions';
-import AtomViewerPane from 'containers/atom/AtomViewerPane';
-import {getAtomData, submitAtomToJournals, saveVersion, updateAtomDetails, publishVersion, addContributor, updateContributor, deleteContributor} from '../atom/actions';
+import AtomAnalytics from 'containers/Atom/AtomAnalytics';
+import AtomCiteButton from 'containers/Atom/AtomCiteButton';
+import AtomContents from 'containers/Atom/AtomContents';
+import AtomContributors from 'containers/Atom/AtomContributors';
+import AtomDetails from 'containers/Atom/AtomDetails';
+import AtomEditorPane from 'containers/Atom/AtomEditorPane';
+import AtomExportButton from 'containers/Atom/AtomExportButton';
+import AtomFollowers from 'containers/Atom/AtomFollowers';
+import AtomHeaderDetail from 'containers/Atom/AtomHeaderDetail';
+import AtomHeaderDetailsMulti from 'containers/Atom/AtomHeaderDetailsMulti';
+import AtomJournals from 'containers/Atom/AtomJournals';
+import AtomSaveVersionButton from 'containers/Atom/AtomSaveVersionButton';
+import AtomVersions from 'containers/Atom/AtomVersions';
+import AtomViewerPane from 'containers/Atom/AtomViewerPane';
+import {getAtomData, submitAtomToJournals, saveVersion, updateAtomDetails, publishVersion, addContributor, updateContributor, deleteContributor} from 'containers/atom/actions';
 
 const StickyContainer = Radium(UnwrappedStickyContainer);
 
