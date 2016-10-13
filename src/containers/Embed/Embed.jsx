@@ -372,9 +372,6 @@ export const Embed = React.createClass({
 					{/* -------------------------------- */}
 					<div style={styles.atomNavBar}>
 						<Sticky style={styles.headerBar} isActive={isEditor}>
-							{!isEmbed && (permissionType === 'author' || permissionType === 'editor') &&
-								<HorizontalNav navItems={atomNavItems} mobileNavButtons={mobileNavButtons}/>
-							}
 							<div style={styles.headerMenu} id={'headerPlaceholder'}></div>
 							<div style={[styles.headerStatus, !this.state.showRightPanel && styles.headerFull]} id={'editor-participants'} className={'editor-participants opacity-on-hover'}></div>
 						</Sticky>
