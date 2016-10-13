@@ -29,7 +29,7 @@ import AtomJournals from 'containers/Atom/AtomJournals';
 import AtomSaveVersionButton from 'containers/Atom/AtomSaveVersionButton';
 import AtomVersions from 'containers/Atom/AtomVersions';
 import AtomViewerPane from 'containers/Atom/AtomViewerPane';
-import {getAtomData, submitAtomToJournals, saveVersion, updateAtomDetails, publishVersion, addContributor, updateContributor, deleteContributor} from 'containers/atom/actions';
+import {getAtomData, submitAtomToJournals, saveVersion, updateAtomDetails, publishVersion, addContributor, updateContributor, deleteContributor} from 'containers/Atom/actions';
 
 const StickyContainer = Radium(UnwrappedStickyContainer);
 
