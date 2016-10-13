@@ -307,6 +307,8 @@ export const Embed = React.createClass({
 		const error = safeGetInToJS(this.props.atomData, ['error', 'message']);
 
 		const isEmbed = this.props.query && this.props.query.embed;
+		const showTitle = this.props.query && this.props.query.title === 'true' || true;
+
 		const hideRightPanel = this.props.query && this.props.query.hideRightPanel;
 		const linkTarget = isEmbed ? '_parent' : '_self';
 
@@ -408,11 +410,10 @@ export const Embed = React.createClass({
 						{ !error &&
 
 							<div style={styles.atomHeader}>
-
 								{/* Atom Title */}
 								{/* ---------- */}
 								<AtomHeaderDetail
-									label={<span style={styles.headerTitle}>{atomData.title}</span>}
+									label={(showTitle) ? <span style={styles.headerTitle}>{atomData.title}</span> : null}
 									defaultMessage={null}
 									editMessage={<FormattedMessage id={'embed.EditMetadata'} defaultMessage={'Edit Metadata'} />}
 									activeMessage={<FormattedMessage id={'embed.HideMetadata'} defaultMessage={'Hide Metadata'} />}
@@ -561,23 +562,6 @@ export const Embed = React.createClass({
 					{/* -------------------- */}
 				</StickyContainer>
 
-
-				{/* Right Panel Section */}
-				{/* ------------------- */}
-				<StickyContainer style={[styles.rightPanel, (!this.state.showRightPanel || hideRightPanel) && styles.hideRightPanel]}>
-					{!error &&
-
-						<Sticky stickyStyle={this.state.showRightPanel ? {} : {left: '0px'}}>
-							<HorizontalNav navItems={rightPanelNavItems} mobileNavButtons={mobileNavButtons}/>
-							<div style={styles.rightPanelContent}>
-								{this.state.rightPanelMode === 'contents'
-									? <AtomContents atomData={this.props.atomData} tocData={toc}/>
-									: <Discussions/>
-								}
-							</div>
-						</Sticky>
-					}
-				</StickyContainer>
 				{/* ------------------- */}
 
 
@@ -645,7 +629,6 @@ styles = {
 		verticalAlign: 'top',
 		padding: '0em 4em 2em',
 		position: 'relative',
-		marginRight: '35vw',
 		backgroundColor: 'white',
 		transition: '.1s linear backgroundColor',
 		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
