@@ -428,8 +428,22 @@ h2 {
   pointer-events: auto;
 }
 
-.ProseMirror-nodeselection *::selection { background: transparent; }
-.ProseMirror-nodeselection *::-moz-selection { background: transparent; }
+.ProseMirror-nodeselection :not(input)::selection {
+	background: transparent;
+ }
+.ProseMirror-nodeselection :not(input)::-moz-selection {
+	background: transparent;
+}
+
+/*
+.ProseMirror-nodeselection input::selection {
+	background: red;
+ }
+.ProseMirror-nodeselection input::-moz-selection {
+	background: red;
+}
+*/
+
 
 .ProseMirror-selectednode {
   outline: 2px solid #8cf;

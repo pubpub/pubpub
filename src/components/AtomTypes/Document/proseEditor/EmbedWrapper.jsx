@@ -148,7 +148,6 @@ export const EmbedWrapper = React.createClass({
 		return (
 			<div ref="embedroot" className={'pub-embed ' + this.props.className} id={this.props.id} style={style}>
 				<AtomViewerPane selected={this.state.selected} atomData={atomData} renderType={'embed'} context={this.props.context}>
-					<span style={{width: '100%', display: 'inline-block'}} ref="menupointer">menu</span>
 					<span style={{textAlign: 'left', width: '100%', display: 'inline-block'}}>{this.props.caption}</span>
 				</AtomViewerPane>
 				{(this.state.selected) ? <div style={{zIndex: 10000, pointerEvents: 'all', position: 'absolute'}}><EmbedEditor embedAttrs={this.props} updateParams={this.updateParams}/></div> : null }

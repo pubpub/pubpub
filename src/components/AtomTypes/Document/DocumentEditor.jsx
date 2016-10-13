@@ -350,13 +350,48 @@ export const DocumentEditor = React.createClass({
 				return false;
 			},
 			onUnmountDOM: (view, node) => {
-				console.log('unmountinggg', node);
+				// console.log('unmountinggg', node);
 				return;
 				if (node.type && node.type.name === 'embed' || node.type.name === 'block_embed') {
 					ElementSchema.unmountNode(node);
 				}
 
 			},
+			/*
+			handleTextInput: (_view, from, to, text) => {
+				if (ElementSchema.currentlyEditing()) {
+					console.log('Prevent text', text);
+					return true;
+				}
+				console.log('Got text', text);
+				return false;
+			},
+			*/
+			handleDOMEvent: (_view, evt, evt2) => {
+				// console.log(evt, ElementSchema.currentlyEditing(), evt2);
+				// return;
+				if (ElementSchema.currentlyEditing()) {
+					const eventType = evt.type;
+					// && eventType.indexOf('drag') === -1
+					if (evt.target && evt.target.className && evt.target.className.indexOf('caption') !== -1 && !evt.dataTransfer) {
+						if (eventType === 'mousedown') {
+							return true;
+						}
+						return false;
+					}
+					if (eventType === 'mousedown') {
+						console.log(evt.currentTarget, evt.target, evt.currentTarget.contains(evt.target));
+						if (ElementSchema.checkPoint(evt.target)) {
+							console.log('skip this!');
+							return false;
+						}
+					}
+					evt.preventDefault();
+					return true;
+				}
+				return false;
+			},
+
 		  menuContent: menu.fullMenu,
 			spellcheck: true,
 		});

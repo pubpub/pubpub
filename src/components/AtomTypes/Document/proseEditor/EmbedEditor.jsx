@@ -34,11 +34,12 @@ export const EmbedEditor = React.createClass({
 		const cap = this.refs.caption.value;
 		this.props.updateParams({caption: cap});
 		this.setState({caption: cap});
+		this.refs.caption.focus();
   },
 
 	preventClick: function(evt) {
-		console.log('got click', evt);
 		// evt.preventDefault();
+		console.log('focus');
 		evt.stopPropagation();
 		this.refs.caption.focus();
 	},
@@ -48,7 +49,7 @@ export const EmbedEditor = React.createClass({
 		const {participants, status} = this.props;
 
 		return (
-      <div className={'contrastbox'} style={styles.box}>
+      <div className={'contrastbox'} style={styles.box} draggable="false" contentEditable="false">
 
         <label htmlFor={'test'}>
           Alignment
@@ -61,15 +62,10 @@ export const EmbedEditor = React.createClass({
           <div onClick={this.setEmbedAttribute.bind(this, 'align', 'right')} style={[styles.alignOption, this.props.embedAttrs.align === 'right' && styles.activeAlign]}>Right</div>
         </div>
 
-        <label htmlFor={'sizeNote'}>
-          Size
-        </label>
-        <input type="text" id={'sizeNote'} name={'size'}/>
-
         <label htmlFor={'captionNote'}>
           Caption
         </label>
-        <input onClick={this.preventClick} ref="caption" value={this.state.caption || this.props.embedAttrs.caption} onChange={this.changeCaption} type="text" id={'captionNote'} name={'caption'}/>
+        <input mousedown={this.preventClick} draggable="false"  className="caption" onClick={this.preventClick} ref="caption" value={this.state.caption || this.props.embedAttrs.caption} onChange={this.changeCaption} type="text" id={'captionNote'} name={'caption'}/>
 
       </div>
 	  );

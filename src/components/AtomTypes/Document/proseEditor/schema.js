@@ -117,8 +117,6 @@ const Embed = {
 	inline: true,
 	group: 'inline',
 	draggable: false,
-	isTextblock: true,
-	locked: true,
 };
 
 const BlockEmbed = {

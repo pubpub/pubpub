@@ -83,6 +83,20 @@ class ElementSchema {
 		}
 	}
 
+	checkPoint = (point) => {
+		const node = this.elementStore[this.editingElem];
+		const dom = (node) ? node.dom : null;
+
+		if (!dom.contains(point)) {
+			node.element.setSelected(false);
+			this.editingElem = null;
+			return true;
+		}
+
+		return false;
+
+	}
+
 
 	updateNodePosition = (currentSelectedNode) => {
 
@@ -175,6 +189,9 @@ class ElementSchema {
 			});
 		});
 		return;
+	}
+	currentlyEditing = () => {
+		return (this.editingElem !== null);
 	}
 	findNodeById = (domHash) => {
 		const element = this.elementStore[domHash];
