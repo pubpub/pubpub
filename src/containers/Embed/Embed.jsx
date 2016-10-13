@@ -307,7 +307,7 @@ export const Embed = React.createClass({
 		const error = safeGetInToJS(this.props.atomData, ['error', 'message']);
 
 		const isEmbed = this.props.query && this.props.query.embed;
-		const showTitle = this.props.query && this.props.query.title === 'true' || true;
+		const showTitle = this.props.query && this.props.query.title === 'true' || !this.props.query.title;
 
 		const hideRightPanel = this.props.query && this.props.query.hideRightPanel;
 		const linkTarget = isEmbed ? '_parent' : '_self';
