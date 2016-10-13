@@ -39,7 +39,6 @@ export const EmbedEditor = React.createClass({
 
 	preventClick: function(evt) {
 		// evt.preventDefault();
-		console.log('focus');
 		evt.stopPropagation();
 		this.refs.caption.focus();
 	},
@@ -49,7 +48,7 @@ export const EmbedEditor = React.createClass({
 		const {participants, status} = this.props;
 
 		return (
-      <div className={'contrastbox'} style={styles.box} draggable="false" contentEditable="false">
+      <div className={'contrastbox'} style={styles.box}>
 
         <label htmlFor={'test'}>
           Alignment

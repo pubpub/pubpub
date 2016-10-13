@@ -1,5 +1,7 @@
 import AtomViewerPane from 'containers/Atom/AtomViewerPane';
 import ReactDOM from 'react-dom';
+import Resizable from 'react-resizable-box';
+import ResizableBox from 'react-resizable-component';
 import React, {PropTypes} from 'react';
 import {ensureImmutable} from 'reducers';
 
@@ -7,6 +9,8 @@ import ElementSchema from './elementSchema';
 import EmbedEditor from './EmbedEditor';
 
 // import {safeGetInToJS} from 'utils/safeParse';
+
+let styles = {};
 
 export const EmbedWrapper = React.createClass({
 	propTypes: {
@@ -81,7 +85,7 @@ export const EmbedWrapper = React.createClass({
 
 
 		const style = {
-			width: this.props.size || 'auto',
+			width: '100%' || 'auto',
 		};
 		if (this.props.align === 'inline') {
 			style.display = 'inline-block';
@@ -90,7 +94,6 @@ export const EmbedWrapper = React.createClass({
 			style.display = 'block';
 			style.margin = '0 auto';
 			style.textAlign = 'center';
-			style.width = '100%';
 		} else if (this.props.align === 'left') {
 			style.display = 'block';
 			style.float = 'left';
@@ -145,16 +148,68 @@ export const EmbedWrapper = React.createClass({
 			);
 		}
 
+		const selected = this.state.selected;
+		const maxWidth = 650;
+		let size = this.props.size || 100;
+
+		if (typeof size === 'string' || size instanceof String) {
+			const match = size.match(/(\d*)%/);
+			if (match && match[1]) {
+				size = parseInt(match[1], 10);
+			} else {
+				size = parseInt(size, 10);
+			}
+
+			if (isNaN(size)) {
+				size = '100%';
+			}
+		}
+
 		return (
 			<div ref="embedroot" className={'pub-embed ' + this.props.className} id={this.props.id} style={style}>
-				<AtomViewerPane selected={this.state.selected} atomData={atomData} renderType={'embed'} context={this.props.context}>
-					<span style={{textAlign: 'left', width: '100%', display: 'inline-block'}}>{this.props.caption}</span>
-				</AtomViewerPane>
+				<Resizable
+				  customClass="item"
+				  width={this.props.size}
+				  height={'auto'}
+					maxWidth={650}
+					customStyle={{margin: '0px auto'}}
+					onResizeStop={(direction, styleSize, clientSize, delta) => {
+						console.log('Stopped resize');
+						console.log(styleSize);
+						console.log(clientSize);
+						const ratio = (styleSize.width / 650) * 100;
+						console.log(ratio);
+						this.updateParams({size: ratio + "%" });
+					}}
+				>
+					<figure style={styles.figure({size: this.props.size})}>
+						<AtomViewerPane selected={this.state.selected} atomData={atomData} renderType={'embed'} context={this.props.context}/>
+					</figure>
+				</Resizable>
+			<figcaption style={styles.caption({size: this.props.size})}>
+				<span style={{textAlign: 'left', width: '100%', display: 'inline-block'}}>{this.props.caption}</span>
 				{(this.state.selected) ? <div style={{zIndex: 10000, pointerEvents: 'all', position: 'absolute'}}><EmbedEditor embedAttrs={this.props} updateParams={this.updateParams}/></div> : null }
-
+			</figcaption>
 			</div>
 		);
 	}
 });
+
+styles = {
+	figure: function({selected}) {
+		return {
+			display: 'table',
+			// userSelect: 'none',
+			width: 'auto',
+			margin: 'auto',
+		};
+	},
+	caption: function({size}) {
+		return {
+			width: size,
+			margin: '0px auto',
+		};
+	}
+};
 
 export default EmbedWrapper;

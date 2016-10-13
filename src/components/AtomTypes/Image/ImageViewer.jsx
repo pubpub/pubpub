@@ -1,5 +1,4 @@
 import Radium from 'radium';
-import Resizable from 'react-resizable-box';
 import React, {PropTypes} from 'react';
 import {FormattedMessage} from 'react-intl';
 import {globalMessages} from 'utils/globalMessages';
@@ -25,21 +24,7 @@ export const ImageViewer = React.createClass({
 		switch (this.props.renderType) {
 		case 'embed':
 		case 'static-embed':
-			return (<figure style={styles.figure({selected})}>
-
-				<Resizable
-				  customClass="item"
-				  width={320}
-				  height={200}
-				  minWidth={160}
-				  minHeight={160}
-				  maxWidth={480}
-				  maxHeight={480}
-				>
-					<img style={styles.img} src={scaledURL} alt={title} style={styles.img({selected})}/>
-				</Resizable>
-				<figcaption style={styles.img}>{this.props.children}</figcaption>
-			</figure>);
+			return (<img style={styles.img} src={scaledURL} alt={title} style={styles.img({selected})}/>);
 		case 'full':
 		case 'static-full':
 		default:
