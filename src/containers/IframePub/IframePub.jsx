@@ -41,7 +41,7 @@ const StickyContainer = Radium(UnwrappedStickyContainer);
 let styles = {};
 let interval;
 
-export const Embed = React.createClass({
+export const IframePub = React.createClass({
 	propTypes: {
 		atomData: PropTypes.object,
 		loginData: PropTypes.object,
@@ -306,11 +306,10 @@ export const Embed = React.createClass({
 		const isLoading = safeGetInToJS(this.props.atomData, ['loading']);
 		const error = safeGetInToJS(this.props.atomData, ['error', 'message']);
 
-		const isEmbed = this.props.query && this.props.query.embed;
 		const showTitle = this.props.query && this.props.query.title === 'true' || !this.props.query.title;
 
 		const hideRightPanel = this.props.query && this.props.query.hideRightPanel;
-		const linkTarget = isEmbed ? '_parent' : '_self';
+		const linkTarget = '_parent';
 
 		const mobileNavButtons = [
 			// (isEditor) ? null : { type: 'button', mobile: true, text: <FormattedMessage {...globalMessages.Contents}/>, action: this.mobileToggleContents },
@@ -412,8 +411,8 @@ export const Embed = React.createClass({
 								<AtomHeaderDetail
 									label={(showTitle) ? <span style={styles.headerTitle}>{atomData.title}</span> : null}
 									defaultMessage={null}
-									editMessage={<FormattedMessage id={'embed.EditMetadata'} defaultMessage={'Edit Metadata'} />}
-									activeMessage={<FormattedMessage id={'embed.HideMetadata'} defaultMessage={'Hide Metadata'} />}
+									editMessage={<FormattedMessage id={'iframePub.EditMetadata'} defaultMessage={'Edit Metadata'} />}
+									activeMessage={<FormattedMessage id={'iframePub.HideMetadata'} defaultMessage={'Hide Metadata'} />}
 									child={
 										<AtomDetails
 											atomData={this.props.atomData}
@@ -434,9 +433,9 @@ export const Embed = React.createClass({
 								{/* ----------------- */}
 								<AtomHeaderDetail
 									label={authorList}
-									defaultMessage={<FormattedMessage id="embed.NContributors" defaultMessage={`{contributorCount, number} {contributorCount, plural, one {Contributor} other {Contributors} }`} values={{contributorCount: contributorsData.length}} />}
-									editMessage={<FormattedMessage id={'embed.EditContributors'} defaultMessage={'Edit Contributors'} />}
-									activeMessage={<FormattedMessage id={'embed.HideContributors'} defaultMessage={'Hide Contributors'} />}
+									defaultMessage={<FormattedMessage id="iframePub.NContributors" defaultMessage={`{contributorCount, number} {contributorCount, plural, one {Contributor} other {Contributors} }`} values={{contributorCount: contributorsData.length}} />}
+									editMessage={<FormattedMessage id={'iframePub.EditContributors'} defaultMessage={'Edit Contributors'} />}
+									activeMessage={<FormattedMessage id={'iframePub.HideContributors'} defaultMessage={'Hide Contributors'} />}
 									child={
 										<AtomContributors
 											atomData={this.props.atomData}
@@ -454,9 +453,9 @@ export const Embed = React.createClass({
 								{/* ---------------------- */}
 								<AtomHeaderDetail
 									label={dateFormat(currentVersionDate, 'mmmm dd, yyyy')}
-									defaultMessage={<FormattedMessage id="embed.NVersions" defaultMessage={`{versionCount, number} {versionCount, plural, one {Version} other {Versions} }`} values={{versionCount: versionsData.length}} />}
-									editMessage={<FormattedMessage id={'embed.ManageVersions'} defaultMessage={'Manage Versions'} />}
-									activeMessage={<FormattedMessage id={'embed.HideVersions'} defaultMessage={'Hide Versions'} />}
+									defaultMessage={<FormattedMessage id="iframePub.NVersions" defaultMessage={`{versionCount, number} {versionCount, plural, one {Version} other {Versions} }`} values={{versionCount: versionsData.length}} />}
+									editMessage={<FormattedMessage id={'iframePub.ManageVersions'} defaultMessage={'Manage Versions'} />}
+									activeMessage={<FormattedMessage id={'iframePub.HideVersions'} defaultMessage={'Hide Versions'} />}
 									child={
 										<AtomVersions
 											versionsData={versionsData}
@@ -478,11 +477,11 @@ export const Embed = React.createClass({
 													<span style={{backgroundColor: 'rgba(0,0,0,0.15)', color: '#FFF', padding: '0em .5em'}}>{journal.journalName}</span>
 												</Link>);
 											})
-											: <FormattedMessage id={'embed.NotFeaturedInJournals'} defaultMessage={'Not Featured in any Journals'} />
+											: <FormattedMessage id={'iframePub.NotFeaturedInJournals'} defaultMessage={'Not Featured in any Journals'} />
 										}
 										defaultMessage={null}
-										editMessage={<FormattedMessage id={'embed.ManageJournals'} defaultMessage={'Manage Journals'} />}
-										activeMessage={<FormattedMessage id={'embed.HideJournals'} defaultMessage={'Hide Journals'} />}
+										editMessage={<FormattedMessage id={'iframePub.ManageJournals'} defaultMessage={'Manage Journals'} />}
+										activeMessage={<FormattedMessage id={'iframePub.HideJournals'} defaultMessage={'Hide Journals'} />}
 										child={
 											<AtomJournals
 												atomData={this.props.atomData}
@@ -505,12 +504,12 @@ export const Embed = React.createClass({
 										<FollowButton id={atomData._id} type={'followsAtom'} isFollowing={atomData.isFollowing} buttonClasses={'light-button'} buttonStyle={{...styles.headerAction, ...styles.headerActionPlainPadding}}/>
 										<AtomHeaderDetailsMulti
 											labels={[
-												<FormattedMessage id="embed.NFollowers" defaultMessage={`{followerCount, number} {followerCount, plural, one {Follower} other {Followers} }`} values={{followerCount: followersData.length}} />,
+												<FormattedMessage id="iframePub.NFollowers" defaultMessage={`{followerCount, number} {followerCount, plural, one {Follower} other {Followers} }`} values={{followerCount: followersData.length}} />,
 												// <FormattedMessage {...globalMessages.Analytics} />
 											]}
 											activeMessages={[
-												<FormattedMessage id={'embed.HideFollowers'} defaultMessage={'Hide Followers'} />,
-												<FormattedMessage id={'embed.HideAnalytics'} defaultMessage={'Hide Analytics'} />
+												<FormattedMessage id={'iframePub.HideFollowers'} defaultMessage={'Hide Followers'} />,
+												<FormattedMessage id={'iframePub.HideAnalytics'} defaultMessage={'Hide Analytics'} />
 											]}
 											views={[
 												<AtomFollowers atomData={this.props.atomData} />,
@@ -526,7 +525,7 @@ export const Embed = React.createClass({
 									<Link to={'/pub/' + this.props.slug}>
 										<div style={styles.notNewestVersion}>
 											<FormattedMessage
-													id="embed.NewerVersionCreated"
+													id="iframePub.NewerVersionCreated"
 													defaultMessage={`Newer version created on {newerData}.`}
 													values={{newerData: dateFormat(newestVersionDate, 'mmmm dd, yyyy')}} />
 										</div>
@@ -577,7 +576,7 @@ export default connect( state => {
 		meta: state.router.params.meta,
 		query: state.router.location.query,
 	};
-})( Radium(Embed) );
+})( Radium(IframePub) );
 
 styles = {
 	atomWrapper: {

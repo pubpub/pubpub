@@ -1,6 +1,6 @@
 import React from 'react';
 import {IndexRoute, Route} from 'react-router';
-import {App, Atom, EmailVerification, Embed, JournalCreate, JournalProfile, Landing, Login, Manage, ResetPassword, SignUp, UserProfile} from 'containers';
+import {App, Atom, EmailVerification, IframePub, JournalCreate, JournalProfile, Landing, Login, Manage, ResetPassword, SignUp, UserProfile} from 'containers';
 import {About, AboutJournals, AboutPubs, AboutReviews, NotFound} from 'components';
 
 function loadComponent(component) {
@@ -24,7 +24,7 @@ export default () => {
 
 			<Route path="/pub/:slug" getComponent={loadComponent(Atom)}/>
 			<Route path="/pub/:slug/:meta" getComponent={loadComponent(Atom)}/>
-			<Route path="/embed/:slug" getComponent={loadComponent(Embed)}/>
+			<Route path="/embed/:slug" getComponent={loadComponent(IframePub)}/>
 
 			{/*
 			<Route path="/group/:groupSlug" getComponent={loadComponent(GroupProfile)}/>
@@ -49,7 +49,7 @@ export default () => {
 
 			<Route path="/user/:username" getComponent={loadComponent(UserProfile)}/> {/* /user/kate?filter=unpublished */}
 			<Route path="/user/:username/:mode" getComponent={loadComponent(UserProfile)}/> {/* /user/kate/discussions?page=4 or /user/kate/settings */}
-			
+
 			<Route path="/signup" getComponent={loadComponent(SignUp)}/>
 
 			<Route path="/verify/:hash" getComponent={loadComponent(EmailVerification)}/>
