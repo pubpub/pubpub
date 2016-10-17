@@ -311,7 +311,6 @@ export const DocumentEditor = React.createClass({
 		this.modelToEditor = nodeConvert.modelToEditor;
 
 		const collabEditing = require('prosemirror-collab').collab;
-		const {DOMParser} = require("prosemirror-model");
 
 
 		this.pubpubSetup = pubpubSetup;
@@ -373,6 +372,7 @@ export const DocumentEditor = React.createClass({
 				if (ElementSchema.currentlyEditing()) {
 					const eventType = evt.type;
 					// && eventType.indexOf('drag') === -1
+					console.log(eventType, evt.target);
 					if (evt.target && evt.target.className && evt.target.className.indexOf('caption') !== -1 && !evt.dataTransfer) {
 						if (eventType === 'mousedown') {
 							return true;
@@ -380,9 +380,8 @@ export const DocumentEditor = React.createClass({
 						return false;
 					}
 					if (eventType === 'mousedown') {
-						console.log(evt.currentTarget, evt.target, evt.currentTarget.contains(evt.target));
 						if (ElementSchema.checkPoint(evt.target)) {
-							console.log('skip this!');
+							console.log('clear it out!');
 							return false;
 						}
 					}

@@ -55,10 +55,10 @@ export const EmbedEditor = React.createClass({
         </label>
 
         <div style={styles.alignDiv} name={'test'}>
-          <div onClick={this.setEmbedAttribute.bind(this, 'align', 'inline')} style={[styles.alignOption, this.props.embedAttrs.align === 'inline' && styles.activeAlign]}>Inline</div>
-          <div onClick={this.setEmbedAttribute.bind(this, 'align', 'full')} style={[styles.alignOption, this.props.embedAttrs.align === 'full' && styles.activeAlign]}>Full</div>
-          <div onClick={this.setEmbedAttribute.bind(this, 'align', 'left')} style={[styles.alignOption, this.props.embedAttrs.align === 'left' && styles.activeAlign]}>Left</div>
-          <div onClick={this.setEmbedAttribute.bind(this, 'align', 'right')} style={[styles.alignOption, this.props.embedAttrs.align === 'right' && styles.activeAlign]}>Right</div>
+          <div onClick={this.setEmbedAttribute.bind(this, 'align', 'inline')} style={styles.alignOption(this.props.embedAttrs.align, 'inline')}>Inline</div>
+          <div onClick={this.setEmbedAttribute.bind(this, 'align', 'full')} style={styles.alignOption(this.props.embedAttrs.align, 'full')}>Full</div>
+          <div onClick={this.setEmbedAttribute.bind(this, 'align', 'left')} style={styles.alignOption(this.props.embedAttrs.align, 'left')}>Left</div>
+          <div onClick={this.setEmbedAttribute.bind(this, 'align', 'right')} style={styles.alignOption(this.props.embedAttrs.align, 'right')}>Right</div>
         </div>
 
         <label htmlFor={'captionNote'}>
@@ -73,9 +73,6 @@ export const EmbedEditor = React.createClass({
 });
 
 const styles = {
-  activeAlign: {
-    fontWeight: '700',
-  },
   box: {
     padding: '0.6em 1.2em',
     fontSize: '0.8em',
@@ -85,10 +82,14 @@ const styles = {
   alignDiv: {
     paddingBottom: '0.5em',
   },
-  alignOption: {
-    display: 'inline-block',
-    paddingRight: '0.8em',
-    cursor: 'pointer',
+  alignOption: function(activeAlign, option) {
+		console.log(activeAlign);
+		return {
+			fontWeight: (activeAlign === option) ? '700' : 400,
+	    display: 'inline-block',
+	    paddingRight: '0.8em',
+	    cursor: 'pointer',
+		};
   }
 };
 
