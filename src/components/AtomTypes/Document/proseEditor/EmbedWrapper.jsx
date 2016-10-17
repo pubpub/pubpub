@@ -103,29 +103,6 @@ export const EmbedWrapper = React.createClass({
 
 		const atomData = ensureImmutable({ atomData: data.parent, currentVersionData: data });
 
-
-		const style = {
-			width: '100%' || 'auto',
-		};
-		if (this.props.align === 'inline') {
-			style.display = 'inline-block';
-			style.verticalAlign = 'top';
-		} else if (this.props.align === 'full') {
-			// style.display = 'block';
-			style.margin = '0 auto';
-			style.textAlign = 'center';
-		} else if (this.props.align === 'left') {
-			// style.display = 'block';
-			// style.float = 'left';
-			// style.paddingRight = '1em';
-		} else if (this.props.align === 'right') {
-			// style.display = 'block';
-			 // style.float = 'right';
-			// style.paddingLeft = '1em';
-		} else if (this.props.align === 'inline-word') {
-			style.display = 'inline';
-		}
-
 		if (this.props.mode === 'cite') {
 			const number = this.state.citeCount || this.props.citeCount || '?';
 
@@ -151,7 +128,6 @@ export const EmbedWrapper = React.createClass({
 				  width={'100%'}
 				  height={'auto'}
 					maxWidth={650}
-					customStyle={style}
 					onResizeStop={(direction, styleSize, clientSize, delta) => {
 						const ratio = (clientSize.width / 650) * 100;
 						console.log(ratio);
@@ -232,8 +208,10 @@ styles = {
 			style.float = 'left';
 		} else if (align === 'right') {
 			style.float = 'right';
+		} else if (align === 'full') {
+			style.margin = '0 auto';
 		}
-		return style;
+ 		return style;
 	},
 	caption: function({size, align}) {
 		const style = {
@@ -241,24 +219,12 @@ styles = {
 			display: 'table-row',
 		};
 		return style;
-		if (align === 'left') {
-			style.float = 'left';
-		} else if (align === 'right') {
-			style.float = 'right';
-		}
-		return style;
 	},
 	captionText: function({align}) {
 		const style = {
 			width: '100%',
 			display: 'inline-block',
 		};
-		return style;
-		if (align === 'left') {
-			style.float = 'left';
-		} else if (align === 'right') {
-			style.float = 'right';
-		}
 		return style;
 	}
 };
