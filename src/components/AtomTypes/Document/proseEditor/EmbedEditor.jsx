@@ -78,7 +78,7 @@ const styles = {
     fontSize: '0.8em',
     border: 'none',
     boxShadow: '0px 0px 2px #808284',
-		// animation: 'x 180ms forwards linear',
+		animation: 'popupKeyframe 180ms forwards linear',
 		// animationName: popupKeyframes,
   },
   alignDiv: {

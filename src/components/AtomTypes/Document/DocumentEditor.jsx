@@ -449,7 +449,7 @@ export const DocumentEditor = React.createClass({
 		// 		that.collab.mod.collab.docChanges.sendToCollaborators()
 		// })
 		this.collab.waitingForDocument = false;
-		this.moveMenu();
+		// this.moveMenu();
 	},
 
 	askForDocument: function() {
