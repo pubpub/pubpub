@@ -149,7 +149,7 @@ export const DocumentEditor = React.createClass({
 
 		//
 
-		// this.moveMenu();
+		//
 	},
 
 	setConnectionStatus: function(status, statusMsg) {
@@ -333,7 +333,7 @@ export const DocumentEditor = React.createClass({
 		const view = new MenuBarEditorView(document.getElementById('atom-body-editor'), {
 		  state: pm,
 		  onAction: (action) => {
-				// console.log(action);
+				console.log(action);
 				const newState = view.editor.state.applyAction(action);
 				this.pm = newState;
 				view.updateState(newState);
@@ -372,7 +372,6 @@ export const DocumentEditor = React.createClass({
 				if (ElementSchema.currentlyEditing()) {
 					const eventType = evt.type;
 					// && eventType.indexOf('drag') === -1
-					console.log(eventType, evt.target);
 					if (evt.target && evt.target.className && evt.target.className.indexOf('caption') !== -1 && !evt.dataTransfer) {
 						if (eventType === 'mousedown') {
 							return true;
@@ -381,7 +380,6 @@ export const DocumentEditor = React.createClass({
 					}
 					if (eventType === 'mousedown') {
 						if (ElementSchema.checkPoint(evt.target)) {
-							console.log('clear it out!');
 							return false;
 						}
 					}
@@ -393,6 +391,7 @@ export const DocumentEditor = React.createClass({
 
 		  menuContent: menu.fullMenu,
 			spellcheck: true,
+			floatingMenu: false,
 		});
 
 		this.pm = pm;
@@ -448,6 +447,7 @@ export const DocumentEditor = React.createClass({
 		// 		that.collab.mod.collab.docChanges.sendToCollaborators()
 		// })
 		this.collab.waitingForDocument = false;
+		this.moveMenu();
 	},
 
 	askForDocument: function() {

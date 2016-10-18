@@ -751,8 +751,9 @@ styles = {
 	},
 	headerMenu: {
 		position: 'absolute',
-		right: 0,
+		left: 'calc(50vw - 220px)',
 		top: 0,
+		display: 'block',
 		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
 			position: 'static',
 		},
@@ -776,7 +777,7 @@ styles = {
 	},
 	headerFull: {
 		display: 'block',
-		left: 'calc(50vw - 300px)',
+		left: 'calc(50vw - 330px)',
 	},
 	notNewestVersion: {
 		backgroundColor: '#363736',
