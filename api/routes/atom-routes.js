@@ -558,7 +558,7 @@ export function getAtomEdit(req, res) {
 		return [atomResult, Version.findOne({_id: mostRecentVersionId}).exec(), permissionType, authors];
 	})
 	.spread(function(atomResult, versionResult, permissionType, authors) { // Send response
-		if (permissionType !== 'author' && permissionType !== 'editor' && permissionType !== 'reader') {
+		if (permissionType !== 'author' && permissionType !== 'editor') {
 			throw new Error('Atom does not exist');
 		}
 
