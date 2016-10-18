@@ -333,7 +333,7 @@ export const DocumentEditor = React.createClass({
 		const view = new MenuBarEditorView(document.getElementById('atom-body-editor'), {
 		  state: pm,
 		  onAction: (action) => {
-				console.log(action);
+				// console.log(action);
 				const newState = view.editor.state.applyAction(action);
 				this.pm = newState;
 				view.updateState(newState);
@@ -366,7 +366,7 @@ export const DocumentEditor = React.createClass({
 				return false;
 			},
 			*/
-			handleDOMEvent: (_view, evt, evt2) => {
+			handleDOMEvent: (_view, evt) => {
 				// console.log(evt, ElementSchema.currentlyEditing(), evt2);
 				// return;
 				if (ElementSchema.currentlyEditing()) {
@@ -383,6 +383,9 @@ export const DocumentEditor = React.createClass({
 							return false;
 						}
 					}
+					if (eventType === 'keydown' && evt.key === 'Delete') {
+						return false;
+					}
 					evt.preventDefault();
 					return true;
 				}
@@ -391,7 +394,6 @@ export const DocumentEditor = React.createClass({
 
 		  menuContent: menu.fullMenu,
 			spellcheck: true,
-			floatingMenu: false,
 		});
 
 		this.pm = pm;
