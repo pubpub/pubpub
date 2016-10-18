@@ -1,7 +1,6 @@
 import AtomViewerPane from 'containers/Atom/AtomViewerPane';
 import ReactDOM from 'react-dom';
 import Resizable from 'react-resizable-box';
-import ResizableBox from 'react-resizable-component';
 import React, {PropTypes} from 'react';
 import {ensureImmutable} from 'reducers';
 
@@ -128,6 +127,7 @@ export const EmbedWrapper = React.createClass({
 				  width={'100%'}
 				  height={'auto'}
 					maxWidth={650}
+					customStyle={styles.outline({selected})}
 					onResizeStop={(direction, styleSize, clientSize, delta) => {
 						const ratio = (clientSize.width / 650) * 100;
 						console.log(ratio);
@@ -183,26 +183,17 @@ styles = {
 		top: '-0.45em',
 		fontSize: '0.85em',
 	},
-	wrapper: function({selected}) {
+	outline: function({selected}) {
 		return {
-			display: 'table',
-			// userSelect: 'none',
-			width: 'auto',
-			margin: 'auto',
+			outline: (selected) ? '3px solid #BBBDC0' : '3px solid transparent',
+			transition: 'outline-color 0.15s ease-in',
+
 		};
 	},
-	resizable: function({align}) {
-		return {
-			display: 'table',
-			// userSelect: 'none',
-			width: 'auto',
-			margin: 'auto',
-		};
-	},
-	figure: function({size, align}) {
+	figure: function({size, align, selected}) {
 		const style = {
 			width: size,
-			display: 'table'
+			display: 'table',
 		};
 		if (align === 'left') {
 			style.float = 'left';

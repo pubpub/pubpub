@@ -1,6 +1,7 @@
-import {Schema, Node, Fragment, Mark, NodeType, MarkType, DOMParser, DOMSerializer} from 'prosemirror-model';
+import {Schema, Fragment, Mark, NodeType, MarkType, DOMParser, DOMSerializer} from 'prosemirror-model';
 import {schema as basicSchema} from 'prosemirror-schema-basic';
-import {addListNodes, OrderedList, BulletList, ListItem} from 'prosemirror-schema-list';
+import {addListNodes} from 'prosemirror-schema-list';
+import {addTableNodes} from 'prosemirror-schema-table';
 
 import ElementSchema from './elementSchema';
 
@@ -164,9 +165,11 @@ const BlockEmbed = {
 };
 
 const schemaNodes = basicSchema.nodeSpec.addBefore('image', 'embed', Embed).addBefore('image', 'block_embed', BlockEmbed).addBefore('horizontal_rule', 'page_break', PageBreak);
+const listSchema = addListNodes(schemaNodes, "paragraph block*", "block");
+const tableSchema = addTableNodes(listSchema, "paragraph block*", "block");
 
 export const schema = new Schema({
-	nodes: addListNodes(schemaNodes, "paragraph block*", "block"),
+	nodes: tableSchema,
 	marks: basicSchema.markSpec.addBefore('code', 'sub', SubMark).addBefore('code', 'sup', SupMark).addBefore('code', 'strike', StrikeThroughMark)
 });
 

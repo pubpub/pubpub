@@ -24,7 +24,7 @@ export const ImageViewer = React.createClass({
 		switch (this.props.renderType) {
 		case 'embed':
 		case 'static-embed':
-			return (<img style={styles.img} src={scaledURL} alt={title} style={styles.img({selected})}/>);
+			return (<img style={styles.img} src={scaledURL} alt={title}/>);
 		case 'full':
 		case 'static-full':
 		default:
@@ -57,21 +57,6 @@ export const ImageViewer = React.createClass({
 export default Radium(ImageViewer);
 
 styles = {
-	figure: function({selected}) {
-		return {
-			display: 'table',
-			// userSelect: 'none',
-			width: 'auto',
-			margin: 'auto',
-		};
-	},
-	img: function({selected}) {
-		return {
-			display: 'table-row',
-			outline: (selected) ? '3px solid #2C2A2B' : '3px solid transparent',
-			transition: 'outline-color 0.15s ease-in',
-		};
-	},
 	key: {
 		fontSize: '1.2em',
 	},

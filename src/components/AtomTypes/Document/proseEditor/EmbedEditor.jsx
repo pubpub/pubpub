@@ -76,6 +76,8 @@ const styles = {
   box: {
     padding: '0.6em 1.2em',
     fontSize: '0.8em',
+    border: 'none',
+    boxShadow: '0px 0px 2px #808284',
 		// animation: 'x 180ms forwards linear',
 		// animationName: popupKeyframes,
   },
@@ -83,7 +85,6 @@ const styles = {
     paddingBottom: '0.5em',
   },
   alignOption: function(activeAlign, option) {
-		console.log(activeAlign);
 		return {
 			fontWeight: (activeAlign === option) ? '700' : 400,
 	    display: 'inline-block',
