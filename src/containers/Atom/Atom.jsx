@@ -780,7 +780,8 @@ styles = {
 	},
 	headerFull: {
 		display: 'block',
-		left: 'calc(50vw - 330px)',
+		right: 'calc(50vw - 425px)',
+		left: null,
 	},
 	notNewestVersion: {
 		backgroundColor: '#363736',
