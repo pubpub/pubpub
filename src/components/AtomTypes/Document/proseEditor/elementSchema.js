@@ -1,8 +1,7 @@
-import once from 'lodash/once';
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-import EmbedWrapper from './EmbedWrapper';
+import EmbedEditWrapper from './EmbedEditWrapper';
 import Pointer from './Pointer';
 
 class ElementSchema {
@@ -236,7 +235,7 @@ class ElementSchema {
 			domChild = document.createElement('span');
 		}
 
-		const reactElement = ReactDOM.render(<EmbedWrapper updateParams={this.updateNodeParams} {...node.attrs}/>, domChild);
+		const reactElement = ReactDOM.render(<EmbedEditWrapper updateParams={this.updateNodeParams} {...node.attrs}/>, domChild);
 		const dom = domChild.childNodes[0];
 		dom.className += (block) ? 'block-embed' : ' embed';
 

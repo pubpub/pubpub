@@ -1,9 +1,9 @@
-import React, {PropTypes} from 'react';
 import Radium, {Style} from 'radium';
-import {globalStyles} from 'utils/styleConstants';
-import {globalMessages} from 'utils/globalMessages';
-import {FormattedMessage} from 'react-intl';
+import React, {PropTypes} from 'react';
 import {markdownParser, markdownSerializer, schema} from 'components/AtomTypes/Document/proseEditor';
+import {FormattedMessage} from 'react-intl';
+import {globalMessages} from 'utils/globalMessages';
+import {globalStyles} from 'utils/styleConstants';
 
 let Marklib = undefined;
 let Rangy = undefined;
@@ -35,7 +35,7 @@ export const SelectionPopup = React.createClass({
 		Rangy = require('rangy');
 		require('rangy/lib/rangy-textrange.js');
 		document.getElementById('atom-viewer').addEventListener('mouseup', this.onMouseUp);
-		
+
 		const prosemirror = require('prosemirror');
 		const {pubpubSetup} = require('components/AtomTypes/Document/proseEditor/pubpubSetup');
 
@@ -214,7 +214,7 @@ export const SelectionPopup = React.createClass({
 			popupVisible: false,
 			highlightObject: undefined,
 		});
-		
+
 		this.clearTempHighlights();
 		this.clearTempHighlights();
 		pm.setDoc(markdownParser.parse(''));
@@ -248,7 +248,7 @@ export const SelectionPopup = React.createClass({
 							<FormattedMessage id="pub.AddComment" defaultMessage="Add Comment"/>
 						</div>
 					}
-					
+
 
 					<div style={[{width: '300px'}, !this.state.popupEditor && {opacity: '0', pointerEvents: 'none', position: 'absolute'}]}>
 						<div id="highlight-reply" style={styles.inputWrapper}></div>

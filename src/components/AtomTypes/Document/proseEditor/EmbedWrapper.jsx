@@ -1,11 +1,6 @@
 import AtomViewerPane from 'containers/Atom/AtomViewerPane';
-import ReactDOM from 'react-dom';
-import Resizable from 'react-resizable-box';
 import React, {PropTypes} from 'react';
 import {ensureImmutable} from 'reducers';
-
-import ElementSchema from './elementSchema';
-import EmbedEditor from './EmbedEditor';
 
 // import {safeGetInToJS} from 'utils/safeParse';
 
@@ -27,72 +22,12 @@ export const EmbedWrapper = React.createClass({
 		nodeId: PropTypes.number,
 	},
 	getInitialState: function() {
-		return {
-			selected: false,
-		};
+		return { };
 	},
 	getDefaultProps: function() {
 		return {
 			context: 'document',
 		};
-	},
-	componentDidMount: function() {
-		/*
-		const checkCallback = () => {
-			ElementSchema.checkAndRender(this.props.nodeId);
-		};
-		window.setTimeout(checkCallback, 0);
-		*/
-	},
-
-	componentWillUpdate: function(nextProps, nextState) {
-	},
-
-	componentWillUnmount: function() {
-		console.log('unmounted atom!');
-	},
-
-	getSize: function() {
-		const elem = ReactDOM.findDOMNode(this.refs.menupointer);
-		return {
-			width: elem.clientWidth,
-			left: elem.offsetLeft,
-			top: elem.offsetTop,
-		};
-	},
-
-	setCiteCount: function(citeCount) {
-		console.log('set cite count!', citeCount);
-		this.setState({citeCount});
-	},
-
-	setSelected: function(selected) {
-		this.setState({selected});
-	},
-
-	updateParams: function(newAttrs) {
-		this.props.updateParams(this.props.nodeId, newAttrs);
-	},
-
-	typeNewCaption: function() {
-		const newCaption = this.refs.captionInput.value;
-		console.log('got new caption!', newCaption);
-		this.updateParams({caption: newCaption});
-		this.refs.captionInput.focus();
-	},
-
-	preventClick: function(evt) {
-		// evt.preventDefault();
-		console.log('preventing click!');
-		evt.stopPropagation();
-		this.refs.captionInput.focus();
-	},
-
-	preventKey: function(evt) {
-		// evt.preventDefault();
-		console.log('preventing key!');
-		evt.stopPropagation();
-		this.refs.captionInput.focus();
 	},
 
 	render: function() {
@@ -117,40 +52,16 @@ export const EmbedWrapper = React.createClass({
 			);
 		}
 
-		const selected = this.state.selected;
-
 		return (
 			<div ref="embedroot" className={'pub-embed ' + this.props.className} id={this.props.id}>
 				<figure style={styles.figure({size: this.props.size, align: this.props.align})}>
-				<div style={{width: this.props.size, position: 'relative', display: 'table-row'}}>
-				<Resizable
-				  width={'100%'}
-				  height={'auto'}
-					maxWidth={650}
-					customStyle={styles.outline({selected})}
-					onResizeStop={(direction, styleSize, clientSize, delta) => {
-						const ratio = (clientSize.width / 650) * 100;
-						console.log(ratio);
-						this.updateParams({size: ratio + "%" });
-					}}>
-						<AtomViewerPane selected={this.state.selected} atomData={atomData} renderType={'embed'} context={this.props.context}/>
-				</Resizable>
-			</div>
+				<div style={{display: 'table-row'}}>
+					<AtomViewerPane atomData={atomData} renderType={'embed'} context={this.props.context}/>
+				</div>
 			<figcaption style={styles.caption({size: this.props.size, align: this.props.align})}>
-				<span
-					onMouseDown={this.preventClick}
-					onKeyDown={this.preventKey}
-					onKeyUp={this.preventKey}
-					draggable="false"
-					onClick={this.preventClick}
-					onInput={this.typeNewCaption}
-					className="caption"
-					ref="captionInput"
-					contentEditable
-					style={styles.captionText({align: this.props.align})}>
+				<span className="caption" style={styles.captionText({align: this.props.align})}>
 					{this.props.caption}
 				</span>
-				{(this.state.selected) ? <div style={styles.embed({size: this.props.size})}><EmbedEditor embedAttrs={this.props} updateParams={this.updateParams}/></div> : null }
 			</figcaption>
 			</figure>
 			</div>
@@ -159,28 +70,6 @@ export const EmbedWrapper = React.createClass({
 });
 
 styles = {
-	embed: function({size}) {
-
-		const style = {
-			zIndex: 10000,
-			pointerEvents: 'all',
-			position: 'absolute',
-			minWidth: '200px',
-			width: `calc(${size} * 0.8)`,
-			margin: `0 calc(${size} * 0.1)`,
-		};
-
-		const parsedSize = parseInt(size);
-		if (!isNaN(parsedSize)) {
-			console.log(parsedSize);
-		}
-		const realSize = 650 * (parsedSize / 100);
-		if (realSize * 0.8 < 200) {
-			const newMargin = Math.round((realSize - 200) / 2);
-			style.margin = `0 ${newMargin}px`
-		}
-		return style;
-	},
 	button: {
 		padding: '0em 0em',
 		height: '0.75em',
@@ -205,14 +94,7 @@ styles = {
 		top: '-0.45em',
 		fontSize: '0.85em',
 	},
-	outline: function({selected}) {
-		return {
-			outline: (selected) ? '3px solid #BBBDC0' : '3px solid transparent',
-			transition: 'outline-color 0.15s ease-in',
-
-		};
-	},
-	figure: function({size, align, selected}) {
+	figure: function({size, align}) {
 		const style = {
 			width: size,
 			display: 'table',

@@ -80,6 +80,17 @@ export const renderReactFromJSON = function(item, isRoot) {
 				citeObjects[node.attrs.data._id] = node.attrs.data;
 			}
 			return <EmbedWrapper {...node.attrs} key={index} citeCount={citeCount}/>;
+
+		case 'block_embed':
+			if (node.attrs.data._id in citeCounts) {
+				citeCount = citeCounts[node.attrs.data._id];
+			} else if (node.attrs.mode === 'cite') {
+				citeCount = currentCiteCount++;
+				citeCounts[node.attrs.data._id] = citeCount;
+				citeObjects[node.attrs.data._id] = node.attrs.data;
+			}
+			return <EmbedWrapper {...node.attrs} key={index} citeCount={citeCount}/>;
+
 		case 'pointer':
 			return <Pointer {...node.attrs} />;
 		default:

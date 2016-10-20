@@ -12,7 +12,6 @@ import {globalMessages} from 'utils/globalMessages';
 import {safeGetInToJS} from 'utils/safeParse';
 
 import ElementSchema from './proseEditor/elementSchema';
-import EmbedEditor from './proseEditor/EmbedEditor';
 import StatusTray from './DocumentEditorStatusTray';
 import {schema as pubSchema, migrateMarks, migrateDiffs} from './proseEditor/schema';
 
@@ -542,8 +541,8 @@ export const DocumentEditor = React.createClass({
 		return {
 			// markdown: markdownSerializer.serialize(this.pm.doc),
 			markdown: '',
-			docJSON: '',
-			// docJSON: this.getState().toJSON(),
+			// docJSON: '',
+			docJSON: this.getState().doc.toJSON(),
 		};
 	},
 

@@ -91,7 +91,12 @@ const insertEmbed = (atomType, state, _, view, nodeType) => {
     view.props.onAction(view.state.tr.replaceSelection(nodeType.createAndFill(nodeAttrs)).action());
 		// callback(nodeAttrs);
 	};
-	window.toggleMedia(state, idGenerationCallback, schema.nodes.block_embed, atomType);
+  if (atomType === 'reference') {
+    window.toggleMedia(state, idGenerationCallback, schema.nodes.embed, atomType);
+  } else {
+    window.toggleMedia(state, idGenerationCallback, schema.nodes.block_embed, atomType);
+  }
+
 };
 
 function insertImageEmbed(nodeType) {

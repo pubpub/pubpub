@@ -161,14 +161,15 @@ export const Media = React.createClass({
 
 	insertItem: function(item) {
 		console.log(item);
-		const nodeData = {
+		const mode = (this.state.atomType === 'reference') ? 'cite' : 'embed';
+ 		const nodeData = {
 			source: item._id,
 			className: '',
 			id: item._id,
 			align: 'full',
 			size: '',
 			caption: '',
-			mode: 'embed',
+			mode: mode,
 			data: item,
 		};
 

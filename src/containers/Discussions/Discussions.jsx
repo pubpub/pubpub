@@ -75,6 +75,7 @@ export const Discussions = React.createClass({
 
 		const place = document.getElementById('reply-input');
 		if (!place) { return undefined; }
+		return;
 		pm = new prosemirror.ProseMirror({
 			place: place,
 			schema: schema,
@@ -127,7 +128,7 @@ export const Discussions = React.createClass({
 		this.setState({replyToID: replyToID});
 		const inputDiv = document.getElementById('reply-wrapper');
 		const destination = document.getElementById('input-placeholder-' + replyToID);
-		destination.appendChild(inputDiv); 
+		destination.appendChild(inputDiv);
 	},
 
 	clearReplyTo: function() {
@@ -135,7 +136,7 @@ export const Discussions = React.createClass({
 		this.setState({replyToID: this.state.defaultReply || this.state.rootReply});
 		const inputDiv = document.getElementById('reply-wrapper');
 		const destination = document.getElementById('reply-wrapper-wrapper');
-		destination.appendChild(inputDiv); 
+		destination.appendChild(inputDiv);
 	},
 
 	publishReply: function() {
@@ -205,7 +206,7 @@ export const Discussions = React.createClass({
 						{/* <Media/> */}
 
 						{/* <Sticky style={styles.replyWrapper} isActive={!!replyToData}> */}
-						<div style={styles.replyWrapper} id={'reply-wrapper'}>							
+						<div style={styles.replyWrapper} id={'reply-wrapper'}>
 							<div style={[styles.replyHeader, !replyToData && {display: 'none'}, this.state.replyToID === this.state.defaultReply && {display: 'none'}]}>
 									<div className={'showChildOnHover'} style={styles.replyToWrapper}>
 										<FormattedMessage {...globalMessages.ReplyTo}/>: {replyToData && replyToData.authorsData[0].source.name}

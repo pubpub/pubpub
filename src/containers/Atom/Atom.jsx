@@ -139,10 +139,13 @@ export const Atom = React.createClass({
 					return;
 				}
 
+				/*
+				TO-DO: SERIALIZE MARKDOWN
 				const newVersionContent = this.refs.atomEditorPane.refs.editor.getSaveVersionContent();
 				if (this.state.currentDocMarkdown !== newVersionContent.markdown) {
 					this.setState({currentDocMarkdown: newVersionContent.markdown});
 				}
+				*/
 			}
 		}, 1000);
 
