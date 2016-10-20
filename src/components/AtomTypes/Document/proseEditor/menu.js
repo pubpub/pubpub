@@ -81,26 +81,41 @@ function insertImageItem(nodeType) {
   })
 }
 
-function insertEmbed(nodeType) {
+
+const insertEmbed = (atomType, state, _, view, nodeType) => {
+  let {node, from, to} = state.selection;
+  let attrs = nodeType && node && node.type == nodeType && node.attrs;
+	const idGenerationCallback = (nodeAttrs) => {
+		const randomId = Math.floor(Math.random()*10000000);
+		nodeAttrs.nodeId = randomId;
+    view.props.onAction(view.state.tr.replaceSelection(nodeType.createAndFill(nodeAttrs)).action());
+		// callback(nodeAttrs);
+	};
+	window.toggleMedia(state, idGenerationCallback, schema.nodes.block_embed, atomType);
+};
+
+function insertImageEmbed(nodeType) {
   return new MenuItem({
-    title: "Insert Embed",
-    label: "Embed",
+    title: "Insert Image",
+    label: "Image",
     select(state) { return canInsert(state, nodeType) },
     run(state, _, view) {
-      let {node, from, to} = state.selection;
-      let attrs = nodeType && node && node.type == nodeType && node.attrs;
-			const idGenerationCallback = (nodeAttrs) => {
-				const randomId = Math.floor(Math.random()*10000000);
-				nodeAttrs.nodeId = randomId;
-        console.log('doing action!', nodeAttrs);
-        view.props.onAction(view.state.tr.replaceSelection(nodeType.createAndFill(nodeAttrs)).action());
-				// callback(nodeAttrs);
-			};
-			window.toggleMedia(state, idGenerationCallback, schema.nodes.embed)
-
+      insertEmbed('image', state, _, view, nodeType);
     }
   })
 }
+
+function insertReferenceEmbed(nodeType) {
+  return new MenuItem({
+    title: "Insert Reference",
+    label: "Reference",
+    select(state) { return canInsert(state, nodeType) },
+    run(state, _, view) {
+      insertEmbed('reference', state, _, view, nodeType);
+    }
+  })
+}
+
 
 
 function positiveInteger(value) {
@@ -269,7 +284,11 @@ function buildMenuItems(schema) {
     r.toggleLink = linkItem(type)
 
   if (type = schema.nodes.block_embed)
-    r.insertEmbed = insertEmbed(type)
+    r.insertImageEmbed = insertImageEmbed(type)
+
+  if (type = schema.nodes.embed)
+    r.insertReferenceEmbed = insertReferenceEmbed(type)
+
   if (type = schema.nodes.bullet_list)
     r.wrapBulletList = wrapListItem(type, {
       title: "Wrap in bullet list",
@@ -323,18 +342,17 @@ function buildMenuItems(schema) {
   }
 
   let cut = arr => arr.filter(x => x)
-  r.insertMenu = new Dropdown(cut([r.insertHorizontalRule, r.insertTable, r.insertEmbed]), {label: "Insert"})
+  r.insertMenu = new Dropdown(cut([r.insertHorizontalRule, r.insertTable, r.insertImageEmbed, r.insertReferenceEmbed]), {label: "Insert"})
   r.typeMenu = new Dropdown(cut([r.makeParagraph, r.makeCodeBlock, r.makeHead1 && new DropdownSubmenu(cut([
     r.makeHead1, r.makeHead2, r.makeHead3, r.makeHead4, r.makeHead5, r.makeHead6
   ]), {label: "Heading"})]), {label: "Type..."})
   let tableItems = cut([r.addRowBefore, r.addRowAfter, r.removeRow, r.addColumnBefore, r.addColumnAfter, r.removeColumn])
   if (tableItems.length)
-    r.tableMenu = new Dropdown(tableItems, {label: "Table"})
+    r.tableMenu = new Dropdown(tableItems, {label: "Modify Table"})
 
   r.inlineMenu = [cut([r.toggleStrong, r.toggleEm, r.toggleCode, r.toggleLink]), [r.insertMenu]]
-  r.blockMenu = [cut([r.typeMenu, r.tableMenu, r.wrapBulletList, r.wrapOrderedList, r.wrapBlockQuote, joinUpItem,
-                      liftItem, selectParentNodeItem])]
-  r.fullMenu = r.inlineMenu.concat(r.blockMenu).concat([[undoItem, redoItem]])
+  r.blockMenu = [cut([r.typeMenu, r.tableMenu, r.wrapBulletList, r.wrapOrderedList, r.wrapBlockQuote, liftItem])]
+  r.fullMenu = r.inlineMenu.concat(r.blockMenu)
 
   return r
 }

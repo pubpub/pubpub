@@ -3,7 +3,7 @@ import murmurhash from 'murmurhash';
 import Dropzone from 'react-dropzone';
 import Radium, {Style} from 'radium';
 import React, {PropTypes} from 'react';
-import {Media} from 'components';
+import {Media, MediaFiltered} from 'components';
 import {MD5} from 'object-hash';
 import {Node} from 'prosemirror-model';
 import {FormattedMessage} from 'react-intl';
@@ -581,7 +581,7 @@ export const DocumentEditor = React.createClass({
 			{/* <Dropzone ref="dropzone" disableClick={true} onDrop={this.onDrop} style={{}} activeClassName={'dropzone-active'} > */}
 				<Style rules={colorMap} />
 
-				<Media ref={'mediaRef'}/>
+				<MediaFiltered ref={'mediaRef'}/>
 
 				{/* <div className={'opacity-on-hover'} style={styles.iconLeft} onClick={this.toggleMarkdown}></div> */}
 

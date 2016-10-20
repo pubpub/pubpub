@@ -37,6 +37,14 @@ export const EmbedEditor = React.createClass({
 		this.refs.caption.focus();
   },
 
+  changeFigureName: function(evt) {
+		const figure = this.refs.caption.value;
+		this.props.updateParams({figureName: figure});
+		this.setState({figureName: figure});
+		this.refs.figureName.focus();
+  },
+
+
 	preventClick: function(evt) {
 		// evt.preventDefault();
 		evt.stopPropagation();
@@ -48,23 +56,40 @@ export const EmbedEditor = React.createClass({
 		const {participants, status} = this.props;
 
 		return (
-      <div className={'contrastbox'} style={styles.box}>
-
-        <label htmlFor={'test'}>
-          Alignment
-        </label>
+      <div className={'contrastbox arrow_box'} style={styles.box}>
 
         <div style={styles.alignDiv} name={'test'}>
-          <div onClick={this.setEmbedAttribute.bind(this, 'align', 'inline')} style={styles.alignOption(this.props.embedAttrs.align, 'inline')}>Inline</div>
-          <div onClick={this.setEmbedAttribute.bind(this, 'align', 'full')} style={styles.alignOption(this.props.embedAttrs.align, 'full')}>Full</div>
-          <div onClick={this.setEmbedAttribute.bind(this, 'align', 'left')} style={styles.alignOption(this.props.embedAttrs.align, 'left')}>Left</div>
-          <div onClick={this.setEmbedAttribute.bind(this, 'align', 'right')} style={styles.alignOption(this.props.embedAttrs.align, 'right')}>Right</div>
+
+          <div onClick={this.setEmbedAttribute.bind(this, 'align', 'left')} style={styles.alignOption(this.props.embedAttrs.align, 'left')}>
+            <svg style={styles.icon({selected: (this.props.embedAttrs.align === 'left')})} className="icon align">
+              <use xlinkHref="/icons/align.svg#left-align" />
+            </svg>
+          </div>
+
+          <div onClick={this.setEmbedAttribute.bind(this, 'align', 'full')} style={styles.alignOption(this.props.embedAttrs.align, 'full')}>
+            <svg style={styles.icon({selected: (this.props.embedAttrs.align === 'full')})} className="icon align">
+              <use xlinkHref="/icons/align.svg#middle-align" />
+            </svg>
+          </div>
+
+          <div onClick={this.setEmbedAttribute.bind(this, 'align', 'right')} style={styles.alignOption(this.props.embedAttrs.align, 'right')}>
+            <svg style={styles.icon({selected: (this.props.embedAttrs.align === 'right')})} className="icon align" >
+              <use xlinkHref="/icons/align.svg#right-align" />
+            </svg>
+          </div>
         </div>
 
-        <label htmlFor={'captionNote'}>
+
+        <label style={styles.label} htmlFor={'captionNote'}>
           Caption
         </label>
-        <input mousedown={this.preventClick} draggable="false"  className="caption" onClick={this.preventClick} ref="caption" value={this.state.caption || this.props.embedAttrs.caption} onChange={this.changeCaption} type="text" id={'captionNote'} name={'caption'}/>
+        <input style={styles.input} mousedown={this.preventClick} draggable="false"  className="caption" onClick={this.preventClick} ref="caption" value={this.state.caption || this.props.embedAttrs.caption} onChange={this.changeCaption} type="text" id={'captionNote'} name={'caption'}/>
+
+        <label style={styles.label} htmlFor={'figureName'}>
+          Figure Name
+        </label>
+        <input style={styles.input} draggable="false"  className="caption" ref="figureName" value={this.state.figureName || this.props.embedAttrs.figureName} onChange={this.changeFigureName} type="text" id={'figureName'} name={'figure'}/>
+
 
       </div>
 	  );
@@ -73,6 +98,24 @@ export const EmbedEditor = React.createClass({
 });
 
 const styles = {
+  icon: function({selected}) {
+    return {
+      width: '20px',
+      height: '20px',
+      backgroundColor: (selected) ? 'white' : undefined,
+      borderRadius: '2px',
+      padding: '3px',
+      boxShadow: (selected) ? '0px 0px 2px #808284' : undefined,
+    };
+  },
+  input: {
+    width: '100%',
+  },
+  label: {
+    lineHeight: '1.35em',
+    fontSize: '0.75em',
+    fontFamily: 'Open Sans',
+  },
   box: {
     padding: '0.6em 1.2em',
     fontSize: '0.8em',
@@ -83,6 +126,7 @@ const styles = {
   },
   alignDiv: {
     paddingBottom: '0.5em',
+    textAlign: 'center',
   },
   alignOption: function(activeAlign, option) {
 		return {
@@ -90,6 +134,7 @@ const styles = {
 	    display: 'inline-block',
 	    paddingRight: '0.8em',
 	    cursor: 'pointer',
+      width: '20px',
 		};
   }
 };

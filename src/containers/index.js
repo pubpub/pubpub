@@ -8,6 +8,7 @@ export JournalProfile from './JournalProfile/JournalProfile';
 export Landing from './Landing/Landing';
 export Login from './Login/Login';
 export Manage from './Manage/Manage';
+export ManageSingle from './Manage/ManageSingle';
 export ResetPassword from './ResetPassword/ResetPassword';
 export SignUp from './SignUp/SignUp';
 export UserProfile from './UserProfile/UserProfile';

@@ -150,7 +150,7 @@ export const EmbedWrapper = React.createClass({
 					style={styles.captionText({align: this.props.align})}>
 					{this.props.caption}
 				</span>
-				{(this.state.selected) ? <div style={{zIndex: 10000, pointerEvents: 'all', position: 'absolute'}}><EmbedEditor embedAttrs={this.props} updateParams={this.updateParams}/></div> : null }
+				{(this.state.selected) ? <div style={styles.embed({size: this.props.size})}><EmbedEditor embedAttrs={this.props} updateParams={this.updateParams}/></div> : null }
 			</figcaption>
 			</figure>
 			</div>
@@ -159,6 +159,28 @@ export const EmbedWrapper = React.createClass({
 });
 
 styles = {
+	embed: function({size}) {
+
+		const style = {
+			zIndex: 10000,
+			pointerEvents: 'all',
+			position: 'absolute',
+			minWidth: '200px',
+			width: `calc(${size} * 0.8)`,
+			margin: `0 calc(${size} * 0.1)`,
+		};
+
+		const parsedSize = parseInt(size);
+		if (!isNaN(parsedSize)) {
+			console.log(parsedSize);
+		}
+		const realSize = 650 * (parsedSize / 100);
+		if (realSize * 0.8 < 200) {
+			const newMargin = Math.round((realSize - 200) / 2);
+			style.margin = `0 ${newMargin}px`
+		}
+		return style;
+	},
 	button: {
 		padding: '0em 0em',
 		height: '0.75em',
