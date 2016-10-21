@@ -72,11 +72,25 @@ const StrikeThroughMark = {
 };
 
 
+
+
 const PageBreak = {
     group: "block",
     toDOM(node) { return ['div', {class: 'pagebreak'}, 'pagebreak']; }
 };
 
+
+const Emoji = {
+  group: 'inline',
+  attrs: {
+    content: {default: ''},
+    markup: {default: ''},
+  },
+	toDOM: function(node) {
+		return ['span', node.attrs.content];
+	},
+  inline: true,
+}
 
 const Embed = {
 	attrs: {
@@ -164,7 +178,7 @@ const BlockEmbed = {
 	locked: true,
 };
 
-const schemaNodes = basicSchema.nodeSpec.addBefore('image', 'embed', Embed).addBefore('image', 'block_embed', BlockEmbed).addBefore('horizontal_rule', 'page_break', PageBreak);
+const schemaNodes = basicSchema.nodeSpec.addBefore('image', 'embed', Embed).addBefore('image', 'block_embed', BlockEmbed).addBefore('horizontal_rule', 'page_break', PageBreak).addBefore('image', 'emoji', Emoji);
 const listSchema = addListNodes(schemaNodes, "paragraph block*", "block");
 const tableSchema = addTableNodes(listSchema, "paragraph block*", "block");
 
