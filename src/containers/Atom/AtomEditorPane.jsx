@@ -1,10 +1,9 @@
-import React, {PropTypes} from 'react';
-import Radium from 'radium';
 import AtomTypes from 'components/AtomTypes';
-import {safeGetInToJS} from 'utils/safeParse';
+import Radium from 'radium';
+import React, {PropTypes} from 'react';
 import {FormattedMessage} from 'react-intl';
 import {globalMessages} from 'utils/globalMessages';
-
+import {safeGetInToJS} from 'utils/safeParse';
 
 export const AtomEditorPane = React.createClass({
 	propTypes: {
@@ -12,9 +11,12 @@ export const AtomEditorPane = React.createClass({
 		loginData: PropTypes.object,
 	},
 
+	getSaveVersionContent: function() {
+		return this.refs.editor.getSaveVersionContent();
+	},
+
 	render: function() {
 		const props = {
-			ref: 'editor',
 			atomData: this.props.atomData,
 			loginData: this.props.loginData
 		};
@@ -22,7 +24,7 @@ export const AtomEditorPane = React.createClass({
 		const type = safeGetInToJS(this.props.atomData, ['atomData', 'type']);
 		if (AtomTypes.hasOwnProperty(type)) {
 			const Component = AtomTypes[type].editor;
-			return <Component {...props} />;
+			return <Component ref="editor" {...props} />;
 		}
 
 		return (

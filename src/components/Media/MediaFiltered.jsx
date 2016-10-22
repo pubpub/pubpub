@@ -160,7 +160,6 @@ export const Media = React.createClass({
 	},
 
 	insertItem: function(item) {
-		console.log(item);
 		const mode = (this.state.atomType === 'reference') ? 'cite' : 'embed';
  		const nodeData = {
 			source: item._id,
@@ -201,81 +200,6 @@ export const Media = React.createClass({
 
 					}
 
-					{/* If we DO have a chosen atom */}
-					{nodeData.data && !this.state.editNodeDataMode &&
-						<div style={styles.mediaDetails}>
-							<div style={styles.editModeHeader}>
-								<h3 style={styles.detailsTitle}>{nodeData.data.parent.title}</h3>
-								<div style={styles.detailsCancel} className={'underlineOnHover'} onClick={this.clearNodeData}>Clear</div>
-								<div style={styles.detailsButtonWrapper}>
-									<div className={'button'} style={styles.detailsButton} onClick={this.saveItem}><FormattedMessage {...globalMessages.Save}/></div>
-								</div>
-							</div>
-							{/* nodeData.data.type !== 'document' &&
-								<div style={styles.detailsClear} className={'underlineOnHover'} onClick={this.editNodeData}><FormattedMessage {...globalMessages.Edit}/></div>
-							*/}
-
-							<div style={styles.details}>
-								<div style={styles.detailsPreview}>
-
-									<AtomViewerPane atomData={ensureImmutable({ atomData: nodeData.data.parent, currentVersionData: nodeData.data })} renderType={'embed'}/>
-
-								</div>
-
-
-								<form onSubmit={this.saveItem} style={styles.detailsForm}>
-									<div>
-										<label style={styles.label} htmlFor={'mode'}>
-											<FormattedMessage {...globalMessages.Mode}/>
-										</label>
-										<RadioGroup name={'mode'} selectedValue={this.state.nodeData.mode} onChange={this.inputChange.bind(this, 'mode')}>
-											<Radio value="embed" id={'embed'} style={styles.radioInput}/> <label htmlFor={'embed'} style={styles.radioLabel}><FormattedMessage {...globalMessages.Embed}/></label>
-											<Radio value="cite" id={'cite'} style={styles.radioInput}/> <label htmlFor={'cite'} style={styles.radioLabel}><FormattedMessage {...globalMessages.Cite}/></label>
-										</RadioGroup>
-									</div>
-									<div style={[this.state.nodeData.mode === 'cite' && styles.disabledInput]}>
-										<label style={styles.label} htmlFor={'caption'}>
-											<FormattedMessage {...globalMessages.Caption}/>
-										</label>
-										<textarea ref={'caption'} id={'caption'} name={'caption'} style={[styles.input, styles.textarea]} value={this.state.nodeData.caption} onChange={this.inputChange.bind(this, 'caption')}></textarea>
-									</div>
-
-									<div style={[this.state.nodeData.mode === 'cite' && styles.disabledInput]}>
-										<label style={styles.label} htmlFor={'align'}>
-											<FormattedMessage {...globalMessages.Align}/>
-										</label>
-										<RadioGroup name={'align'} selectedValue={this.state.nodeData.align} onChange={this.inputChange.bind(this, 'align')}>
-											<Radio value="inline" id={'inline'} style={styles.radioInput}/> <label htmlFor={'inline'} style={styles.radioLabel}><FormattedMessage {...globalMessages.Inline}/></label>
-											<Radio value="full" id={'full'} style={styles.radioInput}/> <label htmlFor={'full'} style={styles.radioLabel}><FormattedMessage {...globalMessages.Full}/></label>
-											<Radio value="left" id={'left'} style={styles.radioInput}/> <label htmlFor={'left'} style={styles.radioLabel}><FormattedMessage {...globalMessages.Left}/></label>
-											<Radio value="right" id={'right'} style={styles.radioInput}/> <label htmlFor={'right'} style={styles.radioLabel}><FormattedMessage {...globalMessages.Right}/></label>
-										</RadioGroup>
-									</div>
-
-									<div style={{display: 'none'}}> {/* Hidden while we don't allow for custom CSS - no use for this field */}
-										<label style={styles.label} htmlFor={'className'}>
-											<FormattedMessage {...globalMessages.ClassName}/>
-										</label>
-										<input ref={'className'} id={'className'} name={'className'} type="text" style={styles.input} value={this.state.nodeData.className} onChange={this.inputChange.bind(this, 'className')}/>
-									</div>
-
-									<div style={[this.state.nodeData.mode === 'cite' && styles.disabledInput]}>
-										<label style={styles.label} htmlFor={'size'}>
-											<FormattedMessage {...globalMessages.Size}/>
-										</label>
-										<input ref={'size'} id={'size'} name={'size'} type="text" style={styles.input} value={this.state.nodeData.size} onChange={this.inputChange.bind(this, 'size')}/>
-										<div className={'light-color inputSubtext'}>
-											e.g. 20%, 50%, 200px, 400px
-										</div>
-									</div>
-
-								</form>
-							</div>
-
-
-						</div>
-					}
-
 					{/* If we DO have a chosen atom  and are trying to edit it*/}
 					{nodeData.data && this.state.editNodeDataMode &&
 						<div style={styles.mediaDetails}>
@@ -283,14 +207,9 @@ export const Media = React.createClass({
 								<h3 style={styles.detailsTitle}>{nodeData.data.parent.title}</h3>
 								<div style={styles.detailsCancel} className={'underlineOnHover'} onClick={this.cancelEditNodeData}><FormattedMessage {...globalMessages.Cancel}/></div>
 							</div>
-
-
-
-							{/* <div style={styles.details}>
+							<div style={styles.details}>
 								<AtomEditorPane ref={'atomEditorPane'} atomData={ensureImmutable({ atomData: nodeData.data.parent, currentVersionData: nodeData.data })}/>
-							</div> */}
-
-
+							</div>
 						</div>
 					}
 

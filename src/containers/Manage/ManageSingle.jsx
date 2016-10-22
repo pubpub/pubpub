@@ -1,5 +1,6 @@
 import atomTypes from 'components/AtomTypes';
 import fuzzy from 'fuzzy';
+import AtomEditorPane from 'containers/Atom/AtomEditorPane';
 import Dropzone from 'react-dropzone';
 import Radium from 'radium';
 import React, { PropTypes } from 'react';
@@ -9,6 +10,7 @@ import {updateAtomDetails, addContributor, updateContributor, deleteContributor}
 import {saveUserSettings} from 'containers/UserProfile/actions';
 import {FormattedMessage} from 'react-intl';
 import {connect} from 'react-redux';
+import {ensureImmutable} from 'reducers';
 import {globalMessages} from 'utils/globalMessages';
 import {safeGetInToJS} from 'utils/safeParse';
 import {s3Upload} from 'utils/uploadFile';
@@ -25,6 +27,7 @@ export const ManageSingle = React.createClass({
 		mediaData: PropTypes.object,
 		loginData: PropTypes.object,
 		setItemHandler: PropTypes.func,
+		insertItemHandler: PropTypes.func,
 		atomType: PropTypes.string,
 		dispatch: PropTypes.func,
 	},
@@ -36,6 +39,9 @@ export const ManageSingle = React.createClass({
 			uploadRates: [],
 			uploadFiles: [],
 			featuredAtoms: [],
+			openEditor: false,
+			errorMsg: null,
+			editingAtom: null,
 		};
 	},
 
@@ -139,13 +145,28 @@ export const ManageSingle = React.createClass({
 		this.props.dispatch(saveVersion(newVersion));
 	},
 
-	handleCreateNewChange: function(item) {
-		this.setState({createNewType: item});
+
+	saveNew: function() {
+		console.log(this.refs);
+		const versionContent = this.refs.atomEditorPane.getSaveVersionContent();
+		const title = this.refs.titleField.value;
+		console.log(versionContent);
+		this.props.dispatch(createAtom(this.props.atomType, versionContent, title, undefined, false)).then((response) => {
+			const atomData = response.result;
+			this.props.insertItemHandler(atomData);
+		},
+		() => {
+			console.log('failure', arguments);
+		}
+	);
 	},
 
+	// to-do:
+	// make create atom also generate a link to the pub it was created for, (if inserted)
+	// make an insert atom url?
 	createNew: function() {
-		const defaultOpen = this.state.createNewType !== 'document';
-		this.props.dispatch(createAtom(this.state.createNewType, undefined, ('New ' + this.state.createNewType), undefined, defaultOpen));
+		this.setState({creatingNew: true});
+		const newType = this.props.atomType;
 		this.setState({filter: ''});
 	},
 
@@ -206,18 +227,35 @@ export const ManageSingle = React.createClass({
 
 
 		const mediaItemsFilterForType = mediaItems.filter((item)=> {
-			// if (typesFiltered.length === 0) { return true; }
 			return item.type === this.props.atomType;
 		});
 
 		const filteredItems = fuzzy.filter(this.state.filter.replace(/type:([a-zA-Z]*)/gi, ''), mediaItemsFilterForType, {extract: (item)=>{ return item.parent.title;} });
 
-		const options = Object.keys(atomTypes).sort((foo, bar)=>{
+		const options = Object.keys(atomTypes).sort((foo, bar)=> {
 			// Sort so that alphabetical
 			if (foo > bar) { return 1; }
 			if (foo < bar) { return -1; }
 			return 0;
 		});
+
+		if (this.state.creatingNew) {
+			const atomData = {type: this.props.atomType};
+			return (
+				<div style={styles.mediaSelectHeader}>
+					<h1>Insert!</h1>
+
+						<label>
+							Title:
+						</label>
+						<input ref="titleField" type="text" placeholder={'Title'} style={styles.filterInput}/>
+
+					<div className={'button'} onClick={this.saveNew} style={styles.createNewButton}><FormattedMessage {...globalMessages.Save}/></div>
+					<AtomEditorPane ref="atomEditorPane" atomData={ensureImmutable({ atomData: atomData, currentVersionData: {} })}/>
+				</div>
+			);
+		}
+
 		return (
 			<div>
 			<div>
@@ -238,14 +276,6 @@ export const ManageSingle = React.createClass({
 					{
 						(this.props.atomType === 'reference') ?
 						<div>
-					<div className={'light-button arrow-down-button'} style={styles.addNewDropdown}>
-						<span style={styles.capitalize}>{this.state.createNewType}</span>
-						<div className={'hoverChild arrow-down-child'}>
-							{options.map((option)=>{
-								return <div key={'setType-' + option} onClick={this.handleCreateNewChange.bind(this, option)} style={styles.dropdownOption} className={'underlineOnHover'}>{option}</div>;
-							})}
-						</div>
-					</div>
 					<div className={'button'} onClick={this.createNew} style={styles.createNewButton}><FormattedMessage {...globalMessages.CreateNew}/></div>
 					</div>
 
@@ -304,6 +334,7 @@ export const ManageSingle = React.createClass({
 
 					return (
 						<div style={{maxWidth: 350, display: 'inline-block', paddingRight: '25px'}}>
+
 						<PreviewEditor
 							key={'atomItem-' + item.parent._id}
 							atomData={item.parent}
@@ -326,7 +357,6 @@ export const ManageSingle = React.createClass({
 							detailsLoading={item.detailsLoading}
 							detailsError={!!item.detailsError}
 							permissionType={item.permissionType}
-
 							defaultOpen={false}/>
 					</div>
 
