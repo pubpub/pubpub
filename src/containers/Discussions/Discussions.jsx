@@ -46,7 +46,7 @@ export const Discussions = React.createClass({
 			discussionEmpty: true,
 			showThreads: true,
 			activeThread: undefined,
-			newThreadMode: false,
+			newThread: false,
 		};
 	},
 
@@ -172,7 +172,11 @@ export const Discussions = React.createClass({
 		};
 
 		this.props.dispatch(createReplyDocument(atomType, versionContent, cleanedTitle.trim(), this.state.replyToID, this.state.rootReply));
+		if (title) {
+			this.setState({newThread: undefined});
+		}
 		pmThread.setDoc(markdownParser.parse(''));
+		
 	},
 
 	proseChange: function() {
