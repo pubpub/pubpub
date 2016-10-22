@@ -13,6 +13,8 @@ import {safeGetInToJS} from 'utils/safeParse';
 import {globalStyles} from 'utils/styleConstants';
 
 import DiscussionItem from './DiscussionItem';
+import DiscussionThreadHeader from './DiscussionThreadHeader';
+import DiscussionThread from './DiscussionThread';
 import {createReplyDocument, setYayNay} from './actions';
 
 // import { StickyContainer as UnwrappedStickyContainer, Sticky } from 'react-sticky';
@@ -41,6 +43,8 @@ export const Discussions = React.createClass({
 			replyToID: undefined,
 			rootReply: undefined,
 			discussionEmpty: true,
+			showThreads: true,
+			activeThread: undefined,
 		};
 	},
 
@@ -162,6 +166,10 @@ export const Discussions = React.createClass({
 
 	},
 
+	setActiveThread: function(id) {
+		this.setState({activeThread: id});
+	},
+
 	render: function() {
 		const isEmbed = this.props.query && this.props.query.embed;
 		const linkTarget = isEmbed ? '_parent' : '_self';
@@ -189,6 +197,56 @@ export const Discussions = React.createClass({
 			return index.linkData.destination === atomData._id;
 		});
 
+		// New Discussions section
+		// ----------------------
+		if (this.state.showThreads) {
+			return (
+				<div style={styles.container}>
+					<Style rules={{
+						'.pub-discussions-wrapper .p-block': {
+							padding: '0.5em 0em',
+							fontFamily: 'Helvetica Neue,Helvetica,Arial,sans-serif',
+							lineHeight: '1.58',
+							fontSize: '0.95em',
+							fontWeight: '300',
+						}
+					}} />
+
+					{!this.state.activeThread &&
+						<div>
+							<div onClick={()=>{this.setState({showThreads: !this.state.showThreads});}} style={styles.topButton}>{this.state.showThreads ? 'Show All' : 'Show Threads'}</div>
+							<div onClick={()=>{this.setState({showThreads: !this.state.showThreads});}} style={[styles.topButton, styles.topButtonDark]}>New Discussion</div>
+
+							<div className={'pub-discussions-wrapper'}>
+								{topChildren.map((discussion, index)=> {
+									return <DiscussionThreadHeader linkTarget={linkTarget} discussionData={discussion} userID={userID} setReplyTo={this.setReplyTo} index={discussion.linkData._id} key={'discussion-' + index} handleVoteSubmit={this.discussionVoteSubmit} showThreads={this.state.showThreads} setActiveThread={this.setActiveThread}/>;
+								})}
+							</div>
+						</div>
+					}
+					{this.state.activeThread &&
+						<div>
+							<div onClick={()=>{this.setState({activeThread: undefined});}} style={styles.topButton}>Back to all Topics</div>
+							<div className={'pub-discussions-wrapper'}>
+								{topChildren.filter((discussion)=> {
+									return discussion.linkData._id === this.state.activeThread;
+								}).map((discussion, index)=> {
+									return <DiscussionThread linkTarget={linkTarget} discussionData={discussion} userID={userID} setReplyTo={this.setReplyTo} index={discussion.linkData._id} key={'discussion-' + index} handleVoteSubmit={this.discussionVoteSubmit} showThreads={this.state.showThreads} setActiveThread={this.setActiveThread}/>;
+								})}
+							</div>
+
+						</div>
+					}
+					
+
+
+				</div>
+			);
+		}
+
+
+		// Old Discussions section
+		// --------------------------
 		return (
 			<div style={styles.container}>
 
@@ -201,6 +259,9 @@ export const Discussions = React.createClass({
 						fontWeight: '300',
 					}
 				}} />
+
+				<div onClick={()=>{this.setState({showThreads: !this.state.showThreads});}} style={styles.topButton}>{this.state.showThreads ? 'Show All' : 'Show Threads'}</div>
+
 
 				{loggedIn &&
 					<div id={'reply-wrapper-wrapper'}>
@@ -266,7 +327,7 @@ export const Discussions = React.createClass({
 						if (fooScore < barScore) { return 1; }
 						return 0;
 					}).map((discussion, index)=> {
-						return <DiscussionItem linkTarget={linkTarget} discussionData={discussion} userID={userID} setReplyTo={this.setReplyTo} index={discussion.linkData._id} key={'discussion-' + index} handleVoteSubmit={this.discussionVoteSubmit}/>;
+						return <DiscussionItem linkTarget={linkTarget} discussionData={discussion} userID={userID} setReplyTo={this.setReplyTo} index={discussion.linkData._id} key={'discussion-' + index} handleVoteSubmit={this.discussionVoteSubmit} showThreads={this.state.showThreads}/>;
 					})}
 				</div>
 
@@ -437,5 +498,19 @@ styles = {
 		boxShadow: '0px 1px 3px #58585B',
 		zIndex: '5',
 	},
+	topButton: {
+		border: '1px solid #CCC',
+		padding: '0em 1em',
+		fontSize: '0.85em',
+		cursor: 'pointer',
+		marginBottom: '.5em',
+		display: 'inline-block',
+	},
+	topButtonDark: {
+		color: 'white',
+		backgroundColor: '#2C2A2B',
+		float: 'right',
+	},
+
 
 };
