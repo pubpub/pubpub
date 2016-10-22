@@ -44,7 +44,9 @@ export const DiscussionThreadHeader = React.createClass({
 		this.props.handleVoteSubmit(type, linkData._id, remove);
 	},
 	clickedTopic: function() {
-		this.props.setActiveThread(this.props.index);
+		const discussion = this.props.discussionData || {};
+		const atomData = discussion.atomData || {};
+		this.props.setActiveThread(atomData._id);
 	},
 
 	render: function() {

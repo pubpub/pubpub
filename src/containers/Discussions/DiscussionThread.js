@@ -7,6 +7,7 @@ import {renderReactFromJSON} from 'components/AtomTypes/Document/proseEditor';
 import {globalStyles} from 'utils/styleConstants';
 import {globalMessages} from 'utils/globalMessages';
 import {FormattedMessage} from 'react-intl';
+import DiscussionThreadInput from './DiscussionThreadInput';
 
 let styles = {};
 
@@ -19,6 +20,7 @@ export const DiscussionThread = React.createClass({
 		isPreview: PropTypes.bool,
 		linkTarget: PropTypes.string,
 		handleVoteSubmit: PropTypes.func,
+		publishThreadReply: PropTypes.func,
 	},
 
 	getInitialState() {
@@ -116,6 +118,11 @@ export const DiscussionThread = React.createClass({
 						return <WrappedDiscussionThread linkTarget={this.props.linkTarget} discussionData={child} userID={this.props.userID} setReplyTo={this.props.setReplyTo} index={child.linkData._id} key={child.linkData._id} handleVoteSubmit={this.props.handleVoteSubmit}/>;
 					})}
 				</div>
+
+				{discussion.linkData.destination === discussion.linkData.metadata.rootReply &&
+					<DiscussionThreadInput publishThreadReply={this.props.publishThreadReply} />
+				}
+				
 
 			</div>
 		);

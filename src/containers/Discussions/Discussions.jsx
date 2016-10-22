@@ -15,6 +15,7 @@ import {globalStyles} from 'utils/styleConstants';
 import DiscussionItem from './DiscussionItem';
 import DiscussionThreadHeader from './DiscussionThreadHeader';
 import DiscussionThread from './DiscussionThread';
+import DiscussionThreadInput from './DiscussionThreadInput';
 import {createReplyDocument, setYayNay} from './actions';
 
 // import { StickyContainer as UnwrappedStickyContainer, Sticky } from 'react-sticky';
@@ -45,6 +46,7 @@ export const Discussions = React.createClass({
 			discussionEmpty: true,
 			showThreads: true,
 			activeThread: undefined,
+			newThreadMode: false,
 		};
 	},
 
@@ -132,9 +134,12 @@ export const Discussions = React.createClass({
 	setReplyTo: function(replyToID) {
 		// rootReplyID is set in componentDidMount
 		this.setState({replyToID: replyToID});
-		const inputDiv = document.getElementById('reply-wrapper');
-		const destination = document.getElementById('input-placeholder-' + replyToID);
-		destination.appendChild(inputDiv); 
+		if (!this.state.showThreads) {
+			const inputDiv = document.getElementById('reply-wrapper');
+			const destination = document.getElementById('input-placeholder-' + replyToID);
+			destination.appendChild(inputDiv); 	
+		}
+		
 	},
 
 	clearReplyTo: function() {
@@ -158,6 +163,18 @@ export const Discussions = React.createClass({
 		this.clearReplyTo();
 	},
 
+	publishThreadReply: function(title, pmThread) {
+		const atomType = 'document';
+		const cleanedTitle = title || 'Reply';
+		const versionContent = {
+			docJSON: pmThread.doc.toJSON(),
+			markdown: markdownSerializer.serialize(pmThread.doc),
+		};
+
+		this.props.dispatch(createReplyDocument(atomType, versionContent, cleanedTitle.trim(), this.state.replyToID, this.state.rootReply));
+		pmThread.setDoc(markdownParser.parse(''));
+	},
+
 	proseChange: function() {
 		const markdown = markdownSerializer.serialize(pm.doc);
 		if (this.state.discussionEmpty !== !markdown) {
@@ -166,8 +183,9 @@ export const Discussions = React.createClass({
 
 	},
 
-	setActiveThread: function(id) {
-		this.setState({activeThread: id});
+	setActiveThread: function(atomID) {
+		this.setState({activeThread: atomID, replyToID: atomID});
+		// set reply here
 	},
 
 	render: function() {
@@ -212,10 +230,10 @@ export const Discussions = React.createClass({
 						}
 					}} />
 
-					{!this.state.activeThread &&
+					{!this.state.newThread && !this.state.activeThread &&
 						<div>
 							<div onClick={()=>{this.setState({showThreads: !this.state.showThreads});}} style={styles.topButton}>{this.state.showThreads ? 'Show All' : 'Show Threads'}</div>
-							<div onClick={()=>{this.setState({showThreads: !this.state.showThreads});}} style={[styles.topButton, styles.topButtonDark]}>New Discussion</div>
+							<div onClick={()=>{this.setState({newThread: true});}} style={[styles.topButton, styles.topButtonDark]}>New Discussion</div>
 
 							<div className={'pub-discussions-wrapper'}>
 								{topChildren.map((discussion, index)=> {
@@ -224,20 +242,26 @@ export const Discussions = React.createClass({
 							</div>
 						</div>
 					}
-					{this.state.activeThread &&
+					{!this.state.newThread && this.state.activeThread &&
 						<div>
-							<div onClick={()=>{this.setState({activeThread: undefined});}} style={styles.topButton}>Back to all Topics</div>
+							<div onClick={()=>{this.setState({activeThread: undefined, replyToID: this.state.defaultReply || this.state.rootReply});}} style={styles.topButton}>Back to all Topics</div>
 							<div className={'pub-discussions-wrapper'}>
 								{topChildren.filter((discussion)=> {
-									return discussion.linkData._id === this.state.activeThread;
+									return discussion.atomData._id === this.state.activeThread;
 								}).map((discussion, index)=> {
-									return <DiscussionThread linkTarget={linkTarget} discussionData={discussion} userID={userID} setReplyTo={this.setReplyTo} index={discussion.linkData._id} key={'discussion-' + index} handleVoteSubmit={this.discussionVoteSubmit} showThreads={this.state.showThreads} setActiveThread={this.setActiveThread}/>;
+									return <DiscussionThread linkTarget={linkTarget} discussionData={discussion} userID={userID} setReplyTo={this.setReplyTo} index={discussion.linkData._id} key={'discussion-' + index} handleVoteSubmit={this.discussionVoteSubmit} showThreads={this.state.showThreads} setActiveThread={this.setActiveThread} publishThreadReply={this.publishThreadReply}/>;
 								})}
 							</div>
 
 						</div>
 					}
 					
+					{this.state.newThread && 
+						<div>
+							<div onClick={()=>{this.setState({newThread: false});}} style={[styles.topButton]}>Cancel</div>
+							<DiscussionThreadInput publishThreadReply={this.publishThreadReply} showTitle={true}/>
+						</div>
+					}
 
 
 				</div>
