@@ -154,6 +154,7 @@ export const ManageSingle = React.createClass({
 		this.props.dispatch(createAtom(this.props.atomType, versionContent, title, undefined, false)).then((response) => {
 			const atomData = response.result;
 			this.props.insertItemHandler(atomData);
+			this.setState({filter: '', creatingNew: false});
 		},
 		() => {
 			console.log('failure', arguments);
@@ -243,7 +244,15 @@ export const ManageSingle = React.createClass({
 			const atomData = {type: this.props.atomType};
 			return (
 				<div style={styles.mediaSelectHeader}>
-					<h1>Insert!</h1>
+					<h1>
+					{(() => {
+						switch (this.props.atomType) {
+							case "image": return <FormattedMessage id="manage.createImage" defaultMessage="Create Image"/>;
+							case "reference": return <FormattedMessage id="manage.createReference" defaultMessage="Create Reference"/>;
+							default:      return "Unknown Data Type";
+						}
+					})()}
+					</h1>
 
 						<label>
 							Title:
