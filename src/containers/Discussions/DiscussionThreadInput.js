@@ -62,10 +62,6 @@ export const DiscussionThreadInput = React.createClass({
 	},
 
 	render: function() {
-
-		const docJSON = versionData.content && versionData.content.docJSON;
-		const date = versionData.createDate;
-
 		return (
 			<div style={styles.container}>
 				<div style={styles.replyBox}>
