@@ -27,22 +27,7 @@ export const DiscussionThreadHeader = React.createClass({
 		};
 	},
 
-	setReply: function() {
-		this.props.setReplyTo(this.props.discussionData.atomData._id);
-	},
 
-	setFlag: function() {
-		console.log('flagging');
-	},
-
-	vote: function(type) {
-		const discussion = this.props.discussionData || {};
-		const linkData = discussion.linkData || {};
-		const hasYayd = discussion.linkData ? discussion.linkData.metadata.yays.indexOf(this.props.userID) !== -1 : false;
-		const hasNayd = discussion.linkData ? discussion.linkData.metadata.nays.indexOf(this.props.userID) !== -1 : false;
-		const remove = (hasYayd && type === 'yay') || (hasNayd && type === 'nay');
-		this.props.handleVoteSubmit(type, linkData._id, remove);
-	},
 	clickedTopic: function() {
 		const discussion = this.props.discussionData || {};
 		const atomData = discussion.atomData || {};
@@ -54,10 +39,7 @@ export const DiscussionThreadHeader = React.createClass({
 		const atomData = discussion.atomData || {};
 		const versionData = discussion.versionData || {};
 		const authorsData = discussion.authorsData || [];
-		const index = this.props.index;
-		const children = discussion.children || [];
 
-		const docJSON = versionData.content && versionData.content.docJSON;
 		const date = versionData.createDate;
 
 		return (

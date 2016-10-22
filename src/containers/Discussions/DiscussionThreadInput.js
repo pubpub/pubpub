@@ -62,12 +62,6 @@ export const DiscussionThreadInput = React.createClass({
 	},
 
 	render: function() {
-		const discussion = this.props.discussionData || {};
-		const atomData = discussion.atomData || {};
-		const versionData = discussion.versionData || {};
-		const authorsData = discussion.authorsData || [];
-		const index = this.props.index;
-		const children = discussion.children || [];
 
 		const docJSON = versionData.content && versionData.content.docJSON;
 		const date = versionData.createDate;

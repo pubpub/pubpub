@@ -312,7 +312,7 @@ export const Discussions = React.createClass({
 							<div style={styles.replyBody}>
 								{this.state.discussionEmpty &&
 									<div style={{position: 'absolute', padding: '1em', color: '#BBBDC0', lineHeight: '1.2em', pointerEvents: 'none'}}>
-										<FormattedMessage id="discussion.placeholder" defaultMessage="Discuss this work. Comments and Reviews encouraged."/>
+										<FormattedMessage id="discussion.placeholder" defaultMessage="Discuss this work"/>
 									</div>
 								}
 								<div id={'reply-input'} className={'atom-reader atom-reply ProseMirror-quick-style'} style={styles.wsywigBlock}></div>
