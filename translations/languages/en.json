@@ -120,6 +120,7 @@
   "discussion.LoginToPost": "Login to post discussion",
   "discussionItem.PrivateDiscussion2": "Private Discussion",
   "discussions.replyCount": "{replies, number} {replies, plural, one {reply} other {replies}}",
+  "discussion.LoginToPost2": "Login to add discussion",
   "emailVerification.Success": "Email Verification Successful!",
   "emailVerification.Unsuccess": "Email Verification Unsuccessful!",
   "journalCreate.JournalName": "Journal Name",

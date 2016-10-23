@@ -20,6 +20,8 @@ export const DiscussionThread = React.createClass({
 		setReplyTo: PropTypes.func,
 		index: PropTypes.string,
 		isPreview: PropTypes.bool,
+		loggedIn: PropTypes.bool,
+		loginQuery: PropTypes.string,
 		linkTarget: PropTypes.string,
 		handleVoteSubmit: PropTypes.func,
 		publishThreadReply: PropTypes.func,
@@ -123,12 +125,12 @@ export const DiscussionThread = React.createClass({
 						if (fooDate < barDate) { return -1; }
 						return 0;
 					}).map((child, childIndex)=> {
-						return <WrappedDiscussionThread linkTarget={this.props.linkTarget} discussionData={child} userID={this.props.userID} setReplyTo={this.props.setReplyTo} index={child.linkData._id} key={child.linkData._id} handleVoteSubmit={this.props.handleVoteSubmit}/>;
+						return <WrappedDiscussionThread loginQuery={loginQuery} loggedIn={loggedIn} linkTarget={linkTarget} discussionData={child} userID={this.props.userID} setReplyTo={this.props.setReplyTo} index={child.linkData._id} key={child.linkData._id} handleVoteSubmit={this.props.handleVoteSubmit}/>;
 					})}
 				</div>
 
 				{discussion.linkData.destination === discussion.linkData.metadata.rootReply &&
-					<DiscussionThreadInput publishThreadReply={this.props.publishThreadReply} />
+					<DiscussionThreadInput publishThreadReply={this.props.publishThreadReply} loginQuery={this.props.loginQuery} loggedIn={this.props.loggedIn} linkTarget={this.props.linkTarget}/>
 				}
 
 

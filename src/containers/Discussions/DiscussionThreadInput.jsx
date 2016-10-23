@@ -19,6 +19,9 @@ export const DiscussionThreadInput = React.createClass({
 	propTypes: {
 		publishThreadReply: PropTypes.func,
 		showTitle: PropTypes.bool,
+		loggedIn: PropTypes.bool,
+		loginQuery: PropTypes.string,
+		linkTarget: PropTypes.string,
 	},
 
 	getInitialState() {
@@ -75,18 +78,27 @@ export const DiscussionThreadInput = React.createClass({
 	render: function() {
 		return (
 			<div style={styles.container}>
-				{this.props.showTitle &&
-					<input type="text" placeholder={'Discussion Title'} value={this.state.title} onChange={(evt)=>{this.setState({title: evt.target.value});}} style={styles.title}/>
+				{this.props.loggedIn &&
+					<div>
+						{this.props.showTitle &&
+							<input type="text" placeholder={'Discussion Title'} value={this.state.title} onChange={(evt)=>{this.setState({title: evt.target.value});}} style={styles.title}/>
+						}
+						<div style={styles.replyBox}>
+							<div id={'reply-thread-input'} className={'atom-reader atom-reply ProseMirror-quick-style'} style={styles.wsywigBlock}></div>
+						</div>
+						<button className={'button'} onClick={this.submitThreadReply}>{this.props.showTitle ? 'Submit New Discussion' : 'Submit Reply'}</button>
+						{this.state.error &&
+							<div style={styles.error}>{this.state.error}</div>
+						}
+					</div>
 				}
-				<div style={styles.replyBox}>
 
-					<div id={'reply-thread-input'} className={'atom-reader atom-reply ProseMirror-quick-style'} style={styles.wsywigBlock}></div>
-				</div>
-				<button className={'button'} onClick={this.submitThreadReply}>{this.props.showTitle ? 'Submit New Discussion' : 'Submit Reply'}</button>
-				{this.state.error &&
-					<div style={styles.error}>{this.state.error}</div>
+				{!this.props.loggedIn &&
+					<Link target={this.props.linkTarget} to={'/login' + this.props.loginQuery} style={globalStyles.link}>
+						<div style={styles.loginMessage}><FormattedMessage id="discussion.LoginToPost2" defaultMessage="Login to add discussion"/></div>
+					</Link>
 				}
-				
+
 			</div>
 		);
 	}
@@ -115,6 +127,11 @@ styles = {
 	},
 	error: {
 		color: '#D8000C',
+	},
+	loginMessage: {
+		textAlign: 'center',
+		padding: '1em 0em',
+		border: '1px solid #777',
 	},
 
 };

@@ -240,6 +240,7 @@ export const SelectionPopup = React.createClass({
 	},
 
 	render: function() {
+		const discussionString = <FormattedMessage id="pub.AddComment" defaultMessage="Add Discussion"/>;
 		return (
 			<div id="plugin-popup" className="plugin-popup" style={[styles.pluginPopup, this.getPluginPopupLoc(), this.state.popupVisible && styles.pluginPopupVisible]}>
 
@@ -251,13 +252,13 @@ export const SelectionPopup = React.createClass({
 						<div>
 							{this.props.loggedIn &&
 								<div key={'addToComment Button'} style={styles.button} onClick={this.enableEditor}>
-									<FormattedMessage id="pub.AddComment" defaultMessage="Add Discussion"/>
+									{discussionString}
 								</div>
 							}
 							{!this.props.loggedIn &&
 								<Link target={this.props.linkTarget} to={'/login' + this.props.loginQuery} style={globalStyles.link}>
 									<div key={'addToComment Button'} style={styles.button}>
-										<FormattedMessage id="pub.AddComment" defaultMessage="Add Discussion"/>
+										{discussionString}
 									</div>
 								</Link>
 							}
@@ -270,7 +271,7 @@ export const SelectionPopup = React.createClass({
 						<input type="text" placeholder={'Discussion Title'} value={this.state.title} onChange={(evt)=>{this.setState({title: evt.target.value});}} style={styles.title}/>
 						<div id="highlight-reply" style={styles.inputWrapper}></div>
 						<button className={'button'} style={styles.editorButton} onClick={this.disableEditor}> <FormattedMessage {...globalMessages.Cancel}/> </button>
-						<button className={'button'} style={styles.editorButton} onClick={this.onHighlightSave}> <FormattedMessage {...globalMessages.PublishReply}/> </button>
+						<button className={'button'} style={styles.editorButton} onClick={this.onHighlightSave}> {discussionString} </button>
 					</div>
 
 				</div>

@@ -266,7 +266,7 @@ export const Discussions = React.createClass({
 								{topChildren.filter((discussion)=> {
 									return discussion.atomData._id === this.state.activeThread;
 								}).map((discussion, index)=> {
-									return <DiscussionThread linkTarget={linkTarget} discussionData={discussion} userID={userID} setReplyTo={this.setReplyTo} index={discussion.linkData._id} key={'discussion-' + index} handleVoteSubmit={this.discussionVoteSubmit} showThreads={this.state.showThreads} setActiveThread={this.setActiveThread} publishThreadReply={this.publishThreadReply}/>;
+									return <DiscussionThread loginQuery={loginQuery} loggedIn={loggedIn} linkTarget={linkTarget} discussionData={discussion} userID={userID} setReplyTo={this.setReplyTo} index={discussion.linkData._id} key={'discussion-' + index} handleVoteSubmit={this.discussionVoteSubmit} showThreads={this.state.showThreads} setActiveThread={this.setActiveThread} publishThreadReply={this.publishThreadReply}/>;
 								})}
 							</div>
 
@@ -276,7 +276,7 @@ export const Discussions = React.createClass({
 					{this.state.newThread &&
 						<div>
 							<div onClick={()=>{this.setState({newThread: false});}} style={[styles.topButton]}>Cancel</div>
-							<DiscussionThreadInput publishThreadReply={this.publishThreadReply} showTitle={true}/>
+							<DiscussionThreadInput publishThreadReply={this.publishThreadReply} showTitle={true} loginQuery={loginQuery} loggedIn={loggedIn} linkTarget={linkTarget}/>
 						</div>
 					}
 
