@@ -237,7 +237,10 @@ export const Discussions = React.createClass({
 
 					{!this.state.newThread && !this.state.activeThread &&
 						<div>
-							<div onClick={()=>{this.setState({showThreads: !this.state.showThreads});}} style={styles.topButton} className={'darkest-border-hover'}>{this.state.showThreads ? 'Show Nested' : 'Show Threads'}</div>
+							{!!discussionsData.length &&
+								<div onClick={()=>{this.setState({showThreads: !this.state.showThreads});}} style={styles.topButton} className={'darkest-border-hover'}>{this.state.showThreads ? 'Show Nested' : 'Show Threads'}</div>
+							}
+							
 							{loggedIn &&
 								<div onClick={()=>{this.setState({newThread: true});}} style={[styles.topButton, styles.topButtonDark]}>New Discussion</div>
 							}
