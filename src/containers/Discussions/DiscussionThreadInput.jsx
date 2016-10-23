@@ -3,6 +3,7 @@ import Radium from 'radium';
 import React, {PropTypes} from 'react';
 import {renderReactFromJSON} from 'components/AtomTypes/Document/proseEditor';
 import {schema} from 'components/AtomTypes/Document/proseEditor';
+import {markdownSerializer} from 'components/AtomTypes/Document/proseEditor';
 import {FormattedMessage} from 'react-intl';
 import { Link } from 'react-router';
 import {StoppableSubscription} from 'subscription';
@@ -23,6 +24,7 @@ export const DiscussionThreadInput = React.createClass({
 	getInitialState() {
 		return {
 			title: '',
+			error: undefined,
 		};
 	},
 
@@ -58,6 +60,15 @@ export const DiscussionThreadInput = React.createClass({
 	},
 
 	submitThreadReply: function() {
+		if (this.props.showTitle && !this.state.title) {
+			return this.setState({error: 'A discussion title is required.'});
+		}
+
+		const markdown = markdownSerializer.serialize(pmThread.doc);
+		if (!markdown) {
+			return this.setState({error: 'Discussion content is required.'});
+		}
+
 		this.props.publishThreadReply(this.state.title, pmThread);
 	},
 
@@ -72,6 +83,10 @@ export const DiscussionThreadInput = React.createClass({
 					<div id={'reply-thread-input'} className={'atom-reader atom-reply ProseMirror-quick-style'} style={styles.wsywigBlock}></div>
 				</div>
 				<button className={'button'} onClick={this.submitThreadReply}>{this.props.showTitle ? 'Submit New Discussion' : 'Submit Reply'}</button>
+				{this.state.error &&
+					<div style={styles.error}>{this.state.error}</div>
+				}
+				
 			</div>
 		);
 	}
@@ -97,6 +112,9 @@ styles = {
 	wsywigBlock: {
 		width: '100%',
 		minHeight: '4em',
+	},
+	error: {
+		color: '#D8000C',
 	},
 
 };

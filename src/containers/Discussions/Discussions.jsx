@@ -69,12 +69,14 @@ export const Discussions = React.createClass({
 		const discussionsData = safeGetInToJS(nextProps.atomData, ['discussionsData']) || [];
 		const rootReply = discussionsData.length ? discussionsData[0].linkData.metadata.rootReply : atomData._id;
 		const defaultReply = atomData._id !== rootReply ? atomData._id : undefined;
-
-		this.setState({
-			replyToID: atomData._id,
-			rootReply: rootReply,
-			defaultReply: defaultReply,
-		});
+		if (!this.state.showThreads) {
+			this.setState({
+				replyToID: atomData._id,
+				rootReply: rootReply,
+				defaultReply: defaultReply,
+			});	
+		}
+		
 	},
 
 	componentDidMount() {

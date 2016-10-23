@@ -112,10 +112,15 @@ export const DiscussionThread = React.createClass({
 
 				<div style={styles.children}>
 					{children.sort((foo, bar)=> {
-						const fooScore = foo.linkData.metadata.yays.length - foo.linkData.metadata.nays.length;
-						const barScore = bar.linkData.metadata.yays.length - bar.linkData.metadata.nays.length;
-						if (fooScore > barScore) { return -1; }
-						if (fooScore < barScore) { return 1; }
+						// const fooScore = foo.linkData.metadata.yays.length - foo.linkData.metadata.nays.length;
+						// const barScore = bar.linkData.metadata.yays.length - bar.linkData.metadata.nays.length;
+						// if (fooScore > barScore) { return -1; }
+						// if (fooScore < barScore) { return 1; }
+						// return 0;
+						const fooDate = foo.linkData.createDate;
+						const barDate = bar.linkData.createDate;
+						if (fooDate > barDate) { return 1; }
+						if (fooDate < barDate) { return -1; }
 						return 0;
 					}).map((child, childIndex)=> {
 						return <WrappedDiscussionThread linkTarget={this.props.linkTarget} discussionData={child} userID={this.props.userID} setReplyTo={this.props.setReplyTo} index={child.linkData._id} key={child.linkData._id} handleVoteSubmit={this.props.handleVoteSubmit}/>;

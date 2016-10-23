@@ -64,7 +64,7 @@ export const DiscussionThreadHeader = React.createClass({
 				<div style={[styles.discussionFooter]}>
 					<img style={styles.image} src={'https://jake.pubpub.org/unsafe/35x35/' + authorsData[0].source.image} />
 					<span style={styles.discussionFooterItem}>{authorsData[0].source.name}</span>
-					<span style={styles.spacer}>,</span>
+					<span style={styles.spacer}> - </span>
 					<span style={styles.discussionFooterItem}>
 						<FormattedMessage
               id="discussions.replyCount"
@@ -97,7 +97,7 @@ styles = {
 	},
 	spacer: {
 		fontSize: '0.6em',
-		padding: '0px 0.5em 0em 0.1em',
+		padding: '0px 0.5em 0em 0.5em',
 		color: '#58585B',
 	},
 	image: {

@@ -35,9 +35,6 @@ const StickyContainer = Radium(UnwrappedStickyContainer);
 
 // import {createHighlight} from 'containers/MediaLibrary/actions';
 
-
-
-
 let styles = {};
 let interval;
 
