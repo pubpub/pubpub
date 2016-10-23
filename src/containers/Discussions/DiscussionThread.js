@@ -1,13 +1,15 @@
-import React, {PropTypes} from 'react';
-import Radium from 'radium';
-// import {safeGetInToJS} from 'utils/safeParse';
 import dateFormat from 'dateformat';
-import { Link } from 'react-router';
+import Radium from 'radium';
+import React, {PropTypes} from 'react';
 import {renderReactFromJSON} from 'components/AtomTypes/Document/proseEditor';
-import {globalStyles} from 'utils/styleConstants';
-import {globalMessages} from 'utils/globalMessages';
 import {FormattedMessage} from 'react-intl';
+import { Link } from 'react-router';
+import {globalMessages} from 'utils/globalMessages';
+import {globalStyles} from 'utils/styleConstants';
+
 import DiscussionThreadInput from './DiscussionThreadInput';
+
+// import {safeGetInToJS} from 'utils/safeParse';
 
 let styles = {};
 
@@ -88,20 +90,19 @@ export const DiscussionThread = React.createClass({
 				<div className={'atom-reply'} style={styles.discussionContent}>
 					{!versionData.isPublished &&
 						<div style={styles.privateDiscussion}>
-							<FormattedMessage id="discussionItem.PrivateDiscussion2" defaultMessage="Private Discussion"/>						
+							<FormattedMessage id="discussionItem.PrivateDiscussion2" defaultMessage="Private Discussion"/>
 						</div>
 					}
 					{renderReactFromJSON(docJSON && docJSON.content, true)}
 				</div>
 				<div style={[styles.discussionFooter, this.props.isPreview && {display: 'none'}]}>
 					<Link target={this.props.linkTarget} style={globalStyles.link} to={'/pub/' + versionData.parent}><span className={'underlineOnHover'} style={styles.discussionFooterItem}>{dateFormat(date, 'mmm dd, yyyy h:MM TT')}</span></Link>
-					<span className={'underlineOnHover'} style={styles.discussionFooterItem} onClick={this.setReply}>
-						<FormattedMessage {...globalMessages.Reply}/>
-					</span>
 					{/* <span className={'underlineOnHover'} style={styles.discussionFooterItem} onClick={this.setFlag}>flag</span> */}
+					{/*
 					<Link target={this.props.linkTarget} style={globalStyles.link} to={'/pub/' + versionData.parent}><span className={'underlineOnHover'} style={styles.discussionFooterItem}>
 						<FormattedMessage {...globalMessages.Permalink}/>
 					</span></Link>
+					*/}
 
 					<div id={'input-placeholder-' + atomData._id}></div>
 
@@ -122,7 +123,7 @@ export const DiscussionThread = React.createClass({
 				{discussion.linkData.destination === discussion.linkData.metadata.rootReply &&
 					<DiscussionThreadInput publishThreadReply={this.props.publishThreadReply} />
 				}
-				
+
 
 			</div>
 		);
@@ -197,8 +198,8 @@ styles = {
 	},
 	discussionFooter: {
 		borderBottom: '1px solid #BBBDC0',
-		marginBottom: '1em',
-		paddingBottom: '1em',
+		margin: '0em -2em 1em -2em',
+		padding: '0em 2em 1em'
 	},
 	discussionFooterItem: {
 		padding: '0em 1em 0em 0em',

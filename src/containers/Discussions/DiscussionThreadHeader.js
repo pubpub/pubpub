@@ -82,13 +82,18 @@ export const DiscussionThreadHeader = React.createClass({
 });
 
 // const WrappedDiscussionItem = Radium(DiscussionItem);
-export default DiscussionThreadHeader;
+export default Radium(DiscussionThreadHeader);
 
 styles = {
 	container: {
-		padding: '1em 0em',
+		padding: '1em 0em 1em 1em',
 		borderBottom: '1px solid #CCC',
 		cursor: 'pointer',
+		borderLeft: '2px solid transparent',
+		margin: '0em -2em',
+		':hover': {
+			borderLeft: '2px solid #58585B'
+		}
 	},
 	spacer: {
 		fontSize: '0.6em',
@@ -102,9 +107,6 @@ styles = {
 		borderRadius: '1px'
 	},
 	discussionFooter: {
-		borderBottom: '1px solid #BBBDC0',
-		marginBottom: '1em',
-		paddingBottom: '1em',
 	},
 	discussionFooterItem: {
 		padding: '0em 0em 0em 0em',
@@ -112,7 +114,7 @@ styles = {
 		color: '#58585B',
 	},
 	discussionHeader: {
-		width: '100%'
+		width: '100%',
 	},
 	headerTitle: {
 		paddingBottom: '0.3em',

@@ -1,15 +1,15 @@
-import React, {PropTypes} from 'react';
-import Radium from 'radium';
-// import {safeGetInToJS} from 'utils/safeParse';
 import dateFormat from 'dateformat';
-import { Link } from 'react-router';
+import Radium from 'radium';
+import React, {PropTypes} from 'react';
 import {renderReactFromJSON} from 'components/AtomTypes/Document/proseEditor';
-import {globalStyles} from 'utils/styleConstants';
-import {globalMessages} from 'utils/globalMessages';
-import {FormattedMessage} from 'react-intl';
-
 import {schema} from 'components/AtomTypes/Document/proseEditor';
+import {FormattedMessage} from 'react-intl';
+import { Link } from 'react-router';
 import {StoppableSubscription} from 'subscription';
+import {globalMessages} from 'utils/globalMessages';
+import {globalStyles} from 'utils/styleConstants';
+// import {safeGetInToJS} from 'utils/safeParse';
+
 
 let styles = {};
 let pmThread;
@@ -64,10 +64,10 @@ export const DiscussionThreadInput = React.createClass({
 	render: function() {
 		return (
 			<div style={styles.container}>
+				{this.props.showTitle &&
+					<input type="text" placeholder={'Discussion Title'} value={this.state.title} onChange={(evt)=>{this.setState({title: evt.target.value});}} style={styles.title}/>
+				}
 				<div style={styles.replyBox}>
-					{this.props.showTitle &&
-						<input type="text" placeholder={'Discussion Title'} value={this.state.title} onChange={(evt)=>{this.setState({title: evt.target.value});}} style={styles.title}/>
-					}
 
 					<div id={'reply-thread-input'} className={'atom-reader atom-reply ProseMirror-quick-style'} style={styles.wsywigBlock}></div>
 				</div>
@@ -92,6 +92,7 @@ styles = {
 	},
 	title: {
 		width: 'calc(100% - 23px)',
+		margin: '1em 0em 0.5em',
 	},
 	wsywigBlock: {
 		width: '100%',

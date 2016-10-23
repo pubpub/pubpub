@@ -13,8 +13,8 @@ import {safeGetInToJS} from 'utils/safeParse';
 import {globalStyles} from 'utils/styleConstants';
 
 import DiscussionItem from './DiscussionItem';
-import DiscussionThreadHeader from './DiscussionThreadHeader';
 import DiscussionThread from './DiscussionThread';
+import DiscussionThreadHeader from './DiscussionThreadHeader';
 import DiscussionThreadInput from './DiscussionThreadInput';
 import {createReplyDocument, setYayNay} from './actions';
 
@@ -137,9 +137,9 @@ export const Discussions = React.createClass({
 		if (!this.state.showThreads) {
 			const inputDiv = document.getElementById('reply-wrapper');
 			const destination = document.getElementById('input-placeholder-' + replyToID);
-			destination.appendChild(inputDiv); 	
+			destination.appendChild(inputDiv);
 		}
-		
+
 	},
 
 	clearReplyTo: function() {
@@ -147,7 +147,7 @@ export const Discussions = React.createClass({
 		this.setState({replyToID: this.state.defaultReply || this.state.rootReply});
 		const inputDiv = document.getElementById('reply-wrapper');
 		const destination = document.getElementById('reply-wrapper-wrapper');
-		destination.appendChild(inputDiv); 
+		destination.appendChild(inputDiv);
 	},
 
 	publishReply: function() {
@@ -176,7 +176,7 @@ export const Discussions = React.createClass({
 			this.setState({newThread: undefined});
 		}
 		pmThread.setDoc(markdownParser.parse(''));
-		
+
 	},
 
 	proseChange: function() {
@@ -259,8 +259,8 @@ export const Discussions = React.createClass({
 
 						</div>
 					}
-					
-					{this.state.newThread && 
+
+					{this.state.newThread &&
 						<div>
 							<div onClick={()=>{this.setState({newThread: false});}} style={[styles.topButton]}>Cancel</div>
 							<DiscussionThreadInput publishThreadReply={this.publishThreadReply} showTitle={true}/>
@@ -298,7 +298,7 @@ export const Discussions = React.createClass({
 						{/* <Media/> */}
 
 						{/* <Sticky style={styles.replyWrapper} isActive={!!replyToData}> */}
-						<div style={styles.replyWrapper} id={'reply-wrapper'}>							
+						<div style={styles.replyWrapper} id={'reply-wrapper'}>
 							<div style={[styles.replyHeader, !replyToData && {display: 'none'}, this.state.replyToID === this.state.defaultReply && {display: 'none'}]}>
 									<div className={'showChildOnHover'} style={styles.replyToWrapper}>
 										<FormattedMessage {...globalMessages.ReplyTo}/>: {replyToData && replyToData.authorsData[0].source.name}
