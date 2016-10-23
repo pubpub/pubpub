@@ -27,6 +27,7 @@ export const SelectionPopup = React.createClass({
 			yLoc: 0,
 			popupEditor: false,
 			highlightObject: undefined,
+			title: '',
 		};
 	},
 
@@ -208,7 +209,7 @@ export const SelectionPopup = React.createClass({
 			markdown: markdownSerializer.serialize(pm.doc),
 		};
 
-		this.props.addSelectionHandler(versionContent, this.state.highlightObject);
+		this.props.addSelectionHandler(versionContent, this.state.highlightObject, this.state.title);
 		this.setState({
 			popupEditor: false,
 			popupVisible: false,
@@ -244,15 +245,16 @@ export const SelectionPopup = React.createClass({
 				<div style={styles.pluginContent}>
 					{!this.state.popupEditor &&
 						<div key={'addToComment Button'} style={styles.button} onClick={this.enableEditor}>
-							<FormattedMessage id="pub.AddComment" defaultMessage="Add Comment"/>
+							<FormattedMessage id="pub.AddComment" defaultMessage="Add Discussion"/>
 						</div>
 					}
 					
 
 					<div style={[{width: '300px'}, !this.state.popupEditor && {opacity: '0', pointerEvents: 'none', position: 'absolute'}]}>
+						<input type="text" placeholder={'Discussion Title'} value={this.state.title} onChange={(evt)=>{this.setState({title: evt.target.value});}} style={styles.title}/>
 						<div id="highlight-reply" style={styles.inputWrapper}></div>
-						<div className={'button'} style={styles.editorButton} onClick={this.disableEditor}> <FormattedMessage {...globalMessages.Cancel}/> </div>
-						<div className={'button'} style={styles.editorButton} onClick={this.onHighlightSave}> <FormattedMessage {...globalMessages.PublishReply}/> </div>
+						<button className={'button'} style={styles.editorButton} onClick={this.disableEditor}> <FormattedMessage {...globalMessages.Cancel}/> </button>
+						<button className={'button'} style={styles.editorButton} onClick={this.onHighlightSave}> <FormattedMessage {...globalMessages.PublishReply}/> </button>
 					</div>
 
 				</div>
@@ -304,6 +306,12 @@ styles = {
 		transform: 'rotate(45deg)',
 		boxShadow: '-1px -1px 1px 0px #9A9A9A',
 		zIndex: 4,
+	},
+	title: {
+		padding: '5px 5px',
+		width: 'calc(100% - 10px - 4px)',
+		margin: '6px 0px 0px',
+		fontSize: '0.9em',
 	},
 	pluginContent: {
 		position: 'relative',

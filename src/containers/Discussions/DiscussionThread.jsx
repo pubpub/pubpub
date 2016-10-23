@@ -68,10 +68,10 @@ export const DiscussionThread = React.createClass({
 				}
 				<div style={styles.discussionHeader}>
 
-					<div style={styles.headerVotes}>
+					{/* <div style={styles.headerVotes}>
 						<div className={'lighter-bg-hover'} style={[styles.headerVote, hasYayd && styles.voteActive]} onClick={this.vote.bind(this, 'yay')}>^</div>
 						<div className={'lighter-bg-hover'} style={[styles.headerVote, styles.headerDownVote, hasNayd && styles.voteActive]} onClick={this.vote.bind(this, 'nay')}>^</div>
-					</div>
+					</div> */}
 					<div style={styles.headerDetails}>
 						{authorsData.map((authorLink, authorIndex)=> {
 							return (
@@ -81,10 +81,12 @@ export const DiscussionThread = React.createClass({
 									</div>
 									<div style={styles.authorDetails}>
 										<Link target={this.props.linkTarget} style={globalStyles.link} to={'/user/' + authorLink.source.username}>{authorLink.source.name}</Link>
+										<span style={styles.discussionFooterItem}>{dateFormat(date, 'mmm dd, yyyy h:MM TT')}</span>
 									</div>
 								</div>
 							);
 						})}
+
 					</div>
 				</div>
 				<div className={'atom-reply'} style={styles.discussionContent}>
@@ -96,7 +98,7 @@ export const DiscussionThread = React.createClass({
 					{renderReactFromJSON(docJSON && docJSON.content, true)}
 				</div>
 				<div style={[styles.discussionFooter, this.props.isPreview && {display: 'none'}]}>
-					<Link target={this.props.linkTarget} style={globalStyles.link} to={'/pub/' + versionData.parent}><span className={'underlineOnHover'} style={styles.discussionFooterItem}>{dateFormat(date, 'mmm dd, yyyy h:MM TT')}</span></Link>
+					{/* <Link target={this.props.linkTarget} style={globalStyles.link} to={'/pub/' + versionData.parent}><span className={'underlineOnHover'} style={styles.discussionFooterItem}>{dateFormat(date, 'mmm dd, yyyy h:MM TT')}</span></Link> */}
 					{/* <span className={'underlineOnHover'} style={styles.discussionFooterItem} onClick={this.setFlag}>flag</span> */}
 					{/*
 					<Link target={this.props.linkTarget} style={globalStyles.link} to={'/pub/' + versionData.parent}><span className={'underlineOnHover'} style={styles.discussionFooterItem}>
@@ -148,8 +150,8 @@ styles = {
 	discussionHeader: {
 		display: 'table',
 		position: 'relative',
-		left: '-.4em',
-		width: 'calc(100% + .4em)'
+		// left: '-.4em',
+		// width: 'calc(100% + .4em)'
 	},
 	headerVotes: {
 		display: 'table-cell',
@@ -204,8 +206,8 @@ styles = {
 	discussionFooterItem: {
 		padding: '0em 1em 0em 0em',
 		fontSize: '0.75em',
-		cursor: 'pointer',
 		color: '#58585B',
+		display: 'block',
 	},
 	privateDiscussion: {
 		backgroundColor: '#363736',

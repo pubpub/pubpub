@@ -223,7 +223,7 @@ export const Atom = React.createClass({
 	// 	smoothScroll(destination);
 	// },
 
-	addSelection: function(versionContent, highlightObject) {
+	addSelection: function(versionContent, highlightObject, title) {
 
 		highlightObject.sourcePub = safeGetInToJS(this.props.atomData, ['atomData', '_id']);
 		highlightObject.sourceVersion = safeGetInToJS(this.props.atomData, ['currentVersionData', '_id']);
@@ -233,7 +233,8 @@ export const Atom = React.createClass({
 		const discussionsData = safeGetInToJS(this.props.atomData, ['discussionsData']) || [];
 		const rootReply = discussionsData.length ? discussionsData[0].linkData.metadata.rootReply : atomData._id;
 		const replyToID = atomData._id;
-		this.props.dispatch(createReplyDocument(atomType, versionContent, 'Reply', replyToID, rootReply, highlightObject));
+		const newTitle = title || 'Reply';
+		this.props.dispatch(createReplyDocument(atomType, versionContent, newTitle, replyToID, rootReply, highlightObject));
 	},
 
 	mobileToggleDiscussions: function() {

@@ -236,7 +236,7 @@ export const Discussions = React.createClass({
 
 					{!this.state.newThread && !this.state.activeThread &&
 						<div>
-							<div onClick={()=>{this.setState({showThreads: !this.state.showThreads});}} style={styles.topButton}>{this.state.showThreads ? 'Show All' : 'Show Threads'}</div>
+							<div onClick={()=>{this.setState({showThreads: !this.state.showThreads});}} style={styles.topButton}>{this.state.showThreads ? 'Show Nested' : 'Show Threads'}</div>
 							<div onClick={()=>{this.setState({newThread: true});}} style={[styles.topButton, styles.topButtonDark]}>New Discussion</div>
 
 							<div className={'pub-discussions-wrapper'}>

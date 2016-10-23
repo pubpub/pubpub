@@ -119,7 +119,8 @@ styles = {
 	headerTitle: {
 		paddingBottom: '0.3em',
 		width: '60%',
-		display: 'inline-block'
+		display: 'inline-block',
+		// fontWeight: 'bold',
 	},
 	headerDate: {
 		fontSize: '0.75em',
