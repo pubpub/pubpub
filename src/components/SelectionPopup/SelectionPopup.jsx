@@ -1,5 +1,6 @@
 import React, {PropTypes} from 'react';
 import Radium, {Style} from 'radium';
+import { Link } from 'react-router';
 import {globalStyles} from 'utils/styleConstants';
 import {globalMessages} from 'utils/globalMessages';
 import {FormattedMessage} from 'react-intl';
@@ -14,6 +15,9 @@ let pm;
 export const SelectionPopup = React.createClass({
 	propTypes: {
 		addSelectionHandler: PropTypes.func,
+		loggedIn: PropTypes.bool,
+		loginQuery: PropTypes.string,
+		linkTarget: PropTypes.string,
 	},
 
 	getDefaultProps: function() {
@@ -244,8 +248,20 @@ export const SelectionPopup = React.createClass({
 				<div style={styles.pluginPopupArrow}></div>
 				<div style={styles.pluginContent}>
 					{!this.state.popupEditor &&
-						<div key={'addToComment Button'} style={styles.button} onClick={this.enableEditor}>
-							<FormattedMessage id="pub.AddComment" defaultMessage="Add Discussion"/>
+						<div>
+							{this.props.loggedIn &&
+								<div key={'addToComment Button'} style={styles.button} onClick={this.enableEditor}>
+									<FormattedMessage id="pub.AddComment" defaultMessage="Add Discussion"/>
+								</div>
+							}
+							{!this.props.loggedIn &&
+								<Link target={this.props.linkTarget} to={'/login' + this.props.loginQuery} style={globalStyles.link}>
+									<div key={'addToComment Button'} style={styles.button}>
+										<FormattedMessage id="pub.AddComment" defaultMessage="Add Discussion"/>
+									</div>
+								</Link>
+							}
+
 						</div>
 					}
 					

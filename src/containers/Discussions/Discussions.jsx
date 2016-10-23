@@ -44,7 +44,7 @@ export const Discussions = React.createClass({
 			replyToID: undefined,
 			rootReply: undefined,
 			discussionEmpty: true,
-			showThreads: true,
+			showThreads: false,
 			activeThread: undefined,
 			newThread: false,
 		};
@@ -55,11 +55,12 @@ export const Discussions = React.createClass({
 		const discussionsData = safeGetInToJS(this.props.atomData, ['discussionsData']) || [];
 		const rootReply = discussionsData.length ? discussionsData[0].linkData.metadata.rootReply : atomData._id;
 		const defaultReply = atomData._id !== rootReply ? atomData._id : undefined;
-
+		const firstReply = discussionsData.length ? discussionsData[0].atomData : {title: ''};
 		this.setState({
 			replyToID: atomData._id,
 			rootReply: rootReply,
 			defaultReply: defaultReply,
+			showThreads: firstReply.title.substring(0, 5) !== 'Reply',
 		});
 	},
 
@@ -236,8 +237,15 @@ export const Discussions = React.createClass({
 
 					{!this.state.newThread && !this.state.activeThread &&
 						<div>
-							<div onClick={()=>{this.setState({showThreads: !this.state.showThreads});}} style={styles.topButton}>{this.state.showThreads ? 'Show Nested' : 'Show Threads'}</div>
-							<div onClick={()=>{this.setState({newThread: true});}} style={[styles.topButton, styles.topButtonDark]}>New Discussion</div>
+							<div onClick={()=>{this.setState({showThreads: !this.state.showThreads});}} style={styles.topButton} className={'darkest-border-hover'}>{this.state.showThreads ? 'Show Nested' : 'Show Threads'}</div>
+							{loggedIn &&
+								<div onClick={()=>{this.setState({newThread: true});}} style={[styles.topButton, styles.topButtonDark]}>New Discussion</div>
+							}
+							{!loggedIn &&
+								<Link target={linkTarget} to={'/login' + loginQuery} style={globalStyles.link}>
+									<div style={[styles.topButton, styles.topButtonDark]}>New Discussion</div>
+								</Link>
+							}
 
 							<div className={'pub-discussions-wrapper'}>
 								{topChildren.map((discussion, index)=> {
@@ -267,6 +275,13 @@ export const Discussions = React.createClass({
 						</div>
 					}
 
+					{!topChildren.length &&
+						<div style={styles.discussionsEmpty}>
+							<p>No discussions yet.</p>
+							<p>Click 'New Discussion' to start the conversation!</p>
+						</div>
+					}
+
 
 				</div>
 			);
@@ -288,7 +303,7 @@ export const Discussions = React.createClass({
 					}
 				}} />
 
-				<div onClick={()=>{this.setState({showThreads: !this.state.showThreads});}} style={styles.topButton}>{this.state.showThreads ? 'Show All' : 'Show Threads'}</div>
+				<div onClick={()=>{this.setState({showThreads: !this.state.showThreads});}} style={styles.topButton} className={'darkest-border-hover'}>{this.state.showThreads ? 'Show Nested' : 'Show Threads'}</div>
 
 
 				{loggedIn &&
@@ -533,11 +548,19 @@ styles = {
 		cursor: 'pointer',
 		marginBottom: '.5em',
 		display: 'inline-block',
+		userSelect: 'none',
 	},
 	topButtonDark: {
 		color: 'white',
 		backgroundColor: '#2C2A2B',
 		float: 'right',
+		userSelect: 'none',
+	},
+	discussionsEmpty: {
+		margin: '3em 0em',
+		textAlign: 'center',
+		fontSize: '1.25em',
+		color: '#58585B',
 	},
 
 
