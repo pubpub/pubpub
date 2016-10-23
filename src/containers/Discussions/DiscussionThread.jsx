@@ -125,7 +125,7 @@ export const DiscussionThread = React.createClass({
 						if (fooDate < barDate) { return -1; }
 						return 0;
 					}).map((child, childIndex)=> {
-						return <WrappedDiscussionThread loginQuery={loginQuery} loggedIn={loggedIn} linkTarget={linkTarget} discussionData={child} userID={this.props.userID} setReplyTo={this.props.setReplyTo} index={child.linkData._id} key={child.linkData._id} handleVoteSubmit={this.props.handleVoteSubmit}/>;
+						return <WrappedDiscussionThread loginQuery={this.props.loginQuery} loggedIn={this.props.loggedIn} linkTarget={this.props.linkTarget} discussionData={child} userID={this.props.userID} setReplyTo={this.props.setReplyTo} index={child.linkData._id} key={child.linkData._id} handleVoteSubmit={this.props.handleVoteSubmit}/>;
 					})}
 				</div>
 
