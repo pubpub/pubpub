@@ -280,7 +280,7 @@ export const Discussions = React.createClass({
 						</div>
 					}
 
-					{!topChildren.length &&
+					{!topChildren.length && !this.state.newThread &&
 						<div style={styles.discussionsEmpty}>
 							<p>No discussions yet.</p>
 							<p>Click 'New Discussion' to start the conversation!</p>
