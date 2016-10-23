@@ -17,7 +17,7 @@
     "import/named": 0,
     "import/namespace": 0,
     "import/no-unresolved": 0,
-    "import/no-named-as-default": 2,
+    "import/no-named-as-default": 0,
     "jsx-quotes": 2,
     "block-scoped-var": 0,
     "padded-blocks": 0,

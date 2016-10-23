@@ -35,9 +35,6 @@ const StickyContainer = Radium(UnwrappedStickyContainer);
 
 // import {createHighlight} from 'containers/MediaLibrary/actions';
 
-
-
-
 let styles = {};
 let interval;
 
@@ -45,6 +42,7 @@ export const Atom = React.createClass({
 	propTypes: {
 		atomData: PropTypes.object,
 		loginData: PropTypes.object,
+		pathname: PropTypes.string,
 		slug: PropTypes.string,
 		query: PropTypes.object, // version: hash
 		meta: PropTypes.string,
@@ -223,7 +221,7 @@ export const Atom = React.createClass({
 	// 	smoothScroll(destination);
 	// },
 
-	addSelection: function(versionContent, highlightObject) {
+	addSelection: function(versionContent, highlightObject, title) {
 
 		highlightObject.sourcePub = safeGetInToJS(this.props.atomData, ['atomData', '_id']);
 		highlightObject.sourceVersion = safeGetInToJS(this.props.atomData, ['currentVersionData', '_id']);
@@ -233,7 +231,8 @@ export const Atom = React.createClass({
 		const discussionsData = safeGetInToJS(this.props.atomData, ['discussionsData']) || [];
 		const rootReply = discussionsData.length ? discussionsData[0].linkData.metadata.rootReply : atomData._id;
 		const replyToID = atomData._id;
-		this.props.dispatch(createReplyDocument(atomType, versionContent, 'Reply', replyToID, rootReply, highlightObject));
+		const newTitle = title || 'Reply';
+		this.props.dispatch(createReplyDocument(atomType, versionContent, newTitle, replyToID, rootReply, highlightObject));
 	},
 
 	mobileToggleDiscussions: function() {
@@ -254,6 +253,9 @@ export const Atom = React.createClass({
 		const atomData = safeGetInToJS(this.props.atomData, ['atomData']) || {};
 		const isEditor = this.props.meta === 'edit';
 		const isDiscussions = this.props.meta === 'discussions';
+
+		const loggedIn = this.props.loginData && this.props.loginData.get('loggedIn');
+		const loginQuery = this.props.pathname && this.props.pathname !== '/' ? '?redirect=' + this.props.pathname : ''; // Query appended to login route. Used to redirect to a given page after succesful login.
 
 		// The editor must not be indexed by search engines, so add a noindex.
 		// The reader must provide metadata for popular embed tags and proper SEO performance.
@@ -554,7 +556,7 @@ export const Atom = React.createClass({
 						}
 
 						{!isEditor && !error && !isDiscussions && atomData.type === 'document' && 
-							<SelectionPopup addSelectionHandler={this.addSelection} />
+							<SelectionPopup addSelectionHandler={this.addSelection} loggedIn={loggedIn} loginQuery={loginQuery} linkTarget={linkTarget}/>
 						}
 
 					</div>
@@ -594,6 +596,7 @@ export default connect( state => {
 		loginData: state.login,
 		slug: state.router.params.slug,
 		meta: state.router.params.meta,
+		pathname: state.router.location.pathname,
 		query: state.router.location.query,
 	};
 })( Radium(Atom) );
