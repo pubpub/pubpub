@@ -120,7 +120,8 @@ styles = {
 		paddingBottom: '0.3em',
 		width: '60%',
 		display: 'inline-block',
-		// fontWeight: 'bold',
+		fontWeight: 'bold',
+		fontSize: '0.9em',
 	},
 	headerDate: {
 		fontSize: '0.75em',
