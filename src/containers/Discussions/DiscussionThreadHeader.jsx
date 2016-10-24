@@ -121,7 +121,7 @@ styles = {
 		width: '60%',
 		display: 'inline-block',
 		fontWeight: 'bold',
-		fontSize: '0.9em',
+		fontSize: '0.95em',
 	},
 	headerDate: {
 		fontSize: '0.75em',
