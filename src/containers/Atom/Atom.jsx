@@ -430,7 +430,7 @@ export const Atom = React.createClass({
 
 								{/* Reply Parent Link */}
 								{/* ----------------- */}
-								{replyParentData.destination && 
+								{replyParentData.destination &&
 									<Link to={'/pub/' + replyParentData.destination.slug} style={styles.replyParentLink} className={'underlineOnHover'}>Reply To: {replyParentData.destination.title}</Link>
 								}
 
@@ -555,7 +555,7 @@ export const Atom = React.createClass({
 							</div>
 						}
 
-						{!isEditor && !error && !isDiscussions && atomData.type === 'document' && 
+						{!isEditor && !error && !isDiscussions && atomData.type === 'document' &&
 							<SelectionPopup addSelectionHandler={this.addSelection} loggedIn={loggedIn} loginQuery={loginQuery} linkTarget={linkTarget}/>
 						}
 
@@ -710,7 +710,10 @@ styles = {
 		zIndex: 1,
 		borderLeft: '1px dashed #808284',
 		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
-			display: 'none',
+			// display: 'block',
+			// borderLeft: 'none',
+			opacity: '0',
+			pointerEvents: 'none',
 		},
 	},
 	toggleRightPanelLine: {
