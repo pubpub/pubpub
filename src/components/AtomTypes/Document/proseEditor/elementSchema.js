@@ -17,8 +17,7 @@ class ElementSchema {
 		return Math.floor(Math.random() * 10000000);
 	}
 
-	initiateProseMirror = ({changeNode, updateMenuCallback, setEmbedAttribute, getState}) => {
-		this.updateMenu = updateMenuCallback;
+	initiateProseMirror = ({changeNode, setEmbedAttribute, getState}) => {
 		this.setEmbedAttribute = setEmbedAttribute;
 		this.changeNode = changeNode;
 		this.getState = getState;
@@ -48,11 +47,6 @@ class ElementSchema {
 			if (this.editingElem && this.elementStore[this.editingElem] && this.elementStore[this.editingElem].active === true) {
 				this.elementStore[this.editingElem].element.setSelected(false);
 				this.editingElem = null;
-				this.updateMenu({
-					embedLayoutCoords: undefined,
-					embedAttrs: undefined,
-					embedWidth: undefined,
-				});
 			}
 
 			return;
@@ -66,7 +60,6 @@ class ElementSchema {
 		}
 
 		if (currentSelectedNode.attrs.nodeId === this.editingElem) {
-			console.log('selected same node');
 			return;
 		}
 
@@ -75,12 +68,6 @@ class ElementSchema {
 		}
 	}
 
-
-	checkAndRender(nodeId) {
-		if (nodeId && this.editingElem === nodeId) {
-			this.updateNodePosition(this.elementStore[nodeId].node);
-		}
-	}
 
 	checkPoint = (point) => {
 		const node = this.elementStore[this.editingElem];
@@ -96,6 +83,16 @@ class ElementSchema {
 
 	}
 
+	focusCaption = () => {
+		const node = this.elementStore[this.editingElem];
+		const dom = (node) ? node.dom : null;
+
+		if (node) {
+			node.element.focusCaption();
+		}
+
+	}
+
 
 	updateNodePosition = (currentSelectedNode) => {
 
@@ -103,38 +100,7 @@ class ElementSchema {
 		const foundNode = this.elementStore[nodeId];
 		this.editingElem = nodeId;
 		foundNode.element.setSelected(true);
-
 		return;
-
-		if (foundNode.active === false) {
-			this.updateMenu({
-				embedLayoutCoords: undefined,
-				embedAttrs: undefined,
-				embedWidth: undefined,
-			});
-			return;
-		}
-
-		foundNode.element.setSelected(true);
-		let size = {width: 0, height: 0, left: 0, top: 0};
-		if (foundNode) {
-			size = foundNode.element.getSize();
-		} else {
-			console.log('Could not find node');
-		}
-
-		const coords = {};
-		coords.bottom = size.top;
-		coords.left = size.left;
-		console.log(size);
-
-		this.editingElem = nodeId;
-		this.updateMenu({
-			embedLayoutCoords: coords,
-			embedAttrs: currentSelectedNode.attrs,
-			embedWidth: size.width,
-		});
-
 	}
 
 	updateNodeParams = (nodeId, newAttrs) => {
@@ -166,45 +132,44 @@ class ElementSchema {
 	}
 
 
-	sortNodes = () => {
+	countNodes = (state) => {
 
 		let citeCount = 0;
+		const editorState = this.getState();
 
-		this.pm.doc.forEach((node, offset, index) => {
+		if (!editorState) {
+			return;
+		}
+
+		const citeCounts = {};
+
+		editorState.doc.forEach((node, offset, index) => {
 			node.forEach((subNode, suboffset, index) => {
-					const nodeHash = this.getNodeHash(subNode.attrs);
-					if (this.elementStore[nodeHash] && this.elementStore[nodeHash].element.setCiteCount) {
-						// debugger;
-						this.elementStore[nodeHash].element.setCiteCount(citeCount);
-						/*
-						console.log(subNode.resolve(0).pos);
-						const resolved = subNode.resolve(0).pos;
-						const selection = new NodeSelection(resolved);
-						citeCount++;
-						this.pm.tr.setNodeType(selection.from, currentSelectedNode.type, {...currentSelectedNode.attrs, ['citeCount']: citeCount}).apply();
-						console.log('Got element!!');
-						*/
+					const nodeAttrs = subNode.attrs;
+					const nodeId = subNode.attrs.nodeId;
+					const node = this.elementStore[nodeId];
+					if (node && node.element && nodeAttrs.mode === 'cite' && nodeAttrs.data) {
+
+						let refCount = citeCounts[nodeAttrs.data._id];
+
+						if (!refCount) {
+							citeCount++;
+							refCount = citeCount;
+							citeCounts[nodeAttrs.data._id] = refCount;
+						}
+
+						if (node.count !== refCount) {
+							node.element.setCiteCount(refCount);
+							node.count = refCount;
+						}
 					}
 			});
 		});
 		return;
 	}
+
 	currentlyEditing = () => {
 		return (this.editingElem !== null);
-	}
-	findNodeById = (domHash) => {
-		const element = this.elementStore[domHash];
-		if (element && element.node) {
-			return element.node.attrs;
-		}
-		return null;
-	}
-	findElementById = (domHash) => {
-		const element = elementStore[domHash];
-		if (element && element.element) {
-			return element.element;
-		}
-		return null;
 	}
 
 	onRemoveNode = (nodeId, domElement, evt) => {
@@ -264,7 +229,7 @@ class ElementSchema {
 		});
 
 
-		// this.sortNodes();
+		this.countNodes();
 
 		return domParent;
 
