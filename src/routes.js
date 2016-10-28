@@ -8,7 +8,7 @@ function loadComponent(component) {
 	else if (__SERVER__ || __DEVELOPMENT__) return (location, cb) => cb(null, component.default || component);
 	
 	// If we didn't hit one of the above return statements, something strange has happened.
-	console.error('Uh oh. Something strange happened in src/routes.js');
+	console.error('Uh oh - Something strange happened in src/routes.js');
 }
 
 export default () => {
