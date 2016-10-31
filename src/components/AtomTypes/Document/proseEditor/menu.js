@@ -12,8 +12,8 @@ function promptLinkAttrs(pm, callback) {
 			label: 'Link target',
 			required: true,
 			clean: (val) => {
-				let newVal = val;
-				if (!/^https?:\/\//i.test(newVal)) {
+				let newVal = val || '';
+				if (!/^https?:\/\//i.test(newVal) && newVal.substring(0, 1) !== '#') {
 					newVal = 'http://' + newVal;
 				}
 				return newVal;

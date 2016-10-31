@@ -13,6 +13,9 @@ import {safeGetInToJS} from 'utils/safeParse';
 import {globalStyles} from 'utils/styleConstants';
 
 import DiscussionItem from './DiscussionItem';
+import DiscussionThread from './DiscussionThread';
+import DiscussionThreadHeader from './DiscussionThreadHeader';
+import DiscussionThreadInput from './DiscussionThreadInput';
 import {createReplyDocument, setYayNay} from './actions';
 
 // import { StickyContainer as UnwrappedStickyContainer, Sticky } from 'react-sticky';
@@ -41,6 +44,9 @@ export const Discussions = React.createClass({
 			replyToID: undefined,
 			rootReply: undefined,
 			discussionEmpty: true,
+			showThreads: false,
+			activeThread: undefined,
+			newThread: false,
 		};
 	},
 
@@ -49,11 +55,12 @@ export const Discussions = React.createClass({
 		const discussionsData = safeGetInToJS(this.props.atomData, ['discussionsData']) || [];
 		const rootReply = discussionsData.length ? discussionsData[0].linkData.metadata.rootReply : atomData._id;
 		const defaultReply = atomData._id !== rootReply ? atomData._id : undefined;
-
+		const firstReply = discussionsData.length ? discussionsData[0].atomData : {title: ''};
 		this.setState({
 			replyToID: atomData._id,
 			rootReply: rootReply,
 			defaultReply: defaultReply,
+			showThreads: firstReply.title.substring(0, 5) !== 'Reply',
 		});
 	},
 
@@ -62,12 +69,14 @@ export const Discussions = React.createClass({
 		const discussionsData = safeGetInToJS(nextProps.atomData, ['discussionsData']) || [];
 		const rootReply = discussionsData.length ? discussionsData[0].linkData.metadata.rootReply : atomData._id;
 		const defaultReply = atomData._id !== rootReply ? atomData._id : undefined;
-
-		this.setState({
-			replyToID: atomData._id,
-			rootReply: rootReply,
-			defaultReply: defaultReply,
-		});
+		if (!this.state.showThreads) {
+			this.setState({
+				replyToID: atomData._id,
+				rootReply: rootReply,
+				defaultReply: defaultReply,
+			});	
+		}
+		
 	},
 
 	componentDidMount() {
@@ -128,9 +137,12 @@ export const Discussions = React.createClass({
 	setReplyTo: function(replyToID) {
 		// rootReplyID is set in componentDidMount
 		this.setState({replyToID: replyToID});
-		const inputDiv = document.getElementById('reply-wrapper');
-		const destination = document.getElementById('input-placeholder-' + replyToID);
-		destination.appendChild(inputDiv); 
+		if (!this.state.showThreads) {
+			const inputDiv = document.getElementById('reply-wrapper');
+			const destination = document.getElementById('input-placeholder-' + replyToID);
+			destination.appendChild(inputDiv);
+		}
+
 	},
 
 	clearReplyTo: function() {
@@ -138,7 +150,7 @@ export const Discussions = React.createClass({
 		this.setState({replyToID: this.state.defaultReply || this.state.rootReply});
 		const inputDiv = document.getElementById('reply-wrapper');
 		const destination = document.getElementById('reply-wrapper-wrapper');
-		destination.appendChild(inputDiv); 
+		destination.appendChild(inputDiv);
 	},
 
 	publishReply: function() {
@@ -154,12 +166,33 @@ export const Discussions = React.createClass({
 		this.clearReplyTo();
 	},
 
+	publishThreadReply: function(title, pmThread) {
+		const atomType = 'document';
+		const cleanedTitle = title || 'Reply';
+		const versionContent = {
+			docJSON: pmThread.doc.toJSON(),
+			markdown: markdownSerializer.serialize(pmThread.doc),
+		};
+
+		this.props.dispatch(createReplyDocument(atomType, versionContent, cleanedTitle.trim(), this.state.replyToID, this.state.rootReply));
+		if (title) {
+			this.setState({newThread: undefined});
+		}
+		pmThread.setDoc(markdownParser.parse(''));
+
+	},
+
 	proseChange: function() {
 		const markdown = markdownSerializer.serialize(pm.doc);
 		if (this.state.discussionEmpty !== !markdown) {
 			this.setState({discussionEmpty: !markdown});
 		}
 
+	},
+
+	setActiveThread: function(atomID) {
+		this.setState({activeThread: atomID, replyToID: atomID});
+		// set reply here
 	},
 
 	render: function() {
@@ -189,6 +222,79 @@ export const Discussions = React.createClass({
 			return index.linkData.destination === atomData._id;
 		});
 
+		// New Discussions section
+		// ----------------------
+		if (this.state.showThreads) {
+			return (
+				<div style={styles.container}>
+					<Style rules={{
+						'.pub-discussions-wrapper .p-block': {
+							padding: '0.5em 0em',
+							fontFamily: 'Helvetica Neue,Helvetica,Arial,sans-serif',
+							lineHeight: '1.58',
+							fontSize: '0.95em',
+							fontWeight: '300',
+						}
+					}} />
+
+					{!this.state.newThread && !this.state.activeThread &&
+						<div>
+							{!!discussionsData.length &&
+								<div onClick={()=>{this.setState({showThreads: !this.state.showThreads});}} style={styles.topButton} className={'darkest-border-hover'}>{this.state.showThreads ? 'Show Nested' : 'Show Threads'}</div>
+							}
+							
+							{loggedIn &&
+								<div onClick={()=>{this.setState({newThread: true});}} style={[styles.topButton, styles.topButtonDark]}>New Discussion</div>
+							}
+							{!loggedIn &&
+								<Link target={linkTarget} to={'/login' + loginQuery} style={globalStyles.link}>
+									<div style={[styles.topButton, styles.topButtonDark]}>New Discussion</div>
+								</Link>
+							}
+
+							<div className={'pub-discussions-wrapper'}>
+								{topChildren.map((discussion, index)=> {
+									return <DiscussionThreadHeader linkTarget={linkTarget} discussionData={discussion} userID={userID} setReplyTo={this.setReplyTo} index={discussion.linkData._id} key={'discussion-' + index} handleVoteSubmit={this.discussionVoteSubmit} showThreads={this.state.showThreads} setActiveThread={this.setActiveThread}/>;
+								})}
+							</div>
+						</div>
+					}
+					{!this.state.newThread && this.state.activeThread &&
+						<div>
+							<div onClick={()=>{this.setState({activeThread: undefined, replyToID: this.state.defaultReply || this.state.rootReply});}} style={styles.topButton}>Back to all Topics</div>
+							<div className={'pub-discussions-wrapper'}>
+								{topChildren.filter((discussion)=> {
+									return discussion.atomData._id === this.state.activeThread;
+								}).map((discussion, index)=> {
+									return <DiscussionThread loginQuery={loginQuery} loggedIn={loggedIn} linkTarget={linkTarget} discussionData={discussion} userID={userID} setReplyTo={this.setReplyTo} index={discussion.linkData._id} key={'discussion-' + index} handleVoteSubmit={this.discussionVoteSubmit} showThreads={this.state.showThreads} setActiveThread={this.setActiveThread} publishThreadReply={this.publishThreadReply}/>;
+								})}
+							</div>
+
+						</div>
+					}
+
+					{this.state.newThread &&
+						<div>
+							<div onClick={()=>{this.setState({newThread: false});}} style={[styles.topButton]}>Cancel</div>
+							<DiscussionThreadInput publishThreadReply={this.publishThreadReply} showTitle={true} loginQuery={loginQuery} loggedIn={loggedIn} linkTarget={linkTarget}/>
+						</div>
+					}
+
+					{!topChildren.length && !this.state.newThread &&
+						<div style={styles.discussionsEmpty}>
+							<p>No discussions yet.</p>
+							<p>Click 'New Discussion' to start the conversation!</p>
+						</div>
+					}
+
+
+				</div>
+			);
+		}
+
+
+		// Old Discussions section
+		// --------------------------
 		return (
 			<div style={styles.container}>
 
@@ -202,6 +308,9 @@ export const Discussions = React.createClass({
 					}
 				}} />
 
+				<div onClick={()=>{this.setState({showThreads: !this.state.showThreads});}} style={styles.topButton} className={'darkest-border-hover'}>{this.state.showThreads ? 'Show Nested' : 'Show Threads'}</div>
+
+
 				{loggedIn &&
 					<div id={'reply-wrapper-wrapper'}>
 
@@ -209,7 +318,7 @@ export const Discussions = React.createClass({
 						{/* <Media/> */}
 
 						{/* <Sticky style={styles.replyWrapper} isActive={!!replyToData}> */}
-						<div style={styles.replyWrapper} id={'reply-wrapper'}>							
+						<div style={styles.replyWrapper} id={'reply-wrapper'}>
 							<div style={[styles.replyHeader, !replyToData && {display: 'none'}, this.state.replyToID === this.state.defaultReply && {display: 'none'}]}>
 									<div className={'showChildOnHover'} style={styles.replyToWrapper}>
 										<FormattedMessage {...globalMessages.ReplyTo}/>: {replyToData && replyToData.authorsData[0].source.name}
@@ -223,7 +332,7 @@ export const Discussions = React.createClass({
 							<div style={styles.replyBody}>
 								{this.state.discussionEmpty &&
 									<div style={{position: 'absolute', padding: '1em', color: '#BBBDC0', lineHeight: '1.2em', pointerEvents: 'none'}}>
-										<FormattedMessage id="discussion.placeholder" defaultMessage="Discuss this work. Comments and Reviews encouraged."/>
+										<FormattedMessage id="discussion.placeholder" defaultMessage="Discuss this work"/>
 									</div>
 								}
 								<div id={'reply-input'} className={'atom-reader atom-reply ProseMirror-quick-style'} style={styles.wsywigBlock}></div>
@@ -266,7 +375,7 @@ export const Discussions = React.createClass({
 						if (fooScore < barScore) { return 1; }
 						return 0;
 					}).map((discussion, index)=> {
-						return <DiscussionItem linkTarget={linkTarget} discussionData={discussion} userID={userID} setReplyTo={this.setReplyTo} index={discussion.linkData._id} key={'discussion-' + index} handleVoteSubmit={this.discussionVoteSubmit}/>;
+						return <DiscussionItem linkTarget={linkTarget} discussionData={discussion} userID={userID} setReplyTo={this.setReplyTo} index={discussion.linkData._id} key={'discussion-' + index} handleVoteSubmit={this.discussionVoteSubmit} showThreads={this.state.showThreads}/>;
 					})}
 				</div>
 
@@ -437,5 +546,27 @@ styles = {
 		boxShadow: '0px 1px 3px #58585B',
 		zIndex: '5',
 	},
+	topButton: {
+		border: '1px solid #CCC',
+		padding: '0em 1em',
+		fontSize: '0.85em',
+		cursor: 'pointer',
+		marginBottom: '.5em',
+		display: 'inline-block',
+		userSelect: 'none',
+	},
+	topButtonDark: {
+		color: 'white',
+		backgroundColor: '#2C2A2B',
+		float: 'right',
+		userSelect: 'none',
+	},
+	discussionsEmpty: {
+		margin: '3em 0em',
+		textAlign: 'center',
+		fontSize: '1.25em',
+		color: '#58585B',
+	},
+
 
 };

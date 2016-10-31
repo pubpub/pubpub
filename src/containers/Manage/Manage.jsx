@@ -267,7 +267,9 @@ export const Manage = React.createClass({
 
 
 				{/* Items List */}
-				{filteredItems.map((item)=> {
+				{filteredItems.filter((item)=> {
+					return item.original.parent.title.indexOf('Reply') === -1;
+				}).map((item)=> {
 					return item.original;
 				}).sort((foo, bar)=>{
 					// Sort so that most recent is first in array
