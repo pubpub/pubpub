@@ -131,6 +131,30 @@ class ElementSchema {
 		this.changeNode(currentFrom, currentSelectedNode.type, {...oldNodeAttrs, ...newAttrs});
 	}
 
+	getElementsInDocument = (nodeType) => {
+
+		const editorState = this.getState();
+
+		if (!editorState) {
+			return;
+		}
+
+		const nodesOfType = [];
+
+		editorState.doc.forEach((node, offset, index) => {
+			node.forEach((subNode, suboffset, index) => {
+					const nodeAttrs = subNode.attrs;
+					const nodeId = subNode.attrs.nodeId;
+					const node = this.elementStore[nodeId];
+					if (node && node.element && nodeAttrs.type === nodeType && nodeAttrs.data) {
+						nodesOfType.push(nodeAttrs.data);
+					}
+			});
+		});
+
+		return nodesOfType;
+
+	}
 
 	countNodes = (state) => {
 

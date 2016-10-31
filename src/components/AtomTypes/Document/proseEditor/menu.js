@@ -1,39 +1,4 @@
-/*
-items.insertEmbed = insertItem(schema.nodes.block_embed, {
-		title: 'Insert Image, Video, Reference, etc',
-		icon: {text: 'insert'},
-		attrs: (pm, callback) =>{
-			const idGenerationCallback = (nodeAttrs) => {
-				const randomId = Math.floor(Math.random() * 10000000);
-				nodeAttrs.nodeId = randomId;
-				callback(nodeAttrs);
-			};
-			window.toggleMedia(pm, idGenerationCallback, schema.nodes.block_embed)
-		},
-	});
-
-=
-
-	items.insertEmbed = insertItem(schema.nodes.embed, {
-		title: 'Insert Image, Video, Reference, etc',
-		icon: {text: 'insert'},
-		attrs: (pm, callback) =>{
-			const idGenerationCallback = (nodeAttrs) => {
-				const randomId = Math.floor(Math.random()*10000000);
-				nodeAttrs.nodeId = randomId;
-				callback(nodeAttrs);
-			};
-			window.toggleMedia(pm, idGenerationCallback, schema.nodes.embed)
-		},
-	});
-
-
-	const embedSelectTest = function(pm) {
-		const {node} = pm.selection;
-		return node && node.type.name === 'embed';
-	};
-*/
-
+import ElementSchema from './elementSchema';
 import {schema} from './schema';
 
 const {wrapItem, blockTypeItem, Dropdown, DropdownSubmenu, joinUpItem, liftItem,
@@ -91,10 +56,12 @@ const insertEmbed = (atomType, state, _, view, nodeType) => {
     view.props.onAction(view.state.tr.replaceSelection(nodeType.createAndFill(nodeAttrs)).action());
 		// callback(nodeAttrs);
 	};
+  const nodesInDoc = ElementSchema.getElementsInDocument();
+
   if (atomType === 'reference') {
-    window.toggleMedia(state, idGenerationCallback, schema.nodes.embed, atomType);
+    window.toggleMedia(idGenerationCallback, schema.nodes.embed, atomType, nodesInDoc);
   } else {
-    window.toggleMedia(state, idGenerationCallback, schema.nodes.block_embed, atomType);
+    window.toggleMedia(idGenerationCallback, schema.nodes.block_embed, atomType, nodesInDoc);
   }
 
 };

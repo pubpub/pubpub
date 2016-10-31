@@ -30,6 +30,7 @@ export const ManageSingle = React.createClass({
 		insertItemHandler: PropTypes.func,
 		atomType: PropTypes.string,
 		dispatch: PropTypes.func,
+		atomsInDoc: PropTypes.array,
 	},
 
 	getInitialState() {
@@ -38,20 +39,11 @@ export const ManageSingle = React.createClass({
 			createNewType: 'document',
 			uploadRates: [],
 			uploadFiles: [],
-			featuredAtoms: [],
 			openEditor: false,
 			errorMsg: null,
 			editingAtom: null,
+			librarySource: 'doc',
 		};
-	},
-
-	componentWillMount() {
-		const featuredAtoms = safeGetInToJS(this.props.loginData, ['userData', 'featuredAtoms']) || [];
-		this.setState({featuredAtoms: featuredAtoms});
-	},
-
-	componentDidMount() {
-		this.props.dispatch(getMedia());
 	},
 
 	filterChange: function(evt) {
@@ -147,10 +139,8 @@ export const ManageSingle = React.createClass({
 
 
 	saveNew: function() {
-		console.log(this.refs);
 		const versionContent = this.refs.atomEditorPane.getSaveVersionContent();
 		const title = this.refs.titleField.value;
-		console.log(versionContent);
 		this.props.dispatch(createAtom(this.props.atomType, versionContent, title, undefined, false)).then((response) => {
 			const atomData = response.result;
 			this.props.insertItemHandler(atomData);
@@ -195,25 +185,38 @@ export const ManageSingle = React.createClass({
 		this.props.dispatch(deleteAtom(atomID));
 	},
 
-	toggleFeatureOnProfile: function(atomID) {
-		const featuredAtoms = this.state.featuredAtoms;
-		const atomIDIndex = featuredAtoms.indexOf(atomID);
-		if (atomIDIndex > -1) {
-			featuredAtoms.splice(atomIDIndex, 1);
-			this.setState({featuredAtoms: featuredAtoms});
-		} else {
-			featuredAtoms.push(atomID);
-			this.setState({featuredAtoms: featuredAtoms});
+	switchLibrarySource: function() {
+		if (this.state.librarySource === 'media') {
+			this.setState({librarySource: 'doc'});
+			return;
 		}
 
-		const userSettings = safeGetInToJS(this.props.loginData, ['userData']);
-		userSettings.featuredAtoms = featuredAtoms;
-		this.props.dispatch(saveUserSettings(userSettings));
+		const mediaData = safeGetInToJS(this.props.mediaData, ['mediaItems']);
+		if (!mediaData || mediaData.length === 0) {
+				this.props.dispatch(getMedia()).then((response) => {
+					this.setState({librarySource: 'media'});
+				},
+				() => {
+					console.log('failure');
+				}
+			);
+		} else {
+			this.setState({librarySource: 'media'});
+		}
+
 	},
 
 	render: function() {
 
-		const mediaItems = safeGetInToJS(this.props.mediaData, ['mediaItems']) || [];
+		// const mediaItems = safeGetInToJS(this.props.mediaData, ['mediaItems']) || [];
+		let mediaItems;
+
+		if (this.state.librarySource === 'media') {
+			mediaItems = safeGetInToJS(this.props.mediaData, ['mediaItems']) || [];
+		} else {
+			mediaItems = this.props.atomsInDoc || [];
+		}
+
 		const allTypes = mediaItems.map((item)=> {
 			return item.type;
 		});
@@ -312,7 +315,19 @@ export const ManageSingle = React.createClass({
 				})}
 
 				<div>
-				<h2>Used in this document: </h2>
+					{
+						(this.state.librarySource === 'media') ?
+						<div>
+							<h2 className="noMarginsHeader">In your library</h2>
+							<div className="light-color underlineOnHover sans-font" style={styles.switchText} onClick={this.switchLibrarySource}>Search the Document</div>
+						</div>
+
+						:
+						<div>
+							<h2 className="noMarginsHeader">Used in this document</h2>
+							<div className="light-color underlineOnHover sans-font" style={styles.switchText} onClick={this.switchLibrarySource}>Search your Library</div>
+						</div>
+					}
 
 
 				{/* Filter Section */}
@@ -413,7 +428,9 @@ styles = {
 	createNewButton: {
 		position: 'relative',
 		verticalAlign: 'top',
-		left: '-2px'
+		left: '15px',
+		marginBottom: '3em',
+		fontSize: '1.5em'
 	},
 	filterDropdown: {
 		width: 'calc(15% - 3.6em - 4px)',
@@ -459,6 +476,10 @@ styles = {
 		padding: 0,
 		cursor: 'pointer',
 		opacity: 0,
+	},
+	switchText: {
+		cursor: 'pointer',
+		margin: '0.35em 0em 1.25em',
 	},
 	uploadBar: {
 		margin: '0em 2em 1em',

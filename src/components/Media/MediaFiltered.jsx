@@ -61,12 +61,13 @@ export const Media = React.createClass({
 		}
 	},
 
-	toggleMedia: function(pm, callback, node, atomType) {
+	toggleMedia: function(callback, node, atomType, atomsInDoc) {
 		this.setState({
 			showMedia: true,
 			closeCallback: callback,
 			nodeData: typeof node.attrs.source === 'string' ? node.attrs : undefined,
-			atomType: atomType
+			atomType: atomType,
+			atomsInDoc: atomsInDoc,
 		});
 	},
 
@@ -195,21 +196,7 @@ export const Media = React.createClass({
 					{/* If we DON'T have a chosen atom */}
 					{!nodeData.data &&
 						<div style={{padding: '2em'}}>
-							<ManageSingle atomType={this.state.atomType} insertItemHandler={this.insertItem} setItemHandler={this.setItem}/>
-						</div>
-
-					}
-
-					{/* If we DO have a chosen atom  and are trying to edit it*/}
-					{nodeData.data && this.state.editNodeDataMode &&
-						<div style={styles.mediaDetails}>
-							<div style={styles.editModeHeader}>
-								<h3 style={styles.detailsTitle}>{nodeData.data.parent.title}</h3>
-								<div style={styles.detailsCancel} className={'underlineOnHover'} onClick={this.cancelEditNodeData}><FormattedMessage {...globalMessages.Cancel}/></div>
-							</div>
-							<div style={styles.details}>
-								<AtomEditorPane ref={'atomEditorPane'} atomData={ensureImmutable({ atomData: nodeData.data.parent, currentVersionData: nodeData.data })}/>
-							</div>
+							<ManageSingle key={this.state.atomType} atomsInDoc={this.state.atomsInDoc} atomType={this.state.atomType} insertItemHandler={this.insertItem} setItemHandler={this.setItem}/>
 						</div>
 					}
 
