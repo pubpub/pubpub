@@ -171,14 +171,6 @@ export const DocumentEditor = React.createClass({
 		return htmlNode.innerHTML;
 	},
 
-	updateEmbedEditor: function({embedLayoutCoords, embedAttrs}) {
-		this.setState({
-			embedLayoutCoords,
-			embedAttrs,
-		});
-	},
-
-
 	// only use block or embed elements
 	setEmbedAttribute: function(key, value, evt) {
 		const currentSelection = this.pm.selection;
@@ -324,6 +316,13 @@ export const DocumentEditor = React.createClass({
 
 		migrateMarks(this.collab.doc.contents);
 
+		ElementSchema.initiateProseMirror({
+			changeNode: this.changeNode,
+			setEmbedAttribute: this.setEmbedAttribute,
+			getState: this.getState,
+		});
+
+
 		pm = EditorState.create({
 			doc: pubSchema.nodeFromJSON(this.collab.doc.contents),
 			plugins: [pubpubSetup({schema: pubSchema}), collabEditing({version: this.collab.doc.version, clientID: userId})],
@@ -340,12 +339,6 @@ export const DocumentEditor = React.createClass({
 				if (action.type === "selection") {
 					ElementSchema.onNodeSelect(newState, action.selection);
 				}
-			},
-			handleClickOn: (view, pos, node, nodePos, evt) => {
-				if (ElementSchema.checkNodeEditing(node)) {
-					return true;
-				}
-				return false;
 			},
 			onUnmountDOM: (view, node) => {
 				// console.log('unmountinggg', node);
@@ -417,12 +410,6 @@ export const DocumentEditor = React.createClass({
 				this.collab.mod.serverCommunications.disconnect();
 		}
 
-		ElementSchema.initiateProseMirror({
-			changeNode: this.changeNode,
-			updateMenuCallback: this.updateEmbedEditor,
-			setEmbedAttribute: this.setEmbedAttribute,
-			getState: this.getState,
-		});
 
 		// TO MIGRATE
 		// this.collab.doc.hash = this.getHash();
@@ -586,12 +573,6 @@ export const DocumentEditor = React.createClass({
 
 				<textarea id="markdown" onChange={this.markdownChange} style={[styles.textarea, this.state.showMarkdown && styles.textareaVisible]}></textarea>
 				<div id={'atom-body-editor'} className={'document-body'} style={[styles.wsywigBlock, this.state.showMarkdown && styles.wsywigWithMarkdown]}>
-
-					{/*this.state.embedLayoutCoords &&
-						<div style={[styles.embedLayoutEditor, {left: this.state.embedLayoutCoords.left, top: this.state.embedLayoutCoords.bottom}]}>
-							<EmbedEditor embedLayoutCoords={this.state.embedLayoutCoords} embedAttrs={this.state.embedAttrs} saveCallback={this.setEmbedAttribute}/>
-						</div>
-					*/}
 
 				</div>
 

@@ -36,14 +36,6 @@ export const EmbedEditWrapper = React.createClass({
 			context: 'document',
 		};
 	},
-	componentDidMount: function() {
-		/*
-		const checkCallback = () => {
-			ElementSchema.checkAndRender(this.props.nodeId);
-		};
-		window.setTimeout(checkCallback, 0);
-		*/
-	},
 
 	componentWillUpdate: function(nextProps, nextState) {
 	},
@@ -62,7 +54,6 @@ export const EmbedEditWrapper = React.createClass({
 	},
 
 	setCiteCount: function(citeCount) {
-		console.log('set cite count!', citeCount);
 		this.setState({citeCount});
 	},
 
@@ -76,13 +67,11 @@ export const EmbedEditWrapper = React.createClass({
 
 	typeNewCaption: function() {
 		const newCaption = this.refs.captionInput.value;
-		console.log('got new caption!', newCaption);
 		this.updateParams({caption: newCaption});
 		this.refs.captionInput.focus();
 	},
 
 	preventClick: function(evt) {
-		// evt.preventDefault();
 		console.log('preventing click!');
 		evt.stopPropagation();
 		this.refs.captionInput.focus();
@@ -90,8 +79,11 @@ export const EmbedEditWrapper = React.createClass({
 
 	preventKey: function(evt) {
 		// evt.preventDefault();
-		console.log('preventing key!');
 		evt.stopPropagation();
+		this.refs.captionInput.focus();
+	},
+
+	focusCaption: function() {
 		this.refs.captionInput.focus();
 	},
 
@@ -124,29 +116,25 @@ export const EmbedEditWrapper = React.createClass({
 				<figure style={styles.figure({size: this.props.size, align: this.props.align})}>
 				<div style={{width: this.props.size, position: 'relative', display: 'table-row'}}>
 				<Resizable
-				  width={'100%'}
-				  height={'auto'}
+					width={'100%'}
+					height={'auto'}
 					maxWidth={650}
 					customStyle={styles.outline({selected})}
 					onResizeStop={(direction, styleSize, clientSize, delta) => {
 						const ratio = (clientSize.width / 650) * 100;
 						console.log(ratio);
-						this.updateParams({size: ratio + "%" });
+						this.updateParams({size: ratio + '%' });
 					}}>
 						<AtomViewerPane selected={this.state.selected} atomData={atomData} renderType={'embed'} context={this.props.context}/>
 				</Resizable>
 			</div>
 			<figcaption style={styles.caption({size: this.props.size, align: this.props.align})}>
 				<span
-					onMouseDown={this.preventClick}
-					onKeyDown={this.preventKey}
-					onKeyUp={this.preventKey}
 					draggable="false"
-					onClick={this.preventClick}
-					onInput={this.typeNewCaption}
 					className="caption"
 					ref="captionInput"
-					contentEditable
+					contentEditable="false"
+
 					style={styles.captionText({align: this.props.align})}>
 					{this.props.caption}
 				</span>

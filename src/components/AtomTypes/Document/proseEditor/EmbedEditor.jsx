@@ -1,5 +1,6 @@
 import ElementPortal from 'react-element-portal';
 import Radium from 'radium';
+import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import React, {PropTypes} from 'react';
 
 const popupKeyframes = Radium.keyframes({
@@ -56,7 +57,11 @@ export const EmbedEditor = React.createClass({
 		const {participants, status} = this.props;
 
 		return (
-      <div className={'contrastbox arrow_box'} style={styles.box}>
+      <ReactCSSTransitionGroup
+        transitionName="popup"
+        transitionAppear={true}
+        transitionAppearTimeout={180}>
+      <div key="boxWrapper" className={'contrastbox arrow_box'} style={styles.box}>
 
         <div style={styles.alignDiv} name={'test'}>
 
@@ -79,19 +84,22 @@ export const EmbedEditor = React.createClass({
           </div>
         </div>
 
-
         <label style={styles.label} htmlFor={'captionNote'}>
           Caption
         </label>
         <input style={styles.input} mousedown={this.preventClick} draggable="false"  className="caption" onClick={this.preventClick} ref="caption" value={this.state.caption || this.props.embedAttrs.caption} onChange={this.changeCaption} type="text" id={'captionNote'} name={'caption'}/>
 
+
+        {/*
+
         <label style={styles.label} htmlFor={'figureName'}>
           Figure Name
         </label>
         <input style={styles.input} draggable="false"  className="caption" ref="figureName" value={this.state.figureName || this.props.embedAttrs.figureName} onChange={this.changeFigureName} type="text" id={'figureName'} name={'figure'}/>
-
+        */}
 
       </div>
+      </ReactCSSTransitionGroup>
 	  );
 
 	}
@@ -121,7 +129,8 @@ const styles = {
     fontSize: '0.8em',
     border: 'none',
     boxShadow: '0px 0px 2px #808284',
-		animation: 'popupKeyframe 180ms forwards linear',
+    // transition: 'popupKeyframe 200ms linear',
+		// animation: 'popupKeyframe 180ms forwards linear',
 		// animationName: popupKeyframes,
   },
   alignDiv: {
