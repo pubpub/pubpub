@@ -1,9 +1,9 @@
 import {Schema, Fragment, Mark, NodeType, MarkType, DOMParser, DOMSerializer} from 'prosemirror-model';
-import {schema as basicSchema} from 'prosemirror-schema-basic';
 import {addListNodes} from 'prosemirror-schema-list';
 import {addTableNodes} from 'prosemirror-schema-table';
 
 import ElementSchema from './elementSchema';
+import {schema as basicSchema} from './schema-basic';
 
 /*
 class Emoji extends Inline {
@@ -207,6 +207,7 @@ const migrateMarks = (node) => {
 				type: mark._,
 				/*
 				attrs: {
+
 
 				}
 				*/
