@@ -123,7 +123,7 @@ export const ManageSingle = React.createClass({
 		const versionContent = {
 			url: 'https://assets.pubpub.org/' + filename
 		};
-		this.props.dispatch(createAtom(atomType, versionContent, title));
+		this.createAtom(atomType, versionContent, title);
 		this.setState({filter: ''});
 	},
 
@@ -141,15 +141,21 @@ export const ManageSingle = React.createClass({
 	saveNew: function() {
 		const versionContent = this.refs.atomEditorPane.getSaveVersionContent();
 		const title = this.refs.titleField.value;
-		this.props.dispatch(createAtom(this.props.atomType, versionContent, title, undefined, false)).then((response) => {
-			const atomData = response.result;
-			this.props.insertItemHandler(atomData);
-			this.setState({filter: '', creatingNew: false});
-		},
-		() => {
-			console.log('failure', arguments);
-		}
-	);
+		this.createAtom(this.props.atomType, versionContent, title, undefined, false);
+	},
+
+	createAtom: function(type, versionContent, title, redirect, defaultOpen) {
+
+		this.props.dispatch(createAtom(type, versionContent, title, redirect, defaultOpen)).then((response) => {
+				const atomData = response.result;
+				this.props.insertItemHandler(atomData);
+				this.setState({filter: '', creatingNew: false});
+			},
+			() => {
+				console.log('failure', arguments);
+			}
+		);
+
 	},
 
 	// to-do:
