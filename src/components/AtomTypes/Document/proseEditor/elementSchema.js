@@ -133,27 +133,37 @@ class ElementSchema {
 
 	getElementsInDocument = (nodeType) => {
 
-		const editorState = this.getState();
-
-		if (!editorState) {
+		if (!this.getState()) {
 			return;
 		}
 
 		const nodesOfType = [];
 
-		editorState.doc.forEach((node, offset, index) => {
-			node.forEach((subNode, suboffset, index) => {
-					const nodeAttrs = subNode.attrs;
-					const nodeId = subNode.attrs.nodeId;
-					const node = this.elementStore[nodeId];
-					if (node && node.element && nodeAttrs.type === nodeType && nodeAttrs.data) {
-						nodesOfType.push(nodeAttrs.data);
-					}
-			});
-		});
+		const processNode = (processedNode) => {
+			const nodeAttrs = processedNode.attrs;
+			const nodeId = processedNode.attrs.nodeId;
+			const node = this.elementStore[nodeId];
+			if (node && node.element && nodeAttrs.type === nodeType && nodeAttrs.data) {
+				nodesOfType.push(nodeAttrs.data);
+			}
+		};
+
+		this.loopThroughAllNodes(processNode);
 
 		return nodesOfType;
 
+	}
+
+	loopThroughAllNodes = (nodeFunc) => {
+
+		const editorState = this.getState();
+
+		const nodeLoop = (node, offset, index) => {
+			nodeFunc(node);
+			node.forEach(nodeLoop);
+		};
+
+		editorState.doc.forEach(nodeLoop);
 	}
 
 	countNodes = (state) => {
@@ -167,28 +177,29 @@ class ElementSchema {
 
 		const citeCounts = {};
 
-		editorState.doc.forEach((node, offset, index) => {
-			node.forEach((subNode, suboffset, index) => {
-					const nodeAttrs = subNode.attrs;
-					const nodeId = subNode.attrs.nodeId;
-					const node = this.elementStore[nodeId];
-					if (node && node.element && nodeAttrs.mode === 'cite' && nodeAttrs.data) {
+		const countNode = (processNode) => {
+			const nodeAttrs = processNode.attrs;
+			const nodeId = processNode.attrs.nodeId;
+			const node = this.elementStore[nodeId];
+			if (node && node.element && nodeAttrs.mode === 'cite' && nodeAttrs.data) {
 
-						let refCount = citeCounts[nodeAttrs.data._id];
+				let refCount = citeCounts[nodeAttrs.data._id];
 
-						if (!refCount) {
-							citeCount++;
-							refCount = citeCount;
-							citeCounts[nodeAttrs.data._id] = refCount;
-						}
+				if (!refCount) {
+					citeCount++;
+					refCount = citeCount;
+					citeCounts[nodeAttrs.data._id] = refCount;
+				}
 
-						if (node.count !== refCount) {
-							node.element.setCiteCount(refCount);
-							node.count = refCount;
-						}
-					}
-			});
-		});
+				if (node.count !== refCount) {
+					node.element.setCiteCount(refCount);
+					node.count = refCount;
+				}
+			}
+		};
+
+		this.loopThroughAllNodes(countNode);
+
 		return;
 	}
 

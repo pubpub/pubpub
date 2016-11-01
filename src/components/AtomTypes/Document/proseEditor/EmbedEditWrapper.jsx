@@ -122,7 +122,6 @@ export const EmbedEditWrapper = React.createClass({
 					customStyle={styles.outline({selected})}
 					onResizeStop={(direction, styleSize, clientSize, delta) => {
 						const ratio = (clientSize.width / 650) * 100;
-						console.log(ratio);
 						this.updateParams({size: ratio + '%' });
 					}}>
 						<AtomViewerPane selected={this.state.selected} atomData={atomData} renderType={'embed'} context={this.props.context}/>
@@ -159,9 +158,6 @@ styles = {
 		};
 
 		const parsedSize = parseInt(size);
-		if (!isNaN(parsedSize)) {
-			console.log(parsedSize);
-		}
 		const realSize = 650 * (parsedSize / 100);
 		if (realSize * 0.8 < 200) {
 			const newMargin = Math.round((realSize - 200) / 2);
