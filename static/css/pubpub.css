@@ -956,9 +956,16 @@ span.ProseMirror-menuitem:hover {
      box-shadow: rgb(128, 130, 132) 0px 0px 2px;
 }
 
-.ProseMirror-icon {
+.ProseMirror-menuitem > div[title] {
     height: 100%;
     line-height: 100%;
+    vertical-align: middle;
+    cursor: pointer;
+    padding: 10px 10px;
+}
+
+
+.ProseMirror-menuitem > div[title].ProseMirror-icon {
     padding: 4px 10px;
 }
 

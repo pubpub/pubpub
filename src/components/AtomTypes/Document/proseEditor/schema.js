@@ -5,47 +5,6 @@ import {addTableNodes} from 'prosemirror-schema-table';
 import ElementSchema from './elementSchema';
 import {schema as basicSchema} from './schema-basic';
 
-/*
-class Emoji extends Inline {
-	get attrs() {
-	return {
-		content: new Attribute,
-		markup: new Attribute,
-	};
-	}
-	toDOM(node) { return ['span', node.attrs.content]; }
-}
-
-// A Pagebreak node Type
-class PageBreak extends Block {
-	toDOM() { return ['div', {class: 'pagebreak'}, 'pagebreak']; }
-}
-
-exports.PageBreak = PageBreak;
-
-// A subscript mark
-class SubMark extends MarkType {
-	get matchDOMTag() { return {'sub': null}; }
-	toDOM() { return ['sub']; }
-}
-exports.SubMark = SubMark;
-
-// A superscript mark
-class SupMark extends MarkType {
-	get matchDOMTag() { return {'sup': null}; }
-	toDOM() { return ['sup']; }
-}
-exports.StrongMark = StrongMark;
-
-
-// A strike through mark
-class StrikeThroughMark extends MarkType {
-	get matchDOMTag() { return {'s': null}; }
-	toDOM() { return ['s']; }
-}
-exports.StrikeThroughMark = StrikeThroughMark;
-*/
-
 // ;; An inline embed node type. Has these attributes:
 //
 // - **`src`** (required): The slug of the pub.
@@ -71,14 +30,10 @@ const StrikeThroughMark = {
     toDOM() { return ["s"] }
 };
 
-
-
-
 const PageBreak = {
     group: "block",
     toDOM(node) { return ['div', {class: 'pagebreak'}, 'pagebreak']; }
 };
-
 
 const Emoji = {
   group: 'inline',

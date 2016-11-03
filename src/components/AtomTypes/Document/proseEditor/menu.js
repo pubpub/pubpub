@@ -246,6 +246,13 @@ function wrapListItem(nodeType, options) {
 //     for, for example the [menu bar](#menu.MenuBarEditorView).
 function buildMenuItems(schema) {
   let r = {}, type
+  if (type = schema.marks.sup)
+    r.supMark = markItem(type, {title: "superscript", icon: null})
+  if (type = schema.marks.sub)
+    r.subMark = markItem(type, {title: "subscript", icon: null})
+  if (type = schema.marks.strike)
+    r.strikeMark = markItem(type, {title: "strikethrough", icon: null})
+
   if (type = schema.marks.strong)
     r.toggleStrong = markItem(type, {title: "Toggle strong style", icon: icons.strong})
   if (type = schema.marks.em)
@@ -290,7 +297,7 @@ function buildMenuItems(schema) {
     for (let i = 1; i <= 10; i++)
       r["makeHead" + i] = blockTypeItem(type, {
         title: "Change to heading " + i,
-        label: "Level " + i,
+        label: "H" + i,
         attrs: {level: i}
       })
   if (type = schema.nodes.horizontal_rule) {
@@ -302,6 +309,17 @@ function buildMenuItems(schema) {
       run(state, onAction) { onAction(state.tr.replaceSelection(hr.create()).action()) }
     })
   }
+
+  if (type = schema.nodes.page_break) {
+    let pb = type
+    r.insertPageBreak = new MenuItem({
+      title: "Insert page break",
+      label: "Page break",
+      select(state) { return canInsert(state, pb) },
+      run(state, onAction) { onAction(state.tr.replaceSelection(pb.create()).action()) }
+    });
+  }
+
   if (type = schema.nodes.table)
     r.insertTable = insertTableItem(type)
   if (type = schema.nodes.table_row) {
@@ -314,16 +332,16 @@ function buildMenuItems(schema) {
   }
 
   let cut = arr => arr.filter(x => x)
-  r.insertMenu = new Dropdown(cut([r.insertHorizontalRule, r.insertTable, r.insertImageEmbed, r.insertReferenceEmbed]), {label: "Insert"})
-  r.typeMenu = new Dropdown(cut([r.makeParagraph, r.makeCodeBlock, r.makeHead1 && new DropdownSubmenu(cut([
-    r.makeHead1, r.makeHead2, r.makeHead3, r.makeHead4, r.makeHead5, r.makeHead6
-  ]), {label: "Heading"})]), {label: "Type..."})
+
+  r.moreinlineMenu = new Dropdown(cut([r.supMark, r.subMark, r.strikeMark]), {label: "..."})
+  r.insertMenu = new Dropdown(cut([r.insertTable, r.insertImageEmbed, r.insertReferenceEmbed]), {label: "Insert"})
+  r.typeMenu = new Dropdown(cut([r.makeCodeBlock,r.insertPageBreak, r.insertHorizontalRule, r.makeHead3, r.makeHead4, r.makeHead5, r.makeHead6]), {label: "..."})
   let tableItems = cut([r.addRowBefore, r.addRowAfter, r.removeRow, r.addColumnBefore, r.addColumnAfter, r.removeColumn])
   if (tableItems.length)
     r.tableMenu = new Dropdown(tableItems, {label: "Modify Table"})
 
-  r.inlineMenu = [cut([r.toggleStrong, r.toggleEm, r.toggleCode, r.toggleLink]), [r.insertMenu]]
-  r.blockMenu = [cut([r.typeMenu, r.tableMenu, r.wrapBulletList, r.wrapOrderedList, r.wrapBlockQuote, liftItem])]
+  r.inlineMenu = [cut([r.toggleStrong, r.toggleEm, r.toggleCode, r.toggleLink, r.moreinlineMenu]), [r.insertMenu]]
+  r.blockMenu = [cut([r.makeHead1, r.makeHead2, r.tableMenu, r.wrapBulletList, r.wrapOrderedList, r.wrapBlockQuote, liftItem, r.typeMenu])]
   r.fullMenu = r.inlineMenu.concat(r.blockMenu)
 
   return r
