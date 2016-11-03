@@ -407,7 +407,7 @@ export const Atom = React.createClass({
 						{/* Atom Header */}
 						{ !error &&
 
-							<div style={styles.atomHeader}>
+							<div style={styles.atomHeader(isEditor)}>
 
 								{/* Atom Title */}
 								{/* ---------- */}
@@ -611,10 +611,12 @@ styles = {
 			boxShadow: '0px 0px 0px #808284',
 		},
 	},
-	atomHeader: {
-		borderBottom: '1px solid #F3F3F4',
-		marginBottom: '1em',
-		paddingBottom: '1em',
+	atomHeader: function(isEditor) {
+		return {
+			borderBottom: (!isEditor) ? '1px solid #F3F3F4' : null,
+			marginBottom: '1em',
+			paddingBottom: '1em',
+		}
 	},
 	headerWrapper: {
 		paddingTop: '2em',
