@@ -94,7 +94,10 @@ class ElementSchema {
 	}
 
 	findNodeById = (nodeId) => {
-		return this.elementStore[this.editingElem].node;
+		if (this.elementStore[nodeId]) {
+			return this.elementStore[nodeId].node;
+		}
+		return null;
 	}
 
 	updateNodePosition = (currentSelectedNode) => {
@@ -224,6 +227,17 @@ class ElementSchema {
 		}
 	}
 
+	serializeNode = (node) => {
+		const nodeId = node.attrs.nodeId;
+		const foundNode = this.elementStore[nodeId];
+		if (!foundNode) {
+			return null;
+		}
+		const clonedNode = foundNode.dom.cloneNode(true);
+		clonedNode.className = "pub-embed block-embed";
+		return clonedNode;
+	}
+
 	createElementAtNode = (node, block = false) => {
 
 		const nodeId = node.attrs.nodeId;
@@ -240,11 +254,17 @@ class ElementSchema {
 
 		const reactElement = ReactDOM.render(<EmbedEditWrapper updateParams={this.updateNodeParams} {...node.attrs}/>, domChild);
 		const dom = domChild.childNodes[0];
-		dom.className += (block) ? 'block-embed' : ' embed';
+		if (block && dom.className.indexOf('block-embed') === -1) {
+			dom.className += ' block-embed';
+		} else if (dom.className.indexOf(' embed') === -1) {
+			dom.className += ' embed';
+		}
 
 		domParent.appendChild(domChild);
 
 		dom.setAttribute('data-nodeId', nodeId);
+
+
 		// const listenerFunc = once(this.onRemoveNode.bind(this, nodeId, domParent));
 		this.elementStore[nodeId] = {node: node, element: reactElement, active: true, dom: domChild};
 

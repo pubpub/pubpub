@@ -303,6 +303,8 @@ export const DocumentEditor = React.createClass({
 
 		const collabEditing = require('prosemirror-collab').collab;
 
+		const {clipboardParser, clipboardSerializer} = require('./proseEditor/clipboardSerializer');
+
 
 		this.pubpubSetup = pubpubSetup;
 		this.collabEditing = collabEditing;
@@ -386,6 +388,8 @@ export const DocumentEditor = React.createClass({
 
 		  menuContent: menu.fullMenu,
 			spellcheck: true,
+			clipboardParser: clipboardParser,
+			clipboardSerializer: clipboardSerializer,
 		});
 
 		this.pm = pm;
