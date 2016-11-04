@@ -93,6 +93,9 @@ class ElementSchema {
 
 	}
 
+	findNodeById = (nodeId) => {
+		return this.elementStore[this.editingElem].node;
+	}
 
 	updateNodePosition = (currentSelectedNode) => {
 
