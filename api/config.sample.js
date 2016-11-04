@@ -9,20 +9,21 @@ Keep config.js private to your development team.
 *********************** */
 
 // AWS Credentials
-export const accessKeyAws = '<YOUR-ACCESS-KEY-HERE>'; // S3 used for file storage
-export const secretKeyAws = '<YOUR-SECRET-KEY-HERE>';
-
-// Heroku Credentials
-export const herokuApiKey = '<YOUR-KEY-HERE>'; // Heroku used to host and serve the project
+process.env.AWS_ACCESS_KEY_ID = '<YOUR-ACCESS-KEY-HERE>'; // S3 used for file storage
+process.env.AWS_SECRET_ACCESS_KEY = '<YOUR-SECRET-KEY-HERE>';
 
 // Mongo Credentials
-export const mongoURI = '<YOUR-URI-HERE>'; // Can point to an external mongo hosting service, or your local instance
+process.env.MONGO_URI = '<YOUR-URI-HERE>'; // Can point to an external mongo hosting service, or your local instance
 
 // Sendgrid Credentials
-export const sendgridAPIKey = '<YOUR-KEY-HERE>'; // Sendgrid used to send transactional emails
+process.env.SENDGRID_API_KEY = '<YOUR-KEY-HERE>'; // Sendgrid used to send transactional emails
 
 // URL for pubpub-collab server (https://github.com/pubpub/collab)
-export const collabServerURL = '<COLLAB-SERVER-URL>';
+process.env.COLLAB_SERVER_URL = '<COLLAB-SERVER-URL>';
 
 // secret shared by pubpub and collaboration server, this key needs to be the same on the collab server
-export const collabEncryptSecret = '<16 or 24 byte password>';
+process.env.COLLAB_ENCRYPT_SECRET = '<16 or 24 byte password>';
+
+// Google API
+process.env.GOOGLE_API_CLIENT_EMAIL = '<GOOGLE-API-EMAIL>';
+process.env.GOOGLE_API_PRIVATE_KEY = '<GOOGLE-API-PRIVATE-KEY>';
