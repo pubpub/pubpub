@@ -377,7 +377,7 @@ export const DocumentEditor = React.createClass({
 							return false;
 						}
 					}
-					if (eventType === 'keydown' && evt.key === 'Delete') {
+					if (eventType === 'keydown' && (evt.key === 'Delete' || evt.code === 'Backspace')) {
 						return false;
 					}
 					evt.preventDefault();
