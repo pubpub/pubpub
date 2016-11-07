@@ -234,7 +234,9 @@ class ElementSchema {
 			return null;
 		}
 		const clonedNode = foundNode.dom.cloneNode(true);
-		clonedNode.className = "pub-embed block-embed";
+		const hoverChild = clonedNode.querySelector('.hoverChild');
+		hoverChild.remove();
+		console.log('returning serializeNode!', clonedNode.innerHTML);
 		return clonedNode;
 	}
 

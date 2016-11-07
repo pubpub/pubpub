@@ -65,7 +65,7 @@ const Embed = {
 		return ElementSchema.createElementAtNode(node);
 	},
 	parseDOM: [{
-		tag: 'div.embed',
+		tag: 'span.embed',
 		getAttrs: dom => {
 			const nodeId = dom.getAttribute('data-nodeId');
       console.log('Creating Embed');
