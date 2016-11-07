@@ -94,10 +94,6 @@ export class ModServerCommunications {
 			this.retryTimeout = window.setTimeout(function() {
 				that.createWSConnection();
 			}, 2000);
-				// console.log('attempting to reconnect');
-			// if (that.editor.pm.mod.collab.hasSendableSteps()) {
-				// jQuery('#unobtrusive_messages').html('<span class="warn">'+gettext('Warning! Not all your changes have been saved! You could suffer data loss. Attempting to reconnect...')+'</span>')
-			// }
 
 		};
 		this.wsPinger = window.setInterval(function() {
@@ -218,7 +214,7 @@ export class ModServerCommunications {
 			break;
 		case 'confirm_diff_version':
 			this.editor.mod.collab.docChanges.cancelCurrentlyCheckingVersion();
-			if (data.diff_version !== getVersion(this.mod.editor.pm)) {
+			if (data.diff_version !== getVersion(this.mod.editor.getState())) {
 				this.editor.mod.collab.docChanges.checkDiffVersion();
 				return;
 			}
