@@ -26,3 +26,5 @@ export const collabServerURL = '<COLLAB-SERVER-URL>';
 
 // secret shared by pubpub and collaboration server, this key needs to be the same on the collab server
 export const collabEncryptSecret = '<16 or 24 byte password>';
+
+process.env.CONVERT_SERVER_URL = '<CONVERT-SERVER-URL>';
