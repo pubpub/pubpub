@@ -383,6 +383,9 @@ export const DocumentEditor = React.createClass({
 					evt.preventDefault();
 					return true;
 				}
+				if (evt.type === 'paste') {
+					setTimeout(ElementSchema.countNodes, 200);
+				}
 				return false;
 			},
 

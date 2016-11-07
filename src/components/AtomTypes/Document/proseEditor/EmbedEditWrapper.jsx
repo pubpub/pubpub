@@ -55,6 +55,7 @@ export const EmbedEditWrapper = React.createClass({
 
 	setCiteCount: function(citeCount) {
 		this.setState({citeCount});
+		this.forceUpdate();
 	},
 
 	setSelected: function(selected) {
@@ -72,7 +73,6 @@ export const EmbedEditWrapper = React.createClass({
 	},
 
 	preventClick: function(evt) {
-		console.log('preventing click!');
 		evt.stopPropagation();
 		this.refs.captionInput.focus();
 	},

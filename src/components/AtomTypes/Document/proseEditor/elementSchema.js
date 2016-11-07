@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import {debounce} from 'utils/loadingFunctions';
 
 import EmbedEditWrapper from './EmbedEditWrapper';
 import Pointer from './Pointer';
@@ -185,7 +186,7 @@ class ElementSchema {
 
 		const countNode = (processNode) => {
 			const nodeAttrs = processNode.attrs;
-			const nodeId = processNode.attrs.nodeId;
+			const nodeId = nodeAttrs.nodeId;
 			const node = this.elementStore[nodeId];
 			if (node && node.element && nodeAttrs.mode === 'cite' && nodeAttrs.data) {
 
@@ -197,7 +198,7 @@ class ElementSchema {
 					citeCounts[nodeAttrs.data._id] = refCount;
 				}
 
-				if (node.count !== refCount) {
+				if (!node.count || node.count !== refCount) {
 					node.element.setCiteCount(refCount);
 					node.count = refCount;
 				}
@@ -236,7 +237,6 @@ class ElementSchema {
 		const clonedNode = foundNode.dom.cloneNode(true);
 		const hoverChild = clonedNode.querySelector('.hoverChild');
 		hoverChild.remove();
-		console.log('returning serializeNode!', clonedNode.innerHTML);
 		return clonedNode;
 	}
 

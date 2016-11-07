@@ -31,9 +31,7 @@ const getNodeAttrs = (dom) => {
     mode: nodeAttrs.mode,
     className: nodeAttrs.className,
     figureName: nodeAttrs.figureName,
-    nodeId: nodeAttrs.randomId,
-    children: null,
-    childNodes: null,
+    nodeId: randomId,
   };
 };
 
