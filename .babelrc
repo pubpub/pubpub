@@ -1,29 +1,8 @@
 {
-  "presets": ["react", "es2015", "stage-0"],
-
-  "plugins": [
-    "transform-runtime",
-    "add-module-exports",
-    "transform-decorators-legacy",
-    "transform-react-display-name",
-    ["react-intl", {
-        "messagesDir": "./translations/messages"
-    }]
-  ],
-
-  "env": {
-    "development": {
-      "plugins": [
-        "typecheck",
-        ["react-transform", {
-            "transforms": [{
-                "transform": "react-transform-catch-errors",
-                "imports": ["react", "redbox-react"]
-              }
-            ]
-        }]
-      ]
-    }
-  }
+	"presets": ["stage-0", "es2015", "react"],
+	"plugins": [
+	    ["react-intl", {
+	        "messagesDir": "./translations/messages"
+	    }]
+	],
 }
-

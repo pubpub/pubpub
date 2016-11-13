@@ -1,3 +1,0 @@
-instrumentation:
-  root: .
-  extensions: ['.js', '.jsx']

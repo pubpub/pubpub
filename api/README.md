@@ -1,2 +1,0 @@
-# PubPub API
-

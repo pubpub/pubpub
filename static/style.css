@@ -1,0 +1,268 @@
+body {
+	/*max-width: 1024px;*/
+	margin: 0 auto;
+	/*padding: 0em 1em;*/
+	/*background-color: #F5F5F5;*/
+	font-family: 'Helvetica';
+}
+
+label {
+	padding-right: 1em;
+	margin-bottom: .25em;
+	width: 100px;
+	display: inline-block;
+}
+
+input, textarea {
+	border: 1px solid #CCC;
+}
+input:focus, input:focus, textarea:focus{
+	outline: none;
+	border: 1px solid #555;
+}
+
+input[type=file], input[type=file]:focus {
+	border: 0px solid black;
+}
+
+img {
+	max-width: 100%;
+	display: block;
+	position: relative;
+	padding: 1em 0em;
+}
+
+.pub-body a {
+	position: relative;
+	display: block;
+}
+.pub-body a:hover:after {
+	content: 'Edit with DbDb';
+	position: absolute;
+	color: #fff;
+	background-color: #2b2c2d;
+	text-decoration: none;
+	top: 1em;
+	right: 0;
+	width: 200px;
+	text-align: center;
+	font-family: 'Open Sans';
+	font-size: 0.85em;
+	border-radius: 1px;
+}
+.link {
+	text-decoration: none;
+	color: inherit;
+}
+
+.link:hover {
+	text-decoration: underline;
+}
+
+.button {
+	background-color: black;
+	color: white;
+	border: 0px;
+	cursor: pointer;
+	position: relative;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+}
+
+.button:hover {
+	color: #DDD;
+}
+
+.button:active {
+	transform: translateY(1px);
+}
+
+.userLink {
+	text-decoration: none;
+	color: black;
+	padding: .25em 0em .25em 1.5em;
+	display: inline-block;
+	position: relative;
+	max-width: calc(100% - 1.5em);
+	word-wrap: break-word;
+}
+.userLink:hover {
+	text-decoration: underline;
+}
+
+.userLink:visited {
+	color: rgb(85, 26, 139);
+}
+
+.userLinkDate {
+	opacity: 0;
+	transition: .1s linear opacity;
+	color: #999;
+	font-size: 0.8em; 
+	text-decoration: none;
+	padding: 0em .5em;
+	display: inline-block;
+}
+.userLink:hover .userLinkDate {
+	opacity: 1;
+}
+
+.underlineOnHover:hover {
+	text-decoration: underline !important;
+}
+
+.showChildOnHover .hoverChild {
+	opacity: 0;
+	transition: .1s linear opacity;
+	pointer-events: none;
+	user-select: none;
+	-webkit-user-select: none;
+}
+
+.showChildOnHover:hover .hoverChild {
+	opacity: 1;
+	pointer-events: auto;
+	user-select: text;
+	-webkit-user-select: text;
+}
+
+.down-arrow {
+	display: inline-block;
+	width: 0;
+	height: 0;
+	vertical-align: middle;
+	margin-top: 4px;
+	content: "";
+	border: 4px solid;
+	border-right-color: transparent;
+	border-bottom-color: transparent;
+	border-left-color: transparent;
+}
+
+@media screen and (min-resolution: 3dppx), screen and (max-width: 767px) {
+	.hide-on-mobile {
+		display: none !important;
+	}
+	.full-on-mobile {
+		display: block !important;
+		width: calc(100% - 2em) !important;
+		padding-left: 1em !important;
+		padding-right: 1em !important;
+		margin: .5em auto !important;
+	}
+}
+
+/* ------------ */
+/* Landing Page */
+/* ------------ */
+.previews-container {
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	justify-content: space-around;
+	padding-top: 1em;
+	width: calc(100% + 2em);
+	position: relative;
+	left: -1em;
+}
+/* ------------ */
+
+/* ------------ */
+/* User Page */
+/* ------------ */
+@media screen and (min-resolution: 3dppx), screen and (max-width: 767px) {
+	.user-header {
+		display: block !important;
+	}
+	.user-name {
+		font-size: 3em !important;
+	}
+	.user-follow {
+		display: inline-block !important;
+		width: 100px !important;
+	}
+}
+/* ------------ */
+
+
+
+/* ------ */
+/* Loader */
+/* ------ */
+.spinner {
+  margin: 100px auto;
+  width: 40px;
+  height: 40px;
+  position: relative;
+}
+
+.cube1, .cube2 {
+  background-color: #333;
+  width: 15px;
+  height: 15px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  
+  -webkit-animation: sk-cubemove 1.8s infinite ease-in-out;
+  animation: sk-cubemove 1.8s infinite ease-in-out;
+}
+
+.cube2 {
+  -webkit-animation-delay: -0.9s;
+  animation-delay: -0.9s;
+}
+
+@-webkit-keyframes sk-cubemove {
+  25% { -webkit-transform: translateX(42px) rotate(-90deg) scale(0.5) }
+  50% { -webkit-transform: translateX(42px) translateY(42px) rotate(-180deg) }
+  75% { -webkit-transform: translateX(0px) translateY(42px) rotate(-270deg) scale(0.5) }
+  100% { -webkit-transform: rotate(-360deg) }
+}
+
+@keyframes sk-cubemove {
+  25% { 
+    transform: translateX(42px) rotate(-90deg) scale(0.5);
+    -webkit-transform: translateX(42px) rotate(-90deg) scale(0.5);
+  } 50% { 
+    transform: translateX(42px) translateY(42px) rotate(-179deg);
+    -webkit-transform: translateX(42px) translateY(42px) rotate(-179deg);
+  } 50.1% { 
+    transform: translateX(42px) translateY(42px) rotate(-180deg);
+    -webkit-transform: translateX(42px) translateY(42px) rotate(-180deg);
+  } 75% { 
+    transform: translateX(0px) translateY(42px) rotate(-270deg) scale(0.5);
+    -webkit-transform: translateX(0px) translateY(42px) rotate(-270deg) scale(0.5);
+  } 100% { 
+    transform: rotate(-360deg);
+    -webkit-transform: rotate(-360deg);
+  }
+}
+/* ------ */
+
+/* ------ */
+/* Button Loader */
+/* ------ */
+.horizontal-progress {
+  -webkit-animation: horizontalMove .75s infinite linear;
+  animation: horizontalMove .75s infinite linear;
+}
+
+@-webkit-keyframes horizontalMove {
+	0% { -webkit-transform: translateX(-100%)}
+	100% { -webkit-transform: translateX(100%)}
+}
+
+@keyframes horizontalMove {
+  0% { 
+    transform: translateX(-100%);
+    -webkit-transform: translateX(-100%);
+  } 
+  100% { 
+    transform: translateX(100%);
+    -webkit-transform: translateX(100%);
+  }
+}
+/* ------ */
