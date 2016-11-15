@@ -36,20 +36,20 @@ export const LaTeXViewer = React.createClass({
 			switch (this.props.renderType) {
 			case 'embed':
 			case 'static-embed':
-				return (<div>
+				return (<span>
 					<Style rules={ katexStyles } />
-					<div dangerouslySetInnerHTML={{__html: displayHTML}}></div>
-				</div>);
+					<span dangerouslySetInnerHTML={{__html: displayHTML}}></span>
+				</span>);
 			case 'full':
 			case 'static-full':
 			default:
-				return (<div>
+				return (<span>
 					<Style rules={ katexStyles } />
-					<div dangerouslySetInnerHTML={{__html: inlineHTML}}></div>
-				</div>);
+					<span dangerouslySetInnerHTML={{__html: inlineHTML}}></span>
+				</span>);
 			}
 		} catch (err) {
-			return (<div>ERROR: rendering latex equation</div>);
+			return (<span>ERROR: rendering latex equation</span>);
 		}
 	}
 });

@@ -97,7 +97,6 @@ export const DocumentEditor = React.createClass({
 			that.setState({participants: participants});
 		};
 
-
 		// Collaboration Authentication information
 		const atomID = safeGetInToJS(this.props.atomData, ['atomData', '_id']);
 		collab.doc_id = atomID;
@@ -106,49 +105,17 @@ export const DocumentEditor = React.createClass({
 		collab.token = token;
 		const img = safeGetInToJS(this.props.loginData, ['userData', 'image']);
 		collab.img = img;
-
-
 		collab.doc = {id: atomID};
-
 		this.collab = collab;
 
 		new ModServerCommunications(collab);
 		new ModCollab(collab);
 
-
-		/*
-		pm.on.change.add(function() {
-			that.collab.docInfo.changed = true;
-		});
-		*/
 		this.collab.mod.serverCommunications.init();
 		this.setSaveTimers();
 
-		// this.proseChange();
-
-		/*
-		pm.on.change.add((evt)=>{
-			this.proseChange();
-		});
-		*/
-
-		/*
-		pm.on.doubleClickOn.add((pos, node, nodePos)=>{
-			if (node.type.name === 'embed') {
-				const done = (attrs)=> {
-					pm.tr.setNodeType(nodePos, node.type, attrs).apply();
-				};
-				window.toggleMedia(pm, done, node);
-				return true;
-			}
-		});
-		*/
-
 		// pm.on.transformPastedHTML.add(this.transformHTML);
 
-		//
-
-		//
 	},
 
 	setConnectionStatus: function(status, statusMsg) {
@@ -247,17 +214,7 @@ export const DocumentEditor = React.createClass({
 
 
 	getHash: function() {
-		// const doc = this.collab.pm.mod.collab.versionDoc.copy();
 		const doc = this.pm.doc;
-		// We need to convert the footnotes from HTML to PM nodes and from that
-		// to JavaScript objects, to ensure that the attribute order of everything
-		// within the footnote will be the same in all browsers, so that the
-		// resulting checksums are the same.
-		// doc.descendants(function(node){
-		// 	if (node.type.name==='footnote') {
-		// 		node.attr.contents = this.mod.footnotes.fnEditor.htmlTofootnoteNode(node.attr.contents)
-		// 	}
-		// })
 		return MD5(JSON.parse(JSON.stringify(doc.toJSON())), {unorderedArrays: true});
 	},
 
@@ -474,6 +431,13 @@ export const DocumentEditor = React.createClass({
 		this.collab.docInfo = dataDocInfo;
 		this.collab.docInfo.changed = false;
 		this.collab.docInfo.titleChanged = false;
+	},
+
+	setDoc: function(doc) {
+		const pm = EditorState.create({
+			doc: pubSchema.nodeFromJSON(this.collab.doc.contents),
+			plugins: [pubpubSetup({schema: pubSchema}), collabEditing({version: this.collab.doc.version, clientID: userId})],
+		});
 	},
 
 	// Get updates to document and then send updates to the server

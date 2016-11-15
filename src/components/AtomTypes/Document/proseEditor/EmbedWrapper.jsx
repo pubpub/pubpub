@@ -52,6 +52,14 @@ export const EmbedWrapper = React.createClass({
 			);
 		}
 
+		if (this.props.align === 'inline') {
+			return (<span ref="embedroot" className={'pub-embed ' + this.props.className} id={this.props.id}>
+				<figure style={styles.figure({size: this.props.size, align: this.props.align})}>
+					<AtomViewerPane atomData={atomData} renderType={'embed'} context={this.props.context}/>
+			</figure>
+		</span>);
+		}
+
 		return (
 			<div ref="embedroot" className={'pub-embed ' + this.props.className} id={this.props.id}>
 				<figure style={styles.figure({size: this.props.size, align: this.props.align})}>

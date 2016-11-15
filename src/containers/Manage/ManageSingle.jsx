@@ -258,6 +258,7 @@ export const ManageSingle = React.createClass({
 						switch (this.props.atomType) {
 							case "image": return <FormattedMessage id="manage.createImage" defaultMessage="Create Image"/>;
 							case "reference": return <FormattedMessage id="manage.createReference" defaultMessage="Create Reference"/>;
+							case "latex": return <FormattedMessage id="manage.createLatex" defaultMessage="Create LaTeX"/>;
 							default:      return "Unknown Data Type";
 						}
 					})()}
@@ -286,13 +287,14 @@ export const ManageSingle = React.createClass({
 		        switch (this.props.atomType) {
 		          case "image": return <FormattedMessage id="manage.InsertImage" defaultMessage="Insert Image"/>;
 		          case "reference": return <FormattedMessage id="manage.InsertReference" defaultMessage="Insert Reference"/>;
+							case "latex": return <FormattedMessage id="manage.createLatex" defaultMessage="Create LaTeX"/>;
 		          default:      return "Unknown Data Type";
 		        }
 		      })()}
 					</h1>
 
 					{
-						(this.props.atomType === 'reference') ?
+						(this.props.atomType === 'reference' || this.props.atomType === 'latex') ?
 						<div>
 					<div className={'button'} onClick={this.createNew} style={styles.createNewButton}><FormattedMessage {...globalMessages.CreateNew}/></div>
 					</div>

@@ -53,15 +53,22 @@ const insertEmbed = (atomType, state, _, view, nodeType) => {
 	const idGenerationCallback = (nodeAttrs) => {
 		const randomId = Math.floor(Math.random()*10000000);
 		nodeAttrs.nodeId = randomId;
+    /*
+    if (atomType === 'latex') {
+      nodeAttrs.align = 'inline';
+    }
+    */
     view.props.onAction(view.state.tr.replaceSelection(nodeType.createAndFill(nodeAttrs)).action());
 		// callback(nodeAttrs);
 	};
   const nodesInDoc = ElementSchema.getElementsInDocument();
 
-  if (atomType === 'reference') {
-    window.toggleMedia(idGenerationCallback, schema.nodes.embed, atomType, nodesInDoc);
-  } else {
-    window.toggleMedia(idGenerationCallback, schema.nodes.block_embed, atomType, nodesInDoc);
+  switch(atomType) {
+    case 'reference':
+    case 'latex':
+      window.toggleMedia(idGenerationCallback, schema.nodes.embed, atomType, nodesInDoc);
+    case 'image':
+      window.toggleMedia(idGenerationCallback, schema.nodes.block_embed, atomType, nodesInDoc);
   }
 
 };
@@ -87,6 +94,18 @@ function insertReferenceEmbed(nodeType) {
     }
   })
 }
+
+function insertLatexEmbed(nodeType) {
+  return new MenuItem({
+    title: "Insert LateX",
+    label: "LaTeX",
+    select(state) { return canInsert(state, nodeType) },
+    run(state, _, view) {
+      insertEmbed('latex', state, _, view, nodeType);
+    }
+  })
+}
+
 
 
 
@@ -265,8 +284,11 @@ function buildMenuItems(schema) {
   if (type = schema.nodes.block_embed)
     r.insertImageEmbed = insertImageEmbed(type)
 
-  if (type = schema.nodes.embed)
+  if (type = schema.nodes.embed) {
+    r.insertLatexEmbed = insertLatexEmbed(type)
     r.insertReferenceEmbed = insertReferenceEmbed(type)
+  }
+
 
   if (type = schema.nodes.bullet_list)
     r.wrapBulletList = wrapListItem(type, {
@@ -334,6 +356,7 @@ function buildMenuItems(schema) {
   let cut = arr => arr.filter(x => x)
 
   r.moreinlineMenu = new Dropdown(cut([r.supMark, r.subMark, r.strikeMark]), {label: "..."})
+  // r.insertMenu = new Dropdown(cut([r.insertTable, r.insertImageEmbed, r.insertReferenceEmbed, r.insertLatexEmbed]), {label: "Insert"})
   r.insertMenu = new Dropdown(cut([r.insertTable, r.insertImageEmbed, r.insertReferenceEmbed]), {label: "Insert"})
   r.typeMenu = new Dropdown(cut([r.makeCodeBlock,r.insertPageBreak, r.insertHorizontalRule, r.makeHead3, r.makeHead4, r.makeHead5, r.makeHead6]), {label: "..."})
   let tableItems = cut([r.addRowBefore, r.addRowAfter, r.removeRow, r.addColumnBefore, r.addColumnAfter, r.removeColumn])
