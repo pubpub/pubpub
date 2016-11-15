@@ -1,7 +1,9 @@
 import Radium, {Style} from 'radium';
 import React, {PropTypes} from 'react';
 import {markdownParser, markdownSerializer, schema} from 'components/AtomTypes/Document/proseEditor';
+
 import {FormattedMessage} from 'react-intl';
+import { Link } from 'react-router';
 import {globalMessages} from 'utils/globalMessages';
 import {globalStyles} from 'utils/styleConstants';
 
@@ -14,6 +16,9 @@ let pm;
 export const SelectionPopup = React.createClass({
 	propTypes: {
 		addSelectionHandler: PropTypes.func,
+		loggedIn: PropTypes.bool,
+		loginQuery: PropTypes.string,
+		linkTarget: PropTypes.string,
 	},
 
 	getDefaultProps: function() {
@@ -27,6 +32,7 @@ export const SelectionPopup = React.createClass({
 			yLoc: 0,
 			popupEditor: false,
 			highlightObject: undefined,
+			title: '',
 		};
 	},
 
@@ -208,7 +214,7 @@ export const SelectionPopup = React.createClass({
 			markdown: markdownSerializer.serialize(pm.doc),
 		};
 
-		this.props.addSelectionHandler(versionContent, this.state.highlightObject);
+		this.props.addSelectionHandler(versionContent, this.state.highlightObject, this.state.title);
 		this.setState({
 			popupEditor: false,
 			popupVisible: false,
@@ -235,7 +241,7 @@ export const SelectionPopup = React.createClass({
 	},
 
 	render: function() {
-
+		const discussionString = <FormattedMessage id="pub.AddComment" defaultMessage="Add Discussion"/>;
 		return (
 			<div id="plugin-popup" className="plugin-popup" style={[styles.pluginPopup, this.getPluginPopupLoc(), this.state.popupVisible && styles.pluginPopupVisible]}>
 
@@ -244,16 +250,29 @@ export const SelectionPopup = React.createClass({
 				<div style={styles.pluginPopupArrow}></div>
 				<div style={styles.pluginContent}>
 					{!this.state.popupEditor &&
-						<div key={'addToComment Button'} style={styles.button} onClick={this.enableEditor}>
-							<FormattedMessage id="pub.AddComment" defaultMessage="Add Comment"/>
+						<div>
+							{this.props.loggedIn &&
+								<div key={'addToComment Button'} style={styles.button} onClick={this.enableEditor}>
+									{discussionString}
+								</div>
+							}
+							{!this.props.loggedIn &&
+								<Link target={this.props.linkTarget} to={'/login' + this.props.loginQuery} style={globalStyles.link}>
+									<div key={'addToComment Button'} style={styles.button}>
+										{discussionString}
+									</div>
+								</Link>
+							}
+
 						</div>
 					}
 
 
 					<div style={[{width: '300px'}, !this.state.popupEditor && {opacity: '0', pointerEvents: 'none', position: 'absolute'}]}>
+						<input type="text" placeholder={'Discussion Title'} value={this.state.title} onChange={(evt)=>{this.setState({title: evt.target.value});}} style={styles.title}/>
 						<div id="highlight-reply" style={styles.inputWrapper}></div>
-						<div className={'button'} style={styles.editorButton} onClick={this.disableEditor}> <FormattedMessage {...globalMessages.Cancel}/> </div>
-						<div className={'button'} style={styles.editorButton} onClick={this.onHighlightSave}> <FormattedMessage {...globalMessages.PublishReply}/> </div>
+						<button className={'button'} style={styles.editorButton} onClick={this.disableEditor}> <FormattedMessage {...globalMessages.Cancel}/> </button>
+						<button className={'button'} style={styles.editorButton} onClick={this.onHighlightSave}> {discussionString} </button>
 					</div>
 
 				</div>
@@ -305,6 +324,12 @@ styles = {
 		transform: 'rotate(45deg)',
 		boxShadow: '-1px -1px 1px 0px #9A9A9A',
 		zIndex: 4,
+	},
+	title: {
+		padding: '5px 5px',
+		width: 'calc(100% - 10px - 4px)',
+		margin: '6px 0px 0px',
+		fontSize: '0.9em',
 	},
 	pluginContent: {
 		position: 'relative',

@@ -235,11 +235,20 @@ export function featureAtom(req, res) {
 	// Check permission 
 
 	Link.createLink('featured', journalID, atomID, userID, now)
-	.then(function() {
-		return Link.setLinkInactive('submitted', atomID, journalID, userID, now, inactiveNote);
+	.then(function(newFeaturedLink) {
+		return [newFeaturedLink, Atom.findOne({_id: newFeaturedLink.destination}, {title: 1, slug: 1, description: 1, previewImage: 1, type: 1, isPublished: 1, }).lean().exec()];
+	}).spread(function(newFeaturedLink, featureDestination) {
+		const newFeaturedLinkPopulated = {
+			...newFeaturedLink.toObject(),
+			destination: featureDestination,
+		};
+		return [newFeaturedLinkPopulated, Link.setLinkInactive('submitted', atomID, journalID, userID, now, inactiveNote)];
 	})
-	.then(function(updatedSubmissionLink) {
-		return res.status(201).json(updatedSubmissionLink);
+	.spread(function(newFeaturedLinkPopulated, updatedSubmissionLink) {
+		return res.status(201).json({
+			featuredLink: newFeaturedLinkPopulated,
+			submittedLink: updatedSubmissionLink
+		});
 	})
 	.catch(function(error) {
 		console.log('error', error);

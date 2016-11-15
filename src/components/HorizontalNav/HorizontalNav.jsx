@@ -79,7 +79,7 @@ export const HorizontalNav = React.createClass({
 					{mobileNavButtons.slice(0, 2).map((option, index)=>{
 
 						if (option === null) {
-							return <div style={styles.contentNavLinkMobile}>&nbsp;</div>;
+							return <div key={'navItem-' + index} style={styles.contentNavLinkMobile}>&nbsp;</div>;
 						} else if (option.type === 'link') {
 							return <Link key={'navItem-' + index} style={styles.contentNavLinkMobile} to={option.link} onClick={this.closeMenu}>{option.text}</Link>;
 						} else if (option.type === 'button') {

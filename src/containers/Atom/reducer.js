@@ -39,6 +39,12 @@ import {
 	DELETE_CONTRIBUTOR_FAIL,
 } from './actions';
 
+import {
+	SET_YAY_NAY_LOAD,
+	SET_YAY_NAY_SUCCESS,
+	SET_YAY_NAY_FAIL,
+} from 'containers/Discussions/actions';
+
 /*--------*/
 // Load Actions
 /*--------*/
@@ -55,6 +61,7 @@ export const defaultState = Immutable.Map({
 	contributorsData: [],
 	submittedData: [],
 	featuredData: [],
+	replyParentData: {},
 	discussionsData: [],
 	loading: true,
 	error: null,
@@ -91,6 +98,7 @@ function getAtomDataSuccess(state, result) {
 		featuredData: result.featuredData,
 		discussionsData: result.discussionsData,
 		followersData: result.followersData,
+		replyParentData: result.replyParentData,
 		token: result.token,
 		tokenValid: result.tokenValid,
 		error: null
@@ -246,6 +254,53 @@ function deleteContributorSuccess(state, result) {
 	});
 }
 
+/* SetYayNay functions */
+/* ----------------------------- */
+function setYayNay(state, type, linkID, remove, userID) {
+	const discussionsData = state.get('discussionsData').toJS();
+	const replyData = discussionsData.filter((reply)=> {
+		return reply.linkData._id === linkID;
+	});
+	const yays = replyData[0].linkData.metadata.yays;
+	const nays = replyData[0].linkData.metadata.nays;
+	const yaysIndex = yays.indexOf(userID);
+	const naysIndex = nays.indexOf(userID);
+
+
+	if (type === 'yay' && yaysIndex === -1) { // Clicked yay, no existing yay, so add it
+		yays.push(userID);
+	}
+	if (type === 'yay' && yaysIndex !== -1) { // Clicked yay, existing yay, so remove it
+		yays.splice(yaysIndex, 1);
+	}
+	if (type === 'yay' && naysIndex !== -1) { // Clicked yay, existing nay, so remove it
+		nays.splice(naysIndex, 1);
+	}
+	if (type === 'nay' && naysIndex === -1) { // Clicked nay, no existing nay, so add it
+		nays.push(userID);
+	}
+	if (type === 'nay' && naysIndex !== -1) { // Clicked nay, existing nay, so remove it
+		nays.splice(naysIndex, 1);
+	}
+	if (type === 'nay' && yaysIndex !== -1) { // Clicked nay, existing yay, so remove it
+		yays.splice(yaysIndex, 1);
+	}
+	
+
+	const newDiscussionsData = discussionsData.map((reply)=> {
+		if (reply.linkData._id === linkID) {
+			reply.linkData.metadata.yays = yays;
+			reply.linkData.metadata.nays = nays;
+		}
+		return reply;
+	});
+
+	return state.merge({
+		discussionsData: ensureImmutable(newDiscussionsData)
+	});
+}
+
+
 /*--------*/
 // Bind actions to specific reducing functions.
 /*--------*/
@@ -309,6 +364,13 @@ export default function readerReducer(state = defaultState, action) {
 	case DELETE_CONTRIBUTOR_SUCCESS:
 		return deleteContributorSuccess(state, action.result);
 	case DELETE_CONTRIBUTOR_FAIL:
+		return state;
+
+	case SET_YAY_NAY_LOAD:
+		return setYayNay(state, action.voteType, action.linkID, action.remove, action.userID);
+	case SET_YAY_NAY_SUCCESS:
+		return state;
+	case SET_YAY_NAY_FAIL:
 		return state;
 
 	default:

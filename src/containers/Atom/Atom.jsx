@@ -35,9 +35,6 @@ const StickyContainer = Radium(UnwrappedStickyContainer);
 
 // import {createHighlight} from 'containers/MediaLibrary/actions';
 
-
-
-
 let styles = {};
 let interval;
 
@@ -45,6 +42,7 @@ export const Atom = React.createClass({
 	propTypes: {
 		atomData: PropTypes.object,
 		loginData: PropTypes.object,
+		pathname: PropTypes.string,
 		slug: PropTypes.string,
 		query: PropTypes.object, // version: hash
 		meta: PropTypes.string,
@@ -123,9 +121,9 @@ export const Atom = React.createClass({
 		// If we create a new document, transition properly
 		const oldSlug = safeGetInToJS(this.props.atomData, ['atomData', 'slug']);
 		const newSlug = safeGetInToJS(nextProps.atomData, ['atomData', 'slug']);
-		if (newSlug !== undefined && this.props.meta === nextProps.meta && oldSlug !== newSlug) {
-			this.props.dispatch(push('/pub/' + newSlug + '/edit'));
-		}
+		// if (newSlug !== undefined && this.props.meta === nextProps.meta && oldSlug !== newSlug) {
+		// 	this.props.dispatch(push('/pub/' + newSlug + '/edit'));
+		// }
 	},
 
 	componentDidMount() {
@@ -226,7 +224,7 @@ export const Atom = React.createClass({
 	// 	smoothScroll(destination);
 	// },
 
-	addSelection: function(versionContent, highlightObject) {
+	addSelection: function(versionContent, highlightObject, title) {
 
 		highlightObject.sourcePub = safeGetInToJS(this.props.atomData, ['atomData', '_id']);
 		highlightObject.sourceVersion = safeGetInToJS(this.props.atomData, ['currentVersionData', '_id']);
@@ -236,7 +234,8 @@ export const Atom = React.createClass({
 		const discussionsData = safeGetInToJS(this.props.atomData, ['discussionsData']) || [];
 		const rootReply = discussionsData.length ? discussionsData[0].linkData.metadata.rootReply : atomData._id;
 		const replyToID = atomData._id;
-		this.props.dispatch(createReplyDocument(atomType, versionContent, 'Reply', replyToID, rootReply, highlightObject));
+		const newTitle = title || 'Reply';
+		this.props.dispatch(createReplyDocument(atomType, versionContent, newTitle, replyToID, rootReply, highlightObject));
 	},
 
 	mobileToggleDiscussions: function() {
@@ -257,6 +256,9 @@ export const Atom = React.createClass({
 		const atomData = safeGetInToJS(this.props.atomData, ['atomData']) || {};
 		const isEditor = this.props.meta === 'edit';
 		const isDiscussions = this.props.meta === 'discussions';
+
+		const loggedIn = this.props.loginData && this.props.loginData.get('loggedIn');
+		const loginQuery = this.props.pathname && this.props.pathname !== '/' ? '?redirect=' + this.props.pathname : ''; // Query appended to login route. Used to redirect to a given page after succesful login.
 
 		// The editor must not be indexed by search engines, so add a noindex.
 		// The reader must provide metadata for popular embed tags and proper SEO performance.
@@ -292,6 +294,7 @@ export const Atom = React.createClass({
 		const contributorsData = safeGetInToJS(this.props.atomData, ['contributorsData']) || [];
 		const featuredData = safeGetInToJS(this.props.atomData, ['featuredData']) || [];
 		const followersData = safeGetInToJS(this.props.atomData, ['followersData']) || [];
+		const replyParentData = safeGetInToJS(this.props.atomData, ['replyParentData']) || {};
 		const versionsData = safeGetInToJS(this.props.atomData, ['versionsData']) || [];
 
 		const currentVersionContent = safeGetInToJS(this.props.atomData, ['currentVersionData', 'content']) || {};
@@ -313,13 +316,15 @@ export const Atom = React.createClass({
 		const linkTarget = isEmbed ? '_parent' : '_self';
 
 		const mobileNavButtons = [
-			(isEditor) ? null : { type: 'button', mobile: true, text: <FormattedMessage {...globalMessages.Contents}/>, action: this.mobileToggleContents },
-			{ type: 'button', mobile: true, text: <FormattedMessage {...globalMessages.Discussions}/>, action: this.mobileToggleDiscussions },
+			// (isEditor) ? null : { type: 'button', mobile: true, text: <FormattedMessage {...globalMessages.Contents}/>, action: this.mobileToggleContents },
+			null,
+			// { type: 'button', mobile: true, text: <FormattedMessage {...globalMessages.Discussions}/>, action: this.mobileToggleDiscussions },
+			{ type: 'link', mobile: true, text: <FormattedMessage {...globalMessages.Discussions}/>, link: '/pub/' + this.props.slug + '/discussions'},
 		// 	{ type: 'button', mobile: true, text: <FormattedMessage {...globalMessages.Menu}/>, action: undefined },
 		];
 
 		if (this.props.meta === 'discussions') {
-			mobileNavButtons[0] = { type: 'link', mobile: true, text: <FormattedMessage {...globalMessages.View}/>, link: '/pub/' + this.props.slug };
+			mobileNavButtons[1] = { type: 'link', mobile: true, text: <FormattedMessage {...globalMessages.View}/>, link: '/pub/' + this.props.slug };
 		}
 
 		/* Nav Items that show above the main content */
@@ -399,7 +404,7 @@ export const Atom = React.createClass({
 
 					{/* Atom Header and Body */}
 					{/* -------------------- */}
-					<div style={[styles.atomWrapper, !this.state.showRightPanel && styles.atomWrapperFull, , !this.state.showRightPanel && isEditor && styles.atomWrapperFullEditor]}>
+					<div style={[styles.atomWrapper, !this.state.showRightPanel && styles.atomWrapperFull, !this.state.showRightPanel && isEditor && styles.atomWrapperFullEditor]}>
 						{ error &&
 							<div style={styles.errorMsg}>{error}</div>
 						}
@@ -425,6 +430,12 @@ export const Atom = React.createClass({
 									}
 									canEdit={permissionType === 'author' || permissionType === 'editor'}
 									style={styles.headerWrapper}/>
+
+								{/* Reply Parent Link */}
+								{/* ----------------- */}
+								{replyParentData.destination &&
+									<Link to={'/pub/' + replyParentData.destination.slug} style={styles.replyParentLink} className={'underlineOnHover'}>Reply To: {replyParentData.destination.title}</Link>
+								}
 
 								{/* Atom Contributors */}
 								{/* ----------------- */}
@@ -547,8 +558,8 @@ export const Atom = React.createClass({
 							</div>
 						}
 
-						{!isEditor && !error && isDiscussions && atomData.type === 'document' &&
-							<SelectionPopup addSelectionHandler={this.addSelection} />
+						{!isEditor && !error && !isDiscussions && atomData.type === 'document' &&
+							<SelectionPopup addSelectionHandler={this.addSelection} loggedIn={loggedIn} loginQuery={loginQuery} linkTarget={linkTarget}/>
 						}
 
 					</div>
@@ -588,6 +599,7 @@ export default connect( state => {
 		loginData: state.login,
 		slug: state.router.params.slug,
 		meta: state.router.params.meta,
+		pathname: state.router.location.pathname,
 		query: state.router.location.query,
 	};
 })( Radium(Atom) );
@@ -686,8 +698,9 @@ styles = {
 		top: 0,
 		transition: '.15s ease-in-out transform',
 		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
-			display: 'block',
-			width: '100vw',
+			// display: 'block',
+			// width: '100vw',
+			display: 'none'
 		},
 	},
 	toggleRightPanelButton: {
@@ -702,7 +715,10 @@ styles = {
 		zIndex: 1,
 		borderLeft: '1px dashed #808284',
 		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
-			display: 'none',
+			// display: 'block',
+			// borderLeft: 'none',
+			opacity: '0',
+			pointerEvents: 'none',
 		},
 	},
 	toggleRightPanelLine: {
@@ -795,6 +811,13 @@ styles = {
 		marginTop: '10px',
 		display: 'inline-block',
 		padding: '0em .5em',
+	},
+	replyParentLink: {
+		paddingBottom: '1em',
+		fontSize: '.85em',
+		color: '#808284',
+		textDecoration: 'none',
+		display: 'block',
 	},
 
 };

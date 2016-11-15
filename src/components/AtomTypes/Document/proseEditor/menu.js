@@ -356,8 +356,7 @@ function buildMenuItems(schema) {
   let cut = arr => arr.filter(x => x)
 
   r.moreinlineMenu = new Dropdown(cut([r.supMark, r.subMark, r.strikeMark]), {label: "..."})
-  // r.insertMenu = new Dropdown(cut([r.insertTable, r.insertImageEmbed, r.insertReferenceEmbed, r.insertLatexEmbed]), {label: "Insert"})
-  r.insertMenu = new Dropdown(cut([r.insertTable, r.insertImageEmbed, r.insertReferenceEmbed]), {label: "Insert"})
+  r.insertMenu = new Dropdown(cut([r.insertTable, r.insertImageEmbed, r.insertReferenceEmbed, r.insertLatexEmbed]), {label: "Insert"})
   r.typeMenu = new Dropdown(cut([r.makeCodeBlock,r.insertPageBreak, r.insertHorizontalRule, r.makeHead3, r.makeHead4, r.makeHead5, r.makeHead6]), {label: "..."})
   let tableItems = cut([r.addRowBefore, r.addRowAfter, r.removeRow, r.addColumnBefore, r.addColumnAfter, r.removeColumn])
   if (tableItems.length)

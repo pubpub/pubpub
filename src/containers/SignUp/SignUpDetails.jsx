@@ -61,10 +61,12 @@ export const SignUpDetails = React.createClass({
 
 	cancelImageUpload: function() {
 		this.setState({userImageFile: null});
+		document.getElementById('userImage').value = null;
 	},
 
 	userImageUploaded: function(url) {
 		this.setState({userImageFile: null, userImageURL: url});
+		document.getElementById('userImage').value = null;
 	},
 
 	render: function() {

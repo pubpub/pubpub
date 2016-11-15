@@ -48,7 +48,7 @@ export const AboutPubs = React.createClass({
 				slug: 'cannibalism_by_a_barred_owl',
 				title: 'Cannibalism by a Barred Owl',
 				previewImage: 'https://assets.pubpub.org/sqjisolp/1470270304869.jpg',
-				description: 'Front-line journalists are high-value targets, and their enemies will spare no expense to silence them. Unfortunately, journalists can be betrayed by their own tools.'
+				description: 'I observed that the owl was perched on the carcass of a second Barred Owl.'
 			},
 			{
 				slug: 'ageofentanglement',

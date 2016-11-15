@@ -1,24 +1,30 @@
-import React, {PropTypes} from 'react';
-import Radium from 'radium';
-// import {safeGetInToJS} from 'utils/safeParse';
 import dateFormat from 'dateformat';
-import { Link } from 'react-router';
+import Radium from 'radium';
+import React, {PropTypes} from 'react';
 import {renderReactFromJSON} from 'components/AtomTypes/Document/proseEditor';
-import {globalStyles} from 'utils/styleConstants';
-import {globalMessages} from 'utils/globalMessages';
 import {FormattedMessage} from 'react-intl';
+import { Link } from 'react-router';
+import {globalMessages} from 'utils/globalMessages';
+import {globalStyles} from 'utils/styleConstants';
+
+import DiscussionThreadInput from './DiscussionThreadInput';
+
+// import {safeGetInToJS} from 'utils/safeParse';
 
 let styles = {};
 
-export const DiscussionItem = React.createClass({
+export const DiscussionThread = React.createClass({
 	propTypes: {
 		discussionData: PropTypes.object,
 		userID: PropTypes.string,
 		setReplyTo: PropTypes.func,
 		index: PropTypes.string,
 		isPreview: PropTypes.bool,
+		loggedIn: PropTypes.bool,
+		loginQuery: PropTypes.string,
 		linkTarget: PropTypes.string,
 		handleVoteSubmit: PropTypes.func,
+		publishThreadReply: PropTypes.func,
 	},
 
 	getInitialState() {
@@ -59,11 +65,15 @@ export const DiscussionItem = React.createClass({
 
 		return (
 			<div>
+				{discussion.linkData.destination === discussion.linkData.metadata.rootReply &&
+					<div style={styles.threadTitle}>{atomData.title.substring(0, 5) === 'Reply' ? ('Discussion by ' + authorsData[0].source.name) : atomData.title}</div>
+				}
 				<div style={styles.discussionHeader}>
-					<div style={styles.headerVotes}>
+
+					{/* <div style={styles.headerVotes}>
 						<div className={'lighter-bg-hover'} style={[styles.headerVote, hasYayd && styles.voteActive]} onClick={this.vote.bind(this, 'yay')}>^</div>
 						<div className={'lighter-bg-hover'} style={[styles.headerVote, styles.headerDownVote, hasNayd && styles.voteActive]} onClick={this.vote.bind(this, 'nay')}>^</div>
-					</div>
+					</div> */}
 					<div style={styles.headerDetails}>
 						{authorsData.map((authorLink, authorIndex)=> {
 							return (
@@ -73,29 +83,30 @@ export const DiscussionItem = React.createClass({
 									</div>
 									<div style={styles.authorDetails}>
 										<Link target={this.props.linkTarget} style={globalStyles.link} to={'/user/' + authorLink.source.username}>{authorLink.source.name}</Link>
+										<span style={styles.discussionFooterItem}>{dateFormat(date, 'mmm dd, yyyy h:MM TT')}</span>
 									</div>
 								</div>
 							);
 						})}
+
 					</div>
 				</div>
 				<div className={'atom-reply'} style={styles.discussionContent}>
 					{!versionData.isPublished &&
 						<div style={styles.privateDiscussion}>
-							<FormattedMessage id="discussionItem.PrivateDiscussion" defaultMessage="Private Discussion"/>						
+							<FormattedMessage id="discussionItem.PrivateDiscussion2" defaultMessage="Private Discussion"/>
 						</div>
 					}
 					{renderReactFromJSON(docJSON && docJSON.content, true)}
 				</div>
 				<div style={[styles.discussionFooter, this.props.isPreview && {display: 'none'}]}>
-					<Link target={this.props.linkTarget} style={globalStyles.link} to={'/pub/' + versionData.parent}><span className={'underlineOnHover'} style={styles.discussionFooterItem}>{dateFormat(date, 'mmm dd, yyyy h:MM TT')}</span></Link>
-					<span className={'underlineOnHover'} style={styles.discussionFooterItem} onClick={this.setReply}>
-						<FormattedMessage {...globalMessages.Reply}/>
-					</span>
+					{/* <Link target={this.props.linkTarget} style={globalStyles.link} to={'/pub/' + versionData.parent}><span className={'underlineOnHover'} style={styles.discussionFooterItem}>{dateFormat(date, 'mmm dd, yyyy h:MM TT')}</span></Link> */}
 					{/* <span className={'underlineOnHover'} style={styles.discussionFooterItem} onClick={this.setFlag}>flag</span> */}
+					{/*
 					<Link target={this.props.linkTarget} style={globalStyles.link} to={'/pub/' + versionData.parent}><span className={'underlineOnHover'} style={styles.discussionFooterItem}>
 						<FormattedMessage {...globalMessages.Permalink}/>
 					</span></Link>
+					*/}
 
 					<div id={'input-placeholder-' + atomData._id}></div>
 
@@ -103,28 +114,38 @@ export const DiscussionItem = React.createClass({
 
 				<div style={styles.children}>
 					{children.sort((foo, bar)=> {
-						const fooScore = foo.linkData.metadata.yays.length - foo.linkData.metadata.nays.length;
-						const barScore = bar.linkData.metadata.yays.length - bar.linkData.metadata.nays.length;
-						if (fooScore > barScore) { return -1; }
-						if (fooScore < barScore) { return 1; }
+						// const fooScore = foo.linkData.metadata.yays.length - foo.linkData.metadata.nays.length;
+						// const barScore = bar.linkData.metadata.yays.length - bar.linkData.metadata.nays.length;
+						// if (fooScore > barScore) { return -1; }
+						// if (fooScore < barScore) { return 1; }
+						// return 0;
+						const fooDate = foo.linkData.createDate;
+						const barDate = bar.linkData.createDate;
+						if (fooDate > barDate) { return 1; }
+						if (fooDate < barDate) { return -1; }
 						return 0;
 					}).map((child, childIndex)=> {
-						return <WrappedDiscussionItem linkTarget={this.props.linkTarget} discussionData={child} userID={this.props.userID} setReplyTo={this.props.setReplyTo} index={child.linkData._id} key={child.linkData._id} handleVoteSubmit={this.props.handleVoteSubmit}/>;
+						return <WrappedDiscussionThread loginQuery={this.props.loginQuery} loggedIn={this.props.loggedIn} linkTarget={this.props.linkTarget} discussionData={child} userID={this.props.userID} setReplyTo={this.props.setReplyTo} index={child.linkData._id} key={child.linkData._id} handleVoteSubmit={this.props.handleVoteSubmit}/>;
 					})}
 				</div>
+
+				{discussion.linkData.destination === discussion.linkData.metadata.rootReply &&
+					<DiscussionThreadInput publishThreadReply={this.props.publishThreadReply} loginQuery={this.props.loginQuery} loggedIn={this.props.loggedIn} linkTarget={this.props.linkTarget}/>
+				}
+
 
 			</div>
 		);
 	}
 });
 
-const WrappedDiscussionItem = Radium(DiscussionItem);
-export default WrappedDiscussionItem;
+const WrappedDiscussionThread = Radium(DiscussionThread);
+export default WrappedDiscussionThread;
 
 styles = {
 	children: {
-		paddingLeft: '1em',
-		borderLeft: '1px solid #E0E0E0',
+		// paddingLeft: '1em',
+		// borderLeft: '1px solid #E0E0E0',
 	},
 	// wsywigBlock: {
 	// 	width: '100%',
@@ -136,8 +157,8 @@ styles = {
 	discussionHeader: {
 		display: 'table',
 		position: 'relative',
-		left: '-.4em',
-		width: 'calc(100% + .4em)'
+		// left: '-.4em',
+		// width: 'calc(100% + .4em)'
 	},
 	headerVotes: {
 		display: 'table-cell',
@@ -186,14 +207,14 @@ styles = {
 	},
 	discussionFooter: {
 		borderBottom: '1px solid #BBBDC0',
-		marginBottom: '1em',
-		paddingBottom: '1em',
+		margin: '0em -2em 1em -2em',
+		padding: '0em 2em 1em'
 	},
 	discussionFooterItem: {
 		padding: '0em 1em 0em 0em',
 		fontSize: '0.75em',
-		cursor: 'pointer',
 		color: '#58585B',
+		display: 'block',
 	},
 	privateDiscussion: {
 		backgroundColor: '#363736',
@@ -201,6 +222,11 @@ styles = {
 		textAlign: 'center',
 		borderRadius: '1px',
 		fontSize: '0.85em',
-	}
+	},
+	threadTitle: {
+		fontWeight: 'bold',
+		padding: '1em 0em',
+		fontSize: '1.2em',
+	},
 
 };

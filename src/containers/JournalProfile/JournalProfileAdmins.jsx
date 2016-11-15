@@ -43,7 +43,7 @@ export const JournalProfileAdmins = React.createClass({
 			const responseArray = response.body || [];
 			const options = responseArray.map((item)=>{
 				return {
-					value: item.slug,
+					value: item.username,
 					label: item.name,
 					slug: item.username,
 					image: item.image,

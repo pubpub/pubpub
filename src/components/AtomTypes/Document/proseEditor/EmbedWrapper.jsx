@@ -1,5 +1,6 @@
-import AtomViewerPane from 'containers/Atom/AtomViewerPane';
 import React, {PropTypes} from 'react';
+
+import AtomViewerPane from 'containers/Atom/AtomViewerPane';
 import {ensureImmutable} from 'reducers';
 
 // import {safeGetInToJS} from 'utils/safeParse';
@@ -67,9 +68,11 @@ export const EmbedWrapper = React.createClass({
 					<AtomViewerPane atomData={atomData} renderType={'embed'} context={this.props.context}/>
 				</div>
 			<figcaption style={styles.caption({size: this.props.size, align: this.props.align})}>
+				{!!this.props.caption &&
 				<span className="caption" style={styles.captionText({align: this.props.align})}>
 					{this.props.caption}
 				</span>
+			}
 			</figcaption>
 			</figure>
 			</div>

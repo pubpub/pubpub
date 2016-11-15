@@ -201,6 +201,7 @@ export const JournalProfile = React.createClass({
 							return (
 								<JournalProfileFeatured
 									journalData={this.props.journalData}
+									handleFeatureAtom={this.handleFeatureAtom}
 									handleCollectionsChange={this.handleCollectionsChange}/>
 							);
 						case 'submitted':

@@ -442,6 +442,12 @@ export function getAtomData(req, res) {
 			}
 		});
 
+		const getReplyLink = Link.findOne({source: atomResult._id, type: 'reply'}).populate({
+			path: 'destination',
+			model: Atom,
+			select: 'slug title previewImage description',
+		}).exec();
+
 		const tasks = [
 			getAuthors,
 			getVersion,
@@ -452,6 +458,7 @@ export function getAtomData(req, res) {
 			getDiscussions,
 			getFollowers,
 			getEditToken,
+			getReplyLink,
 		];
 
 		return [atomResult, Promise.all(tasks)];
@@ -495,6 +502,7 @@ export function getAtomData(req, res) {
 			featuredData: taskData[5],
 			discussionsData: discussionsData,
 			followersData: taskData[7],
+			replyParentData: taskData[9],
 			token: token,
 			collab: !!token,
 		});
@@ -507,7 +515,7 @@ export function getAtomData(req, res) {
 
 		if (error.message === 'Atom has not been published') {
 			console.log(error.message);
-			return res.status(403).json({message: 'Atom has not been published', permissionType: permissionType });
+			return res.status(403).json({message: 'Document has not been published', permissionType: permissionType });
 		}
 
 		console.log('error', error);
@@ -931,5 +939,4 @@ export function uploadDocx(req, res) {
 		return res.status(500).json(error);
 	});
 }
-
 app.post('/uploadDocx', uploadDocx);

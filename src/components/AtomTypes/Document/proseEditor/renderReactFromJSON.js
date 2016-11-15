@@ -1,8 +1,7 @@
-import murmurhash from 'murmurhash';
-import React from 'react';
-
 import EmbedWrapper from './EmbedWrapper';
 import Pointer from './Pointer';
+import React from 'react';
+import murmurhash from 'murmurhash';
 
 let citeCounts = {};
 let citeObjects = {};
@@ -70,6 +69,14 @@ export const renderReactFromJSON = function(item, isRoot) {
 					return previous;
 				}
 			}, node.text);
+
+		case 'table':
+			return <table key={index}>{renderReactFromJSON(node.content)}</table>;
+		case 'table_row':
+			return <tr key={index}>{renderReactFromJSON(node.content)}</tr>;
+		case 'table_cell':
+			return <td key={index}>{renderReactFromJSON(node.content)}</td>;
+
 		case 'embed':
 			let citeCount;
 			if (node.attrs.data._id in citeCounts) {
