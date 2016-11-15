@@ -4,6 +4,8 @@ exports.createSimpleEditor = (place, doc) => {
   const {pubpubSetup} = require('./pubpubSetup');
   const {EditorState} = require('prosemirror-state');
   const {EditorView} = require('prosemirror-view');
+  const {defaultMarkdownParser, defaultMarkdownSerializer} = require("prosemirror-markdown");
+
   // const {clipboardParser, clipboardSerializer} = require('./proseEditor/clipboardSerializer');
 
   /*
@@ -30,10 +32,15 @@ exports.createSimpleEditor = (place, doc) => {
       return view.state.doc.toJSON();
     },
     toMarkdown: () => {
-      return '';
+      const markdown = defaultMarkdownSerializer.serialize(view.state.doc);
+      return markdown;
     },
     focus: () => {
       view.focus();
+    },
+    clear: () => {
+      const newState = EditorState.create({schema: pubSchema});
+      view.updateState(newState);
     },
   };
 

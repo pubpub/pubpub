@@ -1,19 +1,18 @@
-import dateFormat from 'dateformat';
-import Radium from 'radium';
 import React, {PropTypes} from 'react';
-import {renderReactFromJSON} from 'components/AtomTypes/Document/proseEditor';
-import {schema} from 'components/AtomTypes/Document/proseEditor';
-import {markdownSerializer} from 'components/AtomTypes/Document/proseEditor';
+
 import {FormattedMessage} from 'react-intl';
 import { Link } from 'react-router';
+import Radium from 'radium';
 import {StoppableSubscription} from 'subscription';
+import {createSimpleEditor} from 'components/AtomTypes/Document/proseEditor';
+import dateFormat from 'dateformat';
 import {globalMessages} from 'utils/globalMessages';
 import {globalStyles} from 'utils/styleConstants';
+
 // import {safeGetInToJS} from 'utils/safeParse';
 
 
 let styles = {};
-let pmThread;
 
 export const DiscussionThreadInput = React.createClass({
 	propTypes: {
@@ -25,6 +24,7 @@ export const DiscussionThreadInput = React.createClass({
 	},
 
 	getInitialState() {
+		this.editor = null;
 		return {
 			title: '',
 			error: undefined,
@@ -37,29 +37,7 @@ export const DiscussionThreadInput = React.createClass({
 
 		const place = document.getElementById('reply-thread-input');
 		if (!place) { return undefined; }
-		pmThread = new prosemirror.ProseMirror({
-			place: place,
-			schema: schema,
-			plugins: [pubpubSetup.config({menuBar: false, tooltipMenu: false})],
-			doc: null,
-			on: {
-				doubleClickOn: new StoppableSubscription,
-			}
-		});
-
-		// pmThread.on.change.add((evt)=>{
-		// 	this.proseChange();
-		// });
-
-		pmThread.on.doubleClickOn.add((pos, node, nodePos)=>{
-			if (node.type.name === 'embed') {
-				const done = (attrs)=> {
-					pmThread.tr.setNodeType(nodePos, node.type, attrs).apply();
-				};
-				window.toggleMedia(pmThread, done, node);
-				return true;
-			}
-		});
+		this.editor = createSimpleEditor(place);
 	},
 
 	submitThreadReply: function() {
@@ -67,12 +45,12 @@ export const DiscussionThreadInput = React.createClass({
 			return this.setState({error: 'A discussion title is required.'});
 		}
 
-		const markdown = markdownSerializer.serialize(pmThread.doc);
+		const markdown = this.editor.toMarkdown();
 		if (!markdown) {
 			return this.setState({error: 'Discussion content is required.'});
 		}
 
-		this.props.publishThreadReply(this.state.title, pmThread);
+		this.props.publishThreadReply(this.state.title, this.editor);
 	},
 
 	render: function() {

@@ -44,7 +44,7 @@ export const SelectionPopup = React.createClass({
 
 		const place = document.getElementById('highlight-reply');
 		if (!place) { return undefined; }
-		this.pm = createSimpleEditor(place);
+		this.editor = createSimpleEditor(place);
 	},
 
 
@@ -169,7 +169,7 @@ export const SelectionPopup = React.createClass({
 			popupEditor: true,
 			highlightObject: highlightObject,
 		});
-		this.pm.focus();
+		this.editor.focus();
 	},
 	disableEditor: function() {
 		this.setState({
@@ -179,7 +179,7 @@ export const SelectionPopup = React.createClass({
 		});
 		this.clearTempHighlights();
 		this.clearTempHighlights();
-		// pm.setDoc(markdownParser.parse(''));
+		this.editor.clear();
 	},
 
 	onHighlightSave: function() {
@@ -201,8 +201,8 @@ export const SelectionPopup = React.createClass({
 		// };
 
 		const versionContent = {
-			docJSON: this.pm.toJSON(),
-			markdown: this.pm.toMarkdown(),
+			docJSON: this.editor.toJSON(),
+			markdown: this.editor.toMarkdown(),
 		};
 
 		this.props.addSelectionHandler(versionContent, this.state.highlightObject, this.state.title);

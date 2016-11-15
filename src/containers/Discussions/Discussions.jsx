@@ -166,19 +166,19 @@ export const Discussions = React.createClass({
 		this.clearReplyTo();
 	},
 
-	publishThreadReply: function(title, pmThread) {
+	publishThreadReply: function(title, inputEditor) {
 		const atomType = 'document';
 		const cleanedTitle = title || 'Reply';
 		const versionContent = {
-			docJSON: pmThread.doc.toJSON(),
-			markdown: markdownSerializer.serialize(pmThread.doc),
+			docJSON: inputEditor.toJSON(),
+			markdown: inputEditor.toMarkdown(),
 		};
 
 		this.props.dispatch(createReplyDocument(atomType, versionContent, cleanedTitle.trim(), this.state.replyToID, this.state.rootReply));
 		if (title) {
 			this.setState({newThread: undefined});
 		}
-		pmThread.setDoc(markdownParser.parse(''));
+		inputEditor.clear();
 
 	},
 
