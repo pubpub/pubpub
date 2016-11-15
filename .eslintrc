@@ -24,7 +24,7 @@
     "comma-dangle": 0,
     "comma-spacing": 1,
     "no-console": 0,
-    "no-multiple-empty-lines": 1,
+    "no-multiple-empty-lines": 0,
     "no-undef": 1,
     "no-loop-func": 0,
     "no-debugger": 0,

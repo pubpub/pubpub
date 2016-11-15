@@ -71,11 +71,11 @@ export const renderReactFromJSON = function(item, isRoot) {
 			}, node.text);
 
 		case 'table':
-			return <table key={index}>{renderReactFromJSON(node.content)}</table>;
+			return <table key={index}><tbody>{renderReactFromJSON(node.content)}</tbody></table>;
 		case 'table_row':
-			return <tr key={index}>{renderReactFromJSON(node.content)}</tr>;
+			return <tr>{renderReactFromJSON(node.content)}</tr>;
 		case 'table_cell':
-			return <td key={index}>{renderReactFromJSON(node.content)}</td>;
+			return <td>{renderReactFromJSON(node.content)}</td>;
 
 		case 'embed':
 			let citeCount;

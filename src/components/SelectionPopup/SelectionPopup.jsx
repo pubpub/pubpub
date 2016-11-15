@@ -1,9 +1,9 @@
 import Radium, {Style} from 'radium';
 import React, {PropTypes} from 'react';
-import {markdownParser, markdownSerializer, schema} from 'components/AtomTypes/Document/proseEditor';
 
 import {FormattedMessage} from 'react-intl';
 import { Link } from 'react-router';
+import {createSimpleEditor} from 'components/AtomTypes/Document/proseEditor';
 import {globalMessages} from 'utils/globalMessages';
 import {globalStyles} from 'utils/styleConstants';
 
@@ -11,7 +11,6 @@ let Marklib = undefined;
 let Rangy = undefined;
 
 let styles = {};
-let pm;
 
 export const SelectionPopup = React.createClass({
 	propTypes: {
@@ -26,6 +25,7 @@ export const SelectionPopup = React.createClass({
 	},
 
 	getInitialState() {
+		// this.pm = null;
 		return {
 			popupVisible: false,
 			xLoc: 0,
@@ -42,18 +42,9 @@ export const SelectionPopup = React.createClass({
 		require('rangy/lib/rangy-textrange.js');
 		document.getElementById('atom-viewer').addEventListener('mouseup', this.onMouseUp);
 
-		const prosemirror = require('prosemirror');
-		const {pubpubSetup} = require('components/AtomTypes/Document/proseEditor/pubpubSetup');
-
 		const place = document.getElementById('highlight-reply');
 		if (!place) { return undefined; }
-		pm = new prosemirror.ProseMirror({
-			place: place,
-			schema: schema,
-			plugins: [pubpubSetup.config({menuBar: false, tooltipMenu: false})],
-			doc: null,
-		});
-
+		this.pm = createSimpleEditor(place);
 	},
 
 
@@ -178,7 +169,7 @@ export const SelectionPopup = React.createClass({
 			popupEditor: true,
 			highlightObject: highlightObject,
 		});
-		pm.focus();
+		this.pm.focus();
 	},
 	disableEditor: function() {
 		this.setState({
@@ -188,7 +179,7 @@ export const SelectionPopup = React.createClass({
 		});
 		this.clearTempHighlights();
 		this.clearTempHighlights();
-		pm.setDoc(markdownParser.parse(''));
+		// pm.setDoc(markdownParser.parse(''));
 	},
 
 	onHighlightSave: function() {
@@ -210,8 +201,8 @@ export const SelectionPopup = React.createClass({
 		// };
 
 		const versionContent = {
-			docJSON: pm.doc.toJSON(),
-			markdown: markdownSerializer.serialize(pm.doc),
+			docJSON: this.pm.toJSON(),
+			markdown: this.pm.toMarkdown(),
 		};
 
 		this.props.addSelectionHandler(versionContent, this.state.highlightObject, this.state.title);
@@ -223,7 +214,7 @@ export const SelectionPopup = React.createClass({
 
 		this.clearTempHighlights();
 		this.clearTempHighlights();
-		pm.setDoc(markdownParser.parse(''));
+		// pm.setDoc(markdownParser.parse(''));
 	},
 
 	clearTempHighlights: function() {

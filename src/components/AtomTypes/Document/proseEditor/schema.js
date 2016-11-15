@@ -1,8 +1,8 @@
-import {Schema, Fragment, Mark, NodeType, MarkType, DOMParser, DOMSerializer} from 'prosemirror-model';
-import {addListNodes} from 'prosemirror-schema-list';
-import {addTableNodes} from 'prosemirror-schema-table';
+import {DOMParser, DOMSerializer, Fragment, Mark, MarkType, NodeType, Schema} from 'prosemirror-model';
 
 import ElementSchema from './elementSchema';
+import {addListNodes} from 'prosemirror-schema-list';
+import {addTableNodes} from 'prosemirror-schema-table';
 import {schema as basicSchema} from './schema-basic';
 
 // ;; An inline embed node type. Has these attributes:
@@ -68,7 +68,6 @@ const Embed = {
 		tag: 'span.embed',
 		getAttrs: dom => {
 			const nodeId = dom.getAttribute('data-nodeId');
-      console.log('Creating Embed');
 			const nodeAttrs = ElementSchema.findNodeById(nodeId).attrs;
 			return {
 				source: nodeAttrs.source,
@@ -111,7 +110,6 @@ const BlockEmbed = {
 		tag: 'div.block-embed',
 		getAttrs: dom => {
 			const nodeId = dom.getAttribute('data-nodeId');
-      console.log('Creating block Embed');
 			const nodeAttrs = ElementSchema.findNodeById(nodeId).attrs;
 			return {
 				source: nodeAttrs.source,
@@ -143,6 +141,14 @@ export const schema = new Schema({
 	nodes: tableSchema,
 	marks: basicSchema.markSpec.addBefore('code', 'sub', SubMark).addBefore('code', 'sup', SupMark).addBefore('code', 'strike', StrikeThroughMark)
 });
+
+export const createSchema = () => {
+  return new Schema({
+  	nodes: tableSchema,
+  	marks: basicSchema.markSpec.addBefore('code', 'sub', SubMark).addBefore('code', 'sup', SupMark).addBefore('code', 'strike', StrikeThroughMark)
+  });
+}
+
 
 const EmbedType = schema.nodes.embed;
 
