@@ -1,19 +1,21 @@
 import chash from 'color-hash';
+import murmurhash from 'murmurhash';
 import Dropzone from 'react-dropzone';
 import Radium, {Style} from 'radium';
 import React, {PropTypes} from 'react';
-import {Media} from 'components';
+import {Media, MediaFiltered} from 'components';
 import {MD5} from 'object-hash';
-import {Node} from 'prosemirror/dist/model';
+import {Node} from 'prosemirror-model';
 import {FormattedMessage} from 'react-intl';
 import {Subscription, StoppableSubscription} from 'subscription';
 import {globalMessages} from 'utils/globalMessages';
 import {safeGetInToJS} from 'utils/safeParse';
-import {s3Upload} from 'utils/uploadFile';
 
+import ElementSchema from './proseEditor/elementSchema';
 import StatusTray from './DocumentEditorStatusTray';
-import {markdownParser, markdownSerializer, schema} from './proseEditor';
-import {schema as pubSchema} from './proseEditor/schema';
+import {schema as pubSchema, migrateMarks, migrateDiffs} from './proseEditor/schema';
+
+// import {markdownParser, markdownSerializer, schema} from './proseEditor';
 
 const ColorHash = new chash();
 
@@ -39,43 +41,22 @@ export const DocumentEditor = React.createClass({
 
 
 	componentDidMount() {
-		const prosemirror = require('prosemirror');
-		const {pubpubSetup} = require('./proseEditor/pubpubSetup');
+		// return;
 
 		const {ModServerCommunications} = require('./collab/server-communications');
-		const nodeConvert = require('./collab/node-convert');
-		this.editorToModel = nodeConvert.editorToModel;
-		this.modelToEditor = nodeConvert.modelToEditor;
-
 		const {ModCollab} = require('./collab/mod');
-		const {collabEditing} = require('prosemirror/dist/collab');
 
-		const that = this;
 
-		pm = new prosemirror.ProseMirror({
-			place: document.getElementById('atom-body-editor'),
-			schema: schema,
-			plugins: [pubpubSetup, collabEditing.config({version: 0})],
-			// doc: !!docJSON ? Node.fromJSON(schema, docJSON) : null,
-			// doc: null,
-			/*
-			on: {
-			change: new Subscription,
-			doubleClickOn: new StoppableSubscription,
-			}
-			*/
-		});
-
-		this.pm = pm;
 		const token = safeGetInToJS(this.props.atomData, ['token']);
 		const tokenValid = safeGetInToJS(this.props.atomData, ['tokenValid']);
 
-		pm.mod = {};
-		pm.mod.collab = collabEditing.get(pm);
+		const that = this;
+
 		// Ignore setDoc
-		pm.on.beforeSetDoc.remove(pm.mod.collab.onSetDoc);
-		pm.mod.collab.onSetDoc = function() {};
+		// pm.on.beforeSetDoc.remove(pm.mod.collab.onSetDoc);
+	  // pm.mod.collab.onSetDoc = function() {};
 		// Trigger reset on setDoc
+		/*
 		pm.mod.collab.afterSetDoc = function() {
 			// Reset all collab values and set document version
 			const collab = pm.mod.collab;
@@ -83,7 +64,8 @@ export const DocumentEditor = React.createClass({
 			collab.unconfirmedSteps = [];
 			collab.unconfirmedMaps = [];
 		};
-		pm.on.setDoc.add(pm.mod.collab.afterSetDoc);
+		*/
+		// pm.on.setDoc.add(pm.mod.collab.afterSetDoc);
 
 		const collab = {};
 		collab.docInfo = {
@@ -95,8 +77,6 @@ export const DocumentEditor = React.createClass({
 			changed: false,
 		};
 		collab.mod = {};
-		collab.pm = pm;
-		collab.currentPm = pm;
 		collab.waitingForDocument = true;
 		collab.schema = pubSchema;
 		collab.receiveDocument = this.receiveDocument;
@@ -104,15 +84,18 @@ export const DocumentEditor = React.createClass({
 		collab.askForDocument = this.askForDocument;
 		collab.getHash = this.getHash;
 		collab.updateParticipants = this.updateParticipants;
+		collab.applyAction = this.applyAction;
+		collab.getId = this.getId;
 
-		collab.setConnectionStatus = function(status, statusMsg) {
-			that.setState({status, statusMsg});
+		collab.getState = () => {
+			return this.pm;
 		};
+
+		collab.setConnectionStatus = this.setConnectionStatus;
 
 		collab.setParticipants = function(participants) {
 			that.setState({participants: participants});
 		};
-
 
 		// Collaboration Authentication information
 		const atomID = safeGetInToJS(this.props.atomData, ['atomData', '_id']);
@@ -122,67 +105,21 @@ export const DocumentEditor = React.createClass({
 		collab.token = token;
 		const img = safeGetInToJS(this.props.loginData, ['userData', 'image']);
 		collab.img = img;
-
-
 		collab.doc = {id: atomID};
-
 		this.collab = collab;
 
 		new ModServerCommunications(collab);
 		new ModCollab(collab);
 
-
-		pm.on.change.add(function() {
-			that.collab.docInfo.changed = true;
-		});
 		this.collab.mod.serverCommunications.init();
 		this.setSaveTimers();
 
-		this.proseChange();
+		// pm.on.transformPastedHTML.add(this.transformHTML);
 
-		pm.on.change.add((evt)=>{
-			this.proseChange();
-		});
+	},
 
-		pm.on.doubleClickOn.add((pos, node, nodePos)=>{
-			if (node.type.name === 'embed') {
-				const done = (attrs)=> {
-					pm.tr.setNodeType(nodePos, node.type, attrs).apply();
-				};
-				window.toggleMedia(pm, done, node);
-				return true;
-			}
-		});
-
-		// pm.on.selectionChange.add(()=>{
-		// 	const currentSelection = pm.selection;
-		// 	const currentFrom = currentSelection.$from.pos;
-		// 	const currentSelectedNode = currentSelection.node;
-		// 	if (currentSelectedNode && currentSelectedNode.type.name === 'embed') {
-		// 		const coords = pm.coordsAtPos(currentFrom);
-		// 		coords.bottom = coords.bottom + window.scrollY - 40;
-		// 		this.setState({
-		// 			embedLayoutCoords: coords,
-		// 			embedAttrs: currentSelectedNode.attrs,
-		// 		});
-		// 	} else {
-		// 		this.setState({
-		// 			embedLayoutCoords: undefined,
-		// 			embedAttrs: undefined,
-		// 		});
-		// 	}
-
-		// });
-
-		pm.on.transformPastedHTML.add(this.transformHTML);
-
-
-		this.moveMenu();
-		// console.log('onscroll', window.onscroll);
-		// window.onscroll = function(evt) {
-		// 	// called when the window is scrolled.
-		// 	console.log(evt);
-		// };
+	setConnectionStatus: function(status, statusMsg) {
+		this.setState({status, statusMsg});
 	},
 
 	transformHTML: function(htmlText) {
@@ -201,12 +138,22 @@ export const DocumentEditor = React.createClass({
 		return htmlNode.innerHTML;
 	},
 
+	// only use block or embed elements
 	setEmbedAttribute: function(key, value, evt) {
-		const currentSelection = pm.selection;
+		const currentSelection = this.pm.selection;
 		const currentFrom = currentSelection.$from.pos;
 		const currentSelectedNode = currentSelection.node;
 		if (evt) { evt.stopPropagation(); }
-		pm.tr.setNodeType(currentFrom, currentSelectedNode.type, {...currentSelectedNode.attrs, [key]: value}).apply();
+		let nodeType = currentSelectedNode.type;
+		const schema = currentSelectedNode.type.schema;
+		if (key === 'align') {
+			if (value === 'inline') {
+				nodeType = schema.nodes.embed;
+			} else {
+				nodeType = schema.nodes.block_embed;
+			}
+		}
+		this.changeNode(currentFrom, nodeType, {...currentSelectedNode.attrs, [key]: value});
 	},
 
 	sizeChange: function(evt) {
@@ -241,6 +188,8 @@ export const DocumentEditor = React.createClass({
 	},
 	// Collects updates of the document from ProseMirror and saves it under this.doc
 	getUpdates: function(callback) {
+		this.collab.doc.hash = this.getHash();
+		return;
 		const tmpDoc = this.editorToModel(this.collab.pm.mod.collab.versionDoc);
 		this.collab.doc.contents = tmpDoc.contents;
 		// this.doc.metadata = tmpDoc.metadata
@@ -265,39 +214,180 @@ export const DocumentEditor = React.createClass({
 
 
 	getHash: function() {
-		const doc = this.collab.pm.mod.collab.versionDoc.copy();
-		// We need to convert the footnotes from HTML to PM nodes and from that
-		// to JavaScript objects, to ensure that the attribute order of everything
-		// within the footnote will be the same in all browsers, so that the
-		// resulting checksums are the same.
-		// doc.descendants(function(node){
-		// 	if (node.type.name==='footnote') {
-		// 		node.attr.contents = this.mod.footnotes.fnEditor.htmlTofootnoteNode(node.attr.contents)
-		// 	}
-		// })
+		const doc = this.pm.doc;
 		return MD5(JSON.parse(JSON.stringify(doc.toJSON())), {unorderedArrays: true});
 	},
+
+
+	//
+	// Update - Update document and use a JSON
+	//
+
+	applyAction: function(action) {
+		const newState = this.view.editor.state.applyAction(action);
+		this.pm = newState;
+		this.view.updateState(newState);
+		// console.log('Action: ', action);
+	},
+
+	changeNode: function(currentFrom, nodeType, nodeAttrs) {
+		const state = this.pm;
+		const transform = state.tr.setNodeType(currentFrom, nodeType, nodeAttrs);
+		const action = transform.action();
+		this.applyAction(action);
+	},
+
+	getState: function() {
+		return this.pm;
+	},
+
+
+	getId: function() {
+		return safeGetInToJS(this.props.loginData, ['userData', '_id']);
+	},
+
 	update: function() {
+
 		const that = this;
+
+		const {pubpubSetup, buildMenuItems} = require('./proseEditor/pubpubSetup');
+		const {EditorState} = require('prosemirror-state');
+		const {MenuBarEditorView, MenuItem} = require('prosemirror-menu');
+
+		const nodeConvert = require('./collab/node-convert');
+		this.editorToModel = nodeConvert.editorToModel;
+		this.modelToEditor = nodeConvert.modelToEditor;
+
+		const collabEditing = require('prosemirror-collab').collab;
+
+		const {clipboardParser, clipboardSerializer} = require('./proseEditor/clipboardSerializer');
+
+
+		this.pubpubSetup = pubpubSetup;
+		this.collabEditing = collabEditing;
+		this.EditorState = EditorState;
+
+		const userId = this.getId();
+
+		const menu = buildMenuItems(pubSchema);
+		// TO-DO: USE UNIQUE ID FOR USER AND VERSION NUMBER
+		// USE DEFAULT schema
+
+		migrateMarks(this.collab.doc.contents);
+
+		ElementSchema.initiateProseMirror({
+			changeNode: this.changeNode,
+			setEmbedAttribute: this.setEmbedAttribute,
+			getState: this.getState,
+		});
+
+
+		pm = EditorState.create({
+			doc: pubSchema.nodeFromJSON(this.collab.doc.contents),
+			plugins: [pubpubSetup({schema: pubSchema}), collabEditing({version: this.collab.doc.version, clientID: userId})],
+		});
+
+		const view = new MenuBarEditorView(document.getElementById('atom-body-editor'), {
+		  state: pm,
+		  onAction: (action) => {
+				// console.log(action);
+				const newState = view.editor.state.applyAction(action);
+				this.pm = newState;
+				view.updateState(newState);
+				that.collab.mod.collab.docChanges.sendToCollaborators();
+				if (action.type === "selection") {
+					ElementSchema.onNodeSelect(newState, action.selection);
+				}
+			},
+			onUnmountDOM: (view, node) => {
+				// console.log('unmountinggg', node);
+				return;
+				if (node.type && node.type.name === 'embed' || node.type.name === 'block_embed') {
+					ElementSchema.unmountNode(node);
+				}
+
+			},
+			/*
+			handleTextInput: (_view, from, to, text) => {
+				if (ElementSchema.currentlyEditing()) {
+					console.log('Prevent text', text);
+					return true;
+				}
+				console.log('Got text', text);
+				return false;
+			},
+			*/
+			handleDOMEvent: (_view, evt) => {
+				// console.log(evt, ElementSchema.currentlyEditing(), evt2);
+				// return;
+				if (ElementSchema.currentlyEditing()) {
+					const eventType = evt.type;
+					// && eventType.indexOf('drag') === -1
+					if (evt.target && evt.target.className && evt.target.className.indexOf('caption') !== -1 && !evt.dataTransfer) {
+						if (eventType === 'mousedown') {
+							return true;
+						}
+						return false;
+					}
+					if (eventType === 'mousedown') {
+						if (ElementSchema.checkPoint(evt.target)) {
+							return false;
+						}
+					}
+					if (eventType === 'keydown' && (evt.key === 'Delete' || evt.code === 'Backspace')) {
+						return false;
+					}
+					evt.preventDefault();
+					return true;
+				}
+				if (evt.type === 'paste') {
+					setTimeout(ElementSchema.countNodes, 200);
+				}
+				return false;
+			},
+
+		  menuContent: menu.fullMenu,
+			spellcheck: true,
+			clipboardParser: clipboardParser,
+			clipboardSerializer: clipboardSerializer,
+		});
+
+		this.pm = pm;
+		this.view = view;
+		this.collab.pm = pm;
+		this.collab.currentPm = pm;
+
 		this.collab.mod.collab.docChanges.cancelCurrentlyCheckingVersion();
 		this.collab.mod.collab.docChanges.unconfirmedSteps = {};
 		if (this.collab.mod.collab.docChanges.awaitingDiffResponse) {
 			this.collab.mod.collab.docChanges.enableDiffSending();
 		}
-		const pmDoc = this.modelToEditor(this.collab.doc, this.collab.schema);
-		// collabEditing.detach(this.pm)
-		this.collab.pm.setDoc(pmDoc);
-		that.collab.pm.mod.collab.version = this.collab.doc.version;
-		// collabEditing.config({version: this.doc.version}).attach(this.pm)
-		while (this.collab.docInfo.last_diffs.length > 0) {
-			const diff = this.collab.docInfo.last_diffs.shift();
-			this.collab.mod.collab.docChanges.applyDiff(diff);
+
+		// that.collab.pm.mod.collab.version = this.collab.doc.version;
+
+		migrateDiffs(this.collab.docInfo.last_diffs);
+		const appliedAction = this.collab.mod.collab.docChanges.applyAllDiffs(this.collab.docInfo.last_diffs);
+		if (appliedAction) {
+				// this.applyAction(appliedAction);
+		} else {
+				// indicates that the DOM is broken and cannot be repaired
+				this.collab.mod.serverCommunications.disconnect();
 		}
-		this.collab.doc.hash = this.getHash();
+
+
+		// TO MIGRATE
+		// this.collab.doc.hash = this.getHash();
 		// this.collab.mod.comments.store.setVersion(this.doc.comment_version)
+
+
+		// TO MIGRATE
+		/*
 		this.collab.pm.mod.collab.mustSend.add(function() {
 			that.collab.mod.collab.docChanges.sendToCollaborators();
-		}, 0); // priority : 0 so that other things cna be scheduled before this.
+		}, 0);
+		*/
+
+		// priority : 0 so that other things cna be scheduled before this.
 		// this.collab.pm.mod.collab.receivedTransform.add((transform, options) => {that.onTransform(transform, false)})
 		// this.collab.mod.footnotes.fnEditor.renderAllFootnotes()
 		// _.each(this.collab.doc.comments, function(comment) {
@@ -309,6 +399,7 @@ export const DocumentEditor = React.createClass({
 		// 		that.collab.mod.collab.docChanges.sendToCollaborators()
 		// })
 		this.collab.waitingForDocument = false;
+		// this.moveMenu();
 	},
 
 	askForDocument: function() {
@@ -333,45 +424,20 @@ export const DocumentEditor = React.createClass({
 			type: 'participant_update'
 		});
 
-		// if (data.hasOwnProperty('user')) {
-		//     this.collab.user = data.user
-		// } else {
-		//     this.collab.user = this.doc.owner
-		// }
-		// this.getImageDB(this.doc.owner.id, function(){
-		//     that.update()
-		//     that.mod.serverCommunications.send({
-		//         type: 'participant_update'
-		//     })
-		// })
 	},
 
 	receiveDocumentValues: function(dataDoc, dataDocInfo) {
-		// let that = this;
 		this.collab.doc = dataDoc;
 		this.collab.docInfo = dataDocInfo;
 		this.collab.docInfo.changed = false;
 		this.collab.docInfo.titleChanged = false;
-		// let defaultSettings = [
-		//     ['papersize', 1117],
-		//     ['citationstyle', defaultCitationStyle],
-		//     ['documentstyle', defaultDocumentStyle]
-		// ]
-		//
+	},
 
-		// defaultSettings.forEach(function(variable) {
-		//     if (that.collab.doc.settings[variable[0]] === undefined) {
-		//         that.collab.doc.settings[variable[0]] = variable[1]
-		//     }
-		// })
-
-		//
-		// if (this.collab.docInfo.is_new) {
-		//     // If the document is new, change the url. Then forget that the document is new.
-		//     window.history.replaceState("", "", "/document/" + this.doc.id +
-		//         "/");
-		//     delete this.collab.docInfo.is_new
-		// }
+	setDoc: function(doc) {
+		const pm = EditorState.create({
+			doc: pubSchema.nodeFromJSON(this.collab.doc.contents),
+			plugins: [pubpubSetup({schema: pubSchema}), collabEditing({version: this.collab.doc.version, clientID: userId})],
+		});
 	},
 
 	// Get updates to document and then send updates to the server
@@ -426,13 +492,15 @@ export const DocumentEditor = React.createClass({
 	},
 
 	markdownChange: function(evt) {
-		this.pm.setDoc(markdownParser.parse(evt.target.value));
+		// this.pm.setDoc(markdownParser.parse(evt.target.value));
 	},
 
 	getSaveVersionContent: function() {
 		return {
-			markdown: markdownSerializer.serialize(this.pm.doc),
-			docJSON: this.pm.doc.toJSON(),
+			// markdown: markdownSerializer.serialize(this.pm.doc),
+			markdown: '',
+			// docJSON: '',
+			docJSON: this.getState().doc.toJSON(),
 		};
 	},
 
@@ -470,24 +538,16 @@ export const DocumentEditor = React.createClass({
 			{/* <Dropzone ref="dropzone" disableClick={true} onDrop={this.onDrop} style={{}} activeClassName={'dropzone-active'} > */}
 				<Style rules={colorMap} />
 
-				<Media ref={'mediaRef'}/>
+				<MediaFiltered ref={'mediaRef'}/>
 
 				{/* <div className={'opacity-on-hover'} style={styles.iconLeft} onClick={this.toggleMarkdown}></div> */}
 
 				<textarea id="markdown" onChange={this.markdownChange} style={[styles.textarea, this.state.showMarkdown && styles.textareaVisible]}></textarea>
-				<div id={'atom-body-editor'} className={'document-body'} style={[styles.wsywigBlock, this.state.showMarkdown && styles.wsywigWithMarkdown]}></div>
+				<div id={'atom-body-editor'} className={'document-body'} style={[styles.wsywigBlock, this.state.showMarkdown && styles.wsywigWithMarkdown]}>
 
-				{this.state.embedLayoutCoords &&
-					<div style={[styles.embedLayoutEditor, {left: this.state.embedLayoutCoords.left - 2, top: this.state.embedLayoutCoords.bottom}]}>
-						<div onClick={this.setEmbedAttribute.bind(this, 'align', 'inline')} style={[this.state.embedAttrs.align === 'inline' && styles.activeAlign]}>Inline</div>
-						<div onClick={this.setEmbedAttribute.bind(this, 'align', 'full')} style={[this.state.embedAttrs.align === 'full' && styles.activeAlign]}>Full</div>
-						<div onClick={this.setEmbedAttribute.bind(this, 'align', 'left')} style={[this.state.embedAttrs.align === 'left' && styles.activeAlign]}>Left</div>
-						<div onClick={this.setEmbedAttribute.bind(this, 'align', 'right')} style={[this.state.embedAttrs.align === 'right' && styles.activeAlign]}>Right</div>
-						<input type="text" onChange={this.sizeChange} defaultValue={this.state.embedAttrs.size}/>
-						<textarea type="text" onChange={this.captionChange} defaultValue={this.state.embedAttrs.caption}></textarea>
+				</div>
 
-					</div>
-				}
+
 
 			{/* </Dropzone> */}
 			</div>
@@ -516,8 +576,9 @@ styles = {
 	embedLayoutEditor: {
 		position: 'absolute',
 		backgroundColor: 'white',
-		border: '2px solid #808284',
-		boxShadow: '0px 2px 4px #58585B',
+		// border: '2px solid #808284',
+		// boxShadow: '0px 2px 4px #58585B',
+		zIndex: '10000',
 	},
 	activeAlign: {
 		color: 'red',
@@ -554,6 +615,7 @@ styles = {
 		// maxWidth: 'calc(650px + 10em)',
 		backgroundColor: 'white',
 		margin: '0 auto',
+		position: 'relative',
 		// boxShadow: '0px 1px 3px 1px #BBBDC0',
 		minHeight: '600px',
 		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {

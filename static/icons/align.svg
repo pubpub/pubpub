@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:sketch="http://www.bohemiancoding.com/sketch/ns" viewBox="0 0 100 100" version="1.1" x="0px" y="0px">
+
+  <symbol id="middle-align" viewBox="0 0 100 100">
+    <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" sketch:type="MSPage">
+      <path d="M10.5198617,33.842969 L89.4801383,33.842969 L89.4801383,26 L10.5198617,26 L10.5198617,33.842969 Z M5,53.9169986 L95,53.9169986 L95,46.0740296 L5,46.0740296 L5,53.9169986 Z M22.1122333,73.9921313 L77.8888698,73.9921313 L77.8888698,66.1491623 L22.1122333,66.1491623 L22.1122333,73.9921313 Z"
+        fill="currentColor" sketch:type="MSShapeGroup">
+      </path>
+    </g>
+  </symbol>
+
+  <symbol id="left-align" viewBox="0 0 100 100">
+  <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" sketch:type="MSPage">
+  <path d="M5,33.842969 L83.9602765,33.842969 L83.9602765,26 L5,26 L5,33.842969 Z M5,53.9169986 L95,53.9169986 L95,46.0740296 L5,46.0740296 L5,53.9169986 Z M5,73.9921313 L60.7766366,73.9921313 L60.7766366,66.1491623 L5,66.1491623 L5,73.9921313 Z"
+    fill="currentColor" sketch:type="MSShapeGroup">
+  </path></g>
+  </symbol>
+
+  <symbol id="right-align" viewBox="0 0 100 100">
+       <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" sketch:type="MSPage">
+        <path d="M16.0397235,33.842969 L95,33.842969 L95,26 L16.0397235,26 L16.0397235,33.842969 Z M5,53.9169986 L95,53.9169986 L95,46.0740296 L5,46.0740296 L5,53.9169986 Z M39.2222604,73.9921313 L94.9988969,73.9921313 L94.9988969,66.1491623 L39.2222604,66.1491623 L39.2222604,73.9921313 Z"
+          fill="currentColor" sketch:type="MSShapeGroup">
+       </path>
+     </g>
+   </symbol>
+
+
+</svg>

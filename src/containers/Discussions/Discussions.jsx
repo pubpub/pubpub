@@ -1,22 +1,22 @@
-import dateFormat from 'dateformat';
+import {License, Media} from 'components';
 import Radium, {Style} from 'radium';
 import React, {PropTypes} from 'react';
-import {License, Media} from 'components';
+import {createReplyDocument, setYayNay} from './actions';
 import {markdownParser, markdownSerializer, schema} from 'components/AtomTypes/Document/proseEditor';
-import {FormattedMessage} from 'react-intl';
-import {connect} from 'react-redux';
-import { Link } from 'react-router';
-import {push} from 'redux-router';
-import {StoppableSubscription} from 'subscription';
-import {globalMessages} from 'utils/globalMessages';
-import {safeGetInToJS} from 'utils/safeParse';
-import {globalStyles} from 'utils/styleConstants';
 
 import DiscussionItem from './DiscussionItem';
 import DiscussionThread from './DiscussionThread';
 import DiscussionThreadHeader from './DiscussionThreadHeader';
 import DiscussionThreadInput from './DiscussionThreadInput';
-import {createReplyDocument, setYayNay} from './actions';
+import {FormattedMessage} from 'react-intl';
+import { Link } from 'react-router';
+import {StoppableSubscription} from 'subscription';
+import {connect} from 'react-redux';
+import dateFormat from 'dateformat';
+import {globalMessages} from 'utils/globalMessages';
+import {globalStyles} from 'utils/styleConstants';
+import {push} from 'redux-router';
+import {safeGetInToJS} from 'utils/safeParse';
 
 // import { StickyContainer as UnwrappedStickyContainer, Sticky } from 'react-sticky';
 // const StickyContainer = Radium(UnwrappedStickyContainer);
@@ -74,9 +74,9 @@ export const Discussions = React.createClass({
 				replyToID: atomData._id,
 				rootReply: rootReply,
 				defaultReply: defaultReply,
-			});	
+			});
 		}
-		
+
 	},
 
 	componentDidMount() {
@@ -85,6 +85,7 @@ export const Discussions = React.createClass({
 
 		const place = document.getElementById('reply-input');
 		if (!place) { return undefined; }
+		return;
 		pm = new prosemirror.ProseMirror({
 			place: place,
 			schema: schema,
@@ -142,7 +143,6 @@ export const Discussions = React.createClass({
 			const destination = document.getElementById('input-placeholder-' + replyToID);
 			destination.appendChild(inputDiv);
 		}
-
 	},
 
 	clearReplyTo: function() {
@@ -242,7 +242,7 @@ export const Discussions = React.createClass({
 							{!!discussionsData.length &&
 								<div onClick={()=>{this.setState({showThreads: !this.state.showThreads});}} style={styles.topButton} className={'darkest-border-hover'}>{this.state.showThreads ? 'Show Nested' : 'Show Threads'}</div>
 							}
-							
+
 							{loggedIn &&
 								<div onClick={()=>{this.setState({newThread: true});}} style={[styles.topButton, styles.topButtonDark]}>New Discussion</div>
 							}

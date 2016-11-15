@@ -1,17 +1,17 @@
-import React, {PropTypes} from 'react';
-import Radium from 'radium';
-import {Link as UnwrappedLink} from 'react-router';
-const Link = Radium(UnwrappedLink);
-import {HorizontalNav} from 'components';
-import AtomEditorPane from 'containers/Atom/AtomEditorPane';
-import AtomDetails from 'containers/Atom/AtomDetails';
 import AtomContributors from 'containers/Atom/AtomContributors';
-import {ensureImmutable} from 'reducers';
-
+import AtomDetails from 'containers/Atom/AtomDetails';
+import AtomEditorPane from 'containers/Atom/AtomEditorPane';
+import Radium from 'radium';
+import React, {PropTypes} from 'react';
+import {HorizontalNav} from 'components';
 import {FormattedMessage} from 'react-intl';
+import {Link as UnwrappedLink} from 'react-router';
+import {ensureImmutable} from 'reducers';
 import {globalMessages} from 'utils/globalMessages';
-
 import {globalStyles} from 'utils/styleConstants';
+const Link = Radium(UnwrappedLink);
+
+
 let styles = {};
 
 export const PreviewEditor = React.createClass({
@@ -40,6 +40,7 @@ export const PreviewEditor = React.createClass({
 		detailsLoading: PropTypes.bool,
 		contributorsError: PropTypes.bool,
 		detailsError: PropTypes.bool,
+		doNotEdit: PropTypes.bool,
 
 		defaultOpen: PropTypes.bool,
 
@@ -129,7 +130,7 @@ export const PreviewEditor = React.createClass({
 							<img style={styles.image} src={'https://jake.pubpub.org/unsafe/100x100/' + image} alt={atomData.title}/>
 						</Link>
 					</div>
-					
+
 					<div style={styles.tableCell}>
 						<Link to={href} style={globalStyles.link}>
 							<h3 style={styles.title} className={'underlineOnHover'}>{atomData.title}</h3>
@@ -151,10 +152,10 @@ export const PreviewEditor = React.createClass({
 						{!this.state.editorOpen && this.props.setItemHandler &&
 							<div>
 								<div className={'button'} onClick={()=>{this.props.setItemHandler(this.props.versionData)}} style={styles.button}>
-									<FormattedMessage id="previewEditor.SetToInsert" defaultMessage="Set To Insert"/>
+									<FormattedMessage id="previewEditor.SetToInsert" defaultMessage="Insert"/>
 								</div>
 							</div>
-							
+
 						}
 
 						{atomData.type === 'document' &&
@@ -166,13 +167,13 @@ export const PreviewEditor = React.createClass({
 
 						}
 
-						{atomData.type !== 'document' && !this.state.editorOpen &&
+						{atomData.type !== 'document' && !this.state.editorOpen && !this.props.doNotEdit &&
 							<div>
 								<div className={'button'} onClick={this.openEditor} style={styles.button}>
 									<FormattedMessage {...globalMessages.Edit}/>
 								</div>
 							</div>
-							
+
 						}
 
 						{!this.state.editorOpen && !this.state.confirmDelete && !this.props.setItemHandler &&

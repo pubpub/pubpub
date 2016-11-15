@@ -1,3 +1,8 @@
+import {getVersion} from 'prosemirror-collab';
+
+// TO-DO: bind events on change with prose mirror
+
+
 export class ModCollabCarets {
 	constructor(mod) {
 		mod.carets = this;
@@ -46,7 +51,7 @@ export class ModCollabCarets {
 
 		const that = this;
 		const pm = this.mod.editor.pm;
-		pm.updateScheduler([pm.on.change], () => {return that.updatePositionCSS();});
+		// pm.updateScheduler([pm.on.change], () => {return that.updatePositionCSS();});
 		// let fnPm = this.mod.editor.mod.footnotes.fnPm
 		// fnPm.updateScheduler([fnPm.on.change], () => {return that.updatePositionCSS()})
 		// Limit sending of selection to once every 250 ms. This is also important to work correctly
@@ -54,7 +59,7 @@ export class ModCollabCarets {
 		const sendSelection = this.debounce(function() {
 			that.sendSelectionChange();
 		}, 250);
-		pm.on.selectionChange.add(sendSelection);
+		// pm.on.selectionChange.add(sendSelection);
 		// fnPm.on.selectionChange.add(sendSelection)
 	}
 
@@ -95,7 +100,7 @@ export class ModCollabCarets {
 		this.mod.editor.mod.serverCommunications.send({
 			type: 'selection_change',
 			caret_position: this.getCaretPosition(),
-			diff_version: this.mod.editor.pm.mod.collab.version
+			diff_version: getVersion(this.mod.editor.pm)
 		});
 	}
 

@@ -1,4 +1,6 @@
-import {Step} from 'prosemirror/dist/transform';
+import {sendableSteps, getVersion} from 'prosemirror-collab';
+import {receiveAction} from 'prosemirror-collab';
+import {Step} from 'prosemirror-transform';
 
 import {schema as pubSchema} from '../proseEditor/schema';
 
@@ -15,7 +17,7 @@ export class ModCollabDocChanges {
 	}
 
 	checkHash(version, hash) {
-		if (version === this.mod.editor.pm.mod.collab.version) {
+		if (version === getVersion(this.mod.editor.getState())) {
 			if (hash === this.mod.editor.getHash()) {
 				return true;
 			}
@@ -50,7 +52,7 @@ export class ModCollabDocChanges {
 		}
 		this.mod.editor.mod.serverCommunications.send({
 			type: 'check_diff_version',
-			diff_version: this.mod.editor.pm.mod.collab.version
+			diff_version: getVersion(this.mod.editor.getState())
 		});
 	}
 
@@ -71,24 +73,23 @@ export class ModCollabDocChanges {
 		this.sendToCollaborators();
 	}
 
-	sendToCollaborators() {
+	sendToCollaborators = () => {
 		if (this.awaitingDiffResponse ||
-			!this.mod.editor.pm.mod.collab.hasSendableSteps() ) {
+			!sendableSteps(this.mod.editor.getState())) {
 			// this.mod.editor.mod.comments.store.unsentEvents().length === 0) {
 			// We are waiting for the confirmation of previous steps, so don't
 			// send anything now, or there is nothing to send.
 			return;
 		}
 
-		const toSend = this.mod.editor.pm.mod.collab.sendableSteps();
-		// const fnToSend = this.mod.editor.mod.footnotes.fnPm.mod.collab.sendableSteps()
+		const toSend = sendableSteps(this.mod.editor.getState());
 		const requestId = this.confirmStepsRequestCounter++;
 		const aPackage = {
 			type: 'diff',
-			diff_version: this.mod.editor.pm.mod.collab.version,
+			diff_version: getVersion(this.mod.editor.getState()),
 			diff: toSend.steps.map(sIndex => {
 				const step = sIndex.toJSON();
-				step.client_id = this.mod.editor.pm.mod.collab.clientID;
+				step.client_id = this.mod.editor.getId();
 				return step;
 			}),
 			// footnote_diff: fnToSend.steps.map(s => {
@@ -119,7 +120,7 @@ export class ModCollabDocChanges {
 			return undefined;
 		}
 		const editorHash = this.mod.editor.getHash();
-		if (data.diff_version !== this.mod.editor.pm.mod.collab.version) {
+		if (data.diff_version !== getVersion(this.mod.editor.getState())) {
 
 			this.checkDiffVersion();
 			return undefined;
@@ -128,41 +129,37 @@ export class ModCollabDocChanges {
 		if (data.hash && data.hash !== editorHash) {
 			return false;
 		}
-		/*
-		if (data.comments && data.comments.length) {
-			this.mod.editor.updateComments(data.comments, data.comments_version)
-		}
-		*/
 		if (data.diff && data.diff.length) {
 			data.diff.forEach(function(diff) {
 				that.applyDiff(diff);
 			});
 		}
-		/*
-		if (data.footnote_diff && data.footnote_diff.length) {
-			this.mod.editor.mod.footnotes.fnEditor.applyDiffs(data.footnote_diff)
-		  }
-	  */
 		if (data.reject_request_id) {
+			console.log('Rejected this diff');
 			this.rejectDiff(data.reject_request_id);
 		}
 		if (!data.hash) {
 			// No hash means this must have been created server side.
 			this.cancelCurrentlyCheckingVersion();
 			this.enableDiffSending();
-			// Because the uypdate came directly from the sevrer, we may
-			// also have lost some collab updates to the footnote table.
-			// Re-render the footnote table if needed.
-			// this.mod.editor.mod.footnotes.fnEditor.renderAllFootnotes()
+
 		}
 	}
 
-	confirmDiff(requestId) {
+	confirmDiff = (requestId) => {
 		const that = this;
-		const sentSteps = this.unconfirmedSteps[requestId].diffs;
-		this.mod.editor.pm.mod.collab.receive(sentSteps, sentSteps.map(function(step) {
-			return that.mod.editor.pm.mod.collab.clientID;
-		}));
+		const diffs = this.unconfirmedSteps[requestId].diffs;
+
+		const clientIds = diffs.map(function(step) {
+			return that.mod.editor.getId();
+		});
+
+		const action = this.receiveAction(diffs, clientIds, true);
+		action.requestDone = true;
+		if (!action) {
+			console.log('Could not apply diff!');
+		}
+		this.mod.editor.applyAction(action);
 
 		// let sentFnSteps = this.unconfirmedSteps[requestId]["footnote_diffs"]
 		// this.mod.editor.mod.footnotes.fnPm.mod.collab.receive(sentFnSteps, sentFnSteps.map(function(step){
@@ -173,9 +170,9 @@ export class ModCollabDocChanges {
 		// this.mod.editor.mod.comments.store.eventsSent(sentComments)
 
 		if (this.unconfirmedSteps[requestId]) {
-			console.log('deleted diff with ', this.checkUnconfirmedSteps(), ' left');
 			delete this.unconfirmedSteps[requestId];
 		} else {
+			console.log('Could not enable diff');
 			console.log(requestId);
 			console.log(this.unconfirmedSteps);
 		}
@@ -189,13 +186,76 @@ export class ModCollabDocChanges {
 		this.sendToCollaborators();
 	}
 
-	applyDiff(diff) {
+	applyDiff = (diff) => {
 		this.receiving = true;
 		const steps = [diff].map(jIndex => Step.fromJSON(pubSchema, jIndex));
 		const clientIds = [diff].map(jIndex => jIndex.client_id);
-		this.mod.editor.pm.mod.collab.receive(steps, clientIds);
+		const action = this.receiveAction(steps, clientIds);
+		this.mod.editor.applyAction(action);
 		this.receiving = false;
 	}
+
+	applyAllDiffs = (diffs) => {
+		let action = null;
+		this.receiving = true;
+
+		try {
+			const steps = diffs.map(jIndex => Step.fromJSON(pubSchema, jIndex));
+			const clientIds = diffs.map(jIndex => jIndex.client_id);
+			action = this.receiveAction(steps, clientIds);
+			this.mod.editor.applyAction(action);
+		} catch (err) {
+			console.log('ERROR: ', err);
+		}
+
+		this.receiving = false;
+		return action;
+
+	}
+
+
+	applyAllDiffsSequential(diffs) {
+		let action = null;
+		this.receiving = true;
+
+		for (const diff of diffs) {
+			try {
+				const steps = [diff].map(jIndex => Step.fromJSON(pubSchema, jIndex));
+				const clientIds = [diff].map(jIndex => jIndex.client_id);
+				action = this.receiveAction(steps, clientIds);
+				this.mod.editor.applyAction(action);
+			} catch (err) {
+				console.log('ERROR: ', err);
+				console.log(diff);
+			}
+
+		}
+		this.receiving = false;
+		return action;
+
+	}
+
+	receiveAction = (steps, clientIDs, ours = false) => {
+
+		const state = this.mod.editor.getState();
+		const userID = this.mod.editor.getId();
+		let modifiedClientIDs;
+
+		if (!ours) {
+			modifiedClientIDs = clientIDs.map(clientID => {
+				if (clientID === userID) {
+					return 'self';
+				} else {
+					return clientID;
+				}
+			});
+		} else {
+			modifiedClientIDs = clientIDs;
+		}
+
+		return receiveAction(state, steps, modifiedClientIDs);
+	}
+
 
 
 }

@@ -1,7 +1,7 @@
+import EmbedWrapper from './EmbedWrapper';
+import Pointer from './Pointer';
 import React from 'react';
 import murmurhash from 'murmurhash';
-
-import EmbedWrapper from './EmbedWrapper';
 
 let citeCounts = {};
 let citeObjects = {};
@@ -65,10 +65,18 @@ export const renderReactFromJSON = function(item, isRoot) {
 					return <s key={index}>{previous}</s>;
 				case 'link':
 					return <a href={current.href} title={current.title} key={index} target={'_top'}>{previous}</a>;
-				default: 
+				default:
 					return previous;
 				}
 			}, node.text);
+
+		case 'table':
+			return <table key={index}>{renderReactFromJSON(node.content)}</table>;
+		case 'table_row':
+			return <tr key={index}>{renderReactFromJSON(node.content)}</tr>;
+		case 'table_cell':
+			return <td key={index}>{renderReactFromJSON(node.content)}</td>;
+
 		case 'embed':
 			let citeCount;
 			if (node.attrs.data._id in citeCounts) {
@@ -79,6 +87,19 @@ export const renderReactFromJSON = function(item, isRoot) {
 				citeObjects[node.attrs.data._id] = node.attrs.data;
 			}
 			return <EmbedWrapper {...node.attrs} key={index} citeCount={citeCount}/>;
+
+		case 'block_embed':
+			if (node.attrs.data._id in citeCounts) {
+				citeCount = citeCounts[node.attrs.data._id];
+			} else if (node.attrs.mode === 'cite') {
+				citeCount = currentCiteCount++;
+				citeCounts[node.attrs.data._id] = citeCount;
+				citeObjects[node.attrs.data._id] = node.attrs.data;
+			}
+			return <EmbedWrapper {...node.attrs} key={index} citeCount={citeCount}/>;
+
+		case 'pointer':
+			return <Pointer {...node.attrs} />;
 		default:
 			console.log('Error with ', node);
 		}

@@ -3,6 +3,7 @@ saving, collaboration, etc.).
 */
 
 import {collabServerUrl} from 'config';
+import {getVersion} from 'prosemirror-collab';
 
 export class ModServerCommunications {
 	constructor(editor) {
@@ -13,6 +14,7 @@ export class ModServerCommunications {
 		this.messagesToSend = [];
 		this.connected = false;
 		this.online = true;
+		this.broken = false;
 		/* Whether the connection is established for the first time. */
 		this.firstTimeConnection = true;
 		this.retryTimeout = null;
@@ -25,6 +27,8 @@ export class ModServerCommunications {
 
 		window.addEventListener('online', this.goOnline);
 		window.addEventListener('offline', this.goOffline);
+
+		window.onbeforeunload = this.closeWindow;
 	}
 
 	goOffline = () => {
@@ -35,15 +39,23 @@ export class ModServerCommunications {
 
 	goOnline = () => {
 		this.online = true;
+		window.clearTimeout(this.retryTimeout);
 		this.updateConnectionStatus();
 		this.createWSConnection();
+	}
+
+	closeWindow = () => {
+		if (this.ws) {
+			this.ws.onclose = function () {};
+    	this.ws.close();
+		}
 	}
 
 	init() {
 		this.createWSConnection();
 	}
 
-	createWSConnection() {
+	createWSConnection = () => {
 		const that = this;
 		// const websocketProtocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
 
@@ -58,8 +70,9 @@ export class ModServerCommunications {
 
 		const randomInt = Math.round(Math.random() * 100000);
 		try {
-			this.ws = new window.WebSocket(`${websocketProtocol}//${wsServer}/ws/doc/${this.editor.doc.id}?user=${this.editor.username }&token=${this.editor.token}&avatar_url=${this.editor.img}&random=${randomInt}`);
-			// console.log('opening with', `${websocketProtocol}//${wsServer}/ws/doc/${this.editor.doc.id}?user=${this.editor.username }&token=${this.editor.token}&avatar_url=${this.editor.img}&random=${randomInt}`);
+			const ws = new window.WebSocket(`${websocketProtocol}//${wsServer}/ws/doc/${this.editor.doc_id}?user=${this.editor.username }&token=${this.editor.token}&avatar_url=${this.editor.img}&random=${randomInt}`);
+			this.ws = ws;
+			// console.log('opening with', `${websocketProtofcol}//${wsServer}/ws/doc/${this.editor.doc.id}?user=${this.editor.username }&token=${this.editor.token}&avatar_url=${this.editor.img}&random=${randomInt}`);
 			console.log('Opening connection');
 			this.ws.onopen = function() {
 				console.log('Opened Connection');
@@ -73,6 +86,7 @@ export class ModServerCommunications {
 
 		} catch (err) {
 			console.log(err);
+			return;
 		}
 
 		this.ws.onmessage = function(event) {
@@ -81,6 +95,16 @@ export class ModServerCommunications {
 			that.receive(data);
 		};
 		this.ws.onclose = function(event) {
+			if (that.broken) {
+				return;
+			}
+			if (this.ws !== ws) {
+				console.log ('Got a close that isnt active');
+				return;
+			}
+			this.ws.onmessage = function () {};
+			this.ws.onclose = function () {};
+			this.ws.onerror = function () {};
 			console.log('Closed connection');
 			that.connected = false;
 			window.clearInterval(that.wsPinger);
@@ -88,13 +112,7 @@ export class ModServerCommunications {
 
 			this.retryTimeout = window.setTimeout(function() {
 				that.createWSConnection();
-			}, 2000);
-				// console.log('attempting to reconnect');
-			if (that.editor.pm.mod.collab.hasSendableSteps()) {
-				// jQuery('#unobtrusive_messages').html('<span class="warn">'+gettext('Warning! Not all your changes have been saved! You could suffer data loss. Attempting to reconnect...')+'</span>')
-			} else {
-				// jQuery('#unobtrusive_messages').html(gettext('Disconnected. Attempting to reconnect...'))
-			}
+			}, 12000);
 
 		};
 		this.wsPinger = window.setInterval(function() {
@@ -104,15 +122,32 @@ export class ModServerCommunications {
 		}, 30000);
 	}
 
-	close() {
+	close = () => {
 		// console.log('Closed ws');
-		console.log('trying to close ws');
+		console.log('Closing WS');
 		window.clearTimeout(this.retryTimeout);
 		window.clearTimeout(this.wsPinger);
+		this.ws.onmessage = function () {};
+		this.ws.onclose = function () {};
+		this.ws.onerror = function () {};
+		this.ws.close();
+
+	}
+
+	disconnect() {
+		console.log('Disconnecting WS');
+		this.connected = false;
+		this.broken = true;
+		window.clearTimeout(this.retryTimeout);
+		window.clearTimeout(this.wsPinger);
+		this.ws.onmessage = function () {};
+		this.ws.onclose = function () {};
+		this.ws.onerror = function () {};
+		this.editor.setConnectionStatus('disconnected');
 		this.ws.close();
 	}
 
-	activateConnection() {
+	activateConnection = () => {
 		// console.log('Activating connection');
 		this.connected = true;
 		this.updateConnectionStatus();
@@ -124,6 +159,7 @@ export class ModServerCommunications {
 			const docChanges = this.editor.mod.collab.docChanges;
 			const unconfirmed = docChanges.checkUnconfirmedSteps();
 			const toSend = this.messagesToSend.length;
+			this.editor.waitingForDocument = false;
 			console.log('Reactivated with ', unconfirmed, ' unconfirmed steps & ', toSend, 'steps to be sent');
 			docChanges.checkDiffVersion();
 			this.send({
@@ -137,10 +173,14 @@ export class ModServerCommunications {
 	}
 
 	/** Sends data to server or keeps it in a list if currently offline. */
-	send(data) {
+	send = (data) => {
+		if (this.broken === true) {
+			return;
+		}
 		data.token = this.editor.token;
 		data.id = this.editor.doc_id;
 		data.user = this.editor.username;
+		// console.log('Online: ', this.online, ' Connected: ', this.connected, ' Data: ', data);
 		if (this.connected && this.online) {
 			try {
 				// console.log('sending: ', data.type);
@@ -183,7 +223,8 @@ export class ModServerCommunications {
 		}
 	}
 
-	receive(data) {
+	receive = (data) => {
+		// console.log(data);
 		// console.log('receieved: ', data.type);
 		switch (data.type) {
 		case 'chat':
@@ -202,7 +243,7 @@ export class ModServerCommunications {
 			break;
 		case 'confirm_diff_version':
 			this.editor.mod.collab.docChanges.cancelCurrentlyCheckingVersion();
-			if (data.diff_version !== this.editor.pm.mod.collab.version) {
+			if (data.diff_version !== getVersion(this.editor.getState())) {
 				this.editor.mod.collab.docChanges.checkDiffVersion();
 				return;
 			}

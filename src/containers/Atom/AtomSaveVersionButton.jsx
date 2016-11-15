@@ -1,10 +1,9 @@
-import React, {PropTypes} from 'react';
 import Radium from 'radium';
+import React, {PropTypes} from 'react';
 import {Loader} from 'components';
-import {globalStyles} from 'utils/styleConstants';
-
-import {globalMessages} from 'utils/globalMessages';
 import {FormattedMessage} from 'react-intl';
+import {globalMessages} from 'utils/globalMessages';
+import {globalStyles} from 'utils/styleConstants';
 
 let styles;
 
@@ -50,7 +49,7 @@ export const AtomSaveVersionButton = React.createClass({
 	// TODO: Route to /atom/doc when save version is finished. ANd clear our the message
 	render: function() {
 		return (
-			<div className={'light-button arrow-down-button'} style={this.props.buttonStyle}><FormattedMessage {...globalMessages.SaveVersion}/>
+			<div className={'light-button arrow-down-button'} style={[this.props.buttonStyle, styles.elevateButton]}><FormattedMessage {...globalMessages.SaveVersion}/>
 				<div className={'hoverChild arrow-down-child'} style={styles.content}>
 					<h2>
 						<FormattedMessage {...globalMessages.SaveVersion}/>
@@ -102,6 +101,9 @@ export const AtomSaveVersionButton = React.createClass({
 export default Radium(AtomSaveVersionButton);
 
 styles = {
+	elevateButton: {
+		zIndex: 10
+	},
 	content: {
 		width: '400px',
 		padding: '1em',

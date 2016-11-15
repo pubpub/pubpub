@@ -566,7 +566,7 @@ export function getAtomEdit(req, res) {
 		return [atomResult, Version.findOne({_id: mostRecentVersionId}).exec(), permissionType, authors];
 	})
 	.spread(function(atomResult, versionResult, permissionType, authors) { // Send response
-		if (permissionType !== 'author' && permissionType !== 'editor' && permissionType !== 'reader') {
+		if (permissionType !== 'author' && permissionType !== 'editor') {
 			throw new Error('Atom does not exist');
 		}
 
@@ -853,39 +853,90 @@ export function deleteContributor(req, res) {
 }
 app.post('/deleteContributor', deleteContributor);
 
-export function setYayNay(req, res) {
-	const {linkID, type} = req.body;
-	const userID = req.user._id;
-
-	let tasks = type === 'yay'
-		? [
-			Link.update({_id: linkID, type: 'reply'}, {$addToSet: {'metadata.yays': userID}}),
-			Link.update({_id: linkID, type: 'reply'}, {$pull: {'metadata.nays': userID}})
-		]
-		: [
-			Link.update({_id: linkID, type: 'reply'}, {$pull: {'metadata.yays': userID}}),
-			Link.update({_id: linkID, type: 'reply'}, {$addToSet: {'metadata.nays': userID}})
-		];
-
-	if (req.body.remove) {
-		tasks = type === 'yay'
-		? [
-			Link.update({_id: linkID, type: 'reply'}, {$pull: {'metadata.yays': userID}}),
-		]
-		: [
-			Link.update({_id: linkID, type: 'reply'}, {$pull: {'metadata.nays': userID}})
-		];
+// Saves a docx content as the new version content of an Atom
+export function uploadDocx(req, res) {
+	if (!req.user) {
+		return res.status(403).json('Not Logged In');
 	}
-	
-	Promise.all(tasks)
-	.then(function(updateResult) {
-		return res.status(201).json('success');
+
+	if (!req.user.verifiedEmail) {
+		return res.status(403).json('Not Verified');
+	}
+
+	const userID = req.user._id;
+	const now = new Date().getTime();
+	const type = req.body.type || 'markdown';
+	const atomID = req.body.atomID;
+
+	const today = new Date();
+	const dateString = (today + '').substring(4, 15);
+
+	let versionID;
+	// This should be made more intelligent to use images, video thumbnails, etc when possible - if the atom type is image, video, etc.
+
+	request.post(process.env.CONVERT_SERVER_URL + '/convertDocx')
+	.send({form: { url: req.body.url } })
+	.then(function(versionContent) {
+		 const tasks = [
+		// 	Link.createLink('author', userID, newAtomID, userID, now),
+		 ];
+
+		const newVersion = new Version({
+			type: 'markdown',
+			message: 'Imported docx',
+			parent: atomID,
+			content: JSON.parse(versionContent.text),
+			isPublished: false,
+			publishedBy: userID,
+			publishedDate: now,
+			createdBy: userID,
+			createDate: now
+
+		});
+		tasks.push(newVersion.save());
+
+		const informJake = new Promise(function(resolve, reject) {
+			console.log("INFORMING JAKE")
+			const collabUrl = process.env.COLLAB_SERVER_URL.indexOf('localhost') !== -1
+				? 'http://' + process.env.COLLAB_SERVER_URL
+				: 'https://' + process.env.COLLAB_SERVER_URL;
+
+				console.log(collabUrl)
+
+			return request.post(collabUrl + '/import-doc')
+			.send({ document_id: atomID, contents: JSON.stringify(JSON.parse(versionContent.text).docJSON) })
+			.then(function() {
+				resolve();
+			}).catch((err) => { console.log("Aaah " + err); reject(err); })
+		});
+
+		tasks.push(informJake);
+		return Promise.all(tasks);
+	})
+	.then(function(taskData) { // If we created a version, make sure to add that version to parent
+		const savedVersion = taskData[0];
+		console.log("Yah saved version bro " + JSON.stringify(savedVersion))
+		// const versionData = taskResults[0];
+		// versionID = versionData._id;
+		console.log("\n\n"+savedVersion._id)
+		console.log("atomid : " + atomID)
+		return Atom.update({ _id: atomID }, { $addToSet: { versions: savedVersion._id}, $set: {lastUpdated: now} }).exec();
+	})
+	.then(function() {
+		const getVersion = Version.findOne({_id: versionID}).lean().exec();
+		return getVersion;
+	})
+	.then(function(newVersion) { // Return hash of new atom
+		const versionData = newVersion || {};
+		// versionData.parent = atom;
+		// versionData.contributors = contributors;
+		versionData.permissionType = 'author';
+
+		return res.status(201).json(versionData);
 	})
 	.catch(function(error) {
 		console.log('error', error);
 		return res.status(500).json(error);
 	});
-
-	
 }
-app.post('/setYayNay', setYayNay);
+app.post('/uploadDocx', uploadDocx);

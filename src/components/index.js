@@ -10,6 +10,7 @@ export License from './License/License';
 export Loader from './Loader/Loader';
 export LoaderDeterminate from './LoaderDeterminate/LoaderDeterminate';
 export Media from './Media/Media';
+export MediaFiltered from './Media/MediaFiltered';
 export NavContentWrapper from './NavContentWrapper/NavContentWrapper';
 export NotFound from './NotFound/NotFound';
 export PreviewCard from './PreviewCard/PreviewCard';

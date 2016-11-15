@@ -137,10 +137,13 @@ export const Atom = React.createClass({
 					return;
 				}
 
+				/*
+				TO-DO: SERIALIZE MARKDOWN
 				const newVersionContent = this.refs.atomEditorPane.refs.editor.getSaveVersionContent();
 				if (this.state.currentDocMarkdown !== newVersionContent.markdown) {
 					this.setState({currentDocMarkdown: newVersionContent.markdown});
 				}
+				*/
 			}
 		}, 1000);
 
@@ -409,7 +412,7 @@ export const Atom = React.createClass({
 						{/* Atom Header */}
 						{ !error &&
 
-							<div style={styles.atomHeader}>
+							<div style={styles.atomHeader(isEditor)}>
 
 								{/* Atom Title */}
 								{/* ---------- */}
@@ -620,10 +623,12 @@ styles = {
 			boxShadow: '0px 0px 0px #808284',
 		},
 	},
-	atomHeader: {
-		borderBottom: '1px solid #F3F3F4',
-		marginBottom: '1em',
-		paddingBottom: '1em',
+	atomHeader: function(isEditor) {
+		return {
+			borderBottom: (!isEditor) ? '1px solid #F3F3F4' : null,
+			marginBottom: '1em',
+			paddingBottom: '1em',
+		}
 	},
 	headerWrapper: {
 		paddingTop: '2em',
@@ -767,8 +772,9 @@ styles = {
 	},
 	headerMenu: {
 		position: 'absolute',
-		right: 0,
+		left: 'calc(50vw - 220px)',
 		top: 0,
+		display: 'block',
 		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
 			position: 'static',
 		},
@@ -792,7 +798,8 @@ styles = {
 	},
 	headerFull: {
 		display: 'block',
-		left: 'calc(50vw - 300px)',
+		right: 'calc(50vw - 425px)',
+		left: null,
 	},
 	notNewestVersion: {
 		backgroundColor: '#363736',

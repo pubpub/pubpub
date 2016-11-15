@@ -1,15 +1,15 @@
-import React, {PropTypes} from 'react';
 import Radium from 'radium';
-import {safeGetInToJS} from 'utils/safeParse';
-import {globalMessages} from 'utils/globalMessages';
+import React, {PropTypes} from 'react';
 import {FormattedMessage} from 'react-intl';
-
+import {globalMessages} from 'utils/globalMessages';
+import {safeGetInToJS} from 'utils/safeParse';
 let styles;
 
 export const ImageViewer = React.createClass({
 	propTypes: {
 		atomData: PropTypes.object,
 		renderType: PropTypes.string, // full, embed, static-full, static-embed
+		selected: PropTypes.bool,
 	},
 
 	render: function() {
@@ -19,10 +19,12 @@ export const ImageViewer = React.createClass({
 		const scaledURL = imageSource.indexOf('.gif') > -1 ? imageSource : 'https://jake.pubpub.org/unsafe/fit-in/650x0/' + imageSource; // To learn about jake.pubpub fit-in, see Thumbor docs: http://thumbor.readthedocs.io/en/latest/usage.html#fit-in
 		const metadata = safeGetInToJS(this.props.atomData, ['currentVersionData', 'content', 'metadata']) || {};
 
+		const {selected} = this.props;
+
 		switch (this.props.renderType) {
 		case 'embed':
 		case 'static-embed':
-			return <img src={scaledURL} alt={title} style={styles.image}/>;
+			return (<img style={styles.img} src={scaledURL} alt={title}/>);
 		case 'full':
 		case 'static-full':
 		default:
