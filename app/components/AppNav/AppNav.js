@@ -51,8 +51,8 @@ export const AppNav = React.createClass({
 					<div className="pt-navbar-group pt-align-right">
 						<Popover 
 							content={<Menu>
-								<MenuItem iconName={'application'} text={<Link to={'/pub/create'} style={styles.menuLink}>New Pub</Link>} />
-								<MenuItem iconName={'applications'} text={<Link to={'/journal/create'} style={styles.menuLink}>New Journal</Link>} />
+								<MenuItem iconName={'application'} text={<Link to={'/pubs/create'} style={styles.menuLink}>New Pub</Link>} />
+								<MenuItem iconName={'applications'} text={<Link to={'/journals/create'} style={styles.menuLink}>New Journal</Link>} />
 							</Menu>}
 							interactionKind={PopoverInteractionKind.CLICK}
 							position={Position.BOTTOM_RIGHT}
@@ -82,7 +82,7 @@ export const AppNav = React.createClass({
 							inheritDarkTheme={false}
 						>
 							<button className="pt-button pt-minimal">
-								<img style={styles.userImage} alt={user.firstName + ' ' + user.lastName} src={user.image} />
+								<img style={styles.userImage} alt={user.firstName + ' ' + user.lastName} src={'https://jake.pubpub.org/unsafe/50x50/' + user.image} />
 								<span className="pt-icon-standard pt-icon-caret-down pt-align-right" />
 							</button>
 							

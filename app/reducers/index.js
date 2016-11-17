@@ -2,8 +2,11 @@ import Immutable from 'immutable';
 import { combineReducers } from 'redux';
 import account from './account';
 import app from './app';
+import createPub from './createPub';
+import createJournal from './createJournal';
 import login from './login';
 import signUp from './signUp';
+import user from './user';
 
 export function ensureImmutable(state) {
 	// For some reason the @@INIT action is receiving a state variable that is a regular object.
@@ -21,6 +24,9 @@ export function ensureImmutable(state) {
 export default combineReducers({
 	account,
 	app,
+	createPub,
+	createJournal,
 	login,
 	signUp,
+	user,
 });

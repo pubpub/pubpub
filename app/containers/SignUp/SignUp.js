@@ -43,6 +43,9 @@ export const SignUp = React.createClass({
 					<div>
 						<h1>Sign Up</h1>
 						<p>Enter your email to signup for PubPub. We'll send you a link to create your account!</p>
+
+						<hr />
+
 						<form onSubmit={this.handleSubmit} style={styles.form}>
 							<label htmlFor={'email'}>
 								Email
@@ -50,7 +53,7 @@ export const SignUp = React.createClass({
 							</label>
 							
 							<button className={'pt-button pt-intent-primary'} name={'login'} onClick={this.handleSubmit}>
-								Sign Up
+								Email Sign Up Link
 							</button>
 							<div style={styles.errorMessage}>{this.props.signUpData.error}</div>
 						</form>
@@ -87,7 +90,7 @@ export default connect(mapStateToProps)(Radium(SignUp));
 
 styles = {
 	container: {
-		width: '500px',
+		width: '600px',
 		padding: '2em 1em',
 		margin: '0 auto',
 		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {

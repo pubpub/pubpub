@@ -17,6 +17,10 @@ export const globalMessages = defineMessages({
 		id: 'global.PublishReply',
 		defaultMessage: 'Publish Reply',
 	},
+	PubURL: {
+		id: 'global.PubURL',
+		defaultMessage: 'Pub URL',
+	},
 	TypeToSearch: {
 		id: 'global.TypeToSearch',
 		defaultMessage: 'Type To Search',
@@ -332,6 +336,10 @@ export const globalMessages = defineMessages({
 	JournalLogo: {
 		id: 'global.JournalLogo',
 		defaultMessage: 'Journal Logo',
+	},
+	JournalURL: {
+		id: 'global.JournalURL',
+		defaultMessage: 'Journal URL',
 	},
 	All: {
 		id: 'global.All',

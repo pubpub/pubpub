@@ -3,7 +3,12 @@ body {
 	margin: 0 auto;
 	/*padding: 0em 1em;*/
 	/*background-color: #F5F5F5;*/
-	font-family: 'Helvetica';
+	/*font-family: 'Helvetica';*/
+}
+
+.verticalNavHover:hover {
+	padding: .15em 2em .15em calc(.5em - 3px) !important;
+	border-left: 3px solid #2C2A2B !important;
 }
 
 /* Input Fields */
@@ -50,12 +55,12 @@ input[type="file"]:focus {
 }
 /* ------------ */
 
-img {
+/*img {
 	max-width: 100%;
 	display: block;
 	position: relative;
 	padding: 1em 0em;
-}
+}*/
 
 .pub-body a {
 	position: relative;

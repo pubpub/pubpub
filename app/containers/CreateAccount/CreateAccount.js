@@ -183,25 +183,33 @@ export const CreateAccount = React.createClass({
 
 						<form onSubmit={this.createAccountSubmit}>
 							
-							<label style={styles.label} htmlFor={'username'}>
+							<label htmlFor={'username'}>
 								<FormattedMessage {...globalMessages.Username} />
 								<input id={'username'} name={'username'} type="text" style={styles.input} value={this.state.username} onChange={this.inputUpdateLowerCase.bind(this, 'username')} />
-								<div className={'light-color inputSubtext'} to={'/resetpassword'}>
+								<div className={'light-color inputSubtext'}>
 									pubpub.org/user/<b>{this.state.username || 'username'}</b>
 								</div>
 							</label>
 
-							<label style={styles.label} htmlFor={'firstName'}>
+							{/* <label htmlFor={'username'}>
+								<FormattedMessage {...globalMessages.Username} />
+								<div style={styles.prefixedInputWrapper}>
+									<div style={styles.prefix}>pubpub.org/user/</div>
+									<input id={'username'} name={'username'} type="text" style={[styles.input, styles.prefixedInput]} value={this.state.username} onChange={this.inputUpdate.bind(this, 'username')} />
+								</div>
+							</label> */}
+
+							<label htmlFor={'firstName'}>
 								<FormattedMessage {...globalMessages.FirstName} />
 								<input id={'firstName'} name={'first name'} type="text" style={styles.input} value={this.state.firstName} onChange={this.inputUpdate.bind(this, 'firstName')} />
 							</label>
 							
-							<label style={styles.label} htmlFor={'lastName'}>
+							<label htmlFor={'lastName'}>
 								<FormattedMessage {...globalMessages.LastName} />
 								<input id={'lastName'} name={'last name'} type="text" style={styles.input} value={this.state.lastName} onChange={this.inputUpdate.bind(this, 'lastName')} />
 							</label>
 								
-							<label style={styles.label} htmlFor={'password'}>
+							<label htmlFor={'password'}>
 								<FormattedMessage {...globalMessages.Password} />
 								<input id={'password'} name={'password'} type="password" style={styles.input} value={this.state.password} onChange={this.inputUpdate.bind(this, 'password')} />
 								<div className={'light-color inputSubtext'} to={'/resetpassword'}>
@@ -224,12 +232,12 @@ export const CreateAccount = React.createClass({
 							</label>
 
 							<label htmlFor={'publicEmail'}>
-								<FormattedMessage {...globalMessages.PublicEmail}/>
+								<FormattedMessage {...globalMessages.PublicEmail} />
 								<input id={'publicEmail'} name={'publicEmail'} type="text" style={styles.input} value={this.state.publicEmail} onChange={this.inputUpdate.bind(this, 'publicEmail')} />
 							</label>
 
 							<label htmlFor={'website'}>
-								<FormattedMessage {...globalMessages.Website}/>
+								<FormattedMessage {...globalMessages.Website} />
 								<input id={'website'} name={'website'} type="text" style={styles.input} value={this.state.website} onChange={this.inputUpdate.bind(this, 'website')} />
 							</label>
 
@@ -323,6 +331,7 @@ styles = {
 
 	userImage: {
 		width: '100px',
+		display: 'block',
 	},
 	errorMessage: {
 		padding: '10px 0px',
