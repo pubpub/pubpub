@@ -19,6 +19,11 @@ export const SignUp = React.createClass({
 		};
 	},
 
+	inputUpdateLowerCase: function(key, evt) {
+		const value = evt.target.value || '';
+		this.setState({ [key]: value.toLowerCase() });
+	},
+
 	handleSubmit: function(evt) {
 		evt.preventDefault();
 		this.props.dispatch(createSignUp(this.state.email));
@@ -32,7 +37,7 @@ export const SignUp = React.createClass({
 
 		return (
 			<div style={styles.container}>
-				<Helmet title={'Login · PubPub'} />
+				<Helmet title={'Sign Up · PubPub'} />
 
 				{!this.props.signUpData.destinationEmail && 
 					<div>
@@ -41,7 +46,7 @@ export const SignUp = React.createClass({
 						<form onSubmit={this.handleSubmit} style={styles.form}>
 							<label htmlFor={'email'}>
 								Email
-								<input id={'email'} name={'email'} type="email" value={this.state.email} onChange={(evt)=>{ this.setState({ email: evt.target.value.toLowerCase() }); }} />
+								<input id={'email'} name={'email'} type="email" style={styles.input} value={this.state.email} onChange={this.inputUpdateLowerCase.bind(this, 'email')} />
 							</label>
 							
 							<button className={'pt-button pt-intent-primary'} name={'login'} onClick={this.handleSubmit}>
@@ -55,7 +60,8 @@ export const SignUp = React.createClass({
 				{this.props.signUpData.destinationEmail && 
 					<div>
 						<h1>Sign Up</h1>
-						<p>A link to create your account has been sent to {this.props.signUpData.destinationEmail}</p>
+						<p>A link to create your account has been sent to <b>{this.props.signUpData.destinationEmail}</b></p>
+						
 						<button className={'pt-button'} onClick={this.resendEmail}>Resend Email</button>
 						{this.props.signUpData.loading &&
 							<p>Resending</p>
@@ -87,6 +93,9 @@ styles = {
 		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
 			width: 'auto',
 		}
+	},
+	input: {
+		width: 'calc(100% - 20px - 4px)', // Calculations come from padding and border in pubpub.css
 	},
 	errorMessage: {
 		padding: '10px 0px',

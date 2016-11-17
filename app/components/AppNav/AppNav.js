@@ -1,7 +1,8 @@
 import React, { PropTypes } from 'react';
 import Radium from 'radium';
-import { Link } from 'react-router';
+import { Link, browserHistory } from 'react-router';
 import { Popover, PopoverInteractionKind, Position, Menu, MenuItem, MenuDivider } from 'components/Blueprint';
+import { globalStyles } from 'utils/globalStyles';
 
 let styles;
 
@@ -11,47 +12,76 @@ export const AppNav = React.createClass({
 		logoutHandler: PropTypes.func,
 	},
 
+	getInitialState() {
+		return {
+			search: '',
+		};
+	},
+
+	inputUpdate: function(key, evt) {
+		const value = evt.target.value || '';
+		this.setState({ [key]: value });
+	},
+
 	searchSubmited: function(evt) {
 		evt.preventDefault();
-		console.log(evt.target.value);
+		browserHistory.push('/search?q=' + this.state.search);
 	},
 
 	render() {
-		const account = this.props.accountData.user || {};
+		const user = this.props.accountData.user || {};
 		return (
 			<nav className="pt-navbar pt-dark">
 				<div className="pt-navbar-group pt-align-left">
-					<Link to={'/'} className="pt-navbar-heading" style={styles.link}>PubPub</Link>
+					<Link to={'/'} className="pt-navbar-heading" style={styles.logo}>PubPub</Link>
 					<form onSubmit={this.searchSubmited}>
-						<input className="pt-input" placeholder="Search..." type="text" style={styles.searchInput} />
+						<input className="pt-input" placeholder="Search..." type="text" style={styles.searchInput} value={this.state.search} onChange={this.inputUpdate.bind(this, 'search')} />
 					</form>
 				</div>
 				
-				{!account.id &&
+				{!user.id &&
 					<div className="pt-navbar-group pt-align-right">
-						<Link to={'/login'} style={styles.testLink}><button className="pt-button pt-minimal">Login</button></Link>
-						<Link to={'/signup'} style={styles.testLink}><button className="pt-button pt-intent-primary">Signup</button></Link>		
+						<Link to={'/login'} style={styles.menuLink}><button className="pt-button pt-minimal">Login</button></Link>
+						<Link to={'/signup'} style={styles.menuLink}><button className="pt-button pt-intent-primary">Signup</button></Link>		
 					</div>
 				}
 
-				{account.id &&
+				{user.id &&
 					<div className="pt-navbar-group pt-align-right">
-						<button className="pt-button pt-minimal pt-icon-user" />
-						<button className="pt-button pt-minimal pt-icon-notifications" />
 						<Popover 
 							content={<Menu>
-								<MenuItem text={account.firstName + ' ' + account.lastName} />
-								<MenuItem iconName="new-object" text={<Link to={'/'} style={styles.testLink}>A Link</Link>} />
-								<MenuItem iconName="cog" text="Settings" />
+								<MenuItem iconName={'application'} text={<Link to={'/pub/create'} style={styles.menuLink}>New Pub</Link>} />
+								<MenuItem iconName={'applications'} text={<Link to={'/journal/create'} style={styles.menuLink}>New Journal</Link>} />
+							</Menu>}
+							interactionKind={PopoverInteractionKind.CLICK}
+							position={Position.BOTTOM_RIGHT}
+							transitionDuration={200}
+							inheritDarkTheme={false}
+						>
+							<button className="pt-button pt-minimal pt-icon-add">
+								New <span className="pt-icon-standard pt-icon-caret-down pt-align-right" />
+							</button>
+							
+						</Popover>
+
+						<Popover 
+							content={<Menu>
+								<MenuItem text={<Link to={'/user/' + user.username} style={styles.menuLink}><div>{user.firstName + ' ' + user.lastName}</div><div style={styles.subItemText}>View Profile</div></Link>} />
 								<MenuDivider />
+								<MenuItem text={<Link to={'/user/' + user.username + '/pubs'} style={styles.menuLink}>Pubs</Link>} />
+								<MenuItem text={<Link to={'/user/' + user.username + '/journals'} style={styles.menuLink}>Journals</Link>} />
+								<MenuItem text={<Link to={'/user/' + user.username + '/following'} style={styles.menuLink}>Following</Link>} />
+								<MenuDivider />
+								<MenuItem text={<Link to={'/user/' + user.username + '/settings'} style={styles.menuLink}>Settings</Link>} />
 								<MenuItem text={'Logout'} onClick={this.props.logoutHandler} />
 							</Menu>}
 							interactionKind={PopoverInteractionKind.CLICK}
 							position={Position.BOTTOM_RIGHT}
+							transitionDuration={200}
 							inheritDarkTheme={false}
 						>
 							<button className="pt-button pt-minimal">
-								<img style={styles.userImage} alt={account.firstName + ' ' + account.lastName} src={account.image} />
+								<img style={styles.userImage} alt={user.firstName + ' ' + user.lastName} src={user.image} />
 								<span className="pt-icon-standard pt-icon-caret-down pt-align-right" />
 							</button>
 							
@@ -68,44 +98,28 @@ export const AppNav = React.createClass({
 export default Radium(AppNav);
 
 styles = {
-	container: {
-		backgroundColor: '#232425',
-		color: 'white',
-		lineHeight: '50px',
-		height: '50px',
-		padding: '0em 1em',
-		position: 'relative',
-	},
-	searchInput: {
-		backgroundColor: '#394B59',
-	},
-	link: {
+	logo: {
 		textDecoration: 'none',
 		fontFamily: 'Yrsa',
 		fontSize: '1.5em',
 		color: 'inherit',
 		display: 'block',
 	},
-	testLink: {
-		textDecoration: 'none',
-		color: 'inherit',
+	searchInput: {
+		backgroundColor: '#394B59',
+	},
+	menuLink: {
+		...globalStyles.link,
 		display: 'block',
 	},
+	subItemText: {
+		fontSize: '0.8em',
+	},
 	userImage: {
-		width: '22px',
+		width: '25px',
 		padding: '0em',
 		display: 'inline-block',
 		borderRadius: '2px',
-		verticalAlign: 'middle',
-	},
-	name: {
-		textAlign: 'right',
-		color: '#FFF',
-		position: 'absolute',
-		right: '1em',
-		top: 0,
-		height: '50px',
-		lineHeight: '55px',
-		fontWeight: 'light',
+		verticalAlign: 'top',
 	},
 };

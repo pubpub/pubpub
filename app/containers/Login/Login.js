@@ -31,6 +31,18 @@ export const Login = React.createClass({
 		};
 	},
 
+	componentWillReceiveProps(nextProps) {
+		// If login was succesful, redirect
+		const oldLoading = this.props.loginData.loading;
+		const nextLoading = nextProps.loginData.loading;
+		const nextError = nextProps.loginData.error;
+
+		if (oldLoading && !nextLoading && !nextError) {
+			const redirectRoute = this.props.location.query && this.props.location.query.redirect;
+			browserHistory.push(redirectRoute || '/');
+		}
+	},
+
 	inputUpdate: function(key, evt) {
 		const value = evt.target.value || '';
 		this.setState({ [key]: value });
@@ -46,26 +58,11 @@ export const Login = React.createClass({
 		this.props.dispatch(login(this.state.email, this.state.password));
 	},
 
-	componentWillReceiveProps(nextProps) {
-		// If login was succesful, redirect
-		const oldLoading = this.props.loginData.loading;
-		const nextLoading = nextProps.loginData.loading;
-		const nextError = nextProps.loginData.error;
-
-		if (oldLoading && !nextLoading && !nextError) {
-			const redirectRoute = this.props.location.query && this.props.location.query.redirect;
-			browserHistory.push(redirectRoute || '/');
-		}
-	},
-
 	render: function() {
 		const loginData = this.props.loginData || {};
 		const isLoading = loginData.loading;
 		const error = loginData.error;
 		
-		const redirectRoute = this.props.location.query && this.props.location.query.redirect;
-		const redirectQuery = redirectRoute ? '?redirect=' + redirectRoute : '';
-
 		return (
 			<div style={styles.container}>
 				<Helmet title={'Login · PubPub'} />
@@ -101,10 +98,9 @@ export const Login = React.createClass({
 							<FormattedMessage id="login.InvalidEmailOrPassword" defaultMessage="Invalid Email or Password" />
 						</div>	
 					}
-					
 				</form>
 
-				<Link to={'/signup' + redirectQuery} style={styles.registerLink}>
+				<Link to={'/signup'} style={styles.registerLink}>
 					<FormattedMessage id="login.newToPubPub" defaultMessage="New to PubPub? Click to Sign Up!" />
 				</Link>	
 				
