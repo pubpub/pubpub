@@ -35,6 +35,7 @@ export const Root = React.createClass({
 					<script src="https://cdn.polyfill.io/v2/polyfill.min.js?features=Intl.~locale.en" />
 					<link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700" rel="stylesheet" type="text/css" />
 					<link href="https://assets.pubpub.org/_fonts/Yrsa.css" rel="stylesheet" type="text/css" />
+					<link href="/static/blueprint.css" rel="stylesheet" />
 					<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 					<meta name="google-site-verification" content="s8F1PnVMuOT2D-UM6acNzl2thVY_e5s_-Uc83bj27KY" />
 					<link rel="shortcut icon" href="/static/favicon.ico" />
@@ -52,6 +53,26 @@ export const Root = React.createClass({
 				</body>
 			</html>
 		);
+		
+		// return (
+		// 	<html lang="en">
+		// 		<head>
+		// 			<meta charSet="utf-8" />
+		// 			<script src="https://cdn.polyfill.io/v2/polyfill.min.js?features=Intl.~locale.en" />
+		// 			<link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700" rel="stylesheet" type="text/css" />
+		// 			<link href="https://assets.pubpub.org/_fonts/Yrsa.css" rel="stylesheet" type="text/css" />
+		// 			<link href="/static/blueprint.css" rel="stylesheet" />
+		// 			<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		// 			<meta name="google-site-verification" content="s8F1PnVMuOT2D-UM6acNzl2thVY_e5s_-Uc83bj27KY" />
+		// 			<link rel="shortcut icon" href="/static/favicon.ico" />
+		// 			{cssString}
+		// 		</head>
+		// 		<body>
+		// 			<div id="root"></div>
+		// 			<script src={!process.env.NODE_ENV ? '/app.js' : '/' + __MAINBUNDLE__} />
+		// 		</body>
+		// 	</html>
+		// );
 	}
 });
 

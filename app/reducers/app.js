@@ -1,3 +1,6 @@
+/* ---------- */
+// Load Actions
+/* ---------- */
 import {
 	LOGIN_DATA_LOAD,
 	LOGIN_DATA_SUCCESS,
@@ -21,6 +24,9 @@ import {
 	ACCEPT_PR_SUCCESS,
 } from 'containers/App/actions';
 
+/* ------------------- */
+// Define Default State
+/* ------------------- */
 const defaultState = {
 	loading: false,
 	error: undefined,
@@ -30,6 +36,9 @@ const defaultState = {
 	user: {},
 };
 
+/* ----------------------------------------- */
+// Bind actions to specific reducing functions
+/* ----------------------------------------- */
 export default function reducer(state = defaultState, action) {
 	switch (action.type) {
 		

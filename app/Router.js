@@ -67,6 +67,9 @@ function renderComponentWithRoot(req, Component, componentProps, store) {
 
 	const head = Helmet.rewind();
 	const initialState = store.getState();
+	// const initialState = {};
+	// const componentHtml = {};
+	// const head = {title: {}, meta: {}, link: {}};
 	return '<!doctype html>\n' + renderToStaticMarkup(
 		<Root radiumConfig={{ userAgent: req.headers['user-agent'] }} content={componentHtml} initialState={initialState} head={head} />
 	);
@@ -99,7 +102,7 @@ function handleRoute(req, res, renderProps) {
 function serverMiddleware(req, res) {
 	
 	global.clientFetch = function(route, opts) {
-		return fetch(process.env.SITE_URL + route, {
+		return fetch('http://localhost:3000' + route, {
 			...opts,
 			headers: {
 				cookie: req.get('cookie')

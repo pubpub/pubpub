@@ -2,6 +2,7 @@ import Immutable from 'immutable';
 import { combineReducers } from 'redux';
 import account from './account';
 import app from './app';
+import login from './login';
 import signUp from './signUp';
 
 export function ensureImmutable(state) {
@@ -20,5 +21,6 @@ export function ensureImmutable(state) {
 export default combineReducers({
 	account,
 	app,
+	login,
 	signUp,
 });

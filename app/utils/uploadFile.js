@@ -10,7 +10,7 @@ export function s3Upload(file, progressEvent, finishEvent, index) {
 		const formData = new FormData();
 
 		formData.append('key', filename);
-		formData.append('AWSAccessKeyId', 'AKIAIF6U66SA3CL32QBA');
+		formData.append('AWSAccessKeyId', 'AKIAJKX3SN6BRBPWWGHQ');
 		formData.append('acl', 'public-read');
 		formData.append('policy', JSON.parse(this.responseText).policy);
 		formData.append('signature', JSON.parse(this.responseText).signature);
@@ -24,7 +24,7 @@ export function s3Upload(file, progressEvent, finishEvent, index) {
 		sendFile.upload.addEventListener('load', (evt)=>{
 			finishEvent(evt, index, file.type, filename, file.name);
 		}, false);
-		sendFile.open('POST', 'https://s3.amazonaws.com/assets.listoflinks.co', true);
+		sendFile.open('POST', 'https://s3-external-1.amazonaws.com/assets.pubpub.org', true);
 		sendFile.send(formData);
 	}
 

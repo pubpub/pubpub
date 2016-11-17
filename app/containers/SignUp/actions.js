@@ -1,7 +1,20 @@
-export const CREATE_SIGN_UP_LOAD = 'CREATE_SIGN_UP_LOAD';
-export const CREATE_SIGN_UP_SUCCESS = 'CREATE_SIGN_UP_SUCCESS';
-export const CREATE_SIGN_UP_FAIL = 'CREATE_SIGN_UP_FAIL';
+/*--------*/
+// Define Action types
+//
+// All action types are defined as constants. Do not manually pass action
+// types as strings in action creators
+/*--------*/
+export const CREATE_SIGN_UP_LOAD = 'signUp/CREATE_SIGN_UP_LOAD';
+export const CREATE_SIGN_UP_SUCCESS = 'signUp/CREATE_SIGN_UP_SUCCESS';
+export const CREATE_SIGN_UP_FAIL = 'signUp/CREATE_SIGN_UP_FAIL';
 
+/*--------*/
+// Define Action creators
+//
+// All calls to dispatch() call one of these functions. Do not manually create
+// action objects (e.g. {type:example, payload:data} ) within dispatch()
+// function calls
+/*--------*/
 export function createSignUp(email) {
 	return (dispatch) => {
 		dispatch({ type: CREATE_SIGN_UP_LOAD });

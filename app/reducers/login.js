@@ -5,10 +5,14 @@ import { ensureImmutable } from './index';
 // Load Actions
 /* ---------- */
 import {
-	CREATE_SIGN_UP_LOAD,
-	CREATE_SIGN_UP_SUCCESS,
-	CREATE_SIGN_UP_FAIL,
-} from 'containers/SignUp/actions';
+	LOGIN_LOAD,
+	LOGIN_SUCCESS,
+	LOGIN_FAIL,
+
+	LOGOUT_LOAD,
+	LOGOUT_SUCCESS,
+	LOGOUT_FAIL,
+} from 'containers/Login/actions';
 
 /* ------------------- */
 // Define Default State
@@ -16,8 +20,6 @@ import {
 const defaultState = Immutable.Map({
 	loading: false,
 	error: undefined,
-	destinationEmail: undefined,
-	resendSuccess: false,
 });
 
 /* ----------------------------------------- */
@@ -26,22 +28,20 @@ const defaultState = Immutable.Map({
 export default function reducer(state = defaultState, action) {
 	switch (action.type) {
 	
-	case CREATE_SIGN_UP_LOAD:
+	case LOGIN_LOAD:
 		return state.merge({
 			loading: true,
-			resendSuccess: false,
+			error: undefined,
 		});	
-	case CREATE_SIGN_UP_SUCCESS:
+	case LOGIN_SUCCESS:
 		return state.merge({
 			loading: false,
-			destinationEmail: action.email,
-			resendSuccess: !!state.get('destinationEmail')
+			error: false,
 		});
-	case CREATE_SIGN_UP_FAIL:
+	case LOGIN_FAIL:
 		return state.merge({
 			loading: false,
 			error: true,
-			resendSuccess: false,
 		});
 
 	default:

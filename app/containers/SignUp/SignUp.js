@@ -1,4 +1,6 @@
 import React, { PropTypes } from 'react';
+import Radium from 'radium';
+import Helmet from 'react-helmet';
 import { connect } from 'react-redux';
 import { createSignUp } from './actions';
 
@@ -29,19 +31,30 @@ export const SignUp = React.createClass({
 
 		return (
 			<div style={styles.container}>
+				<Helmet title={'Login · PubPub'} />
+
 				{!this.props.signUpData.destinationEmail && 
-					<form onSubmit={this.handleSubmit} style={styles.form}>
-						<input id={'email'} name={'email'} type="email" placeholder={'Email'} value={this.state.email} onChange={(evt)=>{ this.setState({ email: evt.target.value }); }} />
-						<button name={'login'} onClick={this.handleSubmit}>
-							Sign Up
-						</button>
-					</form>
+					<div>
+						<h1>Sign Up</h1>
+						<p>Enter your email to signup for PubPub. We'll send you a link to create your account!</p>
+						<form onSubmit={this.handleSubmit} style={styles.form}>
+							<label htmlFor={'email'}>
+								Email
+								<input id={'email'} name={'email'} type="email" value={this.state.email} onChange={(evt)=>{ this.setState({ email: evt.target.value }); }} />
+							</label>
+							
+							<button className={'pt-button pt-intent-primary'} name={'login'} onClick={this.handleSubmit}>
+								Sign Up
+							</button>
+						</form>
+					</div>
 				}
 
 				{this.props.signUpData.destinationEmail && 
 					<div>
+						<h1>Sign Up</h1>
 						<p>A link to create your account has been sent to {this.props.signUpData.destinationEmail}</p>
-						<p onClick={this.resendEmail}>Resend Email</p>
+						<button className={'pt-button'} onClick={this.resendEmail}>Resend Email</button>
 						{this.props.signUpData.loading &&
 							<p>Resending</p>
 						}
@@ -50,6 +63,7 @@ export const SignUp = React.createClass({
 						}
 					</div>
 				}
+				
 			</div>
 		);
 	}
@@ -61,10 +75,15 @@ function mapStateToProps(state) {
 	};
 }
 
-export default connect(mapStateToProps)(SignUp);
+export default connect(mapStateToProps)(Radium(SignUp));
 
 styles = {
 	container: {
-		padding: '1em'
+		width: '500px',
+		padding: '2em 1em',
+		margin: '0 auto',
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+			width: 'auto',
+		}
 	}
 };

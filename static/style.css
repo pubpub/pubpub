@@ -6,24 +6,49 @@ body {
 	font-family: 'Helvetica';
 }
 
+/* Input Fields */
+/* ------------ */
 label {
-	padding-right: 1em;
-	margin-bottom: .25em;
-	width: 100px;
-	display: inline-block;
+	display: block;
+	color: #58585B;
 }
 
-input, textarea {
-	border: 1px solid #CCC;
+input[type="text"]:not(.pt-input), input[type="email"]:not(.pt-input), input[type="password"]:not(.pt-input), textarea {
+	display: block;
+	padding: 5px 10px;
+	border: 2px solid #BBBDC0;
+	border-radius: 1px;
+	font-size: 1.2em;
+	margin-bottom: 1em;
+	resize: vertical;
 }
-input:focus, input:focus, textarea:focus{
+input[type="text"]:focus:not(.pt-input), input[type="email"]:focus:not(.pt-input), input[type="password"]:focus:not(.pt-input), textarea:focus{
 	outline: none;
-	border: 1px solid #555;
+	border: 2px solid #58585B;
+}
+input[type="file"] {
+	display: block;
+	padding: 5px 0px;
+	border: 0;
+	font-size: 1em;
+	margin-bottom: 1.2em;
 }
 
-input[type=file], input[type=file]:focus {
-	border: 0px solid black;
+input[type="file"]:focus {
+	outline: 2px solid #58585B;
 }
+
+.inputSubtext {
+	font-size: 0.8em;
+	text-decoration: none;
+	position: relative;
+	top: -1.4em;
+}
+
+.subtext {
+	font-size: 0.8em;
+}
+/* ------------ */
 
 img {
 	max-width: 100%;
