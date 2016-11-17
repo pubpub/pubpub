@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
-import { Link } from 'react-router';
+import { Link, browserHistory } from 'react-router';
 import Radium from 'radium';
 import Helmet from 'react-helmet';
 
@@ -45,6 +45,17 @@ export const CreateAccount = React.createClass({
 			googleScholar: '',
 			validationError: undefined,
 		};
+	},
+
+	componentWillReceiveProps(nextProps) {
+		// If login was succesful, redirect
+		const oldLoading = this.props.accountData.createAccountLoading;
+		const nextLoading = nextProps.accountData.createAccountLoading;
+		const nextError = nextProps.accountData.createAccountError;
+
+		if (oldLoading && !nextLoading && !nextError) {
+			browserHistory.push('/');
+		}
 	},
 
 	inputUpdate: function(key, evt) {

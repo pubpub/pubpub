@@ -80,12 +80,12 @@ export const ImageCropper = React.createClass({
 				</div>
 				<div style={styles.previewAndOptions}>
 					<img style={styles.preview}src={this.state.preview} />
-					<div className={'button'} style={styles.option} key="userUploadCancel" onClick={this.handleCancel}>
+					<button className={'pt-button'} style={styles.option} key="userUploadCancel" onClick={this.handleCancel}>
 						<FormattedMessage {...globalMessages.Cancel} />
-					</div>
-					<div className={'button'} style={styles.option} key="userUploadSave" onClick={this.handleSaveImage}>
+					</button>
+					<button className={'pt-button pt-intent-primary'} style={styles.option} key="userUploadSave" onClick={this.handleSaveImage}>
 						<FormattedMessage {...globalMessages.Save} />
-					</div>
+					</button>
 				</div>
 				<div style={styles.loaderWrapper}>
 					<Loader loading={this.state.isUploading}/>
@@ -156,7 +156,7 @@ styles = {
 		fontSize: '0.9em',
 		float: 'right',
 		textAlign: 'center',
-		marginBottom: '20px',
+		marginBottom: '1em',
 		// textAlign: 'right',
 		// fontSize: '25px',
 		// color: '#555',
@@ -169,7 +169,7 @@ styles = {
 			width: '50%',
 			float: 'none',
 			display: 'block',
-			margin: '20px auto'
+			margin: '1em auto'
 		// 	textAlign: 'center',
 		// 	fontSize: '35px',
 		},
