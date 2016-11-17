@@ -8,6 +8,11 @@ import {
 	GET_SIGN_UP_DATA_LOAD,
 	GET_SIGN_UP_DATA_SUCCESS,
 	GET_SIGN_UP_DATA_FAIL,
+
+	CREATE_ACCOUNT_LOAD,
+	CREATE_ACCOUNT_SUCCESS,
+	CREATE_ACCOUNT_FAIL,
+
 } from 'containers/CreateAccount/actions';
 
 /* ------------------- */
@@ -17,6 +22,8 @@ const defaultState = Immutable.Map({
 	loading: false,
 	error: undefined,
 	user: {},
+	createAccountLoading: false,
+	createAccountError: undefined,
 });
 
 /* ----------------------------------------- */
@@ -41,6 +48,23 @@ export default function reducer(state = defaultState, action) {
 		return state.merge({
 			loading: false,
 			error: true,
+		});
+
+	case CREATE_ACCOUNT_LOAD:
+		return state.merge({
+			createAccountLoading: true,
+			createAccountError: undefined,
+		});	
+	case CREATE_ACCOUNT_SUCCESS:
+		return state.merge({
+			createAccountLoading: false,
+			createAccountError: undefined,
+			user: action.result,
+		});
+	case CREATE_ACCOUNT_FAIL:
+		return state.merge({
+			createAccountLoading: false,
+			createAccountError: action.error,
 		});
 
 	default:

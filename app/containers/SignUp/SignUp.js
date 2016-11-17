@@ -3,6 +3,7 @@ import Radium from 'radium';
 import Helmet from 'react-helmet';
 import { connect } from 'react-redux';
 import { createSignUp } from './actions';
+import { globalStyles } from 'utils/globalStyles';
 
 let styles;
 
@@ -40,12 +41,13 @@ export const SignUp = React.createClass({
 						<form onSubmit={this.handleSubmit} style={styles.form}>
 							<label htmlFor={'email'}>
 								Email
-								<input id={'email'} name={'email'} type="email" value={this.state.email} onChange={(evt)=>{ this.setState({ email: evt.target.value }); }} />
+								<input id={'email'} name={'email'} type="email" value={this.state.email} onChange={(evt)=>{ this.setState({ email: evt.target.value.toLowerCase() }); }} />
 							</label>
 							
 							<button className={'pt-button pt-intent-primary'} name={'login'} onClick={this.handleSubmit}>
 								Sign Up
 							</button>
+							<div style={styles.errorMessage}>{this.props.signUpData.error}</div>
 						</form>
 					</div>
 				}
@@ -85,5 +87,9 @@ styles = {
 		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
 			width: 'auto',
 		}
-	}
+	},
+	errorMessage: {
+		padding: '10px 0px',
+		color: globalStyles.errorRed,
+	},
 };

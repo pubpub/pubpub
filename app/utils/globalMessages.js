@@ -53,6 +53,10 @@ export const globalMessages = defineMessages({
 		id: 'global.ProfileImage',
 		defaultMessage: 'Profile Image',
 	},
+	Username: {
+		id: 'global.Username',
+		defaultMessage: 'Username',
+	},
 	FirstName: {
 		id: 'global.FirstName',
 		defaultMessage: 'First Name',

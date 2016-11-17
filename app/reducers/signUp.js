@@ -40,7 +40,7 @@ export default function reducer(state = defaultState, action) {
 	case CREATE_SIGN_UP_FAIL:
 		return state.merge({
 			loading: false,
-			error: true,
+			error: action.error,
 			resendSuccess: false,
 		});
 

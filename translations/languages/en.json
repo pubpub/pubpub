@@ -1,4 +1,5 @@
 {
+  "signup.Usernamerequired": "Username required",
   "signup.FirstNamerequired": "First Name required",
   "signup.LastNamerequired": "Last Name required",
   "signup.Emailrequired": "Email required",
@@ -22,6 +23,7 @@
   "global.SaveVersion": "Save Version",
   "global.LatestVersion": "Latest Version",
   "global.ProfileImage": "Profile Image",
+  "global.Username": "Username",
   "global.FirstName": "First Name",
   "global.LastName": "Last Name",
   "global.Bio": "Bio",

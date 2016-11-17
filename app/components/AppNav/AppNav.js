@@ -16,7 +16,7 @@ export const AppNav = React.createClass({
 	},
 
 	render() {
-		const account = this.props.accountData || {};
+		const account = this.props.accountData.user || {};
 		// return (
 		// 	<div style={styles.container}>
 		// 		<Link to="/" style={styles.link}>
@@ -95,10 +95,9 @@ styles = {
 		position: 'relative',
 	},
 	searchInput: {
-		backgroundColor: '#293742',
+		backgroundColor: '#394B59',
 	},
 	link: {
-		color: 'white',
 		textDecoration: 'none',
 		fontFamily: 'Yrsa',
 		fontSize: '1.5em',

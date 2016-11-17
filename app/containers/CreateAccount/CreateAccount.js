@@ -16,6 +16,7 @@ let styles;
 export const CreateAccount = React.createClass({
 	propTypes: {
 		accountData: PropTypes.object,
+		params: PropTypes.object,
 		dispatch: PropTypes.func,
 	},
 
@@ -30,7 +31,8 @@ export const CreateAccount = React.createClass({
 	getInitialState() {
 		return {
 			userImageFile: null,
-			userImageURL: undefined,
+			userImageURL: 'https://assets.pubpub.org/_site/happyPub.png',
+			username: '',
 			firstName: '',
 			lastName: '',
 			password: '',
@@ -48,6 +50,11 @@ export const CreateAccount = React.createClass({
 	inputUpdate: function(key, evt) {
 		const value = evt.target.value || '';
 		this.setState({ [key]: value });
+	},
+
+	inputUpdateLowerCase: function(key, evt) {
+		const value = evt.target.value || '';
+		this.setState({ [key]: value.toLowerCase() });
 	},
 
 	bioUpdate: function(evt) {
@@ -72,6 +79,11 @@ export const CreateAccount = React.createClass({
 	},
 
 	validate: function(data) {
+		// Check to make sure username exists
+		if (!data.username || !data.username.length) {
+			return { isValid: false, validationError: <FormattedMessage id="signup.Usernamerequired" defaultMessage="Username required" /> };
+		}
+
 		// Check to make sure firstName exists
 		if (!data.firstName || !data.firstName.length) {
 			return { isValid: false, validationError: <FormattedMessage id="signup.FirstNamerequired" defaultMessage="First Name required" /> };
@@ -108,9 +120,12 @@ export const CreateAccount = React.createClass({
 		const user = accountData.user || {};
 		const createAccountData = {
 			email: user.email,
+			hash: this.props.params.hash,
+			username: this.state.username,
 			firstName: this.state.firstName,
 			lastName: this.state.lastName,
 			password: this.state.password,
+			image: this.state.userImageURL,
 			bio: this.state.bio,
 			publicEmail: this.state.publicEmail,
 			website: this.state.website,
@@ -121,19 +136,19 @@ export const CreateAccount = React.createClass({
 		};
 		const { isValid, validationError } = this.validate(createAccountData);
 		this.setState({ validationError: validationError });
-		// if (isValid) {
-		// 	this.props.dispatch(createAccount(createAccountData));	
-		// }
+		if (isValid) {
+			this.props.dispatch(createAccount(createAccountData));	
+		}
 	},
 	render() {
 		const accountData = this.props.accountData || {};
 		const user = accountData.user || {};
-		const isLoading = true;
+		const isLoading = accountData.createAccountLoading;
 		const serverErrors = {
-			emailAlreadyUsed: <FormattedMessage id="signup.Emailalreadyused" defaultMessage="Email already used" />,
-			usernameAlreadyUsed: <FormattedMessage id="signup.Usernamealreadyused" defaultMessage="Username already used" />,
+			'Email already used': <FormattedMessage id="signup.Emailalreadyused" defaultMessage="Email already used" />,
+			'Username already used': <FormattedMessage id="signup.Usernamealreadyused" defaultMessage="Username already used" />,
 		};
-		const errorMessage = serverErrors[accountData.errorMessage] || this.state.validationError;
+		const errorMessage = serverErrors[accountData.createAccountError] || this.state.validationError;
 		return (
 			<div style={styles.container}>
 				<Helmet title={'Create Account · PubPub'} />
@@ -157,6 +172,14 @@ export const CreateAccount = React.createClass({
 
 						<form onSubmit={this.createAccountSubmit}>
 							
+							<label style={styles.label} htmlFor={'username'}>
+								<FormattedMessage {...globalMessages.Username} />
+								<input id={'username'} name={'username'} type="text" style={styles.input} value={this.state.username} onChange={this.inputUpdateLowerCase.bind(this, 'username')} />
+								<div className={'light-color inputSubtext'} to={'/resetpassword'}>
+									pubpub.org/user/<b>{this.state.username || 'username'}</b>
+								</div>
+							</label>
+
 							<label style={styles.label} htmlFor={'firstName'}>
 								<FormattedMessage {...globalMessages.FirstName} />
 								<input id={'firstName'} name={'first name'} type="text" style={styles.input} value={this.state.firstName} onChange={this.inputUpdate.bind(this, 'firstName')} />

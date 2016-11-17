@@ -20,6 +20,7 @@ addLocaleData([...en, ...fr, ...es]);
 export const App = React.createClass({
 	propTypes: {
 		appData: PropTypes.object,
+		accountData: PropTypes.object,
 		children: PropTypes.object,
 		dispatch: PropTypes.func,
 	},
@@ -58,7 +59,7 @@ export const App = React.createClass({
 							{ name: 'twitter:image:alt', content: 'Logo for List of Links' }
 						]} 
 					/> 
-					<AppNav userData={this.props.appData.user} />
+					<AppNav accountData={this.props.accountData} />
 					<div style={{ minHeight: 'calc(100vh - 75px)' }}>{this.props.children}</div>
 					<AppFooter />
 				</StyleRoot>
@@ -70,7 +71,8 @@ export const App = React.createClass({
 
 function mapStateToProps(state) {
 	return {
-		appData: state.app
+		appData: state.app,
+		accountData: state.account.toJS(),
 	};
 }
 
