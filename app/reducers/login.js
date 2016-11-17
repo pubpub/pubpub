@@ -5,13 +5,9 @@ import { ensureImmutable } from './index';
 // Load Actions
 /* ---------- */
 import {
-	LOGIN_LOAD,
-	LOGIN_SUCCESS,
-	LOGIN_FAIL,
-
-	LOGOUT_LOAD,
-	LOGOUT_SUCCESS,
-	LOGOUT_FAIL,
+	LOGIN_POST_LOAD,
+	LOGIN_POST_SUCCESS,
+	LOGIN_POST_FAIL,
 } from 'containers/Login/actions';
 
 /* ------------------- */
@@ -28,17 +24,17 @@ const defaultState = Immutable.Map({
 export default function reducer(state = defaultState, action) {
 	switch (action.type) {
 	
-	case LOGIN_LOAD:
+	case LOGIN_POST_LOAD:
 		return state.merge({
 			loading: true,
 			error: undefined,
 		});	
-	case LOGIN_SUCCESS:
+	case LOGIN_POST_SUCCESS:
 		return state.merge({
 			loading: false,
 			error: false,
 		});
-	case LOGIN_FAIL:
+	case LOGIN_POST_FAIL:
 		return state.merge({
 			loading: false,
 			error: true,

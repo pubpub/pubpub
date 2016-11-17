@@ -1,6 +1,6 @@
-import React, {PropTypes} from 'react';
+import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
-import { Link } from 'react-router';
+import { Link, browserHistory } from 'react-router';
 
 import Radium from 'radium';
 import Helmet from 'react-helmet';
@@ -19,81 +19,95 @@ let styles = {};
 export const Login = React.createClass({
 	propTypes: {
 		loginData: PropTypes.object,
-		query: PropTypes.object,
+		location: PropTypes.object,
 		dispatch: PropTypes.func,
 		
 	},
 
-	handleLoginSubmit: function(evt) {
-		evt.preventDefault();
-		const email = this.refs.email.value || '';
-		this.props.dispatch(login(email.toLowerCase(), this.refs.password.value));
+	getInitialState() {
+		return {
+			email: '',
+			password: '',
+		};
 	},
 
-	// componentWillMount() {
-	// 	const newUsername = this.props.loginData && this.props.loginData.getIn(['userData', 'username']);
-	// 	if (newUsername) {
-	// 		// new username exists and is not the same as oldusername
-	// 		const redirectRoute = this.props.query && this.props.query.redirect;
-	// 		this.props.dispatch(push(redirectRoute || '/'));
-	// 	}
-	// },
-	// componentWillReceiveProps(nextProps) {
-	// 	// If there is a new username in loginData, login was a sucess, so redirect
-	// 	const oldUsername = this.props.loginData && this.props.loginData.getIn(['userData', 'username']);
-	// 	const newUsername = nextProps.loginData && nextProps.loginData.getIn(['userData', 'username']);
-	// 	if (newUsername && oldUsername !== newUsername) {
-	// 		// new username exists and is not the same as oldusername
-	// 		const redirectRoute = this.props.query && this.props.query.redirect;
-	// 		this.props.dispatch(push(redirectRoute || '/'));
-	// 	}
-	// },
+	inputUpdate: function(key, evt) {
+		const value = evt.target.value || '';
+		this.setState({ [key]: value });
+	},
+
+	inputUpdateLowerCase: function(key, evt) {
+		const value = evt.target.value || '';
+		this.setState({ [key]: value.toLowerCase() });
+	},
+
+	handleLoginSubmit: function(evt) {
+		evt.preventDefault();
+		this.props.dispatch(login(this.state.email, this.state.password));
+	},
+
+	componentWillReceiveProps(nextProps) {
+		// If login was succesful, redirect
+		const oldLoading = this.props.loginData.loading;
+		const nextLoading = nextProps.loginData.loading;
+		const nextError = nextProps.loginData.error;
+
+		if (oldLoading && !nextLoading && !nextError) {
+			const redirectRoute = this.props.location.query && this.props.location.query.redirect;
+			browserHistory.push(redirectRoute || '/');
+		}
+	},
 
 	render: function() {
 		const loginData = this.props.loginData || {};
 		const isLoading = loginData.loading;
 		const error = loginData.error;
 		
-		const redirectRoute = this.props.query && this.props.query.redirect;
+		const redirectRoute = this.props.location.query && this.props.location.query.redirect;
 		const redirectQuery = redirectRoute ? '?redirect=' + redirectRoute : '';
 
 		return (
 			<div style={styles.container}>
 				<Helmet title={'Login · PubPub'} />
 
-				<h1><FormattedMessage {...globalMessages.Login}/></h1>
+				<h1><FormattedMessage {...globalMessages.Login} /></h1>
 
 				<form onSubmit={this.handleLoginSubmit}>
 					<div>
 						<label style={styles.label} htmlFor={'email'}>
 							<FormattedMessage {...globalMessages.Email} />
 						</label>
-						<input ref={'email'} id={'email'} name={'email'} type="text" style={styles.input}/>
+						<input id={'email'} name={'email'} type="text" style={styles.input} value={this.state.email} onChange={this.inputUpdateLowerCase.bind(this, 'email')} />
 					</div>
 
 					<div>
 						<label style={styles.label} htmlFor={'password'}>
 							<FormattedMessage {...globalMessages.Password} />
 						</label>
-						<input ref={'password'} id={'password'} name={'password'} type="password" style={styles.input}/>
+						<input id={'password'} name={'password'} type="password" style={styles.input} value={this.state.password} onChange={this.inputUpdate.bind(this, 'password')} />
 						<Link className={'light-color inputSubtext'} to={'/resetpassword'}>
-							<FormattedMessage id="login.ForgotPassword" defaultMessage="Forgot Password?"/>
+							<FormattedMessage id="login.ForgotPassword" defaultMessage="Forgot Password?" />
 						</Link>
 					</div>
 
 					<button name={'login'} className={'pt-button pt-intent-primary'} onClick={this.handleLoginSubmit}>
-						<FormattedMessage {...globalMessages.Login}/>
+						<FormattedMessage {...globalMessages.Login} />
 					</button>
 
-					<div style={styles.loaderContainer}><Loader loading={isLoading} showCompletion={!error}/></div>
+					<div style={styles.loaderContainer}><Loader loading={isLoading} showCompletion={!error} /></div>
 
-					<div style={styles.errorMessage}>{error}</div>
-
+					{error &&
+						<div style={styles.errorMessage}>
+							<FormattedMessage id="login.InvalidEmailOrPassword" defaultMessage="Invalid Email or Password" />
+						</div>	
+					}
+					
 				</form>
 
-				<Link style={styles.registerLink} to={'/signup' + redirectQuery}>
-					<FormattedMessage id="login.newToPubPub" defaultMessage="New to PubPub? Click to Sign Up!"/>
-				</Link>
+				<Link to={'/signup' + redirectQuery} style={styles.registerLink}>
+					<FormattedMessage id="login.newToPubPub" defaultMessage="New to PubPub? Click to Sign Up!" />
+				</Link>	
+				
 
 			</div>
 		);
@@ -128,12 +142,12 @@ styles = {
 		top: 15,
 	},
 	errorMessage: {
-		padding: '10px 0px',
+		margin: '1em 0px',
 		color: globalStyles.errorRed,
 	},
 	registerLink: {
-		...globalStyles.link,
 		display: 'block',
-		margin: '3em 0em'
-	}
+		margin: '1em 0em',
+	},
+	
 };

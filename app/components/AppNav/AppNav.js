@@ -18,17 +18,6 @@ export const AppNav = React.createClass({
 
 	render() {
 		const account = this.props.accountData.user || {};
-		// return (
-		// 	<div style={styles.container}>
-		// 		<Link to="/" style={styles.link}>
-		// 			PubPub
-		// 		</Link>
-
-		// 		<div style={styles.name}>{user.name}</div>
-				
-		// 	</div>
-		// );
-
 		return (
 			<nav className="pt-navbar pt-dark">
 				<div className="pt-navbar-group pt-align-left">
@@ -51,30 +40,25 @@ export const AppNav = React.createClass({
 						<button className="pt-button pt-minimal pt-icon-notifications" />
 						<Popover 
 							content={<Menu>
-								<MenuItem
-									text={ account.firstName + ' ' + account.lastName } />
-								<MenuItem
-									iconName="new-object"
-									text={<Link to={'/'} style={styles.testLink}>A Link</Link>} />
-								<MenuItem
-									iconName="cog"
-									text="Settings" />
+								<MenuItem text={account.firstName + ' ' + account.lastName} />
+								<MenuItem iconName="new-object" text={<Link to={'/'} style={styles.testLink}>A Link</Link>} />
+								<MenuItem iconName="cog" text="Settings" />
 								<MenuDivider />
 								<MenuItem text={'Logout'} onClick={this.props.logoutHandler} />
 							</Menu>}
 							interactionKind={PopoverInteractionKind.CLICK}
-							popoverClassName={'apt-popover-content-sizing'}
 							position={Position.BOTTOM_RIGHT}
 							inheritDarkTheme={false}
-							useSmartPositioning={true} >
-							<button className="pt-button pt-minimal pt-icon-cog" />
+						>
+							<button className="pt-button pt-minimal">
+								<img style={styles.userImage} alt={account.firstName + ' ' + account.lastName} src={account.image} />
+								<span className="pt-icon-standard pt-icon-caret-down pt-align-right" />
+							</button>
+							
 						</Popover>
 					</div>
 				}
-					
-				
-					
-					
+						
 			</nav>
 		);
 	}
@@ -106,6 +90,13 @@ styles = {
 		textDecoration: 'none',
 		color: 'inherit',
 		display: 'block',
+	},
+	userImage: {
+		width: '22px',
+		padding: '0em',
+		display: 'inline-block',
+		borderRadius: '2px',
+		verticalAlign: 'middle',
 	},
 	name: {
 		textAlign: 'right',

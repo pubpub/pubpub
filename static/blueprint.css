@@ -132,11 +132,11 @@ p {
 
 a {
   text-decoration: none;
-  color: #106ba3; }
+  color: #202b33; }
 a:hover {
     cursor: pointer;
     text-decoration: underline;
-    color: #106ba3; }
+    color: #202b33; }
 a .pt-icon, a .pt-icon-standard, a .pt-icon-large {
     color: inherit; }
 a code,
@@ -4190,9 +4190,9 @@ table.pt-table.pt-interactive tbody tr:hover td {
     color: rgba(92, 112, 128, 0.5); }
 .pt-tab[aria-selected="true"] {
     border-radius: 0;
-    box-shadow: inset 0 -3px 0 #106ba3; }
+    box-shadow: inset 0 -3px 0 #202b33; }
 .pt-tab[aria-selected="true"], .pt-tab:not([aria-disabled="true"]):hover {
-    color: #106ba3; }
+    color: #202b33; }
 .pt-tab:focus {
     -moz-outline-radius: 0; }
 .pt-tab-panel {
@@ -4216,7 +4216,7 @@ table.pt-table.pt-interactive tbody tr:hover td {
     right: 0;
     bottom: 0;
     left: 0;
-    background-color: #106ba3;
+    background-color: #202b33;
     height: 3px; }
 .pt-tab-indicator-wrapper.pt-no-animation {
     transition: none; }

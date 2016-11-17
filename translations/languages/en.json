@@ -9,6 +9,7 @@
   "signup.Usernamealreadyused": "Username already used",
   "signup.PasswordLength": "Must be at least 8 characters",
   "login.ForgotPassword": "Forgot Password?",
+  "login.InvalidEmailOrPassword": "Invalid Email or Password",
   "login.newToPubPub": "New to PubPub? Click to Sign Up!",
   "global.Login": "Login",
   "global.SignUp": "Sign Up",
