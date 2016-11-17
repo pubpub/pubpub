@@ -8,6 +8,7 @@ let styles;
 export const AppNav = React.createClass({
 	propTypes: {
 		accountData: PropTypes.object,
+		logoutHandler: PropTypes.func,
 	},
 
 	searchSubmited: function(evt) {
@@ -51,18 +52,15 @@ export const AppNav = React.createClass({
 						<Popover 
 							content={<Menu>
 								<MenuItem
-									onClick={()=>{console.log('yoooo');}}
-									text="New text box" />
+									text={ account.firstName + ' ' + account.lastName } />
 								<MenuItem
 									iconName="new-object"
-									onClick={()=>{console.log('yoooo');}}
 									text={<Link to={'/'} style={styles.testLink}>A Link</Link>} />
 								<MenuItem
-									iconName="new-link"
-									onClick={()=>{console.log('yoooo');}}
-									text="New link" />
+									iconName="cog"
+									text="Settings" />
 								<MenuDivider />
-								<MenuItem text={<span>Cat</span>} iconName="cog" />
+								<MenuItem text={'Logout'} onClick={this.props.logoutHandler} />
 							</Menu>}
 							interactionKind={PopoverInteractionKind.CLICK}
 							popoverClassName={'apt-popover-content-sizing'}

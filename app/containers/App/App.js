@@ -6,9 +6,8 @@ import { IntlProvider, addLocaleData } from 'react-intl';
 import en from 'react-intl/locale-data/en';
 import fr from 'react-intl/locale-data/fr';
 import es from 'react-intl/locale-data/es';
-// import { login, getRecent } from '../actions/app';
 import { AppNav, AppFooter } from 'components';
-// import AppFooter from 'components/AppFooter/AppFooter';
+import { login, logout } from './actions';
 
 
 if (process.env.NODE_ENV !== 'production') {
@@ -28,10 +27,13 @@ export const App = React.createClass({
 	statics: {
 		readyOnActions: function(dispatch) {
 			return Promise.all([
-				// dispatch(login()),
-				// dispatch(getRecent())
+				dispatch(login())
 			]);
 		}
+	},
+
+	logoutHandler: function() {
+		this.props.dispatch(logout());
 	},
 
 	render() {
@@ -59,7 +61,7 @@ export const App = React.createClass({
 							{ name: 'twitter:image:alt', content: 'Logo for List of Links' }
 						]} 
 					/> 
-					<AppNav accountData={this.props.accountData} />
+					<AppNav accountData={this.props.accountData} logoutHandler={this.logoutHandler} />
 					<div style={{ minHeight: 'calc(100vh - 75px)' }}>{this.props.children}</div>
 					<AppFooter />
 				</StyleRoot>

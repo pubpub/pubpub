@@ -15,6 +15,22 @@ import {
 
 } from 'containers/CreateAccount/actions';
 
+import {
+	LOGIN_POST_LOAD,
+	LOGIN_POST_SUCCESS,
+	LOGIN_POST_FAIL,
+} from 'containers/Login/actions';
+
+import {
+	LOGIN_GET_LOAD,
+	LOGIN_GET_SUCCESS,
+	LOGIN_GET_FAIL,
+
+	LOGOUT_LOAD,
+	LOGOUT_SUCCESS,
+	LOGOUT_FAIL,
+} from 'containers/App/actions';
+
 /* ------------------- */
 // Define Default State
 /* ------------------- */
@@ -24,6 +40,8 @@ const defaultState = Immutable.Map({
 	user: {},
 	createAccountLoading: false,
 	createAccountError: undefined,
+	loginLoading: false,
+	loginError: undefined,
 });
 
 /* ----------------------------------------- */
@@ -66,6 +84,33 @@ export default function reducer(state = defaultState, action) {
 			createAccountLoading: false,
 			createAccountError: action.error,
 		});
+	case LOGIN_GET_LOAD:
+	case LOGIN_POST_LOAD:
+		return state.merge({
+			loginLoading: true,
+			loginError: undefined,
+		});	
+	case LOGIN_GET_SUCCESS:
+	case LOGIN_POST_SUCCESS:
+		return state.merge({
+			loginLoading: false,
+			loginError: undefined,
+			user: action.result,
+		});
+	case LOGIN_GET_FAIL:
+	case LOGIN_POST_FAIL:
+		return state.merge({
+			loginLoading: false,
+			loginError: action.error,
+		});
+	case LOGOUT_LOAD:
+		return state;
+	case LOGOUT_SUCCESS:
+		return state.merge({
+			user: {},
+		});
+	case LOGOUT_FAIL:
+		return state;
 
 	default:
 		return ensureImmutable(state);
