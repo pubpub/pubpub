@@ -51,8 +51,12 @@ export const AppNav = React.createClass({
 					<div className="pt-navbar-group pt-align-right">
 						<Popover 
 							content={<Menu>
-								<MenuItem iconName={'application'} text={<Link to={'/pubs/create'} style={styles.menuLink}>New Pub</Link>} />
-								<MenuItem iconName={'applications'} text={<Link to={'/journals/create'} style={styles.menuLink}>New Journal</Link>} />
+								<li><Link to={'/pubs/create'} className="pt-menu-item pt-popover-dismiss pt-icon-application" tabindex="0">
+									New Pub
+								</Link></li>
+								<li><Link to={'/journals/create'} className="pt-menu-item pt-popover-dismiss pt-icon-applications" tabindex="0">
+									New Journal
+								</Link></li>
 							</Menu>}
 							interactionKind={PopoverInteractionKind.CLICK}
 							position={Position.BOTTOM_RIGHT}
@@ -67,13 +71,13 @@ export const AppNav = React.createClass({
 
 						<Popover 
 							content={<Menu>
-								<MenuItem text={<Link to={'/user/' + user.username} style={styles.menuLink}><div>{user.firstName + ' ' + user.lastName}</div><div style={styles.subItemText}>View Profile</div></Link>} />
+								<li><Link to={'/user/' + user.username} className="pt-menu-item pt-popover-dismiss" tabindex="0"><div>{user.firstName + ' ' + user.lastName}</div><div style={styles.subItemText}>View Profile</div></Link></li>
 								<MenuDivider />
-								<MenuItem text={<Link to={'/user/' + user.username + '/pubs'} style={styles.menuLink}>Pubs</Link>} />
-								<MenuItem text={<Link to={'/user/' + user.username + '/journals'} style={styles.menuLink}>Journals</Link>} />
-								<MenuItem text={<Link to={'/user/' + user.username + '/following'} style={styles.menuLink}>Following</Link>} />
+								<li><Link to={'/user/' + user.username + '/pubs'} className="pt-menu-item pt-popover-dismiss" tabindex="0">Your Pubs</Link></li>
+								<li><Link to={'/user/' + user.username + '/journals'} className="pt-menu-item pt-popover-dismiss" tabindex="0">Your Journals</Link></li>
+								<li><Link to={'/user/' + user.username + '/following'} className="pt-menu-item pt-popover-dismiss" tabindex="0">Your Follows</Link></li>
 								<MenuDivider />
-								<MenuItem text={<Link to={'/user/' + user.username + '/settings'} style={styles.menuLink}>Settings</Link>} />
+								<li><Link to={'/user/' + user.username + '/settings'} className="pt-menu-item pt-popover-dismiss" tabindex="0">Settings</Link></li>
 								<MenuItem text={'Logout'} onClick={this.props.logoutHandler} />
 							</Menu>}
 							interactionKind={PopoverInteractionKind.CLICK}

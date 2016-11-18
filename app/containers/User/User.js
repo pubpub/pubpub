@@ -118,7 +118,7 @@ export const User = React.createClass({
 				
 				<div style={styles.headerWrapper}>
 					<div style={styles.headerImageWrapper}>
-						<img alt={user.username} src={'https://jake.pubpub.org/unsafe/150x150/' + user.image} />
+						<img alt={user.username} style={styles.userImage} src={'https://jake.pubpub.org/unsafe/150x150/' + user.image} />
 					</div>
 					<div style={styles.headerTextWrapper}>
 
@@ -187,6 +187,9 @@ styles = {
 		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
 			display: 'block',
 		}
+	},
+	userImage: {
+		borderRadius: '2px',
 	},
 	headerTextWrapper: {
 		padding: '0em 1em',

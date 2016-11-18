@@ -23,7 +23,7 @@ export const CreateJournal = React.createClass({
 	getInitialState() {
 		return {
 			slug: '',
-			title: '',
+			journalName: '',
 			description: '',
 			imageFile: null,
 			imageURL: 'https://assets.pubpub.org/_site/journal.png',
