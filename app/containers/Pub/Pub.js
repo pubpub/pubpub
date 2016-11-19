@@ -46,7 +46,14 @@ export const Pub = React.createClass({
 		};
 	},
 
-	
+	componentDidMount() {
+		// Need to check here so that getUser doesn't make a fetch twice
+		const pub = this.props.pubData.pub || {};
+		const params = this.props.params || {};
+		if (this.props.pubData.pub !== null && pub.slug !== params.slug) {
+			Pub.readyOnActions(this.props.dispatch, this.props.params);	
+		}
+	},
 
 
 
@@ -62,7 +69,7 @@ export const Pub = React.createClass({
 		const currentVersion = versions.reduce((previous, current)=> {
 			if (query.version === String(current.id)) { return current; }
 			return previous;
-		}, versions[versions.length - 1]);
+		}, versions[versions.length - 1] || {});
 
 		const metaData = {
 			title: pubData.title + ' · PubPub',

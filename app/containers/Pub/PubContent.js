@@ -13,10 +13,10 @@ export const PubContent = React.createClass({
 
 	render: function() {
 		const versionData = this.props.versionData || {};
-
+		const files = versionData.files || [];
 		return (
 			<div style={styles.pubBody} className={'pub-body'}>
-				{!versionData.files.length &&
+				{!files.length &&
 					<NonIdealState
 						action={
 							<Popover 
@@ -47,9 +47,9 @@ export const PubContent = React.createClass({
 						visual={'folder-open'} />
 				}
 				
-				{versionData.files.length &&
+				{!!files.length &&
 					<div>
-						{versionData.files[0].name}
+						{files[0].name}
 					</div>
 				}		
 			</div>

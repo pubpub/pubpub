@@ -150,7 +150,15 @@ export const User = React.createClass({
 
 						default:
 							return (
-								<div>{this.props.params.mode}</div>
+								<div>
+									<div>{this.props.params.mode}</div>
+									{user.pubs.map((pub, index)=> {
+										return (<div>
+											<Link to={'/pub/' + pub.slug}>{pub.title}</Link>
+											<p style={{ paddingLeft: '1em' }}>{pub.description}</p>
+										</div>);
+									})}
+								</div>
 							);
 						}
 					})()}
