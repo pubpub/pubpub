@@ -1,5 +1,5 @@
 import React, { PropTypes } from 'react';
-import ReactMarkdown from 'react-markdown';
+import Radium from 'radium';
 
 let styles;
 
@@ -9,13 +9,14 @@ export const PubFiles = React.createClass({
 	},
 
 	render: function() {
+		const versionData = this.props.versionData || {};
 		return (
 			<div style={styles.container}>
 				<h2>Files</h2>
-				{this.props.versionData.files.map((item)=> {
+				{versionData.files.map((item)=> {
 					return (
 						<div style={styles.fileLine}>
-							<div style={{...styles.type, ...styles.fileType}}>{item.type}</div>
+							<div style={[styles.type, styles.fileType]}>{item.type}</div>
 							<div style={styles.fileCell}>{item.name}</div>
 							<div style={styles.fileType}>Edit with Tool</div>
 						</div>
@@ -26,7 +27,7 @@ export const PubFiles = React.createClass({
 	}
 });
 
-export default PubFiles;
+export default Radium(PubFiles);
 
 styles = {
 	container: {

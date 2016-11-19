@@ -5,6 +5,7 @@ import app from './app';
 import createPub from './createPub';
 import createJournal from './createJournal';
 import login from './login';
+import pub from './pub';
 import signUp from './signUp';
 import user from './user';
 
@@ -27,6 +28,7 @@ export default combineReducers({
 	createPub,
 	createJournal,
 	login,
+	pub,
 	signUp,
 	user,
 });

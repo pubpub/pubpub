@@ -8,6 +8,7 @@ export PopoverInteractionKind from './PopoverInteractionKind';
 export Menu from './Menu';
 export MenuItem from './MenuItem';
 export MenuDivider from './MenuDivider';
+export NonIdealState from './NonIdealState';
 
 export Position from './Position';
 export Intent from './Intent';

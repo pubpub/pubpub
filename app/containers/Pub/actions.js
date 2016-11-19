@@ -4,9 +4,9 @@
 // All action types are defined as constants. Do not manually pass action
 // types as strings in action creators
 /*--------*/
-export const GET_USER_DATA_LOAD = 'user/GET_USER_DATA_LOAD';
-export const GET_USER_DATA_SUCCESS = 'user/GET_USER_DATA_SUCCESS';
-export const GET_USER_DATA_FAIL = 'user/GET_USER_DATA_FAIL';
+export const GET_PUB_DATA_LOAD = 'pub/GET_PUB_DATA_LOAD';
+export const GET_PUB_DATA_SUCCESS = 'pub/GET_PUB_DATA_SUCCESS';
+export const GET_PUB_DATA_FAIL = 'pub/GET_PUB_DATA_FAIL';
 
 /*--------*/
 // Define Action creators
@@ -15,19 +15,19 @@ export const GET_USER_DATA_FAIL = 'user/GET_USER_DATA_FAIL';
 // action objects (e.g. {type:example, payload:data} ) within dispatch()
 // function calls
 /*--------*/
-export function getUserData(username) {
+export function getPubData(slug) {
 	return (dispatch) => {
-		dispatch({ type: GET_USER_DATA_LOAD });
+		dispatch({ type: GET_PUB_DATA_LOAD });
 
-		return clientFetch('/api/user/profile?username=' + username, {
+		return clientFetch('/api/pub/?slug=' + slug, {
 			method: 'GET'
 		})
 		.then((result) => {
-			dispatch({ type: GET_USER_DATA_SUCCESS, result });
+			dispatch({ type: GET_PUB_DATA_SUCCESS, result });
 		})
 		.catch((error) => {
 			console.log(error);
-			dispatch({ type: GET_USER_DATA_FAIL, error });
+			dispatch({ type: GET_PUB_DATA_FAIL, error });
 		});
 	};
 }

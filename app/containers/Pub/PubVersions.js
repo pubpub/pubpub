@@ -1,5 +1,6 @@
 import React, { PropTypes } from 'react';
 import { Link } from 'react-router';
+import Radium from 'radium';
 
 let styles;
 
@@ -16,7 +17,7 @@ export const PubVersions = React.createClass({
 
 				{this.props.versionsData.map((item)=> {
 					return (
-						<Link to={{pathname: '/pub', query: {...this.props.location.query, version: item.id}}}>
+						<Link to={{ pathname: '/pub', query: {...this.props.location.query, version: item.id }}}>
 							<div>{item.versionMessage} | Public: {item.public ? 'true' : 'false'}</div>
 						</Link>
 					);
@@ -27,7 +28,7 @@ export const PubVersions = React.createClass({
 	}
 });
 
-export default PubVersions;
+export default Radium(PubVersions);
 
 styles = {
 	container: {

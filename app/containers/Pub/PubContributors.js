@@ -1,4 +1,5 @@
 import React, { PropTypes } from 'react';
+import Radium from 'radium';
 
 let styles;
 
@@ -12,17 +13,19 @@ export const PubContributors = React.createClass({
 		return (
 			<div style={styles.container}>
 				<h2>Contributors</h2>
-				{contributors.map((item, index)=> {
+				{contributors.map((contributor, index)=> {
+					const user = contributor.user || {};
 					return (
 						<div>
-							<div style={styles.contributorName}>{item.name}</div>
+							<div style={styles.contributorName}>{user.firstName + ' ' + user.lastName}</div>
+							<img src={'https://jake.pubpub.org/unsafe/50x50/' + user.image} alt={user.firstName + ' ' + user.lastName} />
 							{/*<div>
-								{item.roles.map((role)=> {
+								{user.roles.map((role)=> {
 									return <div style={styles.role}>{role}</div>;
 								})}	
 							</div>*/}
-							<p>Display As Author: {item.displayAsAuthor ? 'true' : 'false'}</p>
-							<p>Display As Contributor: {item.displayAsContributor ? 'true' : 'false'}</p>
+							<p>Display As Author: {user.displayAsAuthor ? 'true' : 'false'}</p>
+							<p>Display As Contributor: {user.displayAsContributor ? 'true' : 'false'}</p>
 							
 						</div>
 					);
@@ -32,7 +35,7 @@ export const PubContributors = React.createClass({
 	}
 });
 
-export default PubContributors;
+export default Radium(PubContributors);
 
 styles = {
 	container: {

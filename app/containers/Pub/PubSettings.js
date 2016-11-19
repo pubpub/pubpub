@@ -1,10 +1,15 @@
-import React from 'react';
+import React, { PropTypes } from 'react';
+import Radium from 'radium';
 
 let styles;
 
 export const PubSettings = React.createClass({
+	propTypes: {
+		pubData: PropTypes.object,
+	},
 
 	render: function() {
+		const pubData = this.props.pubData || {};
 		return (
 			<div style={styles.container}>
 				<h2>Settings</h2>
@@ -17,7 +22,7 @@ export const PubSettings = React.createClass({
 	}
 });
 
-export default PubSettings;
+export default Radium(PubSettings);
 
 styles = {
 	container: {
