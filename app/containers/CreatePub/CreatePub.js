@@ -38,7 +38,7 @@ export const CreatePub = React.createClass({
 		const nextError = nextProps.createPubData.error;
 
 		if (oldLoading && !nextLoading && !nextError) {
-			browserHistory.push('/pub/' + nextProps.newPubSlug);
+			browserHistory.push('/pub/' + nextProps.createPubData.newPubSlug);
 		}
 	},
 
@@ -80,34 +80,13 @@ export const CreatePub = React.createClass({
 
 	validate: function(data) {
 		// Check to make sure username exists
-		if (!data.username || !data.username.length) {
-			return { isValid: false, validationError: <FormattedMessage id="createPub.Usernamerequired" defaultMessage="Username required" /> };
+		if (!data.slug || !data.slug.length) {
+			return { isValid: false, validationError: <FormattedMessage id="createPub.PubURLrequired" defaultMessage="Pub URL required" /> };
 		}
 
 		// Check to make sure firstName exists
-		if (!data.firstName || !data.firstName.length) {
-			return { isValid: false, validationError: <FormattedMessage id="createPub.FirstNamerequired" defaultMessage="First Name required" /> };
-		}
-
-		// Check to make sure lastName exists
-		if (!data.lastName || !data.lastName.length) {
-			return { isValid: false, validationError: <FormattedMessage id="createPub.LastNamerequired" defaultMessage="Last Name required" /> };
-		}
-
-		// Check to make sure email exists
-		if (!data.email || !data.email.length) {
-			return { isValid: false, validationError: <FormattedMessage id="createPub.Emailrequired" defaultMessage="Email required" /> };
-		}
-
-		// Check to make sure email is lightly valid (complete validation is impossible in JS - so just check for the most common error)
-		const regexTest = /\S+@\S+/;
-		if (!regexTest.test(data.email)) {
-			return { isValid: false, validationError: <FormattedMessage id="createPub.Emailisinvalid" defaultMessage="Email is invalid" /> };
-		}
-
-		// Check to make sure password exists
-		if (!data.password || data.password.length < 8) {
-			return { isValid: false, validationError: <FormattedMessage id="createPub.Passwordtooshort" defaultMessage="Password too short" /> };
+		if (!data.title || !data.title.length) {
+			return { isValid: false, validationError: <FormattedMessage id="createPub.Titlerequired" defaultMessage="Title required" /> };
 		}
 
 		return { isValid: true, validationError: undefined };

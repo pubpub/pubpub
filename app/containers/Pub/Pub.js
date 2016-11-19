@@ -178,6 +178,7 @@ export const Pub = React.createClass({
 
 
 	render() {
+		return <div>HEYOOOO</div>
 		const demoMode = typeof(window) !== 'undefined' && window.location.hostname !== 'teams.pubpub.org' ? false : true;
 		const meta = this.props.params.meta;
 		const query = this.props.location.query;
