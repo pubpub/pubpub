@@ -34,8 +34,7 @@ export function saveVersion(req, res) {
 
 	const checkAndSaveJupyter = new Promise(function(resolve) {
 		if (newVersion.type === 'jupyter') {
-			// const query = Request.post('http://jupyter-dd419b35.e87eb116.svc.dockerapp.io/convert', {form: { url: req.body.newVersion.content.url } });
-			const query = request.post('http://jupyter-dd419b35.e87eb116.svc.dockerapp.io/convert').send({form: { url: req.body.versionContent.url } });
+			const query = request.post('http://jupyter-dd419b35.e87eb116.svc.dockerapp.io/convert').send({ url: req.body.versionContent.url, type: 'jupyter' });
 			resolve(query);
 		} else {
 			resolve();

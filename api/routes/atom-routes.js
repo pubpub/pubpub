@@ -78,8 +78,7 @@ export function createAtom(req, res) {
 	})
 	.then(function() {
 		if (type !== 'jupyter' || !req.body.versionContent) { return undefined; }
-		// return Request.post('http://jupyter-dd419b35.e87eb116.svc.dockerapp.io/convert', { });
-		return request.post('http://jupyter-dd419b35.e87eb116.svc.dockerapp.io/convert').send({form: { url: req.body.versionContent.url } });
+		return request.post('http://jupyter-dd419b35.e87eb116.svc.dockerapp.io/convert').send({ url: req.body.versionContent.url, type: 'jupyter' });
 	})
 	.then(function(response) {
 		if (type !== 'jupyter' || !req.body.versionContent) { return undefined; }
@@ -853,8 +852,8 @@ export function deleteContributor(req, res) {
 }
 app.post('/deleteContributor', deleteContributor);
 
-// Saves a docx content as the new version content of an Atom
-export function uploadDocx(req, res) {
+// Saves docx or PDF content as the new version content of an Atom
+export function upload(req, res) {
 	if (!req.user) {
 		return res.status(403).json('Not Logged In');
 	}
@@ -874,8 +873,8 @@ export function uploadDocx(req, res) {
 	let versionID;
 	// This should be made more intelligent to use images, video thumbnails, etc when possible - if the atom type is image, video, etc.
 
-	request.post(process.env.CONVERT_SERVER_URL + '/convertDocx')
-	.send({form: { url: req.body.url } })
+	request.post(process.env.CONVERT_SERVER_URL + '/convert')
+	.send({form: { url: req.body.url, type: type } })
 	.then(function(versionContent) {
 		 const tasks = [
 		// 	Link.createLink('author', userID, newAtomID, userID, now),
@@ -883,7 +882,7 @@ export function uploadDocx(req, res) {
 
 		const newVersion = new Version({
 			type: 'markdown',
-			message: 'Imported docx',
+			message: 'Imported ' + type,
 			parent: atomID,
 			content: JSON.parse(versionContent.text),
 			isPublished: false,
@@ -896,7 +895,6 @@ export function uploadDocx(req, res) {
 		tasks.push(newVersion.save());
 
 		const informJake = new Promise(function(resolve, reject) {
-			console.log("INFORMING JAKE")
 			const collabUrl = process.env.COLLAB_SERVER_URL.indexOf('localhost') !== -1
 				? 'http://' + process.env.COLLAB_SERVER_URL
 				: 'https://' + process.env.COLLAB_SERVER_URL;
@@ -907,7 +905,7 @@ export function uploadDocx(req, res) {
 			.send({ document_id: atomID, contents: JSON.stringify(JSON.parse(versionContent.text).docJSON) })
 			.then(function() {
 				resolve();
-			}).catch((err) => { console.log("Aaah " + err); reject(err); })
+			}).catch((err) => { console.log(err); reject(err); })
 		});
 
 		tasks.push(informJake);
@@ -939,4 +937,5 @@ export function uploadDocx(req, res) {
 		return res.status(500).json(error);
 	});
 }
-app.post('/uploadDocx', uploadDocx);
+
+app.post('/upload', upload);
