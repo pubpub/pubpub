@@ -872,9 +872,8 @@ export function upload(req, res) {
 
 	let versionID;
 	// This should be made more intelligent to use images, video thumbnails, etc when possible - if the atom type is image, video, etc.
-
 	request.post(process.env.CONVERT_SERVER_URL + '/convert')
-	.send({form: { url: req.body.url, type: type } })
+	.send({ url: req.body.url, type: type })
 	.then(function(versionContent) {
 		 const tasks = [
 		// 	Link.createLink('author', userID, newAtomID, userID, now),
