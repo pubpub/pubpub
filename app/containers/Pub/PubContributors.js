@@ -185,72 +185,82 @@ export const PubContributors = React.createClass({
 					const canRead = this.state.contributorStates[contributor.id].canRead;
 					const isAuthor = this.state.contributorStates[contributor.id].isAuthor;
 					return (
-						<div key={'contributorId-' + contributor.id}>
-							<div style={styles.contributorName}>{user.firstName + ' ' + user.lastName}</div>
-							<img src={'https://jake.pubpub.org/unsafe/50x50/' + user.image} alt={user.firstName + ' ' + user.lastName} />
-							{/*<div>
-								{user.roles.map((role)=> {
-									return <div style={styles.role}>{role}</div>;
-								})}	
-							</div>*/}
-							<Popover 
-								content={<Menu>
-									<MenuItem 
-										onClick={this.permissionChange.bind(this, contributor.id, 0)}
-										text={
-											<div>
-												None
-												<p style={styles.menuSubText}>Ackowledge contributor for their input, but grant no special permissions.</p>
-											</div>
-										}
-									/>
-									<MenuDivider />
-									<MenuItem 
-										onClick={this.permissionChange.bind(this, contributor.id, 1)}
-										text={
-											<div>
-												Can Read 
-												<p style={styles.menuSubText}>Allow contributor to read private versions and discussions.</p>
-											</div>
-										}
-									/>
-									<MenuDivider />
-									<MenuItem 
-										onClick={this.permissionChange.bind(this, contributor.id, 2)}
-										text={
-											<div>
-												Can Edit 
-												<p style={styles.menuSubText}>Allow contributor to create new versions, publish versions, manage discussions, submit to journals.</p>
-											</div>
-										}
-									/>
-								</Menu>}
-								interactionKind={PopoverInteractionKind.CLICK}
-								position={Position.BOTTOM_LEFT}
-								transitionDuration={200}
-								popoverClassName="pt-minimal"
-							>
-								<Tooltip content={'Authors are granted Edit permissions'} isDisabled={!isAuthor} position={Position.BOTTOM} useSmartPositioning={true}>
-									<button type="button" className={isAuthor ? 'pt-button pt-disabled' : 'pt-button'}>
-										Permission: {(canEdit || isAuthor) && 'Can Edit'}{(canRead && !isAuthor) && 'Can Read'}{(!canRead && !canEdit && !isAuthor) && 'None'}
-										<span className="pt-icon-standard pt-icon-caret-down pt-align-right" />
-									</button>
-								</Tooltip>
-								
-							</Popover>	
+						<div key={'contributorId-' + contributor.id} style={styles.contributorWrapper}>
+							<img src={'https://jake.pubpub.org/unsafe/50x50/' + user.image} style={styles.contributorImage} alt={user.firstName + ' ' + user.lastName} />
+							<div style={styles.detailsWrapper}>
+								<div style={styles.contributorName}>{user.firstName + ' ' + user.lastName}</div>
+								<div style={styles.contributorPermission}>
+									<Popover 
+										content={<Menu>
+											<MenuItem 
+												onClick={this.permissionChange.bind(this, contributor.id, 0)}
+												text={
+													<div>
+														None
+														<p style={styles.menuSubText}>Ackowledge contributor for their input, but grant no special permissions.</p>
+													</div>
+												}
+											/>
+											<MenuDivider />
+											<MenuItem 
+												onClick={this.permissionChange.bind(this, contributor.id, 1)}
+												text={
+													<div>
+														Can Read 
+														<p style={styles.menuSubText}>Allow contributor to read private versions and discussions.</p>
+													</div>
+												}
+											/>
+											<MenuDivider />
+											<MenuItem 
+												onClick={this.permissionChange.bind(this, contributor.id, 2)}
+												text={
+													<div>
+														Can Edit 
+														<p style={styles.menuSubText}>Allow contributor to create new versions, publish versions, manage discussions, submit to journals.</p>
+													</div>
+												}
+											/>
+										</Menu>}
+										interactionKind={PopoverInteractionKind.CLICK}
+										position={Position.BOTTOM_LEFT}
+										transitionDuration={200}
+										popoverClassName="pt-minimal"
+									>
+										<Tooltip content={'Authors are granted Edit permissions'} isDisabled={!isAuthor} position={Position.BOTTOM} useSmartPositioning={true}>
+											<button type="button" className={isAuthor ? 'pt-button pt-disabled' : 'pt-button'}>
+												Permission: {(canEdit || isAuthor) && 'Can Edit'}{(canRead && !isAuthor) && 'Can Read'}{(!canRead && !canEdit && !isAuthor) && 'None'}
+												<span className="pt-icon-standard pt-icon-caret-down pt-align-right" />
+											</button>
+										</Tooltip>
+										
+									</Popover>	
 
-							<label className="pt-control pt-checkbox">
-								<input type="checkbox" checked={this.state.contributorStates[contributor.id].isAuthor} onChange={this.isAuthorChange.bind(this, contributor.id)} />
-								<span className="pt-control-indicator"></span>
-								List as Author
-							</label>
-							<label className="pt-control pt-checkbox">
-								<input type="checkbox" checked={this.state.contributorStates[contributor.id].isHidden} onChange={this.isHiddenChange.bind(this, contributor.id)} />
-								<span className="pt-control-indicator"></span>
-								Hide Contributor
-							</label>
+								</div>
 
-							<button type="button" className="pt-button pt-intent-danger pt-minimal" onClick={this.deleteContributor.bind(this, contributor.id)}>Delete Contributor</button>
+								<div>
+									<label style={styles.contributorAction} className="pt-control pt-checkbox">
+										<input type="checkbox" checked={this.state.contributorStates[contributor.id].isAuthor} onChange={this.isAuthorChange.bind(this, contributor.id)} />
+										<span className="pt-control-indicator"></span>
+										List as Author
+									</label>
+									<label style={styles.contributorAction} className="pt-control pt-checkbox">
+										<input type="checkbox" checked={this.state.contributorStates[contributor.id].isHidden} onChange={this.isHiddenChange.bind(this, contributor.id)} />
+										<span className="pt-control-indicator"></span>
+										Hide Contributor
+									</label>
+									<div style={styles.contributorAction}>
+										<button type="button" className="pt-button pt-intent-danger pt-minimal" onClick={this.deleteContributor.bind(this, contributor.id)}>Delete Contributor</button>
+									</div>
+								</div>
+							</div>
+							<hr />
+						
+							
+
+							
+
+							
 						</div>
 					);
 				})}
@@ -265,8 +275,29 @@ styles = {
 	container: {
 		padding: '1.5em',
 	},
+	contributorWrapper: {
+		margin: '2em 0em',
+	},
+	detailsWrapper: {
+		display: 'inline-block',
+	},
+	contributorImage: {
+		verticalAlign: 'top',
+		paddingRight: '1em',
+	},
 	contributorName: {
-		paddingTop: '1em',
+		fontSize: '1.25em',
+		display: 'inline-block',
+		verticalAlign: 'middle',
+		paddingRight: '1em',
+	},
+	contributorPermission: {
+		display: 'inline-block',
+		verticalAlign: 'middle',
+	},
+	contributorAction: {
+		display: 'inline-block',
+		paddingRight: '2em',
 	},
 	menuSubText: {
 		maxWidth: '300px',
