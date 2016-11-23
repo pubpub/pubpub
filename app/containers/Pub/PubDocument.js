@@ -6,14 +6,14 @@ import { Popover, PopoverInteractionKind, Position, Menu, MenuItem, NonIdealStat
 
 let styles;
 
-export const PubContent = React.createClass({
+export const PubDocument = React.createClass({
 	propTypes: {
 		versionData: PropTypes.object,
 	},
 
 	render: function() {
 		const versionData = this.props.versionData || {};
-		const files = versionData.files || [];
+		const files = versionData.files || ['cat'];
 		return (
 			<div style={styles.pubBody} className={'pub-body'}>
 				{!files.length &&
@@ -49,7 +49,29 @@ export const PubContent = React.createClass({
 				
 				{!!files.length &&
 					<div>
-						{files[0].name}
+						{/*files[0].name*/}
+
+						{/*<div className="pt-tag pt-minimal pt-large">13 Files</div>*/}
+
+						<div>
+							<ul className="pt-breadcrumbs">
+								<li><a className="pt-breadcrumb"><span className="pt-icon-standard pt-icon-folder-open" /> 14 Files</a></li>
+								<li><a className="pt-breadcrumb" href="#">Folder three</a></li>
+								<li><span className="pt-breadcrumb">File</span></li>
+							</ul>
+						</div>
+
+						<h2>Introduction</h2>
+						<p>Blah blah blah. This is a whole bunch of stuff. Woopie. Check out all the differnet stuff I can say when I type. Blah blah blah. This is a whole bunch of stuff. Woopie. Check out all the differnet stuff I can say when I type</p>
+						<p>Blah blah blah. This is a whole bunch of stuff. Woopie. Check out all the differnet stuff I can say when I type. Blah blah blah. This is a whole bunch of stuff. Woopie. Check out all the differnet stuff I can say when I type</p>
+						<p>Blah blah blah. This is a whole bunch of stuff. Woopie. Check out all the differnet stuff I can say when I type. Blah blah blah. This is a whole bunch of stuff. Woopie. Check out all the differnet stuff I can say when I type</p>
+						<p>Blah blah blah. This is a whole bunch of stuff. Woopie. Check out all the differnet stuff I can say when I type. Blah blah blah. This is a whole bunch of stuff. Woopie. Check out all the differnet stuff I can say when I type</p>
+						<p>Blah blah blah. This is a whole bunch of stuff. Woopie. Check out all the differnet stuff I can say when I type</p>
+						<h3>Subsection</h3>
+						<p>Blah blah blah. This is a whole bunch of stuff. Woopie. Check out all the differnet stuff I can say when I type</p>
+						<p>Blah blah blah. This is a whole bunch of stuff. Woopie. Check out all the differnet stuff I can say when I type</p>
+						<p>Blah blah blah. This is a whole bunch of stuff. Woopie. Check out all the differnet stuff I can say when I type</p>
+						<p>Blah blah blah. This is a whole bunch of stuff. Woopie. Check out all the differnet stuff I can say when I type</p>
 					</div>
 				}		
 			</div>
@@ -84,7 +106,7 @@ export const PubContent = React.createClass({
 	// }
 });
 
-export default Radium(PubContent);
+export default Radium(PubDocument);
 
 styles = {
 	pubBody: {

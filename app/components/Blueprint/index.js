@@ -13,3 +13,4 @@ export NonIdealState from './NonIdealState';
 export Position from './Position';
 export Intent from './Intent';
 export Toaster from './Toaster';
+export Tooltip from './Tooltip';

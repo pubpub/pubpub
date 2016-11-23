@@ -10,10 +10,11 @@ export const PubFiles = React.createClass({
 
 	render: function() {
 		const versionData = this.props.versionData || {};
+		const files = versionData.files || [];
 		return (
 			<div style={styles.container}>
 				<h2>Files</h2>
-				{versionData.files.map((item)=> {
+				{files.map((item)=> {
 					return (
 						<div style={styles.fileLine}>
 							<div style={[styles.type, styles.fileType]}>{item.type}</div>

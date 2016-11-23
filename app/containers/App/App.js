@@ -35,6 +35,10 @@ export const App = React.createClass({
 	logoutHandler: function() {
 		this.props.dispatch(logout());
 	},
+	componentDidMount() {
+		const FocusStyleManager = require('@blueprintjs/core').FocusStyleManager;
+		FocusStyleManager.onlyShowFocusOnTabs();
+	},
 
 	render() {
 		const messages = {};

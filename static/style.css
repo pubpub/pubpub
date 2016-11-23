@@ -62,7 +62,7 @@ input[type="file"]:focus {
 	padding: 1em 0em;
 }*/
 
-.pub-body a {
+/*.pub-body a {
 	position: relative;
 	display: block;
 }
@@ -79,7 +79,7 @@ input[type="file"]:focus {
 	font-family: 'Open Sans';
 	font-size: 0.85em;
 	border-radius: 1px;
-}
+}*/
 .link {
 	text-decoration: none;
 	color: inherit;

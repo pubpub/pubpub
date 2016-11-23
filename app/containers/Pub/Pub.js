@@ -11,7 +11,7 @@ import { globalStyles } from 'utils/globalStyles';
 import { globalMessages } from 'utils/globalMessages';
 import { FormattedMessage } from 'react-intl';
 
-import { PubContent } from './PubContent';
+import { PubDocument } from './PubDocument';
 import { PubContributors } from './PubContributors';
 import { PubFiles } from './PubFiles';
 import { PubJournals } from './PubJournals';
@@ -72,7 +72,7 @@ export const Pub = React.createClass({
 		}, versions[versions.length - 1] || {});
 
 		const metaData = {
-			title: pubData.title + ' · PubPub',
+			title: (pubData.title || this.props.params.slug) + ' · PubPub',
 			meta: [
 				{ property: 'og:title', content: pubData.title },
 				{ property: 'og:type', content: 'article' },
@@ -102,7 +102,7 @@ export const Pub = React.createClass({
 
 					<div style={styles.pubAuthors}>
 						{contributors.filter((contributor)=>{
-							return contributor.isAuthor !== false;
+							return contributor.isAuthor === true;
 						}).map((contributor, index, array)=> {
 							const user = contributor.user || {};
 							return <Link to={'/user/' + user.username} key={'contributor-' + index}>{user.firstName + ' ' + user.lastName}{index !== array.length -1 ? ', ' : ''}</Link>
@@ -113,7 +113,7 @@ export const Pub = React.createClass({
 					</div>
 
 					<div style={styles.nav}>
-						<Link to={'/pub/' + this.props.params.slug}><div style={styles.navItem} className={'underlineOnHover'}>Content</div></Link>
+						<Link to={'/pub/' + this.props.params.slug}><div style={styles.navItem} className={'underlineOnHover'}>Document</div></Link>
 						<Link to={'/pub/' + this.props.params.slug + '/versions'}><div style={styles.navItem} className={'underlineOnHover'}>Versions ({versions.length})</div></Link>
 						<Link to={'/pub/' + this.props.params.slug + '/contributors'}><div style={styles.navItem} className={'underlineOnHover'}>Contributors ({contributors.length})</div></Link>
 						<Link to={'/pub/' + this.props.params.slug + '/journals'}><div style={styles.navItem} className={'underlineOnHover'}>Journals</div></Link>
@@ -121,9 +121,9 @@ export const Pub = React.createClass({
 						<Link to={'/pub/' + this.props.params.slug + '/settings'}><div style={styles.navItem} className={'underlineOnHover'}>Settings</div></Link>
 					</div>
 
-					{!meta && <PubContent versionData={currentVersion} />}
+					{!meta && <PubDocument versionData={currentVersion} />}
 					{meta === 'versions' && <PubVersions versionsData={versions} location={this.props.location} />}
-					{meta === 'contributors' && <PubContributors contributors={contributors} />}
+					{meta === 'contributors' && <PubContributors contributors={contributors} pubId={pubData.id} dispatch={this.props.dispatch} />}
 					{meta === 'files' && <PubFiles versionData={currentVersion} />}
 					{meta === 'settings' && <PubSettings pubData={pubData} />}
 					{meta === 'journals' && <PubJournals journalsSubmitted={journalsSubmitted} journalsFeatured={journalsFeatured} />}
