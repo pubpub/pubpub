@@ -143,6 +143,10 @@ input[type="file"]:focus {
 	text-decoration: underline !important;
 }
 
+.bottomShadowOnHover:hover {
+	box-shadow: inset 0 -3px 0 #556673;
+}
+
 .showChildOnHover .hoverChild {
 	opacity: 0;
 	transition: .1s linear opacity;

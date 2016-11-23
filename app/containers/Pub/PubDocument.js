@@ -13,34 +13,18 @@ export const PubDocument = React.createClass({
 
 	render: function() {
 		const versionData = this.props.versionData || {};
-		const files = versionData.files || ['cat'];
+		const files = versionData.files || [];
 		return (
-			<div style={styles.pubBody} className={'pub-body'}>
+			<div style={styles.container} className={'pub-body'}>
+
 				{!files.length &&
 					<NonIdealState
 						action={
-							<Popover 
-								content={<Menu>
-									<li><Link to={'/pubs/create'} className="pt-menu-item pt-popover-dismiss pt-icon-application">
-										Import Document
-									</Link></li>
-									<li><Link to={'/journals/create'} className="pt-menu-item pt-popover-dismiss pt-icon-applications">
-										Create new document in Editor
-									</Link></li>
-									<li><Link to={'/journals/create'} className="pt-menu-item pt-popover-dismiss pt-icon-applications">
-										Upload files
-									</Link></li>
-								</Menu>}
-								interactionKind={PopoverInteractionKind.CLICK}
-								position={Position.BOTTOM}
-								transitionDuration={200}
-							>
-								<button type="button" className="pt-button pt-intent-primary">
-									Add File
-									<span className="pt-icon-standard pt-icon-caret-down pt-align-right" />
-								</button>
-								
-							</Popover>
+							<div className="pt-button-group">
+								<a className="pt-button" tabIndex="0" role="button">Import Document</a>
+								<a className="pt-button" tabIndex="0" role="button">Upload Files</a>
+								<a className="pt-button" tabIndex="0" role="button">Open Editor</a>
+							</div>
 						}
 						description={'There are no files associated with this pub yet.'}
 						title={'No Files'}
@@ -49,11 +33,12 @@ export const PubDocument = React.createClass({
 				
 				{!!files.length &&
 					<div>
-						{/*files[0].name*/}
+						files[0].name
 
 						{/*<div className="pt-tag pt-minimal pt-large">13 Files</div>*/}
 
-						<div>
+						{/*
+						<div style={{margin: '-2em 0em 1em 0em'}}>
 							<ul className="pt-breadcrumbs">
 								<li><a className="pt-breadcrumb"><span className="pt-icon-standard pt-icon-folder-open" /> 14 Files</a></li>
 								<li><a className="pt-breadcrumb" href="#">Folder three</a></li>
@@ -62,16 +47,13 @@ export const PubDocument = React.createClass({
 						</div>
 
 						<h2>Introduction</h2>
-						<p>Blah blah blah. This is a whole bunch of stuff. Woopie. Check out all the differnet stuff I can say when I type. Blah blah blah. This is a whole bunch of stuff. Woopie. Check out all the differnet stuff I can say when I type</p>
-						<p>Blah blah blah. This is a whole bunch of stuff. Woopie. Check out all the differnet stuff I can say when I type. Blah blah blah. This is a whole bunch of stuff. Woopie. Check out all the differnet stuff I can say when I type</p>
-						<p>Blah blah blah. This is a whole bunch of stuff. Woopie. Check out all the differnet stuff I can say when I type. Blah blah blah. This is a whole bunch of stuff. Woopie. Check out all the differnet stuff I can say when I type</p>
-						<p>Blah blah blah. This is a whole bunch of stuff. Woopie. Check out all the differnet stuff I can say when I type. Blah blah blah. This is a whole bunch of stuff. Woopie. Check out all the differnet stuff I can say when I type</p>
-						<p>Blah blah blah. This is a whole bunch of stuff. Woopie. Check out all the differnet stuff I can say when I type</p>
+						<p>Blah blah blah. This is a whole bunch of stuff. Woopie. Check out all the differnet stuff I can say when I type. Blah blah blah. This is a whole bunch of stuff. Woopie. Check out all the differnet stuff I can say when I type. Blah blah blah. This is a whole bunch of stuff. Woopie. Check out all the differnet stuff I can say when I type. Blah blah blah. This is a whole bunch of stuff. Woopie. Check out all the differnet stuff I can say when I type. Blah blah blah. This is a whole bunch of stuff. Woopie. Check out all the differnet stuff I can say when I type. Blah blah blah. This is a whole bunch of stuff. Woopie. Check out all the differnet stuff I can say when I type.Blah blah blah. This is a whole bunch of stuff. Woopie. Check out all the differnet stuff I can say when I type. Blah blah blah. This is a whole bunch of stuff. Woopie. Check out all the differnet stuff I can say when I type</p>
 						<h3>Subsection</h3>
 						<p>Blah blah blah. This is a whole bunch of stuff. Woopie. Check out all the differnet stuff I can say when I type</p>
 						<p>Blah blah blah. This is a whole bunch of stuff. Woopie. Check out all the differnet stuff I can say when I type</p>
 						<p>Blah blah blah. This is a whole bunch of stuff. Woopie. Check out all the differnet stuff I can say when I type</p>
 						<p>Blah blah blah. This is a whole bunch of stuff. Woopie. Check out all the differnet stuff I can say when I type</p>
+						*/}
 					</div>
 				}		
 			</div>
@@ -104,17 +86,46 @@ export const PubDocument = React.createClass({
 	// 		</div>
 	// 	);
 	// }
+
+
 });
 
 export default Radium(PubDocument);
 
 styles = {
+	container: {
+		
+	},
 	pubBody: {
-		padding: '1.25em',
-		fontFamily: 'serif',
-		lineHeight: '1.6em',
-		fontSize: '1.2em',
-		color: '#333',
-		maxWidth: '700px',
+		// padding: '1.25em',
+		// fontFamily: 'serif',
+		// lineHeight: '1.6em',
+		// fontSize: '1.2em',
+		// color: '#333',
+		// maxWidth: '700px',
 	},
 };
+
+// <Popover 
+// 		content={<Menu>
+// 			<li><Link to={'/pubs/create'} className="pt-menu-item pt-popover-dismiss pt-icon-application">
+// 				Import Document
+// 			</Link></li>
+// 			<li><Link to={'/journals/create'} className="pt-menu-item pt-popover-dismiss pt-icon-applications">
+// 				Create new document in Editor
+// 			</Link></li>
+// 			<li><Link to={'/journals/create'} className="pt-menu-item pt-popover-dismiss pt-icon-applications">
+// 				Upload files
+// 			</Link></li>
+// 		</Menu>}
+// 		interactionKind={PopoverInteractionKind.CLICK}
+// 		position={Position.BOTTOM}
+// 		transitionDuration={200}
+// 	>
+// 		<button type="button" className="pt-button pt-intent-primary">
+// 			Add File
+// 			<span className="pt-icon-standard pt-icon-caret-down pt-align-right" />
+// 		</button>
+// 		
+// 	</Popover>
+// 

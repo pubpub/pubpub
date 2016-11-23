@@ -55,8 +55,6 @@ export const Pub = React.createClass({
 		}
 	},
 
-
-
 	render() {
 		const meta = this.props.params.meta;
 		const query = this.props.location.query;
@@ -105,22 +103,28 @@ export const Pub = React.createClass({
 							return contributor.isAuthor === true;
 						}).map((contributor, index, array)=> {
 							const user = contributor.user || {};
-							return <Link to={'/user/' + user.username} key={'contributor-' + index}>{user.firstName + ' ' + user.lastName}{index !== array.length -1 ? ', ' : ''}</Link>
+							return <Link to={'/user/' + user.username} key={'contributor-' + index}>{user.firstName + ' ' + user.lastName}{index !== array.length - 1 ? ', ' : ''}</Link>;
 						})}
 					</div>
-					<div>
+					<div style={styles.pubAuthors}>
 						{dateFormat(currentVersion.createdAt, 'mmmm dd, yyyy')}
 					</div>
 
+					{/* ------- */}
+					{/* Nav Bar */}
+					{/* ------- */}
 					<div style={styles.nav}>
-						<Link to={'/pub/' + this.props.params.slug}><div style={styles.navItem} className={'underlineOnHover'}>Document</div></Link>
-						<Link to={'/pub/' + this.props.params.slug + '/versions'}><div style={styles.navItem} className={'underlineOnHover'}>Versions ({versions.length})</div></Link>
-						<Link to={'/pub/' + this.props.params.slug + '/contributors'}><div style={styles.navItem} className={'underlineOnHover'}>Contributors ({contributors.length})</div></Link>
-						<Link to={'/pub/' + this.props.params.slug + '/journals'}><div style={styles.navItem} className={'underlineOnHover'}>Journals</div></Link>
-						<Link to={{ pathname: '/pub/' + this.props.params.slug + '/files', query: query }}><div style={styles.navItem} className={'underlineOnHover'}>Files</div></Link>
-						<Link to={'/pub/' + this.props.params.slug + '/settings'}><div style={styles.navItem} className={'underlineOnHover'}>Settings</div></Link>
+						<Link to={'/pub/' + this.props.params.slug}><div style={[styles.navItem, !meta && styles.navItemActive]} className={'bottomShadowOnHover'}>Document</div></Link>
+						{/* <Link to={{ pathname: '/pub/' + this.props.params.slug + '/files', query: query }}><div style={[styles.navItem, meta === '' && styles.navItemActive]} className={'bottomShadowOnHover'}>Files</div></Link> */}
+						{!!versions.length && <Link to={'/pub/' + this.props.params.slug + '/versions'}><div style={[styles.navItem, meta === 'versions' && styles.navItemActive]} className={'bottomShadowOnHover'}>Versions ({versions.length})</div></Link> }
+						<Link to={'/pub/' + this.props.params.slug + '/contributors'}><div style={[styles.navItem, meta === 'contributors' && styles.navItemActive]} className={'bottomShadowOnHover'}>Contributors ({contributors.length})</div></Link>
+						{!!versions.length && <Link to={'/pub/' + this.props.params.slug + '/journals'}><div style={[styles.navItem, meta === 'journals' && styles.navItemActive]} className={'bottomShadowOnHover'}>Journals</div></Link> }
+						<Link to={'/pub/' + this.props.params.slug + '/settings'}><div style={[styles.navItem, meta === 'settings' && styles.navItemActive]} className={'bottomShadowOnHover'}>Settings</div></Link>
 					</div>
 
+					{/* ------- */}
+					{/* Content */}
+					{/* ------- */}
 					{!meta && <PubDocument versionData={currentVersion} />}
 					{meta === 'versions' && <PubVersions versionsData={versions} location={this.props.location} />}
 					{meta === 'contributors' && <PubContributors contributors={contributors} pubId={pubData.id} dispatch={this.props.dispatch} />}
@@ -136,18 +140,15 @@ export const Pub = React.createClass({
 				<StickyContainer style={styles.right}>
 					<Sticky style={styles.rightSticky}>
 
-						<div style={{textAlign: 'right'}}>
-							<div className="pt-button-group" style={{padding: '.25em'}}>
-							  <button type="button" className="pt-button">Invite Reviewer</button>
-							  <button type="button" className="pt-button">7</button>
-
+						<div style={{ textAlign: 'right', padding: '0em .5em' }}>
+							<div className="pt-button-group" style={{ padding: '.25em' }}>
+								<button type="button" className="pt-button">Invite Reviewer</button>
+								<button type="button" className="pt-button">7</button>
 							</div>
 
 							<button type="button" className="pt-button pt-intent-primary">New Discussion</button>
 						</div>
 
-						  
-						
 						<h3>Discussions</h3>
 						<p>Hello discussion 1</p><p>Hello discussion 1</p><p>Hello discussion 1</p><p>Hello discussion 1</p>
 						<p>Hello discussion 1</p><p>Hello discussion 1</p><p>Hello discussion 1</p><p>Hello discussion 1</p>
@@ -204,7 +205,7 @@ styles = {
 		fontWeight: 'bold',
 	},
 	pubTitle: {
-		padding: '1em 1em 0em',
+		padding: '1em 0.5em 0em',
 		fontSize: '2em',
 		fontWeight: 'bold',
 	},
@@ -250,10 +251,14 @@ styles = {
 	},
 	navItem: {
 		display: 'inline-block',
-		padding: '0em 1em',
-		fontSize: '0.85em',
+		// padding: '0em 1em',
+		padding: '.25em 0em .5em',
+		margin: '0em 1em',
 		cursor: 'pointer',
 		color: '#333',
+	},
+	navItemActive: {
+		boxShadow: 'inset 0 -3px 0 #202b33',
 	},
 	discussionButtonWrapper: {
 		textAlign: 'right',

@@ -153,7 +153,6 @@ export const PubContributors = React.createClass({
 
 	render() {
 		const contributors = this.props.contributors || [];
-		console.log('contributorStates', this.state.contributorStates);
 		return (
 			<div style={styles.container}>
 				<h2>Contributors</h2>
@@ -241,12 +240,12 @@ export const PubContributors = React.createClass({
 								<div>
 									<label style={styles.contributorAction} className="pt-control pt-checkbox">
 										<input type="checkbox" checked={this.state.contributorStates[contributor.id].isAuthor} onChange={this.isAuthorChange.bind(this, contributor.id)} />
-										<span className="pt-control-indicator"></span>
+										<span className="pt-control-indicator" />
 										List as Author
 									</label>
 									<label style={styles.contributorAction} className="pt-control pt-checkbox">
 										<input type="checkbox" checked={this.state.contributorStates[contributor.id].isHidden} onChange={this.isHiddenChange.bind(this, contributor.id)} />
-										<span className="pt-control-indicator"></span>
+										<span className="pt-control-indicator" />
 										Hide Contributor
 									</label>
 									<div style={styles.contributorAction}>
@@ -256,11 +255,6 @@ export const PubContributors = React.createClass({
 							</div>
 							<hr />
 						
-							
-
-							
-
-							
 						</div>
 					);
 				})}
