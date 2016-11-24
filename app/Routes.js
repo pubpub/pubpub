@@ -1,6 +1,6 @@
 import React from 'react';
 import { Route } from 'react-router';
-import { App, CreateAccount, CreatePub, CreateJournal, Landing, Login, Pub, SignUp, NoMatch, User } from 'containers';
+import { App, CreateAccount, CreatePub, CreateJournal, Landing, Login, Pub, Search, SignUp, NoMatch, User } from 'containers';
 
 export default (
 	<Route component={App}>
@@ -9,6 +9,8 @@ export default (
 		<Route path="/signup" component={SignUp} />
 		
 		<Route path="/journals/create" component={CreateJournal} />
+
+		<Route path="/search" component={Search} />
 
 		<Route path="/users/create/:hash" component={CreateAccount} />
 		<Route path="/user/:username" component={User} />

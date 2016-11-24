@@ -66,7 +66,7 @@ export const PubJournals = React.createClass({
 					filterOptions={(options)=>{
 						return options.filter((option)=>{
 							for (let index = 0; index < pubSubmits.length; index++) {
-								if (pubSubmits[index].id === option.id) {
+								if (pubSubmits[index].journal.id === option.id) {
 									return false;
 								}
 							}
@@ -88,7 +88,7 @@ export const PubJournals = React.createClass({
 						{pubSubmits.map((submit, index)=> {
 							const journal = submit.journal;
 							return (
-								<div key={'pubSubmit-' + index }>
+								<div key={'pubSubmit-' + index}>
 									<img alt={journal.name} src={'https://jake.pubpub.org/unsafe/50x50/' + journal.logo} style={{verticalAlign: 'middle', paddingRight: '1em'}}/>
 									<h4 style={{display: 'inline-block'}}>{journal.name}</h4>
 								</div>

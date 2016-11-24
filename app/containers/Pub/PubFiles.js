@@ -178,6 +178,7 @@ export const PubFiles = React.createClass({
 
 				}
 
+				<Link to={'/pub/' + this.props.pubSlug + '/files?test=' + Math.random()}><button className={'pt-button pt-intent-warning'}>Random</button></Link>
 				{!files.length && !this.state.uploading && !this.state.uploadedFileObjects.length &&
 					<NonIdealState
 						action={

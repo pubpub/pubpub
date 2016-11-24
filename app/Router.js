@@ -92,7 +92,7 @@ function handleRoute(req, res, renderProps) {
 	const status = routeIsUnmatched(renderProps) ? 404 : 200;
 	const readyOnAllActions = renderProps.components
 		.filter((component) => component.readyOnActions)
-		.map((component) => component.readyOnActions(store.dispatch, renderProps.params));
+		.map((component) => component.readyOnActions(store.dispatch, renderProps.params, renderProps.location));
 
 	Promise
 		.all(readyOnAllActions)

@@ -27,6 +27,7 @@ export const AppNav = React.createClass({
 	searchSubmited: function(evt) {
 		evt.preventDefault();
 		browserHistory.push('/search?q=' + this.state.search);
+		this.setState({search: ''});
 	},
 
 	render() {

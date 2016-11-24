@@ -69,6 +69,10 @@ export const PubDocument = React.createClass({
 							</ul>
 						</div>
 						<ReactMarkdown source={mainContent} />
+						<ReactMarkdown source={mainContent} />
+						<ReactMarkdown source={mainContent} />
+						<ReactMarkdown source={mainContent} />
+						<ReactMarkdown source={mainContent} />
 
 						{/*<div className="pt-tag pt-minimal pt-large">13 Files</div>*/}
 
