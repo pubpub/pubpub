@@ -2,10 +2,11 @@ import React, { PropTypes } from 'react';
 import Radium from 'radium';
 import { Popover, PopoverInteractionKind, Position, Menu, MenuItem, MenuDivider, Tooltip } from 'components/Blueprint';
 import { AutocompleteBar } from 'components';
+import request from 'superagent';
 import { postContributor, putContributor, deleteContributor } from './actionsContributors';
 let styles;
 
-import request from 'superagent';
+
 
 
 export const PubContributors = React.createClass({
@@ -175,6 +176,7 @@ export const PubContributors = React.createClass({
 					onChange={this.handleSelectChange}
 					onComplete={this.addContributor}
 					completeDisabled={!this.state.newContributor || !this.state.newContributor.id}
+					completeString={'Add'}
 				/>			
 
 					
@@ -195,7 +197,7 @@ export const PubContributors = React.createClass({
 												onClick={this.permissionChange.bind(this, contributor.id, 0)}
 												text={
 													<div>
-														None
+														<b>None</b>
 														<p style={styles.menuSubText}>Ackowledge contributor for their input, but grant no special permissions.</p>
 													</div>
 												}
@@ -205,7 +207,7 @@ export const PubContributors = React.createClass({
 												onClick={this.permissionChange.bind(this, contributor.id, 1)}
 												text={
 													<div>
-														Can Read 
+														<b>Can Read</b>
 														<p style={styles.menuSubText}>Allow contributor to read private versions and discussions.</p>
 													</div>
 												}
@@ -215,7 +217,7 @@ export const PubContributors = React.createClass({
 												onClick={this.permissionChange.bind(this, contributor.id, 2)}
 												text={
 													<div>
-														Can Edit 
+														<b>Can Edit</b>
 														<p style={styles.menuSubText}>Allow contributor to create new versions, publish versions, manage discussions, submit to journals.</p>
 													</div>
 												}

@@ -35,7 +35,7 @@ export const AutoCompleteBar = React.createClass({
 					onChange={this.props.onChange}
 					optionComponent={SelectOption}
 					valueComponent={SelectValue} />
-				<button onClick={this.props.onComplete} style={styles.addControlButton} className={this.props.completeDisabled ? 'pt-button pt-intent-primary pt-disabled' : 'pt-button pt-intent-primary'}>Add</button>
+				<button onClick={this.props.onComplete} style={styles.addControlButton} className={this.props.completeDisabled ? 'pt-button pt-intent-primary pt-disabled' : 'pt-button pt-intent-primary'}>{this.props.completeString}</button>
 			</div>
 		);
 	}
@@ -52,5 +52,6 @@ styles = {
 		display: 'table-cell',
 		height: 'calc(100% + 2px)',
 		borderRadius: '0px 2px 2px 0px',
+		whiteSpace: 'nowrap',
 	},
 };
