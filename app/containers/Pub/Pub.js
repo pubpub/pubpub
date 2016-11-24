@@ -11,12 +11,12 @@ import { globalStyles } from 'utils/globalStyles';
 import { globalMessages } from 'utils/globalMessages';
 import { FormattedMessage } from 'react-intl';
 
-import { PubDocument } from './PubDocument';
-import { PubContributors } from './PubContributors';
-import { PubFiles } from './PubFiles';
-import { PubJournals } from './PubJournals';
-import { PubSettings } from './PubSettings';
-import { PubVersions } from './PubVersions';
+import PubDocument from './PubDocument';
+import PubContributors from './PubContributors';
+import PubFiles from './PubFiles';
+import PubJournals from './PubJournals';
+import PubSettings from './PubSettings';
+import PubVersions from './PubVersions';
 
 
 // import { Popover, PopoverInteractionKind, Position, Menu, MenuItem, NonIdealState } from 'components/Blueprint';
@@ -56,7 +56,8 @@ export const Pub = React.createClass({
 	},
 
 	render() {
-		const meta = this.props.params.meta;
+		const currentFile = this.props.params.filename;
+		const meta = currentFile ? 'files' : this.props.params.meta;
 		const query = this.props.location.query;
 		const pubData = this.props.pubData.pub || {};
 		const contributors = pubData.contributors || [];
@@ -131,10 +132,10 @@ export const Pub = React.createClass({
 					{/* ------- */}
 					{/* Content */}
 					{/* ------- */}
-					{!meta && hasDocument && <PubDocument versionData={currentVersion} />}
+					{!meta && hasDocument && <PubDocument versionData={currentVersion} pubId={pubData.id} pubSlug={pubData.slug} />}
 					{meta === 'versions' && <PubVersions versionsData={versions} location={this.props.location} />}
 					{meta === 'contributors' && <PubContributors contributors={contributors} pubId={pubData.id} dispatch={this.props.dispatch} />}
-					{((!meta && !hasDocument) || meta === 'files') && <PubFiles versionData={currentVersion} pubId={pubData.id} dispatch={this.props.dispatch} />}
+					{((!meta && !hasDocument) || meta === 'files') && <PubFiles versionData={currentVersion} pubId={pubData.id} pubSlug={pubData.slug} routeFilename={this.props.params.filename} dispatch={this.props.dispatch} />}
 					{meta === 'settings' && <PubSettings pubData={pubData} />}
 					{meta === 'journals' && <PubJournals journalsSubmitted={journalsSubmitted} journalsFeatured={journalsFeatured} />}
 					{/* 

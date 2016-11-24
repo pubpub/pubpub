@@ -2,6 +2,7 @@ import React, { PropTypes } from 'react';
 import Radium from 'radium';
 // import ReactMarkdown from 'react-markdown';
 import { Link } from 'react-router';
+import ReactMarkdown from 'react-markdown';
 import { Popover, PopoverInteractionKind, Position, Menu, MenuItem, NonIdealState } from 'components/Blueprint';
 
 let styles;
@@ -9,6 +10,8 @@ let styles;
 export const PubDocument = React.createClass({
 	propTypes: {
 		versionData: PropTypes.object,
+		pubId: PropTypes.number,
+		pubSlug: PropTypes.string,
 	},
 
 	handleFileUploads: function(evt) {
@@ -26,14 +29,18 @@ export const PubDocument = React.createClass({
 		// Get URLs from s3 and add into fileObject
 		// When they're all done, bundle them into a version (replacing similar named files)
 		// Create version
-		
+
 	},
 
 	render() {
 		const versionData = this.props.versionData || {};
 		const files = versionData.files || [];
+		const mainContent = files.reduce((previous, current)=> {
+			if (current.name === 'main.md') { return current.content; } 
+			return previous;
+		}, '');
 		return (
-			<div style={styles.container} className={'pub-body'}>
+			<div style={styles.container}>
 
 				{!files.length &&
 					<NonIdealState
@@ -55,8 +62,13 @@ export const PubDocument = React.createClass({
 				}
 				
 				{!!files.length &&
-					<div>
-						files[0].name
+					<div style={styles.pubBody}>
+						<div style={{margin: '-2em 0em 1em 0em'}}>
+							<ul className="pt-breadcrumbs">
+								<li><Link to={'/pub/' + this.props.pubSlug + '/files'} className="pt-breadcrumb"><span className="pt-icon-standard pt-icon-folder-open" /> {files.length} Files</Link></li>
+							</ul>
+						</div>
+						<ReactMarkdown source={mainContent} />
 
 						{/*<div className="pt-tag pt-minimal pt-large">13 Files</div>*/}
 
@@ -117,15 +129,15 @@ export default Radium(PubDocument);
 
 styles = {
 	container: {
-
+		padding: '1.25em',
 	},
 	pubBody: {
-		// padding: '1.25em',
-		// fontFamily: 'serif',
-		// lineHeight: '1.6em',
-		// fontSize: '1.2em',
-		// color: '#333',
-		// maxWidth: '700px',
+		padding: '0em 1.25em',
+		fontFamily: 'serif',
+		lineHeight: '1.6em',
+		fontSize: '1.2em',
+		color: '#333',
+		maxWidth: '700px',
 	},
 	inputButtonLabel: {
 		overflow: 'hidden',

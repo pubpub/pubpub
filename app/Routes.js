@@ -17,6 +17,7 @@ export default (
 		<Route path="/pubs/create" component={CreatePub} />
 		<Route path="/pub/:slug" component={Pub} />
 		<Route path="/pub/:slug/:meta" component={Pub} />
+		<Route path="/pub/:slug/files/:filename" component={Pub} />
 		<Route path="*" component={NoMatch} />
 	</Route>
 );

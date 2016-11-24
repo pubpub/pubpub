@@ -4,6 +4,7 @@ import Radium from 'radium';
 import { Link } from 'react-router';
 import { Popover, PopoverInteractionKind, Position, Menu, MenuItem, NonIdealState, ProgressBar, Spinner } from 'components/Blueprint';
 import { s3Upload } from 'utils/uploadFile';
+import ReactMarkdown from 'react-markdown';
 import { postVersion } from './actionsVersions';
 
 let styles;
@@ -12,6 +13,8 @@ export const PubFiles = React.createClass({
 	propTypes: {
 		versionData: PropTypes.object,
 		pubId: PropTypes.number,
+		pubSlug: PropTypes.string,
+		routeFilename: PropTypes.string,
 		dispatch: PropTypes.func,
 	},
 
@@ -152,6 +155,11 @@ export const PubFiles = React.createClass({
 	render() {
 		const versionData = this.props.versionData || {};
 		const files = versionData.files || [];
+
+		const currentFile = files.reduce((previous, current)=> {
+			if (current.name === this.props.routeFilename) { return current; } 
+			return previous;
+		}, undefined);
 		return (
 			<div style={styles.container}>
 
@@ -199,10 +207,26 @@ export const PubFiles = React.createClass({
 						visual={'pt-icon-tick'} />
 				}
 				
-				{!!files.length &&
+				{!!files.length && !this.props.routeFilename &&
 					<div>
-						files[0].name
-
+						<table className="pt-table pt-condensed pt-striped" style={{width: '100%'}}>
+							<thead>
+								<th>Name</th>
+								<th>Created</th>
+								<th></th>
+							</thead>
+							<tbody>
+								{files.map((file, index)=> {
+									return (
+										<tr key={'file-' + index}>
+											<td style={styles.tableCell}><Link className={'underlineOnHover link'} to={'/pub/' + this.props.pubSlug + '/files/' + file.name}>{file.name}</Link></td>
+											<td style={styles.tableCell}>{file.createdAt}</td>
+											<td style={[styles.tableCell, styles.tableCellRight]}><button className={'pt-button'}>Edit  <span className="pt-icon-standard pt-icon-caret-down pt-align-right" /></button></td>
+										</tr>
+									);
+								})}
+							</tbody>
+						</table>
 						{/*<div className="pt-tag pt-minimal pt-large">13 Files</div>*/}
 
 						{/*
@@ -224,6 +248,29 @@ export const PubFiles = React.createClass({
 						*/}
 					</div>
 				}		
+
+				{this.props.routeFilename && 
+					<div>
+						<div style={{margin: '-2em 0em 1em 0em'}}>
+							<ul className="pt-breadcrumbs">
+								<li><Link to={'/pub/' + this.props.pubSlug + '/files'} className="pt-breadcrumb"><span className="pt-icon-standard pt-icon-folder-open" /> Files</Link></li>
+								<li><a className="pt-breadcrumb">{currentFile.name}</a></li>
+							</ul>
+						</div>
+						{currentFile.type.indexOf('image') > -1 &&
+							<img src={currentFile.url} style={{maxWidth: '100%'}} />
+						}
+						{currentFile.type.indexOf('markdown') > -1 &&
+							<ReactMarkdown source={currentFile.content} />
+						}
+						{currentFile.type.indexOf('image') === -1 && currentFile.type.indexOf('markdown') === -1 &&
+							<div className={'pt-callout'}>
+								<p>Can not render this file. Click to download the file in your browser.</p>
+								<a href={currentFile.url}><button className={'pt-button'}>Click to Download</button></a>
+							</div>
+						}
+					</div>
+				}
 			</div>
 		);
 	},
@@ -288,7 +335,13 @@ styles = {
 	inputTest: {
 		margin: 0,
 		overflow: 'hidden',
-	}
+	},
+	tableCell: {
+		verticalAlign: 'middle',
+	},
+	tableCellRight: {
+		textAlign: 'right',
+	},
 };
 
 // <Popover 
