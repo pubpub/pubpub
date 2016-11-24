@@ -2,19 +2,31 @@ import React, { PropTypes } from 'react';
 import Radium from 'radium';
 import { AutocompleteBar } from 'components';
 import request from 'superagent';
+import { postJournalSubmit } from './actionsJournals';
 
 let styles;
 
 export const PubJournals = React.createClass({
 	propTypes: {
-		journalsSubmitted: PropTypes.array,
-		journalsFeatured: PropTypes.array,
+		pubSubmits: PropTypes.array,
+		pubFeatures: PropTypes.array,
+		pubId: PropTypes.number,
+		dispatch: PropTypes.func,
 	},
 
 	getInitialState: function() {
 		return {
 			newSubmission: null,
 		};
+	},
+
+	componentWillReceiveProps(nextProps) {
+		const prevSubmits = this.props.pubSubmits || [];
+		const nextSubmits = nextProps.pubSubmits || [];
+
+		if (prevSubmits.length < nextSubmits.length) {
+			this.setState({ newSubmission: null });
+		}
 	},
 
 	loadOptions: function(input, callback) {
@@ -39,12 +51,12 @@ export const PubJournals = React.createClass({
 		this.setState({ newSubmission: value });
 	},
 	createSubmission: function() {
-
+		this.props.dispatch(postJournalSubmit(this.props.pubId, this.state.newSubmission.id));
 	},
 
 	render: function() {
-		const journalsSubmitted = this.props.journalsSubmitted || [];
-		const journalsFeatured = this.props.journalsFeatured || [];
+		const pubSubmits = this.props.pubSubmits || [];
+		const pubFeatures = this.props.pubFeatures || [];
 		
 		return (
 			<div style={styles.container}>
@@ -53,8 +65,8 @@ export const PubJournals = React.createClass({
 				<AutocompleteBar
 					filterOptions={(options)=>{
 						return options.filter((option)=>{
-							for (let index = 0; index < journalsSubmitted.length; index++) {
-								if (journalsSubmitted[index].id === option.id) {
+							for (let index = 0; index < pubSubmits.length; index++) {
+								if (pubSubmits[index].id === option.id) {
 									return false;
 								}
 							}
@@ -69,6 +81,21 @@ export const PubJournals = React.createClass({
 					completeDisabled={!this.state.newSubmission || !this.state.newSubmission.id}
 					completeString={'Submit Pub'}
 				/>
+
+				{!!pubSubmits.length && 
+					<div>
+						<h2>Submissions</h2>
+						{pubSubmits.map((submit, index)=> {
+							const journal = submit.journal;
+							return (
+								<div key={'pubSubmit-' + index }>
+									<img alt={journal.name} src={'https://jake.pubpub.org/unsafe/50x50/' + journal.logo} style={{verticalAlign: 'middle', paddingRight: '1em'}}/>
+									<h4 style={{display: 'inline-block'}}>{journal.name}</h4>
+								</div>
+							);
+						})}
+					</div>
+				}
 				
 			</div>
 		);

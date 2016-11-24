@@ -31,6 +31,12 @@ import {
 	PUT_VERSION_FAIL,
 } from 'containers/Pub/actionsVersions';
 
+import {
+	POST_JOURNAL_SUBMIT_LOAD,
+	POST_JOURNAL_SUBMIT_SUCCESS,
+	POST_JOURNAL_SUBMIT_FAIL,
+} from 'containers/Pub/actionsJournals';
+
 /* ------------------- */
 // Define Default State
 /* ------------------- */
@@ -41,6 +47,8 @@ const defaultState = Immutable.Map({
 	contributorsError: undefined,
 	versionsLoading: false,
 	versionsError: undefined,
+	journalsLoading: false,
+	journalsError: undefined,
 	pub: {},
 });
 
@@ -152,6 +160,26 @@ export default function reducer(state = defaultState, action) {
 		return state.merge({
 			versionsLoading: false,
 			versionsError: action.error,
+		});
+
+	case POST_JOURNAL_SUBMIT_LOAD:
+		return state.merge({
+			journalsLoading: true,
+			journalsError: false,
+		});	
+	case POST_JOURNAL_SUBMIT_SUCCESS:
+		return state.merge({
+			journalsLoading: false,
+			journalsError: undefined,
+		})
+		.mergeIn(
+			['pub', 'pubSubmits'], 
+			state.getIn(['pub', 'pubSubmits']).push(ensureImmutable(action.result))
+		);
+	case POST_JOURNAL_SUBMIT_FAIL:
+		return state.merge({
+			journalsLoading: false,
+			journalsError: action.error,
 		});
 
 	default:

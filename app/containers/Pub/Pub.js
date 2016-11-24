@@ -62,8 +62,8 @@ export const Pub = React.createClass({
 		const pubData = this.props.pubData.pub || {};
 		const contributors = pubData.contributors || [];
 		const versions = pubData.versions || [];
-		const journalsSubmitted = pubData.journalsSubmitted || [];
-		const journalsFeatured = pubData.journalsFeatured || [];
+		const pubSubmits = pubData.pubSubmits || [];
+		const pubFeatures = pubData.pubFeatures || [];
 		// Might have to sort these if it isn't in chronological order
 		const currentVersion = versions.reduce((previous, current)=> {
 			if (query.version === String(current.id)) { return current; }
@@ -137,7 +137,7 @@ export const Pub = React.createClass({
 					{meta === 'contributors' && <PubContributors contributors={contributors} pubId={pubData.id} dispatch={this.props.dispatch} />}
 					{((!meta && !hasDocument) || meta === 'files') && <PubFiles versionData={currentVersion} pubId={pubData.id} pubSlug={pubData.slug} routeFilename={this.props.params.filename} dispatch={this.props.dispatch} />}
 					{meta === 'settings' && <PubSettings pubData={pubData} />}
-					{meta === 'journals' && <PubJournals journalsSubmitted={journalsSubmitted} journalsFeatured={journalsFeatured} />}
+					{meta === 'journals' && <PubJournals pubSubmits={pubSubmits} pubFeatures={pubFeatures} pubId={pubData.id} dispatch={this.props.dispatch} />}
 					{/* 
 					{meta === 'edit' && <PubEdit versionData={currentVersion} updateEditValue={this.setEditValue}/>}
 					*/}
