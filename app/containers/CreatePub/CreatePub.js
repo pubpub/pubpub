@@ -99,7 +99,7 @@ export const CreatePub = React.createClass({
 			slug: this.state.slug,
 			title: this.state.title,
 			description: this.state.description,
-			image: this.state.imageURL,
+			previewImage: this.state.imageURL,
 		};
 		const { isValid, validationError } = this.validate(createData);
 		this.setState({ validationError: validationError });
@@ -214,35 +214,6 @@ styles = {
 	errorMessage: {
 		padding: '10px 0px',
 		color: globalStyles.errorRed,
-	},
-	registerLink: {
-		...globalStyles.link,
-		display: 'block',
-		margin: '3em 0em'
-	},
-	prefixedInputWrapper: {
-		display: 'table',
-		width: '100%',
-		marginBottom: '1.2em',
-	},
-	prefix: {
-		display: 'table-cell',
-		backgroundColor: '#F3F3F4',
-		verticalAlign: 'middle',
-		textAlign: 'center',
-		padding: '4px 10px',
-		borderWidth: '2px 0px 2px 2px',
-		borderStyle: 'solid',
-		borderColor: '#BBBDC0',
-		borderRadius: '1px 0px 0px 1px',
-		width: '1%',
-		fontSize: '0.9em',
-		whiteSpace: 'nowrap',
-	},
-	prefixedInput: {
-		display: 'table-cell',
-		marginBottom: 0,
-		borderRadius: '0px 1px 1px 0px',
 	},
 	imageCropperWrapper: {
 		height: '100vh',

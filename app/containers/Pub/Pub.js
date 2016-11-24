@@ -136,7 +136,7 @@ export const Pub = React.createClass({
 					{meta === 'versions' && <PubVersions versionsData={versions} location={this.props.location} />}
 					{meta === 'contributors' && <PubContributors contributors={contributors} pubId={pubData.id} dispatch={this.props.dispatch} />}
 					{((!meta && !hasDocument) || meta === 'files') && <PubFiles versionData={currentVersion} pubId={pubData.id} pubSlug={pubData.slug} routeFilename={this.props.params.filename} dispatch={this.props.dispatch} />}
-					{meta === 'settings' && <PubSettings pubData={pubData} />}
+					{meta === 'settings' && <PubSettings pubData={pubData} pubId={pubData.id} isLoading={this.props.pubData.settingsLoading} error={this.props.pubData.settingsError} dispatch={this.props.dispatch} />}
 					{meta === 'journals' && <PubJournals pubSubmits={pubSubmits} pubFeatures={pubFeatures} pubId={pubData.id} dispatch={this.props.dispatch} />}
 					{/* 
 					{meta === 'edit' && <PubEdit versionData={currentVersion} updateEditValue={this.setEditValue}/>}

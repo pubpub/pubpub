@@ -8,6 +8,9 @@ import {
 	GET_PUB_DATA_LOAD,
 	GET_PUB_DATA_SUCCESS,
 	GET_PUB_DATA_FAIL,
+	PUT_PUB_DATA_LOAD,
+	PUT_PUB_DATA_SUCCESS,
+	PUT_PUB_DATA_FAIL,
 } from 'containers/Pub/actions';
 
 import {
@@ -49,6 +52,8 @@ const defaultState = Immutable.Map({
 	versionsError: undefined,
 	journalsLoading: false,
 	journalsError: undefined,
+	settingsLoading: false,
+	settingsError: undefined,
 	pub: {},
 });
 
@@ -61,7 +66,7 @@ export default function reducer(state = defaultState, action) {
 	case GET_PUB_DATA_LOAD:
 		return state.merge({
 			loading: true,
-			error: false,
+			error: undefined,
 			pub: {},
 		});	
 	case GET_PUB_DATA_SUCCESS:
@@ -76,10 +81,31 @@ export default function reducer(state = defaultState, action) {
 			error: action.error,
 			pub: null,
 		});
+
+	case PUT_PUB_DATA_LOAD:
+		return state.merge({
+			settingsLoading: true,
+			settingsError: undefined,
+		});	
+	case PUT_PUB_DATA_SUCCESS:
+		return state.merge({
+			settingsLoading: false,
+			settingsError: undefined,
+		})
+		.mergeIn(
+			['pub'], 
+			action.updateData
+		);
+	case PUT_PUB_DATA_FAIL:
+		return state.merge({
+			settingsLoading: false,
+			settingsError: action.error,
+		});
+
 	case POST_CONTRIBUTOR_LOAD:
 		return state.merge({
 			contributorsLoading: true,
-			contributorsError: false,
+			contributorsError: undefined,
 		});	
 	case POST_CONTRIBUTOR_SUCCESS:
 		return state.merge({
@@ -98,7 +124,7 @@ export default function reducer(state = defaultState, action) {
 	case PUT_CONTRIBUTOR_LOAD:
 		return state.merge({
 			contributorsLoading: true,
-			contributorsError: false,
+			contributorsError: undefined,
 		});	
 	case PUT_CONTRIBUTOR_SUCCESS:
 		return state.merge({
@@ -123,7 +149,7 @@ export default function reducer(state = defaultState, action) {
 	case DELETE_CONTRIBUTOR_LOAD:
 		return state.merge({
 			contributorsLoading: true,
-			contributorsError: false,
+			contributorsError: undefined,
 		});	
 	case DELETE_CONTRIBUTOR_SUCCESS:
 		return state.merge({
@@ -145,7 +171,7 @@ export default function reducer(state = defaultState, action) {
 	case POST_VERSION_LOAD:
 		return state.merge({
 			versionsLoading: true,
-			versionsError: false,
+			versionsError: undefined,
 		});	
 	case POST_VERSION_SUCCESS:
 		return state.merge({
@@ -165,7 +191,7 @@ export default function reducer(state = defaultState, action) {
 	case POST_JOURNAL_SUBMIT_LOAD:
 		return state.merge({
 			journalsLoading: true,
-			journalsError: false,
+			journalsError: undefined,
 		});	
 	case POST_JOURNAL_SUBMIT_SUCCESS:
 		return state.merge({
