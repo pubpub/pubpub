@@ -22,6 +22,15 @@ import {
 	DELETE_CONTRIBUTOR_FAIL,
 } from 'containers/Pub/actionsContributors';
 
+import {
+	POST_VERSION_LOAD,
+	POST_VERSION_SUCCESS,
+	POST_VERSION_FAIL,
+	PUT_VERSION_LOAD,
+	PUT_VERSION_SUCCESS,
+	PUT_VERSION_FAIL,
+} from 'containers/Pub/actionsVersions';
+
 /* ------------------- */
 // Define Default State
 /* ------------------- */
@@ -30,6 +39,8 @@ const defaultState = Immutable.Map({
 	error: undefined,
 	contributorsLoading: false,
 	contributorsError: undefined,
+	versionsLoading: false,
+	versionsError: undefined,
 	pub: {},
 });
 
@@ -121,6 +132,26 @@ export default function reducer(state = defaultState, action) {
 		return state.merge({
 			contributorsLoading: false,
 			contributorsError: action.error,
+		});
+
+	case POST_VERSION_LOAD:
+		return state.merge({
+			versionsLoading: true,
+			versionsError: false,
+		});	
+	case POST_VERSION_SUCCESS:
+		return state.merge({
+			versionsLoading: false,
+			versionsError: undefined,
+		})
+		.mergeIn(
+			['pub', 'versions'], 
+			state.getIn(['pub', 'versions']).push(ensureImmutable(action.result))
+		);
+	case POST_VERSION_FAIL:
+		return state.merge({
+			versionsLoading: false,
+			versionsError: action.error,
 		});
 
 	default:

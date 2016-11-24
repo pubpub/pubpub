@@ -7,6 +7,7 @@ export TabPanel from './TabPanel';
 export PopoverInteractionKind from './PopoverInteractionKind';
 export Menu from './Menu';
 export MenuItem from './MenuItem';
+export ProgressBar from './ProgressBar';
 export MenuDivider from './MenuDivider';
 export NonIdealState from './NonIdealState';
 
@@ -14,3 +15,4 @@ export Position from './Position';
 export Intent from './Intent';
 export Toaster from './Toaster';
 export Tooltip from './Tooltip';
+export Spinner from './Spinner';

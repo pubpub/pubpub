@@ -1,8 +1,9 @@
 export function s3Upload(file, progressEvent, finishEvent, index) {
 	function beginUpload() {
-		let folderName = '';
-		const possible = 'abcdefghijklmnopqrstuvwxyz';
-		for (let charIndex = 0; charIndex < 8; charIndex++) { folderName += possible.charAt(Math.floor(Math.random() * possible.length)); }
+		const folderName = '_testing';
+		// let folderName = '';
+		// const possible = 'abcdefghijklmnopqrstuvwxyz';
+		// for (let charIndex = 0; charIndex < 8; charIndex++) { folderName += possible.charAt(Math.floor(Math.random() * possible.length)); }
 		const extension = file.name !== undefined ? file.name.substr((~-file.name.lastIndexOf('.') >>> 0) + 2) : 'jpg';
 
 		const filename = folderName + '/' + new Date().getTime() + '.' + extension;

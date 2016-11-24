@@ -11,7 +11,25 @@ export const PubDocument = React.createClass({
 		versionData: PropTypes.object,
 	},
 
-	render: function() {
+	handleFileUploads: function(evt) {
+		console.log(evt.target.files);
+		const reader = new FileReader();
+		reader.onload = function(progressEvent) {
+			console.log(this.result);
+		};
+		reader.readAsText(evt.target.files[0]);
+
+		// Go over all of the files
+		// Chunk them into type 
+		// create fileObjects
+		// Upload to s3
+		// Get URLs from s3 and add into fileObject
+		// When they're all done, bundle them into a version (replacing similar named files)
+		// Create version
+		
+	},
+
+	render() {
 		const versionData = this.props.versionData || {};
 		const files = versionData.files || [];
 		return (
@@ -22,8 +40,13 @@ export const PubDocument = React.createClass({
 						action={
 							<div className="pt-button-group">
 								<a className="pt-button" tabIndex="0" role="button">Import Document</a>
-								<a className="pt-button" tabIndex="0" role="button">Upload Files</a>
+								<label className="pt-button">
+									Upload Files
+									<input type="file" multiple style={{ position: 'fixed', top: '-100px' }} onChange={this.handleFileUploads} />
+								</label>
 								<a className="pt-button" tabIndex="0" role="button">Open Editor</a>
+								
+
 							</div>
 						}
 						description={'There are no files associated with this pub yet.'}
@@ -94,7 +117,7 @@ export default Radium(PubDocument);
 
 styles = {
 	container: {
-		
+
 	},
 	pubBody: {
 		// padding: '1.25em',
@@ -104,6 +127,23 @@ styles = {
 		// color: '#333',
 		// maxWidth: '700px',
 	},
+	inputButtonLabel: {
+		overflow: 'hidden',
+	},
+	inputButton: {
+		display: 'inline-block',
+		width: '100%',
+		margin: 0,
+	},
+	inputButtonText: {
+		cursor: 'pointer',
+		zIndex: 3,
+		position: 'relative',
+	},
+	inputTest: {
+		margin: 0,
+		overflow: 'hidden',
+	}
 };
 
 // <Popover 

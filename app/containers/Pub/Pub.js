@@ -69,6 +69,12 @@ export const Pub = React.createClass({
 			return previous;
 		}, versions[versions.length - 1] || {});
 
+		const currentFiles = currentVersion.files || [];
+		const hasDocument = currentFiles.reduce((previous, current)=> {
+			if (current.name === 'main.md') { return true; }
+			return previous;
+		}, false);
+
 		const metaData = {
 			title: (pubData.title || this.props.params.slug) + ' · PubPub',
 			meta: [
@@ -114,7 +120,7 @@ export const Pub = React.createClass({
 					{/* Nav Bar */}
 					{/* ------- */}
 					<div style={styles.nav}>
-						<Link to={'/pub/' + this.props.params.slug}><div style={[styles.navItem, !meta && styles.navItemActive]} className={'bottomShadowOnHover'}>Document</div></Link>
+						<Link to={'/pub/' + this.props.params.slug}><div style={[styles.navItem, !meta && styles.navItemActive]} className={'bottomShadowOnHover'}>Content</div></Link>
 						{/* <Link to={{ pathname: '/pub/' + this.props.params.slug + '/files', query: query }}><div style={[styles.navItem, meta === '' && styles.navItemActive]} className={'bottomShadowOnHover'}>Files</div></Link> */}
 						{!!versions.length && <Link to={'/pub/' + this.props.params.slug + '/versions'}><div style={[styles.navItem, meta === 'versions' && styles.navItemActive]} className={'bottomShadowOnHover'}>Versions ({versions.length})</div></Link> }
 						<Link to={'/pub/' + this.props.params.slug + '/contributors'}><div style={[styles.navItem, meta === 'contributors' && styles.navItemActive]} className={'bottomShadowOnHover'}>Contributors ({contributors.length})</div></Link>
@@ -125,10 +131,10 @@ export const Pub = React.createClass({
 					{/* ------- */}
 					{/* Content */}
 					{/* ------- */}
-					{!meta && <PubDocument versionData={currentVersion} />}
+					{!meta && hasDocument && <PubDocument versionData={currentVersion} />}
 					{meta === 'versions' && <PubVersions versionsData={versions} location={this.props.location} />}
 					{meta === 'contributors' && <PubContributors contributors={contributors} pubId={pubData.id} dispatch={this.props.dispatch} />}
-					{meta === 'files' && <PubFiles versionData={currentVersion} />}
+					{((!meta && !hasDocument) || meta === 'files') && <PubFiles versionData={currentVersion} pubId={pubData.id} dispatch={this.props.dispatch} />}
 					{meta === 'settings' && <PubSettings pubData={pubData} />}
 					{meta === 'journals' && <PubJournals journalsSubmitted={journalsSubmitted} journalsFeatured={journalsFeatured} />}
 					{/* 
