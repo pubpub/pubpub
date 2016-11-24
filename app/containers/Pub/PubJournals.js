@@ -89,7 +89,7 @@ export const PubJournals = React.createClass({
 							const journal = submit.journal;
 							return (
 								<div key={'pubSubmit-' + index}>
-									<img alt={journal.name} src={'https://jake.pubpub.org/unsafe/50x50/' + journal.logo} style={{verticalAlign: 'middle', paddingRight: '1em'}}/>
+									<img alt={journal.name} src={'https://jake.pubpub.org/unsafe/50x50/' + journal.icon} style={{verticalAlign: 'middle', paddingRight: '1em'}}/>
 									<h4 style={{display: 'inline-block'}}>{journal.name}</h4>
 								</div>
 							);

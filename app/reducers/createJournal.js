@@ -8,7 +8,7 @@ import {
 	CREATE_JOURNAL_LOAD,
 	CREATE_JOURNAL_SUCCESS,
 	CREATE_JOURNAL_FAIL,
-} from 'containers/CreatePub/actions';
+} from 'containers/CreateJournal/actions';
 
 /* ------------------- */
 // Define Default State
@@ -34,7 +34,7 @@ export default function reducer(state = defaultState, action) {
 		return state.merge({
 			loading: false,
 			error: undefined,
-			newPubSlug: action.slug,
+			newJournalSlug: action.slug,
 		});
 	case CREATE_JOURNAL_FAIL:
 		return state.merge({

@@ -23,10 +23,10 @@ export const CreateJournal = React.createClass({
 	getInitialState() {
 		return {
 			slug: '',
-			journalName: '',
-			description: '',
+			name: '',
+			shortDescription: '',
 			imageFile: null,
-			imageURL: 'https://assets.pubpub.org/_site/journal.png',
+			icon: 'https://assets.pubpub.org/_site/journal.png',
 
 		};
 	},
@@ -38,7 +38,7 @@ export const CreateJournal = React.createClass({
 		const nextError = nextProps.createJournalData.error;
 
 		if (oldLoading && !nextLoading && !nextError) {
-			browserHistory.push('/pub/' + nextProps.newPubSlug);
+			browserHistory.push('/' + nextProps.createJournalData.newJournalSlug);
 		}
 	},
 
@@ -53,8 +53,8 @@ export const CreateJournal = React.createClass({
 	},
 
 	descriptionUpdate: function(evt) {
-		const description = evt.target.value || '';
-		this.setState({ description: description.substring(0, 140) });
+		const shortDescription = evt.target.value || '';
+		this.setState({ shortDescription: shortDescription.substring(0, 140) });
 	},
 
 	slugUpdate: function(evt) {
@@ -70,44 +70,28 @@ export const CreateJournal = React.createClass({
 
 	cancelImageUpload: function() {
 		this.setState({ imageFile: null });
-		document.getElementById('previewImage').value = null;
+		document.getElementById('icon').value = null;
 	},
 
 	imageUploaded: function(url) {
-		this.setState({ imageFile: null, imageURL: url });
-		document.getElementById('previewImage').value = null;
+		this.setState({ imageFile: null, icon: url });
+		document.getElementById('icon').value = null;
 	},
 
 	validate: function(data) {
-		// Check to make sure username exists
-		if (!data.username || !data.username.length) {
-			return { isValid: false, validationError: <FormattedMessage id="createJournal.Usernamerequired" defaultMessage="Username required" /> };
+		// Check to make sure name exists
+		if (!data.name || !data.name.length) {
+			return { isValid: false, validationError: <FormattedMessage id="createJournal.JournalNamerequired" defaultMessage="Journal Name required" /> };
 		}
 
-		// Check to make sure firstName exists
-		if (!data.firstName || !data.firstName.length) {
-			return { isValid: false, validationError: <FormattedMessage id="createJournal.FirstNamerequired" defaultMessage="First Name required" /> };
+		// Check to make sure slug exists
+		if (!data.slug || !data.slug.length) {
+			return { isValid: false, validationError: <FormattedMessage id="createJournal.JournalURLrequired" defaultMessage="Journal URL required" /> };
 		}
 
-		// Check to make sure lastName exists
-		if (!data.lastName || !data.lastName.length) {
-			return { isValid: false, validationError: <FormattedMessage id="createJournal.LastNamerequired" defaultMessage="Last Name required" /> };
-		}
-
-		// Check to make sure email exists
-		if (!data.email || !data.email.length) {
-			return { isValid: false, validationError: <FormattedMessage id="createJournal.Emailrequired" defaultMessage="Email required" /> };
-		}
-
-		// Check to make sure email is lightly valid (complete validation is impossible in JS - so just check for the most common error)
-		const regexTest = /\S+@\S+/;
-		if (!regexTest.test(data.email)) {
-			return { isValid: false, validationError: <FormattedMessage id="createJournal.Emailisinvalid" defaultMessage="Email is invalid" /> };
-		}
-
-		// Check to make sure password exists
-		if (!data.password || data.password.length < 8) {
-			return { isValid: false, validationError: <FormattedMessage id="createJournal.Passwordtooshort" defaultMessage="Password too short" /> };
+		// Check to make sure short description exists
+		if (!data.shortDescription || !data.shortDescription.length) {
+			return { isValid: false, validationError: <FormattedMessage id="createJournal.Descriptionrequired" defaultMessage="Description required" /> };
 		}
 
 		return { isValid: true, validationError: undefined };
@@ -118,12 +102,13 @@ export const CreateJournal = React.createClass({
 		evt.preventDefault();
 		const createData = {
 			slug: this.state.slug,
-			title: this.state.title,
-			description: this.state.description,
-			image: this.state.imageURL,
+			name: this.state.name,
+			shortDescription: this.state.shortDescription,
+			icon: this.state.icon,
 		};
 		const { isValid, validationError } = this.validate(createData);
 		this.setState({ validationError: validationError });
+		console.log(createData);
 		if (isValid) {
 			this.props.dispatch(createJournal(createData));	
 		}
@@ -133,8 +118,7 @@ export const CreateJournal = React.createClass({
 		
 		const isLoading = createJournalData.loading;
 		const serverErrors = {
-			'Email already used': <FormattedMessage id="createJournal.Emailalreadyused" defaultMessage="Email already used" />,
-			'Username already used': <FormattedMessage id="createJournal.Usernamealreadyused" defaultMessage="Username already used" />,
+			'Slug already used': <FormattedMessage id="createJournal.JournalURLalreadyused" defaultMessage="Journal URL already used" />,
 		};
 		const errorMessage = serverErrors[createJournalData.error] || this.state.validationError;
 		return (
@@ -143,15 +127,15 @@ export const CreateJournal = React.createClass({
 				
 				
 				<h1>Create Journal</h1>
-				<p>A pub contains all of the content needed to document and reproduce your research.</p>
-				<p>Pubs maintain full revision histories, can have collaborators, and provide a platform for review and discussion.</p>
+				<p>A journal is a tool to curate work for a given community.</p>
+				<p>Journals can be created by anyway and can dictate their own review expectations and process.</p>
 
 				<hr />
 				<form onSubmit={this.createSubmit}>
 					
 					<label style={styles.label} htmlFor={'journalName'}>
 						<FormattedMessage {...globalMessages.JournalName} />
-						<input id={'journalName'} name={'journal name'} type="text" style={styles.input} value={this.state.journalName} onChange={this.inputUpdate.bind(this, 'journalName')} />
+						<input id={'journalName'} name={'journal name'} type="text" style={styles.input} value={this.state.name} onChange={this.inputUpdate.bind(this, 'name')} />
 					</label>
 
 					<label style={styles.label} htmlFor={'journalURL'}>
@@ -164,16 +148,16 @@ export const CreateJournal = React.createClass({
 						
 					<label htmlFor={'description'}>
 						<FormattedMessage {...globalMessages.Description} />
-						<textarea id={'description'} name={'description'} type="text" style={[styles.input, styles.description]} value={this.state.description} onChange={this.descriptionUpdate} />
+						<textarea id={'description'} name={'description'} type="text" style={[styles.input, styles.description]} value={this.state.shortDescription} onChange={this.descriptionUpdate} />
 						<div className={'light-color inputSubtext'}>
-							{this.state.description.length} / 140
+							{this.state.shortDescription.length} / 140
 						</div>
 					</label>
 					
-					<label htmlFor={'previewImage'}>
-						<FormattedMessage {...globalMessages.PreviewImage} />
-						<img role="presentation" style={styles.previewImage} src={this.state.imageURL} />
-						<input id={'previewImage'} name={'user image'} type="file" accept="image/*" onChange={this.handleFileSelect} />
+					<label htmlFor={'icon'}>
+						<FormattedMessage {...globalMessages.Icon} />
+						<img role="presentation" style={styles.icon} src={this.state.icon} />
+						<input id={'icon'} name={'user image'} type="file" accept="image/*" onChange={this.handleFileSelect} />
 					</label>
 
 					<button className={'pt-button pt-intent-primary'} onClick={this.createSubmit}>
@@ -228,7 +212,7 @@ styles = {
 		height: '4em',
 	},
 
-	previewImage: {
+	icon: {
 		width: '100px',
 		display: 'block',
 	},

@@ -15,7 +15,7 @@ export const CREATE_JOURNAL_FAIL = 'createJournal/CREATE_JOURNAL_FAIL';
 // action objects (e.g. {type:example, payload:data} ) within dispatch()
 // function calls
 /*--------*/
-export function createPub(createData) {
+export function createJournal(createData) {
 	return (dispatch) => {
 		dispatch({ type: CREATE_JOURNAL_LOAD });
 
@@ -26,11 +26,10 @@ export function createPub(createData) {
 				'Content-Type': 'application/json'
 			},
 			body: JSON.stringify({
-				title: createData.title,
-				description: createData.description,
-				image: createData.image,
+				name: createData.name,
+				shortDescription: createData.shortDescription,
+				icon: createData.icon,
 				slug: createData.slug,
-
 			})
 		})
 		.then((result) => {
