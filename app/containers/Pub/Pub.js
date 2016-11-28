@@ -17,6 +17,9 @@ import PubFiles from './PubFiles';
 import PubJournals from './PubJournals';
 import PubSettings from './PubSettings';
 import PubVersions from './PubVersions';
+import PubDiscussionsNew from './PubDiscussionsNew';
+import PubDiscussionsList from './PubDiscussionsList';
+import PubReviewers from './PubReviewers';
 
 
 // import { Popover, PopoverInteractionKind, Position, Menu, MenuItem, NonIdealState } from 'components/Blueprint';
@@ -59,6 +62,8 @@ export const Pub = React.createClass({
 		const currentFile = this.props.params.filename;
 		const meta = currentFile ? 'files' : this.props.params.meta;
 		const query = this.props.location.query;
+		const pathname = this.props.location.pathname;
+		const panel = query.panel;
 		const pubData = this.props.pubData.pub || {};
 		const contributors = pubData.contributors || [];
 		const versions = pubData.versions || [];
@@ -121,7 +126,7 @@ export const Pub = React.createClass({
 					{/* Nav Bar */}
 					{/* ------- */}
 					<div style={styles.nav}>
-						<Link to={'/pub/' + this.props.params.slug}><div style={[styles.navItem, !meta && styles.navItemActive]} className={'bottomShadowOnHover'}>Content</div></Link>
+						<Link to={'/pub/' + this.props.params.slug}><div style={[styles.navItem, (!meta || meta === 'files') && styles.navItemActive]} className={'bottomShadowOnHover'}>Content</div></Link>
 						{/* <Link to={{ pathname: '/pub/' + this.props.params.slug + '/files', query: query }}><div style={[styles.navItem, meta === '' && styles.navItemActive]} className={'bottomShadowOnHover'}>Files</div></Link> */}
 						{!!versions.length && <Link to={'/pub/' + this.props.params.slug + '/versions'}><div style={[styles.navItem, meta === 'versions' && styles.navItemActive]} className={'bottomShadowOnHover'}>Versions ({versions.length})</div></Link> }
 						<Link to={'/pub/' + this.props.params.slug + '/contributors'}><div style={[styles.navItem, meta === 'contributors' && styles.navItemActive]} className={'bottomShadowOnHover'}>Contributors ({contributors.length})</div></Link>
@@ -147,23 +152,28 @@ export const Pub = React.createClass({
 				<StickyContainer style={styles.right}>
 					<Sticky style={styles.rightSticky}>
 
-						<div style={{ textAlign: 'right', padding: '0em .5em' }}>
-							<div className="pt-button-group" style={{ padding: '.25em' }}>
-								<button type="button" className="pt-button">Invite Reviewer</button>
-								<button type="button" className="pt-button">7</button>
-							</div>
+						<div style={styles.panelButtons}>
+							{!panel &&
+								<div>
+									<div className="pt-button-group" style={{ padding: '0em .25em', verticalAlign: 'top' }}>
+										<Link to={{ pathname: pathname, query: { ...query, panel: 'reviewers' } }} className="pt-button">Invite Reviewer</Link>
+										<Link to={{ pathname: pathname, query: { ...query, panel: 'reviewers' } }} className="pt-button">7</Link>
+									</div>
 
-							<button type="button" className="pt-button pt-intent-primary">New Discussion</button>
+									<Link to={{ pathname: pathname, query: { ...query, panel: 'new' } }} className="pt-button pt-intent-primary">New Discussion</Link>
+								</div>
+							}
+
+							{!!panel &&
+								<Link to={{ pathname: pathname, query: { ...query, panel: undefined } }} className="pt-button pt-intent-primary">Back</Link>
+							}
 						</div>
-
-						<h3>Discussions</h3>
-						<p>Hello discussion 1</p><p>Hello discussion 1</p><p>Hello discussion 1</p><p>Hello discussion 1</p>
-						<p>Hello discussion 1</p><p>Hello discussion 1</p><p>Hello discussion 1</p><p>Hello discussion 1</p>
-						<p>Hello discussion 1</p><p>Hello discussion 1</p><p>Hello discussion 1</p><p>Hello discussion 1</p>
-						<p>Hello discussion 1</p><p>Hello discussion 1</p><p>Hello discussion 1</p><p>Hello discussion 1</p>
-						<p>Hello discussion 1</p><p>Hello discussion 1</p><p>Hello discussion 1</p><p>Hello discussion 1</p>
-						<p>Hello discussion 1</p><p>Hello discussion 1</p><p>Hello discussion 1</p><p>Hello discussion 1</p>
 						
+						
+
+						{panel === 'reviewers' && <PubReviewers display={this.props.dispatch} />}
+						{panel === 'new' && <PubDiscussionsNew dispatch={this.props.dispatch} />}
+						{!panel && <PubDiscussionsList dispatch={this.props.dispatch} />}
 
 					</Sticky>
 				</StickyContainer>
@@ -202,6 +212,10 @@ styles = {
 		height: '100vh',
 		overflow: 'hidden',
 		overflowY: 'scroll',
+	},
+	panelButtons: {
+		textAlign: 'right',
+		padding: '.25em .5em',
 	},
 	forkHeader: {
 		padding: '1em 0em',

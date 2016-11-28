@@ -1,5 +1,6 @@
 import React, { PropTypes } from 'react';
 import Radium from 'radium';
+import { Link } from 'react-router';
 import { AutocompleteBar } from 'components';
 import request from 'superagent';
 import { postJournalSubmit } from './actionsJournals';
@@ -90,7 +91,7 @@ export const PubJournals = React.createClass({
 							return (
 								<div key={'pubSubmit-' + index}>
 									<img alt={journal.name} src={'https://jake.pubpub.org/unsafe/50x50/' + journal.icon} style={{verticalAlign: 'middle', paddingRight: '1em'}}/>
-									<h4 style={{display: 'inline-block'}}>{journal.name}</h4>
+									<Link to={'/' + journal.slug}><h4 style={{display: 'inline-block'}}>{journal.name}</h4></Link>
 								</div>
 							);
 						})}
