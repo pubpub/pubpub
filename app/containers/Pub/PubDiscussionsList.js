@@ -15,16 +15,54 @@ export const PubDiscussionsList = React.createClass({
 		dispatch: PropTypes.func,
 	},
 
+	getInitialState() {
+		return {
+			filter: '',
+
+		};
+	},
+
+	componentWillMount() {
+		const query = this.props.query;
+		let filter = '';
+		if (query.author) { filter += 'author:' + query.author + ' '; }
+		if (query.label) { filter += 'label:' + query.label + ' '; }
+		if (query.sort) { filter += 'sort:' + query.sort + ' '; }
+
+		this.setState({ filter: filter });
+	},
+
+	componentWillReceiveProps(nextProps) {
+		const query = nextProps.query;
+		let filter = '';
+		if (query.author) { filter += 'author:' + query.author + ' '; }
+		if (query.label) { filter += 'label:' + query.label + ' '; }
+		if (query.sort) { filter += 'sort:' + query.sort + ' '; }
+		this.setState({ filter: filter });
+	},
+
+	inputUpdate: function(key, evt) {
+		const value = evt.target.value || '';
+		this.setState({ [key]: value });
+	},
+
+	filterSubmit: function(evt) {
+		evt.preventDefault();
+		console.log(this.state.filter);
+	},
+
 	render: function() {
 		const discussionsData = this.props.discussionsData || [];
+		console.log(this.props.query);
+		console.log(this.props.query.label);
 		const authorsMenu = (
 			<Menu>
 				<li className={'pt-menu-header'}><h6>Filter by author:</h6></li>
 				<MenuDivider />
-				{discussionsData.map((discussion)=> {
+				{discussionsData.map((discussion, index)=> {
 					const author = discussion.contributors[0].user;
 					return (
-						<li><Link to={{pathname: this.props.pathname, query: { ...this.props.query, author: author.username }}} className="pt-menu-item pt-popover-dismiss">
+						<li key={'authorFilter-' + index}><Link to={{pathname: this.props.pathname, query: { ...this.props.query, author: author.username }}} className="pt-menu-item pt-popover-dismiss">
 							<img src={'https://jake.pubpub.org/unsafe/50x50/' + author.image} style={styles.authorImages}/> {author.firstName + ' ' + author.lastName}
 						</Link></li>
 					);
@@ -50,11 +88,13 @@ export const PubDiscussionsList = React.createClass({
 				<li><Link to={{pathname: this.props.pathname, query: { ...this.props.query, sort: 'least-replies' }}} className="pt-menu-item pt-popover-dismiss">Least Replies</Link></li>
 			</Menu>
 		);
-		
+
 		return (
 			<div style={styles.container}>
+				<form onSubmit={this.filterSubmit}>
+					<input type="text" placeholder={'Filter discussions'} style={styles.input} value={this.state.filter} onChange={this.inputUpdate.bind(this, 'filter')} />
+				</form>
 				
-				<input type="text" placeholder={'Filter discussions'} style={styles.input}/>
 				<div className="pt-button-group">
 					<PubDiscussionsListFilterButton content={authorsMenu} title={'Authors'} position={0} />
 					<PubDiscussionsListFilterButton content={labelMenu} title={'Label'} position={1} />
