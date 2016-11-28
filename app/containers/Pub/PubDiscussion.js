@@ -8,8 +8,9 @@ import { postDiscussion } from './actionsDiscussions'
 
 let styles;
 
-export const PubDiscussionsNew = React.createClass({
+export const PubDiscussion = React.createClass({
 	propTypes: {
+		discussion: PropTypes.object,
 		pubId: PropTypes.number,
 		isLoading: PropTypes.bool,
 		error: PropTypes.string,
@@ -32,7 +33,7 @@ export const PubDiscussionsNew = React.createClass({
 	validate: function(data) {
 		// Check to make sure name exists
 		if (!data.title || !data.title.length) {
-			return { isValid: false, validationError: <FormattedMessage id="discussion.TitleRequired" defaultMessage="Title Required" /> };
+			return { isValid: false, validationError: <FormattedMessage id="newDiscussion.TitleRequired" defaultMessage="Title Required" /> };
 		}
 
 		return { isValid: true, validationError: undefined };
@@ -56,24 +57,26 @@ export const PubDiscussionsNew = React.createClass({
 	},
 
 	render: function() {
-		const newDiscussionData = {};
+		const discussion = this.props.discussion || {};
 		const isLoading = this.props.isLoading;
 		const serverErrors = {
-			'Slug already used': <FormattedMessage id="discussion.JournalURLalreadyused" defaultMessage="Journal URL already used" />,
+			'Slug already used': <FormattedMessage id="newDiscussion.JournalURLalreadyused" defaultMessage="Journal URL already used" />,
 		};
 		const errorMessage = serverErrors[this.props.error] || this.state.validationError;
 		return (
 			<div style={styles.container}>
-				<h3>New Discussion</h3>
+				<h3>{discussion.title}</h3>
+				<p>{discussion.description}</p>
+
+				<hr />
+
 				<form onSubmit={this.createSubmit}>
-					
-					<input id={'journalName'} name={'journal name'} placeholder={'Title'} type="text" style={styles.input} value={this.state.title} onChange={this.inputUpdate.bind(this, 'title')} />
-						
+					<h3>Reply</h3>
 					<textarea id={'description'} name={'description'} type="text" style={[styles.input, styles.description]} value={this.state.description} onChange={this.inputUpdate.bind(this, 'description')} />
 					
 
 					<button className={'pt-button pt-intent-primary'} onClick={this.createSubmit}>
-						Create New Discussion
+						Post Reply
 					</button>
 
 					<div style={styles.loaderContainer}>
@@ -88,7 +91,7 @@ export const PubDiscussionsNew = React.createClass({
 	}
 });
 
-export default Radium(PubDiscussionsNew);
+export default Radium(PubDiscussion);
 
 styles = {
 	container: {

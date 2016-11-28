@@ -19,6 +19,7 @@ import PubSettings from './PubSettings';
 import PubVersions from './PubVersions';
 import PubDiscussionsNew from './PubDiscussionsNew';
 import PubDiscussionsList from './PubDiscussionsList';
+import PubDiscussion from './PubDiscussion';
 import PubReviewers from './PubReviewers';
 
 
@@ -64,6 +65,7 @@ export const Pub = React.createClass({
 		const query = this.props.location.query;
 		const pathname = this.props.location.pathname;
 		const panel = query.panel;
+		const queryDiscussion = query.discussion;
 		const pubData = this.props.pubData.pub || {};
 		const contributors = pubData.contributors || [];
 		const versions = pubData.versions || [];
@@ -80,6 +82,22 @@ export const Pub = React.createClass({
 			if (current.name === 'main.md') { return true; }
 			return previous;
 		}, false);
+
+	
+		// Add a discussionsIndex value that we'll use to number discussions.
+		const discussionsData = pubData.discussions.sort((foo, bar)=>{
+			// Sort so that oldest is first in array
+			if (foo.createdAt > bar.createdAt) { return 1; }
+			if (foo.createdAt < bar.createdAt) { return -1; }
+			return 0;
+		}).map((discussion, index)=>{
+			return { ...discussion, discussionIndex: index + 1 };
+		});
+		
+		const activeDiscussion = discussionsData.reduce((previous, current)=> {
+			if (queryDiscussion === String(current.discussionIndex)) { return current; }
+			return previous;
+		}, {});
 
 		const metaData = {
 			title: (pubData.title || this.props.params.slug) + ' · PubPub',
@@ -153,9 +171,9 @@ export const Pub = React.createClass({
 					<Sticky style={styles.rightSticky}>
 
 						<div style={styles.panelButtons}>
-							{!panel &&
+							{!panel && !queryDiscussion &&
 								<div>
-									<div className="pt-button-group" style={{ padding: '0em .25em', verticalAlign: 'top' }}>
+									<div className="pt-button-group" style={styles.panelButtonGroup}>
 										<Link to={{ pathname: pathname, query: { ...query, panel: 'reviewers' } }} className="pt-button">Invite Reviewer</Link>
 										<Link to={{ pathname: pathname, query: { ...query, panel: 'reviewers' } }} className="pt-button">7</Link>
 									</div>
@@ -164,16 +182,18 @@ export const Pub = React.createClass({
 								</div>
 							}
 
-							{!!panel &&
-								<Link to={{ pathname: pathname, query: { ...query, panel: undefined } }} className="pt-button pt-intent-primary">Back</Link>
+							{(!!panel || !!queryDiscussion) &&
+								<Link to={{ pathname: pathname, query: { ...query, panel: undefined, discussion: undefined } }} className="pt-button pt-intent-primary">
+									<span className="pt-icon-standard pt-icon-chevron-left" />
+									Back
+								</Link>
 							}
 						</div>
 						
-						
-
 						{panel === 'reviewers' && <PubReviewers display={this.props.dispatch} />}
-						{panel === 'new' && <PubDiscussionsNew dispatch={this.props.dispatch} />}
-						{!panel && <PubDiscussionsList dispatch={this.props.dispatch} />}
+						{panel === 'new' && <PubDiscussionsNew pubId={pubData.id} isLoading={this.props.pubData.discussionsLoading} error={this.props.pubData.discussionsError} dispatch={this.props.dispatch} />}
+						{!panel && !queryDiscussion && <PubDiscussionsList discussionsData={discussionsData} pathname={pathname} query={query} dispatch={this.props.dispatch} />}
+						{!!queryDiscussion && <PubDiscussion discussion={activeDiscussion} pubId={pubData.id} isLoading={this.props.pubData.discussionsLoading} error={this.props.pubData.discussionsError} dispatch={this.props.dispatch} />}
 
 					</Sticky>
 				</StickyContainer>
@@ -212,10 +232,15 @@ styles = {
 		height: '100vh',
 		overflow: 'hidden',
 		overflowY: 'scroll',
+		padding: '0.5em',
 	},
 	panelButtons: {
 		textAlign: 'right',
-		padding: '.25em .5em',
+		padding: '0em 0em 1em',
+	},
+	panelButtonGroup: {
+		padding: '0em .25em', 
+		verticalAlign: 'top',
 	},
 	forkHeader: {
 		padding: '1em 0em',
