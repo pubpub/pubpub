@@ -2,7 +2,7 @@ import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 import Radium from 'radium';
 import Helmet from 'react-helmet';
-import { Link } from 'react-router';
+import { Link, browserHistory } from 'react-router';
 import { StickyContainer, Sticky } from 'react-sticky';
 import ReactMarkdown from 'react-markdown';
 import dateFormat from 'dateformat';
@@ -47,7 +47,19 @@ export const Pub = React.createClass({
 
 	getInitialState() {
 		return {
+			canGoBack: false,
 		};
+	},
+
+	componentWillReceiveProps(nextProps) {
+		const lastPanel = this.props.location.query.panel;
+		const nextPanel = nextProps.location.query.panel;
+		const lastDiscussion = this.props.location.query.discussion;
+		const nextDiscussion = nextProps.location.query.discussion;
+
+		if (lastPanel !== nextPanel || lastDiscussion !== nextDiscussion) {
+			this.setState({ canGoBack: true });
+		}
 	},
 
 	componentDidMount() {
@@ -59,7 +71,24 @@ export const Pub = React.createClass({
 		}
 	},
 
+	goBack: function() {
+		// Note, this breaks if a user directly navigates to a discussion, clicks 'back' (rendering canGoBack = true), and then navigates back twice.
+		// We need a way to turn canGoBack off again, but that feels a bit cumbersome at the moment.
+		// Seems to be an open bug on react-router: https://github.com/ReactTraining/react-router/issues/408
+		if (this.state.canGoBack) {
+			browserHistory.goBack();
+		} else {
+			const query = this.props.location.query;
+			const pathname = this.props.location.pathname;
+			browserHistory.push({
+				pathname: pathname,
+				query: { ...query, panel: undefined, discussion: undefined } 
+			});
+		}
+	},
+
 	render() {
+		console.log(browserHistory);
 		const currentFile = this.props.params.filename;
 		const meta = currentFile ? 'files' : this.props.params.meta;
 		const query = this.props.location.query;
@@ -84,8 +113,19 @@ export const Pub = React.createClass({
 		}, false);
 
 	
+		// Populate parent discussions with their children
+		const tempArray = [...pubData.discussions];
+		tempArray.forEach((discussion)=> {
+			discussion.children = tempArray.filter((child)=> {
+				return (child.replyParentPubId === discussion.id);
+			});
+			return discussion;
+		});
+
 		// Add a discussionsIndex value that we'll use to number discussions.
-		const discussionsData = pubData.discussions.sort((foo, bar)=>{
+		const discussionsData = pubData.discussions.filter((discussion)=> {
+			return discussion.replyParentPubId === pubData.id;
+		}).sort((foo, bar)=>{
 			// Sort so that oldest is first in array
 			if (foo.createdAt > bar.createdAt) { return 1; }
 			if (foo.createdAt < bar.createdAt) { return -1; }
@@ -94,6 +134,7 @@ export const Pub = React.createClass({
 			return { ...discussion, discussionIndex: index + 1 };
 		});
 		
+		console.log('pubdata.discussions', pubData.discussions);
 		const activeDiscussion = discussionsData.reduce((previous, current)=> {
 			if (queryDiscussion === String(current.discussionIndex)) { return current; }
 			return previous;
@@ -183,10 +224,10 @@ export const Pub = React.createClass({
 							}
 
 							{(!!panel || !!queryDiscussion) &&
-								<Link to={{ pathname: pathname, query: { ...query, panel: undefined, discussion: undefined } }} className="pt-button pt-intent-primary">
+								<button type="button" className="pt-button pt-intent-primary" onClick={this.goBack}>
 									<span className="pt-icon-standard pt-icon-chevron-left" />
 									Back
-								</Link>
+								</button>
 							}
 						</div>
 						
@@ -232,7 +273,7 @@ styles = {
 		height: '100vh',
 		overflow: 'hidden',
 		overflowY: 'scroll',
-		padding: '0.5em',
+		padding: '0.5em 0.5em 0.5em 1em',
 	},
 	panelButtons: {
 		textAlign: 'right',

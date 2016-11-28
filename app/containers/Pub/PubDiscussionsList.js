@@ -1,5 +1,10 @@
 import React, { PropTypes } from 'react';
 import { Link } from 'react-router';
+import Radium from 'radium';
+import dateFormat from 'dateformat';
+import { Popover, PopoverInteractionKind, Position, Menu, MenuItem, MenuDivider } from 'components/Blueprint';
+import PubDiscussionsListFilterButton from './PubDiscussionsListFilterButton';
+
 let styles;
 
 export const PubDiscussionsList = React.createClass({
@@ -12,18 +17,59 @@ export const PubDiscussionsList = React.createClass({
 
 	render: function() {
 		const discussionsData = this.props.discussionsData || [];
-
+		const authorsMenu = (
+			<Menu>
+				<li className={'pt-menu-header'}><h6>Filter by author:</h6></li>
+				<MenuDivider />
+				{discussionsData.map((discussion)=> {
+					const author = discussion.contributors[0].user;
+					return (
+						<li><Link to={{pathname: this.props.pathname, query: { ...this.props.query, author: author.username }}} className="pt-menu-item pt-popover-dismiss">
+							<img src={'https://jake.pubpub.org/unsafe/50x50/' + author.image} style={styles.authorImages}/> {author.firstName + ' ' + author.lastName}
+						</Link></li>
+					);
+				})}
+			</Menu>
+		);
+		const labelMenu = (
+			<Menu>
+				<li className={'pt-menu-header'}><h6>Filter by label:</h6></li>
+				<MenuDivider />
+				<li><Link to={{pathname: this.props.pathname, query: { ...this.props.query, label: 'Review' }}} className="pt-menu-item pt-popover-dismiss">Review</Link></li>
+				<li><Link to={{pathname: this.props.pathname, query: { ...this.props.query, label: 'Question' }}} className="pt-menu-item pt-popover-dismiss">Question</Link></li>
+				<li><Link to={{pathname: this.props.pathname, query: { ...this.props.query, label: 'Update Request' }}} className="pt-menu-item pt-popover-dismiss">Update Request</Link></li>
+			</Menu>
+		);
+		const sortMenu = (
+			<Menu>
+				<li className={'pt-menu-header'}><h6>Sort by:</h6></li>
+				<MenuDivider />
+				<li><Link to={{pathname: this.props.pathname, query: { ...this.props.query, sort: 'newest' }}} className="pt-menu-item pt-popover-dismiss">Newest</Link></li>
+				<li><Link to={{pathname: this.props.pathname, query: { ...this.props.query, sort: 'oldest' }}} className="pt-menu-item pt-popover-dismiss">Oldest</Link></li>
+				<li><Link to={{pathname: this.props.pathname, query: { ...this.props.query, sort: 'most-replies' }}} className="pt-menu-item pt-popover-dismiss">Most Replies</Link></li>
+				<li><Link to={{pathname: this.props.pathname, query: { ...this.props.query, sort: 'least-replies' }}} className="pt-menu-item pt-popover-dismiss">Least Replies</Link></li>
+			</Menu>
+		);
+		
 		return (
 			<div style={styles.container}>
-				<h3>Discussions</h3>
 				
-				{discussionsData.map((discussion)=> {
+				<input type="text" placeholder={'Filter discussions'} style={styles.input}/>
+				<div className="pt-button-group">
+					<PubDiscussionsListFilterButton content={authorsMenu} title={'Authors'} position={0} />
+					<PubDiscussionsListFilterButton content={labelMenu} title={'Label'} position={1} />
+					<PubDiscussionsListFilterButton content={sortMenu} title={'Sort'} position={2} />
+				</div>
+				
+				{discussionsData.map((discussion, index)=> {
+					const author = discussion.contributors[0].user;
 					return (
-						<div>
-							<Link to={{pathname: this.props.pathname, query: { ...this.props.query, discussion: discussion.discussionIndex }}}>
-							<h3>{discussion.discussionIndex} | {discussion.title}</h3>
-							<p>{discussion.createdAt}</p>
-							</Link>
+						<div style={styles.discussionItem} key={'discussionItem-' + index}>
+							<Link to={{pathname: this.props.pathname, query: { ...this.props.query, discussion: discussion.discussionIndex }}} style={styles.discussionTitle}>{discussion.title}</Link>
+							<div>#{discussion.discussionIndex} | {dateFormat(discussion.createdAt, 'mmmm dd, yyyy')} | by {author.firstName + ' ' + author.lastName}</div>
+							<div>
+								<img src={'https://jake.pubpub.org/unsafe/50x50/' + author.image} style={styles.authorImages}/>
+							</div>
 						</div>
 					);
 				})}
@@ -33,10 +79,24 @@ export const PubDiscussionsList = React.createClass({
 	}
 });
 
-export default PubDiscussionsList;
+export default Radium(PubDiscussionsList);
 
 styles = {
-	container: {
-		
+	discussionItem: {
+		borderBottom: '1px solid #CCC',
+		padding: '1em 0em',
+		margin: '0em 0em 1em',
+	},
+	discussionTitle: {
+		fontWeight: 'bold',
+		fontSize: '1.25em',
+	},
+	authorImages: {
+		width: '20px',
+		verticalAlign: 'middle',
+	},
+	input: {
+		width: '100%',
+		marginBottom: '0em',
 	},
 };

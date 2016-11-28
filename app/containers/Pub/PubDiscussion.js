@@ -19,7 +19,6 @@ export const PubDiscussion = React.createClass({
 
 	getInitialState() {
 		return {
-			title: '',
 			description: '',
 
 		};
@@ -32,8 +31,8 @@ export const PubDiscussion = React.createClass({
 
 	validate: function(data) {
 		// Check to make sure name exists
-		if (!data.title || !data.title.length) {
-			return { isValid: false, validationError: <FormattedMessage id="newDiscussion.TitleRequired" defaultMessage="Title Required" /> };
+		if (!data.description || !data.description.length) {
+			return { isValid: false, validationError: <FormattedMessage id="discussion.CannotPostEmptyReply" defaultMessage="Cannot post empty reply" /> };
 		}
 
 		return { isValid: true, validationError: undefined };
@@ -44,8 +43,8 @@ export const PubDiscussion = React.createClass({
 		evt.preventDefault();
 		const createData = {
 			replyRootPubId: this.props.pubId,
-			replyParentPubId: this.props.pubId,
-			title: this.state.title,
+			replyParentPubId: this.props.discussion.id,
+			title: 'Reply to: ' + this.props.discussion.title,
 			description: this.state.description,
 		};
 		const { isValid, validationError } = this.validate(createData);
@@ -58,15 +57,25 @@ export const PubDiscussion = React.createClass({
 
 	render: function() {
 		const discussion = this.props.discussion || {};
+		const children = discussion.children || [];
 		const isLoading = this.props.isLoading;
 		const serverErrors = {
-			'Slug already used': <FormattedMessage id="newDiscussion.JournalURLalreadyused" defaultMessage="Journal URL already used" />,
+			'Slug already used': '',
 		};
 		const errorMessage = serverErrors[this.props.error] || this.state.validationError;
 		return (
 			<div style={styles.container}>
 				<h3>{discussion.title}</h3>
 				<p>{discussion.description}</p>
+
+				{children.sort((foo, bar)=>{
+					// Sort so that oldest is first in array
+					if (foo.createdAt > bar.createdAt) { return 1; }
+					if (foo.createdAt < bar.createdAt) { return -1; }
+					return 0;
+				}).map((child, index)=> {
+					return <div key={'childDiscussion-' + index}>{child.description}</div>;
+				})}
 
 				<hr />
 
