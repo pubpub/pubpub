@@ -1,5 +1,5 @@
 import React, { PropTypes } from 'react';
-import { Link } from 'react-router';
+import { Link, browserHistory } from 'react-router';
 import Radium from 'radium';
 import dateFormat from 'dateformat';
 import { Popover, PopoverInteractionKind, Position, Menu, MenuItem, MenuDivider } from 'components/Blueprint';
@@ -24,21 +24,12 @@ export const PubDiscussionsList = React.createClass({
 
 	componentWillMount() {
 		const query = this.props.query;
-		let filter = '';
-		if (query.author) { filter += 'author:' + query.author + ' '; }
-		if (query.label) { filter += 'label:' + query.label + ' '; }
-		if (query.sort) { filter += 'sort:' + query.sort + ' '; }
-
-		this.setState({ filter: filter });
+		this.setState({ filter: query.filter });
 	},
 
 	componentWillReceiveProps(nextProps) {
 		const query = nextProps.query;
-		let filter = '';
-		if (query.author) { filter += 'author:' + query.author + ' '; }
-		if (query.label) { filter += 'label:' + query.label + ' '; }
-		if (query.sort) { filter += 'sort:' + query.sort + ' '; }
-		this.setState({ filter: filter });
+		this.setState({ filter: query.filter });
 	},
 
 	inputUpdate: function(key, evt) {
@@ -48,44 +39,64 @@ export const PubDiscussionsList = React.createClass({
 
 	filterSubmit: function(evt) {
 		evt.preventDefault();
-		console.log(this.state.filter);
+		const newFilter = this.state.filter.length ? this.state.filter : undefined;
+		browserHistory.push({ pathname: this.props.pathname, query: { ...this.props.query, filter: newFilter } })
 	},
 
 	render: function() {
 		const discussionsData = this.props.discussionsData || [];
-		console.log(this.props.query);
-		console.log(this.props.query.label);
+		const query = this.props.query || {};
+
+		const labelList = ['Review', 'Question', 'Update Request'];
+		const sortList = ['Newest', 'Oldest', 'Most Replies', 'Least Replies'];
+
 		const authorsMenu = (
 			<Menu>
 				<li className={'pt-menu-header'}><h6>Filter by author:</h6></li>
+				{query.author && <li><Link to={{pathname: this.props.pathname, query: { ...this.props.query, author: undefined }}} className="pt-menu-item pt-popover-dismiss pt-icon-cross">Clear Author Filter</Link></li>}
 				<MenuDivider />
 				{discussionsData.map((discussion, index)=> {
 					const author = discussion.contributors[0].user;
 					return (
 						<li key={'authorFilter-' + index}><Link to={{pathname: this.props.pathname, query: { ...this.props.query, author: author.username }}} className="pt-menu-item pt-popover-dismiss">
 							<img src={'https://jake.pubpub.org/unsafe/50x50/' + author.image} style={styles.authorImages}/> {author.firstName + ' ' + author.lastName}
+							{query.author === author.username && <span className={'pt-icon-standard pt-icon-tick pt-menu-item-label'} />}
+							
 						</Link></li>
 					);
 				})}
 			</Menu>
 		);
+		
 		const labelMenu = (
 			<Menu>
 				<li className={'pt-menu-header'}><h6>Filter by label:</h6></li>
+				{query.label && <li><Link to={{pathname: this.props.pathname, query: { ...this.props.query, label: undefined }}} className="pt-menu-item pt-popover-dismiss pt-icon-cross">Clear Label Filter</Link></li>}
 				<MenuDivider />
-				<li><Link to={{pathname: this.props.pathname, query: { ...this.props.query, label: 'Review' }}} className="pt-menu-item pt-popover-dismiss">Review</Link></li>
-				<li><Link to={{pathname: this.props.pathname, query: { ...this.props.query, label: 'Question' }}} className="pt-menu-item pt-popover-dismiss">Question</Link></li>
-				<li><Link to={{pathname: this.props.pathname, query: { ...this.props.query, label: 'Update Request' }}} className="pt-menu-item pt-popover-dismiss">Update Request</Link></li>
+				{labelList.map((label, index)=> {
+					return (
+						<li key={'labelFilter-' + index}><Link to={{pathname: this.props.pathname, query: { ...this.props.query, label: label }}} className="pt-menu-item pt-popover-dismiss">
+							{label}
+							{query.label === label && <span className={'pt-icon-standard pt-icon-tick pt-menu-item-label'} />}
+						</Link></li>
+					);
+				})}
 			</Menu>
 		);
+
 		const sortMenu = (
 			<Menu>
 				<li className={'pt-menu-header'}><h6>Sort by:</h6></li>
 				<MenuDivider />
-				<li><Link to={{pathname: this.props.pathname, query: { ...this.props.query, sort: 'newest' }}} className="pt-menu-item pt-popover-dismiss">Newest</Link></li>
-				<li><Link to={{pathname: this.props.pathname, query: { ...this.props.query, sort: 'oldest' }}} className="pt-menu-item pt-popover-dismiss">Oldest</Link></li>
-				<li><Link to={{pathname: this.props.pathname, query: { ...this.props.query, sort: 'most-replies' }}} className="pt-menu-item pt-popover-dismiss">Most Replies</Link></li>
-				<li><Link to={{pathname: this.props.pathname, query: { ...this.props.query, sort: 'least-replies' }}} className="pt-menu-item pt-popover-dismiss">Least Replies</Link></li>
+				{sortList.map((sort, index)=> {
+					const sortMode = query.sort || 'Newest';
+					return (
+						<li key={'sortFilter-' + index}><Link to={{pathname: this.props.pathname, query: { ...this.props.query, sort: sort }}} className="pt-menu-item pt-popover-dismiss">
+							{sort}
+							{sortMode === sort && <span className={'pt-icon-standard pt-icon-tick pt-menu-item-label'} />}
+						</Link></li>
+					);
+				})}
 			</Menu>
 		);
 
