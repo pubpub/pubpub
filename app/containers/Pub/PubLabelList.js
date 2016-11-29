@@ -65,10 +65,7 @@ export const PubLabelList = React.createClass({
 		});
 		return (
 			<div style={styles.container}>
-				{selectedLabels.map((label, index)=> {
-					return <span key={'label-' + index} className="pt-tag" style={{ backgroundColor: label.color || '#CCC', marginRight: '.5em' }}>{label.title}</span>;
-				})}
-
+				
 				<Popover 
 					content={
 						<div style={{padding: '.25em'}}>
@@ -108,7 +105,7 @@ export const PubLabelList = React.createClass({
 						</div>
 					}
 					interactionKind={PopoverInteractionKind.CLICK}
-					position={Position.BOTTOM_RIGHT}
+					position={Position.BOTTOM_LEFT}
 					transitionDuration={200}
 				>
 					<span className="pt-tag" style={styles.editLabelsButton}>
@@ -116,6 +113,10 @@ export const PubLabelList = React.createClass({
 					</span>	
 					
 				</Popover>
+
+				{selectedLabels.map((label, index)=> {
+					return <span key={'label-' + index} className="pt-tag" style={{ backgroundColor: label.color || '#CCC', marginLeft: '.5em' }}>{label.title}</span>;
+				})}
 					
 			</div>
 		);
@@ -128,8 +129,8 @@ export default Radium(PubLabelList);
 
 styles = {
 	container: {
-		padding: '1.25em 0em',
-		textAlign: 'right',
+		padding: '0.25em 0em',
+		// textAlign: 'right',
 	},
 	editLabelsButton: {
 		backgroundColor: 'transparent',

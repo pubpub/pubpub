@@ -8,6 +8,8 @@ import dateFormat from 'dateformat';
 import ReactMarkdown from 'react-markdown';
 import { Popover, PopoverInteractionKind, Position, Menu, MenuItem, MenuDivider, Tooltip } from 'components/Blueprint';
 import { postDiscussion } from './actionsDiscussions'
+import PubLabelList from './PubLabelList';
+
 
 let styles;
 
@@ -80,8 +82,8 @@ export const PubDiscussion = React.createClass({
 					'.discussion-item .pt-button-group:not(.pt-vertical) .pt-popover-target, .discussion-item .pt-button-group:not(.pt-vertical) .pt-tether-target': { float: 'none' },
 				}} />
 
-
 				<h3>{discussion.title}</h3>
+				<PubLabelList allLabels={[]} />
 
 				{discussions.sort((foo, bar)=>{
 					// Sort so that oldest is first in array
