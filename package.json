@@ -55,6 +55,7 @@
     "react": "^15.3.0",
     "react-addons-css-transition-group": "^15.3.2",
     "react-addons-test-utils": "^15.3.2",
+    "react-color": "^2.8.0",
     "react-dom": "^15.3.0",
     "react-ga": "^2.1.2",
     "react-helmet": "^3.1.0",

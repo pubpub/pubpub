@@ -4,12 +4,14 @@ import Radium from 'radium';
 import dateFormat from 'dateformat';
 import { Popover, PopoverInteractionKind, Position, Menu, MenuItem, MenuDivider } from 'components/Blueprint';
 import PubDiscussionsListFilterButton from './PubDiscussionsListFilterButton';
+import PubLabelList from './PubLabelList';
 
 let styles;
 
 export const PubDiscussionsList = React.createClass({
 	propTypes: {
 		discussionsData: PropTypes.array,
+		labelsData: PropTypes.array,
 		pathname: PropTypes.string,
 		query: PropTypes.object,
 		dispatch: PropTypes.func,
@@ -47,7 +49,7 @@ export const PubDiscussionsList = React.createClass({
 		const discussionsData = this.props.discussionsData || [];
 		const query = this.props.query || {};
 
-		const labelList = ['Review', 'Question', 'Update Request'];
+		const labelList = this.props.labelsData || [];
 		const sortList = ['Newest', 'Oldest', 'Most Replies', 'Least Replies'];
 
 		const authorsMenu = (
@@ -75,9 +77,9 @@ export const PubDiscussionsList = React.createClass({
 				<MenuDivider />
 				{labelList.map((label, index)=> {
 					return (
-						<li key={'labelFilter-' + index}><Link to={{pathname: this.props.pathname, query: { ...this.props.query, label: label }}} className="pt-menu-item pt-popover-dismiss">
-							{label}
-							{query.label === label && <span className={'pt-icon-standard pt-icon-tick pt-menu-item-label'} />}
+						<li key={'labelFilter-' + index}><Link to={{pathname: this.props.pathname, query: { ...this.props.query, label: label.title }}} className="pt-menu-item pt-popover-dismiss">
+							<span style={[styles.labelColor, { backgroundColor: label.color }]} /> {label.title}
+							{query.label === label.title && <span className={'pt-icon-standard pt-icon-tick pt-menu-item-label'} />}
 						</Link></li>
 					);
 				})}
@@ -111,6 +113,8 @@ export const PubDiscussionsList = React.createClass({
 					<PubDiscussionsListFilterButton content={labelMenu} title={'Label'} position={1} />
 					<PubDiscussionsListFilterButton content={sortMenu} title={'Sort'} position={2} />
 				</div>
+
+				<PubLabelList allLabels={labelList} />
 				
 				{discussionsData.map((discussion, index)=> {
 					const author = discussion.contributors[0].user;
@@ -135,6 +139,13 @@ export default Radium(PubDiscussionsList);
 styles = {
 	buttonGroup: {
 		marginBottom: '2em',
+	},
+	labelColor: {
+		display: 'inline-block',
+		width: '1em',
+		height: '1em',
+		borderRadius: '2px',
+		verticalAlign: 'middle',
 	},
 	discussionItem: {
 		// borderBottom: '1px solid #CCC',

@@ -5,12 +5,14 @@ import { globalStyles } from 'utils/globalStyles';
 import { globalMessages } from 'utils/globalMessages';
 import { FormattedMessage } from 'react-intl';
 import { postDiscussion } from './actionsDiscussions'
+import PubLabelList from './PubLabelList';
 
 let styles;
 
 export const PubDiscussionsNew = React.createClass({
 	propTypes: {
 		pubId: PropTypes.number,
+		labelsData: PropTypes.array,
 		isLoading: PropTypes.bool,
 		error: PropTypes.string,
 		dispatch: PropTypes.func,
@@ -57,6 +59,7 @@ export const PubDiscussionsNew = React.createClass({
 
 	render: function() {
 		const newDiscussionData = {};
+		const labelList = this.props.labelsData || [];
 		const isLoading = this.props.isLoading;
 		const serverErrors = {
 			'Slug already used': <FormattedMessage id="discussion.JournalURLalreadyused" defaultMessage="Journal URL already used" />,
@@ -66,7 +69,7 @@ export const PubDiscussionsNew = React.createClass({
 			<div style={styles.container}>
 				<h3>New Discussion</h3>
 				<form onSubmit={this.createSubmit}>
-					
+					<PubLabelList allLabels={labelList} />
 					<input id={'journalName'} name={'journal name'} placeholder={'Title'} type="text" style={styles.input} value={this.state.title} onChange={this.inputUpdate.bind(this, 'title')} />
 						
 					<textarea id={'description'} name={'description'} type="text" style={[styles.input, styles.description]} value={this.state.description} onChange={this.inputUpdate.bind(this, 'description')} />
@@ -95,7 +98,7 @@ styles = {
 		
 	},
 	input: {
-		width: 'calc(100% - 20px - 4px)',
+		width: '100%',
 	},
 	loaderContainer: {
 		display: 'inline-block',
