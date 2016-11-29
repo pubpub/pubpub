@@ -88,7 +88,6 @@ export const Pub = React.createClass({
 	},
 
 	render() {
-		console.log(browserHistory);
 		const currentFile = this.props.params.filename;
 		const meta = currentFile ? 'files' : this.props.params.meta;
 		const query = this.props.location.query;
@@ -134,7 +133,6 @@ export const Pub = React.createClass({
 			return { ...discussion, discussionIndex: index + 1 };
 		});
 		
-		console.log('pubdata.discussions', pubData.discussions);
 		const activeDiscussion = discussionsData.reduce((previous, current)=> {
 			if (queryDiscussion === String(current.discussionIndex)) { return current; }
 			return previous;

@@ -24,12 +24,12 @@ export const PubDiscussionsList = React.createClass({
 
 	componentWillMount() {
 		const query = this.props.query;
-		this.setState({ filter: query.filter });
+		this.setState({ filter: query.filter || '' });
 	},
 
 	componentWillReceiveProps(nextProps) {
 		const query = nextProps.query;
-		this.setState({ filter: query.filter });
+		this.setState({ filter: query.filter || '' });
 	},
 
 	inputUpdate: function(key, evt) {
@@ -67,7 +67,7 @@ export const PubDiscussionsList = React.createClass({
 				})}
 			</Menu>
 		);
-		
+
 		const labelMenu = (
 			<Menu>
 				<li className={'pt-menu-header'}><h6>Filter by label:</h6></li>
@@ -106,7 +106,7 @@ export const PubDiscussionsList = React.createClass({
 					<input type="text" placeholder={'Filter discussions'} style={styles.input} value={this.state.filter} onChange={this.inputUpdate.bind(this, 'filter')} />
 				</form>
 				
-				<div className="pt-button-group">
+				<div className="pt-button-group" style={styles.buttonGroup}>
 					<PubDiscussionsListFilterButton content={authorsMenu} title={'Authors'} position={0} />
 					<PubDiscussionsListFilterButton content={labelMenu} title={'Label'} position={1} />
 					<PubDiscussionsListFilterButton content={sortMenu} title={'Sort'} position={2} />
@@ -115,7 +115,7 @@ export const PubDiscussionsList = React.createClass({
 				{discussionsData.map((discussion, index)=> {
 					const author = discussion.contributors[0].user;
 					return (
-						<div style={styles.discussionItem} key={'discussionItem-' + index}>
+						<div style={styles.discussionItem} key={'discussionItem-' + index} className={'pt-card pt-elevation-1'}>
 							<Link to={{pathname: this.props.pathname, query: { ...this.props.query, discussion: discussion.discussionIndex }}} style={styles.discussionTitle}>{discussion.title}</Link>
 							<div>#{discussion.discussionIndex} | {dateFormat(discussion.createdAt, 'mmmm dd, yyyy')} | by {author.firstName + ' ' + author.lastName}</div>
 							<div>
@@ -133,10 +133,16 @@ export const PubDiscussionsList = React.createClass({
 export default Radium(PubDiscussionsList);
 
 styles = {
+	buttonGroup: {
+		marginBottom: '2em',
+	},
 	discussionItem: {
-		borderBottom: '1px solid #CCC',
-		padding: '1em 0em',
-		margin: '0em 0em 1em',
+		// borderBottom: '1px solid #CCC',
+		padding: '.5em',
+		// margin: '1em0em 0em',
+		// border: '1px solid #ccc',
+		// backgroundColor: 'white',
+		borderRadius: '1px',
 	},
 	discussionTitle: {
 		fontWeight: 'bold',

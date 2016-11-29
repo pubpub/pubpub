@@ -1,9 +1,12 @@
 import React, { PropTypes } from 'react';
-import Radium from 'radium';
+import Radium, { Style } from 'radium';
 import { Loader } from 'components';
 import { globalStyles } from 'utils/globalStyles';
 import { globalMessages } from 'utils/globalMessages';
 import { FormattedMessage } from 'react-intl';
+import dateFormat from 'dateformat';
+import ReactMarkdown from 'react-markdown';
+import { Popover, PopoverInteractionKind, Position, Menu, MenuItem, MenuDivider, Tooltip } from 'components/Blueprint';
 import { postDiscussion } from './actionsDiscussions'
 
 let styles;
@@ -22,6 +25,12 @@ export const PubDiscussion = React.createClass({
 			description: '',
 
 		};
+	},
+
+	componentWillReceiveProps(nextProps) {
+		if (this.props.isLoading && !nextProps.isLoading && !nextProps.error) {
+			this.setState({ description: '' });
+		}
 	},
 
 	inputUpdate: function(key, evt) {
@@ -49,7 +58,6 @@ export const PubDiscussion = React.createClass({
 		};
 		const { isValid, validationError } = this.validate(createData);
 		this.setState({ validationError: validationError });
-		console.log(createData);
 		if (isValid) {
 			this.props.dispatch(postDiscussion(createData.replyRootPubId, createData.replyParentPubId, createData.title, createData.description));	
 		}
@@ -63,18 +71,55 @@ export const PubDiscussion = React.createClass({
 			'Slug already used': '',
 		};
 		const errorMessage = serverErrors[this.props.error] || this.state.validationError;
-		return (
-			<div style={styles.container}>
-				<h3>{discussion.title}</h3>
-				<p>{discussion.description}</p>
 
-				{children.sort((foo, bar)=>{
+		const discussions = [discussion, ...discussion.children];
+
+		return (
+			<div style={styles.container} className={'discussion-item'}>
+				<Style rules={{
+					'.discussion-item .pt-button-group:not(.pt-vertical) .pt-popover-target, .discussion-item .pt-button-group:not(.pt-vertical) .pt-tether-target': { float: 'none' },
+				}} />
+
+
+				<h3>{discussion.title}</h3>
+
+				{discussions.sort((foo, bar)=>{
 					// Sort so that oldest is first in array
 					if (foo.createdAt > bar.createdAt) { return 1; }
 					if (foo.createdAt < bar.createdAt) { return -1; }
 					return 0;
 				}).map((child, index)=> {
-					return <div key={'childDiscussion-' + index}>{child.description}</div>;
+					const user = child.contributors[0].user;
+					return (
+						<div key={'discussion-' + index} style={styles.discussionItem}>
+							<div style={styles.discussionItemHeader}>
+								<div  style={styles.discussionItemImageWrapper}>
+									<img src={user.image} style={styles.discussionItemImage}/>	
+								</div>
+								
+								<div style={styles.discussionItemName}>
+									{user.firstName + ' ' + user.lastName} · {dateFormat(child.createdAt, 'mmm dd, yyyy')}
+								</div>
+
+								<div style={styles.discussionItemActions} className="pt-button-group pt-minimal">	
+									<Tooltip content={'Add Feedback'} position={Position.LEFT} useSmartPositioning={true}>						
+										<button type="button" className="pt-button pt-icon-social-media" />
+									</Tooltip>
+									<Tooltip content={'Edit'} position={Position.LEFT} useSmartPositioning={true}>						
+										<button type="button" className="pt-button pt-icon-edit" />
+									</Tooltip>
+									<Tooltip content={'Cite Discussion'} position={Position.LEFT} useSmartPositioning={true}>						
+										<button type="button" className="pt-button pt-icon-bookmark" />
+									</Tooltip>
+
+								</div>
+							</div>
+							<div style={styles.discussionItemBody} className={'discussion-body'}>
+								<ReactMarkdown source={child.description} />
+							</div>
+							
+						</div>
+					);
 				})}
 
 				<hr />
@@ -106,6 +151,37 @@ styles = {
 	container: {
 		
 	},
+	discussionItem: {
+		border: '1px solid #CCC',
+		margin: '1em 0em',
+	},
+	discussionItemHeader: {
+		display: 'table',
+		width: '100%',
+	},
+	discussionItemImageWrapper: {
+		display: 'table-cell',
+		width: '1%',
+		paddingRight: '.5em',
+	},
+	discussionItemImage: {
+		width: '50px',
+		display: 'block',
+	},
+	discussionItemName: {
+		display: 'table-cell',
+		verticalAlign: 'middle',
+	},
+	discussionItemActions: {
+		display: 'table-cell',
+		whiteSpace: 'nowrap',
+		width: '1%',
+		verticalAlign: 'middle',
+	},
+	discussionItemBody: {
+		backgroundColor: 'white',
+		padding: '1em 1em',
+	},
 	input: {
 		width: 'calc(100% - 20px - 4px)',
 	},
@@ -121,4 +197,5 @@ styles = {
 		padding: '10px 0px',
 		color: globalStyles.errorRed,
 	},
+
 };

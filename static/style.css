@@ -11,6 +11,10 @@ body {
 	border-left: 3px solid #2C2A2B !important;
 }
 
+.discussion-item .discussion-body div>*:last-child {
+	margin-bottom: 0;
+}
+
 /* Input Fields */
 /* ------------ */
 label {
