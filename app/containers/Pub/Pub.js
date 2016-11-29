@@ -56,9 +56,13 @@ export const Pub = React.createClass({
 		const nextPanel = nextProps.location.query.panel;
 		const lastDiscussion = this.props.location.query.discussion;
 		const nextDiscussion = nextProps.location.query.discussion;
+		const lastPathname = this.props.location.pathname;
+		const nextPathname = nextProps.location.pathname;
 
-		if (lastPanel !== nextPanel || lastDiscussion !== nextDiscussion) {
+		if ((lastPanel !== nextPanel || lastDiscussion !== nextDiscussion) && lastPathname === nextPathname) {
 			this.setState({ canGoBack: true });
+		} else {
+			this.setState({ canGoBack: false });
 		}
 	},
 
@@ -183,12 +187,12 @@ export const Pub = React.createClass({
 					{/* Nav Bar */}
 					{/* ------- */}
 					<div style={styles.nav}>
-						<Link to={'/pub/' + this.props.params.slug}><div style={[styles.navItem, (!meta || meta === 'files') && styles.navItemActive]} className={'bottomShadowOnHover'}>Content</div></Link>
+						<Link to={{ pathname: '/pub/' + this.props.params.slug, query: query }}><div style={[styles.navItem, (!meta || meta === 'files') && styles.navItemActive]} className={'bottomShadowOnHover'}>Content</div></Link>
 						{/* <Link to={{ pathname: '/pub/' + this.props.params.slug + '/files', query: query }}><div style={[styles.navItem, meta === '' && styles.navItemActive]} className={'bottomShadowOnHover'}>Files</div></Link> */}
-						{!!versions.length && <Link to={'/pub/' + this.props.params.slug + '/versions'}><div style={[styles.navItem, meta === 'versions' && styles.navItemActive]} className={'bottomShadowOnHover'}>Versions ({versions.length})</div></Link> }
-						<Link to={'/pub/' + this.props.params.slug + '/contributors'}><div style={[styles.navItem, meta === 'contributors' && styles.navItemActive]} className={'bottomShadowOnHover'}>Contributors ({contributors.length})</div></Link>
-						{!!versions.length && <Link to={'/pub/' + this.props.params.slug + '/journals'}><div style={[styles.navItem, meta === 'journals' && styles.navItemActive]} className={'bottomShadowOnHover'}>Journals</div></Link> }
-						<Link to={'/pub/' + this.props.params.slug + '/settings'}><div style={[styles.navItem, meta === 'settings' && styles.navItemActive]} className={'bottomShadowOnHover'}>Settings</div></Link>
+						{!!versions.length && <Link to={{ pathname: '/pub/' + this.props.params.slug + '/versions', query: query }}><div style={[styles.navItem, meta === 'versions' && styles.navItemActive]} className={'bottomShadowOnHover'}>Versions ({versions.length})</div></Link> }
+						<Link to={{ pathname: '/pub/' + this.props.params.slug + '/contributors', query: query }}><div style={[styles.navItem, meta === 'contributors' && styles.navItemActive]} className={'bottomShadowOnHover'}>Contributors ({contributors.length})</div></Link>
+						{!!versions.length && <Link to={{ pathname: '/pub/' + this.props.params.slug + '/journals', query: query }}><div style={[styles.navItem, meta === 'journals' && styles.navItemActive]} className={'bottomShadowOnHover'}>Journals</div></Link> }
+						<Link to={{ pathname: '/pub/' + this.props.params.slug + '/settings', query: query }}><div style={[styles.navItem, meta === 'settings' && styles.navItemActive]} className={'bottomShadowOnHover'}>Settings</div></Link>
 					</div>
 
 					{/* ------- */}
@@ -271,7 +275,7 @@ styles = {
 		height: '100vh',
 		overflow: 'hidden',
 		overflowY: 'scroll',
-		padding: '0.5em 0.5em 0.5em 1em',
+		padding: '0.5em 1em 0.5em',
 	},
 	panelButtons: {
 		textAlign: 'right',

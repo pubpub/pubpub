@@ -141,7 +141,7 @@ styles = {
 		padding: '.5em',
 		// margin: '1em0em 0em',
 		// border: '1px solid #ccc',
-		// backgroundColor: 'white',
+		backgroundColor: '#f3f3f4',
 		borderRadius: '1px',
 	},
 	discussionTitle: {
