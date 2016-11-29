@@ -100,6 +100,7 @@ export const Pub = React.createClass({
 		const queryDiscussion = query.discussion;
 		const pubData = this.props.pubData.pub || {};
 		const contributors = pubData.contributors || [];
+		const invitedReviewers = pubData.invitedReviewers || [];
 		const versions = pubData.versions || [];
 		const pubSubmits = pubData.pubSubmits || [];
 		const pubFeatures = pubData.pubFeatures || [];
@@ -234,7 +235,7 @@ export const Pub = React.createClass({
 							}
 						</div>
 						
-						{panel === 'reviewers' && <PubReviewers display={this.props.dispatch} />}
+						{panel === 'reviewers' && <PubReviewers invitedReviewers={invitedReviewers} pubId={pubData.id}  dispatch={this.props.dispatch} />}
 						{panel === 'new' && <PubDiscussionsNew pubId={pubData.id} labelsData={labelsData} isLoading={this.props.pubData.discussionsLoading} error={this.props.pubData.discussionsError} dispatch={this.props.dispatch} />}
 						{!panel && !queryDiscussion && <PubDiscussionsList discussionsData={discussionsData} labelsData={labelsData} pathname={pathname} query={query} dispatch={this.props.dispatch} />}
 						{!!queryDiscussion && <PubDiscussion discussion={activeDiscussion} pubId={pubData.id} isLoading={this.props.pubData.discussionsLoading} error={this.props.pubData.discussionsError} dispatch={this.props.dispatch} />}

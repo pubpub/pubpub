@@ -46,6 +46,12 @@ import {
 	POST_DISCUSSION_FAIL,
 } from 'containers/Pub/actionsDiscussions';
 
+import {
+	POST_REVIEWER_LOAD,
+	POST_REVIEWER_SUCCESS,
+	POST_REVIEWER_FAIL,
+} from 'containers/Pub/actionsReviewers';
+
 /* ------------------- */
 // Define Default State
 /* ------------------- */
@@ -62,6 +68,8 @@ const defaultState = Immutable.Map({
 	settingsError: undefined,
 	discussionsLoading: false,
 	discussionsError: undefined,
+	reviewersLoading: false,
+	reviewersError: undefined,
 	pub: {},
 });
 
@@ -234,6 +242,26 @@ export default function reducer(state = defaultState, action) {
 		return state.merge({
 			discussionsLoading: false,
 			discussionsError: action.error,
+		});
+
+	case POST_REVIEWER_LOAD:
+		return state.merge({
+			reviewersLoading: true,
+			reviewersError: undefined,
+		});	
+	case POST_REVIEWER_SUCCESS:
+		return state.merge({
+			reviewersLoading: false,
+			reviewersError: undefined,
+		})
+		.mergeIn(
+			['pub', 'invitedReviewers'], 
+			state.getIn(['pub', 'invitedReviewers']).push(ensureImmutable(action.result))
+		);
+	case POST_REVIEWER_FAIL:
+		return state.merge({
+			reviewersLoading: false,
+			reviewersError: action.error,
 		});
 
 	default:
