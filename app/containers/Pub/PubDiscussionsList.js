@@ -48,6 +48,47 @@ export const PubDiscussionsList = React.createClass({
 	render: function() {
 		const discussionsData = this.props.discussionsData || [];
 		const query = this.props.query || {};
+		const allAuthors = [
+			...discussionsData.map((discussion)=> {
+				return discussion.contributors[0].user;
+			}),
+			...discussionsData.reduce((previous, current)=> {
+				return [
+					...previous, 
+					...current.children.map((discussion)=> {
+						return discussion.contributors[0].user;
+					})
+				]
+			}, [])
+		];
+		const uniqueAuthorIds = {}
+		const uniqueAuthors = allAuthors.filter((author)=> {
+			if (author.id in uniqueAuthorIds === false) {
+				uniqueAuthorIds[author.id] = true;
+				return true;
+			}
+			return false;
+		});
+		const filteredDiscussions = discussionsData.filter((discussion)=> {
+			let keepResult = true;
+			if (query.label) {
+				const discussionLabels = discussion.labels.map((label)=> {
+					return label.title;
+				});
+				keepResult = discussionLabels.includes(query.label) && keepResult;
+			}
+			if (query.author) {
+				const children = discussion.children || [];
+				const discussionAuthors = [
+					discussion.contributors[0].user.username,
+					...children.map((child)=> {
+						return child.contributors[0].user.username;
+					})
+				];
+				keepResult = discussionAuthors.includes(query.author) && keepResult;
+			}
+			return keepResult;
+		});
 
 		const labelList = this.props.labelsData || [];
 		const sortList = ['Newest', 'Oldest', 'Most Replies', 'Least Replies'];
@@ -57,8 +98,8 @@ export const PubDiscussionsList = React.createClass({
 				<li className={'pt-menu-header'}><h6>Filter by author:</h6></li>
 				{query.author && <li><Link to={{pathname: this.props.pathname, query: { ...this.props.query, author: undefined }}} className="pt-menu-item pt-popover-dismiss pt-icon-cross">Clear Author Filter</Link></li>}
 				<MenuDivider />
-				{discussionsData.map((discussion, index)=> {
-					const author = discussion.contributors[0].user;
+				{uniqueAuthors.map((author, index)=> {
+					// const author = discussion.contributors[0].user;
 					return (
 						<li key={'authorFilter-' + index}><Link to={{pathname: this.props.pathname, query: { ...this.props.query, author: author.username }}} className="pt-menu-item pt-popover-dismiss">
 							<img src={'https://jake.pubpub.org/unsafe/50x50/' + author.image} style={styles.authorImages}/> {author.firstName + ' ' + author.lastName}
@@ -116,14 +157,50 @@ export const PubDiscussionsList = React.createClass({
 
 				<PubLabelList allLabels={labelList} />
 				
-				{discussionsData.map((discussion, index)=> {
+				{filteredDiscussions.sort((foo, bar)=> {
+					const fooChildren = foo.children || [];
+					const barChildren = bar.children || [];
+
+					const newest = query.sort === 'Newest';
+					const oldest = query.sort === 'Oldest';
+
+					const mostReplies = query.sort === 'Most Replies';
+					const leastReplies = query.sort === 'Least Replies';
+
+					if (newest && foo.createdAt > bar.createdAt) { return -1; }
+					if (newest && foo.createdAt < bar.createdAt) { return 1; }
+
+					if (oldest && foo.createdAt > bar.createdAt) { return 1; }
+					if (oldest && foo.createdAt < bar.createdAt) { return -1; }
+
+					if (mostReplies && fooChildren.length > barChildren.length) { return -1; }
+					if (mostReplies && fooChildren.length < barChildren.length) { return 1; }
+
+					if (leastReplies && fooChildren.length > barChildren.length) { return 1; }
+					if (leastReplies && fooChildren.length < barChildren.length) { return -1; }
+
+					return 0;
+				}).map((discussion, index)=> {
 					const author = discussion.contributors[0].user;
+					const labels = discussion.labels || [];
+					const children = discussion.children || [];
+					const discussionAuthors = [...new Set([
+						discussion.contributors[0].user.image,
+						...children.map((child)=> {
+							return child.contributors[0].user.image;
+						})
+					])];
 					return (
 						<div style={styles.discussionItem} key={'discussionItem-' + index} className={'pt-card pt-elevation-1'}>
-							<Link to={{pathname: this.props.pathname, query: { ...this.props.query, discussion: discussion.discussionIndex }}} style={styles.discussionTitle}>{discussion.title}</Link>
-							<div>#{discussion.discussionIndex} | {dateFormat(discussion.createdAt, 'mmmm dd, yyyy')} | by {author.firstName + ' ' + author.lastName}</div>
-							<div>
-								<img src={'https://jake.pubpub.org/unsafe/50x50/' + author.image} style={styles.authorImages}/>
+							<Link to={{pathname: this.props.pathname, query: { ...this.props.query, discussion: discussion.discussionIndex }}} style={styles.discussionTitle}><span style={{opacity: '0.25', fontSize: '0.9em'}}>#{discussion.discussionIndex}</span> {discussion.title}</Link>
+							{labels.map((label, labelIndex)=> {
+								return <span key={'discussionLabel-' + discussion.id + '-' + labelIndex}  className="pt-tag" style={{ backgroundColor: label.color || '#CCC', marginRight: '.5em' }}>{label.title}</span>
+							})}
+							<div>{dateFormat(discussion.createdAt, 'mmmm dd, yyyy')} | by {author.firstName + ' ' + author.lastName} | Replies: {children.length}</div>
+							<div>	
+								{discussionAuthors.map((image, imageIndex)=> {
+									return <img src={'https://jake.pubpub.org/unsafe/50x50/' + image} style={styles.authorImages} key={'discussionImage-' + discussion.id + '-' + imageIndex}/>;
+								})}
 							</div>
 						</div>
 					);
@@ -158,6 +235,7 @@ styles = {
 	discussionTitle: {
 		fontWeight: 'bold',
 		fontSize: '1.25em',
+		display: 'block',
 	},
 	authorImages: {
 		width: '20px',
