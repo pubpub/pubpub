@@ -322,6 +322,16 @@ export default function reducer(state = defaultState, action) {
 	case DELETE_PUB_LABEL_FAIL:
 		return state;
 
+	case POST_LABEL_LOAD:
+		return state;	
+	case POST_LABEL_SUCCESS:
+		return state.setIn(
+			['pub', 'pubLabels'], 
+			state.getIn(['pub', 'pubLabels']).push(ensureImmutable(action.result))
+		);
+	case POST_LABEL_FAIL:
+		return state;
+
 	case PUT_LABEL_LOAD:
 		return state;	
 	case PUT_LABEL_SUCCESS:
@@ -350,6 +360,30 @@ export default function reducer(state = defaultState, action) {
 			})
 		);
 	case PUT_LABEL_FAIL:
+		return state;
+
+	case DELETE_LABEL_LOAD:
+		return state;	
+	case DELETE_LABEL_SUCCESS:
+		return state.setIn(
+			// Update all of the pubLabels associated with a pub. Labels owned by the pub.
+			['pub', 'pubLabels'], 
+			state.getIn(['pub', 'pubLabels']).filter((label)=> {
+				return label.get('id') !== action.labelId;
+			})
+		).setIn(
+			// Update all of the labels associated with discussions. Labels applied to a discussion.
+			['pub', 'discussions'],
+			state.getIn(['pub', 'discussions']).map((discussion)=> {
+				return discussion.setIn(
+					['labels'], 
+					discussion.get('labels').map((label)=> {
+						return label.get('id') !== action.labelId;
+					})
+				);
+			})
+		);
+	case DELETE_LABEL_FAIL:
 		return state;
 
 	default:

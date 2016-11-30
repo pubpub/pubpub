@@ -12,7 +12,8 @@ export const PubLabelList = React.createClass({
 		allLabels: PropTypes.array,
 		selectedLabels: PropTypes.array,
 		onChange: PropTypes.func,
-		pubId: PropTypes.number,
+		pubId: PropTypes.number, // id of the pub the label is applied to
+		rootPubId: PropTypes.number, // id of the pub owning the labels
 		dispatch: PropTypes.func,
 	},
 
@@ -20,10 +21,11 @@ export const PubLabelList = React.createClass({
 		return {
 			selectedLabels: [],
 			editingLabelId: undefined,
-			editingPubId: undefined,
-			editingColorOpen: false,
 			editingColor: undefined,
-			editingTitle: undefined,
+			editingTitle: '',
+			createOpen: false,
+			creatingColor: '#c0392b',
+			creatingTitle: '',
 		};
 	},
 
@@ -61,7 +63,6 @@ export const PubLabelList = React.createClass({
 	editClick: function(label, evt) {
 		this.setState({ 
 			editingLabelId: label.id,
-			editingPubId: label.pubId,
 			editingColor: label.color,
 			editingTitle: label.title,
 		});
@@ -75,15 +76,38 @@ export const PubLabelList = React.createClass({
 	},
 
 	saveEdit: function() {
-		this.props.dispatch(putLabel(this.state.editingPubId, this.state.editingLabelId, this.state.editingTitle, this.state.editingColor));
+		this.props.dispatch(putLabel(this.props.rootPubId, this.state.editingLabelId, this.state.editingTitle, this.state.editingColor));
 		this.setState({ editingLabelId: undefined });
 	},
 	cancelEdit: function() {
 		this.setState({ editingLabelId: undefined });
 	},
 	deleteEdit: function() {
-		this.props.dispatch(deleteLabel(this.state.editingPubId, this.state.editingLabelId));
+		this.props.dispatch(deleteLabel(this.props.rootPubId, this.state.editingLabelId));
 		this.setState({ editingLabelId: undefined });
+	},
+
+	setCreateColor: function(color) {
+		this.setState({ creatingColor: color.hex });
+	},
+	updateCreateTitle: function(evt) {
+		this.setState({ creatingTitle: evt.target.value });
+	},
+	saveCreate: function() {
+		if (!this.state.creatingTitle) { return null; }
+		this.props.dispatch(postLabel(this.props.rootPubId, this.state.creatingTitle, this.state.creatingColor));
+		this.setState({
+			createOpen: false,
+			creatingColor: '#c0392b',
+			creatingTitle: ''
+		});
+	},
+	toggleCreate: function() {
+		this.setState({
+			createOpen: !this.state.createOpen,
+			creatingColor: '#c0392b',
+			creatingTitle: ''
+		});
 	},
 
 	render() {
@@ -134,9 +158,28 @@ export const PubLabelList = React.createClass({
 								);
 							})}
 							<hr style={{ margin: '1em 0em .25em' }}/>
-							<button type="button" className="pt-button pt-fill pt-minimal">
-								Create New Label
-							</button>
+							{this.state.createOpen &&
+								<div style={{padding: '1em 0.5em', margin: '1em 0em',}} className={'pt-card pt-elevation-2'}>
+									<div>
+										<span style={{backgroundColor: this.state.creatingColor}}></span>
+									</div>
+									<input type="text" className={'pt-input'} value={this.state.creatingTitle} onChange={this.updateCreateTitle} style={{width: '100%'}}/>
+									<div style={{ margin: '1em 0em' }}>
+										<CirclePicker color={this.state.creatingColor} onChange={this.setCreateColor} colors={['#c0392b', '#e74c3c', '#d35400', '#f39c12', '#16a085', '#27ae60', '#2ecc71', '#2980b9', '#3498db', '#8e44ad', '#9b59b6', '#2c3e50']} />
+									</div>
+									
+									<div className="pt-button-group pt-fill">
+										<button className="pt-button" onClick={this.toggleCreate}>Cancel</button>
+										<button className={this.state.creatingTitle ? 'pt-button pt-intent-primary' : 'pt-button pt-intent-primary pt-disabled'} onClick={this.saveCreate}>Create Label</button>
+									</div>
+								</div>
+							}
+							{!this.state.createOpen &&
+								<button type="button" className="pt-button pt-fill pt-minimal" onClick={this.toggleCreate}>
+									Create New Label
+								</button>
+							}
+							
 						</div>
 					}
 					interactionKind={PopoverInteractionKind.CLICK}
@@ -181,5 +224,6 @@ styles = {
 		verticalAlign: 'middle',
 		color: 'white',
 		textAlign: 'center',
+		margin: 0,
 	},
 };

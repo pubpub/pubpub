@@ -85,7 +85,7 @@ export const PubDiscussion = React.createClass({
 				}} />
 
 				<h3>{discussion.title}</h3>
-				<PubLabelList allLabels={labelsData} selectedLabels={discussion.labels} pubId={discussion.id} dispatch={this.props.dispatch}/>
+				<PubLabelList allLabels={labelsData} selectedLabels={discussion.labels} pubId={discussion.id} rootPubId={this.props.pubId} dispatch={this.props.dispatch}/>
 
 				{discussions.sort((foo, bar)=>{
 					// Sort so that oldest is first in array
