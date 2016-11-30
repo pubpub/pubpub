@@ -1,6 +1,7 @@
 import React, { PropTypes } from 'react';
 import Radium from 'radium';
 import { Loader } from 'components';
+import { browserHistory } from 'react-router';
 import { globalStyles } from 'utils/globalStyles';
 import { globalMessages } from 'utils/globalMessages';
 import { FormattedMessage } from 'react-intl';
@@ -11,8 +12,8 @@ let styles;
 
 export const PubDiscussionsNew = React.createClass({
 	propTypes: {
-		pubId: PropTypes.number,
-		labelsData: PropTypes.array,
+		pubData: PropTypes.object,
+		pathname: PropTypes.string,
 		isLoading: PropTypes.bool,
 		error: PropTypes.string,
 		dispatch: PropTypes.func,
@@ -22,8 +23,19 @@ export const PubDiscussionsNew = React.createClass({
 		return {
 			title: '',
 			description: '',
-
+			labels: [],
 		};
+	},
+
+	componentWillReceiveProps(nextProps) {
+		const previousPubData = this.props.pubData || {};
+		const previousDiscussions = previousPubData.discussions || [];
+		const nextPubData = nextProps.pubData || {};
+		const nextDiscussions = nextPubData.discussions || [];
+		if (nextDiscussions.length > previousDiscussions.length) {
+			const newDiscussion = nextDiscussions[nextDiscussions.length - 1];
+			browserHistory.push({ pathname: nextProps.pathname, query: {discussion: newDiscussion.discussionIndex} });
+		}
 	},
 
 	inputUpdate: function(key, evt) {
@@ -31,35 +43,40 @@ export const PubDiscussionsNew = React.createClass({
 		this.setState({ [key]: value });
 	},
 
+	onLabelsChange: function(newLabels) {
+		this.setState({ labels: newLabels.map((label)=> {
+			return label.id;
+		})});
+	},
+
 	validate: function(data) {
 		// Check to make sure name exists
 		if (!data.title || !data.title.length) {
 			return { isValid: false, validationError: <FormattedMessage id="discussion.TitleRequired" defaultMessage="Title Required" /> };
 		}
-
 		return { isValid: true, validationError: undefined };
-
 	},
 
 	createSubmit: function(evt) {
 		evt.preventDefault();
+		const pubData = this.props.pubData || {};
 		const createData = {
-			replyRootPubId: this.props.pubId,
-			replyParentPubId: this.props.pubId,
+			replyRootPubId: pubData.id,
+			replyParentPubId: pubData.id,
 			title: this.state.title,
 			description: this.state.description,
+			labels: this.state.labels,
 		};
 		const { isValid, validationError } = this.validate(createData);
 		this.setState({ validationError: validationError });
-		console.log(createData);
 		if (isValid) {
-			this.props.dispatch(postDiscussion(createData.replyRootPubId, createData.replyParentPubId, createData.title, createData.description));	
+			this.props.dispatch(postDiscussion(createData.replyRootPubId, createData.replyParentPubId, createData.title, createData.description, createData.labels));	
 		}
 	},
 
 	render: function() {
-		const newDiscussionData = {};
-		const labelList = this.props.labelsData || [];
+		const pubData = this.props.pubData || {};
+		const labelList = pubData.pubLabels || [];		
 		const isLoading = this.props.isLoading;
 		const serverErrors = {
 			'Slug already used': <FormattedMessage id="discussion.JournalURLalreadyused" defaultMessage="Journal URL already used" />,
@@ -69,7 +86,7 @@ export const PubDiscussionsNew = React.createClass({
 			<div style={styles.container}>
 				<h3>New Discussion</h3>
 				<form onSubmit={this.createSubmit}>
-					<PubLabelList allLabels={labelList} />
+					<PubLabelList allLabels={labelList} onChange={this.onLabelsChange} />
 					<input id={'journalName'} name={'journal name'} placeholder={'Title'} type="text" style={styles.input} value={this.state.title} onChange={this.inputUpdate.bind(this, 'title')} />
 						
 					<textarea id={'description'} name={'description'} type="text" style={[styles.input, styles.description]} value={this.state.description} onChange={this.inputUpdate.bind(this, 'description')} />

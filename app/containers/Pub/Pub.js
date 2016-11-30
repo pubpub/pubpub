@@ -137,6 +137,8 @@ export const Pub = React.createClass({
 		}).map((discussion, index)=>{
 			return { ...discussion, discussionIndex: index + 1 };
 		});
+
+		pubData.discussions = discussionsData;
 		
 		const labelsData = pubData.pubLabels || [];
 		const activeDiscussion = discussionsData.reduce((previous, current)=> {
@@ -235,8 +237,8 @@ export const Pub = React.createClass({
 							}
 						</div>
 						
-						{panel === 'reviewers' && <PubReviewers invitedReviewers={invitedReviewers} pubId={pubData.id}  dispatch={this.props.dispatch} />}
-						{panel === 'new' && <PubDiscussionsNew pubId={pubData.id} labelsData={labelsData} isLoading={this.props.pubData.discussionsLoading} error={this.props.pubData.discussionsError} dispatch={this.props.dispatch} />}
+						{panel === 'reviewers' && <PubReviewers invitedReviewers={invitedReviewers} pubId={pubData.id} dispatch={this.props.dispatch} />}
+						{panel === 'new' && <PubDiscussionsNew pubData={pubData} pathname={pathname} isLoading={this.props.pubData.discussionsLoading} error={this.props.pubData.discussionsError} dispatch={this.props.dispatch} />}
 						{!panel && !queryDiscussion && <PubDiscussionsList discussionsData={discussionsData} labelsData={labelsData} pathname={pathname} query={query} dispatch={this.props.dispatch} />}
 						{!!queryDiscussion && <PubDiscussion discussion={activeDiscussion} pubId={pubData.id} isLoading={this.props.pubData.discussionsLoading} error={this.props.pubData.discussionsError} dispatch={this.props.dispatch} />}
 

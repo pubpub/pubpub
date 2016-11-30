@@ -15,7 +15,7 @@ export const POST_DISCUSSION_FAIL = 'pub/POST_DISCUSSION_FAIL';
 // action objects (e.g. {type:example, payload:data} ) within dispatch()
 // function calls
 /*--------*/
-export function postDiscussion(replyRootPubId, replyParentPubId, title, description) {
+export function postDiscussion(replyRootPubId, replyParentPubId, title, description, labels) {
 	return (dispatch) => {
 		dispatch({ type: POST_DISCUSSION_LOAD });
 
@@ -30,6 +30,7 @@ export function postDiscussion(replyRootPubId, replyParentPubId, title, descript
 				replyRootPubId: replyRootPubId,
 				replyParentPubId: replyParentPubId,
 				description: description, 
+				labels: labels,
 				// We are using the description to store the body content for now. This is to avoid creating a version, file, etc.
 				// If the need to have more robust content in discussions arises, then we can switch to full pub structure.
 			})

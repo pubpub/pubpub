@@ -9,6 +9,7 @@ export const PubLabelList = React.createClass({
 	propTypes: {
 		allLabels: PropTypes.array,
 		selectedLabels: PropTypes.array,
+		onChange: PropTypes.func,
 	},
 
 	getInitialState() {
@@ -22,24 +23,18 @@ export const PubLabelList = React.createClass({
 	},
 
 	selectLabel: function(label) {
-		console.log('label', label);
 		const selectedLabels = this.state.selectedLabels || [];
-		console.log('selectedLabels', selectedLabels);
 		const labelIds = selectedLabels.map((labelItem)=> {
 			return labelItem.id;
 		});
 
-		if (labelIds.includes(label.id)) {
-			this.setState({
-				selectedLabels: selectedLabels.filter((labelItem)=> {
-					return label.id === labelItem.id ? false : true;
-				})
-			});
-		} else {
-			this.setState({
-				selectedLabels: [...selectedLabels, label]
-			});
-		}
+		const newSelected = labelIds.includes(label.id)
+			? selectedLabels.filter((labelItem)=> {
+				return label.id === labelItem.id ? false : true;
+			})
+			: [...selectedLabels, label];
+		this.setState({ selectedLabels: newSelected });
+		this.props.onChange(newSelected);
 	},
 
 	editClick: function(label, evt) {
