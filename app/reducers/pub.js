@@ -52,6 +52,16 @@ import {
 	POST_REVIEWER_FAIL,
 } from 'containers/Pub/actionsReviewers';
 
+import {
+	POST_PUB_LABEL_LOAD,
+	POST_PUB_LABEL_SUCCESS,
+	POST_PUB_LABEL_FAIL,
+
+	DELETE_PUB_LABEL_LOAD,
+	DELETE_PUB_LABEL_SUCCESS,
+	DELETE_PUB_LABEL_FAIL,
+} from 'containers/Pub/actionsPubLabels';
+
 /* ------------------- */
 // Define Default State
 /* ------------------- */
@@ -263,6 +273,40 @@ export default function reducer(state = defaultState, action) {
 			reviewersLoading: false,
 			reviewersError: action.error,
 		});
+
+	case POST_PUB_LABEL_LOAD:
+		return state;	
+	case POST_PUB_LABEL_SUCCESS:
+		// Set path based on if we are adding a label to a discussion or to the pub
+		const postPubLabelDiscussionIndex = state.getIn(['pub', 'discussions']).reduce((previous, current, index)=> {
+			if (current.get('id') === action.pubId) { return index; }
+			return previous;
+		}, undefined); 
+		const postPubLabelPath = state.getIn(['pub', 'id']) === action.pubId ? ['pub', 'labels'] : ['pub', 'discussions', postPubLabelDiscussionIndex, 'labels'];
+		return state.setIn(
+			postPubLabelPath, 
+			state.getIn(postPubLabelPath).push(ensureImmutable(action.result))
+		);
+	case POST_PUB_LABEL_FAIL:
+		return state;
+
+	case DELETE_PUB_LABEL_LOAD:
+		return state;	
+	case DELETE_PUB_LABEL_SUCCESS:
+		// Set path based on if we are removing a label from a discussion or from the pub
+		const deletePubLabelDiscussionIndex = state.getIn(['pub', 'discussions']).reduce((previous, current, index)=> {
+			if (current.get('id') === action.pubId) { return index; }
+			return previous;
+		}, undefined); 
+		const deletePubLabelPath = state.getIn(['pub', 'id']) === action.pubId ? ['pub', 'labels'] : ['pub', 'discussions', deletePubLabelDiscussionIndex, 'labels'];
+		return state.setIn(
+			deletePubLabelPath, 
+			state.getIn(deletePubLabelPath).filter((label)=> {
+				return label.get('id') !== action.labelId;
+			})
+		);
+	case DELETE_PUB_LABEL_FAIL:
+		return state;
 
 	default:
 		return ensureImmutable(state);

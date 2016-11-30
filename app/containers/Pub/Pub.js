@@ -54,12 +54,12 @@ export const Pub = React.createClass({
 	componentWillReceiveProps(nextProps) {
 		const lastPanel = this.props.location.query.panel;
 		const nextPanel = nextProps.location.query.panel;
-		const lastDiscussion = this.props.location.query.discussion;
-		const nextDiscussion = nextProps.location.query.discussion;
+		// const lastDiscussion = this.props.location.query.discussion;
+		// const nextDiscussion = nextProps.location.query.discussion;
 		const lastPathname = this.props.location.pathname;
 		const nextPathname = nextProps.location.pathname;
 
-		if ((lastPanel !== nextPanel || lastDiscussion !== nextDiscussion) && lastPathname === nextPathname) {
+		if (!lastPanel && nextPanel && lastPathname === nextPathname) {
 			this.setState({ canGoBack: true });
 		} else {
 			this.setState({ canGoBack: false });
@@ -137,8 +137,6 @@ export const Pub = React.createClass({
 		}).map((discussion, index)=>{
 			return { ...discussion, discussionIndex: index + 1 };
 		});
-
-		pubData.discussions = discussionsData;
 		
 		const labelsData = pubData.pubLabels || [];
 		const activeDiscussion = discussionsData.reduce((previous, current)=> {
@@ -237,10 +235,14 @@ export const Pub = React.createClass({
 							}
 						</div>
 						
-						{panel === 'reviewers' && <PubReviewers invitedReviewers={invitedReviewers} pubId={pubData.id} dispatch={this.props.dispatch} />}
-						{panel === 'new' && <PubDiscussionsNew pubData={pubData} pathname={pathname} isLoading={this.props.pubData.discussionsLoading} error={this.props.pubData.discussionsError} dispatch={this.props.dispatch} />}
-						{!panel && !queryDiscussion && <PubDiscussionsList discussionsData={discussionsData} labelsData={labelsData} pathname={pathname} query={query} dispatch={this.props.dispatch} />}
-						{!!queryDiscussion && <PubDiscussion discussion={activeDiscussion} pubId={pubData.id} isLoading={this.props.pubData.discussionsLoading} error={this.props.pubData.discussionsError} dispatch={this.props.dispatch} />}
+						{panel === 'reviewers' && 
+							<PubReviewers invitedReviewers={invitedReviewers} pubId={pubData.id} dispatch={this.props.dispatch} />}
+						{panel === 'new' && 
+							<PubDiscussionsNew discussionsData={discussionsData} labelsData={labelsData} pubId={pubData.id} pathname={pathname} isLoading={this.props.pubData.discussionsLoading} error={this.props.pubData.discussionsError} dispatch={this.props.dispatch} />}
+						{!panel && !queryDiscussion && 
+							<PubDiscussionsList discussionsData={discussionsData} labelsData={labelsData} pathname={pathname} query={query} dispatch={this.props.dispatch} />}
+						{!!queryDiscussion && 
+							<PubDiscussion discussion={activeDiscussion} labelsData={labelsData} pubId={pubData.id} isLoading={this.props.pubData.discussionsLoading} error={this.props.pubData.discussionsError} dispatch={this.props.dispatch} />}
 
 					</Sticky>
 				</StickyContainer>

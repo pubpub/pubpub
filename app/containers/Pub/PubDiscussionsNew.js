@@ -5,14 +5,16 @@ import { browserHistory } from 'react-router';
 import { globalStyles } from 'utils/globalStyles';
 import { globalMessages } from 'utils/globalMessages';
 import { FormattedMessage } from 'react-intl';
-import { postDiscussion } from './actionsDiscussions'
+import { postDiscussion } from './actionsDiscussions';
 import PubLabelList from './PubLabelList';
 
 let styles;
 
 export const PubDiscussionsNew = React.createClass({
 	propTypes: {
-		pubData: PropTypes.object,
+		discussionsData: PropTypes.array,
+		labelsData: PropTypes.array,
+		pubId: PropTypes.number,
 		pathname: PropTypes.string,
 		isLoading: PropTypes.bool,
 		error: PropTypes.string,
@@ -28,13 +30,11 @@ export const PubDiscussionsNew = React.createClass({
 	},
 
 	componentWillReceiveProps(nextProps) {
-		const previousPubData = this.props.pubData || {};
-		const previousDiscussions = previousPubData.discussions || [];
-		const nextPubData = nextProps.pubData || {};
-		const nextDiscussions = nextPubData.discussions || [];
+		const previousDiscussions = this.props.discussionsData || [];
+		const nextDiscussions = nextProps.discussionsData || [];
 		if (nextDiscussions.length > previousDiscussions.length) {
 			const newDiscussion = nextDiscussions[nextDiscussions.length - 1];
-			browserHistory.push({ pathname: nextProps.pathname, query: {discussion: newDiscussion.discussionIndex} });
+			browserHistory.push({ pathname: nextProps.pathname, query: { discussion: newDiscussion.discussionIndex } });
 		}
 	},
 
@@ -46,7 +46,7 @@ export const PubDiscussionsNew = React.createClass({
 	onLabelsChange: function(newLabels) {
 		this.setState({ labels: newLabels.map((label)=> {
 			return label.id;
-		})});
+		}) });
 	},
 
 	validate: function(data) {
@@ -59,10 +59,9 @@ export const PubDiscussionsNew = React.createClass({
 
 	createSubmit: function(evt) {
 		evt.preventDefault();
-		const pubData = this.props.pubData || {};
 		const createData = {
-			replyRootPubId: pubData.id,
-			replyParentPubId: pubData.id,
+			replyRootPubId: this.props.pubId,
+			replyParentPubId: this.props.pubId,
 			title: this.state.title,
 			description: this.state.description,
 			labels: this.state.labels,
@@ -75,8 +74,7 @@ export const PubDiscussionsNew = React.createClass({
 	},
 
 	render: function() {
-		const pubData = this.props.pubData || {};
-		const labelList = pubData.pubLabels || [];		
+		const labelList = this.props.labelsData || [];		
 		const isLoading = this.props.isLoading;
 		const serverErrors = {
 			'Slug already used': <FormattedMessage id="discussion.JournalURLalreadyused" defaultMessage="Journal URL already used" />,

@@ -2,6 +2,8 @@ import React, { PropTypes } from 'react';
 import Radium from 'radium';
 import { Popover, PopoverInteractionKind, Position, Menu, MenuItem, NonIdealState } from 'components/Blueprint';
 import { CirclePicker } from 'react-color';
+import { postPubLabel, deletePubLabel } from './actionsPubLabels';
+// import { postLabel, putLabel, deleteLabel } from './actionsLabels'; 
 
 let styles;
 
@@ -10,6 +12,8 @@ export const PubLabelList = React.createClass({
 		allLabels: PropTypes.array,
 		selectedLabels: PropTypes.array,
 		onChange: PropTypes.func,
+		pubId: PropTypes.number,
+		dispatch: PropTypes.func,
 	},
 
 	getInitialState() {
@@ -22,6 +26,9 @@ export const PubLabelList = React.createClass({
 		};
 	},
 
+	componentWillMount() {
+		this.setState({ selectedLabels: this.props.selectedLabels });
+	},
 	selectLabel: function(label) {
 		const selectedLabels = this.state.selectedLabels || [];
 		const labelIds = selectedLabels.map((labelItem)=> {
@@ -34,7 +41,19 @@ export const PubLabelList = React.createClass({
 			})
 			: [...selectedLabels, label];
 		this.setState({ selectedLabels: newSelected });
-		this.props.onChange(newSelected);
+
+
+		// If we have dispatch and a pubId, save the result
+		if (this.props.pubId && this.props.dispatch) {
+			const action = labelIds.includes(label.id) ? deletePubLabel : postPubLabel;
+			this.props.dispatch(action(this.props.pubId, label.id));
+		}
+
+		// If onChange is supplied, call it with new labels
+		if (this.props.onChange) {
+			this.props.onChange(newSelected);	
+		}
+		
 	},
 
 	editClick: function(label, evt) {

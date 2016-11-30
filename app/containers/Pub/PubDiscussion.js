@@ -16,6 +16,7 @@ let styles;
 export const PubDiscussion = React.createClass({
 	propTypes: {
 		discussion: PropTypes.object,
+		labelsData: PropTypes.array,
 		pubId: PropTypes.number,
 		isLoading: PropTypes.bool,
 		error: PropTypes.string,
@@ -67,6 +68,7 @@ export const PubDiscussion = React.createClass({
 
 	render: function() {
 		const discussion = this.props.discussion || {};
+		const labelsData = this.props.labelsData || [];
 		const children = discussion.children || [];
 		const isLoading = this.props.isLoading;
 		const serverErrors = {
@@ -83,7 +85,7 @@ export const PubDiscussion = React.createClass({
 				}} />
 
 				<h3>{discussion.title}</h3>
-				<PubLabelList allLabels={[]} />
+				<PubLabelList allLabels={labelsData} selectedLabels={discussion.labels} pubId={discussion.id} dispatch={this.props.dispatch}/>
 
 				{discussions.sort((foo, bar)=>{
 					// Sort so that oldest is first in array
