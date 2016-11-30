@@ -62,6 +62,20 @@ import {
 	DELETE_PUB_LABEL_FAIL,
 } from 'containers/Pub/actionsPubLabels';
 
+import {
+	POST_LABEL_LOAD,
+	POST_LABEL_SUCCESS,
+	POST_LABEL_FAIL,
+
+	PUT_LABEL_LOAD,
+	PUT_LABEL_SUCCESS,
+	PUT_LABEL_FAIL,
+
+	DELETE_LABEL_LOAD,
+	DELETE_LABEL_SUCCESS,
+	DELETE_LABEL_FAIL,
+} from 'containers/Pub/actionsLabels';
+
 /* ------------------- */
 // Define Default State
 /* ------------------- */
@@ -306,6 +320,36 @@ export default function reducer(state = defaultState, action) {
 			})
 		);
 	case DELETE_PUB_LABEL_FAIL:
+		return state;
+
+	case PUT_LABEL_LOAD:
+		return state;	
+	case PUT_LABEL_SUCCESS:
+		return state.setIn(
+			// Update all of the pubLabels associated with a pub. Labels owned by the pub.
+			['pub', 'pubLabels'], 
+			state.getIn(['pub', 'pubLabels']).map((label)=> {
+				if (label.get('id') === action.labelId) {
+					return label.merge({ title: action.title, color: action.color });
+				}
+				return label;
+			})
+		).setIn(
+			// Update all of the labels associated with discussions. Labels applied to a discussion.
+			['pub', 'discussions'],
+			state.getIn(['pub', 'discussions']).map((discussion)=> {
+				return discussion.setIn(
+					['labels'], 
+					discussion.get('labels').map((label)=> {
+						if (label.get('id') === action.labelId) {
+							return label.merge({ title: action.title, color: action.color });
+						}
+						return label;
+					})
+				);
+			})
+		);
+	case PUT_LABEL_FAIL:
 		return state;
 
 	default:

@@ -3,7 +3,7 @@ import Radium from 'radium';
 import { Popover, PopoverInteractionKind, Position, Menu, MenuItem, NonIdealState } from 'components/Blueprint';
 import { CirclePicker } from 'react-color';
 import { postPubLabel, deletePubLabel } from './actionsPubLabels';
-// import { postLabel, putLabel, deleteLabel } from './actionsLabels'; 
+import { postLabel, putLabel, deleteLabel } from './actionsLabels'; 
 
 let styles;
 
@@ -19,7 +19,8 @@ export const PubLabelList = React.createClass({
 	getInitialState() {
 		return {
 			selectedLabels: [],
-			editingId: undefined,
+			editingLabelId: undefined,
+			editingPubId: undefined,
 			editingColorOpen: false,
 			editingColor: undefined,
 			editingTitle: undefined,
@@ -29,6 +30,7 @@ export const PubLabelList = React.createClass({
 	componentWillMount() {
 		this.setState({ selectedLabels: this.props.selectedLabels });
 	},
+
 	selectLabel: function(label) {
 		const selectedLabels = this.state.selectedLabels || [];
 		const labelIds = selectedLabels.map((labelItem)=> {
@@ -58,25 +60,44 @@ export const PubLabelList = React.createClass({
 
 	editClick: function(label, evt) {
 		this.setState({ 
-			editingId: label.id,
+			editingLabelId: label.id,
+			editingPubId: label.pubId,
 			editingColor: label.color,
 			editingTitle: label.title,
 		});
 	},
+	
 	setEditColor: function(color) {
 		this.setState({ editingColor: color.hex });
 	},
+	updateEditTitle: function(evt) {
+		this.setState({ editingTitle: evt.target.value });
+	},
+
+	saveEdit: function() {
+		this.props.dispatch(putLabel(this.state.editingPubId, this.state.editingLabelId, this.state.editingTitle, this.state.editingColor));
+		this.setState({ editingLabelId: undefined });
+	},
 	cancelEdit: function() {
-		this.setState({ editingId: undefined });
+		this.setState({ editingLabelId: undefined });
+	},
+	deleteEdit: function() {
+		this.props.dispatch(deleteLabel(this.state.editingPubId, this.state.editingLabelId));
+		this.setState({ editingLabelId: undefined });
 	},
 
 	render() {
 		const allLabels = this.props.allLabels || [];
+		
 		// const selectedLabels = this.state.selectedLabels || this.props.selectedLabels || [];
 		const selectedLabels = this.state.selectedLabels || [];
 		const selectedLabelIds = selectedLabels.map((labelItem)=> {
 			return labelItem.id;
 		});
+		const selectedLabelsRender = allLabels.filter((label)=> {
+			return selectedLabelIds.includes(label.id);
+		});
+
 		return (
 			<div style={styles.container}>
 				
@@ -84,21 +105,21 @@ export const PubLabelList = React.createClass({
 					content={
 						<div style={{padding: '.25em'}}>
 							{allLabels.map((label, index)=> {
-								if (this.state.editingId === label.id) {
+								if (this.state.editingLabelId === label.id) {
 									return (
-										<div style={{padding: '1em 0.5em', margin: '1em 0em',}} className={'pt-card pt-elevation-2'}>
+										<div style={{padding: '1em 0.5em', margin: '1em 0em',}} className={'pt-card pt-elevation-2'} key={'publabeledit- ' + label.id}>
 											<div>
 												<span style={{backgroundColor: this.state.editingColor}}></span>
 											</div>
-											<input type="text" className={'pt-input'} defaultValue={label.title} style={{width: '100%'}}/>
+											<input type="text" className={'pt-input'} value={this.state.editingTitle} onChange={this.updateEditTitle} style={{width: '100%'}}/>
 											<div style={{ margin: '1em 0em' }}>
 												<CirclePicker color={this.state.editingColor} onChange={this.setEditColor} colors={['#c0392b', '#e74c3c', '#d35400', '#f39c12', '#16a085', '#27ae60', '#2ecc71', '#2980b9', '#3498db', '#8e44ad', '#9b59b6', '#2c3e50']} />
 											</div>
 											
 											<div className="pt-button-group pt-fill">
-												<button className="pt-button pt-minimal pt-icon-trash" />
+												<button className="pt-button pt-minimal pt-icon-trash" onClick={this.deleteEdit}/>
 												<button className="pt-button" onClick={this.cancelEdit}>Cancel</button>
-												<button className="pt-button pt-intent-primary">Save Label</button>
+												<button className="pt-button pt-intent-primary" onClick={this.saveEdit}>Save Label</button>
 											</div>
 										</div>
 									);
@@ -128,7 +149,7 @@ export const PubLabelList = React.createClass({
 					
 				</Popover>
 
-				{selectedLabels.map((label, index)=> {
+				{selectedLabelsRender.map((label, index)=> {
 					return <span key={'label-' + index} className="pt-tag" style={{ backgroundColor: label.color || '#CCC', marginLeft: '.5em' }}>{label.title}</span>;
 				})}
 					
