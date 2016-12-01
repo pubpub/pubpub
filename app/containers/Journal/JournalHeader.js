@@ -10,7 +10,7 @@ export const JournalProfileHeader = React.createClass({
 	propTypes: {
 		journalName: PropTypes.string,
 		journalSlug: PropTypes.string,
-		journalID: PropTypes.string,
+		journalID: PropTypes.number,
 		isFollowing: PropTypes.bool,
 		description: PropTypes.string,
 		logo: PropTypes.string,
@@ -38,7 +38,7 @@ export const JournalProfileHeader = React.createClass({
 						}
 
 						{(this.props.headerMode !== 'logo') &&
-							<Link to={'/' + this.props.journalSlug} style={globalStyles.link}><h1>{this.props.journalName}</h1></Link>
+							<Link to={'/' + this.props.journalSlug} style={globalStyles.link}><h1 style={styles.headerTitle}>{this.props.journalName}</h1></Link>
 						}
 
 						{(this.props.headerMode !== 'logo') &&
@@ -86,6 +86,9 @@ styles = {
 	headerTextWrapper: {
 		position: 'relative',
 		zIndex: 2,
+	},
+	headerTitle: {
+		color: 'white',
 	},
 	logoImage: {
 		maxWidth: '100%',

@@ -14,6 +14,7 @@ import { FormattedMessage } from 'react-intl';
 import { getJournalData } from './actions';
 
 import JournalHeader from './JournalHeader';
+import JournalLayout from './JournalLayout';
 
 let styles;
 
@@ -52,6 +53,10 @@ export const Journal = React.createClass({
 		}
 	},
 	
+	handleHeaderUpdate: function(updateObject) {
+		this.setState(updateObject);
+	},
+
 	render() {
 		const slug = this.props.params.slug;
 		let mode = this.props.params.mode;
@@ -141,7 +146,15 @@ export const Journal = React.createClass({
 				<NavContentWrapper navItems={navItems} mobileNavButtons={mobileNavButtons}>
 					{(() => {
 						switch (mode) {
-						
+						case 'layout':
+							return (
+								<JournalLayout
+									journal={journal}
+									handleHeaderUpdate={this.handleHeaderUpdate}
+									isLoading={this.props.journalData.layoutLoading}
+									error={this.props.journalData.layoutError}
+									dispatch={this.props.dispatch} />
+							);
 						case 'notFound':
 							return null;
 

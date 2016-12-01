@@ -10,6 +10,8 @@ export MenuItem from './MenuItem';
 export ProgressBar from './ProgressBar';
 export MenuDivider from './MenuDivider';
 export NonIdealState from './NonIdealState';
+export Radio from './Radio';
+export RadioGroup from './RadioGroup';
 
 export Position from './Position';
 export Intent from './Intent';
