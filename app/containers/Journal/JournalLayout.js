@@ -3,8 +3,8 @@ import Radium, {Style} from 'radium';
 import Helmet from 'react-helmet';
 import { Loader } from 'components';
 import { s3Upload } from 'utils/uploadFile';
-// import { RadioGroup, Radio } from 'components/Blueprint';
-import { RadioGroup, Radio } from '@blueprintjs/core';
+import { RadioGroup, Radio } from 'components/Blueprint';
+// import { RadioGroup, Radio } from '@blueprintjs/core';
 import { ChromePicker } from 'react-color';
 
 import { globalStyles } from 'utils/globalStyles';

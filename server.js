@@ -61,7 +61,7 @@ if (!process.env.NODE_ENV) {
 const httpProxy = require('http-proxy');
 const proxy = httpProxy.createProxyServer({
 	changeOrigin: true,
-	target: process.env.API_URL,
+	target: process.env.API_URL || 'http://localhost:9876',
 });
 
 server.use('/api', (req, res) => {

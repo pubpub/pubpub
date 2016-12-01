@@ -35,8 +35,25 @@ export const JournalDetails = React.createClass({
 		};
 	},
 
+	componentWillMount() {
+		const journal = this.props.journal || {};
+		this.initialize(journal);
+	},
+	
 	componentWillReceiveProps(nextProps) {
 		const journal = nextProps.journal || {};
+		this.initialize(journal);
+
+		// If the slug changed, redirect to new slug.
+		const lastSlug = this.props.journal.slug;
+		const nextSlug = nextProps.journal.slug;
+		if (lastSlug && nextSlug && lastSlug !== nextSlug) {
+			browserHistory.push('/' + nextSlug + '/details');
+		}
+		
+	},
+
+	initialize: function(journal) {
 		// Initialize data once we have it.
 		if (journal.id && this.state.icon === undefined) {
 			this.setState({
@@ -51,14 +68,6 @@ export const JournalDetails = React.createClass({
 				facebook: journal.facebook || '',
 			});
 		}
-
-		// If the slug changed, redirect to new slug.
-		const lastSlug = this.props.journal.slug;
-		const nextSlug = nextProps.journal.slug;
-		if (lastSlug && nextSlug && lastSlug !== nextSlug) {
-			browserHistory.push('/' + nextSlug + '/details');
-		}
-		
 	},
 
 	inputUpdate: function(key, evt) {
