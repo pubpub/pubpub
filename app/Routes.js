@@ -1,6 +1,6 @@
 import React from 'react';
 import { Route } from 'react-router';
-import { App, CreateAccount, CreatePub, CreateJournal, Landing, Login, Pub, Search, SignUp, NoMatch, User } from 'containers';
+import { App, CreateAccount, CreatePub, CreateJournal, Landing, Journal, Login, Pub, Search, SignUp, NoMatch, User } from 'containers';
 
 export default (
 	<Route component={App}>
@@ -9,7 +9,9 @@ export default (
 		<Route path="/signup" component={SignUp} />
 		
 		<Route path="/journals/create" component={CreateJournal} />
-
+		<Route path="/:slug" component={Journal} />
+		<Route path="/:slug/:mode" component={Journal} />
+		
 		<Route path="/search" component={Search} />
 
 		<Route path="/users/create/:hash" component={CreateAccount} />
@@ -20,6 +22,7 @@ export default (
 		<Route path="/pub/:slug" component={Pub} />
 		<Route path="/pub/:slug/:meta" component={Pub} />
 		<Route path="/pub/:slug/files/:filename" component={Pub} />
+
 		<Route path="*" component={NoMatch} />
 	</Route>
 );

@@ -30,7 +30,7 @@ export const NavContentWrapper = React.createClass({
 		const mobileNavButtons = this.props.mobileNavButtons || [];
 
 		return (
-			<div className={'section'} style={styles.contentSection}>
+			<div style={styles.contentSection}>
 				<div style={styles.contentNav}>
 
 					<div style={styles.contentNavMobileButtons}>
@@ -81,7 +81,10 @@ export default Radium(NavContentWrapper);
 
 styles = {
 	contentSection: {
-		paddingTop: '0em',
+		padding: '0em 2em 3em 2em',
+		margin: '0 auto',
+		maxWidth: '1024px',
+
 		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
 			display: 'block',
 		}
@@ -146,7 +149,6 @@ styles = {
 	},
 	contentNavTitle: {
 		color: '#808284',
-		fontSize: '0.85em',
 		padding: '.15em 2em .15em 0em',
 		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
 			padding: '.2em 1em .2em .25em',

@@ -29,6 +29,7 @@ export const Landing = React.createClass({
 		return (
 			<div style={styles.container}>
 				<div style={styles.greyBox}>
+					<Link to={'/droopyleaves'}>Droopy leaves</Link>
 					<div style={styles.content}>
 						<h1 style={styles.title}>PubPub for Teams</h1>
 						<p style={styles.text}>

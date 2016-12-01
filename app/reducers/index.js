@@ -4,6 +4,7 @@ import account from './account';
 import app from './app';
 import createPub from './createPub';
 import createJournal from './createJournal';
+import journal from './journal';
 import login from './login';
 import pub from './pub';
 import search from './search';
@@ -28,6 +29,7 @@ export default combineReducers({
 	app,
 	createPub,
 	createJournal,
+	journal,
 	login,
 	pub,
 	search,
