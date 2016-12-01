@@ -293,7 +293,7 @@ export const PubLabelList = React.createClass({
 						? { pathname: '/label/' + label.title, query: {} }
 						: { pathname: this.props.pathname, query: { ...this.props.query, label: label.title, path: undefined, author: undefined, sort: undefined, discussion: undefined } };
 
-					return <Link to={toObject} key={'label-' + index} className="pt-tag" style={{ backgroundColor: label.color || '#CED9E0', color: label.color ? '#FFF' : '#293742', marginRight: '.5em', textDecoration: 'none' }}>{label.title}</Link>;
+					return <Link to={toObject} key={'label-' + index} className="pt-tag" style={{ backgroundColor: label.color || '#CED9E0', color: label.color ? '#FFF' : '#293742', margin: '0em .25em .25em 0em', textDecoration: 'none' }}>{label.title}</Link>;
 				})}
 					
 			</div>
@@ -315,7 +315,7 @@ styles = {
 		boxShadow: 'inset 0px 0px 0px 1px #BBB',
 		color: '#888',
 		cursor: 'pointer',
-		marginRight: '.5em',
+		margin: '0em .25em .25em 0em',
 	},
 	labelColor: {
 		display: 'inline-block',

@@ -4,7 +4,6 @@ import Radium from 'radium';
 import Helmet from 'react-helmet';
 import { Link, browserHistory } from 'react-router';
 import { StickyContainer, Sticky } from 'react-sticky';
-import ReactMarkdown from 'react-markdown';
 import dateFormat from 'dateformat';
 
 import { globalStyles } from 'utils/globalStyles';

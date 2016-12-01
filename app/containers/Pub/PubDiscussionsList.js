@@ -190,7 +190,7 @@ export const PubDiscussionsList = React.createClass({
 					])];
 					return (
 						<div style={styles.discussionItem} key={'discussionItem-' + index} className={'pt-card pt-elevation-1'}>
-							<Link to={{pathname: this.props.pathname, query: { ...this.props.query, discussion: discussion.discussionIndex }}} style={styles.discussionTitle}><span style={{opacity: '0.25', fontSize: '0.9em'}}>#{discussion.discussionIndex}</span> {discussion.title}</Link>
+							<Link to={{pathname: this.props.pathname, query: { ...this.props.query, discussion: discussion.discussionIndex }}} style={styles.discussionTitle}><span style={{opacity: '0.25', fontSize: '0.9em', textDecoration: 'none', display: 'inline-block', paddingRight: '.25em'}}>#{discussion.discussionIndex}</span>{discussion.title}</Link>
 							<PubLabelList allLabels={this.props.labelsData} selectedLabels={labels} canEdit={false} pathname={this.props.pathname} query={this.props.query} />
 							<div>{dateFormat(discussion.createdAt, 'mmmm dd, yyyy')} | by {author.firstName + ' ' + author.lastName} | Replies: {children.length}</div>
 							<div>	
