@@ -8,10 +8,6 @@ export default (
 		<Route path="/login" component={Login} />
 		<Route path="/signup" component={SignUp} />
 		
-		<Route path="/journals/create" component={CreateJournal} />
-		<Route path="/:slug" component={Journal} />
-		<Route path="/:slug/:mode" component={Journal} />
-		
 		<Route path="/search" component={Search} />
 
 		<Route path="/users/create/:hash" component={CreateAccount} />
@@ -23,6 +19,10 @@ export default (
 		<Route path="/pub/:slug/:meta" component={Pub} />
 		<Route path="/pub/:slug/files/:filename" component={Pub} />
 
+		<Route path="/journals/create" component={CreateJournal} />
+		<Route path="/:slug" component={Journal} />
+		<Route path="/:slug/:mode" component={Journal} />
+		
 		<Route path="*" component={NoMatch} />
 	</Route>
 );
