@@ -20,7 +20,6 @@ export const PubDiscussionsList = React.createClass({
 	getInitialState() {
 		return {
 			filter: '',
-
 		};
 	},
 
@@ -99,7 +98,6 @@ export const PubDiscussionsList = React.createClass({
 				{query.author && <li><Link to={{pathname: this.props.pathname, query: { ...this.props.query, author: undefined }}} className="pt-menu-item pt-popover-dismiss pt-icon-cross">Clear Author Filter</Link></li>}
 				<MenuDivider />
 				{uniqueAuthors.map((author, index)=> {
-					// const author = discussion.contributors[0].user;
 					return (
 						<li key={'authorFilter-' + index}><Link to={{pathname: this.props.pathname, query: { ...this.props.query, author: author.username }}} className="pt-menu-item pt-popover-dismiss">
 							<img src={'https://jake.pubpub.org/unsafe/50x50/' + author.image} style={styles.authorImages}/> {author.firstName + ' ' + author.lastName}
@@ -190,14 +188,25 @@ export const PubDiscussionsList = React.createClass({
 					])];
 					return (
 						<div style={styles.discussionItem} key={'discussionItem-' + index} className={'pt-card pt-elevation-1'}>
-							<Link to={{pathname: this.props.pathname, query: { ...this.props.query, discussion: discussion.discussionIndex }}} style={styles.discussionTitle}><span style={{opacity: '0.25', fontSize: '0.9em', textDecoration: 'none', display: 'inline-block', paddingRight: '.25em'}}>#{discussion.discussionIndex}</span>{discussion.title}</Link>
-							<PubLabelList allLabels={this.props.labelsData} selectedLabels={labels} canEdit={false} pathname={this.props.pathname} query={this.props.query} />
+							
+							<Link to={{pathname: this.props.pathname, query: { ...this.props.query, discussion: discussion.discussionIndex }}} style={styles.discussionTitle}>
+								<span style={styles.discussionIndex}>#{discussion.discussionIndex}</span>
+								{discussion.title}
+							</Link>
+
+							<PubLabelList 
+								allLabels={this.props.labelsData} 
+								selectedLabels={labels} 
+								canEdit={false} 
+								pathname={this.props.pathname} 
+								query={this.props.query} />
+
 							<div>{dateFormat(discussion.createdAt, 'mmmm dd, yyyy')} | by {author.firstName + ' ' + author.lastName} | Replies: {children.length}</div>
-							<div>	
-								{discussionAuthors.map((image, imageIndex)=> {
-									return <img src={'https://jake.pubpub.org/unsafe/50x50/' + image} style={styles.authorImages} key={'discussionImage-' + discussion.id + '-' + imageIndex}/>;
-								})}
-							</div>
+
+							{discussionAuthors.map((image, imageIndex)=> {
+								return <img src={'https://jake.pubpub.org/unsafe/50x50/' + image} style={styles.authorImages} key={'discussionImage-' + discussion.id + '-' + imageIndex}/>;
+							})}
+							
 						</div>
 					);
 				})}
@@ -221,10 +230,7 @@ styles = {
 		verticalAlign: 'middle',
 	},
 	discussionItem: {
-		// borderBottom: '1px solid #CCC',
 		padding: '.5em',
-		// margin: '1em0em 0em',
-		// border: '1px solid #ccc',
 		backgroundColor: '#f3f3f4',
 		borderRadius: '1px',
 	},
@@ -232,6 +238,13 @@ styles = {
 		fontWeight: 'bold',
 		fontSize: '1.25em',
 		display: 'block',
+	},
+	discussionIndex: {
+		opacity: '0.25', 
+		fontSize: '0.9em', 
+		textDecoration: 'none', 
+		display: 'inline-block', 
+		paddingRight: '.25em',
 	},
 	authorImages: {
 		width: '20px',

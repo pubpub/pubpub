@@ -2,7 +2,8 @@ import React, { PropTypes } from 'react';
 import Radium from 'radium';
 import { Popover, PopoverInteractionKind, Position, Menu, MenuItem, NonIdealState, Spinner } from 'components/Blueprint';
 import { CirclePicker } from 'react-color';
-import { Link } from 'react-router';
+import { Link as UnwrappedLink } from 'react-router';
+const Link = Radium(UnwrappedLink);
 import { AutocompleteBar } from 'components';
 import request from 'superagent';
 import { postPubLabel, deletePubLabel } from './actionsPubLabels';
@@ -16,7 +17,7 @@ export const PubLabelList = React.createClass({
 		selectedLabels: PropTypes.array,
 		onChange: PropTypes.func,
 		pubId: PropTypes.number, // id of the pub the label is applied to
-		rootPubId: PropTypes.number, // id of the pub owning the labels
+		rootPubId: PropTypes.number, // id of the pub owning the labels, in case of discussion labels
 		globalLabels: PropTypes.bool,
 		canEdit: PropTypes.bool,
 		pathname: PropTypes.string,
@@ -33,7 +34,6 @@ export const PubLabelList = React.createClass({
 			createOpen: false,
 			creatingColor: '#c0392b',
 			creatingTitle: '',
-			newGlobalLabel: undefined,
 			asyncLabels: [],
 			asyncLabelsCache: {},
 			asyncLabelsLoading: false,
@@ -46,7 +46,6 @@ export const PubLabelList = React.createClass({
 	},
 
 	selectLabel: function(label) {
-		console.log('label', label)
 		const selectedLabels = this.state.selectedLabels || [];
 		const labelIds = selectedLabels.map((labelItem)=> {
 			return labelItem.id;
@@ -57,12 +56,8 @@ export const PubLabelList = React.createClass({
 				return label.id === labelItem.id ? false : true;
 			})
 			: [...selectedLabels, label];
-		console.log('newSelected', newSelected);
-		this.setState({ 
-			selectedLabels: newSelected,
-			newGlobalLabel: undefined,
-		});
-
+		
+		this.setState({ selectedLabels: newSelected });
 
 		// If we have dispatch and a pubId, save the result
 		if (this.props.pubId && this.props.dispatch) {
@@ -128,16 +123,23 @@ export const PubLabelList = React.createClass({
 	},
 
 	loadOptions: function(evt) {
-		this.setState({ asyncLabelsInput: evt.target.value });
 		const input = evt.target.value.trim();
-		if (!input) { return undefined; }
+		if (!input) { 
+			return this.setState({
+				asyncLabelsInput: evt.target.value,
+			});
+		}
 		if (input in this.state.asyncLabelsCache) {
 			return this.setState({
+				asyncLabelsInput: evt.target.value,
 				asyncLabels: this.state.asyncLabelsCache[input]
 			});
 		}
 
-		this.setState({ asyncLabelsLoading: true });
+		this.setState({ 
+			asyncLabelsLoading: true,
+			asyncLabelsInput: evt.target.value
+		});
 		request.get('/api/search/label?q=' + input).end((err, response)=>{
 			const responseArray = (response && response.body) || [];
 			this.setState({
@@ -149,11 +151,6 @@ export const PubLabelList = React.createClass({
 				}
 			});
 		});
-	},
-
-	handleGlobalLabelSelectChange: function(value, evt) {
-		console.log(value, evt);
-		this.setState({ newGlobalLabel: value });
 	},
 
 	render() {
@@ -171,23 +168,24 @@ export const PubLabelList = React.createClass({
 				return selectedLabelIds.includes(label.id);
 			});
 
-		console.log(selectedLabelsRender);
-
+		// Define Popover content for labels button when we are using local (i.e. pub-owned) labels
+		const localLabelColors = ['#c0392b', '#e74c3c', '#d35400', '#f39c12', '#16a085', '#27ae60', '#2ecc71', '#2980b9', '#3498db', '#8e44ad', '#9b59b6', '#2c3e50'];
 		const localLabelsContent = (
-			<div style={{padding: '.25em'}}>
+			<div style={styles.popoverContentWrapper}>
+
+				{/* Display all possible labels that can be applied. Provide options to edit */}
 				{allLabels.map((label, index)=> {
 					if (this.state.editingLabelId === label.id) {
 						return (
-							<div style={{padding: '1em 0.5em', margin: '1em 0em',}} className={'pt-card pt-elevation-2'} key={'publabeledit- ' + label.id}>
-								<div>
-									<span style={{backgroundColor: this.state.editingColor}}></span>
-								</div>
-								<input type="text" className={'pt-input'} value={this.state.editingTitle} onChange={this.updateEditTitle} style={{width: '100%'}}/>
-								<div style={{ margin: '1em 0em' }}>
-									<CirclePicker color={this.state.editingColor} onChange={this.setEditColor} colors={['#c0392b', '#e74c3c', '#d35400', '#f39c12', '#16a085', '#27ae60', '#2ecc71', '#2980b9', '#3498db', '#8e44ad', '#9b59b6', '#2c3e50']} />
-								</div>
+							<div style={styles.labelEditCard} className={'pt-card pt-elevation-2'} key={'publabeledit- ' + label.id}>
+								<input type="text" className={'pt-input'} value={this.state.editingTitle} onChange={this.updateEditTitle} style={styles.labelEditInput}/>
 								
-								<div className="pt-button-group pt-fill">
+								<CirclePicker 
+									color={this.state.editingColor} 
+									onChange={this.setEditColor} 
+									colors={localLabelColors} />
+
+								<div className="pt-button-group pt-fill" style={styles.labelEditActions}>
 									<button className="pt-button pt-minimal pt-icon-trash" onClick={this.deleteEdit}/>
 									<button className="pt-button" onClick={this.cancelEdit}>Cancel</button>
 									<button className="pt-button pt-intent-primary" onClick={this.saveEdit}>Save Label</button>
@@ -195,32 +193,37 @@ export const PubLabelList = React.createClass({
 							</div>
 						);
 					}
+
 					return (
 						<div className="pt-button-group pt-fill pt-minimal" key={'publabel- ' + label.id}>
-							<button className="pt-button pt-fill" style={{textAlign: 'left'}} onClick={this.selectLabel.bind(this, label)}>
+							<button className="pt-button pt-fill" style={styles.labelButton} onClick={this.selectLabel.bind(this, label)}>
 								<span style={[styles.labelColor, { backgroundColor: label.color }]} className={selectedLabelIds.includes(label.id) ? 'pt-icon-standard pt-icon-small-tick' : ''}/> {label.title}
 							</button>
 							<button className="pt-button pt-icon-edit" onClick={this.editClick.bind(this, label)} />
 						</div>
 					);
 				})}
-				<hr style={{ margin: '1em 0em .25em' }}/>
+
+				<hr style={styles.localLabelSeparator}/>
+
+				{/* Display interface for creating a new label */}
 				{this.state.createOpen &&
-					<div style={{padding: '1em 0.5em', margin: '1em 0em',}} className={'pt-card pt-elevation-2'}>
-						<div>
-							<span style={{backgroundColor: this.state.creatingColor}}></span>
-						</div>
-						<input type="text" className={'pt-input'} value={this.state.creatingTitle} onChange={this.updateCreateTitle} style={{width: '100%'}}/>
-						<div style={{ margin: '1em 0em' }}>
-							<CirclePicker color={this.state.creatingColor} onChange={this.setCreateColor} colors={['#c0392b', '#e74c3c', '#d35400', '#f39c12', '#16a085', '#27ae60', '#2ecc71', '#2980b9', '#3498db', '#8e44ad', '#9b59b6', '#2c3e50']} />
-						</div>
+					<div style={styles.labelEditCard} className={'pt-card pt-elevation-2'}>
+						<input type="text" className={'pt-input'} value={this.state.creatingTitle} onChange={this.updateCreateTitle} style={styles.labelEditInput}/>
 						
-						<div className="pt-button-group pt-fill">
+						<CirclePicker 
+							color={this.state.creatingColor} 
+							onChange={this.setCreateColor} 
+							colors={localLabelColors} />
+						
+						<div className="pt-button-group pt-fill" style={styles.labelEditActions}>
 							<button className="pt-button" onClick={this.toggleCreate}>Cancel</button>
 							<button className={this.state.creatingTitle ? 'pt-button pt-intent-primary' : 'pt-button pt-intent-primary pt-disabled'} onClick={this.saveCreate}>Create Label</button>
 						</div>
 					</div>
 				}
+
+			{/* Display button to toggle Label creator */}
 				{!this.state.createOpen &&
 					<button type="button" className="pt-button pt-fill pt-minimal" onClick={this.toggleCreate}>
 						Create New Label
@@ -230,46 +233,60 @@ export const PubLabelList = React.createClass({
 			</div>
 		);
 
+		// Define Popover content for labels button when we are using global labels
 		const globalLabelsContent = (
-			<div style={{padding: '.25em', minWidth: '200px', maxWidth: '400px'}}>
-				<h6>Search Labels</h6>
-				<div style={{position: 'relative'}}>
-					<input style={{ width: '100%', paddingRight: '25px', }} type="text" onChange={this.loadOptions} value={this.state.asyncLabelsInput}/>
-					{!!this.state.asyncLabelsLoading && true &&
-						<div style={{position: 'absolute', right: 0, top: '5px'}}><Spinner className={'pt-small'} /></div>
+			<div style={styles.popoverContentWrapper}>
+
+				{/* Search Labels Input and Results*/}
+				<div style={styles.popoverSectionHeader}>
+					Search Labels
+				</div>
+
+				<div style={styles.labelSearchWrapper}>
+					<input style={styles.labelSearchInput} type="text" onChange={this.loadOptions} value={this.state.asyncLabelsInput}/>
+					{!!this.state.asyncLabelsLoading &&
+						<div style={styles.labelSearchLoader}><Spinner className={'pt-small'} /></div>
 					}	
 				</div>
-				
 				
 				{this.state.asyncLabels.map((label, index)=> {
 					return (
 						<div className="pt-button-group pt-fill pt-minimal" key={'publabel- ' + label.id}>
-							<button className="pt-button pt-fill" style={{textAlign: 'left'}} onClick={this.selectLabel.bind(this, label)}>
-								<span style={[styles.labelColor, { backgroundColor: label.color || '#CED9E0', color: '#293742', }]} className={selectedLabelIds.includes(label.id) ? 'pt-icon-standard pt-icon-small-tick' : ''}/> {label.title}
+							<button className="pt-button pt-fill" style={styles.labelButton} onClick={this.selectLabel.bind(this, label)}>
+								<span style={[styles.labelColor, styles.globalLabelColor]} className={selectedLabelIds.includes(label.id) ? 'pt-icon-standard pt-icon-small-tick' : ''}/> {label.title}
 							</button>
 						</div>
 					);
 				})}
 				
-				{!this.state.asyncLabels.length && this.state.asyncLabelsInput &&
-					<NonIdealState description={'No labels match your search yet'} />
+				{!this.state.asyncLabels.length && this.state.asyncLabelsInput && !this.state.asyncLabelsLoading && 
+					<div style={styles.emptyState}>
+						No labels match your search yet
+					</div>
 				}
-				<hr style={{ margin: '1em 0em 1em' }}/>
-				<div>
-					<h6>Selected Labels</h6>
-					{selectedLabels.map((label, index)=> {
-						return (
-							<div className="pt-button-group pt-fill pt-minimal" key={'publabel- ' + label.id}>
-								<button className="pt-button pt-fill" style={{textAlign: 'left'}} onClick={this.selectLabel.bind(this, label)}>
-									<span style={[styles.labelColor, { backgroundColor: label.color || '#CED9E0', color: '#293742', }]} className={'pt-icon-standard pt-icon-small-tick'}/> {label.title}
-								</button>
-							</div>
-						);
-					})}
-					{!selectedLabels.length &&
-						<NonIdealState description={'No labels added yet'} />
-					}
+
+				<hr />
+
+				{/* Selected Labels */}
+				<div style={styles.popoverSectionHeader}>
+					Selected Labels
 				</div>
+
+				{selectedLabels.map((label, index)=> {
+					return (
+						<div className="pt-button-group pt-fill pt-minimal" key={'publabel- ' + label.id}>
+							<button className="pt-button pt-fill" style={styles.labelButton} onClick={this.selectLabel.bind(this, label)}>
+								<span style={[styles.labelColor, styles.globalLabelColor]} className={'pt-icon-standard pt-icon-small-tick'}/> {label.title}
+							</button>
+						</div>
+					);
+				})}
+
+				{!selectedLabels.length &&
+					<div style={styles.emptyState}>
+						No labels added yet
+					</div>
+				}
 				
 			</div>
 		);
@@ -284,16 +301,17 @@ export const PubLabelList = React.createClass({
 						transitionDuration={200}
 					>
 						<span className="pt-tag" style={styles.editLabelsButton}>
-							Labels <span className="pt-icon-standard pt-icon-small-plus" style={{ color: '#888' }}/>
+							Labels <span className="pt-icon-standard pt-icon-small-plus" style={styles.editLabelsButtonIcon}/>
 						</span>	
 					</Popover>
 				}
+
 				{selectedLabelsRender.map((label, index)=> {
 					const toObject = this.props.globalLabels
 						? { pathname: '/label/' + label.title, query: {} }
 						: { pathname: this.props.pathname, query: { ...this.props.query, label: label.title, path: undefined, author: undefined, sort: undefined, discussion: undefined } };
 
-					return <Link to={toObject} key={'label-' + index} className="pt-tag" style={{ backgroundColor: label.color || '#CED9E0', color: label.color ? '#FFF' : '#293742', margin: '0em .25em .25em 0em', textDecoration: 'none' }}>{label.title}</Link>;
+					return <Link to={toObject} key={'label-' + index} className="pt-tag" style={[styles.label, { backgroundColor: label.color || '#CED9E0', color: label.color ? '#FFF' : '#293742' }]}>{label.title}</Link>;
 				})}
 					
 			</div>
@@ -310,12 +328,38 @@ styles = {
 		padding: '0.25em 0em',
 		// textAlign: 'right',
 	},
+	popoverContentWrapper: {
+		padding: '0.5em',
+		minWidth: '150px',
+	},
+	label: {
+		backgroundColor: '#CED9E0', 
+		margin: '0em .25em .25em 0em', 
+		textDecoration: 'none',
+	},
 	editLabelsButton: {
 		backgroundColor: 'transparent',
 		boxShadow: 'inset 0px 0px 0px 1px #BBB',
 		color: '#888',
 		cursor: 'pointer',
 		margin: '0em .25em .25em 0em',
+	},
+	editLabelsButtonIcon: {
+		color: '#888',
+	},
+	labelEditCard: {
+		padding: '1em 0.5em', 
+		margin: '1em 0em',
+	},
+	labelEditInput: {
+		width: '100%',
+		marginBottom: '1em',
+	},
+	labelEditActions: {
+		marginTop: '1em',
+	},
+	labelButton: {
+		textAlign: 'left',
 	},
 	labelColor: {
 		display: 'inline-block',
@@ -326,5 +370,33 @@ styles = {
 		color: 'white',
 		textAlign: 'center',
 		margin: 0,
+	},
+	globalLabelColor: {
+		backgroundColor: '#CED9E0', 
+		color: '#293742',
+	},
+	localLabelSeparator: {
+		margin: '1em 0em .25em',
+	},
+	popoverSectionHeader: {
+		fontWeight: 'bold',
+		margin: '0.5em 0em',
+	},
+	emptyState: {
+		textAlign: 'center',
+		margin: '1em 0em',
+		opacity: '0.75',
+	},
+	labelSearchWrapper: {
+		position: 'relative',
+	},
+	labelSearchInput: { 
+		width: '100%', 
+		paddingRight: '25px', 
+	},
+	labelSearchLoader: {
+		position: 'absolute',
+		right: 0,
+		top: '5px'
 	},
 };

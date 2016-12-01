@@ -22,9 +22,6 @@ import PubDiscussion from './PubDiscussion';
 import PubReviewers from './PubReviewers';
 import PubLabelList from './PubLabelList';
 
-
-// import { Popover, PopoverInteractionKind, Position, Menu, MenuItem, NonIdealState } from 'components/Blueprint';
-
 import { getPubData } from './actions';
 
 let styles;
@@ -104,6 +101,8 @@ export const Pub = React.createClass({
 		const versions = pubData.versions || [];
 		const pubSubmits = pubData.pubSubmits || [];
 		const pubFeatures = pubData.pubFeatures || [];
+		const labelsData = pubData.pubLabels || [];
+
 		// Might have to sort these if it isn't in chronological order
 		const currentVersion = versions.reduce((previous, current)=> {
 			if (query.version === String(current.id)) { return current; }
@@ -116,7 +115,6 @@ export const Pub = React.createClass({
 			return previous;
 		}, false);
 
-	
 		// Populate parent discussions with their children
 		const tempArray = [...pubData.discussions];
 		tempArray.forEach((discussion)=> {
@@ -129,16 +127,10 @@ export const Pub = React.createClass({
 		// Add a discussionsIndex value that we'll use to number discussions.
 		const discussionsData = pubData.discussions.filter((discussion)=> {
 			return discussion.replyParentPubId === pubData.id;
-		}).sort((foo, bar)=>{
-			// Sort so that oldest is first in array
-			if (foo.createdAt > bar.createdAt) { return 1; }
-			if (foo.createdAt < bar.createdAt) { return -1; }
-			return 0;
 		}).map((discussion, index)=>{
 			return { ...discussion, discussionIndex: index + 1 };
 		});
 		
-		const labelsData = pubData.pubLabels || [];
 		const activeDiscussion = discussionsData.reduce((previous, current)=> {
 			if (queryDiscussion === String(current.discussionIndex)) { return current; }
 			return previous;
@@ -169,6 +161,10 @@ export const Pub = React.createClass({
 			<div style={styles.container}>
 
 				<Helmet {...metaData} />
+
+				{/* ---------- */}
+				{/* Left Panel */}
+				{/* ---------- */}
 				<div style={styles.left}>
 
 					<h1 style={styles.pubTitle}>{pubData.title}</h1>
@@ -177,7 +173,6 @@ export const Pub = React.createClass({
 						<PubLabelList selectedLabels={pubData.labels} pubId={pubData.id} rootPubId={pubData.id} globalLabels={true} canEdit={true} pathname={pathname} query={query} dispatch={this.props.dispatch} />	
 					</div>
 					
-
 					<div style={styles.pubAuthors}>
 						{contributors.filter((contributor)=>{
 							return contributor.isAuthor === true;
@@ -186,6 +181,7 @@ export const Pub = React.createClass({
 							return <Link to={'/user/' + user.username} key={'contributor-' + index}>{user.firstName + ' ' + user.lastName}{index !== array.length - 1 ? ', ' : ''}</Link>;
 						})}
 					</div>
+
 					<div style={styles.pubAuthors}>
 						{dateFormat(currentVersion.createdAt, 'mmmm dd, yyyy')}
 					</div>
@@ -195,7 +191,6 @@ export const Pub = React.createClass({
 					{/* ------- */}
 					<div style={styles.nav}>
 						<Link to={{ pathname: '/pub/' + this.props.params.slug, query: query }}><div style={[styles.navItem, (!meta || meta === 'files') && styles.navItemActive]} className={'bottomShadowOnHover'}>Content</div></Link>
-						{/* <Link to={{ pathname: '/pub/' + this.props.params.slug + '/files', query: query }}><div style={[styles.navItem, meta === '' && styles.navItemActive]} className={'bottomShadowOnHover'}>Files</div></Link> */}
 						{!!versions.length && <Link to={{ pathname: '/pub/' + this.props.params.slug + '/versions', query: query }}><div style={[styles.navItem, meta === 'versions' && styles.navItemActive]} className={'bottomShadowOnHover'}>Versions ({versions.length})</div></Link> }
 						<Link to={{ pathname: '/pub/' + this.props.params.slug + '/contributors', query: query }}><div style={[styles.navItem, meta === 'contributors' && styles.navItemActive]} className={'bottomShadowOnHover'}>Contributors ({contributors.length})</div></Link>
 						{!!versions.length && <Link to={{ pathname: '/pub/' + this.props.params.slug + '/journals', query: query }}><div style={[styles.navItem, meta === 'journals' && styles.navItemActive]} className={'bottomShadowOnHover'}>Journals</div></Link> }
@@ -205,18 +200,52 @@ export const Pub = React.createClass({
 					{/* ------- */}
 					{/* Content */}
 					{/* ------- */}
-					{!meta && hasDocument && <PubDocument versionData={currentVersion} pubId={pubData.id} pubSlug={pubData.slug} />}
-					{meta === 'versions' && <PubVersions versionsData={versions} location={this.props.location} />}
-					{meta === 'contributors' && <PubContributors contributors={contributors} pubId={pubData.id} dispatch={this.props.dispatch} />}
-					{((!meta && !hasDocument) || meta === 'files') && <PubFiles versionData={currentVersion} pubId={pubData.id} pubSlug={pubData.slug} routeFilename={this.props.params.filename} dispatch={this.props.dispatch} />}
-					{meta === 'settings' && <PubSettings pubData={pubData} pubId={pubData.id} isLoading={this.props.pubData.settingsLoading} error={this.props.pubData.settingsError} dispatch={this.props.dispatch} />}
-					{meta === 'journals' && <PubJournals pubSubmits={pubSubmits} pubFeatures={pubFeatures} pubId={pubData.id} dispatch={this.props.dispatch} />}
-					{/* 
-					{meta === 'edit' && <PubEdit versionData={currentVersion} updateEditValue={this.setEditValue}/>}
-					*/}
+					{!meta && hasDocument && 
+						<PubDocument
+							versionData={currentVersion}
+							pubId={pubData.id}
+							pubSlug={pubData.slug} />
+					}
+					{meta === 'versions' && 
+						<PubVersions
+							versionsData={versions}
+							location={this.props.location} />
+					}
+					{meta === 'contributors' && 
+						<PubContributors
+							contributors={contributors}
+							pubId={pubData.id}
+							dispatch={this.props.dispatch} />
+					}
+					{((!meta && !hasDocument) || meta === 'files') && 
+						<PubFiles
+							versionData={currentVersion}
+							pubId={pubData.id}
+							pubSlug={pubData.slug}
+							routeFilename={this.props.params.filename}
+							dispatch={this.props.dispatch} />
+					}
+					{meta === 'settings' && 
+						<PubSettings
+							pubData={pubData}
+							pubId={pubData.id}
+							isLoading={this.props.pubData.settingsLoading}
+							error={this.props.pubData.settingsError}
+							dispatch={this.props.dispatch} />
+					}
+					{meta === 'journals' && 
+						<PubJournals
+							pubSubmits={pubSubmits}
+							pubFeatures={pubFeatures}
+							pubId={pubData.id}
+							dispatch={this.props.dispatch} />
+					}
 
 				</div>
 
+				{/* ----------- */}
+				{/* Right Panel */}
+				{/* ----------- */}
 				<StickyContainer style={styles.right}>
 					<Sticky style={styles.rightSticky}>
 
@@ -241,13 +270,41 @@ export const Pub = React.createClass({
 						</div>
 						
 						{panel === 'reviewers' && 
-							<PubReviewers invitedReviewers={invitedReviewers} pubId={pubData.id} dispatch={this.props.dispatch} />}
+							<PubReviewers 
+								invitedReviewers={invitedReviewers}
+								pubId={pubData.id}
+								dispatch={this.props.dispatch} />
+						}
 						{panel === 'new' && 
-							<PubDiscussionsNew discussionsData={discussionsData} labelsData={labelsData} pubId={pubData.id} pathname={pathname} isLoading={this.props.pubData.discussionsLoading} error={this.props.pubData.discussionsError} pathname={pathname} query={query} dispatch={this.props.dispatch} />}
+							<PubDiscussionsNew 
+								discussionsData={discussionsData}
+								labelsData={labelsData}
+								pubId={pubData.id}
+								isLoading={this.props.pubData.discussionsLoading}
+								error={this.props.pubData.discussionsError}
+								pathname={pathname}
+								query={query}
+								dispatch={this.props.dispatch} />
+						}
 						{!panel && !queryDiscussion && 
-							<PubDiscussionsList discussionsData={discussionsData} labelsData={labelsData} pathname={pathname} query={query} dispatch={this.props.dispatch} />}
+							<PubDiscussionsList 
+								discussionsData={discussionsData} 
+								labelsData={labelsData} 
+								pathname={pathname} 
+								query={query} 
+								dispatch={this.props.dispatch} />
+						}
 						{!!queryDiscussion && 
-							<PubDiscussion discussion={activeDiscussion} labelsData={labelsData} pubId={pubData.id} isLoading={this.props.pubData.discussionsLoading} error={this.props.pubData.discussionsError} pathname={pathname} query={query} dispatch={this.props.dispatch} />}
+							<PubDiscussion
+								discussion={activeDiscussion}
+								labelsData={labelsData}
+								pubId={pubData.id}
+								isLoading={this.props.pubData.discussionsLoading}
+								error={this.props.pubData.discussionsError}
+								pathname={pathname}
+								query={query}
+								dispatch={this.props.dispatch} />
+						}
 
 					</Sticky>
 				</StickyContainer>

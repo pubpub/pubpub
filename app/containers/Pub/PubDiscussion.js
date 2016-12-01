@@ -10,7 +10,6 @@ import { Popover, PopoverInteractionKind, Position, Menu, MenuItem, MenuDivider,
 import { postDiscussion } from './actionsDiscussions'
 import PubLabelList from './PubLabelList';
 
-
 let styles;
 
 export const PubDiscussion = React.createClass({
@@ -87,7 +86,16 @@ export const PubDiscussion = React.createClass({
 				}} />
 
 				<h3>{discussion.title}</h3>
-				<PubLabelList allLabels={labelsData} selectedLabels={discussion.labels} pubId={discussion.id} rootPubId={this.props.pubId} canEdit={true} pathname={this.props.pathname} query={this.props.query} dispatch={this.props.dispatch}/>
+				
+				<PubLabelList 
+					allLabels={labelsData} 
+					selectedLabels={discussion.labels} 
+					pubId={discussion.id} 
+					rootPubId={this.props.pubId} 
+					canEdit={true} 
+					pathname={this.props.pathname} 
+					query={this.props.query} 
+					dispatch={this.props.dispatch}/>
 
 				{discussions.sort((foo, bar)=>{
 					// Sort so that oldest is first in array
