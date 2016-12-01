@@ -21,8 +21,8 @@ const defaultState = Immutable.Map({
 	loading: false,
 	error: undefined,
 	journal: {},
-	layoutLoading: false,
-	layoutError: undefined,
+	putDataLoading: false,
+	putDataError: undefined,
 });
 
 /* ----------------------------------------- */
@@ -51,13 +51,13 @@ export default function reducer(state = defaultState, action) {
 
 	case PUT_JOURNAL_DATA_LOAD:
 		return state.merge({
-			layoutLoading: true,
-			layoutError: undefined,
+			putDataLoading: true,
+			putDataError: undefined,
 		});	
 	case PUT_JOURNAL_DATA_SUCCESS:
 		return state.merge({
-			layoutLoading: false,
-			layoutError: undefined,
+			putDataLoading: false,
+			putDataError: undefined,
 		})
 		.mergeIn(
 			['journal'],
@@ -65,8 +65,8 @@ export default function reducer(state = defaultState, action) {
 		);
 	case PUT_JOURNAL_DATA_FAIL:
 		return state.merge({
-			layoutLoading: false,
-			layoutError: action.error,
+			putDataLoading: false,
+			putDataError: action.error,
 			// journal: null,
 		});
 

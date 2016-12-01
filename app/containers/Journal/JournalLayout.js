@@ -97,7 +97,7 @@ export const JournalLayout = React.createClass({
 
 	saveLayout: function(evt) {
 		evt.preventDefault();
-		const newjournalData = {
+		const newJournalData = {
 			logo: this.state.logo,
 			headerColor: this.state.headerColor,
 			headerMode: this.state.headerMode,
@@ -105,7 +105,7 @@ export const JournalLayout = React.createClass({
 			headerImage: this.state.headerImage,
 		};
 
-		this.props.dispatch(putJournal(this.props.journal.id, newjournalData));
+		this.props.dispatch(putJournal(this.props.journal.id, newJournalData));
 	},
 
 	render: function() {

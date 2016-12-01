@@ -15,6 +15,7 @@ import { getJournalData } from './actions';
 
 import JournalHeader from './JournalHeader';
 import JournalLayout from './JournalLayout';
+import JournalDetails from './JournalDetails';
 
 let styles;
 
@@ -151,8 +152,16 @@ export const Journal = React.createClass({
 								<JournalLayout
 									journal={journal}
 									handleHeaderUpdate={this.handleHeaderUpdate}
-									isLoading={this.props.journalData.layoutLoading}
-									error={this.props.journalData.layoutError}
+									isLoading={this.props.journalData.putDataLoading}
+									error={this.props.journalData.putDataError}
+									dispatch={this.props.dispatch} />
+							);
+						case 'details':
+							return (
+								<JournalDetails
+									journal={journal}
+									isLoading={this.props.journalData.putDataLoading}
+									error={this.props.journalData.putDataError}
 									dispatch={this.props.dispatch} />
 							);
 						case 'notFound':

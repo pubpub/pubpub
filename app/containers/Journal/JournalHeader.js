@@ -23,7 +23,7 @@ export const JournalProfileHeader = React.createClass({
 	render: function() {
 		const customBackgroundStyle = {
 			backgroundColor: this.props.headerColor || '#13A6EF',
-			backgroundImage: 'url("' + this.props.headerImage + '")',
+			backgroundImage: this.props.headerImage ? 'url("' + this.props.headerImage + '")' : '',
 			textAlign: this.props.headerAlign || 'left',
 		};
 
