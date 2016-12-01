@@ -154,8 +154,6 @@ export const PubDiscussionsList = React.createClass({
 					<PubDiscussionsListFilterButton content={labelMenu} title={'Label'} position={1} />
 					<PubDiscussionsListFilterButton content={sortMenu} title={'Sort'} position={2} />
 				</div>
-
-				<PubLabelList allLabels={labelList} />
 				
 				{filteredDiscussions.sort((foo, bar)=> {
 					const fooChildren = foo.children || [];
@@ -193,9 +191,7 @@ export const PubDiscussionsList = React.createClass({
 					return (
 						<div style={styles.discussionItem} key={'discussionItem-' + index} className={'pt-card pt-elevation-1'}>
 							<Link to={{pathname: this.props.pathname, query: { ...this.props.query, discussion: discussion.discussionIndex }}} style={styles.discussionTitle}><span style={{opacity: '0.25', fontSize: '0.9em'}}>#{discussion.discussionIndex}</span> {discussion.title}</Link>
-							{labels.map((label, labelIndex)=> {
-								return <span key={'discussionLabel-' + discussion.id + '-' + labelIndex}  className="pt-tag" style={{ backgroundColor: label.color || '#CCC', marginRight: '.5em' }}>{label.title}</span>
-							})}
+							<PubLabelList allLabels={this.props.labelsData} selectedLabels={labels} canEdit={false} pathname={this.props.pathname} query={this.props.query} />
 							<div>{dateFormat(discussion.createdAt, 'mmmm dd, yyyy')} | by {author.firstName + ' ' + author.lastName} | Replies: {children.length}</div>
 							<div>	
 								{discussionAuthors.map((image, imageIndex)=> {

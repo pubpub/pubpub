@@ -18,6 +18,8 @@ export const PubDiscussion = React.createClass({
 		discussion: PropTypes.object,
 		labelsData: PropTypes.array,
 		pubId: PropTypes.number,
+		pathname: PropTypes.string,
+		query: PropTypes.object,
 		isLoading: PropTypes.bool,
 		error: PropTypes.string,
 		dispatch: PropTypes.func,
@@ -85,7 +87,7 @@ export const PubDiscussion = React.createClass({
 				}} />
 
 				<h3>{discussion.title}</h3>
-				<PubLabelList allLabels={labelsData} selectedLabels={discussion.labels} pubId={discussion.id} rootPubId={this.props.pubId} dispatch={this.props.dispatch}/>
+				<PubLabelList allLabels={labelsData} selectedLabels={discussion.labels} pubId={discussion.id} rootPubId={this.props.pubId} canEdit={true} pathname={this.props.pathname} query={this.props.query} dispatch={this.props.dispatch}/>
 
 				{discussions.sort((foo, bar)=>{
 					// Sort so that oldest is first in array

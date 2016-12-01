@@ -21,6 +21,7 @@ import PubDiscussionsNew from './PubDiscussionsNew';
 import PubDiscussionsList from './PubDiscussionsList';
 import PubDiscussion from './PubDiscussion';
 import PubReviewers from './PubReviewers';
+import PubLabelList from './PubLabelList';
 
 
 // import { Popover, PopoverInteractionKind, Position, Menu, MenuItem, NonIdealState } from 'components/Blueprint';
@@ -172,6 +173,11 @@ export const Pub = React.createClass({
 				<div style={styles.left}>
 
 					<h1 style={styles.pubTitle}>{pubData.title}</h1>
+					
+					<div style={{ paddingLeft: '1em' }}>
+						<PubLabelList selectedLabels={pubData.labels} pubId={pubData.id} rootPubId={pubData.id} globalLabels={true} canEdit={true} pathname={pathname} query={query} dispatch={this.props.dispatch} />	
+					</div>
+					
 
 					<div style={styles.pubAuthors}>
 						{contributors.filter((contributor)=>{
@@ -238,11 +244,11 @@ export const Pub = React.createClass({
 						{panel === 'reviewers' && 
 							<PubReviewers invitedReviewers={invitedReviewers} pubId={pubData.id} dispatch={this.props.dispatch} />}
 						{panel === 'new' && 
-							<PubDiscussionsNew discussionsData={discussionsData} labelsData={labelsData} pubId={pubData.id} pathname={pathname} isLoading={this.props.pubData.discussionsLoading} error={this.props.pubData.discussionsError} dispatch={this.props.dispatch} />}
+							<PubDiscussionsNew discussionsData={discussionsData} labelsData={labelsData} pubId={pubData.id} pathname={pathname} isLoading={this.props.pubData.discussionsLoading} error={this.props.pubData.discussionsError} pathname={pathname} query={query} dispatch={this.props.dispatch} />}
 						{!panel && !queryDiscussion && 
 							<PubDiscussionsList discussionsData={discussionsData} labelsData={labelsData} pathname={pathname} query={query} dispatch={this.props.dispatch} />}
 						{!!queryDiscussion && 
-							<PubDiscussion discussion={activeDiscussion} labelsData={labelsData} pubId={pubData.id} isLoading={this.props.pubData.discussionsLoading} error={this.props.pubData.discussionsError} dispatch={this.props.dispatch} />}
+							<PubDiscussion discussion={activeDiscussion} labelsData={labelsData} pubId={pubData.id} isLoading={this.props.pubData.discussionsLoading} error={this.props.pubData.discussionsError} pathname={pathname} query={query} dispatch={this.props.dispatch} />}
 
 					</Sticky>
 				</StickyContainer>

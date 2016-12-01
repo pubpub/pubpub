@@ -17,6 +17,8 @@ export const PubDiscussionsNew = React.createClass({
 		pubId: PropTypes.number,
 		pathname: PropTypes.string,
 		isLoading: PropTypes.bool,
+		pathname: PropTypes.string,
+		query: PropTypes.object,
 		error: PropTypes.string,
 		dispatch: PropTypes.func,
 	},
@@ -84,7 +86,7 @@ export const PubDiscussionsNew = React.createClass({
 			<div style={styles.container}>
 				<h3>New Discussion</h3>
 				<form onSubmit={this.createSubmit}>
-					<PubLabelList allLabels={labelList} onChange={this.onLabelsChange} rootPubId={this.props.pubId} dispatch={this.props.dispatch}/>
+					<PubLabelList allLabels={labelList} onChange={this.onLabelsChange} rootPubId={this.props.pubId} pathname={this.props.pathname} query={this.props.query} dispatch={this.props.dispatch}/>
 					<input id={'journalName'} name={'journal name'} placeholder={'Title'} type="text" style={styles.input} value={this.state.title} onChange={this.inputUpdate.bind(this, 'title')} />
 						
 					<textarea id={'description'} name={'description'} type="text" style={[styles.input, styles.description]} value={this.state.description} onChange={this.inputUpdate.bind(this, 'description')} />
