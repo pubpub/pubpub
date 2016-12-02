@@ -22,7 +22,7 @@ module.exports = {
 		loaders: [
 			{
 				test: /\.js?/,
-				loader: 'babel',
+				loader: 'babel-loader',
 				include: [
 					path.resolve('app')
 				],
@@ -41,11 +41,11 @@ module.exports = {
 					]
 				}
 			},
-			{ test: /\.css$/, loader: 'style!css!sass' },
+			{ test: /\.css$/, loader: 'style-loader!css-loader!sass-loader' },
 			{ test: /\.svg$/, loader: 'file-loader' },
 			{ test: /\.png$/, loader: 'file-loader' },
 			{ test: /\.jpg$/, loader: 'file-loader' },
-			{ test: /\.json$/, loader: 'json' }
+			{ test: /\.json$/, loader: 'json-loader' }
 		]
 	},
 	resolve: {
