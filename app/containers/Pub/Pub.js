@@ -89,6 +89,14 @@ export const Pub = React.createClass({
 	},
 
 	render() {
+		console.log(this.props.pubData.pub.title);
+		console.log(this.props.pubData.loading);
+		if (!this.props.pubData.pub.title && !this.props.pubData.error) {
+			return <div>Loading</div>;
+		}
+		if (!this.props.pubData.pub.title && this.props.pubData.error) {
+			return <div>Error</div>;
+		}
 		const currentFile = this.props.params.filename;
 		const meta = currentFile ? 'files' : this.props.params.meta;
 		const query = this.props.location.query;
@@ -96,6 +104,7 @@ export const Pub = React.createClass({
 		const panel = query.panel;
 		const queryDiscussion = query.discussion;
 		const pubData = this.props.pubData.pub || {};
+		const discussions = pubData.discussions || [];
 		const contributors = pubData.contributors || [];
 		const invitedReviewers = pubData.invitedReviewers || [];
 		const versions = pubData.versions || [];
@@ -116,7 +125,7 @@ export const Pub = React.createClass({
 		}, false);
 
 		// Populate parent discussions with their children
-		const tempArray = [...pubData.discussions];
+		const tempArray = [...discussions];
 		tempArray.forEach((discussion)=> {
 			discussion.children = tempArray.filter((child)=> {
 				return (child.replyParentPubId === discussion.id);
@@ -125,7 +134,7 @@ export const Pub = React.createClass({
 		});
 
 		// Add a discussionsIndex value that we'll use to number discussions.
-		const discussionsData = pubData.discussions.filter((discussion)=> {
+		const discussionsData = discussions.filter((discussion)=> {
 			return discussion.replyParentPubId === pubData.id;
 		}).map((discussion, index)=>{
 			return { ...discussion, discussionIndex: index + 1 };

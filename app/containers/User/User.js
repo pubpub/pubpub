@@ -1,6 +1,7 @@
 import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
-import { Link } from 'react-router';
+import { Link as UnwrappedLink } from 'react-router';
+const Link = Radium(UnwrappedLink);
 import Radium from 'radium';
 import Helmet from 'react-helmet';
 
@@ -152,11 +153,19 @@ export const User = React.createClass({
 							return (
 								<div>
 									<div>{this.props.params.mode}</div>
-									{user.pubs.map((pub, index)=> {
-										return (<div>
-											<Link to={'/pub/' + pub.slug}>{pub.title}</Link>
-											<p style={{ paddingLeft: '1em' }}>{pub.description}</p>
-										</div>);
+									{user.pubs.filter((pub)=> {
+										return !pub.replyRootPubId;
+									}).map((pub, index)=> {
+										return (
+											<div key={'pub-' + index} style={styles.pubPreviewWrapper}>
+												<Link to={'/pub/' + pub.slug} style={[styles.pubPreviewImageWrapper, { backgroundImage: pub.previewImage ? 'url("' + pub.previewImage + '")' : '' }]} />
+												<div style={styles.pubPreviewDetails}>
+													<Link to={'/pub/' + pub.slug}><h4>{pub.title}</h4></Link>
+													<p>{pub.description}</p>
+												</div>
+												
+											</div>
+										);
 									})}
 								</div>
 							);
@@ -184,6 +193,32 @@ styles = {
 		padding: '2em 1em',
 		maxWidth: '1024px',
 		margin: '0 auto',
+	},
+	pubPreviewWrapper: {
+		display: 'table',
+		width: '100%',
+		boxShadow: '0 1px 4px rgba(0,0,0,.05),inset 0 0 0 1px rgba(0,0,0,.1)'
+	},
+	pubPreviewImageWrapper: {
+		display: 'table-cell',
+		verticalAlign: 'middle',
+		boxShadow: 'inset 0 0 0 1px rgba(0,0,0,.09)',
+		width: '125px',
+		height: '125px',
+		backgroundSize: 'cover',
+		backgroundRepeat: 'no-repeat',
+		backgroundPosition: 'center center',
+		boxSizing: 'border-box',
+	},
+	pubPreviewDetails: {
+		display: 'table-cell',
+		verticalAlign: 'middle',
+		padding: '1em',
+	},
+	pubPreviewTitle: {
+		fontSize: '1.5em',
+		fontWeight: 'bold',
+		marginBottom: '1em',
 	},
 	headerWrapper: {
 		paddingBottom: '2em',
