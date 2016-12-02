@@ -20,6 +20,7 @@ export const PubLabelList = React.createClass({
 		rootPubId: PropTypes.number, // id of the pub owning the labels, in case of discussion labels
 		globalLabels: PropTypes.bool,
 		canEdit: PropTypes.bool,
+		canSelect: PropTypes.bool,
 		pathname: PropTypes.string,
 		query: PropTypes.object,
 		dispatch: PropTypes.func,
@@ -199,12 +200,17 @@ export const PubLabelList = React.createClass({
 							<button className="pt-button pt-fill" style={styles.labelButton} onClick={this.selectLabel.bind(this, label)}>
 								<span style={[styles.labelColor, { backgroundColor: label.color }]} className={selectedLabelIds.includes(label.id) ? 'pt-icon-standard pt-icon-small-tick' : ''}/> {label.title}
 							</button>
-							<button className="pt-button pt-icon-edit" onClick={this.editClick.bind(this, label)} />
+							{this.props.canEdit &&
+								<button className="pt-button pt-icon-edit" onClick={this.editClick.bind(this, label)} />
+							}
+							
 						</div>
 					);
 				})}
 
-				<hr style={styles.localLabelSeparator}/>
+				{this.props.canEdit && 
+					<hr style={styles.localLabelSeparator}/>
+				}
 
 				{/* Display interface for creating a new label */}
 				{this.state.createOpen &&
@@ -224,7 +230,7 @@ export const PubLabelList = React.createClass({
 				}
 
 			{/* Display button to toggle Label creator */}
-				{!this.state.createOpen &&
+				{this.props.canEdit && !this.state.createOpen &&
 					<button type="button" className="pt-button pt-fill pt-minimal" onClick={this.toggleCreate}>
 						Create New Label
 					</button>
@@ -293,7 +299,7 @@ export const PubLabelList = React.createClass({
 
 		return (
 			<div style={styles.container}>
-				{this.props.canEdit && 
+				{(this.props.canSelect || this.props.canEdit) && 
 					<Popover 
 						content={this.props.globalLabels ? globalLabelsContent : localLabelsContent}
 						interactionKind={PopoverInteractionKind.CLICK}
