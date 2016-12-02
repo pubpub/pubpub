@@ -146,6 +146,23 @@ export const User = React.createClass({
 					{(() => {
 						switch (mode) {
 						
+						case 'journals': 
+							return (
+								<div>
+									{user.journals.map((journal, index)=> {
+										return (
+											<div key={'journal-' + index} style={styles.pubPreviewWrapper}>
+												<Link to={'/' + journal.slug} style={[styles.pubPreviewImageWrapper, { backgroundImage: journal.icon ? 'url("' + journal.icon + '")' : '' }]} />
+												<div style={styles.pubPreviewDetails}>
+													<Link to={'/' + journal.slug}><h4>{journal.name}</h4></Link>
+													<p>{journal.shortDescription}</p>
+												</div>
+												
+											</div>
+										);
+									})}
+								</div>
+							);
 						case 'notFound':
 							return null;
 
@@ -196,18 +213,21 @@ styles = {
 	},
 	pubPreviewWrapper: {
 		display: 'table',
+		marginBottom: '1em',
 		width: '100%',
-		boxShadow: '0 1px 4px rgba(0,0,0,.05),inset 0 0 0 1px rgba(0,0,0,.1)'
+		boxShadow: '0 1px 4px rgba(0,0,0,0.05),inset 0 0 0 1px rgba(0,0,0,0.1)',
+		borderRadius: '0px 2px 2px 0px',
 	},
 	pubPreviewImageWrapper: {
 		display: 'table-cell',
 		verticalAlign: 'middle',
-		boxShadow: 'inset 0 0 0 1px rgba(0,0,0,.09)',
+		boxShadow: 'inset 0 0 0 1px rgba(0,0,0,0.1)',
 		width: '125px',
 		height: '125px',
 		backgroundSize: 'cover',
 		backgroundRepeat: 'no-repeat',
 		backgroundPosition: 'center center',
+		borderRadius: '2px 0px 0px 2px',
 		boxSizing: 'border-box',
 	},
 	pubPreviewDetails: {

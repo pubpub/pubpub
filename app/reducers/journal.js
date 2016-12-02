@@ -35,6 +35,7 @@ export default function reducer(state = defaultState, action) {
 		return state.merge({
 			loading: true,
 			error: false,
+			journal: {},
 		});	
 	case GET_JOURNAL_DATA_SUCCESS:
 		return state.merge({

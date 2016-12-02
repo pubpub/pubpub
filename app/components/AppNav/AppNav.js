@@ -127,5 +127,7 @@ styles = {
 		display: 'inline-block',
 		borderRadius: '2px',
 		verticalAlign: 'top',
+		position: 'relative',
+		top: '2px',
 	},
 };
