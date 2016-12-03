@@ -89,8 +89,6 @@ export const Pub = React.createClass({
 	},
 
 	render() {
-		console.log(this.props.pubData.pub.title);
-		console.log(this.props.pubData.loading);
 		if (!this.props.pubData.pub.title && !this.props.pubData.error) {
 			return <div>Loading</div>;
 		}
