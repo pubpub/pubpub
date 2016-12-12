@@ -6,6 +6,7 @@ const webpack = require('webpack');
 const del = require('del');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const HtmlPluginRemove = require('html-webpack-plugin-remove');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 class CleanPlugin {
 	constructor(options) {
@@ -44,6 +45,10 @@ module.exports = {
 			template: 'index.html',
 		}),
 		new HtmlPluginRemove(/<script type="text\/javascript" src="\/app.js"><\/script>/),
+		new CopyWebpackPlugin([
+			{ from: 'static', to: 'static' },
+			{ from: '_redirects' },
+		])
 	],
 	module: {
 		loaders: [
