@@ -43,6 +43,8 @@
     "express": "^4.14.0",
     "fuzzysearch": "^1.0.3",
     "glob": "^7.1.1",
+    "html-loader": "^0.4.4",
+    "html-webpack-plugin-remove": "0.0.2",
     "http-proxy": "^1.14.0",
     "immutable": "^3.8.1",
     "intl": "^1.2.5",

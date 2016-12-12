@@ -17,6 +17,10 @@ body {
 
 /* Input Fields */
 /* ------------ */
+form {
+	margin-bottom: 0em;
+}
+
 label {
 	display: block;
 	color: #58585B;

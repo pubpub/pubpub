@@ -10,9 +10,9 @@ import { AppNav, AppFooter } from 'components';
 import { login, logout } from './actions';
 
 
-if (process.env.NODE_ENV !== 'production') {
+// if (process.env.NODE_ENV !== 'production') {
 	require('../../../static/style.css');
-}
+// }
 
 addLocaleData([...en, ...fr, ...es]);
 
