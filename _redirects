@@ -1,4 +1,4 @@
-/*    /index.html   200
-/api/*  https://pubpub-api-v2-dev.herokuapp.com/:splat  200
 /favicon.ico  /static/favicon.ico
 /robots.txt  /static/robots.txt
+/api/*  https://pubpub-api-v2-dev.herokuapp.com/:splat  200
+/*    /index.html   200
