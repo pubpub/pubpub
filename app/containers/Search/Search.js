@@ -30,6 +30,10 @@ export const Search = React.createClass({
 		}
 	},
 
+	componentDidMount() {
+		this.props.dispatch(search(this.props.location.query.q));
+	},
+
 	getInitialState() {
 		return {
 			searchString: '',
