@@ -24,13 +24,13 @@ export const App = React.createClass({
 		dispatch: PropTypes.func,
 	},
 
-	statics: {
-		readyOnActions: function(dispatch) {
-			return Promise.all([
-				dispatch(login())
-			]);
-		}
-	},
+	// statics: {
+	// 	readyOnActions: function(dispatch) {
+	// 		return Promise.all([
+				
+	// 		]);
+	// 	}
+	// },
 
 	logoutHandler: function() {
 		this.props.dispatch(logout());
@@ -38,6 +38,7 @@ export const App = React.createClass({
 	componentDidMount() {
 		const FocusStyleManager = require('@blueprintjs/core').FocusStyleManager;
 		FocusStyleManager.onlyShowFocusOnTabs();
+		this.props.dispatch(login());
 	},
 
 	render() {
