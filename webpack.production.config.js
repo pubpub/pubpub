@@ -62,7 +62,7 @@ module.exports = {
 			{ test: /\.png$/, loader: 'file-loader' },
 			{ test: /\.jpg$/, loader: 'file-loader' },
 			{ test: /\.json$/, loader: 'json-loader' },
-			{ test: /\.html$/, loader: 'html' }
+			{ test: /\.html$/, loader: 'html-loader' }
 		]
 	},
 	resolve: {
