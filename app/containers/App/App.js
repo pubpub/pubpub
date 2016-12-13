@@ -73,11 +73,11 @@ export const App = React.createClass({
 							{ name: 'twitter:image:alt', content: 'Logo for List of Links' }
 						]} 
 					/> 
-					<div style={hiddenStyle}>
+					{/*<div style={hiddenStyle}>*/}
 						<AppNav accountData={this.props.accountData} logoutHandler={this.logoutHandler} />
 						<div style={{ minHeight: 'calc(100vh - 75px)' }}>{this.props.children}</div>
 						<AppFooter />
-					</div>
+					{/*</div>*/}
 				</StyleRoot>
 			</IntlProvider>
 		);
