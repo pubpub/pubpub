@@ -86,7 +86,6 @@
 		"__DISABLE_SSR__": true,
 		"__DEVTOOLS__": true,
 		"socket": true,
-		"clientFetch": true,
-		"webpackIsomorphicTools": true
+		"clientFetch": true
 	}
 }

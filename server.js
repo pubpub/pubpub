@@ -2,11 +2,6 @@ if (process.env.NODE_ENV !== 'production') {
 	require('./config');
 }
 
-if (process.env.NODE_ENV === 'production') {
-	const fs = require('fs');
-	global.__MAINBUNDLE__ = fs.readdirSync('./dist/')[0];
-}
-
 require('babel-core/register');
 
 require.extensions['.css'] = () => { return; };
@@ -86,18 +81,6 @@ if (!process.env.NODE_ENV) {
 	});
 }
 
-
-
-
-
-// server.get('*', require('./app').serverMiddleware);
-// server.get('*', function(req, res) {
-// 	// res.sendFile(require('html!./index.html'));
-// 	console.log('huh');
-// 	// console.log(require('html?./index.html'));
-// 	// return res.sendFile(__dirname + '/index.html');
-// 	// res.redirect('//localhost:3000/');
-// });
 
 server.listen(port, (err) => {
 	if (err) console.error(err);
