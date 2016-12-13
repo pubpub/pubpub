@@ -97,7 +97,7 @@ export const Landing = React.createClass({
 
 function mapStateToProps(state) {
 	return {
-		appData: state.app,
+		appData: state.app.toJS(),
 	};
 }
 

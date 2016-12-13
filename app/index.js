@@ -8,11 +8,11 @@ import routes from './Routes';
 import configureStore from './configureStore';
 
 import fetch from 'isomorphic-fetch';
-console.log(fetch);
 
 const store = configureStore();
-console.log('loading store!');
 // ga.initialize('UA-85097FF6-1');
+
+if (/PhantomJS/.test(window.navigator.userAgent)) { require('es6-promise').polyfill(); }
 
 function logPageView() {
 	ga.set({ page: window.location.pathname });
