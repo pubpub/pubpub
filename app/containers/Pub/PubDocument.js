@@ -3,7 +3,7 @@ import Radium from 'radium';
 // import ReactMarkdown from 'react-markdown';
 import { Link } from 'react-router';
 import ReactMarkdown from 'react-markdown';
-import { Popover, PopoverInteractionKind, Position, Menu, MenuItem, NonIdealState } from 'components/Blueprint';
+import { Popover, PopoverInteractionKind, Position, Menu, MenuItem, NonIdealState } from '@blueprintjs/core';
 
 let styles;
 

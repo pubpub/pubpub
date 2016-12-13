@@ -2,11 +2,6 @@ if (process.env.NODE_ENV !== 'production') {
 	require('./config');
 }
 
-if (process.env.NODE_ENV === 'production') {
-	const fs = require('fs');
-	global.__MAINBUNDLE__ = fs.readdirSync('./dist/')[0];
-}
-
 require('babel-core/register');
 
 require.extensions['.css'] = () => { return; };
@@ -34,8 +29,26 @@ process.on('unhandledRejection', (reason, promise) => {
 
 server.use('/favicon.ico', express.static(path.resolve(__dirname, 'static/favicon.ico')));
 server.use('/robots.txt', express.static(path.resolve(__dirname, 'static/robots.txt')));
-server.use(express.static(path.resolve(__dirname, 'dist')));
 server.use('/static', express.static(path.resolve(__dirname, 'static')));
+server.use('/dist', express.static(path.resolve(__dirname, 'dist')));
+
+
+const httpProxy = require('http-proxy');
+const proxy = httpProxy.createProxyServer({
+	changeOrigin: true,
+	target: process.env.API_URL || 'http://localhost:9876',
+});
+
+server.use('/api', (req, res) => {
+	proxy.web(req, res);
+});
+
+proxy.on('error', (error, req, res) => {
+	// added the error handling to avoid https://github.com/nodejitsu/node-http-proxy/issues/527
+	if (error.code !== 'ECONNRESET') { console.error('proxy error', error); }
+	if (!res.headersSent) { res.writeHead(500, { 'content-type': 'application/json' }); }
+	res.end(JSON.stringify({ error: 'proxy_error', reason: error.message }));
+});
 
 if (!process.env.NODE_ENV) {
 	const compiler = webpack(config);
@@ -56,31 +69,18 @@ if (!process.env.NODE_ENV) {
 		const translate = require('./translations/compileTranslations');
 		translate();
 	});
+
+	server.get('/*', function(req, res) {
+		res.sendFile(path.resolve(__dirname, 'index.html'));
+	});
+
+} else {
+	server.use(express.static(path.resolve(__dirname, 'dist')));
+	server.get('/*', function(req, res) {
+		res.sendFile(path.resolve(__dirname, 'dist/index.html'));
+	});
 }
 
-const httpProxy = require('http-proxy');
-const proxy = httpProxy.createProxyServer({
-	changeOrigin: true,
-	target: process.env.API_URL || 'http://localhost:9876',
-});
-
-server.use('/api', (req, res) => {
-	proxy.web(req, res);
-});
-
-// proxy.on('proxyReq', function(proxyReq, req, res, options) {
-// 	console.log(proxyReq);
-//   // proxyReq.setHeader('X-Special-Proxy-Header', 'foobar');
-// });
-
-// added the error handling to avoid https://github.com/nodejitsu/node-http-proxy/issues/527
-proxy.on('error', (error, req, res) => {
-	if (error.code !== 'ECONNRESET') { console.error('proxy error', error); }
-	if (!res.headersSent) { res.writeHead(500, { 'content-type': 'application/json' }); }
-	res.end(JSON.stringify({ error: 'proxy_error', reason: error.message }));
-});
-
-server.get('*', require('./app').serverMiddleware);
 
 server.listen(port, (err) => {
 	if (err) console.error(err);

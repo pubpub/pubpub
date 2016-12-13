@@ -10,9 +10,9 @@ import { AppNav, AppFooter } from 'components';
 import { login, logout } from './actions';
 
 
-if (process.env.NODE_ENV !== 'production') {
+// if (process.env.NODE_ENV !== 'production') {
 	require('../../../static/style.css');
-}
+// }
 
 addLocaleData([...en, ...fr, ...es]);
 
@@ -24,13 +24,13 @@ export const App = React.createClass({
 		dispatch: PropTypes.func,
 	},
 
-	statics: {
-		readyOnActions: function(dispatch) {
-			return Promise.all([
-				dispatch(login())
-			]);
-		}
-	},
+	// statics: {
+	// 	readyOnActions: function(dispatch) {
+	// 		return Promise.all([
+				
+	// 		]);
+	// 	}
+	// },
 
 	logoutHandler: function() {
 		this.props.dispatch(logout());
@@ -38,11 +38,19 @@ export const App = React.createClass({
 	componentDidMount() {
 		const FocusStyleManager = require('@blueprintjs/core').FocusStyleManager;
 		FocusStyleManager.onlyShowFocusOnTabs();
+		this.props.dispatch(login());
 	},
 
 	render() {
 		const messages = {};
 		const locale = 'en';
+		const loginFinished = this.props.appData.loginFinished;
+		// const hiddenStyle = loginFinished
+		// 	? {}
+		// 	: {
+		// 		height: '0px',
+		// 		overflow: 'hidden',
+		// 	};
 		return (
 			<IntlProvider locale={locale} messages={messages}>
 				<StyleRoot>
@@ -65,9 +73,11 @@ export const App = React.createClass({
 							{ name: 'twitter:image:alt', content: 'Logo for List of Links' }
 						]} 
 					/> 
-					<AppNav accountData={this.props.accountData} logoutHandler={this.logoutHandler} />
-					<div style={{ minHeight: 'calc(100vh - 75px)' }}>{this.props.children}</div>
-					<AppFooter />
+					{/*<div style={hiddenStyle}>*/}
+						<AppNav accountData={this.props.accountData} logoutHandler={this.logoutHandler} />
+						<div style={{ minHeight: 'calc(100vh - 75px)' }}>{this.props.children}</div>
+						<AppFooter />
+					{/*</div>*/}
 				</StyleRoot>
 			</IntlProvider>
 		);
@@ -77,7 +87,7 @@ export const App = React.createClass({
 
 function mapStateToProps(state) {
 	return {
-		appData: state.app,
+		appData: state.app.toJS(),
 		accountData: state.account.toJS(),
 	};
 }

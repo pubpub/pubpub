@@ -7,7 +7,6 @@ export Journal from './Journal/Journal';
 export Login from './Login/Login';
 export NoMatch from './NoMatch/NoMatch';
 export Pub from './Pub/Pub';
-export Root from './Root/Root';
 export Search from './Search/Search';
 export SignUp from './SignUp/SignUp';
 export User from './User/User';

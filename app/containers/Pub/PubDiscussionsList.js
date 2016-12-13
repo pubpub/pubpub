@@ -2,7 +2,7 @@ import React, { PropTypes } from 'react';
 import { Link, browserHistory } from 'react-router';
 import Radium from 'radium';
 import dateFormat from 'dateformat';
-import { Popover, PopoverInteractionKind, Position, Menu, MenuItem, MenuDivider } from 'components/Blueprint';
+import { Popover, PopoverInteractionKind, Position, Menu, MenuItem, MenuDivider } from '@blueprintjs/core';
 import PubDiscussionsListFilterButton from './PubDiscussionsListFilterButton';
 import PubLabelList from './PubLabelList';
 

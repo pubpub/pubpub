@@ -4,6 +4,9 @@
 const path = require('path');
 const webpack = require('webpack');
 const del = require('del');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const HtmlPluginRemove = require('html-webpack-plugin-remove');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 class CleanPlugin {
 	constructor(options) {
@@ -37,7 +40,15 @@ module.exports = {
 			'process.env': {
 				NODE_ENV: JSON.stringify('production'),
 			}
-		})
+		}),
+		new HtmlWebpackPlugin({
+			template: 'index.html',
+		}),
+		new HtmlPluginRemove(/<script type="text\/javascript" src="\/app.js"><\/script>/),
+		new CopyWebpackPlugin([
+			{ from: 'static', to: 'static' },
+			{ from: '_redirects' },
+		])
 	],
 	module: {
 		loaders: [
@@ -55,7 +66,8 @@ module.exports = {
 			{ test: /\.svg$/, loader: 'file-loader' },
 			{ test: /\.png$/, loader: 'file-loader' },
 			{ test: /\.jpg$/, loader: 'file-loader' },
-			{ test: /\.json$/, loader: 'json-loader' }
+			{ test: /\.json$/, loader: 'json-loader' },
+			{ test: /\.html$/, loader: 'html-loader' }
 		]
 	},
 	resolve: {

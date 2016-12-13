@@ -2,7 +2,7 @@ import React, { PropTypes } from 'react';
 import Radium from 'radium';
 // import ReactMarkdown from 'react-markdown';
 import { Link } from 'react-router';
-import { Popover, PopoverInteractionKind, Position, Menu, MenuItem, NonIdealState, ProgressBar, Spinner } from 'components/Blueprint';
+import { Popover, PopoverInteractionKind, Position, Menu, MenuItem, NonIdealState, ProgressBar, Spinner } from '@blueprintjs/core';
 import { s3Upload } from 'utils/uploadFile';
 import ReactMarkdown from 'react-markdown';
 import { postVersion } from './actionsVersions';

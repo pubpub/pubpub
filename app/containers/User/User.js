@@ -31,12 +31,16 @@ export const User = React.createClass({
 		}
 	},
 	componentDidMount() {
+		// window.prerenderReady = false;
 		// Need to check here so that getUser doesn't make a fetch twice
 		const user = this.props.userData.user || {};
 		const params = this.props.params || {};
-		if (this.props.userData.user !== null && user.username !== params.username) {
-			User.readyOnActions(this.props.dispatch, this.props.params);	
-		}
+		// if (this.props.userData.user !== null && user.username !== params.username) {
+		// 	console.log('in the did mount request');
+		// 	User.readyOnActions(this.props.dispatch, this.props.params);	
+		// }
+
+		this.props.dispatch(getUserData(this.props.params.username));
 	},
 
 	// getInitialState() {
@@ -113,6 +117,7 @@ export const User = React.createClass({
 			return <div>Loading</div>;
 		}
 
+		// window.prerenderReady = true;
 		return (
 			<div style={styles.container}>
 				<Helmet {...metaData} />

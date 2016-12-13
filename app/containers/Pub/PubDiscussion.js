@@ -6,7 +6,7 @@ import { globalMessages } from 'utils/globalMessages';
 import { FormattedMessage } from 'react-intl';
 import dateFormat from 'dateformat';
 import ReactMarkdown from 'react-markdown';
-import { Popover, PopoverInteractionKind, Position, Menu, MenuItem, MenuDivider, Tooltip } from 'components/Blueprint';
+import { Popover, PopoverInteractionKind, Position, Menu, MenuItem, MenuDivider, Tooltip } from '@blueprintjs/core';
 import { postDiscussion } from './actionsDiscussions'
 import PubLabelList from './PubLabelList';
 

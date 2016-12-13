@@ -3,8 +3,7 @@ import { connect } from 'react-redux';
 import { browserHistory, Link } from 'react-router';
 import Radium from 'radium';
 import Helmet from 'react-helmet';
-import { Tabs, Tab, TabList, TabPanel, Spinner } from 'components/Blueprint';
-// import { Tabs, Tab, TabList, TabPanel, Spinner } from '@blueprintjs/core';
+import { Tabs, Tab, TabList, TabPanel, Spinner } from '@blueprintjs/core';
 
 // import { globalStyles } from 'utils/globalStyles';
 // import { globalMessages } from 'utils/globalMessages';
@@ -28,6 +27,10 @@ export const Search = React.createClass({
 				dispatch(search(location.query.q))
 			]);
 		}
+	},
+
+	componentDidMount() {
+		this.props.dispatch(search(this.props.location.query.q));
 	},
 
 	getInitialState() {
