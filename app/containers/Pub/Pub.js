@@ -262,7 +262,7 @@ export const Pub = React.createClass({
 								<div>
 									<div className="pt-button-group" style={styles.panelButtonGroup}>
 										<Link to={{ pathname: pathname, query: { ...query, panel: 'reviewers' } }} className="pt-button">Invite Reviewer</Link>
-										<Link to={{ pathname: pathname, query: { ...query, panel: 'reviewers' } }} className="pt-button">7</Link>
+										<Link to={{ pathname: pathname, query: { ...query, panel: 'reviewers' } }} className="pt-button">{invitedReviewers.length}</Link>
 									</div>
 
 									<Link to={{ pathname: pathname, query: { ...query, panel: 'new' } }} className="pt-button pt-intent-primary">New Discussion</Link>
@@ -280,7 +280,10 @@ export const Pub = React.createClass({
 						{panel === 'reviewers' && 
 							<PubReviewers 
 								invitedReviewers={invitedReviewers}
+								discussionsData={discussionsData}
 								pubId={pubData.id}
+								pathname={pathname}
+								query={query}
 								dispatch={this.props.dispatch} />
 						}
 						{panel === 'new' && 

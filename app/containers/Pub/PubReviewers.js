@@ -1,5 +1,6 @@
 import React, { PropTypes } from 'react';
 import Radium from 'radium';
+import { Link } from 'react-router';
 import { AutocompleteBar } from 'components';
 import request from 'superagent';
 import dateFormat from 'dateformat';
@@ -10,7 +11,10 @@ let styles;
 export const PubReviewers = React.createClass({
 	propTypes: {
 		invitedReviewers: PropTypes.array,
+		discussionsData: PropTypes.array,
 		pubId: PropTypes.number,
+		pathname: PropTypes.string,
+		query: PropTypes.object,
 		dispatch: PropTypes.func,
 	},
 
@@ -60,7 +64,7 @@ export const PubReviewers = React.createClass({
 
 	render: function() {
 		const invitedReviewers = this.props.invitedReviewers || [];
-
+		const discussionsData = this.props.discussionsData || [];
 		return (
 			<div style={styles.container}>
 				<h2>Reviewers</h2>
@@ -89,13 +93,40 @@ export const PubReviewers = React.createClass({
 
 				{invitedReviewers.map((reviewer, index)=> {
 					const invitedUser = reviewer.invitedUser;
+					const inviterUser = reviewer.inviterUser;
+					const discussionCount = discussionsData.reduce((previous, current)=> {
+						const children = current.children || [];
+						const discussionAuthors = [
+							current.contributors[0].user.username,
+							...children.map((child)=> {
+								return child.contributors[0].user.username;
+							})
+						];
+						return previous + Number(discussionAuthors.includes(invitedUser.username));
+					}, 0);
+
 					return (
-						<div>
-							<img src={'https://jake.pubpub.org/unsafe/50x50/' + invitedUser.image} style={{ width: '50px' }} />	
-							<div style={styles.discussionItemName}>
-								{invitedUser.firstName + ' ' + invitedUser.lastName} · {dateFormat(reviewer.createdAt, 'mmm dd, yyyy')}
+						<div key={'reviewer-' + reviewer.invitedUserId} style={styles.invitationWrapper}>
+							<div style={styles.invitedReviewerWrapper}>
+								<div style={styles.reviewerImageWrapper}>
+									<Link to={'/user/' + invitedUser.username}>
+										<img alt={invitedUser.firstName + ' ' + invitedUser.lastName} src={'https://jake.pubpub.org/unsafe/50x50/' + invitedUser.image} />	
+									</Link>
+								</div>
+								
+								<div style={styles.reviewerDetails}>
+									<div style={styles.reviewerName}>
+										<Link to={'/user/' + invitedUser.username}>{invitedUser.firstName + ' ' + invitedUser.lastName}</Link>
+									</div>
+									<div>Invited on {dateFormat(reviewer.createdAt, 'mmm dd, yyyy')} · <Link to={{ pathname: this.props.pathname, query: { ...this.props.query, panel: undefined, label: undefined, sort: undefined, author: invitedUser.username } }}>{discussionCount} discussions</Link> </div>
+								</div>
 							</div>
-							{/* Provide links to view all the posts by the user. Give a count (4 posts), and then link to the discussions filtered to that author */}
+							<div>
+								<Link to={'/user/' + inviterUser.username}>
+									<img alt={inviterUser.firstName + ' ' + inviterUser.lastName} src={'https://jake.pubpub.org/unsafe/50x50/' + inviterUser.image} style={styles.inviterImage} />	
+								</Link>
+								Invited by <Link to={'/user/' + inviterUser.username}>{inviterUser.firstName + ' ' + inviterUser.lastName}</Link>
+							</div>
 						</div>
 					);
 				})}
@@ -109,5 +140,33 @@ export default Radium(PubReviewers);
 styles = {
 	container: {
 		
+	},
+	invitationWrapper: {
+		padding: '0em 0em 1em',
+		borderBottom: '1px solid #CCC',
+		margin: '0em 0em 1em',
+	},
+	invitedReviewerWrapper: {
+		display: 'table',
+		width: '100%',
+	},
+	reviewerImageWrapper: {
+		width: '50px',
+		display: 'table-cell',
+	},
+	reviewerDetails: {
+		display: 'table-cell',
+		padding: '0em .25em',
+		verticalAlign: 'top',
+	},
+	reviewerName: {
+		padding: '.25em 0em',
+		fontWeight: 'bold',
+	},
+	inviterImage: {
+		width: '25px',
+		verticalAlign: 'middle',
+		padding: '.25em 0em',
+		marginRight: '.25em',
 	},
 };
