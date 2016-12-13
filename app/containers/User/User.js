@@ -30,7 +30,7 @@ export const User = React.createClass({
 			]);
 		}
 	},
-	componentDidMount() {
+	componentWillMount() {
 		// Need to check here so that getUser doesn't make a fetch twice
 		const user = this.props.userData.user || {};
 		const params = this.props.params || {};
@@ -113,6 +113,7 @@ export const User = React.createClass({
 			return <div>Loading</div>;
 		}
 
+		window.prerenderReady = true;
 		return (
 			<div style={styles.container}>
 				<Helmet {...metaData} />
