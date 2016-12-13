@@ -1,10 +1,13 @@
+import Immutable from 'immutable';
+import { ensureImmutable } from './index';
+
 /* ---------- */
 // Load Actions
 /* ---------- */
 import {
-	LOGIN_DATA_LOAD,
-	LOGIN_DATA_SUCCESS,
-	LOGIN_DATA_FAIL,
+	LOGIN_GET_LOAD,
+	LOGIN_GET_SUCCESS,
+	LOGIN_GET_FAIL,
 
 	GET_PUB_LOAD,
 	GET_PUB_SUCCESS,
@@ -27,21 +30,26 @@ import {
 /* ------------------- */
 // Define Default State
 /* ------------------- */
-const defaultState = {
+const defaultState = Immutable.Map({
+	loginFinished: false,
 	loading: false,
 	error: undefined,
 	loginData: {},
 	recentUsers: [],
 	pub: {},
 	user: {},
-};
+});
 
 /* ----------------------------------------- */
 // Bind actions to specific reducing functions
 /* ----------------------------------------- */
 export default function reducer(state = defaultState, action) {
 	switch (action.type) {
-		
+	
+	case LOGIN_GET_SUCCESS:
+	case LOGIN_GET_FAIL:
+		return state.set('loginFinished', true);
+
 	case GET_PUB_SUCCESS:
 		return {
 			...state,
@@ -101,6 +109,6 @@ export default function reducer(state = defaultState, action) {
 		};
 
 	default:
-		return state;
+		return ensureImmutable(state);
 	}
 }

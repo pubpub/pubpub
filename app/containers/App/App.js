@@ -44,6 +44,13 @@ export const App = React.createClass({
 	render() {
 		const messages = {};
 		const locale = 'en';
+		const loginFinished = this.props.appData.loginFinished;
+		const hiddenStyle = loginFinished
+			? {}
+			: {
+				height: '0px',
+				overflow: 'hidden',
+			};
 		return (
 			<IntlProvider locale={locale} messages={messages}>
 				<StyleRoot>
@@ -66,9 +73,11 @@ export const App = React.createClass({
 							{ name: 'twitter:image:alt', content: 'Logo for List of Links' }
 						]} 
 					/> 
-					<AppNav accountData={this.props.accountData} logoutHandler={this.logoutHandler} />
-					<div style={{ minHeight: 'calc(100vh - 75px)' }}>{this.props.children}</div>
-					<AppFooter />
+					<div style={hiddenStyle}>
+						<AppNav accountData={this.props.accountData} logoutHandler={this.logoutHandler} />
+						<div style={{ minHeight: 'calc(100vh - 75px)' }}>{this.props.children}</div>
+						<AppFooter />
+					</div>
 				</StyleRoot>
 			</IntlProvider>
 		);
@@ -78,7 +87,7 @@ export const App = React.createClass({
 
 function mapStateToProps(state) {
 	return {
-		appData: state.app,
+		appData: state.app.toJS(),
 		accountData: state.account.toJS(),
 	};
 }
