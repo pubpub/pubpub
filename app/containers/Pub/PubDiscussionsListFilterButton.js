@@ -1,5 +1,5 @@
 import React, { PropTypes } from 'react';
-import { Popover, PopoverInteractionKind, Position, Menu, MenuItem, MenuDivider } from 'components/Blueprint';
+import { Popover, PopoverInteractionKind, Position } from '@blueprintjs/core';
 
 let styles;
 
@@ -12,9 +12,9 @@ export const PubDiscussionsListFilterButton = React.createClass({
 
 	render: function() {
 		let position;
-		if (this.props.position === 0) { position = Position.BOTTOM_LEFT }
-		if (this.props.position === 1) { position = Position.BOTTOM }
-		if (this.props.position === 2) { position = Position.BOTTOM_RIGHT }
+		if (this.props.position === 0) { position = Position.BOTTOM_LEFT; }
+		if (this.props.position === 1) { position = Position.BOTTOM; }
+		if (this.props.position === 2) { position = Position.BOTTOM_RIGHT; }
 
 		return (
 			<Popover 

@@ -23,7 +23,7 @@ export function getPubData(slug) {
 	return (dispatch) => {
 		dispatch({ type: GET_PUB_DATA_LOAD });
 
-		return clientFetch('https://pubpub-api-v2-dev.herokuapp.com/pub/?slug=' + slug, {
+		return clientFetch('/api/pub/?slug=' + slug, {
 			method: 'GET'
 		})
 		.then((result) => {

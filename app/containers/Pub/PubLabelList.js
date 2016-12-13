@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react';
 import Radium from 'radium';
-import { Popover, PopoverInteractionKind, Position, Menu, MenuItem, NonIdealState, Spinner } from 'components/Blueprint';
+import { Popover, PopoverInteractionKind, Position, Menu, MenuItem, NonIdealState, Spinner } from '@blueprintjs/core';
 import { CirclePicker } from 'react-color';
 import { Link as UnwrappedLink } from 'react-router';
 const Link = Radium(UnwrappedLink);
