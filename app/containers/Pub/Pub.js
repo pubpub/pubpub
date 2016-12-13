@@ -95,6 +95,9 @@ export const Pub = React.createClass({
 		if (!this.props.pubData.pub.title && this.props.pubData.error) {
 			return <div>Error</div>;
 		}
+
+		window.prerenderReady = true;
+		
 		const currentFile = this.props.params.filename;
 		const meta = currentFile ? 'files' : this.props.params.meta;
 		const query = this.props.location.query;

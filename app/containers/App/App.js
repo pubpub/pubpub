@@ -45,12 +45,12 @@ export const App = React.createClass({
 		const messages = {};
 		const locale = 'en';
 		const loginFinished = this.props.appData.loginFinished;
-		const hiddenStyle = loginFinished
-			? {}
-			: {
-				height: '0px',
-				overflow: 'hidden',
-			};
+		// const hiddenStyle = loginFinished
+		// 	? {}
+		// 	: {
+		// 		height: '0px',
+		// 		overflow: 'hidden',
+		// 	};
 		return (
 			<IntlProvider locale={locale} messages={messages}>
 				<StyleRoot>
