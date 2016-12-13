@@ -30,15 +30,15 @@ module.exports = {
 		new CleanPlugin({
 			files: ['dist/*']
 		}),
+		new webpack.DefinePlugin({
+			'process.env': {
+				NODE_ENV: JSON.stringify('production'),
+			}
+		}),
 		new webpack.optimize.UglifyJsPlugin({
 			compressor: {
 				warnings: false,
 				screw_ie8: true
-			}
-		}),
-		new webpack.DefinePlugin({
-			'process.env': {
-				NODE_ENV: JSON.stringify('production'),
 			}
 		}),
 		new HtmlWebpackPlugin({
