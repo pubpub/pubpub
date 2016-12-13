@@ -7,9 +7,11 @@ import { Provider } from 'react-redux';
 import routes from './Routes';
 import configureStore from './configureStore';
 
+import fetch from 'isomorphic-fetch';
+console.log(fetch);
 
 const store = configureStore();
-
+console.log('loading store!');
 // ga.initialize('UA-85097FF6-1');
 
 function logPageView() {
