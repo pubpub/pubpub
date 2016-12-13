@@ -12,6 +12,7 @@ import { login, logout } from './actions';
 
 // if (process.env.NODE_ENV !== 'production') {
 	require('../../../static/style.css');
+	require('../../../static/blueprint.scss');
 // }
 
 addLocaleData([...en, ...fr, ...es]);

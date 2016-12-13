@@ -16,6 +16,7 @@ import { getJournalData } from './actions';
 import JournalHeader from './JournalHeader';
 import JournalLayout from './JournalLayout';
 import JournalDetails from './JournalDetails';
+import JournalSubmitted from './JournalSubmitted';
 
 let styles;
 
@@ -68,37 +69,37 @@ export const Journal = React.createClass({
 		const metaData = {
 			title: journal.name + ' · PubPub',
 			meta: [
-				{property: 'og:title', content: (journal.name || journal.slug)},
-				{property: 'og:type', content: 'article'},
-				{property: 'og:description', content: journal.shortDescription},
-				{property: 'og:url', content: 'https://www.pubpub.org/' + journal.slug},
-				{property: 'og:image', content: journal.icon},
-				{property: 'og:image:url', content: journal.icon},
-				{property: 'og:image:width', content: '500'},
-				{name: 'twitter:card', content: 'summary'},
-				{name: 'twitter:site', content: '@pubpub'},
-				{name: 'twitter:title', content: (journal.name || journal.slug)},
-				{name: 'twitter:description', content: journal.shortDescription || journal.longDescription || journal.name || journal.slug},
-				{name: 'twitter:image', content: journal.icon},
-				{name: 'twitter:image:alt', content: 'Image for ' + (journal.name || journal.slug)}
+				{ property: 'og:title', content: (journal.name || journal.slug) },
+				{ property: 'og:type', content: 'article' },
+				{ property: 'og:description', content: journal.shortDescription },
+				{ property: 'og:url', content: 'https://www.pubpub.org/' + journal.slug },
+				{ property: 'og:image', content: journal.icon },
+				{ property: 'og:image:url', content: journal.icon },
+				{ property: 'og:image:width', content: '500' },
+				{ name: 'twitter:card', content: 'summary' },
+				{ name: 'twitter:site', content: '@pubpub' },
+				{ name: 'twitter:title', content: (journal.name || journal.slug) },
+				{ name: 'twitter:description', content: journal.shortDescription || journal.longDescription || journal.name || journal.slug },
+				{ name: 'twitter:image', content: journal.icon },
+				{ name: 'twitter:image:alt', content: 'Image for ' + (journal.name || journal.slug) }
 			]
 		};
 
 		const mobileNavButtons = [
-			{ type: 'link', mobile: true, text: <FormattedMessage {...globalMessages.About}/>, link: '/' + this.props.params.slug + '/about' },
-			{ type: 'button', mobile: true, text: <FormattedMessage {...globalMessages.Menu}/>, action: undefined },
+			{ type: 'link', mobile: true, text: <FormattedMessage {...globalMessages.About} />, link: '/' + this.props.params.slug + '/about' },
+			{ type: 'button', mobile: true, text: <FormattedMessage {...globalMessages.Menu} />, action: undefined },
 		];
 
 		let adminNav = [
-			{ type: 'title', text: <FormattedMessage {...globalMessages.Admin}/>},
-			{ type: 'link', text: <FormattedMessage {...globalMessages.Details}/>, link: '/' + this.props.params.slug + '/details', active: mode === 'details' },
-			{ type: 'link', text: <FormattedMessage {...globalMessages.Layout}/>, link: '/' + this.props.params.slug + '/layout', active: mode === 'layout' },
-			{ type: 'link', text: <FormattedMessage {...globalMessages.Featured}/>, link: '/' + this.props.params.slug + '/featured', active: mode === 'featured' },
-			{ type: 'link', text: <FormattedMessage {...globalMessages.Submitted}/>, link: '/' + this.props.params.slug + '/submitted', active: mode === 'submitted' },
-			{ type: 'link', text: <FormattedMessage {...globalMessages.Collections}/>, link: '/' + this.props.params.slug + '/collections', active: mode === 'collections' },
-			{ type: 'link', text: <FormattedMessage {...globalMessages.Admins}/>, link: '/' + this.props.params.slug + '/admins', active: mode === 'admins' },
+			{ type: 'title', text: <FormattedMessage {...globalMessages.Admin} /> },
+			{ type: 'link', text: <FormattedMessage {...globalMessages.Details} />, link: '/' + this.props.params.slug + '/details', active: mode === 'details' },
+			{ type: 'link', text: <FormattedMessage {...globalMessages.Layout} />, link: '/' + this.props.params.slug + '/layout', active: mode === 'layout' },
+			{ type: 'link', text: <FormattedMessage {...globalMessages.Featured} />, link: '/' + this.props.params.slug + '/featured', active: mode === 'featured' },
+			{ type: 'link', text: <FormattedMessage {...globalMessages.Submitted} />, link: '/' + this.props.params.slug + '/submitted', active: mode === 'submitted' },
+			{ type: 'link', text: <FormattedMessage {...globalMessages.Collections} />, link: '/' + this.props.params.slug + '/collections', active: mode === 'collections' },
+			{ type: 'link', text: <FormattedMessage {...globalMessages.Admins} />, link: '/' + this.props.params.slug + '/admins', active: mode === 'admins' },
 			{ type: 'spacer' },
-			{ type: 'title', text: <FormattedMessage {...globalMessages.Public}/>},
+			{ type: 'title', text: <FormattedMessage {...globalMessages.Public} /> },
 		];
 
 		if (!isAdmin) {
@@ -112,9 +113,9 @@ export const Journal = React.createClass({
 
 		const navItems = [
 			...adminNav,
-			{ type: 'link', text: <FormattedMessage {...globalMessages.About}/>, link: '/' + this.props.params.slug + '/about', active: mode === 'about' },
-			{ type: 'link', text: <FormattedMessage {...globalMessages.RecentActivity}/>, link: '/' + this.props.params.slug, active: !mode},
-			{ type: 'link', text: <FormattedMessage {...globalMessages.Followers}/>, link: '/' + this.props.params.slug + '/followers', active: mode === 'followers'},
+			{ type: 'link', text: <FormattedMessage {...globalMessages.About} />, link: '/' + this.props.params.slug + '/about', active: mode === 'about' },
+			{ type: 'link', text: <FormattedMessage {...globalMessages.RecentActivity} />, link: '/' + this.props.params.slug, active: !mode},
+			{ type: 'link', text: <FormattedMessage {...globalMessages.Followers} />, link: '/' + this.props.params.slug + '/followers', active: mode === 'followers'},
 
 			{ type: 'spacer' },
 			...collectionItems,
@@ -162,6 +163,14 @@ export const Journal = React.createClass({
 									journal={journal}
 									isLoading={this.props.journalData.putDataLoading}
 									error={this.props.journalData.putDataError}
+									dispatch={this.props.dispatch} />
+							);
+						case 'submitted':
+							return (
+								<JournalSubmitted
+									journal={journal}
+									isLoading={this.props.journalData.submissionsLoading}
+									error={this.props.journalData.submissionsError}
 									dispatch={this.props.dispatch} />
 							);
 						case 'notFound':

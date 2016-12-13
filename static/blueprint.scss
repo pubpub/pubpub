@@ -1,0 +1,26 @@
+$icon-font-path: "~@blueprintjs/core/resources/icons";
+@import "~@blueprintjs/core/src/common/_colors.scss";
+@import "~@blueprintjs/core/src/common/_variables.scss";
+
+// Override sass Variables here
+// ****************************
+$pt-intent-primary: $dark-gray3;
+$pt-link-color: $dark-gray2;
+$pt-border-radius: floor($pt-grid-size / 5);
+$dark-navbar-background-color: $dark-gray2;
+
+// Import Core Blueprint sass
+// ****************************
+@import "~@blueprintjs/core/src/blueprint.scss";
+
+// Override component styles here
+// ****************************
+.pt-button.pt-intent-primary:hover {
+	background: $dark-gray2;
+	background: -webkit-linear-gradient( top , rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0)) left no-repeat, center no-repeat $dark-gray2;
+	background: linear-gradient(to bottom, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0)) left no-repeat, center no-repeat $dark-gray2;
+}
+
+.pt-button.pt-intent-primary:active, .pt-intent-primary.pt-button.pt-active {
+	background: $dark-gray1;
+}

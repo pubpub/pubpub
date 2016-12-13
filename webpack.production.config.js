@@ -63,11 +63,14 @@ module.exports = {
 				}
 			},
 			{ test: /\.css$/, loader: 'style-loader!css-loader!sass-loader' },
+			{ test: /\.scss$/, loader: 'style-loader!css-loader!sass-loader' },
 			{ test: /\.svg$/, loader: 'file-loader' },
 			{ test: /\.png$/, loader: 'file-loader' },
 			{ test: /\.jpg$/, loader: 'file-loader' },
 			{ test: /\.json$/, loader: 'json-loader' },
-			{ test: /\.html$/, loader: 'html-loader' }
+			{ test: /\.html$/, loader: 'html-loader' },
+			{ test: /\.(woff|woff2)$/, use: 'url-loader', options: { name: 'fonts/[hash].[ext]', limit: 5000, mimetype: 'application/font-woff' } }, 
+			{ test: /\.(ttf|eot|svg)$/, use: 'file-loader', options: { name: 'fonts/[hash].[ext]' } }
 		]
 	},
 	resolve: {

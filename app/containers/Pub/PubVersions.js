@@ -17,9 +17,11 @@ export const PubVersions = React.createClass({
 
 				{this.props.versionsData.map((item)=> {
 					return (
-						<Link to={{ pathname: '/pub', query: {...this.props.location.query, version: item.id }}}>
-							<div>{item.versionMessage} | Public: {item.public ? 'true' : 'false'}</div>
-						</Link>
+						<div key={'version-' + item.id}>
+							<Link to={{ pathname: '/pub', query: {...this.props.location.query, version: item.id }}}>
+								<div>{item.versionMessage} | Public: {item.public ? 'true' : 'false'}</div>
+							</Link>
+						</div>
 					);
 				})}
 

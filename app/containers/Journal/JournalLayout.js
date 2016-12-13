@@ -59,8 +59,8 @@ export const JournalLayout = React.createClass({
 	},
 
 	onLogoFinish: function(evt, index, type, filename) {
-		this.setState({logo: 'https://assets.pubpub.org/' + filename});
-		this.props.handleHeaderUpdate({logo: 'https://assets.pubpub.org/' + filename});
+		this.setState({ logo: 'https://assets.pubpub.org/' + filename });
+		this.props.handleHeaderUpdate({ logo: 'https://assets.pubpub.org/' + filename });
 	},
 
 	handleHeaderImageSelect: function(evt) {
@@ -70,28 +70,28 @@ export const JournalLayout = React.createClass({
 	},
 
 	onHeaderImageFinish: function(evt, index, type, filename) {
-		this.setState({headerImage: 'https://assets.pubpub.org/' + filename});
-		this.props.handleHeaderUpdate({headerImage: 'https://assets.pubpub.org/' + filename});
+		this.setState({ headerImage: 'https://assets.pubpub.org/' + filename });
+		this.props.handleHeaderUpdate({ headerImage: 'https://assets.pubpub.org/' + filename });
 	},
 	clearHeaderImageFinish: function() {
-		this.setState({headerImage: null});
-		this.props.handleHeaderUpdate({headerImage: null});
+		this.setState({ headerImage: null });
+		this.props.handleHeaderUpdate({ headerImage: null });
 	},
 
 	handleColorChange: function(colorChange) {
-		this.setState({headerColor: colorChange.hex});
-		this.props.handleHeaderUpdate({headerColor: colorChange.hex});
+		this.setState({ headerColor: colorChange.hex });
+		this.props.handleHeaderUpdate({ headerColor: colorChange.hex });
 	},
 	handleHeaderModeChange: function(evt) {
 		const newHeaderMode = evt.target.value;
-		this.setState({headerMode: newHeaderMode});
-		this.props.handleHeaderUpdate({headerMode: newHeaderMode});
+		this.setState({ headerMode: newHeaderMode });
+		this.props.handleHeaderUpdate({ headerMode: newHeaderMode });
 	},
 
 	handleHeaderAlignChange: function(evt) {
 		const newHeaderAlign = evt.target.value;
-		this.setState({headerAlign: newHeaderAlign});
-		this.props.handleHeaderUpdate({headerAlign: newHeaderAlign});
+		this.setState({ headerAlign: newHeaderAlign });
+		this.props.handleHeaderUpdate({ headerAlign: newHeaderAlign });
 	},
 
 	saveLayout: function(evt) {
@@ -111,7 +111,7 @@ export const JournalLayout = React.createClass({
 		const journal = this.props.journal || {};
 
 		const metaData = {
-			title: 'Layout' + ' · ' + journal.name,
+			title: 'Layout · ' + journal.name,
 		};
 
 		const isLoading = this.props.isLoading;
@@ -130,7 +130,7 @@ export const JournalLayout = React.createClass({
 
 					<div>
 						<label htmlFor={'logo'}>
-							<FormattedMessage {...globalMessages.JournalLogo}/>
+							<FormattedMessage {...globalMessages.JournalLogo} />
 						</label>
 						{(this.state.logo || journal.logo) &&
 							<img style={styles.image} src={'https://jake.pubpub.org/unsafe/fit-in/500x75/' + (this.state.logo || journal.logo)} />
@@ -141,7 +141,7 @@ export const JournalLayout = React.createClass({
 
 					<div>
 						<label htmlFor={'headerMode'}>
-							<FormattedMessage {...globalMessages.HeaderMode}/>
+							<FormattedMessage {...globalMessages.HeaderMode} />
 						</label>
 						<RadioGroup name="header mode" selectedValue={this.state.headerMode} onChange={this.handleHeaderModeChange}>
 							<Radio value="title" style={styles.radioInput} label={<FormattedMessage {...globalMessages.Title} />} />
@@ -152,7 +152,7 @@ export const JournalLayout = React.createClass({
 
 					<div>
 						<label htmlFor={'headerAlign'}>
-							<FormattedMessage {...globalMessages.HeaderAlign}/>
+							<FormattedMessage {...globalMessages.HeaderAlign} />
 						</label>
 						<RadioGroup name="header align" selectedValue={this.state.headerAlign} onChange={this.handleHeaderAlignChange}>
 							<Radio value="left" style={styles.radioInput} label={<FormattedMessage {...globalMessages.Left} />} /> 
@@ -162,34 +162,34 @@ export const JournalLayout = React.createClass({
 
 					<div>
 						<label htmlFor={'headerAlign'}>
-							<FormattedMessage {...globalMessages.BackgroundColor}/>
+							<FormattedMessage {...globalMessages.BackgroundColor} />
 						</label>
 						<div className={'colorPicker'}>
-							<ChromePicker color={this.state.headerColor} disableAlpha={true} onChange={this.handleColorChange}/>
+							<ChromePicker color={this.state.headerColor} disableAlpha={true} onChange={this.handleColorChange} />
 						</div>
 
 					</div>
 
 					<div>
 						<label htmlFor={'headerImage'}>
-							<FormattedMessage {...globalMessages.BackgroundImage}/>
+							<FormattedMessage {...globalMessages.BackgroundImage} />
 						</label>
 						{this.state.headerImage &&
 							<img style={styles.image} src={'https://jake.pubpub.org/unsafe/fit-in/500x0/' + this.state.headerImage} />
 						}
 						<input id={'headerImage'} name={'background image'} type="file" accept="image/*" onChange={this.handleHeaderImageSelect} />
 						<div className={'light-color inputSubtext underlineOnHover'} onClick={this.clearHeaderImageFinish} style={[styles.clear, !this.state.headerImage && {display: 'none'}]}>
-							<FormattedMessage {...globalMessages.Clear}/>
+							<FormattedMessage {...globalMessages.Clear} />
 						</div>
 
 					</div>
 
 
 					<button className={'pt-button pt-intent-primary'} onClick={this.saveLayout}>
-						<FormattedMessage {...globalMessages.SaveLayout}/>
+						<FormattedMessage {...globalMessages.SaveLayout} />
 					</button>
 
-					<div style={styles.loaderContainer}><Loader loading={isLoading} showCompletion={!errorMessage}/></div>
+					<div style={styles.loaderContainer}><Loader loading={isLoading} showCompletion={!errorMessage} /></div>
 
 					<div style={styles.errorMessage}>{errorMessage}</div>
 
