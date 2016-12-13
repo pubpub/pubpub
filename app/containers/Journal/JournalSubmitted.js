@@ -78,13 +78,13 @@ export const JournalSubmitted = React.createClass({
 
 								</div>
 
-								<Dialog isOpen={this.state.confirmFeature !== undefined} onClose={this.toggleFeature.bind(this, undefined)}>
+								<Dialog isOpen={this.state.confirmFeature === submission.id} onClose={this.toggleFeature.bind(this, undefined)}>
 									<div className="pt-dialog-body">
-										Please confirm that you want to accept <b>This Great Pub</b>
+										Please confirm that you want to accept <b>{submission.title}</b>
 									</div>
 									<div className="pt-dialog-footer">
 										<div className="pt-dialog-footer-actions">
-											<button type="button" className="pt-button">Cancel</button>
+											<button type="button" className="pt-button" onClick={this.toggleFeature.bind(this, undefined)}>Cancel</button>
 											<button type="submit" className="pt-button pt-intent-primary">Feature Pub</button>
 										</div>
 									</div>

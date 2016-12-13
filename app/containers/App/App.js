@@ -9,11 +9,8 @@ import es from 'react-intl/locale-data/es';
 import { AppNav, AppFooter } from 'components';
 import { login, logout } from './actions';
 
-
-// if (process.env.NODE_ENV !== 'production') {
-	require('../../../static/style.css');
-	require('../../../static/blueprint.scss');
-// }
+require('../../../static/style.css');
+require('../../../static/blueprint.scss');
 
 addLocaleData([...en, ...fr, ...es]);
 
@@ -24,14 +21,6 @@ export const App = React.createClass({
 		children: PropTypes.object,
 		dispatch: PropTypes.func,
 	},
-
-	// statics: {
-	// 	readyOnActions: function(dispatch) {
-	// 		return Promise.all([
-				
-	// 		]);
-	// 	}
-	// },
 
 	logoutHandler: function() {
 		this.props.dispatch(logout());
