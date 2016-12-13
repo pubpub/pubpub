@@ -2,7 +2,7 @@ import React, { PropTypes } from 'react';
 import { Link, browserHistory } from 'react-router';
 import Radium from 'radium';
 import dateFormat from 'dateformat';
-import { Popover, PopoverInteractionKind, Position, Menu, MenuItem, MenuDivider } from '@blueprintjs/core';
+import { Menu, MenuDivider } from '@blueprintjs/core';
 import PubDiscussionsListFilterButton from './PubDiscussionsListFilterButton';
 import PubLabelList from './PubLabelList';
 
@@ -41,7 +41,7 @@ export const PubDiscussionsList = React.createClass({
 	filterSubmit: function(evt) {
 		evt.preventDefault();
 		const newFilter = this.state.filter.length ? this.state.filter : undefined;
-		browserHistory.push({ pathname: this.props.pathname, query: { ...this.props.query, filter: newFilter } })
+		browserHistory.push({ pathname: this.props.pathname, query: { ...this.props.query, filter: newFilter } });
 	},
 
 	render: function() {
@@ -57,10 +57,10 @@ export const PubDiscussionsList = React.createClass({
 					...current.children.map((discussion)=> {
 						return discussion.contributors[0].user;
 					})
-				]
+				];
 			}, [])
 		];
-		const uniqueAuthorIds = {}
+		const uniqueAuthorIds = {};
 		const uniqueAuthors = allAuthors.filter((author)=> {
 			if (author.id in uniqueAuthorIds === false) {
 				uniqueAuthorIds[author.id] = true;
@@ -132,7 +132,7 @@ export const PubDiscussionsList = React.createClass({
 				{sortList.map((sort, index)=> {
 					const sortMode = query.sort || 'Newest';
 					return (
-						<li key={'sortFilter-' + index}><Link to={{pathname: this.props.pathname, query: { ...this.props.query, sort: sort }}} className="pt-menu-item pt-popover-dismiss">
+						<li key={'sortFilter-' + index}><Link to={{ pathname: this.props.pathname, query: { ...this.props.query, sort: sort } }} className="pt-menu-item pt-popover-dismiss">
 							{sort}
 							{sortMode === sort && <span className={'pt-icon-standard pt-icon-tick pt-menu-item-label'} />}
 						</Link></li>

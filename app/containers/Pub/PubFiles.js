@@ -178,7 +178,8 @@ export const PubFiles = React.createClass({
 
 				}
 
-				<Link to={'/pub/' + this.props.pubSlug + '/files?test=' + Math.random()}><button className={'pt-button pt-intent-warning'}>Random</button></Link>
+				{/* <Link to={'/pub/' + this.props.pubSlug + '/files?test=' + Math.random()}><button className={'pt-button pt-intent-warning'}>Random</button></Link> */}
+
 				{!files.length && !this.state.uploading && !this.state.uploadedFileObjects.length &&
 					<NonIdealState
 						action={
@@ -210,6 +211,11 @@ export const PubFiles = React.createClass({
 				
 				{!!files.length && !this.props.routeFilename &&
 					<div>
+						<div style={{ margin: '-2em 0em 1em 0em' }}>
+							<ul className="pt-breadcrumbs">
+								<li><Link to={'/pub/' + this.props.pubSlug} className="pt-breadcrumb"><span className="pt-icon-standard pt-icon-document" /> Main</Link></li>
+							</ul>
+						</div>
 						<table className="pt-table pt-condensed pt-striped" style={{width: '100%'}}>
 							<thead>
 								<th>Name</th>
@@ -252,12 +258,13 @@ export const PubFiles = React.createClass({
 
 				{this.props.routeFilename && 
 					<div>
-						<div style={{margin: '-2em 0em 1em 0em'}}>
+						<div style={{ margin: '-2em 0em 1em 0em' }}>
 							<ul className="pt-breadcrumbs">
 								<li><Link to={'/pub/' + this.props.pubSlug + '/files'} className="pt-breadcrumb"><span className="pt-icon-standard pt-icon-folder-open" /> Files</Link></li>
 								<li><a className="pt-breadcrumb">{currentFile.name}</a></li>
 							</ul>
 						</div>
+
 						{currentFile.type.indexOf('image') > -1 &&
 							<img src={currentFile.url} style={{maxWidth: '100%'}} />
 						}
@@ -310,7 +317,7 @@ export default Radium(PubFiles);
 
 styles = {
 	container: {
-		padding: '1em',
+		padding: '1.25em',
 	},
 	pubBody: {
 		// padding: '1.25em',

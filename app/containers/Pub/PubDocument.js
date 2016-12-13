@@ -62,37 +62,19 @@ export const PubDocument = React.createClass({
 				}
 				
 				{!!files.length &&
+					<div style={{ margin: '-2em 0em 1em 0em' }}>
+						<ul className="pt-breadcrumbs">
+							<li><Link to={'/pub/' + this.props.pubSlug + '/files'} className="pt-breadcrumb"><span className="pt-icon-standard pt-icon-folder-open" /> {files.length} Files</Link></li>
+						</ul>
+					</div>
+				}
+				{!!files.length &&
 					<div style={styles.pubBody}>
-						<div style={{margin: '-2em 0em 1em 0em'}}>
-							<ul className="pt-breadcrumbs">
-								<li><Link to={'/pub/' + this.props.pubSlug + '/files'} className="pt-breadcrumb"><span className="pt-icon-standard pt-icon-folder-open" /> {files.length} Files</Link></li>
-							</ul>
-						</div>
 						<ReactMarkdown source={mainContent} />
 						<ReactMarkdown source={mainContent} />
 						<ReactMarkdown source={mainContent} />
 						<ReactMarkdown source={mainContent} />
 						<ReactMarkdown source={mainContent} />
-
-						{/*<div className="pt-tag pt-minimal pt-large">13 Files</div>*/}
-
-						{/*
-						<div style={{margin: '-2em 0em 1em 0em'}}>
-							<ul className="pt-breadcrumbs">
-								<li><a className="pt-breadcrumb"><span className="pt-icon-standard pt-icon-folder-open" /> 14 Files</a></li>
-								<li><a className="pt-breadcrumb" href="#">Folder three</a></li>
-								<li><span className="pt-breadcrumb">File</span></li>
-							</ul>
-						</div>
-
-						<h2>Introduction</h2>
-						<p>Blah blah blah. This is a whole bunch of stuff. Woopie. Check out all the differnet stuff I can say when I type. Blah blah blah. This is a whole bunch of stuff. Woopie. Check out all the differnet stuff I can say when I type. Blah blah blah. This is a whole bunch of stuff. Woopie. Check out all the differnet stuff I can say when I type. Blah blah blah. This is a whole bunch of stuff. Woopie. Check out all the differnet stuff I can say when I type. Blah blah blah. This is a whole bunch of stuff. Woopie. Check out all the differnet stuff I can say when I type. Blah blah blah. This is a whole bunch of stuff. Woopie. Check out all the differnet stuff I can say when I type.Blah blah blah. This is a whole bunch of stuff. Woopie. Check out all the differnet stuff I can say when I type. Blah blah blah. This is a whole bunch of stuff. Woopie. Check out all the differnet stuff I can say when I type</p>
-						<h3>Subsection</h3>
-						<p>Blah blah blah. This is a whole bunch of stuff. Woopie. Check out all the differnet stuff I can say when I type</p>
-						<p>Blah blah blah. This is a whole bunch of stuff. Woopie. Check out all the differnet stuff I can say when I type</p>
-						<p>Blah blah blah. This is a whole bunch of stuff. Woopie. Check out all the differnet stuff I can say when I type</p>
-						<p>Blah blah blah. This is a whole bunch of stuff. Woopie. Check out all the differnet stuff I can say when I type</p>
-						*/}
 					</div>
 				}		
 			</div>
