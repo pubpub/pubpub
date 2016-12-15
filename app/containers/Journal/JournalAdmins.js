@@ -1,6 +1,5 @@
 import React, { PropTypes } from 'react';
 import Radium from 'radium';
-import { Popover, PopoverInteractionKind, Position, Menu, MenuItem, MenuDivider, Tooltip } from '@blueprintjs/core';
 import { AutocompleteBar } from 'components';
 import request from 'superagent';
 import { postJournalAdmin, deleteJournalAdmin } from './actionsAdmins';
@@ -25,7 +24,7 @@ export const JournalAdmins = React.createClass({
 		const nextJournal = nextProps.journal || {};
 		const prevAdmins = prevJournal.admins || [];
 		const nextAdmins = nextJournal.admins || [];
-		
+
 		if (prevAdmins.length < nextAdmins.length) {
 			this.setState({ newAdmin: null });
 		}

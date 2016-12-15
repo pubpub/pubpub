@@ -8,10 +8,8 @@ import { InputGroup, NonIdealState } from '@blueprintjs/core';
 import { globalStyles } from 'utils/globalStyles';
 import { globalMessages } from 'utils/globalMessages';
 import { FormattedMessage } from 'react-intl';
-import { putJournalSubmit, postJournalFeature } from './actionsSubmits';
-import { Loader } from 'components';
 
-import { Dialog } from '@blueprintjs/core';
+import JournalCollectionList from './JournalCollectionList';
 
 let styles = {};
 
@@ -87,20 +85,34 @@ export const JournalFeatures = React.createClass({
 						return 0;
 					}).map((pubFeature, index)=> {
 						const pub = pubFeature.pub;
+						const pubCollections = pub.labels.filter((label)=> {
+							return label.journalId === journal.id;
+						});
 						return (
 							<div key={'feature-' + index} style={styles.featureWrapper}>
-								<div style={styles.imageWrapper}>
-									<Link to={'/pub/' + pub.slug}>
-										<img src={pub.previewImage} style={styles.featureImage} />
-									</Link>
+								<div style={styles.featureTable}>
+									<div style={styles.imageWrapper}>
+										<Link to={'/pub/' + pub.slug}>
+											<img src={pub.previewImage} style={styles.featureImage} />
+										</Link>
+									</div>
+									
+									<div style={styles.featureDetails}>
+										<h4><Link to={'/pub/' + pub.slug}>{pub.title}</Link></h4>
+										<p>{pub.description}</p>	
+										<p>Featured on {dateFormat(pubFeature.updatedAt, 'mmmm dd, yyyy')}</p>	
+									</div>
 								</div>
-								
-								<div style={styles.featureDetails}>
-									<h4><Link to={'/pub/' + pub.slug}>{pub.title}</Link></h4>
-									<p>{pub.description}</p>	
-									<p>Featured on {dateFormat(pubFeature.updatedAt, 'mmmm dd, yyyy')}</p>	
-								</div>
-								
+								<JournalCollectionList 
+									allLabels={journal.collections} 
+									selectedLabels={pubCollections} 
+									pubId={pub.id} 
+									journalId={journal.id} 
+									canEdit={true} 
+									canSelect={true} 
+									pathname={''} 
+									query={{}} 
+									dispatch={this.props.dispatch} />
 							</div>
 						);
 					})
@@ -117,9 +129,11 @@ export default Radium(JournalFeatures);
 
 styles = {
 	featureWrapper: {
-		padding: '0em 0em 1em',
+		// padding: '0em 0em 1em',
 		margin: '0em 0em 1em 0em',
 		borderBottom: '1px solid #CCC',
+	},
+	featureTable: {
 		display: 'table',
 		width: '100%',
 	},

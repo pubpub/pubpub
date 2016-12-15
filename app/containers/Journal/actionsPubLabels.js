@@ -4,13 +4,13 @@
 // All action types are defined as constants. Do not manually pass action
 // types as strings in action creators
 /*--------*/
-export const POST_PUB_LABEL_LOAD = 'pub/POST_PUB_LABEL_LOAD';
-export const POST_PUB_LABEL_SUCCESS = 'pub/POST_PUB_LABEL_SUCCESS';
-export const POST_PUB_LABEL_FAIL = 'pub/POST_PUB_LABEL_FAIL';
+export const POST_PUB_LABEL_LOAD = 'journal/POST_PUB_LABEL_LOAD';
+export const POST_PUB_LABEL_SUCCESS = 'journal/POST_PUB_LABEL_SUCCESS';
+export const POST_PUB_LABEL_FAIL = 'journal/POST_PUB_LABEL_FAIL';
 
-export const DELETE_PUB_LABEL_LOAD = 'pub/DELETE_PUB_LABEL_LOAD';
-export const DELETE_PUB_LABEL_SUCCESS = 'pub/DELETE_PUB_LABEL_SUCCESS';
-export const DELETE_PUB_LABEL_FAIL = 'pub/DELETE_PUB_LABEL_FAIL';
+export const DELETE_PUB_LABEL_LOAD = 'journal/DELETE_PUB_LABEL_LOAD';
+export const DELETE_PUB_LABEL_SUCCESS = 'journal/DELETE_PUB_LABEL_SUCCESS';
+export const DELETE_PUB_LABEL_FAIL = 'journal/DELETE_PUB_LABEL_FAIL';
 
 /*--------*/
 // Define Action creators
@@ -19,11 +19,11 @@ export const DELETE_PUB_LABEL_FAIL = 'pub/DELETE_PUB_LABEL_FAIL';
 // action objects (e.g. {type:example, payload:data} ) within dispatch()
 // function calls
 /*--------*/
-export function postPubLabel(pubId, labelId) {
+export function postPubLabel(pubId, labelId, journalId) {
 	return (dispatch) => {
 		dispatch({ type: POST_PUB_LABEL_LOAD });
 
-		return clientFetch('/api/pub/labels', {
+		return clientFetch('/api/journal/labels', {
 			method: 'POST',
 			headers: {
 				Accept: 'application/json',
@@ -31,7 +31,8 @@ export function postPubLabel(pubId, labelId) {
 			},
 			body: JSON.stringify({
 				pubId: pubId,
-				labelId: labelId
+				labelId: labelId,
+				journalId: journalId
 			})
 		})
 		.then((result) => {
@@ -44,11 +45,11 @@ export function postPubLabel(pubId, labelId) {
 	};
 }
 
-export function deletePubLabel(pubId, labelId) {
+export function deletePubLabel(pubId, labelId, journalId) {
 	return (dispatch) => {
 		dispatch({ type: DELETE_PUB_LABEL_LOAD });
 
-		return clientFetch('/api/pub/labels', {
+		return clientFetch('/api/journal/labels', {
 			method: 'DELETE',
 			headers: {
 				Accept: 'application/json',
@@ -56,7 +57,8 @@ export function deletePubLabel(pubId, labelId) {
 			},
 			body: JSON.stringify({
 				pubId: pubId,
-				labelId: labelId
+				labelId: labelId,
+				journalId: journalId
 			})
 		})
 		.then((result) => {

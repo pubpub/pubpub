@@ -34,6 +34,30 @@ import {
 	DELETE_JOURNAL_ADMIN_FAIL,
 } from 'containers/Journal/actionsAdmins';
 
+import {
+	POST_LABEL_LOAD,
+	POST_LABEL_SUCCESS,
+	POST_LABEL_FAIL,
+
+	PUT_LABEL_LOAD,
+	PUT_LABEL_SUCCESS,
+	PUT_LABEL_FAIL,
+
+	DELETE_LABEL_LOAD,
+	DELETE_LABEL_SUCCESS,
+	DELETE_LABEL_FAIL,
+} from 'containers/Journal/actionsLabels';
+
+import {
+	POST_PUB_LABEL_LOAD,
+	POST_PUB_LABEL_SUCCESS,
+	POST_PUB_LABEL_FAIL,
+
+	DELETE_PUB_LABEL_LOAD,
+	DELETE_PUB_LABEL_SUCCESS,
+	DELETE_PUB_LABEL_FAIL,
+} from 'containers/Journal/actionsPubLabels';
+
 /* ------------------- */
 // Define Default State
 /* ------------------- */
@@ -196,6 +220,104 @@ export default function reducer(state = defaultState, action) {
 			adminsLoading: false,
 			adminsError: action.error,
 		});
+
+	case POST_LABEL_LOAD:
+		return state;	
+	case POST_LABEL_SUCCESS:
+		return state.setIn(
+			['journal', 'collections'], 
+			state.getIn(['journal', 'collections']).push(ensureImmutable(action.result))
+		);
+	case POST_LABEL_FAIL:
+		return state;
+
+	case PUT_LABEL_LOAD:
+		return state;	
+	case PUT_LABEL_SUCCESS:
+		return state.setIn(
+			// Update all of the collections associated with a journal. Labels owned by the journal.
+			['journal', 'collections'], 
+			state.getIn(['journal', 'collections']).map((label)=> {
+				if (label.get('id') === action.labelId) {
+					return label.merge({ title: action.title });
+				}
+				return label;
+			})
+		).setIn(
+			// Update all of the labels associated with discussions. Labels applied to a discussion.
+			['journal', 'pubFeatures'],
+			state.getIn(['journal', 'pubFeatures']).map((pubFeature)=> {
+				return pubFeature.setIn(
+					['pub', 'labels'], 
+					pubFeature.getIn(['pub', 'labels']).map((label)=> {
+						if (label.get('id') === action.labelId) {
+							return label.merge({ title: action.title });
+						}
+						return label;
+					})
+				);
+			})
+		);
+	case PUT_LABEL_FAIL:
+		return state;
+
+	case DELETE_LABEL_LOAD:
+		return state;	
+	case DELETE_LABEL_SUCCESS:
+		return state.setIn(
+			// Update all of the collections associated with a journal. 
+			['journal', 'collections'], 
+			state.getIn(['journal', 'collections']).filter((label)=> {
+				return label.get('id') !== action.labelId;
+			})
+		).setIn(
+			// Update all of the collections associated with featured pubs. Labels applied to a featured pub.
+			['journal', 'pubFeatures'],
+			state.getIn(['journal', 'pubFeatures']).map((pubFeature)=> {
+				return pubFeature.setIn(
+					['pub', 'labels'], 
+					pubFeature.getIn(['pub', 'labels']).filter((label)=> {
+						return label.get('id') !== action.labelId;
+					})
+				);
+			})
+		);
+	case DELETE_LABEL_FAIL:
+		return state;
+
+	case POST_PUB_LABEL_LOAD:
+		return state;	
+	case POST_PUB_LABEL_SUCCESS:
+		// Set path based on if we are adding a label to a discussion or to the pub
+		const postPubLabelFeaturedPubIndex = state.getIn(['journal', 'pubFeatures']).reduce((previous, current, index)=> {
+			if (current.getIn(['pub', 'id']) === action.pubId) { return index; }
+			return previous;
+		}, undefined); 
+		const postPubLabelPath = ['journal', 'pubFeatures', postPubLabelFeaturedPubIndex, 'pub', 'labels'];
+		return state.setIn(
+			postPubLabelPath,
+			state.getIn(postPubLabelPath).push(ensureImmutable(action.result))
+		);
+	case POST_PUB_LABEL_FAIL:
+		return state;
+
+	case DELETE_PUB_LABEL_LOAD:
+		return state;	
+	case DELETE_PUB_LABEL_SUCCESS:
+		// Set path based on if we are removing a label from a discussion or from the pub
+		const deletePubLabelFeaturedPubIndex = state.getIn(['journal', 'pubFeatures']).reduce((previous, current, index)=> {
+			if (current.getIn(['pub', 'id']) === action.pubId) { return index; }
+			return previous;
+		}, undefined); 
+		const deletePubLabelPath = ['journal', 'pubFeatures', deletePubLabelFeaturedPubIndex, 'pub', 'labels'];
+		return state.setIn(
+			deletePubLabelPath, 
+			state.getIn(deletePubLabelPath).filter((label)=> {
+				return label.get('id') !== action.labelId;
+			})
+		);
+	case DELETE_PUB_LABEL_FAIL:
+		return state;
 
 	default:
 		return ensureImmutable(state);

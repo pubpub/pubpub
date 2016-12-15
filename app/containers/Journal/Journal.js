@@ -98,7 +98,6 @@ export const Journal = React.createClass({
 			{ type: 'link', text: <FormattedMessage {...globalMessages.Layout} />, link: '/' + this.props.params.slug + '/layout', active: mode === 'layout' },
 			{ type: 'link', text: <FormattedMessage {...globalMessages.Featured} />, link: '/' + this.props.params.slug + '/featured', active: mode === 'featured' },
 			{ type: 'link', text: <FormattedMessage {...globalMessages.Submitted} />, link: '/' + this.props.params.slug + '/submitted', active: mode === 'submitted' },
-			{ type: 'link', text: <FormattedMessage {...globalMessages.Collections} />, link: '/' + this.props.params.slug + '/collections', active: mode === 'collections' },
 			{ type: 'link', text: <FormattedMessage {...globalMessages.Admins} />, link: '/' + this.props.params.slug + '/admins', active: mode === 'admins' },
 			{ type: 'spacer' },
 			{ type: 'title', text: <FormattedMessage {...globalMessages.Public} /> },

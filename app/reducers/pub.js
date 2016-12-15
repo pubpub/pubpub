@@ -379,7 +379,7 @@ export default function reducer(state = defaultState, action) {
 			state.getIn(['pub', 'discussions']).map((discussion)=> {
 				return discussion.setIn(
 					['labels'], 
-					discussion.get('labels').map((label)=> {
+					discussion.get('labels').filter((label)=> {
 						return label.get('id') !== action.labelId;
 					})
 				);
