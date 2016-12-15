@@ -63,6 +63,10 @@ input[type="file"]:focus {
 }
 /* ------------ */
 
+.pub-body img {
+	max-width: 100%;
+}
+
 /*img {
 	max-width: 100%;
 	display: block;
