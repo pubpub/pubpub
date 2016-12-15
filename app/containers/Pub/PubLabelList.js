@@ -1,10 +1,9 @@
 import React, { PropTypes } from 'react';
 import Radium from 'radium';
-import { Popover, PopoverInteractionKind, Position, Menu, MenuItem, NonIdealState, Spinner } from '@blueprintjs/core';
+import { Popover, PopoverInteractionKind, Position, Spinner } from '@blueprintjs/core';
 import { CirclePicker } from 'react-color';
 import { Link as UnwrappedLink } from 'react-router';
 const Link = Radium(UnwrappedLink);
-import { AutocompleteBar } from 'components';
 import request from 'superagent';
 import { postPubLabel, deletePubLabel } from './actionsPubLabels';
 import { postLabel, putLabel, deleteLabel } from './actionsLabels'; 
@@ -54,7 +53,7 @@ export const PubLabelList = React.createClass({
 
 		const newSelected = labelIds.includes(label.id)
 			? selectedLabels.filter((labelItem)=> {
-				return label.id === labelItem.id ? false : true;
+				return label.id !== labelItem.id;
 			})
 			: [...selectedLabels, label];
 		
@@ -109,7 +108,7 @@ export const PubLabelList = React.createClass({
 	saveCreate: function() {
 		if (!this.state.creatingTitle) { return null; }
 		this.props.dispatch(postLabel(this.props.rootPubId, this.state.creatingTitle, this.state.creatingColor));
-		this.setState({
+		return this.setState({
 			createOpen: false,
 			creatingColor: '#c0392b',
 			creatingTitle: ''
@@ -137,10 +136,6 @@ export const PubLabelList = React.createClass({
 			});
 		}
 
-		this.setState({ 
-			asyncLabelsLoading: true,
-			asyncLabelsInput: evt.target.value
-		});
 		request.get('/api/search/label?q=' + input).end((err, response)=>{
 			const responseArray = (response && response.body) || [];
 			this.setState({
@@ -152,6 +147,12 @@ export const PubLabelList = React.createClass({
 				}
 			});
 		});
+
+		return this.setState({ 
+			asyncLabelsLoading: true,
+			asyncLabelsInput: evt.target.value
+		});
+		
 	},
 
 	render() {
@@ -179,7 +180,7 @@ export const PubLabelList = React.createClass({
 					if (this.state.editingLabelId === label.id) {
 						return (
 							<div style={styles.labelEditCard} className={'pt-card pt-elevation-2'} key={'publabeledit- ' + label.id}>
-								<input type="text" className={'pt-input'} value={this.state.editingTitle} onChange={this.updateEditTitle} style={styles.labelEditInput}/>
+								<input type="text" className={'pt-input'} value={this.state.editingTitle} onChange={this.updateEditTitle} style={styles.labelEditInput} />
 								
 								<CirclePicker 
 									color={this.state.editingColor} 
@@ -187,7 +188,7 @@ export const PubLabelList = React.createClass({
 									colors={localLabelColors} />
 
 								<div className="pt-button-group pt-fill" style={styles.labelEditActions}>
-									<button className="pt-button pt-minimal pt-icon-trash" onClick={this.deleteEdit}/>
+									<button className="pt-button pt-minimal pt-icon-trash" onClick={this.deleteEdit} />
 									<button className="pt-button" onClick={this.cancelEdit}>Cancel</button>
 									<button className="pt-button pt-intent-primary" onClick={this.saveEdit}>Save Label</button>
 								</div>
@@ -209,13 +210,13 @@ export const PubLabelList = React.createClass({
 				})}
 
 				{this.props.canEdit && 
-					<hr style={styles.localLabelSeparator}/>
+					<hr style={styles.localLabelSeparator} />
 				}
 
 				{/* Display interface for creating a new label */}
 				{this.state.createOpen &&
 					<div style={styles.labelEditCard} className={'pt-card pt-elevation-2'}>
-						<input type="text" className={'pt-input'} value={this.state.creatingTitle} onChange={this.updateCreateTitle} style={styles.labelEditInput}/>
+						<input type="text" className={'pt-input'} value={this.state.creatingTitle} onChange={this.updateCreateTitle} style={styles.labelEditInput} />
 						
 						<CirclePicker 
 							color={this.state.creatingColor} 

@@ -49,6 +49,7 @@ export const JournalAdmins = React.createClass({
 			callback(null, { options: options });
 		});
 	},
+	
 	handleSelectChange: function(value) {
 		this.setState({ newAdmin: value });
 	},

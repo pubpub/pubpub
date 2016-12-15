@@ -43,7 +43,7 @@ export const JournalCollectionList = React.createClass({
 
 		const newSelected = labelIds.includes(label.id)
 			? selectedLabels.filter((labelItem)=> {
-				return label.id === labelItem.id ? false : true;
+				return label.id !== labelItem.id;
 			})
 			: [...selectedLabels, label];
 		
@@ -53,11 +53,6 @@ export const JournalCollectionList = React.createClass({
 		if (this.props.pubId && this.props.dispatch) {
 			const action = labelIds.includes(label.id) ? deletePubLabel : postPubLabel;
 			this.props.dispatch(action(this.props.pubId, label.id));
-		}
-
-		// If onChange is supplied, call it with new labels
-		if (this.props.onChange) {
-			this.props.onChange(newSelected);	
 		}
 		
 	},
@@ -92,7 +87,7 @@ export const JournalCollectionList = React.createClass({
 	saveCreate: function() {
 		if (!this.state.creatingTitle) { return null; }
 		this.props.dispatch(postLabel(this.props.journalId, this.state.creatingTitle));
-		this.setState({
+		return this.setState({
 			createOpen: false,
 			creatingTitle: ''
 		});
@@ -127,10 +122,10 @@ export const JournalCollectionList = React.createClass({
 					if (this.state.editingLabelId === label.id) {
 						return (
 							<div style={styles.labelEditCard} className={'pt-card pt-elevation-2'} key={'publabeledit- ' + label.id}>
-								<input type="text" className={'pt-input'} value={this.state.editingTitle} onChange={this.updateEditTitle} style={styles.labelEditInput}/>
+								<input type="text" className={'pt-input'} value={this.state.editingTitle} onChange={this.updateEditTitle} style={styles.labelEditInput} />
 
 								<div className="pt-button-group pt-fill" style={styles.labelEditActions}>
-									<button className="pt-button pt-minimal pt-icon-trash" onClick={this.deleteEdit}/>
+									<button className="pt-button pt-minimal pt-icon-trash" onClick={this.deleteEdit} />
 									<button className="pt-button" onClick={this.cancelEdit}>Cancel</button>
 									<button className="pt-button pt-intent-primary" onClick={this.saveEdit}>Save Label</button>
 								</div>
@@ -141,7 +136,7 @@ export const JournalCollectionList = React.createClass({
 					return (
 						<div className="pt-button-group pt-fill pt-minimal" key={'publabel- ' + label.id}>
 							<button className="pt-button pt-fill" style={styles.labelButton} onClick={this.selectLabel.bind(this, label)}>
-								<span style={styles.labelColor} className={selectedLabelIds.includes(label.id) ? 'pt-icon-standard pt-icon-small-tick' : ''}/> {label.title}
+								<span style={styles.labelColor} className={selectedLabelIds.includes(label.id) ? 'pt-icon-standard pt-icon-small-tick' : ''} /> {label.title}
 							</button>
 							{this.props.canEdit &&
 								<button className="pt-button pt-icon-edit" onClick={this.editClick.bind(this, label)} />
@@ -152,13 +147,13 @@ export const JournalCollectionList = React.createClass({
 				})}
 
 				{this.props.canEdit && !!allLabels.length &&
-					<hr style={styles.localLabelSeparator}/>
+					<hr style={styles.localLabelSeparator} />
 				}
 
 				{/* Display interface for creating a new label */}
 				{this.state.createOpen &&
 					<div style={styles.labelEditCard} className={allLabels.length ? 'pt-card pt-elevation-2' : ''}>
-						<input type="text" className={'pt-input'} value={this.state.creatingTitle} onChange={this.updateCreateTitle} placeholder={'Collection Name'} style={styles.labelEditInput}/>
+						<input type="text" className={'pt-input'} value={this.state.creatingTitle} onChange={this.updateCreateTitle} placeholder={'Collection Name'} style={styles.labelEditInput} />
 						
 						<div className="pt-button-group pt-fill" style={styles.labelEditActions}>
 							<button className="pt-button" onClick={this.toggleCreate}>Cancel</button>
@@ -175,15 +170,13 @@ export const JournalCollectionList = React.createClass({
 				}
 				
 			</div>
-		);
-
-		
+		);	
 
 		return (
 			<div style={styles.container}>
 				{(this.props.canSelect || this.props.canEdit) && 
 					<Popover 
-						content={this.props.globalLabels ? globalLabelsContent : localLabelsContent}
+						content={localLabelsContent}
 						interactionKind={PopoverInteractionKind.CLICK}
 						position={Position.BOTTOM_LEFT}
 						transitionDuration={200}
@@ -195,9 +188,7 @@ export const JournalCollectionList = React.createClass({
 				}
 
 				{selectedLabelsRender.map((label, index)=> {
-					const toObject = this.props.globalLabels
-						? { pathname: '/label/' + label.title, query: {} }
-						: { pathname: this.props.pathname, query: { ...this.props.query, label: label.title, path: undefined, author: undefined, sort: undefined, discussion: undefined } };
+					const toObject = { pathname: this.props.pathname, query: { ...this.props.query, label: label.title, path: undefined, author: undefined, sort: undefined, discussion: undefined } };
 
 					return <Link to={toObject} key={'label-' + index} className="pt-tag" style={[styles.label, { backgroundColor: label.color || '#CED9E0', color: label.color ? '#FFF' : '#293742' }]}>{label.title}</Link>;
 				})}
