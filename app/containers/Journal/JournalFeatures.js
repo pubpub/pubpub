@@ -3,6 +3,7 @@ import Radium from 'radium';
 import Helmet from 'react-helmet';
 import { Link, browserHistory } from 'react-router';
 import dateFormat from 'dateformat';
+import { InputGroup, NonIdealState } from '@blueprintjs/core';
 
 import { globalStyles } from 'utils/globalStyles';
 import { globalMessages } from 'utils/globalMessages';
@@ -29,12 +30,28 @@ export const JournalFeatures = React.createClass({
 	// 		confirmReject: undefined,
 	// 	};
 	// },
+	getInitialState() {
+		return {
+			search: '',
+		};
+	},
 	
 	componentWillReceiveProps(nextProps) {
 		// if (this.props.isLoading && !nextProps.isLoading && !nextProps.error) {
 		// 	this.setState({ confirmReject: undefined });	
 		// 	this.setState({ confirmFeature: undefined });	
 		// }
+	},
+
+	inputUpdate: function(evt) {
+		const value = evt.target.value || '';
+		this.setState({ search: value });
+	},
+
+	searchSubmited: function(evt) {
+		evt.preventDefault();
+		browserHistory.push('/search?q=' + this.state.search);
+		this.setState({ search: '' });
 	},
 
 	render: function() {
@@ -49,6 +66,18 @@ export const JournalFeatures = React.createClass({
 		return (
 			<div>
 				<Helmet {...metaData} />
+
+				{!pubFeatures.length &&
+					<NonIdealState
+						action={
+							<form onSubmit={this.searchSubmited}>
+								<InputGroup leftIconName="search" placeholder={'Search...'} value={this.state.search} onChange={this.inputUpdate}/>
+							</form>
+						}
+						description={'This journal has not yet featured any pubs. Search for pubs to feature below.'}
+						title={'No Featured Pubs'}
+						visual={'application'} />
+				}
 
 				{
 					pubFeatures.sort((foo, bar)=>{

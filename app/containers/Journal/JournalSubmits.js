@@ -3,6 +3,7 @@ import Radium from 'radium';
 import Helmet from 'react-helmet';
 import { Link, browserHistory } from 'react-router';
 import dateFormat from 'dateformat';
+import { NonIdealState } from '@blueprintjs/core';
 
 import { globalStyles } from 'utils/globalStyles';
 import { globalMessages } from 'utils/globalMessages';
@@ -68,6 +69,12 @@ export const JournalSubmits = React.createClass({
 			<div>
 				<Helmet {...metaData} />
 
+				{!pubSubmits.length &&
+					<NonIdealState
+						description={'No pubs have been submitted to this journal. Pubs can be submitted by their authors for consideration.'}
+						title={'No Submitted Pubs'}
+						visual={'application'} />
+				}
 				{
 					pubSubmits.sort((foo, bar)=>{
 						// Sort so that most recent is first in array
