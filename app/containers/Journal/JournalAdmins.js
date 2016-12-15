@@ -1,7 +1,8 @@
 import React, { PropTypes } from 'react';
 import Radium from 'radium';
-import { AutocompleteBar } from 'components';
+import { AutocompleteBar, PreviewUser } from 'components';
 import request from 'superagent';
+import dateFormat from 'dateformat';
 import { postJournalAdmin, deleteJournalAdmin } from './actionsAdmins';
 let styles;
 
@@ -88,25 +89,13 @@ export const JournalAdmins = React.createClass({
 					completeString={'Add'}
 				/>			
 
-					
-				{admins.map((admin, index)=> {
+				{admins.map((admin)=> {
 					const user = admin.user || {};
-
 					return (
-						<div key={'adminId-' + admin.id} style={styles.adminWrapper}>
-							<img src={'https://jake.pubpub.org/unsafe/50x50/' + user.image} style={styles.adminImage} alt={user.firstName + ' ' + user.lastName} />
-							<div style={styles.detailsWrapper}>
-								<div style={styles.adminName}>{user.firstName + ' ' + user.lastName}</div>
-
-								<div>
-									<div style={styles.adminAction}>
-										<button type="button" className="pt-button pt-intent-danger pt-minimal" onClick={this.deleteAdmin.bind(this, admin.id)}>Delete Admin</button>
-									</div>
-								</div>
-							</div>
-							<hr />
-						
-						</div>
+						<PreviewUser 
+							user={user} 
+							details={<span>Added: {dateFormat(admin.createdAt, 'mmmm dd, yyyy')}</span>}
+							rightContent={<button type="button" className="pt-button pt-intent-danger pt-minimal" style={{ whiteSpace: 'nowrap' }} onClick={this.deleteAdmin.bind(this, admin.id)}>Delete Admin</button>} />
 					);
 				})}
 			</div>

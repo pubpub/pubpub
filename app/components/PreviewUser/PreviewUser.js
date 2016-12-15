@@ -9,6 +9,7 @@ export const PreviewUser = React.createClass({
 	propTypes: {
 		user: PropTypes.object,
 		hideBio: PropTypes.bool,
+		details: PropTypes.node,
 		rightContent: PropTypes.node,
 	},
 
@@ -21,7 +22,7 @@ export const PreviewUser = React.createClass({
 				<div style={styles.pubPreviewDetails}>
 					<Link to={'/user/' + user.username}><h5 style={styles.name}>{user.firstName + ' ' + user.lastName}</h5></Link>
 					{!this.props.hideBio &&
-						<p style={styles.bio}>{user.bio}</p>
+						<p style={styles.bio}>{this.props.details || user.bio}</p>
 					}
 				</div>
 
@@ -78,5 +79,6 @@ styles = {
 	rightContent: {
 		display: 'table-cell',
 		width: '1%',
+		verticalAlign: 'middle',
 	},
 };
