@@ -14,6 +14,16 @@ import {
 	PUT_JOURNAL_DATA_FAIL,
 } from 'containers/Journal/actions';
 
+import {
+	PUT_JOURNAL_SUBMIT_LOAD,
+	PUT_JOURNAL_SUBMIT_SUCCESS,
+	PUT_JOURNAL_SUBMIT_FAIL,
+
+	POST_JOURNAL_FEATURE_LOAD,
+	POST_JOURNAL_FEATURE_SUCCESS,
+	POST_JOURNAL_FEATURE_FAIL,
+} from 'containers/Journal/actionsSubmits';
+
 /* ------------------- */
 // Define Default State
 /* ------------------- */
@@ -23,6 +33,8 @@ const defaultState = Immutable.Map({
 	journal: {},
 	putDataLoading: false,
 	putDataError: undefined,
+	submitsLoading: false,
+	submitsError: undefined,
 });
 
 /* ----------------------------------------- */
@@ -69,6 +81,66 @@ export default function reducer(state = defaultState, action) {
 			putDataLoading: false,
 			putDataError: action.error,
 			// journal: null,
+		});
+
+	case PUT_JOURNAL_SUBMIT_LOAD:
+		return state.merge({
+			submitsLoading: true,
+			submitsError: undefined,
+		});	
+	case PUT_JOURNAL_SUBMIT_SUCCESS:
+		return state.merge({
+			submitsLoading: false,
+			submitsError: undefined,
+		})
+		.setIn(
+			['journal', 'pubSubmits'],
+			state.getIn(['journal', 'pubSubmits']).map((pubSubmit)=> {
+				if (pubSubmit.get('pubId') === action.pubId) {
+					const newSubmit = { ...pubSubmit.toJS() };
+					newSubmit.isRejected = true;
+					newSubmit.updatedAt = new Date();
+					return ensureImmutable(newSubmit);
+				}
+				return pubSubmit;
+			})
+		);
+	case PUT_JOURNAL_SUBMIT_FAIL:
+		return state.merge({
+			submitsLoading: false,
+			submitsError: action.error,
+		});
+
+	case POST_JOURNAL_FEATURE_LOAD:
+		return state.merge({
+			submitsLoading: true,
+			submitsError: undefined,
+		});	
+	case POST_JOURNAL_FEATURE_SUCCESS:
+		return state.merge({
+			submitsLoading: false,
+			submitsError: undefined,
+		})
+		.setIn(
+			['journal', 'pubSubmits'],
+			state.getIn(['journal', 'pubSubmits']).map((pubSubmit)=> {
+				if (pubSubmit.get('pubId') === action.pubId) {
+					const newSubmit = { ...pubSubmit.toJS() };
+					newSubmit.isFeatured = true;
+					newSubmit.updatedAt = new Date();
+					return ensureImmutable(newSubmit);
+				}
+				return pubSubmit;
+			})
+		)
+		.setIn(
+			['journal', 'pubFeatures'],
+			state.getIn(['journal', 'pubFeatures']).push(ensureImmutable(action.result))
+		);
+	case POST_JOURNAL_FEATURE_FAIL:
+		return state.merge({
+			submitsLoading: false,
+			submitsError: action.error,
 		});
 
 	default:

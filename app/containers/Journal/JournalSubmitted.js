@@ -2,11 +2,13 @@ import React, { PropTypes } from 'react';
 import Radium from 'radium';
 import Helmet from 'react-helmet';
 import { Link, browserHistory } from 'react-router';
- 
+import dateFormat from 'dateformat';
+
 import { globalStyles } from 'utils/globalStyles';
 import { globalMessages } from 'utils/globalMessages';
 import { FormattedMessage } from 'react-intl';
-import { putJournal } from './actions';
+import { putJournalSubmit, postJournalFeature } from './actionsSubmits';
+import { Loader } from 'components';
 
 import { Dialog } from '@blueprintjs/core';
 
@@ -29,17 +31,33 @@ export const JournalSubmitted = React.createClass({
 	},
 	
 	componentWillReceiveProps(nextProps) {
-	
+		if (this.props.isLoading && !nextProps.isLoading && !nextProps.error) {
+			this.setState({ confirmReject: undefined });	
+			this.setState({ confirmFeature: undefined });	
+		}
 	},
 
-
-	toggleFeature: function(index) {
+	setFeature: function(index) {
 		this.setState({ confirmFeature: index });
+	},
+
+	setReject: function(index) {
+		this.setState({ confirmReject: index });
+	},
+
+	featurePub: function() {
+		const journal = this.props.journal || {};
+		this.props.dispatch(postJournalFeature(journal.id, this.state.confirmFeature));
+	},
+
+	rejectPub: function() {
+		const journal = this.props.journal || {};
+		this.props.dispatch(putJournalSubmit(journal.id, this.state.confirmReject));
 	},
 
 	render: function() {
 		const journal = this.props.journal || {};
-		const pubsSubmitted = journal.pubsSubmitted || [];
+		const pubSubmits = journal.pubSubmits || [];
 		const metaData = {
 			title: 'Submitted · ' + journal.name,
 		};
@@ -51,44 +69,68 @@ export const JournalSubmitted = React.createClass({
 				<Helmet {...metaData} />
 
 				{
-					pubsSubmitted.sort((foo, bar)=>{
+					pubSubmits.sort((foo, bar)=>{
 						// Sort so that most recent is first in array
 						if (foo.createdAt > bar.createdAt) { return -1; }
 						if (foo.createdAt < bar.createdAt) { return 1; }
 						return 0;
-					}).map((submission, index)=> {
+					}).map((pubSubmit, index)=> {
+						const pub = pubSubmit.pub;
+						const isDisabled = pubSubmit.isRejected || pubSubmit.isFeatured;
 						return (
 							<div key={'submission-' + index} style={styles.submissionWrapper}>
 								<div style={styles.imageWrapper}>
-									<Link to={'/pub/' + submission.slug}>
-										<img src={submission.previewImage} style={styles.submissionImage} />
+									<Link to={'/pub/' + pub.slug}>
+										<img src={pub.previewImage} style={[styles.submissionImage, isDisabled && styles.dimItem]} />
 									</Link>
 								</div>
 								
 								<div style={styles.submissionDetails}>
-									<h4><Link to={'/pub/' + submission.slug}>{submission.title}</Link></h4>
-									<p>{submission.description}</p>	
+									{pubSubmit.isRejected &&
+										<p><b>Rejected</b> on {dateFormat(pubSubmit.updatedAt, 'mmmm dd, yyyy')}</p>	
+									}
+									{pubSubmit.isFeatured &&
+										<p><b>Featured</b> on {dateFormat(pubSubmit.updatedAt, 'mmmm dd, yyyy')}</p>	
+									}
+									<h4 style={[isDisabled && styles.dimItem]}><Link to={'/pub/' + pub.slug}>{pub.title}</Link></h4>
+									<p style={[isDisabled && styles.dimItem]}>{pub.description}</p>	
 								</div>
 
-								<div style={styles.buttons}>
-									<div className="pt-button-group pt-vertical">
-										<button type="button" className="pt-button" onClick={this.toggleFeature.bind(this, submission.id)}>Accept</button>
-										<button type="button" className="pt-button">Reject</button>
+								{!isDisabled &&
+									<div style={styles.buttons}>
+										<div className="pt-button-group pt-vertical">
+											<button type="button" className="pt-button" onClick={this.setFeature.bind(this, pub.id)}>Accept</button>
+											<button type="button" className="pt-button" onClick={this.setReject.bind(this, pub.id)}>Reject</button>
+										</div>
 									</div>
+								}
 
-								</div>
-
-								<Dialog isOpen={this.state.confirmFeature === submission.id} onClose={this.toggleFeature.bind(this, undefined)}>
+								<Dialog isOpen={this.state.confirmFeature === pub.id} onClose={this.setFeature.bind(this, undefined)}>
 									<div className="pt-dialog-body">
-										Please confirm that you want to accept <b>{submission.title}</b>
+										Please confirm that you want to feature <b>{pub.title}</b>
 									</div>
 									<div className="pt-dialog-footer">
 										<div className="pt-dialog-footer-actions">
-											<button type="button" className="pt-button" onClick={this.toggleFeature.bind(this, undefined)}>Cancel</button>
-											<button type="submit" className="pt-button pt-intent-primary">Feature Pub</button>
+											<div style={styles.loaderContainer}><Loader loading={isLoading} /></div>
+											<div style={styles.loaderContainer}>{errorMessage}</div>
+											<button type="button" className="pt-button" onClick={this.setFeature.bind(this, undefined)}>Cancel</button>
+											<button type="submit" className="pt-button pt-intent-primary" onClick={this.featurePub}>Feature Pub</button>
 										</div>
 									</div>
-										
+								</Dialog>
+
+								<Dialog isOpen={this.state.confirmReject === pub.id} onClose={this.setReject.bind(this, undefined)}>
+									<div className="pt-dialog-body">
+										Please confirm that you want to reject <b>{pub.title}</b>
+									</div>
+									<div className="pt-dialog-footer">
+										<div className="pt-dialog-footer-actions">
+											<div style={styles.loaderContainer}><Loader loading={isLoading} /></div>
+											<div style={styles.loaderContainer}>{errorMessage}</div>
+											<button type="button" className="pt-button" onClick={this.setReject.bind(this, undefined)}>Cancel</button>
+											<button type="submit" className="pt-button pt-intent-primary" onClick={this.rejectPub}>Reject Pub</button>
+										</div>
+									</div>
 								</Dialog>
 								
 							</div>
@@ -121,6 +163,9 @@ styles = {
 		width: '100px',
 		paddingRight: '1em',
 	},
+	dimItem: {
+		opacity: '0.35',
+	},
 	submissionDetails: {
 		display: 'table-cell',
 		verticalAlign: 'top',
@@ -128,6 +173,10 @@ styles = {
 	buttons: {
 		display: 'table-cell',
 		width: '1%',
+	},
+	loaderContainer: {
+		display: 'inline-block',
+		margin: 'auto 0',
 	},
 	
 };

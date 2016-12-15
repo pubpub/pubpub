@@ -169,8 +169,8 @@ export const Journal = React.createClass({
 							return (
 								<JournalSubmitted
 									journal={journal}
-									isLoading={this.props.journalData.submissionsLoading}
-									error={this.props.journalData.submissionsError}
+									isLoading={this.props.journalData.submitsLoading}
+									error={this.props.journalData.submitsError}
 									dispatch={this.props.dispatch} />
 							);
 						case 'notFound':
