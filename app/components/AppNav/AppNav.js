@@ -121,12 +121,9 @@ styles = {
 		fontSize: '0.8em',
 	},
 	userImage: {
-		width: '25px',
+		width: '24px',
 		padding: '0em',
-		display: 'inline-block',
 		borderRadius: '2px',
-		verticalAlign: 'top',
-		position: 'relative',
-		top: '2px',
+		verticalAlign: 'middle',
 	},
 };
