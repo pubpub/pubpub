@@ -24,6 +24,16 @@ import {
 	POST_JOURNAL_FEATURE_FAIL,
 } from 'containers/Journal/actionsSubmits';
 
+import {
+	POST_JOURNAL_ADMIN_LOAD,
+	POST_JOURNAL_ADMIN_SUCCESS,
+	POST_JOURNAL_ADMIN_FAIL,
+
+	DELETE_JOURNAL_ADMIN_LOAD,
+	DELETE_JOURNAL_ADMIN_SUCCESS,
+	DELETE_JOURNAL_ADMIN_FAIL,
+} from 'containers/Journal/actionsAdmins';
+
 /* ------------------- */
 // Define Default State
 /* ------------------- */
@@ -35,6 +45,8 @@ const defaultState = Immutable.Map({
 	putDataError: undefined,
 	submitsLoading: false,
 	submitsError: undefined,
+	adminsLoading: false,
+	adminsError: undefined,
 });
 
 /* ----------------------------------------- */
@@ -141,6 +153,48 @@ export default function reducer(state = defaultState, action) {
 		return state.merge({
 			submitsLoading: false,
 			submitsError: action.error,
+		});
+
+	case POST_JOURNAL_ADMIN_LOAD:
+		return state.merge({
+			adminsLoading: true,
+			adminsError: undefined,
+		});	
+	case POST_JOURNAL_ADMIN_SUCCESS:
+		return state.merge({
+			adminsLoading: false,
+			adminsError: undefined,
+		})
+		.mergeIn(
+			['journal', 'admins'], 
+			state.getIn(['journal', 'admins']).unshift(ensureImmutable(action.result))
+		);
+	case POST_JOURNAL_ADMIN_FAIL:
+		return state.merge({
+			adminsLoading: false,
+			adminsError: action.error,
+		});
+
+	case DELETE_JOURNAL_ADMIN_LOAD:
+		return state.merge({
+			adminsLoading: true,
+			adminsError: undefined,
+		});	
+	case DELETE_JOURNAL_ADMIN_SUCCESS:
+		return state.merge({
+			adminsLoading: false,
+			adminsError: undefined,
+		})
+		.setIn(
+			['journal', 'admins'], 
+			state.getIn(['journal', 'admins']).filter((admin)=> {
+				return admin.get('id') !== action.journalAdminId;
+			})
+		);
+	case DELETE_JOURNAL_ADMIN_FAIL:
+		return state.merge({
+			adminsLoading: false,
+			adminsError: action.error,
 		});
 
 	default:

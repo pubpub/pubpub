@@ -18,6 +18,7 @@ import JournalLayout from './JournalLayout';
 import JournalDetails from './JournalDetails';
 import JournalSubmits from './JournalSubmits';
 import JournalFeatures from './JournalFeatures';
+import JournalAdmins from './JournalAdmins';
 
 let styles;
 
@@ -180,6 +181,14 @@ export const Journal = React.createClass({
 									journal={journal}
 									isLoading={this.props.journalData.featuresLoading}
 									error={this.props.journalData.featuresError}
+									dispatch={this.props.dispatch} />
+							);
+						case 'admins':
+							return (
+								<JournalAdmins
+									journal={journal}
+									isLoading={this.props.journalData.adminsLoading}
+									error={this.props.journalData.adminsError}
 									dispatch={this.props.dispatch} />
 							);
 						case 'notFound':

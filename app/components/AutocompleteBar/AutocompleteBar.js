@@ -46,7 +46,8 @@ export default Radium(AutoCompleteBar);
 styles = {
 	addControlGroup: {
 		display: 'table',
-		margin: '1em 0em'
+		margin: '1em 0em',
+		width: '100%',
 	},
 	addControlButton: {
 		display: 'table-cell',

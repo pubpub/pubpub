@@ -53,7 +53,7 @@ export const Pub = React.createClass({
 		const pub = this.props.pubData.pub || {};
 		const params = this.props.params || {};
 		if (this.props.pubData.pub !== null && pub.slug !== params.slug) {
-			this.props.dispatch(getPubData(this.props.params));
+			this.props.dispatch(getPubData(params.slug));
 		}
 	},
 	
@@ -91,10 +91,11 @@ export const Pub = React.createClass({
 	},
 
 	render() {
-		if (!this.props.pubData.pub.title && !this.props.pubData.error) {
+		const pubData = this.props.pubData.pub || {};
+		if (!pubData.title && !this.props.pubData.error) {
 			return <div>Loading</div>;
 		}
-		if (!this.props.pubData.pub.title && this.props.pubData.error) {
+		if (!pubData.title && this.props.pubData.error) {
 			return <div>Error</div>;
 		}
 
@@ -104,7 +105,6 @@ export const Pub = React.createClass({
 		const pathname = this.props.location.pathname;
 		const panel = query.panel;
 		const queryDiscussion = query.discussion;
-		const pubData = this.props.pubData.pub || {};
 		const discussions = pubData.discussions || [];
 		const contributors = pubData.contributors || [];
 		const invitedReviewers = pubData.invitedReviewers || [];
