@@ -19,6 +19,8 @@ export const JournalFeatures = React.createClass({
 		journal: PropTypes.object,
 		isLoading: PropTypes.bool,
 		error: PropTypes.string,
+		pathname: PropTypes.string,
+		query: PropTypes.object,
 		dispatch: PropTypes.func,
 	},
 
@@ -110,8 +112,8 @@ export const JournalFeatures = React.createClass({
 									journalId={journal.id} 
 									canEdit={true} 
 									canSelect={true} 
-									pathname={''} 
-									query={{}} 
+									pathname={this.props.pathname} 
+									query={this.props.query} 
 									dispatch={this.props.dispatch} />
 							</div>
 						);

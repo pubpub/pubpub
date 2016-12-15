@@ -4,7 +4,7 @@ import { Link } from 'react-router';
 import Radium from 'radium';
 import Helmet from 'react-helmet';
 
-import { NavContentWrapper } from 'components';
+import { NavContentWrapper, PreviewPub } from 'components';
 import { NoMatch } from 'containers';
 
 import { globalStyles } from 'utils/globalStyles';
@@ -20,6 +20,8 @@ import JournalSubmits from './JournalSubmits';
 import JournalFeatures from './JournalFeatures';
 import JournalAdmins from './JournalAdmins';
 import JournalAbout from './JournalAbout';
+import JournalCollection from './JournalCollection';
+import JournalFollowers from './JournalFollowers';
 
 let styles;
 
@@ -28,6 +30,7 @@ export const Journal = React.createClass({
 		accountData: PropTypes.object,
 		journalData: PropTypes.object,
 		params: PropTypes.object,
+		location: PropTypes.object,
 		dispatch: PropTypes.func,
 	},
 
@@ -65,8 +68,11 @@ export const Journal = React.createClass({
 	render() {
 		const slug = this.props.params.slug;
 		let mode = this.props.params.mode;
+		const query = this.props.location.query;
+		const pathname = this.props.location.pathname;
+		const collection = this.props.params.collection;
 		const journal = this.props.journalData.journal || {};
-		const pubsFeatured = journal.pubsFeatured || [];
+		const pubFeatures = journal.pubFeatures || [];
 		const isAdmin = this.props.journalData.isAdmin || true; // The || true is for dev only.
 
 		const metaData = {
@@ -110,7 +116,7 @@ export const Journal = React.createClass({
 
 		const collections = journal.collections || [];
 		const collectionItems = collections.map((item, index)=> {
-			return { type: 'link', text: item.title, link: '/' + this.props.params.slug + '/' + item._id, active: mode === item._id };
+			return { type: 'link', text: item.title, link: '/' + this.props.params.slug + '/collection/' + item.title, active: collection === item.title };
 		});
 
 		const navItems = [
@@ -181,6 +187,8 @@ export const Journal = React.createClass({
 									journal={journal}
 									isLoading={this.props.journalData.featuresLoading}
 									error={this.props.journalData.featuresError}
+									pathname={pathname}
+									query={query}
 									dispatch={this.props.dispatch} />
 							);
 						case 'admins':
@@ -195,18 +203,25 @@ export const Journal = React.createClass({
 							return (
 								<JournalAbout journal={journal} />
 							);
+						case 'collection':
+							return (
+								<JournalCollection 
+									journal={journal}
+									collection={collection} />
+							);
+						case 'followers':
+							return (
+								<JournalFollowers journal={journal} />
+							);
 						case 'notFound':
 							return null;
 
 						default:
 							return (
 								<div>
-									<div>{this.props.params.mode}</div>
-									{pubsFeatured.map((pub, index)=> {
-										return (<div>
-											<Link to={'/pub/' + pub.slug}>{pub.title}</Link>
-											<p style={{ paddingLeft: '1em' }}>{pub.description}</p>
-										</div>);
+									<h2>Recently Featured</h2>
+									{pubFeatures.map((pubFeature, index)=> {
+										return <PreviewPub key={'collectionItem-' + index} pub={pubFeature.pub} />;
 									})}
 								</div>
 							);

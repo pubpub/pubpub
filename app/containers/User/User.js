@@ -184,7 +184,6 @@ export const User = React.createClass({
 													<Link to={'/pub/' + pub.slug}><h4>{pub.title}</h4></Link>
 													<p>{pub.description}</p>
 												</div>
-												
 											</div>
 										);
 									})}

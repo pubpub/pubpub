@@ -22,6 +22,7 @@ export default (
 		<Route path="/journals/create" component={CreateJournal} />
 		<Route path="/:slug" component={Journal} />
 		<Route path="/:slug/:mode" component={Journal} />
+		<Route path="/:slug/:mode/:collection" component={Journal} />
 		
 		<Route path="*" component={NoMatch} />
 	</Route>
