@@ -23,24 +23,23 @@ export const User = React.createClass({
 		dispatch: PropTypes.func,
 	},
 
-	statics: {
-		readyOnActions: function(dispatch, params) {
-			return Promise.all([
-				dispatch(getUserData(params.username))
-			]);
-		}
-	},
-	componentDidMount() {
+	// statics: {
+	// 	readyOnActions: function(dispatch, params) {
+	// 		return Promise.all([
+	// 			dispatch(getUserData(params.username))
+	// 		]);
+	// 	}
+	// },
+	componentWillMount() {
 		// window.prerenderReady = false;
 		// Need to check here so that getUser doesn't make a fetch twice
 		const user = this.props.userData.user || {};
 		const params = this.props.params || {};
-		// if (this.props.userData.user !== null && user.username !== params.username) {
-		// 	console.log('in the did mount request');
-		// 	User.readyOnActions(this.props.dispatch, this.props.params);	
-		// }
+		if (this.props.userData.user !== null && user.username !== params.username) {
+			this.props.dispatch(getUserData(this.props.params.username));
+		}
 
-		this.props.dispatch(getUserData(this.props.params.username));
+		
 	},
 
 	// getInitialState() {

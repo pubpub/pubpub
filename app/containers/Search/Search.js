@@ -21,16 +21,17 @@ export const Search = React.createClass({
 		dispatch: PropTypes.func,
 	},
 
-	statics: {
-		readyOnActions: function(dispatch, params, location) {
-			return Promise.all([
-				dispatch(search(location.query.q))
-			]);
-		}
-	},
+	// statics: {
+	// 	readyOnActions: function(dispatch, params, location) {
+	// 		return Promise.all([
+	// 			dispatch(search(location.query.q))
+	// 		]);
+	// 	}
+	// },
 
-	componentDidMount() {
+	componentWillMount() {
 		this.props.dispatch(search(this.props.location.query.q));
+		this.setState({ searchString: this.props.location.query.q });
 	},
 
 	getInitialState() {
@@ -39,9 +40,9 @@ export const Search = React.createClass({
 		};
 	},
 
-	componentWillMount() {
-		this.setState({ searchString: this.props.location.query.q });
-	},
+	// componentWillMount() {
+		
+	// },
 
 	componentWillReceiveProps(nextProps) {
 		if (nextProps.location.query.q !== this.state.searchString) {

@@ -34,13 +34,13 @@ export const Pub = React.createClass({
 		dispatch: PropTypes.func,
 	},
 
-	statics: {
-		readyOnActions: function(dispatch, params) {
-			return Promise.all([
-				dispatch(getPubData(params.slug))
-			]);
-		}
-	},
+	// statics: {
+	// 	readyOnActions: function(dispatch, params) {
+	// 		return Promise.all([
+	// 			dispatch(getPubData(params.slug))
+	// 		]);
+	// 	}
+	// },
 
 	getInitialState() {
 		return {
@@ -48,6 +48,15 @@ export const Pub = React.createClass({
 		};
 	},
 
+	componentWillMount() {
+		// Need to check here so that getUser doesn't make a fetch twice
+		const pub = this.props.pubData.pub || {};
+		const params = this.props.params || {};
+		if (this.props.pubData.pub !== null && pub.slug !== params.slug) {
+			this.props.dispatch(getPubData(this.props.params));
+		}
+	},
+	
 	componentWillReceiveProps(nextProps) {
 		const lastPanel = this.props.location.query.panel;
 		const nextPanel = nextProps.location.query.panel;
@@ -63,14 +72,7 @@ export const Pub = React.createClass({
 		}
 	},
 
-	componentDidMount() {
-		// Need to check here so that getUser doesn't make a fetch twice
-		const pub = this.props.pubData.pub || {};
-		const params = this.props.params || {};
-		if (this.props.pubData.pub !== null && pub.slug !== params.slug) {
-			Pub.readyOnActions(this.props.dispatch, this.props.params);	
-		}
-	},
+	
 
 	goBack: function() {
 		// Note, this breaks if a user directly navigates to a discussion, clicks 'back' (rendering canGoBack = true), and then navigates back twice.

@@ -28,13 +28,13 @@ export const Journal = React.createClass({
 		dispatch: PropTypes.func,
 	},
 
-	statics: {
-		readyOnActions: function(dispatch, params) {
-			return Promise.all([
-				dispatch(getJournalData(params.slug))
-			]);
-		}
-	},
+	// statics: {
+	// 	readyOnActions: function(dispatch, params) {
+	// 		return Promise.all([
+	// 			dispatch(getJournalData(params.slug))
+	// 		]);
+	// 	}
+	// },
 
 	getInitialState: function() {
 		return {
@@ -46,12 +46,12 @@ export const Journal = React.createClass({
 		};
 	},
 
-	componentDidMount() {
+	componentWillMount() {
 		// Need to check here so that getUser doesn't make a fetch twice
 		const journal = this.props.journalData.journal || {};
 		const params = this.props.params || {};
 		if (this.props.journalData.journal !== null && journal.slug !== params.slug) {
-			Journal.readyOnActions(this.props.dispatch, this.props.params);	
+			this.props.dispatch(getJournalData(this.props.params.slug))
 		}
 	},
 	

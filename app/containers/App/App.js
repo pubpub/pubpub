@@ -25,7 +25,7 @@ export const App = React.createClass({
 	logoutHandler: function() {
 		this.props.dispatch(logout());
 	},
-	componentDidMount() {
+	componentWillMount() {
 		const FocusStyleManager = require('@blueprintjs/core').FocusStyleManager;
 		FocusStyleManager.onlyShowFocusOnTabs();
 		this.props.dispatch(login());
@@ -34,7 +34,7 @@ export const App = React.createClass({
 	render() {
 		const messages = {};
 		const locale = 'en';
-		const loginFinished = this.props.appData.loginFinished;
+		// const loginFinished = this.props.appData.loginFinished;
 		// const hiddenStyle = loginFinished
 		// 	? {}
 		// 	: {
