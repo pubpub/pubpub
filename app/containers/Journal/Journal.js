@@ -19,6 +19,7 @@ import JournalDetails from './JournalDetails';
 import JournalSubmits from './JournalSubmits';
 import JournalFeatures from './JournalFeatures';
 import JournalAdmins from './JournalAdmins';
+import JournalAbout from './JournalAbout';
 
 let styles;
 
@@ -189,6 +190,10 @@ export const Journal = React.createClass({
 									isLoading={this.props.journalData.adminsLoading}
 									error={this.props.journalData.adminsError}
 									dispatch={this.props.dispatch} />
+							);
+						case 'about':
+							return (
+								<JournalAbout journal={journal} />
 							);
 						case 'notFound':
 							return null;
