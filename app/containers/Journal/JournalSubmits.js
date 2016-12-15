@@ -15,7 +15,7 @@ import { Dialog } from '@blueprintjs/core';
 let styles = {};
 
 
-export const JournalSubmitted = React.createClass({
+export const JournalSubmits = React.createClass({
 	propTypes: {
 		journal: PropTypes.object,
 		isLoading: PropTypes.bool,
@@ -145,7 +145,7 @@ export const JournalSubmitted = React.createClass({
 
 });
 
-export default Radium(JournalSubmitted);
+export default Radium(JournalSubmits);
 
 styles = {
 	submissionWrapper: {

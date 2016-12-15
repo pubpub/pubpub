@@ -16,7 +16,8 @@ import { getJournalData } from './actions';
 import JournalHeader from './JournalHeader';
 import JournalLayout from './JournalLayout';
 import JournalDetails from './JournalDetails';
-import JournalSubmitted from './JournalSubmitted';
+import JournalSubmits from './JournalSubmits';
+import JournalFeatures from './JournalFeatures';
 
 let styles;
 
@@ -167,10 +168,18 @@ export const Journal = React.createClass({
 							);
 						case 'submitted':
 							return (
-								<JournalSubmitted
+								<JournalSubmits
 									journal={journal}
 									isLoading={this.props.journalData.submitsLoading}
 									error={this.props.journalData.submitsError}
+									dispatch={this.props.dispatch} />
+							);
+						case 'featured':
+							return (
+								<JournalFeatures
+									journal={journal}
+									isLoading={this.props.journalData.featuresLoading}
+									error={this.props.journalData.featuresError}
 									dispatch={this.props.dispatch} />
 							);
 						case 'notFound':
