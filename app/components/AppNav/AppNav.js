@@ -77,7 +77,7 @@ export const AppNav = React.createClass({
 								<li><Link to={'/user/' + user.username + '/journals'} className="pt-menu-item pt-popover-dismiss">Your Journals</Link></li>
 								<li><Link to={'/user/' + user.username + '/following'} className="pt-menu-item pt-popover-dismiss">Your Follows</Link></li>
 								<MenuDivider />
-								<li><Link to={'/user/' + user.username + '/settings'} className="pt-menu-item pt-popover-dismiss">Settings</Link></li>
+								<li><Link to={'/user/' + user.username + '/profile'} className="pt-menu-item pt-popover-dismiss">Settings</Link></li>
 								<MenuItem text={'Logout'} onClick={this.props.logoutHandler} />
 							</Menu>}
 							interactionKind={PopoverInteractionKind.CLICK}

@@ -50,7 +50,7 @@ export const JournalAbout = React.createClass({
 				}
 
 
-				<h3><FormattedMessage {...globalMessages.Admins}/></h3>
+				<h3><FormattedMessage {...globalMessages.Admins} /></h3>
 				{admins.map((admin, index)=> {
 					const user = admin.user || {};
 

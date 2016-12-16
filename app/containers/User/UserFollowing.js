@@ -2,7 +2,7 @@ import React, { PropTypes } from 'react';
 import Radium from 'radium';
 import { Link } from 'react-router';
 import { Menu, MenuDivider } from '@blueprintjs/core';
-import { PreviewUser, PreviewPub, DropdownButton } from 'components';
+import { PreviewUser, PreviewPub, PreviewJournal, DropdownButton } from 'components';
 
 import { globalMessages } from 'utils/globalMessages';
 import { FormattedMessage } from 'react-intl';
@@ -22,8 +22,8 @@ export const UserFollowing = React.createClass({
 		return list.sort((foo, bar)=> {
 			const query = this.props.query;
 
-			const fooTitle = foo.firstName || foo.name || foo.title || ''
-			const barTitle = bar.firstName || bar.name || bar.title || ''
+			const fooTitle = foo.firstName || foo.name || foo.title || '';
+			const barTitle = bar.firstName || bar.name || bar.title || '';
 
 			const fooFollowObject = foo.FollowsJournal || foo.FollowsPub || foo.FollowsUser || foo.FollowsLabel || {};
 			const barFollowObject = bar.FollowsJournal || bar.FollowsPub || bar.FollowsUser || bar.FollowsLabel || {};
@@ -76,6 +76,7 @@ export const UserFollowing = React.createClass({
 							<Link to={{ pathname: this.props.pathname, query: { ...query, mode: undefined } }} className={mode === undefined || mode === 'pubs' ? 'pt-button pt-active' : 'pt-button'}>Pubs</Link>
 							<Link to={{ pathname: this.props.pathname, query: { ...query, mode: 'users' } }} className={mode === 'users' ? 'pt-button pt-active' : 'pt-button'}>Users</Link>
 							<Link to={{ pathname: this.props.pathname, query: { ...query, mode: 'journals' } }} className={mode === 'journals' ? 'pt-button pt-active' : 'pt-button'}>Journals</Link>
+							<Link to={{ pathname: this.props.pathname, query: { ...query, mode: 'labels' } }} className={mode === 'labels' ? 'pt-button pt-active' : 'pt-button'}>Labels</Link>
 							<Link to={{ pathname: this.props.pathname, query: { ...query, mode: 'all' } }} className={mode === 'all' ? 'pt-button pt-active' : 'pt-button'}>All</Link>
 						</div>
 					</div>
@@ -116,7 +117,22 @@ export const UserFollowing = React.createClass({
 				
 				{mode === 'journals' && 
 					this.sortList(followsJournals).map((follower, index)=> {
-						return <div key={'followsJournal-' + index}>{follower.name}</div>;
+						return <PreviewJournal key={'followsJournal-' + index} journal={follower} />;
+					})
+				}
+				{mode === 'labels' && 
+					this.sortList(followsLabels).map((follower, index)=> {
+						return <div key={'followsLabel-' + index}>{follower.title}</div>;
+					})
+				}
+
+				{mode === 'all' && 
+					this.sortList([...followsJournals, ...followsUsers, ...followsPubs]).map((follower, index)=> {
+						if (follower.username) { return <PreviewUser key={'followsUser-' + index} user={follower} />; }
+						if (follower.title && follower.previewImage) { return <PreviewPub key={'followsPub-' + index} pub={follower} />; }
+						if (follower.title) { return <div key={'followsLabel-' + index}>{follower.title}</div>; }
+						if (follower.shortDescription) { return <PreviewJournal key={'followsJournal-' + index} journal={follower} />; }
+						return null;
 					})
 				}
 
