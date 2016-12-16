@@ -56,12 +56,13 @@ export const Pub = React.createClass({
 			this.props.dispatch(getPubData(params.slug));
 		}
 
+		// Handle case when discussionId is present
 		const location = this.props.location || {};
 		const pathname = location.pathname;
 		const query = location.query;
 		const pubId = pub.id;
 		const discussions = pub.discussions || [];
-		if (query.discussionId && discussions.length) {
+		if (params.slug === pub.slug && query.discussionId && discussions.length) {
 			this.replaceDiscussionIdQuery(pubId, discussions, pathname, query);
 		}
 	},
@@ -82,6 +83,7 @@ export const Pub = React.createClass({
 			this.setState({ canGoBack: false });
 		}
 
+		// Handle case when discussionId is present
 		const pubData = nextProps.pubData || {};
 		const pub = pubData.pub || {};
 		const pubId = pub.id;
@@ -92,6 +94,9 @@ export const Pub = React.createClass({
 	},
 
 	replaceDiscussionIdQuery: function(pubId, discussions, pathname, query) {
+		// When routing to a url with ?discussionId=12,
+		// we need to find in which top-level discussion, discussionId=12 exists, and then
+		// add the query discussion=parentIndex
 		const discussionsData = this.addDiscussionIndex(discussions, pubId);
 		const discussionParentId = discussions.reduce((previous, current)=> {
 			if (current.id === Number(query.discussionId)) {
