@@ -13,12 +13,17 @@ import { FormattedMessage } from 'react-intl';
 
 import { getUserData } from './actions';
 
+import UserPubs from './UserPubs';
+import UserFollowers from './UserFollowers';
+import UserFollowing from './UserFollowing';
+
 let styles;
 
 export const User = React.createClass({
 	propTypes: {
 		accountData: PropTypes.object,
 		userData: PropTypes.object,
+		location: PropTypes.object,
 		params: PropTypes.object,
 		dispatch: PropTypes.func,
 	},
@@ -54,6 +59,8 @@ export const User = React.createClass({
 		const user = this.props.userData.user || {};
 		const name = user.firstName || user.lastName ? user.firstName + ' ' + user.lastName : this.props.params.username;
 		const ownProfile = username === this.props.accountData.user.username;
+		const query = this.props.location.query;
+		const pathname = this.props.location.pathname;
 
 		const metaData = {
 			title: name + ' · PubPub',
@@ -169,25 +176,29 @@ export const User = React.createClass({
 							);
 						case 'notFound':
 							return null;
-
+						case 'following':
+							return (
+								<UserFollowing
+									user={user} 
+									ownProfile={ownProfile} 
+									pathname={pathname} 
+									query={query} />
+							);
+						case 'followers':
+							return (
+								<UserFollowers
+									user={user} 
+									ownProfile={ownProfile} 
+									pathname={pathname} 
+									query={query} />
+							);
 						default:
 							return (
-								<div>
-									<div>{this.props.params.mode}</div>
-									{user.pubs.filter((pub)=> {
-										return !pub.replyRootPubId;
-									}).map((pub, index)=> {
-										return (
-											<div key={'pub-' + index} style={styles.pubPreviewWrapper}>
-												<Link to={'/pub/' + pub.slug} style={[styles.pubPreviewImageWrapper, { backgroundImage: pub.previewImage ? 'url("' + pub.previewImage + '")' : '' }]} />
-												<div style={styles.pubPreviewDetails}>
-													<Link to={'/pub/' + pub.slug}><h4>{pub.title}</h4></Link>
-													<p>{pub.description}</p>
-												</div>
-											</div>
-										);
-									})}
-								</div>
+								<UserPubs 
+									user={user} 
+									ownProfile={ownProfile} 
+									pathname={pathname} 
+									query={query} />
 							);
 						}
 					})()}

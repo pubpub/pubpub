@@ -3,7 +3,7 @@ import { Link, browserHistory } from 'react-router';
 import Radium from 'radium';
 import dateFormat from 'dateformat';
 import { Menu, MenuDivider } from '@blueprintjs/core';
-import PubDiscussionsListFilterButton from './PubDiscussionsListFilterButton';
+import { DropdownButton } from 'components';
 import PubLabelList from './PubLabelList';
 
 let styles;
@@ -148,9 +148,9 @@ export const PubDiscussionsList = React.createClass({
 				</form>
 				
 				<div className="pt-button-group" style={styles.buttonGroup}>
-					<PubDiscussionsListFilterButton content={authorsMenu} title={'Authors'} position={0} />
-					<PubDiscussionsListFilterButton content={labelMenu} title={'Label'} position={1} />
-					<PubDiscussionsListFilterButton content={sortMenu} title={'Sort'} position={2} />
+					<DropdownButton content={authorsMenu} title={'Authors'} position={0} />
+					<DropdownButton content={labelMenu} title={'Label'} position={1} />
+					<DropdownButton content={sortMenu} title={'Sort'} position={2} />
 				</div>
 				
 				{filteredDiscussions.sort((foo, bar)=> {

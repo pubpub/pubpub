@@ -95,7 +95,7 @@ export const PubDiscussion = React.createClass({
 					canEdit={true} 
 					pathname={this.props.pathname} 
 					query={this.props.query} 
-					dispatch={this.props.dispatch}/>
+					dispatch={this.props.dispatch} />
 
 				{discussions.sort((foo, bar)=>{
 					// Sort so that oldest is first in array
@@ -107,8 +107,8 @@ export const PubDiscussion = React.createClass({
 					return (
 						<div key={'discussion-' + index} style={styles.discussionItem}>
 							<div style={styles.discussionItemHeader}>
-								<div  style={styles.discussionItemImageWrapper}>
-									<img src={'https://jake.pubpub.org/unsafe/50x50/' + user.image} style={styles.discussionItemImage}/>	
+								<div style={styles.discussionItemImageWrapper}>
+									<img src={'https://jake.pubpub.org/unsafe/50x50/' + user.image} style={styles.discussionItemImage} />	
 								</div>
 								
 								<div style={styles.discussionItemName}>
