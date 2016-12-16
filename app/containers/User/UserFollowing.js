@@ -18,6 +18,41 @@ export const UserFollowing = React.createClass({
 		query: PropTypes.object,
 	},
 
+	sortList: function(list) {
+		return list.sort((foo, bar)=> {
+			const query = this.props.query;
+
+			const fooTitle = foo.firstName || foo.name || foo.title || ''
+			const barTitle = bar.firstName || bar.name || bar.title || ''
+
+			const fooFollowObject = foo.FollowsJournal || foo.FollowsPub || foo.FollowsPub || foo.FollowsLabel || {};
+			const barFollowObject = bar.FollowsJournal || bar.FollowsPub || bar.FollowsPub || bar.FollowsLabel || {};
+			
+			const fooDate = fooFollowObject.createdAt;
+			const barDate = barFollowObject.createdAt;
+
+			const newest = query.sort === 'Most Recently Followed';
+			const oldest = query.sort === 'Least Recently Followed';
+
+			const aToZ = query.sort === 'A → Z';
+			const zToA = query.sort === 'Z → A';
+
+			if (newest && fooDate > barDate) { return -1; }
+			if (newest && fooDate < barDate) { return 1; }
+
+			if (oldest && fooDate > barDate) { return 1; }
+			if (oldest && fooDate < barDate) { return -1; }
+
+			if (aToZ && fooTitle > barTitle) { return 1; }
+			if (aToZ && fooTitle < barTitle) { return -1; }
+
+			if (zToA && fooTitle > barTitle) { return -1; }
+			if (zToA && fooTitle < barTitle) { return 1; }
+
+			return 0;
+		});
+	},
+
 	render() {
 		const user = this.props.user || {};
 		const followsUsers = user.followsUsers || [];
@@ -37,11 +72,11 @@ export const UserFollowing = React.createClass({
 						<h2 style={styles.header}>Following</h2>
 					</div>
 					<div style={styles.headerOptions}>
-						<div className="pt-button-group pt-minimal" style={styles.buttonGroup}>
-							<Link to={{ pathname: this.props.pathname, query: { mode: undefined } }} className={mode === undefined || mode === 'pubs' ? 'pt-button pt-active' : 'pt-button'}>Pubs</Link>
-							<Link to={{ pathname: this.props.pathname, query: { mode: 'users' } }} className={mode === 'users' ? 'pt-button pt-active' : 'pt-button'}>Users</Link>
-							<Link to={{ pathname: this.props.pathname, query: { mode: 'journals' } }} className={mode === 'journals' ? 'pt-button pt-active' : 'pt-button'}>Journals</Link>
-							<Link to={{ pathname: this.props.pathname, query: { mode: 'all' } }} className={mode === 'all' ? 'pt-button pt-active' : 'pt-button'}>All</Link>
+						<div className="pt-button-group pt-minimal">
+							<Link to={{ pathname: this.props.pathname, query: { ...query, mode: undefined } }} className={mode === undefined || mode === 'pubs' ? 'pt-button pt-active' : 'pt-button'}>Pubs</Link>
+							<Link to={{ pathname: this.props.pathname, query: { ...query, mode: 'users' } }} className={mode === 'users' ? 'pt-button pt-active' : 'pt-button'}>Users</Link>
+							<Link to={{ pathname: this.props.pathname, query: { ...query, mode: 'journals' } }} className={mode === 'journals' ? 'pt-button pt-active' : 'pt-button'}>Journals</Link>
+							<Link to={{ pathname: this.props.pathname, query: { ...query, mode: 'all' } }} className={mode === 'all' ? 'pt-button pt-active' : 'pt-button'}>All</Link>
 						</div>
 					</div>
 					<div style={styles.headerRight}>
@@ -68,19 +103,19 @@ export const UserFollowing = React.createClass({
 
 
 				{(mode === undefined || mode === 'pubs') && 
-					followsPubs.map((follower, index)=> {
+					this.sortList(followsPubs).map((follower, index)=> {
 						return <PreviewPub key={'followsPub-' + index} pub={follower} />;
 					})
 				}
 
 				{mode === 'users' && 
-					followsUsers.map((follower, index)=> {
+					this.sortList(followsUsers).map((follower, index)=> {
 						return <PreviewUser key={'followsUser-' + index} user={follower} />;
 					})
 				}
 				
 				{mode === 'journals' && 
-					followsJournals.map((follower, index)=> {
+					this.sortList(followsJournals).map((follower, index)=> {
 						return <div key={'followsJournal-' + index}>{follower.name}</div>;
 					})
 				}
@@ -99,6 +134,7 @@ styles = {
 	headerWrapper: {
 		display: 'table',
 		width: '100%',
+		marginBottom: '1em',
 	},
 	headerTitle: {
 		display: 'table-cell',
@@ -121,8 +157,5 @@ styles = {
 	},
 	noWrap: {
 		whiteSpace: 'nowrap',
-	},
-	buttonGroup: {
-		margin: '1em 0em',
 	},
 };
