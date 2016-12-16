@@ -1,13 +1,6 @@
 {
-  "signup.Usernamerequired": "Username required",
-  "signup.FirstNamerequired": "First Name required",
-  "signup.LastNamerequired": "Last Name required",
-  "signup.Emailrequired": "Email required",
-  "signup.Emailisinvalid": "Email is invalid",
-  "signup.Passwordtooshort": "Password too short",
   "signup.Emailalreadyused": "Email already used",
   "signup.Usernamealreadyused": "Username already used",
-  "signup.PasswordLength": "Must be at least 8 characters",
   "createJournal.JournalNamerequired": "Journal Name required",
   "createJournal.JournalURLrequired": "Journal URL required",
   "createJournal.Descriptionrequired": "Description required",
@@ -257,5 +250,12 @@
   "global.ConfirmFeature": "Confirm Feature",
   "global.ConfirmReject": "Confirm Reject",
   "global.CancelReject": "Cancel Reject",
-  "global.ClickOrDragFilesToAdd": "Click Or Drag Files to Add"
+  "global.ClickOrDragFilesToAdd": "Click Or Drag Files to Add",
+  "global.Usernamerequired": "Username required",
+  "global.FirstNamerequired": "First Name required",
+  "global.LastNamerequired": "Last Name required",
+  "global.Emailrequired": "Email required",
+  "global.Emailisinvalid": "Email is invalid",
+  "global.Passwordtooshort": "Password too short",
+  "global.PasswordLength": "Must be at least 8 characters"
 }

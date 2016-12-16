@@ -10,6 +10,12 @@ import {
 	GET_USER_DATA_FAIL,
 } from 'containers/User/actions';
 
+import {
+	PUT_USER_LOAD,
+	PUT_USER_SUCCESS,
+	PUT_USER_FAIL,
+} from 'containers/User/actionsSettings';
+
 /* ------------------- */
 // Define Default State
 /* ------------------- */
@@ -17,6 +23,8 @@ const defaultState = Immutable.Map({
 	loading: false,
 	error: undefined,
 	user: {},
+	settingsLoading: false,
+	settingsError: undefined,
 });
 
 /* ----------------------------------------- */
@@ -42,6 +50,23 @@ export default function reducer(state = defaultState, action) {
 			error: action.error,
 			user: null,
 		});
+
+	case PUT_USER_LOAD:
+		return state.merge({
+			settingsLoading: true,
+			settingsError: undefined,
+		});	
+	case PUT_USER_SUCCESS:
+		return state.merge({
+			settingsLoading: false,
+			settingsError: undefined,
+		})
+		.mergeIn(['user'], action.result);
+	case PUT_USER_FAIL:
+		return state.merge({
+			settingsLoading: false,
+			settingsError: action.error,
+		});	
 
 	default:
 		return ensureImmutable(state);

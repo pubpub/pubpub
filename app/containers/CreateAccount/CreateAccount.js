@@ -96,33 +96,33 @@ export const CreateAccount = React.createClass({
 	validate: function(data) {
 		// Check to make sure username exists
 		if (!data.username || !data.username.length) {
-			return { isValid: false, validationError: <FormattedMessage id="signup.Usernamerequired" defaultMessage="Username required" /> };
+			return { isValid: false, validationError: <FormattedMessage { ...globalMessages.Usernamerequired } /> };
 		}
 
 		// Check to make sure firstName exists
 		if (!data.firstName || !data.firstName.length) {
-			return { isValid: false, validationError: <FormattedMessage id="signup.FirstNamerequired" defaultMessage="First Name required" /> };
+			return { isValid: false, validationError: <FormattedMessage { ...globalMessages.FirstNamerequired } /> };
 		}
 
 		// Check to make sure lastName exists
 		if (!data.lastName || !data.lastName.length) {
-			return { isValid: false, validationError: <FormattedMessage id="signup.LastNamerequired" defaultMessage="Last Name required" /> };
+			return { isValid: false, validationError: <FormattedMessage { ...globalMessages.LastNamerequired } /> };
 		}
 
 		// Check to make sure email exists
 		if (!data.email || !data.email.length) {
-			return { isValid: false, validationError: <FormattedMessage id="signup.Emailrequired" defaultMessage="Email required" /> };
+			return { isValid: false, validationError: <FormattedMessage { ...globalMessages.Emailrequired } /> };
 		}
 
 		// Check to make sure email is lightly valid (complete validation is impossible in JS - so just check for the most common error)
 		const regexTest = /\S+@\S+/;
 		if (!regexTest.test(data.email)) {
-			return { isValid: false, validationError: <FormattedMessage id="signup.Emailisinvalid" defaultMessage="Email is invalid" /> };
+			return { isValid: false, validationError: <FormattedMessage { ...globalMessages.Emailisinvalid } /> };
 		}
 
 		// Check to make sure password exists
 		if (!data.password || data.password.length < 8) {
-			return { isValid: false, validationError: <FormattedMessage id="signup.Passwordtooshort" defaultMessage="Password too short" /> };
+			return { isValid: false, validationError: <FormattedMessage { ...globalMessages.Passwordtooshort } /> };
 		}
 
 		return { isValid: true, validationError: undefined };
@@ -217,7 +217,7 @@ export const CreateAccount = React.createClass({
 								<FormattedMessage {...globalMessages.Password} />
 								<input id={'password'} name={'password'} type="password" style={styles.input} value={this.state.password} onChange={this.inputUpdate.bind(this, 'password')} />
 								<div className={'light-color inputSubtext'} to={'/resetpassword'}>
-									<FormattedMessage id="signup.PasswordLength" defaultMessage="Must be at least 8 characters" />
+									<FormattedMessage {...globalMessages.PasswordLength} />
 								</div>
 							</label>
 								
@@ -340,11 +340,6 @@ styles = {
 	errorMessage: {
 		padding: '10px 0px',
 		color: globalStyles.errorRed,
-	},
-	registerLink: {
-		...globalStyles.link,
-		display: 'block',
-		margin: '3em 0em'
 	},
 	prefixedInputWrapper: {
 		display: 'table',

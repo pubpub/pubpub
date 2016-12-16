@@ -16,6 +16,7 @@ import { getUserData } from './actions';
 import UserPubs from './UserPubs';
 import UserFollowers from './UserFollowers';
 import UserFollowing from './UserFollowing';
+import UserSettingsProfile from './UserSettingsProfile';
 
 let styles;
 
@@ -97,7 +98,7 @@ export const User = React.createClass({
 			{ type: 'title', text: <FormattedMessage {...globalMessages.Settings} /> },
 			{ type: 'link', text: <FormattedMessage {...globalMessages.Profile} />, link: '/user/' + username + '/profile', active: mode === 'profile' },
 			// { type: 'link', text: 'Account', link: '/user/' + username + '/account', active: mode === 'account'},
-			{ type: 'link', text: <FormattedMessage {...globalMessages.Notifications} />, link: '/user/' + username + '/notifications', active: mode === 'notifications' },
+			// { type: 'link', text: <FormattedMessage {...globalMessages.Notifications} />, link: '/user/' + username + '/notifications', active: mode === 'notifications' },
 			// { type: 'link', text: 'Access Token', link: '/user/' + username + '/tokens', active: mode === 'tokens' },
 
 		]
@@ -141,13 +142,17 @@ export const User = React.createClass({
 						*/}
 
 						<h1 style={styles.hideOnMobile}>{name}</h1> {/* Duplicate header for cleaner Follow button rendering */}
-						<p>{user.bio}</p>
+						<p style={styles.bio}>{user.bio}</p>
 
-						{links.filter((link)=> {
-							return !!user[link.key];
-						}).map((link, index)=> {
-							return <a key={'link-' + index} className={'underlineOnHover'} style={[styles.link, index === 0 && styles.firstLink]} href={link.href}>{link.text}</a>;
-						})}
+						<div className="pt-button-group pt-minimal">
+							{links.filter((link)=> {
+								return !!user[link.key];
+							}).map((link, index)=> {
+								// return <a key={'link-' + index} className={'underlineOnHover'} style={[styles.link, index === 0 && styles.firstLink]} href={link.href}>{link.text}</a>;
+								return <a key={'link-' + index} className={'pt-button'} href={link.href}>{link.text}</a>;
+							})}
+						</div>
+
 					</div>
 
 
@@ -176,6 +181,7 @@ export const User = React.createClass({
 							);
 						case 'notFound':
 							return null;
+
 						case 'following':
 							return (
 								<UserFollowing
@@ -191,6 +197,17 @@ export const User = React.createClass({
 									ownProfile={ownProfile} 
 									pathname={pathname} 
 									query={query} />
+							);
+						case 'profile':
+							return (
+								<UserSettingsProfile
+									user={user} 
+									ownProfile={ownProfile} 
+									pathname={pathname} 
+									query={query} 
+									isLoading={this.props.userData.settingsLoading}
+									error={this.props.userData.settingsError}
+									dispatch={this.props.dispatch} />
 							);
 						default:
 							return (
@@ -279,24 +296,27 @@ styles = {
 			padding: '0em',
 		}
 	},
-	link: {
-		paddingLeft: '1em',
-		marginLeft: '1em',
-		borderLeft: '1px solid #BBBDC0',
-		textDecoration: 'none',
-		color: 'inherit',
-		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
-			display: 'block',
-			paddingLeft: 'auto',
-			marginLeft: 'auto',
-			borderLeft: '0px solid #BBBDC0',
-		},
+	bio: {
+		paddingLeft: '0.75em',
 	},
-	firstLink: {
-		borderLeft: '0px solid #BBBDC0',
-		paddingLeft: '0em',
-		marginLeft: '0em',
-	},
+	// link: {
+	// 	paddingLeft: '1em',
+	// 	marginLeft: '1em',
+	// 	borderLeft: '1px solid #BBBDC0',
+	// 	textDecoration: 'none',
+	// 	color: 'inherit',
+	// 	'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+	// 		display: 'block',
+	// 		paddingLeft: 'auto',
+	// 		marginLeft: 'auto',
+	// 		borderLeft: '0px solid #BBBDC0',
+	// 	},
+	// },
+	// firstLink: {
+	// 	borderLeft: '0px solid #BBBDC0',
+	// 	paddingLeft: '0em',
+	// 	marginLeft: '0em',
+	// },
 	hide: {
 		display: 'none',
 		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {

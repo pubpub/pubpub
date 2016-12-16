@@ -918,4 +918,32 @@ export const globalMessages = defineMessages({
 		id: 'global.ClickOrDragFilesToAdd',
 		defaultMessage: 'Click Or Drag Files to Add'
 	},
+	Usernamerequired: {
+		id: 'global.Usernamerequired',
+		defaultMessage: 'Username required'
+	},
+	FirstNamerequired: {
+		id: 'global.FirstNamerequired',
+		defaultMessage: 'First Name required'
+	},
+	LastNamerequired: {
+		id: 'global.LastNamerequired',
+		defaultMessage: 'Last Name required'
+	},
+	Emailrequired: {
+		id: 'global.Emailrequired',
+		defaultMessage: 'Email required'
+	},
+	Emailisinvalid: {
+		id: 'global.Emailisinvalid',
+		defaultMessage: 'Email is invalid'
+	},
+	Passwordtooshort: {
+		id: 'global.Passwordtooshort',
+		defaultMessage: 'Password too short'
+	},
+	PasswordLength: {
+		id: 'global.PasswordLength',
+		defaultMessage: 'Must be at least 8 characters'
+	},
 });

@@ -149,6 +149,7 @@ styles = {
 	},
 	contentNavTitle: {
 		color: '#808284',
+		cursor: 'default',
 		padding: '.15em 2em .15em 0em',
 		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
 			padding: '.2em 1em .2em .25em',

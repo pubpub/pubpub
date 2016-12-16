@@ -31,6 +31,12 @@ import {
 	LOGOUT_FAIL,
 } from 'containers/App/actions';
 
+import {
+	PUT_USER_LOAD,
+	PUT_USER_SUCCESS,
+	PUT_USER_FAIL,
+} from 'containers/User/actionsSettings';
+
 /* ------------------- */
 // Define Default State
 /* ------------------- */
@@ -110,6 +116,13 @@ export default function reducer(state = defaultState, action) {
 			user: {},
 		});
 	case LOGOUT_FAIL:
+		return state;
+
+	case PUT_USER_LOAD:
+		return state;
+	case PUT_USER_SUCCESS:
+		return state.mergeIn(['user'], action.result);
+	case PUT_USER_FAIL:
 		return state;
 
 	default:

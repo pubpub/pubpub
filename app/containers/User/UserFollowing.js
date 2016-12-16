@@ -31,7 +31,7 @@ export const UserFollowing = React.createClass({
 			const fooDate = fooFollowObject.createdAt;
 			const barDate = barFollowObject.createdAt;
 
-			const newest = query.sort === 'Most Recently Followed';
+			const newest = query.sort === 'Most Recently Followed' || query.sort === undefined;
 			const oldest = query.sort === 'Least Recently Followed';
 
 			const aToZ = query.sort === 'A → Z';
@@ -86,7 +86,7 @@ export const UserFollowing = React.createClass({
 									<li className={'pt-menu-header'}><h6>Sort by:</h6></li>
 									<MenuDivider />
 									{sortList.map((sort, index)=> {
-										const sortMode = query.sort || 'Newest';
+										const sortMode = query.sort || 'Most Recently Followed';
 										return (
 											<li key={'sortFilter-' + index}><Link to={{ pathname: this.props.pathname, query: { ...this.props.query, sort: sort } }} className="pt-menu-item pt-popover-dismiss">
 												{sort}
