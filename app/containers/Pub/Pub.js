@@ -55,24 +55,57 @@ export const Pub = React.createClass({
 		if (this.props.pubData.pub !== null && pub.slug !== params.slug) {
 			this.props.dispatch(getPubData(params.slug));
 		}
+
+		const location = this.props.location || {};
+		const pathname = location.pathname;
+		const query = location.query;
+		const pubId = pub.id;
+		const discussions = pub.discussions || [];
+		if (query.discussionId && discussions.length) {
+			this.replaceDiscussionIdQuery(pubId, discussions, pathname, query);
+		}
 	},
 	
 	componentWillReceiveProps(nextProps) {
+		const nextLocation = nextProps.location;
 		const lastPanel = this.props.location.query.panel;
 		const nextPanel = nextProps.location.query.panel;
 		// const lastDiscussion = this.props.location.query.discussion;
 		// const nextDiscussion = nextProps.location.query.discussion;
 		const lastPathname = this.props.location.pathname;
 		const nextPathname = nextProps.location.pathname;
+		const nextQuery = nextLocation.query || {};
 
 		if (!lastPanel && nextPanel && lastPathname === nextPathname) {
 			this.setState({ canGoBack: true });
 		} else {
 			this.setState({ canGoBack: false });
 		}
+
+		const pubData = nextProps.pubData || {};
+		const pub = pubData.pub || {};
+		const pubId = pub.id;
+		const discussions = pub.discussions || [];
+		if (nextQuery.discussionId && discussions.length) {
+			this.replaceDiscussionIdQuery(pubId, discussions, nextPathname, nextQuery);
+		}
 	},
 
-	
+	replaceDiscussionIdQuery: function(pubId, discussions, pathname, query) {
+		const discussionsData = this.addDiscussionIndex(discussions, pubId);
+		const discussionParentId = discussions.reduce((previous, current)=> {
+			if (current.id === Number(query.discussionId)) {
+				return current.replyParentPubId === pubId ? current.id : current.replyParentPubId;
+			}
+			return previous;
+		}, undefined);
+		const discussionIndex = discussionsData.reduce((previous, current)=> {
+			if (current.id === discussionParentId) { return current.discussionIndex; }
+			return previous;
+		}, undefined);
+
+		browserHistory.replace({ pathname: pathname, query: { ...query, discussionId: undefined, discussion: discussionIndex } });
+	},
 
 	goBack: function() {
 		// Note, this breaks if a user directly navigates to a discussion, clicks 'back' (rendering canGoBack = true), and then navigates back twice.
@@ -88,6 +121,18 @@ export const Pub = React.createClass({
 				query: { ...query, panel: undefined, discussion: undefined } 
 			});
 		}
+	},
+
+	addDiscussionIndex: function(discussions, pubId) {
+		return discussions.filter((discussion)=> {
+			return discussion.replyParentPubId === pubId;
+		}).sort((foo, bar)=> {
+			if (foo.createdAt > bar.createdAt) { return 1; }
+			if (foo.createdAt < bar.createdAt) { return -1; }
+			return 0;
+		}).map((discussion, index)=>{
+			return { ...discussion, discussionIndex: index + 1 };
+		});
 	},
 
 	render() {
@@ -135,11 +180,7 @@ export const Pub = React.createClass({
 		});
 
 		// Add a discussionsIndex value that we'll use to number discussions.
-		const discussionsData = discussions.filter((discussion)=> {
-			return discussion.replyParentPubId === pubData.id;
-		}).map((discussion, index)=>{
-			return { ...discussion, discussionIndex: index + 1 };
-		});
+		const discussionsData = this.addDiscussionIndex(discussions, pubData.id);
 		
 		const activeDiscussion = discussionsData.reduce((previous, current)=> {
 			if (queryDiscussion === String(current.discussionIndex)) { return current; }
