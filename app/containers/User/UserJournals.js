@@ -2,7 +2,7 @@ import React, { PropTypes } from 'react';
 import Radium from 'radium';
 import { Link } from 'react-router';
 import { Menu, MenuDivider } from '@blueprintjs/core';
-import { PreviewUser, DropdownButton } from 'components';
+import { PreviewJournal, DropdownButton } from 'components';
 
 import { globalMessages } from 'utils/globalMessages';
 import { FormattedMessage } from 'react-intl';
@@ -10,7 +10,7 @@ import { FormattedMessage } from 'react-intl';
 
 let styles;
 
-export const UserFollowers = React.createClass({
+export const UserJournals = React.createClass({
 	propTypes: {
 		user: PropTypes.object,
 		ownProfile: PropTypes.bool,
@@ -22,17 +22,14 @@ export const UserFollowers = React.createClass({
 		return list.sort((foo, bar)=> {
 			const query = this.props.query;
 
-			const fooTitle = foo.firstName || foo.name || foo.title || ''
-			const barTitle = bar.firstName || bar.name || bar.title || ''
-
-			const fooFollowObject = foo.FollowsJournal || foo.FollowsPub || foo.FollowsUser || foo.FollowsLabel || {};
-			const barFollowObject = bar.FollowsJournal || bar.FollowsPub || bar.FollowsUser || bar.FollowsLabel || {};
+			const fooTitle = foo.firstName || foo.name || foo.title || '';
+			const barTitle = bar.firstName || bar.name || bar.title || '';
 			
-			const fooDate = fooFollowObject.createdAt;
-			const barDate = barFollowObject.createdAt;
+			const fooDate = foo.createdAt;
+			const barDate = bar.createdAt;
 
-			const newest = query.sort === 'Most Recently Followed' || query.sort === undefined;
-			const oldest = query.sort === 'Least Recently Followed';
+			const newest = query.sort === 'Most Recently Created' || query.sort === undefined;
+			const oldest = query.sort === 'Least Recently Created';
 
 			const aToZ = query.sort === 'A → Z';
 			const zToA = query.sort === 'Z → A';
@@ -55,16 +52,16 @@ export const UserFollowers = React.createClass({
 
 	render() {
 		const user = this.props.user || {};
-		const followers = user.followers || [];
+		const journals = user.journals || [];
 
 		const query = this.props.query || {};
-		const sortList = ['Most Recently Followed', 'Least Recently Followed', 'A → Z', 'Z → A'];
+		const sortList = ['Most Recently Created', 'Least Recently Created', 'A → Z', 'Z → A'];
 
 		return (
 			<div style={styles.container}>
 				<div style={styles.headerWrapper}>
 					<div style={styles.headerTitle}>
-						<h2 style={styles.header}>Followers</h2>
+						<h2 style={styles.header}>Journals</h2>
 					</div>
 					<div style={styles.headerOptions} />
 					<div style={styles.headerRight}>
@@ -89,8 +86,8 @@ export const UserFollowers = React.createClass({
 					</div>
 				</div>
 
-				{this.sortList(followers).map((follower, index)=> {
-					return <PreviewUser key={'follower-' + index} user={follower} />;
+				{this.sortList(journals).map((journal, index)=> {
+					return <PreviewJournal key={'journal-' + index} journal={journal} />;
 				})}
 
 			</div>
@@ -98,7 +95,7 @@ export const UserFollowers = React.createClass({
 	}
 });
 
-export default Radium(UserFollowers);
+export default Radium(UserJournals);
 
 styles = {
 	container: {

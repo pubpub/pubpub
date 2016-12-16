@@ -14,6 +14,7 @@ import { FormattedMessage } from 'react-intl';
 import { getUserData } from './actions';
 
 import UserPubs from './UserPubs';
+import UserJournals from './UserJournals';
 import UserFollowers from './UserFollowers';
 import UserFollowing from './UserFollowing';
 import UserSettingsProfile from './UserSettingsProfile';
@@ -161,24 +162,7 @@ export const User = React.createClass({
 				<NavContentWrapper navItems={navItems} mobileNavButtons={mobileNavButtons}>
 					{(() => {
 						switch (mode) {
-						
-						case 'journals': 
-							return (
-								<div>
-									{user.journals.map((journal, index)=> {
-										return (
-											<div key={'journal-' + index} style={styles.pubPreviewWrapper}>
-												<Link to={'/' + journal.slug} style={[styles.pubPreviewImageWrapper, { backgroundImage: journal.icon ? 'url("' + journal.icon + '")' : '' }]} />
-												<div style={styles.pubPreviewDetails}>
-													<Link to={'/' + journal.slug}><h4>{journal.name}</h4></Link>
-													<p>{journal.shortDescription}</p>
-												</div>
-												
-											</div>
-										);
-									})}
-								</div>
-							);
+
 						case 'notFound':
 							return null;
 
@@ -193,6 +177,14 @@ export const User = React.createClass({
 						case 'followers':
 							return (
 								<UserFollowers
+									user={user} 
+									ownProfile={ownProfile} 
+									pathname={pathname} 
+									query={query} />
+							);
+						case 'journals':
+							return (
+								<UserJournals
 									user={user} 
 									ownProfile={ownProfile} 
 									pathname={pathname} 

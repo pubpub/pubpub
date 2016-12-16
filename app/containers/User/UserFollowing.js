@@ -25,8 +25,8 @@ export const UserFollowing = React.createClass({
 			const fooTitle = foo.firstName || foo.name || foo.title || ''
 			const barTitle = bar.firstName || bar.name || bar.title || ''
 
-			const fooFollowObject = foo.FollowsJournal || foo.FollowsPub || foo.FollowsPub || foo.FollowsLabel || {};
-			const barFollowObject = bar.FollowsJournal || bar.FollowsPub || bar.FollowsPub || bar.FollowsLabel || {};
+			const fooFollowObject = foo.FollowsJournal || foo.FollowsPub || foo.FollowsUser || foo.FollowsLabel || {};
+			const barFollowObject = bar.FollowsJournal || bar.FollowsPub || bar.FollowsUser || bar.FollowsLabel || {};
 			
 			const fooDate = fooFollowObject.createdAt;
 			const barDate = barFollowObject.createdAt;
