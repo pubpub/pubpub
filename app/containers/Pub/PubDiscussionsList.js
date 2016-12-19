@@ -5,6 +5,7 @@ import dateFormat from 'dateformat';
 import { Menu, MenuDivider } from '@blueprintjs/core';
 import { DropdownButton } from 'components';
 import PubLabelList from './PubLabelList';
+import fuzzysearch from 'fuzzysearch';
 
 let styles;
 
@@ -70,6 +71,7 @@ export const PubDiscussionsList = React.createClass({
 		});
 		const filteredDiscussions = discussionsData.filter((discussion)=> {
 			let keepResult = true;
+			const children = discussion.children || [];
 			if (query.label) {
 				const discussionLabels = discussion.labels.map((label)=> {
 					return label.title;
@@ -77,7 +79,6 @@ export const PubDiscussionsList = React.createClass({
 				keepResult = discussionLabels.includes(query.label) && keepResult;
 			}
 			if (query.author) {
-				const children = discussion.children || [];
 				const discussionAuthors = [
 					discussion.contributors[0].user.username,
 					...children.map((child)=> {
@@ -85,6 +86,14 @@ export const PubDiscussionsList = React.createClass({
 					})
 				];
 				keepResult = discussionAuthors.includes(query.author) && keepResult;
+			}
+
+			if (query.filter) {
+				const threadText = children.reduce((previous, current)=> {
+					return previous + ' ' + current.description + ' ';
+				}, discussion.title + ' ' + discussion.description + ' ');
+
+				keepResult = fuzzysearch(query.filter, threadText);
 			}
 			return keepResult;
 		});

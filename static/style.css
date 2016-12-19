@@ -6,6 +6,10 @@ body {
 	/*font-family: 'Helvetica';*/
 }
 
+.highlight {
+	background-color: green;
+}
+
 .verticalNavHover:hover {
 	padding: .15em 2em .15em calc(.5em - 3px) !important;
 	border-left: 3px solid #2C2A2B !important;

@@ -19,6 +19,11 @@ import UserFollowers from './UserFollowers';
 import UserFollowing from './UserFollowing';
 import UserSettingsProfile from './UserSettingsProfile';
 
+import * as textQuote from 'dom-anchor-text-quote';
+import Rangy from 'rangy';
+// import Marklib from 'marklib';
+const Marklib = require('marklib');
+
 let styles;
 
 export const User = React.createClass({
@@ -49,12 +54,44 @@ export const User = React.createClass({
 		
 	},
 
-	// getInitialState() {
-	// 	return {
-			
-	// 	};
-	// },
+	getInitialState() {
+		return {
+			contentObject: {}		
+		};
+	},
 
+	saveHightlight: function() {
+		const root2 = document.getElementsByClassName('testing')[0];
+		// const range = window.getSelection();
+		// const range = new Range();
+		const selection = Rangy.getSelection();
+		const range = selection.getRangeAt(0);
+		const things = textQuote.fromRange(root2, range);
+		this.setState({ contentObject: things });
+	},
+	testRun: function() {
+
+		
+		const root2 = document.getElementsByClassName('testing')[0];
+		// const selection = Rangy.getSelection();
+		// const range2 = selection.getRangeAt(0);
+		// console.log(range2);
+
+
+		// let position = textQuote.toTextPosition(root2, 'bunch');
+		// let range = textPosition.toRange(position);
+		// console.log(position, range);
+
+		// const y = { exact: 'stuff! I like t', prefix: 'Here is a bunch of ', suffix: 'his stuff!' };
+		const y = this.state.contentObject;
+		const things2 = textQuote.toRange(root2, y);
+		console.log(things2);
+
+		const renderer = new Marklib.Rendering(document, { className: 'highlight' }, document);
+		const result3 = renderer.renderWithRange(things2);
+		console.log(result3);
+
+	},
 	
 	render() {
 		const username = this.props.params.username;
@@ -153,6 +190,15 @@ export const User = React.createClass({
 								return <a key={'link-' + index} className={'pt-button'} href={link.href}>{link.text}</a>;
 							})}
 						</div>
+
+						{/* <button className={'pt-button'} onClick={this.saveHightlight}>Save highlight</button>
+						<button className={'pt-button'} onClick={this.testRun}>Make highlight</button>
+						<div className={'testing'} contentEditable={true}>
+							<p>Okay - so forget that</p>
+							<img src="http://annotatorjs.org/images/thumb-viewer.png" width="150px"/>
+							<p>!!!!!!Here is a <b>bunch.</b> of stufffIlike this stuff!</p>
+							<p>Huh - that is confusing</p>
+						</div> */}
 
 					</div>
 
