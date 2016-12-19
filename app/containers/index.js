@@ -2,6 +2,7 @@ export App from './App/App';
 export CreateAccount from './CreateAccount/CreateAccount';
 export CreatePub from './CreatePub/CreatePub';
 export CreateJournal from './CreateJournal/CreateJournal';
+export FollowButton from './FollowButton/FollowButton';
 export Landing from './Landing/Landing';
 export Journal from './Journal/Journal';
 export Label from './Label/Label';

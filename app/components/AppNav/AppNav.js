@@ -58,9 +58,7 @@ export const AppNav = React.createClass({
 									New Journal
 								</Link></li>
 							</Menu>}
-							interactionKind={PopoverInteractionKind.CLICK}
 							position={Position.BOTTOM_RIGHT}
-							transitionDuration={200}
 							inheritDarkTheme={false}
 						>
 							<button className="pt-button pt-minimal pt-icon-add">
