@@ -257,5 +257,7 @@
   "global.Emailrequired": "Email required",
   "global.Emailisinvalid": "Email is invalid",
   "global.Passwordtooshort": "Password too short",
-  "global.PasswordLength": "Must be at least 8 characters"
+  "global.PasswordLength": "Must be at least 8 characters",
+  "global.Users": "Users",
+  "global.Labels": "Labels"
 }

@@ -16,7 +16,7 @@ import {
 const defaultState = Immutable.Map({
 	loading: false,
 	error: undefined,
-	results: [],
+	results: {},
 });
 
 /* ----------------------------------------- */

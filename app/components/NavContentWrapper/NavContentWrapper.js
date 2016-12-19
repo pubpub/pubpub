@@ -18,11 +18,11 @@ export const NavContentWrapper = React.createClass({
 		};
 	},
 	toggleMenu: function() {
-		this.setState({showMenu: !this.state.showMenu});
+		this.setState({ showMenu: !this.state.showMenu });
 	},
 
 	closeMenu: function() {
-		this.setState({showMenu: false});
+		this.setState({ showMenu: false });
 	},
 
 	render: function() {
@@ -48,13 +48,31 @@ export const NavContentWrapper = React.createClass({
 					</div>
 
 					<div style={[styles.contentNavItems, !this.state.showMenu && styles.hideOnMobile]}>
-						{navItems.map((option, index)=>{
+						{navItems.map((option, index)=> {
 
 							if (option.type === 'link') {
-								return <Link key={'navItem-' + index} className={'verticalNavHover'} style={[styles.contentNavLink, option.active && styles.contentNavLinkActive]} to={option.link} onClick={this.closeMenu}>{option.text}</Link>;
+								return (
+									<Link key={'navItem-' + index} className={'verticalNavHover'} style={[styles.contentNavLink, option.active && styles.contentNavLinkActive]} to={option.link} onClick={this.closeMenu}>
+										{option.text}
+										<div style={styles.count}>
+											{option.count !== undefined &&
+												<span className="pt-tag pt-minimal">{option.count}</span>
+											}
+										</div>
+									</Link>
+								);
 							}
 							if (option.type === 'button') {
-								return <div key={'navItem-' + index} className={'verticalNavHover'} style={[styles.contentNavLink, option.active && styles.contentNavLinkActive]} onClick={option.action || this.closeMenu}>{option.text}</div>;
+								return (
+									<div key={'navItem-' + index} className={'verticalNavHover'} style={[styles.contentNavLink, option.active && styles.contentNavLinkActive]} onClick={option.action || this.closeMenu}>
+										{option.text}
+										<div style={styles.count}>
+											{option.count !== undefined &&
+												<span className="pt-tag pt-minimal">{option.count}</span>
+											}
+										</div>
+									</div>
+								);
 							}
 							if (option.type === 'spacer') {
 								return <div key={'navItem-' + index} style={styles.contentNavSpacer}></div>;
@@ -134,18 +152,26 @@ styles = {
 		}
 	},
 	contentNavLink: {
-		display: 'block',
+		// display: 'block',
 		textDecoration: 'none',
 		color: 'inherit',
-		padding: '.15em 2em .15em .5em',
+		// padding: '.15em 2em .15em .5em',
+		padding: '.15em .5em .15em .5em',
 		cursor: 'pointer',
 		overflow: 'hidden',
 		textOverflow: 'ellipsis',
 		maxWidth: '150px',
+		display: 'table',
+		width: '100%',
 		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
 			padding: '.2em 1em',
 			fontSize: '1em',
 		}
+	},
+	count: {
+		display: 'table-cell',
+		width: '1%',
+		padding: '0em 0em 0em 1em',
 	},
 	contentNavTitle: {
 		color: '#808284',
@@ -156,7 +182,7 @@ styles = {
 		}
 	},
 	contentNavLinkActive: {
-		padding: '.15em 2em .15em calc(.5em - 3px)',
+		padding: '.15em .5em .15em calc(.5em - 3px)',
 		borderLeft: '3px solid #2C2A2B',
 	},
 	contentNavLinkMobile: {

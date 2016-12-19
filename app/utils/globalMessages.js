@@ -946,4 +946,12 @@ export const globalMessages = defineMessages({
 		id: 'global.PasswordLength',
 		defaultMessage: 'Must be at least 8 characters'
 	},
+	Users: {
+		id: 'global.Users',
+		defaultMessage: 'Users'
+	},
+	Labels: {
+		id: 'global.Labels',
+		defaultMessage: 'Labels'
+	},
 });

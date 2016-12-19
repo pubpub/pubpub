@@ -19,7 +19,7 @@ export function search(query) {
 	return (dispatch) => {
 		dispatch({ type: GET_SEARCH_LOAD });
 
-		return clientFetch('/api/search/pub?q=' + query, {
+		return clientFetch('/api/search/all?q=' + query, {
 			method: 'GET'
 		})
 		.then((result) => {
