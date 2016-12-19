@@ -4,6 +4,7 @@ export CreatePub from './CreatePub/CreatePub';
 export CreateJournal from './CreateJournal/CreateJournal';
 export Landing from './Landing/Landing';
 export Journal from './Journal/Journal';
+export Label from './Label/Label';
 export Login from './Login/Login';
 export NoMatch from './NoMatch/NoMatch';
 export Pub from './Pub/Pub';
