@@ -23,6 +23,7 @@ import PubDiscussionsList from './PubDiscussionsList';
 import PubDiscussion from './PubDiscussion';
 import PubReviewers from './PubReviewers';
 import PubLabelList from './PubLabelList';
+import PubFollowers from './PubFollowers';
 
 import { getPubData } from './actions';
 
@@ -302,6 +303,12 @@ export const Pub = React.createClass({
 							pubFeatures={pubFeatures}
 							pubId={pubData.id}
 							dispatch={this.props.dispatch} />
+					}
+					{meta === 'followers' && 
+						<PubFollowers
+							followers={followers}
+							pathname={pathname}
+							query={query} />
 					}
 
 				</div>
