@@ -8,7 +8,7 @@ import {
 	POST_FOLLOW_LOAD,
 	POST_FOLLOW_SUCCESS,
 	POST_FOLLOW_FAIL,
-} from 'containers/followButton/actions';
+} from 'containers/FollowButton/actions';
 
 /* ------------------- */
 // Define Default State

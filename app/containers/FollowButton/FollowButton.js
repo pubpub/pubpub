@@ -9,7 +9,12 @@ import { Popover, PopoverInteractionKind, Position, Menu, MenuDivider, Checkbox 
 import { globalMessages } from 'utils/globalMessages';
 import { FormattedMessage } from 'react-intl';
 
-// import { getLabel } from './actions';
+import { 
+	postFollowsPub, putFollowsPub, deleteFollowsPub,
+	postFollowsUser, putFollowsUser, deleteFollowsUser,
+	postFollowsJournal, putFollowsJournal, deleteFollowsJournal,
+	postFollowsLabel, putFollowsLabel, deleteFollowsLabel 
+} from './actions';
 
 let styles;
 
@@ -31,10 +36,9 @@ export const FollowButton = React.createClass({
 
 	getInitialState() {
 		return {
-			pubNotifyOnVersion: false,
-			pubNotifyOnDiscussion: false,
-			pubNotifyOnJournal: false,
-			pubNotifyOnContributors: false,
+			pubNotifyOnNewVersion: false,
+			pubNotifyOnNewDiscussions: false,
+			pubNotifyOnNewFeature: false,
 
 			userNotifyOnPub: false,
 			userNotifyOnAdmin: false,
@@ -50,7 +54,21 @@ export const FollowButton = React.createClass({
 		
 	// },
 
-	handleChange: function(option, mode, evt) {
+	createFollow: function(followId, mode) {
+		if (mode === 'pub') { this.props.dispatch(postFollowsPub(followId)); }
+		if (mode === 'user') { this.props.dispatch(postFollowsUser(followId)); }
+		if (mode === 'journal') { this.props.dispatch(postFollowsJournal(followId)); }
+		if (mode === 'label') { this.props.dispatch(postFollowsLabel(followId)); }
+	},
+
+	deleteFollow: function(followId, mode) {
+		if (mode === 'pub') { this.props.dispatch(deleteFollowsPub(followId)); }
+		if (mode === 'user') { this.props.dispatch(deleteFollowsUser(followId)); }
+		if (mode === 'journal') { this.props.dispatch(deleteFollowsJournal(followId)); }
+		if (mode === 'label') { this.props.dispatch(deleteFollowsLabel(followId)); }
+	},
+
+	handleChange: function(followId, mode, option, evt) {
 		const nextState = { 
 			...this.state,
 			[option]: evt.target.checked
@@ -66,11 +84,10 @@ export const FollowButton = React.createClass({
 			putOptions[newKey] = nextState[key];
 		});
 
-		console.log(putOptions);
-		// if (mode === 'pub') { this.props.dispatch(putFollowsPub(putOptions)); }
-		// if (mode === 'user') { this.props.dispatch(putFollowsUser(putOptions)); }
-		// if (mode === 'journal') { this.props.dispatch(putFollowsJournal(putOptions)); }
-		// if (mode === 'label') { this.props.dispatch(putFollowsLabel(putOptions)); }
+		if (mode === 'pub') { this.props.dispatch(putFollowsPub(followId, putOptions)); }
+		if (mode === 'user') { this.props.dispatch(putFollowsUser(followId, putOptions)); }
+		if (mode === 'journal') { this.props.dispatch(putFollowsJournal(followId, putOptions)); }
+		if (mode === 'label') { this.props.dispatch(putFollowsLabel(followId, putOptions)); }
 	},
 
 	render() {
@@ -92,10 +109,9 @@ export const FollowButton = React.createClass({
 		});
 
 		const optionsLanguage = {
-			pubNotifyOnVersion: 'When Pubs Change',
-			pubNotifyOnDiscussion: 'When Discussions added',
-			pubNotifyOnJournal: 'When journals feature',
-			pubNotifyOnContributors: 'when contributors added',
+			pubNotifyOnNewVersion: 'When new version created',
+			pubNotifyOnNewDiscussions: 'When Discussions added',
+			pubNotifyOnNewFeature: 'When journals feature',
 
 			userNotifyOnPub: 'When involved with new pub',
 			userNotifyOnAdmin: 'when admining a new journal',
@@ -112,7 +128,7 @@ export const FollowButton = React.createClass({
 
 				<div className="pt-button-group">
 					{!isFollowing &&
-						<button className="pt-button">Follow</button>
+						<button className="pt-button" onClick={this.createFollow.bind(this, followId, mode)}>Follow</button>
 					}
 
 					{isFollowing &&
@@ -123,7 +139,7 @@ export const FollowButton = React.createClass({
 									{options.map((option, index)=> {
 										return (
 											<li style={styles.checkboxItem}>
-												<Checkbox checked={this.state[option]} onChange={this.handleChange.bind(this, option, mode)}>
+												<Checkbox checked={this.state[option]} onChange={this.handleChange.bind(this, followId, mode, option)}>
 													{optionsLanguage[option]}
 												</Checkbox>
 											</li>
@@ -131,7 +147,7 @@ export const FollowButton = React.createClass({
 									})}
 
 									<MenuDivider />
-									<li className={'pt-menu-item'} style={styles.unfollowButton}>Unfollow</li>
+									<li className={'pt-menu-item'} style={styles.unfollowButton} onClick={this.deleteFollow.bind(this, followId, mode)}>Unfollow</li>
 								</Menu>
 							} 
 							position={Position.BOTTOM}>
