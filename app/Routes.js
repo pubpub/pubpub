@@ -15,6 +15,7 @@ export default (
 		<Route path="/user/:username/:mode" component={User} />
 
 		<Route path="/label/:title" component={Label} />
+		<Route path="/label/:title/:mode" component={Label} />
 
 		<Route path="/pubs/create" component={CreatePub} />
 		<Route path="/pub/:slug" component={Pub} />

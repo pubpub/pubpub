@@ -4,7 +4,7 @@ import { browserHistory, Link } from 'react-router';
 import Radium from 'radium';
 import Helmet from 'react-helmet';
 import { Spinner } from '@blueprintjs/core';
-import { PreviewUser, PreviewPub, PreviewJournal, NavContentWrapper } from 'components';
+import { PreviewUser, PreviewPub } from 'components';
 import { FollowButton } from 'containers';
 
 // import { globalStyles } from 'utils/globalStyles';
@@ -68,15 +68,26 @@ export const Label = React.createClass({
 						labelId={label.id} 
 						followData={followData} 
 						followerCount={followers.length} 
-						followersLink={'/label' + label.title + '/followers'}
+						followersLink={'/label/' + label.title + '/followers'}
 						dispatch={this.props.dispatch} />
 				</div>
 
-				<h1>{label.title}</h1>
+				<h1>
+					<Link to={'/label/' + label.title}>{label.title}</Link>
+				</h1>
 
-				{pubs.map((pub, index)=> {
+				{!params.mode && pubs.map((pub, index)=> {
 					return <PreviewPub key={'labelPub-' + index} pub={pub} />;
 				})}
+
+				{params.mode === 'followers' && 
+					<div>
+						<h2>Followers</h2>
+						{followers.map((follower, index)=> {
+							return <PreviewUser key={'follower-' + index} user={follower} />;
+						})}
+					</div>
+				}
 					
 			</div>
 		);
