@@ -46,13 +46,33 @@ export const FollowButton = React.createClass({
 		};
 	},
 
-	componentWillReceiveProps(nextProps) {
+	// componentWillReceiveProps(nextProps) {
 		
+	// },
+
+	handleChange: function(option, mode, evt) {
+		const nextState = { 
+			...this.state,
+			[option]: evt.target.checked
+		};
+		this.setState(nextState);
+
+		// Filter the new options and prep them for sending to backend.
+		const putOptions = {};
+		const putOptionsKeys = Object.keys(nextState).filter((key)=> {
+			return key.indexOf(mode) === 0;
+		}).map((key)=> {
+			const newKey = key.charAt(mode.length).toLowerCase() + key.substring(mode.length + 1, key.length); // Strips the mode prefix from the state key and fixes camelCase. Needed for backend.
+			putOptions[newKey] = nextState[key];
+		});
+
+		console.log(putOptions);
+		// if (mode === 'pub') { this.props.dispatch(putFollowsPub(putOptions)); }
+		// if (mode === 'user') { this.props.dispatch(putFollowsUser(putOptions)); }
+		// if (mode === 'journal') { this.props.dispatch(putFollowsJournal(putOptions)); }
+		// if (mode === 'label') { this.props.dispatch(putFollowsLabel(putOptions)); }
 	},
 
-	handleChange: function(option, evt) {
-		this.setState({ [option]: evt.target.checked });
-	},
 	render() {
 		const submittedIds = Number(!!this.props.pubId) + Number(!!this.props.userId) + Number(!!this.props.journalId) + Number(!!this.props.labelId);
 		if (submittedIds !== 1) { return <div>Incorrect number of submitted IDs!</div>; }
@@ -85,6 +105,7 @@ export const FollowButton = React.createClass({
 
 			labelNotifyOnPub: 'when new pub added',
 		};
+
 		return (
 			<div style={styles.container}>
 				
@@ -100,7 +121,13 @@ export const FollowButton = React.createClass({
 								<Menu>
 									<li className={'pt-menu-header'}><h6>Followed Activities</h6></li>
 									{options.map((option, index)=> {
-										return <li style={styles.checkboxItem}><Checkbox checked={this.state[option]} onChange={this.handleChange.bind(this, option)}>{optionsLanguage[option]}</Checkbox></li>;
+										return (
+											<li style={styles.checkboxItem}>
+												<Checkbox checked={this.state[option]} onChange={this.handleChange.bind(this, option, mode)}>
+													{optionsLanguage[option]}
+												</Checkbox>
+											</li>
+										);
 									})}
 
 									<MenuDivider />
@@ -115,6 +142,8 @@ export const FollowButton = React.createClass({
 					}
 					
 					{followerCount !== undefined &&
+						// Need to make this a link that appends /followers
+						// Might need to take in a link
 						<button className="pt-button">{followerCount}</button>
 					}
 					
