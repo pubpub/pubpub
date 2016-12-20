@@ -73,8 +73,17 @@ export const Journal = React.createClass({
 		const pathname = this.props.location.pathname;
 		const collection = this.props.params.collection;
 		const journal = this.props.journalData.journal || {};
+		const followers = journal.followers || [];
 		const pubFeatures = journal.pubFeatures || [];
 		const isAdmin = this.props.journalData.isAdmin || true; // The || true is for dev only.
+
+		const accountData = this.props.accountData || {};
+		const accountUser = accountData.user || {};
+		const accountId = accountUser.id;
+		const followData = followers.reduce((previous, current)=> {
+			if (current.id === accountId) { return current.FollowsJournal; }
+			return previous;
+		}, undefined);
 
 		const metaData = {
 			title: journal.name + ' · PubPub',
@@ -141,15 +150,7 @@ export const Journal = React.createClass({
 		return (
 			<div style={styles.container}>
 				<Helmet {...metaData} />
-				
-				<div style={styles.followButtonWrapper}>
-					<FollowButton 
-						userId={user.id} 
-						followData={followData} 
-						followerCount={followers.length} 
-						followersLink={'/user/' + user.username + '/followers'}
-						dispatch={this.props.dispatch} />
-				</div>
+			
 
 				<JournalHeader
 					journalName={journal.name}
@@ -158,6 +159,16 @@ export const Journal = React.createClass({
 					isFollowing={false}
 					description={journal.shortDescription}
 					logo={this.state.logo || journal.logo}
+					followContent={
+						<div style={styles.followButtonWrapper}>
+							<FollowButton 
+								journalId={journal.id} 
+								followData={followData} 
+								followerCount={followers.length} 
+								followersLink={'/' + journal.slug + '/followers'}
+								dispatch={this.props.dispatch} />
+						</div>
+					}
 					headerColor={this.state.headerColor || journal.headerColor}
 					headerMode={this.state.headerMode || journal.headerMode}
 					headerAlign={this.state.headerAlign || journal.headerAlign}
@@ -260,5 +271,7 @@ styles = {
 	},
 	followButtonWrapper: {
 		float: 'right',
+		position: 'relative',
+		zIndex: '3',
 	},
 };

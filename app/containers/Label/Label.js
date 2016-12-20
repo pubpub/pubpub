@@ -5,6 +5,7 @@ import Radium from 'radium';
 import Helmet from 'react-helmet';
 import { Spinner } from '@blueprintjs/core';
 import { PreviewUser, PreviewPub, PreviewJournal, NavContentWrapper } from 'components';
+import { FollowButton } from 'containers';
 
 // import { globalStyles } from 'utils/globalStyles';
 import { globalMessages } from 'utils/globalMessages';
@@ -17,6 +18,7 @@ let styles;
 export const Label = React.createClass({
 	propTypes: {
 		labelData: PropTypes.object,
+		accountData: PropTypes.object,
 		params: PropTypes.object,
 		location: PropTypes.object,
 		dispatch: PropTypes.func,
@@ -38,12 +40,21 @@ export const Label = React.createClass({
 
 	render() {
 		const label = this.props.labelData.label || {};
+		const followers = label.followers || [];
 		const pubs = label.pubs || [];
 		
 		const params = this.props.params || {};
 		const query = this.props.location.query;
 		const pathname = this.props.location.pathname;
 		
+		const accountData = this.props.accountData || {};
+		const accountUser = accountData.user || {};
+		const accountId = accountUser.id;
+		const followData = followers.reduce((previous, current)=> {
+			if (current.id === accountId) { return current.FollowsLabel; }
+			return previous;
+		}, undefined);
+
 		return (
 			<div style={styles.container}>
 				<Helmet title={label.title || params.title + ' · PubPub'} />
@@ -51,6 +62,16 @@ export const Label = React.createClass({
 				{this.props.labelData.loading &&
 					<div>Loading</div>
 				}
+
+				<div style={styles.followButtonWrapper}>
+					<FollowButton 
+						labelId={label.id} 
+						followData={followData} 
+						followerCount={followers.length} 
+						followersLink={'/label' + label.title + '/followers'}
+						dispatch={this.props.dispatch} />
+				</div>
+
 				<h1>{label.title}</h1>
 
 				{pubs.map((pub, index)=> {
@@ -65,6 +86,7 @@ export const Label = React.createClass({
 function mapStateToProps(state) {
 	return {
 		labelData: state.label.toJS(),
+		accountData: state.account.toJS(),
 	};
 }
 
@@ -76,5 +98,7 @@ styles = {
 		maxWidth: '1024px',
 		margin: '0 auto',
 	},
-	
+	followButtonWrapper: {
+		float: 'right',
+	},
 };

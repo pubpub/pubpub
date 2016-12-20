@@ -26,8 +26,8 @@ const followKeys = {
 	userNotifyOnNewPub: true,
 	userNotifyOnAdmin: true,
 
-	journalNotifyOnFeature: true,
-	journalNotifyOnCollection: true,
+	journalNotifyOnNewFeature: true,
+	journalNotifyOnNewSubmission: true,
 
 	labelNotifyOnPub: true,
 };
@@ -41,7 +41,7 @@ export const FollowButton = React.createClass({
 		labelId: PropTypes.number,
 		followData: PropTypes.object,
 		followerCount: PropTypes.number,
-		followersLink: PropTypes.object,
+		followersLink: PropTypes.string,
 		dispatch: PropTypes.func,
 	},
 
@@ -71,11 +71,11 @@ export const FollowButton = React.createClass({
 		if (followData.userId !== undefined) { mode = 'user'; }
 		if (followData.labelId !== undefined) { mode = 'label'; }
 
-		const nextState = Object.keys(followKeys).map((key)=> {
+		Object.keys(followKeys).map((key)=> {
 			const newKey = key.charAt(mode.length).toLowerCase() + key.substring(mode.length + 1, key.length); // Strips the mode prefix from the state key and fixes camelCase. Needed for backend.
 			followKeys[key] = followData[newKey];
 		});
-		this.setState(followKeys);
+		return this.setState(followKeys);
 	},
 
 	createFollow: function(followId, mode) {
@@ -143,8 +143,8 @@ export const FollowButton = React.createClass({
 			userNotifyOnNewPub: 'When involved with new pub',
 			userNotifyOnAdmin: 'when admining a new journal',
 
-			journalNotifyOnFeature: 'when feautre new pub',
-			journalNotifyOnCollection: 'when create new collection',
+			journalNotifyOnNewFeature: 'when feautre new pub',
+			journalNotifyOnNewSubmission: 'when create new submission',
 
 			labelNotifyOnPub: 'when new pub added',
 		};

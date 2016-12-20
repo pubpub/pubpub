@@ -10,6 +10,8 @@ import { globalStyles } from 'utils/globalStyles';
 import { globalMessages } from 'utils/globalMessages';
 import { FormattedMessage } from 'react-intl';
 
+import { FollowButton } from 'containers';
+
 import PubDocument from './PubDocument';
 import PubContributors from './PubContributors';
 import PubFiles from './PubFiles';
@@ -28,6 +30,7 @@ let styles;
 
 export const Pub = React.createClass({
 	propTypes: {
+		accountData: PropTypes.object,
 		pubData: PropTypes.object,
 		params: PropTypes.object,
 		location: PropTypes.object,
@@ -162,6 +165,15 @@ export const Pub = React.createClass({
 		const pubSubmits = pubData.pubSubmits || [];
 		const pubFeatures = pubData.pubFeatures || [];
 		const labelsData = pubData.pubLabels || [];
+		const followers = pubData.followers || [];
+
+		const accountData = this.props.accountData || {};
+		const accountUser = accountData.user || {};
+		const accountId = accountUser.id;
+		const followData = followers.reduce((previous, current)=> {
+			if (current.id === accountId) { return current.FollowsPub; }
+			return previous;
+		}, undefined);
 
 		// Might have to sort these if it isn't in chronological order
 		const currentVersion = versions.reduce((previous, current)=> {
@@ -222,6 +234,15 @@ export const Pub = React.createClass({
 				{/* Left Panel */}
 				{/* ---------- */}
 				<div style={styles.left}>
+
+					<div style={styles.followButtonWrapper}>
+						<FollowButton 
+							pubId={pubData.id} 
+							followData={followData} 
+							followerCount={followers.length} 
+							followersLink={'/pub/' + pubData.slug + '/followers'}
+							dispatch={this.props.dispatch} />
+					</div>
 
 					<h1 style={styles.pubTitle}>{pubData.title}</h1>
 					
@@ -374,6 +395,7 @@ export const Pub = React.createClass({
 
 function mapStateToProps(state) {
 	return {
+		accountData: state.account.toJS(), 
 		pubData: state.pub.toJS(),
 	};
 }
@@ -428,37 +450,6 @@ styles = {
 	pubAuthors: {
 		padding: '.5em 1.5em 1em',
 	},
-	buttonsPR: {
-		float: 'right',
-		width: '200px',
-		margin: '0em 0em 0em .5em',
-	},
-	buttons: {
-		float: 'right',
-		width: '200px',
-		margin: '1.5em 1.5em 1.5em .5em',
-	},
-	buttonBig: {
-		margin: '2px',
-		border: '1px solid #777',
-		textAlign: 'center',
-		fontSize: '.85em',
-		backgroundColor: '#232425',
-		color: 'white',
-		cursor: 'pointer',
-
-		// display: 'inline-block',
-		// width: 'calc(100% - 6)',
-	},
-	button: {
-		margin: '2px',
-		border: '1px solid #777',
-		display: 'inline-block',
-		width: 'calc(50% - 6px)',
-		textAlign: 'center',
-		fontSize: '.85em',
-		cursor: 'pointer',
-	},
 	nav: {
 		borderBottom: '1px solid #ccc',
 		boxShadow: '0px 1px 1px 0px #DDD',
@@ -476,83 +467,9 @@ styles = {
 	navItemActive: {
 		boxShadow: 'inset 0 -3px 0 #202b33',
 	},
-	discussionButtonWrapper: {
-		textAlign: 'right',
-		padding: '1em',
-	},
-	discussionButton: {
-		display: 'inline-block',
-		padding: '.25em .5em',
-		margin: '0em .5em',
-		textAlign: 'center',
-		border: '1px solid #777',
-		fontSize: '.85em',
-	},
-	discussionButtonBig: {
-		display: 'inline-block',
-		padding: '.25em .5em',
-		margin: '0em 0em 0em 0.5em',
-		textAlign: 'center',
-		border: '1px solid #CCC',
-		color: 'white',
-		backgroundColor: '#232425',
-		fontSize: '.85em',
-	},
-	filter: {
-		display: 'inline-block',
-		padding: '0em 1em',
-		fontSize: '0.85em',
-		userSelect: 'none',
-	},
-	filterInput: {
-		margin: '1em 1em 0em',
-		padding: '.5em',
-		width: 'calc(100% - 2em - 1em)'
-	},
-	filterHoverBox: {
-		backgroundColor: 'white',
-		position: 'absolute',
-		margin: '0.5em',
-		border: '1px solid #777',
-		boxShadow: '0px 1px 2px black',
-		padding: '.5em',
-		width: 'calc(100% - 2px - 1em - 1em)',
-		zIndex: 2,
-	},
-	filterHoverClose: {
+	followButtonWrapper: {
 		float: 'right',
-		cursor: 'pointer',
-	},
-	discussionStart: {
-		margin: '2em',
-	},
-	discussionContainer: {
-		padding: '1em 0em',
-		margin: '0em 1em',
-		borderTop: '1px solid #BBB',
-	},
-	discussionTitle: {
-		fontWeight: 'bold',
-	},
-	discussionMeta: {
-		color: '#555',
-		fontSize: '0.85em',
-	},
-	discussionLink: {
-		color: 'inherit',
-		textDecoration: 'none',
-	},
-	conversationWrapper: {
-		padding: '1em',
-	},
-	conversationItem: {
-		marginBottom: '1em',
-	},
-	newDiscussionWrapper: {
-		padding: '1em',
-	},
-	fullWidth: {
-		width: '100%',
+		margin: '2em 1em 0em 0em',
 	},
 	
 };

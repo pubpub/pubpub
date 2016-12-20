@@ -1,7 +1,6 @@
-import React, {PropTypes} from 'react';
+import React, { PropTypes } from 'react';
 import Radium from 'radium';
-import {FollowButton} from 'containers';
-import {globalStyles} from 'utils/globalStyles';
+import { globalStyles } from 'utils/globalStyles';
 import { Link } from 'react-router';
 
 let styles = {};
@@ -18,6 +17,7 @@ export const JournalProfileHeader = React.createClass({
 		headerImage: PropTypes.string,
 		headerMode: PropTypes.string,
 		headerAlign: PropTypes.string,
+		followContent: PropTypes.node,
 	},
 
 	render: function() {
@@ -29,9 +29,10 @@ export const JournalProfileHeader = React.createClass({
 
 		return (
 			<div style={[styles.headerBackground, customBackgroundStyle]}>
-				<div style={styles.backgroundGrey}></div>
+				<div style={styles.backgroundGrey} />
 				<div style={styles.headerContent}>
-					{/* <FollowButton id={this.props.journalID} type={'followsJournal'} isFollowing={this.props.isFollowing} buttonStyle={styles.followButtonStyle}/> */}
+					{this.props.followContent}
+
 					<div style={styles.headerTextWrapper}>
 						{(this.props.headerMode === 'logo' || this.props.headerMode === 'both') &&
 							<Link to={'/' + this.props.journalSlug} style={globalStyles.link}><img style={styles.logoImage} src={this.props.logo} /></Link>
