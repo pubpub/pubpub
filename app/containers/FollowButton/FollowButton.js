@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { browserHistory, Link } from 'react-router';
 import Radium from 'radium';
 import Helmet from 'react-helmet';
-import { Popover, PopoverInteractionKind, Position, Menu, MenuDivider, Checkbox } from '@blueprintjs/core';
+import { Popover, Position, Menu, MenuDivider, Checkbox } from '@blueprintjs/core';
 
 // import { globalStyles } from 'utils/globalStyles';
 import { globalMessages } from 'utils/globalMessages';
@@ -19,17 +19,27 @@ import {
 let styles;
 
 const followKeys = {
-	pubNotifyOnNewVersion: true,
-	pubNotifyOnNewDiscussions: true,
-	pubNotifyOnNewFeature: true,
+	pubNotifyOnVersions: true,
+	pubNotifyOnDiscussions: true,
+	pubNotifyOnJournals: true,
+	pubNotifyOnContributors: true,
+	pubNotifyOnReviewers: true,
+	pubNotifyOnFollowers: true,
 
-	userNotifyOnNewPub: true,
-	userNotifyOnAdmin: true,
+	userNotifyOnPubs: true,
+	userNotifyOnJournals: true,
+	userNotifyOnDiscussions: true,
+	userNotifyOnReviews: true,
+	userNotifyOnFollows: true,
+	userNotifyOnFollowers: true,
 
-	journalNotifyOnNewFeature: true,
-	journalNotifyOnNewSubmission: true,
+	journalNotifyOnAdmins: true,
+	journalNotifyOnFeatures: true,
+	journalNotifyOnSubmissions: true,
+	journalNotifyOnFollowers: true,
 
-	labelNotifyOnPub: true,
+	labelNotifyOnPubs: true,
+	labelNotifyOnFollowers: true,
 };
 
 export const FollowButton = React.createClass({
@@ -136,17 +146,27 @@ export const FollowButton = React.createClass({
 		});
 
 		const optionsLanguage = {
-			pubNotifyOnNewVersion: 'When new version created',
-			pubNotifyOnNewDiscussions: 'When Discussions added',
-			pubNotifyOnNewFeature: 'When journals feature',
+			pubNotifyOnVersions: 'Versions are updated',
+			pubNotifyOnDiscussions: 'New Discussions made',
+			pubNotifyOnJournals: 'Journals feature this pub',
+			pubNotifyOnContributors: 'Contributors are changed',
+			pubNotifyOnReviewers: 'Reviewers are invited',
+			pubNotifyOnFollowers: 'Someone follows this pub',
 
-			userNotifyOnNewPub: 'When involved with new pub',
-			userNotifyOnAdmin: 'when admining a new journal',
+			userNotifyOnPubs: 'Pubs are added',
+			userNotifyOnJournals: 'Journals are joined',
+			userNotifyOnDiscussions: 'Discussions are made',
+			userNotifyOnReviews: 'Reviews invitations are made or accepted',
+			userNotifyOnFollows: 'A new follow is made',
+			userNotifyOnFollowers: 'Someone follows this user',
 
-			journalNotifyOnNewFeature: 'when feautre new pub',
-			journalNotifyOnNewSubmission: 'when create new submission',
+			journalNotifyOnAdmins: 'Admins are added',
+			journalNotifyOnFeatures: 'Pubs are featured',
+			journalNotifyOnSubmissions: 'Pubs are submitted',
+			journalNotifyOnFollowers: 'Someone follows this journal',
 
-			labelNotifyOnPub: 'when new pub added',
+			labelNotifyOnPubs: 'Pubs are added',
+			labelNotifyOnFollowers: 'Someone follows this label',
 		};
 
 		return (
@@ -159,7 +179,7 @@ export const FollowButton = React.createClass({
 					<Popover 
 						content={
 							<Menu>
-								<li className={'pt-menu-header'}><h6>Followed Activities</h6></li>
+								<li className={'pt-menu-header'}><h6>Notify when:</h6></li>
 								{options.map((option, index)=> {
 									return (
 										<li style={styles.checkboxItem} key={'checkbox-' + option}>
@@ -174,7 +194,7 @@ export const FollowButton = React.createClass({
 								<li className={'pt-menu-item'} style={styles.unfollowButton} onClick={this.deleteFollow.bind(this, followId, mode)}>Unfollow</li>
 							</Menu>
 						} 
-						position={Position.BOTTOM}>
+						position={Position.BOTTOM_RIGHT}>
 
 						<button className="pt-button">Following <span className="pt-icon-standard pt-icon-caret-down pt-align-right"/></button>
 

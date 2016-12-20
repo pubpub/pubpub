@@ -25,7 +25,8 @@ export const Label = React.createClass({
 	},
 
 	componentWillMount() {
-		this.props.dispatch(getLabel(this.props.params.title));
+		const params = this.props.params || {};
+		this.props.dispatch(getLabel(params.title));
 	},
 
 	// getInitialState() {

@@ -54,12 +54,7 @@ export const Journal = React.createClass({
 	},
 
 	componentWillMount() {
-		// Need to check here so that getUser doesn't make a fetch twice
-		const journal = this.props.journalData.journal || {};
-		const params = this.props.params || {};
-		if (this.props.journalData.journal !== null && journal.slug !== params.slug) {
-			this.props.dispatch(getJournalData(this.props.params.slug))
-		}
+		this.props.dispatch(getJournalData(this.props.params.slug));
 	},
 	
 	handleHeaderUpdate: function(updateObject) {

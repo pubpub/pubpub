@@ -44,15 +44,8 @@ export const User = React.createClass({
 	// 	}
 	// },
 	componentWillMount() {
-		// window.prerenderReady = false;
-		// Need to check here so that getUser doesn't make a fetch twice
-		const user = this.props.userData.user || {};
 		const params = this.props.params || {};
-		if (this.props.userData.user !== null && user.username !== params.username) {
-			this.props.dispatch(getUserData(this.props.params.username));
-		}
-
-		
+		this.props.dispatch(getUserData(params.username));		
 	},
 
 	getInitialState() {
@@ -182,14 +175,16 @@ export const User = React.createClass({
 						<img alt={user.username} style={styles.userImage} src={'https://jake.pubpub.org/unsafe/150x150/' + user.image} />
 					</div>
 					<div style={styles.headerTextWrapper}>
-						<div style={styles.followButtonWrapper}>
-							<FollowButton 
-								userId={user.id} 
-								followData={followData} 
-								followerCount={followers.length} 
-								followersLink={'/user/' + user.username + '/followers'}
-								dispatch={this.props.dispatch} />
-						</div>
+						{!ownProfile &&
+							<div style={styles.followButtonWrapper}>
+								<FollowButton 
+									userId={user.id} 
+									followData={followData} 
+									followerCount={followers.length} 
+									followersLink={'/user/' + user.username + '/followers'}
+									dispatch={this.props.dispatch} />
+							</div>
+						}
 
 						<h1 style={styles.showOnMobile}>{name}</h1> {/* Duplicate header for cleaner Follow button rendering */}
 						
