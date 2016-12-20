@@ -4,6 +4,7 @@ import { Link } from 'react-router';
 import Radium from 'radium';
 import Helmet from 'react-helmet';
 
+import { FollowButton } from 'containers';
 import { NavContentWrapper, PreviewPub } from 'components';
 import { NoMatch } from 'containers';
 
@@ -141,6 +142,15 @@ export const Journal = React.createClass({
 			<div style={styles.container}>
 				<Helmet {...metaData} />
 				
+				<div style={styles.followButtonWrapper}>
+					<FollowButton 
+						userId={user.id} 
+						followData={followData} 
+						followerCount={followers.length} 
+						followersLink={'/user/' + user.username + '/followers'}
+						dispatch={this.props.dispatch} />
+				</div>
+
 				<JournalHeader
 					journalName={journal.name}
 					journalSlug={journal.slug}
@@ -248,5 +258,7 @@ styles = {
 	container: {
 
 	},
-	
+	followButtonWrapper: {
+		float: 'right',
+	},
 };

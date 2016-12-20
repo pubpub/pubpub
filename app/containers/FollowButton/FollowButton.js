@@ -18,6 +18,20 @@ import {
 
 let styles;
 
+const followKeys = {
+	pubNotifyOnNewVersion: true,
+	pubNotifyOnNewDiscussions: true,
+	pubNotifyOnNewFeature: true,
+
+	userNotifyOnNewPub: true,
+	userNotifyOnAdmin: true,
+
+	journalNotifyOnFeature: true,
+	journalNotifyOnCollection: true,
+
+	labelNotifyOnPub: true,
+};
+
 export const FollowButton = React.createClass({
 	propTypes: {
 		followButtonData: PropTypes.object,
@@ -27,38 +41,49 @@ export const FollowButton = React.createClass({
 		labelId: PropTypes.number,
 		followData: PropTypes.object,
 		followerCount: PropTypes.number,
+		followersLink: PropTypes.object,
 		dispatch: PropTypes.func,
 	},
 
 	componentWillMount() {
 		// Populate state with journalData values if they exist
+		this.initializeState(this.props.followData);
+	},
+
+	componentWillReceiveProps(nextProps) {
+		if (!this.props.followData && !!nextProps.followData) {
+			this.initializeState(nextProps.followData);
+		}
 	},
 
 	getInitialState() {
 		return {
-			pubNotifyOnNewVersion: false,
-			pubNotifyOnNewDiscussions: false,
-			pubNotifyOnNewFeature: false,
-
-			userNotifyOnPub: false,
-			userNotifyOnAdmin: false,
-
-			journalNotifyOnFeature: false,
-			journalNotifyOnCollection: false,
-
-			labelNotifyOnPub: false,
+			justFollowed: 0,
+			...followKeys,
 		};
 	},
 
-	// componentWillReceiveProps(nextProps) {
-		
-	// },
+	initializeState: function(followData) {
+		let mode;
+		if (!followData) { return null; }
+		if (followData.pubId !== undefined) { mode = 'pub'; }
+		if (followData.journalId !== undefined) { mode = 'journal'; }
+		if (followData.userId !== undefined) { mode = 'user'; }
+		if (followData.labelId !== undefined) { mode = 'label'; }
+
+		const nextState = Object.keys(followKeys).map((key)=> {
+			const newKey = key.charAt(mode.length).toLowerCase() + key.substring(mode.length + 1, key.length); // Strips the mode prefix from the state key and fixes camelCase. Needed for backend.
+			followKeys[key] = followData[newKey];
+		});
+		this.setState(followKeys);
+	},
 
 	createFollow: function(followId, mode) {
 		if (mode === 'pub') { this.props.dispatch(postFollowsPub(followId)); }
 		if (mode === 'user') { this.props.dispatch(postFollowsUser(followId)); }
 		if (mode === 'journal') { this.props.dispatch(postFollowsJournal(followId)); }
 		if (mode === 'label') { this.props.dispatch(postFollowsLabel(followId)); }
+		this.setState({ justFollowed: 1 });
 	},
 
 	deleteFollow: function(followId, mode) {
@@ -66,6 +91,7 @@ export const FollowButton = React.createClass({
 		if (mode === 'user') { this.props.dispatch(deleteFollowsUser(followId)); }
 		if (mode === 'journal') { this.props.dispatch(deleteFollowsJournal(followId)); }
 		if (mode === 'label') { this.props.dispatch(deleteFollowsLabel(followId)); }
+		this.setState({ justFollowed: -1 });
 	},
 
 	handleChange: function(followId, mode, option, evt) {
@@ -101,8 +127,9 @@ export const FollowButton = React.createClass({
 		if (this.props.userId !== undefined) { mode = 'user'; }
 		if (this.props.labelId !== undefined) { mode = 'label'; }
 		
-		const isFollowing = !!this.props.followData || true;
-		const followerCount = this.props.followerCount || 12;
+		const followData = this.props.followData || {};
+		const isFollowing = this.state.justFollowed !== -1 && (followData.followerId || this.state.justFollowed === 1);
+		const followerCount = this.props.followerCount;
 
 		const options = Object.keys(this.state).filter((key)=> {
 			return key.indexOf(mode) === 0;
@@ -113,7 +140,7 @@ export const FollowButton = React.createClass({
 			pubNotifyOnNewDiscussions: 'When Discussions added',
 			pubNotifyOnNewFeature: 'When journals feature',
 
-			userNotifyOnPub: 'When involved with new pub',
+			userNotifyOnNewPub: 'When involved with new pub',
 			userNotifyOnAdmin: 'when admining a new journal',
 
 			journalNotifyOnFeature: 'when feautre new pub',
@@ -123,48 +150,43 @@ export const FollowButton = React.createClass({
 		};
 
 		return (
-			<div style={styles.container}>
+			<div className="pt-button-group">
+				{!isFollowing &&
+					<button className="pt-button" onClick={this.createFollow.bind(this, followId, mode)}>Follow</button>
+				}
+
+				{isFollowing &&
+					<Popover 
+						content={
+							<Menu>
+								<li className={'pt-menu-header'}><h6>Followed Activities</h6></li>
+								{options.map((option, index)=> {
+									return (
+										<li style={styles.checkboxItem} key={'checkbox-' + option}>
+											<Checkbox checked={this.state[option]} onChange={this.handleChange.bind(this, followId, mode, option)}>
+												{optionsLanguage[option]}
+											</Checkbox>
+										</li>
+									);
+								})}
+
+								<MenuDivider />
+								<li className={'pt-menu-item'} style={styles.unfollowButton} onClick={this.deleteFollow.bind(this, followId, mode)}>Unfollow</li>
+							</Menu>
+						} 
+						position={Position.BOTTOM}>
+
+						<button className="pt-button">Following <span className="pt-icon-standard pt-icon-caret-down pt-align-right"/></button>
+
+					</Popover>
+				}
 				
-
-				<div className="pt-button-group">
-					{!isFollowing &&
-						<button className="pt-button" onClick={this.createFollow.bind(this, followId, mode)}>Follow</button>
-					}
-
-					{isFollowing &&
-						<Popover 
-							content={
-								<Menu>
-									<li className={'pt-menu-header'}><h6>Followed Activities</h6></li>
-									{options.map((option, index)=> {
-										return (
-											<li style={styles.checkboxItem}>
-												<Checkbox checked={this.state[option]} onChange={this.handleChange.bind(this, followId, mode, option)}>
-													{optionsLanguage[option]}
-												</Checkbox>
-											</li>
-										);
-									})}
-
-									<MenuDivider />
-									<li className={'pt-menu-item'} style={styles.unfollowButton} onClick={this.deleteFollow.bind(this, followId, mode)}>Unfollow</li>
-								</Menu>
-							} 
-							position={Position.BOTTOM}>
-
-							<button className="pt-button">Following <span className="pt-icon-standard pt-icon-caret-down pt-align-right"/></button>
-
-						</Popover>
-					}
-					
-					{followerCount !== undefined &&
-						// Need to make this a link that appends /followers
-						// Might need to take in a link
-						<button className="pt-button">{followerCount}</button>
-					}
-					
-				</div>
-					
+				{followerCount !== undefined &&
+					// Need to make this a link that appends /followers
+					// Might need to take in a link
+					<Link to={this.props.followersLink} className="pt-button">{followerCount + Number((followData.followerId && this.state.justFollowed === 1) ? 0 : this.state.justFollowed || 0)}</Link>
+				}
+				
 			</div>
 		);
 	}
@@ -179,11 +201,6 @@ function mapStateToProps(state) {
 export default connect(mapStateToProps)(Radium(FollowButton));
 
 styles = {
-	container: {
-		padding: '2em 1em',
-		maxWidth: '1024px',
-		margin: '0 auto',
-	},
 	checkboxItem: {
 		margin: '1em 0.5em 0em',
 	},

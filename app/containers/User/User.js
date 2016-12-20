@@ -6,6 +6,7 @@ import Radium from 'radium';
 import Helmet from 'react-helmet';
 
 import { NavContentWrapper } from 'components';
+import { FollowButton } from 'containers';
 
 import { globalStyles } from 'utils/globalStyles';
 import { globalMessages } from 'utils/globalMessages';
@@ -96,10 +97,19 @@ export const User = React.createClass({
 	render() {
 		const username = this.props.params.username;
 		const user = this.props.userData.user || {};
+		const followers = user.followers || [];
 		const name = user.firstName || user.lastName ? user.firstName + ' ' + user.lastName : this.props.params.username;
 		const ownProfile = username === this.props.accountData.user.username;
 		const query = this.props.location.query;
 		const pathname = this.props.location.pathname;
+
+		const accountData = this.props.accountData || {};
+		const accountUser = accountData.user || {};
+		const accountId = accountUser.id;
+		const followData = followers.reduce((previous, current)=> {
+			if (current.id === accountId) { return current.FollowsUser; }
+			return previous;
+		}, undefined);
 
 		const metaData = {
 			title: name + ' · PubPub',
@@ -172,9 +182,17 @@ export const User = React.createClass({
 						<img alt={user.username} style={styles.userImage} src={'https://jake.pubpub.org/unsafe/150x150/' + user.image} />
 					</div>
 					<div style={styles.headerTextWrapper}>
+						<div style={styles.followButtonWrapper}>
+							<FollowButton 
+								userId={user.id} 
+								followData={followData} 
+								followerCount={followers.length} 
+								followersLink={'/user/' + user.username + '/followers'}
+								dispatch={this.props.dispatch} />
+						</div>
 
 						<h1 style={styles.showOnMobile}>{name}</h1> {/* Duplicate header for cleaner Follow button rendering */}
-
+						
 						{/*!ownProfile &&
 							<FollowButton id={user._id} type={'followsUser'} isFollowing={user.isFollowing} buttonStyle={styles.followButtonStyle}/>
 						*/}
@@ -319,6 +337,9 @@ styles = {
 		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
 			display: 'block',
 		}
+	},
+	followButtonWrapper: {
+		float: 'right',
 	},
 	userImage: {
 		borderRadius: '2px',

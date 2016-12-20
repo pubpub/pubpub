@@ -4,8 +4,6 @@ import { Link } from 'react-router';
 
 import { postUser } from 'containers/App/actions';
 
-import { FollowButton } from 'containers';
-
 let styles;
 
 export const Landing = React.createClass({
@@ -32,7 +30,6 @@ export const Landing = React.createClass({
 			<div style={styles.container}>
 				<div style={styles.greyBox}>
 					<Link to={'/droopyleaves2'}>Droopy leaves</Link>
-					<FollowButton pubId={1} dispatch={this.props.dispatch} />
 					<div style={styles.content}>
 						<h1 style={styles.title}>PubPub for Teams</h1>
 						<p style={styles.text}>
