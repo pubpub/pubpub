@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { browserHistory, Link } from 'react-router';
 import Radium from 'radium';
 import Helmet from 'react-helmet';
-import { Popover, Position, Menu, MenuDivider, Checkbox } from '@blueprintjs/core';
+import { Popover, Position, Menu, MenuDivider, Checkbox, Tooltip } from '@blueprintjs/core';
 
 // import { globalStyles } from 'utils/globalStyles';
 import { globalMessages } from 'utils/globalMessages';
@@ -45,6 +45,7 @@ const followKeys = {
 export const FollowButton = React.createClass({
 	propTypes: {
 		followButtonData: PropTypes.object,
+		accountData: PropTypes.object,
 		pubId: PropTypes.number,
 		journalId: PropTypes.number,
 		userId: PropTypes.number,
@@ -127,6 +128,9 @@ export const FollowButton = React.createClass({
 	},
 
 	render() {
+		const accountUser = this.props.accountData.user || {};
+		const isLoggedIn = accountUser.id !== undefined;
+
 		const submittedIds = Number(!!this.props.pubId) + Number(!!this.props.userId) + Number(!!this.props.journalId) + Number(!!this.props.labelId);
 		if (submittedIds !== 1) { return <div>Incorrect number of submitted IDs!</div>; }
 
@@ -171,8 +175,14 @@ export const FollowButton = React.createClass({
 
 		return (
 			<div className="pt-button-group">
-				{!isFollowing &&
+				{!isFollowing && isLoggedIn &&
 					<button className="pt-button" onClick={this.createFollow.bind(this, followId, mode)}>Follow</button>
+				}
+
+				{!isFollowing && !isLoggedIn &&
+					<Tooltip content="Must be logged in to Follow" position={Position.BOTTOM}>
+						<Link to={'/login'} className="pt-button">Follow</Link>
+					</Tooltip>
 				}
 
 				{isFollowing &&
@@ -214,6 +224,7 @@ export const FollowButton = React.createClass({
 
 function mapStateToProps(state) {
 	return {
+		accountData: state.account.toJS(),
 		followButtonData: state.followButton.toJS(),
 	};
 }
