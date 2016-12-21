@@ -43,9 +43,15 @@ export const Landing = React.createClass({
 		const activitiesJournals = activities.journals || [];
 		const activitiesLabels = activities.labels || [];
 
-		const globalActivities = activities.global || [];
-		const followingActivities = activities.following || [];
-		const selfActivities = activities.self || [];
+		const uniqueIDs = {};
+		const uniqueActivities = [...activitiesUsers, ...activitiesPubs, ...activitiesJournals, ...activitiesLabels].filter((activity)=>{
+			if (activity.id in uniqueIDs) { return false; }
+			uniqueIDs[activity.id] = true;
+			return true;
+		});
+		// const globalActivities = activities.global || [];
+		// const followingActivities = activities.following || [];
+		// const selfActivities = activities.self || [];
 
 		const assets = activitiesData.assets || {};
 		const assetPubs = assets.pubs || [];
@@ -56,6 +62,16 @@ export const Landing = React.createClass({
 		const mode = query.mode || 'following';
 		const filterMode = query.filter || 'All';
 		const filterList = ['All', 'Pubs', 'Journals', 'Users', 'Labels'];
+
+		let followingActivities;
+		if (filterMode === 'All') { followingActivities = uniqueActivities; }
+		if (filterMode === 'Pubs') { followingActivities = activitiesPubs; }
+		if (filterMode === 'Users') { followingActivities = activitiesUsers; }
+		if (filterMode === 'Journals') { followingActivities = activitiesJournals; }
+		if (filterMode === 'Labels') { followingActivities = activitiesLabels; }
+
+		const globalActivities = activities.global || [];
+		const youActivities = activities.you || [];
 
 		// For following and self activities, they will come grouped by Journal, Pub, User, and Label
 		// We need to 
@@ -81,34 +97,49 @@ export const Landing = React.createClass({
 								</div>
 								<div style={styles.headerOptions}>
 									<div className="pt-button-group pt-minimal">
-										<Link to={{ pathname: '/', query: { ...query, mode: 'global' } }} className={mode === 'global' ? 'pt-button pt-active' : 'pt-button'}>Global</Link>
+										<Link to={{ pathname: '/', query: { ...query, mode: 'global', filter: undefined } }} className={mode === 'global' ? 'pt-button pt-active' : 'pt-button'}>Global</Link>
 										<Link to={{ pathname: '/', query: { ...query, mode: undefined } }} className={mode === 'following' ? 'pt-button pt-active' : 'pt-button'}>Following</Link>
-										<Link to={{ pathname: '/', query: { ...query, mode: 'you' } }} className={mode === 'you' ? 'pt-button pt-active' : 'pt-button'}>You</Link>
+										<Link to={{ pathname: '/', query: { ...query, mode: 'you', filter: undefined } }} className={mode === 'you' ? 'pt-button pt-active' : 'pt-button'}>You</Link>
 									</div>
 								</div>
-								<div style={styles.headerRight}>
-									<DropdownButton 
-										content={
-											<Menu>
-												{filterList.map((filter, index)=> {
-													return (
-														<li key={'filter-' + index}><Link to={{ pathname: '/', query: { ...query, filter: filter } }} className="pt-menu-item pt-popover-dismiss">
-															{filter}
-															{filterMode === filter && <span className={'pt-icon-standard pt-icon-tick pt-menu-item-label'} />}
-														</Link></li>
-													);
-												})}
-											</Menu>
-										}
-										title={'Filter'} 
-										position={2} />
-								</div>
+								{mode === 'following' &&
+									<div style={styles.headerRight}>
+										<DropdownButton 
+											content={
+												<Menu>
+													{filterList.map((filter, index)=> {
+														return (
+															<li key={'filter-' + index}><Link to={{ pathname: '/', query: { ...query, filter: filter } }} className="pt-menu-item pt-popover-dismiss">
+																{filter}{index !== 0 ? ' you Follow ' : ''}
+																{filterMode === filter && <span className={'pt-icon-standard pt-icon-tick pt-menu-item-label'} />}
+															</Link></li>
+														);
+													})}
+												</Menu>
+											}
+											title={'Filter'} 
+											position={2} />
+									</div>
+								}
 							</div>
 
-							{[...activitiesPubs, ...activitiesJournals].map((activity, index)=> {
-								console.log(activity);
+							{mode === 'following' && followingActivities.map((activity)=> {
 								return <ActivityItem key={'activity-' + activity.id} activity={activity} />;
 							})}
+
+							{mode === 'global' && globalActivities.map((activity)=> {
+								return <ActivityItem key={'activity-' + activity.id} activity={activity} />;
+							})}
+
+							{mode === 'you' && youActivities.map((activity)=> {
+								return <ActivityItem key={'activity-' + activity.id} activity={activity} />;
+							})}
+
+							{((mode === 'following' && !followingActivities.length) || (mode === 'you' && !youActivities.length) || (mode === 'global' && !globalActivities.length)) &&
+								<NonIdealState
+									title={'No Activities'}
+									visual={'pulse'} />
+							}
 							
 						</div>
 
@@ -128,8 +159,6 @@ export const Landing = React.createClass({
 						</div>
 					</div>
 				}
-
-
 
 			</div>
 		);
