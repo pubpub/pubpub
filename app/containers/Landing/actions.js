@@ -19,7 +19,7 @@ export function getActivities() {
 	return (dispatch) => {
 		dispatch({ type: GET_ACTIVITIES_LOAD });
 
-		return clientFetch('/api/activities', {
+		return clientFetch('/api/activities?assets=true', {
 			method: 'GET'
 		})
 		.then((result) => {

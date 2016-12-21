@@ -36,10 +36,20 @@ export const Landing = React.createClass({
 		const user = accountData.user || {};
 
 		const activitiesData = this.props.activitiesData || {};
-		const activities = activitiesData || {};
+		const activities = activitiesData.activities || {};
+
+		const activitiesPubs = activities.pubs || [];
+		const activitiesUsers = activities.users || [];
+		const activitiesJournals = activities.journals || [];
+		const activitiesLabels = activities.labels || [];
+
 		const globalActivities = activities.global || [];
 		const followingActivities = activities.following || [];
 		const selfActivities = activities.self || [];
+
+		const assets = activitiesData.assets || {};
+		const assetPubs = assets.pubs || [];
+		const assetJournals = assets.journals || [];
 
 		const location = this.props.location || {};
 		const query = location.query || {};
@@ -95,24 +105,25 @@ export const Landing = React.createClass({
 								</div>
 							</div>
 
-							<ActivityItem />
-							<ActivityItem />
-							<ActivityItem />
-							<ActivityItem />
-							<ActivityItem />
-							<ActivityItem />
-
+							{[...activitiesPubs, ...activitiesJournals].map((activity, index)=> {
+								console.log(activity);
+								return <ActivityItem key={'activity-' + activity.id} activity={activity} />;
+							})}
 							
 						</div>
 
 						<div style={styles.rightPanel}>
 							<div style={styles.rightContent}>
 								<h3>Your Pubs</h3>
-
-								<ActivityItem />
-								<ActivityItem />
+								{assetPubs.map((pub)=> {
+									return <Link key={'pub-link-' + pub.id} style={styles.sideLink} className={'pt-text-overflow-ellipsis'} to={'/pub/' + pub.slug}>{pub.title}</Link>;
+								})}
 
 								<h3>Your Journals</h3>
+								{assetJournals.map((journal)=> {
+									return <Link key={'journal-link-' + journal.id} style={styles.sideLink} className={'pt-text-overflow-ellipsis'} to={'/' + journal.slug}>{journal.name}</Link>;
+								})}
+
 							</div>
 						</div>
 					</div>
@@ -128,7 +139,7 @@ export const Landing = React.createClass({
 function mapStateToProps(state) {
 	return {
 		accountData: state.account.toJS(),
-		// activitiesData: state.activities.toJS(),
+		activitiesData: state.activities.toJS(),
 	};
 }
 
@@ -151,8 +162,7 @@ styles = {
 	rightPanel: {
 		display: 'table-cell',
 		paddingLeft: '1em',
-		maxWidth: '400px',
-		width: '25%',
+		width: '1%',
 	},
 	rightContent: {
 		borderLeft: '1px solid #EEE',
@@ -181,6 +191,12 @@ styles = {
 		display: 'table-cell',
 		verticalAlign: 'middle',
 		width: '1%',
+	},
+	sideLink: {
+		// width: '100%',
+		display: 'block',
+		width: '200px',
+		paddingBottom: '.5em',
 	},
 	
 };

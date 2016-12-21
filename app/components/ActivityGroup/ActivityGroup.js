@@ -3,7 +3,7 @@ import Radium from 'radium';
 import { Link } from 'react-router';
 let styles = {};
 
-export const ActivityGroupCard = React.createClass({
+export const ActivityGroup = React.createClass({
 	propTypes: {
 		activities: PropTypes.array,
 	},
@@ -20,23 +20,15 @@ export const ActivityGroupCard = React.createClass({
 	render: function() {
 		const activity = this.props.activities || [];
 		// Activities either all have the same actor, or all have the same target
-		const actor = activity.actor || {
-			image: 'https://assets.pubpub.org/_testing/1481721551672.jpg',
-			firstName: 'Maria',
-			lastName: 'Osuega',
-			username: 'test4',
-		};
-		const verb = activity.verb || 'created';
-		const target = activity.target || {
-			slug: 'jokes',
-			title: 'Elephants and Panda Jokes',
-		};
+		const actor = activity.actor || {};
+		const verb = activity.verb || '';
+		const target = activity.target || {};
 		const object = activity.object || {};
 
 		return (
 			<div style={styles.container}>
 				<div style={styles.imageWrapper}>
-					<img src={actor.image} style={styles.image}/>
+					<img src={actor.image} style={styles.image} />
 				</div>
 				
 				<div style={styles.detailsWrapper}>
@@ -51,7 +43,7 @@ export const ActivityGroupCard = React.createClass({
 	}
 });
 
-export default Radium(ActivityGroupCard);
+export default Radium(ActivityGroup);
 
 styles = {
 	container: {

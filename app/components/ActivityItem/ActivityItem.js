@@ -1,6 +1,7 @@
-import React, {PropTypes} from 'react';
+import React, { PropTypes } from 'react';
 import Radium from 'radium';
 import { Link } from 'react-router';
+import dateFormat from 'dateformat';
 let styles = {};
 
 export const ActivityItem = React.createClass({
@@ -18,33 +19,47 @@ export const ActivityItem = React.createClass({
 	},
 
 	render: function() {
-		const activity = this.props.activity || {
-			createdAt: '2016-12-02 16:42:29.488+00',
+		const activity = this.props.activity || {};
+		
+
+		const actor = activity.actorPub || activity.actorUser || activity.actorJournal || activity.actorLabel || {};
+		const verb = activity.verb || '';
+		const target = activity.targetPub || activity.targetUser || activity.targetJournal || activity.targetLabel || {};
+		const object = activity.objectPub || activity.objectUser || activity.objectJournal || activity.objectLabel || {};
+
+		const actorImage = actor.image || actor.previewImage || actor.icon || 'http://plainicon.com/dboard/userprod/2803_dd580/prod_thumb/plainicon.com-48762-256px-1a9.png';
+
+		const makeString = function(item) { 
+			return item.title || item.name || item.firstName + ' ' + item.lastName; 
 		};
-		const actor = activity.actor || {
-			image: 'https://assets.pubpub.org/_testing/1481721551672.jpg',
-			firstName: 'Maria',
-			lastName: 'Osuega',
-			username: 'test4',
+		const actorString = makeString(actor);
+		const targetString = makeString(target);
+		const objectString = makeString(object);
+
+		const makeLink = function(item) { 
+			return (item.username && '/user/' + item.username)
+				|| (item.logo && '/' + item.slug)
+				|| (item.previewImage && '/pub/' + item.slug)
+				|| '/label/' + item.title;
 		};
-		const verb = activity.verb || 'created';
-		const target = activity.target || {
-			slug: 'jokes',
-			title: 'Elephants and Panda Jokes',
-		};
-		const object = activity.object || {};
+		const actorLink = makeLink(actor);
+		const targetLink = makeLink(target);
+		const objectLink = makeLink(object);
 
 		return (
 			<div style={styles.container}>
 				<div style={styles.imageWrapper}>
-					<img src={actor.image} style={styles.image}/>
+					<Link to={actorLink}>
+						<img src={actorImage} style={styles.image} alt={actorString} />
+					</Link>
 				</div>
 				
 				<div style={styles.detailsWrapper}>
-					<div style={styles.date}>yesterday</div>
-					<Link to={'/user/' + actor.username} style={styles.link}>{actor.firstName + ' ' + actor.lastName} </Link>
-					<span>created </span>
-					<Link to={'/pub/' + target.slug} style={styles.link}>{target.title}</Link>
+					<div style={styles.date}>{dateFormat(activity.createdAt, 'mmmm dd, yyyy HH:mm')}</div>
+					
+					<Link to={actorLink} style={styles.link}>{actorString}</Link>
+					<span> {verb} </span>
+					<Link to={targetLink} style={styles.link}>{targetString}</Link>
 					
 				</div>
 			</div>
