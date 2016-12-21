@@ -1,3 +1,5 @@
+export ActivityItem from './ActivityItem/ActivityItem';
+export ActivityGroup from './ActivityGroup/ActivityGroup';
 export AppFooter from './AppFooter/AppFooter';
 export AppNav from './AppNav/AppNav';
 export AutocompleteBar from './AutocompleteBar/AutocompleteBar';

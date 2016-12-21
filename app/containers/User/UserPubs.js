@@ -188,7 +188,4 @@ styles = {
 		verticalAlign: 'middle',
 		width: '1%',
 	},
-	noWrap: {
-		whiteSpace: 'nowrap',
-	},
 };

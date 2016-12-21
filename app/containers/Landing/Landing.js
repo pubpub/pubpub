@@ -1,22 +1,29 @@
 import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
-
+import { Menu, MenuDivider, NonIdealState } from '@blueprintjs/core';
+import { ActivityItem, DropdownButton } from 'components';
 import { postUser } from 'containers/App/actions';
 
 let styles;
 
 export const Landing = React.createClass({
 	propTypes: {
-		appData: PropTypes.object,
+		accountData: PropTypes.object,
+		activitiesData: PropTypes.object,
+		location: PropTypes.object,
 		dispatch: PropTypes.func,
 	},
 
 	getInitialState() {
 		return {
-			email: '',
-			name: '',
+			hasCookie: false,
 		};
+	},
+
+	componentWillMount() {
+		// this.setState({ hasCookie: document.cookie.indexOf('connect.sid') > -1 });
+		// this.props.dispatch(getActivities());
 	},
 
 	handleSubmit: function(evt) {
@@ -25,70 +32,93 @@ export const Landing = React.createClass({
 	},
 
 	render() {
+		const accountData = this.props.accountData || {};
+		const user = accountData.user || {};
+
+		const activitiesData = this.props.activitiesData || {};
+		const activities = activitiesData || {};
+		const globalActivities = activities.global || [];
+		const followingActivities = activities.following || [];
+		const selfActivities = activities.self || [];
+
+		const location = this.props.location || {};
+		const query = location.query || {};
+		const mode = query.mode || 'following';
+		const filterMode = query.filter || 'All';
+		const filterList = ['All', 'Pubs', 'Journals', 'Users', 'Labels'];
+
+		// For following and self activities, they will come grouped by Journal, Pub, User, and Label
+		// We need to 
+		// 1) Search for groups. (Things applied to same target or object within a day's time)
+		// 2) Deduplicate for master list (do we de-duplicate for filters?)
 
 		return (
 			<div style={styles.container}>
-				<div style={styles.greyBox}>
-					<Link to={'/droopyleaves2'}>Droopy leaves</Link>
-					<div style={styles.content}>
-						<h1 style={styles.title}>PubPub for Teams</h1>
-						<p style={styles.text}>
-							Whether in academia, industry, or your basement - research and discovery is hard. It’s even harder without the tools to publish, find, and leverage related work from around the world or even across the building.
-						</p>
-						<p style={styles.text}>
-							PubPub is a full-stack open source publishing platform that enables structured collaboration across individuals, teams, or countries.
-						</p>
 
-						<a href={'https://www.pubpub.org/pub/for-teams'} style={{color: 'white', textDecoration: 'none'}}><button name={'login'} className={'button'} style={styles.pubButton}>
-							Go to the Discussion
-						</button></a>
-
-						
-						{!this.props.appData.user.email &&
-							<form onSubmit={this.handleSubmit} style={styles.form}>
-								<input id={'email'} name={'email'} type="email" style={styles.input} placeholder={'Subscribe to stay updated'} value={this.state.email} onChange={(evt)=>{this.setState({email: evt.target.value});}} />
-								<button name={'login'} className={'button'} style={styles.submitButton} onClick={this.handleSubmit}>
-									Submit
-								</button>
-							</form>
-						}
-						{this.props.appData.user.email &&
-							<h2>Email added!</h2>
-						}
-
+				{!user.id &&
+					<div>
+						<h1>Welcome to PubPub</h1>
+						About section here!
 					</div>
-				</div>
+				}
 
-				<div style={styles.whiteBox}>
-					<div style={styles.content}>
-						<h2 style={styles.title2}>Open Discussion</h2>
-						<p style={styles.text}>
-							After focusing on scientific publishing for two years, we’re expanding our effort to build PubPub as a tool for all types of research. As part of this process we will be documenting and opening our designs to the community.
-						</p>
+				{user.id &&
+					<div style={styles.activitiesTable}>
+						<div style={styles.leftPanel}>
+							<div style={styles.headerWrapper}>
+								<div style={styles.headerTitle}>
+									<h2 style={styles.header}>Activity</h2>
+								</div>
+								<div style={styles.headerOptions}>
+									<div className="pt-button-group pt-minimal">
+										<Link to={{ pathname: '/', query: { ...query, mode: 'global' } }} className={mode === 'global' ? 'pt-button pt-active' : 'pt-button'}>Global</Link>
+										<Link to={{ pathname: '/', query: { ...query, mode: undefined } }} className={mode === 'following' ? 'pt-button pt-active' : 'pt-button'}>Following</Link>
+										<Link to={{ pathname: '/', query: { ...query, mode: 'you' } }} className={mode === 'you' ? 'pt-button pt-active' : 'pt-button'}>You</Link>
+									</div>
+								</div>
+								<div style={styles.headerRight}>
+									<DropdownButton 
+										content={
+											<Menu>
+												{filterList.map((filter, index)=> {
+													return (
+														<li key={'filter-' + index}><Link to={{ pathname: '/', query: { ...query, filter: filter } }} className="pt-menu-item pt-popover-dismiss">
+															{filter}
+															{filterMode === filter && <span className={'pt-icon-standard pt-icon-tick pt-menu-item-label'} />}
+														</Link></li>
+													);
+												})}
+											</Menu>
+										}
+										title={'Filter'} 
+										position={2} />
+								</div>
+							</div>
 
-						<img style={styles.figure} src="/static/diagram.svg"></img>
-					</div>
-				</div>
+							<ActivityItem />
+							<ActivityItem />
+							<ActivityItem />
+							<ActivityItem />
+							<ActivityItem />
+							<ActivityItem />
 
-
-				{/* !this.props.appData.user.name &&
-					<form onSubmit={this.handleSubmit}>
-
-						<div>
-							<label style={styles.label} htmlFor={'username'}>Name</label>
-							<input id={'username'} name={'username'} type="text" style={styles.input} value={this.state.name} onChange={(evt)=>{this.setState({name: evt.target.value});}} />
+							
 						</div>
 
-						<div>
-							<label style={styles.label} htmlFor={'email'}>email</label>
-							<input id={'email'} name={'email'} type="email" style={styles.input} value={this.state.email} onChange={(evt)=>{this.setState({email: evt.target.value});}} />
-						</div>
+						<div style={styles.rightPanel}>
+							<div style={styles.rightContent}>
+								<h3>Your Pubs</h3>
 
-						<button name={'login'} className={'button'} style={styles.submitButton} onClick={this.handleSubmit}>
-							Join
-						</button>
-					</form>
-				*/}
+								<ActivityItem />
+								<ActivityItem />
+
+								<h3>Your Journals</h3>
+							</div>
+						</div>
+					</div>
+				}
+
+
 
 			</div>
 		);
@@ -97,71 +127,60 @@ export const Landing = React.createClass({
 
 function mapStateToProps(state) {
 	return {
-		appData: state.app.toJS(),
+		accountData: state.account.toJS(),
+		// activitiesData: state.activities.toJS(),
 	};
 }
 
 export default connect(mapStateToProps)(Landing);
 
 styles = {
-	text: {
-		fontSize: '1.25em',
-		maxWidth: '650px',
-	},
 	container: {
-		fontFamily: '"HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif',
-		fontWeight: 300,
-		width: '100%',
-		lineHeight: 1.53,
-		// margin: '0 auto',
-		// maxWidth: '800px',
-	},
-	greyBox: {
-		backgroundColor: '#f3f3f4',
-		padding: '1em',
-	},
-	whiteBox: {
-		padding: '1em',
-	},
-	content: {
-		maxWidth: '800px',
+		padding: '1.5em',
+		width: 'calc(100% - 3em)',
+		maxWidth: '1024px',
 		margin: '0 auto',
 	},
-	title: {
-		fontSize: '4em',
-		margin: '0em',
-	},
-	title2: {
-		fontSize: '3em',
-		margin: '0em',
-	},
-	figure: {
+	activitiesTable: {
+		display: 'table',
 		width: '100%',
-		maxWidth: '650px',
-		margin: '4em 0em',
 	},
-	form: {
-		fontSize: '1.25em',
-		margin: '1em 0em',
+	leftPanel: {
+		display: 'table-cell',
 	},
-	input: {
-		fontSize: '1.25em',
-		padding: '.25em .5em',
-		verticalAlign: 'top',
-		width: 'calc(100% - 1em - 2px - 100px)',
+	rightPanel: {
+		display: 'table-cell',
+		paddingLeft: '1em',
+		maxWidth: '400px',
+		width: '25%',
 	},
-	submitButton: {
-		width: '300px',
-		height: '44px',
-		lineHeight: '44px',
-		fontSize: '0.85em',
-		width: '100px'
+	rightContent: {
+		borderLeft: '1px solid #EEE',
+		paddingLeft: '1em',
 	},
-	pubButton: {
-		width: '300px',
-		fontSize: '1em',
-		display: 'block',
-		margin: '2em 0em',
-		padding: '1em 0em',
+	headerWrapper: {
+		display: 'table',
+		width: '100%',
+		marginBottom: '1em',
 	},
+	headerTitle: {
+		display: 'table-cell',
+		verticalAlign: 'middle',
+		paddingRight: '1em',
+		width: '1%',
+		whiteSpace: 'nowrap',
+	},
+	header: {
+		margin: 0,
+	},
+	headerOptions: {
+		display: 'table-cell',
+		verticalAlign: 'middle',
+	},
+	headerRight: {
+		display: 'table-cell',
+		verticalAlign: 'middle',
+		width: '1%',
+	},
+	
 };
