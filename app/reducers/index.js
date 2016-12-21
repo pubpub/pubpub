@@ -1,6 +1,7 @@
 import Immutable from 'immutable';
 import { combineReducers } from 'redux';
 import account from './account';
+import activities from './activities';
 import app from './app';
 import createPub from './createPub';
 import createJournal from './createJournal';
@@ -28,6 +29,7 @@ export function ensureImmutable(state) {
 
 export default combineReducers({
 	account,
+	activities,
 	app,
 	createPub,
 	createJournal,

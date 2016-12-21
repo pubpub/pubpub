@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router';
 import { Menu, MenuDivider, NonIdealState } from '@blueprintjs/core';
 import { ActivityItem, DropdownButton } from 'components';
-import { postUser } from 'containers/App/actions';
+import { getActivities } from './actions';
 
 let styles;
 
@@ -23,13 +23,13 @@ export const Landing = React.createClass({
 
 	componentWillMount() {
 		// this.setState({ hasCookie: document.cookie.indexOf('connect.sid') > -1 });
-		// this.props.dispatch(getActivities());
+		this.props.dispatch(getActivities());
 	},
 
-	handleSubmit: function(evt) {
-		evt.preventDefault();
-		this.props.dispatch(postUser(this.state.email, this.state.name));
-	},
+	// handleSubmit: function(evt) {
+	// 	evt.preventDefault();
+	// 	this.props.dispatch(postUser(this.state.email, this.state.name));
+	// },
 
 	render() {
 		const accountData = this.props.accountData || {};
