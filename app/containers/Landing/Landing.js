@@ -145,15 +145,44 @@ export const Landing = React.createClass({
 
 						<div style={styles.rightPanel}>
 							<div style={styles.rightContent}>
-								<h3>Your Pubs</h3>
-								{assetPubs.map((pub)=> {
-									return <Link key={'pub-link-' + pub.id} style={styles.sideLink} className={'pt-text-overflow-ellipsis'} to={'/pub/' + pub.slug}>{pub.title}</Link>;
-								})}
+								<div style={styles.rightSection} className={'pt-card pt-elevation-0'}>
+									<div className="pt-dialog-header">
+										<span className="pt-icon-large pt-icon-application" />
+										<h5>Your Pubs</h5>
+									</div>
+									<div className="pt-dialog-body">
+										{assetPubs.map((pub)=> {
+											return <Link key={'pub-link-' + pub.id} style={styles.sideLink} className={'pt-text-overflow-ellipsis'} to={'/pub/' + pub.slug}>{pub.title}</Link>;
+										})}
+										
+										{/*
+										<div style={styles.sideAction}>
+											<Link to={'pubs/create'} className={'pt-button pt-fill pt-intent-primary'}>New Pub</Link>	
+										</div>
+										*/}
+									</div>
+										
+									
+								</div>
 
-								<h3>Your Journals</h3>
-								{assetJournals.map((journal)=> {
-									return <Link key={'journal-link-' + journal.id} style={styles.sideLink} className={'pt-text-overflow-ellipsis'} to={'/' + journal.slug}>{journal.name}</Link>;
-								})}
+								<div style={styles.rightSection} className={'pt-card pt-elevation-0'}>
+									<div className="pt-dialog-header">
+										<span className="pt-icon-large pt-icon-applications" />
+										<h5>Your Journals</h5>
+									</div>
+									<div className="pt-dialog-body">
+										{assetJournals.map((journal)=> {
+											return <Link key={'journal-link-' + journal.id} style={styles.sideLink} className={'pt-text-overflow-ellipsis'} to={'/' + journal.slug}>{journal.name}</Link>;
+										})}
+
+										{/* 
+										<div style={styles.sideAction}>
+											<Link to={'journals/create'} className={'pt-button pt-fill pt-intent-primary'}>New Journal</Link>	
+										</div> 
+										*/}
+									</div>
+								</div>
+								
 
 							</div>
 						</div>
@@ -197,6 +226,10 @@ styles = {
 		borderLeft: '1px solid #EEE',
 		paddingLeft: '1em',
 	},
+	rightSection: {
+		backgroundColor: '#ebf1f5',
+		padding: '0em',
+	},
 	headerWrapper: {
 		display: 'table',
 		width: '100%',
@@ -226,6 +259,10 @@ styles = {
 		display: 'block',
 		width: '200px',
 		paddingBottom: '.5em',
+	},
+	sideAction: {
+		textAlign: 'center',
+		padding: '1em 0em',
 	},
 	
 };
