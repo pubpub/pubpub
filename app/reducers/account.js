@@ -37,6 +37,22 @@ import {
 	PUT_USER_FAIL,
 } from 'containers/User/actionsSettings';
 
+import {
+	RESET_PASSWORD_REQUEST_LOAD,
+	RESET_PASSWORD_REQUEST_SUCCESS,
+	RESET_PASSWORD_REQUEST_FAIL,
+
+	RESET_PASSWORD_HASH_LOAD,
+	RESET_PASSWORD_HASH_SUCCESS,
+	RESET_PASSWORD_HASH_FAIL,
+
+	RESET_PASSWORD_LOAD,
+	RESET_PASSWORD_SUCCESS,
+	RESET_PASSWORD_FAIL,
+} from 'containers/ResetPassword/actions';
+
+
+
 /* ------------------- */
 // Define Default State
 /* ------------------- */
@@ -55,12 +71,12 @@ const defaultState = Immutable.Map({
 /* ----------------------------------------- */
 export default function reducer(state = defaultState, action) {
 	switch (action.type) {
-	
+
 	case GET_SIGN_UP_DATA_LOAD:
 		return state.merge({
 			loading: true,
 			error: undefined,
-		});	
+		});
 	case GET_SIGN_UP_DATA_SUCCESS:
 		return state.merge({
 			loading: false,
@@ -78,7 +94,7 @@ export default function reducer(state = defaultState, action) {
 		return state.merge({
 			createAccountLoading: true,
 			createAccountError: undefined,
-		});	
+		});
 	case CREATE_ACCOUNT_SUCCESS:
 		return state.merge({
 			createAccountLoading: false,
@@ -95,7 +111,7 @@ export default function reducer(state = defaultState, action) {
 		return state.merge({
 			loginLoading: true,
 			loginError: undefined,
-		});	
+		});
 	case LOGIN_GET_SUCCESS:
 	case LOGIN_POST_SUCCESS:
 		return state.merge({
@@ -123,6 +139,27 @@ export default function reducer(state = defaultState, action) {
 	case PUT_USER_SUCCESS:
 		return state.mergeIn(['user'], action.result);
 	case PUT_USER_FAIL:
+		return state;
+
+	case RESET_PASSWORD_REQUEST_LOAD:
+		return state;
+	case RESET_PASSWORD_REQUEST_SUCCESS:
+		return state;
+	case RESET_PASSWORD_REQUEST_FAIL:
+		return state;
+
+	case RESET_PASSWORD_HASH_LOAD:
+		return state;
+	case RESET_PASSWORD_HASH_SUCCESS:
+		return state;
+	case RESET_PASSWORD_HASH_FAIL:
+		return state;
+
+	case RESET_PASSWORD_LOAD:
+		return state;
+	case RESET_PASSWORD_SUCCESS:
+		return state;
+	case RESET_PASSWORD_FAIL:
 		return state;
 
 	default:
