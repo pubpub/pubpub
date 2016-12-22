@@ -56,39 +56,41 @@ export const Label = React.createClass({
 			return previous;
 		}, undefined);
 
+		if (this.props.labelData.loading) {
+			return <div>Loading</div>;
+		}
 		return (
 			<div style={styles.container}>
 				<Helmet title={label.title || params.title + ' · PubPub'} />
 				
-				{this.props.labelData.loading &&
-					<div>Loading</div>
-				}
-
-				<div style={styles.followButtonWrapper}>
-					<FollowButton 
-						labelId={label.id} 
-						followData={followData} 
-						followerCount={followers.length} 
-						followersLink={'/label/' + label.title + '/followers'}
-						dispatch={this.props.dispatch} />
-				</div>
-
-				<h1>
-					<Link to={'/label/' + label.title}>{label.title}</Link>
-				</h1>
-
-				{!params.mode && pubs.map((pub, index)=> {
-					return <PreviewPub key={'labelPub-' + index} pub={pub} />;
-				})}
-
-				{params.mode === 'followers' && 
-					<div>
-						<h2>Followers</h2>
-						{followers.map((follower, index)=> {
-							return <PreviewUser key={'follower-' + index} user={follower} />;
-						})}
+				<div>
+					<div style={styles.followButtonWrapper}>
+						<FollowButton 
+							labelId={label.id} 
+							followData={followData} 
+							followerCount={followers.length} 
+							followersLink={'/label/' + label.title + '/followers'}
+							dispatch={this.props.dispatch} />
 					</div>
-				}
+
+					<h1>
+						<Link to={'/label/' + label.title}>{label.title}</Link>
+					</h1>
+
+					{!params.mode && pubs.map((pub, index)=> {
+						return <PreviewPub key={'labelPub-' + index} pub={pub} />;
+					})}
+
+					{params.mode === 'followers' && 
+						<div>
+							<h2>Followers</h2>
+							{followers.map((follower, index)=> {
+								return <PreviewUser key={'follower-' + index} user={follower} />;
+							})}
+						</div>
+					}
+				</div>
+				
 					
 			</div>
 		);

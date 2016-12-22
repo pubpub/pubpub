@@ -223,7 +223,7 @@ styles = {
 		width: '1%',
 	},
 	rightContent: {
-		borderLeft: '1px solid #EEE',
+		// borderLeft: '1px solid #EEE',
 		paddingLeft: '1em',
 	},
 	rightSection: {
