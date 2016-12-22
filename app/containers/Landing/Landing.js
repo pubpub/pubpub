@@ -31,6 +31,11 @@ export const Landing = React.createClass({
 	// 	this.props.dispatch(postUser(this.state.email, this.state.name));
 	// },
 
+	formatFilterString: function(mode, string) {
+		if (mode === 'you') { return 'Your ' + string; }
+		return string + ' you Follow';
+	},
+
 	render() {
 		const accountData = this.props.accountData || {};
 		const user = accountData.user || {};
@@ -49,6 +54,19 @@ export const Landing = React.createClass({
 			uniqueIDs[activity.id] = true;
 			return true;
 		});
+
+		const myActivitiesPubs = activities.myPubs || [];
+		const myActivitiesUsers = activities.myUsers || [];
+		const myActivitiesJournals = activities.myJournals || [];
+
+		const myUniqueIDs = {};
+		const myUniqueActivities = [...myActivitiesUsers, ...myActivitiesPubs, ...myActivitiesJournals].filter((activity)=>{
+			if (activity.id in myUniqueIDs) { return false; }
+			myUniqueIDs[activity.id] = true;
+			return true;
+		});
+
+
 		// const globalActivities = activities.global || [];
 		// const followingActivities = activities.following || [];
 		// const selfActivities = activities.self || [];
@@ -61,7 +79,9 @@ export const Landing = React.createClass({
 		const query = location.query || {};
 		const mode = query.mode || 'following';
 		const filterMode = query.filter || 'All';
-		const filterList = ['All', 'Pubs', 'Journals', 'Users', 'Labels'];
+		const filterList = mode === 'you'
+			? ['All', 'Pubs', 'Journals', 'Users']
+			: ['All', 'Pubs', 'Journals', 'Users', 'Labels'];
 
 		let followingActivities;
 		if (filterMode === 'All') { followingActivities = uniqueActivities; }
@@ -70,8 +90,14 @@ export const Landing = React.createClass({
 		if (filterMode === 'Journals') { followingActivities = activitiesJournals; }
 		if (filterMode === 'Labels') { followingActivities = activitiesLabels; }
 
-		const globalActivities = activities.global || [];
-		const youActivities = activities.you || [];
+		let myActivities;
+		if (filterMode === 'All') { myActivities = myUniqueActivities; }
+		if (filterMode === 'Pubs') { myActivities = myActivitiesPubs; }
+		if (filterMode === 'Users') { myActivities = myActivitiesUsers; }
+		if (filterMode === 'Journals') { myActivities = myActivitiesJournals; }
+
+		// const globalActivities = activities.global || [];
+		// const youActivities = activities.you || [];
 
 		// For following and self activities, they will come grouped by Journal, Pub, User, and Label
 		// We need to 
@@ -97,45 +123,39 @@ export const Landing = React.createClass({
 								</div>
 								<div style={styles.headerOptions}>
 									<div className="pt-button-group pt-minimal">
-										<Link to={{ pathname: '/', query: { ...query, mode: 'global', filter: undefined } }} className={mode === 'global' ? 'pt-button pt-active' : 'pt-button'}>Global</Link>
+										{/* <Link to={{ pathname: '/', query: { ...query, mode: 'global', filter: undefined } }} className={mode === 'global' ? 'pt-button pt-active' : 'pt-button'}>Global</Link> */}
 										<Link to={{ pathname: '/', query: { ...query, mode: undefined } }} className={mode === 'following' ? 'pt-button pt-active' : 'pt-button'}>Following</Link>
-										<Link to={{ pathname: '/', query: { ...query, mode: 'you', filter: undefined } }} className={mode === 'you' ? 'pt-button pt-active' : 'pt-button'}>You</Link>
+										<Link to={{ pathname: '/', query: { ...query, mode: 'you', filter: undefined } }} className={mode === 'you' ? 'pt-button pt-active' : 'pt-button'}>My stuff</Link>
 									</div>
 								</div>
-								{mode === 'following' &&
-									<div style={styles.headerRight}>
-										<DropdownButton 
-											content={
-												<Menu>
-													{filterList.map((filter, index)=> {
-														return (
-															<li key={'filter-' + index}><Link to={{ pathname: '/', query: { ...query, filter: filter } }} className="pt-menu-item pt-popover-dismiss">
-																{filter}{index !== 0 ? ' you Follow ' : ''}
-																{filterMode === filter && <span className={'pt-icon-standard pt-icon-tick pt-menu-item-label'} />}
-															</Link></li>
-														);
-													})}
-												</Menu>
-											}
-											title={'Filter'} 
-											position={2} />
-									</div>
-								}
+								<div style={styles.headerRight}>
+									<DropdownButton 
+										content={
+											<Menu>
+												{filterList.map((filter, index)=> {
+													return (
+														<li key={'filter-' + index}><Link to={{ pathname: '/', query: { ...query, filter: filter } }} className="pt-menu-item pt-popover-dismiss">
+															{index !== 0 ? this.formatFilterString(mode, filter) : filter}
+															{filterMode === filter && <span className={'pt-icon-standard pt-icon-tick pt-menu-item-label'} />}
+														</Link></li>
+													);
+												})}
+											</Menu>
+										}
+										title={'Filter'} 
+										position={2} />
+								</div>
 							</div>
 
 							{mode === 'following' && followingActivities.map((activity)=> {
 								return <ActivityItem key={'activity-' + activity.id} activity={activity} />;
 							})}
 
-							{mode === 'global' && globalActivities.map((activity)=> {
+							{mode === 'you' && myActivities.map((activity)=> {
 								return <ActivityItem key={'activity-' + activity.id} activity={activity} />;
 							})}
 
-							{mode === 'you' && youActivities.map((activity)=> {
-								return <ActivityItem key={'activity-' + activity.id} activity={activity} />;
-							})}
-
-							{((mode === 'following' && !followingActivities.length) || (mode === 'you' && !youActivities.length) || (mode === 'global' && !globalActivities.length)) &&
+							{((mode === 'following' && !followingActivities.length) || (mode === 'you' && !myActivities.length)) &&
 								<NonIdealState
 									title={'No Activities'}
 									visual={'pulse'} />
@@ -154,7 +174,7 @@ export const Landing = React.createClass({
 										{assetPubs.map((pub)=> {
 											return <Link key={'pub-link-' + pub.id} style={styles.sideLink} className={'pt-text-overflow-ellipsis'} to={'/pub/' + pub.slug}>{pub.title}</Link>;
 										})}
-										
+
 										{/*
 										<div style={styles.sideAction}>
 											<Link to={'pubs/create'} className={'pt-button pt-fill pt-intent-primary'}>New Pub</Link>	
