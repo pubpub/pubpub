@@ -174,8 +174,8 @@ export default Radium(ActivityItem);
 styles = {
 	container: {
 		borderTop: '1px solid #EEE',
-		marginTop: '0.75em',
-		paddingTop: '0.75em', 
+		marginTop: '1.5em',
+		paddingTop: '1.5em', 
 		width: '100%',
 	},
 	imageWrapper: {
@@ -199,7 +199,7 @@ styles = {
 		width: '30px',
 	},
 	largeImage: {
-		width: '45px',
+		width: '55px',
 	},
 	link: {
 		fontWeight: 'bold',
