@@ -60,7 +60,7 @@ export const ResetPassword = React.createClass({
 
 	render: function() {
 		const resetPasswordData = this.props.resetPasswordData || {};
-		const isLoading = resetPasswordData.loading;
+		const isLoading = resetPasswordData.resetPasswordLoading;
 		const error = resetPasswordData.resetPasswordError;
 
 		const showConfirmation = this.state.showConfirmation;
@@ -100,14 +100,12 @@ export const ResetPassword = React.createClass({
 						</div>
 					}
 
-
-
-						{ showConfirmation &&
-								<NonIdealState
-									description={'Check your inbox for a reset password email'}
-									title={'Reset Password Email Sent'}
-									visual={'envelope'} />
-						}
+					{ showConfirmation &&
+							<NonIdealState
+								description={'Check your inbox for a reset password email'}
+								title={'Reset Password Email Sent'}
+								visual={'envelope'} />
+					}
 
 			</div>
 		);

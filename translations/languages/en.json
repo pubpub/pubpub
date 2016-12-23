@@ -1,5 +1,4 @@
 {
-  "resetPassword.InvalidHash": "Invalid Hash",
   "signup.Emailalreadyused": "Email already used",
   "signup.Usernamealreadyused": "Username already used",
   "createJournal.JournalNamerequired": "Journal Name required",
@@ -24,6 +23,9 @@
   "pubSettings.Emailalreadyused": "Email already used",
   "pubSettings.Usernamealreadyused": "Username already used",
   "resetPassword.InvalidEmail": "Invalid Email",
+  "setPassword.Passwordtooshort": "Password too short",
+  "setPassword.InvalidHash": "Invalid Hash",
+  "global.SetPassword": "Set Password",
   "global.Login": "Login",
   "global.SignUp": "Sign Up",
   "global.Skipthisstep": "Skip this step",
