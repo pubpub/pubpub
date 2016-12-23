@@ -134,7 +134,7 @@ export const Landing = React.createClass({
 											<Menu>
 												{filterList.map((filter, index)=> {
 													return (
-														<li key={'filter-' + index}><Link to={{ pathname: '/', query: { ...query, filter: filter } }} className="pt-menu-item pt-popover-dismiss">
+														<li key={'filter-' + index}><Link to={{ pathname: '/', query: { ...query, filter: filter === 'All' ? undefined : filter } }} className="pt-menu-item pt-popover-dismiss">
 															{index !== 0 ? this.formatFilterString(mode, filter) : filter}
 															{filterMode === filter && <span className={'pt-icon-standard pt-icon-tick pt-menu-item-label'} />}
 														</Link></li>
