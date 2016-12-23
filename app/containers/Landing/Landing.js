@@ -147,11 +147,19 @@ export const Landing = React.createClass({
 								</div>
 							</div>
 
-							{mode === 'following' && followingActivities.map((activity)=> {
+							{mode === 'following' && followingActivities.sort((foo, bar)=> {
+								if (foo.createdAt > bar.createdAt) { return -1; }
+								if (foo.createdAt < bar.createdAt) { return 1; }
+								return 0;
+							}).map((activity)=> {
 								return <ActivityItem key={'activity-' + activity.id} activity={activity} />;
 							})}
 
-							{mode === 'you' && myActivities.map((activity)=> {
+							{mode === 'you' && myActivities.sort((foo, bar)=> {
+								if (foo.createdAt > bar.createdAt) { return -1; }
+								if (foo.createdAt < bar.createdAt) { return 1; }
+								return 0;
+							}).map((activity)=> {
 								return <ActivityItem key={'activity-' + activity.id} activity={activity} />;
 							})}
 

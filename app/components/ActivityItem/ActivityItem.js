@@ -64,7 +64,7 @@ export const ActivityItem = React.createClass({
 
 		const makeLink = function(item) { 
 			return (item.username && '/user/' + item.username)
-				|| (item.logo && '/' + item.slug)
+				|| (item.icon && '/' + item.slug)
 				|| (item.previewImage && '/pub/' + item.slug)
 				|| '/label/' + item.title;
 				// have to handle discussion links
@@ -113,9 +113,9 @@ export const ActivityItem = React.createClass({
 							case 'newVersion': 
 								return <div>{actorNode} published a new version of {targetNode}</div>;
 							case 'newDiscussion': 
-								return <div>{actorNode} added a new buildLink(objectLink, 'discussion') to {targetNode}</div>;
+								return <div>{actorNode} added a new {buildLink(objectLink, 'discussion')} to {targetNode}</div>;
 							case 'newReply': 
-								return <div>{actorNode} buildLink(objectLink, 'replied') to a discussion on {targetNode}</div>;
+								return <div>{actorNode} {buildLink(objectLink, 'replied')} to a discussion on {targetNode}</div>;
 							case 'newPubLabel': 
 								return <div>{actorNode} added a pub to {targetNode}</div>;
 							case 'invitedReviewer': 
@@ -130,9 +130,8 @@ export const ActivityItem = React.createClass({
 								return <div>{actorNode} added {objectNode} as an admin of {targetNode}</div>;
 							case 'featuredPub': 
 								return <div>{actorNode} featured a pub</div>;
-								// return <div>{actorNode} featured {targetNode}</div>;
 							case 'createdJournalLabel': 
-								return <div>{actorNode} created a new collection, {targetNode}</div>;
+								return <div>{actorNode} created a new collection, {buildLink(actorLink + '/collection/' + target.title, targetString)}</div>;
 							default: 
 								return <div />;
 							}
