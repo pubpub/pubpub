@@ -4,7 +4,7 @@ import { browserHistory } from 'react-router';
 import Radium from 'radium';
 import Helmet from 'react-helmet';
 
-import { Loader, ImageCropper } from 'components';
+import { Loader, ImageCropper, PreviewPub } from 'components';
 import { globalStyles } from 'utils/globalStyles';
 import { globalMessages } from 'utils/globalMessages';
 import { FormattedMessage } from 'react-intl';
@@ -116,6 +116,13 @@ export const CreatePub = React.createClass({
 			'Username already used': <FormattedMessage id="createPub.Usernamealreadyused" defaultMessage="Username already used" />,
 		};
 		const errorMessage = serverErrors[createPubData.error] || this.state.validationError;
+		// const previewPub = {
+		// 	title: this.state.title || 'Your New Pub Title',
+		// 	slug: this.state.slug,
+		// 	description: this.state.description || 'Description of your pub',
+		// 	previewImage: this.state.imageURL,
+		// };
+
 		return (
 			<div style={styles.container}>
 				<Helmet title={'Create Pub · PubPub'} />
@@ -166,6 +173,8 @@ export const CreatePub = React.createClass({
 					<div style={styles.errorMessage}>{errorMessage}</div>
 
 				</form>
+
+				{/* <PreviewPub pub={previewPub} /> */}
 
 				<div style={[styles.imageCropperWrapper, this.state.imageFile !== null && styles.imageCropperWrapperVisible]} >
 					<div style={styles.imageCropper}>

@@ -125,7 +125,7 @@ export const Landing = React.createClass({
 									<div className="pt-button-group pt-minimal">
 										{/* <Link to={{ pathname: '/', query: { ...query, mode: 'global', filter: undefined } }} className={mode === 'global' ? 'pt-button pt-active' : 'pt-button'}>Global</Link> */}
 										<Link to={{ pathname: '/', query: { ...query, mode: undefined } }} className={mode === 'following' ? 'pt-button pt-active' : 'pt-button'}>Following</Link>
-										<Link to={{ pathname: '/', query: { ...query, mode: 'you', filter: undefined } }} className={mode === 'you' ? 'pt-button pt-active' : 'pt-button'}>My stuff</Link>
+										<Link to={{ pathname: '/', query: { ...query, mode: 'you', filter: undefined } }} className={mode === 'you' ? 'pt-button pt-active' : 'pt-button'}>Your Things</Link>
 									</div>
 								</div>
 								<div style={styles.headerRight}>
