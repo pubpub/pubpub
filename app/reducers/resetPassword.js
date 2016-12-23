@@ -36,7 +36,6 @@ const defaultState = Immutable.Map({
 // Bind actions to specific reducing functions
 /* ----------------------------------------- */
 export default function reducer(state = defaultState, action) {
-	console.log("HELL O YES REDUCER CALLSSD " + JSON.stringify(action))
 
 	switch (action.type) {
 

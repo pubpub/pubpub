@@ -65,7 +65,6 @@ export const ResetPassword = React.createClass({
 
 		const showConfirmation = this.state.showConfirmation;
 
-		console.log("HELLO YES RE RENDERING")
 
 		return (
 			<div style={styles.container}>
@@ -115,7 +114,6 @@ export const ResetPassword = React.createClass({
 
 
 function mapStateToProps(state) {
-	console.log("Map state to props")
 	return {
 		resetPasswordData: state.resetPassword.toJS(),
 	};
