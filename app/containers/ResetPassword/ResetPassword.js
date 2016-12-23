@@ -21,7 +21,7 @@ let styles = {};
 
 export const ResetPassword = React.createClass({
 	propTypes: {
-		accoundData: PropTypes.object,
+		accountData: PropTypes.object,
 		dispatch: PropTypes.func
 	},
 
@@ -39,8 +39,7 @@ export const ResetPassword = React.createClass({
 		const nextError = nextProps.accountData.resetPasswordError;
 
 		if (oldLoading && !nextLoading && !nextError) {
-			this.setState({ showConfirmation: true })
-			// browserHistory.push(redirectRoute || '/');
+			this.setState({ showConfirmation: true });
 		}
 	},
 
@@ -54,7 +53,7 @@ export const ResetPassword = React.createClass({
 		this.setState({ [key]: value.toLowerCase() });
 	},
 
-	handleResetPasswordRequestSubmit: function(evt) {
+	handleResetPasswordSubmit: function(evt) {
 		evt.preventDefault();
 		this.props.dispatch(submitResetRequest(this.state.email));
 	},
@@ -66,6 +65,7 @@ export const ResetPassword = React.createClass({
 
 		const showConfirmation = this.state.showConfirmation;
 
+		console.log("HELLO YES RE RENDERING")
 
 		return (
 			<div style={styles.container}>
@@ -82,7 +82,7 @@ export const ResetPassword = React.createClass({
 				}
 
 				{!showConfirmation &&
-					<form onSubmit={this.handleResetPasswordRequestSubmit}>
+					<form onSubmit={this.handleResetPasswordSubmit}>
 						<div>
 							<label style={styles.label} htmlFor={'email'}>
 								<FormattedMessage {...globalMessages.Email} />
@@ -90,7 +90,7 @@ export const ResetPassword = React.createClass({
 							<input id={'email'} name={'email'} type="text" style={styles.input} value={this.state.email} onChange={this.inputUpdateLowerCase.bind(this, 'email')} />
 						</div>
 
-						<button name={'submitResetRequest'} className={'pt-button pt-intent-primary'} onClick={this.handleResetPasswordRequestSubmit}>
+						<button name={'submitResetRequest'} className={'pt-button pt-intent-primary'} onClick={this.handleResetPasswordSubmit}>
 							<FormattedMessage {...globalMessages.ResetPassword} />
 						</button>
 
@@ -116,6 +116,7 @@ export const ResetPassword = React.createClass({
 
 
 function mapStateToProps(state) {
+	console.log("Map state to props")
 	return {
 		accountData: state.account.toJS(),
 	};

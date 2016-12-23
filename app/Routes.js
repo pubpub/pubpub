@@ -1,6 +1,6 @@
 import React from 'react';
 import { Route } from 'react-router';
-import { App, CreateAccount, CreatePub, CreateJournal, Landing, Label, Journal, Login, Pub, Search, SignUp, NoMatch, User, ResetPassword } from 'containers';
+import { App, CreateAccount, CreatePub, CreateJournal, Landing, Label, Journal, Login, Pub, Search, SignUp, NoMatch, User, ResetPassword, ChangePassword } from 'containers';
 
 export default (
 	<Route component={App}>
@@ -8,6 +8,8 @@ export default (
 		<Route path="/login" component={Login} />
 		<Route path="/signup" component={SignUp} />
 		<Route path="/resetpassword" component={ResetPassword} />
+		<Route path="/changepassword" component={ChangePassword} />
+
 
 		<Route path="/search" component={Search} />
 

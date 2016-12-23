@@ -1,4 +1,5 @@
 {
+  "resetPassword.InvalidHash": "Invalid Hash",
   "signup.Emailalreadyused": "Email already used",
   "signup.Usernamealreadyused": "Username already used",
   "createJournal.JournalNamerequired": "Journal Name required",

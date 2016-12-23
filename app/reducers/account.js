@@ -38,19 +38,11 @@ import {
 } from 'containers/User/actionsSettings';
 
 import {
-	RESET_PASSWORD_REQUEST_LOAD,
-	RESET_PASSWORD_REQUEST_SUCCESS,
-	RESET_PASSWORD_REQUEST_FAIL,
-
-	RESET_PASSWORD_HASH_LOAD,
-	RESET_PASSWORD_HASH_SUCCESS,
-	RESET_PASSWORD_HASH_FAIL,
-
 	RESET_PASSWORD_LOAD,
 	RESET_PASSWORD_SUCCESS,
 	RESET_PASSWORD_FAIL,
-} from 'containers/ResetPassword/actions';
 
+} from 'containers/ResetPassword/actions';
 
 
 /* ------------------- */
@@ -144,35 +136,21 @@ export default function reducer(state = defaultState, action) {
 	case PUT_USER_FAIL:
 		return state;
 
-	case RESET_PASSWORD_REQUEST_LOAD:
+	case RESET_PASSWORD_LOAD:
 		return state.merge({
 			resetPasswordLoading: true,
 			resetPasswordError: undefined,
 		});
-	case RESET_PASSWORD_REQUEST_SUCCESS:
+	case RESET_PASSWORD_SUCCESS:
 		return state.merge({
 			resetPasswordLoading: false,
 			resetPasswordError: undefined,
 		});
-	case RESET_PASSWORD_REQUEST_FAIL:
+	case RESET_PASSWORD_FAIL:
 		return state.merge({
 			resetPasswordError: action.error,
 			resetPasswordLoading: false,
 		});
-
-	case RESET_PASSWORD_HASH_LOAD:
-		return state;
-	case RESET_PASSWORD_HASH_SUCCESS:
-		return state;
-	case RESET_PASSWORD_HASH_FAIL:
-		return state;
-
-	case RESET_PASSWORD_LOAD:
-		return state;
-	case RESET_PASSWORD_SUCCESS:
-		return state;
-	case RESET_PASSWORD_FAIL:
-		return state;
 
 	default:
 		return ensureImmutable(state);
