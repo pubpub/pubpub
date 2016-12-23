@@ -24,7 +24,7 @@ export function submitPassword(password, username, hash) {
 
 	return (dispatch) => {
 		dispatch({ type: SET_PASSWORD_LOAD });
-		console.log(password, username, hash)
+
 		return clientFetch('/api/user/password', {
 			method: 'POST', // Changed from POST. Make sure hte rest of this request is formed properly
 			headers: {
