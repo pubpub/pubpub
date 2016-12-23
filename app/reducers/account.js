@@ -37,14 +37,6 @@ import {
 	PUT_USER_FAIL,
 } from 'containers/User/actionsSettings';
 
-import {
-	RESET_PASSWORD_LOAD,
-	RESET_PASSWORD_SUCCESS,
-	RESET_PASSWORD_FAIL,
-
-} from 'containers/ResetPassword/actions';
-
-
 /* ------------------- */
 // Define Default State
 /* ------------------- */
@@ -135,22 +127,6 @@ export default function reducer(state = defaultState, action) {
 		return state.mergeIn(['user'], action.result);
 	case PUT_USER_FAIL:
 		return state;
-
-	case RESET_PASSWORD_LOAD:
-		return state.merge({
-			resetPasswordLoading: true,
-			resetPasswordError: undefined,
-		});
-	case RESET_PASSWORD_SUCCESS:
-		return state.merge({
-			resetPasswordLoading: false,
-			resetPasswordError: undefined,
-		});
-	case RESET_PASSWORD_FAIL:
-		return state.merge({
-			resetPasswordError: action.error,
-			resetPasswordLoading: false,
-		});
 
 	default:
 		return ensureImmutable(state);

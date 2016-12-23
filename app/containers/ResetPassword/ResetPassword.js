@@ -21,7 +21,7 @@ let styles = {};
 
 export const ResetPassword = React.createClass({
 	propTypes: {
-		accountData: PropTypes.object,
+		resetPasswordData: PropTypes.object,
 		dispatch: PropTypes.func
 	},
 
@@ -34,9 +34,9 @@ export const ResetPassword = React.createClass({
 
 	componentWillReceiveProps(nextProps) {
 		// If login was succesful, redirect
-		const oldLoading = this.props.accountData.resetPasswordLoading;
-		const nextLoading = nextProps.accountData.resetPasswordLoading;
-		const nextError = nextProps.accountData.resetPasswordError;
+		const oldLoading = this.props.resetPasswordData.resetPasswordLoading;
+		const nextLoading = nextProps.resetPasswordData.resetPasswordLoading;
+		const nextError = nextProps.resetPasswordData.resetPasswordError;
 
 		if (oldLoading && !nextLoading && !nextError) {
 			this.setState({ showConfirmation: true });
@@ -59,9 +59,9 @@ export const ResetPassword = React.createClass({
 	},
 
 	render: function() {
-		const accountData = this.props.accountData || {};
-		const isLoading = accountData.loading;
-		const error = accountData.resetPasswordError;
+		const resetPasswordData = this.props.resetPasswordData || {};
+		const isLoading = resetPasswordData.loading;
+		const error = resetPasswordData.resetPasswordError;
 
 		const showConfirmation = this.state.showConfirmation;
 
@@ -75,11 +75,6 @@ export const ResetPassword = React.createClass({
 					<h1><FormattedMessage {...globalMessages.ResetPassword} /></h1>
 				}
 
-				{ error &&
-					<div style={styles.errorMessage}>
-						<FormattedMessage id="resetPassword.InvalidEmail" defaultMessage="Invalid Email" />
-					</div>
-				}
 
 				{!showConfirmation &&
 					<form onSubmit={this.handleResetPasswordSubmit}>
@@ -97,6 +92,12 @@ export const ResetPassword = React.createClass({
 						<div style={styles.loaderContainer}><Loader loading={isLoading} showCompletion={!error} /></div>
 						</form>
 
+					}
+
+					{ error &&
+						<div style={styles.errorMessage}>
+							<FormattedMessage id="resetPassword.InvalidEmail" defaultMessage="Invalid Email" />
+						</div>
 					}
 
 
@@ -118,7 +119,7 @@ export const ResetPassword = React.createClass({
 function mapStateToProps(state) {
 	console.log("Map state to props")
 	return {
-		accountData: state.account.toJS(),
+		resetPasswordData: state.resetPassword.toJS(),
 	};
 }
 
