@@ -52,7 +52,14 @@ export const UserPubs = React.createClass({
 
 	render() {
 		const user = this.props.user || {};
-		const pubs = user.pubs || [];
+
+		const contributions = user.contributions || [];
+		const pubs = contributions.map((item)=> {
+			return {
+				...item.pub,
+				isAuthor: item.isAuthor
+			};
+		});
 		
 		const query = this.props.query || {};
 		const mode = query.mode;
@@ -65,10 +72,10 @@ export const UserPubs = React.createClass({
 			return !pub.replyRootPubId;
 		});
 		const authoredPubs = notDiscussions.filter((pub)=>{
-			return pub.Contributor.isAuthor;
+			return pub.isAuthor;
 		});
 		const contributedPubs = notDiscussions.filter((pub)=>{
-			return !pub.Contributor.isAuthor;
+			return !pub.isAuthor;
 		});
 
 		return (

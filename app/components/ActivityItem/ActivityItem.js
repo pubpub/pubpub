@@ -113,9 +113,9 @@ export const ActivityItem = React.createClass({
 							case 'newVersion': 
 								return <div>{actorNode} published a new version of {targetNode}</div>;
 							case 'newDiscussion': 
-								return <div>{actorNode} added a new {buildLink(objectLink, 'discussion')} to {targetNode}</div>;
+								return <div>{actorNode} added a new {buildLink(targetLink + '?discussionId=' + object.id, 'discussion')} to {targetNode}</div>;
 							case 'newReply': 
-								return <div>{actorNode} {buildLink(objectLink, 'replied')} to a discussion on {targetNode}</div>;
+								return <div>{actorNode} {buildLink(targetLink + '?discussionId=' + object.id, 'replied')} to a discussion on {targetNode}</div>;
 							case 'newPubLabel': 
 								return <div>{actorNode} added a pub to {targetNode}</div>;
 							case 'invitedReviewer': 
@@ -196,9 +196,11 @@ styles = {
 	},
 	smallImage: {
 		width: '30px',
+		borderRadius: '2px',
 	},
 	largeImage: {
 		width: '55px',
+		borderRadius: '2px',
 	},
 	link: {
 		fontWeight: 'bold',
