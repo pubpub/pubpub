@@ -142,11 +142,20 @@ export default function reducer(state = defaultState, action) {
 		return state;
 
 	case RESET_PASSWORD_REQUEST_LOAD:
-		return state;
+		return state.merge({
+			resetPasswordLoading: true,
+			resetPasswordError: undefined,
+		});
 	case RESET_PASSWORD_REQUEST_SUCCESS:
-		return state;
+		return state.merge({
+			resetPasswordLoading: false,
+			resetPasswordError: undefined,
+		});
 	case RESET_PASSWORD_REQUEST_FAIL:
-		return state;
+		return state.merge({
+			resetPasswordError: action.error,
+			resetPasswordLoading: false,
+		});
 
 	case RESET_PASSWORD_HASH_LOAD:
 		return state;

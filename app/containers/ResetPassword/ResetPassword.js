@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
-import { browserHistory } from 'react-router';
+import { browserHistory, Link } from 'react-router';
 
 import Radium from 'radium';
 import Helmet from 'react-helmet';
@@ -14,29 +14,33 @@ import { FormattedMessage } from 'react-intl';
 
 import { submitResetRequest } from './actions';
 
+import { NonIdealState } from '@blueprintjs/core';
+
+
 let styles = {};
 
 export const ResetPassword = React.createClass({
 	propTypes: {
-		resetPasswordData: PropTypes.object,
+		accoundData: PropTypes.object,
 		dispatch: PropTypes.func
 	},
 
 	getInitialState() {
 		return {
 			email: '',
+			showConfirmation: false
 		};
 	},
 
 	componentWillReceiveProps(nextProps) {
 		// If login was succesful, redirect
-		const oldLoading = this.props.resetPasswordData.loading;
-		const nextLoading = nextProps.resetPasswordData.loading;
-		const nextError = nextProps.resetPasswordData.error;
+		const oldLoading = this.props.accountData.resetPasswordLoading;
+		const nextLoading = nextProps.accountData.resetPasswordLoading;
+		const nextError = nextProps.accountData.resetPasswordError;
 
 		if (oldLoading && !nextLoading && !nextError) {
-			const redirectRoute = this.props.location.query && this.props.location.query.redirect;
-			browserHistory.push(redirectRoute || '/');
+			this.setState({ showConfirmation: true })
+			// browserHistory.push(redirectRoute || '/');
 		}
 	},
 
@@ -56,36 +60,53 @@ export const ResetPassword = React.createClass({
 	},
 
 	render: function() {
-		const resetPasswordData = this.props.resetPasswordData || {};
-		const isLoading = resetPasswordData.loading;
-		const error = resetPasswordData.error;
+		const accountData = this.props.accountData || {};
+		const isLoading = accountData.loading;
+		const error = accountData.resetPasswordError;
+
+		const showConfirmation = this.state.showConfirmation;
+
+		console.log(JSON.stringify(accountData))
 
 		return (
 			<div style={styles.container}>
 				<Helmet title={'Reset Password · PubPub'} />
 
-				<h1><FormattedMessage {...globalMessages.ResetPassword} /></h1>
+				{!showConfirmation && !error &&
+					<h1><FormattedMessage {...globalMessages.ResetPassword} /></h1>
+				}
 
-				<form onSubmit={this.handleResetPasswordRequestSubmit}>
-					<div>
-						<label style={styles.label} htmlFor={'email'}>
-							<FormattedMessage {...globalMessages.Email} />
-						</label>
-						<input id={'email'} name={'email'} type="text" style={styles.input} value={this.state.email} onChange={this.inputUpdateLowerCase.bind(this, 'email')} />
-					</div>
 
-					<button name={'submitResetRequest'} className={'pt-button pt-intent-primary'} onClick={this.handleResetPasswordRequestSubmit}>
-						<FormattedMessage {...globalMessages.ResetPassword} />
-					</button>
-
-					<div style={styles.loaderContainer}><Loader loading={isLoading} showCompletion={!error} /></div>
-
-					{error &&
-						<div style={styles.errorMessage}>
-							<FormattedMessage id="resetPassword.InvalidEmailOrPassword" defaultMessage="Invalid Email or Password" />
+				{!showConfirmation &&
+					<form onSubmit={this.handleResetPasswordRequestSubmit}>
+						<div>
+							<label style={styles.label} htmlFor={'email'}>
+								<FormattedMessage {...globalMessages.Email} />
+							</label>
+							<input id={'email'} name={'email'} type="text" style={styles.input} value={this.state.email} onChange={this.inputUpdateLowerCase.bind(this, 'email')} />
 						</div>
+
+						<button name={'submitResetRequest'} className={'pt-button pt-intent-primary'} onClick={this.handleResetPasswordRequestSubmit}>
+							<FormattedMessage {...globalMessages.ResetPassword} />
+						</button>
+
+						<div style={styles.loaderContainer}><Loader loading={isLoading} showCompletion={!error} /></div>
+						</form>
+
 					}
-				</form>
+
+						{ error &&
+							<div style={styles.errorMessage}>
+								<FormattedMessage id="resetPassword.InvalidEmail" defaultMessage="Invalid Email" />
+							</div>
+						}
+
+						{ showConfirmation &&
+								<NonIdealState
+									description={'Check your inbox for a reset password email'}
+									title={'Reset Password Email Sent'}
+									visual={'envelope'} />
+						}
 
 			</div>
 		);
@@ -96,7 +117,7 @@ export const ResetPassword = React.createClass({
 
 function mapStateToProps(state) {
 	return {
-		// resetPasswordData: state.resetPassword.toJS(),
+		accountData: state.account.toJS(),
 	};
 }
 
