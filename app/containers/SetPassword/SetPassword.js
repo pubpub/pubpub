@@ -4,7 +4,8 @@ import { connect } from 'react-redux';
 import Radium from 'radium';
 import Helmet from 'react-helmet';
 
-import { browserHistory } from 'react-router';
+import { Link } from 'react-router';
+
 
 import { Loader } from 'components';
 
@@ -13,6 +14,9 @@ import { globalMessages } from 'utils/globalMessages';
 import { FormattedMessage } from 'react-intl';
 
 import { submitPassword } from './actions';
+
+import { NonIdealState } from '@blueprintjs/core';
+
 
 let styles = {};
 
@@ -25,6 +29,7 @@ export const SetPassword = React.createClass({
 
 	getInitialState() {
 		return {
+			showConfirmation: false,
 			resetHash: this.props.params.hash,
 			username: this.props.params.username,
 			password: '',
@@ -40,7 +45,7 @@ export const SetPassword = React.createClass({
 		const nextError = nextProps.resetPasswordData.setPasswordError;
 
 		if (oldLoading && !nextLoading && !nextError) {
-			browserHistory.push('/login');
+			this.setState({ showConfirmation: true });
 		}
 	},
 
@@ -79,12 +84,18 @@ export const SetPassword = React.createClass({
 		const error = resetPasswordData.setPasswordError || this.state.validationError;
 		const validationError = this.state.validationError || undefined;
 
+		const showConfirmation = this.state.showConfirmation;
+
 		return (
 			<div style={styles.container}>
 				<Helmet title={'Set Password · PubPub'} />
 
-				<h1><FormattedMessage {...globalMessages.SetPassword} /></h1>
+				{!(showConfirmation && !error) &&
+					<h1><FormattedMessage {...globalMessages.SetPassword} /></h1>
+				}
 
+
+				{!showConfirmation &&
 					<form onSubmit={this.handleSetPasswordSubmit}>
 						<label htmlFor={'password'}>
 							<FormattedMessage {...globalMessages.Password} />
@@ -102,6 +113,7 @@ export const SetPassword = React.createClass({
 						<div style={styles.loaderContainer}><Loader loading={isLoading} showCompletion={!error} /></div>
 						</form>
 
+					}
 
 					{ error && !validationError &&
 						<div style={styles.errorMessage}>
@@ -112,6 +124,16 @@ export const SetPassword = React.createClass({
 						<div style={styles.errorMessage}>
 							{this.state.validationError}
 						</div>
+					}
+
+
+					{ showConfirmation &&
+							<NonIdealState
+								description={'Your password has successfully been changed'}
+								title={'Reset Password Successful'}
+								visual={'tick'}
+								action={<button className={'pt-button pt-intent-primary pt-large'}>Login</button>}
+							/>
 					}
 
 			</div>
