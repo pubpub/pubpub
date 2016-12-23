@@ -66,16 +66,20 @@ export const ResetPassword = React.createClass({
 
 		const showConfirmation = this.state.showConfirmation;
 
-		console.log(JSON.stringify(accountData))
 
 		return (
 			<div style={styles.container}>
 				<Helmet title={'Reset Password · PubPub'} />
 
-				{!showConfirmation && !error &&
+				{!(showConfirmation && !error) &&
 					<h1><FormattedMessage {...globalMessages.ResetPassword} /></h1>
 				}
 
+				{ error &&
+					<div style={styles.errorMessage}>
+						<FormattedMessage id="resetPassword.InvalidEmail" defaultMessage="Invalid Email" />
+					</div>
+				}
 
 				{!showConfirmation &&
 					<form onSubmit={this.handleResetPasswordRequestSubmit}>
@@ -95,11 +99,7 @@ export const ResetPassword = React.createClass({
 
 					}
 
-						{ error &&
-							<div style={styles.errorMessage}>
-								<FormattedMessage id="resetPassword.InvalidEmail" defaultMessage="Invalid Email" />
-							</div>
-						}
+
 
 						{ showConfirmation &&
 								<NonIdealState

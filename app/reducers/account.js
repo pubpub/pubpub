@@ -64,12 +64,15 @@ const defaultState = Immutable.Map({
 	createAccountError: undefined,
 	loginLoading: false,
 	loginError: undefined,
+	resetPasswordLoading: false,
+	resetPasswordError: undefined
 });
 
 /* ----------------------------------------- */
 // Bind actions to specific reducing functions
 /* ----------------------------------------- */
 export default function reducer(state = defaultState, action) {
+
 	switch (action.type) {
 
 	case GET_SIGN_UP_DATA_LOAD:

@@ -46,7 +46,6 @@ export function submitResetRequest(email) {
 			dispatch({ type: RESET_PASSWORD_REQUEST_SUCCESS, result });
 		})
 		.catch((error) => {
-			console.log(error);
 			dispatch({ type: RESET_PASSWORD_REQUEST_FAIL, error });
 		});
 	};
@@ -71,7 +70,6 @@ export function checkHash(hash, username) {
 			dispatch({ type: RESET_PASSWORD_HASH_SUCCESS, result });
 		})
 		.catch((error) => {
-			console.log(error);
 			dispatch({ type: RESET_PASSWORD_HASH_FAIL, error });
 		});
 	};
