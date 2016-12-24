@@ -1,6 +1,5 @@
 import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
-import { browserHistory, Link } from 'react-router';
 
 import Radium from 'radium';
 import Helmet from 'react-helmet';
@@ -101,8 +100,8 @@ export const ResetPassword = React.createClass({
 
 					{ showConfirmation &&
 							<NonIdealState
-								description={'Check your inbox for a reset password email'}
-								title={'Reset Password Email Sent'}
+								description={<span><FormattedMessage id="resetPassword.CheckInbox" defaultMessage="Check your inbox for a reset password email" /></span>}
+								title={<span><FormattedMessage id="resetPassword.EmailSent" defaultMessage="Reset Password Email Sent" /></span>}
 								visual={'envelope'} />
 					}
 

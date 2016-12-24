@@ -129,10 +129,13 @@ export const SetPassword = React.createClass({
 
 					{ showConfirmation &&
 							<NonIdealState
-								description={'Your password has successfully been changed'}
+								description={<span><FormattedMessage id="setPassword.SuccessDescription" defaultMessage="Your password has been successfully set." /></span>}
 								title={'Reset Password Successful'}
 								visual={'tick'}
-								action={<button className={'pt-button pt-intent-primary pt-large'}>Login</button>}
+								action={
+									<Link to={'/login'}>
+										<button className={'pt-button pt-intent-primary pt-large'}>Login</button>
+									</Link>}
 							/>
 					}
 
