@@ -18,8 +18,11 @@ export const ActivityGroup = React.createClass({
 		
 	},
 	
-	renderAttachment: function(image, link, string, details, id) {
-		const adjustSize = image === 'http://plainicon.com/dboard/userprod/2803_dd580/prod_thumb/plainicon.com-48762-256px-1a9.png' ? { width: '20px' } : {};
+	renderAttachment: function(verb, image, link, string, details, id) {
+		let adjustSize = {};
+		if (verb === 'newPubLabel') {
+			adjustSize = { width: '20px' };
+		}
 		return (
 			<div style={styles.objectWrapper} key={'attachment-' + id}>
 				<div style={styles.imageWrapper}>
@@ -37,7 +40,7 @@ export const ActivityGroup = React.createClass({
 	},
 
 	render: function() {
-		// Activities either all have the same actor and object, or all have the same target
+		// Activities either all have the same actor and object, same actor and target, or same target
 		const activities = this.props.activities || [];
 		
 		const makeString = function(item) { 
@@ -120,6 +123,8 @@ export const ActivityGroup = React.createClass({
 								return <div>{activities.length} people added new discussions to {targetNode}</div>;
 							case 'addedContributor':
 								return <div>{actorNode} added {activities.length} contributors to {targetNode}</div>;
+							case 'addedAdmin':
+								return <div>{actorNode} added {activities.length} admins to {targetNode}</div>;
 							case 'newReply': 
 								return <div>{activities.length} people replied to a discussion on {targetNode}</div>;
 							case 'newPubLabel': 
@@ -144,17 +149,19 @@ export const ActivityGroup = React.createClass({
 						case 'followedPub': 
 						case 'followedJournal': 
 						case 'followedLabel': 
-							return this.renderAttachment(targetImage, targetLink, targetString, targetDetails, activity.id);
+							return this.renderAttachment(verb, targetImage, targetLink, targetString, targetDetails, activity.id);
 						case 'newDiscussion': 
-							return this.renderAttachment(actorImage, objectLink, objectString, objectDetails, activity.id);
+							return this.renderAttachment(verb, actorImage, objectLink, objectString, objectDetails, activity.id);
 						case 'addedContributor': 
-							return this.renderAttachment(objectImage, objectLink, objectString, objectDetails, activity.id);
+							return this.renderAttachment(verb, objectImage, objectLink, objectString, objectDetails, activity.id);
+						case 'addedAdmin': 
+							return this.renderAttachment(verb, objectImage, objectLink, objectString, objectDetails, activity.id);
 						case 'newReply': 
-							return this.renderAttachment(actorImage, objectLink, '', objectDetails, activity.id);
+							return this.renderAttachment(verb, actorImage, objectLink, '', objectDetails, activity.id);
 						case 'newPubLabel': 
-							return this.renderAttachment(targetImage, targetLink, targetString, '', activity.id);
+							return this.renderAttachment(verb, targetImage, targetLink, targetString, '', activity.id);
 						case 'featuredPub': 
-							return this.renderAttachment(targetImage, targetLink, targetString, targetDetails, activity.id);
+							return this.renderAttachment(verb, targetImage, targetLink, targetString, targetDetails, activity.id);
 						default: 
 							return <div />;
 						}

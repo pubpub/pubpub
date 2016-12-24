@@ -105,6 +105,14 @@ export const Landing = React.createClass({
 		if (mode === 'you') { selectedActivities = myActivities; }
 
 
+		// Iterate over all activities and add create keys based on the actor-object, actor-target, or target values
+		// Keys are also set with the date of the activity, so only same-day activities get grouped.
+		// The key is checked across a list of approved groups per type. If valid, that specific type of key (keyTarget, keyActorObject or KeyActorTarget) is 
+		// added to the groups object. 
+		// Objects that are not an approved verb type for groups simply get added to the groups object with their id as key
+		// At the end, we have a groups objet that has arrays organized by the specfic (groupable) keys.
+		// We iterate over these keys, and if length === 1, pull out the single activity
+		// If length > 1, we keep the activity group in place and render the items as a group.
 		const groups = {};
 		selectedActivities.map((activity)=> {
 			const date = new Date(activity.createdAt);
@@ -125,6 +133,7 @@ export const Landing = React.createClass({
 			];
 			const actorTargetGroups = [
 				'addedContributor', // Amy added 4 contributors to Pub
+				'addedAdmin', // Amy added 4 contributors to Pub
 			];
 			const targetGroups = [
 				'newDiscussion', // 8 people added new discussions
@@ -170,11 +179,6 @@ export const Landing = React.createClass({
 			if (fooDate < barDate) { return 1; }
 			return 0;
 		});
-
-		// For following and self activities, they will come grouped by Journal, Pub, User, and Label
-		// We need to 
-		// 1) Search for groups. (Things applied to same target or object within a day's time)
-		// 2) Deduplicate for master list (do we de-duplicate for filters?)
 
 		return (
 			<div style={styles.container}>
