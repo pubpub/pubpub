@@ -112,11 +112,19 @@ export const Landing = React.createClass({
 			const target = activity.targetPub || activity.targetUser || activity.targetJournal || activity.targetLabel || {};
 			const object = activity.objectPub || activity.objectUser || activity.objectJournal || activity.objectLabel || {};
 			const keyTarget = `${activity.verb}-${target.id}-${date.getYear()}${date.getMonth()}${date.getDate()}`;
-			const keyActor = `${activity.verb}-${actor.id}-${object.id}-${date.getYear()}${date.getMonth()}${date.getDate()}`;
+			const keyActorObject = `${activity.verb}-${actor.id}-${object.id}-${date.getYear()}${date.getMonth()}${date.getDate()}`;
+			const keyActorTarget = `${activity.verb}-${actor.id}-${target.id}-${date.getYear()}${date.getMonth()}${date.getDate()}`;
 
-			const actorGroups = [
+			const actorObjectGroups = [
 				'newPubLabel', // Travis added Pub to 4 labels
-				'featuredPub' // Journal features 8 pubs
+				'featuredPub', // Journal features 8 pubs
+				'followedUser', // Ayla followed 6 people
+				'followedPub', // Ayla followed 6 pubs
+				'followedJournal', // Ayla followed 6 journal
+				'followedLabel', // Ayla followed 6 label
+			];
+			const actorTargetGroups = [
+				'addedContributor', // Amy added 4 contributors to Pub
 			];
 			const targetGroups = [
 				'newDiscussion', // 8 people added new discussions
@@ -128,18 +136,22 @@ export const Landing = React.createClass({
 				} else {
 					groups[keyTarget] = [activity];
 				}	
-			} else if (actorGroups.includes(activity.verb)) {
-				if (keyActor in groups) {
-					groups[keyActor].push(activity);
+			} else if (actorTargetGroups.includes(activity.verb)) {
+				if (keyActorTarget in groups) {
+					groups[keyActorTarget].push(activity);
 				} else {
-					groups[keyActor] = [activity];
+					groups[keyActorTarget] = [activity];
+				}
+			} else if (actorObjectGroups.includes(activity.verb)) {
+				if (keyActorObject in groups) {
+					groups[keyActorObject].push(activity);
+				} else {
+					groups[keyActorObject] = [activity];
 				}
 			} else {
 				groups[activity.id] = [activity];
 			}
 		});		
-
-		console.log(groups);
 
 		const realActivities = Object.keys(groups).map((activityGroupKey)=> {
 			const activityGroup = groups[activityGroupKey];
@@ -158,13 +170,6 @@ export const Landing = React.createClass({
 			if (fooDate < barDate) { return 1; }
 			return 0;
 		});
-
-		console.log(realActivities);
-
-
-
-
-
 
 		// For following and self activities, they will come grouped by Journal, Pub, User, and Label
 		// We need to 

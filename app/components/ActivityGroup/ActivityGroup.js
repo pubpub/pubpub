@@ -108,8 +108,18 @@ export const ActivityGroup = React.createClass({
 							// case 'followedJournal': 
 							// case 'followedLabel': 
 								// return <div>{actorNode} followed {targetNode}</div>;
+							case 'followedUser': 
+								return <div>{actorNode} followed {activities.length} people</div>;
+							case 'followedPub': 
+								return <div>{actorNode} followed {activities.length} pubs</div>;
+							case 'followedJournal': 
+								return <div>{actorNode} followed {activities.length} journals</div>;
+							case 'followedLabel': 
+								return <div>{actorNode} followed {activities.length} labels</div>;
 							case 'newDiscussion': 
 								return <div>{activities.length} people added new discussions to {targetNode}</div>;
+							case 'addedContributor':
+								return <div>{actorNode} added {activities.length} contributors to {targetNode}</div>;
 							case 'newReply': 
 								return <div>{activities.length} people replied to a discussion on {targetNode}</div>;
 							case 'newPubLabel': 
@@ -130,8 +140,15 @@ export const ActivityGroup = React.createClass({
 						switch (verb) {
 						// case 'publishedPub':
 						// 	return this.renderAttachment(targetImage, targetLink, targetString, targetDetails);
+						case 'followedUser': 
+						case 'followedPub': 
+						case 'followedJournal': 
+						case 'followedLabel': 
+							return this.renderAttachment(targetImage, targetLink, targetString, targetDetails, activity.id);
 						case 'newDiscussion': 
 							return this.renderAttachment(actorImage, objectLink, objectString, objectDetails, activity.id);
+						case 'addedContributor': 
+							return this.renderAttachment(objectImage, objectLink, objectString, objectDetails, activity.id);
 						case 'newReply': 
 							return this.renderAttachment(actorImage, objectLink, '', objectDetails, activity.id);
 						case 'newPubLabel': 

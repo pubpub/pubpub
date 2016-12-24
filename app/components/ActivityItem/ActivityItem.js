@@ -118,7 +118,7 @@ export const ActivityItem = React.createClass({
 							case 'newPubLabel': 
 								return <div>{actorNode} added a pub to {targetNode}</div>;
 							case 'invitedReviewer': 
-								return <div>{actorNode} invited {objectNode} to {targetNode}</div>;
+								return <div>{actorNode} invited {objectNode} to review {targetNode}</div>;
 							case 'acceptedReviewInvitation': 
 								return <div>{actorNode} accepted {objectNode}'s invitation to review {targetNode}</div>;
 							case 'submittedPub': 
