@@ -8,7 +8,6 @@ let styles = {};
 export const ActivityItem = React.createClass({
 	propTypes: {
 		activity: PropTypes.object,
-		activities: PropTypes.array,
 	},
 
 	// getInitialState() {
@@ -20,9 +19,9 @@ export const ActivityItem = React.createClass({
 		
 	},
 
-	renderAttachment: function(image, link, string, details) {
+	renderAttachment: function(image, link, string, details, id) {
 		return (
-			<div style={styles.objectWrapper}>
+			<div style={styles.objectWrapper} key={'attachment-' + id}>
 				<div style={styles.imageWrapper}>
 					<Link to={link}>
 						<img src={image} style={styles.largeImage} alt={string} />
@@ -145,17 +144,17 @@ export const ActivityItem = React.createClass({
 						{(() => {
 							switch (verb) {
 							case 'publishedPub':
-								return this.renderAttachment(targetImage, targetLink, targetString, targetDetails);
+								return this.renderAttachment(targetImage, targetLink, targetString, targetDetails, activity.id);
 							case 'newDiscussion': 
-								return this.renderAttachment(targetImage, objectLink, objectString, objectDetails);
+								return this.renderAttachment(targetImage, objectLink, objectString, objectDetails, activity.id);
 							case 'newReply': 
-								return this.renderAttachment(targetImage, objectLink, '', objectDetails);
+								return this.renderAttachment(targetImage, objectLink, '', objectDetails, activity.id);
 							case 'newPubLabel': 
-								return this.renderAttachment(objectImage, objectLink, objectString, objectDetails);
+								return this.renderAttachment(objectImage, objectLink, objectString, objectDetails, activity.id);
 							case 'createdJournal': 
-								return this.renderAttachment(targetImage, targetLink, targetString, targetDetails);
+								return this.renderAttachment(targetImage, targetLink, targetString, targetDetails, activity.id);
 							case 'featuredPub': 
-								return this.renderAttachment(targetImage, targetLink, targetString, targetDetails);
+								return this.renderAttachment(targetImage, targetLink, targetString, targetDetails, activity.id);
 							default: 
 								return <div />;
 							}

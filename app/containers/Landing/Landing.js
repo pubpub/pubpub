@@ -2,7 +2,7 @@ import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
 import { Menu, MenuDivider, NonIdealState } from '@blueprintjs/core';
-import { ActivityItem, DropdownButton } from 'components';
+import { ActivityItem, ActivityGroup, DropdownButton } from 'components';
 import { getActivities } from './actions';
 
 let styles;
@@ -99,6 +99,73 @@ export const Landing = React.createClass({
 		// const globalActivities = activities.global || [];
 		// const youActivities = activities.you || [];
 
+
+		let selectedActivities = [];
+		if (mode === 'following') { selectedActivities = followingActivities; }
+		if (mode === 'you') { selectedActivities = myActivities; }
+
+
+		const groups = {};
+		selectedActivities.map((activity)=> {
+			const date = new Date(activity.createdAt);
+			const actor = activity.actorPub || activity.actorUser || activity.actorJournal || activity.actorLabel || {};
+			const target = activity.targetPub || activity.targetUser || activity.targetJournal || activity.targetLabel || {};
+			const object = activity.objectPub || activity.objectUser || activity.objectJournal || activity.objectLabel || {};
+			const keyTarget = `${activity.verb}-${target.id}-${date.getYear()}${date.getMonth()}${date.getDate()}`;
+			const keyActor = `${activity.verb}-${actor.id}-${object.id}-${date.getYear()}${date.getMonth()}${date.getDate()}`;
+
+			const actorGroups = [
+				'newPubLabel', // Travis added Pub to 4 labels
+				'featuredPub' // Journal features 8 pubs
+			];
+			const targetGroups = [
+				'newDiscussion', // 8 people added new discussions
+				'newReply', // 13 people replied to Discussion
+			];
+			if (targetGroups.includes(activity.verb)) {
+				if (keyTarget in groups) {
+					groups[keyTarget].push(activity);
+				} else {
+					groups[keyTarget] = [activity];
+				}	
+			} else if (actorGroups.includes(activity.verb)) {
+				if (keyActor in groups) {
+					groups[keyActor].push(activity);
+				} else {
+					groups[keyActor] = [activity];
+				}
+			} else {
+				groups[activity.id] = [activity];
+			}
+		});		
+
+		console.log(groups);
+
+		const realActivities = Object.keys(groups).map((activityGroupKey)=> {
+			const activityGroup = groups[activityGroupKey];
+			if (activityGroup.length === 1) {
+				return activityGroup[0];
+			}
+			return activityGroup.sort((foo, bar)=> {
+				if (foo.createdAt > bar.createdAt) { return -1; }
+				if (foo.createdAt < bar.createdAt) { return 1; }
+				return 0;
+			});
+		}).sort((foo, bar)=> {
+			const fooDate = Array.isArray(foo) ? foo[0].createdAt : foo.createdAt;
+			const barDate = Array.isArray(bar) ? bar[0].createdAt : bar.createdAt;
+			if (fooDate > barDate) { return -1; }
+			if (fooDate < barDate) { return 1; }
+			return 0;
+		});
+
+		console.log(realActivities);
+
+
+
+
+
+
 		// For following and self activities, they will come grouped by Journal, Pub, User, and Label
 		// We need to 
 		// 1) Search for groups. (Things applied to same target or object within a day's time)
@@ -147,23 +214,14 @@ export const Landing = React.createClass({
 								</div>
 							</div>
 
-							{mode === 'following' && followingActivities.sort((foo, bar)=> {
-								if (foo.createdAt > bar.createdAt) { return -1; }
-								if (foo.createdAt < bar.createdAt) { return 1; }
-								return 0;
-							}).map((activity)=> {
+							{realActivities.map((activity)=> {
+								if (Array.isArray(activity)) {
+									return <ActivityGroup key={'activityGroup-' + activity[0].id} activities={activity} />;	
+								}
 								return <ActivityItem key={'activity-' + activity.id} activity={activity} />;
 							})}
 
-							{mode === 'you' && myActivities.sort((foo, bar)=> {
-								if (foo.createdAt > bar.createdAt) { return -1; }
-								if (foo.createdAt < bar.createdAt) { return 1; }
-								return 0;
-							}).map((activity)=> {
-								return <ActivityItem key={'activity-' + activity.id} activity={activity} />;
-							})}
-
-							{((mode === 'following' && !followingActivities.length) || (mode === 'you' && !myActivities.length)) &&
+							{!realActivities.length &&
 								<NonIdealState
 									title={'No Activities'}
 									visual={'pulse'} />
