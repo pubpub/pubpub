@@ -15,6 +15,8 @@ export const PubFiles = React.createClass({
 		pubId: PropTypes.number,
 		pubSlug: PropTypes.string,
 		routeFilename: PropTypes.string,
+		isLoading: PropTypes.bool,
+		error: PropTypes.object,
 		dispatch: PropTypes.func,
 	},
 
@@ -24,8 +26,29 @@ export const PubFiles = React.createClass({
 			uploadFileNames: [],
 			uploadFiles: [],
 			uploading: false,
+			uploadingFinished: false,
 			uploadedFileObjects: [],
+			newVersionmessage: '',
 		};
+	},
+
+	componentWillReceiveProps(nextProps) {
+		// If login was succesful, redirect
+		const oldLoading = this.props.isLoading;
+		const nextLoading = nextProps.isLoading;
+		const nextError = nextProps.error;
+
+		if (oldLoading && !nextLoading && !nextError) {
+			this.setState({
+				uploadRates: [],
+				uploadFileNames: [],
+				uploadFiles: [],
+				uploading: false,
+				uploadingFinished: false,
+				uploadedFileObjects: [],
+				newVersionmessage: '',
+			});
+		}
 	},
 
 	handleFileUploads: function(evt) {
@@ -107,48 +130,39 @@ export const PubFiles = React.createClass({
 		// Let the uploading animation finish
 		this.setState({
 			uploadedFileObjects: newUploadedFileObjects,
-		});
-
-		if (finished) {
-			this.props.dispatch(postVersion(this.props.pubId, 'Uploading new files: ' + this.state.uploadFileNames.join(', '), false, newUploadedFileObjects));
-
-			setTimeout(()=> {
-				this.setState({
-					uploading: !finished,
-				});
-			}, 350);	
-		}
-		
+			uploadingFinished: finished,
+		});		
 		
 		console.log(newUploadedFileObjects);
-		// let atomType = undefined;
-		// const extension = filename.split('.').pop();
-		// switch (extension) {
-		// case 'jpg':
-		// case 'png':
-		// case 'jpeg':
-		// case 'tiff':
-		// case 'gif':
-		// 	atomType = 'image'; break;
-		// case 'pdf':
-		// 	atomType = 'pdf'; break;
-		// case 'ipynb':
-		// 	atomType = 'jupyter'; break;
-		// case 'mp4':
-		// case 'ogg':
-		// case 'webm':
-		// 	atomType = 'video'; break;
-		// case 'csv':
-		// 	atomType = 'table'; break;
-		// default:
-		// 	break;
-		// }
 
-		// const versionContent = {
-		// 	url: 'https://assets.pubpub.org/' + filename
-		// };
-		// this.props.dispatch(createAtom(atomType, versionContent, title));
-		// this.setState({filter: ''});
+	},
+
+	versionMessageChange: function(evt) {
+		this.setState({ newVersionmessage: evt.target.value });
+	},
+	postNewVersion: function(evt) {
+		evt.preventDefault();
+		if (!this.state.uploadingFinished) { return false; }
+		const pubId = this.props.pubId;
+		const newUploadedFileObjects = this.state.uploadedFileObjects;
+
+		const versionData = this.props.versionData || {};
+		const files = versionData.files || [];
+
+		const fileNames = {};
+		const mergedFiles = [...newUploadedFileObjects, ...files];
+		const newVersionFiles = mergedFiles.map((file)=> {
+			fileNames[file.name] = false;
+			return file;
+		}).filter((item)=> {
+			if (fileNames[item.name]) { return false; }
+			
+			fileNames[item.name] = true;
+			return true;
+		});
+
+		return this.props.dispatch(postVersion(pubId, this.state.newVersionmessage, false, newVersionFiles));
+		// Need to set loading - and then onreceive, set uplaoding to flase, clear values, etc
 	},
 
 
@@ -160,35 +174,55 @@ export const PubFiles = React.createClass({
 			if (current.name === this.props.routeFilename) { return current; } 
 			return previous;
 		}, undefined);
+		
+		const isLoading = this.props.isLoading;
 		return (
 			<div style={styles.container}>
 
-				{this.state.uploading &&
-					<div>
-						<h3>Uploading</h3>
-						{this.state.uploadFileNames.map((uploadFile, index)=> {
-							return (
-								<div key={'uploadFile-' + index} style={[styles.uploadBar, this.state.uploadRates[index] === 1 && { display: 'none' }]}>
-									{uploadFile}
-									<ProgressBar value={this.state.uploadRates[index]} className={this.state.uploadRates[index] === 1 ? 'pt-no-stripes pt-intent-success' : 'pt-no-stripes'} />
-								</div>
-							);
-						})}
+				{/* Upload and Editor Buttons */}
+				{!!files.length && !this.state.uploading &&
+					<div style={styles.topButtons}>
+						<label className="pt-button" htmlFor={'upload'}>
+							Upload Files
+							<input id={'upload'} type="file" multiple style={{ position: 'fixed', top: '-100px' }} onChange={this.handleFileUploads} />
+						</label>
+						
+						<button className={'pt-button'} style={{ marginLeft: '1em' }}>
+							Open Editor
+							<span className={'pt-icon-standard  pt-icon-caret-down pt-align-right'} />
+						</button>
+						
 					</div>
-
 				}
 
-				{/* <Link to={'/pub/' + this.props.pubSlug + '/files?test=' + Math.random()}><button className={'pt-button pt-intent-warning'}>Random</button></Link> */}
+				{/* Breadcrumbs */}
+				{!!files.length &&
+					<div style={{ marginBottom: '1em' }}>
+						{!this.props.routeFilename &&
+							<ul className="pt-breadcrumbs">
+								<li><Link to={'/pub/' + this.props.pubSlug} className="pt-breadcrumb"><span className="pt-icon-standard pt-icon-document" /> Main</Link></li>
+							</ul>
+						}
 
+						{!!this.props.routeFilename &&
+							<ul className="pt-breadcrumbs">
+								<li><Link to={'/pub/' + this.props.pubSlug + '/files'} className="pt-breadcrumb"><span className="pt-icon-standard pt-icon-folder-open" /> Files</Link></li>
+								<li><a className="pt-breadcrumb">{currentFile.name}</a></li>
+							</ul>
+						}
+					</div>
+				}
+
+				{/* No files associated with Pub yet*/}
 				{!files.length && !this.state.uploading && !this.state.uploadedFileObjects.length &&
 					<NonIdealState
 						action={
-							<div className="pt-button-group">
-								<a className="pt-button" tabIndex="0" role="button">Import Document</a>
+							<div>
 								<label className="pt-button">
 									Upload Files
 									<input type="file" multiple style={{ position: 'fixed', top: '-100px' }} onChange={this.handleFileUploads} />
 								</label>
+								<span style={{ width: '1em', height: '1em', display: 'inline-block' }} />
 								<a className="pt-button" tabIndex="0" role="button">Open Editor</a>
 								
 
@@ -199,6 +233,49 @@ export const PubFiles = React.createClass({
 						visual={'folder-open'} />
 				}
 
+
+				{/* Uploading Section */}
+				{this.state.uploading &&
+					<div style={styles.uploadingSection} className={'pt-card pt-elevation-2'}>
+						{!!isLoading && 
+							<div style={styles.newVersionLoading}>
+								<Spinner className={'pt-small'} />
+							</div>
+						}
+
+						<h3>Uploading</h3>
+
+						<form onSubmit={this.postNewVersion}>
+							<div style={styles.uploadingFormTable}>
+								<label htmlFor={'versionMessage'} style={styles.uploadingMessage}>
+									Version Message
+									<input style={styles.uploadingInput} className={'pt-input'} id={'versionMessage'} name={'versionMessage'} type="text" placeholder={'Describe this version'} value={this.state.newVersionmessage} onChange={this.versionMessageChange} />
+								</label>
+								<div style={styles.uploadingSubmit}>
+									<button className={this.state.uploadingFinished ? 'pt-button pt-intent-primary' : 'pt-button pt-intent-primary pt-disabled'} onClick={this.postNewVersion}>
+										{this.state.uploadingFinished 
+											? 'Save New Version'
+											: 'Uploading'
+										}
+									</button>	
+								</div>
+								
+							</div>
+						</form>
+
+						{this.state.uploadFileNames.map((uploadFile, index)=> {
+							return (
+								<div key={'uploadFile-' + index} style={styles.uploadBar}>
+									{uploadFile}
+									<ProgressBar value={this.state.uploadRates[index]} className={this.state.uploadRates[index] === 1 ? 'pt-no-stripes pt-intent-success' : 'pt-no-stripes'} />
+								</div>
+							);
+						})}
+					</div>
+
+				}
+
+				{/* Creating Version */}
 				{!files.length && !this.state.uploading && !!this.state.uploadedFileObjects.length && 
 					<NonIdealState
 						action={
@@ -209,18 +286,17 @@ export const PubFiles = React.createClass({
 						visual={'pt-icon-tick'} />
 				}
 				
+				{/* File List */}
 				{!!files.length && !this.props.routeFilename &&
 					<div>
-						<div style={{ margin: '-2em 0em 1em 0em' }}>
-							<ul className="pt-breadcrumbs">
-								<li><Link to={'/pub/' + this.props.pubSlug} className="pt-breadcrumb"><span className="pt-icon-standard pt-icon-document" /> Main</Link></li>
-							</ul>
-						</div>
+						
 						<table className="pt-table pt-condensed pt-striped" style={{width: '100%'}}>
 							<thead>
-								<th>Name</th>
-								<th>Created</th>
-								<th></th>
+								<tr>
+									<th>Name</th>
+									<th>Created</th>
+									<th></th>
+								</tr>
 							</thead>
 							<tbody>
 								{files.map((file, index)=> {
@@ -234,36 +310,12 @@ export const PubFiles = React.createClass({
 								})}
 							</tbody>
 						</table>
-						{/*<div className="pt-tag pt-minimal pt-large">13 Files</div>*/}
-
-						{/*
-						<div style={{margin: '-2em 0em 1em 0em'}}>
-							<ul className="pt-breadcrumbs">
-								<li><a className="pt-breadcrumb"><span className="pt-icon-standard pt-icon-folder-open" /> 14 Files</a></li>
-								<li><a className="pt-breadcrumb" href="#">Folder three</a></li>
-								<li><span className="pt-breadcrumb">File</span></li>
-							</ul>
-						</div>
-
-						<h2>Introduction</h2>
-						<p>Blah blah blah. This is a whole bunch of stuff. Woopie. Check out all the differnet stuff I can say when I type. Blah blah blah. This is a whole bunch of stuff. Woopie. Check out all the differnet stuff I can say when I type. Blah blah blah. This is a whole bunch of stuff. Woopie. Check out all the differnet stuff I can say when I type. Blah blah blah. This is a whole bunch of stuff. Woopie. Check out all the differnet stuff I can say when I type. Blah blah blah. This is a whole bunch of stuff. Woopie. Check out all the differnet stuff I can say when I type. Blah blah blah. This is a whole bunch of stuff. Woopie. Check out all the differnet stuff I can say when I type.Blah blah blah. This is a whole bunch of stuff. Woopie. Check out all the differnet stuff I can say when I type. Blah blah blah. This is a whole bunch of stuff. Woopie. Check out all the differnet stuff I can say when I type</p>
-						<h3>Subsection</h3>
-						<p>Blah blah blah. This is a whole bunch of stuff. Woopie. Check out all the differnet stuff I can say when I type</p>
-						<p>Blah blah blah. This is a whole bunch of stuff. Woopie. Check out all the differnet stuff I can say when I type</p>
-						<p>Blah blah blah. This is a whole bunch of stuff. Woopie. Check out all the differnet stuff I can say when I type</p>
-						<p>Blah blah blah. This is a whole bunch of stuff. Woopie. Check out all the differnet stuff I can say when I type</p>
-						*/}
 					</div>
 				}		
 
+				{/* Specific File */}
 				{this.props.routeFilename && 
 					<div>
-						<div style={{ margin: '-2em 0em 1em 0em' }}>
-							<ul className="pt-breadcrumbs">
-								<li><Link to={'/pub/' + this.props.pubSlug + '/files'} className="pt-breadcrumb"><span className="pt-icon-standard pt-icon-folder-open" /> Files</Link></li>
-								<li><a className="pt-breadcrumb">{currentFile.name}</a></li>
-							</ul>
-						</div>
 
 						{currentFile.type.indexOf('image') > -1 &&
 							<img src={currentFile.url} style={{maxWidth: '100%'}} />
@@ -317,7 +369,7 @@ export default Radium(PubFiles);
 
 styles = {
 	container: {
-		padding: '1.25em',
+		padding: '0em 1.25em 1.25em',
 	},
 	pubBody: {
 		// padding: '1.25em',
@@ -326,6 +378,34 @@ styles = {
 		// fontSize: '1.2em',
 		// color: '#333',
 		// maxWidth: '700px',
+	},
+	topButtons: {
+		float: 'right',
+	},
+	uploadingSection: {
+		marginBottom: '2em',
+	},
+	uploadingFormTable: {
+		display: 'table',
+		verticalAlign: 'middle',
+		width: '100%',
+	},
+	uploadingMessage: {
+		display: 'table-cell',
+		verticalAlign: 'middle',
+		width: '100%',
+	},
+	uploadingInput: {
+		width: '95%',
+		marginBottom: '1em',
+	},
+	uploadingSubmit: {
+		display: 'table-cell',
+		verticalAlign: 'middle',
+		whiteSpace: 'nowrap',
+	},
+	newVersionLoading: {
+		float: 'right',
 	},
 	inputButtonLabel: {
 		overflow: 'hidden',

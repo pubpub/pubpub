@@ -273,7 +273,8 @@ export const Pub = React.createClass({
 					{meta === 'versions' && 
 						<PubVersions
 							versionsData={versions}
-							location={this.props.location} />
+							location={this.props.location} 
+							pubSlug={pubData.slug} />
 					}
 					{meta === 'contributors' && 
 						<PubContributors
@@ -287,6 +288,8 @@ export const Pub = React.createClass({
 							pubId={pubData.id}
 							pubSlug={pubData.slug}
 							routeFilename={this.props.params.filename}
+							isLoading={this.props.pubData.versionsLoading}
+							error={this.props.pubData.versionsError}
 							dispatch={this.props.dispatch} />
 					}
 					{meta === 'settings' && 
