@@ -1,6 +1,3 @@
-import SHA3 from 'crypto-js/sha3';
-import encHex from 'crypto-js/enc-hex';
-
 /*--------*/
 // Define Action types
 //

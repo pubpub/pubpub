@@ -8,8 +8,7 @@ export default (
 		<Route path="/login" component={Login} />
 		<Route path="/signup" component={SignUp} />
 		<Route path="/resetpassword" component={ResetPassword} />
-		<Route path="/setpassword/:hash/:username" component={SetPassword} />
-
+		<Route path="/resetpassword/:hash/:username" component={SetPassword} />
 
 		<Route path="/search" component={Search} />
 

@@ -7,7 +7,6 @@ import encHex from 'crypto-js/enc-hex';
 // All action types are defined as constants. Do not manually pass action
 // types as strings in action creators
 /*--------*/
-
 export const SET_PASSWORD_LOAD = 'resetPassword/SET_PASSWORD_LOAD';
 export const SET_PASSWORD_SUCCESS = 'resetPassword/SET_PASSWORD_SUCCESS';
 export const SET_PASSWORD_FAIL = 'resetPassword/SET_PASSWORD_FAIL';
@@ -38,11 +37,9 @@ export function submitPassword(password, username, hash) {
 			})
 		})
 		.then((result) => {
-			console.log("YES SUCCESS " + result)
 			dispatch({ type: SET_PASSWORD_SUCCESS, result });
 		})
 		.catch((err) => {
-			console.log(" OH CRAP " + err)
 			dispatch({ type: SET_PASSWORD_FAIL, err });
 		});
 	};

@@ -13,9 +13,9 @@ import {
 
 
 import {
-		SET_PASSWORD_LOAD,
-		SET_PASSWORD_SUCCESS,
-		SET_PASSWORD_FAIL,
+	SET_PASSWORD_LOAD,
+	SET_PASSWORD_SUCCESS,
+	SET_PASSWORD_FAIL,
 } from 'containers/SetPassword/actions';
 
 /* ------------------- */
