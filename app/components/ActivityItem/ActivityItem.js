@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react';
 import Radium from 'radium';
 import { Link } from 'react-router';
-import dateFormat from 'dateformat';
+import { FormattedRelative } from 'react-intl';
 let styles = {};
 
 
@@ -22,7 +22,7 @@ export const ActivityItem = React.createClass({
 	renderAttachment: function(image, link, string, details, id) {
 		return (
 			<div style={styles.objectWrapper} key={'attachment-' + id}>
-				<div style={styles.imageWrapper}>
+				<div style={styles.imageWrapper} className={'opacity-on-hover-child'}>
 					<Link to={link}>
 						<img src={image} style={styles.largeImage} alt={string} />
 					</Link>
@@ -85,17 +85,15 @@ export const ActivityItem = React.createClass({
 		const objectNode = <Link to={objectLink} style={styles.link}>{objectString}</Link>;
 
 		return (
-			<div style={styles.container}>
+			<div style={styles.container} className={'opacity-on-hover-parent'}>
 				<div style={styles.tableWrapper}>
-					<div style={styles.imageWrapper}>
+					<div style={styles.imageWrapper} className={'opacity-on-hover-child'}>
 						<Link to={actorLink}>
 							<img src={actorImage} style={styles.smallImage} alt={actorString} />
 						</Link>
 					</div>
 					
 					<div style={styles.detailsWrapper}>
-						<div style={styles.date}>{dateFormat(activity.createdAt, 'mmmm dd, yyyy HH:mm')}</div>
-						
 						{(() => {
 							switch (verb) {
 							case 'followedUser': 
@@ -137,28 +135,41 @@ export const ActivityItem = React.createClass({
 						})()}
 
 					</div>
+					<div style={styles.dateWrapper}>
+						<FormattedRelative value={activity.createdAt} />
+					</div>
 				</div>
 
 				{showObject &&
 					<div style={styles.attachmentWrapper}>
-						{(() => {
-							switch (verb) {
-							case 'publishedPub':
-								return this.renderAttachment(targetImage, targetLink, targetString, targetDetails, activity.id);
-							case 'newDiscussion': 
-								return this.renderAttachment(targetImage, objectLink, objectString, objectDetails, activity.id);
-							case 'newReply': 
-								return this.renderAttachment(targetImage, objectLink, '', objectDetails, activity.id);
-							case 'newPubLabel': 
-								return this.renderAttachment(objectImage, objectLink, objectString, objectDetails, activity.id);
-							case 'createdJournal': 
-								return this.renderAttachment(targetImage, targetLink, targetString, targetDetails, activity.id);
-							case 'featuredPub': 
-								return this.renderAttachment(targetImage, targetLink, targetString, targetDetails, activity.id);
-							default: 
-								return <div />;
-							}
-						})()}
+						<div style={styles.tableWrapper}>
+							<div style={styles.imageWrapper}>
+								<div style={styles.smallImage} />
+							</div>
+							<div style={styles.tableCell}>
+								{(() => {
+									switch (verb) {
+									case 'publishedPub':
+										return this.renderAttachment(targetImage, targetLink, targetString, targetDetails, activity.id);
+									case 'newDiscussion': 
+										return this.renderAttachment(targetImage, objectLink, objectString, objectDetails, activity.id);
+									case 'newReply': 
+										return this.renderAttachment(targetImage, objectLink, '', objectDetails, activity.id);
+									case 'newPubLabel': 
+										return this.renderAttachment(objectImage, objectLink, objectString, objectDetails, activity.id);
+									case 'createdJournal': 
+										return this.renderAttachment(targetImage, targetLink, targetString, targetDetails, activity.id);
+									case 'featuredPub': 
+										return this.renderAttachment(targetImage, targetLink, targetString, targetDetails, activity.id);
+									default: 
+										return <div />;
+									}
+								})()}
+							</div>
+							<div style={[styles.dateWrapper, styles.hidden]}>
+								<FormattedRelative value={activity.createdAt} />
+							</div>
+						</div>
 					</div>
 				}
 				
@@ -172,8 +183,8 @@ export default Radium(ActivityItem);
 styles = {
 	container: {
 		borderTop: '1px solid #EEE',
-		marginTop: '1.5em',
-		paddingTop: '1.5em', 
+		marginTop: '0.75em',
+		paddingTop: '0.75em', 
 		width: '100%',
 	},
 	imageWrapper: {
@@ -185,6 +196,9 @@ styles = {
 	tableWrapper: {
 		display: 'table',
 	},
+	tableCell: {
+		display: 'table-cell',
+	},
 	objectWrapper: {
 		display: 'table',
 		marginBottom: '.5em',
@@ -192,28 +206,39 @@ styles = {
 	detailsWrapper: {
 		display: 'table-cell',
 		verticalAlign: 'top',
+		lineHeight: '1.2em',
+		paddingTop: '.5em',
+	},
+	dateWrapper: {
+		display: 'table-cell',
+		verticalAlign: 'top',
+		lineHeight: '1.2em',
+		paddingTop: '.5em',
+		width: '1%',
+		whiteSpace: 'nowrap',
+		fontSize: '0.9em',
+		paddingLeft: '1em',
+		color: '#777',
 	},
 	smallImage: {
 		width: '30px',
 		borderRadius: '2px',
 	},
 	largeImage: {
-		width: '55px',
+		width: '50px',
 		borderRadius: '2px',
 	},
 	link: {
 		fontWeight: 'bold',
 	},
-	date: {
-		fontSize: '0.9em',
-		color: '#777',
-	},
 	attachmentWrapper: {
-		margin: '.75em 0em 0em 1em',
-		padding: '0em 0em 0em 1em',
-		borderLeft: '2px solid #EEE',
+		margin: '.75em 0em 0em',
 	},
 	objectTitle: {
 		margin: 0,
 	},
+	hidden: {
+		opacity: '0',
+		pointerEvents: 'none',
+	}
 };

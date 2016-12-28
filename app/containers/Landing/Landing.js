@@ -80,20 +80,20 @@ export const Landing = React.createClass({
 		const mode = query.mode || 'following';
 		const filterMode = query.filter || 'All';
 		const filterList = mode === 'you'
-			? ['All', 'Pubs', 'Journals', 'Users']
-			: ['All', 'Pubs', 'Journals', 'Users', 'Labels'];
+			? ['All', 'Pubs', 'Journals', 'People']
+			: ['All', 'Pubs', 'Journals', 'People', 'Labels'];
 
 		let followingActivities;
 		if (filterMode === 'All') { followingActivities = uniqueActivities; }
 		if (filterMode === 'Pubs') { followingActivities = activitiesPubs; }
-		if (filterMode === 'Users') { followingActivities = activitiesUsers; }
+		if (filterMode === 'People') { followingActivities = activitiesUsers; }
 		if (filterMode === 'Journals') { followingActivities = activitiesJournals; }
 		if (filterMode === 'Labels') { followingActivities = activitiesLabels; }
 
 		let myActivities;
 		if (filterMode === 'All') { myActivities = myUniqueActivities; }
 		if (filterMode === 'Pubs') { myActivities = myActivitiesPubs; }
-		if (filterMode === 'Users') { myActivities = myActivitiesUsers; }
+		if (filterMode === 'People') { myActivities = myActivitiesUsers; }
 		if (filterMode === 'Journals') { myActivities = myActivitiesJournals; }
 
 		// const globalActivities = activities.global || [];
@@ -200,7 +200,7 @@ export const Landing = React.createClass({
 								<div style={styles.headerOptions}>
 									<div className="pt-button-group pt-minimal">
 										{/* <Link to={{ pathname: '/', query: { ...query, mode: 'global', filter: undefined } }} className={mode === 'global' ? 'pt-button pt-active' : 'pt-button'}>Global</Link> */}
-										<Link to={{ pathname: '/', query: { ...query, mode: undefined } }} className={mode === 'following' ? 'pt-button pt-active' : 'pt-button'}>Following</Link>
+										<Link to={{ pathname: '/', query: { ...query, mode: undefined, filter: undefined } }} className={mode === 'following' ? 'pt-button pt-active' : 'pt-button'}>Following</Link>
 										<Link to={{ pathname: '/', query: { ...query, mode: 'you', filter: undefined } }} className={mode === 'you' ? 'pt-button pt-active' : 'pt-button'}>Your Things</Link>
 									</div>
 								</div>
@@ -218,7 +218,7 @@ export const Landing = React.createClass({
 												})}
 											</Menu>
 										}
-										title={'Filter'} 
+										title={'Filter: ' + filterMode} 
 										position={2} />
 								</div>
 							</div>
@@ -242,8 +242,9 @@ export const Landing = React.createClass({
 							<div style={styles.rightContent}>
 								<div style={styles.rightSection} className={'pt-card pt-elevation-0'}>
 									<div className="pt-dialog-header">
-										<span className="pt-icon-large pt-icon-application" />
+										{/* <span className="pt-icon-large pt-icon-application" /> */}
 										<h5>Your Pubs</h5>
+										<Link to={'/pubs/create'} className={'pt-button pt-icon-add'} style={styles.sideButton}>New</Link>
 									</div>
 									<div className="pt-dialog-body">
 										{assetPubs.map((pub)=> {
@@ -262,8 +263,9 @@ export const Landing = React.createClass({
 
 								<div style={styles.rightSection} className={'pt-card pt-elevation-0'}>
 									<div className="pt-dialog-header">
-										<span className="pt-icon-large pt-icon-applications" />
+										{/* <span className="pt-icon-large pt-icon-applications" /> */}
 										<h5>Your Journals</h5>
+										<Link to={'/journals/create'} className={'pt-button pt-icon-add'} style={styles.sideButton}>New</Link>
 									</div>
 									<div className="pt-dialog-body">
 										{assetJournals.map((journal)=> {
@@ -358,6 +360,9 @@ styles = {
 	sideAction: {
 		textAlign: 'center',
 		padding: '1em 0em',
+	},
+	sideButton: {
+		margin: '.5em',
 	},
 	
 };

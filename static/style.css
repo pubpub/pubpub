@@ -178,6 +178,14 @@ input[type="file"]:focus {
 	-webkit-user-select: text;
 }
 
+.opacity-on-hover-parent .opacity-on-hover-child {
+	opacity: 0.85;
+}
+
+.opacity-on-hover-parent:hover .opacity-on-hover-child {
+	opacity: 1;
+}
+
 .down-arrow {
 	display: inline-block;
 	width: 0;
