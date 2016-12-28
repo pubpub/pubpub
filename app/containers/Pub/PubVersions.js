@@ -61,12 +61,15 @@ export const PubVersions = React.createClass({
 								<Tooltip 
 									content={
 										<div>
-											<div>Currently {version.isPublished ? 'Public' : 'Private'}: </div>
-											<div>Click to publish</div>
+											<div>Version is {version.isPublished ? 'Public' : 'Private'}</div>
+											{!version.isPublished &&
+												<div>Click to publish</div>
+											}
+											
 										</div>
 									} 
 									position={Position.BOTTOM_LEFT}>
-									<span onClick={this.setPublish.bind(this, version.id)} className={'pt-button pt-minimal'}>
+									<span onClick={version.isPublished ? ()=>{} : this.setPublish.bind(this, version.id)} className={'pt-button pt-minimal'} style={version.isPublished ? styles.noClick : {}}>
 										<span className={'pt-icon-standard pt-icon-globe'} style={version.isPublished ? styles.icon : [styles.icon, styles.inactiveIcon]} />
 										<span style={styles.iconSpacer} />
 										<span className={'pt-icon-standard pt-icon-lock'} style={version.isPublished ? [styles.icon, styles.inactiveIcon] : styles.icon} />
@@ -86,7 +89,8 @@ export const PubVersions = React.createClass({
 								</Link>
 							</div>
 
-							<Dialog isOpen={this.state.confirmPublish === version.id} onClose={this.setPublish.bind(this, undefined)}>
+							{!version.isPublished &&
+								<Dialog isOpen={this.state.confirmPublish === version.id} onClose={this.setPublish.bind(this, undefined)}>
 									<div className="pt-dialog-body">
 										<p>Please confirm that you want to publish the following version. Once published, the version will be publicly available.</p>
 										<p><b>Publishing cannot be undone.</b></p>
@@ -104,6 +108,7 @@ export const PubVersions = React.createClass({
 										</div>
 									</div>
 								</Dialog>
+							}
 							
 						</div>
 					);
@@ -154,6 +159,9 @@ styles = {
 		width: '0.5em', 
 		height: '1em', 
 		display: 'inline-block',
+	},
+	noClick: {
+		pointerEvents: 'none',
 	},
 	loaderContainer: {
 		display: 'inline-block',
