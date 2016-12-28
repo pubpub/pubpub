@@ -24,6 +24,7 @@ import PubDiscussion from './PubDiscussion';
 import PubReviewers from './PubReviewers';
 import PubLabelList from './PubLabelList';
 import PubFollowers from './PubFollowers';
+import PubDiffVersions from './PubDiffVersions';
 
 import { getPubData } from './actions';
 
@@ -37,7 +38,7 @@ export const Pub = React.createClass({
 		location: PropTypes.object,
 		dispatch: PropTypes.func,
 	},
-	
+
 	getInitialState() {
 		return {
 			canGoBack: false,
@@ -350,6 +351,12 @@ export const Pub = React.createClass({
 					{meta === 'followers' && 
 						<PubFollowers
 							followers={followers}
+							pathname={pathname}
+							query={query} />
+					}
+					{meta === 'diff' && 
+						<PubDiffVersions
+							versions={versions} 
 							pathname={pathname}
 							query={query} />
 					}
