@@ -219,7 +219,7 @@ export const Landing = React.createClass({
 												})}
 											</Menu>
 										}
-										title={'Filter: ' + filterMode} 
+										title={'Filter: ' + ((filterMode === 'People' && mode === 'you') ? 'You' : filterMode) } 
 										position={2} />
 								</div>
 							</div>
