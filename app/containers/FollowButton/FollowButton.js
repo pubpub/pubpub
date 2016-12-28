@@ -44,7 +44,7 @@ export const FollowButton = React.createClass({
 		if (mode === 'user') { this.props.dispatch(postFollowsUser(followId)); }
 		if (mode === 'journal') { this.props.dispatch(postFollowsJournal(followId)); }
 		if (mode === 'label') { this.props.dispatch(postFollowsLabel(followId)); }
-		this.setState({ justFollowed: 1 });
+		this.setState({ justFollowed: this.state.justFollowed + 1 });
 	},
 
 	deleteFollow: function(followId, mode) {
@@ -52,7 +52,7 @@ export const FollowButton = React.createClass({
 		if (mode === 'user') { this.props.dispatch(deleteFollowsUser(followId)); }
 		if (mode === 'journal') { this.props.dispatch(deleteFollowsJournal(followId)); }
 		if (mode === 'label') { this.props.dispatch(deleteFollowsLabel(followId)); }
-		this.setState({ justFollowed: -1 });
+		this.setState({ justFollowed: this.state.justFollowed -1 });
 	},
 
 	render() {
@@ -83,7 +83,7 @@ export const FollowButton = React.createClass({
 		return (
 			<div className="pt-button-group">
 				{!isFollowing && isLoggedIn &&
-					<button className="pt-button" onClick={this.createFollow.bind(this, followId, mode)}>Follow</button>
+					<a role="button" className="pt-button" onClick={this.createFollow.bind(this, followId, mode)}>Follow</a>
 				}
 
 				{!isFollowing && !isLoggedIn &&
@@ -104,7 +104,7 @@ export const FollowButton = React.createClass({
 						} 
 						position={Position.BOTTOM_RIGHT}>
 
-						<button className="pt-button">Following <span className="pt-icon-standard pt-icon-caret-down pt-align-right" /> </button>
+						<a role="button" className="pt-button">Following <span className="pt-icon-standard pt-icon-caret-down pt-align-right" /></a>
 
 					</Popover>
 				}
