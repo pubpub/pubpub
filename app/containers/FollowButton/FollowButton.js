@@ -28,7 +28,7 @@ export const FollowButton = React.createClass({
 		labelId: PropTypes.number,
 		followData: PropTypes.object,
 		followerCount: PropTypes.number,
-		followersLink: PropTypes.string,
+		followersLink: PropTypes.object,
 		dispatch: PropTypes.func,
 	},
 

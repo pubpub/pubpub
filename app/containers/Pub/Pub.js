@@ -173,11 +173,27 @@ export const Pub = React.createClass({
 			const currentDate = new Date(current.createdAt).getTime();
 
 			if (!previous.id) { return current; } // If this is the first loop
-			if (query.version === String(current.id)) { return current; } // If the query version matches current
+			if (query.version === current.hash) { return current; } // If the query version matches current
 			if (!query.version && currentDate > previousDate) { return current; }
 			return previous;
-			
+
 		}, {});
+
+		const sortedVersions = versions.sort((foo, bar)=> {
+			// Sort so that least recent is first in array
+			if (foo.createdAt > bar.createdAt) { return 1; }
+			if (foo.createdAt < bar.createdAt) { return -1; }
+			return 0;
+		});
+
+		const firstPublishedVersion = sortedVersions.reduce((previous, current, index, array)=> {
+			if (previous) { return previous; }
+			if (current.isPublished) { return current; }
+		}, undefined);
+
+		const firstVersion = sortedVersions[0];
+		const lastVersion = sortedVersions[sortedVersions.length - 1];
+
 
 		const currentFiles = currentVersion.files || [];
 		const hasDocument = currentFiles.reduce((previous, current)=> {
@@ -222,7 +238,7 @@ export const Pub = React.createClass({
 				{ name: 'twitter:image:alt', content: 'Preview image for ' + pubData.title }
 			]
 		};
-
+		console.log(currentVersion, currentVersion.hash);
 		return (
 			<div style={styles.container}>
 
@@ -238,7 +254,7 @@ export const Pub = React.createClass({
 							pubId={pubData.id} 
 							followData={followData} 
 							followerCount={followers.length} 
-							followersLink={'/pub/' + pubData.slug + '/followers'}
+							followersLink={{ pathname: '/pub/' + pubData.slug + '/followers', query: query }}
 							dispatch={this.props.dispatch} />
 					</div>
 
@@ -257,9 +273,23 @@ export const Pub = React.createClass({
 						})}
 					</div>
 
-					<div style={styles.pubAuthors}>
+					{(!meta || meta === 'files' || true) &&
+						<div style={styles.versionDates}>
+							{/* <div style={styles.versionDate}>First Version: {dateFormat(firstVersion.createdAt, 'mmmm dd, yy HH:MM')}</div> */}
+							{firstPublishedVersion.id &&
+								<Link to={{ pathname: pathname, query: { ...query, version: firstPublishedVersion.hash } }} style={styles.versionDate}>Originally Published<br />{dateFormat(firstPublishedVersion.createdAt, 'mmmm dd, yy HH:MM')}</Link>
+							}
+							
+							<Link to={{ pathname: pathname, query: { ...query, version: currentVersion.hash } }} style={styles.versionDate}>Current Version<br />{dateFormat(currentVersion.createdAt, 'mmm dd, yy HH:MM')}</Link>
+							{currentVersion.id !== lastVersion.id &&
+								<Link to={{ pathname: pathname, query: { ...query, version: undefined } }} style={styles.versionDate}>Most Recent Version<br />{dateFormat(lastVersion.createdAt, 'mmm dd, yy HH:MM')}</Link>	
+							}
+						</div>
+					}
+
+					{/* <div style={styles.pubAuthors}>
 						{dateFormat(currentVersion.createdAt, 'mmmm dd, yyyy')}
-					</div>
+					</div> */}
 
 					{/* ------- */}
 					{/* Nav Bar */}
@@ -272,6 +302,7 @@ export const Pub = React.createClass({
 						<Link to={{ pathname: '/pub/' + this.props.params.slug + '/settings', query: query }}><div style={[styles.navItem, meta === 'settings' && styles.navItemActive]} className={'bottomShadowOnHover'}>Settings</div></Link>
 					</div>
 
+
 					{/* ------- */}
 					{/* Content */}
 					{/* ------- */}
@@ -279,7 +310,8 @@ export const Pub = React.createClass({
 						<PubDocument
 							versionData={currentVersion}
 							pubId={pubData.id}
-							pubSlug={pubData.slug} />
+							pubSlug={pubData.slug}
+							query={query} />
 					}
 					{meta === 'versions' && 
 						<PubVersions
@@ -299,6 +331,7 @@ export const Pub = React.createClass({
 							pubId={pubData.id}
 							pubSlug={pubData.slug}
 							routeFilename={this.props.params.filename}
+							query={query}
 							isLoading={this.props.pubData.versionsLoading}
 							error={this.props.pubData.versionsError}
 							dispatch={this.props.dispatch} />
@@ -473,6 +506,21 @@ styles = {
 	},
 	navItemActive: {
 		boxShadow: 'inset 0 -3px 0 #202b33',
+	},
+	versionDates: {
+		// padding: '0em 1.5em',
+		// margin: '-1em 1.5em 1em',
+		// backgroundColor: '#F3F3F4',
+		padding: '0.5em 0em',
+		borderTop: '1px solid #f3f3f4',
+		borderBottom: '1px solid #f3f3f4',
+		margin: '0em 1.5em',
+	},
+	versionDate: {
+		fontSize: '0.85em',
+		color: '#666',
+		paddingRight: '2em',
+		display: 'inline-block',
 	},
 	followButtonWrapper: {
 		float: 'right',

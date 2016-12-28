@@ -15,6 +15,7 @@ export const PubFiles = React.createClass({
 		pubId: PropTypes.number,
 		pubSlug: PropTypes.string,
 		routeFilename: PropTypes.string,
+		query: PropTypes.object,
 		isLoading: PropTypes.bool,
 		error: PropTypes.object,
 		dispatch: PropTypes.func,
@@ -176,6 +177,7 @@ export const PubFiles = React.createClass({
 		}, undefined);
 
 		const isLoading = this.props.isLoading;
+		const query = this.props.query || {};
 		return (
 			<div style={styles.container}>
 
@@ -200,13 +202,13 @@ export const PubFiles = React.createClass({
 					<div style={{ marginBottom: '1em' }}>
 						{!this.props.routeFilename &&
 							<ul className="pt-breadcrumbs">
-								<li><Link to={'/pub/' + this.props.pubSlug} className="pt-breadcrumb"><span className="pt-icon-standard pt-icon-document" /> Main</Link></li>
+								<li><Link to={{ pathname: '/pub/' + this.props.pubSlug, query: query }} className="pt-breadcrumb"><span className="pt-icon-standard pt-icon-document" /> Main</Link></li>
 							</ul>
 						}
 
 						{!!this.props.routeFilename &&
 							<ul className="pt-breadcrumbs">
-								<li><Link to={'/pub/' + this.props.pubSlug + '/files'} className="pt-breadcrumb"><span className="pt-icon-standard pt-icon-folder-open" /> Files</Link></li>
+								<li><Link to={{ pathname: '/pub/' + this.props.pubSlug + '/files', query: query }} className="pt-breadcrumb"><span className="pt-icon-standard pt-icon-folder-open" /> Files</Link></li>
 								<li><a className="pt-breadcrumb">{currentFile.name}</a></li>
 							</ul>
 						}
@@ -302,7 +304,7 @@ export const PubFiles = React.createClass({
 								{files.map((file, index)=> {
 									return (
 										<tr key={'file-' + index}>
-											<td style={styles.tableCell}><Link className={'underlineOnHover link'} to={'/pub/' + this.props.pubSlug + '/files/' + file.name}>{file.name}</Link></td>
+											<td style={styles.tableCell}><Link className={'underlineOnHover link'} to={{ pathname: '/pub/' + this.props.pubSlug + '/files/' + file.name, query: query }}>{file.name}</Link></td>
 											<td style={styles.tableCell}>{file.createdAt}</td>
 											<td style={[styles.tableCell, styles.tableCellRight]}><button className={'pt-button'}>History</button></td>
 										</tr>
@@ -403,27 +405,3 @@ styles = {
 		textAlign: 'right',
 	},
 };
-
-// <Popover 
-// 		content={<Menu>
-// 			<li><Link to={'/pubs/create'} className="pt-menu-item pt-popover-dismiss pt-icon-application">
-// 				Import Document
-// 			</Link></li>
-// 			<li><Link to={'/journals/create'} className="pt-menu-item pt-popover-dismiss pt-icon-applications">
-// 				Create new document in Editor
-// 			</Link></li>
-// 			<li><Link to={'/journals/create'} className="pt-menu-item pt-popover-dismiss pt-icon-applications">
-// 				Upload files
-// 			</Link></li>
-// 		</Menu>}
-// 		interactionKind={PopoverInteractionKind.CLICK}
-// 		position={Position.BOTTOM}
-// 		transitionDuration={200}
-// 	>
-// 		<button type="button" className="pt-button pt-intent-primary">
-// 			Add File
-// 			<span className="pt-icon-standard pt-icon-caret-down pt-align-right" />
-// 		</button>
-// 		
-// 	</Popover>
-// 

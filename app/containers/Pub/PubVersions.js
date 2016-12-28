@@ -53,11 +53,11 @@ export const PubVersions = React.createClass({
 							<div style={styles.largeColumn}>
 								{/* Link to Diff view */}
 								<h6 style={styles.noMargin}>{item.versionMessage || 'No message'}</h6>
-								<p style={styles.noMargin}>{dateFormat(item.createdAt, 'mmm dd, yyyy HH:mm')}</p>
+								<p style={styles.noMargin}>{dateFormat(item.createdAt, 'mmm dd, yyyy HH:MM')}</p>
 							</div>
 							<div style={styles.smallColumn}>
 								{/* Link to pub at that version instance */}
-								<Link to={{ pathname: '/pub/' + this.props.pubSlug, query: { ...query, version: item.id } }}>	
+								<Link to={{ pathname: '/pub/' + this.props.pubSlug, query: { ...query, version: item.hash } }}>	
 									<button className={'pt-button p2-minimal'}>View Pub</button>
 								</Link>
 							</div>
