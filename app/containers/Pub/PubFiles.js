@@ -5,6 +5,7 @@ import { Link } from 'react-router';
 import { NonIdealState, ProgressBar, Spinner } from '@blueprintjs/core';
 import { s3Upload } from 'utils/uploadFile';
 import ReactMarkdown from 'react-markdown';
+import { globalStyles } from 'utils/globalStyles';
 import { postVersion } from './actionsVersions';
 
 let styles;
@@ -29,7 +30,8 @@ export const PubFiles = React.createClass({
 			uploading: false,
 			uploadingFinished: false,
 			uploadedFileObjects: [],
-			newVersionmessage: '',
+			newVersionMessage: '',
+			newVersionError: '',
 		};
 	},
 
@@ -47,7 +49,7 @@ export const PubFiles = React.createClass({
 				uploading: false,
 				uploadingFinished: false,
 				uploadedFileObjects: [],
-				newVersionmessage: '',
+				newVersionMessage: '',
 			});
 		}
 	},
@@ -139,10 +141,13 @@ export const PubFiles = React.createClass({
 	},
 
 	versionMessageChange: function(evt) {
-		this.setState({ newVersionmessage: evt.target.value });
+		this.setState({ newVersionMessage: evt.target.value });
 	},
 	postNewVersion: function(evt) {
 		evt.preventDefault();
+		if (!this.state.newVersionMessage) {
+			return this.setState({ newVersionError: 'Version message required' });
+		}
 		if (!this.state.uploadingFinished) { return false; }
 		const pubId = this.props.pubId;
 		const newUploadedFileObjects = this.state.uploadedFileObjects;
@@ -162,7 +167,8 @@ export const PubFiles = React.createClass({
 			return true;
 		});
 
-		return this.props.dispatch(postVersion(pubId, this.state.newVersionmessage, false, newVersionFiles));
+		this.setState({ newVersionError: '' });
+		return this.props.dispatch(postVersion(pubId, this.state.newVersionMessage, false, newVersionFiles));
 		// Need to set loading - and then onreceive, set uplaoding to flase, clear values, etc
 	},
 
@@ -251,7 +257,7 @@ export const PubFiles = React.createClass({
 							<div style={styles.uploadingFormTable}>
 								<label htmlFor={'versionMessage'} style={styles.uploadingMessage}>
 									Version Message
-									<input style={styles.uploadingInput} className={'pt-input'} id={'versionMessage'} name={'versionMessage'} type="text" placeholder={'Describe this version'} value={this.state.newVersionmessage} onChange={this.versionMessageChange} />
+									<input style={styles.uploadingInput} className={'pt-input'} id={'versionMessage'} name={'versionMessage'} type="text" placeholder={'Describe this version'} value={this.state.newVersionMessage} onChange={this.versionMessageChange} />
 								</label>
 								<div style={styles.uploadingSubmit}>
 									<button className={this.state.uploadingFinished ? 'pt-button pt-intent-primary' : 'pt-button pt-intent-primary pt-disabled'} onClick={this.postNewVersion}>
@@ -263,6 +269,9 @@ export const PubFiles = React.createClass({
 								</div>
 								
 							</div>
+							{this.state.newVersionError &&
+								<div style={styles.errorMessage}>{this.state.newVersionError}</div>
+							}
 						</form>
 
 						{this.state.uploadFileNames.map((uploadFile, index)=> {
@@ -403,5 +412,9 @@ styles = {
 	},
 	tableCellRight: {
 		textAlign: 'right',
+	},
+	errorMessage: {
+		margin: '-1em 0px 1em',
+		color: globalStyles.errorRed,
 	},
 };
