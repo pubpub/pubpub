@@ -32,6 +32,7 @@ export const Landing = React.createClass({
 	// },
 
 	formatFilterString: function(mode, string) {
+		if (mode === 'you' && string === 'People') { return 'You'; }
 		if (mode === 'you') { return 'Your ' + string; }
 		return string + ' you Follow';
 	},
