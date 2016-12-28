@@ -48,7 +48,7 @@ export function postVersion(pubId, versionMessage, isPublished, files, newFileAt
 	};
 }
 
-export function putContributor(pubId, contributorId, canEdit, canRead, isAuthor, isHidden) {
+export function putVersion(pubId, contributorId, canEdit, canRead, isAuthor, isHidden) {
 	return (dispatch) => {
 		dispatch({ type: PUT_VERSION_LOAD });
 

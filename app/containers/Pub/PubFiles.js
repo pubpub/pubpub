@@ -2,7 +2,7 @@ import React, { PropTypes } from 'react';
 import Radium from 'radium';
 // import ReactMarkdown from 'react-markdown';
 import { Link } from 'react-router';
-import { Popover, PopoverInteractionKind, Position, Menu, MenuItem, NonIdealState, ProgressBar, Spinner } from '@blueprintjs/core';
+import { NonIdealState, ProgressBar, Spinner } from '@blueprintjs/core';
 import { s3Upload } from 'utils/uploadFile';
 import ReactMarkdown from 'react-markdown';
 import { postVersion } from './actionsVersions';
@@ -174,7 +174,7 @@ export const PubFiles = React.createClass({
 			if (current.name === this.props.routeFilename) { return current; } 
 			return previous;
 		}, undefined);
-		
+
 		const isLoading = this.props.isLoading;
 		return (
 			<div style={styles.container}>
@@ -290,12 +290,12 @@ export const PubFiles = React.createClass({
 				{!!files.length && !this.props.routeFilename &&
 					<div>
 						
-						<table className="pt-table pt-condensed pt-striped" style={{width: '100%'}}>
+						<table className="pt-table pt-condensed pt-striped" style={{ width: '100%' }}>
 							<thead>
 								<tr>
 									<th>Name</th>
 									<th>Created</th>
-									<th></th>
+									<th />
 								</tr>
 							</thead>
 							<tbody>
@@ -304,7 +304,7 @@ export const PubFiles = React.createClass({
 										<tr key={'file-' + index}>
 											<td style={styles.tableCell}><Link className={'underlineOnHover link'} to={'/pub/' + this.props.pubSlug + '/files/' + file.name}>{file.name}</Link></td>
 											<td style={styles.tableCell}>{file.createdAt}</td>
-											<td style={[styles.tableCell, styles.tableCellRight]}><button className={'pt-button'}>Edit  <span className="pt-icon-standard pt-icon-caret-down pt-align-right" /></button></td>
+											<td style={[styles.tableCell, styles.tableCellRight]}><button className={'pt-button'}>History</button></td>
 										</tr>
 									);
 								})}
@@ -334,34 +334,6 @@ export const PubFiles = React.createClass({
 			</div>
 		);
 	},
-
-
-	// render: function() {
-	// 	let md = this.props.versionData.files.reduce((previous, current, index)=> {
-	// 		if (current.name === 'main.md') {
-	// 			return current.value;
-	// 		} 
-	// 		return previous;
-	// 	}, '');
-
-	// 	this.props.versionData.files.map((item)=> {
-	// 		if (item.type === 'image') {
-	// 			const regexp = new RegExp(item.name, "g");
-	// 			md = md.replace(regexp, item.url);
-	// 		}
-	// 	});
-
-	// 	return (
-	// 		<div style={styles.pubBody} className={'pub-body'}>
-	// 			<ReactMarkdown source={md} />
-	// 			<p>On Professor Neri Oxman’s Krebs Cycle of Creativity of the relationship between the disciplines, design and science are opposite one another on the circle, and the output of one is not the input of the other as is often the case of engineering and design or science and engineering. I believe that by making a “lens” and a fusion of design and science, we can fundamentally advance both. This connection includes both the science of design and the design of science, as well as the dynamic relationship between these two activities.</p>
-	// 			<p>For me, antidisciplinary research is akin to mathematician Stanislaw Ulam's famous observation that the study of nonlinear physics is like the study of "non-elephant animals." Antidisciplinary is all about the non-elephant animals.</p>
-	// 			<p>I believe that by bringing together design and science we can produce a rigorous but flexible approach that will allow us to explore, understand and contribute to science in an antidisciplinary way.</p>
-	// 			<p>The kind of scholars we are looking for at the Media Lab are people who don't fit in any existing discipline either because they are between--or simply beyond--traditional disciplines. I often say that if you can do what you want to do in any other lab or department, you should go do it there. Only come to the Media Lab if there is nowhere else for you to go. We are the new Salon des Refusés.</p>
-	// 		</div>
-	// 	);
-	// }
-
 
 });
 
