@@ -182,10 +182,10 @@ export const Pub = React.createClass({
 		const firstPublishedVersion = sortedVersions.reduce((previous, current, index, array)=> {
 			if (previous) { return previous; }
 			if (current.isPublished) { return current; }
-		}, undefined);
+		}, undefined) || {};
 
-		const firstVersion = sortedVersions[0];
-		const lastVersion = sortedVersions[sortedVersions.length - 1];
+		const firstVersion = sortedVersions[0] || {};
+		const lastVersion = sortedVersions[sortedVersions.length - 1] || {};
 
 
 		const currentFiles = currentVersion.files || [];
