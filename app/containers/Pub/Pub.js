@@ -163,10 +163,21 @@ export const Pub = React.createClass({
 		}, undefined);
 
 		// Might have to sort these if it isn't in chronological order
-		const currentVersion = versions.reduce((previous, current)=> {
-			if (query.version === String(current.id)) { return current; }
+		const currentVersion = versions.sort((foo, bar)=> {
+			// Sort so that most recent is first in array
+			if (foo.createdAt > bar.createdAt) { return -1; }
+			if (foo.createdAt < bar.createdAt) { return 1; }
+			return 0;
+		}).reduce((previous, current, index, array)=> {
+			const previousDate = new Date(previous.createdAt).getTime();
+			const currentDate = new Date(current.createdAt).getTime();
+
+			if (!previous.id) { return current; } // If this is the first loop
+			if (query.version === String(current.id)) { return current; } // If the query version matches current
+			if (!query.version && currentDate > previousDate) { return current; }
 			return previous;
-		}, versions[versions.length - 1] || {});
+			
+		}, {});
 
 		const currentFiles = currentVersion.files || [];
 		const hasDocument = currentFiles.reduce((previous, current)=> {
