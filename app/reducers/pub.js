@@ -230,6 +230,31 @@ export default function reducer(state = defaultState, action) {
 			versionsError: action.error,
 		});
 
+	case PUT_VERSION_LOAD:
+		return state.merge({
+			versionsLoading: true,
+			versionsError: undefined,
+		});	
+	case PUT_VERSION_SUCCESS:
+		return state.merge({
+			versionsLoading: false,
+			versionsError: undefined,
+		})
+		.mergeIn(
+			['pub', 'versions'], 
+			state.getIn(['pub', 'versions']).map((version)=> {
+				if (version.get('id') === action.versionId) {
+					return version.set('isPublished', true);
+				}
+				return version;
+			})
+		);
+	case PUT_VERSION_FAIL:
+		return state.merge({
+			versionsLoading: false,
+			versionsError: action.error,
+		});
+
 	case POST_JOURNAL_SUBMIT_LOAD:
 		return state.merge({
 			journalsLoading: true,

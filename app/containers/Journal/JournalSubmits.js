@@ -1,17 +1,15 @@
 import React, { PropTypes } from 'react';
 import Radium from 'radium';
 import Helmet from 'react-helmet';
-import { Link, browserHistory } from 'react-router';
+import { Link } from 'react-router';
 import dateFormat from 'dateformat';
-import { NonIdealState } from '@blueprintjs/core';
+import { Dialog, NonIdealState } from '@blueprintjs/core';
 
 import { globalStyles } from 'utils/globalStyles';
 import { globalMessages } from 'utils/globalMessages';
 import { FormattedMessage } from 'react-intl';
 import { putJournalSubmit, postJournalFeature } from './actionsSubmits';
 import { Loader } from 'components';
-
-import { Dialog } from '@blueprintjs/core';
 
 let styles = {};
 

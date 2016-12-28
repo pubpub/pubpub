@@ -2,7 +2,9 @@ import React, { PropTypes } from 'react';
 import { Link } from 'react-router';
 import Radium from 'radium';
 import dateFormat from 'dateformat';
-import { Position, Tooltip } from '@blueprintjs/core';
+import { Dialog, Position, Tooltip } from '@blueprintjs/core';
+import { putVersion } from './actionsVersions';
+import { Loader } from 'components';
 
 let styles;
 
@@ -10,16 +12,38 @@ export const PubVersions = React.createClass({
 	propTypes: {
 		versionsData: PropTypes.array,
 		pubSlug: PropTypes.string,
+		pubId: PropTypes.number,
 		location: PropTypes.object,
+		isLoading: PropTypes.bool,
+		error: PropTypes.object,
+		dispatch: PropTypes.func,
 	},
 
-	setPublic: function(versionId) {
-		console.log('Publishing ', versionId);
+	getInitialState: function() {
+		return {
+			confirmPublish: undefined,
+		};
+	},
+
+	componentWillReceiveProps(nextProps) {
+		if (this.props.isLoading && !nextProps.isLoading && !nextProps.error) {
+			this.setState({ confirmPublish: undefined });	
+		}
+	},
+
+	setPublish: function(versionId) {
+		this.setState({ confirmPublish: versionId });
+	},
+
+	publishVersion: function() {
+		this.props.dispatch(putVersion(this.props.pubId, this.state.confirmPublish));
 	},
 
 	render: function() {
 		const location = this.props.location || {};
 		const query = location.query || {};
+		const isLoading = this.props.isLoading;
+		const errorMessage = this.props.error;
 		return (
 			<div style={styles.container}>
 				<h2>Versions</h2>
@@ -29,38 +53,57 @@ export const PubVersions = React.createClass({
 					if (foo.createdAt > bar.createdAt) { return -1; }
 					if (foo.createdAt < bar.createdAt) { return 1; }
 					return 0;
-				}).map((item)=> {
+				}).map((version)=> {
 					return (
-						<div key={'version-' + item.id} style={styles.versionRow}>
+						<div key={'version-' + version.id} style={styles.versionRow}>
 
 							<div style={styles.smallColumn}>
 								<Tooltip 
 									content={
 										<div>
-											<div>Currently {item.isPublished ? 'Public' : 'Private'}: </div>
+											<div>Currently {version.isPublished ? 'Public' : 'Private'}: </div>
 											<div>Click to publish</div>
 										</div>
 									} 
 									position={Position.BOTTOM_LEFT}>
-									<span onClick={this.setPublic.bind(this, item.id)} className={'pt-button pt-minimal'}>
-										<span className={'pt-icon-standard pt-icon-globe'} style={item.isPublished ? styles.icon : [styles.icon, styles.inactiveIcon]} />
+									<span onClick={this.setPublish.bind(this, version.id)} className={'pt-button pt-minimal'}>
+										<span className={'pt-icon-standard pt-icon-globe'} style={version.isPublished ? styles.icon : [styles.icon, styles.inactiveIcon]} />
 										<span style={styles.iconSpacer} />
-										<span className={'pt-icon-standard pt-icon-lock'} style={item.isPublished ? [styles.icon, styles.inactiveIcon] : styles.icon} />
+										<span className={'pt-icon-standard pt-icon-lock'} style={version.isPublished ? [styles.icon, styles.inactiveIcon] : styles.icon} />
 									</span>
 								</Tooltip>
 							</div>
 							
 							<div style={styles.largeColumn}>
 								{/* Link to Diff view */}
-								<h6 style={styles.noMargin}>{item.versionMessage || 'No message'}</h6>
-								<p style={styles.noMargin}>{dateFormat(item.createdAt, 'mmm dd, yyyy HH:MM')}</p>
+								<h6 style={styles.noMargin}>{version.versionMessage || 'No message'}</h6>
+								<p style={styles.noMargin}>{dateFormat(version.createdAt, 'mmm dd, yyyy HH:MM')}</p>
 							</div>
 							<div style={styles.smallColumn}>
 								{/* Link to pub at that version instance */}
-								<Link to={{ pathname: '/pub/' + this.props.pubSlug, query: { ...query, version: item.hash } }}>	
+								<Link to={{ pathname: '/pub/' + this.props.pubSlug, query: { ...query, version: version.hash } }}>	
 									<button className={'pt-button p2-minimal'}>View Pub</button>
 								</Link>
 							</div>
+
+							<Dialog isOpen={this.state.confirmPublish === version.id} onClose={this.setPublish.bind(this, undefined)}>
+									<div className="pt-dialog-body">
+										<p>Please confirm that you want to publish the following version. Once published, the version will be publicly available.</p>
+										<p><b>Publishing cannot be undone.</b></p>
+										<div className={'pt-card pt-elevation-2'}>
+											<h6 style={styles.noMargin}>{version.versionMessage || 'No message'}</h6>
+											<p style={styles.noMargin}>{dateFormat(version.createdAt, 'mmm dd, yyyy HH:MM')}</p>
+										</div>
+									</div>
+									<div className="pt-dialog-footer">
+										<div className="pt-dialog-footer-actions">
+											<div style={styles.loaderContainer}><Loader loading={isLoading} /></div>
+											<div style={styles.loaderContainer}>{errorMessage}</div>
+											<button type="button" className="pt-button" onClick={this.setPublish.bind(this, undefined)}>Cancel</button>
+											<button type="submit" className="pt-button pt-intent-primary" onClick={this.publishVersion}>Publish Version</button>
+										</div>
+									</div>
+								</Dialog>
 							
 						</div>
 					);
@@ -111,5 +154,9 @@ styles = {
 		width: '0.5em', 
 		height: '1em', 
 		display: 'inline-block',
-	}
+	},
+	loaderContainer: {
+		display: 'inline-block',
+		margin: 'auto 0',
+	},
 };

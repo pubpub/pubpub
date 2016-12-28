@@ -238,7 +238,7 @@ export const Pub = React.createClass({
 				{ name: 'twitter:image:alt', content: 'Preview image for ' + pubData.title }
 			]
 		};
-		console.log(currentVersion, currentVersion.hash);
+		
 		return (
 			<div style={styles.container}>
 
@@ -316,8 +316,12 @@ export const Pub = React.createClass({
 					{meta === 'versions' && 
 						<PubVersions
 							versionsData={versions}
+							pubId={pubData.id}
 							location={this.props.location} 
-							pubSlug={pubData.slug} />
+							pubSlug={pubData.slug}
+							isLoading={this.props.pubData.versionsLoading}
+							error={this.props.pubData.versionsError}
+							dispatch={this.props.dispatch} />
 					}
 					{meta === 'contributors' && 
 						<PubContributors

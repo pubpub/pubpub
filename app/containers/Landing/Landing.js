@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
-import { Menu, MenuDivider, NonIdealState } from '@blueprintjs/core';
+import { Menu, NonIdealState } from '@blueprintjs/core';
 import { ActivityItem, ActivityGroup, DropdownButton } from 'components';
 import { getActivities } from './actions';
 
@@ -219,7 +219,7 @@ export const Landing = React.createClass({
 												})}
 											</Menu>
 										}
-										title={'Filter: ' + ((filterMode === 'People' && mode === 'you') ? 'You' : filterMode) } 
+										title={'Filter: ' + ((filterMode === 'People' && mode === 'you') ? 'You' : filterMode)} 
 										position={2} />
 								</div>
 							</div>
