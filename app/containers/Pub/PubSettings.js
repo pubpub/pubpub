@@ -12,7 +12,7 @@ let styles;
 
 export const PubSettings = React.createClass({
 	propTypes: {
-		pubData: PropTypes.object,
+		pub: PropTypes.object,
 		pubId: PropTypes.number,
 		isLoading: PropTypes.bool,
 		error: PropTypes.string,
@@ -31,19 +31,19 @@ export const PubSettings = React.createClass({
 	},
 
 	componentWillMount() {
-		const pubData = this.props.pubData;
+		const pub = this.props.pub;
 		this.setState({
-			slug: pubData.slug,
-			title: pubData.title,
-			description: pubData.description,
-			previewImage: pubData.previewImage,
+			slug: pub.slug,
+			title: pub.title,
+			description: pub.description,
+			previewImage: pub.previewImage,
 		});
 	},
 
 	componentWillReceiveProps(nextProps) {
 		// If login was succesful, redirect
-		const oldSlug = this.props.pubData.slug;
-		const nextSlug = nextProps.pubData.slug;
+		const oldSlug = this.props.pub.slug;
+		const nextSlug = nextProps.pub.slug;
 
 		if (oldSlug !== nextSlug) {
 			browserHistory.push('/pub/' + nextSlug + '/settings');
@@ -117,7 +117,7 @@ export const PubSettings = React.createClass({
 	},
 
 	render: function() {
-		// const pubData = this.props.pubData || {};
+		// const pub = this.props.pub || {};
 		const isLoading = this.props.isLoading;
 		const serverErrors = {
 			'Email already used': <FormattedMessage id="pubSettings.Emailalreadyused" defaultMessage="Email already used" />,

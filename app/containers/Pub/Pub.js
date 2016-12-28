@@ -37,15 +37,7 @@ export const Pub = React.createClass({
 		location: PropTypes.object,
 		dispatch: PropTypes.func,
 	},
-
-	// statics: {
-	// 	readyOnActions: function(dispatch, params) {
-	// 		return Promise.all([
-	// 			dispatch(getPubData(params.slug))
-	// 		]);
-	// 	}
-	// },
-
+	
 	getInitialState() {
 		return {
 			canGoBack: false,
@@ -74,8 +66,8 @@ export const Pub = React.createClass({
 		}
 
 		// Handle case when discussionId is present
-		const pubData = nextProps.pubData || {};
-		const pub = pubData.pub || {};
+		const nextPubData = nextProps.pubData || {};
+		const pub = nextPubData.pub || {};
 		const pubId = pub.id;
 		const discussions = pub.discussions || [];
 		if (nextQuery.discussionId && discussions.length) {
@@ -131,11 +123,11 @@ export const Pub = React.createClass({
 	},
 
 	render() {
-		const pubData = this.props.pubData.pub || {};
-		if (!pubData.title && !this.props.pubData.error) {
+		const pub = this.props.pubData.pub || {};
+		if (!pub.title && !this.props.pubData.error) {
 			return <div>Loading</div>;
 		}
-		if (!pubData.title && this.props.pubData.error) {
+		if (!pub.title && this.props.pubData.error) {
 			return <div>Error</div>;
 		}
 
@@ -145,14 +137,14 @@ export const Pub = React.createClass({
 		const pathname = this.props.location.pathname;
 		const panel = query.panel;
 		const queryDiscussion = query.discussion;
-		const discussions = pubData.discussions || [];
-		const contributors = pubData.contributors || [];
-		const invitedReviewers = pubData.invitedReviewers || [];
-		const versions = pubData.versions || [];
-		const pubSubmits = pubData.pubSubmits || [];
-		const pubFeatures = pubData.pubFeatures || [];
-		const labelsData = pubData.pubLabels || [];
-		const followers = pubData.followers || [];
+		const discussions = pub.discussions || [];
+		const contributors = pub.contributors || [];
+		const invitedReviewers = pub.invitedReviewers || [];
+		const versions = pub.versions || [];
+		const pubSubmits = pub.pubSubmits || [];
+		const pubFeatures = pub.pubFeatures || [];
+		const labelsData = pub.pubLabels || [];
+		const followers = pub.followers || [];
 
 		const accountData = this.props.accountData || {};
 		const accountUser = accountData.user || {};
@@ -211,7 +203,7 @@ export const Pub = React.createClass({
 		});
 
 		// Add a discussionsIndex value that we'll use to number discussions.
-		const discussionsData = this.addDiscussionIndex(discussions, pubData.id);
+		const discussionsData = this.addDiscussionIndex(discussions, pub.id);
 		
 		const activeDiscussion = discussionsData.reduce((previous, current)=> {
 			if (queryDiscussion === String(current.discussionIndex)) { return current; }
@@ -219,23 +211,23 @@ export const Pub = React.createClass({
 		}, {});
 
 		const metaData = {
-			title: (pubData.title || this.props.params.slug) + ' · PubPub',
+			title: (pub.title || this.props.params.slug) + ' · PubPub',
 			meta: [
-				{ property: 'og:title', content: pubData.title },
+				{ property: 'og:title', content: pub.title },
 				{ property: 'og:type', content: 'article' },
-				{ property: 'og:description', content: pubData.description },
-				{ property: 'og:url', content: 'https://www.pubpub.org/pub/' + pubData.slug },
-				{ property: 'og:image', content: pubData.previewImage },
-				{ property: 'og:image:url', content: pubData.previewImage },
+				{ property: 'og:description', content: pub.description },
+				{ property: 'og:url', content: 'https://www.pubpub.org/pub/' + pub.slug },
+				{ property: 'og:image', content: pub.previewImage },
+				{ property: 'og:image:url', content: pub.previewImage },
 				{ property: 'og:image:width', content: '500' },
-				{ property: 'article:published_time', content: pubData.lastUpdated || pubData.createDate },
-				{ property: 'article:modified_time', content: pubData.lastUpdated },
+				{ property: 'article:published_time', content: pub.updatedAt || pub.createdAt },
+				{ property: 'article:modified_time', content: pub.updatedAt },
 				{ name: 'twitter:card', content: 'summary' },
 				{ name: 'twitter:site', content: '@pubpub' },
-				{ name: 'twitter:title', content: pubData.title },
-				{ name: 'twitter:description', content: pubData.description || pubData.title },
-				{ name: 'twitter:image', content: pubData.previewImage },
-				{ name: 'twitter:image:alt', content: 'Preview image for ' + pubData.title }
+				{ name: 'twitter:title', content: pub.title },
+				{ name: 'twitter:description', content: pub.description || pub.title },
+				{ name: 'twitter:image', content: pub.previewImage },
+				{ name: 'twitter:image:alt', content: 'Preview image for ' + pub.title }
 			]
 		};
 		
@@ -251,17 +243,17 @@ export const Pub = React.createClass({
 
 					<div style={styles.followButtonWrapper}>
 						<FollowButton 
-							pubId={pubData.id} 
+							pubId={pub.id} 
 							followData={followData} 
 							followerCount={followers.length} 
-							followersLink={{ pathname: '/pub/' + pubData.slug + '/followers', query: query }}
+							followersLink={{ pathname: '/pub/' + pub.slug + '/followers', query: query }}
 							dispatch={this.props.dispatch} />
 					</div>
 
-					<h1 style={styles.pubTitle}>{pubData.title}</h1>
+					<h1 style={styles.pubTitle}>{pub.title}</h1>
 					
 					<div style={{ paddingLeft: '1em' }}>
-						<PubLabelList selectedLabels={pubData.labels} pubId={pubData.id} rootPubId={pubData.id} globalLabels={true} canEdit={true} pathname={pathname} query={query} dispatch={this.props.dispatch} />	
+						<PubLabelList selectedLabels={pub.labels} pubId={pub.id} rootPubId={pub.id} globalLabels={true} canEdit={true} pathname={pathname} query={query} dispatch={this.props.dispatch} />	
 					</div>
 					
 					<div style={styles.pubAuthors}>
@@ -309,16 +301,16 @@ export const Pub = React.createClass({
 					{!meta && hasDocument && 
 						<PubDocument
 							versionData={currentVersion}
-							pubId={pubData.id}
-							pubSlug={pubData.slug}
+							pubId={pub.id}
+							pubSlug={pub.slug}
 							query={query} />
 					}
 					{meta === 'versions' && 
 						<PubVersions
 							versionsData={versions}
-							pubId={pubData.id}
+							pubId={pub.id}
 							location={this.props.location} 
-							pubSlug={pubData.slug}
+							pubSlug={pub.slug}
 							isLoading={this.props.pubData.versionsLoading}
 							error={this.props.pubData.versionsError}
 							dispatch={this.props.dispatch} />
@@ -326,14 +318,14 @@ export const Pub = React.createClass({
 					{meta === 'contributors' && 
 						<PubContributors
 							contributors={contributors}
-							pubId={pubData.id}
+							pubId={pub.id}
 							dispatch={this.props.dispatch} />
 					}
 					{((!meta && !hasDocument) || meta === 'files') && 
 						<PubFiles
 							versionData={currentVersion}
-							pubId={pubData.id}
-							pubSlug={pubData.slug}
+							pubId={pub.id}
+							pubSlug={pub.slug}
 							routeFilename={this.props.params.filename}
 							query={query}
 							isLoading={this.props.pubData.versionsLoading}
@@ -342,8 +334,8 @@ export const Pub = React.createClass({
 					}
 					{meta === 'settings' && 
 						<PubSettings
-							pubData={pubData}
-							pubId={pubData.id}
+							pub={pub}
+							pubId={pub.id}
 							isLoading={this.props.pubData.settingsLoading}
 							error={this.props.pubData.settingsError}
 							dispatch={this.props.dispatch} />
@@ -352,7 +344,7 @@ export const Pub = React.createClass({
 						<PubJournals
 							pubSubmits={pubSubmits}
 							pubFeatures={pubFeatures}
-							pubId={pubData.id}
+							pubId={pub.id}
 							dispatch={this.props.dispatch} />
 					}
 					{meta === 'followers' && 
@@ -394,7 +386,7 @@ export const Pub = React.createClass({
 							<PubReviewers 
 								invitedReviewers={invitedReviewers}
 								discussionsData={discussionsData}
-								pubId={pubData.id}
+								pubId={pub.id}
 								pathname={pathname}
 								query={query}
 								dispatch={this.props.dispatch} />
@@ -403,7 +395,7 @@ export const Pub = React.createClass({
 							<PubDiscussionsNew 
 								discussionsData={discussionsData}
 								labelsData={labelsData}
-								pubId={pubData.id}
+								pubId={pub.id}
 								isLoading={this.props.pubData.discussionsLoading}
 								error={this.props.pubData.discussionsError}
 								pathname={pathname}
@@ -422,7 +414,7 @@ export const Pub = React.createClass({
 							<PubDiscussion
 								discussion={activeDiscussion}
 								labelsData={labelsData}
-								pubId={pubData.id}
+								pubId={pub.id}
 								isLoading={this.props.pubData.discussionsLoading}
 								error={this.props.pubData.discussionsError}
 								pathname={pathname}
