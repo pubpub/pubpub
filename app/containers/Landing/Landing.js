@@ -37,6 +37,20 @@ export const Landing = React.createClass({
 		return string + ' you Follow';
 	},
 
+	filterUniqueActivities: function(activitiesArray) {
+		const uniqueIDs = {};
+		return activitiesArray.filter((activity)=>{
+			const date = new Date(activity.createdAt);
+			const actor = activity.actorPub || activity.actorUser || activity.actorJournal || activity.actorLabel || {};
+			const target = activity.targetPub || activity.targetUser || activity.targetJournal || activity.targetLabel || {};
+			const object = activity.objectPub || activity.objectUser || activity.objectJournal || activity.objectLabel || {};
+			const activityKey = `${activity.verb}-${actor.id}-${object.id}-${target.id}-${date.getYear()}${date.getMonth()}${date.getDate()}`;
+			if (activityKey in uniqueIDs) { return false; }
+			uniqueIDs[activityKey] = true;
+			return true;
+		});
+	},
+
 	render() {
 		const accountData = this.props.accountData || {};
 		const user = accountData.user || {};
@@ -48,29 +62,13 @@ export const Landing = React.createClass({
 		const activitiesUsers = activities.users || [];
 		const activitiesJournals = activities.journals || [];
 		const activitiesLabels = activities.labels || [];
-
-		const uniqueIDs = {};
-		const uniqueActivities = [...activitiesUsers, ...activitiesPubs, ...activitiesJournals, ...activitiesLabels].filter((activity)=>{
-			if (activity.id in uniqueIDs) { return false; }
-			uniqueIDs[activity.id] = true;
-			return true;
-		});
+		const uniqueActivities = this.filterUniqueActivities([...activitiesUsers, ...activitiesPubs, ...activitiesJournals, ...activitiesLabels]);
 
 		const myActivitiesPubs = activities.myPubs || [];
 		const myActivitiesUsers = activities.myUsers || [];
 		const myActivitiesJournals = activities.myJournals || [];
+		const myUniqueActivities = this.filterUniqueActivities([...myActivitiesUsers, ...myActivitiesPubs, ...myActivitiesJournals]);
 
-		const myUniqueIDs = {};
-		const myUniqueActivities = [...myActivitiesUsers, ...myActivitiesPubs, ...myActivitiesJournals].filter((activity)=>{
-			if (activity.id in myUniqueIDs) { return false; }
-			myUniqueIDs[activity.id] = true;
-			return true;
-		});
-
-
-		// const globalActivities = activities.global || [];
-		// const followingActivities = activities.following || [];
-		// const selfActivities = activities.self || [];
 
 		const assets = activitiesData.assets || {};
 		const assetPubs = assets.pubs || [];
@@ -96,10 +94,6 @@ export const Landing = React.createClass({
 		if (filterMode === 'Pubs') { myActivities = myActivitiesPubs; }
 		if (filterMode === 'People') { myActivities = myActivitiesUsers; }
 		if (filterMode === 'Journals') { myActivities = myActivitiesJournals; }
-
-		// const globalActivities = activities.global || [];
-		// const youActivities = activities.you || [];
-
 
 		let selectedActivities = [];
 		if (mode === 'following') { selectedActivities = followingActivities; }
