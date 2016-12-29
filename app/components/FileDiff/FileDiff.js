@@ -22,7 +22,10 @@ export const FileDiff = React.createClass({
 		console.log(targetFile);
 		return (
 			<div style={styles.container} className={'pt-card pt-elevation-0'}>
-				<h6>{targetFile.name}</h6>
+				
+				<div style={styles.header}>
+					<h6>{targetFile.name}</h6>
+				</div>
 				{targetFile.type === 'image/png' &&
 					<FileDiffImage baseFile={baseFile} targetFile={targetFile} />
 				}
@@ -36,6 +39,9 @@ export default Radium(FileDiff);
 styles = {
 	container: {
 		margin: '1em',
+		position: 'relative',
 	},
-	
+	header: {
+		marginBottom: '1.5em',
+	},
 };

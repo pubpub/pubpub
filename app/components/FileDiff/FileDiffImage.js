@@ -1,8 +1,6 @@
 import React, { PropTypes } from 'react';
 import Radium from 'radium';
-import ImageDiff from 'react-image-diff';
 import { Slider } from '@blueprintjs/core';
-// import ImageDiff from 'image-diff-view';
 
 let styles = {};
 
@@ -15,84 +13,23 @@ export const FileDiffImage = React.createClass({
 	getInitialState() {
 		return {
 			sliderVal: .5,
-			width: null,
-			height: null,
-			imagDiff: {},
+			mode: 'slide',
+			containerStyle: {},
+			targetStyle: {},
+			baseStyle: {},
 		};
 	},
 
 	componentDidMount() {
-		const targetFile = this.props.targetFile || {};
-		// const baseURL = targetFile.url || 'http://cezary.github.io/react-image-diff/public/img/spot-the-difference-a.jpg' || baseFile.url;
-		// const targetURL = 'https://ae01.alicdn.com/kf/HTB14qzTOXXXXXbeaFXXq6xXFXXXM/NEW-Candy-Stripe-Color-Warm-Winter-Spring-Cat-Sweater-Pet-Jumper-Cat-Clothes-For-Small-Cat.jpg_50x50.jpg' || targetFile.url;
-
-		// const img = new Image();
-		// img.onload = function(){
-		// 	const imageWidth = this.width;
-		// 	const imageHeight = this.height;
-		// 	const container = document.getElementsByClassName('image-diff-container' + targetFile.id)[0]
-		// 	const containerWidth = container.offsetWidth;
-
-		//     // this.setState({ width: 600, height: 400 });
-		//     if (containerWidth < imageWidth) {
-		// 		const newWidth = imageWidth * (imageWidth / containerWidth);
-		// 		const newHeight = imageHeight * (imageWidth / containerWidth);
-		// 		this.setState({
-		// 			width: newWidth,
-		// 			height: newHeight,
-		// 		});		
-		// 	}
-		// };
-		// img.src = targetURL;
-		window.addEventListener('resize', this.updateDimensions);
+		window.addEventListener('resize', this.buildDimensions);
 	},
 	componentWillUnmount: function() {
-        window.removeEventListener('resize', this.updateDimensions);
+        window.removeEventListener('resize', this.buildDimensions);
     },
-	// componentDidMount() {
-		// const baseFile = this.props.baseFile || {};
-		// const targetFile = this.props.targetFile || {};
-		// const baseURL = baseFile.url;
-		// const targetURL = targetFile.url;
-		// const imageDiff = new ImageDiff(document.getElementById('image-diff'), baseURL, targetURL, 'swipe');
-		// imageDiff.swipe(.5);
-
-		// this.setState({ width: 600, height: 400 });
-
-	// },
 
 	sliderChange: function(value) {
 		this.setState({ sliderVal: value})
-		// this.state.imageDiff.swipe(value / 100);
 	},
-
-	renderSliderLabel: function(value) {
-		return Math.round(value * 100) + '%';
-	},
-	// resizeImage: function(evt) {
-	// 	console.log(evt);
-	// 	const targetFile = this.props.targetFile || {};
-	// 	const image = document.getElementsByClassName('ImageDiff__after')[0]
-	// 	const container = document.getElementsByClassName('image-diff-container' + targetFile.id)[0]
-	// 	if (!image) {return;}
-	// 	const imageWidth = image.offsetWidth;
-	// 	const imageHeight = image.offsetHeight;
-	// 	const containerWidth = container.offsetWidth;
-	// 	debugger;
-	// 	if (containerWidth < imageWidth) {
-	// 		const newWidth = imageWidth * (imageWidth / containerWidth);
-	// 		const newHeight = imageHeight * (imageWidth / containerWidth);
-	// 		if (this.state.width !== newWidth) {
-	// 			setTimeout(()=> {
-	// 				this.setState({
-	// 					width: newWidth,
-	// 					height: newHeight,
-	// 				});		
-	// 			}, 0)
-				
-	// 		}	
-	// 	}
-	// },
 
 	imageLoad: function() {
 		const baseFile = this.props.baseFile || {};
@@ -100,91 +37,143 @@ export const FileDiffImage = React.createClass({
 		const targetImage = document.getElementById('image-holder-' + targetFile.id);
 		const baseImage = document.getElementById('image-holder-' + baseFile.id);
 		if (!targetImage || !baseImage) { return null; }
-		return this.updateDimensions();
+
+		const originalDimensions = {
+			originalTargetWidth: targetImage.offsetWidth,
+			originalTargetHeight: targetImage.offsetHeight,
+			originalBaseWidth: baseImage.offsetWidth,
+			originalBaseHeight: baseImage.offsetHeight,
+		};
+
+		this.setState(originalDimensions);
+
+		return this.buildDimensions(originalDimensions);
 	},
 
-	updateDimensions: function() {
-		console.log('Im here');
-		const baseFile = this.props.baseFile || {};
+	buildDimensions: function(originalDimensions) {
+		const input = originalDimensions || {};
+		const originalTargetWidth = this.state.originalTargetWidth || input.originalTargetWidth;
+		const originalTargetHeight = this.state.originalTargetHeight || input.originalTargetHeight;
+		const originalBaseWidth = this.state.originalBaseWidth || input.originalBaseWidth;
+		const originalBaseHeight = this.state.originalBaseHeight || input.originalBaseHeight;
+
 		const targetFile = this.props.targetFile || {};
-
-		const baseImage = document.getElementById('image-holder-' + baseFile.id);
-		const targetImage = document.getElementById('image-holder-' + targetFile.id);
 		const container = document.getElementsByClassName('image-diff-container' + targetFile.id)[0]
-		
-		const width = Math.max(targetImage.offsetWidth, baseImage.offsetWidth);
-		const height = Math.max(targetImage.offsetHeight, baseImage.offsetHeight);
-		const factor = Math.max((width / container.offsetWidth), 1);
+		const containerWidth = container.offsetWidth;
 
-		return this.setState({
-			width: width * factor,
-			height: height * factor,
-			targetWidth: targetImage.offsetWidth * factor,
-			targetHeight: targetImage.offsetHeight * factor,
-		});
+		const maxWidth = Math.max(originalTargetWidth, originalBaseWidth);
+		const maxHeight = Math.max(originalTargetHeight, originalBaseHeight);
+		const factor = Math.min((containerWidth / maxWidth), 1);
+
+		const targetWidth = originalTargetWidth * factor;
+		const targetHeight = originalTargetHeight * factor;
+		const baseWidth = originalBaseWidth * factor;
+		const baseHeight = originalBaseHeight * factor;
+
+		const scaledMaxWidth = maxWidth * factor;
+		const scaledMaxHeight = maxHeight * factor;
+
+		const targetHorizontalMargin = (scaledMaxWidth - targetWidth) / 2;
+		const targetVerticalMargin = (scaledMaxHeight - targetHeight) / 2;
+
+		const baseHorizontalMargin = (scaledMaxWidth - baseWidth) / 2;
+		const baseVerticalMargin = (scaledMaxHeight - baseHeight) / 2;
+
+		const containerStyle = {
+			width: scaledMaxWidth,
+			height: scaledMaxHeight,
+			margin: '0 auto',
+		};
+
+		const targetStyle = {
+			width: targetWidth,
+			height: targetHeight,
+			margin: targetVerticalMargin + ' ' + targetHorizontalMargin,
+		};
+
+		const baseStyle = {
+			width: baseWidth,
+			height: baseHeight,
+			margin: baseVerticalMargin + ' ' + baseHorizontalMargin,
+		};
+
+		this.setState({
+			containerStyle: containerStyle,
+			targetStyle: targetStyle,
+			baseStyle: baseStyle,
+		})
 	},
 
-	// <div style={[
-	// 						// { opacity: this.state.sliderVal},
-	// 						// { backgroundRepeat: 'no-repeat', backgroundImage: targetURLSmall ? 'url("' + targetURLSmall + '")' : '' }
-	// 					]}>
-							
-	// 					</div>
+	setMode: function(mode) {
+		this.setState({ mode: mode });
+	},
+
 	render: function() {
 		const baseFile = this.props.baseFile || {};
 		const targetFile = this.props.targetFile || {};
-		// const baseURL = targetFile.url || 'http://cezary.github.io/react-image-diff/public/img/spot-the-difference-a.jpg' || baseFile.url;
-		// const targetURL = 'https://ae01.alicdn.com/kf/HTB14qzTOXXXXXbeaFXXq6xXFXXXM/NEW-Candy-Stripe-Color-Warm-Winter-Spring-Cat-Sweater-Pet-Jumper-Cat-Clothes-For-Small-Cat.jpg_50x50.jpg' || targetFile.url;
-		// this.resizeImage();
-		const baseURL = 'http://i.imgur.com/qMBBroL.png';
-		const targetURL = 'http://i.imgur.com/932xbyX.png';
-		const baseURLSmall = 'http://i.imgur.com/KupLxPa.png';
-		const targetURLSmall = 'http://cezary.github.io/react-image-diff/public/img/spot-the-difference-a.jpg' || 'http://i.imgur.com/4Ulz1rH.png';
+		
+		const baseURL = baseFile.url;
+		const targetURL = targetFile.url;
+		const hasBase = !!baseURL;
+		const hasTarget = !!targetURL;
+		const mode = this.state.mode; // slide, fade, or diff
 
-		const mode = 'slide' // slide, fade, or diff
+		const containerStyle = this.state.containerStyle || {};
+		const containerWidth = containerStyle.width || 0;
+		const sliderLocation = containerWidth * this.state.sliderVal;
+		const sliderWidth = {
+			width: containerWidth - sliderLocation
+		};
+		const fadeValue = {
+			opacity: this.state.sliderVal
+		};
+		const diffStyle = {
+			mixBlendMode: 'difference',
+		};
+
 		return (
 			<div style={styles.container} className={'image-diff-container' + targetFile.id}>
-				
-				{/*<ImageDiff before={baseURL} after={targetURL} type="swipe" value={this.state.sliderVal / 100} width={this.state.width} height={this.state.height}/>*/}
+				<div className={'pt-button-group'} style={styles.controls}>
+					<button type="button" className={mode === 'slide' ? 'pt-button pt-active' : 'pt-button'} onClick={this.setMode.bind(this, 'slide')}>Slide</button>
+					<button type="button" className={mode === 'fade' ? 'pt-button pt-active' : 'pt-button'} onClick={this.setMode.bind(this, 'fade')}>Fade</button>
+					<button type="button" className={mode === 'diff' ? 'pt-button pt-active' : 'pt-button'} onClick={this.setMode.bind(this, 'diff')}>Diff</button>
+				</div>
 
 				<div style={{ maxWidth: '100%', position: 'relative' }}>
-					<img src={targetURLSmall} id={'image-holder-' + targetFile.id} style={styles.imageFloat} onLoad={this.imageLoad}/>
-					<img src={baseURL} id={'image-holder-' + baseFile.id} style={styles.imageFloat} onLoad={this.imageLoad}/>		
+					<img src={targetURL || baseURL} id={'image-holder-' + targetFile.id} style={styles.imageFloat} onLoad={this.imageLoad}/>
+					<img src={baseURL || targetURL} id={'image-holder-' + baseFile.id} style={styles.imageFloat} onLoad={this.imageLoad}/>		
 				</div>
 				
+				<div style={[{ position: 'relative' }, this.state.containerStyle]}>
+					<div style={[styles.imageWrapper, this.state.baseStyle]}>
+						<img src={baseURL || targetURL} style={[styles.image, !hasBase && { opacity: 0 }]}/>
+						{!hasBase &&
+							<div style={[styles.noImage, mode === 'diff' && styles.noImageBlack]}/>
+						}
 
-				<div style={[styles.imagesWrapper, { width: this.state.width, height: this.state.height }]}>
-					<div style={styles.tableCell}>
-						<img src={baseURL} style={styles.image} />	
+						<div style={styles.redShadow} />
 					</div>
-
-					<div style={styles.tableCell}>
-						<div style={[
-							{ width: this.state.targetWidth, height: this.state.targetHeight, overflow: 'hidden' },
-							mode === 'slide' ? { paddingLeft: (this.state.sliderVal * 100 + '%')} : {},
-						]}>
-							<div style={[
-								styles.targetImage,
-								{ backgroundImage: targetURLSmall ? 'url("' + targetURLSmall + '")' : '' },
-							]}>
-							</div>
+					<div style={[styles.slider, this.state.containerStyle, mode === 'slide' && sliderWidth, mode === 'fade' && fadeValue, mode === 'diff' && diffStyle]}>
+						<div style={[styles.imageWrapper, this.state.targetStyle]}>
+							<img src={targetURL || baseURL} style={[styles.image, !hasTarget && { opacity: 0 }]}/>
+							{!hasTarget &&
+								<div style={[styles.noImage, mode === 'diff' && styles.noImageWhite]}/>
+							}
+							<div style={styles.greenShadow} />
 						</div>
-						
-						{/*<img src={targetURLSmall} style={[styles.image]} />		*/}
 					</div>
-				
+
+					{mode === 'slide' &&
+						<div style={[styles.sliderBar, { left: sliderLocation }]}></div>
+					}
 					
-
-					{/*<div style={styles.flex}>
-						<div style={[styles.floatingImageWrapper, { opacity: this.state.sliderVal}]}>
-							<img src={targetURLSmall} style={styles.image} />
-						</div>
-					</div>*/}
 				</div>
-
-				<div style={{margin: '1em auto', maxWidth: '400px'}}>
-					<Slider value={this.state.sliderVal} min={0} max={1} stepSize={.01} labelStepSize={.5} renderLabel={this.renderSliderLabel} onChange={this.sliderChange}/>
-				</div>
+				
+				{mode !== 'diff' &&
+					<div style={{margin: '1em auto', width: containerWidth}}>
+						<Slider value={this.state.sliderVal} min={0} max={1} stepSize={.01} labelStepSize={.5} renderLabel={false} onChange={this.sliderChange}/>
+					</div>
+				}
 				
 			</div>
 		);
@@ -195,106 +184,70 @@ export default Radium(FileDiffImage);
 
 styles = {
 	container: {
-		// textAlign: 'center',
+		
 	},
-	imagesWrapper: {
-		position: 'relative',
-		// border: '1px solid blue',
-		boxShadow: '0px 0px 0px 1px blue',
-		margin: '0 auto',
-		// height: '300px',
-		// width: '100%',
-		// display: 'table',
-		// display: 'flex',
-		// maxWidth: '100%',
-		// display: 'inline-block',
-		// textAlign: 'center',
-
-	},
-	cat: {
+	controls: {
 		position: 'absolute',
+		top: '12px',
+		right: '20px',
 	},
-	tableCell: {
-		// display: 'table-cell',
-		// verticalAlign: 'middle',
-		// textAlign: 'center',
-		display: 'flex',
-	    justifyContent: 'center',
-	    alignItems: 'center',
-	    height: '100%',
-	    width: '100%',
-	    position: 'absolute',
+
+	imageWrapper: {
+		position: 'absolute',
+		right: '0',
 	},
+	slider: {
+		position: 'absolute',
+		right: '0',
+		overflow: 'hidden',
+	},
+	redShadow: {
+		width: '100%',
+		height: '100%',
+		position: 'absolute',
+		top: 0,
+		boxShadow: 'inset 0px 0px 0px 2px red',
+	},
+	greenShadow: {
+		width: '100%',
+		height: '100%',
+		position: 'absolute',
+		top: 0,
+		boxShadow: 'inset 0px 0px 0px 2px green',
+	},
+	sliderBar: {
+		width: '1px',
+		backgroundColor: '#555',
+		boxShadow: '0px 0px 2px #888',
+		height: '100%',
+		position: 'absolute',
+		top: '0',
+	},
+
 	image: {
-		maxWidth: '100%',
-		objectFit: 'scale-down',
-		flex: '0 0 auto',
+		width: '100%',
+		userSelect: 'none',
+	},
+	noImage: {
+		width: '100%',
+		height: '100%',
+		position: 'absolute',
+		top: 0,
+		left: 0,
+		backgroundImage: 'url(\'https://assets.pubpub.org/_site/grid.png\')'
+	},
+	noImageBlack: {
+		backgroundImage: 'none',
+		backgroundColor: '#000',
+	},
+	noImageWhite: {
+		backgroundImage: 'none',
+		backgroundColor: '#fff',
 	},
 	imageFloat: {
 		maxWidth: '100%',
 		position: 'absolute',
-		opacity: '0.1',
+		opacity: '0',
 	},
-	targetImage: {
-		width: '100%', 
-		height: '100%', 
-		overflow: 'hidden',
-		backgroundPosition: 'right center', 
-		backgroundRepeat: 'no-repeat', 
-	},
-	flex: {
-		display: 'flex',
-		width: '100%',
-		height: '100%',
-		justifyContent: 'center',
-	},
-	floatingImageWrapper: {
-		position: 'absolute',
-		left: 0,
-		top: 0,
-	},
-	// tranparency: {
-	// 	width: '100%',
-	// 	height: '100%',
-	// 	opacity: '0.5',
-	// 	// backgroundColor: 'red',
-	// 	right: 0,
-	// 	top: 0,
-	// 	position: 'absolute',
-	// },
-	// targetWrapper: {
-	// 	width: '100%',
-	// 	height: '100%',
-	// 	overflow: 'hidden',
-	// 	position: 'absolute',
-	// 	top: 0,
-	// 	right: 0,
-	// 	backgroundPosition: 'right'
-	// },
-	// image2: {
-		
-	// },
 	
 };
-
-
-// {/*<div className='image-diff' id='image-diff' style={{userSelect: 'none', width: '200px'}}>
-// 					<div className='image-diff__inner'>
-// 						<div className='image-diff__before'><img/></div>
-// 						<div className='image-diff__wrapper'><div className='image-diff__after'><img/></div></div>
-// 					</div>
-// 				</div>*/}
-// 				<div style={styles.imageWrapper}>
-					
-// 					<img src={baseURL} style={[styles.image]}/>	
-// 					<div style={[styles.tranparency, { backgroundImage: targetURL ? 'url("' + targetURL + '")' : '' }]}>
-// 					</div>
-// 					{/*<span style={[
-// 						styles.targetWrapper, 
-// 						{ width: ((100-this.state.sliderVal) + '%')},
-						
-// 					]}>
-							
-// 					</span>*/}
-					
-// 				</div>
