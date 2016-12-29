@@ -135,6 +135,15 @@ export const Pub = React.createClass({
 		const currentFile = this.props.params.filename;
 		const meta = currentFile ? 'files' : this.props.params.meta;
 		const query = this.props.location.query;
+		const preservedQuery = {
+			version: query.version,
+			panel: query.panel,
+			discussion: query.discussion,
+			label: query.label,
+			author: query.author,
+			sort: query.sort,
+			filter: query.filter,
+		};
 		const pathname = this.props.location.pathname;
 		const panel = query.panel;
 		const queryDiscussion = query.discussion;
@@ -288,11 +297,11 @@ export const Pub = React.createClass({
 					{/* Nav Bar */}
 					{/* ------- */}
 					<div style={styles.nav}>
-						<Link to={{ pathname: '/pub/' + this.props.params.slug, query: query }}><div style={[styles.navItem, (!meta || meta === 'files') && styles.navItemActive]} className={'bottomShadowOnHover'}>Content</div></Link>
-						{!!versions.length && <Link to={{ pathname: '/pub/' + this.props.params.slug + '/versions', query: query }}><div style={[styles.navItem, meta === 'versions' && styles.navItemActive]} className={'bottomShadowOnHover'}>Versions ({versions.length})</div></Link> }
-						<Link to={{ pathname: '/pub/' + this.props.params.slug + '/contributors', query: query }}><div style={[styles.navItem, meta === 'contributors' && styles.navItemActive]} className={'bottomShadowOnHover'}>Contributors ({contributors.length})</div></Link>
-						{!!versions.length && <Link to={{ pathname: '/pub/' + this.props.params.slug + '/journals', query: query }}><div style={[styles.navItem, meta === 'journals' && styles.navItemActive]} className={'bottomShadowOnHover'}>Journals</div></Link> }
-						<Link to={{ pathname: '/pub/' + this.props.params.slug + '/settings', query: query }}><div style={[styles.navItem, meta === 'settings' && styles.navItemActive]} className={'bottomShadowOnHover'}>Settings</div></Link>
+						<Link to={{ pathname: '/pub/' + this.props.params.slug, query: preservedQuery }}><div style={[styles.navItem, (!meta || meta === 'files') && styles.navItemActive]} className={'bottomShadowOnHover'}>Content</div></Link>
+						{!!versions.length && <Link to={{ pathname: '/pub/' + this.props.params.slug + '/versions', query: preservedQuery }}><div style={[styles.navItem, meta === 'versions' && styles.navItemActive]} className={'bottomShadowOnHover'}>Versions ({versions.length})</div></Link> }
+						<Link to={{ pathname: '/pub/' + this.props.params.slug + '/contributors', query: preservedQuery }}><div style={[styles.navItem, meta === 'contributors' && styles.navItemActive]} className={'bottomShadowOnHover'}>Contributors ({contributors.length})</div></Link>
+						{!!versions.length && <Link to={{ pathname: '/pub/' + this.props.params.slug + '/journals', query: preservedQuery }}><div style={[styles.navItem, meta === 'journals' && styles.navItemActive]} className={'bottomShadowOnHover'}>Journals</div></Link> }
+						<Link to={{ pathname: '/pub/' + this.props.params.slug + '/settings', query: preservedQuery }}><div style={[styles.navItem, meta === 'settings' && styles.navItemActive]} className={'bottomShadowOnHover'}>Settings</div></Link>
 					</div>
 
 

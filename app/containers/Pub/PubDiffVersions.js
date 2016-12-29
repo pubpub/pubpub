@@ -4,6 +4,7 @@ import { browserHistory } from 'react-router';
 import { globalStyles } from 'utils/globalStyles';
 import { globalMessages } from 'utils/globalMessages';
 import { FormattedMessage } from 'react-intl';
+import { FileDiff } from 'components';
 import dateFormat from 'dateformat';
 import Select from 'react-select';
 
@@ -60,15 +61,15 @@ export const PubDiffVersions = React.createClass({
 		const versions = this.props.versions || [];
 		const query = this.props.query || {};
 
-		const versionTarget = versions.reduce((previous, current)=> {
-			if (current.hash === query.target) { return current; }
-			return previous;
-		}, undefined);
-
 		const versionBase = versions.reduce((previous, current)=> {
 			if (current.hash === query.base) { return current; }
 			return previous;
-		}, undefined);
+		}, {});
+
+		const versionTarget = versions.reduce((previous, current)=> {
+			if (current.hash === query.target) { return current; }
+			return previous;
+		}, {});
 
 		const selectionBase = this.buildOption(versionBase);
 		const selectionTarget = this.buildOption(versionTarget);
@@ -76,19 +77,18 @@ export const PubDiffVersions = React.createClass({
 		const allFileNames = {};
 
 		const baseFilesObject = {};
-		versionBase.files.map((file)=> {
+		const baseFiles = versionBase.files || [];
+		baseFiles.map((file)=> {
 			baseFilesObject[file.name] = file;
 			allFileNames[file.name] = true;
 		});
 
 		const targetFilesObject = {};
-		versionTarget.files.map((file)=> {
+		const targetFiles = versionTarget.files || [];
+		targetFiles.map((file)=> {
 			targetFilesObject[file.name] = file;
 			allFileNames[file.name] = true;
 		});
-
-
-
 
 		const options = versions.sort((foo, bar)=> {
 			// Sort so that most recent is first in array
@@ -101,7 +101,12 @@ export const PubDiffVersions = React.createClass({
 
 		// TODO: Make sure base is always earlier than target
 		// Pass in the two files to a component that handles rendering the diff view.
-		// Make versions page link to diff, grab the previous version and set as base
+
+		const changedFilesNames = Object.keys(allFileNames).filter((fileName)=> {
+			const baseFile = baseFilesObject[fileName] || {};
+			const targetFile = targetFilesObject[fileName] || {};
+			return baseFile.hash !== targetFile.hash;
+		});
 
 		return (
 			<div style={styles.container} className={'diff-page'}>
@@ -139,16 +144,10 @@ export const PubDiffVersions = React.createClass({
 				</div>
 
 				<div>
-					{Object.keys(allFileNames).map((fileName)=> {
+					{changedFilesNames.map((fileName)=> {
 						const baseFile = baseFilesObject[fileName] || {};
 						const targetFile = targetFilesObject[fileName] || {};
-						return (
-							<div style={{ padding: '1em' }}>
-								<h5>{fileName}</h5>
-								<div>Old: {baseFile.hash}</div>
-								<div>New: {targetFile.hash}</div>
-							</div>
-						);
+						return <FileDiff key={'fileDiff-' + fileName} baseFile={baseFile} targetFile={targetFile} />;
 					})}
 				</div>
 				

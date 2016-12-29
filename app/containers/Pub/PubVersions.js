@@ -41,6 +41,7 @@ export const PubVersions = React.createClass({
 
 	render: function() {
 		const location = this.props.location || {};
+		const pathname = location.pathname;
 		const query = location.query || {};
 		const isLoading = this.props.isLoading;
 		const errorMessage = this.props.error;
@@ -53,7 +54,8 @@ export const PubVersions = React.createClass({
 					if (foo.createdAt > bar.createdAt) { return -1; }
 					if (foo.createdAt < bar.createdAt) { return 1; }
 					return 0;
-				}).map((version)=> {
+				}).map((version, index, array)=> {
+					const previousVersion = index > 0 ? array[index - 1] : {};
 					return (
 						<div key={'version-' + version.id} style={styles.versionRow}>
 
@@ -79,7 +81,9 @@ export const PubVersions = React.createClass({
 							
 							<div style={styles.largeColumn}>
 								{/* Link to Diff view */}
-								<h6 style={styles.noMargin}>{version.versionMessage || 'No message'}</h6>
+								<Link to={{ pathname: '/pub/' + this.props.pubSlug + '/diff', query: { ...query, version: undefined, base: previousVersion.hash, target: version.hash } }}>
+									<h6 style={styles.noMargin}>{version.versionMessage || 'No message'}</h6>
+								</Link>
 								<p style={styles.noMargin}>{dateFormat(version.createdAt, 'mmm dd, yyyy HH:MM')}</p>
 							</div>
 							<div style={styles.smallColumn}>

@@ -57,7 +57,6 @@ export const Search = React.createClass({
 		const query = nextProps.location.query;
 		const pathname = nextProps.location.pathname;
 		const mode = query.mode;
-		console.log(query);
 
 		if (this.props.searchData.loading && !nextProps.searchData.loading && !pubs.length && users.length && mode === undefined) {
 			browserHistory.replace({ pathname: pathname, query: { ...query, mode: 'users' } });
@@ -81,6 +80,7 @@ export const Search = React.createClass({
 		const query = this.props.location.query;
 		browserHistory.push({ pathname: '/search', query: { ...query, q: this.state.searchString } });
 	},
+	
 	render() {
 		const searchData = this.props.searchData.results || {};
 		const pubs = searchData.pubs || [];

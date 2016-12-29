@@ -19,6 +19,11 @@ body {
 	margin-bottom: 0;
 }
 
+.clearfix:after {
+	content: "";
+	display: table;
+	clear: both;
+}
 /* Input Fields */
 /* ------------ */
 form {
