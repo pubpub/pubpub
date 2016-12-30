@@ -12,7 +12,7 @@ export const FileDiffImage = React.createClass({
 
 	getInitialState() {
 		return {
-			sliderVal: .5,
+			sliderVal: 0.5,
 			mode: 'slide',
 			containerStyle: {},
 			targetStyle: {},
@@ -24,11 +24,11 @@ export const FileDiffImage = React.createClass({
 		window.addEventListener('resize', this.buildDimensions);
 	},
 	componentWillUnmount: function() {
-        window.removeEventListener('resize', this.buildDimensions);
-    },
+		window.removeEventListener('resize', this.buildDimensions);
+	},
 
 	sliderChange: function(value) {
-		this.setState({ sliderVal: value})
+		this.setState({ sliderVal: value });
 	},
 
 	imageLoad: function() {
@@ -58,7 +58,7 @@ export const FileDiffImage = React.createClass({
 		const originalBaseHeight = this.state.originalBaseHeight || input.originalBaseHeight;
 
 		const targetFile = this.props.targetFile || {};
-		const container = document.getElementsByClassName('image-diff-container' + targetFile.id)[0]
+		const container = document.getElementsByClassName('image-diff-container' + targetFile.id)[0];
 		const containerWidth = container.offsetWidth;
 
 		const maxWidth = Math.max(originalTargetWidth, originalBaseWidth);
@@ -101,7 +101,7 @@ export const FileDiffImage = React.createClass({
 			containerStyle: containerStyle,
 			targetStyle: targetStyle,
 			baseStyle: baseStyle,
-		})
+		});
 	},
 
 	setMode: function(mode) {
@@ -140,38 +140,38 @@ export const FileDiffImage = React.createClass({
 				</div>
 
 				<div style={{ maxWidth: '100%', position: 'relative' }}>
-					<img src={targetURL || baseURL} id={'image-holder-' + targetFile.id} style={styles.imageFloat} onLoad={this.imageLoad}/>
-					<img src={baseURL || targetURL} id={'image-holder-' + baseFile.id} style={styles.imageFloat} onLoad={this.imageLoad}/>		
+					<img alt={baseFile.name} src={targetURL || baseURL} id={'image-holder-' + targetFile.id} style={styles.imageFloat} onLoad={this.imageLoad} />
+					<img alt={targetFile.name} src={baseURL || targetURL} id={'image-holder-' + baseFile.id} style={styles.imageFloat} onLoad={this.imageLoad} />		
 				</div>
 				
 				<div style={[{ position: 'relative' }, this.state.containerStyle]}>
 					<div style={[styles.imageWrapper, this.state.baseStyle]}>
-						<img src={baseURL || targetURL} style={[styles.image, !hasBase && { opacity: 0 }]}/>
+						<img alt={baseFile.name} src={baseURL || targetURL} style={[styles.image, !hasBase && { opacity: 0 }]} />
 						{!hasBase &&
-							<div style={[styles.noImage, mode === 'diff' && styles.noImageBlack]}/>
+							<div style={[styles.noImage, mode === 'diff' && styles.noImageBlack]} />
 						}
 
 						<div style={styles.redShadow} />
 					</div>
 					<div style={[styles.slider, this.state.containerStyle, mode === 'slide' && sliderWidth, mode === 'fade' && fadeValue, mode === 'diff' && diffStyle]}>
 						<div style={[styles.imageWrapper, this.state.targetStyle]}>
-							<img src={targetURL || baseURL} style={[styles.image, !hasTarget && { opacity: 0 }]}/>
+							<img alt={targetFile.name} src={targetURL || baseURL} style={[styles.image, !hasTarget && { opacity: 0 }]} />
 							{!hasTarget &&
-								<div style={[styles.noImage, mode === 'diff' && styles.noImageWhite]}/>
+								<div style={[styles.noImage, mode === 'diff' && styles.noImageWhite]} />
 							}
 							<div style={styles.greenShadow} />
 						</div>
 					</div>
 
 					{mode === 'slide' &&
-						<div style={[styles.sliderBar, { left: sliderLocation }]}></div>
+						<div style={[styles.sliderBar, { left: sliderLocation }]} />
 					}
 					
 				</div>
 				
 				{mode !== 'diff' &&
-					<div style={{margin: '1em auto', width: containerWidth}}>
-						<Slider value={this.state.sliderVal} min={0} max={1} stepSize={.01} labelStepSize={.5} renderLabel={false} onChange={this.sliderChange}/>
+					<div style={{ margin: '1em auto', width: containerWidth }}>
+						<Slider value={this.state.sliderVal} min={0} max={1} stepSize={0.01} labelStepSize={0.5} renderLabel={false} onChange={this.sliderChange} />
 					</div>
 				}
 				

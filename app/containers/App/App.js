@@ -9,8 +9,9 @@ import es from 'react-intl/locale-data/es';
 import { AppNav, AppFooter } from 'components';
 import { login, logout } from './actions';
 
-require('../../../static/style.css');
 require('../../../static/blueprint.scss');
+require('../../../static/style.css');
+
 
 addLocaleData([...en, ...fr, ...es]);
 

@@ -110,7 +110,7 @@ export const PubFiles = React.createClass({
 		// Build file item, add it to some state
 		// check if all are done. if all are done. Do a thing.
 		// Once all created, and version has been created and updated on client, set uploading to false
-		console.log('File Finish!', filename, type, title, index);
+		// console.log('File Finish!', filename, type, title, index);
 		
 		const newUploadedFileObject = {
 			url: 'https://assets.pubpub.org/' + filename,
@@ -136,7 +136,7 @@ export const PubFiles = React.createClass({
 			uploadingFinished: finished,
 		});		
 		
-		console.log(newUploadedFileObjects);
+		// console.log(newUploadedFileObjects);
 
 	},
 
