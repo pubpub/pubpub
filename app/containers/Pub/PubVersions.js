@@ -55,7 +55,7 @@ export const PubVersions = React.createClass({
 					if (foo.createdAt < bar.createdAt) { return 1; }
 					return 0;
 				}).map((version, index, array)=> {
-					const previousVersion = index > 0 ? array[index - 1] : {};
+					const previousVersion = index < array.length - 1 ? array[index + 1] : {};
 					return (
 						<div key={'version-' + version.id} style={styles.versionRow}>
 

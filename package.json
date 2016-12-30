@@ -78,6 +78,7 @@
     "react-router-scroll": "^0.4.1",
     "react-select": "^1.0.0-rc.2",
     "react-sticky": "^5.0.5",
+    "react-stylable-diff": "^1.0.1",
     "react-textarea-autosize": "^4.0.5",
     "react-transform-hmr": "^1.0.4",
     "redux": "^3.5.2",

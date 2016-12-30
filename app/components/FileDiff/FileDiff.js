@@ -2,6 +2,7 @@ import React, { PropTypes } from 'react';
 import Radium from 'radium';
 import { Link } from 'react-router';
 import FileDiffImage from './FileDiffImage';
+import FileDiffMarkdown from './FileDiffMarkdown';
 let styles = {};
 
 export const FileDiff = React.createClass({
@@ -28,6 +29,9 @@ export const FileDiff = React.createClass({
 				</div>
 				{targetFile.type === 'image/png' &&
 					<FileDiffImage baseFile={baseFile} targetFile={targetFile} />
+				}
+				{targetFile.type === 'text/markdown' &&
+					<FileDiffMarkdown baseFile={baseFile} targetFile={targetFile} />
 				}
 			</div>
 		);
