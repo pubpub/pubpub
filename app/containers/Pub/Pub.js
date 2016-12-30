@@ -255,7 +255,7 @@ export const Pub = React.createClass({
 				{/* ---------- */}
 				<div style={styles.left}>
 
-					{displayedFeatures.length &&
+					{!!displayedFeatures.length &&
 						<div style={styles.journalHeader}>
 							{displayedFeatures.sort((foo, bar)=> {
 								// Sort so that least recent is first in array

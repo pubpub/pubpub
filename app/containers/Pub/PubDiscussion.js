@@ -215,7 +215,19 @@ export const PubDiscussion = React.createClass({
 										<button type="button" className="pt-button pt-icon-edit" onClick={this.setOpenEditor.bind(this, child.id, child.description)} />
 									</Tooltip>
 									<Tooltip content={'Cite Discussion'} position={Position.LEFT} useSmartPositioning={true}>						
-										<button type="button" className="pt-button pt-icon-bookmark" />
+										
+										<Popover 
+											content={
+												<div style={styles.reactionMenu}>
+													Here is how to cite this discussion.
+													Permalink: https://www.pubpub.org{this.props.pathname}?discussionId={child.id}
+													{/* This permalink isn't right, we need to pass the slug in, we don't want the whole route. */}
+												</div>
+											}
+											popoverClassName={'pt-minimal'}
+											position={Position.BOTTOM_RIGHT} >
+											<button type="button" className="pt-button pt-icon-bookmark" />
+										</Popover>
 									</Tooltip>
 
 								</div>
