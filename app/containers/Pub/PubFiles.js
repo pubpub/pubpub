@@ -315,7 +315,7 @@ export const PubFiles = React.createClass({
 										<tr key={'file-' + index}>
 											<td style={styles.tableCell}><Link className={'underlineOnHover link'} to={{ pathname: '/pub/' + this.props.pubSlug + '/files/' + file.name, query: query }}>{file.name}</Link></td>
 											<td style={styles.tableCell}>{file.createdAt}</td>
-											<td style={[styles.tableCell, styles.tableCellRight]}><button className={'pt-button'}>History</button></td>
+											{/* <td style={[styles.tableCell, styles.tableCellRight]}><button className={'pt-button'}>History</button></td> */}
 										</tr>
 									);
 								})}

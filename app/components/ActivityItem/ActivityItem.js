@@ -50,9 +50,9 @@ export const ActivityItem = React.createClass({
 		const target = activity.targetPub || activity.targetUser || activity.targetJournal || activity.targetLabel || {};
 		const object = activity.objectPub || activity.objectUser || activity.objectJournal || activity.objectLabel || {};
 
-		const actorImage = actor.image || actor.previewImage || actor.icon || 'http://plainicon.com/dboard/userprod/2803_dd580/prod_thumb/plainicon.com-48762-256px-1a9.png';
-		const targetImage = target.image || target.previewImage || target.icon || 'http://plainicon.com/dboard/userprod/2803_dd580/prod_thumb/plainicon.com-48762-256px-1a9.png';
-		const objectImage = object.image || object.previewImage || object.icon || 'http://plainicon.com/dboard/userprod/2803_dd580/prod_thumb/plainicon.com-48762-256px-1a9.png';
+		const actorImage = actor.image || actor.previewImage || actor.icon || 'https://assets.pubpub.org/_site/label.png';
+		const targetImage = target.image || target.previewImage || target.icon || 'https://assets.pubpub.org/_site/label.png';
+		const objectImage = object.image || object.previewImage || object.icon || 'https://assets.pubpub.org/_site/label.png';
 
 		const makeString = function(item) { 
 			return item.title || item.name || item.firstName + ' ' + item.lastName; 

@@ -1,6 +1,5 @@
 import React, { PropTypes } from 'react';
 import Radium from 'radium';
-import { Link } from 'react-router';
 import FileDiffImage from './FileDiffImage';
 import FileDiffMarkdown from './FileDiffMarkdown';
 let styles = {};
@@ -20,7 +19,7 @@ export const FileDiff = React.createClass({
 	render: function() {
 		const baseFile = this.props.baseFile || {};
 		const targetFile = this.props.targetFile || {};
-		console.log(targetFile);
+		
 		return (
 			<div style={styles.container} className={'pt-card pt-elevation-0'}>
 				
