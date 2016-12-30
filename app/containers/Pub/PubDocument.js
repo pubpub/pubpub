@@ -73,10 +73,6 @@ export const PubDocument = React.createClass({
 				{!!files.length &&
 					<div className={'pub-body'} style={styles.pubBody}>
 						<ReactMarkdown source={mainContent} />
-						<ReactMarkdown source={mainContent} />
-						<ReactMarkdown source={mainContent} />
-						<ReactMarkdown source={mainContent} />
-						<ReactMarkdown source={mainContent} />
 					</div>
 				}		
 			</div>

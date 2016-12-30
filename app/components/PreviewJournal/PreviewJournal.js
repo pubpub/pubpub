@@ -8,6 +8,7 @@ let styles;
 export const PreviewJournal = React.createClass({
 	propTypes: {
 		journal: PropTypes.object,
+		bottomContent: PropTypes.node,
 		rightContent: PropTypes.node,
 	},
 
@@ -20,6 +21,11 @@ export const PreviewJournal = React.createClass({
 				<div style={styles.pubPreviewDetails}>
 					<Link to={'/' + journal.slug}><h4>{journal.name}</h4></Link>
 					<p>{journal.shortDescription}</p>
+					{this.props.bottomContent &&
+						<div>
+							{this.props.bottomContent}
+						</div>
+					}
 				</div>
 
 				{!!this.props.rightContent &&
@@ -68,5 +74,7 @@ styles = {
 	rightContent: {
 		display: 'table-cell',
 		width: '1%',
+		verticalAlign: 'middle',
+		whiteSpace: 'nowrap',
 	},
 };

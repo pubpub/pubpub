@@ -8,6 +8,10 @@ export const POST_JOURNAL_SUBMIT_LOAD = 'pub/POST_JOURNAL_SUBMIT_LOAD';
 export const POST_JOURNAL_SUBMIT_SUCCESS = 'pub/POST_JOURNAL_SUBMIT_SUCCESS';
 export const POST_JOURNAL_SUBMIT_FAIL = 'pub/POST_JOURNAL_SUBMIT_FAIL';
 
+export const PUT_FEATURE_LOAD = 'pub/PUT_FEATURE_LOAD';
+export const PUT_FEATURE_SUCCESS = 'pub/PUT_FEATURE_SUCCESS';
+export const PUT_FEATURE_FAIL = 'pub/PUT_FEATURE_FAIL';
+
 /*--------*/
 // Define Action creators
 //
@@ -36,6 +40,33 @@ export function postJournalSubmit(pubId, journalId) {
 		.catch((error) => {
 			console.log(error);
 			dispatch({ type: POST_JOURNAL_SUBMIT_FAIL, error });
+		});
+	};
+}
+
+export function putFeature(pubId, journalId, isDisplayed, isContext) {
+	return (dispatch) => {
+		dispatch({ type: PUT_FEATURE_LOAD });
+
+		return clientFetch('/api/pub/features', {
+			method: 'PUT',
+			headers: {
+				Accept: 'application/json',
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify({
+				pubId: pubId, 
+				journalId: journalId, 
+				isDisplayed: isDisplayed, 
+				isContext: isContext, 
+			})
+		})
+		.then((result) => {
+			dispatch({ type: PUT_FEATURE_SUCCESS, result, journalId: journalId, isDisplayed: isDisplayed, isContext: isContext });
+		})
+		.catch((error) => {
+			console.log(error);
+			dispatch({ type: PUT_FEATURE_FAIL, error });
 		});
 	};
 }

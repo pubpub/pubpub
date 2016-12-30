@@ -1,9 +1,10 @@
 import React, { PropTypes } from 'react';
 import Radium from 'radium';
 import { Link } from 'react-router';
-import { AutocompleteBar } from 'components';
+import { AutocompleteBar, PreviewJournal } from 'components';
 import request from 'superagent';
-import { postJournalSubmit } from './actionsJournals';
+import dateFormat from 'dateformat';
+import { postJournalSubmit, putFeature } from './actionsJournals';
 
 let styles;
 
@@ -18,7 +19,20 @@ export const PubJournals = React.createClass({
 	getInitialState: function() {
 		return {
 			newSubmission: null,
+			featureStates: {},
 		};
+	},
+
+	componentWillMount() {
+		const features = this.props.pubFeatures || [];
+		const featureStates = {};
+		features.map((feature)=> {
+			featureStates[feature.journalId] = {
+				isDisplayed: feature.isDisplayed || false,
+				isContext: feature.isContext || false,
+			};
+		});
+		this.setState({ featureStates: featureStates });
 	},
 
 	componentWillReceiveProps(nextProps) {
@@ -54,10 +68,50 @@ export const PubJournals = React.createClass({
 	createSubmission: function() {
 		this.props.dispatch(postJournalSubmit(this.props.pubId, this.state.newSubmission.id));
 	},
+	setDisplayed: function(journalId, evt) {
+		this.setState({ 
+			featureStates: {
+				...this.state.featureStates,
+				[journalId]: {
+					...this.state.featureStates[journalId],
+					isDisplayed: evt.target.checked
+				}
+			} 
+		});
+		this.props.dispatch(putFeature(
+			this.props.pubId, 
+			journalId, 
+			evt.target.checked,
+			this.state.featureStates[journalId].isContext, 
+			
+		));
+	},
+	setContext: function(journalId, evt) {
+		this.setState({ 
+			featureStates: {
+				...this.state.featureStates,
+				[journalId]: {
+					...this.state.featureStates[journalId],
+					isContext: evt.target.checked
+				}
+			} 
+		});
+		this.props.dispatch(putFeature(
+			this.props.pubId, 
+			journalId, 
+			this.state.featureStates[journalId].isDisplayed, 
+			evt.target.checked,
+		));
+	},
 
 	render: function() {
 		const pubSubmits = this.props.pubSubmits || [];
 		const pubFeatures = this.props.pubFeatures || [];
+
+		const featuredIds = {};
+		pubFeatures.map((feature)=> {
+			featuredIds[feature.journalId] = feature;
+		});
 		
 		return (
 			<div style={styles.container}>
@@ -82,17 +136,63 @@ export const PubJournals = React.createClass({
 					completeDisabled={!this.state.newSubmission || !this.state.newSubmission.id}
 					completeString={'Submit Pub'}
 				/>
+				
+				{!!pubFeatures.length && 
+					<div style={styles.section}>
+						<h2>Features</h2>
+						{pubFeatures.map((feature, index)=> {
+							const journal = feature.journal;
+							return (
+								<div key={'pubFeature-' + index}>
+									<PreviewJournal 
+										journal={journal} 
+										rightContent={
+											<div style={styles.rightContent}>
+												<div>Featured: {dateFormat(feature.createdAt, 'mmm dd, yyyy')}</div>
+											</div>
+										} 
+										bottomContent={
+											<div>
+												<label style={styles.contributorAction} className="pt-control pt-checkbox">
+													<input type="checkbox" checked={this.state.featureStates[feature.journalId].isDisplayed} onChange={this.setDisplayed.bind(this, feature.journalId)} />
+													<span className="pt-control-indicator" />
+													Display in Header
+												</label>
+												<label style={styles.contributorAction} className="pt-control pt-checkbox">
+													<input type="checkbox" checked={this.state.featureStates[feature.journalId].isContext} onChange={this.setContext.bind(this, feature.journalId)} />
+													<span className="pt-control-indicator" />
+													Set as Primary Context
+												</label>
+											</div>
+										} />	
+								</div>
+								
+							);
+						})}
+					</div>
+				}
 
 				{!!pubSubmits.length && 
-					<div>
+					<div style={styles.section}>
 						<h2>Submissions</h2>
 						{pubSubmits.map((submit, index)=> {
 							const journal = submit.journal;
+							const feature = featuredIds[journal.id];
+							const wrapperStyle = feature ? styles.dimItem : {};
 							return (
-								<div key={'pubSubmit-' + index}>
-									<img alt={journal.name} src={'https://jake.pubpub.org/unsafe/50x50/' + journal.icon} style={{verticalAlign: 'middle', paddingRight: '1em'}}/>
-									<Link to={'/' + journal.slug}><h4 style={{display: 'inline-block'}}>{journal.name}</h4></Link>
+								<div key={'pubSubmit-' + index} style={wrapperStyle}>
+									<PreviewJournal 
+										journal={journal} 
+										rightContent={
+											<div style={styles.rightContent}>
+												<div>Submitted: {dateFormat(submit.createdAt, 'mmm dd, yyyy')}</div>
+												{!!feature &&
+													<div>Featured: {dateFormat(feature.createdAt, 'mmm dd, yyyy')}</div>
+												}
+											</div>
+										} />	
 								</div>
+								
 							);
 						})}
 					</div>
@@ -108,5 +208,20 @@ export default Radium(PubJournals);
 styles = {
 	container: {
 		padding: '1.5em',
+	},
+	section: {
+		margin: '2em 0em',
+	},
+	dimItem: {
+		opacity: '0.35',
+	},
+	rightContent: {
+		paddingRight: '1em',
+		color: '#666',
+		textAlign: 'right',
+	},
+	contributorAction: {
+		display: 'inline-block',
+		paddingRight: '2em',
 	},
 };

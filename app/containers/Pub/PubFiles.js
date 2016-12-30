@@ -306,7 +306,6 @@ export const PubFiles = React.createClass({
 								<tr>
 									<th>Name</th>
 									<th>Created</th>
-									<th />
 								</tr>
 							</thead>
 							<tbody>

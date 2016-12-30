@@ -40,6 +40,10 @@ import {
 	POST_JOURNAL_SUBMIT_LOAD,
 	POST_JOURNAL_SUBMIT_SUCCESS,
 	POST_JOURNAL_SUBMIT_FAIL,
+
+	PUT_FEATURE_LOAD,
+	PUT_FEATURE_SUCCESS,
+	PUT_FEATURE_FAIL,
 } from 'containers/Pub/actionsJournals';
 
 import {
@@ -270,6 +274,30 @@ export default function reducer(state = defaultState, action) {
 			state.getIn(['pub', 'pubSubmits']).push(ensureImmutable(action.result))
 		);
 	case POST_JOURNAL_SUBMIT_FAIL:
+		return state.merge({
+			journalsLoading: false,
+			journalsError: action.error,
+		});
+	case PUT_FEATURE_LOAD:
+		return state.merge({
+			journalsLoading: true,
+			journalsError: undefined,
+		});	
+	case PUT_FEATURE_SUCCESS:
+		return state.merge({
+			journalsLoading: false,
+			journalsError: undefined,
+		})
+		.mergeIn(
+			['pub', 'pubFeatures'], 
+			state.getIn(['pub', 'pubFeatures']).map((feature)=> {
+				if (feature.get('journalId') === action.journalId) {
+					return feature.set('isDisplayed', action.isDisplayed, 'isContext', action.isContext);
+				}
+				return feature;
+			})
+		);
+	case PUT_FEATURE_FAIL:
 		return state.merge({
 			journalsLoading: false,
 			journalsError: action.error,
