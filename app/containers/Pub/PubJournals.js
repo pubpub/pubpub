@@ -1,7 +1,6 @@
 import React, { PropTypes } from 'react';
 import Radium from 'radium';
 import { AutocompleteBar, PreviewJournal } from 'components';
-import { Checkbox } from '@blueprintjs/core';
 import request from 'superagent';
 import dateFormat from 'dateformat';
 import { postJournalSubmit, putFeature } from './actionsJournals';
@@ -140,7 +139,12 @@ export const PubJournals = React.createClass({
 				{!!pubFeatures.length && 
 					<div style={styles.section}>
 						<h2>Features</h2>
-						{pubFeatures.map((feature, index)=> {
+						{pubFeatures.sort((foo, bar)=> {
+							// Sort so that most recent is first in array
+							if (foo.createdAt > bar.createdAt) { return -1; }
+							if (foo.createdAt < bar.createdAt) { return 1; }
+							return 0;
+						}).map((feature, index)=> {
 							const journal = feature.journal;
 							const isContext = feature.isContext;
 							return (
@@ -176,7 +180,12 @@ export const PubJournals = React.createClass({
 				{!!pubSubmits.length && 
 					<div style={styles.section}>
 						<h2>Submissions</h2>
-						{pubSubmits.map((submit, index)=> {
+						{pubSubmits.sort((foo, bar)=> {
+							// Sort so that most recent is first in array
+							if (foo.createdAt > bar.createdAt) { return -1; }
+							if (foo.createdAt < bar.createdAt) { return 1; }
+							return 0;
+						}).map((submit, index)=> {
 							const journal = submit.journal;
 							const feature = featuredIds[journal.id];
 							const wrapperStyle = feature ? styles.dimItem : {};

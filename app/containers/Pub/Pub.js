@@ -221,7 +221,7 @@ export const Pub = React.createClass({
 		}, {});
 
 		const displayedFeatures = pubFeatures.filter((feature)=> {
-			return feature.isDisplayed;
+			return !feature.isContext && feature.isDisplayed;
 		});
 
 		const metaData = {
@@ -255,6 +255,23 @@ export const Pub = React.createClass({
 				{/* ---------- */}
 				<div style={styles.left}>
 
+					{displayedFeatures.length &&
+						<div style={styles.journalHeader}>
+							{displayedFeatures.sort((foo, bar)=> {
+								// Sort so that least recent is first in array
+								if (foo.createdAt > bar.createdAt) { return 1; }
+								if (foo.createdAt < bar.createdAt) { return -1; }
+								return 0;
+							}).map((feature)=> {
+								const journal = feature.journal || {};
+								return (
+									<Link to={'/' + journal.slug}>
+										<span className={'pt-tag pt-large'} style={[styles.journalHeaderTag, { backgroundColor: journal.headerColor }]} key={'header-feature-' + feature.journalId}>{journal.name}</span>
+									</Link>
+								);
+							})}
+						</div>
+					}
 					<div style={styles.followButtonWrapper}>
 						<FollowButton 
 							pubId={pub.id} 
@@ -541,6 +558,13 @@ styles = {
 	followButtonWrapper: {
 		float: 'right',
 		margin: '2em 1em 0em 0em',
+	},
+	journalHeader: {
+		padding: '1em',
+		borderBottom: '1px solid #EEE',
+	},
+	journalHeaderTag: {
+		marginRight: '0.5em',
 	},
 	
 };
