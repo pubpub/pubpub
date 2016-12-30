@@ -6,8 +6,8 @@ import { globalMessages } from 'utils/globalMessages';
 import { FormattedMessage } from 'react-intl';
 import dateFormat from 'dateformat';
 import ReactMarkdown from 'react-markdown';
-import { Popover, PopoverInteractionKind, Position, Menu, MenuItem, MenuDivider, Tooltip, EditableText } from '@blueprintjs/core';
-import { postDiscussion, putDiscussion } from './actionsDiscussions'
+import { Popover, PopoverInteractionKind, Position, Menu, MenuItem, MenuDivider, Tooltip } from '@blueprintjs/core';
+import { postDiscussion, putDiscussion, postReaction, deleteReaction } from './actionsDiscussions';
 import PubLabelList from './PubLabelList';
 
 let styles;
@@ -17,6 +17,8 @@ export const PubDiscussion = React.createClass({
 		discussion: PropTypes.object,
 		labelsData: PropTypes.array,
 		pubId: PropTypes.number,
+		allReactions: PropTypes.array,
+		accountId: PropTypes.number,
 		pathname: PropTypes.string,
 		query: PropTypes.object,
 		isLoading: PropTypes.bool,
@@ -90,18 +92,34 @@ export const PubDiscussion = React.createClass({
 		this.props.dispatch(putDiscussion(this.props.discussion.id, this.state.editTitle, undefined));
 	},
 
+	createReaction: function(reactionId) {
+
+	},
+	destroyReaction: function(reactionId) {
+
+	},
+
+	setReaction: function(pubId, reactionId, reactionSet) {
+		if (!this.props.accountId) { return false; }
+
+		if (reactionSet) {
+			return this.props.dispatch(deleteReaction(pubId, reactionId, this.props.accountId));
+		}
+		return this.props.dispatch(postReaction(pubId, reactionId));
+	},
 
 	render: function() {
 		const discussion = this.props.discussion || {};
 		const labelsData = this.props.labelsData || [];
 		const children = discussion.children || [];
+		const allReactions = this.props.allReactions || [];
 		const isLoading = this.props.isLoading;
 		const serverErrors = {
 			'Slug already used': '',
 		};
 		const errorMessage = serverErrors[this.props.error] || this.state.validationError;
 
-		const discussions = [discussion, ...discussion.children];
+		const discussions = [discussion, ...children];
 
 		return (
 			<div style={styles.container} className={'discussion-item'}>
@@ -147,6 +165,22 @@ export const PubDiscussion = React.createClass({
 				}).map((child, index)=> {
 					const user = child.contributors[0].user;
 					const editorOpen = this.state.openEditor === child.id;
+					const pubReactions = child.pubReactions || [];
+					
+					const usedReactions = {};
+					pubReactions.map((PubReaction)=> {
+						const reactionId = PubReaction.reactionId;
+						if (reactionId in usedReactions) {
+							usedReactions[reactionId].count += 1;
+						} else {
+							usedReactions[reactionId] = { count: 1, setByUser: false, reaction: PubReaction.reaction };
+						}
+						if (PubReaction.userId === this.props.accountId) {
+							usedReactions[reactionId].setByUser = true;
+						}
+
+						
+					});
 					return (
 						<div key={'discussion-' + index} style={styles.discussionItem}>
 							<div style={styles.discussionItemHeader}>
@@ -160,7 +194,22 @@ export const PubDiscussion = React.createClass({
 
 								<div style={styles.discussionItemActions} className="pt-button-group pt-minimal">	
 									<Tooltip content={'Add Feedback'} position={Position.LEFT} useSmartPositioning={true}>						
-										<button type="button" className="pt-button pt-icon-social-media" />
+										<Popover 
+											content={
+												<div style={styles.reactionMenu}>
+													{allReactions.map((reaction)=> {
+														const reactionSet = usedReactions[reaction.id] && usedReactions[reaction.id].setByUser;
+														const classes = reactionSet
+															? 'pt-button pt-minimal pt-active'
+															: 'pt-button pt-minimal';
+														return <button key={'reaction-' + reaction.id} className={classes} style={styles.reactionItem} onClick={this.setReaction.bind(this, child.id, reaction.id, reactionSet)}>{reaction.title}</button>;
+													})}
+												</div>
+											}
+											popoverClassName={'pt-minimal'}
+											position={Position.BOTTOM_RIGHT} >
+											<button type="button" className="pt-button pt-icon-social-media" />
+										</Popover>
 									</Tooltip>
 									<Tooltip content={'Edit'} position={Position.LEFT} useSmartPositioning={true}>						
 										<button type="button" className="pt-button pt-icon-edit" onClick={this.setOpenEditor.bind(this, child.id, child.description)} />
@@ -185,6 +234,20 @@ export const PubDiscussion = React.createClass({
 									<div style={styles.loaderContainer}>
 										<Loader loading={isLoading} showCompletion={!errorMessage} />
 									</div>
+								</div>
+							}
+
+							{!editorOpen && 
+								<div style={{ padding: '0.5em' }}>
+									{Object.keys(usedReactions).sort((foo, bar)=> {
+										if (usedReactions[foo].count > usedReactions[bar].count) { return -1; }
+										if (usedReactions[foo].count < usedReactions[bar].count) { return 1; }
+										return 0;
+									}).map((reactionId)=> {
+										return (
+											<div key={'reaction-count-' + child.id + '-' + reactionId} style={styles.reactionCount} className={'pt-tag'}>{usedReactions[reactionId].reaction.title} | {usedReactions[reactionId].count}</div>
+										);
+									})}
 								</div>
 							}
 							
@@ -271,5 +334,13 @@ styles = {
 		padding: '10px 0px',
 		color: globalStyles.errorRed,
 	},
-
+	reactionMenu: {
+		maxWidth: '250px',
+	},
+	reactionItem: {
+		margin: '.5em',
+	},
+	reactionCount: {
+		marginRight: '0.5em',
+	},
 };

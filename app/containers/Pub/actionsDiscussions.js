@@ -12,6 +12,14 @@ export const PUT_DISCUSSION_LOAD = 'pub/PUT_DISCUSSION_LOAD';
 export const PUT_DISCUSSION_SUCCESS = 'pub/PUT_DISCUSSION_SUCCESS';
 export const PUT_DISCUSSION_FAIL = 'pub/PUT_DISCUSSION_FAIL';
 
+export const POST_REACTION_LOAD = 'pub/POST_REACTION_LOAD';
+export const POST_REACTION_SUCCESS = 'pub/POST_REACTION_SUCCESS';
+export const POST_REACTION_FAIL = 'pub/POST_REACTION_FAIL';
+
+export const DELETE_REACTION_LOAD = 'pub/DELETE_REACTION_LOAD';
+export const DELETE_REACTION_SUCCESS = 'pub/DELETE_REACTION_SUCCESS';
+export const DELETE_REACTION_FAIL = 'pub/DELETE_REACTION_FAIL';
+
 /*--------*/
 // Define Action creators
 //
@@ -71,6 +79,56 @@ export function putDiscussion(pubId, title, description) {
 		.catch((error) => {
 			console.log(error);
 			dispatch({ type: PUT_DISCUSSION_FAIL, error });
+		});
+	};
+}
+
+export function postReaction(pubId, reactionId) {
+	return (dispatch) => {
+		dispatch({ type: POST_REACTION_LOAD });
+
+		return clientFetch('/api/pub/reactions', {
+			method: 'POST',
+			headers: {
+				Accept: 'application/json',
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify({
+				pubId: pubId,
+				reactionId: reactionId,
+			})
+		})
+		.then((result) => {
+			dispatch({ type: POST_REACTION_SUCCESS, result, pubId: pubId, });
+		})
+		.catch((error) => {
+			console.log(error);
+			dispatch({ type: POST_REACTION_FAIL, error });
+		});
+	};
+}
+
+export function deleteReaction(pubId, reactionId, accountId) {
+	return (dispatch) => {
+		dispatch({ type: DELETE_REACTION_LOAD });
+
+		return clientFetch('/api/pub/reactions', {
+			method: 'DELETE',
+			headers: {
+				Accept: 'application/json',
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify({
+				pubId: pubId,
+				reactionId: reactionId,
+			})
+		})
+		.then((result) => {
+			dispatch({ type: DELETE_REACTION_SUCCESS, result, pubId: pubId, reactionId: reactionId, accountId: accountId });
+		})
+		.catch((error) => {
+			console.log(error);
+			dispatch({ type: DELETE_REACTION_FAIL, error });
 		});
 	};
 }

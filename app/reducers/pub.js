@@ -54,6 +54,14 @@ import {
 	PUT_DISCUSSION_LOAD,
 	PUT_DISCUSSION_SUCCESS,
 	PUT_DISCUSSION_FAIL,
+
+	POST_REACTION_LOAD,
+	POST_REACTION_SUCCESS,
+	POST_REACTION_FAIL,
+
+	DELETE_REACTION_LOAD,
+	DELETE_REACTION_SUCCESS,
+	DELETE_REACTION_FAIL,
 } from 'containers/Pub/actionsDiscussions';
 
 import {
@@ -356,6 +364,44 @@ export default function reducer(state = defaultState, action) {
 			discussionsLoading: false,
 			discussionsError: action.error,
 		});
+	case POST_REACTION_LOAD:
+		return state;	
+	case POST_REACTION_SUCCESS:
+		return state.mergeIn(
+			['pub', 'discussions'], 
+			state.getIn(['pub', 'discussions']).map((discussion)=> {
+				if (discussion.get('id') === action.pubId) {
+					return discussion.set('pubReactions', discussion.get('pubReactions').push(ensureImmutable(action.result)));
+				}
+				return discussion;
+			})
+		);
+	case POST_REACTION_FAIL:
+		return state;
+
+	case DELETE_REACTION_LOAD:
+		return state;
+	case DELETE_REACTION_SUCCESS:
+		return state.mergeIn(
+			['pub', 'discussions'], 
+			state.getIn(['pub', 'discussions']).map((discussion)=> {
+				if (discussion.get('id') === action.pubId) {
+					return discussion.set(
+						'pubReactions',
+						discussion.get('pubReactions').filter((pubReaction)=> {
+							if (pubReaction.get('pubId') === action.pubId && pubReaction.get('userId') === action.accountId && pubReaction.get('reactionId') === action.reactionId) {
+								return false;
+							}
+							return true;
+						})
+					);
+				}
+				return discussion;
+			})
+		);
+	
+	case DELETE_REACTION_FAIL:
+		return state;
 
 	case POST_REVIEWER_LOAD:
 		return state.merge({
