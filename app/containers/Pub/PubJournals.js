@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react';
 import Radium from 'radium';
-import { Link } from 'react-router';
 import { AutocompleteBar, PreviewJournal } from 'components';
+import { Checkbox } from '@blueprintjs/core';
 import request from 'superagent';
 import dateFormat from 'dateformat';
 import { postJournalSubmit, putFeature } from './actionsJournals';
@@ -142,6 +142,7 @@ export const PubJournals = React.createClass({
 						<h2>Features</h2>
 						{pubFeatures.map((feature, index)=> {
 							const journal = feature.journal;
+							const isContext = feature.isContext;
 							return (
 								<div key={'pubFeature-' + index}>
 									<PreviewJournal 
@@ -153,8 +154,8 @@ export const PubJournals = React.createClass({
 										} 
 										bottomContent={
 											<div>
-												<label style={styles.contributorAction} className="pt-control pt-checkbox">
-													<input type="checkbox" checked={this.state.featureStates[feature.journalId].isDisplayed} onChange={this.setDisplayed.bind(this, feature.journalId)} />
+												<label style={[styles.contributorAction, isContext ? styles.disabled : {}]} className={'pt-control pt-checkbox'}>
+													<input type="checkbox" checked={!isContext && this.state.featureStates[feature.journalId].isDisplayed} onChange={this.setDisplayed.bind(this, feature.journalId)} />
 													<span className="pt-control-indicator" />
 													Display in Header
 												</label>
@@ -211,6 +212,10 @@ styles = {
 	},
 	section: {
 		margin: '2em 0em',
+	},
+	disabled: {
+		pointerEvents: 'none',
+		opacity: '0.5',
 	},
 	dimItem: {
 		opacity: '0.35',

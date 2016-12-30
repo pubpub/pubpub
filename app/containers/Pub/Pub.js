@@ -220,6 +220,10 @@ export const Pub = React.createClass({
 			return previous;
 		}, {});
 
+		const displayedFeatures = pubFeatures.filter((feature)=> {
+			return feature.isDisplayed;
+		});
+
 		const metaData = {
 			title: (pub.title || this.props.params.slug) + ' · PubPub',
 			meta: [

@@ -292,7 +292,10 @@ export default function reducer(state = defaultState, action) {
 			['pub', 'pubFeatures'], 
 			state.getIn(['pub', 'pubFeatures']).map((feature)=> {
 				if (feature.get('journalId') === action.journalId) {
-					return feature.set('isDisplayed', action.isDisplayed, 'isContext', action.isContext);
+					return feature.merge({
+						isDisplayed: action.isDisplayed, 
+						isContext: action.isContext
+					});
 				}
 				return feature;
 			})
