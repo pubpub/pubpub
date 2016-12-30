@@ -86,14 +86,15 @@ export const PubContributors = React.createClass({
 				...this.state.contributorStates,
 				[contributorId]: {
 					...this.state.contributorStates[contributorId],
-					isAuthor: evt.target.checked
+					isAuthor: evt.target.checked,
+					canEdit: evt.target.checked || this.state.contributorStates[contributorId].canEdit,
 				}
 			} 
 		});
 		this.props.dispatch(putContributor(
 			this.props.pubId, 
 			contributorId, 
-			this.state.contributorStates[contributorId].canEdit, 
+			true || this.state.contributorStates[contributorId].canEdit, 
 			this.state.contributorStates[contributorId].canRead, 
 			evt.target.checked,
 			this.state.contributorStates[contributorId].isHidden, 

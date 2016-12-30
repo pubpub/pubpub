@@ -6,8 +6,8 @@ import { globalMessages } from 'utils/globalMessages';
 import { FormattedMessage } from 'react-intl';
 import dateFormat from 'dateformat';
 import ReactMarkdown from 'react-markdown';
-import { Popover, PopoverInteractionKind, Position, Menu, MenuItem, MenuDivider, Tooltip } from '@blueprintjs/core';
-import { postDiscussion } from './actionsDiscussions'
+import { Popover, PopoverInteractionKind, Position, Menu, MenuItem, MenuDivider, Tooltip, EditableText } from '@blueprintjs/core';
+import { postDiscussion, putDiscussion } from './actionsDiscussions'
 import PubLabelList from './PubLabelList';
 
 let styles;
@@ -27,13 +27,18 @@ export const PubDiscussion = React.createClass({
 	getInitialState() {
 		return {
 			description: '',
-
+			openEditor: undefined,
+			editTitle: undefined,
+			editDescription: undefined,
 		};
 	},
 
+	componentWillMount() {
+		this.setState({ editTitle: this.props.discussion.title });
+	},
 	componentWillReceiveProps(nextProps) {
 		if (this.props.isLoading && !nextProps.isLoading && !nextProps.error) {
-			this.setState({ description: '' });
+			this.setState({ description: '', openEditor: undefined });
 		}
 	},
 
@@ -61,11 +66,30 @@ export const PubDiscussion = React.createClass({
 			description: this.state.description,
 		};
 		const { isValid, validationError } = this.validate(createData);
-		this.setState({ validationError: validationError });
+		this.setState({ validationError: validationError, openEditor: undefined });
 		if (isValid) {
 			this.props.dispatch(postDiscussion(createData.replyRootPubId, createData.replyParentPubId, createData.title, createData.description));	
 		}
 	},
+
+	setOpenEditor: function(id, description, title) {
+		this.setState({ openEditor: id, editDescription: description, editTitle: title });
+	},
+
+	discussionChange: function(evt) {
+		this.setState({ editDescription: evt.target.value });
+	},
+	updateDiscussion: function() {
+		this.props.dispatch(putDiscussion(this.state.openEditor, undefined, this.state.editDescription));
+	},
+
+	editTitleChange: function(evt) {
+		this.setState({ editTitle: evt.target.value });
+	},
+	confirmEditTitle: function() {
+		this.props.dispatch(putDiscussion(this.props.discussion.id, this.state.editTitle, undefined));
+	},
+
 
 	render: function() {
 		const discussion = this.props.discussion || {};
@@ -85,7 +109,25 @@ export const PubDiscussion = React.createClass({
 					'.discussion-item .pt-button-group:not(.pt-vertical) .pt-popover-target, .discussion-item .pt-button-group:not(.pt-vertical) .pt-tether-target': { float: 'none' },
 				}} />
 
-				<h3>{discussion.title}</h3>
+				{this.state.openEditor !== 'title' &&
+				<h3>
+					{discussion.title}
+					<button className={'pt-button pt-minimal pt-icon-edit'} onClick={this.setOpenEditor.bind(this, 'title', undefined, discussion.title)} />
+				</h3>
+				}
+				{this.state.openEditor === 'title' &&
+					<div>
+						<input type="text" value={this.state.editTitle} onChange={this.editTitleChange} />
+						<hr />
+						<button className={'pt-button'} onClick={this.setOpenEditor.bind(this, undefined)}>Cancel</button>
+						<button className={'pt-button pt-intent-primary'} onClick={this.confirmEditTitle}>Save</button>
+						<div style={styles.loaderContainer}>
+							<Loader loading={isLoading} showCompletion={!errorMessage} />
+						</div>
+					</div>
+				}
+
+				
 				
 				<PubLabelList 
 					allLabels={labelsData} 
@@ -104,6 +146,7 @@ export const PubDiscussion = React.createClass({
 					return 0;
 				}).map((child, index)=> {
 					const user = child.contributors[0].user;
+					const editorOpen = this.state.openEditor === child.id;
 					return (
 						<div key={'discussion-' + index} style={styles.discussionItem}>
 							<div style={styles.discussionItemHeader}>
@@ -120,7 +163,7 @@ export const PubDiscussion = React.createClass({
 										<button type="button" className="pt-button pt-icon-social-media" />
 									</Tooltip>
 									<Tooltip content={'Edit'} position={Position.LEFT} useSmartPositioning={true}>						
-										<button type="button" className="pt-button pt-icon-edit" />
+										<button type="button" className="pt-button pt-icon-edit" onClick={this.setOpenEditor.bind(this, child.id, child.description)} />
 									</Tooltip>
 									<Tooltip content={'Cite Discussion'} position={Position.LEFT} useSmartPositioning={true}>						
 										<button type="button" className="pt-button pt-icon-bookmark" />
@@ -128,9 +171,23 @@ export const PubDiscussion = React.createClass({
 
 								</div>
 							</div>
-							<div style={styles.discussionItemBody} className={'discussion-body'}>
-								<ReactMarkdown source={child.description} />
-							</div>
+							{!editorOpen && 
+								<div style={styles.discussionItemBody} className={'discussion-body'}>
+									<ReactMarkdown source={child.description} />
+								</div>
+							}
+							{editorOpen && 
+								<div style={styles.discussionItemBody} className={'discussion-body'}>
+									<textarea value={this.state.editDescription} onChange={this.discussionChange} />
+									<hr />
+									<button className={'pt-button'} onClick={this.setOpenEditor.bind(this, undefined)}>Cancel</button>
+									<button className={'pt-button pt-intent-primary'} onClick={this.updateDiscussion}>Save</button>
+									<div style={styles.loaderContainer}>
+										<Loader loading={isLoading} showCompletion={!errorMessage} />
+									</div>
+								</div>
+							}
+							
 							
 						</div>
 					);
@@ -147,9 +204,12 @@ export const PubDiscussion = React.createClass({
 						Post Reply
 					</button>
 
-					<div style={styles.loaderContainer}>
-						<Loader loading={isLoading} showCompletion={!errorMessage} />
-					</div>
+					{!this.state.openEditor &&
+						<div style={styles.loaderContainer}>
+							<Loader loading={isLoading} showCompletion={!errorMessage} />
+						</div>
+					}
+					
 
 					<div style={styles.errorMessage}>{errorMessage}</div>
 

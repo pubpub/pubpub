@@ -8,6 +8,10 @@ export const POST_DISCUSSION_LOAD = 'pub/POST_DISCUSSION_LOAD';
 export const POST_DISCUSSION_SUCCESS = 'pub/POST_DISCUSSION_SUCCESS';
 export const POST_DISCUSSION_FAIL = 'pub/POST_DISCUSSION_FAIL';
 
+export const PUT_DISCUSSION_LOAD = 'pub/PUT_DISCUSSION_LOAD';
+export const PUT_DISCUSSION_SUCCESS = 'pub/PUT_DISCUSSION_SUCCESS';
+export const PUT_DISCUSSION_FAIL = 'pub/PUT_DISCUSSION_FAIL';
+
 /*--------*/
 // Define Action creators
 //
@@ -44,3 +48,30 @@ export function postDiscussion(replyRootPubId, replyParentPubId, title, descript
 		});
 	};
 }
+
+export function putDiscussion(pubId, title, description) {
+	return (dispatch) => {
+		dispatch({ type: PUT_DISCUSSION_LOAD });
+
+		return clientFetch('/api/pub', {
+			method: 'PUT',
+			headers: {
+				Accept: 'application/json',
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify({
+				pubId: pubId,
+				title: title,
+				description: description,
+			})
+		})
+		.then((result) => {
+			dispatch({ type: PUT_DISCUSSION_SUCCESS, result, pubId: pubId, title: title, description: description });
+		})
+		.catch((error) => {
+			console.log(error);
+			dispatch({ type: PUT_DISCUSSION_FAIL, error });
+		});
+	};
+}
+

@@ -265,8 +265,8 @@ export const Pub = React.createClass({
 							}).map((feature)=> {
 								const journal = feature.journal || {};
 								return (
-									<Link to={'/' + journal.slug}>
-										<span className={'pt-tag pt-large'} style={[styles.journalHeaderTag, { backgroundColor: journal.headerColor }]} key={'header-feature-' + feature.journalId}>{journal.name}</span>
+									<Link to={'/' + journal.slug} key={'header-feature-' + feature.journalId}>
+										<span className={'pt-tag pt-large'} style={[styles.journalHeaderTag, { backgroundColor: journal.headerColor }]}>{journal.name}</span>
 									</Link>
 								);
 							})}

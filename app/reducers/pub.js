@@ -50,6 +50,10 @@ import {
 	POST_DISCUSSION_LOAD,
 	POST_DISCUSSION_SUCCESS,
 	POST_DISCUSSION_FAIL,
+
+	PUT_DISCUSSION_LOAD,
+	PUT_DISCUSSION_SUCCESS,
+	PUT_DISCUSSION_FAIL,
 } from 'containers/Pub/actionsDiscussions';
 
 import {
@@ -321,6 +325,33 @@ export default function reducer(state = defaultState, action) {
 			state.getIn(['pub', 'discussions']).push(ensureImmutable(action.result))
 		);
 	case POST_DISCUSSION_FAIL:
+		return state.merge({
+			discussionsLoading: false,
+			discussionsError: action.error,
+		});
+	case PUT_DISCUSSION_LOAD:
+		return state.merge({
+			discussionsLoading: true,
+			discussionsError: undefined,
+		});	
+	case PUT_DISCUSSION_SUCCESS:
+		return state.merge({
+			discussionsLoading: false,
+			discussionsError: undefined,
+		})
+		.mergeIn(
+			['pub', 'discussions'], 
+			state.getIn(['pub', 'discussions']).map((discussion)=> {
+				if (discussion.get('id') === action.pubId) {
+					return discussion.merge({
+						title: action.title || discussion.get('title'), 
+						description: action.description || discussion.get('description')
+					});
+				}
+				return discussion;
+			})
+		);
+	case PUT_DISCUSSION_FAIL:
 		return state.merge({
 			discussionsLoading: false,
 			discussionsError: action.error,
