@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react';
 import Radium from 'radium';
-import PDFJS from 'pdfjs-dist/build/pdf.combined';
+import PDFJS from 'pdfjs-dist';
 
 let styles;
 
@@ -113,28 +113,36 @@ export const PreviewPub = React.createClass({
 			    return page.getTextContent();
 			  })
 			  .then(function(textContent) {
-			    // Create div which will hold text-fragments
+			    // // Create div which will hold text-fragments
 			    var textLayerDiv = document.createElement("div");
 
-			    // Set it's class to textLayer which have required CSS styles
+			    // // Set it's class to textLayer which have required CSS styles
 			    textLayerDiv.setAttribute("class", "textLayer");
 
-			    // Append newly created div in `div#page-#{pdf_page_number}`
+			    // // Append newly created div in `div#page-#{pdf_page_number}`
 			    div.appendChild(textLayerDiv);
 
-			    // Create new instance of TextLayerBuilder class
-			    // const TextLayerBuilder = PDFJS.TextLayerBuilder;
-			    var textLayer = new TextLayerBuilder({
-			      textLayerDiv: textLayerDiv, 
-			      pageIndex: page.pageIndex,
-			      viewport: viewport
-			    });
+			    // // Create new instance of TextLayerBuilder class
+			    // // const TextLayerBuilder = PDFJS.TextLayerBuilder;
+			    // var textLayer = new TextLayerBuilder({
+			    //   textLayerDiv: textLayerDiv, 
+			    //   pageIndex: page.pageIndex,
+			    //   viewport: viewport
+			    // });
+			    // console.log(pdf)
 
-			    // Set text-fragments
-			    textLayer.setTextContent(textContent);
+			    // // Set text-fragments
+			    // textLayer.setTextContent(textContent);
 
-			    // Render text-fragments
-			    textLayer.render();
+			    // // Render text-fragments
+			    // textLayer.render();
+
+			    PDFJS.renderTextLayer({
+			        textContent,
+			        container: textLayerDiv,
+			        viewport,
+			        textDivs: []
+			      });
 			  });
 		    });
 		}
