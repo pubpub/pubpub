@@ -27,41 +27,6 @@ export const PreviewPub = React.createClass({
 	componentWillUnmount: function() {
 		window.removeEventListener('resize', this.renderPDF);
 	},
-
-	/*renderPage2: function(page) {
-			var container = document.getElementById('container');
-			container.innerHTML = ''
-
-			const width = document.getElementById('container').parentElement.offsetWidth;
-		  const scale = width / page.getViewport(1.0).width;
-	      var viewport = page.getViewport(scale);
-	      var div = document.createElement("div");
-
-		  // Get div#the-svg
-		  
-
-		  // Set dimensions
-		  container.style.width = width;
-		  // container.style.height = viewport.height + 'px';
-
-		  // SVG rendering by PDF.js
-		  page.getOperatorList()
-		    .then(function (opList) {
-		      var svgGfx = new PDFJS.SVGGraphics(page.commonObjs, page.objs);
-		      return svgGfx.getSVG(opList, viewport);
-		    })
-		    .then(function (svg) {
-		      container.appendChild(svg);
-		    });
-	},
-
-	renderItAll: function() {
-		const pdf = this.state.pdf;
-		for (let num = 1; num <= pdf.numPages; num++) {
-			pdf.getPage(num).then(this.renderPage2);
-		}
-	},*/
-
 	
 	renderPDF() {
 		var container = document.getElementById("container");
@@ -83,7 +48,6 @@ export const PreviewPub = React.createClass({
 				id: pageNumber,
 				scale: scale,
 				defaultViewport: pdfPage.getViewport(scale),
-				// We can enable text/annotations layers, if needed
 				textLayerFactory: new PDFJS.DefaultTextLayerFactory(),
 				annotationLayerFactory: new PDFJS.DefaultAnnotationLayerFactory()
 			});
