@@ -7,6 +7,7 @@ import { s3Upload } from 'utils/uploadFile';
 import ReactMarkdown from 'react-markdown';
 import { globalStyles } from 'utils/globalStyles';
 import { postVersion } from './actionsVersions';
+import RenderPDF from 'components/RenderPDF/RenderPDF';
 
 let styles;
 
@@ -333,7 +334,10 @@ export const PubFiles = React.createClass({
 						{currentFile.type.indexOf('markdown') > -1 &&
 							<ReactMarkdown source={currentFile.content} />
 						}
-						{currentFile.type.indexOf('image') === -1 && currentFile.type.indexOf('markdown') === -1 &&
+						{currentFile.type.indexOf('pdf') > -1 &&
+							<RenderPDF file={currentFile} />
+						}
+						{currentFile.type.indexOf('pdf') === -1 && currentFile.type.indexOf('image') === -1 && currentFile.type.indexOf('markdown') === -1 &&
 							<div className={'pt-callout'}>
 								<p>Can not render this file. Click to download the file in your browser.</p>
 								<a href={currentFile.url}><button className={'pt-button'}>Click to Download</button></a>
