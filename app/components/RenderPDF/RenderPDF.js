@@ -55,15 +55,15 @@ export const PreviewPub = React.createClass({
 		const url = this.props.file.url || '';
 		PDFJS.getDocument(url).then((pdf)=> {
 			this.setState({ pdf: pdf })	;
-			this.renderItAll3();
+			this.renderItAll4();
 		});
 		
 
-		window.addEventListener('resize', this.renderItAll3);
+		window.addEventListener('resize', this.renderItAll4);
 
 	},
 	componentWillUnmount: function() {
-		window.removeEventListener('resize', this.renderItAll3);
+		window.removeEventListener('resize', this.renderItAll4);
 	},
 
 	renderPage2: function(page) {
@@ -190,6 +190,8 @@ export const PreviewPub = React.createClass({
 		}
 	},
 
+
+
 	renderItAll3: function() {
 		
 
@@ -203,26 +205,87 @@ export const PreviewPub = React.createClass({
 			
 
 		// Loop from 1 to total_number_of_pages in PDF document
+		var x =[]
 		for (var i = 1; i <= pdf.numPages; i++) {
-			
-		    // Get desired page
-		    // TODO - make sure these render in the right order for large PDF.
-		    pdf.getPage(i).then(function(pdfPage) {
-		      const scale = container.offsetWidth / pdfPage.getViewport(4/3).width;
-			  var pdfPageView = new PDFJS.PDFPageView({
-			      container: container,
-			      id: i,
-			      scale: scale,
-			      defaultViewport: pdfPage.getViewport(scale),
-			      // We can enable text/annotations layers, if needed
-			      textLayerFactory: new PDFJS.DefaultTextLayerFactory(),
-			      annotationLayerFactory: new PDFJS.DefaultAnnotationLayerFactory()
-			    });
-			    // Associates the actual page with the view, and drawing it
-			    pdfPageView.setPdfPage(pdfPage);
-			    return pdfPageView.draw();
-		    });
+			x.push(i);
 		}
+		let count = 0;
+		// for (var i = 1; i <= 2; i++) {
+			// var x = [1,2,3,4];
+			x.map((item, index)=>{
+				console.log('yooo');
+			    return pdf.getPage(index + 1).then(function(pdfPage) {
+			      const scale = container.offsetWidth / pdfPage.getViewport(4/3).width;
+			      // Dunno why 4/3 is the unit there. In other tests, it made sense to just use 1.0
+			      // See https://github.com/mozilla/pdf.js/issues/5628
+			      // For optimizations, such as only rendering the visible page: https://github.com/mozilla/pdf.js/issues/7718
+				  var pdfPageView = new PDFJS.PDFPageView({
+				      container: container,
+				      id: index,
+				      scale: scale,
+				      defaultViewport: pdfPage.getViewport(scale),
+				      // We can enable text/annotations layers, if needed
+				      textLayerFactory: new PDFJS.DefaultTextLayerFactory(),
+				      annotationLayerFactory: new PDFJS.DefaultAnnotationLayerFactory()
+				    });
+				    // Associates the actual page with the view, and drawing it
+				    
+				    
+				    pdfPageView.setPdfPage(pdfPage);
+				    count++;
+				    if (count === 84) {
+				    	console.log('done with everything ');
+				    }
+				    
+				    if (index === 0) {
+				    	pdfPageView.draw();
+				    }
+
+				    // const promise = 
+				    // console.log('after the promise ', promise);
+			    });
+		    })		
+
+	},
+	renderItAll4() {
+		var container = document.getElementById("container");
+		container.innerHTML = ''
+		this.renderSinglePage(1);
+	},
+
+	renderSinglePage(pageNumber) {
+		const pdf = this.state.pdf;
+		var container = document.getElementById("container");
+			
+
+		// for (var i = 1; i <= pdf.numPages; i++) {
+		return pdf.getPage(pageNumber).then((pdfPage)=> {
+			const scale = container.offsetWidth / pdfPage.getViewport(4/3).width;
+			// Dunno why 4/3 is the unit there. In other tests, it made sense to just use 1.0
+			// See https://github.com/mozilla/pdf.js/issues/5628
+			// For optimizations, such as only rendering the visible page: https://github.com/mozilla/pdf.js/issues/7718
+			var pdfPageView = new PDFJS.PDFPageView({
+				container: container,
+				id: pageNumber,
+				scale: scale,
+				defaultViewport: pdfPage.getViewport(scale),
+				// We can enable text/annotations layers, if needed
+				textLayerFactory: new PDFJS.DefaultTextLayerFactory(),
+				annotationLayerFactory: new PDFJS.DefaultAnnotationLayerFactory()
+			});
+			// Associates the actual page with the view, and drawing it
+			
+			
+			pdfPageView.setPdfPage(pdfPage);
+			return pdfPageView.draw();
+		})
+		.then((thing)=> {
+			console.log('in thing, with ', pageNumber)
+			if (pageNumber < pdf.numPages) {
+				return this.renderPageWTF(pageNumber + 1);
+			}
+			return null;
+		});	
 	},
 
 	render() {
