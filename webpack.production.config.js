@@ -66,6 +66,7 @@ module.exports = {
 			{ test: /\.scss$/, loader: 'style-loader!css-loader!sass-loader' },
 			{ test: /\.svg$/, loader: 'file-loader' },
 			{ test: /\.png$/, loader: 'file-loader' },
+			{ test: /\.gif$/, loader: 'file-loader' },
 			{ test: /\.jpg$/, loader: 'file-loader' },
 			{ test: /\.json$/, loader: 'json-loader' },
 			{ test: /\.html$/, loader: 'html-loader' },
