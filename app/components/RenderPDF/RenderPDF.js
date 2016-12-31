@@ -2,6 +2,7 @@ import React, { PropTypes } from 'react';
 import Radium from 'radium';
 import PDFJS from 'pdfjs-dist';
 
+PDFJS.PDFJS.workerSrc = '/static/pdf.worker.min.js';
 let styles;
 
 
