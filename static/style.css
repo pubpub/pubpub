@@ -561,6 +561,9 @@ input[type="file"]:focus {
   overflow: hidden;
 }
 
+.page {
+  position: relative;
+}
 .pdfViewer .page {
   direction: ltr;
   width: 816px;

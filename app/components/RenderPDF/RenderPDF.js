@@ -1,10 +1,15 @@
 import React, { PropTypes } from 'react';
 import Radium from 'radium';
-import PDFJS from 'pdfjs-dist';
+// import PDFJS from 'pdfjs-dist';
+import { PDFJS } from 'pdfjs-dist/web/pdf_viewer';
 
-PDFJS.PDFJS.workerSrc = '/static/pdf.worker.min.js';
+console.log(PDFJS);
+
+PDFJS.workerSrc = '/static/pdf.worker.min.js';
 let styles;
-
+// console.log(PDFJS)
+// console.log(PDFJS.DefaultAnnotationLayerFactory)
+// console.log(PDFJS.PDFJS.DefaultAnnotationLayerFactory)
 
 const renderPage = function(page) {
 	const options = {
@@ -50,17 +55,52 @@ export const PreviewPub = React.createClass({
 		const url = this.props.file.url || '';
 		PDFJS.getDocument(url).then((pdf)=> {
 			this.setState({ pdf: pdf })	;
-			this.renderItAll();
+			this.renderItAll3();
 		});
 		
 
-		window.addEventListener('resize', this.renderItAll);
+		window.addEventListener('resize', this.renderItAll3);
 
 	},
 	componentWillUnmount: function() {
-		window.removeEventListener('resize', this.renderItAll);
+		window.removeEventListener('resize', this.renderItAll3);
 	},
+
+	renderPage2: function(page) {
+			var container = document.getElementById('container');
+			container.innerHTML = ''
+
+			const width = document.getElementById('container').parentElement.offsetWidth;
+		  const scale = width / page.getViewport(1.0).width;
+	      var viewport = page.getViewport(scale);
+	      var div = document.createElement("div");
+
+		  // Get div#the-svg
+		  
+
+		  // Set dimensions
+		  container.style.width = width;
+		  // container.style.height = viewport.height + 'px';
+
+		  // SVG rendering by PDF.js
+		  page.getOperatorList()
+		    .then(function (opList) {
+		      var svgGfx = new PDFJS.SVGGraphics(page.commonObjs, page.objs);
+		      return svgGfx.getSVG(opList, viewport);
+		    })
+		    .then(function (svg) {
+		      container.appendChild(svg);
+		    });
+	},
+
 	renderItAll: function() {
+		const pdf = this.state.pdf;
+		for (let num = 1; num <= pdf.numPages; num++) {
+			pdf.getPage(num).then(this.renderPage2);
+		}
+	},
+
+	renderItAll2: function() {
 		
 
 		// PDFJS.disableWorker = true;
@@ -80,6 +120,7 @@ export const PreviewPub = React.createClass({
 		      const scale = container.offsetWidth / page.getViewport(1.0).width;
 		      var viewport = page.getViewport(scale);
 		      var div = document.createElement("div");
+		      console.log(page.getViewport(1))
 
 		      // Set id attribute with page-#{pdf_page_number} format
 		      div.setAttribute("id", "page-" + (page.pageIndex + 1));
@@ -149,11 +190,46 @@ export const PreviewPub = React.createClass({
 		}
 	},
 
+	renderItAll3: function() {
+		
+
+		// PDFJS.disableWorker = true;
+		// PDFJS.getDocument(url).then(renderPages);
+		const pdf = this.state.pdf;
+	
+		// Get div#container and cache it for later use
+		var container = document.getElementById("container");
+		container.innerHTML = ''
+			
+
+		// Loop from 1 to total_number_of_pages in PDF document
+		for (var i = 1; i <= pdf.numPages; i++) {
+			
+		    // Get desired page
+		    // TODO - make sure these render in the right order for large PDF.
+		    pdf.getPage(i).then(function(pdfPage) {
+		      const scale = container.offsetWidth / pdfPage.getViewport(4/3).width;
+			  var pdfPageView = new PDFJS.PDFPageView({
+			      container: container,
+			      id: i,
+			      scale: scale,
+			      defaultViewport: pdfPage.getViewport(scale),
+			      // We can enable text/annotations layers, if needed
+			      textLayerFactory: new PDFJS.DefaultTextLayerFactory(),
+			      annotationLayerFactory: new PDFJS.DefaultAnnotationLayerFactory()
+			    });
+			    // Associates the actual page with the view, and drawing it
+			    pdfPageView.setPdfPage(pdfPage);
+			    return pdfPageView.draw();
+		    });
+		}
+	},
+
 	render() {
 		const file = this.props.file || {};
 
 		return (
-			<div id="container"></div>
+			<div id="container" style={{position: 'relative'}}></div>
 		);
 	}
 
