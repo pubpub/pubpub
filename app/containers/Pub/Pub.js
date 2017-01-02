@@ -12,9 +12,9 @@ import { FormattedMessage } from 'react-intl';
 
 import { FollowButton } from 'containers';
 
-import PubDocument from './PubDocument';
+// import PubDocument from './PubDocument';
 import PubContributors from './PubContributors';
-import PubFiles from './PubFiles';
+import PubContent from './PubContent';
 import PubJournals from './PubJournals';
 import PubSettings from './PubSettings';
 import PubVersions from './PubVersions';
@@ -197,11 +197,12 @@ export const Pub = React.createClass({
 		const lastVersion = sortedVersions[sortedVersions.length - 1] || {};
 
 
-		const currentFiles = currentVersion.files || [];
-		const hasDocument = currentFiles.reduce((previous, current)=> {
-			if (current.name === 'main.md') { return true; }
-			return previous;
-		}, false);
+		// const currentFiles = currentVersion.files || [];
+		// const hasDocument = currentFiles.reduce((previous, current)=> {
+		// 	if (pub.defaultFile === current.filename) { return current; }
+		// 	if (!pub.defaultFile && current.name === 'main.md') { return current; }
+		// 	return previous;
+		// }, false);
 
 		// Populate parent discussions with their children
 		const tempArray = [...discussions];
@@ -329,13 +330,13 @@ export const Pub = React.createClass({
 					{/* ------- */}
 					{/* Content */}
 					{/* ------- */}
-					{!meta && hasDocument && 
+					{/*!meta && hasDocument && 
 						<PubDocument
 							versionData={currentVersion}
 							pubId={pub.id}
 							pubSlug={pub.slug}
 							query={query} />
-					}
+					*/}
 					{meta === 'versions' && 
 						<PubVersions
 							versionsData={versions}
@@ -352,12 +353,12 @@ export const Pub = React.createClass({
 							pubId={pub.id}
 							dispatch={this.props.dispatch} />
 					}
-					{((!meta && !hasDocument) || meta === 'files') && 
-						<PubFiles
-							versionData={currentVersion}
+					{(!meta || meta === 'files') && 
+						<PubContent
+							version={currentVersion}
 							pubId={pub.id}
 							pubSlug={pub.slug}
-							routeFilename={this.props.params.filename}
+							params={this.props.params}
 							query={query}
 							isLoading={this.props.pubData.versionsLoading}
 							error={this.props.pubData.versionsError}

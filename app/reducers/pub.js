@@ -94,6 +94,12 @@ import {
 	DELETE_LABEL_FAIL,
 } from 'containers/Pub/actionsLabels';
 
+import {
+	PUT_DEFAULT_FILE_LOAD,
+	PUT_DEFAULT_FILE_SUCCESS,
+	PUT_DEFAULT_FILE_FAIL,
+} from 'containers/Pub/actionsFiles';
+
 /* ------------------- */
 // Define Default State
 /* ------------------- */
@@ -519,6 +525,12 @@ export default function reducer(state = defaultState, action) {
 			})
 		);
 	case DELETE_LABEL_FAIL:
+		return state;
+
+	case PUT_DEFAULT_FILE_LOAD:
+		return state.setIn(['pub', 'defaultFile'], action.defaultFile);	
+	case PUT_DEFAULT_FILE_SUCCESS:
+	case PUT_DEFAULT_FILE_FAIL:
 		return state;
 
 	default:

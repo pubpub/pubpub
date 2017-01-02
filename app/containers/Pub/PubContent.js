@@ -4,19 +4,19 @@ import Radium from 'radium';
 import { Link } from 'react-router';
 import { NonIdealState, ProgressBar, Spinner } from '@blueprintjs/core';
 import { s3Upload } from 'utils/uploadFile';
-import ReactMarkdown from 'react-markdown';
 import { globalStyles } from 'utils/globalStyles';
 import { postVersion } from './actionsVersions';
-import RenderPDF from 'components/RenderPDF/RenderPDF';
+import { putDefaultFile } from './actionsFiles';
+import { RenderFile } from 'components';
 
 let styles;
 
-export const PubFiles = React.createClass({
+export const PubContent = React.createClass({
 	propTypes: {
-		versionData: PropTypes.object,
+		version: PropTypes.object,
 		pubId: PropTypes.number,
 		pubSlug: PropTypes.string,
-		routeFilename: PropTypes.string,
+		params: PropTypes.object,
 		query: PropTypes.object,
 		isLoading: PropTypes.bool,
 		error: PropTypes.object,
@@ -153,8 +153,8 @@ export const PubFiles = React.createClass({
 		const pubId = this.props.pubId;
 		const newUploadedFileObjects = this.state.uploadedFileObjects;
 
-		const versionData = this.props.versionData || {};
-		const files = versionData.files || [];
+		const version = this.props.version || {};
+		const files = version.files || [];
 
 		const fileNames = {};
 		const mergedFiles = [...newUploadedFileObjects, ...files];
@@ -173,57 +173,42 @@ export const PubFiles = React.createClass({
 		// Need to set loading - and then onreceive, set uplaoding to flase, clear values, etc
 	},
 
+	defaultFileChange: function(filename) {
+		this.props.dispatch(putDefaultFile(this.props.pubId, filename));
+	},
 
 	render() {
-		const versionData = this.props.versionData || {};
-		const files = versionData.files || [];
+		// Default view, no files, no nothing
+		// Default doc view
+		// Default files list
+		// Default files list, uploading
+		// Specific file view
 
-		const currentFile = files.reduce((previous, current)=> {
-			if (current.name === this.props.routeFilename) { return current; } 
-			return previous;
-		}, undefined);
+		const version = this.props.version || {};
+		const files = version.files || [];
 
 		const isLoading = this.props.isLoading;
 		const query = this.props.query || {};
+		const params = this.props.params || {};
+		const meta = params.meta;
+		const routeFilename = params.filename;
+
+		const mainFile = files.reduce((previous, current)=> {
+			if (version.defaultFile === current.filename) { return current; }
+			if (!version.defaultFile && current.name.split('.')[0] === 'main') { return current; }
+			return previous;
+		}, files[0]);
+
+		const routeFile = files.reduce((previous, current)=> {
+			if (current.name === routeFilename) { return current; } 
+			return previous;
+		}, undefined);	
+
 		return (
 			<div style={styles.container}>
 
-				{/* Upload and Editor Buttons */}
-				{!!files.length && !this.state.uploading &&
-					<div style={styles.topButtons}>
-						<label className="pt-button" htmlFor={'upload'}>
-							Upload Files
-							<input id={'upload'} type="file" multiple style={{ position: 'fixed', top: '-100px' }} onChange={this.handleFileUploads} />
-						</label>
-						
-						<button className={'pt-button'} style={{ marginLeft: '1em' }}>
-							Open Editor
-							<span className={'pt-icon-standard  pt-icon-caret-down pt-align-right'} />
-						</button>
-						
-					</div>
-				}
-
-				{/* Breadcrumbs */}
-				{!!files.length &&
-					<div style={{ marginBottom: '1em' }}>
-						{!this.props.routeFilename &&
-							<ul className="pt-breadcrumbs">
-								<li><Link to={{ pathname: '/pub/' + this.props.pubSlug, query: query }} className="pt-breadcrumb"><span className="pt-icon-standard pt-icon-document" /> Main</Link></li>
-							</ul>
-						}
-
-						{!!this.props.routeFilename &&
-							<ul className="pt-breadcrumbs">
-								<li><Link to={{ pathname: '/pub/' + this.props.pubSlug + '/files', query: query }} className="pt-breadcrumb"><span className="pt-icon-standard pt-icon-folder-open" /> Files</Link></li>
-								<li><a className="pt-breadcrumb">{currentFile.name}</a></li>
-							</ul>
-						}
-					</div>
-				}
-
 				{/* No files associated with Pub yet*/}
-				{!files.length && !this.state.uploading && !this.state.uploadedFileObjects.length &&
+				{!files.length && !this.state.uploading &&
 					<NonIdealState
 						action={
 							<div>
@@ -242,6 +227,44 @@ export const PubFiles = React.createClass({
 						visual={'folder-open'} />
 				}
 
+				{/* Upload and Editor Buttons */}
+				{meta === 'files' && !!files.length && !this.state.uploading && !routeFilename &&
+					<div style={styles.topButtons}>
+						<label className="pt-button" htmlFor={'upload'}>
+							Upload Files
+							<input id={'upload'} type="file" multiple style={{ position: 'fixed', top: '-100px' }} onChange={this.handleFileUploads} />
+						</label>
+						
+						<button className={'pt-button'} style={{ marginLeft: '1em' }}>
+							Open Editor
+							<span className={'pt-icon-standard  pt-icon-caret-down pt-align-right'} />
+						</button>
+						
+					</div>
+				}
+
+				{/* Breadcrumbs */}
+				{!!files.length &&
+					<div style={{ marginBottom: '1em' }}>
+						{meta !== 'files' &&
+							<ul className="pt-breadcrumbs">
+								<li><Link to={{ pathname: '/pub/' + this.props.pubSlug + '/files', query: query }} className="pt-breadcrumb"><span className="pt-icon-standard pt-icon-folder-open" /> {files.length} Files</Link></li>
+							</ul>
+						}
+						{meta === 'files' && !routeFilename &&
+							<ul className="pt-breadcrumbs">
+								<li><Link to={{ pathname: '/pub/' + this.props.pubSlug, query: query }} className="pt-breadcrumb"><span className="pt-icon-standard pt-icon-document" /> Main</Link></li>
+							</ul>
+						}
+
+						{!!routeFilename &&
+							<ul className="pt-breadcrumbs">
+								<li><Link to={{ pathname: '/pub/' + this.props.pubSlug + '/files', query: query }} className="pt-breadcrumb"><span className="pt-icon-standard pt-icon-folder-open" /> Files</Link></li>
+								<li><a className="pt-breadcrumb">{routeFile.name}</a></li>
+							</ul>
+						}
+					</div>
+				}
 
 				{/* Uploading Section */}
 				{this.state.uploading &&
@@ -288,7 +311,7 @@ export const PubFiles = React.createClass({
 				}
 
 				{/* Creating Version */}
-				{!files.length && !this.state.uploading && !!this.state.uploadedFileObjects.length && 
+				{/*!files.length && !this.state.uploading && !!this.state.uploadedFileObjects.length && 
 					<NonIdealState
 						action={
 							<Spinner />
@@ -296,10 +319,10 @@ export const PubFiles = React.createClass({
 						description={'Success! Generating a new version now'}
 						title={'Creating Version'}
 						visual={'pt-icon-tick'} />
-				}
+				/*}
 				
 				{/* File List */}
-				{!!files.length && !this.props.routeFilename &&
+				{meta === 'files' && !routeFile &&
 					<div>
 						
 						<table className="pt-table pt-condensed pt-striped" style={{ width: '100%' }}>
@@ -307,6 +330,7 @@ export const PubFiles = React.createClass({
 								<tr>
 									<th>Name</th>
 									<th>Created</th>
+									<th />
 								</tr>
 							</thead>
 							<tbody>
@@ -315,6 +339,16 @@ export const PubFiles = React.createClass({
 										<tr key={'file-' + index}>
 											<td style={styles.tableCell}><Link className={'underlineOnHover link'} to={{ pathname: '/pub/' + this.props.pubSlug + '/files/' + file.name, query: query }}>{file.name}</Link></td>
 											<td style={styles.tableCell}>{file.createdAt}</td>
+											<td style={styles.tableCell}>
+												{/*<input type="radio" name="docs-radio-regular" value={true} onChange={this.defaultFileChange.bind(this, file.name)} />*/}
+												{file.name === mainFile.name &&
+													<button role="button" className={'pt-button pt-minimal pt-active'}>Main File</button>	
+												}
+												{file.name !== mainFile.name &&
+													<button role="button" className={'pt-button pt-minimal'} onClick={this.defaultFileChange.bind(this, file.name)}>Set as main</button>
+												}
+												
+											</td>
 											{/* <td style={[styles.tableCell, styles.tableCellRight]}><button className={'pt-button'}>History</button></td> */}
 										</tr>
 									);
@@ -325,25 +359,8 @@ export const PubFiles = React.createClass({
 				}		
 
 				{/* Specific File */}
-				{this.props.routeFilename && 
-					<div>
-
-						{currentFile.type.indexOf('image') > -1 &&
-							<img src={currentFile.url} style={{maxWidth: '100%'}} />
-						}
-						{currentFile.type.indexOf('markdown') > -1 &&
-							<ReactMarkdown source={currentFile.content} />
-						}
-						{currentFile.type.indexOf('pdf') > -1 &&
-							<RenderPDF file={currentFile} />
-						}
-						{currentFile.type.indexOf('pdf') === -1 && currentFile.type.indexOf('image') === -1 && currentFile.type.indexOf('markdown') === -1 &&
-							<div className={'pt-callout'}>
-								<p>Can not render this file. Click to download the file in your browser.</p>
-								<a href={currentFile.url}><button className={'pt-button'}>Click to Download</button></a>
-							</div>
-						}
-					</div>
+				{!!files.length && (meta !== 'files' || (meta !== 'files' && routeFile)) && 
+					<RenderFile file={routeFile || mainFile} />
 				}
 			</div>
 		);
@@ -351,7 +368,7 @@ export const PubFiles = React.createClass({
 
 });
 
-export default Radium(PubFiles);
+export default Radium(PubContent);
 
 styles = {
 	container: {

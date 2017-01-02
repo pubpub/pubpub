@@ -6,44 +6,44 @@ PDFJS.workerSrc = '/static/pdf.worker.min.js';
 
 let styles;
 
-export const PreviewPub = React.createClass({
+export const RenderFilePDF = React.createClass({
 	propTypes: {
 		file: PropTypes.object,
 	},
 	getInitialState() {
 		return {
 			pdf: undefined,
-		}
+		};
 	},
-	componentDidMount: function() {
+	componentDidMount() {
 		const url = this.props.file.url || '';
 		PDFJS.getDocument(url).then((pdf)=> {
-			this.setState({ pdf: pdf })	;
+			this.setState({ pdf: pdf });
 			this.renderPDF();
 		});
 		window.addEventListener('resize', this.renderPDF);
 
 	},
-	componentWillUnmount: function() {
+	componentWillUnmount() {
 		window.removeEventListener('resize', this.renderPDF);
 	},
 	
-	renderPDF() {
-		var container = document.getElementById("container");
-		container.innerHTML = ''
+	renderPDF: function() {
+		const container = document.getElementById('container');
+		container.innerHTML = '';
 		this.renderPage(1);
 	},
 
 	renderPage(pageNumber) {
 		const pdf = this.state.pdf;
-		var container = document.getElementById("container");
+		const container = document.getElementById('container');
 			
 		return pdf.getPage(pageNumber).then((pdfPage)=> {
-			const scale = container.offsetWidth / pdfPage.getViewport(4/3).width;
+			const scale = container.offsetWidth / pdfPage.getViewport(4 / 3).width;
 			// Dunno why 4/3 is the unit there. In other tests, it made sense to just use 1.0
 			// See https://github.com/mozilla/pdf.js/issues/5628
 			// For optimizations, such as only rendering the visible page: https://github.com/mozilla/pdf.js/issues/7718
-			var pdfPageView = new PDFJS.PDFPageView({
+			const pdfPageView = new PDFJS.PDFPageView({
 				container: container,
 				id: pageNumber,
 				scale: scale,
@@ -63,12 +63,10 @@ export const PreviewPub = React.createClass({
 	},
 
 	render() {
-		const file = this.props.file || {};
-
 		return (
 			<div>
 				<Style rules={{
-					'.pdfWrapper .page': { position: 'relative', boxShadow: '0px 2px 5px #888', marginBottom: '0.5em'},
+					'.pdfWrapper .page': { position: 'relative', boxShadow: '0px 2px 5px #888', marginBottom: '0.5em' },
 				}} />
 				<div id="container" className={'pdfWrapper'} style={styles.container} />
 			</div>
@@ -79,7 +77,7 @@ export const PreviewPub = React.createClass({
 
 });
 
-export default Radium(PreviewPub);
+export default Radium(RenderFilePDF);
 
 styles = {
 	container: {
