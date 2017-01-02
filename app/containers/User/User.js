@@ -20,11 +20,6 @@ import UserFollowers from './UserFollowers';
 import UserFollowing from './UserFollowing';
 import UserSettingsProfile from './UserSettingsProfile';
 
-import * as textQuote from 'dom-anchor-text-quote';
-import Rangy from 'rangy';
-// import Marklib from 'marklib';
-const Marklib = require('marklib');
-
 let styles;
 
 export const User = React.createClass({
@@ -36,13 +31,6 @@ export const User = React.createClass({
 		dispatch: PropTypes.func,
 	},
 
-	// statics: {
-	// 	readyOnActions: function(dispatch, params) {
-	// 		return Promise.all([
-	// 			dispatch(getUserData(params.username))
-	// 		]);
-	// 	}
-	// },
 	componentWillMount() {
 		const params = this.props.params || {};
 		this.props.dispatch(getUserData(params.username));		
@@ -52,39 +40,6 @@ export const User = React.createClass({
 		return {
 			contentObject: {}		
 		};
-	},
-
-	saveHightlight: function() {
-		const root2 = document.getElementsByClassName('testing')[0];
-		// const range = window.getSelection();
-		// const range = new Range();
-		const selection = Rangy.getSelection();
-		const range = selection.getRangeAt(0);
-		const things = textQuote.fromRange(root2, range);
-		this.setState({ contentObject: things });
-	},
-	testRun: function() {
-
-		
-		const root2 = document.getElementsByClassName('testing')[0];
-		// const selection = Rangy.getSelection();
-		// const range2 = selection.getRangeAt(0);
-		// console.log(range2);
-
-
-		// let position = textQuote.toTextPosition(root2, 'bunch');
-		// let range = textPosition.toRange(position);
-		// console.log(position, range);
-
-		// const y = { exact: 'stuff! I like t', prefix: 'Here is a bunch of ', suffix: 'his stuff!' };
-		const y = this.state.contentObject;
-		const things2 = textQuote.toRange(root2, y);
-		console.log(things2);
-
-		const renderer = new Marklib.Rendering(document, { className: 'highlight' }, document);
-		const result3 = renderer.renderWithRange(things2);
-		console.log(result3);
-
 	},
 	
 	render() {

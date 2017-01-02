@@ -1,8 +1,8 @@
 import React, { PropTypes } from 'react';
 import Radium from 'radium';
 import ReactMarkdown from 'react-markdown';
-
-import RenderFilePDF from './RenderFilePDF'
+import { Highlighter } from 'containers';
+import RenderFilePDF from './RenderFilePDF';
 
 let styles;
 
@@ -14,10 +14,11 @@ export const RenderFile = React.createClass({
 	render() {
 		const file = this.props.file || {};
 
-		switch(file.type) {
+		switch (file.type) {
 		case 'text/markdown': 
 			return (
-				<div className={'pub-body'} style={styles.pubBody}>
+				<div id={'content-wrapper'} className={'pub-body'} style={styles.pubBody}>
+					<Highlighter />
 					<ReactMarkdown source={file.content} />
 				</div>
 			);
@@ -25,9 +26,15 @@ export const RenderFile = React.createClass({
 		case 'image/jpg': // Is this ever actually used?
 		case 'image/jpeg':
 		case 'image/gif':
-			return <img src={file.url} style={{maxWidth: '100%'}} />;
+			return <img alt={file.name} src={file.url} style={{ maxWidth: '100%' }} />;
 		case 'application/pdf':
-			return <RenderFilePDF file={file} />;
+			return (
+				<div id={'content-wrapper'}>
+					<Highlighter />
+					<RenderFilePDF file={file} />;
+				</div>
+				
+			);
 		default: 
 			return (
 				<div className={'pt-callout'}>
@@ -44,7 +51,7 @@ export default Radium(RenderFile);
 
 styles = {
 	container: {
-		
+		position: 'relative',
 	},
 	pubBody: {
 		padding: '0em 1.25em',

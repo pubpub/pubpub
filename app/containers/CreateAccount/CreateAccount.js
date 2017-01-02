@@ -20,14 +20,6 @@ export const CreateAccount = React.createClass({
 		dispatch: PropTypes.func,
 	},
 
-	// statics: {
-	// 	readyOnActions: function(dispatch, params) {
-	// 		return Promise.all([
-	// 			dispatch(getSignUpData(params.hash))
-	// 		]);
-	// 	}
-	// },
-
 	componentWillMount() {
 		this.props.dispatch(getSignUpData(this.props.params.hash));
 	},

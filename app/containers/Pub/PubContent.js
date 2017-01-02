@@ -293,7 +293,6 @@ export const PubContent = React.createClass({
 							);
 						})}
 					</div>
-
 				}
 
 				{/* File List */}
