@@ -27,6 +27,7 @@ process.on('unhandledRejection', (reason, promise) => {
 	}
 });
 
+server.use('/opensearch.xml', express.static(path.resolve(__dirname, 'static/opensearch.xml')));
 server.use('/favicon.ico', express.static(path.resolve(__dirname, 'static/favicon.ico')));
 server.use('/robots.txt', express.static(path.resolve(__dirname, 'static/robots.txt')));
 server.use('/static', express.static(path.resolve(__dirname, 'static')));
