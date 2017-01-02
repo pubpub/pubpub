@@ -56,13 +56,6 @@ export const PubContent = React.createClass({
 	},
 
 	handleFileUploads: function(evt) {
-		// console.log(evt.target.files);
-		// const reader = new FileReader();
-		// reader.onload = function(progressEvent) {
-		// 	console.log(this.result);
-		// };
-		// reader.readAsText(evt.target.files[0]);
-
 		// Go over all of the files
 		// Upload to s3
 		// Get URLs from s3 and add into fileObject
@@ -118,11 +111,6 @@ export const PubContent = React.createClass({
 			type: type,
 			name: title,
 		};
-		// Check if it's a type we want to parse here, if it is, parse from state.uploadFiles[index] and add to fileObject
-		// Need to catch and check for inline images/assets?
-		// if (type === 'text/markdown') {
-
-		// }
 		const newUploadedFileObjects = [...this.state.uploadedFileObjects, newUploadedFileObject];
 
 		const finished = this.state.uploadRates.reduce((previous, current)=> {
@@ -130,15 +118,11 @@ export const PubContent = React.createClass({
 			return previous;
 		}, true);
 
-
 		// Let the uploading animation finish
 		this.setState({
 			uploadedFileObjects: newUploadedFileObjects,
 			uploadingFinished: finished,
 		});		
-		
-		// console.log(newUploadedFileObjects);
-
 	},
 
 	versionMessageChange: function(evt) {
@@ -170,7 +154,6 @@ export const PubContent = React.createClass({
 
 		this.setState({ newVersionError: '' });
 		return this.props.dispatch(postVersion(pubId, this.state.newVersionMessage, false, newVersionFiles));
-		// Need to set loading - and then onreceive, set uplaoding to flase, clear values, etc
 	},
 
 	defaultFileChange: function(filename) {
@@ -228,6 +211,7 @@ export const PubContent = React.createClass({
 				}
 
 				{/* Upload and Editor Buttons */}
+				{/* Only shown on main Files list view, when not uploading */}
 				{meta === 'files' && !!files.length && !this.state.uploading && !routeFilename &&
 					<div style={styles.topButtons}>
 						<label className="pt-button" htmlFor={'upload'}>
@@ -244,6 +228,7 @@ export const PubContent = React.createClass({
 				}
 
 				{/* Breadcrumbs */}
+				{/* Shown as long as there are files */}
 				{!!files.length &&
 					<div style={{ marginBottom: '1em' }}>
 						{meta !== 'files' &&
@@ -310,17 +295,6 @@ export const PubContent = React.createClass({
 
 				}
 
-				{/* Creating Version */}
-				{/*!files.length && !this.state.uploading && !!this.state.uploadedFileObjects.length && 
-					<NonIdealState
-						action={
-							<Spinner />
-						}
-						description={'Success! Generating a new version now'}
-						title={'Creating Version'}
-						visual={'pt-icon-tick'} />
-				/*}
-				
 				{/* File List */}
 				{meta === 'files' && !routeFile &&
 					<div>
@@ -349,7 +323,6 @@ export const PubContent = React.createClass({
 												}
 												
 											</td>
-											{/* <td style={[styles.tableCell, styles.tableCellRight]}><button className={'pt-button'}>History</button></td> */}
 										</tr>
 									);
 								})}
@@ -358,7 +331,7 @@ export const PubContent = React.createClass({
 					</div>
 				}		
 
-				{/* Specific File */}
+				{/* Render specific File */}
 				{!!files.length && (meta !== 'files' || (meta !== 'files' && routeFile)) && 
 					<RenderFile file={routeFile || mainFile} />
 				}
@@ -373,14 +346,6 @@ export default Radium(PubContent);
 styles = {
 	container: {
 		padding: '0em 1.25em 1.25em',
-	},
-	pubBody: {
-		// padding: '1.25em',
-		// fontFamily: 'serif',
-		// lineHeight: '1.6em',
-		// fontSize: '1.2em',
-		// color: '#333',
-		// maxWidth: '700px',
 	},
 	topButtons: {
 		float: 'right',

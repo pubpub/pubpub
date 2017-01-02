@@ -196,14 +196,6 @@ export const Pub = React.createClass({
 		const firstVersion = sortedVersions[0] || {};
 		const lastVersion = sortedVersions[sortedVersions.length - 1] || {};
 
-
-		// const currentFiles = currentVersion.files || [];
-		// const hasDocument = currentFiles.reduce((previous, current)=> {
-		// 	if (pub.defaultFile === current.filename) { return current; }
-		// 	if (!pub.defaultFile && current.name === 'main.md') { return current; }
-		// 	return previous;
-		// }, false);
-
 		// Populate parent discussions with their children
 		const tempArray = [...discussions];
 		tempArray.forEach((discussion)=> {
@@ -330,13 +322,6 @@ export const Pub = React.createClass({
 					{/* ------- */}
 					{/* Content */}
 					{/* ------- */}
-					{/*!meta && hasDocument && 
-						<PubDocument
-							versionData={currentVersion}
-							pubId={pub.id}
-							pubSlug={pub.slug}
-							query={query} />
-					*/}
 					{meta === 'versions' && 
 						<PubVersions
 							versionsData={versions}
