@@ -8,6 +8,7 @@ import { globalStyles } from 'utils/globalStyles';
 import { postVersion } from './actionsVersions';
 import { putDefaultFile } from './actionsFiles';
 import { RenderFile } from 'components';
+import dateFormat from 'dateformat';
 
 let styles;
 
@@ -153,7 +154,7 @@ export const PubContent = React.createClass({
 		});
 
 		this.setState({ newVersionError: '' });
-		return this.props.dispatch(postVersion(pubId, this.state.newVersionMessage, false, newVersionFiles));
+		return this.props.dispatch(postVersion(pubId, this.state.newVersionMessage, false, newVersionFiles, version.defaultFile));
 	},
 
 	defaultFileChange: function(filename) {
@@ -177,7 +178,7 @@ export const PubContent = React.createClass({
 		const routeFilename = params.filename;
 
 		const mainFile = files.reduce((previous, current)=> {
-			if (version.defaultFile === current.filename) { return current; }
+			if (version.defaultFile === current.name) { return current; }
 			if (!version.defaultFile && current.name.split('.')[0] === 'main') { return current; }
 			return previous;
 		}, files[0]);
@@ -303,23 +304,26 @@ export const PubContent = React.createClass({
 							<thead>
 								<tr>
 									<th>Name</th>
-									<th>Created</th>
+									<th>Updated</th>
 									<th />
 								</tr>
 							</thead>
 							<tbody>
-								{files.map((file, index)=> {
+								{files.sort((foo, bar)=> {
+									if (foo.name > bar.name) { return 1; }
+									if (foo.name < bar.name) { return -1; }
+									return 0;
+								}).map((file, index)=> {
 									return (
 										<tr key={'file-' + index}>
 											<td style={styles.tableCell}><Link className={'underlineOnHover link'} to={{ pathname: '/pub/' + this.props.pubSlug + '/files/' + file.name, query: query }}>{file.name}</Link></td>
-											<td style={styles.tableCell}>{file.createdAt}</td>
-											<td style={styles.tableCell}>
-												{/*<input type="radio" name="docs-radio-regular" value={true} onChange={this.defaultFileChange.bind(this, file.name)} />*/}
+											<td style={styles.tableCell}>{dateFormat(file.createdAt, 'mmm dd, yyyy')}</td>
+											<td style={[styles.tableCell, styles.tableCellSmall]}>
 												{file.name === mainFile.name &&
-													<button role="button" className={'pt-button pt-minimal pt-active'}>Main File</button>	
+													<button role="button" className={'pt-button pt-fill pt-active'}>Main File</button>	
 												}
 												{file.name !== mainFile.name &&
-													<button role="button" className={'pt-button pt-minimal'} onClick={this.defaultFileChange.bind(this, file.name)}>Set as main</button>
+													<button role="button" className={'pt-button pt-fill'} onClick={this.defaultFileChange.bind(this, file.name)}>Set as main</button>
 												}
 												
 											</td>
@@ -394,6 +398,10 @@ styles = {
 	},
 	tableCell: {
 		verticalAlign: 'middle',
+	},
+	tableCellSmall: {
+		width: '1%',
+		whiteSpace: 'nowrap',
 	},
 	tableCellRight: {
 		textAlign: 'right',

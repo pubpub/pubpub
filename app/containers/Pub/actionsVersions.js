@@ -19,7 +19,7 @@ export const PUT_VERSION_FAIL = 'pub/PUT_VERSION_FAIL';
 // action objects (e.g. {type:example, payload:data} ) within dispatch()
 // function calls
 /*--------*/
-export function postVersion(pubId, versionMessage, isPublished, files, newFileAttribution, newFileRelations) {
+export function postVersion(pubId, versionMessage, isPublished, files, defaultFile, newFileAttribution, newFileRelations) {
 	return (dispatch) => {
 		dispatch({ type: POST_VERSION_LOAD });
 
@@ -34,6 +34,7 @@ export function postVersion(pubId, versionMessage, isPublished, files, newFileAt
 				versionMessage: versionMessage, 
 				isPublished: isPublished, 
 				files: files, 
+				defaultFile: defaultFile,
 				newFileAttribution: newFileAttribution, 
 				newFileRelations: newFileRelations, 
 			})
