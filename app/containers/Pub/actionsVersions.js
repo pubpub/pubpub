@@ -61,6 +61,7 @@ export function putVersion(pubId, versionId) {
 			body: JSON.stringify({
 				pubId: pubId, 
 				versionId: versionId, 
+				isPublished: true,
 			})
 		})
 		.then((result) => {

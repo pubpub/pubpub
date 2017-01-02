@@ -157,7 +157,7 @@ export const PubContent = React.createClass({
 	},
 
 	defaultFileChange: function(filename) {
-		this.props.dispatch(putDefaultFile(this.props.pubId, filename));
+		this.props.dispatch(putDefaultFile(this.props.pubId, this.props.version.id, filename));
 	},
 
 	render() {

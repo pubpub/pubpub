@@ -528,7 +528,15 @@ export default function reducer(state = defaultState, action) {
 		return state;
 
 	case PUT_DEFAULT_FILE_LOAD:
-		return state.setIn(['pub', 'defaultFile'], action.defaultFile);	
+		return state.setIn(
+			['pub', 'versions'], 
+			state.getIn(['pub', 'versions']).map((version)=> {
+				if (version.get('id') === action.versionId) {
+					return version.set('defaultFile', action.defaultFile);
+				}
+				return version;
+			})
+		);	
 	case PUT_DEFAULT_FILE_SUCCESS:
 	case PUT_DEFAULT_FILE_FAIL:
 		return state;

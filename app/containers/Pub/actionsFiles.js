@@ -15,11 +15,11 @@ export const PUT_DEFAULT_FILE_FAIL = 'pub/PUT_DEFAULT_FILE_FAIL';
 // action objects (e.g. {type:example, payload:data} ) within dispatch()
 // function calls
 /*--------*/
-export function putDefaultFile(pubId, defaultFile) {
+export function putDefaultFile(pubId, versionId, defaultFile) {
 	return (dispatch) => {
-		dispatch({ type: PUT_DEFAULT_FILE_LOAD, defaultFile: defaultFile });
+		dispatch({ type: PUT_DEFAULT_FILE_LOAD, versionId: versionId, defaultFile: defaultFile });
 
-		return clientFetch('/api/pub', {
+		return clientFetch('/api/pub/versions', {
 			method: 'PUT',
 			headers: {
 				Accept: 'application/json',
@@ -27,6 +27,7 @@ export function putDefaultFile(pubId, defaultFile) {
 			},
 			body: JSON.stringify({
 				pubId: pubId, 
+				versionId: versionId,
 				defaultFile: defaultFile, 
 			})
 		})
