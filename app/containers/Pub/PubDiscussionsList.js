@@ -198,8 +198,8 @@ export const PubDiscussionsList = React.createClass({
 					return (
 						<div style={styles.discussionItem} key={'discussionItem-' + discussion.id} className={'pt-card pt-elevation-1'}>
 							
-							<Link to={{pathname: this.props.pathname, query: { ...this.props.query, discussion: discussion.discussionIndex }}} style={styles.discussionTitle}>
-								<span style={styles.discussionIndex}>#{discussion.discussionIndex}</span>
+							<Link to={{pathname: this.props.pathname, query: { ...this.props.query, discussion: discussion.threadNumber }}} style={styles.discussionTitle}>
+								<span style={styles.threadNumber}>#{discussion.threadNumber}</span>
 								{discussion.title}
 							</Link>
 
@@ -248,7 +248,7 @@ styles = {
 		fontSize: '1.25em',
 		display: 'block',
 	},
-	discussionIndex: {
+	threadNumber: {
 		opacity: '0.25', 
 		fontSize: '0.9em', 
 		textDecoration: 'none', 

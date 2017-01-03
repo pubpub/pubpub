@@ -124,7 +124,7 @@ export const ActivityGroup = React.createClass({
 							case 'addedAdmin':
 								return <div>{actorNode} added {activities.length} admins to {targetNode}</div>;
 							case 'newReply': 
-								return <div>{activities.length} people replied to a discussion on {targetNode}</div>;
+								return <div>{activities.length} people replied to a {buildLink(targetLink + '?discussion=' + object.threadNumber, 'discussion')} on {targetNode}</div>;
 							case 'newPubLabel': 
 								return <div>{actorNode} added {objectNode} to {activities.length} labels</div>;
 							case 'featuredPub': 
@@ -159,7 +159,7 @@ export const ActivityGroup = React.createClass({
 								case 'followedLabel': 
 									return this.renderAttachment(verb, targetImage, targetLink, targetString, targetDetails, activity.id);
 								case 'newDiscussion': 
-									return this.renderAttachment(verb, actorImage, objectLink, objectString, objectDetails, activity.id);
+									return this.renderAttachment(verb, actorImage, (targetLink + '?discussion=' + object.threadNumber), objectString, objectDetails, activity.id);
 								case 'addedContributor': 
 									return this.renderAttachment(verb, objectImage, objectLink, objectString, objectDetails, activity.id);
 								case 'addedAdmin': 

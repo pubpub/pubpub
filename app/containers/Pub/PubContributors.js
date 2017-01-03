@@ -263,7 +263,7 @@ export const PubContributors = React.createClass({
 								selectedRoles={contributor.roles}
 								pubId={this.props.pubId}
 								contributorId={contributor.id}
-								canSelect={canEdit}
+								canSelect={true}
 								dispatch={this.props.dispatch} />
 							<hr />
 						

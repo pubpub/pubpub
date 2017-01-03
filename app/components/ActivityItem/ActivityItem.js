@@ -110,9 +110,9 @@ export const ActivityItem = React.createClass({
 							case 'newVersion': 
 								return <div>{actorNode} published a new version of {targetNode}</div>;
 							case 'newDiscussion': 
-								return <div>{actorNode} added a new {buildLink(targetLink + '?discussionId=' + object.id, 'discussion')} to {targetNode}</div>;
+								return <div>{actorNode} added a new {buildLink(targetLink + '?discussion=' + object.threadNumber, 'discussion')} to {targetNode}</div>;
 							case 'newReply': 
-								return <div>{actorNode} {buildLink(targetLink + '?discussionId=' + object.id, 'replied')} to a discussion on {targetNode}</div>;
+								return <div>{actorNode} {buildLink(targetLink + '?discussion=' + object.threadNumber, 'replied')} to a discussion on {targetNode}</div>;
 							case 'newPubLabel': 
 								return <div>{actorNode} added a pub to {targetNode}</div>;
 							case 'invitedReviewer': 

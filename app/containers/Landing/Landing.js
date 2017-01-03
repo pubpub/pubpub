@@ -117,6 +117,7 @@ export const Landing = React.createClass({
 			const keyTarget = `${activity.verb}-${target.id}-${date.getYear()}${date.getMonth()}${date.getDate()}`;
 			const keyActorObject = `${activity.verb}-${actor.id}-${object.id}-${date.getYear()}${date.getMonth()}${date.getDate()}`;
 			const keyActorTarget = `${activity.verb}-${actor.id}-${target.id}-${date.getYear()}${date.getMonth()}${date.getDate()}`;
+			const keyObjectTarget = `${activity.verb}-${object.id}-${target.id}-${date.getYear()}${date.getMonth()}${date.getDate()}`;
 
 			const actorObjectGroups = [
 				'newPubLabel', // Travis added Pub to 4 labels
@@ -132,7 +133,9 @@ export const Landing = React.createClass({
 			];
 			const targetGroups = [
 				'newDiscussion', // 8 people added new discussions
-				'newReply', // 13 people replied to Discussion
+			];
+			const objectTargetGroups = [
+				'newReply', // 13 people replied to a Discussion on Pub
 			];
 			if (targetGroups.includes(activity.verb)) {
 				if (keyTarget in groups) {
@@ -151,6 +154,12 @@ export const Landing = React.createClass({
 					groups[keyActorObject].push(activity);
 				} else {
 					groups[keyActorObject] = [activity];
+				}
+			} else if (objectTargetGroups.includes(activity.verb)) {
+				if (keyObjectTarget in groups) {
+					groups[keyObjectTarget].push(activity);
+				} else {
+					groups[keyObjectTarget] = [activity];
 				}
 			} else {
 				groups[activity.id] = [activity];
