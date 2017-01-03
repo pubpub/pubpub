@@ -19,6 +19,8 @@ export const App = React.createClass({
 	propTypes: {
 		appData: PropTypes.object,
 		accountData: PropTypes.object,
+		pubData: PropTypes.object,
+		location: PropTypes.object,
 		children: PropTypes.object,
 		dispatch: PropTypes.func,
 	},
@@ -65,7 +67,7 @@ export const App = React.createClass({
 						]} 
 					/> 
 					{/*<div style={hiddenStyle}>*/}
-						<AppNav accountData={this.props.accountData} logoutHandler={this.logoutHandler} />
+						<AppNav accountData={this.props.accountData} pubData={this.props.pubData} location={this.props.location} logoutHandler={this.logoutHandler} />
 						<div style={{ minHeight: 'calc(100vh - 75px)' }}>{this.props.children}</div>
 						<AppFooter />
 					{/*</div>*/}
@@ -80,6 +82,7 @@ function mapStateToProps(state) {
 	return {
 		appData: state.app.toJS(),
 		accountData: state.account.toJS(),
+		pubData: state.pub.toJS(),
 	};
 }
 

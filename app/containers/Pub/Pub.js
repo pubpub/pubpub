@@ -213,8 +213,14 @@ export const Pub = React.createClass({
 			return previous;
 		}, {});
 
+		const contextJournal = pubFeatures.reduce((previous, current)=> {
+			if (!query.context && current.journalId === pub.defaultContext) { return current.journal; }
+			if (current.journal.name === query.context) { return current.journal; }
+			return previous;
+		}, undefined);
+
 		const displayedFeatures = pubFeatures.filter((feature)=> {
-			return !feature.isContext && feature.isDisplayed;
+			return feature.isDisplayed && (!contextJournal || feature.journalId !== contextJournal.id);
 		});
 
 		const metaData = {
@@ -250,6 +256,9 @@ export const Pub = React.createClass({
 
 					{!!displayedFeatures.length &&
 						<div style={styles.journalHeader}>
+							{!!contextJournal &&
+								<div>also featured in:</div>
+							}
 							{displayedFeatures.sort((foo, bar)=> {
 								// Sort so that least recent is first in array
 								if (foo.createdAt > bar.createdAt) { return 1; }
@@ -362,6 +371,7 @@ export const Pub = React.createClass({
 							pubSubmits={pubSubmits}
 							pubFeatures={pubFeatures}
 							pubId={pub.id}
+							pubDefaultContext={pub.defaultContext}
 							dispatch={this.props.dispatch} />
 					}
 					{meta === 'followers' && 

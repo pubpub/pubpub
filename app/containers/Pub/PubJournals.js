@@ -3,7 +3,7 @@ import Radium from 'radium';
 import { AutocompleteBar, PreviewJournal } from 'components';
 import request from 'superagent';
 import dateFormat from 'dateformat';
-import { postJournalSubmit, putFeature } from './actionsJournals';
+import { postJournalSubmit, putFeature, putPubContext } from './actionsJournals';
 
 let styles;
 
@@ -11,6 +11,7 @@ export const PubJournals = React.createClass({
 	propTypes: {
 		pubSubmits: PropTypes.array,
 		pubFeatures: PropTypes.array,
+		pubDefaultContext: PropTypes.number,
 		pubId: PropTypes.number,
 		dispatch: PropTypes.func,
 	},
@@ -18,20 +19,23 @@ export const PubJournals = React.createClass({
 	getInitialState: function() {
 		return {
 			newSubmission: null,
-			featureStates: {},
+			// featureStates: {},
+			// defaultContext: undefined,
 		};
 	},
 
 	componentWillMount() {
-		const features = this.props.pubFeatures || [];
-		const featureStates = {};
-		features.map((feature)=> {
-			featureStates[feature.journalId] = {
-				isDisplayed: feature.isDisplayed || false,
-				isContext: feature.isContext || false,
-			};
-		});
-		this.setState({ featureStates: featureStates });
+		// const features = this.props.pubFeatures || [];
+		// const featureStates = {};
+		// features.map((feature)=> {
+		// 	featureStates[feature.journalId] = {
+		// 		isDisplayed: feature.isDisplayed || false,
+		// 	};
+		// });
+		// this.setState({ 
+		// 	featureStates: featureStates,
+		// 	defaultContext: this.props.pubDefaultContext
+		// });
 	},
 
 	componentWillReceiveProps(nextProps) {
@@ -68,39 +72,25 @@ export const PubJournals = React.createClass({
 		this.props.dispatch(postJournalSubmit(this.props.pubId, this.state.newSubmission.id));
 	},
 	setDisplayed: function(journalId, evt) {
-		this.setState({ 
-			featureStates: {
-				...this.state.featureStates,
-				[journalId]: {
-					...this.state.featureStates[journalId],
-					isDisplayed: evt.target.checked
-				}
-			} 
-		});
-		this.props.dispatch(putFeature(
-			this.props.pubId, 
-			journalId, 
-			evt.target.checked,
-			this.state.featureStates[journalId].isContext, 
-			
-		));
+		// this.setState({ 
+		// 	featureStates: {
+		// 		...this.state.featureStates,
+		// 		[journalId]: {
+		// 			...this.state.featureStates[journalId],
+		// 			isDisplayed: evt.target.checked
+		// 		}
+		// 	} 
+		// });
+		this.props.dispatch(putFeature(this.props.pubId, journalId, evt.target.checked));
 	},
 	setContext: function(journalId, evt) {
-		this.setState({ 
-			featureStates: {
-				...this.state.featureStates,
-				[journalId]: {
-					...this.state.featureStates[journalId],
-					isContext: evt.target.checked
-				}
-			} 
-		});
-		this.props.dispatch(putFeature(
-			this.props.pubId, 
-			journalId, 
-			this.state.featureStates[journalId].isDisplayed, 
-			evt.target.checked,
-		));
+		// this.setState({ 
+		// 	defaultContext: journalId
+		// });
+		if (journalId === this.props.pubDefaultContext) {
+			return this.props.dispatch(putPubContext(this.props.pubId, null));
+		}
+		return this.props.dispatch(putPubContext(this.props.pubId, journalId));
 	},
 
 	render: function() {
@@ -146,7 +136,8 @@ export const PubJournals = React.createClass({
 							return 0;
 						}).map((feature, index)=> {
 							const journal = feature.journal;
-							const isContext = feature.isContext;
+							const isDisplayed = feature.isDisplayed;
+							const isContext = feature.journalId === this.props.pubDefaultContext;
 							return (
 								<div key={'pubFeature-' + index}>
 									<PreviewJournal 
@@ -158,15 +149,15 @@ export const PubJournals = React.createClass({
 										} 
 										bottomContent={
 											<div>
-												<label style={[styles.contributorAction, isContext ? styles.disabled : {}]} className={'pt-control pt-checkbox'}>
-													<input type="checkbox" checked={!isContext && this.state.featureStates[feature.journalId].isDisplayed} onChange={this.setDisplayed.bind(this, feature.journalId)} />
+												<label style={styles.contributorAction} className={'pt-control pt-checkbox'}>
+													<input type="checkbox" checked={isDisplayed} onChange={this.setDisplayed.bind(this, feature.journalId)} />
 													<span className="pt-control-indicator" />
 													Display in Header
 												</label>
 												<label style={styles.contributorAction} className="pt-control pt-checkbox">
-													<input type="checkbox" checked={this.state.featureStates[feature.journalId].isContext} onChange={this.setContext.bind(this, feature.journalId)} />
+													<input type="checkbox" checked={isContext} onChange={this.setContext.bind(this, feature.journalId)} />
 													<span className="pt-control-indicator" />
-													Set as Primary Context
+													Set as Default Context
 												</label>
 											</div>
 										} />	
@@ -222,10 +213,10 @@ styles = {
 	section: {
 		margin: '2em 0em',
 	},
-	disabled: {
-		pointerEvents: 'none',
-		opacity: '0.5',
-	},
+	// disabled: {
+	// 	pointerEvents: 'none',
+	// 	opacity: '0.5',
+	// },
 	dimItem: {
 		opacity: '0.35',
 	},

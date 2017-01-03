@@ -9,6 +9,8 @@ let styles;
 export const AppNav = React.createClass({
 	propTypes: {
 		accountData: PropTypes.object,
+		pubData: PropTypes.object,
+		location: PropTypes.object,
 		logoutHandler: PropTypes.func,
 	},
 
@@ -31,10 +33,38 @@ export const AppNav = React.createClass({
 
 	render() {
 		const user = this.props.accountData.user || {};
+		const pub = this.props.pubData.pub || {};
+		const location = this.props.location || {};
+		const query = location.query || {};
+		const isPub = location.pathname.indexOf('/pub') === 0;
+		const pubFeatures = isPub ? pub.pubFeatures || [] : [];
+		const contextJournal = pubFeatures.reduce((previous, current)=> {
+			if (!query.context && current.journalId === pub.defaultContext) { return current.journal; }
+			if (current.journal.name === query.context) { return current.journal; }
+			return previous;
+		}, undefined);
+
+		const navClass = 'pt-navbar pt-dark';
+		const navStyle = contextJournal ? { backgroundColor: contextJournal.headerColor } : {};
+
 		return (
-			<nav className="pt-navbar pt-dark">
+			<nav className={navClass} style={navStyle}>
 				<div className="pt-navbar-group pt-align-left">
-					<Link to={'/'} className="pt-navbar-heading" style={styles.logo}>PubPub</Link>
+					<Link to={'/'} className="pt-navbar-heading" style={styles.logo}>
+						{/* PubPub */}
+						{/*<img src={'http://i.imgur.com/eQMn3ya.png'} style={styles.journalLogo} />*/}
+						<img src={'https://i.imgur.com/Z3xWDMT.png'} style={styles.journalLogo} />
+						{/*<img src={'http://i.imgur.com/QpKGIVn.png'} style={styles.journalLogo} />*/}
+						{/*<img src={'http://i.imgur.com/0AgfSdL.png'} style={styles.journalLogo} />*/}
+						
+						
+					</Link>
+					{isPub && contextJournal &&
+						<div style={styles.journalLogoWrapper}>
+							<div style={styles.journalLogoDivider} />
+							<img src={contextJournal.logo} style={styles.journalLogo} />
+						</div>
+					}
 					<form onSubmit={this.searchSubmited}>
 						<input className="pt-input" placeholder="Search..." type="text" style={styles.searchInput} value={this.state.search} onChange={this.inputUpdate.bind(this, 'search')} />
 					</form>
@@ -91,7 +121,12 @@ export const AppNav = React.createClass({
 						</Popover>
 					</div>
 				}
-						
+				{/* <div className={'clearfix'} />
+				<div className={'pt-button-group pt-minimal'}>
+					<Link className={'pt-button'}>Fall 2016</Link>
+					<Link className={'pt-button'}>Optimized Phyics</Link>
+					<Link className={'pt-button'}>Community Discussion</Link>
+				</div>	*/}
 			</nav>
 		);
 	}
@@ -123,5 +158,22 @@ styles = {
 		padding: '0em',
 		borderRadius: '2px',
 		verticalAlign: 'middle',
+	},
+	journalLogoWrapper: {
+		padding: '0em 0.5em',
+		margin: '.25em 0em',
+		position: 'relative',
+	},
+	journalLogoDivider: {
+		position: 'absolute',
+		left: '0',
+		top: '10px',
+		height: '30px',
+		width: '1px',
+		backgroundColor: 'rgba(255,255,255,0.25)',
+	},
+	journalLogo: {
+		height: '100%',
+		padding: '10px 0px',
 	},
 };

@@ -44,6 +44,10 @@ import {
 	PUT_FEATURE_LOAD,
 	PUT_FEATURE_SUCCESS,
 	PUT_FEATURE_FAIL,
+
+	PUT_PUB_CONTEXT_LOAD,
+	PUT_PUB_CONTEXT_SUCCESS,
+	PUT_PUB_CONTEXT_FAIL,
 } from 'containers/Pub/actionsJournals';
 
 import {
@@ -300,11 +304,6 @@ export default function reducer(state = defaultState, action) {
 		return state.merge({
 			journalsLoading: true,
 			journalsError: undefined,
-		});	
-	case PUT_FEATURE_SUCCESS:
-		return state.merge({
-			journalsLoading: false,
-			journalsError: undefined,
 		})
 		.mergeIn(
 			['pub', 'pubFeatures'], 
@@ -317,8 +316,29 @@ export default function reducer(state = defaultState, action) {
 				}
 				return feature;
 			})
-		);
+		);	
+	case PUT_FEATURE_SUCCESS:
+		return state.merge({
+			journalsLoading: false,
+			journalsError: undefined,
+		});
 	case PUT_FEATURE_FAIL:
+		return state.merge({
+			journalsLoading: false,
+			journalsError: action.error,
+		});
+	case PUT_PUB_CONTEXT_LOAD:
+		return state.merge({
+			journalsLoading: true,
+			journalsError: undefined,
+		})
+		.setIn(['pub', 'defaultContext'], action.journalId);
+	case PUT_PUB_CONTEXT_SUCCESS:
+		return state.merge({
+			journalsLoading: false,
+			journalsError: undefined,
+		});
+	case PUT_PUB_CONTEXT_FAIL:
 		return state.merge({
 			journalsLoading: false,
 			journalsError: action.error,

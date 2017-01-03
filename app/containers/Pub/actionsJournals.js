@@ -12,6 +12,10 @@ export const PUT_FEATURE_LOAD = 'pub/PUT_FEATURE_LOAD';
 export const PUT_FEATURE_SUCCESS = 'pub/PUT_FEATURE_SUCCESS';
 export const PUT_FEATURE_FAIL = 'pub/PUT_FEATURE_FAIL';
 
+export const PUT_PUB_CONTEXT_LOAD = 'pub/PUT_PUB_CONTEXT_LOAD';
+export const PUT_PUB_CONTEXT_SUCCESS = 'pub/PUT_PUB_CONTEXT_SUCCESS';
+export const PUT_PUB_CONTEXT_FAIL = 'pub/PUT_PUB_CONTEXT_FAIL';
+
 /*--------*/
 // Define Action creators
 //
@@ -44,9 +48,9 @@ export function postJournalSubmit(pubId, journalId) {
 	};
 }
 
-export function putFeature(pubId, journalId, isDisplayed, isContext) {
+export function putFeature(pubId, journalId, isDisplayed) {
 	return (dispatch) => {
-		dispatch({ type: PUT_FEATURE_LOAD });
+		dispatch({ type: PUT_FEATURE_LOAD, journalId: journalId, isDisplayed: isDisplayed });
 
 		return clientFetch('/api/pub/features', {
 			method: 'PUT',
@@ -58,15 +62,39 @@ export function putFeature(pubId, journalId, isDisplayed, isContext) {
 				pubId: pubId, 
 				journalId: journalId, 
 				isDisplayed: isDisplayed, 
-				isContext: isContext, 
 			})
 		})
 		.then((result) => {
-			dispatch({ type: PUT_FEATURE_SUCCESS, result, journalId: journalId, isDisplayed: isDisplayed, isContext: isContext });
+			dispatch({ type: PUT_FEATURE_SUCCESS });
 		})
 		.catch((error) => {
 			console.log(error);
 			dispatch({ type: PUT_FEATURE_FAIL, error });
+		});
+	};
+}
+
+export function putPubContext(pubId, journalId) {
+	return (dispatch) => {
+		dispatch({ type: PUT_PUB_CONTEXT_LOAD, journalId: journalId, });
+
+		return clientFetch('/api/pub', {
+			method: 'PUT',
+			headers: {
+				Accept: 'application/json',
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify({
+				pubId: pubId, 
+				defaultContext: journalId, 
+			})
+		})
+		.then((result) => {
+			dispatch({ type: PUT_PUB_CONTEXT_SUCCESS });
+		})
+		.catch((error) => {
+			console.log(error);
+			dispatch({ type: PUT_PUB_CONTEXT_FAIL, error });
 		});
 	};
 }
