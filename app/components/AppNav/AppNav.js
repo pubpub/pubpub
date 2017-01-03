@@ -35,6 +35,7 @@ export const AppNav = React.createClass({
 		const user = this.props.accountData.user || {};
 		const pub = this.props.pubData.pub || {};
 		const location = this.props.location || {};
+		const redirectURL = location.pathname.indexOf('/reset') !== 0 && location.pathname !== '/' ? location.pathname : undefined;
 		const query = location.query || {};
 		const isPub = location.pathname.indexOf('/pub') === 0;
 		const pubFeatures = isPub ? pub.pubFeatures || [] : [];
@@ -46,6 +47,7 @@ export const AppNav = React.createClass({
 
 		const navClass = 'pt-navbar pt-dark';
 		const navStyle = contextJournal ? { backgroundColor: contextJournal.headerColor } : {};
+
 
 		return (
 			<nav className={navClass} style={navStyle}>
@@ -72,7 +74,7 @@ export const AppNav = React.createClass({
 				
 				{!user.id &&
 					<div className="pt-navbar-group pt-align-right">
-						<Link to={'/login'} style={styles.menuLink}><button className="pt-button pt-minimal">Login</button></Link>
+						<Link to={{ pathname: '/login', query: { redirect: redirectURL } }} style={styles.menuLink}><button className="pt-button pt-minimal">Login</button></Link>
 						<Link to={'/signup'} style={styles.menuLink}><button className="pt-button pt-intent-primary">Signup</button></Link>		
 					</div>
 				}

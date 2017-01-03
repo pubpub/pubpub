@@ -31,7 +31,7 @@ export const RenderFile = React.createClass({
 			return (
 				<div id={'content-wrapper'}>
 					<Highlighter />
-					<RenderFilePDF file={file} />;
+					<RenderFilePDF file={file} />
 				</div>
 				
 			);
