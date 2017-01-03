@@ -19,23 +19,7 @@ export const PubJournals = React.createClass({
 	getInitialState: function() {
 		return {
 			newSubmission: null,
-			// featureStates: {},
-			// defaultContext: undefined,
 		};
-	},
-
-	componentWillMount() {
-		// const features = this.props.pubFeatures || [];
-		// const featureStates = {};
-		// features.map((feature)=> {
-		// 	featureStates[feature.journalId] = {
-		// 		isDisplayed: feature.isDisplayed || false,
-		// 	};
-		// });
-		// this.setState({ 
-		// 	featureStates: featureStates,
-		// 	defaultContext: this.props.pubDefaultContext
-		// });
 	},
 
 	componentWillReceiveProps(nextProps) {
@@ -72,21 +56,9 @@ export const PubJournals = React.createClass({
 		this.props.dispatch(postJournalSubmit(this.props.pubId, this.state.newSubmission.id));
 	},
 	setDisplayed: function(journalId, evt) {
-		// this.setState({ 
-		// 	featureStates: {
-		// 		...this.state.featureStates,
-		// 		[journalId]: {
-		// 			...this.state.featureStates[journalId],
-		// 			isDisplayed: evt.target.checked
-		// 		}
-		// 	} 
-		// });
 		this.props.dispatch(putFeature(this.props.pubId, journalId, evt.target.checked));
 	},
 	setContext: function(journalId, evt) {
-		// this.setState({ 
-		// 	defaultContext: journalId
-		// });
 		if (journalId === this.props.pubDefaultContext) {
 			return this.props.dispatch(putPubContext(this.props.pubId, null));
 		}
