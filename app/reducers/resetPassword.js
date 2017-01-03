@@ -4,15 +4,10 @@ import { ensureImmutable } from './index';
 /* ---------- */
 // Load Actions
 /* ---------- */
-
 import {
 	RESET_PASSWORD_LOAD,
 	RESET_PASSWORD_SUCCESS,
 	RESET_PASSWORD_FAIL,
-} from 'containers/ResetPassword/actions';
-
-
-import {
 
 	CHECK_RESET_HASH_LOAD,
 	CHECK_RESET_HASH_SUCCESS,
@@ -21,7 +16,7 @@ import {
 	SET_PASSWORD_LOAD,
 	SET_PASSWORD_SUCCESS,
 	SET_PASSWORD_FAIL,
-} from 'containers/SetPassword/actions';
+} from 'containers/ResetPassword/actions';
 
 /* ------------------- */
 // Define Default State
@@ -29,12 +24,7 @@ import {
 const defaultState = Immutable.Map({
 	loading: false,
 	error: undefined,
-	user: {},
-	resetPasswordError: undefined,
-	resetPasswordLoading: false,
-	setPasswordError: undefined,
-	setPasswordLoading: false,
-	checkResetHashLoading: false,
+	checkResetHashLoading: true,
 	checkResetHashError: undefined
 });
 
@@ -48,36 +38,34 @@ export default function reducer(state = defaultState, action) {
 
 	case RESET_PASSWORD_LOAD:
 		return state.merge({
-			resetPasswordLoading: true,
-			resetPasswordError: undefined,
+			loading: true,
+			error: undefined,
 		});
 	case RESET_PASSWORD_SUCCESS:
 		return state.merge({
-			resetPasswordLoading: false,
-			resetPasswordError: undefined,
+			loading: false,
+			error: undefined,
 		});
 	case RESET_PASSWORD_FAIL:
 		return state.merge({
-			resetPasswordError: action.error,
-			resetPasswordLoading: false,
+			loading: false,
+			error: action.error,
 		});
 
 	case SET_PASSWORD_LOAD:
 		return state.merge({
-			setPasswordLoading: true,
-			setPasswordError: undefined,
+			loading: true,
+			error: undefined,
 		});
 	case SET_PASSWORD_SUCCESS:
 		return state.merge({
-			setPasswordLoading: false,
-			user: {
-				email: action.result.email
-			}
+			loading: false,
+			error: undefined,
 		});
 	case SET_PASSWORD_FAIL:
 		return state.merge({
-			setPasswordLoading: false,
-			setPasswordError: true,
+			loading: false,
+			error: true,
 		});
 
 	case CHECK_RESET_HASH_LOAD:
@@ -87,7 +75,8 @@ export default function reducer(state = defaultState, action) {
 		});
 	case CHECK_RESET_HASH_SUCCESS:
 		return state.merge({
-			checkResetHashLoading: false
+			checkResetHashLoading: false,
+			checkResetHashError: undefined,
 		});
 	case CHECK_RESET_HASH_FAIL:
 		return state.merge({

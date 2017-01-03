@@ -13,4 +13,3 @@ export Search from './Search/Search';
 export SignUp from './SignUp/SignUp';
 export User from './User/User';
 export ResetPassword from './ResetPassword/ResetPassword';
-export SetPassword from './SetPassword/SetPassword';
