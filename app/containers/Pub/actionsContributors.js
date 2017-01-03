@@ -16,6 +16,14 @@ export const DELETE_CONTRIBUTOR_LOAD = 'pub/DELETE_CONTRIBUTOR_LOAD';
 export const DELETE_CONTRIBUTOR_SUCCESS = 'pub/DELETE_CONTRIBUTOR_SUCCESS';
 export const DELETE_CONTRIBUTOR_FAIL = 'pub/DELETE_CONTRIBUTOR_FAIL';
 
+export const POST_CONTRIBUTOR_ROLE_LOAD = 'pub/POST_CONTRIBUTOR_ROLE_LOAD';
+export const POST_CONTRIBUTOR_ROLE_SUCCESS = 'pub/POST_CONTRIBUTOR_ROLE_SUCCESS';
+export const POST_CONTRIBUTOR_ROLE_FAIL = 'pub/POST_CONTRIBUTOR_ROLE_FAIL';
+
+export const DELETE_CONTRIBUTOR_ROLE_LOAD = 'pub/DELETE_CONTRIBUTOR_ROLE_LOAD';
+export const DELETE_CONTRIBUTOR_ROLE_SUCCESS = 'pub/DELETE_CONTRIBUTOR_ROLE_SUCCESS';
+export const DELETE_CONTRIBUTOR_ROLE_FAIL = 'pub/DELETE_CONTRIBUTOR_ROLE_FAIL';
+
 /*--------*/
 // Define Action creators
 //
@@ -102,3 +110,54 @@ export function deleteContributor(pubId, contributorId) {
 	};
 }
 
+export function postContributorRole(pubId, contributorId, roleId) {
+	return (dispatch) => {
+		dispatch({ type: POST_CONTRIBUTOR_ROLE_LOAD });
+
+		return clientFetch('/api/pub/contributor/roles', {
+			method: 'POST',
+			headers: {
+				Accept: 'application/json',
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify({
+				pubId: pubId,
+				contributorId: contributorId,
+				roleId: roleId,
+			})
+		})
+		.then((result) => {
+			dispatch({ type: POST_CONTRIBUTOR_ROLE_SUCCESS, result });
+		})
+		.catch((error) => {
+			console.log(error);
+			dispatch({ type: POST_CONTRIBUTOR_ROLE_FAIL, error });
+		});
+	};
+}
+
+export function deleteContributorRole(pubId, contributorId, roleId) {
+	return (dispatch) => {
+		dispatch({ type: DELETE_CONTRIBUTOR_ROLE_LOAD });
+
+		return clientFetch('/api/pub/contributor/roles', {
+			method: 'DELETE',
+			headers: {
+				Accept: 'application/json',
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify({
+				pubId: pubId,
+				contributorId: contributorId,
+				roleId: roleId,
+			})
+		})
+		.then((result) => {
+			dispatch({ type: DELETE_CONTRIBUTOR_ROLE_SUCCESS, result });
+		})
+		.catch((error) => {
+			console.log(error);
+			dispatch({ type: DELETE_CONTRIBUTOR_ROLE_FAIL, error });
+		});
+	};
+}

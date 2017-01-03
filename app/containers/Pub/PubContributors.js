@@ -4,6 +4,7 @@ import { Popover, PopoverInteractionKind, Position, Menu, MenuItem, MenuDivider,
 import { AutocompleteBar } from 'components';
 import request from 'superagent';
 import { postContributor, putContributor, deleteContributor } from './actionsContributors';
+import PubContributorRoleList from './PubContributorRoleList';
 let styles;
 
 
@@ -12,6 +13,7 @@ let styles;
 export const PubContributors = React.createClass({
 	propTypes: {
 		contributors: PropTypes.array,
+		allRoles: PropTypes.array,
 		pubId: PropTypes.number,
 		dispatch: PropTypes.func,
 	},
@@ -256,6 +258,13 @@ export const PubContributors = React.createClass({
 									</div>
 								</div>
 							</div>
+							<PubContributorRoleList
+								allRoles={this.props.allRoles}
+								selectedRoles={contributor.roles}
+								pubId={this.props.pubId}
+								contributorId={contributor.id}
+								canSelect={canEdit}
+								dispatch={this.props.dispatch} />
 							<hr />
 						
 						</div>

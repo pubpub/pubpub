@@ -345,6 +345,7 @@ export const Pub = React.createClass({
 						<PubContributors
 							contributors={contributors}
 							pubId={pub.id}
+							allRoles={pub.allRoles}
 							dispatch={this.props.dispatch} />
 					}
 					{(!meta || meta === 'files') && 
