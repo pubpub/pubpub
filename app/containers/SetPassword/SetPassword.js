@@ -13,9 +13,10 @@ import { globalStyles } from 'utils/globalStyles';
 import { globalMessages } from 'utils/globalMessages';
 import { FormattedMessage } from 'react-intl';
 
-import { submitPassword } from './actions';
+import { submitPassword, checkResetHash } from './actions';
 
-import { NonIdealState } from '@blueprintjs/core';
+import { NonIdealState, Spinner, Callout } from '@blueprintjs/core';
+
 
 
 let styles = {};
@@ -78,14 +79,22 @@ export const SetPassword = React.createClass({
 
 	},
 
+	componentWillMount() {
+		// const FocusStyleManager = require('@blueprintjs/core').FocusStyleManager;
+		// FocusStyleManager.onlyShowFocusOnTabs();
+		this.props.dispatch(checkResetHash(this.state.username, this.state.resetHash));
+	},
+
 	render: function() {
 		const resetPasswordData = this.props.resetPasswordData || {};
 		const isLoading = resetPasswordData.setPasswordLoading;
 		const error = resetPasswordData.setPasswordError || this.state.validationError;
 		const validationError = this.state.validationError || undefined;
+		const hashError = resetPasswordData.checkResetHashError || undefined;
+		const hashLoading = resetPasswordData.checkResetHashLoading || undefined;
+
 
 		const showConfirmation = this.state.showConfirmation;
-
 		return (
 			<div style={styles.container}>
 				<Helmet title={'Set Password · PubPub'} />
@@ -94,8 +103,23 @@ export const SetPassword = React.createClass({
 					<h1><FormattedMessage {...globalMessages.SetPassword} /></h1>
 				}
 
+				{hashLoading &&
+					<Spinner className="pt-intent-primary pt-small" />
+				}
 
-				{!showConfirmation &&
+					{!hashLoading && hashError &&
+						<div>
+							<div className="pt-callout pt-intent-danger">
+							There was an error with your hash. Try resetting your password again.
+							</div>
+							<Link to={'/resetpassword'}>
+								<button className={'pt-button pt-intent-primary pt-large'}>Reset Password</button>
+							</Link>
+						</div>
+					}
+
+
+				{!showConfirmation && !hashError && !hashLoading &&
 					<form onSubmit={this.handleSetPasswordSubmit}>
 						<label htmlFor={'password'}>
 							<FormattedMessage {...globalMessages.Password} />

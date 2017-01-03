@@ -13,6 +13,11 @@ import {
 
 
 import {
+
+	CHECK_RESET_HASH_LOAD,
+	CHECK_RESET_HASH_SUCCESS,
+	CHECK_RESET_HASH_FAIL,
+
 	SET_PASSWORD_LOAD,
 	SET_PASSWORD_SUCCESS,
 	SET_PASSWORD_FAIL,
@@ -28,7 +33,9 @@ const defaultState = Immutable.Map({
 	resetPasswordError: undefined,
 	resetPasswordLoading: false,
 	setPasswordError: undefined,
-	setPasswordLoading: false
+	setPasswordLoading: false,
+	checkResetHashLoading: false,
+	checkResetHashError: undefined
 });
 
 
@@ -71,6 +78,21 @@ export default function reducer(state = defaultState, action) {
 		return state.merge({
 			setPasswordLoading: false,
 			setPasswordError: true,
+		});
+
+	case CHECK_RESET_HASH_LOAD:
+		return state.merge({
+			checkResetHashLoading: true,
+			checkResetHashError: undefined,
+		});
+	case CHECK_RESET_HASH_SUCCESS:
+		return state.merge({
+			checkResetHashLoading: false
+		});
+	case CHECK_RESET_HASH_FAIL:
+		return state.merge({
+			checkResetHashLoading: false,
+			checkResetHashError: true,
 		});
 
 	default:
