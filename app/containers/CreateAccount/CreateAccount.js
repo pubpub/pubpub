@@ -144,7 +144,7 @@ export const CreateAccount = React.createClass({
 		const { isValid, validationError } = this.validate(createAccountData);
 		this.setState({ validationError: validationError });
 		if (isValid) {
-			this.props.dispatch(createAccount(createAccountData));	
+			this.props.dispatch(createAccount(createAccountData));
 		}
 	},
 	render() {
@@ -199,20 +199,20 @@ export const CreateAccount = React.createClass({
 								<FormattedMessage {...globalMessages.FirstName} />
 								<input id={'firstName'} name={'first name'} type="text" style={styles.input} value={this.state.firstName} onChange={this.inputUpdate.bind(this, 'firstName')} />
 							</label>
-							
+
 							<label htmlFor={'lastName'}>
 								<FormattedMessage {...globalMessages.LastName} />
 								<input id={'lastName'} name={'last name'} type="text" style={styles.input} value={this.state.lastName} onChange={this.inputUpdate.bind(this, 'lastName')} />
 							</label>
-								
+
 							<label htmlFor={'password'}>
 								<FormattedMessage {...globalMessages.Password} />
 								<input id={'password'} name={'password'} type="password" style={styles.input} value={this.state.password} onChange={this.inputUpdate.bind(this, 'password')} />
-								<div className={'light-color inputSubtext'} to={'/resetpassword'}>
+								<div className={'light-color inputSubtext'}>
 									<FormattedMessage {...globalMessages.PasswordLength} />
 								</div>
 							</label>
-								
+
 							<label htmlFor={'userImage'}>
 								<FormattedMessage {...globalMessages.ProfileImage} />
 								<img role="presentation" style={styles.userImage} src={this.state.userImageURL} />

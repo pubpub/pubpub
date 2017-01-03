@@ -55,12 +55,12 @@ const defaultState = Immutable.Map({
 /* ----------------------------------------- */
 export default function reducer(state = defaultState, action) {
 	switch (action.type) {
-	
+
 	case GET_SIGN_UP_DATA_LOAD:
 		return state.merge({
 			loading: true,
 			error: undefined,
-		});	
+		});
 	case GET_SIGN_UP_DATA_SUCCESS:
 		return state.merge({
 			loading: false,
@@ -78,7 +78,7 @@ export default function reducer(state = defaultState, action) {
 		return state.merge({
 			createAccountLoading: true,
 			createAccountError: undefined,
-		});	
+		});
 	case CREATE_ACCOUNT_SUCCESS:
 		return state.merge({
 			createAccountLoading: false,
@@ -95,7 +95,7 @@ export default function reducer(state = defaultState, action) {
 		return state.merge({
 			loginLoading: true,
 			loginError: undefined,
-		});	
+		});
 	case LOGIN_GET_SUCCESS:
 	case LOGIN_POST_SUCCESS:
 		return state.merge({

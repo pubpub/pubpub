@@ -13,6 +13,7 @@ import pub from './pub';
 import search from './search';
 import signUp from './signUp';
 import user from './user';
+import resetPassword from './resetPassword';
 
 export function ensureImmutable(state) {
 	// For some reason the @@INIT action is receiving a state variable that is a regular object.
@@ -41,4 +42,5 @@ export default combineReducers({
 	search,
 	signUp,
 	user,
+	resetPassword,
 });

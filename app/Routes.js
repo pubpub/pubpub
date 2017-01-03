@@ -1,13 +1,15 @@
 import React from 'react';
 import { Route } from 'react-router';
-import { App, CreateAccount, CreatePub, CreateJournal, Landing, Label, Journal, Login, Pub, Search, SignUp, NoMatch, User } from 'containers';
+import { App, CreateAccount, CreatePub, CreateJournal, Landing, Label, Journal, Login, Pub, Search, SignUp, NoMatch, User, ResetPassword } from 'containers';
 
 export default (
 	<Route component={App}>
 		<Route path="/" component={Landing} />
 		<Route path="/login" component={Login} />
 		<Route path="/signup" component={SignUp} />
-		
+		<Route path="/resetpassword" component={ResetPassword} />
+		<Route path="/resetpassword/:resetHash/:username" component={ResetPassword} />
+
 		<Route path="/search" component={Search} />
 
 		<Route path="/users/create/:hash" component={CreateAccount} />
@@ -26,7 +28,7 @@ export default (
 		<Route path="/:slug" component={Journal} />
 		<Route path="/:slug/:mode" component={Journal} />
 		<Route path="/:slug/:mode/:collection" component={Journal} />
-		
+
 		<Route path="*" component={NoMatch} />
 	</Route>
 );

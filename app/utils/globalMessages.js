@@ -1,6 +1,10 @@
 import {defineMessages} from 'react-intl';
 
 export const globalMessages = defineMessages({
+	SetPassword: {
+		id: 'global.SetPassword',
+		defaultMessage: 'Set Password'
+	},
 	Login: {
 		id: 'global.Login',
 		defaultMessage: 'Login',
