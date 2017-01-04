@@ -4,9 +4,9 @@ import { Link } from 'react-router';
 import Radium from 'radium';
 import Helmet from 'react-helmet';
 
-import { FollowButton } from 'containers';
-import { NavContentWrapper, PreviewPub } from 'components';
-import { NoMatch } from 'containers';
+import { FollowButton, NoMatch } from 'containers';
+import { Menu, MenuDivider } from '@blueprintjs/core';
+import { DropdownButton } from 'components';
 
 import { globalStyles } from 'utils/globalStyles';
 import { globalMessages } from 'utils/globalMessages';
@@ -61,13 +61,50 @@ export const Journal = React.createClass({
 		this.setState(updateObject);
 	},
 
+	sortList: function(list) {
+		return list.sort((foo, bar)=> {
+			const query = this.props.location.query || {};
+
+			const fooTitle = foo.firstName || foo.name || foo.title || '';
+			const barTitle = bar.firstName || bar.name || bar.title || '';
+			
+			const fooDate = foo.updatedAt;
+			const barDate = bar.updatedAt;
+
+			const newest = query.sort === 'Most Recent' || query.sort === undefined;
+			const oldest = query.sort === 'Least Recent';
+
+			const aToZ = query.sort === 'A → Z';
+			const zToA = query.sort === 'Z → A';
+
+			if (newest && fooDate > barDate) { return -1; }
+			if (newest && fooDate < barDate) { return 1; }
+
+			if (oldest && fooDate > barDate) { return 1; }
+			if (oldest && fooDate < barDate) { return -1; }
+
+			if (aToZ && fooTitle > barTitle) { return 1; }
+			if (aToZ && fooTitle < barTitle) { return -1; }
+
+			if (zToA && fooTitle > barTitle) { return -1; }
+			if (zToA && fooTitle < barTitle) { return 1; }
+
+			return 0;
+		});
+	},
+
 	render() {
-		const slug = this.props.params.slug;
 		let mode = this.props.params.mode;
-		const query = this.props.location.query;
+		
+		const query = this.props.location.query || {};
+		const view = query.view;
+		const sortList = ['Most Recent', 'Least Recent', 'A → Z', 'Z → A'];
+
+		
 		const pathname = this.props.location.pathname;
 		const collection = this.props.params.collection;
 		const journal = this.props.journalData.journal || {};
+		const collections = journal.collections || [];
 		const followers = journal.followers || [];
 		const pubFeatures = journal.pubFeatures || [];
 		const isAdmin = this.props.journalData.isAdmin || true; // The || true is for dev only.
@@ -99,41 +136,6 @@ export const Journal = React.createClass({
 			]
 		};
 
-		const mobileNavButtons = [
-			{ type: 'link', mobile: true, text: <FormattedMessage {...globalMessages.About} />, link: '/' + this.props.params.slug + '/about' },
-			{ type: 'button', mobile: true, text: <FormattedMessage {...globalMessages.Menu} />, action: undefined },
-		];
-
-		let adminNav = [
-			{ type: 'title', text: <FormattedMessage {...globalMessages.Admin} /> },
-			{ type: 'link', text: <FormattedMessage {...globalMessages.Details} />, link: '/' + this.props.params.slug + '/details', active: mode === 'details' },
-			{ type: 'link', text: <FormattedMessage {...globalMessages.Layout} />, link: '/' + this.props.params.slug + '/layout', active: mode === 'layout' },
-			{ type: 'link', text: <FormattedMessage {...globalMessages.Featured} />, link: '/' + this.props.params.slug + '/featured', active: mode === 'featured' },
-			{ type: 'link', text: <FormattedMessage {...globalMessages.Submitted} />, link: '/' + this.props.params.slug + '/submitted', active: mode === 'submitted' },
-			{ type: 'link', text: <FormattedMessage {...globalMessages.Admins} />, link: '/' + this.props.params.slug + '/admins', active: mode === 'admins' },
-			{ type: 'spacer' },
-			{ type: 'title', text: <FormattedMessage {...globalMessages.Public} /> },
-		];
-
-		if (!isAdmin) {
-			adminNav = [];
-		}
-
-		const collections = journal.collections || [];
-		const collectionItems = collections.map((item, index)=> {
-			return { type: 'link', text: item.title, link: '/' + this.props.params.slug + '/collection/' + item.title, active: collection === item.title };
-		});
-
-		const navItems = [
-			...adminNav,
-			{ type: 'link', text: <FormattedMessage {...globalMessages.About} />, link: '/' + this.props.params.slug + '/about', active: mode === 'about' },
-			{ type: 'link', text: <FormattedMessage {...globalMessages.RecentActivity} />, link: '/' + this.props.params.slug, active: !mode},
-			{ type: 'link', text: <FormattedMessage {...globalMessages.Followers} />, link: '/' + this.props.params.slug + '/followers', active: mode === 'followers'},
-
-			{ type: 'spacer' },
-			...collectionItems,
-		];
-
 		if (!isAdmin && (mode === 'details' || mode === 'layout' || mode === 'featured' || mode === 'submitted' || mode === 'collections' || mode === 'admins')) {
 			mode = 'notFound';
 		}
@@ -156,6 +158,7 @@ export const Journal = React.createClass({
 					logo={this.state.logo || journal.logo}
 					followContent={
 						<div style={styles.followButtonWrapper}>
+							<Link className={'pt-button pt-icon-edit'} to={'/' + journal.slug + '/edit'} style={styles.editButton}>Edit Journal</Link>
 							<FollowButton 
 								journalId={journal.id} 
 								followData={followData} 
@@ -164,12 +167,13 @@ export const Journal = React.createClass({
 								dispatch={this.props.dispatch} />
 						</div>
 					}
+					collections={collections}
 					headerColor={this.state.headerColor || journal.headerColor}
 					headerMode={this.state.headerMode || journal.headerMode}
 					headerAlign={this.state.headerAlign || journal.headerAlign}
 					headerImage={this.state.headerImage === null ? undefined : this.state.headerImage || journal.headerImage} />
 
-				<NavContentWrapper navItems={navItems} mobileNavButtons={mobileNavButtons}>
+				<div style={styles.content}>
 					{(() => {
 						switch (mode) {
 						case 'layout':
@@ -196,6 +200,23 @@ export const Journal = React.createClass({
 									isLoading={this.props.journalData.submitsLoading}
 									error={this.props.journalData.submitsError}
 									dispatch={this.props.dispatch} />
+							);
+						case 'edit': 
+							return (
+								<div>
+									<JournalDetails
+										journal={journal}
+										isLoading={this.props.journalData.putDataLoading}
+										error={this.props.journalData.putDataError}
+										dispatch={this.props.dispatch} />
+
+									<JournalLayout
+										journal={journal}
+										handleHeaderUpdate={this.handleHeaderUpdate}
+										isLoading={this.props.journalData.putDataLoading}
+										error={this.props.journalData.putDataError}
+										dispatch={this.props.dispatch} />
+								</div>
 							);
 						case 'featured':
 							return (
@@ -235,15 +256,62 @@ export const Journal = React.createClass({
 						default:
 							return (
 								<div>
-									<h2>Recently Featured</h2>
-									{pubFeatures.map((pubFeature, index)=> {
-										return <PreviewPub key={'collectionItem-' + index} pub={pubFeature.pub} />;
-									})}
+									<div style={styles.headerWrapper}>
+										<div style={styles.headerOptions}>
+											<div className="pt-button-group pt-minimal">
+												<Link to={{ pathname: '/' + journal.slug, query: { ...query, view: undefined } }} className={view === undefined || view === 'featured' ? 'pt-button pt-active' : 'pt-button'}>Featured</Link>
+												<Link to={{ pathname: '/' + journal.slug, query: { ...query, view: 'submitted' } }} className={view === 'submitted' ? 'pt-button pt-active' : 'pt-button'}>Submitted</Link>
+												<Link to={{ pathname: '/' + journal.slug, query: { ...query, view: 'collections' } }} className={view === 'collections' ? 'pt-button pt-active' : 'pt-button'}>Collections</Link>
+											</div>
+										</div>
+										<div style={styles.headerRight}>
+											<DropdownButton 
+												content={
+													<Menu>
+														<li className={'pt-menu-header'}><h6>Sort by:</h6></li>
+														<MenuDivider />
+														{sortList.map((sort, index)=> {
+															const sortMode = query.sort || 'Most Recent';
+															return (
+																<li key={'sortFilter-' + index}><Link to={{ pathname: '/' + journal.slug, query: { ...query, sort: sort } }} className="pt-menu-item pt-popover-dismiss">
+																	{sort}
+																	{sortMode === sort && <span className={'pt-icon-standard pt-icon-tick pt-menu-item-label'} />}
+																</Link></li>
+															);
+														})}
+													</Menu>
+												}
+												title={'Sort'} 
+												position={2} />
+										</div>
+									</div>
+
+									{(query.view === undefined || query.view === 'featured') &&
+										<JournalFeatures
+											journal={journal}
+											isLoading={this.props.journalData.featuresLoading}
+											error={this.props.journalData.featuresError}
+											pathname={pathname}
+											query={query}
+											dispatch={this.props.dispatch} />
+									}
+
+									{query.view === 'submitted' &&
+										<JournalSubmits
+											journal={journal}
+											isLoading={this.props.journalData.submitsLoading}
+											error={this.props.journalData.submitsError}
+											dispatch={this.props.dispatch} />
+									}
+
+									{query.view === 'collections' &&
+										<div><h2>COLLECTIONS YO!</h2></div>
+									}
 								</div>
 							);
 						}
 					})()}
-				</NavContentWrapper>
+				</div>
 
 				
 			</div>
@@ -264,9 +332,45 @@ styles = {
 	container: {
 
 	},
+	editButton: {
+		display: 'block',
+		marginBottom: '0.5em',
+	},
 	followButtonWrapper: {
-		float: 'right',
-		position: 'relative',
+		// float: 'right',
+		right: 0,
+		// position: 'relative',
+		position: 'absolute',
 		zIndex: '3',
+		textAlign: 'right',
+	},
+	headerWrapper: {
+		display: 'table',
+		width: '100%',
+		marginBottom: '1em',
+	},
+	headerTitle: {
+		display: 'table-cell',
+		verticalAlign: 'middle',
+		paddingRight: '1em',
+		width: '1%',
+		whiteSpace: 'nowrap',
+	},
+	header: {
+		margin: 0,
+	},
+	headerOptions: {
+		display: 'table-cell',
+		verticalAlign: 'middle',
+	},
+	headerRight: {
+		display: 'table-cell',
+		verticalAlign: 'middle',
+		width: '1%',
+	},
+	content: {
+		maxWidth: '1024px',
+		margin: '0 auto',
+		padding: '0em 2em 2em',
 	},
 };

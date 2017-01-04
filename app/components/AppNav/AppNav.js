@@ -10,7 +10,9 @@ export const AppNav = React.createClass({
 	propTypes: {
 		accountData: PropTypes.object,
 		pubData: PropTypes.object,
+		journalData: PropTypes.object,
 		location: PropTypes.object,
+		params: PropTypes.object,
 		logoutHandler: PropTypes.func,
 	},
 
@@ -34,19 +36,24 @@ export const AppNav = React.createClass({
 	render() {
 		const user = this.props.accountData.user || {};
 		const pub = this.props.pubData.pub || {};
+		const journal = this.props.journalData.journal || {};
 		const location = this.props.location || {};
 		const redirectURL = location.pathname.indexOf('/signup') !== 0 && location.pathname.indexOf('/reset') !== 0 && location.pathname !== '/' ? location.pathname : undefined;
 		const query = location.query || {};
+		const params = this.props.params || {};
 		const isPub = location.pathname.indexOf('/pub') === 0;
-		const pubFeatures = isPub ? pub.pubFeatures || [] : [];
-		const contextJournal = pubFeatures.reduce((previous, current)=> {
+		const renderHeader = isPub || params.slug;
+		const pubFeatures = renderHeader ? pub.pubFeatures || [] : [];
+		const contextJournal = journal || pubFeatures.reduce((previous, current)=> {
 			if (!query.context && current.journalId === pub.defaultContext) { return current.journal; }
 			if (current.journal.name === query.context) { return current.journal; }
 			return previous;
 		}, undefined);
 
+
+
 		const navClass = 'pt-navbar pt-dark';
-		const navStyle = contextJournal ? { backgroundColor: contextJournal.headerColor } : {};
+		const navStyle = renderHeader && contextJournal ? { backgroundColor: contextJournal.headerColor } : {};
 
 
 		return (
@@ -61,7 +68,7 @@ export const AppNav = React.createClass({
 						
 						
 					</Link>
-					{isPub && contextJournal &&
+					{renderHeader &&
 						<div style={styles.journalLogoWrapper}>
 							<div style={styles.journalLogoDivider} />
 							<img src={contextJournal.logo} style={styles.journalLogo} />
