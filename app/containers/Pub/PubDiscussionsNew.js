@@ -35,7 +35,7 @@ export const PubDiscussionsNew = React.createClass({
 		const nextDiscussions = nextProps.discussionsData || [];
 		if (nextDiscussions.length > previousDiscussions.length) {
 			const newDiscussion = nextDiscussions[nextDiscussions.length - 1];
-			browserHistory.push({ pathname: nextProps.pathname, query: { discussion: newDiscussion.discussionIndex } });
+			browserHistory.push({ pathname: nextProps.pathname, query: { discussion: newDiscussion.threadNumber } });
 		}
 	},
 

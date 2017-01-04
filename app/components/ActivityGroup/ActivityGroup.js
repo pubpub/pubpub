@@ -118,7 +118,7 @@ export const ActivityGroup = React.createClass({
 							case 'followedLabel': 
 								return <div>{actorNode} followed {activities.length} labels</div>;
 							case 'newDiscussion': 
-								return <div>{activities.length} people added new discussions to {targetNode}</div>;
+								return <div>{activities.length} new discussions were added to {targetNode}</div>;
 							case 'addedContributor':
 								return <div>{actorNode} added {activities.length} contributors to {targetNode}</div>;
 							case 'addedAdmin':

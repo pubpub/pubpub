@@ -166,7 +166,7 @@ export const PubDiscussionsList = React.createClass({
 					const fooChildren = foo.children || [];
 					const barChildren = bar.children || [];
 
-					const newest = query.sort === 'Newest';
+					const newest = !query.sort || query.sort === 'Newest';
 					const oldest = query.sort === 'Oldest';
 
 					const mostReplies = query.sort === 'Most Replies';

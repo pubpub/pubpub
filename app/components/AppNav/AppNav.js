@@ -35,7 +35,7 @@ export const AppNav = React.createClass({
 		const user = this.props.accountData.user || {};
 		const pub = this.props.pubData.pub || {};
 		const location = this.props.location || {};
-		const redirectURL = location.pathname.indexOf('/reset') !== 0 && location.pathname !== '/' ? location.pathname : undefined;
+		const redirectURL = location.pathname.indexOf('/signup') !== 0 && location.pathname.indexOf('/reset') !== 0 && location.pathname !== '/' ? location.pathname : undefined;
 		const query = location.query || {};
 		const isPub = location.pathname.indexOf('/pub') === 0;
 		const pubFeatures = isPub ? pub.pubFeatures || [] : [];

@@ -3,6 +3,7 @@ import Radium from 'radium';
 import ReactMarkdown from 'react-markdown';
 import { Highlighter } from 'containers';
 import RenderFilePDF from './RenderFilePDF';
+import RenderFilePPT from './RenderFilePPT';
 
 let styles;
 
@@ -35,6 +36,9 @@ export const RenderFile = React.createClass({
 				</div>
 				
 			);
+		case 'application/vnd.ms-powerpoint':
+		case 'application/vnd.openxmlformats-officedocument.presentationml.presentation':
+			return <RenderFilePPT file={file} />;
 		default: 
 			return (
 				<div className={'pt-callout'}>
