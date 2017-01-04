@@ -88,33 +88,33 @@ export const CreateAccount = React.createClass({
 	validate: function(data) {
 		// Check to make sure username exists
 		if (!data.username || !data.username.length) {
-			return { isValid: false, validationError: <FormattedMessage { ...globalMessages.Usernamerequired } /> };
+			return { isValid: false, validationError: <FormattedMessage {...globalMessages.Usernamerequired} /> };
 		}
 
 		// Check to make sure firstName exists
 		if (!data.firstName || !data.firstName.length) {
-			return { isValid: false, validationError: <FormattedMessage { ...globalMessages.FirstNamerequired } /> };
+			return { isValid: false, validationError: <FormattedMessage {...globalMessages.FirstNamerequired} /> };
 		}
 
 		// Check to make sure lastName exists
 		if (!data.lastName || !data.lastName.length) {
-			return { isValid: false, validationError: <FormattedMessage { ...globalMessages.LastNamerequired } /> };
+			return { isValid: false, validationError: <FormattedMessage {...globalMessages.LastNamerequired} /> };
 		}
 
 		// Check to make sure email exists
 		if (!data.email || !data.email.length) {
-			return { isValid: false, validationError: <FormattedMessage { ...globalMessages.Emailrequired } /> };
+			return { isValid: false, validationError: <FormattedMessage {...globalMessages.Emailrequired} /> };
 		}
 
 		// Check to make sure email is lightly valid (complete validation is impossible in JS - so just check for the most common error)
 		const regexTest = /\S+@\S+/;
 		if (!regexTest.test(data.email)) {
-			return { isValid: false, validationError: <FormattedMessage { ...globalMessages.Emailisinvalid } /> };
+			return { isValid: false, validationError: <FormattedMessage {...globalMessages.Emailisinvalid} /> };
 		}
 
 		// Check to make sure password exists
 		if (!data.password || data.password.length < 8) {
-			return { isValid: false, validationError: <FormattedMessage { ...globalMessages.Passwordtooshort } /> };
+			return { isValid: false, validationError: <FormattedMessage {...globalMessages.Passwordtooshort} /> };
 		}
 
 		return { isValid: true, validationError: undefined };
