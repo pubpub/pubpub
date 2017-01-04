@@ -42,18 +42,18 @@ export const AppNav = React.createClass({
 		const query = location.query || {};
 		const params = this.props.params || {};
 		const isPub = location.pathname.indexOf('/pub') === 0;
-		const renderHeader = isPub || params.slug;
-		const pubFeatures = renderHeader ? pub.pubFeatures || [] : [];
-		const contextJournal = journal || pubFeatures.reduce((previous, current)=> {
+		const isJournal = !isPub && params.slug;
+		const pubFeatures = isPub ? pub.pubFeatures || [] : [];
+		const contextJournal = pubFeatures.reduce((previous, current)=> {
 			if (!query.context && current.journalId === pub.defaultContext) { return current.journal; }
 			if (current.journal.name === query.context) { return current.journal; }
 			return previous;
 		}, undefined);
 
-
+		const headerJournal = isJournal ? journal : contextJournal;
 
 		const navClass = 'pt-navbar pt-dark';
-		const navStyle = renderHeader && contextJournal ? { backgroundColor: contextJournal.headerColor } : {};
+		const navStyle = headerJournal ? { backgroundColor: headerJournal.headerColor } : {};
 
 
 		return (
@@ -68,10 +68,10 @@ export const AppNav = React.createClass({
 						
 						
 					</Link>
-					{renderHeader &&
+					{headerJournal &&
 						<div style={styles.journalLogoWrapper}>
 							<div style={styles.journalLogoDivider} />
-							<img src={contextJournal.logo} style={styles.journalLogo} />
+							<img src={headerJournal.logo} style={styles.journalLogo} />
 						</div>
 					}
 					<form onSubmit={this.searchSubmited}>

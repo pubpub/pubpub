@@ -347,7 +347,7 @@ styles = {
 	headerWrapper: {
 		display: 'table',
 		width: '100%',
-		marginBottom: '1em',
+		marginBottom: '2em',
 	},
 	headerTitle: {
 		display: 'table-cell',

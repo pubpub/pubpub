@@ -70,7 +70,7 @@ export default Radium(JournalProfileHeader);
 styles = {
 	headerBackground: {
 		padding: '2em 0em 1em 0em',
-		marginBottom: '3em',
+		marginBottom: '2em',
 		position: 'relative',
 		color: 'white',
 		backgroundRepeat: 'no-repeat',
