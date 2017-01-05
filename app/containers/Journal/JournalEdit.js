@@ -3,6 +3,7 @@ import Radium, { Style } from 'radium';
 import Helmet from 'react-helmet';
 import { ImageUpload, Loader } from 'components';
 import { s3Upload } from 'utils/uploadFile';
+import { StickyContainer, Sticky } from 'react-sticky';
 import { RadioGroup, Radio } from '@blueprintjs/core';
 import { ChromePicker } from 'react-color';
 
@@ -170,7 +171,9 @@ export const JournalEdit = React.createClass({
 					'.colorPicker > div': { boxShadow: '0px 0px 0px black !important', border: '1px solid #BBBDC0 !important' },
 				}} />
 
+				<StickyContainer>
 				<form onSubmit={this.saveJournal} style={styles.form}>
+					<Sticky>
 					<div style={styles.buttonWrapper}>
 						<button type="button" className={'pt-button pt-intent-primary'} disabled={!this.state.canSave} onClick={this.saveJournal}>
 							Save Journal
@@ -180,6 +183,7 @@ export const JournalEdit = React.createClass({
 
 						<div style={styles.errorMessage}>{errorMessage}</div>
 					</div>
+					</Sticky>
 
 					<div style={styles.formContentWrapper}>
 						<label style={styles.label} htmlFor={'name'}>
@@ -238,11 +242,6 @@ export const JournalEdit = React.createClass({
 							<div className={'colorPicker'}>
 								<ChromePicker color={this.state.headerColor} disableAlpha={true} onChange={this.handleColorChange} />
 							</div>
-						</label>
-
-						<label style={styles.label} htmlFor={'name'}>
-							<FormattedMessage {...globalMessages.JournalName} />
-							<input className={'pt-input margin-bottom'} id={'name'} name={'name'} type="text" style={styles.input} value={this.state.name} onChange={this.inputUpdate.bind(this, 'name')} />
 						</label>
 
 						<label style={styles.label} htmlFor={'slug'}>
@@ -344,6 +343,7 @@ export const JournalEdit = React.createClass({
 
 
 				</form>
+				</StickyContainer>
 
 			</div>
 		);
@@ -362,7 +362,9 @@ styles = {
 		// }
 	},
 	buttonWrapper: {
-		float: 'right',
+		// float: 'right',
+		position: 'absolute',
+		right: 0,
 	},
 	formContentWrapper: {
 		width: '500px',
