@@ -43,7 +43,7 @@ export const JournalEdit = React.createClass({
 	
 	componentWillReceiveProps(nextProps) {
 		const journal = nextProps.journal || {};
-		this.initialize(journal);
+		// this.initialize(journal);
 
 		// If the slug changed, redirect to new slug.
 		const lastSlug = this.props.journal.slug;
@@ -97,14 +97,16 @@ export const JournalEdit = React.createClass({
 		this.setState({ headerColor: colorChange.hex });
 		this.props.handleHeaderUpdate({ headerColor: colorChange.hex });
 	},
-	handleHeaderModeChange: function(evt) {
-		const newHeaderMode = evt.target.value;
+	handleHeaderModeChange: function(value, evt) {
+		evt.preventDefault();
+		const newHeaderMode = value;
 		this.setState({ headerMode: newHeaderMode });
 		this.props.handleHeaderUpdate({ headerMode: newHeaderMode });
 	},
 
-	handleHeaderAlignChange: function(evt) {
-		const newHeaderAlign = evt.target.value;
+	handleHeaderAlignChange: function(value, evt) {
+		evt.preventDefault();
+		const newHeaderAlign = value;
 		this.setState({ headerAlign: newHeaderAlign });
 		this.props.handleHeaderUpdate({ headerAlign: newHeaderAlign });
 	},
@@ -136,8 +138,8 @@ export const JournalEdit = React.createClass({
 
 		this.props.dispatch(putJournal(this.props.journal.id, newJournalData));
 	},
-	printNewImage: function(imageUrl) {
-		console.log(imageUrl);
+	handleIconFinish: function(imageUrl) {
+		this.setState({ icon: imageUrl });
 	},
 
 	render: function() {
@@ -171,83 +173,56 @@ export const JournalEdit = React.createClass({
 					</div>
 
 					<div style={styles.formContentWrapper}>
-						{/*className={'pt-input margin-bottom'} */}
+						
 
 						<label style={styles.label} htmlFor={'name'}>
 							<FormattedMessage {...globalMessages.JournalName} />
-							<input id={'name'} name={'name'} type="text" style={styles.input} value={this.state.name} onChange={this.inputUpdate.bind(this, 'name')} />
+							<input className={'pt-input margin-bottom'} id={'name'} name={'name'} type="text" style={styles.input} value={this.state.name} onChange={this.inputUpdate.bind(this, 'name')} />
 						</label>
 
 						<label style={styles.label} htmlFor={'slug'}>
 							<FormattedMessage {...globalMessages.JournalURL} />
-							<input id={'slug'} name={'slug'} type="text" style={styles.input} value={this.state.slug} onChange={this.inputUpdate.bind(this, 'slug')} />
+							<input className={'pt-input margin-bottom'} id={'slug'} name={'slug'} type="text" style={styles.input} value={this.state.slug} onChange={this.inputUpdate.bind(this, 'slug')} />
 						</label>
 
 						<label style={styles.label} htmlFor={'shortDescription'}>
 							Short Description
-							<textarea id={'shortDescription'} name={'shortDescription'} type="text" style={[styles.input, styles.textarea]} onChange={this.shortDescriptionUpdate} value={this.state.shortDescription} />
+							<textarea className={'pt-input margin-bottom'} id={'shortDescription'} name={'shortDescription'} type="text" style={[styles.input, styles.textarea]} onChange={this.shortDescriptionUpdate} value={this.state.shortDescription} />
 							<div className={'light-color inputSubtext'}>
 								{this.state.shortDescription.length} / 140
 							</div>
 						</label>
 
-
-						<label htmlFor={'icon'}>
-							<FormattedMessage {...globalMessages.JournalIcon} />
-						
-							<img role="presentation" style={styles.image} src={this.state.icon} />
-							<input id={'icon'} name={'icon image'} type="file" accept="image/*" onChange={this.handleFileSelect} />
-							<div className={'light-color inputSubtext'}>
-								<FormattedMessage id="JournalProfileEdit.shortDescription" defaultMessage="Used as the Journal's preview image in search results and throughout the site."/>
-							</div>
-						</label>
+						<ImageUpload 
+							defaultImage={this.state.icon}
+							userCrop={true}
+							label={<FormattedMessage {...globalMessages.JournalIcon} />}
+							tooltip={<FormattedMessage id="JournalProfileEdit.journalIconDescription" defaultMessage="Used as the Journal's preview image in search results and throughout the site."/>} 
+							containerStyle={styles.imageContainer}
+							onNewImage={this.handleIconFinish} />
 
 
 						<label style={styles.label} htmlFor={'website'}>
 							<FormattedMessage {...globalMessages.Website}/>
-							<input id={'website'} name={'website'} type="text" style={styles.input} value={this.state.website} onChange={this.inputUpdate.bind(this, 'website')} />
+							<input className={'pt-input margin-bottom'} id={'website'} name={'website'} type="text" style={styles.input} value={this.state.website} onChange={this.inputUpdate.bind(this, 'website')} />
 						</label>
 
 						<label htmlFor={'twitter'}>
 							Twitter
-							<div style={styles.prefixedInputWrapper}>
-								<div style={styles.prefix}>@</div>
-								<input id={'twitter'} name={'twitter'} type="text" style={[styles.input, styles.prefixedInput]} value={this.state.twitter} onChange={this.inputUpdate.bind(this, 'twitter')} />
+							<div className="pt-control-group prefixed-group margin-bottom">
+								<div className={'pt-button pt-disabled input-prefix'}>@</div>
+								<input className={'pt-input prefixed-input'} id={'twitter'} name={'twitter'} type="text" style={styles.input} value={this.state.twitter} onChange={this.inputUpdate.bind(this, 'twitter')} />
 							</div>
 						</label>
 
 						<label htmlFor={'facebook'}>
 							Facebook
-							<div style={styles.prefixedInputWrapper}>
-								<div style={styles.prefix}>facebook.com/</div>
-								<input id={'facebook'} name={'facebook'} type="text" style={[styles.input, styles.prefixedInput]} value={this.state.facebook} onChange={this.inputUpdate.bind(this, 'facebook')} />
+							<div className="pt-control-group prefixed-group margin-bottom">
+								<div className={'pt-button pt-disabled input-prefix'}>facebook.com/</div>
+								<input className={'pt-input prefixed-input'} id={'facebook'} name={'facebook'} type="text" style={styles.input} value={this.state.facebook} onChange={this.inputUpdate.bind(this, 'facebook')} />
 							</div>
 						</label>
 
-
-						<label style={styles.label} htmlFor={'longDescription'}>
-							Long Description
-							<textarea id={'longDescription'} name={'longDescription'} type="text" style={[styles.input, styles.textarea]} value={this.state.longDescription} onChange={this.inputUpdate.bind(this, 'longDescription')} />
-							<div className={'light-color inputSubtext'}>
-								<FormattedMessage
-										id="JournalProfileEdit.shortDescription2"
-										defaultMessage={`Use to describe longer details about this journal. This text will appear at pubpub.org/{slug}/about.`}
-										values={{ slug: journal.slug }}
-								/>
-							</div>
-						</label>
-
-						<label style={styles.label} htmlFor={'reviewDescription'}>
-							Review Process
-							<textarea id={'reviewDescription'} name={'reviewDescription'} type="text" style={[styles.input, styles.textarea]} value={this.state.reviewDescription} onChange={this.inputUpdate.bind(this, 'reviewDescription')} />
-							<div className={'light-color inputSubtext'}>
-								<FormattedMessage
-										id="JournalProfileEdit.shortDescription3"
-										defaultMessage={`Use to describe the review process and featuring standards of this journal. This text will appear at pubpub.org/{slug}/about.`}
-										values={{ slug: journal.slug }}
-								/>
-							</div>
-						</label>
 
 
 						<ImageUpload 
@@ -256,66 +231,54 @@ export const JournalEdit = React.createClass({
 							label={'Logo'}
 							tooltip={'Used in the Header bar for all branded Journal pages'} 
 							containerStyle={styles.imageContainer}
-							onNewImage={this.printNewImage} />
+							onNewImage={this.handleLogoFinish} />
+
 
 						<ImageUpload 
-							defaultImage={journal.icon}
-							userCrop={true}
-							label={'Icon'}
-							tooltip={'Used in search results, must be square'} 
-							containerStyle={styles.imageContainer}
-							onNewImage={this.printNewImage} />
-
-						<ImageUpload 
-							defaultImage={journal.headerImage}
+							defaultImage={this.state.headerImage}
 							userCrop={false}
 							label={'Background Image'}
 							tooltip={'Testing Tooltip layout'} 
 							containerStyle={styles.imageContainer}
-							onNewImage={this.printNewImage} />
-						<div>
-							<label htmlFor={'logo'}>
-								<FormattedMessage {...globalMessages.JournalLogo} />
-							</label>
-							{(this.state.logo || journal.logo) &&
-								<img style={styles.image} src={'https://jake.pubpub.org/unsafe/fit-in/500x75/' + (this.state.logo || journal.logo)} />
-							}
-							<input id={'logo'} name={'logo image'} type="file" accept="image/*" onChange={this.handleLogoSelect} />
+							onNewImage={this.handleHeaderImageFinish} />
 
-						</div>
+						<label htmlFor={'headerMode'}>
+							<FormattedMessage {...globalMessages.HeaderMode} />
 
-						<div>
-							<label htmlFor={'headerMode'}>
-								<FormattedMessage {...globalMessages.HeaderMode} />
-							</label>
-							<RadioGroup name="header mode" selectedValue={this.state.headerMode} onChange={this.handleHeaderModeChange}>
-								<Radio value="title" style={styles.radioInput} label={<FormattedMessage {...globalMessages.Title} />} />
-								<Radio value="logo" style={styles.radioInput} label={<FormattedMessage {...globalMessages.Logo} />} />
-								<Radio value="both" style={styles.radioInput} label={<FormattedMessage {...globalMessages.Both} />} />
-							</RadioGroup>
-						</div>
+							<div style={{margin:'1em'}} className={'pt-button-group'}>
+								<button className={this.state.headerMode === 'title' ? 'pt-button pt-active' : 'pt-button'} onClick={this.handleHeaderModeChange.bind(this, 'title')}>Title</button>
+								<button className={this.state.headerMode === 'logo' ? 'pt-button pt-active' : 'pt-button'} onClick={this.handleHeaderModeChange.bind(this, 'logo')}>Logo</button>
+								<button className={this.state.headerMode === 'both' ? 'pt-button pt-active' : 'pt-button'} onClick={this.handleHeaderModeChange.bind(this, 'both')}>Both</button>
+							</div>
+						</label>
+						{/*<RadioGroup name="header mode" selectedValue={this.state.headerMode} onChange={this.handleHeaderModeChange}>
+							<Radio value="title" style={styles.radioInput} label={<FormattedMessage {...globalMessages.Title} />} />
+							<Radio value="logo" style={styles.radioInput} label={<FormattedMessage {...globalMessages.Logo} />} />
+							<Radio value="both" style={styles.radioInput} label={<FormattedMessage {...globalMessages.Both} />} />
+						</RadioGroup>*/}
 
-						<div>
-							<label htmlFor={'headerAlign'}>
-								<FormattedMessage {...globalMessages.HeaderAlign} />
-							</label>
-							<RadioGroup name="header align" selectedValue={this.state.headerAlign} onChange={this.handleHeaderAlignChange}>
-								<Radio value="left" style={styles.radioInput} label={<FormattedMessage {...globalMessages.Left} />} /> 
-								<Radio value="center" style={styles.radioInput} label={<FormattedMessage {...globalMessages.Center} />} /> 
-							</RadioGroup>
-						</div>
+						<label htmlFor={'headerAlign'}>
+							<FormattedMessage {...globalMessages.HeaderAlign} />
+							<div style={{margin:'1em'}} className={'pt-button-group'}>
+								<button className={this.state.headerMode === 'left' ? 'pt-button pt-active' : 'pt-button'} onClick={this.handleHeaderAlignChange.bind(this, 'left')}>Left</button>
+								<button className={this.state.headerMode === 'center' ? 'pt-button pt-active' : 'pt-button'} onClick={this.handleHeaderAlignChange.bind(this, 'center')}>Center</button>
+							</div>
+						</label>
+						{/*<RadioGroup name="header align" selectedValue={this.state.headerAlign} onChange={this.handleHeaderAlignChange}>
+							<Radio value="left" style={styles.radioInput} label={<FormattedMessage {...globalMessages.Left} />} /> 
+							<Radio value="center" style={styles.radioInput} label={<FormattedMessage {...globalMessages.Center} />} /> 
+						</RadioGroup>*/}
 
-						<div>
-							<label htmlFor={'headerAlign'}>
-								<FormattedMessage {...globalMessages.BackgroundColor} />
-							</label>
+						<label>
+							<FormattedMessage {...globalMessages.BackgroundColor} />
 							<div className={'colorPicker'}>
 								<ChromePicker color={this.state.headerColor} disableAlpha={true} onChange={this.handleColorChange} />
 							</div>
+						</label>
+							
 
-						</div>
 
-						<div>
+						{/*<div>
 							<label htmlFor={'headerImage'}>
 								<FormattedMessage {...globalMessages.BackgroundImage} />
 							</label>
@@ -327,7 +290,7 @@ export const JournalEdit = React.createClass({
 								<FormattedMessage {...globalMessages.Clear} />
 							</div>
 
-						</div>
+						</div>*/}
 					</div>
 
 
@@ -364,7 +327,7 @@ styles = {
 		marginRight: '3em',
 	},
 	input: {
-		width: 'calc(100% - 20px - 4px)', // Calculations come from padding and border in pubpub.css
+		width: 'calc(100% - 20px)', // Calculations come from padding and border
 	},
 	image: {
 		maxWidth: '100%',

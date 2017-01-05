@@ -2,7 +2,7 @@ import React, {PropTypes} from 'react';
 import Radium from 'radium';
 import { ImageCropper } from 'components';
 import { s3Upload } from 'utils/uploadFile';
-import { Spinner, Tooltip } from '@blueprintjs/core';
+import { Spinner, Tooltip, Position } from '@blueprintjs/core';
 
 let styles = {};
 
@@ -101,7 +101,7 @@ export const ImageUpload = React.createClass({
 		return (
 				
 			<div style={[styles.container, containerStyle]}>
-				<Tooltip content={this.props.tooltip}>
+				<Tooltip content={<span style={styles.tooltipText}>{this.props.tooltip}</span>} position={Position.TOP_LEFT}>
 					<label htmlFor={'logo'}>
 						<div style={styles.label}>
 							{this.props.label}
@@ -161,7 +161,10 @@ styles = {
 		left: 3,
 		backgroundColor: 'white',
 	},	
-
+	tooltipText: {
+		maxWidth: '275px',
+		display: 'inline-block',
+	},
 	imageCropperWrapper: {
 		height: '100vh',
 		width: '100vw',
